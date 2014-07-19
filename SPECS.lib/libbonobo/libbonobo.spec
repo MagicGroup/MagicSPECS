@@ -61,7 +61,7 @@ use Bonobo.
 %patch1 -p1 -b .disable_deprecated
 %patch2 -p1 -b .no-src
 
-autoreconf -i -f
+autoreconf -fisv
 
 %build
 %configure --disable-gtk-doc

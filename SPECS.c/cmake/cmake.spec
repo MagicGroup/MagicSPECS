@@ -13,7 +13,7 @@
 
 Name:           cmake
 Version:        3.0.0
-Release:        0.5.rc1%{?dist}
+Release:        0.6.rc1%{?dist}
 Summary:        Cross-platform make system
 Summary(zh_CN.UTF-8): 跨平台的 make 系统
 
@@ -250,6 +250,9 @@ update-mime-database %{_datadir}/mime &> /dev/null || :
 %endif
 
 %changelog
+* Wed Jul 09 2014 Liu Di <liudidi@gmail.com> - 3.0.0-0.6.rc1
+- 为 Magic 3.0 重建
+
 * Sun May 04 2014 Liu Di <liudidi@gmail.com> - 3.0.0-0.5.rc1
 - 为 Magic 3.0 重建
 

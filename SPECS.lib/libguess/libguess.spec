@@ -1,9 +1,11 @@
 Name: libguess
 Version: 1.1
-Release: 4%{?dist}
+Release: 5%{?dist}
 
 Summary: High-speed character set detection library
+Summary(zh_CN.UTF-8): 高速的字符集检测库
 Group: System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 License: BSD
 URL: http://www.atheme.org/project/libguess
 Source0: http://distfiles.atheme.org/libguess-%{version}.tar.bz2
@@ -21,16 +23,22 @@ deduced as efficiently as possible.
 libguess is fully reentrant, using only local stack memory for DFA
 operations.
 
+%description -l zh_CN.UTF-8
+高速的字符集检测库。
 
 %package devel
 Summary: Files needed for developing with %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: %{name}%{?_isa} = %{version}-%{release}
 
 %description devel
 This package contains the files that are needed when building
 software that uses %{name}.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -69,6 +77,9 @@ LD_LIBRARY_PATH=${RPM_BUILD_ROOT}%{_libdir} make
 
 
 %changelog
+* Wed Jul 16 2014 Liu Di <liudidi@gmail.com> - 1.1-5
+- 为 Magic 3.0 重建
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 1.1-4
 - 为 Magic 3.0 重建
 

@@ -2,6 +2,7 @@ Name:           libmatekbd
 Version:        1.8.0
 Release:        2%{?dist}
 Summary:        Libraries for mate kbd
+Summary(zh_CN.UTF-8): mate kbd 的库
 License:        LGPLv2+
 URL:            http://mate-desktop.org
 Source0:        http://pub.mate-desktop.org/releases/1.8/%{name}-%{version}.tar.xz
@@ -16,12 +17,19 @@ BuildRequires:  mate-common
 %description
 Libraries for matekbd
 
+%description -l zh_CN.UTF-8
+matekbd 的库。
+
 %package devel
 Summary:  Development libraries for libmatekbd
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Requires: %{name}%{?_isa} = %{version}-%{release}
 
 %description devel
 Development libraries for libmatekbd
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -47,7 +55,7 @@ find %{buildroot} -name '*.la' -exec rm -fv {} ';'
 
 # remove needless gsettings convert file
 rm -f  %{buildroot}%{_datadir}/MateConf/gsettings/matekbd.convert
-
+magic_rpm_clean.sh
 %find_lang %{name} --with-gnome --all-name
 
 

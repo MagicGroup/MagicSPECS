@@ -1,7 +1,8 @@
 Name:          libmateweather
 Version:       1.8.0
-Release:       2%{?dist}
+Release:       1%{?dist}
 Summary:       Libraries to allow MATE Desktop to display weather information
+Summary(zh_CN.UTF-8): 允许 MATE 桌面显示天气信息的库
 License:       GPLv2+ and LGPLv2+
 URL:           http://mate-desktop.org
 Source0:       http://pub.mate-desktop.org/releases/1.8/%{name}-%{version}.tar.xz
@@ -17,21 +18,31 @@ Requires:      %{name}-data = %{version}-%{release}
 %description
 Libraries to allow MATE Desktop to display weather information
 
+%description -l zh_CN.UTF-8
+允许 MATE 桌面显示天气信息的库。
+
 %package data
 Summary: Data files for the libmateweather
+Summary(zh_CN.UTF-8): %{name} 的数据文件
 BuildArch: noarch
 Requires: %{name} = %{version}-%{release}
 
 %description data
 This package contains shared data needed for libmateweather.
 
+%description data -l zh_CN.UTF-8
+%{name} 的数据文件。
+
 %package devel
 Summary:  Development files for libmateweather
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Requires: %{name}%{?_isa} = %{version}-%{release}
 
 %description devel
 Development files for libmateweather
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -54,7 +65,7 @@ make %{?_smp_mflags} V=1
 
 find %{buildroot} -name '*.la' -exec rm -fv {} ';'
 find %{buildroot} -name '*.a' -exec rm -fv {} ';'
-
+magic_rpm_clean.sh
 %find_lang %{name} --with-gnome --all-name
 
 

@@ -1,4 +1,5 @@
 Summary: Internationalized Domain Name support library
+Summary(zh_CN.UTF-8): 国际化域名支持库
 Name: libidn
 Version: 1.24
 Release: 3%{?dist}
@@ -6,6 +7,7 @@ URL: http://www.gnu.org/software/libidn/
 License: LGPLv2+ and GPLv3+ and GFDL
 Source0: http://ftp.gnu.org/gnu/libidn/libidn-%{version}.tar.gz
 Group: System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: pkgconfig, gettext
 Requires(post): /usr/sbin/install-info /usr/sbin/ldconfig
@@ -18,9 +20,14 @@ IDNA specifications defined by the IETF Internationalized Domain
 Names (IDN) working group, used for internationalized domain
 names.
 
+%description -l zh_CN.UTF-8
+国际化域名支持库。
+
 %package devel
 Summary: Development files for the libidn library
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: %{name} = %{version}-%{release}
 Requires: pkgconfig
 
@@ -28,8 +35,12 @@ Requires: pkgconfig
 This package includes header files and libraries necessary for
 developing programs which use the GNU libidn library.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
 %package -n emacs-%{name}
 Summary: GNU Emacs libidn support files
+Summary(zh_CN.UTF-8): GNU Emacs libidn 支持文件
 License: GPLv3+
 BuildRequires: emacs
 Requires: %{name} = %{version}-%{release}
@@ -38,6 +49,9 @@ BuildArch: noarch
 
 %description -n emacs-%{name}
 This package includes libidn support files for GNU Emacs.
+
+%description -n emacs-%{name} -l zh_CN.UTF-8
+GNU Emacs libidn 支持文件。
 
 %prep
 %setup -q

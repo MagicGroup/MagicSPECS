@@ -1459,6 +1459,7 @@ void solve(char *name) {
 				if ( !strcmp(name, "tex4ht") ) {
 					fprintf(fpack, "Provides: tetex-tex4ht = %%{tl_version}\n");
 					fprintf(fpack, "Obsoletes: tetex-tex4ht < %%{tl_version}\n");
+					fprintf(fpack, "Conflicts: ht\n");
 				}
 				if ( !strcmp(name, "latex") ) {
 					fprintf(fpack, "Provides: tetex-latex = 3.1-99, texlive-texmf-latex = %%{tl_version}\n");
@@ -2115,7 +2116,6 @@ void solve(char *name) {
 				if ( !strcmp(name, "dvisvgm") ) {
 					fprintf(fpack, "Provides: dvisvgm = %%{tl_version}\n");
 					fprintf(fpack, "Obsoletes: dvisvgm < %%{tl_version}\n");
-					fprintf(fpack, "Requires: ghostscript-devel\n");
 				}
 				if ( !strcmp(name, "lcdftypetools") ) {
 					fprintf(fpack, "Provides: lcdf-typetools = %%{tl_version}\n");

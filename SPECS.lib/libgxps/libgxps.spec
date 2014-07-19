@@ -1,8 +1,10 @@
 Name:           libgxps
 Version:        0.2.2
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        GObject based library for handling and rendering XPS documents
+Summary(zh_CN.UTF-8): 基于 GObject 的处理和渲染 XPS 文档的库
 Group:          System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 
 License:        LGPLv2+
 URL:            http://live.gnome.org/libgxps
@@ -24,24 +26,36 @@ BuildRequires:  chrpath
 libgxps is a GObject based library for handling and rendering XPS
 documents.
 
+%description -l zh_CN.UTF-8
+基于 GObject 的处理和渲染 XPS 文档的库。
+
 %package        devel
 Summary:        Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       %{name}%{?_isa} = %{version}-%{release}
 
 %description    devel
 The %{name}-devel package contains libraries and header files for
 developing applications that use %{name}.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
 %package        tools
 Summary:        Command-line utility programs for manipulating XPS files
+Summary(zh_CN.UTF-8): 处理 XPS 文件的命令行工具程序
 Group:          Applications/Text
+Group(zh_CN.UTF-8): 应用程序/文本
 Requires:       %{name}%{?_isa} = %{version}-%{release}
 
 %description    tools
 The %{name}-tools contains command-line programs for manipulating XPS format
 documents using the %{name} library.
 
+%description tools -l zh_CN.UTF-8
+处理 XPS 文件的命令行工具程序。
 
 %prep
 %setup -q
@@ -82,6 +96,9 @@ magic_rpm_clean.sh
 
 
 %changelog
+* Wed Jul 16 2014 Liu Di <liudidi@gmail.com> - 0.2.2-5
+- 为 Magic 3.0 重建
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 0.2.2-4
 - 为 Magic 3.0 重建
 

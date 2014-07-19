@@ -2,10 +2,12 @@
 
 Name:           libkate
 Version:        0.3.8
-Release:        5%{?dist}
+Release:        1%{?dist}
 Summary:        Libraries to handle the Kate bitstream format
+Summary(zh_CN.UTF-8): 处理 Kate 位流格式的库
 
 Group:          System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 License:        BSD
 URL:            http://code.google.com/p/libkate/
 Source0:        http://libkate.googlecode.com/files/libkate-%{version}.tar.gz
@@ -33,10 +35,15 @@ Kate is meant to be used for karaoke alongside audio/video streams (typically
 Vorbis and Theora), movie subtitles, song lyrics, and anything that needs text
 data at arbitrary time intervals.
 
+%description -l zh_CN.UTF-8
+处理 Kate 位流格式的库，Kate 是一种 Ogg 容器格式，包括文本、图像和动画等。
+是卡拉 OK 使用的格式。
 
 %package        devel
 Summary:        Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       %{name} = %{version}-%{release}
 Requires:       libogg-devel
 
@@ -44,24 +51,36 @@ Requires:       libogg-devel
 The %{name}-devel package contains libraries and header files for
 developing applications that use %{name}.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
 %package utils
 Summary:        Encoder/Decoder utilities for %{name}
+Summary(zh_CN.UTF-8): %{name} 的编码、解码工具
 Group:          Applications/Multimedia
+Group(zh_CN.UTF-8): 应用程序/多媒体
 Requires:       %{name} = %{version}-%{release}
 Requires:       liboggz
 
 %description utils
 The %{name}-utils package contains the katedec/kateenc binaries for %{name}.
 
+%description utils -l zh_CN.UTF-8
+%{name} 的编码、解码工具。
+
 %package docs
 Summary:        Documentation for %{name}
+Summary(zh_CN.UTF-8): %{name} 的文档
 Group:          Documentation
+Group(zh_CN.UTF-8): 文档
 
 BuildArch:      noarch
 
 %description docs
 The %{name}-docs package contains the docs for %{name}.
 
+%description docs -l zh_CN.UTF-8
+%{name} 的文档。
 
 %prep
 %setup -q

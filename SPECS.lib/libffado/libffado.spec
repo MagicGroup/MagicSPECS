@@ -1,11 +1,13 @@
 Summary:        Free firewire audio driver library
+Summary(zh_CN.UTF-8): 自由的火线音频驱动库
 Name:           libffado
-Version:        2.1.0
+Version: 2.2.1
 Release:        1%{?dist}
 # src/libutil/float_cast.h is LGPLv2+.
 # The rest is (GPLv2 or GPLv3)
 License:        LGPLv2+ and (GPLv2 or GPLv3)
 Group:          System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 URL:            http://www.ffado.org/
 Source0:        http://www.ffado.org/files/%{name}-%{version}.tgz
 # The trunk is tarballed as follows:
@@ -40,18 +42,28 @@ The FFADO project aims to provide a generic, open-source solution for the
 support of FireWire based audio devices for the Linux platform. It is the
 successor of the FreeBoB project.
 
+%description -l zh_CN.UTF-8
+自由的火线音频驱动库。
+
 %package devel
 Summary:        Free firewire audio driver library development headers
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 License:        GPLv2 or GPLv3
 Requires:       %{name}%{?_isa} = %{version}-%{release}
 
 %description devel
 Development files needed to build applications against libffado.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
 %package -n ffado
 Summary:        Free firewire audio driver library applications and utilities
+Summary(zh_CN.UTF-8): %{name} 库的应用程序和工具
 Group:          Applications/Multimedia
+Group(zh_CN.UTF-8): 应用程序/多媒体
 # support/tools/* is GPLv3
 # Some files in support/mixer-qt4/ffado are GPLv3+
 # The rest is GPLv2 or GPLv3
@@ -64,6 +76,8 @@ Requires:       PyQt4
 %description -n ffado
 Applications and utilities for use with libffado.
 
+%description -n ffado -l zh_CN.UTF-8
+%{name} 库的应用程序和工具。
 
 %prep
 %setup -q
@@ -95,6 +109,7 @@ ln -s ../../../../libffado/icons/hi64-apps-ffado.png \
 
 # Install ffado-test RHBZ#805940
 install -m 755 tests/ffado-test %{buildroot}%{_bindir}
+magic_rpm_clean.sh
 
 %post -p /sbin/ldconfig
 
@@ -138,6 +153,9 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 
 
 %changelog
+* Wed Jul 16 2014 Liu Di <liudidi@gmail.com> - 2.2.1-1
+- 更新到 2.2.1
+
 * Thu Sep 20 2012 Orcan Ogetbil <oget[dot]fedora[at]gmail[dot]com> - 2.1.0-1
 - Update to 2.1.0.
 - Drop upstreamed & old patches, README.Fedora file.

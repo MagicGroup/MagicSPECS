@@ -17,12 +17,12 @@ else
 	newver1=$(echo $specver | cut -d"." -f1).$(echo $specver | cut -d"." -f2)
 fi	
 rm -f index.html
-url1="$url$newver1/"
+url1="http://ftp.acc.umu.se/pub/GNOME/sources/folks/$newver1/?C=M;O=D"
 $downcommand $url1 -O index.html
 new3="folks-"
 new4=".tar.xz"
 if [ -f index.html ];then
-	newver=`grep "$new3.*$new4" index.html |tail -n 1| sed "s/.*$new3//" | sed "s/$new4.*//" | sed 's/^[ ]\{1,\}//;s/[ ]\{1,\}$//g'`
+	newver=`grep "$new3.*$new4" index.html |head -n 1| sed "s/.*$new3//" | sed "s/$new4.*//" | sed 's/^[ ]\{1,\}//;s/[ ]\{1,\}$//g'`
 	echo $newver
 else
         echo "不能正常取得新版本号"

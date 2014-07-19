@@ -1,11 +1,13 @@
 Name: libfli
 Version: 1.7
-Release: 9%{?dist}
+Release: 10%{?dist}
 Summary: Library for FLI CCD Camera & Filter Wheels
+Summary(zh_CN.UTF-8): FLI CCE 相机和滤光轮库
 
 %define majorver 1
 
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 # Code and LICENSE.LIB have different versions of the BSD license
 # https://sourceforge.net/tracker2/?func=detail&aid=2568511&group_id=90275&atid=593019
 License: BSD
@@ -21,12 +23,20 @@ BuildRequires: cmake
 Finger Lakes Instrument library is used by applications to control FLI 
 line of CCDs and Filter wheels
 
+%description -l zh_CN.UTF-8
+FLI CCE 相机和滤光轮库。
+
 %package devel
 Summary: Libraries, includes, etc. used to develop an application with %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: %{name} = %{version}-%{release}
 %description devel
 These are the header files needed to develop a %{name} application
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q -n %{name}%{majorver}-%{version}
@@ -39,6 +49,7 @@ make VERBOSE=1 %{?_smp_mflags}
 %install
 rm -fr %{buildroot}
 make install DESTDIR=%{buildroot}
+magic_rpm_clean.sh
 
 %clean
 rm -fr %{buildroot}
@@ -58,6 +69,9 @@ rm -fr %{buildroot}
 %{_libdir}/*.so
 
 %changelog
+* Wed Jul 16 2014 Liu Di <liudidi@gmail.com> - 1.7-10
+- 为 Magic 3.0 重建
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 1.7-9
 - 为 Magic 3.0 重建
 

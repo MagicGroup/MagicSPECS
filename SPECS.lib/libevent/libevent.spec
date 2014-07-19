@@ -1,9 +1,11 @@
 Name:           libevent
-Version:        2.0.14
+Version: 2.0.21
 Release:        2%{?dist}
 Summary:        Abstract asynchronous event notification library
+Summary(zh_CN.UTF-8): 抽象异步事件通知库
 
 Group:          System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 License:        BSD
 URL:            http://sourceforge.net/projects/levent/        
 Source0:        http://downloads.sourceforge.net/levent/%{name}-%{version}-stable.tar.gz
@@ -20,9 +22,14 @@ loop found in event driven network servers. An application just needs
 to call event_dispatch() and can then add or remove events dynamically
 without having to change the event loop.
 
+%description -l zh_CN.UTF-8
+抽象异步事件通知库。
+
 %package devel
 Summary: Header files, libraries and development documentation for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: %{name} = %{version}-%{release}
 
 %description devel
@@ -30,6 +37,8 @@ This package contains the header files, static libraries and development
 documentation for %{name}. If you like to develop programs using %{name},
 you will need to install %{name}-devel.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q -n libevent-%{version}-stable
@@ -57,6 +66,7 @@ mkdir -p $RPM_BUILD_ROOT/%{_docdir}/%{name}-devel-%{version}/html
 mkdir -p $RPM_BUILD_ROOT/%{_docdir}/%{name}-devel-%{version}/sample
 (cd sample; \
 	install -p -m 644 *.c Makefile* $RPM_BUILD_ROOT/%{_docdir}/%{name}-devel-%{version}/sample)
+magic_rpm_clean.sh
 
 %post -p /sbin/ldconfig
 
@@ -94,6 +104,9 @@ mkdir -p $RPM_BUILD_ROOT/%{_docdir}/%{name}-devel-%{version}/sample
 %{_docdir}/%{name}-devel-%{version}/sample/*
 
 %changelog
+* Wed Jul 16 2014 Liu Di <liudidi@gmail.com> - 2.0.21-2
+- 更新到 2.0.21
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 2.0.14-2
 - 为 Magic 3.0 重建
 

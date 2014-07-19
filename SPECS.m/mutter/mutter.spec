@@ -1,5 +1,5 @@
 Name:          mutter
-Version:	3.12.0
+Version:	3.13.3
 Release:       1%{?dist}
 Summary:       Window and compositing manager based on Clutter
 
@@ -69,7 +69,7 @@ utilities for testing Metacity/Mutter themes.
 (if ! test -x configure; then NOCONFIGURE=1 ./autogen.sh; fi;
  %configure --disable-static --enable-compile-warnings=maximum)
 
-SHOULD_HAVE_DEFINED="HAVE_SM HAVE_SHAPE HAVE_RANDR HAVE_STARTUP_NOTIFICATION"
+SHOULD_HAVE_DEFINED="HAVE_SM HAVE_RANDR HAVE_STARTUP_NOTIFICATION"
 
 for I in $SHOULD_HAVE_DEFINED; do
   if ! grep -q "define $I" config.h; then
@@ -89,7 +89,7 @@ make install DESTDIR=$RPM_BUILD_ROOT
 
 #Remove libtool archives.
 rm -rf %{buildroot}/%{_libdir}/*.la
-
+magic_rpm_clean.sh
 %find_lang %{name}
 
 # Mutter contains a .desktop file so we just need to validate it
@@ -134,6 +134,9 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 %exclude %{_datadir}/gtk-doc
 
 %changelog
+* Wed Jul 16 2014 Liu Di <liudidi@gmail.com> - 3.13.3-1
+- 更新到 3.13.3
+
 * Fri Apr 11 2014 Liu Di <liudidi@gmail.com> - 3.12.0-1
 - 更新到 3.12.0
 

@@ -1,8 +1,10 @@
 Name: libcdio-paranoia
 Version: 10.2+0.90+1
-Release: 2%{?dist}
+Release: 3%{?dist}
 Summary: CD paranoia on top of libcdio
+Summary(zh_CN.UTF-8): 基于 libcdio 的 CD 抓轨工具
 Group: System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 License: GPLv2+ and LGPLv2+
 URL: http://www.gnu.org/software/libcdio/
 Source0: http://ftp.gnu.org/gnu/libcdio/libcdio-paranoia-%{version}.tar.gz
@@ -21,14 +23,21 @@ data to a file or pipe as .wav, .aifc or as raw 16 bit linear PCM.
 Split off from libcdio to allow more flexible licensing and to be compatible
 with cdparanoia-III-10.2's license. And also, libcdio is just too large.
 
+%description -l zh_CN.UTF-8
+基于 libcdio 的 CD 抓轨工具。
+
 %package devel
 Summary: Header files and libraries for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: %{name}%{?_isa} = %{version}-%{release}
 
 %description devel
 This package contains header files and libraries for %{name}.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -63,6 +72,7 @@ cp -a $RPM_BUILD_ROOT%{_includedir}/cdio/paranoia/*.h $RPM_BUILD_ROOT%{_included
 # remove rpath
 chrpath --delete $RPM_BUILD_ROOT%{_bindir}/*
 chrpath --delete $RPM_BUILD_ROOT%{_libdir}/*.so.*
+magic_rpm_clean.sh
 
 %post -p /sbin/ldconfig
 
@@ -74,8 +84,6 @@ chrpath --delete $RPM_BUILD_ROOT%{_libdir}/*.so.*
 %{_bindir}/*
 %{_libdir}/*.so.*
 %{_mandir}/man1/*
-%lang(ja) %{_mandir}/ja/man1/*
-
 
 %files devel
 %defattr(-,root,root,-)
@@ -86,6 +94,9 @@ chrpath --delete $RPM_BUILD_ROOT%{_libdir}/*.so.*
 
 
 %changelog
+* Sun Jul 13 2014 Liu Di <liudidi@gmail.com> - 10.2+0.90+1-3
+- 为 Magic 3.0 重建
+
 * Mon Dec 16 2013 Adrian Reber <adrian@lisas.de> - 10.2+0.90+1-2
 - Rebuilt for new libcdio-0.92
 

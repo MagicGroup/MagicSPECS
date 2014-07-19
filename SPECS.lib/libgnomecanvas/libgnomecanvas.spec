@@ -1,13 +1,15 @@
 %define gettext_package libgnomecanvas-2.0
 
 Summary: GnomeCanvas widget
+Summary(zh_CN.UTF-8): GnomeCanvas 部件
 Name: libgnomecanvas
 Version: 2.30.3
-Release: 5%{?dist}
+Release: 6%{?dist}
 URL: http://www.gnome.org/
 Source0: http://download.gnome.org/sources/libgnomecanvas/2.30/%{name}-%{version}.tar.bz2
 License: LGPLv2+
 Group: System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 BuildRequires: gtk2-devel
 BuildRequires: libart_lgpl-devel
 BuildRequires: libglade2-devel 
@@ -20,9 +22,14 @@ The canvas widget allows you to create custom displays using stock items
 such as circles, lines, text, and so on. It was originally a port of the
 Tk canvas widget but has evolved quite a bit over time.
 
+%description -l zh_CN.UTF-8
+GnomeCanvas 部件。
+
 %package devel
 Summary: Libraries and headers for libgnomecanvas
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: %{name} = %{version}-%{release}
 # for /usr/share/gtk-doc/html
 Requires: gtk-doc
@@ -31,6 +38,9 @@ Requires: gtk-doc
 The canvas widget allows you to create custom displays using stock items
 such as circles, lines, text, and so on. It was originally a port of the
 Tk canvas widget but has evolved quite a bit over time.
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -66,6 +76,9 @@ magic_rpm_clean.sh
 %{_datadir}/gtk-doc/html/libgnomecanvas
 
 %changelog
+* Wed Jul 16 2014 Liu Di <liudidi@gmail.com> - 2.30.3-6
+- 为 Magic 3.0 重建
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 2.30.3-5
 - 为 Magic 3.0 重建
 

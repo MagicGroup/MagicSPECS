@@ -1,9 +1,11 @@
 Name:           libgdither
 Version:        0.6
-Release:        6%{?dist}
+Release:        7%{?dist}
 Summary:        Library for applying dithering to PCM audio sources
+Summary(zh_CN.UTF-8): 为 PCM 音源添加抖动的库
 
 Group:          System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 License:        GPLv2+
 URL:            http://plugin.org.uk/libgdither/README
 Source0:        http://plugin.org.uk/libgdither/libgdither-%{version}.tar.gz
@@ -20,10 +22,14 @@ PCM samples. The dithering process should be carried out before reducing
 the bit width of PCM audio data (eg. float to 16 bit int conversions) to 
 preserve audio quality.
 
+%description -l zh_CN.UTF-8
+为 PCM 音源添加抖动的库。
 
 %package        devel
 Summary:        Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       %{name} = %{version}-%{release}
 Requires:       pkgconfig
 
@@ -31,6 +37,8 @@ Requires:       pkgconfig
 The %{name}-devel package contains libraries and header files for
 developing applications that use %{name}.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -52,6 +60,7 @@ sed -i -e 's|/usr/local|%{_prefix}|g' \
    $RPM_BUILD_ROOT%{_libdir}/pkgconfig/libgdither.pc
 sed -i -e 's|%{_prefix}/lib|%{_libdir}|' \
   $RPM_BUILD_ROOT%{_libdir}/pkgconfig/libgdither.pc
+magic_rpm_clean.sh
 
 %check
 make test CFLAGS="${RPM_OPT_FLAGS} -Werror --std=c99 -I%{_builddir}/%{?buildsubdir}"
@@ -77,6 +86,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/pkgconfig/libgdither.pc
 
 %changelog
+* Wed Jul 16 2014 Liu Di <liudidi@gmail.com> - 0.6-7
+- 为 Magic 3.0 重建
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 0.6-6
 - 为 Magic 3.0 重建
 

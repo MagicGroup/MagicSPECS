@@ -1,9 +1,11 @@
 Summary:      Open Sound Control library
+Summary(zh_CN.UTF-8): 开放声音控制库
 Name:         liblo
 Version:      0.26
-Release:      3%{?dist}
+Release:      1%{?dist}
 License:      LGPLv2+
 Group:        System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 URL:          http://liblo.sourceforge.net
 Source0:      http://download.sf.net/sourceforge/liblo/liblo-%{version}.tar.gz
 # Fix multilib installation issue RHBZ#480403
@@ -16,15 +18,23 @@ BuildRequires: doxygen
 liblo is an implementation of the Open Sound Control protocol for
 POSIX systems developed by Steve Harris.
 
+%description -l zh_CN.UTF-8
+开放声音控制协议 (OSC) 的实现。
+
 %package devel
 Summary:  Libraries, includes, etc to develop liblo applications
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:    Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: liblo = %{version}-%{release}
 Requires: pkgconfig
 
 %description devel
 Libraries, include files, etc you can use to develop liblo 
 based Open Sound Control applications.
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -48,6 +58,7 @@ make DESTDIR=%{buildroot} install
 # install man pages by hand
 mkdir -p %{buildroot}%{_mandir}/man3/
 install -m 0664 doc/man/man3/*.3 %{buildroot}%{_mandir}/man3/
+magic_rpm_clean.sh
 
 %clean
 rm -rf %{buildroot}

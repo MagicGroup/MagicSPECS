@@ -1,9 +1,9 @@
 %global gtk2_version 2.24.15
-%global gtk3_version 3.6.2
+%global gtk3_version 3.9.3
 
 Name: gnome-themes-standard
-Version:	3.12.0
-Release: 1%{?dist}
+Version:	3.13.3
+Release: 4%{?dist}
 Summary: Standard themes for GNOME applications
 Summary(zh_CN.UTF-8): GNOME 程序的标准主题 
 
@@ -30,9 +30,8 @@ BuildRequires: intltool gettext autoconf automake libtool
 BuildRequires: gtk2
 Requires: gnome-icon-theme
 Requires: abattis-cantarell-fonts
-Requires: adwaita-cursor-theme = %{version}-%{release}
+Requires: adwaita-icon-theme 
 Requires: adwaita-gtk2-theme = %{version}-%{release}
-Requires: adwaita-gtk3-theme = %{version}-%{release}
 
 %description
 The gnome-themes-standard package contains the standard theme for the GNOME
@@ -41,20 +40,6 @@ window borders and GTK+ applications.
 
 %description -l zh_CN.UTF-8
 GNOME 3 程序的标准主题，包括默认光标，桌面背景，窗口边框等。
-
-%package -n adwaita-cursor-theme
-Summary: Adwaita cursor theme
-Summary(zh_CN.UTF-8): Adwaita 光标主题
-Group: User Interface/Desktops
-Group(zh_CN.UTF-8): 用户界面/桌面
-BuildArch: noarch
-
-%description -n adwaita-cursor-theme
-The adwaita-cursor-theme package contains a modern set of cursors originally
-designed for the GNOME desktop.
-
-%description -n adwaita-cursor-theme -l zh_CN.UTF-8
-Adwaita 光标主题。
 
 %package -n adwaita-gtk2-theme
 Summary: Adwaita gtk2 theme
@@ -69,20 +54,6 @@ with a GNOME look and feel.
 
 %description -n adwaita-gtk2-theme -l zh_CN.UTF-8
 Adwaita gtk2 主题。
-
-%package -n adwaita-gtk3-theme
-Summary: Adwaita gtk3 theme
-Summary(zh_CN.UTF-8): Adwaita gtk3 主题 
-Group: User Interface/Desktops
-Group(zh_CN.UTF-8): 用户界面/桌面
-Requires: gtk3%{_isa} >= %{gtk3_version}
-
-%description -n adwaita-gtk3-theme
-The adwaita-gtk3-theme package contains a gtk3 theme for rendering widgets
-with a GNOME look and feel.
-
-%description -n adwaita-gtk3-theme -l zh_CN.UTF-8
-Adwaita gtk3 主题。
 
 %prep
 %setup -q
@@ -99,13 +70,10 @@ for t in HighContrast; do
   touch $RPM_BUILD_ROOT%{_datadir}/icons/$t/icon-theme.cache
 done
 
-rm $RPM_BUILD_ROOT%{_libdir}/gtk-3.0/3.0.0/theming-engines/libadwaita.la
-rm $RPM_BUILD_ROOT%{_libdir}/gtk-2.0/2.10.0/engines/libadwaita.la
-
-mkdir -p $RPM_BUILD_ROOT%{_sysconfdir}/gtk-3.0
-cp $RPM_SOURCE_DIR/settings.ini $RPM_BUILD_ROOT%{_sysconfdir}/gtk-3.0/settings.ini
 mkdir -p $RPM_BUILD_ROOT%{_sysconfdir}/gtk-2.0
 cp $RPM_SOURCE_DIR/gtkrc $RPM_BUILD_ROOT%{_sysconfdir}/gtk-2.0/gtkrc
+
+rm $RPM_BUILD_ROOT%{_libdir}/gtk-2.0/2.10.0/engines/libadwaita.la
 magic_rpm_clean.sh
 
 %post
@@ -124,7 +92,6 @@ done
 # Background and WM
 %{_datadir}/themes/Adwaita
 %exclude %{_datadir}/themes/Adwaita/gtk-2.0
-%exclude %{_datadir}/themes/Adwaita/gtk-3.0
 
 # Background
 %{_datadir}/gnome-background-properties/*
@@ -134,10 +101,6 @@ done
 %{_datadir}/icons/HighContrast
 %{_datadir}/themes/HighContrast
 
-%files -n adwaita-cursor-theme
-# Cursors
-%{_datadir}/icons/Adwaita
-
 %files -n adwaita-gtk2-theme
 # gtk2 Theme and engine
 %{_libdir}/gtk-2.0/2.10.0/engines/libadwaita.so
@@ -145,15 +108,19 @@ done
 # Default gtk2 settings
 %{_sysconfdir}/gtk-2.0/gtkrc
 
-%files -n adwaita-gtk3-theme
-# gtk3 Theme and engine
-%{_libdir}/gtk-3.0/3.0.0/theming-engines/libadwaita.so
-%{_datadir}/themes/Adwaita/gtk-3.0
-# Default gtk3 settings
-%{_sysconfdir}/gtk-3.0/settings.ini
-
-
 %changelog
+* Thu Jul 10 2014 Liu Di <liudidi@gmail.com> - 3.13.3-4
+- 为 Magic 3.0 重建
+
+* Thu Jul 10 2014 Liu Di <liudidi@gmail.com> - 3.13.3-3
+- 为 Magic 3.0 重建
+
+* Thu Jul 10 2014 Liu Di <liudidi@gmail.com> - 3.13.3-2
+- 为 Magic 3.0 重建
+
+* Thu Jul 10 2014 Liu Di <liudidi@gmail.com> - 3.13.3-1
+- 更新到 3.13.3
+
 * Wed Apr 09 2014 Liu Di <liudidi@gmail.com> - 3.12.0-1
 - 更新到 3.12.0
 

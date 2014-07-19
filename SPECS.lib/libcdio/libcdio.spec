@@ -1,8 +1,10 @@
 Name: libcdio
 Version: 0.92
-Release: 1%{?dist}
+Release: 2%{?dist}
 Summary: CD-ROM input and control library
+Summary(zh_CN.UTF-8): CD-ROM 输入和控制库
 Group: System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 License: GPLv3+
 URL: http://www.gnu.org/software/libcdio/
 Source0: http://ftp.gnu.org/gnu/libcdio/libcdio-0.92.tar.gz
@@ -25,14 +27,21 @@ This library provides an interface for CD-ROM access. It can be used
 by applications that need OS- and device-independent access to CD-ROM
 devices.
 
+%description -l zh_CN.UTF-8
+CD-ROM 输入和控制库。
+
 %package devel
 Summary: Header files and libraries for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: %{name} = %{version}-%{release}
 
 %description devel
 This package contains header files and libraries for %{name}.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -94,6 +103,7 @@ done
 # remove rpath
 chrpath --delete $RPM_BUILD_ROOT%{_bindir}/*
 chrpath --delete $RPM_BUILD_ROOT%{_libdir}/*.so.*
+magic_rpm_clean.sh
 
 %check
 # disable test using local CDROM
@@ -140,6 +150,9 @@ fi
 
 
 %changelog
+* Fri Jul 11 2014 Liu Di <liudidi@gmail.com> - 0.92-2
+- 为 Magic 3.0 重建
+
 * Mon Dec 16 2013 Adrian Reber <adrian@lisas.de> - 0.92-1
 - updated to 0.92
 

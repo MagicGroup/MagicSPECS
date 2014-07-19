@@ -1,9 +1,11 @@
 Summary:	Library (C API) for accessing CDDB servers
+Summary(zh_CN.UTF-8): 访问 CDDB 服务的库 (C API)
 Name:		libcddb
 Version:	1.3.2
-Release:	8%{?dist}
+Release:	9%{?dist}
 License: 	LGPLv2+
 Group: 		System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 URL: 		http://libcddb.sourceforge.net/
 Source0: 	http://downloads.sourceforge.net/libcddb/%{name}-%{version}.tar.bz2
 Patch0:		libcddb-1.3.0-multilib.patch
@@ -14,10 +16,14 @@ BuildRequires:	pkgconfig, libcdio-devel >= 0.67
 Libcddb is a library that implements the different protocols (CDDBP,
 HTTP, SMTP) to access data on a CDDB server (e.g http://freedb.org/).
 
+%description -l zh_CN.UTF-8
+这是一个实现通过不同协议 (CDDBP, HTTP, SMTP) 访问 CDDB 的库。
 
 %package devel
 Summary:	Development files for libcddb
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:		Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:	%{name} = %{version}-%{release}
 Requires:	pkgconfig
 
@@ -27,6 +33,8 @@ HTTP, SMTP) to access data on a CDDB server (e.g http://freedb.org/).
 This package contains development files (static libraries, headers)
 for libcddb.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -51,7 +59,7 @@ make %{?_smp_mflags}
 rm -rf $RPM_BUILD_ROOT
 make install DESTDIR=$RPM_BUILD_ROOT
 rm -f $RPM_BUILD_ROOT%{_libdir}/*.la
-
+magic_rpm_clean.sh
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -76,6 +84,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Fri Jul 11 2014 Liu Di <liudidi@gmail.com> - 1.3.2-9
+- 为 Magic 3.0 重建
+
 * Wed Apr 30 2014 Liu Di <liudidi@gmail.com> - 1.3.2-8
 - 为 Magic 3.0 重建
 

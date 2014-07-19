@@ -2,8 +2,8 @@
 %global priority 90
 
 Name:           vala
-Version:        0.23.3
-Release:        2%{?dist}
+Version:        0.24.0
+Release:        4%{?dist}
 Summary:        A modern programming language for GNOME
 
 # Most files are LGPLv2.1+, curses.vapi is 2-clause BSD
@@ -13,10 +13,12 @@ URL:            http://live.gnome.org/Vala
 # note: do not use a macro for directory name
 # as it breaks Colin Walters' automatic build script
 # see https://bugzilla.redhat.com/show_bug.cgi?id=609292
-Source0:        http://download.gnome.org/sources/vala/0.23/vala-%{version}.tar.xz
+Source0:        http://download.gnome.org/sources/vala/0.24/vala-%{version}.tar.xz
 Source1:        vala-mode.el
 Source2:        vala-init.el
 Source3:        emacs-vala-COPYING
+# https://bugzilla.gnome.org/732138
+Patch0:         vala-0.24.0-clutter-gst-deps.patch
 
 BuildRequires:  flex
 BuildRequires:  bison
@@ -130,6 +132,7 @@ the emacs-%{name} package to use Vala with GNU Emacs.
 
 %prep
 %setup -q
+%patch0 -p1
 
 
 %build
@@ -274,6 +277,18 @@ done
 
 
 %changelog
+* Tue Jul 15 2014 Liu Di <liudidi@gmail.com> - 0.24.0-4
+- 为 Magic 3.0 重建
+
+* Fri Jun 27 2014 Yaakov Selkowitz <yselkowi@redhat.com> - 0.24.0-3
+- Fix clutter-gst-1.0 deps (#1106673, #1112424)
+
+* Sun Jun 08 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.24.0-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Mon Mar 24 2014 Richard Hughes <rhughes@redhat.com> - 0.24.0-1
+- Update to 0.24.0
+
 * Thu Feb 20 2014 Kalev Lember <kalevlember@gmail.com> - 0.23.3-2
 - Move Makefile.vapigen to the -tools subpackage (#1030543)
 - Don't ship huge ChangeLog file

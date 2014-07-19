@@ -1,16 +1,19 @@
-%define beta beta17
+%define beta beta19
+
+%{!?ruby_vendorlibdir: %global ruby_vendorlibdir %(ruby -r rbconfig -e 'print RbConfig::CONFIG["vendorlibdir"]')}
+%{!?ruby_vendorarchdir: %global ruby_vendorarchdir %(ruby -r rbconfig -e 'print RbConfig::CONFIG["vendorarchdir"]')}
 
 Summary: Library for Colour AsCii Art, text mode graphics
+Summary(zh_CN.UTF-8): 彩色 AsCii 艺术字，文本界面图形库
 Name: libcaca
 Version: 0.99
-Release: 0.17.%{beta}%{?dist}
+Release: 0.19.%{beta}%{?dist}
 License: WTFPL
 Group: System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 URL: http://caca.zoy.org/wiki/libcaca
 Source: http://caca.zoy.org/files/libcaca/libcaca-%{version}.%{beta}.tar.gz
 Patch0: libcaca-0.99.beta16-multilib.patch
-# http://caca.zoy.org/ticket/99
-Patch1: libcaca-ruby-1.9.patch
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: slang-devel
 BuildRequires: ncurses-devel
@@ -29,10 +32,14 @@ libcaca is the Colour AsCii Art library. It provides high level functions
 for color text drawing, simple primitives for line, polygon and ellipse
 drawing, as well as powerful image to text conversion routines.
 
+%description -l zh_CN.UTF-8
+彩色 AsCii 艺术字，文本界面图形库。
 
 %package devel
 Summary: Development files for libcaca, the library for Colour AsCii Art
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: %{name} = %{version}-%{release}
 Requires: slang-devel
 Requires: ncurses-devel
@@ -50,10 +57,14 @@ drawing, as well as powerful image to text conversion routines.
 This package contains the header files and static libraries needed to
 compile applications or shared objects that use libcaca.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %package -n caca-utils
 Summary: Colour AsCii Art Text mode graphics utilities based on libcaca
+Summary(zh_CN.UTF-8): 基于 libcaca 的工具
 Group: Amusements/Graphics
+Group(zh_CN.UTF-8): 娱乐/图形
 
 %description -n caca-utils
 This package contains utilities and demonstration programs for libcaca, the
@@ -70,10 +81,27 @@ art flames, and cacademo is a simple application that shows the libcaca
 rendering features such as line and ellipses drawing, triangle filling and
 sprite blitting.
 
+%description -n caca-utils -l zh_CN.UTF-8
+基于 libcaca 的工具
+
+%package -n python-caca
+Summary: Python bindings for libcaca
+Summary(zh_CN.UTF-8): libcaca 的 Python 绑定
+Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
+BuildRequires: python2-devel
+
+%description -n python-caca
+This package contains the python bindings for using libcaca from python.
+
+%description -n python-caca -l zh_CN.UTF-8
+libcaca 的 Python 绑定。
 
 %package -n ruby-caca
 Summary: Ruby bindings for libcaca
+Summary(zh_CN.UTF-8): libcaca 的 Ruby 绑定
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: ruby(release)
 BuildRequires: ruby, ruby-devel
 Provides: ruby(caca) = %{version}-%{release}
@@ -81,23 +109,25 @@ Provides: ruby(caca) = %{version}-%{release}
 %description -n ruby-caca
 This package contains the ruby bindings for using libcaca from ruby.
 
+%description -n ruby-caca -l zh_CN.UTF-8
+libcaca 的 Ruby 绑定。
 
 %prep
 %setup -q -n libcaca-%{version}.%{beta}
 %patch0 -p1 -b .multilib
-%patch1 -p0
 
 
 %build
-export CPPFLAGS=-I`ruby -e "puts File.join(RbConfig::CONFIG['includedir'], RbConfig::CONFIG['sitearch'])"`
-
 sed -i -e 's|Config::CONFIG\["sitearchdir"\]|Config::CONFIG["vendorarchdir"]|' \
-       -e 's|Config::CONFIG\["sitelibdir"\]|Config::CONFIG["vendorlibdir"]|' configure
+       -e 's|Config::CONFIG\["sitelibdir"\]|Config::CONFIG["vendorlibdir"]|' \
+       -e "s|rbconfig -e 'print Config|rbconfig -e 'print RbConfig|" \
+       configure
 
 %configure \
   --disable-static \
   --disable-csharp \
-  --disable-java
+  --disable-java \
+  --disable-doc
 # Remove useless rpath
 sed -i 's|^hardcode_libdir_flag_spec=.*|hardcode_libdir_flag_spec=""|g' libtool
 sed -i 's|^runpath_var=LD_RUN_PATH|runpath_var=DIE_RPATH_DIE|g' libtool
@@ -108,10 +138,10 @@ make %{?_smp_mflags}
 rm -rf %{buildroot} libcaca-dev-docs
 make install DESTDIR=%{buildroot}
 # We want to include the docs ourselves from the source directory
-mv %{buildroot}%{_docdir}/libcaca-dev libcaca-dev-docs
+# mv %{buildroot}%{_docdir}/libcaca-dev libcaca-dev-docs
 # Remove symlink to libcaca-dev
-rm -f %{buildroot}%{_docdir}/libcucul-dev
-
+# rm -f %{buildroot}%{_docdir}/libcucul-dev
+magic_rpm_clean.sh
 
 %clean
 rm -rf %{buildroot}
@@ -129,14 +159,15 @@ rm -rf %{buildroot}
 
 %files devel
 %defattr(-,root,root,-)
-%doc ChangeLog libcaca-dev-docs/html/
+#%doc ChangeLog libcaca-dev-docs/html/
+%doc ChangeLog
 %{_bindir}/caca-config
 %{_includedir}/*.h
 %{_libdir}/pkgconfig/*.pc
 %exclude %{_libdir}/*.la
 %{_libdir}/*.so
 %{_mandir}/man1/caca-config.1*
-%{_mandir}/man3/*
+#%{_mandir}/man3/*
 
 %files -n caca-utils
 %defattr(-,root,root,-)
@@ -146,6 +177,7 @@ rm -rf %{buildroot}
 %{_bindir}/cacaplay
 %{_bindir}/cacaserver
 %{_bindir}/cacaview
+%{_bindir}/cacaclock
 %{_bindir}/img2txt
 %{_datadir}/libcaca/
 %{_mandir}/man1/cacademo.1*
@@ -154,6 +186,11 @@ rm -rf %{buildroot}
 %{_mandir}/man1/cacaserver.1*
 %{_mandir}/man1/cacaview.1*
 %{_mandir}/man1/img2txt.1*
+
+%files -n python-caca
+%defattr(-,root,root,-)
+%doc python/examples
+%{python2_sitelib}/caca/
 
 %files -n ruby-caca
 %defattr(-,root,root,-)
@@ -164,6 +201,11 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Jul 10 2014 Liu Di <liudidi@gmail.com> - 0.99-0.17.beta19
+- 升级到 0.99.beta19
+- 添加 python-caca 包
+- 临时禁止生成 doc
+
 * Tue Mar 19 2013 Vít Ondruch <vondruch@redhat.com> - 0.99-0.17.beta17
 - Rebuild for https://fedoraproject.org/wiki/Features/Ruby_2.0.0
 

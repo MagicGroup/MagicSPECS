@@ -1,27 +1,38 @@
 Summary: Library of graphics routines used by libgnomecanvas
+Summary(zh_CN.UTF-8): libgnomecanvas 使用的图形例行库
 Name: libart_lgpl
 Version: 2.3.21
-Release: 4%{?dist}
+Release: 5%{?dist}
 URL: http://www.gnome.org/
 Source0: http://ftp.gnome.org/pub/gnome/sources/libart_lgpl/2.3/%{name}-%{version}.tar.bz2
 #Fedora specific patch
 Patch0: libart-multilib.patch
 License: LGPLv2+
 Group: System Environment/Libraries 
+Group(zh_CN.UTF-8): 系统环境/库
 BuildRequires: pkgconfig
 
 %description
 Graphics routines used by the GnomeCanvas widget and some other 
 applications. libart renders vector paths and the like.
 
+%description -l zh_CN.UTF-8
+libgnomecanvas 使用的图形例行库。
+
 %package devel
 Summary: Libraries and headers for libart_lgpl
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
+
 Requires: %{name} = %{version}-%{release}
 
 %description devel
 The %{name}-devel package contains libraries and header files for
 developing applications that use %{name}.
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -61,7 +72,7 @@ cat >$RPM_BUILD_ROOT%{_includedir}/libart-2.0/libart_lgpl/art_config.h <<EOF
 
 #endif 
 EOF
-
+magic_rpm_clean.sh
 
 %post -p /sbin/ldconfig
 
@@ -80,6 +91,9 @@ EOF
 %{_includedir}/*
 
 %changelog
+* Thu Jul 10 2014 Liu Di <liudidi@gmail.com> - 2.3.21-5
+- 为 Magic 3.0 重建
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 2.3.21-4
 - 为 Magic 3.0 重建
 

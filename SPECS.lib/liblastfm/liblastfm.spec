@@ -6,12 +6,15 @@ Name:	 liblastfm
 Version: 1.0.1
 Release: 3%{?dist}
 Summary: Libraries to integrate Last.fm services
+Summary(zh_CN.UTF-8): 集成 Last.fm 服务的库
 
 Group:	 System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 License: GPLv2+
 URL:     https://github.com/eartle/liblastfm       
 # https://github.com/eartle/liblastfm/tarball/1.0.1
-Source0: eartle-liblastfm-1.0.1-0-g5b65943.tar.gz
+# Source0: eartle-liblastfm-1.0.1-0-g5b65943.tar.gz
+Source0: https://github.com/eartle/%{name}/archive/%{version}.tar.gz
 BuildRoot: %(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
 
 BuildRequires: cmake
@@ -22,9 +25,13 @@ BuildRequires: ruby
 Liblastfm is a collection of libraries to help you integrate Last.fm services
 into your rich desktop software.
 
+%description -l zh_CN.UTF-8
+集成 Last.fm 服务的库。
+
 %if 0%{?fingerprint}
 %package fingerprint
 Summary: Liblastfm fingerprint library
+Summary(zh_CN.UTF-8): Liblastfm 指纹库
 BuildRequires: fftw3-devel
 BuildRequires: pkgconfig(samplerate)
 Requires: %{name}%{?_isa} = %{version}-%{release}
@@ -32,11 +39,16 @@ Requires: %{name}%{?_isa} = %{version}-%{release}
 Obsoletes: liblastfm < 1.0
 %description fingerprint
 %{summary}.
+
+%description fingerprint -l zh_CN.UTF-8
+Liblastfm 指纹库。
 %endif
 
 %package devel
 Summary: Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:	 Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: %{name}%{?_isa} = %{version}-%{release}
 %if 0%{?fingerprint}
 Requires: %{name}-fingerprint%{?_isa} = %{version}-%{release}
@@ -44,6 +56,8 @@ Requires: %{name}-fingerprint%{?_isa} = %{version}-%{release}
 %description devel
 %{summary}.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q -n eartle-liblastfm-9b4efb5 

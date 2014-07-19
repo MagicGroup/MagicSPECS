@@ -2,8 +2,10 @@ Name:		libjpeg-turbo
 Version:	1.2.1
 Release:	5%{?dist}
 Summary:	A MMX/SSE2 accelerated library for manipulating JPEG image files
+Summary(zh_CN.UTF-8): 使用 MMX/SSE2 加速处理 JPEG 图像文件的库
 
 Group:		System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 License:	IJG
 URL:		http://sourceforge.net/projects/libjpeg-turbo
 Source0:	http://downloads.sourceforge.net/%{name}/%{name}-%{version}.tar.gz
@@ -30,9 +32,14 @@ Patch0:		libjpeg-turbo12-noinst.patch
 The libjpeg-turbo package contains a library of functions for manipulating
 JPEG images.
 
+%description -l zh_CN.UTF-8
+使用 MMX/SSE2 加速处理 JPEG 图像文件的库。
+
 %package devel
 Summary:	Headers for the libjpeg-turbo library
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:		Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Obsoletes:	libjpeg-devel < 6b-47
 Provides:	libjpeg-devel = 6b-47%{?dist}
 %if "%{?_isa}" != ""
@@ -44,9 +51,14 @@ Requires:	libjpeg-turbo%{?_isa} = %{version}-%{release}
 This package contains header files necessary for developing programs which
 will manipulate JPEG files using the libjpeg-turbo library.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
 %package utils
 Summary:	Utilities for manipulating JPEG images
+Summary(zh_CN.UTF-8): 处理 JPEG 图像的工具
 Group:		Applications/Multimedia
+Group(zh_CN.UTF-8): 应用程序/多媒体
 Requires:	libjpeg-turbo%{?_isa} = %{version}-%{release}
 
 %description utils
@@ -58,9 +70,14 @@ can perform various useful transformations on JPEG files. Rdjpgcom
 displays any text comments included in a JPEG file. Wrjpgcom inserts
 text comments into a JPEG file.
 
+%description utils -l zh_CN.UTF-8
+处理 JPEG 图像的工具，包括 cjpeg, djpeg, jpegtran, rdjpgcom 和 wrjpgcom.
+
 %package static
 Summary:	Static version of the libjpeg-turbo library
+Summary(zh_CN.UTF-8): %{name} 的静态库
 Group:		Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Obsoletes:	libjpeg-static < 6b-47
 Provides:	libjpeg-static = 6b-47%{?dist}
 %if "%{?_isa}" != ""
@@ -72,21 +89,34 @@ Requires:	libjpeg-turbo-devel%{?_isa} = %{version}-%{release}
 The libjpeg-turbo-static package contains static library for manipulating
 JPEG images.
 
+%description static -l zh_CN.UTF-8
+%{name} 的静态库。
+
 %package -n turbojpeg
 Summary:	TurboJPEG library
+Summary(zh_CN.UTF-8): TurboJPEG 库
 Group:		System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 
 %description -n turbojpeg
 The turbojpeg package contains the TurboJPEG shared library.
 
+%description -n turbojpeg -l zh_CN.UTF-8
+TurboJPEG 库。
+
 %package -n turbojpeg-devel
 Summary:	Headers for the TurboJPEG library
+Summary(zh_CN.UTF-8): turbojpeg 的开发包
 Group:		Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:	turbojpeg%{?_isa} = %{version}-%{release}
 
 %description -n turbojpeg-devel
 This package contains header files necessary for developing programs which
 will manipulate JPEG files using the TurboJPEG library.
+
+%description -n turbojpeg-devel -l zh_CN.UTF-8
+turbojpeg 的开发包。
 
 %prep
 %setup -q
@@ -112,6 +142,7 @@ rm -f $RPM_BUILD_ROOT/%{_libdir}/lib{,turbo}jpeg.la
 
 # Don't distribute libjpegturbo.a
 rm -f $RPM_BUILD_ROOT/%{_libdir}/libturbojpeg.a
+magic_rpm_clean.sh
 
 %clean
 rm -rf $RPM_BUILD_ROOT

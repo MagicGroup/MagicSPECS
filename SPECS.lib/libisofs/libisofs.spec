@@ -1,9 +1,11 @@
 Summary:	Library to create ISO 9660 disk images
+Summary(zh_CN.UTF-8): 创建 ISO 9660 光盘镜像的库
 Name:		libisofs
 Version:	1.1.6
 Release:	2%{?dist}
 License:	GPLv2
 Group:		System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 URL:		http://libburnia-project.org/
 Source:		http://files.libburnia-project.org/releases/%{name}-%{version}.tar.gz
 Patch0:		libisofs-0.6.16-multilib.patch
@@ -19,14 +21,22 @@ attributes etc. It supports the extension AAIP which allows to store
 ACLs and xattr in ISO-9660 filesystems as well. As it is linked with
 zlib, it supports zisofs compression, too.
 
+%description -l zh_CN.UTF-8
+创建 ISO 9660 光盘镜像的库，支持扩展的 ISO。
+
 %package devel
 Summary:	Development files for libisofs
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:		Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:	%{name}%{?_isa} = %{version}-%{release}, pkgconfig
 
 %description devel
 The libisofs-devel package contains libraries and header files for
 developing applications that use libisofs.
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -43,6 +53,7 @@ make DESTDIR=$RPM_BUILD_ROOT INSTALL='install -p' install
 
 # Don't install any libtool .la files
 rm -f $RPM_BUILD_ROOT%{_libdir}/%{name}.la
+magic_rpm_clean.sh
 
 %clean
 rm -rf $RPM_BUILD_ROOT

@@ -1,11 +1,13 @@
 Name:           libdvdnav
-Version:        4.2.0
-Release:        2%{?dist}
+Version: 4.2.1
+Release:        1%{?dist}
 Summary:        A library for reading DVD video discs based on Ogle code
+Summary(zh_CN.UTF-8): 基于 Ogg 代码读取 DVD 视频光盘的库
 
 Group:          System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 License:        GPLv2+
-Source0:        http://dvdnav.mplayerhq.hu/releases/libdvdnav-%{version}.tar.bz2
+Source0:        http://dvdnav.mplayerhq.hu/releases/libdvdnav-%{version}.tar.xz
 Patch0:         %{name}-multilib.patch
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
@@ -16,9 +18,14 @@ BuildRequires:  libdvdread-devel >= 4.1.3-0.3
 libdvdnav provides a simple library for reading DVD video discs.
 The code is based on Ogle and used in, among others, the Xine dvdnav plug-in.
 
+%description -l zh_CN.UTF-8
+基于 Ogg 代码读取 DVD 视频光盘的库。
+
 %package        devel
 Summary:        Development files for libdvdnav
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       %{name} = %{version}-%{release}
 Requires:       libdvdread-devel >= 4.1.3-0.3
 Requires:       pkgconfig
@@ -26,6 +33,9 @@ Requires:       pkgconfig
 %description    devel
 libdvdnav-devel contains the files necessary to build packages that use the
 libdvdnav library.
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -52,6 +62,7 @@ popd
 %{__make} install DESTDIR=%{buildroot}
 %{__install} -d -m 755 %{buildroot}/%{_datadir}/aclocal
 %{__install} -p -m 644 m4/dvdnav.m4 %{buildroot}/%{_datadir}/aclocal
+magic_rpm_clean.sh
 
 %clean
 %{__rm} -rf %{buildroot}
@@ -78,6 +89,9 @@ popd
 %{_libdir}/pkgconfig/dvdnavmini.pc
 
 %changelog
+* Tue Jul 15 2014 Liu Di <liudidi@gmail.com> - 4.2.1-1
+- 更新到 4.2.1
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 4.2.0-2
 - 为 Magic 3.0 重建
 

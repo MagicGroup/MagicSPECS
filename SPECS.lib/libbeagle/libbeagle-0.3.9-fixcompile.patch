@@ -1,0 +1,12 @@
+diff -ur libbeagle-0.3.9.orig/beagle/beagle-request.c libbeagle-0.3.9/beagle/beagle-request.c
+--- libbeagle-0.3.9.orig/beagle/beagle-request.c	2014-07-10 15:02:55.968557970 +0000
++++ libbeagle-0.3.9/beagle/beagle-request.c	2014-07-10 15:03:12.353557550 +0000
+@@ -206,7 +206,7 @@
+ 
+ 	bzero (&sun, sizeof (sun));
+ 	sun.sun_family = AF_UNIX;
+-	snprintf (sun.sun_path, sizeof (sun.sun_path), path);
++	snprintf (sun.sun_path, sizeof (sun.sun_path), "%s", path);
+ 
+ 	/* We retry on EGAIN or EINTR: since both of these mean the socket is active,
+ 	 * there is no harm in trying to retry a lot of times. A blocking socket would

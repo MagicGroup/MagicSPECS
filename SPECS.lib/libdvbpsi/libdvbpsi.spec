@@ -1,11 +1,13 @@
-%define real_name libdvbpsi5
+%define real_name libdvbpsi
 
 Summary: 	Library for MPEG TS and DVB PSI tables decoding and generation
+Summary(zh_CN.UTF-8): MPEG TS 和 DVB PSI 表解码和生成库
 Name: 		libdvbpsi
-Version: 	0.1.6
-Release: 	7%{?dist}
+Version:	1.2.0
+Release: 	1%{?dist}
 License: 	GPLv2+
 Group: 		System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 URL: 		http://www.videolan.org/developers/libdvbpsi.html
 Source0: 	http://download.videolan.org/pub/libdvbpsi/%{version}/%{real_name}-%{version}.tar.bz2
 BuildRoot: 	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -13,7 +15,9 @@ BuildRequires:	graphviz doxygen
 
 %package devel
 Summary: 	Development package for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: 		Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: 	%{name} = %{version}-%{release}
 
 # -----------------------------------------------------------------------------
@@ -22,17 +26,21 @@ Requires: 	%{name} = %{version}-%{release}
 libdvbpsi is a very simple and fully portable library designed for
 MPEG TS and DVB PSI table decoding and generation.
 
+%description -l zh_CN.UTF-8
+MPEG TS 和 DVB PSI 表解码和生成库。
+
 %description devel
 libdvbpsi is a very simple and fully portable library designed for
 MPEG TS and DVB PSI table decoding and generation.
 This package contains development files for %{name}
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
 # -----------------------------------------------------------------------------
 
 %prep
 %setup -q -n %{real_name}-%{version}
-
-
 
 # -----------------------------------------------------------------------------
 
@@ -47,6 +55,7 @@ make doc
 rm -rf $RPM_BUILD_ROOT
 make install DESTDIR=$RPM_BUILD_ROOT INSTALL="install -p"
 rm -f $RPM_BUILD_ROOT%{_libdir}/lib*.la
+magic_rpm_clean.sh
 
 # -----------------------------------------------------------------------------
 
@@ -68,10 +77,14 @@ rm -rf $RPM_BUILD_ROOT
 %doc doc/doxygen/html
 %{_includedir}/dvbpsi/
 %{_libdir}/lib*.so
+%{_libdir}/pkgconfig/libdvbpsi.pc
 
 # -----------------------------------------------------------------------------
 
 %changelog
+* Tue Jul 15 2014 Liu Di <liudidi@gmail.com> - 1.2.0-1
+- 更新到 1.2.0
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 0.1.6-7
 - 为 Magic 3.0 重建
 

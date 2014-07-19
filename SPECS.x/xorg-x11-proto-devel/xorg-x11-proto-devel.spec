@@ -7,7 +7,7 @@
 Summary: X.Org X11 Protocol headers
 Name: xorg-x11-proto-devel
 Version: 7.7
-Release: 5%{?dist}
+Release: 13%{?dist}
 License: MIT
 Group: Development/System
 URL: http://www.x.org
@@ -18,30 +18,35 @@ Source1:  http://xorg.freedesktop.org/archive/individual/proto/compositeproto-0.
 Source2:  http://xorg.freedesktop.org/archive/individual/proto/damageproto-1.2.1.tar.bz2
 Source3:  http://xorg.freedesktop.org/archive/individual/proto/dmxproto-2.3.1.tar.bz2
 Source31: http://xorg.freedesktop.org/archive/individual/proto/dri2proto-2.8.tar.bz2
+Source33: http://xorg.freedesktop.org/pub/individual/proto/dri3proto-1.0.tar.bz2
 Source4:  http://xorg.freedesktop.org/archive/individual/proto/evieext-1.1.1.tar.bz2
 Source5:  http://xorg.freedesktop.org/archive/individual/proto/fixesproto-5.0.tar.bz2
-Source7:  http://xorg.freedesktop.org/archive/individual/proto/fontsproto-2.1.2.tar.bz2
-Source8:  http://xorg.freedesktop.org/archive/individual/proto/glproto-1.4.16.tar.bz2
-Source9:  http://xorg.freedesktop.org/archive/individual/proto/inputproto-2.3.tar.bz2
+Source7:  http://xorg.freedesktop.org/archive/individual/proto/fontsproto-2.1.3.tar.bz2
+Source8:  http://xorg.freedesktop.org/archive/individual/proto/glproto-1.4.17.tar.bz2
+Source9:  http://xorg.freedesktop.org/archive/individual/proto/inputproto-2.3.1.tar.bz2
 Source10: http://xorg.freedesktop.org/archive/individual/proto/kbproto-1.0.6.tar.bz2
+Source32: http://xorg.freedesktop.org/archive/individual/proto/presentproto-1.0.tar.bz2
 Source13: http://xorg.freedesktop.org/archive/individual/proto/randrproto-1.4.0.tar.bz2
 Source14: http://xorg.freedesktop.org/archive/individual/proto/recordproto-1.14.2.tar.bz2
 Source15: http://xorg.freedesktop.org/archive/individual/proto/renderproto-0.11.1.tar.bz2
 Source16: http://xorg.freedesktop.org/archive/individual/proto/resourceproto-1.2.0.tar.bz2
 Source17: http://xorg.freedesktop.org/archive/individual/proto/scrnsaverproto-1.2.2.tar.bz2
-Source19: http://xorg.freedesktop.org/archive/individual/proto/videoproto-2.3.1.tar.bz2
+Source19: http://xorg.freedesktop.org/archive/individual/proto/videoproto-2.3.2.tar.bz2
 Source20: http://xorg.freedesktop.org/archive/individual/proto/xcmiscproto-1.2.2.tar.bz2
-Source21: http://xorg.freedesktop.org/archive/individual/proto/xextproto-7.2.1.tar.bz2
+Source21: http://xorg.freedesktop.org/archive/individual/proto/xextproto-7.3.0.tar.bz2
 Source22: http://xorg.freedesktop.org/archive/individual/proto/xf86bigfontproto-1.2.0.tar.bz2
 Source23: http://xorg.freedesktop.org/archive/individual/proto/xf86dgaproto-2.1.tar.bz2
 Source24: http://xorg.freedesktop.org/archive/individual/proto/xf86driproto-2.1.1.tar.bz2
 Source25: http://xorg.freedesktop.org/archive/individual/proto/xf86miscproto-0.9.3.tar.bz2
 Source27: http://xorg.freedesktop.org/archive/individual/proto/xf86vidmodeproto-2.3.1.tar.bz2
 Source28: http://xorg.freedesktop.org/archive/individual/proto/xineramaproto-1.2.1.tar.bz2
-Source29: http://xorg.freedesktop.org/archive/individual/proto/xproto-7.0.24.tar.bz2
+Source29: http://xorg.freedesktop.org/archive/individual/proto/xproto-7.0.26.tar.bz2
 Source30: http://xorg.freedesktop.org/archive/individual/proto/xproxymanagementprotocol-1.0.3.tar.bz2
 
 Source40: make-git-snapshot.sh
+
+Patch1: presentproto-0001-Force-Window-and-Pixmap-to-be-CARD32-on-the-wire.patch
+Patch2: randrproto-0001-Add-a-GUID-property.patch
 
 BuildRequires: pkgconfig
 BuildRequires: xorg-x11-util-macros >= 1.0.2-1
@@ -56,8 +61,18 @@ Requires: pkgconfig
 %description
 X.Org X11 Protocol headers
 
+
 %prep
-%setup -q -c %{name}-%{version} -a1 -a2 -a3 -a4 -a5 -a7 -a8 -a9 -a10 -a13 -a14 -a15 -a16 -a17 -a19 -a20 -a21 -a22 -a23 -a24 -a25 -a27 -a28 -a29 -a30 -a31
+%setup -q -c %{name}-%{version} -a1 -a2 -a3 -a4 -a5 -a7 -a8 -a9 -a10 -a13 -a14 -a15 -a16 -a17 -a19 -a20 -a21 -a22 -a23 -a24 -a25 -a27 -a28 -a29 -a30 -a31 -a32 -a33
+
+pushd presentproto-*
+%patch1 -p1
+popd
+
+pushd randrproto-*
+%patch2 -p1
+popd
+
 
 %build
 
@@ -65,20 +80,22 @@ X.Org X11 Protocol headers
 for dir in $(ls -1) ; do
 	pushd $dir
         [ -e configure ] || ./autogen.sh
-	# yes, this looks horrible, but it's to get the .pc files in datadir
+	# HdG: AFAIK this is not necessary, remove ?
 	autoreconf -vif
+	# yes, this looks horrible, but it's to get the .pc files in datadir
 	%configure --libdir=%{_datadir} --without-xmlto
 	make %{?_smp_mflags}
+	# XXX presentproto, dri3proto missing this initially
+	[ -e COPYING ] || touch COPYING
 	mv COPYING COPYING-${dir%%-*}
 	popd
 done
 
 
 %install
-rm -rf $RPM_BUILD_ROOT
 for dir in $(ls -1) ; do
 	pushd $dir
-	make install DESTDIR=$RPM_BUILD_ROOT
+	%make_install
 	install -m 444 COPYING-${dir%%-*} $OLDPWD
 	popd
 done
@@ -93,11 +110,8 @@ mv $RPM_BUILD_ROOT%{_docdir}/xproxymanagementprotocol/PM_spec .
 # keep things building even if you have the html doc tools for xmlto installed
 rm -f $RPM_BUILD_ROOT%{_docdir}/*/*.{html,svg}
 
-%clean
-rm -rf $RPM_BUILD_ROOT
 
 %files
-%defattr(-,root,root,-)
 %doc COPYING-*
 %doc *.txt
 %doc PM_spec
@@ -176,6 +190,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_includedir}/X11/extensions/dpmsproto.h
 %{_includedir}/X11/extensions/dri2proto.h
 %{_includedir}/X11/extensions/dri2tokens.h
+%{_includedir}/X11/extensions/dri3proto.h
 %{_includedir}/X11/extensions/evieproto.h
 %{_includedir}/X11/extensions/ge.h
 %{_includedir}/X11/extensions/geproto.h
@@ -186,6 +201,8 @@ rm -rf $RPM_BUILD_ROOT
 %{_includedir}/X11/extensions/multibufconst.h
 %{_includedir}/X11/extensions/multibufproto.h
 %{_includedir}/X11/extensions/panoramiXproto.h
+%{_includedir}/X11/extensions/presentproto.h
+%{_includedir}/X11/extensions/presenttokens.h
 %{_includedir}/X11/extensions/randr.h
 %{_includedir}/X11/extensions/randrproto.h
 %{_includedir}/X11/extensions/recordconst.h
@@ -244,12 +261,14 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/pkgconfig/damageproto.pc
 %{_datadir}/pkgconfig/dmxproto.pc
 %{_datadir}/pkgconfig/dri2proto.pc
+%{_datadir}/pkgconfig/dri3proto.pc
 %{_datadir}/pkgconfig/evieproto.pc
 %{_datadir}/pkgconfig/fixesproto.pc
 %{_datadir}/pkgconfig/fontsproto.pc
 %{_datadir}/pkgconfig/glproto.pc
 %{_datadir}/pkgconfig/inputproto.pc
 %{_datadir}/pkgconfig/kbproto.pc
+%{_datadir}/pkgconfig/presentproto.pc
 %{_datadir}/pkgconfig/randrproto.pc
 %{_datadir}/pkgconfig/recordproto.pc
 %{_datadir}/pkgconfig/renderproto.pc
@@ -268,6 +287,36 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/pkgconfig/xproxymngproto.pc
 
 %changelog
+* Thu Jul 17 2014 Liu Di <liudidi@gmail.com> - 7.7-13
+- 为 Magic 3.0 重建
+
+* Thu Jun 12 2014 Hans de Goede <hdegoede@redhat.com> - 7.7-12
+- inputproto-2.3.1
+
+* Sun Jun 08 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 7.7-11
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Wed Apr 16 2014 Hans de Goede <hdegoede@redhat.com> - 7.7-10
+- fontsproto-2.1.3
+- videoproto-2.3.2
+- xextproto-7.3.0
+- xproto-7.0.26
+- Cherry pick some unreleased fixes from upstream git
+
+* Thu Jan 23 2014 Adam Jackson <ajax@redhat.com> 7.7-9
+- Backport pointer-to-void* changes
+
+* Tue Dec 10 2013 Adam Jackson <ajax@redhat.com> 7.7-8
+- glproto 1.4.17
+
+* Wed Nov 06 2013 Adam Jackson <ajax@redhat.com> 7.7-7
+- presentproto 1.0
+- dri3proto 1.0
+- xextproto 7.2.99.901
+
+* Sun Aug 04 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 7.7-6
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
 * Tue Apr 02 2013 Peter Hutterer <peter.hutterer@redhat.com> 7.7-5
 - xproto 7.0.24
 

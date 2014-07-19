@@ -1,8 +1,10 @@
 Name: libdaemon
 Version: 0.14
-Release: 4%{?dist}
+Release: 5%{?dist}
 Summary: Library for writing UNIX daemons
+Summary(zh_CN.UTF-8): 编写 UNIX 下服务的库
 Group: System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 License: LGPLv2+
 URL: http://0pointer.de/lennart/projects/libdaemon/
 Source0: http://0pointer.de/lennart/projects/libdaemon/%{name}-%{version}.tar.gz
@@ -23,14 +25,22 @@ It consists of the following parts:
 * An API for running subprocesses with STDOUT and STDERR redirected
   to syslog.
 
+%description -l zh_CN.UTF-8
+编写 UNIX 下服务的库。
+
 %package devel
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Summary: Libraries and header files for libdaemon development
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Requires: libdaemon = %{version}-%{release}
 
 %description devel
 The libdaemon-devel package contains the header files and libraries
 necessary for developing programs using libdaemon.
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -46,6 +56,7 @@ find $RPM_BUILD_ROOT \( -name *.a -o -name *.la \) -exec rm {} \;
 rm $RPM_BUILD_ROOT/%{_datadir}/doc/libdaemon/README
 rm $RPM_BUILD_ROOT/%{_datadir}/doc/libdaemon/README.html
 rm $RPM_BUILD_ROOT/%{_datadir}/doc/libdaemon/style.css
+magic_rpm_clean.sh
 
 %post -p /sbin/ldconfig
 
@@ -64,6 +75,9 @@ rm $RPM_BUILD_ROOT/%{_datadir}/doc/libdaemon/style.css
 %{_libdir}/pkgconfig/*.pc
 
 %changelog
+* Mon Jul 14 2014 Liu Di <liudidi@gmail.com> - 0.14-5
+- 为 Magic 3.0 重建
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 0.14-4
 - 为 Magic 3.0 重建
 

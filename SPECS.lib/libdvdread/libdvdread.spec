@@ -1,23 +1,28 @@
 Name:           libdvdread
-Version:        4.2.0
-Release:        2%{?dist}
+Version: 4.9.9
+Release:        1%{?dist}
 Summary:        A library for reading DVD video discs based on Ogle code
+Summary(zh_CN.UTF-8): 基于 Ogle 代码读取 DVD 视频光盘的库
 
 Group:          System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 License:        GPLv2+
-Source0:        http://dvdnav.mplayerhq.hu/releases/libdvdread-%{version}.tar.bz2
+Source0:        http://dvdnav.mplayerhq.hu/releases/libdvdread-%{version}.tar.xz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 # dvdread-config: use pkg-config instead of hard-coded 
-# multilib-conflicting values
-Patch1:         %{name}-multilib.patch
 
 %description
 libdvdread provides a simple foundation for reading DVD video disks.
 It provides the functionality that is required to access many DVDs.
 
+%description -l zh_CN.UTF-8
+基于 Ogle 代码读取 DVD 视频光盘的库。
+
 %package        devel
 Summary:        Development files for libdvdread
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       %{name} = %{version}-%{release}
 Requires:       pkgconfig
 
@@ -27,25 +32,23 @@ It provides the functionality that is required to access many DVDs.
 
 This package contains development files for libdvdread.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
 %prep
 %setup -q
-%patch1 -p1 -b .multilib
 
 %build
-./configure2 \
- --disable-opts \
- --disable-static \
- --disable-strip \
- --extra-cflags="%{optflags}" \
- --libdir=%{_libdir} \
- --prefix=%{_prefix} \
- --shlibdir=%{_libdir} \
+%configure \
+ --disable-static 
 
 %{__make} %{?_smp_mflags}
 
 %install
 %{__rm} -rf %{buildroot}
 %{__make} install DESTDIR=%{buildroot}
+rm -f %{buildroot}%{_libdir}/*.la
+magic_rpm_clean.sh
 
 %clean
 rm -rf %{buildroot}
@@ -61,13 +64,15 @@ rm -rf %{buildroot}
 
 %files devel
 %defattr(-,root,root,-)
-%doc DEVELOPMENT-POLICY.txt TODO
-%{_bindir}/dvdread-config
+%doc TODO
 %{_includedir}/dvdread
 %{_libdir}/libdvdread.so
 %{_libdir}/pkgconfig/dvdread.pc
 
 %changelog
+* Tue Jul 15 2014 Liu Di <liudidi@gmail.com> - 4.9.9-1
+- 更新到 4.9.9
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 4.2.0-2
 - 为 Magic 3.0 重建
 

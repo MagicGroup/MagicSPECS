@@ -1,22 +1,24 @@
+#The directory in the tar file uses the wrong version
+%global wrongversion 0.9.8
+
 Name: libindi
-Version: 0.9
-Release: 3%{?dist}
+Version: 0.9.8.1
+Release: 5%{?dist}
 Summary: Instrument Neutral Distributed Interface
 
 Group: Development/Libraries
 License: LGPLv2+ and GPLv2+
 # See COPYRIGHT file for a description of the licenses and files covered
 
-# Address of FSF is incorrect
-# upstream bug https://sourceforge.net/tracker/?func=detail&aid=3367995&group_id=90275&atid=593019
-
 URL: http://www.indilib.org
 Source0: http://downloads.sourceforge.net/indi/%{name}_%{version}.tar.gz
-Patch0: libindi-usleep.patch
-Patch1: libindi-fsf.patch
+Patch0: libindi-cmake.patch
+# https://sourceforge.net/p/indi/bugs/50/
+Patch1: libindi-mathplugin.patch
+Patch2: libindi-aarch64.patch
 
 BuildRequires: cmake cfitsio-devel zlib-devel libnova-devel libfli-devel
-BuildRequires: libusb-devel
+BuildRequires: libusb-devel libjpeg-devel gsl-devel
 
 %description
 INDI is a distributed control protocol designed to operate
@@ -27,31 +29,30 @@ data acquisition, monitoring, and a lot more.
 %package devel
 Summary: Libraries, includes, etc. used to develop an application with %{name}
 Group: Development/Libraries
-Requires: %{name} = %{version}-%{release}
+Requires: %{name}%{?_isa} = %{version}-%{release}
 %description devel
 These are the header files needed to develop a %{name} application
 
 %package static
 Summary: Static libraries, includes, etc. used to develop an application with %{name}
 Group: Development/Libraries
-Requires: %{name} = %{version}-%{release}
+Requires: %{name}%{?_isa} = %{version}-%{release}
 %description static
 Static library needed to develop a %{name} application
 
 %prep
-%setup -q -n %{name}-%{version}
+%setup -q -n %{name}-%{wrongversion}
 %patch0 -p1
 %patch1 -p1
+%patch2 -p1
 chmod -x drivers/telescope/lx200fs2.h
 chmod -x drivers/telescope/lx200fs2.cpp
-
 
 %build
 %cmake
 make VERBOSE=1 %{?_smp_mflags}
 
 %install
-rm -rf %{buildroot}
 make install DESTDIR=%{buildroot}
 
 %post -p /sbin/ldconfig
@@ -59,10 +60,12 @@ make install DESTDIR=%{buildroot}
 %postun -p /sbin/ldconfig
 
 %files
-%doc AUTHORS ChangeLog COPYING.GPL COPYING.LGPL COPYRIGHT LICENSE NEWS README README.drivers TODO
+%doc AUTHORS ChangeLog COPYING.GPL COPYING.LGPL COPYRIGHT LICENSE NEWS README TODO
 %{_bindir}/*
 %{_libdir}/*.so.*
+%{_libdir}/indi/MathPlugins
 %{_datadir}/indi
+/lib/udev/rules.d/99-gpusb.rules
 
 %files devel
 %{_includedir}/*
@@ -73,11 +76,43 @@ make install DESTDIR=%{buildroot}
 %{_libdir}/*.a
 
 %changelog
-* Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 0.9-3
-- 为 Magic 3.0 重建
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.9.8.1-5
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 
-* Tue Feb 28 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.9-2
-- Rebuilt for c++ ABI breakage
+* Mon May 12 2014 Marcin Juszkiewicz <mjuszkiewicz@redhat.com> 0.9.8.1-4
+- Add AArch64 definitions where needed.
+
+* Fri May 09 2014 Sergio Pascual <sergiopr@fedoraproject.org> 0.9.8.1-3
+- Plugin directory has to be arch-dependent
+
+* Sun Apr 27 2014 Christian Dersch <chrisdersch@gmail.com> 0.9.8.1-2
+- Fix wrong upstream version
+
+* Thu Apr 24 2014 Sergio Pascual <sergiopr@fedoraproject.org> 0.9.8.1-1
+- New upstream source (0.9.8.1)
+
+* Tue Dec 03 2013 Sergio Pascual <sergiopr@fedoraproject.org> 0.9.7-1
+- New upstream source (0.9.7)
+
+* Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.9.6-6
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Wed Jul 17 2013 Sergio Pascual <sergiopr@fedoraproject.org> 0.9.6-5
+- rebuild (cfitsio 3.350)
+
+* Fri Mar 22 2013 Rex Dieter <rdieter@fedoraproject.org> 0.9.6-4
+- rebuild (cfitsio)
+
+* Wed Mar 20 2013 Rex Dieter <rdieter@fedoraproject.org> 0.9.6-3
+- rebuild (cfitsio)
+
+* Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.9.6-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
+
+* Fri Dec 07 2012 Sergio Pascual <sergiopr at fedoraproject.org> - 0.9.6-1
+- New upstream source
+- Added udev rules (in wrong directory)
+- Fixed FSF previous address bug, new appear
 
 * Tue Jan 24 2012 Sergio Pascual <sergiopr at fedoraproject.org> - 0.9-1
 - New upstream source
@@ -135,6 +170,6 @@ make install DESTDIR=%{buildroot}
 - Upstream bug about licenses (GPLv2 missing)
 - Upstream bug about libindi calling exit
 
-* Mon Jan 28 2009 Sergio Pascual <sergiopr at fedoraproject.org> -  0.6-1
+* Mon Jan 26 2009 Sergio Pascual <sergiopr at fedoraproject.org> -  0.6-1
 - First version
 

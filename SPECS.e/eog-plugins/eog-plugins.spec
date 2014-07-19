@@ -1,7 +1,7 @@
 %global __python %{__python3}
 
 Name:           eog-plugins
-Version:	3.12.0
+Version:	3.12.1
 Release:        4%{?dist}
 Summary:        A collection of plugins for the eog image viewer
 Summary(zh_CN.UTF-8): eog 图像查看器的插件集合
@@ -70,6 +70,9 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas || :
 %{_datadir}/glib-2.0/schemas/org.gnome.eog.plugins.export-to-folder.gschema.xml
 
 %changelog
+* Thu Jul 17 2014 Liu Di <liudidi@gmail.com> - 3.12.1-4
+- 更新到 3.12.1
+
 * Tue Apr 01 2014 Liu Di <liudidi@gmail.com> - 3.12.0-4
 - 更新到 3.12.0
 

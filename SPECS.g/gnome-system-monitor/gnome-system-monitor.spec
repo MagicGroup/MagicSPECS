@@ -10,7 +10,7 @@
 Summary: Process and resource monitor
 Summary(zh_CN.UTF-8): 进程和资源监视器
 Name: gnome-system-monitor
-Version:	3.12.0
+Version:	3.13.3
 Release: 1%{?dist}
 License: GPLv2+
 Group: Applications/System
@@ -84,6 +84,9 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &>/dev/null || :
 %{_datadir}/appdata/gnome-system-monitor.appdata.xml
 
 %changelog
+* Fri Jul 18 2014 Liu Di <liudidi@gmail.com> - 3.13.3-1
+- 更新到 3.13.3
+
 * Wed Apr 09 2014 Liu Di <liudidi@gmail.com> - 3.12.0-1
 - 更新到 3.12.0
 

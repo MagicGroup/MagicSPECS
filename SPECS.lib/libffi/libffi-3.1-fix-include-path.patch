@@ -1,0 +1,28 @@
+diff -ur libffi-3.1/include/Makefile.am libffi-3.1.new/include/Makefile.am
+--- libffi-3.1/include/Makefile.am	2014-04-25 17:45:13.000000000 +0000
++++ libffi-3.1.new/include/Makefile.am	2014-07-17 09:35:36.053560667 +0000
+@@ -5,5 +5,6 @@
+ DISTCLEANFILES=ffitarget.h
+ EXTRA_DIST=ffi.h.in ffi_common.h
+ 
+-includesdir = $(libdir)/@PACKAGE_NAME@-@PACKAGE_VERSION@/include
++includesdir = $(includedir)
++
+ nodist_includes_HEADERS = ffi.h ffitarget.h
+diff -ur libffi-3.1/libffi.pc.in libffi-3.1.new/libffi.pc.in
+--- libffi-3.1/libffi.pc.in	2014-04-25 17:45:13.000000000 +0000
++++ libffi-3.1.new/libffi.pc.in	2014-07-17 09:35:55.568560167 +0000
+@@ -1,11 +1,10 @@
+ prefix=@prefix@
+ exec_prefix=@exec_prefix@
+ libdir=@libdir@
+-toolexeclibdir=@toolexeclibdir@
+-includedir=${libdir}/@PACKAGE_NAME@-@PACKAGE_VERSION@/include
++includedir=@includedir@
+ 
+ Name: @PACKAGE_NAME@
+ Description: Library supporting Foreign Function Interfaces
+ Version: @PACKAGE_VERSION@
+-Libs: -L${toolexeclibdir} -lffi
++Libs: -L${libdir} -lffi
+ Cflags: -I${includedir}

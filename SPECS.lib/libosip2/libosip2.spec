@@ -1,10 +1,12 @@
 Name:           libosip2
-Version:        3.6.0
+Version: 4.0.0
 Release:        2%{?dist}
 
 Summary:        oSIP is an implementation of SIP
+Summary(zh_CN.UTF-8): oSIP 是 SIP 的一个实现 
 
 Group:          System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 License:        LGPLv2+
 URL:            http://www.gnu.org/software/osip/
 Source0:        http://ftp.gnu.org/gnu/osip/%{name}-%{version}.tar.gz
@@ -19,9 +21,14 @@ software developers an easy and powerful interface to initiate and control SIP
 based sessions in their applications. SIP is a open standard replacement from
 IETF for H.323.
 
+%description -l zh_CN.UTF-8
+oSIP 是 SIP 的一个实现。
+
 %package        devel
 Summary:        Development libraries for oSIP
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       %{name} = %{version}-%{release}
 
 %description    devel
@@ -38,6 +45,9 @@ at this step. Instead, it currently provides an API for the SIP message parser,
 SDP message parser, and library to handle "SIP transactions" as defined by the
 SIP document.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
 %prep
 %setup -q
 
@@ -50,6 +60,7 @@ rm -rf %{buildroot}
 %makeinstall
 find %{buildroot} -type f -name "*.la" -exec rm -f {} ';'
 mv %{buildroot}%{_mandir}/man1/osip.1 %{buildroot}%{_mandir}/man1/osip2.1
+magic_rpm_clean.sh
 
 %clean
 rm -rf %{buildroot}
@@ -61,8 +72,8 @@ rm -rf %{buildroot}
 %files
 %defattr(-,root,root,-)
 %doc AUTHORS BUGS COPYING ChangeLog FEATURES HISTORY NEWS README TODO
-%{_libdir}/libosip2.so.7*
-%{_libdir}/libosipparser2.so.7*
+%{_libdir}/libosip2.so.*
+%{_libdir}/libosipparser2.so.*
 
 %files devel
 %defattr(-,root,root,-)
@@ -74,6 +85,9 @@ rm -rf %{buildroot}
 %{_mandir}/man1/osip2.1*
 
 %changelog
+* Wed Jul 16 2014 Liu Di <liudidi@gmail.com> - 4.0.0-2
+- 更新到 4.0.0
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 3.6.0-2
 - 为 Magic 3.0 重建
 

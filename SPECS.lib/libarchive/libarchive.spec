@@ -1,12 +1,14 @@
 Name:           libarchive
-Version:        3.0.2
-Release:        2%{?dist}
+Version: 3.1.2
+Release:        3%{?dist}
 Summary:        A library for handling streaming archive formats 
+Summary(zh_CN.UTF-8): 处理流归档格式的库
 
 Group:          System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 License:        BSD
-URL:            http://code.google.com/p/libarchive/
-Source0:        http://libarchive.googlecode.com/files/libarchive-%{version}.tar.gz
+URL:            http://www.libarchive.org/
+Source0:        http://www.libarchive.org/downloads/libarchive-%{version}.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 
@@ -29,15 +31,23 @@ streaming archive formats, including most popular tar variants, several cpio
 formats, and both BSD and GNU ar variants. It can also write shar archives and 
 read ISO9660 CDROM images and ZIP archives.
 
+%description -l zh_CN.UTF-8
+处理流归档格式的库，包括流行的 tar 格式，一些 cpio 格式，以及 BSD 和 GNU ar 格式。
+它也可以写 shar 文档并读取 ISO9660 CD 镜像和 ZIP 归档。
+
 %package        devel
 Summary:        Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       %{name} = %{version}-%{release}
 
 %description    devel
 The %{name}-devel package contains libraries and header files for
 developing applications that use %{name}.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q -n %{name}-%{version}
@@ -56,7 +66,7 @@ find $RPM_BUILD_ROOT -name '*.la' -exec rm -f {} ';'
 find $RPM_BUILD_ROOT -name cpio.5 -exec rm -f {} ';'
 find $RPM_BUILD_ROOT -name mtree.5 -exec rm -f {} ';'
 find $RPM_BUILD_ROOT -name tar.5 -exec rm -f {} ';'
-
+magic_rpm_clean.sh
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -83,6 +93,12 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Wed Jul 09 2014 Liu Di <liudidi@gmail.com> - 3.1.2-3
+- 更新到 3.1.2
+
+* Wed Jul 09 2014 Liu Di <liudidi@gmail.com> - 3.0.2-3
+- 为 Magic 3.0 重建
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 3.0.2-2
 - 为 Magic 3.0 重建
 

@@ -1,9 +1,11 @@
 Summary: OpenFabrics Alliance InfiniBand umad (user MAD) library
+Summary(zh_CN.UTF-8): 开放结构联盟的 InfiniBand UMAD 库
 Name: libibumad
 Version: 1.3.7
 Release: 4%{?dist}
 License: GPLv2 or BSD
 Group: System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 Source: http://www.openfabrics.org/downloads/management/%{name}-%{version}.tar.gz
 Url: http://openfabrics.org
@@ -17,21 +19,34 @@ libibumad provides the user MAD library functions which sit on top of
 the user MAD modules in the kernel. These are used by the IB diagnostic
 and management tools, including OpenSM. 
 
+%description -l zh_CN.UTF-8
+开放结构联盟的 InfiniBand UMAD 库。
+
 %package devel
 Summary: Development files for the libibumad library
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: System Environment/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: %{name} = %{version}-%{release}
 
 %description devel
 Development files for the libibumad library.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
 %package static
 Summary: Static version of the libibumad library
+Summary(zh_CN.UTF-8): %{name} 的静态库
 Group: System Environment/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: %{name}-devel = %{version}-%{release}
 
 %description static
 Static version of the libibumad library.
+
+%description static -l zh_CN.UTF-8
+%{name} 的静态库。
 
 %prep
 %setup -q

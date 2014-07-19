@@ -10,7 +10,7 @@ License: GPL v2 or Later
 Group: Applications/Internet
 Group(zh_CN.UTF-8): 应用程序/互联网
 URL: http://ktorrent.org
-Version: 4.13.2
+Version: 4.13.3
 Release: 1%{?dist}
 %define rversion %version
 Source0:  http://download.kde.org/stable/%{rversion}/src/%{real_name}-%{rversion}.tar.xz
@@ -70,6 +70,9 @@ rm -rf %{buildroot} %{_builddir}/%{buildsubdir}
 
 
 %changelog
+* Fri Jul 18 2014 Liu Di <liudidi@gmail.com> - 4.13.3-1
+- 更新到 4.13.3
+
 * Wed Jun 18 2014 Liu Di <liudidi@gmail.com> - 4.13.2-1
 - 更新到 4.13.2
 

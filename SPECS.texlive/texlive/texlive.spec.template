@@ -1,6 +1,6 @@
-%global source_date 20140305_r33094
-%global tl_version 2013
-%global tl_rel 8
+%global source_date 20140525_r34255
+%global tl_version 2014
+%global tl_rel 0.1
 %global tl_release %{tl_rel}.%{source_date}%{?dist}
 %global tl_noarch_release %{tl_rel}%{?dist}
 %global source_name texlive-%{source_date}-source
@@ -11,6 +11,10 @@
 %if 0%{?fedora} <= 19
 # don't figure any perl dependencies
 %global __perl_requires %{nil}
+%else
+# don't export private perl modules
+%global __provides_exclude %{?__provides_exclude:%__provides_exclude|}^perl\\\\(
+%global __requires_exclude %{?__requires_exclude:%__requires_exclude|}^perl\\\\((PDF::Reuse.*|Pedigree.*|TeXLive.*|Tk::path_tre)\\\\)
 %endif
 
 %global __os_install_post /usr/lib/rpm/brp-compress %{nil}
@@ -24,7 +28,7 @@ Summary: TeX formatting system
 Group: Applications/Publishing
 License: Artistic 2.0 and GPLv2 and GPLv2+ and LGPLv2+ and LPPL and MIT and Public Domain and UCD and Utopia
 URL: http://tug.org/texlive/
-BuildRequires: xz libXaw-devel ncurses-devel bison flex file perl(Digest::MD5) texinfo gcc-c++
+BuildRequires: xz libXaw-devel libXi-devel ncurses-devel bison flex file perl(Digest::MD5) texinfo gcc-c++
 BuildRequires: gd-devel teckit-devel freetype-devel libpng-devel t1lib-devel zlib-devel poppler-devel t1utils
 BuildRequires: zziplib-devel libicu-devel cairo-devel harfbuzz-devel pixman-devel graphite2-devel ghostscript-devel
 BuildRequires: libpaper-devel potrace-devel
@@ -243,7 +247,8 @@ rm -f man
 [ ! -e texlua ] && ln -s luatex texlua
 [ ! -e texluac ] && ln -s luatex texluac
 # remove binaries we don't ship
-for i in physe phyzzx installfont-tl pdfthumb ppower4 tcdialog latexmk texdiff convbkmk songidx wofm2opl wopl2ofm wovf2ovp paperconf luajittex texluajit texluajitc; do
+for i in physe phyzzx installfont-tl pdfthumb ppower4 tcdialog latexmk texdiff songidx wofm2opl wopl2ofm wovf2ovp \
+paperconf luajittex texluajit texluajitc lollipop lualollipop mkpic xelollipop contextjit mtxrunjit; do
 	rm -f $i
 	rm -f %{buildroot}%{_datadir}/texlive/texmf-dist/doc/man/man1/$i.*
 done
@@ -381,6 +386,24 @@ fi
 %{_libdir}/*.so
 
 %changelog
+* Sun Jun  8 2014 Jindrich Novy <novyjindrich@gmail.com> - 2014-0.1-20140525
+- update to TeX Live 2014 release candidate
+- conflict with ht package (#959696)
+
+* Thu May 15 2014 Petr Pisar <ppisar@redhat.com> - 2013-12-20140512
+- Do not export private perl modules (bug #1085424)
+- Build-require libXi-devel for xdvik
+
+* Wed May 14 2014 Jindrich Novy <novyjindrich@gmail.com> - 2013-11-20140512
+- remove explicit ghostscript-devel dependency in dvisvgm (#1087847)
+- pdftex now depends on pdftex-def (#1096535)
+
+* Tue May 13 2014 Marek Kasik <mkasik@redhat.com> - 2013-10-20140411
+- Rebuild (poppler-0.26.0)
+
+* Fri Apr 11 2014 Jindrich Novy <novyjindrich@gmail.com> - 2013-9-20140411
+- sync with upstream
+
 * Fri Mar 21 2014 Dan Horák <dan[at]danny.cz> - 2013-8-20140305
 - do not attempt to built luajittex (#1070380)
 

@@ -1,9 +1,11 @@
 Summary: OpenFabrics Alliance InfiniBand MAD library
+Summary(zh_CN.UTF-8): 开放结构联盟的 InfiniBand MAD 库
 Name: libibmad
 Version: 1.3.8
 Release: 3%{?dist}
 License: GPLv2 or BSD
 Group: System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 Source: http://www.openfabrics.org/downloads/management/%{name}-%{version}.tar.gz
 Url: http://openfabrics.org/
@@ -17,21 +19,34 @@ libibmad provides low layer IB functions for use by the IB diagnostic
 and management programs. These include MAD, SA, SMP, and other basic
 IB functions. 
 
+%description -l zh_CN.UTF-8
+开放结构联盟的 InfiniBand MAD 库。
+
 %package devel
 Summary: Development files for the libibmad library
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: System Environment/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: %{name} = %{version}-%{release}, libibumad-devel
 
 %description devel
 Development files for the libibmad library.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
 %package static
 Summary: Static version of the libibmad library
+Summary(zh_CN.UTF-8): %{name} 的静态库
 Group: System Environment/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: %{name}-devel = %{version}-%{release}
 
 %description static
 Static version of the libibmad library
+
+%description static -l zh_CN.UTF-8
+%{name} 的静态库。
 
 %prep
 %setup -q

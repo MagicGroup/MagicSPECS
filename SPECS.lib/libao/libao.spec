@@ -1,8 +1,10 @@
 Name:           libao
 Version:        1.1.0
-Release:        5%{?dist}
+Release:        6%{?dist}
 Summary:        Cross Platform Audio Output Library
+Summary(zh_CN.UTF-8): 跨平台的音频输出库
 Group:          System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 License:        GPLv2+
 URL:            http://xiph.org/ao/
 Source0:        http://downloads.xiph.org/releases/ao/%{name}-%{version}.tar.gz
@@ -14,10 +16,14 @@ BuildRequires:  pkgconfig(libpulse)
 Libao is a cross platform audio output library. It currently supports
 ESD, OSS, Solaris, and IRIX.
 
+%description -l zh_CN.UTF-8
+跨平台的音频输出库，现在支持 ESD, OSS, Solaris 和 IRIX。
 
 %package        devel
 Summary:        Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       %{name}%{?_isa} = %{version}-%{release}
 Requires:       pkgconfig
 
@@ -25,6 +31,8 @@ Requires:       pkgconfig
 The %{name}-devel package contains libraries and header files for
 developing applications that use %{name}.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -42,7 +50,7 @@ make %{?_smp_mflags}
 make DESTDIR=$RPM_BUILD_ROOT INSTALL="install -p" install
 # remove unpackaged files from the buildroot
 find $RPM_BUILD_ROOT -name '*.la' -exec rm -rf {} \;
-
+magic_rpm_clean.sh
 
 %post -p /sbin/ldconfig
 
@@ -63,9 +71,13 @@ find $RPM_BUILD_ROOT -name '*.la' -exec rm -rf {} \;
 %{_libdir}/libao.so
 %{_libdir}/pkgconfig/ao.pc
 %{_datadir}/aclocal/ao.m4
+%{_docdir}/libao-%{version}/*
 
 
 %changelog
+* Wed Jul 09 2014 Liu Di <liudidi@gmail.com> - 1.1.0-6
+- 为 Magic 3.0 重建
+
 * Thu Aug 23 2012 Matthias Clasen <mclasen@redhat.com> - 1.1.0-5
 - Don't require esound or arts. They are both obsolete
 - Drop no-longer-needed dependency hack

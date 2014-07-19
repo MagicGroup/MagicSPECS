@@ -1,12 +1,14 @@
 Name:           libetpan
-Version:        1.1
+Version: 1.5
 Release:        3%{?dist}
 Summary: Portable, efficient middle-ware for different kinds of mail access
+Summary(zh_CN.UTF-8): 不同类型的邮件访问所用的可移植高效中间件
 
 Group:          System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 License:        BSD
 URL:            http://www.etpan.org/
-Source0:        http://downloads.sourceforge.net/%{name}/%{name}-%{version}.tar.gz
+Source0:        https://github.com/dinhviethoa/%{name}/archive/%{version}.tar.gz
 Patch0:         libetpan-multiarch.patch
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
@@ -23,9 +25,14 @@ The purpose of this mail library is to provide a portable, efficient middle-ware
 for different kinds of mail access. When using the drivers interface, the
 interface is the same for all kinds of mail access, remote and local mailboxes.
 
+%description -l zh_CN.UTF-8
+不同类型的邮件访问所用的可移植高效中间件。
+
 %package        devel
 Summary:        Development package for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       %{name} = %{version}-%{release}
 Requires:       gnutls-devel
 Requires:       cyrus-sasl-devel
@@ -37,11 +44,15 @@ Requires:       zlib-devel
 The %{name}-devel package contains the files needed for development
 with %{name}.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
 %prep
 %setup -q
 %patch0 -b.multi
 
 %build
+if ! [ -f configure ];then ./autogen.sh;fi
 %configure --disable-static --with-gnutls=yes --with-openssl=no
 make LIBTOOL=%{_bindir}/libtool %{?_smp_mflags}
 
@@ -57,6 +68,7 @@ rm -rf $RPM_BUILD_ROOT%{_libdir}/libetpan.{,l}a
 
 touch -r ChangeLog $RPM_BUILD_ROOT%{_bindir}/libetpan-config
 iconv -f iso8859-1 -t utf-8 ChangeLog > ChangeLog.conv && mv -f ChangeLog.conv ChangeLog
+magic_rpm_clean.sh
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -78,6 +90,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/*.so
 
 %changelog
+* Tue Jul 15 2014 Liu Di <liudidi@gmail.com> - 1.5-3
+- 更新到 1.5
+
 * Thu Jul 19 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.1-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 

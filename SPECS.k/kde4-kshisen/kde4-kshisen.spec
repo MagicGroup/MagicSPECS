@@ -8,7 +8,7 @@ Summary: Shisen-Sho Mahjongg-like tile game
 Summary(zh_CN.UTF-8): 连连看游戏
 Group: User Interface/Desktops
 Group(zh_CN.UTF-8): 用户界面/桌面
-Version: 4.13.2
+Version: 4.13.3
 Release: 2%{?dist}
 License: LGPL
 URL:     https://projects.kde.org/projects/kde/kdegames/%{name}
@@ -82,6 +82,9 @@ rm -rf %{buildroot} %{_builddir}/%{buildsubdir}
 %{kde4_datadir}/sounds/*
 
 %changelog
+* Fri Jul 18 2014 Liu Di <liudidi@gmail.com> - 4.13.3-2
+- 更新到 4.13.3
+
 * Thu Jun 19 2014 Liu Di <liudidi@gmail.com> - 4.13.2-2
 - 更新到 4.13.2
 

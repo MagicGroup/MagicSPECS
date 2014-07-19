@@ -1,12 +1,13 @@
 Summary:	Library for extracting extra information from image files
+Summary(zh_CN.UTF-8): 从图像文件中提取额外信息的库
 Name:		libexif
-Version:	0.6.20
-Release:	3%{?dist}
+Version:	0.6.21
+Release:	2%{?dist}
 Group:		System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 License:	LGPLv2+
 URL:		http://libexif.sourceforge.net/
-Source0:	%{name}-%{version}.tar.bz2 
-Source1:	%{name}-doc-%{version}.tar.bz2
+Source0:	http://downloads.sourceforge.net/project/libexif/libexif/%{version}/%{name}-%{version}.tar.bz2 
 BuildRequires: doxygen, pkgconfig
 
 %description
@@ -14,9 +15,15 @@ Most digital cameras produce EXIF files, which are JPEG files with
 extra tags that contain information about the image. The EXIF library
 allows you to parse an EXIF file and read the data from those tags.
 
+%description -l zh_CN.UTF-8
+大多数数码相机提供了 EXIF 文件，一种包括额外标签信息的 JPEG 文件。
+这个库允许你从这些文件读取解析这些标签。
+
 %package devel
 Summary:	Files needed for libexif application development
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:		Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:	%{name} = %{version}-%{release}
 Requires:	pkgconfig
 
@@ -24,14 +31,14 @@ Requires:	pkgconfig
 The libexif-devel package contains the libraries and header files
 for writing programs that use libexif.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
 %prep
 %setup -q
-# to avoid multilib conflicts, we toss in pre-generated docs
-# and neuter make all in the docs dir
-tar xjf %{SOURCE1}
 
 %build
-%configure --disable-static --disable-docs
+%configure --disable-static
 make %{?_smp_mflags}
 
 %install
@@ -41,6 +48,7 @@ rm -rf %{buildroot}%{_datadir}/doc/libexif
 cp -R doc/doxygen-output/libexif-api.html .
 iconv -f latin1 -t utf-8 < COPYING > COPYING.utf8; cp COPYING.utf8 COPYING
 iconv -f latin1 -t utf-8 < README > README.utf8; cp README.utf8 README
+magic_rpm_clean.sh
 %find_lang libexif-12
 
 %post -p /sbin/ldconfig
@@ -60,6 +68,12 @@ iconv -f latin1 -t utf-8 < README > README.utf8; cp README.utf8 README
 %{_libdir}/pkgconfig/libexif.pc
 
 %changelog
+* Wed Jul 16 2014 Liu Di <liudidi@gmail.com> - 0.6.21-2
+- 为 Magic 3.0 重建
+
+* Tue Jul 15 2014 Liu Di <liudidi@gmail.com> - 0.6.21-1
+- 更新到 0.6.21
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 0.6.20-3
 - 为 Magic 3.0 重建
 

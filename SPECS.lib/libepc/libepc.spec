@@ -6,14 +6,16 @@
 %global uuid_version    1.36
 
 Name:           libepc
-Version:        0.4.0
+Version:	0.4.4
 Release:        3%{?dist}
 Summary:        Easy Publish and Consume library
+Summary(zh_CN.UTF-8): 简易发布和使用库
 
 Group:          System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 License:        LGPLv2+
 URL:            http://live.gnome.org/libepc/
-Source0:        http://ftp.gnome.org/pub/gnome/sources/%{name}/0.4/%{name}-%{version}.tar.bz2
+Source0:        http://download.gnome.org/sources/%{name}/0.4/%{name}-%{version}.tar.xz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildRequires:  libuuid-devel >= %{uuid_version}
@@ -29,20 +31,28 @@ BuildRequires:  intltool
 %description
 A library to easily publish and consume values on networks
 
+%description -l zh_CN.UTF-8
+在网络上发布和使用值的简易库。
 
 %package        ui
 Summary:        Widgets for %{name}
+Summary(zh_CN.UTF-8): %{name} 的部件
 Group:          System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 Requires:       %{name}%{?_isa} = %{version}-%{release}
 
 
 %description    ui
 The %{name}-ui package contains widget for use with %{name}.
 
+%description ui -l zh_CN.UTF-8
+%{name} 的部件。
 
 %package        devel
 Summary:        Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       %{name}%{?_isa} = %{version}-%{release}
 Requires:       %{name}-ui%{?_isa} = %{version}-%{release}
 Requires:       libuuid-devel >= %{uuid_version}
@@ -57,6 +67,8 @@ Requires:       glib2-devel%{?_isa} >= %{glib2_version}
 The %{name}-devel package contains libraries and header files for
 developing applications that use %{name}.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -73,6 +85,7 @@ make %{?_smp_flags}
 rm -rf $RPM_BUILD_ROOT
 make install DESTDIR=$RPM_BUILD_ROOT INSTALL="install -p"
 find $RPM_BUILD_ROOT -name '*.la' -exec rm -f {} ';'
+magic_rpm_clean.sh
 %find_lang %{name}
 
 
@@ -115,6 +128,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Tue Jul 15 2014 Liu Di <liudidi@gmail.com> - 0.4.4-3
+- 更新到 0.4.4
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 0.4.0-3
 - 为 Magic 3.0 重建
 

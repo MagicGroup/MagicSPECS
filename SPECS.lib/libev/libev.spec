@@ -3,13 +3,15 @@
 
 Name:		libev
 Summary:	High-performance event loop/event model with lots of features
-Version:	4.11
-Release:	2%{?dist}
+Summary(zh_CN.UTF-8): 具有很多功能的高性能事件循环和模型库
+Version: 4.15
+Release:	1%{?dist}
 Group:		System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 License:	BSD or GPLv2+
 URL:		http://software.schmorp.de/pkg/libev.html
 Source0:	http://dist.schmorp.de/libev/Attic/%{name}-%{version}.tar.gz
-Source1:	%{name}.pc.in
+Patch1:		libev-4.15-pkgconfig.patch
 BuildRequires:	automake libtool
 
 %description
@@ -17,20 +19,28 @@ Libev is modeled (very loosely) after libevent and the Event Perl
 module, but is faster, scales better and is more correct, and also more
 featureful. And also smaller.
 
+%description -l zh_CN.UTF-8
+具有很多功能的高性能事件循环和模型库。
 
 %package 	devel
 Summary:	High-performance event loop/event model with lots of features
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:		System Environment/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:	%{name}%{?_isa} = %{version}-%{release}
 Requires:	pkgconfig
 
 %description 	devel
 This package contains the development headers and libraries for libev.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %package	source
 Summary:	High-performance event loop/event model with lots of features
+Summary(zh_CN.UTF-8): %{name} 的源码
 Group:		System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 %if 0%{?fedora} >= 12 || 0%{?rhel} > 5
 BuildArch:     noarch
 %endif
@@ -38,17 +48,14 @@ BuildArch:     noarch
 %description	source
 This package contains the source code for libev.
 
+%description source -l zh_CN.UTF-8
+%{name} 的源码。
 
 %prep
 %setup -q
-
 # Add pkgconfig support
-cp -p %{SOURCE1} .
-sed -i.pkgconfig -e 's|Makefile|Makefile libev.pc|' configure.ac configure
-sed -i.pkgconfig -e 's|lib_LTLIBRARIES|pkgconfigdir = $(libdir)/pkgconfig\n\npkgconfig_DATA = libev.pc\n\nlib_LTLIBRARIES|' Makefile.am Makefile.in
-aclocal
-automake
-
+%patch1 -p1
+autoreconf -fisv
 
 %build
 %configure --disable-static --with-pic --includedir=%{_includedir}/%{name}
@@ -89,6 +96,9 @@ magic_rpm_clean.sh
 
 
 %changelog
+* Tue Jul 15 2014 Liu Di <liudidi@gmail.com> - 4.15-1
+- 更新到 4.15
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 4.11-2
 - 为 Magic 3.0 重建
 
