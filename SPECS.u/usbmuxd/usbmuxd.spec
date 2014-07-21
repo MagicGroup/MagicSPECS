@@ -1,55 +1,62 @@
+# Tarfile created using git
+# git clone https://github.com/libimobiledevice/usbmuxd.git
+# git archive --format=tar --prefix=%{name}-%{version}/ %{name}-%{version} | bzip2 > ~/%{name}-%{version}.tar.bz2
+# c24463e
+
+%define gittag c24463e
+%define tarfile %{name}-%{version}-%{gittag}.tar.bz2
+
 Name:          usbmuxd
-Version:       1.0.8
-Release:       2%{?dist}
-Summary:       Daemon for communicating with Apple's iPod Touch and iPhone
+Version:       1.0.9
+Release:       0.3.%{gittag}%{?dist}
+Summary:       Daemon for communicating with Apple's iOS devices
 
 Group:         Applications/System
 # All code is dual licenses as GPLv3+ or GPLv2+, except libusbmuxd which is LGPLv2+.
-License:       GPLv3+ or GPLv2+ and LGPLv2+
-URL:           http://marcansoft.com/uploads/
-Source0:       http://marcansoft.com/uploads/usbmuxd/%{name}-%{version}.tar.bz2
+License:       GPLv3+ or GPLv2+
+URL:           http://www.libimobiledevice.org/
+#ource0:       http://www.libimobiledevice.org/downloads/%{name}-%{version}.tar.bz2
+Source0:       %{tarfile}
+Patch0:        usbmuxd-use-systemd-to-start-usbmuxd.patch
+Patch1:        usbmuxd-default-source.patch
 
+BuildRequires: libimobiledevice-devel
 BuildRequires: libplist-devel
-BuildRequires: libusb1-devel
-BuildRequires: cmake
+BuildRequires: libusbx-devel
+BuildRequires: systemd
+BuildRequires: autoconf automake libtool
+
 Requires(pre): shadow-utils
+Requires(post): systemd-units
+Requires(preun): systemd-units
+Requires(postun): systemd-units
+Obsoletes: usbmuxd-devel < 1.0.9
 
 %description
-usbmuxd is a daemon used for communicating with Apple's iPod Touch and iPhone
-devices. It allows multiple services on the device to be accessed
-simultaneously.
-
-%package devel
-Summary: Development package for %{name}
-Group: Development/Libraries
-Requires: usbmuxd = %{version}-%{release}
-Requires: pkgconfig
-Requires: libusb1-devel
-
-%description devel
-Files for development with %{name}.
+usbmuxd is a daemon used for communicating with Apple's iPod Touch, iPhone, 
+iPad and Apple TV devices. It allows multiple services on the device to be 
+accessed simultaneously.
 
 %prep
 %setup -q
+%patch0 -p1 -b .systemd
+%patch1 -p1 -b .def-src
 
 # Set the owner of the device node to be usbmuxd
-sed -i.owner 's/ATTR{idVendor}=="05ac"/OWNER="usbmuxd", ATTR{idVendor}=="05ac"/' udev/85-usbmuxd.rules.in
-sed -i.user 's/-U usbmux/-U usbmuxd/' udev/85-usbmuxd.rules.in
+sed -i.owner 's/OWNER="usbmux"/OWNER="usbmuxd"/' udev/39-usbmuxd.rules.in
+sed -i.user 's/-U usbmux/-U usbmuxd/' udev/usbmuxd.service.in
 
 %build
-export CMAKE_PREFIX_PATH=/usr
-%{cmake} -DUSB_INCLUDE_DIR=%{_includedir}/libusb-1.0 .
+NOCONFIGURE=1 ./autogen.sh
+%configure
 
-make %{?_smp_mflags}
+make %{?_smp_mflags} V=1
 
 %install
-export CMAKE_PREFIX_PATH=/usr$RPM_BUILD_ROOT
 make install DESTDIR=$RPM_BUILD_ROOT
-
-mkdir  -p %{buildroot}%{_prefix}/lib/udev/
-mv %{buildroot}/lib/udev/rules.d %{buildroot}%{_prefix}/lib/udev/
-
-magic_rpm_clean.sh
+# Short term hack
+mkdir -p $RPM_BUILD_ROOT/%{_unitdir}
+cp udev/usbmuxd.service.in $RPM_BUILD_ROOT/%{_unitdir}/usbmuxd.service
 
 %pre
 getent group usbmuxd >/dev/null || groupadd -r usbmuxd -g 113
@@ -58,28 +65,60 @@ useradd -r -g usbmuxd -d / -s /sbin/nologin \
 	-c "usbmuxd user" -u 113 usbmuxd
 exit 0
 
-%post -p /sbin/ldconfig
+%post
+/sbin/ldconfig
+%systemd_post usbmuxd.service
 
-%postun -p /sbin/ldconfig
+%preun
+%systemd_preun usbmuxd.service
+
+%postun
+/sbin/ldconfig
+%systemd_postun_with_restart usbmuxd.service 
 
 %files
-%defattr(-,root,root,-)
-%doc AUTHORS README COPYING.GPLv2 COPYING.GPLv3 COPYING.LGPLv2.1 README.devel
-%{_prefix}/lib/udev/rules.d/85-usbmuxd.rules
-%{_bindir}/iproxy
+%doc AUTHORS README COPYING.GPLv2 COPYING.GPLv3
+/lib/udev/rules.d/39-usbmuxd.rules
+%{_unitdir}/usbmuxd.service
 %{_sbindir}/usbmuxd
-%{_libdir}/libusbmuxd.so.*
-
-%files devel
-%defattr(-,root,root,-)
-%doc README.devel
-%{_includedir}/*.h
-%{_libdir}/libusbmuxd.so
-%{_libdir}/pkgconfig/libusbmuxd.pc
 
 %changelog
-* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 1.0.8-2
-- 为 Magic 3.0 重建
+* Sun Jun 08 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.0.9-0.3.c24463e
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Mon Apr 21 2014 Peter Robinson <pbrobinson@fedoraproject.org> 1.0.9-0.2
+- Minor update
+
+* Mon Apr 21 2014 Peter Robinson <pbrobinson@fedoraproject.org> 1.0.9-0.1
+- Initial 1.0.9 snapshot
+
+* Thu Oct 10 2013 Ralf Corsépius <corsepiu@fedoraproject.org> - 1.0.8-10
+- Add BR: systemd for systemd.macros (RHBZ #1017493).
+
+* Tue Oct 8  2013 Peter Robinson <pbrobinson@fedoraproject.org> 1.0.8-9
+- Fix rpm scripts
+
+* Sun Aug 04 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.0.8-8
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Fri Feb 15 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.0.8-7
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
+
+* Mon Nov 19 2012 Bastien Nocera <bnocera@redhat.com> 1.0.8-6
+- Fix source URL
+
+* Thu Oct  4 2012 Peter Robinson <pbrobinson@fedoraproject.org> - 1.0.8-5
+- Make use of the new systemd macros
+- Minor updates to spec
+
+* Sun Jul 22 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.0.8-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Mon Jul 09 2012 Bastien Nocera <bnocera@redhat.com> 1.0.8-3
+- Use systemd to start usbmuxd instead of udev (#786853)
+
+* Sat Apr 28 2012 Bastien Nocera <bnocera@redhat.com> 1.0.8-2
+- Fix usbmuxd not starting under udev
 
 * Mon Apr  9 2012 Peter Robinson <pbrobinson@fedoraproject.org> 1.0.8-1
 - New stable 1.0.8 release
