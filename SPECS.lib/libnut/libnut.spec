@@ -1,7 +1,8 @@
 Summary: Library for creating and demuxing NUT files
+Summary(zh_CN.UTF-8): 创建和重编码 NUT 文件的库
 Name: libnut
 Version: 0.0.0
-Release: 3_r661%{?dist}
+Release: 4_r661%{?dist}
 License: distributable
 Group: FIXME
 URL: http://www.nut-container.org/
@@ -23,6 +24,9 @@ data they can contain.
 libnut is a free library for creating and demuxing NUT files. It
 supports frame accurate seeking for active streams, recovery from
 errors and dynamic index generation during playback.
+
+%description -l zh_CN.UTF-8
+创建和重编码 NUT 文件的库。
 
 %prep
 %setup -q -n libnut
@@ -50,6 +54,9 @@ rm -rf %{buildroot}
 %{_bindir}/nut*
 
 %changelog
+* Tue Jul 22 2014 Liu Di <liudidi@gmail.com> - 0.0.0-4_r661
+- 为 Magic 3.0 重建
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 0.0.0-3_r661
 - 为 Magic 3.0 重建
 

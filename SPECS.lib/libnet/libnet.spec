@@ -1,9 +1,11 @@
 Summary:	C library for portable packet creation and injection
+Summary(zh_CN.UTF-8): 可移植包的创建和注入 C 库
 Name:		libnet
 Version:	1.1.6
-Release:	4%{?dist}
+Release:	5%{?dist}
 License:	BSD
 Group:		System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 URL:		http://www.sourceforge.net/projects/libnet-dev/
 Source:		http://downloads.sourceforge.net/libnet-dev/%{name}-%{version}.tar.gz
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -16,9 +18,14 @@ write some really cool stuff). Libnet includes packet creation at the IP
 layer and at the link layer as well as a host of supplementary and
 complementary functionality.
 
+%description -l zh_CN.UTF-8
+可移植包的创建和注入 C 库。
+
 %package devel
 Summary:	Development files for the libnet library
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:		Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:	%{name} = %{version}-%{release}
 
 %description devel
@@ -26,6 +33,9 @@ The libnet-devel package includes header files and libraries necessary
 for developing programs which use the libnet library. Libnet is very handy
 with which to write network tools and network test code. See the manpage
 and sample test code for more detailed information.
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -86,6 +96,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/%{name}*.3*
 
 %changelog
+* Tue Jul 22 2014 Liu Di <liudidi@gmail.com> - 1.1.6-5
+- 为 Magic 3.0 重建
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 1.1.6-4
 - 为 Magic 3.0 重建
 

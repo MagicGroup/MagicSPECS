@@ -3,7 +3,7 @@
 
 Name: libindi
 Version: 0.9.8.1
-Release: 6%{?dist}
+Release: 7%{?dist}
 Summary: Instrument Neutral Distributed Interface
 
 Group: Development/Libraries
@@ -76,6 +76,9 @@ make install DESTDIR=%{buildroot}
 %{_libdir}/*.a
 
 %changelog
+* Tue Jul 22 2014 Liu Di <liudidi@gmail.com> - 0.9.8.1-7
+- 为 Magic 3.0 重建
+
 * Fri Jul 18 2014 Liu Di <liudidi@gmail.com> - 0.9.8.1-6
 - 为 Magic 3.0 重建
 
