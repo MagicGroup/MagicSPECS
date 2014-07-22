@@ -1,9 +1,11 @@
 Name:           libnice
-Version:        0.1.3
-Release:        2%{?dist}
+Version: 0.1.7
+Release:        1%{?dist}
 Summary:        GLib ICE implementation
+Summary(zh_CN.UTF-8): GLib ICE 实现 
 
 Group:          System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 License:        LGPLv2 and MPLv1.1
 URL:            http://nice.freedesktop.org/wiki/
 Source0:        http://nice.freedesktop.org/releases/%{name}-%{version}.tar.gz
@@ -24,10 +26,14 @@ NATs and provides security against some attacks. Existing standards that use
 ICE include the Session Initiation Protocol (SIP) and Jingle, XMPP extension
 for audio/video calls.
 
+%description -l zh_CN.UTF-8
+GLib ICE 实现。
 
 %package        devel
 Summary:        Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       %{name} = %{version}-%{release}
 Requires:	glib2-devel
 Requires:	pkgconfig
@@ -37,6 +43,8 @@ Requires:	pkgconfig
 The %{name}-devel package contains libraries and header files for
 developing applications that use %{name}.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -70,6 +78,7 @@ magic_rpm_clean.sh
 %doc NEWS README COPYING COPYING.LGPL COPYING.MPL
 %{_bindir}/stunbdc
 %{_bindir}/stund
+%{_bindir}/*-example
 %{_libdir}/gstreamer-0.10/libgstnice010.so
 %{_libdir}/gstreamer-1.0/libgstnice.so
 %{_libdir}/*.so.*
@@ -84,6 +93,9 @@ magic_rpm_clean.sh
 
 
 %changelog
+* Tue Jul 22 2014 Liu Di <liudidi@gmail.com> - 0.1.7-1
+- 更新到 0.1.7
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 0.1.3-2
 - 为 Magic 3.0 重建
 

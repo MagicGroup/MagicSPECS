@@ -2,6 +2,7 @@
 # Fedora Review: http://bugzilla.redhat.com/204954
 
 Summary: 	Open Fingerprint Architecture library	
+Summary(zh_CN.UTF-8): 音频的开放体系指纹库
 Name:		libofa	
 Version:	0.9.3	
 Release:	21%{?dist}
@@ -10,6 +11,7 @@ License:	GPLv2
 Url:		http://code.google.com/p/musicip-libofa/
 Source0:	http://musicip-libofa.googlecode.com/files/libofa-%{version}.tar.gz	
 Group:		System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 Patch1: libofa-0.9.3-gcc41.patch
@@ -33,9 +35,14 @@ Currently, MusicDNS and the Open Fingerprint Architecture are being used to:
 * fix metadata
 * find out more about tracks by connecting to MusicBrainz
 
+%description -l zh_CN.UTF-8
+音频的开放体系指纹库。
+
 %package devel
 Summary: Development headers and libraries for %{name}	
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:   Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: %{name} = %{version}-%{release}
 Requires: pkgconfig
 # removed by patch2
@@ -43,6 +50,8 @@ Requires: pkgconfig
 %description devel
 %{summary}.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -80,7 +89,7 @@ rm -f $RPM_BUILD_ROOT%{_libdir}/lib*.la
 # prepare docs
 make -C examples clean
 rm -rf examples/.deps examples/Makefile examples/*.gcc43
-
+magic_rpm_clean.sh
 
 %clean
 rm -rf $RPM_BUILD_ROOT

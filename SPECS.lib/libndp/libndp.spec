@@ -1,5 +1,5 @@
 Name: libndp
-Version: 1.2
+Version: 1.3
 Release: 1%{?dist}
 Summary: Library for Neighbor Discovery Protocol
 Summary(zh_CN.UTF-8): 邻居发现协议的库
@@ -59,6 +59,9 @@ magic_rpm_clean.sh
 %{_libdir}/pkgconfig/*.pc
 
 %changelog
+* Tue Jul 22 2014 Liu Di <liudidi@gmail.com> - 1.3-1
+- 更新到 1.3
+
 * Tue Oct 15 2013 Jiri Pirko <jpirko@redhat.com> - 1.2-1
 - Update to 1.2
 - libndp: silently ignore packets with optlen 0
