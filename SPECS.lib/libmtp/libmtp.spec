@@ -2,12 +2,14 @@
 # RPM repository.
 
 Name:           libmtp
-Version:        1.1.5
+Version:	1.1.6
 Release:        3%{?dist}
 Summary:        A software library for MTP media players
+Summary(zh_CN.UTF-8): MTP 媒体播放器的软件库
 URL:            http://libmtp.sourceforge.net/
 
 Group:          System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 Source0:        http://download.sourceforge.net/%{name}/%{name}-%{version}.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 License:        LGPLv2+
@@ -21,18 +23,28 @@ This package provides a software library for communicating with MTP
 (Media Transfer Protocol) media players, typically audio players, video
 players etc.
 
+%description -l zh_CN.UTF-8
+MTP 媒体播放器的软件库。
+
 %package examples
 Summary:        Example programs for libmtp
+Summary(zh_CN.UTF-8): %{name} 的样例程序
 Group:          Applications/Multimedia
+Group(zh_CN.UTF-8): 应用程序/多媒体
 Requires:       %{name} = %{version}-%{release}
 
 %description examples
 This package provides example programs for communicating with MTP
 devices.
 
+%description examples -l zh_CN.UTF-8
+ %{name} 的样例程序。
+
 %package devel
 Summary:        Development files for libmtp
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:          System Environment/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       %{name} = %{version}-%{release}
 Requires:       pkgconfig
 Requires:       libusb1-devel
@@ -40,6 +52,9 @@ Requires:       libusb1-devel
 %description devel
 This package provides development files for the libmtp
 library for MTP media players.
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -79,6 +94,7 @@ touch -r configure.ac \
 
 mkdir -p %{buildroot}/usr/lib
 mv -f %{buildroot}/lib/udev %{buildroot}/usr/lib
+magic_rpm_clean.sh
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -106,6 +122,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Tue Jul 22 2014 Liu Di <liudidi@gmail.com> - 1.1.6-3
+- 更新到 1.1.6
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 1.1.5-3
 - 为 Magic 3.0 重建
 

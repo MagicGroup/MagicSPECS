@@ -1,11 +1,12 @@
 Name:           libmatekbd
-Version:        1.8.0
+Version:	1.9.1
 Release:        2%{?dist}
 Summary:        Libraries for mate kbd
 Summary(zh_CN.UTF-8): mate kbd 的库
 License:        LGPLv2+
 URL:            http://mate-desktop.org
-Source0:        http://pub.mate-desktop.org/releases/1.8/%{name}-%{version}.tar.xz
+%define majorver %(echo %{version} | awk -F. '{print $1"."$2}')
+Source0:        http://pub.mate-desktop.org/releases/%{majorver}/%{name}-%{version}.tar.xz
 
 BuildRequires:  desktop-file-utils
 BuildRequires:  gsettings-desktop-schemas-devel
@@ -86,6 +87,9 @@ fi
 %{_libdir}/libmatekbd.so
 
 %changelog
+* Fri Jul 18 2014 Liu Di <liudidi@gmail.com> - 1.9.1-2
+- 更新到 1.9.1
+
 * Wed May 07 2014 Liu Di <liudidi@gmail.com> - 1.8.0-2
 - 为 Magic 3.0 重建
 

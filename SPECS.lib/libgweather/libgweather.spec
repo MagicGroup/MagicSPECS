@@ -86,7 +86,7 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &>/dev/null || :
 %dir %{_datadir}/libgweather
 %{_datadir}/libgweather/Locations.xml
 %{_datadir}/libgweather/locations.dtd
-%{_datadir}/icons/gnome/*/status/*
+#%{_datadir}/icons/gnome/*/status/*
 %{_datadir}/glib-2.0/schemas/org.gnome.GWeather.enums.xml
 %{_datadir}/glib-2.0/schemas/org.gnome.GWeather.gschema.xml
 

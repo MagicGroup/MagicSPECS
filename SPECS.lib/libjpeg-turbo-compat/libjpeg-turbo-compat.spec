@@ -2,7 +2,7 @@
 
 Name:		libjpeg-turbo-compat
 Version:	1.2.1
-Release:	6%{?dist}
+Release:	7%{?dist}
 Summary:	A MMX/SSE2 accelerated library for manipulating JPEG image files
 
 Group:		System Environment/Libraries
@@ -97,6 +97,9 @@ rm -rf $RPM_BUILD_ROOT/%{_mandir}
 %{_libdir}/libjpeg-turbo-compat/libjpeg.a
 
 %changelog
+* Fri Jul 18 2014 Liu Di <liudidi@gmail.com> - 1.2.1-7
+- 为 Magic 3.0 重建
+
 * Mon Dec 17 2012 Adam Tkac <atkac redhat com> 1.2.1-6
 - don't obsolete/provide libjpeg (#887013)
 

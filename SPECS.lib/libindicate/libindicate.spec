@@ -3,7 +3,7 @@
 
 Name:		libindicate
 Version:	12.10.1
-Release:	1.1
+Release:	2.1
 License:	LGPL-2.1 and LGPL-3.0
 Summary:	Library to raise flags on dbus
 Url:		http://launchpad.net/libindicate
@@ -399,6 +399,9 @@ magic_rpm_clean.sh
 
 
 %changelog
+* Fri Jul 18 2014 Liu Di <liudidi@gmail.com> - 12.10.1-2.1
+- 为 Magic 3.0 重建
+
 * Mon Aug 27 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 12.10.1-1
 - Version 12.10.1
 

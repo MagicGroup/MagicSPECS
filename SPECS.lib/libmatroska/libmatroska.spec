@@ -1,7 +1,7 @@
 Summary:	Open audio/video container format library
 Summary(zh_CN.UTF-8): 开源的音频、视频容器格式库
 Name:		libmatroska
-Version:	1.3.0
+Version: 1.4.1
 Release:	1%{?dist}
 License:	LGPLv2+
 Group:		System Environment/Libraries
@@ -80,6 +80,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Fri Jul 18 2014 Liu Di <liudidi@gmail.com> - 1.4.1-1
+- 更新到 1.4.1
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 1.3.0-2
 - 为 Magic 3.0 重建
 

@@ -1,13 +1,11 @@
 Name:		liblognorm
 Version:	1.0.1
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:	Fast samples-based log normalization library
 
 License:	LGPLv2+
 URL:		http://www.liblognorm.com
 Source0:	http://www.liblognorm.com/download/files/download/%{name}-%{version}.tar.gz
-Patch0:		liblognorm-0.3.4-rename-to-lognormalizer.patch
-Patch1:		liblognorm-0.3.4-pc-file.patch
 
 BuildRequires:	libestr-devel, libee-devel, chrpath
 
@@ -41,8 +39,6 @@ log files.
 
 %prep
 %setup -q
-%patch0 -p1 -b .rename-to-lognormalizer.patch
-%patch1 -p1 -b .pc-file.patch
 
 %build
 %configure
@@ -52,7 +48,7 @@ V=1 make
 make install INSTALL="install -p" DESTDIR=%{buildroot}
 rm -f %{buildroot}/%{_libdir}/*.{a,la}
 chrpath -d %{buildroot}/%{_bindir}/lognormalizer
-chrpath -d %{buildroot}/%{_libdir}/liblognorm.so.0.0.0
+chrpath -d %{buildroot}/%{_libdir}/liblognorm.so.1.0.0
 
 %post -p /sbin/ldconfig
 
@@ -72,6 +68,9 @@ chrpath -d %{buildroot}/%{_libdir}/liblognorm.so.0.0.0
 
 
 %changelog
+* Fri Jul 18 2014 Liu Di <liudidi@gmail.com> - 1.0.1-2
+- 为 Magic 3.0 重建
+
 * Fri Oct 05 2012 mdarade <mdarade@redhat.com> - 0.3.4-4
 - Modified description of main & util package 
 

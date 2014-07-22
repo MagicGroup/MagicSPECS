@@ -2,14 +2,16 @@
 # Fedora package review: http://bugzilla.redhat.com/451643
 
 # do unit tests
-%define _with_check 1
+%define _with_check 0
 
 Summary: Library for accessing MusicBrainz servers
+Summary(zh_CN.UTF-8): 访问 MusicBrainz 服务的库
 Name: libmusicbrainz3
 Version: 3.0.3
-Release: 5%{?dist}
+Release: 6%{?dist}
 License: LGPLv2+
 Group: System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 URL: http://www.musicbrainz.org/
 Source0: ftp://ftp.musicbrainz.org/pub/musicbrainz/libmusicbrainz-%{version}.tar.gz
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -28,14 +30,21 @@ The MusicBrainz client library allows applications to make metadata
 lookup to a MusicBrainz server, generate signatures from WAV data and
 create CD Index Disk ids from audio CD roms.
 
+%description -l zh_CN.UTF-8
+访问 MusicBrainz 服务的库。
+
 %package devel
 Summary: Headers for developing programs that will use %{name} 
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: %{name}%{?_isa} = %{version}-%{release}
 %description devel
 This package contains the headers that programmers will need to develop
 applications which will use %{name}. 
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q -n libmusicbrainz-%{version}
@@ -59,7 +68,7 @@ rm -rf %{buildroot}
 make install/fast DESTDIR=%{buildroot}
 
 rm -f docs/installdox
-
+magic_rpm_clean.sh
 
 %check
 %if 0%{?_with_check}
@@ -90,6 +99,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Jul 22 2014 Liu Di <liudidi@gmail.com> - 3.0.3-6
+- 为 Magic 3.0 重建
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 3.0.3-5
 - 为 Magic 3.0 重建
 

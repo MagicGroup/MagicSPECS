@@ -1,12 +1,14 @@
 Name: libmlx4
-Version: 1.0.5
+Version: 1.0.6
 Release: 5%{?dist}
 Summary: Mellanox ConnectX InfiniBand HCA Userspace Driver
+Summary(zh_CN.UTF-8): Mellanox ConnectX InfiniBand HCA 用户空间驱动
 Provides: libibverbs-driver.%{_arch}
 Group: System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 License: GPLv2 or BSD
 Url: http://www.openfabrics.org/
-Source: http://www.openfabrics.org/downloads/mlx4/%{name}-%{version}.tar.gz
+Source: https://www.openfabrics.org/downloads/mlx4/%{name}-%{version}.tar.gz
 Source1: libmlx4-modprobe.conf
 Source2: libmlx4-mlx4.conf
 Source3: libmlx4-setup.sh
@@ -24,14 +26,22 @@ Requires: dracut
 libmlx4 provides a device-specific userspace driver for Mellanox
 ConnectX HCAs for use with the libibverbs library.
 
+%description -l zh_CN.UTF-8
+Mellanox ConnectX InfiniBand HCA 用户空间驱动。
+
 %package static
 Summary: Static version of the libmlx4 driver
+Summary(zh_CN.UTF-8): %{name} 的静态库
 Group: System Environment/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: %{name} = %{version}-%{release}
 
 %description static
 Static version of libmlx4 that may be linked directly to an
 application, which may be useful for debugging.
+
+%description static -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -53,6 +63,7 @@ install -D -m 755 %{SOURCE3} %{buildroot}%{_libexecdir}/setup-mlx4.sh
 install -D -m 755 %{SOURCE4} %{buildroot}%{dracutlibdir}/modules.d/90-libmlx4/module-setup.sh
 # Remove unpackaged files
 rm -f %{buildroot}%{_libdir}/libmlx4.{la,so}
+magic_rpm_clean.sh
 
 %files
 %defattr(-,root,root,-)
@@ -69,6 +80,9 @@ rm -f %{buildroot}%{_libdir}/libmlx4.{la,so}
 %{_libdir}/libmlx4.a
 
 %changelog
+* Tue Jul 22 2014 Liu Di <liudidi@gmail.com> - 1.0.6-5
+- 更新到 1.0.6
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.0.5-5
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

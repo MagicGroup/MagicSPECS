@@ -1,16 +1,13 @@
 
 Name:    libmygpo-qt
 Summary: Qt Library that wraps the gpodder.net Web API
-Version: 1.0.6
-Release: 2%{?dist}
+Summary(zh_CN.UTF-8): gpodder.net 网页 API 的 Qt 库接口
+Version: 1.0.7
+Release: 1%{?dist}
 
 License: LGPLv2+
 Url:     http://wiki.gpodder.org/wiki/Libmygpo-qt
 Source0: http://stefan.derkits.at/files/libmygpo-qt/libmygpo-qt.%{version}.tar.gz
-
-## upstreamable patches
-# fix pkgconfig version
-Patch50: libmygpo-qt-1.0.6-pkgconfig.patch
 
 BuildRequires: automoc4
 BuildRequires: cmake
@@ -21,19 +18,23 @@ BuildRequires: pkgconfig(QtNetwork)
 %description
 libmygpo-qt is a Qt Library that wraps the gpodder.net Web API,
 http://wiki.gpodder.org/wiki/Web_Services/API_2
- 
+
+%description -l zh_CN.UTF-8
+gpodder.net 网页 API 的 Qt 库接口。
+http://wiki.gpodder.org/wiki/Web_Services/API_2
+
 %package devel
 Summary: Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Requires: %{name}%{?_isa} = %{version}-%{release}
 %description devel
 %{summary}.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
  
 %prep
 %setup -q -n %{name}.%{version}
-
-%patch50 -p1 -b .pkgconfig
-
 
 %build
 mkdir -p %{_target_platform}
@@ -71,6 +72,9 @@ make test -C %{_target_platform}
  
  
 %changelog
+* Tue Jul 22 2014 Liu Di <liudidi@gmail.com> - 1.0.7-1
+- 更新到 1.0.7
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 1.0.6-2
 - 为 Magic 3.0 重建
 

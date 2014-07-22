@@ -11,7 +11,7 @@
 }
 
 Name:           libkolab
-Version:        0.5.0
+Version: 0.5.2
 Release:        1%{?dist}
 Summary:        Kolab Object Handling Library
 Summary(zh_CN.UTF-8): Kolab 对象处理库
@@ -20,9 +20,6 @@ License:        LGPLv3+
 URL:            http://git.kolab.org/libkolab
 
 Source0:        http://git.kolab.org/%{name}/snapshot/libkolab-%{version}.tar.gz
-
-# Fix #2588: kolabformatchecker uses kolab_static instead of kolab
-Patch0:         libkolab-0.5.0_kolab_static.patch
 
 BuildRequires:  cmake
 %if 0%{?rhel} > 6 || 0%{?fedora} > 16
@@ -98,7 +95,6 @@ Python bindings for libkolab
 
 %prep
 %setup -q -n libkolab-%{version}
-%patch0 -p0
 
 %build
 mkdir -p build
@@ -183,6 +179,9 @@ popd
 %{python_sitearch}/kolab/shared.py*
 
 %changelog
+* Fri Jul 18 2014 Liu Di <liudidi@gmail.com> - 0.5.2-1
+- 更新到 0.5.2
+
 * Tue Jun 17 2014 Liu Di <liudidi@gmail.com> - 0.5.0-5
 - 为 Magic 3.0 重建
 

@@ -1,8 +1,10 @@
 Summary: Lightweight library for embedding a webserver in applications
+Summary(zh_CN.UTF-8): 在程序中嵌入网页服务的轻量级库
 Name: libmicrohttpd
-Version: 0.9.33
-Release: 2%{?dist}
+Version: 0.9.37
+Release: 1%{?dist}
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 License: LGPLv2+
 BuildRoot: %(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
 URL: http://www.gnu.org/software/libmicrohttpd/
@@ -38,17 +40,27 @@ Key features that distinguish libmicrohttpd from other projects are:
 * Creates binary of only 25k (for now)
 * Three different threading models
 
+%description -l zh_CN.UTF-8
+在程序中嵌入网页服务的轻量级库，使用 C 编写。
+
 %package devel
 Summary:        Development files for libmicrohttpd
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       %{name} = %{version}-%{release}
 
 %description devel
 Development files for libmicrohttpd
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
 %package doc
 Summary:        Documentation for libmicrohttpd
+Summary(zh_CN.UTF-8): %{name} 的文档
 Group:          Documentation
+Group(zh_CN.UTF-8): 文档
 Requires:       %{name} = %{version}-%{release}
 %if 0%{?fedora} >= 11 || 0%{?rhel} >= 6
 BuildArch:      noarch
@@ -56,6 +68,9 @@ BuildArch:      noarch
 
 %description doc
 Doxygen documentation for libmicrohttpd and some example source code
+
+%description doc -l zh_CN.UTF-8
+%{name} 的文档。
 
 %prep
 %setup -q
@@ -84,6 +99,7 @@ mkdir examples
 install -m 644 src/examples/*.c examples
 
 cp -R doc/doxygen/html html
+magic_rpm_clean.sh
 
 %clean
 rm -rf %{buildroot}
@@ -115,6 +131,7 @@ fi
 %{_includedir}/microhttpd.h
 %{_libdir}/libmicrohttpd.so
 %{_libdir}/pkgconfig/libmicrohttpd.pc
+%{_libdir}/pkgconfig/libmicrospdy.pc
 %{_includedir}/microspdy.h
 %{_libdir}/libmicrospdy.so
 
@@ -128,6 +145,9 @@ fi
 %doc html
 
 %changelog
+* Tue Jul 22 2014 Liu Di <liudidi@gmail.com> - 0.9.37-1
+- 更新到 0.9.37
+
 * Fri May 02 2014 Liu Di <liudidi@gmail.com> - 0.9.33-2
 - 为 Magic 3.0 重建
 

@@ -1,5 +1,5 @@
 Name:           liblockfile
-Version:        1.08
+Version: 1.09
 Release:        1%{?dist}
 Summary:        This implements a number of functions found in -lmail on SysV systems
 
@@ -78,6 +78,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Jul 18 2014 Liu Di <liudidi@gmail.com> - 1.09-1
+- 更新到 1.09
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 1.08-13
 - 为 Magic 3.0 重建
 
