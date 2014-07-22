@@ -5,16 +5,16 @@
 Summary: iODBC Driver Manager
 Summary(zh_CN.UTF-8): iODBC 驱动管理器
 Name: libiodbc
-Version: 3.52.7
+Version: 3.52.9
 Release: 1%{?dist}
 Group: System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
 License: LGPLv2 or BSD
 URL: http://www.iodbc.org/
-Source0: http://www.iodbc.org/downloads/iODBC/libiodbc-%{version}.tar.gz
+Source0: http://downloads.sourceforge.net/project/iodbc/iodbc/%{version}/libiodbc-%{version}.tar.gz
 BuildRoot: %(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
 
-Patch1: libiodbc-3.52.6-multilib.patch
+Patch1: libiodbc-3.52.9-multilib.patch
 
 %{?_enable_gui:BuildRequires: gtk2-devel}
 BuildRequires: chrpath
@@ -58,7 +58,7 @@ iODBC 开发使用的图形界面管理器.
 %prep
 %setup -q
 
-%patch1 -p0 -b .multilib
+%patch1 -p1 -b .multilib
 
 # fix header permissions
 chmod -x include/*.h
@@ -130,6 +130,9 @@ rm -rf %{buildroot}
 %endif
 
 %changelog
+* Fri Jul 18 2014 Liu Di <liudidi@gmail.com> - 3.52.9-1
+- 更新到 3.52.9
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 3.52.7-5
 - 为 Magic 3.0 重建
 

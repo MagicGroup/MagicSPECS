@@ -8,7 +8,7 @@
 
 Name:          usbmuxd
 Version:       1.0.9
-Release:       0.3.%{gittag}%{?dist}
+Release:       0.4.%{gittag}%{?dist}
 Summary:       Daemon for communicating with Apple's iOS devices
 
 Group:         Applications/System
@@ -48,7 +48,7 @@ sed -i.user 's/-U usbmux/-U usbmuxd/' udev/usbmuxd.service.in
 
 %build
 NOCONFIGURE=1 ./autogen.sh
-%configure
+CFLAGS=-D_BSD_SOURCE %configure 
 
 make %{?_smp_mflags} V=1
 
@@ -83,6 +83,9 @@ exit 0
 %{_sbindir}/usbmuxd
 
 %changelog
+* Mon Jul 21 2014 Liu Di <liudidi@gmail.com> - 1.0.9-0.4.c24463e
+- 为 Magic 3.0 重建
+
 * Sun Jun 08 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.0.9-0.3.c24463e
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

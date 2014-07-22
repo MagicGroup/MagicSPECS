@@ -1,9 +1,9 @@
 
 ## build/include liblastfm_fingerprint
-#define fingerprint 1
+%define fingerprint 1
 
 Name:	 liblastfm
-Version: 1.0.1
+Version: 1.0.3
 Release: 3%{?dist}
 Summary: Libraries to integrate Last.fm services
 Summary(zh_CN.UTF-8): 集成 Last.fm 服务的库
@@ -60,7 +60,7 @@ Requires: %{name}-fingerprint%{?_isa} = %{version}-%{release}
 %{name} 的开发包。
 
 %prep
-%setup -q -n eartle-liblastfm-9b4efb5 
+%setup -q 
 
 
 %build
@@ -113,6 +113,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Jul 18 2014 Liu Di <liudidi@gmail.com> - 1.0.3-3
+- 更新到 1.0.3
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 1.0.1-3
 - 为 Magic 3.0 重建
 

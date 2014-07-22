@@ -1,9 +1,0 @@
-diff -Ppru a/utils/CMakeLists.txt b/utils/CMakeLists.txt
---- utils/CMakeLists.txt	2013-10-14 17:57:12.000000000 +0200
-+++ utils/CMakeLists.txt	2013-11-25 10:37:45.053026279 +0100
-@@ -2,4 +2,4 @@
- find_package(Boost REQUIRED COMPONENTS program_options)
- 
- add_executable(kolabformatchecker kolabformatchecker.cpp)
--target_link_libraries(kolabformatchecker kolab_static ${Boost_LIBRARIES})
-+target_link_libraries(kolabformatchecker kolab ${Boost_LIBRARIES})

@@ -4,7 +4,7 @@
 Summary: Library for accessing MusicBrainz servers
 Name: libmusicbrainz5
 Version: 5.0.1
-Release: 10%{?dist}
+Release: 11%{?dist}
 License: LGPLv2
 Group: System Environment/Libraries
 URL: http://www.musicbrainz.org/
@@ -82,6 +82,9 @@ rm -f docs/installdox
 
 
 %changelog
+* Tue Jul 22 2014 Liu Di <liudidi@gmail.com> - 5.0.1-11
+- 为 Magic 3.0 重建
+
 * Wed Jun 11 2014 Christophe Fergeau <cfergeau@redhat.com> 5.0.1-10
 - Fix documentation build with doxygen 1.8.7
   Resolves: rhbz#1106042

@@ -1,6 +1,6 @@
 Name:           liboauth
 Version:        1.0.1
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        OAuth library functions
 
 Group:          System Environment/Libraries
@@ -76,6 +76,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Mon Jul 21 2014 Liu Di <liudidi@gmail.com> - 1.0.1-3
+- 为 Magic 3.0 重建
+
 * Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.0.1-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
 

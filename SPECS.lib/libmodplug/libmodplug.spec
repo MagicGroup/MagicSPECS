@@ -1,10 +1,12 @@
 Name:           libmodplug
-Version:        0.8.8.4
-Release:        2%{?dist}
+Version: 0.8.8.5
+Release:        1%{?dist}
 Epoch:          1
 Summary:        Modplug mod music file format library
+Summary(zh_CN.UTF-8): Modplug mod 音乐文件格式库
 
 Group:          System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 License:        Public Domain
 URL:            http://modplug-xmms.sourceforge.net/
 Source0:        http://downloads.sourceforge.net/modplug-xmms/%{name}-%{version}.tar.gz
@@ -15,14 +17,21 @@ BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 %description
 %{summary}.
 
+%description -l zh_CN.UTF-8
+Modplug mod 音乐文件格式库。
+
 %package        devel
 Summary:        Development files for the Modplug mod music file format library
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       %{name}%{?_isa} = %{epoch}:%{version}-%{release}
 
 %description    devel
 %{summary}.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -39,7 +48,7 @@ make %{?_smp_mflags} V=1
 rm -rf $RPM_BUILD_ROOT
 make install DESTDIR=$RPM_BUILD_ROOT
 rm -f $RPM_BUILD_ROOT%{_libdir}/*.la
-
+magic_rpm_clean.sh
 
 %check
 make check
@@ -67,6 +76,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Tue Jul 22 2014 Liu Di <liudidi@gmail.com> - 1:0.8.8.5-1
+- 更新到 0.8.8.5
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 1:0.8.8.4-2
 - 为 Magic 3.0 重建
 

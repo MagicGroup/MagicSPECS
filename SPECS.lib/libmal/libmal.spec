@@ -4,7 +4,7 @@ Name:    libmal
 # NOTE: this isn't the latest version, but is the last version known to 
 # work with kdepim-3.5.x
 Version: 0.44.1
-Release: 3%{?dist}
+Release: 4%{?dist}
 License: MPL	
 Url: 	 http://jasonday.home.att.net/code/libmal/ 
 Source0: http://jasonday.home.att.net/code/libmal/libmal-%{version}.tar.gz 
@@ -84,6 +84,9 @@ rm -rf %{buildroot} %{_builddir}/%{buildsubdir}
 
 
 %changelog
+* Fri Jul 18 2014 Liu Di <liudidi@gmail.com> - 0.44.1-4
+- 为 Magic 3.0 重建
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 0.44.1-3
 - 为 Magic 3.0 重建
 

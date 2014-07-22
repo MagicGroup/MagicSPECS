@@ -1,9 +1,11 @@
 Name:          libmx
 Version:       1.4.7
-Release:       7%{?dist}
+Release:       8%{?dist}
 Summary:       A clutter widget toolkit
+Summary(zh_CN.UTF-8): clutter 部件工具集
 
 Group:         System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 License:       LGPLv2
 URL:           http://www.clutter-project.org
 Source0:       https://github.com/downloads/clutter-project/mx/mx-%{version}.tar.xz
@@ -27,9 +29,14 @@ It also implements some standard layout managers. One other interesting feature
 is the possibility of setting style properties from a css-like file. It is 
 currently used by Moblin to provide the user experience.
 
+%description -l zh_CN.UTF-8
+clutter 部件工具集。
+
 %package devel
 Summary: Development package for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: %{name}%{?_isa} = %{version}-%{release}
 Requires: clutter-devel, gdk-pixbuf2-devel
 Requires: pkgconfig
@@ -38,15 +45,23 @@ Requires: pkgconfig
 Header files and libraries used for development with MX, a clutter widget 
 toolkit, currently used primarily by Moblin.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
 %package docs
 Summary: Documentation files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的文档
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: %{name} = %{version}-%{release}
 BuildArch: noarch
 
 %description docs
 This package contains developer documentation for MX, a clutter widget 
 toolkit, currently used primarily by Moblin.
+
+%description docs -l zh_CN.UTF-8
+%{name} 的文档。
 
 %prep
 %setup -q -n mx-%{version}
@@ -89,6 +104,9 @@ magic_rpm_clean.sh
 %{_datadir}/gtk-doc/html/mx-gtk
 
 %changelog
+* Tue Jul 22 2014 Liu Di <liudidi@gmail.com> - 1.4.7-8
+- 为 Magic 3.0 重建
+
 * Fri May 02 2014 Liu Di <liudidi@gmail.com> - 1.4.7-7
 - 为 Magic 3.0 重建
 

@@ -1,5 +1,5 @@
 Name: libibverbs
-Version: 1.1.6
+Version: 1.1.8
 Release: 3%{?dist}
 Summary: A library for direct userspace use of RDMA (InfiniBand/iWARP) hardware
 Summary(zh_CN.UTF-8): 用户空间直接使用 RDMA 硬件的库
@@ -102,6 +102,9 @@ rm -rf %{buildroot}
 %{_mandir}/man1/*
 
 %changelog
+* Fri Jul 18 2014 Liu Di <liudidi@gmail.com> - 1.1.8-3
+- 更新到 1.1.8
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 1.1.6-3
 - 为 Magic 3.0 重建
 

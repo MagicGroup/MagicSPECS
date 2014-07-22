@@ -2,7 +2,7 @@ Summary:      Library for manipulating RDF files describing LADSPA plugins
 Summary(zh_CN.UTF-8): 处理描述 LADSPA 插件的 RDF 文件的库
 Name:         liblrdf
 Version:      0.5.0
-Release:      5%{?dist}
+Release:      6%{?dist}
 License:      GPLv2+
 Group:        System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
@@ -67,6 +67,9 @@ magic_rpm_clean.sh
 %{_libdir}/pkgconfig/*
 
 %changelog
+* Fri Jul 18 2014 Liu Di <liudidi@gmail.com> - 0.5.0-6
+- 为 Magic 3.0 重建
+
 * Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.5.0-5
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
 

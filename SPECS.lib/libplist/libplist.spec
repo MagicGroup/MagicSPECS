@@ -1,18 +1,16 @@
 %{!?python_sitearch: %global python_sitearch %(%{__python} -c "from distutils.sysconfig import get_python_lib; print(get_python_lib(1))")}
 
 Name:          libplist
-Version:       1.8
-Release:       5%{?dist}
+Version: 1.11
+Release:       3%{?dist}
 Summary:       Library for manipulating Apple Binary and XML Property Lists
+Summary(zh_CN.UTF-8): 处理 Apple 二进制和 XML 属性列表的库
 
 Group:         System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 License:       LGPLv2+
 URL:           http://www.libimobiledevice.org/
 Source0:       http://www.libimobiledevice.org/downloads/%{name}-%{version}.tar.bz2
-
-## upstreamable patches
-# add support for GNUInstallDirs (where available) and ${LIB_SUFFIX} convention
-Patch50: libplist-1.8-cmake_lib_suffix.patch
 
 BuildRequires: libxml2-devel
 BuildRequires: python-devel
@@ -23,53 +21,61 @@ BuildRequires: Cython
 %description
 libplist is a library for manipulating Apple Binary and XML Property Lists
 
+%description -l zh_CN.UTF-8
+处理 Apple 二进制和 XML 属性列表的库。
+
 %package devel
 Summary: Development package for libplist
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: libplist = %{version}-%{release}
 Requires: pkgconfig
 
 %description devel
 %{name}, development headers and libraries.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
 %package python
 Summary: Python package for libplist
+Summary(zh_CN.UTF-8): %{name} 的 Python 包
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: libplist = %{version}-%{release}
 Requires: python
 
 %description python
 %{name}, python libraries and support
 
+%description python -l zh_CN.UTF-8
+%{name} 的 Python 包。
+
 %prep
 %setup -q
-%patch50 -p1 -b .cmake_lib_suffix
 
 %build
-export CMAKE_PREFIX_PATH=/usr
-%{cmake} -DCMAKE_SKIP_RPATH:BOOL=ON .
+%configure --disable-static
 
 make V=1
 
 %install
-export CMAKE_PREFIX_PATH=/usr
 make install DESTDIR=$RPM_BUILD_ROOT
-magic_rpm_clean.sh
+
+find $RPM_BUILD_ROOT -type f -name "*.la" -delete
 
 %post -p /sbin/ldconfig
 
 %postun -p /sbin/ldconfig
 
 %files
-%defattr(-,root,root,-)
 %doc AUTHORS COPYING.LESSER README
-%{_bindir}/plutil
-%{_bindir}/plutil-%{version}
-%{_libdir}/libplist.so.*
-%{_libdir}/libplist++.so.*
+%{_bindir}/plistutil
+%{_libdir}/libplist.so.2*
+%{_libdir}/libplist++.so.2*
 
 %files devel
-%defattr(-,root,root,-)
 %{_libdir}/pkgconfig/libplist.pc
 %{_libdir}/pkgconfig/libplist++.pc
 %{_libdir}/libplist.so
@@ -77,10 +83,19 @@ magic_rpm_clean.sh
 %{_includedir}/plist
 
 %files python
-%defattr(-,root,root,-)
 %{python_sitearch}/plist*
 
+
 %changelog
+* Mon Jul 21 2014 Liu Di <liudidi@gmail.com> - 1.11-3
+- 为 Magic 3.0 重建
+
+* Mon Jul 21 2014 Liu Di <liudidi@gmail.com> - 1.11-2
+- 为 Magic 3.0 重建
+
+* Mon Jul 21 2014 Liu Di <liudidi@gmail.com> - 1.11-1
+- 更新到 1.11
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 1.8-5
 - 为 Magic 3.0 重建
 
