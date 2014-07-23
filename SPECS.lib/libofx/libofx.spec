@@ -1,6 +1,6 @@
 Summary: A library for supporting Open Financial Exchange (OFX)
 Name: libofx
-Version: 0.9.5
+Version: 0.9.9
 Release: 4%{?dist}
 URL: http://libofx.sourceforge.net/
 Group:	System Environment/Libraries
@@ -61,7 +61,7 @@ rm -rf $RPM_BUILD_ROOT%{_libdir}/lib*.la $RPM_BUILD_ROOT%{_datadir}/doc
 %files
 %defattr(-,root,root)
 %doc AUTHORS COPYING ChangeLog NEWS README totest.txt
-%{_libdir}/libofx.so.5*
+%{_libdir}/libofx.so.*
 %{_datadir}/libofx/
 
 %files -n ofx
@@ -77,6 +77,9 @@ rm -rf $RPM_BUILD_ROOT%{_libdir}/lib*.la $RPM_BUILD_ROOT%{_datadir}/doc
 %{_libdir}/libofx.so
 
 %changelog
+* Wed Jul 23 2014 Liu Di <liudidi@gmail.com> - 0.9.9-4
+- 更新到 0.9.9
+
 * Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.9.5-4
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
 

@@ -4,8 +4,10 @@ Epoch:          1
 Version:        0.22
 Release:        12%{?dist}
 Summary:        A synchronization framework
+Summary(zh_CN.UTF-8): 一个同步框架
 
 Group:          System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 License:        LGPLv2+
 URL:            http://www.opensync.org/
 Source0:        http://www.opensync.org/download/releases/%{version}/%{name}-%{version}.tar.bz2
@@ -38,9 +40,14 @@ devices, a powerful sync-engine and the framework itself. The synchronization
 framework is kept very flexible and is capable of synchronizing any type of
 data, including contacts, calendar, tasks, notes and files. 
 
+%description -l zh_CN.UTF-8
+一个同步框架。
+
 %package devel
 Summary:        Development package for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       %{name} = %{epoch}:%{version}-%{release}
 Requires:       pkgconfig
 Requires:       glib2-devel
@@ -51,13 +58,16 @@ Requires:       sqlite-devel
 The %{name}-devel package contains the files needed for development
 with %{name}.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
 %prep
 %setup -q
 %patch0
 %patch1 -p1 -b .unusedvar
 
 # Fixup expected version of SWIG:
-sed -i -e "s|AC_PROG_SWIG(1.3.17)|AC_PROG_SWIG(2.0.0)|" configure.in
+sed -i -e "s|AC_PROG_SWIG(1.3.17)|AC_PROG_SWIG(3.0.0)|" configure.in
 # and rebuild the configure script:
 autoconf
 
@@ -88,6 +98,7 @@ chrpath --delete $RPM_BUILD_ROOT%{_libexecdir}/osplugin
 chrpath --delete $RPM_BUILD_ROOT%{_libdir}/libosengine.so.*
 chrpath --delete $RPM_BUILD_ROOT%{_libdir}/opensync/formats/*so
 chrpath --delete $RPM_BUILD_ROOT%{python_sitearch}/_opensync.so
+magic_rpm_clean.sh
 
 %clean
 rm -rf $RPM_BUILD_ROOT

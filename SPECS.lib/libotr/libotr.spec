@@ -1,8 +1,8 @@
 Summary: Off-The-Record Messaging library and toolkit
 Summary(zh_CN.UTF-8): Off-The-Record (OTR) 消息库和工具
 Name: libotr
-Version: 3.2.0
-Release: 6%{?dist}
+Version: 4.0.0
+Release: 1%{?dist}
 License: GPLv2 and LGPLv2
 Group: System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
@@ -80,6 +80,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Wed Jul 23 2014 Liu Di <liudidi@gmail.com> - 4.0.0-1
+- 更新到 4.0.0
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 3.2.0-6
 - 为 Magic 3.0 重建
 
