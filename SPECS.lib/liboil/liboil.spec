@@ -1,8 +1,8 @@
 Summary: Library of Optimized Inner Loops, CPU optimized functions
 Summary(zh_CN.UTF-8): 优化内部循环的库，CPU 优化函数
 Name: liboil
-Version: 0.3.16
-Release: 3%{?dist}
+Version: 0.3.17
+Release: 1%{?dist}
 # See COPYING which details everything, various BSD licenses apply
 License: BSD
 Group: System Environment/Libraries
@@ -98,6 +98,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Jul 23 2014 Liu Di <liudidi@gmail.com> - 0.3.17-1
+- 更新到 0.3.17
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 0.3.16-3
 - 为 Magic 3.0 重建
 

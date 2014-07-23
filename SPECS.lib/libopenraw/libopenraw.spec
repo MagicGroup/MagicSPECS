@@ -1,6 +1,7 @@
 Summary:	Decode camera RAW files
+Summary(zh_CN.UTF-8): 解码数码相机的 RAW 文件
 Name:		libopenraw
-Version:	0.0.9
+Version: 	0.0.9
 Release:	2%{?dist}
 License:	LGPLv3+
 URL:		http://libopenraw.freedesktop.org/wiki
@@ -21,16 +22,24 @@ that dcraw is not suited for easy integration into applications, and
 there is a need for an easy to use API to build free software digital
 image processing application.
 
+%description -l zh_CN.UTF-8
+解码数码相机的 RAW 文件。
+
 %package gnome
 Summary:	GUI components of %{name}
+Summary(zh_CN.UTF-8): %{name} 的图形界面组件
 
 Requires:	%{name} = %{version}-%{release}
 
 %description gnome 
 The %{name}-gnome package contains gui components of %{name}.
 
+%description gnome -l zh_CN.UTF-8
+%{name} 的图形界面组件。
+
 %package devel
 Summary:	Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 
 Requires:	%{name} = %{version}-%{release}
 Requires:	pkgconfig
@@ -39,9 +48,12 @@ Requires:	pkgconfig
 The %{name}-devel package contains libraries and header files for
 developing applications that use %{name}.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
 %package gnome-devel
 Summary:	Development files for %{name}-gnome
-
+Summary(zh_CN.UTF-8): %{name}-gnome 的开发包
 Requires:	%{name}-gnome = %{version}-%{release}
 Requires:	%{name}-devel = %{version}-%{release}
 Requires:	pkgconfig
@@ -50,8 +62,12 @@ Requires:	pkgconfig
 The %{name}-gnome-devel package contains libraries and header files for
 developing applications that use %{name}-gnome.
 
+%description gnome-devel -l zh_CN.UTF-8
+%{name}-gnome 的开发包。
+
 %package pixbuf-loader
 Summary:	RAW image loader for GTK+ applications
+Summary(zh_CN.UTF-8): GTK+ 程序的 RAW 图像载入器
 
 Requires:	gtk2
 Requires:	%{name} = %{version}-%{release}
@@ -61,6 +77,9 @@ Requires(postun): gdk-pixbuf2
 %description pixbuf-loader
 %{name}-pixbuf-loader contains a plugin to load RAW images, as created by
 digital cameras, in GTK+ applications.
+
+%description pixbuf-loader -l zh_CN.UTF-8
+GTK+ 程序的 RAW 图像载入器。
 
 %prep
 %setup -q
@@ -81,6 +100,7 @@ rm -rf $RPM_BUILD_ROOT
 
 make install DESTDIR=$RPM_BUILD_ROOT
 find $RPM_BUILD_ROOT -type f -name "*.la" -delete
+magic_rpm_clean.sh
 
 %post -p /sbin/ldconfig
 
