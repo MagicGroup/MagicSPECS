@@ -1,9 +1,10 @@
 
 Name:           libpqxx
 Summary:        C++ client API for PostgreSQL
+Summary(zh_CN.UTF-8): PostgreSQL 的 C++ 客户端 API
 Epoch:          1
 Version:        4.0.1
-Release:        1%{?dist}
+Release:        2%{?dist}
 
 License:        BSD
 URL:            http://pqxx.org/
@@ -21,18 +22,29 @@ C++ client API for PostgreSQL. The standard front-end (in the sense of
 "language binding") for writing C++ programs that use PostgreSQL.
 Supersedes older libpq++ interface.
 
+%description -l zh_CN.UTF-8
+PostgreSQL 的 C++ 客户端 API。
+
 %package devel
 Summary:        Development tools for %{name} 
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Requires:       %{name}%{?_isa} = %{epoch}:%{version}-%{release}
 Requires:       postgresql-devel
 %description devel
 %{summary}.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
 %package doc
 Summary: Developer documentation for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发文档
 BuildArch: noarch
 %description doc
 %{summary}.
+
+%description doc -l zh_CN.UTF-8
+%{name} 的开发文档。
 
 
 %prep
@@ -54,7 +66,7 @@ make %{?_smp_mflags}
 make install DESTDIR=%{buildroot}
 
 rm -fv %{buildroot}%{_libdir}/lib*.la
-
+magic_rpm_clean.sh
 
 %check 
 # FIXME: most/all fail, need already-running postgresql instance?
@@ -80,6 +92,9 @@ make %{?_smp_mflags} check ||:
 
 
 %changelog
+* Mon Jul 28 2014 Liu Di <liudidi@gmail.com> - 1:4.0.1-2
+- 为 Magic 3.0 重建
+
 * Tue Jun 24 2014 Rex Dieter <rdieter@fedoraproject.org> 1:4.0.1-1
 - 4.0.1
 

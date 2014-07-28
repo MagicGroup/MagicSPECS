@@ -1,8 +1,10 @@
 Name:		libprojectM
 Version:	2.0.1
-Release:	23%{?dist}
+Release:	24%{?dist}
 Summary:	The libraries for the projectM music visualization plugin
+Summary(zh_CN.UTF-8): projectM 音乐可视化插件的库
 Group:		Applications/Multimedia
+Group(zh_CN.UTF-8): 应用程序/多媒体
 License:	LGPLv2+
 URL:		http://projectm.sourceforge.net/
 Source0:	http://downloads.sourceforge.net/projectm/%{name}-%{version}.tar.bz2
@@ -35,14 +37,22 @@ like you can create presets that connect music with incredible visuals.
 projectM is an LGPL'ed reimplementation of Milkdrop under OpenGL. All projectM
 requires is a video card with 3D acceleration and your favorite music.
 
+%description -l zh_CN.UTF-8
+projectM 音乐可视化插件的库。
+
 %package	devel
 Summary:	Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:		Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:	%{name}%{?_isa} = %{version}-%{release}, pkgconfig
 
 %description	devel
 The %{name}-devel package contains libraries and header files for
 developing applications that use %{name}.
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -74,6 +84,7 @@ make %{?_smp_mflags} VERBOSE=1
 rm -rf $RPM_BUILD_ROOT
 make install DESTDIR=$RPM_BUILD_ROOT
 find $RPM_BUILD_ROOT -name '*.la' -exec rm -f {} ';'
+magic_rpm_clean.sh
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -95,6 +106,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/pkgconfig/*.pc
 
 %changelog
+* Mon Jul 28 2014 Liu Di <liudidi@gmail.com> - 2.0.1-24
+- 为 Magic 3.0 重建
+
 * Tue May 27 2014 Liu Di <liudidi@gmail.com> - 2.0.1-23
 - 为 Magic 3.0 重建
 

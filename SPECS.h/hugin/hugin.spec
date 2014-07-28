@@ -2,7 +2,7 @@
 Summary: A panoramic photo stitcher and more
 Name: hugin
 Version:	2013.0.0
-Release: 5%{?dist}
+Release: 6%{?dist}
 License: GPLv2+
 Group: Applications/Multimedia
 Source: http://downloads.sourceforge.net/hugin/%{name}-%{version}.tar.bz2
@@ -171,6 +171,9 @@ touch --no-create %{_datadir}/icons/gnome || :
 %{_mandir}/man1/pto_gen.*
 
 %changelog
+* Fri Jul 25 2014 Liu Di <liudidi@gmail.com> - 2013.0.0-6
+- 为 Magic 3.0 重建
+
 * Wed May 28 2014 Liu Di <liudidi@gmail.com> - 2013.0.0-5
 - 更新到 2013.0.0
 
