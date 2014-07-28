@@ -1,0 +1,10 @@
+--- dpkg-1.17.6-orig/triplettable	2014-07-28 14:25:53.563813031 +0000
++++ dpkg-1.17.6/triplettable	2014-07-28 14:43:47.764558334 +0000
+@@ -12,6 +12,7 @@
+ gnuabin32-linux-mips64el	mipsn32el
+ gnuabin32-linux-mips64	mipsn32
+ gnuabi64-linux-mips64el	mips64el
++gnu-linux-mips64el      mips64el
+ gnuabi64-linux-mips64	mips64
+ gnuspe-linux-powerpc	powerpcspe
+ gnux32-linux-amd64	x32
