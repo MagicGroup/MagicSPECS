@@ -1,15 +1,15 @@
 Name:           libqb
-Version:        0.14.3
-Release:        2%{?dist}
+Version: 0.17.0
+Release: 1%{?dist}
 Summary:        An IPC library for high performance servers
+Summary(zh_CN.UTF-8): 高性能服务的 IPC 库
 
 Group:          System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 License:        LGPLv2+
 URL:            http://www.libqb.org
 Source0:        https://fedorahosted.org/releases/q/u/quarterback/%{name}-%{version}.tar.xz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-
-Patch1: 0001-TEST-fix-typo-s-in-check_ipc.c.patch
 
 BuildRequires:  libtool doxygen procps check-devel automake
 
@@ -19,10 +19,11 @@ BuildRequires:  libtool doxygen procps check-devel automake
 libqb provides high performance client server reusable features.
 Initially these are IPC and poll.
 
+%description -l zh_CN.UTF-8
+高性能服务的 IPC 库。
+
 %prep
 %setup -q
-
-%patch1 -p1
 
 # work-around for broken epoll in rawhide/f17
 %build
@@ -70,6 +71,9 @@ developing applications that use %{name}.
 %{_mandir}/man8/qb-blackbox.8.gz
 
 %changelog
+* Mon Jul 28 2014 Liu Di <liudidi@gmail.com> - 0.17.0-1
+- 更新到 0.17.0
+
 
 * Mon Oct 29 2012 Angus Salkeld <asalkeld@redhat.com> - 0.14.3-2
 Fix test code highlighted by new check version
