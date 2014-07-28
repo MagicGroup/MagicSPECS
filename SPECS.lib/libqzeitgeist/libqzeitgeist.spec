@@ -1,8 +1,9 @@
 
 Name:    libqzeitgeist
 Summary: Qt Zeitgeist Library
+Summary(zh_CN.UTF-8): Qt Zeitgest 库
 Version: 0.8.0
-Release: 6%{?dist}
+Release: 7%{?dist}
 
 License: LGPLv2+
 URL:     http://projects.kde.org/projects/kdesupport/libqzeitgeist 
@@ -26,12 +27,18 @@ BuildRequires: zeitgeist
 %description
 A Qt interface to the Zeitgeist event tracking system.
 
+%description -l zh_CN.UTF-8
+Zeitgeist 事件跟踪系统的 Qt 接口
+
 %package devel
 Summary: Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Requires: %{name}%{?_isa} = %{version}-%{release}
 %description devel
 %{summary}
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q 
@@ -78,6 +85,9 @@ test "$(pkg-config --modversion QZeitgeist)" = "%{version}"
 
 
 %changelog
+* Mon Jul 28 2014 Liu Di <liudidi@gmail.com> - 0.8.0-7
+- 为 Magic 3.0 重建
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 0.8.0-6
 - 为 Magic 3.0 重建
 
