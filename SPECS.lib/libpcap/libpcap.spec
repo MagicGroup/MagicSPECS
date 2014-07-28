@@ -1,9 +1,11 @@
 Name: libpcap
 Epoch: 14
-Version: 1.2.1
-Release: 3%{?dist}
+Version: 1.5.3
+Release: 1%{?dist}
 Summary: A system-independent interface for user-level packet capture
+Summary(zh_CN.UTF-8): 系统无关的用户级包捕捉库
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 License: BSD with advertising
 URL: http://www.tcpdump.org
 BuildRequires: glibc-kernheaders >= 2.2.0 bison flex bluez-libs-devel
@@ -26,9 +28,14 @@ in each application.
 Install libpcap if you need to do low-level network traffic monitoring
 on your network.
 
+%description -l zh_CN.UTF-8
+系统无关的用户级包捕捉库。
+
 %package devel
 Summary: Libraries and header files for the libpcap library
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: %{name} = %{epoch}:%{version}-%{release}
 
 %description devel
@@ -43,12 +50,15 @@ in each application.
 This package provides the libraries, include files, and other 
 resources needed for developing libpcap applications.
  
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
 %prep
 %setup -q
 
 %patch1 -p1 -b .man 
 %patch2 -p1 -b .multilib
-%patch3 -p1 -b .s390
+#%patch3 -p1 -b .s390
 
 #sparc needs -fPIC 
 %ifarch %{sparc}
@@ -65,6 +75,7 @@ rm -rf $RPM_BUILD_ROOT
 
 make DESTDIR=$RPM_BUILD_ROOT install
 rm -f $RPM_BUILD_ROOT%{_libdir}/libpcap.a
+magic_rpm_clean.sh
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -90,6 +101,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man5/pcap*.5*
 
 %changelog
+* Fri Jul 25 2014 Liu Di <liudidi@gmail.com> - 14:1.5.3-1
+- 更新到 1.5.3
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 14:1.2.1-3
 - 为 Magic 3.0 重建
 

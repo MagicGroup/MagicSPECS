@@ -1,8 +1,10 @@
 Name:		libpari23
 Version:	2.3.5
-Release:	7%{?dist}
+Release:	8%{?dist}
 Summary:	Number Theory-oriented Computer Algebra Library
+Summary(zh_CN.UTF-8): 用于数论的计算机代数库
 Group:		System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 # No version is specified
 License:	GPL+
 URL:		http://pari.math.u-bordeaux.fr/
@@ -32,15 +34,29 @@ numbers, etc., and a lot of transcendental functions.
 This is an old version of the library, for compatibility with applications and
 library bindings that have not been migrated to the current stable release.
 
+%description -l zh_CN.UTF-8
+PARI/GP 是一种针对数论中的快速计算(大数分解，代数数论，椭圆曲线...) 而设计的广泛
+应用的计算机代数系统，同样具备大量实用的函数来对于数学实体的计算， 诸如矩阵，多
+项式，幂级数，代数数，以及相当多的超越方程等等。 PARI也可以作为快速计算的C语言库。
+
+这个系统最初是由Henri Cohen和他的合作者们（来自法国的波尔多第一大学）发展起来的。 
+PARI现在在公共授权条款(GPL)之下并在许多志愿者的帮助下由Karim Belabas进行维护。
+
 %package devel
 Summary:	Header files and libraries for PARI development
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:		Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:	%{name} = %{version}-%{release}
 Requires:	pkgconfig
 
 %description devel
 Header files and libraries for PARI development with the old version 2.3.x
 API.
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
 
 %prep
 %setup -q -n pari-%{version}
@@ -123,6 +139,7 @@ rm -rf %{buildroot}%{_datadir}/emacs/site-lisp/pari/
 
 # Placate rpmlint regarding binary and library permissions
 %{_fixperms} %{buildroot}{%{_bindir},%{_libdir}}
+magic_rpm_clean.sh
 
 %check
 make dobench
@@ -165,6 +182,9 @@ make dotest-round4
 %{_datadir}/%{name}/
 
 %changelog
+* Fri Jul 25 2014 Liu Di <liudidi@gmail.com> - 2.3.5-8
+- 为 Magic 3.0 重建
+
 * Thu Jun 19 2014 Liu Di <liudidi@gmail.com> - 2.3.5-7
 - 为 Magic 3.0 重建
 

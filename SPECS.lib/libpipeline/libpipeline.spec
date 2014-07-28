@@ -1,11 +1,13 @@
 %global gnulib_ver 20120404-stable
 
 Summary: A pipeline manipulation library
+Summary(zh_CN.UTF-8): 一个管道操作库
 Name: libpipeline
-Version: 1.2.2
-Release: 2%{?dist}
+Version: 1.3.0
+Release: 1%{?dist}
 License: GPLv3+
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 URL: http://libpipeline.nongnu.org/
 Source: http://download.savannah.gnu.org/releases/libpipeline/libpipeline-%{version}.tar.gz
 
@@ -24,15 +26,23 @@ often error-prone and insecure. This alleviates programmers of the need to
 laboriously construct pipelines using lower-level primitives such as fork(2)
 and execve(2).
 
+%description -l zh_CN.UTF-8
+一个管道操作库。
+
 %package devel
 Summary: Header files and libraries for pipeline manipulation library
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: %{name}%{?_isa} = %{version}-%{release}
 Requires: pkgconfig
 
 %description devel
 libpipeline-devel contains the header files and libraries needed
 to develop programs that use libpipeline library.
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -48,6 +58,7 @@ make check
 %install
 make install DESTDIR=$RPM_BUILD_ROOT prefix=%{_prefix} INSTALL='install -p'
 rm $RPM_BUILD_ROOT/%{_libdir}/libpipeline.la
+magic_rpm_clean.sh
 
 %post -p /sbin/ldconfig
 
@@ -64,6 +75,9 @@ rm $RPM_BUILD_ROOT/%{_libdir}/libpipeline.la
 %{_mandir}/man3/*
 
 %changelog
+* Mon Jul 28 2014 Liu Di <liudidi@gmail.com> - 1.3.0-1
+- 更新到 1.3.0
+
 * Fri Nov 30 2012 Peter Schiffer <pschiffe@redhat.com> - 1.2.2-2
 - resolves: #876108
   fixed size_t underflow in pipeline_readline() function

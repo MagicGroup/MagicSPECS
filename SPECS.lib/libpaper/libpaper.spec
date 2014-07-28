@@ -1,8 +1,10 @@
 Name:		libpaper
 Version:	1.1.24
-Release:	4%{?dist}
+Release:	5%{?dist}
 Summary:	Library and tools for handling papersize
+Summary(zh_CN.UTF-8): 处理页面大小的库和工具
 Group:		System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 License:	GPLv2
 URL:		http://packages.qa.debian.org/libp/libpaper.html
 Source0:	http://ftp.debian.org/debian/pool/main/libp/libpaper/%{name}_%{version}.tar.gz
@@ -26,14 +28,22 @@ being to provide really basic functions (obtaining the system paper name
 and getting the height and width of a given kind of paper) that 
 applications can immediately integrate.
 
+%description -l zh_CN.UTF-8
+处理页面大小的库和工具。
+
 %package devel
 Summary:	Headers/Libraries for developing programs that use libpaper
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:		Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:	%{name} = %{version}-%{release}
 
 %description devel
 This package contains headers and libraries that programmers will need 
 to develop applications which use libpaper.
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q -n %{name}-%{version}
@@ -64,6 +74,7 @@ for i in cs da de es fr gl hu it ja nl pt_BR sv tr uk vi; do
 	mkdir -p $RPM_BUILD_ROOT%{_datadir}/locale/$i/LC_MESSAGES/;
 	msgfmt debian/po/$i.po -o $RPM_BUILD_ROOT%{_datadir}/locale/$i/LC_MESSAGES/%{name}.mo;
 done
+magic_rpm_clean.sh
 %find_lang %{name}
 
 %clean
@@ -92,6 +103,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Fri Jul 25 2014 Liu Di <liudidi@gmail.com> - 1.1.24-5
+- 为 Magic 3.0 重建
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 1.1.24-4
 - 为 Magic 3.0 重建
 
