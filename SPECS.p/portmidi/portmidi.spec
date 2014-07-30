@@ -1,3 +1,4 @@
+%global _desktopdir %{?_desktopdir:%{_datadir}/applications}
 Summary:        Real-time Midi I/O Library
 Name:           portmidi
 Version:        217
@@ -12,6 +13,7 @@ Patch0:         portmidi-cmake.patch
 # Fix multilib conflict RHBZ#831432
 Patch1:         portmidi-no_date_footer.patch
 Patch2:		portmidi-nojava.patch
+Patch3:		portmidi-217-format-security.patch
 BuildRequires:  alsa-lib-devel
 BuildRequires:  cmake
 BuildRequires:  desktop-file-utils
@@ -70,8 +72,11 @@ configuration utility "pmdefaults" and some test applications.
 
 %prep
 %setup -q -n %{name}
-#%patch0 -p1 -b .buildfix
+%if 0%{?JAVA}
+%patch0 -p1 -b .buildfix
+%endif
 %patch1 -p1 -b .no.date
+%patch3 -p1
 
 %if ! 0%{?JAVA}
 %patch2 -p1
