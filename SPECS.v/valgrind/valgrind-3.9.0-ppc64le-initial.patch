@@ -1,0 +1,3456 @@
+From 4f0b04ae746ccb2a848292027defef48873b2598 Mon Sep 17 00:00:00 2001
+From: Carl Love <carll@us.ibm.com>
+Date: Tue, 8 Jul 2014 10:37:46 -0500
+Subject: [PATCH] POWER PC, add initial Little Endian support
+
+The IBM POWER processor now supports both Big Endian and Little Endian.
+This patch renames the #defines with the name ppc64 to ppc64be for the BE
+specific code.  This patch adds the Little Endian #define ppc64le to the
+
+Additionally, a few functions are renamed to remove BE from the name if the
+function is used by BE and LE. Functions that are BE specific have BE put
+in the name.
+
+The goals of this patch is to make sure #defines, function names and
+variables consistently use PPC64/ppc64 if it refers to BE and LE,
+PPC64BE/ppc64be if it is specific to BE, PPC64LE/ppc64le if it is LE
+specific.  The patch does not break the code for PPC64 Big Endian.
+
+The patch removes the BASH specific use of "BASH_SOURCE[0]" in
+tests/check_isa-2_06_cap and tests/check_isa-2_07 as it is not portable
+across other shells.
+
+Signed-off-by: Carl Love <carll@us.ibm.com>
+---
+ Makefile.all.am                             |  23 +-
+ Makefile.tool.am                            |  21 +-
+ VEX/priv/guest_ppc_toIR.c                   | 356 ++++++++++++++--------------
+ cachegrind/cg_arch.c                        |   2 +-
+ cachegrind/cg_branchpred.c                  |   2 +-
+ configure.ac                                |  57 ++++-
+ coregrind/launcher-darwin.c                 |  10 +-
+ coregrind/launcher-linux.c                  |   4 +-
+ coregrind/m_aspacemgr/aspacemgr-common.c    |   3 +-
+ coregrind/m_cache.c                         |   3 +-
+ coregrind/m_coredump/coredump-elf.c         |   4 +-
+ coregrind/m_debugger.c                      |   2 +-
+ coregrind/m_debuginfo/d3basics.c            |   5 +-
+ coregrind/m_debuginfo/debuginfo.c           |  15 +-
+ coregrind/m_debuginfo/priv_storage.h        |   2 +-
+ coregrind/m_debuginfo/readdwarf.c           |  15 +-
+ coregrind/m_debuginfo/readelf.c             |  47 ++--
+ coregrind/m_debuginfo/readmacho.c           |   4 +-
+ coregrind/m_debuginfo/storage.c             |   2 +-
+ coregrind/m_debuglog.c                      |   2 +-
+ coregrind/m_dispatch/dispatch-ppc64-linux.S |   6 +-
+ coregrind/m_gdbserver/target.c              |   2 +-
+ coregrind/m_initimg/initimg-linux.c         |  18 +-
+ coregrind/m_libcassert.c                    |   2 +-
+ coregrind/m_libcfile.c                      |  25 +-
+ coregrind/m_libcproc.c                      |   6 +-
+ coregrind/m_libcsetjmp.c                    |   4 +-
+ coregrind/m_machine.c                       |  26 +-
+ coregrind/m_main.c                          |  19 +-
+ coregrind/m_redir.c                         |   2 +-
+ coregrind/m_scheduler/scheduler.c           |   4 +-
+ coregrind/m_sigframe/sigframe-ppc64-linux.c |   4 +-
+ coregrind/m_signals.c                       |   4 +-
+ coregrind/m_stacktrace.c                    |  13 +-
+ coregrind/m_syscall.c                       |   4 +-
+ coregrind/m_syswrap/priv_types_n_macros.h   |   3 +-
+ coregrind/m_syswrap/syscall-ppc64-linux.S   |   4 +-
+ coregrind/m_syswrap/syswrap-linux.c         |   8 +-
+ coregrind/m_syswrap/syswrap-main.c          |  12 +-
+ coregrind/m_syswrap/syswrap-ppc64-linux.c   |   4 +-
+ coregrind/m_trampoline.S                    |   2 +-
+ coregrind/m_translate.c                     |  16 +-
+ coregrind/m_ume/elf.c                       |   6 +-
+ coregrind/m_ume/macho.c                     |   4 +-
+ coregrind/m_vki.c                           |   4 +-
+ coregrind/pub_core_aspacemgr.h              |   3 +-
+ coregrind/pub_core_basics.h                 |   2 +-
+ coregrind/pub_core_debuginfo.h              |   2 +-
+ coregrind/pub_core_machine.h                |   8 +-
+ coregrind/pub_core_mallocfree.h             |  15 +-
+ coregrind/pub_core_threadstate.h            |   2 +-
+ coregrind/pub_core_trampoline.h             |   2 +-
+ coregrind/pub_core_transtab_asm.h           |   4 +-
+ coregrind/vgdb-invoker-ptrace.c             |   6 +-
+ drd/drd_bitmap.h                            |   4 +-
+ drd/drd_load_store.c                        |   2 +-
+ drd/tests/unit_bitmap.c                     |   3 +-
+ helgrind/tests/annotate_hbefore.c           |   2 +-
+ include/pub_tool_basics.h                   |   7 +-
+ include/pub_tool_libcsetjmp.h               |   2 +-
+ include/pub_tool_machine.h                  |   2 +-
+ include/pub_tool_vkiscnums_asm.h            |   2 +-
+ include/valgrind.h                          |  22 +-
+ include/vki/vki-linux.h                     |   4 +-
+ memcheck/mc_machine.c                       |   7 +-
+ memcheck/tests/atomic_incs.c                |   8 +-
+ memcheck/tests/unit_libcbase.c              |   3 +-
+ tests/Makefile.am                           |   3 +-
+ tests/arch_test.c                           |   2 +-
+ tests/check_isa-2_06_cap                    |   2 +-
+ tests/check_isa-2_07_cap                    |   2 +-
+ tests/is_ppc64_BE.c                         |  14 ++
+ tests/power_insn_available.c                |   6 +-
+ 73 files changed, 506 insertions(+), 416 deletions(-)
+ create mode 100644 tests/is_ppc64_BE.c
+
+diff --git a/Makefile.all.am b/Makefile.all.am
+index 0d30ed5..f0b638d 100644
+--- a/Makefile.all.am
++++ b/Makefile.all.am
+@@ -229,15 +229,16 @@ if VGCONF_PLATVARIANT_IS_ANDROID
+ PRELOAD_LDFLAGS_COMMON_LINUX += -nostdlib
+ endif
+ 
+-PRELOAD_LDFLAGS_X86_LINUX    = $(PRELOAD_LDFLAGS_COMMON_LINUX) @FLAG_M32@
+-PRELOAD_LDFLAGS_AMD64_LINUX  = $(PRELOAD_LDFLAGS_COMMON_LINUX) @FLAG_M64@
+-PRELOAD_LDFLAGS_PPC32_LINUX  = $(PRELOAD_LDFLAGS_COMMON_LINUX) @FLAG_M32@
+-PRELOAD_LDFLAGS_PPC64_LINUX  = $(PRELOAD_LDFLAGS_COMMON_LINUX) @FLAG_M64@
+-PRELOAD_LDFLAGS_ARM_LINUX    = $(PRELOAD_LDFLAGS_COMMON_LINUX) @FLAG_M32@
+-PRELOAD_LDFLAGS_ARM64_LINUX  = $(PRELOAD_LDFLAGS_COMMON_LINUX) @FLAG_M64@
+-PRELOAD_LDFLAGS_X86_DARWIN   = $(PRELOAD_LDFLAGS_COMMON_DARWIN) -arch i386
+-PRELOAD_LDFLAGS_AMD64_DARWIN = $(PRELOAD_LDFLAGS_COMMON_DARWIN) -arch x86_64
+-PRELOAD_LDFLAGS_S390X_LINUX  = $(PRELOAD_LDFLAGS_COMMON_LINUX) @FLAG_M64@
+-PRELOAD_LDFLAGS_MIPS32_LINUX = $(PRELOAD_LDFLAGS_COMMON_LINUX) @FLAG_M32@
+-PRELOAD_LDFLAGS_MIPS64_LINUX = $(PRELOAD_LDFLAGS_COMMON_LINUX) @FLAG_M64@
++PRELOAD_LDFLAGS_X86_LINUX      = $(PRELOAD_LDFLAGS_COMMON_LINUX) @FLAG_M32@
++PRELOAD_LDFLAGS_AMD64_LINUX    = $(PRELOAD_LDFLAGS_COMMON_LINUX) @FLAG_M64@
++PRELOAD_LDFLAGS_PPC32_LINUX    = $(PRELOAD_LDFLAGS_COMMON_LINUX) @FLAG_M32@
++PRELOAD_LDFLAGS_PPC64BE_LINUX  = $(PRELOAD_LDFLAGS_COMMON_LINUX) @FLAG_M64@
++PRELOAD_LDFLAGS_PPC64LE_LINUX  = $(PRELOAD_LDFLAGS_COMMON_LINUX) @FLAG_M64@
++PRELOAD_LDFLAGS_ARM_LINUX      = $(PRELOAD_LDFLAGS_COMMON_LINUX) @FLAG_M32@
++PRELOAD_LDFLAGS_ARM64_LINUX    = $(PRELOAD_LDFLAGS_COMMON_LINUX) @FLAG_M64@
++PRELOAD_LDFLAGS_X86_DARWIN     = $(PRELOAD_LDFLAGS_COMMON_DARWIN) -arch i386
++PRELOAD_LDFLAGS_AMD64_DARWIN   = $(PRELOAD_LDFLAGS_COMMON_DARWIN) -arch x86_64
++PRELOAD_LDFLAGS_S390X_LINUX    = $(PRELOAD_LDFLAGS_COMMON_LINUX) @FLAG_M64@
++PRELOAD_LDFLAGS_MIPS32_LINUX   = $(PRELOAD_LDFLAGS_COMMON_LINUX) @FLAG_M32@
++PRELOAD_LDFLAGS_MIPS64_LINUX   = $(PRELOAD_LDFLAGS_COMMON_LINUX) @FLAG_M64@
+ 
+diff --git a/Makefile.tool.am b/Makefile.tool.am
+index 6e15ce4..458d5ee 100644
+--- a/Makefile.tool.am
++++ b/Makefile.tool.am
+@@ -46,7 +46,10 @@ TOOL_LDFLAGS_AMD64_LINUX = \
+ TOOL_LDFLAGS_PPC32_LINUX = \
+ 	$(TOOL_LDFLAGS_COMMON_LINUX) @FLAG_M32@
+ 
+-TOOL_LDFLAGS_PPC64_LINUX = \
++TOOL_LDFLAGS_PPC64BE_LINUX = \
++	$(TOOL_LDFLAGS_COMMON_LINUX) @FLAG_M64@
++
++TOOL_LDFLAGS_PPC64LE_LINUX = \
+ 	$(TOOL_LDFLAGS_COMMON_LINUX) @FLAG_M64@
+ 
+ TOOL_LDFLAGS_ARM_LINUX = \
+@@ -102,8 +105,11 @@ LIBREPLACEMALLOC_AMD64_LINUX = \
+ LIBREPLACEMALLOC_PPC32_LINUX = \
+ 	$(top_builddir)/coregrind/libreplacemalloc_toolpreload-ppc32-linux.a
+ 
+-LIBREPLACEMALLOC_PPC64_LINUX = \
+-	$(top_builddir)/coregrind/libreplacemalloc_toolpreload-ppc64-linux.a
++LIBREPLACEMALLOC_PPC64BE_LINUX = \
++	$(top_builddir)/coregrind/libreplacemalloc_toolpreload-ppc64be-linux.a
++
++LIBREPLACEMALLOC_PPC64LE_LINUX = \
++	$(top_builddir)/coregrind/libreplacemalloc_toolpreload-ppc64le-linux.a
+ 
+ LIBREPLACEMALLOC_ARM_LINUX = \
+ 	$(top_builddir)/coregrind/libreplacemalloc_toolpreload-arm-linux.a
+@@ -141,9 +147,14 @@ LIBREPLACEMALLOC_LDFLAGS_PPC32_LINUX = \
+ 	$(LIBREPLACEMALLOC_PPC32_LINUX) \
+ 	-Wl,--no-whole-archive
+ 
+-LIBREPLACEMALLOC_LDFLAGS_PPC64_LINUX = \
++LIBREPLACEMALLOC_LDFLAGS_PPC64BE_LINUX = \
++	-Wl,--whole-archive \
++	$(LIBREPLACEMALLOC_PPC64BE_LINUX) \
++	-Wl,--no-whole-archive
++
++LIBREPLACEMALLOC_LDFLAGS_PPC64LE_LINUX = \
+ 	-Wl,--whole-archive \
+-	$(LIBREPLACEMALLOC_PPC64_LINUX) \
++	$(LIBREPLACEMALLOC_PPC64LE_LINUX) \
+ 	-Wl,--no-whole-archive
+ 
+ LIBREPLACEMALLOC_LDFLAGS_ARM_LINUX = \
+diff --git a/VEX/priv/guest_ppc_toIR.c b/VEX/priv/guest_ppc_toIR.c
+index d39debf..e0031a3 100644
+--- a/VEX/priv/guest_ppc_toIR.c
++++ b/VEX/priv/guest_ppc_toIR.c
+@@ -144,6 +144,7 @@
+ #include "guest_ppc_defs.h"
+ 
+ 
++#define IENDIANESS   Iend_BE
+ /*------------------------------------------------------------*/
+ /*--- Globals                                              ---*/
+ /*------------------------------------------------------------*/
+@@ -503,9 +504,9 @@ static ULong extend_s_32to64 ( UInt x )
+    return (ULong)((((Long)x) << 32) >> 32);
+ }
+ 
+-/* Do a big-endian load of a 32-bit word, regardless of the endianness
++/* Do a proper-endian load of a 32-bit word, regardless of the endianness
+    of the underlying host. */
+-static UInt getUIntBigendianly ( UChar* p )
++static UInt getUIntPPCendianly ( UChar* p )
+ {
+    UInt w = 0;
+    w = (w << 8) | p[0];
+@@ -526,11 +527,11 @@ static void assign ( IRTemp dst, IRExpr* e )
+ }
+ 
+ /* This generates a normal (non store-conditional) store. */
+-static void storeBE ( IRExpr* addr, IRExpr* data )
++static void store ( IRExpr* addr, IRExpr* data )
+ {
+    IRType tyA = typeOfIRExpr(irsb->tyenv, addr);
+    vassert(tyA == Ity_I32 || tyA == Ity_I64);
+-   stmt( IRStmt_Store(Iend_BE, addr, data) );
++   stmt( IRStmt_Store(IENDIANESS, addr, data) );
+ }
+ 
+ static IRExpr* unop ( IROp op, IRExpr* a )
+@@ -586,9 +587,9 @@ static IRExpr* mkV128 ( UShort i )
+ }
+ 
+ /* This generates a normal (non load-linked) load. */
+-static IRExpr* loadBE ( IRType ty, IRExpr* addr )
++static IRExpr* load ( IRType ty, IRExpr* addr )
+ {
+-   return IRExpr_Load(Iend_BE, ty, addr);
++   return IRExpr_Load(IENDIANESS, ty, addr);
+ }
+ 
+ static IRExpr* mkOR1 ( IRExpr* arg1, IRExpr* arg2 )
+@@ -4758,7 +4759,7 @@ static Bool dis_int_load ( UInt theInstr )
+    switch (opc1) {
+    case 0x22: // lbz (Load B & Zero, PPC32 p433)
+       DIP("lbz r%u,%d(r%u)\n", rD_addr, (Int)simm16, rA_addr);
+-      val = loadBE(Ity_I8, mkexpr(EA));
++      val = load(Ity_I8, mkexpr(EA));
+       putIReg( rD_addr, mkWidenFrom8(ty, val, False) );
+       break;
+       
+@@ -4768,14 +4769,14 @@ static Bool dis_int_load ( UInt theInstr )
+          return False;
+       }
+       DIP("lbzu r%u,%d(r%u)\n", rD_addr, (Int)simm16, rA_addr);
+-      val = loadBE(Ity_I8, mkexpr(EA));
++      val = load(Ity_I8, mkexpr(EA));
+       putIReg( rD_addr, mkWidenFrom8(ty, val, False) );
+       putIReg( rA_addr, mkexpr(EA) );
+       break;
+       
+    case 0x2A: // lha (Load HW Alg, PPC32 p445)
+       DIP("lha r%u,%d(r%u)\n", rD_addr, (Int)simm16, rA_addr);
+-      val = loadBE(Ity_I16, mkexpr(EA));
++      val = load(Ity_I16, mkexpr(EA));
+       putIReg( rD_addr, mkWidenFrom16(ty, val, True) );
+       break;
+ 
+@@ -4785,14 +4786,14 @@ static Bool dis_int_load ( UInt theInstr )
+          return False;
+       }
+       DIP("lhau r%u,%d(r%u)\n", rD_addr, (Int)simm16, rA_addr);
+-      val = loadBE(Ity_I16, mkexpr(EA));
++      val = load(Ity_I16, mkexpr(EA));
+       putIReg( rD_addr, mkWidenFrom16(ty, val, True) );
+       putIReg( rA_addr, mkexpr(EA) );
+       break;
+       
+    case 0x28: // lhz (Load HW & Zero, PPC32 p450)
+       DIP("lhz r%u,%d(r%u)\n", rD_addr, (Int)simm16, rA_addr);
+-      val = loadBE(Ity_I16, mkexpr(EA));
++      val = load(Ity_I16, mkexpr(EA));
+       putIReg( rD_addr, mkWidenFrom16(ty, val, False) );
+       break;
+       
+@@ -4802,14 +4803,14 @@ static Bool dis_int_load ( UInt theInstr )
+          return False;
+       }
+       DIP("lhzu r%u,%d(r%u)\n", rD_addr, (Int)simm16, rA_addr);
+-      val = loadBE(Ity_I16, mkexpr(EA));
++      val = load(Ity_I16, mkexpr(EA));
+       putIReg( rD_addr, mkWidenFrom16(ty, val, False) );
+       putIReg( rA_addr, mkexpr(EA) );
+       break;
+ 
+    case 0x20: // lwz (Load W & Zero, PPC32 p460)
+       DIP("lwz r%u,%d(r%u)\n", rD_addr, (Int)simm16, rA_addr);
+-      val = loadBE(Ity_I32, mkexpr(EA));
++      val = load(Ity_I32, mkexpr(EA));
+       putIReg( rD_addr, mkWidenFrom32(ty, val, False) );
+       break;
+       
+@@ -4819,7 +4820,7 @@ static Bool dis_int_load ( UInt theInstr )
+          return False;
+       }
+       DIP("lwzu r%u,%d(r%u)\n", rD_addr, (Int)simm16, rA_addr);
+-      val = loadBE(Ity_I32, mkexpr(EA));
++      val = load(Ity_I32, mkexpr(EA));
+       putIReg( rD_addr, mkWidenFrom32(ty, val, False) );
+       putIReg( rA_addr, mkexpr(EA) );
+       break;
+@@ -4838,14 +4839,14 @@ static Bool dis_int_load ( UInt theInstr )
+             vex_printf("dis_int_load(ppc)(lwzux,rA_addr|rD_addr)\n");
+             return False;
+          }
+-         val = loadBE(Ity_I8, mkexpr(EA));
++         val = load(Ity_I8, mkexpr(EA));
+          putIReg( rD_addr, mkWidenFrom8(ty, val, False) );
+          putIReg( rA_addr, mkexpr(EA) );
+          break;
+          
+       case 0x057: // lbzx (Load B & Zero, Indexed, PPC32 p436)
+          DIP("lbzx r%u,r%u,r%u\n", rD_addr, rA_addr, rB_addr);
+-         val = loadBE(Ity_I8, mkexpr(EA));
++         val = load(Ity_I8, mkexpr(EA));
+          putIReg( rD_addr, mkWidenFrom8(ty, val, False) );
+          break;
+          
+@@ -4855,14 +4856,14 @@ static Bool dis_int_load ( UInt theInstr )
+             return False;
+          }
+          DIP("lhaux r%u,r%u,r%u\n", rD_addr, rA_addr, rB_addr);
+-         val = loadBE(Ity_I16, mkexpr(EA));
++         val = load(Ity_I16, mkexpr(EA));
+          putIReg( rD_addr, mkWidenFrom16(ty, val, True) );
+          putIReg( rA_addr, mkexpr(EA) );
+          break;
+          
+       case 0x157: // lhax (Load HW Alg, Indexed, PPC32 p448)
+          DIP("lhax r%u,r%u,r%u\n", rD_addr, rA_addr, rB_addr);
+-         val = loadBE(Ity_I16, mkexpr(EA));
++         val = load(Ity_I16, mkexpr(EA));
+          putIReg( rD_addr, mkWidenFrom16(ty, val, True) );
+          break;
+          
+@@ -4872,14 +4873,14 @@ static Bool dis_int_load ( UInt theInstr )
+             return False;
+          }
+          DIP("lhzux r%u,r%u,r%u\n", rD_addr, rA_addr, rB_addr);
+-         val = loadBE(Ity_I16, mkexpr(EA));
++         val = load(Ity_I16, mkexpr(EA));
+          putIReg( rD_addr, mkWidenFrom16(ty, val, False) );
+          putIReg( rA_addr, mkexpr(EA) );
+          break;
+          
+       case 0x117: // lhzx (Load HW & Zero, Indexed, PPC32 p453)
+          DIP("lhzx r%u,r%u,r%u\n", rD_addr, rA_addr, rB_addr);
+-         val = loadBE(Ity_I16, mkexpr(EA));
++         val = load(Ity_I16, mkexpr(EA));
+          putIReg( rD_addr, mkWidenFrom16(ty, val, False) );
+          break;
+ 
+@@ -4889,14 +4890,14 @@ static Bool dis_int_load ( UInt theInstr )
+             return False;
+          }
+          DIP("lwzux r%u,r%u,r%u\n", rD_addr, rA_addr, rB_addr);
+-         val = loadBE(Ity_I32, mkexpr(EA));
++         val = load(Ity_I32, mkexpr(EA));
+          putIReg( rD_addr, mkWidenFrom32(ty, val, False) );
+          putIReg( rA_addr, mkexpr(EA) );
+          break;
+          
+       case 0x017: // lwzx (Load W & Zero, Indexed, PPC32 p463)
+          DIP("lwzx r%u,r%u,r%u\n", rD_addr, rA_addr, rB_addr);
+-         val = loadBE(Ity_I32, mkexpr(EA));
++         val = load(Ity_I32, mkexpr(EA));
+          putIReg( rD_addr, mkWidenFrom32(ty, val, False) );
+          break;
+ 
+@@ -4908,13 +4909,13 @@ static Bool dis_int_load ( UInt theInstr )
+             return False;
+          }
+          DIP("ldux r%u,r%u,r%u\n", rD_addr, rA_addr, rB_addr);
+-         putIReg( rD_addr, loadBE(Ity_I64, mkexpr(EA)) );
++         putIReg( rD_addr, load(Ity_I64, mkexpr(EA)) );
+          putIReg( rA_addr, mkexpr(EA) );
+          break;
+ 
+       case 0x015: // ldx (Load DWord, Indexed, PPC64 p476)
+          DIP("ldx r%u,r%u,r%u\n", rD_addr, rA_addr, rB_addr);
+-         putIReg( rD_addr, loadBE(Ity_I64, mkexpr(EA)) );
++         putIReg( rD_addr, load(Ity_I64, mkexpr(EA)) );
+          break;
+ 
+       case 0x175: // lwaux (Load W Alg, Update Indexed, PPC64 p501)
+@@ -4924,14 +4925,14 @@ static Bool dis_int_load ( UInt theInstr )
+          }
+          DIP("lwaux r%u,r%u,r%u\n", rD_addr, rA_addr, rB_addr);
+          putIReg( rD_addr,
+-                  unop(Iop_32Sto64, loadBE(Ity_I32, mkexpr(EA))) );
++                  unop(Iop_32Sto64, load(Ity_I32, mkexpr(EA))) );
+          putIReg( rA_addr, mkexpr(EA) );
+          break;
+ 
+       case 0x155: // lwax (Load W Alg, Indexed, PPC64 p502)
+          DIP("lwax r%u,r%u,r%u\n", rD_addr, rA_addr, rB_addr);
+          putIReg( rD_addr,
+-                  unop(Iop_32Sto64, loadBE(Ity_I32, mkexpr(EA))) );
++                  unop(Iop_32Sto64, load(Ity_I32, mkexpr(EA))) );
+          break;
+ 
+       default:
+@@ -4946,7 +4947,7 @@ static Bool dis_int_load ( UInt theInstr )
+       switch ((b1<<1) | b0) {
+       case 0x0: // ld (Load DWord, PPC64 p472)
+          DIP("ld r%u,%d(r%u)\n", rD_addr, simm16, rA_addr);
+-         putIReg( rD_addr, loadBE(Ity_I64, mkexpr(EA)) );
++         putIReg( rD_addr, load(Ity_I64, mkexpr(EA)) );
+          break;
+ 
+       case 0x1: // ldu (Load DWord, Update, PPC64 p474)
+@@ -4955,14 +4956,14 @@ static Bool dis_int_load ( UInt theInstr )
+             return False;
+          }
+          DIP("ldu r%u,%d(r%u)\n", rD_addr, simm16, rA_addr);
+-         putIReg( rD_addr, loadBE(Ity_I64, mkexpr(EA)) );
++         putIReg( rD_addr, load(Ity_I64, mkexpr(EA)) );
+          putIReg( rA_addr, mkexpr(EA) );
+          break;
+ 
+       case 0x2: // lwa (Load Word Alg, PPC64 p499)
+          DIP("lwa r%u,%d(r%u)\n", rD_addr, simm16, rA_addr);
+          putIReg( rD_addr,
+-                  unop(Iop_32Sto64, loadBE(Ity_I32, mkexpr(EA))) );
++                  unop(Iop_32Sto64, load(Ity_I32, mkexpr(EA))) );
+          break;
+ 
+       default:
+@@ -4981,17 +4982,17 @@ static Bool dis_int_load ( UInt theInstr )
+        */
+       // trap if EA misaligned on 16 byte address
+       if (mode64) {
+-         assign(high, loadBE(ty, mkexpr( EA ) ) );
+-         assign(low, loadBE(ty, binop( Iop_Add64,
+-                                       mkexpr( EA ),
+-                                       mkU64( 8 ) ) ) );
++         assign(high, load(ty, mkexpr( EA ) ) );
++         assign(low, load(ty, binop( Iop_Add64,
++                                     mkexpr( EA ),
++                                     mkU64( 8 ) ) ) );
+       } else {
+-         assign(high, loadBE(ty, binop( Iop_Add32,
+-                                        mkexpr( EA ),
+-                                        mkU32( 4 ) ) ) );
+-         assign(low, loadBE(ty, binop( Iop_Add32,
+-                                        mkexpr( EA ),
+-                                        mkU32( 12 ) ) ) );
++         assign(high, load(ty, binop( Iop_Add32,
++                                      mkexpr( EA ),
++                                      mkU32( 4 ) ) ) );
++         assign(low, load(ty, binop( Iop_Add32,
++                                      mkexpr( EA ),
++                                      mkU32( 12 ) ) ) );
+       }
+       gen_SIGBUS_if_misaligned( EA, 16 );
+       putIReg( rD_addr,  mkexpr( high) );
+@@ -5046,7 +5047,7 @@ static Bool dis_int_store ( UInt theInstr, VexAbiInfo* vbi )
+    switch (opc1) {
+    case 0x26: // stb (Store B, PPC32 p509)
+       DIP("stb r%u,%d(r%u)\n", rS_addr, simm16, rA_addr);
+-      storeBE( mkexpr(EA), mkNarrowTo8(ty, mkexpr(rS)) );
++      store( mkexpr(EA), mkNarrowTo8(ty, mkexpr(rS)) );
+       break;
+        
+    case 0x27: // stbu (Store B, Update, PPC32 p510)
+@@ -5056,12 +5057,12 @@ static Bool dis_int_store ( UInt theInstr, VexAbiInfo* vbi )
+       }
+       DIP("stbu r%u,%d(r%u)\n", rS_addr, simm16, rA_addr);
+       putIReg( rA_addr, mkexpr(EA) );
+-      storeBE( mkexpr(EA), mkNarrowTo8(ty, mkexpr(rS)) );
++      store( mkexpr(EA), mkNarrowTo8(ty, mkexpr(rS)) );
+       break;
+ 
+    case 0x2C: // sth (Store HW, PPC32 p522)
+       DIP("sth r%u,%d(r%u)\n", rS_addr, simm16, rA_addr);
+-      storeBE( mkexpr(EA), mkNarrowTo16(ty, mkexpr(rS)) );
++      store( mkexpr(EA), mkNarrowTo16(ty, mkexpr(rS)) );
+       break;
+       
+    case 0x2D: // sthu (Store HW, Update, PPC32 p524)
+@@ -5071,12 +5072,12 @@ static Bool dis_int_store ( UInt theInstr, VexAbiInfo* vbi )
+       }
+       DIP("sthu r%u,%d(r%u)\n", rS_addr, simm16, rA_addr);
+       putIReg( rA_addr, mkexpr(EA) );
+-      storeBE( mkexpr(EA), mkNarrowTo16(ty, mkexpr(rS)) );
++      store( mkexpr(EA), mkNarrowTo16(ty, mkexpr(rS)) );
+       break;
+ 
+    case 0x24: // stw (Store W, PPC32 p530)
+       DIP("stw r%u,%d(r%u)\n", rS_addr, simm16, rA_addr);
+-      storeBE( mkexpr(EA), mkNarrowTo32(ty, mkexpr(rS)) );
++      store( mkexpr(EA), mkNarrowTo32(ty, mkexpr(rS)) );
+       break;
+ 
+    case 0x25: // stwu (Store W, Update, PPC32 p534)
+@@ -5086,7 +5087,7 @@ static Bool dis_int_store ( UInt theInstr, VexAbiInfo* vbi )
+       }
+       DIP("stwu r%u,%d(r%u)\n", rS_addr, simm16, rA_addr);
+       putIReg( rA_addr, mkexpr(EA) );
+-      storeBE( mkexpr(EA), mkNarrowTo32(ty, mkexpr(rS)) );
++      store( mkexpr(EA), mkNarrowTo32(ty, mkexpr(rS)) );
+       break;
+       
+    /* X Form : all these use EA_indexed */
+@@ -5104,12 +5105,12 @@ static Bool dis_int_store ( UInt theInstr, VexAbiInfo* vbi )
+          }
+          DIP("stbux r%u,r%u,r%u\n", rS_addr, rA_addr, rB_addr);
+          putIReg( rA_addr, mkexpr(EA) );
+-         storeBE( mkexpr(EA), mkNarrowTo8(ty, mkexpr(rS)) );
++         store( mkexpr(EA), mkNarrowTo8(ty, mkexpr(rS)) );
+          break;
+          
+       case 0x0D7: // stbx (Store B Indexed, PPC32 p512)
+          DIP("stbx r%u,r%u,r%u\n", rS_addr, rA_addr, rB_addr);
+-         storeBE( mkexpr(EA), mkNarrowTo8(ty, mkexpr(rS)) );
++         store( mkexpr(EA), mkNarrowTo8(ty, mkexpr(rS)) );
+          break;
+          
+       case 0x1B7: // sthux (Store HW, Update Indexed, PPC32 p525)
+@@ -5119,12 +5120,12 @@ static Bool dis_int_store ( UInt theInstr, VexAbiInfo* vbi )
+          }
+          DIP("sthux r%u,r%u,r%u\n", rS_addr, rA_addr, rB_addr);
+          putIReg( rA_addr, mkexpr(EA) );
+-         storeBE( mkexpr(EA), mkNarrowTo16(ty, mkexpr(rS)) );
++         store( mkexpr(EA), mkNarrowTo16(ty, mkexpr(rS)) );
+          break;
+          
+       case 0x197: // sthx (Store HW Indexed, PPC32 p526)
+          DIP("sthx r%u,r%u,r%u\n", rS_addr, rA_addr, rB_addr);
+-         storeBE( mkexpr(EA), mkNarrowTo16(ty, mkexpr(rS)) );
++         store( mkexpr(EA), mkNarrowTo16(ty, mkexpr(rS)) );
+          break;
+          
+       case 0x0B7: // stwux (Store W, Update Indexed, PPC32 p535)
+@@ -5134,12 +5135,12 @@ static Bool dis_int_store ( UInt theInstr, VexAbiInfo* vbi )
+          }
+          DIP("stwux r%u,r%u,r%u\n", rS_addr, rA_addr, rB_addr);
+          putIReg( rA_addr, mkexpr(EA) );
+-         storeBE( mkexpr(EA), mkNarrowTo32(ty, mkexpr(rS)) );
++         store( mkexpr(EA), mkNarrowTo32(ty, mkexpr(rS)) );
+          break;
+ 
+       case 0x097: // stwx (Store W Indexed, PPC32 p536)
+          DIP("stwx r%u,r%u,r%u\n", rS_addr, rA_addr, rB_addr);
+-         storeBE( mkexpr(EA), mkNarrowTo32(ty, mkexpr(rS)) );
++         store( mkexpr(EA), mkNarrowTo32(ty, mkexpr(rS)) );
+          break;
+          
+ 
+@@ -5151,12 +5152,12 @@ static Bool dis_int_store ( UInt theInstr, VexAbiInfo* vbi )
+          }
+          DIP("stdux r%u,r%u,r%u\n", rS_addr, rA_addr, rB_addr);
+          putIReg( rA_addr, mkexpr(EA) );
+-         storeBE( mkexpr(EA), mkexpr(rS) );
++         store( mkexpr(EA), mkexpr(rS) );
+          break;
+ 
+       case 0x095: // stdx (Store DWord Indexed, PPC64 p585)
+          DIP("stdx r%u,r%u,r%u\n", rS_addr, rA_addr, rB_addr);
+-         storeBE( mkexpr(EA), mkexpr(rS) );
++         store( mkexpr(EA), mkexpr(rS) );
+          break;
+ 
+       default:
+@@ -5174,7 +5175,7 @@ static Bool dis_int_store ( UInt theInstr, VexAbiInfo* vbi )
+             return False;
+ 
+          DIP("std r%u,%d(r%u)\n", rS_addr, simm16, rA_addr);
+-         storeBE( mkexpr(EA), mkexpr(rS) );
++         store( mkexpr(EA), mkexpr(rS) );
+          break;
+ 
+       case 0x1: // stdu (Store DWord, Update, PPC64 p583)
+@@ -5183,7 +5184,7 @@ static Bool dis_int_store ( UInt theInstr, VexAbiInfo* vbi )
+ 
+          DIP("stdu r%u,%d(r%u)\n", rS_addr, simm16, rA_addr);
+          putIReg( rA_addr, mkexpr(EA) );
+-         storeBE( mkexpr(EA), mkexpr(rS) );
++         store( mkexpr(EA), mkexpr(rS) );
+          break;
+ 
+       case 0x2: { // stq (Store QuadWord, Update, PPC64 p583)
+@@ -5205,9 +5206,9 @@ static Bool dis_int_store ( UInt theInstr, VexAbiInfo* vbi )
+             assign( EA_lo, ea_rAor0_simm( rA_addr, simm16+12 ) );
+          }
+          putIReg( rA_addr, mkexpr(EA_hi) );
+-         storeBE( mkexpr(EA_hi), mkexpr(rS) );
++         store( mkexpr(EA_hi), mkexpr(rS) );
+          putIReg( rA_addr, mkexpr( EA_lo) );
+-         storeBE( mkexpr(EA_lo), getIReg( rS_addr+1 ) );
++         store( mkexpr(EA_lo), getIReg( rS_addr+1 ) );
+          break;
+       }
+       default:
+@@ -5256,7 +5257,7 @@ static Bool dis_int_ldst_mult ( UInt theInstr )
+       DIP("lmw r%u,%d(r%u)\n", rD_addr, simm16, rA_addr);
+       for (r = rD_addr; r <= 31; r++) {
+          irx_addr = binop(mkAdd, mkexpr(EA), mode64 ? mkU64(ea_off) : mkU32(ea_off));
+-         putIReg( r, mkWidenFrom32(ty, loadBE(Ity_I32, irx_addr ),
++         putIReg( r, mkWidenFrom32(ty, load(Ity_I32, irx_addr ),
+                                        False) );
+          ea_off += 4;
+       }
+@@ -5266,7 +5267,7 @@ static Bool dis_int_ldst_mult ( UInt theInstr )
+       DIP("stmw r%u,%d(r%u)\n", rS_addr, simm16, rA_addr);
+       for (r = rS_addr; r <= 31; r++) {
+          irx_addr = binop(mkAdd, mkexpr(EA), mode64 ? mkU64(ea_off) : mkU32(ea_off));
+-         storeBE( irx_addr, mkNarrowTo32(ty, getIReg(r)) );
++         store( irx_addr, mkNarrowTo32(ty, getIReg(r)) );
+          ea_off += 4;
+       }
+       break;
+@@ -5321,8 +5322,9 @@ void generate_lsw_sequence ( IRTemp tNBytes,   // # bytes, :: Ity_I32
+                   Iop_Shl32, 
+                   unop(
+                      Iop_8Uto32, 
+-                     loadBE(Ity_I8, 
+-                            binop(mkSzOp(ty,Iop_Add8), e_EA, mkSzImm(ty,i)))
++                     load( Ity_I8,
++                           binop( mkSzOp(ty,Iop_Add8),
++                                  e_EA, mkSzImm(ty,i)))
+                   ), 
+                   mkU8(toUChar(shift))
+                )
+@@ -5360,12 +5362,12 @@ void generate_stsw_sequence ( IRTemp tNBytes,   // # bytes, :: Ity_I32
+       }
+       /* *(EA+i) = 32to8(rS >> shift) */
+       vassert(shift == 0 || shift == 8 || shift == 16 || shift == 24);
+-      storeBE(
+-         binop(mkSzOp(ty,Iop_Add8), e_EA, mkSzImm(ty,i)),
+-         unop(Iop_32to8,
+-              binop(Iop_Shr32,
+-                    mkNarrowTo32(ty, getIReg(rS)),
+-                    mkU8(toUChar(shift))))
++      store(
++            binop( mkSzOp(ty,Iop_Add8), e_EA, mkSzImm(ty,i)),
++            unop( Iop_32to8,
++                  binop( Iop_Shr32,
++                         mkNarrowTo32( ty, getIReg(rS) ),
++                         mkU8( toUChar(shift) )))
+       );
+       shift -= 8;
+    }
+@@ -5404,10 +5406,10 @@ static Bool dis_int_ldst_str ( UInt theInstr, /*OUT*/Bool* stopHere )
+          /* Special case hack */
+          /* rD = Mem[EA]; (rD+1)%32 = Mem[EA+4] */
+          putIReg( rD_addr,          
+-                  loadBE(Ity_I32, mkexpr(t_EA)) );
++                  load(Ity_I32, mkexpr(t_EA)) );
+          putIReg( (rD_addr+1) % 32, 
+-                  loadBE(Ity_I32,
+-                         binop(Iop_Add32, mkexpr(t_EA), mkU32(4))) );
++                  load(Ity_I32,
++                       binop(Iop_Add32, mkexpr(t_EA), mkU32(4))) );
+       } else {
+          t_nbytes = newTemp(Ity_I32);
+          assign( t_nbytes, mkU32(NumBytes==0 ? 32 : NumBytes) );
+@@ -5439,10 +5441,10 @@ static Bool dis_int_ldst_str ( UInt theInstr, /*OUT*/Bool* stopHere )
+       if (NumBytes == 8 && !mode64) {
+          /* Special case hack */
+          /* Mem[EA] = rD; Mem[EA+4] = (rD+1)%32 */
+-         storeBE( mkexpr(t_EA), 
+-                  getIReg(rD_addr) );
+-         storeBE( binop(Iop_Add32, mkexpr(t_EA), mkU32(4)), 
+-                  getIReg((rD_addr+1) % 32) );
++         store( mkexpr(t_EA),
++                getIReg(rD_addr) );
++         store( binop(Iop_Add32, mkexpr(t_EA), mkU32(4)),
++                getIReg((rD_addr+1) % 32) );
+       } else {
+          t_nbytes = newTemp(Ity_I32);
+          assign( t_nbytes, mkU32(NumBytes==0 ? 32 : NumBytes) );
+@@ -6145,7 +6147,7 @@ static Bool dis_memsync ( UInt theInstr )
+ 
+          // and actually do the load
+          res = newTemp(Ity_I32);
+-         stmt( IRStmt_LLSC(Iend_BE, res, mkexpr(EA), NULL/*this is a load*/) );
++         stmt( IRStmt_LLSC(IENDIANESS, res, mkexpr(EA), NULL/*this is a load*/) );
+ 
+          putIReg( rD_addr, mkWidenFrom32(ty, mkexpr(res), False) );
+          break;
+@@ -6171,7 +6173,7 @@ static Bool dis_memsync ( UInt theInstr )
+ 
+          // Do the store, and get success/failure bit into resSC
+          resSC = newTemp(Ity_I1);
+-         stmt( IRStmt_LLSC(Iend_BE, resSC, mkexpr(EA), mkexpr(rS)) );
++         stmt( IRStmt_LLSC(IENDIANESS, resSC, mkexpr(EA), mkexpr(rS)) );
+ 
+          // Set CR0[LT GT EQ S0] = 0b000 || XER[SO]  on failure
+          // Set CR0[LT GT EQ S0] = 0b001 || XER[SO]  on success
+@@ -6238,7 +6240,7 @@ static Bool dis_memsync ( UInt theInstr )
+ 
+          // and actually do the load
+          res = newTemp(Ity_I64);
+-         stmt( IRStmt_LLSC(Iend_BE, res, mkexpr(EA), NULL/*this is a load*/) );
++         stmt( IRStmt_LLSC(IENDIANESS, res, mkexpr(EA), NULL/*this is a load*/) );
+ 
+          putIReg( rD_addr, mkexpr(res) );
+          break;
+@@ -6264,7 +6266,7 @@ static Bool dis_memsync ( UInt theInstr )
+ 
+          // Do the store, and get success/failure bit into resSC
+          resSC = newTemp(Ity_I1);
+-         stmt( IRStmt_LLSC(Iend_BE, resSC, mkexpr(EA), mkexpr(rS)) );
++         stmt( IRStmt_LLSC(IENDIANESS, resSC, mkexpr(EA), mkexpr(rS)) );
+ 
+          // Set CR0[LT GT EQ S0] = 0b000 || XER[SO]  on failure
+          // Set CR0[LT GT EQ S0] = 0b001 || XER[SO]  on success
+@@ -6294,16 +6296,16 @@ static Bool dis_memsync ( UInt theInstr )
+ 
+          // and actually do the load
+          if (mode64) {
+-            stmt( IRStmt_LLSC( Iend_BE, res_hi,
++            stmt( IRStmt_LLSC( IENDIANESS, res_hi,
+                                mkexpr(EA), NULL/*this is a load*/) );
+-            stmt( IRStmt_LLSC( Iend_BE, res_lo,
++            stmt( IRStmt_LLSC( IENDIANESS, res_lo,
+                                binop(Iop_Add64, mkexpr(EA), mkU64(8) ),
+                                NULL/*this is a load*/) );
+          } else {
+-            stmt( IRStmt_LLSC( Iend_BE, res_hi,
++            stmt( IRStmt_LLSC( IENDIANESS, res_hi,
+                                binop( Iop_Add32, mkexpr(EA), mkU32(4) ),
+                                NULL/*this is a load*/) );
+-            stmt( IRStmt_LLSC( Iend_BE, res_lo,
++            stmt( IRStmt_LLSC( IENDIANESS, res_lo,
+                                binop( Iop_Add32, mkexpr(EA), mkU32(12) ),
+                                NULL/*this is a load*/) );
+          }
+@@ -6334,14 +6336,14 @@ static Bool dis_memsync ( UInt theInstr )
+          resSC = newTemp(Ity_I1);
+ 
+          if (mode64) {
+-            stmt( IRStmt_LLSC( Iend_BE, resSC, mkexpr(EA), mkexpr(rS_hi) ) );
+-            storeBE(binop( Iop_Add64, mkexpr(EA), mkU64(8) ), mkexpr(rS_lo) );
++            stmt( IRStmt_LLSC( IENDIANESS, resSC, mkexpr(EA), mkexpr(rS_hi) ) );
++            store( binop( Iop_Add64, mkexpr(EA), mkU64(8) ), mkexpr(rS_lo) );
+          } else {
+-            stmt( IRStmt_LLSC( Iend_BE, resSC, binop( Iop_Add32,
+-                                                      mkexpr(EA),
+-                                                      mkU32(4) ),
+-                                                      mkexpr(rS_hi) ) );
+-            storeBE(binop(Iop_Add32, mkexpr(EA), mkU32(12) ), mkexpr(rS_lo) );
++            stmt( IRStmt_LLSC( IENDIANESS, resSC, binop( Iop_Add32,
++                                                         mkexpr(EA),
++                                                         mkU32(4) ),
++                                                         mkexpr(rS_hi) ) );
++            store( binop(Iop_Add32, mkexpr(EA), mkU32(12) ), mkexpr(rS_lo) );
+          }
+ 
+          // Set CR0[LT GT EQ S0] = 0b000 || XER[SO]  on failure
+@@ -6664,7 +6666,7 @@ static Bool dis_int_ldst_rev ( UInt theInstr )
+ 
+       case 0x316: // lhbrx (Load Halfword Byte-Reverse Indexed, PPC32 p449)
+          DIP("lhbrx r%u,r%u,r%u\n", rD_addr, rA_addr, rB_addr);
+-         assign( w1, unop(Iop_16Uto32, loadBE(Ity_I16, mkexpr(EA))) );
++         assign( w1, unop(Iop_16Uto32, load(Ity_I16, mkexpr(EA))) );
+          assign( w2, gen_byterev16(w1) );
+          putIReg( rD_addr, mkWidenFrom32(ty, mkexpr(w2),
+                                          /* Signed */False) );
+@@ -6672,7 +6674,7 @@ static Bool dis_int_ldst_rev ( UInt theInstr )
+ 
+       case 0x216: // lwbrx (Load Word Byte-Reverse Indexed, PPC32 p459)
+          DIP("lwbrx r%u,r%u,r%u\n", rD_addr, rA_addr, rB_addr);
+-         assign( w1, loadBE(Ity_I32, mkexpr(EA)) );
++         assign( w1, load(Ity_I32, mkexpr(EA)) );
+          assign( w2, gen_byterev32(w1) );
+          putIReg( rD_addr, mkWidenFrom32(ty, mkexpr(w2),
+                                          /* Signed */False) );
+@@ -6684,11 +6686,11 @@ static Bool dis_int_ldst_rev ( UInt theInstr )
+          IRTemp w3 = newTemp( Ity_I32 );
+          IRTemp w4 = newTemp( Ity_I32 );
+          DIP("ldbrx r%u,r%u,r%u\n", rD_addr, rA_addr, rB_addr);
+-         assign( w1, loadBE( Ity_I32, mkexpr( EA ) ) );
++         assign( w1, load( Ity_I32, mkexpr( EA ) ) );
+          assign( w2, gen_byterev32( w1 ) );
+          nextAddr = binop( mkSzOp( ty, Iop_Add8 ), mkexpr( EA ),
+                            ty == Ity_I64 ? mkU64( 4 ) : mkU32( 4 ) );
+-         assign( w3, loadBE( Ity_I32, nextAddr ) );
++         assign( w3, load( Ity_I32, nextAddr ) );
+          assign( w4, gen_byterev32( w3 ) );
+          putIReg( rD_addr, binop( Iop_32HLto64, mkexpr( w4 ), mkexpr( w2 ) ) );
+          break;
+@@ -6697,13 +6699,13 @@ static Bool dis_int_ldst_rev ( UInt theInstr )
+       case 0x396: // sthbrx (Store Half Word Byte-Reverse Indexed, PPC32 p523)
+          DIP("sthbrx r%u,r%u,r%u\n", rS_addr, rA_addr, rB_addr);
+          assign( w1, mkNarrowTo32(ty, getIReg(rS_addr)) );
+-         storeBE( mkexpr(EA), unop(Iop_32to16, gen_byterev16(w1)) );
++         store( mkexpr(EA), unop(Iop_32to16, gen_byterev16(w1)) );
+          break;
+       
+       case 0x296: // stwbrx (Store Word Byte-Reverse Indxd, PPC32 p531)
+          DIP("stwbrx r%u,r%u,r%u\n", rS_addr, rA_addr, rB_addr);
+          assign( w1, mkNarrowTo32(ty, getIReg(rS_addr)) );
+-         storeBE( mkexpr(EA), gen_byterev32(w1) );
++         store( mkexpr(EA), gen_byterev32(w1) );
+          break;
+ 
+       case 0x294: // stdbrx (Store Doubleword Byte-Reverse Indexed)
+@@ -6715,8 +6717,9 @@ static Bool dis_int_ldst_rev ( UInt theInstr )
+          DIP("stdbrx r%u,r%u,r%u\n", rS_addr, rA_addr, rB_addr);
+          assign(lo, unop(Iop_64HIto32, mkexpr(rS)));
+          assign(hi, unop(Iop_64to32, mkexpr(rS)));
+-         storeBE( mkexpr( EA ),
+-                  binop( Iop_32HLto64, gen_byterev32( hi ), gen_byterev32( lo ) ) );
++         store( mkexpr( EA ),
++                binop( Iop_32HLto64, gen_byterev32( hi ),
++                       gen_byterev32( lo ) ) );
+          break;
+       }
+ 
+@@ -7234,7 +7237,7 @@ static Bool dis_cache_manage ( UInt         theInstr,
+          
+          for (i = 0; i < clearszB / 8; i++) {
+             irx_addr = binop( Iop_Add64, mkexpr(addr), mkU64(i*8) );
+-            storeBE( irx_addr, mkU64(0) );
++            store( irx_addr, mkU64(0) );
+          }
+       } else {
+          /* Round EA down to the start of the containing block. */
+@@ -7244,7 +7247,7 @@ static Bool dis_cache_manage ( UInt         theInstr,
+          
+          for (i = 0; i < clearszB / 4; i++) {
+             irx_addr = binop( Iop_Add32, mkexpr(addr), mkU32(i*4) );
+-            storeBE( irx_addr, mkU32(0) );
++            store( irx_addr, mkU32(0) );
+          }
+       }
+       break;
+@@ -7464,7 +7467,7 @@ static Bool dis_fp_load ( UInt theInstr )
+       DIP("lfs fr%u,%d(r%u)\n", frD_addr, simm16, rA_addr);
+       assign( EA, ea_rAor0_simm(rA_addr, simm16) );
+       putFReg( frD_addr,
+-               unop(Iop_F32toF64, loadBE(Ity_F32, mkexpr(EA))) );
++               unop(Iop_F32toF64, load(Ity_F32, mkexpr(EA))) );
+       break;
+ 
+    case 0x31: // lfsu (Load Float Single, Update, PPC32 p442)
+@@ -7473,14 +7476,14 @@ static Bool dis_fp_load ( UInt theInstr )
+       DIP("lfsu fr%u,%d(r%u)\n", frD_addr, simm16, rA_addr);
+       assign( EA, ea_rA_simm(rA_addr, simm16) );
+       putFReg( frD_addr,
+-               unop(Iop_F32toF64, loadBE(Ity_F32, mkexpr(EA))) );
++               unop(Iop_F32toF64, load(Ity_F32, mkexpr(EA))) );
+       putIReg( rA_addr, mkexpr(EA) );
+       break;
+       
+    case 0x32: // lfd (Load Float Double, PPC32 p437)
+       DIP("lfd fr%u,%d(r%u)\n", frD_addr, simm16, rA_addr);
+       assign( EA, ea_rAor0_simm(rA_addr, simm16) );
+-      putFReg( frD_addr, loadBE(Ity_F64, mkexpr(EA)) );
++      putFReg( frD_addr, load(Ity_F64, mkexpr(EA)) );
+       break;
+ 
+    case 0x33: // lfdu (Load Float Double, Update, PPC32 p438)
+@@ -7488,7 +7491,7 @@ static Bool dis_fp_load ( UInt theInstr )
+          return False;
+       DIP("lfdu fr%u,%d(r%u)\n", frD_addr, simm16, rA_addr);
+       assign( EA, ea_rA_simm(rA_addr, simm16) );
+-      putFReg( frD_addr, loadBE(Ity_F64, mkexpr(EA)) );
++      putFReg( frD_addr, load(Ity_F64, mkexpr(EA)) );
+       putIReg( rA_addr, mkexpr(EA) );
+       break;
+ 
+@@ -7503,7 +7506,7 @@ static Bool dis_fp_load ( UInt theInstr )
+          DIP("lfsx fr%u,r%u,r%u\n", frD_addr, rA_addr, rB_addr);
+          assign( EA, ea_rAor0_idxd(rA_addr, rB_addr) );
+          putFReg( frD_addr, unop( Iop_F32toF64, 
+-                                  loadBE(Ity_F32, mkexpr(EA))) );
++                                  load(Ity_F32, mkexpr(EA))) );
+          break;
+          
+       case 0x237: // lfsux (Load Float Single, Update Indxd, PPC32 p443)
+@@ -7512,14 +7515,14 @@ static Bool dis_fp_load ( UInt theInstr )
+          DIP("lfsux fr%u,r%u,r%u\n", frD_addr, rA_addr, rB_addr);
+          assign( EA, ea_rA_idxd(rA_addr, rB_addr) );
+          putFReg( frD_addr,
+-                  unop(Iop_F32toF64, loadBE(Ity_F32, mkexpr(EA))) );
++                  unop(Iop_F32toF64, load(Ity_F32, mkexpr(EA))) );
+          putIReg( rA_addr, mkexpr(EA) );
+          break;
+          
+       case 0x257: // lfdx (Load Float Double Indexed, PPC32 p440)
+          DIP("lfdx fr%u,r%u,r%u\n", frD_addr, rA_addr, rB_addr);
+          assign( EA, ea_rAor0_idxd(rA_addr, rB_addr) );
+-         putFReg( frD_addr, loadBE(Ity_F64, mkexpr(EA)) );
++         putFReg( frD_addr, load(Ity_F64, mkexpr(EA)) );
+          break;
+          
+       case 0x277: // lfdux (Load Float Double, Update Indxd, PPC32 p439)
+@@ -7527,14 +7530,14 @@ static Bool dis_fp_load ( UInt theInstr )
+             return False;
+          DIP("lfdux fr%u,r%u,r%u\n", frD_addr, rA_addr, rB_addr);
+          assign( EA, ea_rA_idxd(rA_addr, rB_addr) );
+-         putFReg( frD_addr, loadBE(Ity_F64, mkexpr(EA)) );
++         putFReg( frD_addr, load(Ity_F64, mkexpr(EA)) );
+          putIReg( rA_addr, mkexpr(EA) );
+          break;
+          
+       case 0x357: // lfiwax (Load Float As Integer, Indxd, ISA 2.05 p120)
+          DIP("lfiwax fr%u,r%u,r%u\n", frD_addr, rA_addr, rB_addr);
+          assign( EA, ea_rAor0_idxd( rA_addr, rB_addr ) );
+-         assign( iLo, loadBE(Ity_I32, mkexpr(EA)) );
++         assign( iLo, load(Ity_I32, mkexpr(EA)) );
+          assign( iHi, binop(Iop_Sub32,
+                             mkU32(0),
+                             binop(Iop_Shr32, mkexpr(iLo), mkU8(31)))  );
+@@ -7547,7 +7550,7 @@ static Bool dis_fp_load ( UInt theInstr )
+          IRTemp dw = newTemp( Ity_I64 );
+          DIP("lfiwzx fr%u,r%u,r%u\n", frD_addr, rA_addr, rB_addr);
+          assign( EA, ea_rAor0_idxd( rA_addr, rB_addr ) );
+-         assign( iLo, loadBE(Ity_I32, mkexpr(EA)) );
++         assign( iLo, load(Ity_I32, mkexpr(EA)) );
+          assign( dw, binop( Iop_32HLto64, mkU32( 0 ), mkexpr( iLo ) ) );
+          putFReg( frD_addr, unop( Iop_ReinterpI64asF64, mkexpr( dw ) ) );
+          break;
+@@ -7606,8 +7609,7 @@ static Bool dis_fp_store ( UInt theInstr )
+       /* Use Iop_TruncF64asF32 to truncate and possible denormalise
+          the value to be stored in the correct way, without any
+          rounding. */
+-      storeBE( mkexpr(EA),
+-               unop(Iop_TruncF64asF32, mkexpr(frS)) );
++      store( mkexpr(EA), unop(Iop_TruncF64asF32, mkexpr(frS)) );
+       break;
+ 
+    case 0x35: // stfsu (Store Float Single, Update, PPC32 p519)
+@@ -7616,15 +7618,14 @@ static Bool dis_fp_store ( UInt theInstr )
+       DIP("stfsu fr%u,%d(r%u)\n", frS_addr, simm16, rA_addr);
+       assign( EA, ea_rA_simm(rA_addr, simm16) );
+       /* See comment for stfs */
+-      storeBE( mkexpr(EA),
+-               unop(Iop_TruncF64asF32, mkexpr(frS)) );
++      store( mkexpr(EA), unop(Iop_TruncF64asF32, mkexpr(frS)) );
+       putIReg( rA_addr, mkexpr(EA) );
+       break;
+ 
+    case 0x36: // stfd (Store Float Double, PPC32 p513)
+       DIP("stfd fr%u,%d(r%u)\n", frS_addr, simm16, rA_addr);
+       assign( EA, ea_rAor0_simm(rA_addr, simm16) );
+-      storeBE( mkexpr(EA), mkexpr(frS) );
++      store( mkexpr(EA), mkexpr(frS) );
+       break;
+ 
+    case 0x37: // stfdu (Store Float Double, Update, PPC32 p514)
+@@ -7632,7 +7633,7 @@ static Bool dis_fp_store ( UInt theInstr )
+          return False;
+       DIP("stfdu fr%u,%d(r%u)\n", frS_addr, simm16, rA_addr);
+       assign( EA, ea_rA_simm(rA_addr, simm16) );
+-      storeBE( mkexpr(EA), mkexpr(frS) );
++      store( mkexpr(EA), mkexpr(frS) );
+       putIReg( rA_addr, mkexpr(EA) );
+       break;
+ 
+@@ -7646,8 +7647,8 @@ static Bool dis_fp_store ( UInt theInstr )
+          DIP("stfsx fr%u,r%u,r%u\n", frS_addr, rA_addr, rB_addr);
+          assign( EA, ea_rAor0_idxd(rA_addr, rB_addr) );
+          /* See note for stfs */
+-         storeBE( mkexpr(EA), 
+-                  unop(Iop_TruncF64asF32, mkexpr(frS)) );
++         store( mkexpr(EA),
++                unop(Iop_TruncF64asF32, mkexpr(frS)) );
+          break;
+          
+       case 0x2B7: // stfsux (Store Float Sgl, Update Indxd, PPC32 p520)
+@@ -7656,15 +7657,14 @@ static Bool dis_fp_store ( UInt theInstr )
+          DIP("stfsux fr%u,r%u,r%u\n", frS_addr, rA_addr, rB_addr);
+          assign( EA, ea_rA_idxd(rA_addr, rB_addr) );
+          /* See note for stfs */
+-         storeBE( mkexpr(EA), 
+-                  unop(Iop_TruncF64asF32, mkexpr(frS)) );
++         store( mkexpr(EA), unop(Iop_TruncF64asF32, mkexpr(frS)) );
+          putIReg( rA_addr, mkexpr(EA) );
+          break;
+ 
+       case 0x2D7: // stfdx (Store Float Double Indexed, PPC32 p516)
+          DIP("stfdx fr%u,r%u,r%u\n", frS_addr, rA_addr, rB_addr);
+          assign( EA, ea_rAor0_idxd(rA_addr, rB_addr) );
+-         storeBE( mkexpr(EA), mkexpr(frS) );
++         store( mkexpr(EA), mkexpr(frS) );
+          break;
+          
+       case 0x2F7: // stfdux (Store Float Dbl, Update Indxd, PPC32 p515)
+@@ -7672,7 +7672,7 @@ static Bool dis_fp_store ( UInt theInstr )
+             return False;
+          DIP("stfdux fr%u,r%u,r%u\n", frS_addr, rA_addr, rB_addr);
+          assign( EA, ea_rA_idxd(rA_addr, rB_addr) );
+-         storeBE( mkexpr(EA), mkexpr(frS) );
++         store( mkexpr(EA), mkexpr(frS) );
+          putIReg( rA_addr, mkexpr(EA) );
+          break;
+ 
+@@ -7680,8 +7680,8 @@ static Bool dis_fp_store ( UInt theInstr )
+          // NOTE: POWERPC OPTIONAL, "Graphics Group" (PPC32_GX)
+          DIP("stfiwx fr%u,r%u,r%u\n", frS_addr, rA_addr, rB_addr);
+          assign( EA, ea_rAor0_idxd(rA_addr, rB_addr) );
+-         storeBE( mkexpr(EA),
+-                  unop(Iop_64to32, unop(Iop_ReinterpF64asI64, mkexpr(frS))) );
++         store( mkexpr(EA),
++                unop(Iop_64to32, unop(Iop_ReinterpF64asI64, mkexpr(frS))) );
+          break;
+ 
+       default:
+@@ -8867,11 +8867,11 @@ static Bool dis_fp_pair ( UInt theInstr )
+    assign( frT_lo, getFReg(frT_lo_addr) );
+ 
+    if (is_load) {
+-      putFReg( frT_hi_addr, loadBE(Ity_F64, mkexpr(EA_hi)) );
+-      putFReg( frT_lo_addr, loadBE(Ity_F64, mkexpr(EA_lo)) );
++      putFReg( frT_hi_addr, load(Ity_F64, mkexpr(EA_hi)) );
++      putFReg( frT_lo_addr, load(Ity_F64, mkexpr(EA_lo)) );
+    } else {
+-      storeBE( mkexpr(EA_hi), mkexpr(frT_hi) );
+-      storeBE( mkexpr(EA_lo), mkexpr(frT_lo) );
++      store( mkexpr(EA_hi), mkexpr(frT_hi) );
++      store( mkexpr(EA_lo), mkexpr(frT_lo) );
+    }
+ 
+    return True;
+@@ -15072,7 +15072,7 @@ dis_vx_load ( UInt theInstr )
+    {
+       IRExpr * exp;
+       DIP("lxsiwzx %d,r%u,r%u\n", (UInt)XT, rA_addr, rB_addr);
+-      exp = unop( Iop_64HIto32, loadBE( Ity_I64, mkexpr( EA ) ) );
++      exp = unop( Iop_64HIto32, load( Ity_I64, mkexpr( EA ) ) );
+       putVSReg( XT, binop( Iop_64HLtoV128,
+                            unop( Iop_32Uto64, exp),
+                            mkU64(0) ) );
+@@ -15082,7 +15082,7 @@ dis_vx_load ( UInt theInstr )
+    {
+       IRExpr * exp;
+       DIP("lxsiwax %d,r%u,r%u\n", (UInt)XT, rA_addr, rB_addr);
+-      exp = unop( Iop_64HIto32, loadBE( Ity_I64, mkexpr( EA ) ) );
++      exp = unop( Iop_64HIto32, load( Ity_I64, mkexpr( EA ) ) );
+       putVSReg( XT, binop( Iop_64HLtoV128,
+                            unop( Iop_32Sto64, exp),
+                            mkU64(0) ) );
+@@ -15099,8 +15099,7 @@ dis_vx_load ( UInt theInstr )
+       exp = unop( Iop_ReinterpF64asI64,
+                   unop( Iop_F32toF64,
+                         unop( Iop_ReinterpI32asF32,
+-                              unop( Iop_64HIto32,
+-                                    loadBE( Ity_I64, mkexpr( EA ) ) ) ) ) );
++                              load( Ity_I32, mkexpr( EA ) ) ) ) );
+ 
+       putVSReg( XT, binop( Iop_64HLtoV128, exp, mkU64( 0 ) ) );
+       break;
+@@ -15109,7 +15108,7 @@ dis_vx_load ( UInt theInstr )
+    {
+       IRExpr * exp;
+       DIP("lxsdx %d,r%u,r%u\n", (UInt)XT, rA_addr, rB_addr);
+-      exp = loadBE( Ity_I64, mkexpr( EA ) );
++      exp = load( Ity_I64, mkexpr( EA ) );
+       // We need to pass an expression of type Ity_V128 with putVSReg, but the load
+       // we just performed is only a DW.  But since the contents of VSR[XT] element 1
+       // are undefined after this operation, we can just do a splat op.
+@@ -15123,10 +15122,10 @@ dis_vx_load ( UInt theInstr )
+       ULong ea_off = 8;
+       IRExpr* high_addr;
+       DIP("lxvd2x %d,r%u,r%u\n", (UInt)XT, rA_addr, rB_addr);
+-      high = loadBE( Ity_I64, mkexpr( EA ) );
++      high = load( Ity_I64, mkexpr( EA ) );
+       high_addr = binop( addOp, mkexpr( EA ), ty == Ity_I64 ? mkU64( ea_off )
+             : mkU32( ea_off ) );
+-      low = loadBE( Ity_I64, high_addr );
++      low = load( Ity_I64, high_addr );
+       putVSReg( XT, binop( Iop_64HLtoV128, high, low ) );
+       break;
+    }
+@@ -15134,7 +15133,7 @@ dis_vx_load ( UInt theInstr )
+    {
+       IRTemp data = newTemp(Ity_I64);
+       DIP("lxvdsx %d,r%u,r%u\n", (UInt)XT, rA_addr, rB_addr);
+-      assign( data, loadBE( Ity_I64, mkexpr( EA ) ) );
++      assign( data, load( Ity_I64, mkexpr( EA ) ) );
+       putVSReg( XT, binop( Iop_64HLtoV128, mkexpr( data ), mkexpr( data ) ) );
+       break;
+    }
+@@ -15145,19 +15144,19 @@ dis_vx_load ( UInt theInstr )
+       IRExpr* irx_addr;
+ 
+       DIP("lxvw4x %d,r%u,r%u\n", (UInt)XT, rA_addr, rB_addr);
+-      t3 = loadBE( Ity_I32,  mkexpr( EA ) );
++      t3 = load( Ity_I32,  mkexpr( EA ) );
+       ea_off += 4;
+       irx_addr = binop( mkSzOp( ty, Iop_Add8 ), mkexpr( EA ),
+                         ty == Ity_I64 ? mkU64( ea_off ) : mkU32( ea_off ) );
+-      t2 = loadBE( Ity_I32, irx_addr );
++      t2 = load( Ity_I32, irx_addr );
+       ea_off += 4;
+       irx_addr = binop( mkSzOp( ty, Iop_Add8 ), mkexpr( EA ),
+                         ty == Ity_I64 ? mkU64( ea_off ) : mkU32( ea_off ) );
+-      t1 = loadBE( Ity_I32, irx_addr );
++      t1 = load( Ity_I32, irx_addr );
+       ea_off += 4;
+       irx_addr = binop( mkSzOp( ty, Iop_Add8 ), mkexpr( EA ),
+                         ty == Ity_I64 ? mkU64( ea_off ) : mkU32( ea_off ) );
+-      t0 = loadBE( Ity_I32, irx_addr );
++      t0 = load( Ity_I32, irx_addr );
+       putVSReg( XT, binop( Iop_64HLtoV128, binop( Iop_32HLto64, t3, t2 ),
+                            binop( Iop_32HLto64, t1, t0 ) ) );
+       break;
+@@ -15205,7 +15204,7 @@ dis_vx_store ( UInt theInstr )
+       DIP("stxsiwx %d,r%u,r%u\n", (UInt)XS, rA_addr, rB_addr);
+       high64 = unop( Iop_V128HIto64, mkexpr( vS ) );
+       low32  = unop( Iop_64to32, high64 );
+-      storeBE( mkexpr( EA ), low32 );
++      store( mkexpr( EA ), low32 );
+       break;
+    }
+    case 0x28C:
+@@ -15218,7 +15217,7 @@ dis_vx_store ( UInt theInstr )
+       assign(val32, unop( Iop_ReinterpF32asI32,
+                           unop( Iop_TruncF64asF32,
+                                 mkexpr(high64) ) ) );
+-      storeBE( mkexpr( EA ), mkexpr( val32 ) );
++      store( mkexpr( EA ), mkexpr( val32 ) );
+       break;
+    }
+    case 0x2CC:
+@@ -15226,7 +15225,7 @@ dis_vx_store ( UInt theInstr )
+       IRExpr * high64;
+       DIP("stxsdx %d,r%u,r%u\n", (UInt)XS, rA_addr, rB_addr);
+       high64 = unop( Iop_V128HIto64, mkexpr( vS ) );
+-      storeBE( mkexpr( EA ), high64 );
++      store( mkexpr( EA ), high64 );
+       break;
+    }
+    case 0x3CC:
+@@ -15235,9 +15234,9 @@ dis_vx_store ( UInt theInstr )
+       DIP("stxvd2x %d,r%u,r%u\n", (UInt)XS, rA_addr, rB_addr);
+       high64 = unop( Iop_V128HIto64, mkexpr( vS ) );
+       low64 = unop( Iop_V128to64, mkexpr( vS ) );
+-      storeBE( mkexpr( EA ), high64 );
+-      storeBE( binop( mkSzOp( ty, Iop_Add8 ), mkexpr( EA ), ty == Ity_I64 ? mkU64( 8 )
+-            : mkU32( 8 ) ), low64 );
++      store( mkexpr( EA ), high64 );
++      store( binop( mkSzOp( ty, Iop_Add8 ), mkexpr( EA ),
++                    ty == Ity_I64 ? mkU64( 8 ) : mkU32( 8 ) ), low64 );
+       break;
+    }
+    case 0x38C:
+@@ -15253,20 +15252,19 @@ dis_vx_store ( UInt theInstr )
+       // quad-word aligned.  Therefore, do 4 individual word-size stores.
+       assign( hi64, unop( Iop_V128HIto64, mkexpr( vS ) ) );
+       assign( lo64, unop( Iop_V128to64, mkexpr( vS ) ) );
+-
+-      storeBE( mkexpr( EA ), unop( Iop_64HIto32, mkexpr( hi64 ) ) );
++      store( mkexpr( EA ), unop( Iop_64HIto32, mkexpr( hi64 ) ) );
+       ea_off += 4;
+       irx_addr = binop( mkSzOp( ty, Iop_Add8 ), mkexpr( EA ),
+                         ty == Ity_I64 ? mkU64( ea_off ) : mkU32( ea_off ) );
+-      storeBE( irx_addr, unop( Iop_64to32, mkexpr( hi64 ) ) );
++      store( irx_addr, unop( Iop_64to32, mkexpr( hi64 ) ) );
+       ea_off += 4;
+       irx_addr = binop( mkSzOp( ty, Iop_Add8 ), mkexpr( EA ),
+                         ty == Ity_I64 ? mkU64( ea_off ) : mkU32( ea_off ) );
+-      storeBE( irx_addr, unop( Iop_64HIto32, mkexpr( lo64 ) ) );
++      store( irx_addr, unop( Iop_64HIto32, mkexpr( lo64 ) ) );
+       ea_off += 4;
+       irx_addr = binop( mkSzOp( ty, Iop_Add8 ), mkexpr( EA ),
+                         ty == Ity_I64 ? mkU64( ea_off ) : mkU32( ea_off ) );
+-      storeBE( irx_addr, unop( Iop_64to32, mkexpr( lo64 ) ) );
++      store( irx_addr, unop( Iop_64to32, mkexpr( lo64 ) ) );
+ 
+       break;
+    }
+@@ -15498,29 +15496,29 @@ static Bool dis_av_load ( VexAbiInfo* vbi, UInt theInstr )
+       /* loads addressed byte into vector[EA[0:3]
+          since all other destination bytes are undefined,
+          can simply load entire vector from 16-aligned EA */
+-      putVReg( vD_addr, loadBE(Ity_V128, mkexpr(EA_align16)) );
++      putVReg( vD_addr, load(Ity_V128, mkexpr(EA_align16)) );
+       break;
+ 
+    case 0x027: // lvehx (Load Vector Element Half Word Indexed, AV p121)
+       DIP("lvehx v%d,r%u,r%u\n", vD_addr, rA_addr, rB_addr);
+       /* see note for lvebx */
+-      putVReg( vD_addr, loadBE(Ity_V128, mkexpr(EA_align16)) );
++      putVReg( vD_addr, load(Ity_V128, mkexpr(EA_align16)) );
+       break;
+ 
+    case 0x047: // lvewx (Load Vector Element Word Indexed, AV p122)
+       DIP("lvewx v%d,r%u,r%u\n", vD_addr, rA_addr, rB_addr);
+       /* see note for lvebx */
+-      putVReg( vD_addr, loadBE(Ity_V128, mkexpr(EA_align16)) );
++      putVReg( vD_addr, load(Ity_V128, mkexpr(EA_align16)) );
+       break;
+ 
+    case 0x067: // lvx (Load Vector Indexed, AV p127)
+       DIP("lvx v%d,r%u,r%u\n", vD_addr, rA_addr, rB_addr);
+-      putVReg( vD_addr, loadBE(Ity_V128, mkexpr(EA_align16)) );
++      putVReg( vD_addr, load(Ity_V128, mkexpr(EA_align16)) );
+       break;
+ 
+    case 0x167: // lvxl (Load Vector Indexed LRU, AV p128)
+       DIP("lvxl v%d,r%u,r%u\n", vD_addr, rA_addr, rB_addr);
+-      putVReg( vD_addr, loadBE(Ity_V128, mkexpr(EA_align16)) );
++      putVReg( vD_addr, load(Ity_V128, mkexpr(EA_align16)) );
+       break;
+ 
+    default:
+@@ -15567,9 +15565,9 @@ static Bool dis_av_store ( UInt theInstr )
+       assign( idx, binop(Iop_Shl8,
+                          binop(Iop_Sub8, mkU8(15), mkexpr(eb)),
+                          mkU8(3)) );
+-      storeBE( mkexpr(EA),
+-               unop(Iop_32to8, unop(Iop_V128to32,
+-                    binop(Iop_ShrV128, mkexpr(vS), mkexpr(idx)))) );
++      store( mkexpr(EA),
++             unop( Iop_32to8, unop(Iop_V128to32,
++                   binop(Iop_ShrV128, mkexpr(vS), mkexpr(idx)))) );
+       break;
+    }
+    case 0x0A7: { // stvehx (Store Vector Half Word Indexed, AV p132)
+@@ -15580,9 +15578,9 @@ static Bool dis_av_store ( UInt theInstr )
+       assign( idx, binop(Iop_Shl8,
+                          binop(Iop_Sub8, mkU8(14), mkexpr(eb)),
+                          mkU8(3)) );
+-      storeBE( mkexpr(addr_aligned),
+-               unop(Iop_32to16, unop(Iop_V128to32,
+-                    binop(Iop_ShrV128, mkexpr(vS), mkexpr(idx)))) );
++      store( mkexpr(addr_aligned),
++             unop( Iop_32to16, unop(Iop_V128to32,
++                   binop(Iop_ShrV128, mkexpr(vS), mkexpr(idx)))) );
+       break;
+    }
+    case 0x0C7: { // stvewx (Store Vector Word Indexed, AV p133)
+@@ -15593,20 +15591,20 @@ static Bool dis_av_store ( UInt theInstr )
+       assign( idx, binop(Iop_Shl8,
+                          binop(Iop_Sub8, mkU8(12), mkexpr(eb)),
+                          mkU8(3)) );
+-      storeBE( mkexpr(addr_aligned),
+-               unop(Iop_V128to32,
+-                    binop(Iop_ShrV128, mkexpr(vS), mkexpr(idx))) );
++      store( mkexpr( addr_aligned),
++             unop( Iop_V128to32,
++                   binop(Iop_ShrV128, mkexpr(vS), mkexpr(idx))) );
+       break;
+    }
+ 
+    case 0x0E7: // stvx (Store Vector Indexed, AV p134)
+       DIP("stvx v%d,r%u,r%u\n", vS_addr, rA_addr, rB_addr);
+-      storeBE( addr_align( mkexpr(EA), 16 ), mkexpr(vS) );
++      store( addr_align( mkexpr(EA), 16 ), mkexpr(vS) );
+       break;
+ 
+    case 0x1E7: // stvxl (Store Vector Indexed LRU, AV p135)
+       DIP("stvxl v%d,r%u,r%u\n", vS_addr, rA_addr, rB_addr);
+-      storeBE( addr_align( mkexpr(EA), 16 ), mkexpr(vS) );
++      store( addr_align( mkexpr(EA), 16 ), mkexpr(vS) );
+       break;
+ 
+    default:
+@@ -18535,7 +18533,7 @@ DisResult disInstr_PPC_WRK (
+    /* At least this is simple on PPC32: insns are all 4 bytes long, and
+       4-aligned.  So just fish the whole thing out of memory right now
+       and have done. */
+-   theInstr = getUIntBigendianly( (UChar*)(&guest_code[delta]) );
++   theInstr = getUIntPPCendianly( (UChar*)(&guest_code[delta]) );
+ 
+    if (0) vex_printf("insn: 0x%x\n", theInstr);
+ 
+@@ -18560,12 +18558,12 @@ DisResult disInstr_PPC_WRK (
+       UInt word2 = mode64 ? 0x78006800 : 0x5400683E;
+       UInt word3 = mode64 ? 0x7800E802 : 0x5400E83E;
+       UInt word4 = mode64 ? 0x78009802 : 0x5400983E;
+-      if (getUIntBigendianly(code+ 0) == word1 &&
+-          getUIntBigendianly(code+ 4) == word2 &&
+-          getUIntBigendianly(code+ 8) == word3 &&
+-          getUIntBigendianly(code+12) == word4) {
++      if (getUIntPPCendianly(code+ 0) == word1 &&
++          getUIntPPCendianly(code+ 4) == word2 &&
++          getUIntPPCendianly(code+ 8) == word3 &&
++          getUIntPPCendianly(code+12) == word4) {
+          /* Got a "Special" instruction preamble.  Which one is it? */
+-         if (getUIntBigendianly(code+16) == 0x7C210B78 /* or 1,1,1 */) {
++         if (getUIntPPCendianly(code+16) == 0x7C210B78 /* or 1,1,1 */) {
+             /* %R3 = client_request ( %R4 ) */
+             DIP("r3 = client_request ( %%r4 )\n");
+             delta += 20;
+@@ -18575,7 +18573,7 @@ DisResult disInstr_PPC_WRK (
+             goto decode_success;
+          }
+          else
+-         if (getUIntBigendianly(code+16) == 0x7C421378 /* or 2,2,2 */) {
++         if (getUIntPPCendianly(code+16) == 0x7C421378 /* or 2,2,2 */) {
+             /* %R3 = guest_NRADDR */
+             DIP("r3 = guest_NRADDR\n");
+             delta += 20;
+@@ -18584,7 +18582,7 @@ DisResult disInstr_PPC_WRK (
+             goto decode_success;
+          }
+          else
+-         if (getUIntBigendianly(code+16) == 0x7C631B78 /* or 3,3,3 */) {
++         if (getUIntPPCendianly(code+16) == 0x7C631B78 /* or 3,3,3 */) {
+             /*  branch-and-link-to-noredir %R11 */
+             DIP("branch-and-link-to-noredir r11\n");
+             delta += 20;
+@@ -18595,7 +18593,7 @@ DisResult disInstr_PPC_WRK (
+             goto decode_success;
+          }
+          else
+-         if (getUIntBigendianly(code+16) == 0x7C842378 /* or 4,4,4 */) {
++         if (getUIntPPCendianly(code+16) == 0x7C842378 /* or 4,4,4 */) {
+             /* %R3 = guest_NRADDR_GPR2 */
+             DIP("r3 = guest_NRADDR_GPR2\n");
+             delta += 20;
+@@ -18604,10 +18602,10 @@ DisResult disInstr_PPC_WRK (
+             goto decode_success;
+          }
+          else
+-         if (getUIntBigendianly(code+16) == 0x7CA52B78 /* or 5,5,5 */) {
++         if (getUIntPPCendianly(code+16) == 0x7CA52B78 /* or 5,5,5 */) {
+             DIP("IR injection\n");
+ 
+-            vex_inject_ir(irsb, Iend_BE);
++            vex_inject_ir(irsb, IENDIANESS);
+ 
+             delta += 20;
+             dres.len = 20;
+@@ -18627,7 +18625,7 @@ DisResult disInstr_PPC_WRK (
+          }
+          /* We don't know what it is.  Set opc1/opc2 so decode_failure
+             can print the insn following the Special-insn preamble. */
+-         theInstr = getUIntBigendianly(code+16);
++         theInstr = getUIntPPCendianly(code+16);
+          opc1     = ifieldOPC(theInstr);
+          opc2     = ifieldOPClo10(theInstr);
+          goto decode_failure;
+@@ -19323,7 +19321,7 @@ DisResult disInstr_PPC_WRK (
+       case 0x32E: case 0x34E: case 0x36E: // tabortdc., tabortwci., tabortdci.
+       case 0x38E: case 0x3AE: case 0x3EE: // tabort., treclaim., trechkpt.
+       if (dis_transactional_memory( theInstr,
+-                                    getUIntBigendianly( (UChar*)(&guest_code[delta + 4])),
++                                    getUIntPPCendianly( (UChar*)(&guest_code[delta + 4])),
+                                     abiinfo, &dres,
+                                     resteerOkFn, callback_opaque))
+             goto decode_success;
+diff --git a/cachegrind/cg_arch.c b/cachegrind/cg_arch.c
+index 0b39c52..170e4cc 100644
+--- a/cachegrind/cg_arch.c
++++ b/cachegrind/cg_arch.c
+@@ -353,7 +353,7 @@ configure_caches(cache_t *I1c, cache_t *D1c, cache_t *LLc,
+    *D1c = (cache_t) {  65536, 2, 64 };
+    *LLc = (cache_t) { 262144, 8, 64 };
+ 
+-#elif defined(VGA_ppc64)
++#elif defined(VGA_ppc64be) || defined(VGA_ppc64le)
+ 
+    // Default cache configuration
+    *I1c = (cache_t) {  65536, 2, 64 };
+diff --git a/cachegrind/cg_branchpred.c b/cachegrind/cg_branchpred.c
+index b385f66..9ee5c62 100644
+--- a/cachegrind/cg_branchpred.c
++++ b/cachegrind/cg_branchpred.c
+@@ -44,7 +44,7 @@
+ 
+ /* How many bits at the bottom of an instruction address are
+    guaranteed to be zero? */
+-#if defined(VGA_ppc32) || defined(VGA_ppc64) \
++#if defined(VGA_ppc32) || defined(VGA_ppc64be)  || defined(VGA_ppc64le) \
+     || defined(VGA_mips32) || defined(VGA_mips64) || defined(VGA_arm64)
+ #  define N_IADDR_LO_ZERO_BITS 2
+ #elif defined(VGA_x86) || defined(VGA_amd64)
+diff --git a/configure.ac b/configure.ac
+index c91ea94..5b65439 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -163,6 +163,18 @@ AC_MSG_CHECKING([for a supported CPU])
+ # is a 64-bit capable PowerPC, then it must be set to ppc64 and not ppc32.
+ # Ditto for amd64.  It is used for more configuration below, but is not used
+ # outside this file.
++#
++# Power PC returns powerpc for Big Endian.  This was not changed when Little
++# Endian support was added to the 64-bit architecture.  The 64-bit Little
++# Endian systems explicitly state le in the host_cpu.  For clarity in the
++# Valgrind code, the ARCH_MAX name will state LE or BE for the endianess of
++# the 64-bit system.  Big Endian is the only mode supported on 32-bit Power PC.
++# The abreviation PPC or ppc refers to 32-bit and 64-bit systems with either
++# Endianess.  The name PPC64 or ppc64 to 64-bit systems of either Endianess.
++# The names ppc64be or PPC64BE refer to only 64-bit systems that are Big
++# Endian.  Similarly, ppc64le or PPC64LE refer to only 64-bit systems that are
++# Little Endian.
++
+ case "${host_cpu}" in
+      i?86) 
+ 	AC_MSG_RESULT([ok (${host_cpu})])
+@@ -175,8 +187,15 @@ case "${host_cpu}" in
+         ;;
+ 
+      powerpc64)
++     # this only referrs to 64-bit Big Endian
+         AC_MSG_RESULT([ok (${host_cpu})])
+-        ARCH_MAX="ppc64"
++        ARCH_MAX="ppc64be"
++        ;;
++
++     powerpc64le)
++     # this only referrs to 64-bit Little Endian
++        AC_MSG_RESULT([ok (${host_cpu})])
++        ARCH_MAX="ppc64le"
+         ;;
+ 
+      powerpc)
+@@ -378,7 +397,7 @@ esac
+ # does not support building 32 bit programs
+ 
+ case "$ARCH_MAX-$VGCONF_OS" in
+-     amd64-linux|ppc64-linux)
++     amd64-linux|ppc64be-linux)
+         AC_MSG_CHECKING([for 32 bit build support])
+         safe_CFLAGS=$CFLAGS
+         CFLAGS="-m32"
+@@ -496,13 +515,13 @@ case "$ARCH_MAX-$VGCONF_OS" in
+         valt_load_address_sec_inner="0xUNSET"
+         AC_MSG_RESULT([ok (${ARCH_MAX}-${VGCONF_OS})])
+ 	;;
+-     ppc64-linux)
++     ppc64be-linux)
+         valt_load_address_sec_norml="0xUNSET"
+         valt_load_address_sec_inner="0xUNSET"
+ 	if test x$vg_cv_only64bit = xyes; then
+-	   VGCONF_ARCH_PRI="ppc64"
++	   VGCONF_ARCH_PRI="ppc64be"
+            VGCONF_ARCH_SEC=""
+-	   VGCONF_PLATFORM_PRI_CAPS="PPC64_LINUX"
++	   VGCONF_PLATFORM_PRI_CAPS="PPC64BE_LINUX"
+ 	   VGCONF_PLATFORM_SEC_CAPS=""
+            valt_load_address_pri_norml="0x38000000"
+            valt_load_address_pri_inner="0x28000000"
+@@ -514,9 +533,9 @@ case "$ARCH_MAX-$VGCONF_OS" in
+            valt_load_address_pri_norml="0x38000000"
+            valt_load_address_pri_inner="0x28000000"
+ 	else
+-	   VGCONF_ARCH_PRI="ppc64"
++	   VGCONF_ARCH_PRI="ppc64be"
+            VGCONF_ARCH_SEC="ppc32"
+-	   VGCONF_PLATFORM_PRI_CAPS="PPC64_LINUX"
++	   VGCONF_PLATFORM_PRI_CAPS="PPC64BE_LINUX"
+ 	   VGCONF_PLATFORM_SEC_CAPS="PPC32_LINUX"
+            valt_load_address_pri_norml="0x38000000"
+            valt_load_address_pri_inner="0x28000000"
+@@ -525,6 +544,18 @@ case "$ARCH_MAX-$VGCONF_OS" in
+ 	fi
+         AC_MSG_RESULT([ok (${ARCH_MAX}-${VGCONF_OS})])
+ 	;;
++     ppc64le-linux)
++        # Little Endian is only supported on PPC64
++        valt_load_address_sec_norml="0xUNSET"
++        valt_load_address_sec_inner="0xUNSET"
++        VGCONF_ARCH_PRI="ppc64le"
++        VGCONF_ARCH_SEC=""
++        VGCONF_PLATFORM_PRI_CAPS="PPC64LE_LINUX"
++        VGCONF_PLATFORM_SEC_CAPS=""
++        valt_load_address_pri_norml="0x38000000"
++        valt_load_address_pri_inner="0x28000000"
++        AC_MSG_RESULT([ok (${ARCH_MAX}-${VGCONF_OS})])
++       ;;
+      # Darwin gets identified as 32-bit even when it supports 64-bit.
+      # (Not sure why, possibly because 'uname' returns "i386"?)  Just about
+      # all Macs support both 32-bit and 64-bit, so we just build both.  If
+@@ -663,7 +694,8 @@ AM_CONDITIONAL(VGCONF_ARCHS_INCLUDE_PPC32,
+                test x$VGCONF_PLATFORM_PRI_CAPS = xPPC32_LINUX \ 
+                  -o x$VGCONF_PLATFORM_SEC_CAPS = xPPC32_LINUX )
+ AM_CONDITIONAL(VGCONF_ARCHS_INCLUDE_PPC64, 
+-               test x$VGCONF_PLATFORM_PRI_CAPS = xPPC64_LINUX )
++               test x$VGCONF_PLATFORM_PRI_CAPS = xPPC64BE_LINUX \
++                 -o x$VGCONF_PLATFORM_PRI_CAPS = xPPC64LE_LINUX )
+ AM_CONDITIONAL(VGCONF_ARCHS_INCLUDE_ARM,   
+                test x$VGCONF_PLATFORM_PRI_CAPS = xARM_LINUX \
+                  -o x$VGCONF_PLATFORM_SEC_CAPS = xARM_LINUX )
+@@ -686,8 +718,10 @@ AM_CONDITIONAL(VGCONF_PLATFORMS_INCLUDE_AMD64_LINUX,
+ AM_CONDITIONAL(VGCONF_PLATFORMS_INCLUDE_PPC32_LINUX, 
+                test x$VGCONF_PLATFORM_PRI_CAPS = xPPC32_LINUX \ 
+                  -o x$VGCONF_PLATFORM_SEC_CAPS = xPPC32_LINUX)
+-AM_CONDITIONAL(VGCONF_PLATFORMS_INCLUDE_PPC64_LINUX, 
+-               test x$VGCONF_PLATFORM_PRI_CAPS = xPPC64_LINUX)
++AM_CONDITIONAL(VGCONF_PLATFORMS_INCLUDE_PPC64BE_LINUX,
++               test x$VGCONF_PLATFORM_PRI_CAPS = xPPC64BE_LINUX)
++AM_CONDITIONAL(VGCONF_PLATFORMS_INCLUDE_PPC64LE_LINUX,
++               test x$VGCONF_PLATFORM_PRI_CAPS = xPPC64LE_LINUX)
+ AM_CONDITIONAL(VGCONF_PLATFORMS_INCLUDE_ARM_LINUX, 
+                test x$VGCONF_PLATFORM_PRI_CAPS = xARM_LINUX \
+                  -o x$VGCONF_PLATFORM_SEC_CAPS = xARM_LINUX)
+@@ -714,7 +748,8 @@ AM_CONDITIONAL(VGCONF_OS_IS_LINUX,
+                test x$VGCONF_PLATFORM_PRI_CAPS = xX86_LINUX \
+                  -o x$VGCONF_PLATFORM_PRI_CAPS = xAMD64_LINUX \
+                  -o x$VGCONF_PLATFORM_PRI_CAPS = xPPC32_LINUX \
+-                 -o x$VGCONF_PLATFORM_PRI_CAPS = xPPC64_LINUX \
++                 -o x$VGCONF_PLATFORM_PRI_CAPS = xPPC64BE_LINUX \
++                 -o x$VGCONF_PLATFORM_PRI_CAPS = xPPC64LE_LINUX \
+                  -o x$VGCONF_PLATFORM_PRI_CAPS = xARM_LINUX \
+                  -o x$VGCONF_PLATFORM_PRI_CAPS = xARM64_LINUX \
+                  -o x$VGCONF_PLATFORM_PRI_CAPS = xS390X_LINUX \
+diff --git a/coregrind/launcher-darwin.c b/coregrind/launcher-darwin.c
+index 8e3d63e..1f99026 100644
+--- a/coregrind/launcher-darwin.c
++++ b/coregrind/launcher-darwin.c
+@@ -59,11 +59,11 @@ static struct {
+    const char *apple_name;     // e.g. x86_64
+    const char *valgrind_name;  // e.g. amd64
+ } valid_archs[] = {
+-   { CPU_TYPE_X86,       "i386",   "x86" }, 
+-   { CPU_TYPE_X86_64,    "x86_64", "amd64" }, 
+-   { CPU_TYPE_ARM,       "arm",    "arm" }, 
+-   { CPU_TYPE_POWERPC,   "ppc",    "ppc32" }, 
+-   { CPU_TYPE_POWERPC64, "ppc64",  "ppc64" }, 
++   { CPU_TYPE_X86,         "i386",    "x86" },
++   { CPU_TYPE_X86_64,      "x86_64",  "amd64" },
++   { CPU_TYPE_ARM,         "arm",     "arm" },
++   { CPU_TYPE_POWERPC,     "ppc",     "ppc32" },
++   { CPU_TYPE_POWERPC64BE, "ppc64be", "ppc64be" },
+ };
+ static int valid_archs_count = sizeof(valid_archs)/sizeof(valid_archs[0]);
+ 
+diff --git a/coregrind/launcher-linux.c b/coregrind/launcher-linux.c
+index 83035ea..38e4857 100644
+--- a/coregrind/launcher-linux.c
++++ b/coregrind/launcher-linux.c
+@@ -236,7 +236,7 @@ static const char *select_platform(const char *clientname)
+             if (ehdr->e_machine == EM_PPC64 &&
+                 (ehdr->e_ident[EI_OSABI] == ELFOSABI_SYSV ||
+                  ehdr->e_ident[EI_OSABI] == ELFOSABI_LINUX)) {
+-               platform = "ppc64-linux";
++               platform = "ppc64be-linux";
+             } 
+             else 
+             if (ehdr->e_machine == EM_S390 &&
+@@ -320,7 +320,7 @@ int main(int argc, char** argv, char** envp)
+    if ((0==strcmp(VG_PLATFORM,"x86-linux"))    ||
+        (0==strcmp(VG_PLATFORM,"amd64-linux"))  ||
+        (0==strcmp(VG_PLATFORM,"ppc32-linux"))  ||
+-       (0==strcmp(VG_PLATFORM,"ppc64-linux"))  ||
++       (0==strcmp(VG_PLATFORM,"ppc64be-linux"))  ||
+        (0==strcmp(VG_PLATFORM,"arm-linux"))    ||
+        (0==strcmp(VG_PLATFORM,"arm64-linux"))  ||
+        (0==strcmp(VG_PLATFORM,"s390x-linux"))  ||
+diff --git a/coregrind/m_aspacemgr/aspacemgr-common.c b/coregrind/m_aspacemgr/aspacemgr-common.c
+index b8d694d..903f924 100644
+--- a/coregrind/m_aspacemgr/aspacemgr-common.c
++++ b/coregrind/m_aspacemgr/aspacemgr-common.c
+@@ -162,7 +162,8 @@ SysRes VG_(am_do_mmap_NO_NOTIFY)( Addr start, SizeT length, UInt prot,
+    aspacem_assert((offset % 4096) == 0);
+    res = VG_(do_syscall6)(__NR_mmap2, (UWord)start, length,
+                           prot, flags, fd, offset / 4096);
+-#  elif defined(VGP_amd64_linux) || defined(VGP_ppc64_linux) \
++#  elif defined(VGP_amd64_linux) \
++        || defined(VGP_ppc64be_linux)  || defined(VGP_ppc64le_linux) \
+         || defined(VGP_s390x_linux) || defined(VGP_mips32_linux) \
+         || defined(VGP_mips64_linux) || defined(VGP_arm64_linux)
+    res = VG_(do_syscall6)(__NR_mmap, (UWord)start, length, 
+diff --git a/coregrind/m_cache.c b/coregrind/m_cache.c
+index 0321db4..d208a53 100644
+--- a/coregrind/m_cache.c
++++ b/coregrind/m_cache.c
+@@ -538,7 +538,8 @@ get_cache_info(VexArchInfo *vai)
+    return ret == 0 ? True : False;
+ }
+ 
+-#elif defined(VGA_arm) || defined(VGA_ppc32) || defined(VGA_ppc64) || \
++#elif defined(VGA_arm) || defined(VGA_ppc32)    || \
++   defined(VGA_ppc64be) || defined(VGA_ppc64le) || \
+    defined(VGA_mips32) || defined(VGA_mips64) || defined(VGA_arm64)
+ 
+ static Bool
+diff --git a/coregrind/m_coredump/coredump-elf.c b/coregrind/m_coredump/coredump-elf.c
+index fcc16ec..08ddddd 100644
+--- a/coregrind/m_coredump/coredump-elf.c
++++ b/coregrind/m_coredump/coredump-elf.c
+@@ -322,7 +322,7 @@ static void fill_prstatus(const ThreadState *tst,
+    regs->dsisr = 0;
+    regs->result = 0;
+ 
+-#elif defined(VGP_ppc64_linux)
++#elif defined(VGP_ppc64be_linux)
+ #  define DO(n)  regs->gpr[n] = arch->vex.guest_GPR##n
+    DO(0);  DO(1);  DO(2);  DO(3);  DO(4);  DO(5);  DO(6);  DO(7);
+    DO(8);  DO(9);  DO(10); DO(11); DO(12); DO(13); DO(14); DO(15);
+@@ -458,7 +458,7 @@ static void fill_fpu(const ThreadState *tst, vki_elf_fpregset_t *fpu)
+    DO(24); DO(25); DO(26); DO(27); DO(28); DO(29); DO(30); DO(31);
+ #  undef DO
+ 
+-#elif defined(VGP_ppc64_linux)
++#elif defined(VGP_ppc64be_linux) || defined(VGP_ppc64le_linux)
+    /* The guest state has the FPR fields declared as ULongs, so need
+       to fish out the values without converting them.
+       NOTE: The 32 FP registers map to the first 32 VSX registers.*/
+diff --git a/coregrind/m_debugger.c b/coregrind/m_debugger.c
+index 3a61361..4af8f18 100644
+--- a/coregrind/m_debugger.c
++++ b/coregrind/m_debugger.c
+@@ -152,7 +152,7 @@ static Int ptrace_setregs(Int pid, VexGuestArchState* vex)
+                      (void*)LibVEX_GuestPPC32_get_XER(vex));
+    return rc;
+ 
+-#elif defined(VGP_ppc64_linux)
++#elif defined(VGP_ppc64be_linux) || defined(VGP_ppc64le_linux)
+    Int rc = 0; 
+    /* FRJ: copied nearly verbatim from the ppc32 case. I compared the 
+       vki-ppc64-linux.h with its ppc32 counterpart and saw no 
+diff --git a/coregrind/m_debuginfo/d3basics.c b/coregrind/m_debuginfo/d3basics.c
+index 3999533..02e8dad 100644
+--- a/coregrind/m_debuginfo/d3basics.c
++++ b/coregrind/m_debuginfo/d3basics.c
+@@ -406,7 +406,7 @@ static Bool get_Dwarf_Reg( /*OUT*/Addr* a, Word regno, RegSummary* regs )
+    if (regno == 7/*RSP*/) { *a = regs->sp; return True; }
+ #  elif defined(VGP_ppc32_linux)
+    if (regno == 1/*SP*/) { *a = regs->sp; return True; }
+-#  elif defined(VGP_ppc64_linux)
++#  elif defined(VGP_ppc64be_linux) || defined(VGP_ppc64le_linux)
+    if (regno == 1/*SP*/) { *a = regs->sp; return True; }
+ #  elif defined(VGP_arm_linux)
+    if (regno == 13) { *a = regs->sp; return True; }
+@@ -863,7 +863,8 @@ GXResult ML_(evaluate_Dwarf3_Expr) ( UChar* expr, UWord exprszB,
+             if (!regs)
+                FAIL("evaluate_Dwarf3_Expr: "
+                     "DW_OP_call_frame_cfa but no reg info");
+-#if defined(VGP_ppc32_linux) || defined(VGP_ppc64_linux)
++#if defined(VGP_ppc32_linux) || defined(VGP_ppc64be_linux) \
++    || defined(VGP_ppc64le_linux)
+             /* Valgrind on ppc32/ppc64 currently doesn't use unwind info. */
+             uw1 = ML_(read_Addr)((UChar*)regs->sp);
+ #else
+diff --git a/coregrind/m_debuginfo/debuginfo.c b/coregrind/m_debuginfo/debuginfo.c
+index 13d27f0..90b6f0c 100644
+--- a/coregrind/m_debuginfo/debuginfo.c
++++ b/coregrind/m_debuginfo/debuginfo.c
+@@ -833,8 +833,8 @@ ULong VG_(di_notify_mmap)( Addr a, Bool allow_SkFileV, Int use_fd )
+       || defined(VGA_mips64)
+    is_rx_map = seg->hasR && seg->hasX;
+    is_rw_map = seg->hasR && seg->hasW;
+-#  elif defined(VGA_amd64) || defined(VGA_ppc64) || defined(VGA_arm) \
+-        || defined(VGA_arm64)
++#  elif defined(VGA_amd64) || defined(VGA_ppc64be) || defined(VGA_ppc64le)  \
++        || defined(VGA_arm) || defined(VGA_arm64)
+    is_rx_map = seg->hasR && seg->hasX && !seg->hasW;
+    is_rw_map = seg->hasR && seg->hasW && !seg->hasX;
+ #  elif defined(VGP_s390x_linux)
+@@ -1675,7 +1675,7 @@ Bool get_sym_name ( Bool do_cxx_demangling, Bool do_z_demangling,
+    return True;
+ }
+ 
+-/* ppc64-linux only: find the TOC pointer (R2 value) that should be in
++/* ppc64be-linux only: find the TOC pointer (R2 value) that should be in
+    force at the entry point address of the function containing
+    guest_code_addr.  Returns 0 if not known. */
+ Addr VG_(get_tocptr) ( Addr guest_code_addr )
+@@ -2370,7 +2370,8 @@ UWord evalCfiExpr ( XArray* exprs, Int ix,
+             case Creg_IA_SP: return eec->uregs->sp;
+             case Creg_IA_BP: return eec->uregs->fp;
+             case Creg_MIPS_RA: return eec->uregs->ra;
+-#           elif defined(VGA_ppc32) || defined(VGA_ppc64)
++#           elif defined(VGA_ppc32) || defined(VGA_ppc64be) \
++               || defined(VGA_ppc64le)
+ #           elif defined(VGP_arm64_linux)
+             case Creg_ARM64_X30: return eec->uregs->x30;
+ #           else
+@@ -2620,7 +2621,7 @@ static Addr compute_cfa ( D3UnwindRegs* uregs,
+       case CFIC_IA_BPREL:
+          cfa = cfsi_m->cfa_off + uregs->fp;
+          break;
+-#     elif defined(VGA_ppc32) || defined(VGA_ppc64)
++#     elif defined(VGA_ppc32) || defined(VGA_ppc64be) || defined(VGA_ppc64le)
+ #     elif defined(VGP_arm64_linux)
+       case CFIC_ARM64_SPREL: 
+          cfa = cfsi_m->cfa_off + uregs->sp;
+@@ -2728,7 +2729,7 @@ Bool VG_(use_CF_info) ( /*MOD*/D3UnwindRegs* uregsHere,
+    ipHere = uregsHere->ia;
+ #  elif defined(VGA_mips32) || defined(VGA_mips64)
+    ipHere = uregsHere->pc;
+-#  elif defined(VGA_ppc32) || defined(VGA_ppc64)
++#  elif defined(VGA_ppc32) || defined(VGA_ppc64be) || defined(VGA_ppc64le)
+ #  elif defined(VGP_arm64_linux)
+    ipHere = uregsHere->pc;
+ #  else
+@@ -2810,7 +2811,7 @@ Bool VG_(use_CF_info) ( /*MOD*/D3UnwindRegs* uregsHere,
+    COMPUTE(uregsPrev.pc, uregsHere->pc, cfsi_m->ra_how, cfsi_m->ra_off);
+    COMPUTE(uregsPrev.sp, uregsHere->sp, cfsi_m->sp_how, cfsi_m->sp_off);
+    COMPUTE(uregsPrev.fp, uregsHere->fp, cfsi_m->fp_how, cfsi_m->fp_off);
+-#  elif defined(VGA_ppc32) || defined(VGA_ppc64)
++#  elif defined(VGA_ppc32) || defined(VGA_ppc64be) || defined(VGA_ppc64le) 
+ #  elif defined(VGP_arm64_linux)
+    COMPUTE(uregsPrev.pc,  uregsHere->pc,  cfsi_m->ra_how,  cfsi_m->ra_off);
+    COMPUTE(uregsPrev.sp,  uregsHere->sp,  cfsi_m->sp_how,  cfsi_m->sp_off);
+diff --git a/coregrind/m_debuginfo/priv_storage.h b/coregrind/m_debuginfo/priv_storage.h
+index 000d5f1..f002878 100644
+--- a/coregrind/m_debuginfo/priv_storage.h
++++ b/coregrind/m_debuginfo/priv_storage.h
+@@ -285,7 +285,7 @@ typedef
+       Int   x29_off;
+    }
+    DiCfSI_m;
+-#elif defined(VGA_ppc32) || defined(VGA_ppc64)
++#elif defined(VGA_ppc32) || defined(VGA_ppc64be) || defined(VGA_ppc64le)
+ /* Just have a struct with the common fields in, so that code that
+    processes the common fields doesn't have to be ifdef'd against
+    VGP_/VGA_ symbols.  These are not used in any way on ppc32/64-linux
+diff --git a/coregrind/m_debuginfo/readdwarf.c b/coregrind/m_debuginfo/readdwarf.c
+index c6e9ebe..158f614 100644
+--- a/coregrind/m_debuginfo/readdwarf.c
++++ b/coregrind/m_debuginfo/readdwarf.c
+@@ -1833,7 +1833,7 @@ void ML_(read_debuginfo_dwarf1) (
+ #  define FP_REG         1
+ #  define SP_REG         1
+ #  define RA_REG_DEFAULT 65
+-#elif defined(VGP_ppc64_linux)
++#elif defined(VGP_ppc64be_linux) || defined(VGP_ppc64le_linux)
+ #  define FP_REG         1
+ #  define SP_REG         1
+ #  define RA_REG_DEFAULT 65
+@@ -1873,8 +1873,9 @@ void ML_(read_debuginfo_dwarf1) (
+    arm-linux (320) seems ludicrously high, but the ARM IHI 0040A page
+    7 (DWARF for the ARM Architecture) specifies that values up to 320
+    might exist, for Neon/VFP-v3. */
+-#if defined(VGP_ppc32_linux) || defined(VGP_ppc64_linux) \
+-    || defined(VGP_mips32_linux) || defined(VGP_mips64_linux)
++#if defined(VGP_ppc32_linux) || defined(VGP_ppc64be_linux) \
++     || defined(VGP_ppc64le_linux) || defined(VGP_mips32_linux) \
++     || defined(VGP_mips64_linux)
+ # define N_CFI_REGS 72
+ #elif defined(VGP_arm_linux)
+ # define N_CFI_REGS 320
+@@ -2491,7 +2492,7 @@ static Bool summarise_context(/*OUT*/Addr* base,
+ 
+    return True;
+ 
+-#  elif defined(VGA_ppc32) || defined(VGA_ppc64)
++#  elif defined(VGA_ppc32) || defined(VGA_ppc64be) || defined(VGA_ppc64le)
+    /* These don't use CFI based unwinding (is that really true?) */
+ 
+ #  else
+@@ -2585,7 +2586,8 @@ static Int copy_convert_CfiExpr_tree ( XArray*        dstxa,
+             return ML_(CfiExpr_CfiReg)( dstxa, Creg_IA_IP );
+ #        elif defined(VGA_arm64)
+          I_die_here;
+-#        elif defined(VGA_ppc32) || defined(VGA_ppc64)
++#        elif defined(VGA_ppc32) || defined(VGA_ppc64be) \
++            || defined(VGA_ppc64le)
+ #        else
+ #           error "Unknown arch"
+ #        endif
+@@ -3756,7 +3758,8 @@ void ML_(read_callframe_info_dwarf3)
+    if (!is_ehframe)
+       vg_assert(frame_avma == 0);
+ 
+-#  if defined(VGP_ppc32_linux) || defined(VGP_ppc64_linux)
++#  if defined(VGP_ppc32_linux) || defined(VGP_ppc64be_linux) \
++      || defined(VGP_ppc64le_linux)
+    /* These targets don't use CFI-based stack unwinding.  */
+    return;
+ #  endif
+diff --git a/coregrind/m_debuginfo/readelf.c b/coregrind/m_debuginfo/readelf.c
+index c57ac22..732ca0a 100644
+--- a/coregrind/m_debuginfo/readelf.c
++++ b/coregrind/m_debuginfo/readelf.c
+@@ -204,19 +204,19 @@ void show_raw_elf_symbol ( DiImage* strtab_img,
+    .data, size of .data + size of .bss).  I don't know if this is
+    really correct/justifiable, or not.
+ 
+-   For ppc64-linux it's more complex.  If the symbol is seen to be in
++   For ppc64be-linux it's more complex.  If the symbol is seen to be in
+    the .opd section, it is taken to be a function descriptor, and so
+    a dereference is attempted, in order to get hold of the real entry
+    point address.  Also as part of the dereference, there is an attempt
+    to calculate the TOC pointer (R2 value) associated with the symbol.
+ 
+-   To support the ppc64-linux pre-"dotless" ABI (prior to gcc 4.0.0),
++   To support the ppc64be-linux pre-"dotless" ABI (prior to gcc 4.0.0),
+    if the symbol is seen to be outside the .opd section and its name
+    starts with a dot, an .opd deference is not attempted, and no TOC
+    pointer is calculated, but the the leading dot is removed from the
+    name.
+ 
+-   As a result, on ppc64-linux, the caller of this function may have
++   As a result, on ppc64be-linux, the caller of this function may have
+    to piece together the real size, address, name of the symbol from
+    multiple calls to this function.  Ugly and confusing.
+ */
+@@ -229,22 +229,22 @@ Bool get_elf_symbol_info (
+         DiSlice*   escn_strtab,   /* holds the name */
+         Addr       sym_svma,   /* address as stated in the object file */
+         Bool       symtab_in_debug, /* symbol table is in the debug file */
+-        DiSlice*   escn_opd,   /* the .opd (ppc64-linux only) */
++        DiSlice*   escn_opd,   /* the .opd (ppc64be-linux only) */
+         PtrdiffT   opd_bias,   /* for biasing AVMAs found in .opd */
+         /* OUTPUTS */
+         DiOffT* sym_name_out_ioff, /* name (in strtab) we should record */
+         Addr*   sym_avma_out,   /* addr we should record */
+         Int*    sym_size_out,   /* symbol size */
+-        Addr*   sym_tocptr_out, /* ppc64-linux only: R2 value to be
++        Addr*   sym_tocptr_out, /* ppc64be-linux only: R2 value to be
+                                    used on entry */
+-        Bool*   from_opd_out,   /* ppc64-linux only: did we deref an
++        Bool*   from_opd_out,   /* ppc64be-linux only: did we deref an
+                                   .opd entry? */
+         Bool*   is_text_out,    /* is this a text symbol? */
+         Bool*   is_ifunc        /* is this a  STT_GNU_IFUNC function ?*/
+      )
+ {
+    Bool plausible;
+-#  if defined(VGP_ppc64_linux)
++#  if defined(VGP_ppc64be_linux)
+    Bool is_in_opd;
+ #  endif
+    Bool in_text, in_data, in_sdata, in_rodata, in_bss, in_sbss;
+@@ -374,9 +374,9 @@ Bool get_elf_symbol_info (
+    }
+ #  endif
+ 
+-#  if defined(VGP_ppc64_linux)
++#  if defined(VGP_ppc64be_linux)
+    /* Allow STT_NOTYPE in the very special case where we're running on
+-      ppc64-linux and the symbol is one which the .opd-chasing hack
++      ppc64be-linux and the symbol is one which the .opd-chasing hack
+       below will chase. */
+    if (!plausible
+        && *is_text_out
+@@ -473,7 +473,7 @@ Bool get_elf_symbol_info (
+       return False;
+    }
+ 
+-   /* ppc64-linux nasty hack: if the symbol is in an .opd section,
++   /* ppc64be-linux nasty hack: if the symbol is in an .opd section,
+       then really what we have is the address of a function
+       descriptor.  So use the first word of that as the function's
+       text.
+@@ -481,7 +481,8 @@ Bool get_elf_symbol_info (
+       See thread starting at
+       http://gcc.gnu.org/ml/gcc-patches/2004-08/msg00557.html
+    */
+-#  if defined(VGP_ppc64_linux)
++#  if defined(VGP_ppc64be_linux)
++   /* Host and guest may have different Endianess, used by BE only */
+    is_in_opd = False;
+ #  endif
+ 
+@@ -489,7 +490,7 @@ Bool get_elf_symbol_info (
+        && di->opd_size > 0
+        && *sym_avma_out >= di->opd_avma
+        && *sym_avma_out <  di->opd_avma + di->opd_size) {
+-#     if !defined(VGP_ppc64_linux)
++#     if !defined(VGP_ppc64be_linux)
+       if (TRACE_SYMTAB_ENABLED) {
+          HChar* sym_name = ML_(img_strdup)(escn_strtab->img,
+                                            "di.gesi.6", sym_name_ioff);
+@@ -584,7 +585,7 @@ Bool get_elf_symbol_info (
+ 
+    /* Here's yet another ppc64-linux hack.  Get rid of leading dot if
+       the symbol is outside .opd. */
+-#  if defined(VGP_ppc64_linux)
++#  if defined(VGP_ppc64be_linux)
+    if (di->opd_size > 0
+        && !is_in_opd
+        && *sym_name_out_ioff != DiOffT_INVALID
+@@ -668,7 +669,7 @@ Bool get_elf_symbol_info (
+       }
+    }
+ 
+-#  if defined(VGP_ppc64_linux)
++#  if defined(VGP_ppc64be_linux)
+    /* It's crucial that we never add symbol addresses in the .opd
+       section.  This would completely mess up function redirection and
+       intercepting.  This assert ensures that any symbols that make it
+@@ -692,7 +693,7 @@ void read_elf_symtab__normal(
+         struct _DebugInfo* di, const HChar* tab_name,
+         DiSlice*   escn_symtab,
+         DiSlice*   escn_strtab,
+-        DiSlice*   escn_opd, /* ppc64-linux only */ 
++        DiSlice*   escn_opd, /* ppc64be-linux only */
+         Bool       symtab_in_debug
+      )
+ {
+@@ -768,7 +769,7 @@ void read_elf_symtab__normal(
+ 
+ 
+ /* Read an ELF symbol table (normal or dynamic).  This one is for
+-   ppc64-linux, which requires special treatment. */
++   ppc64be-linux, which requires special treatment. */
+ 
+ typedef
+    struct { 
+@@ -806,7 +807,7 @@ static Word cmp_TempSymKey ( TempSymKey* key1, TempSym* elem2 )
+ 
+ static
+ __attribute__((unused)) /* not referred to on all targets */
+-void read_elf_symtab__ppc64_linux( 
++void read_elf_symtab__ppc64be_linux(
+         struct _DebugInfo* di, const HChar* tab_name,
+         DiSlice*   escn_symtab,
+         DiSlice*   escn_strtab,
+@@ -830,7 +831,7 @@ void read_elf_symtab__ppc64_linux(
+       return;
+    }
+ 
+-   TRACE_SYMTAB("\n--- Reading (ELF, ppc64-linux) %s (%lld entries) ---\n",
++   TRACE_SYMTAB("\n--- Reading (ELF, ppc64be-linux) %s (%lld entries) ---\n",
+                 tab_name, escn_symtab->szB/sizeof(ElfXX_Sym) );
+ 
+    oset = VG_(OSetGen_Create)( offsetof(TempSym,key), 
+@@ -2116,7 +2117,7 @@ Bool ML_(read_elf_debug_info) ( struct _DebugInfo* di )
+             BAD(".plt");
+          }
+       }
+-#     elif defined(VGP_ppc64_linux)
++#     elif defined(VGP_ppc64be_linux) || defined(VGP_ppc64le_linux)
+       /* Accept .plt where mapped as rw (data), or unmapped */
+       if (0 == VG_(strcmp)(name, ".plt")) {
+          if (inrw && !di->plt_present) {
+@@ -2229,7 +2230,7 @@ Bool ML_(read_elf_debug_info) ( struct _DebugInfo* di )
+       DiSlice dwarf1d_escn        = DiSlice_INVALID; // .debug        (dwarf1)
+       DiSlice dwarf1l_escn        = DiSlice_INVALID; // .line         (dwarf1)
+       DiSlice opd_escn            = DiSlice_INVALID; // .opd (dwarf2, 
+-                                                     //       ppc64-linux)
++                                                     //       ppc64be-linux)
+       DiSlice ehframe_escn[N_EHFRAME_SECTS];         // .eh_frame (dwarf2)
+ 
+       for (i = 0; i < N_EHFRAME_SECTS; i++)
+@@ -2733,8 +2734,8 @@ Bool ML_(read_elf_debug_info) ( struct _DebugInfo* di )
+          void (*read_elf_symtab)(struct _DebugInfo*, const HChar*,
+                                  DiSlice*, DiSlice*, DiSlice*, Bool);
+          Bool symtab_in_debug;
+-#        if defined(VGP_ppc64_linux)
+-         read_elf_symtab = read_elf_symtab__ppc64_linux;
++#        if defined(VGP_ppc64be_linux)
++         read_elf_symtab = read_elf_symtab__ppc64be_linux;
+ #        else
+          read_elf_symtab = read_elf_symtab__normal;
+ #        endif
+@@ -2776,7 +2777,7 @@ Bool ML_(read_elf_debug_info) ( struct _DebugInfo* di )
+          seems OK though.  Also skip on Android. */
+ #     if !defined(VGP_amd64_linux) \
+          && !defined(VGP_s390x_linux) \
+-         && !defined(VGP_ppc64_linux) \
++         && !defined(VGP_ppc64be_linux) \
+          && !defined(VGPV_arm_linux_android) \
+          && !defined(VGPV_x86_linux_android) \
+          && !defined(VGP_mips64_linux)
+diff --git a/coregrind/m_debuginfo/readmacho.c b/coregrind/m_debuginfo/readmacho.c
+index d20a464..9926237 100644
+--- a/coregrind/m_debuginfo/readmacho.c
++++ b/coregrind/m_debuginfo/readmacho.c
+@@ -197,8 +197,8 @@ static DiSlice map_image_aboard ( DebugInfo* di, /* only for err msgs */
+            f++, arch_be_ioff += sizeof(struct fat_arch)) {
+ #        if defined(VGA_ppc)
+          Int cputype = CPU_TYPE_POWERPC;
+-#        elif defined(VGA_ppc64)
+-         Int cputype = CPU_TYPE_POWERPC64;
++#        elif defined(VGA_ppc64be)
++         Int cputype = CPU_TYPE_POWERPC64BE;
+ #        elif defined(VGA_x86)
+          Int cputype = CPU_TYPE_X86;
+ #        elif defined(VGA_amd64)
+diff --git a/coregrind/m_debuginfo/storage.c b/coregrind/m_debuginfo/storage.c
+index 78bcdf6..c6a17ca 100644
+--- a/coregrind/m_debuginfo/storage.c
++++ b/coregrind/m_debuginfo/storage.c
+@@ -199,7 +199,7 @@ void ML_(ppDiCfSI) ( XArray* /* of CfiExpr */ exprs,
+    SHOW_HOW(si_m->r11_how, si_m->r11_off);
+    VG_(printf)(" R7=");
+    SHOW_HOW(si_m->r7_how, si_m->r7_off);
+-#  elif defined(VGA_ppc32) || defined(VGA_ppc64)
++#  elif defined(VGA_ppc32) || defined(VGA_ppc64be) || defined(VGA_ppc64le)
+ #  elif defined(VGA_s390x) || defined(VGA_mips32) || defined(VGA_mips64)
+    VG_(printf)(" SP=");
+    SHOW_HOW(si_m->sp_how, si_m->sp_off);
+diff --git a/coregrind/m_debuglog.c b/coregrind/m_debuglog.c
+index 2657c3a..8a22ca2 100644
+--- a/coregrind/m_debuglog.c
++++ b/coregrind/m_debuglog.c
+@@ -189,7 +189,7 @@ static UInt local_sys_getpid ( void )
+    return __res;
+ }
+ 
+-#elif defined(VGP_ppc64_linux)
++#elif defined(VGP_ppc64be_linux) || defined(VGP_ppc64le_linux)
+ 
+ static UInt local_sys_write_stderr ( const HChar* buf, Int n )
+ {
+diff --git a/coregrind/m_dispatch/dispatch-ppc64-linux.S b/coregrind/m_dispatch/dispatch-ppc64-linux.S
+index ac1c4cb..35cefdf 100644
+--- a/coregrind/m_dispatch/dispatch-ppc64-linux.S
++++ b/coregrind/m_dispatch/dispatch-ppc64-linux.S
+@@ -28,7 +28,7 @@
+   The GNU General Public License is contained in the file COPYING.
+ */
+ 
+-#if defined(VGP_ppc64_linux)
++#if defined(VGP_ppc64be_linux) || defined(VGP_ppc64le_linux)
+ 
+ #include "pub_core_basics_asm.h"
+ #include "pub_core_dispatch_asm.h"
+@@ -193,7 +193,7 @@ VG_(disp_run_translations):
+         /* 88(sp) used later to load fpscr with zero */
+ 	/* 48:87(sp) free */
+ 	
+-        /* Linkage Area (reserved)
++        /* Linkage Area (reserved)  BE ABI
+            40(sp) : TOC
+            32(sp) : link editor doubleword
+            24(sp) : compiler doubleword
+@@ -530,7 +530,7 @@ VG_(disp_cp_evcheck_fail):
+ /* Let the linker know we don't need an executable stack */
+ .section .note.GNU-stack,"",@progbits
+ 
+-#endif // defined(VGP_ppc64_linux)
++#endif // defined(VGP_ppc64be_linux) || defined(VGP_ppc64le_linux)
+ 
+ /*--------------------------------------------------------------------*/
+ /*--- end                                                          ---*/
+diff --git a/coregrind/m_gdbserver/target.c b/coregrind/m_gdbserver/target.c
+index 4c4c1b5..2fde954 100644
+--- a/coregrind/m_gdbserver/target.c
++++ b/coregrind/m_gdbserver/target.c
+@@ -657,7 +657,7 @@ void valgrind_initialize_target(void)
+    arm64_init_architecture(&the_low_target);
+ #elif defined(VGA_ppc32)
+    ppc32_init_architecture(&the_low_target);
+-#elif defined(VGA_ppc64)
++#elif defined(VGA_ppc64be) || defined(VGA_ppc64le)
+    ppc64_init_architecture(&the_low_target);
+ #elif defined(VGA_s390x)
+    s390x_init_architecture(&the_low_target);
+diff --git a/coregrind/m_initimg/initimg-linux.c b/coregrind/m_initimg/initimg-linux.c
+index 54efdea..b4c6d92 100644
+--- a/coregrind/m_initimg/initimg-linux.c
++++ b/coregrind/m_initimg/initimg-linux.c
+@@ -366,7 +366,7 @@ struct auxv *find_auxv(UWord* sp)
+       sp++;
+    sp++;
+    
+-#if defined(VGA_ppc32) || defined(VGA_ppc64)
++#if defined(VGA_ppc32) || defined(VGA_ppc64be) || defined(VGA_ppc64le)
+ # if defined AT_IGNOREPPC
+    while (*sp == AT_IGNOREPPC)        // skip AT_IGNOREPPC entries
+       sp += 2;
+@@ -457,7 +457,8 @@ Addr setup_client_stack( void*  init_sp,
+       auxsize += sizeof(*cauxv);
+    }
+ 
+-#  if defined(VGP_ppc32_linux) || defined(VGP_ppc64_linux)
++#  if defined(VGP_ppc32_linux) || defined(VGP_ppc64be_linux) \
++      || defined(VGP_ppc64le_linux)
+    auxsize += 2 * sizeof(*cauxv);
+ #  endif
+ 
+@@ -614,7 +615,8 @@ Addr setup_client_stack( void*  init_sp,
+    // We do not take ULong* (as ULong 8 bytes on a 32 bits),
+    // => we take UWord*
+ 
+-#  if defined(VGP_ppc32_linux) || defined(VGP_ppc64_linux)
++#  if defined(VGP_ppc32_linux) || defined(VGP_ppc64be_linux) \
++      || defined(VGP_ppc64le_linux)
+    auxv[0].a_type  = AT_IGNOREPPC;
+    auxv[0].u.a_val = AT_IGNOREPPC;
+    auxv[1].a_type  = AT_IGNOREPPC;
+@@ -707,7 +709,7 @@ Addr setup_client_stack( void*  init_sp,
+                                 "PPC32 icache line size %u (type %u)\n", 
+                                 (UInt)auxv->u.a_val, (UInt)auxv->a_type );
+             }
+-#           elif defined(VGP_ppc64_linux)
++#           elif defined(VGP_ppc64be_linux) || defined(VGP_ppc64le_linux)
+             /* acquire cache info */
+             if (auxv->u.a_val > 0) {
+                VG_(machine_ppc64_set_clszB)( auxv->u.a_val );
+@@ -718,7 +720,8 @@ Addr setup_client_stack( void*  init_sp,
+ #           endif
+             break;
+ 
+-#        if defined(VGP_ppc32_linux) || defined(VGP_ppc64_linux)
++#        if defined(VGP_ppc32_linux) || defined(VGP_ppc64be_linux) \
++            || defined(VGP_ppc64le_linux)
+          case AT_IGNOREPPC:
+             break;
+ #        endif
+@@ -738,7 +741,8 @@ Addr setup_client_stack( void*  init_sp,
+             auxv->a_type = AT_IGNORE;
+             break;
+ 
+-#        if !defined(VGP_ppc32_linux) && !defined(VGP_ppc64_linux)
++#        if !defined(VGP_ppc32_linux) && !defined(VGP_ppc64be_linux) \
++            && !defined(VGP_ppc64le)
+          case AT_SYSINFO_EHDR: {
+             /* Trash this, because we don't reproduce it */
+             const NSegment* ehdrseg = VG_(am_find_nsegment)((Addr)auxv->u.a_ptr);
+@@ -1024,7 +1028,7 @@ void VG_(ii_finalise_image)( IIFinaliseImageInfo iifii )
+    arch->vex.guest_GPR1 = iifii.initial_client_SP;
+    arch->vex.guest_CIA  = iifii.initial_client_IP;
+ 
+-#  elif defined(VGP_ppc64_linux)
++#  elif defined(VGP_ppc64be_linux) || defined(VGP_ppc64le_linux)
+    vg_assert(0 == sizeof(VexGuestPPC64State) % 16);
+ 
+    /* Zero out the initial state, and set up the simulated FPU in a
+diff --git a/coregrind/m_libcassert.c b/coregrind/m_libcassert.c
+index f8a957b..5e77f9f 100644
+--- a/coregrind/m_libcassert.c
++++ b/coregrind/m_libcassert.c
+@@ -98,7 +98,7 @@
+         (srP)->r_sp = (ULong)r1;                          \
+         (srP)->misc.PPC32.r_lr = lr;                      \
+       }
+-#elif defined(VGP_ppc64_linux)
++#elif defined(VGP_ppc64be_linux) || defined(VGP_ppc64le_linux)
+ #  define GET_STARTREGS(srP)                              \
+       { ULong cia, r1, lr;                                \
+         __asm__ __volatile__(                             \
+diff --git a/coregrind/m_libcfile.c b/coregrind/m_libcfile.c
+index 0688bbb..9ff6b61 100644
+--- a/coregrind/m_libcfile.c
++++ b/coregrind/m_libcfile.c
+@@ -677,8 +677,8 @@ SysRes VG_(pread) ( Int fd, void* buf, Int count, OffT offset )
+    res = VG_(do_syscall6)(__NR_pread64, fd, (UWord)buf, count, 
+                           0, 0, offset);
+    return res;
+-#  elif defined(VGP_amd64_linux) \
+-      || defined(VGP_ppc64_linux) || defined(VGP_s390x_linux) \
++#  elif defined(VGP_amd64_linux) || defined(VGP_s390x_linux) \
++      || defined(VGP_ppc64be_linux)  || defined(VGP_ppc64le_linux) \
+       || defined(VGP_mips64_linux) \
+       || defined(VGP_arm64_linux)
+    res = VG_(do_syscall4)(__NR_pread64, fd, (UWord)buf, count, offset);
+@@ -923,7 +923,8 @@ static Int parse_inet_addr_and_port ( const HChar* str, UInt* ip_addr, UShort* p
+ Int VG_(socket) ( Int domain, Int type, Int protocol )
+ {
+ #  if defined(VGP_x86_linux) || defined(VGP_ppc32_linux) \
+-      || defined(VGP_ppc64_linux) || defined(VGP_s390x_linux)
++      || defined(VGP_ppc64be_linux) || defined(VGP_ppc64le_linux) \
++      || defined(VGP_s390x_linux)
+    SysRes res;
+    UWord  args[3];
+    args[0] = domain;
+@@ -963,7 +964,8 @@ static
+ Int my_connect ( Int sockfd, struct vki_sockaddr_in* serv_addr, Int addrlen )
+ {
+ #  if defined(VGP_x86_linux) || defined(VGP_ppc32_linux) \
+-      || defined(VGP_ppc64_linux) || defined(VGP_s390x_linux)
++      || defined(VGP_ppc64be_linux) || defined(VGP_ppc64le_linux) \
++      || defined(VGP_s390x_linux)
+    SysRes res;
+    UWord  args[3];
+    args[0] = sockfd;
+@@ -1002,7 +1004,8 @@ Int VG_(write_socket)( Int sd, const void *msg, Int count )
+       SIGPIPE */
+ 
+ #  if defined(VGP_x86_linux) || defined(VGP_ppc32_linux) \
+-      || defined(VGP_ppc64_linux) || defined(VGP_s390x_linux)
++      || defined(VGP_ppc64be_linux) || defined(VGP_ppc64le_linux) \
++      || defined(VGP_s390x_linux)
+    SysRes res;
+    UWord  args[4];
+    args[0] = sd;
+@@ -1033,7 +1036,8 @@ Int VG_(write_socket)( Int sd, const void *msg, Int count )
+ Int VG_(getsockname) ( Int sd, struct vki_sockaddr *name, Int *namelen)
+ {
+ #  if defined(VGP_x86_linux) || defined(VGP_ppc32_linux) \
+-      || defined(VGP_ppc64_linux) || defined(VGP_s390x_linux) \
++      || defined(VGP_ppc64be_linux) || defined(VGP_ppc64le_linux) \
++      || defined(VGP_s390x_linux) \
+       || defined(VGP_mips32_linux)
+    SysRes res;
+    UWord  args[3];
+@@ -1064,7 +1068,8 @@ Int VG_(getsockname) ( Int sd, struct vki_sockaddr *name, Int *namelen)
+ Int VG_(getpeername) ( Int sd, struct vki_sockaddr *name, Int *namelen)
+ {
+ #  if defined(VGP_x86_linux) || defined(VGP_ppc32_linux) \
+-      || defined(VGP_ppc64_linux) || defined(VGP_s390x_linux) \
++      || defined(VGP_ppc64be_linux) || defined(VGP_ppc64le_linux) \
++      || defined(VGP_s390x_linux) \
+       || defined(VGP_mips32_linux)
+    SysRes res;
+    UWord  args[3];
+@@ -1096,7 +1101,8 @@ Int VG_(getsockopt) ( Int sd, Int level, Int optname, void *optval,
+                       Int *optlen)
+ {
+ #  if defined(VGP_x86_linux) || defined(VGP_ppc32_linux) \
+-      || defined(VGP_ppc64_linux) || defined(VGP_s390x_linux)
++      || defined(VGP_ppc64be_linux) || defined(VGP_ppc64le_linux) \
++      || defined(VGP_s390x_linux)
+    SysRes res;
+    UWord  args[5];
+    args[0] = sd;
+@@ -1133,7 +1139,8 @@ Int VG_(setsockopt) ( Int sd, Int level, Int optname, void *optval,
+                       Int optlen)
+ {
+ #  if defined(VGP_x86_linux) || defined(VGP_ppc32_linux) \
+-      || defined(VGP_ppc64_linux) || defined(VGP_s390x_linux)
++      || defined(VGP_ppc64be_linux) || defined(VGP_ppc64le_linux) \
++      || defined(VGP_s390x_linux)
+    SysRes res;
+    UWord  args[5];
+    args[0] = sd;
+diff --git a/coregrind/m_libcproc.c b/coregrind/m_libcproc.c
+index 25b295c..41bca83 100644
+--- a/coregrind/m_libcproc.c
++++ b/coregrind/m_libcproc.c
+@@ -555,8 +555,8 @@ Int VG_(getgroups)( Int size, UInt* list )
+       list[i] = (UInt)list16[i];
+    return sr_Res(sres);
+ 
+-#  elif defined(VGP_amd64_linux) || defined(VGP_ppc64_linux)  \
+-        || defined(VGP_arm_linux)                             \
++#  elif defined(VGP_amd64_linux) || defined(VGP_arm_linux) \
++        || defined(VGP_ppc64be_linux) || defined(VGP_ppc64le_linux)  \
+         || defined(VGO_darwin) || defined(VGP_s390x_linux)    \
+         || defined(VGP_mips32_linux) || defined(VGP_arm64_linux)
+    SysRes sres;
+@@ -741,7 +741,7 @@ void VG_(invalidate_icache) ( void *ptr, SizeT nbytes )
+    // If I-caches are coherent, nothing needs to be done here
+    if (vai.hwcache_info.icaches_maintain_coherence) return;
+ 
+-#  if defined(VGA_ppc32) || defined(VGA_ppc64)
++#  if defined(VGA_ppc32) || defined(VGA_ppc64be) || defined(VGA_ppc64le)
+    Addr startaddr = (Addr) ptr;
+    Addr endaddr   = startaddr + nbytes;
+    Addr cls;
+diff --git a/coregrind/m_libcsetjmp.c b/coregrind/m_libcsetjmp.c
+index 5b72182..488e8e8 100644
+--- a/coregrind/m_libcsetjmp.c
++++ b/coregrind/m_libcsetjmp.c
+@@ -149,7 +149,7 @@ __asm__(
+ 
+ /* ------------ ppc64-linux ------------ */
+ 
+-#if defined(VGP_ppc64_linux)
++#if defined(VGP_ppc64be_linux)
+ 
+ __asm__(
+ ".section \".toc\",\"aw\""          "\n"
+@@ -270,7 +270,7 @@ __asm__(
+ ".previous"  "\n"
+ );
+ 
+-#endif /* VGP_ppc64_linux */
++#endif /* VGP_ppc64be_linux */
+ 
+ 
+ /* ------------ amd64-{linux,darwin} ------------ */
+diff --git a/coregrind/m_machine.c b/coregrind/m_machine.c
+index c09d528..45b0fa7 100644
+--- a/coregrind/m_machine.c
++++ b/coregrind/m_machine.c
+@@ -81,7 +81,7 @@ void VG_(get_UnwindStartRegs) ( /*OUT*/UnwindStartRegs* regs,
+    regs->r_sp = (ULong)VG_(threads)[tid].arch.vex.guest_GPR1;
+    regs->misc.PPC32.r_lr
+       = VG_(threads)[tid].arch.vex.guest_LR;
+-#  elif defined(VGA_ppc64)
++#  elif defined(VGA_ppc64be) || defined(VGA_ppc64le)
+    regs->r_pc = VG_(threads)[tid].arch.vex.guest_CIA;
+    regs->r_sp = VG_(threads)[tid].arch.vex.guest_GPR1;
+    regs->misc.PPC64.r_lr
+@@ -212,7 +212,7 @@ static void apply_to_GPs_of_tid(ThreadId tid, void (*f)(ThreadId,
+    (*f)(tid, "R13", vex->guest_R13);
+    (*f)(tid, "R14", vex->guest_R14);
+    (*f)(tid, "R15", vex->guest_R15);
+-#elif defined(VGA_ppc32) || defined(VGA_ppc64)
++#elif defined(VGA_ppc32) || defined(VGA_ppc64be) || defined(VGA_ppc64le)
+    (*f)(tid, "GPR0" , vex->guest_GPR0 );
+    (*f)(tid, "GPR1" , vex->guest_GPR1 );
+    (*f)(tid, "GPR2" , vex->guest_GPR2 );
+@@ -442,7 +442,7 @@ UInt VG_(machine_x86_have_mxcsr) = 0;
+ UInt VG_(machine_ppc32_has_FP)  = 0;
+ UInt VG_(machine_ppc32_has_VMX) = 0;
+ #endif
+-#if defined(VGA_ppc64)
++#if defined(VGA_ppc64be) || defined(VGA_ppc64le)
+ ULong VG_(machine_ppc64_has_VMX) = 0;
+ #endif
+ #if defined(VGA_arm)
+@@ -452,7 +452,7 @@ Int VG_(machine_arm_archlevel) = 4;
+ 
+ /* For hwcaps detection on ppc32/64, s390x, and arm we'll need to do SIGILL
+    testing, so we need a VG_MINIMAL_JMP_BUF. */
+-#if defined(VGA_ppc32) || defined(VGA_ppc64) \
++#if defined(VGA_ppc32) || defined(VGA_ppc64be) || defined(VGA_ppc64le) \
+     || defined(VGA_arm) || defined(VGA_s390x) || defined(VGA_mips32)
+ #include "pub_core_libcsetjmp.h"
+ static VG_MINIMAL_JMP_BUF(env_unsup_insn);
+@@ -470,7 +470,7 @@ static void handler_unsup_insn ( Int x ) {
+  * Not very defensive: assumes that as long as the dcbz/dcbzl
+  * instructions don't raise a SIGILL, that they will zero an aligned,
+  * contiguous block of memory of a sensible size. */
+-#if defined(VGA_ppc32) || defined(VGA_ppc64)
++#if defined(VGA_ppc32) || defined(VGA_ppc64be) || defined(VGA_ppc64le)
+ static void find_ppc_dcbz_sz(VexArchInfo *arch_info)
+ {
+    Int dcbz_szB = 0;
+@@ -523,7 +523,7 @@ static void find_ppc_dcbz_sz(VexArchInfo *arch_info)
+                  dcbz_szB, dcbzl_szB);
+ #  undef MAX_DCBZL_SZB
+ }
+-#endif /* defined(VGA_ppc32) || defined(VGA_ppc64) */
++#endif /* defined(VGA_ppc32) || defined(VGA_ppc64be) || defined(VGA_ppc64le) */
+ 
+ #ifdef VGA_s390x
+ 
+@@ -1064,7 +1064,7 @@ Bool VG_(machine_get_hwcaps)( void )
+      return True;
+    }
+ 
+-#elif defined(VGA_ppc64)
++#elif defined(VGA_ppc64be)|| defined(VGA_ppc64le)
+    {
+      /* Same instruction set detection algorithm as for ppc32. */
+      vki_sigset_t          saved_set, tmp_set;
+@@ -1178,7 +1178,7 @@ Bool VG_(machine_get_hwcaps)( void )
+                     (Int)have_F, (Int)have_V, (Int)have_FX,
+                     (Int)have_GX, (Int)have_VX, (Int)have_DFP,
+                     (Int)have_isa_2_07);
+-     /* on ppc64, if we don't even have FP, just give up. */
++     /* on ppc64be, if we don't even have FP, just give up. */
+      if (!have_F)
+         return False;
+ 
+@@ -1599,7 +1599,7 @@ void VG_(machine_ppc32_set_clszB)( Int szB )
+ 
+ 
+ /* Notify host cpu instruction cache line size. */
+-#if defined(VGA_ppc64)
++#if defined(VGA_ppc64be)|| defined(VGA_ppc64le)
+ void VG_(machine_ppc64_set_clszB)( Int szB )
+ {
+    vg_assert(hwcaps_done);
+@@ -1681,7 +1681,7 @@ Int VG_(machine_get_size_of_largest_guest_register) ( void )
+    if (vai.hwcaps & VEX_HWCAPS_PPC32_DFP) return 16;
+    return 8;
+ 
+-#  elif defined(VGA_ppc64)
++#  elif defined(VGA_ppc64be) || defined(VGA_ppc64le)
+    /* 8 if boring; 16 if signs of Altivec or other exotic stuff */
+    if (vai.hwcaps & VEX_HWCAPS_PPC64_V) return 16;
+    if (vai.hwcaps & VEX_HWCAPS_PPC64_VX) return 16;
+@@ -1719,12 +1719,12 @@ Int VG_(machine_get_size_of_largest_guest_register) ( void )
+ void* VG_(fnptr_to_fnentry)( void* f )
+ {
+ #  if defined(VGP_x86_linux) || defined(VGP_amd64_linux)  \
+-      || defined(VGP_arm_linux)                           \
+-      || defined(VGP_ppc32_linux) || defined(VGO_darwin)  \
++      || defined(VGP_arm_linux) || defined(VGO_darwin)          \
++      || defined(VGP_ppc32_linux) || defined(VGP_ppc64le_linux) \
+       || defined(VGP_s390x_linux) || defined(VGP_mips32_linux) \
+       || defined(VGP_mips64_linux) || defined(VGP_arm64_linux)
+    return f;
+-#  elif defined(VGP_ppc64_linux)
++#  elif defined(VGP_ppc64be_linux)
+    /* ppc64-linux uses the AIX scheme, in which f is a pointer to a
+       3-word function descriptor, of which the first word is the entry
+       address. */
+diff --git a/coregrind/m_main.c b/coregrind/m_main.c
+index d2ce001..96ef31c 100644
+--- a/coregrind/m_main.c
++++ b/coregrind/m_main.c
+@@ -2023,7 +2023,8 @@ Int valgrind_main ( Int argc, HChar **argv, HChar **envp )
+ 
+ #     if defined(VGP_x86_linux)
+       iters = 10;
+-#     elif defined(VGP_amd64_linux) || defined(VGP_ppc64_linux)
++#     elif defined(VGP_amd64_linux) || defined(VGP_ppc64be_linux) \
++         || defined(VGP_ppc64le_linux)
+       iters = 10;
+ #     elif defined(VGP_ppc32_linux)
+       iters = 5;
+@@ -2602,7 +2603,7 @@ void shutdown_actions_NORETURN( ThreadId tid,
+ static void final_tidyup(ThreadId tid)
+ {
+ #if !defined(VGO_darwin)
+-#  if defined(VGP_ppc64_linux)
++#  if defined(VGP_ppc64be_linux)
+    Addr r2;
+ #  endif
+    Addr __libc_freeres_wrapper = VG_(client___libc_freeres_wrapper);
+@@ -2614,7 +2615,7 @@ static void final_tidyup(ThreadId tid)
+         0 == __libc_freeres_wrapper )
+       return;			/* can't/won't do it */
+ 
+-#  if defined(VGP_ppc64_linux)
++#  if defined(VGP_ppc64be_linux)
+    r2 = VG_(get_tocptr)( __libc_freeres_wrapper );
+    if (r2 == 0) {
+       VG_(message)(Vg_UserMsg, 
+@@ -2632,12 +2633,12 @@ static void final_tidyup(ThreadId tid)
+ 		   "Caught __NR_exit; running __libc_freeres()\n");
+       
+    /* set thread context to point to libc_freeres_wrapper */
+-   /* ppc64-linux note: __libc_freeres_wrapper gives us the real
++   /* ppc64be-linux note: __libc_freeres_wrapper gives us the real
+       function entry point, not a fn descriptor, so can use it
+       directly.  However, we need to set R2 (the toc pointer)
+       appropriately. */
+    VG_(set_IP)(tid, __libc_freeres_wrapper);
+-#  if defined(VGP_ppc64_linux)
++#  if defined(VGP_ppc64be_linux)
+    VG_(threads)[tid].arch.vex.guest_GPR2 = r2;
+ #  endif
+    /* mips-linux note: we need to set t9 */
+@@ -2834,7 +2835,7 @@ asm("\n"
+     "\ttrap\n"
+     ".previous\n"
+ );
+-#elif defined(VGP_ppc64_linux)
++#elif defined(VGP_ppc64be_linux)
+ asm("\n"
+     /* PPC64 ELF ABI says '_start' points to a function descriptor.
+        So we must have one, and that is what goes into the .opd section. */
+@@ -3093,10 +3094,10 @@ void _start_in_C_linux ( UWord* pArgc )
+ 
+    the_iicii.sp_at_startup = (Addr)pArgc;
+ 
+-#  if defined(VGP_ppc32_linux) || defined(VGP_ppc64_linux) \
+-      || defined(VGP_arm64_linux)
++#  if defined(VGP_ppc32_linux) || defined(VGP_ppc64be_linux) \
++      || defined(VGP_ppc64le_linux) || defined(VGP_arm64_linux)
+    {
+-      /* ppc/ppc64 can be configured with different page sizes.
++      /* ppc32/ppc64 can be configured with different page sizes.
+          Determine this early.  This is an ugly hack and really should
+          be moved into valgrind_main. */
+       UWord *sp = &pArgc[1+argc+1];
+diff --git a/coregrind/m_redir.c b/coregrind/m_redir.c
+index b13b3fb..dc77119 100644
+--- a/coregrind/m_redir.c
++++ b/coregrind/m_redir.c
+@@ -1278,7 +1278,7 @@ void VG_(redir_initialise) ( void )
+       );
+    }
+ 
+-#  elif defined(VGP_ppc64_linux)
++#  elif defined(VGP_ppc64be_linux)
+    /* If we're using memcheck, use these intercepts right from
+       the start, otherwise ld.so makes a lot of noise. */
+    if (0==VG_(strcmp)("Memcheck", VG_(details).name)) {
+diff --git a/coregrind/m_scheduler/scheduler.c b/coregrind/m_scheduler/scheduler.c
+index 8808abc..64d45cb 100644
+--- a/coregrind/m_scheduler/scheduler.c
++++ b/coregrind/m_scheduler/scheduler.c
+@@ -768,7 +768,7 @@ static void do_pre_run_checks ( ThreadState* tst )
+    vg_assert(VG_IS_8_ALIGNED(offsetof(VexGuestAMD64State,guest_RIP)));
+ #  endif
+ 
+-#  if defined(VGA_ppc32) || defined(VGA_ppc64)
++#  if defined(VGA_ppc32) || defined(VGA_ppc64be) || defined(VGA_ppc64le)
+    /* ppc guest_state vector regs must be 16 byte aligned for
+       loads/stores.  This is important! */
+    vg_assert(VG_IS_16_ALIGNED(& tst->arch.vex.guest_VSR0));
+@@ -1622,7 +1622,7 @@ void VG_(nuke_all_threads_except) ( ThreadId me, VgSchedReturnCode src )
+ #elif defined(VGA_amd64)
+ #  define VG_CLREQ_ARGS       guest_RAX
+ #  define VG_CLREQ_RET        guest_RDX
+-#elif defined(VGA_ppc32) || defined(VGA_ppc64)
++#elif defined(VGA_ppc32) || defined(VGA_ppc64be) || defined(VGA_ppc64le)
+ #  define VG_CLREQ_ARGS       guest_GPR4
+ #  define VG_CLREQ_RET        guest_GPR3
+ #elif defined(VGA_arm)
+diff --git a/coregrind/m_sigframe/sigframe-ppc64-linux.c b/coregrind/m_sigframe/sigframe-ppc64-linux.c
+index 3e5fa74..bb53806 100644
+--- a/coregrind/m_sigframe/sigframe-ppc64-linux.c
++++ b/coregrind/m_sigframe/sigframe-ppc64-linux.c
+@@ -31,7 +31,7 @@
+    The GNU General Public License is contained in the file COPYING.
+ */
+ 
+-#if defined(VGP_ppc64_linux)
++#if defined(VGP_ppc64be_linux) || defined(VGP_ppc64le_linux)
+ 
+ #include "pub_core_basics.h"
+ #include "pub_core_vki.h"
+@@ -388,7 +388,7 @@ void VG_(sigframe_destroy)( ThreadId tid, Bool isRT )
+    VG_TRACK( post_deliver_signal, tid, sigNo );
+ }
+ 
+-#endif // defined(VGP_ppc64_linux)
++#endif // defined(VGP_ppc64be_linux) || defined(VGP_ppc64le_linux) 
+ 
+ /*--------------------------------------------------------------------*/
+ /*--- end                                                          ---*/
+diff --git a/coregrind/m_signals.c b/coregrind/m_signals.c
+index 40bd7ea..0fd11c4 100644
+--- a/coregrind/m_signals.c
++++ b/coregrind/m_signals.c
+@@ -348,7 +348,7 @@ typedef struct SigQueue {
+         (srP)->misc.PPC32.r_lr = (uc)->uc_regs->mc_gregs[VKI_PT_LNK]; \
+       }
+ 
+-#elif defined(VGP_ppc64_linux)
++#elif defined(VGP_ppc64be_linux) || defined(VGP_ppc64le_linux)
+ #  define VG_UCONTEXT_INSTR_PTR(uc)  ((uc)->uc_mcontext.gp_regs[VKI_PT_NIP])
+ #  define VG_UCONTEXT_STACK_PTR(uc)  ((uc)->uc_mcontext.gp_regs[VKI_PT_R1])
+    /* Dubious hack: if there is an error, only consider the lowest 8
+@@ -851,7 +851,7 @@ extern void my_sigreturn(void);
+    "	sc\n" \
+    ".previous\n"
+ 
+-#elif defined(VGP_ppc64_linux)
++#elif defined(VGP_ppc64be_linux)
+ #  define _MY_SIGRETURN(name) \
+    ".align   2\n" \
+    ".globl   my_sigreturn\n" \
+diff --git a/coregrind/m_stacktrace.c b/coregrind/m_stacktrace.c
+index 6e73e17..64e1ac4 100644
+--- a/coregrind/m_stacktrace.c
++++ b/coregrind/m_stacktrace.c
+@@ -622,7 +622,8 @@ UInt VG_(get_StackTrace_wrk) ( ThreadId tid_if_known,
+ 
+ /* -----------------------ppc32/64 ---------------------- */
+ 
+-#if defined(VGP_ppc32_linux) || defined(VGP_ppc64_linux)
++#if defined(VGP_ppc32_linux) || defined(VGP_ppc64be_linux) \
++    || defined(VGP_ppc64le_linux)
+ 
+ UInt VG_(get_StackTrace_wrk) ( ThreadId tid_if_known,
+                                /*OUT*/Addr* ips, UInt max_n_ips,
+@@ -631,7 +632,7 @@ UInt VG_(get_StackTrace_wrk) ( ThreadId tid_if_known,
+                                Addr fp_max_orig )
+ {
+    Bool  lr_is_first_RA = False;
+-#  if defined(VG_PLAT_USES_PPCTOC)
++#  if defined(VG_PLAT_USES_PPCTOC) || defined(VGP_ppc64le_linux)
+    Word redir_stack_size = 0;
+    Word redirs_used      = 0;
+ #  endif
+@@ -650,7 +651,7 @@ UInt VG_(get_StackTrace_wrk) ( ThreadId tid_if_known,
+    Addr fp = sp;
+ #  if defined(VGP_ppc32_linux)
+    Addr lr = startRegs->misc.PPC32.r_lr;
+-#  elif defined(VGP_ppc64_linux)
++#  elif defined(VGP_ppc64be_linux) || defined(VGP_ppc64le_linux)
+    Addr lr = startRegs->misc.PPC64.r_lr;
+ #  endif
+    Addr fp_min = sp;
+@@ -686,7 +687,7 @@ UInt VG_(get_StackTrace_wrk) ( ThreadId tid_if_known,
+    /* fp is %r1.  ip is %cia.  Note, ppc uses r1 as both the stack and
+       frame pointers. */
+ 
+-#  if defined(VGP_ppc64_linux)
++#  if defined(VGP_ppc64be_linux) || defined(VGP_ppc64le_linux)
+    redir_stack_size = VEX_GUEST_PPC64_REDIR_STACK_SIZE;
+    redirs_used      = 0;
+ #  endif
+@@ -742,7 +743,7 @@ UInt VG_(get_StackTrace_wrk) ( ThreadId tid_if_known,
+         /* On ppc64-linux (ppc64-elf, really), the lr save
+            slot is 2 words back from sp, whereas on ppc32-elf(?) it's
+            only one word back. */
+-#        if defined(VG_PLAT_USES_PPCTOC)
++#        if defined(VG_PLAT_USES_PPCTOC) || defined(VGP_ppc64le_linux)
+          const Int lr_offset = 2;
+ #        else
+          const Int lr_offset = 1;
+@@ -761,7 +762,7 @@ UInt VG_(get_StackTrace_wrk) ( ThreadId tid_if_known,
+             else
+                ip = (((UWord*)fp)[lr_offset]);
+ 
+-#           if defined(VG_PLAT_USES_PPCTOC)
++#           if defined(VG_PLAT_USES_PPCTOC) || defined(VGP_ppc64le_linux)
+             /* Nasty hack to do with function replacement/wrapping on
+                ppc64-linux.  If LR points to our magic return stub,
+                then we are in a wrapped or intercepted function, in
+diff --git a/coregrind/m_syscall.c b/coregrind/m_syscall.c
+index 161be15..b111e5c 100644
+--- a/coregrind/m_syscall.c
++++ b/coregrind/m_syscall.c
+@@ -386,7 +386,7 @@ asm(
+ ".previous\n"
+ );
+ 
+-#elif defined(VGP_ppc64_linux)
++#elif defined(VGP_ppc64be_linux)
+ /* Due to the need to return 65 bits of result, this is completely
+    different from the ppc32 case.  The single arg register points to a
+    7-word block containing the syscall # and the 6 args.  The syscall
+@@ -720,7 +720,7 @@ SysRes VG_(do_syscall) ( UWord sysno, UWord a1, UWord a2, UWord a3,
+    UInt  cr0so   = (UInt)(ret);
+    return VG_(mk_SysRes_ppc32_linux)( val, cr0so );
+ 
+-#  elif defined(VGP_ppc64_linux)
++#  elif defined(VGP_ppc64be_linux) || defined(VGP_ppc64le_linux)
+    ULong argblock[7];
+    argblock[0] = sysno;
+    argblock[1] = a1;
+diff --git a/coregrind/m_syswrap/priv_types_n_macros.h b/coregrind/m_syswrap/priv_types_n_macros.h
+index 325c53a..e69bdf3 100644
+--- a/coregrind/m_syswrap/priv_types_n_macros.h
++++ b/coregrind/m_syswrap/priv_types_n_macros.h
+@@ -90,7 +90,8 @@ typedef
+       // field names), the s_arg value is the offset from the stack pointer.
+       Int o_sysno;
+ #     if defined(VGP_x86_linux) || defined(VGP_amd64_linux) \
+-         || defined(VGP_ppc32_linux) || defined(VGP_ppc64_linux) \
++         || defined(VGP_ppc32_linux) \
++         || defined(VGP_ppc64be_linux) || defined(VGP_ppc64le_linux) \
+          || defined(VGP_arm_linux) || defined(VGP_s390x_linux) \
+          || defined(VGP_mips64_linux) || defined(VGP_arm64_linux)
+       Int o_arg1;
+diff --git a/coregrind/m_syswrap/syscall-ppc64-linux.S b/coregrind/m_syswrap/syscall-ppc64-linux.S
+index 30ae594..df73940 100644
+--- a/coregrind/m_syswrap/syscall-ppc64-linux.S
++++ b/coregrind/m_syswrap/syscall-ppc64-linux.S
+@@ -27,7 +27,7 @@
+   The GNU General Public License is contained in the file COPYING.
+ */
+ 
+-#if defined(VGP_ppc64_linux)
++#if defined(VGP_ppc64be_linux) || defined(VGP_ppc64le_linux)
+ 
+ #include "pub_core_basics_asm.h"
+ #include "pub_core_vkiscnums_asm.h"
+@@ -165,7 +165,7 @@ ML_(blksys_finished):  .quad 5b
+ /* Let the linker know we don't need an executable stack */
+ .section .note.GNU-stack,"",@progbits
+ 
+-#endif // defined(VGP_ppc64_linux)
++#endif // defined(VGP_ppc64be_linux) || defined(VGP_ppc64le_linux)
+ 
+ /*--------------------------------------------------------------------*/
+ /*--- end                                                          ---*/
+diff --git a/coregrind/m_syswrap/syswrap-linux.c b/coregrind/m_syswrap/syswrap-linux.c
+index c195ca2..d224207 100644
+--- a/coregrind/m_syswrap/syswrap-linux.c
++++ b/coregrind/m_syswrap/syswrap-linux.c
+@@ -244,7 +244,8 @@ static void run_a_thread_NORETURN ( Word tidW )
+          : "n" (VgTs_Empty), "n" (__NR_exit), "m" (tst->os_state.exitcode)
+          : "rax", "rdi"
+       );
+-#elif defined(VGP_ppc32_linux) || defined(VGP_ppc64_linux)
++#elif defined(VGP_ppc32_linux) || defined(VGP_ppc64be_linux) \
++      || defined(VGP_ppc64le_linux)
+       { UInt vgts_empty = (UInt)VgTs_Empty;
+         asm volatile (
+           "stw %1,%0\n\t"          /* set tst->status = VgTs_Empty */
+@@ -385,7 +386,7 @@ void VG_(main_thread_wrapper_NORETURN)(ThreadId tid)
+    sp -= 16;
+    sp &= ~0xF;
+    *(UWord *)sp = 0;
+-#elif defined(VGP_ppc64_linux)
++#elif defined(VGP_ppc64be_linux) || defined(VGP_ppc64le_linux)
+    /* make a stack frame */
+    sp -= 112;
+    sp &= ~((Addr)0xF);
+@@ -438,7 +439,8 @@ SysRes ML_(do_fork_clone) ( ThreadId tid, UInt flags,
+    /* Since this is the fork() form of clone, we don't need all that
+       VG_(clone) stuff */
+ #if defined(VGP_x86_linux) \
+-    || defined(VGP_ppc32_linux) || defined(VGP_ppc64_linux) \
++    || defined(VGP_ppc32_linux) \
++    || defined(VGP_ppc64be_linux) || defined(VGP_ppc64le_linux)	\
+     || defined(VGP_arm_linux) || defined(VGP_mips32_linux) \
+     || defined(VGP_mips64_linux) || defined(VGP_arm64_linux)
+    res = VG_(do_syscall5)( __NR_clone, flags, 
+diff --git a/coregrind/m_syswrap/syswrap-main.c b/coregrind/m_syswrap/syswrap-main.c
+index 8f25497..077a9b4 100644
+--- a/coregrind/m_syswrap/syswrap-main.c
++++ b/coregrind/m_syswrap/syswrap-main.c
+@@ -442,7 +442,7 @@ void getSyscallArgsFromGuestState ( /*OUT*/SyscallArgs*       canonical,
+    canonical->arg7  = 0;
+    canonical->arg8  = 0;
+ 
+-#elif defined(VGP_ppc64_linux)
++#elif defined(VGP_ppc64be_linux) || defined(VGP_ppc64le_linux)
+    VexGuestPPC64State* gst = (VexGuestPPC64State*)gst_vanilla;
+    canonical->sysno = gst->guest_GPR0;
+    canonical->arg1  = gst->guest_GPR3;
+@@ -688,7 +688,7 @@ void putSyscallArgsIntoGuestState ( /*IN*/ SyscallArgs*       canonical,
+    gst->guest_GPR7 = canonical->arg5;
+    gst->guest_GPR8 = canonical->arg6;
+ 
+-#elif defined(VGP_ppc64_linux)
++#elif defined(VGP_ppc64be_linux) || defined(VGP_ppc64le_linux)
+    VexGuestPPC64State* gst = (VexGuestPPC64State*)gst_vanilla;
+    gst->guest_GPR0 = canonical->sysno;
+    gst->guest_GPR3 = canonical->arg1;
+@@ -819,7 +819,7 @@ void getSyscallStatusFromGuestState ( /*OUT*/SyscallStatus*     canonical,
+    canonical->sres = VG_(mk_SysRes_ppc32_linux)( gst->guest_GPR3, cr0so );
+    canonical->what = SsComplete;
+ 
+-#  elif defined(VGP_ppc64_linux)
++#  elif defined(VGP_ppc64be_linux) || defined(VGP_ppc64le_linux)
+    VexGuestPPC64State* gst   = (VexGuestPPC64State*)gst_vanilla;
+    UInt                cr    = LibVEX_GuestPPC64_get_CR( gst );
+    UInt                cr0so = (cr >> 28) & 1;
+@@ -977,7 +977,7 @@ void putSyscallStatusIntoGuestState ( /*IN*/ ThreadId tid,
+    VG_TRACK( post_reg_write, Vg_CoreSysCall, tid, 
+              OFFSET_ppc32_CR0_0, sizeof(UChar) );
+ 
+-#  elif defined(VGP_ppc64_linux)
++#  elif defined(VGP_ppc64be_linux) || defined(VGP_ppc64le_linux)
+    VexGuestPPC64State* gst = (VexGuestPPC64State*)gst_vanilla;
+    UInt old_cr = LibVEX_GuestPPC64_get_CR(gst);
+    vg_assert(canonical->what == SsComplete);
+@@ -1182,7 +1182,7 @@ void getSyscallArgLayout ( /*OUT*/SyscallArgLayout* layout )
+    layout->uu_arg7  = -1; /* impossible value */
+    layout->uu_arg8  = -1; /* impossible value */
+ 
+-#elif defined(VGP_ppc64_linux)
++#elif defined(VGP_ppc64be_linux) || defined(VGP_ppc64le_linux)
+    layout->o_sysno  = OFFSET_ppc64_GPR0;
+    layout->o_arg1   = OFFSET_ppc64_GPR3;
+    layout->o_arg2   = OFFSET_ppc64_GPR4;
+@@ -1988,7 +1988,7 @@ void ML_(fixup_guest_state_to_restart_syscall) ( ThreadArchState* arch )
+       vg_assert(p[0] == 0x0F && p[1] == 0x05);
+    }
+ 
+-#elif defined(VGP_ppc32_linux) || defined(VGP_ppc64_linux)
++#elif defined(VGP_ppc32_linux) || defined(VGP_ppc64be_linux)
+    arch->vex.guest_CIA -= 4;             // sizeof(ppc32 instr)
+ 
+    /* Make sure our caller is actually sane, and we're really backing
+diff --git a/coregrind/m_syswrap/syswrap-ppc64-linux.c b/coregrind/m_syswrap/syswrap-ppc64-linux.c
+index 4673dda..5d266b8 100644
+--- a/coregrind/m_syswrap/syswrap-ppc64-linux.c
++++ b/coregrind/m_syswrap/syswrap-ppc64-linux.c
+@@ -28,7 +28,7 @@
+    The GNU General Public License is contained in the file COPYING.
+ */
+ 
+-#if defined(VGP_ppc64_linux)
++#if defined(VGP_ppc64be_linux) || defined(VGP_ppc64le_linux)
+ 
+ #include "pub_core_basics.h"
+ #include "pub_core_vki.h"
+@@ -1074,7 +1074,7 @@ SyscallTableEntry* ML_(get_linux_syscall_entry) ( UInt sysno )
+    return NULL;
+ }
+ 
+-#endif // defined(VGP_ppc64_linux)
++#endif // defined(VGP_ppc64be_linux) || defined(VGP_ppc64le_linux)
+ 
+ /*--------------------------------------------------------------------*/
+ /*--- end                                                          ---*/
+diff --git a/coregrind/m_trampoline.S b/coregrind/m_trampoline.S
+index 5dd362c..c859bdd 100644
+--- a/coregrind/m_trampoline.S
++++ b/coregrind/m_trampoline.S
+@@ -416,7 +416,7 @@ VG_(trampoline_stuff_end):
+ 
+ /*---------------- ppc64-linux ----------------*/
+ #else
+-#if defined(VGP_ppc64_linux)
++#if defined(VGP_ppc64be_linux) || defined(VGP_ppc64le_linux)
+ 
+ #	define UD2_16     trap ; trap ; trap; trap
+ #	define UD2_64     UD2_16   ; UD2_16   ; UD2_16   ; UD2_16
+diff --git a/coregrind/m_translate.c b/coregrind/m_translate.c
+index d1757bb..0919394 100644
+--- a/coregrind/m_translate.c
++++ b/coregrind/m_translate.c
+@@ -868,7 +868,7 @@ static Bool chase_into_ok ( void* closureV, Addr64 addr64 )
+    if (addr != VG_(redir_do_lookup)(addr, NULL))
+       goto dontchase;
+ 
+-#  if defined(VG_PLAT_USES_PPCTOC)
++#  if defined(VG_PLAT_USES_PPCTOC) || defined(VGP_ppc64le_linux)
+    /* This needs to be at the start of its own block.  Don't chase. Re
+       ULong_to_Ptr, be careful to ensure we only compare 32 bits on a
+       32-bit target.*/
+@@ -918,7 +918,7 @@ static IRExpr* mkU32 ( UInt n ) {
+    return IRExpr_Const(IRConst_U32(n));
+ }
+ 
+-#if defined(VG_PLAT_USES_PPCTOC)
++#if defined(VG_PLAT_USES_PPCTOC) || defined(VGP_ppc64le_linux)
+ static IRExpr* mkU8 ( UChar n ) {
+    return IRExpr_Const(IRConst_U8(n));
+ }
+@@ -941,7 +941,7 @@ static void gen_PUSH ( IRSB* bb, IRExpr* e )
+    IRTemp      t1;
+    IRExpr*     one;
+ 
+-#  if defined(VGP_ppc64_linux)
++#  if defined(VGP_ppc64be_linux) || defined(VGP_ppc64le_linux)
+    Int    stack_size       = VEX_GUEST_PPC64_REDIR_STACK_SIZE;
+    Int    offB_REDIR_SP    = offsetof(VexGuestPPC64State,guest_REDIR_SP);
+    Int    offB_REDIR_STACK = offsetof(VexGuestPPC64State,guest_REDIR_STACK);
+@@ -1035,7 +1035,7 @@ static void gen_PUSH ( IRSB* bb, IRExpr* e )
+ 
+ static IRTemp gen_POP ( IRSB* bb )
+ {
+-#  if defined(VGP_ppc64_linux)
++#  if defined(VGP_ppc64be_linux) || defined(VGP_ppc64le_linux)
+    Int    stack_size       = VEX_GUEST_PPC64_REDIR_STACK_SIZE;
+    Int    offB_REDIR_SP    = offsetof(VexGuestPPC64State,guest_REDIR_SP);
+    Int    offB_REDIR_STACK = offsetof(VexGuestPPC64State,guest_REDIR_STACK);
+@@ -1127,7 +1127,7 @@ static IRTemp gen_POP ( IRSB* bb )
+ 
+ static void gen_push_and_set_LR_R2 ( IRSB* bb, Addr64 new_R2_value )
+ {
+-#  if defined(VGP_ppc64_linux)
++#  if defined(VGP_ppc64be_linux)
+    Addr64 bogus_RA  = (Addr64)&VG_(ppctoc_magic_redirect_return_stub);
+    Int    offB_GPR2 = offsetof(VexGuestPPC64State,guest_GPR2);
+    Int    offB_LR   = offsetof(VexGuestPPC64State,guest_LR);
+@@ -1143,7 +1143,7 @@ static void gen_push_and_set_LR_R2 ( IRSB* bb, Addr64 new_R2_value )
+ 
+ static void gen_pop_R2_LR_then_bLR ( IRSB* bb )
+ {
+-#  if defined(VGP_ppc64_linux)
++#  if defined(VGP_ppc64be_linux)  || defined(VGP_ppc64le_linux)
+    Int    offB_GPR2 = offsetof(VexGuestPPC64State,guest_GPR2);
+    Int    offB_LR   = offsetof(VexGuestPPC64State,guest_LR);
+    Int    offB_CIA  = offsetof(VexGuestPPC64State,guest_CIA);
+@@ -1277,7 +1277,7 @@ Bool mk_preamble__set_NRADDR_to_nraddr ( void* closureV, IRSB* bb )
+    Int offB_GPR25 = offsetof(VexGuestMIPS64State, guest_r25);
+    addStmtToIRSB(bb, IRStmt_Put(offB_GPR25, mkU64(closure->readdr)));
+ #  endif
+-#  if defined(VGP_ppc64_linux)
++#  if defined(VGP_ppc64be_linux)
+    addStmtToIRSB( 
+       bb,
+       IRStmt_Put( 
+@@ -1523,7 +1523,7 @@ Bool VG_(translate) ( ThreadId tid,
+    vex_abiinfo.guest_ppc_zap_RZ_at_blr        = False;
+    vex_abiinfo.guest_ppc_zap_RZ_at_bl         = NULL;
+ #  endif
+-#  if defined(VGP_ppc64_linux)
++#  if defined(VGP_ppc64be_linux)
+    vex_abiinfo.guest_ppc_zap_RZ_at_blr        = True;
+    vex_abiinfo.guest_ppc_zap_RZ_at_bl         = const_True;
+    vex_abiinfo.host_ppc_calls_use_fndescrs    = True;
+diff --git a/coregrind/m_ume/elf.c b/coregrind/m_ume/elf.c
+index 7d79f96..910bb7a 100644
+--- a/coregrind/m_ume/elf.c
++++ b/coregrind/m_ume/elf.c
+@@ -505,9 +505,9 @@ Int VG_(load_ELF)(Int fd, const HChar* name, /*MOD*/ExeInfo* info)
+    info->exe_base = minaddr + ebase;
+    info->exe_end  = maxaddr + ebase;
+ 
+-#if defined(VGP_ppc64_linux)
+-   /* On PPC64, a func ptr is represented by a TOC entry ptr.  This
+-      TOC entry contains three words; the first word is the function
++#if defined(VGP_ppc64be_linux)
++   /* On PPC64BE, ELF ver 1, a func ptr is represented by a TOC entry ptr.
++      This TOC entry contains three words; the first word is the function
+       address, the second word is the TOC ptr (r2), and the third word
+       is the static chain value. */
+    info->init_ip  = ((ULong*)entry)[0];
+diff --git a/coregrind/m_ume/macho.c b/coregrind/m_ume/macho.c
+index f79a561..7608811 100644
+--- a/coregrind/m_ume/macho.c
++++ b/coregrind/m_ume/macho.c
+@@ -699,8 +699,8 @@ load_fat_file(int fd, vki_off_t offset, vki_off_t size, unsigned long filetype,
+ 
+ #if defined(VGA_ppc32)
+    good_arch = CPU_TYPE_POWERPC;
+-#elif defined(VGA_ppc64)
+-   good_arch = CPU_TYPE_POWERPC64;
++#elif defined(VGA_ppc64be)
++   good_arch = CPU_TYPE_POWERPC64BE;
+ #elif defined(VGA_x86)
+    good_arch = CPU_TYPE_I386;
+ #elif defined(VGA_amd64)
+diff --git a/coregrind/m_vki.c b/coregrind/m_vki.c
+index 1563623..2e1626b 100644
+--- a/coregrind/m_vki.c
++++ b/coregrind/m_vki.c
+@@ -42,8 +42,8 @@
+ /* ppc32/64-linux determines page size at startup, hence m_vki is
+    the logical place to store that info. */
+ 
+-#if defined(VGP_ppc32_linux) || defined(VGP_ppc64_linux) \
+-    || defined(VGP_arm64_linux)
++#if defined(VGP_ppc32_linux) || defined(VGP_ppc64be_linux) \
++    || defined(VGP_ppc64le_linux) || defined(VGP_arm64_linux)
+ unsigned long VKI_PAGE_SHIFT = 12;
+ unsigned long VKI_PAGE_SIZE  = 1UL << 12;
+ #endif
+diff --git a/coregrind/pub_core_aspacemgr.h b/coregrind/pub_core_aspacemgr.h
+index ba5df5a..4dd62cb 100644
+--- a/coregrind/pub_core_aspacemgr.h
++++ b/coregrind/pub_core_aspacemgr.h
+@@ -334,7 +334,8 @@ extern Bool VG_(am_relocate_nooverlap_client)( /*OUT*/Bool* need_discard,
+ // stacks.  The address space manager provides and suitably
+ // protects such stacks.
+ 
+-#if defined(VGP_ppc32_linux) || defined(VGP_ppc64_linux) \
++#if defined(VGP_ppc32_linux) \
++    || defined(VGP_ppc64be_linux) || defined(VGP_ppc64le_linux)	\
+     || defined(VGP_mips32_linux) || defined(VGP_mips64_linux) \
+     || defined(VGP_arm64_linux)
+ # define VG_STACK_GUARD_SZB  65536  // 1 or 16 pages
+diff --git a/coregrind/pub_core_basics.h b/coregrind/pub_core_basics.h
+index 2959015..05b3d66 100644
+--- a/coregrind/pub_core_basics.h
++++ b/coregrind/pub_core_basics.h
+@@ -54,7 +54,7 @@
+ #  include "libvex_guest_amd64.h"
+ #elif defined(VGA_ppc32)
+ #  include "libvex_guest_ppc32.h"
+-#elif defined(VGA_ppc64)
++#elif defined(VGA_ppc64be) || defined(VGA_ppc64le)
+ #  include "libvex_guest_ppc64.h"
+ #elif defined(VGA_arm)
+ #  include "libvex_guest_arm.h"
+diff --git a/coregrind/pub_core_debuginfo.h b/coregrind/pub_core_debuginfo.h
+index 697969a..5e93793 100644
+--- a/coregrind/pub_core_debuginfo.h
++++ b/coregrind/pub_core_debuginfo.h
+@@ -118,7 +118,7 @@ typedef
+ typedef
+    struct { Addr pc; Addr sp; Addr x30; Addr x29; } /* PC, SP, LR, FP */
+    D3UnwindRegs;
+-#elif defined(VGA_ppc32) || defined(VGA_ppc64)
++#elif defined(VGA_ppc32) || defined(VGA_ppc64be) || defined(VGA_ppc64le)
+ typedef
+    UChar  /* should be void, but gcc complains at use points */
+    D3UnwindRegs;
+diff --git a/coregrind/pub_core_machine.h b/coregrind/pub_core_machine.h
+index 0cd5cf8..f1d839a 100644
+--- a/coregrind/pub_core_machine.h
++++ b/coregrind/pub_core_machine.h
+@@ -56,7 +56,7 @@
+ #  define VG_ELF_MACHINE      EM_PPC
+ #  define VG_ELF_CLASS        ELFCLASS32
+ #  undef  VG_PLAT_USES_PPCTOC
+-#elif defined(VGP_ppc64_linux)
++#elif defined(VGP_ppc64be_linux)
+ #  define VG_ELF_DATA2XXX     ELFDATA2MSB
+ #  define VG_ELF_MACHINE      EM_PPC64
+ #  define VG_ELF_CLASS        ELFCLASS64
+@@ -119,7 +119,7 @@
+ #  define VG_INSTR_PTR        guest_CIA
+ #  define VG_STACK_PTR        guest_GPR1
+ #  define VG_FRAME_PTR        guest_GPR1   // No frame ptr for PPC
+-#elif defined(VGA_ppc64)
++#elif defined(VGA_ppc64be) || defined(VGA_ppc64le)
+ #  define VG_INSTR_PTR        guest_CIA
+ #  define VG_STACK_PTR        guest_GPR1
+ #  define VG_FRAME_PTR        guest_GPR1   // No frame ptr for PPC
+@@ -233,7 +233,7 @@ extern Bool VG_(machine_get_cache_info)( VexArchInfo * );
+ extern void VG_(machine_ppc32_set_clszB)( Int );
+ #endif
+ 
+-#if defined(VGA_ppc64)
++#if defined(VGA_ppc64be) || defined(VGA_ppc64le)
+ extern void VG_(machine_ppc64_set_clszB)( Int );
+ #endif
+ 
+@@ -265,7 +265,7 @@ extern UInt VG_(machine_ppc32_has_VMX);
+ /* PPC64: set to 1 if Altivec instructions are supported in
+    user-space, else 0.  Is referenced from assembly code, so do not
+    change from a 64-bit int. */
+-#if defined(VGA_ppc64)
++#if defined(VGA_ppc64be) || defined(VGA_ppc64le)
+ extern ULong VG_(machine_ppc64_has_VMX);
+ #endif
+ 
+diff --git a/coregrind/pub_core_mallocfree.h b/coregrind/pub_core_mallocfree.h
+index 552da97..fafe707 100644
+--- a/coregrind/pub_core_mallocfree.h
++++ b/coregrind/pub_core_mallocfree.h
+@@ -71,13 +71,14 @@ typedef Int ArenaId;
+ // for any AltiVec- or SSE-related type.  This matches the Darwin libc.
+ // Also, use 16 bytes for any PPC variant, since 16 is required to make
+ // Altiveccery work right.
+-#elif defined(VGP_amd64_linux)  || \
+-      defined(VGP_ppc32_linux)  || \
+-      defined(VGP_ppc64_linux)  || \
+-      defined(VGP_s390x_linux)  || \
+-      defined(VGP_mips64_linux) || \
+-      defined(VGP_x86_darwin)   || \
+-      defined(VGP_amd64_darwin) || \
++#elif defined(VGP_amd64_linux)    || \
++      defined(VGP_ppc32_linux)    || \
++      defined(VGP_ppc64be_linux)  || \
++      defined(VGP_ppc64le_linux)  || \
++      defined(VGP_s390x_linux)    || \
++      defined(VGP_mips64_linux)   || \
++      defined(VGP_x86_darwin)     || \
++      defined(VGP_amd64_darwin)   || \
+       defined(VGP_arm64_linux)
+ #  define VG_MIN_MALLOC_SZB       16
+ #else
+diff --git a/coregrind/pub_core_threadstate.h b/coregrind/pub_core_threadstate.h
+index ad6ff82..c2ebb1c 100644
+--- a/coregrind/pub_core_threadstate.h
++++ b/coregrind/pub_core_threadstate.h
+@@ -84,7 +84,7 @@ typedef
+    typedef VexGuestAMD64State VexGuestArchState;
+ #elif defined(VGA_ppc32)
+    typedef VexGuestPPC32State VexGuestArchState;
+-#elif defined(VGA_ppc64)
++#elif defined(VGA_ppc64be) || defined(VGA_ppc64le)
+    typedef VexGuestPPC64State VexGuestArchState;
+ #elif defined(VGA_arm)
+    typedef VexGuestARMState   VexGuestArchState;
+diff --git a/coregrind/pub_core_trampoline.h b/coregrind/pub_core_trampoline.h
+index 96710fe..b4c056b 100644
+--- a/coregrind/pub_core_trampoline.h
++++ b/coregrind/pub_core_trampoline.h
+@@ -81,7 +81,7 @@ extern UInt  VG_(ppc32_linux_REDIR_FOR_strcmp)( void*, void* );
+ extern void* VG_(ppc32_linux_REDIR_FOR_strchr)( void*, Int );
+ #endif
+ 
+-#if defined(VGP_ppc64_linux)
++#if defined(VGP_ppc64be_linux) || defined(VGP_ppc64le_linux)
+ extern Addr  VG_(ppc64_linux_SUBST_FOR_rt_sigreturn);
+ extern UInt  VG_(ppc64_linux_REDIR_FOR_strlen)( void* );
+ extern void* VG_(ppc64_linux_REDIR_FOR_strchr)( void*, Int );
+diff --git a/coregrind/pub_core_transtab_asm.h b/coregrind/pub_core_transtab_asm.h
+index 2a3f0f1..b063d54 100644
+--- a/coregrind/pub_core_transtab_asm.h
++++ b/coregrind/pub_core_transtab_asm.h
+@@ -62,8 +62,8 @@
+ #elif defined(VGA_s390x) || defined(VGA_arm)
+ #  define VG_TT_FAST_HASH(_addr)  ((((UWord)(_addr)) >> 1) & VG_TT_FAST_MASK)
+ 
+-#elif defined(VGA_ppc32) || defined(VGA_ppc64) || defined(VGA_mips32) \
+-      || defined(VGA_mips64) || defined(VGA_arm64)
++#elif defined(VGA_ppc32) || defined(VGA_ppc64be) || defined(VGA_ppc64le) \
++      || defined(VGA_mips32) || defined(VGA_mips64) || defined(VGA_arm64)
+ #  define VG_TT_FAST_HASH(_addr)  ((((UWord)(_addr)) >> 2) & VG_TT_FAST_MASK)
+ 
+ #else
+diff --git a/coregrind/vgdb-invoker-ptrace.c b/coregrind/vgdb-invoker-ptrace.c
+index 0ad631a..bad4df5 100644
+--- a/coregrind/vgdb-invoker-ptrace.c
++++ b/coregrind/vgdb-invoker-ptrace.c
+@@ -843,7 +843,7 @@ Bool invoker_invoke_gdbserver (pid_t pid)
+    sp = user_mod.sp;
+ #elif defined(VGA_ppc32)
+    sp = user_mod.regs.gpr[1];
+-#elif defined(VGA_ppc64)
++#elif defined(VGA_ppc64be) || defined(VGA_ppc64le)
+    sp = user_mod.regs.gpr[1];
+ #elif defined(VGA_s390x)
+    sp = user_mod.regs.gprs[15];
+@@ -907,7 +907,7 @@ Bool invoker_invoke_gdbserver (pid_t pid)
+       I_die_here : not x86 or amd64 in x86/amd64 section/
+ #endif
+ 
+-#elif defined(VGA_ppc32) || defined(VGA_ppc64)
++#elif defined(VGA_ppc32) || defined(VGA_ppc64be) || defined(VGA_ppc64le)
+       user_mod.regs.nip = shared32->invoke_gdbserver;
+       user_mod.regs.trap = -1L;
+       /* put check arg in register 3 */
+@@ -984,7 +984,7 @@ Bool invoker_invoke_gdbserver (pid_t pid)
+ 
+ #elif defined(VGA_ppc32)
+       assert(0); // cannot vgdb a 64 bits executable with a 32 bits exe
+-#elif defined(VGA_ppc64)
++#elif defined(VGA_ppc64be)
+       Addr64 func_addr;
+       Addr64 toc_addr;
+       int rw;
+diff --git a/drd/drd_bitmap.h b/drd/drd_bitmap.h
+index 939afe4..86d53f3 100644
+--- a/drd/drd_bitmap.h
++++ b/drd/drd_bitmap.h
+@@ -139,8 +139,8 @@ Addr make_address(const UWord a1, const UWord a0)
+ #if defined(VGA_x86) || defined(VGA_ppc32) || defined(VGA_arm) \
+     || defined(VGA_mips32)
+ #define BITS_PER_BITS_PER_UWORD 5
+-#elif defined(VGA_amd64) || defined(VGA_ppc64) || defined(VGA_s390x) \
+-      || defined(VGA_mips64) || defined(VGA_arm64)
++#elif defined(VGA_amd64) || defined(VGA_ppc64be) || defined(VGA_ppc64le) \
++      || defined(VGA_s390x) || defined(VGA_mips64) || defined(VGA_arm64)
+ #define BITS_PER_BITS_PER_UWORD 6
+ #else
+ #error Unknown platform.
+diff --git a/drd/drd_load_store.c b/drd/drd_load_store.c
+index 59c2e36..973bdda 100644
+--- a/drd/drd_load_store.c
++++ b/drd/drd_load_store.c
+@@ -43,7 +43,7 @@
+ #define STACK_POINTER_OFFSET OFFSET_amd64_RSP
+ #elif defined(VGA_ppc32)
+ #define STACK_POINTER_OFFSET OFFSET_ppc32_GPR1
+-#elif defined(VGA_ppc64)
++#elif defined(VGA_ppc64be) || defined(VGA_ppc64le)
+ #define STACK_POINTER_OFFSET OFFSET_ppc64_GPR1
+ #elif defined(VGA_arm)
+ #define STACK_POINTER_OFFSET OFFSET_arm_R13
+diff --git a/drd/tests/unit_bitmap.c b/drd/tests/unit_bitmap.c
+index e537e6d..6e8064a 100644
+--- a/drd/tests/unit_bitmap.c
++++ b/drd/tests/unit_bitmap.c
+@@ -83,7 +83,8 @@ struct { Addr address; SizeT size; BmAccessTypeT access_type; }
+     {               0x00ffffffULL, 1, eLoad  },
+     { 0xffffffffULL - (((1 << ADDR_LSB_BITS) + 1) << ADDR_IGNORED_BITS),
+                                    1, eStore },
+-#if defined(VGP_amd64_linux) || defined(VGP_ppc64_linux)
++#if defined(VGP_amd64_linux) || defined(VGP_ppc64be_linux) \
++    || defined(VGP_ppc64le_linux)
+     { 0xffffffffULL - (1 << ADDR_LSB_BITS << ADDR_IGNORED_BITS),
+                                    1, eStore },
+     {               0xffffffffULL, 1, eStore },
+diff --git a/helgrind/tests/annotate_hbefore.c b/helgrind/tests/annotate_hbefore.c
+index 3368c56..74cf9d8 100644
+--- a/helgrind/tests/annotate_hbefore.c
++++ b/helgrind/tests/annotate_hbefore.c
+@@ -20,7 +20,7 @@
+ 
+ typedef  unsigned long int  UWord;
+ 
+-#if defined(VGA_ppc64)
++#if defined(VGA_ppc64be) || defined(VGA_ppc64le)
+ 
+ // ppc64
+ /* return 1 if success, 0 if failure */
+diff --git a/include/pub_tool_basics.h b/include/pub_tool_basics.h
+index 2236d00..4e30160 100644
+--- a/include/pub_tool_basics.h
++++ b/include/pub_tool_basics.h
+@@ -270,9 +270,9 @@ static inline Bool sr_EQ ( SysRes sr1, SysRes sr2 ) {
+ 
+ #if defined(VGA_x86) || defined(VGA_amd64) || defined (VGA_arm) \
+     || ((defined(VGA_mips32) || defined(VGA_mips64)) && defined (_MIPSEL)) \
+-    || defined(VGA_arm64)
++    || defined(VGA_arm64)  || defined(VGA_ppc64le)
+ #  define VG_LITTLEENDIAN 1
+-#elif defined(VGA_ppc32) || defined(VGA_ppc64) || defined(VGA_s390x) \
++#elif defined(VGA_ppc32) || defined(VGA_ppc64be) || defined(VGA_s390x) \
+       || ((defined(VGA_mips32) || defined(VGA_mips64)) && defined (_MIPSEB))
+ #  define VG_BIGENDIAN 1
+ #else
+@@ -283,7 +283,8 @@ static inline Bool sr_EQ ( SysRes sr1, SysRes sr2 ) {
+ #if defined(VGA_x86)
+ #  define VG_REGPARM(n)            __attribute__((regparm(n)))
+ #elif defined(VGA_amd64) || defined(VGA_ppc32) \
+-      || defined(VGA_ppc64) || defined(VGA_arm) || defined(VGA_s390x) \
++      || defined(VGA_ppc64be) || defined(VGA_ppc64le) \
++      || defined(VGA_arm) || defined(VGA_s390x) \
+       || defined(VGA_mips32) || defined(VGA_mips64) \
+       || defined(VGA_arm64)
+ #  define VG_REGPARM(n)            /* */
+diff --git a/include/pub_tool_libcsetjmp.h b/include/pub_tool_libcsetjmp.h
+index 4bd3270..ff01058 100644
+--- a/include/pub_tool_libcsetjmp.h
++++ b/include/pub_tool_libcsetjmp.h
+@@ -82,7 +82,7 @@ __attribute__((noreturn))
+ void  VG_MINIMAL_LONGJMP(VG_MINIMAL_JMP_BUF(_env));
+ 
+ 
+-#elif defined(VGP_ppc64_linux)
++#elif defined(VGP_ppc64be_linux) || defined(VGP_ppc64le_linux)
+ 
+ #define VG_MINIMAL_JMP_BUF(_name)        ULong _name [32+1+1]
+ __attribute__((returns_twice))
+diff --git a/include/pub_tool_machine.h b/include/pub_tool_machine.h
+index e956419..0f004f1 100644
+--- a/include/pub_tool_machine.h
++++ b/include/pub_tool_machine.h
+@@ -53,7 +53,7 @@
+ #  define VG_CLREQ_SZB             20
+ #  define VG_STACK_REDZONE_SZB      0
+ 
+-#elif defined(VGP_ppc64_linux)
++#elif defined(VGP_ppc64be_linux)  || defined(VGP_ppc64le_linux)
+ #  define VG_MIN_INSTR_SZB          4
+ #  define VG_MAX_INSTR_SZB          4 
+ #  define VG_CLREQ_SZB             20
+diff --git a/include/pub_tool_vkiscnums_asm.h b/include/pub_tool_vkiscnums_asm.h
+index 6f84651..7f7f03e 100644
+--- a/include/pub_tool_vkiscnums_asm.h
++++ b/include/pub_tool_vkiscnums_asm.h
+@@ -42,7 +42,7 @@
+ #elif defined(VGP_ppc32_linux)
+ #  include "vki/vki-scnums-ppc32-linux.h"
+ 
+-#elif defined(VGP_ppc64_linux)
++#elif defined(VGP_ppc64be_linux) || defined(VGP_ppc64le_linux)
+ #  include "vki/vki-scnums-ppc64-linux.h"
+ 
+ #elif defined(VGP_s390x_linux)
+diff --git a/include/valgrind.h b/include/valgrind.h
+index a4380d1..01a372b 100644
+--- a/include/valgrind.h
++++ b/include/valgrind.h
+@@ -115,7 +115,7 @@
+ #undef PLAT_x86_linux
+ #undef PLAT_amd64_linux
+ #undef PLAT_ppc32_linux
+-#undef PLAT_ppc64_linux
++#undef PLAT_ppc64be_linux
+ #undef PLAT_arm_linux
+ #undef PLAT_arm64_linux
+ #undef PLAT_s390x_linux
+@@ -140,8 +140,9 @@
+ #  define PLAT_amd64_linux 1
+ #elif defined(__linux__) && defined(__powerpc__) && !defined(__powerpc64__)
+ #  define PLAT_ppc32_linux 1
+-#elif defined(__linux__) && defined(__powerpc__) && defined(__powerpc64__)
+-#  define PLAT_ppc64_linux 1
++#elif defined(__linux__) && defined(__powerpc__) && defined(__powerpc64__) && _CALL_ELF != 2
++/* Big Endian uses ELF version 1 */
++#  define PLAT_ppc64be_linux 1
+ #elif defined(__linux__) && defined(__arm__) && !defined(__aarch64__)
+ #  define PLAT_arm_linux 1
+ #elif defined(__linux__) && defined(__aarch64__) && !defined(__arm__)
+@@ -519,9 +520,9 @@ typedef
+ 
+ #endif /* PLAT_ppc32_linux */
+ 
+-/* ------------------------ ppc64-linux ------------------------ */
++/* ---------------------- ppc64be-linux ------------------------ */
+ 
+-#if defined(PLAT_ppc64_linux)
++#if defined(PLAT_ppc64be_linux)
+ 
+ typedef
+    struct { 
+@@ -596,7 +597,8 @@ typedef
+                     );                                           \
+  } while (0)
+ 
+-#endif /* PLAT_ppc64_linux */
++#endif /* PLAT_ppc64be_linux */
++
+ 
+ /* ------------------------- arm-linux ------------------------- */
+ 
+@@ -2534,9 +2536,9 @@ typedef
+ 
+ #endif /* PLAT_ppc32_linux */
+ 
+-/* ------------------------ ppc64-linux ------------------------ */
++/* ---------------------- ppc64be-linux ------------------------ */
+ 
+-#if defined(PLAT_ppc64_linux)
++#if defined(PLAT_ppc64be_linux)
+ 
+ /* ARGREGS: r3 r4 r5 r6 r7 r8 r9 r10 (the rest on stack somewhere) */
+ 
+@@ -3089,7 +3091,7 @@ typedef
+       lval = (__typeof__(lval)) _res;                             \
+    } while (0)
+ 
+-#endif /* PLAT_ppc64_linux */
++#endif /* PLAT_ppc64be_linux */
+ 
+ /* ------------------------- arm-linux ------------------------- */
+ 
+@@ -5935,7 +5937,7 @@ VALGRIND_PRINTF_BACKTRACE(const char *format, ...)
+ #undef PLAT_x86_linux
+ #undef PLAT_amd64_linux
+ #undef PLAT_ppc32_linux
+-#undef PLAT_ppc64_linux
++#undef PLAT_ppc64be_linux
+ #undef PLAT_arm_linux
+ #undef PLAT_s390x_linux
+ #undef PLAT_mips32_linux
+diff --git a/include/vki/vki-linux.h b/include/vki/vki-linux.h
+index 6043842..9111e0f 100644
+--- a/include/vki/vki-linux.h
++++ b/include/vki/vki-linux.h
+@@ -85,7 +85,7 @@
+ #  include "vki-posixtypes-amd64-linux.h"
+ #elif defined(VGA_ppc32)
+ #  include "vki-posixtypes-ppc32-linux.h"
+-#elif defined(VGA_ppc64)
++#elif defined(VGA_ppc64be) || defined(VGA_ppc64le)
+ #  include "vki-posixtypes-ppc64-linux.h"
+ #elif defined(VGA_arm)
+ #  include "vki-posixtypes-arm-linux.h"
+@@ -211,7 +211,7 @@ typedef unsigned int	        vki_uint;
+ #  include "vki-amd64-linux.h"
+ #elif defined(VGA_ppc32)
+ #  include "vki-ppc32-linux.h"
+-#elif defined(VGA_ppc64)
++#elif defined(VGA_ppc64be) || defined(VGA_ppc64le)
+ #  include "vki-ppc64-linux.h"
+ #elif defined(VGA_arm)
+ #  include "vki-arm-linux.h"
+diff --git a/memcheck/mc_machine.c b/memcheck/mc_machine.c
+index 7074107..ccb431f 100644
+--- a/memcheck/mc_machine.c
++++ b/memcheck/mc_machine.c
+@@ -61,7 +61,7 @@
+ # define MC_SIZEOF_GUEST_STATE sizeof(VexGuestPPC32State)
+ #endif
+ 
+-#if defined(VGA_ppc64)
++#if defined(VGA_ppc64be) || defined(VGA_ppc64le)
+ # include "libvex_guest_ppc64.h"
+ # define MC_SIZEOF_GUEST_STATE sizeof(VexGuestPPC64State)
+ #endif
+@@ -150,7 +150,7 @@ static Int get_otrack_shadow_offset_wrk ( Int offset, Int szB )
+ {
+    /* -------------------- ppc64 -------------------- */
+ 
+-#  if defined(VGA_ppc64)
++#  if defined(VGA_ppc64be) || defined(VGA_ppc64le)
+ 
+ #  define GOF(_fieldname) \
+       (offsetof(VexGuestPPC64State,guest_##_fieldname))
+@@ -160,7 +160,6 @@ static Int get_otrack_shadow_offset_wrk ( Int offset, Int szB )
+    Int  sz   = szB;
+    Int  o    = offset;
+    tl_assert(sz > 0);
+-   tl_assert(host_is_big_endian());
+ 
+    if (sz == 8 || sz == 4) {
+       /* The point of this is to achieve
+@@ -1282,7 +1281,7 @@ static Int get_otrack_shadow_offset_wrk ( Int offset, Int szB )
+ IRType MC_(get_otrack_reg_array_equiv_int_type) ( IRRegArray* arr )
+ {
+    /* -------------------- ppc64 -------------------- */
+-#  if defined(VGA_ppc64)
++#  if defined(VGA_ppc64be) || defined(VGA_ppc64le)
+    /* The redir stack. */
+    if (arr->base == offsetof(VexGuestPPC64State,guest_REDIR_STACK[0])
+        && arr->elemTy == Ity_I64
+diff --git a/memcheck/tests/atomic_incs.c b/memcheck/tests/atomic_incs.c
+index 50c29e9..0029d8c 100644
+--- a/memcheck/tests/atomic_incs.c
++++ b/memcheck/tests/atomic_incs.c
+@@ -62,7 +62,7 @@ __attribute__((noinline)) void atomic_add_8bit ( char* p, int n )
+          : /*trash*/ "memory", "cc", "r15"
+       );
+    } while (success != 1);
+-#elif defined(VGA_ppc64)
++#elif defined(VGA_ppc64be)
+    /* Nasty hack.  Does correctly atomically do *p += n, but only if p
+       is 8-aligned -- guaranteed by caller. */
+    unsigned long success;
+@@ -261,7 +261,7 @@ __attribute__((noinline)) void atomic_add_16bit ( short* p, int n )
+          : /*trash*/ "memory", "cc", "r15"
+       );
+    } while (success != 1);
+-#elif defined(VGA_ppc64)
++#elif defined(VGA_ppc64be)
+    /* Nasty hack.  Does correctly atomically do *p += n, but only if p
+       is 8-aligned -- guaranteed by caller. */
+    unsigned long success;
+@@ -457,7 +457,7 @@ __attribute__((noinline)) void atomic_add_32bit ( int* p, int n )
+          : /*trash*/ "memory", "cc", "r15"
+       );
+    } while (success != 1);
+-#elif defined(VGA_ppc64)
++#elif defined(VGA_ppc64be)
+    /* Nasty hack.  Does correctly atomically do *p += n, but only if p
+       is 8-aligned -- guaranteed by caller. */
+    unsigned long success;
+@@ -574,7 +574,7 @@ __attribute__((noinline)) void atomic_add_64bit ( long long int* p, int n )
+       "lock; addq %%rbx,(%%rax)" "\n"
+       : : "S"(&block[0])/* S means "rsi only" */ : "memory","cc","rax","rbx"
+    );
+-#elif defined(VGA_ppc64)
++#elif defined(VGA_ppc64be) || defined(VGA_ppc64le)
+    unsigned long success;
+    do {
+       __asm__ __volatile__(
+diff --git a/memcheck/tests/unit_libcbase.c b/memcheck/tests/unit_libcbase.c
+index 019b67a..d61ecf9 100644
+--- a/memcheck/tests/unit_libcbase.c
++++ b/memcheck/tests/unit_libcbase.c
+@@ -56,7 +56,8 @@ void test_VG_STREQN(void)
+ }
+ 
+ // On PPC/Linux VKI_PAGE_SIZE is a variable, not a macro.
+-#if defined(VGP_ppc32_linux) || defined(VGP_ppc64_linux)
++#if defined(VGP_ppc32_linux) || defined(VGP_ppc64be_linux) \
++    || defined(VGP_ppc64le_linux)
+ unsigned long VKI_PAGE_SIZE  = 1UL << 12;
+ #elif defined(VGP_arm64_linux)
+ unsigned long VKI_PAGE_SIZE  = 1UL << 16;
+diff --git a/tests/Makefile.am b/tests/Makefile.am
+index adfbec4..b01cfb7 100644
+--- a/tests/Makefile.am
++++ b/tests/Makefile.am
+@@ -31,7 +31,8 @@ check_PROGRAMS = \
+ 	x86_amd64_features \
+ 	s390x_features \
+ 	mips_features \
+-	power_insn_available
++	power_insn_available \
++	is_ppc64_BE
+ 
+ AM_CFLAGS   += $(AM_FLAG_M3264_PRI)
+ AM_CXXFLAGS += $(AM_FLAG_M3264_PRI)
+diff --git a/tests/arch_test.c b/tests/arch_test.c
+index d1a337b..2fa3b48 100644
+--- a/tests/arch_test.c
++++ b/tests/arch_test.c
+@@ -48,7 +48,7 @@ static Bool go(char* arch)
+ #elif defined(VGP_ppc32_linux)
+    if ( 0 == strcmp( arch, "ppc32" ) ) return True;
+ 
+-#elif defined(VGP_ppc64_linux)
++#elif defined(VGP_ppc64be_linux)
+    if ( 0 == strcmp( arch, "ppc64" ) ) return True;
+ #if defined(VGA_SEC_ppc32)
+    if ( 0 == strcmp( arch, "ppc32" ) ) return True;
+diff --git a/tests/check_isa-2_06_cap b/tests/check_isa-2_06_cap
+index c5fc05a..b8ec37f 100755
+--- a/tests/check_isa-2_06_cap
++++ b/tests/check_isa-2_06_cap
+@@ -1,7 +1,7 @@
+ #!/bin/sh
+ 
+ # We use this script to check whether or not the processor supports Power ISA 2.06 or later.
+-DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
++DIR="$( cd "$( dirname "$0" )" && pwd )"
+ LD_SHOW_AUXV=1 $DIR/true | grep  arch_2_06 > /dev/null 2>&1
+ 
+ if [ "$?" -ne "0" ]; then
+diff --git a/tests/check_isa-2_07_cap b/tests/check_isa-2_07_cap
+index ee777c1..8b991e5 100755
+--- a/tests/check_isa-2_07_cap
++++ b/tests/check_isa-2_07_cap
+@@ -2,7 +2,7 @@
+ 
+ # We use this script to check whether or not the processor supports
+ # Power ISA 2.07.
+-DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
++DIR="$( cd "$( dirname "$0" )" && pwd )"
+ LD_SHOW_AUXV=1 $DIR/true | grep  arch_2_07 > /dev/null 2>&1
+ 
+ if [ "$?" -ne "0" ]; then
+diff --git a/tests/is_ppc64_BE.c b/tests/is_ppc64_BE.c
+new file mode 100644
+index 0000000..6c12fb3
+--- /dev/null
++++ b/tests/is_ppc64_BE.c
+@@ -0,0 +1,14 @@
++#include <stdio.h>
++#include <stdlib.h>
++#include <string.h>
++
++// This program returns 0 if executing on ppc64 big endian; otherwise returns 1
++
++int main(void)
++{
++#if defined(VGP_ppc64be_linux)
++   return 0;
++#else
++   return 1;
++#endif
++}
+diff --git a/tests/power_insn_available.c b/tests/power_insn_available.c
+index 1bfea2a..1c53918 100644
+--- a/tests/power_insn_available.c
++++ b/tests/power_insn_available.c
+@@ -7,7 +7,7 @@
+ 
+ typedef enum exit_codes_ {
+ 
+-#if defined(VGA_ppc32) || defined(VGA_ppc64)
++#if defined(VGA_ppc32) || defined(VGA_ppc64be) || defined(VGA_ppc64le)
+   /* If the insn that got queried for: exists */
+   POWER_INSN_AVAILABLE    = 0,
+   /* If the insn that got queried for: does not exist on this platform */
+@@ -24,7 +24,7 @@ typedef enum exit_codes_ {
+ 
+ } exit_code;
+ 
+-#if defined(VGA_ppc32) || defined(VGA_ppc64)
++#if defined(VGA_ppc32) || defined(VGA_ppc64be)  || defined(VGA_ppc64le)
+ /* Signal Handling support for unsupported instructions. */
+ static jmp_buf unsup_insn_env;
+ static void unsup_insn_handler(int signal_number)
+@@ -72,7 +72,7 @@ int main(int argc, char **argv)
+ {
+   exit_code status;
+ 
+-#if defined(VGA_ppc32) || defined(VGA_ppc64)
++#if defined(VGA_ppc32) || defined(VGA_ppc64be) || defined(VGA_ppc64le)
+   char *insn;
+   if (argc != 2) {
+     fprintf(stderr, "usage: power_insn_available <insn>\n" );
+-- 
+1.8.4.2
+
