@@ -16,12 +16,14 @@
 
 Name: libreswan
 Summary: IPsec implementation with IKEv1 and IKEv2 keying protocols
-Version: 3.8
-Release: %{?prever:0.}1%{?prever:.%{prever}}%{?dist}
+Summary(zh_CN.UTF-8): 带有 IKEv1 和 IKEv2 协议的 IPsec 实现
+Version: 3.9
+Release: 1%{?dist}
 License: GPLv2
 Url: https://www.libreswan.org/
 Source: https://download.libreswan.org/%{name}-%{version}%{?prever}.tar.gz
 Group: System Environment/Daemons
+Group(zh_CN.UTF-8): 系统环境/服务
 BuildRequires: gmp-devel bison flex pkgconfig
 BuildRequires: systemd
 Requires(post): coreutils bash systemd
@@ -77,6 +79,9 @@ Libreswan. To build KLIPS, see the kmod-libreswan.spec file.
 Libreswan also supports IKEv2 (RFC4309) and Secure Labeling
 
 Libreswan is based on Openswan-2.6.38 which in turn is based on FreeS/WAN-2.04
+
+%description -l zh_CN.UTF-8
+带有 IKEv1 和 IKEv2 协议的 IPsec 实现。
 
 %prep
 %setup -q -n libreswan-%{version}%{?prever}
@@ -158,7 +163,7 @@ echo "include %{_sysconfdir}/ipsec.d/*.secrets" > %{buildroot}%{_sysconfdir}/ips
 rm -fr %{buildroot}%{_sysconfdir}/rc.d/rc*
 
 %files
-%doc BUGS CHANGES COPYING CREDITS README LICENSE
+%doc CHANGES COPYING CREDITS README LICENSE
 %doc docs/*.*
 %attr(0644,root,root) %config(noreplace) %{_sysconfdir}/ipsec.conf
 %attr(0644,root,root) %config(noreplace) %{_sysconfdir}/sysconfig/pluto
@@ -201,6 +206,9 @@ if [ ! -f %{_sysconfdir}/ipsec.d/cert8.db ] ; then
 fi
 
 %changelog
+* Wed Jul 30 2014 Liu Di <liudidi@gmail.com> - 3.9-1
+- 更新到 3.9
+
 * Sat Jan 18 2014 Paul Wouters <pwouters@redhat.com> - 3.8-1
 - Updated to 3.8, fixes rhbz#CVE-2013-6467 (rhbz#1054102)
 

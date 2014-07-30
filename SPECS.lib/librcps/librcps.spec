@@ -1,6 +1,6 @@
 Name: librcps
 Version: 0.3
-Release: 3%{?dist}
+Release: 4%{?dist}
 Summary: Library for resource constrained project scheduling
 Summary(zh_CN.UTF-8): 资源驱动的项目计划库
 License: GPLv2
@@ -60,6 +60,9 @@ rm -rf %{buildroot}
 %{_libdir}/*.so
 
 %changelog
+* Wed Jul 30 2014 Liu Di <liudidi@gmail.com> - 0.3-4
+- 为 Magic 3.0 重建
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 0.3-3
 - 为 Magic 3.0 重建
 

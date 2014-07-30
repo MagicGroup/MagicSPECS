@@ -1,12 +1,15 @@
 Name:           librsvg2
 Summary:        An SVG library based on cairo
-Version:        2.36.4
-Release:        2%{?dist}
+Summary(zh_CN.UTF-8): 基于 cairo 的 SVG 库
+Version:	2.40.2
+Release: 1%{?dist}
 
 License:        LGPLv2+
 Group:          System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 #VCS:           git:git://git.gnome.org/librsvg
-Source:         http://download.gnome.org/sources/librsvg/2.36/librsvg-%{version}.tar.xz
+%define majorver %(echo %{version} | awk -F. '{print $1"."$2}')
+Source:         http://download.gnome.org/sources/librsvg/%{majorver}/librsvg-%{version}.tar.xz
 
 
 Requires(post):   gdk-pixbuf2
@@ -37,10 +40,14 @@ Obsoletes:      librsvg3 <= 2.26.3-3.fc14
 %description
 An SVG library based on cairo.
 
+%description -l zh_CN.UTF-8
+基于 cairo 的 SVG 库。
 
 %package devel
 Summary:        Libraries and include files for developing with librsvg
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       %{name} = %{version}-%{release}
 
 Provides:       librsvg3-devel = %{name}.%{version}-%{release}
@@ -49,6 +56,9 @@ Obsoletes:      librsvg3-devel <= 2.26.3-3.fc14
 %description devel
 This package provides the necessary development libraries and include
 files to allow you to develop with librsvg.
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q -n librsvg-%{version}
@@ -72,6 +82,7 @@ find $RPM_BUILD_ROOT -name '*.la' -exec rm -f {} ';'
 rm -f $RPM_BUILD_ROOT%{_libdir}/mozilla/
 rm -f $RPM_BUILD_ROOT%{_sysconfdir}/gtk-2.0/gdk-pixbuf.loaders
 rm -f $RPM_BUILD_ROOT%{_datadir}/pixmaps/svg-viewer.svg
+magic_rpm_clean.sh
 
 %post
 /sbin/ldconfig
@@ -96,13 +107,16 @@ gdk-pixbuf-query-loaders-%{__isa_bits} --update-cache || :
 %{_includedir}/librsvg-2.0
 %{_libdir}/pkgconfig/librsvg-2.0.pc
 %{_datadir}/gir-1.0/*
-%dir %{_datadir}/vala
-%dir %{_datadir}/vala/vapi
-%{_datadir}/vala/vapi/librsvg-2.0.vapi
+#%dir %{_datadir}/vala
+#%dir %{_datadir}/vala/vapi
+#%{_datadir}/vala/vapi/librsvg-2.0.vapi
 %doc %{_datadir}/gtk-doc/html/rsvg-2.0
 
 
 %changelog
+* Wed Jul 30 2014 Liu Di <liudidi@gmail.com> - 2.40.2-1
+- 更新到 2.40.2
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 2.36.4-2
 - 为 Magic 3.0 重建
 

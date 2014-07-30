@@ -5,25 +5,27 @@
 %define satyr_ver 0.13
 
 Summary: Generic library for reporting various problems
+Summary(zh_CN.UTF-8): 报告多种问题的通用库
 Name: libreport
-Version: 2.2.2
-Release: 7%{?dist}
+Version: 2.2.3
+Release: 1%{?dist}
 License: GPLv2+
 Group: System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 URL: https://fedorahosted.org/abrt/
 Source: https://fedorahosted.org/released/abrt/%{name}-%{version}.tar.gz
 Source1: autogen.sh
 
-Patch01: 0001-Bugzilla-pass-Bugzilla_token-in-all-relevant-XML-RPC.patch
-Patch02: 0002-Bugzilla-session-parameters-for-XML-RPC-calls.patch
-Patch03: 0003-Worklflow-order-workflows-according-to-their-priorit.patch
-Patch04: 0004-define-priorities-for-the-existing-workflows.patch
-Patch05: 0005-less-confusing-label-for-upload-data-in-Anaconda.patch
-Patch06: 0006-Bugzilla-move-the-advanced-options-to-the-advanced-s.patch
-Patch07: 0007-hide-Don-t-store-password-checkbox.patch
-Patch08: 0008-refactoring-unify-event-configuration-dialogs.patch
-Patch09: 0009-GUI-remove-the-intermediate-configuration-dialog.patch
-Patch10: 0010-reporter-upload-more-descriptive-message-about-missi.patch
+Patch1:  0001-ureport-implement-attaching-of-user-comments.patch
+Patch2:  0002-gui-make-preferences-dialogue-modal-for-parents.patch
+Patch3:  0003-gui-select-the-first-in-the-configuration-list.patch
+Patch4:  0004-gui-wrap-lines-for-human-readable-files.patch
+Patch5:  0005-wizard-fix-help-text-for-screencasting.patch
+Patch6:  0006-gui-support-Enter-2Click-in-Preferences-list.patch
+Patch7:  0007-gui-apply-configuration-dialogues-changes-on-Enter-k.patch
+Patch8:  0008-gui-close-ask-dialogues-on-Enter-key.patch
+Patch9:  0001-json-include-json.h-accordingly-to-json-c-CFLAGS.patch
+Patch10: 0001-ureport-include-json.h-accordingly-to-json-c-CFLAGS.patch
 
 # git is need for '%%autosetup -S git' which automatically applies all the
 # patches above. Please, be aware that the patches must be generated
@@ -662,6 +664,9 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 
 
 %changelog
+* Wed Jul 30 2014 Liu Di <liudidi@gmail.com> - 2.2.3-1
+- 更新到 2.2.3
+
 * Tue Jun 24 2014 Liu Di <liudidi@gmail.com> - 2.2.2-7
 - 为 Magic 3.0 重建
 

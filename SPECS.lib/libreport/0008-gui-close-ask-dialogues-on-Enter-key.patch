@@ -1,0 +1,73 @@
+From 74cff8bbb789e388ff74510e1be12e3a6958a923 Mon Sep 17 00:00:00 2001
+From: Jakub Filak <jfilak@redhat.com>
+Date: Fri, 18 Jul 2014 13:44:53 +0200
+Subject: [PATCH 8/8] gui: close ask dialogues on Enter key
+
+Related to rhbz#1067123
+
+Signed-off-by: Jakub Filak <jfilak@redhat.com>
+---
+ src/gtk-helpers/ask_dialogs.c | 7 ++++++-
+ src/gui-wizard-gtk/wizard.c   | 6 ++++++
+ 2 files changed, 12 insertions(+), 1 deletion(-)
+
+diff --git a/src/gtk-helpers/ask_dialogs.c b/src/gtk-helpers/ask_dialogs.c
+index d188dc5..81beea4 100644
+--- a/src/gtk-helpers/ask_dialogs.c
++++ b/src/gtk-helpers/ask_dialogs.c
+@@ -81,8 +81,11 @@ static int run_ask_yes_no_save_generic_result_dialog(ask_yes_no_dialog_flags fla
+     /* let's try to use the text as markup
+      * this allows us to use hyperlinks to man pages  */
+     gtk_message_dialog_set_markup(GTK_MESSAGE_DIALOG(dialog), message);
+-    gtk_dialog_add_button(GTK_DIALOG(dialog), _("_Yes"), GTK_RESPONSE_YES);
++    /* Follow GTK3's yes-no-buttons order:
++     * [No] [Yes]
++     */
+     GtkWidget *no_button = gtk_dialog_add_button(GTK_DIALOG(dialog), _("_No"), GTK_RESPONSE_NO);
++    gtk_dialog_add_button(GTK_DIALOG(dialog), _("_Yes"), GTK_RESPONSE_YES);
+ 
+     gint response = GTK_RESPONSE_NO;
+     g_signal_connect(G_OBJECT(dialog), "response",
+@@ -101,6 +104,8 @@ static int run_ask_yes_no_save_generic_result_dialog(ask_yes_no_dialog_flags fla
+                      G_CALLBACK(on_toggle_ask_yes_no_yesforever_cb), (gpointer)no_button);
+     }
+ 
++    /* Esc -> No, Enter -> Yes */
++    gtk_dialog_set_default_response(GTK_DIALOG(dialog), GTK_RESPONSE_YES);
+     gtk_widget_show(ask_yes_no_cb);
+     gtk_dialog_run(GTK_DIALOG(dialog));
+ 
+diff --git a/src/gui-wizard-gtk/wizard.c b/src/gui-wizard-gtk/wizard.c
+index 16b06db..0fde0f4 100644
+--- a/src/gui-wizard-gtk/wizard.c
++++ b/src/gui-wizard-gtk/wizard.c
+@@ -1584,6 +1584,7 @@ static char *ask_helper(const char *msg, void *args, bool password)
+             GTK_BUTTONS_OK_CANCEL,
+             "%s", msg);
+     char *tagged_msg = tag_url(msg, "\n");
++    gtk_dialog_set_default_response(GTK_DIALOG(dialog), GTK_RESPONSE_OK);
+     gtk_message_dialog_set_markup(GTK_MESSAGE_DIALOG(dialog), tagged_msg);
+     free(tagged_msg);
+ 
+@@ -1636,6 +1637,8 @@ static int run_event_gtk_ask_yes_no(const char *msg, void *args)
+     gtk_message_dialog_set_markup(GTK_MESSAGE_DIALOG(dialog), tagged_msg);
+     free(tagged_msg);
+ 
++    /* Esc -> No, Enter -> Yes */
++    gtk_dialog_set_default_response(GTK_DIALOG(dialog), GTK_RESPONSE_YES);
+     const int ret = gtk_dialog_run(GTK_DIALOG(dialog)) == GTK_RESPONSE_YES;
+ 
+     gtk_widget_destroy(dialog);
+@@ -1892,6 +1895,9 @@ static int ask_replace_old_private_group_name(void)
+     free(message);
+     free(markup_message);
+ 
++    /* Esc -> No, Enter -> Yes */
++    gtk_dialog_set_default_response(GTK_DIALOG(old_private_group), GTK_RESPONSE_YES);
++
+     gint result = gtk_dialog_run(GTK_DIALOG(old_private_group));
+     gtk_widget_destroy(old_private_group);
+ 
+-- 
+1.9.3
+
