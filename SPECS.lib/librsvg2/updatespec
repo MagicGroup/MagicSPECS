@@ -4,6 +4,6 @@ if [ -z "$1" ] ; then
         exit 1
 fi
 pushd $(dirname $0)
-sed -i "s/Version:.*/Version:\t$1/g" libgdata.spec
-sed -i "s/Release:.*/Release: 1%{?dist}/g" libgdata.spec
+sed -i "s/Version:.*/Version:\t$1/g" librsvg2.spec
+sed -i "s/Release:.*/Release: 1%{?dist}/g" librsvg2.spec
 popd

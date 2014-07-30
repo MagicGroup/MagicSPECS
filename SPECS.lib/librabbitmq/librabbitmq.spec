@@ -9,10 +9,12 @@
 
 Name:      librabbitmq
 Summary:   Client library for AMQP
+Summary(zh_CN.UTF-8): AMQP 的客户端库
 Version:   0.5.0
-Release:   3%{?dist}
+Release:   4%{?dist}
 License:   MIT
 Group:     System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 URL:       https://github.com/alanxz/rabbitmq-c
 
 Source0:   https://github.com/alanxz/rabbitmq-c/releases/download/v%{version}/rabbitmq-c-%{version}.tar.gz
@@ -34,20 +36,28 @@ BuildRequires: xmlto
 This is a C-language AMQP client library for use with AMQP servers
 speaking protocol versions 0-9-1.
 
+%description -l zh_CN.UTF-8
+AMQP 的客户端库。
 
 %package devel
 Summary:    Header files and development libraries for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:      Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:   %{name}%{?_isa} = %{version}-%{release}
 
 %description devel
 This package contains the header files and development libraries
 for %{name}.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %package tools
 Summary:    Example tools built using the librabbitmq package
+Summary(zh_CN.UTF-8): %{name} 的样例工具
 Group:      Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:   %{name}%{?_isa} = %{version}
 
 %description tools
@@ -60,6 +70,15 @@ amqp-delete-queue   Delete a queue from an AMQP server
 amqp-get            Get a message from a queue on an AMQP server
 amqp-publish        Publish a message on an AMQP server
 
+
+%description tools -l zh_CN.UTF-8
+%{name} 的样例工具，包括：
+
+amqp-consume        在 AMQP 服务器上的队伍中删除消息
+amqp-declare-queue  在 AMQP 服务器上声明队列
+amqp-delete-queue   从 AMQP 服务器上删除队列
+amqp-get            在 AMQP 服务器上的队列取得消息
+amqp-publish        在 AMQP 服务器上发布消息
 
 %prep
 %setup -q -n rabbitmq-c-%{version}
@@ -89,7 +108,7 @@ make %{_smp_mflags}
 make install  DESTDIR="%{buildroot}"
 
 rm %{buildroot}%{_libdir}/%{name}.la
-
+magic_rpm_clean.sh
 
 %check
 : check .pc is usable
@@ -123,6 +142,9 @@ make check
 
 
 %changelog
+* Wed Jul 30 2014 Liu Di <liudidi@gmail.com> - 0.5.0-4
+- 为 Magic 3.0 重建
+
 * Wed Apr 23 2014 Liu Di <liudidi@gmail.com> - 0.5.0-3
 - 为 Magic 3.0 重建
 

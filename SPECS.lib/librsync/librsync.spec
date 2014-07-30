@@ -1,14 +1,17 @@
 Summary:        Rsync libraries
+Summary(zh_CN.UTF-8): 同步库
 Name:           librsync
 Version:        0.9.7
-Release:        20%{?dist}
+Release:        21%{?dist}
 License:        LGPLv2+
 Group:          System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 URL:            http://librsync.sourceforge.net/
 Source:         http://downloads.sourceforge.net/sourceforge/%{name}/%{name}-%{version}.tar.gz
 Patch0:         librsync-0.9.7-lfs_overflow.patch
 Patch1:         librsync-0.9.7-getopt.patch
 Patch2:         librsync-0.9.7-man_pages.patch
+Patch3:         librsync-0.9.7-format-security.patch
 BuildRequires:  zlib-devel, bzip2-devel, %{_includedir}/popt.h, libtool
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
@@ -24,9 +27,14 @@ The current version of this package does not implement the rsync
 network protocol and uses a delta format slightly more efficient than
 and incompatible with rsync 2.4.6.
 
+%description -l zh_CN.UTF-8
+这个库实现了 "rsync" 算法，允许远程比较二进制文件。
+
 %package devel
 Summary:        Headers and development libraries for librsync
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       %{name}%{?_isa} = %{version}-%{release}
 
 %description devel
@@ -38,11 +46,15 @@ The current version of this package does not implement the rsync
 network protocol and uses a delta format slightly more efficient than
 and incompatible with rsync 2.4.6.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
 %prep
 %setup -q
 %patch0 -p1 -b .lfs_overflow
 %patch1 -p1 -b .getopt
 %patch2 -p1 -b .man_pages
+%patch3 -p1 -b .format-security
 
 %build
 libtoolize
@@ -56,6 +68,7 @@ rm -rf $RPM_BUILD_ROOT
 
 install -D -m 755 .libs/rdiff $RPM_BUILD_ROOT%{_bindir}/rdiff
 rm -f $RPM_BUILD_ROOT%{_libdir}/%{name}.{la,a}
+magic_rpm_clean.sh
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -78,6 +91,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/librsync.3*
 
 %changelog
+* Wed Jul 30 2014 Liu Di <liudidi@gmail.com> - 0.9.7-21
+- 为 Magic 3.0 重建
+
 * Sat Feb 23 2013 Robert Scheck <robert@fedoraproject.org> 0.9.7-20
 - Made autoreconf copying the missing auxiliary files (#914147)
 

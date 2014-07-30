@@ -1,10 +1,12 @@
 Summary:        Library providing low-level IEEE-1394 access
+Summary(zh_CN.UTF-8): 低级的 IEEE-1394 访问库
 Name:           libraw1394
-Version:        2.0.7
-Release:        3%{?dist}
+Version: 2.1.0
+Release: 1%{?dist}
 License:        LGPLv2+
 Group:          System Environment/Libraries
-Source:         http://www.kernel.org/pub/linux/libs/ieee1394/%{name}-%{version}.tar.bz2
+Group(zh_CN.UTF-8): 系统环境/库
+Source:         http://www.kernel.org/pub/linux/libs/ieee1394/%{name}-%{version}.tar.xz
 URL:            http://www.dennedy.org/libraw1394/
 ExcludeArch:    s390 s390x
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -17,13 +19,21 @@ the classic ieee1394 and new firewire linux driver stacks is included, with
 run-time detection of the active stack. Fedora comes with the firewire stack
 by default.
 
+%description -l zh_CN.UTF-8
+低级的 IEEE-1394 设备访问库。
+
 %package devel
 Summary:       Development libs for libraw1394
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:         Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:      %{name} = %{version}-%{release}, pkgconfig
 
 %description devel
 Development libraries needed to build applications against libraw1394.
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -36,6 +46,7 @@ make %{?_smp_mflags}
 rm -rf $RPM_BUILD_ROOT
 make install DESTDIR=$RPM_BUILD_ROOT
 rm -f $RPM_BUILD_ROOT%{_libdir}/libraw1394.la
+magic_rpm_clean.sh
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -65,6 +76,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Wed Jul 30 2014 Liu Di <liudidi@gmail.com> - 2.1.0-1
+- 更新到 2.1.0
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 2.0.7-3
 - 为 Magic 3.0 重建
 

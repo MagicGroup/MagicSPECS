@@ -1,0 +1,15 @@
+Patch by Robert Scheck <robert@fedoraproject.org> for librsync >= 0.9.7, which fixes the
+build failures if compiled with "-Werror=format-security". For further information please
+also have a look to https://bugzilla.redhat.com/show_bug.cgi?id=1037171
+
+--- librsync-0.9.7/buf.c				2004-02-08 00:17:57.000000000 +0100
++++ librsync-0.9.7/buf.c.format-security		2013-12-08 01:52:22.000000000 +0100
+@@ -213,7 +213,7 @@
+ 
+     got = fread(*buf, 1, *len, f);
+     if (got == -1) {
+-        rs_error(strerror(errno));
++        rs_error("%s", strerror(errno));
+         return RS_IO_ERROR;
+     } else if (got == 0) {
+         rs_error("unexpected eof on fd%d", fileno(f));
