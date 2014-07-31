@@ -6,7 +6,7 @@
 %global python 0
 
 Name:          libimobiledevice
-Version:       1.1.5
+Version: 1.1.6
 Release:       1%{?dist}
 Summary:       Library for connecting to mobile devices
 Summary(zh_CN.UTF-8): 连接移动设备的库
@@ -16,7 +16,6 @@ Group(zh_CN.UTF-8): 系统环境/库
 License:       LGPLv2+
 URL:           http://www.libimobiledevice.org/
 Source0:       http://www.libimobiledevice.org/downloads/%{name}-%{version}.tar.bz2
-Patch0:        libimobiledevice-1.1.5-fix-cythpn-lockdown.pxi.patch
 
 BuildRequires: glib2-devel
 BuildRequires: gnutls-devel
@@ -30,6 +29,7 @@ BuildRequires: usbmuxd-devel
 BuildRequires: python-devel
 BuildRequires: Cython
 BuildRequires: swig
+BuildRequires: libusbmuxd >= 1.0.9
 
 %description
 libimobiledevice is a library for connecting to mobile devices including phones 
@@ -63,7 +63,6 @@ Python bindings for libimobiledevice.
 
 %prep
 %setup -q
-%patch0 -p1
 
 # Fix dir permissions on html docs
 chmod +x docs/html
@@ -104,6 +103,9 @@ find %{buildroot} -name '*.la' -exec rm -f {} ';'
 %endif
 
 %changelog
+* Fri Jul 18 2014 Liu Di <liudidi@gmail.com> - 1.1.6-1
+- 更新到 1.1.6
+
 * Wed Apr 30 2014 Liu Di <liudidi@gmail.com> - 1.1.5-6
 - 为 Magic 3.0 重建
 

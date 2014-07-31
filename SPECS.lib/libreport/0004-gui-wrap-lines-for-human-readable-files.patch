@@ -1,0 +1,35 @@
+From 36ef849dce4cb702852822017807ad8faf8ae622 Mon Sep 17 00:00:00 2001
+From: Jakub Filak <jfilak@redhat.com>
+Date: Fri, 18 Jul 2014 09:04:47 +0200
+Subject: [PATCH 4/8] gui: wrap lines for human readable files
+
+Wrap lines for comment and reason files.
+
+Do not wrap lines for maps, backtrace, environ and ... becuase
+these files are something like lists consiting from lines.
+
+Resolves rhbz#1120871
+
+Signed-off-by: Jakub Filak <jfilak@redhat.com>
+---
+ src/gui-wizard-gtk/wizard.c | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/src/gui-wizard-gtk/wizard.c b/src/gui-wizard-gtk/wizard.c
+index ae3e2df..68af9bd 100644
+--- a/src/gui-wizard-gtk/wizard.c
++++ b/src/gui-wizard-gtk/wizard.c
+@@ -1129,6 +1129,10 @@ static void append_item_to_ls_details(gpointer name, gpointer value, gpointer da
+         {
+             GtkWidget *tab_lbl = gtk_label_new((char *)name);
+             GtkWidget *tev = gtk_text_view_new();
++
++            if (strcmp(name, FILENAME_COMMENT) == 0 || strcmp(name, FILENAME_REASON) == 0)
++                gtk_text_view_set_wrap_mode(GTK_TEXT_VIEW(tev), GTK_WRAP_WORD);
++
+             gtk_widget_override_font(GTK_WIDGET(tev), g_monospace_font);
+             load_text_to_text_view(GTK_TEXT_VIEW(tev), (char *)name);
+             /* init searching */
+-- 
+1.9.3
+

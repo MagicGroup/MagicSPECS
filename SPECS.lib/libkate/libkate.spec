@@ -1,7 +1,7 @@
 %{!?python_sitelib: %global python_sitelib %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib()")}
 
 Name:           libkate
-Version:        0.3.8
+Version: 0.4.1
 Release:        1%{?dist}
 Summary:        Libraries to handle the Kate bitstream format
 Summary(zh_CN.UTF-8): 处理 Kate 位流格式的库
@@ -155,6 +155,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Fri Jul 18 2014 Liu Di <liudidi@gmail.com> - 0.4.1-1
+- 更新到 0.4.1
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 0.3.8-5
 - 为 Magic 3.0 重建
 

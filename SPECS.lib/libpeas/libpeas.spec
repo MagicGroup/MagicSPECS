@@ -8,10 +8,12 @@
 
 Name:		libpeas
 Version:	1.10.0
-Release:	3%{?dist}
+Release:	4%{?dist}
 Summary:	Plug-ins implementation convenience library
+Summary(zh_CN.UTF-8): 实现插件的简易库
 
 Group:		System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 License:	LGPLv2+
 URL:		http://ftp.acc.umu.se/pub/GNOME/sources/libpeas/
 Source0:	http://ftp.acc.umu.se/pub/GNOME/sources/%{name}/1.10/%{name}-%{version}.tar.xz
@@ -38,14 +40,22 @@ BuildRequires:	autoconf automake gnome-common
 libpeas is a convenience library making adding plug-ins support
 to GTK+ and glib-based applications.
 
+%description -l zh_CN.UTF-8
+这是一个给 GTK+ 和基于 glib 的程序添加插件支持的简易库。
+
 %package devel
 Summary:	Development files for libpeas
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:		Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:	%{name} = %{version}-%{release}
 
 %description devel
 This package contains development libraries and header files
 that are needed to write applications that use libpeas.
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -64,7 +74,7 @@ rm $RPM_BUILD_ROOT/%{_libdir}/lib*.la	\
 # Remove rpath as per https://fedoraproject.org/wiki/Packaging/Guidelines#Beware_of_Rpath
 chrpath --delete $RPM_BUILD_ROOT%{_bindir}/peas-demo
 chrpath --delete $RPM_BUILD_ROOT%{_libdir}/libpeas-gtk-1.0.so
-
+magic_rpm_clean.sh
 %find_lang libpeas
 
 %post
@@ -107,6 +117,9 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor >&/dev/null || :
 %{_datadir}/glade/catalogs/libpeas-gtk.xml
 
 %changelog
+* Mon Jul 28 2014 Liu Di <liudidi@gmail.com> - 1.10.0-4
+- 为 Magic 3.0 重建
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.10.0-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

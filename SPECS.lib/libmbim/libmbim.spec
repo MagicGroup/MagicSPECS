@@ -1,5 +1,5 @@
 
-%global realversion 1.6.0
+%global realversion 1.8.0
 %global _hardened_build 1
 
 Name: libmbim
@@ -94,6 +94,9 @@ make check
 
 
 %changelog
+* Fri Jul 18 2014 Liu Di <liudidi@gmail.com> - 1.8.0-1
+- 更新到 1.8.0
+
 * Sat Feb  1 2014 poma <poma@gmail.com> - 1.6.0-1
 - Update to 1.6.0 release
 

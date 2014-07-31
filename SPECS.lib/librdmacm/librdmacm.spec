@@ -1,19 +1,13 @@
 Name: librdmacm
-Version: 1.0.15
-Release: 3%{?dist}
+Version: 1.0.19
+Release: 1%{?dist}
 Summary: Userspace RDMA Connection Manager
+Summary(zh_CN.UTF-8): 用户空间的 RDMA 连接管理器
 Group: System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 License: GPLv2 or BSD
 Url: http://www.openfabrics.org/
-Source: http://www.openfabrics.org/downloads/rdmacm/%{name}-%{version}.tar.gz
-Patch1: 0001-rdma-verbs-Fix-race-polling-for-completions.patch
-Patch2: 0002-librdmacm-Fix-duplicate-free-of-connect.patch
-Patch3: 0003-librdmacm-Verify-size-of-route_len.patch
-Patch4: 0004-librdmacm-udaddy-Fix-resource-leak-in-case-of-error.patch
-Patch6: 0006-rdma-cma-minor-code-refactoring-when-saving-a-string.patch
-Patch7: 0007-librdmacm-Return-ECONNREFUSED-from-rdma_connect-on-r.patch
-Patch8: 0008-udaddy-ucmatose-allow-easy-setting-of-tos-in-hex.patch
-Patch9: 0009-librdmacm-Update-web-site-and-email-addresses.patch
+Source: https://www.openfabrics.org/downloads/rdmacm/%{name}-%{version}.tar.gz
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 ExcludeArch: s390 s390x
 BuildRequires: libibverbs-devel > 1.1.4, chrpath
@@ -21,39 +15,49 @@ BuildRequires: libibverbs-devel > 1.1.4, chrpath
 %description
 librdmacm provides a userspace RDMA Communication Managment API.
 
+%description -l zh_CN.UTF-8
+用户空间的 RDMA 连接管理器。
+
 %package devel
 Summary: Development files for the librdmacm library
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: System Environment/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: %{name} = %{version}-%{release} libibverbs-devel%{?_isa}
 
 %description devel
 Development files for the librdmacm library.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
 %package static
 Summary: Static development files for the librdmacm library
+Summary(zh_CN.UTF-8): %{name} 的静态库
 Group: System Environment/Libraries
+Group(zh_CN.UTF-8): 开发/库
 
 %description static
 Static libraries for the librdmacm library.
 
+%description static -l zh_CN.UTF-8
+%{name} 的静态库。
+
 %package utils
 Summary: Examples for the librdmacm library
+Summary(zh_CN.UTF-8): %{name} 的样例
 Group: System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 Requires: %{name} = %{version}-%{release}
 
 %description utils
 Example test programs for the librdmacm library.
 
+%description utils -l zh_CN.UTF-8
+%{name} 的样例测试程序。
+
 %prep
 %setup -q
-%patch1 -p1
-%patch2 -p1
-%patch3 -p1
-%patch4 -p1
-%patch6 -p1
-%patch7 -p1
-%patch8 -p1
-%patch9 -p1
 
 %build
 %configure LDFLAGS=-lpthread
@@ -65,7 +69,7 @@ make %{?_smp_mflags}
 rm -rf %{buildroot}
 %makeinstall
 # remove unpackaged files from the buildroot
-rm -f %{buildroot}%{_libdir}/*.la
+find %{buildroot} -name '*.la' -exec rm -f {} ';'
 # kill rpaths
 chrpath -d %{buildroot}%{_bindir}/*
 magic_rpm_clean.sh
@@ -79,11 +83,13 @@ rm -rf %{buildroot}
 %files
 %defattr(-,root,root,-)
 %{_libdir}/librdmacm*.so.*
+%{_libdir}/rsocket/*.so.*
 %doc AUTHORS COPYING README
 
 %files devel
 %defattr(-,root,root)
 %{_libdir}/lib*.so
+%{_libdir}/rsocket/*.so
 %{_includedir}/*
 %{_mandir}/man3/*
 %{_mandir}/man7/*
@@ -91,6 +97,7 @@ rm -rf %{buildroot}
 %files static
 %defattr(-,root,root,-)
 %{_libdir}/*.a
+%{_libdir}/rsocket/*.a
 
 %files utils
 %defattr(-,root,root,-)
@@ -98,6 +105,9 @@ rm -rf %{buildroot}
 %{_mandir}/man1/*
 
 %changelog
+* Wed Jul 30 2014 Liu Di <liudidi@gmail.com> - 1.0.19-1
+- 更新到 1.0.19
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 1.0.15-3
 - 为 Magic 3.0 重建
 

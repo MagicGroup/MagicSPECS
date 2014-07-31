@@ -1,9 +1,11 @@
 Name:           libmnl
 Version:        1.0.3
-Release:        7%{?dist}
+Release:        8%{?dist}
 Summary:        A minimalistic Netlink library
+Summary(zh_CN.UTF-8): 一个简约的 Netlink 库
 
 Group:          System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 License:        LGPLv2+
 URL:            http://netfilter.org/projects/libmnl
 Source0:        http://netfilter.org/projects/libmnl/files/%{name}-%{version}.tar.bz2
@@ -15,24 +17,35 @@ the Netlink header and TLVs that are repetitive and easy to get wrong.
 This library aims to provide simple helpers that allows you to re-use code and
 to avoid re-inventing the wheel.
 
+%description -l zh_CN.UTF-8
+一个简约的 Netlink 库。
 
 %package        devel
 Summary:        Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       %{name}%{_isa} = %{version}-%{release}
 
 %package 	static
 Summary: 	Static development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的静态库
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: %{name} = %{version}-%{release}
 
 %description    devel
 The %{name}-devel package contains libraries and header files for
 developing applications that use %{name}.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
 %description 	static
 The %{name}-static package contains static libraries for devleoping applications that use %{name}.
 
+%description static -l zh_CN.UTF-8
+%{name} 的静态库。
 
 %prep
 %setup -q
@@ -49,7 +62,7 @@ find $RPM_BUILD_ROOT -name '*.la' -exec rm -f {} ';'
 find examples '(' -name 'Makefile.am' -o -name 'Makefile.in' ')' -exec rm -f {} ';'
 find examples -type d -name '.deps' -prune -exec rm -rf {} ';'
 mv examples examples-%{_arch}
-
+magic_rpm_clean.sh
 
 %post -p /sbin/ldconfig
 
@@ -71,6 +84,9 @@ mv examples examples-%{_arch}
 %{_libdir}/*.a
 
 %changelog
+* Tue Jul 22 2014 Liu Di <liudidi@gmail.com> - 1.0.3-8
+- 为 Magic 3.0 重建
+
 * Fri Apr 18 2014 Liu Di <liudidi@gmail.com> - 1.0.3-7
 - 为 Magic 3.0 重建
 

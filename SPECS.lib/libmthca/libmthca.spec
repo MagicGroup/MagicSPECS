@@ -1,9 +1,11 @@
 Name: libmthca
 Version: 1.0.6
-Release: 6%{?dist}
+Release: 7%{?dist}
 Summary: Mellanox InfiniBand HCA Userspace Driver
+Summary(zh_CN.UTF-8): Mellanox InfiniBand HCA 用户空间驱动
 Provides: libibverbs-driver.%{_arch}
 Group: System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 License: GPLv2 or BSD
 Url: http://openfabrics.org/
 Source: http://openfabrics.org/downloads/mthca/%{name}-%{version}.tar.gz
@@ -20,9 +22,14 @@ libmthca provides a device-specific userspace driver for Mellanox HCAs
 (MT23108 InfiniHost and MT25208 InfiniHost III Ex) for use with the
 libibverbs library.
 
+%description -l zh_CN.UTF-8
+Mellanox InfiniBand HCA 用户空间驱动。
+
 %package static
 Summary: Development files for the libmthca driver
+Summary(zh_CN.UTF-8): %{name} 的静态库
 Group: System Environment/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Provides: %{name}-devel-static = %{version}-%{release}
 Obsoletes: %{name}-devel-static < 1.0.5-4
 Requires: %{name} = %{version}-%{release}
@@ -30,6 +37,9 @@ Requires: %{name} = %{version}-%{release}
 %description static
 Static version of libmthca that may be linked directly to an
 application, which may be useful for debugging.
+
+%description static -l zh_CN.UTF-8
+%{name} 的静态库。
 
 %prep
 %setup -q
@@ -64,6 +74,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/libmthca.a
 
 %changelog
+* Tue Jul 22 2014 Liu Di <liudidi@gmail.com> - 1.0.6-7
+- 为 Magic 3.0 重建
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 1.0.6-6
 - 为 Magic 3.0 重建
 

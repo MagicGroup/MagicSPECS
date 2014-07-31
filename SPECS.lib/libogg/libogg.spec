@@ -1,22 +1,28 @@
 Summary:        The Ogg bitstream file format library
+Summary(zh_CN.UTF-8): Ogg 文件格式库
 Name:           libogg
-Version:        1.2.2
-Release:        5%{?dist}
+Version: 1.3.2
+Release:        1%{?dist}
 Epoch:          2
 Group:          System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 License:        BSD
 URL:            http://www.xiph.org/
-Source:         http://downloads.xiph.org/releases/ogg/%{name}-%{version}.tar.gz
+Source:         http://downloads.xiph.org/releases/ogg/%{name}-%{version}.tar.xz
 
 %description
 Libogg is a library for manipulating Ogg bitstream file formats.
 Libogg supports both making Ogg bitstreams and getting packets from
 Ogg bitstreams.
 
+%description -l zh_CN.UTF-8
+Ogg 文件格式库。
 
 %package devel
 Summary:        Files needed for development using libogg
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       libogg = %{epoch}:%{version}-%{release}
 Requires:       pkgconfig
 Requires:       automake
@@ -26,15 +32,21 @@ Libogg is a library used for manipulating Ogg bitstreams. The
 libogg-devel package contains the header files and documentation
 needed for development using libogg.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %package devel-docs
 Summary:	Documentation for developing Ogg applications
+Summary(zh_CN.UTF-8): %{name} 的开发文档
 Group:		Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 BuildArch:	noarch
 
 %description devel-docs
 Documentation for developing applications with libogg
 
+%description devel-docs -l zh_CN.UTF-8
+%{name} 的开发文档。
 
 %prep
 %setup -q
@@ -54,11 +66,11 @@ make DESTDIR=$RPM_BUILD_ROOT install
 rm -f $RPM_BUILD_ROOT%{_libdir}/*.la
 
 rm -rf __installed_docs
-mv $RPM_BUILD_ROOT%{_docdir}/%{name}-%{version} __installed_docs
+mv $RPM_BUILD_ROOT%{_docdir}/%{name} __installed_docs
 
 # rename directory to match index.html
-mv __installed_docs/ogg __installed_docs/libogg
-
+# mv __installed_docs/ogg __installed_docs/libogg
+magic_rpm_clean.sh
 
 %clean 
 rm -rf $RPM_BUILD_ROOT
@@ -88,6 +100,9 @@ rm -rf $RPM_BUILD_ROOT
 %doc __installed_docs/*
 
 %changelog
+* Wed Jul 23 2014 Liu Di <liudidi@gmail.com> - 2:1.3.2-1
+- 更新到 1.3.2
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 2:1.2.2-5
 - 为 Magic 3.0 重建
 

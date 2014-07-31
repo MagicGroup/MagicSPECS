@@ -2,7 +2,7 @@ Summary: Library for reading and writing ID3v1 and ID3v2 tags
 Summary(zh_CN.UTF-8): 读取和写入 ID3v1 和 ID3v2 标签的库
 Name: libid3tag
 Version: 0.15.1b
-Release: 7%{?dist}
+Release: 8%{?dist}
 License: GPL
 Group: System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
@@ -94,6 +94,9 @@ EOF
 
 
 %changelog
+* Fri Jul 18 2014 Liu Di <liudidi@gmail.com> - 0.15.1b-8
+- 为 Magic 3.0 重建
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 0.15.1b-7
 - 为 Magic 3.0 重建
 

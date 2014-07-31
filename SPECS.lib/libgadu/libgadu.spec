@@ -6,7 +6,8 @@ Release:	3%{?dist}
 Summary:	A Gadu-gadu protocol compatible communications library
 Summary(zh_CN.UTF-8): Gadu-gadu 协议兼容通信库
 License:	LGPLv2
-Source0:	https://github.com/wojtekka/libgadu/releases/download/%{version}%{?rcver}/libgadu-%{version}%{?rcver}.tar.gz
+#Source0:	https://github.com/wojtekka/libgadu/releases/download/%{version}%{?rcver}/libgadu-%{version}%{?rcver}.tar.gz
+Source0:	https://github.com/wojtekka/%{name}/archive/%{version}.tar.gz
 URL:		http://libgadu.net/
 BuildRequires:	doxygen
 BuildRequires:	gnutls-devel
@@ -57,6 +58,7 @@ libgadu library.
 %setup -q -n %{name}-%{version}%{?rcver}
 
 %build
+if ! [ -f configure ];then ./autogen.sh ;fi
 %configure \
 	--disable-silent-rules \
 	--disable-static \

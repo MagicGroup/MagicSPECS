@@ -67,12 +67,7 @@ GTK 和 QT 的前端由 qalculate-gtk 和 qalculate-kde 软件包提供。
 %patch2 -p1
 
 %build
-intltoolize --copy --force --automake
-libtoolize --force --copy
-aclocal
-autoheader
-automake
-autoconf
+autoreconf -fisv
 %configure --disable-static
 sed -i 's|^hardcode_libdir_flag_spec=.*|hardcode_libdir_flag_spec=""|g' libtool
 sed -i 's|^runpath_var=LD_RUN_PATH|runpath_var=DIE_RPATH_DIE|g' libtool
@@ -104,6 +99,7 @@ rm -rf %{buildroot}
 %{_libdir}/libqalculate.so
 %{_libdir}/pkgconfig/libqalculate.pc
 %{_includedir}/libqalculate/
+%{_docdir}/libqalculate-%{version}/reference/html/*
 
 %files -n qalculate
 %defattr(-,root,root,-)

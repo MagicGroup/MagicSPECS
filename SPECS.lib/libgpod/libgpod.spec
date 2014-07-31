@@ -16,7 +16,7 @@ Summary: Library to access the contents of an iPod
 Summary(zh_CN.UTF-8): 访问 iPod 内容的库
 Name: libgpod
 Version: 0.8.3
-Release: 2%{?dist}
+Release: 3%{?dist}
 License: LGPLv2+
 Group: System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
@@ -236,6 +236,9 @@ echo "D /var/run/%{name} 0755 root root -" > \
 %endif
 
 %changelog
+* Mon Jul 21 2014 Liu Di <liudidi@gmail.com> - 0.8.3-3
+- 为 Magic 3.0 重建
+
 * Wed Jul 16 2014 Liu Di <liudidi@gmail.com> - 0.8.3-2
 - 为 Magic 3.0 重建
 

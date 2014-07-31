@@ -1,10 +1,12 @@
 Summary: Library for manipulating panoramic images
+Summary(zh_CN.UTF-8): 处理全景图像的库
 Name: libpano13
-Version: 2.9.18
-Release: 3%{?dist}
+Version: 2.9.19
+Release: 1%{?dist}
 License: GPLv2+
 URL: http://panotools.sourceforge.net/
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Source: http://downloads.sourceforge.net/panotools/%{name}-%{version}.tar.gz
 BuildRequires: libjpeg-devel, libtiff-devel, libpng-devel, zlib-devel
 BuildRequires: libgcj-devel
@@ -17,9 +19,14 @@ manipulation, correction and stitching of panoramic photographs.
 Due to patent restrictions, this library has a maximum fisheye field-of-view
 restriction of 179 degrees to prevent stitching of hemispherical photographs.
 
+%description -l zh_CN.UTF-8
+处理全景图像的库。
+
 %package tools
 Summary: Tools that use the libpano13 library
+Summary(zh_CN.UTF-8): 使用 %{name} 库的工具
 Group: Applications/Multimedia
+Group(zh_CN.UTF-8): 应用程序/多媒体
 Provides: libpano12-tools = 2.8.6-4
 Obsoletes: libpano12-tools < 2.8.6-4
 Requires: %{name} = %{version}-%{release}
@@ -38,9 +45,15 @@ PTmasker
 PTmender, remaps photos between projections
 PTroller, merges multiple TIFF with alpha masks to a single TIFF
 
+
+%description tools -l zh_CN.UTF-8
+使用 %{name} 库的工具。
+
 %package devel
 Summary: Development tools for programs which will use the libpano13 library
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: %{name} = %{version}-%{release}
 Requires: libjpeg-devel, libtiff-devel, libpng-devel, zlib-devel
 Requires: libgcj-devel
@@ -48,6 +61,9 @@ Requires: libgcj-devel
 %description devel
 The libpano13-devel package includes the header files necessary for developing
 programs which will manipulate panoramas using the libpano13 library.
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -59,6 +75,7 @@ make %{?_smp_mflags}
 %install
 make install DESTDIR=%{buildroot}
 rm %{buildroot}/%{_libdir}/libpano13.la
+magic_rpm_clean.sh
 
 %post -p /sbin/ldconfig
 %postun -p /sbin/ldconfig
@@ -69,7 +86,7 @@ rm -rf %{buildroot}
 %files
 %defattr(-, root, root,-)
 %doc AUTHORS ChangeLog COPYING NEWS README README.linux
-%{_libdir}/libpano13.so.2*
+%{_libdir}/libpano13.so.*
 
 %files tools
 %defattr(-, root, root,-)
@@ -96,6 +113,9 @@ rm -rf %{buildroot}
 %{_libdir}/pkgconfig/libpano13.pc
 
 %changelog
+* Fri Jul 25 2014 Liu Di <liudidi@gmail.com> - 2.9.19-1
+- 更新到 2.9.19
+
 * Thu Apr 17 2014 Liu Di <liudidi@gmail.com> - 2.9.18-3
 - 为 Magic 3.0 重建
 

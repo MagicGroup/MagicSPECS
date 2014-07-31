@@ -6,7 +6,7 @@ Summary(zh_CN.UTF-8): libmpeg2 - 处理MPEG2视频格式
 Name: libmpeg2
 Epoch: 1
 Version: 0.5.1
-Release: 6%{?dist}
+Release: 7%{?dist}
 License: GPL
 Group: System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库 
@@ -21,12 +21,17 @@ libmpeg2是一个自由的库，可以解码mpeg-2和mpeg-1视频流。
 
 %package        devel
 Summary:        Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       %{name} = %{epoch}:%{version}-%{release}
 
 %description    devel
 This package contains libraries and header files for developing applications
 that use %{name}
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q -n %{pkgname}-%{version}
@@ -38,7 +43,7 @@ make
 %install
 make DESTDIR=$RPM_BUILD_ROOT install
 rm -rf $RPM_BUILD_ROOT%{_libdir}/*.la
-
+magic_rpm_clean.sh
 	   
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -57,6 +62,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man1/*1*
 
 %changelog
+* Tue Jul 22 2014 Liu Di <liudidi@gmail.com> - 1:0.5.1-7
+- 为 Magic 3.0 重建
+
 * Mon Jan 07 2013 Liu Di <liudidi@gmail.com> - 1:0.5.1-6
 - 为 Magic 3.0 重建
 

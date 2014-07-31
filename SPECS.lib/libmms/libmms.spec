@@ -1,9 +1,11 @@
 Name:          libmms
-Version:       0.6.2
-Release:       6%{?dist}
+Version: 0.6.4
+Release:       1%{?dist}
 Summary:       Library for Microsoft Media Server (MMS) streaming protocol
+Summary(zh_CN.UTF-8): 微软流媒体服务协议 (MMS) 的库
 License:       LGPLv2+
 Group:         System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 URL:           http://libmms.sourceforge.net/
 Source0:       http://downloads.sourceforge.net/%{name}/%{name}-%{version}.tar.gz
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -16,15 +18,21 @@ the net, especially on news sites and other content-serving sites. Libmms
 allows you to download content from such sites, making it easy to add MMS
 support to your media applications.
 
+%description -l zh_CN.UTF-8
+微软媒体服务流协议 (MMS) 的库。
 
 %package devel
 Summary:       Development package for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:         Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:      %{name} = %{version}-%{release}, pkgconfig
 
 %description devel
 This package contains development files for %{name}.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -38,7 +46,7 @@ make %{?_smp_mflags}
 %install
 make install DESTDIR=$RPM_BUILD_ROOT
 rm $RPM_BUILD_ROOT%{_libdir}/%{name}.la
-
+magic_rpm_clean.sh
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -61,6 +69,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Tue Jul 22 2014 Liu Di <liudidi@gmail.com> - 0.6.4-1
+- 更新到 0.6.4
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 0.6.2-6
 - 为 Magic 3.0 重建
 

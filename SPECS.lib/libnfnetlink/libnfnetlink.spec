@@ -1,8 +1,10 @@
 Name:           libnfnetlink
 Version:        1.0.1
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        Netfilter netlink userspace library
+Summary(zh_CN.UTF-8): Netfilter netlink 用户空间库
 Group:          System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 License:        GPLv2+
 URL:            http://netfilter.org
 Source0:        http://netfilter.org/projects/libnfnetlink/files/%{name}-%{version}.tar.bz2
@@ -16,9 +18,14 @@ nfnetlink handling functions.  It is used as a foundation for other, netfilter
 subsystem specific libraries such as libnfnetlink_conntrack, libnfnetlink_log
 and libnfnetlink_queue.
 
+%description -l zh_CN.UTF-8
+Netfilter netlink 用户空间库。
+
 %package        devel
 Summary:        Netfilter netlink userspace library
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       %{name} = %{version}-%{release}
 Requires:	kernel-headers
 
@@ -27,6 +34,9 @@ libnfnetlink is a userspace library that provides some low-level
 nfnetlink handling functions.  It is used as a foundation for other, netfilter
 subsystem specific libraries such as libnfnetlink_conntrack, libnfnetlink_log
 and libnfnetlink_queue.
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -39,6 +49,7 @@ make %{?_smp_mflags}
 rm -rf $RPM_BUILD_ROOT
 make install DESTDIR=$RPM_BUILD_ROOT
 find $RPM_BUILD_ROOT -type f -name "*.la" -exec rm -f {} ';'
+magic_rpm_clean.sh
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -60,6 +71,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_includedir}/libnfnetlink/*.h
 
 %changelog
+* Tue Jul 22 2014 Liu Di <liudidi@gmail.com> - 1.0.1-5
+- 为 Magic 3.0 重建
+
 * Fri Apr 18 2014 Liu Di <liudidi@gmail.com> - 1.0.1-4
 - 为 Magic 3.0 重建
 

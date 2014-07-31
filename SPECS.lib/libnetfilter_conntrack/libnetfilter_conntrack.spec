@@ -1,8 +1,10 @@
 Name:           libnetfilter_conntrack
 Version:        1.0.4
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        Netfilter conntrack userspace library
+Summary(zh_CN.UTF-8): Netfilter conntrack 用户空间库
 Group:          System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 License:        GPLv2+
 URL:            http://netfilter.org
 Source0:        http://netfilter.org/projects/%{name}/files/%{name}-%{version}.tar.bz2
@@ -14,15 +16,23 @@ BuildRequires:  libnfnetlink-devel >= 1.0.1, pkgconfig, kernel-headers, libmnl-d
 libnetfilter_conntrack is a userspace library providing a programming 
 interface (API) to the in-kernel connection tracking state table.
 
+%description -l zh_CN.UTF-8
+Netfilter conntrack 用户空间库。
+
 %package        devel
 Summary:        Netfilter conntrack userspace library
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       %{name} = %{version}-%{release}, libnfnetlink-devel >= 1.0.1
 Requires:	kernel-headers
 
 %description    devel
 libnetfilter_conntrack is a userspace library providing a programming
 interface (API) to the in-kernel connection tracking state table.
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -40,6 +50,7 @@ make %{?_smp_mflags}
 rm -rf $RPM_BUILD_ROOT
 make install DESTDIR=$RPM_BUILD_ROOT
 find $RPM_BUILD_ROOT -type f -name "*.la" -exec rm -f {} ';'
+magic_rpm_clean.sh
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -60,6 +71,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_includedir}/libnetfilter_conntrack/*.h
 
 %changelog
+* Tue Jul 22 2014 Liu Di <liudidi@gmail.com> - 1.0.4-4
+- 为 Magic 3.0 重建
+
 * Fri Apr 18 2014 Liu Di <liudidi@gmail.com> - 1.0.4-3
 - 为 Magic 3.0 重建
 

@@ -2,7 +2,7 @@ Summary: Library for accessing MusicBrainz servers
 Summary(zh_CN.UTF-8): 访问MusicBrainz服务器的库
 Name: libmusicbrainz
 Version: 2.1.5
-Release: 4%{?dist}
+Release: 5%{?dist}
 License: LGPL
 Group: System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
@@ -73,6 +73,9 @@ magic_rpm_clean.sh
 %{_libdir}/*.so
 
 %changelog
+* Tue Jul 22 2014 Liu Di <liudidi@gmail.com> - 2.1.5-5
+- 为 Magic 3.0 重建
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 2.1.5-4
 - 为 Magic 3.0 重建
 

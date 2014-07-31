@@ -1,7 +1,7 @@
 Summary: X.509 library
 Summary(zh_CN.UTF-8): X.509 库
 Name:    libksba
-Version: 1.2.0
+Version: 1.3.0
 Release: 3%{?dist}
 
 License: GPLv3
@@ -97,6 +97,9 @@ fi
 
 
 %changelog
+* Fri Jul 18 2014 Liu Di <liudidi@gmail.com> - 1.3.0-3
+- 更新到 1.3.0
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 1.2.0-3
 - 为 Magic 3.0 重建
 

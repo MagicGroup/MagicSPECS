@@ -3,7 +3,7 @@ Summary:	Liblazy - D-Bus methods provided for convenience
 Summary(zh_CN.UTF-8): Liblazy - 方便提供的 D-Bus 模式
 Name:		liblazy
 Version:	0.2
-Release:	5%{?dist}
+Release:	6%{?dist}
 License:	LGPL v2.1+
 Group:        System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
@@ -71,6 +71,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/liblazy.a
 
 %changelog
+* Fri Jul 18 2014 Liu Di <liudidi@gmail.com> - 0.2-6
+- 为 Magic 3.0 重建
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 0.2-5
 - 为 Magic 3.0 重建
 

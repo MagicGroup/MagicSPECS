@@ -1,9 +1,10 @@
 %define _root_libdir    %{_libdir}
 
 Summary: NFSv4 User and Group ID Mapping Library
+Summary(zh_CN.UTF-8): NFSv4 用户和组 ID 映射库
 Name: libnfsidmap
 Version: 0.25
-Release: 2%{?dist}
+Release: 3%{?dist}
 Provides: nfs-utils-lib
 Obsoletes: nfs-utils-lib
 URL: http://www.citi.umich.edu/projects/nfsv4/linux/
@@ -14,6 +15,7 @@ License: BSD
 Source0: http://www.citi.umich.edu/projects/nfsv4/linux/libnfsidmap/%{name}-%{version}.tar.gz
 
 Group: System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 BuildRoot: %{_tmppath}/%{name}-%{version}-root
 BuildRequires: pkgconfig, openldap-devel
 BuildRequires: automake, libtool
@@ -24,15 +26,23 @@ Requires: openldap
 %description
 Library that handles mapping between names and ids for NFSv4.
 
+%description -l zh_CN.UTF-8
+NFSv4 用户和组 ID 映射库。
+
 %package devel
 Summary: Development files for the libnfsidmap library
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: %{name} = %{version}-%{release}
 Requires: pkgconfig
 
 %description devel
 This package includes header files and libraries necessary for
 developing programs which use the libnfsidmap library.
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q 
@@ -83,6 +93,9 @@ rm -rf %{buildroot}
 %{_root_libdir}/*.so
 
 %changelog
+* Tue Jul 22 2014 Liu Di <liudidi@gmail.com> - 0.25-3
+- 为 Magic 3.0 重建
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 0.25-2
 - 为 Magic 3.0 重建
 

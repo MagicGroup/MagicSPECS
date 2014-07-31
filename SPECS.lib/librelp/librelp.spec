@@ -1,9 +1,11 @@
 Summary: The Reliable Event Logging Protocol library
+Summary(zh_CN.UTF-8): 可靠事件日志协议库
 Name: librelp
-Version: 1.2.5
-Release: 2%{?dist}
+Version: 1.2.7
+Release: 1%{?dist}
 License: GPLv3+
 Group: System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 URL: http://www.rsyslog.com/
 Source0: http://download.rsyslog.com/librelp/%{name}-%{version}.tar.gz
 Requires(post): /sbin/ldconfig
@@ -16,9 +18,14 @@ Librelp is an easy to use library for the RELP protocol. RELP (stands
 for Reliable Event Logging Protocol) is a general-purpose, extensible
 logging protocol.
 
+%description -l zh_CN.UTF-8
+可靠事件日志协议库。
+
 %package devel
 Summary: Development files for the %{name} package
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: %{name} = %{version}-%{release}
 Requires: pkgconfig
 
@@ -26,6 +33,9 @@ Requires: pkgconfig
 Librelp is an easy to use library for the RELP protocol. The
 librelp-devel package contains the header files and libraries needed
 to develop applications using librelp.
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -39,6 +49,7 @@ rm -rf $RPM_BUILD_ROOT
 make install DESTDIR=$RPM_BUILD_ROOT
 
 rm $RPM_BUILD_ROOT/%{_libdir}/*.la
+magic_rpm_clean.sh
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -62,6 +73,9 @@ fi
 %{_libdir}/pkgconfig/relp.pc
 
 %changelog
+* Wed Jul 30 2014 Liu Di <liudidi@gmail.com> - 1.2.7-1
+- 更新到 1.2.7
+
 * Wed Apr 23 2014 Liu Di <liudidi@gmail.com> - 1.2.5-2
 - 为 Magic 3.0 重建
 

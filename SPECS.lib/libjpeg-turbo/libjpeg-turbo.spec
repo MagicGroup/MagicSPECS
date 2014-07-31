@@ -1,5 +1,5 @@
 Name:		libjpeg-turbo
-Version:	1.2.1
+Version: 1.3.1
 Release:	5%{?dist}
 Summary:	A MMX/SSE2 accelerated library for manipulating JPEG image files
 Summary(zh_CN.UTF-8): 使用 MMX/SSE2 加速处理 JPEG 图像文件的库
@@ -121,7 +121,7 @@ turbojpeg 的开发包。
 %prep
 %setup -q
 
-%patch0 -p1 -b .noinst
+#%patch0 -p1 -b .noinst
 
 %build
 autoreconf -fiv
@@ -154,6 +154,7 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 %doc README README-turbo.txt change.log ChangeLog.txt
 %{_libdir}/libjpeg.so.8*
+%{_libdir}/libturbojpeg.so.*
 
 %files devel
 %defattr(-,root,root,-)
@@ -163,6 +164,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_includedir}/jmorecfg.h
 %{_includedir}/jpeglib.h
 %{_libdir}/libjpeg.so
+%{_docdir}/*.txt
+%{_docdir}/README
+%{_docdir}/example.c
 
 %files utils
 %defattr(-,root,root,-)
@@ -172,6 +176,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_bindir}/jpegtran
 %{_bindir}/rdjpgcom
 %{_bindir}/wrjpgcom
+%{_bindir}/tjbench
 %{_mandir}/man1/cjpeg.1*
 %{_mandir}/man1/djpeg.1*
 %{_mandir}/man1/jpegtran.1*
@@ -189,6 +194,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_includedir}/turbojpeg.h
 
 %changelog
+* Fri Jul 18 2014 Liu Di <liudidi@gmail.com> - 1.3.1-5
+- 更新到 1.3.1
+
 * Tue Dec 04 2012 Adam Tkac <atkac redhat com> 1.2.1-5
 - change license to IJG (#877517)
 

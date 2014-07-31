@@ -1,9 +1,11 @@
 Summary:	Sample rate conversion library for audio data
+Summary(zh_CN.UTF-8): 音频数据的采样率转换库
 Name:		libsamplerate
 Version:	0.1.8
 Release:	2%{?dist}
 License:	GPLv2+
 Group:		System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 URL:		http://www.mega-nerd.com/SRC/
 Source0:	http://www.mega-nerd.com/SRC/%{name}-%{version}.tar.gz
 BuildRequires:	libsndfile-devel >= 1.0.6, pkgconfig
@@ -15,10 +17,14 @@ factor of 12 and upsample by the same factor. The ratio of input and
 output sample rates can be a real number. The conversion ratio can
 also vary with time for speeding up and slowing down effects.
 
+%description -l zh_CN.UTF-8
+音频数据的采样率转换库。
 
 %package devel
 Summary:	Development related files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:		Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:	%{name} = %{version}-%{release}, pkgconfig
 
 %description devel
@@ -29,6 +35,8 @@ output sample rates can be a real number. The conversion ratio can
 also vary with time for speeding up and slowing down effects.
 This package contains development files for %{name}
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -48,7 +56,7 @@ rm $RPM_BUILD_ROOT%{_libdir}/%{name}.la
 rm -rf $RPM_BUILD_ROOT%{_docdir}/libsamplerate0-dev _doc
 cp -a doc _doc
 rm _doc/Makefile*
-
+magic_rpm_clean.sh
 
 %check
 export LD_LIBRARY_PATH=`pwd`/src/.libs

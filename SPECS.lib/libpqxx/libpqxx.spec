@@ -1,35 +1,50 @@
 
 Name:           libpqxx
-Epoch:          1
-Version:        3.2
-Release:        0.2%{?dist}
 Summary:        C++ client API for PostgreSQL
+Summary(zh_CN.UTF-8): PostgreSQL 的 C++ 客户端 API
+Epoch:          1
+Version:        4.0.1
+Release:        2%{?dist}
 
-Group:          System Environment/Libraries
 License:        BSD
 URL:            http://pqxx.org/
 Source0:        http://pqxx.org/download/software/libpqxx/libpqxx-%{version}.tar.gz
 Source1:        http://pqxx.org/download/software/libpqxx/libpqxx-%{version}.tar.gz.md5sum
-BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 Patch3:         libpqxx-2.6.8-multilib.patch
 
 BuildRequires:  postgresql-devel
 BuildRequires:  pkgconfig
+BuildRequires:  python
 
 %description
 C++ client API for PostgreSQL. The standard front-end (in the sense of
 "language binding") for writing C++ programs that use PostgreSQL.
 Supersedes older libpq++ interface.
 
+%description -l zh_CN.UTF-8
+PostgreSQL 的 C++ 客户端 API。
+
 %package devel
 Summary:        Development tools for %{name} 
-Group:          Development/Libraries
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Requires:       %{name}%{?_isa} = %{epoch}:%{version}-%{release}
-Requires:       pkgconfig
 Requires:       postgresql-devel
 %description devel
 %{summary}.
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
+%package doc
+Summary: Developer documentation for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发文档
+BuildArch: noarch
+%description doc
+%{summary}.
+
+%description doc -l zh_CN.UTF-8
+%{name} 的开发文档。
 
 
 %prep
@@ -48,42 +63,60 @@ make %{?_smp_mflags}
 
 
 %install
-rm -rf $RPM_BUILD_ROOT
-make install DESTDIR=$RPM_BUILD_ROOT
+make install DESTDIR=%{buildroot}
 
-rm -f $RPM_BUILD_ROOT%{_libdir}/lib*.la
-
+rm -fv %{buildroot}%{_libdir}/lib*.la
+magic_rpm_clean.sh
 
 %check 
-# not enabled, by default, takes awhile.
-%{?_with_check:make check}
-
-%clean
-rm -rf $RPM_BUILD_ROOT
+# FIXME: most/all fail, need already-running postgresql instance?
+make %{?_smp_mflags} check ||:
 
 
 %post -p /sbin/ldconfig
-
 %postun -p /sbin/ldconfig
 
-
 %files
-%defattr(-,root,root,-)
 %doc AUTHORS ChangeLog COPYING NEWS README VERSION
-%{_libdir}/libpqxx-3.2.so
+%{_libdir}/libpqxx-4.0.so
 
 %files devel
-%defattr(-,root,root,-)
 %doc README-UPGRADE
 %{_bindir}/pqxx-config
 %{_includedir}/pqxx/
 %{_libdir}/libpqxx.so
 %{_libdir}/pkgconfig/libpqxx.pc
 
+%files doc
+%doc doc/html/*
+
 
 %changelog
-* Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 1:3.2-0.2
+* Mon Jul 28 2014 Liu Di <liudidi@gmail.com> - 1:4.0.1-2
 - 为 Magic 3.0 重建
+
+* Tue Jun 24 2014 Rex Dieter <rdieter@fedoraproject.org> 1:4.0.1-1
+- 4.0.1
+
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1:3.2-0.7
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Fri Sep 20 2013 Rex Dieter <rdieter@fedoraproject.org> - 1:3.2-0.6
+- .spec cleanup
+- -doc subpkg
+- (re)enable %%check
+
+* Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1:3.2-0.5
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1:3.2-0.4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
+
+* Thu Jul 19 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1:3.2-0.3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1:3.2-0.2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 
 * Fri Jul 01 2011 Andreas Bierfert <andreas.bierfert[AT]lowlatency.de>
 - 1:3.2-0.1

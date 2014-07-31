@@ -1,6 +1,6 @@
 Name: libmng
 Version: 1.0.10
-Release: 8%{?dist}
+Release: 9%{?dist}
 URL: http://www.libmng.com/
 Summary: A library which supports MNG graphics.
 Summary(zh_CN.UTF-8): 支持 MNG 图形的库。
@@ -71,7 +71,8 @@ make %{?_smp_mflags}
 %install
 %makeinstall
 
-#rm -f $RPM_BUILD_ROOT%{_libdir}/*.la
+rm -f $RPM_BUILD_ROOT%{_libdir}/*.la
+magic_rpm_clean.sh
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -87,7 +88,7 @@ rm -rf $RPM_BUILD_ROOT
 %files devel
 %defattr(-,root,root)
 %{_libdir}/*.so
-%{_libdir}/*.la
+#%{_libdir}/*.la
 %{_includedir}/*
 %{_mandir}/man3
 %{_mandir}/man5
@@ -97,6 +98,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/*.a
 
 %changelog
+* Tue Jul 22 2014 Liu Di <liudidi@gmail.com> - 1.0.10-9
+- 为 Magic 3.0 重建
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 1.0.10-8
 - 为 Magic 3.0 重建
 

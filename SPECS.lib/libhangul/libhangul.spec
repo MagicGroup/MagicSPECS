@@ -1,6 +1,6 @@
 Name:		libhangul
 Version:	0.1.0
-Release:	2%{?dist}
+Release:	3%{?dist}
 
 License:	LGPLv2+
 URL:		http://kldp.net/projects/hangul/
@@ -75,6 +75,9 @@ magic_rpm_clean.sh
 
 
 %changelog
+* Fri Jul 18 2014 Liu Di <liudidi@gmail.com> - 0.1.0-3
+- 为 Magic 3.0 重建
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 0.1.0-2
 - 为 Magic 3.0 重建
 

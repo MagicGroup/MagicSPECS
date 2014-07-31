@@ -1,15 +1,17 @@
 Summary: A library of functions for manipulating PNG image format files
+Summary(zh_CN.UTF-8): 处理 PNG 图像格式文件的库
 Name: libpng
 Epoch: 2
-Version: 1.6.3
-Release: 3%{?dist}
+Version: 1.6.12
+Release: 2%{?dist}
 License: zlib
 Group: System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 URL: http://www.libpng.org/pub/png/
 
 # Note: non-current tarballs get moved to the history/ subdirectory,
 # so look there if you fail to retrieve the version you want
-Source0: ftp://ftp.simplesystems.org/pub/libpng/png/src/libpng16/libpng-%{version}.tar.gz
+Source0: ftp://ftp.simplesystems.org/pub/libpng/png/src/libpng16/libpng-%{version}.tar.xz
 
 Source1: pngusr.dfa
 
@@ -29,9 +31,14 @@ compression algorithm.
 Libpng should be installed if you need to manipulate PNG format image
 files.
 
+%description -l zh_CN.UTF-8
+处理 PNG 图像格式文件的库。
+
 %package devel
 Summary: Development tools for programs to manipulate PNG image format files
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: %{name}%{?_isa} = %{epoch}:%{version}-%{release}
 Requires: zlib-devel%{?_isa} pkgconfig%{?_isa}
 
@@ -43,9 +50,14 @@ If you want to develop programs which will manipulate PNG image format
 files, you should install libpng-devel.  You'll also need to install
 the libpng package.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
 %package static
 Summary: Static PNG image format file library
+Summary(zh_CN.UTF-8): %{name} 的静态库
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: %{name}-devel%{?_isa} = %{epoch}:%{version}-%{release}
 
 %description static
@@ -53,13 +65,21 @@ The libpng-static package contains the statically linkable version of libpng.
 Linking to static libraries is discouraged for most applications, but it is
 necessary for some boot packages.
 
+%description static -l zh_CN.UTF-8
+%{name} 的静态库。
+
 %package tools
 Summary: Tools for PNG image format file library
+Summary(zh_CN.UTF-8): PNG 图像格式文件库的工具
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: %{name}%{?_isa} = %{epoch}:%{version}-%{release}
 
 %description tools
 The libpng-tools package contains tools used by the authors of libpng.
+
+%description tools -l zh_CN.UTF-8
+PNG 图像格式文件库的工具。
 
 %prep
 %setup -q
@@ -80,6 +100,7 @@ make DESTDIR=$RPM_BUILD_ROOT install
 
 # We don't ship .la files.
 rm -rf $RPM_BUILD_ROOT%{_libdir}/*.la
+magic_rpm_clean.sh
 
 %check
 #to run make check use "--with check"
@@ -110,6 +131,12 @@ make check
 %{_bindir}/pngfix
 
 %changelog
+* Mon Jul 28 2014 Liu Di <liudidi@gmail.com> - 2:1.6.12-2
+- 为 Magic 3.0 重建
+
+* Mon Jul 28 2014 Liu Di <liudidi@gmail.com> - 2:1.6.12-1
+- 更新到 1.6.12
+
 * Tue Aug 13 2013 Petr Hracek <phracek@redhat.com> 2:1.6.3-3
 - libpng-tools depends only on libpng
 
