@@ -1,8 +1,10 @@
 Name:		libspotify
 Version:	12.1.51
-Release:	3%{?dist}
+Release:	4%{?dist}
 Summary:	Official Spotify API
+Summary(zh_CN.UTF-8): 官方的 Spotify API
 Group:		Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 License:	Redistributable, no modification permitted
 URL:		http://developer.spotify.com/en/libspotify/overview/
 Source0:	http://developer.spotify.com/download/libspotify/libspotify-%{version}-Linux-i686-release.tar.gz
@@ -18,12 +20,19 @@ libspotify is the official Spotify API.  Applications can use this API to play
 music using a user's Spotify account, provided that the user has a Spotify
 Premium Account.
 
+%description -l zh_CN.UTF-8
+官方的 Spotify API。
+
 %package devel
 Summary:	Development files for official Spotify API
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Requires:	libspotify = %{version}-%{release}
 
 %description devel
 This contains the files needed to develop using libspotify
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %ifarch i686
@@ -96,6 +105,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Thu Jul 31 2014 Liu Di <liudidi@gmail.com> - 12.1.51-4
+- 为 Magic 3.0 重建
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 12.1.51-3
 - 为 Magic 3.0 重建
 

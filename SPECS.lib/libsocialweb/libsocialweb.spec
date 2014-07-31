@@ -1,12 +1,15 @@
 Name:          libsocialweb
 Version:       0.25.21
-Release:       1%{?dist}
+Release:       2%{?dist}
 Summary:       A social network data aggregator
+Summary(zh_CN.UTF-8): 社交网络数据聚合程序
 
 Group:         Applications/Internet
+Group(zh_CN.UTF-8): 应用程序/互联网
 License:       LGPLv2
 URL:           http://www.gnome.org/
-Source0:       ftp://ftp.gnome.org/pub/gnome/sources/%{name}/0.25/%{name}-%{version}.tar.xz
+%define majorver %(echo %{version} | awk -F. '{print $1"."$2}')
+Source0:       ftp://ftp.gnome.org/pub/gnome/sources/%{name}/%{majorver}/%{name}-%{version}.tar.xz
 Source1: flickr
 Source2: twitter
 Source3: lastfm
@@ -38,23 +41,36 @@ such as your friend's blog posts and photos, upcoming events, recently played
 tracks, and pending eBay* auctions. It also provides a service to update 
 your status on web services which support it, such as MySpace* and Twitter*.
 
+%description -l zh_CN.UTF-8
+社交网络数据聚合程序。
+
 %package devel
 Summary: Development package for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: %{name} = %{version}-%{release}
 Requires: pkgconfig
 
 %description devel
 Files for development with %{name}.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
 %package keys
 Summary: API keys for %{name}
+Summary(zh_CN.UTF-8): %{name} 的 API 键
 Group: Applications/Internet
+Group(zh_CN.UTF-8): 应用程序/互联网
 BuildArch: noarch
 Requires: %{name} = %{version}-%{release}
 
 %description keys
 Keys allowing access to various web services through libsocialweb.
+
+%description keys -l zh_CN.UTF-8
+%{name} 的 API 键。
 
 %prep
 %setup -q
@@ -80,7 +96,7 @@ find %{buildroot} -name '*.a' -exec rm -f {} ';'
 
 mkdir -p %{buildroot}/%{_datadir}/libsocialweb/keys
 cp %{SOURCE1} %{SOURCE2} %{SOURCE3} %{SOURCE4} %{SOURCE5} %{SOURCE6} %{buildroot}/%{_datadir}/libsocialweb/keys
-
+magic_rpm_clean.sh
 %find_lang %{name}
 
 %post -p /sbin/ldconfig
@@ -116,6 +132,9 @@ cp %{SOURCE1} %{SOURCE2} %{SOURCE3} %{SOURCE4} %{SOURCE5} %{SOURCE6} %{buildroot
 %{_datadir}/libsocialweb/keys
 
 %changelog
+* Thu Jul 31 2014 Liu Di <liudidi@gmail.com> - 0.25.21-2
+- 为 Magic 3.0 重建
+
 * Tue Oct 16 2012 Peter Robinson <pbrobinson@fedoraproject.org> 0.25.21-1
 - update to 0.25.21. Fixes CVE-2012-4511, RHBZ 865126
 

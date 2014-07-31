@@ -1,9 +1,11 @@
 Summary: X.Org X11 ICE runtime library
+Summary(zh_CN.UTF-8): X.Org X11 ICE 运行库
 Name: libICE
-Version: 1.0.8
-Release: 2%{?dist}
+Version: 1.0.9
+Release: 1%{?dist}
 License: MIT
 Group: System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 URL: http://www.x.org
 
 Source0: ftp://ftp.x.org/pub/individual/lib/%{name}-%{version}.tar.bz2
@@ -15,13 +17,21 @@ BuildRequires: xorg-x11-xtrans-devel >= 1.0.3-5
 %description
 The X.Org X11 ICE (Inter-Client Exchange) runtime library.
 
+%description -l zh_CN.UTF-8
+X.Org X11 ICE 运行库。
+
 %package devel
 Summary: X.Org X11 ICE development package
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: %{name} = %{version}-%{release}
 
 %description devel
 The X.Org X11 ICE (Inter-Client Exchange) development package.
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -60,6 +70,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/pkgconfig/ice.pc
 
 %changelog
+* Thu Jul 31 2014 Liu Di <liudidi@gmail.com> - 1.0.9-1
+- 更新到 1.0.9
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 1.0.8-2
 - 为 Magic 3.0 重建
 

@@ -1,0 +1,61 @@
+diff -up libsexy-0.1.11/libsexy/sexy-icon-entry.h.foo libsexy-0.1.11/libsexy/sexy-icon-entry.h
+--- libsexy-0.1.11/libsexy/sexy-icon-entry.h.foo	2011-03-25 18:38:36.958790038 -0500
++++ libsexy-0.1.11/libsexy/sexy-icon-entry.h	2011-03-25 18:38:42.624719205 -0500
+@@ -25,8 +25,7 @@ typedef struct _SexyIconEntry      SexyI
+ typedef struct _SexyIconEntryClass SexyIconEntryClass;
+ typedef struct _SexyIconEntryPriv  SexyIconEntryPriv;
+ 
+-#include <gtk/gtkentry.h>
+-#include <gtk/gtkimage.h>
++#include <gtk/gtk.h>
+ 
+ #define SEXY_TYPE_ICON_ENTRY (sexy_icon_entry_get_type())
+ #define SEXY_ICON_ENTRY(obj) \
+diff -up libsexy-0.1.11/libsexy/sexy-spell-entry.h.foo libsexy-0.1.11/libsexy/sexy-spell-entry.h
+--- libsexy-0.1.11/libsexy/sexy-spell-entry.h.foo	2011-03-25 18:37:44.664443809 -0500
++++ libsexy-0.1.11/libsexy/sexy-spell-entry.h	2011-03-25 18:37:51.558357623 -0500
+@@ -25,7 +25,7 @@ typedef struct _SexySpellEntry      Sexy
+ typedef struct _SexySpellEntryClass SexySpellEntryClass;
+ typedef struct _SexySpellEntryPriv  SexySpellEntryPriv;
+ 
+-#include <gtk/gtkentry.h>
++#include <gtk/gtk.h>
+ 
+ #define SEXY_TYPE_SPELL_ENTRY            (sexy_spell_entry_get_type())
+ #define SEXY_SPELL_ENTRY(obj)            (G_TYPE_CHECK_INSTANCE_CAST((obj), SEXY_TYPE_SPELL_ENTRY, SexySpellEntry))
+diff -up libsexy-0.1.11/libsexy/sexy-tooltip.h.foo libsexy-0.1.11/libsexy/sexy-tooltip.h
+--- libsexy-0.1.11/libsexy/sexy-tooltip.h.foo	2011-03-25 18:38:08.409146960 -0500
++++ libsexy-0.1.11/libsexy/sexy-tooltip.h	2011-03-25 18:38:13.621081802 -0500
+@@ -24,7 +24,7 @@
+ typedef struct _SexyTooltip      SexyTooltip;
+ typedef struct _SexyTooltipClass SexyTooltipClass;
+ 
+-#include <gtk/gtkwindow.h>
++#include <gtk/gtk.h>
+ 
+ #define SEXY_TYPE_TOOLTIP            (sexy_tooltip_get_type())
+ #define SEXY_TOOLTIP(obj)            (G_TYPE_CHECK_INSTANCE_CAST((obj), SEXY_TYPE_TOOLTIP, SexyTooltip))
+diff -up libsexy-0.1.11/libsexy/sexy-tree-view.h.foo libsexy-0.1.11/libsexy/sexy-tree-view.h
+--- libsexy-0.1.11/libsexy/sexy-tree-view.h.foo	2011-03-25 18:38:24.882941008 -0500
++++ libsexy-0.1.11/libsexy/sexy-tree-view.h	2011-03-25 18:38:29.779879786 -0500
+@@ -26,7 +26,7 @@ typedef struct _SexyTreeView      SexyTr
+ typedef struct _SexyTreeViewClass SexyTreeViewClass;
+ typedef struct _SexyTreeViewPriv  SexyTreeViewPriv;
+ 
+-#include <gtk/gtktreeview.h>
++#include <gtk/gtk.h>
+ 
+ #define SEXY_TYPE_TREE_VIEW            (sexy_tree_view_get_type())
+ #define SEXY_TREE_VIEW(obj)            (G_TYPE_CHECK_INSTANCE_CAST((obj), SEXY_TYPE_TREE_VIEW, SexyTreeView))
+diff -up libsexy-0.1.11/libsexy/sexy-url-label.h.foo libsexy-0.1.11/libsexy/sexy-url-label.h
+--- libsexy-0.1.11/libsexy/sexy-url-label.h.foo	2011-03-25 18:38:53.984577188 -0500
++++ libsexy-0.1.11/libsexy/sexy-url-label.h	2011-03-25 18:38:57.991527095 -0500
+@@ -24,7 +24,7 @@
+ typedef struct _SexyUrlLabel      SexyUrlLabel;
+ typedef struct _SexyUrlLabelClass SexyUrlLabelClass;
+ 
+-#include <gtk/gtklabel.h>
++#include <gtk/gtk.h>
+ 
+ #define SEXY_TYPE_URL_LABEL (sexy_url_label_get_type())
+ #define SEXY_URL_LABEL(obj) \

@@ -1,9 +1,11 @@
 Summary: SILC Client Library
+Summary(zh_CN.UTF-8): SILC 客户端库
 Name:    libsilc
 Version: 1.1.10
-Release: 8%{dist}
+Release: 9%{dist}
 License: GPLv2 or BSD
 Group:   System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 URL:     http://www.silcnet.org/
 Source0: http://www.silcnet.org/download/toolkit/sources/silc-toolkit-%{version}.tar.bz2
 Patch0:  silc-toolkit-1.1-wordsize.patch
@@ -19,9 +21,14 @@ SILC Client Library libraries for clients to connect to SILC networks.
 SILC (Secure Internet Live Conferencing) is a protocol which provides
 secure conferencing services on the Internet over insecure channel.
 
+%description -l zh_CN.UTF-8
+SILC 客户端库。
+
 %package devel
 Summary: Headers and shared libraries for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:   Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: libsilc = %{version}-%{release}
 Requires: pkgconfig
 
@@ -29,13 +36,21 @@ Requires: pkgconfig
 The SILC Toolkit development libraries and headers. Required for building
 SILC clients.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
 %package doc
 Summary: Development documentation for %{name}
+Summary(zh_CN.UTF-8): %{name} 的文档
 Group:   Documentation
+Group(zh_CN.UTF-8): 文档
 
 %description doc
 The SILC Toolkit documentation in HTML format. Useful for writing new SILC
 applications.
+
+%description doc -l zh_CN.UTF-8
+%{name} 的文档。
 
 %prep
 %setup -q -n silc-toolkit-%{version}
@@ -91,6 +106,7 @@ rm -f $RPM_BUILD_ROOT%{_libdir}/libsilcclient.la
 # Fix encoding of CREDITS
 mv CREDITS CREDITS.orig
 iconv -f iso-8859-15 -t utf8 -o CREDITS CREDITS.orig
+magic_rpm_clean.sh
 
 %check
 # If this fails, the filter-provides script needs an update.
@@ -129,9 +145,12 @@ rm -rf $RPM_BUILD_ROOT
 %doc COPYING BSD GPL
 %doc docinst/toolkit
 %doc docinst/tutorial
-
+%{_docdir}/%{name}-%{version}/*
 
 %changelog
+* Thu Jul 31 2014 Liu Di <liudidi@gmail.com> - 1.1.10-9
+- 为 Magic 3.0 重建
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 1.1.10-8
 - 为 Magic 3.0 重建
 

@@ -1,7 +1,8 @@
 Name:           libserf
-Version:        1.3.5
-Release:        3%{?dist}
+Version:        1.3.6
+Release:        2%{?dist}
 Summary:        High-Performance Asynchronous HTTP Client Library
+Summary(zh_CN.UTF-8): 高性能的异步 HTTP 客户端库
 License:        ASL 2.0
 URL:            http://code.google.com/p/serf/
 Source0:        http://serf.googlecode.com/svn/src_releases/serf-%{version}.tar.bz2
@@ -15,14 +16,21 @@ Portable Runtime (APR) library. It multiplexes connections, running the
 read/write communication asynchronously. Memory copies and transformations are
 kept to a minimum to provide high performance operation.
 
+%description -l zh_CN.UTF-8
+高性能的异步 HTTP 客户端库。
+
 %package        devel
 Summary:        Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Requires:       %{name}%{?_isa} = %{version}-%{release}
 Requires:       apr-devel%{?_isa}
 
 %description    devel
 This package contains libraries and header files for
 developing applications that use %{name}.
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -qn serf-%{version}
@@ -44,6 +52,7 @@ scons \
 %install
 scons install --install-sandbox=%{buildroot}
 find %{buildroot} -name '*.*a' -delete -print
+magic_rpm_clean.sh
 
 %check
 scons %{?_smp_mflags} check || true
@@ -63,6 +72,12 @@ scons %{?_smp_mflags} check || true
 %{_libdir}/pkgconfig/serf*.pc
 
 %changelog
+* Thu Jul 31 2014 Liu Di <liudidi@gmail.com> - 1.3.6-2
+- 为 Magic 3.0 重建
+
+* Thu Jul 31 2014 Liu Di <liudidi@gmail.com> - 1.3.6-1
+- 升级到 1.3.6
+
 * Tue Jun 17 2014 Liu Di <liudidi@gmail.com> - 1.3.5-3
 - 为 Magic 3.0 重建
 
