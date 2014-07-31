@@ -332,6 +332,12 @@ case "%{_target_cpu}" in
           export F77="gfortran -m31"
           export FC="gfortran -m31"
       ;;    
+      mips64*)
+          export CC="gcc -mabi=64"
+          export CXX="g++ -mabi=64"
+          export F77="gfortran -mabi=64"
+          export FC="gfortran -mabi=64"
+      ;;
       *)
           export CC="gcc -m32"
           export CXX="g++ -m32"
