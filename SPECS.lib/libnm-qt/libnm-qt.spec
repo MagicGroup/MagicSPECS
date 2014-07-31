@@ -1,11 +1,13 @@
 %global         git_commit 5cff3c5
 Name:           libnm-qt
 Version:        0.9.8.2
-Release:        2.20140422%{git_commit}%{?dist}
+Release:        4%{?dist}
 Epoch:          2
 Summary:        Qt-only wrapper for NetworkManager DBus API
+Summary(zh_CN.UTF-8): NetworkManager DBus API 的 Qt 接口
 
 Group:          System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 License:        LGPLv2+
 URL:            https://projects.kde.org/projects/extragear/libs/libnm-qt
 # Source0:        http://download.kde.org/unstable/networkmanagement/%{version}/src/%{name}-%{version}.tar.xz
@@ -24,13 +26,21 @@ Requires:  NetworkManager >= 0.9.9.0
 %description
 Qt library for NetworkManager
 
+%description -l zh_CN.UTF-8
+NetworkManager DBus API 的 Qt 接口。
+
 %package devel
 Summary: Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: %{name}%{?_isa} = %{epoch}:%{version}-%{release}
 %description devel
 Qt libraries and header files for developing applications
 that use NetworkManager
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -qn %{name}-%{version}
@@ -48,6 +58,7 @@ make %{?_smp_mflags} -C %{_target_platform}
 rm -rf %{buildroot}
 
 make install/fast  DESTDIR=%{buildroot} -C %{_target_platform}
+magic_rpm_clean.sh
 
 %post -p /sbin/ldconfig
 %postun -p /sbin/ldconfig
@@ -63,6 +74,9 @@ make install/fast  DESTDIR=%{buildroot} -C %{_target_platform}
 %{_includedir}/NetworkManagerQt/
 
 %changelog
+* Tue Jul 22 2014 Liu Di <liudidi@gmail.com> - 2:0.9.8.2-4
+- 为 Magic 3.0 重建
+
 * Fri Jun 06 2014 Liu Di <liudidi@gmail.com> - 2:0.9.8.2-2.201404225cff3c5
 - 为 Magic 3.0 重建
 

@@ -1,9 +1,11 @@
 Name:           libmspack
 Version:        0.3
-Release:        0.4.alpha%{?dist}
+Release:        0.5.alpha%{?dist}
 Summary:        Library for CAB and related files compression and decompression
+Summary(zh_CN.UTF-8): 压缩解压 CAB 和相关文件的库
 
 Group:          System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 License:        LGPLv2
 URL:            http://www.cabextract.org.uk/libmspack/
 Source0:        http://www.cabextract.org.uk/libmspack/%{name}-%{version}alpha.tar.gz
@@ -16,9 +18,14 @@ BuildRequires:  doxygen
 The purpose of libmspack is to provide both compression and decompression of 
 some loosely related file formats used by Microsoft.
 
+%description -l zh_CN.UTF-8
+压缩解压 CAB 和相关文件的库。
+
 %package        devel
 Summary:        Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       %{name} = %{version}-%{release}
 Obsoletes:      %{name}-doc < 0.2
 
@@ -26,6 +33,8 @@ Obsoletes:      %{name}-doc < 0.2
 The %{name}-devel package contains libraries, header files and documentation
 for developing applications that use %{name}.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q -n %{name}-%{version}alpha
@@ -53,7 +62,7 @@ doxygen
 find html -type f | xargs touch -r %{SOURCE0}
 rm -f html/installdox
 popd
-
+magic_rpm_clean.sh
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -78,6 +87,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Tue Jul 22 2014 Liu Di <liudidi@gmail.com> - 0.3-0.5.alpha
+- 为 Magic 3.0 重建
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 0.3-0.4.alpha
 - 为 Magic 3.0 重建
 

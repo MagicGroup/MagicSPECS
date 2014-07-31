@@ -11,14 +11,16 @@
 %endif
 
 Summary: A library for managing OS information for virtualization
+Summary(zh_CN.UTF-8): 为虚拟化管理系统信息的库
 Name: libosinfo
-Version: 0.2.1
+Version: 0.2.10
 Release: 1%{?dist}%{?extra_release}
 License: LGPLv2+
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Source: https://fedorahosted.org/releases/l/i/%{name}/%{name}-%{version}.tar.gz
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-URL: https://fedorahosted.org/libosinfo/
+URL: http://libosinfo.org
 BuildRequires: glib2-devel
 BuildRequires: check-devel
 BuildRequires: libxml2-devel >= 2.6.0
@@ -36,9 +38,14 @@ libosinfo is a library that allows virtualization provisioning tools to
 determine the optimal device settings for a hypervisor/operating system
 combination.
 
+%description -l zh_CN.UTF-8
+为虚拟化管理系统信息的库。
+
 %package devel
 Summary: Libraries, includes, etc. to compile with the libosinfo library
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: %{name} = %{version}-%{release}
 Requires: pkgconfig
 Requires: glib2-devel
@@ -50,9 +57,14 @@ combination.
 
 Libraries, includes, etc. to compile with the libosinfo library
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
 %package vala
 Summary: Vala bindings
+Summary(zh_CN.UTF-8): Vala 绑定
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: %{name} = %{version}-%{release}
 
 %description vala
@@ -61,6 +73,9 @@ determine the optimal device settings for a hypervisor/operating system
 combination.
 
 This package provides the Vala bindings for libosinfo library.
+
+%description vala -l zh_CN.UTF-8
+Vala 绑定。
 
 %prep
 %setup -q
@@ -82,6 +97,7 @@ rm -fr %{buildroot}
 %__make install DESTDIR=%{buildroot}
 rm -f %{buildroot}%{_libdir}/*.a
 rm -f %{buildroot}%{_libdir}/*.la
+magic_rpm_clean.sh
 
 %check
 make check
@@ -109,6 +125,8 @@ rm -fr %{buildroot}
 %{_datadir}/libosinfo/db/oses
 %{_datadir}/libosinfo/db/hypervisors
 %{_datadir}/libosinfo/db/install-scripts
+%{_datadir}/libosinfo/db/datamaps/windows-lang.xml
+%{_datadir}/libosinfo/db/datamaps/x11-keyboard.xml
 %{_datadir}/libosinfo/schemas/libosinfo.rng
 %{_mandir}/man1/osinfo-db-validate.1*
 %{_mandir}/man1/osinfo-detect.1*
@@ -139,6 +157,9 @@ rm -fr %{buildroot}
 %{_datadir}/vala/vapi/libosinfo-1.0.vapi
 
 %changelog
+* Wed Jul 23 2014 Liu Di <liudidi@gmail.com> - 0.2.10-1
+- 更新到 0.2.10
+
 * Fri Oct 12 2012 Zeeshan Ali <zeenix@redhat.com> - 0.2.1-1
 - Fix and simplify udev rule.
 - Fedora:

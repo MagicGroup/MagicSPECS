@@ -1,15 +1,17 @@
 Summary: Decoder of various derivatives of MPEG standards
 Summary(zh_CN.UTF-8): 多种 MPEG 衍生标准的解码器
 Name: libmpeg3
-Version: 1.7
-Release: 3%{?dist}
+Version: 1.8
+Release: 1%{?dist}
 License: GPL
 Group: System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
 URL: http://heroinewarrior.com/libmpeg3.php3
 Source0: http://dl.sf.net/heroines/libmpeg3-%{version}-src.tar.bz2
-Patch0: libmpeg3-1.6-makefile.patch
+Source1: libmpeg3.pc
+Patch0: libmpeg3.sharedlibs.patch
 Patch1: libmpeg3-1.7-mips-disable-MMX_CSS.patch
+Patch2:	libmpeg3-1.8-fixformatsecurity.patch
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: nasm
 
@@ -56,7 +58,8 @@ LibMPEG3解码许多MPEG标准派生出的标准到未压缩数据以便于编�
 
 %prep
 %setup
-#%patch0 -p1 -b .makefile
+%patch0 -p1 -b .makefile
+%patch2 -p1
 %ifarch mips64el
 %patch1 -p1 -b .mips
 %endif
@@ -70,34 +73,41 @@ make
 
 %install
 %{__rm} -rf %{buildroot}
+%ifarch %{ix86}
 export OBJDIR=i686
+%endif
 %{__make} install \
-    LIBDIR=%{_libdir} \
-    DESTDIR=%{buildroot}
+    DESTDIR=%{buildroot} LIBDIR=%{_lib}
 
+mkdir -p %{buildroot}%{_libdir}/pkgconfig
+%ifarch x86_64
+sed -i 's/\/usr\/lib/\/usr\/lib64/g' %{SOURCE1}
+%endif
+install -m 0644 %{SOURCE1} %{buildroot}%{_libdir}/pkgconfig/libmpeg3.pc
 
 %clean
 %{__rm} -rf %{buildroot}
 
 
-#post -p /sbin/ldconfig
+%post -p /sbin/ldconfig
 
-#postun -p /sbin/ldconfig
+%postun -p /sbin/ldconfig
 
 
 %files
 %defattr(-, root, root, 0755)
 %doc COPYING
 %{_bindir}/*
-%{_libdir}/*
-%{_includedir}/*
-%exclude /usr/*/debug*
+%{_libdir}/libmpeg3.so.*
 
-#%files devel
-#%defattr(-, root, root, 0755)
-#%doc docs/*
-#%{_libdir}/*.a
-#%{_includedir}/*.h
+%files devel
+%defattr(-, root, root, 0755)
+%doc docs/*
+%{_libdir}/*.so
+%{_includedir}/*.h
+%{_includedir}/audio/*.h
+%{_includedir}/video/*.h
+%{_libdir}/pkgconfig/libmpeg3.pc
 
 
 %changelog

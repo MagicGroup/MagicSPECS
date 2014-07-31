@@ -1,8 +1,10 @@
 Name:		libmetalink
 Version:	0.1.2
-Release:	4%{?dist}
+Release:	5%{?dist}
 Summary:	Metalink library written in C
+Summary(zh_CN.UTF-8): 用 C 写的 Metalink 库
 Group:		System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 License:	MIT
 URL:		https://launchpad.net/libmetalink
 Source0:	http://launchpad.net/libmetalink/trunk/packagingfix/+download/%{name}-%{version}.tar.bz2
@@ -14,13 +16,21 @@ BuildRequires:	CUnit-devel
 libmetalink is a Metalink C library. It adds Metalink functionality such as
 parsing Metalink XML files to programs written in C.
 
+%description -l zh_CN.UTF-8
+用 C 写的 Metalink 库。
+
 %package	devel
 Summary:	Files needed for developing with %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:		Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:	%{name}%{?_isa} = %{version}-%{release}
 
 %description	devel
 Files needed for building applications with libmetalink.
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -36,6 +46,7 @@ make check
 rm -rf $RPM_BUILD_ROOT
 make install DESTDIR=$RPM_BUILD_ROOT
 find $RPM_BUILD_ROOT -name *.la -exec rm {} \;
+magic_rpm_clean.sh
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -61,6 +72,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Tue Jul 22 2014 Liu Di <liudidi@gmail.com> - 0.1.2-5
+- 为 Magic 3.0 重建
+
 * Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.1.2-4
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
 

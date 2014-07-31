@@ -1,8 +1,10 @@
 Name:		libqxt
 Version:	0.6.2
-Release:	3%{?dist}
+Release:	4%{?dist}
 Summary:	Qt extension library
+Summary(zh_CN.UTF-8): Qt 扩展库
 Group:		System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 License:	CPL or LGPLv2
 URL:		http://www.libqxt.org/
 Source0:	http://bitbucket.org/libqxt/libqxt/get/v%{version}.tar.bz2
@@ -31,9 +33,14 @@ BuildRequires:	qt4-devel
 LibQxt, an extension library for Qt, provides a suite of cross-platform
 utility classes to add functionality not readily available in the Qt toolkit.
 
+%description -l zh_CN.UTF-8
+Qt 扩展库。
+
 %package	devel
 Summary:	Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:		Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:	%{name} = %{version}-%{release}
 Requires:	avahi-compat-libdns_sd-devel
 Requires:	avahi-devel
@@ -44,6 +51,8 @@ Requires:	qt4-devel
 This package contains libraries and header files for developing applications
 that use LibQxt.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q -n %{name}-%{name}-v%{version}
@@ -72,6 +81,7 @@ make install INSTALL_ROOT=$RPM_BUILD_ROOT
 
 # We are installing these to the proper location
 rm -fr $RPM_BUILD_ROOT%{_prefix}/doc/
+magic_rpm_clean.sh
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -96,6 +106,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_qt4_datadir}/mkspecs/features/qxt*.prf
 
 %changelog
+* Mon Jul 28 2014 Liu Di <liudidi@gmail.com> - 0.6.2-4
+- 为 Magic 3.0 重建
+
 * Thu Jul 19 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.6.2-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 

@@ -2,7 +2,7 @@
 
 Name: libiptcdata
 Version: 1.0.4
-Release: 6%{?dist}
+Release: 7%{?dist}
 Summary: IPTC tag library
 Summary(zh_CN.UTF-8): IPTC 标签库
 
@@ -84,7 +84,7 @@ rm -rf $RPM_BUILD_ROOT
 %doc AUTHORS COPYING ChangeLog NEWS README TODO
 %{_bindir}/*
 %{_libdir}/lib*.so.*
-%{_datadir}/locale/*/LC_MESSAGES/*.mo
+#%{_datadir}/locale/*/LC_MESSAGES/*.mo
 
 %files devel
 %defattr(-,root,root)
@@ -100,6 +100,9 @@ rm -rf $RPM_BUILD_ROOT
 %{python_sitearch}/*.so
 
 %changelog
+* Fri Jul 18 2014 Liu Di <liudidi@gmail.com> - 1.0.4-7
+- 为 Magic 3.0 重建
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 1.0.4-6
 - 为 Magic 3.0 重建
 

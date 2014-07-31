@@ -1,9 +1,11 @@
 Summary:            Utilities to convert Outlook .pst files to other formats
+Summary(zh_CN.UTF-8): 转换 Outlook .pst 文件到其它格式的工具
 Name:               libpst
-Version:            0.6.55
-Release:            4%{?dist}
+Version: 0.6.63
+Release: 1%{?dist}
 License:            GPLv2+
 Group:              Applications/Productivity
+Group(zh_CN.UTF-8): 应用程序/生产力
 Source:             http://www.five-ten-sg.com/%{name}/packages/%{name}-%{version}.tar.gz
 BuildRoot:          %(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
 URL:                http://www.five-ten-sg.com/%{name}/
@@ -22,19 +24,29 @@ contacts to .ldif format for import into ldap databases, and pst2dii
 which can convert email messages to the DII load file format used by
 Summation.
 
+%description -l zh_CN.UTF-8
+转换 Outlook .pst 文件到其它格式的工具，包括 mbox 和 MH 邮箱格式，
+导入 ladp 数据库用的 .ldif 格式，及 Summation 使用的 DII 文件格式。
+
 
 %package libs
 Summary:            Shared library used by the pst utilities
+Summary(zh_CN.UTF-8): %{name} 的共享库
 Group:              Development/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 
 %description libs
 The libpst-libs package contains the shared library used by the pst
 utilities.
 
+%description libs -l zh_CN.UTF-8
+%{name} 的共享库。
 
 %package python
 Summary:            Python bindings for libpst
+Summary(zh_CN.UTF-8): libpst 的 Python 绑定
 Group:              Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:           python
 Requires:           %{name}-libs = %{version}-%{release}
 
@@ -42,10 +54,14 @@ Requires:           %{name}-libs = %{version}-%{release}
 The libpst-python package allows you to use the libpst shared object
 from python code.
 
+%description python -l zh_CN.UTF-8
+libpst 的 Python 绑定。
 
 %package devel
 Summary:            Library links and header files for libpst application development
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:              Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:           pkgconfig
 Requires:           %{name}-libs = %{version}-%{release}
 
@@ -55,27 +71,36 @@ you'll need to develop applications using the libpst shared library.
 You do not need to install it if you just want to use the libpst
 utilities.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %package devel-doc
 Summary:            Documentation for libpst.so for libpst application development
+Summary(zh_CN.UTF-8): %{name} 的开发文档
 Group:              Documentation
+Group(zh_CN.UTF-8): 文档
 Requires:           %{name}-doc = %{version}-%{release}
 
 %description devel-doc
 The libpst-devel-doc package contains the doxygen generated
 documentation for the libpst.so shared library.
 
+%description devel-doc -l zh_CN.UTF-8
+%{name} 的开发文档。
 
 %package doc
 Summary:            Documentation for the pst utilities in html format
+Summary(zh_CN.UTF-8): %{name} 的文档
 Group:              Documentation
+Group(zh_CN.UTF-8): 文档
 
 %description doc
 The libpst-doc package contains the html documentation for the pst
 utilities.  You do not need to install it if you just want to use the
 libpst utilities.
 
-
+%description doc -l zh_CN.UTF-8
+%{name} 的文档。
 
 %prep
 %setup -q
@@ -147,6 +172,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Mon Jul 28 2014 Liu Di <liudidi@gmail.com> - 0.6.63-1
+- 更新到 0.6.63
+
 * Sat Apr 20 2013 Liu Di <liudidi@gmail.com> - 0.6.55-4
 - 为 Magic 3.0 重建
 

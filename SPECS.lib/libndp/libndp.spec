@@ -1,8 +1,10 @@
 Name: libndp
-Version: 1.2
+Version: 1.3
 Release: 1%{?dist}
 Summary: Library for Neighbor Discovery Protocol
+Summary(zh_CN.UTF-8): 邻居发现协议的库
 Group: System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 License: LGPLv2+
 URL: http://www.libndp.org/
 Source: http://www.libndp.org/files/libndp-%{version}.tar.gz
@@ -12,14 +14,22 @@ This package contains a library which provides a wrapper
 for IPv6 Neighbor Discovery Protocol.  It also provides a tool
 named ndptool for sending and receiving NDP messages.
 
+%description -l zh_CN.UTF-8
+IPv6 邻居发现协议的库。
+
 %package devel
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Summary: Libraries and header files for libndp development
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Requires: libndp = %{version}-%{release}
 
 %description devel
 The libndp-devel package contains the header files and libraries
 necessary for developing programs using libndp.
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -31,6 +41,7 @@ make %{?_smp_mflags}
 %install
 make install DESTDIR=$RPM_BUILD_ROOT INSTALL="install -p"
 find $RPM_BUILD_ROOT -name \*.la -delete
+magic_rpm_clean.sh
 
 %post -p /sbin/ldconfig
 
@@ -48,6 +59,9 @@ find $RPM_BUILD_ROOT -name \*.la -delete
 %{_libdir}/pkgconfig/*.pc
 
 %changelog
+* Tue Jul 22 2014 Liu Di <liudidi@gmail.com> - 1.3-1
+- 更新到 1.3
+
 * Tue Oct 15 2013 Jiri Pirko <jpirko@redhat.com> - 1.2-1
 - Update to 1.2
 - libndp: silently ignore packets with optlen 0

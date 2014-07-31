@@ -2,13 +2,16 @@
 %define dbus_glib_version	0.70
 
 Summary: Desktop notification library
+Summary(zh_CN.UTF-8): 桌面通知库
 Name: libnotify
-Version: 0.7.4
-Release: 2%{?dist}
+Version:	0.7.6
+Release: 1%{?dist}
 URL: http://library.gnome.org/devel/notification-spec/
-Source0: http://download.gnome.org/sources/%{name}/0.7/%{name}-%{version}.tar.xz
+%define majorver %(echo %{version} | awk -F. '{print $1"."$2}')
+Source0: http://download.gnome.org/sources/%{name}/%{majorver}/%{name}-%{version}.tar.xz
 License: LGPLv2+
 Group: System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 BuildRequires: libtool
 BuildRequires: glib2-devel >= %{glib2_version}
 BuildRequires: gdk-pixbuf2-devel
@@ -25,9 +28,14 @@ daemon, as defined in the freedesktop.org Desktop Notifications spec. These
 notifications can be used to inform the user about an event or display some
 form of information without getting in the user's way.
 
+%description -l zh_CN.UTF-8
+桌面通知库。
+
 %package devel
 Summary:	Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:		Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:	%{name} = %{version}-%{release}
 Requires:       glib2-devel >= %{glib2_version}
 Requires:	dbus-devel >= %{dbus_version}
@@ -37,6 +45,9 @@ Requires:	pkgconfig
 %description devel
 This package contains libraries and header files needed for
 development of programs using %{name}.
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -50,6 +61,7 @@ make install DESTDIR=$RPM_BUILD_ROOT
 
 rm -f $RPM_BUILD_ROOT%{_libdir}/*.la
 rm -f $RPM_BUILD_ROOT%{_libdir}/*.a
+magic_rpm_clean.sh
 
 %post -p /sbin/ldconfig
 
@@ -72,6 +84,9 @@ rm -f $RPM_BUILD_ROOT%{_libdir}/*.a
 %{_datadir}/gir-1.0/Notify-0.7.gir
 
 %changelog
+* Tue Jul 22 2014 Liu Di <liudidi@gmail.com> - 0.7.6-1
+- 更新到 0.7.6
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 0.7.4-2
 - 为 Magic 3.0 重建
 

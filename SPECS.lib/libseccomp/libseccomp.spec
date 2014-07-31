@@ -1,10 +1,12 @@
 Summary: Enhanced seccomp library
+Summary(zh_CN.UTF-8): 增强的 seccomp 库
 Name: libseccomp
 Version: 2.1.1
 Release: 3%{?dist}
 ExclusiveArch: %{ix86} x86_64 %{arm}
 License: LGPLv2
 Group: System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 Source: http://downloads.sf.net/project/libseccomp/%{name}-%{version}.tar.gz
 URL: http://libseccomp.sourceforge.net
 BuildRequires: valgrind
@@ -16,9 +18,14 @@ to specify which syscalls, and optionally which syscall arguments, the
 application is allowed to execute, all of which are enforced by the Linux
 Kernel.
 
+%description -l zh_CN.UTF-8
+增强的 seccomp 库。
+
 %package devel
 Summary: Development files used to build applications with libseccomp support
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: %{name}%{?_isa} = %{version}-%{release} pkgconfig
 
 %description devel
@@ -27,6 +34,9 @@ syscall filtering mechanism, seccomp.  The libseccomp API allows an application
 to specify which syscalls, and optionally which syscall arguments, the
 application is allowed to execute, all of which are enforced by the Linux
 Kernel.
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -41,6 +51,7 @@ mkdir -p "%{buildroot}/%{_libdir}"
 mkdir -p "%{buildroot}/%{_includedir}"
 mkdir -p "%{buildroot}/%{_mandir}"
 make V=1 DESTDIR="%{buildroot}" install
+magic_rpm_clean.sh
 
 %check
 make check

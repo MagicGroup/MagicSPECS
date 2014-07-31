@@ -1,9 +1,11 @@
 Name:           libp11
 Version:        0.2.8
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        Library for using PKCS#11 modules
+Summary(zh_CN.UTF-8): 使用 PCS#11 模块的库
 
 Group:          System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 License:        LGPLv2+
 URL:            http://www.opensc-project.org/libp11
 Source0:        http://www.opensc-project.org/files/libp11/libp11-%{version}.tar.gz
@@ -18,14 +20,22 @@ BuildRequires:  pkgconfig
 Libp11 is a library implementing a small layer on top of PKCS#11 API to
 make using PKCS#11 implementations easier.
 
+%description -l zh_CN.UTF-8
+使用 PCS#11 模块的库。
+
 %package devel
 Summary:        Files for developing with %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       %{name} = %{version}-%{release}
 
 %description devel
 The %{name}-devel package contains libraries and header files for
 developing applications that use %{name}.
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -45,6 +55,7 @@ rm -rf $RPM_BUILD_ROOT%{_datadir}/doc/%{name}/
 
 # Remove libtool .la files
 rm -f $RPM_BUILD_ROOT%{_libdir}/*.la
+magic_rpm_clean.sh
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -66,6 +77,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_includedir}/libp11.h
 
 %changelog
+* Fri Jul 25 2014 Liu Di <liudidi@gmail.com> - 0.2.8-4
+- 为 Magic 3.0 重建
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 0.2.8-3
 - 为 Magic 3.0 重建
 

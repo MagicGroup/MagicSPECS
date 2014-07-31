@@ -177,6 +177,9 @@ rm -rf %{buildroot}
 %postun -n pyldb -p /sbin/ldconfig
 
 %changelog
+* Fri Jul 18 2014 Liu Di <liudidi@gmail.com> - 1.1.16-1
+- 更新到 1.1.17
+
 * Thu Jan 02 2014 Stephen Gallagher <sgallagh@redhat.com> - 1.1.16-4
 - Enable building libldb's LDAP interface module
 

@@ -3,7 +3,7 @@
 
 Name: libindi
 Version: 0.9.8.1
-Release: 5%{?dist}
+Release: 7%{?dist}
 Summary: Instrument Neutral Distributed Interface
 
 Group: Development/Libraries
@@ -76,6 +76,12 @@ make install DESTDIR=%{buildroot}
 %{_libdir}/*.a
 
 %changelog
+* Tue Jul 22 2014 Liu Di <liudidi@gmail.com> - 0.9.8.1-7
+- 为 Magic 3.0 重建
+
+* Fri Jul 18 2014 Liu Di <liudidi@gmail.com> - 0.9.8.1-6
+- 为 Magic 3.0 重建
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.9.8.1-5
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

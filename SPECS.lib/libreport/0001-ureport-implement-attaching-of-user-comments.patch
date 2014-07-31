@@ -1,0 +1,133 @@
+From 8b3d8dd997d2103087cbaef4642b52147db97f16 Mon Sep 17 00:00:00 2001
+From: Jakub Filak <jfilak@redhat.com>
+Date: Tue, 8 Jul 2014 16:10:01 +0200
+Subject: [PATCH 1/8] ureport: implement attaching of user comments
+
+Closes #199
+
+Signed-off-by: Jakub Filak <jfilak@redhat.com>
+---
+ src/lib/json.c        | 10 ++++++++++
+ src/lib/ureport.h     |  4 ++++
+ src/plugins/ureport.c | 33 +++++++++++++++++++++++++++++----
+ 3 files changed, 43 insertions(+), 4 deletions(-)
+
+diff --git a/src/lib/json.c b/src/lib/json.c
+index 66db537..08ffe8c 100644
+--- a/src/lib/json.c
++++ b/src/lib/json.c
+@@ -133,3 +133,13 @@ struct post_state *ureport_attach_email(const char *bthash, const char *email,
+ 
+     return post_state;
+ }
++
++struct post_state *ureport_attach_comment(const char *bthash, const char *comment,
++                                       struct ureport_server_config *config)
++{
++    char *json_attachment = new_json_attachment(bthash, "comment", comment);
++    struct post_state *post_state = post_ureport(json_attachment, config);
++    free(json_attachment);
++
++    return post_state;
++}
+diff --git a/src/lib/ureport.h b/src/lib/ureport.h
+index 16f40f1..80f26d9 100644
+--- a/src/lib/ureport.h
++++ b/src/lib/ureport.h
+@@ -51,6 +51,10 @@ struct post_state *ureport_attach_rhbz(const char *bthash, int rhbz_bug_id,
+ struct post_state *ureport_attach_email(const char *bthash, const char *email,
+                                         struct ureport_server_config *config);
+ 
++#define ureport_attach_comment libreport_ureport_attach_comment
++struct post_state *ureport_attach_comment(const char *bthash, const char *comment,
++                                        struct ureport_server_config *config);
++
+ #define ureport_from_dump_dir libreport_ureport_from_dump_dir
+ char *ureport_from_dump_dir(const char *dump_dir_path);
+ 
+diff --git a/src/plugins/ureport.c b/src/plugins/ureport.c
+index 59554f4..e6237cc 100644
+--- a/src/plugins/ureport.c
++++ b/src/plugins/ureport.c
+@@ -435,6 +435,8 @@ int main(int argc, char **argv)
+     bool rhbz_bug_from_rt = false;
+     const char *email_address = NULL;
+     bool email_address_from_env = false;
++    char *comment = NULL;
++    bool comment_file = NULL;
+     struct dump_dir *dd = NULL;
+     struct options program_options[] = {
+         OPT__VERBOSE(&g_verbose),
+@@ -456,11 +458,16 @@ int main(int argc, char **argv)
+                           _("attach RHBZ bug (requires -a|-A, conflicts with -B)")),
+         OPT_BOOL('B', "bug-id-rt", &rhbz_bug_from_rt,
+                           _("attach last RHBZ bug from reported_to (requires -a|-A, conflicts with -b)")),
++        OPT_STRING('o', "comment", &comment, "DESCRIPTION",
++                          _("attach short text (requires -a|-A, conflicts with -D)")),
++        OPT_BOOL('O', "comment-file", &comment_file,
++                          _("attach short text from comment (requires -a|-A, conflicts with -d)")),
++
+         OPT_END(),
+     };
+ 
+     const char *program_usage_string = _(
+-        "& [-v] [-c FILE] [-u URL] [-k] [-t SOURCE] [-A -a bthash -B -b bug-id -E -e email] [-d DIR]\n"
++        "& [-v] [-c FILE] [-u URL] [-k] [-t SOURCE] [-A -a bthash -B -b bug-id -E -e email -O -o comment] [-d DIR]\n"
+         "\n"
+         "Upload micro report or add an attachment to a micro report\n"
+         "\n"
+@@ -495,7 +502,10 @@ int main(int argc, char **argv)
+     if (email_address && email_address_from_env)
+         error_msg_and_die("You need to pass either -e bthash or -E");
+ 
+-    if (ureport_hash_from_rt || rhbz_bug_from_rt)
++    if (comment && comment_file)
++        error_msg_and_die("You need to pass either -o comment or -O");
++
++    if (ureport_hash_from_rt || rhbz_bug_from_rt || comment_file)
+     {
+         dd = dd_opendir(dump_dir_path, DD_OPEN_READONLY);
+         if (!dd)
+@@ -533,6 +543,15 @@ int main(int argc, char **argv)
+             free_report_result(bz_result);
+         }
+ 
++        if (comment_file)
++        {
++            comment = dd_load_text(dd, FILENAME_COMMENT);
++            if (comment == NULL)
++                error_msg_and_die(_("Cannot attach comment from 'comment' file"));
++            if (comment[0] == '\0')
++                error_msg_and_die(_("'comment' file is empty"));
++        }
++
+         dd_close(dd);
+     }
+ 
+@@ -546,8 +565,8 @@ int main(int argc, char **argv)
+ 
+     if (ureport_hash)
+     {
+-        if (rhbz_bug < 0 && !email_address)
+-            error_msg_and_die(_("You need to specify bug ID, contact email or both"));
++        if (rhbz_bug < 0 && !email_address && !comment)
++            error_msg_and_die(_("You need to specify bug ID, contact email, comment or all of them"));
+ 
+         if (rhbz_bug >= 0)
+         {
+@@ -561,6 +580,12 @@ int main(int argc, char **argv)
+                 goto finalize;
+         }
+ 
++        if (comment)
++        {
++            if (perform_attach(&config, ureport_hash, (attach_handler)ureport_attach_comment, (void *)comment))
++                goto finalize;
++        }
++
+         ret = 0;
+         goto finalize;
+     }
+-- 
+1.9.3
+

@@ -5,7 +5,9 @@ Version: 1.0.0
 Release: 4%{?dist}
 
 Summary: Library of many utility functions and classes
+Summary(zh_CN.UTF-8): 许多函数和类的库
 Group: System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 # https://fedoraproject.org/wiki/Licensing/MIT
 License: MIT
 URL: http://www.atheme.org/project/mowgli
@@ -19,15 +21,22 @@ the slow GLib list manipulation functions), or stand alone. It also provides a
 powerful hook system and convenient logging for your code, as well as a high
 performance block allocator.
 
+%description -l zh_CN.UTF-8
+这是一个 C 的开发框架（类似 GLib），提供了高性能和可靠的算法。
+
 %package devel
 Summary: Files needed for developing with libmowgli
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: %{name}%{?_isa} = %{version}-%{release}
 
 %description devel
 This package contains the files that are needed when building
 software that uses libmowgli.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q

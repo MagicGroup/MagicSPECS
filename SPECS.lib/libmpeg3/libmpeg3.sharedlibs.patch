@@ -1,0 +1,219 @@
+diff -Naur libmpeg3-1.8.old/Makefile libmpeg3-1.8.new/Makefile
+--- libmpeg3-1.8.old/Makefile	2008-08-07 04:33:09.000000000 +0100
++++ libmpeg3-1.8.new/Makefile	2008-09-28 03:28:17.000000000 +0100
+@@ -1,8 +1,11 @@
+ CC = gcc
+ NASM = nasm
+ USE_MMX = 0
+-USE_CSS = 1
+-A52DIR := $(shell expr a52dec* )
++USE_CSS = 0
++A52DIR := /usr/include/a52dec
++LIBDIR = lib
++MAJOR = 1
++MINOR = 8
+ 
+ 
+ ifeq ("$(DST)", "")
+@@ -16,36 +19,46 @@
+ endif
+ 
+ 
+-OBJDIR := $(shell uname --machine)
++ifeq ("$(ARCH)", "")
++OBJDIR := $(shell arch)
++else
++OBJDIR := $(ARCH)
++endif
+ 
+ 
++ifeq ($(strip $(prefix)),)
++PREFIX=/usr
++else
++PREFIX=$(prefix)
++endif
+ 
++ifeq ($(OBJDIR), i386)
++  USE_MMX = 0
++  ADD_CFLAGS := -O2 -fomit-frame-pointer -falign-loops=2 -falign-jumps=2 -falign-functions=2 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -D_LARGEFILE64_SOURCE
++endif
+ 
+-ifeq ($(OBJDIR), alpha)
++ifeq ($(OBJDIR), i586)
+   USE_MMX = 0
+-  ifneq ($(HAVE_CFLAGS), y)
+-    CFLAGS := -O4 -arch ev67 -ieee -accept c99_keywords -gcc_messages
+-  endif
++  ADD_CFLAGS := -O2 -fomit-frame-pointer -falign-loops=2 -falign-jumps=2 -falign-functions=2 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -D_LARGEFILE64_SOURCE
+ endif
+ 
+ ifeq ($(OBJDIR), i686)
+-  USE_MMX = 1
+-  ifneq ($(HAVE_CFLAGS), y)
+-    CFLAGS := -O2 -fomit-frame-pointer -falign-loops=2 -falign-jumps=2 -falign-functions=2 -I/usr/local/include
+-  endif
+-  CFLAGS += -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -D_LARGEFILE64_SOURCE
++  USE_MMX = 0
++  ADD_CFLAGS := -O2 -fomit-frame-pointer -falign-loops=2 -falign-jumps=2 -falign-functions=2 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -D_LARGEFILE64_SOURCE
+ endif
+ 
++
+ ifeq ($(OBJDIR), x86_64)
+-  ifneq ($(HAVE_CFLAGS), y)
+-    CFLAGS := -O2 -fomit-frame-pointer -I/usr/local/include
+-  endif
+-  CFLAGS += -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -D_LARGEFILE64_SOURCE
++  ADD_CFLAGS := -O2 -fPIC -fomit-frame-pointer -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -D_LARGEFILE64_SOURCE
++endif
+ 
+ 
++ifndef ADD_CFLAGS
++  # This is not a "supported" architecture. Fall on defaults.
++  ADD_CFLAGS := -O2 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -D_LARGEFILE64_SOURCE
+ endif
+ 
+-
++CFLAGS += $(ADD_CFLAGS)
+ 
+ ifeq ($(USE_CSS), 1)
+   CFLAGS += -DHAVE_CSS
+@@ -64,8 +77,7 @@
+ 
+ CFLAGS += \
+ 	-I. \
+-	-I$(A52DIR)/include \
+-	-I$(A52DIR)/liba52
++	-I$(A52DIR)
+ 
+ 
+ 
+@@ -77,7 +89,8 @@
+ 
+ 
+ 
+-
++SOBJS = $(OBJS:.o=.lo)
++.SUFFIXES: .lo
+ 
+ 
+ OBJS = \
+@@ -136,51 +149,45 @@
+ 	$(OBJDIR)/audio \
+ 	$(OBJDIR)/video
+ 
+-include Makefile.a52
+-
+-DIRS += $(A52DIRS)
+-
+-
++SHARED = $(OBJDIR)/libmpeg3.so
+ OUTPUT = $(OBJDIR)/libmpeg3.a
+ UTILS = $(OBJDIR)/mpeg3dump $(OBJDIR)/mpeg3peek $(OBJDIR)/mpeg3toc  $(OBJDIR)/mpeg3cat
++SONAME = libmpeg3.so
+ 
+ #$(OBJDIR)/mpeg3split
+ 
+ 
+-LIBS = -lm -lpthread
++LIBS = -lm -lpthread -la52
+ 
+ $(shell mkdir -p $(OBJDIR) )
+ 
+-$(shell echo $(CFLAGS) > $(OBJDIR)/c_flags)
+-$(shell echo $(A52CFLAGS) > $(OBJDIR)/a52_flags)
+-$(shell echo $(OBJS) $(ASMOBJS) $(A52OBJS) $(NASMOBJS) > $(OBJDIR)/objs)
+ $(shell mkdir -p $(DIRS) )
+ 
+-all: $(OUTPUT) $(UTILS)
++all: $(SHARED) $(UTILS)
+ 
+ 
+-$(OUTPUT): $(OBJS) $(ASMOBJS) $(NASMOBJS) $(A52OBJS)
+-	ar rcs $(OUTPUT) `cat $(OBJDIR)/objs`
++$(SHARED): $(OBJS) $(ASMOBJS) $(NASMOBJS) $(A52OBJS)
++	$(CC) $(CFLAGS) $(LIBS) -shared -o $(SHARED) $(OBJS) $(ASMOBJS) $(NASMOBJS)  -Wl,-soname -Wl,$(SONAME)
++	( cd $(OBJDIR); \
++	ln -sf $(SONAME) $(SONAME).$(MAJOR) ; \
++	ln -sf $(SONAME) $(SONAME).$(MAJOR).$(MINOR) ; \
++	)
+ 
+ 
++$(OBJDIR)/mpeg3dump: $(SHARED) mpeg3dump.c
++	$(CC) $(CFLAGS) $(LIBS) -o $(OBJDIR)/mpeg3dump mpeg3dump.c $(SHARED)
+ 
+-$(OBJDIR)/mpeg3dump: $(OUTPUT) mpeg3dump.c
+-	$(CC) `cat $(OBJDIR)/c_flags` -o $(OBJDIR)/mpeg3dump mpeg3dump.c $(OUTPUT) $(LIBS)
++$(OBJDIR)/mpeg3peek: $(SHARED) mpeg3peek.c
++	$(CC) $(CFLAGS) $(LIBS) -o $(OBJDIR)/mpeg3peek mpeg3peek.c $(SHARED)
+ 
+-$(OBJDIR)/mpeg3peek: $(OUTPUT) mpeg3peek.c
+-	$(CC) `cat $(OBJDIR)/c_flags` -o $(OBJDIR)/mpeg3peek mpeg3peek.c $(OUTPUT) $(LIBS)
++$(OBJDIR)/mpeg3toc: $(SHARED) mpeg3toc.c
++	$(CC) $(CFLAGS) $(LIBS) -o $(OBJDIR)/mpeg3toc mpeg3toc.c $(SHARED)
+ 
+-$(OBJDIR)/mpeg3toc: $(OUTPUT) mpeg3toc.c
+-	$(CC) `cat $(OBJDIR)/c_flags` -o $(OBJDIR)/mpeg3toc mpeg3toc.c $(OUTPUT) $(LIBS)
++$(OBJDIR)/mpeg3cat: $(SHARED) mpeg3cat.c
++	$(CC) $(CFLAGS) $(LIBS) -o $(OBJDIR)/mpeg3cat mpeg3cat.c $(SHARED)
+ 
+-$(OBJDIR)/mpeg3cat: $(OUTPUT) mpeg3cat.c
+-	$(CC) `cat $(OBJDIR)/c_flags` -o $(OBJDIR)/mpeg3cat mpeg3cat.c $(OUTPUT) $(LIBS)
+-
+-#$(OBJDIR)/mpeg3split: $(OUTPUT)
+-#	$(CC) `cat $(OBJDIR)/c_flags` -o $(OBJDIR)/mpeg3split mpeg3split.c $(OUTPUT) $(LIBS)
+-
+-$(OBJDIR)/mpeg2qt: $(OUTPUT)
+-	$(CC) `cat $(OBJDIR)/c_flags` -o $(OBJDIR)/mpeg2qt mpeg2qt.c \
++$(OBJDIR)/mpeg2qt: $(SHARED)
++	$(CC) $(CFLAGS) $(LIBS) -o $(OBJDIR)/mpeg2qt mpeg2qt.c \
+ 		$(OUTPUT) \
+ 		$(LIBS) \
+ 		-I. \
+@@ -191,7 +198,18 @@
+ 		-ldl
+ 
+ install: 
+-	cp $(UTILS) $(DST)
++	install -d $(DESTDIR)$(PREFIX)/bin
++	install -m 755 $(UTILS) $(DESTDIR)$(PREFIX)/bin
++	install -d $(DESTDIR)$(PREFIX)/$(LIBDIR)
++	install $(SHARED) $(DESTDIR)$(PREFIX)/$(LIBDIR)
++	( cd $(DESTDIR)$(PREFIX)/$(LIBDIR) ; \
++	ln -sf $(SONAME) $(SONAME).$(MAJOR) ; \
++	ln -sf $(SONAME) $(SONAME).$(MAJOR).$(MINOR) ; )
++	install -d $(DESTDIR)$(PREFIX)/include/audio
++	install -d $(DESTDIR)$(PREFIX)/include/video
++	install -m 644 *.h $(DESTDIR)$(PREFIX)/include
++	install -m 644 audio/*.h $(DESTDIR)$(PREFIX)/include/audio
++	install -m 644 video/*.h $(DESTDIR)$(PREFIX)/include/video
+ 
+ clean:
+ 	rm -rf $(OBJDIR)
+@@ -204,7 +222,7 @@
+ 	cat *.c *.h audio/*.c audio/*.h video/*.c video/*.h | wc
+ 
+ $(OBJS): 
+-	$(CC) -c `cat $(OBJDIR)/c_flags` $(subst $(OBJDIR)/,, $*.c) -o $*.o
++	$(CC) -c -D_REENTRANT $(CFLAGS) $(subst $(OBJDIR)/,, $*.c) -o $*.o
+ $(ASMOBJS): 
+ 	$(CC) -c `cat $(OBJDIR)/c_flags` $(subst $(OBJDIR)/,, $*.S) -o $*.o
+ $(NASMOBJS): 
+@@ -255,6 +273,3 @@
+ $(OBJDIR)/video/vlc.o:  			    video/vlc.c
+ $(OBJDIR)/workarounds.o:  			    workarounds.c
+ 
+-
+-
+-include depend.a52
+diff -Naur libmpeg3-1.8.old/audio/Makefile libmpeg3-1.8.new/audio/Makefile
+--- libmpeg3-1.8.old/audio/Makefile	2007-01-09 07:09:51.000000000 +0000
++++ libmpeg3-1.8.new/audio/Makefile	2008-09-28 02:32:54.000000000 +0100
+@@ -18,7 +18,7 @@
+ all: $(OBJS)
+ 
+ .c.o:
+-	$(CC) -c `./c_flags` $*.c
++	$(CC) -c -fPIC `./c_flags` $*.c
+ 
+ .s.o:
+ 	$(CC) -f elf $*.s

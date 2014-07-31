@@ -1,12 +1,14 @@
 Name:		libotf
-Version:	0.9.12
-Release:	4%{?dist}
+Version: 0.9.13
+Release:	1%{?dist}
 Summary:	A Library for handling OpenType Font
+Summary(zh_CN.UTF-8): 处理 OpenType 字体的库
 
 Group:		System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 License:	LGPLv2+
-URL:		http://www.m17n.org/libotf/
-Source0:	 http://www.m17n.org/%{name}/%{name}-%{version}.tar.gz
+URL:		http://www.nongnu.org/m17n/
+Source0:	http://download.savannah.gnu.org/releases/m17n/%{name}-%{version}.tar.gz
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildRequires:	gcc chrpath freetype-devel libXaw-devel
@@ -24,15 +26,22 @@ provides the similar (or better) facility as this library, but
 currently they have not yet released their library. So, we have
 developed this one.
 
+%description -l zh_CN.UTF-8
+处理 OpenType 字体的库。
+
 %package	devel
 Summary:	Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:		Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:	%{name} = %{version}-%{release}, pkgconfig
 
 %description	devel
 The %{name}-devel package contains libraries and header files for
 developing applications that use %{name}.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -51,6 +60,7 @@ for file in $RPM_BUILD_ROOT/usr/bin/*; do chrpath -d $file || true; done
 
 (cd example && make clean && rm -rf .deps && rm Makefile)
 rm $RPM_BUILD_ROOT/usr/bin/libotf-config
+magic_rpm_clean.sh
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -78,6 +88,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/pkgconfig/*
 
 %changelog
+* Wed Jul 23 2014 Liu Di <liudidi@gmail.com> - 0.9.13-1
+- 更新到 0.9.13
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 0.9.12-4
 - 为 Magic 3.0 重建
 

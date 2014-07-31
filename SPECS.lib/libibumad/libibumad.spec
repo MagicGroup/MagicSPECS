@@ -1,13 +1,13 @@
 Summary: OpenFabrics Alliance InfiniBand umad (user MAD) library
 Summary(zh_CN.UTF-8): 开放结构联盟的 InfiniBand UMAD 库
 Name: libibumad
-Version: 1.3.7
+Version: 1.3.9
 Release: 4%{?dist}
 License: GPLv2 or BSD
 Group: System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-Source: http://www.openfabrics.org/downloads/management/%{name}-%{version}.tar.gz
+Source: https://www.openfabrics.org/downloads/management/%{name}-%{version}.tar.gz
 Url: http://openfabrics.org
 Requires(post): /sbin/ldconfig
 Requires(postun): /sbin/ldconfig
@@ -84,6 +84,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/libibumad.a
 
 %changelog
+* Fri Jul 18 2014 Liu Di <liudidi@gmail.com> - 1.3.9-4
+- 更新到 1.3.9
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 1.3.7-4
 - 为 Magic 3.0 重建
 

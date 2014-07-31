@@ -1,11 +1,12 @@
 Name:          libmateweather
-Version:       1.8.0
+Version:	1.9.0
 Release:       1%{?dist}
 Summary:       Libraries to allow MATE Desktop to display weather information
 Summary(zh_CN.UTF-8): 允许 MATE 桌面显示天气信息的库
 License:       GPLv2+ and LGPLv2+
 URL:           http://mate-desktop.org
-Source0:       http://pub.mate-desktop.org/releases/1.8/%{name}-%{version}.tar.xz
+%define majorver %(echo %{version} | awk -F. '{print $1"."$2}')
+Source0:       http://pub.mate-desktop.org/releases/%{majorver}/%{name}-%{version}.tar.xz
 
 BuildRequires: gtk2-devel
 BuildRequires: libsoup-devel
@@ -111,6 +112,9 @@ fi
 
 
 %changelog
+* Fri Jul 18 2014 Liu Di <liudidi@gmail.com> - 1.9.0-1
+- 更新到 1.9.0
+
 * Wed May 07 2014 Liu Di <liudidi@gmail.com> - 1.8.0-2
 - 为 Magic 3.0 重建
 

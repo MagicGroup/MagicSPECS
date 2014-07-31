@@ -1,11 +1,13 @@
 # %global         git_commit 1496e4d
 Name:           libmm-qt
-Version:        1.0.0
+Version: 1.0.1
 Release:        2%{?dist}
 Epoch:          1
 Summary:        Qt-only wrapper for ModemManager DBus API
+Summary(zh_CN.UTF-8): ModemMoanager DBus API 的 Qt 接口
 
 Group:          System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 License:        LGPLv2+
 URL:            https://projects.kde.org/projects/extragear/libs/libmm-qt
 
@@ -22,12 +24,20 @@ Requires:  ModemManager >= 1.0.0
 %description
 Qt library for ModemManager
 
+%description -l zh_CN.UTF-8
+ModemManager 的 Qt 库
+
 %package devel
 Summary: Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: %{name}%{?_isa} = %{epoch}:%{version}-%{release}
 %description devel
 Qt libraries and header files for developing applications that use ModemManager
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -qn %{name}-%{version}
@@ -45,6 +55,7 @@ make %{?_smp_mflags} -C %{_target_platform}
 rm -rf %{buildroot}
 
 make install/fast  DESTDIR=%{buildroot} -C %{_target_platform}
+magic_rpm_clean.sh
 
 %post -p /sbin/ldconfig
 %postun -p /sbin/ldconfig
@@ -61,6 +72,9 @@ make install/fast  DESTDIR=%{buildroot} -C %{_target_platform}
 %{_libdir}/libModemManagerQt.so
 
 %changelog
+* Tue Jul 22 2014 Liu Di <liudidi@gmail.com> - 1:1.0.1-2
+- 更新到 1.0.1
+
 * Thu Nov 21 2013 Jan Grulich <jgrulich@redhat.com> - 1:1.0.0-2
 - Update to 1.0.0 (stable release)
 

@@ -1,9 +1,11 @@
 Name:           libntlm
-Version:        1.3
-Release:        4%{?dist}
+Version: 1.4
+Release:        1%{?dist}
 Summary:        NTLM authentication library 
+Summary(zh_CN.UTF-8): NTLM 认证库
 
 Group:          System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 License:        LGPLv2+
 URL:            http://nongnu.org/libntlm/
 Source0:        http://nongnu.org/libntlm/releases/%{name}-%{version}.tar.gz
@@ -15,9 +17,14 @@ BuildRequires:  pkgconfig
 A library for authenticating with Microsoft NTLM challenge-response,
 derived from Samba sources.
 
+%description -l zh_CN.UTF-8
+NTLM 认证库。
+
 %package        devel
 Summary:        Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       %{name} = %{version}-%{release}
 Requires:       pkgconfig
 
@@ -25,6 +32,8 @@ Requires:       pkgconfig
 The %{name}-devel package contains libraries and header files for
 developing applications that use %{name}.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -65,6 +74,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Tue Jul 22 2014 Liu Di <liudidi@gmail.com> - 1.4-1
+- 更新到 1.4
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 1.3-4
 - 为 Magic 3.0 重建
 

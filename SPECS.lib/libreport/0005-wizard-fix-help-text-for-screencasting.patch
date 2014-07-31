@@ -1,0 +1,32 @@
+From f5ca628791e23af0ebfae6bbee715efe1e90e34d Mon Sep 17 00:00:00 2001
+From: Jakub Filak <jfilak@redhat.com>
+Date: Fri, 18 Jul 2014 13:38:40 +0200
+Subject: [PATCH 5/8] wizard: fix help text for screencasting
+
+Related to rhbz#1120870
+
+Signed-off-by: Jakub Filak <jfilak@redhat.com>
+---
+ src/gui-wizard-gtk/wizard.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/src/gui-wizard-gtk/wizard.c b/src/gui-wizard-gtk/wizard.c
+index 68af9bd..16b06db 100644
+--- a/src/gui-wizard-gtk/wizard.c
++++ b/src/gui-wizard-gtk/wizard.c
+@@ -3490,10 +3490,10 @@ void create_assistant(bool expert_mode)
+         gtk_widget_set_sensitive(GTK_WIDGET(g_btn_startcast), false);
+         gtk_widget_set_tooltip_markup(GTK_WIDGET(g_btn_startcast),
+           _("In order to enable the built-in screencasting "
+-            "functionality the package recordmydesktop has to be installed. "
++            "functionality the package fros-recordmydesktop has to be installed. "
+             "Please run the following command if you want to install it."
+             "\n\n"
+-            "<b>su -c \"yum install recordmydesktop\"</b>"
++            "<b>su -c \"yum install fros-recordmydesktop\"</b>"
+             ));
+     }
+ 
+-- 
+1.9.3
+

@@ -3,11 +3,13 @@
 
 Name:		libnjb
 Version:	2.2.7
-Release:	3%{?dist}
+Release:	4%{?dist}
 Summary:	A software library for talking to the Creative Nomad Jukeboxes and Dell DJs
+Summary(zh_CN.UTF-8): 与创新 Nomad Jukeboxes 和 Dell DJs 通信的库
 URL:		http://libnjb.sourceforge.net/
 
 Group:		System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 Source0:	http://download.sourceforge.net/%{name}/%{name}-%{version}.tar.gz
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 License:	BSD
@@ -21,18 +23,28 @@ BuildRequires:	doxygen
 This package provides a software library for communicating with the
 Creative Nomad Jukebox line of MP3 players.
 
+%description -l zh_CN.UTF-8
+与创新 Nomad Jukeboxes 和 Dell DJs 通信的库。
+
 %package examples
 Summary:        Example programs for libnjb
+Summary(zh_CN.UTF-8): %{name} 的样例程序
 Group:          Applications/Multimedia
+Group(zh_CN.UTF-8): 应用程序/多媒体
 Requires:       %{name} = %{version}-%{release}
 
 %description examples
 This package provides example programs for communicating with the
 Creative Nomad Jukebox and Dell DJ line of MP3 players.
 
+%description examples -l zh_CN.UTF-8
+%{name} 的样例程序。
+
 %package devel
 Summary:        Development files for libnjb
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:          System Environment/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       %{name} = %{version}-%{release}
 # doc subpackage removed in newer releases, and included
 # in the -devel package.
@@ -45,6 +57,9 @@ Requires:	ncurses-devel
 %description devel
 This package provides development files for the libnjb
 library for Creative Nomad/Zen/Jukebox and Dell DJ line of MP3 players.
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -101,6 +116,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Tue Jul 22 2014 Liu Di <liudidi@gmail.com> - 2.2.7-4
+- 为 Magic 3.0 重建
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 2.2.7-3
 - 为 Magic 3.0 重建
 

@@ -1,9 +1,11 @@
 Name:           liboggz
 Version:        1.1.1
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        Simple programming interface for Ogg files and streams
+Summary(zh_CN.UTF-8): Ogg 文件和流的简单程序接口
 
 Group:          System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 License:        BSD
 URL:            http://www.annodex.net/
 Source0:        http://www.annodex.net/software/liboggz/download/%{name}-%{version}.tar.gz
@@ -21,9 +23,14 @@ Ogg files and streams. Ogg is an interleaving data container developed
 by Monty at Xiph.Org, originally to support the Ogg Vorbis audio
 format.
 
+%description -l zh_CN.UTF-8
+Ogg 文件和流的简单程序接口。
+
 %package devel
 Summary:	Files needed for development using liboggz
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       liboggz = %{version}-%{release}
 Requires:       libogg-devel >= 1.0
 Requires:       pkgconfig
@@ -37,9 +44,14 @@ format.
 This package contains the header files and documentation needed for
 development using liboggz.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
 %package doc
 Summary:        Documentation for liboggz
+Summary(zh_CN.UTF-8): %{name} 的文档
 Group:		Documentation
+Group(zh_CN.UTF-8): 文档
 Requires:	liboggz = %{version}-%{release}
 
 %description doc
@@ -51,6 +63,8 @@ format.
 This package contains HTML documentation needed for development using
 liboggz.
 
+%description doc -l zh_CN.UTF-8
+%{name} 的文档。
 
 %prep
 %setup -q -n %{name}-%{version}
@@ -84,7 +98,7 @@ rm -rf $RPM_BUILD_ROOT%{_datadir}/doc/%{name}-doc-%{version}/latex
     touch -r oggz_off_t_generated.h.in.multilib \
       $RPM_BUILD_ROOT%{_includedir}/oggz/oggz_off_t_generated.h
 )
-
+magic_rpm_clean.sh
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -115,6 +129,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Wed Jul 23 2014 Liu Di <liudidi@gmail.com> - 1.1.1-5
+- 为 Magic 3.0 重建
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 1.1.1-4
 - 为 Magic 3.0 重建
 

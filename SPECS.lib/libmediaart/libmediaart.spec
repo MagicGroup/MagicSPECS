@@ -1,17 +1,13 @@
 Name:           libmediaart
-Version:        0.2.0
-Release:        4%{?dist}
+Version:	0.4.0
+Release:        1%{?dist}
 Summary:        Library for managing media art caches
+Summary(zh_CN.UTF-8): 管理媒体缓存的库
 
 License:        LGPLv2+
 URL:            https://github.com/curlybeast/libmediaart
-Source0:        https://download.gnome.org/sources/%{name}/0.2/%{name}-%{version}.tar.xz
-
-# upstreamd patches to avoid unncesarry linkage
-# https://bugzilla.gnome.org/show_bug.cgi?id=723877
-Patch1:         0001-configure-Don-t-link-to-both-Qt-and-gdk-pixbuf-if-bo.patch
-Patch2:         0002-build-Remove-leftover-explicit-lm-lz-linkage.patch
-Patch3:         0003-build-Force-automake-C-linkage-when-building-C-only.patch
+%define majorver %(echo %{version} | awk -F. '{print $1"."$2}')
+Source0:        https://download.gnome.org/sources/%{name}/%{majorver}/%{name}-%{version}.tar.xz
 
 BuildRequires:  pkgconfig(glib-2.0) pkgconfig(gio-2.0) pkgconfig(gio-unix-2.0)
 BuildRequires:  pkgconfig(gdk-pixbuf-2.0)
@@ -23,21 +19,23 @@ BuildRequires:  automake autoconf libtool
 %description
 Library tasked with managing, extracting and handling media art caches.
 
+%description -l zh_CN.UTF-8
+管理媒体缓存的库。
 
 %package        devel
 Summary:        Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Requires:       %{name}%{?_isa} = %{version}-%{release}
 
 %description    devel
 The %{name}-devel package contains libraries and header files for
 developing applications that use %{name}.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
-%patch1 -p1
-%patch2 -p1
-%patch3 -p1
 autoreconf -fi
 
 
@@ -51,6 +49,7 @@ make %{?_smp_mflags}
 %install
 %make_install
 find $RPM_BUILD_ROOT -name '*.la' -delete -print
+magic_rpm_clean.sh
 
 #check
 # requires X
@@ -76,6 +75,9 @@ find $RPM_BUILD_ROOT -name '*.la' -delete -print
 
 
 %changelog
+* Fri Jul 18 2014 Liu Di <liudidi@gmail.com> - 0.4.0-1
+- 更新到 0.4.0
+
 * Sat Feb  8 2014 Yanko Kaneti <yaneti@declera.com> - 0.2.0-4
 - Add patches to avoid unnecessary linkage
 

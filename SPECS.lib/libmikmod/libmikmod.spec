@@ -1,18 +1,15 @@
 Summary: A MOD music file player library
 Summary(zh_CN.UTF-8): MOD 音乐文件播放器库
 Name: libmikmod
-Version: 3.2.0
-Release: 0.beta2%{?dist}.2
+Version: 3.3.6
+Release: 1%{?dist}
 License: GPLv2 and LGPLv2+
 Group: Applications/Multimedia
 Group(zh_CN.UTF-8): 应用程序/多媒体
 Buildroot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: esound-devel
 URL: http://mikmod.raphnet.net/
-Source0: http://mikmod.raphnet.net/files/libmikmod-%{version}-beta2.tar.bz2
-Patch0:  libmikmod-64bit.patch
-Patch1:  libmikmod-esd.patch
-Patch2:  libmikmod-strip-lib.patch
+Source0: http://downloads.sourceforge.net/project/mikmod/libmikmod/%{version}/libmikmod-%{version}.tar.gz
 Patch3:  libmikmod-multilib.patch
 Patch4:  libmikmod-autoconf.patch
 Patch5:  libmikmod-info.patch
@@ -43,13 +40,7 @@ applications for mikmod.
 %{name} 的开发包。
 
 %prep
-%setup -q -n %{name}-%{version}-beta2
-%patch0 -p1 -b .64bit
-%patch1 -p1 -b .esd
-%patch2 -p1 -b .strip-lib
-%patch3 -p1 -b .multilib
-%patch4 -p1 -b .autoconf
-%patch5 -p1 -b .info
+%setup -q -n %{name}-%{version}
 
 %build
 %configure
@@ -89,8 +80,12 @@ fi
 %{_includedir}/*
 %{_infodir}/mikmod*
 %{_mandir}/man1/libmikmod-config*
+%{_libdir}/pkgconfig/libmikmod.pc
 
 %changelog
+* Tue Jul 22 2014 Liu Di <liudidi@gmail.com> - 3.3.6-1
+- 更新到 3.3.6
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 3.2.0-0.beta2.2
 - 为 Magic 3.0 重建
 

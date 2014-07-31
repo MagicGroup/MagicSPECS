@@ -3,11 +3,13 @@
 %define bootstrap 1
 
 Summary: C library for multiple precision complex arithmetic
+Summary(zh_CN.UTF-8): 高精度的复数计算 C 库
 Name: libmpc
 Version: 1.0.2
-Release: 1%{?dist}
+Release: 2%{?dist}
 License: LGPLv3+ and GFDL
 Group: Development/Tools
+Group(zh_CN.UTF-8): 开发/工具
 URL: http://www.multiprecision.org/
 Source0: http://www.multiprecision.org/mpc/download/mpc-%{version}.tar.gz
 
@@ -25,20 +27,31 @@ MPC is a C library for the arithmetic of complex numbers with
 arbitrarily high precision and correct rounding of the result. It is
 built upon and follows the same principles as Mpfr.
 
+%description -l zh_CN.UTF-8
+高精度的复数计算 C 库。
+
 %package devel
 Summary: Header and shared development libraries for MPC
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: %{name}%{?_isa} = %{version}-%{release}
 Requires: mpfr-devel gmp-devel
 
 %description devel
 Header files and shared object symlinks for MPC is a C library.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
 %package -n compat-libmpc
 Summary: compat/bootstrap mpc-0.9 library
+Summary(zh_CN.UTF-8): mpc-0.9 的兼容库
 %description -n compat-libmpc
 %{summary}.
 
+%description -n compat-libmpc -l zh_CN.UTF-8
+mpc-0.9 的兼容库。
 
 %prep
 %setup -q -n mpc-%{version} %{?bootstrap:-a 1}
@@ -107,6 +120,9 @@ fi
 
 
 %changelog
+* Tue Jul 22 2014 Liu Di <liudidi@gmail.com> - 1.0.2-2
+- 为 Magic 3.0 重建
+
 * Mon Feb 24 2014 Peter Robinson <pbrobinson@fedoraproject.org> 1.0.2-1
 - mpc-1.0.2
 

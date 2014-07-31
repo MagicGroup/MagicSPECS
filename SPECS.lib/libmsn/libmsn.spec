@@ -1,10 +1,12 @@
 
 Name:		libmsn
 Summary:	Library for connecting to the MSN Messenger service
+Summary(zh_CN.UTF-8): 连接 MSN 信息服务的库
 Version:	4.2.1
-Release:	4%{?dist}
+Release:	5%{?dist}
 
 Group:		System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 License:	GPLv2
 URL:		http://sourceforge.net/projects/libmsn/
 Source0:	http://downloads.sourceforge.net/%{name}/%{name}-%{version}.tar.bz2
@@ -19,14 +21,22 @@ BuildRequires:	pkgconfig
 Libmsn is a reusable, open-source, fully documented library for connecting to
 the MSN Messenger service.
 
+%description -l zh_CN.UTF-8
+连接 MSN 信息服务的库。
+
 %package	devel
 Summary:	Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:		Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:	%{name}%{?_isa} = %{version}-%{release}
 
 %description	devel
 The %{name}-devel package contains libraries and header files for
 developing applications that use %{name}.
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q -n %{name}-%{version}
@@ -46,7 +56,7 @@ make %{?_smp_mflags} -C %{_target_platform}
 %install
 rm -rf %{buildroot}
 make install/fast -C %{_target_platform} DESTDIR=%{buildroot}
-
+magic_rpm_clean.sh
 
 %clean
 rm -rf %{buildroot}
@@ -71,6 +81,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Jul 22 2014 Liu Di <liudidi@gmail.com> - 4.2.1-5
+- 为 Magic 3.0 重建
+
 * Thu Jul 19 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 4.2.1-4
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 

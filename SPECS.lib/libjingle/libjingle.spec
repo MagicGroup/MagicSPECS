@@ -1,6 +1,6 @@
 Name:           libjingle
 Version:        0.6.14
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        GoogleTalk implementation of Jingle
 Group:          System Environment/Libraries
 License:        BSD
@@ -155,6 +155,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Fri Jul 18 2014 Liu Di <liudidi@gmail.com> - 0.6.14-5
+- 为 Magic 3.0 重建
+
 * Tue Jun 24 2014 Liu Di <liudidi@gmail.com> - 0.6.14-4
 - 为 Magic 3.0 重建
 

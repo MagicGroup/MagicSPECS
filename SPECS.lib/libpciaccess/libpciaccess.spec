@@ -2,11 +2,13 @@
 #define gitrev  a0a53a67c91c698007dcac3e7aba27c999c4f6ed
 
 Name:           libpciaccess
-Version:        0.13.1
-Release:        2%{?dist}
+Version: 0.13.2
+Release:        1%{?dist}
 Summary:        PCI access library
+Summary(zh_CN.UTF-8): PCI 访问库
 
 Group:          System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 License:        MIT
 URL:            http://gitweb.freedesktop.org/?p=xorg/lib/libpciaccess.git
 
@@ -25,14 +27,22 @@ Requires:       hwdata
 libpciaccess is a library for portable PCI access routines across multiple
 operating systems.
 
+%description -l zh_CN.UTF-8
+PCI 访问库。
+
 %package devel
 Summary:        PCI access library development package
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       %{name} = %{version}-%{release}
 Requires:       pkgconfig
 
 %description devel
 Development package for libpciaccess.
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q -n %{name}-%{?gitdate:%{gitdate}}%{!?gitdate:%{version}}
@@ -68,6 +78,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/pkgconfig/pciaccess.pc
 
 %changelog
+* Mon Jul 28 2014 Liu Di <liudidi@gmail.com> - 0.13.2-1
+- 更新到 0.13.2
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 0.13.1-2
 - 为 Magic 3.0 重建
 

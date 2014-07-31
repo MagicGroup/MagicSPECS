@@ -1,11 +1,13 @@
 Summary: A library for password generation and password quality checking
+Summary(zh_CN.UTF-8): 密码生成和密码质量校验库
 Name: libpwquality
 Version: 1.2.3
-Release: 2%{?dist}
+Release: 3%{?dist}
 # The package is BSD licensed with option to relicense as GPLv2+
 # - this option is redundant as the BSD license allows that anyway.
 License: BSD or GPLv2+
 Group: System Environment/Base
+Group(zh_CN.UTF-8): 系统环境/基本
 Source0: http://fedorahosted.org/releases/l/i/libpwquality/libpwquality-%{version}.tar.bz2
 Patch1: libpwquality-1.2.3-translation-updates.patch
 
@@ -31,9 +33,15 @@ of random passwords that pass the checks.
 This library uses the cracklib and cracklib dictionaries
 to perform some of the checks.
 
+%description -l zh_CN.UTF-8
+密码生成和密码质量校验库，这个库使用 cracklib 和 cracklib 字典
+来进一些检查。
+
 %package devel
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Summary: Support for development of applications using the libpwquality library
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Requires: libpwquality%{?_isa} = %{version}-%{release}
 Requires: pkgconfig
 
@@ -42,9 +50,14 @@ Files needed for development of applications using the libpwquality
 library.
 See the pwquality.h header file for the API.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
 %package -n python-pwquality
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Summary: Python bindings for the libpwquality library
+Summary(zh_CN.UTF-8): %{name} 的 Python 绑定
 Requires: libpwquality%{?_isa} = %{version}-%{release}
 
 %description -n python-pwquality
@@ -52,6 +65,9 @@ This is pwquality Python module that provides Python bindings
 for the libpwquality library. These bindings can be used
 for easy password quality checking and generation of random
 pronounceable passwords from Python applications.
+
+%description -n python-pwquality -l zh_CN.UTF-8
+%{name} 的 Python 绑定。
 
 %prep
 %setup -q
@@ -77,7 +93,7 @@ popd
 %endif
 rm -f $RPM_BUILD_ROOT%{_libdir}/*.la
 rm -f $RPM_BUILD_ROOT%{_moduledir}/*.la
-
+magic_rpm_clean.sh
 %find_lang libpwquality
 
 %check
@@ -110,6 +126,9 @@ rm -f $RPM_BUILD_ROOT%{_moduledir}/*.la
 %{python_sitearch}/pwquality.so
 
 %changelog
+* Mon Jul 28 2014 Liu Di <liudidi@gmail.com> - 1.2.3-3
+- 为 Magic 3.0 重建
+
 * Fri Nov 29 2013 Tomáš Mráz <tmraz@redhat.com> 1.2.3-2
 - translation updates
 
