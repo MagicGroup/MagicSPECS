@@ -24,7 +24,7 @@ BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 %endif
 
 # Note s390x doesn't have an openmpi port available.
-%ifarch %{ix86} x86_64 ppc ppc64 ppc64le %{arm} aarch64
+%ifarch %{ix86} x86_64 ppc ppc64 ppc64le %{arm} aarch64 mips64el
 %global build_openmpi 1
 %else
 %global build_openmpi 0
@@ -99,7 +99,7 @@ BuildRequires: autoconf automake
 
 %{?scl:Requires:%scl_runtime}
 
-ExclusiveArch: %{ix86} x86_64 ppc ppc64 ppc64le s390x %{arm} aarch64
+ExclusiveArch: %{ix86} x86_64 ppc ppc64 ppc64le s390x %{arm} aarch64 mips64el
 %ifarch %{ix86}
 %define valarch x86
 %define valsecarch %{nil}
@@ -135,6 +135,10 @@ ExclusiveArch: %{ix86} x86_64 ppc ppc64 ppc64le s390x %{arm} aarch64
 %ifarch aarch64
 %define valarch arm64
 %define valsecarch %{nil}
+%endif
+%ifarch mips64el
+%define valarch mips64
+%define valsecarch mips
 %endif
 
 %description
