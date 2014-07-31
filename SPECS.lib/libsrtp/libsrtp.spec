@@ -1,11 +1,11 @@
 %global shortname srtp
 %global cvsver 20101004cvs
 %define git 1
-%define vcsdate 20140623
+%define vcsdate 20140731
 
 Name:		lib%{shortname}
 Version:	1.4.4
-Release:	7.%{vcsdate}git%{?dist}
+Release:	8.%{vcsdate}git%{?dist}
 Summary:	An implementation of the Secure Real-time Transport Protocol (SRTP)
 Summary(zh_CN.UTF-8): 安全实时传输协议（SRTP）的实现
 Group:		System Environment/Libraries
@@ -94,6 +94,12 @@ magic_rpm_clean.sh
 %{_libdir}/*.a
 
 %changelog
+* Thu Jul 31 2014 Liu Di <liudidi@gmail.com> - 1.4.4-8.20140731git
+- 更新到 20140731 日期的仓库源码
+
+* Thu Jul 31 2014 Liu Di <liudidi@gmail.com> - 1.4.4-8.20140623git
+- 为 Magic 3.0 重建
+
 * Mon Jun 23 2014 Liu Di <liudidi@gmail.com> - 1.4.4-7.20140623git
 - 为 Magic 3.0 重建
 

@@ -1,13 +1,14 @@
 Name:           libshout
-Version:        2.2.2
-Release:        8%{?dist}
+Version: 2.3.1
+Release: 1%{?dist}
 Summary:        Icecast source streaming library
+Summary(zh_CN.UTF-8): Icecast 源流媒体库
 
 Group:          System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 License:        LGPLv2+
 URL:            http://www.icecast.org/
 Source:         http://downloads.us.xiph.org/releases/libshout/libshout-%{version}.tar.gz
-Patch0:         libshout-2.2.2-fix_speex.patch
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildRequires:  libogg-devel
@@ -22,9 +23,14 @@ libshout is a library for communicating with and sending data to an
 icecast server.  It handles the socket connection, the timing of the
 data, and prevents most bad data from getting to the icecast server.
 
+%description -l zh_CN.UTF-8
+Icecast 源流媒体库。
+
 %package        devel
 Summary:        static libraries and header files for %{name} development.
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       %{name} = %{version}-%{release}
 
 Requires:       libogg-devel
@@ -37,9 +43,11 @@ The libshout-devel package contains the header files needed for developing
 applications that send data to an icecast server.  Install libshout-devel if
 you want to develop applications using libshout.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
 %prep
 %setup -q
-%patch0 -p1 -b .fix_speex
 
 %build
 %configure --disable-static
@@ -57,6 +65,7 @@ make DESTDIR="$RPM_BUILD_ROOT" INSTALL="install -p " install
 find $RPM_BUILD_ROOT -type f -name "*.la" -exec rm -f {} ';'
 
 rm -rf $RPM_BUILD_ROOT%{_docdir}
+magic_rpm_clean.sh
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -80,6 +89,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/aclocal/shout.m4
 
 %changelog
+* Thu Jul 31 2014 Liu Di <liudidi@gmail.com> - 2.3.1-1
+- 更新到 2.3.1
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 2.2.2-8
 - 为 Magic 3.0 重建
 

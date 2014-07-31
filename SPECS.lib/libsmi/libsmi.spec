@@ -2,8 +2,10 @@ Name:           libsmi
 Version:        0.4.8
 Release:        8%{?dist}
 Summary:        A library to access SMI MIB information
+Summary(zh_CN.UTF-8): 访问 SMI MIB 信息的库
 
 Group:          System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 License:        GPLv2+
 URL:            http://www.ibr.cs.tu-bs.de/projects/libsmi/index.html
 Source0:        ftp://ftp.ibr.cs.tu-bs.de/pub/local/libsmi/%{name}-%{version}.tar.gz
@@ -25,10 +27,14 @@ This package contains tools to check, dump, and convert MIB
 definitions and a steadily maintained and revised archive
 of all IETF and IANA maintained standard MIB modules.
 
+%description -l zh_CN.UTF-8
+访问 SMI MIB 信息的库。
 
 %package devel
 Summary:        Development environment for libsmi library
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       %name = %version-%release
 Requires:       pkgconfig
 
@@ -39,6 +45,9 @@ and parsing SMIv1/v2 MIB modules.
 
 This package contains development files needed to develop
 libsmi-based applications.
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -66,6 +75,7 @@ install -p -m 644 %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/smi.conf
 
 rm -f $RPM_BUILD_ROOT%{_libdir}/*.a
 rm -f $RPM_BUILD_ROOT%{_libdir}/*.la
+magic_rpm_clean.sh
 
 %check
 # fails a couple of tests (2 in {0.4.4, 0.4.5})

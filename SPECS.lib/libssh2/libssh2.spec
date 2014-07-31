@@ -4,10 +4,12 @@
 %global noarch_docs_package 1
 
 Name:		libssh2
-Version:	1.4.1
-Release:	2%{?dist}
+Version: 1.4.3
+Release: 1%{?dist}
 Summary:	A library implementing the SSH2 protocol
+Summary(zh_CN.UTF-8): 实现 SSH2 协议的库
 Group:		System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 License:	BSD
 URL:		http://www.libssh2.org/
 Source0:	http://libssh2.org/download/libssh2-%{version}.tar.gz
@@ -26,9 +28,14 @@ Internet Drafts: SECSH-TRANS(22), SECSH-USERAUTH(25),
 SECSH-CONNECTION(23), SECSH-ARCH(20), SECSH-FILEXFER(06)*,
 SECSH-DHGEX(04), and SECSH-NUMBERS(10).
 
+%description -l zh_CN.UTF-8
+实现 SSH2 协议的库。
+
 %package	devel
 Summary:	Development files for libssh2
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:		Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:	%{name} = %{version}-%{release}
 Requires:	pkgconfig
 
@@ -36,9 +43,14 @@ Requires:	pkgconfig
 The libssh2-devel package contains libraries and header files for
 developing applications that use libssh2.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
 %package	docs
 Summary:	Documentation for libssh2
+Summary(zh_CN.UTF-8): %{name} 的文档
 Group:		Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:	%{name} = %{version}-%{release}
 %if %{noarch_docs_package}
 BuildArch:	noarch
@@ -47,6 +59,9 @@ BuildArch:	noarch
 %description	docs
 The libssh2-docs package contains man pages and examples for
 developing applications that use libssh2.
+
+%description docs -l zh_CN.UTF-8
+%{name} 的文档。
 
 %prep
 %setup -q
@@ -117,6 +132,9 @@ rm -rf %{buildroot}
 %{_libdir}/pkgconfig/libssh2.pc
 
 %changelog
+* Thu Jul 31 2014 Liu Di <liudidi@gmail.com> - 1.4.3-1
+- 更新到 1.4.3
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 1.4.1-2
 - 为 Magic 3.0 重建
 

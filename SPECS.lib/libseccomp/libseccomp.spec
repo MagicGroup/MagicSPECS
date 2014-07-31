@@ -2,7 +2,7 @@ Summary: Enhanced seccomp library
 Summary(zh_CN.UTF-8): 增强的 seccomp 库
 Name: libseccomp
 Version: 2.1.1
-Release: 3%{?dist}
+Release: 4%{?dist}
 ExclusiveArch: %{ix86} x86_64 %{arm}
 License: LGPLv2
 Group: System Environment/Libraries
@@ -75,6 +75,9 @@ make check
 %{_mandir}/man3/*
 
 %changelog
+* Thu Jul 31 2014 Liu Di <liudidi@gmail.com> - 2.1.1-4
+- 为 Magic 3.0 重建
+
 * Fri Jun 20 2014 Liu Di <liudidi@gmail.com> - 2.1.1-3
 - 为 Magic 3.0 重建
 

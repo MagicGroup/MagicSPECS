@@ -1,9 +1,11 @@
 Name:           libspectre
-Version:        0.2.6
-Release:        6%{?dist}
+Version: 0.2.7
+Release: 1%{?dist}
 Summary:        A library for rendering PostScript(TM) documents
+Summary(zh_CN.UTF-8): 渲染 PostScript(TM) 文档的库
 
 Group:          System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 License:        GPLv2+
 URL:            http://libspectre.freedesktop.org
 Source0:        http://libspectre.freedesktop.org/releases/%{name}-%{version}.tar.gz
@@ -15,10 +17,14 @@ BuildRequires: ghostscript-devel >= 8.61
 It provides a convenient easy to use API for handling and rendering
 PostScript documents.
 
+%description -l zh_CN.UTF-8
+渲染 PostScript(TM) 文档的库。
 
 %package        devel
 Summary:        Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       %{name} = %{version}-%{release}
 Requires:       pkgconfig
 
@@ -27,6 +33,8 @@ Requires:       pkgconfig
 The %{name}-devel package contains libraries and header files for
 developing applications that use %{name}.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -41,7 +49,7 @@ make %{?_smp_mflags}
 rm -rf $RPM_BUILD_ROOT
 make install DESTDIR=$RPM_BUILD_ROOT
 find $RPM_BUILD_ROOT -name '*.la' -exec rm -f {} ';'
-
+magic_rpm_clean.sh
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -65,6 +73,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Thu Jul 31 2014 Liu Di <liudidi@gmail.com> - 0.2.7-1
+- 更新到 0.2.7
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 0.2.6-6
 - 为 Magic 3.0 重建
 

@@ -2,9 +2,10 @@
 %global release_version %%(echo %{version} | awk -F. '{print $1"."$2}')
 
 Name:           libsecret
-Version:        0.15
-Release:        2%{?dist}
+Version:	0.18
+Release: 1%{?dist}
 Summary:        Library for storing and retrieving passwords and other secrets
+Summary(zh_CN.UTF-8): 存储和检索密码和其它秘密信息的库 
 
 License:        LGPLv2+
 URL:            https://live.gnome.org/Libsecret
@@ -27,15 +28,21 @@ libsecret is a library for storing and retrieving passwords and other secrets.
 It communicates with the "Secret Service" using DBus. gnome-keyring and
 KSecretService are both implementations of a Secret Service.
 
+%description -l zh_CN.UTF-8
+存储和检索密码和其它秘密信息的库。
+
 
 %package        devel
 Summary:        Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Requires:       %{name}%{?_isa} = %{version}-%{release}
 
 %description    devel
 The %{name}-devel package contains libraries and header files for
 developing applications that use %{name}.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -50,7 +57,7 @@ make %{?_smp_mflags}
 make install DESTDIR=$RPM_BUILD_ROOT
 
 find $RPM_BUILD_ROOT -name '*.la' -exec rm -f {} ';'
-
+magic_rpm_clean.sh
 %find_lang libsecret
 
 
@@ -64,7 +71,7 @@ find $RPM_BUILD_ROOT -name '*.la' -exec rm -f {} ';'
 %{_bindir}/secret-tool
 %{_libdir}/libsecret-1.so.*
 %{_libdir}/girepository-1.0/Secret-1.typelib
-%{_libdir}/girepository-1.0/SecretUnstable-0.typelib
+#%{_libdir}/girepository-1.0/SecretUnstable-0.typelib
 %doc %{_mandir}/man1/secret-tool.1.gz
 
 %files devel
@@ -73,16 +80,19 @@ find $RPM_BUILD_ROOT -name '*.la' -exec rm -f {} ';'
 %{_libdir}/pkgconfig/libsecret-1.pc
 %{_libdir}/pkgconfig/libsecret-unstable.pc
 %{_datadir}/gir-1.0/Secret-1.gir
-%{_datadir}/gir-1.0/SecretUnstable-0.gir
+#%{_datadir}/gir-1.0/SecretUnstable-0.gir
 %{_datadir}/vala/vapi/libsecret-1.deps
 %{_datadir}/vala/vapi/libsecret-1.vapi
-%{_datadir}/vala/vapi/libsecret-unstable.deps
-%{_datadir}/vala/vapi/libsecret-unstable.vapi
-%{_datadir}/vala/vapi/mock-service-0.vapi
+#%{_datadir}/vala/vapi/libsecret-unstable.deps
+#%{_datadir}/vala/vapi/libsecret-unstable.vapi
+#%{_datadir}/vala/vapi/mock-service-0.vapi
 %doc %{_datadir}/gtk-doc/
 
 
 %changelog
+* Thu Jul 31 2014 Liu Di <liudidi@gmail.com> - 0.18-1
+- 更新到 0.18
+
 * Fri May 02 2014 Liu Di <liudidi@gmail.com> - 0.15-2
 - 为 Magic 3.0 重建
 
