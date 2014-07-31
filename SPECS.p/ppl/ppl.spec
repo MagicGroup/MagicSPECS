@@ -8,6 +8,7 @@ URL:			http://www.cs.unipr.it/ppl/
 Source0:		ftp://ftp.cs.unipr.it/pub/ppl/releases/%{version}/%{name}-%{version}.tar.bz2
 Source1:		ppl.hh
 Source2:		ppl_c.h
+Patch1:		ppl-1.0-gmp-5.1.0-fix.patch
 Requires(post):		/sbin/ldconfig
 Requires(postun):	/sbin/ldconfig
 # Merged into ppl as of 0.12
@@ -155,6 +156,7 @@ Install this package if you want to program with the PPL.
 
 %prep
 %setup -q
+%patch1 -p0
 
 %build
 CPPFLAGS="-I%{_includedir}/glpk"

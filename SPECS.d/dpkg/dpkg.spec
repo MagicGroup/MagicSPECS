@@ -17,6 +17,7 @@ URL:            http://packages.debian.org/unstable/admin/dpkg
 Source0:        http://ftp.debian.org/debian/pool/main/d/dpkg/%{name}_%{version}.tar.xz
 Patch0:         dpkg-perl-libexecdir.patch
 Patch1:         dpkg-fix-logrotate.patch
+Patch2:         dpkg_add_gnu-linux-mips64el_arch.patch
 BuildRequires:  zlib-devel bzip2-devel gettext ncurses-devel
 BuildRequires:  autoconf automake gettext-devel
 BuildRequires:  doxygen flex xz-devel po4a dotconf-devel
@@ -106,6 +107,7 @@ dselect is a high-level interface for the installation/removal of debs .
 %setup -q
 %patch0 -p1
 %patch1 -p1
+%patch2 -p1
 
 # Filter unwanted Requires:
 cat << \EOF > %{name}-req

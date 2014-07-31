@@ -51,7 +51,7 @@ developing applications that use %{name}.
 %prep
 %setup -q -n %{shortname}-git%{vcsdate}
 #%patch0 -p1 -b .shared
-#%patch1 -p1 -b .mips
+%patch1 -p1 -b .mips
 
 # Fix end-of-line encoding
 sed -i 's/\r//g' doc/draft-irtf-cfrg-icm-00.txt
