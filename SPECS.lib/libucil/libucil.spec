@@ -1,9 +1,11 @@
 Summary:	Library to render text and graphic overlays onto video images
+Summary(zh_CN.UTF-8): 在视频图像上渲染文本图形的库
 Name:		libucil
 Version:	0.9.10
-Release:	5%{?dist}
+Release:	6%{?dist}
 License:	GPLv2+
 Group:		System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 URL:		http://www.unicap-imaging.org/
 Source0:	http://www.unicap-imaging.org/downloads/%{name}-%{version}.tar.gz
 
@@ -28,9 +30,14 @@ applications to use any supported video capture device via a single API.
 The related ucil library provides easy to use functions to render text
 and graphic overlays onto video images.
 
+%description -l zh_CN.UTF-8
+在视频图像上渲染文本图形的库。
+
 %package devel
 Summary:	Development files for the ucil library
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:		Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:	%{name} = %{version}-%{release}, pkgconfig, libunicap-devel
 Obsoletes:	unicap-devel <= 0.9.7-1
 
@@ -38,6 +45,9 @@ Obsoletes:	unicap-devel <= 0.9.7-1
 The libucil-devel package includes header files and libraries necessary
 for developing programs which use the ucil library. It contains the API
 documentation of the library, too.
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -55,6 +65,7 @@ make DESTDIR=$RPM_BUILD_ROOT install
 
 # Don't install any static .a and libtool .la files
 rm -f $RPM_BUILD_ROOT%{_libdir}/%{name}.{a,la}
+magic_rpm_clean.sh
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -76,6 +87,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/gtk-doc/html/%{name}
 
 %changelog
+* Fri Aug 01 2014 Liu Di <liudidi@gmail.com> - 0.9.10-6
+- 为 Magic 3.0 重建
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 0.9.10-5
 - 为 Magic 3.0 重建
 
