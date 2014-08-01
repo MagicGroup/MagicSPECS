@@ -1,12 +1,19 @@
 Summary: Theora Video Compression Codec
+Summary(zh_CN.UTF-8): Theora 视频压缩编码
 Name: libtheora
 Version: 1.1.1
 Release: 3%{?dist}
 Epoch: 1
 License: BSD
 Group: System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 URL: http://www.theora.org
 Source0: http://downloads.xiph.org/releases/theora/%{name}-%{version}.tar.xz
+Patch0:         libtheora-1.1.1-fix-pp_sharp_mod-calc.patch
+# https://bugs.archlinux.org/task/35985
+Patch1:         libtheora-1.1.1-libpng16.patch
+Patch2:         libtheora-1.1.1-libm.patch
+
 BuildRequires: libogg-devel >= 2:1.1
 BuildRequires: libvorbis-devel
 BuildRequires: SDL-devel libpng-devel
@@ -22,10 +29,14 @@ nearly identical, varying only in encapsulating decoder tables in the
 bitstream headers, but Theora will make use of this extra freedom
 in the future to improve over what is possible with VP3.
 
+%description -l zh_CN.UTF-8
+Theora 视频压缩编码。
 
 %package devel
 Summary: Development tools for Theora applications
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:	libogg-devel >= 2:1.1
 Requires:	libtheora = %{epoch}:%{version}-%{release}
 Requires:	pkgconfig
@@ -40,10 +51,14 @@ Provides:	theora-exp-devel
 The libtheora-devel package contains the header files needed to develop
 applications with libtheora.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %package devel-docs
 Summary: Documentation for developing Theora applications
+Summary(zh_CN.UTF-8): %{name} 的开发文档
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: libtheora = %{epoch}:%{version}-%{release}
 BuildArch: noarch
 
@@ -51,30 +66,43 @@ BuildArch: noarch
 The libtheora-devel-docs package contains the documentation needed
 to develop applications with libtheora.
 
+%description devel-docs -l zh_CN.UTF-8
+%{name} 的开发文档。
 
 %package -n theora-tools
 Summary: Command line tools for Theora videos
+Summary(zh_CN.UTF-8): Theora 视频的命令行工具
 Group: Applications/Multimedia
+Group(zh_CN.UTF-8): 应用程序/多媒体
 Requires: libtheora = %{epoch}:%{version}-%{release}
 
 %description -n theora-tools
 The theora-tools package contains simple command line tools for use
 with theora bitstreams.
 
+%description -n theora-tools -l zh_CN.UTF-8
+Theora 视频的命令行工具。
 
 %prep
 %setup -q
 # no custom CFLAGS please
+%patch0 -p1
+%patch1 -p0 -b .libpng16
+%patch2 -p1
+
 sed -i 's/CFLAGS="$CFLAGS $cflags_save"/CFLAGS="$cflags_save"/g' configure
+# Update config.guess/sub to fix builds on new architectures (aarch64/ppc64le)
+cp /usr/lib/rpm/config.* .
 
 
 %build
+./autogen.sh
 %configure --enable-shared --disable-static
 # Don't use rpath!
 sed -i 's|^hardcode_libdir_flag_spec=.*|hardcode_libdir_flag_spec=""|g' libtool
 sed -i 's|^runpath_var=LD_RUN_PATH|runpath_var=DIE_RPATH_DIE|g' libtool
-make
-make -C doc/spec
+make %{?_smp_mflags}
+make -C doc/spec %{?_smp_mflags}
 
 
 %install
@@ -89,7 +117,7 @@ install -m 755 examples/.libs/dump_video $RPM_BUILD_ROOT/%{_bindir}/theora_dump_
 install -m 755 examples/.libs/encoder_example $RPM_BUILD_ROOT/%{_bindir}/theora_encode
 install -m 755 examples/.libs/player_example $RPM_BUILD_ROOT/%{_bindir}/theora_player
 install -m 755 examples/.libs/png2theora $RPM_BUILD_ROOT/%{_bindir}/png2theora
-
+magic_rpm_clean.sh
 
 %clean
 rm -rf $RPM_BUILD_ROOT

@@ -1,11 +1,13 @@
 Summary:	The ASN.1 library used in GNUTLS
+Summary(zh_CN.UTF-8): GNUTLS 使用的 ASN.1 库
 Name:		libtasn1
-Version:	3.4
-Release:	1%{?dist}
+Version: 4.0
+Release: 1%{?dist}
 
 # The libtasn1 library is LGPLv2+, utilities are GPLv3+
 License:	GPLv3+ and LGPLv2+
 Group:		System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 URL:		http://www.gnu.org/software/libtasn1/
 Source0:	http://ftp.gnu.org/gnu/libtasn1/%name-%version.tar.gz
 Source1:	http://ftp.gnu.org/gnu/libtasn1/%name-%version.tar.gz.sig
@@ -19,7 +21,9 @@ Provides: bundled(gnulib) = 20130324
 
 %package devel
 Summary:	Files for development of applications which will use libtasn1
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:		Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:	%name = %version-%release
 Requires:	pkgconfig
 Requires(post):		/sbin/install-info
@@ -28,7 +32,9 @@ Requires(postun):	/sbin/install-info
 
 %package tools
 Summary:	Some ASN.1 tools
+Summary(zh_CN.UTF-8): 一些 ASN.1 工具
 Group:		Applications/Text
+Group(zh_CN.UTF-8): 应用程序/文本
 License:	GPLv3+
 Requires:	%name = %version-%release
 
@@ -38,15 +44,22 @@ A library that provides Abstract Syntax Notation One (ASN.1, as specified
 by the X.680 ITU-T recommendation) parsing and structures management, and
 Distinguished Encoding Rules (DER, as per X.690) encoding and decoding functions.
 
+%description -l zh_CN.UTF-8
+GNUTLS 使用的 ASN.1 库。
+
 %description devel
 This package contains files for development of applications which will
 use libtasn1.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %description tools
 This package contains simple tools that can decode and encode ASN.1
 data.
 
+%description tools -l zh_CN.UTF-8
+一些解码和编码 ASN.1 数据的工具。
 
 %prep
 %setup -q
@@ -65,7 +78,7 @@ make %{?_smp_mflags}
 make DESTDIR="$RPM_BUILD_ROOT" install
 
 rm -f $RPM_BUILD_ROOT{%_libdir/*.la,%_infodir/dir}
-
+magic_rpm_clean.sh
 
 %check
 make check
@@ -104,6 +117,9 @@ test "$1" = 0 -a -f %_infodir/%name.info.gz && \
 
 
 %changelog
+* Thu Jul 31 2014 Liu Di <liudidi@gmail.com> - 4.0-1
+- 更新到 4.0
+
 * Wed Nov 27 2013 Nikos Mavrogiannopoulos <nmav@redhat.com> - 3.4-1
 - new upstream release
 

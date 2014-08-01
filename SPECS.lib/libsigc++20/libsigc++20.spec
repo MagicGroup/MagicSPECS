@@ -2,11 +2,13 @@
 %define release_version %(echo %{version} | awk -F. '{print $1"."$2}')
 
 Name:           libsigc++20
-Version:        2.2.11
-Release:        2%{?dist}
+Version:	2.3.1
+Release: 1%{?dist}
 Summary:        Typesafe signal framework for C++
+Summary(zh_CN.UTF-8): C++ 的类型安全信号框架
 
 Group:          System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 License:        LGPLv2+
 URL:            http://libsigc.sourceforge.net/
 Source0:        http://ftp.gnome.org/pub/GNOME/sources/libsigc++/%{release_version}/libsigc++-%{version}.tar.xz
@@ -25,26 +27,36 @@ ease of use unmatched by other C++ callback libraries.
 Package GTK-- (gtkmm), which is a C++ binding to the GTK+ library,
 starting with version 1.1.2, uses libsigc++20.
 
+%description -l zh_CN.UTF-8
+C++ 的类型安全信号框架。
 
 %package devel
 Summary:        Development tools for the typesafe signal framework for C++
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       %{name} = %{version}-%{release}
 
 %description devel
 The %{name}-devel package contains the static libraries and header files
 needed for development with %{name}.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %package        doc
 Summary:        Documentation for %{name}, includes full API docs
+Summary(zh_CN.UTF-8): %{name} 的文档
 Group:          Documentation
+Group(zh_CN.UTF-8): 文档
 BuildArch:      noarch
 Requires:       %{name} = %{version}-%{release}
 
 %description    doc
 This package contains the full API documentation for %{name}.
 
+%description doc -l zh_CN.UTF-8
+%{name} 的文档。
 
 %prep
 %setup -q -n libsigc++-%{version}
@@ -84,6 +96,9 @@ magic_rpm_clean.sh
 
 
 %changelog
+* Thu Jul 31 2014 Liu Di <liudidi@gmail.com> - 2.3.1-1
+- 更新到 2.3.1
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 2.2.11-2
 - 为 Magic 3.0 重建
 

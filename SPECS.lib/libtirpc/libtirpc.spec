@@ -1,17 +1,19 @@
 %define _root_libdir    %{_libdir}
 
 Name:		   libtirpc
-Version:		0.2.2
-Release:		4%{?dist}
+Version: 0.2.4
+Release: 1%{?dist}
 Summary:		Transport Independent RPC Library
+Summary(zh_CN.UTF-8): 独立运行的 RPC 库
 Group:		  	System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 License:		SISSL and BSD
 URL:  			http://nfsv4.bullopensource.org/
 
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 Source0:	http://downloads.sourceforge.net/libtirpc/libtirpc-%{version}.tar.bz2
 
-Patch001: libtirpc-0.2.3-rc1.patch
+Patch001: libtirpc-0.2.5-rc3.patch
 
 BuildRequires:		automake, autoconf, libtool, pkgconfig
 BuildRequires:		libgssglue-devel
@@ -28,9 +30,14 @@ Transport Layer Interface (TLI) or an equivalent X/Open Transport Interface
 by almost 70 vendors on all major operating systems.  TS-RPC source code 
 (RPCSRC 4.0) remains available from several internet sites.
 
+%description -l zh_CN.UTF-8
+独立运行的 RPC 库。
+
 %package devel
 Summary:	Development files for the libtirpc library
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:	Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:	%{name} = %{version}-%{release}
 Requires:	pkgconfig man-db
 
@@ -38,6 +45,8 @@ Requires:	pkgconfig man-db
 This package includes header files and libraries necessary for
 developing programs which use the tirpc library.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -133,6 +142,9 @@ rm -rf %{buildroot}
 %{_mandir}/*/*
 
 %changelog
+* Fri Aug 01 2014 Liu Di <liudidi@gmail.com> - 0.2.4-1
+- 更新到 0.2.4
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 0.2.2-4
 - 为 Magic 3.0 重建
 

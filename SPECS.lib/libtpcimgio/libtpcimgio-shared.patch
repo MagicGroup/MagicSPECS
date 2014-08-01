@@ -1,21 +1,21 @@
-diff -up libtpcimgio/Makefile.shared libtpcimgio/Makefile
---- libtpcimgio/Makefile.shared	2010-09-18 07:05:53.000000000 -0400
-+++ libtpcimgio/Makefile	2011-08-08 13:50:36.906876738 -0400
-@@ -70,9 +70,12 @@ SOURCES 	= ecat63r.c ecat63w.c ecat63p.c
- 		  sifio.c sif.c weight.c libtpcimgiov.c
+diff -ur libtpcimgio.orig/Makefile libtpcimgio/Makefile
+--- libtpcimgio.orig/Makefile	2014-08-01 12:12:23.524103855 +0000
++++ libtpcimgio/Makefile	2014-08-01 12:23:16.937087108 +0000
+@@ -83,9 +83,12 @@
+ 		  img.c sifio.c sif.c weight.c libtpcimgiov.c
  OBJECTS 	= ${SOURCES:.c=.o}
  LIBARCHIVE	= ${LIBRARY}.a
-+SHLIBSHORT	= ${LIBRARY}.so
-+SHLIBMAJOR	= ${SHLIBSHORT}.0
-+SHLIBARCHIVE	= ${SHLIBMAJOR}.0.0
++SHLIBSHORT      = ${LIBRARY}.so
++SHLIBMAJOR      = ${SHLIBSHORT}.0
++SHLIBARCHIVE    = ${SHLIBMAJOR}.0.0
  DOXYGEN		= doxygen
  CC		= gcc
--CFLAGS 		= -std=gnu99 -s -Wall ${ANSI} -O2 ${INCLUDE}
-+CFLAGS 		= -std=gnu99 -s -Wall ${ANSI} -O2 ${INCLUDE} -fPIC -DPIC
- LDFLAGS         = -L.
- LIBS 		= ${LDFLAGS} -ltpcimgio -ltpcmisc -lm
+-CFLAGS 		= -std=gnu99 -s -Wall -O3 ${INCLUDE} ${ANSI}
++CFLAGS 		= -std=gnu99 -s -Wall -O3 ${INCLUDE} ${ANSI} -fPIC -DPIC
+ LIBS 		= ${LIBPATH} -ltpcimgio -ltpcmisc -lm
  ZIP		= zip
-@@ -92,14 +95,20 @@ endif
+ PRVERS		= progvers -opt=-b
+@@ -102,14 +105,20 @@
  LIBEXEC 	= ${LIBRARY}${EXT}
  
  # ------------- Compilation: --------------------------------------------------#
@@ -36,16 +36,16 @@ diff -up libtpcimgio/Makefile.shared libtpcimgio/Makefile
  # Compile executable
 -${LIBEXEC}: ${LIBARCHIVE} ${LIBRARY}.c
 +${LIBEXEC}: ${SHLIBARCHIVE} ${LIBRARY}.c
- 	${CC} ${LIBRARY}.c -o ${LIBEXEC} ${CFLAGS} ${LIBS}
+ 	${CC} ${LIBRARY}.c -o ${LIBEXEC} ${LIBPATH} ${CFLAGS} ${LIBS}
  ifneq ($(OS),Windows_NT)
  	 chmod a+x ${LIBEXEC}
-@@ -119,8 +128,9 @@ ${LIBRARY}.version: ${LIBEXEC}
+@@ -129,8 +138,9 @@
  # ------------- Installation: -------------------------------------------------#
  install: libversion libinstall execinstall
  
 -libinstall: ${LIBARCHIVE}
 +libinstall: ${LIBARCHIVE} ${SHAREDLIBARCHIVE}
- 	${ADDDATE} -i=${LIBRARY}.version -o=${PET_LIB} -nodate -copy ${LIBARCHIVE}
+ 	${ADDDATE} -i=${LIBRARY}.version -o=${PET_LIBPATH} -nodate -copy ${LIBARCHIVE}
 +	${ADDDATE} -i=${LIBRARY}.version -o=${PET_LIB} -nodate -copy ${SHAREDLIBARCHIVE}
  
  execinstall: ${LIBEXEC}

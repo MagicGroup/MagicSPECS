@@ -1,9 +1,11 @@
 Summary: X.Org X11 SM runtime library
+Summary(zh_CN.UTF-8): X.Org X11 SM 运行库
 Name: libSM
 Version: 1.2.1
 Release: 2%{?dist}
 License: MIT
 Group: System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 URL: http://www.x.org
 
 Source0: ftp://ftp.x.org/pub/individual/lib/%{name}-%{version}.tar.bz2
@@ -18,9 +20,14 @@ BuildRequires: xmlto
 %description
 The X.Org X11 SM (Session Management) runtime library.
 
+%description -l zh_CN.UTF-8
+X.Org X11 SM（会话管理）运行库
+
 %package devel
 Summary: X.Org X11 SM development package
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: %{name} = %{version}-%{release}
 Requires: libICE-devel
 Requires: xorg-x11-proto-devel
@@ -28,6 +35,9 @@ Requires: pkgconfig
 
 %description devel
 The X.Org X11 SM (Session Management) development package.
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q

@@ -3,14 +3,17 @@
 ### Abstract ###
 
 Name: libsoup
-Version: 2.45.90
+Version:	2.47.4
 Release: 1%{?dist}
 License: LGPLv2
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Summary: Soup, an HTTP library implementation
+Summary(zh_CN.UTF-8): 一个 HTTP 库实现
 URL: http://live.gnome.org/LibSoup
 #VCS: git:git://git.gnome.org/libsoup
-Source: http://download.gnome.org/sources/libsoup/2.45/libsoup-%{version}.tar.xz
+%define majorver %(echo %{version} | awk -F. '{print $1"."$2}')
+Source: http://download.gnome.org/sources/libsoup/%{majorver}/libsoup-%{version}.tar.xz
 Requires: glib-networking >= %{glib2_version}
 
 ### Build Dependencies ###
@@ -33,9 +36,14 @@ on the network in a completely asynchronous fashion, very similar to
 the Gtk+ programming model (a synchronous operation mode is also
 supported for those who want it).
 
+%description -l zh_CN.UTF-8
+一个 HTTP 库实现。
+
 %package devel
 Summary: Header files for the Soup library
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: %{name} = %{version}-%{release}
 Requires: glib2-devel >= %{glib2_version}
 Requires: gnutls-devel
@@ -44,6 +52,9 @@ Requires: libxml2-devel
 %description devel
 Libsoup is an HTTP library implementation in C. This package allows
 you to develop applications that use the libsoup library.
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -60,7 +71,7 @@ make %{?_smp_mflags}
 make DESTDIR=$RPM_BUILD_ROOT install
 
 rm -f $RPM_BUILD_ROOT/%{_libdir}/*.la
-
+magic_rpm_clean.sh
 %find_lang libsoup
 
 %post -p /sbin/ldconfig
@@ -81,6 +92,9 @@ rm -f $RPM_BUILD_ROOT/%{_libdir}/*.la
 %{_datadir}/gtk-doc/html/%{name}-2.4
 
 %changelog
+* Thu Jul 31 2014 Liu Di <liudidi@gmail.com> - 2.47.4-1
+- 更新到 2.47.4
+
 * Tue Feb 18 2014 Richard Hughes <rhughes@redhat.com> - 2.45.90-1
 - Update to 2.45.90
 
