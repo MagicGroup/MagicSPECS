@@ -2,12 +2,14 @@
 %global gcc_version  %(gcc -dumpversion || echo "666")
 
 Summary: The GNU Portable Library Tool
+Summary(zh_CN.UTF-8): GNU 可移植库工具
 Name:    libtool
 Version: 2.4.2
-Release: 27%{?dist}
+Release: 28%{?dist}
 License: GPLv2+ and LGPLv2+ and GFDL
 URL:     http://www.gnu.org/software/libtool/
 Group:   Development/Tools
+Group(zh_CN.UTF-8): 开发/工具
 
 Source:  http://ftp.gnu.org/gnu/libtool/libtool-%{version}.tar.xz
 
@@ -61,10 +63,14 @@ Portable Library Tool (libtool) and the GNU Libtool Dynamic Module Loader
 (ltdl) into a package built using the GNU Autotools (including GNU Autoconf
 and GNU Automake).
 
+%description -l zh_CN.UTF-8
+GNU 可移植库工具。
 
 %package ltdl
 Summary:  Runtime libraries for GNU Libtool Dynamic Module Loader
+Summary(zh_CN.UTF-8): GNU Libtool 动态模块载入器的运行库
 Group:    System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 Provides: %{name}-libs = %{version}-%{release}
 License:  LGPLv2+
 Requires(post):  /sbin/ldconfig
@@ -80,10 +86,14 @@ These runtime libraries are needed by programs that link directly to the
 system-installed ltdl libraries; they are not needed by software built using
 the rest of the GNU Autotools (including GNU Autoconf and GNU Automake).
 
+%description ltdl -l zh_CN.UTF-8
+GNU Libtool 动态模块载入器的运行库。
 
 %package ltdl-devel
 Summary: Tools needed for development using the GNU Libtool Dynamic Module Loader
+Summary(zh_CN.UTF-8): %{name}-ltdl 的开发包
 Group:    Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: %{name}-ltdl = %{version}-%{release}
 License:  LGPLv2+
 
@@ -91,6 +101,8 @@ License:  LGPLv2+
 %description ltdl-devel
 Static libraries and header files for development with ltdl.
 
+%description ltdl-devel -l zh_CN.UTF-8
+%{name}-ltdl 的开发包。
 
 %prep
 %setup -n libtool-%{version} -q
@@ -186,6 +198,9 @@ fi
 
 
 %changelog
+* Fri Aug 01 2014 Liu Di <liudidi@gmail.com> - 2.4.2-28
+- 为 Magic 3.0 重建
+
 * Thu Jul 17 2014 Liu Di <liudidi@gmail.com> - 2.4.2-27
 - 为 Magic 3.0 重建
 

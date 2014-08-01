@@ -2,7 +2,7 @@ Summary:	Sample rate conversion library for audio data
 Summary(zh_CN.UTF-8): 音频数据的采样率转换库
 Name:		libsamplerate
 Version:	0.1.8
-Release:	2%{?dist}
+Release:	3%{?dist}
 License:	GPLv2+
 Group:		System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
@@ -83,6 +83,9 @@ unset LD_LIBRARY_PATH
 
 
 %changelog
+* Thu Jul 31 2014 Liu Di <liudidi@gmail.com> - 0.1.8-3
+- 为 Magic 3.0 重建
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 0.1.8-2
 - 为 Magic 3.0 重建
 

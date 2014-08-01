@@ -1,6 +1,6 @@
 Name:           libspiro
 Version:        20071029
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        Library to simplify the drawing of beautiful curves
 Summary(zh_CN.UTF-8): 简单描绘优美曲线的库
 
@@ -44,6 +44,7 @@ make %{?_smp_mflags}
 rm -rf $RPM_BUILD_ROOT
 make install DESTDIR=$RPM_BUILD_ROOT
 find $RPM_BUILD_ROOT -name '*.la' -exec rm -f {} ';'
+magic_rpm_clean.sh
 
 %clean
 rm -rf $RPM_BUILD_ROOT

@@ -1,13 +1,15 @@
 Name:           libssh
-Version:        0.6.1
-Release:        1%{?dist}
+Version: 0.6.3
+Release: 1%{?dist}
 Summary:        A library implementing the SSH protocol
+Summary(zh_CN.UTF-8): 实现 SSH 协议的库
 License:        LGPLv2+
 URL:            http://www.libssh.org
 Group:          System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
-Source0:        https://red.libssh.org/attachments/download/81/libssh-0.6.1.tar.xz
+Source0:        https://red.libssh.org/attachments/download/87/libssh-%{version}.tar.xz
 
 BuildRequires:  cmake
 BuildRequires:  doxygen
@@ -22,14 +24,22 @@ files, use a secure and transparent tunnel for your remote programs. With its
 Secure FTP implementation, you can play with remote files easily, without
 third-party programs others than libcrypto (from openssl).
 
+%description -l zh_CN.UTF-8
+实现 SSH 协议的库。
+
 %package devel
 Summary:        Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       %{name}%{?_isa} = %{version}-%{release}
 
 %description devel
 The %{name}-devel package contains libraries and header files for developing
 applications that use %{name}.
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -54,6 +64,7 @@ popd
 pushd obj
 make DESTDIR=%{buildroot} install
 popd
+magic_rpm_clean.sh
 
 %post -p /sbin/ldconfig
 
@@ -83,6 +94,9 @@ rm -rf %{buildroot}
 %{_libdir}/libssh_threads.so
 
 %changelog
+* Thu Jul 31 2014 Liu Di <liudidi@gmail.com> - 0.6.3-1
+- 更新到 0.6.3
+
 * Mon Feb 10 2014 - Andreas Schneider <asn@redhat.com> - 0.6.1-1
 - Update to version 0.6.1.
 - resolves: #1056757 - Fix scp mode.

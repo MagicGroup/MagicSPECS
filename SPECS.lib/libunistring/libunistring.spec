@@ -1,8 +1,10 @@
 Name: libunistring
 Version: 0.9.3
-Release: 3%{?dist}
+Release: 4%{?dist}
 Group: System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 Summary: GNU Unicode string library
+Summary(zh_CN.UTF-8): GNU Unicode 字符串库
 License: LGPLv3+
 Url: http://www.gnu.org/software/libunistring/
 Source0: http://ftp.gnu.org/gnu/libunistring/%{name}-%{version}.tar.gz
@@ -17,13 +19,21 @@ This portable C library implements Unicode string types in three flavours:
 (iteration, formatted output, width, word breaks, line breaks, normalization,
 case folding and regular expressions).
 
+%description -l zh_CN.UTF-8
+GNU Unicode 字符串库。
+
 %package devel
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Summary: GNU Unicode string library - development files
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Requires: %{name} = %{version}-%{release}
 
 %description devel
 Development files for programs using libunistring.
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -37,6 +47,7 @@ rm -rf $RPM_BUILD_ROOT
 make install DESTDIR=$RPM_BUILD_ROOT INSTALL="install -p"
 rm -f $RPM_BUILD_ROOT/%{_infodir}/dir
 rm -f $RPM_BUILD_ROOT/%{_libdir}/%{name}.la
+magic_rpm_clean.sh
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -68,6 +79,9 @@ if [ $1 = 0 ]; then
 fi
 
 %changelog
+* Fri Aug 01 2014 Liu Di <liudidi@gmail.com> - 0.9.3-4
+- 为 Magic 3.0 重建
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 0.9.3-3
 - 为 Magic 3.0 重建
 

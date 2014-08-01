@@ -3,8 +3,8 @@
 Summary: A privileged helper for utmp/wtmp updates
 Summary(zh_CN.UTF-8): utmp/wtmp 更新的私有帮助器
 Name: libutempter
-Version: 1.1.5
-Release: 5%{?dist}
+Version: 1.1.6
+Release: 1%{?dist}
 License: LGPLv2
 Group: System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
@@ -79,7 +79,7 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 %doc COPYING README
 %{_libdir}/libutempter.so.0
-%{_libdir}/libutempter.so.1.1.5
+%{_libdir}/libutempter.so.1.*
 %dir %attr(755,root,utempter) %{_libexecdir}/utempter
 %attr(2711,root,utmp) %{_libexecdir}/utempter/utempter
 # FIXME: If a symlink is needed for compat here, uncomment the code in the
@@ -90,8 +90,12 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 %{_includedir}/utempter.h
 %{_libdir}/libutempter.so
+%{_mandir}/man3/*
 
 %changelog
+* Fri Aug 01 2014 Liu Di <liudidi@gmail.com> - 1.1.6-1
+- 更新到 1.1.6
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 1.1.5-5
 - 为 Magic 3.0 重建
 

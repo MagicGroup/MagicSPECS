@@ -1,6 +1,6 @@
 Name:           libsexy
 Version:        0.1.11
-Release:        5%{?dist}
+Release:        6%{?dist}
 Summary:        Funky fresh graphical widgets for GTK+ 2
 Summary(zh_CN.UTF-8):	一些 GTK+2 的有意思的新图形部件
 
@@ -9,6 +9,10 @@ Group(zh_CN.UTF-8):	系统环境/库
 License:        LGPLv2+
 URL:            http://www.chipx86.com/wiki/Libsexy
 Source0:        http://releases.chipx86.com/%{name}/%{name}/%{name}-%{version}.tar.gz
+Patch0:         %{name}-%{version}-url-label.patch
+Patch1:         %{name}-icon-name.patch
+Patch2:         gtk2-single-include.patch
+
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildRequires:  gtk2-devel
@@ -43,10 +47,12 @@ developing applications that use %{name}.
 
 %prep
 %setup -q
-
+%patch0 -p1 -b .url-label
+%patch1 -p1 -b .icon-name
+%patch2 -p1 -b .gtk-single-include
 
 %build
-%configure --disable-static LIBS="-lgmodule-2.0"
+%configure --disable-static
 make %{?_smp_mflags}
 
 
@@ -86,6 +92,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Thu Jul 31 2014 Liu Di <liudidi@gmail.com> - 0.1.11-6
+- 为 Magic 3.0 重建
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 0.1.11-5
 - 为 Magic 3.0 重建
 

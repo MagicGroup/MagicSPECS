@@ -1,8 +1,10 @@
 Name:           libtimidity
 Version:        0.1.0
-Release:        10%{?dist}
+Release:        11%{?dist}
 Summary:        MIDI to WAVE converter library
+Summary(zh_CN.UTF-8): MIDI 转 WAV 转换库
 Group:          System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 License:        LGPLv2+
 URL:            http://libtimidity.sourceforge.net/
 Source0:        http://downloads.sourceforge.net/%{name}/%{name}-%{version}.tar.bz2
@@ -19,16 +21,22 @@ API to work with MIDI songs, it enables to specify full path to the
 timidity configuration file, and have function to retrieve meta data
 from MIDI song.
 
+%description -l zh_CN.UTF-8
+MIDI 转 WAV 转换库。
 
 %package        devel
 Summary:        Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       pkgconfig, %{name} = %{version}-%{release}
 
 %description    devel
 The %{name}-devel package contains libraries and header files for
 developing applications that use %{name}.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -44,7 +52,7 @@ make %{?_smp_mflags}
 rm -rf $RPM_BUILD_ROOT
 make install DESTDIR=$RPM_BUILD_ROOT
 rm $RPM_BUILD_ROOT%{_libdir}/libtimidity.la
-
+magic_rpm_clean.sh
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -68,6 +76,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Fri Aug 01 2014 Liu Di <liudidi@gmail.com> - 0.1.0-11
+- 为 Magic 3.0 重建
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 0.1.0-10
 - 为 Magic 3.0 重建
 

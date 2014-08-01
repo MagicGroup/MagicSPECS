@@ -1,9 +1,11 @@
-Version: 1.6.17
+Version: 1.6.19
 Summary: Universal Plug and Play (UPnP) SDK
+Summary(zh_CN.UTF-8): 通用即插即用 (UPnP) SDK
 Name: libupnp
-Release: 2%{?dist}
+Release: 1%{?dist}
 License: BSD
 Group: System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 URL: http://www.libupnp.org/
 Source: http://downloads.sourceforge.net/pupnp/%{name}-%{version}.tar.bz2
 
@@ -15,38 +17,33 @@ The Universal Plug and Play (UPnP) SDK for Linux provides
 support for building UPnP-compliant control points, devices, 
 and bridges on Linux.
 
+%description -l zh_CN.UTF-8
+通用即插即用 (UPnP) SDK。
+
 %package devel
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Summary: Include files needed for development with libupnp
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Requires: libupnp = %{version}-%{release}
 
 %description devel
 The libupnp-devel package contains the files necessary for development with
 the UPnP SDK libraries.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
 %prep
 %setup -q
 
 %build
-%configure --with-documentation --enable-static=no
+%configure --enable-static=no --enable-ipv6
 make %{?_smp_mflags}
 
 %install
 test "$RPM_BUILD_ROOT" != "/" && rm -rf $RPM_BUILD_ROOT
 make install DESTDIR=$RPM_BUILD_ROOT
-
-#create the doc devel dir
-%{__mkdir_p} %{buildroot}%{docdeveldir}
-
-#mv examples dir and pdf file to the doc devel dir
-%{__mv} %{buildroot}%{docdir}/examples \
-	%{buildroot}%{docdeveldir}/
-%{__mv} %{buildroot}%{docdir}/UPnP_Programming_Guide.pdf \
-	%{buildroot}%{docdeveldir}/
-%{__mv} %{buildroot}%{docdir}/IXML_Programming_Guide.pdf \
-	%{buildroot}%{docdeveldir}/
-%{__mv} %{buildroot}%{docdir}/html \
-	%{buildroot}%{docdeveldir}/
 
 %{__rm} %{buildroot}%{_libdir}/{libixml.la,libthreadutil.la,libupnp.la}
 magic_rpm_clean.sh
@@ -57,14 +54,14 @@ magic_rpm_clean.sh
 
 %files
 %defattr(-,root,root,-)
-%doc %{docdir}
+#%doc %{docdir}
 %{_libdir}/libixml.so.2*
 %{_libdir}/libthreadutil.so.6*
 %{_libdir}/libupnp.so.6*
 
 %files devel
 %defattr(0644,root,root,0755)
-%doc %{docdeveldir}
+#%doc %{docdeveldir}
 %{_includedir}/upnp/
 %{_libdir}/libixml.so
 %{_libdir}/libthreadutil.so
@@ -75,6 +72,9 @@ magic_rpm_clean.sh
 rm -rf %{buildroot}
 
 %changelog
+* Fri Aug 01 2014 Liu Di <liudidi@gmail.com> - 1.6.19-1
+- 更新到 1.6.19
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 1.6.17-2
 - 为 Magic 3.0 重建
 

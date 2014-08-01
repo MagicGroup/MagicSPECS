@@ -1,6 +1,6 @@
 Name:           libucimf
 Version:        2.3.8
-Release:        2%{?dist}
+Release:        3%{?dist}
 
 Summary:        Unicode Console Input Method Framework
 Summary(zh_CN.UTF-8):	在 Unicode 控制台环境下提供输入法支持的框架
@@ -79,6 +79,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/pkgconfig/*
 
 %changelog
+* Fri Aug 01 2014 Liu Di <liudidi@gmail.com> - 2.3.8-3
+- 为 Magic 3.0 重建
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 2.3.8-2
 - 为 Magic 3.0 重建
 

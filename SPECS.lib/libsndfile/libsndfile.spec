@@ -1,9 +1,11 @@
 Summary:	Library for reading and writing sound files
+Summary(zh_CN.UTF-8): 读取和写入声音文件的库
 Name:		libsndfile
 Version:	1.0.25
 Release:	4%{?dist}
 License:	LGPLv2+ and GPLv2+ and BSD
 Group:		System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 URL:		http://www.mega-nerd.com/libsndfile/
 Source0:	http://www.mega-nerd.com/libsndfile/files/libsndfile-%{version}.tar.gz
 Patch0:		%{name}-1.0.25-system-gsm.patch
@@ -26,10 +28,14 @@ currently read/write 8, 16, 24 and 32-bit PCM files as well as 32 and
 64-bit floating point WAV files and a number of compressed formats. It
 compiles and runs on *nix, MacOS, and Win32.
 
+%description -l zh_CN.UTF-8
+读取和写入声音文件的库，支持 AIFF, AU, WAV 及其它通过标准接口的文件。
 
 %package devel
 Summary:	Development files for libsndfile
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:		Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:	%{name}%{?_isa} = %{version}-%{release} pkgconfig
 
 
@@ -38,10 +44,14 @@ libsndfile is a C library for reading and writing sound files such as
 AIFF, AU, WAV, and others through one standard interface.
 This package contains files needed to develop with libsndfile.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %package utils
 Summary:	Command Line Utilities for libsndfile
+Summary(zh_CN.UTF-8): %{name} 的命令行工具
 Group:		Applications/Multimedia
+Group(zh_CN.UTF-8): 应用程序/多媒体
 Requires:	%{name} = %{version}-%{release}
 Obsoletes:	libsndfile < 1.0.20-4
 
@@ -51,6 +61,8 @@ libsndfile is a C library for reading and writing sound files such as
 AIFF, AU, WAV, and others through one standard interface.
 This package contains command line utilities for libsndfile.
 
+%description utils -l zh_CN.UTF-8
+%{name} 的命令行工具。
 
 %prep
 %setup -q
@@ -104,7 +116,7 @@ EOF
 %if 0%{?rhel} != 0
 rm -f %{buildroot}%{_bindir}/sndfile-jackplay
 %endif
-
+magic_rpm_clean.sh
 
 %check
 LD_LIBRARY_PATH=$PWD/src/.libs make check

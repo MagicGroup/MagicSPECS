@@ -1,7 +1,8 @@
 Name:           libtomcrypt
 Version:        1.17
-Release:        21%{?dist}
+Release:        22%{?dist}
 Summary:        A comprehensive, portable cryptographic toolkit
+Summary(zh_CN.UTF-8): 一个全面的，可移植的加密工具包
 
 License:        Public Domain
 URL:            http://www.libtom.org/?page=features&newsitems=5&whatfile=crypt
@@ -34,16 +35,24 @@ standard API that allows new ciphers, hashes and PRNGs to be added or removed
 without change to the overall end application. It features easy to use functions
 and a complete user manual which has many source snippet examples. 
 
+%description -l zh_CN.UTF-8
+一个全面的，可移植的加密工具包。
+
 %package        devel
 Summary:        Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Requires:       %{name}%{?_isa} = %{version}-%{release}
 
 %description    devel
 The %{name}-devel package contains libraries and header files for
 developing applications that use %{name}.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
 %package        doc
 Summary:        Documentation files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的文档
 BuildArch:      noarch
 Provides:       %{name}-doc = %{version}-%{release}
 Obsoletes:      %{name}-doc < 1.17-19
@@ -51,6 +60,9 @@ Obsoletes:      %{name}-doc < 1.17-19
 
 %description    doc
 The %{name}-doc package contains documentation for use with %{name}.
+
+%description doc -l zh_CN.UTF-8
+%{name} 的文档。
 
 %prep
 %setup -q
@@ -86,6 +98,7 @@ chmod 644 LICENSE
 find %{buildroot} -name '*.la' -delete
 find %{buildroot} -name '*.a' -delete
 find %{buildroot} -name 'libtomcrypt_prof*' -delete
+magic_rpm_clean.sh
 
 %post -p /sbin/ldconfig
 
@@ -104,6 +117,9 @@ find %{buildroot} -name 'libtomcrypt_prof*' -delete
 %doc LICENSE doc/crypt.pdf
 
 %changelog
+* Fri Aug 01 2014 Liu Di <liudidi@gmail.com> - 1.17-22
+- 为 Magic 3.0 重建
+
 * Sun Sep 29 2013 Simone Caronni <negativo17@gmail.com> - 1.17-21
 - Move headers to default location.
 

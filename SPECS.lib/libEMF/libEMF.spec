@@ -1,10 +1,11 @@
 Summary:	A library for generating Enhanced Metafiles
-Summary(pl):	Biblioteka do generowania plików w formacie Enhanced Metafile
+Summary(zh_CN.UTF-8): 生成增强元文件(emf)的库
 Name:		libEMF
 Version:	1.0.7
-Release:	3%{?dist}
+Release:	4%{?dist}
 License:	LGPLv2+ and GPLv2+
 Group:		System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 URL:		http://libemf.sourceforge.net/
 Source0:	http://downloads.sourceforge.net/project/libemf/libemf/%{version}/libEMF-%{version}.tar.gz
 BuildRequires:	libstdc++-devel
@@ -17,25 +18,22 @@ don't natively support the ECMA-234 Graphics Device Interface
 graphics programs such as Grace or gnuplot. Therefore, it implements a
 very limited subset of the GDI.
 
-%description -l pl
-libEMF to biblioteka do generowania plików w formacie Enhanced
-Metafile na systemach nie obsługujących natywnie systemu graficznego
-ECMA-234 GDI. Biblioteka ma służyć jako sterownik dla innych programów
-graficznych, takich jak Grace czy gnuplot. Z tego powodu ma
-zaimplementowany bardzo ograniczony podzbiór GDI.
+%description -l zh_CN.UTF-8
+生成增强元文件(emf)的库。
 
 %package devel
 Summary:	libEMF header files
-Summary(pl):	Pliki nagłówkowe libEMF
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:		Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:	%{name} = %{version}-%{release}
 Requires:	libstdc++-devel
 
 %description devel
 libEMF header files.
 
-%description devel -l pl
-Pliki nagłówkowe libEMF.
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -53,6 +51,7 @@ make install \
 	DESTDIR=$RPM_BUILD_ROOT
 
 rm $RPM_BUILD_ROOT%{_libdir}/libEMF.la
+magic_rpm_clean.sh
 
 %check
 make check
@@ -71,6 +70,9 @@ make check
 %{_includedir}/libEMF
 
 %changelog
+* Thu Jul 31 2014 Liu Di <liudidi@gmail.com> - 1.0.7-4
+- 为 Magic 3.0 重建
+
 * Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.0.7-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
 

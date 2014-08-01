@@ -7,12 +7,14 @@
 #define use_autofoo 1
 
 Summary: A library for creating MusicBrainz enabled tagging applications 
+Summary(zh_CN.UTF-8): 创建可用 MusicBrainz 标签程序的库
 Name:	 libtunepimp
 Version: 0.5.3
-Release: 21%{?dist}
+Release: 22%{?dist}
 
 License: LGPLv2+
 Group: 	 System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 URL:	 http://musicbrainz.org/doc/libtunepimp
 # see http://musicbrainz.org/doc/libtunepimpDownload
 Source0: http://ftp.musicbrainz.org/pub/musicbrainz/libtunepimp-%{version}.tar.gz
@@ -57,9 +59,14 @@ Provides:  libtunepimp5 = %{version}-%{release}
 The TunePimp library is a development library geared towards developers 
 who wish to create MusicBrainz enabled tagging applications.
 
+%description -l zh_CN.UTF-8
+创建可用 MusicBrainz 标签程序的库。
+
 %package devel
 Summary: Headers for developing programs that will use %{name} 
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:   Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: %{name} = %{version}-%{release}
 %if "%{name}" == "libtunepimp"
 Provides:  libtunepimp5-devel = %{version}-%{release}
@@ -69,15 +76,22 @@ Conflicts: libtunepimp-devel
 %description devel
 %{summary}.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
 %global python_ver %(%{__python} -c "import sys ; print sys.version[:3]")
 %global python_sitelib  %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib()")
 %global python_sitearch %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib(1)")
 %package -n python-tunepimp
 Summary: Python bindings for developing programs that will use %{name} 
+Summary(zh_CN.UTF-8): %{name} 的 Python 绑定
 Group:   Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 %description -n python-tunepimp
 %{summary}.
 
+%description -n python-tunepimp -l zh_CN.UTF-8
+%{name} 的 Python 绑定。
 
 %prep
 %setup -q -n libtunepimp-%{version}
@@ -110,7 +124,6 @@ pushd python
 %{__python} setup.py build 
 popd
 
-
 %install
 rm -rf %{buildroot}
 
@@ -130,7 +143,7 @@ done
 # unpackaged files
 rm -f %{buildroot}%{_libdir}/lib*.la
 %{!?_with_mp4:rm -f  %{buildroot}%{pkglibdir}/plugins/mp4.tpp}
-
+magic_rpm_clean.sh
 
 %clean
 rm -rf %{buildroot}
@@ -172,6 +185,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Aug 01 2014 Liu Di <liudidi@gmail.com> - 0.5.3-22
+- 为 Magic 3.0 重建
+
 * Thu Jul 19 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.5.3-21
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 
