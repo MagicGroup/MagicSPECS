@@ -5,11 +5,13 @@
 %define __find_requires sh %{SOURCE1} %{prev__find_requires}
 
 Summary:	Library to access different kinds of (video) capture devices
+Summary(zh_CN.UTF-8): 访问不同类型的视频捕捉设备的库
 Name:		libunicap
 Version:	0.9.12
-Release:	8%{?dist}
+Release:	9%{?dist}
 License:	GPLv2+
 Group:		System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 URL:		http://www.unicap-imaging.org/
 Source0:	http://www.unicap-imaging.org/downloads/%{name}-%{version}.tar.gz
 Source1:	%{name}-filter.sh
@@ -38,9 +40,14 @@ maintaining maximum performance. Zero copy capture of video buffers is
 possible for devices supporting it allowing fast video capture with low
 CPU usage even on low-speed architectures.
 
+%description -l zh_CN.UTF-8
+访问不同类型的视频捕捉设备的库。
+
 %package devel
 Summary:	Development files for the unicap library
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:		Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:	%{name} = %{version}-%{release}, pkgconfig
 Obsoletes:	unicap-devel <= 0.9.7-1
 
@@ -48,6 +55,9 @@ Obsoletes:	unicap-devel <= 0.9.7-1
 The libunicap-devel package includes header files and libraries necessary
 for for developing programs which use the unicap library. It contains the
 API documentation of the library, too.
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -87,7 +97,7 @@ sed -e 's/\(SYSFS\|ATTRS\)/ATTRS/g' -i $RPM_BUILD_ROOT%{_sysconfdir}/udev/rules.
 sed -e 's/\(SYSFS\|ATTRS\)/SYSFS/g' -i $RPM_BUILD_ROOT%{_sysconfdir}/udev/rules.d/50-euvccam.rules
 %endif
 touch -c -r {data,$RPM_BUILD_ROOT%{_sysconfdir}/udev/rules.d}/50-euvccam.rules
-
+magic_rpm_clean.sh
 %find_lang unicap
 
 %clean
@@ -112,6 +122,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/gtk-doc/html/%{name}
 
 %changelog
+* Fri Aug 01 2014 Liu Di <liudidi@gmail.com> - 0.9.12-9
+- 为 Magic 3.0 重建
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 0.9.12-8
 - 为 Magic 3.0 重建
 

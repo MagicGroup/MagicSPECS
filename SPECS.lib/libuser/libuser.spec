@@ -3,9 +3,10 @@
 %define WITH_SELINUX 0
 
 Name: libuser
-Version: 0.57.2
-Release: 2%{?dist}
+Version: 0.60
+Release: 1%{?dist}
 Group: System Environment/Base
+Group(zh_CN.UTF-8): 系统环境/基本
 License: LGPLv2+
 URL: https://fedorahosted.org/libuser/
 Source: https://fedorahosted.org/releases/l/i/libuser/libuser-%{version}.tar.xz
@@ -20,6 +21,7 @@ BuildRequires: nscd
 # For %%check
 BuildRequires: openldap-clients, openldap-servers
 Summary: A user and group account administration library
+Summary(zh_CN.UTF-8): 用户和组账号管理库
 
 %description
 The libuser library implements a standardized interface for manipulating
@@ -29,9 +31,14 @@ back-ends to interface to its data sources.
 Sample applications modeled after those included with the shadow password
 suite are included.
 
+%description -l zh_CN.UTF-8
+用户和组账号管理库。
+
 %package devel
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Summary: Files needed for developing applications which use libuser
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Requires: %{name}%{?_isa} = %{version}-%{release}
 Requires: glib2-devel%{?_isa}
 
@@ -39,15 +46,23 @@ Requires: glib2-devel%{?_isa}
 The libuser-devel package contains header files, static libraries, and other
 files useful for developing applications with libuser.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
 %package python
 Summary: Python bindings for the libuser library
+Summary(zh_CN.UTF-8): %{name} 的 Python 绑定
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: libuser%{?_isa} = %{version}-%{release}
 
 %description python
 The libuser-python package contains the Python bindings for
 the libuser library, which provides a Python API for manipulating and
 administering user and group accounts.
+
+%description python -l zh_CN.UTF-8
+%{name} 的 Python 绑定。
 
 %prep
 %setup -q
@@ -67,7 +82,7 @@ rm -fr $RPM_BUILD_ROOT
 
 %install
 make install DESTDIR=$RPM_BUILD_ROOT INSTALL='install -p'
-
+magic_rpm_clean.sh
 %find_lang %{name}
 
 %check
@@ -114,6 +129,12 @@ python -c "import libuser"
 %{_datadir}/gtk-doc/html/*
 
 %changelog
+* Fri Aug 01 2014 Liu Di <liudidi@gmail.com> - 0.60-1
+- 更新到 0.60
+
+* Fri Aug 01 2014 Liu Di <liudidi@gmail.com> - 0.57.2-2
+- 更新到 0.60
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 0.57.2-2
 - 为 Magic 3.0 重建
 

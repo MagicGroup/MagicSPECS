@@ -1,10 +1,12 @@
 Name:           libuninameslist
 Version:        20091231
-Release:        4%{?dist}
+Release:        5%{?dist}
 
 Summary:        A library providing Unicode character names and annotations
+Summary(zh_CN.UTF-8): 提供 Unicode 字符名称和说明的库
 
 Group:          System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 License:        BSD
 URL:            http://libuninameslist.sourceforge.net
 Source0:        http://downloads.sourceforge.net/libuninameslist/libuninameslist-%{version}.tar.bz2
@@ -14,14 +16,21 @@ BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 libuninameslist provides applications with access to Unicode name and
 annotation data from the official Unicode Character Database.
 
+%description -l zh_CN.UTF-8
+提供 Unicode 字符名称和说明的库，数据从官方 Unicode 字符数据库中获得。
+
 %package        devel
 Summary:        Header files and static libraries for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       %{name} = %{version}-%{release}
 
 %description    devel
 This package contains header files and static libraries for %{name}.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q -n libuninameslist
@@ -36,6 +45,7 @@ make %{?_smp_mflags}
 rm -rf $RPM_BUILD_ROOT
 %makeinstall incdir=$RPM_BUILD_ROOT%{_includedir}
 find $RPM_BUILD_ROOT -type f -name "*.la" -exec rm -f {} ';'
+magic_rpm_clean.sh
 
 
 %clean
@@ -59,6 +69,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Fri Aug 01 2014 Liu Di <liudidi@gmail.com> - 20091231-5
+- 为 Magic 3.0 重建
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 20091231-4
 - 为 Magic 3.0 重建
 

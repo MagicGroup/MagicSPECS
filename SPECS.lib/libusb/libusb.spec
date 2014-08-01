@@ -1,17 +1,19 @@
 Name: libusb
 Epoch: 1
-Version: 0.1.3
-Release: 14%{?dist}
+Version: 0.1.5
+Release: 2%{?dist}
 Summary: A library which allows userspace access to USB devices
+Summary(zh_CN.UTF-8): 允许用户空间程序访问 USB 设备的库
 Group: System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 License: LGPLv2+
 URL: http://sourceforge.net/projects/libusb/
 Source0: http://prdownloads.sourceforge.net/libusb/libusb-compat-%{version}.tar.bz2
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
-Patch0: libusb-documentation.patch
-Patch1: libusb-error-access-log-message.patch
-Patch2: libusb-config-multilib.patch
+Patch0: libusb-config-multilib.patch
+Patch1: 0001-Link-with-znodelete-to-disallow-unloading.patch
+Patch2: 0002-Revert-use-atexit-to-call-libusb_exit.patch
 
 BuildRequires: libusb1-devel
 
@@ -21,9 +23,14 @@ Legacy libusb-0.1 is no longer supported by upstream, therefore content of this
 package was replaced by libusb-compat. It provides compatibility layer allowing
 applications written for libusb-0.1 to work with libusb-1.0.
 
+%description -l zh_CN.UTF-8
+允许用户空间程序访问 USB 设备的库。
+
 %package devel
 Summary: Development files for libusb
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: %{name} = %{epoch}:%{version}-%{release}
 Requires: pkgconfig
 
@@ -32,9 +39,14 @@ This package contains the header files, libraries and documentation needed to
 develop applications that use libusb-0.1. However new applications should use
 libusb-1.0 library instead of this one.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
 %package static
 Summary: Static development files for libusb
+Summary(zh_CN.UTF-8): %{name} 的静态库
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: %{name}-devel = %{epoch}:%{version}-%{release}
 
 %description static
@@ -42,11 +54,14 @@ This package contains static libraries needed to develop applications that use
 libusb-0.1. However new applications should use libusb-1.0 library instead of
 this one.
 
+%description static -l zh_CN.UTF-8
+%{name} 的静态库。
+
 %prep
 %setup -q -n libusb-compat-%{version}
-%patch0 -p1 -b .documentation
-%patch1 -p1 -b .error-access-log-message
-%patch2 -p1 -b .config-multilib
+%patch0 -p1 
+%patch1 -p1 
+%patch2 -p1 
 
 %build
 %configure --libdir=%{_libdir}
@@ -85,6 +100,12 @@ rm -rf %{buildroot}
 %{_libdir}/libusb.a
 
 %changelog
+* Fri Aug 01 2014 Liu Di <liudidi@gmail.com> - 1:0.1.5-2
+- 为 Magic 3.0 重建
+
+* Fri Aug 01 2014 Liu Di <liudidi@gmail.com> - 1:0.1.5-1
+- 升级到 0.1.5
+
 * Wed Jan 16 2013 Liu Di <liudidi@gmail.com> - 1:0.1.3-14
 - 为 Magic 3.0 重建
 

@@ -2,11 +2,13 @@
 # --without check: Do not run the testsuite.  Default is to run it.
 
 Summary: An unwinding library
+Summary(zh_CN.UTF-8): 一个展开库
 Name: libunwind
 Version: 1.0.1
 Release: 4%{?dist}
 License: BSD
 Group: Development/Debuggers
+Group(zh_CN.UTF-8): 开发/调试器
 Source: http://download.savannah.gnu.org/releases/libunwind/libunwind-%{version}.tar.gz
 #Fedora specific patch
 Patch1: libunwind-disable-setjmp.patch
@@ -23,14 +25,22 @@ BuildRequires: automake libtool autoconf
 Libunwind provides a C ABI to determine the call-chain of a program.
 This version of libunwind is targetted for the ia64 platform.
 
+%description -l zh_CN.UTF-8
+这个包提供了检测程序的函数调用链的 C ABI。
+
 %package devel
 Summary: Development package for libunwind
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: Development/Debuggers
+Group(zh_CN.UTF-8): 开发/库
 Requires: libunwind = %{version}-%{release}
 
 %description devel
 The libunwind-devel package includes the libraries and header files for
 libunwind.
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
