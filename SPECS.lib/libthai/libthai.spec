@@ -1,13 +1,15 @@
-%define datrie_version 0.2.3
+%define datrie_version 0.2.8
 
 Summary:  Thai language support routines
+Summary(zh_CN.UTF-8): 泰语支持例程
 Name: libthai
-Version: 0.1.14
-Release: 6%{?dist}
+Version: 0.1.18
+Release: 1%{?dist}
 License: LGPLv2+
 Group: System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 Source: ftp://linux.thai.net/pub/thailinux/software/libthai/libthai-%{version}.tar.gz
-Source1: ftp://linux.thai.net/pub/thailinux/software/libthai/libdatrie-%{datrie_version}.tar.gz
+Source1: ftp://linux.thai.net/pub/thailinux/software/libthai/libdatrie-%{datrie_version}.tar.xz
 Patch: libthai-libdatrie-static-build.patch
 Patch1: libthai-0.1.9-doxygen-segfault.patch
 Patch2: libthai-0.1.9-multilib.patch
@@ -27,9 +29,14 @@ developers' tasks to incorporate Thai language support in their applications.
 It includes important Thai-specific functions e.g. word breaking, input and
 output methods as well as basic character and string supports.
 
+%description -l zh_CN.UTF-8
+泰语支持例程。
+
 %package devel
 Summary:  Thai language support routines
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: %{name} = %{version}-%{release}
 Requires: pkgconfig
 
@@ -39,6 +46,9 @@ for the libthai package.
 
 Install libthai-devel if you want to develop programs which will use
 libthai.
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q -n %{name}-%{version} -a 1
@@ -63,7 +73,6 @@ mv libdatrie-%{datrie_version} libdatrie
 
 {
   pushd libdatrie
-  mkdir m4
   autoreconf -i -f
   %configure
   make
@@ -91,6 +100,7 @@ mv $RPM_BUILD_ROOT%{_docdir}/libthai/* installed-docs
 rmdir $RPM_BUILD_ROOT%{_docdir}/libthai
 
 rm $RPM_BUILD_ROOT%{_libdir}/*.la
+magic_rpm_clean.sh
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -101,7 +111,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(-, root, root)
-%doc README AUTHORS COPYING ChangeLog TODO
+%doc README AUTHORS COPYING ChangeLog
 %{_libdir}/lib*.so.*
 %{_datadir}/libthai
 
@@ -111,9 +121,12 @@ rm -rf $RPM_BUILD_ROOT
 %{_includedir}/thai
 %{_libdir}/lib*.so
 %{_libdir}/pkgconfig/*
-%{_mandir}/man3/*
+#%{_mandir}/man3/*
 
 %changelog
+* Fri Aug 01 2014 Liu Di <liudidi@gmail.com> - 0.1.18-1
+- 更新到 0.1.18
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 0.1.14-6
 - 为 Magic 3.0 重建
 

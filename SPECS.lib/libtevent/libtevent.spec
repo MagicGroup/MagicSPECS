@@ -5,10 +5,12 @@
 %{!?python_version: %global python_version %(%{__python} -c "from distutils.sysconfig import get_python_version; print(get_python_version())")}
 
 Name: libtevent
-Version: 0.9.18
+Version: 0.9.21
 Release: 1%{?dist}
 Group: System Environment/Daemons
+Group(zh_CN.UTF-8): 系统环境/服务
 Summary: The tevent library
+Summary(zh_CN.UTF-8): tevent 库
 License: LGPLv3+
 URL: http://tevent.samba.org/
 Source: http://samba.org/ftp/tevent/tevent-%{version}.tar.gz
@@ -32,9 +34,15 @@ the classic file descriptor events.
 Tevent also provide helpers to deal with asynchronous code providing the
 tevent_req (Tevent Request) functions.
 
+%description -l zh_CN.UTF-8
+Tevent 是一个基于 talloc 内核管理的事件系统。它支持许多的事件类型，比如定时器、
+信号和经典的文件描述事件。
+
 %package devel
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Summary: Developer tools for the Tevent library
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Requires: libtevent = %{version}-%{release}
 Requires: libtalloc-devel >= 2.0.7
 Requires: pkgconfig
@@ -42,14 +50,21 @@ Requires: pkgconfig
 %description devel
 Header files needed to develop programs that link against the Tevent library.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %package -n python-tevent
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Summary: Python bindings for the Tevent library
+Summary(zh_CN.UTF-8): %{name} 的 Python 绑定
 Requires: libtevent = %{version}-%{release}
 
 %description -n python-tevent
 Python bindings for libtevent
+
+%description -n python-tevent -l zh_CN.UTF-8
+%{name} 的 Python 绑定。
 
 %prep
 # Update timestamps on the files touched by a patch, to avoid non-equal
@@ -93,6 +108,7 @@ rm -f $RPM_BUILD_ROOT%{_libdir}/libtevent.a
 rm -f doc/man/man3/todo*
 mkdir -p $RPM_BUILD_ROOT/%{_mandir}
 cp -a doc/man/* $RPM_BUILD_ROOT/%{_mandir}
+magic_rpm_clean.sh
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -118,6 +134,9 @@ rm -rf $RPM_BUILD_ROOT
 %postun -p /sbin/ldconfig
 
 %changelog
+* Fri Aug 01 2014 Liu Di <liudidi@gmail.com> - 0.9.21-1
+- 更新到 0.9.21
+
 * Mon Mar 18 2013 Jakub Hrozek <jhrozek@redhat.com> - 0.9.18-1
 - New upstream release 0.9.18
 

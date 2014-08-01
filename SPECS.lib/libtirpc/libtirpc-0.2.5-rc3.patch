@@ -1,0 +1,893 @@
+diff --git a/configure.ac b/configure.ac
+index 11df020..10d17ea 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -1,7 +1,6 @@
+ AC_INIT(libtirpc, 0.2.4)
+ AM_INIT_AUTOMAKE([silent-rules])
+ AM_SILENT_RULES([yes])
+-AM_MAINTAINER_MODE
+ AC_CONFIG_SRCDIR([src/auth_des.c])
+ AC_CONFIG_MACRO_DIR([m4])
+ 
+diff --git a/man/Makefile.am b/man/Makefile.am
+index 8f764b7..a37c7da 100644
+--- a/man/Makefile.am
++++ b/man/Makefile.am
+@@ -1,11 +1,19 @@
++LOOKUP_MANS		= getrpcent.3t getrpcport.3t
++NETCONFIG_MANS		= getnetconfig.3t getnetpath.3t
++BIND_MANS		= bindresvport.3t
++COMPAT_MANS		= des_crypt.3t rpc_soc.3t rpc_secure.3t rtime.3t
++CLIENT_MANS		= rpc_clnt_auth.3t rpc_clnt_calls.3t rpc_clnt_create.3t \
++			  rpcbind.3t
++SERVER_MANS		= rpc_svc_calls.3t rpc_svc_create.3t rpc_svc_err.3t \
++			  rpc_svc_reg.3t
++GENERIC_MANS		= rpc.3t rpc_xdr.3t
+ 
+-man5_MANS = netconfig.5
+-man3_MANS = bindresvport.3t des_crypt.3t getnetconfig.3t getnetpath.3t \
+-		getrpcent.3t getrpcport.3t rpc.3t rpc_clnt_auth.3t rpc_clnt_calls.3t \
+-		rpc_clnt_create.3t rpc_secure.3t rpc_soc.3t rpc_svc_calls.3t \
+-		rpc_svc_create.3t rpc_svc_err.3t rpc_svc_reg.3t rpc_xdr.3t rtime.3t
++dist_man5_MANS		= netconfig.5
++dist_man3_MANS		= $(LOOKUP_MANS) $(NETCONFIG_MANS) \
++			  $(BIND_MANS) $(GENERIC_MANS) $(COMPAT_MANS) \
++			  $(CLIENT_MANS) $(SERVER_MANS)
+ 
+-EXTRA_DIST = $(man5_MANS) $(man3_MANS)
++EXTRA_DIST		= publickey.3t publickey.5 rpc.5
+ 
+-CLEANFILES	       = cscope.* *~
+-DISTCLEANFILES	       = Makefile.in
++CLEANFILES		= cscope.* *~
++DISTCLEANFILES		= Makefile.in
+diff --git a/man/bindresvport.3t b/man/bindresvport.3t
+index 6724663..476e678 100644
+--- a/man/bindresvport.3t
++++ b/man/bindresvport.3t
+@@ -7,8 +7,6 @@
+ .Nm bindresvport ,
+ .Nm bindresvport_sa
+ .Nd bind a socket to a privileged IP port
+-.Sh LIBRARY
+-.Lb libc
+ .Sh SYNOPSIS
+ .In sys/types.h
+ .In rpc/rpc.h
+@@ -94,8 +92,11 @@ for any of the errors specified for the calls
+ .Xr getsockopt 2 ,
+ or
+ .Xr setsockopt 2 .
++.Sh AVAILABILITY
++The
++.Fn bindresvport
++function is part of libtirpc.
+ .Sh SEE ALSO
+ .Xr bind 2 ,
+ .Xr getsockopt 2 ,
+-.Xr setsockopt 2 ,
+-.Xr ip 4
++.Xr setsockopt 2
+diff --git a/man/des_crypt.3t b/man/des_crypt.3t
+index b708f76..a2be1bd 100644
+--- a/man/des_crypt.3t
++++ b/man/des_crypt.3t
+@@ -6,8 +6,6 @@
+ .Sh NAME
+ .Nm des_crypt , ecb_crypt , cbc_crypt , des_setparity
+ .Nd "fast DES encryption"
+-.Sh LIBRARY
+-.Lb libc
+ .Sh SYNOPSIS
+ .In rpc/des_crypt.h
+ .Ft int
+@@ -118,6 +116,13 @@ Given a result status
+ the macro
+ .Fn DES_FAILED stat
+ is false only for the first two statuses.
++.Sh AVAILABILITY
++The
++.Fn ecb_crypt ,
++.Fn cbc_crypt ,
++and
++.Fn des_setparity
++functions are part of libtirpc.
+ .Sh SEE ALSO
+ .\" .Xr des 1 ,
+ .Xr crypt 3
+diff --git a/man/getnetconfig.3t b/man/getnetconfig.3t
+index fbaa14d..6682319 100644
+--- a/man/getnetconfig.3t
++++ b/man/getnetconfig.3t
+@@ -12,8 +12,6 @@
+ .Nm nc_perror ,
+ .Nm nc_sperror
+ .Nd get network configuration database entry
+-.Sh LIBRARY
+-.Lb libc
+ .Sh SYNOPSIS
+ .In netconfig.h
+ .Ft "struct netconfig *"
+@@ -215,6 +213,8 @@ implemented as thread-specific data.
+ .Bl -tag -width /etc/netconfig -compact
+ .It Pa /etc/netconfig
+ .El
++.Sh AVAILABILITY
++These functions are part of libtirpc.
+ .Sh SEE ALSO
+ .Xr getnetpath 3 ,
+ .Xr netconfig 5
+diff --git a/man/getnetpath.3t b/man/getnetpath.3t
+index b3712ad..474acf9 100644
+--- a/man/getnetpath.3t
++++ b/man/getnetpath.3t
+@@ -12,8 +12,6 @@
+ entry corresponding to
+ .Ev NETPATH
+ component
+-.Sh LIBRARY
+-.Lb libc
+ .Sh SYNOPSIS
+ .In netconfig.h
+ .Ft "struct netconfig *"
+@@ -162,6 +160,8 @@ has been exhausted,
+ .Fn getnetpath
+ returns
+ .Dv NULL .
++.Sh AVAILABILITY
++These functions are part of libtirpc.
+ .Sh SEE ALSO
+ .Xr getnetconfig 3 ,
+ .Xr netconfig 5 ,
+diff --git a/man/getrpcent.3t b/man/getrpcent.3t
+index 261a8f4..2796de9 100644
+--- a/man/getrpcent.3t
++++ b/man/getrpcent.3t
+@@ -10,8 +10,6 @@
+ .Nm endrpcent ,
+ .Nm setrpcent
+ .Nd get RPC entry
+-.Sh LIBRARY
+-.Lb libc
+ .Sh SYNOPSIS
+ .In rpc/rpc.h
+ .Ft struct rpcent *
+@@ -89,10 +87,11 @@ program number is found, or until end-of-file is encountered.
+ .Bl -tag -width /etc/rpc -compact
+ .It Pa /etc/rpc
+ .El
++.Sh AVAILABILITY
++These functions are part of libtirpc.
+ .Sh SEE ALSO
+ .Xr rpc 5 ,
+-.Xr rpcinfo 8 ,
+-.Xr ypserv 8
++.Xr rpcinfo 8
+ .Sh DIAGNOSTICS
+ A
+ .Dv NULL
+diff --git a/man/getrpcport.3t b/man/getrpcport.3t
+index 8a072c7..1aa5773 100644
+--- a/man/getrpcport.3t
++++ b/man/getrpcport.3t
+@@ -6,8 +6,6 @@
+ .Sh NAME
+ .Nm getrpcport
+ .Nd get RPC port number
+-.Sh LIBRARY
+-.Lb libc
+ .Sh SYNOPSIS
+ .Ft int
+ .Fn getrpcport "char *host" "int prognum" "int versnum" "int proto"
+@@ -32,3 +30,7 @@ is registered but not with version
+ it will still return a port number (for some version of the program)
+ indicating that the program is indeed registered.
+ The version mismatch will be detected upon the first call to the service.
++.Sh AVAILABILITY
++The
++.Fn getrpcport
++function is part of libtirpc.
+diff --git a/man/rpc.3t b/man/rpc.3t
+index b2927b1..9ff7423 100644
+--- a/man/rpc.3t
++++ b/man/rpc.3t
+@@ -6,8 +6,6 @@
+ .Sh NAME
+ .Nm rpc
+ .Nd library routines for remote procedure calls
+-.Sh LIBRARY
+-.Lb libc
+ .Sh SYNOPSIS
+ .In rpc/rpc.h
+ .In netconfig.h
+@@ -499,6 +497,8 @@ pages on which they are described:
+ .Bl -tag -width /etc/netconfig
+ .It Pa /etc/netconfig
+ .El
++.Sh AVAILABILITY
++These functions are part of libtirpc.
+ .Sh SEE ALSO
+ .Xr getnetconfig 3 ,
+ .Xr getnetpath 3 ,
+diff --git a/man/rpc_clnt_auth.3t b/man/rpc_clnt_auth.3t
+index ee8fd1d..e20f322 100644
+--- a/man/rpc_clnt_auth.3t
++++ b/man/rpc_clnt_auth.3t
+@@ -13,8 +13,6 @@
+ .Nm authsys_create ,
+ .Nm authsys_create_default
+ .Nd library routines for client side remote procedure call authentication
+-.Sh LIBRARY
+-.Lb libc
+ .Sh SYNOPSIS
+ .In rpc/rpc.h
+ .Ft "void"
+@@ -90,6 +88,8 @@ Call
+ .Fn authsys_create
+ with the appropriate arguments.
+ .El
++.Sh AVAILABILITY
++These functions are part of libtirpc.
+ .Sh SEE ALSO
+ .Xr rpc 3 ,
+ .Xr rpc_clnt_calls 3 ,
+diff --git a/man/rpc_clnt_calls.3t b/man/rpc_clnt_calls.3t
+index 38b29d5..8c3804b 100644
+--- a/man/rpc_clnt_calls.3t
++++ b/man/rpc_clnt_calls.3t
+@@ -19,8 +19,6 @@
+ .Nm rpc_broadcast_exp ,
+ .Nm rpc_call
+ .Nd library routines for client side calls
+-.Sh LIBRARY
+-.Lb libc
+ .Sh SYNOPSIS
+ .In rpc/rpc.h
+ .Ft "enum clnt_stat"
+@@ -309,6 +307,8 @@ on which it can create a connection.
+ You do not have control of timeouts or authentication
+ using this routine.
+ .El
++.Sh AVAILABILITY
++These functions are part of libtirpc.
+ .Sh SEE ALSO
+ .Xr printf 3 ,
+ .Xr rpc 3 ,
+diff --git a/man/rpc_clnt_create.3t b/man/rpc_clnt_create.3t
+index acdbab4..95b6fc8 100644
+--- a/man/rpc_clnt_create.3t
++++ b/man/rpc_clnt_create.3t
+@@ -27,8 +27,6 @@
+ .Nd "library routines for dealing with creation and manipulation of"
+ .Vt CLIENT
+ handles
+-.Sh LIBRARY
+-.Lb libc
+ .Sh SYNOPSIS
+ .In rpc/rpc.h
+ .Ft bool_t
+@@ -507,6 +505,8 @@ It is used by the routine
+ .Fn clnt_pcreateerror
+ to print the reason for the failure.
+ .El
++.Sh AVAILABILITY
++These functions are part of libtirpc.
+ .Sh SEE ALSO
+ .Xr rpc 3 ,
+ .Xr rpc_clnt_auth 3 ,
+diff --git a/man/rpc_secure.3t b/man/rpc_secure.3t
+index 7969a91..7ad6e49 100644
+--- a/man/rpc_secure.3t
++++ b/man/rpc_secure.3t
+@@ -258,10 +258,11 @@ if it succeeds and
+ if it fails.
+ Inverse of
+ .Fn netname2user .
++.Sh AVAILABILITY
++These functions are part of libtirpc.
+ .Sh SEE ALSO
+ .Xr rpc 3 ,
+-.Xr xdr 3 ,
+-.Xr keyserv 8
++.Xr xdr 3
+ .Pp
+ The following manuals:
+ .Rs
+diff --git a/man/rpc_soc.3t b/man/rpc_soc.3t
+index 59058c0..f26c0af 100644
+--- a/man/rpc_soc.3t
++++ b/man/rpc_soc.3t
+@@ -72,8 +72,6 @@
+ .Nm xprt_register ,
+ .Nm xprt_unregister
+ .Nd "library routines for remote procedure calls"
+-.Sh LIBRARY
+-.Lb libc
+ .Sh SYNOPSIS
+ .In rpc/rpc.h
+ .Pp
+@@ -1707,6 +1705,8 @@ This routine modifies the global variable
+ .Va svc_fds .
+ Service implementors usually do not need this routine.
+ .El
++.Sh AVAILABILITY
++These functions are part of libtirpc.
+ .Sh SEE ALSO
+ .Xr rpc_secure 3 ,
+ .Xr xdr 3
+diff --git a/man/rpc_svc_calls.3t b/man/rpc_svc_calls.3t
+index 582b45d..4b3c08b 100644
+--- a/man/rpc_svc_calls.3t
++++ b/man/rpc_svc_calls.3t
+@@ -21,8 +21,6 @@
+ .Nm svc_run ,
+ .Nm svc_sendreply
+ .Nd library routines for RPC servers
+-.Sh LIBRARY
+-.Lb libc
+ .Sh SYNOPSIS
+ .In rpc/rpc.h
+ .Ft int
+@@ -258,6 +256,8 @@ if it succeeds,
+ .Dv FALSE
+ otherwise.
+ .El
++.Sh AVAILABILITY
++These functions are part of libtirpc.
+ .Sh SEE ALSO
+ .Xr poll 2 ,
+ .Xr select 2 ,
+diff --git a/man/rpc_svc_create.3t b/man/rpc_svc_create.3t
+index d47be2b..6e28d2e 100644
+--- a/man/rpc_svc_create.3t
++++ b/man/rpc_svc_create.3t
+@@ -18,8 +18,6 @@
+ .Nm svc_tp_create ,
+ .Nm svc_vc_create
+ .Nd library routines for the creation of server handles
+-.Sh LIBRARY
+-.Lb libc
+ .Sh SYNOPSIS
+ .In rpc/rpc.h
+ .Ft bool_t
+@@ -329,6 +327,8 @@ The server is not registered with the
+ .Xr rpcbind 8
+ service.
+ .El
++.Sh AVAILABILITY
++These functions are part of libtirpc.
+ .Sh SEE ALSO
+ .Xr rpc 3 ,
+ .Xr rpc_svc_calls 3 ,
+diff --git a/man/rpc_svc_err.3t b/man/rpc_svc_err.3t
+index 49139cb..ffc7f53 100644
+--- a/man/rpc_svc_err.3t
++++ b/man/rpc_svc_err.3t
+@@ -17,8 +17,6 @@
+ .Nm svcerr_systemerr ,
+ .Nm svcerr_weakauth
+ .Nd library routines for server side remote procedure call errors
+-.Sh LIBRARY
+-.Lb libc
+ .Sh SYNOPSIS
+ .In rpc/rpc.h
+ .Ft void
+@@ -90,6 +88,8 @@ authentication arguments.
+ The routine calls
+ .Fn svcerr_auth "xprt" "AUTH_TOOWEAK" .
+ .El
++.Sh AVAILABILITY
++These functions are part of libtirpc.
+ .Sh SEE ALSO
+ .Xr rpc 3 ,
+ .Xr rpc_svc_calls 3 ,
+diff --git a/man/rpc_svc_reg.3t b/man/rpc_svc_reg.3t
+index 56dd530..e74f7fc 100644
+--- a/man/rpc_svc_reg.3t
++++ b/man/rpc_svc_reg.3t
+@@ -16,8 +16,6 @@
+ .Nm xprt_register ,
+ .Nm xprt_unregister
+ .Nd library routines for registering servers
+-.Sh LIBRARY
+-.Lb libc
+ .Sh SYNOPSIS
+ .In rpc/rpc.h
+ .Ft int
+@@ -173,6 +171,8 @@ This routine modifies the global variable
+ .Xr rpc_svc_calls 3 ) .
+ Service implementors usually do not need this routine.
+ .El
++.Sh AVAILABILITY
++These functions are part of libtirpc.
+ .Sh SEE ALSO
+ .Xr select 2 ,
+ .Xr rpc 3 ,
+diff --git a/man/rpc_xdr.3t b/man/rpc_xdr.3t
+index feb708b..ae3d663 100644
+--- a/man/rpc_xdr.3t
++++ b/man/rpc_xdr.3t
+@@ -15,8 +15,6 @@
+ .Nm xdr_rejected_reply ,
+ .Nm xdr_replymsg
+ .Nd XDR library routines for remote procedure calls
+-.Sh LIBRARY
+-.Lb libc
+ .Sh SYNOPSIS
+ .In rpc/rpc.h
+ .Ft bool_t
+@@ -96,6 +94,8 @@ This reply could be either an acceptance,
+ rejection or
+ .Dv NULL .
+ .El
++.Sh AVAILABILITY
++These functions are part of libtirpc.
+ .Sh SEE ALSO
+ .Xr rpc 3 ,
+ .Xr xdr 3
+diff --git a/man/rpcbind.3t b/man/rpcbind.3t
+index 99b03cf..ec492cc 100644
+--- a/man/rpcbind.3t
++++ b/man/rpcbind.3t
+@@ -14,8 +14,6 @@
+ .Nm rpcb_set ,
+ .Nm rpcb_unset
+ .Nd library routines for RPC bind service
+-.Sh LIBRARY
+-.Lb libc
+ .Sh SYNOPSIS
+ .In rpc/rpc.h
+ .Ft "rpcblist *"
+@@ -187,6 +185,8 @@ Only the owner of the service or the super-user can destroy the mapping.
+ in
+ .Xr rpc_svc_calls 3 . )
+ .El
++.Sh AVAILABILITY
++These functions are part of libtirpc.
+ .Sh SEE ALSO
+ .Xr rpc_clnt_calls 3 ,
+ .Xr rpc_svc_calls 3 ,
+diff --git a/man/rtime.3t b/man/rtime.3t
+index 6e61350..bc93af6 100644
+--- a/man/rtime.3t
++++ b/man/rtime.3t
+@@ -7,8 +7,6 @@
+ .Sh NAME
+ .Nm rtime
+ .Nd "get remote time"
+-.Sh LIBRARY
+-.Lb libc
+ .Sh SYNOPSIS
+ .In sys/types.h
+ .In sys/time.h
+@@ -46,5 +44,7 @@ however, the routine will instead use
+ and block until a reply is received from the time server.
+ .Sh RETURN VALUES
+ .Rv -std rtime
+-.Sh SEE ALSO
+-.Xr timed 8
++.Sh AVAILABILITY
++The
++.Fn rtime
++function is part of libtirpc.
+diff --git a/src/auth_gss.c b/src/auth_gss.c
+index 703bc3f..fd6191b 100644
+--- a/src/auth_gss.c
++++ b/src/auth_gss.c
+@@ -49,14 +49,14 @@
+ #include <netinet/in.h>
+ #include <gssapi/gssapi.h>
+ 
+-static void	authgss_nextverf();
+-static bool_t	authgss_marshal();
+-static bool_t	authgss_refresh();
+-static bool_t	authgss_validate();
+-static void	authgss_destroy();
+-static void	authgss_destroy_context();
+-static bool_t	authgss_wrap();
+-static bool_t	authgss_unwrap();
++static void	authgss_nextverf(AUTH *);
++static bool_t	authgss_marshal(AUTH *, XDR *);
++static bool_t	authgss_refresh(AUTH *, void *);
++static bool_t	authgss_validate(AUTH *, struct opaque_auth *);
++static void	authgss_destroy(AUTH *);
++static void	authgss_destroy_context(AUTH *);
++static bool_t	authgss_wrap(AUTH *, XDR *, xdrproc_t, caddr_t);
++static bool_t	authgss_unwrap(AUTH *, XDR *, xdrproc_t, caddr_t);
+ 
+ 
+ /*
+@@ -198,7 +198,7 @@ authgss_create(CLIENT *clnt, gss_name_t name, struct rpc_gss_sec *sec)
+ 	save_auth = clnt->cl_auth;
+ 	clnt->cl_auth = auth;
+ 
+-	if (!authgss_refresh(auth))
++	if (!authgss_refresh(auth, NULL))
+ 		auth = NULL;
+ 	else
+ 		auth_get(auth); /* Reference for caller */
+@@ -418,7 +418,7 @@ authgss_validate(AUTH *auth, struct opaque_auth *verf)
+ }
+ 
+ static bool_t
+-authgss_refresh(AUTH *auth)
++authgss_refresh(AUTH *auth, void *dummy)
+ {
+ 	struct rpc_gss_data	*gd;
+ 	struct rpc_gss_init_res	 gr;
+@@ -639,7 +639,7 @@ authgss_destroy(AUTH *auth)
+ 	free(auth);
+ }
+ 
+-bool_t
++static bool_t
+ authgss_wrap(AUTH *auth, XDR *xdrs, xdrproc_t xdr_func, caddr_t xdr_ptr)
+ {
+ 	struct rpc_gss_data	*gd;
+@@ -656,7 +656,7 @@ authgss_wrap(AUTH *auth, XDR *xdrs, xdrproc_t xdr_func, caddr_t xdr_ptr)
+ 				 gd->sec.svc, gd->gc.gc_seq));
+ }
+ 
+-bool_t
++static bool_t
+ authgss_unwrap(AUTH *auth, XDR *xdrs, xdrproc_t xdr_func, caddr_t xdr_ptr)
+ {
+ 	struct rpc_gss_data	*gd;
+diff --git a/src/clnt_simple.c b/src/clnt_simple.c
+index e66da6a..7ee9542 100644
+--- a/src/clnt_simple.c
++++ b/src/clnt_simple.c
+@@ -104,9 +104,9 @@ rpc_call(host, prognum, versnum, procnum, inproc, in, outproc, out, nettype)
+ 	extern thread_key_t rpc_call_key;
+ 	extern mutex_t tsd_lock;
+ 
+-	if (rpc_call_key == -1) {
++	if (rpc_call_key == KEY_INITIALIZER) {
+ 		mutex_lock(&tsd_lock);
+-		if (rpc_call_key == -1)
++		if (rpc_call_key == KEY_INITIALIZER)
+ 			thr_keycreate(&rpc_call_key, rpc_call_destroy);
+ 		mutex_unlock(&tsd_lock);
+ 	}
+diff --git a/src/getnetconfig.c b/src/getnetconfig.c
+index 78de0f6..635c03a 100644
+--- a/src/getnetconfig.c
++++ b/src/getnetconfig.c
+@@ -137,10 +137,10 @@ __nc_error()
+ 	 * (including non-threaded programs), or if an allocation
+ 	 * fails.
+ 	 */
+-	if (nc_key == -1) {
++	if (nc_key == KEY_INITIALIZER) {
+ 		error = 0;
+ 		mutex_lock(&nc_lock);
+-		if (nc_key == -1)
++		if (nc_key == KEY_INITIALIZER)
+ 			error = thr_keycreate(&nc_key, free);
+ 		mutex_unlock(&nc_lock);
+ 		if (error)
+diff --git a/src/mt_misc.c b/src/mt_misc.c
+index d459dec..093086e 100644
+--- a/src/mt_misc.c
++++ b/src/mt_misc.c
+@@ -78,12 +78,12 @@ pthread_mutex_t	svcraw_lock = PTHREAD_MUTEX_INITIALIZER;
+ pthread_mutex_t	tsd_lock = PTHREAD_MUTEX_INITIALIZER;
+ 
+ /* Library global tsd keys */
+-thread_key_t clnt_broadcast_key;
+-thread_key_t rpc_call_key = -1;
+-thread_key_t tcp_key = -1;
+-thread_key_t udp_key = -1;
+-thread_key_t nc_key = -1;
+-thread_key_t rce_key = -1;
++thread_key_t clnt_broadcast_key = KEY_INITIALIZER;
++thread_key_t rpc_call_key = KEY_INITIALIZER;
++thread_key_t tcp_key = KEY_INITIALIZER;
++thread_key_t udp_key = KEY_INITIALIZER;
++thread_key_t nc_key = KEY_INITIALIZER;
++thread_key_t rce_key = KEY_INITIALIZER;
+ 
+ /* xprtlist (svc_generic.c) */
+ pthread_mutex_t	xprtlist_lock = PTHREAD_MUTEX_INITIALIZER;
+@@ -110,7 +110,7 @@ __rpc_createerr()
+ 	struct rpc_createerr *rce_addr;
+ 
+ 	mutex_lock(&tsd_lock);
+-	if (rce_key == -1)
++	if (rce_key == KEY_INITIALIZER)
+ 		thr_keycreate(&rce_key, free);
+ 	mutex_unlock(&tsd_lock);
+ 
+@@ -131,17 +131,17 @@ __rpc_createerr()
+ 
+ void tsd_key_delete(void)
+ {
+-	if (clnt_broadcast_key != -1)
++	if (clnt_broadcast_key != KEY_INITIALIZER)
+ 		pthread_key_delete(clnt_broadcast_key);
+-	if (rpc_call_key != -1)
++	if (rpc_call_key != KEY_INITIALIZER)
+ 		pthread_key_delete(rpc_call_key);
+-	if (tcp_key != -1)
++	if (tcp_key != KEY_INITIALIZER)
+ 		pthread_key_delete(tcp_key);
+-	if (udp_key != -1)
++	if (udp_key != KEY_INITIALIZER)
+ 		pthread_key_delete(udp_key);
+-	if (nc_key != -1)
++	if (nc_key != KEY_INITIALIZER)
+ 		pthread_key_delete(nc_key);
+-	if (rce_key != -1)
++	if (rce_key != KEY_INITIALIZER)
+ 		pthread_key_delete(rce_key);
+ 	return;
+ }
+diff --git a/src/rpc_generic.c b/src/rpc_generic.c
+index 2eb91ad..a43906c 100644
+--- a/src/rpc_generic.c
++++ b/src/rpc_generic.c
+@@ -228,16 +228,16 @@ __rpc_getconfip(nettype)
+ 	extern thread_key_t tcp_key, udp_key;
+ 	extern mutex_t tsd_lock;
+ 
+-	if (tcp_key == -1) {
++	if (tcp_key == KEY_INITIALIZER) {
+ 		mutex_lock(&tsd_lock);
+-		if (tcp_key == -1)
++		if (tcp_key == KEY_INITIALIZER)
+ 			thr_keycreate(&tcp_key, free);
+ 		mutex_unlock(&tsd_lock);
+ 	}
+ 	netid_tcp = (char *)thr_getspecific(tcp_key);
+-	if (udp_key == -1) {
++	if (udp_key == KEY_INITIALIZER) {
+ 		mutex_lock(&tsd_lock);
+-		if (udp_key == -1)
++		if (udp_key == KEY_INITIALIZER)
+ 			thr_keycreate(&udp_key, free);
+ 		mutex_unlock(&tsd_lock);
+ 	}
+diff --git a/src/rpc_soc.c b/src/rpc_soc.c
+index 4213ca0..338edbb 100644
+--- a/src/rpc_soc.c
++++ b/src/rpc_soc.c
+@@ -508,9 +508,9 @@ clnt_broadcast(prog, vers, proc, xargs, argsp, xresults, resultsp, eachresult)
+ {
+ 	extern mutex_t tsd_lock;
+ 
+-	if (clnt_broadcast_key == -1) {
++	if (clnt_broadcast_key == KEY_INITIALIZER) {
+ 		mutex_lock(&tsd_lock);
+-		if (clnt_broadcast_key == -1)
++		if (clnt_broadcast_key == KEY_INITIALIZER)
+ 			thr_keycreate(&clnt_broadcast_key, free);
+ 		mutex_unlock(&tsd_lock);
+ 	}
+diff --git a/src/svc.c b/src/svc.c
+index 08cd6c9..8afd15d 100644
+--- a/src/svc.c
++++ b/src/svc.c
+@@ -649,6 +649,7 @@ svc_getreq_common (fd)
+     {
+       if (SVC_RECV (xprt, &msg))
+ 	{
++	  bool_t no_dispatch;
+ 
+ 	  /* now find the exported program and call it */
+ 	  struct svc_callout *s;
+@@ -660,11 +661,14 @@ svc_getreq_common (fd)
+ 	  r.rq_proc = msg.rm_call.cb_proc;
+ 	  r.rq_cred = msg.rm_call.cb_cred;
+ 	  /* first authenticate the message */
+-	  if ((why = _authenticate (&r, &msg)) != AUTH_OK)
++	  why = _gss_authenticate(&r, &msg, &no_dispatch);
++	  if (why != AUTH_OK)
+ 	    {
+ 	      svcerr_auth (xprt, why);
+ 	      goto call_done;
+ 	    }
++	  if (no_dispatch)
++	    goto call_done;
+ 	  /* now match message with a registered service */
+ 	  prog_found = FALSE;
+ 	  low_vers = (rpcvers_t) - 1L;
+diff --git a/src/svc_auth.c b/src/svc_auth.c
+index e80d5f9..31241c9 100644
+--- a/src/svc_auth.c
++++ b/src/svc_auth.c
+@@ -82,9 +82,10 @@ static struct authsvc *Auths = NULL;
+  * invalid.
+  */
+ enum auth_stat
+-_authenticate(rqst, msg)
++_gss_authenticate(rqst, msg, no_dispatch)
+ 	struct svc_req *rqst;
+ 	struct rpc_msg *msg;
++	bool_t *no_dispatch;
+ {
+ 	int cred_flavor;
+ 	struct authsvc *asp;
+@@ -97,6 +98,7 @@ _authenticate(rqst, msg)
+ 	rqst->rq_xprt->xp_verf.oa_flavor = _null_auth.oa_flavor;
+ 	rqst->rq_xprt->xp_verf.oa_length = 0;
+ 	cred_flavor = rqst->rq_cred.oa_flavor;
++	*no_dispatch = FALSE;
+ 	switch (cred_flavor) {
+ 	case AUTH_NONE:
+ 		dummy = _svcauth_none(rqst, msg);
+@@ -112,6 +114,11 @@ _authenticate(rqst, msg)
+ 		dummy = _svcauth_des(rqst, msg);
+ 		return (dummy);
+ #endif
++#ifdef HAVE_RPCSEC_GSS
++	case RPCSEC_GSS:
++		dummy = _svcauth_gss(rqst, msg, no_dispatch);
++		return (dummy);
++#endif
+ 	default:
+ 		break;
+ 	}
+@@ -132,6 +139,13 @@ _authenticate(rqst, msg)
+ 	return (AUTH_REJECTEDCRED);
+ }
+ 
++enum auth_stat
++_authenticate(struct svc_req *rqst, struct rpc_msg *msg)
++{
++	bool_t no_dispatch;
++	return _gss_authenticate(rqst, msg, &no_dispatch);
++}
++
+ /*
+  *  Allow the rpc service to register new authentication types that it is
+  *  prepared to handle.  When an authentication flavor is registered,
+@@ -161,6 +175,9 @@ svc_auth_reg(cred_flavor, handler)
+ #ifdef DES_BUILTIN
+ 	    case AUTH_DES:
+ #endif
++#ifdef HAVE_RPCSEC_GSS
++	    case RPCSEC_GSS:
++#endif
+ 		/* already registered */
+ 		return (1);
+ 
+diff --git a/src/svc_auth_gss.c b/src/svc_auth_gss.c
+index 9c74313..26c1065 100644
+--- a/src/svc_auth_gss.c
++++ b/src/svc_auth_gss.c
+@@ -53,11 +53,11 @@ typedef struct gss_union_ctx_id_t {
+ 
+ 
+ 
+-static bool_t	svcauth_gss_destroy();
+-static bool_t   svcauth_gss_wrap();
+-static bool_t   svcauth_gss_unwrap();
++static bool_t	svcauth_gss_wrap(SVCAUTH *, XDR *, xdrproc_t, caddr_t);
++static bool_t	svcauth_gss_unwrap(SVCAUTH *, XDR *, xdrproc_t, caddr_t);
++static bool_t	svcauth_gss_destroy(SVCAUTH *);
+ 
+-struct svc_auth_ops svc_auth_gss_ops = {
++static struct svc_auth_ops svc_auth_gss_ops = {
+ 	svcauth_gss_wrap,
+ 	svcauth_gss_unwrap,
+ 	svcauth_gss_destroy
+@@ -79,7 +79,7 @@ struct svc_rpc_gss_data {
+ 	((struct svc_rpc_gss_data *)(auth)->svc_ah_private)
+ 
+ /* Global server credentials. */
+-gss_cred_id_t		_svcauth_gss_creds;
++static gss_cred_id_t	_svcauth_gss_creds;
+ static gss_name_t	_svcauth_gss_name = NULL;
+ 
+ bool_t
+@@ -286,21 +286,19 @@ svcauth_gss_validate(struct svc_rpc_gss_data *gd, struct rpc_msg *msg)
+ 	struct opaque_auth	*oa;
+ 	gss_buffer_desc		 rpcbuf, checksum;
+ 	OM_uint32		 maj_stat, min_stat, qop_state;
+-	u_char			 rpchdr[128];
++	u_char			 *rpchdr;
+ 	int32_t			*buf;
+ 
+ 	gss_log_debug("in svcauth_gss_validate()");
+ 
+-	memset(rpchdr, 0, sizeof(rpchdr));
+-
+ 	/* XXX - Reconstruct RPC header for signing (from xdr_callmsg). */
+ 	oa = &msg->rm_call.cb_cred;
+ 	if (oa->oa_length > MAX_AUTH_BYTES)
+ 		return (FALSE);
+-	
+-	/* 8 XDR units from the IXDR macro calls. */
+-	if (sizeof(rpchdr) < (8 * BYTES_PER_XDR_UNIT +
+-			RNDUP(oa->oa_length)))
++
++	rpchdr = (u_char *)calloc(((8 * BYTES_PER_XDR_UNIT) + 
++			RNDUP(oa->oa_length)), 1);
++	if (rpchdr == NULL)
+ 		return (FALSE);
+ 
+ 	buf = (int32_t *)rpchdr;
+@@ -325,6 +323,8 @@ svcauth_gss_validate(struct svc_rpc_gss_data *gd, struct rpc_msg *msg)
+ 	maj_stat = gss_verify_mic(&min_stat, gd->ctx, &rpcbuf, &checksum,
+ 				  &qop_state);
+ 
++	free(rpchdr);
++
+ 	if (maj_stat != GSS_S_COMPLETE) {
+ 		gss_log_status("gss_verify_mic", maj_stat, min_stat);
+ 		return (FALSE);
+@@ -332,7 +332,7 @@ svcauth_gss_validate(struct svc_rpc_gss_data *gd, struct rpc_msg *msg)
+ 	return (TRUE);
+ }
+ 
+-bool_t
++static bool_t
+ svcauth_gss_nextverf(struct svc_req *rqst, u_int num)
+ {
+ 	struct svc_rpc_gss_data	*gd;
+@@ -513,7 +513,7 @@ _svcauth_gss(struct svc_req *rqst, struct rpc_msg *msg, bool_t *no_dispatch)
+ 	return (AUTH_OK);
+ }
+ 
+-bool_t
++static bool_t
+ svcauth_gss_destroy(SVCAUTH *auth)
+ {
+ 	struct svc_rpc_gss_data	*gd;
+@@ -535,7 +535,7 @@ svcauth_gss_destroy(SVCAUTH *auth)
+ 	return (TRUE);
+ }
+ 
+-bool_t
++static bool_t
+ svcauth_gss_wrap(SVCAUTH *auth, XDR *xdrs, xdrproc_t xdr_func, caddr_t xdr_ptr)
+ {
+ 	struct svc_rpc_gss_data	*gd;
+@@ -552,7 +552,7 @@ svcauth_gss_wrap(SVCAUTH *auth, XDR *xdrs, xdrproc_t xdr_func, caddr_t xdr_ptr)
+ 				 gd->sec.svc, gd->seq));
+ }
+ 
+-bool_t
++static bool_t
+ svcauth_gss_unwrap(SVCAUTH *auth, XDR *xdrs, xdrproc_t xdr_func, caddr_t xdr_ptr)
+ {
+ 	struct svc_rpc_gss_data	*gd;
+diff --git a/tirpc/reentrant.h b/tirpc/reentrant.h
+index 9489b15..5f5c96e 100644
+--- a/tirpc/reentrant.h
++++ b/tirpc/reentrant.h
+@@ -46,6 +46,8 @@
+ #define once_t			pthread_once_t
+ 
+ #define thread_key_t		pthread_key_t
++
++#define KEY_INITIALIZER		((thread_key_t)-1)
+ #define MUTEX_INITIALIZER	PTHREAD_MUTEX_INITIALIZER
+ #define RWLOCK_INITIALIZER	PTHREAD_RWLOCK_INITIALIZER
+ #define ONCE_INITIALIZER	PTHREAD_ONCE_INIT
+diff --git a/tirpc/rpc/auth.h b/tirpc/rpc/auth.h
+index 4ce11f0..7c8f813 100644
+--- a/tirpc/rpc/auth.h
++++ b/tirpc/rpc/auth.h
+@@ -399,6 +399,7 @@ struct rpc_msg;
+ enum auth_stat _svcauth_none (struct svc_req *, struct rpc_msg *);
+ enum auth_stat _svcauth_short (struct svc_req *, struct rpc_msg *);
+ enum auth_stat _svcauth_unix (struct svc_req *, struct rpc_msg *);
++enum auth_stat _svcauth_gss (struct svc_req *, struct rpc_msg *, bool_t *);
+ __END_DECLS
+ 
+ #define AUTH_NONE	0		/* no authentication */
+diff --git a/tirpc/rpc/svc_auth.h b/tirpc/rpc/svc_auth.h
+index 14269d1..723c989 100644
+--- a/tirpc/rpc/svc_auth.h
++++ b/tirpc/rpc/svc_auth.h
+@@ -66,6 +66,8 @@ typedef struct SVCAUTH {
+  * Server side authenticator
+  */
+ __BEGIN_DECLS
++extern enum auth_stat _gss_authenticate(struct svc_req *, struct rpc_msg *,
++		bool_t *);
+ extern enum auth_stat _authenticate(struct svc_req *, struct rpc_msg *);
+ extern int svc_auth_reg(int, enum auth_stat (*)(struct svc_req *,
+ 			  struct rpc_msg *));

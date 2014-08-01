@@ -1,9 +1,11 @@
 Summary:        Tar file manipulation API
+Summary(zh_CN.UTF-8): Tar 文件处理 API
 Name:           libtar
 Version:        1.2.11
-Release:        13%{?dist}
+Release:        14%{?dist}
 License:        MIT
 Group:          System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 URL:            http://www.feep.net/libtar/
 Source0:        ftp://ftp.feep.net/pub/software/libtar/libtar-%{version}.tar.gz
 Patch0:         http://ftp.debian.org/debian/pool/main/libt/libtar/libtar_1.2.11-4.diff.gz
@@ -16,16 +18,22 @@ libtar is a C library for manipulating tar archives. It supports both
 the strict POSIX tar format and many of the commonly-used GNU
 extensions.
 
+%description -l zh_CN.UTF-8
+Tar 文件处理 API。
 
 %package        devel
 Summary:        Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       %{name} = %{version}-%{release}
 
 %description    devel
 The %{name}-devel package contains libraries and header files for
 developing applications that use %{name}.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -53,7 +61,7 @@ make install DESTDIR=$RPM_BUILD_ROOT LIBTOOL=/usr/bin/libtool
 # Without this we get no debuginfo and stripping
 chmod +x $RPM_BUILD_ROOT%{_libdir}/libtar.so.%{version}
 rm $RPM_BUILD_ROOT%{_libdir}/*a
-
+magic_rpm_clean.sh
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -78,6 +86,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Thu Jul 31 2014 Liu Di <liudidi@gmail.com> - 1.2.11-14
+- 为 Magic 3.0 重建
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 1.2.11-13
 - 为 Magic 3.0 重建
 
