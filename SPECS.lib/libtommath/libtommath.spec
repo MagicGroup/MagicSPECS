@@ -1,7 +1,8 @@
 Name:           libtommath
 Version:        0.42.0
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        A portable number theoretic multiple-precision integer library
+Summary(zh_CN.UTF-8): 可移植的数论高精度整数库
 License:        Public Domain
 URL:            http://www.libtom.org/?page=features&newsitems=5&whatfile=ltm
 
@@ -31,22 +32,33 @@ written entirely in C. (phew!). The library is designed to provide a simple to
 work with API that provides fairly efficient routines that build out of the box
 without configuration.
 
+%description -l zh_CN.UTF-8
+可移植的数论高精度整数库。
+
 %package        devel
 Summary:        Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Requires:       %{name}%{?_isa} = %{version}-%{release}
 
 %description    devel
 The %{name}-devel package contains libraries and header files for developing
 applications that use %{name}.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
 %package        doc
 Summary:        Documentation files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的文档
 BuildArch:      noarch
 Provides:       %{name}-doc = %{version}-%{release}
 Obsoletes:      %{name}-doc < 0.42-1
 
 %description    doc
 The %{name}-doc package contains PDF documentation for using %{name}.
+
+%description doc -l zh_CN.UTF-8
+%{name} 的文档。
 
 %prep
 %setup -q
@@ -71,6 +83,7 @@ chmod 644 LICENSE
 
 find %{buildroot} -name '*.la' -delete
 find %{buildroot} -name '*.a' -delete
+magic_rpm_clean.sh
 
 %post -p /sbin/ldconfig
 
@@ -88,6 +101,9 @@ find %{buildroot} -name '*.a' -delete
 %doc bn.pdf poster.pdf tommath.pdf
 
 %changelog
+* Fri Aug 01 2014 Liu Di <liudidi@gmail.com> - 0.42.0-4
+- 为 Magic 3.0 重建
+
 * Sun Sep 29 2013 Simone Caronni <negativo17@gmail.com> - 0.42.0-3
 - Move headers to default location.
 

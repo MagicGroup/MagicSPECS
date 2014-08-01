@@ -1,10 +1,12 @@
 Summary: Library of functions for manipulating TIFF format image files
+Summary(zh_CN.UTF-8): 处理 TIFF 格式图像文件的函数库
 Name: libtiff
 Version: 4.0.3
-Release: 16%{?dist}
+Release: 17%{?dist}
 
 License: libtiff
 Group: System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 URL: http://www.remotesensing.org/libtiff/
 
 Source: ftp://ftp.remotesensing.org/pub/libtiff/tiff-%{version}.tar.gz
@@ -35,9 +37,14 @@ used file format for bitmapped images.  TIFF files usually end in the
 The libtiff package should be installed if you need to manipulate TIFF
 format image files.
 
+%description -l zh_CN.UTF-8
+处理 TIFF 格式图像文件的函数库。
+
 %package devel
 Summary: Development tools for programs which will use the libtiff library
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: %{name}%{?_isa} = %{version}-%{release}
 Requires: pkgconfig%{?_isa}
 
@@ -46,13 +53,18 @@ This package contains the header files and documentation necessary for
 developing programs which will manipulate TIFF format image files
 using the libtiff library.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
 If you need to develop programs which will manipulate TIFF format
 image files, you should install this package.  You'll also need to
 install the libtiff package.
 
 %package static
 Summary: Static TIFF image format file library
+Summary(zh_CN.UTF-8): %{name} 的静态库
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: %{name}-devel%{?_isa} = %{version}-%{release}
 
 %description static
@@ -60,14 +72,22 @@ The libtiff-static package contains the statically linkable version of libtiff.
 Linking to static libraries is discouraged for most applications, but it is
 necessary for some boot packages.
 
+%description static -l zh_CN.UTF-8
+%{name} 的静态库。
+
 %package tools
 Summary: Command-line utility programs for manipulating TIFF files
+Summary(zh_CN.UTF-8): 处理 TIFF 文件的命令行工具程序
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: %{name}%{?_isa} = %{version}-%{release}
 
 %description tools
 This package contains command-line programs for manipulating TIFF format
 image files using the libtiff library.
+
+%description tools -l zh_CN.UTF-8
+处理 TIFF 文件的命令行工具程序。
 
 %prep
 %setup -q -n tiff-%{version}
@@ -158,6 +178,7 @@ then
 EOF
 
 fi
+magic_rpm_clean.sh
 
 %post -p /sbin/ldconfig
 
@@ -190,6 +211,9 @@ find html -name 'Makefile*' | xargs rm
 %{_mandir}/man1/*
 
 %changelog
+* Fri Aug 01 2014 Liu Di <liudidi@gmail.com> - 4.0.3-17
+- 为 Magic 3.0 重建
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 4.0.3-16
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

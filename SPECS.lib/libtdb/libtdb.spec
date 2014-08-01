@@ -5,10 +5,12 @@
 %{!?python_version: %global python_version %(%{__python} -c "from distutils.sysconfig import get_python_version; print(get_python_version())")}
 
 Name: libtdb
-Version: 1.2.12
-Release: 2%{?dist}
+Version: 1.3.0
+Release: 1%{?dist}
 Group: System Environment/Daemons
+Group(zh_CN.UTF-8): 系统环境/服务
 Summary: The tdb library
+Summary(zh_CN.UTF-8): tdb 库
 License: LGPLv3+
 URL: http://tdb.samba.org/
 Source: http://samba.org/ftp/tdb/tdb-%{version}.tar.gz
@@ -26,30 +28,48 @@ Provides: bundled(libreplace)
 %description
 A library that implements a trivial database.
 
+%description -l zh_CN.UTF-8
+实现 trivial 数据库的库。
+
 %package devel
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Summary: Header files need to link the Tdb library
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Requires: libtdb = %{version}-%{release}
 Requires: pkgconfig
 
 %description devel
 Header files needed to develop programs that link against the Tdb library.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
 %package -n tdb-tools
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Summary: Developer tools for the Tdb library
+Summary(zh_CN.UTF-8): %{name} 的开发工具
 Requires: libtdb = %{version}-%{release}
 
 %description -n tdb-tools
 Tools to manage Tdb files
 
+%description -n tdb-tools -l zh_CN.UTF-8
+管理 Tdb 文件的工具。
+
 %package -n python-tdb
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Summary: Python bindings for the Tdb library
+Summary(zh_CN.UTF-8): %{name} 的 Python 绑定
 Requires: libtdb = %{version}-%{release}
 
 %description -n python-tdb
 Python bindings for libtdb
+
+%description -n python-tdb -l zh_CN.UTF-8
+%{name} 的 Python 绑定。
 
 %prep
 %setup -q -n tdb-%{version}
@@ -70,6 +90,7 @@ make install DESTDIR=$RPM_BUILD_ROOT
 find $RPM_BUILD_ROOT -name "*.so*" -exec chmod -c +x {} \;
 
 rm -f $RPM_BUILD_ROOT%{_libdir}/libtdb.a
+magic_rpm_clean.sh
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -109,6 +130,9 @@ rm -rf $RPM_BUILD_ROOT
 %postun -n python-tdb -p /sbin/ldconfig
 
 %changelog
+* Fri Aug 01 2014 Liu Di <liudidi@gmail.com> - 1.3.0-1
+- 更新到 1.3.0
+
 * Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.2.12-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
 

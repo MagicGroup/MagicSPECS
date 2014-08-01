@@ -1,0 +1,14 @@
+diff -ur libtpcimgio.orig/include/imgunit.h libtpcimgio/include/imgunit.h
+--- libtpcimgio.orig/include/imgunit.h	2014-08-01 12:38:21.631063921 +0000
++++ libtpcimgio/include/imgunit.h	2014-08-01 12:38:35.864063557 +0000
+@@ -19,8 +19,8 @@
+ /*****************************************************************************/
+ #include "petunits.h"
+ /*****************************************************************************/
+-#include "include/img.h"
+-#include "include/ecat7.h"
++#include "img.h"
++#include "ecat7.h"
+ /*****************************************************************************/
+ #define IMGUNIT_UNKNOWN               CUNIT_UNKNOWN
+ #define IMGUNIT_CPS                   CUNIT_CPS

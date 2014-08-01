@@ -1,11 +1,13 @@
 Name:           libtpcmisc
-Version:        1.4.8
-Release:        7%{?dist}
+Version: 2.2.5
+Release: 1%{?dist}
 Summary:        Miscellaneous PET functions
+Summary(zh_CN.UTF-8): PET 的杂项函数
 
 License:        LGPLv2+
 URL:            http://www.turkupetcentre.net/software/libdoc/%{name}/index.html
-Source0:        http://www.turkupetcentre.net/software/libsrc/%{name}_1_4_8_src.zip
+%define ver %(echo %{version} | sed -e 's/\\./_/g')
+Source0:        http://www.turkupetcentre.net/software/libsrc/%{name}_%{ver}_src.zip
 Patch0:         %{name}-shared.patch
 
 BuildRequires:  doxygen dos2unix graphviz
@@ -17,21 +19,30 @@ smaller sub-libraries that each handle a specific task.
 This library includes miscellaneous functions utilized in PET 
 data processing.
 
+%description -l zh_CN.UTF-8
+PET 的杂项函数。
 
 %package        devel
 Summary:        Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Requires:       %{name}%{?_isa} = %{version}-%{release}
 
 %description    devel
 The %{name}-devel package contains libraries and header files for
 developing applications that use %{name}.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %package        static
 Summary:        Static libraries for %{name}
+Summary(zh_CN.UTF-8): %{name} 的静态库
 
 %description	static
 This package contains static libraries for %{name}.
+
+%description static -l zh_CN.UTF-8
+%{name} 的静态库。
 
 %prep
 %setup -q -n %{name}
@@ -87,6 +98,9 @@ popd
 %{_libdir}/%{name}.a
 
 %changelog
+* Fri Aug 01 2014 Liu Di <liudidi@gmail.com> - 2.2.5-1
+- 更新到 2.2.5
+
 * Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.4.8-7
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
 
