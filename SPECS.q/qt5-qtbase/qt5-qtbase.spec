@@ -4,6 +4,13 @@
 
 # support qtchooser (adds qtchooser .conf file)
 %define qtchooser 1
+%if 0%{?qtchooser}
+%define priority 10
+%ifarch %{multilib_basearchs}
+%define priority 15
+%endif
+%endif
+
 %global qt_module qtbase
 
 %global rpm_macros_dir %(d=%{_rpmconfigdir}/macros.d; [ -d $d ] || d=%{_sysconfdir}/rpm; echo $d)
@@ -21,8 +28,8 @@
 
 Summary: Qt5 - QtBase components
 Name:    qt5-qtbase
-Version: 5.3.0
-Release: 10%{?dist}
+Version: 5.3.1
+Release: 5%{?dist}
 
 # See LGPL_EXCEPTIONS.txt, LICENSE.GPL3, respectively, for exception details
 License: LGPLv2 with exceptions or GPLv3 with exceptions
@@ -45,14 +52,17 @@ Source5: qconfig-multilib.h
 # QT_XCB_FORCE_SOFTWARE_OPENGL for them
 Source6: 10-qt5-check-opengl2.sh
 
-# drop configure check for xkbcommon-x11
-Patch1: qtbase-opensource-src-5.3.0-no_xkbcommon-x11.patch
+# support the old versions of libxcb and libxkbcommon in F19 and F20
+Patch1: qtbase-opensource-src-5.3.0-old-xcb.patch
 
 # support multilib optflags
 Patch2: qtbase-multilib_optflags.patch
 
 # fix QTBUG-35459 (too low entityCharacterLimit=1024 for CVE-2013-4549)
 Patch4: qt-everywhere-opensource-src-4.8.5-QTBUG-35459.patch
+
+# Prefer QPA implementation in qsystemtrayicon_x11 if available
+Patch5: qtbase-5.3.1-prefer-qpa-implementation.patch
 
 # unconditionally enable freetype lcdfilter support
 Patch12: qtbase-opensource-src-5.2.0-enable_ft_lcdfilter.patch
@@ -64,10 +74,6 @@ Patch12: qtbase-opensource-src-5.2.0-enable_ft_lcdfilter.patch
 Patch50: qt5-poll.patch
 
 ##upstream patches
-
-# qatomic_mips.h have "sync x0??" code, mips64el is not support
-Patch100: qt5-qtbase-qbasicatomic-invalid_operands_sync_0x11-fix.patch
-Patch101: qt5-mips64el-fix_-m64.patch
 
 # macros
 %define _qt5 %{name}
@@ -112,18 +118,22 @@ BuildRequires: pkgconfig(libudev)
 BuildRequires: pkgconfig(NetworkManager)
 BuildRequires: pkgconfig(openssl)
 BuildRequires: pkgconfig(libpulse) pkgconfig(libpulse-mainloop-glib)
+%if 0%{?fedora}
+%global xkbcommon -system-xkbcommon
 %if 0%{?fedora} > 20
 BuildRequires: pkgconfig(xcb-xkb) >= 1.10
-%global xkbcommon -system-xkbcommon
 BuildRequires: pkgconfig(xkbcommon) >= 0.4.1
 BuildRequires: pkgconfig(xkbcommon-x11) >= 0.4.1
-## if no xcb-xkb > 1.10 or xkbcommon-x11
-## ie, to allow libxkbcommon backport for f19/f20
-#global no_xkbcommon_x11 1
 %else
-Provides: bundled(libxkbcommon) = 0.4.1
-%global xkbcommon -qt-xkbcommon
+# apply patch to support older versions of xcb and xkbcommon
+%global old_xcb 1
+BuildRequires: pkgconfig(xkbcommon)
 %endif
+%else
+%global xkbcommon -qt-xkbcommon
+Provides: bundled(libxkbcommon) = 0.4.1
+%endif
+BuildRequires: pkgconfig(xcb-xkb)
 BuildRequires: pkgconfig(xkeyboard-config)
 %if 0%{?fedora} || 0%{?rhel} > 6
 %define egl 1
@@ -144,6 +154,14 @@ BuildRequires: libicu-devel
 %endif
 BuildRequires: pkgconfig(xcb) pkgconfig(xcb-glx) pkgconfig(xcb-icccm) pkgconfig(xcb-image) pkgconfig(xcb-keysyms) pkgconfig(xcb-renderutil)
 BuildRequires: pkgconfig(zlib)
+
+%if 0%{?qtchooser}
+%if 0%{?fedora}
+Conflicts: qt < 1:4.8.6-10
+%endif
+Requires(post): %{_sbindir}/update-alternatives
+Requires(postun): %{_sbindir}/update-alternatives
+%endif
 
 ## Sql drivers
 %if 0%{?rhel}
@@ -170,6 +188,9 @@ Requires: %{name}-odbc%{?_isa}
 Requires: %{name}-postgresql%{?_isa}
 %if "%{?tds}" != "-no-sql-tds"
 Requires: %{name}-tds%{?_isa}
+%endif
+%if 0%{?egl}
+Requires: pkgconfig(egl)
 %endif
 Requires: pkgconfig(gl)
 %description devel
@@ -248,8 +269,6 @@ Obsoletes: qt5-qtbase-x11 < 5.2.0
 Provides:  qt5-qtbase-x11 = %{version}-%{release}
 
 # for Source6: 10-qt5-check-opengl2.sh:
-# directory ownership
-Requires: xorg-x11-xinit
 # glxinfo
 Requires: glx-utils
 
@@ -260,21 +279,18 @@ Qt5 libraries used for drawing widgets and OpenGL items.
 %prep
 %setup -q -n qtbase-opensource-src-%{version}%{?pre:-%{pre}}
 
-%if 0%{?no_xkbcommon_x11}
-%patch1 -p1 -b .no_xkbcommon-x11
+%if 0%{?old_xcb}
+%patch1 -p1 -b .old_xcb
 %endif
 %patch2 -p1 -b .multilib_optflags
 # drop backup file(s), else they get installed too, http://bugzilla.redhat.com/639463
 rm -fv mkspecs/linux-g++*/qmake.conf.multilib-optflags
 
 %patch4 -p1 -b .QTBUG-35459
+%patch5 -p1 -b .prefer-qpa
 %patch12 -p1 -b .enable_ft_lcdfilter
 
 #patch50 -p1 -b .poll
-%ifarch mips64el
-%patch100 -p1 -b .mips64el
-%patch101 -p1 -b .mips64el-m64
-%endif
 
 # drop -fexceptions from $RPM_OPT_FLAGS
 RPM_OPT_FLAGS=`echo $RPM_OPT_FLAGS | sed 's|-fexceptions||g'`
@@ -451,14 +467,10 @@ popd
 %if 0%{?qtchooser}
   mkdir -p %{buildroot}%{_sysconfdir}/xdg/qtchooser
   pushd    %{buildroot}%{_sysconfdir}/xdg/qtchooser
-  echo "%{_qt5_bindir}" >  qt5.conf
-  echo "%{_qt5_prefix}" >> qt5.conf
-  %ifarch %{multilib_archs}
-    mv qt5.conf qt5-%{__isa_bits}.conf
-    %ifarch %{multilib_basearchs}
-      ln -sv qt5-%{__isa_bits}.conf qt5.conf
-    %endif
-  %endif
+  echo "%{_qt5_bindir}" >  qt5-%{__isa_bits}.conf
+  echo "%{_qt5_prefix}" >> qt5-%{__isa_bits}.conf
+  # alternatives targets
+  touch default.conf qt5.conf
   popd
 %endif
 
@@ -490,15 +502,45 @@ ctest --output-on-failure ||:
 popd
 
 
-%post -p /sbin/ldconfig
-%postun -p /sbin/ldconfig
+%post
+/sbin/ldconfig
+%if 0%{?qtchooser}
+%{_sbindir}/update-alternatives \
+  --install %{_sysconfdir}/xdg/qtchooser/qt5.conf \
+  qtchooser-qt5 \
+  %{_sysconfdir}/xdg/qtchooser/qt5-%{__isa_bits}.conf \
+  %{priority}
+
+%{_sbindir}/update-alternatives \
+  --install %{_sysconfdir}/xdg/qtchooser/default.conf \
+  qtchooser-default \
+  %{_sysconfdir}/xdg/qtchooser/qt5.conf \
+  %{priority}
+%endif
+
+%postun
+/sbin/ldconfig
+%if 0%{?qtchooser}
+if [ $1 -eq 0 ]; then
+%{_sbindir}/update-alternatives  \
+  --remove qtchooser-qt5 \
+  %{_sysconfdir}/xdg/qtchooser/qt5-%{__isa_bits}.conf
+
+%{_sbindir}/update-alternatives  \
+  --remove qtchooser-default \
+  %{_sysconfdir}/xdg/qtchooser/qt5.conf
+fi
+%endif
+
 
 %files
 %doc LICENSE.GPL LICENSE.LGPL LGPL_EXCEPTION.txt
 %if 0%{?qtchooser}
-# not editable config files, so not using %%config here
 %dir %{_sysconfdir}/xdg/qtchooser
-%{_sysconfdir}/xdg/qtchooser/*.conf
+# not editable config files, so not using %%config here
+%ghost %{_sysconfdir}/xdg/qtchooser/default.conf
+%ghost %{_sysconfdir}/xdg/qtchooser/qt5.conf
+%{_sysconfdir}/xdg/qtchooser/qt5-%{__isa_bits}.conf
 %endif
 %{_qt5_libdir}/libQt5Concurrent.so.5*
 %{_qt5_libdir}/libQt5Core.so.5*
@@ -527,7 +569,7 @@ popd
 %dir %{_qt5_plugindir}/platformthemes/
 %dir %{_qt5_plugindir}/printsupport/
 %dir %{_qt5_plugindir}/sqldrivers/
-%{_qt5_plugindir}/sqldrivers/libqsqlite*.so
+%{_qt5_plugindir}/sqldrivers/libqsqlite.so
 
 %if 0%{?docs}
 %files doc
@@ -674,6 +716,8 @@ popd
 %postun gui -p /sbin/ldconfig
 
 %files gui
+%dir %{_sysconfdir}/X11/xinit
+%dir %{_sysconfdir}/X11/xinit/xinitrc.d/
 %{_sysconfdir}/X11/xinit/xinitrc.d/10-qt5-check-opengl2.sh
 %{_qt5_libdir}/libQt5Gui.so.5*
 %{_qt5_libdir}/libQt5OpenGL.so.5*
@@ -694,7 +738,6 @@ popd
 %{_qt5_plugindir}/platforms/libqkms.so
 %{_qt5_plugindir}/platforms/libqminimalegl.so
 %endif
-%{_qt5_plugindir}/platforms/libqdirectfb.so
 %{_qt5_plugindir}/platforms/libqlinuxfb.so
 %{_qt5_plugindir}/platforms/libqminimal.so
 %{_qt5_plugindir}/platforms/libqoffscreen.so
@@ -704,14 +747,22 @@ popd
 
 
 %changelog
-* Thu Jun 12 2014 Liu Di <liudidi@gmail.com> - 5.3.0-10
-- 为 Magic 3.0 重建
+* Thu Jul 24 2014 Rex Dieter <rdieter@fedoraproject.org> - 5.3.1-5
+- drop dep on xorg-x11-xinit (own shared dirs instead)
+- fix/improve qtchooser support using alternatives (#1122316)
 
-* Thu Jun 12 2014 Liu Di <liudidi@gmail.com> - 5.3.0-9
-- 为 Magic 3.0 重建
+* Mon Jun 30 2014 Kevin Kofler <Kevin@tigcc.ticalc.org> 5.3.1-4
+- support the old versions of libxcb and libxkbcommon in F19 and F20
+- don't use the bundled libxkbcommon
 
-* Thu Jun 12 2014 Liu Di <liudidi@gmail.com> - 5.3.0-8
-- 为 Magic 3.0 重建
+* Mon Jun 30 2014 Rex Dieter <rdieter@fedoraproject.org> 5.3.1-3
+- -devel: Requires: pkgconfig(egl)
+
+* Fri Jun 27 2014 Jan Grulich <jgrulich@redhat.com> - 5.3.1-2
+- Prefer QPA implementation in qsystemtrayicon_x11 if available
+
+* Tue Jun 17 2014 Jan Grulich <jgrulich@redhat.com> - 5.3.1-1
+- 5.3.1
 
 * Sun Jun 08 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 5.3.0-7
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
