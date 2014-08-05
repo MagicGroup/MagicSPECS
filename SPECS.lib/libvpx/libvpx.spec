@@ -1,26 +1,18 @@
 %global majorver 1
-%global minorver 2
+%global minorver 3
 %global tinyver  0
-%global commit 5e3439bbf7872a03bd3c6d7c2ceca98ade090e64
-%global shortcommit %(c=%{commit}; echo ${c:0:7})
 
 Name:			libvpx
 Summary:		VP8 Video Codec SDK
 Version:		%{majorver}.%{minorver}.%{tinyver}
 %global soversion	%{version}
-Release:		2.git%{shortcommit}%{?dist}
+Release:		5%{?dist}
 License:		BSD
 Group:			System Environment/Libraries
-# Pulling from git head because we need vp9.
-# git clone https://code.google.com/p/webm.libvpx/ libvpx
-# cd libvpx
-# rm -rf .git*
-# cd ..
-# mv libvpx libvpx-git5e3439b
-# tar cfj libvpx-git5e3439b.tar.bz2 libvpx-git5e3439b
-Source0:		%{name}-git%{shortcommit}.tar.bz2
+Source0:		http://webm.googlecode.com/files/%{name}-v%{version}.tar.bz2
 # Thanks to debian.
 Source2:		libvpx.ver
+Patch0:			Bug-fix-in-ssse3-quantize-function.patch
 URL:			http://www.webmproject.org/tools/vp8-sdk/
 %ifarch %{ix86} x86_64
 BuildRequires:		yasm
@@ -51,7 +43,8 @@ A selection of utilities and tools for VP8, including a sample encoder
 and decoder.
 
 %prep
-%setup -q -n %{name}-git%{shortcommit}
+%setup -q -n %{name}-v%{version}
+%patch0 -p1 -b .patch0
 
 %build
 %ifarch %{ix86}
@@ -60,23 +53,28 @@ and decoder.
 %ifarch	x86_64
 %global	vpxtarget x86_64-linux-gcc
 %else
+%ifarch armv7hl
+%global vpxtarget armv7-linux-gcc
+%else
 %global vpxtarget generic-gnu
+%endif
 %endif
 %endif
 
 # The configure script will reject the shared flag on the generic target
 # This means we need to fall back to the manual creation we did before. :P
 %if "%{vpxtarget}" == "generic-gnu"
-%ifarch mips64el
-%global generic_target 0
-%else
 %global generic_target 1
-%endif
 %else
 %global	generic_target 0
 %endif
 
-./configure --target=%{vpxtarget} --enable-pic --disable-install-srcs \
+%ifarch armv7hl
+CROSS=armv7hl-redhat-linux-gnueabi- CHOST=armv7hl-redhat-linux-gnueabi-hardfloat ./configure \
+%else
+./configure --target=%{vpxtarget} \
+%endif
+--enable-pic --disable-install-srcs \
 %if ! %{generic_target}
 --enable-shared \
 %endif
@@ -86,6 +84,21 @@ and decoder.
 sed -i "s|-O3|%{optflags}|g" libs-%{vpxtarget}.mk
 sed -i "s|-O3|%{optflags}|g" examples-%{vpxtarget}.mk
 sed -i "s|-O3|%{optflags}|g" docs-%{vpxtarget}.mk
+
+%ifarch armv7hl
+#hackety hack hack
+sed -i "s|AR=armv7hl-redhat-linux-gnueabi-ar|AR=ar|g" libs-%{vpxtarget}.mk
+sed -i "s|AR=armv7hl-redhat-linux-gnueabi-ar|AR=ar|g" examples-%{vpxtarget}.mk
+sed -i "s|AR=armv7hl-redhat-linux-gnueabi-ar|AR=ar|g" docs-%{vpxtarget}.mk
+
+sed -i "s|AS=armv7hl-redhat-linux-gnueabi-as|AS=as|g" libs-%{vpxtarget}.mk
+sed -i "s|AS=armv7hl-redhat-linux-gnueabi-as|AS=as|g" examples-%{vpxtarget}.mk
+sed -i "s|AS=armv7hl-redhat-linux-gnueabi-as|AS=as|g" docs-%{vpxtarget}.mk
+
+sed -i "s|NM=armv7hl-redhat-linux-gnueabi-nm|NM=nm|g" libs-%{vpxtarget}.mk
+sed -i "s|NM=armv7hl-redhat-linux-gnueabi-nm|NM=nm|g" examples-%{vpxtarget}.mk
+sed -i "s|NM=armv7hl-redhat-linux-gnueabi-nm|NM=nm|g" docs-%{vpxtarget}.mk
+%endif
 
 make %{?_smp_mflags} verbose=true target=libs
 
@@ -158,8 +171,23 @@ popd
 %{_bindir}/*
 
 %changelog
-* Sat Jun  1 2013 Tom Callaway <spot@fedoraproject.org> - 1.2.0-2.git5e3439b
-- update to trunk for vp9 code for chromium
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.3.0-5
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Thu Mar 20 2014 Wim Taymans <wtaymans@redhat.com> - 1.3.0-4
+- fix Illegal Instruction abort
+
+* Thu Feb 13 2014 Dan Horák <dan[at]danny.cz> - 1.3.0-3
+- update library symbol list for 1.3.0 from Debian
+
+* Tue Feb 11 2014 Tom Callaway <spot@fedoraproject.org> - 1.3.0-2
+- armv7hl specific target
+
+* Tue Feb 11 2014 Tom Callaway <spot@fedoraproject.org> - 1.3.0-1
+- update to 1.3.0
+
+* Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.2.0-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
 
 * Thu Feb 28 2013 Tom Callaway <spot@fedoraproject.org> - 1.2.0-1
 - update to 1.2.0
