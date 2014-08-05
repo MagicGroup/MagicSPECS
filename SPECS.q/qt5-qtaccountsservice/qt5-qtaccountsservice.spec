@@ -2,15 +2,12 @@
 
 Name:           qt5-%{qt_module}
 Summary:        Qt5 - AccountService addon
-Version:        0.1.1
+Version:        0.1.2
 Release:        4%{?dist}
 Group:          Applications/System
 License:        LGPLv2+
 URL:            https://github.com/hawaii-desktop/qt-accountsservice-addon
-# git clone --no-checkout https://github.com/hawaii-desktop/qt-accountsservice-addon.git
-# cd qt-accountsservice-addon/
-# git archive v0.1.1 --prefix=qt-accountsservice-addon-0.1.1/ |gzip >qt-accountsservice-addon-0.1.1.tar.gz
-Source0:        qt-accountsservice-addon-%{version}.tar.gz
+Source0:        http://downloads.sourceforge.net/project/mauios/hawaii/%{qt_module}/%{qt_module}-%{version}.tar.gz
 
 BuildRequires:  pkgconfig(Qt5Core)
 BuildRequires:  pkgconfig(Qt5Gui)
@@ -38,7 +35,7 @@ Files for development using Qt Account Service Addon.
 
 
 %prep
-%setup -q -n qt-accountsservice-addon-%{version}
+%setup -q -n %{qt_module}-%{version}
 
 
 %build
@@ -48,9 +45,6 @@ make %{?_smp_mflags} LINK='g++ -Wl,--as-needed'
 
 %install
 make install INSTALL_ROOT=$RPM_BUILD_ROOT
-#DESTDIR=$RPM_BUILD_ROOT
-#INSTALL_ROOT=$RPM_BUILD_ROOT
-#make install DESTDIR=$RPM_BUILD_ROOT INSTALL_ROOT=$RPM_BUILD_ROOT
 
 
 %post -p /sbin/ldconfig
@@ -73,8 +67,11 @@ make install INSTALL_ROOT=$RPM_BUILD_ROOT
 
 
 %changelog
-* Mon May 05 2014 Liu Di <liudidi@gmail.com> - 0.1.1-4
-- 为 Magic 3.0 重建
+* Thu Jul 24 2014 Lubomir Rintel <lkundrak@v3.sk> - 0.1.2-1
+- Update to 0.1.2
+
+* Sun Jun 08 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.1.1-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 
 * Sun Nov 24 2013 Lubomir Rintel <lkundrak@v3.sk> - 0.1.1-1
 - Rebase
