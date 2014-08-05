@@ -3,14 +3,15 @@
 
 Summary:        Qt5 - QtConfiguration module
 Name:           qt5-%{qt_module}
-Version:        0.2.1
-Release:        2%{?dist}
+Version:        0.3.0
+Release:        1%{?dist}
 
 # See LGPL_EXCEPTIONS.txt, LICENSE.GPL3, respectively, for exception details
 License:        LGPLv2 with exceptions or GPLv3 with exceptions
 URL:            https://github.com/mauios/qtconfiguration
-Source0:        %{qt_module}-%{version}.tar.gz
-BuildRequires:  qt5-qtbase-devel
+Source0:        http://downloads.sourceforge.net/project/mauios/hawaii/%{qt_module}/%{qt_module}-%{version}.tar.gz
+BuildRequires:  pkgconfig(Qt5Core)
+BuildRequires:  pkgconfig(Qt5Qml)
 BuildRequires:  pkgconfig(dconf)
 BuildRequires:  cmake
 
@@ -50,6 +51,7 @@ make install DESTDIR=$RPM_BUILD_ROOT
 
 %files
 %{_libdir}/libqtconfiguration.so.0*
+%{_libdir}/hawaii
 %doc LICENSE.FDL
 %doc LICENSE.GPL
 %doc LICENSE.LGPL
@@ -63,8 +65,11 @@ make install DESTDIR=$RPM_BUILD_ROOT
 
 
 %changelog
-* Mon May 05 2014 Liu Di <liudidi@gmail.com> - 0.2.1-2
-- 为 Magic 3.0 重建
+* Sun Jun 15 2014 Lubomir Rintel <lkundrak@v3.sk> - 0.3.0-1
+- Update to latest version
+
+* Sun Jun 08 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.2.1-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 
 * Sun Nov 17 2013 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com> - 0.2.1-1
 - Upstream switched from qmake to cmake
