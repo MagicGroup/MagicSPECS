@@ -12,26 +12,21 @@
 
 Summary: Qt5 - QtDeclarative component
 Name:    qt5-%{qt_module}
-Version: 5.2.1
-Release: 6%{?dist}
+Version: 5.3.1
+Release: 1%{?dist}
 
 # See LICENSE.GPL LICENSE.LGPL LGPL_EXCEPTION.txt, for details
 License: LGPLv2 with exceptions or GPLv3 with exceptions
 Url: http://qt-project.org/
 %if 0%{?pre:1}
-Source0: http://download.qt-project.org/development_releases/qt/5.2/%{version}-%{pre}/submodules/%{qt_module}-opensource-src-%{version}-%{pre}.tar.xz
+Source0: http://download.qt-project.org/development_releases/qt/5.3/%{version}-%{pre}/submodules/%{qt_module}-opensource-src-%{version}-%{pre}.tar.xz
 %else
-Source0: http://download.qt-project.org/official_releases/qt/5.2/%{version}/submodules/%{qt_module}-opensource-src-%{version}.tar.xz
+Source0: http://download.qt-project.org/official_releases/qt/5.3/%{version}/submodules/%{qt_module}-opensource-src-%{version}.tar.xz
 %endif
 
 # support no_sse2 CONFIG (fedora i686 builds cannot assume -march=pentium4 -msse2 -mfpmath=sse flags, or the JIT that needs them)
 # https://codereview.qt-project.org/#change,73710
 Patch1: qtdeclarative-opensource-src-5.2.0-no_sse2.patch
-
-# two upstream/upstream fixes from https://code.google.com/p/double-conversion/issues/detail?id=33
-# Qt uses old version of double-conversion code
-Patch2: 0001-Add-ARM-64-support.patch
-Patch3: 0002-Fix-build-on-ARMv8-64bit.patch
 
 Obsoletes: qt5-qtjsbackend < 5.2.0
 
@@ -82,8 +77,6 @@ Requires: %{name}%{?_isa} = %{version}-%{release}
 %setup -q -n %{qt_module}-opensource-src-%{version}%{?pre:-%{pre}}
 
 %patch1 -p1 -b .no_sse2
-%patch2 -p1 -b .0001
-%patch3 -p1 -b .0002
 
 
 %build
@@ -162,6 +155,7 @@ popd
 %{_qt5_libdir}/sse2/libQt5Qml.so.5*
 %endif
 %{_qt5_libdir}/libQt5Quick.so.5*
+%{_qt5_libdir}/libQt5QuickWidgets.so.5*
 %{_qt5_libdir}/libQt5QuickParticles.so.5*
 %{_qt5_libdir}/libQt5QuickTest.so.5*
 %{_qt5_plugindir}/accessible/libqtaccessiblequick.so
@@ -175,6 +169,7 @@ popd
 %{_qt5_libdir}/libQt5Qml.so
 %{_qt5_libdir}/libQt5Qml.prl
 %{_qt5_libdir}/libQt5Quick*.so
+%{_qt5_libdir}/libQt5QuickWidgets.so.5
 %{_qt5_libdir}/libQt5Quick*.prl
 %{_qt5_libdir}/cmake/Qt5*/
 %{_qt5_libdir}/pkgconfig/Qt5*.pc
@@ -190,8 +185,6 @@ popd
 %{_qt5_docdir}/qtqml/
 %{_qt5_docdir}/qtquick.qch
 %{_qt5_docdir}/qtquick/
-%{_qt5_docdir}/qtquickdialogs.qch
-%{_qt5_docdir}/qtquickdialogs/
 %endif
 
 %if 0%{?_qt5_examplesdir:1}
@@ -201,20 +194,14 @@ popd
 
 
 %changelog
-* Mon May 05 2014 Liu Di <liudidi@gmail.com> - 5.2.1-6
-- 为 Magic 3.0 重建
+* Tue Jun 17 2014 Jan Grulich <jgrulich@redhat.com> - 5.3.1-1
+- 5.3.1
 
-* Sun May 04 2014 Liu Di <liudidi@gmail.com> - 5.2.1-5
-- 为 Magic 3.0 重建
+* Sun Jun 08 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 5.3.0-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 
-* Sun May 04 2014 Liu Di <liudidi@gmail.com> - 5.2.1-4
-- 为 Magic 3.0 重建
-
-* Sun May 04 2014 Liu Di <liudidi@gmail.com> - 5.2.1-3
-- 为 Magic 3.0 重建
-
-* Sun May 04 2014 Liu Di <liudidi@gmail.com> - 5.2.1-2
-- 为 Magic 3.0 重建
+* Wed May 21 2014 Jan Grulich <jgrulich@redhat.com> 5.3.0-1
+- 5.3.0
 
 * Wed Feb 05 2014 Rex Dieter <rdieter@fedoraproject.org> 5.2.1-1
 - 5.2.1
