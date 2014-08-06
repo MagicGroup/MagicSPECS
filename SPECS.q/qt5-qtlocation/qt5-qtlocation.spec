@@ -5,22 +5,25 @@
 
 Summary: Qt5 - Location component
 Name:    qt5-%{qt_module}
-Version: 5.2.1
-Release: 3%{?dist}
+Version: 5.3.1
+Release: 1%{?dist}
 
 # See LGPL_EXCEPTIONS.txt, LICENSE.GPL3, respectively, for exception details
 License: LGPLv2 with exceptions or GPLv3 with exceptions
 Url: http://qt-project.org/
 %if 0%{?pre:1}
-Source0: http://download.qt-project.org/development_releases/qt/5.2/%{version}-%{pre}/submodules/%{qt_module}-opensource-src-%{version}-%{pre}.tar.xz
+Source0: http://download.qt-project.org/development_releases/qt/5.3/%{version}-%{pre}/submodules/%{qt_module}-opensource-src-%{version}-%{pre}.tar.xz
 %else
-Source0: http://download.qt-project.org/official_releases/qt/5.2/%{version}/submodules/%{qt_module}-opensource-src-%{version}.tar.xz
+Source0: http://download.qt-project.org/official_releases/qt/5.3/%{version}/submodules/%{qt_module}-opensource-src-%{version}.tar.xz
 %endif
 
 BuildRequires: qt5-qtbase-devel >= %{version}
 BuildRequires: pkgconfig(Qt5Qml)
 BuildRequires: pkgconfig(geoclue)
+# gyspy currently not available on epel7, https://bugzilla.redhat.com/1069225
+%if 0%{?rhel} != 7
 BuildRequires: pkgconfig(gypsy)
+%endif
 %{?_qt5_version:Requires: qt5-qtbase%{?_isa} >= %{_qt5_version}}
 
 %description
@@ -76,9 +79,17 @@ make install INSTALL_ROOT=%{buildroot}
 make install_docs INSTALL_ROOT=%{buildroot}
 %endif
 
-## unpackaged files
-# .la files, die, die, die.
-rm -fv %{buildroot}%{_qt5_libdir}/lib*.la
+## .prl/.la file love
+# nuke .prl reference(s) to %%buildroot, excessive (.la-like) libs
+pushd %{buildroot}%{_qt5_libdir}
+for prl_file in libQt5*.prl ; do
+  sed -i -e "/^QMAKE_PRL_BUILD_DIR/d" ${prl_file}
+  if [ -f "$(basename ${prl_file} .prl).so" ]; then
+    rm -fv "$(basename ${prl_file} .prl).la"
+    sed -i -e "/^QMAKE_PRL_LIBS/d" ${prl_file}
+  fi
+done
+popd
 
 
 %post -p /sbin/ldconfig
@@ -112,11 +123,17 @@ rm -fv %{buildroot}%{_qt5_libdir}/lib*.la
 
 
 %changelog
-* Mon May 05 2014 Liu Di <liudidi@gmail.com> - 5.2.1-3
-- 为 Magic 3.0 重建
+* Tue Jun 17 2014 Jan Grulich <jgrulich@redhat.com> - 5.3.1-1
+- 5.3.1
 
-* Mon May 05 2014 Liu Di <liudidi@gmail.com> - 5.2.1-2
-- 为 Magic 3.0 重建
+* Sun Jun 08 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 5.3.0-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Wed May 21 2014 Jan Grulich <jgrulich@redhat.com> 5.3.0-1
+- 5.3.0
+
+* Mon May 05 2014 Rex Dieter <rdieter@fedoraproject.org> 5.2.1-2
+- sanitize .prl file(s)
 
 * Wed Feb 05 2014 Rex Dieter <rdieter@fedoraproject.org> 5.2.1-1
 - 5.2.1
