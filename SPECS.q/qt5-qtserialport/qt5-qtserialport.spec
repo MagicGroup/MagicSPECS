@@ -5,16 +5,16 @@
 
 Summary: Qt5 - SerialPort component
 Name:    qt5-%{qt_module}
-Version: 5.2.1
-Release: 3%{?dist}
+Version: 5.3.1
+Release: 1%{?dist}
 
 # See LGPL_EXCEPTIONS.txt, LICENSE.GPL3, respectively, for exception details
 License: LGPLv2 with exceptions or GPLv3 with exceptions
 Url: http://qt-project.org/
 %if 0%{?pre:1}
-Source0: http://download.qt-project.org/development_releases/qt/5.2/%{version}-%{pre}/submodules/%{qt_module}-opensource-src-%{version}-%{pre}.tar.xz
+Source0: http://download.qt-project.org/development_releases/qt/5.3/%{version}-%{pre}/submodules/%{qt_module}-opensource-src-%{version}-%{pre}.tar.xz
 %else
-Source0: http://download.qt-project.org/official_releases/qt/5.2/%{version}/submodules/%{qt_module}-opensource-src-%{version}.tar.xz
+Source0: http://download.qt-project.org/official_releases/qt/5.3/%{version}/submodules/%{qt_module}-opensource-src-%{version}.tar.xz
 %endif
 
 BuildRequires: qt5-qtbase-devel >= %{version}
@@ -115,11 +115,17 @@ popd
 
 
 %changelog
-* Mon May 05 2014 Liu Di <liudidi@gmail.com> - 5.2.1-3
-- 为 Magic 3.0 重建
+* Thu Jul 24 2014 Rex Dieter <rdieter@fedoraproject.org> 5.3.1-1
+- 5.3.1
+
+* Sun Jun 08 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 5.3.0-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Wed May 21 2014 Jan Grulich <jgrulich@redhat.com> 5.3.0-1
+- 5.3.0
 
 * Sat Apr 26 2014 Rex Dieter <rdieter@fedoraproject.org> 5.2.1-2
-- clean .prl files (buildroot, excessive deps)
+- clean .prl files (buildroot, excessive deps) (#1091630)
 
 * Thu Feb 06 2014 Rex Dieter <rdieter@fedoraproject.org> 5.2.1-1
 - 5.2.1
