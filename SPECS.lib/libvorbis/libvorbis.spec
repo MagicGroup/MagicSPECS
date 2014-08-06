@@ -1,11 +1,13 @@
 %{!?_pkgdocdir: %global _pkgdocdir %{_docdir}/%{name}-%{version}}
 
 Summary:	The Vorbis General Audio Compression Codec
+Summary(zh_CN.UTF-8): Vorbis 通用音频压缩编码库
 Name:		libvorbis
 Version:	1.3.4
 Release:	1%{?dist}
 Epoch:		1
 Group:		System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 License:	BSD
 URL:		http://www.xiph.org/
 Source:		http://downloads.xiph.org/releases/vorbis/%{name}-%{version}.tar.xz
@@ -20,9 +22,14 @@ and variable bitrates.
 The libvorbis package contains runtime libraries for use in programs
 that support Ogg Vorbis.
 
+%description -l zh_CN.UTF-8
+Vorbis 通用音频压缩编码库。
+
 %package devel
 Summary: Development tools for Vorbis applications
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:	libogg-devel >= 2:1.1
 Requires:	%{name} = %{epoch}:%{version}-%{release}
 Obsoletes:	vorbis-devel
@@ -31,14 +38,22 @@ Obsoletes:	vorbis-devel
 The libvorbis-devel package contains the header files and documentation
 needed to develop applications with Ogg Vorbis.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
 %package devel-docs
 Summary: Documentation for developing Vorbis applications
+Summary(zh_CN.UTF-8): %{name} 的开发文档
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: %{name}-devel = %{epoch}:%{version}-%{release}
 BuildArch: noarch
 
 %description devel-docs
 Documentation for developing applications with libvorbis.
+
+%description devel-docs -l zh_CN.UTF-8
+%{name} 的开发文档。
 
 %prep
 
@@ -57,6 +72,7 @@ make DESTDIR=$RPM_BUILD_ROOT install docdir=%{_pkgdocdir}
 install -pm 644 -t $RPM_BUILD_ROOT%{_pkgdocdir} AUTHORS COPYING README
 # remove unpackaged files from the buildroot
 rm -f $RPM_BUILD_ROOT%{_libdir}/*.la
+magic_rpm_clean.sh
 
 %check
 make check

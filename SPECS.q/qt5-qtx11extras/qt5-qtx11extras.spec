@@ -4,7 +4,7 @@
 Summary: Qt5 - X11 support library
 Name:    qt5-%{qt_module}
 Version: 5.3.1
-Release: 1%{?dist}
+Release: 2%{?dist}
 
 # See LGPL_EXCEPTIONS.txt, LICENSE.GPL3, respectively, for exception details
 License: LGPLv2 with exceptions or GPLv3 with exceptions
@@ -78,6 +78,9 @@ popd
 
 
 %changelog
+* Wed Aug 06 2014 Liu Di <liudidi@gmail.com> - 5.3.1-2
+- 为 Magic 3.0 重建
+
 * Tue Jun 17 2014 Jan Grulich <jgrulich@redhat.com> - 5.3.1-1
 - 5.3.1
 

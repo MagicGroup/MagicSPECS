@@ -48,7 +48,7 @@ done
 
 
 Version: %{real_version}
-Release: %{release_number}%{?dist}.4
+Release: 2%{?dist}
 %define ver %version
 
 Source0: http://releases.qt-project.org/qt4/source/qt-everywhere-opensource-src-%{version}.tar.gz
@@ -2075,6 +2075,9 @@ rm -rf %{buildroot} %{_builddir}/%{buildsubdir}
 %endif
 
 %changelog
+* Tue Aug 05 2014 Liu Di <liudidi@gmail.com> - 4.8.6-2
+- 为 Magic 3.0 重建
+
 * Fri Jun 06 2014 Liu Di <liudidi@gmail.com> - 4.8.6-1.4
 - 为 Magic 3.0 重建
 

@@ -2,6 +2,7 @@ Name:           libverto
 Version:        0.2.4
 Release:        3%{?dist}
 Summary:        Main loop abstraction library
+Summary(zh_CN.UTF-8): 主循环抽象库
 
 License:        MIT
 URL:            https://fedorahosted.org/libverto/
@@ -27,8 +28,12 @@ timeout and signal functionality. Currently glib is the only module
 that does not provide these three because it lacks signal. However,
 glib will support signal in the future.
 
+%description -l zh_CN.UTF-8
+主循环抽象库。
+
 %package        devel
 Summary:        Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Requires:       %{name}%{?_isa} = %{version}-%{release}
 Requires:       pkgconfig
 
@@ -36,14 +41,21 @@ Requires:       pkgconfig
 The %{name}-devel package contains libraries and header files for
 developing applications that use %{name}.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
 %package        glib
 Summary:        glib module for %{name}
+Summary(zh_CN.UTF-8): %{name} 的 glib 模块
 Requires:       %{name}%{?_isa} = %{version}-%{release}
 
 %description    glib
 Module for %{name} which provides integration with glib.
 
 This package does NOT yet provide %{name}-module-base.
+
+%description glib -l zh_CN.UTF-8
+%{name} 的 glib 模块。
 
 %package        glib-devel
 Summary:        Development files for %{name}-glib

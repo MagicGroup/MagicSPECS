@@ -3,12 +3,14 @@ Name:           libvoikko
 Version:        3.5
 Release:        2%{?dist}
 Summary:        Voikko is a library for spellcheckers and hyphenators
+Summary(zh_CN.UTF-8): 检查拼写和断字的库
 
 Group:          System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 License:        GPLv2+
 URL:            http://voikko.sourceforge.net/
 # The usual format of stable release URLs
-Source0:        http://downloads.sourceforge.net/voikko/%{name}-%{version}.tar.gz
+Source0:        http://www.puimula.org/voikko-sources/libvoikko/%{name}-%{version}.tar.gz
 # The usual format of test release URLs
 #Source0:        http://www.puimula.org/htp/testing/%{name}-%{version}rc1.tar.gz
 
@@ -29,18 +31,28 @@ simple or even moderately complex morphologies and do not require morphological
 analysis in their hyphenators should be implemented using other tools such as
 Hunspell.
 
+%description -l zh_CN.UTF-8
+检查拼写和断字的库。
+
 %package        devel
 Summary:        Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       %{name} = %{version}-%{release} pkgconfig
 
 %description    devel
 The %{name}-devel package contains libraries and header files for
 developing applications that use %{name}.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
 %package -n     voikko-tools
 Summary:        Test tools for %{name}
+Summary(zh_CN.UTF-8): %{name} 的测试工具
 Group:          Applications/Text
+Group(zh_CN.UTF-8): 应用程序/文本
 Requires:       %{name} = %{version}-%{release}
 
 %description -n voikko-tools
@@ -48,9 +60,14 @@ This package contains voikkospell and voikkohyphenate, small command line
 tools for testing libvoikko. These tools may also be useful for shell
 scripts.
 
+%description -n voikko-tools -l zh_CN.UTF-8
+%{name} 的测试工具。
+
 %package -n     python-libvoikko
 Summary:        Python interface to %{name}
+Summary(zh_CN.UTF-8): %{name} 的 Python 绑定
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       %{name} = %{version}-%{release}
 # Note: noarch subpackage, only works in Fedora >= 11
 BuildArch:      noarch
@@ -60,6 +77,8 @@ Python interface to libvoikko, library of Finnish language tools.
 This module can be used to perform various natural language analysis
 tasks on Finnish text.
 
+%description -n python-libvoikko -l zh_CN.UTF-8
+%{name} 的 Python 绑定。
 
 %prep
 %setup -q
@@ -84,7 +103,7 @@ find $RPM_BUILD_ROOT -name '*.a' -exec rm -f {} ';'
 # Install the Python interface
 install -d $RPM_BUILD_ROOT%{python_sitelib}
 install -pm 0644 python/libvoikko.py $RPM_BUILD_ROOT%{python_sitelib}/
-
+magic_rpm_clean.sh
 
 %post -p /sbin/ldconfig
 

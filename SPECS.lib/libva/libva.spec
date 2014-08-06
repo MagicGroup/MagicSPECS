@@ -5,10 +5,12 @@ Name:      libva
 Version:   1.0.15
 Release:   3%{?dist}
 Summary:   Video Acceleration (VA) API for Linux
+Summary(zh_CN.UTF-8): Linux 下的视频加速 (VA) API
 Group:     System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 License:   MIT
 URL:       http://freedesktop.org/wiki/Software/vaapi
-Source0:   http://cgit.freedesktop.org/libva/snapshot/%{name}-%{version}.tar.bz2
+Source0:   http://www.freedesktop.org/software/vaapi/releases/libva//%{name}-%{version}.tar.bz2
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: libtool
 %{?with_libudev:BuildRequires: libudev-devel}
@@ -24,6 +26,9 @@ Obsoletes: libva-utils < %{version}-%{release}
 
 %description
 Libva is a library providing the VA API video acceleration API.
+
+%description -l zh_CN.UTF-8
+Linux 下的视频加速 (VA) API。
 
 %package libs
 Summary: Shared libs for %{name}
