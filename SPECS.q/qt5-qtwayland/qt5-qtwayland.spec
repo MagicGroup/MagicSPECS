@@ -4,7 +4,7 @@
 Summary:        Qt5 - Wayland platform support and QtCompositor module
 Name:           qt5-%{qt_module}
 Version:        5.3.0
-Release:        0.2.20140723git02c499c%{?dist}
+Release:        0.3.20140723git02c499c%{?dist}
 License:        LGPLv2 with exceptions or GPLv3 with exceptions
 Url:            http://qt-project.org/wiki/QtWayland
 # git clone --no-checkout git://gitorious.org/qt/qtwayland.git
@@ -104,6 +104,9 @@ install -pm644 gl/include/QtCompositor/%{version}/QtCompositor/private/{wayland-
 
 
 %changelog
+* Wed Aug 06 2014 Liu Di <liudidi@gmail.com> - 5.3.0-0.3.20140723git02c499c
+- 为 Magic 3.0 重建
+
 * Thu Jul 24 2014 Lubomir Rintel <lkundrak@v3.sk> - 5.3.0-0.2.20140723git02c499c
 - Update
 

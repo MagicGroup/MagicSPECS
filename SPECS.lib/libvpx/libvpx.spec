@@ -4,11 +4,13 @@
 
 Name:			libvpx
 Summary:		VP8 Video Codec SDK
+Summary(zh_CN.UTF-8): 	VP8 视频编码 SDK
 Version:		%{majorver}.%{minorver}.%{tinyver}
 %global soversion	%{version}
 Release:		5%{?dist}
 License:		BSD
 Group:			System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 Source0:		http://webm.googlecode.com/files/%{name}-v%{version}.tar.bz2
 # Thanks to debian.
 Source2:		libvpx.ver
@@ -24,23 +26,36 @@ libvpx provides the VP8 SDK, which allows you to integrate your applications
 with the VP8 video codec, a high quality, royalty free, open source codec 
 deployed on millions of computers and devices worldwide. 
 
+%description -l zh_CN.UTF-8
+VP8 视频编码 SDK。
+
 %package devel
 Summary:		Development files for libvpx
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:			Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:		%{name}%{?_isa} = %{version}-%{release}
 
 %description devel
 Development libraries and headers for developing software against 
 libvpx.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
 %package utils
 Summary:		VP8 utilities and tools
+Summary(zh_CN.UTF-8):   VP8 工具
 Group:			Development/Tools
+Group(zh_CN.UTF-8): 开发/工具
 Requires:		%{name}%{?_isa} = %{version}-%{release}
 
 %description utils
 A selection of utilities and tools for VP8, including a sample encoder
 and decoder.
+
+%description utils -l zh_CN.UTF-8
+VP8 工具。
 
 %prep
 %setup -q -n %{name}-v%{version}
@@ -152,6 +167,7 @@ mv usr/bin/twopass_encoder usr/bin/vp8_twopass_encoder
 # Fix the binary permissions
 chmod 755 usr/bin/*
 popd
+magic_rpm_clean.sh
 
 %post -p /sbin/ldconfig
 %postun -p /sbin/ldconfig

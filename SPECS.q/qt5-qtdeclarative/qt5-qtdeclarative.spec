@@ -13,7 +13,7 @@
 Summary: Qt5 - QtDeclarative component
 Name:    qt5-%{qt_module}
 Version: 5.3.1
-Release: 1%{?dist}
+Release: 2%{?dist}
 
 # See LICENSE.GPL LICENSE.LGPL LGPL_EXCEPTION.txt, for details
 License: LGPLv2 with exceptions or GPLv3 with exceptions
@@ -194,6 +194,9 @@ popd
 
 
 %changelog
+* Tue Aug 05 2014 Liu Di <liudidi@gmail.com> - 5.3.1-2
+- 为 Magic 3.0 重建
+
 * Tue Jun 17 2014 Jan Grulich <jgrulich@redhat.com> - 5.3.1-1
 - 5.3.1
 

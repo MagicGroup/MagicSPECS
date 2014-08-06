@@ -29,7 +29,7 @@
 Summary: Qt5 - QtBase components
 Name:    qt5-qtbase
 Version: 5.3.1
-Release: 5%{?dist}
+Release: 10%{?dist}
 
 # See LGPL_EXCEPTIONS.txt, LICENSE.GPL3, respectively, for exception details
 License: LGPLv2 with exceptions or GPLv3 with exceptions
@@ -157,7 +157,7 @@ BuildRequires: pkgconfig(zlib)
 
 %if 0%{?qtchooser}
 %if 0%{?fedora}
-Conflicts: qt < 1:4.8.6-10
+Conflicts: qt4 < 4.8.6-1
 %endif
 Requires(post): %{_sbindir}/update-alternatives
 Requires(postun): %{_sbindir}/update-alternatives
@@ -569,7 +569,7 @@ fi
 %dir %{_qt5_plugindir}/platformthemes/
 %dir %{_qt5_plugindir}/printsupport/
 %dir %{_qt5_plugindir}/sqldrivers/
-%{_qt5_plugindir}/sqldrivers/libqsqlite.so
+%{_qt5_plugindir}/sqldrivers/libqsqlite*.so
 
 %if 0%{?docs}
 %files doc
@@ -738,6 +738,7 @@ fi
 %{_qt5_plugindir}/platforms/libqkms.so
 %{_qt5_plugindir}/platforms/libqminimalegl.so
 %endif
+%{_qt5_plugindir}/platforms/libqdirectfb.so
 %{_qt5_plugindir}/platforms/libqlinuxfb.so
 %{_qt5_plugindir}/platforms/libqminimal.so
 %{_qt5_plugindir}/platforms/libqoffscreen.so
@@ -747,6 +748,21 @@ fi
 
 
 %changelog
+* Tue Aug 05 2014 Liu Di <liudidi@gmail.com> - 5.3.1-10
+- 为 Magic 3.0 重建
+
+* Tue Aug 05 2014 Liu Di <liudidi@gmail.com> - 5.3.1-9
+- 为 Magic 3.0 重建
+
+* Tue Aug 05 2014 Liu Di <liudidi@gmail.com> - 5.3.1-8
+- 为 Magic 3.0 重建
+
+* Tue Aug 05 2014 Liu Di <liudidi@gmail.com> - 5.3.1-7
+- 为 Magic 3.0 重建
+
+* Tue Aug 05 2014 Liu Di <liudidi@gmail.com> - 5.3.1-6
+- 为 Magic 3.0 重建
+
 * Thu Jul 24 2014 Rex Dieter <rdieter@fedoraproject.org> - 5.3.1-5
 - drop dep on xorg-x11-xinit (own shared dirs instead)
 - fix/improve qtchooser support using alternatives (#1122316)

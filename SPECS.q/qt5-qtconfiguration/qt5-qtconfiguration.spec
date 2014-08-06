@@ -4,7 +4,7 @@
 Summary:        Qt5 - QtConfiguration module
 Name:           qt5-%{qt_module}
 Version:        0.3.0
-Release:        1%{?dist}
+Release:        2%{?dist}
 
 # See LGPL_EXCEPTIONS.txt, LICENSE.GPL3, respectively, for exception details
 License:        LGPLv2 with exceptions or GPLv3 with exceptions
@@ -65,6 +65,9 @@ make install DESTDIR=$RPM_BUILD_ROOT
 
 
 %changelog
+* Tue Aug 05 2014 Liu Di <liudidi@gmail.com> - 0.3.0-2
+- 为 Magic 3.0 重建
+
 * Sun Jun 15 2014 Lubomir Rintel <lkundrak@v3.sk> - 0.3.0-1
 - Update to latest version
 
