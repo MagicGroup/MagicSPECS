@@ -11,19 +11,19 @@
 
 Summary: Qt5 - QtTool components
 Name:    qt5-qttools
-Version: 5.2.1
-Release: 10%{?dist}
+Version: 5.3.1
+Release: 1%{?dist}
 
 # See LGPL_EXCEPTIONS.txt, LICENSE.GPL3, respectively, for exception details
 License: LGPLv2 with exceptions or GPLv3 with exceptions
 Url: http://qt-project.org/
 %if 0%{?pre:1}
-Source0: http://download.qt-project.org/development_releases/qt/5.2/%{version}-%{pre}/submodules/%{qt_module}-opensource-src-%{version}-%{pre}.tar.xz
+Source0: http://download.qt-project.org/development_releases/qt/5.3/%{version}-%{pre}/submodules/%{qt_module}-opensource-src-%{version}-%{pre}.tar.xz
 %else
-Source0: http://download.qt-project.org/official_releases/qt/5.2/%{version}/submodules/%{qt_module}-opensource-src-%{version}.tar.xz
+Source0: http://download.qt-project.org/official_releases/qt/5.3/%{version}/submodules/%{qt_module}-opensource-src-%{version}.tar.xz
 %endif
 
-Patch1: qttools-system_clucene.patch
+Patch1: qttools-opensource-src-5.3.0-system-clucene.patch
 
 # help lrelease/lupdate use/prefer qmake-qt5
 # https://bugzilla.redhat.com/show_bug.cgi?id=1009893
@@ -118,8 +118,7 @@ Requires: %{name}%{?_isa} = %{version}-%{release}
 %if 0%{?system_clucene}
 %patch1 -p1 -b .system_clucene
 # bundled libs
-#mv src/assistant/3rdparty/clucene \
-#   src/assistant/3rdparty/clucene.BAK
+rm -rf src/assistant/3rdparty/clucene
 %endif
 %patch2 -p1 -b .qmake-qt5
 
@@ -288,12 +287,14 @@ fi
 %{_bindir}/qcollectiongenerator*
 %{_bindir}/qhelpconverter*
 %{_bindir}/qhelpgenerator*
+%{_bindir}/qtdiag*
 %{_qt5_bindir}/designer*
 %{_qt5_bindir}/lconvert*
 %{_qt5_bindir}/linguist*
 %{_qt5_bindir}/lrelease*
 %{_qt5_bindir}/lupdate*
 %{_qt5_bindir}/pixeltool*
+%{_qt5_bindir}/qtdiag*
 %{_qt5_bindir}/qcollectiongenerator*
 %{_qt5_bindir}/qhelpconverter*
 %{_qt5_bindir}/qhelpgenerator*
@@ -324,6 +325,7 @@ fi
 %{_qt5_plugindir}/designer/libcustomwidgetplugin.so
 %{_qt5_plugindir}/designer/libtaskmenuextension.so
 %{_qt5_plugindir}/designer/libworldtimeclockplugin.so
+%{_qt5_plugindir}/designer/libqquickwidget.so
 
 %files static
 %{_qt5_headerdir}/QtUiTools/
@@ -353,32 +355,17 @@ fi
 
 
 %changelog
-* Mon May 05 2014 Liu Di <liudidi@gmail.com> - 5.2.1-10
-- 为 Magic 3.0 重建
+* Tue Jun 17 2014 Jan Grulich <jgrulich@redhat.com> - 5.3.1-1
+- 5.3.1
 
-* Mon May 05 2014 Liu Di <liudidi@gmail.com> - 5.2.1-9
-- 为 Magic 3.0 重建
+* Sun Jun 08 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 5.3.0-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 
-* Mon May 05 2014 Liu Di <liudidi@gmail.com> - 5.2.1-8
-- 为 Magic 3.0 重建
+* Thu May 29 2014 Kevin Kofler <Kevin@tigcc.ticalc.org> 5.3.0-2
+- restore system-clucene patch, rm the bundled copy
 
-* Mon May 05 2014 Liu Di <liudidi@gmail.com> - 5.2.1-7
-- 为 Magic 3.0 重建
-
-* Mon May 05 2014 Liu Di <liudidi@gmail.com> - 5.2.1-6
-- 为 Magic 3.0 重建
-
-* Sun May 04 2014 Liu Di <liudidi@gmail.com> - 5.2.1-5
-- 为 Magic 3.0 重建
-
-* Sun May 04 2014 Liu Di <liudidi@gmail.com> - 5.2.1-4
-- 为 Magic 3.0 重建
-
-* Sun May 04 2014 Liu Di <liudidi@gmail.com> - 5.2.1-3
-- 为 Magic 3.0 重建
-
-* Sun May 04 2014 Liu Di <liudidi@gmail.com> - 5.2.1-2
-- 为 Magic 3.0 重建
+* Wed May 21 2014 Jan Grulich <jgrulich@redhat.com> 5.3.0-1
+- 5.3.0
 
 * Wed Feb 05 2014 Rex Dieter <rdieter@fedoraproject.org> 5.2.1-1
 - 5.2.1
