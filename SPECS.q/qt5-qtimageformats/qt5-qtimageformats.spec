@@ -7,22 +7,24 @@
 
 Summary: Qt5 - QtImageFormats component
 Name:    qt5-%{qt_module}
-Version: 5.2.1
-Release: 3%{?dist}
+Version: 5.3.1
+Release: 1%{?dist}
 
 # See LGPL_EXCEPTIONS.txt, LICENSE.GPL3, respectively, for details
 License: LGPLv2 with exceptions or GPLv3 with exceptions
 Url: http://qt-project.org/
 %if 0%{?pre:1}
-Source0: http://download.qt-project.org/development_releases/qt/5.2/%{version}-%{pre}/submodules/%{qt_module}-opensource-src-%{version}-%{pre}.tar.xz
+Source0: http://download.qt-project.org/development_releases/qt/5.3/%{version}-%{pre}/submodules/%{qt_module}-opensource-src-%{version}-%{pre}.tar.xz
 %else
-Source0: http://download.qt-project.org/official_releases/qt/5.2/%{version}/submodules/%{qt_module}-opensource-src-%{version}.tar.xz
+Source0: http://download.qt-project.org/official_releases/qt/5.3/%{version}/submodules/%{qt_module}-opensource-src-%{version}.tar.xz
 %endif
 Patch0: qtimageformats-opensource-src-5.2.1-libmng-test.patch
 
 BuildRequires: qt5-qtbase-devel >= %{version}
 BuildRequires: libmng-devel
 BuildRequires: libtiff-devel
+BuildRequires: jasper-devel
+BuildRequires: libwebp-devel
 
 %{?_qt5_version:Requires: qt5-qtbase%{?_isa} >= %{_qt5_version}}
 
@@ -82,6 +84,10 @@ make install_docs INSTALL_ROOT=%{buildroot}
 %{_qt5_plugindir}/imageformats/libqtga.so
 %{_qt5_plugindir}/imageformats/libqtiff.so
 %{_qt5_plugindir}/imageformats/libqwbmp.so
+%{_qt5_plugindir}/imageformats/libqdds.so
+%{_qt5_plugindir}/imageformats/libqicns.so
+%{_qt5_plugindir}/imageformats/libqjp2.so
+%{_qt5_plugindir}/imageformats/libqwebp.so
 
 %files devel
 %{_qt5_libdir}/cmake/Qt5Gui/Qt5Gui_*Plugin.cmake
@@ -94,8 +100,14 @@ make install_docs INSTALL_ROOT=%{buildroot}
 
 
 %changelog
-* Mon May 05 2014 Liu Di <liudidi@gmail.com> - 5.2.1-3
-- 为 Magic 3.0 重建
+* Tue Jun 17 2014 Jan Grulich <jgrulich@redhat.com> - 5.3.1-1
+- 5.3.1
+
+* Sun Jun 08 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 5.3.0-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Wed May 21 2014 Jan Grulich <jgrulich@redhat.com> - 5.3.0-1
+- 5.3.0
 
 * Tue Mar 18 2014 Ville Skyttä <ville.skytta@iki.fi> - 5.2.1-2
 - Fix libmng test, build with system one instead of bundled
