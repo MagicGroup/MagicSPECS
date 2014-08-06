@@ -7,16 +7,16 @@
 
 Summary: Qt5 - Support for rendering and displaying SVG
 Name:    qt5-%{qt_module}
-Version: 5.2.1
-Release: 2%{?dist}
+Version: 5.3.1
+Release: 1%{?dist}
 
 # See LGPL_EXCEPTIONS.txt, LICENSE.GPL3, respectively, for exception details
 License: LGPLv2 with exceptions or GPLv3 with exceptions
 Url: http://qt-project.org/
 %if 0%{?pre:1}
-Source0: http://download.qt-project.org/development_releases/qt/5.2/%{version}-%{pre}/submodules/%{qt_module}-opensource-src-%{version}-%{pre}.tar.xz
+Source0: http://download.qt-project.org/development_releases/qt/5.3/%{version}-%{pre}/submodules/%{qt_module}-opensource-src-%{version}-%{pre}.tar.xz
 %else
-Source0: http://download.qt-project.org/official_releases/qt/5.2/%{version}/submodules/%{qt_module}-opensource-src-%{version}.tar.xz
+Source0: http://download.qt-project.org/official_releases/qt/5.3/%{version}/submodules/%{qt_module}-opensource-src-%{version}.tar.xz
 %endif
 
 BuildRequires: qt5-qtbase-devel >= %{version}
@@ -75,16 +75,17 @@ make install INSTALL_ROOT=%{buildroot}
 make install_docs INSTALL_ROOT=%{buildroot}
 %endif
 
-## .prl file love (maybe consider just deleting these -- rex
-# nuke dangling reference(s) to %%buildroot, excessive (.la-like) libs
-sed -i \
-  -e "/^QMAKE_PRL_BUILD_DIR/d" \
-  -e "/^QMAKE_PRL_LIBS/d" \
-  %{buildroot}%{_qt5_libdir}/*.prl
-
-## unpackaged files
-# .la files, die, die, die.
-rm -fv %{buildroot}%{_qt5_libdir}/lib*.la
+## .prl/.la file love
+# nuke .prl reference(s) to %%buildroot, excessive (.la-like) libs
+pushd %{buildroot}%{_qt5_libdir}
+for prl_file in libQt5*.prl ; do
+  sed -i -e "/^QMAKE_PRL_BUILD_DIR/d" ${prl_file}
+  if [ -f "$(basename ${prl_file} .prl).so" ]; then
+    rm -fv "$(basename ${prl_file} .prl).la"
+    sed -i -e "/^QMAKE_PRL_LIBS/d" ${prl_file}
+  fi
+done
+popd
 
 
 %post -p /sbin/ldconfig
@@ -100,7 +101,6 @@ rm -fv %{buildroot}%{_qt5_libdir}/lib*.la
 %{_qt5_headerdir}/QtSvg/
 %{_qt5_libdir}/libQt5Svg.so
 %{_qt5_libdir}/libQt5Svg.prl
-%{_qt5_libdir}/cmake/Qt5Gui/Qt5Gui_QSvgPlugin.cmake
 %{_qt5_libdir}/cmake/Qt5Svg/
 %{_qt5_libdir}/pkgconfig/Qt5Svg.pc
 %{_qt5_archdatadir}/mkspecs/modules/qt_lib_svg*.pri
@@ -118,8 +118,17 @@ rm -fv %{buildroot}%{_qt5_libdir}/lib*.la
 
 
 %changelog
-* Mon May 05 2014 Liu Di <liudidi@gmail.com> - 5.2.1-2
-- 为 Magic 3.0 重建
+* Tue Jun 17 2014 Jan Grulich <jgrulich@redhat.com> - 5.3.1-1
+- 5.3.1
+
+* Sun Jun 08 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 5.3.0-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Wed May 21 2014 Jan Grulich <jgrulich@redhat.com> 5.3.0-1
+- 5.3.0
+
+* Mon May 05 2014 Rex Dieter <rdieter@fedoraproject.org> 5.2.1-2
+- use standard (same as qtbase) .prl sanitation
 
 * Thu Feb 06 2014 Rex Dieter <rdieter@fedoraproject.org> 5.2.1-1
 - 5.2.1
