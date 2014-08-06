@@ -7,15 +7,15 @@
 
 Name:           qt5-%{qt_module}
 Summary:        Qt5 - module with set of QtQuick controls
-Version:        5.2.1
-Release:        2%{?dist}
+Version:        5.3.1
+Release:        1%{?dist}
 
 License:        BSD and (LGPLv2 with exceptions or GPLv3 with exceptions) and GFDL
 Url:            http://qt-project.org/
 %if 0%{?pre:1}
-Source0: http://download.qt-project.org/development_releases/qt/5.2/%{version}-%{pre}/submodules/%{qt_module}-opensource-src-%{version}-%{pre}.tar.xz
+Source0: http://download.qt-project.org/development_releases/qt/5.3/%{version}-%{pre}/submodules/%{qt_module}-opensource-src-%{version}-%{pre}.tar.xz
 %else
-Source0: http://download.qt-project.org/official_releases/qt/5.2/%{version}/submodules/%{qt_module}-opensource-src-%{version}.tar.xz
+Source0: http://download.qt-project.org/official_releases/qt/5.3/%{version}/submodules/%{qt_module}-opensource-src-%{version}.tar.xz
 %endif
 
 BuildRequires:  qt5-qtbase-devel >= %{version}
@@ -88,19 +88,25 @@ make install_docs INSTALL_ROOT=%{buildroot}
 %{_qt5_docdir}/qtquickcontrols/
 %{_qt5_docdir}/qtquicklayouts.qch
 %{_qt5_docdir}/qtquicklayouts/
+%{_qt5_docdir}/qtquickdialogs.qch
+%{_qt5_docdir}/qtquickdialogs/
 %endif
 
-# ready -examples, seems 'make install' doesn't currently do anything in examples/
-%if 0
-#if 0%{?_qt5_examplesdir:1}
+%if 0%{?_qt5_examplesdir:1}
 %files examples
 %{_qt5_examplesdir}/
 %endif
 
 
 %changelog
-* Mon May 05 2014 Liu Di <liudidi@gmail.com> - 5.2.1-2
-- 为 Magic 3.0 重建
+* Tue Jun 17 2014 Jan Grulich <jgrulich@redhat.com> - 5.3.1-1
+- 5.3.1
+
+* Sun Jun 08 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 5.3.0-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Wed May 21 2014 Jan Grulich <jgrulich@redhat.com> 5.3.0-1
+- 5.3.0
 
 * Thu Feb 06 2014 Rex Dieter <rdieter@fedoraproject.org> 5.2.1-1
 - 5.2.1
