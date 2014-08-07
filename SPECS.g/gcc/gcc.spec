@@ -970,6 +970,7 @@ cd ../..
 CC=gcc
 OPT_FLAGS=`echo %{optflags}|sed -e 's/\(-Wp,\)\?-D_FORTIFY_SOURCE=[12]//g'`
 OPT_FLAGS=`echo $OPT_FLAGS|sed -e 's/-m64//g;s/-m32//g;s/-m31//g'`
+OPT_FLAGS=`echo $OPT_FLAGS|sed -e 's/-mabi=64//g;s/-mabi=32//g;s/-mabi=n32//g;s/-mabi=o64//g'`
 OPT_FLAGS=`echo $OPT_FLAGS|sed -e 's/-mfpmath=sse/-mfpmath=sse -msse2/g'`
 OPT_FLAGS=`echo $OPT_FLAGS|sed -e 's/ -pipe / /g'`
 %ifarch sparc
