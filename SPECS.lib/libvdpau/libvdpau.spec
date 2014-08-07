@@ -1,6 +1,6 @@
 Name:           libvdpau
-Version:        0.4.1
-Release:        6%{?dist}
+Version: 0.8
+Release: 1%{?dist}
 Summary:        Wrapper library for the Video Decode and Presentation API
 Summary(zh_CN.UTF-8): 对于视频解码和演示API的包装库
 
@@ -93,6 +93,7 @@ rm -rf $RPM_BUILD_ROOT
 %files
 %defattr(-,root,root,-)
 %doc AUTHORS COPYING
+%{_sysconfdir}/vdpau_wrapper.cfg
 %{_libdir}/*.so.*
 %dir %{_libdir}/vdpau
 %{_libdir}/vdpau/libvdpau_trace.so*
@@ -111,6 +112,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Wed Aug 06 2014 Liu Di <liudidi@gmail.com> - 0.8-1
+- 更新到 0.8
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 0.4.1-6
 - 为 Magic 3.0 重建
 

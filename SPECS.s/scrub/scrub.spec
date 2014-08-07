@@ -1,6 +1,6 @@
 Name:		scrub
 Version:	2.5.2
-Release:	5%{?dist}
+Release:	6%{?dist}
 Summary:	Disk scrubbing program
 License:	GPLv2+
 Group:		System Environment/Base
@@ -33,6 +33,9 @@ make DESTDIR=%{buildroot} install
 %{_mandir}/man1/scrub.1*
 
 %changelog
+* Thu Aug 07 2014 Liu Di <liudidi@gmail.com> - 2.5.2-6
+- 为 Magic 3.0 重建
+
 * Sun Jun 08 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.5.2-5
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

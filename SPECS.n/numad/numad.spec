@@ -2,7 +2,7 @@
 
 Name: numad
 Version: 0.5
-Release: 17.20140620git%{?dist}
+Release: 18.20140620git%{?dist}
 Summary: NUMA user daemon
 
 License: LGPLv2
@@ -59,6 +59,9 @@ make install prefix=%{buildroot}/usr
 %systemd_postun numad.service
 
 %changelog
+* Thu Aug 07 2014 Liu Di <liudidi@gmail.com> - 0.5-18.20140620git
+- 为 Magic 3.0 重建
+
 * Mon Jun 23 2014 Jan Synáček <jsynacek@redhat.com> - 0.5-17.20140620git
 - Update to 20140620
 

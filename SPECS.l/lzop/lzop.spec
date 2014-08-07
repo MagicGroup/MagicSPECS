@@ -1,9 +1,11 @@
 Summary:	Real-time file compressor
+Summary(zh_CN.UTF-8): 实时文件压缩器
 Name:		lzop
 Version:	1.03
-Release:	10%{?dist}
+Release:	11%{?dist}
 License:	GPLv2+
 Group:		Applications/Archiving
+Group(zh_CN.UTF-8): 应用程序/归档
 URL:		http://www.lzop.org/
 Source:		http://www.lzop.org/download/%{name}-%{version}.tar.gz
 BuildRequires:	lzo-devel
@@ -16,6 +18,9 @@ gzip are much higher compression and decompression speed at the cost of some
 compression ratio. The lzop compression utility was designed with the goals
 of reliability, speed, portability and with reasonable drop-in compatibility
 to gzip.
+
+%description -l zh_CN.UTF-8
+实时文件压缩器。
 
 %prep
 %setup -q
@@ -38,6 +43,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man?/%{name}.*
 
 %changelog
+* Thu Aug 07 2014 Liu Di <liudidi@gmail.com> - 1.03-11
+- 为 Magic 3.0 重建
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.03-10
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

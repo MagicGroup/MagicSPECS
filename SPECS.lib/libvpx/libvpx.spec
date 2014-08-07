@@ -7,7 +7,7 @@ Summary:		VP8 Video Codec SDK
 Summary(zh_CN.UTF-8): 	VP8 视频编码 SDK
 Version:		%{majorver}.%{minorver}.%{tinyver}
 %global soversion	%{version}
-Release:		5%{?dist}
+Release:		6%{?dist}
 License:		BSD
 Group:			System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
@@ -187,6 +187,9 @@ magic_rpm_clean.sh
 %{_bindir}/*
 
 %changelog
+* Wed Aug 06 2014 Liu Di <liudidi@gmail.com> - 1.3.0-6
+- 为 Magic 3.0 重建
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.3.0-5
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 
