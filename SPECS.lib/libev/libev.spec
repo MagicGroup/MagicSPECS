@@ -5,7 +5,7 @@ Name:		libev
 Summary:	High-performance event loop/event model with lots of features
 Summary(zh_CN.UTF-8): 具有很多功能的高性能事件循环和模型库
 Version: 4.15
-Release:	1%{?dist}
+Release:	3%{?dist}
 Group:		System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
 License:	BSD or GPLv2+
@@ -36,6 +36,21 @@ This package contains the development headers and libraries for libev.
 %description devel -l zh_CN.UTF-8
 %{name} 的开发包。
 
+%package libevent-devel
+Summary:          Compatibility development header with libevent for %{name}.
+Summary(zh_CN.UTF-8): libevent 的兼容头文件
+Requires:         %{name}-devel%{?_isa} = %{version}-%{release}
+
+# The event.h file actually conflicts with the one from libevent-devel
+Conflicts:        libevent-devel
+
+%description libevent-devel
+This package contains a development header to make libev compatible with
+libevent.
+
+%description libevent-devel -l zh_CN.UTF-8
+libevent 的兼容头文件。
+
 %package	source
 Summary:	High-performance event loop/event model with lots of features
 Summary(zh_CN.UTF-8): %{name} 的源码
@@ -58,7 +73,7 @@ This package contains the source code for libev.
 autoreconf -fisv
 
 %build
-%configure --disable-static --with-pic --includedir=%{_includedir}/%{name}
+%configure --disable-static --with-pic 
 make %{?_smp_mflags}
 
 %check
@@ -87,15 +102,25 @@ magic_rpm_clean.sh
 
 %files devel
 %{_libdir}/%{name}.so
-%{_includedir}/libev/
+%{_includedir}/ev++.h
+%{_includedir}/ev.h
 %{_libdir}/pkgconfig/%{name}.pc
 %{_mandir}/man?/*
+
+%files libevent-devel
+%{_includedir}/event.h
 
 %files source
 %{source_dir}
 
 
 %changelog
+* Thu Aug 07 2014 Liu Di <liudidi@gmail.com> - 4.15-3
+- 为 Magic 3.0 重建
+
+* Thu Aug 07 2014 Liu Di <liudidi@gmail.com> - 4.15-2
+- 为 Magic 3.0 重建
+
 * Tue Jul 15 2014 Liu Di <liudidi@gmail.com> - 4.15-1
 - 更新到 4.15
 

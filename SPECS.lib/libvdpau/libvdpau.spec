@@ -1,9 +1,11 @@
 Name:           libvdpau
-Version:        0.4.1
-Release:        6%{?dist}
+Version: 0.8
+Release: 1%{?dist}
 Summary:        Wrapper library for the Video Decode and Presentation API
+Summary(zh_CN.UTF-8): 对于视频解码和演示API的包装库
 
 Group:          System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 License:        MIT
 URL:            http://freedesktop.org/wiki/Software/VDPAU
 Source0:        http://people.freedesktop.org/~aplattner/vdpau/libvdpau-%{version}.tar.bz2
@@ -27,18 +29,28 @@ VDPAU is the Video Decode and Presentation API for UNIX.
 It provides an interface to video decode acceleration and presentation
 hardware present in modern GPUs.
 
+%description -l zh_CN.UTF-8
+对于视频解码和演示API的包装库，它提供了针对现代 GPU 加速的接口。
+
 %{?!_without_docs:
 %package        docs
 Summary:        Documentation for %{name}
+Summary(zh_CN.UTF-8): %{name} 的文档
 Group:          Documentation
+Group(zh_CN.UTF-8): 文档
 
 %description    docs
 The %{name}-docs package contains documentation for %{name}.
 }
 
+%description docs -l zh_CN.UTF-8
+%{name} 的文档。
+
 %package        devel
 Summary:        Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       %{name} = %{version}-%{release}
 Requires:       libX11-devel
 Requires:       pkgconfig
@@ -47,6 +59,8 @@ Requires:       pkgconfig
 The %{name}-devel package contains libraries and header files for
 developing applications that use %{name}.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -64,7 +78,7 @@ make %{?_smp_mflags}
 rm -rf $RPM_BUILD_ROOT
 make install DESTDIR=$RPM_BUILD_ROOT INSTALL="install -p"
 find $RPM_BUILD_ROOT -name '*.la' -exec rm -f {} ';'
-
+magic_rpm_clean.sh
 
 
 %clean
@@ -79,6 +93,7 @@ rm -rf $RPM_BUILD_ROOT
 %files
 %defattr(-,root,root,-)
 %doc AUTHORS COPYING
+%{_sysconfdir}/vdpau_wrapper.cfg
 %{_libdir}/*.so.*
 %dir %{_libdir}/vdpau
 %{_libdir}/vdpau/libvdpau_trace.so*
@@ -97,6 +112,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Wed Aug 06 2014 Liu Di <liudidi@gmail.com> - 0.8-1
+- 更新到 0.8
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 0.4.1-6
 - 为 Magic 3.0 重建
 

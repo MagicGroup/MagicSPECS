@@ -2,13 +2,15 @@
 #需要细分包
 
 Name:      libva
-Version:   1.0.15
-Release:   3%{?dist}
+Version: 1.3.1
+Release: 1%{?dist}
 Summary:   Video Acceleration (VA) API for Linux
+Summary(zh_CN.UTF-8): Linux 下的视频加速 (VA) API
 Group:     System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 License:   MIT
 URL:       http://freedesktop.org/wiki/Software/vaapi
-Source0:   http://cgit.freedesktop.org/libva/snapshot/%{name}-%{version}.tar.bz2
+Source0:   http://www.freedesktop.org/software/vaapi/releases/libva//%{name}-%{version}.tar.bz2
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: libtool
 %{?with_libudev:BuildRequires: libudev-devel}
@@ -24,6 +26,9 @@ Obsoletes: libva-utils < %{version}-%{release}
 
 %description
 Libva is a library providing the VA API video acceleration API.
+
+%description -l zh_CN.UTF-8
+Linux 下的视频加速 (VA) API。
 
 %package libs
 Summary: Shared libs for %{name}
@@ -90,6 +95,9 @@ rm -rf %{buildroot}
 %{_bindir}/mpeg2vldemo
 %{_bindir}/putsurface
 %{_bindir}/avcenc
+%{_bindir}/loadjpeg
+%{_bindir}/mpeg2vaenc
+%{_bindir}/putsurface_wayland
 %{_libdir}/dri/dummy_drv_video.so
 
 %files libs 
@@ -108,6 +116,9 @@ rm -rf %{buildroot}
 %{_includedir}/va/*.h
 
 %changelog
+* Wed Aug 06 2014 Liu Di <liudidi@gmail.com> - 1.3.1-1
+- 更新到 1.3.1
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 1.0.15-3
 - 为 Magic 3.0 重建
 

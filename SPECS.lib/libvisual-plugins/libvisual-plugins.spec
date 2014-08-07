@@ -1,6 +1,6 @@
 Name:           libvisual-plugins
 Version:        0.4.0
-Release:        6%{?dist}
+Release:        7%{?dist}
 Summary:        Plugins for use with libvisual
 Summary(zh_CN.UTF-8):	使用libvisual的插件
 
@@ -83,6 +83,9 @@ rm -rf %buildroot
 %_datadir/libvisual-plugins-0.4/
 
 %changelog
+* Wed Aug 06 2014 Liu Di <liudidi@gmail.com> - 0.4.0-7
+- 为 Magic 3.0 重建
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 0.4.0-6
 - 为 Magic 3.0 重建
 
