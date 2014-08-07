@@ -69,9 +69,6 @@ Patch50: qt5-poll.patch
 Patch100: qt5-qtbase-qbasicatomic-invalid_operands_sync_0x11-fix.patch
 Patch101: qt5-mips64el-fix_-m64.patch
 
-# fix list of cached module variables . QTBUG-35195
-Patch200: qt5-qtbase-fix_list_of_cached_module_variables.diff
-
 # macros
 %define _qt5 %{name}
 %define _qt5_prefix %{_libdir}/qt5
@@ -278,7 +275,6 @@ rm -fv mkspecs/linux-g++*/qmake.conf.multilib-optflags
 %patch100 -p1 -b .mips64el
 %patch101 -p1 -b .mips64el-m64
 %endif
-%patch200 -p1 -b .QTBUG-35195
 
 # drop -fexceptions from $RPM_OPT_FLAGS
 RPM_OPT_FLAGS=`echo $RPM_OPT_FLAGS | sed 's|-fexceptions||g'`
