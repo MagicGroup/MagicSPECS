@@ -382,8 +382,8 @@
 
 Summary: Library providing a simple virtualization API
 Name: libvirt
-Version: 1.2.5
-Release: 3%{?dist}%{?extra_release}
+Version: 1.2.7
+Release: 1%{?dist}%{?extra_release}
 License: LGPLv2+
 Group: Development/Libraries
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
@@ -1915,6 +1915,7 @@ exit 0
 %dir %attr(0700, root, root) %{_sysconfdir}/libvirt/qemu/networks/autostart
 %dir %attr(0700, root, root) %{_localstatedir}/lib/libvirt/network/
 %dir %attr(0755, root, root) %{_localstatedir}/lib/libvirt/dnsmasq/
+%attr(0755, root, root) %{_libexecdir}/libvirt_leaseshelper
         %endif
         %if %{with_nwfilter}
 %dir %attr(0700, root, root) %{_sysconfdir}/libvirt/nwfilter/
@@ -1990,6 +1991,7 @@ exit 0
 %ghost %dir %{_localstatedir}/run/libvirt/network/
 %dir %attr(0700, root, root) %{_localstatedir}/lib/libvirt/network/
 %dir %attr(0755, root, root) %{_localstatedir}/lib/libvirt/dnsmasq/
+%attr(0755, root, root) %{_libexecdir}/libvirt_leaseshelper
 %{_libdir}/%{name}/connection-driver/libvirt_driver_network.so
         %endif
 
@@ -2144,7 +2146,9 @@ exit 0
 %{_bindir}/virt-xml-validate
 %{_bindir}/virt-pki-validate
 %{_bindir}/virt-host-validate
-%{_libdir}/lib*.so.*
+%{_libdir}/libvirt.so.*
+%{_libdir}/libvirt-qemu.so.*
+%{_libdir}/libvirt-lxc.so.*
 
 %if %{with_dtrace}
 %{_datadir}/systemtap/tapset/libvirt_probes*.stp
@@ -2159,6 +2163,7 @@ exit 0
 %{_datadir}/libvirt/schemas/capability.rng
 %{_datadir}/libvirt/schemas/domain.rng
 %{_datadir}/libvirt/schemas/domaincommon.rng
+%{_datadir}/libvirt/schemas/domaincaps.rng
 %{_datadir}/libvirt/schemas/domainsnapshot.rng
 %{_datadir}/libvirt/schemas/interface.rng
 %{_datadir}/libvirt/schemas/network.rng
@@ -2201,10 +2206,17 @@ exit 0
 %files devel
 %defattr(-, root, root)
 
-%{_libdir}/lib*.so
+%{_libdir}/libvirt.so
+%{_libdir}/libvirt-qemu.so
+%{_libdir}/libvirt-lxc.so
 %dir %{_includedir}/libvirt
-%{_includedir}/libvirt/*.h
+%{_includedir}/libvirt/virterror.h
+%{_includedir}/libvirt/libvirt.h
+%{_includedir}/libvirt/libvirt-qemu.h
+%{_includedir}/libvirt/libvirt-lxc.h
 %{_libdir}/pkgconfig/libvirt.pc
+%{_libdir}/pkgconfig/libvirt-qemu.pc
+%{_libdir}/pkgconfig/libvirt-lxc.pc
 
 %dir %{_datadir}/libvirt/api/
 %{_datadir}/libvirt/api/libvirt-api.xml
@@ -2223,6 +2235,9 @@ exit 0
 %doc examples/systemtap
 
 %changelog
+* Wed Aug 06 2014 Liu Di <liudidi@gmail.com> - 1.2.7-1
+- 更新到 1.2.7
+
 * Fri Jun 20 2014 Liu Di <liudidi@gmail.com> - 1.2.5-3
 - 为 Magic 3.0 重建
 

@@ -1,13 +1,12 @@
 Name:           libverto
-Version:        0.2.4
-Release:        3%{?dist}
+Version: 0.2.6
+Release: 1%{?dist}
 Summary:        Main loop abstraction library
+Summary(zh_CN.UTF-8): 主循环抽象库
 
 License:        MIT
 URL:            https://fedorahosted.org/libverto/
 Source0:        http://fedorahosted.org/releases/l/i/%{name}/%{name}-%{version}.tar.gz
-# From upstream, will be in next release
-Patch1:         libverto-0.2.4-fix-libev.patch
 
 BuildRequires:  glib2-devel
 BuildRequires:  libev-devel
@@ -27,8 +26,12 @@ timeout and signal functionality. Currently glib is the only module
 that does not provide these three because it lacks signal. However,
 glib will support signal in the future.
 
+%description -l zh_CN.UTF-8
+主循环抽象库。
+
 %package        devel
 Summary:        Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Requires:       %{name}%{?_isa} = %{version}-%{release}
 Requires:       pkgconfig
 
@@ -36,14 +39,21 @@ Requires:       pkgconfig
 The %{name}-devel package contains libraries and header files for
 developing applications that use %{name}.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
 %package        glib
 Summary:        glib module for %{name}
+Summary(zh_CN.UTF-8): %{name} 的 glib 模块
 Requires:       %{name}%{?_isa} = %{version}-%{release}
 
 %description    glib
 Module for %{name} which provides integration with glib.
 
 This package does NOT yet provide %{name}-module-base.
+
+%description glib -l zh_CN.UTF-8
+%{name} 的 glib 模块。
 
 %package        glib-devel
 Summary:        Development files for %{name}-glib
@@ -116,10 +126,9 @@ developing applications that use %{name}-tevent.
 
 %prep
 %setup -q
-%patch1 -p1
 
 %build
-%configure --disable-static
+%configure --disable-static --with-libev
 make %{?_smp_mflags}
 
 %install
@@ -188,6 +197,9 @@ magic_rpm_clean.sh
 %{_libdir}/pkgconfig/%{name}-tevent.pc
 
 %changelog
+* Wed Aug 06 2014 Liu Di <liudidi@gmail.com> - 0.2.6-1
+- 更新到 0.2.6
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 0.2.4-3
 - 为 Magic 3.0 重建
 

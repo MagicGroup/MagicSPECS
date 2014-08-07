@@ -1,0 +1,61 @@
+diff -Naurd collie-sheepdog-bb41896.orig/sheep/cluster/corosync.c collie-sheepdog-bb41896/sheep/cluster/corosync.c
+--- collie-sheepdog-bb41896.orig/sheep/cluster/corosync.c	2011-12-28 18:03:36.000000000 +0100
++++ collie-sheepdog-bb41896/sheep/cluster/corosync.c	2012-03-16 10:47:39.378340300 +0100
+@@ -196,9 +196,9 @@
+ retry:
+ 	ret = cpg_mcast_joined(cpg_handle, CPG_TYPE_AGREED, iov, iov_cnt);
+ 	switch (ret) {
+-	case CPG_OK:
++	case CS_OK:
+ 		break;
+-	case CPG_ERR_TRY_AGAIN:
++	case CS_ERR_TRY_AGAIN:
+ 		dprintf("failed to send message: retrying\n");
+ 		sleep(1);
+ 		goto retry;
+@@ -632,7 +632,7 @@
+ 	corosync_handlers = *handlers;
+ 
+ 	ret = cpg_initialize(&cpg_handle, &cb);
+-	if (ret != CPG_OK) {
++	if (ret != CS_OK) {
+ 		eprintf("failed to initialize cpg (%d) - is corosync running?\n", ret);
+ 		return -1;
+ 	}
+@@ -659,7 +659,7 @@
+ 	this_node.pid = getpid();
+ 
+ 	ret = cpg_fd_get(cpg_handle, &fd);
+-	if (ret != CPG_OK) {
++	if (ret != CS_OK) {
+ 		eprintf("failed to get cpg file descriptor (%d)\n", ret);
+ 		return -1;
+ 	}
+@@ -681,13 +681,13 @@
+ retry:
+ 	ret = cpg_join(cpg_handle, &cpg_group);
+ 	switch (ret) {
+-	case CPG_OK:
++	case CS_OK:
+ 		break;
+-	case CPG_ERR_TRY_AGAIN:
++	case CS_ERR_TRY_AGAIN:
+ 		dprintf("failed to join the sheepdog group: retrying\n");
+ 		sleep(1);
+ 		goto retry;
+-	case CPG_ERR_SECURITY:
++	case CS_ERR_SECURITY:
+ 		eprintf("permission denied to join the sheepdog group\n");
+ 		return -1;
+ 	default:
+@@ -740,8 +740,8 @@
+ {
+ 	int ret;
+ 
+-	ret = cpg_dispatch(cpg_handle, CPG_DISPATCH_ALL);
+-	if (ret != CPG_OK)
++	ret = cpg_dispatch(cpg_handle, CS_DISPATCH_ALL);
++	if (ret != CS_OK)
+ 		return -1;
+ 
+ 	return 0;

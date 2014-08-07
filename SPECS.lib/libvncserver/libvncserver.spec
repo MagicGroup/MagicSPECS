@@ -1,8 +1,9 @@
 
 Summary: Library to make writing a vnc server easy
+Summary(zh_CN.UTF-8): 更易编写 vnc 服务的库
 Name:    libvncserver
 Version: 0.9.9
-Release: 11%{?dist}
+Release: 12%{?dist}
 
 # NOTE: --with-tightvnc-filetransfer => GPLv2
 License: GPLv2+
@@ -45,8 +46,12 @@ exporting a framebuffer via the Remote Frame Buffer protocol) easy.
 It hides the programmer from the tedious task of managing clients and
 compression schemata.
 
+%description -l zh_CN.UTF-8
+更易编写 vnc 服务的库。
+
 %package devel
 Summary: Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Requires: %{name}%{?_isa} = %{version}-%{release}
 # libvncserver-config deps
 Requires: coreutils
@@ -56,6 +61,8 @@ Provides:  LibVNCServer-devel = %{version}-%{release}
 %description devel
 %{summary}.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q -n LibVNCServer-%{version}
@@ -100,7 +107,7 @@ make install DESTDIR=%{buildroot}
 rm -fv %{buildroot}%{_bindir}/linuxvnc
 rm -fv %{buildroot}%{_libdir}/lib*.a
 rm -fv %{buildroot}%{_libdir}/lib*.la
-
+magic_rpm_clean.sh
 
 %check
 unset DISPLAY
@@ -128,6 +135,9 @@ xvfb-run -a make -C test test ||:
 
 
 %changelog
+* Wed Aug 06 2014 Liu Di <liudidi@gmail.com> - 0.9.9-12
+- 为 Magic 3.0 重建
+
 * Fri May 02 2014 Liu Di <liudidi@gmail.com> - 0.9.9-11
 - 为 Magic 3.0 重建
 
