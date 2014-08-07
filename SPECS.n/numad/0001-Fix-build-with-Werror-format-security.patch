@@ -1,0 +1,25 @@
+From 6ab732334bc765d4b5883ddde0e9891b4813d136 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Ville=20Skytt=C3=A4?= <ville.skytta@iki.fi>
+Date: Mon, 20 Jan 2014 22:25:58 +0200
+Subject: [PATCH 1/2] Fix build with -Werror=format-security
+
+---
+ numad.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/numad.c b/numad.c
+index d266f3d..1075e2c 100644
+--- a/numad.c
++++ b/numad.c
+@@ -154,7 +154,7 @@ void numad_log(int level, const char *fmt, ...) {
+     }
+     char buf[BUF_SIZE];
+     time_t ts = time(NULL);
+-    sprintf(buf, ctime(&ts));
++    sprintf(buf, "%s", ctime(&ts));
+     char *p = &buf[strlen(buf) - 1];
+     *p++ = ':';
+     *p++ = ' ';
+-- 
+1.8.3.1
+
