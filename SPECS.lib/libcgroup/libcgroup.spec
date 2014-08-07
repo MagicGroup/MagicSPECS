@@ -3,11 +3,13 @@
 %global _hardened_build 1
 
 Summary: Library to control and monitor control groups
+Summary(zh_CN.UTF-8): 控制和监视 cgroup 的库 
 Name: libcgroup
 Version: 0.41
-Release: 4%{?dist}
+Release: 5%{?dist}
 License: LGPLv2+
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 URL: http://libcg.sourceforge.net/
 Source0: http://downloads.sourceforge.net/libcg/%{name}-%{version}.tar.bz2
 Source1: cgconfig.service
@@ -165,6 +167,9 @@ getent group cgred >/dev/null || groupadd -r cgred
 %{_libdir}/pkgconfig/libcgroup.pc
 
 %changelog
+* Thu Aug 07 2014 Liu Di <liudidi@gmail.com> - 0.41-5
+- 为 Magic 3.0 重建
+
 * Thu Jul 17 2014 Tom Callaway <spot@fedoraproject.org> - 0.41-4
 - fix license handling
 

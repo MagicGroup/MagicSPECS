@@ -1,6 +1,6 @@
 Name:           libvisual
 Version:        0.4.0
-Release:        6%{?dist}
+Release:        7%{?dist}
 Summary:        Abstraction library for audio visualisation plugins
 Summary(zh_CN.UTF-8): 音频可视化插件的抽象库
 
@@ -9,6 +9,7 @@ Group(zh_CN.UTF-8):	应用程序/多媒体
 License:        LGPL
 URL:            http://libvisual.sf.net
 Source0:        http://dl.sf.net/libvisual/libvisual-%{version}.tar.bz2
+Patch0:		libvisual-0.4.0-format-security.patch
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 
@@ -49,6 +50,7 @@ Libvisual是一个在应用程序和音频可视化插件之间的抽象库。
 
 %prep
 %setup -q
+%patch0 -p1
 
 %build
 %ifarch i386
@@ -88,6 +90,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Wed Aug 06 2014 Liu Di <liudidi@gmail.com> - 0.4.0-7
+- 为 Magic 3.0 重建
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 0.4.0-6
 - 为 Magic 3.0 重建
 

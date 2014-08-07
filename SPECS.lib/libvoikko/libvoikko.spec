@@ -1,7 +1,7 @@
 %{!?python_sitelib: %global python_sitelib %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib()")}
 Name:           libvoikko
-Version:        3.5
-Release:        2%{?dist}
+Version: 3.7
+Release: 1%{?dist}
 Summary:        Voikko is a library for spellcheckers and hyphenators
 Summary(zh_CN.UTF-8): 检查拼写和断字的库
 
@@ -120,11 +120,11 @@ magic_rpm_clean.sh
 %{_bindir}/voikkospell
 %{_bindir}/voikkohyphenate
 %{_bindir}/voikkogc
-%{_bindir}/voikkovfstc
+#%{_bindir}/voikkovfstc
 %{_mandir}/man1/voikkohyphenate.1.gz
 %{_mandir}/man1/voikkospell.1.gz
 %{_mandir}/man1/voikkogc.1.gz
-%{_mandir}/man1/voikkovfstc.1.gz
+#%{_mandir}/man1/voikkovfstc.1.gz
 
 %files devel
 %defattr(-,root,root,-)
@@ -138,6 +138,9 @@ magic_rpm_clean.sh
 %{python_sitelib}/%{name}.py*
 
 %changelog
+* Wed Aug 06 2014 Liu Di <liudidi@gmail.com> - 3.7-1
+- 更新到 3.7
+
 * Thu Jul 19 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.5-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 

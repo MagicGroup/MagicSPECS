@@ -1,7 +1,7 @@
 Name: sheepdog
 Summary: The Sheepdog Distributed Storage System for KVM/QEMU
 Version: 0.3.0
-Release: 7%{?dist}
+Release: 8%{?dist}
 License: GPLv2 and GPLv2+
 Group: System Environment/Base
 URL: http://www.osrg.net/sheepdog
@@ -93,6 +93,9 @@ fi
 %{_mandir}/man8/sheep.8*
 
 %changelog
+* Thu Aug 07 2014 Liu Di <liudidi@gmail.com> - 0.3.0-8
+- 为 Magic 3.0 重建
+
 * Sun Jun 08 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.3.0-7
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 
