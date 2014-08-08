@@ -1,0 +1,12 @@
+diff -up proxychains-3.1/proxychains/libproxychains.c.gcc47 proxychains-3.1/proxychains/libproxychains.c
+--- proxychains-3.1/proxychains/libproxychains.c.gcc47	2012-03-08 12:36:17.254991890 -0500
++++ proxychains-3.1/proxychains/libproxychains.c	2012-03-08 12:39:31.144369931 -0500
+@@ -291,7 +291,7 @@ void freeaddrinfo(struct addrinfo *res)
+ int getnameinfo (const struct sockaddr * sa,
+ 			socklen_t salen, char * host,
+ 			socklen_t hostlen, char * serv,
+-			socklen_t servlen, unsigned int flags)
++			socklen_t servlen, int flags)
+ {
+ 	int ret = 0;
+ 	if(!init_l)
