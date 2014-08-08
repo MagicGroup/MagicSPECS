@@ -2,11 +2,13 @@
 %define debug_package %{nil}
 
 Summary: X.Org X11 Autotools macros
+Summary(zh_CN.UTF-8): X.Org X11 Autotools 宏
 Name: xorg-x11-util-macros
-Version: 1.17
-Release: 2%{?dist}
+Version: 1.19.0
+Release: 1%{?dist}
 License: MIT
 Group: Development/System
+Group(zh_CN.UTF-8): 开发/系统
 URL: http://www.x.org
 BuildArch: noarch
 Source0:  http://ftp.nara.wide.ad.jp/pub/X11/x.org/individual/util/util-macros-%{version}.tar.bz2
@@ -15,6 +17,9 @@ Requires: autoconf automake libtool pkgconfig
 %description
 X.Org X11 autotools macros required for building the various packages that
 comprise the X Window System.
+
+%description -l zh_CN.UTF-8
+X.Org X11 Autotools 宏。
 
 %prep
 %setup -q -n %{pkgname}-%{version}
@@ -35,6 +40,9 @@ magic_rpm_clean.sh
 %{_datadir}/pkgconfig/xorg-macros.pc
 
 %changelog
+* Fri Aug 08 2014 Liu Di <liudidi@gmail.com> - 1.19.0-1
+- 更新到 1.19.0
+
 * Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 1.17-2
 - 为 Magic 3.0 重建
 

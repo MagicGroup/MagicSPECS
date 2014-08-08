@@ -1,9 +1,11 @@
 Summary: X.Org X11 libXrandr runtime library
+Summary(zh_CN.UTF-8): X.Org X11 libXrandr 运行库
 Name: libXrandr
-Version: 1.4.0
+Version: 1.4.2
 Release: 1%{?dist}
 License: MIT
 Group: System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 URL: http://www.x.org
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
@@ -17,13 +19,21 @@ BuildRequires: pkgconfig(xext)
 %description
 X.Org X11 libXrandr runtime library
 
+%description -l zh_CN.UTF-8
+ X.Org X11 libXrandr 运行库。
+
 %package devel
 Summary: X.Org X11 libXrandr development package
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: %{name} = %{version}-%{release}
 
 %description devel
 X.Org X11 libXrandr development package
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -38,6 +48,7 @@ rm -rf $RPM_BUILD_ROOT
 make install DESTDIR=$RPM_BUILD_ROOT
 
 rm -f $RPM_BUILD_ROOT%{_libdir}/*.la
+magic_rpm_clean.sh
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -60,6 +71,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*.3*
 
 %changelog
+* Fri Aug 08 2014 Liu Di <liudidi@gmail.com> - 1.4.2-1
+- 更新到 1.4.2
+
 * Thu Jul 26 2012 Dave Airlie <airlied@redhat.com> 1.4.0-1
 - libXrandr 1.4.0 upstream release.
 

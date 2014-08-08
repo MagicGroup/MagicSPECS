@@ -3,11 +3,13 @@
 %global gitversion a3bdd2b09
 
 Summary: Core X11 protocol client library
+Summary(zh_CN.UTF-8): 核心的 X11 协议客户端库
 Name: libX11
-Version: 1.6.1
-Release: 2%{?gitdate:.%{gitdate}git%{gitversion}}%{?dist}
+Version: 1.6.2
+Release: 1%{?gitdate:.%{gitdate}git%{gitversion}}%{?dist}
 License: MIT
 Group: System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 URL: http://www.x.org
 
 %if 0%{?gitdate}
@@ -31,21 +33,34 @@ Requires: %{name}-common = %{version}-%{release}
 %description
 Core X11 protocol client library.
 
+%description -l zh_CN.UTF-8
+核心的 X11 协议客户端库。
+
 %package common
 Summary: Common data for libX11
+Summary(zh_CN.UTF-8): libX11 的通用数据
 Group: System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 BuildArch: noarch
 
 %description common
 libX11 common data
 
+%description common -l zh_CN.UTF-8
+libX11 通用数据。
+
 %package devel
 Summary: Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: %{name} = %{version}-%{release}
 
 %description devel
 X.Org X11 libX11 development package
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q -n %{tarball}-%{?gitdate:%{gitdate}}%{!?gitdate:%{version}}
@@ -71,6 +86,7 @@ find $RPM_BUILD_ROOT -name 'Xcms.txt' -delete
 
 # FIXME package these properly
 rm -rf $RPM_BUILD_ROOT%{_docdir}
+magic_rpm_clean.sh
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -113,6 +129,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man5/*.5*
 
 %changelog
+* Fri Aug 08 2014 Liu Di <liudidi@gmail.com> - 1.6.2-1
+- 更新到 1.6.2
+
 * Tue Jul 30 2013 Peter Hutterer <peter.hutterer@redhat.com> 1.6.1-1
 - libX11 1.6.1
 
@@ -337,7 +356,7 @@ rm -rf $RPM_BUILD_ROOT
 * Mon Jul 10 2006 Mike A. Harris <mharris@redhat.com> 1.0.3-1.fc6
 - Updated libX11 to version 1.0.3
 - Remove libX11-1.0.1-setuid.diff as it is included in the 1.0.3 release.
-- Added 'dist' tag to "Release:"
+- Added 'dist' tag to "Release: 1%{?gitdate:.%{gitdate}git%{gitversion}}%{?dist}
 
 * Wed Jun 28 2006 Mike A. Harris <mharris@redhat.com> 1.0.2-1
 - Updated libX11 to version 1.0.2

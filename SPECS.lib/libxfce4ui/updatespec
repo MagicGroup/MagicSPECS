@@ -5,4 +5,5 @@ if [ -z "$1" ] ; then
 fi
 pushd $(dirname $0)
 sed -i "s/Version:.*/Version:\t$1/g" libxfce4ui.spec
+sed -i "s/Release:.*/Release: 1%{?dist}/g" libxfce4ui.spec
 popd

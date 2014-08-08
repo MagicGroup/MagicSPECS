@@ -2,13 +2,14 @@
 %define multilib_archs x86_64 %{ix86} ppc64 ppc s390x s390 sparc64 sparcv9
 
 Name:    libzip
-Version: 0.10.1
-Release: 6%{?dist}
+Version: 0.11.2
+Release: 1%{?dist}
 Summary: C library for reading, creating, and modifying zip archives
+Summary(zh_CN.UTF-8): 读取、创建和修改 zip 文档的 C 库
 
 License: BSD
 URL:     http://www.nih.at/libzip/index.html
-Source0: http://www.nih.at/libzip/libzip-%{version}.tar.bz2
+Source0: http://www.nih.at/libzip/libzip-%{version}.tar.xz
 
 #BuildRequires:  automake libtool
 BuildRequires:  zlib-devel
@@ -16,28 +17,28 @@ BuildRequires:  zlib-devel
 # to handle multiarch headers, ex from mysql-devel package
 Source1: zipconf.h
 
-# fonctionnal changes from php bundled library
-Patch0: libzip-0.10-php.patch
-
-
 %description
 libzip is a C library for reading, creating, and modifying zip archives. Files
 can be added from data buffers, files, or compressed data copied directly from 
 other zip archives. Changes made without closing the archive can be reverted. 
 The API is documented by man pages.
 
+%description -l zh_CN.UTF-8
+读取、创建和修改 zip 文档的 C 库。
+
 %package devel
 Summary: Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Requires: %{name}%{?_isa} = %{version}-%{release}
 %description devel
 The %{name}-devel package contains libraries and header files for
 developing applications that use %{name}.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
-
-%patch0 -p1 -b .forphp
 
 # Avoid lib64 rpaths (FIXME: recheck this on newer releases)
 %if "%{_libdir}" != "/usr/lib"
@@ -94,6 +95,12 @@ magic_rpm_clean.sh
 
 
 %changelog
+* Fri Aug 08 2014 Liu Di <liudidi@gmail.com> - 0.11.2-1
+- 更新到 0.11.2
+
+* Fri Aug 08 2014 Liu Di <liudidi@gmail.com> - 0.10.1-1
+- 更新到 0.11.2.tar.gz</a></p><p>Man pages:
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 0.10.1-6
 - 为 Magic 3.0 重建
 

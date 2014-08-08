@@ -3,11 +3,13 @@
 #global gitversion ae0187c87
 
 Summary: X.Org X11 libXi runtime library
+Summary(zh_CN.UTF-8): X.Org X11 libXi 运行库
 Name: libXi
-Version: 1.6.1
-Release: 2%{?gitdate:.%{gitdate}git%{gitversion}}%{dist}
+Version: 1.7.4
+Release: 1%{?gitdate:.%{gitdate}git%{gitversion}}%{dist}
 License: MIT
 Group: System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 URL: http://www.x.org
 
 %if 0%{?gitdate}
@@ -30,9 +32,14 @@ Requires: libX11 >= 1.4.99.1
 %description
 X.Org X11 libXi runtime library
 
+%description -l zh_CN.UTF-8
+X.Org X11 libXi 运行库。
+
 %package devel
 Summary: X.Org X11 libXi development package
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: %{name} = %{version}-%{release}
 # required by xi.pc
 Requires: xorg-x11-proto-devel
@@ -40,6 +47,9 @@ Requires: pkgconfig
 
 %description devel
 X.Org X11 libXi development package
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q -n %{tarball}-%{?gitdate:%{gitdate}}%{!?gitdate:%{version}}
@@ -90,6 +100,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*.3*
 
 %changelog
+* Fri Aug 08 2014 Liu Di <liudidi@gmail.com> - 1.7.4-1
+- 更新到 1.7.4
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 1.6.1-2
 - 为 Magic 3.0 重建
 

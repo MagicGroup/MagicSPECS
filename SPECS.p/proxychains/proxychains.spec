@@ -1,6 +1,6 @@
 Name:		proxychains
 Version:	3.1
-Release:	15%{?dist}
+Release:	16%{?dist}
 Summary:	Provides proxy support to any application
 Group:		Applications/Internet
 License:	GPLv2+
@@ -43,6 +43,9 @@ rm -f $RPM_BUILD_ROOT%{_libdir}/lib*.so
 %{_libdir}/libproxychains.so.3.0.0
 
 %changelog
+* Fri Aug 08 2014 Liu Di <liudidi@gmail.com> - 3.1-16
+- 为 Magic 3.0 重建
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.1-15
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

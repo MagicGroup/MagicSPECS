@@ -1,11 +1,13 @@
 %{!?_pkgdocdir: %global _pkgdocdir %{_docdir}/%{name}-%{version}}
 
 Name:           libxcb
-Version:        1.10
-Release:        3%{?dist}
+Version: 1.11
+Release: 1%{?dist}
 Summary:        A C binding to the X11 protocol
+Summary(zh_CN.UTF-8): X11 协议的 C 绑定
 
 Group:          System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 License:        MIT
 URL:            http://xcb.freedesktop.org/
 Source0:        http://xcb.freedesktop.org/dist/%{name}-%{version}.tar.bz2
@@ -16,26 +18,28 @@ BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 # the pkgconfig file so libs that link against libxcb know this...
 Source1:	pthread-stubs.pc.in
 
-# http://cgit.freedesktop.org/xcb/libxcb/patch/?id=3b72a2c9d1d656c74c691a45689e1d637f669e3a
-Patch0:		0001-Force-XCB-event-structures-with-64-bit-extended-fiel.patch
-
 BuildRequires:  autoconf automake libtool pkgconfig
 BuildRequires:  doxygen
 BuildRequires:  graphviz
 BuildRequires:  libXau-devel
 BuildRequires:  libxslt
-BuildRequires:  xcb-proto >= 1.10
+BuildRequires:  xcb-proto >= 1.11
 BuildRequires:  xorg-x11-proto-devel
-BuildRequires:  xorg-x11-util-macros
+BuildRequires:  xorg-x11-util-macros >= 1.18
 
 %description
 The X protocol C-language Binding (XCB) is a replacement for Xlib featuring a
 small footprint, latency hiding, direct access to the protocol, improved
 threading support, and extensibility.
 
+%description -l zh_CN.UTF-8
+X11 协议的 C 绑定。
+
 %package        devel
 Summary:        Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       %{name} = %{version}-%{release}
 Requires:       pkgconfig
 
@@ -43,17 +47,24 @@ Requires:       pkgconfig
 The %{name}-devel package contains libraries and header files for
 developing applications that use %{name}.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
 %package        doc
 Summary:        Documentation for %{name}
+Summary(zh_CN.UTF-8): %{name} 的文档
 Group:          Documentation
+Group(zh_CN.UTF-8): 文档
 BuildArch:	noarch
 
 %description    doc
 The %{name}-doc package contains documentation for the %{name} library.
 
+%description doc -l zh_CN.UTF-8
+%{name} 的文档。
+
 %prep
 %setup -q 
-%patch0 -p1
 
 %build
 sed -i 's/pthread-stubs //' configure.ac
@@ -69,6 +80,7 @@ install -pm 644 COPYING NEWS README $RPM_BUILD_ROOT%{_pkgdocdir}
 sed 's,@libdir@,%{_libdir},;s,@prefix@,%{_prefix},;s,@exec_prefix@,%{_exec_prefix},' %{SOURCE1} > $RPM_BUILD_ROOT%{_libdir}/pkgconfig/pthread-stubs.pc
 
 find $RPM_BUILD_ROOT -name '*.la' -delete
+magic_rpm_clean.sh
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -116,6 +128,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_pkgdocdir}
 
 %changelog
+* Fri Aug 08 2014 Liu Di <liudidi@gmail.com> - 1.11-1
+- 更新到 1.11
+
 * Tue Jun 03 2014 Liu Di <liudidi@gmail.com> - 1.10-3
 - 为 Magic 3.0 重建
 

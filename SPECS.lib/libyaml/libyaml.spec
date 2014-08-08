@@ -4,10 +4,12 @@
 
 Name:       libyaml
 Version:    0.1.6
-Release:    4%{?dist}
+Release:    6%{?dist}
 Summary:    YAML 1.1 parser and emitter written in C
+Summary(zh_CN.UTF-8): 用 C 编写的 YAML 1.1 解析库
 
 Group:      System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 License:    MIT
 URL:        http://pyyaml.org/
 Source0:    http://pyyaml.org/download/libyaml/%{tarballname}-%{version}.tar.gz
@@ -18,10 +20,14 @@ YAML is a data serialization format designed for human readability and
 interaction with scripting languages.  LibYAML is a YAML parser and
 emitter written in C.
 
+%description -l zh_CN.UTF-8
+用 C 编写的 YAML 1.1 解析库。
 
 %package devel
 Summary:   Development files for LibYAML applications
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:     Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:  libyaml = %{version}-%{release}, pkgconfig
 
 
@@ -29,6 +35,8 @@ Requires:  libyaml = %{version}-%{release}, pkgconfig
 The %{name}-devel package contains libraries and header files for
 developing applications that use LibYAML.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q -n %{tarballname}-%{version}
@@ -46,6 +54,7 @@ rm -f %{buildroot}%{_libdir}/*.{la,a}
 soname=$(readelf -d %{buildroot}%{_libdir}/libyaml.so | awk '$2 == "(SONAME)" {print $NF}' | tr -d '[]')
 rm -f %{buildroot}%{_libdir}/libyaml.so
 echo "INPUT($soname)" > %{buildroot}%{_libdir}/libyaml.so
+magic_rpm_clean.sh
 
 
 %check
@@ -79,6 +88,12 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Aug 08 2014 Liu Di <liudidi@gmail.com> - 0.1.6-6
+- 为 Magic 3.0 重建
+
+* Fri Aug 08 2014 Liu Di <liudidi@gmail.com> - 0.1.6-5
+- 为 Magic 3.0 重建
+
 * Fri Jul 18 2014 Tom Callaway <spot@fedoraproject.org> - 0.1.6-4
 - fix license handling
 
