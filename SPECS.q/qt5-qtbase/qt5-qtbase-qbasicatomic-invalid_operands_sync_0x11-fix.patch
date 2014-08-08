@@ -1,11 +1,75 @@
---- qtbase-opensource-src-5.3.0/src/corelib/thread/qbasicatomic.h.orig	2014-06-18 06:51:01.155168890 +0000
-+++ qtbase-opensource-src-5.3.0/src/corelib/thread/qbasicatomic.h	2014-06-18 06:52:14.745050318 +0000
-@@ -60,7 +60,7 @@
- # include "QtCore/qatomic_armv5.h"
- #elif defined(Q_PROCESSOR_IA64)
- #  include "QtCore/qatomic_ia64.h"
--#elif defined(Q_PROCESSOR_MIPS)
-+#elif defined(Q_PROCESSOR_MIPS) && !defined(__mips64)
- #  include "QtCore/qatomic_mips.h"
- #elif defined(Q_PROCESSOR_SPARC)
- #  include "QtCore/qatomic_sparc.h"
+From cb4da6380c6af2bce871ae466f1ba445339adc3a Mon Sep 17 00:00:00 2001
+From: Aurelien Jarno <aurelien@aurel32.net>
+Date: Sun, 10 Nov 2013 23:20:46 +0100
+Subject: [PATCH] Support MIPS atomic on pre-MIPS32 architectures
+
+The atomic functions on MIPS are based on the sync opcode with an
+immediate argument, which is something introduced in the MIPS32
+instruction set. This prevent to use Qt on pre-MIPS32 CPU, like the
+Loongson 2 CPU.
+
+However some of the pre-MIPS32 CPUs interprets the sync opcode with and
+immediate argument as a sync opcode without argument (which is a stronger
+ordering than with the argument), and for the others the kernel emulates
+it.
+
+It is therefore fine to use the current MIPS atomic functions on
+pre-MIPS32 CPU. This patch allows that by temporarily changing the
+instruction set to MIPS32 around the sync instruction, so that binutils
+doesn't choke on it.
+
+Change-Id: I9cc984bd55b5f172736ce9e638a6f4e271b79fe7
+---
+ src/corelib/arch/qatomic_mips.h |   10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
+
+--- a/src/corelib/arch/qatomic_mips.h
++++ b/src/corelib/arch/qatomic_mips.h
+@@ -110,13 +110,19 @@ template <typename T> struct QAtomicOps
+ template <int size> template <typename T> inline
+ void QBasicAtomicOps<size>::acquireMemoryFence(const T &) Q_DECL_NOTHROW
+ {
+-    asm volatile ("sync 0x11" ::: "memory");
++    asm volatile (".set push\n"
++                  ".set mips32\n"
++                  "sync 0x11\n"
++                  ".set pop\n" ::: "memory");
+ }
+ 
+ template <int size> template <typename T> inline
+ void QBasicAtomicOps<size>::releaseMemoryFence(const T &) Q_DECL_NOTHROW
+ {
+-    asm volatile ("sync 0x12" ::: "memory");
++    asm volatile (".set push\n"
++                  ".set mips32\n"
++                  "sync 0x11\n"
++                  ".set pop\n" ::: "memory");
+ }
+ 
+ 
+template <int size> template <typename T> inline
+Author: Pino Toscano <toscano.pino@tiscali.it>
+Description: Support atomic on pre-MIPS32 archs, also in orderedMemoryFence
+ Set pre-MIPS32 opcodes also in orderedMemoryFence.
+Last-Update: 2013-12-20
+Forwarded: no
+
+---
+ src/corelib/arch/qatomic_mips.h |    5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+--- a/src/corelib/arch/qatomic_mips.h
++++ b/src/corelib/arch/qatomic_mips.h
+@@ -128,7 +128,10 @@ void QBasicAtomicOps<size>::releaseMemor
+ template <int size> template <typename T> inline
+ void QBasicAtomicOps<size>::orderedMemoryFence(const T &) Q_DECL_NOTHROW
+ {
+-    asm volatile ("sync 0" ::: "memory");
++    asm volatile (".set push\n"
++                  ".set mips32\n"
++                  "sync 0\n"
++                  ".set pop\n" ::: "memory");
+ }
+ 
+ template<> template<typename T> inline
+
