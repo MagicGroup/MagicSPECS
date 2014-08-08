@@ -1,10 +1,12 @@
 Name:		libxml
 Summary:	Old XML library for Gnome-1 application compatibility
+Summary(zh_CN.UTF-8): Gnome-1 应用程序兼容的旧 XML 库
 Epoch:		1
 Version:	1.8.17
-Release:	32%{?dist}
+Release:	33%{?dist}
 License:	LGPLv2+ or W3C
 Group:		Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 URL:		http://veillard.com/XML/
 Source:		ftp://xmlsoft.org/libxml/old/libxml-%{version}.tar.gz
 Patch0:		libxml-1.8.17-CAN-2004-0110.patch
@@ -22,13 +24,21 @@ BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(id -nu)
 %description
 This library allows old Gnome-1 applications to manipulate XML files.
 
+%description -l zh_CN.UTF-8
+Gnome-1 应用程序兼容的旧 XML 库。
+
 %package devel
 Summary:	Libraries, includes, etc. to build old libxml-based applications
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:		Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:	%{name}%{?_isa} = %{epoch}:%{version}-%{release}, pkgconfig
 
 %description devel
 Libraries, includes, etc. to build old libxml-based applications.
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -79,6 +89,7 @@ make DESTDIR=%{buildroot} INSTALL="install -p" install
 if [ -d %{buildroot}/%{prefix}/include/gnome-xml ]; then
 	ln -s -f . %{buildroot}/%{_includedir}/gnome-xml/libxml
 fi
+magic_rpm_clean.sh
 
 %check
 make testall
@@ -106,6 +117,9 @@ rm -rf %{buildroot}
 %exclude %{_libdir}/libxml.la
 
 %changelog
+* Fri Aug 08 2014 Liu Di <liudidi@gmail.com> - 1:1.8.17-33
+- 为 Magic 3.0 重建
+
 * Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1:1.8.17-32
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
 

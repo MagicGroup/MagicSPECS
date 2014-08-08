@@ -5,4 +5,5 @@ if [ -z "$1" ] ; then
 fi
 pushd $(dirname $0)
 sed -i "s/Version:.*/Version:\t$1/g" libxkbcommon.spec
+sed -i "s/Release:.*/Release: 1%{?gitdate:.%{gitdate}}%{?dist}/g" libxkbcommon.spec
 popd

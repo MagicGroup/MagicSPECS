@@ -1,14 +1,17 @@
 Summary: Library providing XML and HTML support
+Summary(zh_CN.UTF-8): 提供 XML 和 HTML 支持的库
 Name: libxml2
-Version: 2.9.0
-Release: 2%{?dist}%{?extra_release}
+Version: 2.9.1
+Release: 1%{?dist}
 License: MIT
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Source: ftp://xmlsoft.org/libxml2/libxml2-%{version}.tar.gz
 BuildRoot: %{_tmppath}/%{name}-%{version}-root
 BuildRequires: python python-devel zlib-devel pkgconfig xz-devel
 URL: http://xmlsoft.org/
 Patch0: libxml2-multilib.patch
+Patch1: libxml2-2.9.0-do-not-check-crc.patch
 
 %description
 This library allows to manipulate XML files. It includes support
@@ -21,9 +24,14 @@ to select subnodes or ranges. A flexible Input/Output mechanism is
 available, with existing HTTP and FTP modules and combined to an
 URI library.
 
+%description -l zh_CN.UTF-8
+提供 XML 和 HTML 支持的库。
+
 %package devel
 Summary: Libraries, includes, etc. to develop XML and HTML applications
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: libxml2 = %{version}-%{release}
 Requires: zlib-devel
 Requires: xz-devel
@@ -41,18 +49,28 @@ to select subnodes or ranges. A flexible Input/Output mechanism is
 available, with existing HTTP and FTP modules and combined to an
 URI library.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
 %package static
 Summary: Static library for libxml2
+Summary(zh_CN.UTF-8): %{name} 的静态库
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: libxml2 = %{version}-%{release}
 
 %description static
 Static library for libxml2 provided for specific uses or shaving a few
 microseconds when parsing, do not link to them for generic purpose packages.
 
+%description static -l zh_CN.UTF-8
+%{name} 的静态库。
+
 %package python
 Summary: Python bindings for the libxml2 library
+Summary(zh_CN.UTF-8): %{name} 的 Python 绑定
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: libxml2 = %{version}-%{release}
 
 %description python
@@ -65,25 +83,34 @@ to read, modify and write XML and HTML files. There is DTDs support
 this includes parsing and validation even with complex DTDs, either
 at parse time or later once the document has been modified.
 
+%description python -l zh_CN.UTF-8
+%{name} 的 Python 绑定。
+
 %prep
 %setup -q
 %patch0 -p1
+%patch1 -p1
 
 %build
 %configure
 make %{_smp_mflags}
-gzip -9 ChangeLog
 
 %install
 rm -fr %{buildroot}
 
-%makeinstall
-gzip -9 doc/libxml2-api.xml
-rm -f $RPM_BUILD_ROOT%{_libdir}/*.la
+make install DESTDIR=%{buildroot}
 
 # multiarch crazyness on timestamp differences or Makefile/binaries for examples
 touch -m --reference=$RPM_BUILD_ROOT/%{_includedir}/libxml2/libxml/parser.h $RPM_BUILD_ROOT/%{_bindir}/xml2-config
+
+rm -f $RPM_BUILD_ROOT%{_libdir}/*.la
+rm -f $RPM_BUILD_ROOT%{_libdir}/python*/site-packages/*.a
+rm -f $RPM_BUILD_ROOT%{_libdir}/python*/site-packages/*.la
+rm -rf $RPM_BUILD_ROOT%{_datadir}/doc/libxml2-%{version}/*
+rm -rf $RPM_BUILD_ROOT%{_datadir}/doc/libxml2-python-%{version}/*
 (cd doc/examples ; make clean ; rm -rf .deps Makefile)
+gzip -9 -c doc/libxml2-api.xml > doc/libxml2-api.xml.gz
+
 magic_rpm_clean.sh
 
 %clean
@@ -96,7 +123,7 @@ rm -fr %{buildroot}
 %files
 %defattr(-, root, root)
 
-%doc AUTHORS ChangeLog.gz NEWS README Copyright TODO
+%doc AUTHORS NEWS README Copyright TODO
 %doc %{_mandir}/man1/xmllint.1*
 %doc %{_mandir}/man1/xmlcatalog.1*
 %doc %{_mandir}/man3/libxml.3*
@@ -109,7 +136,7 @@ rm -fr %{buildroot}
 %defattr(-, root, root)
 
 %doc %{_mandir}/man1/xml2-config.1*
-%doc AUTHORS ChangeLog.gz NEWS README Copyright
+%doc AUTHORS NEWS README Copyright
 %doc doc/*.html doc/html doc/*.gif doc/*.png
 %doc doc/tutorial doc/libxml2-api.xml.gz
 %doc doc/examples
@@ -144,6 +171,9 @@ rm -fr %{buildroot}
 %doc doc/python.html
 
 %changelog
+* Fri Aug 08 2014 Liu Di <liudidi@gmail.com> - 2.9.1-1
+- 更新到 2.9.1
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 2.9.0-2
 - 为 Magic 3.0 重建
 

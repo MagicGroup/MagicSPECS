@@ -1,9 +1,11 @@
 Summary: X Damage extension library
+Summary(zh_CN.UTF-8): X Damage 扩展库
 Name: libXdamage
-Version: 1.1.3
-Release: 4%{?dist}
+Version: 1.1.4
+Release: 1%{?dist}
 License: MIT
 Group: System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 URL: http://www.x.org
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
@@ -15,13 +17,21 @@ BuildRequires: pkgconfig(damageproto) >= 1.1.0
 %description
 X.Org X11 libXdamage runtime library.
 
+%description -l zh_CN.UTF-8
+X Damage 扩展库。
+
 %package devel
 Summary: Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: %{name} = %{version}-%{release}
 
 %description devel
 X.Org X11 libXdamage development package.
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -37,6 +47,7 @@ make install DESTDIR=$RPM_BUILD_ROOT INSTALL="install -p"
 
 # We intentionally don't ship *.la files
 rm -f $RPM_BUILD_ROOT%{_libdir}/*.la
+magic_rpm_clean.sh
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -57,6 +68,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/pkgconfig/xdamage.pc
 
 %changelog
+* Fri Aug 08 2014 Liu Di <liudidi@gmail.com> - 1.1.4-1
+- 更新到 1.1.4
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 1.1.3-4
 - 为 Magic 3.0 重建
 

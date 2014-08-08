@@ -1,9 +1,11 @@
 Name:           libzeitgeist
 Version:        0.3.18
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        Client library for applications that want to interact with the Zeitgeist daemon
+Summary(zh_CN.UTF-8): 与 Zeitgeist 服务交互的程序所需要的客户端库
 
 Group:          System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 License:        LGPLv3 and GPLv3
 URL:            https://launchpad.net/libzeitgeist
 Source0:        http://launchpad.net/%{name}/0.3/%{version}/+download/%{name}-%{version}.tar.gz
@@ -19,15 +21,22 @@ This project provides a client library for applications that want to interact
 with the Zeitgeist daemon. The library is written in C using glib and provides
 an asynchronous GObject oriented API.
 
+%description -l zh_CN.UTF-8
+与 Zeitgeist 服务交互的程序所需要的客户端库。
+
 %package        devel
 Summary:        Development files for %{name}%{?_isa}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       %{name}%{?_isa} = %{version}-%{release}
 
 %description    devel
 The %{name}-devel package contains libraries and header files for
 developing applications that use %{name}.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -86,6 +95,9 @@ magic_rpm_clean.sh
 
 
 %changelog
+* Fri Aug 08 2014 Liu Di <liudidi@gmail.com> - 0.3.18-4
+- 为 Magic 3.0 重建
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 0.3.18-3
 - 为 Magic 3.0 重建
 

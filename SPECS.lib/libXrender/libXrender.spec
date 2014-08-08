@@ -1,9 +1,11 @@
 Summary: X.Org X11 libXrender runtime library
+Summary(zh_CN.UTF-8): X.Org X11 libXrender 运行库
 Name: libXrender
-Version: 0.9.7
-Release: 2%{?dist}
+Version: 0.9.8
+Release: 1%{?dist}
 License: MIT
 Group: System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 URL: http://www.x.org
 
 Source0: ftp://ftp.x.org/pub/individual/lib/%{name}-%{version}.tar.bz2
@@ -14,13 +16,21 @@ BuildRequires: libX11-devel
 %description
 X.Org X11 libXrender runtime library
 
+%description -l zh_CN.UTF-8
+X.Org X11 libXrender 运行库。
+
 %package devel
 Summary: X.Org X11 libXrender development package
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: %{name} = %{version}-%{release}
 
 %description devel
 X.Org X11 libXrender development package
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -60,6 +70,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/pkgconfig/xrender.pc
 
 %changelog
+* Fri Aug 08 2014 Liu Di <liudidi@gmail.com> - 0.9.8-1
+- 更新到 0.9.8
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 0.9.7-2
 - 为 Magic 3.0 重建
 
