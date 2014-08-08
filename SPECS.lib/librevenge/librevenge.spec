@@ -2,8 +2,9 @@
 
 Name: librevenge
 Version: 0.0.1
-Release: 2%{?dist}
+Release: 3%{?dist}
 Summary: A base library for writing document import filters
+Summary(zh_CN.UTF-8): 编写文档导入过滤器的基本库
 
 # src/lib/RVNGOLEStream.{h,cpp} are BSD
 License: (LGPLv2+ or MPLv2.0) and BSD
@@ -20,20 +21,31 @@ BuildRequires: pkgconfig(zlib)
 interfaces for text documents, vector graphics, spreadsheets and
 presentations.
 
+%description -l zh_CN.UTF-8
+编写文档导入过滤器的基本库。
+
 %package devel
 Summary: Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Requires: %{name}%{?_isa} = %{version}-%{release}
 
 %description devel
 The %{name}-devel package contains libraries and header files for
 developing applications that use %{name}.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
 %package doc
 Summary: Documentation of %{name} API
+Summary(zh_CN.UTF-8): %{name} 的文档
 BuildArch: noarch
 
 %description doc
 The %{name}-doc package contains documentation files for %{name}.
+
+%description doc -l zh_CN.UTF-8
+%{name} 的文档。
 
 %prep
 %autosetup -p1
@@ -51,6 +63,7 @@ make install DESTDIR=%{buildroot}
 rm -f %{buildroot}/%{_libdir}/*.la
 # we install API docs directly from build
 rm -rf %{buildroot}/%{_docdir}/%{name}
+magic_rpm_clean.sh
 
 %post -p /sbin/ldconfig
 %postun -p /sbin/ldconfig
@@ -84,6 +97,9 @@ make %{?_smp_mflags} check
 %doc docs/doxygen/html
 
 %changelog
+* Fri Aug 08 2014 Liu Di <liudidi@gmail.com> - 0.0.1-3
+- 为 Magic 3.0 重建
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.0.1-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

@@ -1,33 +1,50 @@
 Name: libwpd
 Summary: Library for reading and converting WordPerfect documents
-Version: 0.9.6
-Release: 2%{?dist}
+Summary(zh_CN.UTF-8): 读取和转换 WordPerfect 文档的库
+Version: 0.10.0
+%define majorver %(echo %{version} | awk -F. '{print $1"."$2}')
+Release: 1%{?dist}
 Source: http://downloads.sourceforge.net/%{name}/%{name}-%{version}.tar.bz2
 Group: System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 URL: http://libwpd.sf.net/
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 License: LGPLv2+
 BuildRequires: glib2-devel >= 2.0.0, libgsf-devel >= 1.6.0, cppunit-devel
+BuildRequires: librevenge-devel >= 0.0.1
 
 %description
 Library that handles Word Perfect documents.
 
+%description -l zh_CN.UTF-8
+读取和转换 WordPerfect 文档的库。
+
 %package tools
 Summary: Tools to transform WordPerfect Documents into other formats
+Summary(zh_CN.UTF-8): 转换 WordPerfect 文档到其它格式的工具
 Group: Applications/Publishing
+Group(zh_CN.UTF-8): 应用程序/出版
 
 %description tools
 Tools to transform WordPerfect Documents into other formats.
 Currently supported: HTML, raw, text.
 
+%description tools -l zh_CN.UTF-8
+转换 WordPerfect 文档到其它格式的工具，当前支持:HTML, raw, 文本。
+
 %package devel
 Requires: libwpd = %{version}-%{release}
 Requires: glib2-devel >= 2.0.0, libgsf-devel >= 1.6.0, pkgconfig
 Summary: Files for developing with libwpd
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 
 %description devel
 Includes and definitions for developing with libwpd.
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -55,7 +72,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(-,root,root,-)
-%doc COPYING CREDITS README
+%doc CREDITS README
 %{_libdir}/*.so.*
 
 %files tools
@@ -67,9 +84,12 @@ rm -rf $RPM_BUILD_ROOT
 %doc HACKING TODO
 %{_libdir}/*.so
 %{_libdir}/pkgconfig/*
-%{_includedir}/libwpd-0.9
+%{_includedir}/libwpd-%{majorver}
 
 %changelog
+* Fri Aug 08 2014 Liu Di <liudidi@gmail.com> - 0.10.0-1
+- 更新到 0.10.0
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 0.9.6-2
 - 为 Magic 3.0 重建
 

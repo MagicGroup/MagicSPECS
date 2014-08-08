@@ -1,8 +1,10 @@
 Summary: Windows MetaFile Library
+Summary(zh_CN.UTF-8): Windows 元文件库
 Name: libwmf
 Version: 0.2.8.4
-Release: 32%{?dist}
+Release: 33%{?dist}
 Group: System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 #libwmf is under the LGPLv2+, however...
 #1. The tarball contains an old version of the urw-fonts under GPL+.
 #   Those fonts are not installed
@@ -64,16 +66,26 @@ BuildRequires: libjpeg-devel, libXt-devel, libX11-devel, dos2unix, libtool
 %description
 A library for reading and converting Windows MetaFile vector graphics (WMF).
 
+%description -l zh_CN.UTF-8
+读取和转换 Windows 元文件向量图形 (WMF) 的库。
+
 %package lite
 Summary: Windows Metafile parser library
+Summary(zh_CN.UTF-8): Windows 元文件解析库
 Group: System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 
 %description lite
 A library for parsing Windows MetaFile vector graphics (WMF).
 
+%description lite -l zh_CN.UTF-8
+解析 Windows 元文件向量图形 (WMF) 的库。
+
 %package devel
 Summary: Support files necessary to compile applications with libwmf
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: libwmf = %{version}-%{release}
 Requires: gtk2-devel, libxml2-devel, libjpeg-devel
 
@@ -81,6 +93,8 @@ Requires: gtk2-devel, libxml2-devel, libjpeg-devel
 Libraries, headers, and support files necessary to compile applications 
 using libwmf.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 %prep
 %setup -q
 %patch0  -p1 -b .nodocs
@@ -120,6 +134,7 @@ find doc -name "Makefile*" -exec rm {} \;
 rm -rf $RPM_BUILD_ROOT%{_datadir}/libwmf/fonts/*afm
 rm -rf $RPM_BUILD_ROOT%{_datadir}/libwmf/fonts/*pfb
 sed -i $RPM_BUILD_ROOT%{_datadir}/libwmf/fonts/fontmap -e 's#libwmf/fonts#fonts/default/Type1#g'
+magic_rpm_clean.sh
 
 %post
 /sbin/ldconfig
@@ -164,6 +179,9 @@ gdk-pixbuf-query-loaders-%{__isa_bits} --update-cache || :
 
 
 %changelog
+* Fri Aug 08 2014 Liu Di <liudidi@gmail.com> - 0.2.8.4-33
+- 为 Magic 3.0 重建
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 0.2.8.4-32
 - 为 Magic 3.0 重建
 
