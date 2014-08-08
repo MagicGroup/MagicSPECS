@@ -1,10 +1,10 @@
 Summary: Window Navigator Construction Kit
 Name: libwnck
-Version: 2.30.7
-Release: 4%{?dist}
+Version: 2.31.0
+Release: 3%{?dist}
 URL: http://download.gnome.org/sources/libwnck/
 #VCS: git:git://git.gnome.org/libwnck
-Source0: http://download.gnome.org/sources/libwnck/2.30/%{name}-%{version}.tar.xz
+Source0: http://download.gnome.org/sources/libwnck/2.31/%{name}-%{version}.tar.xz
 License: LGPLv2+
 Group: System Environment/Libraries
 
@@ -46,7 +46,7 @@ make %{?_smp_mflags}
 %install
 make install DESTDIR=$RPM_BUILD_ROOT INSTALL="install -p"
 find $RPM_BUILD_ROOT -name '*.la' -exec rm -f {} ';'
-magic_rpm_clean.sh
+
 %find_lang %{name}
 
 # This package is merely compat for gtk2 apps, now.
@@ -71,11 +71,26 @@ rm -f $RPM_BUILD_ROOT%{_bindir}/wnck-urgency-monitor
 %doc %{_datadir}/gtk-doc
 
 %changelog
-* Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 2.30.7-4
-- 为 Magic 3.0 重建
+* Tue Jul 22 2014 Kalev Lember <kalevlember@gmail.com> - 2.31.0-3
+- Rebuilt for gobject-introspection 1.41.4
 
-* Fri Oct 26 2012 Liu Di <liudidi@gmail.com> - 2.30.7-3
-- 为 Magic 3.0 重建
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.31.0-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Sat Nov 30 2013 Kevin Fenzi <kevin@scrye.com> 2.31.0-1
+- Update to 2.31.0
+
+* Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.30.7-6
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.30.7-5
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
+
+* Fri Jul 27 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.30.7-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.30.7-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 
 * Wed Oct 26 2011 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.30.7-2
 - Rebuilt for glibc bug#747377
