@@ -2,12 +2,14 @@
 
 Name:           libwacom
 
-Version:        0.7.1
-Release:        1%{?dist}
+Version: 0.9
+Release: 1%{?dist}
 Summary:        Tablet Information Client Library
+Summary(zh_CN.UTF-8): 手写板信息客户端库
 Requires:       %{name}-data
 
 Group:          System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 License:        MIT
 URL:            http://linuxwacom.sourceforge.net
 
@@ -23,20 +25,31 @@ BuildRequires:  systemd-devel
 tools. This information can then be used by drivers or applications to tweak
 the UI or general settings to match the physical tablet.
 
+%description -l zh_CN.UTF-8
+手写板信息客户端库。
+
 %package devel
 Summary:        Tablet Information Client Library Library Development Package
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Requires:       %{name} = %{version}-%{release}
 Requires:       pkgconfig
 
 %description devel
 Tablet information client library library development package.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
 %package data
 Summary:        Tablet Information Client Library Library Data Files
+Summary(zh_CN.UTF-8): %{name} 的数据文件
 BuildArch:      noarch
 
 %description data
 Tablet information client library library data files.
+
+%description data -l zh_CN.UTF-8
+%{name} 的数据文件。
 
 %prep
 %setup -q -n %{name}-%{version}
@@ -53,6 +66,7 @@ install -p -m 644 %SOURCE1 ${RPM_BUILD_ROOT}/%{udevdir}/rules.d/65-libwacom.rule
 
 # We intentionally don't ship *.la files
 rm -f %{buildroot}%{_libdir}/*.la
+magic_rpm_clean.sh
 
 %post -p /sbin/ldconfig
 %postun -p /sbin/ldconfig
@@ -80,6 +94,9 @@ rm -f %{buildroot}%{_libdir}/*.la
 %{_datadir}/libwacom/layouts/*.svg
 
 %changelog
+* Fri Aug 08 2014 Liu Di <liudidi@gmail.com> - 0.9-1
+- 更新到 0.9
+
 * Tue Apr 16 2013 Peter Hutterer <peter.hutterer@redhat.com> 0.7.1-1
 - libwacom 0.7.1
 

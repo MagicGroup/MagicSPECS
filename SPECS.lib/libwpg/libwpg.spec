@@ -1,6 +1,6 @@
 Name:           libwpg
-Version:        0.2.0
-Release:        4%{?dist}
+Version: 0.3.0
+Release: 1%{?dist}
 Summary:        Library for reading WordPerfect Graphics images
 Summary(zh_CN.UTF-8): 读取 WordPerfect 图形图像的库
 
@@ -9,10 +9,9 @@ Group(zh_CN.UTF-8): 系统环境/库
 License:        GPLv2+
 URL:            http://libwpg.sourceforge.net/
 Source0:        http://download.sourceforge.net/libwpg/%{name}-%{version}.tar.bz2
-Patch0:         libwpg-0.1.3-nodate.patch
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
-BuildRequires:  libwpd-devel >= 0.8
+BuildRequires:  libwpd-devel >= 0.10
 BuildRequires:  doxygen
 
 %description
@@ -54,7 +53,6 @@ such as WordPerfect and Presentations.
 
 %prep
 %setup -q
-%patch0 -p1 -b .nodate
 
 %build
 %configure
@@ -79,7 +77,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(-,root,root,-)
-%doc AUTHORS COPYING
+%doc AUTHORS 
 %{_libdir}/*.so.*
 
 %files devel
@@ -94,6 +92,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_bindir}/*
 
 %changelog
+* Fri Aug 08 2014 Liu Di <liudidi@gmail.com> - 0.3.0-1
+- 更新到 0.3.0
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 0.2.0-4
 - 为 Magic 3.0 重建
 

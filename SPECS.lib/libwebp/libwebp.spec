@@ -2,7 +2,7 @@
 
 Name:          libwebp
 Version:       0.4.1
-Release:       1%{?dist}
+Release:       2%{?dist}
 Group:         Development/Libraries
 URL:           http://webmproject.org/
 Summary:       Library and tools for the WebP graphics format
@@ -107,6 +107,7 @@ cp swig/*.jar swig/*.so %{buildroot}/%{_libdir}/%{name}-java/
 %{_bindir}/cwebp
 %{_bindir}/dwebp
 %{_bindir}/gif2webp
+%{_bindir}/vwebp
 %{_bindir}/webpmux
 %{_mandir}/man*/*
 
@@ -124,6 +125,9 @@ cp swig/*.jar swig/*.so %{buildroot}/%{_libdir}/%{name}-java/
 %{_libdir}/%{name}-java/
 
 %changelog
+* Fri Aug 08 2014 Liu Di <liudidi@gmail.com> - 0.4.1-2
+- 为 Magic 3.0 重建
+
 * Tue Aug 05 2014 Sandro Mani <manisandro@gmail.com> - 0.4.1-1
 - upstream release 0.4.1
 
