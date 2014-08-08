@@ -1,12 +1,11 @@
 diff -up ModemManager-0.4.998/src/tests/Makefile.am.foo ModemManager-0.4.998/src/tests/Makefile.am
 --- ModemManager-0.4.998/src/tests/Makefile.am.foo	2011-07-06 17:59:53.711343366 -0500
 +++ ModemManager-0.4.998/src/tests/Makefile.am	2011-07-06 18:00:08.971152593 -0500
-@@ -45,7 +45,6 @@ if WITH_TESTS
+@@ -3,7 +3,6 @@
  noinst_PROGRAMS = \
  	test-modem-helpers \
  	test-charsets \
 -	test-qcdm-serial-port \
  	test-at-serial-port \
- 	test-sms-part
- 
-
+ 	test-sms-part-3gpp \
+ 	test-sms-part-cdma

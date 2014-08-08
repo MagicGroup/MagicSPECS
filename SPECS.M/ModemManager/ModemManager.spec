@@ -1,34 +1,35 @@
-%global snapshot .git20130913
+
 %global glib2_version 2.32
 %global systemd_dir %{_prefix}/lib/systemd/system
 
-%global hardened_build 1
+%global _hardened_build 1
 
 Summary: Mobile broadband modem management service
 Name: ModemManager
-Version: 1.1.0
-Release: 2%{snapshot}%{?dist}
+Version: 1.3.0
+Release: 1%{?dist}
 #
-# Source from git://anongit.freedesktop.org/ModemManager/ModemManager
-# tarball built with:
-#    ./autogen.sh --prefix=/usr --sysconfdir=/etc --localstatedir=/var
-#    make distcheck
+# Source from http://freedesktop.org/software/ModemManager/
 #
-Source: %{name}-%{version}%{snapshot}.tar.xz
+Source: %{name}-%{version}.git20140805.3dd6f931.tar.xz
 License: GPLv2+
 Group: System Environment/Base
 
-URL: http://www.gnome.org/projects/NetworkManager/
+URL: https://wiki.gnome.org/Projects/NetworkManager
 BuildRoot: %(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
 Requires: glib2 >= %{glib2_version}
+# For mbim-proxy and qmi-proxy
+Requires: libmbim-utils
+Requires: libqmi-utils
+
 BuildRequires: glib2-devel >= %{glib2_version}
 BuildRequires: libgudev1-devel >= 143
 BuildRequires: automake autoconf intltool libtool
 BuildRequires: intltool
 BuildRequires: libxslt gtk-doc
-BuildRequires: libqmi-devel >= 1.6
-BuildRequires: libmbim-devel >= 1.5
-BuildRequires: gobject-introspection-devel >= 0.10.3
+BuildRequires: libqmi-devel >= 1.10
+BuildRequires: libmbim-devel >= 1.10
+BuildRequires: gobject-introspection-devel >= 1.38
 BuildRequires: vala-tools vala-devel
 
 Patch0: buildsys-hates-openpty.patch
@@ -89,9 +90,10 @@ intltoolize --force
 %configure \
 	--enable-more-warnings=error \
 	--with-udev-base-dir=%{_prefix}/lib/udev \
-	--enable-gtk-doc=yes \
+	--enable-gtk-doc \
 	--with-qmi=yes \
 	--with-mbim=yes \
+	--with-newest-qmi-commands \
 	--disable-static \
 	--with-polkit=no \
 	--with-dist-version=%{version}-%{release}
@@ -141,6 +143,7 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %{systemd_dir}/ModemManager.service
 %{_datadir}/icons/hicolor/22x22/apps/*.png
 %{_mandir}/man8/*
+%{_datadir}/locale/*/LC_MESSAGES/ModemManager.mo
 
 %files devel
 %{_includedir}/ModemManager/*.h
@@ -165,6 +168,24 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %{_datadir}/vala/vapi/libmm-glib.*
 
 %changelog
+* Tue Aug  5 2014 Dan Williams <dcbw@redhat.com> - 1.3.0-1
+- Update to git development snapshot
+- Add IPv6 support for many devices
+- Updated blacklist for non-modem USB devices
+- Support for more MBIM devices from various manufacturers
+- Support for more Huawei devices with network ports
+- Add new "unmanaged" GPS location mode
+- Many bug fixes for various modems
+
+* Tue Jul 22 2014 Kalev Lember <kalevlember@gmail.com> - 1.2.0-3
+- Rebuilt for gobject-introspection 1.41.4
+
+* Fri Jun 06 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.2.0-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Sat Feb  1 2014 poma <poma@gmail.com> - 1.2.0-1
+- Update to 1.2.0 release
+
 * Fri Sep 13 2013 Dan Williams <dcbw@redhat.com> - 1.1.0-2.git20130913
 - Build with MBIM support
 - Enable Vala bindings
