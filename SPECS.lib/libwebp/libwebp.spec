@@ -1,15 +1,16 @@
 %global _hardened_build 1
 
 Name:          libwebp
-Version:       0.4.0
+Version:       0.4.1
 Release:       1%{?dist}
 Group:         Development/Libraries
 URL:           http://webmproject.org/
 Summary:       Library and tools for the WebP graphics format
 # Additional IPR is licensed as well. See PATENTS file for details
 License:       BSD
-Source0:       http://webp.googlecode.com/files/%{name}-%{version}.tar.gz
+Source0:       http://downloads.webmproject.org/releases/webp/%{name}-%{version}.tar.gz
 Source1:       libwebp_jni_example.java
+
 BuildRequires: libjpeg-devel
 BuildRequires: libpng-devel
 BuildRequires: giflib-devel
@@ -17,6 +18,7 @@ BuildRequires: libtiff-devel
 BuildRequires: java-devel
 BuildRequires: jpackage-utils
 BuildRequires: swig
+BuildRequires: autoconf automake libtool
 
 %description
 WebP is an image format that does lossy compression of digital
@@ -52,7 +54,7 @@ images more efficiently.
 Group:         Development/Libraries
 Summary:       Java bindings for libwebp, a library for the WebP format
 Requires:      %{name}%{?_isa} = %{version}-%{release}
-Requires:      java
+Requires:      java-headless
 Requires:      jpackage-utils
 
 %description java
@@ -62,7 +64,10 @@ Java bindings for libwebp.
 %setup -q
 
 %build
-%configure --disable-static --enable-libwebpmux --enable-libwebpdemux --enable-libwebpdecoder
+autoreconf -vif
+%configure --disable-static --enable-libwebpmux \
+           --enable-libwebpdemux --enable-libwebpdecoder
+
 make %{?_smp_mflags}
 
 # swig generated Java bindings
@@ -101,7 +106,6 @@ cp swig/*.jar swig/*.so %{buildroot}/%{_libdir}/%{name}-java/
 %files tools
 %{_bindir}/cwebp
 %{_bindir}/dwebp
-%{_bindir}/vwebp
 %{_bindir}/gif2webp
 %{_bindir}/webpmux
 %{_mandir}/man*/*
@@ -120,6 +124,22 @@ cp swig/*.jar swig/*.so %{buildroot}/%{_libdir}/%{name}-java/
 %{_libdir}/%{name}-java/
 
 %changelog
+* Tue Aug 05 2014 Sandro Mani <manisandro@gmail.com> - 0.4.1-1
+- upstream release 0.4.1
+
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.4.0-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Tue Apr 08 2014 Jaromir Capik <jcapik@redhat.com> - 0.4.0-3
+- Fixing endian checks (#962091)
+- Fixing FTPBS caused by rpath presence
+
+* Fri Mar 28 2014 Michael Simacek <msimacek@redhat.com> - 0.4.0-2
+- Use Requires: java-headless rebuild (#1067528)
+
+* Thu Jan 02 2014 Sandro Mani <manisandro@gmail.com> - 0.4.0-1
+- upstream release 0.4.0
+
 * Wed Oct 02 2013 Sandro Mani <manisandro@gmail.com> - 0.3.1-2
 - enable webpdemux
 
