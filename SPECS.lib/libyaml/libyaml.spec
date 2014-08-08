@@ -3,8 +3,8 @@
 #====================================================================#
 
 Name:       libyaml
-Version:    0.1.4
-Release:    3%{?dist}
+Version:    0.1.6
+Release:    4%{?dist}
 Summary:    YAML 1.1 parser and emitter written in C
 
 Group:      System Environment/Libraries
@@ -12,7 +12,6 @@ License:    MIT
 URL:        http://pyyaml.org/
 Source0:    http://pyyaml.org/download/libyaml/%{tarballname}-%{version}.tar.gz
 BuildRoot:  %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-
 
 %description
 YAML is a data serialization format designed for human readability and
@@ -34,7 +33,6 @@ developing applications that use LibYAML.
 %prep
 %setup -q -n %{tarballname}-%{version}
 
-
 %build
 %configure
 make %{?_smp_mflags}
@@ -44,6 +42,10 @@ make %{?_smp_mflags}
 rm -rf %{buildroot}
 make DESTDIR=%{buildroot} INSTALL="install -p" install
 rm -f %{buildroot}%{_libdir}/*.{la,a}
+
+soname=$(readelf -d %{buildroot}%{_libdir}/libyaml.so | awk '$2 == "(SONAME)" {print $NF}' | tr -d '[]')
+rm -f %{buildroot}%{_libdir}/libyaml.so
+echo "INPUT($soname)" > %{buildroot}%{_libdir}/libyaml.so
 
 
 %check
@@ -62,7 +64,9 @@ rm -rf %{buildroot}
 
 %files
 %defattr(-,root,root,-)
-%doc LICENSE README
+%{!?_licensedir:%global license %%doc}
+%license LICENSE
+%doc README
 %{_libdir}/%{name}*.so.*
 
 
@@ -75,8 +79,35 @@ rm -rf %{buildroot}
 
 
 %changelog
-* Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 0.1.4-3
-- 为 Magic 3.0 重建
+* Fri Jul 18 2014 Tom Callaway <spot@fedoraproject.org> - 0.1.6-4
+- fix license handling
+
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.1.6-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Mon Mar 31 2014 John Eckersberg <jeckersb@redhat.com> - 0.1.6-2
+- Work around ldconfig bug with libyaml.so (bz1082822)
+
+* Wed Mar 26 2014 John Eckersberg <jeckersb@redhat.com> - 0.1.6-1
+- New upstream release 0.1.6 (bz1081492)
+- Fixes CVE-2014-2525 (bz1078083)
+
+* Tue Feb  4 2014 John Eckersberg <jeckersb@redhat.com> - 0.1.5-1
+- New upstream release 0.1.5 (bz1061087)
+- Removed patches for CVE-2013-6393; they are included in 0.1.5
+  upstream
+
+* Wed Jan 29 2014 John Eckersberg <jeckersb@redhat.com> - 0.1.4-6
+- Add patches for CVE-2013-6393 (bz1033990)
+
+* Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.1.4-5
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.1.4-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
+
+* Thu Jul 19 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.1.4-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.1.4-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
