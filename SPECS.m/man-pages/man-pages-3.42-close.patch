@@ -1,0 +1,17 @@
+diff -up man-pages-3.59/man2/close.2.orig man-pages-3.59/man2/close.2
+--- man-pages-3.59/man2/close.2.orig	2014-02-16 08:33:52.000000000 +0100
++++ man-pages-3.59/man2/close.2	2014-02-18 13:49:27.685917162 +0100
+@@ -120,6 +120,13 @@ other threads in the same process.
+ Since a file descriptor may be reused,
+ there are some obscure race conditions
+ that may cause unintended side effects.
++.PP
++When dealing with sockets, you have to be sure that there is no
++.BR recv (2)
++still blocking on it on another thread, otherwise it might block forever,
++since no more messages will be send via the socket. Be sure to use
++.BR shutdown (2)
++to shut down all parts the connection before closing the socket.
+ .\" Date: Tue, 4 Sep 2007 13:57:35 +0200
+ .\" From: Fredrik Noring <noring@nocrew.org>
+ .\" One such race involves signals and ERESTARTSYS. If a file descriptor

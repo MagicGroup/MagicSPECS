@@ -19,7 +19,7 @@ diff -up man-pages-3.32/man5/host.conf.5.pom man-pages-3.32/man5/host.conf.5
  This keyword may be listed more than once.
  Each time it should be
 @@ -141,11 +135,6 @@ override the behavior which is configure
- If set this variable points to a file that should be read instead of
+ If set, this variable points to a file that should be read instead of
  .IR /etc/host.conf .
  .TP
 -.B RESOLV_SERV_ORDER
