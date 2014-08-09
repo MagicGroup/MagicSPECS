@@ -2,64 +2,22 @@
 Summary: A GNU tool which simplifies the build process for users
 Name: make
 Epoch: 1
-Version: 3.82
-Release: 20%{?dist}
-License: GPLv2+
+Version: 4.0
+Release: 2%{?dist}
+License: GPLv3+
 Group: Development/Tools
 URL: http://www.gnu.org/software/make/
 Source: ftp://ftp.gnu.org/gnu/make/make-%{version}.tar.bz2
 
-Patch1: make-3.82-noclock_gettime.patch
-Patch2: make-3.82-j8k.patch
-Patch3: make-3.82-getcwd.patch
-Patch4: make-3.82-err-reporting.patch
+Patch1: make-4.0-noclock_gettime.patch
+Patch2: make-4.0-j8k.patch
+Patch3: make-4.0-getcwd.patch
+Patch4: make-4.0-err-reporting.patch
 
 # Upstream: https://savannah.gnu.org/bugs/?30748
-Patch6: make-3.82-weird-shell.patch
+Patch6: make-4.0-weird-shell.patch
 
-Patch7: make-3.82-newlines.patch
-Patch8: make-3.82-jobserver.patch
-
-# Upstream: https://savannah.gnu.org/bugs/?30612
-# Upstream: https://savannah.gnu.org/bugs/?30723
-Patch9: make-3.82-bugfixes.patch
-
-Patch10: make-3.82-sort-blank.patch
-Patch11: make-3.82-copy-on-expand.patch
-
-# Upstream: https://savannah.gnu.org/bugs/?33873
-Patch12: make-3.82-parallel-remake.patch
-
-# http://savannah.gnu.org/bugs/?34335
-Patch13: make-3.82-warn_undefined_function.patch
-
-# http://lists.gnu.org/archive/html/bug-make/2011-06/msg00032.html
-Patch14: make-3.82-trace.patch
-
-# http://lists.gnu.org/archive/html/bug-make/2011-04/msg00002.html
-Patch15: make-3.82-expensive_glob.patch
-
-# Upstream: https://savannah.gnu.org/bugs/?30653
-Patch16: make-3.82-dont-prune-intermediate.patch
-
-# https://bugzilla.redhat.com/show_bug.cgi?id=926115
-Patch17: make-3.82-aarch64.patch
-
-# Additional fix for https://savannah.gnu.org/bugs/?30612
-Patch18: make-3.82-empty-members.patch
-
-# Can't use a stem and a glob in the same dependency.
-# https://savannah.gnu.org/bugs/?39310
-# https://bugzilla.redhat.com/show_bug.cgi?id=987672
-Patch19: make-3.82-stem_glob.patch
-
-# Stack limit not restored for processes spawned through $(shell)
-# https://savannah.gnu.org/bugs/index.php?39851
-Patch20: make-3.82-func_shell-rlimit.patch
-
-# This to make the test targets/SECONDARY deterministic.  The above
-# patch causes this to occasionally fail.
-Patch21: make-3.82-tests-SECONDARY.patch
+Patch7: make-4.0-newlines.patch
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 Requires(post): /sbin/install-info
@@ -74,6 +32,13 @@ knowledge about the details of the build process. The details about
 how the program should be built are provided for make in the program's
 makefile.
 
+%package devel
+Summary: Header file for externally visible definitions
+Group: Development/Libraries
+
+%description devel
+The make-devel package contains gnumake.h.
+
 %prep
 %setup -q
 %patch1 -p1
@@ -82,20 +47,6 @@ makefile.
 %patch4 -p1
 %patch6 -p1
 %patch7 -p1
-%patch8 -p1
-%patch9 -p1
-%patch10 -p1
-%patch11 -p1
-%patch12 -p0
-%patch13 -p2
-%patch14 -p1
-%patch15 -p0
-%patch16 -p0
-%patch17 -p1
-%patch18 -p1
-%patch19 -p1
-%patch20 -p1
-%patch21 -p1
 
 rm -f tests/scripts/features/parallelism.orig
 
@@ -138,10 +89,19 @@ fi
 %{_bindir}/*
 %{_mandir}/man*/*
 %{_infodir}/*.info*
+%{_includedir}/gnumake.h
+
+%files devel
+%defattr(-,root,root)
+%{_includedir}/gnumake.h
 
 %changelog
-* Sun May 04 2014 Liu Di <liudidi@gmail.com> - 1:3.82-20
-- 为 Magic 3.0 重建
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1:4.0-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Wed Apr 30 2014 Patsy Franklin <pfrankli@redhat.com> 1:4.0-1
+- Rebase to make-4.0
+  - Created make-devel sub-package to handle new dependency on gnumake.h.
 
 * Thu Aug 22 2013 Petr Machata <pmachata@redhat.com> - 1:3.82-19
 - make now restores rlimit to its original values before launching
@@ -189,7 +149,7 @@ fi
 * Wed Oct 26 2011 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1:3.82-7
 - Rebuilt for glibc bug#747377
 
-* Tue May 12 2011 Lubomir Rintel <lkundrak@v3.sk> - 1:3.82-6
+* Thu May 12 2011 Lubomir Rintel <lkundrak@v3.sk> - 1:3.82-6
 - Fix free-after-use with nested assignments (#703104)
 
 * Tue Feb 08 2011 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1:3.82-5
@@ -321,7 +281,7 @@ fi
 * Tue Feb 07 2006 Jesse Keating <jkeating@redhat.com> - 1:3.80-10.1
 - rebuilt for new gcc4.1 snapshot and glibc changes
 
-* Mon Feb 02 2006 Petr Machata <pmachata@redhat.com> 3.80-10
+* Thu Feb 02 2006 Petr Machata <pmachata@redhat.com> 3.80-10
 - H.J. Lu caught a typo in the patch and provided a new one. (#175376)
 
 * Mon Jan 09 2006 Petr Machata <pmachata@redhat.com> 3.80-9
