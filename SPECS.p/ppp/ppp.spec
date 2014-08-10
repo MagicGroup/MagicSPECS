@@ -1,40 +1,59 @@
+%global _hardened_build 1
+
 Summary: The Point-to-Point Protocol daemon
 Name: ppp
-Version: 2.4.5
-Release: 19%{?dist}
+Version: 2.4.6
+Release: 6%{?dist}
 License: BSD and LGPLv2+ and GPLv2+ and Public Domain
 Group: System Environment/Daemons
 URL: http://www.samba.org/ppp
 Source0: ftp://ftp.samba.org/pub/ppp/ppp-%{version}.tar.gz
-Source1: ppp-2.3.5-pamd.conf
-Source2: ppp.logrotate
-Source3: ppp-tmpfs.conf
-Patch0: ppp-2.4.3-make.patch
-Patch1: ppp-2.3.6-sample.patch
-Patch2: ppp-2.4.2-libutil.patch
-Patch3: ppp-2.4.1-varargs.patch
-Patch4: ppp-2.4.4-lib64.patch
-Patch7: ppp-2.4.2-pie.patch
-Patch8: ppp-2.4.3-fix.patch
-Patch9: ppp-2.4.3-fix64.patch
-Patch11: ppp-2.4.2-change_resolv_conf.patch
-Patch13: ppp-2.4.4-no_strip.patch
-Patch17: ppp-2.4.2-pppoatm-make.patch
-Patch19: ppp-2.4.3-local.patch
-Patch20: ppp-2.4.3-ipv6-accept-remote.patch
-Patch22: ppp-2.4.4-cbcp.patch
-Patch23: ppp-2.4.2-dontwriteetc.patch
-Patch24: ppp-2.4.4-fd_leak.patch
-Patch25: ppp-2.4.5-var_run_ppp.patch
-Patch26: ppp-2.4.5-manpg.patch
-Patch27: ppp-2.4.5-eaptls-mppe-0.99.patch
-Patch28: ppp-2.4.5-ppp_resolv.patch
-Patch29: ppp-2.4.5-man.patch
+Source1: ppp-pam.conf
+Source2: ppp-logrotate.conf
+Source3: ppp-tmpfiles.conf
+Source4: ip-down
+Source5: ip-down.ipv6to4
+Source6: ip-up
+Source7: ip-up.ipv6to4
+Source8: ipv6-down
+Source9: ipv6-up
+Source10: ifup-ppp
+Source11: ifdown-ppp
+Source12: ppp-watch.tar.xz
 
-BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-BuildRequires: pam-devel, libpcap-devel, openssl-devel
-Requires: glibc >= 2.0.6, /etc/pam.d/system-auth, logrotate, libpcap >= 14:0.8.3-6
-Requires: systemd-units
+# Fedora-specific
+Patch0001:	0001-build-sys-use-gcc-as-our-compiler-of-choice.patch
+Patch0002:	0002-build-sys-enable-PAM-support.patch
+Patch0003:	0003-build-sys-utilize-compiler-flags-handed-to-us-by-rpm.patch
+Patch0004:	0004-doc-add-configuration-samples.patch
+Patch0005:	0005-build-sys-don-t-hardcode-LIBDIR-but-set-it-according.patch
+Patch0006:	0006-scritps-use-change_resolv_conf-function.patch
+Patch0007:	0007-build-sys-don-t-strip-binaries-during-installation.patch
+Patch0008:	0008-build-sys-use-prefix-usr-instead-of-usr-local.patch
+Patch0009:	0009-pppd-introduce-ipv6-accept-remote.patch
+Patch0010:	0010-build-sys-enable-CBCP.patch
+Patch0011:	0011-build-sys-don-t-put-connect-errors-log-to-etc-ppp.patch
+Patch0012:	0012-pppd-we-don-t-want-to-accidentally-leak-fds.patch
+Patch0013:	0013-everywhere-O_CLOEXEC-harder.patch
+Patch0014:	0014-everywhere-use-SOCK_CLOEXEC-when-creating-socket.patch
+Patch0015:	0015-pppd-move-pppd-database-to-var-run-ppp.patch
+Patch0016:	0016-rp-pppoe-add-manpage-for-pppoe-discovery.patch
+Patch0017:	0017-pppd-rebase-EAP-TLS-patch-v0.994.patch
+Patch0018:	0018-scritps-fix-ip-up.local-sample.patch
+Patch0019:	0019-sys-linux-rework-get_first_ethernet.patch
+Patch0020:	0020-pppd-put-lock-files-in-var-lock-ppp.patch
+Patch0021:	0021-build-sys-compile-pppol2tp-plugin-with-RPM_OPT_FLAGS.patch
+Patch0022:	0022-build-sys-compile-pppol2tp-with-multilink-support.patch
+Patch0023:	0023-build-sys-install-rp-pppoe-plugin-files-with-standar.patch
+Patch0024:	0024-build-sys-install-pppoatm-plugin-files-with-standard.patch
+Patch0025:	0025-pppd-install-pppd-binary-using-standard-perms-755.patch
+Patch0026:	0026-Revert-pppd-rebase-EAP-TLS-patch-v0.994.patch
+Patch0027:	0027-pppd-EAP-TLS-patch-v0.997.patch
+
+BuildRequires: pam-devel, libpcap-devel, openssl-devel, systemd, systemd-devel, glib2-devel
+Requires: glibc >= 2.0.6, /etc/pam.d/system-auth, libpcap >= 14:0.8.3-6, systemd, initscripts >= 9.54
+Requires(pre): /usr/bin/getent
+Requires(pre): /usr/sbin/groupadd
 
 %description
 The ppp package contains the PPP (Point-to-Point Protocol) daemon and
@@ -51,69 +70,55 @@ Group: Development/Libraries
 This package contains the header files for building plugins for ppp.
 
 %prep
-%setup  -q
-%patch0 -p1 -b .make
-%patch1 -p1 -b .sample
-# patch 2 depends on the -lutil in patch 0
-%patch2 -p1 -b .libutil
-%patch3 -p1 -b .varargs
-# patch 4 depends on the -lutil in patch 0
-%patch4 -p1 -b .lib64
-%patch7 -p1 -b .pie
-%patch8 -p1 -b .fix
-%patch9 -p1 -b .fix64
-%patch11 -p1 -b .change_resolv_conf
-%patch13 -p1 -b .no_strip
-%patch17 -p1 -b .atm-make
-%patch19 -p1 -b .local
-%patch20 -p1 -b .ipv6cp
-%patch22 -p1 -b .cbcp
-%patch23 -p1 -b .dontwriteetc
-%patch24 -p1 -b .fd_leak
-%patch25 -p1 -b .var_run_ppp
-%patch26 -p1 -b .manpg
-%patch27 -p1 -b .eaptls
-%patch28 -p1 -b .ppp_resolv
-%patch29 -p1 -b .man
+%setup -q
+%autopatch -p1
 
-rm -f scripts/*.local
-rm -f scripts/*.change_resolv_conf
-rm -f scripts/*.usepeerdns-var_run_ppp_resolv
-rm -f scripts/*.ppp_resolv
-find . -type f -name "*.sample" | xargs rm -f 
-
-rm -f include/linux/if_pppol2tp.h
+tar -xJf %{SOURCE12}
 
 %build
-#find . -name 'Makefile*' -print0 | xargs -0 perl -pi.no_strip -e "s: -s : :g"
-RPM_OPT_FLAGS="$RPM_OPT_FLAGS -fPIC -Wall"
+export RPM_OPT_FLAGS="$RPM_OPT_FLAGS -fPIC -Wall"
 %configure
-make
+make %{?_smp_mflags}
+make -C ppp-watch %{?_smp_mflags}
 
 %install
-[ "$RPM_BUILD_ROOT" != "/" ] && rm -rf $RPM_BUILD_ROOT
-export INSTROOT=$RPM_BUILD_ROOT
-make install install-etcppp
-
-chmod -R a+rX scripts
+make INSTROOT=%{buildroot} install install-etcppp
 find scripts -type f | xargs chmod a-x
-chmod 0755 $RPM_BUILD_ROOT/%{_libdir}/pppd/%{version}/*.so
-mkdir -p $RPM_BUILD_ROOT%{_sysconfdir}/pam.d
-install -m 644 %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/pam.d/ppp
+make ROOT=%{buildroot} -C ppp-watch install
 
-# Provide pointers for people who expect stuff in old places
-mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/log/ppp
-mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/run/ppp
+# create log files dir
+install -d %{buildroot}%{_localstatedir}/log/ppp
 
-install -d -m 755 $RPM_BUILD_ROOT%{_sysconfdir}/tmpfiles.d
-install -p -m 644 %{SOURCE3} $RPM_BUILD_ROOT%{_sysconfdir}/tmpfiles.d/ppp.conf
+# install pam config
+install -d %{buildroot}%{_sysconfdir}/pam.d
+install -m 644 %{SOURCE1} %{buildroot}%{_sysconfdir}/pam.d/ppp
 
-# Logrotate script
-mkdir -p $RPM_BUILD_ROOT%{_sysconfdir}/logrotate.d
-install -m 644 %{SOURCE2} $RPM_BUILD_ROOT%{_sysconfdir}/logrotate.d/ppp
+# install logrotate script
+install -d %{buildroot}%{_sysconfdir}/logrotate.d
+install -p %{SOURCE2} %{buildroot}%{_sysconfdir}/logrotate.d/ppp
 
-%clean
-rm -rf $RPM_BUILD_ROOT
+# install tmpfiles drop-in
+install -d %{buildroot}%{_tmpfilesdir}
+install -p %{SOURCE3} %{buildroot}%{_tmpfilesdir}/ppp.conf
+
+# install scripts (previously owned by initscripts package)
+install -d %{buildroot}%{_sysconfdir}/ppp
+install -p %{SOURCE4} %{buildroot}%{_sysconfdir}/ppp/ip-down
+install -p %{SOURCE5} %{buildroot}%{_sysconfdir}/ppp/ip-down.ipv6to4
+install -p %{SOURCE6} %{buildroot}%{_sysconfdir}/ppp/ip-up
+install -p %{SOURCE7} %{buildroot}%{_sysconfdir}/ppp/ip-up.ipv6to4
+install -p %{SOURCE8} %{buildroot}%{_sysconfdir}/ppp/ipv6-down
+install -p %{SOURCE9} %{buildroot}%{_sysconfdir}/ppp/ipv6-up
+
+install -d %{buildroot}%{_sysconfdir}/sysconfig/network-scripts/
+install -p %{SOURCE10} %{buildroot}%{_sysconfdir}/sysconfig/network-scripts/ifup-ppp
+install -p %{SOURCE11} %{buildroot}%{_sysconfdir}/sysconfig/network-scripts/ifdown-ppp
+
+%pre
+/usr/bin/getent group dip >/dev/null 2>&1 || /usr/sbin/groupadd -r -g 40 dip >/dev/null 2>&1 || :
+
+%post
+%tmpfiles_create ppp.conf
 
 %files
 %defattr(-,root,root)
@@ -122,6 +127,16 @@ rm -rf $RPM_BUILD_ROOT
 %{_sbindir}/pppdump
 %{_sbindir}/pppoe-discovery
 %{_sbindir}/pppstats
+%{_sbindir}/ppp-watch
+%dir %{_sysconfdir}/ppp
+%{_sysconfdir}/ppp/ip-up
+%{_sysconfdir}/ppp/ip-down
+%{_sysconfdir}/ppp/ip-up.ipv6to4
+%{_sysconfdir}/ppp/ip-down.ipv6to4
+%{_sysconfdir}/ppp/ipv6-up
+%{_sysconfdir}/ppp/ipv6-down
+%{_sysconfdir}/sysconfig/network-scripts/ifdown-ppp
+%{_sysconfdir}/sysconfig/network-scripts/ifup-ppp
 %{_mandir}/man8/chat.8*
 %{_mandir}/man8/pppd.8*
 %{_mandir}/man8/pppdump.8*
@@ -129,11 +144,12 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man8/pppd-radius.8*
 %{_mandir}/man8/pppstats.8*
 %{_mandir}/man8/pppoe-discovery.8*
+%{_mandir}/man8/ppp-watch.8*
 %{_libdir}/pppd
-%dir %{_sysconfdir}/ppp
-%dir %{_localstatedir}/run/ppp
+%ghost %dir /run/ppp
+%ghost %dir /run/lock/ppp
+%dir %{_sysconfdir}/logrotate.d
 %attr(700, root, root) %dir %{_localstatedir}/log/ppp
-%config %{_sysconfdir}/tmpfiles.d/ppp.conf
 %config(noreplace) %{_sysconfdir}/ppp/eaptls-client
 %config(noreplace) %{_sysconfdir}/ppp/eaptls-server
 %config(noreplace) %{_sysconfdir}/ppp/chap-secrets
@@ -141,6 +157,7 @@ rm -rf $RPM_BUILD_ROOT
 %config(noreplace) %{_sysconfdir}/ppp/pap-secrets
 %config(noreplace) %{_sysconfdir}/pam.d/ppp
 %config(noreplace) %{_sysconfdir}/logrotate.d/ppp
+%{_tmpfilesdir}/ppp.conf
 %doc FAQ README README.cbcp README.linux README.MPPE README.MSCHAP80 README.MSCHAP81 README.pwfd README.pppoe scripts sample README.eap-tls
 
 %files devel
@@ -149,11 +166,74 @@ rm -rf $RPM_BUILD_ROOT
 %doc PLUGINS
 
 %changelog
-* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 2.4.5-19
-- 为 Magic 3.0 重建
+* Fri Jun 20 2014 Michal Sekletar <msekleta@redhat.com> - 2.4.6-6
+- version 0.997 of EAP-TLS patch
 
-* Thu Jan 26 2012 Liu Di <liudidi@gmail.com> - 2.4.5-18
-- 为 Magic 3.0 重建
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.4.6-5
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Wed Apr 16 2014 Michal Sekletar <msekleta@redhat.com> - 2.4.6-4
+- move ppp initscripts to ppp package (#1088220)
+
+* Mon Apr 14 2014 Michal Sekletar <msekleta@redhat.com> - 2.4.6-3
+- don't require perl and expect (#1086846)
+
+* Thu Apr 10 2014 Michal Sekletar <msekleta@redhat.com> - 2.4.6-2
+- rebase to 2.4.6
+
+* Thu Aug 01 2013 Michal Sekletar <msekleta@redhat.com> - 2.4.5-33
+- fix post installation scriptlet
+
+* Fri Jul 12 2013 Michal Sekletar <msekleta@redhat.com> - 2.4.5-32
+- don't ship /var/lock/ppp in rpm payload and create it in %post instead
+- fix installation of tmpfiles.d configuration
+- enable hardened build
+- fix bogus dates in changelog
+- compile all binaries with hardening flags
+
+* Thu Jul 04 2013 Michal Sekletar <msekleta@redhat.com> - 2.4.5-31
+- fix possible NULL pointer dereferencing
+
+* Wed May 29 2013 Michal Sekletar <msekleta@redhat.com> - 2.4.5-30
+- make radius plugin config parser less strict
+- resolves : #906913
+
+* Wed Mar 20 2013 Michal Sekletar <msekleta@redhat.com> - 2.4.5-29
+- Add creation of dip system group
+
+* Wed Mar 20 2013 Michal Sekletar <msekleta@redhat.com> - 2.4.5-28
+- Add /etc/logrotate.d to files section since we no longer hard depend on logrotate
+
+* Wed Mar 20 2013 Michal Sekletar <msekleta@redhat.com> - 2.4.5-27
+- Don't hard depend on logrotate
+
+* Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.4.5-26
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
+
+* Mon Nov 12 2012 Michal Sekletar <msekleta@redhat.com> - 2.4.5-25
+- Resolves: #840190 - install configuration file in /usr/lib/tmpfiles.d
+
+* Tue Sep 11 2012 Michal Sekletar <msekleta@redhat.com> - 2.4.5-24
+- Removed unnecessary dependency on systemd-unit
+
+* Sat Jul 21 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.4.5-23
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Tue May 29 2012 Michal Sekletar <msekleta@redhat.com>
+- Resolves: #817011 - fixed ppp-2.4.5-eaptls-mppe-0.99 patch, added variable definition
+
+* Mon May 21 2012 Michal Sekletar <msekleta@redhat.com>
+- Resolves: #817013 - fixed support for multilink channels in pppol2tp plugin
+
+* Thu May 17 2012 Michal Sekletar <msekleta@redhat.com>
+- Resolves: #771340 - fixed compilation of pppd without USE_EAPTLS
+
+* Sat Jan 14 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.4.5-19
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
+
+* Mon May 30 2011 Jiri Skala <jskala@redhat.com> - 2.4.5-18
+- fixes #682381 - hardcodes eth0
+- fixes #708260 - SELinux is preventing access on the file LCK..ttyUSB3
 
 * Mon Apr 04 2011 Jiri Skala <jskala@redhat.com> - 2.4.5-17
 - fixes #664282 and #664868 - man page fixes
@@ -257,7 +337,7 @@ rm -rf $RPM_BUILD_ROOT
 * Wed Jul 19 2006 Thomas Woerner <twoerner@redhat.com> 2.4.4-1
 - new version 2.4.4 with lots of fixes
 - fixed reesolv.conf docs (#165072)
-  Thanks to Matt Domsch for the initial patch 
+  Thanks to Matt Domsch for the initial patch
 - enabled CBCP (#199278)
 
 * Wed Jul 12 2006 Jesse Keating <jkeating@redhat.com> - 2.4.3-6.2.2
@@ -322,7 +402,7 @@ rm -rf $RPM_BUILD_ROOT
 - require new libpcap library (>= 0.8.3-6) with a fix for inbound/outbound
   filter processing
 - not using internal libpcap structures anymore, fixes inbound/outbound
-  filter processing (#128053) 
+  filter processing (#128053)
 
 * Fri Aug  6 2004 Thomas Woerner <twoerner@redhat.com> 2.4.2-4
 - fixed signal handling (#29171)
@@ -335,7 +415,7 @@ rm -rf $RPM_BUILD_ROOT
 * Tue Jun 15 2004 Elliot Lee <sopwith@redhat.com>
 - rebuilt
 
-* Wed May 24 2004 David Woodhouse <dwmw2@redhat.com> 2.4.2-2.3
+* Mon May 24 2004 David Woodhouse <dwmw2@redhat.com> 2.4.2-2.3
 - Enable IPv6 support. Disable PIE to avoid bogus Provides:
 
 * Fri May 14 2004 Thomas Woerner <twoerner@redhat.com> 2.4.2-2.2
@@ -457,7 +537,7 @@ rm -rf $RPM_BUILD_ROOT
 * Fri Apr 09 1999 Cristian Gafton <gafton@redhat.com>
 - force pppd use the glibc's logwtmp instead of implementing its own
 
-* Wed Apr 01 1999 Preston Brown <pbrown@redhat.com>
+* Thu Apr 01 1999 Preston Brown <pbrown@redhat.com>
 - version 2.3.7 bugfix release
 
 * Tue Mar 23 1999 Cristian Gafton <gafton@redhat.com>
@@ -466,7 +546,7 @@ rm -rf $RPM_BUILD_ROOT
 * Mon Mar 22 1999 Michael Johnson <johnsonm@redhat.com>
 - auth patch
 
-* Sun Mar 21 1999 Cristian Gafton <gafton@redhat.com> 
+* Sun Mar 21 1999 Cristian Gafton <gafton@redhat.com>
 - auto rebuild in the new build environment (release 3)
 
 * Thu Jan 07 1999 Cristian Gafton <gafton@redhat.com>
@@ -504,7 +584,7 @@ rm -rf $RPM_BUILD_ROOT
 - added a samples patch; updated glibc patch
 
 * Thu Dec 18 1997 Erik Troan <ewt@redhat.com>
-- added a patch to use our own route.h, rather then glibc's (which has 
+- added a patch to use our own route.h, rather then glibc's (which has
   alignment problems on Alpha's) -- I only applied this patch on the Alpha,
   though it should be safe everywhere
 
@@ -517,4 +597,3 @@ rm -rf $RPM_BUILD_ROOT
 * Tue Mar 25 1997 Erik Troan <ewt@redhat.com>
 - Integrated new patch from David Mosberger
 - Improved description
-
