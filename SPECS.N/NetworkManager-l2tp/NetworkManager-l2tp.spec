@@ -1,17 +1,16 @@
 %global nm_version          1:0.9.2
 %global dbus_version        1.1
 %global gtk3_version        3.0
-%global ppp_version         2.4.5
+%global ppp_version         %(rpm -q ppp --queryformat '%{VERSION}')
 %global shared_mime_version 0.16-3
 
 Summary:   NetworkManager VPN plugin for l2tp
 Name:      NetworkManager-l2tp
-Version:   0.9.8.5
+Version:   0.9.8.7
 Release:   1%{?dist}
 # The most of code uses GPLv2+ license.
 # Only vpn-password-dialog has LGPLv2+.
 License:   GPLv2+ and LGPLv2+
-Group:     System Environment/Base
 URL:       https://launchpad.net/~seriy-pr/+archive/network-manager-l2tp
 Source:    https://github.com/seriyps/NetworkManager-l2tp/archive/%{version}/%{name}-%{version}.tar.gz
 
@@ -23,7 +22,7 @@ BuildRequires: NetworkManager-devel   >= %{nm_version}
 BuildRequires: NetworkManager-glib-devel >= %{nm_version}
 BuildRequires: libgnome-keyring-devel
 BuildRequires: intltool gettext
-BuildRequires: ppp-devel = %{ppp_version}
+BuildRequires: ppp-devel
 
 # nm-connection-editor was a part of NetworkManager-gnome but since F18 it splits
 %if 0%{?fedora} > 17
@@ -40,7 +39,7 @@ Requires: gnome-keyring
 Requires: xl2tpd
 Requires: openswan
 
-%filter_provides_in %{_libdir}/pppd/2.*/nm-l2tp-pppd-plugin.so
+%filter_provides_in %{_libdir}/pppd/%{ppp_version}/nm-l2tp-pppd-plugin.so
 %filter_provides_in %{_libdir}/NetworkManager/lib*.so
 
 %description
@@ -66,8 +65,8 @@ make install DESTDIR=%{buildroot} INSTALL="/usr/bin/install -p"
 rm -f %{buildroot}%{_libdir}/NetworkManager/lib*.la
 rm -f %{buildroot}%{_libdir}/NetworkManager/lib*.a
 
-rm -f %{buildroot}%{_libdir}/pppd/2.*/nm-l2tp-pppd-plugin.la
-rm -f %{buildroot}%{_libdir}/pppd/2.*/nm-l2tp-pppd-plugin.a
+rm -f %{buildroot}%{_libdir}/pppd/%{ppp_version}/nm-l2tp-pppd-plugin.la
+rm -f %{buildroot}%{_libdir}/pppd/%{ppp_version}/nm-l2tp-pppd-plugin.a
 
 %find_lang %{name}
 
@@ -83,6 +82,19 @@ rm -f %{buildroot}%{_libdir}/pppd/2.*/nm-l2tp-pppd-plugin.a
 %{_datadir}/gnome-vpn-properties/l2tp
 
 %changelog
+* Thu Jul 31 2014 Ivan Romanov <drizt@land.ru> - 0.9.8.7-1
+- updated to 0.9.8.7
+
+* Fri Jun 06 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.9.8.6-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Fri Apr 11 2014 Ivan Romanov <drizt@land.ru> - 0.9.8.6-2
+- use ppp of any version
+- dropped Groups tag
+
+* Thu Feb 27 2014 Ivan Romanov <drizt@land.ru> - 0.9.8.6-1
+- updated to 0.9.8.6
+
 * Sun Jan 19 2014 Ivan Romanov <drizt@land.ru> - 0.9.8.5-1
 - updated to 0.9.8.5
 - dropped patches, went to upstream
