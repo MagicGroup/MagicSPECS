@@ -1,11 +1,13 @@
-%define rcver -rc2
-%define snapshot .git20120302
+%define rcver %{nil}
+%define snapshot %{nil}
+
+%global _hardened_build 1
 
 Summary: WPA/WPA2/IEEE 802.1X Supplicant
 Name: wpa_supplicant
 Epoch: 1
-Version: 1.0
-Release: 0.4%{?dist}
+Version: 2.0
+Release: 9%{?dist}
 License: BSD
 Group: System Environment/Base
 Source0: http://w1.fi/releases/%{name}-%{version}%{rcver}%{snapshot}.tar.gz
@@ -16,8 +18,10 @@ Source4: %{name}.sysconfig
 Source6: %{name}.logrotate
 
 %define build_gui 1
+%define build_libeap 1
 %if 0%{?rhel} >= 1
 %define build_gui 0
+%define build_libeap 0
 %endif
 
 # distro specific customization and not suitable for upstream,
@@ -30,24 +34,27 @@ Patch1: wpa_supplicant-flush-debug-output.patch
 Patch2: wpa_supplicant-dbus-service-file-args.patch
 # quiet an annoying and frequent syslog message
 Patch3: wpa_supplicant-quiet-scan-results-message.patch
-# recover from streams of driver disconnect messages (iwl3945)
-Patch4: wpa_supplicant-squelch-driver-disconnect-spam.patch
 # allow more private key encryption algorithms
 Patch5: wpa_supplicant-openssl-more-algs.patch
 # distro specific customization for Qt4 build tools, not suitable for upstream
 Patch6: wpa_supplicant-gui-qt4.patch
-# Need <unistd.h> for getopt
-Patch7: wpa_supplicant-1.0-wpagui-getopt.patch
 # Fix libnl3 includes path
-Patch8: libnl3-includes.patch
+Patch7: libnl3-includes.patch
+# Less aggressive roaming; signal strength is wildly variable
+Patch8: rh837402-less-aggressive-roaming.patch
+# Don't evict current AP from PMKSA cache when it's large
+Patch9: 0001-Fix-OKC-based-PMKSA-cache-entry-clearing.patch
+
+%if %{build_libeap}
 # Dirty hack for WiMAX
 # http://linuxwimax.org/Download?action=AttachFile&do=get&target=wpa-1.5-README.txt
-Patch100: wpa_supplicant-0.7.2-generate-libeap-peer.patch
+Patch100: wpa_supplicant-2.0-generate-libeap-peer.patch
+%endif
 
 URL: http://w1.fi/wpa_supplicant/
 
 %if %{build_gui}
-BuildRequires: qt4-devel >= 4.0
+BuildRequires: qt-devel >= 4.0
 %endif
 BuildRequires: openssl-devel
 BuildRequires: readline-devel
@@ -77,6 +84,7 @@ Graphical User Interface for wpa_supplicant written using QT
 
 %endif
 
+%if %{build_libeap}
 %package -n libeap
 Summary: EAP peer library
 Group: System Environment/Libraries
@@ -93,6 +101,7 @@ Requires: libeap = %{epoch}:%{version}-%{release}
 %description -n libeap-devel
 This package contains header files for using the EAP peer library.
 Don't use this unless you know what you're doing.
+%endif
 
 %prep
 %setup -q -n %{name}-%{version}%{rcver}
@@ -100,21 +109,26 @@ Don't use this unless you know what you're doing.
 %patch1 -p1 -b .flush-debug-output
 %patch2 -p1 -b .dbus-service-file
 %patch3 -p1 -b .quiet-scan-results-msg
-%patch4 -p1 -b .disconnect-spam
 %patch5 -p1 -b .more-openssl-algs
 %patch6 -p1 -b .qt4
-%patch7 -p1 -b .getopt
-%patch8 -p1 -b .libnl3
+%patch7 -p1 -b .libnl3
+%patch8 -p1 -b .rh837402-less-aggressive-roaming
+%patch9 -p1 -b .okc-current-fix
 
 %build
 pushd wpa_supplicant
   cp %{SOURCE1} .config
-  CFLAGS="${CFLAGS:-%optflags}" ; export CFLAGS ;
-  CXXFLAGS="${CXXFLAGS:-%optflags}" ; export CXXFLAGS ;
+  CFLAGS="${CFLAGS:-%optflags} -fPIE -DPIE" ; export CFLAGS ;
+  CXXFLAGS="${CXXFLAGS:-%optflags} -fPIE -DPIE" ; export CXXFLAGS ;
+  LDFLAGS="${LDFLAGS:-%optflags} -pie -Wl,-z,now" ; export LDFLAGS ;
+  # yes, BINDIR=_sbindir
+  BINDIR="%{_sbindir}" ; export BINDIR ;
+  LIBDIR="%{_libdir}" ; export LIBDIR ;
   make %{_smp_mflags}
 %if %{build_gui}
   QTDIR=%{_libdir}/qt4 make wpa_gui-qt4 %{_smp_mflags}
 %endif
+  make eapol_test
 popd
 
 %install
@@ -131,6 +145,7 @@ install -d %{buildroot}/%{_sbindir}
 install -m 0755 %{name}/wpa_passphrase %{buildroot}/%{_sbindir}
 install -m 0755 %{name}/wpa_cli %{buildroot}/%{_sbindir}
 install -m 0755 %{name}/wpa_supplicant %{buildroot}/%{_sbindir}
+install -m 0755 %{name}/eapol_test %{buildroot}/%{_sbindir}
 install -D -m 0644 %{name}/dbus/dbus-wpa_supplicant.conf %{buildroot}/%{_sysconfdir}/dbus-1/system.d/wpa_supplicant.conf
 install -D -m 0644 %{name}/dbus/fi.w1.wpa_supplicant1.service %{buildroot}/%{_datadir}/dbus-1/system-services/fi.w1.wpa_supplicant1.service
 install -D -m 0644 %{name}/dbus/fi.epitest.hostap.WPASupplicant.service %{buildroot}/%{_datadir}/dbus-1/system-services/fi.epitest.hostap.WPASupplicant.service
@@ -154,14 +169,24 @@ rm -f  %{name}/doc/.cvsignore
 rm -rf %{name}/doc/docbook
 chmod -R 0644 %{name}/examples/*.py
 
+%if %{build_libeap}
 # HAAACK
 patch -p1 -b --suffix .wimax < %{PATCH100}
 pushd wpa_supplicant
   make clean
-  make -C ../src/eap_peer
+
+  CFLAGS="${CFLAGS:-%optflags} -fPIC -DPIC" ; export CFLAGS ;
+  CXXFLAGS="${CXXFLAGS:-%optflags} -fPIC -DPIC" ; export CXXFLAGS ;
+  LDFLAGS="${LDFLAGS:-%optflags} -Wl,-z,now" ; export LDFLAGS ;
+  # yes, BINDIR=_sbindir
+  BINDIR="%{_sbindir}" ; export BINDIR ;
+  LIBDIR="%{_libdir}" ; export LIBDIR ;
+
+  make V=1 -C ../src/eap_peer
   make DESTDIR=%{buildroot} LIB=%{_lib} -C ../src/eap_peer install
   sed -i -e 's|libdir=/usr/lib|libdir=%{_libdir}|g' %{buildroot}/%{_libdir}/pkgconfig/*.pc
 popd
+%endif
 
 %post
 if [ $1 -eq 1 ] ; then 
@@ -206,6 +231,7 @@ fi
 %{_sbindir}/wpa_passphrase
 %{_sbindir}/wpa_supplicant
 %{_sbindir}/wpa_cli
+%{_sbindir}/eapol_test
 %dir %{_localstatedir}/run/%{name}
 %dir %{_sysconfdir}/%{name}
 %{_mandir}/man8/*
@@ -216,6 +242,7 @@ fi
 %{_bindir}/wpa_gui
 %endif
 
+%if %{build_libeap}
 %files -n libeap
 %{_libdir}/libeap.so.0*
 
@@ -227,10 +254,62 @@ fi
 %post -n libeap -p /sbin/ldconfig
 
 %postun -n libeap -p /sbin/ldconfig
+%endif
 
 %changelog
-* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 1:1.0-0.4
-- 为 Magic 3.0 重建
+* Sun Jun 08 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1:2.0-9
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Mon Nov 18 2013 Dan Williams <dcbw@redhat.com> - 1:2.0-8
+- Don't disconnect when PMKSA cache gets too large (rh #1016707)
+
+* Sun Aug 04 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1:2.0-7
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Wed Jul 10 2013 Dan Williams <dcbw@redhat.com> - 1:2.0-6
+- Enable full RELRO/PIE/PIC for wpa_supplicant and libeap
+- Fix changelog dates
+
+* Wed Jul 10 2013 Dan Williams <dcbw@redhat.com> - 1:2.0-5
+- Build and package eapol_test (rh #638218)
+
+* Wed Jul 10 2013 Dan Williams <dcbw@redhat.com> - 1:2.0-4
+- Disable WiMAX libeap hack for RHEL
+
+* Wed May 15 2013 Dan Williams <dcbw@redhat.com> - 1:2.0-3
+- Enable HT (802.11n) for AP mode
+
+* Tue May  7 2013 Dan Williams <dcbw@redhat.com> - 1:2.0-2
+- Use hardened build macros and ensure they apply to libeap too
+
+* Mon May  6 2013 Dan Williams <dcbw@redhat.com> - 1:2.0-1
+- Update to 2.0
+- Be less aggressive when roaming due to signal strength changes (rh #837402)
+
+* Mon Apr  1 2013 Dan Williams <dcbw@redhat.com> - 1:1.1-1
+- Update to 1.1
+- Be less aggressive when roaming due to signal strength changes
+
+* Fri Feb 15 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1:1.0-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
+
+* Sun Jan 20 2013 Dan Horák <dan@danny.cz> - 1:1.0-3
+- rebuilt again for fixed soname in libnl3
+
+* Sun Jan 20 2013 Kalev Lember <kalevlember@gmail.com> - 1:1.0-2
+- Rebuilt for libnl3
+
+* Wed Aug 29 2012 Dan Williams <dcbw@redhat.com> - 1:1.0-1
+- Enable lightweight AP mode support
+- Enable P2P (WiFi Direct) support
+- Enable RSN IBSS/AdHoc support
+
+* Sun Jul 22 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1:1.0-0.5
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Tue May  1 2012 Dan Williams <dcbw@redhat.com> - 1:1.0-0.4
+- Update to wpa_supplicant 1.0-rc3
+- Fix systemd target dependencies (rh #815091)
 
 * Fri Mar  2 2012 Dan Williams <dcbw@redhat.com> - 1:1.0-0.3
 - Update to latest 1.0 git snapshot
@@ -334,7 +413,7 @@ fi
 * Sun Jan 18 2009 Tomas Mraz <tmraz@redhat.com> - 1:0.6.4-3
 - rebuild with new openssl
 
-* Mon Oct 15 2008 Dan Williams <dcbw@redhat.com> - 1:0.6.4-2
+* Wed Oct 15 2008 Dan Williams <dcbw@redhat.com> - 1:0.6.4-2
 - Handle encryption keys correctly when switching 802.11 modes (rh #459399)
 - Better scanning behavior on resume from suspend/hibernate
 - Better interaction with newer kernels and drivers
@@ -457,7 +536,7 @@ fi
 * Thu Mar 15 2007 Dan Williams <dcbw@redhat.com> - 0.5.7-1
 - Update to 0.5.7 stable release
 
-* Mon Oct 27 2006 Dan Williams <dcbw@redhat.com> - 0.4.9-1
+* Fri Oct 27 2006 Dan Williams <dcbw@redhat.com> - 0.4.9-1
 - Update to 0.4.9 for WE-21 fixes, remove upstreamed patches
 - Don't package doc/ because they aren't actually wpa_supplicant user documentation,
     and becuase it pulls in perl
