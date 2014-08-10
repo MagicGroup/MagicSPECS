@@ -7,11 +7,9 @@
 
 %global upstream_name Sphinx
 
-%define _with_doc 1
-
 Name:       python-sphinx
-Version:    1.1.3
-Release:    7%{?dist}
+Version:    1.2.2
+Release:    5%{?dist}
 Summary:    Python documentation generator
 
 Group:      Development/Tools
@@ -23,34 +21,34 @@ Group:      Development/Tools
 License:    BSD and Public Domain and Python and (MIT or GPLv2)
 URL:        http://sphinx.pocoo.org/
 Source0:    http://pypi.python.org/packages/source/S/%{upstream_name}/%{upstream_name}-%{version}.tar.gz
-# Sent upstream as a fix to work with the next version of docutils
-Patch0: sphinx-docutils-0.10.patch
+Patch0:	    Sphinx-1.2.1-mantarget.patch
 
 BuildArch:     noarch
 BuildRequires: python2-devel >= 2.4
 BuildRequires: python-setuptools
-%if 0%{?_with_doc}
 BuildRequires: python-docutils
 BuildRequires: python-jinja2
+BuildRequires: python-pygments
 BuildRequires: python-nose
-%endif
-# Test dependencies
-BuildRequires: texlive-latex
+#BuildRequires: texlive-latex
 
 %if 0%{?with_python3}
 BuildRequires: python3-devel
 BuildRequires: python3-setuptools
-%if 0%{?_with_doc}
 BuildRequires: python3-docutils
 BuildRequires: python3-jinja2
 BuildRequires: python3-pygments
 BuildRequires: python3-nose
-%endif
 %endif # with_python3
 
 Requires:      python-docutils
 Requires:      python-jinja2
 Requires:      python-pygments
+# for latex builder
+Requires:      texlive-framed
+Requires:      texlive-threeparttable
+Requires:      texlive-titlesec
+Requires:      texlive-wrapfig
 
 %description
 Sphinx is a tool that makes it easy to create intelligent and
@@ -88,6 +86,11 @@ Group:      Development/Tools
 Requires:      python3-docutils
 Requires:      python3-jinja2
 Requires:      python3-pygments
+# for latex builder
+Requires:      texlive-framed
+Requires:      texlive-threeparttable
+Requires:      texlive-titlesec
+Requires:      texlive-wrapfig
 
 %description -n python3-sphinx
 Sphinx is a tool that makes it easy to create intelligent and
@@ -139,9 +142,8 @@ This package contains documentation in reST and HTML formats.
 
 %prep
 %setup -q -n %{upstream_name}-%{version}%{?prerel}
+%patch0 -p1 -b .mantarget
 sed '1d' -i sphinx/pycode/pgen2/token.py
-
-%patch0 -p1
 
 %if 0%{?with_python3}
 rm -rf %{py3dir}
@@ -157,14 +159,13 @@ pushd %{py3dir}
 popd
 %endif # with_python3
 
-%if 0%{?_with_doc}
 pushd doc
 make html
 make man
 rm -rf _build/html/.buildinfo
 mv _build/html ..
 popd
-%endif
+
 
 %install
 rm -rf %{buildroot}
@@ -178,13 +179,13 @@ pushd %{py3dir}
 for f in %{buildroot}%{_bindir}/sphinx-*;
 do
     mv $f $f-%{python3_version}
+    ln -s %{_bindir}/`basename $f-%{python3_version}` $f-3
 done
 popd
 %endif # with_python3
 
 %{__python} setup.py install --skip-build --root %{buildroot}
 
-%if 0%{?_with_doc}
 pushd doc
 # Deliver man pages
 install -d %{buildroot}%{_mandir}/man1
@@ -201,13 +202,12 @@ popd
 rm -rf doc/_build
 sed -i 's|python ../sphinx-build.py|/usr/bin/sphinx-build|' doc/Makefile
 mv doc reST
-%endif
 
 # Move language files to /usr/share;
 # patch to support this incorporated in 0.6.6
 pushd %{buildroot}%{python_sitelib}
 
-for lang in `find sphinx/locale -maxdepth 1 -mindepth 1 -type d -printf "%f "`;
+for lang in `find sphinx/locale -maxdepth 1 -mindepth 1 -type d -not -path '*/\.*' -printf "%f "`;
 do
   install -d %{buildroot}%{_datadir}/sphinx/locale/$lang
   install -d %{buildroot}%{_datadir}/locale/$lang/LC_MESSAGES
@@ -218,7 +218,6 @@ do
   rm -rf sphinx/locale/$lang
 done
 popd
-magic_rpm_clean.sh
 %find_lang sphinx
 
 # Language files; Since these are javascript, it's not immediately obvious to
@@ -232,51 +231,67 @@ magic_rpm_clean.sh
 make test
 %if 0%{?with_python3}
 pushd %{py3dir}
-make test
+PYTHON=python3 make test
 popd
 %endif # with_python3
 
 
 %files -f sphinx.lang
-%defattr(-,root,root,-)
-%doc AUTHORS CHANGES EXAMPLES LICENSE README TODO
+%doc AUTHORS CHANGES EXAMPLES LICENSE README.rst TODO
+%exclude %{_bindir}/sphinx-*-3
 %exclude %{_bindir}/sphinx-*-%{python3_version}
 %{_bindir}/sphinx-*
 %{python_sitelib}/*
 %dir %{_datadir}/sphinx/
 %dir %{_datadir}/sphinx/locale
 %dir %{_datadir}/sphinx/locale/*
-%if 0%{?_with_doc}
 %exclude %{_mandir}/man1/sphinx-*-%{python3_version}.1*
 %{_mandir}/man1/*
-%endif
 
 %if 0%{?with_python3}
 %files -n python3-sphinx
-%doc AUTHORS CHANGES EXAMPLES LICENSE README TODO
+%doc AUTHORS CHANGES EXAMPLES LICENSE README.rst TODO
+%{_bindir}/sphinx-*-3
 %{_bindir}/sphinx-*-%{python3_version}
 %{python3_sitelib}/*
 %dir %{_datadir}/sphinx/
 %dir %{_datadir}/sphinx/locale
 %dir %{_datadir}/sphinx/locale/*
-%if 0%{?_with_doc}
 %{_mandir}/man1/sphinx-*-%{python3_version}.1*
-%endif
 %endif # with_python3
 
-%if 0%{?_with_doc}
 %files doc
-%defattr(-,root,root,-)
 %doc html reST
-%endif
 
 
 %changelog
-* Tue Jun 17 2014 Liu Di <liudidi@gmail.com> - 1.1.3-7
-- 为 Magic 3.0 重建
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.2.2-5
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 
-* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 1.1.3-6
-- 为 Magic 3.0 重建
+* Tue May 27 2014 Bohuslav Kabrda <bkabrda@redhat.com> - 1.2.2-4
+- Don't own the -3 scripts by python 2 package
+
+* Thu May 22 2014 Bohuslav Kabrda <bkabrda@redhat.com> - 1.2.2-3
+- Add sphinx-*-3 links to scripts
+Resolves: #1098109
+
+* Fri May  9 2014 Orion Poplawski <orion@cora.nwra.com> - 1.2.2-2
+- Rebuild for Python 3.4
+
+* Fri May  9 2014 Orion Poplawski <orion@cora.nwra.com> - 1.2.2-1
+- Update to 1.2.2
+
+* Thu Feb 13 2014 Michel Salim <salimma@fedoraproject.org> - 1.2.1-1
+- Update to 1.2.1
+
+* Sun Aug 04 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.1.3-8
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Sat Mar  9 2013 Michel Salim <salimma@fedoraproject.org> - 1.1.3-7
+- Fix inheritance_diagram quoting bug, exposed by the newer, stricter dot
+
+* Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.1.3-6
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
 
 * Tue Aug 21 2012 Toshio Kuratomi <toshio@fedoraproject.org> - 1.1.3-5
 - Fix for use of sphinx's manpage writer with docutils-0.10
