@@ -1,0 +1,24 @@
+diff -upr gtk-smooth-engine-2.14.3+deb5-orig/autogen.sh gtk-smooth-engine-2.14.3+deb5/autogen.sh
+--- gtk-smooth-engine-2.14.3+deb5-orig/autogen.sh	2008-11-13 14:53:04.000000000 +0100
++++ gtk-smooth-engine-2.14.3+deb5/autogen.sh	2014-06-08 10:33:13.578140107 +0200
+@@ -16,7 +16,19 @@ cd $srcdir
+ 	DIE=1
+ }
+ 
+-if automake-1.10 --version < /dev/null > /dev/null 2>&1 ; then
++if automake-1.14 --version < /dev/null > /dev/null 2>&1 ; then
++    AUTOMAKE=automake-1.14
++    ACLOCAL=aclocal-1.14
++elif automake-1.13 --version < /dev/null > /dev/null 2>&1 ; then
++    AUTOMAKE=automake-1.13
++    ACLOCAL=aclocal-1.13
++elif automake-1.12 --version < /dev/null > /dev/null 2>&1 ; then
++    AUTOMAKE=automake-1.12
++    ACLOCAL=aclocal-1.12
++elif automake-1.11 --version < /dev/null > /dev/null 2>&1 ; then
++    AUTOMAKE=automake-1.11
++    ACLOCAL=aclocal-1.11
++elif automake-1.10 --version < /dev/null > /dev/null 2>&1 ; then
+     AUTOMAKE=automake-1.10
+     ACLOCAL=aclocal-1.10
+ elif automake-1.9 --version < /dev/null > /dev/null 2>&1 ; then
