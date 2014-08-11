@@ -1,6 +1,6 @@
 Name:           maven
-Version:        3.2.1
-Release:        12%{?dist}
+Version:        3.2.2
+Release:        1%{?dist}
 Summary:        Java project management and project comprehension tool
 License:        ASL 2.0
 URL:            http://maven.apache.org/
@@ -18,10 +18,6 @@ Patch0002:      0002-Migrate-from-easymock-1-to-easymock-3.patch
 Patch0003:      0003-Update-Aether-to-0.9.0.M3.patch
 # Forwarded upstream (MNG-5534)
 Patch0004:      0004-Update-to-Sisu-0.1.0-and-Guice-3.1.6.patch
-# Forwarded upstream (MNG-5591, accepted)
-Patch0005:      0005-MNG-5591-use-reactor-hint-for-reactor-WorkspaceReade.patch
-# Backported from upstream commit bef7fac
-Patch0006:      0006-MNG-5613-fix-NullPointerException-when-error-occur-d.patch
 
 BuildArch:      noarch
 
@@ -153,8 +149,6 @@ Group:          Documentation
 %patch0002 -p1
 %patch0003 -p1
 %patch0004 -p1
-%patch0005 -p1
-%patch0006 -p1
 
 # not really used during build, but a precaution
 rm maven-ant-tasks-*.jar
@@ -172,11 +166,10 @@ sed -i 's:\r::' apache-maven/src/conf/settings.xml
 sed -i -e s:'-classpath "${M2_HOME}"/boot/plexus-classworlds-\*.jar':'-classpath "${M2_HOME}"/boot/plexus-classworlds.jar':g \
         apache-maven/src/bin/mvn*
 
-# Disable animal-sniffer on RHEL
-# Temporarily disabled for fedora to solve asm & asm4 clashing on classpath
-#if [ %{?rhel} ]; then
+# Disable QA plugins which are not useful for us
 %pom_remove_plugin :animal-sniffer-maven-plugin
-#fi
+%pom_remove_plugin :maven-enforcer-plugin
+%pom_remove_plugin :apache-rat-plugin
 
 # logback is not really needed by maven in typical use cases, so set
 # its scope to provided
@@ -281,11 +274,11 @@ ln -sf $(build-classpath plexus/classworlds) \
 
 
 %changelog
-* Mon Jun 09 2014 Liu Di <liudidi@gmail.com> - 3.2.1-12
-- 为 Magic 3.0 重建
+* Wed Jun 18 2014 Mikolaj Izdebski <mizdebsk@redhat.com> - 3.2.2-1
+- Update to upstream version 3.2.2
 
-* Mon Jun 09 2014 Liu Di <liudidi@gmail.com> - 3.2.1-11
-- 为 Magic 3.0 重建
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.2.1-11
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 
 * Thu Jun  5 2014 Mikolaj Izdebski <mizdebsk@redhat.com> - 3.2.1-10
 - Fix artifact pattern in %%mvn_file invocation
