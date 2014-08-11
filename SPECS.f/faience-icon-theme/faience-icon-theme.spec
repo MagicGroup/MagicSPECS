@@ -2,9 +2,11 @@
 
 Name:           faience-icon-theme
 Version:        0.5
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Faience icon theme
+Summary(zh_CN.UTF-8): Faience 图标主题
 Group:          User Interface/Desktops
+Group(zh_CN.UTF-8): 用户界面/桌面
 
 License:        GPLv3
 URL:            https://code.google.com/p/faience-theme
@@ -25,6 +27,8 @@ The faience icon theme include Faience, Faience-Azur,
 Faience-Claire and Faience-Ocre theme.
 It is cleaned from any nonfree icons.
 
+%description -l zh_CN.UTF-8
+Faience 图标主题。
 
 %prep
 %setup -q -n %{name}_%{version}
@@ -51,7 +55,7 @@ find -type f -name "icon-theme.cache" -delete -print
 install -dpm 755 $RPM_BUILD_ROOT%{_datadir}/icons
 
 cp -ar %{themes} $RPM_BUILD_ROOT%{_datadir}/icons
-
+magic_rpm_clean.sh
 
 %post
 for theme in %{themes}
@@ -86,6 +90,9 @@ done
 
 
 %changelog
+* Mon Aug 11 2014 Liu Di <liudidi@gmail.com> - 0.5-3
+- 为 Magic 3.0 重建
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.5-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

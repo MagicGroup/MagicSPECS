@@ -5,7 +5,7 @@
 %global geocode_glib_version 3.10.0
 
 Name:           gnome-settings-daemon
-Version:	3.12.0
+Version:	3.13.4
 Release:        2%{?dist}
 Summary:        The daemon sharing settings from GNOME to GTK+/KDE applications
 Summary(zh_CN.UTF-8): GNOME 和 GTK+/KDE 程序共享设置的服务
@@ -65,6 +65,8 @@ Requires: gnome-desktop3%{?_isa} >= %{gnome_desktop_version}
 Requires: gsettings-desktop-schemas%{?_isa} >= %{gsettings_desktop_schemas_version}
 Requires: libgweather%{?_isa} >= %{libgweather_version}
 
+Obsoletes: %{name}-updates < 3.13.1
+
 %description
 A daemon to share settings from GNOME to other applications. It also
 handles global keybindings, as well as a number of desktop-wide settings.
@@ -85,19 +87,6 @@ developing applications that use %{name}.
 
 %description devel -l zh_CN.UTF-8
 %{name} 的开发包。
-
-%package	updates
-Summary:        updates plugin for  %{name} 
-Summary(zh_CN.UTF-8): %{name} 更新插件
-Group:          Development/Libraries
-Group(zh_CN.UTF-8): 开发/库
-Requires:       %{name} = %{version}-%{release}
-
-%description	updates
-The %{name}-updates package contains the updates plugin for %{name} 
-
-%description updates -l zh_CN.UTF-8
-%{name} 的更新插件。
 
 %prep
 %setup -q
@@ -135,14 +124,6 @@ fi
 
 %posttrans
 gtk-update-icon-cache %{_datadir}/icons/hicolor >&/dev/null || :
-glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
-
-%postun	updates
-if [ $1 -eq 0 ]; then
-  glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
-fi
-
-%posttrans updates
 glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 
 %files -f %{name}.lang
@@ -230,6 +211,10 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 %{_libdir}/gnome-settings-daemon-3.0/libcursor.so
 %{_libdir}/gnome-settings-daemon-3.0/cursor.gnome-settings-plugin
 
+%{_libdir}/gnome-settings-daemon-3.0/libsharing.so
+%{_libdir}/gnome-settings-daemon-3.0/sharing.gnome-settings-plugin
+%{_datadir}/glib-2.0/schemas/org.gnome.settings-daemon.plugins.sharing.gschema.xml
+
 %{_libdir}/gnome-settings-daemon-3.0/libgsd.so
 
 %{_libexecdir}/gnome-settings-daemon
@@ -276,16 +261,14 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 %{_libexecdir}/gsd-test-screensaver-proxy
 %{_libexecdir}/gsd-test-smartcard
 %{_libexecdir}/gsd-test-sound
-%{_libexecdir}/gsd-test-updates
 %{_libexecdir}/gsd-test-xrandr
 %{_libexecdir}/gsd-test-xsettings
 
-%files updates
-%{_libdir}/gnome-settings-daemon-3.0/updates.gnome-settings-plugin
-%{_libdir}/gnome-settings-daemon-3.0/libupdates.so
-%{_datadir}/glib-2.0/schemas/org.gnome.settings-daemon.plugins.updates.gschema.xml
 
 %changelog
+* Sun Aug 10 2014 Liu Di <liudidi@gmail.com> - 3.13.4-2
+- 更新到 3.13.4
+
 * Wed Apr 09 2014 Liu Di <liudidi@gmail.com> - 3.12.0-2
 - 更新到 3.12.0
 

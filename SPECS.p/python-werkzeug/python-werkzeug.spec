@@ -8,7 +8,7 @@
 
 Name:           python-werkzeug
 Version:        0.9.6
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        The Swiss Army knife of Python web development 
 
 Group:          Development/Libraries
@@ -158,6 +158,9 @@ popd
 
 
 %changelog
+* Sun Aug 10 2014 Liu Di <liudidi@gmail.com> - 0.9.6-2
+- 为 Magic 3.0 重建
+
 * Fri Jul 18 2014 Haïkel Guémar <hguemar@fedoraproject.org> - 0.9.6-1
 - Upstream 0.9.6
 - Fixes RHBZ #1105819

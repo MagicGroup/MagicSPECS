@@ -1,9 +1,11 @@
 Name:		jansson
 Version:	2.6
-Release:	4%{?dist}
+Release:	5%{?dist}
 Summary:	C library for encoding, decoding and manipulating JSON data
+Summary(zh_CN.UTF-8): 编码、解码和处理 JSON 数据的 C 库
 
 Group:		System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 License:	MIT
 URL:		http://www.digip.org/jansson/
 Source0:	http://www.digip.org/jansson/releases/jansson-%{version}.tar.bz2
@@ -13,20 +15,32 @@ BuildRequires:	python-sphinx
 %description
 Small library for parsing and writing JSON documents.
 
+%description -l zh_CN.UTF-8
+解析和写入 JSON 文档的小库。
+
 %package devel
 Summary: Header files for jansson
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: %{name}%{?_isa} = %{version}-%{release}
 
 %description devel
 Header files for developing applications making use of jansson.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
 %package devel-doc
 Summary: Development documentation for jansson
+Summary(zh_CN.UTF-8): %{name} 的开发文档
 BuildArch: noarch
 
 %description devel-doc
 Development documentation for jansson.
+
+%description devel-doc -l zh_CN.UTF-8
+%{name} 的开发文档。
 
 %prep
 %setup -q
@@ -42,6 +56,7 @@ make check
 %install
 make install INSTALL="install -p" DESTDIR="$RPM_BUILD_ROOT"
 rm "$RPM_BUILD_ROOT%{_libdir}"/*.la
+magic_rpm_clean.sh
 
 %post -p /sbin/ldconfig
 
@@ -60,6 +75,9 @@ rm "$RPM_BUILD_ROOT%{_libdir}"/*.la
 %doc doc/_build/html/*
 
 %changelog
+* Sun Aug 10 2014 Liu Di <liudidi@gmail.com> - 2.6-5
+- 为 Magic 3.0 重建
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.6-4
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

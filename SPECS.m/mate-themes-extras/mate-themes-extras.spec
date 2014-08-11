@@ -1,7 +1,8 @@
 Summary: 	Extra gtk-2/3 themes for gtk based desktops
+Summary(zh_CN.UTF-8): 基于 gtk 的桌面的额外 gtk-2/3 主题
 Name: 		mate-themes-extras
-Version: 	1.9.0
-Release: 	2%{?dist}
+Version: 1.9.1
+Release: 1%{?dist}
 
 # upstream is located at github, but links from tag releases doesn't match copied link in
 # web-browser, in result fedora-rewiew-tool will fail.
@@ -42,6 +43,9 @@ window borders, cursors, etc.
 This package is optimized for GTK3-3.12.
 Theme list: Blue-Submarine, DeLorean-Dark, GnomishBeige,
 Green-Submarine, Smoothly, Smoothly-Black.
+
+%description -l zh_CN.UTF-8
+基于 gtk 的桌面的额外 gtk-2/3 主题。
 
 %prep
 %setup -q
@@ -86,7 +90,7 @@ hardlink -c -v $RPM_BUILD_ROOT%{_datadir}/themes/Smoothly-Black
 #hardlink -c -v $RPM_BUILD_ROOT%{_datadir}/themes/Zukitwo-Noble
 #hardlink -c -v $RPM_BUILD_ROOT%{_datadir}/themes/Zukitwo-Wine
 #hardlink -c -v $RPM_BUILD_ROOT%{_datadir}/themes/Zukitwo-Wise
-
+magic_rpm_clean.sh
 
 %files
 %doc AUTHORS COPYING README ChangeLog
@@ -112,6 +116,9 @@ hardlink -c -v $RPM_BUILD_ROOT%{_datadir}/themes/Smoothly-Black
 
 
 %changelog
+* Mon Aug 11 2014 Liu Di <liudidi@gmail.com> - 1.9.1-1
+- 更新到 1.9.1
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.9.0-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

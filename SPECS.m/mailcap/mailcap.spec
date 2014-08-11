@@ -1,9 +1,11 @@
 Name:           mailcap
-Version:        2.1.38
-Release:        2%{?dist}
+Version: 2.1.42
+Release: 1%{?dist}
 Summary:        Helper application and MIME type associations for file types
+Summary(zh_CN.UTF-8): 文件类型关联的帮助程序
 
 Group:          System Environment/Base
+Group(zh_CN.UTF-8): 系统环境/基本
 License:        Public Domain and MIT
 URL:            http://git.fedorahosted.org/git/mailcap.git
 Source0:        https://fedorahosted.org/released/mailcap/%{name}-%{version}.tar.xz
@@ -23,6 +25,9 @@ list of MIME types and their filename "extension" associations, used
 by several applications e.g. to determine MIME types for filenames.
 
 
+%description -l zh_CN.UTF-8
+文件类型关联的帮助程序。
+
 %prep
 %setup -q
 
@@ -33,7 +38,7 @@ by several applications e.g. to determine MIME types for filenames.
 %install
 rm -rf $RPM_BUILD_ROOT
 make install DESTDIR=$RPM_BUILD_ROOT sysconfdir=%{_sysconfdir} mandir=%{_mandir}
-
+magic_rpm_clean.sh
 
 %check
 make check
@@ -52,6 +57,12 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sat Aug 09 2014 Liu Di <liudidi@gmail.com> - 2.1.42-1
+- 更新到 2.1.42
+
+* Sat Aug 09 2014 Liu Di <liudidi@gmail.com> - 2.1.38-2
+- 更新到 2.1.42
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 2.1.38-2
 - 为 Magic 3.0 重建
 

@@ -1,7 +1,8 @@
 Name:           dmz-cursor-themes
 Version:        0.4
-Release:        9%{?dist}
+Release:        10%{?dist}
 Summary:        X cursors themes
+Summary(zh_CN.UTF-8): X 光标主题
 
 Group:          User Interface/Desktops
 License:        CC-BY-SA
@@ -23,6 +24,9 @@ BuildArch:      noarch
 %description
 An X cursors theme by Jakub Steiner used by OpenSUSE.
 
+%description -l zh_CN.UTF-8
+OpenSUSE 使用的 X 光标主题。
+
 %prep
 %setup -q -c dmz-cursor-themes-%{version}
 
@@ -35,6 +39,7 @@ mkdir -p %{buildroot}/%{_datadir}/icons/dmz
 cp -pr dmz/xcursors %{buildroot}/%{_datadir}/icons/dmz/cursors
 mkdir -p %{buildroot}/%{_datadir}/icons/dmz-aa
 cp -pr dmz-aa/xcursors %{buildroot}/%{_datadir}/icons/dmz-aa/cursors
+magic_rpm_clean.sh
 
 %clean
 rm -rf %{buildroot}
@@ -46,6 +51,9 @@ rm -rf %{buildroot}
 %{_datadir}/icons/dmz-aa/
 
 %changelog
+* Mon Aug 11 2014 Liu Di <liudidi@gmail.com> - 0.4-10
+- 为 Magic 3.0 重建
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.4-9
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

@@ -10,10 +10,12 @@
 
 Name:           librepo
 Version:        1.7.5
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Repodata downloading library
-
+Summary(zh_CN.UTF-8): Repo 数据下载库
+ 
 Group:          System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 License:        LGPLv2+
 URL:            https://github.com/Tojaj/librepo
 # Use the following commands to generate the tarball:
@@ -43,17 +45,27 @@ BuildRequires:  openssl-devel
 A library providing C and Python (libcURL like) API to downloading repository
 metadata.
 
+%description -l zh_CN.UTF-8
+Repo 数据下载库。
+
 %package devel
 Summary:        Repodata downloading library
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       %{name}%{?_isa} = %{version}-%{release}
 
 %description devel
 Development files for librepo.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
 %package -n python-librepo
 Summary:        Python bindings for the librepo library
+Summary(zh_CN.UTF-8): %{name} 的 Python 绑定
 Group:          Development/Languages
+Group(zh_CN.UTF-8): 开发/语言
 BuildRequires:  pygpgme
 BuildRequires:  python2-devel
 BuildRequires:  python-flask
@@ -64,10 +76,15 @@ Requires:       %{name}%{?_isa} = %{version}-%{release}
 %description -n python-librepo
 Python bindings for the librepo library.
 
+%description -n python-librepo -l zh_CN.UTF-8
+%{name} 的 Python 绑定。
+
 %if %{with python3}
 %package -n python3-librepo
 Summary:        Python 3 bindings for the librepo library
+Summary(zh_CN.UTF-8): %{name} 的 Python3 绑定
 Group:          Development/Languages
+Group(zh_CN.UTF-8): 开发/语言
 BuildRequires:  python3-pygpgme
 BuildRequires:  python3-devel
 BuildRequires:  python3-flask
@@ -77,6 +94,9 @@ Requires:       %{name}%{?_isa} = %{version}-%{release}
 
 %description -n python3-librepo
 Python 3 bindings for the librepo library.
+
+%description -n python3-librepo -l zh_CN.UTF-8
+%{name} 的 Python3 绑定。
 %endif
 
 %prep
@@ -116,6 +136,7 @@ pushd py3
 make install DESTDIR=$RPM_BUILD_ROOT
 popd
 %endif
+magic_rpm_clean.sh
 
 %post -p /sbin/ldconfig
 
@@ -139,6 +160,9 @@ popd
 %endif
 
 %changelog
+* Sun Aug 10 2014 Liu Di <liudidi@gmail.com> - 1.7.5-2
+- 为 Magic 3.0 重建
+
 * Tue Jul  8 2014 Tomas Mlcoch <tmlcoch at redhat.com> - 1.7.5-1
 - accepts unicoded destination as UTF-8 string (Related: RhBug:1108908)
 - downloader: Do not print debug message about preparing internal mirror list

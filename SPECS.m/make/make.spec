@@ -1,11 +1,13 @@
 # -*- coding: utf-8 -*-
 Summary: A GNU tool which simplifies the build process for users
+Summary(zh_CN.UTF-8): 简化用户构建过程的 GNU 工具
 Name: make
 Epoch: 1
 Version: 4.0
-Release: 2%{?dist}
+Release: 3%{?dist}
 License: GPLv3+
 Group: Development/Tools
+Group(zh_CN.UTF-8): 开发/工具
 URL: http://www.gnu.org/software/make/
 Source: ftp://ftp.gnu.org/gnu/make/make-%{version}.tar.bz2
 
@@ -32,12 +34,20 @@ knowledge about the details of the build process. The details about
 how the program should be built are provided for make in the program's
 makefile.
 
+%description -l zh_CN.UTF-8
+简化用户构建过程的 GNU 工具。
+
 %package devel
 Summary: Header file for externally visible definitions
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 
 %description devel
 The make-devel package contains gnumake.h.
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -60,7 +70,7 @@ make DESTDIR=$RPM_BUILD_ROOT install
 ln -sf make ${RPM_BUILD_ROOT}/%{_bindir}/gmake
 ln -sf make.1 ${RPM_BUILD_ROOT}/%{_mandir}/man1/gmake.1
 rm -f ${RPM_BUILD_ROOT}/%{_infodir}/dir
-
+magic_rpm_clean.sh
 %find_lang %name
 
 %check
@@ -96,6 +106,9 @@ fi
 %{_includedir}/gnumake.h
 
 %changelog
+* Sat Aug 09 2014 Liu Di <liudidi@gmail.com> - 1:4.0-3
+- 为 Magic 3.0 重建
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1:4.0-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

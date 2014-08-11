@@ -1,18 +1,15 @@
 Summary: The GNU macro processor
+Summary(zh_CN.UTF-8): GNU 宏处理器
 Name: m4
-Version: 1.4.16
-Release: 6%{?dist}
+Version: 1.4.17
+Release: 1%{?dist}
 License: GPLv3+
 Group: Applications/Text
+Group(zh_CN.UTF-8): 应用程序/文本
 Source0: http://ftp.gnu.org/gnu/m4/m4-%{version}.tar.xz
 Source1: http://ftp.gnu.org/gnu/m4/m4-%{version}.tar.xz.sig
 URL: http://www.gnu.org/software/m4/
-# Patch0: Temporary fix to avoid fails, already fixed in gnulib, this patch
-#         should be removed after updating m4 to newer gnulib
-Patch0: m4-1.4.16-readlink-einval.patch
-# Patch1: Temporary fix to avoid build fails, this patch
-#         should be removed after updateing m4 to newer gnulib
-Patch1: m4-1.4.16-gnulib-gets.patch
+Patch0: m4-1.4.17-gnulib-ppc64le.patch
 Requires(post): /sbin/install-info
 Requires(preun): /sbin/install-info
 # Gnulib bundled - the library has been granted an exception, see https://fedorahosted.org/fpc/ticket/174
@@ -29,10 +26,12 @@ not for running configure scripts.
 
 Install m4 if you need a macro processor.
 
+%description -l zh_CN.UTF-8
+GNU 宏处理器。
+
 %prep
 %setup -q
-%patch0 -p1 -b .readlink-einval
-%patch1 -p1 -b .gnulib-gets
+%patch0 -p1 -b .gnulib
 chmod 644 COPYING
 
 %build
@@ -42,6 +41,7 @@ make %{?_smp_mflags}
 %install
 make install INSTALL="%{__install} -p" DESTDIR=$RPM_BUILD_ROOT
 rm -f $RPM_BUILD_ROOT%{_infodir}/dir
+magic_rpm_clean.sh
 
 %check
 make %{?_smp_mflags} check
@@ -65,6 +65,9 @@ if [ "$1" = 0 ]; then
 fi
 
 %changelog
+* Fri Aug 08 2014 Liu Di <liudidi@gmail.com> - 1.4.17-1
+- 更新到 1.4.17
+
 * Tue Aug 28 2012 Vitezslav Crhonek <vcrhonek@redhat.com> - 1.4.16-6
 - Fix issues found by fedora-review utility in the spec file
 

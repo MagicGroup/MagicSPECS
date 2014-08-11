@@ -1,5 +1,5 @@
 Name:           gnome-shell
-Version:	3.13.3
+Version:	3.13.4
 Release:        3%{?dist}
 Summary:        Window management and application launching for GNOME
 Summary(zh_CN.UTF-8): GNOME 的窗口管理器和程序载入器
@@ -152,6 +152,10 @@ glib-compile-schemas --allow-any-name %{_datadir}/glib-2.0/schemas &> /dev/null 
 %{_bindir}/gnome-shell-extension-tool
 %{_bindir}/gnome-shell-perf-tool
 %{_bindir}/gnome-shell-extension-prefs
+%{_libexecdir}/gnome-shell-portal-helper
+%{_datadir}/applications/gnome-shell-wayland.desktop
+%{_datadir}/applications/org.gnome.Shell.PortalHelper.desktop
+%{_datadir}/dbus-1/services/org.gnome.Shell.PortalHelper.service
 %{_datadir}/glib-2.0/schemas/*.xml
 %{_datadir}/applications/gnome-shell.desktop
 %{_datadir}/applications/gnome-shell-extension-prefs.desktop
@@ -180,6 +184,9 @@ glib-compile-schemas --allow-any-name %{_datadir}/glib-2.0/schemas &> /dev/null 
 %exclude %{_datadir}/gtk-doc
 
 %changelog
+* Sun Aug 10 2014 Liu Di <liudidi@gmail.com> - 3.13.4-3
+- 更新到 3.13.4
+
 * Wed Jul 16 2014 Liu Di <liudidi@gmail.com> - 3.13.3-3
 - 更新到 3.13.3
 

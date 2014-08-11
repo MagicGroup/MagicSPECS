@@ -1,13 +1,15 @@
 Name:           malaga-suomi-voikko
-Version:        1.10
-Release:        2%{?dist}
+Version: 1.16
+Release: 1%{?dist}
 Summary:        A description of Finnish morphology written in Malaga (Voikko edition)
+Summary(zh_CN.UTF-8): 用 Malaga 编写的芬兰语形态描述
 
 Group:          Applications/Text
+Group(zh_CN.UTF-8): 应用程序/文本
 License:        GPLv2+
 URL:            http://voikko.sourceforge.net/
 # The usual format of stable release source URLs
-Source0:        http://downloads.sourceforge.net/voikko/suomi-malaga-%{version}.tar.gz
+Source0:        http://www.puimula.org/voikko-sources/suomi-malaga/suomi-malaga-%{version}.tar.gz
 # The usual format of testing release source URLs
 #Source0:        http://www.puimula.org/htp/testing/suomi-malaga-%{version}rc3.tar.gz
 
@@ -20,6 +22,9 @@ BuildRequires:  malaga >= 7.8 python
 A description of Finnish morphology written in Malaga. This package is built
 to support the Voikko spellchecker/hyphenator, it doesn't support the Sukija
 text indexer.
+
+%description -l zh_CN.UTF-8
+用 Malaga 编写的芬兰语形态描述。
 
 %prep
 %setup -q -n suomi-malaga-%{version}
@@ -36,7 +41,7 @@ rm -rf $RPM_BUILD_ROOT
 # names (*_l vs *_b). This is the reason we use %%{_libdir} instead of
 # %%{_datadir} and won't noarch the package.
 make voikko-install DESTDIR=$RPM_BUILD_ROOT%{_libdir}/voikko
-
+magic_rpm_clean.sh
 
 %files
 %defattr(-,root,root,-)
@@ -45,6 +50,9 @@ make voikko-install DESTDIR=$RPM_BUILD_ROOT%{_libdir}/voikko
 
 
 %changelog
+* Sat Aug 09 2014 Liu Di <liudidi@gmail.com> - 1.16-1
+- 更新到 1.16
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 1.10-2
 - 为 Magic 3.0 重建
 

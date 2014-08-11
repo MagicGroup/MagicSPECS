@@ -3,9 +3,11 @@
 
 Name:		hawkey
 Version:	0.4.19
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:	Library providing simplified C and Python API to libsolv
+Summary(zh_CN.UTF-8): libsolv 的简单 C 和 Python API
 Group:		System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 License:	LGPLv2+
 URL:		https://github.com/akozumpl/hawkey
 # git clone https://github.com/akozumpl/hawkey.git && cd hawkey && package/archive
@@ -107,6 +109,9 @@ popd
 %exclude %{python3_sitearch}/hawkey/test/__pycache__
 
 %changelog
+* Sun Aug 10 2014 Liu Di <liudidi@gmail.com> - 0.4.19-2
+- 为 Magic 3.0 重建
+
 
 * Mon Jul 28 2014 Aleš Kozumplik <ales@redhat.com> - 0.4.19-1
 - packaging: bump the SONAME as there are dropped API calls. (Ales Kozumplik)

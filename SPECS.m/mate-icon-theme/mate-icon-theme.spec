@@ -2,9 +2,11 @@ Name:		mate-icon-theme
 Version:	1.4.0
 Release:	7%{?dist}
 Summary:	Icon theme for MATE Desktop
+Summary(zh_CN.UTF-8): MATE 桌面的图标主题
 License:	GPLv2+ and LGPLv2+
 URL:		http://mate-desktop.org
-Source0:	http://pub.mate-desktop.org/releases/1.4/%{name}-%{version}.tar.xz
+%define majorver %(echo %{version} | awk -F. '{print $1"."$2}')
+Source0:	http://pub.mate-desktop.org/releases/%{majorver}/%{name}-%{version}.tar.xz
 
 BuildArch:	noarch
 
@@ -16,11 +18,18 @@ Obsoletes: mate-icon-theme-legacy < %{version}-%{release}
 %description
 Icon theme for MATE Desktop
 
+%description -l zh_CN.UTF-8
+MATE 桌面的图标主题。
+
 %package devel
 Summary: Development files for mate-icon-theme
+Summary(zh_CN.UTF-8): %{name} 的开发包
 
 %description devel
 Development files for mate-icon-theme
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q

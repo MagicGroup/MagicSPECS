@@ -1,10 +1,12 @@
 Summary:        Terminal emulator for MATE
+Summary(zh_CN.UTF-8): MATE 的终端模拟器
 Name:           mate-terminal
 Version:        1.9.0
-Release:        1%{?dist}
+Release:        2%{?dist}
 License:        GPLv3+
 URL:            http://mate-desktop.org
-Source0:        http://pub.mate-desktop.org/releases/1.8/%{name}-%{version}.tar.xz
+%define majorver %(echo %{version} | awk -F. '{print $1"."$2}')
+Source0:        http://pub.mate-desktop.org/releases/%{majorver}/%{name}-%{version}.tar.xz
 
 #Default to black bg white fg, unlimited scrollback, turn off use theme default
 Patch0:        mate-terminal_better_defaults.patch
@@ -27,6 +29,9 @@ Mate-terminal is a terminal emulator for MATE. It supports translucent
 backgrounds, opening multiple terminals in a single window (tabs) and
 clickable URLs.
 
+%description -l zh_CN.UTF-8
+MATE 的终端模拟器。
+
 %prep
 %setup -q
 %patch0 -p1
@@ -46,7 +51,7 @@ desktop-file-install                                                    \
         --delete-original                                               \
         --dir=%{buildroot}%{_datadir}/applications                      \
 %{buildroot}%{_datadir}/applications/mate-terminal.desktop
-
+magic_rpm_clean.sh
 %find_lang %{name} --with-gnome --all-name
 
 
@@ -70,6 +75,9 @@ fi
 
 
 %changelog
+* Mon Aug 11 2014 Liu Di <liudidi@gmail.com> - 1.9.0-2
+- 为 Magic 3.0 重建
+
 * Sat Jul 12 2014 Wolfgang Ulbrich <chat-to-me@raveit.de> - 1.9.0-1
 - update to 1.9.0 release
 

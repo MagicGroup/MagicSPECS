@@ -5,6 +5,7 @@
 %global _hardened_build 1
 
 Summary: Mobile broadband modem management service
+Summary(zh_CN.UTF-8): 移动宽带调制解调器管理服务
 Name: ModemManager
 Version: 1.3.0
 Release: 1%{?dist}
@@ -14,6 +15,7 @@ Release: 1%{?dist}
 Source: %{name}-%{version}.git20140805.3dd6f931.tar.xz
 License: GPLv2+
 Group: System Environment/Base
+Group(zh_CN.UTF-8): 系统环境/基本
 
 URL: https://wiki.gnome.org/Projects/NetworkManager
 BuildRoot: %(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
@@ -38,9 +40,14 @@ Patch0: buildsys-hates-openpty.patch
 The ModemManager service manages WWAN modems and provides a consistent API for
 interacting with these devices to client applications.
 
+%description -l zh_CN.UTF-8
+移动宽带调制解调器管理服务。
+
 %package devel
 Summary: Libraries and headers for adding ModemManager support to applications
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: %{name}%{?_isa} = %{version}-%{release}
 Requires: pkgconfig
 
@@ -48,18 +55,28 @@ Requires: pkgconfig
 This package contains various headers for accessing some ModemManager functionality
 from applications.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
 %package glib
 Summary: Libraries for adding ModemManager support to applications that use glib.
+Summary(zh_CN.UTF-8): 在使用 glib 的程序添加 ModemManager 支持的库
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: glib2 >= %{glib2_version}
 
 %description glib
 This package contains the libraries that make it easier to use some ModemManager
 functionality from applications that use glib.
 
+%description glib -l zh_CN.UTF-8
+在使用 glib 的程序添加 ModemManager 支持的库。
+
 %package glib-devel
 Summary: Libraries and headers for adding ModemManager support to applications that use glib.
+Summary(zh_CN.UTF-8): %{name}-glib 的开发包
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: %{name}%{?_isa} = %{version}-%{release}
 Requires: %{name}-devel%{?_isa} = %{version}-%{release}
 Requires: %{name}-glib%{?_isa} = %{version}-%{release}
@@ -70,14 +87,22 @@ Requires: pkgconfig
 This package contains various headers for accessing some ModemManager functionality
 from glib applications.
 
+%description glib-devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
 %package vala
 Summary: Vala bindings for ModemManager
+Summary(zh_CN.UTF-8): %{name} 的 Vala
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: vala
 Requires: %{name}-glib%{?_isa} = %{version}-%{release}
 
 %description vala
 Vala bindings for ModemManager
+
+%description vala -l zh_CN.UTF-8
+%{name} 的 Vala。
 
 %prep
 %setup -q
@@ -108,6 +133,7 @@ make install DESTDIR=$RPM_BUILD_ROOT
 
 rm -f $RPM_BUILD_ROOT%{_libdir}/*.la
 rm -f $RPM_BUILD_ROOT%{_libdir}/%{name}/*.la
+magic_rpm_clean.sh
 
 %post
 touch --no-create %{_datadir}/icons/hicolor &>/dev/null || :
@@ -143,7 +169,7 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %{systemd_dir}/ModemManager.service
 %{_datadir}/icons/hicolor/22x22/apps/*.png
 %{_mandir}/man8/*
-%{_datadir}/locale/*/LC_MESSAGES/ModemManager.mo
+#{_datadir}/locale/*/LC_MESSAGES/ModemManager.mo
 
 %files devel
 %{_includedir}/ModemManager/*.h

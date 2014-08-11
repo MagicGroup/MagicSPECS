@@ -1,10 +1,12 @@
 Name:           mate-common
 Summary:        mate common build files
-Version:        1.8.0
-Release:        2%{?dist}
+Summary(zh_CN.UTF-8): MATE 的通用构建文件
+Version: 1.9.0
+Release: 1%{?dist}
 License:        GPLv3+
 URL:            http://mate-desktop.org
-Source0:        http://pub.mate-desktop.org/releases/1.6/mate-common-%{version}.tar.xz
+%define majorver %(echo %{version} | awk -F. '{print $1"."$2}')
+Source0:        http://pub.mate-desktop.org/releases/%{majorver}/mate-common-%{version}.tar.xz
 BuildArch:      noarch
 BuildRequires:  automake autoconf
 Requires:       automake 
@@ -20,6 +22,9 @@ Requires:       yelp-tools
 %description
 binaries for building all MATE desktop sub components
 
+%description -l zh_CN.UTF-8
+构建 MATE 桌面子组件的二进制文件。
+
 %prep
 %setup -q
 
@@ -31,7 +36,7 @@ make %{?_smp_mflags} V=1
 
 %install
 %{make_install}
-
+magic_rpm_clean.sh
 
 %files
 %{_bindir}/mate-*
@@ -40,6 +45,9 @@ make %{?_smp_mflags} V=1
 %{_mandir}/man1/*
 
 %changelog
+* Sat Aug 09 2014 Liu Di <liudidi@gmail.com> - 1.9.0-1
+- 更新到 1.9.0
+
 * Wed May 07 2014 Liu Di <liudidi@gmail.com> - 1.8.0-2
 - 为 Magic 3.0 重建
 

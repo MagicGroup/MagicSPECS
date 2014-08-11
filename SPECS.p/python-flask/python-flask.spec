@@ -9,7 +9,7 @@
 
 Name:           python-flask
 Version:        0.10.1
-Release:        4%{?dist}
+Release:        5%{?dist}
 Epoch:          1
 Summary:        A micro-framework for Python based on Werkzeug, Jinja 2 and good intentions
 
@@ -180,6 +180,9 @@ popd
 
 
 %changelog
+* Sun Aug 10 2014 Liu Di <liudidi@gmail.com> - 1:0.10.1-5
+- 为 Magic 3.0 重建
+
 * Tue May 13 2014 Bohuslav Kabrda <bkabrda@redhat.com> - 1:0.10.1-4
 - Rebuilt for https://fedoraproject.org/wiki/Changes/Python_3.4
 - Minor fix to rhel macro logic

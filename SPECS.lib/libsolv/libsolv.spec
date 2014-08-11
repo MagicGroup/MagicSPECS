@@ -7,7 +7,7 @@
 
 Name:		libsolv
 Version:	0.6.4
-Release:	1%{?dist}
+Release:	2%{?dist}
 License:	BSD
 Url:		https://github.com/openSUSE/libsolv
 # git clone https://github.com/openSUSE/libsolv.git
@@ -16,6 +16,7 @@ Source:		libsolv-%{gitrev}.tar.xz
 Patch0:		libsolv-rubyinclude.patch
 Group:		Development/Libraries
 Summary:	Package dependency solver
+Summary(zh_CN.UTF-8): 包依赖解决器
 BuildRequires:	cmake libdb-devel expat-devel rpm-devel zlib-devel
 BuildRequires:	swig perl perl-devel ruby ruby-devel python2-devel
 BuildRequires:  xz-devel
@@ -29,9 +30,14 @@ library is based on two major, but independent, blocks:
 - Using satisfiability, a well known and researched topic, for
   resolving package dependencies.
 
+%description -l zh_CN.UTF-8
+包依赖解决器。
+
 %package devel
 Summary:	A new approach to package dependency solving
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:		Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:	libsolv-tools%{?_isa} = %{version}-%{release}
 Requires:	libsolv%{?_isa} = %{version}-%{release}
 Requires:	rpm-devel%{?_isa}
@@ -39,6 +45,9 @@ Requires:	cmake
 
 %description devel
 Development files for libsolv,
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %package tools
 Summary:	A new approach to package dependency solving
@@ -97,6 +106,7 @@ make ARGS="-V" test
        -DENABLE_DEBIAN=1 \
        -DENABLE_ARCHREPO=1 \
        -DENABLE_LZMA_COMPRESSION=1 \
+       -DINSTALL_MANDIR=%{_mandir} \
        -DMULTI_SEMANTICS=1
 
 make %{?_smp_mflags}
@@ -104,6 +114,8 @@ make %{?_smp_mflags}
 %install
 make DESTDIR=$RPM_BUILD_ROOT install
 rm $RPM_BUILD_ROOT/usr/bin/testsolv
+mv %{buildroot}/usr/man %{buildroot}%{_datadir}/
+magic_rpm_clean.sh
 
 %post -p /sbin/ldconfig
 
@@ -153,6 +165,9 @@ rm $RPM_BUILD_ROOT/usr/bin/testsolv
 %{python_sitearch}/*
 
 %changelog
+* Sun Aug 10 2014 Liu Di <liudidi@gmail.com> - 0.6.4-2
+- 为 Magic 3.0 重建
+
 
 * Mon Jul 28 2014 Aleš Kozumplík <akozumpl@redhat.com> - 0.6.4-1
 - Rebase to upstream 5bd9589

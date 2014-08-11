@@ -1,6 +1,6 @@
 Name: libteam
 Version: 1.11
-Release: 1%{?dist}
+Release: 2%{?dist}
 Summary: Library for controlling team network device
 Group: System Environment/Libraries
 License: LGPLv2+
@@ -135,6 +135,9 @@ python ./setup.py install --root $RPM_BUILD_ROOT -O1
 %{python_sitearch}/*
 
 %changelog
+* Sun Aug 10 2014 Liu Di <liudidi@gmail.com> - 1.11-2
+- 为 Magic 3.0 重建
+
 * Thu Jun 26 2014 Jiri Pirko <jpirko@redhat.com> - 1.11-1
 - 1.11 release
 - teamd: add forgotten teamd_link_watch.h to noinst_HEADERS

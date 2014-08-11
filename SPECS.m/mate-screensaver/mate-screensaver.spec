@@ -2,7 +2,7 @@
 %global rel_build 1
 
 # This is needed, because src-url contains branched part of versioning-scheme.
-%global branch 1.9
+%global branch %(echo %{version} | awk -F. '{print $1"."$2}')
 
 # Settings used for build from snapshots.
 %{!?rel_build:%global commit d5b35083e4de1d7457ebd937172bb0054e1fa089}
@@ -13,10 +13,11 @@
 %{!?rel_build:%global git_tar %{name}-%{version}-%{git_ver}.tar.xz}
 
 Name:           mate-screensaver
-Version:        %{branch}.0
-Release:        2%{?dist}
+Version:        1.9.0
+Release:        3%{?dist}
 #Release:        0.1%{?git_rel}%{?dist}
 Summary:        MATE Screensaver
+Summary(zh_CN.UTF-8): MATE 屏幕保护
 License:        GPLv2+ and LGPLv2+
 URL:            http://pub.mate-desktop.org
 
@@ -29,15 +30,11 @@ URL:            http://pub.mate-desktop.org
 #https://github.com/mate-desktop/mate-screensaver/pull/51
 Patch0:         mate-screensaver_has-separator-deprecation.patch
 
-Requires:       redhat-menus
+Requires:       magic-menus
 Requires:       system-logos
 
 # switch to gnome-keyring > f19
-%if 0%{?fedora} > 19
 Requires:       gnome-keyring-pam
-%else
-Requires:       mate-keyring-pam
-%endif
 
 BuildRequires:  dbus-glib-devel
 BuildRequires:  desktop-file-utils
@@ -64,14 +61,19 @@ BuildRequires:  xmlto
 mate-screensaver is a screen saver and locker that aims to have
 simple, sane, secure defaults and be well integrated with the desktop.
 
+%description -l zh_CN.UTF-8
+MATE 的屏幕保护程序。
 
 %package devel
 Summary: Development files for mate-screensaver
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Requires: %{name}%{?_isa} = %{version}-%{release}
 
 %description devel
 Development files for mate-screensaver
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q%{!?rel_build:n %{name}-%{commit}}
@@ -116,7 +118,7 @@ rm -f %{buildroot}%{_datadir}/MateConf/gsettings/org.mate.screensaver.gschema.mi
 # fix versioned doc dir
 mkdir -p %{buildroot}%{_datadir}/doc/mate-screensaver
 mv %{buildroot}%{_datadir}/doc/mate-screensaver-%{version}/mate-screensaver.html %{buildroot}%{_datadir}/doc/mate-screensaver/mate-screensaver.html
-
+magic_rpm_clean.sh
 %find_lang %{name} --with-gnome --all-name
 
 %postun
@@ -153,6 +155,9 @@ fi
 
 
 %changelog
+* Mon Aug 11 2014 Liu Di <liudidi@gmail.com> - 1.9.0-3
+- 为 Magic 3.0 重建
+
 * Sun Jul 20 2014 Wolfgang Ulbrich <chat-to-me@raveit.de> - 1.9.0.2
 - fix 'has_separator'_deprecation
 

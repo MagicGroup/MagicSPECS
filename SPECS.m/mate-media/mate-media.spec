@@ -1,10 +1,12 @@
 Name:           mate-media
 Version:        1.8.0
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        MATE media programs
+Summary(zh_CN.UTF-8): MATE 媒体程序
 License:        GPLv2+ and LGPLv2+
 URL:            http://mate-desktop.org
-Source0:        http://pub.mate-desktop.org/releases/1.8/%{name}-%{version}.tar.xz
+%define majorver %(echo %{version} | awk -F. '{print $1"."$2}')
+Source0:        http://pub.mate-desktop.org/releases/%{majorver}/%{name}-%{version}.tar.xz
 
 BuildRequires:  desktop-file-utils
 BuildRequires:  gtk2-devel
@@ -19,6 +21,8 @@ BuildRequires:  unique-devel
 This package contains a few media utilities for the MATE desktop,
 including a volume control.
 
+%description -l zh_CN.UTF-8
+这个包包含了 MATE 桌面的几个媒体工具，比如音量控制。
 
 %prep
 %setup -q
@@ -41,7 +45,7 @@ desktop-file-install                                                    \
         --delete-original                                               \
         --dir=%{buildroot}%{_datadir}/applications                      \
 %{buildroot}%{_datadir}/applications/mate-volume-control.desktop
-
+magic_rpm_clean.sh
 %find_lang %{name} --with-gnome --all-name
 
 
@@ -62,6 +66,9 @@ desktop-file-install                                                    \
 
 
 %changelog
+* Mon Aug 11 2014 Liu Di <liudidi@gmail.com> - 1.8.0-3
+- 为 Magic 3.0 重建
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.8.0-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

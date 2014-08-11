@@ -1,52 +1,63 @@
 Name:       m17n-db
 Summary:    Multilingualization datafiles for m17n-lib
-Version:    1.6.3
-Release:    3%{?dist}
+Summary(zh_CN.UTF-8): m17n-lib 的多语言数据文件
+Version: 1.6.5
+Release: 1%{?dist}
 Group:      System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 License:    LGPLv2+
 URL:        http://www.m17n.org/m17n-lib/index.html
-Source0:    http://www.m17n.org/m17n-lib-download/%{name}-%{version}.tar.gz
+Source0:    http://download.savannah.gnu.org/releases/m17n/%{name}-%{version}.tar.gz
 BuildArch:  noarch
 BuildRequires: gettext
 
 # Fedora speicifc patches
-Patch1:     number_pad_itrans-222634.patch
-Patch2:     bn-itrans-t-182227.patch
-Patch4:     kn-itrans_key-summary_228806.patch
-Patch5:     ml-itrans-keysummary-435260.patch
-# Upstream patches
-Patch11:     si-wijesekera-altgr-key.patch
+Patch0:     %{name}-%{version}-bn-itrans-bug182227.patch
+Patch1:     %{name}-%{version}-kn-itrans_key-summary_bug228806.patch
+Patch2:     %{name}-%{version}-kn-inscript-ZWNJ-bug440007.patch
+Patch3:     %{name}-%{version}-number_pad_itrans-222634.patch
 
 %description
 This package contains multilingualization (m17n) datafiles for m17n-lib
 which describe input maps, encoding maps, OpenType font data and
 font layout text rendering for languages.
 
+%description -l zh_CN.UTF-8
+m17n-lib 的多语言数据文件。
+
 %package extras
 Summary:  Extra m17n-db files
+Summary(zh_CN.UTF-8): m17-db 的附加文件
 Group:    System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 Requires: %{name} = %{version}-%{release}
 
 %description extras
 m17n-db extra files for input maps that are less used.
 
+%description extras -l zh_CN.UTF-8
+m17-db 的附加文件。
+
 %package devel
 Summary:  Development files for m17n-db
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:    Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: %{name} = %{version}-%{release}
 
 %description devel
 m17n-db development files
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q 
 pushd MIM
+%patch0 -p1 -b .0~
 %patch1 -p1 -b .1~
 %patch2 -p1 -b .2~
-%patch4 -p0 -b .4~
-%patch5 -p0 -b .5~
-%patch11 -p0 -b .11~
+%patch3 -p2 -b .3~
 popd
 
 %build
@@ -57,33 +68,55 @@ make %{?_smp_mflags}
 make install DESTDIR=$RPM_BUILD_ROOT INSTALL="install -p"
 
 # don't ship unijoy map for now
-rm $RPM_BUILD_ROOT%{_datadir}/m17n/{bn-unijoy.mim,icons/bn-unijoy.png}
+rm -f $RPM_BUILD_ROOT%{_datadir}/m17n/{bn-unijoy.mim,icons/bn-unijoy.png}
 
 #removing ispell.mim for rh#587927
 rm $RPM_BUILD_ROOT%{_datadir}/m17n/ispell.mim
-
+magic_rpm_clean.sh
 # For installing the translation files
 %find_lang %name
 
 %files 
 %doc AUTHORS COPYING README
 %dir %{_datadir}/m17n
-%dir %{_datadir}/m17n/icons
 %{_datadir}/m17n/mdb.dir
 %{_datadir}/m17n/*.tbl
-%{_datadir}/m17n/*.mim
-%exclude %{_datadir}/m17n/zh-*.mim
-%exclude %{_datadir}/m17n/icons/zh*.png
-%exclude %{_datadir}/m17n/ja-*.mim
-%exclude %{_datadir}/m17n/icons/ja*.png
-%{_datadir}/m17n/icons/*.png
+%{_datadir}/m17n/scripts
 %{_datadir}/m17n/*.flt
+# keymaps
+%{_datadir}/m17n/a*.mim
+%{_datadir}/m17n/b*.mim
+%{_datadir}/m17n/c*.mim
+%{_datadir}/m17n/d*.mim
+%{_datadir}/m17n/e*.mim
+%{_datadir}/m17n/f*.mim
+%{_datadir}/m17n/g*.mim
+%{_datadir}/m17n/h*.mim
+%{_datadir}/m17n/i*.mim
+%{_datadir}/m17n/k*.mim
+%{_datadir}/m17n/l*.mim
+%{_datadir}/m17n/m*.mim
+%{_datadir}/m17n/n*.mim
+%{_datadir}/m17n/o*.mim
+%{_datadir}/m17n/p*.mim
+%{_datadir}/m17n/r*.mim
+%{_datadir}/m17n/s*.mim
+%{_datadir}/m17n/t*.mim
+%{_datadir}/m17n/u*.mim
+%{_datadir}/m17n/v*.mim
+%{_datadir}/m17n/y*.mim
+# icons for keymaps
+%{_datadir}/m17n/*.png
+%exclude %{_datadir}/m17n/zh-*.mim
+%exclude %{_datadir}/m17n/zh*.png
+%exclude %{_datadir}/m17n/ja-*.mim
+%exclude %{_datadir}/m17n/ja*.png
 
 %files extras -f %{name}.lang
 %{_datadir}/m17n/zh-*.mim
-%{_datadir}/m17n/icons/zh*.png
+%{_datadir}/m17n/zh*.png
 %{_datadir}/m17n/ja*.mim
-%{_datadir}/m17n/icons/ja*.png
+%{_datadir}/m17n/ja*.png
 %{_datadir}/m17n/*.fst
 %{_datadir}/m17n/*.map
 %{_datadir}/m17n/*.tab
@@ -95,6 +128,9 @@ rm $RPM_BUILD_ROOT%{_datadir}/m17n/ispell.mim
 %{_datadir}/pkgconfig/m17n-db.pc
 
 %changelog
+* Fri Aug 08 2014 Liu Di <liudidi@gmail.com> - 1.6.5-1
+- 更新到 1.6.5
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 1.6.3-3
 - 为 Magic 3.0 重建
 

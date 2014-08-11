@@ -1,11 +1,12 @@
 Name:           mate-settings-daemon
-Version:        1.8.0
-Release:        4%{?dist}
+Version: 1.9.1
+Release: 1%{?dist}
 Summary:        MATE Desktop settings daemon
+Summary(zh_CN.UTF-8): MATE 桌面的设置服务
 License:        GPLv2+
 URL:            http://mate-desktop.org
-
-Source0:        http://pub.mate-desktop.org/releases/1.8/%{name}-%{version}.tar.xz
+%define majorver %(echo %{version} | awk -F. '{print $1"."$2}')
+Source0:        http://pub.mate-desktop.org/releases/%{majorver}/%{name}-%{version}.tar.xz
 
 # To generate tarball
 # wget http://git.mate-desktop.org/%%{name}/snapshot/%%{name}-{_internal_version}.tar.xz -O %%{name}-%%{version}.git%%{_internal_version}.tar.xz
@@ -35,14 +36,21 @@ This package contains the daemon which is responsible for setting the
 various parameters of a MATE session and the applications that run
 under it.
 
+%description -l zh_CN.UTF-8
+MATE 桌面的设置服务。
+
 %package devel
 Summary:        Development files for mate-settings-daemon
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Requires:       %{name}%{?_isa} = %{version}-%{release}
 
 %description devel
 This package contains the daemon which is responsible for setting the
 various parameters of a MATE session and the applications that run
 under it.
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q 
@@ -68,7 +76,7 @@ find %{buildroot} -name '*.la' -exec rm -rf {} ';'
 rm -f %{buildroot}%{_datadir}/MateConf/gsettings/mate-settings-daemon.convert
 
 desktop-file-validate %{buildroot}%{_sysconfdir}/xdg/autostart/mate-settings-daemon.desktop
-
+magic_rpm_clean.sh
 %find_lang %{name} --with-gnome --all-name
 
 %post
@@ -111,6 +119,9 @@ fi
 %{_libdir}/pkgconfig/mate-settings-daemon.pc
 
 %changelog
+* Mon Aug 11 2014 Liu Di <liudidi@gmail.com> - 1.9.1-1
+- 更新到 1.9.1
+
 * Wed May 07 2014 Liu Di <liudidi@gmail.com> - 1.8.0-4
 - 为 Magic 3.0 重建
 

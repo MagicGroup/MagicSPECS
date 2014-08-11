@@ -9,7 +9,7 @@
 Summary:	Unicode-aware Pure Python Expect-like module
 Name:		python-pexpect
 Version:	3.1
-Release:	3%{?dist}
+Release:	4%{?dist}
 License:	MIT
 Group:		Development/Languages
 URL:		https://github.com/pexpect/pexpect
@@ -137,6 +137,9 @@ rm -rf %{buildroot}
 %endif # with_python3
 
 %changelog
+* Sun Aug 10 2014 Liu Di <liudidi@gmail.com> - 3.1-4
+- 为 Magic 3.0 重建
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.1-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

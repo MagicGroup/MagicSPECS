@@ -2,7 +2,7 @@
 %global rel_build 1
 
 # This is needed, because src-url contains branched part of versioning-scheme.
-%global branch 1.9
+%global branch %(echo %{version} | awk -F. '{print $1"."$2}')
 
 # Settings used for build from snapshots.
 %{!?rel_build:%global commit 0280831e27ff5dc2d7c7473cd3bf9041f805299e}
@@ -13,16 +13,17 @@
 %{!?rel_build:%global git_tar %{name}-%{version}-%{git_ver}.tar.xz}
 
 Name:           mate-notification-daemon
-Version:        %{branch}.0
+Version:        1.9.0
 #Release:        0.2%{?git_rel}%{?dist}
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Notification daemon for MATE Desktop
+Summary(zh_CN.UTF-8): MATE 桌面的通知服务
 License:        GPLv2+
 URL:            http://mate-desktop.org
 
 # for downloading the tarball use 'spectool -g -R mate-notification-daemon.spec'
 # Source for release-builds.
-%{?rel_build:Source0:     http://pub.mate-desktop.org/releases/%{branch}/%%{name}-%%{version}.tar.xz}
+%{?rel_build:Source0:     http://pub.mate-desktop.org/releases/%{branch}/%{name}-%{version}.tar.xz}
 # Source for snapshot-builds.
 %{!?rel_build:Source0:    http://git.mate-desktop.org/%{name}/snapshot/%{name}-%{commit}.tar.xz#/%{git_tar}}
 
@@ -38,6 +39,9 @@ Provides:       desktop-notification-daemon
 
 %description
 Notification daemon for MATE Desktop
+
+%description -l zh_CN.UTF-8
+MATE 桌面的通知服务。
 
 %prep
 %setup -q%{!?rel_build:n %{name}-%{commit}}
@@ -61,7 +65,7 @@ desktop-file-install                               \
 
 # remove needless gsettings convert file
 rm -f  %{buildroot}%{_datadir}/MateConf/gsettings/mate-notification-daemon.convert
-
+magic_rpm_clean.sh
 %find_lang %{name} --with-gnome --all-name
 
 %post
@@ -94,6 +98,9 @@ fi
 
 
 %changelog
+* Sun Aug 10 2014 Liu Di <liudidi@gmail.com> - 1.9.0-2
+- 为 Magic 3.0 重建
+
 * Sat Jul 12 2014 Wolfgang Ulbrich <chat-to-me@raveit.de> - 1.9.0-1
 - update to 1.9.0 release
 

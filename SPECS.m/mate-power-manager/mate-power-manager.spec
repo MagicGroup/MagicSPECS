@@ -3,16 +3,17 @@
 Name:          mate-power-manager
 Version:       1.8.0
 #Release:       0.4.git%%{_internal_version}%{?dist}
-Release:       3%{?dist}
+Release:       4%{?dist}
 Summary:       MATE power management service
+Summary(zh_CN.UTF-8): MATE 电源管理服务
 License:       GPLv2+
 URL:           http://pub.mate-desktop.org
 
 # To generate tarball
 # wget http://git.mate-desktop.org/%%{name}/snapshot/%%{name}-{_internal_version}.tar.xz -O %%{name}-%%{version}.git%%{_internal_version}.tar.xz
 #Source0: http://raveit65.fedorapeople.org/Mate/git-upstream/%%{name}-%%{version}.git%%{_internal_version}.tar.xz
-
-Source0:       http://pub.mate-desktop.org/releases/1.8/%{name}-%{version}.tar.xz
+%define majorver %(echo %{version} | awk -F. '{print $1"."$2}')
+Source0:       http://pub.mate-desktop.org/releases/%{majorver}/%{name}-%{version}.tar.xz
 
 # upstream patch
 # https://github.com/mate-desktop/mate-power-manager/commit/8cb168b
@@ -56,6 +57,8 @@ BuildRequires: xmlto
 MATE Power Manager uses the information and facilities provided by UPower
 displaying icons and handling user callbacks in an interactive MATE session.
 
+%description -l zh_CN.UTF-8
+MATE 电源管理服务，使用 UPower 提供的信息和功能。
 
 %prep
 %setup -q
@@ -92,7 +95,7 @@ desktop-file-install                               \
 
 # remove needless gsettings convert file
 rm -f  %{buildroot}%{_datadir}/MateConf/gsettings/mate-power-manager.convert
-
+magic_rpm_clean.sh
 %find_lang %{name} --with-gnome --all-name
 
 
@@ -136,6 +139,9 @@ fi
 
 
 %changelog
+* Mon Aug 11 2014 Liu Di <liudidi@gmail.com> - 1.8.0-4
+- 为 Magic 3.0 重建
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.8.0-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

@@ -3,7 +3,7 @@ Name: initscripts
 Version: 9.54
 License: GPLv2
 Group: System Environment/Base
-Release: 5%{?dist}
+Release: 6%{?dist}
 URL: http://fedorahosted.org/releases/i/n/initscripts/
 Source: http://fedorahosted.org/releases/i/n/initscripts/initscripts-%{version}.tar.bz2
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
@@ -212,6 +212,9 @@ rm -rf $RPM_BUILD_ROOT
 /etc/profile.d/debug*
 
 %changelog
+* Sun Aug 10 2014 Liu Di <liudidi@gmail.com> - 9.54-6
+- 为 Magic 3.0 重建
+
 * Sat Jul 12 2014 Tom Callaway <spot@fedoraproject.org> - 9.54-5
 - fix license handling
 

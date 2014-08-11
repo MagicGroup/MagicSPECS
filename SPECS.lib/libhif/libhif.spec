@@ -1,7 +1,8 @@
 Summary:   Simple package library built on top of hawkey and librepo
+Summary(zh_CN.UTF-8): 在 hawkey 和 librepo 上构建的简单包库
 Name:      libhif
 Version:   0.1.2
-Release:   4%{?dist}
+Release:   5%{?dist}
 License:   LGPLv2+
 URL:       https://github.com/hughsie/libhif
 Source0:   http://people.freedesktop.org/~hughsient/releases/libhif-%{version}.tar.xz
@@ -23,12 +24,19 @@ BuildRequires: libsolv-devel
 This library provides a simple interface to hawkey and librepo and is currently
 used by PackageKit and rpm-ostree.
 
+%description -l zh_CN.UTF-8
+在 hawkey 和 librepo 上构建的简单包库。
+
 %package devel
 Summary: GLib Libraries and headers for libhif
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Requires: %{name}%{?_isa} = %{version}-%{release}
 
 %description devel
 GLib headers and libraries for libhif.
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -46,6 +54,7 @@ make %{?_smp_mflags}
 make install DESTDIR=$RPM_BUILD_ROOT
 
 rm -f $RPM_BUILD_ROOT%{_libdir}/libhif*.la
+magic_rpm_clean.sh
 
 %post -p /sbin/ldconfig
 
@@ -65,6 +74,9 @@ rm -f $RPM_BUILD_ROOT%{_libdir}/libhif*.la
 %{_datadir}/gir-1.0/*.gir
 
 %changelog
+* Sun Aug 10 2014 Liu Di <liudidi@gmail.com> - 0.1.2-5
+- 为 Magic 3.0 重建
+
 * Mon Jul 28 2014 Kalev Lember <kalevlember@gmail.com> - 0.1.2-4
 - Rebuilt for hawkey soname bump
 
