@@ -1,7 +1,7 @@
-From b7282fd199d9ff4169ca62d50606fbe94086f2de Mon Sep 17 00:00:00 2001
+From 3d875b067847d00519f960bf83469b85685a4ec5 Mon Sep 17 00:00:00 2001
 From: Mikolaj Izdebski <mizdebsk@redhat.com>
 Date: Thu, 29 Aug 2013 10:11:48 +0200
-Subject: [PATCH 2/6] Migrate from easymock 1 to easymock 3
+Subject: [PATCH 2/4] Migrate from easymock 1 to easymock 3
 
 ---
  maven-compat/pom.xml                               |  2 +-
@@ -12,7 +12,7 @@ Subject: [PATCH 2/6] Migrate from easymock 1 to easymock 3
  delete mode 100644 maven-compat/src/test/java/org/apache/maven/artifact/testutils/MockManager.java
 
 diff --git a/maven-compat/pom.xml b/maven-compat/pom.xml
-index ff75433..7ee01a0 100644
+index 9758d79..be2a927 100644
 --- a/maven-compat/pom.xml
 +++ b/maven-compat/pom.xml
 @@ -83,7 +83,7 @@
@@ -120,11 +120,11 @@ index bcda50a..37a281c 100644
  
      private Artifact createTestPomArtifact( String directory )
 diff --git a/pom.xml b/pom.xml
-index 7e0c305..b3f710f 100644
+index ccf6f36..760e6c2 100644
 --- a/pom.xml
 +++ b/pom.xml
-@@ -44,7 +44,7 @@
-   <properties>
+@@ -46,7 +46,7 @@
+     <maven.compiler.target>1.6</maven.compiler.target>    
      <classWorldsVersion>2.5.1</classWorldsVersion>
      <commonsCliVersion>1.2</commonsCliVersion>
 -    <easyMockVersion>1.2_Java1.3</easyMockVersion>
@@ -132,7 +132,7 @@ index 7e0c305..b3f710f 100644
      <junitVersion>3.8.2</junitVersion>
      <plexusVersion>1.5.5</plexusVersion>
      <plexusInterpolationVersion>1.19</plexusInterpolationVersion>
-@@ -324,7 +324,7 @@
+@@ -344,7 +344,7 @@
        </dependency>
        <!--bootstrap-start-comment-->
        <dependency>
@@ -142,5 +142,5 @@ index 7e0c305..b3f710f 100644
          <version>${easyMockVersion}</version>
          <scope>test</scope>
 -- 
-1.9.0
+1.9.3
 
