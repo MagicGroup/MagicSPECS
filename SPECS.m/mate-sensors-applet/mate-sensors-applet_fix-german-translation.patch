@@ -1,0 +1,12 @@
+diff -upr mate-sensors-applet-1.8.0-orig/po/de.po mate-sensors-applet-1.8.0/po/de.po
+--- mate-sensors-applet-1.8.0-orig/po/de.po	2014-02-19 22:59:51.000000000 +0100
++++ mate-sensors-applet-1.8.0/po/de.po	2014-07-18 19:50:14.704409411 +0200
+@@ -291,7 +291,7 @@ msgstr "Sensoren"
+ 
+ #: ../sensors-applet/sensors-applet.h:57
+ msgid "RPM"
+-msgstr "Umdrehungen / Min."
++msgstr "U/min"
+ 
+ #: ../sensors-applet/sensors-applet.h:58
+ msgid "V"
