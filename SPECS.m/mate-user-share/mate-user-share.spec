@@ -2,7 +2,7 @@
 %global rel_build 1
 
 # This is needed, because src-url contains branched part of versioning-scheme.
-%global branch 1.8
+#global branch 1.8
 
 # Settings used for build from snapshots.
 %{!?rel_build:%global commit c0f0c63c670d799dee4fa7577083d0cbace56db4}
@@ -13,14 +13,17 @@
 %{!?rel_build:%global git_tar %{name}-%{version}-%{git_ver}.tar.xz}
 
 Summary:         Mate user file sharing
+Summary(zh_CN.UTF-8): Mate 用户文件共享
 Name:            mate-user-share
-Version:         %{branch}.0
-Release:         2%{?dist}
+Version:         1.8.0
+Release:         3%{?dist}
 #Release:         0.1%{?git_rel}%{?dist}
 License:         GPLv2+
 Group:           System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 URL:             http://mate-desktop.org
 
+%define branch %(echo %{version} | awk -F. '{print $1"."$2}')
 # for downloading the tarball use 'spectool -g -R mate-user-share.spec'
 # Source for release-builds.
 %{?rel_build:Source0:     http://pub.mate-desktop.org/releases/%{branch}/%{name}-%{version}.tar.xz}
@@ -36,7 +39,6 @@ BuildRequires:  httpd
 BuildRequires:  libcanberra-devel
 BuildRequires:  libICE-devel
 BuildRequires:  libnotify-devel
-BuildRequires:  libselinux-devel
 BuildRequires:  libSM-devel
 BuildRequires:  mate-common
 BuildRequires:  caja-devel
@@ -45,17 +47,8 @@ BuildRequires:  perl(XML::Parser)
 BuildRequires:  unique-devel
 
 # disable bluetooth support for bluez5
-%if 0%{?fedora} > 19
 #BuildRequires: mate-bluetooth-devel
-%else
-BuildRequires:  mate-bluetooth-devel
-%endif
-%if 0%{?fedora} > 20
 BuildRequires: caja-devel
-%else
-BuildRequires: mate-file-manager-devel
-%endif
-
 
 Requires: httpd
 # obsolete with bluez5
@@ -79,6 +72,9 @@ up in the Network location in MATE.
 
 The program also allows to share files using ObexFTP over Bluetooth.
 
+%description -l zh_CN.UTF-8
+MATE 用户文件共享。
+
 %prep
 %setup -q%{!?rel_build:n %{name}-%{commit}}
 
@@ -88,17 +84,10 @@ The program also allows to share files using ObexFTP over Bluetooth.
 
 %build
 # disable bluetooth support for bluez5
-%if 0%{?fedora} > 19
 %configure \
     --disable-static \
     --disable-bluetooth \
     --disable-schemas-compile
-%else
-%configure \
-    --disable-scrollkeeper \
-    --disable-static \
-    --disable-schemas-compile
-%endif
 make %{?_smp_mflags}
 
 %install
@@ -109,21 +98,14 @@ rm -f $RPM_BUILD_ROOT%{_libdir}/caja/extensions-2.0/*.la
 # no need to provide a convert file for mateconf user settings,
 # because Mate started with gsettings in f17/18
 rm -f $RPM_BUILD_ROOT%{_datadir}/MateConf/gsettings/mate-user-share.convert
-
+magic_rpm_clean.sh
 %find_lang %{name} --with-gnome --all-name
 
 # disable bluetooth support for bluez5
-%if 0%{?fedora} > 19
 rm -f ${RPM_BUILD_ROOT}/%{_sysconfdir}/xdg/autostart/mate-user-share-obexftp.desktop
 rm -f desktop-file-validate ${RPM_BUILD_ROOT}/%{_sysconfdir}/xdg/autostart/mate-user-share-obexpush.desktop
 desktop-file-validate ${RPM_BUILD_ROOT}/%{_datadir}/applications/mate-user-share-properties.desktop
 desktop-file-validate ${RPM_BUILD_ROOT}/%{_sysconfdir}/xdg/autostart/mate-user-share-webdav.desktop
-%else
-desktop-file-validate ${RPM_BUILD_ROOT}/%{_datadir}/applications/mate-user-share-properties.desktop
-desktop-file-validate ${RPM_BUILD_ROOT}/%{_sysconfdir}/xdg/autostart/mate-user-share-obexftp.desktop
-desktop-file-validate ${RPM_BUILD_ROOT}/%{_sysconfdir}/xdg/autostart/mate-user-share-obexpush.desktop
-desktop-file-validate ${RPM_BUILD_ROOT}/%{_sysconfdir}/xdg/autostart/mate-user-share-webdav.desktop
-%endif
 
 %post
 /bin/touch --no-create %{_datadir}/icons/hicolor >&/dev/null || :
@@ -147,13 +129,7 @@ fi
 %{_datadir}/mate-user-share/
 %{_datadir}/applications/mate-user-share-properties.desktop
 # disable bluetooth support for bluez5
-%if 0%{?fedora} > 19
 %{_sysconfdir}/xdg/autostart/mate-user-share-webdav.desktop
-%else
-%{_sysconfdir}/xdg/autostart/mate-user-share-obexftp.desktop
-%{_sysconfdir}/xdg/autostart/mate-user-share-obexpush.desktop
-%{_sysconfdir}/xdg/autostart/mate-user-share-webdav.desktop
-%endif
 %{_datadir}/icons/hicolor/*/apps/mate-obex-server.png
 %{_libdir}/caja/extensions-2.0/*.so
 %{_datadir}/glib-2.0/schemas/org.mate.FileSharing.gschema.xml
@@ -161,6 +137,9 @@ fi
 
 
 %changelog
+* Mon Aug 11 2014 Liu Di <liudidi@gmail.com> - 1.8.0-3
+- 为 Magic 3.0 重建
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.8.0-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

@@ -1,11 +1,13 @@
 Name:           mate-system-monitor
 Version:        1.9.0
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Process and resource monitor
+Summary(zh_CN.UTF-8): 进程和资源监视器
 
 License:        GPLv2+
 URL:            http://mate-desktop.org
-Source0:        http://pub.mate-desktop.org/releases/1.9/%{name}-%{version}.tar.xz
+%define majorver %(echo %{version} | awk -F. '{print $1"."$2}')
+Source0:        http://pub.mate-desktop.org/releases/%{majorver}/%{name}-%{version}.tar.xz
 
 BuildRequires: dbus-glib-devel
 BuildRequires: desktop-file-utils
@@ -23,6 +25,9 @@ BuildRequires: mate-icon-theme-devel
 mate-system-monitor allows to graphically view and manipulate the running
 processes on your system. It also provides an overview of available resources
 such as CPU and memory.
+
+%description -l zh_CN.UTF-8
+进程和资源监视器。
 
 %prep
 %setup -q
@@ -45,7 +50,7 @@ desktop-file-install --delete-original             \
 
 # remove needless gsettings convert file
 rm -f  $RPM_BUILD_ROOT%{_datadir}/MateConf/gsettings/mate-system-monitor.convert
-
+magic_rpm_clean.sh
 %find_lang %{name} --with-gnome --all-name
 
 %postun
@@ -67,6 +72,9 @@ fi
 
 
 %changelog
+* Mon Aug 11 2014 Liu Di <liudidi@gmail.com> - 1.9.0-2
+- 为 Magic 3.0 重建
+
 * Tue Jul 15 2014 Wolfgang Ulbrich <chat-to-me@raveit.de> - 1.9.0-1
 - update to 1.9.0 release
 - drop runtime require mate-desktop, no need of it

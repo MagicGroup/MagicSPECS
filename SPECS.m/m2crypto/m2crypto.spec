@@ -4,9 +4,10 @@
 %global multilib_arches %{ix86} ia64 ppc ppc64 s390 s390x x86_64 sparc sparcv9 sparc64
 
 Summary: Support for using OpenSSL in python scripts
+Summary(zh_CN.UTF-8): 在 python 脚本中使用 OpenSSL 的支持
 Name: m2crypto
 Version: 0.21.1
-Release: 7%{?dist}
+Release: 8%{?dist}
 Source0: http://pypi.python.org/packages/source/M/M2Crypto/M2Crypto-%{version}.tar.gz
 # https://bugzilla.osafoundation.org/show_bug.cgi?id=2341
 Patch0: m2crypto-0.21.1-timeouts.patch
@@ -33,6 +34,9 @@ BuildRequires: perl, pkgconfig, swig, which
 
 %description
 This package allows you to call OpenSSL functions from python scripts.
+
+%description -l zh_CN.UTF-8
+这个包允许你在 Python 脚本中调用 OpenSSL 函数。
 
 %prep
 %setup -q -n M2Crypto-%{version}
@@ -97,6 +101,7 @@ grep -rl '/usr/bin/env python' demo tests \
 	| xargs sed -i "s,/usr/bin/env python,%{__python},"
 
 rm tests/*.py.* # Patch backup files
+magic_rpm_clean.sh
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -108,6 +113,9 @@ rm -rf $RPM_BUILD_ROOT
 %{python_sitearch}/M2Crypto-*.egg-info
 
 %changelog
+* Fri Aug 08 2014 Liu Di <liudidi@gmail.com> - 0.21.1-8
+- 为 Magic 3.0 重建
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 0.21.1-7
 - 为 Magic 3.0 重建
 

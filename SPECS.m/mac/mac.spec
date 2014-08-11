@@ -7,7 +7,7 @@ Group:          Applications/Multimedia
 Group(zh_CN.UTF-8):	应用程序/多媒体
 Source:         mac-3.99-u4-b5.tar.gz
 Patch0:		mac-gcc44.patch
-Release:        6%{?dist}
+Release:        7%{?dist}
 Vendor:         Matthew T. Ashland <email@monkeysaudio.com>,SuperMMX
 URL:            http://sourceforge.net/projects/mac-port/
 BuildRoot:      %{_tmppath}/%{name}-%{version}-root
@@ -67,6 +67,9 @@ make DESTDIR=$RPM_BUILD_ROOT install
 %{_includedir}/*
 
 %changelog
+* Fri Aug 08 2014 Liu Di <liudidi@gmail.com> - 3.99u4b5-7
+- 为 Magic 3.0 重建
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 3.99u4b5-6
 - 为 Magic 3.0 重建
 

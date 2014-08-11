@@ -1,7 +1,8 @@
 Name:           mate-dialogs
 Version:        1.8.0
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        Displays dialog boxes from shell scripts
+Summary(zh_CN.UTF-8): 从 Shell 脚本上显示对话框
 License:        LGPLv2+ and GPLv2+
 URL:            http://mate-desktop.org
 
@@ -9,7 +10,8 @@ URL:            http://mate-desktop.org
 # wget http://git.mate-desktop.org/%%{name}/snapshot/%%{name}-{_internal_version}.tar.xz -O %%{name}-%%{version}.git%%{_internal_version}.tar.xz
 #Source0: http://raveit65.fedorapeople.org/Mate/git-upstream/%{name}-%{version}.git%{_internal_version}.tar.xz
 
-Source0:        http://pub.mate-desktop.org/releases/1.8/%{name}-%{version}.tar.xz
+%define majorver %(echo %{version} | awk -F. '{print $1"."$2}')
+Source0:        http://pub.mate-desktop.org/releases/%{majorver}/%{name}-%{version}.tar.xz
 
 BuildRequires:  gtk2-devel
 BuildRequires:  mate-common
@@ -18,6 +20,9 @@ BuildRequires:  yelp-tools
 
 %description
 Displays dialog boxes from shell scripts.
+
+%description -l zh_CN.UTF-8
+从 Shell 脚本上显示对话框。
 
 %prep
 %setup -q
@@ -30,7 +35,7 @@ make %{?_smp_mflags} V=1
 
 %install
 %{make_install}
-
+magic_rpm_clean.sh
 %find_lang %{name} --with-gnome --all-name
 
 
@@ -42,6 +47,9 @@ make %{?_smp_mflags} V=1
 
 
 %changelog
+* Sun Aug 10 2014 Liu Di <liudidi@gmail.com> - 1.8.0-4
+- 为 Magic 3.0 重建
+
 * Wed May 07 2014 Liu Di <liudidi@gmail.com> - 1.8.0-3
 - 为 Magic 3.0 重建
 

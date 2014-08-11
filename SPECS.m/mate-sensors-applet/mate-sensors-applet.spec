@@ -1,11 +1,14 @@
 Name:           mate-sensors-applet
 Version:        1.8.0
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        MATE panel applet for hardware sensors
+Summary(zh_CN.UTF-8): 硬件传感器的 MATE 面板小部件
 Group:          User Interface/Desktops
+Group(zh_CN.UTF-8): 用户界面/桌面
 License:        GPLv2+
 URL:            http://mate-desktop.org
-Source0:        http://pub.mate-desktop.org/releases/1.8/%{name}-%{version}.tar.xz
+%define majorver %(echo %{version} | awk -F. '{print $1"."$2}')
+Source0:        http://pub.mate-desktop.org/releases/%{majorver}/%{name}-%{version}.tar.xz
 
 Patch0:         mate-sensors-applet_fix-german-translation.patch
 
@@ -28,15 +31,22 @@ Alarms can be set for each sensor to notify the user once a certain value
 has been reached, and can be configured to execute a given command at given
 repeated intervals.
 
+%description -l zh_CN.UTF-8
+硬件传感器的 MATE 面板小部件。
 
 %package        devel
 Summary:        Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       %{name}%{?_isa} = %{version}-%{release}
 
 %description    devel
 The mate-sensors-applet-devel package contains libraries and header files for
 developing applications that use mate-sensors-applet.
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -60,7 +70,7 @@ make %{?_smp_mflags}
 %{make_install}
 
 find $RPM_BUILD_ROOT -name "*.la" -exec rm -rf {} ';'
-
+magic_rpm_clean.sh
 %find_lang %{name} --with-gnome --all-name
 
 
@@ -100,6 +110,9 @@ fi
 
 
 %changelog
+* Mon Aug 11 2014 Liu Di <liudidi@gmail.com> - 1.8.0-4
+- 为 Magic 3.0 重建
+
 * Fri Jul 18 2014 Wolfgang Ulbrich <chat-to-me@raveit.de> - 1.8.0.3
 - fix german translation
 

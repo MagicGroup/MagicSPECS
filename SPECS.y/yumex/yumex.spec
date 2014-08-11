@@ -2,10 +2,12 @@
 
 Name:     yumex
 Version:  3.0.15
-Release:  1%{?dist}
+Release:  2%{?dist}
 Summary:  Yum Extender graphical package management tool
+Summary(zh_CN.UTF-8): Yum 扩展的图形包管理工具
 
 Group:    Applications/System
+Group(zh_CN.UTF-8): 应用程序/系统
 License:  GPLv2+
 URL:      http://www.yumex.dk
 Source0:  https://fedorahosted.org/releases/y/u/yumex/%{name}-%{version}.tar.gz
@@ -33,6 +35,8 @@ Requires: pyxdg
 %description
 Graphical User Interface for Yum.
 
+%description -l zh_CN.UTF-8
+Yum 的图形界面。
 
 %prep
 %setup -q
@@ -56,7 +60,7 @@ desktop-file-validate %{buildroot}/%{_datadir}/applications/%{name}-local.deskto
     
 # this is a doc file; removing from installed tree
 rm $RPM_BUILD_ROOT%{_datadir}/yumex/COPYING
-
+magic_rpm_clean.sh
 %find_lang %name
 
 %post
@@ -85,6 +89,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/appdata/*.xml
 
 %changelog
+* Sun Aug 10 2014 Liu Di <liudidi@gmail.com> - 3.0.15-2
+- 为 Magic 3.0 重建
+
 * Wed Jun 4 2014 Tim Lauridsen <timlau@fedoraproject.org> 3.0.15-1
 - bumped version to 3.0.15
 * Tue Feb 25 2014 Tim Lauridsen <timlau@fedoraproject.org> 3.0.14-1

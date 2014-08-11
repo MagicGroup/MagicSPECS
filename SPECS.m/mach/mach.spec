@@ -1,13 +1,14 @@
 Name:           mach
-Version:        1.0.0
-Release:        3%{?dist}
+Version: 1.0.3
+Release: 1%{?dist}
 Summary:        Make a chroot
+Summary(zh_CN.UTF-8): 制作 chroot
 
 Group:          Applications/System
+Group(zh_CN.UTF-8): 应用程序/系统
 License:        GPLv2+
 URL:            http://thomas.apestaart.org/projects/mach/
 Source:         http://thomas.apestaart.org/download/mach/%{name}-%{version}.tar.bz2
-Patch1:		mach-1.0.0-gcc4.patch
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root
 
 Requires:       python
@@ -44,9 +45,11 @@ Authors:
 --------
 Thomas Vander Stichele (thomas (at) apestaart (dot) org)
 
+%description -l zh_CN.UTF-8
+制作 chroot。
+
 %prep
 %setup -q
-%patch1 -p1
 
 %build
 %configure \
@@ -111,6 +114,9 @@ fi
 %attr(04750,root,mach) %{_sbindir}/mach-helper
 
 %changelog
+* Fri Aug 08 2014 Liu Di <liudidi@gmail.com> - 1.0.3-1
+- 更新到 1.0.3
+
 * Thu Jul 19 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.0.0-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 

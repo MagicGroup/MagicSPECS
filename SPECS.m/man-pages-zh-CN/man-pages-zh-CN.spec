@@ -1,13 +1,15 @@
 %define origName manpages-zh
 Summary: Chinese Man Pages from Chinese Man Pages Project
+Summary(zh_CN.UTF-8): 来自中文手册页项目的中文手册页
 Name: man-pages-zh-CN
-Version: 1.5.1
-Release: 5%{?dist}
+Version: 1.5.2
+Release: 2%{?dist}
 License: GFDL
 Group: Documentation
+Group(zh_CN.UTF-8): 文档
 #Vendor: From CMPP (Chinese Man Pages Project)
 URL: http://code.google.com/p/manpages-zh/
-Source0: http://manpages-zh.googlecode.com/files/%{origName}-%{version}.tar.gz
+Source0: http://manpages-zh.googlecode.com/files/%{origName}-%{version}.tar.bz2
 BuildRoot:        %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildArchitectures: noarch
 Summary(zh_CN): 中文 man pages
@@ -48,9 +50,11 @@ mkdir -p $RPM_BUILD_ROOT%{_mandir}/zh_CN
 %__make install DESTDIR=$RPM_BUILD_ROOT 
 # Remove file conflict
 %define manDest $RPM_BUILD_ROOT%{_mandir}/zh_CN
-%__rm %{manDest}/man1/mencoder.1
-%__rm %{manDest}/man1/mplayer.1
 %__rm %{manDest}/man1/newgrp.1
+
+%__rm %{manDest}/man1/apropos.1
+%__rm %{manDest}/man1/man.1
+%__rm %{manDest}/man1/whatis.1
 
 %__rm %{manDest}/man8/chpasswd.8
 %__rm %{manDest}/man8/groupadd.8
@@ -59,7 +63,7 @@ mkdir -p $RPM_BUILD_ROOT%{_mandir}/zh_CN
 %__rm %{manDest}/man8/useradd.8
 %__rm %{manDest}/man8/usermod.8
 %__rm %{manDest}/man8/userdel.8
-
+magic_rpm_clean.sh
 
 %clean
 %__rm -rf ${RPM_BUILD_ROOT}
@@ -70,6 +74,12 @@ mkdir -p $RPM_BUILD_ROOT%{_mandir}/zh_CN
 %{_mandir}/zh_CN/man*/*
 
 %changelog
+* Sat Aug 09 2014 Liu Di <liudidi@gmail.com> - 1.5.2-2
+- 为 Magic 3.0 重建
+
+* Sat Aug 09 2014 Liu Di <liudidi@gmail.com> - 1.5.2-1
+- 更新到 1.5.2
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 1.5.1-5
 - 为 Magic 3.0 重建
 

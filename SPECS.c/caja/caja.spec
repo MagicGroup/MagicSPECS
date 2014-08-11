@@ -2,7 +2,7 @@
 %global rel_build 1
 
 # This is needed, because src-url contains branched part of versioning-scheme.
-%global branch 1.9
+#global branch 1.9
 
 # Settings used for build from snapshots.
 %{!?rel_build:%global commit ee0a62c8759040d84055425954de1f860bac8652}
@@ -14,13 +14,16 @@
 
 Name:        caja
 Summary:     File manager for MATE
-Version:     %{branch}.1
-Release:     1%{?dist}
-#Release:     0.1%{?git_rel}%{?dist}
+Summary(zh_CN.UTF-8): MATE 的文件管理器
+Version: 1.9.1
+Release: 1%{?dist}
+#Release: 1%{?dist}
 License:     GPLv2+ and LGPLv2+
 Group:       User Interface/Desktops
+Group(zh_CN.UTF-8): 用户界面/桌面
 URL:         http://mate-desktop.org
 
+%define branch %(echo %{version} | awk -F. '{print $1"."$2}')
 # for downloading the tarball use 'spectool -g -R caja.spec'
 # Source for release-builds.
 %{?rel_build:Source0:     http://pub.mate-desktop.org/releases/%{branch}/%{name}-%{version}.tar.xz}
@@ -32,7 +35,6 @@ BuildRequires:  desktop-file-utils
 BuildRequires:  exempi-devel
 BuildRequires:  gobject-introspection-devel
 BuildRequires:  libexif-devel
-BuildRequires:  libselinux-devel
 BuildRequires:  libSM-devel
 BuildRequires:  libxml2-devel
 BuildRequires:  mate-common
@@ -43,7 +45,7 @@ BuildRequires:  unique-devel
 
 Requires:   gamin
 Requires:   filesystem
-Requires:   redhat-menus
+Requires:   magic-menus
 Requires:   gvfs
 
 # the main binary links against libcaja-extension.so
@@ -53,11 +55,9 @@ Requires:       %{name}-extensions%{?_isa} = %{version}-%{release}
 # needed for using mate-text-editor as stanalone in another DE
 Requires:       %{name}-schemas%{?_isa} = %{version}-%{release}
 
-%if 0%{?fedora} && 0%{?fedora} > 20
 Provides: mate-file-manager%{?_isa} = %{version}-%{release}
 Provides: mate-file-manager = %{version}-%{release}
 Obsoletes: mate-file-manager < %{version}-%{release}
-%endif
 
 %description
 Caja (mate-file-manager) is the file manager and graphical shell
@@ -67,43 +67,52 @@ It allows to browse directories on local and remote file systems, preview
 files and launch applications associated with them.
 It is also responsible for handling the icons on the MATE desktop.
 
+%description -l zh_CN.UTF-8
+Mate 的文件管理器。
+
 %package extensions
 Summary:  Mate-file-manager extensions library
+Summary(zh_CN.UTF-8): MATE 文件管理器的扩展库
 Requires: %{name}%{?_isa} = %{version}-%{release}
-%if 0%{?fedora} && 0%{?fedora} > 20
 Provides: mate-file-manager-extensions%{?_isa} = %{version}-%{release}
 Provides: mate-file-manager-extensions = %{version}-%{release}
 Obsoletes: mate-file-manager-extensions < %{version}-%{release}
-%endif
 
 %description extensions
 This package provides the libraries used by caja extensions.
 
+%description extensions -l zh_CN.UTF-8
+MATE 文件管理器的扩展库。
+
 # needed for using mate-text-editor (pluma) as stanalone in another DE
 %package schemas
 Summary:  Mate-file-manager schemas
+Summary(zh_CN.UTF-8): MATE 文件管理器的 schemas 文件
 License:  LGPLv2+
-%if 0%{?fedora} && 0%{?fedora} > 20
 Provides: mate-file-manager-schemas%{?_isa} = %{version}-%{release}
 Provides: mate-file-manager-schemas = %{version}-%{release}
 Obsoletes: mate-file-manager-schemas < %{version}-%{release}
-%endif
 
 %description schemas
 This package provides the gsettings schemas for caja.
 
+%description schemas -l zh_CN.UTF-8
+MATE 文件管理器的 schemas 文件。
+
 %package devel
 Summary:  Support for developing mate-file-manager extensions
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Requires: %{name}%{?_isa} = %{version}-%{release}
-%if 0%{?fedora} && 0%{?fedora} > 20
 Provides: mate-file-manager-devel%{?_isa} = %{version}-%{release}
 Provides: mate-file-manager-devel = %{version}-%{release}
 Obsoletes: mate-file-manager-devel < %{version}-%{release}
-%endif
 
 %description devel
 This package provides libraries and header files needed
 for developing caja extensions.
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q%{!?rel_build:n %{name}-%{commit}}
@@ -147,7 +156,7 @@ $RPM_BUILD_ROOT%{_datadir}/applications/*.desktop
 
 # remove needless gsettings convert file
 rm -f  $RPM_BUILD_ROOT%{_datadir}/MateConf/gsettings/caja.convert
-
+magic_rpm_clean.sh
 %find_lang %{name}
 
 
@@ -212,6 +221,9 @@ fi
 
 
 %changelog
+* Mon Aug 11 2014 Liu Di <liudidi@gmail.com>
+- 更新到 extensions-1.9.0
+
 * Sat Jul 12 2014 Wolfgang Ulbrich <chat-to-me@raveit.de> - 1.9.1-1
 - update to 1.9.1 release
 - move gtk-docs to -devel subpackage

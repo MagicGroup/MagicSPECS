@@ -1,8 +1,10 @@
 Name:		mate-applet-softupd
 Version:	0.2.11
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:	MATE Software Update Applet 
+Summary(zh_CN.UTF-8): MATE 软件更新小部件
 Group:		Applications/System
+Group(zh_CN.UTF-8): 应用程序/系统
 License:	GPLv2+
 URL:		http://www.zavedil.com/mate-software-updates-applet/
 Source:		http://www.zavedil.com/wp-content/uploads/2014/04/mate-applet-softupd-%{version}.tar.gz
@@ -21,7 +23,8 @@ Requires:	yumex
 %description
 Software updates notification applet for the MATE desktop environment.
 
-
+%description -l zh_CN.UTF-8
+MATE 软件更新小部件。
 
 %prep
 
@@ -45,7 +48,7 @@ make install DESTDIR=$RPM_BUILD_ROOT
 
 #	Do not install doc files: they are handled as rpm doc files.
 rm -rf $RPM_BUILD_ROOT%{_docdir}
-
+magic_rpm_clean.sh
 %find_lang %{name}
 
 
@@ -85,6 +88,9 @@ fi
 
 
 %changelog
+* Sun Aug 10 2014 Liu Di <liudidi@gmail.com> - 0.2.11-3
+- 为 Magic 3.0 重建
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.2.11-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

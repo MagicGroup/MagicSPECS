@@ -2,9 +2,10 @@
 
 Name:           mate-icon-theme-faenza
 Version:        1.8.0
-Release:        2%{?dist}
+Release:        3%{?dist}
 #Release:        0.1.git%{_internal_version}%{?dist}
 Summary:        Extra set of icon themes for MATE Desktop
+Summary(zh_CN.UTF-8): MATE 桌面的额外图标集合
 License:        GPLv2+
 URL:            http://mate-desktop.org
 
@@ -12,7 +13,8 @@ URL:            http://mate-desktop.org
 # wget http://git.mate-desktop.org/%%{name}/snapshot/%%{name}-{_internal_version}.tar.xz -O %%{name}-%%{version}.git%%{_internal_version}.tar.xz
 #Source0: http://raveit65.fedorapeople.org/Mate/git-upstream/%{name}-%{version}.git%{_internal_version}.tar.xz
 
-Source0:        http://pub.mate-desktop.org/releases/1.8/%{name}-%{version}.tar.xz
+%define majorver %(echo %{version} | awk -F. '{print $1"."$2}')
+Source0:        http://pub.mate-desktop.org/releases/%{majorver}/%{name}-%{version}.tar.xz
 
 BuildRequires: hardlink
 BuildRequires: mate-common
@@ -21,6 +23,9 @@ BuildArch: noarch
 
 %description
 Provides a complimentary set of icon themes for MATE Desktop
+
+%description -l zh_CN.UTF-8
+MATE 桌面的额外图标集合。
 
 %prep
 %setup -q
@@ -39,6 +44,7 @@ make %{?_smp_mflags} V=1
 
 # save space by linking identical images
 hardlink -c -v %{buildroot}%{_datadir}/icons
+magic_rpm_clean.sh
 
 %post
 /bin/touch --no-create %{_datadir}/icons/matefaenza &> /dev/null || :
@@ -74,6 +80,9 @@ fi
 
 
 %changelog
+* Mon Aug 11 2014 Liu Di <liudidi@gmail.com> - 1.8.0-3
+- 为 Magic 3.0 重建
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.8.0-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

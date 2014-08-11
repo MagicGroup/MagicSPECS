@@ -7,7 +7,7 @@
 
 Name:           pygpgme
 Version:        0.3
-Release:        11%{?dist}
+Release:        12%{?dist}
 Summary:        Python module for working with OpenPGP messages
 
 Group:          Development/Languages
@@ -123,6 +123,9 @@ find tests -name '*.pyc' -delete
 %endif # with_python3
 
 %changelog
+* Sun Aug 10 2014 Liu Di <liudidi@gmail.com> - 0.3-12
+- 为 Magic 3.0 重建
+
 * Thu Jul 31 2014 Tom Callaway <spot@fedoraproject.org> - 0.3-11
 - fix license handling
 

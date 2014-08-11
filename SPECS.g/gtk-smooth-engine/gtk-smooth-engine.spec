@@ -1,11 +1,13 @@
 Summary: 	The Smooth engine for GTK+-2.0
+Summary(zh_CN.UTF-8): GTK+-2.0 的 Smooth 引擎
 Name: 		gtk-smooth-engine
 Version: 	2.14.3
-Release: 	4%{?dist}
+Release: 	5%{?dist}
 License:	LGPLv2+ and GPLv2+
 URL: 		http://ftp.de.debian.org/debian/pool/main/g/gtk-smooth-engine
 Source0: 	http://ftp.de.debian.org/debian/pool/main/g/gtk-smooth-engine/%{name}_%{version}+deb5.tar.gz
 Group: 		User Interface/Desktops
+Group(zh_CN.UTF-8): 用户界面/桌面
 
 Patch0:     gtk-smooth-engine_automake.patch
 
@@ -20,6 +22,9 @@ BuildRequires: 	autoconf
 %description
 The Smooth engine for GTK+-2.0
 
+%description -l zh_CN.UTF-8
+GTK+-2.0 的 Smooth 引擎。
+
 %prep
 %setup -q -n %{name}-%{version}+deb5
 %patch0 -p1 -b .automake
@@ -33,6 +38,7 @@ make %{?_smp_mflags}
 %install
 %{make_install}
 find $RPM_BUILD_ROOT -name '*.la' -exec rm -f {} ';'
+magic_rpm_clean.sh
 
 %post -p /sbin/ldconfig
 
@@ -45,6 +51,9 @@ find $RPM_BUILD_ROOT -name '*.la' -exec rm -f {} ';'
 
 
 %changelog
+* Mon Aug 11 2014 Liu Di <liudidi@gmail.com> - 2.14.3-5
+- 为 Magic 3.0 重建
+
 * Sun Jun 08 2014 Wolfgang Ulbrich <chat-to-me@raveit.de> - 2.14.3-4
 - fix build for Fedora_21_Mass_Rebuild
 

@@ -5,11 +5,13 @@
 %global additional_name man-pages-additional-%{additional_version}
 
 Summary: Linux kernel and C library user-space interface documentation
+Summary(zh_CN.UTF-8): Linux 内核和 C 库的用户空间接口文档
 Name: man-pages
 Version: 3.70
-Release: 1%{?dist}
+Release: 2%{?dist}
 License: GPL+ and GPLv2+ and BSD and MIT and Copyright only and IEEE
 Group: Documentation
+Group(zh_CN.UTF-8): 文档
 URL: http://www.kernel.org/doc/man-pages/
 Source: http://www.kernel.org/pub/linux/docs/man-pages/man-pages-%{version}.tar.xz
 # POSIX man pages
@@ -35,6 +37,9 @@ Patch21: man-pages-3.42-close.patch
 
 %description
 A large collection of manual pages from the Linux Documentation Project (LDP).
+
+%description -l zh_CN.UTF-8
+来自 Linux 文档项目 (LDP) 的手册页大集合。
 
 %prep
 %setup -q -a 1 -a 2
@@ -70,6 +75,7 @@ popd
 pushd %{additional_name}
 make install DESTDIR=$RPM_BUILD_ROOT
 popd
+magic_rpm_clean.sh
 
 %files
 %doc README man-pages-%{version}.Announce Changes
@@ -77,6 +83,9 @@ popd
 %{_mandir}/man*/*
 
 %changelog
+* Sat Aug 09 2014 Liu Di <liudidi@gmail.com> - 3.70-2
+- 为 Magic 3.0 重建
+
 * Fri Jul 11 2014 jchaloup <jchaloup@redhat.com> - 3.70-1
 - resolves: #1118632
   updated to 3.70

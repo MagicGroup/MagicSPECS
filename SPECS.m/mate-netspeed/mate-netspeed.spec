@@ -1,10 +1,12 @@
 Name:           mate-netspeed
 Version:        1.9.0
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        MATE netspeed
+Summary(zh_CN.UTF-8): MATE 网络速度
 License:        GPLv2+
 URL:            http://www.mate-desktop.org
-Source0:        http://pub.mate-desktop.org/releases/1.9/%{name}-%{version}.tar.xz
+%define majorver %(echo %{version} | awk -F. '{print $1"."$2}')
+Source0:        http://pub.mate-desktop.org/releases/%{majorver}/%{name}-%{version}.tar.xz
 
 BuildRequires:  mate-common
 BuildRequires:  libgtop2-devel
@@ -16,6 +18,9 @@ BuildRequires:  mate-desktop-devel
 %description
 MATE netspeed is an applet that shows how much 
 traffic occurs on a specified network device. 
+
+%description -l zh_CN.UTF-8
+这是一个显示网络流量的小部件。
 
 %prep
 %setup -q
@@ -32,7 +37,7 @@ make %{?_smp_mflags} V=1
 
 find %{buildroot} -name '*.la' -exec rm -rf {} ';'
 find %{buildroot} -name '*.a' -exec rm -rf {} ';'
-
+magic_rpm_clean.sh
 %find_lang %{name} --with-gnome --all-name
 
 %post
@@ -68,6 +73,9 @@ fi
 
 
 %changelog
+* Mon Aug 11 2014 Liu Di <liudidi@gmail.com> - 1.9.0-2
+- 为 Magic 3.0 重建
+
 * Sat Jul 30 2014 Wolfgang Ulbrich <chat-to-me@raveit.de> - 1.9.0-1
 - update to 1.9.0 release
 

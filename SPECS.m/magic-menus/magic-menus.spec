@@ -1,13 +1,15 @@
 %define gettext_package redhat-menus
 
 Summary: Configuration and data files for the desktop menus
+Summary(zh_CN.UTF-8): 桌面菜单的配置和数据文件
 Name: magic-menus
 Version: 12.0.2
-Release: 8%{?dist}
+Release: 9%{?dist}
 URL: http://www.magiclinux.org
 Source0: %{name}-%{version}.tar.xz
 License: GPL+
 Group: User Interface/Desktops
+Group(zh_CN.UTF-8): 用户界面/桌面
 BuildArch: noarch
 BuildRequires: desktop-file-utils
 BuildRequires: intltool
@@ -16,6 +18,9 @@ BuildRequires: intltool
 This package contains the XML files that describe the menu layout for
 GNOME and KDE, and the .desktop files that define the names and icons
 of "subdirectories" in the menus.
+
+%description -l zh_CN.UTF-8
+桌面菜单的配置和数据文件。
 
 %prep
 %setup -q
@@ -58,6 +63,9 @@ update-desktop-database &> /dev/null || :
 %{_datadir}/desktop-directories/*.directory
 
 %changelog
+* Fri Aug 08 2014 Liu Di <liudidi@gmail.com> - 12.0.2-9
+- 为 Magic 3.0 重建
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 12.0.2-7
 - 为 Magic 3.0 重建
 

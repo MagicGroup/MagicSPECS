@@ -2,7 +2,7 @@
 %global rel_build 1
 
 # This is needed, because src-url contains branched part of versioning-scheme.
-%global branch 1.8
+%global branch %(echo %{version} | awk -F. '{print $1"."$2}')
 
 # Settings used for build from snapshots.
 %{!?rel_build:%global commit 922d0e0219b1bedcece8624e4b5fd7e15e7a9bd5}
@@ -13,10 +13,11 @@
 %{!?rel_build:%global git_tar %{name}-%{version}-%{git_ver}.tar.xz}
 
 Name:          mate-control-center
-Version:       %{branch}.1
-Release:       4%{?dist}
-#Release:       0.6%{?git_rel}%{?dist}
+Version: 1.8.2
+Release: 1%{?dist}
+#Release: 1%{?dist}
 Summary:       MATE Desktop control-center
+Summary(zh_CN.UTF-8): MATE 桌面的控制中心
 License:       LGPLv2+ and GPLv2+
 URL:           http://mate-desktop.org
 
@@ -25,9 +26,6 @@ URL:           http://mate-desktop.org
 %{?rel_build:Source0:     http://pub.mate-desktop.org/releases/%{branch}/%{name}-%{version}.tar.xz}
 # Source for snapshot-builds.
 %{!?rel_build:Source0:    http://git.mate-desktop.org/%{name}/snapshot/%{name}-%{commit}.tar.xz#/%{git_tar}}
-
-# rhbz (#1089461)
-Patch0:        mate-control-center_typo-in-gsettings-key.patch
 
 BuildRequires: dconf-devel
 BuildRequires: desktop-file-utils
@@ -60,8 +58,12 @@ Requires: %{name}-filesystem%{?_isa} = %{version}-%{release}
 MATE Control Center configures system settings such as themes,
 keyboards shortcuts, etc.
 
+%description -l zh_CN.UTF-8
+MATE 桌面的控制中心，配置如主题、快捷键等系统设置。
+
 %package filesystem
 Summary:      MATE Control Center directories
+Summary(zh_CN.UTF-8): MATE 控制中心的目录
 # NOTE: this is an "inverse dep" subpackage. It gets pulled in
 # NOTE: by the main package an MUST not depend on the main package
 
@@ -71,21 +73,22 @@ for applications. This package contains directories where applications
 can install configuration files that are picked up by the control-center
 utilities.
 
+%description filesystem -l zh_CN.UTF-8
+MATE 控制中心的目录。
+
 %package devel
 Summary:      Development files for mate-settings-daemon
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Requires:       %{name}%{?_isa} = %{version}-%{release}
 
 %description devel
 Development files for mate-control-center
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q%{!?rel_build:n %{name}-%{commit}}
-
-%patch0 -p1 -b .gsettings
-
-# To work around rpath
-autoreconf -fi
 
 # needed for git snapshots
 #NOCONFIGURE=1 ./autogen.sh
@@ -118,7 +121,7 @@ rm %{buildroot}%{_datadir}/applications/mimeinfo.cache
 
 # remove needless gsettings convert file
 rm -f  %{buildroot}%{_datadir}/MateConf/gsettings/mate-control-center.convert
-
+magic_rpm_clean.sh
 %find_lang %{name} --with-gnome --all-name
 
 
@@ -181,6 +184,9 @@ fi
 
 
 %changelog
+* Sun Aug 10 2014 Liu Di <liudidi@gmail.com> - 1.8.2-1
+- 更新到 1.8.2
+
 * Wed May 07 2014 Liu Di <liudidi@gmail.com> - 1.8.1-4
 - 为 Magic 3.0 重建
 

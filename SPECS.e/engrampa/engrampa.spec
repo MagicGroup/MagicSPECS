@@ -2,7 +2,7 @@
 %global rel_build 1
 
 # This is needed, because src-url contains branched part of versioning-scheme.
-%global branch 1.9
+#global branch 1.9
 
 # Settings used for build from snapshots.
 %{!?rel_build:%global commit f4611c3411c44e792f729a0780c31b0aa55fe004}
@@ -13,13 +13,15 @@
 %{!?rel_build:%global git_tar %{name}-%{version}-%{git_ver}.tar.xz}
 
 Name:          engrampa
-Version:       %{branch}.0
-Release:       1%{?dist}
+Version:       1.9.0
+Release:       2%{?dist}
 #Release:       0.2%{?git_rel}%{?dist}
 Summary:       MATE Desktop file archiver
+Summary(zh_CN.UTF-8): MATE 桌面的文件归档管理器
 License:       GPLv2+ and LGPLv2+
 URL:           http://mate-desktop.org
 
+%define branch %(echo %{version} | awk -F. '{print $1"."$2}')
 # for downloading the tarball use 'spectool -g -R engrampa.spec'
 # Source for release-builds.
 %{?rel_build:Source0:     http://pub.mate-desktop.org/releases/%{branch}/%{name}-%{version}.tar.xz}
@@ -29,24 +31,20 @@ URL:           http://mate-desktop.org
 BuildRequires:  mate-common
 BuildRequires:  desktop-file-utils
 BuildRequires:  gtk2-devel
-%if 0%{?fedora} && 0%{?fedora} > 20
 BuildRequires:  caja-devel
-%else
-BuildRequires:  mate-file-manager-devel
-%endif
 BuildRequires:  mate-desktop-devel
 BuildRequires:  libSM-devel
 
-%if 0%{?fedora} && 0%{?fedora} > 20
 Provides: mate-file-archiver%{?_isa} = %{version}-%{release}
 Provides: mate-file-archiver = %{version}-%{release}
 Obsoletes: mate-file-archiver < %{version}-%{release}
-%endif
 
 %description
 Mate File Archiver is an application for creating and viewing archives files,
 such as zip, xv, bzip2, cab, rar and other compress formats.
 
+%description -l zh_CN.UTF-8
+这是一个创建和查看归档文件的程序，支持 zip, xv, bzip2, cab, rar 和其它的压缩格式。
 
 %prep
 %setup -q%{!?rel_build:n %{name}-%{commit}}
@@ -77,7 +75,7 @@ find %{buildroot} -name "*.la" -exec rm -f {} ';'
 
 # remove needless gsettings convert file to avoid slow session start
 rm -f  %{buildroot}%{_datadir}/MateConf/gsettings/engrampa.convert
-
+magic_rpm_clean.sh
 %find_lang %{name} --with-gnome --all-name
 
 %post
@@ -112,6 +110,9 @@ fi
 
 
 %changelog
+* Mon Aug 11 2014 Liu Di <liudidi@gmail.com> - 1.9.0-2
+- 为 Magic 3.0 重建
+
 * Sat Jul 12 2014 Wolfgang Ulbrich <chat-to-me@raveit.de> - 1.9.0-1
 - update to 1.9.0 release
 

@@ -1,12 +1,14 @@
 Name:           mate-themes
-Version:        1.4.0
-Release:        8%{?dist}
+Version: 1.9.0
+Release: 1%{?dist}
 Summary:        MATE Desktop themes
+Summary(zh_CN.UTF-8): MATE 桌面主题
 License:        GPLv2+
 URL:            http://mate-desktop.org
-Source0:        http://pub.mate-desktop.org/releases/1.4/%{name}-%{version}.tar.xz
+%define majorver %(echo %{version} | awk -F. '{print $1"."$2}')
+Source0:        http://pub.mate-desktop.org/releases/%{majorver}/%{name}-%{version}.tar.xz
 
-BuildRequires:  icon-naming-utils mate-common mate-doc-utils mate-icon-theme-devel
+BuildRequires:  icon-naming-utils mate-common mate-desktop-devel mate-icon-theme-devel
 BuildRequires:  pkgconfig(gtk-engines-2)
 Requires:       mate-icon-theme
 Requires:       gtk2-engines
@@ -16,6 +18,8 @@ BuildARch:      noarch
 %description
 MATE Desktop themes
 
+%description -l zh_CN.UTF-8
+MATE 桌面主题。
 
 %prep
 %setup -q
@@ -36,6 +40,23 @@ find %{buildroot} -name '*.a' -exec rm -rf {} ';'
 magic_rpm_clean.sh
 %find_lang %{name}
 
+# clean up package
+rm -rf %{buildroot}%{_datadir}/themes/PrintLarge/
+rm -rf %{buildroot}%{_datadir}/themes/Quid/
+rm -rf %{buildroot}%{_datadir}/themes/Simply/
+rm -rf %{buildroot}%{_datadir}/themes/ContrastHighLargePrint/
+rm -rf %{buildroot}%{_datadir}/themes/ContrastHighLargePrintInverse/
+rm -rf %{buildroot}%{_datadir}/themes/ContrastLowLargePrint/
+rm -rf %{buildroot}%{_datadir}/themes/ContrastLow/
+rm -rf %{buildroot}%{_datadir}/themes/ContrastHighInverse/
+rm -rf %{buildroot}%{_datadir}/icons/ContrastHighInverse/
+rm -rf %{buildroot}%{_datadir}/icons/ContrastHighLargePrint/
+rm -rf %{buildroot}%{_datadir}/icons/ContrastHighLargePrintInverse/
+rm -rf %{buildroot}%{_datadir}/icons/ContrastHigh-SVG/
+rm -rf %{buildroot}%{_datadir}/icons/MateLargePrint/
+rm -rf %{buildroot}%{_datadir}/icons/Quid/
+rm -rf %{buildroot}%{_datadir}/themes/AlaDelta/
+rm -rf %{buildroot}%{_datadir}/themes/Atantla/
 
 %post
 for icon_theme in \
@@ -70,35 +91,26 @@ done
 
 %files -f %{name}.lang
 %doc AUTHORS COPYING README
-%{_datadir}/icons/ContrastHigh-SVG
-%{_datadir}/themes/TraditionalOkClassic
-%{_datadir}/themes/ContrastLowLargePrint
-%{_datadir}/themes/Fog
-%{_datadir}/themes/PrintLarge
-%{_datadir}/themes/Quid
-%{_datadir}/themes/Reverse
-%{_datadir}/themes/Shiny
-%{_datadir}/themes/Simply
-%{_datadir}/themes/TraditionalOk
-%{_datadir}/themes/ContrastHighLargePrint
-%{_datadir}/themes/ContrastHighLargePrintInverse
-%{_datadir}/themes/ContrastLow
-%{_datadir}/themes/ContrastHigh
-%{_datadir}/themes/ContrastHighInverse
-%{_datadir}/themes/Aldabra
-%{_datadir}/icons/ContrastHigh
-%{_datadir}/icons/ContrastHighInverse
-%{_datadir}/icons/ContrastHighLargePrint
-%{_datadir}/icons/Fog
-%{_datadir}/icons/MateLargePrint
-%{_datadir}/icons/Quid
-%{_datadir}/themes/AlaDelta
-%{_datadir}/themes/Atantla
-%{_datadir}/icons/mate/cursors
-%{_datadir}/icons/ContrastHighLargePrintInverse
-%{_datadir}/themes/TraditionalOkTest
+%{_datadir}/themes/GreenLaguna/
+%{_datadir}/themes/Menta/
+%{_datadir}/themes/BlueMenta/
+%{_datadir}/themes/BlackMenta/
+%{_datadir}/themes/BlackMATE/
+%{_datadir}/themes/Fog/
+%{_datadir}/themes/Reverse/
+%{_datadir}/themes/Shiny/
+%{_datadir}/themes/TraditionalOk/
+%{_datadir}/themes/TraditionalGreen/
+%{_datadir}/themes/TraditionalOkTest/
+%{_datadir}/themes/ContrastHigh/
+%{_datadir}/icons/ContrastHigh/
+%{_datadir}/icons/Fog/
+%{_datadir}/icons/mate/cursors/
 
 %changelog
+* Mon Aug 11 2014 Liu Di <liudidi@gmail.com> - 1.9.0-1
+- 更新到 1.9.0
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 1.4.0-8
 - 为 Magic 3.0 重建
 

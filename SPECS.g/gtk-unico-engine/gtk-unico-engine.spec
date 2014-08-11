@@ -4,10 +4,12 @@
 
 Name:           gtk-unico-engine
 Version:        1.0.3
-Release:        0.4.%{revision_date}bzr%{revision}%{?dist}
+Release:        0.5.%{revision_date}bzr%{revision}%{?dist}
 Summary:        Unico Gtk+ theming engine
+Summary(zh_CN.UTF-8): Unico Gtk+ 主题引擎
 
 Group:          User Interface/Desktops
+Group(zh_CN.UTF-8): 用户界面/桌面
 License:        LGPLv2
 URL:            https://launchpad.net/unico/
 # The source for this package was pulled from upstream's VCS. Use the following
@@ -25,6 +27,8 @@ Unico is a Gtk+ engine that aims to be the more complete yet powerful theming
 engine for Gtk+ 3.0 and newer. It’s the first Gtk+ engine written with Gtk+
 style context APIs in mind, using CSS as first class citizen.
 
+%description -l zh_CN.UTF-8
+Unico Gtk+ 主题引擎。
 
 %prep
 %setup -q -n %{engine_name}-%{version}-bzr%{revision}
@@ -42,7 +46,7 @@ make %{?_smp_mflags}
 %make_install
 
 rm $RPM_BUILD_ROOT%{_libdir}/gtk-3.0/3.0.0/theming-engines/*.la
-
+magic_rpm_clean.sh
 
 %files
 # TODO: add ChangeLog and README if non-empty
@@ -51,6 +55,9 @@ rm $RPM_BUILD_ROOT%{_libdir}/gtk-3.0/3.0.0/theming-engines/*.la
 
 
 %changelog
+* Mon Aug 11 2014 Liu Di <liudidi@gmail.com> - 1.0.3-0.5.20140109bzr152
+- 为 Magic 3.0 重建
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.0.3-0.4.20140109bzr152
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

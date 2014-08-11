@@ -1,31 +1,17 @@
 Summary:        Shared code for mate-panel, mate-session, mate-file-manager, etc
+Summary(zh_CN.UTF-8): mate-panel, mate-session, mate-file-manager 等程序的共享代码
 Name:           mate-desktop
 License:        GPLv2+ and LGPLv2+ and MIT
-%if 0%{?fedora} > 20
-Version:        1.8.0
-Release:        5%{?dist}
-Source0:        http://pub.mate-desktop.org/releases/1.8/%{name}-%{version}.tar.xz
-%else
-Version:        1.6.2
-Release:        3%{?dist}
-Source0:        http://pub.mate-desktop.org/releases/1.6/%{name}-%{version}.tar.xz
-%endif
+Version: 1.9.1
+Release: 1%{?dist}
+%define majorver %(echo %{version} | awk -F. '{print $1"."$2}')
+Source0:        http://pub.mate-desktop.org/releases/%{majorver}/%{name}-%{version}.tar.xz
 URL:            http://mate-desktop.org
 
-# fix fedora backgrounds and
-# workaround for x-caja-desktop window issue
-Source1:        mate-fedora.gschema.override
 Source2:        gnu-cat.gif
 Source3:        gnu-cat_navideno_v3.png
-Source4:        mate-fedora-f20.gschema.override
-Source5:        mate-fedora-f21.gschema.override
 
-#enable gnucat
-%if 0%{?fedora} > 20
 Patch0:         mate-desktop_enable_gnucat-f21.patch
-%else
-Patch0:         mate-desktop_enable_gnucat.patch
-%endif
 
 
 BuildRequires:  dconf-devel
@@ -33,11 +19,7 @@ BuildRequires:  desktop-file-utils
 BuildRequires:  mate-common
 BuildRequires:  startup-notification-devel
 BuildRequires:  unique-devel
-%if 0%{?fedora} > 20
 BuildRequires:  itstool
-%else
-BuildRequires:  mate-doc-utils
-%endif
 
 Requires: %{name}-libs%{?_isa} = %{version}-%{release}
 Requires: magic-menus
@@ -66,27 +48,21 @@ Obsoletes: mate-vfs
 Obsoletes: mate-vfs-devel
 Obsoletes: mate-vfs-smb
 # switch to gnome-keyring > f19
-%if 0%{?fedora} > 19
 Obsoletes: libmatekeyring
 Obsoletes: libmatekeyring-devel
 Obsoletes: mate-keyring
 Obsoletes: mate-keyring-pam
 Obsoletes: mate-keyring-devel
-%endif
 # temporarily solution for f20 until mate-bluetooth
 # is ported to bluez5
-%if 0%{?fedora} > 19
 Obsoletes: mate-bluetooth < 1:1.6.0-6
 Obsoletes: mate-bluetooth-libs < 1:1.6.0-6
 Obsoletes: mate-bluetooth-devel < 1:1.6.0-6
-%endif
-%if 0%{?fedora} > 20
 Obsoletes: mate-doc-utils
 Obsoletes: mate-character-map
 Obsoletes: mate-character-map-devel 
 Obsoletes: libmatewnck
 Obsoletes: libmatewnck-devel
-%endif
 
 
 %description
@@ -95,21 +71,32 @@ The mate-desktop package contains an internal library
 desktop, and also some data files and other shared components of the
 MATE user environment.
 
+%description -l zh_CN.UTF-8
+这个包包含了 MATE 桌面环境使用的内部库，和一些共享的数据和组件。
+
 %package libs
 Summary:   Shared libraries for libmate-desktop
+Summary(zh_CN.UTF-8): %{name} 的运行库
 License:   LGPLv2+
 
 %description libs
 Shared libraries for libmate-desktop
 
+%description libs -l zh_CN.UTF-8
+%{name} 的运行库。
+
 %package devel
 Summary:    Libraries and headers for libmate-desktop
+Summary(zh_CN.UTF-8): %{name} 的开发包
 License:    LGPLv2+
 Requires:   %{name}-libs%{?_isa} = %{version}-%{release}
 
 %description devel
 Libraries and header files for the MATE-internal private library
 libmatedesktop.
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -121,7 +108,6 @@ cp %SOURCE3 mate-about/gnu-cat_navideno_v3.png
 autoreconf -fi
 
 %build
-%if 0%{?fedora} > 20
 %configure                                                 \
      --enable-desktop-docs                                 \
      --disable-schemas-compile                             \
@@ -132,18 +118,6 @@ autoreconf -fi
      --enable-mpaste                                       \
      --with-pnp-ids-path="%{_datadir}/hwdata/pnp.ids"      \
      --enable-gtk-doc-html
-%else
-%configure \
-     --disable-scrollkeeper                                \
-     --disable-schemas-compile                             \
-     --with-gtk=2.0                                        \
-     --with-x                                              \
-     --disable-static                                      \
-     --enable-unique                                       \
-     --with-pnp-ids-path="%{_datadir}/hwdata/pnp.ids"      \
-     --with-omf-dir=%{_datadir}/omf/mate-desktop           \
-     --enable-gnucat
-%endif
 
 make %{?_smp_mflags} V=1
 
@@ -159,33 +133,15 @@ desktop-file-install                                         \
         --dir=%{buildroot}%{_datadir}/applications           \
 %{buildroot}%{_datadir}/applications/mate-about.desktop
 
-%if 0%{?fedora} > 20
-desktop-file-install                                         \
-        --delete-original                                    \
-        --dir=%{buildroot}%{_datadir}/applications           \
-%{buildroot}%{_datadir}/applications/mate-user-guide.desktop
-%endif
-
-%if 0%{?fedora} > 19
-%if 0%{?fedora} > 20
-install -D -m 0644 %SOURCE5 %{buildroot}%{_datadir}/glib-2.0/schemas/mate-fedora.gschema.override
-%else
-install -D -m 0644 %SOURCE4 %{buildroot}%{_datadir}/glib-2.0/schemas/mate-fedora.gschema.override
-%endif
-%else
-install -D -m 0644 %SOURCE1 %{buildroot}%{_datadir}/glib-2.0/schemas/mate-fedora.gschema.override
-%endif
-
 # remove needless gsettings convert file
 rm -f  %{buildroot}%{_datadir}/MateConf/gsettings/mate-desktop.convert
 
-%if 0%{?fedora} > 20
 # remove conflicting files with gnome
 rm -fr %{buildroot}%{_datadir}/help/*/fdl
 rm -fr %{buildroot}%{_datadir}/help/*/gpl
 rm -fr %{buildroot}%{_datadir}/help/*/lgpl
-%endif
 
+magic_rpm_clean.sh
 %find_lang %{name} --with-gnome --all-name
 
 
@@ -211,30 +167,17 @@ fi
 
 %files
 %doc AUTHORS COPYING COPYING.LIB NEWS README
-%if 0%{?fedora} > 20
 %{_bindir}/mate-about
 %{_bindir}/mate-gsettings-toggle
 %{_bindir}/mpaste
+%{_bindir}/mate-color-select
+%{_datadir}/applications/mate-color-select.desktop
 %{_datadir}/applications/mate-about.desktop
-%{_datadir}/applications/mate-user-guide.desktop
 %{_datadir}/mate-about
-%{_datadir}/glib-2.0/schemas/mate-fedora.gschema.override
 %{_mandir}/man1/*
 %{_datadir}/pixmaps/gnu-cat.gif
 %{_datadir}/pixmaps/gnu-cat_navideno_v3.png
-%{_datadir}/help/*/mate-user-guide
-%else
-%{_bindir}/mate-about
-%{_bindir}/mate-gsettings-toggle
-%{_datadir}/applications/mate-about.desktop
-%{_datadir}/mate
-%{_datadir}/omf/mate-desktop
-%{_datadir}/mate-about
-%{_datadir}/glib-2.0/schemas/mate-fedora.gschema.override
-%{_mandir}/man1/*
-%{_datadir}/pixmaps/gnu-cat.gif
-%{_datadir}/pixmaps/gnu-cat_navideno_v3.png
-%endif
+
 
 %files libs -f %{name}.lang
 %{_libdir}/libmate-desktop-2.so.*
@@ -248,6 +191,9 @@ fi
 
 
 %changelog
+* Sun Aug 10 2014 Liu Di <liudidi@gmail.com> - 1.9.1-1
+- 更新到 1.9.1
+
 * Wed May 07 2014 Liu Di <liudidi@gmail.com> - 1.8.0-5
 - 为 Magic 3.0 重建
 

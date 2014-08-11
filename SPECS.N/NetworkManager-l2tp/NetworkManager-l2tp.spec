@@ -7,7 +7,7 @@
 Summary:   NetworkManager VPN plugin for l2tp
 Name:      NetworkManager-l2tp
 Version:   0.9.8.7
-Release:   1%{?dist}
+Release:   2%{?dist}
 # The most of code uses GPLv2+ license.
 # Only vpn-password-dialog has LGPLv2+.
 License:   GPLv2+ and LGPLv2+
@@ -82,6 +82,9 @@ rm -f %{buildroot}%{_libdir}/pppd/%{ppp_version}/nm-l2tp-pppd-plugin.a
 %{_datadir}/gnome-vpn-properties/l2tp
 
 %changelog
+* Sun Aug 10 2014 Liu Di <liudidi@gmail.com> - 0.9.8.7-2
+- 为 Magic 3.0 重建
+
 * Thu Jul 31 2014 Ivan Romanov <drizt@land.ru> - 0.9.8.7-1
 - updated to 0.9.8.7
 
