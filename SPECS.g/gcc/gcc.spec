@@ -5,7 +5,7 @@
 # %{release}, append them after %{gcc_release} on Release: line.
 %global gcc_release 7
 %global _unpackaged_files_terminate_build 0
-%global multilib_64_archs sparc64 ppc64 s390x x86_64
+%global multilib_64_archs sparc64 ppc64 s390x x86_64 mips64el
 %ifarch %{ix86} x86_64 ia64 ppc ppc64 alpha
 %global build_ada 1
 %else
@@ -65,6 +65,9 @@
 %endif
 %ifarch x86_64
 %global multilib_32_arch i686
+%endif
+%ifarch mips64el
+%global multilib_32_arch mipsel
 %endif
 Summary: Various compilers (C, C++, Objective-C, Java, ...)
 Name: gcc
@@ -1088,7 +1091,7 @@ CC="$CC" CFLAGS="$OPT_FLAGS" \
 	--with-arch=i686 \
 %endif
 %ifarch mips64el
-        --with-arch=mips3 --with-abi=64 --disable-multilib \
+        --with-arch=mips3 --with-abi=64 --with-arch_32=mips1 --enable-targets=o32,n64 \
 %endif
 %ifarch x86_64
 	--with-arch_32=i686 \
