@@ -1,6 +1,6 @@
 Name:           javapackages-tools
-Version:        4.0.0
-Release:        7%{?dist}
+Version:        4.1.0
+Release:        2%{?dist}
 
 Summary:        Macros and scripts for Java packaging support
 
@@ -8,13 +8,7 @@ License:        BSD
 URL:            https://fedorahosted.org/javapackages/
 Source0:        https://fedorahosted.org/released/javapackages/javapackages-%{version}.tar.xz
 
-Patch0:         0001-pom-Add-ability-to-read-parent-s-version.patch
-Patch1:         0002-maven.req-Check-if-dependency-is-not-provided-by-sub.patch
-Patch2:         0004-maven.req-Generate-versioned-deps-on-subpackages.patch
-Patch3:         0006-maven.req-Fix-self-dependency-detection-code.patch
-Patch4:         0008-Fix-javapackages-metadata.xml.patch
-Patch5:         0010-maven.req-When-generating-req-from-POM-file-do-not-b.patch
-Patch6:         add-support-for-xmvn.resolver.disableEffectivePom-property.patch
+Patch0:         0001-maven.req-XMvn-sets-resolvedVersion-to-UNKNOWN-for-u.patch
 
 BuildArch:      noarch
 
@@ -29,6 +23,7 @@ BuildRequires:  python-nose
 BuildRequires:  dia
 BuildRequires:  PyXB >= 1.2.3
 BuildRequires:  javapackages-tools >= 4.0.0
+BuildRequires:  xmvn-resolve >= 2.0.0
 
 Requires:       coreutils
 Requires:       libxslt
@@ -104,7 +99,6 @@ Requires:       python-lxml
 Module for handling, querying and manipulating of various files for Java
 packaging in Linux distributions
 
-%if 0
 %package -n fedora-review-plugin-java
 Summary:        fedora-review plugin for checking Java packaging guidelines
 License:        GPLv2+
@@ -112,7 +106,6 @@ Requires:       fedora-review
 
 %description -n fedora-review-plugin-java
 %{summary}.
-%endif
 
 %package doc
 Summary:        Guide for Java packaging
@@ -141,12 +134,6 @@ This package provides non-essential macros and scripts to support Java packaging
 %setup -q -n javapackages-%{version}
 
 %patch0 -p1
-%patch1 -p1
-%patch2 -p1
-%patch3 -p1
-%patch4 -p1
-%patch5 -p1
-%patch6 -p1
 
 %build
 %configure
@@ -162,8 +149,6 @@ sed -e 's/.[17]$/&.gz/' -e 's/.py$/&*/' -i files-*
 pushd python
 %{__python} setup.py install --skip-build --root $RPM_BUILD_ROOT
 popd
-
-rm -rf %{buildroot}%{_datadir}/fedora-review
 
 %check
 ./check
@@ -182,23 +167,30 @@ rm -rf %{buildroot}%{_datadir}/fedora-review
 %doc LICENSE
 %{python_sitelib}/javapackages*
 
-%if 0
 %files -n fedora-review-plugin-java
 %{_datadir}/fedora-review/plugins/*
-%endif
 
 %files doc -f files-doc
 %doc LICENSE
 
 %changelog
-* Tue Jul 01 2014 Liu Di <liudidi@gmail.com> - 4.0.0-7
-- 为 Magic 3.0 重建
+* Thu Jul 10 2014 Michal Srb <msrb@redhat.com> - 4.1.0-2
+- Backport upstream patch for maven.req
 
-* Mon Jun 09 2014 Liu Di <liudidi@gmail.com> - 4.0.0-6
-- 为 Magic 3.0 重建
+* Mon Jun 23 2014 Michal Srb <msrb@redhat.com> - 4.1.0-1
+- Update to upstream version 4.1.0
 
-* Mon Jun 09 2014 Liu Di <liudidi@gmail.com> - 4.0.0-5
-- 为 Magic 3.0 重建
+* Thu Jun 12 2014 Michal Srb <msrb@redhat.com> - 4.0.0-8
+- Install man page for pom_change_dep
+
+* Tue Jun 10 2014 Michal Srb <msrb@redhat.com> - 4.0.0-7
+- Backport fix for maven.prov
+
+* Tue Jun 10 2014 Michal Srb <msrb@redhat.com> - 4.0.0-6
+- Update docs
+
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 4.0.0-5
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 
 * Fri May 30 2014 Michal Srb <msrb@redhat.com> - 4.0.0-4
 - Backport patch which adds support for "disableEffectivePom" property
