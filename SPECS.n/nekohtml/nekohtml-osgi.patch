@@ -1,0 +1,13 @@
+diff -up ./build.xml.fix ./build.xml
+--- ./build.xml.fix	2014-05-12 18:02:07.855415796 -0400
++++ ./build.xml	2014-05-12 18:03:02.519353974 -0400
+@@ -129,6 +129,9 @@
+   <jar jarfile='${jar.file}'>
+ 	<manifest>
+     	<attribute name="Built-By" value="${author}"/>
++        <attribute name="Bundle-SymbolicName" value="${package}" />
++        <attribute name="Bundle-Version" value="${version}" />
++        <attribute name="Export-Package" value="org.cyberneko.html,org.cyberneko.html.filters,org.cyberneko.html.parsers,org.cyberneko.html.xercesbridge" />
+     	<section name="org/cyberneko/html/">
+ 		  <attribute name="Specification-Title" value="Hyper-Text Markup Language (HTML)" />
+     	  <attribute name="Specification-Version" value="4.01" />
