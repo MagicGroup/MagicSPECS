@@ -1,0 +1,94 @@
+#!/bin/sh
+# 
+# Groovy script
+# Lubomir Rintel <lkundrak@v3.sk>
+
+# Packagers: When updating the package be sure to check
+# all this against against the upstream binary package
+
+# Source functions library
+if [ -f /usr/share/java-utils/java-functions ] ; then 
+  . /usr/share/java-utils/java-functions
+else
+  echo "Can't find functions library, aborting"
+  exit 1
+fi
+
+# Configuration
+SCRIPT_PATH=$0
+PROGNAME=$(basename $SCRIPT_PATH)
+GROOVY_CONF=/etc/groovy-starter.conf
+TOOLS_JAR=$(build-classpath ../../jvm/java/lib/tools)
+STARTER_MAIN_CLASS=org.codehaus.groovy.tools.GroovyStarter
+MAIN_CLASS=$STARTER_MAIN_CLASS
+
+# Wrappers
+[ $PROGNAME = grape ]		&& CLASS=org.codehaus.groovy.tools.GrapeMain
+[ $PROGNAME = groovy ]		&& CLASS=groovy.ui.GroovyMain
+[ $PROGNAME = groovyc ]		&& CLASS=org.codehaus.groovy.tools.FileSystemCompiler
+[ $PROGNAME = groovyConsole ]	&& CLASS=groovy.ui.Console
+[ $PROGNAME = java2groovy ]	&& CLASS=org.codehaus.groovy.antlr.java.Java2GroovyMain
+[ $PROGNAME = groovysh ]	&& CLASS=org.codehaus.groovy.tools.shell.Main
+[ $PROGNAME = groovysh ]	&& [ "$OLDSHELL" ] && CLASS=groovy.ui.InteractiveShell
+
+# Load system-wide configuration
+if [ -f /etc/groovy.conf ]; then
+  . /etc/groovy.conf
+fi
+
+# Load user configuration
+[ -f "$HOME/.groovyrc" ] && . "$HOME/.groovyrc"
+[ -f "$HOME/.groovy/startup" ] && . "$HOME/.groovy/startup"
+
+# Bail out if there's nothing to run
+if [ -z "$CLASS" ]
+then
+	echo "Can not determine main class for '$PROGNAME'" >&2
+	exit 1
+fi
+
+# JVM options
+GROOVY_OPTS="$GROOVY_OPTS -Dscript.name=$SCRIPT_PATH"
+GROOVY_OPTS="$GROOVY_OPTS -Dprogram.name=$PROGNAME"
+GROOVY_OPTS="$GROOVY_OPTS -Dgroovy.starter.conf=$GROOVY_CONF"
+GROOVY_OPTS="$GROOVY_OPTS -Dgroovy.home=$GROOVY_HOME"
+GROOVY_OPTS="$GROOVY_OPTS -Dtools.jar=$TOOLS_JAR"
+
+# Do not forget about RPM dependencies!
+BASE_JARS="$BASE_JARS ant"
+BASE_JARS="$BASE_JARS ant/ant-junit"
+BASE_JARS="$BASE_JARS ant-launcher"
+BASE_JARS="$BASE_JARS antlr"
+BASE_JARS="$BASE_JARS objectweb-asm3/asm"
+BASE_JARS="$BASE_JARS objectweb-asm3/asm-analysis"
+BASE_JARS="$BASE_JARS objectweb-asm3/asm-tree"
+BASE_JARS="$BASE_JARS objectweb-asm3/asm-util"
+BASE_JARS="$BASE_JARS bsf"
+BASE_JARS="$BASE_JARS commons-cli"
+BASE_JARS="$BASE_JARS commons-logging"
+BASE_JARS="$BASE_JARS groovy"
+BASE_JARS="$BASE_JARS ivy"
+BASE_JARS="$BASE_JARS jline1"
+BASE_JARS="$BASE_JARS jsp"
+BASE_JARS="$BASE_JARS junit"
+BASE_JARS="$BASE_JARS servlet"
+BASE_JARS="$BASE_JARS xstream"
+BASE_JARS="$BASE_JARS jansi"
+
+if [ "$1" = "-cp" -o "$1" = "-classpath" -o "$1" = "--classpath" ] ; then
+    if [ -z $CLASSPATH ]; then
+        CLASSPATH=$2
+    else
+        CLASSPATH=$2:$CLASSPATH
+    fi
+    shift 2
+fi
+
+# Set parameters
+set_jvm
+set_classpath $BASE_JARS
+set_flags $BASE_FLAGS
+set_options $BASE_OPTIONS $GROOVY_OPTS
+
+# Let's start
+run --conf "$GROOVY_CONF" --main "$CLASS" "$@"
