@@ -1,0 +1,20 @@
+<dependencies>
+    <dependency>
+        <maven>
+            <groupId>org.apache.geronimo.modules</groupId>
+            <artifactId>geronimo-transaction</artifactId>
+        </maven>
+    </dependency>
+    <dependency>
+        <maven>
+            <groupId>tomcat</groupId>
+            <artifactId>naming-java</artifactId>
+        </maven>
+    </dependency>
+    <dependency>
+        <maven>
+            <groupId>tomcat</groupId>
+            <artifactId>naming-common</artifactId>
+        </maven>
+    </dependency>
+</dependencies>
