@@ -1,0 +1,20 @@
+diff -up ./standard/src/org/apache/taglibs/standard/tag/common/sql/DataSourceWrapper.java.sav ./standard/src/org/apache/taglibs/standard/tag/common/sql/DataSourceWrapper.java
+--- ./standard/src/org/apache/taglibs/standard/tag/common/sql/DataSourceWrapper.java.sav	2012-01-24 15:23:53.000000000 -0500
++++ ./standard/src/org/apache/taglibs/standard/tag/common/sql/DataSourceWrapper.java	2012-01-24 15:24:31.000000000 -0500
+@@ -25,6 +25,8 @@ import javax.sql.DataSource;
+ 
+ import org.apache.taglibs.standard.resources.Resources;
+ 
++import java.sql.SQLFeatureNotSupportedException;
++import java.util.logging.Logger;
+ 
+ /**
+  * <p>A simple <code>DataSource</code> wrapper for the standard
+@@ -118,4 +120,7 @@ public class DataSourceWrapper implement
+         throw new SQLException(Resources.getMessage("NOT_SUPPORTED"));
+     }
+ 
++    public Logger getParentLogger() throws SQLFeatureNotSupportedException {
++        throw new SQLFeatureNotSupportedException(Resources.getMessage("NOT_SUPPORTED"));
++    }
+ }
