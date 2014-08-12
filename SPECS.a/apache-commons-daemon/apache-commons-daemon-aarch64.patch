@@ -1,0 +1,43 @@
+backport from http://svn.apache.org/viewvc?view=revision&revision=1533345
+
+https://issues.apache.org/jira/browse/DAEMON-308
+
+---
+ src/native/unix/configure            |    4 ++++
+ src/native/unix/support/apsupport.m4 |    4 ++++
+ 2 files changed, 8 insertions(+)
+
+--- commons-daemon-1.0.15-src.orig/src/native/unix/configure
++++ commons-daemon-1.0.15-src/src/native/unix/configure
+@@ -2695,10 +2695,14 @@ echo "$as_me: error: Unsupported operati
+   arm*)
+     CFLAGS="$CFLAGS -DCPU=\\\"arm\\\""
+     supported_os="arm"
+     HOST_CPU=arm
+     ;;
++  aarch64*)
++    CFLAGS="$CFLAGS -DCPU=\\\"aarch64\\\""
++    supported_os="aarch64"
++    HOST_CPU=aarch64;;
+   *)
+     echo "$as_me:$LINENO: result: failed" >&5
+ echo "${ECHO_T}failed" >&6
+     { { echo "$as_me:$LINENO: error: Unsupported CPU architecture \"$host_cpu\"" >&5
+ echo "$as_me: error: Unsupported CPU architecture \"$host_cpu\"" >&2;}
+--- commons-daemon-1.0.15-src.orig/src/native/unix/support/apsupport.m4
++++ commons-daemon-1.0.15-src/src/native/unix/support/apsupport.m4
+@@ -164,10 +164,14 @@ AC_DEFUN(AP_SUPPORTED_HOST,[
+   arm*)
+     CFLAGS="$CFLAGS -DCPU=\\\"arm\\\""
+     supported_os="arm"
+     HOST_CPU=arm
+     ;;
++  aarch64*)
++    CFLAGS="$CFLAGS -DCPU=\\\"aarch64\\\""
++    supported_os="aarch64"
++    HOST_CPU=aarch64;;
+   *)
+     AC_MSG_RESULT([failed])
+     AC_MSG_ERROR([Unsupported CPU architecture "$host_cpu"]);;
+   esac
+ 
