@@ -4,7 +4,7 @@
 
 Name:             byteman
 Version:          2.1.4.1
-Release:          4%{?dist}
+Release:          3%{?dist}
 Summary:          Java agent-based bytecode injection tool
 License:          LGPLv2+
 URL:              http://www.jboss.org/byteman
@@ -21,12 +21,12 @@ BuildRequires:    maven-failsafe-plugin
 BuildRequires:    maven-jar-plugin
 BuildRequires:    maven-surefire-plugin
 BuildRequires:    maven-surefire-provider-testng
-BuildRequires:    maven-surefire-provider-junit
+BuildRequires:    maven-surefire-provider-junit4
 BuildRequires:    maven-verifier-plugin
 BuildRequires:    java_cup
 BuildRequires:    jarjar
 BuildRequires:    objectweb-asm
-BuildRequires:    junit
+BuildRequires:    junit4
 BuildRequires:    testng
 
 Requires:         jpackage-utils
@@ -119,9 +119,6 @@ ln -s %{_javadir}/byteman/byteman.jar $RPM_BUILD_ROOT%{homedir}/lib/byteman.jar
 %doc docs/copyright.txt
 
 %changelog
-* Thu Jun 12 2014 Liu Di <liudidi@gmail.com> - 2.1.4.1-4
-- 为 Magic 3.0 重建
-
 * Fri Apr 18 2014 Marek Goldmann <mgoldman@redhat.com> - 2.1.4.1-3
 - Rebuilding for objectweb-asm update, RHBZ#1083570
 
