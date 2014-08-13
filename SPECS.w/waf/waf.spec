@@ -1,4 +1,4 @@
-%if (! 0%{?rhel}) || 0%{?rhel} > 6
+%if 0%{?fedora}
 %global with_python3 1
 # Turn off the brp-python-bytecompile script
 %global __os_install_post %(echo '%{__os_install_post}' | sed -e 's!/usr/lib[^[:space:]]*/brp-python-bytecompile[[:space:]].*$!!g')
@@ -9,33 +9,34 @@
 # available)
 %global with_docs 1
 
+# For pre-releases
+%undefine prerel
+
 Name:           waf
-Version:        1.6.10
-Release:        2%{?dist}
+Version:        1.7.16
+Release:        %{?prerel:0.}1%{?prerel:.%prerel}%{?dist}.2
 Summary:        A Python-based build system
 Group:          Development/Tools
 # The entire source code is BSD apart from pproc.py (taken from Python 2.5)
 License:        BSD and Python
 URL:            http://code.google.com/p/waf/
 # Original tarfile can be found at
-# http://waf.googlecode.com/files/waf-%%{version}.tar.bz2
+# http://ftp.waf.io/pub/release/waf-%%{version}.tar.bz2
 # We remove:
-# - /docs/book, as this is under CC-BY-NC-ND, which is not allowed in
-#   Fedora
-# - /waflib/extras/subprocess.py, is under a Python license and not
-#   needed in Fedora
-Source:         waf-%{version}.stripped.tar.bz2
-# use _datadir instead of /usr/lib
+# - docs/book, licensed CC BY-NC-ND
+# - Waf logos, licensed CC BY-NC
+Source:         waf-%{version}%{?prerel}.stripped.tar.bz2
 Patch0:         waf-1.6.2-libdir.patch
 Patch1:         waf-1.6.9-logo.patch
-BuildRoot:      %(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
+
 BuildArch:      noarch
+
 BuildRequires:  python-devel
 %if 0%{?with_python3}
 BuildRequires:  python3-devel
 %endif # with_python3
 %if 0%{?with_docs}
-%if 0%{?fedora > 13}
+%if 0%{?fedora}
 BuildRequires:  python-sphinx
 %else
 BuildRequires:  python-sphinx10
@@ -82,10 +83,16 @@ This package contains the Python 3 version of %{name}.
 
 
 %if 0%{?with_docs}
-%package -n %{name}-docs
+%package -n %{name}-doc
 Summary:        Documentation for %{name}
+Requires:       %{name} = %{version}-%{release}
+# obsolete the previous docs subpackage - guideline specifies -doc
+# since: Fedora 18, RHEL 7 (mark the provides/obsoletes RHEL only after
+# we no longer need to provide upgrade paths from affected Fedora releases)
+Provides:       %{name}-docs = %{version}-%{release}
+Obsoletes:      %{name}-docs < 1.6.11-2
 
-%description -n %{name}-docs
+%description -n %{name}-doc
 Waf is a Python-based framework for configuring, compiling and
 installing applications. It is a replacement for other tools such as
 Autotools, Scons, CMake or Ant.
@@ -96,8 +103,20 @@ This package contains the HTML documentation for %{name}.
 
 %prep
 %setup -q
-%patch0 -p0 -b .libdir
-%patch1 -p1 -b .logo
+# also search for waflib in /usr/share/waf
+%patch0 -p0
+# do not try to use the (removed) waf logos
+%patch1 -p1
+
+# remove BOM, causes trouble later
+sed -i -e '1s/^\xEF\xBB\xBF//' waflib/extras/dpapi.py
+
+# add missing quotes, see rhbz#914566 and
+# https://code.google.com/p/waf/issues/detail?id=1263
+sed -i -e 's@fontname=\(Vera.*sans\),@fontname="\1",@g' \
+  docs/sphinx/conf.py \
+  docs/sphinx/coremodules.rst \
+  docs/sphinx/featuremap.rst
 
 
 %build
@@ -116,14 +135,12 @@ pushd docs/sphinx
 %if ! 0%{?fedora > 13}
 export SPHINX_BUILD=sphinx-1.0-build
 %endif
-../../waf configure build
+../../waf -v configure build
 popd
 %endif # with_docs
 
 
 %install
-rm -rf %{buildroot}
-
 # use waf so it unpacks itself
 mkdir _temp ; pushd _temp
 cp -av ../waf .
@@ -171,12 +188,7 @@ rm -f docs/sphinx/build/html/.buildinfo
 %endif # with_python3
 
 
-%clean
-rm -rf %{buildroot}
-
-
 %files
-%defattr(-,root,root,-)
 %doc README TODO ChangeLog demos
 %{_bindir}/waf
 %{_bindir}/waf-%{python_version}
@@ -185,22 +197,108 @@ rm -rf %{buildroot}
 
 %if 0%{?with_python3}
 %files -n %{name}-python3
-%defattr(-,root,root,-)
 %{_bindir}/waf-%{python3_version}
 %{_datadir}/waf3
 %endif # with_python3
 
 
 %if 0%{?with_docs}
-%files -n %{name}-docs
-%defattr(-,root,root,-)
+%files -n %{name}-doc
 %doc docs/sphinx/build/html
 %endif # with_docs
 
 
 %changelog
-* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 1.6.10-2
-- 为 Magic 3.0 重建
+* Sun Jun 08 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.7.16-1.2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Wed May 28 2014 Kalev Lember <kalevlember@gmail.com> - 1.7.16-1.1
+- Rebuilt for https://fedoraproject.org/wiki/Changes/Python_3.4
+
+* Fri Mar 21 2014 Thomas Moschny <thomas.moschny@gmx.de> - 1.7.16-1
+- Update to 1.7.16.
+- Update download URL.
+
+* Sat Jan 25 2014 Thomas Moschny <thomas.moschny@gmx.de> - 1.7.15-1
+- Update to 1.7.15.
+- Modernize spec file.
+
+* Tue Jan  7 2014 Thomas Moschny <thomas.moschny@gmx.de> - 1.7.14-1
+- Update to 1.7.14.
+
+* Tue Sep 10 2013 Thomas Moschny <thomas.moschny@gmx.de> - 1.7.13-1
+- Update to 1.7.13.
+
+* Sun Aug 04 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.7.11-1.1
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Sun May 26 2013 Thomas Moschny <thomas.moschny@gmx.de> - 1.7.11-1
+- Update to 1.7.11.
+
+* Fri Mar 22 2013 Thomas Moschny <thomas.moschny@gmx.de> - 1.7.10-1
+- Update to 1.7.10.
+
+* Sat Mar  9 2013 Thomas Moschny <thomas.moschny@gmx.de> - 1.7.9-2
+- Add fix for FTBFS bug rhbz#914566.
+
+* Fri Feb 15 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.7.9-1.1
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
+
+* Sun Jan 13 2013 Thomas Moschny <thomas.moschny@gmx.de> - 1.7.9-1
+- Update to 1.7.9.
+
+* Fri Dec 21 2012 Thomas Moschny <thomas.moschny@gmx.de> - 1.7.8-1
+- Update to 1.7.8.
+
+* Sun Dec 16 2012 Thomas Moschny <thomas.moschny@gmx.de> - 1.7.7-1
+- Update to 1.7.7.
+
+* Tue Nov 20 2012 Thomas Moschny <thomas.moschny@gmx.de> - 1.7.6-1
+- Update to 1.7.6.
+
+* Tue Oct  2 2012 Thomas Moschny <thomas.moschny@gmx.de> - 1.7.5-1
+- Update to 1.7.5.
+
+* Wed Sep 26 2012 Thomas Moschny <thomas.moschny@gmx.de> - 1.7.4-1
+- Update to 1.7.4.
+
+* Mon Aug  6 2012 Thomas Moschny <thomas.moschny@gmx.de> - 1.7.2-1
+- Update to 1.7.2.
+
+* Sat Aug  4 2012 Thomas Moschny <thomas.moschny@gmx.de> - 1.7.1-1
+- Update to 1.7.1.
+- Remove rhel logic from with_python3 conditional.
+
+* Sat Aug 04 2012 David Malcolm <dmalcolm@redhat.com> - 1.7.0-1.2
+- rebuild for https://fedoraproject.org/wiki/Features/Python_3.3
+
+* Sun Jul 22 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.7.0-1.1
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Mon Jul 16 2012 Thomas Moschny <thomas.moschny@gmx.de> - 1.7.0-1
+- Update to 1.7.0.
+
+* Sat Jun 16 2012 Thomas Moschny <thomas.moschny@gmx.de> - 1.7.0-0.2.pre5
+- Update to 1.7.0pre5.
+
+* Thu Jun  7 2012 Thomas Moschny <thomas.moschny@gmx.de> - 1.7.0-0.1.pre4
+- Update to 1.7.0pre4.
+
+* Thu Jun  7 2012 Thomas Moschny <thomas.moschny@gmx.de> - 1.7.0-0.2.pre3
+- Add patch for waf issue #1171.
+- Spec file fixes.
+
+* Thu Jun  7 2012 Michel Salim <salimma@fedoraproject.org> - 1.7.0-0.1.pre3
+- Update to 1.7.0pre3
+- Spec clean-up
+- Rename -docs subpackage to -doc, per guidelines
+
+* Mon Feb  6 2012 Michel Salim <salimma@fedoraproject.org> - 1.6.11-1
+- Update to 1.6.11
+- Build in verbose mode
+
+* Sat Jan 14 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.6.10-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 
 * Sun Dec 18 2011 Thomas Moschny <thomas.moschny@gmx.de> - 1.6.10-1
 - Update to 1.6.10.
