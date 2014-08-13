@@ -1,0 +1,107 @@
+--- src/test/org/h2/test/server/TestWeb.java.orig	2014-04-05 14:57:06.000000000 +0100
++++ src/test/org/h2/test/server/TestWeb.java	2014-06-12 11:22:10.115626270 +0100
+@@ -692,7 +692,7 @@
+         }
+ 
+         @Override
+-        public Map<String, String> getParameterMap() {
++        public Map<String, String[]> getParameterMap() {
+             return null;
+         }
+ 
+@@ -904,6 +904,68 @@
+             return false;
+         }
+ 
++        @Override
++        public java.util.Collection<javax.servlet.http.Part> getParts() {
++            return null;
++        }
++
++        @Override
++        public javax.servlet.http.Part getPart(String name) {
++            return null;
++        }
++
++        @Override
++        public boolean authenticate(HttpServletResponse response) {
++            return false;
++        }
++
++        @Override
++        public void login(String username, String password) {
++            // ignore
++        }
++
++        @Override
++        public void logout() {
++            // ignore
++        }
++
++        @Override
++        public ServletContext getServletContext() {
++            return null;
++        }
++
++        @Override
++        public javax.servlet.AsyncContext startAsync() {
++            return null;
++        }
++
++        @Override
++        public javax.servlet.AsyncContext startAsync(
++                javax.servlet.ServletRequest servletRequest,
++                javax.servlet.ServletResponse servletResponse) {
++            return null;
++        }
++
++        @Override
++        public boolean isAsyncStarted() {
++            return false;
++        }
++
++        @Override
++        public boolean isAsyncSupported() {
++            return false;
++        }
++
++        @Override
++        public javax.servlet.AsyncContext getAsyncContext() {
++            return null;
++        }
++
++        @Override
++        public javax.servlet.DispatcherType getDispatcherType() {
++            return null;
++        }
++
+     }
+ 
+     /**
+@@ -1080,6 +1142,26 @@
+             // ignore
+         }
+ 
++        @Override
++        public int getStatus() {
++            return 0;
++        }
++
++        @Override
++        public String getHeader(String name) {
++            return null;
++        }
++
++        @Override
++        public java.util.Collection<String> getHeaders(String name) {
++            return null;
++        }
++
++        @Override
++        public java.util.Collection<String> getHeaderNames() {
++            return null;
++        }
++
+     }
+ 
+     /**
