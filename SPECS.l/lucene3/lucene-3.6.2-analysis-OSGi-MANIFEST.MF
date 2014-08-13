@@ -1,0 +1,67 @@
+Manifest-Version: 1.0
+Implementation-Vendor: The Apache Software Foundation
+Bundle-Localization: plugin
+X-Compile-Target-JDK: 1.5
+Bundle-RequiredExecutionEnvironment: J2SE-1.5
+Bundle-SymbolicName: org.apache.lucene.analysis
+Require-Bundle: org.apache.lucene.core;bundle-version="[3.6.0,4.0.0)"
+Export-Package: org.apache.lucene.analysis.ar;version="3.6.2",
+ org.apache.lucene.analysis.bg;version="3.6.2",
+ org.apache.lucene.analysis.br;version="3.6.2",
+ org.apache.lucene.analysis.ca;version="3.6.2",
+ org.apache.lucene.analysis.cjk;version="3.6.2",
+ org.apache.lucene.analysis.cn;version="3.6.2",
+ org.apache.lucene.analysis.compound;version="3.6.2",
+ org.apache.lucene.analysis.compound.hyphenation;version="3.6.2",
+ org.apache.lucene.analysis.cz;version="3.6.2",
+ org.apache.lucene.analysis.da;version="3.6.2",
+ org.apache.lucene.analysis.de;version="3.6.2",
+ org.apache.lucene.analysis.el;version="3.6.2",
+ org.apache.lucene.analysis.en;version="3.6.2",
+ org.apache.lucene.analysis.es;version="3.6.2",
+ org.apache.lucene.analysis.eu;version="3.6.2",
+ org.apache.lucene.analysis.fa;version="3.6.2",
+ org.apache.lucene.analysis.fi;version="3.6.2",
+ org.apache.lucene.analysis.fr;version="3.6.2",
+ org.apache.lucene.analysis.gl;version="3.6.2",
+ org.apache.lucene.analysis.hi;version="3.6.2",
+ org.apache.lucene.analysis.hu;version="3.6.2",
+ org.apache.lucene.analysis.hunspell;version="3.6.2",
+ org.apache.lucene.analysis.hy;version="3.6.2",
+ org.apache.lucene.analysis.id;version="3.6.2",
+ org.apache.lucene.analysis.in;version="3.6.2",
+ org.apache.lucene.analysis.it;version="3.6.2",
+ org.apache.lucene.analysis.lv;version="3.6.2",
+ org.apache.lucene.analysis.miscellaneous;version="3.6.2",
+ org.apache.lucene.analysis.ngram;version="3.6.2",
+ org.apache.lucene.analysis.nl;version="3.6.2",
+ org.apache.lucene.analysis.no;version="3.6.2",
+ org.apache.lucene.analysis.path;version="3.6.2",
+ org.apache.lucene.analysis.payloads;version="3.6.2",
+ org.apache.lucene.analysis.position;version="3.6.2",
+ org.apache.lucene.analysis.pt;version="3.6.2",
+ org.apache.lucene.analysis.query;version="3.6.2",
+ org.apache.lucene.analysis.reverse;version="3.6.2",
+ org.apache.lucene.analysis.ro;version="3.6.2",
+ org.apache.lucene.analysis.ru;version="3.6.2",
+ org.apache.lucene.analysis.shingle;version="3.6.2",
+ org.apache.lucene.analysis.sinks;version="3.6.2",
+ org.apache.lucene.analysis.snowball;version="3.6.2",
+ org.apache.lucene.analysis.sv;version="3.6.2",
+ org.apache.lucene.analysis.synonym;version="3.6.2",
+ org.apache.lucene.analysis.th;version="3.6.2",
+ org.apache.lucene.analysis.tr;version="3.6.2",
+ org.apache.lucene.analysis.util;version="3.6.2",
+ org.apache.lucene.analysis.wikipedia;version="3.6.2"
+Bundle-Version: 3.6.2
+Specification-Title: Lucene Search Engine: analyzers
+Specification-Vendor: The Apache Software Foundation
+Bundle-Vendor: fedoraproject.org
+Bundle-Name: Lucene contributed extensions
+Extension-Name: org.apache.lucene
+Implementation-Title: org.apache.lucene
+Import-Package: org.xml.sax;resolution:=optional,
+ javax.xml.parsers;resolution:=optional,
+ org.xml.sax.helpers;resolution:=optional
+Bundle-ManifestVersion: 2
+
