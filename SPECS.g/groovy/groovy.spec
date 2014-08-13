@@ -4,7 +4,7 @@
 
 Name:           groovy
 Version:        1.8.9
-Release:        12%{?dist}
+Release:        13%{?dist}
 Summary:        Dynamic language for the Java Platform
 
 # Some of the files are licensed under BSD and CPL terms, but the CPL has been superceded
@@ -85,7 +85,7 @@ build-jar-repository target/lib/compile servlet jsp \
         objectweb-asm3/asm-tree objectweb-asm3/asm \
         objectweb-asm3/asm-util objectweb-asm3/asm-analysis \
         antlr ant/ant-antlr antlr \
-        bsf jline1 xstream ant junit ivy commons-cli \
+        bsf jline1 xstream ant junit apache-ivy commons-cli \
         jansi
 
 # Build
@@ -132,6 +132,9 @@ desktop-file-install --dir $RPM_BUILD_ROOT%{_datadir}/applications \
 %doc LICENSE.txt LICENSE-2.0.txt NOTICE.txt cpl-v10.txt epl-v10.txt
 
 %changelog
+* Mon Aug 11 2014 Mikolaj Izdebski <mizdebsk@redhat.com> - 1.8.9-13
+- Fix Ivy JAR location
+
 * Sun Jun 22 2014 Michal Srb - 1.8.9-12
 - Migrate to %%mvn_artifact
 - Fix dep on jline1 in run script
