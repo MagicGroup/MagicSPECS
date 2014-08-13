@@ -1,0 +1,33 @@
+diff -Nru jdom-JDOM-2.0.5/core/src/java/org/jdom2/AttributeList.java jdom-JDOM-2.0.5-gil/core/src/java/org/jdom2/AttributeList.java
+--- jdom-JDOM-2.0.5/core/src/java/org/jdom2/AttributeList.java	2013-04-17 00:00:39.000000000 +0200
++++ jdom-JDOM-2.0.5-gil/core/src/java/org/jdom2/AttributeList.java	2014-04-05 01:16:17.473795389 +0200
+@@ -606,7 +606,7 @@
+ 	 * 
+ 	 * @param comp The Comparator to use for sorting.
+ 	 */
+-	void sort(Comparator<? super Attribute> comp) {
++	public void sort(Comparator<? super Attribute> comp) {
+ 		final int sz = size;
+ 		int[] indexes = new int[sz];
+ 		for (int i = 0 ; i < sz; i++) {
+diff -Nru jdom-JDOM-2.0.5/core/src/java/org/jdom2/ContentList.java jdom-JDOM-2.0.5-gil/core/src/java/org/jdom2/ContentList.java
+--- jdom-JDOM-2.0.5/core/src/java/org/jdom2/ContentList.java	2013-04-17 00:00:39.000000000 +0200
++++ jdom-JDOM-2.0.5-gil/core/src/java/org/jdom2/ContentList.java	2014-04-05 01:17:24.004508188 +0200
+@@ -628,7 +628,7 @@
+ 		return left;
+ 	}
+ 	
+-	final void sort(final Comparator<? super Content> comp) {
++	public final void sort(final Comparator<? super Content> comp) {
+ 		final int sz = size;
+ 		int[] indexes = new int[sz];
+ 		for (int i = 0 ; i < sz; i++) {
+@@ -1238,7 +1238,7 @@
+ 		}
+ 		
+ 
+-		final void sort(final Comparator<? super F> comp) {
++		public final void sort(final Comparator<? super F> comp) {
+ 			// this size() forces a full scan/update of the list.
+ 			final int sz = size();
+ 			final int[] indexes = new int[sz];
