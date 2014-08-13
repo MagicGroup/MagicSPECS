@@ -1,0 +1,30 @@
+Bundle-Localization: plugin
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-SymbolicName: org.apache.lucene.queryparser
+Require-Bundle: org.apache.lucene.core;bundle-version="4.8.1"
+Export-Package: org.apache.lucene.queryparser.analyzing;version="4.8.1",
+ org.apache.lucene.queryparser.classic;version="4.8.1",
+ org.apache.lucene.queryparser.complexPhrase;version="4.8.1",
+ org.apache.lucene.queryparser.ext;version="4.8.1",
+ org.apache.lucene.queryparser.flexible.core;version="4.8.1",
+ org.apache.lucene.queryparser.flexible.core.builders;version="4.8.1",
+ org.apache.lucene.queryparser.flexible.core.config;version="4.8.1",
+ org.apache.lucene.queryparser.flexible.core.messages;version="4.8.1",
+ org.apache.lucene.queryparser.flexible.core.nodes;version="4.8.1",
+ org.apache.lucene.queryparser.flexible.core.parser;version="4.8.1",
+ org.apache.lucene.queryparser.flexible.core.processors;version="4.8.1",
+ org.apache.lucene.queryparser.flexible.core.util;version="4.8.1",
+ org.apache.lucene.queryparser.simple;version="4.8.1",
+ org.apache.lucene.queryparser.surround.parser;version="4.8.1",
+ org.apache.lucene.queryparser.surround.query;version="4.8.1",
+ org.apache.lucene.queryparser.xml;version="4.8.1",
+ org.apache.lucene.queryparser.xml.builders;version="4.8.1"
+Bundle-Version: 4.8.1
+Bundle-Vendor: fedoraproject.org
+Bundle-Name: Lucene Query parsers and parsing framework
+Import-Package: org.xml.sax;resolution:=optional,
+ javax.xml.parsers;resolution:=optional,
+ org.xml.sax.helpers;resolution:=optional
+Bundle-ManifestVersion: 2
+
+
