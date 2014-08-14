@@ -1,0 +1,11 @@
+--- pom.xml.orig	2013-01-18 17:01:28.968287168 +0800
++++ pom.xml	2013-01-18 17:01:41.000866596 +0800
+@@ -61,7 +61,7 @@
+     <beanshell-artifactId>bsh</beanshell-artifactId>
+     <beanshell-version>2.0b4</beanshell-version>
+     <groovy-groupId>org.codehaus.groovy</groovy-groupId>
+-    <groovy-artifactId>groovy-all</groovy-artifactId>
++    <groovy-artifactId>groovy</groovy-artifactId>
+     <groovy-version>2.0.1</groovy-version>
+     <mavenPluginPluginVersion>3.2</mavenPluginPluginVersion>
+     
