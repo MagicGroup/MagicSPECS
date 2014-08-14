@@ -1,0 +1,13 @@
+diff --git a/mockito-1.9.0/build.xml b/mockito-1.9.0/build.xml
+index e6b49e8..487b632 100644
+--- a/mockito-1.9.0/build.xml
++++ b/mockito-1.9.0/build.xml
+@@ -44,7 +44,7 @@
+   <path id="compile.classpath">
+     <fileset dir="/usr/share/java">
+       <include name="hamcrest/core.jar" />
+-      <include name="junit4.jar" />
++      <include name="junit.jar" />
+       <include name="objenesis.jar" />
+       <include name="cglib.jar" />
+     </fileset>

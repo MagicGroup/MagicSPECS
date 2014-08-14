@@ -1,0 +1,133 @@
+# HG changeset patch
+# Parent 65e60f677b3cb9c40d5d37e91ce6be1897c46370
+
+diff --git a/src/org/mockito/internal/creation/DelegatingMockitoMethodProxy.java b/src/org/mockito/internal/creation/DelegatingMockitoMethodProxy.java
+--- a/src/org/mockito/internal/creation/DelegatingMockitoMethodProxy.java
++++ b/src/org/mockito/internal/creation/DelegatingMockitoMethodProxy.java
+@@ -4,7 +4,7 @@
+  */
+ package org.mockito.internal.creation;
+ 
+-import org.mockito.cglib.proxy.MethodProxy;
++import net.sf.cglib.proxy.MethodProxy;
+ 
+ public class DelegatingMockitoMethodProxy extends AbstractMockitoMethodProxy {
+ 
+diff --git a/src/org/mockito/internal/creation/MethodInterceptorFilter.java b/src/org/mockito/internal/creation/MethodInterceptorFilter.java
+--- a/src/org/mockito/internal/creation/MethodInterceptorFilter.java
++++ b/src/org/mockito/internal/creation/MethodInterceptorFilter.java
+@@ -8,8 +8,8 @@
+ import java.io.Serializable;
+ import java.lang.reflect.Method;
+ 
+-import org.mockito.cglib.proxy.MethodInterceptor;
+-import org.mockito.cglib.proxy.MethodProxy;
++import net.sf.cglib.proxy.MethodInterceptor;
++import net.sf.cglib.proxy.MethodProxy;
+ import org.mockito.internal.MockitoInvocationHandler;
+ import org.mockito.internal.creation.cglib.CGLIBHacker;
+ import org.mockito.internal.invocation.*;
+diff --git a/src/org/mockito/internal/creation/MockitoMethodProxy.java b/src/org/mockito/internal/creation/MockitoMethodProxy.java
+--- a/src/org/mockito/internal/creation/MockitoMethodProxy.java
++++ b/src/org/mockito/internal/creation/MockitoMethodProxy.java
+@@ -4,7 +4,7 @@
+  */
+ package org.mockito.internal.creation;
+ 
+-import org.mockito.cglib.proxy.MethodProxy;
++import net.sf.cglib.proxy.MethodProxy;
+ 
+ public interface MockitoMethodProxy {
+ 
+diff --git a/src/org/mockito/internal/creation/SerializableMockitoMethodProxy.java b/src/org/mockito/internal/creation/SerializableMockitoMethodProxy.java
+--- a/src/org/mockito/internal/creation/SerializableMockitoMethodProxy.java
++++ b/src/org/mockito/internal/creation/SerializableMockitoMethodProxy.java
+@@ -6,7 +6,7 @@
+ 
+ import java.io.Serializable;
+ 
+-import org.mockito.cglib.proxy.MethodProxy;
++import net.sf.cglib.proxy.MethodProxy;
+ import org.mockito.internal.util.reflection.Whitebox;
+ 
+ public class SerializableMockitoMethodProxy extends AbstractMockitoMethodProxy implements Serializable {
+diff --git a/src/org/mockito/internal/creation/cglib/CGLIBHacker.java b/src/org/mockito/internal/creation/cglib/CGLIBHacker.java
+--- a/src/org/mockito/internal/creation/cglib/CGLIBHacker.java
++++ b/src/org/mockito/internal/creation/cglib/CGLIBHacker.java
+@@ -8,7 +8,7 @@
+ import java.lang.reflect.Field;
+ 
+ import org.mockito.internal.creation.MockitoMethodProxy;
+-import org.mockito.cglib.proxy.MethodProxy;
++import net.sf.cglib.proxy.MethodProxy;
+ 
+ public class CGLIBHacker implements Serializable {
+ 
+diff --git a/src/org/mockito/internal/creation/cglib/MockitoNamingPolicy.java b/src/org/mockito/internal/creation/cglib/MockitoNamingPolicy.java
+--- a/src/org/mockito/internal/creation/cglib/MockitoNamingPolicy.java
++++ b/src/org/mockito/internal/creation/cglib/MockitoNamingPolicy.java
+@@ -4,7 +4,7 @@
+  */
+ package org.mockito.internal.creation.cglib;
+ 
+-import org.mockito.cglib.core.DefaultNamingPolicy;
++import net.sf.cglib.core.DefaultNamingPolicy;
+ 
+ public class MockitoNamingPolicy extends DefaultNamingPolicy {
+     
+diff --git a/src/org/mockito/internal/creation/jmock/ClassImposterizer.java b/src/org/mockito/internal/creation/jmock/ClassImposterizer.java
+--- a/src/org/mockito/internal/creation/jmock/ClassImposterizer.java
++++ b/src/org/mockito/internal/creation/jmock/ClassImposterizer.java
+@@ -7,8 +7,8 @@
+ import java.lang.reflect.*;
+ import java.util.List;
+ 
+-import org.mockito.cglib.core.*;
+-import org.mockito.cglib.proxy.*;
++import net.sf.cglib.core.*;
++import net.sf.cglib.proxy.*;
+ import org.mockito.exceptions.base.MockitoException;
+ import org.mockito.internal.creation.cglib.MockitoNamingPolicy;
+ import org.objenesis.ObjenesisStd;
+diff --git a/src/org/mockito/internal/creation/jmock/SerializableNoOp.java b/src/org/mockito/internal/creation/jmock/SerializableNoOp.java
+--- a/src/org/mockito/internal/creation/jmock/SerializableNoOp.java
++++ b/src/org/mockito/internal/creation/jmock/SerializableNoOp.java
+@@ -6,8 +6,8 @@
+ 
+ import java.io.Serializable;
+ 
+-import org.mockito.cglib.proxy.Callback;
+-import org.mockito.cglib.proxy.NoOp;
++import net.sf.cglib.proxy.Callback;
++import net.sf.cglib.proxy.NoOp;
+ 
+ public class SerializableNoOp implements NoOp, Serializable {
+ 
+diff --git a/src/org/mockito/internal/stubbing/defaultanswers/ReturnsSmartNulls.java b/src/org/mockito/internal/stubbing/defaultanswers/ReturnsSmartNulls.java
+--- a/src/org/mockito/internal/stubbing/defaultanswers/ReturnsSmartNulls.java
++++ b/src/org/mockito/internal/stubbing/defaultanswers/ReturnsSmartNulls.java
+@@ -9,8 +9,8 @@
+ import java.util.Arrays;
+ 
+ import org.mockito.Mockito;
+-import org.mockito.cglib.proxy.MethodInterceptor;
+-import org.mockito.cglib.proxy.MethodProxy;
++import net.sf.cglib.proxy.MethodInterceptor;
++import net.sf.cglib.proxy.MethodProxy;
+ import org.mockito.exceptions.Reporter;
+ import org.mockito.internal.creation.jmock.ClassImposterizer;
+ import org.mockito.internal.debugging.Location;
+diff --git a/src/org/mockito/internal/util/MockUtil.java b/src/org/mockito/internal/util/MockUtil.java
+--- a/src/org/mockito/internal/util/MockUtil.java
++++ b/src/org/mockito/internal/util/MockUtil.java
+@@ -4,8 +4,8 @@
+  */
+ package org.mockito.internal.util;
+ 
+-import org.mockito.cglib.proxy.Callback;
+-import org.mockito.cglib.proxy.Factory;
++import net.sf.cglib.proxy.Callback;
++import net.sf.cglib.proxy.Factory;
+ import org.mockito.exceptions.misusing.NotAMockException;
+ import org.mockito.internal.InvocationNotifierHandler;
+ import org.mockito.internal.MockHandler;

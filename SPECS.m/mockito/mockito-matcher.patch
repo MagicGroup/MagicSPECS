@@ -1,0 +1,24 @@
+diff --git a/src/org/mockito/internal/matchers/LocalizedMatcher.java b/src/org/mockito/internal/matchers/LocalizedMatcher.java
+index 01e83b3..7d249f5 100644
+--- a/src/org/mockito/internal/matchers/LocalizedMatcher.java
++++ b/src/org/mockito/internal/matchers/LocalizedMatcher.java
+@@ -16,6 +16,12 @@ public class LocalizedMatcher implements Matcher, ContainsExtraTypeInformation,
+     private final Matcher actualMatcher;
+     private Location location;
+ 
++    /* This is a hack for Fedora. Bug has been filed here:
++     * https://code.google.com/p/mockito/issues/detail?id=428 */
++    public void describeMismatch(Object item, Description mismatchDescription) {
++        mismatchDescription.appendText("was ").appendValue(item);
++    }
++
+     public LocalizedMatcher(Matcher actualMatcher) {
+         this.actualMatcher = actualMatcher;
+         this.location = new Location();
+@@ -65,4 +71,4 @@ public class LocalizedMatcher implements Matcher, ContainsExtraTypeInformation,
+     public Matcher getActualMatcher() {
+         return actualMatcher;
+     }
+-}
+\ No newline at end of file
++}
