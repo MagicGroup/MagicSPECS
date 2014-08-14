@@ -1,0 +1,44 @@
+From a954f6d671b5c3f334a80e803db77362500c1e48 Mon Sep 17 00:00:00 2001
+From: Juan Hernandez <juan.hernandez@redhat.com>
+Date: Sat, 10 Mar 2012 17:20:13 +0100
+Subject: [PATCH 4/5] Don't bundle other jars
+
+---
+ build.xml |    7 -------
+ 1 files changed, 0 insertions(+), 7 deletions(-)
+
+diff --git a/build.xml b/build.xml
+index 12631a1..4dda9ef 100644
+--- a/build.xml
++++ b/build.xml
+@@ -830,7 +830,6 @@
+                       <fileset dir="${runtime-fi.classes}"/>
+                       <fileset dir="${runtime-staxex.classes}"/>
+                       <fileset dir="${runtime.src}" includes="META-INF/**/*" />
+-                      <zipgroupfileset dir="${jaxb.libs.runtime2}" includes="*.jar" />
+                   </jar>
+               </sequential>
+ 
+@@ -854,19 +853,13 @@ Class-Path: ${manifest.classpath}
+                     <mapper type="glob" from="*.java" to="*.java_" />
+                   </copy>
+ 
+-                  <mkdir dir="${jaxb.root}/build/jaxb-xjc-rejar"/>
+-                  <unzip dest="${jaxb.root}/build/jaxb-xjc-rejar">
+-                    <fileset dir="${jaxb.libs.compiler}" includes="*.jar" />
+-                  </unzip>
+                   <jar jarfile="${jaxb.dist}/lib/jaxb-xjc.jar"
+                        manifest="${xjc.root}/manifest.xjc"
+                        duplicate="fail">
+                       <!-- can't use zipgroupfileset because of the duplicate LICENSE.txt -->
+-                      <fileset dir="${jaxb.root}/build/jaxb-xjc-rejar"/>
+                       <fileset dir="${xjc.classes}"/>
+                       <metainf dir="${xjc.src}/META-INF" />
+                   </jar>
+-                  <delete dir="${jaxb.root}/build/jaxb-xjc-rejar"/>
+               </sequential>
+ 
+               <!-- copy bin scripts -->
+-- 
+1.7.9
+
