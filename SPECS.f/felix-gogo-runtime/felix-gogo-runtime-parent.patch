@@ -1,0 +1,12 @@
+diff --git a/pom.xml b/pom.xml
+index d467d41..5dd4bbb 100644
+--- a/pom.xml
++++ b/pom.xml
+@@ -21,7 +21,6 @@
+         <groupId>org.apache.felix</groupId>
+         <artifactId>gogo-parent</artifactId>
+         <version>0.6.0</version>
+-        <relativePath>../gogo-parent/pom.xml</relativePath>
+     </parent>
+     <modelVersion>4.0.0</modelVersion>
+     <packaging>bundle</packaging>

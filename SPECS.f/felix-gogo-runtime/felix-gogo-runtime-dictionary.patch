@@ -1,0 +1,21 @@
+diff --git a/src/main/java/org/apache/felix/gogo/runtime/activator/EventAdminListener.java b/src/main/java/org/apache/felix/gogo/runtime/activator/EventAdminListener.java
+index 2368ce1..dab9269 100644
+--- a/src/main/java/org/apache/felix/gogo/runtime/activator/EventAdminListener.java
++++ b/src/main/java/org/apache/felix/gogo/runtime/activator/EventAdminListener.java
+@@ -19,6 +19,7 @@
+ package org.apache.felix.gogo.runtime.activator;
+ 
+ import java.util.Properties;
++import java.util.Dictionary;
+ 
+ import org.apache.felix.gogo.api.CommandSessionListener;
+ import org.apache.felix.service.command.CommandSession;
+@@ -45,7 +46,7 @@ public class EventAdminListener implements CommandSessionListener
+         if (admin != null) {
+             Properties props = new Properties();
+             props.setProperty("command", command.toString());
+-            Event event = new Event("org/apache/felix/service/command/EXECUTING", props);
++            Event event = new Event("org/apache/felix/service/command/EXECUTING", (Dictionary)props);
+             admin.postEvent(event);
+         }
+     }
