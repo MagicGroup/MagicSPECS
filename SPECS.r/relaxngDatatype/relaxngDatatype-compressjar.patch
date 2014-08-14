@@ -1,0 +1,10 @@
+--- build.xml.orig	2007-02-12 18:15:19.000000000 -0500
++++ build.xml	2007-02-12 18:15:25.000000000 -0500
+@@ -26,7 +26,6 @@
+ 		<!-- standard archive -->
+ 		<delete file="relaxngDatatype.jar"/>
+ 		<jar	jarfile="relaxngDatatype.jar"
+-				compress="false"
+ 				manifest="MANIFEST.MF">
+ 			<fileset dir="bin" includes="**/*.class" />
+ 		</jar>
