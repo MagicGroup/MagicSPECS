@@ -1,6 +1,6 @@
 Name:           maven-enforcer
 Version:        1.3.1
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Maven Enforcer
 License:        ASL 2.0
 URL:            http://maven.apache.org/enforcer
@@ -15,7 +15,7 @@ BuildRequires:  mvn(org.apache.maven.shared:maven-dependency-tree)
 BuildRequires:  mvn(org.apache.maven:maven-artifact)
 BuildRequires:  mvn(org.apache.maven:maven-compat)
 BuildRequires:  mvn(org.apache.maven:maven-core)
-BuildRequires:  mvn(org.apache.maven:maven-parent)
+BuildRequires:  mvn(org.apache.maven:maven-parent:pom:)
 BuildRequires:  mvn(org.apache.maven:maven-plugin-api)
 BuildRequires:  mvn(org.apache.maven:maven-project)
 BuildRequires:  mvn(org.beanshell:bsh)
@@ -84,8 +84,11 @@ sed -e "s|<artifactId>plexus-maven-plugin</artifactId>|<artifactId>plexus-compon
 %doc LICENSE NOTICE
 
 %changelog
-* Mon Jun 09 2014 Liu Di <liudidi@gmail.com> - 1.3.1-2
-- 为 Magic 3.0 重建
+* Mon Aug  4 2014 Mikolaj Izdebski <mizdebsk@redhat.com> - 1.3.1-3
+- Fix build-requires on parent POM
+
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.3.1-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 
 * Fri Aug  9 2013 Mikolaj Izdebski <mizdebsk@redhat.com> - 1.3.1-1
 - Update to upstream version 1.3.1
