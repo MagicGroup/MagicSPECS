@@ -1,0 +1,14 @@
+Index: src/main/java/org/apache/felix/gogo/shell/Activator.java
+===================================================================
+--- src/main/java/org/apache/felix/gogo/shell/Activator.java	(revision 1238398)
++++ src/main/java/org/apache/felix/gogo/shell/Activator.java	(working copy)
+@@ -74,6 +74,9 @@
+             args = (args == null) ? "" : args;
+             session.execute("gosh --login " + args);
+         }
++        catch (InterruptedException e){
++        	// ignore
++        }
+         catch (Exception e)
+         {
+             Object loc = session.get(".location");
