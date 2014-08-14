@@ -1,0 +1,34 @@
+From 1bcc5546d6100f1cc41f6e1cb9be113ce967d737 Mon Sep 17 00:00:00 2001
+From: Juan Hernandez <juan.hernandez@redhat.com>
+Date: Sat, 10 Mar 2012 17:24:00 +0100
+Subject: [PATCH 5/5] Remove classpath from manifests
+
+---
+ build.xml |    4 ----
+ 1 files changed, 0 insertions(+), 4 deletions(-)
+
+diff --git a/build.xml b/build.xml
+index 4dda9ef..a0759eb 100644
+--- a/build.xml
++++ b/build.xml
+@@ -820,9 +820,6 @@
+               <!-- generate jaxb-impl.jar for 2.0 runtime -->
+               <sequential>
+                   <createManifest file="${runtime.root}/build/manifest.rt" extensionName="com.sun.xml.bind" />
+-                  <manifest mode="update" file="${runtime.root}/build/manifest.rt">
+-                    <attribute name="Class-Path" value="jaxb-api.jar activation.jar jsr173_1.0_api.jar jaxb1-impl.jar" /> <!-- added for JES4 script compatibility -->
+-                  </manifest>
+                   <jar jarfile="${jaxb.dist}/lib/jaxb-impl.jar"
+                        manifest="${runtime.root}/build/manifest.rt"
+                        duplicate="fail">
+@@ -845,7 +842,6 @@
+                   <property name="manifest.classpath" value="jaxb-api.jar jaxb-impl.jar jsr173_1.0_api.jar activation.jar" />
+                   <echo file="${xjc.root}/manifest.xjc" append="true"
+ >Main-Class: com.sun.tools.xjc.XJCFacade
+-Class-Path: ${manifest.classpath}
+ 
+ </echo>
+                   <copy todir="${xjc.classes}">
+-- 
+1.7.9
+

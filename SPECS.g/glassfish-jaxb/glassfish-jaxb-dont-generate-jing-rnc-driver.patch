@@ -1,0 +1,31 @@
+From 2fad64699dd922ae6c78575b4b32f621461544a5 Mon Sep 17 00:00:00 2001
+From: Juan Hernandez <juan.hernandez@redhat.com>
+Date: Sat, 10 Mar 2012 17:16:56 +0100
+Subject: [PATCH 3/5] Don't generate Jing RNC driver
+
+---
+ tools/build.xml |    2 --
+ 1 files changed, 0 insertions(+), 2 deletions(-)
+
+diff --git a/tools/build.xml b/tools/build.xml
+index d304db4..0723987 100644
+--- a/tools/build.xml
++++ b/tools/build.xml
+@@ -53,14 +53,12 @@
+     <target name="compile" depends="compile-for-source"
+             description="build tools and deploy them into necessary locations">
+         <ant dir="${jaxb.root}/tools/pretty-printer" />
+-        <ant dir="${jaxb.root}/tools/jing-rnc-driver"/>
+     </target>
+     
+     <target name="clean">
+         <ant dir="${jaxb.root}/tools/source-tidy"          target="clean"/>
+         <ant dir="${jaxb.root}/tools/webapp-commons"       target="clean"/>
+         <ant dir="${jaxb.root}/tools/pretty-printer"       target="clean"/>
+-        <ant dir="${jaxb.root}/tools/jing-rnc-driver"      target="clean"/>
+         <ant dir="${jaxb.root}/tools/xmllint"              target="clean"/>
+     </target>
+ </project>
+-- 
+1.7.9
+

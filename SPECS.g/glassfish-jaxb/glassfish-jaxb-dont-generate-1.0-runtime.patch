@@ -1,0 +1,60 @@
+From 2dd0e1c44601db267fab47fa903c3f478d624d53 Mon Sep 17 00:00:00 2001
+From: Juan Hernandez <juan.hernandez@redhat.com>
+Date: Sat, 10 Mar 2012 17:11:14 +0100
+Subject: [PATCH 2/5] Don't generate 1.0 runtime
+
+---
+ build.xml |   23 +----------------------
+ 1 files changed, 1 insertions(+), 22 deletions(-)
+
+diff --git a/build.xml b/build.xml
+index 7e95870..12631a1 100644
+--- a/build.xml
++++ b/build.xml
+@@ -798,7 +798,7 @@
+        
+     <!-- generate a distribution -->
+     <target name="dist"
+-            depends="compile, integrate-1.0-compiler"
++            depends="compile"
+             description="create a distribution in jaxb-ri/dist">
+         <mkdir dir="${jaxb.dist}" />
+         <mkdir dir="${jaxb.dist}/bin" />
+@@ -834,25 +834,6 @@
+                   </jar>
+               </sequential>
+ 
+-              <!-- JAXB 1.0 runtime jar -->
+-              <!-- generate jaxb1-impl.jar for 1.0 runtime -->
+-              <!-- include the contents of the old jaxb-libs.jar -->
+-              <sequential>
+-                  <createManifest file="${runtime.root}/build/manifest.rt1" extensionName="com.sun.xml.bind" />
+-                  <mkdir dir="${jaxb.root}/build/jaxb-1-impl-rejar"/>
+-                  <unzip dest="${jaxb.root}/build/jaxb-1-impl-rejar">
+-                    <fileset dir="${jaxb.libs.runtime}" includes="*.jar" />
+-                  </unzip>
+-                  <jar jarfile="${jaxb.dist}/lib/jaxb1-impl.jar"
+-                       manifest="${runtime.root}/build/manifest.rt1">
+-                      <!-- can't use zipgroupfileset because of the duplicate version.properties -->
+-                      <fileset dir="${jaxb.root}/build/jaxb-1-impl-rejar"/>
+-                      <fileset dir="${runtime-deprecated.classes}"/>
+-                  </jar>
+-                  <delete dir="${jaxb.root}/build/jaxb-1-impl-rejar"/>
+-              </sequential>
+-
+-
+               <!-- generate jaxb-xjc.jar: xjc, and schemagen subprojects -->
+               <sequential>
+                   <createManifest file="${xjc.root}/manifest.xjc" extensionName="com.sun.tools.xjc" />
+@@ -884,8 +865,6 @@ Class-Path: ${manifest.classpath}
+                       <fileset dir="${jaxb.root}/build/jaxb-xjc-rejar"/>
+                       <fileset dir="${xjc.classes}"/>
+                       <metainf dir="${xjc.src}/META-INF" />
+-                      <!-- bundle the 1.0 compiler in the side directory -->
+-                      <zipfileset dir="${xjc10.classes}/.." />
+                   </jar>
+                   <delete dir="${jaxb.root}/build/jaxb-xjc-rejar"/>
+               </sequential>
+-- 
+1.7.9
+

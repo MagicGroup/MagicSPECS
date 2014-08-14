@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+
+<project name="javadoc" default="build">
+
+  <target name="build">
+    <mkdir dir="apidocs" />
+    <javadoc destdir="apidocs">
+      <fileset dir="runtime/src" includes="**/*.java"/>
+      <fileset dir="xjc/src" includes="**/*.java"/>
+    </javadoc>
+    <copy todir="apidocs">
+      <fileset dir="runtime/src" includes="**/doc-files/**/*"/>
+      <fileset dir="xjc/src" includes="**/doc-files/**/*"/>
+    </copy>
+  </target>
+
+</project>

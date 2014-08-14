@@ -1,0 +1,114 @@
+--- a/jaxb-impl.pom
++++ b/jaxb-impl.pom
+@@ -43,12 +43,6 @@
+ 
+ <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+ 
+-    <parent>
+-        <groupId>net.java</groupId>
+-        <artifactId>jvnet-parent</artifactId>
+-        <version>1</version>
+-    </parent>
+-    
+     <modelVersion>4.0.0</modelVersion>
+     <groupId>com.sun.xml.bind</groupId>
+     <artifactId>jaxb-impl</artifactId>
+@@ -91,6 +85,37 @@
+         <url>http://java.net/projects/jaxb/sources/version2/show/branches/jaxb-2_2-branch/jaxb-ri</url>
+     </scm>
+ 
++    <dependencies>
++        <dependency>
++            <groupId>isorelax</groupId>
++            <artifactId>isorelax</artifactId>
++            <scope>system</scope>
++            <systemPath>/usr/share/java/isorelax.jar</systemPath>
++        </dependency>
++        <dependency>
++            <groupId>msv-msv</groupId>
++            <artifactId>msv-msv</artifactId>
++            <scope>system</scope>
++            <systemPath>/usr/share/java/msv-msv.jar</systemPath>
++        </dependency>
++        <dependency>
++            <groupId>relaxngDatatype</groupId>
++            <artifactId>relaxngDatatype</artifactId>
++            <scope>system</scope>
++            <systemPath>/usr/share/java/relaxngDatatype.jar</systemPath>
++        </dependency>
++        <dependency>
++            <groupId>com.sun.istack</groupId>
++            <artifactId>istack-commons-runtime</artifactId>
++            <version>2.6.1</version>
++        </dependency>
++        <dependency>
++            <groupId>com.sun.xml.txw2</groupId>
++            <artifactId>txw2</artifactId>
++            <version>20110809</version>
++        </dependency>
++    </dependencies>
++
+     <dependencyManagement>        
+         <dependencies>
+             <dependency>
+--- a/jaxb-xjc.pom
++++ b/jaxb-xjc.pom
+@@ -43,12 +43,6 @@
+ 
+ <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+ 
+-    <parent>
+-        <groupId>net.java</groupId>
+-        <artifactId>jvnet-parent</artifactId>
+-        <version>1</version>
+-    </parent>
+-    
+     <modelVersion>4.0.0</modelVersion>
+     <groupId>com.sun.xml.bind</groupId>
+     <artifactId>jaxb-xjc</artifactId>
+@@ -91,6 +85,45 @@
+         <url>http://java.net/projects/jaxb/sources/version2/show/branches/jaxb-2_2-branch/jaxb-ri</url>
+     </scm>
+ 
++    <dependencies>
++      <dependency>
++        <groupId>com.sun.codemodel</groupId>
++        <artifactId>codemodel</artifactId>
++        <version>2.6</version>
++      </dependency>
++      <dependency>
++        <groupId>com.sun.xml.dtd-parser</groupId>
++        <artifactId>dtd-parser</artifactId>
++        <version>1.2-SNAPSHOT</version>
++      </dependency>
++      <dependency>
++        <groupId>com.sun.istack</groupId>
++        <artifactId>istack-commons-tools</artifactId>
++        <version>2.6.1</version>
++      </dependency>
++      <dependency>
++        <groupId>relaxngDatatype</groupId>
++        <artifactId>relaxngDatatype</artifactId>
++        <scope>system</scope>
++        <systemPath>/usr/share/java/relaxngDatatype.jar</systemPath>
++      </dependency>
++      <dependency>
++        <groupId>xml-resolver</groupId>
++        <artifactId>xml-resolver</artifactId>
++        <version>1.2</version>
++      </dependency>
++      <dependency>
++        <groupId>org.kohsuke.rngom</groupId>
++        <artifactId>rngom</artifactId>
++        <version>201103-SNAPSHOT</version>
++      </dependency>
++      <dependency>
++        <groupId>com.sun.xsom</groupId>
++        <artifactId>xsom</artifactId>
++        <version>20110809</version>
++      </dependency>
++    </dependencies>
++
+     <dependencyManagement>
+         <dependencies>
+             <dependency>
