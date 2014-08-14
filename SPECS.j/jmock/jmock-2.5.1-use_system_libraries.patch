@@ -1,0 +1,31 @@
+--- build.xml	2008-06-23 14:06:51.000000000 +0200
++++ build.xml-gil	2012-08-13 12:21:15.007275254 +0200
+@@ -3,7 +3,13 @@
+ 	<property name="distdir" value="build/jmock-${version}"/>
+ 
+ 	<path id="build.classpath">
+-		<fileset dir="lib" includes="*.jar" excludes="*-src.jar"/>
++		<fileset dir="/usr/share/java" includes="bsh.jar"/>
++		<fileset dir="/usr/share/java" includes="cglib.jar"/>
++		<fileset dir="/usr/share/java" includes="hamcrest12/core.jar"/>
++		<fileset dir="/usr/share/java" includes="hamcrest12/library.jar"/>
++		<fileset dir="/usr/share/java" includes="junit4.jar"/>
++		<fileset dir="/usr/share/java" includes="objenesis.jar"/>
++		<fileset dir="/usr/share/java" includes="objectweb-asm/asm.jar"/>
+ 	</path>
+ 
+ 	<target name="build"
+@@ -225,6 +231,13 @@
+ 			<classpath>
+ 				<path refid="build.classpath"/>
+ 				<fileset dir="${distdir}" includes="*.jar"/>
++				<fileset dir="/usr/share/java" includes="bsh.jar"/>
++				<fileset dir="/usr/share/java" includes="cglib.jar"/>
++				<fileset dir="/usr/share/java" includes="hamcrest12/core.jar"/>
++				<fileset dir="/usr/share/java" includes="hamcrest12/library.jar"/>
++				<fileset dir="/usr/share/java" includes="junit4.jar"/>
++				<fileset dir="/usr/share/java" includes="objenesis.jar"/>
++				<fileset dir="/usr/share/java" includes="objectweb-asm/asm.jar"/>
+ 			</classpath>
+ 			
+ 			<formatter type="brief" usefile="no"/>

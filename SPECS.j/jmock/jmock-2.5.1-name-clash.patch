@@ -1,0 +1,76 @@
+diff -Nru src/org/jmock/Expectations.java src-gil/org/jmock/Expectations.java
+--- src/org/jmock/Expectations.java	2012-08-13 12:22:27.031761235 +0200
++++ src-gil/org/jmock/Expectations.java	2012-08-13 12:26:25.000000000 +0200
+@@ -143,42 +143,42 @@
+         return null;
+     }
+ 
+-    public boolean with(Matcher<Boolean> matcher) {
++    public boolean withBoolean(Matcher<Boolean> matcher) {
+         addParameterMatcher(matcher);
+         return false;
+     }
+     
+-    public byte with(Matcher<Byte> matcher) {
++    public byte withByte(Matcher<Byte> matcher) {
+         addParameterMatcher(matcher);
+         return 0;
+     }
+ 
+-    public short with(Matcher<Short> matcher) {
++    public short withShort(Matcher<Short> matcher) {
+         addParameterMatcher(matcher);
+         return 0;
+     }
+ 
+-    public char with(Matcher<Character> matcher) {
++    public char withCharacter(Matcher<Character> matcher) {
+         addParameterMatcher(matcher);
+         return 0;
+     }
+     
+-    public int with(Matcher<Integer> matcher) {
++    public int withInteger(Matcher<Integer> matcher) {
+         addParameterMatcher(matcher);
+         return 0;
+     }
+ 
+-    public long with(Matcher<Long> matcher) {
++    public long withLong(Matcher<Long> matcher) {
+         addParameterMatcher(matcher);
+         return 0;
+     }
+ 
+-    public float with(Matcher<Float> matcher) {
++    public float withFloat(Matcher<Float> matcher) {
+         addParameterMatcher(matcher);
+         return 0.0f;
+     }
+ 
+-    public double with(Matcher<Double> matcher) {
++    public double withDouble(Matcher<Double> matcher) {
+         addParameterMatcher(matcher);
+         return 0.0;
+     }
+diff -Nru src/org/jmock/syntax/ArgumentConstraintPhrases.java src-gil/org/jmock/syntax/ArgumentConstraintPhrases.java
+--- src/org/jmock/syntax/ArgumentConstraintPhrases.java	2006-10-12 16:06:01.000000000 +0200
++++ src-gil/org/jmock/syntax/ArgumentConstraintPhrases.java	2012-08-13 12:27:35.000000000 +0200
+@@ -4,11 +4,11 @@
+ 
+ public interface ArgumentConstraintPhrases {
+     <T> T with(Matcher<T> matcher);
+-    boolean with(Matcher<Boolean> matcher);
+-    byte with(Matcher<Byte> matcher);
+-    short with(Matcher<Short> matcher);
+-    int with(Matcher<Integer> matcher);
+-    long with(Matcher<Long> matcher);
+-    float with(Matcher<Float> matcher);
+-    double with(Matcher<Double> matcher);
++    boolean withBoolean(Matcher<Boolean> matcher);
++    byte withByte(Matcher<Byte> matcher);
++    short withShort(Matcher<Short> matcher);
++    int withInteger(Matcher<Integer> matcher);
++    long withLong(Matcher<Long> matcher);
++    float withFloat(Matcher<Float> matcher);
++    double withDouble(Matcher<Double> matcher);
+ }
