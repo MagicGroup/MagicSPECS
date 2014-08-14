@@ -38,7 +38,8 @@ BuildRequires:  ant >= 1.8.2
 %endif
 BuildRequires:  bsh
 BuildRequires:  isorelax
-BuildRequires:  jdk >= 1:1.6.0
+BuildRequires:  java-devel-openjdk >= 1:1.6.0
+BuildRequires:  java-javadoc
 BuildRequires:  javacc
 BuildRequires:  jpackage-utils
 BuildRequires:  qdox
