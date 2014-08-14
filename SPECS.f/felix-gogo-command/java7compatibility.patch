@@ -1,0 +1,20 @@
+--- a/src/main/java/org/apache/felix/gogo/command/Inspect.java
++++ b/src/main/java/org/apache/felix/gogo/command/Inspect.java
+@@ -102,7 +102,7 @@
+             }
+ 
+             // Print out any matching generic capabilities.
+-            BundleWiring wiring = b.adapt(BundleWiring.class);
++            BundleWiring wiring = (BundleWiring) b.adapt(BundleWiring.class);
+             if (wiring != null)
+             {
+                 String title = b + " provides:";
+@@ -277,7 +277,7 @@
+             }
+ 
+             // Print out any matching generic requirements.
+-            BundleWiring wiring = b.adapt(BundleWiring.class);
++            BundleWiring wiring = (BundleWiring) b.adapt(BundleWiring.class);
+             if (wiring != null)
+             {
+                 String title = b + " requires:";
