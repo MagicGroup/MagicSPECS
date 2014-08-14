@@ -1,0 +1,26 @@
+--- hamcrest-1.1/build.xml.jarjar	2008-10-24 11:35:30.171892280 -0400
++++ hamcrest-1.1/build.xml	2008-10-24 11:36:07.667890720 -0400
+@@ -24,22 +24,10 @@
+     <target name="generator"
+             description="Build code generator tool">
+         <java-to-jar srcdir="hamcrest-generator/src/main/java"
+-                     destjar="build/temp/hamcrest-generator-${version}-nodeps.jar"
++                     destjar="build/hamcrest-generator-${version}.jar"
+                      classpath="
+                        lib/generator/qdox.jar;
+                      "/>
+-        <taskdef name="jarjar"
+-                 classname="com.tonicsystems.jarjar.JarJarTask"
+-                 classpath="lib/generator/jarjar.jar"/>
+-        <!-- Bundle QDox classes in hamcrest-generator.jar so user doesn't need to care
+-             about it's existence. Uses JarJar to place classes under a different package
+-             to prevent conflict. -->
+-        <jarjar jarfile="build/hamcrest-generator-${version}.jar">
+-            <zipfileset src="build/temp/hamcrest-generator-${version}-nodeps.jar"/>
+-            <zipfileset src="lib/generator/qdox.jar"/>
+-            <rule pattern="com.thoughtworks.qdox.**"
+-                  result="org.hamcrest.generator.qdox.@1"/>
+-        </jarjar>
+     </target>
+ 
+     <target name="core"
