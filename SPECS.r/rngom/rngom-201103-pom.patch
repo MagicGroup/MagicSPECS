@@ -1,0 +1,37 @@
+diff -Naur rngom-201103-SNAPSHOT/pom.xml rngom-201103-SNAPSHOT-work/pom.xml
+--- rngom-201103-SNAPSHOT/pom.xml	2011-04-06 11:33:13.000000000 -0400
++++ rngom-201103-SNAPSHOT-work/pom.xml	2012-01-19 11:28:03.124001130 -0500
+@@ -156,33 +156,6 @@
+                 </executions>
+             </plugin>
+             <plugin>
+-                <artifactId>maven-antrun-plugin</artifactId>
+-                <version>1.6</version>
+-                <executions>
+-                    <execution>
+-                        <phase>generate-sources</phase>
+-                        <configuration>
+-                            <tasks>
+-                                <taskdef name="licence" classname="com.sun.tools.LicenceTask">
+-                                    <classpath>
+-                                        <pathelement path="lib/lic.jar"/>
+-                                    </classpath>
+-                                </taskdef>
+-                                <licence licence="licenceheader.txt">
+-                                    <fileset dir="src" includes="org/kohsuke/rngom/parse/compact/CompactSyntax*.java, 
+-                                    org/kohsuke/rngom/parse/compact/JavaChar*.java, 
+-                                    org/kohsuke/rngom/parse/compact/ParseException.java, 
+-                                    org/kohsuke/rngom/parse/compact/Token*.java"/>
+-                                </licence>
+-                            </tasks>
+-                        </configuration>
+-                        <goals>
+-                            <goal>run</goal>
+-                        </goals>
+-                    </execution>
+-                </executions>
+-            </plugin>
+-            <plugin>
+                 <groupId>org.apache.maven.plugins</groupId>
+                 <artifactId>maven-surefire-plugin</artifactId>
+                 <configuration>
