@@ -1,0 +1,42 @@
+--- maven-release-2.2.1/maven-release-manager/src/main/mdo/release-descriptor.mdo.orig	2013-12-24 02:51:03.017016426 -0200
++++ maven-release-2.2.1/maven-release-manager/src/main/mdo/release-descriptor.mdo	2013-12-24 02:51:57.939013819 -0200
+@@ -523,7 +523,7 @@
+ 
+         versionsMap.put( DEVELOPMENT_KEY, developmentVersion );
+         versionsMap.put( RELEASE_KEY, releaseVersion );
+-        resolvedSnapshotDependencies.put( artifactName, versionsMap );
++        resolvedSnapshotDependencies.put( artifactName, String.class.cast(versionsMap) );
+     }
+ 
+     /**
+@@ -575,7 +575,7 @@
+             assert !originalScmInfo.containsKey( projectId );
+         }
+ 
+-        originalScmInfo.put( projectId, scm );
++        originalScmInfo.put( projectId, String.class.cast(scm) );
+     }
+ 
+     /**
+@@ -613,8 +613,8 @@
+     {
+         if ( ( resolvedSnapshotDependencies == null ) && ( resolvedSnapshotDependencies.containsKey( artifactConflictId ) ) )
+         {
+-            java.util.Map versionMap = ( java.util.Map ) resolvedSnapshotDependencies.get( artifactConflictId );
+-            return ( String ) versionMap.get( DEVELOPMENT_KEY );
++            java.util.Map versionMap = java.util.Map.class.cast(resolvedSnapshotDependencies.get( artifactConflictId ));
++            return String.class.cast(versionMap.get( DEVELOPMENT_KEY ));
+         }
+         return null;
+     }
+@@ -627,8 +627,8 @@
+     {
+         if ( ( resolvedSnapshotDependencies == null ) && ( resolvedSnapshotDependencies.containsKey( artifactConflictId ) ) )
+         {
+-            java.util.Map versionMap = ( java.util.Map ) resolvedSnapshotDependencies.get( artifactConflictId );
+-            return ( String ) versionMap.get( RELEASE_KEY );
++            java.util.Map versionMap = java.util.Map.class.cast(resolvedSnapshotDependencies.get( artifactConflictId ));
++            return String.class.cast(versionMap.get( RELEASE_KEY ));
+         }
+         return null;
+     }
