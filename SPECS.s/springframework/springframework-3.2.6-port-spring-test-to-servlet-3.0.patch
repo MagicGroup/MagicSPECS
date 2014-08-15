@@ -1,0 +1,210 @@
+From 1a275380b7033a8a8601f7bded15814248825594 Mon Sep 17 00:00:00 2001
+From: Michal Srb <msrb@redhat.com>
+Date: Thu, 16 Jan 2014 15:00:19 +0100
+Subject: [PATCH] Port spring-test to servlet 3.0
+
+---
+ .../mock/web/MockHttpServletRequest.java           |  40 ++++++++
+ .../mock/web/MockServletContext.java               | 104 ++++++++++++++++++++-
+ 2 files changed, 143 insertions(+), 1 deletion(-)
+
+diff --git a/spring-test/src/main/java/org/springframework/mock/web/MockHttpServletRequest.java b/spring-test/src/main/java/org/springframework/mock/web/MockHttpServletRequest.java
+index 0d29289..3acaed3 100644
+--- a/spring-test/src/main/java/org/springframework/mock/web/MockHttpServletRequest.java
++++ b/spring-test/src/main/java/org/springframework/mock/web/MockHttpServletRequest.java
+@@ -36,14 +36,20 @@ import java.util.List;
+ import java.util.Locale;
+ import java.util.Map;
+ import java.util.Set;
++
++import javax.servlet.AsyncContext;
++import javax.servlet.DispatcherType;
+ import javax.servlet.RequestDispatcher;
+ import javax.servlet.ServletContext;
+ import javax.servlet.ServletException;
+ import javax.servlet.ServletInputStream;
++import javax.servlet.ServletRequest;
++import javax.servlet.ServletResponse;
+ import javax.servlet.http.Cookie;
+ import javax.servlet.http.HttpServletRequest;
+ import javax.servlet.http.HttpServletResponse;
+ import javax.servlet.http.HttpSession;
++import javax.servlet.http.Part;
+ 
+ import org.springframework.util.Assert;
+ import org.springframework.util.LinkedCaseInsensitiveMap;
+@@ -913,4 +919,38 @@ public class MockHttpServletRequest implements HttpServletRequest {
+ 		this.authType = null;
+ 	}
+ 
++	public AsyncContext startAsync() throws IllegalStateException {
++		throw new UnsupportedOperationException("Not implemented yet");
++	}
++
++	public AsyncContext startAsync(ServletRequest servletRequest,
++			ServletResponse servletResponse) throws IllegalStateException {
++		throw new UnsupportedOperationException("Not implemented yet");
++	}
++
++	public boolean isAsyncStarted() {
++		throw new UnsupportedOperationException("Not implemented yet");
++	}
++
++	public boolean isAsyncSupported() {
++		throw new UnsupportedOperationException("Not implemented yet");
++
++	}
++
++	public AsyncContext getAsyncContext() {
++		throw new UnsupportedOperationException("Not implemented yet");
++	}
++
++	public DispatcherType getDispatcherType() {
++		throw new UnsupportedOperationException("Not implemented yet");
++	}
++
++	public Collection<Part> getParts() throws IOException, ServletException {
++		throw new UnsupportedOperationException("Not implemented yet");
++	}
++
++	public Part getPart(String name) throws IOException, ServletException {
++		throw new UnsupportedOperationException("Not implemented yet");
++	}
++
+ }
+diff --git a/spring-test/src/main/java/org/springframework/mock/web/MockServletContext.java b/spring-test/src/main/java/org/springframework/mock/web/MockServletContext.java
+index 49b49e5..6c1ba7a 100644
+--- a/spring-test/src/main/java/org/springframework/mock/web/MockServletContext.java
++++ b/spring-test/src/main/java/org/springframework/mock/web/MockServletContext.java
+@@ -23,20 +23,29 @@ import java.net.MalformedURLException;
+ import java.net.URL;
+ import java.util.Collections;
+ import java.util.Enumeration;
++import java.util.EventListener;
+ import java.util.HashMap;
+ import java.util.HashSet;
+ import java.util.LinkedHashMap;
+ import java.util.LinkedHashSet;
+ import java.util.Map;
+ import java.util.Set;
++
+ import javax.activation.FileTypeMap;
++import javax.servlet.Filter;
++import javax.servlet.FilterRegistration;
+ import javax.servlet.RequestDispatcher;
+ import javax.servlet.Servlet;
+ import javax.servlet.ServletContext;
++import javax.servlet.ServletException;
++import javax.servlet.ServletRegistration;
++import javax.servlet.ServletRegistration.Dynamic;
++import javax.servlet.SessionCookieConfig;
++import javax.servlet.SessionTrackingMode;
++import javax.servlet.descriptor.JspConfigDescriptor;
+ 
+ import org.apache.commons.logging.Log;
+ import org.apache.commons.logging.LogFactory;
+-
+ import org.springframework.core.io.DefaultResourceLoader;
+ import org.springframework.core.io.Resource;
+ import org.springframework.core.io.ResourceLoader;
+@@ -496,4 +505,97 @@ public class MockServletContext implements ServletContext {
+ 		}
+ 	}
+ 
++
++	public Dynamic addServlet(String servletName, String className) {
++		throw new UnsupportedOperationException("Not implemented yet");
++	}
++
++	public Dynamic addServlet(String servletName, Servlet servlet) {
++		throw new UnsupportedOperationException("Not implemented yet");
++	}
++
++	public Dynamic addServlet(String servletName,
++			Class<? extends Servlet> servletClass) {
++		throw new UnsupportedOperationException("Not implemented yet");
++	}
++
++	public <T extends Servlet> T createServlet(Class<T> clazz)
++			throws ServletException {
++		throw new UnsupportedOperationException("Not implemented yet");
++	}
++
++	public ServletRegistration getServletRegistration(String servletName) {
++		throw new UnsupportedOperationException("Not implemented yet");
++	}
++
++	public Map<String, ? extends ServletRegistration> getServletRegistrations() {
++		throw new UnsupportedOperationException("Not implemented yet");
++	}
++
++	public javax.servlet.FilterRegistration.Dynamic addFilter(
++			String filterName, String className) {
++		throw new UnsupportedOperationException("Not implemented yet");
++	}
++
++	public javax.servlet.FilterRegistration.Dynamic addFilter(
++			String filterName, Filter filter) {
++		throw new UnsupportedOperationException("Not implemented yet");
++	}
++
++	public javax.servlet.FilterRegistration.Dynamic addFilter(
++			String filterName, Class<? extends Filter> filterClass) {
++		throw new UnsupportedOperationException("Not implemented yet");
++	}
++
++	public <T extends Filter> T createFilter(Class<T> clazz)
++			throws ServletException {
++		throw new UnsupportedOperationException("Not implemented yet");
++	}
++
++	public FilterRegistration getFilterRegistration(String filterName) {
++		throw new UnsupportedOperationException("Not implemented yet");
++	}
++
++	public Map<String, ? extends FilterRegistration> getFilterRegistrations() {
++		throw new UnsupportedOperationException("Not implemented yet");
++	}
++
++	public SessionCookieConfig getSessionCookieConfig() {
++		throw new UnsupportedOperationException("Not implemented yet");
++	}
++
++	public void setSessionTrackingModes(
++			Set<SessionTrackingMode> sessionTrackingModes) {
++		throw new UnsupportedOperationException("Not implemented yet");
++	}
++
++	public Set<SessionTrackingMode> getDefaultSessionTrackingModes() {
++		throw new UnsupportedOperationException("Not implemented yet");
++	}
++
++	public Set<SessionTrackingMode> getEffectiveSessionTrackingModes() {
++		throw new UnsupportedOperationException("Not implemented yet");
++	}
++
++	public void addListener(String className) {
++		throw new UnsupportedOperationException("Not implemented yet");
++	}
++
++	public <T extends EventListener> void addListener(T t) {
++		throw new UnsupportedOperationException("Not implemented yet");
++	}
++
++	public void addListener(Class<? extends EventListener> listenerClass) {
++		throw new UnsupportedOperationException("Not implemented yet");
++	}
++
++	public <T extends EventListener> T createListener(Class<T> clazz)
++			throws ServletException {
++		throw new UnsupportedOperationException("Not implemented yet");
++	}
++
++	public JspConfigDescriptor getJspConfigDescriptor() {
++		throw new UnsupportedOperationException("Not implemented yet");
++	}
++
+ }
+-- 
+1.8.3.1
+
