@@ -1,0 +1,15 @@
+diff --git a/src/main/java/org/apache/maven/plugin/eclipse/InstallPluginsMojo.java b/src/main/java/org/apache/maven/plugin/eclipse/InstallPluginsMojo.java
+index d2a543a..4a15a45 100644
+--- a/src/main/java/org/apache/maven/plugin/eclipse/InstallPluginsMojo.java
++++ b/src/main/java/org/apache/maven/plugin/eclipse/InstallPluginsMojo.java
+@@ -407,10 +407,6 @@ public class InstallPluginsMojo
+             {
+                 throw new MojoExecutionException( "Could not extract: " + artifactFile, e );
+             }
+-            catch ( IOException e )
+-            {
+-                throw new MojoExecutionException( "Could not extract: " + artifactFile, e );
+-            }
+         }
+     }
+ 
