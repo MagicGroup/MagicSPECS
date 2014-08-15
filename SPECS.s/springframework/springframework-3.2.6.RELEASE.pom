@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- This is a dummy POM added just to ease building in the RPM platforms: -->
+
+<project
+  xmlns="http://maven.apache.org/POM/4.0.0"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>org.springframework</groupId>
+  <artifactId>spring-project</artifactId>
+  <packaging>pom</packaging>
+  <version>3.2.5.RELEASE</version>
+
+  <modules>
+    <module>spring-core</module>
+    <module>spring-context</module>
+    <module>spring-context-support</module>
+    <module>spring-expression</module>
+    <module>spring-aop</module>
+    <module>spring-instrument</module>
+    <module>spring-instrument-tomcat</module>
+    <module>spring-beans</module>
+    <module>spring-jdbc</module>
+    <module>spring-jms</module>
+    <module>spring-orm</module>
+    <module>spring-web</module>
+    <module>spring-tx</module>
+    <module>spring-oxm</module>
+    <module>spring-struts</module>
+    <module>spring-webmvc</module>
+    <module>spring-test</module>
+    <module>spring-webmvc-portlet</module>
+  </modules>
+
+</project>

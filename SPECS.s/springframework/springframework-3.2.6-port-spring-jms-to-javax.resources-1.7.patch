@@ -1,0 +1,29 @@
+From 5c154a99226a74430cd244deb2acd37a586fd7a2 Mon Sep 17 00:00:00 2001
+From: Michal Srb <msrb@redhat.com>
+Date: Fri, 17 Jan 2014 09:05:42 +0100
+Subject: [PATCH] Port spring-jms to javax.resources 1.7
+
+---
+ .../jms/listener/endpoint/JmsMessageEndpointFactory.java          | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+
+diff --git a/spring-jms/src/main/java/org/springframework/jms/listener/endpoint/JmsMessageEndpointFactory.java b/spring-jms/src/main/java/org/springframework/jms/listener/endpoint/JmsMessageEndpointFactory.java
+index 954dd49..17e2019 100644
+--- a/spring-jms/src/main/java/org/springframework/jms/listener/endpoint/JmsMessageEndpointFactory.java
++++ b/spring-jms/src/main/java/org/springframework/jms/listener/endpoint/JmsMessageEndpointFactory.java
+@@ -124,4 +124,12 @@ public class JmsMessageEndpointFactory extends AbstractMessageEndpointFactory  {
+ 		}
+ 	}
+ 
++	public String getActivationName() {
++		throw new UnsupportedOperationException("Not implemented yet");
++	}
++
++	public Class<?> getEndpointClass() {
++		throw new UnsupportedOperationException("Not implemented yet");
++	}
++
+ }
+-- 
+1.8.3.1
+

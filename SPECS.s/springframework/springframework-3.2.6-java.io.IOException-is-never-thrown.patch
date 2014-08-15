@@ -1,0 +1,29 @@
+From 991d188f7066f82c135555d2ec488d0267aa2d12 Mon Sep 17 00:00:00 2001
+From: Michal Srb <msrb@redhat.com>
+Date: Wed, 15 Jan 2014 15:09:21 +0100
+Subject: [PATCH] Fix exception java.io.IOException is never thrown error
+
+---
+ .../java/org/springframework/ui/velocity/VelocityEngineFactory.java | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/spring-context-support/src/main/java/org/springframework/ui/velocity/VelocityEngineFactory.java b/spring-context-support/src/main/java/org/springframework/ui/velocity/VelocityEngineFactory.java
+index 2e81188..bd57496 100644
+--- a/spring-context-support/src/main/java/org/springframework/ui/velocity/VelocityEngineFactory.java
++++ b/spring-context-support/src/main/java/org/springframework/ui/velocity/VelocityEngineFactory.java
+@@ -250,9 +250,9 @@ public class VelocityEngineFactory {
+ 			// Perform actual initialization.
+ 			velocityEngine.init();
+ 		}
+-		catch (IOException ex) {
+-			throw ex;
+-		}
++		//catch (IOException ex) {
++		//	throw ex;
++		//}
+ 		catch (VelocityException ex) {
+ 			throw ex;
+ 		}
+-- 
+1.8.3.1
+
