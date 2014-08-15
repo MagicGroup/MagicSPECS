@@ -1,0 +1,16 @@
+--- eclipse.platform.swt/bundles/org.eclipse.swt/Eclipse SWT/gtk/org/eclipse/swt/widgets/Control.java.bak	2013-01-28 12:16:08.000000000 +0100
++++ eclipse.platform.swt/bundles/org.eclipse.swt/Eclipse SWT/gtk/org/eclipse/swt/widgets/Control.java	2013-02-19 13:22:29.529926456 +0100
+@@ -4439,7 +4439,12 @@
+ 		oldDecorations.fixAccelGroup ();
+ 	}
+ 	long /*int*/ newParent = parent.parentingHandle();
+-	OS.gtk_widget_reparent(topHandle, newParent);
++//	OS.gtk_widget_reparent(topHandle, newParent);
++	OS.g_object_ref(topHandle);
++	OS.gtk_container_remove(OS.gtk_widget_get_parent(topHandle), topHandle);
++	OS.gtk_container_add(newParent, topHandle);
++	OS.g_object_unref(topHandle);
++	
+ 	if (OS.GTK3) {
+ 		OS.swt_fixed_move (newParent, topHandle, x, y);
+ 	} else {

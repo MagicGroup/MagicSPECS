@@ -1,0 +1,16 @@
+--- eclipse-platform-parent/pom.xml.orig	2014-03-24 15:52:04.794208197 +0000
++++ eclipse-platform-parent/pom.xml	2014-03-24 15:56:15.746202079 +0000
+@@ -170,13 +170,6 @@
+         <groupId>org.eclipse.tycho</groupId>
+         <artifactId>target-platform-configuration</artifactId>
+         <configuration>
+-          <target>
+-            <artifact>
+-              <groupId>org.eclipse</groupId>
+-              <artifactId>eclipse-sdk-prereqs</artifactId>
+-              <version>4.4.0-SNAPSHOT</version>
+-            </artifact>
+-          </target>
+           <environments>
+             <environment>
+               <os>linux</os>

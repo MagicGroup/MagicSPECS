@@ -1,0 +1,331 @@
+--- eclipse.platform.releng.tychoeclipsebuilder/eclipse-junit-tests/src/main/scripts/test.xml.orig	2014-04-01 15:02:34.500445944 +0100
++++ eclipse.platform.releng.tychoeclipsebuilder/eclipse-junit-tests/src/main/scripts/test.xml	2014-04-01 15:16:01.556714647 +0100
+@@ -200,99 +200,14 @@
+ 
+   <!--use an stable version of the director so that instability in the current build doesn't cause all the tests to fail -->
+   <target name="setupPlatform">
+-    <echo message="os.arch ${os.arch}" />
+     <loadproperties srcfile="equinoxp2tests.properties" />
+-    <condition
+-      property="platformArchive"
+-      value="${org.eclipse.equinox.p2.reconciler.tests.lastrelease.platform.archive.linux}">
+-      <and>
+-        <os family="unix" />
+-        <not>
+-          <or>
+-            <or>
+-              <os arch="x86_64" />
+-              <os arch="amd64" />
+-            </or>
+-            <os family="mac" />
+-          </or>
+-        </not>
+-      </and>
+-    </condition>
+-    <condition
+-      property="platformArchive"
+-      value="${org.eclipse.equinox.p2.reconciler.tests.lastrelease.platform.archive.macosx-x86_64}">
+-      <and>
+-        <os family="mac" />
+-        <os family="unix" />
+-        <or>
+-          <os arch="x86_64" />
+-          <os arch="amd64" />
+-        </or>
+-      </and>
+-    </condition>
+-    <condition
+-      property="platformArchive"
+-      value="${org.eclipse.equinox.p2.reconciler.tests.lastrelease.platform.archive.macosx}">
+-      <and>
+-        <os family="mac" />
+-        <os family="unix" />
+-        <!-- should not need, as long as x86_64 rules (above) comes first
+-             <os arch="i386" />
+-        -->
+-      </and>
+-    </condition>
+-    <condition
+-      property="platformArchive"
+-      value="${org.eclipse.equinox.p2.reconciler.tests.lastrelease.platform.archive.win32}">
+-      <and>
+-        <os family="windows" />
+-        <os arch="x86" />
+-      </and>
+-    </condition>
+-    <condition
+-      property="platformArchive"
+-      value="${org.eclipse.equinox.p2.reconciler.tests.lastrelease.platform.archive.win32-x86_64}">
+-      <and>
+-        <os family="windows" />
+-        <or>
+-          <os arch="x86_64" />
+-          <os arch="amd64" />
+-        </or>
+-      </and>
+-    </condition>
+-    <condition
+-      property="platformArchive"
+-      value="${org.eclipse.equinox.p2.reconciler.tests.lastrelease.platform.archive.linux-x86_64}">
+-      <and>
+-        <os family="unix" />
+-        <or>
+-          <os arch="x86_64" />
+-          <os arch="amd64" />
+-        </or>
+-      </and>
++    <property name="platformArchive" value="${runtimeArchive}" />
++    <condition property="platformTarget" value="platform-zip">
++      <contains string="${platformArchive}" substring=".zip" />
+     </condition>
+-
+-    <fail
+-      unless="platformArchive"
+-      message="platformArchive is not defined. Check that conditions cover os arch ${os.arch}. May be VM dependent.)" />
+-
+-    <condition
+-      property="platformTarget"
+-      value="platform-zip">
+-      <contains
+-        string="${platformArchive}"
+-        substring=".zip" />
+-    </condition>
+-    <condition
+-      property="platformTarget"
+-      value="platform-tar.gz">
+-      <contains
+-        string="${platformArchive}"
+-        substring=".tar.gz" />
++    <condition property="platformTarget" value="platform-tar.gz">
++      <contains string="${platformArchive}" substring=".tar.gz" />
+     </condition>
+-    <fail
+-      unless="platformTarget"
+-      message="platformTarget is not defined. Check that platformArchive variable and value is defined correctly, such as in equinoxp2tests.properties in the appropriate testConfig" />
+     <echo message="platformTarget ${platformTarget} platformArchive ${platformArchive}" />
+     <antcall target="${platformTarget}" />
+   </target>
+@@ -320,7 +235,7 @@
+     <exec
+       dir="${platformLocation}"
+       executable="tar">
+-      <arg line="-xzf ${platformArchive}" />
++      <arg line="-xzf ../${platformArchive}" />
+     </exec>
+   </target>
+ 
+@@ -867,6 +782,17 @@
+           arg2="" />
+       </not>
+     </condition>
++
++    <!-- swt needs this property to run tests -->
++    <dirset id="test.plugin.folder" dir="${eclipse-home}/plugins/">
++      <include name="${testPlugin}_*" />
++    </dirset>
++    <property name="testPluginFolder" refid="test.plugin.folder" />
++    <echo>trying to find ${testPluginFolder}</echo>
++    <condition property="org.eclipse.swt.tests" value="${testPluginFolder}">
++      <equals arg1="${testPlugin}" arg2="org.eclipse.swt.tests"/>
++    </condition>
++
+     <antcall target="runSuite" />
+     <antcall target="genResults" />
+   </target>
+@@ -1411,6 +1337,15 @@
+         value="end longRunningTests" />
+     </antcall>
+ 
++    <!-- Copy over the XML to generate a top-level report for all of the tests -->
++    <mkdir dir="${results}/origXml" />
++    <xslt style="${repoLocation}/splitter.xsl" basedir="${results}/xml" includes="*.xml" destdir="${results}/origXml"/>
++    <!-- Aggregate XML report files -->
++    <junitreport todir="${results}/xml" tofile="org.eclipse.sdk.tests.xml">
++      <fileset dir="${results}/origXml" includes="*.xml" />
++    </junitreport>
++    <!-- Generate top-level HTML report -->
++    <xslt style="${repoLocation}/JUNIT.XSL" basedir="${results}/xml" includes="org.eclipse.sdk.tests.xml" destdir="${results}/html" />
+   </target>
+ 
+   <!--
+@@ -1453,7 +1388,6 @@
+     <antcall target="e4CssSwt" />
+     <antcall target="e4UI" />
+     <antcall target="equinoxds" />
+-    <antcall target="equinoxp2discovery" />
+     <antcall target="bidi" />
+     <antcall target="ltkuirefactoringtests" />
+     <antcall target="ltkcorerefactoringtests" />
+@@ -1467,7 +1401,6 @@
+     <antcall target="osgi" />
+     <antcall target="coreresources" />
+     <antcall target="equinoxp2" />
+-    <antcall target="teamcvs" />
+     <antcall target="jface" />
+     <antcall target="ui" />
+     <antcall target="uiperformance" />
+@@ -1550,7 +1483,7 @@
+     <property
+       name="message"
+       value="no message given by caller" />
+-    <markTime msg="${message}" />
++    <!--markTime msg="${message}" /-->
+   </target>
+ 
+   <!--
+--- eclipse.platform.releng.tychoeclipsebuilder/eclipse-junit-tests/src/main/scripts/runtests.sh.orig	2014-05-26 17:04:22.000000000 +0300
++++ eclipse.platform.releng.tychoeclipsebuilder/eclipse-junit-tests/src/main/scripts/runtests.sh	2014-05-26 19:17:46.622004452 +0300
+@@ -1,5 +1,72 @@
+ #!/usr/bin/env bash
+ 
++function findXvncAndSetDisplay() {
++#   if [ ${headless} == 1 ]; then
++        # Try to find Xvnc
++        xvnc=
++        if [ -a /usr/bin/Xvnc ]
++        then
++            xvnc=/usr/bin/Xvnc
++            setupXvnc
++        else
++            if [ -a /usr/X11/bin/Xvnc ]
++            then
++                xvnc=/usr/X11/bin/Xvnc
++                setupXvnc
++            else
++                echo "Couldn't find Xvnc (/usr/bin/Xvnc or /usr/X11/bin/Xvnc).  Using DISPLAY=0:0"
++                DISPLAY=`$HOST`:0.0
++            fi
++        fi
++        export DISPLAY
++#   fi
++}
++
++function setupXvnc() {
++    # Pick a high display number.
++    port=`expr '(' $RANDOM '*' 9 / 32767 ')' + 58`
++    echo localhost > Xvnc.cfg
++    echo "Setting up Xvnc on port ${port} with password VNCpassword1"
++    $xvnc :$port -screen 1 1024x768x32 -auth Xvnc.cfg -localhost -PasswordFile eclipse-tests-vncpwd &> Xvnc.log &
++    Xvncpid=$!
++    DISPLAY=`$HOST`:$port
++}
++
++function setArch() {
++    if [ "x$buildArch" = "x" ]
++    then
++        if uname -m > /dev/null 2>&1; then
++            arch=`uname -m`
++        else
++            arch=`uname -p`
++        fi
++        # Massage arch for Eclipse-uname differences
++        case $arch in
++            i[0-9]*86)
++                arch=x86 ;;
++            ia64)
++                arch=ia64 ;;
++            ppc)
++                arch=ppc ;;
++            x86_64)
++                arch=x86_64 ;;
++            *)
++                echo "Unrecognized architecture:  $arch" 1>&2
++                exit 1 ;;
++        esac
++        echo >&2 "Architecture not specified.  Assuming host architecture: $arch"
++    fi
++}
++
++function cleanupXvnc() {
++    # Clean up if we used Xvnc
++    if [ -e Xvnc.cfg ]
++    then
++        kill $Xvncpid
++        rm Xvnc.cfg
++    fi
++}
++
+ # This file should never exist or be needed for production machine,
+ # but allows an easy way for a "local user" to provide this file
+ # somewhere on the search path ($HOME/bin is common),
+@@ -92,59 +159,31 @@ fi
+ #necessary when invoking this script through rsh
+ cd $dir
+ 
++    mkdir -p /tmp/eclipse-tests-directory
++    pushd /tmp/eclipse-tests-directory
++    rm -rf *
++    cp ${testslocation}/*.properties .
++    cp ${testslocation}/library.xml .
++
+ if [ ! -r eclipse ]
+ then
+-  tar -xzf eclipse-SDK-*.tar.gz
+-  # note, the file pattern to match, must not start with */plugins because there is no leading '/' in the zip file, since they are repos.
+-  unzip -qq -o -C eclipse-junit-tests-*.zip plugins/org.eclipse.test* -d eclipse/dropins/
++  pushd @libdir@
++    tar czf /tmp/eclipse-tests-directory/eclipse-SDK-temp-linux-gtk-x86_64.tar.gz eclipse
++  popd
++  cp -rf @libdir@/eclipse eclipse
+ fi
+ 
+ # run tests
+ launcher=`ls eclipse/plugins/org.eclipse.equinox.launcher_*.jar`
++findXvncAndSetDisplay
++setArch
++export ANT_HOME=@USR@/share/ant
++@USR@/bin/./ant \
++-file "${testslocation}/test.xml" $tests \
++-Dws=$ws -Dos=$os -Darch=$arch -Dos.arch=$arch \
++-DbuildId=v20120903-1347 -Dbasedir="/tmp/eclipse-tests-directory" \
++-DruntimeArchive="eclipse-SDK-temp-linux-gtk-x86_64.tar.gz" \
++-DrepoLocation="${testslocation}" \
++-Dorg.eclipse.test="3.3.100" \
++-D$installmode=true $properties
+ 
+-echo " = = = Start list environment variables in effect = = = ="
+-env
+-echo " = = = End list environment variables in effect = = = ="
+-
+-# make sure there is a window manager running. See bug 379026
+-# we should not have to, but may be a quirk/bug of hudson setup
+-# assuming metacity attaches to "current" display by default (which should have
+-# already been set by Hudson). We echo its value here just for extra reference/cross-checks.
+-
+-echo "Check if any window managers are running (xfwm|twm|metacity|beryl|fluxbox|compiz|kwin):"
+-wmpss=$(ps -ef | egrep -i "xfwm|twm|metacity|beryl|fluxbox|compiz|kwin" | grep -v egrep)
+-echo "Window Manager processes: $wmpss"
+-echo
+-
+-if [[ -z $wmpss ]]
+-then
+-  echo "No window managers processes found running, so will start metacity"
+-  metacity --replace --sm-disable  &
+-  METACITYPID=$!
+-  echo $METACITYPID > epmetacity.pid
+-else
+-  echo "Existing window manager found running, so did not force start of metacity"
+-fi
+-
+-echo
+-
+-# list out metacity processes so overtime we can see if they accumulate, or if killed automatically
+-# when our process exits. If not automatic, should use epmetacity.pid to kill it when we are done.
+-echo "Current metacity processes running (check for accumulation):"
+-ps -ef | grep "metacity" | grep -v grep
+-echo
+-
+-echo "Triple check if any window managers are running (at least metacity should be!):"
+-wmpss=$(ps -ef | egrep -i "xfwm|twm|metacity|beryl|fluxbox|compiz" | grep -v egrep)
+-echo "Window Manager processes: $wmpss"
+-echo
+-echo "extdirprop in runtest: ${extdirprop}"
+-echo "extdirproperty in runtest: ${extdirproperty}"
+-
+-# -Dtimeout=300000 "${ANT_OPTS}"
+-if [[ ! -z "${extdirproperty}" ]]
+-then
+-  $vmcmd "${extdirproperty}" -Dosgi.os=$os -Dosgi.ws=$ws -Dosgi.arch=$arch -jar $launcher -data workspace -application org.eclipse.ant.core.antRunner -file ${PWD}/test.xml $tests -Dws=$ws -Dos=$os -Darch=$arch -D$installmode=true $properties -logger org.apache.tools.ant.DefaultLogger
+-else
+-  $vmcmd -Dosgi.os=$os -Dosgi.ws=$ws -Dosgi.arch=$arch  -jar $launcher -data workspace -application org.eclipse.ant.core.antRunner -file ${PWD}/test.xml $tests -Dws=$ws -Dos=$os -Darch=$arch -D$installmode=true $properties -logger org.apache.tools.ant.DefaultLogger
+-fi
