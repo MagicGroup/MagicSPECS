@@ -1,0 +1,36 @@
+diff --git a/src/main/java/org/apache/maven/plugin/ide/AbstractIdeSupportMojo.java b/src/main/java/org/apache/maven/plugin/ide/AbstractIdeSupportMojo.java
+index fcab66c..87782cb 100644
+--- a/src/main/java/org/apache/maven/plugin/ide/AbstractIdeSupportMojo.java
++++ b/src/main/java/org/apache/maven/plugin/ide/AbstractIdeSupportMojo.java
+@@ -545,9 +545,6 @@ public abstract class AbstractIdeSupportMojo
+ 
+                     ArtifactResolutionResult artifactResolutionResult = null;
+ 
+-                    try
+-                    {
+-
+                         List listeners = new ArrayList();
+ 
+                         if ( logger.isDebugEnabled() )
+@@ -561,21 +558,6 @@ public abstract class AbstractIdeSupportMojo
+                             artifactCollector.collect( getProjectArtifacts(), project.getArtifact(), managedVersions,
+                                                        localRepo, project.getRemoteArtifactRepositories(),
+                                                        getArtifactMetadataSource(), null, listeners );
+-                    }
+-                    catch ( ArtifactResolutionException e )
+-                    {
+-                        getLog().debug( e.getMessage(), e );
+-                        getLog().error(
+-                                        Messages.getString( "AbstractIdeSupportMojo.artifactresolution", new Object[] { //$NON-NLS-1$
+-                                                            e.getGroupId(), e.getArtifactId(), e.getVersion(),
+-                                                                e.getMessage() } ) );
+-
+-                        // if we are here artifactResolutionResult is null, create a project without dependencies but
+-                        // don't fail
+-                        // (this could be a reactor projects, we don't want to fail everything)
+-                        // Causes MECLIPSE-185. Not sure if it should be handled this way??
+-                        return new IdeDependency[0];
+-                    }
+ 
+                     // keep track of added reactor projects in order to avoid duplicates
+                     Set emittedReactorProjectId = new HashSet();
