@@ -1,0 +1,17 @@
+diff --git a/pom.xml b/pom.xml
+index 14bfb88..6e143f7 100644
+--- a/pom.xml
++++ b/pom.xml
+@@ -13,6 +13,12 @@
+   <dependencies>
+     <dependency>
+       <groupId>org.codehaus.plexus</groupId>
++      <artifactId>plexus-container-default</artifactId>
++      <version>1.5.5</version>
++      <scope>test</scope>
++    </dependency>
++    <dependency>
++      <groupId>org.codehaus.plexus</groupId>
+       <artifactId>plexus-utils</artifactId>
+       <version>1.4.1</version>
+     </dependency>
