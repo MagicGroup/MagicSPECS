@@ -1,0 +1,1689 @@
+diff --git eclipse.platform.swt/bundles/org.eclipse.swt/Eclipse SWT Browser/common/org/eclipse/swt/browser/WebBrowser.java eclipse.platform.swt/bundles/org.eclipse.swt/Eclipse SWT Browser/common/org/eclipse/swt/browser/WebBrowser.java
+index 01b3f12..2009b84 100644
+--- eclipse.platform.swt/bundles/org.eclipse.swt/Eclipse SWT Browser/common/org/eclipse/swt/browser/WebBrowser.java	
++++ eclipse.platform.swt/bundles/org.eclipse.swt/Eclipse SWT Browser/common/org/eclipse/swt/browser/WebBrowser.java	
+@@ -401,6 +401,7 @@ public Object evaluate (String script) throws SWTException {
+ 	registerFunction (function);
+ 	String functionName = EXECUTE_ID + index;
+ 
++	// Create a function that will execute the given script
+ 	StringBuffer buffer = new StringBuffer ("window."); // $NON-NLS-1$
+ 	buffer.append (functionName);
+ 	buffer.append (" = function "); // $NON-NLS-1$
+@@ -410,6 +411,8 @@ public Object evaluate (String script) throws SWTException {
+ 	buffer.append ("\n};"); // $NON-NLS-1$
+ 	execute (buffer.toString ());
+ 
++	// Execute the function created above, assign the result to
++	// a variable then call Java with that result
+ 	buffer = new StringBuffer ("if (window."); // $NON-NLS-1$
+ 	buffer.append (functionName);
+ 	buffer.append (" == undefined) {window.external.callJava("); // $NON-NLS-1$
+diff --git eclipse.platform.swt/bundles/org.eclipse.swt/Eclipse SWT PI/common_j2se/org/eclipse/swt/internal/Library.java eclipse.platform.swt/bundles/org.eclipse.swt/Eclipse SWT PI/common_j2se/org/eclipse/swt/internal/Library.java
+index 780a82c..c3bedd0 100644
+--- eclipse.platform.swt/bundles/org.eclipse.swt/Eclipse SWT PI/common_j2se/org/eclipse/swt/internal/Library.java	
++++ eclipse.platform.swt/bundles/org.eclipse.swt/Eclipse SWT PI/common_j2se/org/eclipse/swt/internal/Library.java	
+@@ -10,9 +10,15 @@
+  *******************************************************************************/
+ package org.eclipse.swt.internal;
+ 
+-import java.io.*;
+-import java.net.*;
+-import java.util.jar.*;
++import java.io.File;
++import java.io.FileOutputStream;
++import java.io.IOException;
++import java.io.InputStream;
++import java.lang.reflect.Method;
++import java.net.JarURLConnection;
++import java.net.URL;
++import java.net.URLConnection;
++import java.util.jar.Attributes;
+ 
+ public class Library {
+ 
+@@ -263,19 +269,7 @@ public static void loadLibrary (String name, boolean mapName) {
+ 	/* Compute the library name and mapped name */
+ 	String libName1, libName2, mappedName1, mappedName2;
+ 	if (mapName) {
+-		String version = System.getProperty ("swt.version"); //$NON-NLS-1$
+-		if (version == null) {
+-			version = "" + MAJOR_VERSION; //$NON-NLS-1$
+-			/* Force 3 digits in minor version number */
+-			if (MINOR_VERSION < 10) {
+-				version += "00"; //$NON-NLS-1$
+-			} else {
+-				if (MINOR_VERSION < 100) version += "0"; //$NON-NLS-1$
+-			}
+-			version += MINOR_VERSION;		
+-			/* No "r" until first revision */
+-			if (REVISION > 0) version += "r" + REVISION; //$NON-NLS-1$
+-		}
++		String version = getVersionString();
+ 		libName1 = name + "-" + Platform.PLATFORM + "-" + version;  //$NON-NLS-1$ //$NON-NLS-2$
+ 		libName2 = name + "-" + Platform.PLATFORM;  //$NON-NLS-1$
+ 		mappedName1 = mapLibraryName (libName1);
+@@ -337,4 +331,60 @@ static String mapLibraryName (String libName) {
+ 	return libName;
+ }
+ 
++private static String getVersionString(){
++	String version = System.getProperty ("swt.version"); //$NON-NLS-1$
++	if (version == null) {
++		version = "" + MAJOR_VERSION; //$NON-NLS-1$
++		/* Force 3 digits in minor version number */
++		if (MINOR_VERSION < 10) {
++			version += "00"; //$NON-NLS-1$
++		} else {
++			if (MINOR_VERSION < 100) version += "0"; //$NON-NLS-1$
++		}
++		version += MINOR_VERSION;
++		/* No "r" until first revision */
++		if (REVISION > 0) version += "r" + REVISION; //$NON-NLS-1$
++	}
++	return version;
++}
++
++public static File findResource(String resourceName, boolean mapName){
++	if (mapName){
++		resourceName = resourceName + "-"+ getVersionString();
++		resourceName = mapLibraryName(resourceName);
++	}
++	// Look for the resource in the swt library path
++	String classpath = System.getProperty("java.library.path");
++	if (classpath != null){
++		File file = new File(classpath + SEPARATOR + resourceName);
++		if (file.exists()){
++			return file;
++		}
++	}
++
++	// If this is an OSGI bundle look for the resource using getResource
++	URL url = Library.class.getClassLoader().getResource(resourceName);
++	URLConnection connection;
++	try {
++		connection = url.openConnection();
++		Method getFileURLMethod = connection.getClass().getMethod("getFileURL");
++
++	if (getFileURLMethod != null){
++		URL result = (URL) getFileURLMethod.invoke(connection);
++		return new File(result.toURI());
++	}
++	} catch (Exception e) {
++		// If any exceptions are thrown the resource cannot be located this way.
++	}
++
++	// Look for the resource in the user's home directory
++	String homeDir = System.getProperty ("user.home"); //$NON-NLS-1$
++	File file = new File (homeDir + SWT_LIB_DIR, resourceName);
++	if (file.exists()){
++		return file;
++	}
++
++	return null;
++}
++
+ }
+diff --git eclipse.platform.swt/bundles/org.eclipse.swt/Eclipse SWT PI/gtk/library/make_linux.mak eclipse.platform.swt/bundles/org.eclipse.swt/Eclipse SWT PI/gtk/library/make_linux.mak
+index 6bce587..051c806 100644
+--- eclipse.platform.swt/bundles/org.eclipse.swt/Eclipse SWT PI/gtk/library/make_linux.mak	
++++ eclipse.platform.swt/bundles/org.eclipse.swt/Eclipse SWT PI/gtk/library/make_linux.mak	
+@@ -48,6 +48,7 @@ XULRUNNER_LIB = lib$(XULRUNNER_PREFIX)-$(WS_PREFIX)-$(SWT_VERSION).so
+ XULRUNNER24_LIB = lib$(XULRUNNER24_PREFIX)-$(WS_PREFIX)-$(SWT_VERSION).so
+ XPCOMINIT_LIB = lib$(XPCOMINIT_PREFIX)-$(WS_PREFIX)-$(SWT_VERSION).so
+ WEBKIT_LIB = lib$(WEBKIT_PREFIX)-$(WS_PREFIX)-$(SWT_VERSION).so
++WEBKIT_EXTENSION = lib$(WEBKIT_PREFIX)-extension-$(SWT_VERSION).so
+ GLX_LIB = lib$(GLX_PREFIX)-$(WS_PREFIX)-$(SWT_VERSION).so
+ 
+ CAIROCFLAGS = `pkg-config --cflags cairo`
+@@ -298,7 +299,7 @@ xpcominit_stats.o: xpcominit_stats.cpp
+ #
+ # WebKit lib
+ #
+-make_webkit: $(WEBKIT_LIB)
++make_webkit: $(WEBKIT_LIB) $(WEBKIT_EXTENSION)
+ 
+ $(WEBKIT_LIB): $(WEBKIT_OBJECTS)
+ 	$(CC) $(LFLAGS) -o $(WEBKIT_LIB) $(WEBKIT_OBJECTS)
+@@ -312,6 +313,13 @@ webkit_structs.o: webkitgtk_structs.c
+ webkit_stats.o: webkitgtk_stats.c webkitgtk_stats.h
+ 	$(CC) $(CFLAGS) $(WEBKITCFLAGS) -c webkitgtk_stats.c -o webkit_stats.o
+ 
++webkit_extension.o: webkit_extension.c webkit_extension.h
++	$(CC) $(CFLAGS) $(WEBKITCFLAGS) -c webkit_extension.c -o webkit_extension.o `pkg-config --cflags --libs webkit2gtk-3.0`
++
++$(WEBKIT_EXTENSION): webkit_extension.o
++	$(CC) -g -shared -Wl,-no-undefined,-soname,$(WEBKIT_EXTENSION) \
++        `pkg-config --cflags --libs webkit2gtk-3.0` -o $(WEBKIT_EXTENSION) webkit_extension.o -lc
++
+ #
+ # GLX lib
+ #
+diff --git eclipse.platform.swt/bundles/org.eclipse.swt/Eclipse SWT WebKit/gtk/library/webkit_extension.c eclipse.platform.swt/bundles/org.eclipse.swt/Eclipse SWT WebKit/gtk/library/webkit_extension.c
+new file mode 100644
+index 0000000..b6288de
+--- /dev/null
++++ eclipse.platform.swt/bundles/org.eclipse.swt/Eclipse SWT WebKit/gtk/library/webkit_extension.c	
+@@ -0,0 +1,394 @@
++/*******************************************************************************
++ * Copyright (c) 2014 Red Hat and others. All rights reserved.
++ * The contents of this file are made available under the terms
++ * of the GNU Lesser General Public License (LGPL) Version 2.1 that
++ * accompanies this distribution (lgpl-v21.txt).  The LGPL is also
++ * available at http://www.gnu.org/licenses/lgpl.html.  If the version
++ * of the LGPL at http://www.gnu.org is different to the version of
++ * the LGPL accompanying this distribution and there is any conflict
++ * between the two license versions, the terms of the LGPL accompanying
++ * this distribution shall govern.
++ *
++ * Contributors:
++ *     Red Hat - initial API and implementation
++ *******************************************************************************/
++
++#include "webkit_extension.h"
++
++/**
++ * This function will get called when JavaScript calls external.callJava
++ */
++static JSValueRef
++webkit_extension_external_object_callJava(JSContextRef context,
++    JSObjectRef object,
++    JSObjectRef thisObject,
++    size_t argumentCount,
++    const JSValueRef arguments[],
++    JSValueRef* exception)
++{
++   JSStringRef propertyName =JSStringCreateWithUTF8CString ("pageId");
++   JSValueRef value = JSObjectGetProperty (context, thisObject, propertyName, NULL);
++   JSStringRelease (propertyName);
++
++   // Forward the java call to Java
++   g_assert (argumentCount == 3);
++   GVariant *result = g_dbus_proxy_call_sync (main_process_proxy,
++                      "webkit_extension_external_object_callJava",
++                      g_variant_new ("(t@d@s@r)", (guint64)JSValueToNumber (context, value, NULL),
++                          webkit_extension_convert_js_to_gvariant(context, arguments[0]),
++                          webkit_extension_convert_js_to_gvariant(context, arguments[1]),
++                          webkit_extension_convert_js_to_gvariant(context, arguments[2])),
++                      G_DBUS_CALL_FLAGS_NONE,
++                      -1,
++                      NULL,
++                      NULL);
++
++   return webkit_extension_convert_gvariant_to_js(context, result);
++}
++
++static JSValueRef webkit_extension_convert_gvariant_to_js (JSContextRef context, GVariant * value){
++
++  if (g_variant_is_of_type(value, G_VARIANT_TYPE_BYTE) && g_variant_get_byte(value) == 0x00){
++      return JSValueMakeUndefined (context);
++  }
++
++  if (g_variant_is_of_type(value, G_VARIANT_TYPE_BOOLEAN)){
++      return JSValueMakeBoolean (context, g_variant_get_boolean(value));
++  }
++
++  if (g_variant_is_of_type(value, G_VARIANT_TYPE_DOUBLE)){
++      return JSValueMakeNumber (context, g_variant_get_double(value));
++  }
++
++  if (g_variant_is_of_type(value, G_VARIANT_TYPE_STRING)){
++      JSStringRef stringRef = JSStringCreateWithUTF8CString (g_variant_get_string(value, NULL));
++      JSValueRef result = JSValueMakeString (context, stringRef);
++      JSStringRelease (stringRef);
++      return result;
++  }
++
++  if (g_variant_is_of_type(value, G_VARIANT_TYPE_UINT64)){
++      return JSValueMakeNumber (context, g_variant_get_uint64(value));
++  }
++
++  if (g_variant_is_of_type(value, G_VARIANT_TYPE_TUPLE)){
++      gsize length = (int)g_variant_n_children (value);
++      JSValueRef *children = g_new (JSValueRef, length);
++
++      int i = 0;
++      for (i = 0; i < length; i++) {
++          children[i] = webkit_extension_convert_gvariant_to_js (context, g_variant_get_child_value(value, i));
++      }
++      JSValueRef result = JSObjectMakeArray (context, length, children, NULL);
++      g_free (children);
++      return result;
++  }
++
++  g_error("Unhandled type %s \n", g_variant_get_type_string (value));
++
++  return NULL;
++}
++
++static GVariant * webkit_extension_convert_js_to_gvariant (JSContextRef context, JSValueRef value){
++  JSType type = JSValueGetType (context, value);
++
++  if (type == kJSTypeBoolean){
++      gboolean result = JSValueToNumber (context, value, NULL) != 0;
++      return g_variant_new_boolean(result);
++  }
++
++  if (type == kJSTypeNumber){
++      double result = JSValueToNumber (context, value, NULL);
++      return g_variant_new_double (result);
++  }
++
++  if (type == kJSTypeString){
++      JSStringRef stringRef = JSValueToStringCopy(context, value, NULL);
++      size_t length = JSStringGetMaximumUTF8CStringSize (stringRef);
++      char* string = (char*)malloc(length);
++      JSStringGetUTF8CString(stringRef, string, length);
++      GVariant *variant = g_variant_new_string(string);
++      free(string);
++      return variant;
++  }
++
++  if (type == kJSTypeNull || type == kJSTypeUndefined){
++      return NULL;
++  }
++
++  if (type == kJSTypeObject){
++
++      JSStringRef propertyName =JSStringCreateWithUTF8CString ("length");
++      JSObjectRef object =  JSValueToObject(context, value, NULL);
++      JSValueRef valuePtr = JSObjectGetProperty (context, object, propertyName, NULL);
++      JSStringRelease (propertyName);
++
++      if (JSValueGetType (context, valuePtr) == kJSTypeNumber) {
++          int length = (int)JSValueToNumber (context, valuePtr, NULL);
++          GVariant **children = g_new (GVariant *, length);
++
++          int i = 0;
++          for (i = 0; i < length; i++) {
++              const JSValueRef child = JSObjectGetPropertyAtIndex (context, object, i, NULL);
++              children[i] = webkit_extension_convert_js_to_gvariant(context, child);
++          }
++          GVariant* variant = g_variant_new_tuple (children, length);
++          g_free (children);
++          return variant;
++      }
++  }
++
++  // Get type value string
++  JSStringRef valueIString = JSValueToStringCopy(context, value, NULL);
++  size_t valueUTF8Size = JSStringGetMaximumUTF8CStringSize(valueIString);
++  char* valueUTF8 = (char*)malloc(valueUTF8Size);
++  JSStringGetUTF8CString(valueIString, valueUTF8, valueUTF8Size);
++
++  g_error("Unhandled type %d value: %s \n", type, valueUTF8);
++  free(valueUTF8);
++  JSStringRelease(valueIString);
++
++  return NULL;
++}
++
++/**
++ * Returns the main frame of the WebPage with the given id
++ */
++static WebKitFrame *webkit_extension_get_main_frame (const guint64 id){
++  WebKitWebPage *web_page = webkit_web_extension_get_page (this_extension, id);
++  return webkit_web_page_get_main_frame (web_page);
++}
++
++/**
++ * The 'external' object's hasProperty function. This function will confirm
++ * that 'external.callJava' exist
++ */
++static bool external_object_hasProperty(JSContextRef context, JSObjectRef object, JSStringRef propertyName){
++  return JSStringIsEqualToUTF8CString(propertyName, "callJava");
++}
++
++/**
++ * For the 'callJava' property of the 'external' object create a JavaScript
++ * function which will call back webkit_extension_external_object_callJava
++ */
++static JSValueRef external_object_getProperty(JSContextRef context, JSObjectRef object, JSStringRef propertyName, JSValueRef* exception){
++
++  if (JSStringIsEqualToUTF8CString(propertyName, "callJava")) {
++      return JSObjectMakeFunctionWithCallback (context, propertyName, webkit_extension_external_object_callJava);
++  }
++
++  return NULL;
++}
++
++JSClassDefinition external_object_definition = {
++    0,
++    kJSClassAttributeNone,
++
++    "external",
++    NULL,
++
++    NULL,
++    NULL,
++
++    NULL,
++    NULL,
++    external_object_hasProperty,
++    external_object_getProperty,
++    NULL,
++    NULL,
++    NULL,
++    NULL,
++    NULL,
++    NULL,
++    NULL
++};
++
++/**
++ * Set window.external to the "external" object we created in C.
++ * That way external.callJava calls our C function.
++ */
++static void webkit_extension_install_external_object(WebKitScriptWorld *world, WebKitFrame *frame, guint64 page_id){
++
++  // Create the 'external' object.
++  JSGlobalContextRef context = webkit_frame_get_javascript_context_for_script_world (frame, world);
++  JSObjectRef globalObject = JSContextGetGlobalObject (context);
++  JSObjectRef externalObject = JSObjectMake (context, JSClassCreate(&external_object_definition), NULL);
++
++  // Add the pageId to the 'external' object.
++  JSStringRef name = JSStringCreateWithUTF8CString ("pageId");
++  JSValueRef number = JSValueMakeNumber (context, page_id);
++  JSObjectSetProperty (context, externalObject, name, number, 0, NULL);
++  JSStringRelease (name);
++
++  // Set the global variable external to the external object
++  name = JSStringCreateWithUTF8CString ("external");
++  JSObjectSetProperty (context, globalObject, name, externalObject, 0, NULL);
++  JSStringRelease (name);
++}
++
++static void
++window_object_cleared_callback (WebKitScriptWorld *world,
++                                WebKitWebPage     *web_page,
++                                WebKitFrame       *frame,
++                                gpointer           user_data)
++{
++
++  guint64 page_id = webkit_web_page_get_id (web_page);
++
++  // Install the "external" object.
++  webkit_extension_install_external_object(world, frame, page_id);
++
++  // Notify the main process
++  g_dbus_proxy_call (main_process_proxy,
++                     "webkit_extension_window_object_cleared",
++                     g_variant_new ("(tb)", page_id, webkit_frame_is_main_frame (frame)),
++                     G_DBUS_CALL_FLAGS_NONE,
++                     -1,
++                     NULL,
++                     NULL,
++                     NULL);
++}
++
++static gboolean webkit_extension_execute_script (const guint64 page_id, const gchar* script, const gchar* url){
++
++  WebKitFrame *main_frame = webkit_extension_get_main_frame (page_id);
++
++  JSStringRef url_string = JSStringCreateWithUTF8CString (url);
++  JSStringRef script_string = JSStringCreateWithUTF8CString (script);
++
++  JSGlobalContextRef context = webkit_frame_get_javascript_global_context (main_frame);
++
++  JSValueRef exception;
++  JSValueRef result = JSEvaluateScript(context, script_string, NULL, url_string, 0,  &exception);
++  if (!result){
++      JSStringRef exceptionIString = JSValueToStringCopy(context, exception, NULL);
++      size_t exceptionUTF8Size = JSStringGetMaximumUTF8CStringSize(exceptionIString);
++      char* exceptionUTF8 = (char*)malloc(exceptionUTF8Size);
++      JSStringGetUTF8CString(exceptionIString, exceptionUTF8, exceptionUTF8Size);
++      g_error("Failed to execute script exception: %s\n", exceptionUTF8);
++      free(exceptionUTF8);
++      JSStringRelease(exceptionIString);
++  }
++
++  JSStringRelease (url_string);
++  JSStringRelease (script_string);
++
++  return result != NULL;
++}
++
++static void
++webkit_extension_handle_method_call (GDBusConnection       *connection,
++                    const gchar           *sender,
++                    const gchar           *object_path,
++                    const gchar           *interface_name,
++                    const gchar           *method_name,
++                    GVariant              *parameters,
++                    GDBusMethodInvocation *invocation,
++                    gpointer               user_data)
++{
++
++  if (g_strcmp0(method_name, "webkit_extension_execute_script") == 0){
++      const gchar *script;
++      const gchar *url;
++      guint64 page_id;
++      g_variant_get(parameters, "(t&s&s)", &page_id, &script, &url);
++      gboolean result = webkit_extension_execute_script (page_id, script, url);
++      g_dbus_method_invocation_return_value(invocation, g_variant_new("(b)", result));
++      return;
++  }
++
++  g_error ("UNKNOWN method %s\n", method_name);
++}
++
++static void setup_dbus_connection(){
++  GDBusConnection *bcon = g_bus_get_sync  (G_BUS_TYPE_SESSION, NULL,  NULL);
++  main_process_proxy = g_dbus_proxy_new_sync (bcon,
++      G_DBUS_PROXY_FLAGS_NONE,
++      NULL,
++      webkit_main_process_dbus_name,
++      webkit_main_process_dbus_path,
++      webkit_main_process_dbus_name,
++      NULL,
++      NULL);
++  g_assert (main_process_proxy != NULL);
++}
++
++static void notify_main_process_ready(){
++
++  // Notify the server that extension bus is ready.
++  g_dbus_proxy_call (main_process_proxy,
++                     "webkit_extension_ready",
++                     g_variant_new ("(ss)", webkit_extension_dbus_name, webkit_extension_dbus_path),
++                     G_DBUS_CALL_FLAGS_NONE,
++                     -1,
++                     NULL,
++                     NULL,
++                     NULL);
++}
++
++static const GDBusInterfaceVTable interface_vtable =
++  { webkit_extension_handle_method_call, NULL, NULL };
++
++static void
++on_bus_acquired (GDBusConnection *connection,
++                 const gchar     *name,
++                 gpointer         user_data)
++{
++  guint registration_id = g_dbus_connection_register_object(connection,
++      webkit_extension_dbus_path,
++      introspection_data->interfaces[0],
++      &interface_vtable, NULL, /* user_data */
++      NULL, /* user_data_free_func */
++      NULL); /* GError** */
++  g_assert(registration_id > 0);
++
++  setup_dbus_connection();
++  notify_main_process_ready();
++}
++
++G_MODULE_EXPORT void
++webkit_web_extension_initialize_with_user_data (WebKitWebExtension *extension, GVariant *user_data)
++{
++
++  this_extension = extension;
++
++  const gchar *unique_id = g_variant_get_string(user_data, NULL);
++  int id_length = strlen(unique_id);
++
++  //FIXME: free these pointers when the extension is being unloaded.
++  webkit_main_process_dbus_name = g_new (gchar, strlen(WEBKIT_MAIN_PROCESS_DBUS_NAME_PREFIX) + id_length + 1);
++  webkit_main_process_dbus_path = g_new (gchar, strlen(WEBKIT_MAIN_PROCESS_DBUS_PATH_PREFIX) + id_length + 1);
++  webkit_extension_dbus_name = g_new (gchar, strlen(WEBKIT_EXTENSION_DBUS_NAME_PREFIX) + id_length + 1);
++  webkit_extension_dbus_path = g_new (gchar, strlen(WEBKIT_EXTENSION_DBUS_PATH_PREFIX) + id_length + 1);
++  introspection_xml = g_new (gchar, strlen(introspection_xml_template) + strlen(WEBKIT_EXTENSION_DBUS_NAME_PREFIX) + id_length + 1);
++
++  g_sprintf (webkit_main_process_dbus_name, WEBKIT_MAIN_PROCESS_DBUS_NAME_PREFIX, unique_id);
++  g_sprintf (webkit_main_process_dbus_path, WEBKIT_MAIN_PROCESS_DBUS_PATH_PREFIX, unique_id);
++  g_sprintf (webkit_extension_dbus_name, WEBKIT_EXTENSION_DBUS_NAME_PREFIX, unique_id);
++  g_sprintf (webkit_extension_dbus_path, WEBKIT_EXTENSION_DBUS_PATH_PREFIX, unique_id);
++  g_sprintf (introspection_xml, introspection_xml_template, webkit_extension_dbus_name);
++
++  g_signal_connect (webkit_script_world_get_default (),
++                    "window-object-cleared",
++                    G_CALLBACK (window_object_cleared_callback),
++                    NULL);
++
++  // Setup DBus connection
++  guint owner_id;
++  introspection_data = g_dbus_node_info_new_for_xml (introspection_xml, NULL);
++  g_assert (introspection_data != NULL);
++
++  owner_id = g_bus_own_name (G_BUS_TYPE_SESSION,
++                             webkit_extension_dbus_name,
++                             G_BUS_NAME_OWNER_FLAGS_REPLACE | G_BUS_NAME_OWNER_FLAGS_ALLOW_REPLACEMENT,
++                             on_bus_acquired,
++                             NULL, /* on_name_acquired */
++                             NULL, /* on_name_lost */
++                             NULL,
++                             NULL);
++  g_assert (owner_id != 0);
++
++  // TODO: clean up on extension unload.
++  //  g_bus_unown_name (owner_id);
++  //  g_dbus_node_info_unref (introspection_data);
++}
+diff --git eclipse.platform.swt/bundles/org.eclipse.swt/Eclipse SWT WebKit/gtk/library/webkit_extension.h eclipse.platform.swt/bundles/org.eclipse.swt/Eclipse SWT WebKit/gtk/library/webkit_extension.h
+new file mode 100644
+index 0000000..d127f9c
+--- /dev/null
++++ eclipse.platform.swt/bundles/org.eclipse.swt/Eclipse SWT WebKit/gtk/library/webkit_extension.h	
+@@ -0,0 +1,73 @@
++/*******************************************************************************
++ * Copyright (c) 2014 Red Hat and others. All rights reserved.
++ * The contents of this file are made available under the terms
++ * of the GNU Lesser General Public License (LGPL) Version 2.1 that
++ * accompanies this distribution (lgpl-v21.txt).  The LGPL is also
++ * available at http://www.gnu.org/licenses/lgpl.html.  If the version
++ * of the LGPL at http://www.gnu.org is different to the version of
++ * the LGPL accompanying this distribution and there is any conflict
++ * between the two license versions, the terms of the LGPL accompanying
++ * this distribution shall govern.
++ *
++ * Contributors:
++ *     Red Hat - initial API and implementation
++ *******************************************************************************/
++
++#ifndef INC_webkit_extension_H
++#define INC_webkit_extension_H
++
++#include <string.h>
++
++#include <glib.h>
++#include <glib/gprintf.h>
++
++#include <gio/gio.h>
++#include <stdlib.h>
++
++#include <unistd.h>
++#include <stdio.h>
++
++#include <webkit2/webkit-web-extension.h>
++
++#include <JavaScriptCore/JSContextRef.h>
++#include <JavaScriptCore/JSObjectRef.h>
++#include <JavaScriptCore/JSStringRef.h>
++
++#define WEBKIT_MAIN_PROCESS_DBUS_NAME_PREFIX "org.eclipse.webkit_main.%s"
++#define WEBKIT_MAIN_PROCESS_DBUS_PATH_PREFIX "/org/eclipse/webkit_main/%s"
++
++#define WEBKIT_EXTENSION_DBUS_NAME_PREFIX "org.eclipse.webkit_extension.%s"
++#define WEBKIT_EXTENSION_DBUS_PATH_PREFIX "/org/eclipse/webkit_extension/%s"
++
++static gchar* webkit_main_process_dbus_name;
++static gchar* webkit_main_process_dbus_path;
++
++static gchar* webkit_extension_dbus_name;
++static gchar* webkit_extension_dbus_path;
++
++static GDBusProxy *main_process_proxy;
++
++static GDBusNodeInfo *introspection_data = NULL;
++
++static gchar* introspection_xml;
++
++static gchar* introspection_xml_template =
++"<node>"
++  "<interface name='%s'>"
++
++    "<method name='webkit_extension_execute_script'>"
++      "<arg type='t' name='page_id' direction='in'/>"
++      "<arg type='s' name='script' direction='in'/>"
++      "<arg type='s' name='url' direction='in'/>"
++      "<arg type='b' name='result' direction='out'/>"
++    "</method>"
++
++  "</interface>"
++"</node>";
++
++WebKitWebExtension *this_extension;
++
++static GVariant * webkit_extension_convert_js_to_gvariant (JSContextRef context, JSValueRef value);
++static JSValueRef webkit_extension_convert_gvariant_to_js (JSContextRef context, GVariant * value);
++
++#endif /*INC_webkit_extension_H*/
+diff --git eclipse.platform.swt/bundles/org.eclipse.swt/Eclipse SWT WebKit/gtk/library/webkitgtk.c eclipse.platform.swt/bundles/org.eclipse.swt/Eclipse SWT WebKit/gtk/library/webkitgtk.c
+index 15b7761..3994f37 100644
+--- eclipse.platform.swt/bundles/org.eclipse.swt/Eclipse SWT WebKit/gtk/library/webkitgtk.c	
++++ eclipse.platform.swt/bundles/org.eclipse.swt/Eclipse SWT WebKit/gtk/library/webkitgtk.c	
+@@ -2103,6 +2103,46 @@ JNIEXPORT jintLong JNICALL WebKitGTK_NATIVE(_1webkit_1web_1context_1set_1favicon
+ }
+ #endif
+ 
++#ifndef NO__1webkit_1web_1context_1set_1web_1extensions_1directory
++JNIEXPORT void JNICALL WebKitGTK_NATIVE(_1webkit_1web_1context_1set_1web_1extensions_1directory)
++	(JNIEnv *env, jclass that, jintLong arg0, jbyteArray arg1)
++{
++	jbyte *lparg1=NULL;
++	WebKitGTK_NATIVE_ENTER(env, that, _1webkit_1web_1context_1set_1web_1extensions_1directory_FUNC);
++	if (arg1) if ((lparg1 = (*env)->GetByteArrayElements(env, arg1, NULL)) == NULL) goto fail;
++/*
++	webkit_web_context_set_web_extensions_directory(arg0, lparg1);
++*/
++	{
++		WebKitGTK_LOAD_FUNCTION(fp, webkit_web_context_set_web_extensions_directory)
++		if (fp) {
++			((void (CALLING_CONVENTION*)(jintLong, jbyte *))fp)(arg0, lparg1);
++		}
++	}
++fail:
++	if (arg1 && lparg1) (*env)->ReleaseByteArrayElements(env, arg1, lparg1, 0);
++	WebKitGTK_NATIVE_EXIT(env, that, _1webkit_1web_1context_1set_1web_1extensions_1directory_FUNC);
++}
++#endif
++
++#ifndef NO__1webkit_1web_1context_1set_1web_1extensions_1initialization_1user_1data
++JNIEXPORT void JNICALL WebKitGTK_NATIVE(_1webkit_1web_1context_1set_1web_1extensions_1initialization_1user_1data)
++	(JNIEnv *env, jclass that, jintLong arg0, jintLong arg1)
++{
++	WebKitGTK_NATIVE_ENTER(env, that, _1webkit_1web_1context_1set_1web_1extensions_1initialization_1user_1data_FUNC);
++/*
++	webkit_web_context_set_web_extensions_initialization_user_data(arg0, arg1);
++*/
++	{
++		WebKitGTK_LOAD_FUNCTION(fp, webkit_web_context_set_web_extensions_initialization_user_data)
++		if (fp) {
++			((void (CALLING_CONVENTION*)(jintLong, jintLong))fp)(arg0, arg1);
++		}
++	}
++	WebKitGTK_NATIVE_EXIT(env, that, _1webkit_1web_1context_1set_1web_1extensions_1initialization_1user_1data_FUNC);
++}
++#endif
++
+ #ifndef NO__1webkit_1web_1data_1source_1get_1data
+ JNIEXPORT jintLong JNICALL WebKitGTK_NATIVE(_1webkit_1web_1data_1source_1get_1data)
+ 	(JNIEnv *env, jclass that, jintLong arg0)
+@@ -2501,6 +2541,26 @@ JNIEXPORT jintLong JNICALL WebKitGTK_NATIVE(_1webkit_1web_1view_1get_1main_1fram
+ }
+ #endif
+ 
++#ifndef NO__1webkit_1web_1view_1get_1page_1id
++JNIEXPORT jintLong JNICALL WebKitGTK_NATIVE(_1webkit_1web_1view_1get_1page_1id)
++	(JNIEnv *env, jclass that, jintLong arg0)
++{
++	jintLong rc = 0;
++	WebKitGTK_NATIVE_ENTER(env, that, _1webkit_1web_1view_1get_1page_1id_FUNC);
++/*
++	rc = (jintLong)webkit_web_view_get_page_id(arg0);
++*/
++	{
++		WebKitGTK_LOAD_FUNCTION(fp, webkit_web_view_get_page_id)
++		if (fp) {
++			rc = (jintLong)((jintLong (CALLING_CONVENTION*)(jintLong))fp)(arg0);
++		}
++	}
++	WebKitGTK_NATIVE_EXIT(env, that, _1webkit_1web_1view_1get_1page_1id_FUNC);
++	return rc;
++}
++#endif
++
+ #ifndef NO__1webkit_1web_1view_1get_1progress
+ JNIEXPORT jdouble JNICALL WebKitGTK_NATIVE(_1webkit_1web_1view_1get_1progress)
+ 	(JNIEnv *env, jclass that, jintLong arg0)
+diff --git eclipse.platform.swt/bundles/org.eclipse.swt/Eclipse SWT WebKit/gtk/library/webkitgtk_stats.c eclipse.platform.swt/bundles/org.eclipse.swt/Eclipse SWT WebKit/gtk/library/webkitgtk_stats.c
+index c3cf9ee..b0e6650 100644
+--- eclipse.platform.swt/bundles/org.eclipse.swt/Eclipse SWT WebKit/gtk/library/webkitgtk_stats.c	
++++ eclipse.platform.swt/bundles/org.eclipse.swt/Eclipse SWT WebKit/gtk/library/webkitgtk_stats.c	
+@@ -123,6 +123,8 @@ char * WebKitGTK_nativeFunctionNames[] = {
+ 	"_1webkit_1uri_1response_1get_1mime_1type",
+ 	"_1webkit_1web_1context_1get_1default",
+ 	"_1webkit_1web_1context_1set_1favicon_1database_1directory",
++	"_1webkit_1web_1context_1set_1web_1extensions_1directory",
++	"_1webkit_1web_1context_1set_1web_1extensions_1initialization_1user_1data",
+ 	"_1webkit_1web_1data_1source_1get_1data",
+ 	"_1webkit_1web_1data_1source_1get_1encoding",
+ 	"_1webkit_1web_1frame_1get_1data_1source",
+@@ -143,6 +145,7 @@ char * WebKitGTK_nativeFunctionNames[] = {
+ 	"_1webkit_1web_1view_1get_1estimated_1load_1progress",
+ 	"_1webkit_1web_1view_1get_1load_1status",
+ 	"_1webkit_1web_1view_1get_1main_1frame",
++	"_1webkit_1web_1view_1get_1page_1id",
+ 	"_1webkit_1web_1view_1get_1progress",
+ 	"_1webkit_1web_1view_1get_1settings",
+ 	"_1webkit_1web_1view_1get_1title",
+diff --git eclipse.platform.swt/bundles/org.eclipse.swt/Eclipse SWT WebKit/gtk/library/webkitgtk_stats.h eclipse.platform.swt/bundles/org.eclipse.swt/Eclipse SWT WebKit/gtk/library/webkitgtk_stats.h
+index e14e8f6..7b939e9 100644
+--- eclipse.platform.swt/bundles/org.eclipse.swt/Eclipse SWT WebKit/gtk/library/webkitgtk_stats.h	
++++ eclipse.platform.swt/bundles/org.eclipse.swt/Eclipse SWT WebKit/gtk/library/webkitgtk_stats.h	
+@@ -133,6 +133,8 @@ typedef enum {
+ 	_1webkit_1uri_1response_1get_1mime_1type_FUNC,
+ 	_1webkit_1web_1context_1get_1default_FUNC,
+ 	_1webkit_1web_1context_1set_1favicon_1database_1directory_FUNC,
++	_1webkit_1web_1context_1set_1web_1extensions_1directory_FUNC,
++	_1webkit_1web_1context_1set_1web_1extensions_1initialization_1user_1data_FUNC,
+ 	_1webkit_1web_1data_1source_1get_1data_FUNC,
+ 	_1webkit_1web_1data_1source_1get_1encoding_FUNC,
+ 	_1webkit_1web_1frame_1get_1data_1source_FUNC,
+@@ -153,6 +155,7 @@ typedef enum {
+ 	_1webkit_1web_1view_1get_1estimated_1load_1progress_FUNC,
+ 	_1webkit_1web_1view_1get_1load_1status_FUNC,
+ 	_1webkit_1web_1view_1get_1main_1frame_FUNC,
++	_1webkit_1web_1view_1get_1page_1id_FUNC,
+ 	_1webkit_1web_1view_1get_1progress_FUNC,
+ 	_1webkit_1web_1view_1get_1settings_FUNC,
+ 	_1webkit_1web_1view_1get_1title_FUNC,
+diff --git eclipse.platform.swt/bundles/org.eclipse.swt/Eclipse SWT WebKit/gtk/library/webkitgtk_structs.c eclipse.platform.swt/bundles/org.eclipse.swt/Eclipse SWT WebKit/gtk/library/webkitgtk_structs.c
+index 5324bd8..8ad1c78 100644
+--- eclipse.platform.swt/bundles/org.eclipse.swt/Eclipse SWT WebKit/gtk/library/webkitgtk_structs.c	
++++ eclipse.platform.swt/bundles/org.eclipse.swt/Eclipse SWT WebKit/gtk/library/webkitgtk_structs.c	
+@@ -1,5 +1,5 @@
+ /*******************************************************************************
+- * Copyright (c) 2009, 2011 IBM Corporation and others. All rights reserved.
++ * Copyright (c) 2009, 2014 IBM Corporation and others. All rights reserved.
+  * The contents of this file are made available under the terms
+  * of the GNU Lesser General Public License (LGPL) Version 2.1 that
+  * accompanies this distribution (lgpl-v21.txt).  The LGPL is also
+diff --git eclipse.platform.swt/bundles/org.eclipse.swt/Eclipse SWT WebKit/gtk/org/eclipse/swt/browser/WebKit.java eclipse.platform.swt/bundles/org.eclipse.swt/Eclipse SWT WebKit/gtk/org/eclipse/swt/browser/WebKit.java
+index 7ef6236..0e00c09 100644
+--- eclipse.platform.swt/bundles/org.eclipse.swt/Eclipse SWT WebKit/gtk/org/eclipse/swt/browser/WebKit.java	
++++ eclipse.platform.swt/bundles/org.eclipse.swt/Eclipse SWT WebKit/gtk/org/eclipse/swt/browser/WebKit.java	
+@@ -11,12 +11,15 @@
+ package org.eclipse.swt.browser;
+ 
+ 
++import java.io.File;
+ import java.io.UnsupportedEncodingException;
+ import java.net.MalformedURLException;
+ import java.net.URL;
+ import java.util.Enumeration;
++import java.util.HashMap;
+ import java.util.Hashtable;
+ import java.util.StringTokenizer;
++import java.util.UUID;
+ 
+ import org.eclipse.swt.SWT;
+ import org.eclipse.swt.SWTException;
+@@ -27,6 +30,7 @@ import org.eclipse.swt.internal.C;
+ import org.eclipse.swt.internal.Callback;
+ import org.eclipse.swt.internal.Compatibility;
+ import org.eclipse.swt.internal.Converter;
++import org.eclipse.swt.internal.GVariantConverter;
+ import org.eclipse.swt.internal.LONG;
+ import org.eclipse.swt.internal.Library;
+ import org.eclipse.swt.internal.gtk.GdkEventKey;
+@@ -49,6 +53,8 @@ import org.eclipse.swt.widgets.Shell;
+ @SuppressWarnings({"rawtypes", "unchecked"})
+ class WebKit extends WebBrowser {
+ 	long /*int*/ webView, webViewData, scrolledWindow;
++	long pageId;
++
+ 	int failureCount, lastKeyCode, lastCharCode;
+ 	String postData;
+ 	String[] headers;
+@@ -56,10 +62,61 @@ class WebKit extends WebBrowser {
+ 	byte[] htmlBytes;
+ 	BrowserFunction eventFunction;
+ 
++	/**
++	 * A hash map to keep the results of Java Script executions. The result is
++	 * mapped to the value of jsCounter at the time of execution so that the
++	 * polling loop can find the correct result
++	 */
++	private static HashMap<Integer, Long> jsResults = new HashMap<Integer, Long>();
++
++	/**
++	 * A counter that is incremented each time @link
++	 * {@link WebKit#webkit_extension_execute_script(String, String)} is called
++	 * and as a unique reference to that script run.
++	 */
++	private static int jsCounter = 0;
++
++	private static long /*int*/ dbus_proxy = 0;
++
+ 	static int DisabledJSCount;
+ 	static long /*int*/ ExternalClass, PostString, WebViewType;
+ 	static boolean IsWebKit14orNewer, LibraryLoaded;
+ 	static Hashtable WindowMappings = new Hashtable ();
++	static HashMap<Long, WebKit> browserIdMappings = new HashMap<Long, WebKit>();
++
++	private static final String WEBKIT_MAIN_PROCESS_DBUS_NAME_PREFIX = "org.eclipse.webkit_main.";
++	private static final String WEBKIT_MAIN_PROCESS_DBUS_PATH_PREFIX = "/org/eclipse/webkit_main/";
++
++	private static String uniqueDBusID;
++	private static String mainProcessDBusName;
++	private static String mainProcessDBusPath;
++
++	/* Introspection data out main WebKit process. This specifies the
++	 * interface that the extension will expect to see. */
++	private static String dbusIntrospectionXml =
++	"<node>" +
++	  "<interface name='%s'>" +
++
++	    "<method name='webkit_extension_ready'>" +
++	      "<arg type='s' name='extension_dbus_name' direction='in'/>" +
++	      "<arg type='s' name='extension_dbus_path' direction='in'/>" +
++	    "</method>" +
++
++	    "<method name='webkit_extension_window_object_cleared'>" +
++	      "<arg type='t' name='pageId' direction='in'/>" +
++	      "<arg type='b' name='isMainFrame' direction='in'/>" +
++	    "</method>" +
++
++	    "<method name='webkit_extension_external_object_callJava'>" +
++	      "<arg type='t' name='pageId' direction='in'/>" +
++	      "<arg type='d' name='id' direction='in'/>" +
++	      "<arg type='s' name='token' direction='in'/>" +
++	      "<arg type='r' name='arguments' direction='in'/>" +
++	      "<arg type='*' name='result' direction='out'/>" +
++	    "</method>" +
++
++	"</interface>" +
++	"</node>";
+ 
+ 	static final String ABOUT_BLANK = "about:blank"; //$NON-NLS-1$
+ 	static final String CHARSET_UTF8 = "UTF-8"; //$NON-NLS-1$
+@@ -122,6 +179,12 @@ class WebKit extends WebBrowser {
+ 	static Callback JSObjectHasPropertyProc, JSObjectGetPropertyProc, JSObjectCallAsFunctionProc;
+ 	static Callback JSDOMEventProc;
+ 
++	private static Callback connectedToExtensionCallback;
++	private static Callback busAcquiredCallback;
++	private static Callback handleDbusFunctionCallCallbackObject;
++	private static Callback executeJavaScriptFinishedCallback;
++	private static Callback webkit_initialize_web_extensions_callback;
++
+ 	static boolean WEBKIT2;
+ 
+ 	static {
+@@ -137,6 +200,22 @@ class WebKit extends WebBrowser {
+ 
+ 			WebViewType = WebKitGTK.webkit_web_view_get_type ();
+ 
++			if (WEBKIT2){
++				long /*int*/ webContext = WebKitGTK.webkit_web_context_get_default();
++
++				webkit_initialize_web_extensions_callback = new Callback(WebKit.class, "webkit_initialize_web_extensions", 2);
++				OS.g_signal_connect (webContext, WebKitGTK.initialize_web_extensions, webkit_initialize_web_extensions_callback.getAddress(), 0);
++
++				setUpExtensionConnection();
++				//TODO: Perhaps a directory can be created inside SWT_LIBRARY_PATH for the extension.
++				//      That way webkit wouldn't attempt to load unrelated .so's as extensions
++				File extension = Library.findResource("swt-webkit-extension", true);  //$NON-NLS-1$
++				String extensionsPath = extension.getParent();
++				byte[] extensionsPathBytes = Converter.wcsToMbcs (null, extensionsPath, true);
++				WebKitGTK.webkit_web_context_set_web_extensions_directory(webContext, extensionsPathBytes);
++				executeJavaScriptFinishedCallback = new Callback(WebKit.class, "executeJavaScriptFinishedCallback", 3);
++			}
++
+ 			Proc2 = new Callback (WebKit.class, "Proc", 2); //$NON-NLS-1$
+ 			if (Proc2.getAddress () == 0) SWT.error (SWT.ERROR_NO_MORE_CALLBACKS);
+ 			Proc3 = new Callback (WebKit.class, "Proc", 3); //$NON-NLS-1$
+@@ -247,11 +326,24 @@ class WebKit extends WebBrowser {
+ 		}
+ 	}
+ 
+-static String getString (long /*int*/ strPtr) {
+-	int length = OS.strlen (strPtr);
+-	byte [] buffer = new byte [length];
+-	OS.memmove (buffer, strPtr, length);
+-	return new String (Converter.mbcsToWcs (null, buffer));
++@SuppressWarnings("unused")
++private static long /*int*/ webkit_initialize_web_extensions (long /*int*/ context, long /*int*/ user_data){
++	 WebKitGTK.webkit_web_context_set_web_extensions_initialization_user_data (
++		      context,
++		      GVariantConverter.convertJavaToGVariant(uniqueDBusID));
++	return 0;
++}
++
++/**
++ * In WebKit2 each WebPage/WebView pair is assigned an ID. This is used to
++ * coordinate operations between a WebView in the main process and its
++ * corresponding WebPage in the extension process.
++ *
++ * @param id the id of the WebView
++ * @return an instance of WebKit which has the corresponding id
++ */
++private static WebKit findBrowserById (long id) {
++	return browserIdMappings.get(id);
+ }
+ 
+ static Browser FindBrowser (long /*int*/ webView) {
+@@ -286,6 +378,55 @@ static boolean IsInstalled () {
+ 		(major == MIN_VERSION[0] && minor == MIN_VERSION[1] && micro >= MIN_VERSION[2]);
+ }
+ 
++
++/**
++ * Set up this process to be ready to receive DBus connections from the extension.
++ */
++private static void setUpExtensionConnection(){
++	UUID uuid = UUID.randomUUID();
++	// A valid dbus name must not contain '-' and must
++	// not begin with a digit.
++	uniqueDBusID = "a" + uuid.toString().replace('-', '_');
++
++	mainProcessDBusName = WEBKIT_MAIN_PROCESS_DBUS_NAME_PREFIX + uniqueDBusID;
++	mainProcessDBusPath = WEBKIT_MAIN_PROCESS_DBUS_PATH_PREFIX + uniqueDBusID;
++
++	busAcquiredCallback = new Callback(WebKit.class, "busAcquiredCallback", 3);
++	int owner_id = OS.g_bus_own_name (OS.G_BUS_TYPE_SESSION,
++			Converter.wcsToMbcs(null, mainProcessDBusName, true),
++			OS.G_BUS_NAME_OWNER_FLAGS_REPLACE | OS.G_BUS_NAME_OWNER_FLAGS_ALLOW_REPLACEMENT,
++			busAcquiredCallback.getAddress(),
++			0,
++			0,
++			0,
++			0);
++
++	assert(owner_id > 0);
++}
++
++static long /*int*/ busAcquiredCallback (long /*int*/ connection, long /*int*/ name, long /*int*/ user_data){
++	dbusIntrospectionXml = String.format(dbusIntrospectionXml, mainProcessDBusName);
++	byte[] dbusIntrospectionXmlBytes = Converter.wcsToMbcs(null, dbusIntrospectionXml, true);
++	long /*int*/ [] error = new long /*int*/ [1];
++	long /*int*/ introspection_data = OS.g_dbus_node_info_new_for_xml (dbusIntrospectionXmlBytes, error);
++	if (introspection_data == 0 || error[0] != 0){
++		return 0;
++	}
++	handleDbusFunctionCallCallbackObject = new Callback(WebKit.class, "webkit_extension_handle_dbus_function_call", 8);
++
++	long /*int*/ interface_info = OS.g_dbus_node_info_lookup_interface(introspection_data, Converter.wcsToMbcs(null, mainProcessDBusName, true));
++	long /*int*/[] vtable = {handleDbusFunctionCallCallbackObject.getAddress(),0,0};
++	long /*int*/ registration_id = OS.g_dbus_connection_register_object (connection,
++			Converter.wcsToMbcs(null, mainProcessDBusPath, true),
++			interface_info,
++            vtable,
++            0,
++            0,
++            error);
++	assert (registration_id != 0);
++	return 0;
++}
++
+ static long /*int*/ JSObjectCallAsFunctionProc (long /*int*/ ctx, long /*int*/ function, long /*int*/ thisObject, long /*int*/ argumentCount, long /*int*/ arguments, long /*int*/ exception) {
+ 	if (WebKitGTK.JSValueIsObjectOfClass (ctx, thisObject, ExternalClass) == 0) {
+ 		return WebKitGTK.JSValueMakeUndefined (ctx);
+@@ -406,10 +547,11 @@ static long /*int*/ Proc (long /*int*/ handle, long /*int*/ arg0, long /*int*/ u
+ 	} else if (OS.G_TYPE_CHECK_INSTANCE_TYPE (handle, WebKitGTK.webkit_web_frame_get_type ())) {
+ 		webView = WebKitGTK.webkit_web_frame_get_web_view (handle);
+ 	} else {
++		SWT.error(SWT.ERROR_INVALID_ARGUMENT, new Throwable("UNHANDLED type " + Converter.getString(OS.G_OBJECT_TYPE_NAME(handle))));
+ 		return 0;
+ 	}
+ 
+-	Browser browser = FindBrowser (webView); 
++	Browser browser = FindBrowser (webView);
+ 	if (browser == null) return 0;
+ 	WebKit webkit = (WebKit)browser.webBrowser;
+ 	if (webView == handle) {
+@@ -526,6 +668,7 @@ long /*int*/ webFrameProc (long /*int*/ handle, long /*int*/ arg0, long /*int*/
+ 
+ long /*int*/ webViewProc (long /*int*/ handle, long /*int*/ user_data) {
+ 	switch ((int)/*64*/user_data) {
++		case CREATE_WEB_VIEW: return webkit_create_web_view (handle, 0);
+ 		case CLOSE_WEB_VIEW: return webkit_close_web_view (handle);
+ 		case WEB_VIEW_READY: return webkit_web_view_ready (handle);
+ 		default: return 0;
+@@ -574,8 +717,98 @@ long /*int*/ webViewProc (long /*int*/ handle, long /*int*/ arg0, long /*int*/ a
+ 	}
+ }
+ 
++/**
++ * Handles function calls from the extension through DBus.
++ *
++ * @param connection
++ * @param sender
++ * @param object_path
++ * @param interface_name
++ * @param method_name
++ * @param parameters
++ * @param invocation
++ * @param user_data
++ * @return
++ */
++@SuppressWarnings("unused")
++private static long /*int*/ webkit_extension_handle_dbus_function_call(
++		long /*int*/ connection, long /*int*/ sender,
++		long /*int*/ object_path, long /*int*/ interface_name,
++		long /*int*/ method_name, long /*int*/ parameters,
++		long /*int*/ invocation, long /*int*/ user_data) {
++
++	String methodName = Converter.getString(method_name);
++
++	if (methodName.equals("webkit_extension_ready")) {
++		webkit_extension_ready(parameters);
++		return 0;
++	}
++
++	if (methodName.equals("webkit_extension_window_object_cleared")) {
++		webkit_extension_window_object_cleared(parameters);
++		return 0;
++	}
++
++	if (methodName.equals("webkit_extension_external_object_callJava")) {
++		Object result = webkit_extension_external_object_callJava(parameters);
++		OS.g_dbus_method_invocation_return_value(invocation, GVariantConverter.convertJavaToGVariant(new Object[]{result}));
++		return 0;
++	}
++
++	SWT.error(SWT.ERROR_INVALID_ARGUMENT, new Throwable("Unknow DBus method name " + methodName));
++	return 0;
++}
++
++/**
++ * Called by the extension through DBus to notify the main process that
++ * extension ready for connection through DBus
++ *
++ * @param args_variant a GVariant containing the call arguments.
++ */
++private static void webkit_extension_ready (long /*int*/ args_variant){
++	Object[] args = (Object[]) GVariantConverter.convertGVariantToJava(args_variant);
++	String extensionDbusName = (String) args[0];
++	String extensionDbusPath = (String) args[1];
++	connectToExtension(extensionDbusName, extensionDbusPath);
++}
++
++/**
++ * Connect to the WebKit extension via dbus
++ * @param name dbus name
++ * @param path dbus path
++ */
++private static void connectToExtension(String name, String path){
++
++	connectedToExtensionCallback = new Callback(WebKit.class, "connectedToExtensionCallback", 3);
++
++	long /*int*/ bcon = OS.g_bus_get_sync (OS.G_BUS_TYPE_SESSION, 0,  0);
++	OS.g_dbus_proxy_new (bcon,
++			OS.G_DBUS_PROXY_FLAGS_NONE,
++			0,
++			Converter.wcsToMbcs(null, name, true),
++			Converter.wcsToMbcs(null, path, true),
++			Converter.wcsToMbcs(null, name, true),
++			0,
++			connectedToExtensionCallback.getAddress(),
++			0);
++}
++
++/**
++ * Called by DBus when the connection to the extension has been established.
++ */
++@SuppressWarnings("unused")
++private static long /*int*/ connectedToExtensionCallback (long /*int*/ source_object, long /*int*/ res, long /*int*/ user_data){
++	long /*int*/[] error = new long /*int*/[1];
++	dbus_proxy = OS.g_dbus_proxy_new_finish (res, error);
++	if (error[0] != 0){
++		SWT.error(SWT.ERROR_IO, new Throwable(Converter.getString(OS.g_error_get_message(error[0]))));
++	}
++	return 0;
++}
++
+ @Override
+ public void create (Composite parent, int style) {
++
+ 	if (ExternalClass == 0) {
+ 		if (Device.DEBUG) {
+ 			int major, minor, micro;
+@@ -651,10 +884,15 @@ public void create (Composite parent, int style) {
+ 		OS.g_signal_connect (webView, WebKitGTK.window_object_cleared, Proc5.getAddress (), WINDOW_OBJECT_CLEARED);
+ 		OS.g_signal_connect (webView, WebKitGTK.status_bar_text_changed, Proc3.getAddress (), STATUS_BAR_TEXT_CHANGED);
+ 	} else {
++
++		// Set the page Id
++		this.pageId = WebKitGTK.webkit_web_view_get_page_id (webView);
++		browserIdMappings.put(pageId, this);
++
+ 		OS.gtk_container_add (browser.handle, webView);
+ 
+ 		OS.g_signal_connect (webView, WebKitGTK.close, Proc2.getAddress (), CLOSE_WEB_VIEW);
+-		OS.g_signal_connect (webView, WebKitGTK.create, Proc3.getAddress (), CREATE_WEB_VIEW);
++		OS.g_signal_connect (webView, WebKitGTK.create, Proc2.getAddress (), CREATE_WEB_VIEW);
+ 		OS.g_signal_connect (webView, WebKitGTK.load_changed, Proc3.getAddress (), LOAD_CHANGED);
+ 		OS.g_signal_connect (webView, WebKitGTK.ready_to_show, Proc2.getAddress (), WEB_VIEW_READY);
+ 		OS.g_signal_connect (webView, WebKitGTK.decide_policy, Proc4.getAddress (), DECIDE_POLICY);
+@@ -663,6 +901,22 @@ public void create (Composite parent, int style) {
+ 		OS.g_signal_connect (webView, WebKitGTK.context_menu, Proc5.getAddress (), CONTEXT_MENU);
+ 		OS.g_signal_connect (webView, WebKitGTK.notify_estimated_load_progress, Proc3.getAddress (), NOTIFY_PROGRESS);
+ 		OS.g_signal_connect (webView, WebKitGTK.authenticate, Proc3.getAddress (), AUTHENTICATE);
++
++		// Wait for extension initialization.
++		// The extension and the DBus connection to it is performed asyncrounously
++		// This creates a race condition; if functions requiring the extension are
++		// called right after this function returns crashes can occure.
++		Display display = browser.getDisplay();
++		long time = System.currentTimeMillis();
++		long timeOut = time+2000;
++		while (!display.isDisposed() && dbus_proxy == 0 && time < timeOut) {
++			if (!display.readAndDispatch()) display.sleep();
++			time = System.currentTimeMillis();
++		}
++
++		if (dbus_proxy == 0){
++			SWT.error(SWT.ERROR_IO, new Throwable("Failed to initialize DBus connection to extension"));
++		}
+ 	}
+ 
+ 	OS.gtk_widget_show (webView);
+@@ -679,9 +933,9 @@ public void create (Composite parent, int style) {
+ 	OS.g_signal_connect (webView, OS.motion_notify_event, JSDOMEventProc.getAddress (), 0);
+ 
+ 	/*
+-	* Callbacks to get the events not consumed by WebKit, and to block 
+-	* them so that they don't get propagated to the parent handle twice.  
+-	* This hook is set after WebKit and is therefore called after WebKit's 
++	* Callbacks to get the events not consumed by WebKit, and to block
++	* them so that they don't get propagated to the parent handle twice.
++	* This hook is set after WebKit and is therefore called after WebKit's
+ 	* handler because GTK dispatches events in their order of registration.
+ 	*/
+ 	if (!WEBKIT2){
+@@ -781,12 +1035,20 @@ public void create (Composite parent, int style) {
+ 		}
+ 	}
+ 
+-	eventFunction = new BrowserFunction (browser, "HandleWebKitEvent") { //$NON-NLS-1$
+-		@Override
+-		public Object function(Object[] arguments) {
+-			return handleEventFromFunction (arguments) ? Boolean.TRUE : Boolean.FALSE;
+-		}
+-	};
++	if (WEBKIT2){
++		/* In WebKit2 if the create function is called from a signal handler
++		 * which blocks the core process such as "create" signal the following call
++		 * will cause a deadlock as the core process is blocked and unable to
++		 * execute JavaScript.
++		 */
++		this.browser.getDisplay().asyncExec(new Runnable() {
++			public void run() {
++				initializeEventFunction();
++			}
++		});
++	}else {
++		initializeEventFunction();
++	}
+ 
+ 	/*
+ 	* Bug in WebKitGTK.  MouseOver/MouseLeave events are not consistently sent from
+@@ -822,6 +1084,15 @@ public void create (Composite parent, int style) {
+ 	}
+ }
+ 
++private void initializeEventFunction(){
++	eventFunction = new BrowserFunction (browser, "HandleWebKitEvent") { //$NON-NLS-1$
++		@Override
++		public Object function(Object[] arguments) {
++			return handleEventFromFunction (arguments) ? Boolean.TRUE : Boolean.FALSE;
++		}
++	};
++}
++
+ void addEventHandlers (long /*int*/ web_view, boolean top) {
+ 	/*
+ 	* If JS is disabled (causes DOM events to not be delivered) then do not add event
+@@ -829,7 +1100,7 @@ void addEventHandlers (long /*int*/ web_view, boolean top) {
+ 	*/
+ 	if (!jsEnabled) return;
+ 
+-	if (top && IsWebKit14orNewer) {
++	if (top && IsWebKit14orNewer && !WEBKIT2) {
+ 		long /*int*/ domDocument = WebKitGTK.webkit_web_view_get_dom_document (web_view);
+ 		if (domDocument != 0) {
+ 			WindowMappings.put (new LONG (domDocument), new LONG (web_view));
+@@ -886,6 +1157,9 @@ void addEventHandlers (long /*int*/ web_view, boolean top) {
+ 
+ 	/* add JS event listener in frames */
+ 	buffer = new StringBuffer ("for (var i = 0; i < frames.length; i++) {"); //$NON-NLS-1$
++
++	buffer.append ("if (frames[i].document == undefined) { continue; } "); //$NON-NLS-1$
++
+ 	buffer.append ("frames[i].document.addEventListener('keydown', window.SWTkeyhandler, true);"); //$NON-NLS-1$
+ 	buffer.append ("frames[i].document.addEventListener('keypress', window.SWTkeyhandler, true);"); //$NON-NLS-1$
+ 	buffer.append ("frames[i].document.addEventListener('keyup', window.SWTkeyhandler, true);"); //$NON-NLS-1$
+@@ -915,6 +1189,8 @@ public boolean close () {
+ boolean close (boolean showPrompters) {
+ 	if (!jsEnabled) return true;
+ 
++	// If the current window or any of its frames have an onbeforeunload
++	// function, execute that function.
+ 	String message1 = Compatibility.getMessage("SWT_OnBeforeUnload_Message1"); // $NON-NLS-1$
+ 	String message2 = Compatibility.getMessage("SWT_OnBeforeUnload_Message2"); // $NON-NLS-1$
+ 	String functionName = EXECUTE_ID + "CLOSE"; // $NON-NLS-1$
+@@ -945,6 +1221,11 @@ boolean close (boolean showPrompters) {
+ 
+ @Override
+ public boolean execute (String script) {
++
++	if (WEBKIT2){
++		return webkit_extension_execute_script(this.pageId, script, getUrl());
++	}
++
+ 	byte[] bytes = null;
+ 	try {
+ 		bytes = (script + '\0').getBytes (CHARSET_UTF8); //$NON-NLS-1$
+@@ -960,22 +1241,67 @@ public boolean execute (String script) {
+ 	}
+ 	long /*int*/ result = 0;
+ 
+-	if (WEBKIT2){
+-		WebKitGTK.webkit_web_view_run_javascript (webView, scriptString, 0, 0, 0);
+-	} else {
+-		long /*int*/ urlString = WebKitGTK.JSStringCreateWithUTF8CString (bytes);
++	long /*int*/ urlString = WebKitGTK.JSStringCreateWithUTF8CString (bytes);
+ 
+-		long /*int*/ frame = WebKitGTK.webkit_web_view_get_main_frame (webView);
+-		long /*int*/ context = WebKitGTK.webkit_web_frame_get_global_context (frame);
+-		result = WebKitGTK.JSEvaluateScript (context, scriptString, 0, urlString, 0, null);
++	long /*int*/ frame = WebKitGTK.webkit_web_view_get_main_frame (webView);
++	long /*int*/ context = WebKitGTK.webkit_web_frame_get_global_context (frame);
++	result = WebKitGTK.JSEvaluateScript (context, scriptString, 0, urlString, 0, null);
+ 
+-		WebKitGTK.JSStringRelease (urlString);
+-	}
++	WebKitGTK.JSStringRelease (urlString);
+ 
+ 	WebKitGTK.JSStringRelease (scriptString);
+ 	return result != 0;
+ }
+ 
++/**
++ * Execute the given script by sending it through DBus to the webkit extension.
++ * @param pageId
++ * @param script
++ * @param url
++ * @return true if execution is successful, false otherwise.
++ */
++private boolean webkit_extension_execute_script (long pageId, String script, String url){
++	long /*int*/ args[] = { OS.g_variant_new_uint64(pageId),
++			OS.g_variant_new_string (Converter.wcsToMbcs(null, script, true)),
++			OS.g_variant_new_string (Converter.wcsToMbcs(null, url, true))};
++
++	final long /*int*/ argsTuple = OS.g_variant_new_tuple(args, args.length);
++
++	int currentCounter = jsCounter++;
++	OS.g_dbus_proxy_call (dbus_proxy,
++			Converter.wcsToMbcs(null,"webkit_extension_execute_script", true),
++			argsTuple, OS.G_DBUS_CALL_FLAGS_NO_AUTO_START, -1, 0, executeJavaScriptFinishedCallback.getAddress(),currentCounter);
++
++	// The following is a workaround for the fact that g_dbus_proxy_call_sync
++	// blocks until it is timed-out and returns a failure.
++	// Keep iterating through the event loop until our JavaScript call has finished
++	// executing, failed, or timed-out.
++	Display display = this.browser.getDisplay();
++	while (!display.isDisposed() && jsResults.get(currentCounter) == null) {
++		if (!display.readAndDispatch()) display.sleep();
++	}
++
++	long result = jsResults.remove(currentCounter);
++	if (result == 0){
++		return false;
++	}
++
++	return (Boolean) ((Object[])GVariantConverter.convertGVariantToJava((long /*int*/ )result))[0];
++}
++
++@SuppressWarnings("unused")
++private static long /*int*/ executeJavaScriptFinishedCallback (long /*int*/ source_object, long /*int*/ res, long /*int*/ user_data){
++	long /*int*/[] error = new long /*int*/[1];
++	long /*int*/ result = OS.g_dbus_proxy_call_finish (dbus_proxy, res, error);
++	int counter = (int) user_data;
++	if (error[0] != 0){
++		SWT.error(SWT.ERROR_IO, new Throwable(Converter.getString(OS.g_error_get_message(error[0]))));
++		result = 0;
++	}
++	jsResults.put(counter, (long)result);
++	return 0;
++}
++
+ @Override
+ public boolean forward () {
+ 	if (WebKitGTK.webkit_web_view_can_go_forward (webView) == 0) return false;
+@@ -1996,7 +2322,7 @@ long /*int*/ webkit_decide_policy (long /*int*/ web_view, long /*int*/ decision,
+           return 0;
+        }
+        long /*int*/ uri = WebKitGTK.webkit_uri_request_get_uri (request);
+-       String url = getString(uri);
++       String url = Converter.getString(uri);
+        /*
+         * If the URI indicates that the page is being rendered from memory
+         * (via setText()) then set it to about:blank to be consistent with IE.
+@@ -2075,7 +2401,7 @@ long /*int*/ webkit_load_changed (long /*int*/ web_view, int status, long user_d
+ 			long /*int*/ title = WebKitGTK.webkit_web_view_get_title (webView);
+ 			if (title == 0) {
+ 				long /*int*/ uri = WebKitGTK.webkit_web_view_get_uri (webView);
+-				fireNewTitleEvent(getString(uri));
++				fireNewTitleEvent(Converter.getString(uri));
+ 			}
+ 
+ 			fireProgressCompletedEvent();
+@@ -2215,9 +2541,11 @@ long /*int*/ webkit_resource_request_starting (long /*int*/ web_view, long /*int
+ 				// Set the message method type to POST
+ 				WebKitGTK.SoupMessage_method (message, PostString);
+ 				long /*int*/ body = WebKitGTK.SoupMessage_request_body (message);
++				// convert custom postData to bytes
+ 				byte[] bytes = Converter.wcsToMbcs (null, postData, false);
+ 				long /*int*/ data = C.malloc (bytes.length);
+ 				C.memmove (data, bytes, bytes.length);
++				// Append custom POST data to soup message
+ 				WebKitGTK.soup_message_body_append (body, WebKitGTK.SOUP_MEMORY_TAKE, data, bytes.length);
+ 				WebKitGTK.soup_message_body_flatten (body);
+ 
+@@ -2309,6 +2637,27 @@ long /*int*/ webkit_web_view_ready (long /*int*/ web_view) {
+ 	return 0;
+ }
+ 
++/**
++ * Called by the extension through DBus to notify the main process that the
++ * JavaScript 'window' object has been cleared. This means that window functions
++ * such as 'window.external.callJava' has been cleared and should be reinstalled.
++ *
++ * @param args_variant
++ */
++private static void webkit_extension_window_object_cleared (long /*int*/ args_variant) {
++	Object[] args = (Object[]) GVariantConverter.convertGVariantToJava(args_variant);
++	long pageId = (Long) args[0];
++	boolean isMainFrame = (Boolean) args[1];
++
++	WebKit instance = findBrowserById(pageId);
++	Enumeration elements = instance.functions.elements ();
++	while (elements.hasMoreElements ()) {
++		BrowserFunction current = (BrowserFunction)elements.nextElement ();
++		instance.execute (current.functionString);
++	}
++	instance.addEventHandlers (instance.webView, isMainFrame);
++}
++
+ long /*int*/ webkit_window_object_cleared (long /*int*/ web_view, long /*int*/ frame, long /*int*/ context, long /*int*/ window_object) {
+ 	long /*int*/ globalObject = WebKitGTK.JSContextGetGlobalObject (context);
+ 	long /*int*/ externalObject = WebKitGTK.JSObjectMake (context, ExternalClass, webViewData);
+@@ -2332,6 +2681,56 @@ long /*int*/ webkit_window_object_cleared (long /*int*/ web_view, long /*int*/ f
+ 	return 0;
+ }
+ 
++/**
++ * Called by the extension to forward a call to Java from JavaScript
++ * @param args_variant a GVariant containing the arguments passed along from JavaScript
++ */
++private static Object  webkit_extension_external_object_callJava (long /*int*/ args_variant){
++	Object[] args = (Object[]) GVariantConverter.convertGVariantToJava(args_variant);
++	Object returnValue = null;
++
++	if (args.length == 4) {
++		// The first argument is the pageId
++		int i = 0;
++		long pageId = (Long) args[i++];
++		WebKit browser = findBrowserById(pageId);
++
++		// The f argument is the function key which is the same as the function index.
++		int index = ((Double)args[i++]).intValue();
++		Object key = new Integer (index);
++		BrowserFunction function = (BrowserFunction)browser.functions.get (key);
++
++		// The second argument is a String that is equal to the token of the function.
++		String token = args[i++].toString();
++
++		if (function != null && token.equals (function.token)) {
++
++			// The third argument is an array of arguments to the Java function.
++			args = (Object[]) args[i++];
++
++			if (function != null && token.equals (function.token)) {
++				try {
++					try {
++						returnValue = function.function (args);
++					} catch (Exception e) {
++						/* exception during function invocation */
++						returnValue = WebBrowser.CreateErrorString (e.getLocalizedMessage ());
++					}
++				} catch (IllegalArgumentException e) {
++					/* invalid argument value type */
++					if (function.isEvaluate) {
++						/* notify the function so that a java exception can be thrown */
++						function.function (new String[] {WebBrowser.CreateErrorString (new SWTException (SWT.ERROR_INVALID_RETURN_VALUE).getLocalizedMessage ())});
++					}
++					returnValue = WebBrowser.CreateErrorString (e.getLocalizedMessage ());
++				}
++			}
++		}
++	}
++
++	return returnValue;
++}
++
+ long /*int*/ callJava (long /*int*/ ctx, long /*int*/ func, long /*int*/ thisObject, long /*int*/ argumentCount, long /*int*/ arguments, long /*int*/ exception) {
+ 	Object returnValue = null;
+ 	if (argumentCount == 3) {
+@@ -2339,9 +2738,15 @@ long /*int*/ callJava (long /*int*/ ctx, long /*int*/ func, long /*int*/ thisObj
+ 		C.memmove (result, arguments, C.PTR_SIZEOF);
+ 		int type = WebKitGTK.JSValueGetType (ctx, result[0]);
+ 		if (type == WebKitGTK.kJSTypeNumber) {
++			// The arguments are an array of pointers
++
++			// The first argument is the function key which is the same as the function index.
++			// Extract it.
+ 			int index = ((Double)convertToJava (ctx, result[0])).intValue ();
+ 			result[0] = 0;
+ 			Object key = new Integer (index);
++
++			// The second argument is a String that is equal to the token of the function.
+ 			C.memmove (result, arguments + C.PTR_SIZEOF, C.PTR_SIZEOF);
+ 			type = WebKitGTK.JSValueGetType (ctx, result[0]);
+ 			if (type == WebKitGTK.kJSTypeString) {
+@@ -2349,6 +2754,7 @@ long /*int*/ callJava (long /*int*/ ctx, long /*int*/ func, long /*int*/ thisObj
+ 				BrowserFunction function = (BrowserFunction)functions.get (key);
+ 				if (function != null && token.equals (function.token)) {
+ 					try {
++						// The third argument is an array of arguments to the Java function.
+ 						C.memmove (result, arguments + 2 * C.PTR_SIZEOF, C.PTR_SIZEOF);
+ 						Object temp = convertToJava (ctx, result[0]);
+ 						if (temp instanceof Object[]) {
+diff --git eclipse.platform.swt/bundles/org.eclipse.swt/Eclipse SWT WebKit/gtk/org/eclipse/swt/internal/webkit/WebKitGTK.java eclipse.platform.swt/bundles/org.eclipse.swt/Eclipse SWT WebKit/gtk/org/eclipse/swt/internal/webkit/WebKitGTK.java
+index f7505ba..71876c0 100644
+--- eclipse.platform.swt/bundles/org.eclipse.swt/Eclipse SWT WebKit/gtk/org/eclipse/swt/internal/webkit/WebKitGTK.java	
++++ eclipse.platform.swt/bundles/org.eclipse.swt/Eclipse SWT WebKit/gtk/org/eclipse/swt/internal/webkit/WebKitGTK.java	
+@@ -57,6 +57,7 @@ public class WebKitGTK extends C {
+ 	public static final byte[] decide_policy = ascii ("decide-policy"); // $NON-NLS-1$
+ 	public static final byte[] download_requested = ascii ("download-requested"); // $NON-NLS-1$
+ 	public static final byte[] download_started = ascii ("download-started"); // $NON-NLS-1$
++	public static final byte[] initialize_web_extensions = ascii("initialize-web-extensions"); // $NON-NLS-1$
+ 	public static final byte[] hovering_over_link = ascii ("hovering-over-link"); // $NON-NLS-1$
+ 	public static final byte[] load_changed = ascii ("load-changed"); // $NON-NLS-1$
+ 	public static final byte[] mime_type_policy_decision_requested = ascii ("mime-type-policy-decision-requested"); // $NON-NLS-1$
+@@ -1132,6 +1133,29 @@ public static final long /*int*/ webkit_web_context_get_default () {
+ }
+ 
+ /** @method flags=dynamic */
++public static final native void _webkit_web_context_set_web_extensions_initialization_user_data (long /*int*/ context, long /*int*/ user_data);
++public static final void webkit_web_context_set_web_extensions_initialization_user_data (long /*int*/ context,  long /*int*/ user_data) {
++	lock.lock();
++	try {
++		_webkit_web_context_set_web_extensions_initialization_user_data (context, user_data);
++	} finally {
++		lock.unlock();
++	}
++}
++
++/** @method flags=dynamic */
++public static final native void _webkit_web_context_set_web_extensions_directory (long /*int*/ context, byte[] directory);
++public static final void webkit_web_context_set_web_extensions_directory (long /*int*/ context, byte[] directory) {
++	lock.lock();
++	try {
++		_webkit_web_context_set_web_extensions_directory (context, directory);
++	} finally {
++		lock.unlock();
++	}
++}
++
++
++/** @method flags=dynamic */
+ public static final native long /*int*/ _webkit_web_context_set_favicon_database_directory (long /*int*/ context, long /*int*/ path);
+ public static final long /*int*/ webkit_web_context_set_favicon_database_directory (long /*int*/ context, long /*int*/ path) {
+ 	lock.lock();
+@@ -1364,6 +1388,17 @@ public static final long /*int*/ webkit_web_view_get_main_frame (long /*int*/ we
+ }
+ 
+ /** @method flags=dynamic */
++public static final native long /*int*/ _webkit_web_view_get_page_id (long /*int*/ web_view);
++public static final long /*int*/ webkit_web_view_get_page_id (long /*int*/ web_view) {
++	lock.lock();
++	try {
++		return _webkit_web_view_get_page_id (web_view);
++	} finally {
++		lock.unlock();
++	}
++}
++
++/** @method flags=dynamic */
+ public static final native double _webkit_web_view_get_progress (long /*int*/ web_view);
+ public static final double webkit_web_view_get_progress (long /*int*/ web_view) {
+ 	lock.lock();
+diff --git eclipse.platform.swt/bundles/org.eclipse.swt/Eclipse SWT/gtk/org/eclipse/swt/internal/Converter.java eclipse.platform.swt/bundles/org.eclipse.swt/Eclipse SWT/gtk/org/eclipse/swt/internal/Converter.java
+index 4b8c089..176b44f 100644
+--- eclipse.platform.swt/bundles/org.eclipse.swt/Eclipse SWT/gtk/org/eclipse/swt/internal/Converter.java	
++++ eclipse.platform.swt/bundles/org.eclipse.swt/Eclipse SWT/gtk/org/eclipse/swt/internal/Converter.java	
+@@ -36,6 +36,13 @@ public static String defaultCodePage () {
+ 	return "UTF8";
+ }
+ 
++public static String getString (long /*int*/ strPtr) {
++	int length = OS.strlen (strPtr);
++	byte [] buffer = new byte [length];
++	OS.memmove (buffer, strPtr, length);
++	return new String (Converter.mbcsToWcs (null, buffer));
++}
++
+ public static char [] mbcsToWcs (String codePage, byte [] buffer) {
+ 	long /*int*/ [] items_written = new long /*int*/ [1];
+ 	long /*int*/ ptr = OS.g_utf8_to_utf16 (buffer, buffer.length, null, items_written, null);
+@@ -57,7 +64,7 @@ public static byte [] wcsToMbcs (String codePage, String string, boolean termina
+ public static byte [] wcsToMbcs (String codePage, char [] buffer, boolean terminate) {
+ 	long /*int*/ [] items_read = new long /*int*/ [1], items_written = new long /*int*/ [1];
+ 	/*
+-	* Note that g_utf16_to_utf8()  stops converting 
++	* Note that g_utf16_to_utf8()  stops converting
+ 	* when it finds the first NULL.
+ 	*/
+ 	long /*int*/ ptr = OS.g_utf16_to_utf8 (buffer, buffer.length, items_read, items_written, null);
+diff --git eclipse.platform.swt/bundles/org.eclipse.swt/Eclipse SWT/gtk/org/eclipse/swt/internal/GVariantConverter.java eclipse.platform.swt/bundles/org.eclipse.swt/Eclipse SWT/gtk/org/eclipse/swt/internal/GVariantConverter.java
+new file mode 100644
+index 0000000..dc19b0f
+--- /dev/null
++++ eclipse.platform.swt/bundles/org.eclipse.swt/Eclipse SWT/gtk/org/eclipse/swt/internal/GVariantConverter.java	
+@@ -0,0 +1,98 @@
++/*******************************************************************************
++ * Copyright (c) 2014 Red Hat and others.
++ * All rights reserved. This program and the accompanying materials
++ * are made available under the terms of the Eclipse Public License v1.0
++ * which accompanies this distribution, and is available at
++ * http://www.eclipse.org/legal/epl-v10.html
++ *
++ * Contributors:
++ *     Red Hat - initial API and implementation
++ *******************************************************************************/
++
++package org.eclipse.swt.internal;
++
++import org.eclipse.swt.SWT;
++import org.eclipse.swt.internal.gtk.OS;
++
++public class GVariantConverter {
++
++/**
++ * Converts the given GVariant to a Java object
++ * @param value a pointer to the native GVariant
++ */
++public static Object convertGVariantToJava(long /*int*/ value){
++
++	if (OS.g_variant_is_of_type(value, OS.G_VARIANT_TYPE_BOOLEAN)){
++		return new Boolean(OS.g_variant_get_boolean(value));
++	}
++
++	if (OS.g_variant_is_of_type(value, OS.G_VARIANT_TYPE_DOUBLE)){
++		return new Double(OS.g_variant_get_double(value));
++	}
++
++	if (OS.g_variant_is_of_type(value, OS.G_VARIANT_TYPE_STRING)){
++		return Converter.getString(OS.g_variant_get_string(value, null));
++	}
++
++	if (OS.g_variant_is_of_type(value, OS.G_VARIANT_TYPE_UINT64)){
++		return new Long(OS.g_variant_get_uint64(value));
++	}
++
++	if (OS.g_variant_is_of_type(value, OS.G_VARIANT_TYPE_TUPLE)){
++		int length = (int)OS.g_variant_n_children (value);
++		Object[] result = new Object[length];
++		for (int i = 0; i < length; i++) {
++			result[i] = convertGVariantToJava (OS.g_variant_get_child_value(value, i));
++		}
++		return result;
++	}
++
++	String typeString = Converter.getString(OS.g_variant_get_type_string(value));
++	SWT.error (SWT.ERROR_INVALID_ARGUMENT, new Throwable("Unhandled variant type " + typeString ));
++	return null;
++}
++
++/**
++ * Converts the given Java Object to a GVariant representation
++ * @param value a pointer to the native GVariant
++ */
++public static long /*int*/ convertJavaToGVariant(Object value){
++
++	if (value == null) {
++		return OS.g_variant_new_byte((byte) 0x00);
++	}
++
++	if (value instanceof String) {
++		return OS.g_variant_new_string (Converter.wcsToMbcs(null, (String) value, true));
++	}
++
++	if (value instanceof Boolean) {
++		return OS.g_variant_new_boolean((Boolean) value);
++	}
++
++	if (value instanceof Double) {
++		return OS.g_variant_new_double (((Double) value).doubleValue());
++	}
++
++	if (value instanceof Long) {
++		return OS.g_variant_new_int64((Long) value);
++	}
++
++	if (value instanceof Object[]) {
++
++		Object[] arrayValue = (Object[]) value;
++		int length = arrayValue.length;
++		long /*int*/ variants[] = new long /*int*/[length];
++
++		for (int i = 0; i < length; i++) {
++			variants[i] = convertJavaToGVariant(arrayValue[i]);
++		}
++
++		return OS.g_variant_new_tuple(variants, length);
++	}
++
++	SWT.error (SWT.ERROR_INVALID_RETURN_VALUE, new Throwable("Unhandled type " + value.getClass()));
++	return 0;
++}
++
++}
+diff --git eclipse.platform.swt/tests/org.eclipse.swt.tests/JUnit Tests/org/eclipse/swt/tests/junit/browser/Browser4.java eclipse.platform.swt/tests/org.eclipse.swt.tests/JUnit Tests/org/eclipse/swt/tests/junit/browser/Browser4.java
+index f254c91..c33e138 100644
+--- eclipse.platform.swt/tests/org.eclipse.swt.tests/JUnit Tests/org/eclipse/swt/tests/junit/browser/Browser4.java	
++++ eclipse.platform.swt/tests/org.eclipse.swt.tests/JUnit Tests/org/eclipse/swt/tests/junit/browser/Browser4.java	
+@@ -84,8 +84,8 @@ public class Browser4 {
+ 					shell.close();
+ 					return;					
+ 				}
+-				shell2.open();
+ 				visibilityShow = true;
++				shell2.open();
+ 			}
+ 		});
+ 		browser2.addProgressListener(new ProgressListener() {
+diff --git eclipse.platform.swt/tests/org.eclipse.swt.tests/JUnit Tests/org/eclipse/swt/tests/junit/browser/Test_BrowserSuite.java eclipse.platform.swt/tests/org.eclipse.swt.tests/JUnit Tests/org/eclipse/swt/tests/junit/browser/Test_BrowserSuite.java
+index 763c1fe..b7fbb02 100644
+--- eclipse.platform.swt/tests/org.eclipse.swt.tests/JUnit Tests/org/eclipse/swt/tests/junit/browser/Test_BrowserSuite.java	
++++ eclipse.platform.swt/tests/org.eclipse.swt.tests/JUnit Tests/org/eclipse/swt/tests/junit/browser/Test_BrowserSuite.java	
+@@ -54,6 +54,15 @@ public void testBrowser8() {
+ }
+ 
+ public void testBrowser9() {
++	String webkit2 = System.getenv("SWT_WEBKIT2"); // $NON-NLS-1$
++	boolean WEBKIT2 = webkit2 != null && webkit2.equals("1"); // $NON-NLS-1$
++	/* WebKit2GTK+ does not support the "status-bar-text-changed" signal
++	 * which this test is testing.
++	 * RFE: https://bugs.webkit.org/show_bug.cgi?id=128604
++	 */
++	if(WEBKIT2){
++		return;
++	}
+ 	assertTrue(Browser9.test());
+ }
+ 

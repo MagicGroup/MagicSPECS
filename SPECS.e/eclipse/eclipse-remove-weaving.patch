@@ -1,0 +1,50 @@
+--- eclipse.platform.releng/features/org.eclipse.sdk.tests/feature.xml.orig	2014-03-26 11:39:33.756282231 +0000
++++ eclipse.platform.releng/features/org.eclipse.sdk.tests/feature.xml	2014-03-26 13:19:39.009594727 +0000
+@@ -349,12 +349,6 @@
+          version="0.0.0"/>
+ 
+    <plugin
+-         id="org.eclipse.releng.tests"
+-         download-size="0"
+-         install-size="0"
+-         version="0.0.0"/>
+-
+-   <plugin
+          id="org.eclipse.team.tests.cvs.core"
+          download-size="0"
+          install-size="0"
+@@ -391,21 +385,6 @@
+          install-size="0"
+          version="0.0.0"/>
+ 
+-<!-- org.aspectj.runtime is required for equinox.region tests. 
+-     If they are ever moved/removed org.aspectj.runtime should 
+-     be moved/removed to with them -->
+-   <plugin
+-         id="org.aspectj.runtime"
+-         download-size="0"
+-         install-size="0"
+-         version="0.0.0"/>
+-
+-   <plugin
+-         id="org.eclipse.equinox.region.tests"
+-         download-size="0"
+-         install-size="0"
+-         version="0.0.0"/>
+-
+    <plugin
+          id="org.eclipse.equinox.security.tests"
+          download-size="0"
+@@ -423,12 +402,6 @@
+          download-size="0"
+          install-size="0"
+          version="0.0.0"/>
+-
+-   <plugin
+-         id="org.eclipse.equinox.p2.tests.discovery"
+-         download-size="0"
+-         install-size="0"
+-         version="0.0.0"/>
+ 
+    <plugin
+          id="org.eclipse.equinox.p2.tests.ui"

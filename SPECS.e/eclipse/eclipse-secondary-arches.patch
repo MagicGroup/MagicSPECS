@@ -1,0 +1,457 @@
+diff --git a/eclipse-platform-parent/pom.xml b/eclipse-platform-parent/pom.xml
+index 6c567f8..969eafb 100644
+--- a/eclipse-platform-parent/pom.xml
++++ b/eclipse-platform-parent/pom.xml
+@@ -209,49 +209,19 @@
+               <arch>s390x</arch>
+             </environment>
+             <environment>
+-              <os>win32</os>
+-              <ws>win32</ws>
+-              <arch>x86</arch>
+-            </environment>
+-            <environment>
+-              <os>win32</os>
+-              <ws>win32</ws>
+-              <arch>x86_64</arch>
+-            </environment>
+-            <environment>
+-              <os>macosx</os>
+-              <ws>cocoa</ws>
+-              <arch>x86</arch>
+-            </environment>
+-            <environment>
+-              <os>macosx</os>
+-              <ws>cocoa</ws>
+-              <arch>x86_64</arch>
+-            </environment>
+-            <environment>
+-              <os>solaris</os>
+-              <ws>gtk</ws>
+-              <arch>sparc</arch>
+-            </environment>
+-            <environment>
+-              <os>solaris</os>
+-              <ws>gtk</ws>
+-              <arch>x86</arch>
+-            </environment>
+-            <environment>
+-              <os>hpux</os>
++              <os>linux</os>
+               <ws>gtk</ws>
+-              <arch>ia64</arch>
++              <arch>arm</arch>
+             </environment>
+             <environment>
+-              <os>aix</os>
++              <os>linux</os>
+               <ws>gtk</ws>
+-              <arch>ppc</arch>
++              <arch>ppc64le</arch>
+             </environment>
+             <environment>
+-              <os>aix</os>
++              <os>linux</os>
+               <ws>gtk</ws>
+-              <arch>ppc64</arch>
++              <arch>aarch64</arch>
+             </environment>
+           </environments>
+         </configuration>
+--- a/eclipse.platform.releng.tychoeclipsebuilder/eclipse-junit-tests/pom.xml
++++ b/eclipse.platform.releng.tychoeclipsebuilder/eclipse-junit-tests/pom.xml
+@@ -130,21 +130,6 @@
+               <ws>gtk</ws>
+               <arch>x86_64</arch>
+             </environment>
+-            <environment>
+-              <os>win32</os>
+-              <ws>win32</ws>
+-              <arch>x86</arch>
+-            </environment>
+-            <environment>
+-              <os>win32</os>
+-              <ws>win32</ws>
+-              <arch>x86_64</arch>
+-            </environment>
+-            <environment>
+-              <os>macosx</os>
+-              <ws>cocoa</ws>
+-              <arch>x86_64</arch>
+-            </environment>
+           </environments>
+         </configuration>
+       </plugin>
+diff --git a/eclipse.platform.releng.tychoeclipsebuilder/rcp.config/build.properties b/eclipse.platform.releng.tychoeclipsebuilder/rcp.config/build.properties
+index 80a32e4..85de879 100644
+--- a/eclipse.platform.releng.tychoeclipsebuilder/rcp.config/build.properties
++++ b/eclipse.platform.releng.tychoeclipsebuilder/rcp.config/build.properties
+@@ -32,6 +32,12 @@ root.solaris.gtk.sparc.permissions.755=eclipse
+ root.solaris.gtk.x86=../../rt.equinox.binaries/org.eclipse.equinox.executable/bin/gtk/solaris/x86
+ root.solaris.gtk.x86.permissions.755=eclipse
+ 
++root.linux.gtk.arm=target/resources/linux.gtk.arm,../../rt.equinox.binaries/org.eclipse.equinox.executable/bin/gtk/linux/arm
++root.linux.gtk.arm.permissions.755=eclipse 
++root.linux.gtk.aarch64=target/resources/linux.gtk.aarch64,../../rt.equinox.binaries/org.eclipse.equinox.executable/bin/gtk/linux/aarch64
++root.linux.gtk.aarch64.permissions.755=eclipse 
++root.linux.gtk.ppc64le=rootfiles/linux.gtk.ppc64le,../../rt.equinox.binaries/org.eclipse.equinox.executable/bin/gtk/linux/ppc64le
++root.linux.gtk.ppc64le.permissions.755=eclipse
+ root.linux.gtk.x86=rootfiles/linux.gtk.x86,../../rt.equinox.binaries/org.eclipse.equinox.executable/bin/gtk/linux/x86
+ root.linux.gtk.x86.permissions.755=libcairo-swt.so,eclipse
+ root.linux.gtk.ppc=rootfiles/linux.gtk.ppc64,../../rt.equinox.binaries/org.eclipse.equinox.executable/bin/gtk/linux/ppc
+diff --git a/eclipse.platform.swt.binaries/pom.xml b/eclipse.platform.swt.binaries/pom.xml
+index 7dd0536..66d79ee 100644
+--- a/eclipse.platform.swt.binaries/pom.xml
++++ b/eclipse.platform.swt.binaries/pom.xml
+@@ -53,6 +53,9 @@
+     <module>bundles/org.eclipse.swt.gtk.linux.ppc64</module>
+     <module>bundles/org.eclipse.swt.gtk.linux.s390</module>
+     <module>bundles/org.eclipse.swt.gtk.linux.s390x</module>
++    <module>bundles/org.eclipse.swt.gtk.linux.arm</module>
++    <module>bundles/org.eclipse.swt.gtk.linux.aarch64</module>
++    <module>bundles/org.eclipse.swt.gtk.linux.ppc64le</module>
+     <module>bundles/org.eclipse.swt.gtk.linux.x86</module>
+     <module>bundles/org.eclipse.swt.gtk.linux.x86_64</module>
+     <module>bundles/org.eclipse.swt.gtk.solaris.sparc</module>
+diff --git a/rt.equinox.framework/pom.xml b/rt.equinox.framework/pom.xml
+index b46cdc6..0fb36a5 100644
+--- a/rt.equinox.framework/pom.xml
++++ b/rt.equinox.framework/pom.xml
+@@ -55,6 +55,9 @@
+     <module>bundles/org.eclipse.equinox.launcher.gtk.aix.ppc</module>
+     <module>bundles/org.eclipse.equinox.launcher.gtk.aix.ppc64</module>
+     <module>bundles/org.eclipse.equinox.launcher.gtk.hpux.ia64</module>
++    <module>bundles/org.eclipse.equinox.launcher.gtk.linux.arm</module>
++    <module>bundles/org.eclipse.equinox.launcher.gtk.linux.aarch64</module>
++    <module>bundles/org.eclipse.equinox.launcher.gtk.linux.ppc64le</module>
+     <module>bundles/org.eclipse.equinox.launcher.gtk.linux.ppc</module>
+     <module>bundles/org.eclipse.equinox.launcher.gtk.linux.ppc64</module>
+     <module>bundles/org.eclipse.equinox.launcher.gtk.linux.s390</module>
+diff --git a/eclipse.platform.swt/bundles/org.eclipse.swt/buildFragment.xml b/eclipse.platform.swt/bundles/org.eclipse.swt/buildFragment.xml
+index f5fb504..1187e84 100644
+--- a/eclipse.platform.swt/bundles/org.eclipse.swt/buildFragment.xml
++++ b/eclipse.platform.swt/bundles/org.eclipse.swt/buildFragment.xml
+@@ -425,6 +425,7 @@
+ 				<equals arg1="${swt.arch}" arg2="ppc64"/>
+ 				<equals arg1="${swt.arch}" arg2="ppc64le"/>
+ 				<equals arg1="${swt.arch}" arg2="s390x"/>
++				<equals arg1="${swt.arch}" arg2="aarch64"/>
+ 			</or>
+ 		</condition>
+ 		<echo>Is64=${is64}</echo>
+diff --git a/eclipse.platform.ui/features/org.eclipse.e4.rcp/feature.xml b/eclipse.platform.ui/features/org.eclipse.e4.rcp/feature.xml
+index 7e1f520..734dd10 100644
+--- a/eclipse.platform.ui/features/org.eclipse.e4.rcp/feature.xml
++++ b/eclipse.platform.ui/features/org.eclipse.e4.rcp/feature.xml
+@@ -409,6 +409,36 @@
+          install-size="0"
+          version="0.0.0"
+          fragment="true"/>
++         
++   <plugin
++         id="org.eclipse.equinox.launcher.gtk.linux.ppc64le"
++         os="linux"
++         ws="gtk"
++         arch="ppc64le"
++         download-size="0"
++         install-size="0"
++         version="0.0.0"
++         fragment="true"/>
++         
++   <plugin
++         id="org.eclipse.equinox.launcher.gtk.linux.arm"
++         os="linux"
++         ws="gtk"
++         arch="arm"
++         download-size="0"
++         install-size="0"
++         version="0.0.0"
++         fragment="true"/>
++
++   <plugin
++         id="org.eclipse.equinox.launcher.gtk.linux.aarch64"
++         os="linux"
++         ws="gtk"
++         arch="aarch64"
++         download-size="0"
++         install-size="0"
++         version="0.0.0"
++         fragment="true"/>
+ 
+    <plugin
+          id="org.eclipse.equinox.launcher.gtk.linux.x86"
+@@ -583,6 +613,39 @@
+          version="0.0.0"
+          fragment="true"
+          unpack="false"/>
++         
++   <plugin
++         id="org.eclipse.swt.gtk.linux.ppc64le"
++         os="linux"
++         ws="gtk"
++         arch="ppc64le"
++         download-size="0"
++         install-size="0"
++         version="0.0.0"
++         fragment="true"
++         unpack="false"/>
++         
++   <plugin
++         id="org.eclipse.swt.gtk.linux.arm"
++         os="linux"
++         ws="gtk"
++         arch="arm"
++         download-size="0"
++         install-size="0"
++         version="0.0.0"
++         fragment="true"
++         unpack="false"/>
++
++   <plugin
++         id="org.eclipse.swt.gtk.linux.aarch64"
++         os="linux"
++         ws="gtk"
++         arch="aarch64"
++         download-size="0"
++         install-size="0"
++         version="0.0.0"
++         fragment="true"
++         unpack="false"/>
+ 
+    <plugin
+          id="org.eclipse.swt.gtk.linux.ppc"
+diff --git a/rt.equinox.framework/features/org.eclipse.equinox.executable.feature/library/gtk/build.sh b/rt.equinox.framework/features/org.eclipse.equinox.executable.feature/library/gtk/build.sh
+index 29d3871..45526c8 100644
+--- a/rt.equinox.framework/features/org.eclipse.equinox.executable.feature/library/gtk/build.sh
++++ b/rt.equinox.framework/features/org.eclipse.equinox.executable.feature/library/gtk/build.sh
+@@ -104,6 +104,12 @@
+ 				[ -d /bluebird/teamswt/swt-builddir/JDKs/PPC64/ibm-java2-ppc64-50 ] && defaultJavaHome="/bluebird/teamswt/swt-builddir/JDKs/PPC64/ibm-java2-ppc64-50"
+ 				OUTPUT_DIR="$EXEC_DIR/bin/$defaultWS/$defaultOS/$defaultOSArch"
+ 				;;
++			"ppc64le")
++				defaultOSArch="ppc64le"
++				defaultJava=DEFAULT_JAVA_EXEC
++				[ -d /bluebird/teamswt/swt-builddir/JDKs/PPC64/ibm-java2-ppc64-50 ] && defaultJavaHome="/bluebird/teamswt/swt-builddir/JDKs/PPC64/ibm-java2-ppc64-50"
++				OUTPUT_DIR="$EXEC_DIR/bin/$defaultWS/$defaultOS/$defaultOSArch"
++				;;
+ 			"s390")
+ 				defaultOSArch="s390"
+ 				defaultJava=DEFAULT_JAVA_EXEC
+@@ -119,6 +125,16 @@
+ 				defaultJava=DEFAULT_JAVA_EXEC
+ 				OUTPUT_DIR="$EXEC_DIR/bin/$defaultWS/$defaultOS/$defaultOSArch"
+ 				;;
++			arm*)
++				defaultOSArch="arm"
++				defaultJava=DEFAULT_JAVA_EXEC
++				OUTPUT_DIR="$EXEC_DIR/bin/$defaultWS/$defaultOS/$defaultOSArch"
++				;;
++			"aarch64")
++				defaultOSArch="aarch64"
++				defaultJava=DEFAULT_JAVA_EXEC
++				OUTPUT_DIR="$EXEC_DIR/bin/$defaultWS/$defaultOS/$defaultOSArch"
++				;;
+ 			*)
+ 				echo "*** Unknown MODEL <${MODEL}>"
+ 				;;
+diff --git a/rt.equinox.framework/features/org.eclipse.equinox.executable.feature/pom.xml b/rt.equinox.framework/features/org.eclipse.equinox.executable.feature/pom.xml
+index fac13bf..e487001 100644
+--- a/rt.equinox.framework/features/org.eclipse.equinox.executable.feature/pom.xml
++++ b/rt.equinox.framework/features/org.eclipse.equinox.executable.feature/pom.xml
+@@ -259,6 +259,129 @@
+         </plugins>
+       </build>
+     </profile>
++
++    <profile>
++      <id>build-native-launchers-gtk.linux.ppc</id>
++      <activation>
++        <property>
++          <name>native</name>
++          <value>gtk.linux.ppc</value>
++        </property>
++      </activation>
++      <build>
++        <plugins>
++          <plugin>
++            <artifactId>maven-antrun-plugin</artifactId>
++            <executions>
++              <execution>
++                <id>compile-executable-natives</id>
++                <phase>generate-resources</phase>
++                <configuration>
++                  <target>
++                    <ant antfile="build.xml" dir="library/gtk/" target="build_eclipse"/>
++                  </target>
++                </configuration>
++                <goals>
++                  <goal>run</goal>
++                </goals>
++              </execution>
++            </executions>
++          </plugin>
++        </plugins>
++      </build>
++    </profile>
++    <profile>
++      <id>build-native-launchers-gtk.linux.ppc64</id>
++      <activation>
++        <property>
++          <name>native</name>
++          <value>gtk.linux.ppc64</value>
++        </property>
++      </activation>
++      <build>
++        <plugins>
++          <plugin>
++            <artifactId>maven-antrun-plugin</artifactId>
++            <executions>
++              <execution>
++                <id>compile-executable-natives</id>
++                <phase>generate-resources</phase>
++                <configuration>
++                  <target>
++                    <ant antfile="build.xml" dir="library/gtk/" target="build_eclipse"/>
++                  </target>
++                </configuration>
++                <goals>
++                  <goal>run</goal>
++                </goals>
++              </execution>
++            </executions>
++          </plugin>
++        </plugins>
++      </build>
++    </profile>
++
++    <profile>
++      <id>build-native-launchers-gtk.linux.arm</id>
++      <activation>
++        <property>
++          <name>native</name>
++          <value>gtk.linux.arm</value>
++        </property>
++      </activation>
++      <build>
++        <plugins>
++          <plugin>
++            <artifactId>maven-antrun-plugin</artifactId>
++            <executions>
++              <execution>
++                <id>compile-executable-natives</id>
++                <phase>generate-resources</phase>
++                <configuration>
++                  <target>
++                    <ant antfile="build.xml" dir="library/gtk/" target="build_eclipse"/>
++                  </target>
++                </configuration>
++                <goals>
++                  <goal>run</goal>
++                </goals>
++              </execution>
++            </executions>
++          </plugin>
++        </plugins>
++      </build>
++    </profile>
++    <profile>
++      <id>build-native-launchers-gtk.linux.aarch64</id>
++      <activation>
++        <property>
++          <name>native</name>
++          <value>gtk.linux.aarch64</value>
++        </property>
++      </activation>
++      <build>
++        <plugins>
++          <plugin>
++            <artifactId>maven-antrun-plugin</artifactId>
++            <executions>
++              <execution>
++                <id>compile-executable-natives</id>
++                <phase>generate-resources</phase>
++                <configuration>
++                  <target>
++                    <ant antfile="build.xml" dir="library/gtk/" target="build_eclipse"/>
++                  </target>
++                </configuration>
++                <goals>
++                  <goal>run</goal>
++                </goals>
++              </execution>
++            </executions>
++          </plugin>
++        </plugins>
++      </build>
++    </profile>
++
+     <profile>
+       <id>build-native-launchers-win32.win32.x86_64</id>
+       <activation>
+--- a/eclipse.platform.releng.tychoeclipsebuilder/rcp.config/pom.xml	2014-05-26 19:20:28.958177815 +0300
++++ b/eclipse.platform.releng.tychoeclipsebuilder/rcp.config/pom.xml	2014-05-26 19:33:42.942025740 +0300
+@@ -30,6 +30,64 @@
+         <version>2.6</version>
+         <executions>
+           <execution>
++            <id>copy-resources-gtk.linux.aarch64</id>
++            <phase>validate</phase>
++            <goals>
++              <goal>copy-resources</goal>
++            </goals>
++            <configuration>
++              <outputDirectory>${basedir}/target/resources/linux.gtk.aarch64</outputDirectory>
++              <resources>
++                <resource>
++                  <directory>../../eclipse.platform.swt.binaries/bundles/org.eclipse.swt.gtk.linux.aarch64</directory>
++                  <includes>
++                    <include>about_files/*</include>
++                    <include>about.html</include>
++                  </includes>
++                </resource>
++              </resources>
++            </configuration>
++          </execution>
++        <execution>
++            <id>copy-resources-gtk.linux.arm</id>
++            <phase>validate</phase>
++            <goals>
++              <goal>copy-resources</goal>
++            </goals>
++            <configuration>
++              <outputDirectory>${basedir}/target/resources/linux.gtk.arm</outputDirectory>
++              <resources>
++                <resource>
++                  <directory>../../eclipse.platform.swt.binaries/bundles/org.eclipse.swt.gtk.linux.arm</directory>
++                  <includes>
++                    <include>about_files/*</include>
++                    <include>about.html</include>
++                  </includes>
++                </resource>
++              </resources>
++            </configuration>
++          </execution>
++          <execution>
++            <id>copy-resources-gtk.linux.ppc64le</id>
++            <phase>validate</phase>
++            <goals>
++              <goal>copy-resources</goal>
++            </goals>
++            <configuration>
++              <outputDirectory>${basedir}/rootfiles/linux.gtk.ppc64le</outputDirectory>
++              <resources>
++                <resource>
++                  <directory>../../eclipse.platform.swt.binaries/bundles/org.eclipse.swt.gtk.linux.ppc64le
++                  </directory>
++                  <includes>
++                    <include>about_files/*</include>
++                    <include>about.html</include>
++                  </includes>
++              </resource>
++            </resources>
++          </configuration>
++          </execution>
++          <execution>
+             <id>copy-resources-gtk.linux.x86</id>
+             <phase>validate</phase>
+             <goals>

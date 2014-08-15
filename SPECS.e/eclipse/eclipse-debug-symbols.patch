@@ -1,0 +1,35 @@
+--- eclipse.platform.swt/bundles/org.eclipse.swt/Eclipse SWT PI/gtk/library/make_linux.mak.orig	2014-03-12 10:43:26.000000000 +0000
++++ eclipse.platform.swt/bundles/org.eclipse.swt/Eclipse SWT PI/gtk/library/make_linux.mak	2014-03-12 14:36:44.130938292 +0000
+@@ -115,7 +115,7 @@
+ WEBKIT_OBJECTS = swt.o webkit.o webkit_structs.o webkit_stats.o
+ GLX_OBJECTS = swt.o glx.o glx_structs.o glx_stats.o
+ 
+-CFLAGS = -O -Wall \
++CFLAGS = -g -O -Wall \
+ 		-DSWT_VERSION=$(SWT_VERSION) \
+ 		$(NATIVE_STATS) \
+ 		-DLINUX -DGTK \
+@@ -125,12 +125,6 @@
+ 		${SWT_PTR_CFLAGS}
+ LFLAGS = -shared -fPIC ${SWT_LFLAGS}
+ 
+-ifndef NO_STRIP
+-	AWT_LFLAGS := $(AWT_LFLAGS) -s
+-	MOZILLALFLAGS := $(MOZILLALFLAGS) -s
+-	LFLAGS := $(LFLAGS) -s
+-endif
+-
+ all: make_swt make_atk make_glx make_webkit
+ 
+ #
+--- rt.equinox.framework/features/org.eclipse.equinox.executable.feature/library/gtk/make_linux.mak.orig	2014-03-12 14:47:37.513191381 +0000
++++ rt.equinox.framework/features/org.eclipse.equinox.executable.feature/library/gtk/make_linux.mak	2014-03-12 14:47:45.672200015 +0000
+@@ -48,7 +48,7 @@
+  -DGTK3_LIB="\"libgtk-3.so.0\"" -DGDK3_LIB="\"libgdk-3.so.0\"" \
+  -DPIXBUF_LIB="\"libgdk_pixbuf-2.0.so.0\"" -DGOBJ_LIB="\"libgobject-2.0.so.0\"" -DX11_LIB="\"libX11.so.6\""
+ LFLAGS = ${M_ARCH} -shared -fpic -Wl,--export-dynamic 
+-CFLAGS = ${M_ARCH} -g -s -Wall\
++CFLAGS = ${M_ARCH} -g -Wall\
+ 	-fpic \
+ 	-DLINUX \
+ 	-DMOZILLA_FIX \
