@@ -1,12 +1,15 @@
 Summary: X Athena Widget Set
+Summary(zh_CN.UTF-8): X 的部件集
 Name: libXaw
-Version: 1.0.11
-Release: 2%{?dist}
+Version: 1.0.12
+Release: 1%{?dist}
 License: MIT
 URL: http://www.x.org
 Group: System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 
 Source0: ftp://ftp.x.org/pub/individual/lib/%{name}-%{version}.tar.bz2
+Patch0: libXaw-1.0.12-format-security.patch
 
 BuildRequires: pkgconfig(xproto) pkgconfig(x11) pkgconfig(xt)
 BuildRequires: pkgconfig(xmu) pkgconfig(xpm) pkgconfig(xext)
@@ -17,9 +20,14 @@ BuildRequires: xorg-x11-util-macros xmlto lynx
 %description
 Xaw is a widget set based on the X Toolkit Intrinsics (Xt) Library.
 
+%description -l zh_CN.UTF-8
+Xaw 是基于 X 工具内部函数库的部件集。
+
 %package devel
 Summary: Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: %{name} = %{version}-%{release}
 Requires: pkgconfig
 Requires: pkgconfig(xproto) pkgconfig(xmu) pkgconfig(xt) pkgconfig(xpm)
@@ -27,13 +35,17 @@ Requires: pkgconfig(xproto) pkgconfig(xmu) pkgconfig(xt) pkgconfig(xpm)
 %description devel
 X.Org X11 libXaw development package
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
 %prep
 %setup -q
+%patch0 -p1
 
 %build
 export CFLAGS="$RPM_OPT_FLAGS -Os"
 %configure \
-	    --docdir=%{_docdir}/%{name}-%{version}-%{release} \
+	    --docdir=%{_pkgdocdir} \
 	    --disable-xaw8 --disable-static \
 	    --disable-xaw6
 make %{?_smp_mflags}
@@ -42,6 +54,7 @@ make %{?_smp_mflags}
 rm -rf $RPM_BUILD_ROOT
 
 make install DESTDIR=$RPM_BUILD_ROOT INSTALL="install -p"
+install -pm 644 COPYING README ChangeLog $RPM_BUILD_ROOT%{_pkgdocdir}
 rm -f $RPM_BUILD_ROOT%{_libdir}/*.la
 magic_rpm_clean.sh
 
@@ -53,7 +66,8 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(-,root,root,-)
-%doc COPYING README ChangeLog
+%dir %{_pkgdocdir}
+%{_pkgdocdir}/*
 %{_libdir}/libXaw.so.7
 %{_libdir}/libXaw7.so.7
 %{_libdir}/libXaw7.so.7.0.0
@@ -61,7 +75,6 @@ rm -rf $RPM_BUILD_ROOT
 %files devel
 %defattr(-,root,root,-)
 %dir %{_includedir}/X11/Xaw
-%doc COPYING
 %{_includedir}/X11/Xaw/*.h
 # FIXME:  Is this C file really supposed to be here?
 %{_includedir}/X11/Xaw/Template.c
@@ -69,13 +82,11 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/libXaw7.so
 %{_libdir}/pkgconfig/xaw7.pc
 %{_mandir}/man3/*.3*
-%dir %{_docdir}/%{name}-%{version}-%{release}
-%{_docdir}/%{name}-%{version}-%{release}/*.xml
-%{_docdir}/%{name}-%{version}-%{release}/*.pdf*
-%{_docdir}/%{name}-%{version}-%{release}/%{name}.html*
-%{_docdir}/%{name}-%{version}-%{release}/%{name}.txt
 
 %changelog
+* Fri Aug 08 2014 Liu Di <liudidi@gmail.com> - 1.0.12-1
+- 更新到 1.0.12
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 1.0.11-2
 - 为 Magic 3.0 重建
 

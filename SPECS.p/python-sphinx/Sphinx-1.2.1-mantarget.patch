@@ -1,0 +1,15 @@
+--- sphinx/doc/Makefile.mantarget	2014-02-13 23:28:58.604797750 +0700
++++ sphinx/doc/Makefile	2014-02-14 00:00:45.794658764 +0700
+@@ -12,6 +12,12 @@
+ help:
+ 	@$(SPHINXBUILD) -M help "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS) $(O)
+ 
++# Likewise for man, since a man directory exist and make will assume
++# the target is up to date
++.PHONY: man
++man:
++	@$(SPHINXBUILD) -M man "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS) $(O)
++
+ # Catch-all target: route all unknown targets to Sphinx using the new
+ # "make mode" option.  $(O) is meant as a shortcut for $(SPHINXOPTS).
+ %:

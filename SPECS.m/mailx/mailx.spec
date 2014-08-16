@@ -2,12 +2,14 @@
 %global mailrc %{_sysconfdir}/mail.rc
 
 Summary: Enhanced implementation of the mailx command
+Summary(zh_CN.UTF-8): mailx 命令的增强实现
 Name: mailx
 Version: 12.5
-Release: 8%{?dist}
+Release: 9%{?dist}
 # MPLv1.1 .. nss.c, nsserr.c
 License: BSD with advertising and MPLv1.1
 Group: Applications/Internet
+Group(zh_CN.UTF-8): 应用程序/互联网
 URL: http://heirloom.sourceforge.net/mailx.html
 # Mailx's upstream provides only the CVS method of downloading source code.
 # Use get-upstream-tarball.sh script to download current version of mailx.
@@ -47,6 +49,9 @@ both for sending and receiving mail.
 Besides the "mailx" command, this package provides "mail" and "Mail"
 (which should be compatible with its predecessors from the mailx-8.x source),
 as well as "nail" (the initial name of this project).
+
+%description -l zh_CN.UTF-8
+这是一个增强的邮件命令。
 
 
 %prep
@@ -98,7 +103,7 @@ ln -s mailx.1 mail.1
 ln -s mailx.1 Mail.1
 ln -s mailx.1 nail.1
 popd
-
+magic_rpm_clean.sh
 
 %triggerpostun -- mailx < 12
 [[ -f %{mailrc}.rpmnew ]] && {
@@ -130,6 +135,9 @@ popd
 
 
 %changelog
+* Sat Aug 09 2014 Liu Di <liudidi@gmail.com> - 12.5-9
+- 为 Magic 3.0 重建
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 12.5-8
 - 为 Magic 3.0 重建
 

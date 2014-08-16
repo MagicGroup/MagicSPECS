@@ -1,15 +1,15 @@
 Summary: Sample Authorization Protocol for X
+Summary(zh_CN.UTF-8): X 的样例认证协议
 Name: libXau
-Version: 1.0.7
-Release: 2%{?dist}
+Version: 1.0.8
+Release: 1%{?dist}
 License: MIT
 Group: System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 URL: http://www.x.org
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 Source0: ftp://ftp.x.org/pub/individual/lib/%{name}-%{version}.tar.bz2
-
-#Patch0: xau-1.0.4-local.patch
 
 BuildRequires: pkgconfig
 BuildRequires: xorg-x11-proto-devel
@@ -21,9 +21,14 @@ authorization data in the connection setup block to restrict use of the display
 to only those clients that show that they know a server-specific key 
 called a "magic cookie".
 
+%description -l zh_CN.UTF-8
+X 的样例认证协议。
+
 %package devel
 Summary: Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: %{name} = %{version}-%{release}
 Requires: xorg-x11-proto-devel
 Requires: pkgconfig
@@ -32,9 +37,11 @@ BuildRequires: xorg-x11-proto-devel
 %description devel
 X.Org X11 libXau development package
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
 %prep
 %setup -q
-#patch0 -p1 -b .local
 
 %build
 
@@ -71,6 +78,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*.3*
 
 %changelog
+* Fri Aug 08 2014 Liu Di <liudidi@gmail.com> - 1.0.8-1
+- 更新到 1.0.8
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 1.0.7-2
 - 为 Magic 3.0 重建
 

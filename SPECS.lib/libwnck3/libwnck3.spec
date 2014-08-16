@@ -1,7 +1,8 @@
 Summary: Window Navigator Construction Kit
+Summary(zh_CN.UTF-8): 窗口导航构建工具包
 Name: libwnck3
-Version: 3.4.3
-Release: 2%{?dist}
+Version:	3.4.7
+Release: 1%{?dist}
 URL: http://download.gnome.org/sources/libwnck/
 #VCS: git:git://git.gnome.org/libwnck
 Source0: http://download.gnome.org/sources/libwnck/3.4/libwnck-%{version}.tar.xz
@@ -27,14 +28,23 @@ libwnck (pronounced "libwink") is used to implement pagers, tasklists,
 and other such things. It allows applications to monitor information
 about open windows, workspaces, their names/icons, and so forth.
 
+%description -l zh_CN.UTF-8
+这个库用来实现页面，任务列表和其它的类似部件。允许程序监视有关打开的窗口，
+工作区，他们的名字、图标和其它有用的信息。
+
 %package devel
 Summary: Libraries and headers for libwnck
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: %{name} = %{version}-%{release}
 
 %description devel
 The %{name}-devel package contains libraries and header files for
 developing applications that use %{name}.
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q -n libwnck-%{version}
@@ -48,7 +58,7 @@ make %{?_smp_mflags}
 %install
 make install DESTDIR=$RPM_BUILD_ROOT INSTALL="install -p"
 find $RPM_BUILD_ROOT -name '*.la' -exec rm -f {} ';'
-
+magic_rpm_clean.sh
 %find_lang libwnck-3.0
 
 %post -p /sbin/ldconfig
@@ -70,6 +80,9 @@ find $RPM_BUILD_ROOT -name '*.la' -exec rm -f {} ';'
 %doc %{_datadir}/gtk-doc
 
 %changelog
+* Fri Aug 08 2014 Liu Di <liudidi@gmail.com> - 3.4.7-1
+- 更新到 3.4.7
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 3.4.3-2
 - 为 Magic 3.0 重建
 

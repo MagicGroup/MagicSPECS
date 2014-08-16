@@ -1,9 +1,11 @@
 Summary: X.Org X11 libXxf86misc runtime library
+Summary(zh_CN.UTF-8): X.Org X11 libXxf86misc 运行库
 Name: libXxf86misc
 Version: 1.0.3
 Release: 4%{?dist}
 License: MIT
 Group: System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 URL: http://www.x.org
 Source0: ftp://ftp.x.org/pub/individual/lib/%{name}-%{version}.tar.bz2
 
@@ -12,13 +14,21 @@ BuildRequires: pkgconfig(xproto) pkgconfig(xext)
 %description
 X.Org X11 libXxf86misc runtime library
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
 %package devel
 Summary: X.Org X11 libXxf86misc development package
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: %{name} = %{version}-%{release}
 
 %description devel
 X.Org X11 libXxf86misc development package
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -30,6 +40,7 @@ make %{?_smp_mflags}
 %install
 make install DESTDIR=$RPM_BUILD_ROOT INSTALL="install -p"
 find $RPM_BUILD_ROOT -name '*.la' -exec rm -f {} ';'
+magic_rpm_clean.sh
 
 %post -p /sbin/ldconfig
 %postun -p /sbin/ldconfig

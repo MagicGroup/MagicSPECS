@@ -2,31 +2,22 @@
 %global gnulib_ver 20120404-stable
 
 Summary: Tools for searching and reading man pages
+Summary(zh_CN.UTF-8): 搜索和读取手册页的工具
 Name: man-db
-Version: 2.6.3
-Release: 2%{?dist}
+Version: 2.6.7.1
+Release: 1%{?dist}
 # GPLv2+ .. man-db
 # GPLv3+ .. gnulib
 License: GPLv2+ and GPLv3+
 Group: System Environment/Base
+Group(zh_CN.UTF-8): 系统环境/基本
 URL: http://www.nongnu.org/man-db/
 
 Source0: http://download.savannah.gnu.org/releases/%{name}/%{name}-%{version}.tar.xz
 Source1: man-db.crondaily
 Source2: man-db.sysconfig
 
-# resolves: #655385
-Patch0: man-db-2.5.9-sgr.patch
-# resolves: #677669
-Patch1: man-db-2.6.1-wildcards.patch
-# resolves: #693458
-Patch2: man-db-2.6.1-so-links.patch
-# resolves: #657409
-Patch3: man-db-2.6.1-locale-fallback.patch
-# resolves: #841431
-Patch4: man-db-2.6.2-invalid-cache.patch
-# adds support for man-pages-overrides
-Patch5: man-db-2.6.3-overrides.patch
+Patch0: 1110274-Add-systemd-tmpfiles-snippet-to-clean-up-old-cat-fil.patch
 
 Obsoletes: man < 2.0
 Provides: man = %{version}
@@ -45,22 +36,22 @@ manual page names and descriptions. manpath determines search path
 for manual pages. lexgrog directly reads header information in
 manual pages.
 
+%description -l zh_CN.UTF-8
+搜索和读取手册页的工具，共有 5 个：man, whatis, apropos, manpath 和 lexgrog。
+
 %prep
 %setup -q
-%patch0 -p1 -b .sgr
-%patch1 -p1 -b .wildcards
-%patch2 -p1 -b .so-links
-%patch3 -p1 -b .locale-fallback
-%patch4 -p1 -b .invalid-cache
-%patch5 -p1 -b .overrides
+%patch0 -p1 
 
 %build
 %configure \
     --with-sections="1 1p 8 2 3 3p 4 5 6 7 9 0p n l p o 1x 2x 3x 4x 5x 6x 7x 8x" \
-    --disable-setuid --with-browser=elinks --with-lzip=lzip
+    --disable-setuid --with-browser=elinks --with-lzip=lzip \
+    --with-override-dir=overrides
 make CC="%{__cc} %{optflags}" %{?_smp_mflags} V=1
 
 %install
+rm -rf $RPM_BUILD_ROOT
 make install DESTDIR=$RPM_BUILD_ROOT prefix=%{_prefix} INSTALL='install -p'
 
 # move the documentation to the relevant place
@@ -82,6 +73,9 @@ install -D -p -m 0755 %{SOURCE1} $RPM_BUILD_ROOT/etc/cron.daily/man-db.cron
 # config for cron script
 install -D -p -m 0644 %{SOURCE2} $RPM_BUILD_ROOT/etc/sysconfig/man-db
 
+# config for tmpfiles.d
+install -D -p -m 0644 init/systemd/man-db.conf $RPM_BUILD_ROOT/usr/lib/tmpfiles.d/.
+magic_rpm_clean.sh
 %find_lang %{name}
 %find_lang %{name}-gnulib
 
@@ -90,10 +84,13 @@ install -D -p -m 0644 %{SOURCE2} $RPM_BUILD_ROOT/etc/sysconfig/man-db
 %{__rm} -rf %{cache}/*
 
 %files -f %{name}.lang -f %{name}-gnulib.lang
-%doc README man-db-manual.txt man-db-manual.ps docs/COPYING ChangeLog NEWS
+%{!?_licensedir:%global license %%doc}
+%license docs/COPYING
+%doc README man-db-manual.txt man-db-manual.ps ChangeLog NEWS
 %config(noreplace) %{_sysconfdir}/man_db.conf
 %config(noreplace) %{_sysconfdir}/sysconfig/man-db
-%{_sysconfdir}/cron.daily/man-db.cron
+%config(noreplace) %{_sysconfdir}/cron.daily/man-db.cron
+%config(noreplace) /usr/lib/tmpfiles.d/man-db.conf
 %{_sbindir}/accessdb
 %{_bindir}/man
 %{_bindir}/whatis
@@ -119,10 +116,12 @@ install -D -p -m 0644 %{SOURCE2} $RPM_BUILD_ROOT/etc/sysconfig/man-db
 %{_mandir}/man8/accessdb.8*
 %{_mandir}/man8/catman.8*
 %{_mandir}/man8/mandb.8*
-%lang(es)   %{_datadir}/man/es/man*/*
-%lang(it)   %{_datadir}/man/it/man*/*
+%lang(zh_CN)   %{_datadir}/man/zh_CN/man*/*
 
 %changelog
+* Sat Aug 09 2014 Liu Di <liudidi@gmail.com> - 2.6.7.1-1
+- 更新到 2.6.7.1
+
 * Tue Oct 30 2012 Peter Schiffer <pschiffe@redhat.com> - 2.6.3-2
 - resolves: #870680
   use less as the default pager

@@ -3,14 +3,17 @@
 
 Name:    m17n-lib
 Version:  1.6.4
-Release:  5%{?dist}
+Release:  6%{?dist}
 Summary:  Multilingual text library
+Summary(zh_CN.UTF-8): 多语言文本库
 
 Group:    System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 License:  LGPLv2+
 URL:    http://www.nongnu.org/m17n/
 Source0:  http://download.savannah.gnu.org/releases/m17n/%{name}-%{version}.tar.gz
 Patch0:  %{name}-1.6.1-multilib.patch
+Patch1:	m17n-lib-1.6.4-aarch64.patch
 
 BuildRequires:  m17n-db-devel libthai
 %if %{with anthy}
@@ -28,38 +31,54 @@ the input of many languages with the input table maps from m17n-db.
 
 The package provides the core and input method backend libraries.
 
+%description -l zh_CN.UTF-8
+多语言文本库。
+
 %package  anthy
 Summary:  Anthy module for m17n
+Summary(zh_CN.UTF-8): m17n 的 Anthy 模块
 Group:    System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 Requires: %{name}%{?_isa} = %{version}-%{release}
 
 %description anthy
 Anthy module for %{name} allows ja-anthy.mim to support input conversion.
 
+%description anthy -l zh_CN.UTF-8
+m17n 的 Anthy 模块。
 
 %package  devel
 Summary:  Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:    Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: %{name}%{?_isa} = %{version}-%{release}
 Requires: %{name}-tools = %{version}-%{release}
 
 %description devel
 Development files for %{name}.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %package  tools
 Summary:  m17n GUI Library tools
+Summary(zh_CN.UTF-8): m17n 图形界面库工具
 Group:    System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 Requires: m17n-db-extras
 Requires: %{name}%{?_isa} = %{version}-%{release}
 
 %description tools
 Tools to test M17n GUI widget library.
 
+%description tools -l zh_CN.UTF-8
+m17n 图形界面库工具。
 
 %prep
 %setup -q 
 %patch0 -p0
+%patch1 -p1
 
 %build
 %configure --disable-rpath --disable-static
@@ -75,6 +94,7 @@ make install DESTDIR=$RPM_BUILD_ROOT INSTALL="install -p"
 rm $RPM_BUILD_ROOT%{_libdir}/m17n/1.0/libmimx-ispell.so
 
 find $RPM_BUILD_ROOT -name '*.la' -exec rm -f {} ';'
+magic_rpm_clean.sh
 
 %post -p /sbin/ldconfig
 %postun -p /sbin/ldconfig
@@ -112,6 +132,9 @@ find $RPM_BUILD_ROOT -name '*.la' -exec rm -f {} ';'
 %{_libdir}/libm17n-gui.so.*
 
 %changelog
+* Fri Aug 08 2014 Liu Di <liudidi@gmail.com> - 1.6.4-6
+- 为 Magic 3.0 重建
+
 * Sat May 03 2014 Liu Di <liudidi@gmail.com> - 1.6.4-5
 - 为 Magic 3.0 重建
 

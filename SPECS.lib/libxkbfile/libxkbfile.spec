@@ -1,9 +1,11 @@
 Summary: X.Org X11 libxkbfile runtime library
+Summary(zh_CN.UTF-8): X.Org X11 libxkbfile 运行库
 Name: libxkbfile
 Version: 1.0.8
-Release: 2%{?dist}
+Release: 3%{?dist}
 License: MIT
 Group: System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 URL: http://www.x.org
 
 Source0: ftp://ftp.x.org/pub/individual/lib/%{name}-%{version}.tar.bz2
@@ -13,13 +15,21 @@ BuildRequires: pkgconfig(xproto) pkgconfig(x11)
 %description
 X.Org X11 libxkbfile runtime library
 
+%description -l zh_CN.UTF-8
+X.Org X11 libxkbfile 运行库。
+
 %package devel
 Summary: X.Org X11 libxkbfile development package
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: %{name} = %{version}-%{release}
 
 %description devel
 X.Org X11 libxkbfile development package
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -64,6 +74,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/pkgconfig/xkbfile.pc
 
 %changelog
+* Fri Aug 08 2014 Liu Di <liudidi@gmail.com> - 1.0.8-3
+- 为 Magic 3.0 重建
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 1.0.8-2
 - 为 Magic 3.0 重建
 

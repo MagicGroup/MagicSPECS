@@ -1,8 +1,8 @@
 #global gitdate  20120917
 
 Name:           libxkbcommon
-Version:        0.4.2
-Release:        4%{?gitdate:.%{gitdate}}%{?dist}
+Version:	0.4.2
+Release: 5%{?gitdate:.%{gitdate}}%{?dist}
 Summary:        X.Org X11 XKB parsing library
 Summary(zh_CN.UTF-8): X.Org X11 XKB 解析库
 License:        MIT
@@ -117,6 +117,9 @@ magic_rpm_clean.sh
 %endif
 
 %changelog
+* Fri Aug 08 2014 Liu Di <liudidi@gmail.com> - 0.4.2-5
+- 为 Magic 3.0 重建
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.4.2-4
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

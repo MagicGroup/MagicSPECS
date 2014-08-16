@@ -1,9 +1,11 @@
 Summary: X.Org X11 libXft runtime library
+Summary(zh_CN.UTF-8): X.Org X11 libXft 运行库
 Name: libXft
-Version: 2.3.1
-Release: 7%{?dist}
+Version: 2.3.2
+Release: 1%{?dist}
 License: MIT
 Group: System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 URL: http://www.x.org
 
 Source0: ftp://ftp.x.org/pub/individual/lib/%{name}-%{version}.tar.bz2
@@ -20,17 +22,25 @@ Requires: fontconfig >= 2.2-1
 %description
 X.Org X11 libXft runtime library
 
+%description -l zh_CN.UTF-8
+X.Org X11 libXft 运行库。
+
 %package devel
 Summary: X.Org X11 libXft development package
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: %{name} = %{version}-%{release}
 
 %description devel
 X.Org X11 libXft development package
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
 %prep
 %setup -q
-%patch0 -p1
+#patch0 -p1
 
 %build
 autoreconf -v --install --force
@@ -50,6 +60,7 @@ rm -f $RPM_BUILD_ROOT%{_mandir}/man1/xft-config*
 
 # We intentionally don't ship *.la files
 rm -f $RPM_BUILD_ROOT%{_libdir}/*.la
+magic_rpm_clean.sh
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -75,6 +86,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/Xft.3*
 
 %changelog
+* Fri Aug 08 2014 Liu Di <liudidi@gmail.com> - 2.3.2-1
+- 更新到 2.3.2
+
 * Tue Jun 03 2014 Liu Di <liudidi@gmail.com> - 2.3.1-7
 - 为 Magic 3.0 重建
 

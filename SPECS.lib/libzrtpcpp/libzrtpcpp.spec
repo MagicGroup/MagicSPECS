@@ -1,13 +1,15 @@
 Name:           libzrtpcpp
-Version:	4.2.3
-Release:        5%{?dist}
+Version: 4.2.4
+Release: 1%{?dist}
 Summary:        ZRTP support library for the GNU ccRTP stack
+Summary(zh_CN.UTF-8): GNU ccRTP stack 的 ZRTP 支持库
 
 Group:          System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 License:        GPLv3+
 URL:            https://github.com/wernerd/ZRTPCPP
-#Source0:        https://github.com/wernerd/ZRTPCPP/archive/V%{version}.tar.gz
-Source0:	ZRTPCPP-%{version}.tar.gz
+Source0:        https://github.com/wernerd/ZRTPCPP/archive/V%{version}.tar.gz
+#Source0:	ZRTPCPP-%{version}.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildRequires:	ccrtp-devel 
@@ -53,6 +55,7 @@ chmod 644 NEWS
 rm -rf $RPM_BUILD_ROOT
 make install DESTDIR=$RPM_BUILD_ROOT
 find $RPM_BUILD_ROOT -name '*.la' -exec rm -f {} ';'
+magic_rpm_clean.sh
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -76,6 +79,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Fri Aug 08 2014 Liu Di <liudidi@gmail.com> - 4.2.4-1
+- 更新到 4.2.4
+
 * Mon Jun 23 2014 Liu Di <liudidi@gmail.com> - 4.2.3-5
 - 更新到 4.2.3
 

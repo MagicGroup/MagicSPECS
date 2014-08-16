@@ -1,0 +1,19 @@
+diff -Naurp mate-applet-softupd-0.2.10.orig/src/main.c mate-applet-softupd-0.2.10.new/src/main.c
+--- mate-applet-softupd-0.2.10.orig/src/main.c	2013-10-24 20:16:37.000000000 +0200
++++ mate-applet-softupd-0.2.10.new/src/main.c	2014-04-22 17:33:20.154136042 +0200
+@@ -276,8 +276,14 @@ static void applet_back_change (MatePane
+ }
+ 
+ static void applet_destroy(MatePanelApplet *applet_widget, softupd_applet *applet) {
+-	g_main_loop_quit(applet->loop);
+         g_assert(applet);
++
++	/* Remove all timers. */
++
++	while (g_source_remove_by_user_data((gpointer) applet))
++		;
++
++	g_main_loop_quit(applet->loop);
+ 	g_free(applet->pid_arr);
+         g_free(applet);
+         return;

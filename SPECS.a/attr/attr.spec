@@ -1,7 +1,7 @@
 Summary: Utilities for managing filesystem extended attributes
 Name: attr
 Version: 2.4.47
-Release: 5%{?dist}
+Release: 7%{?dist}
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 Source: http://download.savannah.gnu.org/releases-noredirect/attr/attr-%{version}.src.tar.gz
 
@@ -100,6 +100,12 @@ chmod 0755 $RPM_BUILD_ROOT/%{_libdir}/libattr.so.*.*.*
 # drop already installed documentation, we will use an RPM macro to install it
 rm -rf $RPM_BUILD_ROOT%{_docdir}/%{name}*
 
+# {,f,l}{get,list,remove,set}xattr.2 man pages are now provided by man-pages pkg
+# See <http://lists.nongnu.org/archive/html/acl-devel/2014-03/msg00010.html>.
+rm -fv $RPM_BUILD_ROOT%{_mandir}/man2/{,f,l}{get,list,remove,set}xattr.2*
+rmdir "$RPM_BUILD_ROOT%{_mandir}/man2"
+
+magic_rpm_clean.sh
 %find_lang %{name}
 
 %post -n libattr -p /sbin/ldconfig
@@ -119,7 +125,6 @@ rm -rf $RPM_BUILD_ROOT%{_docdir}/%{name}*
 %files -n libattr-devel
 %{_libdir}/libattr.so
 %{_includedir}/attr
-%{_mandir}/man2/*attr.2*
 %{_mandir}/man3/attr_*.3.*
 
 %files -n libattr
@@ -127,6 +132,12 @@ rm -rf $RPM_BUILD_ROOT%{_docdir}/%{name}*
 %config(noreplace) %{_sysconfdir}/xattr.conf
 
 %changelog
+* Sat Aug 09 2014 Liu Di <liudidi@gmail.com> - 2.4.47-7
+- 为 Magic 3.0 重建
+
+* Sat Aug 09 2014 Liu Di <liudidi@gmail.com> - 2.4.47-6
+- 为 Magic 3.0 重建
+
 * Tue Jan 21 2014 Kamil Dudka <kdudka@redhat.com> 2.4.47-5
 - refer to ENODATA instead of ENOATTR in man pages (#1055933)
 

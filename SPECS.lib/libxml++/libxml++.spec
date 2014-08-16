@@ -3,14 +3,16 @@
 %define release_version %(echo %{version} | awk -F. '{print $1"."$2}')
 
 Name:           libxml++
-Version:        2.34.2
-Release:        3%{?dist}
+Version:	2.37.1
+Release: 1%{?dist}
 Summary:        C++ wrapper for the libxml2 XML parser library
+Summary(zh_CN.UTF-8): libxml2 XML 解析库的 C++ 接口
 
 Group:          System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 License:        LGPLv2+
 URL:            http://libxmlplusplus.sourceforge.net/
-Source0:        http://ftp.gnome.org/pub/GNOME/sources/libxml++/%{release_version}/libxml++-%{version}.tar.bz2
+Source0:        http://ftp.gnome.org/pub/GNOME/sources/libxml++/%{release_version}/libxml++-%{version}.tar.xz
 
 BuildRequires:  libxml2-devel >= 2.6.1
 BuildRequires:  glibmm24-devel >= 2.4.0
@@ -20,10 +22,14 @@ libxml++ is a C++ wrapper for the libxml2 XML parser library. It's original
 author is Ari Johnson and it is currently maintained by Christophe de Vienne
 and Murray Cumming.
 
+%description -l zh_CN.UTF-8
+libxml2 XML 解析库的 C++ 接口。
 
 %package devel
 Summary:        Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       %{name} = %{version}-%{release}
 Requires:       libxml2-devel
 Requires:       glibmm24-devel
@@ -31,9 +37,14 @@ Requires:       glibmm24-devel
 %description devel
 This package contains the headers and libraries for libxml++ development.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
 %package        doc
 Summary:        Documentation for %{name}, includes full API docs
+Summary(zh_CN.UTF-8): %{name} 的文档
 Group:          Documentation
+Group(zh_CN.UTF-8): 文档
 BuildArch:      noarch
 BuildRequires:  doxygen, graphviz
 Requires:       %{name} = %{version}-%{release}
@@ -42,6 +53,8 @@ Requires:       glibmm24-doc
 %description    doc
 This package contains the full API documentation for %{name}.
 
+%description doc -l zh_CN.UTF-8
+%{name} 的文档。
 
 %prep
 %setup -q
@@ -58,7 +71,7 @@ find $RPM_BUILD_ROOT -name "*.la" -o -name '*.a' | xargs rm -f
 # fix wrong base path in devhelp index file
 sed -i "s#$RPM_BUILD_ROOT##g" \
     $RPM_BUILD_ROOT%{_datadir}/devhelp/books/%{name}-%{api_ver}/%{name}-%{api_ver}.devhelp2
-
+magic_rpm_clean.sh
 
 %post -p /sbin/ldconfig
 
@@ -84,6 +97,9 @@ sed -i "s#$RPM_BUILD_ROOT##g" \
 
 
 %changelog
+* Fri Aug 08 2014 Liu Di <liudidi@gmail.com> - 2.37.1-1
+- 更新到 2.37.1
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 2.34.2-3
 - 为 Magic 3.0 重建
 

@@ -1,12 +1,14 @@
 Summary: Window Navigator Construction Kit
+Summary(zh_CN.UTF-8): 窗口导航构建工具包
 Name: libwnck
-Version: 2.30.7
+Version: 2.31.0
 Release: 4%{?dist}
 URL: http://download.gnome.org/sources/libwnck/
 #VCS: git:git://git.gnome.org/libwnck
-Source0: http://download.gnome.org/sources/libwnck/2.30/%{name}-%{version}.tar.xz
+Source0: http://download.gnome.org/sources/libwnck/2.31/%{name}-%{version}.tar.xz
 License: LGPLv2+
 Group: System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 
 Requires: startup-notification
 
@@ -26,14 +28,23 @@ libwnck (pronounced "libwink") is used to implement pagers, tasklists,
 and other such things. It allows applications to monitor information
 about open windows, workspaces, their names/icons, and so forth.
 
+%description -l zh_CN.UTF-8
+这个库用来实现页面，任务列表和其它的类似部件。允许程序监视有关打开的窗口，
+工作区，他们的名字、图标和其它有用的信息。
+
 %package devel
 Summary: Libraries and headers for libwnck
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: %{name} = %{version}-%{release}
 
 %description devel
 The %{name}-devel package contains libraries and header files for
 developing applications that use %{name}.
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -71,11 +82,29 @@ rm -f $RPM_BUILD_ROOT%{_bindir}/wnck-urgency-monitor
 %doc %{_datadir}/gtk-doc
 
 %changelog
-* Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 2.30.7-4
+* Fri Aug 08 2014 Liu Di <liudidi@gmail.com> - 2.31.0-4
 - 为 Magic 3.0 重建
 
-* Fri Oct 26 2012 Liu Di <liudidi@gmail.com> - 2.30.7-3
-- 为 Magic 3.0 重建
+* Tue Jul 22 2014 Kalev Lember <kalevlember@gmail.com> - 2.31.0-3
+- Rebuilt for gobject-introspection 1.41.4
+
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.31.0-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Sat Nov 30 2013 Kevin Fenzi <kevin@scrye.com> 2.31.0-1
+- Update to 2.31.0
+
+* Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.30.7-6
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.30.7-5
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
+
+* Fri Jul 27 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.30.7-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.30.7-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 
 * Wed Oct 26 2011 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.30.7-2
 - Rebuilt for glibc bug#747377

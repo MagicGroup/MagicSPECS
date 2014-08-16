@@ -1,7 +1,8 @@
 Summary: Library providing the Gnome XSLT engine
+Summary(zh_CN.UTF-8): 提供  Gnome XSLT 引擎的库
 Name: libxslt
 Version: 1.1.28
-Release: 2%{?dist}%{?extra_release}
+Release: 3%{?dist}%{?extra_release}
 License: MIT
 Group: Development/Libraries
 Source: ftp://xmlsoft.org/XSLT/libxslt-%{version}.tar.gz
@@ -22,9 +23,15 @@ This C library allows to transform XML files into other XML files
 mechanism. To use it you need to have a version of libxml2 >= 2.6.27
 installed. The xsltproc command is a command line interface to the XSLT engine
 
+
+%description -l zh_CN.UTF-8
+提供  Gnome XSLT 引擎的库。
+
 %package devel
 Summary: Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: libxslt = %{version}-%{release}
 Requires: libgcrypt-devel
 
@@ -33,9 +40,14 @@ Requires: libgcrypt-devel
 The %{name}-devel package contains libraries and header files for
 developing applications that use %{name}.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
 %package python
 Summary: Python bindings for the libxslt library
+Summary(zh_CN.UTF-8): %{name} 的 Python 绑定
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: libxslt = %{version}-%{release}
 Requires: libxml2-python
 
@@ -48,6 +60,9 @@ This library allows to parse sytlesheets, uses the libxml2-python
 to load and save XML and HTML files. Direct access to XPath and
 the XSLT transformation context are possible to extend the XSLT language
 with XPath functions written in Python.
+
+%description python -l zh_CN.UTF-8
+%{name} 的 Python 绑定。
 
 %prep
 %setup -q
@@ -73,6 +88,7 @@ find $RPM_BUILD_ROOT -name '*.la' -exec rm -f {} ';'
 
 # multiarch crazyness on timestamp differences
 touch -m --reference=$RPM_BUILD_ROOT/%{_includedir}/libxslt/xslt.h $RPM_BUILD_ROOT/%{_bindir}/xslt-config
+magic_rpm_clean.sh
 
 %check 
 make tests
@@ -102,6 +118,7 @@ make tests
 %doc doc/tutorial
 %doc doc/tutorial2
 %doc doc/EXSLT
+%{_docdir}/%{name}-%{version}/html/*
 %{_libdir}/lib*.so
 %{_libdir}/*.sh
 %{_datadir}/aclocal/libxslt.m4
@@ -112,6 +129,7 @@ make tests
 
 %files python
 %defattr(-, root, root,-)
+%{_docdir}/%{name}-python-%{version}/*
 %{python_sitearch}/libxslt.py*
 %{python_sitearch}/libxsltmod*
 %doc python/libxsltclass.txt
@@ -120,6 +138,9 @@ make tests
 %doc python/tests/*.xsl
 
 %changelog
+* Fri Aug 08 2014 Liu Di <liudidi@gmail.com> - 1.1.28-3
+- 为 Magic 3.0 重建
+
 * Sat May 03 2014 Liu Di <liudidi@gmail.com> - 1.1.28-2
 - 为 Magic 3.0 重建
 

@@ -1,10 +1,12 @@
 Name:		mate-polkit
-Version:	1.4.0
-Release:	5%{?dist}
+Version: 1.9.0
+Release: 1%{?dist}
 Summary:	Integrates polkit authentication for MATE desktop
+Summary(zh_CN.UTF-8): MATE 桌面集成的 polkit 认证
 License:	LGPLv2+
 URL:		http://mate-desktop.org
-Source0:	http://pub.mate-desktop.org/releases/1.4/%name-%version.tar.xz
+%define majorver %(echo %{version} | awk -F. '{print $1"."$2}')
+Source0:	http://pub.mate-desktop.org/releases/%{majorver}/%name-%version.tar.xz
 
 BuildRequires:	gobject-introspection-devel gtk2-devel mate-common polkit-devel
 # needed for gobject-introspection support somehow,
@@ -18,12 +20,19 @@ Provides:	PolicyKit-authentication-agent
 %description
 Integrates polkit with the MATE Desktop environment
 
+%description -l zh_CN.UTF-8
+MATE 桌面集成的 polkit 认证。
+
 %package devel
 Requires: %{name}%{?_isa} = %{version}-%{release}
 Summary:	Integrates polkit with the MATE Desktop environment
+Summary(zh_CN.UTF-8): %{name} 的开发包
 
 %description devel
 Development libraries for mate-polkit
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -64,6 +73,12 @@ find %{buildroot} -name '*.la' -exec rm -fv {} ';'
 
 
 %changelog 
+* Mon Aug 11 2014 Liu Di <liudidi@gmail.com> - 1.9.0-1
+- 更新到 1.9.0
+
+* Mon Aug 11 2014 Liu Di <liudidi@gmail.com> - 1.4.0-5
+- 更新到 1.9.1
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 1.4.0-5
 - 为 Magic 3.0 重建
 

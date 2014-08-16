@@ -2,7 +2,7 @@
 %global rel_build 1
 
 # This is needed, because src-url contains branched part of versioning-scheme.
-%global branch 1.8
+%global branch %(echo %{version} | awk -F. '{print $1"."$2}')
 
 # Settings used for build from snapshots.
 %{!?rel_build:%global commit 62a708d461e08275d6b85985f5fa13fa8fbc85f7}
@@ -13,10 +13,11 @@
 %{!?rel_build:%global git_tar %{name}-%{version}-%{git_ver}.tar.xz}
 
 Name:           marco
-Version:        %{branch}.0
-Release:        4%{?dist}
-#Release:       0.5%{?git_rel}%{?dist}
+Version: 1.9.1
+Release: 1%{?dist}
+#Release: 1%{?dist}
 Summary:        MATE Desktop window manager
+Summary(zh_CN.UTF-8): MATE 桌面窗口管理器
 License:        LGPLv2+ and GPLv2+
 URL:            http://mate-desktop.org
 
@@ -61,8 +62,12 @@ Obsoletes: mate-window-manager < %{version}-%{release}
 %description
 MATE Desktop window manager
 
+%description -l zh_CN.UTF-8
+MATE 桌面的窗口管理器。
+
 %package devel
 Summary: Development files for mate-window-manager
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Requires: %{name}%{?_isa} = %{version}-%{release}
 %if 0%{?fedora} && 0%{?fedora} <= 25
 Provides: mate-window-manager-devel%{?_isa} = %{version}-%{release}
@@ -72,6 +77,9 @@ Obsoletes: mate-window-manager-devel < %{version}-%{release}
 
 %description devel
 Development files for marco
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q%{!?rel_build:n %{name}-%{commit}}
@@ -112,7 +120,7 @@ desktop-file-install                                \
 
 # remove needless gsettings convert file
 rm -f  %{buildroot}%{_datadir}/MateConf/gsettings/marco.convert
-
+magic_rpm_clean.sh
 %find_lang %{name} --with-gnome --all-name
 
 
@@ -163,6 +171,9 @@ fi
 
 
 %changelog
+* Sat Aug 09 2014 Liu Di <liudidi@gmail.com> - 1.9.1-1
+- 更新到 1.9.1
+
 * Wed May 07 2014 Liu Di <liudidi@gmail.com> - 1.8.0-4
 - 为 Magic 3.0 重建
 

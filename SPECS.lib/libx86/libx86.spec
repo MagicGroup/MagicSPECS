@@ -1,9 +1,11 @@
 Name:           libx86
 Version:        1.1
-Release:        12%{?dist}
+Release:        13%{?dist}
 Summary:        Library for making real-mode x86 calls
+Summary(zh_CN.UTF-8): 编写实时 x86 调用的库
 
 Group:          System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 License:        MIT
 URL:            http://www.codon.org.uk/~mjg59/libx86
 Source0:        http://www.codon.org.uk/~mjg59/libx86/downloads/%{name}-%{version}.tar.gz
@@ -19,14 +21,22 @@ Patch1: libx86-mmap-offset.patch
 A library to provide support for making real-mode x86 calls with an emulated
 x86 processor.
 
+%description -l zh_CN.UTF-8
+编写实时 x86 调用的库。
+
 %package devel
 Summary:        Development tools for programs which will use libx86
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       %{name} = %{version}-%{release}
 
 %description devel
 This package contains the static library and header file necessary for
 development of programs that will use libx86 to make real-mode x86 calls.
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -42,6 +52,7 @@ CFLAGS="$RPM_OPT_FLAGS" make BACKEND=x86emu LIBDIR=%{_libdir} %{?_smp_mflags}
 rm -rf $RPM_BUILD_ROOT
 make install DESTDIR=$RPM_BUILD_ROOT LIBDIR=%{_libdir}
 rm $RPM_BUILD_ROOT/%{_libdir}/*.a
+magic_rpm_clean.sh
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -62,6 +73,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/pkgconfig/x86.pc
 
 %changelog
+* Fri Aug 08 2014 Liu Di <liudidi@gmail.com> - 1.1-13
+- 为 Magic 3.0 重建
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 1.1-12
 - 为 Magic 3.0 重建
 

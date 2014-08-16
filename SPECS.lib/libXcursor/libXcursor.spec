@@ -1,9 +1,11 @@
 Summary: Cursor management library
+Summary(zh_CN.UTF-8): 光标管理库
 Name: libXcursor
-Version: 1.1.13
-Release: 2%{?dist}
+Version: 1.1.14
+Release: 1%{?dist}
 License: MIT
 Group: System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 URL: http://www.x.org
 #VCS: git:git://anongit.freedesktop.org/xorg/lib/libXcursor
 Source0: ftp://ftp.x.org/pub/individual/lib/%{name}-%{version}.tar.bz2
@@ -22,13 +24,21 @@ Cursors can be loaded from files or memory. A library of common cursors
 exists which map to the standard X cursor names.Cursors can exist in
 several sizes and the library automatically picks the best size.
 
+%description -l zh_CN.UTF-8
+光标管理库。
+
 %package devel
 Summary: Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: %{name} = %{version}-%{release}
 
 %description devel
 libXcursor development package.
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -86,6 +96,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/Xcursor*.3*
 
 %changelog
+* Fri Aug 08 2014 Liu Di <liudidi@gmail.com> - 1.1.14-1
+- 更新到 1.1.14
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 1.1.13-2
 - 为 Magic 3.0 重建
 

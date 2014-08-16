@@ -1,9 +1,11 @@
 Summary:	High-level API for X Keyboard Extension
+Summary(zh_CN.UTF-8): X 键盘扩展的高级 API
 Name:		libxklavier
-Version:	5.2.1
-Release: 	2%{?dist}
+Version:	5.3
+Release: 1%{?dist}
 License:	LGPLv2+
 Group:		Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 URL: http://www.freedesktop.org/wiki/Software/LibXklavier
 BuildRequires: libxml2-devel
 BuildRequires: libxkbfile-devel
@@ -15,10 +17,8 @@ BuildRequires: iso-codes-devel
 BuildRequires: gobject-introspection-devel
 # temporary workaround for a typical introspection issue
 BuildRequires: libxklavier-devel
-Source: http://download.gnome.org/sources/libxklavier/5.2/%{name}-%{version}.tar.xz
-# http://bugs.freedesktop.org/show_bug.cgi?id=22687
-Patch0: flags.patch
-Patch2: catch-more-xerrors.patch
+%define majorver %(echo %{version} | awk -F. '{print $1"."$2}')
+Source: http://download.gnome.org/sources/libxklavier/%{majorver}/%{name}-%{version}.tar.xz
 
 %description
 libxklavier is a library providing a high-level API for the X Keyboard
@@ -26,9 +26,14 @@ Extension (XKB). This library is intended to support XFree86 and other
 commercial X servers. It is useful for creating XKB-related software
 (layout indicators etc).
 
+%description -l zh_CN.UTF-8
+X 键盘扩展的高级 API。
+
 %package devel
 Summary: Development files for libxklavier
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: %{name} = %{version}-%{release}
 Requires: libxml2-devel
 
@@ -36,10 +41,11 @@ Requires: libxml2-devel
 This package contains libraries, header files and developer documentation
 needed to develop libxklavier applications.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
 %prep
 %setup -q
-%patch0 -p1 -b .flags
-%patch2 -p1 -b .catch-more-xerrors
 
 %build
 
@@ -55,6 +61,7 @@ make V=1 %{?_smp_mflags}
 make install DESTDIR=$RPM_BUILD_ROOT
 
 rm -f $RPM_BUILD_ROOT%{_libdir}/*.{a,la}
+magic_rpm_clean.sh
 
 %post -p /sbin/ldconfig
 
@@ -79,6 +86,9 @@ rm -f $RPM_BUILD_ROOT%{_libdir}/*.{a,la}
 %{_datadir}/gir-1.0/Xkl-1.0.gir
 
 %changelog
+* Fri Aug 08 2014 Liu Di <liudidi@gmail.com> - 5.3-1
+- 更新到 5.3
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 5.2.1-2
 - 为 Magic 3.0 重建
 

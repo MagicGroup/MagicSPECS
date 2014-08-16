@@ -1,10 +1,12 @@
 Name:           mate-session-manager
-Version:        1.8.1
-Release:        3%{?dist}
+Version: 1.9.1
+Release: 1%{?dist}
 Summary:        MATE Desktop session manager
+Summary(zh_CN.UTF-8): MATE 桌面的会话管理器
 License:        GPLv2+
 URL:            http://mate-desktop.org
-Source0:        http://pub.mate-desktop.org/releases/1.8/%{name}-%{version}.tar.xz
+%define majorver %(echo %{version} | awk -F. '{print $1"."$2}')
+Source0:        http://pub.mate-desktop.org/releases/%{majorver}/%{name}-%{version}.tar.xz
 
 BuildRequires:  dbus-glib-devel
 BuildRequires:  desktop-file-utils
@@ -31,6 +33,9 @@ Requires: hicolor-icon-theme
 This package contains a session that can be started from a display
 manager such as MDM. It will load all necessary applications for a
 full-featured user session.
+
+%description -l zh_CN.UTF-8d
+MATE 桌面的会话管理器。
 
 %prep
 %setup -q
@@ -59,7 +64,7 @@ desktop-file-install                               \
 
 # remove needless gsettings convert file
 rm -f  %{buildroot}%{_datadir}/MateConf/gsettings/mate-session.convert
-
+magic_rpm_clean.sh
 %find_lang %{name} --with-gnome --all-name
 
 %post
@@ -93,6 +98,9 @@ fi
 %{_docdir}/mate-session-manager/dbus/mate-session.html
 
 %changelog
+* Mon Aug 11 2014 Liu Di <liudidi@gmail.com> - 1.9.1-1
+- 更新到 1.9.1
+
 * Wed May 07 2014 Liu Di <liudidi@gmail.com> - 1.8.1-3
 - 为 Magic 3.0 重建
 

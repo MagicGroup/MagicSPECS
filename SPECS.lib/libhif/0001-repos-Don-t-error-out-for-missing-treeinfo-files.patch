@@ -1,0 +1,28 @@
+From 9b57af338fc9856fe01e2726ea25ab1b4b70aee7 Mon Sep 17 00:00:00 2001
+From: Kalev Lember <kalevlember@gmail.com>
+Date: Sat, 19 Jul 2014 13:53:49 +0200
+Subject: [PATCH] repos: Don't error out for missing treeinfo files
+
+Just silently ignore mount points that don't have a .treeinfo file.
+
+https://bugzilla.redhat.com/show_bug.cgi?id=1114207
+---
+ libhif/hif-repos.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/libhif/hif-repos.c b/libhif/hif-repos.c
+index 6ba8ff7..db0b6b3 100644
+--- a/libhif/hif-repos.c
++++ b/libhif/hif-repos.c
+@@ -200,7 +200,7 @@ hif_repos_add_sack_from_mount_point (HifRepos *repos,
+ 	exists = g_file_test (treeinfo_fn, G_FILE_TEST_EXISTS);
+ 	g_debug ("checking %s for %s: %s", root, id, exists ? "yes" : "no");
+ 	if (!exists)
+-		return FALSE;
++		return TRUE;
+ 
+ 	/* add the repodata/repomd.xml as a source */
+ 	if (!hif_repos_add_media (repos, root, *idx, error))
+-- 
+2.0.1
+

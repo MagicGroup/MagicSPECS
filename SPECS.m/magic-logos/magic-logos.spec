@@ -1,8 +1,10 @@
 Name: magic-logos
 Summary: Magic-related icons and pictures
+Summary(zh_CN.UTF-8): Magic 相关的图标和图像
 Version: 30.0.0
 Release: 2%{?dist}
 Group: System Environment/Base
+Group(zh_CN.UTF-8): 系统环境/基本
 URL: http://git.fedorahosted.org/git/fedora-logos.git/
 License: Licensed only for approved usage, see COPYING for details. 
 
@@ -15,6 +17,9 @@ Provides: system-logos = %{version}-%{release}
 
 %description
 Magic-related icons and pictures
+
+%description -l zh_CN.UTF-8
+Magic 相关的图标和图像。
 
 %prep
 

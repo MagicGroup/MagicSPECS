@@ -10,11 +10,13 @@
 %define without_devel  0
 
 Summary: X.Org X11 libXp runtime library
+Summary(zh_CN.UTF-8): X.Org X11 libXp 运行库
 Name: libXp
-Version: 1.0.0
-Release: 18%{?dist}
+Version: 1.0.2
+Release: 2%{?dist}
 License: MIT
 Group: System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 URL: http://www.x.org
 
 Source0: ftp://ftp.x.org/pub/individual/lib/%{name}-%{version}.tar.bz2
@@ -31,10 +33,15 @@ Patch0: add-proto-files.patch
 %description
 X.Org X11 libXp runtime library
 
+%description -l zh_CN.UTF-8
+X.Org X11 libXp 运行库。
+
 %if ! %{without_devel}
 %package devel
 Summary: X.Org X11 libXp development package
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: libXau-devel pkgconfig
 Requires: %{name} = %{version}-%{release}
 
@@ -43,6 +50,9 @@ BuildRequires: xorg-x11-proto-devel
 
 %description devel
 X.Org X11 libXp development package
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 %endif
 
 %prep
@@ -78,6 +88,7 @@ rm -rf $RPM_BUILD_ROOT%{_mandir}
 
 # We intentionally don't ship *.la files
 rm -f $RPM_BUILD_ROOT%{_libdir}/*.la
+magic_rpm_clean.sh
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -87,7 +98,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(-,root,root,-)
-%doc AUTHORS COPYING INSTALL ChangeLog
+%doc AUTHORS COPYING ChangeLog
 %{_libdir}/libXp.so.6
 %{_libdir}/libXp.so.6.2.0
 
@@ -107,6 +118,12 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Fri Aug 08 2014 Liu Di <liudidi@gmail.com> - 1.0.2-2
+- 为 Magic 3.0 重建
+
+* Fri Aug 08 2014 Liu Di <liudidi@gmail.com> - 1.0.2-1
+- 更新到 1.0.2
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 1.0.0-18
 - 为 Magic 3.0 重建
 

@@ -1,6 +1,6 @@
 
 # handle the difference between kde4 konsole and kde3 konsole parameters  --- nihui
-%define kde4 0
+%define kde4 1
 
 %define real_name magic_network_guide
 
@@ -12,7 +12,7 @@ Name: kde4-%{real_name}
 Name: %{real_name}
 %endif
 Version: 2.1
-Release: 8%{?dist}
+Release: 9%{?dist}
 License: GPL
 Group: Applications/System
 Group(zh_CN.UTF-8): 应用程序/系统
@@ -63,12 +63,15 @@ rm -rf %{buildroot} %{_builddir}/%{buildsubdir}
 
 %files
 %defattr(-,root,root)
-%{_bindir}
-%{_sbindir}
-%{_datadir}
-/root
+%{_bindir}/*
+%{_sbindir}/*
+%{_datadir}/*
+/root/*
 
 %changelog
+* Fri Aug 08 2014 Liu Di <liudidi@gmail.com> - 2.1-9
+- 为 Magic 3.0 重建
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 2.1-8
 - 为 Magic 3.0 重建
 

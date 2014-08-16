@@ -2,7 +2,7 @@ Summary: Magic Linux system service manager
 Summary(zh_CN.UTF-8): Magic Linux 系统服务管理器
 Name: magic_service_manager
 Version: 0.1
-Release: 2%{?dist}
+Release: 3%{?dist}
 URL: http://www.magiclinux.org
 License: GPL v3 or later
 Group: Applications/System
@@ -51,6 +51,9 @@ cd build
 %{_datadir}/apps/*
 
 %changelog
+* Fri Aug 08 2014 Liu Di <liudidi@gmail.com> - 0.1-3
+- 为 Magic 3.0 重建
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 0.1-2
 - 为 Magic 3.0 重建
 

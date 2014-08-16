@@ -1,7 +1,12 @@
+%if 0%{?fedora} > 12
+%global with_python3 1
+%else
 %{!?python_sitearch: %global python_sitearch %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib(1)")}
+%endif
+
 Summary: A library for text mode user interfaces
 Name: newt
-Version: 0.52.14
+Version: 0.52.17
 Release: 3%{?dist}
 License: LGPLv2
 Group: System Environment/Libraries
@@ -9,19 +14,21 @@ URL: https://fedorahosted.org/newt/
 Source: https://fedorahosted.org/released/newt/newt-%{version}.tar.gz
 BuildRequires: popt-devel python-devel slang-devel
 BuildRequires: docbook-utils
+%if 0%{?with_python3}
+BuildRequires: python3-devel
+%endif
 Provides: snack = %{version}-%{release}
-BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 %package devel
 Summary: Newt windowing toolkit development files
-Requires: slang-devel %{name} = %{version}-%{release}
+Requires: slang-devel %{name}%{?_isa} = %{version}-%{release}
 Group: Development/Libraries
 
 # The loader portion of the installer needs to link statically against libnewt,
 # so the static library must be shipped.
 %package static
 Summary: Newt windowing toolkit static library
-Requires: %{name}-devel = %{version}-%{release}
+Requires: %{name}-devel%{?_isa} = %{version}-%{release}
 Group: Development/Libraries
 
 %Description
@@ -47,13 +54,24 @@ The newt-static package contains the static version of the newt library.
 Install it if you need to link statically with libnewt.
 
 %package python
-Summary: Python bindings for newt
+Summary: Python 2 bindings for newt
 Group: Development/Libraries
-Requires: newt = %{version}-%{release}
+Requires: %{name}%{?_isa} = %{version}-%{release}
 
 %description python
-The newt-python package contains the Python bindings for the newt library
-providing a python API for creating text mode ionterfaces. 
+The newt-python package contains the Python 2 bindings for the newt library
+providing a python API for creating text mode interfaces.
+
+%if 0%{?with_python3}
+%package python3
+Summary: Python 3 bindings for newt
+Group: Development/Libraries
+Requires: %{name}%{?_isa} = %{version}-%{release}
+
+%description python3
+The newt-python3 package contains the Python 3 bindings for the newt library
+providing a python API for creating text mode interfaces.
+%endif
 
 %prep
 %setup -q
@@ -67,43 +85,89 @@ chmod 0644 peanuts.py popcorn.py
 docbook2txt tutorial.sgml
 
 %install
-rm -rf $RPM_BUILD_ROOT
 make DESTDIR=$RPM_BUILD_ROOT install
 
 %find_lang %{name}
-
-%clean
-rm -rf $RPM_BUILD_ROOT
 
 %post -p /sbin/ldconfig
 
 %postun -p /sbin/ldconfig
 
 %files -f %{name}.lang
-%defattr (-,root,root)
-%doc COPYING
+%doc AUTHORS COPYING CHANGES README
 %{_bindir}/whiptail
 %{_libdir}/libnewt.so.*
 %{_mandir}/man1/whiptail.1*
 
 %files devel
-%defattr (-,root,root)
 %doc tutorial.*
 %{_includedir}/newt.h
 %{_libdir}/libnewt.so
 %{_libdir}/pkgconfig/libnewt.pc
 
 %files static
-%defattr(-,root,root)
 %{_libdir}/libnewt.a
 
 %files python
-%defattr(-,root,root)
 %doc peanuts.py popcorn.py
 %{python_sitearch}/*.so
 %{python_sitearch}/*.py*
 
+%if 0%{?with_python3}
+%files python3
+%doc peanuts.py popcorn.py
+%{python3_sitearch}/*.so
+%{python3_sitearch}/*.py*
+%{python3_sitearch}/__pycache__/*.py*
+%endif
+
 %changelog
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.52.17-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Wed May 28 2014 Kalev Lember <kalevlember@gmail.com> - 0.52.17-2
+- Rebuilt for https://fedoraproject.org/wiki/Changes/Python_3.4
+
+* Wed Feb 19 2014 Miroslav Lichvar <mlichvar@redhat.com> - 0.52.17-1
+- update to 0.52.17
+- upstream changelog is now in CHANGES
+
+* Thu Oct 17 2013 Miroslav Lichvar <mlichvar@redhat.com> - 0.52.16-2
+- add python3 support (Matthias Klose) (#963839)
+- build python3 subpackage (Miro Hrončok) (#963839)
+- rename snackmodule to snack (#963839)
+
+* Tue Aug 06 2013 Miroslav Lichvar <mlichvar@redhat.com> - 0.52.16-1
+- add newtComponentGetSize and newtComponentGetPosition (#987596)
+- modify Makefile to use SOEXT (#971168)
+- free gpm socket name and unlink gpm socket on form exit
+- fix memory leaks in whiptail
+- fix weekdays in spec changelog
+
+* Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.52.15-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Fri Apr 05 2013 Miroslav Lichvar <mlichvar@redhat.com> - 0.52.15-2
+- add missing whiptail options to help and man page
+
+* Mon Mar 25 2013 Miroslav Lichvar <mlichvar@redhat.com> - 0.52.15-1
+- fix errors found by gcc-with-cpychecker (#800075)
+- fix building with tcl8.6 (#902561)
+- add fallback to python-config (#783627)
+- replace tabs in snack.py (#870647)
+- compile snackmodule.c with flag -fPIC (Kang Kai)
+- include new translations from transifex
+- allow newtWinMenu and newtWinEntries with no buttons or items
+- don't draw scale when not mapped
+- build with large-file support for stat64
+- remove unused variables in test code
+- update FSF address
+- remove obsolete macros
+- make some dependencies arch-specific
+
+* Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.52.14-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
+
 * Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.52.14-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 
@@ -329,7 +393,7 @@ rm -rf $RPM_BUILD_ROOT
 * Thu Nov 24 2005 Jindrich Novy <jnovy@redhat.com> - 0.52.2-1
 - rebuild because of the new slang-2.0.5
 
-* Fri Nov 22 2005 Petr Rockai <prockai@redhat.com> - 0.52.2-0
+* Tue Nov 22 2005 Petr Rockai <prockai@redhat.com> - 0.52.2-0
 - new upstream version (minor fixes for the source tarball
   and build system)
 
@@ -415,7 +479,7 @@ rm -rf $RPM_BUILD_ROOT
 - fix textwrap for UTF-8 in general
 - bump soname to avoid shared library collisions with slang
 
-* Wed Jul 01 2002 Michael Fulbright <msf@redhat.com> 0.50.39-1
+* Mon Jul 01 2002 Michael Fulbright <msf@redhat.com> 0.50.39-1
 - Changed a test to check for 'None' the correct way
 
 * Wed Jun 26 2002 Bill Nottingham <notting@redhat.com> 0.50.38-1
@@ -432,7 +496,7 @@ rm -rf $RPM_BUILD_ROOT
 * Mon Mar 18 2002 Bill Nottingham <notting@redhat.com> 0.50.35-1
 - build for whatever version of python happens to be installed
 
-* Fri Sep 15 2001 Trond Eivind Glomsrød <teg@redhat.com> 0.50.34-1
+* Sat Sep 15 2001 Trond Eivind Glomsrød <teg@redhat.com> 0.50.34-1
 - remove python2 subpackage
 - compile package for python 2.2
 
@@ -617,7 +681,7 @@ of keys
 * Mon Mar 15 1999 Matt Wilson <msw@redhat.com>
 - fix from Jakub Jelinek for listbox keypresses
 
-* Fri Feb 27 1999 Matt Wilson <msw@redhat.com>
+* Sat Feb 27 1999 Matt Wilson <msw@redhat.com>
 - fixed support for navigating listboxes with alphabetical keypresses
 
 * Thu Feb 25 1999 Matt Wilson <msw@redhat.com>
@@ -679,7 +743,7 @@ of keys
 - Added patched from Clarence Smith for setting the size of a listbox
 - Version 0.9
 
-* Tue May 28 1997 Elliot Lee <sopwith@redhat.com> 0.8-2
+* Wed May 28 1997 Elliot Lee <sopwith@redhat.com> 0.8-2
 - Touchups on Makefile
 - Cleaned up NEWT_FLAGS_*
 

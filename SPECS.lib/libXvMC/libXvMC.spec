@@ -1,9 +1,11 @@
 Summary: X.Org X11 libXvMC runtime library
+Summary(zh_CN.UTF-8): X.Org X11 libXvMC 运行库
 Name: libXvMC
-Version: 1.0.7
-Release: 2%{?dist}
+Version: 1.0.8
+Release: 1%{?dist}
 License: MIT
 Group: System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 URL: http://www.x.org
 
 Source0: ftp://ftp.x.org/pub/individual/lib/%{name}-%{version}.tar.bz2
@@ -13,13 +15,21 @@ BuildRequires: pkgconfig(videoproto) pkgconfig(xv)
 %description
 X.Org X11 libXvMC runtime library
 
+%description -l zh_CN.UTF-8
+X.Org X11 libXvMC 运行库。
+
 %package devel
 Summary: X.Org X11 libXvMC development package
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: %{name} = %{version}-%{release}
 
 %description devel
 X.Org X11 libXvMC development package
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -41,6 +51,7 @@ rm $RPM_BUILD_ROOT%{_docdir}/*/*.txt
 }
 
 find $RPM_BUILD_ROOT -name '*.la' -exec rm -f {} ';'
+magic_rpm_clean.sh
 
 %post -p /sbin/ldconfig
 %postun -p /sbin/ldconfig
@@ -63,6 +74,9 @@ find $RPM_BUILD_ROOT -name '*.la' -exec rm -f {} ';'
 %{_libdir}/pkgconfig/xvmc.pc
 
 %changelog
+* Fri Aug 08 2014 Liu Di <liudidi@gmail.com> - 1.0.8-1
+- 更新到 1.0.8
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 1.0.7-2
 - 为 Magic 3.0 重建
 
