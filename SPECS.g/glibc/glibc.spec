@@ -659,11 +659,16 @@ GCC="gcc -m64"
 GXX="g++ -m64"
 %endif
 
-#### mips64el
+#### mips*el
 %ifarch mips64el
-BuildFlags=""
+BuildFlags="-march=mips3 -fno-stack-protector"
 GCC="gcc -mabi=64"
 GXX="g++ -mabi=64"
+%endif
+%ifarch mipsel
+BuildFlags="-march=mips1 -fno-stack-protector"
+GCC="gcc -mabi=32"
+GXX="g++ -mabi=32"
 %endif
 
 ##############################################################################
