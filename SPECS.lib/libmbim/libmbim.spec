@@ -1,5 +1,5 @@
 
-%global realversion 1.8.0
+%global realversion 1.10.0
 %global _hardened_build 1
 
 Name: libmbim
@@ -80,6 +80,7 @@ make check
 %files
 %doc COPYING NEWS AUTHORS README
 %{_libdir}/libmbim-glib.so.*
+%{_libexecdir}/mbim-proxy
 %{_mandir}/man1/*
 
 %files devel
@@ -94,6 +95,9 @@ make check
 
 
 %changelog
+* Fri Aug 08 2014 Liu Di <liudidi@gmail.com> - 1.10.0-1
+- 更新到 1.10.0
+
 * Fri Jul 18 2014 Liu Di <liudidi@gmail.com> - 1.8.0-1
 - 更新到 1.8.0
 

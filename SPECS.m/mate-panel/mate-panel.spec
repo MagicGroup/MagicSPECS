@@ -2,7 +2,7 @@
 %global rel_build 1
 
 # This is needed, because src-url contains branched part of versioning-scheme.
-#%global branch 1.8
+%global branch %(echo %{version} | awk -F. '{print $1"."$2}')
 
 # Settings used for build from snapshots.
 %{!?rel_build:%global commit 838555a41dc08a870b408628f529b66e2c8c4054}
@@ -13,10 +13,11 @@
 %{!?rel_build:%global git_tar %{name}-%{version}-%{git_ver}.tar.xz}
 
 Name:           mate-panel
-Version:        %{branch}.0
-Release:        3%{?dist}
-#Release:        0.1%{?git_rel}%{?dist}
+Version: 1.9.1
+Release: 1%{?dist}
+#Release: 1%{?dist}
 Summary:        MATE Desktop panel and applets
+Summary(zh_CN.UTF-8): MATE 桌面面板和小部件
 #libs are LGPLv2+ applications GPLv2+
 License:        GPLv2+
 URL:            http://mate-desktop.org
@@ -56,21 +57,31 @@ BuildRequires:  yelp-tools
 %description
 MATE Desktop panel applets
 
+%description -l zh_CN.UTF-8
+MATE 桌面面板和小部件。
 
 %package libs
 Summary:     Shared libraries for mate-panel
+Summary(zh_CN.UTF-8): %{name} 的运行库
 License:     LGPLv2+
 Requires:    %{name}%{?_isa} = %{version}-%{release}
 
 %description libs
 Shared libraries for libmate-desktop
 
+%description libs -l zh_CN.UTF-8
+%{name} 的运行库。
+
 %package devel
 Summary:     Development files for mate-panel
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Requires:    %{name}-libs%{?_isa} = %{version}-%{release}
 
 %description devel
 Development files for mate-panel
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q%{!?rel_build:n %{name}-%{commit}}
@@ -114,7 +125,7 @@ install -D -m 0644 %{SOURCE1} %{buildroot}%{_datadir}/mate-panel/layouts/fedora.
 
 # remove needless gsettings convert file
 rm -f  %{buildroot}%{_datadir}/MateConf/gsettings/mate-panel.convert
-
+magic_rpm_clean.sh
 %find_lang %{name} --with-gnome --all-name
 
 
@@ -168,6 +179,9 @@ update-desktop-database &> /dev/null || :
 
 
 %changelog
+* Mon Aug 11 2014 Liu Di <liudidi@gmail.com> - 1.9.1-1
+- 更新到 1.9.1
+
 * Wed May 07 2014 Liu Di <liudidi@gmail.com> - 1.8.0-3
 - 为 Magic 3.0 重建
 

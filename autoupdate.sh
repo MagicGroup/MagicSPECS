@@ -114,7 +114,11 @@ fi
 #如果不是，则检测新版本
 if [ -f $DIR/getnewver ]; then
 	NEWVER=`$DIR/getnewver`
+	if ! [ x"$NEWVER" = x"不能正常取得新版本号" ]; then  
 	echo $NEWVER
+	else
+	exit 1
+	fi
 else
 	echo "没有取得 $1 新版本号的脚本，请自行添加。"
 	exit 1

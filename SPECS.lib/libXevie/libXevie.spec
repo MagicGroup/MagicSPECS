@@ -1,9 +1,11 @@
 Summary: X Event Interceptor Library
+Summary(zh_CN.UTF-8): X 事件截取库
 Name: libXevie
 Version: 1.0.3
-Release: 4%{?dist}
+Release: 5%{?dist}
 License: MIT
 Group: System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 URL: http://www.x.org
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
@@ -15,14 +17,22 @@ BuildRequires: libXext-devel
 %description
 X Event Interceptor Library.
 
+%description -l zh_CN.UTF-8
+X 事件截取库。
+
 %package devel
 Summary: Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: %{name} = %{version}-%{release}
 Requires: pkgconfig
 
 %description devel
 libXevie development package.
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -44,6 +54,7 @@ make install DESTDIR=$RPM_BUILD_ROOT INSTALL="install -p"
 
 # We intentionally don't ship *.la files
 rm -f $RPM_BUILD_ROOT%{_libdir}/*.la
+magic_rpm_clean.sh
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -69,6 +80,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*.3*
 
 %changelog
+* Fri Aug 08 2014 Liu Di <liudidi@gmail.com> - 1.0.3-5
+- 为 Magic 3.0 重建
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 1.0.3-4
 - 为 Magic 3.0 重建
 

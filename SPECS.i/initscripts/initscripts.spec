@@ -1,16 +1,14 @@
 Summary: The inittab file and the /etc/init.d scripts
 Name: initscripts
-Version: 9.52
-# ppp-watch is GPLv2+, everything else is GPLv2
-License: GPLv2 and GPLv2+
+Version: 9.54
+License: GPLv2
 Group: System Environment/Base
-Release: 1%{?dist}
+Release: 6%{?dist}
 URL: http://fedorahosted.org/releases/i/n/initscripts/
 Source: http://fedorahosted.org/releases/i/n/initscripts/initscripts-%{version}.tar.bz2
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 Obsoletes: initscripts-legacy <= 9.39
 Requires: /bin/awk, sed, coreutils
-Requires: /sbin/sysctl
 Requires: grep
 Requires: module-init-tools
 Requires: util-linux >= 2.16
@@ -28,12 +26,15 @@ Requires: udev >= 125-1
 Requires: cpio
 Requires: hostname
 Conflicts: ipsec-tools < 0.8.0-2
-Conflicts: NetworkManager < 0.9.9.0-9.git20130807
+Conflicts: NetworkManager < 0.9.9.0-37.git20140131.el7
+Conflicts: ppp < 2.4.6-4
 Requires(pre): /usr/sbin/groupadd
 Requires(post): /sbin/chkconfig, coreutils
 Requires(preun): /sbin/chkconfig
 BuildRequires: glib2-devel popt-devel gettext pkgconfig
 Provides: /sbin/service
+
+Patch0: 0001-remove-ppp-from-translation.patch
 
 %description
 The initscripts package contains the basic system scripts used to boot
@@ -54,6 +55,8 @@ Currently, this consists of various memory checking code.
 
 %prep
 %setup -q
+%autopatch -p1
+
 
 %build
 make
@@ -131,10 +134,7 @@ rm -rf $RPM_BUILD_ROOT
 /etc/sysconfig/network-scripts/network-functions-ipv6
 /etc/sysconfig/network-scripts/init.ipv6-global
 %config(noreplace) /etc/sysconfig/network-scripts/ifcfg-lo
-/etc/sysconfig/network-scripts/ifup-ipx
 /etc/sysconfig/network-scripts/ifup-post
-/etc/sysconfig/network-scripts/ifdown-ppp
-/etc/sysconfig/network-scripts/ifup-ppp
 /etc/sysconfig/network-scripts/ifup-routes
 /etc/sysconfig/network-scripts/ifdown-routes
 /etc/sysconfig/network-scripts/ifup-plip
@@ -188,21 +188,14 @@ rm -rf $RPM_BUILD_ROOT
 /usr/lib/udev/rules.d/*
 /usr/lib/udev/rename_device
 /usr/sbin/service
-/usr/sbin/ppp-watch
 %{_mandir}/man*/*
 %dir %attr(775,root,root) /var/run/netreport
-%dir /etc/ppp
-%dir /etc/ppp/peers
-/etc/ppp/ip-up
-/etc/ppp/ip-down
-/etc/ppp/ip-up.ipv6to4
-/etc/ppp/ip-down.ipv6to4
-/etc/ppp/ipv6-up
-/etc/ppp/ipv6-down
 %dir /etc/NetworkManager
 %dir /etc/NetworkManager/dispatcher.d
 /etc/NetworkManager/dispatcher.d/00-netreport
-%doc sysconfig.txt sysvinitfiles static-routes-ipv6 ipv6-tunnel.howto ipv6-6to4.howto changes.ipv6 COPYING
+%doc sysconfig.txt sysvinitfiles static-routes-ipv6 ipv6-tunnel.howto ipv6-6to4.howto changes.ipv6
+%{!?_licensedir:%global license %%doc}
+%license COPYING
 /var/lib/stateless
 %ghost %attr(0600,root,utmp) /var/log/btmp
 %ghost %attr(0664,root,utmp) /var/log/wtmp
@@ -219,6 +212,43 @@ rm -rf $RPM_BUILD_ROOT
 /etc/profile.d/debug*
 
 %changelog
+* Sun Aug 10 2014 Liu Di <liudidi@gmail.com> - 9.54-6
+- 为 Magic 3.0 重建
+
+* Sat Jul 12 2014 Tom Callaway <spot@fedoraproject.org> - 9.54-5
+- fix license handling
+
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 9.54-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Wed May 21 2014 Lukáš Nykrýn <lnykryn@redhat.com> - 9.54-3
+- don't require sysctl, it is in procps anyway
+
+* Tue Apr 15 2014 Lukáš Nykrýn <lnykryn@redhat.com> - 9.54-1
+- move ppp support to ppp package
+- remove fedora-configure
+- network: detect if / is on netfs
+- is_nm_handling: fix RE
+- bonding: match whole name of interface
+- network: add support for team devices
+- ifup-wireless: fix syntax error
+- fedora-readonly: fix prefix detection
+
+* Wed Mar 26 2014 Lukáš Nykrýn <lnykryn@redhat.com> - 9.53-1
+- bridging: add possibility to set prio and ageing
+- ifup: add possibility to specify value for -w parameter of arping
+- network: try to not compete with NM during boot
+- fedora-domainname: DefaultDependencies=no
+- service: add condrestart to allowed commands
+- update ifup/ifdown NetworkManager interaction once more(#1036701, #1061810)
+- network: modify ifup-wireless so it doesn't call exit
+- set shmmax and shmall defaults to match rhel6 values (#1056547)
+- update ifup/ifdown NetworkManager interaction (#1036701, #1061810)
+- service: fix action matching
+- remove ifup-ipx from spec
+- Delete IPX support.
+- remove dependency on sysvinit-tools
+
 * Tue Jan 14 2014 Lukáš Nykrýn <lnykryn@redhat.com> - 9.52-1
 - require procps-ng
 

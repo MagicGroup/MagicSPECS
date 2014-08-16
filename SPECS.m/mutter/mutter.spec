@@ -1,5 +1,5 @@
 Name:          mutter
-Version:	3.13.3
+Version:	3.13.4
 Release:       1%{?dist}
 Summary:       Window and compositing manager based on Clutter
 
@@ -107,16 +107,18 @@ fi
 glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 
 %files -f %{name}.lang
-%doc README AUTHORS COPYING NEWS HACKING doc/theme-format.txt
+%doc COPYING NEWS doc/theme-format.txt
 %doc %{_mandir}/man1/mutter.1.gz
 #%doc %{_mandir}/man1/mutter-message.1.gz
 %{_bindir}/mutter
 #%{_bindir}/mutter-message
 %{_datadir}/applications/*.desktop
-%{_datadir}/gnome/wm-properties/mutter-wm.desktop
+#%{_datadir}/gnome/wm-properties/mutter-wm.desktop
 #%{_datadir}/mutter
 %{_libdir}/lib*.so.*
 %{_libdir}/mutter/
+%{_libexecdir}/mutter-restart-helper
+%{_datadir}/glib-2.0/schemas/org.gnome.mutter.wayland.gschema.xml
 %{_datadir}/GConf/gsettings/mutter-schemas.convert
 %{_datadir}/glib-2.0/schemas/org.gnome.mutter.gschema.xml
 %{_datadir}/gnome-control-center/keybindings/50-mutter-*.xml
@@ -134,6 +136,9 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 %exclude %{_datadir}/gtk-doc
 
 %changelog
+* Sun Aug 10 2014 Liu Di <liudidi@gmail.com> - 3.13.4-1
+- 更新到 3.13.4
+
 * Wed Jul 16 2014 Liu Di <liudidi@gmail.com> - 3.13.3-1
 - 更新到 3.13.3
 

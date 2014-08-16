@@ -1,9 +1,11 @@
 Summary: X Composite Extension library
+Summary(zh_CN.UTF-8): X 复合扩展库
 Name: libXcomposite
-Version: 0.4.3
-Release: 4%{?dist}
+Version: 0.4.4
+Release: 1%{?dist}
 License: MIT
 Group: System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 URL: http://www.x.org
 
 Source0: ftp://ftp.x.org/pub/individual/lib/%{name}-%{version}.tar.bz2
@@ -14,13 +16,21 @@ BuildRequires: pkgconfig(xfixes) pkgconfig(xext)
 %description
 X Composite Extension library
 
+%description -l zh_CN.UTF-8
+X 复合扩展库。
+
 %package devel
 Summary: Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: %{name} = %{version}-%{release}
 
 %description devel
 X.Org X11 libXcomposite development package
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -33,6 +43,7 @@ make %{?_smp_mflags}
 rm -rf $RPM_BUILD_ROOT
 make install DESTDIR=$RPM_BUILD_ROOT
 rm -f $RPM_BUILD_ROOT%{_libdir}/*.la
+magic_rpm_clean.sh
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -54,6 +65,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/X?omposite*.3*
 
 %changelog
+* Fri Aug 08 2014 Liu Di <liudidi@gmail.com> - 0.4.4-1
+- 更新到 0.4.4
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 0.4.3-4
 - 为 Magic 3.0 重建
 

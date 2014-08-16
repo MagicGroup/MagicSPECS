@@ -1,0 +1,16 @@
+#!/bin/bash
+url=""
+new1="libxslt-"
+new2=".tar.gz"
+downcommand="lftp -c" 
+pushd $(dirname $0) > /dev/null
+rm -f index.html && lftp -c "open ftp://xmlsoft.org/libxml2/;cls --sort=date" |grep -v docs |grep -v rc |grep -v git > index.html
+if [ -f index.html ];then
+	newver=`grep "$new1.*$new2" index.html|head -n 1| sed "s/.*$new1//" | sed "s/$new2.*//" | sed 's/^[ ]\{1,\}//;s/[ ]\{1,\}$//g'`
+	echo $newver
+else
+	echo "不能正常取得新版本号"
+	exit 1
+fi
+rm -f index.html
+popd > /dev/null

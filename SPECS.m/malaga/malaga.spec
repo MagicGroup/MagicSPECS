@@ -1,9 +1,11 @@
 Name:           malaga
 Version:        7.12 
-Release:        11%{?dist}
+Release:        12%{?dist}
 Summary:        A programming language for automatic language analysis
+Summary(zh_CN.UTF-8): 自动语言分析的程序语言
 
 Group:          Development/Languages
+Group(zh_CN.UTF-8): 开发/语言
 License:        GPLv2+
 URL:            http://home.arcor.de/bjoern-beutel/malaga/
 Source0:        http://home.arcor.de/bjoern-beutel/malaga/%{name}-%{version}.tgz
@@ -33,22 +35,34 @@ Malaga is based on the grammatical theory of the "Left Associative Grammar"
 (LAG), developed by Roland Hausser, professor for Computational Linguistics at
 University of Erlangen, Germany.
 
+%description -l zh_CN.UTF-8
+自动语言分析的程序语言。
+
 %package        devel
 Summary:        Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:          Development/Languages
+Group(zh_CN.UTF-8): 开发/库
 Requires:       lib%{name} = %{version}-%{release}
 
 %description    devel
 The %{name}-devel package contains libraries and header files for
 developing applications that use %{name}.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
 %package -n	lib%{name}
 Summary:        Library files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的运行库
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 
 %description -n	lib%{name}
 Library files for %{name}.
 
+%description -n lib%{name} -l zh_CN.UTF-8
+%{name} 的运行库。
 
 %prep
 %setup -q
@@ -79,7 +93,7 @@ find $RPM_BUILD_ROOT -name '*.la' -exec rm -f {} ';'
 find $RPM_BUILD_ROOT -name '*.a' -exec rm -f {} ';'
 # Change permission of libmalaga.so*
 chmod 0755 $RPM_BUILD_ROOT%{_libdir}/libmalaga.so*
-
+magic_rpm_clean.sh
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -117,6 +131,9 @@ fi
 
 
 %changelog
+* Sat Aug 09 2014 Liu Di <liudidi@gmail.com> - 7.12-12
+- 为 Magic 3.0 重建
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 7.12-11
 - 为 Magic 3.0 重建
 

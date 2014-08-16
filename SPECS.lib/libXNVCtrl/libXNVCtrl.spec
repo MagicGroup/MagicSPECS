@@ -1,8 +1,10 @@
 Name:           libXNVCtrl
 Version:        169.12
-Release:        8%{?dist}
+Release:        9%{?dist}
 Summary:        Library providing the NV-CONTROL API
+Summary(zh_CN.UTF-8): 提供 NV 显卡控制 API 的库
 Group:          System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 License:        GPLv2+
 URL:            ftp://download.nvidia.com/XFree86/nvidia-settings/
 Source0:        ftp://download.nvidia.com/XFree86/nvidia-settings/nvidia-settings-%{version}.tar.gz
@@ -17,16 +19,22 @@ the proprietary NVidia xorg driver. This package does not contain the
 nvidia-settings tool itself as that is included with the proprietary drivers
 themselves. 
 
+%description -l zh_CN.UTF-8
+提供 NV 显卡控制 API 的库。
 
 %package        devel
 Summary:        Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       %{name} = %{version}-%{release}, libX11-devel
 
 %description    devel
 The %{name}-devel package contains libraries and header files for
 developing applications that use %{name}.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q -n nvidia-settings-1.0
@@ -54,7 +62,7 @@ popd
 # imake installs these under X11/extensions, but apps expect them under NVCtrl
 mv $RPM_BUILD_ROOT%{_includedir}/X11/extensions \
   $RPM_BUILD_ROOT%{_includedir}/NVCtrl
-
+magic_rpm_clean.sh
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -78,6 +86,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Fri Aug 08 2014 Liu Di <liudidi@gmail.com> - 169.12-9
+- 为 Magic 3.0 重建
+
 * Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 169.12-8
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
 

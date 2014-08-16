@@ -1,12 +1,12 @@
 %define name	libmpcdec
 %define version	1.2.6
-%define release	5%{?dist}
+%define release	7%{?dist}
 
 Name: 	%{name}
 Summary: 	Portable Musepack decoder library
 Summary(zh_CN.UTF-8): 可移植 Musepack 解码器库
 Version: 	%{version}
-Release: 	%{release}.1
+Release: 	%{release}.3
 
 Source:	http://files.musepack.net/source/%{name}-%{version}.tar.bz2
 URL:		http://www.musepack.net
@@ -74,6 +74,12 @@ rm -rf %{buildroot} %{_builddir}/%{buildsubdir}
 
 
 %changelog
+* Sun Aug 10 2014 Liu Di <liudidi@gmail.com> - 1.2.6-7.3
+- 为 Magic 3.0 重建
+
+* Fri Aug 08 2014 Liu Di <liudidi@gmail.com> - 1.2.6-6.2
+- 为 Magic 3.0 重建
+
 * Tue Jul 22 2014 Liu Di <liudidi@gmail.com> - 1.2.6-5.1
 - 为 Magic 3.0 重建
 

@@ -3,26 +3,31 @@
 #====================================================================#
 
 Name:       libyaml
-Version:    0.1.4
-Release:    3%{?dist}
+Version:    0.1.6
+Release:    6%{?dist}
 Summary:    YAML 1.1 parser and emitter written in C
+Summary(zh_CN.UTF-8): 用 C 编写的 YAML 1.1 解析库
 
 Group:      System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 License:    MIT
 URL:        http://pyyaml.org/
 Source0:    http://pyyaml.org/download/libyaml/%{tarballname}-%{version}.tar.gz
 BuildRoot:  %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-
 
 %description
 YAML is a data serialization format designed for human readability and
 interaction with scripting languages.  LibYAML is a YAML parser and
 emitter written in C.
 
+%description -l zh_CN.UTF-8
+用 C 编写的 YAML 1.1 解析库。
 
 %package devel
 Summary:   Development files for LibYAML applications
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:     Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:  libyaml = %{version}-%{release}, pkgconfig
 
 
@@ -30,10 +35,11 @@ Requires:  libyaml = %{version}-%{release}, pkgconfig
 The %{name}-devel package contains libraries and header files for
 developing applications that use LibYAML.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q -n %{tarballname}-%{version}
-
 
 %build
 %configure
@@ -44,6 +50,11 @@ make %{?_smp_mflags}
 rm -rf %{buildroot}
 make DESTDIR=%{buildroot} INSTALL="install -p" install
 rm -f %{buildroot}%{_libdir}/*.{la,a}
+
+soname=$(readelf -d %{buildroot}%{_libdir}/libyaml.so | awk '$2 == "(SONAME)" {print $NF}' | tr -d '[]')
+rm -f %{buildroot}%{_libdir}/libyaml.so
+echo "INPUT($soname)" > %{buildroot}%{_libdir}/libyaml.so
+magic_rpm_clean.sh
 
 
 %check
@@ -62,7 +73,9 @@ rm -rf %{buildroot}
 
 %files
 %defattr(-,root,root,-)
-%doc LICENSE README
+%{!?_licensedir:%global license %%doc}
+%license LICENSE
+%doc README
 %{_libdir}/%{name}*.so.*
 
 
@@ -75,8 +88,41 @@ rm -rf %{buildroot}
 
 
 %changelog
-* Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 0.1.4-3
+* Fri Aug 08 2014 Liu Di <liudidi@gmail.com> - 0.1.6-6
 - 为 Magic 3.0 重建
+
+* Fri Aug 08 2014 Liu Di <liudidi@gmail.com> - 0.1.6-5
+- 为 Magic 3.0 重建
+
+* Fri Jul 18 2014 Tom Callaway <spot@fedoraproject.org> - 0.1.6-4
+- fix license handling
+
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.1.6-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Mon Mar 31 2014 John Eckersberg <jeckersb@redhat.com> - 0.1.6-2
+- Work around ldconfig bug with libyaml.so (bz1082822)
+
+* Wed Mar 26 2014 John Eckersberg <jeckersb@redhat.com> - 0.1.6-1
+- New upstream release 0.1.6 (bz1081492)
+- Fixes CVE-2014-2525 (bz1078083)
+
+* Tue Feb  4 2014 John Eckersberg <jeckersb@redhat.com> - 0.1.5-1
+- New upstream release 0.1.5 (bz1061087)
+- Removed patches for CVE-2013-6393; they are included in 0.1.5
+  upstream
+
+* Wed Jan 29 2014 John Eckersberg <jeckersb@redhat.com> - 0.1.4-6
+- Add patches for CVE-2013-6393 (bz1033990)
+
+* Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.1.4-5
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.1.4-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
+
+* Thu Jul 19 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.1.4-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.1.4-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild

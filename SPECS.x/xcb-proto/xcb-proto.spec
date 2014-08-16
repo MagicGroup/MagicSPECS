@@ -2,11 +2,13 @@
 %{!?python_sitelib: %define python_sitelib %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib(0)")}
 
 Name:           xcb-proto
-Version:        1.10
-Release:        2%{?dist}
+Version: 1.11
+Release: 1%{?dist}
 Summary:        XCB protocol descriptions
+Summary(zh_CN.UTF-8): XCB 协议的描述文件
 
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 License:        MIT
 URL:            http://xcb.freedesktop.org/
 Source0:        http://xcb.freedesktop.org/dist/%{name}-%{version}.tar.bz2
@@ -21,6 +23,9 @@ This package contains the protocol descriptions themselves.  Language
 bindings use these protocol descriptions to generate code for marshalling
 the protocol.
 
+%description -l zh_CN.UTF-8
+XCB 协议的描述文件。
+
 %prep
 %setup -q
 
@@ -32,6 +37,7 @@ make %{?_smp_mflags}
 %install
 rm -rf $RPM_BUILD_ROOT
 make install DESTDIR=$RPM_BUILD_ROOT
+magic_rpm_clean.sh
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -46,6 +52,9 @@ rm -rf $RPM_BUILD_ROOT
 %{python_sitelib}/xcbgen
 
 %changelog
+* Fri Aug 08 2014 Liu Di <liudidi@gmail.com> - 1.11-1
+- 更新到 1.11
+
 * Tue Jun 03 2014 Liu Di <liudidi@gmail.com> - 1.10-2
 - 为 Magic 3.0 重建
 

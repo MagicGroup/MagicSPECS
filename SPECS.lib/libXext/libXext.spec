@@ -1,9 +1,11 @@
 Summary: X.Org X11 libXext runtime library
+Summary(zh_CN.UTF-8): X.Org X11 libXext 运行库
 Name: libXext
-Version: 1.3.1
-Release: 2%{?dist}
+Version: 1.3.3
+Release: 1%{?dist}
 License: MIT
 Group: System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 URL: http://www.x.org
 
 Source0: ftp://ftp.x.org/pub/individual/lib/%{name}-%{version}.tar.bz2
@@ -18,13 +20,21 @@ BuildRequires: xmlto
 %description
 X.Org X11 libXext runtime library
 
+%description -l zh_CN.UTF-8
+X.Org X11 libXext 运行库。
+
 %package devel
 Summary: X.Org X11 libXext development package
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: %{name} = %{version}-%{release}
 
 %description devel
 X.Org X11 libXext development package
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -81,6 +91,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*.3*
 
 %changelog
+* Fri Aug 08 2014 Liu Di <liudidi@gmail.com> - 1.3.3-1
+- 更新到 1.3.3
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 1.3.1-2
 - 为 Magic 3.0 重建
 

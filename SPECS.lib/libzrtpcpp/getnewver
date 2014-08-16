@@ -1,6 +1,6 @@
 #!/bin/bash
 url="https://github.com/wernerd/ZRTPCPP/releases"
-new1="V"
+new1="\\/V"
 new2=".tar.gz"
 downcommand="wget -q" 
 pushd $(dirname $0) > /dev/null

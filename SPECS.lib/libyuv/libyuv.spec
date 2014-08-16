@@ -2,15 +2,17 @@
 %global with_neon --enable-neon
 %endif
 %define svn 1
-%define vcsdate 20140603
+%define vcsdate 20140808
 
 
 Name:		libyuv
 Summary:	YUV conversion and scaling functionality library
+Summary(zh_CN.UTF-8): YUV 转换和缩放函数库
 Version:	0
-Release:	0.svn%{vcsdate}%{?dist}.5
+Release:	0.svn%{vcsdate}%{?dist}.7
 License:	BSD
 Group:		Development/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 Url:		http://code.google.com/p/libyuv/
 ## svn -r 389 export http://libyuv.googlecode.com/svn/trunk libyuv-0
 ## tar -cjvf libyuv-0.tar.bz2 libyuv-0
@@ -34,10 +36,14 @@ formats for rendering/effects. Rotate by 90 degrees to adjust for mobile
 devices in portrait mode. Scale YUV to prepare content for compression,
 with point, bilinear or box filter.
 
+%description -l zh_CN.UTF-8
+YUV 转换和缩放函数库。
 
 %package devel
 Summary: The development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: pkgconfig
 Requires: %{name}%{?_isa} = %{version}-%{release}
 
@@ -45,11 +51,13 @@ Requires: %{name}%{?_isa} = %{version}-%{release}
 %description devel
 Additional header files for development with %{name}.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q -n %{name}-svn%{vcsdate}
 %patch1 -p1 -b .autotools
-%patch2 -p1 -b .COPYROW_MIPS
+#%patch2 -p1 -b .COPYROW_MIPS
 
 
 %build
@@ -91,6 +99,15 @@ make check
 
 
 %changelog
+* Fri Aug 08 2014 Liu Di <liudidi@gmail.com> - 0-0.svn20140808.7
+- 为 Magic 3.0 重建
+
+* Fri Aug 08 2014 Liu Di <liudidi@gmail.com> - 0-0.svn20140808.6
+- 更新到 20140808 日期的仓库源码
+
+* Fri Aug 08 2014 Liu Di <liudidi@gmail.com> - 0-0.svn20140603.6
+- 为 Magic 3.0 重建
+
 * Tue Jun 03 2014 Liu Di <liudidi@gmail.com> - 0-0.svn20140603.5
 - 为 Magic 3.0 重建
 

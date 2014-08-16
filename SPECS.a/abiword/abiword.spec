@@ -6,7 +6,7 @@ Summary: The AbiWord word processor
 Summary(zh_CN): AbiWord 字处理程序
 Name: abiword
 Version: %{majorversion}.%{minorversion}.%{microversion}
-Release: 4%{?dist}
+Release: 5%{?dist}
 Epoch: 1
 Group: Applications/Editors
 Group(zh_CN): 应用程序/编辑器
@@ -193,6 +193,9 @@ update-desktop-database %{_datadir}/applications > /dev/null 2>&1 || :
 %{_libdir}/pkgconfig/%{name}-%{majorversion}.%{minorversion}.pc
 
 %changelog
+* Fri Aug 08 2014 Liu Di <liudidi@gmail.com> - 1:3.0.0-5
+- 为 Magic 3.0 重建
+
 * Thu Jul 17 2014 Liu Di <liudidi@gmail.com> - 1:3.0.0-4
 - 为 Magic 3.0 重建
 

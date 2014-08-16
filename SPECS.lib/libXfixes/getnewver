@@ -1,7 +1,7 @@
 #!/bin/bash
 url="http://ftp.x.org/pub/individual/lib/?C=M;O=D"
 new1="libXfixes-"
-new2=".tar.bz2"
+new2=".tar.gz"
 downcommand="wget -q" 
 pushd $(dirname $0) > /dev/null
 rm -f index.html && $downcommand "$url" -O index.html

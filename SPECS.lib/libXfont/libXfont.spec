@@ -1,9 +1,11 @@
 Summary: X.Org X11 libXfont runtime library
+Summary(zh_CN.UTF-8): X.Org X11 libXfont 运行库
 Name: libXfont
-Version: 1.4.5
-Release: 2%{?dist}
+Version: 1.5.0
+Release: 1%{?dist}
 License: MIT
 Group: System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 URL: http://www.x.org
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
@@ -18,14 +20,22 @@ BuildRequires: freetype-devel
 %description
 X.Org X11 libXfont runtime library
 
+%description -l zh_CN.UTF-8
+X.Org X11 libXfont 运行库。
+
 %package devel
 Summary: X.Org X11 libXfont development package
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: %{name} = %{version}-%{release}
 Requires: libfontenc-devel
 
 %description devel
 X.Org X11 libXfont development package
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -42,6 +52,7 @@ make install DESTDIR=$RPM_BUILD_ROOT
 
 # We intentionally don't ship *.la files
 rm -f $RPM_BUILD_ROOT%{_libdir}/*.la
+magic_rpm_clean.sh
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -78,6 +89,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/pkgconfig/xfont.pc
 
 %changelog
+* Fri Aug 08 2014 Liu Di <liudidi@gmail.com> - 1.5.0-1
+- 更新到 1.5.0
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 1.4.5-2
 - 为 Magic 3.0 重建
 

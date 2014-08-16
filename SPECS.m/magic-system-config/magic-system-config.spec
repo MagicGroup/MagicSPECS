@@ -2,7 +2,7 @@ Summary: MagicLinux BugPatch Package
 Summary(zh_CN.UTF-8): MagicLinux 补丁包
 Name: magic-system-config
 Version: 3.0
-Release: 1%{?dist}
+Release: 2%{?dist}
 Source0: %{name}.tar.gz
 #already include in alsa-lib
 #Source1: asound.conf
@@ -69,8 +69,8 @@ echo 'AUTOFSCK_DEF_CHECK=yes' >/etc/sysconfig/autofsck
 # remove some server start links forrunlevel three
 # should be removed from the "%post" section of specs
 # of each packages
-
-
+# 以下暂不使用
+%if 0
 chkconfig iptables off
 chkconfig ip6tables off
 chkconfig portmap off
@@ -81,7 +81,7 @@ chkconfig netfs off
 #chkconfig pcmcia off
 chkconfig xinetd off
 #chkconfig rawdevices off
-
+%endif
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -96,6 +96,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Fri Aug 08 2014 Liu Di <liudidi@gmail.com> - 3.0-2
+- 为 Magic 3.0 重建
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 2.6-2
 - 为 Magic 3.0 重建
 

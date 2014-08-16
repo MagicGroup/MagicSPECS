@@ -1,0 +1,11 @@
+diff -upr mate-screensaver-1.8.0-orig/data/mate-screensaver-preferences.ui mate-screensaver-1.8.0/data/mate-screensaver-preferences.ui
+--- mate-screensaver-1.8.0-orig/data/mate-screensaver-preferences.ui	2013-02-27 17:26:45.000000000 +0100
++++ mate-screensaver-1.8.0/data/mate-screensaver-preferences.ui	2014-07-20 23:35:46.500664892 +0200
+@@ -35,7 +35,6 @@
+     <property name="gravity">GDK_GRAVITY_NORTH_WEST</property>
+     <property name="focus_on_map">True</property>
+     <property name="urgency_hint">False</property>
+-    <property name="has_separator">False</property>
+     <child internal-child="vbox">
+       <object class="GtkVBox" id="dialog-vbox1">
+         <property name="orientation">vertical</property>

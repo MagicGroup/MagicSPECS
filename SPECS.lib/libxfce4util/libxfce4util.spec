@@ -3,8 +3,10 @@ Name:           libxfce4util
 Version:	4.11.0
 Release:        3%{?dist}
 Summary:        Utility library for the Xfce4 desktop environment
+Summary(zh_CN.UTF-8): Xfce4 桌面环境的工具库
 
 Group:          System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 License:        LGPLv2+
 URL:            http://www.xfce.org/
 %global xfceversion %(echo %{version} | awk -F. '{print $1"."$2}')
@@ -19,9 +21,14 @@ BuildRequires:  gtk-doc
 %description
 This package includes basic utility non-GUI functions for Xfce4.
 
+%description -l zh_CN.UTF-8
+Xfce4 桌面环境的工具库。
+
 %package devel
 Summary: Developpment tools for libxfce4util library
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: %{name} = %{version}-%{release}
 Requires: glib2-devel
 Requires: gtk2-devel
@@ -30,6 +37,9 @@ Requires: pkgconfig
 %description devel
 This package includes static libraries and header files for the
 libxfce4util library.
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
