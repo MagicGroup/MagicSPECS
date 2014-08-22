@@ -3,7 +3,7 @@
 %global oname javax.annotation-api
 Name:          glassfish-annotation-api
 Version:       1.2
-Release:       7%{?dist}
+Release:       8%{?dist}
 Summary:       Common Annotations API Specification (JSR 250)
 License:       CDDL or GPLv2 with exceptions
 # http://jcp.org/en/jsr/detail?id=250
@@ -56,6 +56,9 @@ cp -p target/classes/META-INF/LICENSE.txt .
 %doc LICENSE.txt
 
 %changelog
+* Fri Aug 15 2014 Liu Di <liudidi@gmail.com> - 1.2-8
+- 为 Magic 3.0 重建
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.2-7
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

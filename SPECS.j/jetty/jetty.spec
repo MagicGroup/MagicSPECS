@@ -55,7 +55,7 @@
 
 Name:           jetty
 Version:        9.2.1
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Java Webserver and Servlet Container
 
 # Jetty is dual licensed under both ASL 2.0 and EPL 1.0, see NOTICE.txt
@@ -882,6 +882,9 @@ exit 0
 %doc NOTICE.txt LICENSE*
 
 %changelog
+* Wed Aug 13 2014 Liu Di <liudidi@gmail.com> - 9.2.1-2
+- 为 Magic 3.0 重建
+
 * Fri Jun 13 2014 Michael Simacek <msimacek@redhat.com> - 9.2.1-1
 - Update to upstream version 9.2.1
 

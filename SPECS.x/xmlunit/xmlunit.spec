@@ -30,7 +30,7 @@
 
 Name:           xmlunit
 Version:        1.5
-Release:        2%{?dist}
+Release:        3%{?dist}
 Epoch:          0
 Summary:        Provides classes to do asserts on xml
 License:        BSD
@@ -123,6 +123,9 @@ end
 %doc %{_javadocdir}/%{name}
 
 %changelog
+* Tue Aug 12 2014 Liu Di <liudidi@gmail.com> - 0:1.5-3
+- 为 Magic 3.0 重建
+
 * Sun Jun 08 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0:1.5-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

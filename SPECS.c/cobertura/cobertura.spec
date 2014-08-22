@@ -1,6 +1,6 @@
 Name:           cobertura
 Version:        1.9.4.1
-Release:        13%{?dist}
+Release:        14%{?dist}
 Summary:        Java tool that calculates the percentage of code accessed by tests
 
 # ASL 2.0: src/net/sourceforge/cobertura/webapp/web.xml
@@ -126,6 +126,9 @@ cp -rp build/api/* %{buildroot}%{_javadocdir}/%{name}
 %{_javadocdir}/%{name}
 
 %changelog
+* Tue Aug 12 2014 Liu Di <liudidi@gmail.com> - 1.9.4.1-14
+- 为 Magic 3.0 重建
+
 * Wed May 21 2014 Orion Poplawski <orion@cora.nwra.com> - 1.9.4.1-13
 - Use junit instead of junit4
 

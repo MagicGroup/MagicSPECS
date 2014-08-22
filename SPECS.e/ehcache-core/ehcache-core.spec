@@ -1,6 +1,6 @@
 Name:          ehcache-core
 Version:       2.6.7
-Release:       5%{?dist}
+Release:       6%{?dist}
 Summary:       Easy Hibernate Cache
 License:       ASL 2.0
 URL:           http://ehcache.org/
@@ -106,6 +106,9 @@ This package contains javadoc for %{name}.
 %doc src/assemble/EHCACHE-CORE-LICENSE.txt
 
 %changelog
+* Wed Aug 13 2014 Liu Di <liudidi@gmail.com> - 2.6.7-6
+- 为 Magic 3.0 重建
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.6.7-5
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

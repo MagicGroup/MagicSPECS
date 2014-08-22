@@ -1,6 +1,6 @@
 Name:           maven-dependency-plugin
 Version:        2.8
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        Plugin to manipulate, copy and unpack local and remote artifacts
 
 Group:          Development/Libraries
@@ -91,6 +91,9 @@ sed -i \
 %doc LICENSE NOTICE
 
 %changelog
+* Thu Aug 14 2014 Liu Di <liudidi@gmail.com> - 2.8-5
+- 为 Magic 3.0 重建
+
 * Wed Jun 11 2014 Alexander Kurtakov <akurtako@redhat.com> 2.8-4
 - Fix building by dropping useless BRs.
 

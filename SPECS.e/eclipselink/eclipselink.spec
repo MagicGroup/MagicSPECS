@@ -2,7 +2,7 @@
 %global namedversion %{version}%{?reltag}
 Name:          eclipselink
 Version:       2.4.2
-Release:       6%{?dist}
+Release:       7%{?dist}
 Summary:       Eclipse Persistence Services Project
 License:       EPL and BSD
 Url:           http://www.eclipse.org/eclipselink/
@@ -158,6 +158,9 @@ cp -pr target/api/* %{buildroot}%{_javadocdir}/%{name}
 %doc license.html
 
 %changelog
+* Thu Aug 14 2014 Liu Di <liudidi@gmail.com> - 2.4.2-7
+- 为 Magic 3.0 重建
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.4.2-6
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

@@ -3,7 +3,7 @@
 
 Name:             keytool-maven-plugin
 Version:          1.0
-Release:          15%{?dist}
+Release:          16%{?dist}
 Summary:          A plugin that wraps the keytool program and allows to manipulate keystores
 License:          MIT and ASL 2.0
 Group:            Development/Libraries
@@ -59,6 +59,9 @@ cp %{SOURCE1} LICENSE-ASL
 %doc LICENSE-MIT LICENSE-ASL
 
 %changelog
+* Fri Aug 15 2014 Liu Di <liudidi@gmail.com> - 1.0-16
+- 为 Magic 3.0 重建
+
 * Sun Jun 08 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.0-15
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

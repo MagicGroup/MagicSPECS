@@ -2,7 +2,7 @@
 %global archivever  jdk15on-%(echo %{version}|sed 's|\\\.||')
 Name:          bouncycastle-pkix
 Version:       1.50
-Release:       3%{?dist}
+Release:       4%{?dist}
 Summary:       Bouncy Castle PKIX, CMS, EAC, TSP, PKCS, OCSP, CMP, and CRMF APIs
 License:       MIT
 URL:           http://www.bouncycastle.org/
@@ -136,6 +136,9 @@ install -pm 644 %{SOURCE1} %{buildroot}%{_mavenpomdir}/JPP-bcpkix.pom
 %doc LICENSE.html
 
 %changelog
+* Fri Aug 15 2014 Liu Di <liudidi@gmail.com> - 1.50-4
+- 为 Magic 3.0 重建
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.50-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

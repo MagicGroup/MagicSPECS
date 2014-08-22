@@ -31,7 +31,7 @@
 Summary:        Java XPath, XSLT 2.0 and XQuery implementation
 Name:           saxon
 Version:        9.3.0.4
-Release:        13%{?dist}
+Release:        14%{?dist}
 # net.sf.saxon.om.XMLChar is from ASL-licensed Xerces
 # net/sf/saxon/option/jdom/ is MPLv1.1
 # net/sf/saxon/serialize/codenorm/ is UCD
@@ -200,6 +200,9 @@ update-alternatives --install %{_javadir}/jaxp_transform_impl.jar \
 
 
 %changelog
+* Thu Aug 14 2014 Liu Di <liudidi@gmail.com> - 9.3.0.4-14
+- 为 Magic 3.0 重建
+
 * Thu Jun 12 2014 Mikolaj Izdebski <mizdebsk@redhat.com> - 9.3.0.4-13
 - Restore removed Maven alias for net.sf.saxon:saxon::dom:
 

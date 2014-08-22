@@ -33,7 +33,7 @@
 
 Name:           jakarta-taglibs-standard
 Version:        1.1.2
-Release:        12%{?dist}
+Release:        13%{?dist}
 Epoch:          0
 Summary:        An open-source implementation of the JSP Standard Tag Library
 License:        ASL 2.0
@@ -142,6 +142,9 @@ ln -sf ../jakarta-taglibs-core.jar %{buildroot}%{_javadir}/javax.servlet.jsp.jst
 
 
 %changelog
+* Tue Aug 12 2014 Liu Di <liudidi@gmail.com> - 0:1.1.2-13
+- 为 Magic 3.0 重建
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0:1.1.2-12
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

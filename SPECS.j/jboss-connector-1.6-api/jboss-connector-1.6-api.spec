@@ -3,7 +3,7 @@
 
 Name:             jboss-connector-1.6-api
 Version:          1.0.1
-Release:          0.6%{namedreltag}%{?dist}
+Release:          0.7%{namedreltag}%{?dist}
 Summary:          Connector Architecture 1.6 API
 Group:            Development/Libraries
 License:          CDDL or GPLv2 with exceptions
@@ -68,7 +68,8 @@ cp -rp target/site/apidocs/* $RPM_BUILD_ROOT%{_javadocdir}/%{name}
 %files
 %{_javadir}/%{name}.jar
 %{_mavenpomdir}/*
-%{_mavendepmapfragdir}/*
+%{_datadir}/maven-metadata/jboss-connector-1.6-api.xml
+#%{_mavendepmapfragdir}/*
 %doc README LICENSE
 
 %files javadoc
@@ -76,6 +77,9 @@ cp -rp target/site/apidocs/* $RPM_BUILD_ROOT%{_javadocdir}/%{name}
 %doc LICENSE
 
 %changelog
+* Fri Aug 15 2014 Liu Di <liudidi@gmail.com> - 1.0.1-0.7.20120310git9dc9a5
+- 为 Magic 3.0 重建
+
 * Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.0.1-0.6.20120310git9dc9a5
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
 

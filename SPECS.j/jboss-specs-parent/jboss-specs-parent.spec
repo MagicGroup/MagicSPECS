@@ -3,7 +3,7 @@
 
 Name:             jboss-specs-parent
 Version:          1.0.0
-Release:          0.11%{namedreltag}%{?dist}
+Release:          0.12%{namedreltag}%{?dist}
 Summary:          JBoss Specification API Parent POM
 Group:            Development/Libraries
 # The license is not included because it's not a part of this tag. License file
@@ -41,6 +41,9 @@ install -pm 644 pom.xml $RPM_BUILD_ROOT%{_mavenpomdir}/JPP.jboss-%{name}.pom
 %files -f .mfiles
 
 %changelog
+* Fri Aug 15 2014 Liu Di <liudidi@gmail.com> - 1.0.0-0.12.Beta2
+- 为 Magic 3.0 重建
+
 * Sun Aug 03 2014 Yaakov Selkowitz <yselkowi@redhat.com> - 1.0.0-0.11.Beta2
 - Fix FTBFS due to XMvn changes in F21 (#1106901)
 

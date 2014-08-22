@@ -1,7 +1,7 @@
 %global oname jaxb-api
 Name:          glassfish-jaxb-api
 Version:       2.2.9
-Release:       6%{?dist}
+Release:       7%{?dist}
 Summary:       Java Architecture for XML Binding
 License:       CDDL or GPLv2 with exception
 URL:           http://jaxb.java.net/
@@ -72,6 +72,9 @@ mv %{buildroot}%{_javadocdir}/%{name} \
 %{_javadocdir}/%{oname}
 
 %changelog
+* Thu Aug 14 2014 Liu Di <liudidi@gmail.com> - 2.2.9-7
+- 为 Magic 3.0 重建
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.2.9-6
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

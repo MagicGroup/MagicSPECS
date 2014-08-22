@@ -3,7 +3,7 @@
 
 Name:         jboss-el-2.2-api
 Version:      1.0.2
-Release:      2%{?dist}
+Release:      3%{?dist}
 Summary:      Expression Language 2.2 API
 License:      CDDL or GPLv2 with exceptions
 URL:          http://www.jboss.org
@@ -48,6 +48,9 @@ This package contains the API documentation for %{name}.
 %doc README
 
 %changelog
+* Thu Aug 14 2014 Liu Di <liudidi@gmail.com> - 1.0.2-3
+- 为 Magic 3.0 重建
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.0.2-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

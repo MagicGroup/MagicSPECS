@@ -3,7 +3,7 @@
 
 Name:             jboss-jsp-2.2-api
 Version:          1.0.1
-Release:          10%{dist}
+Release:          11%{dist}
 Summary:          JavaServer(TM) Pages 2.2 API
 Group:            Development/Libraries
 License:          CDDL or GPLv2 with exceptions
@@ -72,6 +72,9 @@ cp -rp target/site/apidocs/* $RPM_BUILD_ROOT%{_javadocdir}/%{name}
 %doc LICENSE README
 
 %changelog
+* Thu Aug 14 2014 Liu Di <liudidi@gmail.com> - 1.0.1-11
+- 为 Magic 3.0 重建
+
 * Fri Jun 27 2014 Yaakov Selkowitz <yselkowi@redhat.com> - 1.0.1-10
 - Fix FTBFS due to XMvn changes in F21 (#1106884)
 

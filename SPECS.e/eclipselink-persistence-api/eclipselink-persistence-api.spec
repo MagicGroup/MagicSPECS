@@ -3,7 +3,7 @@
 %global namedversion %{version}%{?namedreltag}
 Name:          eclipselink-persistence-api
 Version:       2.0.5
-Release:       3%{?dist}
+Release:       4%{?dist}
 Summary:       JPA 2.0 Spec OSGi Bundle
 License:       EPL and ASL 2.0
 URL:           http://www.eclipse.org/eclipselink/
@@ -79,6 +79,9 @@ done
 %doc license.html
 
 %changelog
+* Thu Aug 14 2014 Liu Di <liudidi@gmail.com> - 2.0.5-4
+- 为 Magic 3.0 重建
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.0.5-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

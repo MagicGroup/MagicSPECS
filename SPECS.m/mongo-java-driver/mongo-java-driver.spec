@@ -1,6 +1,6 @@
 Name:		mongo-java-driver
 Version:	2.11.3
-Release:	4%{?dist}
+Release:	5%{?dist}
 Summary:	A Java driver for MongoDB
 
 Group:		Development/Libraries
@@ -97,6 +97,9 @@ cp -rp docs/bson %{buildroot}%{_javadocdir}/%{name}-bson
 %doc README.md LICENSE.txt
 
 %changelog
+* Fri Aug 15 2014 Liu Di <liudidi@gmail.com> - 2.11.3-5
+- 为 Magic 3.0 重建
+
 * Tue Jun 10 2014 Severin Gehwolf <sgehwolf@redhat.com> - 2.11.3-4
 - Fix FTBFS. Resolves RHBZ#1106228.
 - Fix @VERSION@ substitution. Resolves RHBZ#1048200.

@@ -3,7 +3,7 @@
 
 Name:          jboss-jms-1.1-api
 Version:       1.0.1
-Release:       9%{?dist}
+Release:       10%{?dist}
 Summary:       JBoss JMS API 1.1 Spec
 Group:         Development/Libraries
 License:       CDDL or GPLv2 with exceptions
@@ -55,6 +55,9 @@ This package contains the API documentation for %{name}.
 %doc LICENSE README
 
 %changelog
+* Fri Aug 15 2014 Liu Di <liudidi@gmail.com> - 1.0.1-10
+- 为 Magic 3.0 重建
+
 * Tue Jul 01 2014 Marek Goldmann <mgoldman@redhat.com> - 1.0.1-9
 - New guidelines
 

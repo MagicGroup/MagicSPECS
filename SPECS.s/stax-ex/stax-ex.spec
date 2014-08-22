@@ -1,6 +1,6 @@
 Name:          stax-ex
 Version:       1.7.1
-Release:       8%{?dist}
+Release:       9%{?dist}
 Summary:       StAX API extensions
 License:       CDDL or GPLv2
 Url:           https://stax-ex.dev.java.net
@@ -59,6 +59,9 @@ dos2unix LICENSE.txt
 %doc LICENSE.txt
 
 %changelog
+* Thu Aug 14 2014 Liu Di <liudidi@gmail.com> - 1.7.1-9
+- 为 Magic 3.0 重建
+
 * Sun Jun 08 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.7.1-8
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

@@ -30,7 +30,7 @@
 
 Name:           slf4j
 Version:        1.7.7
-Release:        2%{?dist}
+Release:        3%{?dist}
 Epoch:          0
 Summary:        Simple Logging Facade for Java
 Group:          Development/Libraries
@@ -210,6 +210,9 @@ cp -pr target/site/* $RPM_BUILD_ROOT%{_defaultdocdir}/%{name}-manual
 %doc LICENSE.txt APACHE-LICENSE
 
 %changelog
+* Wed Aug 13 2014 Liu Di <liudidi@gmail.com> - 0:1.7.7-3
+- 为 Magic 3.0 重建
+
 * Sun Jun 08 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0:1.7.7-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

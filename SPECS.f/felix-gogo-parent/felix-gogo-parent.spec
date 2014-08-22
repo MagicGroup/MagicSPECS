@@ -6,7 +6,7 @@
 
 Name:             %{?scl_prefix}%{project}-%{pkgname}
 Version:          0.6.0
-Release:          10%{?dist}
+Release:          11%{?dist}
 Summary:          Parent package for Felix Gogo
 License:          ASL 2.0
 URL:              http://felix.apache.org/site/apache-felix-gogo.html
@@ -17,7 +17,7 @@ BuildArch:        noarch
 
 BuildRequires:  maven-local
 BuildRequires:  mvn(junit:junit)
-BuildRequires:  mvn(org.apache.felix:felix-parent)
+BuildRequires:  mvn(org.apache.felix:felix-parent:pom:)
 BuildRequires:  mvn(org.apache.maven.plugins:maven-compiler-plugin)
 BuildRequires:  mvn(org.easymock:easymock)
 BuildRequires:  mvn(org.mockito:mockito-all)
@@ -46,6 +46,9 @@ dynamic service deployment framework that is amenable to remote management.
 %doc LICENSE NOTICE
 
 %changelog
+* Thu Aug 14 2014 Liu Di <liudidi@gmail.com> - 0.6.0-11
+- 为 Magic 3.0 重建
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.6.0-10
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

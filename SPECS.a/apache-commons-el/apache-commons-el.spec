@@ -5,7 +5,7 @@
 
 Name:           apache-%{short_name}
 Version:        1.0
-Release:        31%{?dist}
+Release:        32%{?dist}
 Summary:        The Apache Commons Extension Language
 License:        ASL 1.1
 URL:            http://commons.apache.org/%{base_name}
@@ -91,6 +91,9 @@ cp -pr dist/docs/api/* %{buildroot}%{_javadocdir}/%{name}
 
 
 %changelog
+* Fri Aug 15 2014 Liu Di <liudidi@gmail.com> - 1.0-32
+- 为 Magic 3.0 重建
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.0-31
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

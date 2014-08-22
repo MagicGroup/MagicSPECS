@@ -4,7 +4,7 @@
 
 Name:             google-%{short_name}
 Version:          2.2.4
-Release:          6%{?dist}
+Release:          7%{?dist}
 Summary:          Java lib for conversion of Java objects into JSON representation
 License:          ASL 2.0
 Group:            Development/Libraries
@@ -60,6 +60,9 @@ sed -i 's/\r//g' LICENSE
 %doc LICENSE
 
 %changelog
+* Fri Aug 15 2014 Liu Di <liudidi@gmail.com> - 2.2.4-7
+- 为 Magic 3.0 重建
+
 * Tue Jun 10 2014 Severin Gehwolf <sgehwolf@redhat.com> - 2.2.4-6
 - Move to xmvn style packaging.
 - Fix FTBFS. Resolves RHBZ#1106707.

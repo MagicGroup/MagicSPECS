@@ -1,6 +1,6 @@
 Name:           maven-release
 Version:        2.2.1
-Release:        13%{?dist}
+Release:        14%{?dist}
 Summary:        Release a project updating the POM and tagging in the SCM
 License:        ASL 2.0
 URL:            http://maven.apache.org/plugins/maven-release-plugin/
@@ -99,6 +99,9 @@ EOT
 %doc LICENSE NOTICE
 
 %changelog
+* Thu Aug 14 2014 Liu Di <liudidi@gmail.com> - 2.2.1-14
+- 为 Magic 3.0 重建
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.2.1-13
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

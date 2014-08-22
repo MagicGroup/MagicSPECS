@@ -1,6 +1,6 @@
 Name:    mchange-commons
 Version: 0.2.7
-Release: 1%{?dist}
+Release: 2%{?dist}
 Summary: A collection of general purpose utilities for c3p0
 License: LGPLv2 or EPL
 URL:     https://github.com/swaldman/mchange-commons-java
@@ -76,6 +76,9 @@ cp -pr target/api/* %{buildroot}%{_javadocdir}/%{name}
 %{_javadocdir}/%{name}
 
 %changelog
+* Wed Aug 13 2014 Liu Di <liudidi@gmail.com> - 0.2.7-2
+- 为 Magic 3.0 重建
+
 * Sun Jun 08 2014 Mat Booth <mat.booth@redhat.com> - 0.2.7-1
 - Update to latest upstream version
 - Drop patches

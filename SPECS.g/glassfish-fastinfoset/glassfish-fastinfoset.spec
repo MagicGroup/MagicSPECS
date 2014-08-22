@@ -1,6 +1,6 @@
 Name:          glassfish-fastinfoset
 Version:       1.2.12
-Release:       11%{?dist}
+Release:       12%{?dist}
 Summary:       Fast Infoset
 License:       ASL 2.0
 URL:           https://fi.dev.java.net
@@ -71,6 +71,9 @@ This package contains javadoc for %{name}.
 %files javadoc -f .mfiles-javadoc
 
 %changelog
+* Thu Aug 14 2014 Liu Di <liudidi@gmail.com> - 1.2.12-12
+- 为 Magic 3.0 重建
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.2.12-11
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

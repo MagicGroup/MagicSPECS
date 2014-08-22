@@ -34,7 +34,7 @@
 Summary:        High-performance, full-featured text search engine
 Name:           %{?scl_prefix}lucene
 Version:        4.8.1
-Release:        3%{?dist}
+Release:        4%{?dist}
 Epoch:          0
 License:        ASL 2.0
 URL:            http://lucene.apache.org/
@@ -412,6 +412,9 @@ popd
 %doc LICENSE.txt
 
 %changelog
+* Wed Aug 13 2014 Liu Di <liudidi@gmail.com> - 0:4.8.1-4
+- 为 Magic 3.0 重建
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0:4.8.1-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

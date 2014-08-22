@@ -4,7 +4,7 @@
 
 Name:          xerces-j2
 Version:       2.11.0
-Release:       19%{?dist}
+Release:       20%{?dist}
 Summary:       Java XML parser
 Group:         Development/Libraries
 License:       ASL 2.0
@@ -216,6 +216,9 @@ update-alternatives --install %{_javadir}/jaxp_parser_impl.jar \
 %{_datadir}/%{name}
 
 %changelog
+* Tue Aug 12 2014 Liu Di <liudidi@gmail.com> - 2.11.0-20
+- 为 Magic 3.0 重建
+
 * Sun Jun 08 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.11.0-19
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

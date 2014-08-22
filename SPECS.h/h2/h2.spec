@@ -1,6 +1,6 @@
 Name:           h2
 Version:        1.3.176
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Java SQL database
 
 License:        EPL
@@ -77,6 +77,9 @@ cp -rp %SOURCE1 $RPM_BUILD_ROOT%{_mavenpomdir}/JPP-%{name}.pom
 %doc src/docsrc/html/license.html
 
 %changelog
+* Wed Aug 13 2014 Liu Di <liudidi@gmail.com> - 1.3.176-3
+- 为 Magic 3.0 重建
+
 * Fri Jun 13 2014 Mat Booth <mat.booth@redhat.com> - 1.3.176-2
 - Fix erroneous osgi dep on org.osgi.service.jdbc
 

@@ -4,7 +4,7 @@
 # Set to 1 to build Eclipse without dependency to eclipse-pde
 # Some parts (help) will not be built, and second run will be required,
 # but this is a way to bootstrap Eclipse on secondary archs.
-%global bootstrap       0
+%global bootstrap       1
 
 
 Epoch:                  1
@@ -38,7 +38,7 @@ Epoch:                  1
 Summary:        An open, extensible IDE
 Name:           %{?scl_prefix}eclipse
 Version:        %{eclipse_version}
-Release:        11%{?dist}
+Release:        12%{?dist}
 License:        EPL
 Group:          Development/Tools
 URL:            http://www.eclipse.org/
@@ -1013,6 +1013,9 @@ fi
 %{_libdir}/%{pkg_name}/plugins/org.eclipse.osgi.compatibility.state_*
 
 %changelog
+* Fri Aug 15 2014 Liu Di <liudidi@gmail.com> - 1:4.4.0-12
+- 为 Magic 3.0 重建
+
 * Mon Jul 28 2014 Sami Wagiaalla <swagiaal@redhat.com> 1:4.4.0-11
 - Add patch for webkit2 support.
 

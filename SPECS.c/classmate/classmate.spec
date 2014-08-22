@@ -1,6 +1,6 @@
 Name:          classmate
 Version:       0.8.0
-Release:       5%{?dist}
+Release:       6%{?dist}
 Summary:       Java introspection library
 License:       ASL 2.0
 Url:           http://github.com/cowtowncoder/java-classmate/
@@ -59,6 +59,9 @@ rm -r src/test/java/com/fasterxml/classmate/TestReadme.java \
 %doc LICENSE-2.0.txt
 
 %changelog
+* Wed Aug 13 2014 Liu Di <liudidi@gmail.com> - 0.8.0-6
+- 为 Magic 3.0 重建
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.8.0-5
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

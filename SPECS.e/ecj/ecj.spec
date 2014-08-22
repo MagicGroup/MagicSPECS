@@ -5,7 +5,7 @@ Epoch: 1
 Summary: Eclipse Compiler for Java
 Name: ecj
 Version: 4.4.0
-Release: 1%{?dist}
+Release: 2%{?dist}
 URL: http://www.eclipse.org
 License: EPL
 Group: Development/Languages
@@ -89,6 +89,9 @@ install -pm 644 pom.xml \
 %{_mandir}/man1/ecj.1.gz
 
 %changelog
+* Tue Aug 12 2014 Liu Di <liudidi@gmail.com> - 1:4.4.0-2
+- 为 Magic 3.0 重建
+
 * Thu Jul 3 2014 Alexander Kurtakov <akurtako@redhat.com> 1:4.4.0-1
 - Update to 4.4 final.
 - Drop gcj patches as gcj is not in Fedora anymore and ecj now requires 1.6.

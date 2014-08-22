@@ -1,6 +1,6 @@
 Name:           maven-script-interpreter
 Version:        1.1
-Release:        5%{?dist}
+Release:        6%{?dist}
 Summary:        Maven Script Interpreter
 License:        ASL 2.0
 URL:            http://maven.apache.org/shared/maven-script-interpreter/
@@ -48,6 +48,9 @@ API documentation for %{name}.
 
 
 %changelog
+* Thu Aug 14 2014 Liu Di <liudidi@gmail.com> - 1.1-6
+- 为 Magic 3.0 重建
+
 * Mon Aug  4 2014 Mikolaj Izdebski <mizdebsk@redhat.com> - 1.1-5
 - Fix build-requires on parent POM
 

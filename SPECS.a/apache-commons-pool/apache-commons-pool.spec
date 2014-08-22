@@ -3,7 +3,7 @@
 
 Name:             apache-%{short_name}
 Version:          1.6
-Release:          9%{?dist}
+Release:          10%{?dist}
 Summary:          Apache Commons Pool Package
 License:          ASL 2.0
 URL:              http://commons.apache.org/%{base_name}/
@@ -51,6 +51,9 @@ This package contains the API documentation for %{name}.
 %doc LICENSE.txt NOTICE.txt
 
 %changelog
+* Tue Aug 12 2014 Liu Di <liudidi@gmail.com> - 1.6-10
+- 为 Magic 3.0 重建
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.6-9
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

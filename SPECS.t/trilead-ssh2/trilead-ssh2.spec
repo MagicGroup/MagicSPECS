@@ -2,7 +2,7 @@
 
 Name:           trilead-ssh2
 Version:        217
-Release:        4.jenkins%{patchlvl}%{?dist}
+Release:        5.jenkins%{patchlvl}%{?dist}
 Summary:        SSH-2 protocol implementation in pure Java
 
 # project is under BSD, but some parts are MIT licensed
@@ -53,6 +53,9 @@ API documentation for %{name}.
 
 
 %changelog
+* Thu Aug 14 2014 Liu Di <liudidi@gmail.com> - 217-5.jenkins4
+- 为 Magic 3.0 重建
+
 * Sun Jun 08 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 217-4.jenkins4
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

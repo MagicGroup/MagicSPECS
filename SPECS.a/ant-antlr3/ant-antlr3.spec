@@ -1,6 +1,6 @@
 Name: ant-antlr3
 Version: 20110110
-Release: 9%{?dist}
+Release: 10%{?dist}
 Summary: Antlr3 task for Ant
 Group: Development/Tools	
 License: ASL 2.0
@@ -71,6 +71,9 @@ EOF
 %{_javadocdir}/ant-antlr3
 
 %changelog
+* Thu Aug 14 2014 Liu Di <liudidi@gmail.com> - 20110110-10
+- 为 Magic 3.0 重建
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 20110110-9
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

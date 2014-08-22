@@ -1,6 +1,6 @@
 Name:           maven-plugin-testing
 Version:        3.2.0
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Maven Plugin Testing
 License:        ASL 2.0
 URL:            http://maven.apache.org/plugin-testing/
@@ -77,6 +77,9 @@ sed -i -e "s/MockControl/IMocksControl/g" maven-test-tools/src/main/java/org/apa
 %doc LICENSE NOTICE
 
 %changelog
+* Thu Aug 14 2014 Liu Di <liudidi@gmail.com> - 3.2.0-2
+- 为 Magic 3.0 重建
+
 * Mon Jul 21 2014 Mikolaj Izdebski <mizdebsk@redhat.com> - 3.2.0-1
 - Update to upstream version 3.2.0
 

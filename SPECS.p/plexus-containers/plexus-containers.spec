@@ -10,7 +10,7 @@
 
 Name:           %{parent}-%{subname}
 Version:        1.5.5
-Release:        18%{?dist}
+Release:        19%{?dist}
 Summary:        Containers for Plexus
 License:        ASL 2.0 and MIT
 URL:            http://plexus.codehaus.org/
@@ -162,6 +162,9 @@ sed -i "s|<version>2.3</version>|<version> %{javadoc_plugin_version}</version>|"
 %files javadoc -f .mfiles-javadoc
 
 %changelog
+* Thu Aug 14 2014 Liu Di <liudidi@gmail.com> - 1.5.5-19
+- 为 Magic 3.0 重建
+
 * Fri Jul 04 2014 Mat Booth <mat.booth@redhat.com> - 1.5.5-18
 - Port to lastest objectweb-asm
 

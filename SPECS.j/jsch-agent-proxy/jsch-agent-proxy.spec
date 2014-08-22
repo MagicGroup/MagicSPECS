@@ -1,6 +1,6 @@
 Name:           jsch-agent-proxy
 Version:        0.0.7
-Release:        6%{?dist}
+Release:        7%{?dist}
 Summary:        Proxy to ssh-agent and Pageant in Java
 License:        BSD
 URL:            http://www.jcraft.com/jsch-agent-proxy/
@@ -17,7 +17,7 @@ BuildRequires:  mvn(net.schmizz:sshj)
 BuildRequires:  mvn(org.apache.felix:maven-bundle-plugin)
 BuildRequires:  mvn(org.apache.maven.plugins:maven-source-plugin)
 BuildRequires:  mvn(org.apache.maven.wagon:wagon-ssh-external)
-BuildRequires:  mvn(org.sonatype.oss:oss-parent)
+BuildRequires:  mvn(org.sonatype.oss:oss-parent:pom:)
 
 %description
 jsch-agent-proxy is a proxy program to OpenSSH ssh-agent and Pageant
@@ -117,6 +117,9 @@ This package provides %{summary}.
 %doc LICENSE.txt
 
 %changelog
+* Thu Aug 14 2014 Liu Di <liudidi@gmail.com> - 0.0.7-7
+- 为 Magic 3.0 重建
+
 * Sun Jun 08 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.0.7-6
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

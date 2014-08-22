@@ -1,6 +1,6 @@
 Name:             fusesource-pom
 Version:          1.9
-Release:          9%{?dist}
+Release:          10%{?dist}
 Summary:          Parent POM for FuseSource Maven projects
 License:          ASL 2.0
 URL:              http://fusesource.com/
@@ -32,6 +32,9 @@ cp -p %{SOURCE1} LICENSE
 %doc LICENSE
 
 %changelog
+* Wed Aug 13 2014 Liu Di <liudidi@gmail.com> - 1.9-10
+- 为 Magic 3.0 重建
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.9-9
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

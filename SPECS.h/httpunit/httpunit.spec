@@ -30,7 +30,7 @@
 
 Name:           httpunit
 Version:        1.7
-Release:        15%{?dist}
+Release:        16%{?dist}
 Epoch:          0
 Summary:        Automated web site testing toolkit
 License:        MIT and ASL 2.0
@@ -114,11 +114,12 @@ ln -s \
   %{_javadir}/xerces-j2.jar \
   jars
 
-mv %{SOURCE1} pom.xml
-mv %{SOURCE2} META-INF/
-mv %{SOURCE3} META-INF/
-mv %{SOURCE4} META-INF/
-mv %{SOURCE5} LICENSE-ASL
+#原来是 mv，但是会导致打包失败。
+cp %{SOURCE1} pom.xml
+cp %{SOURCE2} META-INF/
+cp %{SOURCE3} META-INF/
+cp %{SOURCE4} META-INF/
+cp %{SOURCE5} LICENSE-ASL
 
 
 %build
@@ -160,6 +161,9 @@ popd
 %doc doc/*
 
 %changelog
+* Tue Aug 12 2014 Liu Di <liudidi@gmail.com> - 0:1.7-16
+- 为 Magic 3.0 重建
+
 * Fri Jun 27 2014 Yaakov Selkowitz <yselkowi@redhat.com> - 0:1.7-15
 - Fix FTBFS due to xmvn changes (#1106777)
 

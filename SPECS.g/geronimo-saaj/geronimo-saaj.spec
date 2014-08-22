@@ -3,7 +3,7 @@
 
 Name:             geronimo-saaj
 Version:          1.1
-Release:          15%{?dist}
+Release:          16%{?dist}
 Summary:          Java EE: SOAP with Attachments API Package v1.3
 License:          ASL 2.0 and W3C
 
@@ -57,6 +57,9 @@ sed -i 's/\r//' LICENSE NOTICE
 %doc LICENSE NOTICE
 
 %changelog
+* Tue Aug 12 2014 Liu Di <liudidi@gmail.com> - 1.1-16
+- 为 Magic 3.0 重建
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.1-15
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

@@ -4,7 +4,7 @@
 
 Name:           apache-%{short_name}
 Version:        1.0.15
-Release:        7%{?dist}
+Release:        8%{?dist}
 Summary:        Defines API to support an alternative invocation mechanism
 License:        ASL 2.0
 Group:          Applications/System
@@ -114,6 +114,9 @@ install -Dpm 644 src/native/unix/jsvc.1 $RPM_BUILD_ROOT%{_mandir}/man1/jsvc.1
 
 
 %changelog
+* Tue Aug 12 2014 Liu Di <liudidi@gmail.com> - 1.0.15-8
+- 为 Magic 3.0 重建
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.0.15-7
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

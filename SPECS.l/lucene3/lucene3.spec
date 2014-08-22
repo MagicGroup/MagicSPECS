@@ -3,7 +3,7 @@
 Summary:        High-performance, full-featured text search engine
 Name:           lucene3
 Version:        3.6.2
-Release:        5%{?dist}
+Release:        6%{?dist}
 Epoch:          0
 License:        ASL 2.0 and BSD
 URL:            http://lucene.apache.org/
@@ -201,6 +201,9 @@ cp -pr build/docs/api/* $RPM_BUILD_ROOT%{_javadocdir}/%{name}
 %endif
 
 %changelog
+* Wed Aug 13 2014 Liu Di <liudidi@gmail.com> - 0:3.6.2-6
+- 为 Magic 3.0 重建
+
 * Fri Jun 13 2014 Marek Goldmann <mgoldman@redhat.com> - 0:3.6.2-5
 - Support for new xmvn
 

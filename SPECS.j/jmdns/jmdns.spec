@@ -1,6 +1,6 @@
 Name:           jmdns
 Version:        3.4.1
-Release:        7%{?dist}
+Release:        8%{?dist}
 Summary:        Java implementation of multi-cast DNS
 
 # The project was originally developed under the GNU
@@ -17,7 +17,7 @@ Source1:        create-tarball.sh
 Patch0:         0001-added-an-unclean-shut-down-that-s-a-whole-lot-faster.patch
 
 BuildRequires:  maven-local
-BuildRequires:  mvn(org.sonatype.oss:oss-parent)
+BuildRequires:  mvn(org.sonatype.oss:oss-parent:pom:)
 
 BuildArch:      noarch
 
@@ -64,6 +64,9 @@ sed -i 's/\r//' LICENSE-LGPL.txt
 
 
 %changelog
+* Thu Aug 14 2014 Liu Di <liudidi@gmail.com> - 3.4.1-8
+- 为 Magic 3.0 重建
+
 * Sun Jun 08 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.4.1-7
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 
