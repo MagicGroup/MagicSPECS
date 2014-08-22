@@ -4,7 +4,7 @@
 
 Name:       glassfish-jsp
 Version:    2.3.2
-Release:    5%{?dist}
+Release:    6%{?dist}
 Summary:    Glassfish J2EE JSP API implementation
 
 License:    (CDDL or GPLv2 with exceptions) and ASL 2.0
@@ -94,6 +94,9 @@ popd
 
 
 %changelog
+* Wed Aug 13 2014 Liu Di <liudidi@gmail.com> - 2.3.2-6
+- 为 Magic 3.0 重建
+
 * Mon Jun 9 2014 Alexander Kurtakov <akurtako@redhat.com> 2.3.2-5
 - Rebuild to regen osgi metadata.
 

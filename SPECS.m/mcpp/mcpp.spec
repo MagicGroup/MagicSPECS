@@ -1,11 +1,13 @@
 # spec file for mcpp / compiler-independent-library-build on fedora
 
 Summary:    Alternative C/C++ preprocessor
+Summary(zh_CN.UTF-8): 可选的 C/C++ 预处理器
 Name:       mcpp
 Version:    2.7.2
-Release:    7%{?dist}
+Release:    8%{?dist}
 License:    BSD
 Group:      Development/Languages
+Group(zh_CN.UTF-8): 开发/语言
 Source:     http://downloads.sourceforge.net/%{name}/%{name}-%{version}.tar.gz
 URL:        http://mcpp.sourceforge.net/
 Patch0:     mcpp-manual.html.patch
@@ -27,6 +29,9 @@ preprocessor or as a stand-alone program without using library build of
 mcpp, this package installs only a program named 'mcpp' which links
 shared library of mcpp and behaves independent from GCC.
 
+%description -l zh_CN.UTF-8
+可选的 C/C++ 预处理器。
+
 %prep
 %setup -q
 %patch0 -p0 -b -z.euc-jp
@@ -42,6 +47,7 @@ rm -rf $RPM_BUILD_ROOT
 make DESTDIR=$RPM_BUILD_ROOT install
 rm -rf $RPM_BUILD_ROOT%{_docdir}/%{name}
 rm -f $RPM_BUILD_ROOT%{_libdir}/libmcpp.la
+magic_rpm_clean.sh
 
 %files
 %defattr(-,root,root,-)
@@ -97,6 +103,9 @@ This package provides an html manual for mcpp.
 rm -rf $RPM_BUILD_ROOT
 
 %changelog
+* Fri Aug 22 2014 Liu Di <liudidi@gmail.com> - 2.7.2-8
+- 为 Magic 3.0 重建
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 2.7.2-7
 - 为 Magic 3.0 重建
 

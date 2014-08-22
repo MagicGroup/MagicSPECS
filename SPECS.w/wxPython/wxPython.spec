@@ -8,14 +8,18 @@ Version:        2.8.12.0
 Release:        3%{?dist}
 
 Summary:        GUI toolkit for the Python programming language
+Summary(zh_CN.UTF-8): Python 程序开发的 GUI 工具箱
 
 Group:          Development/Languages
+Group(zh_CN.UTF-8): 开发/语言
 License:        LGPLv2+ and wxWidgets 
 URL:            http://www.wxpython.org/
 Source0:        http://downloads.sourceforge.net/wxpython/%{name}-src-%{version}.tar.bz2
 # fix aui imports
 # http://trac.wxwidgets.org/ticket/12107
 Patch0:         wxPython-2.8.12.0-aui.patch
+Patch1:		wxPython-2.8.12.0-format.patch
+
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 # make sure to keep this updated as appropriate
 BuildRequires:  wx-gtk2-unicode-devel >= 2.8.11
@@ -32,9 +36,14 @@ graphical user interface, simply and easily. It is implemented as a Python
 extension module (native code) that wraps the popular wxWindows cross
 platform GUI library, which is written in C++.
 
+%description -l zh_CN.UTF-8
+Python 语言的图形界面开发工具箱，是 wxWindows 的 Python 扩展模块实现。
+
 %package        devel
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Summary:        Development files for wxPython add-on modules
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Requires:       %{name} = %{version}-%{release}
 Requires:       wx-gtk2-unicode-devel
 
@@ -43,21 +52,27 @@ This package includes C++ header files and SWIG files needed for developing
 add-on modules for wxPython. It is NOT needed for development of most
 programs which use the wxPython toolkit.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
 %package        docs
 Group:          Documentation
+Group(zh_CN.UTF-8): 文档
 Summary:        Documentation and samples for wxPython
+Summary(zh_CN.UTF-8): %{name} 的文档。
 Requires:       %{name} = %{version}-%{release}
-%if 0%{?fedora} > 9
 BuildArch:      noarch
-%endif
 
 %description docs
 Documentation, samples and demo application for wxPython.
 
+%description docs -l zh_CN.UTF-8
+%{name} 的文档。
 
 %prep
 %setup -q -n wxPython-src-%{version}
 %patch0 -p1 -b .aui
+%patch1 -p1 -b .format
 
 # fix libdir otherwise additional wx libs cannot be found
 sed -i -e 's|/usr/lib|%{_libdir}|' wxPython/config.py
@@ -82,6 +97,7 @@ python setup.py %{buildflags} install --root=$RPM_BUILD_ROOT
 mv $RPM_BUILD_ROOT%{python_sitelib}/wx.pth  $RPM_BUILD_ROOT%{python_sitearch}
 mv $RPM_BUILD_ROOT%{python_sitelib}/wxversion.py* $RPM_BUILD_ROOT%{python_sitearch}
 %endif
+magic_rpm_clean.sh
 
 %clean
 rm -rf $RPM_BUILD_ROOT

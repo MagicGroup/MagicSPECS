@@ -1,7 +1,9 @@
 # Review: https://bugzilla.redhat.com/show_bug.cgi?id=219930
 
+%global         usegtk3     1
+
 Name:           lxpanel
-Version:	0.6.2
+Version:	0.7.0
 Release:        1%{?dist}
 Summary:        A lightweight X11 desktop panel
 Summary(zh_CN.UTF-8): 轻量级的 X11 桌面面板
@@ -11,22 +13,17 @@ Group(zh_CN.UTF-8): 用户界面/桌面
 License:        GPLv2+
 URL:            http://lxde.org/
 #VCS: git:git://lxde.git.sourceforge.net/gitroot/lxde/lxpanel
-Source0:        http://downloads.sourceforge.net/sourceforge/lxde/%{name}-%{version}.tar.gz
-
-# Fedora bug: https://bugzilla.redhat.com/show_bug.cgi?id=746063
-Patch0:         lxpanel-0.5.6-Fix-pager-scroll.patch
-Patch1:		lxpanel-fix-compile.patch
-
-## distro specific patches
-# use nm-connection-editor to edit network connections
-Patch101:       lxpanel-0.3.8.1-nm-connection-editor.patch
-
+Source0:        http://downloads.sourceforge.net/sourceforge/lxde/%{name}-%{version}.tar.xz
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 #BuildRequires:  docbook-utils
 BuildRequires:  gettext
-BuildRequires:  gtk2-devel 
+%if %{usegtk3}
+BuildRequires:  gtk3-devel
+%else
+BuildRequires:  gtk2-devel >= 2.16.0
+%endif
 BuildRequires:  intltool
 BuildRequires:  pkgconfig(xpm)
 BuildRequires:  pkgconfig(libstartup-notification-1.0)
@@ -66,13 +63,14 @@ developing applications that use %{name}.
 
 %prep
 %setup -q
-%patch0 -p1 -b .revert
-%patch1 -p1
-
-%patch101 -p1 -b .system-config-network
 
 %build
-%configure
+%configure \
+%if %{usegtk3}
+	--enable-gtk3
+%endif
+
+
 make %{?_smp_mflags} V=1
 
 
@@ -100,6 +98,12 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/pkgconfig/lxpanel.pc
 
 %changelog
+* Fri Aug 22 2014 Liu Di <liudidi@gmail.com> - 0.7.0-1
+- 更新到 0.7.0
+
+* Fri Aug 22 2014 Liu Di <liudidi@gmail.com> - 0.7.x-1
+- 更新到 0.7.x
+
 * Tue Jul 08 2014 Liu Di <liudidi@gmail.com> - 0.6.2-1
 - 更新到 0.6.2
 

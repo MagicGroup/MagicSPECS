@@ -1,6 +1,6 @@
 Name:           javapackages-tools
 Version:        4.1.0
-Release:        2%{?dist}
+Release:        4%{?dist}
 
 Summary:        Macros and scripts for Java packaging support
 
@@ -150,6 +150,8 @@ pushd python
 %{__python} setup.py install --skip-build --root $RPM_BUILD_ROOT
 popd
 
+rm -rf %{buildroot}%{_datadir}/fedora-review
+
 %check
 ./check
 
@@ -167,13 +169,21 @@ popd
 %doc LICENSE
 %{python_sitelib}/javapackages*
 
+%if 0
 %files -n fedora-review-plugin-java
 %{_datadir}/fedora-review/plugins/*
+%endif
 
 %files doc -f files-doc
 %doc LICENSE
 
 %changelog
+* Tue Aug 12 2014 Liu Di <liudidi@gmail.com> - 4.1.0-4
+- 为 Magic 3.0 重建
+
+* Tue Aug 12 2014 Liu Di <liudidi@gmail.com> - 4.1.0-3
+- 为 Magic 3.0 重建
+
 * Thu Jul 10 2014 Michal Srb <msrb@redhat.com> - 4.1.0-2
 - Backport upstream patch for maven.req
 

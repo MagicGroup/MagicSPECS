@@ -30,7 +30,7 @@
 
 Name:           maven-jxr
 Version:        2.4
-Release:        4%{?dist}
+Release:        5%{?dist}
 Epoch:          0
 Summary:        Source cross referencing tool
 # BSD: maven-jxr/src/main/java/org/apache/maven/jxr/JavaCodeTransform.java
@@ -115,6 +115,9 @@ cp %{SOURCE1} .
 %files -n maven-plugin-jxr -f .mfiles-maven-plugin-jxr
 
 %changelog
+* Thu Aug 14 2014 Liu Di <liudidi@gmail.com> - 0:2.4-5
+- 为 Magic 3.0 重建
+
 * Mon Aug  4 2014 Mikolaj Izdebski <mizdebsk@redhat.com> - 0:2.4-4
 - Fix build-requires on parent POM
 

@@ -1,6 +1,6 @@
 Name:           cal10n
 Version:        0.7.7
-Release:        5%{?dist}
+Release:        6%{?dist}
 Summary:        Compiler assisted localization library (CAL10N)
 License:        MIT
 URL:            http://cal10n.qos.ch
@@ -64,6 +64,9 @@ find . -name \*.jar -delete
 %doc LICENSE.txt
 
 %changelog
+* Wed Aug 13 2014 Liu Di <liudidi@gmail.com> - 0.7.7-6
+- 为 Magic 3.0 重建
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.7.7-5
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

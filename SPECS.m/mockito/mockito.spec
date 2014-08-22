@@ -1,6 +1,6 @@
 Name:           mockito
 Version:        1.9.0
-Release:        17%{?dist}
+Release:        18%{?dist}
 Summary:        A Java mocking framework
 
 License:        MIT
@@ -91,6 +91,9 @@ cp -rp target/javadoc/* $RPM_BUILD_ROOT%{_javadocdir}/%{name}
 %doc NOTICE
 
 %changelog
+* Thu Aug 14 2014 Liu Di <liudidi@gmail.com> - 1.9.0-18
+- 为 Magic 3.0 重建
+
 * Mon Jun 09 2014 Omair Majid <omajid@redhat.com> - 1.9.0-17
 - Use .mfiles to pick up xmvn metadata
 - Don't use obsolete _mavenpomdir and _mavendepmapfragdir macros

@@ -6,7 +6,7 @@
 
 Name:             %{?scl_prefix}%{project}-gogo-shell
 Version:          0.10.0
-Release:          13%{?dist}
+Release:          14%{?dist}
 Summary:          Community OSGi R4 Service Platform Implementation - Basic Commands
 Group:            Development/Tools
 License:          ASL 2.0
@@ -73,6 +73,9 @@ This package contains the API documentation for %{pkg_name}.
 %doc LICENSE
 
 %changelog
+* Thu Aug 14 2014 Liu Di <liudidi@gmail.com> - 0.10.0-14
+- 为 Magic 3.0 重建
+
 * Wed Jul 16 2014 Mat Booth <mat.booth@redhat.com> - 0.10.0-13
 - Fix unowned directory.
 

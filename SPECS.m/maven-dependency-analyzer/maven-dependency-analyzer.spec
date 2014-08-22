@@ -1,6 +1,6 @@
 Name:           maven-dependency-analyzer
 Version:        1.4
-Release:        6%{?dist}
+Release:        7%{?dist}
 Summary:        Maven dependency analyzer
 License:        ASL 2.0
 URL:            http://maven.apache.org/shared/maven-dependency-analyzer/
@@ -58,6 +58,9 @@ Summary:        API documentation for %{name}
 %doc LICENSE NOTICE
 
 %changelog
+* Thu Aug 14 2014 Liu Di <liudidi@gmail.com> - 1.4-7
+- 为 Magic 3.0 重建
+
 * Mon Aug  4 2014 Mikolaj Izdebski <mizdebsk@redhat.com> - 1.4-6
 - Fix build-requires on parent POM
 

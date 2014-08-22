@@ -1,6 +1,6 @@
 Name:          jackson-module-jaxb-annotations
 Version:       2.4.1
-Release:       1%{?dist}
+Release:       2%{?dist}
 Summary:       JAXB annotations support for Jackson (2.x)
 License:       ASL 2.0
 URL:           http://wiki.fasterxml.com/JacksonJAXBAnnotations
@@ -67,6 +67,9 @@ sed -i 's/\r//' LICENSE NOTICE
 %doc LICENSE NOTICE
 
 %changelog
+* Fri Aug 15 2014 Liu Di <liudidi@gmail.com> - 2.4.1-2
+- 为 Magic 3.0 重建
+
 * Fri Jul 04 2014 gil cattaneo <puntogil@libero.it> 2.4.1-1
 - update to 2.4.1
 

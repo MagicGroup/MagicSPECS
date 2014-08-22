@@ -1,6 +1,6 @@
 Name:          lightcouch
 Version:       0.1.2
-Release:       2%{?dist}
+Release:       3%{?dist}
 Summary:       CouchDB Java API
 License:       ASL 2.0
 URL:           http://www.lightcouch.org/
@@ -9,7 +9,7 @@ Source0:       https://github.com/lightcouch/LightCouch/archive/%{name}-%{versio
 BuildRequires: java-devel
 BuildRequires: mvn(com.google.code.gson:gson)
 BuildRequires: mvn(org.apache.httpcomponents:httpclient) >= 4.3.3
-BuildRequires: mvn(org.sonatype.oss:oss-parent)
+BuildRequires: mvn(org.sonatype.oss:oss-parent:pom:)
 BuildRequires: mvn(junit:junit)
 BuildRequires: maven-local
 BuildArch:     noarch
@@ -107,6 +107,9 @@ sed -i "s|public Response save() {|public Response save() throws java.io.Unsuppo
 %doc LICENSE
 
 %changelog
+* Fri Aug 15 2014 Liu Di <liudidi@gmail.com> - 0.1.2-3
+- 为 Magic 3.0 重建
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.1.2-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

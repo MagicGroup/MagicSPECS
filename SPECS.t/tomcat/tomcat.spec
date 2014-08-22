@@ -54,7 +54,7 @@
 Name:          tomcat
 Epoch:         0
 Version:       %{major_version}.%{minor_version}.%{micro_version}
-Release:       3%{?dist}
+Release:       4%{?dist}
 Summary:       Apache Servlet/JSP Engine, RI for Servlet %{servletspec}/JSP %{jspspec} API
 
 Group:         System Environment/Daemons
@@ -292,25 +292,25 @@ popd
 mkdir -p META-INF
 cp -p %{SOURCE8} META-INF/MANIFEST.MF
 touch META-INF/MANIFEST.MF
-zip -u output/build/lib/servlet-api.jar META-INF/MANIFEST.MF
+zip -v output/build/lib/servlet-api.jar META-INF/MANIFEST.MF
 cp -p %{SOURCE9} META-INF/MANIFEST.MF
 touch META-INF/MANIFEST.MF
-zip -u output/build/lib/jsp-api.jar META-INF/MANIFEST.MF
+zip -v output/build/lib/jsp-api.jar META-INF/MANIFEST.MF
 cp -p %{SOURCE12} META-INF/MANIFEST.MF
 touch META-INF/MANIFEST.MF
-zip -u output/build/lib/el-api.jar META-INF/MANIFEST.MF
+zip -v output/build/lib/el-api.jar META-INF/MANIFEST.MF
 cp -p %{SOURCE13} META-INF/MANIFEST.MF
 touch META-INF/MANIFEST.MF
-zip -u output/build/lib/jasper-el.jar META-INF/MANIFEST.MF
+zip -v output/build/lib/jasper-el.jar META-INF/MANIFEST.MF
 cp -p %{SOURCE14} META-INF/MANIFEST.MF
 touch META-INF/MANIFEST.MF
-zip -u output/build/lib/jasper.jar META-INF/MANIFEST.MF
+zip -v output/build/lib/jasper.jar META-INF/MANIFEST.MF
 cp -p %{SOURCE15} META-INF/MANIFEST.MF
 touch META-INF/MANIFEST.MF
-zip -u output/build/lib/tomcat-api.jar META-INF/MANIFEST.MF
+zip -v output/build/lib/tomcat-api.jar META-INF/MANIFEST.MF
 cp -p %{SOURCE16} META-INF/MANIFEST.MF
 touch META-INF/MANIFEST.MF
-zip -u output/build/bin/tomcat-juli.jar META-INF/MANIFEST.MF
+zip -v output/build/bin/tomcat-juli.jar META-INF/MANIFEST.MF
 
 %install
 # build initial path structure
@@ -669,6 +669,9 @@ fi
 %attr(0644,root,root) %{_unitdir}/%{name}-jsvc.service
 
 %changelog
+* Tue Aug 12 2014 Liu Di <liudidi@gmail.com> - 0:7.0.54-4
+- 为 Magic 3.0 重建
+
 * Mon Jun 16 2014 Michal Srb <msrb@redhat.com> - 0:7.0.54-3
 - jsp-api requires el-api
 

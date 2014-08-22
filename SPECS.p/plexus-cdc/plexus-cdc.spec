@@ -34,7 +34,7 @@
 
 Name:           %{parent}-%{subname}
 Version:        1.0
-Release:        0.21.a14%{?dist}
+Release:        0.22.a14%{?dist}
 Epoch:          0
 Summary:        Plexus Component Descriptor Creator
 # Almost whole gleaner subpackage is ASL 2.0
@@ -99,6 +99,9 @@ cp -p %{SOURCE2} .
 %doc LICENSE-2.0.txt
 
 %changelog
+* Fri Aug 15 2014 Liu Di <liudidi@gmail.com> - 0:1.0-0.22.a14
+- 为 Magic 3.0 重建
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0:1.0-0.21.a14
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

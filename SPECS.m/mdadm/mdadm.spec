@@ -1,7 +1,8 @@
 Summary:     The mdadm program controls Linux md devices (software RAID arrays)
+Summary(zh_CN.UTF-8): 控制 Linux md 设备 (软 Raid) 的程序
 Name:        mdadm
-Version:     3.3.1
-Release:     6%{?dist}
+Version: 3.3.2
+Release: 1%{?dist}
 Source:      http://www.kernel.org/pub/linux/utils/raid/mdadm/mdadm-%{version}.tar.xz
 Source1:     mdmonitor.init
 Source2:     raid-check
@@ -12,15 +13,13 @@ Source6:     mdmonitor.service
 Source7:     mdadm.conf
 Source8:     mdadm_event.conf
 
-Patch1:      mdadm-3.3.1-Grow-improve-error-message-is-grow-n2-used-on-Linear.patch
-Patch2:      mdadm-3.3.1-Assemble-Only-fail-auto-assemble-in-face-of-mdadm.co.patch
-Patch3:      mdadm-3.3.1-DDF-cast-print-arguments-in-super-ddf.c.patch
 # Fedora customization patches
 Patch97:     mdadm-3.3-udev.patch
 Patch98:     mdadm-2.5.2-static.patch
 URL:         http://www.kernel.org/pub/linux/utils/raid/mdadm/
 License:     GPLv2+
 Group:       System Environment/Base
+Group(zh_CN.UTF-8): 系统环境/基本
 BuildRoot:   %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 Obsoletes:   mdctl,raidtools
 Obsoletes:   mdadm-sysvinit
@@ -38,12 +37,12 @@ package.  However, mdadm is a single program, and it can perform
 almost all functions without a configuration file, though a configuration
 file can be used to help with some common tasks.
 
+%description -l zh_CN.UTF-8
+mdadm 程序用来创建、管理和监视 Linux MD（软 Raid）设备。
+
 %prep
 %setup -q
 
-%patch1 -p1 -b .lineargrow
-%patch2 -p1 -b .autofail
-%patch3 -p1 -b .ddf
 # Fedora customization patches
 %patch97 -p1 -b .udev
 %patch98 -p1 -b .static
@@ -73,6 +72,7 @@ install -d -m 0710 %{buildroot}%{_localstatedir}/run/%{name}/
 # abrt
 mkdir -p %{buildroot}/etc/libreport/events.d
 install -m644 %{SOURCE8} %{buildroot}/etc/libreport/events.d
+magic_rpm_clean.sh
 
 %clean
 rm -rf %{buildroot}
@@ -108,6 +108,9 @@ rm -rf %{buildroot}
 /etc/libreport/events.d/*
 
 %changelog
+* Fri Aug 22 2014 Liu Di <liudidi@gmail.com> - 3.3.2-1
+- 更新到 3.3.2
+
 * Tue Aug 5 2014 Jes Sorensen <Jes.Sorensen@redhat.com> - 3.3.1-6
 - Apply proper fix for bz1125883, clean up after rogue patch application
 - Resolves bz1125883

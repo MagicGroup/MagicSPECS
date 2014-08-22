@@ -106,7 +106,7 @@ Summary: An interpreted, interactive, object-oriented programming language
 Name: %{python}
 # Remember to also rebase python-docs when changing this:
 Version: 2.7.8
-Release: 3%{?dist}
+Release: 4%{?dist}
 License: Python
 Group: Development/Languages
 Requires: %{python}-libs%{?_isa} = %{version}-%{release}
@@ -2078,6 +2078,9 @@ rm -fr %{buildroot}
 # ======================================================
 
 %changelog
+* Wed Aug 13 2014 Liu Di <liudidi@gmail.com> - 2.7.8-4
+- 为 Magic 3.0 重建
+
 * Thu Jul 31 2014 Tom Callaway <spot@fedoraproject.org> - 2.7.8-3
 - fix license handling
 

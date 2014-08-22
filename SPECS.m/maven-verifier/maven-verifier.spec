@@ -1,6 +1,6 @@
 Name:           maven-verifier
 Version:        1.5
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        Maven verifier
 License:        ASL 2.0
 URL:            http://maven.apache.org/shared/maven-verifier
@@ -47,6 +47,9 @@ API documentation for %{name}.
 
 
 %changelog
+* Thu Aug 14 2014 Liu Di <liudidi@gmail.com> - 1.5-5
+- 为 Magic 3.0 重建
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.5-4
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

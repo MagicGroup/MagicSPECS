@@ -3,7 +3,7 @@
 
 Name:          jmock
 Version:       2.5.1
-Release:       7%{?dist}
+Release:       8%{?dist}
 Summary:       Java library for testing code with mock objects
 License:       BSD
 Url:           http://www.jmock.org/
@@ -142,6 +142,9 @@ cp -pr build/%{name}-%{namedversion}/doc/* %{buildroot}%{_javadocdir}/%{name}
 %doc LICENSE.txt
 
 %changelog
+* Thu Aug 14 2014 Liu Di <liudidi@gmail.com> - 2.5.1-8
+- 为 Magic 3.0 重建
+
 * Sun Jun 08 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.5.1-7
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

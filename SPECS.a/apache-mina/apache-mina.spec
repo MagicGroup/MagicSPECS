@@ -1,6 +1,6 @@
 Name: apache-mina
 Version: 2.0.7
-Release: 2%{?dist}
+Release: 3%{?dist}
 Summary: Apache MINA
 Group: Development/Libraries
 License: ASL 2.0
@@ -94,6 +94,9 @@ sed -i \
 
 
 %changelog
+* Fri Aug 15 2014 Liu Di <liudidi@gmail.com> - 2.0.7-3
+- 为 Magic 3.0 重建
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.0.7-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

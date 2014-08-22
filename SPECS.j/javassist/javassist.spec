@@ -2,7 +2,7 @@
 
 Name:           javassist
 Version:        3.18.1
-Release:        2%{?dist}
+Release:        4%{?dist}
 Summary:        The Java Programming Assistant provides simple Java bytecode manipulation
 Group:          Development/Libraries
 License:        MPLv1.1 or LGPLv2+ or ASL 2.0
@@ -73,6 +73,12 @@ mkdir runtest
 %doc License.html
 
 %changelog
+* Tue Aug 12 2014 Liu Di <liudidi@gmail.com> - 3.18.1-4
+- 为 Magic 3.0 重建
+
+* Tue Aug 12 2014 Liu Di <liudidi@gmail.com> - 3.18.1-3
+- 为 Magic 3.0 重建
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.18.1-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

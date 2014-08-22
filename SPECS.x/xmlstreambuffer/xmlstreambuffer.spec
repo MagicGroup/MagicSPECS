@@ -1,6 +1,6 @@
 Name:          xmlstreambuffer
 Version:       1.5.1
-Release:       5%{?dist}
+Release:       6%{?dist}
 Summary:       XML Stream Buffer
 License:       CDDL or GPLv2 with exceptions
 Url:           http://java.net/projects/xmlstreambuffer/
@@ -82,6 +82,9 @@ sed -i 's/\r//' LICENSE.txt
 %doc LICENSE.txt
 
 %changelog
+* Thu Aug 14 2014 Liu Di <liudidi@gmail.com> - 1.5.1-6
+- 为 Magic 3.0 重建
+
 * Sun Jun 08 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.5.1-5
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

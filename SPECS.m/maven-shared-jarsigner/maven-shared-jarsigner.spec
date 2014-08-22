@@ -1,6 +1,6 @@
 Name:             maven-shared-jarsigner
 Version:          1.3.2
-Release:          2%{?dist}
+Release:          3%{?dist}
 Summary:          Component to assist in signing Java archives
 License:          ASL 2.0
 URL:              http://maven.apache.org/shared/maven-jarsigner/
@@ -44,6 +44,9 @@ find -name \*.jar -delete
 %doc LICENSE NOTICE
 
 %changelog
+* Thu Aug 14 2014 Liu Di <liudidi@gmail.com> - 1.3.2-3
+- 为 Magic 3.0 重建
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.3.2-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

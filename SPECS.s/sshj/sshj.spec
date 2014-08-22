@@ -1,6 +1,6 @@
 Name:          sshj
 Version:       0.8.1
-Release:       8%{?dist}
+Release:       9%{?dist}
 Summary:       SSHv2 library for Java
 License:       ASL 2.0
 URL:           http://schmizz.net/sshj/
@@ -71,6 +71,9 @@ sed -i -e 's/org.junit.internal.matchers/org.hamcrest.core/' src/test/java/net/s
 %doc LICENSE NOTICE
 
 %changelog
+* Fri Aug 15 2014 Liu Di <liudidi@gmail.com> - 0.8.1-9
+- 为 Magic 3.0 重建
+
 * Sun Jun 08 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.8.1-8
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

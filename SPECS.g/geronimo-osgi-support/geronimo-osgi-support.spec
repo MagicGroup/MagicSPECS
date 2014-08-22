@@ -3,7 +3,7 @@
 
 Name:             geronimo-osgi-support
 Version:          1.0
-Release:          16%{?dist}
+Release:          17%{?dist}
 Summary:          OSGI spec bundle support
 License:          ASL 2.0 and W3C
 URL:              http://geronimo.apache.org/
@@ -67,6 +67,9 @@ sed -i 's/\r//' LICENSE NOTICE
 %doc LICENSE NOTICE
 
 %changelog
+* Tue Aug 12 2014 Liu Di <liudidi@gmail.com> - 1.0-17
+- 为 Magic 3.0 重建
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.0-16
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

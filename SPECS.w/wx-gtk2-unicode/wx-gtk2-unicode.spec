@@ -55,7 +55,7 @@ Summary: The GTK+ %{gtkver} port of the wxWidgets library
 Summary(zh_CN.UTF-8): wxWidgets的GTK+%{gtkver}移植
 Name: %{name}
 Version: %{ver}
-Release: %{rel}.1
+Release: 4%{?dist}
 License: wxWindows Licence
 Group: System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
@@ -733,7 +733,7 @@ rm -f %{_bindir}/%{wxbaseconfiglink}
 %{_libdir}/libwx_%{buildname}_fl-%{ver2}.so.*
 %{_libdir}/libwx_%{buildname}_gizmos-%{ver2}.so.*
 %{_libdir}/libwx_%{buildname}_gizmos_xrc-%{ver2}.so.*
-#%{_libdir}/libwx_%{buildname}_mmedia-%{ver2}.so.*
+%{_libdir}/libwx_%{buildname}_mmedia-%{ver2}.so.*
 %{_libdir}/libwx_%{buildname}_ogl-%{ver2}.so.*
 %{_libdir}/libwx_%{buildname}_plot-%{ver2}.so.*
 %{_libdir}/libwx_%{buildname}_stc-%{ver2}.so.*
@@ -758,11 +758,9 @@ rm -f %{_bindir}/%{wxbaseconfiglink}
 %{_libdir}/libwx_%{buildname}_gizmos-%{ver2}.so
 %{_libdir}/libwx_%{buildname}_gizmos_xrc-%{ver2}.so
 
-%if 0
 %dir %{_includedir}/wx-%{ver2}/wx/mmedia
 %{_includedir}/wx-%{ver2}/wx/mmedia/*
 %{_libdir}/libwx_%{buildname}_mmedia-%{ver2}.so
-%endif
 
 %dir %{_includedir}/wx-%{ver2}/wx/ogl
 %{_includedir}/wx-%{ver2}/wx/ogl/*
@@ -781,6 +779,9 @@ rm -f %{_bindir}/%{wxbaseconfiglink}
 %{_libdir}/libwx_%{buildname}_svg-%{ver2}.so
 
 %changelog 
+* Wed Aug 13 2014 Liu Di <liudidi@gmail.com> - 2.8.12-4
+- 为 Magic 3.0 重建
+
 * Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 2.8.12-3.1
 - 为 Magic 3.0 重建
 

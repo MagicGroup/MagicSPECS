@@ -1,6 +1,6 @@
 Name: relaxngcc
 Version: 1.12
-Release: 6%{?dist}
+Release: 7%{?dist}
 Summary: RELAX NG Compiler Compiler
 Group: Development/Libraries
 
@@ -119,6 +119,9 @@ cp -pr javadoc/* %{buildroot}%{_javadocdir}/%{name}/.
 %doc LICENSE.txt
 
 %changelog
+* Thu Aug 14 2014 Liu Di <liudidi@gmail.com> - 1.12-7
+- 为 Magic 3.0 重建
+
 * Sun Aug 04 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.12-6
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
 

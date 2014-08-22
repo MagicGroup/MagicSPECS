@@ -32,7 +32,7 @@
 
 Name:           xstream
 Version:        1.4.7
-Release:        6%{?dist}
+Release:        7%{?dist}
 Summary:        Java XML serialization library
 License:        BSD
 URL:            http://xstream.codehaus.org/
@@ -181,6 +181,9 @@ dummy = posix.readlink(dir) and os.remove(dir)
 %doc LICENSE.txt
 
 %changelog
+* Tue Aug 12 2014 Liu Di <liudidi@gmail.com> - 1.4.7-7
+- 为 Magic 3.0 重建
+
 * Mon Aug  4 2014 Mikolaj Izdebski <mizdebsk@redhat.com> - 1.4.7-6
 - Fix build-requires on codehaus-parent
 

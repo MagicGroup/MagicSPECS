@@ -30,7 +30,7 @@
 
 Name:           gnu-getopt
 Version:        1.0.14
-Release:        7%{?dist}
+Release:        8%{?dist}
 Epoch:          0
 Summary:        Java getopt implementation
 License:        LGPLv2+
@@ -99,6 +99,9 @@ rm -rf $(readlink -f %{_javadocdir}/%{name}) %{_javadocdir}/%{name} || :
 %{_javadocdir}/%{name}
 
 %changelog
+* Thu Aug 14 2014 Liu Di <liudidi@gmail.com> - 0:1.0.14-8
+- 为 Magic 3.0 重建
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0:1.0.14-7
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

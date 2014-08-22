@@ -1,22 +1,23 @@
 %{!?python_sitearch: %define python_sitearch %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib(1)")}
 
 Summary: Mercurial -- a distributed SCM
+Summary(zh_CN.UTF-8): 一个分布式版本控制系统
 Name: mercurial
-Version: 2.4
-Release: 2%{?dist}
-#Release: 1.rc1%{?dist}
+Version: 3.1
+Release: 1%{?dist}
+#Release: 1%{?dist}
 
 #%define upstreamversion %{version}-rc
 %define upstreamversion %{version}
 
 License: GPLv2+
 Group: Development/Tools
+Group(zh_CN.UTF-8): 开发/工具
 URL: http://www.selenic.com/mercurial/
 #Source0: http://www.selenic.com/mercurial/release/%{name}-%{version}.tar.gz
 Source0: http://www.selenic.com/mercurial/release/%{name}-%{upstreamversion}.tar.gz
 Source1: mercurial-site-start.el
 Patch0: mercurial-i18n.patch
-#Patch1: docutils-0.8.patch
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: python python-devel
 BuildRequires: emacs-nox emacs-el pkgconfig gettext python-docutils
@@ -30,6 +31,9 @@ for efficient handling of very large distributed projects.
 Quick start: http://www.selenic.com/mercurial/wiki/index.cgi/QuickStart
 Tutorial: http://www.selenic.com/mercurial/wiki/index.cgi/Tutorial
 Extensions: http://www.selenic.com/mercurial/wiki/index.cgi/CategoryExtension
+
+%description -l zh_CN.UTF-8
+一个分布式版本控制系统。
 
 %define pkg mercurial
 
@@ -85,7 +89,6 @@ documentation.
 #%setup -q
 %setup -q -n %{name}-%{upstreamversion}
 %patch0 -p0
-#%patch1 -p1
 
 %build
 make all
@@ -148,7 +151,7 @@ install -m 644 contrib/mergetools.hgrc $RPM_BUILD_ROOT%{_sysconfdir}/mercurial/h
 mv $RPM_BUILD_ROOT%{python_sitearch}/mercurial/locale $RPM_BUILD_ROOT%{_datadir}/locale
 rm -rf $RPM_BUILD_ROOT%{python_sitearch}/mercurial/locale
 
-
+magic_rpm_clean.sh
 %find_lang hg
 
 grep -v locale %{name}-base.files > %{name}-base-filtered.files
@@ -192,6 +195,9 @@ rm -rf $RPM_BUILD_ROOT
 ##cd tests && %{__python} run-tests.py
 
 %changelog
+* Fri Aug 22 2014 Liu Di <liudidi@gmail.com> - 3.1-1
+- 更新到 3.1
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 2.4-2
 - 为 Magic 3.0 重建
 

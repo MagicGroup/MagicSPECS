@@ -21,12 +21,12 @@ BuildRequires:    maven-failsafe-plugin
 BuildRequires:    maven-jar-plugin
 BuildRequires:    maven-surefire-plugin
 BuildRequires:    maven-surefire-provider-testng
-BuildRequires:    maven-surefire-provider-junit4
+BuildRequires:    maven-surefire-provider-junit
 BuildRequires:    maven-verifier-plugin
 BuildRequires:    java_cup
 BuildRequires:    jarjar
 BuildRequires:    objectweb-asm
-BuildRequires:    junit4
+BuildRequires:    junit
 BuildRequires:    testng
 
 Requires:         jpackage-utils
@@ -36,13 +36,8 @@ Requires:         java-devel
 #BuildRequires:    java_cup = 1:0.11a-12
 #BuildRequires:    objectweb-asm = 0:3.3.1-7
 
-%if 0%{?fedora} > 20
 Provides:         bundled(objectweb-asm) = 0:5.0.1-1
 Provides:         bundled(java_cup) = 1:0.11a-16
-%else
-Provides:         bundled(objectweb-asm) = 0:3.3.1-8
-Provides:         bundled(java_cup) = 1:0.11a-15
-%endif
 
 %description
 Byteman is a tool which simplifies tracing and testing of Java programs.

@@ -3,7 +3,7 @@
 
 Name:             geronimo-jaxrpc
 Version:          2.1
-Release:          16%{?dist}
+Release:          17%{?dist}
 Summary:          Java EE: Java API for XML Remote Procedure Call v1.1
 License:          ASL 2.0 and W3C
 
@@ -56,6 +56,9 @@ sed -i 's/\r//' LICENSE NOTICE
 %doc LICENSE NOTICE
 
 %changelog
+* Tue Aug 12 2014 Liu Di <liudidi@gmail.com> - 2.1-17
+- 为 Magic 3.0 重建
+
 * Mon Aug  4 2014 Mikolaj Izdebski <mizdebsk@redhat.com> - 2.1-16
 - Remove use of depmap
 

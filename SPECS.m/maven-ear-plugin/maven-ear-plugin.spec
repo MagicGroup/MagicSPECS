@@ -1,6 +1,6 @@
 Name:           maven-ear-plugin
 Version:        2.8
-Release:        6%{?dist}
+Release:        7%{?dist}
 Summary:        Maven EAR Plugin
 
 Group:          Development/Libraries
@@ -79,13 +79,17 @@ cp -pr target/site/api*/* %{buildroot}%{_javadocdir}/%{name}/
 %doc LICENSE NOTICE
 %{_javadir}/%{name}.jar
 %{_mavenpomdir}/*
-%{_mavendepmapfragdir}/*
+#%{_mavendepmapfragdir}/*
+%{_datadir}/maven-metadata/maven-ear-plugin.xml
 
 %files javadoc
 %doc LICENSE NOTICE
 %{_javadocdir}/%{name}
 
 %changelog
+* Fri Aug 15 2014 Liu Di <liudidi@gmail.com> - 2.8-7
+- 为 Magic 3.0 重建
+
 * Fri Mar 28 2014 Michael Simacek <msimacek@redhat.com> - 2.8-6
 - Use Requires: java-headless rebuild (#1067528)
 

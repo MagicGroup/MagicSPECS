@@ -3,7 +3,7 @@
 %global oname json
 Name:          android-json-org-java
 Version:       4.3
-Release:       0.2.r3.1%{?dist}
+Release:       0.3.r3.1%{?dist}
 Summary:       Androids rewrite of the evil licensed Json.org
 License:       ASL 2.0
 URL:           https://android.googlesource.com/platform/libcore/+/master/json
@@ -65,6 +65,9 @@ rm -rf MODULE_LICENSE_BSD_LIKE
 %doc LICENSE-2.0.txt
 
 %changelog
+* Wed Aug 13 2014 Liu Di <liudidi@gmail.com> - 4.3-0.3.r3.1
+- 为 Magic 3.0 重建
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 4.3-0.2.r3.1
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

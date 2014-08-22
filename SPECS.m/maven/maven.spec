@@ -1,6 +1,6 @@
 Name:           maven
 Version:        3.2.2
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Java project management and project comprehension tool
 License:        ASL 2.0
 URL:            http://maven.apache.org/
@@ -274,6 +274,9 @@ ln -sf $(build-classpath plexus/classworlds) \
 
 
 %changelog
+* Mon Aug 11 2014 Liu Di <liudidi@gmail.com> - 3.2.2-2
+- 为 Magic 3.0 重建
+
 * Wed Jun 18 2014 Mikolaj Izdebski <mizdebsk@redhat.com> - 3.2.2-1
 - Update to upstream version 3.2.2
 

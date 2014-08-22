@@ -3,7 +3,7 @@
 
 Name:          hibernate
 Version:       4.3.5
-Release:       2%{?dist}
+Release:       3%{?dist}
 Summary:       Relational persistence and query service
 Group:         Development/Libraries
 License:       LGPLv2+ and ASL 2.0
@@ -432,6 +432,9 @@ done
 %doc lgpl.txt LICENSE-2.0.txt
 
 %changelog
+* Tue Aug 12 2014 Liu Di <liudidi@gmail.com> - 4.3.5-3
+- 为 Magic 3.0 重建
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 4.3.5-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

@@ -11,7 +11,7 @@
 
 Name:           %{wxgtkname}
 Version:        3.0.1
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        GTK port of the wxWidgets GUI library
 License:        wxWidgets
 Group:          System Environment/Libraries
@@ -236,6 +236,9 @@ popd
 %doc html
 
 %changelog
+* Wed Aug 13 2014 Liu Di <liudidi@gmail.com> - 3.0.1-2
+- 为 Magic 3.0 重建
+
 * Sat Jul 5 2014 Jeremy Newton <alexjnewt@hotmail.com> - 3.0.1-1
 - Bump to 3.0.1 RH#1076617
 

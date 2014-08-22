@@ -1,6 +1,6 @@
 Name:           jna
 Version:        4.1.0
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        Pure Java access to native libraries
 
 Group:          Development/Libraries
@@ -188,7 +188,8 @@ rm -rf %{buildroot}
 %{_javadir}/%{name}.jar
 %if 0%{?fedora} >= 9 || 0%{?rhel} > 5
 %{_mavenpomdir}/JPP-%{name}.pom
-%{_mavendepmapfragdir}/%{name}
+#%{_mavendepmapfragdir}/%{name}
+%{_datadir}/maven-metadata/%{name}.xml
 %endif
 
 
@@ -203,11 +204,15 @@ rm -rf %{buildroot}
 %{_javadir}/%{name}
 %if 0%{?fedora} >= 9 || 0%{?rhel} > 5
 %{_mavenpomdir}/JPP.%{name}-%{name}-platform.pom
-%{_mavendepmapfragdir}/%{name}-platform
+#%{_mavendepmapfragdir}/%{name}-platform
+%{_datadir}/maven-metadata/%{name}-platform.xml
 %endif
 
 
 %changelog
+* Thu Aug 14 2014 Liu Di <liudidi@gmail.com> - 4.1.0-5
+- 为 Magic 3.0 重建
+
 * Fri Jan 10 2014 Roland Grunberg <rgrunber@redhat.com> - 4.0.0-4
 - fix updated depmap
 

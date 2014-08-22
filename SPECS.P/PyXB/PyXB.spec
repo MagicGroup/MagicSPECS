@@ -1,6 +1,6 @@
 Name:           PyXB
 Version:        1.2.3
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Python XML Schema Bindings
 License:        Apache
 URL:            http://pyxb.sourceforge.net/
@@ -29,6 +29,9 @@ XMLSchema.
 %{_bindir}/pyx*
 
 %changelog
+* Wed Aug 13 2014 Liu Di <liudidi@gmail.com> - 1.2.3-3
+- 为 Magic 3.0 重建
+
 * Fri Jun 06 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.2.3-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

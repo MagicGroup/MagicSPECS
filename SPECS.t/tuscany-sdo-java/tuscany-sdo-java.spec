@@ -5,7 +5,7 @@
 
 Name:          tuscany-sdo-java
 Version:       1.1.1
-Release:       10%{?dist}
+Release:       11%{?dist}
 Summary:       Service Data Objects 2.1 Java API spec
 License:       ASL 2.0
 Url:           http://tuscany.apache.org/sdo-java.html
@@ -93,6 +93,9 @@ sed -i 's#<target>1.4</target>#<target>1.5</target>#' pom.xml sdo-api/pom.xml
 %doc LICENSE NOTICE
 
 %changelog
+* Fri Aug 15 2014 Liu Di <liudidi@gmail.com> - 1.1.1-11
+- 为 Magic 3.0 重建
+
 * Sun Jun 08 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.1.1-10
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

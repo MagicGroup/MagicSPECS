@@ -30,7 +30,7 @@
 
 Name:           jline1
 Version:        1.0
-Release:        10%{?dist}
+Release:        11%{?dist}
 Summary:        Java library for reading and editing user input in console applications
 License:        BSD
 URL:            http://jline.sourceforge.net/
@@ -117,6 +117,9 @@ mv tmp/* .
 %doc LICENSE.txt
 
 %changelog
+* Tue Aug 12 2014 Liu Di <liudidi@gmail.com> - 1.0-11
+- 为 Magic 3.0 重建
+
 * Mon Jun 23 2014 msrb@redhat.com - 1.0-9
 - Fix FTBFS
 

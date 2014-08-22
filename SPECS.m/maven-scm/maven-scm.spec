@@ -30,7 +30,7 @@
 
 Name:           maven-scm
 Version:        1.9.1
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Common API for doing SCM operations
 License:        ASL 2.0
 URL:            http://maven.apache.org/scm
@@ -124,6 +124,9 @@ sed -i s/cvsjava.CvsJava/cvsexe.CvsExe/ maven-scm-client/src/main/resources/META
 %doc LICENSE NOTICE
 
 %changelog
+* Thu Aug 14 2014 Liu Di <liudidi@gmail.com> - 1.9.1-2
+- 为 Magic 3.0 重建
+
 * Mon Jul 28 2014 Mikolaj Izdebski <mizdebsk@redhat.com> - 1.9.1-1
 - Update to upstream version 1.9.1
 

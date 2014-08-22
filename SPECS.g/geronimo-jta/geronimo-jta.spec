@@ -2,7 +2,7 @@
 
 Name:		geronimo-jta
 Version:	1.1.1
-Release:	17%{?dist}
+Release:	18%{?dist}
 Summary:	J2EE JTA v1.1 API
 
 Group:		Development/Libraries
@@ -63,6 +63,9 @@ rm -rf $(readlink -f %{_javadocdir}/%{name}) %{_javadocdir}/%{name} || :
 
 
 %changelog
+* Tue Aug 12 2014 Liu Di <liudidi@gmail.com> - 1.1.1-18
+- 为 Magic 3.0 重建
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.1.1-17
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

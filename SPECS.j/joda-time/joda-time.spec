@@ -2,7 +2,7 @@
 
 Name:             joda-time
 Version:          2.3
-Release:          2.%{tzversion}%{?dist}
+Release:          3.%{tzversion}%{?dist}
 Summary:          Java date and time API
 
 License:          ASL 2.0
@@ -62,6 +62,9 @@ tar -xzf %{SOURCE1} -C src/main/java/org/joda/time/tz/src/
 %doc LICENSE.txt NOTICE.txt
 
 %changelog
+* Tue Aug 12 2014 Liu Di <liudidi@gmail.com> - 2.3-3.tzdata2013g
+- 为 Magic 3.0 重建
+
 * Sun Jun 08 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.3-2.tzdata2013g
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

@@ -1,6 +1,6 @@
 Name: txw2
 Version: 20110809
-Release: 11%{?dist}
+Release: 12%{?dist}
 Summary: Typed XML writer for Java
 Group: Development/Libraries
 License: CDDL and GPLv2 with exceptions
@@ -104,6 +104,9 @@ cp -rp target/site/apidocs/* %{buildroot}%{_javadocdir}/%{name}
 
 
 %changelog
+* Fri Aug 15 2014 Liu Di <liudidi@gmail.com> - 20110809-12
+- 为 Magic 3.0 重建
+
 * Mon Aug 04 2014 Yaakov Selkowitz <yselkowi@redhat.com> - 20110809-11
 - Fix FTBFS due to F21 XMvn changes (#1107468)
 

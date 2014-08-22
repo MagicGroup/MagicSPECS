@@ -1,6 +1,6 @@
 Name:          glassfish-dtd-parser
 Version:       1.2
-Release:       0.10.20120120svn%{?dist}
+Release:       0.11.20120120svn%{?dist}
 Summary:       Library for parsing XML DTDs
 License:       CDDL 1.1 and GPLv2 with exceptions
 Url:           http://java.net/projects/dtd-parser
@@ -43,6 +43,9 @@ This package contains javadoc for %{name}.
 %doc LICENSE.txt
 
 %changelog
+* Thu Aug 14 2014 Liu Di <liudidi@gmail.com> - 1.2-0.11.20120120svn
+- 为 Magic 3.0 重建
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.2-0.10.20120120svn
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

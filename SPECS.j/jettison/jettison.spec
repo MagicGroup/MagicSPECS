@@ -1,6 +1,6 @@
 Name:           jettison
 Version:        1.3.4
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        A JSON StAX implementation
 License:        ASL 2.0
 URL:            http://jettison.codehaus.org/
@@ -54,6 +54,9 @@ This package contains the API documentation for %{name}.
 %doc src/main/resources/META-INF/LICENSE
 
 %changelog
+* Tue Aug 12 2014 Liu Di <liudidi@gmail.com> - 1.3.4-5
+- 为 Magic 3.0 重建
+
 * Sun Jun 08 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.3.4-4
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

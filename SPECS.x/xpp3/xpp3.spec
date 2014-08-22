@@ -3,7 +3,7 @@
 Summary:        XML Pull Parser
 Name:           xpp3
 Version:        1.1.4
-Release:        3.c%{?dist}
+Release:        4.c%{?dist}
 License:        ASL 1.1
 URL:            http://www.extreme.indiana.edu/xgws/xsoap/xpp/mxp1/index.html
 Source0:        http://www.extreme.indiana.edu/dist/java-repository/xpp3/distributions/xpp3-%{oversion}_src.tgz
@@ -93,6 +93,9 @@ cp -pr doc/api/* %{buildroot}%{_javadocdir}/%{name}
 %doc %{_javadocdir}/%{name}
 
 %changelog
+* Wed Aug 13 2014 Liu Di <liudidi@gmail.com> - 1.1.4-4.c
+- 为 Magic 3.0 重建
+
 * Sun Jun 08 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.1.4-3.c
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

@@ -1,6 +1,6 @@
 Name:           log4j
 Version:        2.0
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Java logging package
 BuildArch:      noarch
 License:        ASL 2.0
@@ -210,6 +210,9 @@ fi
 
 
 %changelog
+* Thu Aug 14 2014 Liu Di <liudidi@gmail.com> - 2.0-2
+- 为 Magic 3.0 重建
+
 * Fri Jul 18 2014 Michael Simacek <msimacek@redhat.com> 2.0-1
 - Update to upstream version 2.0
 - Remove osgi subpackage (osgi parts were moved to corresponding artifacts)

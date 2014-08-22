@@ -3,7 +3,7 @@
 
 Name:          springframework
 Version:       3.2.6
-Release:       3%{?dist}
+Release:       4%{?dist}
 Summary:       Spring Java Application Framework
 Epoch:         0
 License:       ASL 2.0
@@ -462,6 +462,9 @@ cp -p src/dist/* .
 
 
 %changelog
+* Fri Aug 15 2014 Liu Di <liudidi@gmail.com> - 0:3.2.6-4
+- 为 Magic 3.0 重建
+
 * Sun Jun 08 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0:3.2.6-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

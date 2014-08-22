@@ -2,7 +2,7 @@
 
 Name: xsom
 Version: 0
-Release: 12.%{checkout}svn%{?dist}
+Release: 14.%{checkout}svn%{?dist}
 Summary: XML Schema Object Model (XSOM)
 Group: Development/Libraries
 License: CDDL or GPLv2 with exceptions
@@ -114,6 +114,12 @@ cp -rp target/site/apidocs/* %{buildroot}%{_javadocdir}/%{name}
 
 
 %changelog
+* Thu Aug 14 2014 Liu Di <liudidi@gmail.com> - 0-14.20110809svn
+- 为 Magic 3.0 重建
+
+* Thu Aug 14 2014 Liu Di <liudidi@gmail.com> - 0-13.20110809svn
+- 为 Magic 3.0 重建
+
 * Mon Aug 04 2014 Yaakov Selkowitz <yselkowi@redhat.com> - 0-12.20110809svn
 - Fix junit BRs (#1107359)
 - Fix FTBFS due to F21 XMvn changes
