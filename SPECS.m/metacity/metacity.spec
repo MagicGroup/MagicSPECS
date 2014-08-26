@@ -1,40 +1,16 @@
-%define _default_patch_fuzz 999
-
 Summary: Unobtrusive window manager
 Name: metacity
-Version: 2.34.13
+Version: 3.12.0
 Release: 2%{?dist}
 URL: http://download.gnome.org/sources/metacity/
-Source0: http://download.gnome.org/sources/metacity/2.34/metacity-%{version}.tar.xz
+Source0: http://download.gnome.org/sources/metacity/3.12/metacity-%{version}.tar.xz
 # http://bugzilla.gnome.org/show_bug.cgi?id=558723
 Patch4: stop-spamming-xsession-errors.patch
-# http://bugzilla.gnome.org/show_bug.cgi?id=135056
-Patch5: dnd-keynav.patch
-
-# fedora specific patches
-Patch12: fresh-tooltips.patch
 
 # https://bugzilla.gnome.org/show_bug.cgi?id=598995
 Patch16: Dont-focus-ancestor-window-on-a-different-workspac.patch
-# https://bugzilla.gnome.org/show_bug.cgi?id=599097
-Patch18: For-mouse-and-sloppy-focus-return-to-mouse-mode-on.patch
-# https://bugzilla.gnome.org/show_bug.cgi?id=599248
-Patch19: Add-nofocuswindows-preference-to-list-windows-that.patch
-Patch119: Exclude-the-current-application-from-no_focus_window.patch
-# https://bugzilla.gnome.org/show_bug.cgi?id=599261
-Patch20: Add-a-newwindowsalwaysontop-preference.patch
-Patch120: Apply-new_windows_always_on_top-to-newly-raised-acti.patch
 # https://bugzilla.gnome.org/show_bug.cgi?id=559816
 Patch24: metacity-2.28-empty-keybindings.patch
-# https://bugzilla.gnome.org/show_bug.cgi?id=604319
-Patch25: metacity-2.28-xioerror-unknown-display.patch
-# https://bugzilla.gnome.org/show_bug.cgi?id=599181
-Patch28: Stop-confusing-GDK-s-grab-tracking.patch
-# https://bugzilla.gnome.org/show_bug.cgi?id=622517
-Patch29: Allow-breaking-out-from-maximization-during-mouse.patch
-
-Source1: window.png
-Source2: mini-window.png
 
 License: GPLv2+
 Group: User Interface/Desktops
@@ -89,21 +65,9 @@ API. This package exists purely for technical reasons.
 %prep
 %setup -q
 %patch4 -p1 -b .stop-spamming-xsession-errors
-%patch5 -p1 -b .dnd-keynav
-%patch12 -p1 -b .fresh-tooltips
 
 %patch16 -p1 -b .focus-different-workspace
-%patch18 -p1 -b .focus-on-motion
-%patch19 -p1 -b .no-focus-windows
-%patch119 -p1 -b .no-focus-windows-current-app
-%patch20 -p1 -b .always-on-top
-%patch120 -p1 -b .always-on-top-activate
 %patch24 -p1 -b .empty-keybindings
-%patch25 -p1 -b .xioerror-unknown-display
-%patch28 -p1 -b .grab-tracking
-%patch29 -p1 -b .mouse-unmaximize
-
-cp -p %{SOURCE1} %{SOURCE2} src/
 
 # force regeneration
 rm -f src/org.gnome.metacity.gschema.valid
@@ -181,8 +145,29 @@ fi
 %{_mandir}/man1/metacity-window-demo.1.gz
 
 %changelog
-* Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 2.34.13-2
-- 为 Magic 3.0 重建
+* Sun Aug 17 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.12.0-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
+
+* Wed Jun 18 2014 Richard Hughes <rhughes@redhat.com> - 3.12.0-1
+- Update to 3.12.0
+
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.34.13-7
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.34.13-6
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Thu May 16 2013 Florian Müllner <fmuellner@redhat.com> - 2.34.13-5
+- Include documentation update from upstream
+
+* Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.34.13-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
+
+* Thu Nov 22 2012 Florian Müllner <fmuellner@redhat.com> - 2.34.13-3
+- Clean up leftovers from upstream patch removed in commit 24481514
+
+* Tue Nov 20 2012 Matthias Clasen <mclasen@redhat.com> - 2.34.13-2
+- Don't use a patch fuzz of 999
 
 * Mon Oct 15 2012 Florian Müllner <fmuellner@redhat.com> - 2.34.13-1
 - Update to 2.34.13
