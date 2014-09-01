@@ -75,8 +75,8 @@ rm -f src/main/resources/META-INF/plexus/components.xml
 %doc LICENSE NOTICE
 
 %changelog
-* Mon Jun 09 2014 Liu Di <liudidi@gmail.com> - 1.4-9
-- 为 Magic 3.0 重建
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.4-9
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 
 * Wed May 21 2014 Mikolaj Izdebski <mizdebsk@redhat.com> - 1.4-8
 - Update to current packaging guidelines

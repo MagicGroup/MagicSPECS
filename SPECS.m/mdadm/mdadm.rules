@@ -50,7 +50,7 @@ LABEL="md_imsm_inc_end"
 
 # Next make sure that this isn't a dm device we should skip for some reason
 ENV{DM_UDEV_RULES_VSN}!="?*", GOTO="dm_change_end"
-ENV{DM_UDEV_DISABLE_DISK_RULES_FLAG}=="1", GOTO="dm_change_end"
+ENV{DM_UDEV_DISABLE_OTHER_RULES_FLAG}=="1", GOTO="dm_change_end"
 ENV{DM_SUSPENDED}=="1", GOTO="dm_change_end"
 KERNEL=="dm-*", SUBSYSTEM=="block", ENV{ID_FS_TYPE}=="linux_raid_member", \
 	ACTION=="change", RUN+="/sbin/mdadm -I $env{DEVNAME}"

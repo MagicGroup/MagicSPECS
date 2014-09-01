@@ -1,0 +1,11 @@
+diff -up ./build.xml.tests-headless ./build.xml
+--- ./build.xml.tests-headless	2013-07-04 20:42:30.000000000 +0200
++++ ./build.xml	2013-07-05 15:06:19.354441386 +0200
+@@ -885,6 +885,7 @@ osname=macosx;processor=x86;processor=x8
+       <sysproperty key="jna.builddir" file="${build}"/>
+       <sysproperty key="jna.nativedir" file="${build.native}"/>
+       <jvmarg value="${vmopt.arch}"/>
++      <jvmarg value="-Djava.awt.headless=true"/>
+       <classpath><path refid="test.runpath"/></classpath>
+       <formatter type="brief" usefile="false"/>
+       <formatter type="xml"/>

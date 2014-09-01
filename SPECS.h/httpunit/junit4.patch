@@ -1,0 +1,26 @@
+--- src/com/meterware/servletunit/JUnitServlet.java.sav	2008-05-20 16:25:36.000000000 +0300
++++ src/com/meterware/servletunit/JUnitServlet.java	2012-04-18 14:00:39.653850687 +0300
+@@ -29,8 +29,6 @@ import javax.servlet.http.HttpServletRes
+ import javax.servlet.ServletException;
+ 
+ import junit.runner.BaseTestRunner;
+-import junit.runner.TestSuiteLoader;
+-import junit.runner.StandardTestSuiteLoader;
+ import junit.framework.Test;
+ import junit.framework.AssertionFailedError;
+ import junit.framework.TestResult;
+@@ -148,12 +146,8 @@ public class JUnitServlet extends HttpSe
+         }
+ 
+ 
+-        /**
+-         * Always use the StandardTestSuiteLoader. Overridden from
+-         * BaseTestRunner.
+-         */
+-        public TestSuiteLoader getLoader() {
+-            return new StandardTestSuiteLoader();
++        protected boolean useReloadingTestSuiteLoader() {
++        	return false;
+         }
+ 
+     }

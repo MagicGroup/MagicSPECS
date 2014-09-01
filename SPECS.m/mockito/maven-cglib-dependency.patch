@@ -1,0 +1,15 @@
+diff --git a/maven/mockito-core.pom b/maven/mockito-core.pom
+--- a/maven/mockito-core.pom
++++ b/maven/mockito-core.pom
+@@ -29,6 +29,11 @@
+             <artifactId>objenesis</artifactId>
+             <version>1.0</version>        
+         </dependency>
++        <dependency>
++            <groupId>net.sf.cglib</groupId>
++            <artifactId>cglib</artifactId>
++            <version>2.2</version>        
++        </dependency>
+     </dependencies>
+     
+ </project>

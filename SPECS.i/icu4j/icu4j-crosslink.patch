@@ -1,0 +1,11 @@
+--- build.xml.sav	2011-05-09 15:34:33.558950383 +0300
++++ build.xml	2011-05-09 15:37:10.204119756 +0300
+@@ -448,7 +448,7 @@
+                 docencoding="iso-8859-1"
+                 bottom="&lt;font size=-1&gt;Copyright (c) ${current.year} IBM Corporation and others.&lt;/font&gt;"
+                 additionalparam="-breakiterator -use -tagletpath ${icu4j.build-tools.jar} -taglet com.ibm.icu.dev.tool.docs.ICUTaglet"
+-                link="http://java.sun.com/javase/6/docs/api/"
++                link="${j2se.apidoc}"
+                 source="1.5">
+             <packageset dir="${icu4j.core.dir}/src">
+                 <include name="com/ibm/icu/lang/**"/>

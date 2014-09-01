@@ -1,7 +1,7 @@
 Name:           junit
 Epoch:          1
 Version:        4.11
-Release:        18%{?dist}
+Release:        19%{?dist}
 Summary:        Java regression test package
 License:        CPL
 URL:            http://www.junit.org/
@@ -69,8 +69,7 @@ ant dist -Dversion-status=
 mkdir -p META-INF
 cp -p %{SOURCE2} META-INF/MANIFEST.MF
 touch META-INF/MANIFEST.MF
-# -u 会出错，原因未知
-zip %{name}%{version}/%{name}-%{version}.jar META-INF/MANIFEST.MF
+zip -v %{name}%{version}/%{name}-%{version}.jar META-INF/MANIFEST.MF
 
 %install
 # jars
@@ -108,16 +107,13 @@ cp -pr %{name}%{version}/%{name}/* %{buildroot}%{_datadir}/%{name}/demo/%{name}
 %doc junit%{version}/doc/*
 
 %changelog
-* Thu Jun 12 2014 Liu Di <liudidi@gmail.com> - 1:4.11-18
+* Tue Aug 12 2014 Liu Di <liudidi@gmail.com> - 1:4.11-19
 - 为 Magic 3.0 重建
 
-* Thu Jun 12 2014 Liu Di <liudidi@gmail.com> - 1:4.11-17
+* Tue Aug 12 2014 Liu Di <liudidi@gmail.com> - 1:4.11-16
 - 为 Magic 3.0 重建
 
-* Thu Jun 12 2014 Liu Di <liudidi@gmail.com> - 1:4.11-16
-- 为 Magic 3.0 重建
-
-* Thu Jun 12 2014 Liu Di <liudidi@gmail.com> - 1:4.11-15
+* Tue Aug 12 2014 Liu Di <liudidi@gmail.com> - 1:4.11-15
 - 为 Magic 3.0 重建
 
 * Mon Jun  9 2014 Mikolaj Izdebski <mizdebsk@redhat.com> - 1:4.11-14

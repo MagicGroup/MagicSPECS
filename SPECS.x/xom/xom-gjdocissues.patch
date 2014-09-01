@@ -1,0 +1,21 @@
+--- build.xml.orig	2007-02-14 16:57:41.000000000 -0500
++++ build.xml	2007-02-14 16:57:56.000000000 -0500
+@@ -294,7 +294,7 @@
+              windowtitle="${Name} ${version}  API"
+              docencoding="UTF-8"
+              charset="UTF-8"
+-             link="http://www.junit.org/junit/javadoc/3.8.1"
++             linkoffline="http://www.junit.org/junit/javadoc/3.8.1 org.junit"
+              doctitle="${Name} ${version}"
+              bottom="Copyright 2002-${year} &lt;a href='http://www.elharo.com/'&gt;Elliotte Rusty Harold&lt;/a&gt;
+ 			 &lt;br/&gt; &lt;a href='mailto:elharo@metalab.unc.edu?Subject=XOM'&gt;elharo@metalab.unc.edu&lt;/a&gt;">
+@@ -346,8 +346,7 @@
+              windowtitle="${Name} ${version}  API"
+              docencoding="UTF-8"
+              charset="UTF-8"
+-             noqualifier="java.lang:java.io"
+-             link="http://www.junit.org/junit/javadoc/3.8.1"
++             linkoffline="http://www.junit.org/junit/javadoc/3.8.1 org.junit"
+              doctitle="${Name} ${version}"
+              bottom="Copyright 2002-${year} &lt;a href='http://www.elharo.com/'&gt;Elliotte Rusty Harold&lt;/a&gt;
+ 			 &lt;br/&gt; &lt;a href='mailto:elharo@metalab.unc.edu?Subject=XOM'&gt;elharo@metalab.unc.edu&lt;/a&gt;">

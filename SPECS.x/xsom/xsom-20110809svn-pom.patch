@@ -1,0 +1,38 @@
+diff -Naur xsom-20110809/pom.xml xsom-20110809-work/pom.xml
+--- xsom-20110809/pom.xml	2011-08-09 09:26:44.000000000 -0400
++++ xsom-20110809-work/pom.xml	2012-01-19 10:26:49.613983857 -0500
+@@ -49,11 +49,6 @@
+     <url>http://xsom.java.net/</url>
+     <version>20110809</version>
+     <packaging>jar</packaging>
+-    <parent>
+-        <groupId>net.java</groupId>
+-        <artifactId>jvnet-parent</artifactId>
+-        <version>1</version>
+-    </parent>
+     <licenses>
+         <license>
+             <name>CDDL v1.1 / GPL v2 dual license</name>
+@@ -146,12 +141,6 @@
+                         <phase>generate-sources</phase>
+                         <configuration>
+                             <tasks>
+-                                <taskdef name="licence" classname="com.sun.tools.LicenceTask">
+-                                  <classpath>
+-                                    <pathelement path="lib/lic.jar" />
+-                                  </classpath>
+-                                </taskdef>
+-                                
+                                 <mkdir dir="build/automata" />
+ 
+                                 <!-- delete old files to avoid corruption -->
+@@ -164,9 +153,6 @@
+                                     <arg path="build/src/com/sun/xml/xsom/impl/parser/state" />
+                                     <arg path="src/xmlschema.rng" />
+                                 </java>
+-                                <licence licence="licenceheader.txt">
+-                                  <fileset dir="build/src/" includes="com/sun/xml/xsom/impl/parser/state/*.java" />
+-                                </licence>
+                             </tasks>
+                         </configuration>
+                         <goals>

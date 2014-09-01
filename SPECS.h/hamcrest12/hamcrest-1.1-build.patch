@@ -1,0 +1,42 @@
+--- build.xml.sav0	2007-06-30 15:03:43.000000000 +0200
++++ build.xml	2008-02-14 12:07:25.000000000 +0100
+@@ -26,17 +26,17 @@
+         <java-to-jar srcdir="hamcrest-generator/src/main/java"
+                      destjar="build/temp/hamcrest-generator-${version}-nodeps.jar"
+                      classpath="
+-                       lib/generator/qdox-1.6.1.jar;
++                       lib/generator/qdox.jar;
+                      "/>
+         <taskdef name="jarjar"
+                  classname="com.tonicsystems.jarjar.JarJarTask"
+-                 classpath="lib/generator/jarjar-1.0rc3.jar"/>
++                 classpath="lib/generator/jarjar.jar"/>
+         <!-- Bundle QDox classes in hamcrest-generator.jar so user doesn't need to care
+              about it's existence. Uses JarJar to place classes under a different package
+              to prevent conflict. -->
+         <jarjar jarfile="build/hamcrest-generator-${version}.jar">
+             <zipfileset src="build/temp/hamcrest-generator-${version}-nodeps.jar"/>
+-            <zipfileset src="lib/generator/qdox-1.6.1.jar"/>
++            <zipfileset src="lib/generator/qdox.jar"/>
+             <rule pattern="com.thoughtworks.qdox.**"
+                   result="org.hamcrest.generator.qdox.@1"/>
+         </jarjar>
+@@ -211,7 +211,7 @@
+ 	<target name="javadoc" depends="library">
+ 		<mkdir dir="build/javadoc"/>
+ 		<javadoc destdir="build/javadoc" source="1.5" failonerror="yes"
+-			overview="overview.html">
++			>
+ 			
+             <classpath>
+                 <fileset dir="lib/integration">
+@@ -208,7 +208,8 @@
+ 			<packageset dir="hamcrest-core/src/main/java"/>
+ 			<packageset dir="hamcrest-library/src/main/java" excludes="org/hamcrest/internal"/>
+ 			<packageset dir="hamcrest-integration/src/main/java"/>
+-			<packageset dir="build/generated-code"/>
++			<packageset dir="build/temp/hamcrest-core/generated-code"/>
++			<packageset dir="build/temp/hamcrest-library/generated-code"/>
+ 			
+ 			<group title="Hamcrest API and Utility Classes" packages="org.hamcrest"/>
+ 			<group title="Matcher Library" packages="org.hamcrest.*"/>

@@ -1,0 +1,14 @@
+--- pom.xml.orig	2011-10-24 11:35:30.000000000 +0300
++++ pom.xml	2011-11-02 15:15:07.818007195 +0200
+@@ -69,6 +69,11 @@ under the License.
+     <!-- maven -->
+     <dependency>
+       <groupId>org.apache.maven</groupId>
++      <artifactId>maven-core</artifactId>
++      <version>${mavenVersion}</version>
++    </dependency>
++    <dependency>
++      <groupId>org.apache.maven</groupId>
+       <artifactId>maven-artifact</artifactId>
+       <version>${mavenVersion}</version>
+     </dependency>

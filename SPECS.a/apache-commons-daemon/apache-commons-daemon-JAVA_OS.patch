@@ -1,0 +1,11 @@
+--- commons-daemon-1.0.12-src/src/native/unix/configure~	2013-01-14 07:45:15.000000000 +0100
++++ commons-daemon-1.0.12-src/src/native/unix/configure	2013-01-24 15:55:59.757193071 +0100
+@@ -2776,7 +2776,7 @@
+ echo "${ECHO_T}jni_md.h found in $JAVA_HOME/$JAVA_INC" >&6
+   INCLUDES="$INCLUDES -I$JAVA_HOME/include -I$JAVA_HOME/$JAVA_INC"
+ else
+-  INCLUDES="$INCLUDES -I$JAVA_HOME/include -I$JAVA_HOME/include/$supported_os"
++  INCLUDES="$INCLUDES -I$JAVA_HOME/include -I$JAVA_HOME/include/$JAVA_OS"
+ fi
+ 
+ if test "$GCC" = "yes"

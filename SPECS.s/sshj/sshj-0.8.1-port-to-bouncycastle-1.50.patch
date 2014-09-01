@@ -1,0 +1,65 @@
+diff -Nru sshj-0.8.1/pom.xml sshj-0.8.1-msrb/pom.xml
+--- sshj-0.8.1/pom.xml	2012-07-08 15:55:22.000000000 +0200
++++ sshj-0.8.1-msrb/pom.xml	2014-04-06 04:07:24.338791306 +0200
+@@ -41,8 +41,13 @@
+         </dependency>
+         <dependency>
+             <groupId>org.bouncycastle</groupId>
+-            <artifactId>bcprov-jdk16</artifactId>
+-            <version>1.46</version>
++            <artifactId>bcpkix-jdk15on</artifactId>
++            <version>1.50</version>
++        </dependency>
++        <dependency>
++            <groupId>org.bouncycastle</groupId>
++            <artifactId>bcprov-jdk15on</artifactId>
++            <version>1.50</version>
+             <scope>provided</scope>
+         </dependency>
+         <dependency>
+diff -Nru sshj-0.8.1/src/main/java/net/schmizz/sshj/userauth/keyprovider/PKCS8KeyFile.java sshj-0.8.1-msrb/src/main/java/net/schmizz/sshj/userauth/keyprovider/PKCS8KeyFile.java
+--- sshj-0.8.1/src/main/java/net/schmizz/sshj/userauth/keyprovider/PKCS8KeyFile.java	2012-07-08 15:55:22.000000000 +0200
++++ sshj-0.8.1-msrb/src/main/java/net/schmizz/sshj/userauth/keyprovider/PKCS8KeyFile.java	2014-04-06 03:42:43.248047889 +0200
+@@ -23,7 +23,12 @@
+ import net.schmizz.sshj.userauth.password.PrivateKeyStringResource;
+ import net.schmizz.sshj.userauth.password.Resource;
+ import org.bouncycastle.openssl.EncryptionException;
+-import org.bouncycastle.openssl.PEMReader;
++import org.bouncycastle.openssl.PEMDecryptorProvider;
++import org.bouncycastle.openssl.PEMEncryptedKeyPair;
++import org.bouncycastle.openssl.PEMKeyPair;
++import org.bouncycastle.openssl.PEMParser;
++import org.bouncycastle.openssl.jcajce.JcaPEMKeyConverter;
++import org.bouncycastle.openssl.jcajce.JcePEMDecryptorProviderBuilder;
+ import org.slf4j.Logger;
+ import org.slf4j.LoggerFactory;
+ 
+@@ -119,14 +124,26 @@
+             throws IOException {
+         KeyPair kp = null;
+         org.bouncycastle.openssl.PasswordFinder pFinder = makeBouncyPasswordFinder();
+-        PEMReader r = null;
++        PEMParser r = null;
+         Object o = null;
+         try {
+             for (; ; ) {
+                 // while the PasswordFinder tells us we should retry
+                 try {
+-                    r = new PEMReader(resource.getReader(), pFinder);
++                    r = new PEMParser(resource.getReader());
+                     o = r.readObject();
++
++                    JcaPEMKeyConverter pemConverter = new JcaPEMKeyConverter();
++                    pemConverter.setProvider("BC");
++                    if (pFinder != null && o instanceof PEMEncryptedKeyPair) {
++                        JcePEMDecryptorProviderBuilder decryptorBuilder = new JcePEMDecryptorProviderBuilder();
++                        PEMDecryptorProvider pemDecryptor = decryptorBuilder.build(pFinder.getPassword());
++                        o = pemConverter.getKeyPair(((PEMEncryptedKeyPair) o).decryptKeyPair(pemDecryptor));
++                    }
++                    if (o instanceof PEMKeyPair) {
++                        o = pemConverter.getKeyPair((PEMKeyPair) o);
++                    }
++
+                 } catch (EncryptionException e) {
+                     if (pwdf.shouldRetry(resource))
+                         continue;

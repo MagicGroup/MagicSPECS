@@ -1,0 +1,64 @@
+From 665f967f23ffed9445e1a0d045ae3a9625db3e90 Mon Sep 17 00:00:00 2001
+From: Mikolaj Izdebski <mizdebsk@redhat.com>
+Date: Mon, 28 Apr 2014 16:25:41 +0200
+Subject: [PATCH] Remove usage of junit.awtui and junit.swingui
+
+---
+ src/test/javassist/Bench.java                 | 5 -----
+ src/test/javassist/bytecode/BytecodeTest.java | 6 ------
+ src/test/javassist/compiler/CompTest.java     | 6 ------
+ 3 files changed, 17 deletions(-)
+
+diff --git a/src/test/javassist/Bench.java b/src/test/javassist/Bench.java
+index 723fa19..b7b8b27 100644
+--- a/src/test/javassist/Bench.java
++++ b/src/test/javassist/Bench.java
+@@ -153,11 +153,6 @@ public class Bench extends JvstTestRoot {
+         System.out.println("println: " + (t5 * 10) + " usec");
+     }
+ 
+-    public static void main(String[] args) {
+-        // junit.textui.TestRunner.run(suite());
+-        junit.swingui.TestRunner.main(new String[] { "javassist.Bench" });
+-    }
+-
+     public static Test suite() {
+         TestSuite suite = new TestSuite("Benchmark Tests");
+         suite.addTestSuite(Bench.class);
+diff --git a/src/test/javassist/bytecode/BytecodeTest.java b/src/test/javassist/bytecode/BytecodeTest.java
+index b918750..a53f030 100644
+--- a/src/test/javassist/bytecode/BytecodeTest.java
++++ b/src/test/javassist/bytecode/BytecodeTest.java
+@@ -826,12 +826,6 @@ public class BytecodeTest extends TestCase {
+         assertEquals("(I)V", cPool2.getUtf8Info(cPool2.getMethodTypeInfo(mtIndex)));
+     }
+ 
+-    public static void main(String[] args) {
+-        // junit.textui.TestRunner.run(suite());
+-        junit.awtui.TestRunner.main(new String[] {
+-            "javassist.bytecode.BytecodeTest" });
+-    }
+-
+     public static Test suite() {
+         TestSuite suite = new TestSuite("Bytecode Tests");
+         suite.addTestSuite(BytecodeTest.class);
+diff --git a/src/test/javassist/compiler/CompTest.java b/src/test/javassist/compiler/CompTest.java
+index 6a1d542..158552e 100644
+--- a/src/test/javassist/compiler/CompTest.java
++++ b/src/test/javassist/compiler/CompTest.java
+@@ -113,12 +113,6 @@ public class CompTest extends TestCase {
+         assertEquals("(int,char[],String)", s);
+     }
+ 
+-    public static void main(String[] args) {
+-        // junit.textui.TestRunner.run(suite());
+-        junit.awtui.TestRunner.main(new String[] {
+-            "javassist.compiler.CompTest" });
+-    }
+-
+     public static Test suite() {
+         TestSuite suite = new TestSuite("Compiler Tests");
+         suite.addTestSuite(CompTest.class);
+-- 
+1.9.0
+

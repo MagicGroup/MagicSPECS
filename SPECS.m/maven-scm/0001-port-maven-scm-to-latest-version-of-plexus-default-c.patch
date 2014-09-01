@@ -1,0 +1,446 @@
+From 8ba1b5b97c0933c7d9929485188673efd8bc8f9b Mon Sep 17 00:00:00 2001
+From: Mat Booth <mbooth@apache.org>
+Date: Sun, 25 Aug 2013 14:08:40 +0100
+Subject: [PATCH] port maven-scm to latest version of plexus default container
+
+---
+ .../main/java/org/apache/maven/scm/client/cli/MavenScmCli.java | 10 ++++------
+ maven-scm-plugin/pom.xml                                       |  6 +++---
+ .../maven/scm/provider/accurev/cli/AccuRevCommandLineTest.java |  7 +++----
+ .../maven/scm/provider/accurev/cli/AccuRevJUnitUtil.java       |  6 +++---
+ .../maven/scm/provider/accurev/cli/WorkSpaceConsumerTest.java  |  6 +++---
+ .../provider/accurev/command/AbstractAccuRevCommandTest.java   |  8 ++++----
+ .../accurev/command/blame/AccuRevBlameCommandTckTest.java      |  8 +++-----
+ .../command/changelog/AccuRevChangeLogCommandTckTest.java      |  8 +++-----
+ .../accurev/command/checkin/AccuRevCheckInCommandTckTest.java  |  7 +++----
+ .../command/checkout/AccuRevCheckoutCommandTckTest.java        |  7 +++----
+ .../accurev/command/status/AccuRevStatusCommandTckTest.java    |  7 +++----
+ .../provider/accurev/command/tag/AccuRevTagCommandTckTest.java |  7 +++----
+ .../accurev/command/update/AccuRevUpdateCommandTckTest.java    |  7 +++----
+ .../provider/vss/commands/status/VssStatusConsumerTest.java    |  3 ++-
+ .../svn/svnexe/command/changelog/SvnChangeLogConsumerTest.java |  3 ++-
+ pom.xml                                                        |  2 +-
+ 16 files changed, 46 insertions(+), 56 deletions(-)
+
+diff --git a/maven-scm-client/src/main/java/org/apache/maven/scm/client/cli/MavenScmCli.java b/maven-scm-client/src/main/java/org/apache/maven/scm/client/cli/MavenScmCli.java
+index c1a08bf..b99d798 100644
+--- a/maven-scm-client/src/main/java/org/apache/maven/scm/client/cli/MavenScmCli.java
++++ b/maven-scm-client/src/main/java/org/apache/maven/scm/client/cli/MavenScmCli.java
+@@ -37,7 +37,7 @@ import org.apache.maven.scm.manager.NoSuchScmProviderException;
+ import org.apache.maven.scm.manager.ScmManager;
+ import org.apache.maven.scm.repository.ScmRepository;
+ import org.apache.maven.scm.repository.ScmRepositoryException;
+-import org.codehaus.plexus.embed.Embedder;
++import org.codehaus.plexus.DefaultPlexusContainer;
+ import org.codehaus.plexus.util.StringUtils;
+ 
+ /**
+@@ -47,7 +47,7 @@ import org.codehaus.plexus.util.StringUtils;
+  */
+ public class MavenScmCli
+ {
+-    private Embedder plexus;
++    private DefaultPlexusContainer plexus;
+ 
+     private ScmManager scmManager;
+ 
+@@ -58,9 +58,7 @@ public class MavenScmCli
+     public MavenScmCli()
+         throws Exception
+     {
+-        plexus = new Embedder();
+-
+-        plexus.start();
++        plexus = new DefaultPlexusContainer();
+ 
+         scmManager = (ScmManager) plexus.lookup( ScmManager.ROLE );
+     }
+@@ -69,7 +67,7 @@ public class MavenScmCli
+     {
+         try
+         {
+-            plexus.stop();
++            plexus.dispose();
+         }
+         catch ( Exception ex )
+         {
+diff --git a/maven-scm-plugin/pom.xml b/maven-scm-plugin/pom.xml
+index 9e83331..4527ce5 100644
+--- a/maven-scm-plugin/pom.xml
++++ b/maven-scm-plugin/pom.xml
+@@ -41,14 +41,14 @@
+   <description>Maven Plugin that allows accessing different SCMs.</description>
+ 
+   <properties>
+-    <mavenVersion>2.0.6</mavenVersion>
++    <mavenVersion>3.0.5</mavenVersion>
+     <mavenPluginVersion>3.2</mavenPluginVersion>
+   </properties>
+   
+   <dependencies>
+     <dependency>
+       <groupId>org.apache.maven</groupId>
+-      <artifactId>maven-project</artifactId>
++      <artifactId>maven-compat</artifactId>
+       <version>${mavenVersion}</version>
+     </dependency>
+     <dependency>
+@@ -117,7 +117,7 @@
+     <dependency>
+       <groupId>org.apache.maven.plugin-testing</groupId>
+       <artifactId>maven-plugin-testing-harness</artifactId>
+-      <version>1.2</version>
++      <version>2.0</version>
+       <scope>test</scope>
+     </dependency>
+     <dependency>
+diff --git a/maven-scm-providers/maven-scm-provider-accurev/src/test/java/org/apache/maven/scm/provider/accurev/cli/AccuRevCommandLineTest.java b/maven-scm-providers/maven-scm-provider-accurev/src/test/java/org/apache/maven/scm/provider/accurev/cli/AccuRevCommandLineTest.java
+index f36c862..d0785b5 100644
+--- a/maven-scm-providers/maven-scm-provider-accurev/src/test/java/org/apache/maven/scm/provider/accurev/cli/AccuRevCommandLineTest.java
++++ b/maven-scm-providers/maven-scm-provider-accurev/src/test/java/org/apache/maven/scm/provider/accurev/cli/AccuRevCommandLineTest.java
+@@ -39,6 +39,7 @@ import org.apache.maven.scm.ScmTestCase;
+ import org.apache.maven.scm.log.ScmLogger;
+ import org.apache.maven.scm.provider.accurev.AccuRev;
+ import org.apache.maven.scm.provider.accurev.AccuRevStat;
++import org.codehaus.plexus.ContainerConfiguration;
+ import org.codehaus.plexus.util.Os;
+ import org.codehaus.plexus.util.cli.CommandLineException;
+ import org.codehaus.plexus.util.cli.Commandline;
+@@ -152,11 +153,9 @@ public class AccuRevCommandLineTest
+     }
+ 
+     @Override
+-    protected InputStream getCustomConfiguration()
+-        throws Exception
++    protected void customizeContainerConfiguration( ContainerConfiguration containerConfiguration )
+     {
+-
+-        return AccuRevJUnitUtil.getPlexusConfiguration();
++        containerConfiguration.setContainerConfigurationURL( AccuRevJUnitUtil.getPlexusConfiguration() );
+     }
+ 
+     @Test
+diff --git a/maven-scm-providers/maven-scm-provider-accurev/src/test/java/org/apache/maven/scm/provider/accurev/cli/AccuRevJUnitUtil.java b/maven-scm-providers/maven-scm-provider-accurev/src/test/java/org/apache/maven/scm/provider/accurev/cli/AccuRevJUnitUtil.java
+index bae8bd9..cfff689 100644
+--- a/maven-scm-providers/maven-scm-provider-accurev/src/test/java/org/apache/maven/scm/provider/accurev/cli/AccuRevJUnitUtil.java
++++ b/maven-scm-providers/maven-scm-provider-accurev/src/test/java/org/apache/maven/scm/provider/accurev/cli/AccuRevJUnitUtil.java
+@@ -21,8 +21,8 @@ package org.apache.maven.scm.provider.accurev.cli;
+ 
+ import java.io.BufferedReader;
+ import java.io.IOException;
+-import java.io.InputStream;
+ import java.io.InputStreamReader;
++import java.net.URL;
+ 
+ import org.apache.maven.scm.log.ScmLogger;
+ import org.apache.maven.scm.manager.ScmManager;
+@@ -63,9 +63,9 @@ public class AccuRevJUnitUtil
+         return new PlexusLogger( logger );
+     }
+ 
+-    public static InputStream getPlexusConfiguration()
++    public static URL getPlexusConfiguration()
+     {
+-        return AccuRevJUnitUtil.class.getResourceAsStream( "/PlexusTestContainerConfig.xml" );
++        return AccuRevJUnitUtil.class.getResource( "/PlexusTestContainerConfig.xml" );
+     }
+ 
+ }
+diff --git a/maven-scm-providers/maven-scm-provider-accurev/src/test/java/org/apache/maven/scm/provider/accurev/cli/WorkSpaceConsumerTest.java b/maven-scm-providers/maven-scm-provider-accurev/src/test/java/org/apache/maven/scm/provider/accurev/cli/WorkSpaceConsumerTest.java
+index e8222f2..4b169bf 100644
+--- a/maven-scm-providers/maven-scm-provider-accurev/src/test/java/org/apache/maven/scm/provider/accurev/cli/WorkSpaceConsumerTest.java
++++ b/maven-scm-providers/maven-scm-provider-accurev/src/test/java/org/apache/maven/scm/provider/accurev/cli/WorkSpaceConsumerTest.java
+@@ -31,6 +31,7 @@ import java.util.Map;
+ import org.apache.maven.scm.ScmTestCase;
+ import org.apache.maven.scm.log.ScmLogger;
+ import org.apache.maven.scm.provider.accurev.WorkSpace;
++import org.codehaus.plexus.ContainerConfiguration;
+ import org.junit.Before;
+ import org.junit.Test;
+ import org.junit.runner.RunWith;
+@@ -44,10 +45,9 @@ public class WorkSpaceConsumerTest
+     private ScmLogger logger;
+ 
+     @Override
+-    protected InputStream getCustomConfiguration()
+-        throws Exception
++    protected void customizeContainerConfiguration( ContainerConfiguration containerConfiguration )
+     {
+-        return AccuRevJUnitUtil.getPlexusConfiguration();
++        containerConfiguration.setContainerConfigurationURL( AccuRevJUnitUtil.getPlexusConfiguration() );
+     }
+ 
+     @Before
+diff --git a/maven-scm-providers/maven-scm-provider-accurev/src/test/java/org/apache/maven/scm/provider/accurev/command/AbstractAccuRevCommandTest.java b/maven-scm-providers/maven-scm-provider-accurev/src/test/java/org/apache/maven/scm/provider/accurev/command/AbstractAccuRevCommandTest.java
+index 718f7e8..148dad4 100644
+--- a/maven-scm-providers/maven-scm-provider-accurev/src/test/java/org/apache/maven/scm/provider/accurev/command/AbstractAccuRevCommandTest.java
++++ b/maven-scm-providers/maven-scm-provider-accurev/src/test/java/org/apache/maven/scm/provider/accurev/command/AbstractAccuRevCommandTest.java
+@@ -33,6 +33,7 @@ import org.apache.maven.scm.provider.accurev.AccuRevInfo;
+ import org.apache.maven.scm.provider.accurev.AccuRevScmProviderRepository;
+ import org.apache.maven.scm.provider.accurev.Stream;
+ import org.apache.maven.scm.provider.accurev.cli.AccuRevJUnitUtil;
++import org.codehaus.plexus.ContainerConfiguration;
+ import org.junit.Before;
+ import org.junit.runner.RunWith;
+ import org.mockito.InOrder;
+@@ -45,10 +46,9 @@ public abstract class AbstractAccuRevCommandTest
+ {
+ 
+     @Override
+-    protected InputStream getCustomConfiguration()
+-        throws Exception
++    protected void customizeContainerConfiguration( ContainerConfiguration containerConfiguration )
+     {
+-        return AccuRevJUnitUtil.getPlexusConfiguration();
++        containerConfiguration.setContainerConfigurationURL( AccuRevJUnitUtil.getPlexusConfiguration() );
+     }
+ 
+     @Mock
+@@ -98,4 +98,4 @@ public abstract class AbstractAccuRevCommandTest
+         return logger;
+     }
+ 
+-}
+\ No newline at end of file
++}
+diff --git a/maven-scm-providers/maven-scm-provider-accurev/src/test/java/org/apache/maven/scm/provider/accurev/command/blame/AccuRevBlameCommandTckTest.java b/maven-scm-providers/maven-scm-provider-accurev/src/test/java/org/apache/maven/scm/provider/accurev/command/blame/AccuRevBlameCommandTckTest.java
+index f8ea542..6f7ef3d 100644
+--- a/maven-scm-providers/maven-scm-provider-accurev/src/test/java/org/apache/maven/scm/provider/accurev/command/blame/AccuRevBlameCommandTckTest.java
++++ b/maven-scm-providers/maven-scm-provider-accurev/src/test/java/org/apache/maven/scm/provider/accurev/command/blame/AccuRevBlameCommandTckTest.java
+@@ -31,6 +31,7 @@ import org.apache.maven.scm.command.blame.BlameScmResult;
+ import org.apache.maven.scm.provider.accurev.cli.AccuRevJUnitUtil;
+ import org.apache.maven.scm.provider.accurev.command.AccuRevTckUtil;
+ import org.apache.maven.scm.tck.command.blame.BlameCommandTckTest;
++import org.codehaus.plexus.ContainerConfiguration;
+ import org.junit.After;
+ import org.junit.Before;
+ import org.junit.Test;
+@@ -45,12 +46,9 @@ public class AccuRevBlameCommandTckTest
+     private AccuRevTckUtil accurevTckTestUtil = new AccuRevTckUtil();
+ 
+     @Override
+-    protected InputStream getCustomConfiguration()
+-        throws Exception
+-
++    protected void customizeContainerConfiguration( ContainerConfiguration containerConfiguration )
+     {
+-
+-        return AccuRevJUnitUtil.getPlexusConfiguration();
++        containerConfiguration.setContainerConfigurationURL( AccuRevJUnitUtil.getPlexusConfiguration() );
+     }
+ 
+     @Override
+diff --git a/maven-scm-providers/maven-scm-provider-accurev/src/test/java/org/apache/maven/scm/provider/accurev/command/changelog/AccuRevChangeLogCommandTckTest.java b/maven-scm-providers/maven-scm-provider-accurev/src/test/java/org/apache/maven/scm/provider/accurev/command/changelog/AccuRevChangeLogCommandTckTest.java
+index 24aa50c..805010b 100644
+--- a/maven-scm-providers/maven-scm-provider-accurev/src/test/java/org/apache/maven/scm/provider/accurev/command/changelog/AccuRevChangeLogCommandTckTest.java
++++ b/maven-scm-providers/maven-scm-provider-accurev/src/test/java/org/apache/maven/scm/provider/accurev/command/changelog/AccuRevChangeLogCommandTckTest.java
+@@ -42,6 +42,7 @@ import org.apache.maven.scm.provider.accurev.cli.AccuRevJUnitUtil;
+ import org.apache.maven.scm.provider.accurev.command.AccuRevTckUtil;
+ import org.apache.maven.scm.repository.ScmRepository;
+ import org.apache.maven.scm.tck.command.changelog.ChangeLogCommandTckTest;
++import org.codehaus.plexus.ContainerConfiguration;
+ import org.junit.After;
+ import org.junit.Before;
+ import org.junit.Test;
+@@ -223,11 +224,8 @@ public class AccuRevChangeLogCommandTckTest
+     }
+ 
+     @Override
+-    protected InputStream getCustomConfiguration()
+-        throws Exception
+-
++    protected void customizeContainerConfiguration( ContainerConfiguration containerConfiguration )
+     {
+-        return AccuRevJUnitUtil.getPlexusConfiguration();
++        containerConfiguration.setContainerConfigurationURL( AccuRevJUnitUtil.getPlexusConfiguration() );
+     }
+-
+ }
+diff --git a/maven-scm-providers/maven-scm-provider-accurev/src/test/java/org/apache/maven/scm/provider/accurev/command/checkin/AccuRevCheckInCommandTckTest.java b/maven-scm-providers/maven-scm-provider-accurev/src/test/java/org/apache/maven/scm/provider/accurev/command/checkin/AccuRevCheckInCommandTckTest.java
+index 35861a6..2d63fd3 100644
+--- a/maven-scm-providers/maven-scm-provider-accurev/src/test/java/org/apache/maven/scm/provider/accurev/command/checkin/AccuRevCheckInCommandTckTest.java
++++ b/maven-scm-providers/maven-scm-provider-accurev/src/test/java/org/apache/maven/scm/provider/accurev/command/checkin/AccuRevCheckInCommandTckTest.java
+@@ -25,6 +25,7 @@ import java.io.InputStream;
+ import org.apache.maven.scm.provider.accurev.cli.AccuRevJUnitUtil;
+ import org.apache.maven.scm.provider.accurev.command.AccuRevTckUtil;
+ import org.apache.maven.scm.tck.command.checkin.CheckInCommandTckTest;
++import org.codehaus.plexus.ContainerConfiguration;
+ import org.junit.After;
+ import org.junit.Before;
+ import org.junit.Test;
+@@ -39,11 +40,9 @@ public class AccuRevCheckInCommandTckTest
+     private AccuRevTckUtil accurevTckTestUtil = new AccuRevTckUtil();
+ 
+     @Override
+-    protected InputStream getCustomConfiguration()
+-        throws Exception
+-
++    protected void customizeContainerConfiguration( ContainerConfiguration containerConfiguration )
+     {
+-        return AccuRevJUnitUtil.getPlexusConfiguration();
++        containerConfiguration.setContainerConfigurationURL( AccuRevJUnitUtil.getPlexusConfiguration() );
+     }
+ 
+     @Override
+diff --git a/maven-scm-providers/maven-scm-provider-accurev/src/test/java/org/apache/maven/scm/provider/accurev/command/checkout/AccuRevCheckoutCommandTckTest.java b/maven-scm-providers/maven-scm-provider-accurev/src/test/java/org/apache/maven/scm/provider/accurev/command/checkout/AccuRevCheckoutCommandTckTest.java
+index ad2a413..69f38cf 100644
+--- a/maven-scm-providers/maven-scm-provider-accurev/src/test/java/org/apache/maven/scm/provider/accurev/command/checkout/AccuRevCheckoutCommandTckTest.java
++++ b/maven-scm-providers/maven-scm-provider-accurev/src/test/java/org/apache/maven/scm/provider/accurev/command/checkout/AccuRevCheckoutCommandTckTest.java
+@@ -25,6 +25,7 @@ import java.io.InputStream;
+ import org.apache.maven.scm.provider.accurev.cli.AccuRevJUnitUtil;
+ import org.apache.maven.scm.provider.accurev.command.AccuRevTckUtil;
+ import org.apache.maven.scm.tck.command.checkout.CheckOutCommandTckTest;
++import org.codehaus.plexus.ContainerConfiguration;
+ import org.junit.After;
+ import org.junit.Before;
+ import org.junit.Test;
+@@ -44,11 +45,9 @@ public class AccuRevCheckoutCommandTckTest
+     protected AccuRevTckUtil testUtil = new AccuRevTckUtil();
+ 
+     @Override
+-    protected InputStream getCustomConfiguration()
+-        throws Exception
+-
++    protected void customizeContainerConfiguration( ContainerConfiguration containerConfiguration )
+     {
+-        return AccuRevJUnitUtil.getPlexusConfiguration();
++        containerConfiguration.setContainerConfigurationURL( AccuRevJUnitUtil.getPlexusConfiguration() );
+     }
+ 
+     @Override
+diff --git a/maven-scm-providers/maven-scm-provider-accurev/src/test/java/org/apache/maven/scm/provider/accurev/command/status/AccuRevStatusCommandTckTest.java b/maven-scm-providers/maven-scm-provider-accurev/src/test/java/org/apache/maven/scm/provider/accurev/command/status/AccuRevStatusCommandTckTest.java
+index 4691138..50c178d 100644
+--- a/maven-scm-providers/maven-scm-provider-accurev/src/test/java/org/apache/maven/scm/provider/accurev/command/status/AccuRevStatusCommandTckTest.java
++++ b/maven-scm-providers/maven-scm-provider-accurev/src/test/java/org/apache/maven/scm/provider/accurev/command/status/AccuRevStatusCommandTckTest.java
+@@ -25,6 +25,7 @@ import java.io.InputStream;
+ import org.apache.maven.scm.provider.accurev.cli.AccuRevJUnitUtil;
+ import org.apache.maven.scm.provider.accurev.command.AccuRevTckUtil;
+ import org.apache.maven.scm.tck.command.status.StatusCommandTckTest;
++import org.codehaus.plexus.ContainerConfiguration;
+ import org.junit.After;
+ import org.junit.Before;
+ import org.junit.Test;
+@@ -87,11 +88,9 @@ public class AccuRevStatusCommandTckTest
+     }
+ 
+     @Override
+-    protected InputStream getCustomConfiguration()
+-        throws Exception
+-
++    protected void customizeContainerConfiguration( ContainerConfiguration containerConfiguration )
+     {
+-        return AccuRevJUnitUtil.getPlexusConfiguration();
++        containerConfiguration.setContainerConfigurationURL( AccuRevJUnitUtil.getPlexusConfiguration() );
+     }
+ 
+     @Override
+diff --git a/maven-scm-providers/maven-scm-provider-accurev/src/test/java/org/apache/maven/scm/provider/accurev/command/tag/AccuRevTagCommandTckTest.java b/maven-scm-providers/maven-scm-provider-accurev/src/test/java/org/apache/maven/scm/provider/accurev/command/tag/AccuRevTagCommandTckTest.java
+index 64a47b5..bd870b5 100644
+--- a/maven-scm-providers/maven-scm-provider-accurev/src/test/java/org/apache/maven/scm/provider/accurev/command/tag/AccuRevTagCommandTckTest.java
++++ b/maven-scm-providers/maven-scm-provider-accurev/src/test/java/org/apache/maven/scm/provider/accurev/command/tag/AccuRevTagCommandTckTest.java
+@@ -31,6 +31,7 @@ import org.apache.maven.scm.provider.accurev.cli.AccuRevJUnitUtil;
+ import org.apache.maven.scm.provider.accurev.command.AccuRevTckUtil;
+ import org.apache.maven.scm.repository.ScmRepository;
+ import org.apache.maven.scm.tck.command.tag.TagCommandTckTest;
++import org.codehaus.plexus.ContainerConfiguration;
+ import org.junit.After;
+ import org.junit.Before;
+ import org.junit.Test;
+@@ -45,11 +46,9 @@ public class AccuRevTagCommandTckTest
+     private AccuRevTckUtil accurevTckTestUtil = new AccuRevTckUtil();
+ 
+     @Override
+-    protected InputStream getCustomConfiguration()
+-        throws Exception
+-
++    protected void customizeContainerConfiguration( ContainerConfiguration containerConfiguration )
+     {
+-        return AccuRevJUnitUtil.getPlexusConfiguration();
++        containerConfiguration.setContainerConfigurationURL( AccuRevJUnitUtil.getPlexusConfiguration() );
+     }
+ 
+     @Override
+diff --git a/maven-scm-providers/maven-scm-provider-accurev/src/test/java/org/apache/maven/scm/provider/accurev/command/update/AccuRevUpdateCommandTckTest.java b/maven-scm-providers/maven-scm-provider-accurev/src/test/java/org/apache/maven/scm/provider/accurev/command/update/AccuRevUpdateCommandTckTest.java
+index ebd2f2f..ffca109 100644
+--- a/maven-scm-providers/maven-scm-provider-accurev/src/test/java/org/apache/maven/scm/provider/accurev/command/update/AccuRevUpdateCommandTckTest.java
++++ b/maven-scm-providers/maven-scm-provider-accurev/src/test/java/org/apache/maven/scm/provider/accurev/command/update/AccuRevUpdateCommandTckTest.java
+@@ -25,6 +25,7 @@ import java.io.InputStream;
+ import org.apache.maven.scm.provider.accurev.cli.AccuRevJUnitUtil;
+ import org.apache.maven.scm.provider.accurev.command.AccuRevTckUtil;
+ import org.apache.maven.scm.tck.command.update.UpdateCommandTckTest;
++import org.codehaus.plexus.ContainerConfiguration;
+ import org.junit.After;
+ import org.junit.Before;
+ import org.junit.Test;
+@@ -39,11 +40,9 @@ public class AccuRevUpdateCommandTckTest
+     private AccuRevTckUtil accurevTckTestUtil = new AccuRevTckUtil();
+ 
+     @Override
+-    protected InputStream getCustomConfiguration()
+-        throws Exception
+-
++    protected void customizeContainerConfiguration( ContainerConfiguration containerConfiguration )
+     {
+-        return AccuRevJUnitUtil.getPlexusConfiguration();
++        containerConfiguration.setContainerConfigurationURL( AccuRevJUnitUtil.getPlexusConfiguration() );
+     }
+ 
+     @Override
+diff --git a/maven-scm-providers/maven-scm-provider-vss/src/test/java/org/apache/maven/scm/provider/vss/commands/status/VssStatusConsumerTest.java b/maven-scm-providers/maven-scm-provider-vss/src/test/java/org/apache/maven/scm/provider/vss/commands/status/VssStatusConsumerTest.java
+index dbedbaf..c404445 100644
+--- a/maven-scm-providers/maven-scm-provider-vss/src/test/java/org/apache/maven/scm/provider/vss/commands/status/VssStatusConsumerTest.java
++++ b/maven-scm-providers/maven-scm-provider-vss/src/test/java/org/apache/maven/scm/provider/vss/commands/status/VssStatusConsumerTest.java
+@@ -31,6 +31,7 @@ import org.apache.maven.scm.manager.plexus.PlexusLogger;
+ import org.apache.maven.scm.provider.vss.repository.VssScmProviderRepository;
+ import org.apache.maven.scm.repository.ScmRepository;
+ import org.apache.maven.scm.repository.ScmRepositoryException;
++import org.codehaus.plexus.DefaultPlexusContainer;
+ import org.codehaus.plexus.util.IOUtil;
+ 
+ /**
+@@ -50,7 +51,7 @@ public class VssStatusConsumerTest
+     {
+         super.setUp();
+         scmManager = getScmManager();
+-        logger = getContainer().getLogger();
++        logger = ( (DefaultPlexusContainer) getContainer() ).getLogger();
+     }
+ 
+     public void testConsumeLine()
+diff --git a/maven-scm-providers/maven-scm-providers-svn/maven-scm-provider-svnexe/src/test/java/org/apache/maven/scm/provider/svn/svnexe/command/changelog/SvnChangeLogConsumerTest.java b/maven-scm-providers/maven-scm-providers-svn/maven-scm-provider-svnexe/src/test/java/org/apache/maven/scm/provider/svn/svnexe/command/changelog/SvnChangeLogConsumerTest.java
+index 7ed4403..6c22cde 100644
+--- a/maven-scm-providers/maven-scm-providers-svn/maven-scm-provider-svnexe/src/test/java/org/apache/maven/scm/provider/svn/svnexe/command/changelog/SvnChangeLogConsumerTest.java
++++ b/maven-scm-providers/maven-scm-providers-svn/maven-scm-provider-svnexe/src/test/java/org/apache/maven/scm/provider/svn/svnexe/command/changelog/SvnChangeLogConsumerTest.java
+@@ -24,6 +24,7 @@ import org.apache.maven.scm.ChangeSet;
+ import org.apache.maven.scm.ScmFileStatus;
+ import org.apache.maven.scm.log.DefaultLog;
+ import org.codehaus.plexus.PlexusTestCase;
++import org.codehaus.plexus.DefaultPlexusContainer;
+ import org.codehaus.plexus.logging.Logger;
+ import org.junit.Assert;
+ 
+@@ -57,7 +58,7 @@ public class SvnChangeLogConsumerTest
+     {
+         super.setUp();
+ 
+-        logger = getContainer().getLogger();
++        logger = ( (DefaultPlexusContainer) getContainer() ).getLogger();
+         consumer = new SvnChangeLogConsumer( new DefaultLog(), null );
+     }
+ 
+diff --git a/pom.xml b/pom.xml
+index dd956d8..2028b1d 100644
+--- a/pom.xml
++++ b/pom.xml
+@@ -255,7 +255,7 @@
+       <dependency>
+         <groupId>org.codehaus.plexus</groupId>
+         <artifactId>plexus-container-default</artifactId>
+-        <version>1.0-alpha-9</version>
++        <version>1.5.5</version>
+       </dependency>
+       <dependency>
+         <groupId>org.codehaus.plexus</groupId>
+-- 
+1.8.4.2
+

@@ -1,0 +1,39 @@
+--- build.xml	2011-12-19 10:49:15.683545403 -0500
++++ build.xml	2011-12-19 10:54:11.779525160 -0500
+@@ -135,13 +135,12 @@
+     </target>
+ 
+     <target name="bigjar"
+-            depends="core, library, integration, generator"
++            depends="core, library, generator"
+             description="Build a single Jar (hamcrest-all.jar) that contains core, library, generator and integration.">
+         <jar jarfile="build/hamcrest-all-${version}.jar" duplicate="preserve">
+             <zipfileset src="build/hamcrest-core-${version}.jar"/>
+             <zipfileset src="build/hamcrest-library-${version}.jar"/>
+             <zipfileset src="build/hamcrest-generator-${version}.jar"/>
+-            <zipfileset src="build/hamcrest-integration-${version}.jar"/>
+         </jar>
+     </target>
+ 
+@@ -186,21 +186,14 @@
+ 		<javadoc destdir="build/javadoc" source="1.5" failonerror="yes"
+ 			>
+ 			
+-            <classpath>
+-                <fileset dir="lib/integration">
+-                    <include name="*.jar"/>
+-                </fileset>
+-            </classpath>
+ 
+ 			<packageset dir="hamcrest-core/src/main/java"/>
+ 			<packageset dir="hamcrest-library/src/main/java" excludes="org/hamcrest/internal"/>
+-			<packageset dir="hamcrest-integration/src/main/java"/>
+ 			<packageset dir="build/temp/hamcrest-core/generated-code"/>
+ 			<packageset dir="build/temp/hamcrest-library/generated-code"/>
+ 			
+ 			<group title="Hamcrest API and Utility Classes" packages="org.hamcrest"/>
+ 			<group title="Matcher Library" packages="org.hamcrest.*"/>
+-			<group title="Integration" packages="org.hamcrest.integration, org.hamcrest.integration.*"/>
+ 			
+ 			<link offline="false" href="http://java.sun.com/j2se/1.5.0/docs/api/"/>
+ 			<link offline="false" href="http://www.junit.org/junit/javadoc/3.8.1/"/>

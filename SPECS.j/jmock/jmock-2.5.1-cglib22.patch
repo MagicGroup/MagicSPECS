@@ -1,0 +1,85 @@
+diff -Nru jmock-2.5.1/test/org/jmock/test/unit/support/MethodFactory.java jmock-2.5.1-gil/test/org/jmock/test/unit/support/MethodFactory.java
+--- jmock-2.5.1/test/org/jmock/test/unit/support/MethodFactory.java	2007-07-23 13:43:05.000000000 +0200
++++ jmock-2.5.1-gil/test/org/jmock/test/unit/support/MethodFactory.java	2012-04-19 10:46:53.707914792 +0200
+@@ -4,13 +4,13 @@
+ 
+ import java.lang.reflect.Method;
+ 
+-import net.sf.cglib.asm.ClassWriter;
+-import net.sf.cglib.asm.Type;
++import org.objectweb.asm.ClassWriter;
++import org.objectweb.asm.Type;
+ import net.sf.cglib.core.Constants;
+ 
+ 
+ public class MethodFactory extends ClassLoader {
+-    public static final int CLASS_FORMAT_VERSION = 45;
++    public static final int CLASS_FORMAT_VERSION = 49;
+     
+     public static Class<?>[] NO_ARGUMENTS = {};
+     public static Class<?>[] NO_EXCEPTIONS = {};
+@@ -33,20 +33,20 @@
+         {
+             @Override
+             protected Class<?> findClass( String interfaceName ) {
+-                ClassWriter writer = new ClassWriter(true);
++                ClassWriter writer = new ClassWriter(ClassWriter.COMPUTE_MAXS);
+ 
+                 writer.visit(CLASS_FORMAT_VERSION,
+                              Constants.ACC_PUBLIC|Constants.ACC_INTERFACE,
+                              nameToClassFormat(interfaceName),
++                             null,
+                              "java/lang/Object",
+-                             null, /* interfaces */
+-                             null  /* source file */);
++                             null /* interfaces */);
+ 
+                 writer.visitMethod(Constants.ACC_PUBLIC | Constants.ACC_ABSTRACT,
+                                    methodName,
+                                    methodDescriptor(returnType, argTypes),
+-                                   classNamesInClassFormat(exceptionTypes),
+-                                   null /* no attributes */);
++                                   null,
++                                   classNamesInClassFormat(exceptionTypes));
+ 
+                 byte[] classAsBytes = writer.toByteArray();
+ 
+diff -Nru jmock-2.5.1/test/org/jmock/test/unit/support/SyntheticEmptyInterfaceClassLoader.java jmock-2.5.1-gil/test/org/jmock/test/unit/support/SyntheticEmptyInterfaceClassLoader.java
+--- jmock-2.5.1/test/org/jmock/test/unit/support/SyntheticEmptyInterfaceClassLoader.java	2007-04-10 10:34:01.000000000 +0200
++++ jmock-2.5.1-gil/test/org/jmock/test/unit/support/SyntheticEmptyInterfaceClassLoader.java	2012-04-19 10:46:53.706914792 +0200
+@@ -3,9 +3,11 @@
+  */
+ package org.jmock.test.unit.support;
+ 
++import static org.jmock.test.unit.support.MethodFactory.CLASS_FORMAT_VERSION;
++
+ import java.util.regex.Pattern;
+ 
+-import net.sf.cglib.asm.ClassWriter;
++import org.objectweb.asm.ClassWriter;
+ import net.sf.cglib.core.Constants;
+ 
+ public class SyntheticEmptyInterfaceClassLoader extends ClassLoader {
+@@ -30,13 +32,15 @@
+     }
+ 
+     private Class<?> synthesiseInterface(String name) throws ClassFormatError {
+-        ClassWriter writer = new ClassWriter(true);
+-        writer.visit(MethodFactory.CLASS_FORMAT_VERSION,
+-                     Constants.ACC_PUBLIC | Constants.ACC_INTERFACE,
+-                     name.replace('.', '/'),
+-                     "java/lang/Object",
+-                     null, /* interfaces */
+-                     null /* source file */);
++        ClassWriter writer = new ClassWriter(ClassWriter.COMPUTE_MAXS);
++                writer.visit(CLASS_FORMAT_VERSION,
++                             Constants.ACC_PUBLIC|Constants.ACC_INTERFACE,
++                             MethodFactory.nameToClassFormat(name),
++                             null,
++                             "java/lang/Object",
++                             null /* interfaces */);
++         
++
+         
+         byte[] b = writer.toByteArray();
+ 

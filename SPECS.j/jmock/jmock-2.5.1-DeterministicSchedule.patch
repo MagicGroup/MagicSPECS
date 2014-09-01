@@ -1,0 +1,28 @@
+--- src/org/jmock/lib/concurrent/DeterministicScheduler.java	2008-06-23 14:06:51.000000000 +0200
++++ src/org/jmock/lib/concurrent/DeterministicScheduler.java-gil	2011-07-27 20:46:08.446224533 +0200
+@@ -110,21 +110,21 @@
+         throw blockingOperationsNotSupported();
+     }
+ 
+-    public <T> List<Future<T>> invokeAll(Collection<Callable<T>> tasks) throws InterruptedException {
++    public <T> List<Future<T>> invokeAll(Collection<? extends Callable<T>> tasks) throws InterruptedException {
+         throw blockingOperationsNotSupported();
+     }
+ 
+-    public <T> List<Future<T>> invokeAll(Collection<Callable<T>> tasks, long timeout, TimeUnit unit) throws InterruptedException {
++    public <T> List<Future<T>> invokeAll(Collection<? extends Callable<T>> tasks, long timeout, TimeUnit unit) throws InterruptedException {
+         throw blockingOperationsNotSupported();
+     }
+     
+-    public <T> T invokeAny(Collection<Callable<T>> tasks)
++    public <T> T invokeAny(Collection<? extends Callable<T>> tasks)
+         throws InterruptedException, ExecutionException 
+     {
+         throw blockingOperationsNotSupported();
+     }
+ 
+-    public <T> T invokeAny(Collection<Callable<T>> tasks, long timeout, TimeUnit unit) 
++    public <T> T invokeAny(Collection<? extends Callable<T>> tasks, long timeout, TimeUnit unit)
+         throws InterruptedException, ExecutionException, TimeoutException 
+     {
+         throw blockingOperationsNotSupported();

@@ -1,0 +1,170 @@
+diff --git a/src/main/java/org/codehaus/plexus/cdc/ComponentGleaner.java b/src/main/java/org/codehaus/plexus/cdc/ComponentGleaner.java
+index b5e8d06..f33c724 100644
+--- a/src/main/java/org/codehaus/plexus/cdc/ComponentGleaner.java
++++ b/src/main/java/org/codehaus/plexus/cdc/ComponentGleaner.java
+@@ -25,7 +25,7 @@ package org.codehaus.plexus.cdc;
+  */
+ 
+ import com.thoughtworks.qdox.model.JavaClass;
+-import com.thoughtworks.qdox.model.JavaClassCache;
++import com.thoughtworks.qdox.JavaDocBuilder;
+ import org.codehaus.plexus.cdc.gleaner.SourceComponentGleaner;
+ import org.codehaus.plexus.component.repository.cdc.ComponentDescriptor;
+ 
+@@ -39,6 +39,6 @@ public interface ComponentGleaner
+ {
+     String ROLE = ComponentGleaner.class.getName();
+ 
+-    ComponentDescriptor glean( JavaClassCache classCache, JavaClass javaClass )
++    ComponentDescriptor glean( JavaDocBuilder classCache, JavaClass javaClass )
+         throws ComponentDescriptorCreatorException;
+ }
+diff --git a/src/main/java/org/codehaus/plexus/cdc/PlexusDefaultComponentGleaner.java b/src/main/java/org/codehaus/plexus/cdc/PlexusDefaultComponentGleaner.java
+index 80d6941..0ddc3f4 100644
+--- a/src/main/java/org/codehaus/plexus/cdc/PlexusDefaultComponentGleaner.java
++++ b/src/main/java/org/codehaus/plexus/cdc/PlexusDefaultComponentGleaner.java
+@@ -35,7 +35,7 @@ import java.util.Map;
+ 
+ import com.thoughtworks.qdox.model.DocletTag;
+ import com.thoughtworks.qdox.model.JavaClass;
+-import com.thoughtworks.qdox.model.JavaClassCache;
++import com.thoughtworks.qdox.JavaDocBuilder;
+ import com.thoughtworks.qdox.model.JavaField;
+ import org.codehaus.plexus.component.repository.cdc.ComponentDescriptor;
+ import org.codehaus.plexus.component.repository.cdc.ComponentRequirement;
+@@ -92,7 +92,7 @@ public class PlexusDefaultComponentGleaner
+     // ComponentGleaner Implementation
+     // ----------------------------------------------------------------------
+ 
+-    public ComponentDescriptor glean( JavaClassCache classCache, JavaClass javaClass )
++    public ComponentDescriptor glean( JavaDocBuilder classCache, JavaClass javaClass )
+         throws ComponentDescriptorCreatorException
+     {
+         DocletTag tag = javaClass.getTagByName( PLEXUS_COMPONENT_TAG );
+@@ -274,7 +274,11 @@ public class PlexusDefaultComponentGleaner
+ 
+             String fqn = ifc.getFullyQualifiedName();
+ 
+-            String pkg = ifc.getPackage();
++            String pkg = null;
++            if ( ifc.getPackage() != null )
++            {
++                pkg = ifc.getPackage().getName();
++            }
+ 
+             if ( pkg == null )
+             {
+@@ -292,7 +296,7 @@ public class PlexusDefaultComponentGleaner
+                     // prepend the gleaned class' package
+                     // -----------------------------------------------------------------------
+ 
+-                    pkg = javaClass.getPackage();
++                    pkg = javaClass.getPackage().getName();
+ 
+                     fqn = pkg + "." + fqn;
+                 }
+@@ -335,7 +339,7 @@ public class PlexusDefaultComponentGleaner
+         return role;
+     }
+ 
+-    private void findRequirements( JavaClassCache classCache, ComponentDescriptor componentDescriptor,
++    private void findRequirements( JavaDocBuilder classCache, ComponentDescriptor componentDescriptor,
+                                    JavaClass javaClass )
+     {
+         JavaField[] fields = javaClass.getFields();
+@@ -445,7 +449,7 @@ public class PlexusDefaultComponentGleaner
+ 
+                 JavaClass roleClass = classCache.getClassByName( role );
+ 
+-                if ( role.indexOf( '.' ) == -1 && StringUtils.isEmpty( roleClass.getPackage() ) )
++                if ( role.indexOf( '.' ) == -1 && StringUtils.isEmpty( roleClass.getPackage().getName() ) )
+                 {
+                     role = javaClass.getPackage() + "." + roleClass.getName();
+                 }
+diff --git a/src/main/java/org/codehaus/plexus/cdc/gleaner/QDoxComponentGleaner.java b/src/main/java/org/codehaus/plexus/cdc/gleaner/QDoxComponentGleaner.java
+index e3e35bb..b35b32f 100644
+--- a/src/main/java/org/codehaus/plexus/cdc/gleaner/QDoxComponentGleaner.java
++++ b/src/main/java/org/codehaus/plexus/cdc/gleaner/QDoxComponentGleaner.java
+@@ -35,7 +35,7 @@ import java.util.Map;
+ 
+ import com.thoughtworks.qdox.model.DocletTag;
+ import com.thoughtworks.qdox.model.JavaClass;
+-import com.thoughtworks.qdox.model.JavaClassCache;
++import com.thoughtworks.qdox.JavaDocBuilder;
+ import com.thoughtworks.qdox.model.JavaField;
+ import org.codehaus.plexus.component.repository.cdc.ComponentDescriptor;
+ import org.codehaus.plexus.component.repository.cdc.ComponentRequirement;
+@@ -91,7 +91,7 @@ public class QDoxComponentGleaner
+     // ComponentGleaner Implementation
+     // ----------------------------------------------------------------------
+ 
+-    public ComponentDescriptor glean( JavaClassCache classCache, JavaClass javaClass )
++    public ComponentDescriptor glean( JavaDocBuilder classCache, JavaClass javaClass )
+         throws ComponentGleanerException
+     {
+         DocletTag tag = javaClass.getTagByName( PLEXUS_COMPONENT_TAG );
+@@ -271,7 +271,7 @@ public class QDoxComponentGleaner
+ 
+             String fqn = ifc.getFullyQualifiedName();
+ 
+-            String pkg = ifc.getPackage();
++            String pkg = ifc.getPackage().getName();
+ 
+             if ( pkg == null )
+             {
+@@ -289,7 +289,7 @@ public class QDoxComponentGleaner
+                     // prepend the gleaned class' package
+                     // -----------------------------------------------------------------------
+ 
+-                    pkg = javaClass.getPackage();
++                    pkg = javaClass.getPackage().getName();
+ 
+                     fqn = pkg + "." + fqn;
+                 }
+@@ -331,7 +331,7 @@ public class QDoxComponentGleaner
+         return role;
+     }
+ 
+-    private void findRequirements( JavaClassCache classCache, ComponentDescriptor componentDescriptor,
++    private void findRequirements( JavaDocBuilder classCache, ComponentDescriptor componentDescriptor,
+                                    JavaClass javaClass )
+     {
+         JavaField[] fields = javaClass.getFields();
+@@ -441,7 +441,7 @@ public class QDoxComponentGleaner
+ 
+                 JavaClass roleClass = classCache.getClassByName( role );
+ 
+-                if ( role.indexOf( '.' ) == -1 && StringUtils.isEmpty( roleClass.getPackage() ) )
++                if ( role.indexOf( '.' ) == -1 && StringUtils.isEmpty( roleClass.getPackage().getName() ) )
+                 {
+                     role = javaClass.getPackage() + "." + roleClass.getName();
+                 }
+@@ -543,4 +543,4 @@ public class QDoxComponentGleaner
+ 
+         return value;
+     }
+-}
+\ No newline at end of file
++}
+diff --git a/src/main/java/org/codehaus/plexus/cdc/gleaner/SourceComponentGleaner.java b/src/main/java/org/codehaus/plexus/cdc/gleaner/SourceComponentGleaner.java
+index e7ee5ba..4355862 100644
+--- a/src/main/java/org/codehaus/plexus/cdc/gleaner/SourceComponentGleaner.java
++++ b/src/main/java/org/codehaus/plexus/cdc/gleaner/SourceComponentGleaner.java
+@@ -17,7 +17,7 @@
+ package org.codehaus.plexus.cdc.gleaner;
+ 
+ import com.thoughtworks.qdox.model.JavaClass;
+-import com.thoughtworks.qdox.model.JavaClassCache;
++import com.thoughtworks.qdox.JavaDocBuilder;
+ import org.codehaus.plexus.cdc.gleaner.ComponentGleanerException;
+ import org.codehaus.plexus.component.repository.cdc.ComponentDescriptor;
+ 
+@@ -30,5 +30,5 @@ public interface SourceComponentGleaner
+ {
+     String ROLE = SourceComponentGleaner.class.getName();
+ 
+-    ComponentDescriptor glean(JavaClassCache classCache, JavaClass javaClass) throws ComponentGleanerException;
+-}
+\ No newline at end of file
++    ComponentDescriptor glean(JavaDocBuilder classCache, JavaClass javaClass) throws ComponentGleanerException;
++}

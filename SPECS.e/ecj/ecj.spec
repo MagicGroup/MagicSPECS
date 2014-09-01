@@ -1,101 +1,60 @@
 Epoch: 1
 
-%global qualifier 201209141800
-
-%define with_gcjbootstrap %{!?_with_gcjbootstrap:0}%{?_with_gcjbootstrap:1}
-%define without_gcjbootstrap %{?_with_gcjbootstrap:0}%{!?_with_gcjbootstrap:1}
+%global qualifier R-4.4-201406061215
 
 Summary: Eclipse Compiler for Java
 Name: ecj
-Version: 4.2.1
-Release: 3%{?dist}
+Version: 4.4.0
+Release: 2%{?dist}
 URL: http://www.eclipse.org
 License: EPL
 Group: Development/Languages
-Source0: http://download.eclipse.org/eclipse/downloads/drops4/R-%{version}-%{qualifier}/%{name}src-%{version}.jar
+Source0: http://download.eclipse.org/eclipse/downloads/drops4/%{qualifier}/%{name}src-4.4.jar
 Source1: ecj.sh.in
-# Use ECJ for GCJ
-# cvs -d:pserver:anonymous@sourceware.org:/cvs/rhug \
-# export -D 2009-09-28 eclipse-gcj
-# tar cjf ecj-gcj.tar.bz2 eclipse-gcj
-Source2: %{name}-gcj.tar.bz2
-#Patched from http://repo2.maven.org/maven2/org/eclipse/jdt/core/3.3.0-v_771/core-3.3.0-v_771.pom 
+#Patched from http://central.maven.org/maven2/org/eclipse/jdt/core/compiler/ecj/4.4/ecj-4.4.pom 
 # No dependencies are needed for ecj, dependencies are for using of jdt.core which makes no sense outside of eclipse
-Source3: core-3.3.0-v_771.pom
+Source3: ecj-4.4.pom
+Source4: ecj.1
+Source5: http://git.eclipse.org/c/jdt/eclipse.jdt.core.git/plain/org.eclipse.jdt.core/scripts/binary/META-INF/MANIFEST.MF
 # Always generate debug info when building RPMs (Andrew Haley)
 Patch0: %{name}-rpmdebuginfo.patch
-Patch1: %{name}-defaultto1.5.patch
-Patch2: %{name}-generatedebuginfo.patch
-# Patches Source2 for compatibility with newer ecj
-Patch3: eclipse-gcj-compat4.2.1.patch
 # build.xml fails to include a necessary .props file in the built ecj.jar
-Patch4: %{name}-include-props.patch
-Patch5: eclipse-gcj-nodummysymbol.patch
+Patch1: %{name}-include-props.patch
 
-BuildRequires: gcc-java >= 4.0.0
-BuildRequires: /usr/bin/aot-compile-rpm
-BuildRequires: java-gcj-compat
+BuildArch: noarch
 
-%if ! %{with_gcjbootstrap}
+BuildRequires: gzip
 BuildRequires: ant
-%endif
+BuildRequires: java-devel >= 1:1.7.0 
 
 Provides: eclipse-ecj = %{epoch}:%{version}-%{release}
 Obsoletes: eclipse-ecj < 1:3.4.2-4
+
+Obsoletes: %{name}-native < 1:4.2.1-10
 
 %description
 ECJ is the Java bytecode compiler of the Eclipse Platform.  It is also known as
 the JDT Core batch compiler.
 
-%package native
-Summary:	Native(gcj) bits for %{name}
-Group:		Development/Libraries
-Requires:	%{name} = %{epoch}:%{version}-%{release}
-Requires: libgcj >= 4.0.0
-Requires(post): java-gcj-compat
-Requires(postun): java-gcj-compat
-
-%description native
-AOT compiled ecj to speed up when running under GCJ.
-
-
 %prep
 %setup -q -c
 %patch0 -p1
-%patch1 -p1
-%patch2 -p1
-%patch4 -p1
+%patch1 -b .sav
+
+sed -i -e 's|debuglevel=\"lines,source\"|debug=\"yes\"|g' build.xml
+sed -i -e "s/Xlint:none/Xlint:none -encoding cp1252/g" build.xml
 
 cp %{SOURCE3} pom.xml
-# Use ECJ for GCJ's bytecode compiler
-tar jxf %{SOURCE2}
-mv eclipse-gcj/org/eclipse/jdt/internal/compiler/batch/GCCMain.java \
-  org/eclipse/jdt/internal/compiler/batch/
-%patch3 -p1
-%patch5 -p1
-cat eclipse-gcj/gcc.properties >> \
-  org/eclipse/jdt/internal/compiler/batch/messages.properties
-rm -rf eclipse-gcj
-
-# Remove bits of JDT Core we don't want to build
-rm -r org/eclipse/jdt/internal/compiler/tool
-rm -r org/eclipse/jdt/internal/compiler/apt
-rm -f org/eclipse/jdt/core/BuildJarIndex.java
+mkdir -p scripts/binary/META-INF/
+cp %{SOURCE5} scripts/binary/META-INF/MANIFEST.MF
 
 # JDTCompilerAdapter isn't used by the batch compiler
 rm -f org/eclipse/jdt/core/JDTCompilerAdapter.java
+cp %{SOURCE4} ecj.1
 
 %build
-%if %{with_gcjbootstrap}
-  for f in `find -name '*.java' | cut -c 3- | LC_ALL=C sort`; do
-    gcj -Wno-deprecated -C $f
-  done
-
-  find -name '*.class' -or -name '*.properties' -or -name '*.rsc' |\
-    xargs fastjar cf %{name}-%{version}.jar
-%else
-   ant
-%endif
+ant 
+gzip ecj.1
 
 %install
 mkdir -p $RPM_BUILD_ROOT%{_javadir}
@@ -109,47 +68,79 @@ popd
 install -p -D -m0755 %{SOURCE1} $RPM_BUILD_ROOT%{_bindir}/ecj
 sed --in-place "s:@JAVADIR@:%{_javadir}:" $RPM_BUILD_ROOT%{_bindir}/ecj
 
-aot-compile-rpm
+# Install manpage
+mkdir -p $RPM_BUILD_ROOT%{_mandir}/man1
+install -m 644 -p ecj.1.gz $RPM_BUILD_ROOT%{_mandir}/man1/ecj.1.gz
 
 # poms
 install -d -m 755 $RPM_BUILD_ROOT%{_mavenpomdir}
 install -pm 644 pom.xml \
     $RPM_BUILD_ROOT%{_mavenpomdir}/JPP-%{name}.pom
 
-%add_maven_depmap -a "org.eclipse.tycho:org.eclipse.jdt.core" JPP-%{name}.pom %{name}.jar
+%add_maven_depmap -a "org.eclipse.tycho:org.eclipse.jdt.core,org.eclipse.jdt:core,org.eclipse.jdt:org.eclipse.jdt.core" JPP-%{name}.pom %{name}.jar
 
-%post native
-if [ -x %{_bindir}/rebuild-gcj-db ]
-then
-  %{_bindir}/rebuild-gcj-db
-fi
-
-%postun native
-if [ -x %{_bindir}/rebuild-gcj-db ]
-then
-  %{_bindir}/rebuild-gcj-db
-fi
-
-%files
+%files -f .mfiles
 %doc about.html
 %{_mavenpomdir}/JPP-%{name}.pom
-%{_mavendepmapfragdir}/%{name}
 %{_bindir}/%{name}
 %{_javadir}/%{name}.jar
 %{_javadir}/eclipse-%{name}.jar
 %{_javadir}/jdtcore.jar
-
-%files native
-%{_libdir}/gcj/%{name}
+%{_mandir}/man1/ecj.1.gz
 
 %changelog
+* Tue Aug 12 2014 Liu Di <liudidi@gmail.com> - 1:4.4.0-2
+- 为 Magic 3.0 重建
+
+* Thu Jul 3 2014 Alexander Kurtakov <akurtako@redhat.com> 1:4.4.0-1
+- Update to 4.4 final.
+- Drop gcj patches as gcj is not in Fedora anymore and ecj now requires 1.6.
+
+* Thu Jun 12 2014 Alexander Kurtakov <akurtako@redhat.com> 1:4.4.0-0.4.git20140430
+- Add additional depmap for maven.
+
+* Mon Jun 9 2014 Alexander Kurtakov <akurtako@redhat.com> 1:4.4.0-0.3.git20140430
+- Fix FTBFS.
+
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1:4.4.0-0.2.git20140430
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Thu May 1 2014 Alexander Kurtakov <akurtako@redhat.com> 1:4.4.0-0.1.git20140430
+- Update to 4.4.0 I-build to make it cope with Java 8.
+
+* Mon Apr 14 2014 Mat Booth <mat.booth@redhat.com> - 1:4.2.1-10
+- Drop gcj AOT-compilation support.
+- Obsolete -native sub-package.
+
+* Wed Oct 09 2013 gil cattaneo <puntogil@libero.it> 1:4.2.1-9
+- enable build of org/eclipse/jdt/internal/compiler/[apt,tool]
+  (ant build mode only), required by querydsl
+- remove some rpmlint problems (invalid date)
+
+* Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1:4.2.1-8
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Tue May 21 2013 Jon VanAlten <jon.vanalten@redhat.com> - 4.2.1-7
+- Add manpage for ecj executable
+- Resolves: rhbz#948442
+
+* Tue Apr  9 2013 Mikolaj Izdebski <mizdebsk@redhat.com> - 4.2.1-6
+- Add depmap for org.eclipse.jdt.core.compiler:ecj
+- Resolves: rhbz#949938
+
+* Wed Mar 06 2013 Karsten Hopp <karsten@redhat.com> 1:4.2.1-5
+- add BR java-devel for !with_gcjbootstrap
+
+* Wed Feb 13 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1:4.2.1-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
+
 * Mon Oct 29 2012 Jon VanAlten <jon.vanalten@redhat.com> 1:4.2.1-3
 - Patch GCCMain to avoid dummy symbols.
 
 * Wed Oct 10 2012 Krzysztof Daniel <kdaniel@redhat.com> 1:4.2.1-2
 - Add depmap satysfying Tycho req.
 
-* Wed Jul 31 2012 Jon VanAlten <jon.vanalten@redhat.com> 1:4.2.1-1
+* Sun Jul 29 2012 Jon VanAlten <jon.vanalten@redhat.com> 1:4.2.1-1
 - Update to 4.2.1 upstream version.
 
 * Wed Jul 18 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1:3.4.2-14
@@ -242,7 +233,7 @@ fi
 * Mon Sep 27 2004 Gary Benson <gbenson@redhat.com> 2.1.3-5
 - Rebuild with new katana.
 
-* Fri Jul 22 2004 Gary Benson <gbenson@redhat.com> 2.1.3-4
+* Thu Jul 22 2004 Gary Benson <gbenson@redhat.com> 2.1.3-4
 - Build without bootstrap-ant.
 - Split out lib-org-eclipse-jdt-internal-compiler.so.
 

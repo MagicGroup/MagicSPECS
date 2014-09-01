@@ -1,0 +1,33 @@
+From 052c1cafc64c7fa4a15e9a8f2dedfa9d5cdbf19a Mon Sep 17 00:00:00 2001
+From: Stanislav Ochotnicky <sochotnicky@redhat.com>
+Date: Mon, 25 Jul 2011 14:44:11 +0200
+Subject: [PATCH] Add setThreshold stub
+
+This is needed for proper working with our maven3-only stack
+---
+ .../dependency/utils/DependencySilentLog.java      |   11 +++++++++++
+ 1 files changed, 11 insertions(+), 0 deletions(-)
+
+diff --git a/src/main/java/org/apache/maven/plugin/dependency/utils/DependencySilentLog.java b/src/main/java/org/apache/maven/plugin/dependency/utils/DependencySilentLog.java
+index e8cba42..3b45f5e 100644
+--- a/src/main/java/org/apache/maven/plugin/dependency/utils/DependencySilentLog.java
++++ b/src/main/java/org/apache/maven/plugin/dependency/utils/DependencySilentLog.java
+@@ -324,4 +324,15 @@ public class DependencySilentLog
+     {
+         return null;
+     }
++
++    /**
++     * By default, do nothing.
++     *
++     * @see org.codehaus.plexus.logging.Logger#setThreshold(int)
++     */
++    public void setThreshold(int level)
++    {
++        // nop
++    }
++
+ }
+-- 
+1.7.6
+

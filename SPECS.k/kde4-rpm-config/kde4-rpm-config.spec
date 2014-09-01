@@ -75,7 +75,7 @@
 Summary: KDE4 rpm macros 
 Name: kde4-rpm-config
 Version: %{rversion}
-Release: 1%{?dist}
+Release: 2%{?dist}
 
 Group: System Environment/Base
 License: Public Domain
@@ -281,6 +281,9 @@ rm -rf $RPM_BUILD_ROOT %{name}.list
 %{rpm_macros_dir}/macros.kde4
 
 %changelog
+* Fri Aug 22 2014 Liu Di <liudidi@gmail.com> - 4.13.3-2
+- 为 Magic 3.0 重建
+
 * Fri Jul 18 2014 Liu Di <liudidi@gmail.com> - 4.13.3-1
 - 更新到 4.13.3
 

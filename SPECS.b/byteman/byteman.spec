@@ -4,7 +4,7 @@
 
 Name:             byteman
 Version:          2.1.4.1
-Release:          4%{?dist}
+Release:          3%{?dist}
 Summary:          Java agent-based bytecode injection tool
 License:          LGPLv2+
 URL:              http://www.jboss.org/byteman
@@ -36,13 +36,8 @@ Requires:         java-devel
 #BuildRequires:    java_cup = 1:0.11a-12
 #BuildRequires:    objectweb-asm = 0:3.3.1-7
 
-%if 0%{?fedora} > 20
 Provides:         bundled(objectweb-asm) = 0:5.0.1-1
 Provides:         bundled(java_cup) = 1:0.11a-16
-%else
-Provides:         bundled(objectweb-asm) = 0:3.3.1-8
-Provides:         bundled(java_cup) = 1:0.11a-15
-%endif
 
 %description
 Byteman is a tool which simplifies tracing and testing of Java programs.
@@ -119,9 +114,6 @@ ln -s %{_javadir}/byteman/byteman.jar $RPM_BUILD_ROOT%{homedir}/lib/byteman.jar
 %doc docs/copyright.txt
 
 %changelog
-* Thu Jun 12 2014 Liu Di <liudidi@gmail.com> - 2.1.4.1-4
-- 为 Magic 3.0 重建
-
 * Fri Apr 18 2014 Marek Goldmann <mgoldman@redhat.com> - 2.1.4.1-3
 - Rebuilding for objectweb-asm update, RHBZ#1083570
 

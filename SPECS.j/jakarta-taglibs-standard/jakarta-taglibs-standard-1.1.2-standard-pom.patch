@@ -1,0 +1,25 @@
+--- standard-1.1.2.pom	2012-06-19 16:43:36.251081977 +0800
++++ standard-1.1.2.pom-gil	2012-06-19 17:06:55.267591862 +0800
+@@ -3,4 +3,21 @@
+   <groupId>taglibs</groupId>
+   <artifactId>standard</artifactId>
+   <version>1.1.2</version>
++  <dependencies>
++    <dependency>
++        <groupId>jstl</groupId>
++        <artifactId>jstl</artifactId>
++        <version>1.1.2</version>
++    </dependency>
++    <dependency>
++        <groupId>org.apache.tomcat</groupId>
++        <artifactId>tomcat-el-api</artifactId>
++        <version>7.0.27</version>
++    </dependency>
++    <dependency>
++        <groupId>xalan</groupId>
++        <artifactId>xalan</artifactId>
++        <version>2.7.1</version>
++    </dependency>
++  </dependencies>
+ </project>
+\ No newline at end of file

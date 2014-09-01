@@ -1,0 +1,14 @@
+--- standard/src/org/apache/taglibs/standard/tag/common/sql/DataSourceWrapper.java.sav	2004-07-20 00:06:07.000000000 +0300
++++ standard/src/org/apache/taglibs/standard/tag/common/sql/DataSourceWrapper.java	2011-07-19 14:19:40.689712335 +0300
+@@ -111,5 +111,11 @@ public class DataSourceWrapper implement
+         throw new SQLException(Resources.getMessage("NOT_SUPPORTED"));
+     }
+ 
++    public boolean isWrapperFor(Class iface) throws SQLException {
++        throw new SQLException(Resources.getMessage("NOT_SUPPORTED"));
++    }
++    public Object unwrap(Class iface) throws SQLException {
++        throw new SQLException(Resources.getMessage("NOT_SUPPORTED"));
++    }
+ 
+ }

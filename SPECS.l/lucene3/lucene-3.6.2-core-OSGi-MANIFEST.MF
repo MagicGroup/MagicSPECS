@@ -1,0 +1,28 @@
+Manifest-Version: 1.0
+Implementation-Vendor: The Apache Software Foundation
+Bundle-Localization: plugin
+X-Compile-Target-JDK: 1.5
+Bundle-RequiredExecutionEnvironment: J2SE-1.5
+Bundle-SymbolicName: org.apache.lucene.core
+Import-Package: javax.management
+Export-Package: org.apache.lucene;version="3.6.2",
+ org.apache.lucene.analysis;version="3.6.2",
+ org.apache.lucene.analysis.standard;version="3.6.2",
+ org.apache.lucene.analysis.standard.std31;version="3.6.2",
+ org.apache.lucene.analysis.tokenattributes;version="3.6.2",
+ org.apache.lucene.collation;version="3.6.2",
+ org.apache.lucene.document;version="3.6.2",
+ org.apache.lucene.index;version="3.6.2",
+ org.apache.lucene.queryParser;version="3.6.2",
+ org.apache.lucene.search;version="3.6.2",
+ org.apache.lucene.search.function;version="3.6.2",
+ org.apache.lucene.search.payloads;version="3.6.2",
+ org.apache.lucene.search.spans;version="3.6.2",
+ org.apache.lucene.store;version="3.6.2",
+ org.apache.lucene.util;version="3.6.2",
+ org.apache.lucene.util.fst;version="3.6.2",
+ org.apache.lucene.util.packed;version="3.6.2"
+Bundle-Version: 3.6.2
+Bundle-Vendor: fedoraproject.org
+Bundle-Name: High-performance, full-featured text search engine
+Bundle-ManifestVersion: 2

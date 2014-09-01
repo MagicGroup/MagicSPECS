@@ -1,0 +1,23 @@
+Bundle-Localization: plugin
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-SymbolicName: org.apache.lucene.core
+Import-Package: javax.management
+Export-Package: org.apache.lucene;version="4.8.1",
+ org.apache.lucene.analysis;version="4.8.1",
+ org.apache.lucene.analysis.tokenattributes;version="4.8.1",
+ org.apache.lucene.document;version="4.8.1",
+ org.apache.lucene.index;version="4.8.1",
+ org.apache.lucene.search;version="4.8.1",
+ org.apache.lucene.search.payloads;version="4.8.1",
+ org.apache.lucene.search.spans;version="4.8.1",
+ org.apache.lucene.search.similarities;version="4.8.1",
+ org.apache.lucene.store;version="4.8.1",
+ org.apache.lucene.util;version="4.8.1",
+ org.apache.lucene.util.fst;version="4.8.1",
+ org.apache.lucene.util.packed;version="4.8.1",
+ org.apache.lucene.util.mutable;version="4.8.1",
+ org.apache.lucene.util.automaton;version="4.8.1"
+Bundle-Version: 4.8.1
+Bundle-Vendor: fedoraproject.org
+Bundle-Name: High-performance, full-featured text search engine
+Bundle-ManifestVersion: 2

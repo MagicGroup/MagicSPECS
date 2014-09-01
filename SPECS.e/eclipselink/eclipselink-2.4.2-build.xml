@@ -1,0 +1,289 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- build file by gil -->
+<project name="build-eclipselink" default="package">
+  <property file="build.properties"/>
+  <property name="api.version"    value="2.4.2"/>
+  <property name="reltag.version" value="v20130514-5956486"/>
+  <property name="named.version"  value="${api.version}.${reltag.version}"/>
+
+  <target name="init">
+    <mkdir dir="${dir.build}/classes"/>
+  </target>
+
+  <target name="clean">
+    <delete dir="${dir.build}"/>
+  </target>
+
+  <path id="build.classpath">
+    <pathelement location="${dir.build}/classes/**"/>
+    <fileset dir="${dir.build}"    includes="eclipselink.jar"/>
+    <fileset dir="/usr/share/java" includes="ant.jar"/>
+    <fileset dir="/usr/share/java" includes="antlr3-runtime.jar"/>
+    <fileset dir="/usr/share/java" includes="eclipse/osgi.jar"/>
+    <fileset dir="/usr/share/java" includes="geronimo-jms.jar"/>
+    <!--fileset dir="/usr/share/java" includes="hibernate-jpa-2.0-api.jar"/-->
+    <fileset dir="/usr/share/java" includes="eclipselink-persistence-api.jar"/>
+    <fileset dir="/usr/share/java" includes="jboss-connector-1.6-api.jar"/>
+    <fileset dir="/usr/share/java" includes="jboss-transaction-1.1-api.jar"/>
+    <fileset dir="/usr/share/java" includes="geronimo-validation.jar"/>
+    <fileset dir="/usr/share/java" includes="javamail/mail.jar"/>
+    <fileset dir="/usr/share/java" includes="objectweb-asm3/asm.jar"/>
+    <fileset dir="/usr/share/java" includes="objectweb-asm3/asm-commons.jar"/>
+    <fileset dir="/usr/share/java" includes="objectweb-asm3/asm-tree.jar"/>
+    <fileset dir="/usr/share/java" includes="objectweb-asm3/asm-util.jar"/>
+    <fileset dir="/usr/share/java" includes="objectweb-asm3/asm-xml.jar"/>
+    <fileset dir="/usr/share/java" includes="tuscany-sdo-api.jar"/>
+    <fileset dir="/usr/share/java" includes="tomcat-servlet-api.jar"/>
+    <fileset dir="/usr/share/java" includes="qname.jar"/>
+    <fileset dir="/usr/share/java" includes="wsdl4j.jar"/>
+    <fileset dir="/usr/share/java" includes="codemodel.jar"/>
+    <fileset dir="/usr/share/java" includes="glassfish-jaxb/jaxb-impl.jar"/>
+    <fileset dir="/usr/share/java" includes="glassfish-jaxb/jaxb-xjc.jar"/>
+    <fileset dir="/usr/share/java" includes="jaxb-api.jar"/>
+    <fileset dir="/usr/share/java" includes="jsr-311.jar"/>
+    <!--fileset dir="/usr/share/java" includes="org.osgi.enterprise.jar"/-->
+    <!--fileset dir="/usr/share/java" includes="aspectjtools.jar"/-->
+    <!--fileset dir="/usr/share/java" includes="stringtemplate.jar"/-->
+  </path>
+
+  <macrodef name="antlr3">
+    <attribute name="grammar.name"/>
+    <attribute name="package" default="${package}"/>
+    <attribute name="make" default="True"/>
+    <attribute name="verbose" default="True"/>
+    <sequential>
+      <echo message="antlr @{package}/@{grammar.name}" />
+      <antlr:ant-antlr3 xmlns:antlr="antlib:org/apache/tools/ant/antlr"
+        target="@{package}/@{grammar.name}"
+        outputdirectory="@{package}"
+        libdirectory="@{package}"
+        multithreaded="true"
+        make="@{make}"
+        verbose="@{verbose}"
+        report="true"
+        debug="false">
+        <classpath>
+          <pathelement path="/usr/share/java/ant/ant-antlr3.jar"/>
+          <pathelement path="/usr/share/java/antlr3.jar"/>
+          <pathelement path="/usr/share/java/antlr3-runtime.jar"/>
+          <pathelement path="/usr/share/java/stringtemplate4.jar"/>
+          <!--pathelement path="/usr/share/java/ant.jar"/-->
+          <!--pathelement path="/usr/share/java/antlr.jar"/-->
+          <!--pathelement path="/usr/share/java/stringtemplate.jar"/-->
+        </classpath>
+        <jvmarg value="-Xmx512M"/>
+      </antlr:ant-antlr3>
+    </sequential>
+  </macrodef>
+
+  <target name="compile" depends="init">
+    
+    <!--antlr3 package="org/eclipse/persistence/internal/jpa/parsing/jpql/antlr"
+      grammar.name="JPQL.g"/>
+      
+    <antlr3 package="org/eclipse/persistence/internal/oxm/record/json"
+      grammar.name="JSON.g"/-->
+
+    <javac
+      srcdir="${dir.src}"
+      destdir="${dir.build}/classes"
+      debug="${debug}"
+      source="${source}"
+      target="${target}"
+      classpathref="build.classpath"
+      includeantruntime="false">
+      <include name="org/eclipse/persistence/**"/>
+      <include name="commonj/**"/>
+      <!-- Oracle non free -->
+      <exclude name="org/eclipse/persistence/platform/database/oracle/ucp/**" />
+      <exclude name="org/eclipse/persistence/internal/eis/adapters/aq/**" />
+      <exclude name="org/eclipse/persistence/eis/adapters/aq/**" />
+      <exclude name="org/eclipse/persistence/internal/platform/database/oracle/**" />
+      <exclude name="org/eclipse/persistence/platform/database/oracle/*.java" />
+      <exclude name="org/eclipse/persistence/platform/database/oracle/converters/**" />
+      <exclude name="org/eclipse/persistence/platform/database/oracle/dcn/**" />
+      <exclude name="org/eclipse/persistence/tools/profiler/oracle/**" />
+      <exclude name="org/eclipse/persistence/platform/xml/xdk/**" />
+      <!-- Embedded libraries -->
+      <exclude name="org/eclipse/persistence/internal/libraries/**" />
+    </javac>
+  </target>
+  
+  <target name="jar" depends="compile ">
+    <jar
+      destfile="${dir.build}/eclipselink.jar"
+      basedir="${dir.build}/classes"
+      excludes="org/eclipse/persistence/internal/libraries/**">
+      <!--zipfileset dir="${dir.src}/xsd" prefix="xsd"/>
+      <zipfileset file="${dir.src}/eclipselink_oxm_2_0.xsd" prefix="xsd"/>
+      <zipfileset file="${dir.src}/eclipselink_oxm_2_1.xsd" prefix="xsd"/-->
+      <fileset dir="${dir.src}">
+	<include name="org/eclipse/persistence/internal/helper/VendorNameToPlatformMapping.properties"/>
+	<include name="org/eclipse/persistence/*.xsd"/>
+	<include name="org/eclipse/persistence/jpa/*.xsd"/>
+	<include name="org/eclipse/persistence/jaxb/*.xsd"/>
+	<include name="org/eclipse/persistence/dbws/*.xsd"/>
+	<include name="*.html"/>
+      </fileset>
+      <service type="javax.persistence.spi.PersistenceProvider" provider="org.eclipse.persistence.jpa.PersistenceProvider"/>
+      <manifest>
+	<attribute name="Specification-Title" value="Eclipse Persistence Services"/>
+	<attribute name="Specification-Vendor" value="Eclipse.org - EclipseLink Project"/>
+	<attribute name="Specification-Version" value="${api.version}"/>
+	<attribute name="Implementation-Title" value="org.eclipse.persistence"/>
+	<attribute name="Implementation-Version" value="${named.version}"/>
+	<attribute name="Implementation-Vendor" value="Eclipse.org - EclipseLink Project"/>
+	<attribute name="Release-Designation" value="EclipseLink ${api.version}"/>
+	<attribute name="Premain-Class" value="org.eclipse.persistence.internal.jap.deployment.JavaSECMPInitializerAgent"/>
+	<attribute name="Main-Class" value="org.eclipse.persistence.Version"/>
+      </manifest>
+    </jar>
+  </target>
+
+  <!--taskdef name="osgiJar" classname="net.luminis.build.plugin.bnd.BuildTask">
+    <classpath>
+     <fileset dir="/usr/share/java" includes="net.luminis.build.plugin.jar" />
+     <fileset dir="/usr/share/java" includes="aqute-bndlib.jar" />
+     <fileset dir="/usr/share/java" includes="ant.jar" />
+    </classpath>
+  </taskdef>
+  
+  <target name="compile.antlr" depends="init">
+    <javac
+      srcdir="${dir.src}"
+      destdir="${dir.build}/classes-antlr"
+      debug="${debug}"
+      source="${source}"
+      target="${target}"
+      classpathref="build.classpath"
+      includeantruntime="false">
+      <include name="org/eclipse/persistence/internal/libraries/antlr/**"/>
+      <classpath>
+	<pathelement location="${dir.build}/classes"/>
+	<pathelement location="${dir.build}/classes-antlr"/>
+	<fileset dir="/usr/share/java" includes="stringtemplate.jar"/>
+      </classpath>
+    </javac>
+  </target>
+  
+  <target name="compile.asm" depends="init">
+    <javac
+      srcdir="${dir.src}"
+      destdir="${dir.build}/classes-asm"
+      debug="${debug}"
+      source="${source}"
+      target="${target}"
+      classpathref="build.classpath"
+      includeantruntime="false">
+      <include name="org/eclipse/persistence/internal/libraries/asm/**"/>
+    </javac>
+  </target>
+  
+  <target name="jar.antlr" depends="compile.antlr">
+      <osgiJar
+         outputdir="${dir.build}"
+         bundleName="EclipseLink ANTLR"
+         bundleVendor="Eclipse.org - EclipseLink Project"
+         bundleSymbolicName="org.eclipse.persistence.antlr"
+         bundleVersion="${named.version}"
+         bundleRequiredExecutionEnvironment="J2SE-1.5"
+         exportpackage="
+org.eclipse.persistence.internal.libraries.antlr.runtime;version=${named.version},
+org.eclipse.persistence.internal.libraries.antlr.runtime.debug;version=${named.version},
+org.eclipse.persistence.internal.libraries.antlr.runtime.misc;version=${named.version},
+org.eclipse.persistence.internal.libraries.antlr.runtime.tree;version=${named.version},
+"
+         privatePackage=""
+	 includeResource="${dir.src}/about.html,${dir.src}/license.html,${dir.src}/readme.html"
+         includeIncludeResourceHeader="false"
+        >
+        <classpath><pathelement path="${dir.build}/classes-antlr" /></classpath>
+        <manifest>
+          <attribute name="Built-By" value="${user.name}"/>
+          <attribute name="Specification-Title" value="Eclipse Persistence Services Source"/>
+          <attribute name="Specification-Vendor" value="Eclipse.org - EclipseLink Project"/>
+          <attribute name="Specification-Version" value="${api.version}"/>
+          <attribute name="Implementation-Title" value="org.eclipse.persistence.antlr"/>
+          <attribute name="Implementation-Version" value="${named.version}"/>
+          <attribute name="Implementation-Vendor" value="Eclipse.org - EclipseLink Project"/>
+          <attribute name="Release-Designation" value="EclipseLink ${api.version}"/>
+          <attribute name="HK2-Bundle-Name" value="org.eclipse.persistence:org.eclipse.persistence.antlr"/>
+       </manifest>
+      </osgiJar>
+  </target>
+  
+  <target name="jar.asm" depends="compile.asm">
+      <osgiJar
+         outputdir="${dir.build}"
+         bundleName="EclipseLink ASM"
+         bundleVendor="Eclipse.org - EclipseLink Project"
+         bundleSymbolicName="org.eclipse.persistence.asm"
+         bundleVersion="${named.version}"
+         bundleRequiredExecutionEnvironment="J2SE-1.5"
+importPackage="
+javax.xml.transform,
+javax.xml.transform.sax,
+javax.xml.transform.stream,
+org.xml.sax,org.xml.sax.ext,
+org.xml.sax.helpers,
+"
+         exportpackage="
+org.eclipse.persistence.internal.libraries.asm;version=${named.version},
+org.eclipse.persistence.internal.libraries.asm.commons;version=${named.version},
+org.eclipse.persistence.internal.libraries.asm.signature;version=${named.version},
+org.eclipse.persistence.internal.libraries.asm.tree;version=${named.version},
+org.eclipse.persistence.internal.libraries.asm.tree.analysis;version=${named.version},
+org.eclipse.persistence.internal.libraries.asm.util;version=${named.version},
+org.eclipse.persistence.internal.libraries.asm.xml;version=${named.version},
+"
+         privatePackage=""
+	 includeResource="${dir.src}/about.html,${dir.src}/license.html,${dir.src}/readme.html"
+         includeIncludeResourceHeader="false"
+        >
+        <classpath><pathelement path="${dir.build}/classes-asm" /></classpath>
+        <manifest>
+          <attribute name="Built-By" value="${user.name}"/>
+          <attribute name="Specification-Title" value="Eclipse Persistence Services Source"/>
+          <attribute name="Specification-Vendor" value="Eclipse.org - EclipseLink Project"/>
+          <attribute name="Specification-Version" value="${api.version}"/>
+          <attribute name="Implementation-Title" value="org.eclipse.persistence.asm"/>
+          <attribute name="Implementation-Version" value="${named.version}"/>
+          <attribute name="Implementation-Vendor" value="Eclipse.org - EclipseLink Project"/>
+          <attribute name="Release-Designation" value="EclipseLink ${api.version}"/>
+          <attribute name="HK2-Bundle-Name" value="org.eclipse.persistence:org.eclipse.persistence.asm"/>
+       </manifest>
+      </osgiJar>
+  </target-->
+  
+  <target name="javadoc" depends="init">
+    <mkdir dir="${dir.build}/api"/>
+    <javadoc
+      destdir="${dir.build}/api"
+      access="public"
+      windowtitle="EclipseLink ${api.version}, &quot;build ${reltag.version}&quot; API Reference"
+      doctitle="EclipseLink ${api.version}, &quot;build ${reltag.version}&quot; API Reference"
+      bottom="EclipseLink ${api.version}, &quot;build ${reltag.version}&quot; API Reference"
+      defaultexcludes="yes">
+      <packageset dir="${dir.src}">
+	<include name="org/eclipse/persistence/**"/>
+	<!-- Oracle non free -->
+	<exclude name="org/eclipse/persistence/platform/database/oracle/ucp/**" />
+	<exclude name="org/eclipse/persistence/internal/eis/adapters/aq/**" />
+	<exclude name="org/eclipse/persistence/eis/adapters/aq/**" />
+	<exclude name="org/eclipse/persistence/internal/platform/database/oracle/**" />
+	<exclude name="org/eclipse/persistence/platform/database/oracle/*.java" />
+	<exclude name="org/eclipse/persistence/platform/database/oracle/converters/**" />
+	<exclude name="org/eclipse/persistence/platform/database/oracle/dcn/**" />
+	<exclude name="org/eclipse/persistence/tools/profiler/oracle/**" />
+	<exclude name="org/eclipse/persistence/platform/xml/xdk/**" />
+	<!-- Embedded libraries -->
+	<exclude name="org/eclipse/persistence/internal/libraries/**" />
+      </packageset>
+      <link href="/usr/share/javadoc/java/" packagelistLoc="/usr/share/javadoc/java/package-list"/>
+      <classpath refid="build.classpath"/>
+    </javadoc>
+  </target>
+  <!--  jar.asm, jar.antlr, -->
+  <target name="package" depends="jar, javadoc"/>
+
+</project>

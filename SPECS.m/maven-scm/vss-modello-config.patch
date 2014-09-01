@@ -1,0 +1,13 @@
+--- maven-scm-providers/maven-scm-provider-vss/pom.xml.orig	2013-08-25 15:14:45.038548606 +0100
++++ maven-scm-providers/maven-scm-provider-vss/pom.xml	2013-08-25 15:15:15.624655116 +0100
+@@ -64,7 +64,9 @@
+         </executions>
+         <configuration>
+           <version>1.0.0</version>
+-          <model>src/main/mdo/vss-settings.mdo</model>
++          <models>
++            <model>src/main/mdo/vss-settings.mdo</model>
++          </models>
+         </configuration>
+       </plugin>
+     </plugins>

@@ -4,7 +4,7 @@
 # Set to bcond_with or use --without gui to disable qt4 gui build
 %bcond_without gui
 # Set to RC version if building RC, else %{nil}
-%define rcver -rc4
+#define rcver -rc4
 
 %define rpm_macros_dir %{_sysconfdir}/rpm
 %if 0%{?fedora} > 18
@@ -12,7 +12,7 @@
 %endif
 
 Name:           cmake
-Version:        3.0.0
+Version:	3.0.1
 Release:        0.6.rc1%{?dist}
 Summary:        Cross-platform make system
 Summary(zh_CN.UTF-8): 跨平台的 make 系统
@@ -25,7 +25,7 @@ Group(zh_CN.UTF-8): 开发/工具
 # some GPL-licensed bison-generated files, these all include an exception granting redistribution under terms of your choice
 License:        BSD and MIT and zlib
 URL:            http://www.cmake.org
-Source0:        http://www.cmake.org/files/v3.8/cmake-%{version}%{?rcver}.tar.gz
+Source0:        http://www.cmake.org/files/v3.0/cmake-%{version}%{?rcver}.tar.gz
 Source1:        cmake-init.el
 Source2:        macros.cmake
 
@@ -51,9 +51,6 @@ Patch5:         cmake-2.8.11-rc4-lua-5.2.patch
 # Add -fno-strict-aliasing when compiling cm_sha2.c
 # http://www.cmake.org/Bug/view.php?id=14314
 Patch6:         cmake-strict_aliasing.patch
-# Patch away .png extension in icon name in desktop file.
-# http://www.cmake.org/Bug/view.php?id=14315
-Patch7:         cmake-desktop_icon.patch
 # Remove automatic Qt module dep adding
 # http://public.kitware.com/Bug/view.php?id=14750
 Patch8:         cmake-qtdeps.patch
@@ -141,7 +138,6 @@ This package contains documentation for CMake.
 %patch4 -p1
 %patch5 -p1
 %patch6 -p1
-%patch7 -p1
 %patch8 -p1
 %patch9 -p1
 %patch10 -p1
@@ -250,6 +246,9 @@ update-mime-database %{_datadir}/mime &> /dev/null || :
 %endif
 
 %changelog
+* Thu Aug 14 2014 Liu Di <liudidi@gmail.com> - 3.0.1-0.6.rc1
+- 更新到 3.0.1
+
 * Wed Jul 09 2014 Liu Di <liudidi@gmail.com> - 3.0.0-0.6.rc1
 - 为 Magic 3.0 重建
 

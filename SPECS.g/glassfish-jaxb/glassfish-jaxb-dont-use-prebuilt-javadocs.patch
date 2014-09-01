@@ -1,0 +1,26 @@
+From 463def43292b22ba9137b79fe98a96fe545725ed Mon Sep 17 00:00:00 2001
+From: Juan Hernandez <juan.hernandez@redhat.com>
+Date: Sat, 10 Mar 2012 18:04:19 +0100
+Subject: [PATCH 6/7] Don't use prebuilt javadocs
+
+---
+ build.xml |    3 ---
+ 1 files changed, 0 insertions(+), 3 deletions(-)
+
+diff --git a/build.xml b/build.xml
+index a0759eb..7b18a8e 100644
+--- a/build.xml
++++ b/build.xml
+@@ -880,9 +880,6 @@
+ 
+         </parallel>
+ 
+-        <unzip src="${jaxb.libs.redist}/jaxb-api-doc.zip" dest="${jaxb.dist}/docs/api"/>
+-        <antcall target="docs" />
+-
+         <antcall target="process-sample.notinwspack"/>
+         <!-- copy samples -->
+         <mkdir dir="${jaxb.dist}/samples"/>
+-- 
+1.7.9
+

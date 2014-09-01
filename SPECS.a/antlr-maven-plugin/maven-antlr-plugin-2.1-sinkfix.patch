@@ -1,0 +1,34 @@
+diff -up antlr-maven-plugin/src/main/java/org/codehaus/mojo/antlr/AntlrHtmlReport.java.BAD antlr-maven-plugin/src/main/java/org/codehaus/mojo/antlr/AntlrHtmlReport.java
+--- antlr-maven-plugin/src/main/java/org/codehaus/mojo/antlr/AntlrHtmlReport.java.BAD	2010-10-12 13:14:45.228549104 -0400
++++ antlr-maven-plugin/src/main/java/org/codehaus/mojo/antlr/AntlrHtmlReport.java	2010-10-12 13:16:26.605549002 -0400
+@@ -25,6 +25,7 @@ import java.util.Iterator;
+ import java.util.List;
+ import java.util.Locale;
+ 
++import org.apache.maven.doxia.sink.render.RenderingContext;
+ import org.apache.maven.doxia.siterenderer.Renderer;
+ import org.apache.maven.doxia.siterenderer.RendererException;
+ import org.apache.maven.doxia.siterenderer.sink.SiteRendererSink;
+@@ -218,20 +219,11 @@ public class AntlrHtmlReport
+     {
+         try
+         {
+-            SiteRendererSink sink = siteRenderer.createSink( getReportOutputDirectory(), getOutputName() + ".html" );
++            RenderingContext context = new RenderingContext( getReportOutputDirectory(), getOutputName() + ".html" );
++            SiteRendererSink sink = new SiteRendererSink( context );
+ 
+             generate( sink, Locale.getDefault() );
+         }
+-        catch ( RendererException e )
+-        {
+-            throw new MojoExecutionException( "An error has occurred in " + getName( Locale.ENGLISH )
+-                + " report generation.", e );
+-        }
+-        catch ( IOException e )
+-        {
+-            throw new MojoExecutionException( "An error has occurred in " + getName( Locale.ENGLISH )
+-                + " report generation.", e );
+-        }
+         catch ( MavenReportException e )
+         {
+             throw new MojoExecutionException( "An error has occurred in " + getName( Locale.ENGLISH )

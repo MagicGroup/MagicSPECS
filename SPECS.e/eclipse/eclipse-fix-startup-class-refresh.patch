@@ -1,0 +1,7 @@
+--- rt.equinox.bundles/bundles/org.eclipse.equinox.common/META-INF/MANIFEST.MF.bak	2013-03-14 11:36:30.000000000 +0100
++++ rt.equinox.bundles/bundles/org.eclipse.equinox.common/META-INF/MANIFEST.MF	2013-04-23 19:28:14.777666704 +0200
+@@ -35,3 +35,4 @@
+ Comment-Header: Both Eclipse-LazyStart and Bundle-ActivationPolicy are specified for compatibility with 3.2
+ Eclipse-LazyStart: true
+ Bundle-ActivationPolicy: lazy
++Require-Capability: osgi.identity; filter:="(osgi.identity=org.eclipse.core.runtime)"; resolution:=optional

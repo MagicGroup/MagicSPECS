@@ -1,0 +1,27 @@
+From 5f4055b0b8792440e3f004ff189e08e05c5a1d44 Mon Sep 17 00:00:00 2001
+From: Juan Hernandez <juan.hernandez@redhat.com>
+Date: Sat, 10 Mar 2012 17:08:06 +0100
+Subject: [PATCH 1/5] Don't use internal resolver
+
+---
+ xjc/src/com/sun/tools/xjc/Options.java |    4 ++--
+ 1 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/xjc/src/com/sun/tools/xjc/Options.java b/xjc/src/com/sun/tools/xjc/Options.java
+index 78c9cf4..d8247de 100644
+--- a/xjc/src/com/sun/tools/xjc/Options.java
++++ b/xjc/src/com/sun/tools/xjc/Options.java
+@@ -67,8 +67,8 @@ import com.sun.codemodel.CodeWriter;
+ import com.sun.codemodel.JPackage;
+ import com.sun.codemodel.writer.FileCodeWriter;
+ import com.sun.codemodel.writer.PrologCodeWriter;
+-import com.sun.org.apache.xml.internal.resolver.CatalogManager;
+-import com.sun.org.apache.xml.internal.resolver.tools.CatalogResolver;
++import org.apache.xml.resolver.CatalogManager;
++import org.apache.xml.resolver.tools.CatalogResolver;
+ import com.sun.tools.xjc.api.ClassNameAllocator;
+ import com.sun.tools.xjc.api.SpecVersion;
+ import com.sun.tools.xjc.generator.bean.field.FieldRendererFactory;
+-- 
+1.7.9
+

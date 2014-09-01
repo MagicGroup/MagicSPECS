@@ -1,0 +1,28 @@
+--- commons-el-1.0-src/build.xml.orig	2007-07-20 15:34:15.000000000 -0400
++++ commons-el-1.0-src/build.xml	2007-07-20 15:36:48.000000000 -0400
+@@ -171,6 +171,8 @@
+     <javac  srcdir="${source.home}"
+            destdir="${build.home}/classes"
+              debug="${compile.debug}"
++            source="1.4"
++            target="1.4"
+        deprecation="${compile.deprecation}"
+           optimize="${compile.optimize}">
+       <classpath refid="compile.classpath"/>
+@@ -186,6 +188,8 @@
+     <javac  srcdir="${test.home}"
+            destdir="${build.home}/tests"
+              debug="${compile.debug}"
++            source="1.4"
++            target="1.4"
+        deprecation="${compile.deprecation}"
+           optimize="${compile.optimize}">
+       <classpath refid="test.classpath"/>
+@@ -214,6 +218,7 @@
+     <mkdir      dir="${dist.home}/docs/api"/>
+     <javadoc sourcepath="${source.home}"
+                 destdir="${dist.home}/docs/api"
++                 source="1.4"
+            packagenames="org.apache.commons.*"
+                  author="true"
+                 private="true"

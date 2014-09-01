@@ -1,0 +1,152 @@
+From a2354ea0736fd371e870120ee7c3eeedfdc2191b Mon Sep 17 00:00:00 2001
+From: Mikolaj Izdebski <mizdebsk@redhat.com>
+Date: Fri, 24 Jan 2014 17:01:18 +0100
+Subject: [PATCH 2/2] [MODELLO-285] Fix StAX reader in case no field adder is
+ defined
+
+In generated StAX readers don't use adders for fields which have
+adders explicitly disabled.
+---
+ .../modello/plugin/stax/StaxReaderGenerator.java   |  4 +-
+ .../xml/stax/NoAdderStaxGeneratorTest.java         | 51 ++++++++++++++++++++++
+ .../src/test/resources/noAdder.mdo                 | 41 +++++++++++++++++
+ 3 files changed, 95 insertions(+), 1 deletion(-)
+ create mode 100644 modello-plugins/modello-plugin-stax/src/test/java/org/codehaus/modello/generator/xml/stax/NoAdderStaxGeneratorTest.java
+ create mode 100644 modello-plugins/modello-plugin-stax/src/test/resources/noAdder.mdo
+
+diff --git a/modello-plugins/modello-plugin-stax/src/main/java/org/codehaus/modello/plugin/stax/StaxReaderGenerator.java b/modello-plugins/modello-plugin-stax/src/main/java/org/codehaus/modello/plugin/stax/StaxReaderGenerator.java
+index 83e617d..5081871 100644
+--- a/modello-plugins/modello-plugin-stax/src/main/java/org/codehaus/modello/plugin/stax/StaxReaderGenerator.java
++++ b/modello-plugins/modello-plugin-stax/src/main/java/org/codehaus/modello/plugin/stax/StaxReaderGenerator.java
+@@ -38,6 +38,7 @@ import org.codehaus.modello.plugin.java.javasource.JParameter;
+ import org.codehaus.modello.plugin.java.javasource.JSourceCode;
+ import org.codehaus.modello.plugin.java.javasource.JSourceWriter;
+ import org.codehaus.modello.plugin.java.javasource.JType;
++import org.codehaus.modello.plugin.java.metadata.JavaAssociationMetadata;
+ import org.codehaus.modello.plugin.java.metadata.JavaFieldMetadata;
+ import org.codehaus.modello.plugins.xml.metadata.XmlAssociationMetadata;
+ import org.codehaus.modello.plugins.xml.metadata.XmlFieldMetadata;
+@@ -1097,6 +1098,7 @@ public class StaxReaderGenerator
+                 if ( ModelDefault.LIST.equals( type ) || ModelDefault.SET.equals( type ) )
+                 {
+                     JavaFieldMetadata javaFieldMetadata = (JavaFieldMetadata) association.getMetadata( JavaFieldMetadata.ID );
++                    JavaAssociationMetadata javaAssociationMetadata = (JavaAssociationMetadata) association.getAssociationMetadata( JavaAssociationMetadata.ID );
+ 
+                     String adder;
+ 
+@@ -1171,7 +1173,7 @@ public class StaxReaderGenerator
+                             addCodeToAddReferences( association, jClass, sc, referenceIdentifierField, objectName );
+                         }
+ 
+-                        if ( association.getTo().equals( field.getModelClass().getName() ) )
++                        if ( association.getTo().equals( field.getModelClass().getName() ) || !javaAssociationMetadata.isAdder() )
+                         {
+                             // HACK: the addXXX method will cause an OOME when compiling a self-referencing class, so we
+                             //  just add it to the array. This could disrupt the links if you are using break/create
+diff --git a/modello-plugins/modello-plugin-stax/src/test/java/org/codehaus/modello/generator/xml/stax/NoAdderStaxGeneratorTest.java b/modello-plugins/modello-plugin-stax/src/test/java/org/codehaus/modello/generator/xml/stax/NoAdderStaxGeneratorTest.java
+new file mode 100644
+index 0000000..57d2087
+--- /dev/null
++++ b/modello-plugins/modello-plugin-stax/src/test/java/org/codehaus/modello/generator/xml/stax/NoAdderStaxGeneratorTest.java
+@@ -0,0 +1,51 @@
++package org.codehaus.modello.generator.xml.stax;
++
++/*
++ * Licensed to the Apache Software Foundation (ASF) under one
++ * or more contributor license agreements.  See the NOTICE file
++ * distributed with this work for additional information
++ * regarding copyright ownership.  The ASF licenses this file
++ * to you under the Apache License, Version 2.0 (the
++ * "License"); you may not use this file except in compliance
++ * with the License.  You may obtain a copy of the License at
++ *
++ *   http://www.apache.org/licenses/LICENSE-2.0
++ *
++ * Unless required by applicable law or agreed to in writing,
++ * software distributed under the License is distributed on an
++ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
++ * KIND, either express or implied.  See the License for the
++ * specific language governing permissions and limitations
++ * under the License.
++ */
++
++import java.util.Properties;
++
++import org.codehaus.modello.AbstractModelloJavaGeneratorTest;
++import org.codehaus.modello.core.ModelloCore;
++import org.codehaus.modello.model.Model;
++
++public class NoAdderStaxGeneratorTest
++    extends AbstractModelloJavaGeneratorTest
++{
++    public NoAdderStaxGeneratorTest()
++    {
++        super( "testNoAdder" );
++    }
++
++    public void testNoAdder()
++        throws Throwable
++    {
++        ModelloCore modello = (ModelloCore) lookup( ModelloCore.ROLE );
++
++        Model model = modello.loadModel( getXmlResourceReader( "/noAdder.mdo" ) );
++
++        Properties parameters = getModelloParameters( "1.0.0" );
++
++        modello.generate( model, "java", parameters );
++        modello.generate( model, "stax-reader", parameters );
++        modello.generate( model, "stax-writer", parameters );
++
++        compileGeneratedSources();
++    }
++}
+diff --git a/modello-plugins/modello-plugin-stax/src/test/resources/noAdder.mdo b/modello-plugins/modello-plugin-stax/src/test/resources/noAdder.mdo
+new file mode 100644
+index 0000000..d2fdb9a
+--- /dev/null
++++ b/modello-plugins/modello-plugin-stax/src/test/resources/noAdder.mdo
+@@ -0,0 +1,41 @@
++<?xml version="1.0" encoding="US-ASCII"?>
++<model xmlns="http://modello.codehaus.org/MODELLO/1.4.0"
++       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
++       xsi:schemaLocation="http://modello.codehaus.org/MODELLO/1.4.0
++                           http://modello.codehaus.org/xsd/modello-1.4.0.xsd">
++  <id>test</id>
++  <name>Test</name>
++  <defaults>
++    <default>
++      <key>package</key>
++      <value>org.codehaus.modello.generator.xml.stax.test.noadder</value>
++    </default>
++  </defaults>
++  <classes>
++    <class xml.tagName="myType">
++      <name>MyType</name>
++      <version>1.0.0+</version>
++      <fields>
++        <field>
++          <name>test</name>
++          <version>1.0.0+</version>
++          <type>String</type>
++        </field>
++      </fields>
++    </class>
++    <class rootElement="true" xml.tagName="noAdderTest">
++      <name>NoAdderTest</name>
++      <version>1.0.0+</version>
++      <fields>
++        <field>
++          <name>property</name>
++          <version>1.0.0+</version>
++          <association java.adder="false">
++            <type>MyType</type>
++            <multiplicity>*</multiplicity>
++          </association>
++        </field>
++      </fields>
++    </class>
++  </classes>
++</model>
+-- 
+1.8.4.2
+

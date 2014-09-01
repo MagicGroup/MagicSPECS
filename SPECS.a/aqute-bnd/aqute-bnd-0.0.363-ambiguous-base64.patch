@@ -1,0 +1,21 @@
+diff -Naur aqute-bnd-0.0.363.orig/src/main/java/aQute/bnd/signing/Signer.java aqute-bnd-0.0.363/src/main/java/aQute/bnd/signing/Signer.java
+--- aqute-bnd-0.0.363.orig/src/main/java/aQute/bnd/signing/Signer.java	2009-02-24 16:40:24.000000000 +0000
++++ aqute-bnd-0.0.363/src/main/java/aQute/bnd/signing/Signer.java	2014-05-09 16:57:46.400038213 +0000
+@@ -119,7 +119,7 @@
+             if (algorithms[a] != null) {
+                 byte[] digest = algorithms[a].digest(manbytes);
+                 ps.print(digestNames[a] + "-Digest-Manifest: ");
+-                ps.print(new Base64(digest));
++                ps.print(new aQute.lib.base64.Base64(digest));
+                 ps.print("\r\n");
+             }
+         }
+@@ -142,7 +142,7 @@
+                     if (algorithms[a] != null) {
+                         byte[] digest = algorithms[a].digest();
+                         String header = digestNames[a] + "-Digest: "
+-                                + new Base64(digest) + "\r\n";
++                                + new aQute.lib.base64.Base64(digest) + "\r\n";
+                         out.write(header.getBytes());
+                     }
+                 }
