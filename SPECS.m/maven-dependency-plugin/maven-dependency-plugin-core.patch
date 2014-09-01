@@ -1,0 +1,16 @@
+diff --git a/pom.xml b/pom.xml
+index bd58801..1a3f62f 100644
+--- a/pom.xml
++++ b/pom.xml
+@@ -92,6 +92,11 @@ under the License.
+     <!-- maven -->
+     <dependency>
+       <groupId>org.apache.maven</groupId>
++      <artifactId>maven-core</artifactId>
++      <version>${mavenVersion}</version>
++    </dependency>
++    <dependency>
++      <groupId>org.apache.maven</groupId>
+       <artifactId>maven-artifact</artifactId>
+       <version>${mavenVersion}</version>
+     </dependency>

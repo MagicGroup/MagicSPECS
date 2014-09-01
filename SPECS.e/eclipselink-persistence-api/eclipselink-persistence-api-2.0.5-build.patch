@@ -1,0 +1,135 @@
+--- pom.xml	2013-04-11 16:29:20.000000000 +0200
++++ pom.xml-gil	2013-07-16 05:27:54.095598724 +0200
+@@ -62,6 +62,132 @@
+     </developer>
+   </developers>
+   
++  <properties>
++    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
++  </properties>
++  
++  <dependencies>
++      <dependency>
++          <groupId>org.eclipse.osgi</groupId>
++          <artifactId>org.eclipse.osgi</artifactId>
++          <version>3.6.0.v20100517</version>
++      </dependency>
++  </dependencies>
++
++  <build>
++      <resources>
++          <resource>
++              <directory>src/main/resources</directory>
++          </resource>
++          <resource>
++              <directory>${project.build.sourceDirectory}</directory>
++              <excludes>
++                  <exclude>**/*.java</exclude>
++                  <exclude>**/.*</exclude>
++              </excludes>
++          </resource>
++          <resource>
++              <directory>${project.build.sourceDirectory}</directory>
++              <includes>
++                  <include>**/packageinfo</include>
++              </includes>
++          </resource>
++      </resources>
++    
++      <plugins>
++          <plugin>
++              <groupId>org.apache.maven.plugins</groupId>
++              <artifactId>maven-compiler-plugin</artifactId>
++              <version>2.0.2</version>
++              <configuration>
++                  <source>1.6</source>
++                  <target>1.6</target>
++                  <encoding>${project.build.sourceEncoding}</encoding>
++              </configuration>
++          </plugin>
++          <plugin>
++              <artifactId>maven-resources-plugin</artifactId>
++              <version>2.5</version>
++              <configuration>
++                  <encoding>${project.build.sourceEncoding}</encoding>
++              </configuration>
++          </plugin>
++          <plugin>
++              <groupId>org.apache.felix</groupId>
++              <artifactId>maven-bundle-plugin</artifactId>
++              <version>2.0.0</version>
++              <configuration>
++                  <instructions>
++                      <Bundle-Activator>org.eclipse.persistence.javax.persistence.osgi.Activator</Bundle-Activator>
++                      <Bundle-ClassPath>.</Bundle-ClassPath>
++                      <Bundle-Name>Java Persistence API 2.0</Bundle-Name>
++                      <Bundle-RequiredExecutionEnvironment>J2SE-1.5</Bundle-RequiredExecutionEnvironment>
++                      <Bundle-SymbolicName>javax.persistence</Bundle-SymbolicName>
++                      <Bundle-Vendor>Eclipse.org - EclipseLink Project</Bundle-Vendor>
++                      <Bundle-Version>${project.version}</Bundle-Version>
++                      <Export-Package>javax.persistence,
++                          javax.persistence.spi,
++                          javax.persistence.criteria,
++                          javax.persistence.metamodel</Export-Package>
++                      <Import-Package>javax.sql;resolution:=optional,
++                          org.osgi.framework;resolution:=optional,
++                          org.osgi.service.jpa</Import-Package>
++                      <Private-Package>.,org.eclipse.persistence.javax.persistence.osgi</Private-Package>
++                      <Implementation-Vendor>Eclipse.org - EclipseLink Project</Implementation-Vendor>
++                      <Specification-Vendor>Sun Microsystems Inc.</Specification-Vendor>
++                      <Specification-Version>2.0</Specification-Version>
++                  </instructions>
++              </configuration>
++              <executions>
++                  <execution>
++                      <id>bundle-manifest</id>
++                      <phase>process-classes</phase>
++                      <goals>
++                          <goal>manifest</goal>
++                      </goals>
++                  </execution>
++              </executions>
++          </plugin>
++          <plugin>
++              <groupId>org.apache.maven.plugins</groupId>
++              <artifactId>maven-jar-plugin</artifactId>
++              <version>2.3.1</version>
++              <configuration>
++                  <archive>
++                      <!-- add the generated manifest to the archive -->
++                      <manifestFile>${project.build.outputDirectory}/META-INF/MANIFEST.MF</manifestFile>
++                  </archive>
++              </configuration>
++          </plugin>
++          <plugin>
++              <groupId>org.apache.maven.plugins</groupId>
++              <artifactId>maven-javadoc-plugin</artifactId>
++              <version>2.8</version>
++              <configuration>
++                  <encoding>${project.build.sourceEncoding}</encoding>
++                  <nodeprecated>false</nodeprecated>
++                  <use>false</use>
++                  <author>true</author>
++                  <version>true</version>
++                  <doctitle><![CDATA[<h1>Java Persistence API 2.0</h1>]]>
++                  </doctitle>
++                  <header><![CDATA[${project.description}]]>
++                  </header>
++                  <bottom><![CDATA[<font size=-1>
++<p>Copyright &copy; Eclipse.org - EclipseLink Project (2000, 2012). All Rights Reserved. Licensed under the Eclipse Public License v1.0.</font>]]>
++                  </bottom>
++                  <detectJavaApiLink>false</detectJavaApiLink>
++                  <offlineLinks>
++                      <offlineLink>
++                          <url>http://download.oracle.com/javase/6/docs/api/</url>
++			  <location>/usr/share/javadoc/java</location>
++                      </offlineLink>
++                  </offlineLinks>
++              </configuration>  
++          </plugin>
++      </plugins>
++  </build>
++  
+ </project>
+ 
+ 

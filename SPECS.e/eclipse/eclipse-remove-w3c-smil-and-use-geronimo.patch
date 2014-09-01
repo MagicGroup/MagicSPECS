@@ -1,0 +1,52 @@
+--- eclipse.platform.ui/features/org.eclipse.e4.rcp/feature.xml.orig	2014-03-26 11:00:57.935084582 +0000
++++ eclipse.platform.ui/features/org.eclipse.e4.rcp/feature.xml	2014-03-26 11:02:43.076109293 +0000
+@@ -123,20 +123,6 @@
+          unpack="false"/>
+ 
+    <plugin
+-         id="org.w3c.dom.smil"
+-         download-size="0"
+-         install-size="0"
+-         version="1.0.0.qualifier"
+-         unpack="false"/>
+-
+-   <plugin
+-         id="org.w3c.dom.events"
+-         download-size="0"
+-         install-size="0"
+-         version="3.0.0.qualifier"
+-         unpack="false"/>
+-
+-   <plugin
+          id="javax.inject"
+          download-size="0"
+          install-size="0"
+@@ -144,7 +130,7 @@
+          unpack="false"/>
+ 
+    <plugin
+-         id="javax.annotation"
++         id="org.apache.geronimo.specs.geronimo-annotation_1.1_spec"
+          download-size="0"
+          install-size="0"
+          version="0.0.0"
+--- eclipse.platform.common/bundles/org.eclipse.platform.doc.isv/pom.xml.orig	2013-02-20 16:43:17.000000000 +0100
++++ eclipse.platform.common/bundles/org.eclipse.platform.doc.isv/pom.xml	2013-02-21 09:51:19.981788507 +0100
+@@ -61,7 +61,7 @@
+                   </requirement>
+                   <requirement>
+                     <type>eclipse-plugin</type>
+-                    <id>javax.annotation</id>
++                    <id>org.apache.geronimo.specs.geronimo-annotation_1.1_spec</id>
+                     <versionRange>0.0.0</versionRange>
+                   </requirement>
+                   <requirement>
+@@ -96,7 +96,7 @@
+                   </requirement>
+                   <requirement>
+                     <type>eclipse-plugin</type>
+-                    <id>org.apache.jasper.glassfish</id>
++                    <id>org.glassfish.web.javax.servlet.jsp</id>
+                     <versionRange>0.0.0</versionRange>
+                   </requirement>
+                   <requirement>

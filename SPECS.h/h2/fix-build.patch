@@ -1,0 +1,33 @@
+--- src/tools/org/h2/build/Build.java.orig	2014-04-05 14:57:06.000000000 +0100
++++ src/tools/org/h2/build/Build.java	2014-06-12 11:18:39.647010805 +0100
+@@ -188,14 +188,12 @@
+         switchSource(debugInfo);
+         clean();
+         mkdir("temp");
+-        download();
+         String classpath = "temp" +
+-                File.pathSeparator + "ext/servlet-api-2.4.jar" +
+-                File.pathSeparator + "ext/lucene-core-3.0.2.jar" +
+-                File.pathSeparator + "ext/slf4j-api-1.6.0.jar" +
+-                File.pathSeparator + "ext/org.osgi.core-4.2.0.jar" +
+-                File.pathSeparator + "ext/org.osgi.enterprise-4.2.0.jar" +
+-                File.pathSeparator + "ext/jts-1.13.jar" +
++                File.pathSeparator + "/usr/share/java/servlet.jar" +
++                File.pathSeparator + "/usr/share/java/lucene3/lucene-core-3.jar" +
++                File.pathSeparator + "/usr/share/java/slf4j/api.jar" +
++                File.pathSeparator + "/usr/share/java/felix/org.osgi.core.jar" +
++                File.pathSeparator + "/usr/share/java/jts.jar" +
+                 File.pathSeparator + System.getProperty("java.home") + "/../lib/tools.jar";
+         FileList files;
+         if (clientOnly) {
+@@ -536,8 +534,8 @@
+         javadoc("-sourcepath", "src/main", "org.h2.jdbc", "org.h2.jdbcx",
+                 "org.h2.tools", "org.h2.api", "org.h2.engine", "org.h2.fulltext",
+                 "-classpath",
+-                "ext/lucene-core-3.0.2.jar" +
+-                File.pathSeparator + "ext/jts-1.13.jar",
++                "/usr/share/java/lucene3/lucene-core-3.jar" +
++                File.pathSeparator + "/usr/share/java/jts.jar",
+                 "-docletpath", "bin" + File.pathSeparator + "temp",
+                 "-doclet", "org.h2.build.doclet.Doclet");
+         copy("docs/javadoc", files("src/docsrc/javadoc"), "src/docsrc/javadoc");

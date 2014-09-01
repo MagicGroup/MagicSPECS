@@ -1,14 +1,15 @@
 Name:           media-player-info
-Version:        17
-Release:        3%{?dist}
+Version: 21
+Release: 1%{?dist}
 Summary:        Data files describing media player capabilities
+Summary(zh_CN.UTF-8): 媒体播放器的描述数据文件
 
 Group:          System Environment/Base
+Group(zh_CN.UTF-8): 系统环境/基本
 License:        BSD
 URL:            http://www.freedesktop.org/wiki/Software/media-player-info
 Source0:        http://www.freedesktop.org/software/media-player-info/%{name}-%{version}.tar.gz
 BuildArch:      noarch
-Patch0:         fdo-51097-hp-veer.patch
 
 BuildRequires:  libudev-devel
 BuildRequires:  python
@@ -22,16 +23,17 @@ supported file formats, etc.
 
 The package also installs a udev rule to identify media player devices.
 
+%description -l zh_CN.UTF-8
+媒体播放器（大部分是 USB）的描述数据文件.
+
 
 %prep
 %setup -q
-%patch0 -p1 -b .veer
-
 
 %build
 %configure
 make %{?_smp_mflags}
-
+magic_rpm_clean.sh
 
 %install
 make install DESTDIR=$RPM_BUILD_ROOT
@@ -42,9 +44,12 @@ make install DESTDIR=$RPM_BUILD_ROOT
 %doc COPYING README NEWS AUTHORS
 /usr/share/media-player-info
 /usr/lib/udev/rules.d/*
-
+/usr/lib/udev/hwdb.d/20-usb-media-players.hwdb
 
 %changelog
+* Fri Aug 22 2014 Liu Di <liudidi@gmail.com> - 21-1
+- 更新到 21
+
 * Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 17-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
 

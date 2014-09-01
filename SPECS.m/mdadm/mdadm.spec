@@ -1,7 +1,8 @@
 Summary:     The mdadm program controls Linux md devices (software RAID arrays)
+Summary(zh_CN.UTF-8): 控制 Linux md 设备 (软 Raid) 的程序
 Name:        mdadm
-Version:     3.2.6
-Release:     19%{?dist}
+Version: 3.3.2
+Release: 1%{?dist}
 Source:      http://www.kernel.org/pub/linux/utils/raid/mdadm/mdadm-%{version}.tar.xz
 Source1:     mdmonitor.init
 Source2:     raid-check
@@ -11,41 +12,19 @@ Source5:     mdadm-cron
 Source6:     mdmonitor.service
 Source7:     mdadm.conf
 Source8:     mdadm_event.conf
-Patch1:	     mdadm-3.2.6-Create.c-check-if-freesize-is-equal-0.patch
-Patch2:	     mdadm-3.2.6-imsm-Forbid-spanning-between-multiple-controllers.patch
-Patch3:	     mdadm-3.2.6-query-udev-dir-via-pkg-config.patch
-Patch4:	     mdadm-3.2.6-Add-updating-component_size-to-manager-thread-of-mdm.patch
-Patch5:      mdadm-3.2.6-imsm-monitor-do-not-finish-migration-if-there-are-no.patch
-Patch93:     mdadm-3.2.6-Remove-offroot-argument-and-default-to-always-settin.patch
-Patch94:     mdadm-3.2.6-Add-support-for-launching-mdmon-via-systemctl-instea.patch
-Patch95:     mdadm-3.2.6-In-case-launching-mdmon-fails-print-an-error-message.patch
-Patch96:     mdadm-3.2.6-mdmon-add-foreground-option.patch
+
 # Fedora customization patches
-Patch97:     mdadm-3.2.6-udev.patch
+Patch97:     mdadm-3.3-udev.patch
 Patch98:     mdadm-2.5.2-static.patch
-# Fedora 17 - only
-Patch99:     mdadm-3.2.4-map-dir.patch
 URL:         http://www.kernel.org/pub/linux/utils/raid/mdadm/
 License:     GPLv2+
 Group:       System Environment/Base
+Group(zh_CN.UTF-8): 系统环境/基本
 BuildRoot:   %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 Obsoletes:   mdctl,raidtools
-%if 0%{?fedora} >= 18 || 0%{?rhel} >= 7
-%define	     fedora17	0
-%else
-%define	     fedora17	1
-%define	     _udevrulesdir	/usr/lib/udev/rules.d
-%define	     _tmpfilesdir	%{_prefix}/usr/lib/tmpfiles.d
-%endif
-%if %{fedora17}
-Requires(post): systemd-units systemd-sysv chkconfig coreutils
-Requires:    udev initscripts
-Conflicts:   dracut < 009-14
-%else
 Obsoletes:   mdadm-sysvinit
-Conflicts:   dracut < 024-25
+Conflicts:   dracut < 034-1
 Requires(post): systemd-units chkconfig coreutils
-%endif
 BuildRequires: systemd-units binutils-devel
 Requires(preun): systemd-units
 Requires(postun): systemd-units coreutils
@@ -58,60 +37,27 @@ package.  However, mdadm is a single program, and it can perform
 almost all functions without a configuration file, though a configuration
 file can be used to help with some common tasks.
 
-%if %{fedora17}
-%package sysvinit
-Group:       System Environment/Base
-Summary:     SysV init script for mdadm
-Requires:    %{name} = %{version}-%{release}
-Requires(post):   /sbin/service
-Requires(preun):  /sbin/service
-Requires(postun): /sbin/service
-
-%description sysvinit
-SysV style init script for mdadm. It needs to be installed only if systemd
-is not used as the system init process.
-%endif
+%description -l zh_CN.UTF-8
+mdadm 程序用来创建、管理和监视 Linux MD（软 Raid）设备。
 
 %prep
 %setup -q
-%patch1 -p1 -b .raidsize
-%patch2 -p1 -b .multictrl
-%patch3 -p1 -b .udevquery
-%patch4 -p1 -b .component
-%patch5 -p1 -b .migration
-
-# Use systemctl to launch mdmon on F18 and higher
-%if !%{fedora17}
-%patch93 -p1 -b .nooffroot
-%patch94 -p1 -b .sysctl
-%patch95 -p1 -b .mdmonfail
-%patch96 -p1 -b .foreground
-%endif
 
 # Fedora customization patches
 %patch97 -p1 -b .udev
 %patch98 -p1 -b .static
-# Fedora 16, 17 - only
-%if %{fedora17}
-%patch99 -p1 -b .map-dir
-%endif
 
 %build
 make %{?_smp_mflags} CXFLAGS="$RPM_OPT_FLAGS" SYSCONFDIR="%{_sysconfdir}" mdadm mdmon
 
 %install
 rm -rf %{buildroot}
-%if !%{fedora17}
 make DESTDIR=%{buildroot} MANDIR=%{_mandir} BINDIR=%{_sbindir} SYSTEMD_DIR=%{_unitdir} install install-systemd
-%else
-make DESTDIR=%{buildroot} MANDIR=%{_mandir} BINDIR=%{_sbindir} SYSTEMD_DIR=%{_unitdir} install
-install -Dp -m 755 %{SOURCE1} %{buildroot}%{_initrddir}/mdmonitor
-%endif
 install -Dp -m 755 %{SOURCE2} %{buildroot}%{_sbindir}/raid-check
 install -Dp -m 644 %{SOURCE3} %{buildroot}%{_udevrulesdir}/65-md-incremental.rules
 install -Dp -m 644 %{SOURCE4} %{buildroot}%{_sysconfdir}/sysconfig/raid-check
 install -Dp -m 644 %{SOURCE5} %{buildroot}%{_sysconfdir}/cron.d/raid-check
-mkdir -p -m 700 %{buildroot}/var/run/mdadm
+mkdir -p -m 710 %{buildroot}/var/run/mdadm
 
 # systemd
 mkdir -p %{buildroot}%{_unitdir}
@@ -126,6 +72,7 @@ install -d -m 0710 %{buildroot}%{_localstatedir}/run/%{name}/
 # abrt
 mkdir -p %{buildroot}/etc/libreport/events.d
 install -m644 %{SOURCE8} %{buildroot}/etc/libreport/events.d
+magic_rpm_clean.sh
 
 %clean
 rm -rf %{buildroot}
@@ -146,11 +93,6 @@ rm -rf %{buildroot}
 /sbin/chkconfig --del mdmonitor >/dev/null 2>&1 || :
 /bin/systemctl try-restart mdmonitor.service >/dev/null 2>&1 || :
 
-%if %{fedora17}
-%triggerpostun -n %{name}-sysvinit -- %{name} < 3.2.2-3
-/sbin/chkconfig --add mdmonitor >/dev/null 2>&1 || :
-%endif
-
 %files
 %defattr(-,root,root,-)
 %doc TODO ChangeLog mdadm.conf-example COPYING misc/*
@@ -158,18 +100,85 @@ rm -rf %{buildroot}
 %{_sbindir}/*
 %{_unitdir}/*
 %{_mandir}/man*/md*
+/usr/lib/systemd/system-shutdown/*
 %config(noreplace) %{_sysconfdir}/cron.d/*
 %config(noreplace) %{_sysconfdir}/sysconfig/*
 %dir %{_localstatedir}/run/%{name}/
 %config(noreplace) %{_tmpfilesdir}/%{name}.conf
 /etc/libreport/events.d/*
 
-%if %{fedora17}
-%files sysvinit
-%{_initrddir}/*
-%endif
-
 %changelog
+* Fri Aug 22 2014 Liu Di <liudidi@gmail.com> - 3.3.2-1
+- 更新到 3.3.2
+
+* Tue Aug 5 2014 Jes Sorensen <Jes.Sorensen@redhat.com> - 3.3.1-6
+- Apply proper fix for bz1125883, clean up after rogue patch application
+- Resolves bz1125883
+
+* Mon Aug 04 2014 Dan Horák <dan[at]danny.cz> - 3.3.1-5
+- revert the previous fix, not upstream yet
+
+* Mon Aug 04 2014 Dan Horák <dan[at]danny.cz> - 3.3.1-4
+- fix FTBFS on ppc64 (#1125883)
+
+* Tue Jul 29 2014 Jes Sorensen <Jes.Sorensen@redhat.com> - 3.3.1-3
+- Improve error message for "--grow -n2" when used on Linear arrays
+- Fix problem where explicitly specified arrays were not assembled if
+  they were disabled in /etc/mdadm.conf
+- Resolves bz1122146, bz1124310
+
+* Thu Jun 12 2014 Jes Sorensen <Jes.Sorensen@redhat.com> - 3.3.1-2
+- Revert 'change' event support fix from 3.3.1-1 - this requires a lot
+  more testing if we are to go there.
+
+* Tue Jun 10 2014 Jes Sorensen <Jes.Sorensen@redhat.com> - 3.3.1-1
+- Update to mdadm-3.3.1
+- Fixup mdadm.rules to honor 'change' events
+- Resolvez bz1105136
+
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.3-8
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Fri Mar 14 2014 Jes Sorensen <Jes.Sorensen@redhat.com> - 3.3-7
+- Don't depend on syslog.target in mdmonitor.service
+- Resolves bz1055202
+
+* Fri Jan 31 2014 Jes Sorensen <Jes.Sorensen@redhat.com> - 3.3-6
+- Revert changes introduced in 3.3-5, they were based on incorrect
+  recommendations.
+- Resolves bz1053176
+
+* Thu Jan 30 2014 Jes Sorensen <Jes.Sorensen@redhat.com> - 3.3-5
+- Do not create /var/run/mdadm in the rpm file, since this is sitting on
+  tmpfs and is created by tmpfiles during boot.
+- Resolves bz1053176
+
+* Thu Oct 10 2013 Jes Sorensen <Jes.Sorensen@redhat.com> - 3.3-4
+- Fix byteswap macros return types to allow for building on big endian
+  architectures again.
+- Resolves bz1015494
+
+* Wed Oct 9 2013 Jes Sorensen <Jes.Sorensen@redhat.com> - 3.3-3
+- Check for DM_UDEV_DISABLE_OTHER_RULES_FLAG instead of
+  DM_UDEV_DISABLE_DISK_RULES_FLAG in 65-md-incremental.rules 
+- Resolves bz1015521
+
+* Tue Oct 8 2013 Jes Sorensen <Jes.Sorensen@redhat.com> - 3.3-2
+- Fix dracut requirement, minimum version 034-1
+
+* Thu Sep 5 2013 Jes Sorensen <Jes.Sorensen@redhat.com> - 3.3-1
+- Update to mdadm-3.3
+- Resolves bz977826
+
+* Tue Aug 13 2013 Jes Sorensen <Jes.Sorensen@redhat.com> - 3.2.6-21
+- Fix pointless rpmbuild noise over mismatching date info
+- Remove Fedora 17 support
+- Fix problem where first stop command doesn't stop container during
+  IMSM volume's reshape bz956053 (f18), bz956056 (f19)
+
+* Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.2.6-20
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
 * Wed Apr 24 2013 Jes Sorensen <Jes.Sorensen@redhat.com> - 3.2.6-19
 - Fix problem where  rebuild of IMSM RAID5 volume started in OROM,
   does not proceed in OS 
@@ -180,11 +189,11 @@ rm -rf %{buildroot}
   if an array was stopped during ongoing expansion of a RAID1/5 volume.
 - Resolves bz948745
 
-* Wed Apr 23 2013 Jes Sorensen <Jes.Sorensen@redhat.com> - 3.2.6-17
+* Tue Apr 23 2013 Jes Sorensen <Jes.Sorensen@redhat.com> - 3.2.6-17
 - Reorder patches to allow for udev query patch to be applied on
   Fedora 17 as well.
 
-* Tue Apr 22 2013 Jes Sorensen <Jes.Sorensen@redhat.com> - 3.2.6-16
+* Mon Apr 22 2013 Jes Sorensen <Jes.Sorensen@redhat.com> - 3.2.6-16
 - Rely on rpm macros to place files in correct directories, and match /usr
   move
 - Resolves bz955248
@@ -957,7 +966,7 @@ rm -rf %{buildroot}
 - Added Obsoletes: mdctl
 - missingok for configfile
 
-* Wed Mar 12 2002 NeilBrown <neilb@cse.unsw.edu.au>
+* Tue Mar 12 2002 NeilBrown <neilb@cse.unsw.edu.au>
 - Add md.4 and mdadm.conf.5 man pages
 
 * Fri Mar 08 2002 Chris Siebenmann <cks@cquest.utoronto.ca>

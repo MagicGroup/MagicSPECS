@@ -1,0 +1,114 @@
+--- build.xml	2013-04-17 00:00:39.000000000 +0200
++++ build.xml-gil	2013-09-12 16:13:30.119000138 +0200
+@@ -102,13 +102,13 @@
+ 	<filter token="jdk" value="${compile.target}" />
+ 
+ 	<!-- Default JAR libraries -->
+-	<property name="parser.jar"        value="${lib.dir}/xercesImpl.jar" />
+-	<property name="xmlapi.jar"        value="${lib.dir}/xml-apis.jar" />
+-	<property name="jaxen.jar"         value="${lib.dir}/jaxen-1.1.6.jar" />
+-	<property name="junit.jar"         value="${lib.dir}/junit-4.8.2.jar" />
+-	<property name="isorelax.jar"      value="${contrib}/lib/isorelax.jar" />
+-	<property name="xalan.jar"         value="${lib.dir}/xalan/xalan-2.7.1.jar" />
+-	<property name="xalanser.jar"      value="${lib.dir}/xalan/serializer-2.7.1.jar" />
++	<property name="parser.jar"        value="/usr/share/java/xerces-j2.jar" />
++	<property name="xmlapi.jar"        value="/usr/share/java/xml-commons-apis.jar" />
++	<property name="jaxen.jar"         value="/usr/share/java/jaxen.jar" />
++	<property name="junit.jar"         value="/usr/share/java/junit.jar" />
++	<property name="isorelax.jar"      value="/usr/share/java/isorelax.jar" />
++	<property name="xalan.jar"         value="/usr/share/java/xalan-j2.jar" />
++	<property name="xalanser.jar"      value="/usr/share/java/xalan-j2-serializer.jar" />
+ 
+ 	<!-- Compilation class path -->
+ 	<path id="base.class.path">
+@@ -121,8 +121,8 @@
+ 		<pathelement location="${xalanser.jar}" />
+ 		<!-- normally these stax jars will not be found -->
+ 		<!-- this is used for testing Java5 (the test sets stax.dir) -->
+-		<pathelement location="${stax.dir}/jsr173_1.0_api.jar" />
+-		<pathelement location="${stax.dir}/sjsxp.jar" />
++		<pathelement location="/usr/share/java/bea-stax-api.jar" />
++		<!--pathelement location="${stax.dir}/sjsxp.jar" /-->
+ 	</path>
+ 
+ 	<path id="core.class.path">
+@@ -139,7 +139,12 @@
+ 		<pathelement location="${junit.instrumented}" />
+ 		<pathelement location="${junit.build}"/>
+ 		<path refid="contrib.class.path"/>
+-		<fileset dir="${lib.dir}/cobertura" includes="*.jar" />
++		<fileset dir="/usr/share/java/objectweb-asm" includes="asm.jar" />
++		<fileset dir="/usr/share/java/objectweb-asm" includes="asm-tree.jar" />
++		<fileset dir="/usr/share/java" includes="log4j.jar" />
++		<fileset dir="/usr/share/java" includes="cobertura.jar" />
++		<fileset dir="/usr/share/java" includes="cobertura-runtime.jar" />
++		<fileset dir="/usr/share/java" includes="jakarta-oro.jar" />
+ 	</path>
+ 
+ 
+@@ -289,6 +294,7 @@
+              header="&lt;b&gt;${Name}&lt;br&gt;&lt;font size='-1'&gt;${version}&lt;/font&gt;&lt;/b&gt;"
+              bottom="Copyright &#169; ${year} Jason Hunter, Brett McLaughlin. All Rights Reserved.">
+ 			<classpath refid="base.class.path"/>
++			<link href="${j2se.apidoc}"/>
+ 		</javadoc>
+ 	</target>
+ 	
+@@ -373,11 +379,11 @@
+ 	<!-- =================================================================== -->
+ 	<target name="package" depends="coverage, jars"
+           description="Creates the class package">
+-		<zip destfile="${package}/${jarbase}.zip">
++		<!--zip destfile="${package}/${jarbase}.zip">
+ 			<fileset dir="${package}" includes="${jarbase}*.jar" />
+ 			<fileset dir="${basedir}" includes="lib/xerces* lib/jaxen* lib/xml*" />
+ 			<fileset dir="${basedir}" includes="LICENSE.txt README.txt" />
+-		</zip>
++		</zip-->
+ 	</target>
+ 
+ 	<!-- =================================================================== -->
+@@ -401,6 +407,7 @@
+ 		        <include name="**/*.class"/>
+ 		        <!-- exclude name="**/**/jaxen/**/*.class"/ -->
+ 		    </fileset>
++		    <classpath refid="junit.class.path" />
+ 		</cobertura-instrument>
+ 		
+ 		<property name="forkjunit" value="true" />
+@@ -528,7 +535,25 @@
+ 			</filterset>
+ 		</copy>
+ 		
+-		<exec dir="${mavendir}/core" executable="${gpg}">
++		<copy filtering="true" file="maven/contrib.pom" tofile="${mavendir}/core/${mavenbase}-contrib.pom">
++			<filterset>
++				<filter token="artifactID" value="${mavenartifact}"/>
++				<filter token="version" value="${version}" />
++				<filter token="jdk" value="${compile.target}" />
++				<filter token="license" value="${license}" />
++			</filterset>
++		</copy>
++		
++		<copy filtering="true" file="maven/junit.pom" tofile="${mavendir}/core/${mavenbase}-junit.pom">
++			<filterset>
++				<filter token="artifactID" value="${mavenartifact}"/>
++				<filter token="version" value="${version}" />
++				<filter token="jdk" value="${compile.target}" />
++				<filter token="license" value="${license}" />
++			</filterset>
++		</copy>
++		
++		<!--exec dir="${mavendir}/core" executable="${gpg}">
+ 			<arg value="-abv"/>
+ 			<arg value="${mavenbase}.pom"/>
+ 		</exec>
+@@ -543,7 +568,7 @@
+ 		<exec dir="${mavendir}/core" executable="${gpg}">
+ 			<arg value="-abv"/>
+ 			<arg value="${mavenbase}-javadoc.jar"/>
+-		</exec>
++		</exec-->
+ 		
+ 		<jar destfile="${mavendir}/${mavenbase}-maven-bundle.jar"
+ 			basedir="${mavendir}/core"

@@ -105,8 +105,8 @@
 Summary: An interpreted, interactive, object-oriented programming language
 Name: %{python}
 # Remember to also rebase python-docs when changing this:
-Version: 2.7.7
-Release: 3%{?dist}
+Version: 2.7.8
+Release: 4%{?dist}
 License: Python
 Group: Development/Languages
 Requires: %{python}-libs%{?_isa} = %{version}-%{release}
@@ -877,6 +877,11 @@ Patch193: 00193-enable-loading-sqlite-extensions.patch
 # FIXED UPSTREAM
 #Patch194: 00194-fix-tests-with-sqlite-3.8.4.patch
 
+# Since openssl-1.0.1h-5.fc21 SSLv2 and SSLV3 protocols
+# are disabled by default in openssl, according the comment in openssl
+# patch this affects only SSLv23_method, this patch enables SSLv2
+# and SSLv3 when SSLv23_method is used
+Patch195: 00195-enable-sslv23-in-ssl.patch
 
 # (New patches go here ^^^)
 #
@@ -1234,6 +1239,7 @@ mv Modules/cryptmodule.c Modules/_cryptmodule.c
 # 00192: upstream as of Python 2.7.7
 %patch193 -p1
 # 00194: upstream as of Python 2.7.7
+%patch195 -p1
 
 
 # This shouldn't be necesarry, but is right now (2.2a3)
@@ -1552,7 +1558,7 @@ install -d %{buildroot}/usr/lib/python%{pybasever}/site-packages
 %global _pyconfig32_h pyconfig-32.h
 %global _pyconfig64_h pyconfig-64.h
 
-%ifarch %{power64} s390x x86_64 ia64 alpha sparc64 aarch64 mips64el
+%ifarch %{power64} s390x x86_64 ia64 alpha sparc64 aarch64
 %global _pyconfig_h %{_pyconfig64_h}
 %else
 %global _pyconfig_h %{_pyconfig32_h}
@@ -1625,7 +1631,7 @@ done
 # Install a tapset for this libpython into tapsetdir, fixing up the path to the
 # library:
 mkdir -p %{buildroot}%{tapsetdir}
-%ifarch %{power64} s390x x86_64 ia64 alpha sparc64 aarch64 mips64el
+%ifarch %{power64} s390x x86_64 ia64 alpha sparc64 aarch64
 %global libpython_stp_optimized libpython%{pybasever}-64.stp
 %global libpython_stp_debug     libpython%{pybasever}-debug-64.stp
 %else
@@ -1727,7 +1733,9 @@ rm -fr %{buildroot}
 
 %files
 %defattr(-, root, root, -)
-%doc LICENSE README
+%{!?_licensedir:%global license %%doc}
+%license LICENSE
+%doc README
 %{_bindir}/pydoc*
 %{_bindir}/%{python}
 %if %{main_python}
@@ -1738,7 +1746,9 @@ rm -fr %{buildroot}
 
 %files libs
 %defattr(-,root,root,-)
-%doc LICENSE README
+%{!?_licensedir:%global license %%doc}
+%license LICENSE
+%doc README
 %dir %{pylibdir}
 %dir %{dynload_dir}
 %{dynload_dir}/Python-%{version}-py%{pybasever}.egg-info
@@ -2068,8 +2078,20 @@ rm -fr %{buildroot}
 # ======================================================
 
 %changelog
-* Tue Jun 17 2014 Liu Di <liudidi@gmail.com> - 2.7.7-3
+* Wed Aug 13 2014 Liu Di <liudidi@gmail.com> - 2.7.8-4
 - 为 Magic 3.0 重建
+
+* Thu Jul 31 2014 Tom Callaway <spot@fedoraproject.org> - 2.7.8-3
+- fix license handling
+
+* Fri Jul 18 2014 Robert Kuska <rkuska@redhat.com> - 2.7.8-2
+- Enable SSLv2 and SSLv3 when SSLv23_method is used in ssl
+
+* Mon Jul 14 2014 Robert Kuska <rkuska@redhat.com> - 2.7.8-1
+- Update to 2.7.8
+
+* Fri Jul 11 2014 Dan Horák <dan[at]danny.cz> - 2.7.7-3
+- rebuilt for updated libffi ABI on ppc64le
 
 * Sat Jun  7 2014 Peter Robinson <pbrobinson@fedoraproject.org> 2.7.7-2
 - aarch64 has valgrind, just list those that don't support it

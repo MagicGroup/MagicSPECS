@@ -1,0 +1,296 @@
+diff -Nru jmock-2.5.1/src/org/jmock/Expectations.java jmock-2.5.1-gil/src/org/jmock/Expectations.java
+--- jmock-2.5.1/src/org/jmock/Expectations.java	2008-07-03 13:52:29.000000000 +0200
++++ jmock-2.5.1-gil/src/org/jmock/Expectations.java	2012-11-02 13:58:47.805563931 +0100
+@@ -184,39 +184,48 @@
+     }
+     
+     public boolean with(boolean value) {
+-        return with(equalTo(value));
++        addParameterMatcher(equal(value));
++        return false;
+     }
+     
+     public byte with(byte value) {
+-        return with(equalTo(value));
++        addParameterMatcher(equal(value));
++        return 0;
+     }
+     
+     public short with(short value) {
+-        return with(equalTo(value));
++        addParameterMatcher(equal(value));
++        return 0;
+     }
+     
+     public char with(char value) {
+-        return with(equalTo(value));
++        addParameterMatcher(equal(value));
++        return 0;
+     }
+     
+     public int with(int value) {
+-        return with(equalTo(value));
++        addParameterMatcher(equal(value));
++        return 0;
+     }
+     
+     public long with(long value) {
+-        return with(equalTo(value));
++        addParameterMatcher(equal(value));
++        return 0;
+     }
+     
+     public float with(float value) {
+-        return with(equalTo(value));
++        addParameterMatcher(equal(value));
++        return 0;
+     }
+     
+     public double with(double value) {
+-        return with(equalTo(value));
++        addParameterMatcher(equal(value));
++        return 0;
+     }
+     
+     public <T> T with(T value) {
+-        return with(equalTo(value));
++        addParameterMatcher(equal(value));
++        return value;
+     }
+     
+     public void will(Action action) {
+diff -Nru jmock-2.5.1/src/org/jmock/internal/InvocationExpectationBuilder.java jmock-2.5.1-gil/src/org/jmock/internal/InvocationExpectationBuilder.java
+--- jmock-2.5.1/src/org/jmock/internal/InvocationExpectationBuilder.java	2008-06-23 10:56:29.000000000 +0200
++++ jmock-2.5.1-gil/src/org/jmock/internal/InvocationExpectationBuilder.java	2012-11-02 13:58:47.808563779 +0100
+@@ -10,10 +10,9 @@
+ import org.jmock.api.Action;
+ import org.jmock.api.Expectation;
+ import org.jmock.api.Invocation;
+-import org.jmock.internal.matcher.MethodMatcher;
+ import org.jmock.internal.matcher.MethodNameMatcher;
+ import org.jmock.internal.matcher.MockObjectMatcher;
+-import org.jmock.internal.matcher.ParametersMatcher;
++import org.jmock.internal.matcher.AllParametersMatcher;
+ import org.jmock.syntax.MethodClause;
+ import org.jmock.syntax.ParametersClause;
+ import org.jmock.syntax.ReceiverClause;
+@@ -83,14 +82,14 @@
+     }
+     
+     public void createExpectationFrom(Invocation invocation) {
+-        expectation.setMethodMatcher(new MethodMatcher(invocation.getInvokedMethod()));
++        expectation.setMethod(invocation.getInvokedMethod());
+         
+         if (capturedParameterMatchers.isEmpty()) {
+-            expectation.setParametersMatcher(new ParametersMatcher(invocation.getParametersAsArray()));
++            expectation.setParametersMatcher(new AllParametersMatcher(invocation.getParametersAsArray()));
+         }
+         else {
+             checkParameterMatcherCount(invocation);
+-            expectation.setParametersMatcher(new ParametersMatcher(capturedParameterMatchers));
++            expectation.setParametersMatcher(new AllParametersMatcher(capturedParameterMatchers));
+         }
+     }
+     
+@@ -130,7 +129,7 @@
+     }
+     
+     public void with(Matcher<?>... parameterMatchers) {
+-        expectation.setParametersMatcher(new ParametersMatcher(Arrays.asList(parameterMatchers)));
++        expectation.setParametersMatcher(new AllParametersMatcher(Arrays.asList(parameterMatchers)));
+     }
+     
+     public void withNoArguments() {
+diff -Nru jmock-2.5.1/src/org/jmock/internal/InvocationExpectation.java jmock-2.5.1-gil/src/org/jmock/internal/InvocationExpectation.java
+--- jmock-2.5.1/src/org/jmock/internal/InvocationExpectation.java	2007-12-28 00:26:14.000000000 +0100
++++ jmock-2.5.1-gil/src/org/jmock/internal/InvocationExpectation.java	2012-11-02 13:58:47.807563829 +0100
+@@ -10,6 +10,7 @@
+ import org.jmock.api.Action;
+ import org.jmock.api.Expectation;
+ import org.jmock.api.Invocation;
++import org.jmock.internal.matcher.MethodMatcher;
+ import org.jmock.lib.action.VoidAction;
+ 
+ /** 
+@@ -19,10 +20,11 @@
+  * @author smgf
+  */
+ public class InvocationExpectation implements Expectation {
++    private static ParametersMatcher ANY_PARAMETERS = new AnyParametersMatcher();
+     private Cardinality cardinality = Cardinality.ALLOWING;
+ 	private Matcher<?> objectMatcher = IsAnything.anything();
+-	private Matcher<Method> methodMatcher = IsAnything.anything("<any method>");
+-	private Matcher<Object[]> parametersMatcher = IsAnything.anything("(<any parameters>)");
++	private Matcher<? super Method> methodMatcher = IsAnything.anything("<any method>");
++	private ParametersMatcher parametersMatcher = ANY_PARAMETERS;
+     private Action action = new VoidAction();
+     private List<OrderingConstraint> orderingConstraints = new ArrayList<OrderingConstraint>();
+     private List<SideEffect> sideEffects = new ArrayList<SideEffect>();
+@@ -36,12 +38,16 @@
+ 	public void setObjectMatcher(Matcher<?> objectMatcher) {
+ 		this.objectMatcher = objectMatcher;
+ 	}
++
++	public void setMethod(Method method) {
++	    this.methodMatcher = new MethodMatcher(method);
++	}
+ 	
+-	public void setMethodMatcher(Matcher<Method> methodMatcher) {
+-		this.methodMatcher = methodMatcher;
++	public void setMethodMatcher(Matcher<? super Method> matcher) {
++		this.methodMatcher = matcher;
+ 	}
+ 	
+-	public void setParametersMatcher(Matcher<Object[]> parametersMatcher) {
++	public void setParametersMatcher(ParametersMatcher parametersMatcher) {
+ 		this.parametersMatcher = parametersMatcher;
+ 	}
+ 
+@@ -121,4 +127,14 @@
+             sideEffect.perform();
+         }
+     }
++
++    private static class AnyParametersMatcher extends IsAnything<Object[]> implements ParametersMatcher {
++        public AnyParametersMatcher() {
++            super("(<any parameters>)");
++        }
++
++        public boolean isCompatibleWith(Object[] parameters) {
++            return true;
++        }
++    };
+ }
+diff -Nru jmock-2.5.1/src/org/jmock/internal/matcher/AllParametersMatcher.java jmock-2.5.1-gil/src/org/jmock/internal/matcher/AllParametersMatcher.java
+--- jmock-2.5.1/src/org/jmock/internal/matcher/AllParametersMatcher.java	1970-01-01 01:00:00.000000000 +0100
++++ jmock-2.5.1-gil/src/org/jmock/internal/matcher/AllParametersMatcher.java	2012-11-02 13:58:47.809563730 +0100
+@@ -0,0 +1,80 @@
++package org.jmock.internal.matcher;
++
++import static java.util.Arrays.asList;
++
++import java.util.List;
++
++import org.hamcrest.Description;
++import org.hamcrest.Matcher;
++import org.hamcrest.TypeSafeDiagnosingMatcher;
++import org.hamcrest.core.IsEqual;
++import org.jmock.internal.ParametersMatcher;
++
++public class AllParametersMatcher extends TypeSafeDiagnosingMatcher<Object[]>  implements ParametersMatcher {
++    private final Matcher<Object>[] elementMatchers;
++
++    public AllParametersMatcher(Object[] expectedValues) {
++        this.elementMatchers =  equalMatchersFor(expectedValues);
++    }
++
++    @SuppressWarnings("unchecked")
++    public AllParametersMatcher(List<Matcher<?>> parameterMatchers) {
++        this.elementMatchers = parameterMatchers.toArray(new Matcher[0]);
++    }
++
++    public boolean isCompatibleWith(Object[] parameters) {
++        return elementMatchers.length == parameters.length;
++    }
++
++    @Override
++    public boolean matchesSafely(Object[] parameters, Description mismatch) {
++        return matchesNumberOfParameters(parameters, mismatch)
++            && matchesParameters(parameters, mismatch);
++    }
++
++    private boolean matchesNumberOfParameters(Object[] parameters, Description mismatch) {
++        if (elementMatchers.length != parameters.length) {
++            mismatch.appendText("wrong number of parameters: ")
++                    .appendValue(parameters);
++            return false;
++        }
++        return true;
++    }
++
++    private boolean matchesParameters(Object[] parameters, Description mismatch) {
++        boolean result = true;
++        for (int i = 0; i < parameters.length; i++) {
++            result &= matchesParameter(parameters[i], elementMatchers[i], mismatch, i);
++        }
++        return result;
++    }
++
++    private boolean matchesParameter(final Object value, final Matcher<Object> matcher, Description mismatch, int index) {
++        mismatch.appendText("\n      parameter " + index + " ");
++        final boolean parameterMatches = matcher.matches(value);
++        if (parameterMatches) {
++            mismatch.appendText("matched: ").appendDescriptionOf(matcher);
++        } else {
++            mismatch.appendText("did not match: ")
++                .appendDescriptionOf(matcher)
++                .appendText(", because ");
++            matcher.describeMismatch(value, mismatch);
++        }
++        return parameterMatches;
++    }
++
++    public void describeTo(Description description) {
++        description.appendList("(", ", ",")", asList(elementMatchers));
++    }
++
++    @SuppressWarnings("unchecked")
++    private static Matcher<Object>[] equalMatchersFor(Object[] expectedValues) {
++        Matcher<Object>[] matchers = new Matcher[expectedValues.length];
++        for (int i = 0; i < expectedValues.length; i++) {
++            matchers[i] = new IsEqual<Object>(expectedValues[i]);
++        }
++        return matchers;
++    }
++
++}
++
+diff -Nru jmock-2.5.1/src/org/jmock/internal/ParametersMatcher.java jmock-2.5.1-gil/src/org/jmock/internal/ParametersMatcher.java
+--- jmock-2.5.1/src/org/jmock/internal/ParametersMatcher.java	1970-01-01 01:00:00.000000000 +0100
++++ jmock-2.5.1-gil/src/org/jmock/internal/ParametersMatcher.java	2012-11-02 13:58:47.809563730 +0100
+@@ -0,0 +1,12 @@
++package org.jmock.internal;
++
++import org.hamcrest.Matcher;
++
++public interface ParametersMatcher extends Matcher<Object[]> {
++    /**
++     * Is this matcher likely to be relevant to the given parameters?
++     * @param parameters The parameters to be matched
++     * @return true iff the parameters may be relevant.
++     */
++    boolean isCompatibleWith(Object[] parameters);
++}
+diff -Nru jmock-2.5.1/test/org/jmock/test/acceptance/HamcrestTypeSafetyAcceptanceTests.java jmock-2.5.1-gil/test/org/jmock/test/acceptance/HamcrestTypeSafetyAcceptanceTests.java
+--- jmock-2.5.1/test/org/jmock/test/acceptance/HamcrestTypeSafetyAcceptanceTests.java	2007-02-06 17:20:50.000000000 +0100
++++ jmock-2.5.1-gil/test/org/jmock/test/acceptance/HamcrestTypeSafetyAcceptanceTests.java	2012-11-02 13:58:47.809563730 +0100
+@@ -1,7 +1,7 @@
+ package org.jmock.test.acceptance;
+ 
+-import static org.hamcrest.number.OrderingComparisons.greaterThan;
+-import static org.hamcrest.text.StringStartsWith.startsWith;
++import static org.hamcrest.CoreMatchers.startsWith;
++import static org.hamcrest.number.OrderingComparison.greaterThan;
+ 
+ import java.lang.reflect.Method;
+ 
+diff -Nru jmock-2.5.1/test/org/jmock/test/unit/internal/InvocationExpectationTests.java jmock-2.5.1-gil/test/org/jmock/test/unit/internal/InvocationExpectationTests.java
+--- jmock-2.5.1/test/org/jmock/test/unit/internal/InvocationExpectationTests.java	2007-06-23 10:48:36.000000000 +0200
++++ jmock-2.5.1-gil/test/org/jmock/test/unit/internal/InvocationExpectationTests.java	2012-11-02 13:58:47.811563631 +0100
+@@ -16,6 +16,7 @@
+ import org.jmock.internal.InvocationExpectation;
+ import org.jmock.internal.OrderingConstraint;
+ import org.jmock.internal.SideEffect;
++import org.jmock.internal.matcher.AllParametersMatcher;
+ import org.jmock.lib.action.ReturnValueAction;
+ import org.jmock.test.unit.support.AssertThat;
+ import org.jmock.test.unit.support.MethodFactory;
+@@ -72,7 +73,7 @@
+ 		Object[] differentArgCount = {1,2,3};
+ 		Object[] noArgs = null;
+ 		
+-		expectation.setParametersMatcher(equalTo(args));
++		expectation.setParametersMatcher(new AllParametersMatcher(args));
+ 		
+ 		assertTrue("should match", expectation.matches(new Invocation(targetObject, method, args)));
+ 		assertTrue("should not match", !expectation.matches(new Invocation(targetObject, method, differentArgs)));

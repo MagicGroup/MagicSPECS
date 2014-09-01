@@ -1,0 +1,25 @@
+From 8f1dda63b3e44835a0a88975b368c132f538fd4f Mon Sep 17 00:00:00 2001
+From: Michal Srb <msrb@redhat.com>
+Date: Tue, 30 Jul 2013 15:10:14 +0200
+Subject: [PATCH] Add javadoc target to build.xml
+
+---
+ build.xml | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/build.xml b/build.xml
+index 7337939..0b283c5 100644
+--- a/build.xml
++++ b/build.xml
+@@ -538,4 +538,8 @@ THE POSSIBILITY OF SUCH DAMAGE.
+ 
+   </target>
+ 
++  <target name="javadoc" depends="jar" description="generate javadoc">
++    <javadoc sourcepath="src/" destdir="api/" />
++  </target>
++
+ </project>
+-- 
+1.8.1.4
+

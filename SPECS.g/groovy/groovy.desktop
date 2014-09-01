@@ -1,0 +1,11 @@
+[Desktop Entry]
+Version=1.0
+Name=Groovy Console
+GenericName=Groovy Console
+Comment=Evaluate scripts in Groovy language
+Type=Application
+Categories=Development;IDE;Java;
+Exec=groovyConsole %F
+TryExec=groovyConsole
+StartupNotify=true
+Icon=groovy

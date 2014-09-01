@@ -2,7 +2,7 @@
 
 Name:           lxlauncher
 Version:        0.2.2
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Open source replacement for Launcher on the EeePC
 Summary(zh_CN.UTF-8): EeePC 上的 Launcher 的开源替代品
 
@@ -68,6 +68,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Fri Aug 22 2014 Liu Di <liudidi@gmail.com> - 0.2.2-3
+- 为 Magic 3.0 重建
+
 * Fri Jul 04 2014 Liu Di <liudidi@gmail.com> - 0.2.2-2
 - 为 Magic 3.0 重建
 

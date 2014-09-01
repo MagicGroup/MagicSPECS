@@ -1,0 +1,40 @@
+From 03c6edd57b8f0275ca344e24bdc5b992c723c987 Mon Sep 17 00:00:00 2001
+From: Michal Srb <msrb@redhat.com>
+Date: Thu, 16 Jan 2014 11:05:10 +0100
+Subject: [PATCH] Port spring-orm to javax.persistence 2.0
+
+---
+ .../orm/jpa/persistenceunit/MutablePersistenceUnitInfo.java    | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
+
+diff --git a/spring-orm/src/main/java/org/springframework/orm/jpa/persistenceunit/MutablePersistenceUnitInfo.java b/spring-orm/src/main/java/org/springframework/orm/jpa/persistenceunit/MutablePersistenceUnitInfo.java
+index dd2da77..263e52e 100644
+--- a/spring-orm/src/main/java/org/springframework/orm/jpa/persistenceunit/MutablePersistenceUnitInfo.java
++++ b/spring-orm/src/main/java/org/springframework/orm/jpa/persistenceunit/MutablePersistenceUnitInfo.java
+@@ -20,6 +20,9 @@ import java.net.URL;
+ import java.util.LinkedList;
+ import java.util.List;
+ import java.util.Properties;
++
++import javax.persistence.SharedCacheMode;
++import javax.persistence.ValidationMode;
+ import javax.persistence.spi.ClassTransformer;
+ import javax.persistence.spi.PersistenceUnitTransactionType;
+ import javax.sql.DataSource;
+@@ -208,6 +211,13 @@ public class MutablePersistenceUnitInfo implements SmartPersistenceUnitInfo {
+ 		throw new UnsupportedOperationException("getNewTempClassLoader not supported");
+ 	}
+ 
++	public ValidationMode getValidationMode() {
++		throw new UnsupportedOperationException("Not implemented yet");
++	}
++
++	public SharedCacheMode getSharedCacheMode() {
++		throw new UnsupportedOperationException("Not implemented yet");
++	}
+ 
+ 	@Override
+ 	public String toString() {
+-- 
+1.8.3.1
+

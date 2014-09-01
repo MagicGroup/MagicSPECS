@@ -1,0 +1,30 @@
+--- eclipse.platform.team/bundles/org.eclipse.compare/compare/org/eclipse/compare/internal/patch/DiffViewerComparator.java.orig	2014-03-27 10:48:13.547706443 +0000
++++ eclipse.platform.team/bundles/org.eclipse.compare/compare/org/eclipse/compare/internal/patch/DiffViewerComparator.java	2014-03-27 10:52:42.615751600 +0000
+@@ -49,7 +49,7 @@
+ 
+ 					return oldStart0 - oldStart1;
+ 				}
+-				return Policy.getComparator().compare(arg0, arg1);
++				return Policy.getComparator().compare((String)arg0, (String)arg1);
+ 			}
+ 		};
+ 	}
+--- eclipse.platform.ui/bundles/org.eclipse.ui.ide.application/src/org/eclipse/ui/internal/ide/application/IDEWorkbenchAdvisor.java.orig	2014-03-27 11:27:35.233213660 +0000
++++ eclipse.platform.ui/bundles/org.eclipse.ui.ide.application/src/org/eclipse/ui/internal/ide/application/IDEWorkbenchAdvisor.java	2014-03-27 12:19:30.696748271 +0000
+@@ -13,6 +13,7 @@
+ import java.lang.reflect.InvocationTargetException;
+ import java.net.URL;
+ import java.util.ArrayList;
++import java.util.Comparator;
+ import java.util.Iterator;
+ import java.util.Map;
+ import java.util.TreeMap;
+@@ -235,7 +236,7 @@
+ 		// show Help button in JFace dialogs
+ 		TrayDialog.setDialogHelpAvailable(true);
+ 
+-		Policy.setComparator(Collator.getInstance());
++		Policy.setComparator((Comparator)Collator.getInstance());
+ 	}
+ 
+ 	/*

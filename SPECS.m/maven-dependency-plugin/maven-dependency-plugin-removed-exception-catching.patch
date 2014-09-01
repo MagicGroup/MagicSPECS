@@ -1,0 +1,27 @@
+From a9316856e6c53eba9f444c85dfdfeff6d0f0f5b7 Mon Sep 17 00:00:00 2001
+From: Michal Srb <msrb@redhat.com>
+Date: Fri, 15 Mar 2013 13:53:16 +0100
+Subject: [PATCH] removed exception catching
+
+---
+ .../apache/maven/plugin/dependency/resolvers/ResolvePluginsMojo.java  | 4 ----
+ 1 file changed, 4 deletions(-)
+
+diff --git a/src/main/java/org/apache/maven/plugin/dependency/resolvers/ResolvePluginsMojo.java b/src/main/java/org/apache/maven/plugin/dependency/resolvers/ResolvePluginsMojo.java
+index bc509dd..476f520 100644
+--- a/src/main/java/org/apache/maven/plugin/dependency/resolvers/ResolvePluginsMojo.java
++++ b/src/main/java/org/apache/maven/plugin/dependency/resolvers/ResolvePluginsMojo.java
+@@ -143,10 +143,6 @@ public class ResolvePluginsMojo
+         {
+             throw new MojoExecutionException( "Nested:", e );
+         }
+-        catch ( final InvalidDependencyVersionException e )
+-        {
+-            throw new MojoExecutionException( "Nested:", e );
+-        }
+         catch ( final ArtifactFilterException e )
+         {
+             throw new MojoExecutionException( "Nested:", e );
+-- 
+1.8.1.4
+

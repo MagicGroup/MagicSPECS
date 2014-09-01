@@ -1,0 +1,37 @@
+From bc4b149aa582d1663db86141533477a3a7ca937e Mon Sep 17 00:00:00 2001
+From: Juan Hernandez <juan.hernandez@redhat.com>
+Date: Sat, 10 Mar 2012 18:04:52 +0100
+Subject: [PATCH 7/7] Don't build examples
+
+---
+ build.xml |   14 --------------
+ 1 files changed, 0 insertions(+), 14 deletions(-)
+
+diff --git a/build.xml b/build.xml
+index 7b18a8e..4da31cb 100644
+--- a/build.xml
++++ b/build.xml
+@@ -880,20 +880,6 @@
+ 
+         </parallel>
+ 
+-        <antcall target="process-sample.notinwspack"/>
+-        <!-- copy samples -->
+-        <mkdir dir="${jaxb.dist}/samples"/>
+-        <copy todir="${jaxb.dist}/samples">
+-          <fileset dir="${jaxb.root}/samples/work" defaultexcludes="yes">
+-            <exclude name="CHANGELOG.txt"/>
+-            <exclude name="**/build.golden.regexp"/>
+-            <exclude name="**/.cvsignore"/>
+-            <exclude name="**/sample.meta"/>
+-            <exclude name="**/gen-src/**/*"/>
+-            <exclude name="**/classes/**/*"/>
+-          </fileset>
+-        </copy>
+-
+     </target>
+ 
+     <target name="push-snapshot-to-maven">
+-- 
+1.7.9
+

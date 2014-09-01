@@ -1,13 +1,15 @@
 Name:           menu-cache
-Version:        0.4.1
-Release:        1%{?dist}
+Version: 0.6.0
+Release: 3%{?dist}
 Summary:        Caching mechanism for freedesktop.org compliant menus
+Summary(zh_CN.UTF-8): freedesktop.org 兼容菜单的缓存机制
 
 Group:          System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 License:        LGPLv2+ and GPLv2+
 URL:            http://lxde.org
 #VCS: git:git://lxde.git.sourceforge.net/gitroot/lxde/menu-cache
-Source0:        http://downloads.sourceforge.net/lxde/%{name}-%{version}.tar.gz
+Source0:        http://downloads.sourceforge.net/lxde/%{name}-%{version}.tar.xz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildRequires:  glib2-devel >= 2.16.0
@@ -17,9 +19,14 @@ Menu-cache is a caching mechanism for freedesktop.org compliant menus to
 speed up parsing of the menu entries. It is currently used by some of 
 components of the LXDE desktop environment such as LXPanel or LXLauncher.
 
+%description -l zh_CN.UTF-8
+ freedesktop.org 兼容菜单的缓存机制，这是 LXDE 桌面环境的一部分。
+
 %package        devel
 Summary:        Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       %{name} = %{version}-%{release}
 Requires:       pkgconfig
 
@@ -27,6 +34,8 @@ Requires:       pkgconfig
 The %{name}-devel package contains libraries and header files for
 developing applications that use %{name}.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -45,7 +54,7 @@ make %{?_smp_mflags} V=1
 rm -rf %{buildroot}
 make install DESTDIR=%{buildroot}
 find %{buildroot} -name '*.la' -exec rm -f {} ';'
-
+magic_rpm_clean.sh
 
 %clean
 rm -rf %{buildroot}
@@ -60,8 +69,8 @@ rm -rf %{buildroot}
 %defattr(-,root,root,-)
 #FIXME: add ChangeLog and NEWS if there is content
 %doc AUTHORS COPYING README
-%{_libexecdir}/menu-cache-gen
-%{_libexecdir}/menu-cached
+%{_libexecdir}/menu-cache/menu-cache-gen
+%{_libexecdir}/menu-cache/menu-cached
 %{_libdir}/libmenu-cache.so.*
 #%{_mandir}/man*/*.gz
 
@@ -75,6 +84,18 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Aug 22 2014 Liu Di <liudidi@gmail.com> - 0.6.0-3
+- 为 Magic 3.0 重建
+
+* Fri Aug 22 2014 Liu Di <liudidi@gmail.com> - 0.6.0-2
+- 为 Magic 3.0 重建
+
+* Fri Aug 22 2014 Liu Di <liudidi@gmail.com> - 0.6.0-1
+- 更新到 0.6.0
+
+* Fri Aug 22 2014 Liu Di <liudidi@gmail.com> - 0.4.1-1
+- 更新到 0.6.0
+
 * Sun Nov 25 2012 Christoph Wickert <cwickert@fedoraproject.org> - 0.4.1-1
 - Update to 0.4.1
 

@@ -1,0 +1,47 @@
+From 10955c0d72fc11324cebcb2bd8fe4bf56f0f8887 Mon Sep 17 00:00:00 2001
+From: Mikolaj Izdebski <mizdebsk@redhat.com>
+Date: Fri, 27 Sep 2013 12:49:53 +0200
+Subject: [PATCH] Do not use algorithm name as regular expression
+
+In org.codehaus.plexus.digest.DigestUtils.cleanChecksum(String,
+String, String), the second parameter is used as part of the regular
+expression.  Compiling the resulting regular expression can result in
+a VM error with a crafted algorithm name.  The regular expression
+should be a constant, with a capture group for the algorithm name, and
+the name should be checked after matching.
+
+Originally reported by Florian Weimer in:
+https://bugzilla.redhat.com/show_bug.cgi?id=959454
+---
+ src/main/java/org/codehaus/plexus/digest/DigestUtils.java | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
+
+diff --git a/src/main/java/org/codehaus/plexus/digest/DigestUtils.java b/src/main/java/org/codehaus/plexus/digest/DigestUtils.java
+index a54a8c0..430c3a8 100644
+--- a/src/main/java/org/codehaus/plexus/digest/DigestUtils.java
++++ b/src/main/java/org/codehaus/plexus/digest/DigestUtils.java
+@@ -51,16 +51,17 @@ public class DigestUtils
+         String trimmedChecksum = checksum.replace( '\n', ' ' ).trim();
+ 
+         // Free-BSD / openssl
+-        String regex = algorithm.replaceAll( "-", "" ) + "\\s*\\((.*?)\\)\\s*=\\s*([a-fA-F0-9]+)";
++        algorithm = algorithm.replaceAll( "-", "" );
++        String regex = "(.{" + algorithm.length() + "})\\s*\\((.*?)\\)\\s*=\\s*([a-fA-F0-9]+)";
+         Matcher m = Pattern.compile( regex ).matcher( trimmedChecksum );
+-        if ( m.matches() )
++        if ( m.matches() && m.group( 1 ).equals( algorithm ) )
+         {
+-            String filename = m.group( 1 );
++            String filename = m.group( 2 );
+             if ( !isValidChecksumPattern( filename, path ) )
+             {
+                 throw new DigesterException( "Supplied checksum does not match checksum pattern" );
+             }
+-            trimmedChecksum = m.group( 2 );
++            trimmedChecksum = m.group( 3 );
+         }
+         else
+         {
+-- 
+1.8.3.1
+

@@ -1,0 +1,26 @@
+--- jstl-1.1.2.pom	2012-06-19 17:05:52.059382074 +0800
++++ jstl-1.1.2.pom-gil	2012-06-19 17:04:58.289054295 +0800
+@@ -10,10 +10,17 @@
+   <url>http://java.sun.com/products/jsp/jstl/</url>
+   <distributionManagement>
+     <downloadUrl>http://java.sun.com/products/jsp/jstl/downloads/</downloadUrl>
+-    <relocation>
+-      <groupId>javax.servlet</groupId>
+-      <artifactId>jstl</artifactId>
+-      <version>1.1.2</version>
+-    </relocation>
+   </distributionManagement>
++  <dependencies>
++    <dependency>
++        <groupId>org.apache.tomcat</groupId>
++        <artifactId>tomcat-servlet-api</artifactId>
++        <version>7.0.27</version>
++    </dependency>
++    <dependency>
++        <groupId>org.apache.tomcat</groupId>
++        <artifactId>tomcat-jsp-api</artifactId>
++        <version>7.0.27</version>
++    </dependency>
++  </dependencies>
+ </project>
+\ No newline at end of file

@@ -1,0 +1,20 @@
+--- build.xml	2008-06-23 14:06:51.000000000 +0200
++++ build.xml-gil	2011-07-27 20:51:11.859243192 +0200
+@@ -192,8 +192,6 @@
+ 	
+ 	<target name="javadoc" depends="dir.dist">
+ 		<mkdir dir="build/extract/hamcrest-api"/>
+-		<unzip src="lib/hamcrest-core-1.1.jar" dest="build/extract/hamcrest-api"/>
+-		<unzip src="lib/hamcrest-library-1.1.jar" dest="build/extract/hamcrest-api"/>
+ 
+ 		<mkdir dir="${distdir}/doc"/>
+ 		<javadoc destdir="${distdir}/doc" source="1.5" failonerror="yes"
+@@ -208,8 +206,6 @@
+ 			</packageset>
+ 			
+ 			<group title="jMock 2" packages="org.jmock, org.jmock.*"/>
+-			<group title="Hamcrest API" packages="org.hamcrest"/>
+-			<group title="Hamcrest Matcher Library" packages="org.hamcrest.*"/>
+ 
+ 			<link offline="false" href="http://java.sun.com/j2se/1.5.0/docs/api/"/>
+ 			<link offline="false" href="http://www.junit.org/junit/javadoc/3.8.1/"/>

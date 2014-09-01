@@ -1,0 +1,16 @@
+<dependencies>
+	<dependency>
+	  <maven>
+		<groupId>org.codehaus.plexus</groupId>
+		<artifactId>plexus-tools</artifactId>
+		<version>1.0.5</version>
+	  </maven>
+	  <jpp>
+		<groupId>JPP/plexus</groupId>
+		<artifactId>tools</artifactId>
+		<version>1.0.5</version>
+	  </jpp>
+	</dependency>
+
+</dependencies>
+

@@ -16,7 +16,7 @@
 
 Summary: The GIMP ToolKit (GTK+), a library for creating GUIs for X
 Name: gtk3
-Version:	3.13.4
+Version:	3.13.7
 Release: 1%{?dist}
 License: LGPLv2+
 Group: System Environment/Libraries
@@ -233,6 +233,7 @@ gtk-query-immodules-3.0-%{__isa_bits} --update-cache
 %{_bindir}/gtk-query-immodules-3.0*
 %{_bindir}/gtk-launch
 %{_bindir}/gtk3-icon-browser
+%{_bindir}/gtk-encode-symbolic-svg
 %{_libdir}/libgtk-3.so.*
 %{_libdir}/libgdk-3.so.*
 %{_libdir}/libgailutil-3.so.*
@@ -250,6 +251,7 @@ gtk-query-immodules-3.0-%{__isa_bits} --update-cache
 %ghost %{_libdir}/gtk-3.0/%{bin_version}/immodules.cache
 %{_mandir}/man1/gtk-query-immodules-3.0*
 %{_mandir}/man1/gtk-launch.1.gz
+%{_mandir}/man1/gtk-encode-symbolic-svg.1.gz
 %exclude %{_mandir}/man1/gtk-update-icon-cache.1.gz
 %{_datadir}/glib-2.0/schemas/org.gtk.Settings.FileChooser.gschema.xml
 %{_datadir}/glib-2.0/schemas/org.gtk.Settings.ColorChooser.gschema.xml
@@ -309,6 +311,9 @@ gtk-query-immodules-3.0-%{__isa_bits} --update-cache
 %{_datadir}/installed-tests
 
 %changelog
+* Fri Aug 22 2014 Liu Di <liudidi@gmail.com> - 3.13.7-1
+- 更新到 3.13.7
+
 * Thu Jul 17 2014 Liu Di <liudidi@gmail.com> - 3.13.4-1
 - 更新到 3.13.4
 

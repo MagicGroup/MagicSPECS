@@ -1,0 +1,20 @@
+diff -up ./native/Makefile.build ./native/Makefile
+--- ./native/Makefile.build	2012-10-19 03:53:11.000000000 +0200
++++ ./native/Makefile	2012-10-26 11:25:19.003999925 +0200
+@@ -90,7 +90,7 @@ CDEFINES=-D_REENTRANT
+ PCFLAGS=-W -Wall -Wno-unused -Wno-parentheses
+ CFLAGS=$(PCFLAGS) $(CFLAGS_EXTRA) $(COPT) $(CDEBUG) $(CDEFINES) $(CINCLUDES) \
+        -DJNA_JNI_VERSION='"$(JNA_JNI_VERSION)"' -DCHECKSUM='"$(CHECKSUM)"'
+-LDFLAGS=-o $@ -shared
++LDFLAGS=$(RPM_LD_FLAGS) -o $@ -shared
+ ifeq ($(DYNAMIC_LIBFFI),true)
+ CFLAGS += $(shell pkg-config --cflags libffi 2>/dev/null || echo)
+ LIBS += $(shell pkg-config --libs libffi 2>/dev/null || echo -lffi)
+@@ -344,7 +344,6 @@ $(RSRC): $(BUILD)/jnidispatch.rc
+ 
+ $(LIBRARY): $(JNIDISPATCH_OBJS) $(FFI_LIB)
+ 	$(LD) $(LDFLAGS) $(JNIDISPATCH_OBJS) $(FFI_LIB) $(LIBS)
+-	$(STRIP) $@
+ 
+ $(TESTLIB): $(BUILD)/testlib.o
+ 	$(LD) $(LDFLAGS) $< $(LIBS)

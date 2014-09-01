@@ -1,0 +1,91 @@
+From 4d56e6f0f0c230b14f1353252ae3d42ff7a5b27c Mon Sep 17 00:00:00 2001
+From: Kohsuke Kawaguchi <kk@kohsuke.org>
+Date: Tue, 9 Aug 2011 13:15:10 -0700
+Subject: [PATCH] added an unclean shut down that's a whole lot faster
+
+---
+ src/main/java/javax/jmdns/JmDNS.java          |  5 +++
+ src/main/java/javax/jmdns/impl/JmDNSImpl.java | 53 +++++++++++++++++++++++++++
+ 2 files changed, 58 insertions(+)
+
+diff --git a/src/main/java/javax/jmdns/JmDNS.java b/src/main/java/javax/jmdns/JmDNS.java
+index 0857674..60dca1c 100644
+--- a/src/main/java/javax/jmdns/JmDNS.java
++++ b/src/main/java/javax/jmdns/JmDNS.java
+@@ -419,4 +419,9 @@ public abstract class JmDNS implements Closeable {
+      */
+     public abstract Delegate setDelegate(Delegate value);
+ 
++    /**
++     * Works like {@link #close()} but terminate uncleanly, but rapidly and without blocking.
++     */
++    public abstract void abort();
++
+ }
+diff --git a/src/main/java/javax/jmdns/impl/JmDNSImpl.java b/src/main/java/javax/jmdns/impl/JmDNSImpl.java
+index b9c92ba..bb844a5 100644
+--- a/src/main/java/javax/jmdns/impl/JmDNSImpl.java
++++ b/src/main/java/javax/jmdns/impl/JmDNSImpl.java
+@@ -1841,6 +1841,59 @@ public class JmDNSImpl extends JmDNS implements DNSStatefulObject, DNSTaskStarte
+      * {@inheritDoc}
+      */
+     @Override
++    public void abort() {
++        if (this.isClosing()) {
++            return;
++        }
++
++        if (logger.isLoggable(Level.FINER)) {
++            logger.finer("Aborting JmDNS: " + this);
++        }
++        // Stop JmDNS
++        // This protects against recursive calls
++        if (this.closeState()) {
++            // We got the tie break now clean up
++
++            // Stop the timer
++            logger.finer("Canceling the timer");
++            this.cancelTimer();
++
++            // Cancel all services
++//            this.unregisterAllServices();     // KK: this is a blocking call that doesn't fit 'abort'
++            this.disposeServiceCollectors();
++
++// KK: another blocking call
++//            if (logger.isLoggable(Level.FINER)) {
++//                logger.finer("Wait for JmDNS cancel: " + this);
++//            }
++//            this.waitForCanceled(DNSConstants.CLOSE_TIMEOUT);
++
++            // Stop the canceler timer
++            logger.finer("Canceling the state timer");
++            this.cancelStateTimer();
++
++            // Stop the executor
++            _executor.shutdown();
++
++            // close socket
++            this.closeMulticastSocket();
++
++            // remove the shutdown hook
++            if (_shutdown != null) {
++                Runtime.getRuntime().removeShutdownHook(_shutdown);
++            }
++
++            if (logger.isLoggable(Level.FINER)) {
++                logger.finer("JmDNS closed.");
++            }
++        }
++        advanceState(null);
++    }
++
++    /**
++     * {@inheritDoc}
++     */
++    @Override
+     @Deprecated
+     public void printServices() {
+         System.err.println(toString());
+-- 
+1.8.5.3
+

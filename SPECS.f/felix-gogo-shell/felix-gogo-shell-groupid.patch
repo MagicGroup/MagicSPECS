@@ -1,0 +1,20 @@
+diff --git a/pom.xml b/pom.xml
+index af31761..f49d7c3 100644
+--- a/pom.xml
++++ b/pom.xml
+@@ -30,13 +30,13 @@
+     <version>0.10.0</version>
+     <dependencies>
+         <dependency>
+-            <groupId>org.osgi</groupId>
++            <groupId>org.apache.felix</groupId>
+             <artifactId>org.osgi.core</artifactId>
+             <version>4.2.0</version>
+             <scope>provided</scope>
+         </dependency>
+         <dependency>
+-            <groupId>org.osgi</groupId>
++            <groupId>org.apache.felix</groupId>
+             <artifactId>org.osgi.compendium</artifactId>
+             <version>4.0.0</version>
+             <scope>provided</scope>

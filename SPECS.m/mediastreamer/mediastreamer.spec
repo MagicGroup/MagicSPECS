@@ -5,10 +5,10 @@
 %bcond_without	pulseaudio	# PulseAudio support
 #
 Summary:	Audio/Video real-time streaming
-Summary(pl.UTF-8):	Przesyłanie strumieni audio/video w czasie rzeczywistym 
+Summary(zh_CN.UTF-8): 音频/视频实时流
 Name:		mediastreamer
 Version:	2.10.0
-Release:	7
+Release:	8
 License:	GPL v2+
 Group:		Libraries
 Source0:	http://download-mirror.savannah.gnu.org/releases/linphone/mediastreamer/%{name}-%{version}.tar.gz
@@ -60,15 +60,14 @@ Mediastreamer2 is a GPL licensed library to make audio and video
 real-time streaming and processing. Written in pure C, it is based
 upon the oRTP library.
 
-%description -l pl.UTF-8
-Mediastreamer2 to udostępniona na licencji GPL biblioteka do
-przesyłania i przetwarzania strumieni audio/video w czasie
-rzeczywistym. Jest napisana w czystym C, oparta na bibliotece oRTP.
+%description -l zh_CN.UTF-8
+支持音频和视频的实时流。
 
 %package devel
 Summary:	Header files and development documentation for mediastreamer library
-Summary(pl.UTF-8):	Pliki nagłówkowe i dokumentacja do biblioteki mediastreamer
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:		Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:	%{name} = %{version}-%{release}
 %{?with_opengl:Requires:	mesa-libGL-devel}
 Requires:	alsa-lib-devel
@@ -90,20 +89,21 @@ Requires:	libXv-devel
 %description devel
 Header files and development documentation for mediastreamer library.
 
-%description devel -l pl.UTF-8
-Pliki nagłówkowe i dokumentacja do biblioteki mediastreamer.
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %package static
 Summary:	Static mediastreamer library
-Summary(pl.UTF-8):	Statyczna biblioteka mediastreamer
+Summary(zh_CN.UTF-8): %{name} 的静态库
 Group:		Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:	%{name}-devel = %{version}-%{release}
 
 %description static
 Static mediastreamer library.
 
-%description static -l pl.UTF-8
-Statyczna biblioteka mediastreamer.
+%description static -l zh_CN.UTF-8
+%{name} 的静态库。
 
 %prep
 %setup -q

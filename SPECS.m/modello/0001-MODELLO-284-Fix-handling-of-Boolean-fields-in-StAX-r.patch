@@ -1,0 +1,129 @@
+From d2f183ad877f3c4a59840cc6180bbb4142fa669c Mon Sep 17 00:00:00 2001
+From: Mikolaj Izdebski <mizdebsk@redhat.com>
+Date: Fri, 24 Jan 2014 16:27:12 +0100
+Subject: [PATCH 1/2] [MODELLO-284] Fix handling of Boolean fields in StAX
+ reader
+
+---
+ .../modello/plugin/stax/StaxReaderGenerator.java   |  4 +-
+ .../xml/stax/BooleanTypeStaxGeneratorTest.java     | 51 ++++++++++++++++++++++
+ .../src/test/resources/boolean.mdo                 | 27 ++++++++++++
+ 3 files changed, 80 insertions(+), 2 deletions(-)
+ create mode 100644 modello-plugins/modello-plugin-stax/src/test/java/org/codehaus/modello/generator/xml/stax/BooleanTypeStaxGeneratorTest.java
+ create mode 100644 modello-plugins/modello-plugin-stax/src/test/resources/boolean.mdo
+
+diff --git a/modello-plugins/modello-plugin-stax/src/main/java/org/codehaus/modello/plugin/stax/StaxReaderGenerator.java b/modello-plugins/modello-plugin-stax/src/main/java/org/codehaus/modello/plugin/stax/StaxReaderGenerator.java
+index 7e0a39f..83e617d 100644
+--- a/modello-plugins/modello-plugin-stax/src/main/java/org/codehaus/modello/plugin/stax/StaxReaderGenerator.java
++++ b/modello-plugins/modello-plugin-stax/src/main/java/org/codehaus/modello/plugin/stax/StaxReaderGenerator.java
+@@ -1406,7 +1406,7 @@ public class StaxReaderGenerator
+             parserGetter = "getTrimmedValue( " + parserGetter + " )";
+         }
+ 
+-        if ( "boolean".equals( type ) )
++        if ( "boolean".equals( type ) || "Boolean".equals( type ) )
+         {
+             sc.add( objectName + "." + setterName + "( getBooleanValue( " + parserGetter + ", \"" + tagName
+                 + "\", xmlStreamReader ) );" );
+@@ -1446,7 +1446,7 @@ public class StaxReaderGenerator
+             sc.add( objectName + "." + setterName + "( getByteValue( " + parserGetter + ", \"" + tagName
+                 + "\", xmlStreamReader, strict ) );" );
+         }
+-        else if ( "String".equals( type ) || "Boolean".equals( type ) )
++        else if ( "String".equals( type ) )
+         {
+             // TODO: other Primitive types
+             sc.add( objectName + "." + setterName + "( " + parserGetter + " );" );
+diff --git a/modello-plugins/modello-plugin-stax/src/test/java/org/codehaus/modello/generator/xml/stax/BooleanTypeStaxGeneratorTest.java b/modello-plugins/modello-plugin-stax/src/test/java/org/codehaus/modello/generator/xml/stax/BooleanTypeStaxGeneratorTest.java
+new file mode 100644
+index 0000000..3072e97
+--- /dev/null
++++ b/modello-plugins/modello-plugin-stax/src/test/java/org/codehaus/modello/generator/xml/stax/BooleanTypeStaxGeneratorTest.java
+@@ -0,0 +1,51 @@
++package org.codehaus.modello.generator.xml.stax;
++
++/*
++ * Licensed to the Apache Software Foundation (ASF) under one
++ * or more contributor license agreements.  See the NOTICE file
++ * distributed with this work for additional information
++ * regarding copyright ownership.  The ASF licenses this file
++ * to you under the Apache License, Version 2.0 (the
++ * "License"); you may not use this file except in compliance
++ * with the License.  You may obtain a copy of the License at
++ *
++ *   http://www.apache.org/licenses/LICENSE-2.0
++ *
++ * Unless required by applicable law or agreed to in writing,
++ * software distributed under the License is distributed on an
++ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
++ * KIND, either express or implied.  See the License for the
++ * specific language governing permissions and limitations
++ * under the License.
++ */
++
++import java.util.Properties;
++
++import org.codehaus.modello.AbstractModelloJavaGeneratorTest;
++import org.codehaus.modello.core.ModelloCore;
++import org.codehaus.modello.model.Model;
++
++public class BooleanTypeStaxGeneratorTest
++    extends AbstractModelloJavaGeneratorTest
++{
++    public BooleanTypeStaxGeneratorTest()
++    {
++        super( "testBooleanType" );
++    }
++
++    public void testBooleanType()
++        throws Throwable
++    {
++        ModelloCore modello = (ModelloCore) lookup( ModelloCore.ROLE );
++
++        Model model = modello.loadModel( getXmlResourceReader( "/boolean.mdo" ) );
++
++        Properties parameters = getModelloParameters( "1.0.0" );
++
++        modello.generate( model, "java", parameters );
++        modello.generate( model, "stax-reader", parameters );
++        modello.generate( model, "stax-writer", parameters );
++
++        compileGeneratedSources();
++    }
++}
+diff --git a/modello-plugins/modello-plugin-stax/src/test/resources/boolean.mdo b/modello-plugins/modello-plugin-stax/src/test/resources/boolean.mdo
+new file mode 100644
+index 0000000..790c9c3
+--- /dev/null
++++ b/modello-plugins/modello-plugin-stax/src/test/resources/boolean.mdo
+@@ -0,0 +1,27 @@
++<?xml version="1.0" encoding="US-ASCII"?>
++<model xmlns="http://modello.codehaus.org/MODELLO/1.4.0"
++       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
++       xsi:schemaLocation="http://modello.codehaus.org/MODELLO/1.4.0
++			   http://modello.codehaus.org/xsd/modello-1.4.0.xsd">
++  <id>test</id>
++  <name>Test</name>
++  <defaults>
++    <default>
++      <key>package</key>
++      <value>org.codehaus.modello.generator.xml.stax.test.testboolean</value>
++    </default>
++  </defaults>
++  <classes>
++    <class rootElement="true" xml.tagName="booleanTest">
++      <name>BooleanTest</name>
++      <version>1.0.0+</version>
++      <fields>
++        <field>
++          <name>property</name>
++          <version>1.0.0+</version>
++          <type>Boolean</type>
++        </field>
++      </fields>
++    </class>
++  </classes>
++</model>
+-- 
+1.8.4.2
+

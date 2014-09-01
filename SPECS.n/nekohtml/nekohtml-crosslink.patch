@@ -1,0 +1,46 @@
+From e71cb71827c1f83abcb1cbc152bb106ac00e9e63 Mon Sep 17 00:00:00 2001
+From: Michael Simacek <msimacek@redhat.com>
+Date: Tue, 4 Feb 2014 14:53:11 +0100
+Subject: [PATCH] nekohtml crosslink
+
+Signed-off-by: Michael Simacek <msimacek@redhat.com>
+---
+ build.xml | 15 ++++++++++++---
+ 1 file changed, 12 insertions(+), 3 deletions(-)
+
+diff --git a/build.xml b/build.xml
+index 2f24269..f027529 100644
+--- a/build.xml
++++ b/build.xml
+@@ -41,7 +41,12 @@
+ 
+  <property name='version.java.dir' value='${build.src.dir}/org/cyberneko/html'/>
+  <property name='version.java'     value='${version.java.dir}/Version.java'/>
+- 
++
++ <property name='bcel.javadoc' value='http://jakarta.apache.org/bcel/apidocs/'/>
++ <property name='j2se.javadoc' value='http://java.sun.com/j2se/1.4.2/docs/api/'/>
++ <property name='xni.javadoc' value='http://xml.apache.org/xerces2-j/javadocs/xni/'/>
++ <property name='xerces.javadoc' value='http://xml.apache.org/xerces2-j/javadocs/xerces2/'/>
++
+  <!-- defined maven snapshots and staging repository id and url -->
+  <property name="maven-snapshots-repository-id" value="sonatype-nexus-snapshots" />
+  <property name="maven-snapshots-repository-url" value="https://oss.sonatype.org/content/repositories/snapshots/" />
+@@ -178,8 +183,12 @@
+            author='true' version='true' use='true'
+            windowtitle="${Name} Implementation"
+            doctitle="${Name}" encoding="ISO-8859-1"
+-           bottom="${copyright}" 
+-  />
++           bottom="${copyright}">
++    <link href="${bcel.javadoc}"/>
++    <link href="${j2se.javadoc}"/>
++    <link href="${xni.javadoc}"/>
++    <link href="${xerces.javadoc}"/>
++  </javadoc>
+  </target>
+  
+  <target name='doc-init'>
+-- 
+1.8.5.3
+

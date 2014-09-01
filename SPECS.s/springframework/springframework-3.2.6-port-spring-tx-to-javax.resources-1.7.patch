@@ -1,0 +1,67 @@
+From a080bcf000f0fd18996b5f442698b6d0a99e9583 Mon Sep 17 00:00:00 2001
+From: Michal Srb <msrb@redhat.com>
+Date: Thu, 16 Jan 2014 08:12:12 +0100
+Subject: [PATCH] Port to javax.resources 1.7
+
+---
+ .../jca/endpoint/GenericMessageEndpointFactory.java           | 10 +++++++++-
+ .../springframework/jca/support/SimpleBootstrapContext.java   | 11 +++++++++++
+ 2 files changed, 20 insertions(+), 1 deletion(-)
+
+diff --git a/spring-tx/src/main/java/org/springframework/jca/endpoint/GenericMessageEndpointFactory.java b/spring-tx/src/main/java/org/springframework/jca/endpoint/GenericMessageEndpointFactory.java
+index 61f8db5..6b9137e 100644
+--- a/spring-tx/src/main/java/org/springframework/jca/endpoint/GenericMessageEndpointFactory.java
++++ b/spring-tx/src/main/java/org/springframework/jca/endpoint/GenericMessageEndpointFactory.java
+@@ -23,7 +23,6 @@ import javax.transaction.xa.XAResource;
+ 
+ import org.aopalliance.intercept.MethodInterceptor;
+ import org.aopalliance.intercept.MethodInvocation;
+-
+ import org.springframework.aop.framework.ProxyFactory;
+ import org.springframework.aop.support.DelegatingIntroductionInterceptor;
+ import org.springframework.util.ReflectionUtils;
+@@ -156,4 +155,13 @@ public class GenericMessageEndpointFactory extends AbstractMessageEndpointFactor
+ 		}
+ 	}
+ 
++
++	public String getActivationName() {
++		throw new UnsupportedOperationException("Not implemented yet");
++	}
++
++	public Class<?> getEndpointClass() {
++		throw new UnsupportedOperationException("Not implemented yet");
++	}
++
+ }
+diff --git a/spring-tx/src/main/java/org/springframework/jca/support/SimpleBootstrapContext.java b/spring-tx/src/main/java/org/springframework/jca/support/SimpleBootstrapContext.java
+index d26fea7..4cf12e4 100644
+--- a/spring-tx/src/main/java/org/springframework/jca/support/SimpleBootstrapContext.java
++++ b/spring-tx/src/main/java/org/springframework/jca/support/SimpleBootstrapContext.java
+@@ -21,7 +21,9 @@ import java.util.Timer;
+ import javax.resource.spi.BootstrapContext;
+ import javax.resource.spi.UnavailableException;
+ import javax.resource.spi.XATerminator;
++import javax.resource.spi.work.WorkContext;
+ import javax.resource.spi.work.WorkManager;
++import javax.transaction.TransactionSynchronizationRegistry;
+ 
+ /**
+  * Simple implementation of the JCA 1.5 {@link javax.resource.spi.BootstrapContext}
+@@ -77,4 +79,13 @@ public class SimpleBootstrapContext implements BootstrapContext {
+ 		return new Timer();
+ 	}
+ 
++	public boolean isContextSupported(
++			Class<? extends WorkContext> workContextClass) {
++		throw new UnsupportedOperationException("Not implemented yet");
++	}
++
++	public TransactionSynchronizationRegistry getTransactionSynchronizationRegistry() {
++		throw new UnsupportedOperationException("Not implemented yet");
++	}
++
+ }
+-- 
+1.8.3.1
+

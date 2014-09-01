@@ -1,0 +1,215 @@
+--- rt.equinox.p2/features/org.eclipse.equinox.p2.core.feature/pom.xml.bak	2012-07-25 17:45:43.000000000 +0200
++++ rt.equinox.p2/features/org.eclipse.equinox.p2.core.feature/pom.xml	2012-07-31 07:41:13.103636303 +0200
+@@ -40,6 +40,24 @@
+               <excludes>
+                 <plugin id="org.sat4j.core"/>
+                 <plugin id="org.sat4j.pb"/>
++                <plugin id="org.apache.commons.codec" />
++		 <plugin id="org.apache.commons.httpclient" />
++		 <plugin id="org.apache.httpcomponents.httpclient" />
++		 <plugin id="org.apache.httpcomponents.httpcore" />
++		 <plugin id="org.apache.commons.logging" />
++		 <plugin id="org.eclipse.ecf"/>
++		 <plugin id="org.eclipse.ecf.filetransfer"/>
++		 <plugin id="org.eclipse.ecf.identity"/>
++		 <plugin id="org.eclipse.ecf.provider.filetransfer"/>
++		 <plugin id="org.eclipse.ecf.provider.filetransfer.httpclient"/>
++		 <plugin id="org.eclipse.ecf.provider.filetransfer.httpclient.ssl"/>
++		 <plugin id="org.eclipse.ecf.provider.filetransfer.httpclient4"/>
++		 <plugin id="org.eclipse.ecf.provider.filetransfer.httpclient4.ssl"/>
++		 <plugin id="org.eclipse.ecf.provider.filetransfer.ssl"/>
++		 <plugin id="org.eclipse.ecf.ssl"/>
++		 <plugin id="org.eclipse.equinox.security.macosx"/>
++		 <plugin id="org.eclipse.equinox.security.win32.x86"/>
++		 <plugin id="org.eclipse.equinox.security.win32.x86_64"/>
+               </excludes>
+             </configuration>
+           </execution>
+--- eclipse.platform.releng/features/org.eclipse.help-feature/pom.xml.bak	2012-07-31 07:43:57.000000000 +0200
++++ eclipse.platform.releng/features/org.eclipse.help-feature/pom.xml	2012-07-31 08:05:24.279277920 +0200
+@@ -53,6 +53,17 @@
+             <goals>
+               <goal>source-feature</goal>
+             </goals>
++            <configuration>
++              <excludes>
++                <plugin id="javax.servlet-api" /><plugin id="javax.el" /><plugin id="com.sun.el.javax.el" /><plugin id="org.apache.el" /><plugin id="org.apache.commons.logging" />
++                <plugin id="javax.servlet.jsp" /><plugin id="org.apache.lucene.analysis" /><plugin id="org.apache.lucene.core" />
++                <plugin id="org.apache.tomcat" /><plugin id="org.eclipse.jetty.continuation" /><plugin id="org.eclipse.jetty.http" />
++                <plugin id="org.apache.juli" /><plugin id="org.eclipse.jetty.io" /><plugin id="org.eclipse.jetty.security" />
++                <plugin id="org.eclipse.jetty.util" /><plugin id="org.eclipse.jetty.server" />
++                <plugin id="org.glassfish.web.javax.servlet.jsp" /><plugin id="org.eclipse.jetty.servlet" />
++                <plugin id="org.apache.commons.el" /><plugin id="org.glassfish.web.javax.servlet.jsp" />
++              </excludes>
++            </configuration>
+           </execution>
+         </executions>
+       </plugin>
+--- eclipse.pde/org.eclipse.pde-feature/pom.xml.bak	2013-01-29 11:22:47.065953870 +0100
++++ eclipse.pde/org.eclipse.pde-feature/pom.xml	2013-01-29 11:23:18.630196529 +0100
+@@ -37,6 +37,8 @@
+             <configuration>
+               <excludes>
+                   <plugin id="org.eclipse.pde"/>
++		  <plugin id="org.objectweb.asm"/>
++		  <plugin id="org.objectweb.asm.tree"/>
+                   <plugin id="org.eclipse.pde.doc.user"/>
+               </excludes>
+             </configuration>
+--- eclipse.jdt/org.eclipse.jdt-feature/pom.xml.orig	2013-02-20 16:32:38.000000000 +0100
++++ eclipse.jdt/org.eclipse.jdt-feature/pom.xml	2013-02-21 10:08:50.404275226 +0100
+@@ -57,6 +57,10 @@
+               <excludes>
+                 <plugin id="org.eclipse.jdt"/>
+                 <plugin id="org.eclipse.jdt.doc.user"/>
++                <plugin id="org.eclipse.jdt.launching.macosx" />
++                <plugin id="org.eclipse.jdt.launching.ui.macosx" />
++                <plugin id="org.junit" />
++                <plugin id="org.hamcrest.core" />
+               </excludes>
+             </configuration>
+           </execution>
+--- eclipse.platform.releng/features/org.eclipse.platform-feature/sourceTemplateFeature/build.properties.bak	2013-03-14 11:18:11.000000000 +0100
++++ eclipse.platform.releng/features/org.eclipse.platform-feature/sourceTemplateFeature/build.properties	2013-03-14 12:45:12.956174290 +0100
+@@ -15,10 +15,7 @@
+ license.html
+ 
+ 
+-generate.feature@org.eclipse.rcp.source=org.eclipse.rcp,feature@org.eclipse.e4.rcp.source,plugin@com.ibm.icu.source;version=50.1.0.qualifier;unpack="false",\
+-plugin@org.apache.felix.gogo.command.source;version=0.10.0.qualifier;unpack="false",\
+-plugin@org.apache.felix.gogo.runtime.source;version=0.10.0.qualifier;unpack="false",\
+-plugin@org.apache.felix.gogo.shell.source;version=0.10.0.qualifier;unpack="false"
++generate.feature@org.eclipse.rcp.source=org.eclipse.rcp,feature@org.eclipse.e4.rcp.source
+ 
+ generate.feature@org.eclipse.equinox.p2.user.ui.source=org.eclipse.equinox.p2.user.ui,\
+            feature@org.eclipse.equinox.p2.core.feature.source,\
+@@ -31,16 +28,6 @@
+            plugin@org.eclipse.ecf.provider.filetransfer.source;version=3.2.0.qualifier;unpack="false",\
+            plugin@org.eclipse.ecf.provider.filetransfer.ssl.source;version=1.0.0.qualifier;unpack="false",\
+            plugin@org.eclipse.ecf.provider.filetransfer.httpclient4.source;version=1.0.200.qualifier;unpack="false",\
+-           plugin@org.eclipse.ecf.provider.filetransfer.httpclient4.ssl.source;version=1.0.0.qualifier;unpack="false",\
+-           plugin@org.apache.commons.codec.source;version=1.4.0.qualifier;unpack="false,\
+-           plugin@org.apache.commons.httpclient.source;version=3.1.0.qualifier;unpack="false"
++           plugin@org.eclipse.ecf.provider.filetransfer.httpclient4.ssl.source;version=1.0.0.qualifier;unpack="false"
+            
+-generate.feature@org.eclipse.e4.rcp.source=org.eclipse.e4.rcp,\
+- plugin@javax.annotation.source;version=1.1.0.qualifier;unpack="false",\
+- plugin@javax.inject.source;version=1.0.0.qualifier;unpack="false",\
+- plugin@org.apache.batik.css.source;version=1.6.0.qualifier;unpack="false",\
+- plugin@org.apache.batik.util.gui.source;version=1.6.0.qualifier;unpack="false",\
+- plugin@org.apache.batik.util.source;version=1.6.0.qualifier;unpack="false",\
+- plugin@org.w3c.dom.smil.source;version=1.0.0.qualifier;unpack="false",\
+- plugin@org.w3c.dom.svg.source;version=1.1.0.qualifier;unpack="false",\
+- plugin@org.w3c.css.sac.source;version=1.3.1.qualifier;unpack="false"
++generate.feature@org.eclipse.e4.rcp.source=org.eclipse.e4.rcp
+\ No newline at end of file
+--- eclipse.platform.releng/features/org.eclipse.platform-feature/pom.xml.orig	2014-03-24 12:58:43.355826288 +0000
++++ eclipse.platform.releng/features/org.eclipse.platform-feature/pom.xml	2014-03-24 13:04:46.463916138 +0000
+@@ -75,6 +75,12 @@
+                 <plugin id="org.eclipse.core.net.win32.x86"/>
+                 <plugin id="org.eclipse.core.net.win32.x86_64"/>
+                 <plugin id="org.eclipse.equinox.security.macosx"/>
++                <plugin id="org.eclipse.equinox.security.win32.x86"/>
++                <plugin id="org.eclipse.equinox.security.win32.x86_64"/>
++                <plugin id="org.eclipse.compare.win32"/>
++                <plugin id="org.eclipse.ui.win32"/>
++                <plugin id="com.jcraft.jsch"/>
++                <plugin id="org.apache.ant"/>
+               </excludes>
+             </configuration>
+           </execution>
+--- eclipse.platform.releng/features/org.eclipse.sdk.examples-feature/pom.xml.orig	2014-04-23 15:44:51.755422154 +0100
++++ eclipse.platform.releng/features/org.eclipse.sdk.examples-feature/pom.xml	2014-04-23 15:45:22.730893380 +0100
+@@ -39,11 +39,9 @@
+               <features>
+                 <feature id="org.eclipse.sdk.examples"/>
+               </features>
+-              <!-- 
+               <excludes>
+-                <plugin id="org.eclipse.sdk.examples"/>
++                <plugin id="org.eclipse.swt.examples.ole.win32"/>
+               </excludes>
+-               -->
+             </configuration>
+           </execution>
+         </executions>
+--- eclipse.platform.releng/features/org.eclipse.rcp/pom.xml.orig	2014-04-28 16:08:27.781454042 +0100
++++ eclipse.platform.releng/features/org.eclipse.rcp/pom.xml	2014-04-28 16:08:55.067988282 +0100
+@@ -37,6 +37,7 @@
+             <configuration>
+               <excludes>
+                 <plugin id="org.eclipse.rcp"/>
++                <plugin id="org.eclipse.ui.cocoa"/>
+               </excludes>
+             </configuration>
+           </execution>
+--- eclipse.platform.releng/features/org.eclipse.sdk/build.properties.bak	2013-03-14 11:18:11.000000000 +0100
++++ eclipse.platform.releng/features/org.eclipse.sdk/build.properties	2013-03-14 13:00:08.498377327 +0100
+@@ -11,31 +11,12 @@
+ bin.includes=feature.xml,feature.properties
+ 
+ generate.feature@org.eclipse.platform.source=org.eclipse.platform,feature@org.eclipse.rcp.source,feature@org.eclipse.equinox.p2.user.ui.source;optional="true",plugin@org.eclipse.platform.doc.isv;unpack="false",\
+-  plugin@org.apache.ant.source;version=1.8.4.qualifier;unpack="false",\
+-  plugin@com.jcraft.jsch.source;version=0.1.46.qualifier;unpack="false",\
+   exclude@org.eclipse.platform.doc.user
+    
+ generate.feature@org.eclipse.jdt.source=org.eclipse.jdt, plugin@org.eclipse.jdt.doc.isv;unpack="false",\
+-plugin@org.junit.source;version=4.10.0.qualifier;unpack="false",\
+-plugin@org.hamcrest.core.source;version=1.1.0.qualifier;unpack="false",\
+ exclude@org.eclipse.jdt.doc.user
+-generate.feature@org.eclipse.pde.source=org.eclipse.pde,plugin@org.objectweb.asm.source;version=3.3.1.qualifier;unpack="false",\exclude@org.eclipse.pde.doc.user
++generate.feature@org.eclipse.pde.source=org.eclipse.pde,\exclude@org.eclipse.pde.doc.user
+ generate.feature@org.eclipse.cvs.source=org.eclipse.cvs
+-generate.feature@org.eclipse.help.source=org.eclipse.help,\
+-  plugin@javax.servlet.source;version=3.0.0.qualifier;unpack="false",\
+-  plugin@javax.servlet.jsp.source;version=2.2.0.qualifier;unpack="false",\
+-  plugin@org.apache.jasper.glassfish.source;version=2.2.2.qualifier;unpack="false",\
+-  plugin@com.sun.el.source;version=2.2.0.qualifier;unpack="false",\
+-  plugin@org.apache.commons.logging.source;version=1.0.4.qualifier;unpack="false",\
+-  plugin@org.apache.lucene.analysis.source;version=3.5.0.qualifier;unpack="false",\
+-  plugin@org.apache.lucene.core.source;version=3.5.0.qualifier;unpack="false",\
+-  plugin@org.eclipse.jetty.continuation.source;version=8.1.9.qualifier;unpack="false",\
+-  plugin@org.eclipse.jetty.http.source;version=8.1.9.qualifier;unpack="false",\
+-  plugin@org.eclipse.jetty.io.source;version=8.1.9.qualifier;unpack="false",\
+-  plugin@org.eclipse.jetty.security.source;version=8.1.9.qualifier;unpack="false",\
+-  plugin@org.eclipse.jetty.server.source;version=8.1.9.qualifier;unpack="false",\
+-  plugin@org.eclipse.jetty.servlet.source;version=8.1.9.qualifier;unpack="false",\
+-  plugin@org.eclipse.jetty.util.source;version=8.1.9.qualifier;unpack="false",\
+-  plugin@javax.el.source;version=2.2.0.qualifier;unpack="false"
+-
++generate.feature@org.eclipse.help.source=org.eclipse.help
++  
+ generatedVersionLength=45
+--- eclipse.platform.ui/features/org.eclipse.e4.rcp/pom.xml.orig	2014-05-26 18:37:25.406426611 +0300
++++ eclipse.platform.ui/features/org.eclipse.e4.rcp/pom.xml	2014-05-26 18:37:47.327449374 +0300
+@@ -54,6 +54,30 @@
+                 <plugin id="org.eclipse.equinox.launcher.gtk.hpux.ia64"/>
+                 <plugin id="org.eclipse.equinox.launcher.win32.win32.x86"/>
+                 <plugin id="org.eclipse.equinox.launcher.win32.win32.x86_64"/>
++                <plugin id="org.apache.geronimo.specs.geronimo-annotation_1.1_spec" />
++				<plugin id="org.apache.felix.gogo.command" />
++               <plugin id="org.apache.batik.css" />
++               <plugin id="org.w3c.css.sac" />
++               <plugin id="org.apache.batik.util" />
++               <plugin id="org.apache.batik.util.gui" />
++               <plugin id="org.w3c.dom.svg" />
++				<plugin id="javax.inject" />
++				<plugin id="com.ibm.icu"/>
++				<plugin id="org.apache.felix.gogo.runtime" />
++				<plugin id="org.apache.felix.gogo.shell" />
++				<plugin id="org.eclipse.equinox.launcher.gtk.linux.arm" />
++				<plugin id="org.eclipse.equinox.launcher.gtk.linux.aarch64" />
++				<plugin id="org.eclipse.equinox.launcher.gtk.linux.ppc64le" />
++				<plugin id="org.eclipse.swt.win32.win32.x86" />
++				<plugin id="org.eclipse.swt.win32.win32.x86_64" />
++				<plugin id="org.eclipse.swt.cocoa.macosx.x86_64" />
++               <plugin id="org.eclipse.swt.gtk.solaris.sparc" />
++               <plugin id="org.eclipse.swt.gtk.solaris.x86" />
++               <plugin id="org.eclipse.swt.cocoa.macosx" />
++               <plugin id="org.eclipse.swt.gtk.aix.ppc" />
++               <plugin id="org.eclipse.swt.gtk.aix.ppc64" />
++               <plugin id="org.eclipse.swt.gtk.hpux.ia64" />
++				<plugin id="org.eclipse.e4.ui.workbench.renderers.swt.cocoa" />
+               </excludes>
+             </configuration>
+           </execution>

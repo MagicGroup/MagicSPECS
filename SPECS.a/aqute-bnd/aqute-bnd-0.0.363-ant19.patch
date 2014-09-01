@@ -1,0 +1,29 @@
+diff -Nru aqute-bnd-0.0.363/src/main/java/aQute/bnd/main/bnd.java aqute-bnd-0.0.363-gil/src/main/java/aQute/bnd/main/bnd.java
+--- aqute-bnd-0.0.363/src/main/java/aQute/bnd/main/bnd.java	2009-08-21 09:21:24.000000000 +0200
++++ aqute-bnd-0.0.363-gil/src/main/java/aQute/bnd/main/bnd.java	2013-09-01 14:15:42.325747311 +0200
+@@ -1020,7 +1020,7 @@
+     }
+ 
+     public boolean doWrap(File properties, File bundle, File output,
+-            File classpath[], int options, Map<String, String> additional)
++            File classpath[], int options, Map<String, Object> additional)
+             throws Exception {
+         if (!bundle.exists()) {
+             error("No such file: " + bundle.getAbsolutePath());
+diff -Nru aqute-bnd-0.0.363/src/main/java/aQute/lib/osgi/Analyzer.java aqute-bnd-0.0.363-gil/src/main/java/aQute/lib/osgi/Analyzer.java
+--- aqute-bnd-0.0.363/src/main/java/aQute/lib/osgi/Analyzer.java	2009-08-20 08:40:30.000000000 +0200
++++ aqute-bnd-0.0.363-gil/src/main/java/aQute/lib/osgi/Analyzer.java	2013-09-01 14:17:52.246330093 +0200
+@@ -1216,10 +1216,10 @@
+         return sb.toString();
+     }
+ 
+-    public void putAll(Map<String, String> additional, boolean force) {
+-        for (Iterator<Map.Entry<String, String>> i = additional.entrySet()
++    public void putAll(Map<String, Object> additional, boolean force) {
++        for (Iterator<Map.Entry<String, Object>> i = additional.entrySet()
+                 .iterator(); i.hasNext();) {
+-            Map.Entry<String, String> entry = i.next();
++            Map.Entry<String, Object> entry = i.next();
+             if (force || getProperties().get(entry.getKey()) == null)
+                 setProperty((String) entry.getKey(), (String) entry.getValue());
+         }

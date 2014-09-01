@@ -1,0 +1,17 @@
+diff --git a/pom.xml b/pom.xml
+index c3d92dc..bd58801 100644
+--- a/pom.xml
++++ b/pom.xml
+@@ -206,6 +206,12 @@ under the License.
+     </dependency>
+ 
+     <dependency>
++      <groupId>org.apache.commons</groupId>
++      <artifactId>commons-io</artifactId>
++      <version>3.2.1</version>
++    </dependency>
++
++    <dependency>
+       <groupId>commons-collections</groupId>
+       <artifactId>commons-collections</artifactId>
+       <version>3.2.1</version>

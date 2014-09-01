@@ -1,0 +1,57 @@
+--- pom.xml	2009-11-09 13:43:21.000000000 +0100
++++ pom.xml-gil	2012-02-10 17:23:47.881823249 +0100
+@@ -83,7 +83,7 @@
+           </archive>
+         </configuration>
+       </plugin>
+-      <plugin>
++      <!--plugin>
+           <groupId>org.codehaus.mojo</groupId>
+           <artifactId>buildnumber-maven-plugin</artifactId>
+           <configuration>
+@@ -100,10 +100,11 @@
+               </goals>
+             </execution>
+           </executions>
+-       </plugin>
++       </plugin-->
+        <plugin>
+         <groupId>org.apache.maven.plugins</groupId>
+         <artifactId>maven-javadoc-plugin</artifactId>
++        <version>2.8</version>
+           <executions>
+             <execution>
+               <phase>validate</phase>
+@@ -116,6 +117,7 @@
+        <plugin>
+         <groupId>org.apache.maven.plugins</groupId>
+         <artifactId>maven-source-plugin</artifactId>
++        <version>2.1.2</version>
+         <executions>
+           <execution>
+             <id>attach-sources</id>
+@@ -129,6 +131,7 @@
+       <plugin>
+         <groupId>org.apache.felix</groupId>
+         <artifactId>maven-bundle-plugin</artifactId>
++        <version>2.0.0</version>
+         <extensions>true</extensions>
+         <executions>
+           <execution>
+@@ -148,13 +151,13 @@
+         </executions>
+       </plugin>
+     </plugins>
+-        <extensions>
++        <!--extensions>
+           <extension>
+             <groupId>org.jvnet.wagon-svn</groupId>
+               <artifactId>wagon-svn</artifactId>
+               <version>1.8</version>
+           </extension>
+-        </extensions>
++        </extensions-->
+   </build>
+ 
+     <repositories>
+

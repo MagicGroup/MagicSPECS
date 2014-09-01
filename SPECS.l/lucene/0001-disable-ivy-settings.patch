@@ -1,0 +1,25 @@
+From 161ffbc7a22ed1941bf897a126b80ca6a7fbf3ca Mon Sep 17 00:00:00 2001
+From: Michael Simacek <msimacek@redhat.com>
+Date: Thu, 16 Jan 2014 16:27:10 +0100
+Subject: [PATCH] disable ivy settings
+
+Signed-off-by: Michael Simacek <msimacek@redhat.com>
+---
+ common-build.xml | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/common-build.xml b/common-build.xml
+index f4720a8..fa7aee5 100644
+--- a/common-build.xml
++++ b/common-build.xml
+@@ -350,7 +350,6 @@
+           you have an idea, fix it.
+           unless="ivy.settings.uptodate" -->
+     <!-- override: just for safety, should be unnecessary -->
+-    <ivy:configure file="${common.dir}/ivy-settings.xml" override="true"/>
+     <!-- <property name="ivy.settings.uptodate" value="true"/> -->
+   </target>
+ 
+-- 
+1.8.4.2
+

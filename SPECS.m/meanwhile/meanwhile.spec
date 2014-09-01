@@ -4,10 +4,12 @@
 
 Name:		meanwhile
 Summary:	Lotus Sametime Community Client library
+Summary(zh_CN.UTF-8): Lotus Sametime 通信客户端库
 License:	LGPLv2+
 Group:		Applications/Internet
+Group(zh_CN.UTF-8): 应用程序/互联网
 Version:	1.1.0
-Release:	7%{?dist}
+Release:	8%{?dist}
 # The source for this package was pulled from upstream's vcs.  Use the
 # following commands to generate the tarball:
 # cvs -d:pserver:anonymous@meanwhile.cvs.sourceforge.net:/cvsroot/meanwhile login
@@ -17,8 +19,13 @@ Release:	7%{?dist}
 # ./autogen.sh
 # make dist
 Source:		meanwhile-%{version}.tar.gz
-Patch0:		meanwhile-crash.patch
-Patch1:		meanwhile-fix-glib-headers.patch
+Patch0:         %{name}-crash.patch
+Patch1:         %{name}-fix-glib-headers.patch
+Patch2:         %{name}-file-transfer.patch
+Patch3:         %{name}-status-timestamp-workaround.patch
+# https://bugzilla.redhat.com/show_bug.cgi?id=1037196
+Patch4:         %{name}-format-security-fix.patch
+
 URL:		http://meanwhile.sourceforge.net
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: glib2-devel, doxygen
@@ -32,9 +39,14 @@ interface allows additional services to be added to a session at runtime,
 allowing for simple integration of future service handlers such as the user
 directory and whiteboard and screen-sharing.
 
+%description -l zh_CN.UTF-8
+Lotus Sametime 通信客户端库。
+
 %package devel
 Summary: Header files, libraries and development documentation for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: %{name} = %{version}-%{release}
 Requires: glib2-devel
 
@@ -43,20 +55,32 @@ This package contains the header files, static libraries and development
 documentation for %{name}. If you like to develop programs using %{name},
 you will need to install %{name}-devel.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
 %package doc
 Summary: Documentation for the Meanwhile library
+Summary(zh_CN.UTF-8): %{name} 的文档
 Group: Applications/Internet
+Group(zh_CN.UTF-8): 文档
 License: GFDL
 
 %description doc
 Documentation for the Meanwhile library
 
+%description doc -l zh_CN.UTF-8
+%{name} 的文档。
+
 %prep
 %setup -q
-%patch0 -p0
-%patch1 -p1
+%patch0 -p0 -b .crash
+%patch1 -p1 -b .fix-glib-headers
+%patch2 -p1 -b .file-transfer
+%patch3 -p1 -b .status-timestamp-workaround
+%patch4 -p1 -b .format-security-fix
 
 %build
+autoreconf -fisv
 %configure --enable-doxygen
 make %{?_smp_mflags}
 
@@ -67,6 +91,7 @@ rm -rf $RPM_BUILD_ROOT
 # some unknown reason, and people have to build it themselves.  Dumb.
 rm -rf $RPM_BUILD_ROOT%{_datadir}/doc/%{name}-doc-%{version}/latex
 rm -rf $RPM_BUILD_ROOT%{_libdir}/libmeanwhile.a
+magic_rpm_clean.sh
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -92,6 +117,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/doc/%{name}-doc-%{version}/
 
 %changelog
+* Fri Aug 22 2014 Liu Di <liudidi@gmail.com> - 1.1.0-8
+- 为 Magic 3.0 重建
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 1.1.0-7
 - 为 Magic 3.0 重建
 

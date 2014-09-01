@@ -1,0 +1,100 @@
+diff -Nru janino-2.6.1/commons-compiler/pom.xml janino-2.6.1-gil/commons-compiler/pom.xml
+--- janino-2.6.1/commons-compiler/pom.xml	2012-01-21 03:57:03.000000000 +0100
++++ janino-2.6.1-gil/commons-compiler/pom.xml	2012-04-18 14:33:09.198316607 +0200
+@@ -9,9 +9,9 @@
+     <artifactId>janino-parent</artifactId>
+     <version>2.6.1</version>
+   </parent>
+-
++  <groupId>org.codehaus.janino</groupId>
+   <artifactId>commons-compiler</artifactId>
+-
++  <version>2.6.1</version>
+   <name>Commons Compiler</name>
+ 
+   <dependencies>
+diff -Nru janino-2.6.1/commons-compiler-jdk/pom.xml janino-2.6.1-gil/commons-compiler-jdk/pom.xml
+--- janino-2.6.1/commons-compiler-jdk/pom.xml	2012-01-21 03:57:30.000000000 +0100
++++ janino-2.6.1-gil/commons-compiler-jdk/pom.xml	2012-04-18 14:33:09.199316607 +0200
+@@ -9,15 +9,16 @@
+     <artifactId>janino-parent</artifactId>
+     <version>2.6.1</version>
+   </parent>
+-
++  <groupId>org.codehaus.janino</groupId>
+   <artifactId>commons-compiler-jdk</artifactId>
+-
++  <version>2.6.1</version>
+   <name>Commons Compiler Jdk</name>
+ 
+   <dependencies>
+     <dependency>
+       <groupId>org.codehaus.janino</groupId>
+       <artifactId>commons-compiler</artifactId>
++      <version>2.6.1</version>
+     </dependency>
+   </dependencies>
+ 
+diff -Nru janino-2.6.1/janino/pom.xml janino-2.6.1-gil/janino/pom.xml
+--- janino-2.6.1/janino/pom.xml	2012-01-21 03:58:03.000000000 +0100
++++ janino-2.6.1-gil/janino/pom.xml	2012-04-18 14:33:09.199316607 +0200
+@@ -9,9 +9,11 @@
+     <artifactId>janino-parent</artifactId>
+     <version>2.6.1</version>
+   </parent>
+-
++  
++  <groupId>org.codehaus.janino</groupId>
+   <artifactId>janino</artifactId>
+-
++  <version>2.6.1</version>
++    
+   <name>Janino</name>
+ 
+   <dependencies>
+@@ -22,13 +24,14 @@
+     </dependency>
+     <dependency>
+       <groupId>org.apache.ant</groupId>
+-      <artifactId>ant-nodeps</artifactId>
++      <artifactId>ant</artifactId>
+       <optional>true</optional>
+     </dependency>
+ 
+     <dependency>
+       <groupId>org.codehaus.janino</groupId>
+       <artifactId>commons-compiler</artifactId>
++      <version>2.6.1</version>
+     </dependency>
+   </dependencies>
+ </project>
+diff -Nru janino-2.6.1/pom.xml janino-2.6.1-gil/pom.xml
+--- janino-2.6.1/pom.xml	2012-01-21 03:56:49.000000000 +0100
++++ janino-2.6.1-gil/pom.xml	2012-04-18 14:33:37.549315690 +0200
+@@ -109,7 +109,7 @@
+       </dependency>
+       <dependency>
+         <groupId>org.apache.ant</groupId>
+-        <artifactId>ant-nodeps</artifactId>
++        <artifactId>ant</artifactId>
+         <version>1.7.1</version>
+       </dependency>
+     </dependencies>
+@@ -243,7 +243,7 @@
+               <inputEncoding>${project.build.sourceEncoding}</inputEncoding><!-- not needed in 2.2 -->
+             </configuration>
+           </plugin>
+-          <plugin>
++          <!--plugin>
+             <groupId>org.codehaus.mojo</groupId>
+             <artifactId>findbugs-maven-plugin</artifactId>
+             <version>1.1.1</version>
+@@ -257,7 +257,7 @@
+             <groupId>org.codehaus.mojo</groupId>
+             <artifactId>javancss-maven-plugin</artifactId>
+             <version>2.0</version>
+-          </plugin>
++          </plugin-->
+         </plugins>
+       </reporting>
+     </profile>
