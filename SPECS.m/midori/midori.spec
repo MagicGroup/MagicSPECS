@@ -1,19 +1,19 @@
+%{!?_pkgdocdir: %global _pkgdocdir %{_docdir}/%{name}-%{version}}
+
 Name:		midori
-Version:	0.5.1
-Release:	1%{?dist}
+Version:	0.5.8
+Release:	3%{?dist}
 Summary:	A lightweight GTK+ web browser 
 
 Group:		Applications/Internet
 License:	LGPLv2+
-URL:		http://software.twotoasts.de/?page=midori
+URL:		http://midori-browser.org/
 
-Source0:	http://archive.xfce.org/src/apps/%{name}/0.5/%{name}-%{version}.tar.bz2
+Source0:        http://midori-browser.org/downloads/midori_%{version}_all_.tar.bz2
 
 ## Fedora-specific: Set the default homepage to start.fedoraproject.org
 ## instead of search page.
-Patch0: 	midori-0.5.0-homepage.patch
-# Remove the private browsing extension group. It's not up to spec
-Patch1:		midori-0.5.0-desktop.patch
+Patch0: 	midori-0.5.7-homepage.patch
 
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
@@ -32,8 +32,9 @@ BuildRequires:	python-docutils
 BuildRequires:	sqlite-devel
 BuildRequires:	unique-devel
 BuildRequires:	vala
-BuildRequires:	waf >= 1.5
 BuildRequires:	webkitgtk-devel >= 1.1.1
+BuildRequires:	cmake
+BuildRequires:	librsvg2-tools
 
 %description
 Midori is a lightweight web browser, and has many features expected of a
@@ -50,40 +51,20 @@ modern browser, including:
 The project is currently in an early alpha state. The features are still being
 implemented, and some are still quite incomplete.
 
-%package	devel
-Summary:	Development files for %{name}
-Group:		Development/Libraries
-Requires:	%{name} = %{version}-%{release}
-Requires:	vala
-
-%description	devel
-The %{name}-devel package contains libraries and header files for
-developing extensions for %{name}.
-
-
 %prep
-%setup -q
-## Use the system-provided waf, instead of the in-tarball copy.
-#rm -rf waf
+%setup -q -c
 %patch0 -p1 -b .fedora-homepage
-%patch1 -p1 -b .desktop
 
 %build
-export CFLAGS="%{optflags}"
-## Currently does not build against Fedora waf
-./waf	--prefix=%{_usr}			\
-	--docdir=%{_docdir}/%{name}-%{version}	\
-	--libdir=%{_libdir}			\
-	--enable-apidocs			\
-        --disable-zeitgeist                     \
-	configure
-./waf %{?_smp_mflags} build
+#cmake -DCMAKE_INSTALL_SYSCONFDIR=/etc -DUSE_APIDOCS=1 -DUSE_ZEITGEIST=OFF -DHALF_BRO_INCOM_WEBKIT2=ON .
+%cmake -DCMAKE_INSTALL_SYSCONFDIR=/etc -DUSE_APIDOCS=1 -DUSE_ZEITGEIST=OFF .
 
- 
+make %{?_smp_mflags}
+
 %install
 rm -rf %{buildroot}
-#waf --destdir=%{buildroot} install
-./waf --destdir=%{buildroot} install
+make install DESTDIR=$RPM_BUILD_ROOT
+
 %find_lang %{name}
 desktop-file-install					\
 %if 0%{?fedora} < 19
@@ -94,6 +75,7 @@ desktop-file-install					\
 	%{buildroot}%{_datadir}/applications/%{name}.desktop
 desktop-file-install					\
 	--delete-original				\
+	--remove-not-show-in=Pantheon			\
 	--dir %{buildroot}%{_datadir}/applications	\
 	%{buildroot}%{_datadir}/applications/%{name}-private.desktop
 
@@ -103,12 +85,14 @@ rm -rf %{buildroot}
 
 %post
 touch --no-create %{_datadir}/icons/hicolor &>/dev/null || :
+/usr/bin/update-desktop-database &> /dev/null || :
 
 
 %postun
 if [ $1 -eq 0 ] ; then
 	touch --no-create %{_datadir}/icons/hicolor &>/dev/null
 	gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
+        /usr/bin/update-desktop-database &> /dev/null || :
 fi
 
 
@@ -118,7 +102,7 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 
 %files -f %{name}.lang
 %defattr(-,root,root,-)
-%doc %{_docdir}/%{name}-%{version}/
+%doc %{_pkgdocdir}
 %{_bindir}/midori
 %if 0%{?fedora} < 19
 %{_datadir}/applications/fedora-%{name}.desktop
@@ -132,16 +116,42 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %{_datadir}/%{name}/
 %{_libdir}/%{name}/
 %{_sysconfdir}/xdg/%{name}/
-#%config(noreplace) %{_sysconfdir}/%{name}/extensions/*/config
-#%{_sysconfdir}/%{name}/
-
-%files devel
-%defattr(-,root,root,-)
-%{_includedir}/*
-%{_datadir}/vala/vapi/*
-
+%{_datadir}/gtk-doc/html/%{name}*
+%{_datadir}/appdata/%{name}.appdata.xml
+%{_libdir}/%{name}/
+%{_libdir}/libmidori-core.*
 
 %changelog
+* Sun Aug 17 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.5.8-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
+
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.5.8-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Thu Apr 03 2014 Kevin Fenzi <kevin@scrye.com> 0.5.8-1
+- Update to 0.5.8
+
+* Fri Jan 17 2014 Kevin Fenzi <kevin@scrye.com> 0.5.7-1
+- Update to 0.5.7
+
+* Tue Nov 19 2013 Kevin Fenzi <kevin@scrye.com> 0.5.6-1
+- Update to 0.5.6
+
+* Wed Nov 06 2013 Kevin Fenzi <kevin@scrye.com> 0.5.5-2
+- Add update-desktop-database scriptlet. Fixes bug #1003658
+
+* Fri Aug 16 2013 Kevin Fenzi <kevin@scrye.com> 0.5.5-1
+- Update to 0.5.5
+
+* Sat Jul 27 2013 Kevin Fenzi <kevin@scrye.com> 0.5.4-2
+- Fix for unversioned doc dirs
+
+* Mon Jul 15 2013 Kevin Fenzi <kevin@scrye.com> 0.5.4-1
+- Update to 0.5.4
+
+* Fri May 17 2013 Kevin Fenzi <kevin@scrye.com> 0.5.2-1
+- Update to 0.5.2
+
 * Thu May 16 2013 Kevin Fenzi <kevin@scrye.com> 0.5.1-1
 - Update to 0.5.1
 
