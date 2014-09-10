@@ -36,7 +36,7 @@
 %else
 %global build_libtsan 0
 %endif
-%ifarch %{ix86} x86_64 ppc ppc64 s390 s390x %{arm} mips64el
+%ifarch %{ix86} x86_64 ppc ppc64 s390 s390x %{arm} mips64el mipsel
 %global build_libatomic 1
 %else
 %global build_libatomic 0
@@ -1023,7 +1023,7 @@ CC="$CC" CFLAGS="$OPT_FLAGS" \
 	--enable-shared --enable-threads=posix --enable-checking=release \
 	--with-system-zlib --enable-__cxa_atexit --disable-libunwind-exceptions \
         --enable-gnu-unique-object --enable-linker-build-id \
-%ifarch mips64el
+%ifarch mips64el mipsel
         --with-linker-hash-style=sysv \
 %else
         --with-linker-hash-style=gnu \
@@ -1091,7 +1091,10 @@ CC="$CC" CFLAGS="$OPT_FLAGS" \
 	--with-arch=i686 \
 %endif
 %ifarch mips64el
-        --with-arch=mips3 --with-abi=64 --with-arch_32=mips1 --enable-targets=o32,n64 \
+	--with-arch=mips3 --with-abi=64 --with-arch_32=mips3 --enable-targets=o32,n64 \
+%endif
+%ifarch mipsel
+	--with-arch=mips3 --with-abi=32 --disable-multilib \
 %endif
 %ifarch x86_64
 	--with-arch_32=i686 \
