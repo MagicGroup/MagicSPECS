@@ -1,17 +1,19 @@
-%{!?_pkgdocdir: %global _pkgdocdir %{_docdir}/%{name}-%{version}}
+%global _pkgdocdir %{_docdir}/%{name}
 
 Name:		midori
 Version:	0.5.8
 Release:	3%{?dist}
 Summary:	A lightweight GTK+ web browser 
+Summary(zh_CN.UTF-8): 一个轻量级的 GTK+ 网页浏览器
 
 Group:		Applications/Internet
+Group(zh_CN.UTF-8): 应用程序/互联网
 License:	LGPLv2+
 URL:		http://midori-browser.org/
 
 Source0:        http://midori-browser.org/downloads/midori_%{version}_all_.tar.bz2
 
-## Fedora-specific: Set the default homepage to start.fedoraproject.org
+## Magic-pecific: Set the default homepage to start.fedoraproject.org
 ## instead of search page.
 Patch0: 	midori-0.5.7-homepage.patch
 
@@ -51,6 +53,9 @@ modern browser, including:
 The project is currently in an early alpha state. The features are still being
 implemented, and some are still quite incomplete.
 
+%description -l zh_CN.UTF-8
+一个轻量级的网页浏览器，基于 webkitgtk。
+
 %prep
 %setup -q -c
 %patch0 -p1 -b .fedora-homepage
@@ -64,12 +69,9 @@ make %{?_smp_mflags}
 %install
 rm -rf %{buildroot}
 make install DESTDIR=$RPM_BUILD_ROOT
-
+magic_rpm_clean.sh
 %find_lang %{name}
 desktop-file-install					\
-%if 0%{?fedora} < 19
-	--vendor fedora					\
-%endif
 	--delete-original				\
 	--dir %{buildroot}%{_datadir}/applications	\
 	%{buildroot}%{_datadir}/applications/%{name}.desktop
@@ -104,11 +106,7 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %defattr(-,root,root,-)
 %doc %{_pkgdocdir}
 %{_bindir}/midori
-%if 0%{?fedora} < 19
-%{_datadir}/applications/fedora-%{name}.desktop
-%else
 %{_datadir}/applications/%{name}.desktop
-%endif
 %{_datadir}/applications/%{name}-private.desktop
 %{_datadir}/icons/*/*/apps/%{name}.*
 %{_datadir}/icons/*/*/categories/extension.*
