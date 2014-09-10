@@ -3,16 +3,15 @@
 Summary: Music module player
 Summary(zh_CN.UTF-8): 音乐模块播放器
 Name: mikmod
-Version: 3.2.2
-Release: 0.beta1%{?dist}.2
+Version: 3.2.6
+Release: 2%{?dist}
 License: GPLv2 and LGPLv2+
 Group: Applications/Multimedia
 Group(zh_CN.UTF-8): 应用程序/多媒体
 Buildroot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: ncurses-devel libmikmod-devel
 URL: http://mikmod.raphnet.net/
-Source0: http://mikmod.raphnet.net/files/mikmod-%{version}-beta1.tar.gz
-Patch0: mikmod-3.2.2-beta1-missing-protos.patch
+Source0: http://downloads.sourceforge.net/project/mikmod/mikmod/%{version}/mikmod-%{version}.tar.gz
 
 %description
 MikMod is one of the best and most well known MOD music file players
@@ -30,8 +29,7 @@ Install the mikmod package if you need a MOD music file player.
 MikMod 是类 UNIX 系统上的最好的和几乎最著名的 MOD 音乐文件播放器。
 
 %prep
-%setup -q -n %{name}-%{version}-beta1
-%patch0 -p1
+%setup -q -n %{name}-%{version}
 
 
 %build
@@ -58,6 +56,12 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Mon Sep 08 2014 Liu Di <liudidi@gmail.com> - 3.2.6-2
+- 为 Magic 3.0 重建
+
+* Mon Sep 08 2014 Liu Di <liudidi@gmail.com> - 3.2.6-1
+- 更新到 3.2.6
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 3.2.2-0.beta1.2
 - 为 Magic 3.0 重建
 

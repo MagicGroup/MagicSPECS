@@ -1,9 +1,11 @@
 Name:		mftrace
 Version:	1.2.18
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:	Utility for converting TeX bitmap fonts to Type 1 or TrueType fonts
+Summary(zh_CN.UTF-8): 转换 TeX 位图字体到 Type1 或 TrueType 字体的工具
 
 Group:		Applications/Publishing
+Group(zh_CN.UTF-8): 应用程序/出版
 License:	GPLv2
 URL:		http://lilypond.org/mftrace/
 Source0:	http://lilypond.org/download/sources/mftrace/%{name}-%{version}.tar.gz
@@ -22,6 +24,9 @@ documents to render correctly at many printer resolutions. Moreover,
 Ghostscript can generate much better PDF, if given scalable PostScript
 fonts.
 
+%description -l zh_CN.UTF-8
+这是一个小 Python 程序，可以让你转换 TeX 位图字体到 PFA、PFB 或 TTF 字体。
+
 %prep
 %setup -q
 sed -i -e "s/-Wall -O2/$RPM_OPT_FLAGS/" GNUmakefile.in
@@ -35,7 +40,7 @@ make %{?_smp_mflags}
 %install
 rm -rf $RPM_BUILD_ROOT
 make install DESTDIR=$RPM_BUILD_ROOT
-
+magic_rpm_clean.sh
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -50,6 +55,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Thu Aug 28 2014 Liu Di <liudidi@gmail.com> - 1.2.18-3
+- 为 Magic 3.0 重建
+
 * Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.2.18-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
 

@@ -6,7 +6,7 @@ diff -Nur midori-0.5.7.orig/midori/midori-settings.vala midori-0.5.7/midori/mido
          public bool always_show_tabbar { get; set; default = true; }
  
 -        public string homepage { get; set; default = "about:search"; }
-+        public string homepage { get; set; default = "https://start.fedoraproject.org"; }
++        public string homepage { get; set; default = "https://www.magiclinux.org"; }
          public string tabhome { get; set; default = "about:dial"; }
          static string default_download_folder () {
              return Environment.get_user_special_dir (UserDirectory.DOWNLOAD)

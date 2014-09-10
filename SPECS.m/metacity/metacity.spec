@@ -1,7 +1,8 @@
 Summary: Unobtrusive window manager
+Summary(zh_CN.UTF-8): 窗口管理器
 Name: metacity
 Version: 3.12.0
-Release: 2%{?dist}
+Release: 3%{?dist}
 URL: http://download.gnome.org/sources/metacity/
 Source0: http://download.gnome.org/sources/metacity/3.12/metacity-%{version}.tar.xz
 # http://bugzilla.gnome.org/show_bug.cgi?id=558723
@@ -14,6 +15,7 @@ Patch24: metacity-2.28-empty-keybindings.patch
 
 License: GPLv2+
 Group: User Interface/Desktops
+Group(zh_CN.UTF-8): 用户界面/桌面
 BuildRequires: gtk2-devel 
 BuildRequires: pango-devel 
 BuildRequires: fontconfig-devel
@@ -51,9 +53,14 @@ Metacity is a window manager that integrates nicely with the GNOME desktop.
 It strives to be quiet, small, stable, get on with its job, and stay out of
 your attention.
 
+%description -l zh_CN.UTF-8
+GNOME3 的窗口管理器。
+
 %package devel
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Summary: Development files for metacity
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Requires: %{name} = %{version}-%{release}
 
 %description devel
@@ -61,6 +68,9 @@ This package contains the files needed for compiling programs using
 the metacity-private library. Note that you are not supposed to write
 programs using the metacity-private library, since it is a private
 API. This package exists purely for technical reasons.
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -105,7 +115,7 @@ find $RPM_BUILD_ROOT -name '*.la' -exec rm -f {} ';'
 #desktop-file-install --vendor "" --delete-original \
 #	--dir $RPM_BUILD_ROOT%{_datadir}/applications \
 #	$RPM_BUILD_ROOT%{_datadir}/applications/metacity.desktop
-
+magic_rpm_clean.sh
 %find_lang %{name} --all-name --with-gnome
 
 %post -p /sbin/ldconfig
@@ -145,6 +155,9 @@ fi
 %{_mandir}/man1/metacity-window-demo.1.gz
 
 %changelog
+* Tue Aug 26 2014 Liu Di <liudidi@gmail.com> - 3.12.0-3
+- 为 Magic 3.0 重建
+
 * Sun Aug 17 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.12.0-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
 

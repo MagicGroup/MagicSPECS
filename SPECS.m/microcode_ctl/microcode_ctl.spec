@@ -1,11 +1,13 @@
-%define upstream_version 2.1-4
+%define upstream_version 2.1-5
 
 Summary:        Tool to transform and deploy CPU microcode update for x86.
+Summary(zh_CN.UTF-8): 部署和更改针对 x86 CPU 微码更新的工具
 Name:           microcode_ctl
 Version:        2.1
-Release:        6%{?dist}
+Release:        7%{?dist}
 Epoch:          2
 Group:          System Environment/Base
+Group(zh_CN.UTF-8): 系统环境/基本
 License:        GPLv2+ and Redistributable, no modification permitted
 URL:            http://fedorahosted.org/microcode_ctl
 Source0:        http://fedorahosted.org/released/microcode_ctl/%{name}-%{upstream_version}.tar.xz
@@ -20,6 +22,9 @@ The microcode update is volatile and needs to be uploaded on each system
 boot i.e. it doesn't reflash your cpu permanently, reboot and it reverts
 back to the old microcode.
 
+%description -l zh_CN.UTF-8
+部署和更改针对 x86 CPU 微码更新的工具。
+
 %prep
 %setup -q -n %{name}-%{upstream_version}
 
@@ -29,6 +34,7 @@ make CFLAGS="$RPM_OPT_FLAGS" %{?_smp_mflags}
 %install
 rm -rf %{buildroot}
 make DESTDIR=%{buildroot} PREFIX=%{_prefix} INSDIR=/usr/sbin install clean
+magic_rpm_clean.sh
 
 %clean
 rm -rf %{buildroot}
@@ -40,6 +46,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Aug 28 2014 Liu Di <liudidi@gmail.com> - 2:2.1-7
+- 为 Magic 3.0 重建
+
 * Tue Jul 01 2014 Liu Di <liudidi@gmail.com> - 2:2.1-6
 - 为 Magic 3.0 重建
 
