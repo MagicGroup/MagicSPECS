@@ -20,7 +20,7 @@
 
 Name: gnome-python2
 Version: 2.28.1
-Release: 8%{?dist}
+Release: 9%{?dist}
 License: LGPLv2+
 Group: Development/Languages
 Group(zh_CN.UTF-8): 开发/语言
@@ -208,6 +208,9 @@ magic_rpm_clean.sh
 rm -f %{python_sitearch}/bonobo/__init__.{pyc,pyo}
 
 %changelog
+* Wed Aug 27 2014 Liu Di <liudidi@gmail.com> - 2.28.1-9
+- 为 Magic 3.0 重建
+
 * Thu Dec 06 2012 Liu Di <liudidi@gmail.com> - 2.28.1-8
 - 为 Magic 3.0 重建
 

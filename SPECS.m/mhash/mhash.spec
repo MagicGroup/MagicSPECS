@@ -2,12 +2,14 @@
 # As of 2007-08-18 11:03, this project is no longer under active development.
 
 Summary: Thread-safe hash algorithms library
+Summary(zh_CN.UTF-8): 线程安全的哈希算法库
 Name: mhash
 Version: 0.9.9.9
-Release: 5%{?dist}
+Release: 6%{?dist}
 URL: http://mhash.sourceforge.net/
 License: LGPLv2+
 Group: System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 Source: http://downloads.sourceforge.net/mhash/mhash-%{version}.tar.bz2
 Patch2: mhash-0.9.9.9-align.patch
 Patch3: mhash-0.9.9.9-force64bit-tiger.patch
@@ -49,10 +51,14 @@ HAVAL256, HAVAL224, HAVAL192, HAVAL160, HAVAL128, MD5, MD4, MD2,
 RIPEMD128/160/256/320, TIGER, TIGER160, TIGER128, SHA1/224/256/384/512,
 Whirlpool, SNEFRU128/256, CRC32B and CRC32 checksums.
 
+%description -l zh_CN.UTF-8
+线程安全的哈希算法库。
 
 %package -n %{name}-devel
 Summary: Header files and libraries for developing apps which use mhash
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: %{name} = %{version}-%{release}
 Provides: libmhash-devel = %{version}-%{release}
 
@@ -60,6 +66,8 @@ Provides: libmhash-devel = %{version}-%{release}
 This package contains the header files and libraries needed to
 develop programs that use the mhash library.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -90,7 +98,7 @@ make DESTDIR=${RPM_BUILD_ROOT} install
 # Eliminate some autoheader definitions which should not enter a public API.
 # There are more which wait for a fix upstream.
 sed -i 's!\(#define \(PACKAGE\|VERSION \).*\)!/* \1 */!g' ${RPM_BUILD_ROOT}%{_includedir}/mutils/mhash_config.h
-
+magic_rpm_clean.sh
 
 %check
 make check
@@ -124,6 +132,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Thu Aug 28 2014 Liu Di <liudidi@gmail.com> - 0.9.9.9-6
+- 为 Magic 3.0 重建
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 0.9.9.9-5
 - 为 Magic 3.0 重建
 

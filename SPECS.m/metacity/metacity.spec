@@ -1,43 +1,21 @@
-%define _default_patch_fuzz 999
-
 Summary: Unobtrusive window manager
+Summary(zh_CN.UTF-8): 窗口管理器
 Name: metacity
-Version: 2.34.13
-Release: 2%{?dist}
+Version: 3.12.0
+Release: 3%{?dist}
 URL: http://download.gnome.org/sources/metacity/
-Source0: http://download.gnome.org/sources/metacity/2.34/metacity-%{version}.tar.xz
+Source0: http://download.gnome.org/sources/metacity/3.12/metacity-%{version}.tar.xz
 # http://bugzilla.gnome.org/show_bug.cgi?id=558723
 Patch4: stop-spamming-xsession-errors.patch
-# http://bugzilla.gnome.org/show_bug.cgi?id=135056
-Patch5: dnd-keynav.patch
-
-# fedora specific patches
-Patch12: fresh-tooltips.patch
 
 # https://bugzilla.gnome.org/show_bug.cgi?id=598995
 Patch16: Dont-focus-ancestor-window-on-a-different-workspac.patch
-# https://bugzilla.gnome.org/show_bug.cgi?id=599097
-Patch18: For-mouse-and-sloppy-focus-return-to-mouse-mode-on.patch
-# https://bugzilla.gnome.org/show_bug.cgi?id=599248
-Patch19: Add-nofocuswindows-preference-to-list-windows-that.patch
-Patch119: Exclude-the-current-application-from-no_focus_window.patch
-# https://bugzilla.gnome.org/show_bug.cgi?id=599261
-Patch20: Add-a-newwindowsalwaysontop-preference.patch
-Patch120: Apply-new_windows_always_on_top-to-newly-raised-acti.patch
 # https://bugzilla.gnome.org/show_bug.cgi?id=559816
 Patch24: metacity-2.28-empty-keybindings.patch
-# https://bugzilla.gnome.org/show_bug.cgi?id=604319
-Patch25: metacity-2.28-xioerror-unknown-display.patch
-# https://bugzilla.gnome.org/show_bug.cgi?id=599181
-Patch28: Stop-confusing-GDK-s-grab-tracking.patch
-# https://bugzilla.gnome.org/show_bug.cgi?id=622517
-Patch29: Allow-breaking-out-from-maximization-during-mouse.patch
-
-Source1: window.png
-Source2: mini-window.png
 
 License: GPLv2+
 Group: User Interface/Desktops
+Group(zh_CN.UTF-8): 用户界面/桌面
 BuildRequires: gtk2-devel 
 BuildRequires: pango-devel 
 BuildRequires: fontconfig-devel
@@ -75,9 +53,14 @@ Metacity is a window manager that integrates nicely with the GNOME desktop.
 It strives to be quiet, small, stable, get on with its job, and stay out of
 your attention.
 
+%description -l zh_CN.UTF-8
+GNOME3 的窗口管理器。
+
 %package devel
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Summary: Development files for metacity
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Requires: %{name} = %{version}-%{release}
 
 %description devel
@@ -86,24 +69,15 @@ the metacity-private library. Note that you are not supposed to write
 programs using the metacity-private library, since it is a private
 API. This package exists purely for technical reasons.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
 %prep
 %setup -q
 %patch4 -p1 -b .stop-spamming-xsession-errors
-%patch5 -p1 -b .dnd-keynav
-%patch12 -p1 -b .fresh-tooltips
 
 %patch16 -p1 -b .focus-different-workspace
-%patch18 -p1 -b .focus-on-motion
-%patch19 -p1 -b .no-focus-windows
-%patch119 -p1 -b .no-focus-windows-current-app
-%patch20 -p1 -b .always-on-top
-%patch120 -p1 -b .always-on-top-activate
 %patch24 -p1 -b .empty-keybindings
-%patch25 -p1 -b .xioerror-unknown-display
-%patch28 -p1 -b .grab-tracking
-%patch29 -p1 -b .mouse-unmaximize
-
-cp -p %{SOURCE1} %{SOURCE2} src/
 
 # force regeneration
 rm -f src/org.gnome.metacity.gschema.valid
@@ -141,7 +115,7 @@ find $RPM_BUILD_ROOT -name '*.la' -exec rm -f {} ';'
 #desktop-file-install --vendor "" --delete-original \
 #	--dir $RPM_BUILD_ROOT%{_datadir}/applications \
 #	$RPM_BUILD_ROOT%{_datadir}/applications/metacity.desktop
-
+magic_rpm_clean.sh
 %find_lang %{name} --all-name --with-gnome
 
 %post -p /sbin/ldconfig
@@ -181,8 +155,32 @@ fi
 %{_mandir}/man1/metacity-window-demo.1.gz
 
 %changelog
-* Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 2.34.13-2
+* Tue Aug 26 2014 Liu Di <liudidi@gmail.com> - 3.12.0-3
 - 为 Magic 3.0 重建
+
+* Sun Aug 17 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.12.0-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
+
+* Wed Jun 18 2014 Richard Hughes <rhughes@redhat.com> - 3.12.0-1
+- Update to 3.12.0
+
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.34.13-7
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.34.13-6
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Thu May 16 2013 Florian Müllner <fmuellner@redhat.com> - 2.34.13-5
+- Include documentation update from upstream
+
+* Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.34.13-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
+
+* Thu Nov 22 2012 Florian Müllner <fmuellner@redhat.com> - 2.34.13-3
+- Clean up leftovers from upstream patch removed in commit 24481514
+
+* Tue Nov 20 2012 Matthias Clasen <mclasen@redhat.com> - 2.34.13-2
+- Don't use a patch fuzz of 999
 
 * Mon Oct 15 2012 Florian Müllner <fmuellner@redhat.com> - 2.34.13-1
 - Update to 2.34.13

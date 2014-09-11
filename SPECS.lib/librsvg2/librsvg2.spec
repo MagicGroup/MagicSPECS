@@ -1,7 +1,7 @@
 Name:           librsvg2
 Summary:        An SVG library based on cairo
 Summary(zh_CN.UTF-8): 基于 cairo 的 SVG 库
-Version:	2.40.2
+Version:	2.40.3
 Release: 1%{?dist}
 
 License:        LGPLv2+
@@ -11,6 +11,8 @@ Group(zh_CN.UTF-8): 系统环境/库
 %define majorver %(echo %{version} | awk -F. '{print $1"."$2}')
 Source:         http://download.gnome.org/sources/librsvg/%{majorver}/librsvg-%{version}.tar.xz
 
+# build with vala 0.18
+Patch0: librsvg-vala.patch
 
 Requires(post):   gdk-pixbuf2
 Requires(postun): gdk-pixbuf2
@@ -60,8 +62,22 @@ files to allow you to develop with librsvg.
 %description devel -l zh_CN.UTF-8
 %{name} 的开发包。
 
+%package tools
+Summary:        Extra tools for librsvg
+Summary(zh_CN.UTF-8): %{name} 的额外工具
+Requires:       %{name} = %{version}-%{release}
+
+%description tools
+This package provides extra utilities based on the librsvg library.
+
+%description tools -l zh_CN.UTF-8
+%{name} 的额外工具。
+
 %prep
 %setup -q -n librsvg-%{version}
+%patch0 -p1
+
+autoreconf -fisv
 
 %build
 GDK_PIXBUF_QUERYLOADERS=/usr/bin/gdk-pixbuf-query-loaders-%{__isa_bits}
@@ -98,22 +114,26 @@ gdk-pixbuf-query-loaders-%{__isa_bits} --update-cache || :
 %{_libdir}/librsvg-2.so.*
 %{_libdir}/gdk-pixbuf-2.0/*/loaders/libpixbufloader-svg.so
 %{_libdir}/girepository-1.0/*
-%{_bindir}/rsvg-view-3
-%{_bindir}/rsvg-convert
-%{_mandir}/man1/rsvg-convert.1*
 
 %files devel
 %{_libdir}/librsvg-2.so
 %{_includedir}/librsvg-2.0
 %{_libdir}/pkgconfig/librsvg-2.0.pc
 %{_datadir}/gir-1.0/*
-#%dir %{_datadir}/vala
-#%dir %{_datadir}/vala/vapi
-#%{_datadir}/vala/vapi/librsvg-2.0.vapi
+%dir %{_datadir}/vala
+%dir %{_datadir}/vala/vapi
+%{_datadir}/vala/vapi/librsvg-2.0.vapi
 %doc %{_datadir}/gtk-doc/html/rsvg-2.0
 
+%files tools
+%{_bindir}/rsvg-convert
+%{_bindir}/rsvg-view-3
+%{_mandir}/man1/rsvg-convert.1*
 
 %changelog
+* Mon Sep 08 2014 Liu Di <liudidi@gmail.com> - 2.40.3-1
+- 更新到 2.40.3
+
 * Wed Jul 30 2014 Liu Di <liudidi@gmail.com> - 2.40.2-1
 - 更新到 2.40.2
 

@@ -1,0 +1,12 @@
+diff -Nur midori-0.5.7.orig/midori/midori-settings.vala midori-0.5.7/midori/midori-settings.vala
+--- midori-0.5.7.orig/midori/midori-settings.vala	2014-01-15 13:43:34.000000000 -0700
++++ midori-0.5.7/midori/midori-settings.vala	2014-01-17 10:09:11.247077733 -0700
+@@ -156,7 +156,7 @@
+         // [Deprecated (since = "0.5.7")]
+         public bool always_show_tabbar { get; set; default = true; }
+ 
+-        public string homepage { get; set; default = "about:search"; }
++        public string homepage { get; set; default = "https://www.magiclinux.org"; }
+         public string tabhome { get; set; default = "about:dial"; }
+         static string default_download_folder () {
+             return Environment.get_user_special_dir (UserDirectory.DOWNLOAD)
