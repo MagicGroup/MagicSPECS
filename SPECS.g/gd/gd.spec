@@ -114,8 +114,8 @@ CFLAGS="$RPM_OPT_FLAGS -DDEFAULT_FONTPATH='\"\
 /usr/share/fonts/liberation\"'"
 
 %configure \
-    --with-vpx=%{_prefix} \
-    --with-tiff=%{_prefix} \
+    --with-vpx \
+    --with-tiff \
     --disable-rpath
 make %{?_smp_mflags}
 
