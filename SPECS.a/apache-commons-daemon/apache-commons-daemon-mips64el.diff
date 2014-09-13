@@ -1,0 +1,30 @@
+diff -Nuri commons-daemon-1.0.15-src-orig/src/native/unix/configure commons-daemon-1.0.15-src/src/native/unix/configure
+--- commons-daemon-1.0.15-src-orig/src/native/unix/configure	2014-09-13 04:46:23.993617820 +0000
++++ commons-daemon-1.0.15-src/src/native/unix/configure	2014-09-13 04:48:07.933124162 +0000
+@@ -2701,6 +2701,11 @@
+     CFLAGS="$CFLAGS -DCPU=\\\"aarch64\\\""
+     supported_os="aarch64"
+     HOST_CPU=aarch64;;
++  mips64el)
++    CFLAGS="$CFLAGS -DCPU=\\\"mips64el\\\""
++    supported_os="mips64el"
++    HOST_CPU=mips64el
++    ;;
+   *)
+     echo "$as_me:$LINENO: result: failed" >&5
+ echo "${ECHO_T}failed" >&6
+diff -Nuri commons-daemon-1.0.15-src-orig/src/native/unix/support/apsupport.m4 commons-daemon-1.0.15-src/src/native/unix/support/apsupport.m4
+--- commons-daemon-1.0.15-src-orig/src/native/unix/support/apsupport.m4	2014-09-13 04:46:24.009242828 +0000
++++ commons-daemon-1.0.15-src/src/native/unix/support/apsupport.m4	2014-09-13 04:49:08.708545904 +0000
+@@ -170,6 +170,11 @@
+     CFLAGS="$CFLAGS -DCPU=\\\"aarch64\\\""
+     supported_os="aarch64"
+     HOST_CPU=aarch64;;
++  mips64el)
++    CFLAGS="$CFLAGS -DCPU=\\\"mips64el\\\""
++    supported_os="mips64el"
++    HOST_CPU=mips64el
++    ;;
+   *)
+     AC_MSG_RESULT([failed])
+     AC_MSG_ERROR([Unsupported CPU architecture "$host_cpu"]);;
