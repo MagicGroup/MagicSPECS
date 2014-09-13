@@ -16,6 +16,8 @@ Patch2:         apache-commons-daemon-secondary.patch
 # backport from http://svn.apache.org/viewvc?view=revision&revision=1533345
 # https://issues.apache.org/jira/browse/DAEMON-308
 Patch3:         apache-commons-daemon-aarch64.patch
+# Add mips64el support
+Patch4:         apache-commons-daemon-mips64el.diff
 BuildRequires:  maven-local
 BuildRequires:  java-devel >= 1:1.6.0
 BuildRequires:  jpackage-utils
@@ -65,6 +67,7 @@ Obsoletes:      jakarta-%{short_name}-javadoc <= 1:1.0.1
 %patch1 -p1 -b .java_os
 %patch2 -p1 -b .secondary
 %patch3 -p1 -b .aarch64
+%patch4 -p1 -b .mips64el
 
 # remove java binaries from sources
 rm -rf src/samples/build/
