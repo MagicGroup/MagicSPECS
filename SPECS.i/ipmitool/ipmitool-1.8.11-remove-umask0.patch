@@ -1,0 +1,13 @@
+CVE-2011-4339 OpenIPMI: IPMI event daemon creates PID file with world writeable permissions
+
+diff -up ipmitool-1.8.11/lib/helper.c.original ipmitool-1.8.11/lib/helper.c
+--- ipmitool-1.8.11/lib/helper.c.original	2011-10-03 13:00:54.000000000 +0900
++++ ipmitool-1.8.11/lib/helper.c	2011-10-03 13:01:01.000000000 +0900
+@@ -427,7 +427,6 @@ ipmi_start_daemon(struct ipmi_intf *intf
+ #endif
+ 
+ 	chdir("/");
+-	umask(0);
+ 
+ 	for (fd=0; fd<64; fd++) {
+ 		if (fd != intf->fd)
