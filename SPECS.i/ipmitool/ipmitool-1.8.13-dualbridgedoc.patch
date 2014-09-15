@@ -1,0 +1,13 @@
+diff -up ipmitool-1.8.13/doc/ipmitool.1.dualbridge ipmitool-1.8.13/doc/ipmitool.1
+--- ipmitool-1.8.13/doc/ipmitool.1.dualbridge	2013-11-05 10:10:20.139940133 +0100
++++ ipmitool-1.8.13/doc/ipmitool.1	2013-11-05 10:10:35.197947425 +0100
+@@ -156,9 +156,6 @@ Set the local IPMB address.  The local a
+ or is auto discovered on PICMG platforms when -m is not specified.
+ There should be no need to change the local address for normal operation.
+ .TP 
+-\fB\-M\fR <\fIaddress\fP>
+-Set transit local address for bridge request. (dual bridge)
+-.TP 
+ \fB\-N\fR <\fIsec\fP>
+ Specify nr. of seconds between retransmissions of lan/lanplus messages.
+ Defaults are 2 seconds for lan and 1 second for lanplus interfaces.

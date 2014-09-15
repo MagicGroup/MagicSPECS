@@ -1,0 +1,39 @@
+532188 -  ipmievd init script's condrestart doesn't work
+
+Author: Ville Skyttä (ville.skytta@iki.fi)
+Sent upstream as https://sourceforge.net/tracker/?func=detail&aid=2889888&group_id=95200&atid=610552
+
+Index: contrib/ipmievd.init.redhat
+===================================================================
+RCS file: /cvsroot/ipmitool/ipmitool/contrib/ipmievd.init.redhat,v
+retrieving revision 1.1
+diff -u -r1.1 ipmievd.init.redhat
+--- contrib/ipmievd.init.redhat	19 Mar 2006 23:05:48 -0000	1.1
++++ contrib/ipmievd.init.redhat	31 Oct 2009 08:50:07 -0000
+@@ -62,6 +62,11 @@
+ 	return $ret
+ }
+ 
++restart() {
++	stop
++	start
++}
++
+ case "$1" in
+     start)
+ 	start
+@@ -72,11 +77,10 @@
+     status)
+ 	status $IPMIEVD_BIN
+ 	;;
+-    restart|reload)
+-    	stop
+-	start
++    restart|reload|force-reload)
++	restart
+ 	;;
+-    condrestart)
++    try-restart|condrestart)
+ 	[ -f /var/lock/subsys/ipmievd ] && restart || :
+ 	;;
+     *)
