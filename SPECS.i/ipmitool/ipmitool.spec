@@ -1,7 +1,7 @@
 Name:         ipmitool
 Summary:      Utility for IPMI control
 Version:      1.8.13
-Release:      6%{?dist}
+Release:      7%{?dist}
 License:      BSD
 Group:        System Environment/Base
 URL:          http://ipmitool.sourceforge.net/
@@ -185,6 +185,9 @@ install -Dm 755 contrib/bmc-snmp-proxy         %{buildroot}%{_libexecdir}/bmc-sn
 %{_libexecdir}/bmc-snmp-proxy
 
 %changelog
+* Mon Sep 15 2014 Liu Di <liudidi@gmail.com> - 1.8.13-7
+- 为 Magic 3.0 重建
+
 * Sat Aug 16 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.8.13-6
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
 
