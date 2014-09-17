@@ -1,6 +1,6 @@
 Name:           wol
 Version:        0.7.1
-Release:        12%{?dist}
+Release:        13%{?dist}
 Summary:        Wake On Lan client
 
 Group:          Applications/Internet
@@ -54,6 +54,9 @@ fi
 %{_bindir}/%{name}*
 
 %changelog
+* Sat Sep 13 2014 Liu Di <liudidi@gmail.com> - 0.7.1-13
+- 为 Magic 3.0 重建
+
 * Mon Aug 18 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.7.1-12
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
 
