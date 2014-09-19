@@ -11,6 +11,7 @@ URL:            http://www.gnome.org/projects/dia/
 Source0:        ftp://ftp.gnome.org/pub/GNOME/sources/dia/0.97/dia-%{version}.tar.xz
 Patch0:         dia-noglib.patch
 Patch1:         dia-unregister-import.patch
+Patch2:         dia-0.97.2-fix-freetype2.patch
 
 BuildRequires:  libgnomeui-devel pygtk2-devel desktop-file-utils
 BuildRequires:  intltool docbook-utils docbook-style-dsssl docbook-style-xsl
@@ -32,6 +33,7 @@ and can export to PostScript(TM).
 %setup -q
 %patch0 -p0 -b .noglib
 %patch1 -p1 -b .unregister-import
+%patch2 -p1 -b .freetype2
 
 sed -i 's|libdia_la_LDFLAGS = -avoid-version|libdia_la_LDFLAGS = -avoid-version $(shell pkg-config gtk+-2.0 libxml-2.0 libart-2.0 libgnome-2.0 --libs)|' \
   lib/Makefile.*
