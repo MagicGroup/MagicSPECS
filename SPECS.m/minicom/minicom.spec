@@ -1,15 +1,18 @@
+
 Summary: A text-based modem control and terminal emulation program
 Name: minicom
-Version: 2.6.2
-Release: 1%{?dist}
+Version: 2.7
+Release: 3%{?dist}
 URL: http://alioth.debian.org/projects/minicom/
-License: GPL+ and GPLv2+ and GPLv2 and Public Domain and Copyright only
+License: GPL+ and GPLv2+ and GPLv2 and LGPLv2+ Public Domain and Copyright only
 Group: Applications/Communications
 ExcludeArch: s390 s390x
+
+Source0: https://alioth.debian.org/frs/download.php/file/3977/minicom-2.7.tar.gz
+
 BuildRequires: lockdev-devel ncurses-devel autoconf automake gettext-devel
 Requires: lockdev lrzsz
 
-Source0: https://alioth.debian.org/frs/download.php/3869/minicom-2.6.2.tar.gz
 
 %description
 Minicom is a simple text-based modem control and terminal emulation
@@ -17,11 +20,13 @@ program somewhat similar to MSDOS Telix. Minicom includes a dialing
 directory, full ANSI and VT100 emulation, an (external) scripting
 language, and other features.
 
+
 %prep
 %setup -q
 
 cp -pr doc doc_
 rm -f doc_/Makefile*
+
 
 %build
 #./autogen.sh
@@ -29,11 +34,13 @@ autoreconf --verbose --force --install
 %configure
 make %{?_smp_mflags}
 
+
 %install
 make DESTDIR=%{buildroot} install
 mkdir -p %{buildroot}%{_sysconfdir}
 
 %find_lang %{name}
+
 
 %files -f %{name}.lang
 %doc ChangeLog AUTHORS NEWS TODO doc_/*
@@ -44,7 +51,27 @@ mkdir -p %{buildroot}%{_sysconfdir}
 %{_bindir}/ascii-xfr
 %{_mandir}/man1/*
 
+
 %changelog
+* Sun Aug 17 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.7-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
+
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.7-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Mon Jan 06 2014 Jaromir Capik <jcapik@redhat.com> - 2.7-1
+- Update to 2.7
+- Fixing bogus dates in the changelog
+
+* Wed Aug 07 2013 Jaromir Capik <jcapik@redhat.com> - 2.6.2-4
+- Fixing the license tag
+
+* Wed Jul 31 2013 Jaromir Capik <jcapik@redhat.com> - 2.6.2-3
+- RH man page scan (#948521)
+
+* Thu Feb 07 2013 Jaromir Capik <jcapik@redhat.com> - 2.6.2-2
+- Disabling lockfile warnings when the device disappears (ttyUSB hot unplug)
+
 * Thu Feb 07 2013 Jaromir Capik <jcapik@redhat.com> - 2.6.2-1
 - Update to 2.6.2
 
@@ -333,7 +360,7 @@ mkdir -p %{buildroot}%{_sysconfdir}
 * Sun Mar 21 1999 Cristian Gafton <gafton@redhat.com> 
 - auto rebuild in the new build environment (release 5)
 
-* Tue Jan 24 1999 Michael Maher <mike@redhat.com>
+* Sun Jan 24 1999 Michael Maher <mike@redhat.com>
 - fixed bug, changed groups.
 
 * Thu Oct 01 1998 Cristian Gafton <gafton@redhat.com>
@@ -352,7 +379,7 @@ mkdir -p %{buildroot}%{_sysconfdir}
 - BuildRoot; updated .make patch to cope with the buildroot
 - fixed the spec file
 
-* Tue May 06 1998 Michael Maher <mike@redhat.com>
+* Wed May 06 1998 Michael Maher <mike@redhat.com>
 - update of package (1.81)
 
 * Wed Oct 29 1997 Otto Hammersmith <otto@redhat.com>
