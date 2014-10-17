@@ -16,8 +16,8 @@
 %endif
 
 Name:           ocaml
-Version:        4.01.0
-Release:        20%{?dist}
+Version:        4.02.0
+Release:        3%{?dist}
 
 Summary:        OCaml compiler and programming environment
 
@@ -25,10 +25,10 @@ License:        QPL and (LGPLv2+ with exceptions)
 
 URL:            http://www.ocaml.org
 
-Source0:        http://caml.inria.fr/pub/distrib/ocaml-4.01/ocaml-%{version}.tar.gz
-Source1:        http://caml.inria.fr/pub/distrib/ocaml-4.01/ocaml-4.01-refman-html.tar.gz
-Source2:        http://caml.inria.fr/pub/distrib/ocaml-4.01/ocaml-4.01-refman.pdf
-Source3:        http://caml.inria.fr/pub/distrib/ocaml-4.01/ocaml-4.01-refman.info.tar.gz
+Source0:        http://caml.inria.fr/pub/distrib/ocaml-4.02/%{name}-%{version}.tar.gz
+Source1:        http://caml.inria.fr/pub/distrib/ocaml-4.02/ocaml-4.02-refman-html.tar.gz
+Source2:        http://caml.inria.fr/pub/distrib/ocaml-4.02/ocaml-4.02-refman.pdf
+Source3:        http://caml.inria.fr/pub/distrib/ocaml-4.02/ocaml-4.02-refman.info.tar.gz
 
 # IMPORTANT NOTE:
 #
@@ -37,42 +37,32 @@ Source3:        http://caml.inria.fr/pub/distrib/ocaml-4.01/ocaml-4.01-refman.in
 # will be OVERWRITTEN by the next update.  Instead, request commit
 # access to the fedorahosted project:
 #
-# http://git.fedorahosted.org/git/?p=fedora-ocaml.git
+# https://git.fedorahosted.org/cgit/fedora-ocaml.git/
+#
+# Current branch: fedora-22-4.02
 #
 # ALTERNATIVELY add a patch to the end of the list (leaving the
 # existing patches unchanged) adding a comment to note that it should
 # be incorporated into the git repo at a later time.
 #
-Patch0001:      0001-Add-.gitignore-file-to-ignore-generated-files.patch
+Patch0001:      0001-Don-t-ignore-.-configure-it-s-a-real-git-file.patch
 Patch0002:      0002-Ensure-empty-compilerlibs-directory-is-created-by-gi.patch
-Patch0003:      0003-ocamlbyteinfo-ocamlplugininfo-Useful-utilities-from-.patch
-Patch0004:      0004-Don-t-add-rpaths-to-libraries.patch
+Patch0003:      0003-Don-t-add-rpaths-to-libraries.patch
+Patch0004:      0004-ocamlbyteinfo-ocamlplugininfo-Useful-utilities-from-.patch
 Patch0005:      0005-configure-Allow-user-defined-C-compiler-flags.patch
 Patch0006:      0006-Add-support-for-ppc64.patch
-Patch0007:      0007-yacc-Use-mkstemp-instead-of-mktemp.patch
+Patch0007:      0007-Add-support-for-ppc64le.patch
+Patch0008:      0008-arm-arm64-Mark-stack-as-non-executable.patch
+Patch0009:      0009-arg-Add-no_arg-and-get_arg-helper-functions.patch
+Patch0010:      0010-arg-Allow-flags-such-as-flag-arg-as-well-as-flag-arg.patch
+Patch0011:      0011-PR-6517-use-ISO-C99-types-u-int-32-64-_t-in-preferen.patch
+Patch0012:      0012-ppc-ppc64-ppc64le-Mark-stack-as-non-executable.patch
 
-# Aarch64 patches.
-Patch0008:      0008-Port-to-the-ARM-64-bits-AArch64-architecture-experim.patch
-Patch0009:      0009-Updated-with-latest-versions-from-FSF.patch
-Patch0010:      0010-arm64-Align-code-and-data-to-8-bytes.patch
-
-# NON-upstream patch to allow '--flag=arg' as an alternative to '--flag arg'.
-Patch0011:      0011-arg-Add-no_arg-and-get_arg-helper-functions.patch
-Patch0012:      0012-arg-Allow-flags-such-as-flag-arg-as-well-as-flag-arg.patch
-
-# ppc64le support (Michel Normand).
-Patch0013:      0013-Add-support-for-ppc64le.patch
-
-# ARM & Aarch64 non-executable stack.
-Patch0014:      0014-arm-arm64-Mark-stack-as-non-executable.patch
-
-# Temporary, we can drop this explicit BR in June 2014:
-BuildRequires:  ocaml-srpm-macros
+# Add BFD support so that ocamlobjinfo supports *.cmxs format (RHBZ#1113735).
+BuildRequires:  binutils-devel
 
 BuildRequires:  ncurses-devel
 BuildRequires:  gdbm-devel
-BuildRequires:  tcl-devel
-BuildRequires:  tk-devel
 BuildRequires:  emacs
 BuildRequires:  gawk
 BuildRequires:  perl
@@ -96,6 +86,11 @@ BuildRequires:  git
 Requires:       gcc
 Requires:       rpm-build >= 4.8.0
 
+# Because we pass -c flag to ocaml-find-requires (to avoid circular
+# dependencies) we also have to explicitly depend on the right version
+# of ocaml-runtime.
+Requires:       ocaml-runtime = %{version}-%{release}
+
 # Bundles an MD5 implementation in byterun/md5.{c,h}
 Provides:       bundled(md5-plumb)
 
@@ -111,7 +106,7 @@ programming language from the ML family of languages.
 
 This package comprises two batch compilers (a fast bytecode compiler
 and an optimizing native-code compiler), an interactive toplevel system,
-parsing tools (Lex,Yacc,Camlp4), a replay debugger, a documentation generator,
+parsing tools (Lex,Yacc), a replay debugger, a documentation generator,
 and a comprehensive library.
 
 
@@ -143,56 +138,6 @@ Requires:       libX11-devel
 
 %description x11
 X11 support for OCaml.
-
-
-%package labltk
-Summary:        Tk bindings for OCaml
-Requires:       ocaml-runtime = %{version}-%{release}
-
-%description labltk
-Labltk is a library for interfacing OCaml with the scripting language
-Tcl/Tk.
-
-This package contains the runtime files.
-
-
-%package labltk-devel
-Summary:        Development files for labltk
-Requires:       ocaml = %{version}-%{release}
-Requires:       %{name}-labltk = %{version}-%{release}
-Requires:       libX11-devel
-Requires:       tcl-devel
-Requires:       tk-devel
-
-%description labltk-devel
-Labltk is a library for interfacing OCaml with the scripting language
-Tcl/Tk.
-
-This package contains the development files.  It includes the ocaml
-browser for code editing and library browsing.
-
-
-%package camlp4
-Summary:        Pre-Processor-Pretty-Printer for OCaml
-Requires:       ocaml-runtime = %{version}-%{release}
-
-%description camlp4
-Camlp4 is a Pre-Processor-Pretty-Printer for OCaml, parsing a source
-file and printing some result on standard output.
-
-This package contains the runtime files.
-
-
-%package camlp4-devel
-Summary:        Pre-Processor-Pretty-Printer for OCaml
-Requires:       ocaml = %{version}-%{release}
-Requires:       %{name}-camlp4 = %{version}-%{release}
-
-%description camlp4-devel
-Camlp4 is a Pre-Processor-Pretty-Printer for OCaml, parsing a source
-file and printing some result on standard output.
-
-This package contains the development files.
 
 
 %package ocamldoc
@@ -253,6 +198,7 @@ git init
 git config user.email "noone@example.com"
 git config user.name "no one"
 git add .
+git add -f configure   ;# required because .gitignore lists this file
 git commit -a -q -m "%{version} baseline"
 git am %{patches} </dev/null
 
@@ -271,14 +217,7 @@ ulimit -Hs 65536
 ulimit -Ss 65536
 %endif
 
-# For the use of -mpreferred-stack-boundary to workaround gcc stack
-# alignment issues, see: http://caml.inria.fr/mantis/view.php?id=5700
-# ONLY use this on i386.
-%ifarch %{ix86}
-CFLAGS="$RPM_OPT_FLAGS -mpreferred-stack-boundary=2" \
-%else
-CFLAGS="$RPM_OPT_FLAGS" \
-%endif
+CFLAGS="$RPM_OPT_FLAGS -fno-strict-aliasing" \
 ./configure \
     -bindir %{_bindir} \
     -libdir %{_libdir}/ocaml \
@@ -432,8 +371,6 @@ fi
 %{_libdir}/ocaml/threads/*.cma
 %{_libdir}/ocaml/fedora-ocaml-release
 %exclude %{_libdir}/ocaml/graphicsX11.cmi
-%exclude %{_libdir}/ocaml/stublibs/dlllabltk.so
-#%exclude %{_libdir}/ocaml/stublibs/dlltkanim.so
 
 
 %files source
@@ -447,74 +384,6 @@ fi
 %{_libdir}/ocaml/graphicsX11.mli
 
 
-%files labltk
-%doc LICENSE
-%{_bindir}/labltk
-%dir %{_libdir}/ocaml/labltk
-%{_libdir}/ocaml/labltk/*.cmi
-%{_libdir}/ocaml/labltk/*.cma
-%{_libdir}/ocaml/labltk/*.cmo
-%{_libdir}/ocaml/stublibs/dlllabltk.so
-#%{_libdir}/ocaml/stublibs/dlltkanim.so
-
-
-%files labltk-devel
-%doc LICENSE
-%doc otherlibs/labltk/examples_labltk
-%doc otherlibs/labltk/examples_camltk
-%{_bindir}/ocamlbrowser
-%{_libdir}/ocaml/labltk/labltktop
-%{_libdir}/ocaml/labltk/pp
-%{_libdir}/ocaml/labltk/tkcompiler
-%{_libdir}/ocaml/labltk/*.a
-%if %{native_compiler}
-%{_libdir}/ocaml/labltk/*.cmxa
-%{_libdir}/ocaml/labltk/*.cmx
-%{_libdir}/ocaml/labltk/*.o
-%endif
-%{_libdir}/ocaml/labltk/*.mli
-
-
-%files camlp4
-%doc LICENSE
-%dir %{_libdir}/ocaml/camlp4
-%{_libdir}/ocaml/camlp4/*.cmi
-%{_libdir}/ocaml/camlp4/*.cma
-%{_libdir}/ocaml/camlp4/*.cmo
-%dir %{_libdir}/ocaml/camlp4/Camlp4Filters
-%{_libdir}/ocaml/camlp4/Camlp4Filters/*.cmi
-%{_libdir}/ocaml/camlp4/Camlp4Filters/*.cmo
-%dir %{_libdir}/ocaml/camlp4/Camlp4Parsers
-%{_libdir}/ocaml/camlp4/Camlp4Parsers/*.cmo
-%{_libdir}/ocaml/camlp4/Camlp4Parsers/*.cmi
-%dir %{_libdir}/ocaml/camlp4/Camlp4Printers
-%{_libdir}/ocaml/camlp4/Camlp4Printers/*.cmi
-%{_libdir}/ocaml/camlp4/Camlp4Printers/*.cmo
-%dir %{_libdir}/ocaml/camlp4/Camlp4Top
-%{_libdir}/ocaml/camlp4/Camlp4Top/*.cmi
-%{_libdir}/ocaml/camlp4/Camlp4Top/*.cmo
-
-
-%files camlp4-devel
-%{_bindir}/camlp4*
-%{_bindir}/mkcamlp4
-%if %{native_compiler}
-%{_libdir}/ocaml/camlp4/*.a
-%{_libdir}/ocaml/camlp4/*.cmxa
-%{_libdir}/ocaml/camlp4/*.cmx
-%{_libdir}/ocaml/camlp4/*.o
-%{_libdir}/ocaml/camlp4/Camlp4Filters/*.cmx
-%{_libdir}/ocaml/camlp4/Camlp4Filters/*.o
-%{_libdir}/ocaml/camlp4/Camlp4Parsers/*.cmx
-%{_libdir}/ocaml/camlp4/Camlp4Parsers/*.o
-%{_libdir}/ocaml/camlp4/Camlp4Printers/*.cmx
-%{_libdir}/ocaml/camlp4/Camlp4Printers/*.o
-%{_libdir}/ocaml/camlp4/Camlp4Top/*.cmx
-%{_libdir}/ocaml/camlp4/Camlp4Top/*.o
-%endif
-%{_mandir}/man1/*
-
-
 %files ocamldoc
 %doc LICENSE
 %doc ocamldoc/Changes.txt
@@ -525,6 +394,7 @@ fi
 %files docs
 %doc refman.pdf htmlman
 %{_infodir}/*
+%{_mandir}/man1/*
 %{_mandir}/man3/*
 
 
@@ -549,8 +419,54 @@ fi
 
 
 %changelog
-* Fri Jun 20 2014 Liu Di <liudidi@gmail.com> - 4.01.0-20
-- 为 Magic 3.0 重建
+* Thu Sep 11 2014 Richard W.M. Jones <rjones@redhat.com> - 4.02.0-3
+- Use -fno-strict-aliasing when building the compiler (RHBZ#990540).
+- ppc, ppc64, ppc64le: Mark stack as non-executable.
+
+* Tue Sep  9 2014 Richard W.M. Jones <rjones@redhat.com> - 4.02.0-2
+- Fix bug in argument parsing (RHBZ#1139790).
+
+* Sat Aug 30 2014 Richard W.M. Jones <rjones@redhat.com> - 4.02.0-1
+- New upstream OCaml 4.02.0 final.
+- Add patch for ocaml-camlimages
+  (see http://caml.inria.fr/mantis/view.php?id=6517)
+
+* Fri Aug 22 2014 Richard W.M. Jones <rjones@redhat.com> - 4.02.0-0.11.gitc48fc015
+- Rebase on top of OCaml 4.02+rc1 (same as git commit c48fc015).
+
+* Sun Aug 17 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 4.02.0-0.10.git10e45753
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
+
+* Fri Aug 08 2014 Richard W.M. Jones <rjones@redhat.com> - 4.02.0-0.9
+- Add fix for Coq build issue:
+  http://caml.inria.fr/mantis/view.php?id=6507
+
+* Fri Aug 01 2014 Richard W.M. Jones <rjones@redhat.com> - 4.02.0-0.8
+- Rebase on top of 4.02.0 beta commit 10e45753.
+
+* Sat Jul 19 2014 Richard W.M. Jones <rjones@redhat.com> - 4.02.0-0.7
+- Rebase on top of 4.02.0 beta commit c4f3a6c7.
+- Remove the patch to disable CSE, since that problem is fixed upstream.
+- Remove the patch fixing caml_callback2 on aarch64 since that patch is
+  now upstream.
+- Make the compiler depend on ocaml-runtime explicitly.
+
+* Tue Jul 15 2014 Richard W.M. Jones <rjones@redhat.com> - 4.02.0-0.5
+- Disable CSE optimization which is broken on armv7hl and aarch64.
+- Fix broken caml_callback2 on aarch64
+  http://caml.inria.fr/mantis/view.php?id=6489
+
+* Sat Jul 12 2014 Richard W.M. Jones <rjones@redhat.com> - 4.02.0-0.1
+- Update to 4.02.0-beta1 + patches from the upstream 4.02 branch.
+- REMOVED labltk and camlp4 packages, since these are now packaged
+  separately upstream.
+- Upstream includes fix for stack alignment issues on i686, so remove hack.
+- Upstream now uses mkstemp where available, so patch removed.
+- Upstream includes Aarch64 backend, so remove our own backport.
+- Drop BR on ocaml-srpm-macros, since it is now included in Fedora.
+
+* Thu Jun 26 2014 Richard W.M. Jones <rjones@redhat.com> - 4.01.0-20
+- BR binutils-devel so ocamlobjinfo supports *.cmxs files (RHBZ#1113735).
 
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 4.01.0-19
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild

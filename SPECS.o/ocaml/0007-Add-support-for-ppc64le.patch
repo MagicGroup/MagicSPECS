@@ -1,7 +1,7 @@
-From d9ec3ac29493999687b0f7daa23f4888bc57c7be Mon Sep 17 00:00:00 2001
+From 6e3ca14f2d4dba2612eff59126140cde0d04394f Mon Sep 17 00:00:00 2001
 From: Michel Normand <normand@linux.vnet.ibm.com>
 Date: Tue, 18 Mar 2014 09:15:47 -0400
-Subject: [PATCH 13/14] Add support for ppc64le.
+Subject: [PATCH 07/12] Add support for ppc64le.
 
 Signed-off-by: Michel Normand <normand@linux.vnet.ibm.com>
 ---
@@ -1556,10 +1556,10 @@ index 0000000..6101d53
 +
 +let fundecl f = (new selector)#emit_fundecl f
 diff --git a/asmrun/Makefile b/asmrun/Makefile
-index 6a8ed98..1ff256f 100644
+index 5da022c..c0362b6 100644
 --- a/asmrun/Makefile
 +++ b/asmrun/Makefile
-@@ -96,6 +96,12 @@ power64.o: power64-$(SYSTEM).o
+@@ -99,6 +99,12 @@ power64.o: power64-$(SYSTEM).o
  power64.p.o: power64-$(SYSTEM).o
  	cp power64-$(SYSTEM).o power64.p.o
  
@@ -1858,7 +1858,7 @@ index 0000000..f49d00c
 +power64-elf.S
 \ No newline at end of file
 diff --git a/asmrun/stack.h b/asmrun/stack.h
-index 031e408..f1890c1 100644
+index 5202c3a..94b81e4 100644
 --- a/asmrun/stack.h
 +++ b/asmrun/stack.h
 @@ -55,6 +55,15 @@
@@ -1892,26 +1892,26 @@ index b79252d..049652e 100755
  	echo powerpc-unknown-linux-${LIBC}
  	exit ;;
 diff --git a/configure b/configure
-index 36edfab..8a22078 100755
+index 3d258dc..0bf4ebd 100755
 --- a/configure
 +++ b/configure
-@@ -696,6 +696,7 @@ case "$host" in
-                                 fi;;
+@@ -809,6 +809,7 @@ case "$target" in
    i[3456]86-*-gnu*)             arch=i386; system=gnu;;
+   i[3456]86-*-mingw*)           arch=i386; system=mingw;;
    powerpc64-*-linux*)           arch=power64; model=ppc64; system=elf;;
 +  powerpc64le-*-linux*)         arch=power64le; model=ppc64le; system=elf;;
    powerpc*-*-linux*)            arch=power; model=ppc; system=elf;;
    powerpc-*-netbsd*)            arch=power; model=ppc; system=elf;;
    powerpc-*-openbsd*)           arch=power; model=ppc; system=bsd_elf;;
-@@ -781,6 +782,8 @@ case "$arch,$model,$system" in
-                     aspp='gcc -c';;
-   power64,*,elf)    as='as -u -m ppc64'
-                     aspp='gcc -c';;
-+  power64le,*,elf)  as='as -u -m ppc64'
-+                    aspp='gcc -c';;
-   power,*,rhapsody) as="as -arch $model"
-                     aspp="$bytecc -c";;
-   sparc,*,solaris)  as='as'
+@@ -891,6 +892,8 @@ case "$arch,$system" in
+                   aspp="${TOOLPREF}gcc -c";;
+   power64,*,elf)  as='${TOOLPREF}as -u -m ppc64'
+                   aspp='${TOOLPREF}gcc -c';;
++  power64le,*,elf) as='${TOOLPREF}as -u -m ppc64'
++                  aspp='${TOOLPREF}gcc -c';;
+   power,rhapsody) as="${TOOLPREF}as -arch $model"
+                   aspp="$bytecc -c";;
+   sparc,solaris)  as="${TOOLPREF}as"
 -- 
-1.9.0
+2.0.4
 

@@ -1,12 +1,12 @@
-From 251d3447bb10550320f43512d8886561c1298f74 Mon Sep 17 00:00:00 2001
+From 0641f11626be99c8bde349520ac28a8d93106856 Mon Sep 17 00:00:00 2001
 From: "Richard W.M. Jones" <rjones@redhat.com>
 Date: Tue, 1 Apr 2014 11:17:07 +0100
-Subject: [PATCH 11/14] arg: Add no_arg and get_arg helper functions.
+Subject: [PATCH 09/12] arg: Add no_arg and get_arg helper functions.
 
 The no_arg function in this patch is a no-op.  It will do something
 useful in the followups.
 
-The get_arg function simple checks the next position on the command
+The get_arg function simply checks the next position on the command
 line exists and returns that argument or raises a Arg.Missing.
 
 This patch should introduce no functional change, it is simply code
@@ -19,7 +19,7 @@ In particular, this should not change the treatment of Arg.current
  1 file changed, 26 insertions(+), 21 deletions(-)
 
 diff --git a/stdlib/arg.ml b/stdlib/arg.ml
-index 8b64236..c8b3d44 100644
+index 0f6480b..a41e0a2 100644
 --- a/stdlib/arg.ml
 +++ b/stdlib/arg.ml
 @@ -134,56 +134,62 @@ let parse_argv_dynamic ?(current=current) argv speclist anonfun errmsg =
@@ -114,5 +114,5 @@ index 8b64236..c8b3d44 100644
          treat_action action
        with Bad m -> stop (Message m);
 -- 
-1.9.0
+2.0.4
 
