@@ -9,7 +9,7 @@
 
 Name:           mod_perl
 Version:        2.0.8
-Release:        7.20140430svn1590627%{?dist}
+Release:        10.20140624svn1602105%{?dist}
 Summary:        An embedded Perl interpreter for the Apache HTTP Server
 
 Group:          System Environment/Daemons
@@ -17,9 +17,9 @@ License:        ASL 2.0
 URL:            http://perl.apache.org/
 # The source for this package was pulled from upstream's vcs.  Use the
 # following commands to generate the tarball:
-#  svn export -r 1590627 https://svn.apache.org/repos/asf/perl/modperl/branches/httpd24threading mod_perl-2.0.8-svn1590627
-#  tar czvf mod_perl-2.0.8-svn1590627.tar.gz mod_perl-2.0.8-svn1590627
-Source0:        mod_perl-2.0.8-svn1590627.tar.gz
+#  svn export -r 1602105 https://svn.apache.org/repos/asf/perl/modperl/trunk mod_perl-2.0.8-svn1602105
+#  tar czvf mod_perl-2.0.8-svn1602105.tar.gz mod_perl-2.0.8-svn1602105
+Source0:        mod_perl-2.0.8-svn1602105.tar.gz
 Source1:        perl.conf
 Source2:        perl.module.conf
 Patch1:         mod_perl-2.0.4-inline.patch
@@ -76,7 +76,7 @@ modules that use mod_perl.
 
 
 %prep
-%setup -q -n %{name}-%{version}-svn1590627
+%setup -q -n %{name}-%{version}-svn1602105
 %patch1 -p1
 
 %build
@@ -186,6 +186,15 @@ find "$RPM_BUILD_ROOT" -type f -name *.orig -exec rm -f {} \;
 %{_mandir}/man3/Apache::Test*.3pm*
 
 %changelog
+* Wed Aug 27 2014 Jitka Plesnikova <jplesnik@redhat.com> - 2.0.8-10.20140624svn1602105
+- Perl 5.20 rebuild
+
+* Sun Aug 17 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.0.8-9.20140624svn1602105
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
+
+* Tue Jun 24 2014 Jan Kaluza <jkaluza@redhat.com> - 2.0.8-8.20140624svn1602105
+- update to latest revision from trunk to backport latest upstream fixes
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.0.8-7.20140430svn1590627
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 
