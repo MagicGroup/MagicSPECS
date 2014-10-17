@@ -1,7 +1,7 @@
-From 57955b8a4d4cf7732cb87964f5e124ab713e084b Mon Sep 17 00:00:00 2001
+From 4d1defe6f017b86b0766fd02005a468bedd9aa88 Mon Sep 17 00:00:00 2001
 From: "Richard W.M. Jones" <rjones@redhat.com>
 Date: Tue, 1 Apr 2014 11:21:40 +0100
-Subject: [PATCH 12/14] arg: Allow flags such as --flag=arg as well as --flag
+Subject: [PATCH 10/12] arg: Allow flags such as --flag=arg as well as --flag
  arg.
 
 Allow flags to be followed directly by their argument, separated by an '='
@@ -11,12 +11,12 @@ command line parsing libraries allow.
 Fix for the following issue:
 http://caml.inria.fr/mantis/view.php?id=5197
 ---
- stdlib/arg.ml  | 28 ++++++++++++++++++++++------
+ stdlib/arg.ml  | 30 ++++++++++++++++++++++++------
  stdlib/arg.mli |  3 ++-
- 2 files changed, 24 insertions(+), 7 deletions(-)
+ 2 files changed, 26 insertions(+), 7 deletions(-)
 
 diff --git a/stdlib/arg.ml b/stdlib/arg.ml
-index c8b3d44..766de5f 100644
+index a41e0a2..5ffdabc 100644
 --- a/stdlib/arg.ml
 +++ b/stdlib/arg.ml
 @@ -55,6 +55,12 @@ let rec assoc3 x l =
@@ -32,10 +32,10 @@ index c8b3d44..766de5f 100644
  let make_symlist prefix sep suffix l =
    match l with
    | [] -> "<none>"
-@@ -130,14 +136,24 @@ let parse_argv_dynamic ?(current=current) argv speclist anonfun errmsg =
+@@ -130,14 +136,26 @@ let parse_argv_dynamic ?(current=current) argv speclist anonfun errmsg =
    while !current < l do
      let s = argv.(!current) in
-     if String.length s >= 1 && String.get s 0 = '-' then begin
+     if String.length s >= 1 && s.[0] = '-' then begin
 -      let action =
 -        try assoc3 s !speclist
 -        with Not_found -> stop (Unknown s)
@@ -59,12 +59,14 @@ index c8b3d44..766de5f 100644
 +        | None ->
 +          if !current + 1 < l then argv.(!current + 1)
 +          else stop (Missing s)
-+        | Some arg -> arg
++        | Some arg ->
++          decr current;
++          arg
        in
        begin try
          let rec treat_action = function
 diff --git a/stdlib/arg.mli b/stdlib/arg.mli
-index 869d030..b8c6f11 100644
+index 22eda40..7078071 100644
 --- a/stdlib/arg.mli
 +++ b/stdlib/arg.mli
 @@ -25,7 +25,8 @@
@@ -78,5 +80,5 @@ index 869d030..b8c6f11 100644
  
     Examples ([cmd] is assumed to be the command name):
 -- 
-1.9.0
+2.0.4
 
