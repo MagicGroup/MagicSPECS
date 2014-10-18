@@ -1,0 +1,22 @@
+diff -Nuri f2c-orig/libf2c/uninit.c f2c/libf2c/uninit.c
+--- f2c-orig/libf2c/uninit.c	2014-10-18 09:58:04.201582090 +0800
++++ f2c/libf2c/uninit.c	2014-10-18 10:08:04.219467424 +0800
+@@ -178,7 +178,8 @@
+ 	}
+ #endif /* MSpc */
+ 
+-#ifdef __mips	/* must link with -lfpe */
++//#ifdef __mips	/* must link with -lfpe */
++#if 0 /* disable fpe , loongson is not support */
+ #define IEEE0_done
+ /* code from Eric Grosse */
+ #include <stdlib.h>
+@@ -281,7 +282,7 @@
+ 
+ #else /* !(mc68000||powerpc) */
+ 
+-#ifdef _FPU_IEEE
++#if ( defined(_FPU_IEEE) && !defined(__mips))
+ #ifndef _FPU_EXTENDED /* e.g., ARM processor under Linux */
+ #define _FPU_EXTENDED 0
+ #endif
