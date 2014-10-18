@@ -10,6 +10,7 @@ URL:            http://netlib.org/f2c/
 Source:         ftp://netlib.org/f2c.tar
 # Patch makefile to build a shared library
 Patch:          f2c-20110801.patch
+Patch10:        f2c-mips-disable-fpe.patch
 BuildRequires:  unzip
 BuildRoot:      %(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
 Requires:       %{name}-libs = %{version}-%{release}
@@ -43,6 +44,9 @@ pushd libf2c
 unzip ../libf2c.zip
 popd
 %patch
+%ifarch mips64el
+%patch10 -p1
+%endif
 
 %build
 cp src/makefile.u src/Makefile
