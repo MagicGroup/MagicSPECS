@@ -1,20 +1,17 @@
-%define qt5 0
 Name:           qt-gstreamer
-Version:        0.10.3
-Release:        4%{?dist}
+Version:        1.2.0
+Release:        2%{?dist}
 Summary:        C++ bindings for GStreamer with a Qt-style API
 License:        LGPLv2+
-URL:            http://gstreamer.freedesktop.org/wiki/QtGStreamer
-Source0:        http://gstreamer.freedesktop.org/src/%{name}/%{name}-%{version}.tar.bz2
+URL:            http://gstreamer.freedesktop.org/modules/qt-gstreamer.html
+Source0:        http://gstreamer.freedesktop.org/src/%{name}/%{name}-%{version}.tar.xz
 
 BuildRequires:  automoc
 BuildRequires:  boost-devel
-BuildRequires:  gstreamer-plugins-base-devel >= 0.10.33
+BuildRequires:  gstreamer1-plugins-base-devel
 BuildRequires:  qt4-devel
-%if 0%{qt5}
-BuildRequires:  qt5-qtbase-devel
+BuildRequires:  qt5-qtdeclarative-devel
 BuildRequires:  qt5-qtquick1-devel
-%endif
 
 %{?_qt4_version:Requires: qt4%{?_isa} >= %{_qt4_version}}
 
@@ -32,7 +29,6 @@ Requires:       boost-devel%{?_isa}
 This package contains the header files and development documentation
 for %{name}.
 
-%if 0%{qt5}
 %package -n qt5-gstreamer
 Summary:        C++ bindings for GStreamer with a Qt5-style API
 %{?_qt5_version:Requires: qt5-qtbase%{?_isa} >= %{_qt5_version}}
@@ -48,7 +44,6 @@ Requires:       boost-devel%{?_isa}
 %description -n qt5-gstreamer-devel
 This package contains the header files and development documentation
 for qt5-gstreamer.
-%endif
 
 %prep
 %setup -q
@@ -61,31 +56,33 @@ popd
 
 make %{?_smp_mflags} -C %{_target_platform}
 
-%if 0%{qt5}
 mkdir -p %{_target_platform}-qt5
 pushd %{_target_platform}-qt5
 %{cmake} -DQT_VERSION=5 ..
 popd
 
 make %{?_smp_mflags} -C %{_target_platform}-qt5
-%endif
+
 
 %install
 make install/fast DESTDIR=%{buildroot} -C %{_target_platform}
-%if 0%{qt5}
 make install/fast DESTDIR=%{buildroot} -C %{_target_platform}-qt5
-%endif
+
 
 %post -p /sbin/ldconfig
 %postun -p /sbin/ldconfig
 
 %files
 %doc COPYING README
-%{_libdir}/gstreamer-0.10/libgstqtvideosink.so
-%{_libdir}/libQtGLib-2.0.so.0*
-%{_libdir}/libQtGStreamer-0.10.so.0*
-%{_libdir}/libQtGStreamerUi-0.10.so.0*
-%{_libdir}/libQtGStreamerUtils-0.10.so.0*
+%{_libdir}/gstreamer-1.0/libgstqtvideosink.so
+%{_libdir}/libQtGLib-2.0.so.0
+%{_libdir}/libQtGLib-2.0.so.1*
+%{_libdir}/libQtGStreamer-1.0.so.0
+%{_libdir}/libQtGStreamer-1.0.so.1*
+%{_libdir}/libQtGStreamerUi-1.0.so.0
+%{_libdir}/libQtGStreamerUi-1.0.so.1*
+%{_libdir}/libQtGStreamerUtils-1.0.so.0
+%{_libdir}/libQtGStreamerUtils-1.0.so.1*
 %{_libdir}/qt4/imports/QtGStreamer/
 
 %files devel
@@ -93,47 +90,63 @@ make install/fast DESTDIR=%{buildroot} -C %{_target_platform}-qt5
 %{_includedir}/QtGStreamer
 %{_libdir}/cmake/QtGStreamer
 %{_libdir}/libQtGLib-2.0.so
-%{_libdir}/libQtGStreamer-0.10.so
-%{_libdir}/libQtGStreamerUi-0.10.so
-%{_libdir}/libQtGStreamerUtils-0.10.so
+%{_libdir}/libQtGStreamer-1.0.so
+%{_libdir}/libQtGStreamerUi-1.0.so
+%{_libdir}/libQtGStreamerUtils-1.0.so
 %{_libdir}/pkgconfig/QtGLib-2.0.pc
-%{_libdir}/pkgconfig/QtGStreamer-0.10.pc
-%{_libdir}/pkgconfig/QtGStreamerUi-0.10.pc
-%{_libdir}/pkgconfig/QtGStreamerUtils-0.10.pc
+%{_libdir}/pkgconfig/QtGStreamer-1.0.pc
+%{_libdir}/pkgconfig/QtGStreamerUi-1.0.pc
+%{_libdir}/pkgconfig/QtGStreamerUtils-1.0.pc
 
-%if 0%{qt5}
 %post -n qt5-gstreamer -p /sbin/ldconfig
 %postun -n qt5-gstreamer -p /sbin/ldconfig
 
 %files -n qt5-gstreamer
 %doc COPYING README
-%{_libdir}/gstreamer-0.10/libgstqt5videosink.so
-%{_libdir}/libQt5GLib-2.0.so.0*
-%{_libdir}/libQt5GStreamer-0.10.so.0*
-%{_libdir}/libQt5GStreamerUi-0.10.so.0*
-%{_libdir}/libQt5GStreamerUtils-0.10.so.0*
+%{_libdir}/gstreamer-1.0/libgstqt5videosink.so
+%{_libdir}/libQt5GLib-2.0.so.0
+%{_libdir}/libQt5GLib-2.0.so.1*
+%{_libdir}/libQt5GStreamer-1.0.so.0
+%{_libdir}/libQt5GStreamer-1.0.so.1*
+%{_libdir}/libQt5GStreamerUi-1.0.so.0
+%{_libdir}/libQt5GStreamerUi-1.0.so.1*
+%{_libdir}/libQt5GStreamerUtils-1.0.so.0
+%{_libdir}/libQt5GStreamerUtils-1.0.so.1*
+%{_libdir}/libQt5GStreamerQuick-1.0.so.0
+%{_libdir}/libQt5GStreamerQuick-1.0.so.1*
 %{_libdir}/qt5/imports/QtGStreamer/
+%{_libdir}/qt5/qml/QtGStreamer/
 
 %files -n qt5-gstreamer-devel
 %doc HACKING
 %{_includedir}/Qt5GStreamer
 %{_libdir}/cmake/Qt5GStreamer
 %{_libdir}/libQt5GLib-2.0.so
-%{_libdir}/libQt5GStreamer-0.10.so
-%{_libdir}/libQt5GStreamerUi-0.10.so
-%{_libdir}/libQt5GStreamerUtils-0.10.so
+%{_libdir}/libQt5GStreamer-1.0.so
+%{_libdir}/libQt5GStreamerUi-1.0.so
+%{_libdir}/libQt5GStreamerUtils-1.0.so
+%{_libdir}/libQt5GStreamerQuick-1.0.so
 %{_libdir}/pkgconfig/Qt5GLib-2.0.pc
-%{_libdir}/pkgconfig/Qt5GStreamer-0.10.pc
-%{_libdir}/pkgconfig/Qt5GStreamerUi-0.10.pc
-%{_libdir}/pkgconfig/Qt5GStreamerUtils-0.10.pc
-%endif
+%{_libdir}/pkgconfig/Qt5GStreamer-1.0.pc
+%{_libdir}/pkgconfig/Qt5GStreamerUi-1.0.pc
+%{_libdir}/pkgconfig/Qt5GStreamerUtils-1.0.pc
+%{_libdir}/pkgconfig/Qt5GStreamerQuick-1.0.pc
+%{_libdir}/pkgconfig/Qt5GStreamerQuick-1.0.pc
+
 
 %changelog
-* Tue Apr 29 2014 Liu Di <liudidi@gmail.com> - 0.10.3-4
-- 为 Magic 3.0 重建
+* Sun Aug 17 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.2.0-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
 
-* Tue Apr 29 2014 Liu Di <liudidi@gmail.com> - 0.10.3-3
-- 为 Magic 3.0 重建
+* Wed Jul  9 2014 Alexey Kurov <nucleo@fedoraproject.org> - 1.2.0-1
+- qt-gstreamer-1.2.0
+- switch to gstreamer1
+
+* Sun Jun 08 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.10.3-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Fri May 23 2014 Petr Machata <pmachata@redhat.com> - 0.10.3-3
+- Rebuild for boost 1.55.0
 
 * Fri Nov 15 2013 Alexey Kurov <nucleo@fedoraproject.org> - 0.10.3-2
 - rebuilt for arm switch qreal double
