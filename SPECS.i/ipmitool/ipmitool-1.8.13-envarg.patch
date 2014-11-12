@@ -1,0 +1,795 @@
+diff --git a/lib/ipmi_main.c b/lib/ipmi_main.c
+index 1885bb5..0e420f6 100644
+--- a/lib/ipmi_main.c
++++ b/lib/ipmi_main.c
+@@ -388,401 +388,444 @@ ipmi_main(int argc, char ** argv,
+ 	char sol_escape_char = SOL_ESCAPE_CHARACTER_DEFAULT;
+ 	char * devfile  = NULL;
+ 
++	int cnt = argc;
++	char **arg = argv;
++	int voptind;
++	int argecnt = 0;
++	char **arge = NULL;
++	char **narge = NULL;
++	char *argestr = NULL;
++
+ 	/* save program name */
+ 	progname = strrchr(argv[0], '/');
+ 	progname = ((progname == NULL) ? argv[0] : progname+1);
+ 	signal(SIGINT, ipmi_catch_sigint);
+ 
+-	while ((argflag = getopt(argc, (char **)argv, OPTION_STRING)) != -1)
++	do
+ 	{
+-		switch (argflag) {
+-		case 'I':
+-			if (intfname) {
+-				free(intfname);
+-				intfname = NULL;
+-			}
+-			intfname = strdup(optarg);
+-			if (intfname == NULL) {
+-				lprintf(LOG_ERR, "%s: malloc failure", progname);
+-				goto out_free;
+-			}
+-			if (intflist != NULL) {
+-				found = 0;
+-				for (sup=intflist; sup->name != NULL; sup++) {
+-					if (strncmp(sup->name, intfname, strlen(intfname)) == 0 &&
+-							strncmp(sup->name, intfname, strlen(sup->name)) == 0 &&
+-							sup->supported == 1)
+-						found = 1;
++		if (arge != NULL) {
++			voptind = optind;
++			cnt = argecnt;
++			arg = arge;
++		}
++		while ((argflag = getopt(cnt, (char **)arg, OPTION_STRING)) != -1)
++		{
++			switch (argflag) {
++			case 'I':
++				if (intfname) {
++					free(intfname);
++					intfname = NULL;
+ 				}
+-				if (!found) {
+-					lprintf(LOG_ERR, "Interface %s not supported", intfname);
++				intfname = strdup(optarg);
++				if (intfname == NULL) {
++					lprintf(LOG_ERR, "%s: malloc failure", progname);
+ 					goto out_free;
+ 				}
+-			}
+-			break;
+-		case 'h':
+-			ipmi_option_usage(progname, cmdlist, intflist);
+-			rc = 0;
+-			goto out_free;
+-			break;
+-		case 'V':
+-			printf("%s version %s\n", progname, VERSION);
+-			rc = 0;
+-			goto out_free;
+-			break;
+-		case 'd':
+-			if (str2int(optarg, &devnum) != 0) {
+-				lprintf(LOG_ERR, "Invalid parameter given or out of range for '-d'.");
+-				rc = -1;
+-				goto out_free;
+-			}
+-			/* Check if device number is -gt 0; I couldn't find limit for
+-			 * kernels > 2.6, thus right side is unlimited.
+-			 */
+-			if (devnum < 0) {
+-				lprintf(LOG_ERR, "Device number %i is out of range.", devnum);
+-				rc = -1;
+-				goto out_free;
+-			}
+-			break;
+-		case 'p':
+-			if (str2int(optarg, &port) != 0) {
+-				lprintf(LOG_ERR, "Invalid parameter given or out of range for '-p'.");
+-				rc = -1;
+-				goto out_free;
+-			}
+-			/* Check if port is -gt 0 && port is -lt 65535 */
+-			if (port < 0 || port > 65535) {
+-				lprintf(LOG_ERR, "Port number %i is out of range.", port);
+-				rc = -1;
+-				goto out_free;
+-			}
+-			break;
+-		case 'C':
+-			if (str2int(optarg, &cipher_suite_id) != 0) {
+-				lprintf(LOG_ERR, "Invalid parameter given or out of range for '-C'.");
+-				rc = -1;
+-				goto out_free;
+-			}
+-			/* add check Cipher is -gt 0 */
+-			if (cipher_suite_id < 0) {
+-				lprintf(LOG_ERR, "Cipher suite ID %i is invalid.", cipher_suite_id);
+-				rc = -1;
++				if (intflist != NULL) {
++					found = 0;
++					for (sup=intflist; sup->name != NULL; sup++) {
++						if (strncmp(sup->name, intfname, strlen(intfname)) == 0 &&
++								strncmp(sup->name, intfname, strlen(sup->name)) == 0 &&
++								sup->supported == 1)
++							found = 1;
++					}
++					if (!found) {
++						lprintf(LOG_ERR, "Interface %s not supported", intfname);
++						goto out_free;
++					}
++				}
++				break;
++			case 'h':
++				ipmi_option_usage(progname, cmdlist, intflist);
++				rc = 0;
+ 				goto out_free;
+-			}
+-			break;
+-		case 'v':
+-			verbose++;
+-			break;
+-		case 'c':
+-			csv_output = 1;
+-			break;
+-		case 'H':
+-			if (hostname) {
+-				free(hostname);
+-				hostname = NULL;
+-			}
+-			hostname = strdup(optarg);
+-			if (hostname == NULL) {
+-				lprintf(LOG_ERR, "%s: malloc failure", progname);
++				break;
++			case 'V':
++				printf("%s version %s\n", progname, VERSION);
++				rc = 0;
+ 				goto out_free;
+-			}
+-			break;
+-		case 'f':
+-			if (password) {
+-				free(password);
+-				password = NULL;
+-			}
+-			password = ipmi_password_file_read(optarg);
+-			if (password == NULL)
+-				lprintf(LOG_ERR, "Unable to read password "
+-						"from file %s", optarg);
+-			break;
+-		case 'a':
+-#ifdef HAVE_GETPASSPHRASE
+-			tmp_pass = getpassphrase("Password: ");
+-#else
+-			tmp_pass = getpass("Password: ");
+-#endif
+-			if (tmp_pass != NULL) {
++				break;
++			case 'd':
++				if (str2int(optarg, &devnum) != 0) {
++					lprintf(LOG_ERR, "Invalid parameter given or out of range for '-d'.");
++					rc = -1;
++					goto out_free;
++				}
++				/* Check if device number is -gt 0; I couldn't find limit for
++				 * kernels > 2.6, thus right side is unlimited.
++				 */
++				if (devnum < 0) {
++					lprintf(LOG_ERR, "Device number %i is out of range.", devnum);
++					rc = -1;
++					goto out_free;
++				}
++				break;
++			case 'p':
++				if (str2int(optarg, &port) != 0) {
++					lprintf(LOG_ERR, "Invalid parameter given or out of range for '-p'.");
++					rc = -1;
++					goto out_free;
++				}
++				/* Check if port is -gt 0 && port is -lt 65535 */
++				if (port < 0 || port > 65535) {
++					lprintf(LOG_ERR, "Port number %i is out of range.", port);
++					rc = -1;
++					goto out_free;
++				}
++				break;
++			case 'C':
++				if (str2int(optarg, &cipher_suite_id) != 0) {
++					lprintf(LOG_ERR, "Invalid parameter given or out of range for '-C'.");
++					rc = -1;
++					goto out_free;
++				}
++				/* add check Cipher is -gt 0 */
++				if (cipher_suite_id < 0) {
++					lprintf(LOG_ERR, "Cipher suite ID %i is invalid.", cipher_suite_id);
++					rc = -1;
++					goto out_free;
++				}
++				break;
++			case 'v':
++				verbose++;
++				break;
++			case 'c':
++				csv_output = 1;
++				break;
++			case 'H':
++				if (hostname) {
++					free(hostname);
++					hostname = NULL;
++				}
++				hostname = strdup(optarg);
++				if (hostname == NULL) {
++					lprintf(LOG_ERR, "%s: malloc failure", progname);
++					goto out_free;
++				}
++				break;
++			case 'f':
+ 				if (password) {
+ 					free(password);
+ 					password = NULL;
+ 				}
+-				password = strdup(tmp_pass);
+-				tmp_pass = NULL;
+-				if (password == NULL) {
+-					lprintf(LOG_ERR, "%s: malloc failure", progname);
+-					goto out_free;
++				password = ipmi_password_file_read(optarg);
++				if (password == NULL)
++					lprintf(LOG_ERR, "Unable to read password "
++							"from file %s", optarg);
++				break;
++			case 'a':
++#ifdef HAVE_GETPASSPHRASE
++				tmp_pass = getpassphrase("Password: ");
++#else
++				tmp_pass = getpass("Password: ");
++#endif
++				if (tmp_pass != NULL) {
++					if (password) {
++						free(password);
++						password = NULL;
++					}
++					password = strdup(tmp_pass);
++					tmp_pass = NULL;
++					if (password == NULL) {
++						lprintf(LOG_ERR, "%s: malloc failure", progname);
++						goto out_free;
++					}
+ 				}
+-			}
+-			break;
+-		case 'k':
+-			if (kgkey) {
+-				free(kgkey);
+-				kgkey = NULL;
+-			}
+-			kgkey = strdup(optarg);
+-			if (kgkey == NULL) {
+-				lprintf(LOG_ERR, "%s: malloc failure", progname);
+-				goto out_free;
+-			}
+-			break;
+-		case 'K':
+-			if ((tmp_env = getenv("IPMI_KGKEY"))) {
++				break;
++			case 'k':
+ 				if (kgkey) {
+ 					free(kgkey);
+ 					kgkey = NULL;
+ 				}
+-				kgkey = strdup(tmp_env);
++				kgkey = strdup(optarg);
+ 				if (kgkey == NULL) {
+ 					lprintf(LOG_ERR, "%s: malloc failure", progname);
+ 					goto out_free;
+ 				}
+-			} else {
+-				lprintf(LOG_WARN, "Unable to read kgkey from environment");
+-			}
+-			break;
+-		case 'y':
+-			if (kgkey) {
+-				free(kgkey);
+-				kgkey = NULL;
+-			}
+-			kgkey = ipmi_parse_hex(optarg);
+-			if (kgkey == NULL) {
+-				goto out_free;
+-			}
+-			break;
+-		case 'Y':
+-#ifdef HAVE_GETPASSPHRASE
+-			tmp_pass = getpassphrase("Key: ");
+-#else
+-			tmp_pass = getpass("Key: ");
+-#endif
+-			if (tmp_pass != NULL) {
++				break;
++			case 'K':
++				if ((tmp_env = getenv("IPMI_KGKEY"))) {
++					if (kgkey) {
++						free(kgkey);
++						kgkey = NULL;
++					}
++					kgkey = strdup(tmp_env);
++					if (kgkey == NULL) {
++						lprintf(LOG_ERR, "%s: malloc failure", progname);
++						goto out_free;
++					}
++				} else {
++					lprintf(LOG_WARN, "Unable to read kgkey from environment");
++				}
++				break;
++			case 'y':
+ 				if (kgkey) {
+ 					free(kgkey);
+ 					kgkey = NULL;
+ 				}
+-				kgkey = strdup(tmp_pass);
+-				tmp_pass = NULL;
++				kgkey = ipmi_parse_hex(optarg);
+ 				if (kgkey == NULL) {
++					goto out_free;
++				}
++				break;
++			case 'Y':
++#ifdef HAVE_GETPASSPHRASE
++				tmp_pass = getpassphrase("Key: ");
++#else
++				tmp_pass = getpass("Key: ");
++#endif
++				if (tmp_pass != NULL) {
++					if (kgkey) {
++						free(kgkey);
++						kgkey = NULL;
++					}
++					kgkey = strdup(tmp_pass);
++					tmp_pass = NULL;
++					if (kgkey == NULL) {
++						lprintf(LOG_ERR, "%s: malloc failure", progname);
++						goto out_free;
++					}
++				}
++				break;
++			case 'U':
++				if (username) {
++					free(username);
++					username = NULL;
++				}
++				if (strlen(optarg) > 16) {
++					lprintf(LOG_ERR, "Username is too long (> 16 bytes)");
++					goto out_free;
++				}
++				username = strdup(optarg);
++				if (username == NULL) {
+ 					lprintf(LOG_ERR, "%s: malloc failure", progname);
+ 					goto out_free;
+ 				}
+-			}
+-			break;
+-		case 'U':
+-			if (username) {
+-				free(username);
+-				username = NULL;
+-			}
+-			if (strlen(optarg) > 16) {
+-				lprintf(LOG_ERR, "Username is too long (> 16 bytes)");
+-				goto out_free;
+-			}
+-			username = strdup(optarg);
+-			if (username == NULL) {
+-				lprintf(LOG_ERR, "%s: malloc failure", progname);
+-				goto out_free;
+-			}
+-			break;
+-		case 'S':
+-			if (sdrcache) {
+-				free(sdrcache);
+-				sdrcache = NULL;
+-			}
+-			sdrcache = strdup(optarg);
+-			if (sdrcache == NULL) {
+-				lprintf(LOG_ERR, "%s: malloc failure", progname);
+-				goto out_free;
+-			}
+-			break;
+-		case 'D':
+-			/* check for subsequent instance of -D */
+-			if (devfile) {
+-				/* free memory for previous string */
+-				free(devfile);
+-			}
+-			devfile = strdup(optarg);
+-			if (devfile == NULL) {
+-				lprintf(LOG_ERR, "%s: malloc failure", progname);
+-				goto out_free;
+-			}
+-			break;
++				break;
++			case 'S':
++				if (sdrcache) {
++					free(sdrcache);
++					sdrcache = NULL;
++				}
++				sdrcache = strdup(optarg);
++				if (sdrcache == NULL) {
++					lprintf(LOG_ERR, "%s: malloc failure", progname);
++					goto out_free;
++				}
++				break;
++			case 'D':
++				/* check for subsequent instance of -D */
++				if (devfile) {
++					/* free memory for previous string */
++					free(devfile);
++				}
++				devfile = strdup(optarg);
++				if (devfile == NULL) {
++					lprintf(LOG_ERR, "%s: malloc failure", progname);
++					goto out_free;
++				}
++				break;
+ #ifdef ENABLE_ALL_OPTIONS
+-		case 'o':
+-			if (oemtype) {
+-				free(oemtype);
+-				oemtype = NULL;
+-			}
+-			oemtype = strdup(optarg);
+-			if (oemtype == NULL) {
+-				lprintf(LOG_ERR, "%s: malloc failure", progname);
+-				goto out_free;
+-			}
+-			if (strncmp(oemtype, "list", 4) == 0 ||
+-					strncmp(oemtype, "help", 4) == 0) {
+-				ipmi_oem_print();
+-				rc = 0;
+-				goto out_free;
+-			}
+-			break;
+-		case 'g':
+-			/* backwards compatible oem hack */
+-			if (oemtype) {
+-				free(oemtype);
+-				oemtype = NULL;
+-			}
+-			oemtype = strdup("intelwv2");
+-			break;
+-		case 's':
+-			/* backwards compatible oem hack */
+-			if (oemtype) {
+-				free(oemtype);
+-				oemtype = NULL;
+-			}
+-			oemtype = strdup("supermicro");
+-			break;
+-		case 'P':
+-			if (password) {
+-				free(password);
+-				password = NULL;
+-			}
+-			password = strdup(optarg);
+-			if (password == NULL) {
+-				lprintf(LOG_ERR, "%s: malloc failure", progname);
+-				goto out_free;
+-			}
+-
+-			/* Prevent password snooping with ps */
+-			i = strlen(optarg);
+-			memset(optarg, 'X', i);
+-			break;
+-		case 'E':
+-			if ((tmp_env = getenv("IPMITOOL_PASSWORD"))) {
+-				if (password) {
+-					free(password);
+-					password = NULL;
++			case 'o':
++				if (oemtype) {
++					free(oemtype);
++					oemtype = NULL;
+ 				}
+-				password = strdup(tmp_env);
+-				if (password == NULL) {
++				oemtype = strdup(optarg);
++				if (oemtype == NULL) {
+ 					lprintf(LOG_ERR, "%s: malloc failure", progname);
+ 					goto out_free;
+ 				}
+-			}
+-			else if ((tmp_env = getenv("IPMI_PASSWORD"))) {
++				if (strncmp(oemtype, "list", 4) == 0 ||
++						strncmp(oemtype, "help", 4) == 0) {
++					ipmi_oem_print();
++					rc = 0;
++					goto out_free;
++				}
++				break;
++			case 'g':
++				/* backwards compatible oem hack */
++				if (oemtype) {
++					free(oemtype);
++					oemtype = NULL;
++				}
++				oemtype = strdup("intelwv2");
++				break;
++			case 's':
++				/* backwards compatible oem hack */
++				if (oemtype) {
++					free(oemtype);
++					oemtype = NULL;
++				}
++				oemtype = strdup("supermicro");
++				break;
++			case 'P':
+ 				if (password) {
+ 					free(password);
+ 					password = NULL;
+ 				}
+-				password = strdup(tmp_env);
++				password = strdup(optarg);
+ 				if (password == NULL) {
+ 					lprintf(LOG_ERR, "%s: malloc failure", progname);
+ 					goto out_free;
+ 				}
+-			}
+-			else {
+-				lprintf(LOG_WARN, "Unable to read password from environment");
+-			}
+-			break;
+-		case 'L':
+-			i = strlen(optarg);
+-			if ((i > 0) && (optarg[i-1] == '+')) {
+-				lookupbit = 0;
+-				optarg[i-1] = 0;
+-			}
+-			privlvl = str2val(optarg, ipmi_privlvl_vals);
+-			if (privlvl == 0xFF) {
+-				lprintf(LOG_WARN, "Invalid privilege level %s", optarg);
+-			}
+-			break;
+-		case 'A':
+-			authtype = str2val(optarg, ipmi_authtype_session_vals);
+-			break;
+-		case 't':
+-			if (str2uchar(optarg, &target_addr) != 0) {
+-				lprintf(LOG_ERR, "Invalid parameter given or out of range for '-t'.");
+-				rc = -1;
+-				goto out_free;
+-			}
+-			break;
+-		case 'b':
+-			if (str2uchar(optarg, &target_channel) != 0) {
+-				lprintf(LOG_ERR, "Invalid parameter given or out of range for '-b'.");
+-				rc = -1;
+-				goto out_free;
+-			}
+-			break;
+-		case 'T':
+-			if (str2uchar(optarg, &transit_addr) != 0) {
+-				lprintf(LOG_ERR, "Invalid parameter given or out of range for '-T'.");
+-				rc = -1;
+-				goto out_free;
+-			}
+-			break;
+-		case 'B':
+-			if (str2uchar(optarg, &transit_channel) != 0) {
+-				lprintf(LOG_ERR, "Invalid parameter given or out of range for '-B'.");
+-				rc = -1;
+-				goto out_free;
+-			}
+-			break;
+-		case 'l':
+-			if (str2uchar(optarg, &target_lun) != 0) {
+-				lprintf(LOG_ERR, "Invalid parameter given or out of range for '-l'.");
+-				rc = 1;
+-				goto out_free;
+-			}
+-			break;
+-		case 'm':
+-			if (str2uchar(optarg, &arg_addr) != 0) {
+-				lprintf(LOG_ERR, "Invalid parameter given or out of range for '-m'.");
+-				rc = -1;
+-				goto out_free;
+-			}
+-			break;
+-		case 'e':
+-			sol_escape_char = optarg[0];
+-			break;
+-		case 'O':
+-			if (seloem) {
+-				free(seloem);
+-				seloem = NULL;
+-			}
+-			seloem = strdup(optarg);
+-			if (seloem == NULL) {
+-				lprintf(LOG_ERR, "%s: malloc failure", progname);
+-				goto out_free;
+-			}
+-			break;
+-		case 'z':
+-			if (str2ushort(optarg, &my_long_packet_size) != 0) {
+-				lprintf(LOG_ERR, "Invalid parameter given or out of range for '-z'.");
+-				rc = -1;
+-				goto out_free;
+-			}
+-			break;
+-		/* Retry and Timeout */
+-		case 'R':
+-			if (str2int(optarg, &retry) != 0 || retry < 0) {
+-				lprintf(LOG_ERR, "Invalid parameter given or out of range for '-R'.");
+-				rc = -1;
++
++				/* Prevent password snooping with ps */
++				i = strlen(optarg);
++				memset(optarg, 'X', i);
++				break;
++			case 'E':
++				if ((tmp_env = getenv("IPMITOOL_PASSWORD"))) {
++					if (password) {
++						free(password);
++						password = NULL;
++					}
++					password = strdup(tmp_env);
++					if (password == NULL) {
++						lprintf(LOG_ERR, "%s: malloc failure", progname);
++						goto out_free;
++					}
++				}
++				else if ((tmp_env = getenv("IPMI_PASSWORD"))) {
++					if (password) {
++						free(password);
++						password = NULL;
++					}
++					password = strdup(tmp_env);
++					if (password == NULL) {
++						lprintf(LOG_ERR, "%s: malloc failure", progname);
++						goto out_free;
++					}
++				}
++				else {
++					lprintf(LOG_WARN, "Unable to read password from environment");
++				}
++				break;
++			case 'L':
++				i = strlen(optarg);
++				if ((i > 0) && (optarg[i-1] == '+')) {
++					lookupbit = 0;
++					optarg[i-1] = 0;
++				}
++				privlvl = str2val(optarg, ipmi_privlvl_vals);
++				if (privlvl == 0xFF) {
++					lprintf(LOG_WARN, "Invalid privilege level %s", optarg);
++				}
++				break;
++			case 'A':
++				authtype = str2val(optarg, ipmi_authtype_session_vals);
++				break;
++			case 't':
++				if (str2uchar(optarg, &target_addr) != 0) {
++					lprintf(LOG_ERR, "Invalid parameter given or out of range for '-t'.");
++					rc = -1;
++					goto out_free;
++				}
++				break;
++			case 'b':
++				if (str2uchar(optarg, &target_channel) != 0) {
++					lprintf(LOG_ERR, "Invalid parameter given or out of range for '-b'.");
++					rc = -1;
++					goto out_free;
++				}
++				break;
++			case 'T':
++				if (str2uchar(optarg, &transit_addr) != 0) {
++					lprintf(LOG_ERR, "Invalid parameter given or out of range for '-T'.");
++					rc = -1;
++					goto out_free;
++				}
++				break;
++			case 'B':
++				if (str2uchar(optarg, &transit_channel) != 0) {
++					lprintf(LOG_ERR, "Invalid parameter given or out of range for '-B'.");
++					rc = -1;
++					goto out_free;
++				}
++				break;
++			case 'l':
++				if (str2uchar(optarg, &target_lun) != 0) {
++					lprintf(LOG_ERR, "Invalid parameter given or out of range for '-l'.");
++					rc = 1;
++					goto out_free;
++				}
++				break;
++			case 'm':
++				if (str2uchar(optarg, &arg_addr) != 0) {
++					lprintf(LOG_ERR, "Invalid parameter given or out of range for '-m'.");
++					rc = -1;
++					goto out_free;
++				}
++				break;
++			case 'e':
++				sol_escape_char = optarg[0];
++				break;
++			case 'O':
++				if (seloem) {
++					free(seloem);
++					seloem = NULL;
++				}
++				seloem = strdup(optarg);
++				if (seloem == NULL) {
++					lprintf(LOG_ERR, "%s: malloc failure", progname);
++					goto out_free;
++				}
++				break;
++			case 'z':
++				if (str2ushort(optarg, &my_long_packet_size) != 0) {
++					lprintf(LOG_ERR, "Invalid parameter given or out of range for '-z'.");
++					rc = -1;
++					goto out_free;
++				}
++				break;
++			/* Retry and Timeout */
++			case 'R':
++				if (str2int(optarg, &retry) != 0 || retry < 0) {
++					lprintf(LOG_ERR, "Invalid parameter given or out of range for '-R'.");
++					rc = -1;
++					goto out_free;
++				}
++				break;
++			case 'N':
++				if (str2uint(optarg, &timeout) != 0) {
++					lprintf(LOG_ERR, "Invalid parameter given or out of range for '-N'.");
++					rc = -1;
++					goto out_free;
++				}
++				break;
++#endif
++			default:
++				ipmi_option_usage(progname, cmdlist, intflist);
+ 				goto out_free;
+ 			}
+-			break;
+-		case 'N':
+-			if (str2uint(optarg, &timeout) != 0) {
+-				lprintf(LOG_ERR, "Invalid parameter given or out of range for '-N'.");
+-				rc = -1;
+-				goto out_free;
++		}
++
++		/* support additional arguments from environment */
++		if (argecnt == 0) {
++			argestr = getenv("IPMITOOL_ARGV");
++			if (argestr != NULL) {
++				argecnt = 0;
++				arge = malloc(sizeof(char*)*(argecnt+2));
++				arge[argecnt++] = "ipmitool-env";
++				arge[argecnt] = NULL;
++				while ((arge[argecnt] = strsep(&argestr, " ")) != NULL) {
++					narge = realloc(arge, sizeof(char*)*(argecnt+2));
++					if (narge == NULL) {
++						free(arge);
++						lprintf(LOG_ERR, "Problem while resizing options from environment.\n");
++						rc = -1;
++						goto out_free;
++					} else {
++						arge = narge;
++					}
++					arge[++argecnt] = NULL;
++				}
+ 			}
+-			break;
+-#endif
+-		default:
+-			ipmi_option_usage(progname, cmdlist, intflist);
+-			goto out_free;
+ 		}
++
++	} while ((argecnt>1) && (arg != arge));
++	if (NULL != arge) {
++		optind = voptind;
+ 	}
+ 
+ 	/* check for command before doing anything */
