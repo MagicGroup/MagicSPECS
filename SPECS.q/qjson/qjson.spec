@@ -1,6 +1,6 @@
 Name:           qjson
 Version:        0.8.1
-Release:        7%{?dist}
+Release:        9%{?dist}
 Summary:        A qt-based library that maps JSON data to QVariant objects
 
 License:        GPLv2+
@@ -69,6 +69,12 @@ make test -C %{_target_platform}
 %{_libdir}/cmake/qjson/
 
 %changelog
+* Thu Oct 30 2014 Liu Di <liudidi@gmail.com> - 0.8.1-9
+- 为 Magic 3.0 重建
+
+* Thu Oct 30 2014 Liu Di <liudidi@gmail.com> - 0.8.1-8
+- 为 Magic 3.0 重建
+
 * Sun Aug 17 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.8.1-7
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
 

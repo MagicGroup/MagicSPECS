@@ -1,10 +1,12 @@
 Summary: An utility for finding files by name
+Summary(zh_CN.UTF-8): 按名称查找文件的工具
 Name: mlocate
-Version: 0.24
-Release: 3%{?dist}
+Version: 0.26
+Release: 1%{?dist}
 License: GPLv2
 URL: https://fedorahosted.org/mlocate/
 Group: Applications/System
+Group(zh_CN.UTF-8): 应用程序/系统
 Source0: https://fedorahosted.org/releases/m/l/mlocate/mlocate-%{version}.tar.xz
 Source1: updatedb.conf
 Source2: mlocate.cron
@@ -21,6 +23,10 @@ The 'm' stands for "merging": updatedb reuses the existing database to avoid
 rereading most of the file system, which makes updatedb faster and does not
 trash the system caches as much as traditional locate implementations.
 
+%description -l zh_CN.UTF-8
+mlocate 是一个 locate/updatedb 实现，它把所有存在的文件保存在一个数据库并
+允许你按名称查找它们。
+
 %prep
 %setup -q
 
@@ -36,7 +42,7 @@ install -p -m 644 %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/updatedb.conf
 install -p -m 755 %{SOURCE2} $RPM_BUILD_ROOT/etc/cron.daily/mlocate.cron
 # %%ghost semantics is so stupid
 touch $RPM_BUILD_ROOT%{_localstatedir}/lib/mlocate/mlocate.db
-
+magic_rpm_clean.sh
 %find_lang mlocate
 
 %clean
@@ -63,6 +69,9 @@ fi
 %ghost %{_localstatedir}/lib/mlocate/mlocate.db
 
 %changelog
+* Fri Oct 17 2014 Liu Di <liudidi@gmail.com> - 0.26-1
+- 更新到 0.26
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 0.24-3
 - 为 Magic 3.0 重建
 

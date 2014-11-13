@@ -1,11 +1,13 @@
-
+#这个做自动更新比较困难
 Summary: A text-based modem control and terminal emulation program
+Summary(zh_CN.UTF-8): 基于文本的调制解调器控制和虚拟终端程序
 Name: minicom
 Version: 2.7
-Release: 3%{?dist}
+Release: 4%{?dist}
 URL: http://alioth.debian.org/projects/minicom/
 License: GPL+ and GPLv2+ and GPLv2 and LGPLv2+ Public Domain and Copyright only
 Group: Applications/Communications
+Group(zh_CN.UTF-8): 应用程序/通信
 ExcludeArch: s390 s390x
 
 Source0: https://alioth.debian.org/frs/download.php/file/3977/minicom-2.7.tar.gz
@@ -20,6 +22,8 @@ program somewhat similar to MSDOS Telix. Minicom includes a dialing
 directory, full ANSI and VT100 emulation, an (external) scripting
 language, and other features.
 
+%description -l zh_CN.UTF-8
+基于文本的调制解调器控制和虚拟终端程序。
 
 %prep
 %setup -q
@@ -38,7 +42,7 @@ make %{?_smp_mflags}
 %install
 make DESTDIR=%{buildroot} install
 mkdir -p %{buildroot}%{_sysconfdir}
-
+magic_rpm_clean.sh
 %find_lang %{name}
 
 
@@ -53,6 +57,9 @@ mkdir -p %{buildroot}%{_sysconfdir}
 
 
 %changelog
+* Wed Oct 15 2014 Liu Di <liudidi@gmail.com> - 2.7-4
+- 为 Magic 3.0 重建
+
 * Sun Aug 17 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.7-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
 

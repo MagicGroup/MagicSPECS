@@ -2,11 +2,13 @@
 
 Name:           mingw-binutils
 Version:        2.24
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Cross-compiled version of binutils for Win32 and Win64 environments
+Summary(zh_CN.UTF-8): 交叉编译 Win32 和 Win64 程序用的二进制工具
 
 License:        GPLv2+ and LGPLv2+ and GPLv3+ and LGPLv3+
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 
 URL:            http://www.gnu.org/software/binutils/
 Source0:        http://ftp.gnu.org/gnu/binutils/binutils-%{version}.tar.bz2
@@ -32,15 +34,24 @@ Patch0:         bfd_doc.txt
 Cross compiled binutils (utilities like 'strip', 'as', 'ld') which
 understand Windows executables and DLLs.
 
+%description -l zh_CN.UTF-8
+交叉编译 Win32 和 Win64 程序用的二进制工具，如 strip, as, ld 等。
+
 %package -n mingw-binutils-generic
 Summary:        Utilities which are needed for both the Win32 and Win64 toolchains
+
+Summary(zh_CN.UTF-8): Win32 和 Win64 工具链都需要的工具
 
 %description -n mingw-binutils-generic
 Utilities (like strip and objdump) which are needed for
 both the Win32 and Win64 toolchains
 
+%description -n mingw-binutils-generic -l zh_CN.UTF-8
+Win32 和 Win64 工具链都需要的工具。
+
 %package -n mingw32-binutils
 Summary:        Cross-compiled version of binutils for the Win32 environment
+Summary(zh_CN.UTF-8): Win32 环境需要的交叉编译工具
 Requires:       mingw-binutils-generic = %{version}-%{release}
 
 # NB: This must be left in.
@@ -50,8 +61,12 @@ Requires:       mingw32-filesystem >= 95
 Cross compiled binutils (utilities like 'strip', 'as', 'ld') which
 understand Windows executables and DLLs.
 
+%description -n mingw32-binutils -l zh_CN.UTF-8
+Win32 环境需要的交叉编译工具。
+
 %package -n mingw64-binutils
 Summary:        Cross-compiled version of binutils for the Win64 environment
+Summary(zh_CN.UTF-8): Win64 环境需要的交叉编译工具
 Requires:       mingw-binutils-generic = %{version}-%{release}
 
 # NB: This must be left in.
@@ -61,6 +76,8 @@ Requires:       mingw64-filesystem >= 95
 Cross compiled binutils (utilities like 'strip', 'as', 'ld') which
 understand Windows executables and DLLs.
 
+%description -n mingw64-binutils -l zh_CN.UTF-8
+Win64 环境需要的交叉编译工具。
 
 %prep
 %setup -q -n binutils-%{version}
@@ -174,7 +191,7 @@ mv $RPM_BUILD_ROOT/multilib%{_bindir}/%{mingw64_strip} $RPM_BUILD_ROOT%{_bindir}
 mv $RPM_BUILD_ROOT/multilib%{_bindir}/%{mingw64_objdump} $RPM_BUILD_ROOT%{_bindir}/%{mingw_objdump}
 mv $RPM_BUILD_ROOT/multilib%{_bindir}/%{mingw64_objcopy} $RPM_BUILD_ROOT%{_bindir}/%{mingw_objcopy}
 rm -rf $RPM_BUILD_ROOT/multilib
-
+magic_rpm_clean.sh
 
 %files -n mingw-binutils-generic
 %doc COPYING
@@ -251,6 +268,9 @@ rm -rf $RPM_BUILD_ROOT/multilib
 
 
 %changelog
+* Sat Oct 04 2014 Liu Di <liudidi@gmail.com> - 2.24-2
+- 为 Magic 3.0 重建
+
 * Sat Jan 11 2014 Erik van Pienbroek <epienbro@fedoraproject.org> - 2.24-1
 - Update to 2.24
 

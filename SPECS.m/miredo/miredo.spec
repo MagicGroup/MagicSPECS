@@ -10,10 +10,12 @@
 
 Name:           miredo
 Version:        1.2.6
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Tunneling of IPv6 over UDP through NATs
+Summary(zh_CN.UTF-8): 在 UDP 协议上通过地址转换使用 IPv6 隧道
 
 Group:          Applications/Internet
+Group(zh_CN.UTF-8): 应用程序/互联网
 License:        GPLv2+
 URL:            http://www.remlab.net/miredo/
 Source0:        http://www.remlab.net/files/miredo/miredo-%{version}.tar.xz
@@ -39,9 +41,14 @@ It is meant to provide IPv6 connectivity to hosts behind NAT
 devices, most of which do not support IPv6, and not even
 IPv6-over-IPv4 (including 6to4).
 
+%description -l zh_CN.UTF-8
+在 UDP 协议上通过地址转换使用 IPv6 隧道。
+
 %package libs
 Summary:        Tunneling of IPv6 over UDP through NATs
+Summary(zh_CN.UTF-8): 在 UDP 协议上通过地址转换使用 IPv6 隧道
 Group:          Applications/Internet 
+Group(zh_CN.UTF-8): 应用程序/互联网
 Requires(post):   /sbin/ldconfig
 Requires(postun): /sbin/ldconfig
 Requires(pre):    shadow-utils
@@ -57,10 +64,16 @@ devices, most of which do not support IPv6, and not even
 IPv6-over-IPv4 (including 6to4).
 This libs package provides the files necessary for both server and client.
 
+%description libs -l zh_CN.UTF-8
+在 UDP 协议上通过地址转换使用 IPv6 隧道。
+这是服务器和客户端都需要的库。
+
 
 %package devel
 Summary:        Header files, libraries and development documentation for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       %{name}-libs = %{version}-%{release}
 
 %description devel
@@ -68,9 +81,14 @@ This package contains the header files, development libraries and development
 documentation for %{name}. If you would like to develop programs using %{name},
 you will need to install %{name}-devel.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
 %package server
 Summary:        Tunneling server for IPv6 over UDP through NATs
+Summary(zh_CN.UTF-8): %{name} 的服务器端
 Group:          Applications/Internet
+Group(zh_CN.UTF-8): 应用程序/互联网
 Requires:       %{name}-libs = %{version}-%{release}
 Requires(post): systemd-units
 Requires(preun): systemd-units
@@ -82,9 +100,14 @@ Miredo is an implementation of the "Teredo: Tunneling IPv6 over UDP
 through NATs" proposed Internet standard (RFC4380). This offers the server 
 part of miredo. Most people will need only the client part.
 
+%description server -l zh_CN.UTF-8
+%{name} 的服务器端。
+
 %package client
 Summary:        Tunneling client for IPv6 over UDP through NATs
+Summary(zh_CN.UTF-8): %{name} 的客户端
 Group:          Applications/Internet
+Group(zh_CN.UTF-8): 应用程序/互联网
 Requires:       %{name}-libs = %{version}-%{release}
 Requires(post): systemd-units
 Requires(preun): systemd-units
@@ -94,11 +117,13 @@ Requires(post): systemd-sysv
 Provides:       %{name} = %{version}-%{release}
 Obsoletes:      %{name} <= 1.1.6
 
-
 %description client
 Miredo is an implementation of the "Teredo: Tunneling IPv6 over UDP
 through NATs" proposed Internet standard (RFC4380). This offers the client
 part of miredo. Most people only need the client part.
+
+%description client -l zh_CN.UTF-8
+%{name} 的客户端。
 
 %prep
 %setup -q
@@ -125,6 +150,7 @@ make %{?_smp_mflags}
 %install
 rm -rf %{buildroot}
 make install DESTDIR=%{buildroot} INSTALL='install -p'
+magic_rpm_clean.sh
 %find_lang %{name}
 mkdir rpmdocs
 mv %{buildroot}%{_docdir}/miredo/examples rpmdocs/
@@ -252,6 +278,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Oct 15 2014 Liu Di <liudidi@gmail.com> - 1.2.6-3
+- 为 Magic 3.0 重建
+
 * Mon Apr 14 2014 Liu Di <liudidi@gmail.com> - 1.2.6-2
 - 为 Magic 3.0 重建
 

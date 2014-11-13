@@ -1,6 +1,6 @@
 Name:           qt-gstreamer
 Version:        1.2.0
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        C++ bindings for GStreamer with a Qt-style API
 License:        LGPLv2+
 URL:            http://gstreamer.freedesktop.org/modules/qt-gstreamer.html
@@ -135,6 +135,9 @@ make install/fast DESTDIR=%{buildroot} -C %{_target_platform}-qt5
 
 
 %changelog
+* Fri Oct 31 2014 Liu Di <liudidi@gmail.com> - 1.2.0-3
+- 为 Magic 3.0 重建
+
 * Sun Aug 17 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.2.0-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
 

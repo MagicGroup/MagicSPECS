@@ -8,7 +8,7 @@ Summary: A framework for searching and managing metadata
 Summary(zh_CN.UTF-8): 查找和管理元数据的框架
 Group: System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
-Version: 4.13.3
+Version: 4.14.2
 Release: 1%{?dist}
 License: LGPL
 URL: http://extragear.kde.org/apps/kipi
@@ -142,6 +142,7 @@ fi
 %{_kde4_libdir}/libbaloofiles.so.4*
 %{_kde4_libdir}/libbaloopim.so.4*
 %{_kde4_libdir}/libbalooxapian.so.4*
+%{_kde4_libdir}/libbalooqueryparser.so.4*
 
 %files devel
 %{_kde4_includedir}/baloo/
@@ -149,9 +150,13 @@ fi
 %{_kde4_libdir}/libbaloofiles.so
 %{_kde4_libdir}/libbaloopim.so
 %{_kde4_libdir}/libbalooxapian.so
+%{_kde4_libdir}/libbalooqueryparser.so
 %{_kde4_libdir}/cmake/Baloo/
 
 %changelog
+* Thu Oct 23 2014 Liu Di <liudidi@gmail.com> - 4.14.2-1
+- 更新到 4.14.2
+
 * Fri Jul 18 2014 Liu Di <liudidi@gmail.com> - 4.13.3-1
 - 更新到 4.13.3
 

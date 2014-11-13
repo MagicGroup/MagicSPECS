@@ -1,0 +1,12 @@
+diff -ur gst-plugins-bad-0.10.23.orig/ext/modplug/gstmodplug.cc gst-plugins-bad-0.10.23/ext/modplug/gstmodplug.cc
+--- gst-plugins-bad-0.10.23.orig/ext/modplug/gstmodplug.cc	2014-10-17 11:39:01.412542199 +0000
++++ gst-plugins-bad-0.10.23/ext/modplug/gstmodplug.cc	2014-10-17 11:39:14.830541855 +0000
+@@ -50,7 +50,7 @@
+ #define WORDS_BIGENDIAN 0
+ #endif
+ 
+-#include <stdafx.h>
++#include <libmodplug/stdafx.h>
+ #include <libmodplug/sndfile.h>
+ 
+ #include "gstmodplug.h"

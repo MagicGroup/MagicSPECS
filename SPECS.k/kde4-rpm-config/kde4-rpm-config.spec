@@ -22,7 +22,7 @@
 # 是否使用 gcc 的位置无关型可执行文件特性(Position Independent Executables)
 %define enable_fpie OFF
 
-%define rversion 4.13.3
+%define rversion 4.14.2
 
 # 定义 kdehome 环境变量的 cmake 编译参数
 %define KDE_DEFAULT_HOME .kde4
@@ -281,6 +281,9 @@ rm -rf $RPM_BUILD_ROOT %{name}.list
 %{rpm_macros_dir}/macros.kde4
 
 %changelog
+* Tue Oct 21 2014 Liu Di <liudidi@gmail.com> - 4.14.2-2
+- 更新到 4.14.2
+
 * Fri Aug 22 2014 Liu Di <liudidi@gmail.com> - 4.13.3-2
 - 为 Magic 3.0 重建
 
