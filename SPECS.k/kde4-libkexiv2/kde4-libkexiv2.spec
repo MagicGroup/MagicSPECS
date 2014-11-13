@@ -3,14 +3,14 @@
 
 %define kde4_enable_final_bool ON
 
-%define libkexiv2_ver 2.3.1
+%define libkexiv2_ver 2.3.2
 
 Name: kde4-%{real_name}
 Summary: An Exiv2 wrapper library
 Summary(zh_CN.UTF-8): 一个 Exiv2 的绑定库
 Group: System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
-Version: 4.13.3
+Version: 4.14.2
 Release: 1%{?dist}
 License: LGPL
 URL: http://extragear.kde.org/apps/kipi
@@ -86,6 +86,9 @@ rm -rf %{buildroot} %{_builddir}/%{buildsubdir}
 %{kde4_libdir}/cmake/libkexiv2-%{libkexiv2_ver}/*.cmake
 
 %changelog
+* Thu Oct 23 2014 Liu Di <liudidi@gmail.com> - 4.14.2-1
+- 更新到 4.14.2
+
 * Fri Jul 18 2014 Liu Di <liudidi@gmail.com> - 4.13.3-1
 - 更新到 4.13.3
 

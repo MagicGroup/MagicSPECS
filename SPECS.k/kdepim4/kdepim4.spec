@@ -17,7 +17,7 @@ License: LGPL v2 or later
 Group: User Interface/Desktops
 Group(zh_CN.UTF-8): 用户界面/桌面
 URL: http://www.kde.org/
-Version: 4.13.3
+Version: 4.14.2
 Release: 1%{?dist}
 Source0: http://download.kde.org/stable/%{version}/src/%{real_name}-%{version}.tar.xz
 
@@ -479,7 +479,6 @@ rm -rf %{buildroot} %{_builddir}/%{buildsubdir}
 #%{kde4_libdir}/strigi/strigiea_ctg.so
 %{kde4_datadir}/applications/kde4/*.desktop
 %{kde4_appsdir}/akregator_sharemicroblog_plugin/akregator_sharemicroblog_plugin.rc
-#%{kde4_appsdir}/blogilo/TextEditorInitialHtml
 %{kde4_appsdir}/desktoptheme/default/widgets/stickynote.svgz
 #%{kde4_appsdir}/kaddressbook-mobile/*
 %{kde4_appsdir}/kconf_update/knode.upd
@@ -748,6 +747,14 @@ rm -rf %{buildroot} %{_builddir}/%{buildsubdir}
 %{kde4_datadir}/apps/kconf_update/migrate-kmail-filters.pl
 %{kde4_auth_policy_filesdir}/org.kde.kalarmrtcwake.policy
 
+#可能不是这个包的
+%{kde4_bindir}/akonadi_followupreminder_agent
+%{kde4_plugindir}/imports/org/kde/pim/mail/*
+%{kde4_libdir}/libfollowupreminder.so.4*
+%{kde4_datadir}/akonadi/agents/followupreminder.desktop
+%{kde4_appsdir}/akonadi_followupreminder_agent/akonadi_followupreminder_agent.notifyrc
+%{kde4_htmldir}/en/akonadi_followupreminder_agent/*
+
 %files -n %{name}-knode
 %defattr(-,root,root)
 %{kde4_bindir}/knode
@@ -951,6 +958,7 @@ rm -rf %{buildroot} %{_builddir}/%{buildsubdir}
 #%{kde4_libdir}/strigi/strigiea_vcf.so
 #%{kde4_libdir}/strigi/strigiea_ics.so
 
+%if 0
 %files -n %{name}-blogilo
 %defattr(-,root,root)
 %{kde4_bindir}/blogilo
@@ -964,6 +972,7 @@ rm -rf %{buildroot} %{_builddir}/%{buildsubdir}
 %{kde4_iconsdir}/hicolor/*/actions/remove-link.png
 %{kde4_iconsdir}/hicolor/*/actions/upload-media.png
 %doc %lang(en) %{kde4_htmldir}/en/blogilo/*
+%endif
 
 %files -n %{name}-akonadi
 %defattr(-,root,root)
@@ -991,6 +1000,9 @@ rm -rf %{buildroot} %{_builddir}/%{buildsubdir}
 
 
 %changelog
+* Fri Oct 24 2014 Liu Di <liudidi@gmail.com> - 4.14.2-1
+- 更新到 4.14.2
+
 * Fri Jul 18 2014 Liu Di <liudidi@gmail.com> - 4.13.3-1
 - 更新到 4.13.3
 

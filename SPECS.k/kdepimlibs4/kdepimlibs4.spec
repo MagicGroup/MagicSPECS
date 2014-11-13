@@ -10,7 +10,7 @@ License: LGPL v2 or later
 Group: System/GUI/KDE
 Group(zh_CN.UTF-8): 系统/GUI/KDE
 URL: http://www.kde.org/
-Version: 4.13.3
+Version: 4.14.2
 Release: 1%{?dist}
 %define rversion %version
 Source0: http://download.kde.org/stable/%{rversion}/src/%{real_name}-%{rversion}.tar.xz
@@ -27,7 +27,7 @@ BuildRequires: gpgme-devel
 BuildRequires: libkdelibs4-devel >= %{version}
 BuildRequires: qt4-devel >= 4.4.3
 BuildRequires: libXpm-devel libXtst-devel
-BuildRequires: akonadi-devel >= 1.8.1
+BuildRequires: akonadi-devel >= 1.13.0
 BuildRequires: automoc4 >= 0.9.87
 BuildRequires: libical-devel >= 0.33
 BuildRequires: prison-devel >= 1.0
@@ -227,6 +227,7 @@ rm -rf %{buildroot} %{_builddir}/%{buildsubdir}
 %{kde4_appsdir}/akonadi
 %{kde4_appsdir}/akonadi-kde
 %{kde4_bindir}/akonadi2xml
+%{kde4_bindir}/akonaditest
 %{kde4_libdir}/libakonadi-xml.so.*
 %{kde4_plugindir}/kcm_mailtransport.so
 %{kde4_appsdir}/kconf_update/mailtransports.upd
@@ -234,6 +235,7 @@ rm -rf %{buildroot} %{_builddir}/%{buildsubdir}
 %{kde4_servicesdir}/kcm_mailtransport.desktop
 %{kde4_kcfgdir}/mailtransport.kcfg
 %{kde4_datadir}/mime/packages/x-vnd.akonadi.socialfeeditem.xml
+%{kde4_datadir}/akonadi/agents/knutresource.desktop
 
 %files -n libkdepimlibs4-devel
 %defattr(-,root,root)
@@ -301,6 +303,9 @@ rm -rf %{buildroot} %{_builddir}/%{buildsubdir}
 %endif
 
 %changelog
+* Wed Oct 22 2014 Liu Di <liudidi@gmail.com> - 4.14.2-1
+- 更新到 4.14.2
+
 * Fri Jul 18 2014 Liu Di <liudidi@gmail.com> - 4.13.3-1
 - 更新到 4.13.3
 

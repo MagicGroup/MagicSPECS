@@ -10,9 +10,11 @@ License: GPL v2 or Later
 Group: Applications/Internet
 Group(zh_CN.UTF-8): 应用程序/互联网
 URL: http://ktorrent.org
-Version: 4.13.3
+Version: 4.14.2
 Release: 1%{?dist}
 Source0: http://download.kde.org/stable/%{version}/src/%{real_name}-%{version}.tar.xz
+
+Patch0: libkcddb-4.14.2-fixxmlpath.patch
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
@@ -41,6 +43,7 @@ Contains the development files.
 
 %prep
 %setup -q -n %{real_name}-%{version}
+%patch0 -p1
 
 %build
 mkdir build
@@ -78,6 +81,9 @@ rm -rf %{buildroot} %{_builddir}/%{buildsubdir}
 %{kde4_libdir}/cmake/*
 
 %changelog
+* Thu Oct 23 2014 Liu Di <liudidi@gmail.com> - 4.14.2-1
+- 更新到 4.14.2
+
 * Fri Jul 18 2014 Liu Di <liudidi@gmail.com> - 4.13.3-1
 - 更新到 4.13.3
 

@@ -8,7 +8,7 @@ Summary: Common plugin infrastructure for KDE image applications
 Summary(zh_CN.UTF-8): KDE 图像程序的公共插件基础构架
 Group: System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
-Version: 4.13.3
+Version: 4.14.2
 Release: 1%{?dist}
 License: LGPL
 URL: http://extragear.kde.org/apps/kipi
@@ -84,6 +84,9 @@ rm -rf %{buildroot} %{_builddir}/%{buildsubdir}
 %{_libdir}/pkgconfig/*.pc
 
 %changelog
+* Wed Oct 22 2014 Liu Di <liudidi@gmail.com> - 4.14.2-1
+- 更新到 4.14.2
+
 * Fri Jul 18 2014 Liu Di <liudidi@gmail.com> - 4.13.3-1
 - 更新到 4.13.3
 

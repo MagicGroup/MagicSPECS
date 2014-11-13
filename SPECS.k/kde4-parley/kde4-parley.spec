@@ -1,14 +1,14 @@
 #define svn_number rc1
 %define real_name parley
 
-%define kde4_enable_final_bool ON
+%define kde4_enable_final_bool OFF
 
 Name: kde4-%{real_name}
 Summary: Vocabulary Trainer
 Summary(zh_CN.UTF-8): 词汇训练
 Group: User Interface/Desktops
 Group(zh_CN.UTF-8): 用户界面/桌面
-Version: 4.13.3
+Version: 4.14.2
 Release: 1%{?dist}
 License: LGPL
 URL: http://extragear.kde.org/apps/kipi
@@ -62,8 +62,12 @@ rm -rf %{buildroot} %{_builddir}/%{buildsubdir}
 %{kde4_iconsdir}/*
 %{kde4_kcfgdir}/*
 %{kde4_configdir}/*
+%{kde4_datadir}/appdata/parley.appdata.xml
 
 %changelog
+* Fri Oct 31 2014 Liu Di <liudidi@gmail.com> - 4.14.2-1
+- 更新到 4.14.2
+
 * Fri Jul 18 2014 Liu Di <liudidi@gmail.com> - 4.13.3-1
 - 更新到 4.13.3
 

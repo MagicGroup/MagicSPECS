@@ -1,0 +1,72 @@
+diff -ur mjpegtools-2.1.0/lavtools/jpeg2yuv.c mjpegtools-2.1.0.new/lavtools/jpeg2yuv.c
+--- mjpegtools-2.1.0/lavtools/jpeg2yuv.c	2008-01-06 03:28:00.000000000 +0000
++++ mjpegtools-2.1.0.new/lavtools/jpeg2yuv.c	2014-10-16 11:35:07.745762568 +0000
+@@ -451,7 +451,7 @@
+            
+            if (firstjpeg) {
+                p = firstjpeg;
+-               sprintf(jpegname, firstjpeg);
++               sprintf(jpegname, "%s", firstjpeg);
+                firstjpeg = NULL;
+            }
+            else {
+diff -ur mjpegtools-2.1.0/lavtools/lav_io.c mjpegtools-2.1.0.new/lavtools/lav_io.c
+--- mjpegtools-2.1.0/lavtools/lav_io.c	2007-09-09 22:16:53.000000000 +0000
++++ mjpegtools-2.1.0.new/lavtools/lav_io.c	2014-10-16 11:28:36.876772585 +0000
+@@ -926,7 +926,7 @@
+             strcat(errmsg, ", quicktime");
+ #endif
+ 	    strcat(errmsg, ").\n");
+-            fprintf(stderr, errmsg);
++            fprintf(stderr, "%s", errmsg);
+ 	    free(lav_fd);
+ 	    internal_error = ERROR_FORMAT; /* Format not recognized */
+ 	    return 0;
+diff -ur mjpegtools-2.1.0/lavtools/lavtrans.c mjpegtools-2.1.0.new/lavtools/lavtrans.c
+--- mjpegtools-2.1.0/lavtools/lavtrans.c	2005-10-02 17:01:30.000000000 +0000
++++ mjpegtools-2.1.0.new/lavtools/lavtrans.c	2014-10-16 11:29:24.781771358 +0000
+@@ -275,7 +275,7 @@
+    if (process_image_frame != -1)
+    {
+       nv = el_get_video_frame(vbuff, process_image_frame, &el);
+-      sprintf(imgfname,outfile);
++      sprintf(imgfname,"%s",outfile);
+       imgfd = fopen(imgfname,"wb");
+       if (imgfd==0) system_error("opening image file","fopen");
+       res = fwrite(vbuff,nv,1,imgfd);
+diff -ur mjpegtools-2.1.0/mplex/main.cpp mjpegtools-2.1.0.new/mplex/main.cpp
+--- mjpegtools-2.1.0/mplex/main.cpp	2011-12-11 08:53:59.000000000 +0000
++++ mjpegtools-2.1.0.new/mplex/main.cpp	2014-10-17 09:55:49.643700890 +0000
+@@ -614,7 +614,7 @@
+                 if( flag_table[flag].longname != 0 )
+                     message += sep;
+             }
+-            mjpeg_error( message.c_str() );
++            mjpeg_error( message.c_str(), "%s" );
+             return false;
+         }
+ 
+diff -ur mjpegtools-2.1.0/yuvfilters/yuvfilters.h mjpegtools-2.1.0.new/yuvfilters/yuvfilters.h
+--- mjpegtools-2.1.0/yuvfilters/yuvfilters.h	2005-02-27 22:46:56.000000000 +0000
++++ mjpegtools-2.1.0.new/yuvfilters/yuvfilters.h	2014-10-17 10:01:24.749692301 +0000
+@@ -35,7 +35,7 @@
+ #ifdef MJPEGTOOLS
+ # define perror(MSG) mjpeg_error("%s: %s", MSG, strerror(errno))
+ # define WERROR(MSG) mjpeg_error(MSG)
+-# define WERRORL(MSG) mjpeg_error(MSG)
++# define WERRORL(MSG) mjpeg_error(MSG, "%s")
+ # define WWARN(MSG) mjpeg_warn(MSG)
+ #else
+ # define WERROR(MSG) write(2, MSG "\n", sizeof MSG)
+diff -ur mjpegtools-2.1.0/yuvfilters/yuvkineco.c mjpegtools-2.1.0.new/yuvfilters/yuvkineco.c
+--- mjpegtools-2.1.0/yuvfilters/yuvkineco.c	2005-12-05 05:06:06.000000000 +0000
++++ mjpegtools-2.1.0.new/yuvfilters/yuvkineco.c	2014-10-17 09:58:28.989696806 +0000
+@@ -48,7 +48,7 @@
+     } else {
+ #ifdef MJPEGTOOLS
+       buf[n] = '\0';
+-      mjpeg_debug(buf);
++      mjpeg_debug(buf, "%s");
+ #else
+       fputs(buf, stderr);
+ #endif

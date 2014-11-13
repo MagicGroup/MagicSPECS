@@ -1,9 +1,10 @@
-%define upstream_version 20110218
+%define upstream_version 20120614
 
 Summary: Mobile broadband provider database
+Summary(zh_CN.UTF-8): 移动宽带提供商信息
 Name: mobile-broadband-provider-info
 Version: 1.%{upstream_version}
-Release: 3%{?dist}
+Release: 4%{?dist}
 #
 # Source from git://git.gnome.org/mobile-broadband-provider-info
 # tarball built with:
@@ -11,9 +12,10 @@ Release: 3%{?dist}
 #    make distcheck
 #
 #Source: mobile-broadband-provider-info-%{upstream_version}.tar.bz2
-Source: http://ftp.gnome.org/pub/gnome/sources/mobile-broadband-provider-info/%{upstream_version}/mobile-broadband-provider-info-%{upstream_version}.tar.bz2
+Source: http://ftp.gnome.org/pub/gnome/sources/mobile-broadband-provider-info/%{upstream_version}/mobile-broadband-provider-info-%{upstream_version}.tar.xz
 License: Public Domain
 Group: System Environment/Base
+Group(zh_CN.UTF-8): 系统环境/基本
 
 BuildArch: noarch
 URL: http://live.gnome.org/NetworkManager/MobileBroadband/ServiceProviders
@@ -24,14 +26,22 @@ BuildRequires: libxml2
 The mobile-broadband-provider-info package contains listings of mobile
 broadband (3G) providers and associated network and plan information.
 
+%description -l zh_CN.UTF-8
+移动宽带（3G）提供商信息。
+
 %package devel
 Summary: Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: %{name} = %{version}-%{release}
 
 %description devel
 The %{name}-devel package contains files necessary for
 developing developing applications that use %{name}.
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q -n %{name}-%{upstream_version}
@@ -46,6 +56,7 @@ make check
 %install
 rm -rf $RPM_BUILD_ROOT
 make install DESTDIR=$RPM_BUILD_ROOT
+magic_rpm_clean.sh
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -61,6 +72,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/pkgconfig/%{name}.pc
 
 %changelog
+* Fri Oct 17 2014 Liu Di <liudidi@gmail.com> - 1.20120614-4
+- 为 Magic 3.0 重建
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 1.20110218-3
 - 为 Magic 3.0 重建
 

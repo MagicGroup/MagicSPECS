@@ -1,9 +1,10 @@
 %define _notuse_dependency_tracking %{nil}
 
 Name:		mldonkey
-Version:	3.1.3
-Release:	1%{?dist}
+Version: 3.1.5
+Release: 1%{?dist}
 Summary:	Client for several P2P networks
+Summary(zh_CN.UTF-8): P2P 网络的客户端
 License:	GPLv2+
 Source0:	http://downloads.sourceforge.net/%{name}/%{name}-%{version}.tar.bz2
 Source1:	mldonkey-gui.desktop
@@ -16,6 +17,7 @@ Patch2:		mldonkey-0002-Fix-DSO-linking.patch
 Patch3:		mldonkey-3.0.3-gcc47.patch
 URL:		http://mldonkey.sourceforge.net
 Group:		Applications/Internet
+Group(zh_CN.UTF-8): 应用程序/互联网
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 %if 0%{?el5}
 BuildRequires:	ocaml >= 3.09.3
@@ -72,11 +74,16 @@ It can also access other peer-to-peer networks:
 - FileTP (wget-clone)
 - DC++
 
+%description -l zh_CN.UTF-8
+P2P 网络的客户端，支持 edonkey 协议和 BitTorrent, Fasttrack, FileTP, DC++ 等。
+
 
 %if 0%{?fedora}%{?el6}
 %package gui
 Summary:	Graphical frontend for mldonkey based on GTK
+Summary(zh_CN.UTF-8): 基于 GTK 的 mldonkey 的图形界面
 Group:		Applications/Internet
+Group(zh_CN.UTF-8): 应用程序/互联网
 Requires:	hicolor-icon-theme
 # TODO requirement for mldonkey_previewer
 # Requires:	mplayer
@@ -87,12 +94,17 @@ The GTK interface for mldonkey provides a convenient way of managing
 all mldonkey operations. It gives details about conected servers,
 downloaded files, friends and lets one search for files in a pleasing
 way.
+
+%description gui -l zh_CN.UTF-8
+基于 GTK 的 mldonkey 的图形界面。
 %endif
 
 
 %package server
 Summary:	Enables mldonkey as a system daemon
+Summary(zh_CN.UTF-8): 使 mldonkey 做为系统服务启动
 Group:		System Environment/Daemons
+Group(zh_CN.UTF-8): 系统环境/服务
 Requires:	%{name} = %{version}-%{release}
 # Necessary for mldonkey_df_monitor.sh
 Requires:	mailx
@@ -116,10 +128,14 @@ NOTE: If you are using a password for your mldonkey, you need to specify
 it in your %{_sysconfdir}/sysconfig/mldonkey, because mldonkey now stores
 it encrypted.
 
+%description server -l zh_CN.UTF-8
+使 mldonkey 做为系统服务启动。
 
 %package -n konqueror-mldonkey-ed2k-support
 Summary:	Easy way to download a ed2k-link from Konqueror
+Summary(zh_CN.UTF-8): 在 Konqueror 中简单下载 ed2k 链接
 Group:		User Interface/Desktops
+Group(zh_CN.UTF-8): 用户界面/桌面
 Requires:	perl(LWP::UserAgent)
 Requires:	kdelibs4
 
@@ -130,6 +146,8 @@ This package contains tool which gives you an easy way to add an ed2k-link
 with a single click to your mldonkey download queue.
 You need to edit %{_sysconfdir}/sysconfig/mldonkey_submit
 
+%description -n konqueror-mldonkey-ed2k-support -l zh_CN.UTF-8
+在 Konqueror 中简单下载 ed2k 链接。
 
 #%package -n mozilla-mldonkey-ed2k-support
 #Summary:	Easy way to download a ed2k-link from Mozilla/Firefox
@@ -267,7 +285,7 @@ install -D -p -m 644 distrib/ed2k_submit/ed2k.protocol  $RPM_BUILD_ROOT%{_datadi
 # ed2k for mozilla support
 # TODO should we unpack it into FF's plugins directory?
 #install -D -p -m 644 distrib/ed2k_mozilla/mldonkey_protocol_handler-2.2.xpi $RPM_BUILD_ROOT%{_datadir}/%{name}/mldonkey_protocol_handler-2.2.xpi
-
+magic_rpm_clean.sh
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -392,6 +410,9 @@ fi
 
 
 %changelog
+* Fri Oct 17 2014 Liu Di <liudidi@gmail.com> - 3.1.5-1
+- 更新到 3.1.5
+
 * Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.0.3-6
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 

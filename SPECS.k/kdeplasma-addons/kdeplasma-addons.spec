@@ -12,7 +12,7 @@ License: LGPL v2 or later
 Group: User Interface/Desktops
 Group(zh_CN.UTF-8): 用户界面/桌面
 URL: http://www.kde.org/
-Version: 4.13.3
+Version: 4.14.2
 Release: 1%{?dist}
 Source0: http://download.kde.org/stable/%{version}/src/%{real_name}-%{version}.tar.xz
 
@@ -1128,6 +1128,7 @@ rm -rf %{buildroot} %{_builddir}/%{buildsubdir}
 %{kde4_appsdir}/plasma/services/kimpanel.operations
 %{kde4_kcfgdir}/kimpanelconfig.kcfg
 %{kde4_servicesdir}/plasma-*-kimpanel.desktop
+%{kde4_datadir}/ibus/component/kimpanel.xml
 
 %files -n kde-plasma-knowledgebase
 %defattr(-,root,root)
@@ -1168,6 +1169,9 @@ rm -rf %{buildroot} %{_builddir}/%{buildsubdir}
 %{kde4_servicesdir}/plasma-applet-bookmarks.desktop
 
 %changelog
+* Fri Oct 24 2014 Liu Di <liudidi@gmail.com> - 4.14.2-1
+- 更新到 4.14.2
+
 * Fri Jul 18 2014 Liu Di <liudidi@gmail.com> - 4.13.3-1
 - 更新到 4.13.3
 
