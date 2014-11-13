@@ -224,7 +224,6 @@ done
 %build
 mkdir m4 || :
 autoreconf -fi
-export CFLAGS="%{optflags} -Werror=format-security"
 %configure \
   --libdir=%{_libdir} \
   --disable-static \
