@@ -34,9 +34,6 @@ Requires:       %{name} = %{version}-%{release}
 The %{name}-devel package contains libraries and header files for
 developing applications that use %{name}.
 
-%description devel -l zh_CN.UTF-8
-%{name} 的开发包。
-
 %prep
 %setup -q -n frei0r-%{version}
 

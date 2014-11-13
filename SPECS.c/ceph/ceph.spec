@@ -15,7 +15,7 @@ Patch2:        ceph-fix-sbin-target.patch
 BuildRequires: fuse-devel, libtool, libtool-ltdl-devel, boost-devel,
 BuildRequires: libedit-devel, fuse-devel, git, perl, gdbm, libaio-devel,
 # google-perftools is not available on these:
-%ifnarch ppc ppc64 s390 s390x aarch64
+%ifnarch ppc ppc64 s390 s390x aarch64 mips64el
 BuildRequires: gperftools-devel
 %endif
 BuildRequires: cryptopp-devel, libatomic_ops-static, gcc-c++
@@ -93,7 +93,7 @@ EXTRA_LDFLAGS="-lpthread"
 
 %{configure} --prefix=%{_prefix} --sbindir=%{_sbindir} \
 --localstatedir=%{_localstatedir} --sysconfdir=%{_sysconfdir} \
-%ifarch ppc ppc64 s390 s390x aarch64
+%ifarch ppc ppc64 s390 s390x aarch64 mips64el
 --without-tcmalloc \
 %endif
 --with-system-leveldb --without-hadoop --with-radosgw --with-gtk2 \

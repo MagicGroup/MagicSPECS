@@ -52,7 +52,7 @@ sed -i s#'multisound/Makefile \\'## configure.in
 sed -i s#multisound## Makefile.am
 
 %__aclocal
-%__automake
+%__automake --add-missing
 %__autoconf
 %configure --disable-loader
 make %{?_smp_mflags}
