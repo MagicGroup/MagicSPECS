@@ -62,7 +62,7 @@ magic_rpm_clean.sh
 
 %files
 %doc COPYING README
-%{_libdir}/libpgf.so.4*
+%{_libdir}/libpgf.so.6*
 
 %files devel
 %doc html
