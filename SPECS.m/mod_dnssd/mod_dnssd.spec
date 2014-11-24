@@ -6,10 +6,12 @@
 
 Name:           mod_dnssd
 Version:        0.6
-Release:        12%{?dist}
+Release:        13%{?dist}
 Summary:        An Apache HTTPD module which adds Zeroconf support
+Summary(zh_CN.UTF-8): 为 Apache 添加零配置支持的 HTTPD 的模块
 
 Group:          System Environment/Daemons
+Group(zh_CN.UTF-8): 系统环境/服务
 License:        ASL 2.0
 URL:            http://0pointer.de/lennart/projects/mod_dnssd/
 Source0:        http://0pointer.de/lennart/projects/mod_dnssd/%{name}-%{version}.tar.gz
@@ -22,6 +24,9 @@ BuildRequires:  httpd-devel avahi-devel e2fsprogs-devel
 %description
 mod_dnssd is an Apache HTTPD module which adds Zeroconf support via DNS-SD
 using Avahi.
+
+%description -l zh_CN.UTF-8
+使用 avahi 通过 DNS-SD 为 Apache 添加零配置支持的 HTTPD 的模块， 
 
 %prep
 %setup -q
@@ -44,6 +49,7 @@ touch -r %{SOURCE1} 10-mod_dnssd.conf mod_dnssd.conf
 install -Dp -m 0644 mod_dnssd.conf $RPM_BUILD_ROOT%{_httpd_confdir}/mod_dnssd.conf
 install -Dp -m 0644 10-mod_dnssd.conf $RPM_BUILD_ROOT%{_httpd_modconfdir}/10-mod_dnssd.conf
 %endif
+magic_rpm_clean.sh
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -55,6 +61,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/httpd/modules/mod_dnssd.so
 
 %changelog
+* Fri Oct 17 2014 Liu Di <liudidi@gmail.com> - 0.6-13
+- 为 Magic 3.0 重建
+
 * Mon Aug 11 2014 Liu Di <liudidi@gmail.com> - 0.6-12
 - 为 Magic 3.0 重建
 

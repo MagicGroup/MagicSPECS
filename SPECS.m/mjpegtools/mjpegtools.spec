@@ -1,6 +1,4 @@
 %define name    mjpegtools
-%define version 2.0.1
-%define release 0.1%{?dist}
 
 %define infoentry "* mjpeg-howto: (mjpeg-howto).        How to use the mjpeg tools"
 %define infofile mjpeg-howto.info
@@ -8,15 +6,17 @@
 %define __os_install_post %{nil}
 
 Name: %name
-Version: %version
-Release: %release
+Version: 2.1.0
+Release: 1%{?dist}
 Summary: Tools for recording, editing, playing back and mpeg-encoding video under linux
 Summary(zh_CN): 在 linux 下录制、编辑、播放以及 mpeg 编码视频的工具
 License: GPL
 Url: http://mjpeg.sourceforge.net/
 Group: Applications/Multimedia
 Group(zh_CN): 应用程序/多媒体
-Source0: http://prdownloads.sourceforge.net/mjpeg/mjpegtools-%{version}RC1.tar.gz
+Source0: http://prdownloads.sourceforge.net/mjpeg/mjpegtools-%{version}.tar.gz
+Patch0:	mjpegtools-2.1.0-fixformat.patch
+
 BuildRoot: %{_tmppath}/%{name}-buildroot-%{version}-%{release}
 
 Requires: libX11 SDL
@@ -43,17 +43,26 @@ DC10(+), Marvel G200/G400), these can also playback video using the
 hardware. With the rest of the tools, this video can be edited and
 encoded into mpeg1/2 or divx video.
 
+%description -l zh_CN.UTF-8
+在 linux 下录制、编辑、播放以及 mpeg 编码视频的工具。
+
 %package devel
 Summary: Development headers and libraries for the mjpegtools
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 
 %description devel
 This package contains static libraries and C system header files
 needed to compile applications that use part of the libraries
 of the mjpegtools package.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
 %prep
-%setup -q -n %{name}-%{version}RC1
+%setup -q -n %{name}-%{version}
+%patch0 -p1
 
 #mkdir usr
 
@@ -65,12 +74,13 @@ of the mjpegtools package.
 #CFLAGS="${CFLAGS:-%optflags}" ; export CFLAGS
 #CXXFLAGS="${CXXFLAGS:-%optflags}" ; export CXXFLAGS
 
-%configure --prefix=%{_prefix}
+%configure --disable-warnings_as_errors
 %{__make} %{?_smp_mflags}
 
 %install
 %{__rm} -rf %{buildroot}
 %{__make} DESTDIR=%{buildroot} install
+magic_rpm_clean.sh
 
 %post
 #/sbin/install-info \
@@ -124,6 +134,9 @@ of the mjpegtools package.
 %{_libdir}/*.so
 
 %changelog
+* Wed Oct 15 2014 Liu Di <liudidi@gmail.com> - 2.1.0-1
+- 更新到 2.1.0
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 2.0.0-2
 - 为 Magic 3.0 重建
 

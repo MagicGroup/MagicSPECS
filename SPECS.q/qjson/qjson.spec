@@ -1,13 +1,11 @@
 Name:           qjson
-Version:        0.7.1
-Release:        10%{?dist}
+Version:        0.8.1
+Release:        9%{?dist}
 Summary:        A qt-based library that maps JSON data to QVariant objects
 
-Group:          Development/Languages
 License:        GPLv2+
 URL:            http://sourceforge.net/projects/qjson/
-Source0:        http://downloads.sourceforge.net/project/qjson/qjson/0.7.1/qjson-0.7.1.tar.bz2
-BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+Source0:        http://sourceforge.net/projects/%{name}/files/qjson/%{version}/%{name}-%{version}.tar.bz2
 
 BuildRequires:  cmake >= 2.6
 BuildRequires:  doxygen
@@ -21,21 +19,19 @@ QVariant objects.
 
 %package devel
 Summary:  Development files for qjson
-Group:    Development/Libraries
 Requires: %{name}%{?_isa} = %{version}-%{release}
 %description devel
 The %{name}-devel package contains the libraries and header files required for
 developing applications that use %{name}.
 
 %prep
-%setup -qn qjson
+%setup -qn %{name}-%{version}
 
 %build
 mkdir -p %{_target_platform}
 pushd %{_target_platform}
 %{cmake} \
   -DQJSON_BUILD_TESTS:BOOL=ON \
-  -DCMAKE_MODULES_INSTALL_DIR:PATH=%{_datadir}/cmake/Modules/ \
   ..
 popd
 
@@ -47,41 +43,65 @@ doxygen
 popd
 
 %install
-rm -rf %{buildroot}
 make install DESTDIR=%{buildroot} -C %{_target_platform}
-magic_rpm_clean.sh
 
 %check
 export PKG_CONFIG_PATH=%{buildroot}%{_datadir}/pkgconfig:%{buildroot}%{_libdir}/pkgconfig
 test "$(pkg-config --modversion QJson)" = "%{version}"
+export CTEST_OUTPUT_ON_FAILURE=1
 make test -C %{_target_platform}
-
-%clean
-rm -rf %{buildroot}
 
 %post -p /sbin/ldconfig
 %postun -p /sbin/ldconfig
 
 %files
-%defattr(-,root,root,-)
-%doc COPYING
-%doc README
+%doc COPYING.lib
+%doc README.md README.license
+%{_libdir}/libqjson.so.%{version}
 %{_libdir}/libqjson.so.0*
 
 %files devel
-%defattr(-,root,root,-)
 %doc doc/html
 %{_includedir}/qjson/
 %{_libdir}/libqjson.so
 %{_libdir}/pkgconfig/QJson.pc
-# own parent dir(s), avoid dep on cmake
-%dir %{_datadir}/cmake
-%dir %{_datadir}/cmake/Modules
-%{_datadir}/cmake/Modules/FindQJSON.cmake
+%dir %{_libdir}/cmake
+%{_libdir}/cmake/qjson/
 
 %changelog
-* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 0.7.1-10
+* Thu Oct 30 2014 Liu Di <liudidi@gmail.com> - 0.8.1-9
 - 为 Magic 3.0 重建
+
+* Thu Oct 30 2014 Liu Di <liudidi@gmail.com> - 0.8.1-8
+- 为 Magic 3.0 重建
+
+* Sun Aug 17 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.8.1-7
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
+
+* Sun Jun 08 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.8.1-6
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Fri Dec 13 2013 Rex Dieter <rdieter@fedoraproject.org> 0.8.1-5
+- %%check: CTEST_OUTPUT_ON_FAILURE
+
+* Thu Aug 22 2013 Rex Dieter <rdieter@fedoraproject.org> 0.8.1-4
+- .spec cleanup
+
+* Sun Aug 04 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.8.1-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.8.1-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
+
+* Tue Nov 27 2012 Rex Dieter <rdieter@fedoraproject.org> 0.8.1-1
+- 0.8.1
+
+* Fri Nov 23 2012 Rex Dieter <rdieter@fedoraproject.org> - 0.8.0-2
+- %%files: track soname
+- -devel: own %%_libdir/cmake
+
+* Thu Nov 22 2012 Jan Grulich <jgrulich@redhat.com> - 0.8.0-1
+- 0.8.0
 
 * Thu Aug 09 2012 Rex Dieter <rdieter@fedoraproject.org> - 0.7.1-9
 - rebuild

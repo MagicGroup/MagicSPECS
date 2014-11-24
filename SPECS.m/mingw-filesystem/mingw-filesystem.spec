@@ -7,10 +7,12 @@
 
 Name:           mingw-filesystem
 Version:        99
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        MinGW cross compiler base filesystem and environment
+Summary(zh_CN.UTF-8): MinGW 交叉编译器的基本文件系统和环境
 
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 License:        GPLv2+
 URL:            http://fedoraproject.org/wiki/MinGW
 BuildArch:      noarch
@@ -53,9 +55,12 @@ This environment is maintained by the Fedora MinGW SIG at:
 
   http://fedoraproject.org/wiki/SIGs/MinGW
 
+%description -l zh_CN.UTF-8
+这个包包括了所有 MinGW 包需要的基本文件系统结构，RPM 宏定义和环境。
 
 %package base
 Summary:        Generic files which are needed for both mingw32-filesystem and mingw64-filesystem
+Summary(zh_CN.UTF-8): mingw32-filesystem 和 mingw64-filesystem 共同需要的文件
 
 # Obsolete the packages from the test repo
 Obsoletes:      cross-filesystem < 67-2
@@ -71,9 +76,12 @@ This environment is maintained by the Fedora MinGW SIG at:
 
   http://fedoraproject.org/wiki/SIGs/MinGW
 
+%description base -l zh_CN.UTF-8
+mingw32-filesystem 和 mingw64-filesystem 共同需要的文件。
 
 %package -n mingw32-filesystem
 Summary:        MinGW cross compiler base filesystem and environment for the win32 target
+Summary(zh_CN.UTF-8): win32 目标系统需要基本文件系统和环境
 Requires:       %{name}-base = %{version}-%{release}
 
 # Note about 'Provides: mingw32(foo.dll)'
@@ -101,9 +109,12 @@ This environment is maintained by the Fedora MinGW SIG at:
 
   http://fedoraproject.org/wiki/SIGs/MinGW
 
+%description -n mingw32-filesystem -l zh_CN.UTF-8
+win32 目标系统需要基本文件系统和环境。
 
 %package -n mingw64-filesystem
 Summary:        MinGW cross compiler base filesystem and environment for the win64 target
+Summary(zh_CN.UTF-8): win64 目标系统需要基本文件系统和环境
 Requires:       %{name}-base = %{version}-%{release}
 
 Provides:       %(sed "s/\(.*\)/mingw64(\1) /g" %{SOURCE17} | tr "\n" " ")
@@ -117,6 +128,8 @@ This environment is maintained by the Fedora MinGW SIG at:
 
   http://fedoraproject.org/wiki/SIGs/MinGW
 
+%description -n mingw64-filesystem -l zh_CN.UTF-8
+win64 目标系统需要基本文件系统和环境。
 
 %prep
 %setup -q -c -T
@@ -274,7 +287,7 @@ install -m 0644 %{SOURCE15} $RPM_BUILD_ROOT%{_rpmconfigdir}/fileattrs/
 mkdir -p $RPM_BUILD_ROOT%{_datadir}/mingw
 install -m 0644 %{SOURCE11} $RPM_BUILD_ROOT%{_datadir}/mingw/
 install -m 0644 %{SOURCE12} $RPM_BUILD_ROOT%{_datadir}/mingw/
-
+magic_rpm_clean.sh
 
 %files base
 %doc COPYING
@@ -309,6 +322,9 @@ install -m 0644 %{SOURCE12} $RPM_BUILD_ROOT%{_datadir}/mingw/
 
 
 %changelog
+* Mon Oct 13 2014 Liu Di <liudidi@gmail.com> - 99-5
+- 为 Magic 3.0 重建
+
 * Sat Feb  8 2014 Erik van Pienbroek <epienbro@fedoraproject.org> - 99-4
 - Place the RPM macros in /usr/lib/rpm/macros.d when using a modern RPM
 

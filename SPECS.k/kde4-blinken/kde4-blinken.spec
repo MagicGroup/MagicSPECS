@@ -10,7 +10,7 @@ License: GPL v2 or Later
 Group: Applications/Internet
 Group(zh_CN.UTF-8): 应用程序/互联网
 URL: http://ktorrent.org
-Version: 4.13.3
+Version: 4.14.2
 Release: 1%{?dist}
 %define rversion %version
 Source0:  http://download.kde.org/stable/%{rversion}/src/%{real_name}-%{rversion}.tar.xz
@@ -67,9 +67,12 @@ rm -rf %{buildroot} %{_builddir}/%{buildsubdir}
 %{kde4_appsdir}/blinken/*
 %{kde4_kcfgdir}/blinken.kcfg
 %{kde4_htmldir}/en/*
-
+%{kde4_datadir}/appdata/blinken.appdata.xml
 
 %changelog
+* Wed Oct 22 2014 Liu Di <liudidi@gmail.com> - 4.14.2-1
+- 更新到 4.14.2
+
 * Fri Jul 18 2014 Liu Di <liudidi@gmail.com> - 4.13.3-1
 - 更新到 4.13.3
 

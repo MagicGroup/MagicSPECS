@@ -11,9 +11,9 @@ License: GPL v2 or later
 Group: User Interface/Desktops
 Group(zh_CN.UTF-8): 用户界面/桌面
 URL: http://www.kde.org/
-Version: 4.13.3
-Release: 3%{?dist}
-Source0: http://download.kde.org/stable/4.12.5/src/%{real_name}-4.11.9.tar.xz
+Version: 4.14.2
+Release: 4%{?dist}
+Source0: http://download.kde.org/stable/4.14.2/src/%{real_name}-4.11.13.tar.xz
 Source1: extras.tar.gz
 # magic logo for kwin decoration
 Source2: magic.png
@@ -382,7 +382,7 @@ Summary: Performance monitor daemon
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++#
 
 %prep
-%setup -q -n %{real_name}-4.11.9
+%setup -q -n %{real_name}-4.11.13
 
 %patch60 -p1
 
@@ -1071,7 +1071,7 @@ rm -rf %{buildroot} %{_builddir}/%{buildsubdir}
 #%{kde4_servicetypesdir}/solid*manager.desktop
 %{kde4_servicetypesdir}/solid-device-type.desktop
 %doc %lang(en) %{kde4_htmldir}/en/kcontrol/solid-actions
-%doc %lang(en) %{kde4_htmldir}/en/kcontrol/solid-hardware
+#%doc %lang(en) %{kde4_htmldir}/en/kcontrol/solid-hardware
 ############################################ klipper
 %{kde4_bindir}/klipper
 %{kde4_libdir}/libkdeinit4_klipper.so
@@ -1232,6 +1232,12 @@ fi
 #重打包时要重新处理
 
 %changelog
+* Mon Nov 03 2014 Liu Di <liudidi@gmail.com> - 4.14.2-4
+- 为 Magic 3.0 重建
+
+* Wed Oct 22 2014 Liu Di <liudidi@gmail.com> - 4.14.2-3
+- 更新到 4.14.2
+
 * Fri Jul 18 2014 Liu Di <liudidi@gmail.com> - 4.13.3-3
 - 更新到 4.13.3
 

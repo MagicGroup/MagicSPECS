@@ -8,7 +8,7 @@ License: GPL v2 or later
 Group: System/GUI/KDE
 Group(zh_CN.UTF-8): 系统/GUI/KDE
 URL: http://www.kde.org/
-Version: 4.13.3
+Version: 4.14.2
 Release: 1%{?dist}
 %define rversion %version
 Source0: http://download.kde.org/stable/%{rversion}/src/%{real_name}-%{rversion}.tar.xz
@@ -343,6 +343,7 @@ rm -rf %{buildroot} %{_builddir}/%{buildsubdir}
 %dir %{kde4_datadir}/autostart
 # dolphin config file
 %config %{kde4_configdir}/servicemenu.knsrc
+%{kde4_datadir}/appdata/dolphin.appdata.xml
 %{kde4_datadir}/autostart/*.desktop
 %{kde4_kcfgdir}/*.kcfg
 %{kde4_dbus_interfacesdir}/org.kde.*.xml
@@ -447,6 +448,9 @@ rm -rf %{buildroot} %{_builddir}/%{buildsubdir}
 
 
 %changelog
+* Wed Oct 22 2014 Liu Di <liudidi@gmail.com> - 4.14.2-1
+- 更新到 4.14.2
+
 * Fri Jul 18 2014 Liu Di <liudidi@gmail.com> - 4.13.3-1
 - 更新到 4.13.3
 
