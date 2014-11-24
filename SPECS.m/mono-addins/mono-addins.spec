@@ -1,14 +1,16 @@
 %define debug_package %{nil}
 
 Name:		mono-addins
-Version:	0.6.2
-Release:	3%{?dist}
+Version: 1.1
+Release: 1%{?dist}
 Summary:	Addins for mono
+Summary(zh_CN.UTF-8): Mono 的附加组件
 Group:		Development/Languages
+Group(zh_CN.UTF-8): 开发/语言
 License:	MIT
 URL:		http://www.mono-project.com/Main_Page
-Source0:	http://origin-download.mono-project.com/sources/mono-addins/mono-addins-%{version}.tar.bz2
-Patch0:		mono-addins-0.6.2-libdir.patch
+Source0:	http://origin-download.mono-project.com/sources/mono-addins/mono-addins-%{version}.tar.gz
+Patch0:		mono-addins-1.1-libdir.patch
 
 BuildRequires:	mono-devel >= 2.4, gtk-sharp2-devel, autoconf, automake
 BuildRequires:	pkgconfig
@@ -35,9 +37,14 @@ Provides: mono(Mono.Addins.CecilReflector) = 0.5.0.0
 Mono.Addins is a generic framework for creating extensible applications,
 and for creating libraries which extend those applications.
 
+%description -l zh_CN.UTF-8
+Mono 的附加组件。
+
 %package devel
 Summary: Development files for mono-addins
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: Development/Languages
+Group(zh_CN.UTF-8): 开发/语言
 Requires: %{name} = %{version}-%{release} pkgconfig
 Provides: mono(Mono.Addins.MSBuild) = 0.2.0.0
 Provides: mono(Mono.Addins.MSBuild) = 0.3.0.0
@@ -50,6 +57,9 @@ and for creating libraries which extend those applications.
 This package contains MSBuild tasks file and target, which allows
 using add-in references directly in a build file (still experimental).
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
 %prep
 %setup -q 
 %patch0 -p1 -b .libdir
@@ -61,6 +71,7 @@ make %{?_smp_mflags}
 
 %install
 make DESTDIR=%{buildroot} install
+magic_rpm_clean.sh
 
 %files 
 %defattr(-,root,root,-)
@@ -92,6 +103,10 @@ make DESTDIR=%{buildroot} install
 %{_prefix}/lib/mono/gac/policy.0.5.Mono.Addins.Gui
 %{_prefix}/lib/mono/gac/policy.0.5.Mono.Addins.Setup
 %{_prefix}/lib/mono/gac/policy.0.5.Mono.Addins
+%{_prefix}/lib/mono/gac/policy.0.6.Mono.Addins.CecilReflector
+%{_prefix}/lib/mono/gac/policy.0.6.Mono.Addins.Gui
+%{_prefix}/lib/mono/gac/policy.0.6.Mono.Addins.Setup
+%{_prefix}/lib/mono/gac/policy.0.6.Mono.Addins
 %{_mandir}/man1/mautil.1.gz
 
 %files devel
@@ -100,12 +115,16 @@ make DESTDIR=%{buildroot} install
 %{_prefix}/lib/mono/gac/policy.0.3.Mono.Addins.MSBuild
 %{_prefix}/lib/mono/gac/policy.0.4.Mono.Addins.MSBuild
 %{_prefix}/lib/mono/gac/policy.0.5.Mono.Addins.MSBuild
+%{_prefix}/lib/mono/gac/policy.0.6.Mono.Addins.MSBuild
 %{_prefix}/lib/mono/mono-addins/Mono.Addins.MSBuild.dll
 %{_prefix}/lib/mono/gac/Mono.Addins.MSBuild
-%{_prefix}/lib/mono/xbuild
+#%{_prefix}/lib/mono/xbuild
 %{_libdir}/pkgconfig/mono-addins*
 
 %changelog
+* Mon Oct 20 2014 Liu Di <liudidi@gmail.com> - 1.1-1
+- 更新到 1.1
+
 * Sun Oct 23 2011 Christian Krause <chkr@fedoraproject.org> - 0.6.2-3
 - Change paths for mono assemblies according to updated packaging
   guidelines (http://fedoraproject.org/wiki/Packaging:Mono)

@@ -1,9 +1,11 @@
 Name:           mono
 Version:        2.10.8
-Release:        3%{?dist}
+Release:        6%{?dist}
 Summary:        A .NET runtime environment
+Summary(zh_CN.UTF-8): .NET 运行环境
 
 Group:          Development/Languages
+Group(zh_CN.UTF-8): 开发/语言
 License:        MIT
 URL:            http://www.mono-project.com/Main_Page
 Source0:        http://origin-download.mono-project.com/sources/mono/mono-%{version}.tar.bz2
@@ -45,6 +47,9 @@ The Mono runtime implements a JIT engine for the ECMA CLI
 virtual machine (as well as a byte code interpreter, the
 class loader, the garbage collector, threading system and
 metadata access libraries.
+
+%description -l zh_CN.UTF-8
+.NET 的运行环境。
 
 %package core
 Summary:        The Mono CIL runtime, suitable for running .NET code
@@ -715,6 +720,15 @@ rm -rf %{buildroot}%{_mandir}/man?/mono-configuration-crypto*
 
 
 %changelog
+* Mon Oct 20 2014 Liu Di <liudidi@gmail.com> - 2.10.8-6
+- 为 Magic 3.0 重建
+
+* Mon Oct 20 2014 Liu Di <liudidi@gmail.com> - 2.10.8-5
+- 为 Magic 3.0 重建
+
+* Mon Oct 20 2014 Liu Di <liudidi@gmail.com> - 2.10.8-4
+- 为 Magic 3.0 重建
+
 * Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.10.8-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 

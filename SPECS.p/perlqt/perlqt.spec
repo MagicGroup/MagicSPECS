@@ -17,7 +17,7 @@
 
 
 Name:           perlqt
-Version: 4.13.3
+Version: 4.14.2
 Release:        1%{?dist}
 Summary:        PerlQt kdebindings library
 Summary(zh_CN.UTF-8): Perl 的 Qt 绑定
@@ -93,6 +93,9 @@ magic_rpm_clean.sh
 %{_kde4_includedir}/perlqt/
 
 %changelog
+* Fri Oct 31 2014 Liu Di <liudidi@gmail.com> - 4.14.2-1
+- 更新到 4.14.2
+
 * Fri Jul 18 2014 Liu Di <liudidi@gmail.com> - 4.13.3-1
 - 更新到 4.13.3
 

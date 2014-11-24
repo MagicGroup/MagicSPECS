@@ -10,7 +10,7 @@ Summary(zh_CN.UTF-8): 游戏合集
 Group: System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
 Version: %{rversion}
-Release: 5%{?dist}
+Release: 6%{?dist}
 License: LGPL
 URL: http://extragear.kde.org/apps/kipi
 Source0: http://download.kde.org/stable/%{version}/src/%{real_name}-%{version}.tar.xz
@@ -80,6 +80,9 @@ rm -rf %{buildroot} %{_builddir}/%{buildsubdir}
 %{kde4_datadir}/sounds/*
 
 %changelog
+* Fri Oct 31 2014 Liu Di <liudidi@gmail.com> - 4.14.2-6
+- 为 Magic 3.0 重建
+
 * Fri Jul 18 2014 Liu Di <liudidi@gmail.com> - 4.13.3-5
 - 为 Magic 3.0 重建
 

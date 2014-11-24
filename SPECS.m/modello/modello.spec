@@ -3,6 +3,7 @@ Version:        1.8.1
 Release:        6%{?dist}
 Epoch:          0
 Summary:        Modello Data Model toolkit
+Summary(zh_CN.UTF-8): 模型数据模型工具包
 # The majority of files are under MIT license, but some of them are
 # ASL 2.0 or BSD-licensed.
 License:        ASL 2.0 and BSD and MIT
@@ -44,12 +45,18 @@ architecture, various types of code and descriptors can be generated
 from the single model, including Java POJOs, XML
 marshallers/unmarshallers, XSD and documentation.
 
+%description -l zh_CN.UTF-8
+模型数据模型工具包。
 
 %package javadoc
 Summary:        Javadoc for %{name}
+Summary(zh_CN.UTF-8): %{name} 的 Javadoc
 
 %description javadoc
 API documentation for %{name}.
+
+%description javadoc -l zh_CN.UTF-8
+%{name} 的 API 文档。
 
 %prep
 %setup -q

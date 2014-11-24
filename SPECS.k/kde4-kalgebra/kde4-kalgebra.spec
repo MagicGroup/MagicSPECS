@@ -10,7 +10,7 @@ License: GPL v2 or Later
 Group: User Interface/Desktops
 Group(zh_CN.UTF-8): 用户界面/桌面
 URL: http://ktorrent.org
-Version: 4.13.3
+Version: 4.14.2
 Release: 1%{?dist}
 %define rversion %version
 Source0: http://download.kde.org/stable/%{rversion}/src/%{real_name}-%{rversion}.tar.xz
@@ -58,25 +58,18 @@ rm -rf %{buildroot} %{_builddir}/%{buildsubdir}
 %defattr(-,root,root,-)
 %doc COPYING
 %{kde4_bindir}/*
-#%{kde4_libdir}/*.so*
 %{kde4_plugindir}/*
 %{kde4_iconsdir}/hicolor/*
 %{kde4_xdgappsdir}/*.desktop
 %{kde4_appsdir}/*
-#%{kde4_kcfgdir}/*.kcfg
 %{kde4_servicesdir}/*
-#%{kde4_servicetypesdir}/*
-#%{kde4_configdir}/*
 %{kde4_htmldir}/en/*
-
-%if 0
-%files devel
-%defattr(-,root,root,-)
-#%{kde4_includedir}/*
-#%{kde4_libdir}/*.so
-%endif
+%{kde4_datadir}/appdata/kalgebra.appdata.xml
 
 %changelog
+* Thu Oct 23 2014 Liu Di <liudidi@gmail.com> - 4.14.2-1
+- 更新到 4.14.2
+
 * Fri Jul 18 2014 Liu Di <liudidi@gmail.com> - 4.13.3-1
 - 更新到 4.13.3
 

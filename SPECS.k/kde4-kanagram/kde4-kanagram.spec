@@ -10,7 +10,7 @@ License: GPL v2 or Later
 Group: Applications/Internet
 Group(zh_CN.UTF-8): 应用程序/互联网
 URL: http://www.kde.org
-Version: 4.13.3
+Version: 4.14.2
 Release: 1%{?dist}
 %define rversion %version
 Source0: http://download.kde.org/stable/%{rversion}/src/%{real_name}-%{rversion}.tar.xz
@@ -26,19 +26,6 @@ Anagram game
 
 %description -l zh_CN.UTF-8
 字谜游戏
-
-%package devel
-Summary: Development files for %{name}
-Summary(zh_CN.UTF-8): %{name} 的开发文件
-Group: Development/Libraries
-Group(zh_CN.UTF-8): 开发/库
-Requires: %{name} = %{version}-%{release}
-
-%description devel
-Contains the development files.
-
-%description devel -l zh_CN.UTF-8
-%{name} 的开发文件。包含 libbtcore 的开发文件。
 
 %prep
 %setup -q -n %{real_name}-%{rversion}
@@ -69,23 +56,18 @@ rm -rf %{buildroot} %{_builddir}/%{buildsubdir}
 %defattr(-,root,root,-)
 %doc COPYING
 %{kde4_bindir}/*
-%{kde4_libdir}/*.so.*
-#%{kde4_plugindir}/*
 %{kde4_iconsdir}/hicolor/*
 %{kde4_xdgappsdir}/*.desktop
 %{kde4_appsdir}/*
 %{kde4_kcfgdir}/*.kcfg
-#%{kde4_servicesdir}/*
-#%{kde4_servicetypesdir}/*
 %{kde4_configdir}/*
 %{kde4_htmldir}/en/*
-
-%files devel
-%defattr(-,root,root,-)
-%{kde4_includedir}/*
-%{kde4_libdir}/*.so
+%{kde4_datadir}/appdata/kanagram.appdata.xml
 
 %changelog
+* Thu Oct 23 2014 Liu Di <liudidi@gmail.com> - 4.14.2-1
+- 更新到 4.14.2
+
 * Fri Jul 18 2014 Liu Di <liudidi@gmail.com> - 4.13.3-1
 - 更新到 4.13.3
 

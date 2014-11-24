@@ -26,8 +26,8 @@
 %endif
 
 Name:		mod_fcgid
-Version:	2.3.7
-Release:	8%{?dist}
+Version: 2.3.9
+Release: 1%{?dist}
 Summary:	FastCGI interface module for Apache 2
 Group:		System Environment/Daemons
 License:	ASL 2.0
@@ -215,6 +215,9 @@ exit 0
 %endif
 
 %changelog
+* Fri Oct 17 2014 Liu Di <liudidi@gmail.com> - 2.3.9-1
+- 更新到 2.3.9
+
 * Wed May 07 2014 Liu Di <liudidi@gmail.com> - 2.3.7-8
 - 为 Magic 3.0 重建
 
