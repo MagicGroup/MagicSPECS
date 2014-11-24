@@ -10,7 +10,6 @@ URL: http://heroinewarrior.com/libmpeg3.php3
 Source0: http://dl.sf.net/heroines/libmpeg3-%{version}-src.tar.bz2
 Source1: libmpeg3.pc
 Patch0: libmpeg3.sharedlibs.patch
-Patch1: libmpeg3-1.7-mips-disable-MMX_CSS.patch
 Patch2:	libmpeg3-1.8-fixformatsecurity.patch
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: nasm
@@ -60,9 +59,6 @@ LibMPEG3解码许多MPEG标准派生出的标准到未压缩数据以便于编�
 %setup
 %patch0 -p1 -b .makefile
 %patch2 -p1
-%ifarch mips64el
-%patch1 -p1 -b .mips
-%endif
 
 %build
 export OBJDIR=i686
