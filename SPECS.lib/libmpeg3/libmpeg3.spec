@@ -76,7 +76,7 @@ export OBJDIR=i686
     DESTDIR=%{buildroot} LIBDIR=%{_lib}
 
 mkdir -p %{buildroot}%{_libdir}/pkgconfig
-%ifarch x86_64
+%ifarch x86_64 mips64el
 sed -i 's/\/usr\/lib/\/usr\/lib64/g' %{SOURCE1}
 %endif
 install -m 0644 %{SOURCE1} %{buildroot}%{_libdir}/pkgconfig/libmpeg3.pc
