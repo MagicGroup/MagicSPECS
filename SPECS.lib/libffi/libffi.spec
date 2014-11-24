@@ -75,7 +75,9 @@ developing applications that use %{name}.
 autoreconf -fisv
 %configure --disable-static
 #临时性措施
+%ifarch x86_64
 sed -i "s/libffi-3.1\/include//g" x86_64-magic-linux-gnu/include/Makefile
+%endif
 make %{?_smp_mflags}
 
 
