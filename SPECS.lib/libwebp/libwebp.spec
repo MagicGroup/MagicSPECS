@@ -10,6 +10,7 @@ Summary:       Library and tools for the WebP graphics format
 License:       BSD
 Source0:       http://downloads.webmproject.org/releases/webp/%{name}-%{version}.tar.gz
 Source1:       libwebp_jni_example.java
+Patch1:        libwebp-0.4.1-disable-mips32-in-mips64.patch
 
 BuildRequires: libjpeg-devel
 BuildRequires: libpng-devel
@@ -62,6 +63,7 @@ Java bindings for libwebp.
 
 %prep
 %setup -q
+%patch1 -p1
 
 %build
 autoreconf -vif
