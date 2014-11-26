@@ -1,0 +1,23 @@
+Index: kQOAuth-0.97/kqoauth.prf
+===================================================================
+--- kQOAuth-0.97.orig/kqoauth.prf
++++ kQOAuth-0.97/kqoauth.prf
+@@ -1,5 +1,4 @@
+ KQOAUTH_INCDIR = /usr/include
+-KQOAUTH_LIBDIR = /usr/lib
+ 
+ KQOAUTH_INCDIR ~= s!/qt4*!!
+ KQOAUTH_LIBDIR ~= s!/qt4*!!
+Index: kQOAuth-0.97/src/src.pro
+===================================================================
+--- kQOAuth-0.97.orig/src/src.pro
++++ kQOAuth-0.97/src/src.pro
+@@ -75,7 +75,7 @@
+     system( ./pcfile.sh $${INSTALL_PREFIX} $${VERSION} )
+     pkgconfig.files = kqoauth.pc
+     
+-    target.path = $${INSTALL_PREFIX}/lib
++    target.path = $${KQOAUTH_LIBDIR}
+ 
+     headers.path = $${INSTALL_PREFIX}/include/QtKOAuth
+     docs.path = $${INSTALL_PREFIX}/share/doc/$${TARGET}-$${VERSION}/html
