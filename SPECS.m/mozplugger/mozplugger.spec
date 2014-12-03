@@ -1,9 +1,11 @@
 Summary: A generic mozilla plug-in
+Summary(zh_CN.UTF-8): 通用的 Mozilla 插件
 Name: mozplugger
-Version: 1.14.3
-Release: 2%{?dist}
+Version: 2.1.6
+Release: 5%{?dist}
 License: GPLv2+
 Group: Applications/Internet
+Group(zh_CN.UTF-8): 应用程序/互联网
 Url: http://mozplugger.mozdev.org/
 Source0: http://mozplugger.mozdev.org/files/%{name}-%{version}.tar.gz
 
@@ -11,7 +13,7 @@ Source0: http://mozplugger.mozdev.org/files/%{name}-%{version}.tar.gz
 Patch1: mozplugger-1.13.3-path.patch
 
 # buildroot issue
-Patch2: mozplugger-1.14.3-buildroot.patch
+Patch2: mozplugger-2.1.6-buildroot.patch
 
 Requires: m4
 Requires: sox
@@ -26,6 +28,9 @@ BuildRoot: %(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
 %description
 MozPlugger is a generic Mozilla plug-in that allows the use of standard Linux
 programs as plug-ins for media types on the Internet.
+
+%description -l zh_CN.UTF-8
+通用的 Mozilla 插件，可以让标准的 Linux 程序做为插件播放互联网的媒体。
 
 %prep
 %setup -q
@@ -47,6 +52,15 @@ iconv -f iso-8859-1 -t utf-8 < "$file" > "${file}_"
 mv "${file}_" "$file"
 iconv -f iso-8859-1 -t utf-8 < README > README_
 mv README_ README
+magic_rpm_clean.sh
+
+%post
+#setsebool -P unconfined_mozilla_plugin_transition 0
+
+%postun
+#if [ $1 -eq 0 ] ; then
+#  setsebool -P unconfined_mozilla_plugin_transition 1
+#fi
 
 %clean
 rm -rf %{buildroot}
@@ -60,6 +74,18 @@ rm -rf %{buildroot}
 %{_mandir}/man7/mozplugger.7*
 
 %changelog
+* Tue Dec 02 2014 Liu Di <liudidi@gmail.com> - 2.1.6-5
+- 为 Magic 3.0 重建
+
+* Tue Dec 02 2014 Liu Di <liudidi@gmail.com> - 2.1.6-4
+- 为 Magic 3.0 重建
+
+* Tue Dec 02 2014 Liu Di <liudidi@gmail.com> - 2.1.6-3
+- 为 Magic 3.0 重建
+
+* Tue Dec 02 2014 Liu Di <liudidi@gmail.com> - 2.1.6-2
+- 为 Magic 3.0 重建
+
 * Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 1.14.3-2
 - 为 Magic 3.0 重建
 

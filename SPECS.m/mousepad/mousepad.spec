@@ -2,10 +2,12 @@
 
 Name:           mousepad
 Version:        0.3.0
-Release:        5%{?dist}
+Release:        6%{?dist}
 Summary:        Simple text editor for Xfce desktop environment
+Summary(zh_CN.UTF-8): Xfce 桌面环境下的简单文本编辑器
 
 Group:          Applications/Editors
+Group(zh_CN.UTF-8): 应用程序/编辑器
 License:        GPLv2+
 URL:            http://xfce.org/
 #VCS: git:git://git.xfce.org/apps/mousepad
@@ -47,6 +49,9 @@ features:
     * Drag and Drop
     * Printing
 
+%description -l zh_CN.UTF-8
+Xfce 桌面环境下的简单文本编辑器。
+
 %prep
 %setup -q
 
@@ -59,7 +64,7 @@ make %{?_smp_mflags} V=1
 %install
 rm -rf %{buildroot}
 make install DESTDIR=%{buildroot} INSTALL='install -p'
-
+magic_rpm_clean.sh
 %find_lang %{name}
 
 desktop-file-install \
@@ -87,6 +92,9 @@ update-desktop-database &> /dev/null ||:
 
 
 %changelog
+* Mon Nov 24 2014 Liu Di <liudidi@gmail.com> - 0.3.0-6
+- 为 Magic 3.0 重建
+
 * Sun Aug 17 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.3.0-5
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
 

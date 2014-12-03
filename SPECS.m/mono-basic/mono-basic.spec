@@ -1,10 +1,12 @@
 %define debug_package %{nil}
 
 Name:		mono-basic
-Version:	2.10
-Release:	4%{?dist}
+Version: 3.8
+Release: 1%{?dist}
 Summary:	VisualBasic.NET support for mono
+Summary(zh_CN.UTF-8): mono 的 VB.NET 支持
 Group:		Development/Languages
+Group(zh_CN.UTF-8): 开发/语言
 License:	LGPLv2+
 URL:		http://www.mono-project.com/Main_Page
 Source0:	http://origin-download.mono-project.com/sources/mono-basic/%{name}-%{version}.tar.bz2	
@@ -25,13 +27,21 @@ This package contains the Visual Basic .NET compiler and language
 runtime. This allows you to compile and run VB.NET application and
 assemblies.
 
+%description -l zh_CN.UTF-8
+这个包包含了 VB.NET 的编译器和语言运行环境。
+
 %package devel
 Summary: Development files for mono-basic
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: %{name} = %{version}-%{release} pkgconfig
  
 %description devel
 Development files for mono-basic
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -51,9 +61,11 @@ libdir=%{_prefix}/lib
 
 Name: mono-basic
 Description: mono-basic - VB for mono
-Version: 2.0
+Version: 3.8
 Libs: -r:%{_prefix}/lib/mono/2.0/Microsoft.VisualBasic.dll
 EOF
+
+magic_rpm_clean.sh
 
 %files 
 %defattr(-,root,root,-)
@@ -72,6 +84,9 @@ EOF
 %{_libdir}/pkgconfig/mono-basic.pc
 
 %changelog
+* Thu Nov 20 2014 Liu Di <liudidi@gmail.com> - 3.8-1
+- 更新到 3.8
+
 * Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 2.10-4
 - 为 Magic 3.0 重建
 

@@ -17,7 +17,7 @@ License: LGPL v2 or later
 Group: User Interface/Desktops
 Group(zh_CN.UTF-8): 用户界面/桌面
 URL: http://www.kde.org/
-Version: 4.14.2
+Version: 4.14.3
 Release: 1%{?dist}
 Source0: http://download.kde.org/stable/%{version}/src/%{real_name}-%{version}.tar.xz
 
@@ -60,7 +60,7 @@ Requires: %{name}-libkpgp = %{version}
 Requires: %{name}-libksieve = %{version}
 Requires: %{name}-plugins = %{version}
 Requires: %{name}-strigi-analyzer = %{version}
-Requires: %{name}-blogilo = %{version}
+#Requires: %{name}-blogilo = %{version}
 Requires: %{name}-akonadi = %{version}
 Requires: %{name}-akonadiconsole = %{version}
 Requires: %{name}-messagecore = %{version}
@@ -1000,6 +1000,9 @@ rm -rf %{buildroot} %{_builddir}/%{buildsubdir}
 
 
 %changelog
+* Fri Nov 21 2014 Liu Di <liudidi@gmail.com> - 4.14.3-1
+- 更新到 4.14.3
+
 * Fri Oct 24 2014 Liu Di <liudidi@gmail.com> - 4.14.2-1
 - 更新到 4.14.2
 

@@ -31,7 +31,7 @@ process it.
 
 Name:           libkqoauth
 Version:        0.98
-Release:        1%{?dist}
+Release:        3%{?dist}
 Summary:        %{pack_summ}
 License:        LGPL-2.1+ and LGPL-3.0+
 Group:          System/Libraries
@@ -50,7 +50,7 @@ BuildRequires:  pkgconfig(QtNetwork) >= 4.7
 %package        devel
 Summary:        Development files for %{name}
 Group:          Development/Libraries/C and C++
-Requires:       %{name}0 = %{version}
+Requires:       %{name} = %{version}
 
 %description    devel
 The %{name}-devel package contains libraries and header files for
@@ -72,9 +72,9 @@ make %{?_smp_mflags}
 %install
 %make_install INSTALL_ROOT=%{buildroot}
 
-%post -n %{name}0 -p /sbin/ldconfig
+%post -p /sbin/ldconfig
 
-%postun -n %{name}0 -p /sbin/ldconfig
+%postun -p /sbin/ldconfig
 
 %files 
 %defattr(-,root,root)
@@ -94,6 +94,12 @@ make %{?_smp_mflags}
 %endif
 
 %changelog
+* Wed Nov 26 2014 Liu Di <liudidi@gmail.com> - 0.98-3
+- 为 Magic 3.0 重建
+
+* Wed Nov 26 2014 Liu Di <liudidi@gmail.com> - 0.98-2
+- 为 Magic 3.0 重建
+
 * Thu Sep 26 2013 dap.darkness@gmail.com
 - Update to 0.98:
   * no upstream changelog.
