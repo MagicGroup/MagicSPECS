@@ -233,7 +233,7 @@ function downsources()
 			# 如果不存在，则先从 apt 服务器上下载
 			echo "正在从 magic 的服务器上下载源码 $sourcefile"
 			SDIR=SOURCES.`dirname $DIR |cut -f2 -d"."`
-			if ! ( debug_run $DOWN $TOPDIR/SOURCES "http://apt.linuxfans.org/magic/3.0/sources/$SDIR/$1/$sourcefile" ) ; then
+			if ! ( debug_run $DOWN $TOPDIR/SOURCES "http://www.321211.net/magic/3.0/sources/$SDIR/$1/$sourcefile" ) ; then
 				#如果无法下载，则有官方下载地址的就尝试从官方下载
 				echo "Magic 的服务器上没有 $sourcefile，尝试从 spec 中提供的地址下载"
 				if ! [ x"$sourceurl" = x"" ]; then
@@ -277,7 +277,7 @@ function downpatches()
                         # 如果不存在，则先从 apt 服务器上下载
                         echo "正在从 magic 的服务器上下载补丁 $patchfile"
                         SDIR=SOURCES.`dirname $DIR |cut -f2 -d"."`
-                        if ! ( debug_run $DOWN $TOPDIR/SOURCES "http://apt.linuxfans.org/magic/3.0/sources/$SDIR/$1/$patchfile" ) ; then
+                        if ! ( debug_run $DOWN $TOPDIR/SOURCES "http://www.321211.net/magic/3.0/sources/$SDIR/$1/$patchfile" ) ; then
                                 #如果无法下载，则有官方下载地址的就尝试从官方下载
                                 if ! [ x"$patchurl" = x"" ]; then
                                         if ! ( debug_run $DOWN $TOPDIR/SOURCES $patchurl ) ; then

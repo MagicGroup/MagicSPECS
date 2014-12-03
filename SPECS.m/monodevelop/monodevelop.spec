@@ -5,11 +5,13 @@
 %global nunitver    2.4.8.0
 
 Name:           monodevelop
-Version:        2.8.5
-Release:        1%{?dist}
+Version: 5.5.0.227
+Release: 2%{?dist}
 Summary:        A full-featured IDE for Mono and Gtk#
+Summary(zh_CN.UTF-8): Mono 和 Gtk# 用的完整功能的 IDE
 
 Group:          Development/Tools
+Group(zh_CN.UTF-8): 开发/工具
 License:        GPLv2+
 URL:            http://monodevelop.com/
 Source0:        http://download.mono-project.com/sources/%{name}/%{name}-%{version}.tar.bz2
@@ -38,16 +40,23 @@ This package provides MonoDevelop, a full-featured IDE for Mono with
 syntax colouring, code completion, debugging, project management and
 support for C sharp, Visual Basic.NET, Java, Boo, Nemerle and MSIL.
 
+%description -l zh_CN.UTF-8
+Mono 和 Gtk# 用的完整功能的 IDE，包括语法高亮，代码补全，调试，项目管理等。
+支持 C#, VB.NET, JAVA, Boo, Nemerle 和 MSIL
 
 %package        devel
 Summary:        Development files for monodevelop
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       %{name} = %{version}-%{release}
 Requires:       pkgconfig
  
 %description devel
 Development files for %{name}.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -86,7 +95,7 @@ desktop-file-install \
 
 mkdir -p $RPM_BUILD_ROOT/%{_libdir}/pkgconfig
 test "%{_libdir}" = "%{_prefix}/lib" || mv $RPM_BUILD_ROOT/%{_prefix}/lib/pkgconfig/* $RPM_BUILD_ROOT/%{_libdir}/pkgconfig
-
+magic_rpm_clean.sh
 %find_lang %{name}
 
 %post
@@ -120,6 +129,12 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %{_libdir}/pkgconfig/monodevelop*.pc
 
 %changelog
+* Fri Nov 21 2014 Liu Di <liudidi@gmail.com> - 5.5.0.227-2
+- 为 Magic 3.0 重建
+
+* Fri Nov 21 2014 Liu Di <liudidi@gmail.com> - 5.5.0.227-1
+- 更新到 5.5.0.227
+
 * Wed Jan 04 2012 Christian Krause <chkr@fedoraproject.org> - 2.8.5-1
 - Update to 2.8.5
 
