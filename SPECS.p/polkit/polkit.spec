@@ -1,10 +1,24 @@
-Summary: polkit Authorization Framework
+# Only enable if using patches that touches configure.ac,
+# Makefile.am or other build system related files
+#
+%define enable_autoreconf 1
+
+Summary: An authorization framework
 Name: polkit
-Version: 0.106
-Release: 2%{?dist}
+Version: 0.112
+Release: 8%{?dist}
 License: LGPLv2+
 URL: http://www.freedesktop.org/wiki/Software/polkit
 Source0: http://www.freedesktop.org/software/polkit/releases/%{name}-%{version}.tar.gz
+Source1: http://www.freedesktop.org/software/polkit/releases/%{name}-%{version}.tar.gz.sign
+# https://bugs.freedesktop.org/show_bug.cgi?id=71894
+Patch0: polkit-0.112-XDG_RUNTIME_DIR.patch
+# https://bugs.freedesktop.org/show_bug.cgi?id=60847
+Patch1: polkit-0.112-PolkitAgentSession-race.patch
+# http://cgit.freedesktop.org/polkit/commit/?id=26d0c0578211fb96fc8fe75572aa11ad6ecbf9b8
+Patch2: polkit-0.112-systemd-Deduplicate-code-paths.patch
+# http://cgit.freedesktop.org/polkit/commit/?id=a68f5dfd7662767b7b9822090b70bc5bd145c50c
+Patch3: polkit-0.112-systemd-prepare-for-D-Bus-user-bus.patch
 Group: System Environment/Libraries
 BuildRequires: glib2-devel >= 2.30.0
 BuildRequires: expat-devel
@@ -13,9 +27,20 @@ BuildRequires: gtk-doc
 BuildRequires: intltool
 BuildRequires: gobject-introspection-devel
 BuildRequires: systemd-devel
-BuildRequires: js-devel
+BuildRequires: mozjs17-devel
 
-Requires: dbus
+%if 0%{?enable_autoreconf}
+BuildRequires: autoconf
+BuildRequires: automake
+BuildRequires: libtool
+%endif
+
+Requires: dbus, polkit-pkla-compat
+
+Requires(pre): shadow-utils
+Requires(post): /sbin/ldconfig, systemd
+Requires(preun): systemd
+Requires(postun): /sbin/ldconfig, systemd
 
 Obsoletes: PolicyKit <= 0.10
 Provides: PolicyKit = 0.11
@@ -26,6 +51,9 @@ Conflicts: polkit-gnome < 0.97
 
 Obsoletes: polkit-desktop-policy < 0.103
 Provides: polkit-desktop-policy = 0.103
+
+Obsoletes: polkit-js-engine < 0.110-4
+Provides: polkit-js-engine = %{version}-%{release}
 
 %description
 polkit is a toolkit for defining and handling authorizations.  It is
@@ -55,42 +83,73 @@ BuildArch: noarch
 %description docs
 Development documentation for polkit.
 
+%package libs
+Summary: Libraries for polkit
+Group: Development/Libraries
+
+%description libs
+Libraries files for polkit.
+
+
 %prep
 %setup -q
+%patch0 -p1 -b .XDG_RUNTIME_DIR
+%patch1 -p1 -b .PolkitAgentSession-race
+%patch2 -p1 -b .dbus-user-bus
+%patch3 -p1 -b .session-dedup-code
 
 %build
+%if 0%{?enable_autoreconf}
+autoreconf -i
+%endif
+# we can't use _hardened_build here, see
+# https://bugzilla.redhat.com/show_bug.cgi?id=962005
+export CFLAGS='-fPIC %optflags'
+export LDFLAGS='-pie -Wl,-z,now -Wl,-z,relro'
 %configure --enable-gtk-doc \
         --disable-static \
         --enable-introspection \
-        --enable-examples \
-        --enable-systemd=yes
-make
+        --disable-examples \
+        --enable-libsystemd-login=yes --with-mozjs=mozjs-17.0
+make V=1
 
 %install
-make install DESTDIR=$RPM_BUILD_ROOT
+make install DESTDIR=$RPM_BUILD_ROOT INSTALL='install -p'
 
 rm -f $RPM_BUILD_ROOT%{_libdir}/*.la
-rm -f $RPM_BUILD_ROOT%{_libdir}/polkit-1/extensions/*.la
-magic_rpm_clean.sh
-%find_lang polkit-1 || touch polkit-1.lang
+
+%find_lang polkit-1
 
 %pre
 getent group polkitd >/dev/null || groupadd -r polkitd
 getent passwd polkitd >/dev/null || useradd -r -g polkitd -d / -s /sbin/nologin -c "User for polkitd" polkitd
 exit 0
 
-%post -p /sbin/ldconfig
+%post
+/sbin/ldconfig
+# The implied (systemctl preset) will fail and complain, but the macro hides
+# and ignores the fact.  This is in fact what we want, polkit.service does not
+# have an [Install] section and it is always started on demand.
+%systemd_post polkit.service
 
-%postun -p /sbin/ldconfig
+%preun
+%systemd_preun polkit.service
+
+%postun
+/sbin/ldconfig
+# Not %%systemd_postun_with_restart - let's err on the side of safety, and keep
+# the daemon, with its temporary authorizations and agent registrations, running
+# after the upgrade as well; it would be unfortunate if the upgrade tool failed
+# because a component can't handle polkitd losing state.
+%systemd_postun
 
 %files -f polkit-1.lang
 %defattr(-,root,root,-)
 %doc COPYING NEWS README
-%{_libdir}/lib*.so.*
 %{_datadir}/man/man1/*
 %{_datadir}/man/man8/*
 %{_datadir}/dbus-1/system-services/*
-%{_prefix}/lib/systemd/system/polkit.service
+%{_unitdir}/polkit.service
 %dir %{_datadir}/polkit-1/
 %dir %{_datadir}/polkit-1/actions
 %attr(0700,polkitd,root) %dir %{_datadir}/polkit-1/rules.d
@@ -105,7 +164,6 @@ exit 0
 %{_bindir}/pkttyagent
 %dir %{_prefix}/lib/polkit-1
 %{_prefix}/lib/polkit-1/polkitd
-%{_libdir}/girepository-1.0/*.typelib
 
 # see upstream docs for why these permissions are necessary
 %attr(4755,root,root) %{_bindir}/pkexec
@@ -117,16 +175,124 @@ exit 0
 %{_libdir}/pkgconfig/*.pc
 %{_datadir}/gir-1.0/*.gir
 %{_includedir}/*
-%{_bindir}/pk-example-frobnicate
-%{_datadir}/polkit-1/actions/org.freedesktop.policykit.examples.pkexec.policy
 
 %files docs
 %defattr(-,root,root,-)
 %{_datadir}/gtk-doc
 
+%files libs
+%{_libdir}/lib*.so.*
+%{_libdir}/girepository-1.0/*.typelib
+
 %changelog
-* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 0.106-2
-- 为 Magic 3.0 重建
+* Sat Nov 08 2014 Colin Walters <walters@redhat.com> - 0.112-8
+- Split separate -libs package, so that NetworkManager can just depend on
+  that, without dragging in the daemon (as well as libmozjs17).  This
+  allows the creation of more minimal systems that want programs like NM,
+  but do not need the configurability of the daemon; it would be ok if only
+  root is authorized.
+
+* Sun Aug 17 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.112-7
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
+
+* Tue Jul 22 2014 Kalev Lember <kalevlember@gmail.com> - 0.112-6
+- Rebuilt for gobject-introspection 1.41.4
+
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.112-5
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Thu Jun  5 2014 Kay Sievers <kay@redhat.com> - 0.112-4
+- backport upstream D-Bus "user bus" changes
+
+* Mon Feb 10 2014 Miloslav Trmač <mitr@redhat.com> - 0.112-3
+- Fix a PolkitAgentSession race condition
+  Resolves: #1063193
+
+* Sat Dec  7 2013 Miloslav Trmač <mitr@redhat.com> - 0.112-2
+- Workaround pam_systemd setting broken XDG_RUNTIME_DIR
+  Resolves: #1033774
+- Always use mozjs-17.0 even if js-devel is installed
+
+* Wed Sep 18 2013 Miloslav Trmač <mitr@redhat.com> - 0.112-1
+- Update to polkit-0.112
+- Resolves: #1009538, CVE-2013-4288
+
+* Sun Aug 04 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.111-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Wed May 29 2013 Tomas Bzatek <tbzatek@redhat.com> - 0.111-2
+- Fix a race on PolkitSubject type registration (#866718)
+
+* Wed May 15 2013 Miloslav Trmač <mitr@redhat.com> - 0.111-1
+- Update to polkit-0.111
+  Resolves: #917888
+- Use SpiderMonkey from mozjs17 instead of js
+- Ship the signature in the srpm
+- Try to preserve timestamps in (make install)
+
+* Fri May 10 2013 Miloslav Trmač <mitr@redhat.com> - 0.110-4
+- Shut up rpmlint about Summary:
+- Build with V=1
+- Use %%{_unitdir} instead of hard-coding the path
+- Use the new systemd macros, primarily to run (systemctl daemon-reload)
+  Resolves: #857382
+
+* Fri May 10 2013 Miloslav Trmač <mitr@redhat.com> - 0.110-4
+- Make the JavaScript engine mandatory.  The polkit-js-engine package has been
+  removed, main polkit package Provides:polkit-js-engine for compatibility.
+- Add Requires: polkit-pkla-compat
+  Resolves: #908808
+
+* Wed Feb 13 2013 Miloslav Trmač <mitr@redhat.com> - 0.110-3
+- Don't ship pk-example-frobnicate in the "live" configuration
+  Resolves: #878112
+
+* Fri Feb  8 2013 Miloslav Trmač <mitr@redhat.com> - 0.110-2
+- Own %%{_docdir}/polkit-js-engine-*
+  Resolves: #907668
+
+* Wed Jan  9 2013 David Zeuthen <davidz@redhat.com> - 0.110-1%{?dist}
+- Update to upstream release 0.110
+
+* Mon Jan  7 2013 Matthias Clasen <mclasen@redhat.com> - 0.109-2%{?dist}
+- Build with pie and stuff
+
+* Wed Dec 19 2012 David Zeuthen <davidz@redhat.com> 0.109-1%{?dist}
+- Update to upstream release 0.109
+- Drop upstreamed patches
+
+* Thu Nov 15 2012 David Zeuthen <davidz@redhat.com> 0.108-3%{?dist}
+- Attempt to open the correct libmozjs185 library, otherwise polkit
+  authz rules will not work unless js-devel is installed (fdo #57146)
+
+* Wed Nov 14 2012 David Zeuthen <davidz@redhat.com> 0.108-2%{?dist}
+- Include gmodule-2.0 to avoid build error
+
+* Wed Nov 14 2012 David Zeuthen <davidz@redhat.com> 0.108-1%{?dist}
+- Update to upstream release 0.108
+- Drop upstreamed patches
+- This release dynamically loads the JavaScript interpreter and can
+  cope with it not being available. In this case, polkit authorization
+  rules are not processed and the defaults for an action - as defined
+  in its .policy file - are used for authorization decisions.
+- Add new meta-package, polkit-js-engine, that pulls in the required
+  JavaScript bits to make polkit authorization rules work. The default
+  install - not the minimal install - should include this package
+
+* Wed Oct 10 2012 Adam Jackson <ajax@redhat.com> 0.107-4
+- Don't crash if initializing the server object fails
+
+* Tue Sep 18 2012 David Zeuthen <davidz@redhat.com> 0.107-3%{?dist}
+- Authenticate as root if e.g. the wheel group is empty (#834494)
+
+* Fri Jul 27 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.107-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Wed Jul 11 2012 David Zeuthen <davidz@redhat.com> 0.107-1%{?dist}
+- Update to upstream release 0.107
+
+* Fri Jun 29 2012 David Zeuthen <davidz@redhat.com> 0.106-2%{?dist}
+- Add forgotten Requires(pre): shadow-utils
 
 * Thu Jun 07 2012 David Zeuthen <davidz@redhat.com> 0.106-1%{?dist}
 - Update to upstream release 0.106
@@ -169,7 +335,7 @@ exit 0
 - Add patch to neuter the annoying systemd behavior where stdout/stderr
   is sent to the system logs
 
-* Fri Aug 04 2011 David Zeuthen <davidz@redhat.com> 0.102-1
+* Thu Aug 04 2011 David Zeuthen <davidz@redhat.com> 0.102-1
 - Update to 0.102 release
 
 * Fri May 13 2011 Bastien Nocera <bnocera@redhat.com> 0.101-7
@@ -206,7 +372,7 @@ exit 0
 * Fri Jan 28 2011 Matthias Clasen <mclasen@redhat.com> - 0.98-6
 - Own /usr/libexec/polkit-1
 
-* Fri Nov 14 2010 Matthias Clasen <mclasen@redhat.com> - 0.98-5
+* Fri Nov 12 2010 Matthias Clasen <mclasen@redhat.com> - 0.98-5
 - Enable introspection
 
 * Thu Sep 02 2010 David Zeuthen <davidz@redhat.com> - 0.98-4
