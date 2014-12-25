@@ -1,42 +1,32 @@
 Name:           libmediaart
-Version:	0.4.0
+Version:        0.7.0
 Release:        1%{?dist}
 Summary:        Library for managing media art caches
-Summary(zh_CN.UTF-8): 管理媒体缓存的库
 
 License:        LGPLv2+
 URL:            https://github.com/curlybeast/libmediaart
-%define majorver %(echo %{version} | awk -F. '{print $1"."$2}')
-Source0:        https://download.gnome.org/sources/%{name}/%{majorver}/%{name}-%{version}.tar.xz
+Source0:        https://download.gnome.org/sources/%{name}/0.7/%{name}-%{version}.tar.xz
 
 BuildRequires:  pkgconfig(glib-2.0) pkgconfig(gio-2.0) pkgconfig(gio-unix-2.0)
 BuildRequires:  pkgconfig(gdk-pixbuf-2.0)
 BuildRequires:  vala-tools vala-devel
-#for the autoreconf
-BuildRequires:  automake autoconf libtool
 
 
 %description
 Library tasked with managing, extracting and handling media art caches.
 
-%description -l zh_CN.UTF-8
-管理媒体缓存的库。
 
 %package        devel
 Summary:        Development files for %{name}
-Summary(zh_CN.UTF-8): %{name} 的开发包
 Requires:       %{name}%{?_isa} = %{version}-%{release}
 
 %description    devel
 The %{name}-devel package contains libraries and header files for
 developing applications that use %{name}.
 
-%description devel -l zh_CN.UTF-8
-%{name} 的开发包。
 
 %prep
 %setup -q
-autoreconf -fi
 
 
 %build
@@ -49,7 +39,6 @@ make %{?_smp_mflags}
 %install
 %make_install
 find $RPM_BUILD_ROOT -name '*.la' -delete -print
-magic_rpm_clean.sh
 
 #check
 # requires X
@@ -75,8 +64,26 @@ magic_rpm_clean.sh
 
 
 %changelog
-* Fri Jul 18 2014 Liu Di <liudidi@gmail.com> - 0.4.0-1
-- 更新到 0.4.0
+* Mon Sep 22 2014 Yanko Kaneti <yaneti@declera.com> - 0.7.0-1
+- Update to 0.7.0
+
+* Tue Aug 19 2014 Kalev Lember <kalevlember@gmail.com> - 0.6.0-1
+- Update to 0.6.0
+
+* Sun Aug 17 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.4.0-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
+
+* Tue Jul 22 2014 Kalev Lember <kalevlember@gmail.com> - 0.4.0-3
+- Rebuilt for gobject-introspection 1.41.4
+
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.4.0-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Tue Apr  1 2014 Yanko Kaneti <yaneti@declera.com> - 0.4.0-1
+- Update to 0.4.0
+
+* Fri Mar  7 2014 Yanko Kaneti <yaneti@declera.com> - 0.3.0-1
+- Update to 0.3.0. Drop upstreamed patches.
 
 * Sat Feb  8 2014 Yanko Kaneti <yaneti@declera.com> - 0.2.0-4
 - Add patches to avoid unnecessary linkage
