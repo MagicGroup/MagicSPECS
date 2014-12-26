@@ -7,20 +7,20 @@
 %define boost_docdir __tmp_docdir
 %define boost_examplesdir __tmp_examplesdir
 
-%ifarch aarch64 ppc64le
+%ifarch ppc64le
   %bcond_with mpich
 %else
   %bcond_without mpich
 %endif
 
-%ifarch s390 s390x aarch64 ppc64le
+%ifarch s390 s390x ppc64le
   # No OpenMPI support on these arches
   %bcond_with openmpi
 %else
   %bcond_without openmpi
 %endif
 
-%ifnarch %{ix86} x86_64
+%ifnarch %{ix86} x86_64 %{arm}
   # Avoid using Boost.Context on non-x86 arches.  s390 is not
   # supported at all and there were _syntax errors_ in PPC code.  This
   # should be enabled on a case-by-case basis as the arches are tested
@@ -34,9 +34,9 @@
 
 Name: boost
 Summary: The free peer-reviewed portable C++ source libraries
-Version: 1.54.0
-%define version_enc 1_54_0
-Release: 12%{?dist}
+Version: 1.55.0
+%define version_enc 1_55_0
+Release: 5%{?dist}
 License: Boost and MIT and Python
 
 %define toplev_dirname %{name}_%{version_enc}
@@ -59,6 +59,7 @@ Requires: boost-atomic = %{version}-%{release}
 Requires: boost-chrono = %{version}-%{release}
 %if %{with context}
 Requires: boost-context = %{version}-%{release}
+Requires: boost-coroutine = %{version}-%{release}
 %endif
 Requires: boost-date-time = %{version}-%{release}
 Requires: boost-filesystem = %{version}-%{release}
@@ -96,28 +97,9 @@ Patch4: boost-1.50.0-fix-non-utf8-files.patch
 # http://www.boost.org/boost-build2/doc/html/bbv2/overview.html
 Patch5: boost-1.48.0-add-bjam-man-page.patch
 
-# https://bugzilla.redhat.com/show_bug.cgi?id=781859
-# The following tickets have yet to be fixed by upstream.
-# https://svn.boost.org/trac/boost/ticket/6413
-# https://svn.boost.org/trac/boost/ticket/8849
-Patch9: boost-1.53.0-attribute.patch
-
 # https://bugzilla.redhat.com/show_bug.cgi?id=828856
 # https://bugzilla.redhat.com/show_bug.cgi?id=828857
 Patch15: boost-1.50.0-pool.patch
-
-# https://bugzilla.redhat.com/show_bug.cgi?id=977098
-# https://svn.boost.org/trac/boost/ticket/8731
-Patch18: boost-1.54.0-__GLIBC_HAVE_LONG_LONG.patch
-
-# Upstream patches posted as release notes:
-# http://www.boost.org/users/history/version_1_54_0.html
-Patch19: 001-coroutine.patch
-Patch20: 002-date-time.patch
-Patch21: 003-log.patch
-
-# https://svn.boost.org/trac/boost/ticket/8826
-Patch22: boost-1.54.0-context-execstack.patch
 
 # https://svn.boost.org/trac/boost/ticket/8844
 Patch23: boost-1.54.0-bind-static_assert.patch
@@ -130,10 +112,6 @@ Patch25: boost-1.54.0-mpl-print.patch
 
 # https://svn.boost.org/trac/boost/ticket/8859
 Patch26: boost-1.54.0-static_warning-unused_typedef.patch
-
-# https://svn.boost.org/trac/boost/ticket/8855
-Patch27: boost-1.54.0-math-unused_typedef.patch
-Patch28: boost-1.54.0-math-unused_typedef-2.patch
 
 # https://svn.boost.org/trac/boost/ticket/8853
 Patch31: boost-1.54.0-tuple-unused_typedef.patch
@@ -152,51 +130,35 @@ Patch36: boost-1.54.0-spirit-unused_typedef-2.patch
 # https://svn.boost.org/trac/boost/ticket/8871
 Patch37: boost-1.54.0-numeric-unused_typedef.patch
 
-# https://svn.boost.org/trac/boost/ticket/8872
-Patch38: boost-1.54.0-multiprecision-unused_typedef.patch
-
-# https://svn.boost.org/trac/boost/ticket/8874
-Patch42: boost-1.54.0-unordered-unused_typedef.patch
-
-# https://svn.boost.org/trac/boost/ticket/8876
-Patch43: boost-1.54.0-algorithm-unused_typedef.patch
-
-# https://svn.boost.org/trac/boost/ticket/8877
-Patch44: boost-1.54.0-graph-unused_typedef.patch
-
 # https://svn.boost.org/trac/boost/ticket/8878
 Patch45: boost-1.54.0-locale-unused_typedef.patch
 
 # https://svn.boost.org/trac/boost/ticket/8879
 Patch46: boost-1.54.0-property_tree-unused_typedef.patch
 
-# https://svn.boost.org/trac/boost/ticket/8880
-Patch47: boost-1.54.0-xpressive-unused_typedef.patch
-
-# https://svn.boost.org/trac/boost/ticket/8881
-Patch48: boost-1.54.0-mpi-unused_typedef.patch
-
 # https://svn.boost.org/trac/boost/ticket/8888
 Patch49: boost-1.54.0-python-unused_typedef.patch
-
-# https://svn.boost.org/trac/boost/ticket/8941
-Patch50: boost-1.54.0-lexical_cast-int128.patch
 
 # https://svn.boost.org/trac/boost/ticket/9038
 Patch51: boost-1.54.0-pool-test_linking.patch
 
-# https://svn.boost.org/trac/boost/ticket/9037
-Patch52: boost-1.54.0-thread-cond_variable_shadow.patch
-
 # This was already fixed upstream, so no tracking bug.
 Patch53: boost-1.54.0-pool-max_chunks_shadow.patch
 
-# https://svn.boost.org/trac/boost/ticket/9041
-Patch54: boost-1.54.0-thread-link_atomic.patch
+# https://svn.boost.org/trac/boost/ticket/8725
+Patch54: boost-1.55.0-program_options-class_attribute.patch
 
-# https://bugzilla.redhat.com/show_bug.cgi?id=1002578
-# https://svn.boost.org/trac/boost/ticket/9065
-Patch55: boost-1.54.0-interprocess-atomic_cas32-ppc.patch
+# Fixed upstream on Oct 4 00:26:49 2013.
+Patch55: boost-1.55.0-archive-init_order.patch
+
+# https://github.com/boostorg/xpressive/pull/1
+Patch56: boost-1.55.0-xpressive-unused_typedefs.patch
+
+# Fixed upstream on Aug 20 05:11:14 2013.
+Patch57: boost-1.55.0-spirit-unused_typedefs.patch
+
+# https://bugzilla.redhat.com/show_bug.cgi?id=1159960
+Patch58: boost-1.54.0-smart_ptr-shared_ptr_at.patch
 
 %bcond_with tests
 %bcond_with docs_generated
@@ -240,6 +202,16 @@ Group: System Environment/Libraries
 
 Run-Time support for Boost.Context, a foundational library that
 provides a sort of cooperative multitasking on a single thread.
+
+%package coroutine
+Summary: Run-Time component of boost coroutine library
+Group: System Environment/Libraries
+
+%description coroutine
+Run-Time support for Boost.Coroutine, a library that provides
+generalized subroutines which allow multiple entry points for
+suspending and resuming execution.
+
 %endif
 
 %package date-time
@@ -653,19 +625,11 @@ a number of significant features and is now developed independently
 
 %patch4 -p1
 %patch5 -p1
-%patch9 -p1
 %patch15 -p0
-%patch18 -p1
-%patch19 -p1
-%patch20 -p1
-%patch21 -p1
-%patch22 -p1
 %patch23 -p1
 %patch24 -p1
 %patch25 -p0
 %patch26 -p1
-%patch27 -p1
-%patch28 -p0
 %patch31 -p0
 %patch32 -p0
 %patch33 -p0
@@ -673,21 +637,16 @@ a number of significant features and is now developed independently
 %patch35 -p1
 %patch36 -p1
 %patch37 -p1
-%patch38 -p1
-%patch42 -p1
-%patch43 -p1
-%patch44 -p1
 %patch45 -p1
 %patch46 -p1
-%patch47 -p1
-%patch48 -p1
 %patch49 -p1
-%patch50 -p0
 %patch51 -p1
-%patch52 -p1
 %patch53 -p1
 %patch54 -p1
 %patch55 -p1
+%patch56 -p1
+%patch57 -p1
+%patch58 -p1
 
 # At least python2_version needs to be a macro so that it's visible in
 # %%install as well.
@@ -894,7 +853,6 @@ rm -f tmp-doc-directories
 echo ============================= install examples ==================
 # Fix a few non-standard issues (DOS and/or non-UTF8 files)
 sed -i -e 's/\r//g' libs/geometry/example/ml02_distance_strategy.cpp
-sed -i -e 's/\r//g' libs/geometry/example/ml02_distance_strategy.vcproj
 for tmp_doc_file in flyweight/example/Jamfile.v2 \
  format/example/sample_new_features.cpp multi_index/example/Jamfile.v2 \
  multi_index/example/hashed.cpp serialization/example/demo_output.txt \
@@ -953,6 +911,10 @@ rm -rf $RPM_BUILD_ROOT
 %post context -p /sbin/ldconfig
 
 %postun context -p /sbin/ldconfig
+
+%post coroutine -p /sbin/ldconfig
+
+%postun coroutine -p /sbin/ldconfig
 %endif
 
 %post date-time -p /sbin/ldconfig
@@ -1044,10 +1006,17 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/libboost_chrono.so.%{sonamever}
 
 %if %{with context}
+
 %files context
 %defattr(-, root, root, -)
 %doc LICENSE_1_0.txt
 %{_libdir}/libboost_context.so.%{sonamever}
+
+%files coroutine
+%defattr(-, root, root, -)
+%doc LICENSE_1_0.txt
+%{_libdir}/libboost_coroutine.so.%{sonamever}
+
 %endif
 
 %files date-time
@@ -1176,6 +1145,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/libboost_chrono.so
 %if %{with context}
 %{_libdir}/libboost_context.so
+%{_libdir}/libboost_coroutine.so
 %endif
 %{_libdir}/libboost_date_time.so
 %{_libdir}/libboost_filesystem.so
@@ -1279,8 +1249,55 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man1/bjam.1*
 
 %changelog
-* Fri Apr 18 2014 Liu Di <liudidi@gmail.com> - 1.54.0-12
-- 为 Magic 3.0 重建
+* Wed Nov 12 2014 Petr Machata <pmachata@redhat.com> - 1.55.0-5
+- Fix boost::shared_ptr<T>::operator[], which was ill-formed for
+  non-array T's.  (boost-1.54.0-smart_ptr-shared_ptr_at.patch)
+
+* Tue Aug 26 2014 David Tardon <dtardon@redhat.com> - 1.55.0-4
+- rebuild for ICU 53.1
+
+* Fri Aug 15 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.55.0-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
+
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.55.0-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Mon May 12 2014 Petr Machata <pmachata@redhat.com> - 1.55.0-1
+- Add a new sub-package boost-coroutine
+- Annotate or drop some unused typedefs
+  (boost-1.55.0-python-unused_typedefs.patch,
+  boost-1.55.0-spirit-unused_typedefs.patch,
+  boost-1.55.0-xpressive-unused_typedefs.patch)
+- Add a patch for wrong initialization order
+  (boost-1.55.0-archive-init_order.patch)
+- Add a patch for misplaced attribute at class declaration
+  (boost-1.55.0-program_options-class_attribute.patch)
+- Drop 001-coroutine.patch, 002-date-time.patch, 003-log.patch,
+  boost-1.53.0-attribute.patch,
+  boost-1.54.0-__GLIBC_HAVE_LONG_LONG.patch,
+  boost-1.54.0-algorithm-unused_typedef.patch,
+  boost-1.54.0-context-execstack.patch,
+  boost-1.54.0-graph-unused_typedef.patch,
+  boost-1.54.0-interprocess-atomic_cas32-ppc.patch,
+  boost-1.54.0-lexical_cast-int128.patch,
+  boost-1.54.0-math-unused_typedef-2.patch,
+  boost-1.54.0-math-unused_typedef.patch,
+  boost-1.54.0-mpi-unused_typedef.patch,
+  boost-1.54.0-multiprecision-unused_typedef.patch,
+  boost-1.54.0-thread-cond_variable_shadow.patch,
+  boost-1.54.0-thread-link_atomic.patch,
+  boost-1.54.0-unordered-unused_typedef.patch,
+  boost-1.54.0-xpressive-unused_typedef.patch,
+
+* Tue Mar 18 2014 Petr Machata <pmachata@redhat.com> - 1.54.0-14
+- Fix a noexecstack patch for ARM, enable Boost.Context on ARM.
+  (boost-1.54.0-context-execstack.patch)
+
+* Tue Mar 18 2014 Björn Esser <bjoern.esser@gmail.com> - 1.54.0-13
+- rebuilt for mpich-3.1
+
+* Mon Mar 17 2014 Peter Robinson <pbrobinson@fedoraproject.org> 1.54.0-12
+- Enable MPICH and OpenMPI support on aarch64
 
 * Wed Feb 12 2014 Petr Machata <pmachata@redhat.com> - 1.54.0-11
 - Rebuild for ICU soname bump.
