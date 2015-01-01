@@ -18,7 +18,7 @@
 ASYNC_BIN=munin-asyncd
 PATH=/sbin:/bin:/usr/sbin:/usr/bin
 DAEMON=/usr/sbin/${ASYNC_BIN}
-PIDFILE=/var/run/${ASYNC_BIN}.pid
+PIDFILE=/var/run/munin/${ASYNC_BIN}.pid
 
 is_running () {
 	if [ ! -e "$PIDFILE" ]; then

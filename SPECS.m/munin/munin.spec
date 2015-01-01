@@ -1,6 +1,6 @@
 Name:           munin
-Version:        2.0.21
-Release:        6%{?dist}
+Version:        2.0.25
+Release:        1%{?dist}
 Summary:        Network-wide graphing framework (grapher/gatherer)
 
 Group:          System Environment/Daemons
@@ -31,6 +31,7 @@ Source20:       Makefile.config-dist
 Source21:       nginx_munin.conf
 Source22:       munin-fcgi-html.rc
 Source23:       munin-fcgi-graph.rc
+Source24:       munin-2.0.9-amavis-config
 
 #Patch1:         munin-1.4.6-restorecon.patch
 #Patch2:         munin-1.4.2-fontfix.patch
@@ -110,12 +111,20 @@ BuildRequires:  systemd-units
 %endif
 
 # Munin node requires
+%if 0%{?rhel} > 6
+#Requires:       perl(Cache::Memcached)
+#Requires:       perl(Carp::Always)
+# This one is in fact optional, only needed for cidr_allow in munin-node,
+# which is documented in the manual page. Not present in el7.
+#Requires:       perl(Net::CIDR)
+%else
 Requires:       perl(Cache::Memcached)
 Requires:       perl(Carp::Always)
+Requires:       perl(Net::CIDR)
+%endif
 Requires:       perl(Crypt::DES)
 Requires:       perl(Digest::HMAC)
 Requires:       perl(Digest::SHA1)
-Requires:       perl(Net::CIDR)
 Requires:       perl(Net::Server)
 Requires:       perl(Net::Server::Fork)
 Requires:       perl(Net::SNMP)
@@ -126,15 +135,14 @@ Requires:       perl(Cache::Cache)
 
 # Munin node java monitor requires
 #Requires:       java-jmx # rhel<5
-# java buildrequires on fedora < 17 and rhel 5,6
-%if 0%{?rhel} > 6 || 0%{?fedora} > 16
-BuildRequires:  java-1.7.0-devel
-%else
-# java buildrequires on fedora 17 and higher
-BuildRequires:  java-1.6.0-devel
-%endif
-BuildRequires:  mx4j
+BuildRequires:  java-devel
 BuildRequires:  jpackage-utils
+%if 0%{?rhel} > 6
+# RHEL7 does not have mx4j
+#BuildRequires:  mx4j
+%else
+BuildRequires:  mx4j
+%endif
 
 # CGI requires
 # RHEL6+ Requires:       dejavu-sans-mono-fonts
@@ -314,6 +322,11 @@ Munin plugins that require Net::IP.  This is only dhcpd3 and ntp currently.
 install -c %{SOURCE12} ./plugins/node.d.linux/cpuspeed.in
 %endif
 
+%if 0%{?rhel} > 6
+# This one relies on Cache::Memcached, which is not shipped with el7
+rm -f plugins/node.d/memcached_.in
+%endif
+
 %patch4 -p0
 %patch5 -p0
 #% patch7 -p1
@@ -327,7 +340,11 @@ sed -i -e 's,^PERLSITELIB := \(.*\),PERLSITELIB := %{perl_vendorlib},;' Makefile
 
 
 %build
+%if 0%{?rhel} > 6
+export  CLASSPATH=plugins/javalib/org/munin/plugin/jmx:$CLASSPATH
+%else
 export  CLASSPATH=plugins/javalib/org/munin/plugin/jmx:$(build-classpath mx4j):$CLASSPATH
+%endif
 make    CONFIG=Makefile.config-dist
 
 # Convert to utf-8
@@ -347,7 +364,11 @@ done
 rm -rf ${buildroot}
 
 ## Node
+%if 0%{?rhel} > 6
+export  CLASSPATH=plugins/javalib/org/munin/plugin/jmx:$CLASSPATH
+%else
 export  CLASSPATH=plugins/javalib/org/munin/plugin/jmx:$(build-classpath mx4j):$CLASSPATH
+%endif
 make    CONFIG=Makefile.config-dist \
         DESTDIR=%{buildroot} \
 %if 0%{?rhel} > 7 || 0%{?fedora} > 19
@@ -394,7 +415,7 @@ install -m 0644 %{SOURCE14} %{buildroot}/lib/systemd/system/munin-asyncd.service
 install -m 0644 %{SOURCE15} %{buildroot}/lib/systemd/system/munin-fcgi-html.service
 install -m 0644 %{SOURCE16} %{buildroot}/lib/systemd/system/munin-fcgi-graph.service
 %endif
-%if 0%{?fedora} > 16
+%if 0%{?rhel} > 6 || 0%{?fedora} > 16
 install -m 0644 %{SOURCE11} %{buildroot}/lib/systemd/system/munin-node.service
 install -m 0644 %{SOURCE14} %{buildroot}/lib/systemd/system/munin-asyncd.service
 install -m 0644 %{SOURCE15} %{buildroot}/lib/systemd/system/munin-fcgi-html.service
@@ -409,7 +430,7 @@ install -m 0644 %{SOURCE9} %{buildroot}%{_sysconfdir}/tmpfiles.d/%{name}.conf
 %endif
 
 # Fedora 15 and rhel use sysvinit / upstart
-%if 0%{?rhel} > 4 || 0%{?fedora} == 15
+%if (0%{?rhel} > 4 && 0%{?rhel} <= 6) || 0%{?fedora} == 15
 mkdir -p %{buildroot}/etc/rc.d/init.d
 cat %{SOURCE18} | sed -e 's/2345/\-/' > %{buildroot}/etc/rc.d/init.d/munin-node
 chmod 755 %{buildroot}/etc/rc.d/init.d/munin-node
@@ -454,6 +475,9 @@ install -m 0644 %{SOURCE6} %{buildroot}/etc/munin/plugin-conf.d/postfix
 # install df config to exclude fses we shouldn't try and monitor
 install -m 0644 %{SOURCE7} %{buildroot}/etc/munin/plugin-conf.d/df
 
+# Install amavis config file to set MUNIN_MKTEMP env
+install -m 0644 %{SOURCE24} %{buildroot}/etc/munin/plugin-conf.d/amavis
+
 # Append for BZ# 746083
 cat - >> %{buildroot}/etc/munin/plugin-conf.d/munin-node <<EOT.node
 [diskstats]
@@ -490,7 +514,10 @@ sed -i 's/^\[.*/\[localhost\]/' %{buildroot}/etc/munin/munin.conf
 
 # BZ# 885422 Move munin-node logs to /var/log/munin-node/
 mkdir -p %{buildroot}/var/log/munin-node
-sed -i 's,^log_file .*,log_file /var/log/munin-node/munin-node.log,' %{buildroot}/etc/munin/munin-node.conf
+sed -i -e '
+  s,^log_file .*,log_file /var/log/munin-node/munin-node.log,;
+  s,^#host_name .*,host_name localhost.localdomain,;
+  ' %{buildroot}/etc/munin/munin-node.conf
 
 # Create sample fcgi config files
 mkdir -p %{buildroot}/etc/sysconfig %{buildroot}/etc/httpd/conf.d
@@ -708,6 +735,7 @@ exit 0
 %dir %attr(0755,root,root) /var/log/munin-node
 %config(noreplace) %{_sysconfdir}/logrotate.d/munin-node
 %config(noreplace) %{_sysconfdir}/munin/munin-node.conf
+%config(noreplace) %{_sysconfdir}/munin/plugin-conf.d/amavis
 %config(noreplace) %{_sysconfdir}/munin/plugin-conf.d/df
 %config(noreplace) %{_sysconfdir}/munin/plugin-conf.d/fw_
 %config(noreplace) %{_sysconfdir}/munin/plugin-conf.d/hddtemp_smartctl
@@ -796,20 +824,46 @@ exit 0
 
 
 %changelog
-* Fri Jun 20 2014 Liu Di <liudidi@gmail.com> - 2.0.21-6
-- 为 Magic 3.0 重建
+* Tue Nov 25 2014 "D. Johnson" <fenris02@fedoraproject.org> - 2.0.25-1
+- Upstream released 2.0.25
 
-* Wed Jun 11 2014 Liu Di <liudidi@gmail.com> - 2.0.21-5
-- 为 Magic 3.0 重建
+* Sun Oct 26 2014 "D. Johnson" <fenris02@fedoraproject.org> - 2.0.24-1
+- Upstream released 2.0.24
 
-* Wed Jun 11 2014 Liu Di <liudidi@gmail.com> - 2.0.21-4
-- 为 Magic 3.0 重建
+* Sat Oct 18 2014 "D. Johnson" <fenris02@fedoraproject.org> - 2.0.23-1
+- Upstream released 2.0.23
 
-* Wed Jun 11 2014 Liu Di <liudidi@gmail.com> - 2.0.21-3
-- 为 Magic 3.0 重建
+* Fri Oct 17 2014 "D. Johnson" <fenris02@fedoraproject.org> - 2.0.22-1
+- Upstream released 2.0.22
+
+* Tue Oct 07 2014 "D. Johnson" <fenris02@fedoraproject.org> - 2.0.21-8
+- BZ# 1149948 - munin-async pid file in /var/run rather than /var/run/munin
+
+* Mon Sep 15 2014 Petr Pisar <ppisar@redhat.com> - 2.0.21-6
+- Build against perl 5.20
+
+* Sun Sep 14 2014 "D. Johnson" <fenris02@fedoraproject.org> - 2.0.21-6
+- Add amavis plugin config defaults
+
+* Sun Sep 07 2014 "D. Johnson" <fenris02@fedoraproject.org> - 2.0.21-5
+- BZ# 1114857 - munin-2.0.21-2.fc21 FTBFS: No Package found for java-1.7.0-devel
+- re-merge earlier commit for epel7
+
+* Fri Aug 29 2014 Jitka Plesnikova <jplesnik@redhat.com> - 2.0.21-4
+- Perl 5.20 rebuild
+
+* Fri Aug 01 2014 "D. Johnson" <fenris02@fedoraproject.org> - 2.0.21-3
+- Default to a localhost name to prevent munin-node from complaining
 
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.0.21-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Mon Apr 28 2014 Lubomir Rintel <lkundrak@v3.sk> - 2.0.21-1.1
+- mx4j is not a build time dependency
+- RHEL 7 Actually uses systemd too
+- No Net::CIDR in el7
+- No Cache::Memcached in el7
+- Carp::Always is not actually required
 
 * Fri Apr 25 2014 "D. Johnson" <fenris02@fedoraproject.org> - 2.0.21-1
 - Upstream released 2.0.21
