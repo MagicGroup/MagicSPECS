@@ -11,7 +11,7 @@
 }
 
 Name:           libkolab
-Version: 0.5.2
+Version: 0.5.3
 Release:        1%{?dist}
 Summary:        Kolab Object Handling Library
 Summary(zh_CN.UTF-8): Kolab 对象处理库
@@ -179,6 +179,9 @@ popd
 %{python_sitearch}/kolab/shared.py*
 
 %changelog
+* Mon Dec 29 2014 Liu Di <liudidi@gmail.com> - 0.5.3-1
+- 更新到 0.5.3
+
 * Fri Jul 18 2014 Liu Di <liudidi@gmail.com> - 0.5.2-1
 - 更新到 0.5.2
 

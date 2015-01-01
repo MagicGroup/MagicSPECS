@@ -1,9 +1,9 @@
 #%%global _internal_version  bc54d96
 
 Name:          mate-power-manager
-Version:       1.8.0
-#Release:       0.4.git%%{_internal_version}%{?dist}
-Release:       4%{?dist}
+Version: 1.9.0
+#Release: 1%{?dist}
+Release: 1%{?dist}
 Summary:       MATE power management service
 Summary(zh_CN.UTF-8): MATE 电源管理服务
 License:       GPLv2+
@@ -64,17 +64,8 @@ MATE 电源管理服务，使用 UPower 提供的信息和功能。
 %setup -q
 #%%setup -q -n %{name}-%{_internal_version}
 
-%patch0 -p1 -b .dbus
-%patch1 -p1 -b .avoid-levels-is-0-warning
-%if 0%{?fedora} > 20
-%patch2 -p1 -b .remove-battery-recall-logic
-%patch3 -p1 -b .port-to-upower-0.99-API
-%patch4 -p1 -b .improve-UPower1-support
-%patch5 -p1 -b .other-round-of-fixes-for-UPower-0.99
-%endif
-
 # nedded to create configure and make files for dbus patch
-NOCONFIGURE=1 ./autogen.sh
+#NOCONFIGURE=1 ./autogen.sh
 
 %build
 %configure \
@@ -118,7 +109,7 @@ fi
 %files  -f %{name}.lang
 %doc AUTHORS COPYING README
 %{_mandir}/man1/mate-power-*.*
-%{_bindir}/mate-power-bugreport.sh
+%{_bindir}/mate-power-manager-bugreport
 %{_bindir}/mate-power-manager
 %{_bindir}/mate-power-preferences
 %{_bindir}/mate-power-statistics
@@ -128,8 +119,8 @@ fi
 %{_datadir}/mate-power-manager/
 %{_datadir}/icons/hicolor/*/apps/mate-*.*
 %{_datadir}/polkit-1/actions/org.mate.power.policy
-%{_datadir}/mate-2.0/ui/brightness-applet-menu.xml
-%{_datadir}/mate-2.0/ui/inhibit-applet-menu.xml
+#%{_datadir}/mate-2.0/ui/brightness-applet-menu.xml
+#%{_datadir}/mate-2.0/ui/inhibit-applet-menu.xml
 %{_datadir}/mate-panel/applets/org.mate.BrightnessApplet.mate-panel-applet
 %{_datadir}/mate-panel/applets/org.mate.InhibitApplet.mate-panel-applet
 %{_datadir}/glib-2.0/schemas/org.mate.power-manager.gschema.xml
@@ -139,6 +130,9 @@ fi
 
 
 %changelog
+* Tue Dec 23 2014 Liu Di <liudidi@gmail.com> - 1.9.0-1
+- 更新到 1.9.0
+
 * Mon Aug 11 2014 Liu Di <liudidi@gmail.com> - 1.8.0-4
 - 为 Magic 3.0 重建
 

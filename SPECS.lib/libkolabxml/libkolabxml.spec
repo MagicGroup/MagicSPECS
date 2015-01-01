@@ -45,7 +45,7 @@
 %endif
 
 Name:           libkolabxml
-Version:        1.0.1
+Version: 1.0.3
 Release:        8%{?dist}
 Summary:        Kolab XML format collection parser library
 
@@ -177,7 +177,7 @@ bindings provided through libkolabxml.
 
 %prep
 %setup -q -n libkolabxml-%{version}
-%patch0 -p1
+#%patch0 -p1
 
 %build
 mkdir -p build
@@ -284,6 +284,9 @@ popd
 %endif
 
 %changelog
+* Mon Dec 29 2014 Liu Di <liudidi@gmail.com> - 1.0.3-8
+- 更新到 1.0.3
+
 * Fri Jul 18 2014 Liu Di <liudidi@gmail.com> - 1.0.1-8
 - 为 Magic 3.0 重建
 

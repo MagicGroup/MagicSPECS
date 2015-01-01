@@ -5,7 +5,7 @@
 %global geocode_glib_version 3.10.0
 
 Name:           gnome-settings-daemon
-Version:	3.13.4
+Version:	3.15.1
 Release:        2%{?dist}
 Summary:        The daemon sharing settings from GNOME to GTK+/KDE applications
 Summary(zh_CN.UTF-8): GNOME 和 GTK+/KDE 程序共享设置的服务
@@ -231,7 +231,7 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 %{_datadir}/glib-2.0/schemas/org.gnome.settings-daemon.enums.xml
 %{_datadir}/glib-2.0/schemas/org.gnome.settings-daemon.plugins.gschema.xml
 
-%{_datadir}/dbus-1/services/org.freedesktop.IBus.service
+#%{_datadir}/dbus-1/services/org.freedesktop.IBus.service
 
 %{_datadir}/man/man1/gnome-settings-daemon.1.gz
 
@@ -266,6 +266,9 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 
 
 %changelog
+* Tue Dec 23 2014 Liu Di <liudidi@gmail.com> - 3.15.1-2
+- 更新到 3.15.1
+
 * Sun Aug 10 2014 Liu Di <liudidi@gmail.com> - 3.13.4-2
 - 更新到 3.13.4
 

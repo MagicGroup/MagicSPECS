@@ -7,7 +7,7 @@ Summary:	MPEG4IP - system for encoding, streaming and playing MPEG-4 audio/video
 Summary(zh_CN.UTF-8):	MPEG4IP - 编码，发布和播放 MPEG-4 音频/视频的系统
 Name:		mpeg4ip
 Version:	1.6.1
-Release:	12%{?dist}
+Release:	13%{?dist}
 Epoch:		1
 License:	MPL v1.1 (original code) and other licenses (included libraries)
 Group:		Applications/Multimedia
@@ -250,6 +250,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/libsrtpif.a
 
 %changelog
+* Thu Dec 04 2014 Liu Di <liudidi@gmail.com> - 1:1.6.1-13
+- 为 Magic 3.0 重建
+
 * Tue Jun 24 2014 Liu Di <liudidi@gmail.com> - 1:1.6.1-12
 - 为 Magic 3.0 重建
 
