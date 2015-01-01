@@ -2,7 +2,7 @@ Summary:            Utilities to convert Outlook .pst files to other formats
 Summary(zh_CN.UTF-8): 转换 Outlook .pst 文件到其它格式的工具
 Name:               libpst
 Version: 0.6.63
-Release: 1%{?dist}
+Release: 3%{?dist}
 License:            GPLv2+
 Group:              Applications/Productivity
 Group(zh_CN.UTF-8): 应用程序/生产力
@@ -172,6 +172,12 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Mon Dec 29 2014 Liu Di <liudidi@gmail.com> - 0.6.63-3
+- 为 Magic 3.0 重建
+
+* Mon Dec 29 2014 Liu Di <liudidi@gmail.com> - 0.6.63-2
+- 为 Magic 3.0 重建
+
 * Mon Jul 28 2014 Liu Di <liudidi@gmail.com> - 0.6.63-1
 - 更新到 0.6.63
 

@@ -1,7 +1,7 @@
 Summary: GNOME power management service
 Summary(zh_CN.UTF-8): GNOME 电源管理服务
 Name: gnome-power-manager
-Version:	3.12.0
+Version:	3.14.1
 Release: 2%{?dist}
 License: GPLv2+ and GFDL
 Group: Applications/System
@@ -72,6 +72,9 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 %{_mandir}/man1/*.1.gz
 
 %changelog
+* Tue Dec 23 2014 Liu Di <liudidi@gmail.com> - 3.14.1-2
+- 更新到 3.14.1
+
 * Wed Apr 09 2014 Liu Di <liudidi@gmail.com> - 3.12.0-2
 - 更新到 3.12.0
 

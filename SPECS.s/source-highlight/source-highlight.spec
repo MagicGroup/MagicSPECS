@@ -1,7 +1,7 @@
 Summary: Produces a document with syntax highlighting
 Name: source-highlight
 Version: 3.1.6
-Release: 7%{?dist}
+Release: 9%{?dist}
 Group: Development/Tools
 License: GPLv3+
 Source0: ftp://ftp.gnu.org/gnu/src-highlite/%{name}-%{version}.tar.gz
@@ -92,6 +92,12 @@ fi
 %{_includedir}/srchilite/*.h
 
 %changelog
+* Mon Dec 29 2014 Liu Di <liudidi@gmail.com> - 3.1.6-9
+- 为 Magic 3.0 重建
+
+* Mon Dec 29 2014 Liu Di <liudidi@gmail.com> - 3.1.6-8
+- 为 Magic 3.0 重建
+
 * Sat May 03 2014 Liu Di <liudidi@gmail.com> - 3.1.6-7
 - 为 Magic 3.0 重建
 

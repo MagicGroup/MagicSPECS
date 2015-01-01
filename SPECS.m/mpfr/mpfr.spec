@@ -1,12 +1,14 @@
 Summary: A C library for multiple-precision floating-point computations
+Summary(zh_CN.UTF-8): 一种高精度浮点计算 C 语言库
 Name: mpfr
 Version: 3.1.2
-Release: 4%{?dist}
+Release: 5%{?dist}
 URL: http://www.mpfr.org/
 Source0: http://www.mpfr.org/mpfr-current/%{name}-%{version}.tar.xz
 # GFDL  (mpfr.texi, mpfr.info and fdl.texi)
 License: LGPLv3+ and GPLv3+ and GFDL
 Group: System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 BuildRequires: autoconf libtool gmp-devel
 Requires(post): /sbin/ldconfig
 Requires(postun): /sbin/ldconfig
@@ -19,9 +21,14 @@ also has a well-defined semantics. It copies the good ideas from the
 ANSI/IEEE-754 standard for double-precision floating-point arithmetic 
 (53-bit mantissa). MPFR is based on the GMP multiple-precision library.
 
+%description -l zh_CN.UTF-8
+一种高精度浮点计算 C 语言库。
+
 %package devel
 Summary: Development tools A C library for mpfr library
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: %{name} = %{version}-%{release}
 Requires(post): /sbin/install-info
 Requires(preun): /sbin/install-info
@@ -34,6 +41,9 @@ multiple-precision floating-point library in applications.
 If you want to develop applications which will use the MPFR library,
 you'll need to install the mpfr-devel package.  You'll also need to
 install the mpfr package.
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -52,6 +62,7 @@ rm -f $RPM_BUILD_ROOT%{_infodir}/dir
 mkdir $RPM_BUILD_ROOT/%{_docdir}/%{name}-%{version}
 mv $RPM_BUILD_ROOT/%{_docdir}/%{name}/ $RPM_BUILD_ROOT/%{_docdir}/%{name}-%{version}/
 %endif
+magic_rpm_clean.sh
 
 %check
 make %{?_smp_mflags} check
@@ -85,6 +96,9 @@ fi
 %{_docdir}/mpfr/*
 
 %changelog
+* Thu Dec 25 2014 Liu Di <liudidi@gmail.com> - 3.1.2-5
+- 为 Magic 3.0 重建
+
 * Tue Aug 06 2013 Ralf Corsépius <corsepiu@fedoraproject.org> - 3.1.2-4
 - Install docs into unversioned docdir (Fix FTBFS RHBZ#992296).
 - Append --disable-static to %%configure.

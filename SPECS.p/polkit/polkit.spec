@@ -6,7 +6,7 @@
 Summary: An authorization framework
 Name: polkit
 Version: 0.112
-Release: 8%{?dist}
+Release: 9%{?dist}
 License: LGPLv2+
 URL: http://www.freedesktop.org/wiki/Software/polkit
 Source0: http://www.freedesktop.org/software/polkit/releases/%{name}-%{version}.tar.gz
@@ -185,6 +185,9 @@ exit 0
 %{_libdir}/girepository-1.0/*.typelib
 
 %changelog
+* Tue Dec 23 2014 Liu Di <liudidi@gmail.com> - 0.112-9
+- 为 Magic 3.0 重建
+
 * Sat Nov 08 2014 Colin Walters <walters@redhat.com> - 0.112-8
 - Split separate -libs package, so that NetworkManager can just depend on
   that, without dragging in the daemon (as well as libmozjs17).  This

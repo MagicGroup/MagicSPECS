@@ -1,7 +1,7 @@
 Summary:        Power Management Service
 Name:           upower
 Version:        0.99.2
-Release:        1%{?dist}
+Release:        2%{?dist}
 License:        GPLv2+
 Group:          System Environment/Libraries
 URL:            http://upower.freedesktop.org/
@@ -110,6 +110,9 @@ rm -f $RPM_BUILD_ROOT%{_libdir}/*.la
 %{_datadir}/gtk-doc/html/UPower/*
 
 %changelog
+* Tue Dec 23 2014 Liu Di <liudidi@gmail.com> - 0.99.2-2
+- 为 Magic 3.0 重建
+
 * Thu Dec 18 2014 Richard Hughes <rhughes@redhat.com> - 0.99.2-1
 - New upstream release
 - Fix various memory and reference leaks

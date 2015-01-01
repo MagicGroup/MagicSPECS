@@ -1,5 +1,5 @@
 Name:          mutter
-Version:	3.13.4
+Version:	3.15.3
 Release:       1%{?dist}
 Summary:       Window and compositing manager based on Clutter
 
@@ -136,6 +136,9 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 %exclude %{_datadir}/gtk-doc
 
 %changelog
+* Wed Dec 24 2014 Liu Di <liudidi@gmail.com> - 3.15.3-1
+- 更新到 3.15.3
+
 * Sun Aug 10 2014 Liu Di <liudidi@gmail.com> - 3.13.4-1
 - 更新到 3.13.4
 
