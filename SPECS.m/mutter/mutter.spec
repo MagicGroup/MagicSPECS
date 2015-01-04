@@ -1,9 +1,11 @@
 Name:          mutter
 Version:	3.15.3
-Release:       1%{?dist}
+Release:       2%{?dist}
 Summary:       Window and compositing manager based on Clutter
+Summary(zh_CN.UTF-8): 基于 Clutter 的窗口管理器
 
 Group:         User Interface/Desktops
+Group(zh_CN.UTF-8): 用户界面/桌面
 License:       GPLv2+
 #VCS:          git:git://git.gnome.org/mutter
 %define majorver %(echo %{version} | awk -F. '{print $1"."$2}')
@@ -52,15 +54,23 @@ Moblin. For this reason, Mutter is very extensible via plugins, which
 are used both to add fancy visual effects and to rework the window
 management behaviors to meet the needs of the environment.
 
+%description -l zh_CN.UTF-8
+基于 clutter 窗口管理器。
+
 %package devel
 Summary: Development package for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: %{name} = %{version}-%{release}
 Requires: pkgconfig
 
 %description devel
 Header files and libraries for developing Mutter plugins. Also includes
 utilities for testing Metacity/Mutter themes.
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -136,6 +146,9 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 %exclude %{_datadir}/gtk-doc
 
 %changelog
+* Thu Jan 01 2015 Liu Di <liudidi@gmail.com> - 3.15.3-2
+- 为 Magic 3.0 重建
+
 * Wed Dec 24 2014 Liu Di <liudidi@gmail.com> - 3.15.3-1
 - 更新到 3.15.3
 

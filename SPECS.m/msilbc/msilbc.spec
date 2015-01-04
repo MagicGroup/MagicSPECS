@@ -3,11 +3,13 @@
 %define develname %name-devel
 
 Summary:	msiLBC is low bitrate audio codec - plugin for mediastreamer
+Summary(zh_CN.UTF-8): msiLBC 是一个低采样率的音频编码，可用在媒体服务插件
 Name:		msilbc
 Version:	2.0.3
-Release:	5%{?dist}
+Release:	6%{?dist}
 License:	GPL2
-Group:		System/Libraries
+Group:  System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 URL:		http://www.linphone.org
 Source0:	http://download.savannah.gnu.org/releases/linphone/plugins/sources/%{name}-%{version}.tar.gz
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-buildroot
@@ -23,17 +25,24 @@ codec, which is necessary to use the codec with Linphone.
 iLBC is low bitrate audio codec - plugin for mediastreamer.
 Needed to build Google Talk libjingle voice call support with iLBC codec.
 
+%description -l zh_CN.UTF-8
+msiLBC 是一个低采样率的音频编码，可用在媒体服务插件。
 
 #--------------------------------------------------------------------
 %package -n %{libname}
 Summary:	Library files for msiLBC
-Group:          System/Libraries
+Summary(zh_CN.UTF-8): %{name} 的动态运行库
+Group:  System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 
 %description -n	%{libname}
 This package supplies the mediastreamer plugin for the iLBC audio
 codec, which is necessary to use the codec with Linphone.
 iLBC is low bitrate audio codec - plugin for mediastreamer.
 Needed to build Google Talk libjingle voice call support with iLBC codec.
+
+%description -n %{libname} -l zh_CN.UTF-8
+%{name} 的动态运行库。
 
 %files -n %{libname}
 %defattr(-,root,root)
@@ -43,7 +52,9 @@ Needed to build Google Talk libjingle voice call support with iLBC codec.
 #--------------------------------------------------------------------
 %package -n %{develname}
 Summary:	Development files for msiLBC library
-Group:		Development/C
+Summary(zh_CN.UTF-8): %{name} 的开发包
+Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:	%{libname} = %{version}-%{release}
 Provides:	%{name}-devel = %{version}-%{release}
 
@@ -52,6 +63,9 @@ This package supplies the mediastreamer plugin for the iLBC audio
 codec, which is necessary to use the codec with Linphone.
 iLBC is low bitrate audio codec - plugin for mediastreamer.
 Needed to build Google Talk libjingle voice call support with iLBC codec.
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %files -n %{develname}
 %defattr(-,root,root)
@@ -81,6 +95,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Jan 01 2015 Liu Di <liudidi@gmail.com> - 2.0.3-6
+- 为 Magic 3.0 重建
+
 * Tue Jun 24 2014 Liu Di <liudidi@gmail.com> - 2.0.3-5
 - 为 Magic 3.0 重建
 

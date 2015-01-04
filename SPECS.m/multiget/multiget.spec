@@ -1,10 +1,10 @@
-%define svn 1
+%define svn 0
 %define svndate 20120118
 Summary: Cross platform file downloader
 Summary(zh_CN.UTF-8): 跨平台的文件下载工具
 Name: multiget
 Version: 2.0
-Release: 0.2%{?dist}
+Release: 0.3%{?dist}
 License: GPL
 Group: Applications/Internet
 Group(zh_CN.UTF-8): 应用程序/互联网
@@ -64,13 +64,18 @@ magic_rpm_clean.sh
 %{__rm} -rf %{buildroot} %{_builddir}/%{buildsubdir}
 
 %files
-%{_bindir}
-%{_datadir}
-#%{_usr}
-#%exclude %{_usr}/*/debug*
-#%exclude %{_usrsrc}
+%{_bindir}/multiget
+%{_datadir}/applications/multiget.desktop
+#好像已经没有用了。
+%{_datadir}/apps/konqueror/servicemenus/d4x_download_servicemenu.desktop
+%{_docdir}/multiget/*
+%{_datadir}/locale/zh_CN/LC_MESSAGES/multiget.mo
+%{_datadir}/pixmaps/mg_32.xpm
 
 %changelog
+* Thu Jan 01 2015 Liu Di <liudidi@gmail.com> - 2.0-0.3
+- 为 Magic 3.0 重建
+
 * Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 2.0-0.2
 - 为 Magic 3.0 重建
 

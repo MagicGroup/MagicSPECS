@@ -1,9 +1,11 @@
 Summary: Programs for accessing MS-DOS disks without mounting the disks
+Summary(zh_CN.UTF-8): 不挂载磁盘访问 MS-DOS 盘的程序
 Name: mtools
-Version: 4.0.17
-Release: 2%{?dist}
+Version: 4.0.18
+Release: 1%{?dist}
 License: GPLv3+
 Group: Applications/System
+Group(zh_CN.UTF-8): 应用程序/系统
 Source0: ftp://ftp.gnu.org/gnu/mtools/mtools-%{version}.tar.bz2
 Url: http://mtools.linux.lu/
 Buildroot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -19,6 +21,9 @@ files (normally on MS-DOS floppy disks).  Mtools supports Windows95
 style long file names, OS/2 XDF disks, and 2m disks
 
 Mtools should be installed if you need to use MS-DOS disks
+
+%description -l zh_CN.UTF-8
+不挂载磁盘访问 MS-DOS 盘的程序。
 
 %prep
 %setup -q -n %{name}-%{version}
@@ -68,6 +73,9 @@ fi
 %{_infodir}/mtools.info*
 
 %changelog
+* Thu Jan 01 2015 Liu Di <liudidi@gmail.com> - 4.0.18-1
+- 更新到 4.0.18
+
 * Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 4.0.17-2
 - 为 Magic 3.0 重建
 
