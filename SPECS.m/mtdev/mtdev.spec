@@ -1,19 +1,24 @@
 %global tarball mtdev
-%global gitdate 20110105
+#global gitdate 20110105
 
 Name:           mtdev
-Version:        1.1.0
-Release:        4.%{?gitdate}%{?dist}
+Version:        1.1.5
+Release:        2%{?gitdate:.%{gitdate}git%{gitversion}}%{?dist}
 Summary:        Multitouch Protocol Translation Library
+Summary(zh_CN.UTF-8): 多点触摸协议转换库
 
 Group:          System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 License:        MIT
 URL:            http://bitmath.org/code/mtdev/
 
-# upstream doesn't have tarballs
+%if 0%{?gitdate}
 Source0:        %{tarball}-%{gitdate}.tar.bz2
 Source1:        make-git-snapshot.sh
 Source2:        commitid
+%else
+Source0:        http://bitmath.org/code/%{name}/%{name}-%{version}.tar.bz2
+%endif
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildRequires:  autoconf automake libtool
@@ -25,16 +30,23 @@ events to the slotted type B protocol. The events put into mtdev may be from
 any MT device, specifically type A without contact tracking, type A with
 contact tracking, or type B with contact tracking.
 
+%description -l zh_CN.UTF-8
+多点触摸协议转换库。
+
 %package devel
 Summary:        Multitouch Protocol Translation Library Development Package
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Requires:       %{name} = %{version}-%{release}
 Requires:       pkgconfig
 
 %description devel
 Multitouch protocol translation library development package.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
 %prep
-%setup -q -n %{tarball}-%{gitdate}
+%setup -q -n %{tarball}-%{?gitdate:%{gitdate}}%{!?gitdate:%{version}}
 
 %build
 autoreconf -v --install || exit 1
@@ -47,6 +59,7 @@ make install DESTDIR=%{buildroot} INSTALL="install -p"
 
 # We intentionally don't ship *.la files
 rm -f %{buildroot}%{_libdir}/*.la
+magic_rpm_clean.sh
 
 %clean
 rm -rf %{buildroot}
@@ -56,7 +69,7 @@ rm -rf %{buildroot}
 
 %files
 %defattr(-,root,root,-)
-%doc COPYING README CREDITS
+%doc COPYING README 
 %{_libdir}/libmtdev.so.*
 
 %files devel
@@ -69,6 +82,12 @@ rm -rf %{buildroot}
 %{_bindir}/mtdev-test
 
 %changelog
+* Thu Jan 01 2015 Liu Di <liudidi@gmail.com> - 1.1.5-2
+- 为 Magic 3.0 重建
+
+* Fri Jan 01 2015 Liu Di <liudidi@gmail.com> - 1.1.5-1
+- 更新到 1.1.5
+
 * Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 1.1.0-4.20110105
 - 为 Magic 3.0 重建
 

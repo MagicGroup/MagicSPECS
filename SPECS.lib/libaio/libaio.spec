@@ -26,7 +26,7 @@ Linux 本地异步 I/O 访问库。
 
 %package devel
 Summary: Development files for Linux-native asynchronous I/O access
-Group(zh_CN.UTF-8): 开发/库
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: Development/System
 Group(zh_CN.UTF-8): 开发/系统
 Requires: libaio

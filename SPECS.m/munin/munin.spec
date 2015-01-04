@@ -1,6 +1,6 @@
 Name:           munin
 Version:        2.0.25
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Network-wide graphing framework (grapher/gatherer)
 
 Group:          System Environment/Daemons
@@ -824,6 +824,9 @@ exit 0
 
 
 %changelog
+* Thu Jan 01 2015 Liu Di <liudidi@gmail.com> - 2.0.25-2
+- 为 Magic 3.0 重建
+
 * Tue Nov 25 2014 "D. Johnson" <fenris02@fedoraproject.org> - 2.0.25-1
 - Upstream released 2.0.25
 

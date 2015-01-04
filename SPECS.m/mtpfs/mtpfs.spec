@@ -2,8 +2,9 @@
 
 Name:           mtpfs
 Version:        1.1
-Release:        0.4.svn%{svndate}%{?dist}
+Release:        0.5.svn%{svndate}%{?dist}
 Summary:        FUSE file system allowing MTP device to be mounted and browsed
+Summary(zh_CN.UTF-8): 可以挂载 MTP 设备进行浏览的 FUSE 文件系统
 
 License:        GPLv3
 URL:            https://code.google.com/p/mtpfs/
@@ -37,6 +38,8 @@ to be browsed as if it were a normal external hard disk.
 
 You can use this to mount and browse some Android tablet computers.
 
+%description -l zh_CN.UTF-8
+可以挂载 MTP 设备进行浏览的 FUSE 文件系统。很多安卓设备支持这个协议。
 
 %prep
 %setup -q -n mtpfs-read-only
@@ -58,6 +61,9 @@ make install DESTDIR=$RPM_BUILD_ROOT
 
 
 %changelog
+* Thu Jan 01 2015 Liu Di <liudidi@gmail.com> - 1.1-0.5.svn20120510
+- 为 Magic 3.0 重建
+
 * Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 1.1-0.4.svn20120510
 - 为 Magic 3.0 重建
 

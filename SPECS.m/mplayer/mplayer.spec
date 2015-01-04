@@ -1,5 +1,5 @@
 %define _sysconfdir /etc
-%define date 2013-07-02
+%define date 2014-12-31
 %define with_gui 1
 %define with_vdpau 1
 
@@ -10,7 +10,7 @@ Summary(zh_CN.UTF-8): MPlayer, Linux 下的媒体播放器
 Name: mplayer
 Version: 1.0svn%{svndate}
 License: GPL
-Release: 5%{?dist}
+Release: 1%{?dist}
 Group: Applications/Multimedia
 Group(zh_CN.UTF-8): 应用程序/多媒体
 Url: http://www.mplayerhq.hu
@@ -90,7 +90,6 @@ Mplayer 的 GUI 支持文件。
         --codecsdir=/usr/lib/codecs \
         --enable-faad            \
         --enable-libmpeg2          \
-        --enable-dvdread            \
 %if %{with_gui}
         --enable-gui \
 %else
@@ -120,7 +119,8 @@ Mplayer 的 GUI 支持文件。
         --enable-menu \
         --enable-dynamic-plugins \
         --enable-freetype \
-        --enable-vm
+        --enable-vm \
+	--extra-libs="-lmpeg2 -ldvdread"
 
 make %{?_smp_mflags}
 
@@ -200,6 +200,9 @@ rm -rf %{buildroot} %{_builddir}/%{buildsubdir}
 %endif
 
 %changelog
+* Thu Jan 01 2015 Liu Di <liudidi@gmail.com> - 1.0svn20141231-1
+- 更新到 1.0svn20141231
+
 * Fri Jul 05 2013 Liu Di <liudidi@gmail.com> - 1.0svn20130702-5
 - 为 Magic 3.0 重建
 

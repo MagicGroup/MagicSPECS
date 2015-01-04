@@ -1,9 +1,11 @@
 Name:           munge
 Version:        0.5.11
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        Enables uid & gid authentication across a host cluster
+Summary(zh_CN.UTF-8): 通过主机 cluster 启用 uid 和 gid 认证
 
 Group:          Applications/System
+Group(zh_CN.UTF-8): 应用程序/系统
 License:        GPLv2+
 URL:            http://munge.googlecode.com/
 Source0:        http://munge.googlecode.com/files/munge-%{version}.tar.bz2
@@ -32,21 +34,33 @@ key. Clients within this security realm can create and validate credentials
 without the use of root privileges, reserved ports, or platform-specific 
 methods.
 
+%description -l zh_CN.UTF-8
+通过主机 cluster 启用 uid 和 gid 认证。
+
 %package devel
 Summary:        Development files for uid * gid authentication across a host cluster
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:          Applications/System
+Group(zh_CN.UTF-8): 开发/库
 Requires:       munge-libs%{?_isa} = %{version}-%{release}
 
 %description devel
 Header files for developing using MUNGE.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
 %package libs
 Summary:        Runtime libs for uid * gid authentication across a host cluster
+Summary(zh_CN.UTF-8): %{name} 的运行库
 Group:          Applications/System
+Group(zh_CN.UTF-8): 应用程序/系统
 
 %description libs
 Runtime libraries for using MUNGE.
 
+%description libs -l zh_CN.UTF-8
+%{name} 的运行库。
 
 %prep
 %setup -q
@@ -87,6 +101,7 @@ chmod 700 %{buildroot}%{_sysconfdir}/munge
 # i.e it is not actually included in the rpm, only the record 
 # of it is.
 touch %{buildroot}%{_var}/run/munge/munged.pid
+magic_rpm_clean.sh
 
 %clean
 rm -rf %{buildroot}
@@ -164,6 +179,9 @@ exit 0
 
 
 %changelog
+* Thu Jan 01 2015 Liu Di <liudidi@gmail.com> - 0.5.11-4
+- 为 Magic 3.0 重建
+
 * Sun Aug 17 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.5.11-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
 

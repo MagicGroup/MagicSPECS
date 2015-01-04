@@ -5,14 +5,16 @@
 %define _unpackaged_files_terminate_build	0
 
 Summary:  A collection of Python software tools
+Summary(zh_CN.UTF-8): Python 软件工具集合
 Name: mx%{pybasever}
 Version: 3.2.5
-Release: 1%{?dist}
+Release: 2%{?dist}
 URL: http://www.lemburg.com/files/python/eGenix-mx-Extensions.html
 Source0: http://www.lemburg.com/python/egenix-mx-base-%{version}.tar.gz
 #Patch1: mx-3.1.1-lib64.patch
 License: Python
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 BuildRequires: Distutils
 BuildRequires: python-devel > 2.3
 %if %{?without_pybasever}
@@ -25,13 +27,21 @@ BuildRoot: %{_tmppath}/%{name}-%{version}-root
 The mx extensions for Python are a collection of Python software tools
 which enhance Python's usability in many areas.
 
+%description -l zh_CN.UTF-8
+Python 软件工具集合。
+
 %package devel
 Summary: Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: %{name} = %{version}-%{release}
 
 %description devel
 Development files for %{name}
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q -n egenix-mx-base-%{version}
@@ -93,6 +103,7 @@ rm -rf ${BASEDIR}/mx/*/Doc/
 rm -rf ${BASEDIR}/mx/*/Examples
 rm -rf docs/*/Examples/*.pyc
 rm -rf docs/*/Examples/*.pyo
+magic_rpm_clean.sh
 
 %clean
 rm -rf %{buildroot}
@@ -108,6 +119,9 @@ rm -rf %{buildroot}
 %{_includedir}/mx/
 
 %changelog
+* Sat Jan 03 2015 Liu Di <liudidi@gmail.com> - 3.2.5-2
+- 为 Magic 3.0 重建
+
 * Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 3.2.1-2
 - 为 Magic 3.0 重建
 
