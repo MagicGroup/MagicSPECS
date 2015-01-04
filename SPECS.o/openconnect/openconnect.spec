@@ -1,8 +1,4 @@
-# For Fedora 17 and below, for now, build a compat libopenconnect.so.1 with OpenSSL so
-# that the upgrade path is easier.
-%define build_compat_lib 0%{?fedora} && 0%{?fedora} < 18
-
-# RHEL6 still has GnuTLS which is even more ancient than Fedora's!
+# RHEL6 still has ancient GnuTLS
 %define use_gnutls 0%{?fedora} || 0%{?rhel} >= 7
 
 # RHEL5 has no libproxy, and no %make_install macro
@@ -16,31 +12,27 @@
 %endif
 
 Name:		openconnect
-Version:	5.02
-Release:	2%{?dist}
+Version:	7.02
+Release:	1%{?dist}
 Summary:	Open client for Cisco AnyConnect VPN
 
 Group:		Applications/Internet
 License:	LGPLv2+
 URL:		http://www.infradead.org/openconnect.html
 Source0:	ftp://ftp.infradead.org/pub/openconnect/openconnect-%{version}.tar.gz
-Source1:	library15.c
-Source2:	libopenconnect15.map
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildRequires:	pkgconfig(openssl) pkgconfig(libxml-2.0)
 BuildRequires:	autoconf automake libtool python gettext
-%if 0%{?fedora}
-%if !(%{build_compat_lib})
+%if 0%{?fedora} || 0%{?rhel} >= 7
 Obsoletes:	openconnect-lib-compat%{?_isa} < %{version}-%{release}
-%endif
 Requires:	vpnc-script
 %else
 Requires:	vpnc
 %endif
 
 %if %{use_gnutls}
-BuildRequires:	pkgconfig(gnutls) trousers-devel
+BuildRequires:	pkgconfig(gnutls) trousers-devel pkgconfig(libpcsclite)
 %endif
 %if %{use_libproxy}
 BuildRequires:	pkgconfig(libproxy-1.0)
@@ -67,56 +59,10 @@ This package provides the core HTTP and authentication support from
 the OpenConnect VPN client, to be used by GUI authentication dialogs
 for NetworkManager etc.
 
-%package doc
-Summary: Doc files for %{name}
-Group: Documentation
-Requires: %{name}%{?_isa} = %{version}-%{release}
-
-%description doc
-Doc files for %{name}.
-
-%package lib-compat
-Summary: Compatibility library for OpenConnect authentication clients
-Group: Applications/Internet
-Requires: %{name}%{?_isa} = %{version}-%{release}
-
-%description lib-compat
-This package provides a backward-compatible library for use by GNOME and KDE
-NetworkManager clients which have not yet been rebuilt to use the new version
-of the library.
-
 %prep
 %setup -q
-%if %{build_compat_lib}
-cp %{SOURCE1} .
-cp %{SOURCE2} libopenconnect15.map.in
-# In Fedora 16 we fixed the gnutls_record_get_direction() bug without upgrading
-sed 's/2\.12\.16/2.12.14/' -i configure
-touch version.c
-%endif
 
 %build
-%if %{build_compat_lib}
-mkdir compat
-cd compat
-%global _configure ../configure
-%configure --with-vpnc-script=/etc/vpnc/vpnc-script --htmldir=%{_docdir}/%{name}-%{version} --without-gnutls --without-openssl-version-check
-# Hack: Build with library15.c instead of library.c and use the old version
-# script and soname.
-sed -e 's/library\./library15./g' \
-    -e 's/libopenconnect.map/libopenconnect15.map/g' \
-    -e 's/\$(LT_VER_ARG) 2:./-version-number 1:5/g' \
-    Makefile > Makefile.lib15
-# We configure with --disable-dependency-tracking so we do not need this:
-# cp .deps/libopenconnect_la-library.Plo .deps/libopenconnect_la-library2.Plo
-
-# Do not let it rebuild the symbol map that we provided
-cp %{SOURCE2} .
-make -f Makefile.lib15 libopenconnect.la V=1
-cd ..
-%global _configure ./configure
-%endif # {build_compat_lib}
-
 %configure	--with-vpnc-script=/etc/vpnc/vpnc-script \
 %if !%{use_gnutls}
 		--with-openssl --without-openssl-version-check \
@@ -127,11 +73,6 @@ make %{?_smp_mflags} V=1
 
 %install
 rm -rf $RPM_BUILD_ROOT
-%if %{build_compat_lib}
-mkdir -p $RPM_BUILD_ROOT/%{_libdir}
-install -m0755 compat/.libs/libopenconnect.so.1.5.0 ${RPM_BUILD_ROOT}/%{_libdir}
-ln -sf libopenconnect.so.1.5.0 ${RPM_BUILD_ROOT}/%{_libdir}/libopenconnect.so.1
-%endif
 %make_install
 rm -f $RPM_BUILD_ROOT/%{_libdir}/libopenconnect.la
 %find_lang %{name}
@@ -145,13 +86,10 @@ rm -rf $RPM_BUILD_ROOT
 
 %files -f %{name}.lang
 %defattr(-,root,root,-)
-%{_libdir}/libopenconnect.so.2*
+%{_libdir}/libopenconnect.so.5*
 %{_sbindir}/openconnect
-
-%if %{build_compat_lib}
-%files lib-compat
-%{_libdir}/libopenconnect.so.1*
-%endif
+%{_mandir}/man8/*
+%doc TODO COPYING.LGPL
 
 %files devel
 %defattr(-,root,root,-)
@@ -159,13 +97,35 @@ rm -rf $RPM_BUILD_ROOT
 /usr/include/openconnect.h
 %{_libdir}/pkgconfig/openconnect.pc
 
-%files doc
-%defattr(-,root,root,-)
-%{_docdir}/openconnect/*
-%{_mandir}/man8/*
-%doc TODO COPYING.LGPL
-
 %changelog
+* Fri Dec 19 2014 David Woodhouse <David.Woodhouse@intel.com> - 7.02-1
+- Update to 7.02 release (#1175951)
+
+* Sun Dec 07 2014 David Woodhouse <David.Woodhouse@intel.com> - 7.01-1
+- Update to 7.01 release
+
+* Thu Nov 27 2014 David Woodhouse <David.Woodhouse@intel.com> - 7.00-2
+- Add upstreamed version of Nikos' curve patch with version.c fixed
+
+* Thu Nov 27 2014 David Woodhouse <David.Woodhouse@intel.com> - 7.00-1
+- Update to 7.00 release
+
+* Tue Sep 16 2014 Nikos Mavrogiannopoulos <nmav@redhat.com> - 6.00-2
+- When compiling with old gnutls version completely disable ECDHE instead
+  of disabling the curves.
+
+* Sun Aug 17 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 6.00-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
+
+* Tue Jul 08 2014 David Woodhouse <David.Woodhouse@intel.com> - 6.00-1
+- Update to 6.00 release
+
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 5.99-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Wed Mar 05 2014 David Woodhouse <David.Woodhouse@intel.com> - 5.99-1
+- Update to 5.99 release
+
 * Wed Jan 01 2014 David Woodhouse <David.Woodhouse@intel.com> - 5.02-1
 - Update to 5.02 release (#981911, #991653, #1031886)
 
