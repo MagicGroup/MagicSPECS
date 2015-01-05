@@ -10,6 +10,7 @@ License:        LGPLv2+
 URL:            http://www.xfce.org/
 #VCS git:git://git.xfce.org/xfce/libxfcegui4
 Source0:        http://archive.xfce.org/src/xfce/%{name}/%{xfceversion}/%{name}-%{version}.tar.bz2
+Patch1:         libxfcegui4-4.10.0-fix-xfce_setenv.patch
 BuildRoot:      %(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
 
 BuildRequires:  pkgconfig(gtk+-2.0) >= 2.10.0
@@ -44,6 +45,7 @@ developing applications that use %{name}.
 
 %prep
 %setup -q
+%patch1 -p1
 
 
 %build

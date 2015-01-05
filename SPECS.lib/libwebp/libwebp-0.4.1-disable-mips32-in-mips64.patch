@@ -1,0 +1,12 @@
+diff -Nuri libwebp-0.4.1-orig/src/dsp/dsp.h libwebp-0.4.1/src/dsp/dsp.h
+--- libwebp-0.4.1-orig/src/dsp/dsp.h	2014-11-25 20:00:30.344517485 +0800
++++ libwebp-0.4.1/src/dsp/dsp.h	2014-11-25 20:00:56.204882288 +0800
+@@ -60,7 +60,7 @@
+ #define WEBP_USE_NEON
+ #endif
+ 
+-#if defined(__mips__)
++#if (defined(__mips__) && !defined(__mips64))
+ #define WEBP_USE_MIPS32
+ #endif
+ 
