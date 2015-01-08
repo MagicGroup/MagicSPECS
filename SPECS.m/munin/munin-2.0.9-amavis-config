@@ -1,0 +1,4 @@
+[amavis]
+group adm
+env.MUNIN_MKTEMP /bin/mktemp -p /tmp/ $1
+env.amavislog /var/log/mail.info

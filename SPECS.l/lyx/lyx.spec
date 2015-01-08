@@ -13,7 +13,7 @@ BuildRequires: fontpackages-devel
 Summary: WYSIWYM (What You See Is What You Mean) document processor
 Summary(zh_CN.UTF-8): 所见即所得的文档处理器
 Name:	 lyx
-Version:	2.1.0
+Version:	2.1.2
 Release: 1%{?dist}
 
 License: GPLv2+
@@ -171,7 +171,7 @@ A collection of Math symbol fonts for %{name}.
 
 %setup -q -n %{name}-%{version}
 
-%patch50 -p1 -b .xdg_open
+#%patch50 -p1 -b .xdg_open
 
 %if 0%{?autotools}
 ./autogen.sh
@@ -304,6 +304,9 @@ fc-cache %{_fontdir} 2> /dev/null ||:
 
 
 %changelog
+* Mon Dec 29 2014 Liu Di <liudidi@gmail.com> - 2.1.2-1
+- 更新到 2.1.2
+
 * Tue Jul 08 2014 Liu Di <liudidi@gmail.com> - 2.1.0-1
 - 更新到 2.1.0
 

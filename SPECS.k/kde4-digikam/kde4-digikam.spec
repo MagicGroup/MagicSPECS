@@ -1,8 +1,12 @@
 %define real_name digikam
 #define pre %{nil}
+%define bootsrap 0
+%if 0%{?bootsrap}
+%global _unpackaged_files_terminate_build	0
+%endif
 Name:	 kde4-digikam
-Version: 4.1.0
-Release: 2%{?dist}
+Version: 4.5.0
+Release: 3%{?dist}
 Summary: A digital camera accessing & photo management application
 Summary(zh_CN.UTF-8): 一个数码相机访问和照片管理程序
 
@@ -212,7 +216,12 @@ Requires: kipi-plugins = %{version}-%{release}
 
 mkdir -p %{_target_platform}
 pushd %{_target_platform}
+%if 0%{?bootsrap}
+%{cmake_kde4} -DDIGIKAMSC_USE_PRIVATE_SHAREDLIBS=ON \
+	..
+%else
 %{cmake_kde4} -DDIGIKAMSC_USE_PRIVATE_KDEGRAPHICS:BOOL=0 ..
+%endif
 popd
 
 make %{?_smp_mflags} -C %{_target_platform}
@@ -258,7 +267,6 @@ update-desktop-database -q &> /dev/null
 %files
 %doc core/AUTHORS core/ChangeLog core/COPYING
 %doc core/NEWS core/README core/TODO
-%doc core/TODO.FACE core/TODO.MYSQLPORT
 %{_kde4_bindir}/digikam
 %{_kde4_bindir}/digitaglinktree
 %{_kde4_bindir}/cleanup_digikamdb
@@ -284,6 +292,7 @@ update-desktop-database -q &> /dev/null
 %{kde4_datadir}/locale/zh_*/LC_MESSAGES/digikam.mo
 %{kde4_appsdir}/kconf_update/adjustlevelstool.upd
 %{kde4_appsdir}/kipi/tips
+%{kde4_datadir}/appdata/*.xml
 
 %post libs -p /sbin/ldconfig
 %postun libs -p /sbin/ldconfig
@@ -300,9 +309,9 @@ update-desktop-database -q &> /dev/null
 %{_kde4_libdir}/libkface.so.*
 
 %files -n libkface-devel
-%{_kde4_includedir}/libkface/
+#%{_kde4_includedir}/libkface/
 %{_kde4_libdir}/libkface.so
-%{_kde4_appsdir}/cmake/modules/FindKface.cmake
+%{_kde4_libdir}/cmake/Kface-3.5.0/*.cmake
 %{_libdir}/pkgconfig/libkface.pc
 
 %post -n libkgeomap -p /sbin/ldconfig
@@ -315,7 +324,7 @@ update-desktop-database -q &> /dev/null
 %{kde4_localedir}/zh_*/LC_MESSAGES/libkgeomap.mo
 
 %files -n libkgeomap-devel
-%{_kde4_includedir}/libkgeomap/
+#%{_kde4_includedir}/libkgeomap/
 %{_kde4_libdir}/libkgeomap.so
 %{_kde4_appsdir}/cmake/modules/FindKGeoMap.cmake
 %{_libdir}/pkgconfig/libkgeomap.pc
@@ -327,7 +336,7 @@ update-desktop-database -q &> /dev/null
 %{_kde4_libdir}/libmediawiki.so.*
 
 %files -n libmediawiki-devel
-%{_kde4_includedir}/libmediawiki/
+#%{_kde4_includedir}/libmediawiki/
 %{_kde4_libdir}/libmediawiki.so
 %{_kde4_appsdir}/cmake/modules/FindMediawiki.cmake
 %{_libdir}/pkgconfig/libmediawiki.pc
@@ -460,6 +469,12 @@ update-desktop-database -q &> /dev/null
 
 
 %changelog
+* Wed Nov 26 2014 Liu Di <liudidi@gmail.com> - 4.5.0-3
+- 为 Magic 3.0 重建
+
+* Tue Nov 25 2014 Liu Di <liudidi@gmail.com> - 4.5.0-2
+- 更新到 4.5.0
+
 * Fri Jul 18 2014 Liu Di <liudidi@gmail.com> - 4.1.0-2
 - 为 Magic 3.0 重建
 

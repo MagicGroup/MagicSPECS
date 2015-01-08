@@ -6,7 +6,7 @@
 # NOTE:  Try not to release new versions to released versions of Fedora
 # You need to recompile all users of HDF5 for each version change
 Name: hdf5
-Version: 1.8.12
+Version: 1.8.14
 Release: 4%{?dist}
 Summary: A general purpose library and file format for storing scientific data
 License: BSD
@@ -16,11 +16,12 @@ URL: http://www.hdfgroup.org/HDF5/
 Source0: http://www.hdfgroup.org/ftp/HDF5/releases/hdf5-%{version}%{?snaprel}/src/hdf5-%{version}%{?snaprel}.tar.bz2
 Source1: h5comp
 # For man pages
-Source2: http://ftp.us.debian.org/debian/pool/main/h/hdf5/hdf5_%{version}-4.debian.tar.gz
+Source2: http://ftp.us.debian.org/debian/pool/main/h/hdf5/hdf5_1.8.13+docs-15.debian.tar.xz
 Patch0: hdf5-LD_LIBRARY_PATH.patch
 Patch1: hdf5-1.8.8-tstlite.patch
-# https://bugzilla.redhat.com/show_bug.cgi?id=925545
-Patch2: hdf5-aarch64.patch
+# Fix long double conversions on ppc64le
+# https://bugzilla.redhat.com/show_bug.cgi?id=1078173
+Patch3: hdf5-ldouble-ppc64le.patch
 
 BuildRequires: krb5-devel, openssl-devel, zlib-devel, gcc-gfortran, time
 # Needed for mpi tests
@@ -151,7 +152,7 @@ HDF5 parallel openmpi static libraries
 # the tstlite test fails with "stack smashing detected" on these arches
 %patch1 -p1 -b .tstlite
 %endif
-%patch2 -p1 -b .aarch64
+%patch3 -p1 -b .aarch64
 #This should be fixed in 1.8.7
 find \( -name '*.[ch]*' -o -name '*.f90' -o -name '*.txt' \) -exec chmod -x {} +
 
@@ -313,6 +314,9 @@ done
 %{_mandir}/man1/h5repart.1*
 %{_mandir}/man1/h5stat.1*
 %{_mandir}/man1/h5unjam.1*
+%{_mandir}/man1/h5debug.1*
+%{_mandir}/man1/h5pcc.1*
+%{_mandir}/man1/h5pfc.1*
 
 %files devel
 %{macrosdir}/macros.hdf5
@@ -405,6 +409,39 @@ done
 
 
 %changelog
+* Thu Jan 01 2015 Liu Di <liudidi@gmail.com> - 1.8.14-4
+- 更新到 1.8.14
+
+* Thu Jan 01 2015 Liu Di <liudidi@gmail.com> - 1.8.14-4
+- 更新到 1.8.14
+
+* Thu Jan 01 2015 Liu Di <liudidi@gmail.com> - 1.8.14-4
+- 更新到 1.8.14
+
+* Thu Jan 01 2015 Liu Di <liudidi@gmail.com> - 1.8.14-4
+- 更新到 1.8.14
+
+* Wed Dec 31 2014 Liu Di <liudidi@gmail.com> - 1.8.14-4
+- 更新到 1.8.14
+
+* Wed Dec 31 2014 Liu Di <liudidi@gmail.com> - 1.8.14-4
+- 更新到 1.8.14
+
+* Wed Dec 31 2014 Liu Di <liudidi@gmail.com> - 1.8.14-4
+- 更新到 1.8.14
+
+* Wed Dec 31 2014 Liu Di <liudidi@gmail.com> - 1.8.14-4
+- 更新到 1.8.14
+
+* Wed Dec 31 2014 Liu Di <liudidi@gmail.com> - 1.8.14-4
+- 更新到 1.8.14
+
+* Wed Dec 31 2014 Liu Di <liudidi@gmail.com> - 1.8.14-4
+- 更新到 1.8.14
+
+* Wed Dec 31 2014 Liu Di <liudidi@gmail.com> - 1.8.14-4
+- 更新到 1.8.14
+
 * Tue Apr 15 2014 Liu Di <liudidi@gmail.com> - 1.8.12-4
 - 更新到 1.8.12
 

@@ -14,7 +14,7 @@
 
 Name:           mate-applets
 Version:        1.9.0
-Release:        2%{?dist}
+Release:        3%{?dist}
 #Release:        0.1%{?git_rel}%{?dist}
 Summary:        MATE Desktop panel applets
 Summary(zh_CN.UTF-8): MATE 桌面面板小部件
@@ -173,6 +173,9 @@ fi
 
 
 %changelog
+* Tue Dec 23 2014 Liu Di <liudidi@gmail.com> - 1.9.0-3
+- 为 Magic 3.0 重建
+
 * Sun Aug 10 2014 Liu Di <liudidi@gmail.com> - 1.9.0-2
 - 为 Magic 3.0 重建
 

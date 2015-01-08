@@ -1,10 +1,12 @@
 Summary: A tool for printing multiple pages of text on each printed page
+Summary(zh_CN.UTF-8): 在每一个页面上打印多个页面的工具
 Name: mpage
 Version: 2.5.6
-Release: 11%{dist}
+Release: 12%{dist}
 License: GPLv2+
 Url: http://www.mesa.nl/pub/mpage/
 Group: Applications/Publishing
+Group(zh_CN.UTF-8): 应用程序/出版
 Source: ftp://ftp.mesa.nl/pub/mpage/mpage-%{version}.tgz
 Patch0: mpage25-config.patch
 BuildRoot: %(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX) 
@@ -16,6 +18,9 @@ PostScript printer with several pages on each sheet of paper. Mpage is
 very useful for viewing large printouts without using up lots of
 paper. Mpage supports many different layout options for the printed
 pages.
+
+%description -l zh_CN.UTF-8
+在每一个页面上打印多个页面的工具。
 
 %prep
 %setup -q
@@ -35,6 +40,7 @@ make PREFIX=$RPM_BUILD_ROOT/%{_prefix} BINDIR=$RPM_BUILD_ROOT/%{_bindir} \
 	LIBDIR=$RPM_BUILD_ROOT/%{_datadir} \
 	MANDIR=$RPM_BUILD_ROOT/%{_mandir}/man1 \
 	install
+magic_rpm_clean.sh
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -47,6 +53,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/mpage
 
 %changelog
+* Thu Dec 04 2014 Liu Di <liudidi@gmail.com> - 2.5.6-12
+- 为 Magic 3.0 重建
+
 * Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 2.5.6-11
 - 为 Magic 3.0 重建
 

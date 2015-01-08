@@ -1,7 +1,7 @@
 %global debug_package %{nil}
 
 Name:           gsettings-desktop-schemas
-Version:	3.12.0
+Version:	3.14.1
 Release:        1%{?dist}
 Summary:        A collection of GSettings schemas
 Summary(zh_CN.UTF-8): Gsettings 架构集合
@@ -79,6 +79,9 @@ fi
 
 
 %changelog
+* Tue Dec 23 2014 Liu Di <liudidi@gmail.com> - 3.14.1-1
+- 更新到 3.14.1
+
 * Fri Apr 11 2014 Liu Di <liudidi@gmail.com> - 3.12.0-1
 - 更新到 3.12.0
 

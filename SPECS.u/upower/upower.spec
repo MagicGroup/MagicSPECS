@@ -1,6 +1,6 @@
 Summary:        Power Management Service
 Name:           upower
-Version:        0.99.0
+Version:        0.99.2
 Release:        2%{?dist}
 License:        GPLv2+
 Group:          System Environment/Libraries
@@ -18,14 +18,15 @@ BuildRequires:  libimobiledevice-devel
 BuildRequires:  glib2-devel >= 2.6.0
 BuildRequires:  dbus-devel  >= 1.2
 BuildRequires:  dbus-glib-devel >= 0.82
-BuildRequires:  polkit-devel >= 0.92
 BuildRequires:  gobject-introspection-devel
 BuildRequires:  gtk-doc
-Requires:       polkit >= 0.92
 Requires:       udev
 Requires:       gobject-introspection
 
-Patch0: 0001-lib-Fix-segfault-on-getting-property-when-daemon-is-.patch
+%if 0%{?fedora}
+# From rhughes-f20-gnome-3-12 copr
+Obsoletes:      compat-upower09 < 0.99
+%endif
 
 %description
 UPower (formerly DeviceKit-power) provides a daemon, API and command
@@ -35,14 +36,20 @@ line tools for managing power devices attached to the system.
 Summary: Headers and libraries for UPower
 Group: Development/Libraries
 Requires: %{name} = %{version}-%{release}
-Obsoletes: DeviceKit-power-devel < 1:0.9.0-2
 
 %description devel
 Headers and libraries for UPower.
 
+%package devel-docs
+Summary: Headers and libraries for UPower
+Requires: %{name} = %{version}-%{release}
+BuildArch: noarch
+
+%description devel-docs
+Developer documentation for for libupower-glib.
+
 %prep
 %setup -q
-%patch0 -p1
 
 %build
 %configure \
@@ -89,9 +96,6 @@ rm -f $RPM_BUILD_ROOT%{_libdir}/*.la
 %files devel
 %defattr(-,root,root,-)
 %{_datadir}/dbus-1/interfaces/*.xml
-%{_datadir}/gtk-doc
-%dir %{_datadir}/gtk-doc/html/UPower
-%{_datadir}/gtk-doc/html/UPower/*
 %{_libdir}/libupower-glib.so
 %{_libdir}/pkgconfig/*.pc
 %{_datadir}/gir-1.0/*.gir
@@ -99,7 +103,58 @@ rm -f $RPM_BUILD_ROOT%{_libdir}/*.la
 %{_includedir}/libupower-glib/up-*.h
 %{_includedir}/libupower-glib/upower.h
 
+%files devel-docs
+%defattr(-,root,root,-)
+%{_datadir}/gtk-doc
+%dir %{_datadir}/gtk-doc/html/UPower
+%{_datadir}/gtk-doc/html/UPower/*
+
 %changelog
+* Tue Dec 23 2014 Liu Di <liudidi@gmail.com> - 0.99.2-2
+- 为 Magic 3.0 重建
+
+* Thu Dec 18 2014 Richard Hughes <rhughes@redhat.com> - 0.99.2-1
+- New upstream release
+- Fix various memory and reference leaks
+- Respect the CriticalPowerAction config option
+- Set update-time on the aggregate device
+- Update display device when battery is removed
+
+* Sun Nov 16 2014 Kalev Lember <kalevlember@gmail.com> - 0.99.1-3
+- Obsolete compat-upower09 from rhughes-f20-gnome-3-12 copr
+
+* Wed Oct 15 2014 Peter Robinson <pbrobinson@fedoraproject.org> 0.99.1-2
+- Rebuild for libimobiledevice 1.1.7
+
+* Mon Aug 18 2014 Richard Hughes <rhughes@redhat.com> - 0.99.1-1
+- New upstream release
+- Create the history directory at runtime
+- Do not log a critical warning when using _set_object_path_sync()
+- Fix API doc for up_client_get_on_battery()
+- Fix possible UpHistoryItem leak on failure
+- Fix segfault on getting property when daemon is not running
+- Fix shutdown on boot on some machines
+- Fix small memleak on startup with Logitech devices
+- Free the obtained device list array after use
+- Remove IsDocked property
+- Remove unused polkit dependency
+
+* Mon Aug 18 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.99.0-7
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
+
+* Tue Jul 22 2014 Kalev Lember <kalevlember@gmail.com> - 0.99.0-6
+- Rebuilt for gobject-introspection 1.41.4
+
+* Sun Jun 08 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.99.0-5
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Mon May  5 2014 Peter Robinson <pbrobinson@fedoraproject.org> 0.99.0-4
+- Rebuild for libimobiledevice 1.1.6
+
+* Mon Mar 17 2014 Richard Hughes <rhughes@redhat.com> - 0.99.0-3
+- Split out a new devel-docs subpackage to fix multilib_policy=all installs.
+- Resolves: #1070661
+
 * Fri Nov 08 2013 Bastien Nocera <bnocera@redhat.com> 0.99.0-2
 - Fix crash when D-Bus isn't available
 

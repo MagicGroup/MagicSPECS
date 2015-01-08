@@ -1,6 +1,6 @@
 Name:           mozilla-filesystem
 Version:        1.9
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        Mozilla filesytem layout
 Summary(zh_CN.UTF-8): Mozilla 文件系统布局
 Group:          Applications/Internet
@@ -34,6 +34,9 @@ rm -rf $RPM_BUILD_ROOT
 /etc/skel/.mozilla
 
 %changelog
+* Mon Dec 01 2014 Liu Di <liudidi@gmail.com> - 1.9-4
+- 为 Magic 3.0 重建
+
 * Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 1.9-3
 - 为 Magic 3.0 重建
 

@@ -7,7 +7,7 @@ Summary: A game of action and puzzle solving
 Summary(zh_CN.UTF-8): 一个动作解谜游戏
 Group: User Interface/Desktops
 Group(zh_CN.UTF-8): 用户界面/桌面
-Version: 4.14.2
+Version: 4.14.3
 Release: 1%{?dist}
 License: LGPL
 URL: http://extragear.kde.org/apps/kipi
@@ -73,6 +73,9 @@ rm -rf %{buildroot} %{_builddir}/%{buildsubdir}
 %{kde4_iconsdir}/*/*/a*/*
 
 %changelog
+* Wed Dec 31 2014 Liu Di <liudidi@gmail.com> - 4.14.3-1
+- 更新到 4.14.3
+
 * Fri Oct 31 2014 Liu Di <liudidi@gmail.com> - 4.14.2-1
 - 更新到 4.14.2
 

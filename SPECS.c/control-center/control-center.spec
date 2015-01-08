@@ -12,7 +12,7 @@
 Summary: Utilities to configure the GNOME desktop
 Summary(zh_CN.UTF-8): 配置 GNOME 桌面的工具
 Name: control-center
-Version: 3.13.3
+Version: 3.14.2
 Release: 2%{?dist}
 Epoch: 1
 License: GPLv2+ and GFDL
@@ -141,7 +141,6 @@ utilities.
 
 %prep
 %setup -q -n gnome-control-center-%{version}
-%patch0 -p1 -b .distro-logo
 
 %build
 %configure \
@@ -229,6 +228,9 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 
 
 %changelog
+* Tue Dec 23 2014 Liu Di <liudidi@gmail.com> - 1:3.14.2-2
+- 更新到 3.14.2
+
 * Thu Jul 17 2014 Liu Di <liudidi@gmail.com> - 1:3.13.3-2
 - 更新到 3.13.3
 

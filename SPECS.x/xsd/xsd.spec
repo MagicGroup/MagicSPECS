@@ -1,6 +1,6 @@
 Name:           xsd
 Version:        3.3.0
-Release:        15%{?dist}
+Release:        16%{?dist}
 Summary:        W3C XML schema to C++ data binding compiler
 
 Group:          Development/Tools
@@ -123,6 +123,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Mon Dec 29 2014 Liu Di <liudidi@gmail.com> - 3.3.0-16
+- 为 Magic 3.0 重建
+
 * Sat Feb 09 2013 Denis Arnaud <denis.arnaud_fedora@m4x.org> - 3.3.0-15
 - Rebuild for Boost-1.53.0
 

@@ -1,7 +1,7 @@
 %{!?python_sitearch: %global python_sitearch %(%{__python} -c "from distutils.sysconfig import get_python_lib; print(get_python_lib(1))")}
 Summary: A panoramic photo stitcher and more
 Name: hugin
-Version:	2013.0.0
+Version:	2014.0.0
 Release: 6%{?dist}
 License: GPLv2+
 Group: Applications/Multimedia
@@ -77,16 +77,26 @@ touch --no-create %{_datadir}/icons/gnome || :
 %files -f %{name}.lang
 %defattr(-, root, root,-)
 %{_bindir}/PTBatcherGUI
-%{_bindir}/PTBatcher
+#%{_bindir}/PTBatcher
 %{_bindir}/hugin
-%{_bindir}/nona_gui
+#%{_bindir}/nona_gui
 %{_bindir}/hugin_stitch_project
 %{_bindir}/icpfind
 %{_bindir}/calibrate_lens_gui
-%{_bindir}/autopano-noop.sh
+#%{_bindir}/autopano-noop.sh
 %{_bindir}/geocpset
 %{_bindir}/pto_lensstack
 %{_bindir}/pto_var
+%{_bindir}/pto_mask
+%{_bindir}/pto_move
+%{_bindir}/pto_template
+%{_datadir}/appdata/PTBatcherGUI.appdata.xml
+%{_datadir}/appdata/calibrate_lens_gui.appdata.xml
+%{_datadir}/appdata/hugin.appdata.xml
+%{_datadir}/hugin/data/hugin_exiftool_copy.arg
+%{_mandir}/man1/pto_mask.1.gz
+%{_mandir}/man1/pto_move.1.gz
+%{_mandir}/man1/pto_template.1.gz
 %{_mandir}/man1/geocpset.1.gz
 %{_mandir}/man1/pto_lensstack.1.gz
 %{_mandir}/man1/pto_var.1.gz
@@ -104,13 +114,13 @@ touch --no-create %{_datadir}/icons/gnome || :
 %{_datadir}/%{name}/data/plugins/README_*.txt
 %{_datadir}/%{name}/data/plugins/*.py*
 %{_datadir}/%{name}/data/plugins-templates/*.py*
-%{_mandir}/man1/PTBatcher.*
+#%{_mandir}/man1/PTBatcher.*
 %{_mandir}/man1/PTBatcherGUI.*
-%{_mandir}/man1/autopano-noop.*
+#%{_mandir}/man1/autopano-noop.*
 %{_mandir}/man1/calibrate_lens_gui.*
 %{_mandir}/man1/hugin.*
 %{_mandir}/man1/hugin_stitch_project.*
-%{_mandir}/man1/nona_gui.*
+#%{_mandir}/man1/nona_gui.*
 %{_mandir}/man1/icpfind.*
 
 %doc AUTHORS COPYING INSTALL_cmake README README_JP TODO LICENCE_VIGRA src/celeste/LICENCE_LIBSVM doc/nona.txt doc/fulla.html src/hugin1/hugin/xrc/data/help_en_EN/LICENCE.manual
@@ -121,7 +131,7 @@ touch --no-create %{_datadir}/icons/gnome || :
 %{_bindir}/autooptimiser
 %{_bindir}/celeste_standalone
 %{_bindir}/fulla
-%{_bindir}/matchpoint
+#%{_bindir}/matchpoint
 %{_bindir}/hugin_hdrmerge
 %{_bindir}/nona
 %{_bindir}/pto2mk
@@ -156,7 +166,7 @@ touch --no-create %{_datadir}/icons/gnome || :
 %{_mandir}/man1/celeste_standalone.*
 %{_mandir}/man1/fulla.*
 %{_mandir}/man1/hugin_hdrmerge.*
-%{_mandir}/man1/matchpoint.*
+#%{_mandir}/man1/matchpoint.*
 %{_mandir}/man1/nona.*
 %{_mandir}/man1/pto2mk.*
 %{_mandir}/man1/tca_correct.*
@@ -171,6 +181,9 @@ touch --no-create %{_datadir}/icons/gnome || :
 %{_mandir}/man1/pto_gen.*
 
 %changelog
+* Fri Dec 26 2014 Liu Di <liudidi@gmail.com> - 2014.0.0-6
+- 更新到 2014.0.0
+
 * Fri Jul 25 2014 Liu Di <liudidi@gmail.com> - 2013.0.0-6
 - 为 Magic 3.0 重建
 

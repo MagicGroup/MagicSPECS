@@ -1,8 +1,8 @@
 #global gitdate  20120917
 
 Name:           libxkbcommon
-Version:	0.4.2
-Release: 5%{?gitdate:.%{gitdate}}%{?dist}
+Version:	0.5.0
+Release: 1%{?gitdate:.%{gitdate}}%{?dist}
 Summary:        X.Org X11 XKB parsing library
 Summary(zh_CN.UTF-8): X.Org X11 XKB 解析库
 License:        MIT
@@ -99,6 +99,7 @@ magic_rpm_clean.sh
 %{_includedir}/xkbcommon/xkbcommon-compat.h
 %{_includedir}/xkbcommon/xkbcommon-keysyms.h
 %{_includedir}/xkbcommon/xkbcommon-names.h
+%{_includedir}/xkbcommon/xkbcommon-compose.h
 %{_libdir}/pkgconfig/xkbcommon.pc
 %{_docdir}/libxkbcommon/*
 
@@ -117,6 +118,9 @@ magic_rpm_clean.sh
 %endif
 
 %changelog
+* Wed Dec 24 2014 Liu Di <liudidi@gmail.com> - 0.5.0-1
+- 更新到 0.5.0
+
 * Fri Aug 08 2014 Liu Di <liudidi@gmail.com> - 0.4.2-5
 - 为 Magic 3.0 重建
 

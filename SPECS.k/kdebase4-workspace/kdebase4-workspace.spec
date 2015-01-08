@@ -11,7 +11,7 @@ License: GPL v2 or later
 Group: User Interface/Desktops
 Group(zh_CN.UTF-8): 用户界面/桌面
 URL: http://www.kde.org/
-Version: 4.14.2
+Version: 4.14.3
 Release: 4%{?dist}
 Source0: http://download.kde.org/stable/4.14.2/src/%{real_name}-4.11.13.tar.xz
 Source1: extras.tar.gz
@@ -1232,6 +1232,9 @@ fi
 #重打包时要重新处理
 
 %changelog
+* Tue Dec 30 2014 Liu Di <liudidi@gmail.com> - 4.14.3-4
+- 更新到 4.14.3
+
 * Mon Nov 03 2014 Liu Di <liudidi@gmail.com> - 4.14.2-4
 - 为 Magic 3.0 重建
 

@@ -8,7 +8,7 @@ Summary: Ball bouncing game
 Summary(zh_CN.UTF-8): 弹跳球游戏
 Group: User Interface/Desktops
 Group(zh_CN.UTF-8): 用户界面/桌面
-Version: 4.14.2
+Version: 4.14.3
 Release: 1%{?dist}
 License: LGPL
 URL: http://www.kde.org
@@ -74,6 +74,9 @@ rm -rf %{buildroot} %{_builddir}/%{buildsubdir}
 %{kde4_iconsdir}/*/*/a*/*
 
 %changelog
+* Wed Dec 31 2014 Liu Di <liudidi@gmail.com> - 4.14.3-1
+- 更新到 4.14.3
+
 * Thu Nov 06 2014 Liu Di <liudidi@gmail.com> - 4.14.2-1
 - 更新到 4.14.2
 

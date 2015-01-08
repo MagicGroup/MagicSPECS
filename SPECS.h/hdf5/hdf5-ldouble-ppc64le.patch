@@ -1,0 +1,105 @@
+diff -up hdf5-1.8.12/configure.ac.ldouble-ppc64le hdf5-1.8.12/configure.ac
+--- hdf5-1.8.12/configure.ac.ldouble-ppc64le	2014-03-19 08:58:07.933233530 -0600
++++ hdf5-1.8.12/configure.ac	2014-03-19 09:01:48.651040050 -0600
+@@ -3766,6 +3766,13 @@ else
+             unsigned char       s2[8];
+             int                 ret = 1;
+             
++#if defined __powerpc64__ && defined _LITTLE_ENDIAN
++            /* Don't bother checking on ppc64le, we know it'll work, and
++             * that what hdf5 calls 'special algorithm' simply is
++             * IBM ldouble 128 (i.e. two seperately scaled doubles).
++             * The check below assumes big endian.  */
++            ret = 0;
++#endif
+             if(sizeof(long double) == 16 && sizeof(long) == 8) {
+                 /*make sure the long double type has 16 bytes in size and 
+                  * 11 bits of exponent.  If it is,
+@@ -3844,6 +3851,13 @@ else
+             unsigned char       s[16];
+             int                 flag=0, ret=1;
+         
++#if defined __powerpc64__ && defined _LITTLE_ENDIAN
++            /* Don't bother checking on ppc64le, we know it'll work, and
++             * that what hdf5 calls 'special algorithm' simply is
++             * IBM ldouble 128 (i.e. two seperately scaled doubles).
++             * The check below assumes big endian.  */
++            ret = 0;
++#endif
+             /*Determine if long double has 16 byte in size, 11 bit exponent, and
+              *the bias is 0x3ff */ 
+             if(sizeof(long double) == 16) { 
+diff -up hdf5-1.8.12/configure.ldouble-ppc64le hdf5-1.8.12/configure
+--- hdf5-1.8.12/configure.ldouble-ppc64le	2014-03-19 08:58:07.918233616 -0600
++++ hdf5-1.8.12/configure	2014-03-19 08:58:07.932233536 -0600
+@@ -30362,6 +30362,13 @@ else
+             unsigned char       s2[8];
+             int                 ret = 1;
+ 
++#if defined __powerpc64__ && defined _LITTLE_ENDIAN
++           /* Don't bother checking on ppc64le, we know it'll work, and
++              that what hdf5 calls 'special algorithm' simply is
++              IBM ldouble 128 (i.e. two seperately scaled doubles).
++              The check below assumes big endian.  */
++           ret = 0;
++#endif
+             if(sizeof(long double) == 16 && sizeof(long) == 8) {
+                 /*make sure the long double type has 16 bytes in size and
+                  * 11 bits of exponent.  If it is,
+@@ -30466,6 +30473,13 @@ else
+             unsigned char       s[16];
+             int                 flag=0, ret=1;
+ 
++#if defined __powerpc64__ && defined _LITTLE_ENDIAN
++           /* Don't bother checking on ppc64le, we know it'll work, and
++              that what hdf5 calls 'special algorithm' simply is
++              IBM ldouble 128 (i.e. two seperately scaled doubles).
++              The check below assumes big endian.  */
++           ret = 0;
++#endif
+             /*Determine if long double has 16 byte in size, 11 bit exponent, and
+              *the bias is 0x3ff */
+             if(sizeof(long double) == 16) {
+diff -up hdf5-1.8.12/test/dt_arith.c.ldouble-ppc64le hdf5-1.8.12/test/dt_arith.c
+--- hdf5-1.8.12/test/dt_arith.c.ldouble-ppc64le	2013-11-21 08:14:03.000000000 -0700
++++ hdf5-1.8.12/test/dt_arith.c	2014-03-19 08:58:07.935233518 -0600
+@@ -3072,7 +3072,18 @@ test_conv_flt_1 (const char *name, int r
+                         buf, saved, nelmts);
+ #if H5_SIZEOF_LONG_DOUBLE!=H5_SIZEOF_DOUBLE && H5_SIZEOF_LONG_DOUBLE!=0
+             } else if(src_type == FLT_LDOUBLE) {
+-                 INIT_FP_SPECIAL(src_size, src_nbits, sendian, LDBL_MANT_DIG, dst_size,
++                size_t mant_dig = LDBL_MANT_DIG;
++                if (mant_dig >= src_nbits) {
++                    /* This happens for IBM long double in little endian.
++                       The macro LDBL_MANT_DIG says 106 mantissa bits, but the
++                       HDF5 detection code actually represents it as a normal 64bit
++                       double (52 bit mantissa) with the upper double being
++                       unspec bits (which is sort of okay as the testsuite
++                       wouldn't deal with that format correctly anyway).  So
++                       override the mantissa size.  */
++                    mant_dig = 52;
++                }
++                 INIT_FP_SPECIAL(src_size, src_nbits, sendian, mant_dig, dst_size,
+                         buf, saved, nelmts);
+ #endif
+             } else
+@@ -3807,7 +3818,18 @@ test_conv_int_fp(const char *name, int r
+             INIT_FP_DENORM(long double, LDBL_MANT_DIG, src_size, src_nbits, sendian, dst_size,
+                     buf, saved, nelmts);
+         } else {
+-            INIT_FP_SPECIAL(src_size, src_nbits, sendian, LDBL_MANT_DIG, dst_size, buf, saved, nelmts);
++           size_t mant_dig = LDBL_MANT_DIG;
++           if (mant_dig >= src_nbits) {
++               /* This happens for IBM long double in little endian.
++                  The macro LDBL_MANT_DIG says 106 mantissa bits, but the
++                  HDF5 detection code actually represents it as a normal 64bit
++                  double (52 bit mantissa) with the upper double being
++                  unspec bits (which is sort of okay as the testsuite
++                  wouldn't deal with that format correctly anyway).  So
++                  override the mantissa size.  */
++               mant_dig = 52;
++           }
++            INIT_FP_SPECIAL(src_size, src_nbits, sendian, mant_dig, dst_size, buf, saved, nelmts);
+         }
+ #endif
+     } else
