@@ -1,11 +1,13 @@
 %{!?python_sitearch: %global python_sitearch %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib(1)")}
 
 Summary:	A high-performance implementation of MPI
+Summary(zh_CN.UTF-8): MPI 的一个高性能实现
 Name:		mpich
-Version:	3.1
-Release:	2%{?dist}
+Version: 3.1.3
+Release: 1%{?dist}
 License:	MIT
 Group:		Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 URL:		http://www.mpich.org/
 
 Source0:	http://www.mpich.org/static/downloads/%{version}/%{name}-%{version}.tar.gz
@@ -43,9 +45,14 @@ which MPI implementation to use when multiple implementations are installed.
 If you want MPICH support to be automatically loaded, you need to install the
 mpich-autoload package.
 
+%description -l zh_CN.UTF-8
+MPI 的一个高性能实现。
+
 %package autoload
 Summary:	Load mpich automatically into profile
+Summary(zh_CN.UTF-8): 自动载入 mpich 到配置文件
 Group:		System Environment/Base
+Group(zh_CN.UTF-8): 系统环境/基本
 Requires:	mpich = %{version}-%{release}
 Provides:	mpich2-autoload = 3.0.1
 Obsoletes:	mpich2-autoload < 3.0
@@ -53,9 +60,14 @@ Obsoletes:	mpich2-autoload < 3.0
 %description autoload
 This package contains profile files that make mpich automatically loaded.
 
+%description autoload -l zh_CN.UTF-8
+自动载入 mpich 到配置文件。
+
 %package devel
 Summary:	Development files for mpich
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:		Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Provides:	%{name}-devel-static = %{version}-%{release}
 Requires:	%{name} = %{version}-%{release}
 Requires:	pkgconfig
@@ -66,9 +78,14 @@ Obsoletes:	mpich2-devel < 3.0
 %description devel
 Contains development headers and libraries for mpich
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
 %package doc
 Summary:	Documentations and examples for mpich
+Summary(zh_CN.UTF-8): %{name} 的文档和样例
 Group:		Documentation
+Group(zh_CN.UTF-8): 文档
 BuildArch:	noarch
 Requires:	%{name}-devel = %{version}-%{release}
 Provides:	mpich2-doc = 3.0.1
@@ -76,6 +93,9 @@ Obsoletes:	mpich2-doc < 3.0
 
 %description doc
 Contains documentations, examples and man-pages for mpich
+
+%description doc -l zh_CN.UTF-8
+%{name} 的文档和样例。
 
 # We only compile with gcc, but other people may want other compilers.
 # Set the compiler here.
@@ -187,7 +207,8 @@ mkdir -p %{buildroot}%{_rpmconfigdir}/macros.d
 cp -p %{SOURCE1} %{buildroot}%{_rpmconfigdir}/macros.d/macros.%{name}
 
 find %{buildroot} -type f -name "*.la" -exec rm -f {} ';'
-rm -f %{buildroot}%{_libdir}/%{name}/lib/lib{*mpich*,opa,mpl}.a
+rm -f %{buildroot}%{_libdir}/%{name}/lib/lib{*mpich*,opa,mpl,mpi*}.a
+magic_rpm_clean.sh
 
 %check
 make check
@@ -204,8 +225,8 @@ make check
 %{_libdir}/%{name}/lib/*.so.*
 %{_libdir}/%{name}/bin/*
 %dir %{python_sitearch}/%{name}
-%dir %{_mandir}/%{name}
-%doc %{_mandir}/%{name}/man1/
+#%dir %{_mandir}/%{name}
+#%doc %{_mandir}/%{name}/man1/
 %{_sysconfdir}/modulefiles/mpi/
 %{_sysconfdir}/modulefiles/%{name}-%{_arch}
 
@@ -223,9 +244,12 @@ make check
 %files doc
 %dir %{_datadir}/%{name}
 %{_datadir}/%{name}/doc/
-%{_mandir}/%{name}/man3/
+#%{_mandir}/%{name}/man3/
 
 %changelog
+* Fri Dec 26 2014 Liu Di <liudidi@gmail.com> - 3.1.3-1
+- 更新到 3.1.3
+
 * Fri Feb 21 2014 Ville Skyttä <ville.skytta@iki.fi> - 3.1-2
 - Install rpm macros to %%{_rpmconfigdir}/macros.d as non-%%config.
 

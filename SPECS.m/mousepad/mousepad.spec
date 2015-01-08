@@ -1,27 +1,35 @@
+%global minorversion 0.3
+
 Name:           mousepad
 Version:        0.3.0
-Release:        0.1.20120827git88aba4%{?dist}
-Summary:        Mousepad - A simple text editor for Xfce
+Release:        6%{?dist}
+Summary:        Simple text editor for Xfce desktop environment
+Summary(zh_CN.UTF-8): Xfce 桌面环境下的简单文本编辑器
 
 Group:          Applications/Editors
+Group(zh_CN.UTF-8): 应用程序/编辑器
 License:        GPLv2+
 URL:            http://xfce.org/
-#Source0:        http://www.xfce.org/archive/xfce-4.6.0/src/mousepad-%{version}.tar.bz2
-Source0:        http://git.xfce.org/apps/mousepad/snapshot/mousepad-88aba4e1f5272ea686cb34c5d6e349ef152d4701.tar.bz2
+#VCS: git:git://git.xfce.org/apps/mousepad
+Source0:        http://archive.xfce.org/src/apps/%{name}/%{minorversion}/%{name}-%{version}.tar.bz2
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
-BuildRequires: libxfce4util-devel
-BuildRequires: perl(XML::Parser)
-BuildRequires: gettext intltool
-BuildRequires: desktop-file-utils
-BuildRequires: xfce4-dev-tools autoconf libtool 
-BuildRequires: gtksourceview2-devel dbus-glib-devel glib2-devel
-BuildRequires: exo-devel
+BuildRequires:  libxfce4util-devel
+BuildRequires:  gettext intltool
+BuildRequires:  desktop-file-utils
+BuildRequires:  gtksourceview2-devel
+BuildRequires:  dbus-glib-devel
+BuildRequires:  glib2-devel
+BuildRequires:  exo-devel
 
 %description
-Mousepad is a text editor for Xfce based on Leafpad. The initial reason for
-Mousepad was to provide printing support, which would have been difficult
-for Leafpad for various reasons.
+Mousepad aims to be an easy-to-use and fast editor. It's target is an editor for
+quickly editing text files, not a development environment or an editor with a
+huge bunch of plugins.
+
+Mousepad is based on Leafpad. The initial reason for Mousepad was to provide
+printing support, which would have been difficult for Leafpad for various
+reasons.
 
 Although some features are under development, currently Mousepad has following
 features:
@@ -41,30 +49,33 @@ features:
     * Drag and Drop
     * Printing
 
+%description -l zh_CN.UTF-8
+Xfce 桌面环境下的简单文本编辑器。
+
 %prep
-%setup -q -n mousepad-88aba4e1f5272ea686cb34c5d6e349ef152d4701
+%setup -q
 
 
 %build
-xdt-autogen
-%configure --enable-maintainer-mode
-make 
+%configure
+make %{?_smp_mflags} V=1
 
 
 %install
-rm -rf $RPM_BUILD_ROOT
-make install DESTDIR=$RPM_BUILD_ROOT
-
+rm -rf %{buildroot}
+make install DESTDIR=%{buildroot} INSTALL='install -p'
+magic_rpm_clean.sh
 %find_lang %{name}
 
-rm -f ${RPM_BUILD_ROOT}%{_datadir}/applications/mousepad.desktop
+desktop-file-install \
+    --remove-category="Application" \
+    --delete-original \
+    --dir=%{buildroot}%{_datadir}/applications \
+    %{buildroot}/%{_datadir}/applications/%{name}.desktop
 
-desktop-file-install                                            \
-        --dir ${RPM_BUILD_ROOT}%{_datadir}/applications         \
-        Mousepad.desktop
 
 %clean
-rm -rf $RPM_BUILD_ROOT
+rm -rf %{buildroot}
 
 %post
 update-desktop-database &> /dev/null ||:
@@ -72,16 +83,34 @@ update-desktop-database &> /dev/null ||:
 %postun
 update-desktop-database &> /dev/null ||:
 
+
 %files -f %{name}.lang
 %defattr(-,root,root,-)
-%doc AUTHORS* README NEWS* TODO COPYING THANKS
+%doc AUTHORS COPYING NEWS README TODO THANKS
 %{_bindir}/mousepad 
-%{_datadir}/applications/Mousepad.desktop
-%{_datadir}/icons/hicolor/*/*/*
-%{_libdir}/xfce4/mousepad
-%{_datadir}/doc/Mousepad
+%{_datadir}/applications/%{name}.desktop
+
 
 %changelog
+* Mon Nov 24 2014 Liu Di <liudidi@gmail.com> - 0.3.0-6
+- 为 Magic 3.0 重建
+
+* Sun Aug 17 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.3.0-5
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
+
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.3.0-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.3.0-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.3.0-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
+
+* Sun Dec 30 2012 Christoph Wickert <cwickert@fedoraproject.org> - 0.3.0-1
+- Update to 0.3.0 final
+- Clean up spec file
+
 * Mon Sep 03 2012 Kevin Fenzi <kevin@scrye.com> 0.3.0-0.1
 - Update to pre-release git snapshot of 0.3.0
 

@@ -16,14 +16,16 @@
 %{!?_pkgdocdir: %global _pkgdocdir %{_docdir}/%{name}-%{version}}
 
 Summary: A text mode mail user agent
+Summary(zh_CN.UTF-8): 文本模式的邮件用户代理
 Name: mutt
 Version: 1.5.23
-Release: 2%{?dist}
+Release: 3%{?dist}
 Epoch: 5
 # The entire source code is GPLv2+ except
 # pgpewrap.c setenv.c sha1.c wcwidth.c which are Public Domain
 License: GPLv2+ and Public Domain
 Group: Applications/Internet
+Group(zh_CN.UTF-8): 应用程序/互联网
 Source: ftp://ftp.mutt.org/mutt/devel/mutt-%{version}.tar.gz
 Source1: mutt_ldap_query
 Patch1: mutt-1.5.18-muttrc.patch
@@ -67,6 +69,8 @@ advanced features like key bindings, keyboard macros, mail threading,
 regular expression searches and a powerful pattern matching language
 for selecting groups of messages.
 
+%description -l zh_CN.UTF-8
+文本模式的邮件用户代理。
 
 %prep
 # unpack; cd
@@ -161,7 +165,7 @@ rm -rf $RPM_BUILD_ROOT%{_pkgdocdir}
 
 # provide muttrc.local(5): the same as muttrc(5)
 ln -sf ./muttrc.5 $RPM_BUILD_ROOT%{_mandir}/man5/muttrc.local.5
-
+magic_rpm_clean.sh
 %find_lang %{name}
 
 
@@ -183,6 +187,9 @@ ln -sf ./muttrc.5 $RPM_BUILD_ROOT%{_mandir}/man5/muttrc.local.5
 
 
 %changelog
+* Thu Jan 01 2015 Liu Di <liudidi@gmail.com> - 5:1.5.23-3
+- 为 Magic 3.0 重建
+
 * Wed May 07 2014 Liu Di <liudidi@gmail.com> - 5:1.5.23-2
 - 为 Magic 3.0 重建
 

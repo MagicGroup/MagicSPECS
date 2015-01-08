@@ -8,7 +8,7 @@ Summary: Manage KDE passwords
 Summary(zh_CN.UTF-8): 管理 KDE4 的密码
 Group: User Interface/Desktops
 Group(zh_CN.UTF-8): 用户界面/桌面
-Version: 4.14.2
+Version: 4.14.3
 Release: 1%{?dist}
 License: LGPL
 URL: http://extragear.kde.org/apps/kipi
@@ -70,6 +70,9 @@ rm -rf %{buildroot} %{_builddir}/%{buildsubdir}
 %{kde4_datadir}/polkit-1/actions/org.kde.kcontrol.kcmkwallet.policy
 
 %changelog
+* Wed Dec 31 2014 Liu Di <liudidi@gmail.com> - 4.14.3-1
+- 更新到 4.14.3
+
 * Fri Oct 31 2014 Liu Di <liudidi@gmail.com> - 4.14.2-1
 - 更新到 4.14.2
 

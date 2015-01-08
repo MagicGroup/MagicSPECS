@@ -6,81 +6,86 @@
 %global with_enca 0
 %global with_libcue 0
 %global with_thunderbird 0
+%global with_libmediaart 0
 %else
 %global with_enca 1
 %global with_libcue 1
 %global with_thunderbird 1
+%global with_libmediaart 1
 %endif
 
-Summary:	Desktop-neutral search tool and indexer
-Name:		tracker
-Version:	0.17.4
-Release:	2%{?dist}
-License:	GPLv2+
-Group:		Applications/System
-URL:		http://projects.gnome.org/tracker/
-Source0:	http://download.gnome.org/sources/tracker/0.17/%{name}-%{version}.tar.xz
+Name:           tracker
+Version:        1.3.2
+Release:        2%{?dist}
+Summary:        Desktop-neutral search tool and indexer
+
+Group:          Applications/System
+License:        GPLv2+
+URL:            https://wiki.gnome.org/Projects/Tracker
+Source0:        https://download.gnome.org/sources/%{name}/1.3/%{name}-%{version}.tar.xz
 
 # only autostart in Gnome, see also
 # https://bugzilla.redhat.com/show_bug.cgi?id=771601
-Patch1:		tracker-0.15-onlyshowin.patch
+Patch0:         0001-Only-autostart-in-GNOME-771601.patch
 
-# https://bugzilla.gnome.org/show_bug.cgi?id=712142
-Patch3:		0001-Bump-the-minimum-memory-requirement-to-768M.patch
-
-BuildRequires:	desktop-file-utils
-%if 0%{?with_enca}
-BuildRequires:	enca-devel
-%endif
-BuildRequires:	exempi-devel
-BuildRequires:	firefox
-BuildRequires:	flac-devel
-BuildRequires:	gdk-pixbuf2-devel
-BuildRequires:	giflib-devel
-BuildRequires:	gobject-introspection-devel
-BuildRequires:	graphviz
-BuildRequires:	gstreamer1-devel
-BuildRequires:	gstreamer1-plugins-base-devel
-BuildRequires:	gtk-doc
-BuildRequires:	gtk3-devel
-BuildRequires:	gupnp-dlna-devel
-BuildRequires:	intltool
-%if 0%{?with_libcue}
-BuildRequires:	libcue-devel
-%endif
-BuildRequires:	libexif-devel
-BuildRequires:	libgee-devel
-BuildRequires:	libgsf-devel
-BuildRequires:	libgxps-devel
-BuildRequires:	libicu-devel
-BuildRequires:	libiptcdata-devel
-BuildRequires:	libjpeg-devel
-BuildRequires:	libmediaart-devel
-BuildRequires:	libosinfo-devel
-BuildRequires:	libpng-devel
-BuildRequires:	libsecret-devel
-BuildRequires:	libtiff-devel
-BuildRequires:	libuuid-devel
-BuildRequires:	libvorbis-devel
-BuildRequires:	libxml2-devel
-%if 0%{?with_nautilus}
-BuildRequires:	nautilus-devel
-%endif
-BuildRequires:	NetworkManager-glib-devel
-BuildRequires:	poppler-glib-devel
-BuildRequires:	rest-devel
-BuildRequires:	sqlite-devel
-BuildRequires:	taglib-devel
+BuildRequires:  desktop-file-utils
+BuildRequires:  firefox
+BuildRequires:  giflib-devel
+BuildRequires:  graphviz
+BuildRequires:  gtk-doc
+BuildRequires:  intltool
+BuildRequires:  libjpeg-devel
+BuildRequires:  libtiff-devel
 %if 0%{?with_thunderbird}
-BuildRequires:	thunderbird
+BuildRequires:  thunderbird
 %endif
-BuildRequires:	totem-pl-parser-devel
-BuildRequires:	upower-devel
-BuildRequires:	vala-devel
+BuildRequires:  vala-devel
+%if 0%{?with_enca}
+BuildRequires:  pkgconfig(enca)
+%endif
+BuildRequires:  pkgconfig(exempi-2.0)
+BuildRequires:  pkgconfig(flac)
+BuildRequires:  pkgconfig(gobject-introspection-1.0)
+BuildRequires:  pkgconfig(gstreamer-1.0)
+BuildRequires:  pkgconfig(gstreamer-pbutils-1.0)
+BuildRequires:  pkgconfig(gstreamer-tag-1.0)
+BuildRequires:  pkgconfig(gtk+-3.0)
+BuildRequires:  pkgconfig(icu-i18n)
+BuildRequires:  pkgconfig(icu-uc)
+%if 0%{?with_libcue}
+BuildRequires:  pkgconfig(libcue)
+%endif
+BuildRequires:  pkgconfig(libexif)
+BuildRequires:  pkgconfig(gee-0.8)
+BuildRequires:  pkgconfig(libgsf-1)
+BuildRequires:  pkgconfig(libgxps)
+BuildRequires:  pkgconfig(libiptcdata)
+%if 0%{?with_nautilus}
+BuildRequires:  pkgconfig(libnautilus-extension)
+%endif
+BuildRequires:  pkgconfig(libnm-glib)
+BuildRequires:  pkgconfig(libosinfo-1.0)
+BuildRequires:  pkgconfig(libpng)
+%if 0%{?with_libmediaart}
+BuildRequires:  pkgconfig(libmediaart-1.0)
+%endif
+BuildRequires:  pkgconfig(libxml-2.0)
+BuildRequires:  pkgconfig(poppler-glib)
+BuildRequires:  pkgconfig(sqlite3)
+BuildRequires:  pkgconfig(taglib_c)
+BuildRequires:  pkgconfig(totem-plparser)
+BuildRequires:  pkgconfig(upower-glib)
+BuildRequires:  pkgconfig(uuid)
+BuildRequires:  pkgconfig(vorbisfile)
 
 Obsoletes: compat-tracker018 < 0.17.2-2
 Obsoletes: tracker-miner-flickr < 0.16.0
 Obsoletes: tracker-nautilus-plugin < 0.17.2-2
+
+%if 0%{?fedora}
+# From rhughes-f20-gnome-3-12 copr
+Obsoletes: compat-tracker016 < 0.18
+%endif
 
 %description
 Tracker is a powerful desktop-neutral first class object database,
@@ -98,29 +103,36 @@ It has the ability to index, store, harvest metadata. retrieve and search
 all types of files and other first class objects
 
 %package devel
-Summary:	Headers for developing programs that will use %{name}
-Group:		Development/Libraries
-Requires:	%{name}%{?_isa} = %{version}-%{release}
+Summary:        Headers for developing programs that will use %{name}
+Group:          Development/Libraries
+Requires:       %{name}%{?_isa} = %{version}-%{release}
 
 %description devel
 This package contains the static libraries and header files needed for
 developing with tracker
 
-%package ui-tools
-Summary:	Tracker search tool(s)
-Group:		User Interface/Desktops
-Requires:	%{name}%{?_isa} = %{version}-%{release}
-Obsoletes:	paperbox <= 0.4.4
-Obsoletes:	tracker-search-tool <= 0.12.0
+%package needle
+Summary:        Tracker search tool
+Requires:       %{name}%{?_isa} = %{version}-%{release}
+Obsoletes:      paperbox <= 0.4.4
+Obsoletes:      tracker-ui-tools < 1.1.4
+Obsoletes:      tracker-search-tool <= 0.12.0
 
-%description ui-tools
-Graphical frontend to tracker search (tracker-needle) and configuration
-(tracker-preferences) facilities.
+%description needle
+Graphical frontend to tracker search.
+
+%package preferences
+Summary:        Tracker preferences
+Requires:       %{name}%{?_isa} = %{version}-%{release}
+Obsoletes:      tracker-ui-tools < 1.1.4
+
+%description preferences
+Graphical frontend to tracker configuration.
 
 %package firefox-plugin
-Summary:	A simple bookmark exporter for Tracker
-Group:		User Interface/Desktops
-Requires:	%{name}%{?_isa} = %{version}-%{release}
+Summary:        A simple bookmark exporter for Tracker
+Group:          User Interface/Desktops
+Requires:       %{name}%{?_isa} = %{version}-%{release}
 
 %description firefox-plugin
 This Firefox addon exports your bookmarks to Tracker, so that you can search
@@ -128,9 +140,9 @@ for them for example using tracker-needle.
 
 %if 0%{?with_nautilus}
 %package nautilus-plugin
-Summary:	Tracker's nautilus plugin
-Group:		User Interface/Desktops
-Requires:	%{name}%{?_isa} = %{version}-%{release}
+Summary:        Tracker's nautilus plugin
+Group:          User Interface/Desktops
+Requires:       %{name}%{?_isa} = %{version}-%{release}
 
 %description nautilus-plugin
 Tracker's nautilus plugin, provides 'tagging' functionality. Ability to perform
@@ -139,75 +151,82 @@ search in nautilus using tracker is built-in directly in the nautilus package.
 
 %if 0%{?with_thunderbird}
 %package thunderbird-plugin
-Summary:	Thunderbird extension to export mails to Tracker
-Group:		User Interface/Desktops
-Requires:	%{name}%{?_isa} = %{version}-%{release}
+Summary:        Thunderbird extension to export mails to Tracker
+Group:          User Interface/Desktops
+Requires:       %{name}%{?_isa} = %{version}-%{release}
 
 %description thunderbird-plugin
 A simple Thunderbird extension to export mails to Tracker.
 %endif
 
 %package docs
-Summary:	Documentations for tracker
-Group:		Documentation
-BuildArch:	noarch
+Summary:        Documentations for tracker
+Group:          Documentation
+BuildArch:      noarch
 
 %description docs
 This package contains the documentation for tracker
 
+
 %prep
 %setup -q
 
-%patch1 -p1 -b .onlyshowin
-%patch3 -p1 -b .memory
+%patch0 -p1 -b .autostart-gnome
 
 ## nuke unwanted rpaths, see also
 ## https://fedoraproject.org/wiki/Packaging/Guidelines#Beware_of_Rpath
 sed -i -e 's|"/lib /usr/lib|"/%{_lib} %{_libdir}|' configure
 
+
 %build
-%configure --disable-static		\
-	--enable-gtk-doc		\
-	--enable-miner-evolution=no	\
-	--with-firefox-plugin-dir=%{_libdir}/firefox/extensions		\
+%configure --disable-static \
+           --enable-gtk-doc \
+           --enable-libflac \
+           --enable-libvorbis \
+           --enable-miner-evolution=no \
+           --with-firefox-plugin-dir=%{_libdir}/firefox/extensions \
+           --disable-mp3 \
 %if %{with_nautilus}
-	--enable-nautilus-extension					\
+           --enable-nautilus-extension \
 %else
-	--disable-nautilus-extension					\
+           --disable-nautilus-extension \
+%endif
+%if %{with_libmediaart}
+           --enable-libmediaart \
+%else
+           --disable-libmediaart \
 %endif
 %if 0%{?with_thunderbird}
-	--with-thunderbird-plugin-dir=%{_libdir}/thunderbird/extensions	\
+           --with-thunderbird-plugin-dir=%{_libdir}/thunderbird/extensions \
 %endif
-	--with-unicode-support=libicu					\
-	--disable-qt							\
-	--disable-functional-tests
+           --with-unicode-support=libicu \
+           --disable-functional-tests
 # Disable the functional tests for now, they use python bytecodes.
 
 make V=1 %{?_smp_mflags}
 
+
 %install
-make DESTDIR=%{buildroot} install
+make DESTDIR=%{buildroot} INSTALL="install -p" install
 
-mkdir -p %{buildroot}%{_sysconfdir}/ld.so.conf.d
-echo "%{_libdir}/tracker-1.0"	\
-	> %{buildroot}%{_sysconfdir}/ld.so.conf.d/tracker-%{_arch}.conf
-
-%if 0%{?fedora} && 0%{?fedora} < 18
-desktop-file-install --delete-original			\
-	--vendor="fedora"				\
-	--dir=%{buildroot}%{_datadir}/applications	\
-	%{buildroot}%{_datadir}/applications/%{name}-needle.desktop
-%endif
-
-find %{buildroot} -type f -name "*.la" -exec rm -f {} ';'
+find %{buildroot} -type f -name "*.la" -delete
 rm -rf %{buildroot}%{_datadir}/tracker-tests
+
+# Remove .so symlinks for private libraries -- no external users are supposed
+# to link with them.
+rm -f %{buildroot}%{_libdir}/tracker-1.0/*.so
 
 %find_lang %{name}
 
+
+%check
+desktop-file-validate %{buildroot}%{_datadir}/applications/tracker-*.desktop
+
+
 %post -p /sbin/ldconfig
 
-%post ui-tools
-touch --no-create %{_datadir}/icons/hicolor
+%post preferences
+touch --no-create %{_datadir}/icons/hicolor &>/dev/null || :
 
 %postun
 /sbin/ldconfig
@@ -215,21 +234,18 @@ if [ $1 -eq 0 ]; then
   glib-compile-schemas %{_datadir}/glib-2.0/schemas &>/dev/null || :
 fi
 
-%postun ui-tools
+%postun preferences
 if [ $1 -eq 0 ] ; then
-touch --no-create %{_datadir}/icons/hicolor
-if [ -x %{_bindir}/gtk-update-icon-cache ]; then
-  %{_bindir}/gtk-update-icon-cache --quiet %{_datadir}/icons/hicolor || :
-fi
+    touch --no-create %{_datadir}/icons/hicolor &>/dev/null
+    gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 fi
 
 %posttrans
 glib-compile-schemas %{_datadir}/glib-2.0/schemas &>/dev/null || :
 
-%posttrans ui-tools
-if [ -x %{_bindir}/gtk-update-icon-cache ]; then
-  %{_bindir}/gtk-update-icon-cache --quiet %{_datadir}/icons/hicolor || :
-fi
+%posttrans preferences
+gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
+
 
 %files -f %{name}.lang
 %doc AUTHORS COPYING NEWS README
@@ -241,16 +257,17 @@ fi
 %{_libdir}/tracker-1.0/
 %{_libdir}/girepository-1.0/Tracker-1.0.typelib
 %{_libdir}/girepository-1.0/TrackerControl-1.0.typelib
-%{_libdir}/girepository-1.0/TrackerExtract-1.0.typelib
 %{_libdir}/girepository-1.0/TrackerMiner-1.0.typelib
 %{_mandir}/*/tracker*.gz
-%{_sysconfdir}/ld.so.conf.d/tracker-%{_arch}.conf
+%{_sysconfdir}/bash_completion.d/tracker-prompt.sh
 %config(noreplace) %{_sysconfdir}/xdg/autostart/tracker*.desktop
 %{_datadir}/glib-2.0/schemas/*
 %exclude %{_bindir}/tracker-needle
 %exclude %{_bindir}/tracker-preferences
-%exclude %{_mandir}/man1/tracker-preferences.1.gz
-%exclude %{_mandir}/man1/tracker-needle.1.gz
+%exclude %{_datadir}/tracker/tracker-needle.ui
+%exclude %{_datadir}/tracker/tracker-preferences.ui
+%exclude %{_mandir}/man1/tracker-preferences.1*
+%exclude %{_mandir}/man1/tracker-needle.1*
 
 %files devel
 %{_includedir}/tracker-1.0/
@@ -259,17 +276,22 @@ fi
 %{_datadir}/vala/vapi/tracker*.*
 %{_datadir}/gir-1.0/Tracker-1.0.gir
 %{_datadir}/gir-1.0/TrackerControl-1.0.gir
-%{_datadir}/gir-1.0/TrackerExtract-1.0.gir
 %{_datadir}/gir-1.0/TrackerMiner-1.0.gir
 
-%files ui-tools
+%files needle
 %{_bindir}/tracker-needle
+%{_datadir}/appdata/tracker-needle.appdata.xml
+%{_datadir}/applications/tracker-needle.desktop
+%{_datadir}/tracker/tracker-needle.ui
+%{_mandir}/man1/tracker-needle.1*
+
+%files preferences
 %{_bindir}/tracker-preferences
+%{_datadir}/appdata/tracker-preferences.appdata.xml
+%{_datadir}/applications/tracker-preferences.desktop
 %{_datadir}/icons/*/*/apps/tracker.*
-%{_datadir}/applications/*.desktop
-%{_mandir}/man1/tracker-preferences.1.gz
-%{_mandir}/man1/tracker-needle.1.gz
-%exclude %{_datadir}/applications/trackerbird-launcher.desktop
+%{_datadir}/tracker/tracker-preferences.ui
+%{_mandir}/man1/tracker-preferences.1*
 
 %files firefox-plugin
 %{_datadir}/xul-ext/trackerfox/
@@ -294,9 +316,131 @@ fi
 %{_datadir}/gtk-doc/html/libtracker-sparql/
 %{_datadir}/gtk-doc/html/ontology/
 
+
 %changelog
-* Sun May 04 2014 Liu Di <liudidi@gmail.com> - 0.17.4-2
+* Thu Dec 25 2014 Liu Di <liudidi@gmail.com> - 1.3.2-2
 - 为 Magic 3.0 重建
+
+* Fri Dec 19 2014 Richard Hughes <rhughes@redhat.com> - 1.3.2-1
+- Update to 1.3.2
+
+* Wed Dec 10 2014 Matthias Clasen <mclasen@redhat.com> - 1.3.1-2
+- Fix a crash (#1133042)
+
+* Wed Dec 03 2014 Kalev Lember <kalevlember@gmail.com> - 1.3.1-1
+- Update to 1.3.1
+
+* Fri Nov 28 2014 David King <amigadave@amigadave.com> - 1.3.0-1
+- Update to 1.3.0
+
+* Sun Nov 16 2014 Kalev Lember <kalevlember@gmail.com> - 1.2.4-3
+- Obsolete compat-tracker016 from rhughes-f20-gnome-3-12 copr
+
+* Mon Nov 10 2014 Debarshi Ray <rishi@fedoraproject.org> - 1.2.4-2
+- Backport upstream patch to avoid use of setrlimit (RH #1133924)
+
+* Thu Nov 06 2014 Kalev Lember <kalevlember@gmail.com> - 1.2.4-1
+- Update to 1.2.4
+
+* Mon Nov 03 2014 Richard Hughes <richard@hughsie.com> - 1.2.3-2
+- Fix non-Fedora build
+
+* Fri Oct 17 2014 Kalev Lember <kalevlember@gmail.com> - 1.2.3-1
+- Update to 1.2.3
+
+* Wed Sep 24 2014 David King <amigadave@amigadave.com> - 1.2.2-2
+- Use pkgconfig for BuildRequires
+- Preserve timestamps during install
+- Enable FLAC and Vorbis extractors
+
+* Wed Sep 24 2014 Kalev Lember <kalevlember@gmail.com> - 1.2.2-1
+- Update to 1.2.2
+
+* Tue Sep 23 2014 Kalev Lember <kalevlember@gmail.com> - 1.2.1-1
+- Update to 1.2.1
+
+* Mon Sep 22 2014 Kalev Lember <kalevlember@gmail.com> - 1.2.0-1
+- Update to 1.2.0
+
+* Fri Sep 05 2014 Kalev Lember <kalevlember@gmail.com> - 1.1.4-2
+- Fix tracker-ui-tools obsoletes
+
+* Fri Sep 05 2014 Kalev Lember <kalevlember@gmail.com> - 1.1.4-1
+- Update to 1.1.4
+- Split tracker-needle and tracker-preferences to separate subpackages
+
+* Tue Aug 26 2014 David Tardon <dtardon@redhat.com> - 1.1.3-2
+- rebuild for ICU 53.1
+
+* Tue Aug 19 2014 Kalev Lember <kalevlember@gmail.com> - 1.1.3-1
+- Update to 1.1.3
+
+* Mon Aug 18 2014 Kalev Lember <kalevlember@gmail.com> - 1.1.2-4
+- Rebuilt for upower 0.99.1 soname bump
+
+* Mon Aug 18 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.1.2-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
+
+* Fri Aug 15 2014 Peter Robinson <pbrobinson@fedoraproject.org> 1.1.2-2
+- Aarch64 now has Thunderbird
+
+* Wed Aug 13 2014 Kalev Lember <kalevlember@gmail.com> - 1.1.2-1
+- Update to 1.1.2
+
+* Mon Jul 28 2014 Peter Robinson <pbrobinson@fedoraproject.org> 1.0.2-4
+- No Thunderbird on aarch64 until tb-31
+
+* Sun Jul 27 2014 Kalev Lember <kalevlember@gmail.com> - 1.0.2-3
+- Revert back to tracker 1.0.2 for now
+
+* Sun Jul 27 2014 Igor Gnatenko <i.gnatenko.brain@gmail.com> - 1.1.1-1
+- 1.1.1 upstream release
+- spec cleanups
+
+* Tue Jul 22 2014 Kalev Lember <kalevlember@gmail.com> - 1.0.2-2
+- Rebuilt for gobject-introspection 1.41.4
+
+* Thu Jul 10 2014 Kalev Lember <kalevlember@gmail.com> - 1.0.2-1
+- Update to 1.0.2
+
+* Fri Jul 04 2014 Kalev Lember <kalevlember@gmail.com> - 1.0.1-3
+- Another try at removing the ld.so.conf.d override
+
+* Sun Jun 08 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.0.1-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Fri May 09 2014 Debarshi <rishi@fedoraproject.org> - 1.0.1-1
+- Update to 1.0.1
+
+* Mon Mar 24 2014 Kalev Lember <kalevlember@gmail.com> - 1.0.0-1
+- Update to 1.0.0
+
+* Mon Mar 24 2014 Kalev Lember <kalevlember@gmail.com> - 0.17.8-4
+- Temporarily add back an empty ld.so conf (#1079775)
+
+* Sat Mar 22 2014 Kalev Lember <kalevlember@gmail.com> - 0.17.8-3
+- Remove .so symlinks for private libraries
+
+* Sat Mar 22 2014 Kalev Lember <kalevlember@gmail.com> - 0.17.8-2
+- Use desktop-file-validate instead of desktop-file-install
+- Remove ld.so.conf.d override
+- Update icon cache scriptlets
+
+* Fri Mar 21 2014 Kalev Lember <kalevlember@gmail.com> - 0.17.8-1
+- Update to 0.17.8
+
+* Tue Mar 18 2014 Debarshi Ray <rishi@fedoraproject.org> - 0.17.6-1
+- Update to 0.17.6
+
+* Tue Mar 18 2014 Bastien Nocera <bnocera@redhat.com> - 0.17.5-3
+- Remove home-made mp3 tag extractor
+
+* Wed Mar 05 2014 David King <amigadave@amigadave.com> - 0.17.5-2
+- Remove libsecret-devel BuildRequires
+- Drop removed --disable-qt configure argument
+
+* Tue Mar 04 2014 Debarshi Ray <rishi@fedoraproject.org> - 0.17.5-1
+- Update to 0.17.5
 
 * Sat Feb 22 2014 Kalev Lember <kalevlember@gmail.com> - 0.17.4-1
 - Update to 0.17.4

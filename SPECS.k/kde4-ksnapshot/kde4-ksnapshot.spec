@@ -8,7 +8,7 @@ Summary: A screen capture utility
 Summary(zh_CN.UTF-8): 屏幕抓图工具
 Group: User Interface/Desktops
 Group(zh_CN.UTF-8): 用户界面/桌面
-Version: 4.14.2
+Version: 4.14.3
 Release: 2%{?dist}
 License: LGPL
 URL: http://extragear.kde.org/apps/kipi
@@ -72,6 +72,9 @@ rm -rf %{buildroot} %{_builddir}/%{buildsubdir}
 %endif
 
 %changelog
+* Tue Dec 30 2014 Liu Di <liudidi@gmail.com> - 4.14.3-2
+- 更新到 4.14.3
+
 * Thu Oct 30 2014 Liu Di <liudidi@gmail.com> - 4.14.2-2
 - 更新到 4.14.2
 

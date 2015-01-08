@@ -8,7 +8,7 @@
 #global tests 1
 
 Name:    nepomuk-widgets
-Version: 4.14.2
+Version: 4.14.3
 Release: 1%{?dist}
 Summary: Nepomuk  Widgets
 Summary(zh_CN.UTF-8): Nepomuk 小工具
@@ -109,6 +109,9 @@ make -C %{_target_platform}/autotests/test test  ||:
 %{kde4_libdir}/libnepomukwidgets.so.*
 
 %changelog
+* Tue Dec 30 2014 Liu Di <liudidi@gmail.com> - 4.14.3-1
+- 更新到 4.14.3
+
 * Wed Oct 22 2014 Liu Di <liudidi@gmail.com> - 4.14.2-1
 - 更新到 4.14.2
 

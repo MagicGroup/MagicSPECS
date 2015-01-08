@@ -1,5 +1,5 @@
 Name:          ceph
-Version:	0.77
+Version:	0.90
 Release:       2%{?dist}
 Summary:       User space components of the Ceph file system
 License:       LGPLv2
@@ -145,7 +145,7 @@ fi
 %{_bindir}/ceph-conf
 %{_bindir}/ceph-clsinfo
 %{_bindir}/ceph-crush-location
-%{_bindir}/ceph_filestore_tool
+#%{_bindir}/ceph_filestore_tool
 %{_bindir}/crushtool
 %{_bindir}/monmaptool
 %{_bindir}/osdmaptool
@@ -161,12 +161,17 @@ fi
 %{_bindir}/ceph-debugpack
 %{_bindir}/ceph-coverage
 %{_bindir}/ceph-dencoder
-%{_bindir}/ceph_filestore_dump
+%{_bindir}/ceph-brag
+%{_bindir}/ceph_objectstore_tool
+%{_bindir}/cephfs-journal-tool
+%{_bindir}/rbd-replay
+%{_bindir}/rbd-replay-many
+#%{_bindir}/ceph_filestore_dump
 %{_bindir}/ceph_mon_store_converter
 %{_bindir}/ceph-post-file
 %{_bindir}/ceph-rest-api
 %{_initrddir}/ceph
-%{_sbindir}/mkcephfs
+#%{_sbindir}/mkcephfs
 %{_sbindir}/mount.ceph
 %{_sbindir}/ceph-disk-activate
 %{_sbindir}/ceph-disk-prepare
@@ -181,7 +186,7 @@ fi
 %{_mandir}/man8/ceph-mon.8*
 %{_mandir}/man8/ceph-mds.8*
 %{_mandir}/man8/ceph-osd.8*
-%{_mandir}/man8/mkcephfs.8*
+#%{_mandir}/man8/mkcephfs.8*
 %{_mandir}/man8/ceph-run.8*
 %{_mandir}/man8/ceph-syn.8*
 %{_mandir}/man8/crushtool.8*
@@ -202,6 +207,12 @@ fi
 %{_mandir}/man8/ceph-rbdnamer.8*
 %{_mandir}/man8/ceph-rest-api.8*
 %{_mandir}/man8/ceph-post-file.8*
+%{_libdir}/libradosstriper.so.*
+%{_libexecdir}/ceph/ceph-osd-prestart.sh
+%{_mandir}/man8/ceph-disk.8.gz
+%{_mandir}/man8/rbd-replay-many.8.gz
+%{_mandir}/man8/rbd-replay-prep.8.gz
+%{_mandir}/man8/rbd-replay.8.gz
 %{python_sitelib}/rados.py*
 %{python_sitelib}/rbd.py*
 %{python_sitelib}/cephfs.py*
@@ -269,11 +280,14 @@ fi
 %{_includedir}/rados/buffer.h
 %{_includedir}/rados/page.h
 %{_includedir}/rados/crc32c.h
+%{_includedir}/radosstriper/libradosstriper.h
+%{_includedir}/radosstriper/libradosstriper.hpp
 %dir %{_includedir}/rbd
 %{_includedir}/rbd/librbd.h
 %{_includedir}/rbd/librbd.hpp
 %{_includedir}/rbd/features.h
 %{_libdir}/libcephfs.so
+%{_libdir}/libradosstriper.so
 %{_libdir}/librados.so
 %{_libdir}/librbd.so
 %{_bindir}/librados-config
@@ -287,6 +301,9 @@ fi
 %{_sysconfdir}/bash_completion.d/radosgw-admin
 
 %changelog
+* Fri Dec 26 2014 Liu Di <liudidi@gmail.com> - 0.90-2
+- 更新到 0.90
+
 * Sat Mar 08 2014 Liu Di <liudidi@gmail.com> - 0.77-2
 - 更新到 0.77
 

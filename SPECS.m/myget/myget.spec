@@ -1,12 +1,11 @@
 %define version  0.1.2
 %define subver   20050921
-%define release  4%{?dist}
 
 Name: myget
 Summary: A download accelerator for GNU/Linux
 Summary(zh_CN.UTF-8): GNU/Linux下的下载加速器
 Version: %{version}
-Release: %{release}
+Release: 4%{?dist}
 License: GPL
 Group: Applications/Internet
 Group(zh_CN.UTF-8): 应用程序/互联网

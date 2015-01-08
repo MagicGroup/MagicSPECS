@@ -9,11 +9,13 @@
 %define fontdir /usr/share/fonts/%{name}
 
 Summary: TrueType core fonts for the web
+Summary(zh_CN.UTF-8): 来自互联网的 TrueType 字体
 Name: %{name}
 Version: 2.0
-Release: 1
+Release: 2
 License: Spec file is GPL, binary rpm is gratis but non-distributable
 Group: User Interface/X
+Group(zh_CN.UTF-8): 用户界面/X
 BuildArch: noarch
 BuildRoot: /var/tmp/%{name}-root
 BuildPrereq: %{ttmkfdir}
@@ -28,6 +30,9 @@ http://www.microsoft.com/typography/fontpack/. The src rpm is cleverly
 constructed so that the actual fonts are downloaded from Sourceforge's site
 at build time. Therefore this package technically does not 'redistribute'
 the fonts, it just makes it easy to install them on a linux system.
+
+%description -l zh_CN.UTF-8
+来自互联网的 TrueType 字体。
 
 %prep
 mkdir -p %{name}/downloads
@@ -171,6 +176,9 @@ fi
 %dir %{fontdir}
 
 %changelog
+* Thu Jan 01 2015 Liu Di <liudidi@gmail.com> - 2.0-2
+- 为 Magic 3.0 重建
+
 * Sun May 07 2006 Noa Resare <noa@resare.com> 2.0-1
 - checksums downloads
 - random mirror
