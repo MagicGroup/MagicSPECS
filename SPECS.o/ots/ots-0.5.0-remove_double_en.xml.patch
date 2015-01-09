@@ -1,0 +1,12 @@
+diff -Nuri ots-0.5.0-orig/dic/Makefile.am ots-0.5.0/dic/Makefile.am
+--- ots-0.5.0-orig/dic/Makefile.am	2015-01-09 15:20:13.189749928 +0800
++++ ots-0.5.0/dic/Makefile.am	2015-01-09 15:20:35.323550323 +0800
+@@ -1,7 +1,7 @@
+ DICTS=bg.xml ca.xml cs.xml cy.xml da.xml de.xml el.xml en.xml eo.xml es.xml \
+       et.xml eu.xml fi.xml fr.xml ga.xml gl.xml he.xml hu.xml ia.xml id.xml \
+       is.xml it.xml lv.xml mi.xml ms.xml mt.xml nl.xml nn.xml pl.xml pt.xml \
+-      ro.xml ru.xml sv.xml tl.xml tr.xml uk.xml yi.xml en.xml
++      ro.xml ru.xml sv.xml tl.xml tr.xml uk.xml yi.xml
+ 
+ pkgdata_DATA = $(DICTS)
+ 
