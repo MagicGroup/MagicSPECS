@@ -82,7 +82,7 @@ chmod -x pod/Popup.pod Tixish/lib/Tk/balArrow.xbm
 %patch3 -p1
 
 %build
-%{__perl} Makefile.PL INSTALLDIRS=vendor X11LIB=%{_libdir} XFT=1
+%{__perl} Makefile.PL INSTALLDIRS=vendor X11LIB=%{_libdir} XFT=1 X11INC=%{_includedir}
 find . -name Makefile | xargs %{__perl} -pi -e 's/^\tLD_RUN_PATH=[^\s]+\s*/\t/'
 make %{?_smp_mflags}
 
