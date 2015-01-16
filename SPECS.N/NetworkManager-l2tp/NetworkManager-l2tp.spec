@@ -5,9 +5,10 @@
 %global shared_mime_version 0.16-3
 
 Summary:   NetworkManager VPN plugin for l2tp
+Summary(zh_CN.UTF-8): NetworkManager 的 l2tp VPN 插件
 Name:      NetworkManager-l2tp
 Version:   0.9.8.7
-Release:   3%{?dist}
+Release:   4%{?dist}
 # The most of code uses GPLv2+ license.
 # Only vpn-password-dialog has LGPLv2+.
 License:   GPLv2+ and LGPLv2+
@@ -46,6 +47,9 @@ Requires: openswan
 This package contains software for integrating L2TP VPN support with
 the NetworkManager and the GNOME desktop.
 
+%description -l zh_CN.UTF-8
+NetworkManager 的 l2tp VPN 插件。
+
 %prep
 %setup -q
 
@@ -67,7 +71,7 @@ rm -f %{buildroot}%{_libdir}/NetworkManager/lib*.a
 
 rm -f %{buildroot}%{_libdir}/pppd/%{ppp_version}/nm-l2tp-pppd-plugin.la
 rm -f %{buildroot}%{_libdir}/pppd/%{ppp_version}/nm-l2tp-pppd-plugin.a
-
+magic_rpm_clean.sh
 %find_lang %{name}
 
 %files -f %{name}.lang
@@ -82,6 +86,9 @@ rm -f %{buildroot}%{_libdir}/pppd/%{ppp_version}/nm-l2tp-pppd-plugin.a
 %{_datadir}/gnome-vpn-properties/l2tp
 
 %changelog
+* Sun Jan 04 2015 Liu Di <liudidi@gmail.com> - 0.9.8.7-4
+- 为 Magic 3.0 重建
+
 * Fri Aug 15 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.9.8.7-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
 

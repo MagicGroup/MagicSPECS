@@ -1,14 +1,17 @@
-%global snapshot .git20140128
+#global snapshot .git20140128
 
 Summary:   NetworkManager VPN plugin for OpenVPN
+Summary(zh_CN.UTF-8): NetworkManager 的 OpenVPN 插件
 Name:      NetworkManager-openvpn
 Epoch:     1
-Version:   0.9.9.0
-Release:   0.1%{snapshot}%{?dist}
+Version:	1.0.0
+Release:	1%{?dist}
 License:   GPLv2+
 URL:       http://www.gnome.org/projects/NetworkManager/
 Group:     System Environment/Base
-Source0:   http://ftp.gnome.org/pub/GNOME/sources/%{name}/0.9/%{name}-%{version}%{snapshot}.tar.bz2
+Group(zh_CN.UTF-8): 系统环境/基本
+%define majorver %(echo %{version} | awk -F. '{print $1"."$2}')
+Source0:   http://ftp.gnome.org/pub/GNOME/sources/%{name}/%{majorver}/%{name}-%{version}.tar.xz
 
 BuildRequires: gtk3-devel
 BuildRequires: dbus-devel
@@ -36,21 +39,25 @@ Obsoletes: NetworkManager-openvpn < 1:0.9.8.2-3
 This package contains software for integrating VPN capabilities with
 the OpenVPN server with NetworkManager.
 
+%description -l zh_CN.UTF-8
+NetworkManager 的 OpenVPN 插件。
+
 %package -n NetworkManager-openvpn-gnome
 Summary: NetworkManager VPN plugin for OpenVPN - GNOME files
+Summary(zh_CN.UTF-8): NetworkManager 的 OpenVPN 插件 - GNOME 文件
 Group:   System Environment/Base
+Group(zh_CN.UTF-8): 系统环境/基本
 
 Requires: NetworkManager-openvpn = %{epoch}:%{version}-%{release}
-%if 0%{?fedora} > 17
 Requires: nm-connection-editor
-%else
-Requires: NetworkManager-gnome
-%endif
 Obsoletes: NetworkManager-openvpn < 1:0.9.8.2-3
 
 %description -n NetworkManager-openvpn-gnome
 This package contains software for integrating VPN capabilities with
 the OpenVPN server with NetworkManager (GNOME files).
+
+%description -n NetworkManager-openvpn-gnome -l zh_CN.UTF-8
+NetworkManager 的 OpenVPN 插件 - GNOME 文件。
 
 %prep
 %setup -q -n %{name}-%{version}
@@ -73,7 +80,7 @@ make check
 make install DESTDIR=%{buildroot} INSTALL="%{__install} -p"
 
 rm -f %{buildroot}%{_libdir}/NetworkManager/lib*.la
-
+magic_rpm_clean.sh
 %find_lang %{name}
 
 %files -f %{name}.lang
@@ -91,6 +98,9 @@ rm -f %{buildroot}%{_libdir}/NetworkManager/lib*.la
 %{_datadir}/gnome-vpn-properties/openvpn/nm-openvpn-dialog.ui
 
 %changelog
+* Fri Jan 16 2015 Liu Di <liudidi@gmail.com> - 1:1.0.0-1
+- 更新到 1.0.0
+
 * Tue Jan 28 2014 Dan Williams <dcbw@redhat.com> - 1:0.9.9.0-0.1
 - core: add support for IPv6 inside tunnels (rh #1033868)
 - auth: add support for interactive mode

@@ -1,14 +1,17 @@
 %global snapshot %{nil}
 
 Summary:   NetworkManager VPN plugin for vpnc
+Summary(zh_CN.UTF-8): NetworkManaget 的 vpnc 插件
 Name:      NetworkManager-vpnc
 Epoch:     1
 Version:   1.0.0
-Release:   1%{snapshot}%{?dist}
+Release:   3%{snapshot}%{?dist}
 License:   GPLv2+
 URL:       http://www.gnome.org/projects/NetworkManager/
 Group:     System Environment/Base
-Source0:   https://download.gnome.org/sources/NetworkManager-vpnc/1.0/%{name}-%{version}%{snapshot}.tar.xz
+Group(zh_CN.UTF-8): 系统环境/基本
+%define majorver %(echo %{version} | awk -F. '{print $1"."$2}')
+Source0:   https://download.gnome.org/sources/NetworkManager-vpnc/%{majorver}/%{name}-%{version}%{snapshot}.tar.xz
 
 BuildRequires: gtk3-devel
 BuildRequires: dbus-devel
@@ -34,9 +37,14 @@ Obsoletes: NetworkManager-vpnc < 1:0.9.8.2-2
 This package contains software for integrating VPN capabilities with
 the vpnc server with NetworkManager.
 
+%description -l zh_CN.UTF-8
+NetworkManaget 的 vpnc 插件。
+
 %package -n NetworkManager-vpnc-gnome
 Summary: NetworkManager VPN plugin for vpnc - GNOME files
+Summary(zh_CN.UTF-8): NetworkManaget 的 vpnc 插件 - GNOME 文件
 Group:   System Environment/Base
+Group(zh_CN.UTF-8): 系统环境/基本
 
 Requires: NetworkManager-vpnc = %{epoch}:%{version}-%{release}
 Requires: nm-connection-editor
@@ -45,6 +53,9 @@ Obsoletes: NetworkManager-vpnc < 1:0.9.8.2-2
 %description -n NetworkManager-vpnc-gnome
 This package contains software for integrating VPN capabilities with
 the vpnc server with NetworkManager (GNOME files).
+
+%description -n NetworkManager-vpnc-gnome -l zh_CN.UTF-8
+NetworkManaget 的 vpnc 插件 - GNOME 文件。
 
 %prep
 %setup -q -n %{name}-%{version}
@@ -63,7 +74,7 @@ make install DESTDIR=%{buildroot} INSTALL="%{__install} -p"
 
 rm -f %{buildroot}%{_libdir}/NetworkManager/lib*.la
 rm -f %{buildroot}%{_libdir}/NetworkManager/lib*.a
-
+magic_rpm_clean.sh
 %find_lang %{name}
 
 
@@ -99,6 +110,12 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %{_datadir}/gnome-vpn-properties/vpnc/nm-vpnc-dialog.ui
 
 %changelog
+* Fri Jan 16 2015 Liu Di <liudidi@gmail.com> - 1:1.0.0-3
+- 为 Magic 3.0 重建
+
+* Fri Jan 16 2015 Liu Di <liudidi@gmail.com> - 1:1.0.0-2
+- 为 Magic 3.0 重建
+
 * Mon Dec 22 2014 Dan Williams <dcbw@redhat.com> - 1:1.0.0-1
 - Update to 1.0
 

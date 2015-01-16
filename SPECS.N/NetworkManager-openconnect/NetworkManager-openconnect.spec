@@ -6,11 +6,13 @@
 %define realversion 1.0.0
 
 Summary:   NetworkManager VPN plugin for openconnect
+Summary(zh_CN.UTF-8): NetworkManager 的 openconnect VPN 插件
 Name:      NetworkManager-openconnect
 Version:   1.0.0
-Release:   1%{?dist}
+Release:   2%{?dist}
 License:   GPLv2+, LGPLv2.1
 Group:     System Environment/Base
+Group(zh_CN.UTF-8): 系统环境/基本
 URL:       http://www.gnome.org/projects/NetworkManager/
 Source:    https://download.gnome.org/sources/NetworkManager-openconnect/1.0/%{name}-%{realversion}.tar.xz
 
@@ -36,6 +38,9 @@ Requires(pre): %{_sbindir}/groupadd
 This package contains software for integrating the openconnect VPN software
 with NetworkManager and the GNOME desktop
 
+%description -l zh_CN.UTF-8
+NetworkManager 的 openconnect VPN 插件。
+
 %prep
 %setup -q -n NetworkManager-openconnect-%{realversion}
 
@@ -49,7 +54,7 @@ make install DESTDIR=$RPM_BUILD_ROOT
 
 rm -f %{buildroot}%{_libdir}/NetworkManager/lib*.la
 rm -f %{buildroot}%{_libdir}/NetworkManager/lib*.a
-
+magic_rpm_clean.sh
 %find_lang %{name}
 
 %pre
@@ -88,6 +93,9 @@ fi
 %{_datadir}/gnome-vpn-properties/openconnect/nm-openconnect-dialog.ui
 
 %changelog
+* Sun Jan 04 2015 Liu Di <liudidi@gmail.com> - 1.0.0-2
+- 为 Magic 3.0 重建
+
 * Mon Dec 22 2014 Dan Williams <dcbw@redhat.com> - 1.0.0-1
 - Update to 1.0
 

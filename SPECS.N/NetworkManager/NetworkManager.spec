@@ -75,7 +75,7 @@ Name: NetworkManager
 Summary: Network connection manager and user applications
 Epoch: %{epoch_version}
 Version: %{realversion}
-Release: %{release_version}%{snapshot}%{git_sha_version}%{?dist}
+Release: %{release_version}%{snapshot}%{git_sha_version}%{?dist}.1
 Group: System Environment/Base
 License: GPLv2+
 URL: http://www.gnome.org/projects/NetworkManager/
@@ -165,7 +165,6 @@ BuildRequires: newt-devel
 BuildRequires: /usr/bin/dbus-launch
 BuildRequires: pygobject3-base
 BuildRequires: dbus-python
-BuildRequires: libselinux-devel
 BuildRequires: polkit-devel
 
 
@@ -415,7 +414,7 @@ intltoolize --force
 %else
 	--enable-teamdctl=no \
 %endif
-	--with-selinux=yes \
+	--with-selinux=no \
 	--enable-polkit=yes \
 	--enable-polkit-agent \
 	--enable-modify-system=yes \
@@ -662,6 +661,9 @@ fi
 %endif
 
 %changelog
+* Sun Jan 04 2015 Liu Di <liudidi@gmail.com> - 1:1.0.0-1.1
+- 为 Magic 3.0 重建
+
 * Mon Dec 22 2014 Dan Williams <dcbw@redhat.com> - 1:1.0.0-1
 - Update to 1.0
 

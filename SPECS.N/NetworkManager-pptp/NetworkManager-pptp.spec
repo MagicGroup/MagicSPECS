@@ -2,14 +2,17 @@
 %global ppp_version %(rpm -q ppp --queryformat '%{VERSION}')
 
 Summary:   NetworkManager VPN plugin for PPTP
+Summary(zh_CN.UTF-8): NetWorkManager 的 PPTP VPN 插件
 Name:      NetworkManager-pptp
 Epoch:     1
-Version:   0.9.8.4
-Release:   1%{snapshot}%{?dist}
+Version:	1.0.0
+Release:	1%{?dist}
 License:   GPLv2+
 URL:       http://www.gnome.org/projects/NetworkManager/
 Group:     System Environment/Base
-Source0:   http://ftp.gnome.org/pub/GNOME/sources/%{name}/0.9/%{name}-%{version}%{snapshot}.tar.xz
+Group(zh_CN.UTF-8): 系统环境/基本
+%define majorver %(echo %{version} | awk -F. '{print $1"."$2}')
+Source0:   http://ftp.gnome.org/pub/GNOME/sources/%{name}/%{majorver}/%{name}-%{version}%{snapshot}.tar.xz
 
 BuildRequires: gtk3-devel
 BuildRequires: dbus-devel
@@ -37,21 +40,25 @@ Obsoletes: NetworkManager-pptp < 1:0.9.8.2-3
 This package contains software for integrating VPN capabilities with
 the PPTP server with NetworkManager.
 
+%description -l zh_CN.UTF-8
+NetWorkManager 的 PPTP VPN 插件。
+
 %package -n NetworkManager-pptp-gnome
 Summary: NetworkManager VPN plugin for PPTP - GNOME files
+Summary(zh_CN.UTF-8): NetWorkManager 的 PPTP VPN 插件 - GNOME 文件 
 Group:   System Environment/Base
+Group(zh_CN.UTF-8): 系统环境/基本
 
 Requires: NetworkManager-pptp = %{epoch}:%{version}-%{release}
-%if 0%{?fedora} > 17
 Requires: nm-connection-editor
-%else
-Requires: NetworkManager-gnome
-%endif
 Obsoletes: NetworkManager-pptp < 1:0.9.8.2-3
 
 %description -n NetworkManager-pptp-gnome
 This package contains software for integrating VPN capabilities with
 the PPTP server with NetworkManager (GNOME files).
+
+%description -n NetworkManager-pptp-gnome -l zh_CN.UTF-8
+NetWorkManager 的 PPTP VPN 插件 - GNOME 文件。
 
 %prep
 %setup -q -n %{name}-%{version}
@@ -75,7 +82,7 @@ make install DESTDIR=%{buildroot} INSTALL="%{__install} -p"
 rm -f %{buildroot}%{_libdir}/NetworkManager/lib*.la
 rm -f %{buildroot}%{_libdir}/NetworkManager/lib*.a
 rm -f %{buildroot}%{_libdir}/pppd/%{ppp_version}/*.la
-
+magic_rpm_clean.sh
 %find_lang %{name}
 
 %files -f %{name}.lang
@@ -93,6 +100,9 @@ rm -f %{buildroot}%{_libdir}/pppd/%{ppp_version}/*.la
 %{_datadir}/gnome-vpn-properties/pptp/nm-pptp-dialog.ui
 
 %changelog
+* Fri Jan 16 2015 Liu Di <liudidi@gmail.com> - 1:1.0.0-1
+- 更新到 1.0.0
+
 * Fri Jul 26 2013 Jiří Klimeš <jklimes@redhat.com> - 1:0.9.8.2-3
 - Fixing Obsoletes to ensure NetworkManager-pptp-gnome installs on update (rh #986368)
 
