@@ -1,7 +1,7 @@
 %global         git_commit 5cff3c5
 Name:           libnm-qt
-Version:        0.9.8.2
-Release:        4%{?dist}
+Version:        0.9.8.3
+Release:        2%{?dist}
 Epoch:          2
 Summary:        Qt-only wrapper for NetworkManager DBus API
 Summary(zh_CN.UTF-8): NetworkManager DBus API 的 Qt 接口
@@ -74,6 +74,12 @@ magic_rpm_clean.sh
 %{_includedir}/NetworkManagerQt/
 
 %changelog
+* Mon Jan 05 2015 Liu Di <liudidi@gmail.com> - 2:0.9.8.3-2
+- 为 Magic 3.0 重建
+
+* Mon Jan 05 2015 Liu Di <liudidi@gmail.com> - 2:0.9.8.3-1
+- 更新到 0.9.8.3
+
 * Tue Jul 22 2014 Liu Di <liudidi@gmail.com> - 2:0.9.8.2-4
 - 为 Magic 3.0 重建
 
