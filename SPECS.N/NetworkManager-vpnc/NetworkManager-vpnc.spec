@@ -1,47 +1,53 @@
-%define nm_version          1:0.9.2
-%define dbus_version        1.1
-%define gtk3_version        3.0.1
-%define vpnc_version        0.5
-%define shared_mime_version 0.16-3
-
-%define snapshot %{nil}
-%define realversion 0.9.3.997
+%global snapshot %{nil}
 
 Summary:   NetworkManager VPN plugin for vpnc
 Name:      NetworkManager-vpnc
 Epoch:     1
-Version:   0.9.3.997
-Release:   4%{snapshot}%{?dist}
+Version:   1.0.0
+Release:   1%{snapshot}%{?dist}
 License:   GPLv2+
-Group:     System Environment/Base
 URL:       http://www.gnome.org/projects/NetworkManager/
-Source:    %{name}-%{realversion}%{snapshot}.tar.bz2
+Group:     System Environment/Base
+Source0:   https://download.gnome.org/sources/NetworkManager-vpnc/1.0/%{name}-%{version}%{snapshot}.tar.xz
 
-BuildRequires: gtk3-devel             >= %{gtk3_version}
-BuildRequires: dbus-devel             >= %{dbus_version}
-BuildRequires: NetworkManager-devel   >= %{nm_version}
-BuildRequires: NetworkManager-glib-devel >= %{nm_version}
-%if 0%{?fedora} > 16
-BuildRequires: libgnome-keyring-devel
-%else
-BuildRequires: gnome-keyring-devel
-%endif
+BuildRequires: gtk3-devel
+BuildRequires: dbus-devel
+BuildRequires: NetworkManager-devel
+BuildRequires: NetworkManager-glib-devel >= 1:0.9.9.0
 BuildRequires: intltool gettext
+BuildRequires: libnm-gtk-devel >= 0.9.9.0
+BuildRequires: libsecret-devel
 
-Requires: gtk3             >= %{gtk3_version}
-Requires: dbus             >= %{dbus_version}
-Requires: NetworkManager   >= %{nm_version}
-Requires: vpnc             >= %{vpnc_version}
-Requires: shared-mime-info >= %{shared_mime_version}
+Requires: gtk3
+Requires: dbus
+Requires: NetworkManager >= 1:0.9.9.0
+Requires: vpnc
+Requires: shared-mime-info
 Requires: gnome-keyring
+Obsoletes: NetworkManager-vpnc < 1:0.9.8.2-2
 
+%global _privatelibs libnm-vpnc-properties[.]so.*
+%global __provides_exclude ^(%{_privatelibs})$
+%global __requires_exclude ^(%{_privatelibs})$
 
 %description
-This package contains software for integrating the vpnc VPN software
-with NetworkManager and the GNOME desktop
+This package contains software for integrating VPN capabilities with
+the vpnc server with NetworkManager.
+
+%package -n NetworkManager-vpnc-gnome
+Summary: NetworkManager VPN plugin for vpnc - GNOME files
+Group:   System Environment/Base
+
+Requires: NetworkManager-vpnc = %{epoch}:%{version}-%{release}
+Requires: nm-connection-editor
+Obsoletes: NetworkManager-vpnc < 1:0.9.8.2-2
+
+%description -n NetworkManager-vpnc-gnome
+This package contains software for integrating VPN capabilities with
+the vpnc server with NetworkManager (GNOME files).
 
 %prep
-%setup -q -n NetworkManager-vpnc-%{realversion}
+%setup -q -n %{name}-%{version}
 
 
 %build
@@ -53,8 +59,7 @@ make %{?_smp_mflags}
 make check
 
 %install
-
-make install DESTDIR=$RPM_BUILD_ROOT
+make install DESTDIR=%{buildroot} INSTALL="%{__install} -p"
 
 rm -f %{buildroot}%{_libdir}/NetworkManager/lib*.la
 rm -f %{buildroot}%{_libdir}/NetworkManager/lib*.a
@@ -77,23 +82,52 @@ fi
 gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 
 %files -f %{name}.lang
-%defattr(-, root, root)
 
 %doc AUTHORS ChangeLog
-%{_libdir}/NetworkManager/lib*.so*
 %{_libexecdir}/nm-vpnc-auth-dialog
 %{_sysconfdir}/dbus-1/system.d/nm-vpnc-service.conf
 %{_sysconfdir}/NetworkManager/VPN/nm-vpnc-service.name
 %{_libexecdir}/nm-vpnc-service
 %{_libexecdir}/nm-vpnc-service-vpnc-helper
-%{_datadir}/gnome-vpn-properties/vpnc/nm-vpnc-dialog.ui
 %{_datadir}/applications/nm-vpnc-auth-dialog.desktop
 %{_datadir}/icons/hicolor/48x48/apps/gnome-mime-application-x-cisco-vpn-settings.png
+
+%files -n NetworkManager-vpnc-gnome
+%doc AUTHORS ChangeLog
+%{_libdir}/NetworkManager/lib*.so*
 %dir %{_datadir}/gnome-vpn-properties/vpnc
+%{_datadir}/gnome-vpn-properties/vpnc/nm-vpnc-dialog.ui
 
 %changelog
-* Wed Feb 13 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1:0.9.3.997-4
-- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
+* Mon Dec 22 2014 Dan Williams <dcbw@redhat.com> - 1:1.0.0-1
+- Update to 1.0
+
+* Fri Aug 15 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1:0.9.9.0-6.git20140428
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
+
+* Fri Jun 06 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1:0.9.9.0-5.git20140428
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Mon Apr 28 2014 Dan Williams <dcbw@redhat.com> - 1:0.9.9.0-4.git20140428
+- Fix interactions with GNOME Shell when no passwords are required (bgo #728681)
+
+* Fri Feb  7 2014 Thomas Haller <thaller@redhat.com> - 1:0.9.9.0-3.git20140131
+- Fix passing --pid-file argument to vpnc as separate arguments (rh #1062555)
+
+* Fri Jan 31 2014 Dan Williams <dcbw@redhat.com> - 1:0.9.9.0-2.git20140131
+- Fix passing --pid-file argument to vpnc
+
+* Wed Jan 29 2014 Dan Williams <dcbw@redhat.com> - 1:0.9.9.0-1
+- Always return found secrets for External UI mode
+
+* Fri Jul 26 2013 Jiří Klimeš <jklimes@redhat.com> - 1:0.9.8.2-2
+- Fixing Obsoletes to ensure NetworkManager-vpnc-gnome installs on update (rh #983632)
+
+* Fri Jun  7 2013 Dan Williams <dcbw@redhat.com> - 1:0.9.8.2-1
+- Update to 0.9.8.2 release
+
+* Sat Apr 06 2013 Dan Fruehauf <malkodan@gmail.com> - 1:0.9.8.0-1
+- Refactored spec file
 
 * Wed Jul 18 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1:0.9.3.997-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
@@ -285,7 +319,7 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 * Wed Oct 10 2007 Dan Williams <dcbw@redhat.com> - 1:0.7.0-0.2.svn2970
 - Fix default username
 
-* Thu Sep 28 2007 Dan Williams <dcbw@redhat.com> - 1:0.7.0-0.1.svn2914
+* Fri Sep 28 2007 Dan Williams <dcbw@redhat.com> - 1:0.7.0-0.1.svn2914
 - Fix .name file on 64-bit systems
 
 * Fri Sep 28 2007 Jesse Keating <jkeating@redhat.com> - 1:0.7.0-0.2.svn2910
