@@ -14,9 +14,6 @@ BuildRequires: pkgconfig(xproto) pkgconfig(xext)
 %description
 X.Org X11 libXxf86misc runtime library
 
-%description devel -l zh_CN.UTF-8
-%{name} 的开发包。
-
 %package devel
 Summary: X.Org X11 libXxf86misc development package
 Summary(zh_CN.UTF-8): %{name} 的开发包
