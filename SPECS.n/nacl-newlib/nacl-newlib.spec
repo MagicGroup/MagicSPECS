@@ -1,34 +1,34 @@
-%global gitver 5feee65
+%global gitver a9ae3c6
 
 Name:		nacl-newlib
 Summary:	C library intended for use on embedded systems
-Version:	1.20.0
-Release:	7.git%{gitver}%{?dist}
+Version:	2.0.0
+Release:	1.git%{gitver}%{?dist}
 # Generated from git
 # git clone http://git.chromium.org/native_client/nacl-newlib.git
 # (Checkout ID taken from chromium-27.0.1453.93/native_client/tools/REVISIONS)
 # cd nacl-newlib
-# git checkout 5feee65e182c08a7e89fbffc3223c57e4335420f
+# git checkout a9ae3c60b36dea3d8a10e18b1b6db952d21268c2
 # cd ..
 # For newlib version, grep PACKAGE_VERSION newlib/libm/configure
-# mv nacl-newlib nacl-newlib-1.20.0-git5feee65
-# tar --exclude-vcs -cjf nacl-newlib-1.20.0-git5feee65.tar.bz2 nacl-newlib-1.20.0-git5feee65
+# mv nacl-newlib nacl-newlib-2.0.0-gita9ae3c6
+# tar --exclude-vcs -cjf nacl-newlib-2.0.0-gita9ae3c6.tar.bz2 nacl-newlib-2.0.0-gita9ae3c6
 License:	BSD and MIT and LGPLv2+
 Source0:	nacl-newlib-%{version}-git%{gitver}.tar.bz2
 # We need to copy some missing header files from chromium
-# mkdir ~/nacl-headers-27.0.1453.93
-# cd chromium-27.0.1453.93/native_client/
-# ./src/trusted/service_runtime/export_header.py src/trusted/service_runtime/include ~/nacl-headers-27.0.1453.93/
-# cd ~/nacl-headers-27.0.1453.93
-# tar cfj ~/nacl-headers-27.0.1453.93.tar.bz2 .
-Source1:	nacl-headers-27.0.1453.93.tar.bz2
-# Taken from chromium-27.0.1453.93/native_client/tools/newlib-libc-script
+# mkdir ~/nacl-headers-35.0.1916.114
+# cd chromium-35.0.1916.114/native_client/
+# ./src/trusted/service_runtime/export_header.py src/trusted/service_runtime/include ~/nacl-headers-35.0.1916.114/
+# cd ~/nacl-headers-35.0.1916.114
+# tar cfj ~/nacl-headers-35.0.1916.114.tar.bz2 .
+Source1:	nacl-headers-35.0.1916.114.tar.bz2
+# Taken from chromium-35.0.1916.114/native_client/tools/newlib-libc-script
 Source2:	newlib-libc-script
-# Taken from chromium-27.0.1453.93/native_client/src/untrusted/pthread/pthread.h
+# Taken from chromium-35.0.1916.114/native_client/src/untrusted/pthread/pthread.h
 Source3:	pthread.h
-# Taken from chromium-27.0.1453.93/native_client/src/untrusted/pthread/semaphore.h
+# Taken from chromium-35.0.1916.114/native_client/src/untrusted/pthread/semaphore.h
 Source4:	semaphore.h
-# Taken from chromium-27.0.1453.93/native_client/src/untrusted/stubs/crt1.x
+# Taken from chromium-35.0.1916.114/native_client/src/untrusted/stubs/crt1.x
 Source5:	crt1.x
 URL:		http://sourceware.org/newlib/
 BuildRequires:	nacl-binutils nacl-gcc
@@ -93,6 +93,9 @@ cp -a %{SOURCE5} %{buildroot}%{_prefix}/x86_64-nacl/lib/crt1.o
 %{_prefix}/x86_64-nacl/lib/
 
 %changelog
+* Mon Jun  2 2014 Tom Callaway <spot@fedoraproject.org> 2.0.0-1.gita9ae3c6
+- update for chromium 35
+
 * Fri May 31 2013 Tom Callaway <spot@fedoraproject.org> 1.20.0-7.git5feee65
 - update for chromium 27
 
