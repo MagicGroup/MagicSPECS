@@ -90,7 +90,7 @@ rm -rf %{buildroot}
 %doc %{_mandir}/man8/*
 %config %{_sysconfdir}/pure-ftpd.conf
 %config %{_sysconfdir}/pure-ftpd/
-%config(noreplace) %{_initrddir}/pure-ftpd/
+%config(noreplace) %{_initrddir}/pure-ftpd
 %config(noreplace) %{_sysconfdir}/pam.d/*
 %{_sbindir}/*
 %{_bindir}/*
