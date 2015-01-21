@@ -1,0 +1,18 @@
+diff --git a/configure.ac b/configure.ac
+index cd5dc28..cf3ef43 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -3,9 +3,11 @@ AC_INIT(nc6, 1.0, [ds6-devel@deepspace6.net])
+ AC_CONFIG_AUX_DIR(config)
+ AC_CONFIG_SRCDIR(src/main.c)
+ AM_GNU_GETTEXT_VERSION(0.14.1)
+-AM_INIT_AUTOMAKE(1.6)           dnl Automake 1.6 or better is required
++dnl Automake 1.6 or better is required
++AM_INIT_AUTOMAKE(1.6)
+ AM_CONFIG_HEADER(config.h)
+-AC_PREREQ(2.52)                 dnl Autoconf 2.52 or better is required
++AC_PREREQ(2.52)
++dnl Autoconf 2.52 or better is required
+ 
+ 
+ dnl Checks for programs.
