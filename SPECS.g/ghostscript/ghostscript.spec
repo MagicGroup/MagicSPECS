@@ -1,8 +1,7 @@
-%define gs_ver 9.10
-%define gs_dot_ver 9.10
+%define gs_ver 9.15
+%define gs_dot_ver 9.15
 %{expand: %%define build_with_freetype %{?_with_freetype:1}%{!?_with_freetype:0}}
 Summary: A PostScript interpreter and renderer
-Summary(zh_CN.UTF-8): PostScript 解释器和渲染器
 Name: ghostscript
 Version: %{gs_ver}
 
@@ -13,12 +12,12 @@ Release: 6%{?dist}
 License: AGPLv3+ and Redistributable, no modification permitted
 URL: http://www.ghostscript.com/
 Group: Applications/Publishing
-Group(zh_CN.UTF-8): 应用程序/出版
-Source0: ghostscript-%{gs_ver}-cleaned.tar.bz2
-# ghostscript contains a jpegxr directory containing code we cannot
-# ship due to licensing concerns. Therefore we use this script to
-# remove that directory before shipping it. Download the upstream
-# tarball and invoke this script while in the tarball's directory:
+Source0: ghostscript-%{gs_ver}-cleaned-1.tar.bz2
+# ghostscript contains code we cannot ship due to licensing concerns.
+# Therefore we use this script to remove it before shipping the
+# tarball.
+# Download the upstream tarball and invoke this script while in the
+# tarball's directory:
 Source1: generate-tarball.sh
 Source2: CIDFnmap
 Source4: cidfmap
@@ -29,15 +28,11 @@ Patch3: ghostscript-noopt.patch
 Patch4: ghostscript-runlibfileifexists.patch
 Patch5: ghostscript-icc-missing-check.patch
 Patch6: ghostscript-Fontmap.local.patch
-Patch7: ghostscript-iccprofiles-initdir.patch
-Patch8: ghostscript-gdevcups-debug-uninit.patch
-Patch9: ghostscript-wrf-snprintf.patch
-Patch10: ghostscript-gs694154.patch
-Patch11: ghostscript-gs694809.patch
-Patch12: ghostscript-duplex.patch
+Patch7: ghostscript-wrf-snprintf.patch
+Patch8: ghostscript-system-openjpeg2.patch
 
-Requires: urw-fonts >= 1.1, ghostscript-fonts
-Requires: poppler-data
+Requires: %{name}-core%{?_isa} = %{version}-%{release}
+Requires: %{name}-x11%{?_isa} = %{version}-%{release}
 BuildRequires: xz
 BuildRequires: libjpeg-devel, libXt-devel
 BuildRequires: zlib-devel, libpng-devel, unzip, gtk3-devel
@@ -51,7 +46,7 @@ BuildRequires: jasper-devel
 BuildRequires: dbus-devel
 BuildRequires: poppler-data
 BuildRequires: lcms2-devel >= 2.4-5
-BuildRequires: openjpeg-devel
+BuildRequires: openjpeg2-devel
 %{?_with_freetype:BuildRequires: freetype-devel}
 BuildRoot: %{_tmppath}/%{name}-%{gs_ver}-root
 
@@ -76,48 +71,48 @@ non-PostScript printers, you should install ghostscript. If you
 install ghostscript, you also need to install the ghostscript-fonts
 package.
 
-%description -l zh_CN.UTF-8
-Postscripts 解释器和渲染器。
-
 %package devel
 Summary: Files for developing applications that use ghostscript
-Summary(zh_CN.UTF-8): %{name} 的开发包
-Requires: %{name} = %{version}-%{release}
+Requires: %{name}%{?_isa} = %{version}-%{release}
 Group: Development/Libraries
-Group(zh_CN.UTF-8): 开发/库
 
 %description devel
 The header files for developing applications that use ghostscript.
 
-%description devel -l zh_CN.UTF-8
-%{name} 的开发包。
-
 %package doc
 Summary: Documentation for ghostscript
-Summary(zh_CN.UTF-8): %{name} 的文档
 Requires: %{name} = %{version}-%{release}
 Group: Documentation
-Group(zh_CN.UTF-8): 文档
 BuildArch: noarch
 
 %description doc
 The documentation files that come with ghostscript.
 
-%description doc -l zh_CN.UTF-8
-%{name} 的文档。
+%package x11
+Summary: The X11 driver for Ghostscript
+Requires: %{name}%{?_isa} = %{version}-%{release}
+Group: Applications/Publishing
+
+%description x11
+
+The X11 driver for Ghostscript.
+
+%package core
+Summary: Parts of Ghostscript which do not require X11
+Requires: urw-fonts >= 1.1, ghostscript-fonts
+Requires: poppler-data
+Group: Applications/Publishing
+
+%description core
+The parts of Ghostscript which do not require X11.
 
 %package gtk
 Summary: A GTK-enabled PostScript interpreter and renderer
-Summary(zh_CN.UTF-8): 使用 GTK 的 PostScript 解释器和渲染器
-Requires: %{name} = %{version}-%{release}
+Requires: %{name}%{?_isa} = %{version}-%{release}
 Group: Applications/Publishing
-Group(zh_CN.UTF-8): 应用程序/出版
 
 %description gtk
 A GTK-enabled version of Ghostscript, called 'gsx'.
-
-%description gtk -l zh_CN.UTF-8
-使用 GTK 的 PostScript 解释器和渲染器，命名为 gsx。
 
 %prep
 %setup -q -n %{name}-%{gs_ver}
@@ -144,23 +139,10 @@ rm -rf expat freetype icclib jasper jpeg jpegxr lcms lcms2 libpng openjpeg zlib 
 # package manifest.
 %patch6 -p1
 
-# Don't assume %%rom%% device is available for initial ICC profile dir.
-%patch7 -p1 -b .iccprofiles-initdir
-
-# gdevcups: don't use uninitialized variables in debugging output.
-%patch8 -p1 -b .gdevcups-debug-uninit
-
 # Use more caution when converting floats to strings (bug #980085).
-%patch9 -p1 -b .wrf-snprintf
+%patch7 -p1 -b .wrf-snprintf
 
-# Use upstream patch to fix gs segfault (bug #1036428).
-%patch10 -p1 -b .gs694154
-
-# Use upstream patch to fix gs segfault (bug #1039718).
-%patch11 -p1 -b .gs694809
-
-# Use upstream patch to fix duplex for some devices (bug #1068896).
-%patch12 -p1 -b .duplex
+%patch8 -p1 -b .system-openjpeg2
 
 # Convert manual pages to UTF-8
 from8859_1() {
@@ -297,16 +279,15 @@ MAIN_PWD=`pwd`
  find .%{_bindir}/ | sed -e 's/\.//;' | \
                 grep -v '/$\|/hpijs$\|/gsx$\|/ijs-config$' \
                 >> $MAIN_PWD/rpm.sharelist)
-magic_rpm_clean.sh
 
 %clean
 rm -rf $RPM_BUILD_ROOT
 
-%post -p /sbin/ldconfig
+%post core -p /sbin/ldconfig
 
-%postun -p /sbin/ldconfig
+%postun core -p /sbin/ldconfig
 
-%files -f rpm.sharelist
+%files core -f rpm.sharelist
 %defattr(-,root,root)
 %dir %{_sysconfdir}/ghostscript
 %dir %{_sysconfdir}/ghostscript/%{gs_dot_ver}
@@ -321,15 +302,20 @@ rm -rf $RPM_BUILD_ROOT
 %dir %{_datadir}/ghostscript/%{gs_dot_ver}/Resource/ColorSpace
 %dir %{_datadir}/ghostscript/%{gs_dot_ver}/Resource/Decoding
 %dir %{_datadir}/ghostscript/%{gs_dot_ver}/Resource/Encoding
+%dir %{_datadir}/ghostscript/%{gs_dot_ver}/Resource/IdiomSet
 %dir %{_datadir}/ghostscript/%{gs_dot_ver}/Resource/SubstCID
 %{_datadir}/ghostscript/%{gs_dot_ver}/lib
 %{_datadir}/ghostscript/%{gs_dot_ver}/iccprofiles
 %{_mandir}/man*/*
+%lang(de) %{_mandir}/de/man*/*
 %{_libdir}/libgs.so.*
 %{_libdir}/libijs-*.so*
 %dir %{_libdir}/%{name}
-%{_libdir}/%{name}/%{gs_dot_ver}
+%dir %{_libdir}/%{name}/%{gs_dot_ver}
 %config(noreplace) %{_sysconfdir}/ghostscript/%{gs_dot_ver}/*
+
+%files
+%defattr(-,root,root)
 
 %files doc
 %defattr(-,root,root)
@@ -339,6 +325,10 @@ rm -rf $RPM_BUILD_ROOT
 %files gtk
 %defattr(-,root,root)
 %{_bindir}/gsx
+
+%files x11
+%defattr(-,root,root)
+%{_libdir}/%{name}/%{gs_dot_ver}/X11.so
 
 %files devel
 %defattr(-,root,root)
@@ -352,6 +342,56 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/libgs.so
 
 %changelog
+* Fri Dec 19 2014 Tim Waugh <twaugh@redhat.com> 9.15-6
+- Don't ship X11.so in both the main package and the x11 sub-package.
+
+* Fri Dec 19 2014 Rex Dieter <rdieter@fedoraproject.org> 9.15-5
+- fix %%_isa macro usage
+
+* Thu Dec 18 2014 Tim Waugh <twaugh@redhat.com> 9.15-4
+- New ghostscript-x11 package for X11 driver (bug #148939).
+- Ghostscript not requiring X11 is now in ghostscript-core.
+- The 'ghostscript' package requires both of these.
+
+* Tue Oct  7 2014 Tim Waugh <twaugh@redhat.com> 9.15-3
+- Avoid shipping ramfs source as its license is unclear. Similarly
+  with some documentation and example code (bug #1149617).
+
+* Fri Oct  3 2014 Tim Waugh <twaugh@redhat.com> 9.15-2
+- Use system openjpeg2 library so we can decode JPX (upstream
+  bug #695557).
+
+* Tue Sep 23 2014 Tim Waugh <twaugh@redhat.com> 9.15-1
+- 9.15. No longer need iccprofiles-initdir, gs694154, crash, sys-zlib,
+  or trio-g patches.
+
+* Tue Sep  9 2014 Tim Waugh <twaugh@redhat.com>
+- No need to apply patch for already-applied gdevcups-debug-uninit.
+
+* Sat Aug 16 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 9.14-6
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
+
+* Fri Aug 15 2014 Tim Waugh <twaugh@redhat.com> 9.14-5
+- Fix double-to-string conversion on e.g. ppc64 (bug #1014772).
+
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 9.14-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Wed Jun  4 2014 Tim Waugh <twaugh@redhat.com> 9.14-3
+- Applied patch from upstream to fix memory handling issue that could
+  lead to crashes (bug #1087071).
+
+* Tue Jun 03 2014 Ralf Corsépius <corsepiu@fedoraproject.org> 9.14-2
+- Add %%{_datadir}/ghostscript/%%{gs_dot_ver}/Resource/IdiomSet
+  (RHBZ #1100338).
+
+* Thu Mar 27 2014 Tim Waugh <twaugh@redhat.com> 9.14-1
+- 9.14.
+
+* Wed Mar 26 2014 Tim Waugh <twaugh@redhat.com> 9.12-1
+- 9.12 (bug #1080814).
+- Fix build when using system zlib.
+
 * Thu Feb 27 2014 Tim Waugh <twaugh@redhat.com> 9.10-6
 - Use upstream patch to fix duplex for some devices (bug #1068896).
 
