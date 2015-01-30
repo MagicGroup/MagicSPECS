@@ -1256,7 +1256,11 @@ done
 	-no-rpath \
 	-cups \
 	-stl \
-	-pch \
+%ifarch mips64el
+	-no-pch \
+%else
+	pch \
+%endif
 	-accessibility \
 	-reduce-exports \
 	-reduce-relocations \

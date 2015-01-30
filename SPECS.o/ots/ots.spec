@@ -10,6 +10,8 @@ Group:		System Environment/Libraries
 Group(zh_CN.UTF-8):	系统环境/库
 
 Source0:	http://prdownloads.sourceforge.net/libots/ots-%{version}.tar.gz
+Patch0:  ots-0.5.0-remove_double_en.xml.patch
+
 
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
@@ -60,6 +62,7 @@ The %{name}-libs package contains shared libraries used by %{name}.
 
 %prep
 %setup -q 
+%patch0 -p1
 
 
 %build
