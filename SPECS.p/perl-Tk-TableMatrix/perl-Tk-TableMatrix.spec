@@ -40,7 +40,7 @@ rm demos/edit_styles.pl.timestamps
 
 
 %build
-%{__perl} Makefile.PL INSTALLDIRS=vendor OPTIMIZE="$RPM_OPT_FLAGS"
+%{__perl} Makefile.PL INSTALLDIRS=vendor OPTIMIZE="$RPM_OPT_FLAGS" X11LIB=%{_libdir} X11INC=%{_includedir}
 make %{?_smp_mflags}
 
 

@@ -181,7 +181,7 @@ rm -rf %{buildroot}
 %endif
 # legacy/compat header locations
 %{_includedir}/openjpeg.h
-%{_includedir}/openjpeg/
+%{_includedir}/openjpeg
 
 
 %changelog
