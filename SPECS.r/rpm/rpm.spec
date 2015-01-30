@@ -77,6 +77,9 @@ Patch308: rpm-4.11.0.1-setuppy-fixes.patch
 # Temporary Patch to provide support for updates
 Patch400: rpm-4.10.90-rpmlib-filesystem-check.patch
 
+# Mips64el
+Patch500: rpm-4.11.2-mips64el.patch
+
 # Partially GPL/LGPL dual-licensed and some bits with BSD
 # SourceLicense: (GPLv2+ and LGPLv2+ with exceptions) and BSD 
 License: GPLv2+
@@ -284,6 +287,8 @@ packages on a system.
 %patch308 -p1 -b .setuppy-fixes
 
 %patch400 -p1 -b .rpmlib-filesystem-check
+
+%patch500 -p1 -b .mips64el
 
 %patch5 -p1 -b .armhfp
 # this patch cant be applied on softfp builds
