@@ -1,13 +1,15 @@
 # -*- coding: utf-8 -*-
 Summary: A portable x86 assembler which uses Intel-like syntax
+Summary(zh_CN.UTF-8): 使用类 Intel 语法的可移植 x86 汇编语言
 Name: nasm
-Version: 2.10
-Release: 2%{?dist}
+Version: 2.11.06
+Release: 1%{?dist}
 License: BSD
 Group: Development/Languages
+Group(zh_CN.UTF-8): 开发/语言
 URL: http://www.nasm.us
-Source0: http://www.nasm.us/pub/nasm/releasebuilds/2.10/%{name}-%{version}.tar.bz2
-Source1: http://www.nasm.us/pub/nasm/releasebuilds/2.10/%{name}-%{version}-xdoc.tar.bz2
+Source0: http://www.nasm.us/pub/nasm/releasebuilds/%{version}/%{name}-%{version}.tar.xz
+Source1: http://www.nasm.us/pub/nasm/releasebuilds/%{version}/%{name}-%{version}-xdoc.tar.xz
 BuildRequires: perl
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 Requires(post): /sbin/install-info
@@ -15,30 +17,43 @@ Requires(preun): /sbin/install-info
 
 %package doc
 Summary: Documentation for NASM
+Summary(zh_CN.UTF-8): %{name} 的文档
 Group: Development/Languages
+Group(zh_CN.UTF-8): 开发/语言
 BuildRequires: ghostscript, texinfo
 
 %package rdoff
 Summary: Tools for the RDOFF binary format, sometimes used with NASM
+Summary(zh_CN.UTF-8): RDOFF 二进制格式工具，有时被 NASM 使用
 Group: Development/Tools
+Group(zh_CN.UTF-8): 开发/工具
 
 %description
 NASM is the Netwide Assembler, a free portable assembler for the Intel
 80x86 microprocessor series, using primarily the traditional Intel
 instruction mnemonics and syntax.
 
+%description -l zh_CN.UTF-8
+使用类 Intel 语法的可移植 x86 汇编语言。
+
 %description doc
 This package contains documentation for the Netwide Assembler (NASM),
 in HTML, info, PostScript, and text formats.
+
+%description doc -l zh_CN.UTF-8
+%{name} 的文档。
 
 %description rdoff
 Tools for the operating-system independent RDOFF binary format, which
 is sometimes used with the Netwide Assembler (NASM). These tools
 include linker, library manager, loader, and information dump.
 
+%description rdoff -l zh_CN.UTF-8
+RDOFF 二进制格式工具，有时被 NASM 使用。
+
 %prep
 %setup -q
-tar xjf %{SOURCE1} --strip-components 1
+tar xf %{SOURCE1} --strip-components 1
 
 %build
 %configure
@@ -52,6 +67,7 @@ mkdir -p $RPM_BUILD_ROOT/%{_mandir}/man1
 make INSTALLROOT=$RPM_BUILD_ROOT install install_rdf
 install -d $RPM_BUILD_ROOT/%{_infodir}
 install -t $RPM_BUILD_ROOT/%{_infodir} doc/info/*
+magic_rpm_clean.sh
 
 %clean
 rm -rf ${RPM_BUILD_ROOT}
@@ -91,6 +107,9 @@ fi
 %{_bindir}/rdf2srec
 
 %changelog
+* Wed Jan 21 2015 Liu Di <liudidi@gmail.com> - 2.11.06-1
+- 更新到 2.11.06
+
 * Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 2.10-2
 - 为 Magic 3.0 重建
 

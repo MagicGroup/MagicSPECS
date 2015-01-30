@@ -16,7 +16,7 @@
 
 Name:           tracker
 Version:        1.3.2
-Release:        2%{?dist}
+Release:        4%{?dist}
 Summary:        Desktop-neutral search tool and indexer
 
 Group:          Applications/System
@@ -318,6 +318,12 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 
 
 %changelog
+* Wed Jan 21 2015 Liu Di <liudidi@gmail.com> - 1.3.2-4
+- 为 Magic 3.0 重建
+
+* Wed Jan 21 2015 Liu Di <liudidi@gmail.com> - 1.3.2-3
+- 为 Magic 3.0 重建
+
 * Thu Dec 25 2014 Liu Di <liudidi@gmail.com> - 1.3.2-2
 - 为 Magic 3.0 重建
 

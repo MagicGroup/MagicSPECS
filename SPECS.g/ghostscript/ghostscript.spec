@@ -5,7 +5,7 @@ Summary: A PostScript interpreter and renderer
 Name: ghostscript
 Version: %{gs_ver}
 
-Release: 6%{?dist}
+Release: 7%{?dist}
 
 # Included CMap data is Redistributable, no modification permitted,
 # see http://bugzilla.redhat.com/487510
@@ -342,6 +342,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/libgs.so
 
 %changelog
+* Wed Jan 28 2015 Liu Di <liudidi@gmail.com> - 9.15-7
+- 为 Magic 3.0 重建
+
 * Fri Dec 19 2014 Tim Waugh <twaugh@redhat.com> 9.15-6
 - Don't ship X11.so in both the main package and the x11 sub-package.
 

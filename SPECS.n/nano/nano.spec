@@ -1,19 +1,14 @@
 Summary:         A small text editor
+Summary(zh_CN.UTF-8): 一个小的文本编辑器
 Name:            nano
-Version:         2.3.2
+Version:         2.3.6
 Release:         2%{?dist}
 License:         GPLv3+
 Group:           Applications/Editors
+Group(zh_CN.UTF-8): 应用程序/编辑器
 URL:             http://www.nano-editor.org
 Source:          http://www.nano-editor.org/dist/v2.3/%{name}-%{version}.tar.gz
 Source2:         nanorc
-Patch0:          nano-2.3.2-warnings.patch
-
-# http://lists.gnu.org/archive/html/nano-devel/2010-08/msg00004.html
-Patch1:          0001-check-stat-s-result-and-avoid-calling-stat-on-a-NULL.patch
-
-# http://lists.gnu.org/archive/html/nano-devel/2010-08/msg00005.html
-Patch2:          0002-use-futimens-if-available-instead-of-utime.patch
 
 BuildRoot:       %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:   autoconf
@@ -23,17 +18,17 @@ BuildRequires:   groff
 BuildRequires:   ncurses-devel
 BuildRequires:   sed
 Conflicts:       filesystem < 3
-Requires(post):  /sbin/install-info
-Requires(preun): /sbin/install-info
+Requires(post):  /usr/sbin/install-info
+Requires(preun): /usr/sbin/install-info
 
 %description
 GNU nano is a small and friendly text editor.
 
+%description -l zh_CN.UTF-8
+一个小的文本编辑器。
+
 %prep
 %setup -q
-%patch0 -p1
-%patch1 -p1
-%patch2 -p1
 
 for f in doc/man/fr/{nano.1,nanorc.5,rnano.1} ; do
   iconv -f iso-8859-1 -t utf-8 -o $f.tmp $f && mv $f.tmp $f
@@ -60,7 +55,7 @@ sed -e 's/# set nowrap/set nowrap/' \
     doc/nanorc.sample >> ./nanorc
 mkdir -p %{buildroot}%{_sysconfdir}
 install -m 644 ./nanorc %{buildroot}%{_sysconfdir}/nanorc
-
+magic_rpm_clean.sh
 %find_lang %{name}
 
 %post
@@ -78,17 +73,19 @@ fi
 exit 0
 
 %files -f %{name}.lang
-%doc AUTHORS BUGS COPYING ChangeLog INSTALL NEWS README THANKS TODO
+%doc AUTHORS COPYING ChangeLog INSTALL NEWS README THANKS TODO
 %doc doc/nanorc.sample
 %doc doc/faq.html
 %{_bindir}/*
 %config(noreplace) %{_sysconfdir}/nanorc
 %{_mandir}/man*/*
-%lang(fr) %{_mandir}/fr/man*/*
 %{_infodir}/nano.info*
 %{_datadir}/nano
 
 %changelog
+* Tue Jan 20 2015 Liu Di <liudidi@gmail.com> - 2.3.6-2
+- 为 Magic 3.0 重建
+
 * Wed Mar 27 2013 Kamil Dudka <kdudka@redhat.com> - 2.3.2-2
 - add "BuildRequires: file-devel" to build libmagic support (#927994)
 

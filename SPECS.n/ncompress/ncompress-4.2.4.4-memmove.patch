@@ -1,0 +1,12 @@
+diff -urNp ncompress-4.2.4-orig/compress42.c ncompress-4.2.4/compress42.c
+--- ncompress-4.2.4-orig/compress42.c	2012-01-03 15:13:58.014222927 +0100
++++ ncompress-4.2.4/compress42.c	2012-01-03 15:15:17.117097419 +0100
+@@ -1441,7 +1441,7 @@ compress(fdin, fdout)
+ 					boff = -(((OBUFSIZ<<3)-boff)%(n_bits<<3));
+ 					bytes_out += OBUFSIZ;
+ 
+-					memcpy(outbuf, outbuf+OBUFSIZ, (outbits>>3)+1);
++					memmove(outbuf, outbuf+OBUFSIZ, (outbits>>3)+1);
+ 					memset(outbuf+(outbits>>3)+1, '\0', OBUFSIZ);
+ 				}
+ 

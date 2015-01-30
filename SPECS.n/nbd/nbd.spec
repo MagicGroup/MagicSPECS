@@ -1,12 +1,14 @@
 Name:           nbd
-Version:        2.9.20
-Release:        4%{dist}
+Version: 3.8
+Release: 1%{?dist}
 Summary:        Network Block Device user-space tools (TCP version)
+Summary(zh_CN.UTF-8): 网络块设备的用户空间工具 (TCP 版本)
 
 Group:          Applications/System
+Group(zh_CN.UTF-8): 应用程序/系统
 License:        GPL+
 URL:            http://nbd.sourceforge.net/
-Source0:        http://downloads.sourceforge.net/nbd/nbd-%{version}.tar.bz2
+Source0:        http://downloads.sourceforge.net/nbd/nbd-%{version}.tar.xz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildRequires:  glib2-devel
@@ -14,6 +16,9 @@ BuildRequires:  glib2-devel
 %description 
 Tools for the Linux Kernel's network block device, allowing you to use
 remote block devices over a TCP/IP network.
+
+%description -l zh_CN.UTF-8
+Linux 内核网络块设备的工具，允许你通过 TCP/IP 网络远程使用块设备。
 
 %prep
 %setup -q
@@ -25,18 +30,22 @@ make %{?_smp_mflags}
 %install
 rm -rf $RPM_BUILD_ROOT
 make install DESTDIR=$RPM_BUILD_ROOT
+magic_rpm_clean.sh
 
 %clean
 rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(-,root,root,-)
-%doc README simple_test nbd-tester-client.c cliserv.h
 %{_mandir}/man*/nbd*
 %{_bindir}/nbd-server
+%{_bindir}/nbd-trdump
 %{_sbindir}/nbd-client
 
 %changelog
+* Wed Jan 21 2015 Liu Di <liudidi@gmail.com> - 3.8-1
+- 更新到 3.8
+
 * Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 2.9.20-4
 - 为 Magic 3.0 重建
 

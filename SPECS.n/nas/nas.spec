@@ -1,7 +1,8 @@
 Name:       nas 
 Summary:    The Network Audio System (NAS)
+Summary(zh_CN.UTF-8): 网络音频系统 (NAS)
 Version:    1.9.4
-Release:    2%{?dist}
+Release:    3%{?dist}
 URL:        http://radscan.com/nas.html
 # README:               MIT (main license)
 # config/aclocal.m4:    FSFULLR
@@ -26,6 +27,7 @@ URL:        http://radscan.com/nas.html
 # doc/title.ps:             All rights reserved (Network Computing Devices)
 License:    MIT
 Group:      Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 %define daemon nasd
 # Original source nas-1.9.4.src.tar.gz (MD5:dac0e6cd3e5d6a37ae1dff364236a752)
 # is from
@@ -59,12 +61,16 @@ Requires(postun):   systemd-units
 
 %package devel
 Summary:    Development and doc files for the NAS 
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:      Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:   %{name}-libs = %{version}-%{release}
 
 %package libs
 Summary:    Run-time libraries for NAS
+Summary(zh_CN.UTF-8): %{name} 的运行库
 Group:      System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 
 
 %description
@@ -84,19 +90,27 @@ Key features of the Network Audio System include:
     • Small size
     • Free!  No obnoxious licensing terms
 
+%description -l zh_CN.UTF-8
+网络音频系统。
+
 %description libs
 %{summary}.
+
+%description libs -l zh_CN.UTF-8
+%{name} 的运行库。
 
 %description devel
 Development files and the documentation for Network Audio System.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
 %patch0 -p1 -b .move_AuErrorDB
 
 # Update config.sub to support aarch64, bug #926196
-cp -p %{_datadir}/automake-*/config.{sub,guess} config
+cp -p %{_datadir}/automake-1.14/config.{sub,guess} config
 sed -i -e '/AC_FUNC_SNPRINTF/d' config/configure.ac
 autoreconf -i -f config
 for F in HISTORY; do
@@ -125,7 +139,7 @@ install -p -m644 -D %{SOURCE2} $RPM_BUILD_ROOT%{_sysconfdir}/sysconfig/%{daemon}
 rm $RPM_BUILD_ROOT%{_libdir}/*.a
 # Rename config file
 mv $RPM_BUILD_ROOT%{_sysconfdir}/%{name}/nasd.conf{.eg,}
-
+magic_rpm_clean.sh
 
 %post
 %systemd_post %{daemon}.service
@@ -175,6 +189,9 @@ echo '  systemd-sysv-convert --apply %{daemon}'
 
 
 %changelog
+* Tue Jan 20 2015 Liu Di <liudidi@gmail.com> - 1.9.4-3
+- 为 Magic 3.0 重建
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.9.4-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

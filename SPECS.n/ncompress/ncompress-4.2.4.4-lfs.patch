@@ -1,0 +1,23 @@
+diff --git a/compress42.c b/compress42.c
+index 804d099..b3b3add 100644
+--- a/compress42.c
++++ b/compress42.c
+@@ -130,6 +130,7 @@
+  *   Add variable bit length output.
+  *
+  */
++#include	<unistd.h>
+ #include	<stdio.h>
+ #include	<stdlib.h>
+ #include	<string.h>
+@@ -538,8 +539,8 @@ int				remove_ofname = 0;	/* Remove output file on a error				*/
+ char 			ofname[MAXPATHLEN];	/* Output filename								*/
+ int				fgnd_flag = 0;		/* Running in background (SIGINT=SIGIGN)		*/
+ 
+-long 			bytes_in;			/* Total number of byte from input				*/
+-long 			bytes_out;			/* Total number of byte to output				*/
++long long bytes_in;			/* Total number of byte from input				*/
++long long bytes_out;			/* Total number of byte to output				*/
+ 
+ /*
+  * 8086 & 80286 Has a problem with array bigger than 64K so fake the array

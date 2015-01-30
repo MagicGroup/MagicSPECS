@@ -1,10 +1,12 @@
 %global revision 20140906
 Summary: Ncurses support utilities
+Summary(zh_CN.UTF-8): Ncuerses 支持工具
 Name: ncurses
 Version: 5.9
-Release: 17.%{revision}%{?dist}
+Release: 18.%{revision}%{?dist}
 License: MIT
 Group: System Environment/Base
+Group(zh_CN.UTF-8): 系统环境/基本
 URL: http://invisible-island.net/ncurses/ncurses.html
 Source0: ftp://invisible-island.net/ncurses/current/ncurses-%{version}-%{revision}.tgz
 
@@ -26,9 +28,18 @@ This package contains support utilities, including a terminfo compiler
 tic, a decompiler infocmp, clear, tput, tset, and a termcap conversion
 tool captoinfo.
 
+%description -l zh_CN.UTF-8
+ncurses（new curses）是一个程序库，它提供了API，可以允许程序员编写独立
+于终端的基于文本的用户界面。它是一个虚拟终端中的“类GUI”应用软件工具箱。它
+还优化了屏幕刷新方法，以减少使用远程shell时遇到的延迟。
+
+这个包包含了相关的支持工具。
+
 %package libs
 Summary: Ncurses libraries
+Summary(zh_CN.UTF-8): %{name} 的运行库
 Group: System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 Requires: %{name}-base = %{version}-%{release}
 # libs introduced in 5.6-13 
 Obsoletes: ncurses < 5.6-13
@@ -43,9 +54,14 @@ discontinued 4.4 BSD classic curses library.
 
 This package contains the ncurses libraries.
 
+%description libs -l zh_CN.UTF-8
+%{name} 的运行库。
+
 %package base
 Summary: Descriptions of common terminals
+Summary(zh_CN.UTF-8): 通用终端描述
 Group: System Environment/Base
+Group(zh_CN.UTF-8): 系统环境/基本
 Obsoletes: termcap < 1:5.5-2
 # base introduced in 5.6-13 
 Conflicts: ncurses < 5.6-13
@@ -57,9 +73,15 @@ BuildArch: noarch
 This package contains descriptions of common terminals. Other terminal
 descriptions are included in the ncurses-term package.
 
+%description base -l zh_CN.UTF-8
+这个包包含了通用终端的描述。其它终端描述包含在 ncurses-term 包。
+
+
 %package term
 Summary: Terminal descriptions
+Summary(zh_CN.UTF-8): 终端描述
 Group: System Environment/Base
+Group(zh_CN.UTF-8): 系统环境/基本
 Requires: %{name}-base = %{version}-%{release}
 BuildArch: noarch
 
@@ -67,9 +89,14 @@ BuildArch: noarch
 This package contains additional terminal descriptions not found in
 the ncurses-base package.
 
+%description term -l zh_CN.UTF-8
+这个包包含了不在 ncurses-base 包中的终端描述。
+
 %package devel
 Summary: Development files for the ncurses library
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: %{name}-libs%{?_isa} = %{version}-%{release}
 Requires: pkgconfig
 Obsoletes: libtermcap-devel < 2.0.8-48
@@ -82,13 +109,21 @@ the ncurses terminal handling library.
 Install the ncurses-devel package if you want to develop applications
 which will use ncurses.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
 %package static
 Summary: Static libraries for the ncurses library
+Summary(zh_CN.UTF-8): %{name} 的静态库
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: %{name}-devel%{?_isa} = %{version}-%{release}
 
 %description static
 The ncurses-static package includes static libraries of the ncurses library.
+
+%description static -l zh_CN.UTF-8
+%{name} 的静态库。
 
 %prep
 %setup -q -n %{name}-%{version}-%{revision}
@@ -240,6 +275,9 @@ bzip2 NEWS
 %{_libdir}/lib*.a
 
 %changelog
+* Mon Jan 26 2015 Liu Di <liudidi@gmail.com> - 5.9-18.20140906
+- 为 Magic 3.0 重建
+
 * Fri Sep 12 2014 Miroslav Lichvar <mlichvar@redhat.com> 5.9-17.20140906
 - update to 5.9-20140906
 

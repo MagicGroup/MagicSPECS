@@ -60,7 +60,7 @@ Requires: %{name}-agent-libs = %{epoch}:%{version}-%{release}
 Requires(post): systemd-sysv
 
 BuildRequires: openssl-devel, bzip2-devel, elfutils-devel
-BuildRequires: libselinux-devel, elfutils-libelf-devel, rpm-devel
+BuildRequires: elfutils-libelf-devel, rpm-devel
 BuildRequires: perl-devel, perl(ExtUtils::Embed), gawk, procps
 BuildRequires: python-devel, python-setuptools
 BuildRequires: chrpath

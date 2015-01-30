@@ -1,15 +1,17 @@
 Summary:    Reads and writes data across network connections using TCP or UDP
+Summary(zh_CN.UTF-8): 使用 TCP 或 UDP 读写网络连接数据
 Name:       nc
 Version:    1.107
-Release:    2%{?dist}
+Release:    3%{?dist}
 URL:        http://www.openbsd.org/cgi-bin/cvsweb/src/usr.bin/%{name}/
 License:    BSD and ISC
 Group:      Applications/Internet
+Group(zh_CN.UTF-8): 应用程序/互联网
 # source is CVS checkout, e.g.:
 # CVSROOT=anoncvs@anoncvs.openbsd.org.ar:/cvs/src/usr.bin cvs checkout nc
 Source0:    %{name}-%{version}.tar.bz2
 Source1:    b64_ntop.c
-Patch0:     nc-1.107-linux-ify.patch
+Patch0:	    nc-1.107-linux-ify.patch
 Patch1:     nc-1.107-pollhup.patch
 Patch2:     nc-1.107-udp-stop.patch
 Patch3:     nc-1.107-udp-portscan.patch
@@ -33,6 +35,9 @@ has many built-in capabilities.
 You may want to install the netcat package if you are administering a
 network and you'd like to use its debugging and network exploration
 capabilities.
+
+%description -l zh_CN.UTF-8
+使用 TCP 或 UDP 读写网络连接数据。
 
 %prep
 %setup -q -n nc
@@ -63,6 +68,9 @@ magic_rpm_clean.sh
 %{_mandir}/man1/nc.1*
 
 %changelog
+* Wed Jan 21 2015 Liu Di <liudidi@gmail.com> - 1.107-3
+- 为 Magic 3.0 重建
+
 * Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 1.107-2
 - 为 Magic 3.0 重建
 
