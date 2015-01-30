@@ -1,15 +1,15 @@
 Name:           nettle
-Version:        2.7.1
-Release:        3%{?dist}
+Version: 3.0
+Release: 1%{?dist}
 Summary:        A low-level cryptographic library
+Summary(zh_CN.UTF-8): 低级的密码库
 
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 License:        LGPLv2+
 URL:            http://www.lysator.liu.se/~nisse/nettle/
 #Source0:	%{name}-%{version}-hobbled.tar.gz
-Source0:        http://www.lysator.liu.se/~nisse/archive/%{name}-%{version}.tar.gz
-Patch0:		nettle-2.7.1-remove-ecc-testsuite.patch
-Patch1:		nettle-2.7.1-tmpalloc.patch
+Source0:        https://ftp.gnu.org/gnu/nettle/%{name}-%{version}.tar.gz
 
 BuildRequires:  gmp-devel m4 texinfo-tex texlive-dvips ghostscript
 
@@ -19,7 +19,9 @@ Requires(preun): info
 
 %package devel
 Summary:        Development headers for a low-level cryptographic library
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       %{name} = %{version}-%{release}
 Requires:       gmp-devel%{?_isa}
 
@@ -29,6 +31,9 @@ or less any context: In crypto toolkits for object-oriented languages
 (C++, Python, Pike, ...), in applications like LSH or GNUPG, or even in
 kernel space.
 
+%description -l zh_CN.UTF-8
+低级的密码库。
+
 %description devel
 Nettle is a cryptographic library that is designed to fit easily in more
 or less any context: In crypto toolkits for object-oriented languages
@@ -36,15 +41,13 @@ or less any context: In crypto toolkits for object-oriented languages
 kernel space.  This package contains the files needed for developing 
 applications with nettle.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
 # Disable -ggdb3 which makes debugedit unhappy
 sed s/ggdb3/g/ -i configure
-sed 's/ecc-192.c//g' -i Makefile.in
-sed 's/ecc-224.c//g' -i Makefile.in
-%patch0 -p1
-%patch1 -p1 -b .tmpalloc
 
 %build
 %configure --enable-shared
@@ -58,22 +61,22 @@ mkdir -p $RPM_BUILD_ROOT%{_infodir}
 install -p -m 644 nettle.info $RPM_BUILD_ROOT%{_infodir}/
 rm -f $RPM_BUILD_ROOT%{_libdir}/*.a
 rm -f $RPM_BUILD_ROOT%{_infodir}/dir
-chmod 0755 $RPM_BUILD_ROOT%{_libdir}/libnettle.so.4.*
-chmod 0755 $RPM_BUILD_ROOT%{_libdir}/libhogweed.so.2.*
+chmod 0755 $RPM_BUILD_ROOT%{_libdir}/libnettle.so.*
+chmod 0755 $RPM_BUILD_ROOT%{_libdir}/libhogweed.so.*
+magic_rpm_clean.sh
+
 %check
 make check
 
 %files
-%doc AUTHORS ChangeLog COPYING.LIB NEWS README TODO
+%doc AUTHORS ChangeLog NEWS README TODO
 %{_infodir}/nettle.info.gz
 %{_bindir}/nettle-lfib-stream
 %{_bindir}/pkcs1-conv
 %{_bindir}/sexp-conv
 %{_bindir}/nettle-hash
-%{_libdir}/libnettle.so.4
-%{_libdir}/libnettle.so.4.*
-%{_libdir}/libhogweed.so.2
-%{_libdir}/libhogweed.so.2.*
+%{_libdir}/libnettle.so.*
+%{_libdir}/libhogweed.so.*
 
 
 %files devel
@@ -98,6 +101,9 @@ fi
 
 
 %changelog
+* Wed Jan 28 2015 Liu Di <liudidi@gmail.com> - 3.0-1
+- 更新到 3.0
+
 * Fri Jan 10 2014 Nikos Mavrogiannopoulos <nmav@redhat.com> - 2.7.1-3
 - Corrected bug number in previous comment.
 

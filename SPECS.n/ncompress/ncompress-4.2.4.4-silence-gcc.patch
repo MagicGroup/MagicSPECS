@@ -1,0 +1,33 @@
+diff --git a/compress42.c b/compress42.c
+index c3f6b35..834c2f2 100644
+--- a/compress42.c
++++ b/compress42.c
+@@ -704,7 +704,7 @@ main(argc, argv)
+ 		REG4	char		**fileptr;
+ 	int i;
+ 
+-    	if (fgnd_flag = (signal(SIGINT, SIG_IGN) != SIG_IGN))
++	if ((fgnd_flag = (signal(SIGINT, SIG_IGN)) != SIG_IGN))
+ 			signal(SIGINT, (SIG_TYPE)abort_compress);
+ 
+ 		signal(SIGTERM, (SIG_TYPE)abort_compress);
+@@ -1016,8 +1016,8 @@ comprexx(fileptr)
+ 
+ 					if (infstat.st_nlink > 1 && (!force))
+ 					{
+-			  			fprintf(stderr, "%s has %d other links: unchanged\n",
+-										tempname, infstat.st_nlink - 1);
++						fprintf(stderr, "%s has %ld other links: unchanged\n",
++										tempname, (long)(infstat.st_nlink - 1));
+ 						exit_code = 1;
+ 			  			return;
+ 					}
+@@ -1318,7 +1318,7 @@ compdir(dir)
+ 		** think it's worth it. -- Dave Mack
+ 		*/
+ 
+-		while (dp = readdir(dirp))
++		while ((dp = readdir(dirp)))
+ 		{
+ 			if (dp->d_ino == 0)
+ 				continue;

@@ -1,8 +1,10 @@
 Summary:        Netcat with IPv6 Support
+Summary(zh_CN.UTF-8): 支持 IPv6 的 Netcat
 Name:           nc6
 Version:        1.0
-Release:        21%{?dist}
+Release:        22%{?dist}
 Group:          Applications/Internet
+Group(zh_CN.UTF-8): 应用程序/互联网
 URL:            http://www.deepspace6.net/projects/netcat6.html
 License:        GPLv2+
 Source:         ftp://ftp.deepspace6.net/pub/ds6/sources/nc6/%{name}-%{version}.tar.bz2
@@ -27,6 +29,9 @@ would need and has several interesting built-in capabilities.  Netcat,
 or "nc" as the actual program is named, should have been supplied long
 ago as another one of those cryptic but standard Unix tools."
 
+%description -l zh_CN.UTF-8
+支持 IPv6 的 Netcat。
+
 %prep
 %setup -q
 %patch0 -p1
@@ -39,6 +44,7 @@ make %{?_smp_mflags}
 
 %install
 make DESTDIR="%{buildroot}" install
+magic_rpm_clean.sh
 
 %files
 %{_bindir}/%{name}
@@ -46,6 +52,9 @@ make DESTDIR="%{buildroot}" install
 %doc README AUTHORS COPYING NEWS TODO
 
 %changelog
+* Wed Jan 21 2015 Liu Di <liudidi@gmail.com> - 1.0-22
+- 为 Magic 3.0 重建
+
 * Fri Nov 07 2014 Petr Šabata <contyk@redhat.com> - 1.0-21
 - Close sockets after the client disconnects (#1161432)
 
