@@ -1,17 +1,17 @@
-%global checkout 20120127git
+%global checkout 20141124git
 
 Summary: Basic networking tools
 Name: net-tools
-Version: 1.60
-Release: 135.%{checkout}%{?dist}
-License: GPL+
+Version: 2.0
+Release: 0.31.%{checkout}%{?dist}
+License: GPLv2+
 Group: System Environment/Base
-URL: http://net-tools.sourceforge.net
+URL: http://sourceforge.net/projects/net-tools/
 
-# git archive --format=tar --remote=git://net-tools.git.sourceforge.net/gitroot/net-tools/net-tools master | xz > net-tools-%%{version}.%%{checkout}.tar.xz
+# git archive --format=tar --remote=git://git.code.sf.net/p/net-tools/code master | xz > net-tools-%%{version}.%%{checkout}.tar.xz
 Source0: net-tools-%{version}.%{checkout}.tar.xz
-Source1: net-tools-%{version}-config.h
-Source2: net-tools-%{version}-config.make
+Source1: net-tools-config.h
+Source2: net-tools-config.make
 Source3: ether-wake.c
 Source4: ether-wake.8
 Source5: mii-diag.c
@@ -21,55 +21,40 @@ Source8: ipmaddr.8
 Source9: arp-ethers.service
 
 # adds <delay> option that allows netstat to cycle printing through statistics every delay seconds.
-Patch1: net-tools-1.60-cycle.patch
+Patch1: net-tools-cycle.patch
 
 # Fixed incorrect address display for ipx (#46434)
-Patch2: net-tools-1.60-ipx.patch
-
-# hostname lookup problems with route --inet6 (#84108)
-Patch3: net-tools-1.60-inet6-lookup.patch
+Patch2: net-tools-ipx.patch
 
 # various man page fixes merged into one patch
-Patch4: net-tools-1.60-man.patch
+Patch3: net-tools-man.patch
 
 # netstat: interface option now works as described in the man page (#61113, #115987)
-Patch5: net-tools-1.60-interface.patch
+Patch4: net-tools-interface.patch
 
 # filter out duplicate tcp entries (#139407)
-Patch6: net-tools-1.60-duplicate-tcp.patch
+Patch5: net-tools-duplicate-tcp.patch
 
 # don't report statistics for virtual devices (#143981)
-Patch7: net-tools-1.60-statalias.patch
+Patch6: net-tools-statalias.patch
 
 # clear static buffers in interface.c by Ulrich Drepper (#176714)
-Patch8: net-tools-1.60-interface_stack.patch
+Patch7: net-tools-interface_stack.patch
 
 # statistics for SCTP
-Patch9: net-tools-1.60-sctp-statistics.patch
+Patch8: net-tools-sctp-statistics.patch
 
 # ifconfig crash when interface name is too long (#190703)
-Patch10: net-tools-1.60-ifconfig-long-iface-crasher.patch
+Patch9: net-tools-ifconfig-long-iface-crasher.patch
 
-# fixed tcp timers info in netstat (#466845)
-Patch11: net-tools-1.60-netstat-probe.patch
+# use all interfaces instead of default (#1003875)
+Patch20: ether-wake-interfaces.patch
 
-BuildRequires: gettext
+BuildRequires: bluez-libs-devel
+BuildRequires: gettext, libselinux
+BuildRequires: libselinux-devel
 BuildRequires: systemd-units
-Requires: hostname
 Requires(post): systemd-units
-
-Provides: /bin/netstat
-Provides: /sbin/ifconfig
-Provides: /sbin/route
-Provides: /sbin/arp
-Provides: /sbin/ether-wake
-Provides: /sbin/ipmaddr
-Provides: /sbin/iptunnel
-Provides: /sbin/mii-diag
-Provides: /sbin/mii-tool
-Provides: /sbin/nameif
-Provides: /sbin/plipconfig
-Provides: /sbin/slattach
 
 %description
 The net-tools package contains basic networking tools,
@@ -80,15 +65,13 @@ Most of them are obsolete. For replacement check iproute package.
 %setup -q -c
 %patch1 -p1 -b .cycle
 %patch2 -p1 -b .ipx
-%patch3 -p1 -b .inet6-lookup
-%patch4 -p1 -b .man
-%patch5 -p1 -b .interface
-%patch6 -p1 -b .dup-tcp
-%patch7 -p1 -b .statalias
-%patch8 -p1 -b .stack
-%patch9 -p1 -b .sctp
-%patch10 -p1 -b .long_iface
-%patch11 -p1 -b .probe
+%patch3 -p1 -b .man
+%patch4 -p1 -b .interface
+%patch5 -p1 -b .dup-tcp
+%patch6 -p1 -b .statalias
+%patch7 -p1 -b .stack
+%patch8 -p1 -b .sctp
+%patch9 -p1 -b .long_iface
 
 cp %SOURCE1 ./config.h
 cp %SOURCE2 ./config.make
@@ -99,37 +82,38 @@ cp %SOURCE6 ./man/en_US
 cp %SOURCE7 ./man/en_US
 cp %SOURCE8 ./man/en_US
 
-%ifarch alpha
-perl -pi -e "s|-O2||" Makefile
-%endif
+%patch20 -p1 -b .interfaces
+
+touch ./config.h
 
 %build
-export CFLAGS="$RPM_OPT_FLAGS $CFLAGS"
+# Sparc and s390 arches need to use -fPIE
+%ifarch sparcv9 sparc64 s390 s390x
+export CFLAGS="${RPM_OPT_FLAGS} -fPIE"
+%else
+export CFLAGS="${RPM_OPT_FLAGS} -fpie"
+%endif
+# RHBZ #853193
+export LDFLAGS="${RPM_LD_FLAGS} -pie -Wl,-z,now"
 
 make
-gcc $RPM_OPT_FLAGS -o ether-wake ether-wake.c
-gcc $RPM_OPT_FLAGS -o mii-diag mii-diag.c
+make ether-wake
+gcc ${RPM_OPT_FLAGS} -o mii-diag mii-diag.c
 
 %install
 mv man/de_DE man/de
 mv man/fr_FR man/fr
 mv man/pt_BR man/pt
 
-make BASEDIR=%{buildroot} mandir=%{_mandir} install
+make BASEDIR=%{buildroot} BINDIR=%{_bindir} SBINDIR=%{_sbindir} install
 
-mkdir -p %{buildroot}%{_bindir}
-mkdir -p %{buildroot}%{_sbindir}
-
-mv %{buildroot}/sbin/* %{buildroot}%{_sbindir}
-mv %{buildroot}/bin/* %{buildroot}%{_bindir}
-
-# ifconfig and route are installed into /bin by default
-# mv them back to /sbin for now as I (jpopelka) don't think customers would be happy
+# ifconfig and route are installed into /usr/bin by default
+# mv them back to /usr/sbin (#1045445)
 mv %{buildroot}%{_bindir}/ifconfig %{buildroot}%{_sbindir}
 mv %{buildroot}%{_bindir}/route %{buildroot}%{_sbindir}
 
-install -m 755 ether-wake %{buildroot}%{_sbindir}
-install -m 755 mii-diag %{buildroot}%{_sbindir}
+install -p -m 755 ether-wake %{buildroot}%{_sbindir}
+install -p -m 755 mii-diag %{buildroot}%{_sbindir}
 
 rm %{buildroot}%{_sbindir}/rarp
 rm %{buildroot}%{_mandir}/man8/rarp.8*
@@ -149,29 +133,160 @@ rm -rf %{buildroot}%{_mandir}/man1
 rm -rf %{buildroot}%{_mandir}/pt/man1
 
 # install systemd unit file
-mkdir -p %{buildroot}%{_unitdir}
-install -m 644 %{SOURCE9} %{buildroot}%{_unitdir}
+install -D -p -m 644 %{SOURCE9} %{buildroot}%{_unitdir}/arp-ethers.service
 
-magic_rpm_clean.sh
-%find_lang %{name} --all-name --with-man || touch %{name}.lang
+%find_lang %{name} --all-name --with-man
 
 %post
-# Initial installation
-if [ $1 -eq 1 ] ; then 
-    /bin/systemctl enable arp-ethers.service >/dev/null 2>&1 || :
-fi
-
+%systemd_post arp-ethers.service
 
 %files -f %{name}.lang
-%doc COPYING
+%{!?_licensedir:%global license %%doc}
+%license COPYING
 %{_bindir}/netstat
-%{_sbindir}/*
+%{_sbindir}/ifconfig
+%{_sbindir}/route
+%{_sbindir}/arp
+%{_sbindir}/ether-wake
+%{_sbindir}/ipmaddr
+%{_sbindir}/iptunnel
+%{_sbindir}/mii-diag
+%{_sbindir}/mii-tool
+%{_sbindir}/nameif
+%{_sbindir}/plipconfig
+%{_sbindir}/slattach
 %{_mandir}/man[58]/*
 %attr(0644,root,root)   %{_unitdir}/arp-ethers.service
 
 %changelog
-* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 1.60-135.20120127git
-- 为 Magic 3.0 重建
+* Mon Nov 24 2014 Jiri Popelka <jpopelka@redhat.com> - 2.0-0.31.20141124git
+- latest upstream snapshot (#1162284)
+
+* Thu Nov 20 2014 Jiri Popelka <jpopelka@redhat.com> - 2.0-0.30.20141007git
+- ether-wake: apply Debian's hardening patch
+
+* Tue Oct 07 2014 Jiri Popelka <jpopelka@redhat.com> - 2.0-0.29.20141007git
+- latest upstream snapshot (#1149405)
+
+* Fri Oct 03 2014 Lubomir Rintel <lkundrak@v3.sk> - 2.0-0.28.20140707git
+- Enable bluetooth
+
+* Sun Aug 17 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.0-0.27.20140707git
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
+
+* Fri Jul 18 2014 Tom Callaway <spot@fedoraproject.org> - 2.0-0.26.20140707git
+- fix license handling
+
+* Mon Jul 07 2014 Jiri Popelka <jpopelka@redhat.com> - 2.0-0.25.20140707git
+- latest upstream snapshot
+
+* Tue Jun 10 2014 Jiri Popelka <jpopelka@redhat.com> - 2.0-0.24.20131119git
+- __global_ldflags -> RPM_LD_FLAGS, optflags -> RPM_OPT_FLAGS
+
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.0-0.23.20131119git
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Mon Mar 31 2014 Jaromír Končický <jkoncick@redhat.com> - 2.0-0.22.20131119git
+- output sctp endpoints without -a parameter (#1063913)
+
+* Fri Feb 14 2014 Jaromír Končický <jkoncick@redhat.com> - 2.0-0.21.20131119git
+- remake sctp-quiet.patch (#1063906#c7)
+
+* Tue Feb 11 2014 Jaromír Končický <jkoncick@redhat.com> - 2.0-0.20.20131119git
+- make sctp quiet on systems without sctp (#1063906)
+
+* Fri Dec 20 2013 Jiri Popelka <jpopelka@redhat.com> - 2.0-0.19.20131119git
+- move ifconfig and route back to sbin (#1045445)
+
+* Tue Dec 03 2013 Jiri Popelka <jpopelka@redhat.com> - 2.0-0.18.20131119git
+- make mii-diag compile with -Werror=format-security (#1037218)
+
+* Tue Nov 19 2013 Jiri Popelka <jpopelka@redhat.com> - 2.0-0.17.20131119git
+- latest snapshot (#1021109)
+
+* Fri Nov 01 2013 Jiri Popelka <jpopelka@redhat.com> - 2.0-0.16.20131004git
+- use different compiler/linker flags macros
+
+* Thu Oct 10 2013 Jaromír Končický <jkoncick@redhat.com> - 2.0-0.15.20131004git
+- install binaries into /usr/bin and /usr/sbin (#1016674)
+
+* Fri Oct 04 2013 Jiri Popelka <jpopelka@redhat.com> - 2.0-0.14.20131004git
+- latest snapshot
+
+* Mon Sep 23 2013 Jiri Popelka <jpopelka@redhat.com> - 2.0-0.13.20130910git
+- remove %%ifarch alpha condition from %%prep
+- improve sctp-statistics.patch (#982638#c10)
+
+* Tue Sep 10 2013 Jiri Popelka <jpopelka@redhat.com> - 2.0-0.12.20130910git
+- latest snapshot
+
+* Wed Sep 04 2013 Jiri Popelka <jpopelka@redhat.com> - 2.0-0.11.20130607git
+- amend ether-wake-interfaces.patch
+
+* Wed Sep 04 2013 Jaromír Končický <jkoncick@redhat.com> - 2.0-0.10.20130607git
+- use all interfaces instead of default (#1003875)
+- reverted all changes on ether-wake.c and put original file
+
+* Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.0-0.9.20130607git
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Fri Jun 07 2013 Jiri Popelka <jpopelka@redhat.com> - 2.0-0.8.20130607git
+- latest snapshot
+
+* Thu Apr 25 2013 Jiri Popelka <jpopelka@redhat.com> - 2.0-0.7.20130425git
+- latest snapshot
+
+* Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.0-0.6.20130109git
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
+
+* Wed Jan 09 2013 Jiri Popelka <jpopelka@redhat.com> - 2.0-0.5.20130109git
+- latest snapshot (#579855)
+
+* Fri Nov 30 2012 Jiri Popelka <jpopelka@redhat.com> - 2.0-0.4.20121106git
+- fix URL
+
+* Fri Nov 16 2012 Jiri Popelka <jpopelka@redhat.com> - 2.0-0.3.20121106git
+- match actual license
+
+* Tue Nov 06 2012 Jiri Popelka <jpopelka@redhat.com> - 2.0-0.2.20121106git
+- few man page fixes
+
+* Thu Oct 04 2012 Jiri Popelka <jpopelka@redhat.com> - 2.0-0.1.20121004git
+- the git snapshot we ship is actually much more a
+  2.0 pre-release then 1.60 post-release
+
+* Mon Oct 01 2012 Jiri Popelka <jpopelka@redhat.com> - 1.60-145.20120917git
+- compile without STRIP (Metricom radio) support
+
+* Mon Sep 17 2012 Jiri Popelka <jpopelka@redhat.com> - 1.60-144.20120917git
+- upstream git snapshot
+
+* Wed Sep 05 2012 Jiri Popelka <jpopelka@redhat.com> - 1.60-143.20120702git
+- Sparc and s390 arches need to use -fPIE
+
+* Wed Sep 05 2012 Jiri Popelka <jpopelka@redhat.com> - 1.60-142.20120702git
+- compile with PIE and full RELRO flags (#853193)
+
+* Wed Aug 22 2012 Jiri Popelka <jpopelka@redhat.com> - 1.60-141.20120702git
+- fixed building with kernel-3.6
+
+* Wed Aug 22 2012 Jiri Popelka <jpopelka@redhat.com> - 1.60-140.20120702git
+- use new systemd-rpm macros (#850225)
+
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.60-139.20120702git
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Mon Jul 02 2012 Jiri Popelka <jpopelka@redhat.com> - 1.60-138.20120702git
+- fixes for #834110 and #836258 merged upstream
+
+* Wed Jun 20 2012 Jiri Popelka <jpopelka@redhat.com> - 1.60-137.20120509git
+- compile without Token ring support (http://lwn.net/Articles/497397/)
+
+* Tue Jun 19 2012 Jiri Popelka <jpopelka@redhat.com> - 1.60-136.20120509git
+- better SCTP support (#826676)
+
+* Wed May 09 2012 Jiri Popelka <jpopelka@redhat.com> - 1.60-135.20120509git
+- don't require hostname package
 
 * Fri Jan 27 2012 Jiri Popelka <jpopelka@redhat.com> - 1.60-134.20120127git
 - Do not show interface metric in 'ifconfig', 'ifconfig -s' and 'netstat -i'.
@@ -313,7 +428,7 @@ fi
 - Make "hostname -s" display host name cut at the first dot (no
   matter if the host name resolves or not) (bug #531702)
 
-* Tue Sep 30 2009  Jiri Popelka <jpopelka@redhat.com> - 1.60-96
+* Wed Sep 30 2009  Jiri Popelka <jpopelka@redhat.com> - 1.60-96
 - netplug moved to separate package
 - #319981 and #322901 - minor man pages changes
 - applied changes from berlios cvs, which fix: Berlios #16232, Gentoo #283759 and polish Makefile and slattach 
@@ -538,7 +653,7 @@ fi
 * Fri Sep 03 2004 Radek Vokal <rvokal@redhat.com> 1.60-35
 - The return value of nameif was wrong (#129032) - patch from Fujitsu QA 
 
-* Tue Aug 30 2004 Radek Vokal <rvokal@redhat.com> 1.60-34
+* Mon Aug 30 2004 Radek Vokal <rvokal@redhat.com> 1.60-34
 - Trunc patch added (#128359)
 
 * Mon Aug 30 2004 Radek Vokal <rvokal@redhat.com> 1.60-33
@@ -679,7 +794,7 @@ fi
 * Tue Feb  6 2001 Crutcher Dunnavant <crutcher@redhat.com>
 - fixed man page typo, closing bug #25921
 
-* Fri Feb  1 2001 Crutcher Dunnavant <crutcher@redhat.com>
+* Thu Feb  1 2001 Crutcher Dunnavant <crutcher@redhat.com>
 - applied twaugh's patch to close bug #25474
 - which was a buffer length bug.
 
