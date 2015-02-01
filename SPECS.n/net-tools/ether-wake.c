@@ -3,10 +3,10 @@
 static char version_msg[] =
 "ether-wake.c: v1.09 11/12/2003 Donald Becker, http://www.scyld.com/";
 static char brief_usage_msg[] =
-"usage: ether-wake -i <ifname> [-p aa:bb:cc:dd[:ee:ff]] 00:11:22:33:44:55\n"
+"usage: ether-wake [-i <ifname>] [-p aa:bb:cc:dd[:ee:ff]] 00:11:22:33:44:55\n"
 "   Use '-u' to see the complete set of options.\n";
 static char usage_msg[] =
-"usage: ether-wake -i <ifname> [-p aa:bb:cc:dd[:ee:ff]] 00:11:22:33:44:55\n"
+"usage: ether-wake [-i <ifname>] [-p aa:bb:cc:dd[:ee:ff]] 00:11:22:33:44:55\n"
 "\n"
 "	This program generates and transmits a Wake-On-LAN (WOL)\n"
 "	\"Magic Packet\", used for restarting machines that have been\n"
@@ -22,7 +22,7 @@ static char usage_msg[] =
 "	Options:\n"
 "		-b	Send wake-up packet to the broadcast address.\n"
 "		-D	Increase the debug level.\n"
-"		-i ifname	Use interface IFNAME.\n"
+"		-i ifname	Use interface IFNAME instead of the default 'eth0'.\n"
 "		-p <pw>		Append the four or six byte password PW to the packet.\n"
 "					A password is only required for a few adapter types.\n"
 "					The password may be specified in ethernet hex format\n"
@@ -112,7 +112,7 @@ static int get_wol_pw(const char *optarg);
 
 int main(int argc, char *argv[])
 {
-	char *ifname = NULL;
+	char *ifname = "eth0";
 	int one = 1;				/* True, for socket options. */
 	int s;						/* Raw socket */
 	int errflag = 0, verbose = 0, do_version = 0;
@@ -141,11 +141,6 @@ int main(int argc, char *argv[])
 		printf("%s\n", version_msg);
 	if (errflag) {
 		fprintf(stderr, brief_usage_msg);
-		return 3;
-	}
-
-	if (ifname == NULL) {
-		fprintf(stderr, "Specify -i <interface>.\n");
 		return 3;
 	}
 
