@@ -7,7 +7,7 @@
 # For NaCl, the crossarch is x86_64-nacl
 
 %global binutils_target x86_64-nacl
-%global gitver bd55408
+%global gitver 7dc2f25
 
 ExclusiveArch: i686 x86_64
 
@@ -23,24 +23,22 @@ ExclusiveArch: i686 x86_64
 
 Summary: A GNU collection of binary utilities
 Name: nacl-binutils%{?_with_debug:-debug}
-Version: 2.20.1
-Release: 7.git%{gitver}%{?dist}
+Version: 2.24
+Release: 2.git%{gitver}%{?dist}
 License: GPLv3+
 Group: Development/Tools
 URL: http://sources.redhat.com/binutils
 # Generated from git
 # git clone http://git.chromium.org/native_client/nacl-binutils.git
-# (Checkout ID taken from chromium-27.0.1453.93/native_client/tools/REVISIONS)
+# (Checkout ID taken from chromium-35.0.1916.114/native_client/tools/REVISIONS)
 # cd nacl-binutils
-# git checkout bd554084ade59fdb9ff90b502d4e9fdaa4a19db6
+# git checkout 7dc2f2590e3e0dcec737a0c91e3f86d91c10db7f
 # cd ..
 # For binutils version, grep "AM_INIT_AUTOMAKE(bfd, " bfd/configure.in
-# mv nacl-binutils nacl-binutils-2.20.1-gitbd55408
-# tar --exclude-vcs -cjf nacl-binutils-2.20.1-gitbd55408.tar.bz2 nacl-binutils-2.20.1-gitbd55408
+# mv nacl-binutils nacl-binutils-2.24-git7dc2f25
+# tar --exclude-vcs -cjf nacl-binutils-2.24-git7dc2f25.tar.bz2 nacl-binutils-2.24-git7dc2f25
 Source: nacl-binutils-%{version}-git%{gitver}.tar.bz2
 Source2: binutils-2.19.50.0.1-output-format.sed
-# http://www.mail-archive.com/bug-binutils@gnu.org/msg14429.html
-Patch0: nacl-binutils-2.20.1-gite0648d3-texfix.patch
 
 # build_gold for nacl is no
 %global build_gold no
@@ -124,8 +122,6 @@ using libelf instead of BFD.
 
 %prep
 %setup -q -n nacl-binutils-%{version}-git%{gitver}
-
-%patch0 -p1 -b .texfix
 
 # We cannot run autotools as there is an exact requirement of autoconf-2.59.
 
@@ -431,6 +427,12 @@ exit 0
 %endif # %{isnative}
 
 %changelog
+* Mon Jan 19 2015 Liu Di <liudidi@gmail.com> - 2.24-2.git7dc2f25
+- 为 Magic 3.0 重建
+
+* Mon Jun  2 2014 Tom Callaway <spot@fedoraproject.org> - 2.24-1.git7dc2f25
+- update for chromium 35
+
 * Thu May 30 2013 Tom Callaway <spot@fedoraproject.org> - 2.20.1-7.gitbd55408
 - update to chromium 27 nacl-binutils
 

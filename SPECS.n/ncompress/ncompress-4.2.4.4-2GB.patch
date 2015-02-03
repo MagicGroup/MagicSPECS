@@ -1,0 +1,13 @@
+diff --git a/compress42.c b/compress42.c
+index 4d33342..495bdf3 100644
+--- a/compress42.c
++++ b/compress42.c
+@@ -1373,7 +1373,7 @@ compress(fdin, fdout)
+ 		REG11	int			boff;
+ 		REG12	int			n_bits;
+ 		REG13	int			ratio;
+-		REG14	long		checkpoint;
++		REG14	unsigned long long	checkpoint;
+ 		REG15	code_int	extcode;
+ 		union
+ 		{

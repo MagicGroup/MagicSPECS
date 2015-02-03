@@ -1,7 +1,7 @@
 Summary: A library for handling different graphics file formats
 Name: netpbm
-Version: 10.61.02
-Release: 10%{?dist}
+Version: 10.66.02
+Release: 6%{?dist}
 # See copyright_summary for details
 License: BSD and GPLv2 and IJG and MIT and Public Domain
 Group: System Environment/Libraries
@@ -33,13 +33,12 @@ Patch22: netpbm-pamtojpeg2k.patch
 Patch23: netpbm-manfix.patch
 Patch24: netpbm-ppmtopict.patch
 Patch25: netpbm-pnmtopclxl.patch
-#Patch26: netpbm-man-repeated.patch
-Patch27: netpbm-multipage-pam.patch
-Patch28: netpbm-compare-same-images.patch
-#Patch29: netpbm-man-corrections.patch
-Patch29: netpbm-manual-pages.patch
+Patch26: netpbm-werror.patch
+Patch27: netpbm-disable-pbmtog3.patch
+Patch28: netpbm-pnmtops.patch
 BuildRequires: libjpeg-devel, libpng-devel, libtiff-devel, flex
 BuildRequires: libX11-devel, python, jasper-devel, libxml2-devel
+BuildRequires: ghostscript-core
 
 %description
 The netpbm package contains a library of functions which support
@@ -102,7 +101,7 @@ netpbm-doc.  You'll also need to install the netpbm-progs package.
 %patch9 -p1 -b .xwdfix
 %patch11 -p1 -b .multilib
 %patch13 -p1 -b .glibc
-%patch15 -p1
+%patch15 -p1 -b .docfix
 %patch16 -p1 -b .ppmfadeusage
 %patch17 -p1 -b .fiasco-overflow
 %patch20 -p1 -b .noppmtompeg
@@ -111,24 +110,17 @@ netpbm-doc.  You'll also need to install the netpbm-progs package.
 %patch23 -p1 -b .manfix
 %patch24 -p1 -b .ppmtopict
 %patch25 -p1 -b .pnmtopclxl
-#%patch26 -p1 -b .man-repeated
-%patch27 -p1 -b .multipage-pam
-%patch28 -p1 -b .compare-same-images
-#%patch29 -p1 -b .man-corrections
-%patch29 -p1 -b .manual-pages
-exit 0
+%patch26 -p1 -b .werror
+%patch27 -p1 -b .disable-pbmtog3
+%patch28 -p1 -b .pnmtops
 
 sed -i 's/STRIPFLAG = -s/STRIPFLAG =/g' config.mk.in
 rm -rf converter/other/jpeg2000/libjasper/
 sed -i -e 's/^SUBDIRS = libjasper/SUBDIRS =/' converter/other/jpeg2000/Makefile
 
-
 %build
-#有 mingw64-gcc 时需要 n，没有则不需要，这个地方有些问题。
 ./configure <<EOF
 
-
-n
 
 
 
@@ -225,6 +217,7 @@ rm -rf $RPM_BUILD_ROOT/usr/misc
 rm -rf $RPM_BUILD_ROOT/usr/man
 rm -rf $RPM_BUILD_ROOT/usr/pkginfo
 rm -rf $RPM_BUILD_ROOT/usr/config_template
+rm -rf $RPM_BUILD_ROOT/usr/pkgconfig_template
 
 # Don't ship the static library
 rm -f $RPM_BUILD_ROOT/%{_libdir}/lib*.a
@@ -241,6 +234,7 @@ popd
 pushd test
 export LD_LIBRARY_PATH=$RPM_BUILD_ROOT%{_libdir}
 export PBM_TESTPREFIX=$RPM_BUILD_ROOT%{_bindir}
+export PBM_BINPREFIX=$RPM_BUILD_ROOT%{_bindir}
 ./Execute-Tests && exit 0
 popd
 
@@ -254,13 +248,12 @@ rm -rf $RPM_BUILD_ROOT
 %files
 %defattr(-,root,root)
 %doc doc/copyright_summary doc/COPYRIGHT.PATENT doc/GPL_LICENSE.txt doc/HISTORY README
-%{_libdir}/lib*.so.*
+%{_libdir}/lib*.so*
 
 %files devel
 %defattr(-,root,root)
 %dir %{_includedir}/netpbm
 %{_includedir}/netpbm/*.h
-%{_libdir}/lib*.so
 %{_mandir}/man3/*
 
 %files progs
@@ -275,14 +268,29 @@ rm -rf $RPM_BUILD_ROOT
 %doc userguide/*
 
 %changelog
-* Mon Apr 14 2014 Liu Di <liudidi@gmail.com> - 10.61.02-10
+* Wed Jan 28 2015 Liu Di <liudidi@gmail.com> - 10.66.02-6
 - 为 Magic 3.0 重建
 
-* Mon Apr 14 2014 Liu Di <liudidi@gmail.com> - 10.61.02-9
-- 为 Magic 3.0 重建
+* Tue Jan 20 2015 Petr Hracek <phracek@redhat.com> - 10.66.02-5
+- Moving libnetpbm.so from netpbm-devel to netpbm (#1180811)
 
-* Mon Apr 14 2014 Liu Di <liudidi@gmail.com> - 10.61.02-8
-- 为 Magic 3.0 重建
+* Tue Jan 20 2015 Petr Hracek <phracek@redhat.com> - 10.66.02-4
+- Add missing pnmtops to netpbm-progs (#1171903)
+
+* Sun Aug 17 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 10.66.02-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
+
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 10.66.02-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Tue May 13 2014 Petr Hracek <phracek@redhat.com> - 10.66.02-1
+- Update new sources (#1063264)
+
+* Mon Apr 14 2014 Jaromir Capik <jcapik@redhat.com> - 10.61.02-9
+- Fixing format-security flaws (#1037217)
+
+* Wed Nov 13 2013 Petr Hracek <phracek@redhat.com> - 10.61.02-8
+- pnmtops hangs in case of more then 10 files (#1029512)
 
 * Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 10.61.02-7
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild

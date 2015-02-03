@@ -1,13 +1,16 @@
 Name:           nautilus-sendto
 Epoch:          1
-Version:        3.8.0
+Version:	3.8.2
 Release:        1%{?dist}
 Summary:        Nautilus context menu for sending files
+Summary(zh_CN.UTF-8): Nautilus 发送文件的右键菜单
 
 Group:          User Interface/Desktops
+Group(zh_CN.UTF-8): 用户界面/桌面
 License:        GPLv2+
 URL:            ftp://ftp.gnome.org/pub/gnome/sources/%{name}
-Source0:        http://download.gnome.org/sources/%{name}/3.8/%{name}-%{version}.tar.xz
+%define majorver %(echo %{version} | awk -F. '{print $1"."$2}')
+Source0:        http://download.gnome.org/sources/%{name}/%{majorver}/%{name}-%{version}.tar.xz
 
 BuildRequires:  gettext
 BuildRequires:  gobject-introspection-devel
@@ -26,6 +29,9 @@ sending files via other desktop applications.  These functions are
 implemented as plugins, so nautilus-sendto can be extended with
 additional features.
 
+%description -l zh_CN.UTF-8
+Nautilus 发送文件的右键菜单。
+
 %prep
 %setup -q
 
@@ -38,7 +44,7 @@ make %{?_smp_mflags}
 make install DESTDIR=$RPM_BUILD_ROOT
 
 find $RPM_BUILD_ROOT \( -name '*.a' -o -name '*.la' \) -exec rm -f {} \;
-
+magic_rpm_clean.sh
 %find_lang %{name}
 
 %files -f %{name}.lang
@@ -47,6 +53,9 @@ find $RPM_BUILD_ROOT \( -name '*.a' -o -name '*.la' \) -exec rm -f {} \;
 %{_mandir}/man1/nautilus-sendto.1.gz
 
 %changelog
+* Wed Jan 21 2015 Liu Di <liudidi@gmail.com> - 1:3.8.2-1
+- 更新到 3.8.2
+
 * Tue Mar 26 2013 Kalev Lember <kalevlember@gmail.com> - 1:3.8.0-1
 - Update to 3.8.0
 

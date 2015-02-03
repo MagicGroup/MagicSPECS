@@ -10,7 +10,7 @@
 Name:           nautilus
 Summary:        File manager for GNOME
 Summary(zh_CN.UTF-8): GNOME 下的文件管理器
-Version:	3.12.0
+Version:	3.14.2
 Release:        1%{?dist}
 License:        GPLv2+
 Group:          User Interface/Desktops
@@ -148,14 +148,14 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas >&/dev/null || :
 
 %files  -f %{name}.lang
 %doc AUTHORS COPYING COPYING.LIB NEWS README
-%{_datadir}/nautilus
+#%{_datadir}/nautilus
 %{_datadir}/applications/*
 %{_datadir}/mime/packages/nautilus.xml
 %{_bindir}/*
 %{_datadir}/dbus-1/services/org.gnome.Nautilus.service
 %{_datadir}/dbus-1/services/org.freedesktop.FileManager1.service
 %{_datadir}/gnome-shell/search-providers/nautilus-search-provider.ini
-%{_datadir}/dbus-1/services/org.gnome.Nautilus.SearchProvider.service
+#%{_datadir}/dbus-1/services/org.gnome.Nautilus.SearchProvider.service
 %{_mandir}/man1/nautilus-connect-server.1.gz
 %{_mandir}/man1/nautilus.1.gz
 %{_libexecdir}/nautilus-convert-metadata
@@ -164,7 +164,7 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas >&/dev/null || :
 %dir %{_libdir}/nautilus/extensions-3.0
 %{_libdir}/nautilus/extensions-3.0/libnautilus-sendto.so
 %{_sysconfdir}/xdg/autostart/nautilus-autostart.desktop
-%{_datadir}/appdata/nautilus.appdata.xml
+%{_datadir}/appdata/org.gnome.Nautilus.appdata.xml
 
 %files extensions
 %{_libdir}/libnautilus-extension.so.*
@@ -181,6 +181,9 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas >&/dev/null || :
 %doc %{_datadir}/gtk-doc/html/libnautilus-extension/
 
 %changelog
+* Wed Jan 21 2015 Liu Di <liudidi@gmail.com> - 3.14.2-1
+- 更新到 3.14.2
+
 * Mon Apr 07 2014 Liu Di <liudidi@gmail.com> - 3.12.0-1
 - 更新到 3.12.0
 

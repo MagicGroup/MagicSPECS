@@ -1,25 +1,58 @@
 Name:       nas 
 Summary:    The Network Audio System (NAS)
-Version:    1.9.3
-Release:    6%{?dist}
+Summary(zh_CN.UTF-8): 网络音频系统 (NAS)
+Version:    1.9.4
+Release:    3%{?dist}
 URL:        http://radscan.com/nas.html
-License:    Public Domain
+# README:               MIT (main license)
+# config/aclocal.m4:    FSFULLR
+# config/config.sub:    GPL with exceptions, effectively same as main license
+# config/ltmain.sh:     GPLv2+ with exceptions, effectively same as main license
+# config/config.guess:  GPLv2+ with exceptions, effectively same as main license
+# config/configure:     FSFUL
+# config/install-sh:    MIT
+# server/dda/voxware/auvoxware.h:
+#                           (MIT) and
+#                           (something similar to MIT license by SCO)
+# server/dda/sun/ausuni.c:  (MIT) and
+#                           (something similar to MIT)
+# lib/audio/aiff.c          MIT (with Apple warranty declaration)
+# Following flawed files has been removed or correcterd according to upstream
+# commit e43cf3377b8b87114796556f5ad0469d4e79e183:
+# server/dda/hpux/auhpux.h: (MIT) and
+#                           (as-is with unclear commercial prohibition)
+# doc/xcon94slide.ps:       All rights reserved (Frame Technology Corporation)
+# doc/overview.ps:          All rights reserved (Network Computing Devices)
+# doc/library.ps:           All rights reserved (Network Computing Devices)
+# doc/title.ps:             All rights reserved (Network Computing Devices)
+License:    MIT
 Group:      Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 %define daemon nasd
-
-Source0:    http://downloads.sourceforge.net/%{name}/%{name}-%{version}.src.tar.gz
+# Original source nas-1.9.4.src.tar.gz (MD5:dac0e6cd3e5d6a37ae1dff364236a752)
+# is from
+# <http://downloads.sourceforge.net/%%{name}/%%{name}-%%{version}.src.tar.gz>.
+# The nas-1.9.4.repacked.tar.gz corrects flawed files according to upstream
+# commit e43cf3377b8b87114796556f5ad0469d4e79e183. Offical post-1.9.4 release
+# should be free as speech and will not need repacking.
+Source0:    %{name}-%{version}.repacked.tar.gz
 Source1:    %{daemon}.service
 Source2:    %{daemon}.sysconfig
 Patch0:     %{name}-1.9.3-Move-AuErrorDB-to-SHAREDIR.patch
-
-BuildRequires:  bison flex
+BuildRequires:  bison
+BuildRequires:  flex
 BuildRequires:  imake
-BuildRequires:  libX11-devel libXau-devel libXaw-devel libXext-devel
-BuildRequires:  libXp-devel libXt-devel
+BuildRequires:  libX11-devel
+BuildRequires:  libXau-devel
+BuildRequires:  libXaw-devel
+BuildRequires:  libXext-devel
+BuildRequires:  libXp-devel
+BuildRequires:  libXt-devel
 BuildRequires:  systemd-units
 # Update config.sub to support aarch64, bug #926196
-BuildRequires: autoconf libtool automake
-
+BuildRequires:  autoconf
+BuildRequires:  automake
+BuildRequires:  libtool
 Requires:           %{name}-libs = %{version}-%{release}
 Requires(post):     systemd-sysv systemd-units
 Requires(preun):    systemd-units
@@ -28,43 +61,56 @@ Requires(postun):   systemd-units
 
 %package devel
 Summary:    Development and doc files for the NAS 
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:      Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:   %{name}-libs = %{version}-%{release}
 
 %package libs
-Summary: Run-time libraries for NAS
-Group:   System Environment/Libraries
+Summary:    Run-time libraries for NAS
+Summary(zh_CN.UTF-8): %{name} 的运行库
+Group:      System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 
 
 %description
-In a nutshell, NAS is the audio equivalent of an X display  server.
-The Network Audio System (NAS) was developed by NCD for playing,
-recording, and manipulating audio data over a network.  Like the
-X Window System, it uses the client/server model to separate
-applications from the specific drivers that control audio input
-and output devices.
+In a nutshell, NAS is the audio equivalent of an X display server.  The
+Network Audio System (NAS) was developed for playing, recording, and
+manipulating audio data over a network.  Like the X Window System, it uses the
+client/server model to separate applications from the specific drivers that
+control audio input and output devices.
+
 Key features of the Network Audio System include:
-    o  Device-independent audio over the network
-    o  Lots of audio file and data formats
-    o  Can store sounds in server for rapid replay
-    o  Extensive mixing, separating, and manipulation of audio data
-    o  Simultaneous use of audio devices by multiple applications
-    o  Use by a growing number of ISVs
-    o  Small size
-    o  Free!  No obnoxious licensing terms
+    • Device-independent audio over the network
+    • Lots of audio file and data formats
+    • Can store sounds in server for rapid replay
+    • Extensive mixing, separating, and manipulation of audio data
+    • Simultaneous use of audio devices by multiple applications
+    • Use by a growing number of ISVs
+    • Small size
+    • Free!  No obnoxious licensing terms
+
+%description -l zh_CN.UTF-8
+网络音频系统。
 
 %description libs
 %{summary}.
 
+%description libs -l zh_CN.UTF-8
+%{name} 的运行库。
+
 %description devel
 Development files and the documentation for Network Audio System.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
 %patch0 -p1 -b .move_AuErrorDB
+
 # Update config.sub to support aarch64, bug #926196
-cp -p %{_datadir}/automake-1.12/config.{sub,guess} config
+cp -p %{_datadir}/automake-1.14/config.{sub,guess} config
 sed -i -e '/AC_FUNC_SNPRINTF/d' config/configure.ac
 autoreconf -i -f config
 for F in HISTORY; do
@@ -93,7 +139,7 @@ install -p -m644 -D %{SOURCE2} $RPM_BUILD_ROOT%{_sysconfdir}/sysconfig/%{daemon}
 rm $RPM_BUILD_ROOT%{_libdir}/*.a
 # Rename config file
 mv $RPM_BUILD_ROOT%{_sysconfdir}/%{name}/nasd.conf{.eg,}
-
+magic_rpm_clean.sh
 
 %post
 %systemd_post %{daemon}.service
@@ -130,20 +176,41 @@ echo '  systemd-sysv-convert --apply %{daemon}'
 %{_mandir}/man5/*
 
 %files libs
-%defattr(-,root,root,-)
-%doc README FAQ HISTORY TODO
-%{_libdir}/libaudio.so.2
-%{_libdir}/libaudio.so.2.4
+# The LICENSE_CLARIFICIATION is specific to repacked sources.
+%doc FAQ HISTORY LICENSE_CLARIFICIATION README TODO
+%{_libdir}/libaudio.so.*
 %{_datadir}/X11/AuErrorDB
 
 %files devel
-%defattr(-,root,root,-)
+%doc doc/actions doc/protocol.txt doc/*.ps
 %{_includedir}/audio/
 %{_libdir}/libaudio.so
 %{_mandir}/man3/*
 
 
 %changelog
+* Tue Jan 20 2015 Liu Di <liudidi@gmail.com> - 1.9.4-3
+- 为 Magic 3.0 重建
+
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.9.4-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Tue Oct 08 2013 Petr Pisar <ppisar@redhat.com> - 1.9.4-1
+- 1.9.4 bump
+- Package license corrected to MIT
+
+* Mon Sep 16 2013 Petr Pisar <ppisar@redhat.com> - 1.9.3-9
+- Fix CVE-2013-4258 (formatting string for syslog call) (bug #1006753)
+- Fix CVE-2013-4256 (parsing display number, heap overflow when processing
+  AUDIOHOST variable) (bug #1006753)
+- Fix race when opening a TCP device (bug #1006753)
+
+* Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.9.3-8
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Thu Jul 18 2013 Petr Pisar <ppisar@redhat.com> - 1.9.3-7
+- Perl 5.18 rebuild
+
 * Wed Mar 27 2013 Petr Pisar <ppisar@redhat.com> - 1.9.3-6
 - Update config.sub to support aarch64 (bug #926196)
 
@@ -231,7 +298,7 @@ echo '  systemd-sysv-convert --apply %{daemon}'
 * Wed Mar 21 2007 Frank Büttner  <frank-buettner@gmx.net> - 1.8a-1%{?dist}
 - fix bug 233353 
 
-* Thu Feb 09 2007 Frank Büttner  <frank-buettner@gmx.net> - 1.8-13%{?dist}
+* Fri Feb 09 2007 Frank Büttner  <frank-buettner@gmx.net> - 1.8-13%{?dist}
 - use the corrected patch
 
 * Thu Feb 08 2007 Frank Büttner  <frank-buettner@gmx.net> - 1.8-11%{?dist}

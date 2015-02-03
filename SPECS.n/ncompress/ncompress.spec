@@ -1,19 +1,44 @@
 Summary: Fast compression and decompression utilities.
 Summary(zh_CN.UTF-8): 快速压缩和解压缩的工具。
 Name: ncompress
-Version: 4.2.4
-Release: 47%{?dist}
+Version: 4.2.4.4
+Release: 1%{?dist}
 License: distributable
 Group: Applications/File
 Group(zh_CN.UTF-8): 应用程序/文件
-Source: ftp://metalab.unc.edu/pub/Linux/utils/compress/ncompress-4.2.4.tar.Z
-Patch0: ncompress-4.2.4-make.patch
-Patch1: ncompress-4.2.4-lfs2.patch
-Patch2: ncompress-4.2.4-filenamelen.patch
-Patch3: ncompress-2GB.patch
-Patch4: ncompress-4.2.4-zerobyteforce.patch
-Patch5: ncompress-4.2.4-bssUnderflow.patch
-Patch6: ncompress-4.2.4-endians.patch
+URL:    http://ncompress.sourceforge.net/
+Source: http://prdownloads.sourceforge.net/sourceforge/%{name}/%{name}-%{version}.tar.gz
+
+# allow to build ncompress
+# ~> downstream
+Patch0: ncompress-4.2.4.4-make.patch
+
+# from dist-git commit 0539779d937
+# (praiskup: removed redundant part as -DNOFUNCDEF is defined)
+# ~> downstream
+Patch1: ncompress-4.2.4.4-lfs.patch
+
+# exit when too long filename is given (do not segfault)
+# ~> #unknown
+# ~> downstream
+Patch2: ncompress-4.2.4.4-filenamelen.patch
+
+# permit files > 2GB to be compressed
+# ~> #126775
+Patch3: ncompress-4.2.4.4-2GB.patch
+
+# do not fail to compress on ppc/s390x
+# ~> #207001
+Patch4: ncompress-4.2.4.4-endians.patch
+
+# use memmove instead of memcpy
+# ~> 760657
+# ~> downstream
+Patch5: ncompress-4.2.4.4-memmove.patch
+
+# silence gcc warnings
+# ~> downstream
+Patch6: ncompress-4.2.4.4-silence-gcc.patch
 
 BuildRequires: gcc glibc-devel fileutils
 BuildRoot: %{_tmppath}/%{name}-%{version}-root
@@ -36,51 +61,53 @@ ncompress 软件包包括用来压缩和解压文件的压缩和解压工具。�
 
 %prep
 %setup -q
-%patch0 -p1
-%patch1 -p1 -b .lfs
-%patch2 -p1 -b .filenamelen
-%patch3 -p1 -b .2GB
-%patch4 -p1 -b .zerobyteforce
-%patch5 -p1 -b .bssUnderflow
-%patch6 -p1 -b .endians
 
-%build
-
-export RPM_OPT_FLAGS="$RPM_OPT_FLAGS -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE"
-ENDIAN=4321
+# configure build system
+# ~> downstream
+%patch0 -p1 -b .configure-buildsystem
 
 %ifarch sparc m68k armv4l ppc s390 s390x ppc64 sparc64
-ENDIAN=1234
+ARCH_FLAGS="$ARCH_FLAGS -DBYTEORDER=1234"
 %endif
 
 %ifarch alpha ia64
-export RPM_OPT_FLAGS="$RPM_OPT_FLAGS -DNOALLIGN=0"
+ARCH_FLAGS="$ARCH_FLAGS -DNOALLIGN=0"
 %endif
 
-make RPM_OPT_FLAGS="$RPM_OPT_FLAGS" ENDIAN="$ENDIAN"
+sed "s/\$(ARCH_FLAGS)/$ARCH_FLAGS/" Makefile.def > Makefile
+
+%patch1 -p1 -b .lfs
+%patch2 -p1 -b .filenamelen
+%patch3 -p1 -b .2GB
+%patch4 -p1 -b .endians
+%patch5 -p1 -b .memmove
+%patch6 -p1 -b .silence-gcc
+ 
+
+%build
+make CFLAGS="%{optflags} %{?nc_endian} %{?nc_align}"
 
 %install
-rm -rf $RPM_BUILD_ROOT
-mkdir -p $RPM_BUILD_ROOT/usr/bin
+mkdir -p $RPM_BUILD_ROOT/%{_bindir}
 mkdir -p $RPM_BUILD_ROOT/%{_mandir}/man1
-
-
-install -m755 compress $RPM_BUILD_ROOT/usr/bin
-ln -sf compress $RPM_BUILD_ROOT/usr/bin/uncompress
-install -m644 compress.1 $RPM_BUILD_ROOT%{_mandir}/man1
+install -p -m755 compress $RPM_BUILD_ROOT/%{_bindir}
+ln -sf compress $RPM_BUILD_ROOT/%{_bindir}/uncompress
+install -p -m644 compress.1 $RPM_BUILD_ROOT%{_mandir}/man1
 ln -sf compress.1 $RPM_BUILD_ROOT%{_mandir}/man1/uncompress.1
 
 %clean
 rm -rf $RPM_BUILD_ROOT
 
 %files
-%defattr(-,root,root)
-/usr/bin/compress
-/usr/bin/uncompress
+%{_bindir}/compress
+%{_bindir}/uncompress
 %{_mandir}/man1/*
 %doc LZW.INFO README
 
 %changelog
+* Mon Jan 26 2015 Liu Di <liudidi@gmail.com> - 4.2.4.4-1
+- 更新到 4.2.4.4
+
 * Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 4.2.4-47
 - 为 Magic 3.0 重建
 

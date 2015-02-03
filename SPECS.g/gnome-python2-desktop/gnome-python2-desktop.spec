@@ -67,7 +67,7 @@ BuildRequires: libgnomeprintui22-devel
 BuildRequires: libgtop2-devel >= %{libgtop_version}
 BuildRequires: librsvg2-devel >= %{librsvg2_version}
 BuildRequires: libwnck-devel >= %{libwnck_version}
-BuildRequires: metacity-devel >= %{metacity_version}
+#BuildRequires: metacity-devel >= %{metacity_version}
 BuildRequires: pygtk2-devel >= %{pygtk_version}
 BuildRequires: python-devel
 BuildRequires: totem-pl-parser-devel >= %{totem_version}
@@ -213,7 +213,7 @@ via Python.
 # been ported to GTK+3. It's not practical to mix GTK+2 and GTK+3 bindings
 # in gnome-python2-desktop, so for now we'll just have to disable the GTK+3
 # stuff. - AdamW 2010/07
-%configure --enable-metacity --disable-evince --disable-braseromedia --disable-braseroburn --disable-mediaprofiles --disable-applet --disable-evolution --disable-evolution_ecal
+%configure --disable-metacity --disable-evince --disable-braseromedia --disable-braseroburn --disable-mediaprofiles --disable-applet --disable-evolution --disable-evolution_ecal
 make
 
 %install
@@ -266,9 +266,11 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 %{python_sitearch}/gtk-2.0/gtop.so
 
+%if 0
 %files -n gnome-python2-metacity
 %defattr(-,root,root,-)
 %{python_sitearch}/gtk-2.0/metacity.so
+%endif
 
 %files -n gnome-python2-totem
 %defattr(-,root,root,-)

@@ -4,10 +4,10 @@
  * out) in net-snmp-config.h.  The original net-snmp-config.h has been renamed.
  * DO NOT INCLUDE THE NEW FILE DIRECTLY -- ALWAYS INCLUDE THIS ONE INSTEAD. */
 
-#ifdef net-snmp-config_multilib_redirection_h
-#error "Do not define net-snmp-config_multilib_redirection_h!"
+#ifdef net_snmp_config_multilib_redirection_h
+#error "Do not define net_snmp_config_multilib_redirection_h!"
 #endif
-#define net-snmp-config_multilib_redirection_h
+#define net_snmp_config_multilib_redirection_h
 
 #if defined(__i386__)
 #include "net-snmp-config-i386.h"
@@ -35,4 +35,4 @@
 #error "net-snmp-devel package does not work on your architecture"
 #endif
 
-#undef net-snmp-config_multilib_redirection_h
+#undef net_snmp_config_multilib_redirection_h
