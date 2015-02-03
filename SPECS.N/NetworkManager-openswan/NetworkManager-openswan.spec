@@ -1,37 +1,19 @@
 #%define nm_version        1:0.9.8
 
-%define realversion 0.9.8.4
+%define realversion 1.0.0
 
 Summary:   NetworkManager VPN plug-in for openswan
+Summary(zh_CN.UTF-8): NetworkManaget 的 openswan VPN 插件
 Name:      NetworkManager-openswan
-Version:   0.9.8.4
-Release:   2%{?dist}
+Version:	1.0.0
+Release:	1%{?dist}
 License:   GPLv2+
 Group:     System Environment/Base
-URL:       http://ftp.gnome.org/pub/GNOME/sources/NetworkManager-openswan/0.9/
-Source0:   http://ftp.gnome.org/pub/GNOME/sources/NetworkManager-openswan/0.9/%{name}-%{realversion}.tar.xz
+Group(zh_CN.UTF-8): 系统环境/基本
+%define majorver %(echo %{version} | awk -F. '{print $1"."$2}')
+URL:       http://ftp.gnome.org/pub/GNOME/sources/NetworkManager-openswan/%{majorver}/
+Source0:   http://ftp.gnome.org/pub/GNOME/sources/NetworkManager-openswan/%{majorver}/%{name}-%{realversion}.tar.xz
 BuildRoot: %(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
-Patch1:    0001-NM-openswan-was-missing-support-for-nm-openswan-auth.patch
-Patch2:    0002-Fixed-gtk-label-max-width-issue-by-setting-it-to-35.patch
-Patch3:    0003-Fixed-Networkmanager-and-related-lib-dependencies.patch
-Patch4:    0004-Fixed-gnomekeyring-lib-dependencies.patch
-Patch5:    0005-Fixed-dead-code-based-on-coverity-scan.patch
-Patch6:    0006-Fix-prcoessing-of-nm-openswan-dialog.ui-file-and-add.patch
-Patch7:    0007-openswan-libreswan-does-not-provide-tun0-interface-s.patch
-Patch8:    0008-libreswan-related-fixes-as-some-macros-have-been-mod.patch
-Patch9:    0009-Fixed-an-issue-where-writing-configuration-on-stdin-.patch
-Patch10:   0010-Fixed-more-coverity-scan-issues.patch
-Patch11:   0011-Fixed-the-current-code-as-it-does-not-set-the-defaul.patch
-Patch12:   0012-Fixed-netmask-issue-when-sending-IP-information-to-t.patch
-Patch13:   0013-Fixed-more-libreswan-related-changes.patch
-Patch14:   0014-Fixed-an-issue-where-nm-openswan-service-is-searchin.patch
-Patch15:   0015-Rewrite-pluto-watch-API-which-watches-the-pluto-proc.patch
-Patch16:   0016-Fixed-defaults-values-for-more-parameters-to-help-th.patch
-Patch17:   0017-Fixed-initiation-of-pluto-daemon-by-this-plugin-to-r.patch
-Patch18:   0018-Fixed-various-debug-messages.patch
-Patch19:   0019-Fixed-the-termination-operation-of-pluto-daemon-to-c.patch
-Patch20:   0020-Fixed-an-issue-where-proper-network-stack-is-not-loa.patch
-Patch21:   nm-openswan-1035786-1040924.patch
 
 BuildRequires: gtk3-devel
 BuildRequires: dbus-devel
@@ -62,9 +44,14 @@ Requires: shared-mime-info
 This package contains software for integrating the openswan VPN software
 with NetworkManager and the GNOME desktop
 
+%description -l zh_CN.UTF-8
+NetworkManaget 的 openswan VPN 插件。
+
 %package -n NetworkManager-openswan-gnome
 Summary: NetworkManager VPN plugin for openswan - GNOME files
+Summary(zh_CN.UTF-8): NetworkManaget 的 openswan VPN 插件 - GNOME 文件
 Group:   System Environment/Base
+Group(zh_CN.UTF-8): 系统环境/基本
 
 Requires: NetworkManager-openswan = %{version}-%{release}
 Requires: nm-connection-editor
@@ -73,29 +60,11 @@ Requires: nm-connection-editor
 This package contains software for integrating VPN capabilities with
 the openswan/libreswan server with NetworkManager (GNOME files).
 
+%description -n NetworkManager-openswan-gnome -l zh_CN.UTF-8
+NetworkManaget 的 openswan VPN 插件 - GNOME 文件。
+
 %prep
 %setup -q  -n NetworkManager-openswan-%{realversion}
-%patch1 -p1
-%patch2 -p1
-%patch3 -p1
-%patch4 -p1
-%patch5 -p1
-%patch6 -p1
-%patch7 -p1
-%patch8 -p1
-%patch9 -p1
-%patch10 -p1
-%patch11 -p1
-%patch12 -p1
-%patch13 -p1
-%patch14 -p1
-%patch15 -p1
-%patch16 -p1
-%patch17 -p1
-%patch18 -p1
-%patch19 -p1
-%patch20 -p1
-%patch21 -p1
 
 %build
 autoreconf
@@ -107,7 +76,7 @@ make install DESTDIR=$RPM_BUILD_ROOT
 rm -f %{buildroot}%{_libdir}/NetworkManager/lib*.la
 rm -f %{buildroot}%{_libdir}/NetworkManager/lib*.a
 mv  %{buildroot}%{_libexecdir}/nm-openswan-service-helper  %{buildroot}%{_libexecdir}/nm-libreswan-service-helper
-
+magic_rpm_clean.sh
 %find_lang %{name}
 
 %post
@@ -140,6 +109,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Mon Jan 05 2015 Liu Di <liudidi@gmail.com> - 1.0.0-1
+- 更新到 1.0.0
+
 * Thu Dec 12 2013 Avesh Agarwal <avagarwa@redhat.com> - 0.9.8.4-2
 - Fixes 1035786 (and its duplicate 1040924)
 

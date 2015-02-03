@@ -1,9 +1,11 @@
 Name:           netcf
-Version:        0.2.4
-Release:        3%{?dist}%{?extra_release}
+Version: 0.2.6
+Release: 1%{?dist}
 Summary:        Cross-platform network configuration library
+Summary(zh_CN.UTF-8): 跨平台的网络配置库
 
 Group:          System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 License:        LGPLv2+
 URL:            https://fedorahosted.org/netcf/
 Source0:        https://fedorahosted.org/released/%{name}/%{name}-%{version}.tar.gz
@@ -64,9 +66,14 @@ system. Network configurations are expressed in a platform-independent
 XML format, which netcf translates into changes to the system's
 'native' network configuration files.
 
+%description -l zh_CN.UTF-8
+跨平台的网络配置库。
+
 %package        devel
 Summary:        Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       %{name}-libs = %{version}-%{release}
 Requires:       pkgconfig
 
@@ -74,9 +81,14 @@ Requires:       pkgconfig
 The %{name}-devel package contains libraries and header files for
 developing applications that use %{name}.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
 %package        libs
 Summary:        Libraries for %{name}
+Summary(zh_CN.UTF-8): %{name} 的运行库
 Group:          System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 
 # bridge-utils is needed because /sbin/ifup calls brctl
 # if you create a bridge device
@@ -84,6 +96,9 @@ Requires:       bridge-utils
 
 %description    libs
 The libraries for %{name}.
+
+%description libs -l zh_CN.UTF-8
+%{name} 的运行库。
 
 %prep
 %setup -q
@@ -113,6 +128,7 @@ rm -rf $RPM_BUILD_ROOT
 make install DESTDIR=$RPM_BUILD_ROOT SYSTEMD_UNIT_DIR=%{_unitdir} \
      INSTALL="%{__install} -p"
 find $RPM_BUILD_ROOT -name '*.la' -exec rm -f {} ';'
+magic_rpm_clean.sh
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -169,6 +185,9 @@ fi
 %{_libdir}/pkgconfig/netcf.pc
 
 %changelog
+* Mon Jan 26 2015 Liu Di <liudidi@gmail.com> - 0.2.6-1
+- 更新到 0.2.6
+
 * Fri Jun 20 2014 Liu Di <liudidi@gmail.com> - 0.2.4-3
 - 为 Magic 3.0 重建
 

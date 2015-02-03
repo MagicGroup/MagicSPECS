@@ -2,22 +2,23 @@
 %define glib2_version   2.32.0
 %define dbus_version    1.4
 %define dbus_glib_version 0.86
-%define nm_version      1:0.9.9.0
+%define nm_version      1:0.9.9.95
 %define obsoletes_ver   1:0.9.7
 
-%define snapshot .git20131028
-%define realversion 0.9.9.0
+%define snapshot %{nil}
+%define git_sha %{nil}
+%define realversion 1.0.0
 
 Name: network-manager-applet
 Summary: A network control and status applet for NetworkManager
-Version: 0.9.9.0
-Release: 8%{snapshot}%{?dist}
+Version: 1.0.0
+Release: 2%{snapshot}%{git_sha}%{?dist}
 Group: Applications/System
 License: GPLv2+
 URL: http://www.gnome.org/projects/NetworkManager/
 Obsoletes: NetworkManager-gnome < %{obsoletes_ver}
 
-Source: http://ftp.gnome.org/pub/GNOME/sources/network-manager-applet/0.9/%{name}-%{realversion}%{snapshot}.tar.bz2
+Source: https://download.gnome.org/sources/network-manager-applet/1.0/%{name}-%{realversion}%{snapshot}%{git_sha}.tar.xz
 Patch0: nm-applet-no-notifications.patch
 Patch1: nm-applet-wifi-dialog-ui-fixes.patch
 Patch2: applet-ignore-deprecated.patch
@@ -28,11 +29,11 @@ Requires: libnm-gtk = %{version}-%{release}
 Requires: dbus >= 1.4
 Requires: dbus-glib >= 0.100
 Requires: libnotify >= 0.4.3
-Requires: gnome-icon-theme
 Requires: nm-connection-editor = %{version}-%{release}
 
 BuildRequires: NetworkManager-devel >= %{nm_version}
 BuildRequires: NetworkManager-glib-devel >= %{nm_version}
+BuildRequires: ModemManager-glib-devel >= 1.0
 BuildRequires: dbus-devel >= %{dbus_version}
 BuildRequires: dbus-glib-devel >= %{dbus_glib_version}
 BuildRequires: glib2-devel >= %{glib2_version}
@@ -60,7 +61,6 @@ Requires: NetworkManager-glib >= %{nm_version}
 Requires: libnm-gtk = %{version}-%{release}
 Requires: dbus >= 1.4
 Requires: dbus-glib >= 0.94
-Requires: gnome-icon-theme
 Requires(post): /usr/bin/gtk-update-icon-cache
 
 %description -n nm-connection-editor
@@ -107,6 +107,7 @@ intltoolize --force
 %configure \
     --disable-static \
     --without-bluetooth \
+    --with-modem-manager-1=yes \
     --enable-more-warnings=yes \
     --disable-migration
 make %{?_smp_mflags}
@@ -212,6 +213,40 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &>/dev/null || :
 %{_datadir}/gir-1.0/NMGtk-1.0.gir
 
 %changelog
+* Fri Jan 16 2015 Liu Di <liudidi@gmail.com> - 1.0.0-2
+- 为 Magic 3.0 重建
+
+* Mon Dec 22 2014 Dan Williams <dcbw@redhat.com> - 1.0.0-1
+- Update to 1.0
+
+* Mon Dec  1 2014 Jiří Klimeš <jklimes@redhat.com> - 0.9.10.1-1.git20141201.be5a9db
+- update to latest git snapshot of 0.9.10 (git20141201 sha:be5a9db)
+
+* Wed Sep 03 2014 Kalev Lember <kalevlember@gmail.com> - 0.9.9.0-15.git20140424
+- Backport a patch to hide nm-connection-editor launcher in GNOME
+
+* Sun Aug 17 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.9.9.0-14.git20140424
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
+
+* Tue Jul 22 2014 Kalev Lember <kalevlember@gmail.com> - 0.9.9.0-13.git20140424
+- Rebuilt for gobject-introspection 1.41.4
+
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.9.9.0-12.git20140424
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Wed May 07 2014 Kalev Lember <kalevlember@gmail.com> - 0.9.9.0-11.git20140424
+- Drop gnome-icon-theme dependency
+
+* Thu Apr 24 2014 Jiří Klimeš <jklimes@redhat.com> - 0.9.9.0-10.git20140424
+- update to latest git snapshot (git20140424 sha:9ba9c3e)
+
+* Mon Mar 24 2014 Dan Winship <danw@redhat.com> - 0.9.9.0-9.git20140123
+- Add ModemManager-glib-devel to BuildRequires
+
+* Thu Jan 23 2014 Jiří Klimeš <jklimes@redhat.com> - 0.9.9.0-8.git20140123
+- update to latest git snapshot (git20140123 sha:5d4f17e)
+- applet: fix crash when "CA certificate is not required" (rh #1055535)
+
 * Fri Dec 20 2013 Kevin Fenzi <kevin@scrye.com> 0.9.9.0-8.git20131028
 - Remove bluetooth plugin, doesn't work with new gnome-bluetooth/bluez5
 

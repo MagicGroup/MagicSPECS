@@ -1,0 +1,60 @@
+diff --git a/compress42.c b/compress42.c
+index b3b3add..6878046 100644
+--- a/compress42.c
++++ b/compress42.c
+@@ -141,6 +141,7 @@
+ #include	<sys/types.h>
+ #include	<sys/stat.h>
+ #include	<errno.h>
++#include	<string.h>
+ 
+ #ifdef DIRENT
+ #	include	<dirent.h>
+@@ -214,7 +215,7 @@
+ #	define	OBUFSIZ	BUFSIZ	/* Default output buffer size							*/
+ #endif
+ 
+-#define MAXPATHLEN 1024		/* MAXPATHLEN - maximum length of a pathname we allow 	*/
++#define MAXPATHLEN PATH_MAX 		/* MAXPATHLEN - maximum length of a pathname we allow 	*/
+ #define	SIZE_INNER_LOOP		256	/* Size of the inter (fast) compress loop			*/
+ 
+ 							/* Defines for third byte of header 					*/
+@@ -701,6 +702,7 @@ main(argc, argv)
+ 	{
+     	REG3	char		**filelist;
+ 		REG4	char		**fileptr;
++	int i;
+ 
+     	if (fgnd_flag = (signal(SIGINT, SIG_IGN) != SIG_IGN))
+ 			signal(SIGINT, (SIG_TYPE)abort_compress);
+@@ -714,13 +716,18 @@ main(argc, argv)
+     	nomagic = 1;	/* Original didn't have a magic number */
+ #endif
+ 
+-    	filelist = (char **)malloc(argc*sizeof(char *));
++	for (i=0; i<argc; i++) {
++		if (strlen(argv[i])>(MAXPATHLEN-1)) {
++			fprintf(stderr,"Filename too long\n");
++			exit(1);
++		}
++	}
++	filelist = fileptr = (char **)malloc(argc*sizeof(char *));
+     	if (filelist == NULL)
+ 		{
+ 			fprintf(stderr, "Cannot allocate memory for file list.\n");
+ 			exit (1);
+ 		}
+-    	fileptr = filelist;
+     	*filelist = NULL;
+ 
+     	if((progname = strrchr(argv[0], '/')) != 0)
+@@ -860,7 +867,9 @@ nextarg:	continue;
+ 				decompress(0, 1);
+ 		}
+ 
++		free(filelist);
+ 		exit((exit_code== -1) ? 1:exit_code);
++		return 0;
+ 	}
+ 
+ void

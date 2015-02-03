@@ -1,22 +1,22 @@
+%global revision 20140906
 Summary: Ncurses support utilities
+Summary(zh_CN.UTF-8): Ncuerses 支持工具
 Name: ncurses
 Version: 5.9
-Release: 5.20120204%{?dist}
+Release: 18.%{revision}%{?dist}
 License: MIT
 Group: System Environment/Base
+Group(zh_CN.UTF-8): 系统环境/基本
 URL: http://invisible-island.net/ncurses/ncurses.html
-Source0: ftp://invisible-island.net/ncurses/ncurses-%{version}.tar.gz
+Source0: ftp://invisible-island.net/ncurses/current/ncurses-%{version}-%{revision}.tgz
 
-Patch1: ncurses-5.9-20111224-patch.sh.bz2
-Patch2: ncurses-5.9-20111231-20120204.patch.bz2
 Patch8: ncurses-config.patch
 Patch9: ncurses-libs.patch
 Patch11: ncurses-urxvt.patch
 Patch12: ncurses-kbs.patch
 BuildRequires: gpm-devel pkgconfig
-BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
-Requires: %{name}-libs = %{version}-%{release}
+Requires: %{name}-libs%{?_isa} = %{version}-%{release}
 
 %description
 The curses library routines are a terminal-independent method of
@@ -28,9 +28,18 @@ This package contains support utilities, including a terminfo compiler
 tic, a decompiler infocmp, clear, tput, tset, and a termcap conversion
 tool captoinfo.
 
+%description -l zh_CN.UTF-8
+ncurses（new curses）是一个程序库，它提供了API，可以允许程序员编写独立
+于终端的基于文本的用户界面。它是一个虚拟终端中的“类GUI”应用软件工具箱。它
+还优化了屏幕刷新方法，以减少使用远程shell时遇到的延迟。
+
+这个包包含了相关的支持工具。
+
 %package libs
 Summary: Ncurses libraries
+Summary(zh_CN.UTF-8): %{name} 的运行库
 Group: System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 Requires: %{name}-base = %{version}-%{release}
 # libs introduced in 5.6-13 
 Obsoletes: ncurses < 5.6-13
@@ -45,32 +54,50 @@ discontinued 4.4 BSD classic curses library.
 
 This package contains the ncurses libraries.
 
+%description libs -l zh_CN.UTF-8
+%{name} 的运行库。
+
 %package base
 Summary: Descriptions of common terminals
+Summary(zh_CN.UTF-8): 通用终端描述
 Group: System Environment/Base
+Group(zh_CN.UTF-8): 系统环境/基本
 Obsoletes: termcap < 1:5.5-2
 # base introduced in 5.6-13 
 Conflicts: ncurses < 5.6-13
 # /lib -> /usr/lib move
 Conflicts: filesystem < 3
+BuildArch: noarch
 
 %description base
 This package contains descriptions of common terminals. Other terminal
 descriptions are included in the ncurses-term package.
 
+%description base -l zh_CN.UTF-8
+这个包包含了通用终端的描述。其它终端描述包含在 ncurses-term 包。
+
+
 %package term
 Summary: Terminal descriptions
+Summary(zh_CN.UTF-8): 终端描述
 Group: System Environment/Base
+Group(zh_CN.UTF-8): 系统环境/基本
 Requires: %{name}-base = %{version}-%{release}
+BuildArch: noarch
 
 %description term
 This package contains additional terminal descriptions not found in
 the ncurses-base package.
 
+%description term -l zh_CN.UTF-8
+这个包包含了不在 ncurses-base 包中的终端描述。
+
 %package devel
 Summary: Development files for the ncurses library
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: Development/Libraries
-Requires: %{name}-libs = %{version}-%{release}
+Group(zh_CN.UTF-8): 开发/库
+Requires: %{name}-libs%{?_isa} = %{version}-%{release}
 Requires: pkgconfig
 Obsoletes: libtermcap-devel < 2.0.8-48
 Provides: libtermcap-devel = 2.0.8-48
@@ -82,19 +109,24 @@ the ncurses terminal handling library.
 Install the ncurses-devel package if you want to develop applications
 which will use ncurses.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
 %package static
 Summary: Static libraries for the ncurses library
+Summary(zh_CN.UTF-8): %{name} 的静态库
 Group: Development/Libraries
-Requires: %{name}-devel = %{version}-%{release}
+Group(zh_CN.UTF-8): 开发/库
+Requires: %{name}-devel%{?_isa} = %{version}-%{release}
 
 %description static
 The ncurses-static package includes static libraries of the ncurses library.
 
-%prep
-%setup -q
+%description static -l zh_CN.UTF-8
+%{name} 的静态库。
 
-%patch1 -p1
-%patch2 -p1
+%prep
+%setup -q -n %{name}-%{version}-%{revision}
 
 %patch8 -p1 -b .config
 %patch9 -p1 -b .libs
@@ -106,12 +138,12 @@ cp -p install-sh test
 find test -type f | xargs chmod 644
 
 for f in ANNOUNCE; do
-	iconv -f iso8859-1 -t utf8 -o ${f}{_,} &&
-		touch -r ${f}{,_} && mv -f ${f}{_,}
+    iconv -f iso8859-1 -t utf8 -o ${f}{_,} &&
+        touch -r ${f}{,_} && mv -f ${f}{_,}
 done
 
 %build
-%define ncurses_options \\\
+%global ncurses_options \\\
     --with-shared --without-ada --with-ospeed=unsigned \\\
     --enable-hard-tabs --enable-xmc-glitch --enable-colorfgbg \\\
     --with-terminfo-dirs=%{_sysconfdir}/terminfo:%{_datadir}/terminfo \\\
@@ -119,7 +151,9 @@ done
     --enable-pc-files \\\
     --with-pkg-config-libdir=%{_libdir}/pkgconfig \\\
     --with-termlib=tinfo \\\
-    --with-chtype=long
+    --with-chtype=long \\\
+    --with-cxx-shared \\\
+    --with-xterm-kbs=DEL
 
 mkdir narrowc widec
 cd narrowc
@@ -135,16 +169,12 @@ make %{?_smp_mflags} libs
 cd ..
 
 %install
-rm -rf ${RPM_BUILD_ROOT}
-
 make -C narrowc DESTDIR=$RPM_BUILD_ROOT install.{libs,progs,data}
 rm -f $RPM_BUILD_ROOT%{_libdir}/libtinfo.*
 make -C widec DESTDIR=$RPM_BUILD_ROOT install.{libs,includes,man}
 
 chmod 755 ${RPM_BUILD_ROOT}%{_libdir}/lib*.so.*.*
 chmod 644 ${RPM_BUILD_ROOT}%{_libdir}/lib*.a
-
-magic_rpm_clean.sh
 
 mkdir -p $RPM_BUILD_ROOT%{_sysconfdir}/terminfo
 
@@ -155,7 +185,7 @@ for termname in \
     ansi dumb linux vt100 vt100-nav vt102 vt220 vt52 \
     Eterm\* aterm bterm cons25 cygwin eterm\* gnome gnome-256color hurd jfbterm \
     konsole konsole-256color mach\* mlterm mrxvt nsterm putty\* pcansi \
-    rxvt rxvt-\* screen screen-\*color screen.\* sun teraterm teraterm2.3 \
+    rxvt{,-\*} screen{,-\*color,.\*} st{,-\*} sun teraterm teraterm2.3 \
     vte vte-256color vwmterm wsvt25\* xfce xterm xterm-\*
 do
     for i in $RPM_BUILD_ROOT%{_datadir}/terminfo/?/$termname; do
@@ -196,7 +226,7 @@ echo "INPUT(-lncursesw)" > $RPM_BUILD_ROOT%{_libdir}/libcursesw.so
 echo "INPUT(-ltinfo)" > $RPM_BUILD_ROOT%{_libdir}/libtermcap.so
 
 rm -f $RPM_BUILD_ROOT%{_libdir}/terminfo
-rm -f $RPM_BUILD_ROOT%{_libdir}/pkgconfig/{*_g,ncurses++*}.pc
+rm -f $RPM_BUILD_ROOT%{_libdir}/pkgconfig/*_g.pc
 
 bzip2 NEWS
 
@@ -205,7 +235,6 @@ bzip2 NEWS
 %postun libs -p /sbin/ldconfig
 
 %files
-%defattr(-,root,root)
 %doc ANNOUNCE AUTHORS NEWS.bz2 README TO-DO
 %{_bindir}/[cirt]*
 %{_mandir}/man1/[cirt]*
@@ -213,21 +242,19 @@ bzip2 NEWS
 %{_mandir}/man7/*
 
 %files libs
-%defattr(-,root,root)
 %{_libdir}/lib*.so.*
 
 %files base -f terms.base
-%defattr(-,root,root)
+%{!?_licensedir:%global license %%doc}
+%license COPYING
 %doc README
 %dir %{_sysconfdir}/terminfo
 %{_datadir}/tabset
 %dir %{_datadir}/terminfo
 
 %files term -f terms.term
-%defattr(-,root,root)
 
 %files devel
-%defattr(-,root,root)
 %doc test
 %doc doc/html/hackguide.html
 %doc doc/html/ncurses-intro.html
@@ -245,15 +272,56 @@ bzip2 NEWS
 %{_mandir}/man3/*
 
 %files static
-%defattr(-,root,root)
 %{_libdir}/lib*.a
 
-%clean
-rm -rf ${RPM_BUILD_ROOT}
-
 %changelog
-* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 5.9-5.20120204
+* Mon Jan 26 2015 Liu Di <liudidi@gmail.com> - 5.9-18.20140906
 - 为 Magic 3.0 重建
+
+* Fri Sep 12 2014 Miroslav Lichvar <mlichvar@redhat.com> 5.9-17.20140906
+- update to 5.9-20140906
+
+* Sun Aug 17 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 5.9-16.20140323
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
+
+* Fri Jul 18 2014 Tom Callaway <spot@fedoraproject.org> - 5.9-15.20140323
+- fix license handling
+
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 5.9-14.20140323
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Wed Mar 26 2014 Miroslav Lichvar <mlichvar@redhat.com> 5.9-13.20140323
+- update to 20140323
+
+* Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 5.9-12.20130511
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Mon May 13 2013 Miroslav Lichvar <mlichvar@redhat.com> 5.9-11.20130511
+- update to 20130511
+
+* Mon Apr 15 2013 Miroslav Lichvar <mlichvar@redhat.com> 5.9-10.20130413
+- update to 20130413
+
+* Mon Mar 18 2013 Miroslav Lichvar <mlichvar@redhat.com> 5.9-9.20130316
+- update to 20130316
+- include shared ncurses C++ libraries (#911540)
+
+* Wed Jan 30 2013 Miroslav Lichvar <mlichvar@redhat.com> 5.9-8.20130126
+- update to 20130126
+- clear scrollback buffer in clear (#815790)
+- make -base and -term subpackages noarch
+- make some dependencies arch-specific
+
+* Thu Oct 18 2012 Miroslav Lichvar <mlichvar@redhat.com> 5.9-7.20121017
+- update to 20121017
+
+* Mon Oct 15 2012 Miroslav Lichvar <mlichvar@redhat.com> 5.9-6.20121013
+- update to 20121013
+- move st entries to -base
+- remove obsolete macros
+
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 5.9-5.20120204
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 
 * Wed Feb 08 2012 Miroslav Lichvar <mlichvar@redhat.com> 5.9-4.20120204
 - move libs and terms to /usr
@@ -443,7 +511,7 @@ rm -rf ${RPM_BUILD_ROOT}
 * Tue Feb 07 2006 Jesse Keating <jkeating@redhat.com> - 5.5-18.1
 - rebuilt for new gcc4.1 snapshot and glibc changes
 
-* Fri Jan 31 2006 Jindrich Novy <jnovy@redhat.com> 5.5-18
+* Tue Jan 31 2006 Jindrich Novy <jnovy@redhat.com> 5.5-18
 - add --with-chtype=long to avoid type clashes on x86_64 (#178824)
 - spec cleanup
 
@@ -503,7 +571,7 @@ rm -rf ${RPM_BUILD_ROOT}
 - update to newest jumbo monthly patch + weeklies, fixing
   new line cursor move problem (#140326)
 
-* Wed Oct 21 2004 Adrian Havill <havill@redhat.com> 5.4-14
+* Thu Oct 21 2004 Adrian Havill <havill@redhat.com> 5.4-14
 - escape rpm macros in the changelog (#135408)
 
 * Tue Aug 31 2004 Adrian Havill <havill@redhat.com> 5.4-13
@@ -521,7 +589,7 @@ rm -rf ${RPM_BUILD_ROOT}
 - add term.sh to /etc/profile.d, reference in /etc/bashrc
 - modify term.sh to support rxvt (#122815 comment 93)
 
-* Fri Jul 08 2004 Adrian Havill <havill@redhat.com> 5.4-10
+* Thu Jul 08 2004 Adrian Havill <havill@redhat.com> 5.4-10
 - add home/end mappings to gnome definition (#122815)
 
 * Tue Jul 06 2004 Adrian Havill <havill@redhat.com> 5.4-9.fc3
@@ -693,7 +761,7 @@ rm -rf ${RPM_BUILD_ROOT}
 - Fix up some terminfo entries containing includes to
   "/var/tmp/ncurses-root/something" (#30771)
 
-* Wed Feb 22 2001 Harald Hoyer <harald@redhat.de>
+* Thu Feb 22 2001 Harald Hoyer <harald@redhat.de>
 - fixed rxvt backspace setting
 
 * Fri Feb  9 2001 Yukihiro Nakai <ynakai@redhat.com>

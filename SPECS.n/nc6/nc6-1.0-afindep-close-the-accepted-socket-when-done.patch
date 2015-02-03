@@ -1,0 +1,31 @@
+From 9f043d704320942bfbc5cd7773e91a7beff5522b Mon Sep 17 00:00:00 2001
+From: Aaron Lu <aaron.lu@intel.com>
+Date: Fri, 7 Nov 2014 14:27:36 +0800
+Subject: [PATCH] afindep: close the accepted socket when done
+
+The accepted socket ns isn't closed when done and that caused the socket
+to keep in the CLOSE_WAIT state until the program quits. But since nc6
+is used to continuous accpet more connections and not quit with a
+client, this would cause more and more sockets to stay in CLOSE_WAIT
+state and eventually new connections will be refused.
+
+Signed-off-by: Aaron Lu <aaron.lu@intel.com>
+---
+ src/afindep.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/src/afindep.c b/src/afindep.c
+index 6645d6d..bf06e8b 100644
+--- a/src/afindep.c
++++ b/src/afindep.c
+@@ -548,6 +548,7 @@ int afindep_listener(const struct addrinfo *hints,
+ 			}
+ 
+ 			callback(ns, socktype, cdata);
++			close(ns);
+ 
+ 			if (max_accept > 0 && --max_accept == 0)
+ 				break;
+-- 
+1.9.3
+

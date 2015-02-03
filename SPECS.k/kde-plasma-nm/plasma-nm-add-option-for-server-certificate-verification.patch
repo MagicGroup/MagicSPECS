@@ -1,0 +1,209 @@
+diff --git a/vpn/openvpn/nm-openvpn-service.h b/vpn/openvpn/nm-openvpn-service.h
+index def533e..39e2251 100644
+--- a/vpn/openvpn/nm-openvpn-service.h
++++ b/vpn/openvpn/nm-openvpn-service.h
+@@ -54,6 +54,7 @@
+ #define NM_OPENVPN_KEY_USERNAME "username"
+ #define NM_OPENVPN_KEY_TAP_DEV "tap-dev"
+ #define NM_OPENVPN_KEY_TLS_REMOTE "tls-remote"
++#define NM_OPENVPN_KEY_REMOTE_CERT_TLS "remote-cert-tls"
+ 
+ #define NM_OPENVPN_KEY_PASSWORD "password"
+ #define NM_OPENVPN_KEY_CERTPASS "cert-pass"
+diff --git a/vpn/openvpn/openvpnadvanced.ui b/vpn/openvpn/openvpnadvanced.ui
+index 3fc4796..ed3ba53 100644
+--- a/vpn/openvpn/openvpnadvanced.ui
++++ b/vpn/openvpn/openvpnadvanced.ui
+@@ -6,13 +6,16 @@
+    <rect>
+     <x>0</x>
+     <y>0</y>
+-    <width>560</width>
+-    <height>462</height>
++    <width>573</width>
++    <height>471</height>
+    </rect>
+   </property>
+   <layout class="QVBoxLayout" name="verticalLayout">
+    <item>
+     <widget class="KTabWidget" name="tabWidget">
++     <property name="currentIndex">
++      <number>0</number>
++     </property>
+      <widget class="QWidget" name="generalTab">
+       <attribute name="title">
+        <string>General</string>
+@@ -284,7 +287,7 @@
+       <attribute name="title">
+        <string>TLS Settings</string>
+       </attribute>
+-      <layout class="QVBoxLayout" name="verticalLayout_9">
++      <layout class="QVBoxLayout" name="verticalLayout_2">
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout_10">
+          <item>
+@@ -307,6 +310,44 @@
+         </layout>
+        </item>
+        <item>
++        <widget class="QCheckBox" name="chkRemoteCertTls">
++         <property name="text">
++          <string>Verify peer (server) certificate usage signature</string>
++         </property>
++        </widget>
++       </item>
++       <item>
++        <layout class="QHBoxLayout" name="horizontalLayout_3">
++         <item>
++          <widget class="QLabel" name="labelRemoteCertTls">
++           <property name="enabled">
++            <bool>false</bool>
++           </property>
++           <property name="text">
++            <string>Remote peer certificate TLS type:</string>
++           </property>
++          </widget>
++         </item>
++         <item>
++          <widget class="QComboBox" name="cmbRemoteCertTls">
++           <property name="enabled">
++            <bool>false</bool>
++           </property>
++           <item>
++            <property name="text">
++             <string>Server</string>
++            </property>
++           </item>
++           <item>
++            <property name="text">
++             <string>Client</string>
++            </property>
++           </item>
++          </widget>
++         </item>
++        </layout>
++       </item>
++       <item>
+         <widget class="QGroupBox" name="useExtraTlsAuth">
+          <property name="title">
+           <string>Use additional TLS authentication</string>
+@@ -384,8 +425,8 @@
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+-           <width>20</width>
+-           <height>0</height>
++           <width>533</width>
++           <height>178</height>
+           </size>
+          </property>
+         </spacer>
+@@ -521,7 +562,7 @@
+            <property name="enabled">
+             <bool>false</bool>
+            </property>
+-           <property name="passwordMode">
++           <property name="passwordMode" stdset="0">
+             <bool>true</bool>
+            </property>
+           </widget>
+@@ -580,6 +621,7 @@
+    <class>KUrlRequester</class>
+    <extends>QFrame</extends>
+    <header>kurlrequester.h</header>
++   <container>1</container>
+   </customwidget>
+   <customwidget>
+    <class>KTabWidget</class>
+@@ -602,17 +644,19 @@
+   <tabstop>cboCipher</tabstop>
+   <tabstop>cboHmac</tabstop>
+   <tabstop>subjectMatch</tabstop>
++  <tabstop>chkRemoteCertTls</tabstop>
++  <tabstop>cmbRemoteCertTls</tabstop>
+   <tabstop>useExtraTlsAuth</tabstop>
+-  <tabstop>kurlTlsAuthKey</tabstop>
+   <tabstop>cboDirection</tabstop>
+   <tabstop>cmbProxyType</tabstop>
+   <tabstop>proxyServerAddress</tabstop>
+   <tabstop>sbProxyPort</tabstop>
+   <tabstop>chkProxyRetry</tabstop>
+   <tabstop>proxyUsername</tabstop>
+-  <tabstop>chkProxyShowPassword</tabstop>
+   <tabstop>proxyPassword</tabstop>
+   <tabstop>proxyPasswordStorage</tabstop>
++  <tabstop>chkProxyShowPassword</tabstop>
++  <tabstop>buttonBox</tabstop>
+  </tabstops>
+  <resources/>
+  <connections>
+@@ -632,5 +676,37 @@
+     </hint>
+    </hints>
+   </connection>
++  <connection>
++   <sender>chkRemoteCertTls</sender>
++   <signal>toggled(bool)</signal>
++   <receiver>labelRemoteCertTls</receiver>
++   <slot>setEnabled(bool)</slot>
++   <hints>
++    <hint type="sourcelabel">
++     <x>279</x>
++     <y>73</y>
++    </hint>
++    <hint type="destinationlabel">
++     <x>145</x>
++     <y>100</y>
++    </hint>
++   </hints>
++  </connection>
++  <connection>
++   <sender>chkRemoteCertTls</sender>
++   <signal>toggled(bool)</signal>
++   <receiver>cmbRemoteCertTls</receiver>
++   <slot>setEnabled(bool)</slot>
++   <hints>
++    <hint type="sourcelabel">
++     <x>279</x>
++     <y>73</y>
++    </hint>
++    <hint type="destinationlabel">
++     <x>413</x>
++     <y>100</y>
++    </hint>
++   </hints>
++  </connection>
+  </connections>
+ </ui>
+diff --git a/vpn/openvpn/openvpnadvancedwidget.cpp b/vpn/openvpn/openvpnadvancedwidget.cpp
+index 0ee97e3..ae44806 100644
+--- a/vpn/openvpn/openvpnadvancedwidget.cpp
++++ b/vpn/openvpn/openvpnadvancedwidget.cpp
+@@ -208,6 +208,15 @@ void OpenVpnAdvancedWidget::loadConfig()
+     if (dataMap.contains(NM_OPENVPN_KEY_TLS_REMOTE)) {
+         m_ui->subjectMatch->setText(dataMap[NM_OPENVPN_KEY_TLS_REMOTE]);
+     }
++
++    if (dataMap.contains(NM_OPENVPN_KEY_REMOTE_CERT_TLS)) {
++        const QString remoteCertTls = dataMap[NM_OPENVPN_KEY_REMOTE_CERT_TLS];
++        m_ui->chkRemoteCertTls->setChecked(true);
++        m_ui->labelRemoteCertTls->setEnabled(true);
++        m_ui->cmbRemoteCertTls->setEnabled(true);
++        m_ui->cmbRemoteCertTls->setCurrentIndex(remoteCertTls == QLatin1String("server") ? 0 : 1);
++    }
++
+     m_ui->useExtraTlsAuth->setChecked(!dataMap[NM_OPENVPN_KEY_TA].isEmpty());
+     m_ui->kurlTlsAuthKey->setUrl(KUrl(dataMap[NM_OPENVPN_KEY_TA]) );
+     if (dataMap.contains(NM_OPENVPN_KEY_TA_DIR)) {
+@@ -320,6 +329,11 @@ NetworkManager::VpnSetting::Ptr OpenVpnAdvancedWidget::setting() const
+     if (!m_ui->subjectMatch->text().isEmpty()) {
+         data.insert(QLatin1String(NM_OPENVPN_KEY_TLS_REMOTE), m_ui->subjectMatch->text());
+     }
++
++    if (m_ui->chkRemoteCertTls->isChecked()) {
++        data.insert(QLatin1String(NM_OPENVPN_KEY_REMOTE_CERT_TLS), m_ui->cmbRemoteCertTls->currentText().toLower());
++    }
++
+     if (m_ui->useExtraTlsAuth->isChecked()) {
+         KUrl tlsAuthKeyUrl = m_ui->kurlTlsAuthKey->url();
+         if (!tlsAuthKeyUrl.isEmpty()) {

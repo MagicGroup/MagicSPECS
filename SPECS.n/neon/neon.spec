@@ -1,9 +1,11 @@
 Summary: An HTTP and WebDAV client library
+Summary(zh_CN.UTF-8): HTTP 和 WebDAV 客户端库
 Name: neon
-Version: 0.30.0
-Release: 2%{?dist}
+Version: 0.30.1
+Release: 1%{?dist}
 License: LGPLv2+
 Group: System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 URL: http://www.webdav.org/neon/
 Source0: http://www.webdav.org/neon/neon-%{version}.tar.gz
 Patch0: neon-0.27.0-multilib.patch
@@ -19,9 +21,14 @@ with a low-level interface for HTTP request handling.  neon
 supports persistent connections, proxy servers, basic, digest and
 Kerberos authentication, and has complete SSL support.
 
+%description -l zh_CN.UTF-8
+HTTP 和 WebDAV 客户端库。
+
 %package devel
 Summary: Development libraries and C header files for the neon library
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: neon = %{version}-%{release}, gnutls-devel, zlib-devel, expat-devel
 Requires: pkgconfig
 # Documentation is GPLv2+
@@ -29,6 +36,9 @@ License: LGPLv2+ and GPLv2+
 
 %description devel
 The development library for the C language HTTP and WebDAV client library.
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -53,7 +63,7 @@ make install DESTDIR=$RPM_BUILD_ROOT INSTALL="install -p"
 
 sed -ri "/^dependency_libs/{s,-l[^ ']*,,g}" \
       $RPM_BUILD_ROOT%{_libdir}/libneon.la
-
+magic_rpm_clean.sh
 %find_lang %{name}
 
 %clean
@@ -79,6 +89,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/*.so
 
 %changelog
+* Mon Jan 26 2015 Liu Di <liudidi@gmail.com> - 0.30.1-1
+- 更新到 0.30.1
+
 * Wed Jul 31 2013 Joe Orton <jorton@redhat.com> - 0.30.0-2
 - prevent installation of HTML docs
 

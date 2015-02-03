@@ -1,17 +1,21 @@
-%global         git_commit 043bbae
+# %global         git_commit f2ca6ae
 Name:           kde-plasma-nm
-Version:        0.9.3.4
-Release:        7.20140520git%{git_commit}%{?dist}
+Version:        0.9.3.5
+Release:        5%{?dist}
 Summary:        Plasma applet written in QML for managing network connections
 License:        LGPLv2+ and GPLv2+
-URL:            https://projects.kde.org/projects/playground/network/plasma-nm
-# Source0:        http://download.kde.org/unstable/plasma-nm//plasma-nm-%{version}.tar.xz
-# # Package from git snapshots using releaseme scripts
-Source0:        plasma-nm-%{version}.tar.xz
+URL:            https://projects.kde.org/projects/kde/workspace/plasma-nm/
+Source0:        http://download.kde.org/stable/plasma-nm//plasma-nm-%{version}.tar.xz
+# Package from git snapshots using releaseme scripts
+# Source0:        plasma-nm-%{version}.tar.xz
 
 # Add plasma-nm to default systray if needed, for upgraders...
 Source10: 01-fedora-plasma-nm.js
 
+# Upstream patches
+Patch0:   plasma-nm-add-option-for-server-certificate-verification.patch
+Patch1:   plasma-nm-update-openconnect-support-for-library-version-5.patch
+Patch2:   plasma-nm-update-openconnect-storage-of-manually-accepted-serv.patch
 
 BuildRequires:  gettext
 BuildRequires:  kdelibs4-devel
@@ -22,7 +26,7 @@ BuildRequires:  pkgconfig(NetworkManager) >= 0.9.8
 BuildRequires:  pkgconfig(ModemManager) >= 1.0.0
 BuildRequires:  pkgconfig(libnm-glib) pkgconfig(libnm-util)
 %if 0%{?fedora} || 0%{?epel}
-BuildRequires:  pkgconfig(openconnect) >= 4.00
+BuildRequires:  pkgconfig(openconnect) >= 7.00
 %endif
 
 Requires:  NetworkManager >= 0.9.8
@@ -40,6 +44,9 @@ the default NetworkManager service.
 # Required for properly working GMS/CDMA connections
 %package mobile
 Summary: Mobile support for %{name}
+%if 0%{?fedora} > 20
+Requires:  NetworkManager-wwan >= 0.9.8
+%endif
 Requires:  ModemManager
 Requires:  mobile-broadband-provider-info
 Requires:  libmm-qt >= 1.0.2
@@ -110,6 +117,9 @@ Provides:       kde-plasma-networkmanagement-pptp = 1:%{version}-%{release}
 %prep
 %setup -qn plasma-nm-%{version}
 
+%patch0 -p1 -b .add-option-for-server-certificate-verification
+%patch1 -p1 -b .update-openconnect-support-for-library-version-5
+%patch2 -p1 -b .update-openconnect-storage-of-manually-accepted-serv
 
 %build
 mkdir -p %{_target_platform}
@@ -125,7 +135,6 @@ rm -rf %{buildroot}
 
 make install/fast  DESTDIR=%{buildroot} -C %{_target_platform}
 magic_rpm_clean.sh
-
 %find_lang plasma_applet_org.kde.networkmanagement
 %find_lang plasmanetworkmanagement-kded
 %find_lang kde-nm-connection-editor
@@ -228,17 +237,66 @@ fi
 %endif
 
 %changelog
-* Fri Jun 06 2014 Liu Di <liudidi@gmail.com> - 0.9.3.4-7.20140520git043bbae
+* Sun Jan 04 2015 Liu Di <liudidi@gmail.com> - 0.9.3.5-5
 - 为 Magic 3.0 重建
 
-* Fri Jun 06 2014 Liu Di <liudidi@gmail.com> - 0.9.3.4-6.20140520git043bbae
-- 为 Magic 3.0 重建
+* Wed Dec 17 2014 Jan Grulich <jgrulich@redhat.com> - 0.9.3.5-4
+- Remove dependency on NetworkManager-wifi
 
-* Fri Jun 06 2014 Liu Di <liudidi@gmail.com> - 0.9.3.4-5.20140520git043bbae
-- 为 Magic 3.0 重建
+* Mon Dec 08 2014 David Woodhouse <dwmw2@infradead.org> - 0.9.3.5-3
+- Bump BuildRequires for OpenConnect to 7.00
 
-* Fri Jun 06 2014 Liu Di <liudidi@gmail.com> - 0.9.3.4-4.20140520git043bbae
-- 为 Magic 3.0 重建
+* Wed Dec 03 2014 Jan Grulich <jgrulich@redhat.com> - 0.9.3.5-2
+- Add option for server certificate verification
+  Resolves: bz#1169888
+- Fix build against OpenConnect >= 7.0.0
+- Update OpenConnect storage of manually-accepted server certs
+
+* Wed Nov 05 2014 Jan Grulich <jgrulich@redhat.com> - 0.9.3.5-1
+- Update to 0.9.3.5
+
+* Tue Sep 16 2014 Jan Grulich <jgrulich@redhat.com> - 0.9.3.4-15
+- Pickup upstream fixes
+  Do not make it as a git snapshot, but just include upstream patches
+  Resolves: bz#1156476
+
+* Tue Sep 16 2014 Jan Grulich <jgrulich@redhat.com> - 0.9.3.4-14.20140916gitf2ca6ae
+- Update to the latest git snapshot including bugfixes
+  Resolves: bz#1133233
+  Resolves: bz#1129909
+
+* Sat Aug 16 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.9.3.4-13
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
+
+* Wed Aug 06 2014 Jan Grulich <jgrulich@redhat.com> - 0.9.3.4-12
+- Update to stable version
+
+* Sat Jul 26 2014 Jan Grulich <jgrulich@redhat.com> - 0.9.3.4-11.20140724git38b75ec
+- VPNC - fix storing of advaced settings
+  kdebz#337803
+
+* Thu Jul 24 2014 Jan Grulich <jgrulich@redhat.com> - 0.9.3.4-10.20140724git38b75ec
+- update git snapshot (probably final version)
+- drop patches as they are already included in the tarball
+
+* Mon Jul 14 2014 David Woodhouse <dwmw2@infradead.org> - 0.9.3.4-9.20140702git61bb6a0
+- Fix handling of NEWGROUP return for OpenConnect VPN
+
+* Mon Jul 14 2014 David Woodhouse <dwmw2@infradead.org> - 0.9.3.4-8.20140702git61bb6a0
+- fix handling of 'autoconnect' option for OpenConnect VPN
+
+* Wed Jul 09 2014 David Woodhouse <dwmw2@infradead.org> - 0.9.3.4-7.20140702git61bb6a0
+- bump to rebuild against OpenConnect 6.00
+
+* Wed Jul 02 2014 Jan Grulich <jgrulich@redhat.com> - 0.9.3.4-6.20140702git61bb6a0
+- update git snapshot
+
+* Sun Jun 08 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.9.3.4-5.20140520git043bbae
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Thu Jun 05 2014 Jan Grulich <jgrulich@redhat.com> - 0.9.3.4-4.20140522git043bbae
+- fix crash when connecting to VPN
+- fix crash when adding available wifi connection
 
 * Thu May 29 2014 Kevin Kofler <Kevin@tigcc.ticalc.org> - 0.9.3.4-3.20140522git043bbae
 - fix libnm-qt versioned dependencies (missing Epoch)

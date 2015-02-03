@@ -11,7 +11,7 @@
 Summary: A collection of SNMP protocol tools and libraries
 Name: net-snmp
 Version: 5.7.2
-Release: 12%{?dist}
+Release: 24%{?dist}
 Epoch: 1
 
 License: BSD
@@ -39,6 +39,12 @@ Patch6: net-snmp-5.7.2-systemd.patch
 Patch7: net-snmp-5.7.2-python-ipaddress-size.patch
 Patch8: net-snmp-5.7.2-create-user-multilib.patch
 Patch9: net-snmp-5.7.2-autoreconf.patch
+Patch10: net-snmp-5.7.2-btrfs.patch
+Patch11: net-snmp-5.7-agentx-crash.patch
+Patch12: net-snmp-5.5-agentx-disconnect-crash.patch
+Patch13: net-snmp-5.7.2-icmp-mib.patch
+Patch14: net-snmp-CVE-2014-3565.patch
+Patch15: net-snmp-5.7.2-cert-path.patch
 
 Requires(post): chkconfig
 Requires(preun): chkconfig
@@ -48,7 +54,6 @@ Requires(preun): initscripts
 Requires(preun): coreutils
 Requires: %{name}-libs = %{epoch}:%{version}-%{release}
 Requires: %{name}-agent-libs = %{epoch}:%{version}-%{release}
-Requires: mysql-libs
 # This is actually needed for the %%triggerun script but Requires(triggerun)
 # is not valid.  We can use %%post because this particular %triggerun script
 # should fire just after this package is installed.
@@ -65,7 +70,7 @@ BuildRequires: net-tools
 # for make test
 BuildRequires: perl(TAP::Harness)
 BuildRequires: systemd-units
-%ifnarch s390 s390x
+%ifnarch s390 s390x ppc64le
 BuildRequires: lm_sensors-devel >= 3
 %endif
 %if %{netsnmp_tcp_wrappers}
@@ -107,7 +112,7 @@ Requires: elfutils-devel, rpm-devel, elfutils-libelf-devel, openssl-devel
 %if %{netsnmp_tcp_wrappers}
 Requires: tcp_wrappers-devel
 %endif
-%ifnarch s390 s390x
+%ifnarch s390 s390x ppc64le
 Requires: lm_sensors-devel
 %endif
 # pull perl development libraries, net-snmp agent libraries may link to them
@@ -203,6 +208,12 @@ cp %{SOURCE12} .
 %patch7 -p1 -b .ipaddress-size
 %patch8 -p1 -b .multilib
 %patch9 -p1 -b .autoreconf
+%patch10 -p1 -b .btrfs
+%patch11 -p1 -b .agentx-crash
+%patch12 -p1 -b .agentx-disconnect-crash
+%patch13 -p1 -b .icmp-mib
+%patch14 -p1 -b .CVE-2014-3565
+%patch15 -p1 -b .cert-path
 
 %ifarch sparc64 s390 s390x
 # disable failing test - see https://bugzilla.redhat.com/show_bug.cgi?id=680697
@@ -222,7 +233,7 @@ MIBS="host agentx smux \
      ip-mib/ipv6ScopeZoneIndexTable ip-mib/ipIfStatsTable \
      sctp-mib rmon-mib etherlike-mib"
 
-%ifnarch s390 s390x
+%ifnarch s390 s390x ppc64le
 # there are no lm_sensors on s390
 MIBS="$MIBS ucd-snmp/lmsensorsMib"
 %endif
@@ -358,8 +369,8 @@ install -m 755 -d $RPM_BUILD_ROOT/usr/include/net-snmp/agent/util_funcs
 install -m 644  agent/mibgroup/util_funcs/*.h $RPM_BUILD_ROOT/usr/include/net-snmp/agent/util_funcs
 
 # systemd stuff
-install -m 755 -d $RPM_BUILD_ROOT/%{_sysconfdir}/tmpfiles.d/
-install -m 644 %SOURCE9 $RPM_BUILD_ROOT/%{_sysconfdir}/tmpfiles.d/net-snmp.conf
+install -m 755 -d $RPM_BUILD_ROOT/%{_tmpfilesdir}
+install -m 644 %SOURCE9 $RPM_BUILD_ROOT/%{_tmpfilesdir}/net-snmp.conf
 install -m 755 -d $RPM_BUILD_ROOT/%{_unitdir}
 install -m 644 %SOURCE10 %SOURCE11 $RPM_BUILD_ROOT/%{_unitdir}/
 
@@ -422,8 +433,8 @@ rm -rf ${RPM_BUILD_ROOT}
 %doc README.thread AGENT.txt PORTING local/README.mib2c
 %doc IETF-MIB-LICENSE.txt
 %dir %{_sysconfdir}/snmp
-%config(noreplace) %{_sysconfdir}/snmp/snmpd.conf
-%config(noreplace) %{_sysconfdir}/snmp/snmptrapd.conf
+%config(noreplace) %attr(0600,root,root) %{_sysconfdir}/snmp/snmpd.conf
+%config(noreplace) %attr(0600,root,root) %{_sysconfdir}/snmp/snmptrapd.conf
 %{_bindir}/snmpconf
 %{_bindir}/net-snmp-create-v3-user
 %{_sbindir}/*
@@ -435,7 +446,7 @@ rm -rf ${RPM_BUILD_ROOT}
 %dir %{_datadir}/snmp
 %{_datadir}/snmp/snmpconf-data
 %dir %{_localstatedir}/run/net-snmp
-%config(noreplace) %{_sysconfdir}/tmpfiles.d/net-snmp.conf
+%{_tmpfilesdir}/net-snmp.conf
 %{_unitdir}/snmp*
 %config(noreplace) %{_sysconfdir}/sysconfig/snmpd
 %config(noreplace) %{_sysconfdir}/sysconfig/snmptrapd
@@ -504,8 +515,47 @@ rm -rf ${RPM_BUILD_ROOT}
 %{_initrddir}/snmptrapd
 
 %changelog
-* Fri Jun 20 2014 Liu Di <liudidi@gmail.com> - 1:5.7.2-12
-- 为 Magic 3.0 重建
+* Fri Sep 05 2014 Jitka Plesnikova <jplesnik@redhat.com> - 1:5.7.2-24
+- Perl 5.20 rebuild
+
+* Mon Sep  1 2014 Jan Safranek <jsafrane@redhat.com> - 1:5.7.2-23
+- Fixed CVE-2014-3565
+- Fixed net-snmp-cert tool, now it does not depend on net-snmp-devel (#1134475)
+
+* Tue Aug 26 2014 Jitka Plesnikova <jplesnik@redhat.com> - 1:5.7.2-22
+- Perl 5.20 rebuild
+
+* Sun Aug 17 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1:5.7.2-21
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
+
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1:5.7.2-20
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Tue Mar  4 2014 Jan Safranek <jsafrane@redhat.com> - 1:5.7.2-19
+- Fixed buffer overflow in ICMP-MIB (#1071753)
+
+* Wed Jan 15 2014 Jan Safranek <jsafrane@redhat.com> - 1:5.7.2-18
+- Added support for ppc64le architecture (#1052431)
+
+* Thu Jan  9 2014 Jan Safranek <jsafrane@redhat.com> - 1:5.7.2-17
+- Moved tmpfiles.d config file to /usr/lib
+
+* Thu Dec  5 2013 Jan Safranek <jsafrane@redhat.com> - 1:5.7.2-16
+- Fixed snmpd crashing when AgentX subagent disconnects in the middle of
+  request processing (#1038011)
+
+* Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1:5.7.2-15
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Wed Jul 17 2013 Petr Pisar <ppisar@redhat.com> - 1:5.7.2-14
+- Perl 5.18 rebuild
+
+* Thu Jun 27 2013 Jan Safranek <jsafrane@redhat.com> - 1:5.7.2-13
+- set permissions of snmpd.conf and snmptrapd conf to 0600 to prevent
+  users from reading passwords and community strings.
+
+* Tue May 21 2013 Jan Safranek <jsafrane@redhat.com> - 1:5.7.2-12
+- added btrfs support to hrFSTable (#965348)
 
 * Mon May  6 2013 Jan Safranek <jsafrane@redhat.com> - 1:5.7.2-11
 - added aarch64 to multilib architectures.

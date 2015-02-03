@@ -1,20 +1,20 @@
-%global gitver 0622fce
+%global gitver 093bbb4
 %global gcc_target_platform x86_64-nacl
 %global bootstrap 0
 
 Name:		nacl-gcc
 Summary:	Various compilers (C, C++) for nacl
 Version:	4.4.3
-Release:	8.git%{gitver}%{?dist}
+Release:	9.git%{gitver}%{?dist}
 # Generated from git
 # git clone http://git.chromium.org/native_client/nacl-gcc.git
-# (Checkout ID taken from chromium-25.0.1364.172/native_client/tools/REVISIONS)
+# (Checkout ID taken from chromium-35.0.1916.114/native_client/tools/REVISIONS)
 # cd nacl-gcc
-# git checkout 0622fce75c30b1cdce32dfa1a6fe96cb34e526ea
+# git checkout 093bbb415942cc3406656f90a3a5b2f0aef58d06
 # cd ..
 # For gcc version, cat gcc/BASE-VER
-# mv nacl-gcc nacl-gcc-4.4.3-git0622fce
-# tar --exclude-vcs -cjf nacl-gcc-4.4.3-git0622fce.tar.bz2 nacl-gcc-4.4.3-git0622fce
+# mv nacl-gcc nacl-gcc-4.4.3-git093bbb4
+# tar --exclude-vcs -cjf nacl-gcc-4.4.3-git093bbb4.tar.bz2 nacl-gcc-4.4.3-git093bbb4
 License:	GPLv3+ and GPLv3+ with exceptions and GPLv2+ with exceptions
 Source0:	nacl-gcc-%{version}-git%{gitver}.tar.bz2
 Patch0:		nacl-gcc-4.4.3-git0622fce-tex-fixes.patch
@@ -136,6 +136,12 @@ rm -rf %{buildroot}%{_libdir}/libiberty.a
 %endif
 
 %changelog
+* Tue Jan 20 2015 Liu Di <liudidi@gmail.com> - 4.4.3-9.git093bbb4
+- 为 Magic 3.0 重建
+
+* Mon Jun  2 2014 Tom Callaway <spot@fedoraproject.org> 4.4.3-8.git093bbb4
+- update for chromium 35
+
 * Wed Mar 27 2013 Tom Callaway <spot@fedoraproject.org> 4.4.3-7.git0622fce
 - update for chromium 25
 

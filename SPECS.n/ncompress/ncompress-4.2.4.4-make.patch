@@ -1,0 +1,20 @@
+diff --git a/Makefile.def b/Makefile.def
+index e493d7c..1e6612f 100644
+--- a/Makefile.def
++++ b/Makefile.def
+@@ -31,7 +31,14 @@ MANDIR=/usr/local/man/man1
+ #	-DDEF_ERRNO=1				Define error (not defined in errno.h).
+ #	-DMAXSEG_64K=1 -BITS=16		Support segment processsor like 80286.
+ #
+-options= $(CFLAGS) $(CPPFLAGS) -DDIRENT=1 -DUSERMEM=800000 -DREGISTERS=3
++options= $(CFLAGS) $(CPPFLAGS) -DDIRENT=1 -DUSERMEM=800000 -DREGISTERS=20 \
++	-D_FILE_OFFSET_BITS=64 \
++	-D_LARGEFILE_SOURCE \
++	-DNOFUNCDEF=1 \
++	-DOBUFSIZ=1024 \
++	-DUTIME_H \
++	-DSYSDIR=1 \
++	$(ARCH_FLAGS)
+ 
+ # libary options
+ LBOPT= $(LDFLAGS)
