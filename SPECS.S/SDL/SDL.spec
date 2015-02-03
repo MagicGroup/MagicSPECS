@@ -73,7 +73,7 @@ applications.
 %setup -q -b0
 %patch0 -p1 -b .multilib
 %patch1 -p0 -b .grabnotviewable
-%patch2 -p0 -b .xdata
+%patch2 -p1 -b .xdata
 for F in CREDITS; do 
     iconv -f iso8859-1 -t utf-8 < "$F" > "${F}.utf"
     touch --reference "$F" "${F}.utf"
