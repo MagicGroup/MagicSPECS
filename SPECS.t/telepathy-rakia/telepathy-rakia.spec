@@ -37,7 +37,7 @@ framework based on the SofiaSIP-stack.
 %prep
 %setup -q
 %patch0 -p1 -b .gio
-autoreconf
+autoreconf -ivf
 
 %build
 %configure
