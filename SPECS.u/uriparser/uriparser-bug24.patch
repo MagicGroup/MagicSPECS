@@ -1,0 +1,34 @@
+testRangeComparison() in test/test.cpp assumes that strncmp() used by uriCompareRangeA() will always return -1/0/1 values.
+
+So it fails on AArch64:
+
+UriSuite: 50/52
+Comparing to yields -64, expected -1.
+Comparing to yields 64, expected 1.
+UriSuite: 51/52
+
+Why? Simple. C standard says that strncmp() has to return <0/0/>0 values.
+
+Upstream bug: https://sourceforge.net/p/uriparser/bugs/24/
+
+Index: uriparser-0.8.1/src/UriCommon.c
+===================================================================
+--- uriparser-0.8.1.orig/src/UriCommon.c
++++ uriparser-0.8.1/src/UriCommon.c
+@@ -98,7 +98,15 @@ int URI_FUNC(CompareRange)(
+ 		return -1;
+ 	}
+ 
+-	return URI_STRNCMP(a->first, b->first, (a->afterLast - a->first));
++	diff = URI_STRNCMP(a->first, b->first, (a->afterLast - a->first));
++
++	if (diff > 0) {
++		return 1;
++	} else if (diff < 0) {
++		return -1;
++	}
++
++	return diff;
+ }
+ 
+ 
