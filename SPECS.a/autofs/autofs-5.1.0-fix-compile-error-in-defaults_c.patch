@@ -1,0 +1,35 @@
+autofs-5.1.0 - fix compile error in defaults.c
+
+From: Ian Kent <raven@themaw.net>
+
+Puzzling, suddenly I'm getting a compile error for defaults.c due
+to a lack of including stdarg.h.
+---
+ CHANGELOG      |    4 ++++
+ lib/defaults.c |    1 +
+ 2 files changed, 5 insertions(+)
+
+diff --git a/CHANGELOG b/CHANGELOG
+index 5a5964d..58b94dc 100644
+--- a/CHANGELOG
++++ b/CHANGELOG
+@@ -1,3 +1,7 @@
++??/??/2014 autofs-5.1.1
++=======================
++- fix compile error in defaults.c.
++
+ 04/06/2014 autofs-5.1.0
+ =======================
+ - fix mistake in assignment.
+diff --git a/lib/defaults.c b/lib/defaults.c
+index 2b03ea2..d29a976 100644
+--- a/lib/defaults.c
++++ b/lib/defaults.c
+@@ -20,6 +20,7 @@
+ #include <string.h>
+ #include <sys/utsname.h>
+ #include <sys/stat.h>
++#include <stdarg.h>
+ 
+ #include "config.h"
+ #include "list.h"

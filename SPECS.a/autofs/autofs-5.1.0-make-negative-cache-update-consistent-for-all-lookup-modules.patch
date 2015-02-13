@@ -1,0 +1,108 @@
+autofs-5.1.0 - make negative cache update consistent for all lookup modules
+
+From: Ian Kent <ikent@redhat.com>
+
+Use common function for negative cache update everywhere to ensure consistency.
+---
+ CHANGELOG                |    1 +
+ modules/lookup_hosts.c   |   14 +-------------
+ modules/lookup_nisplus.c |   13 +------------
+ modules/lookup_program.c |   14 +-------------
+ 4 files changed, 4 insertions(+), 38 deletions(-)
+
+diff --git a/CHANGELOG b/CHANGELOG
+index 59f2906..37b2cde 100644
+--- a/CHANGELOG
++++ b/CHANGELOG
+@@ -37,6 +37,7 @@
+ - init qdn before use in get_query_dn().
+ - fix typo in update_hosts_mounts().
+ - fix hosts map update on reload.
++- make negative cache update consistent for all lookup modules.
+ 
+ 04/06/2014 autofs-5.1.0
+ =======================
+diff --git a/modules/lookup_hosts.c b/modules/lookup_hosts.c
+index 407cf31..02bf970 100644
+--- a/modules/lookup_hosts.c
++++ b/modules/lookup_hosts.c
+@@ -149,22 +149,10 @@ static int do_parse_mount(struct autofs_point *ap, struct map_source *source,
+ 	ret = ctxt->parse->parse_mount(ap, name, name_len,
+ 				 mapent, ctxt->parse->context);
+ 	if (ret) {
+-		time_t now = time(NULL);
+ 		struct mapent_cache *mc = source->mc;
+-		struct mapent *me;
+-		int rv = CHE_OK;
+ 
+ 		cache_writelock(mc);
+-		me = cache_lookup_distinct(mc, name);
+-		if (me)
+-			rv = cache_push_mapent(me, NULL);
+-		else
+-			rv = cache_update(mc, source, name, NULL, now);
+-		if (rv != CHE_FAIL) {
+-			me = cache_lookup_distinct(mc, name);
+-			if (me)
+-				me->status = now + ap->negative_timeout;
+-		}
++		cache_update_negative(mc, source, name, ap->negative_timeout);
+ 		cache_unlock(mc);
+ 		return NSS_STATUS_TRYAGAIN;
+ 	}
+diff --git a/modules/lookup_nisplus.c b/modules/lookup_nisplus.c
+index db1b162..d5eba47 100644
+--- a/modules/lookup_nisplus.c
++++ b/modules/lookup_nisplus.c
+@@ -777,24 +777,13 @@ int lookup_mount(struct autofs_point *ap, const char *name, int name_len, void *
+ 	ret = ctxt->parse->parse_mount(ap, key, key_len,
+ 				       mapent, ctxt->parse->context);
+ 	if (ret) {
+-		time_t now = time(NULL);
+-		int rv = CHE_OK;
+-
+ 		free(mapent);
+ 
+ 		/* Don't update negative cache when re-connecting */
+ 		if (ap->flags & MOUNT_FLAG_REMOUNT)
+ 			return NSS_STATUS_TRYAGAIN;
+ 		cache_writelock(mc);
+-		me = cache_lookup_distinct(mc, key);
+-		if (me)
+-			rv = cache_push_mapent(me, NULL);
+-		else
+-			rv = cache_update(mc, source, key, NULL, now);
+-		if (rv != CHE_FAIL) {
+-			me = cache_lookup_distinct(mc, key);
+-			me->status = time(NULL) + ap->negative_timeout;
+-		}
++		cache_update_negative(mc, source, key, ap->negative_timeout);
+ 		cache_unlock(mc);
+ 		return NSS_STATUS_TRYAGAIN;
+ 	}
+diff --git a/modules/lookup_program.c b/modules/lookup_program.c
+index aae0ec0..bf0e350 100644
+--- a/modules/lookup_program.c
++++ b/modules/lookup_program.c
+@@ -622,20 +622,8 @@ out_free:
+ 		free(mapent);
+ 
+ 	if (ret) {
+-		time_t now = time(NULL);
+-		int rv = CHE_OK;
+-
+ 		cache_writelock(mc);
+-		me = cache_lookup_distinct(mc, name);
+-		if (me)
+-			rv = cache_push_mapent(me, NULL);
+-		else
+-			rv = cache_update(mc, source, name, NULL, now);
+-		if (rv != CHE_FAIL) {
+-			me = cache_lookup_distinct(mc, name);
+-			if (me)
+-				me->status = now + ap->negative_timeout;
+-		}
++		cache_update_negative(mc, source, name, ap->negative_timeout);
+ 		cache_unlock(mc);
+ 		return NSS_STATUS_TRYAGAIN;
+ 	}

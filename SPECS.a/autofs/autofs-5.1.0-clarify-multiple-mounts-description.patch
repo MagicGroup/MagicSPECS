@@ -1,0 +1,49 @@
+autofs-5.1.0 - clarify multiple mounts description
+
+From: Ian Kent <ikent@redhat.com>
+
+Try and clarify the "Multiple Mounts" and "Replicated Server" sections
+in the autofs(5) man page.
+---
+ CHANGELOG    |    1 +
+ man/autofs.5 |    8 ++++++--
+ 2 files changed, 7 insertions(+), 2 deletions(-)
+
+diff --git a/CHANGELOG b/CHANGELOG
+index 519fea3..c6d8933 100644
+--- a/CHANGELOG
++++ b/CHANGELOG
+@@ -30,6 +30,7 @@
+ - fix reset amd lexer scan buffer.
+ - ignore multiple commas in options strings.
+ - fix typo in flagdir configure option.
++- clarify multiple mounts description.
+ 
+ 04/06/2014 autofs-5.1.0
+ =======================
+diff --git a/man/autofs.5 b/man/autofs.5
+index 81ae375..6c53520 100644
+--- a/man/autofs.5
++++ b/man/autofs.5
+@@ -211,15 +211,19 @@ can be used to name multiple filesystems to mount.  It takes the form:
+ .RS +.2i
+ .ta 1.0i
+ .nf
+-.BI "key [" -options "] [mount-point [" -options "] location...]..."
++.BI "key [ -options ] [[/] location [/relative-mount-point [ -options ] location...]..."
+ .fi
+ .RE
+ .sp
+ .P
+ This may extend over multiple lines, quoting the line-breaks with \`\\\'.
+ If present, the per-mountpoint mount-options are appended to the
+-default mount-options.
++default mount-options. This behaviour may be overridden by the append_options
++configuration setting.
+ .SS Replicated Server
++A mount location can specify multiple hosts for a location, portentially
++with a different export path for the same file system. Historically these
++different locations are read-only and provide the same replicated file system.
+ .sp
+ .RS +.2i
+ .ta 1.5i
