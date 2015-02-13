@@ -1,0 +1,14 @@
+diff -r -u3 python-ldap-2.4.16/setup.cfg python-ldap-2.4.16.fedora/setup.cfg
+--- python-ldap-2.4.16/setup.cfg	2014-09-10 14:17:37.000000000 +0200
++++ python-ldap-2.4.16.fedora/setup.cfg	2014-09-25 10:20:47.555165683 +0200
+@@ -1,8 +1,7 @@
+ [_ldap]
+-library_dirs = /opt/openldap/lib64 /usr/lib
+-include_dirs = /opt/openldap/include /usr/include/sasl /usr/include
++include_dirs = /usr/include/sasl /usr/include
+ defines = HAVE_SASL HAVE_TLS HAVE_LIBLDAP_R
+-extra_compile_args = 
++extra_compile_args = -g
+ extra_objects = 
+ libs = ldap_r
+ 
