@@ -41,7 +41,7 @@ Development files for SDL_pango.
 # Fix the (many) DOS encoded files, not *.png since they get corrupt
 find . -not -name \*.png -type f -exec dos2unix -k {} \;
 # For FC-5 x86_64 this is required, or the shared library doesn't get built
-autoreconf
+autoreconf -ifv
 libtoolize --copy --force
 
 
