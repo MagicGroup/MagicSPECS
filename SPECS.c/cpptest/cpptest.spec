@@ -1,9 +1,11 @@
 Name:           cpptest
 Version:        1.1.2
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        A portable and powerful and simple unit testing framework for C++
+Summary(zh_CN.UTF-8): C++ 的测试框架
 
 Group:          System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 License:        LGPLv2+
 URL:            http://%{name}.sourceforge.net/
 Source0:        http://downloads.sourceforge.net/%{name}/%{name}-%{version}.tar.gz
@@ -15,15 +17,22 @@ CppTest is a portable and powerful, yet simple, unit testing framework
 for handling automated tests in C++. The focus lies on usability and
 extendability.
 
+%description -l zh_CN.UTF-8
+这是一个可移植，功能强大，但仍然简单易用的 C++ 自动测试框架。
+
 %package        devel
 Summary:        Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       %{name} = %{version}-%{release}, pkgconfig
 
 %description    devel
 The %{name}-devel package contains libraries and header files for
 developing applications that use %{name}.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -36,6 +45,7 @@ make %{?_smp_mflags} V=1
 %install
 make install DESTDIR=$RPM_BUILD_ROOT
 find $RPM_BUILD_ROOT -name '*.la' -exec rm -f {} ';'
+magic_rpm_clean.sh
 
 %clean
 
@@ -58,6 +68,9 @@ find $RPM_BUILD_ROOT -name '*.la' -exec rm -f {} ';'
 
 
 %changelog
+* Thu Feb 12 2015 Liu Di <liudidi@gmail.com> - 1.1.2-4
+- 为 Magic 3.0 重建
+
 * Sat Aug 16 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.1.2-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
 

@@ -1,8 +1,10 @@
 Name:		keybinder3
 Version:	0.3.0
-Release:	4%{?dist}
+Release:	5%{?dist}
 Summary:	A library for registering global keyboard shortcuts
+Summary(zh_CN.UTF-8): 注册全局键盘快捷方式的库
 Group:		Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 License:	MIT
 URL:		https://github.com/engla/keybinder/tree/keybinder-3.0
 Source0:	https://github.com/engla/keybinder/archive/keybinder-3.0-v%{version}.tar.gz
@@ -17,21 +19,34 @@ The library contains:
 - A C library, libkeybinder
 - Gobject-Introspection bindings
 
+%description -l zh_CN.UTF-8
+注册全局键盘快捷方式的库。
+
 %package devel
 Summary: Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: %{name}%{?_isa} = %{version}-%{release}
 %description devel
 This package contains the development files for %{name}.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
 %package doc
 Summary: Documentation for %{name}
+Summary(zh_CN.UTF-8): %{name} 的文档
 Group: Documentation
+Group(zh_CN.UTF-8): 文档
 BuildArch: noarch
 Requires: %{name} = %{version}-%{release}
 Requires: devhelp
 %description doc
 This package contains documentation for %{name}.
+
+%description doc -l zh_CN.UTF-8
+%{name} 的文档。
 
 %prep
 %setup -qn keybinder-keybinder-3.0-v%{version}
@@ -45,6 +60,7 @@ make %{?_smp_mflags} V=1
 make install DESTDIR=%{buildroot}
 
 rm -rf %{buildroot}/%{_libdir}/libkeybinder-3.0.la
+magic_rpm_clean.sh
 
 %post -p /sbin/ldconfig
 %postun -p /sbin/ldconfig
@@ -66,6 +82,9 @@ rm -rf %{buildroot}/%{_libdir}/libkeybinder-3.0.la
 %{_datadir}/gtk-doc/html/keybinder-3.0/*
 
 %changelog
+* Sun Feb 15 2015 Liu Di <liudidi@gmail.com> - 0.3.0-5
+- 为 Magic 3.0 重建
+
 * Sat Aug 16 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.3.0-4
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
 

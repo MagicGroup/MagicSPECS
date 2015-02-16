@@ -1,6 +1,6 @@
 Name: ding-libs
 Version: 0.4.0
-Release: 24%{?dist}
+Release: 25%{?dist}
 Summary: "Ding is not GLib" assorted utility libraries
 Group: Development/Libraries
 License: LGPLv3+
@@ -337,6 +337,9 @@ rm -f \
 rm -f */doc/html/installdox
 
 %changelog
+* Fri Feb 13 2015 Liu Di <liudidi@gmail.com> - 0.4.0-25
+- 为 Magic 3.0 重建
+
 * Sat Aug 16 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.4.0-24
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
 

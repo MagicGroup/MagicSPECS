@@ -1,31 +1,41 @@
 Name:		nkf
 Epoch:		1
-Version:	2.1.2
-Release:	4%{?dist}
+Version: 2.1.3
+Release: 1%{?dist}
 License:	BSD
 URL:		http://nkf.sourceforge.jp/
-Source0:	http://osdn.dl.sourceforge.jp/nkf/53171/%{name}-%{version}.tar.gz
+Source0:	http://osdn.dl.sourceforge.jp/nkf/59912/%{name}-%{version}.tar.gz
 Source3:	nkf.copyright
 Buildroot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:	perl(ExtUtils::MakeMaker)
 
 Summary:	A Kanji code conversion filter
+Summary(zh_CN.UTF-8): 日文汉字编码转换器
 Group:		Applications/Text
+Group(zh_CN.UTF-8): 应用程序/文本
 
 %description
 Nkf is a Kanji code converter for terminals, hosts, and networks. Nkf
 converts input Kanji code to 7-bit JIS, MS-kanji (shifted-JIS) or
 EUC.
 
+%description -l zh_CN.UTF-8
+日文汉字编码转换器。
+
 %package -n perl-NKF
 Summary:	Perl extension for Network Kanji Filter
+Summary(zh_CN.UTF-8): %{name} 的 Perl 扩展
 Group:		Applications/Text
+Group(zh_CN.UTF-8): 应用程序/文本
 Requires:	perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
 
 %description -n perl-NKF
 This is a Perl Extension version of nkf (Network Kanji Filter).
 It converts the last argument and return converted result.
 Conversion details are specified by flags before the last argument.
+
+%description -n perl-NKF -l zh_CN.UTF-8
+%{name} 的 Perl 扩展。
 
 %prep
 %setup -q
@@ -56,6 +66,7 @@ rm -f	$RPM_BUILD_ROOT%{perl_vendorarch}/perllocal.pod		\
 	$RPM_BUILD_ROOT%{perl_vendorarch}/auto/NKF/.packlist
 popd
 chmod 0755 $RPM_BUILD_ROOT%{perl_vendorarch}/auto/NKF/NKF.so
+magic_rpm_clean.sh
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -65,7 +76,6 @@ rm -rf $RPM_BUILD_ROOT
 %doc nkf.doc nkf.copyright
 %{_bindir}/nkf
 %{_mandir}/man1/nkf.1*
-%{_mandir}/ja/man1/nkf.1*
 
 %files -n perl-NKF
 %defattr (-, root, root, -)
@@ -75,6 +85,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/NKF.3pm.gz
 
 %changelog
+* Mon Feb 16 2015 Liu Di <liudidi@gmail.com> - 1:2.1.3-1
+- 更新到 2.1.3
+
 * Thu Jun 19 2014 Liu Di <liudidi@gmail.com> - 1:2.1.2-4
 - 为 Magic 3.0 重建
 

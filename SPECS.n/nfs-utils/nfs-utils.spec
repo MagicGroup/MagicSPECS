@@ -1,8 +1,9 @@
 Summary: NFS utilities and supporting clients and daemons for the kernel NFS server
+Summary(zh_CN.UTF-8): NSF 工具和支持内核NFS服务的客户端、守护程序
 Name: nfs-utils
 URL: http://sourceforge.net/projects/nfs
 Version: 1.3.2
-Release: 0.1%{?dist}
+Release: 0.2%{?dist}
 Epoch: 1
 
 # group all 32bit related archs
@@ -68,6 +69,9 @@ System) server on the remote host.  For example, showmount can display the
 clients which are mounted on that host.
 
 This package also contains the mount.nfs and umount.nfs program.
+
+%description -l zh_CN.UTF-8
+NSF 工具和支持内核NFS服务的客户端、守护程序。
 
 %prep
 %setup -q
@@ -157,6 +161,7 @@ mkdir -p $RPM_BUILD_ROOT%{_sharedstatedir}/nfs/statd/sm
 mkdir -p $RPM_BUILD_ROOT%{_sharedstatedir}/nfs/statd/sm.bak
 mkdir -p $RPM_BUILD_ROOT%{_sharedstatedir}/nfs/v4recovery
 mkdir -p $RPM_BUILD_ROOT%{_sysconfdir}/exports.d
+magic_rpm_clean.sh
 
 %clean
 rm -rf $RPM_BUILD_ROOT/*
@@ -297,6 +302,9 @@ fi
 /sbin/umount.nfs4
 
 %changelog
+* Thu Feb 12 2015 Liu Di <liudidi@gmail.com> - 1:1.3.2-0.2
+- 为 Magic 3.0 重建
+
 * Sun Feb  1 2015 Steve Dickson <steved@redhat.com> 1.3.2-0.1
 - statd: Fix test for foreground mode (bz 1188040)
 

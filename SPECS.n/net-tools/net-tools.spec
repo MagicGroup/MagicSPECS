@@ -1,11 +1,13 @@
 %global checkout 20141124git
 
 Summary: Basic networking tools
+Summary(zh_CN.UTF-8): 基本的网络工具
 Name: net-tools
 Version: 2.0
 Release: 0.31.%{checkout}%{?dist}
 License: GPLv2+
 Group: System Environment/Base
+Group(zh_CN.UTF-8): 系统环境/基本
 URL: http://sourceforge.net/projects/net-tools/
 
 # git archive --format=tar --remote=git://git.code.sf.net/p/net-tools/code master | xz > net-tools-%%{version}.%%{checkout}.tar.xz
@@ -51,8 +53,7 @@ Patch9: net-tools-ifconfig-long-iface-crasher.patch
 Patch20: ether-wake-interfaces.patch
 
 BuildRequires: bluez-libs-devel
-BuildRequires: gettext, libselinux
-BuildRequires: libselinux-devel
+BuildRequires: gettext
 BuildRequires: systemd-units
 Requires(post): systemd-units
 
@@ -60,6 +61,10 @@ Requires(post): systemd-units
 The net-tools package contains basic networking tools,
 including ifconfig, netstat, route, and others.
 Most of them are obsolete. For replacement check iproute package.
+
+%description -l zh_CN.UTF-8
+这个包包含了基本的网络工具，如 ifconfig, netstat, route 等。
+大多数已经过时，替代品可以查看 iproute 包。
 
 %prep
 %setup -q -c
@@ -134,7 +139,7 @@ rm -rf %{buildroot}%{_mandir}/pt/man1
 
 # install systemd unit file
 install -D -p -m 644 %{SOURCE9} %{buildroot}%{_unitdir}/arp-ethers.service
-
+magic_rpm_clean.sh
 %find_lang %{name} --all-name --with-man
 
 %post

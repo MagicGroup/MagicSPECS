@@ -637,7 +637,7 @@ Obsoletes: java-1.7.0-openjdk-accessibility%1
 
 Name:    java-%{javaver}-%{origin}
 Version: %{javaver}.%{updatever}
-Release: 19.%{buildver}%{?dist}
+Release: 20.%{buildver}%{?dist}
 # java-1.5.0-ibm from jpackage.org set Epoch to 1 for unknown reasons,
 # and this change was brought into RHEL-4.  java-1.5.0-ibm packages
 # also included the epoch in their virtual provides.  This created a
@@ -1670,6 +1670,9 @@ end
 
 
 %changelog
+* Mon Feb 16 2015 Liu Di <liudidi@gmail.com> - 1:1.8.0.40-20.b12
+- 为 Magic 3.0 重建
+
 * Fri Jan 09 2015 Dan Horák <dan[at]danny.cz> - 1:1.8.0.40-19.b12
 - refresh s390 patches
 
