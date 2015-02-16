@@ -1,9 +1,11 @@
 Name: ninja
 Version: 1.5.8.1
-Release: 16
+Release: 17
 License: GPLv2+
 Summary: Text based Internet Relay Chat (IRC) client
+Summary(zh_CN.UTF-8): 文本界面的 IRC 客户端
 Group: Applications/Internet
+Group(zh_CN.UTF-8): 应用程序/互联网
 URL: http://qoop.org/ftp/ninja/
 Source0: http://qoop.org/ftp/ninja/sources/%{name}-%{version}.tar.gz
 Patch0: %{name}-%{version}-doc.patch
@@ -22,6 +24,9 @@ more.
 
 Install Ninja IRC if you want to participate (troll, lurk, hang out) in
 irc channels.  Especially if you want to have power features.
+
+%description -l zh_CN.UTF-8
+文本界面的 IRC 客户端。
 
 %prep
 %setup -q
@@ -42,6 +47,7 @@ ln -sf %{name}-%{version} %{buildroot}%{_bindir}/%{name}
 mkdir -p %{buildroot}%{_mandir}/man1/
 mv %{buildroot}%{_mandir}/ninja.* %{buildroot}%{_mandir}/man1/
 rm %{buildroot}/%{_datadir}/%{name}/help/.date
+magic_rpm_clean.sh
 
 %files
 %defattr(-,root,root, 755)
@@ -59,6 +65,9 @@ rm %{buildroot}/%{_datadir}/%{name}/help/.date
 %doc README ChangeLog BUGS+TODO COPYING
 
 %changelog
+* Mon Feb 16 2015 Liu Di <liudidi@gmail.com> - 1.5.8.1-17
+- 为 Magic 3.0 重建
+
 * Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.5.8.1-16
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
 

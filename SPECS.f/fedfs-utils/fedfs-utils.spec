@@ -1,9 +1,11 @@
 Name:           fedfs-utils
 Version:        0.10.3
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Utilities for mounting and managing FedFS
+Summary(zh_CN.UTF-8): 挂载和管理 FedFS 的工具
 
 Group:          System Environment/Daemons
+Group(zh_CN.UTF-8): 系统环境/服务
 License:        GPLv2
 URL:            http://wiki.linux-nfs.org/wiki/index.php/FedFsUtilsProject
 BuildRequires:  libidn-devel libcap-devel openldap-devel
@@ -41,6 +43,9 @@ Currently, the Linux FedFS implementation supports only NFS version 4
 referrals. More on NFS version 4 referrals can be found in RFC 3530.
 FedFS may support other network file system protocols in the future.
 
+%description -l zh_CN.UTF-8
+挂载和管理 FedFS 的工具。
+
 %prep
 %setup -q -n %{name}-%{version}
 
@@ -67,10 +72,13 @@ install -m 444 doc/ldap/fedfs.schema %{buildroot}%{_sysconfdir}/openldap/schema
 # Don't package static libs to encourage use of shared library.
 rm -f %{buildroot}%{_libdir}/libnfsjunct.a
 rm -f %{buildroot}%{_libdir}/libnfsjunct.la
+magic_rpm_clean.sh
 
 %package common
 Summary:      Common files for FedFS
+Summary(zh_CN.UTF-8): %{name} 的通用文件
 Group:        System Environment/Daemons
+Group(zh_CN.UTF-8): 系统环境/服务
 BuildArch:    noarch
 
 %description common
@@ -97,13 +105,18 @@ Currently, the Linux FedFS implementation supports only NFS version 4
 referrals. More on NFS version 4 referrals can be found in RFC 3530.
 FedFS may support other network file system protocols in the future.
 
+%description common -l zh_CN.UTF-8
+%{name} 的通用文件。
+
 %files common
 %doc COPYING README ChangeLog doc/ldap/fedfs.schema doc/ldap/fedfs-schema.ldif
 %{_mandir}/man7/fedfs.7.*
 
 %package client
 Summary:      Utilities for mounting FedFS domains
+Summary(zh_CN.UTF-8): 挂载 FedFS 域的工具
 Group:        System Environment/Daemons
+Group(zh_CN.UTF-8): 系统环境/服务
 Requires:     %{name}-common = %{version}-%{release}
 Requires:     nfs-utils autofs
 Requires(post): systemd-units
@@ -132,6 +145,9 @@ required.
 Currently, the Linux FedFS implementation supports only NFS version 4
 referrals. More on NFS version 4 referrals can be found in RFC 3530.
 FedFS may support other network file system protocols in the future.
+
+%description client -l zh_CN.UTF-8
+挂载 FedFS 域的工具。
 
 %files client
 /sbin/mount.fedfs
@@ -417,6 +433,9 @@ FedFS may support other network file system protocols in the future.
 %{_mandir}/man8/nsdb-*
 
 %changelog
+* Thu Feb 12 2015 Liu Di <liudidi@gmail.com> - 0.10.3-3
+- 为 Magic 3.0 重建
+
 * Sat Aug 16 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.10.3-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
 

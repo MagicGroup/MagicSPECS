@@ -2,7 +2,7 @@
 
 Name: python-ldap
 Version: 2.4.17
-Release: 1%{?dist}
+Release: 2%{?dist}
 Epoch: 0
 License: Python
 Group: System Environment/Libraries
@@ -66,6 +66,9 @@ sed -i 's|#! python|#!/usr/bin/python|g' Demo/simplebrowse.py
 %{python_sitearch}/python_ldap-%{version}-*.egg-info
 
 %changelog
+* Fri Feb 13 2015 Liu Di <liudidi@gmail.com> - 0:2.4.17-2
+- 为 Magic 3.0 重建
+
 * Mon Sep 29 2014 Petr Spacek <pspacek@redhat.com> - 0:2.4.17-1
 - New upstream release adds features required in bug 1122486
 - Dependency on pyasn1-modules was added to fix bug 995545

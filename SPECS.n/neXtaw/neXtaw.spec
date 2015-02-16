@@ -1,12 +1,14 @@
 Summary:        Modified version of the Athena Widgets with N*XTSTEP appearance
+Summary(zh_CN.UTF-8): 具有 N*XTSTEP 外观 Athena 部件的修改版本
 Name:           neXtaw
 Version:        0.15.1
-Release:        16%{?dist}
+Release:        17%{?dist}
 
 URL:            http://siag.nu/neXtaw/
 Source0:        http://siag.nu/pub/neXtaw/%{name}-%{version}.tar.gz
 License:        MIT
 Group:          System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-buildroot
 
 BuildRequires:  libXext-devel
@@ -19,9 +21,15 @@ is based on Xaw3d, by Kaleb Keithley and is almost 100% backward
 compatible with it. Its goal is to try to emulate the look and feel of
 the N*XTSTEP GUI.
 
+%description -l zh_CN.UTF-8
+具有 N*XTSTEP 外观 Athena 部件的修改版本。是 libXaw 部件集的替代器。
+它基于 Xaw3d。
+
 %package        devel
 Summary:        Development files for the neXtaw library
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       %{name} = %{version}-%{release}
 Requires:       libXmu-devel
 Requires:       libXt-devel
@@ -33,6 +41,8 @@ compatible with it. Its goal is to try to emulate the look and feel of
 the N*XTSTEP GUI. This package contains the development files of the
 neXtaw library.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -51,7 +61,7 @@ make install DESTDIR=$RPM_BUILD_ROOT
 rm $RPM_BUILD_ROOT%{_libdir}/*.la
 cp -a doc __docs
 rm __docs/{Makefile*,TODO,app-defaults/Makefile*}
-
+magic_rpm_clean.sh
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -74,6 +84,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Thu Feb 12 2015 Liu Di <liudidi@gmail.com> - 0.15.1-17
+- 为 Magic 3.0 重建
+
 * Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 0.15.1-16
 - 为 Magic 3.0 重建
 

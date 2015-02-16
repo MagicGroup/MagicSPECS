@@ -27,10 +27,12 @@
 Name:              nginx
 Epoch:             1
 Version:           1.6.2
-Release:           4%{?dist}
+Release:           5%{?dist}
 
 Summary:           A high performance web server and reverse proxy server
+Summary(zh_CN.UTF-8): 高性能的 Web 服务器和反向代理服务器
 Group:             System Environment/Daemons
+Group(zh_CN.UTF-8): 系统环境/服务
 # BSD License (two clause)
 # http://www.freebsd.org/copyright/freebsd-license.html
 License:           BSD
@@ -92,9 +94,14 @@ Nginx is a web server and a reverse proxy server for HTTP, SMTP, POP3 and
 IMAP protocols, with a strong focus on high concurrency, performance and low
 memory usage.
 
+%description -l zh_CN.UTF-8
+高性能的 Web 服务器和 HTTP, SMTP, POP3 和 IMAP 协议的反向代理服务器。
+
 %package filesystem
 Group:             System Environment/Daemons
+Group(zh_CN.UTF-8): 系统环境/服务
 Summary:           The basic directory layout for the Nginx server
+Summary(zh_CN.UTF-8): Nginx 服务的基本目录结构
 BuildArch:         noarch
 Requires(pre):     shadow-utils
 
@@ -103,6 +110,8 @@ The nginx-filesystem package contains the basic directory layout
 for the Nginx server including the correct permissions for the
 directories.
 
+%description filesystem -l zh_CN.UTF-8
+Nginx 服务的基本目录结构。
 
 %prep
 %setup -q
@@ -216,7 +225,7 @@ for i in ftdetect indent syntax; do
     install -p -D -m644 contrib/vim/${i}/nginx.vim \
         %{buildroot}%{_datadir}/vim/vimfiles/${i}/nginx.vim
 done
-
+magic_rpm_clean.sh
 
 %pre filesystem
 getent group %{nginx_group} > /dev/null || groupadd -r %{nginx_group}
@@ -308,6 +317,9 @@ fi
 
 
 %changelog
+* Sun Feb 15 2015 Liu Di <liudidi@gmail.com> - 1:1.6.2-5
+- 为 Magic 3.0 重建
+
 * Wed Oct 22 2014 Jamie Nguyen <jamielinux@fedoraproject.org> - 1:1.6.2-4
 - fix package ownership of directories
 

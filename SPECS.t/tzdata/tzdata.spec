@@ -3,7 +3,7 @@ Name: tzdata
 Version: 2015a
 %define tzdata_version 2015a
 %define tzcode_version 2015a
-Release: 1%{?dist}
+Release: 2%{?dist}
 License: Public Domain
 Group: System Environment/Base
 URL: https://www.iana.org/time-zones
@@ -117,6 +117,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/javazi-1.8
 
 %changelog
+* Mon Feb 16 2015 Liu Di <liudidi@gmail.com> - 2015a-2
+- 为 Magic 3.0 重建
+
 * Thu Feb 12 2015 Patsy Franklin <pfrankli@redhat.com> - 2015a-1
 - Rebase to 2015a
   - New leap second 2015-06-30 23:59:60 UTC as per IERS Bulletin C 49.

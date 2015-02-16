@@ -1,8 +1,10 @@
 Name:	keybinder
 Version:	0.3.0
-Release:	5%{?dist}
+Release:	6%{?dist}
 Summary:	A library for registering global keyboard shortcuts
+Summary(zh_CN.UTF-8): 注册全局键盘快捷方式的库
 Group:	Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 License:	MIT
 URL:	http://kaizer.se/wiki/keybinder/
 Source0:	http://kaizer.se/publicfiles/%{name}/%{name}-%{version}.tar.gz
@@ -23,20 +25,29 @@ The library contains:
 - Python bindings, python-keybinder
 - An examples directory with programs in C, Lua, Python and Vala.
 
+%description -l zh_CN.UTF-8
+注册全局键盘快捷方式的库。
+
 %package devel
 Summary: Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: %{name} = %{version}-%{release}
 Requires: pkgconfig
 
 %description devel
 This package contains the development files for %{name}.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %package -n python-%{name}
 Group:		Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 License:	GPLv2+
 Summary:	Keybinder python bindings
+Summary(zh_CN.UTF-8): %{name} 的 Python 绑定
 Requires:	%{name} = %{version}-%{release}
 Requires:	pygtk2 pygobject2
 
@@ -45,6 +56,9 @@ Requires:	pygtk2 pygobject2
 
 %description -n python-%{name}
 This package contains python bindings for keybinder.
+
+%description -n python-%{name} -l zh_CN.UTF-8
+%{name} 的 Python 绑定。
 
 %prep
 %setup -q -n %{name}-%{version}
@@ -81,6 +95,8 @@ rm -rf %{buildroot}
 %{_libdir}/libkeybinder.so 
 %{_datadir}/gtk-doc
 %{_datadir}/gtk-doc/html/%{name}
+%{_libdir}/girepository-1.0/Keybinder-0.0.typelib
+%{_datadir}/gir-1.0/Keybinder-0.0.gir
 
 %files -n python-%{name}
 %defattr(-,root,root)
@@ -88,6 +104,9 @@ rm -rf %{buildroot}
 %doc COPYING
 
 %changelog
+* Sun Feb 15 2015 Liu Di <liudidi@gmail.com> - 0.3.0-6
+- 为 Magic 3.0 重建
+
 * Sat Aug 16 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.3.0-5
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
 

@@ -4,7 +4,7 @@
 
 Name:           uriparser
 Version:        0.8.1
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        URI parsing library - RFC 3986
 
 Group:          System Environment/Libraries
@@ -84,8 +84,12 @@ fi
 %{_includedir}/*
 %{_libdir}/*.so
 %{_libdir}/pkgconfig/*.pc
+%{_docdir}/%{name}-%{version}/*
 
 %changelog
+* Thu Feb 12 2015 Liu Di <liudidi@gmail.com> - 0.8.1-5
+- 为 Magic 3.0 重建
+
 * Thu Jan 29 2015 Peter Robinson <pbrobinson@fedoraproject.org> 0.8.1-4
 - Modernise spec
 

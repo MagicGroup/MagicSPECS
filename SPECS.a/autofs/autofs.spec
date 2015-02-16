@@ -6,12 +6,14 @@
 %define with_systemd        %{?_without_systemd:        0} %{?!_without_systemd:        1}
 
 Summary: A tool for automatically mounting and unmounting filesystems
+Summary(zh_CN.UTF-8): 自动挂载和删除文件系统的工具
 Name: autofs
 Version: 5.1.0
-Release: 10%{?dist}
+Release: 11%{?dist}
 Epoch: 1
 License: GPLv2+
 Group: System Environment/Daemons
+Group(zh_CN.UTF-8): 系统环境/服务
 Source: ftp://ftp.kernel.org/pub/linux/daemons/autofs/v5/autofs-%{version}.tar.gz
 Patch1: autofs-5.1.0-fix-compile-error-in-defaults_c.patch
 Patch2: autofs-5.1.0-add-serialization-to-sasl-init.patch
@@ -59,7 +61,7 @@ Buildroot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: systemd-units
 %endif
 BuildRequires: autoconf, hesiod-devel, openldap-devel, bison, flex, libxml2-devel, cyrus-sasl-devel, openssl-devel module-init-tools util-linux nfs-utils e2fsprogs libtirpc-devel
-BuildRequires: libsss_autofs
+#BuildRequires: libsss_autofs
 Conflicts: cyrus-sasl-lib < 2.1.23-9
 Requires: bash coreutils sed gawk textutils sh-utils grep module-init-tools /bin/ps
 %if %{with_systemd}
@@ -83,25 +85,9 @@ autofs is a daemon which automatically mounts filesystems when you use
 them, and unmounts them later when you are not using them.  This can
 include network filesystems, CD-ROMs, floppies, and so forth.
 
-%description -l de
-autofs ist ein Dämon, der Dateisysteme automatisch montiert, wenn sie 
-benutzt werden, und sie später bei Nichtbenutzung wieder demontiert. 
-Dies kann Netz-Dateisysteme, CD-ROMs, Disketten und ähnliches einschließen. 
-
-%description -l fr
-autofs est un démon qui monte automatiquement les systèmes de fichiers
-lorsqu'on les utilise et les démonte lorsqu'on ne les utilise plus. Cela
-inclus les systèmes de fichiers réseau, les CD-ROMs, les disquettes, etc.
-
-%description -l tr
-autofs, kullanýlan dosya sistemlerini gerek olunca kendiliðinden baðlar
-ve kullanýmlarý sona erince yine kendiliðinden çözer. Bu iþlem, að dosya
-sistemleri, CD-ROM'lar ve disketler üzerinde yapýlabilir.
-
-%description -l sv
-autofs är en daemon som mountar filsystem när de använda, och senare
-unmountar dem när de har varit oanvända en bestämd tid.  Detta kan
-inkludera nätfilsystem, CD-ROM, floppydiskar, och så vidare.
+%description -l zh_CN.UTF-8
+这是一个服务，可以在你使用的时候自动挂载文件系统，不用的时候自动删除。
+包括网络文件系统，CD-ROM, 软盘等。
 
 %prep
 %setup -q -n %{name}-%{version}
@@ -185,6 +171,7 @@ install -m 755 redhat/autofs.init $RPM_BUILD_ROOT%{_initrddir}/autofs
 %endif
 install -m 644 redhat/autofs.conf $RPM_BUILD_ROOT/etc/autofs.conf
 install -m 644 redhat/autofs.sysconfig $RPM_BUILD_ROOT/etc/sysconfig/autofs
+magic_rpm_clean.sh
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -244,6 +231,9 @@ fi
 %dir /etc/auto.master.d
 
 %changelog
+* Fri Feb 13 2015 Liu Di <liudidi@gmail.com> - 1:5.1.0-11
+- 为 Magic 3.0 重建
+
 * Wed Jan 21 2015 Ian Kent <ikent@redhat.com> - 1:5.1.0-10
 - make negative cache update consistent for all lookup modules.
 - ensure negative cache isn't updated on remount.

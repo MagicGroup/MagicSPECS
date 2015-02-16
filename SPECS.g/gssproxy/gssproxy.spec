@@ -1,9 +1,11 @@
 Name:		gssproxy
 Version:	0.3.1
-Release:	4%{?dist}
+Release:	5%{?dist}
 Summary:	GSSAPI Proxy
+Summary(zh_CN.UTF-8): GSSAPI 代理
 
 Group:		System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 License:	MIT
 URL:		http://fedorahosted.org/gss-proxy
 Source0:	http://fedorahosted.org/released/gss-proxy/%{name}-%{version}.tar.gz
@@ -13,6 +15,7 @@ Patch0:		gssproxy-0.3.1-flags_handling.patch
 Patch1:		gssproxy-0.3.1-nfsd_startup.patch
 Patch2:		gssproxy-0.3.1-deadlock_fix.patch
 Patch3:		gssproxy-0.3.1-gssi_inquire_context.patch
+Patch4:		0001-Fix-error-in-compiling-without-SELinux.patch
 
 %global servicename gssproxy
 %global pubconfpath %{_sysconfdir}/gssproxy
@@ -42,7 +45,6 @@ BuildRequires: doxygen
 BuildRequires: gettext-devel
 BuildRequires: pkgconfig
 BuildRequires: krb5-devel >= 1.11.3-25
-BuildRequires: libselinux-devel
 BuildRequires: keyutils-libs-devel
 BuildRequires: libini_config-devel >= 1.0.0.1
 BuildRequires: libverto-devel
@@ -54,6 +56,9 @@ BuildRequires: systemd-units
 %description
 A proxy for GSSAPI credential handling
 
+%description -l zh_CN.UTF-8
+GSSAPI 代理。
+
 %prep
 %setup -q
 
@@ -61,6 +66,7 @@ A proxy for GSSAPI credential handling
 %patch1 -p2 -b .nfsd_startup
 %patch2 -p2 -b .deadlock_fix
 %patch3 -p2 -b .gssi_inquire_context
+%patch4 -p2 -b .without_selinux
 
 %build
 autoreconf -f -i
@@ -69,10 +75,11 @@ autoreconf -f -i
     --with-init-dir=%{_initrddir} \
     --disable-static \
     --disable-rpath \
+    --without-selinux \
     --with-gpp-default-behavior=REMOTE_FIRST
 
 make %{?_smp_mflags} all
-make test_proxymech
+#make test_proxymech
 
 %install
 rm -rf %{buildroot}
@@ -83,6 +90,7 @@ install -d -m755 %{buildroot}%{_unitdir}
 install -m644 examples/gssproxy.conf %{buildroot}%{_sysconfdir}/gssproxy/gssproxy.conf
 install -m644 examples/mech %{buildroot}%{_sysconfdir}/gss/mech
 install -m644 systemd/gssproxy.service %{buildroot}%{_unitdir}/gssproxy.service
+magic_rpm_clean.sh
 
 %clean
 rm -rf %{buildroot}
@@ -113,6 +121,9 @@ rm -rf %{buildroot}
 %systemd_postun_with_restart gssproxy.service
 
 %changelog
+* Fri Feb 13 2015 Liu Di <liudidi@gmail.com> - 0.3.1-5
+- 为 Magic 3.0 重建
+
 * Sat Aug 16 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.3.1-4
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
 
