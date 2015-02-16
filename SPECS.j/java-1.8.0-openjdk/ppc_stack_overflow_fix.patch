@@ -1,0 +1,48 @@
+diff --git a/src/cpu/zero/vm/stack_zero.hpp b/src/cpu/zero/vm/stack_zero.hpp
+--- jdk8/hotspot/src/cpu/zero/vm/stack_zero.hpp
++++ jdk8/hotspot/src/cpu/zero/vm/stack_zero.hpp
+@@ -99,7 +99,7 @@
+   int shadow_pages_size() const {
+     return _shadow_pages_size;
+   }
+-  int abi_stack_available(Thread *thread) const;
++  ssize_t abi_stack_available(Thread *thread) const;
+ 
+  public:
+   void overflow_check(int required_words, TRAPS);
+diff --git a/src/cpu/zero/vm/stack_zero.inline.hpp b/src/cpu/zero/vm/stack_zero.inline.hpp
+--- jdk8/hotspot/src/cpu/zero/vm/stack_zero.inline.hpp
++++ jdk8/hotspot/src/cpu/zero/vm/stack_zero.inline.hpp
+@@ -47,10 +47,11 @@
+ // This method returns the amount of ABI stack available for us
+ // to use under normal circumstances.  Note that the returned
+ // value can be negative.
+-inline int ZeroStack::abi_stack_available(Thread *thread) const {
+-  int stack_used = thread->stack_base() - (address) &stack_used;
+-  int stack_free = thread->stack_size() - stack_used;
+-  return stack_free - shadow_pages_size();
++inline ssize_t ZeroStack::abi_stack_available(Thread *thread) const {
++  ssize_t stack_used = thread->stack_base() - (address) &stack_used
++    + (StackYellowPages+StackRedPages+StackShadowPages) * os::vm_page_size();
++  ssize_t stack_free = thread->stack_size() - stack_used;
++  return stack_free;
+ }
+ 
+ #endif // CPU_ZERO_VM_STACK_ZERO_INLINE_HPP
+diff --git a/src/os/linux/vm/os_linux.cpp b/src/os/linux/vm/os_linux.cpp
+--- jdk8/hotspot/src/os/linux/vm/os_linux.cpp
++++ jdk8/hotspot/src/os/linux/vm/os_linux.cpp
+@@ -4700,6 +4700,13 @@
+   os::Linux::min_stack_allowed = MAX2(os::Linux::min_stack_allowed,
+             (size_t)(StackYellowPages+StackRedPages+StackShadowPages) * Linux::page_size() +
+                     (2*BytesPerWord COMPILER2_PRESENT(+1)) * Linux::vm_default_page_size());
++#ifdef ZERO
++  // If this is Zero, allow at the very minimum one page each for the
++  // Zero stack and the native stack.  This won't make any difference
++  // for 4k pages, but is significant for large pages.
++  os::Linux::min_stack_allowed = MAX2(os::Linux::min_stack_allowed,
++             (size_t)(StackYellowPages+StackRedPages+StackShadowPages+2) * Linux::page_size());
++#endif
+ 
+   size_t threadStackSizeInBytes = ThreadStackSize * K;
+   if (threadStackSizeInBytes != 0 &&
