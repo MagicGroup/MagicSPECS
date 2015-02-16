@@ -1,10 +1,10 @@
 [Desktop Entry]
-Name=OpenJDK 8 Policy Tool
-Comment=Manage OpenJDK policy files (@VERSION@)
-Exec=@JAVA_HOME@/bin/policytool
-Icon=java
+Name=OpenJDK 8 Policy Tool #ARCH#
+Comment=Manage OpenJDK policy files #ARCH#
+Exec=#JRE_HOME#/policytool
+Icon=java-1.8.0
 Terminal=false
 Type=Application
 StartupWMClass=sun-security-tools-PolicyTool
-Categories=Development;Java;
+Categories=Java;
 Version=1.0
