@@ -1,0 +1,36 @@
+autofs-5.1.0 - fix signed comparison in inet_fill_net()
+
+From: Ian Kent <raven@themaw.net>
+
+Fix the less than 0 comparison of an incorrectly declared var in
+inet_fill_net().
+---
+ CHANGELOG        |    1 +
+ lib/parse_subs.c |    2 +-
+ 2 files changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/CHANGELOG b/CHANGELOG
+index f5bbb34..6977443 100644
+--- a/CHANGELOG
++++ b/CHANGELOG
+@@ -9,6 +9,7 @@
+ - fix config entry read buffer not checked.
+ - fix FILE pointer check in defaults_read_config().
+ - fix memory leak in conf_amd_get_log_options().
++- fix signed comparison in inet_fill_net().
+ 
+ 04/06/2014 autofs-5.1.0
+ =======================
+diff --git a/lib/parse_subs.c b/lib/parse_subs.c
+index d3dfa57..c1648c2 100644
+--- a/lib/parse_subs.c
++++ b/lib/parse_subs.c
+@@ -378,7 +378,7 @@ unsigned int get_proximity(struct sockaddr *host_addr)
+ static char *inet_fill_net(const char *net_num, char *net)
+ {
+ 	char *np;
+-	unsigned int dots = 3;
++	int dots = 3;
+ 
+ 	if (strlen(net_num) > INET_ADDRSTRLEN)
+ 		return NULL;

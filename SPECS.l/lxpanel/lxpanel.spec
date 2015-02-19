@@ -1,9 +1,9 @@
 # Review: https://bugzilla.redhat.com/show_bug.cgi?id=219930
 
-%global         usegtk3     1
+%global         usegtk3     0
 
 Name:           lxpanel
-Version:	0.7.0
+Version:	0.8.0
 Release:        1%{?dist}
 Summary:        A lightweight X11 desktop panel
 Summary(zh_CN.UTF-8): 轻量级的 X11 桌面面板
@@ -98,6 +98,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/pkgconfig/lxpanel.pc
 
 %changelog
+* Sun Feb 15 2015 Liu Di <liudidi@gmail.com> - 0.8.0-1
+- 更新到 0.8.0
+
 * Fri Aug 22 2014 Liu Di <liudidi@gmail.com> - 0.7.0-1
 - 更新到 0.7.0
 

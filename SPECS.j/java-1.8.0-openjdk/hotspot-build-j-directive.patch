@@ -1,0 +1,19 @@
+# HG changeset patch
+# User andrew
+# Date 1398183426 -3600
+# Node ID b4ea3a87f707e674a144e805084bda0f72ad4e38
+# Parent  00aa9f5a26b9e2c7bdca547201106f76e23a8c01
+Don't substitute 'j' for '-j' inside -I directives
+
+--- jdk8/hotspot/make/linux/makefiles/adjust-mflags.sh	Tue Apr 22 17:15:43 2014 +0100
++++ jdk8/hotspot/make/linux/makefiles/adjust-mflags.sh	Tue Apr 22 17:17:06 2014 +0100
+@@ -64,7 +64,7 @@
+ 	echo "$MFLAGS" \
+ 	| sed '
+ 		s/^-/ -/
+-		s/ -\([^ 	][^ 	]*\)j/ -\1 -j/
++		s/ -\([^ 	I][^ 	]*\)j/ -\1 -j/
+ 		s/ -j[0-9][0-9]*/ -j/
+ 		s/ -j\([^ 	]\)/ -j -\1/
+ 		s/ -j/ -j'${HOTSPOT_BUILD_JOBS:-${default_build_jobs}}'/
+

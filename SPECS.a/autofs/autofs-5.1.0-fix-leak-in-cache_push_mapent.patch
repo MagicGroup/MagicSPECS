@@ -1,0 +1,36 @@
+autofs-5.1.0 - fix leak in cache_push_mapent()
+
+From: Ian Kent <raven@themaw.net>
+
+cache_push_mapent() incorectly sets the cache entry mapent to the old
+value which causes a memory leak when the new map entry isn't NULL.
+---
+ CHANGELOG   |    1 +
+ lib/cache.c |    2 +-
+ 2 files changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/CHANGELOG b/CHANGELOG
+index e911682..bc8b9d1 100644
+--- a/CHANGELOG
++++ b/CHANGELOG
+@@ -5,6 +5,7 @@
+ - dont allocate dev_ctl_ops too early.
+ - fix incorrect round robin host detection.
+ - fix race accessing qdn in get_query_dn().
++- fix leak in cache_push_mapent().
+ 
+ 04/06/2014 autofs-5.1.0
+ =======================
+diff --git a/lib/cache.c b/lib/cache.c
+index 8d08094..4bab5a3 100644
+--- a/lib/cache.c
++++ b/lib/cache.c
+@@ -203,7 +203,7 @@ int cache_push_mapent(struct mapent *me, char *mapent)
+ 
+ 	s->mapent = me->mapent;
+ 	s->age = me->age;
+-	me->mapent = mapent;
++	me->mapent = new;
+ 
+ 	if (me->stack)
+ 		s->next = me->stack;

@@ -1,0 +1,63 @@
+autofs-5.1.0 - gaurd against incorrect umount return
+
+From: Ian Kent <ikent@redhat.com>
+
+If umount(8) returns a fail but the mount is actually umounted autofs
+can incorrectly try reconstruct mount triggers. This can lead to the
+automount point becoming unresponsive.
+---
+ CHANGELOG          |    1 +
+ daemon/automount.c |    3 ++-
+ lib/mounts.c       |    6 ++++--
+ 3 files changed, 7 insertions(+), 3 deletions(-)
+
+diff --git a/CHANGELOG b/CHANGELOG
+index c6d8933..f7b2ec1 100644
+--- a/CHANGELOG
++++ b/CHANGELOG
+@@ -31,6 +31,7 @@
+ - ignore multiple commas in options strings.
+ - fix typo in flagdir configure option.
+ - clarify multiple mounts description.
++- gaurd against incorrect umount return.
+ 
+ 04/06/2014 autofs-5.1.0
+ =======================
+diff --git a/daemon/automount.c b/daemon/automount.c
+index 64dc305..229cb1a 100644
+--- a/daemon/automount.c
++++ b/daemon/automount.c
+@@ -532,7 +532,8 @@ static int umount_subtree_mounts(struct autofs_point *ap, const char *path, unsi
+ 	if (!is_mm_root && is_mounted(_PATH_MOUNTED, path, MNTS_REAL)) {
+ 		struct amd_entry *entry;
+ 		debug(ap->logopt, "unmounting dir = %s", path);
+-		if (umount_ent(ap, path)) {
++		if (umount_ent(ap, path) &&
++		    is_mounted(_PATH_MOUNTED, path, MNTS_REAL)) {
+ 			warn(ap->logopt, "could not umount dir %s", path);
+ 			left++;
+ 			goto done;
+diff --git a/lib/mounts.c b/lib/mounts.c
+index f635371..27ea744 100644
+--- a/lib/mounts.c
++++ b/lib/mounts.c
+@@ -2165,7 +2165,8 @@ int umount_multi_triggers(struct autofs_point *ap, struct mapent *me, char *root
+ 		 */
+ 		if (is_mounted(_PATH_MOUNTED, root, MNTS_REAL)) {
+ 			info(ap->logopt, "unmounting dir = %s", root);
+-			if (umount_ent(ap, root)) {
++			if (umount_ent(ap, root) &&
++			    is_mounted(_PATH_MOUNTED, root, MNTS_REAL)) {
+ 				if (mount_multi_triggers(ap, me, root, strlen(root), "/") < 0)
+ 					warn(ap->logopt,
+ 					     "failed to remount offset triggers");
+@@ -2266,7 +2267,8 @@ int clean_stale_multi_triggers(struct autofs_point *ap,
+ 		 */
+ 		if (oe->ioctlfd != -1 ||
+ 		    is_mounted(_PROC_MOUNTS, oe->key, MNTS_REAL)) {
+-			if (umount_ent(ap, oe->key)) {
++			if (umount_ent(ap, oe->key) &&
++			    is_mounted(_PROC_MOUNTS, oe->key, MNTS_REAL)) {
+ 				debug(ap->logopt,
+ 				      "offset %s has active mount, invalidate",
+ 				      oe->key);
