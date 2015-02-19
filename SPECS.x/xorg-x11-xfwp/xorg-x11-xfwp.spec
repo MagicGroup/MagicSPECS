@@ -46,7 +46,7 @@ firewall.
       pushd $pkg
       case $pkg in
          proxymngr*)
-            aclocal ; libtoolize --force ; automake ; autoconf
+            aclocal ; libtoolize --force ; automake -avf ; autoconf
      ;;
   *)
      ;;
