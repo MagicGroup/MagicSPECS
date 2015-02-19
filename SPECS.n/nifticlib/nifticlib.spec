@@ -1,7 +1,8 @@
 Name:           nifticlib
 Version:        2.0.0
-Release:        5%{?dist}
+Release:        6%{?dist}
 Summary:        A set of i/o libraries for reading and writing files in the nifti-1 data format
+Summary(zh_CN.UTF-8): 读取和写入 nifti-1 数据格式文件的工具
 
 License:        Public Domain
 URL:            http://niftilib.sourceforge.net/
@@ -16,20 +17,31 @@ the nifti-1 data format. nifti-1 is a binary file format for storing
 medical image data, e.g. magnetic resonance image (MRI) and functional
 MRI (fMRI) brain images.
 
+%description -l zh_CN.UTF-8
+读取和写入 nifti-1 数据格式文件的工具。
+
 %package devel
 Summary: Libraries and header files for nifticlib development
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Requires: %{name} = %{version}-%{release}
 
 %description devel
 The nifticlib-devel package contains the header files and libraries
 necessary for developing programs that make use of the nifticlib library.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
 %package docs
 Summary: Documentation for %{name}
+Summary(zh_CN.UTF-8): %{name} 的文档
 Requires: %{name} = %{version}-%{release}
 
 %description docs
 The package contains documentation and example files for %{name}.
+
+%description docs -l zh_CN.UTF-8
+%{name} 的文档。
 
 %prep
 %setup -q
@@ -62,6 +74,7 @@ rm -fv docs/html/installdox
 rm -fv docs/html/Doxy*
 cp -av docs/* $RPM_BUILD_ROOT/%{_docdir}/%{name}/docs/
 cp -av examples/* $RPM_BUILD_ROOT/%{_docdir}/%{name}/examples/
+magic_rpm_clean.sh
 
 %files
 %defattr(-,root,root,-)
@@ -84,6 +97,9 @@ cp -av examples/* $RPM_BUILD_ROOT/%{_docdir}/%{name}/examples/
 %postun -p /sbin/ldconfig
 
 %changelog
+* Mon Feb 16 2015 Liu Di <liudidi@gmail.com> - 2.0.0-6
+- 为 Magic 3.0 重建
+
 * Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.0.0-5
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
 

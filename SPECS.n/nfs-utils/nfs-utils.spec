@@ -1,39 +1,22 @@
 Summary: NFS utilities and supporting clients and daemons for the kernel NFS server
+Summary(zh_CN.UTF-8): NSF 工具和支持内核NFS服务的客户端、守护程序
 Name: nfs-utils
 URL: http://sourceforge.net/projects/nfs
-Version: 1.2.5
-Release: 15%{?dist}
+Version: 1.3.2
+Release: 0.2%{?dist}
 Epoch: 1
 
 # group all 32bit related archs
 %define all_32bit_archs i386 i486 i586 i686 athlon ppc sparcv9
 
-Source0: http://www.kernel.org/pub/linux/utils/nfs/%{name}-%{version}.tar.bz2
+Source0: https://www.kernel.org/pub/linux/utils/nfs-utils/%{version}/%{name}-%{version}.tar.xz
 
-Source9: id_resolver.conf
-Source10: nfs.sysconfig
-Source11: nfs-lock.service
-Source12: nfs-secure.service
-Source13: nfs-secure-server.service
-Source14: nfs-server.service
-Source15: nfs-blkmap.service
-%define nfs_services %{SOURCE11} %{SOURCE12} %{SOURCE13} %{SOURCE14} %{SOURCE15}
+Source1: id_resolver.conf
+Source2: nfs.sysconfig
+Source3: nfs-utils_env.sh
+Source4: lockd.conf
 
-Source20: var-lib-nfs-rpc_pipefs.mount
-Source21: proc-fs-nfsd.mount
-%define nfs_automounts %{SOURCE20} %{SOURCE21}
-
-Source50: nfs-lock.preconfig
-Source51: nfs-server.preconfig
-Source52: nfs-server.postconfig
-%define nfs_configs %{SOURCE50} %{SOURCE51} %{SOURCE52} 
-
-Patch001: nfs-utils-1.2.6-rc6.patch
-Patch002: nfs-utils-1.2.4-mountshortcut.patch
-Patch003: nfs-utils-1.2.5-libidmap-hide-syms.patch
-Patch004: nfs-utils-1.2.5-nfsd-new-default.patch
-Patch005: nfs-utils-1.2.5-gssd-usercreds.patch
-Patch006: nfs-utils-1.2.5-gssd-nolibgssapi-krb5.patch
+Patch001: nfs-utils-1.2.1-statd-bg.patch
 
 Patch100: nfs-utils-1.2.1-statdpath-man.patch
 Patch101: nfs-utils-1.2.1-exp-subtree-warn-off.patch
@@ -50,7 +33,6 @@ Provides: rpc.mountd  = %{epoch}:%{version}-%{release}
 Provides: rpc.nfsd    = %{epoch}:%{version}-%{release}
 Provides: rpc.statd   = %{epoch}:%{version}-%{release}
 Provides: rpc.gssd    = %{epoch}:%{version}-%{release}
-Provides: rpc.svcgssd = %{epoch}:%{version}-%{release}
 Provides: mount.nfs   = %{epoch}:%{version}-%{release}
 Provides: mount.nfs4  = %{epoch}:%{version}-%{release}
 Provides: umount.nfs  = %{epoch}:%{version}-%{release}
@@ -59,21 +41,22 @@ Provides: sm-notify   = %{epoch}:%{version}-%{release}
 Provides: start-statd = %{epoch}:%{version}-%{release}
 
 License: MIT and GPLv2 and GPLv2+ and BSD
-Buildroot: %{_tmppath}/%{name}-%{version}-root
 Requires: rpcbind, sed, gawk, sh-utils, fileutils, textutils, grep
-Requires: kmod, keyutils
-BuildRequires: libgssglue-devel libevent-devel libcap-devel
+Requires: kmod, keyutils, quota
+BuildRequires: libevent-devel libcap-devel
 BuildRequires: libnfsidmap-devel libtirpc-devel libblkid-devel
 BuildRequires: krb5-libs >= 1.4 autoconf >= 2.57 openldap-devel >= 2.2
 BuildRequires: automake, libtool, glibc-headers, device-mapper-devel
 BuildRequires: krb5-devel, tcp_wrappers-devel, libmount-devel
+BuildRequires: fedfs-utils-devel >= 0.8.0-7, sqlite-devel
 Requires(pre): shadow-utils >= 4.0.3-25
-Requires(pre): /usr/sbin/chkconfig /sbin/nologin
-Requires: libnfsidmap libgssglue libevent
-Requires: libtirpc libblkid libcap libmount
+Requires(pre): /sbin/chkconfig /sbin/nologin
+Requires: libnfsidmap libevent
+Requires: libtirpc >= 0.2.3-1 libblkid libcap libmount
 Requires(post): systemd-units
 Requires(preun): systemd-units
 Requires(postun): systemd-units
+Requires: gssproxy => 0.3.0-0
 
 %description
 The nfs-utils package provides a daemon for the kernel NFS server and
@@ -87,15 +70,13 @@ clients which are mounted on that host.
 
 This package also contains the mount.nfs and umount.nfs program.
 
+%description -l zh_CN.UTF-8
+NSF 工具和支持内核NFS服务的客户端、守护程序。
+
 %prep
 %setup -q
 
 %patch001 -p1
-%patch002 -p1
-%patch003 -p1
-%patch004 -p1
-%patch005 -p1
-%patch006 -p1
 
 %patch100 -p1
 %patch101 -p1
@@ -117,76 +98,97 @@ export PIE
 sh -x autogen.sh
 
 CFLAGS="`echo $RPM_OPT_FLAGS $ARCH_OPT_FLAGS $PIE -D_FILE_OFFSET_BITS=64`"
+
+%define _statdpath /var/lib/nfs/statd
 %configure \
     CFLAGS="$CFLAGS" \
     CPPFLAGS="$DEFINES" \
     LDFLAGS="-pie" \
     --enable-mountconfig \
     --enable-ipv6 \
-	--with-statdpath=/var/lib/nfs/statd \
+	--with-statdpath=%{_statdpath} \
 	--enable-libmount-mount
 
 make %{?_smp_mflags} all
 
 %install
-rm -rf $RPM_BUILD_ROOT
-mkdir -p $RPM_BUILD_ROOT{sbin,/usr/sbin,%{_prefix}/lib/systemd/system}
-mkdir -p $RPM_BUILD_ROOT/usr/lib/%{name}/scripts
+rm -rf $RPM_BUILD_ROOT/*
+
+mkdir -p $RPM_BUILD_ROOT%/sbin
+mkdir -p $RPM_BUILD_ROOT%{_sbindir}
+mkdir -p $RPM_BUILD_ROOT%{_unitdir}
+mkdir -p $RPM_BUILD_ROOT%{_unitdir}/nfs.target.wants
 mkdir -p ${RPM_BUILD_ROOT}%{_mandir}/man8
-mkdir -p $RPM_BUILD_ROOT/etc/sysconfig
-mkdir -p $RPM_BUILD_ROOT/etc/request-key.d
+mkdir -p $RPM_BUILD_ROOT%{_sysconfdir}/sysconfig
+mkdir -p $RPM_BUILD_ROOT%{_sysconfdir}/request-key.d
+mkdir -p $RPM_BUILD_ROOT%{_sysconfdir}/modprobe.d/
 make DESTDIR=$RPM_BUILD_ROOT install
-install -s -m 755 tools/rpcdebug/rpcdebug $RPM_BUILD_ROOT/usr/sbin
-install -m 644 utils/mount/nfsmount.conf  $RPM_BUILD_ROOT/etc
-install -m 644 %{SOURCE9} $RPM_BUILD_ROOT/etc/request-key.d
-install -m 644 %{SOURCE10} $RPM_BUILD_ROOT/etc/sysconfig/nfs
+install -s -m 755 tools/rpcdebug/rpcdebug $RPM_BUILD_ROOT%{_sbindir}
+install -m 644 utils/mount/nfsmount.conf  $RPM_BUILD_ROOT%{_sysconfdir}
+install -m 644 %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/request-key.d
+install -m 644 %{SOURCE2} $RPM_BUILD_ROOT%{_sysconfdir}/sysconfig/nfs
 
-for service in %{nfs_services} ; do
-	install -m 644 $service $RPM_BUILD_ROOT%{_prefix}/lib/systemd/system
+for file in systemd/*.service  ; do
+	install -m 644 $file $RPM_BUILD_ROOT%{_unitdir}
 done
-for service in %{nfs_automounts} ; do
-	install -m 644 $service $RPM_BUILD_ROOT%{_prefix}/lib/systemd/system
+for file in systemd/*.target  ; do
+	install -m 644 $file $RPM_BUILD_ROOT%{_unitdir}
 done
-for config in %{nfs_configs} ; do
-	install -m 755 $config $RPM_BUILD_ROOT/usr/lib/%{name}/scripts
+for file in systemd/*.mount  ; do
+	install -m 644 $file $RPM_BUILD_ROOT%{_unitdir}
 done
 
-mkdir -p $RPM_BUILD_ROOT/var/lib/nfs/rpc_pipefs
+mkdir -p $RPM_BUILD_ROOT/run/sysconfig
+mkdir -p $RPM_BUILD_ROOT/usr/lib/systemd/scripts
+install -m 755 %{SOURCE3} $RPM_BUILD_ROOT/usr/lib/systemd/scripts/nfs-utils_env.sh
+install -m 644 %{SOURCE4} $RPM_BUILD_ROOT%{_sysconfdir}/modprobe.d/lockd.conf
 
-touch $RPM_BUILD_ROOT/var/lib/nfs/rmtab
-mv $RPM_BUILD_ROOT/usr/sbin/rpc.statd $RPM_BUILD_ROOT/sbin
+#
+# For backwards compatablity 
+#
+cd $RPM_BUILD_ROOT%{_unitdir}
+ln -s nfs-server.service nfs.service
+ln -s rpc-gssd.service nfs-secure.service
+ln -s nfs-idmapd.service  nfs-idmap.service
+ln -s rpc-statd.service nfs-lock.service
 
-mkdir -p $RPM_BUILD_ROOT/var/lib/nfs/statd/sm
-mkdir -p $RPM_BUILD_ROOT/var/lib/nfs/statd/sm.bak
-mkdir -p $RPM_BUILD_ROOT/var/lib/nfs/v4recovery
-mkdir -p $RPM_BUILD_ROOT/etc/exports.d
+mkdir -p $RPM_BUILD_ROOT%{_sharedstatedir}/nfs/rpc_pipefs
 
-mv $RPM_BUILD_ROOT/sbin/* $RPM_BUILD_ROOT%{_sbindir}
-rm -rf $RPM_BUILD_ROOT/sbin
+touch $RPM_BUILD_ROOT%{_sharedstatedir}/nfs/rmtab
+mv $RPM_BUILD_ROOT%{_sbindir}/rpc.statd $RPM_BUILD_ROOT/sbin
 
+mkdir -p $RPM_BUILD_ROOT%{_sharedstatedir}/nfs/statd/sm
+mkdir -p $RPM_BUILD_ROOT%{_sharedstatedir}/nfs/statd/sm.bak
+mkdir -p $RPM_BUILD_ROOT%{_sharedstatedir}/nfs/v4recovery
+mkdir -p $RPM_BUILD_ROOT%{_sysconfdir}/exports.d
 magic_rpm_clean.sh
 
 %clean
-rm -rf $RPM_BUILD_ROOT
+rm -rf $RPM_BUILD_ROOT/*
 
 %pre
-
 # move files so the running service will have this applied as well
-for x in gssd svcgssd idmapd ; do
+for x in gssd idmapd ; do
     if [ -f /var/lock/subsys/rpc.$x ]; then
-        mv /var/lock/subsys/rpc.$x /var/lock/subsys/rpc$x
+		mv /var/lock/subsys/rpc.$x /var/lock/subsys/rpc$x
     fi
 done
 
-/usr/sbin/useradd -l -c "RPC Service User" -r \
-        -s /sbin/nologin -u 29 -d /var/lib/nfs rpcuser 2>/dev/null || :
-/usr/sbin/groupadd -g 29 rpcuser 2>/dev/null || :
+%define rpcuser_uid 29
+# Create rpcuser uid as long as it does not already exist.
+cat /etc/passwd | cut -d':' -f 1 | grep --quiet rpcuser 2>/dev/null
+if [ "$?" -eq 1 ]; then
+    /usr/sbin/useradd -l -c "RPC Service User" -r -g %{rpcuser_uid} \
+        -s /sbin/nologin -u %{rpcuser_uid} -d /var/lib/nfs rpcuser 2>/dev/null || :
+else
+ /usr/sbin/usermod -u %{rpcuser_uid} -g %{rpcuser_uid} rpcuser 2>/dev/null || :
+fi 
 
 # Using the 16-bit value of -2 for the nfsnobody uid and gid
-%define nfsnobody_uid   65534
+%define nfsnobody_uid	65534
 
 # Create nfsnobody gid as long as it does not already exist
-cat /etc/group | cut -d':' -f 3 | grep --quiet %{nfsnobody_uid} 2>/dev/null
+cat /etc/group | cut -d':' -f 1 | grep --quiet nfsnobody 2>/dev/null
 if [ "$?" -eq 1 ]; then
     /usr/sbin/groupadd -g %{nfsnobody_uid} nfsnobody 2>/dev/null || :
 else
@@ -194,27 +196,32 @@ else
 fi
 
 # Create nfsnobody uid as long as it does not already exist.
-cat /etc/passwd | cut -d':' -f 3 | grep --quiet %{nfsnobody_uid} 2>/dev/null
+cat /etc/passwd | cut -d':' -f 1 | grep --quiet nfsnobody 2>/dev/null
 if [ "$?" -eq 1 ]; then
     /usr/sbin/useradd -l -c "Anonymous NFS User" -r -g %{nfsnobody_uid} \
-        -s /sbin/nologin -u %{nfsnobody_uid} -d /var/lib/nfs nfsnobody 2>/dev/null || :
+		-s /sbin/nologin -u %{nfsnobody_uid} -d /var/lib/nfs nfsnobody 2>/dev/null || :
 else
 
-   /usr/sbin/usermod -u %{nfsnobody_uid} nfsnobody 2>/dev/null || :
+   /usr/sbin/usermod -u %{nfsnobody_uid} -g %{nfsnobody_uid} nfsnobody 2>/dev/null || :
 fi
 
 %post
-/usr/bin/systemctl enable nfs-lock.service >/dev/null 2>&1 || :
+if [ $1 -eq 1 ] ; then
+	# Initial installation
+	/bin/systemctl enable nfs-client.target >/dev/null 2>&1 || :
+	/bin/systemctl start nfs-client.target  >/dev/null 2>&1 || :
+fi
+%systemd_post nfs-config
+%systemd_post nfs-server
+
 # Make sure statd used the correct uid/gid.
 chown -R rpcuser:rpcuser /var/lib/nfs/statd
 
 %preun
 if [ $1 -eq 0 ]; then
-	# Package removal, not upgrade
-	for service in %(sed 's!\S*/!!g' <<< '%{nfs_services}') ; do
-    	/usr/bin/systemctl disable $service >/dev/null 2>&1 || :
-    	/usr/bin/systemctl stop $service >/dev/null 2>&1 || :
-	done
+	%systemd_preun nfs-client.target
+	%systemd_preun nfs-server.server
+
     /usr/sbin/userdel rpcuser 2>/dev/null || :
     /usr/sbin/groupdel rpcuser 2>/dev/null || :
     /usr/sbin/userdel nfsnobody 2>/dev/null || :
@@ -224,74 +231,307 @@ if [ $1 -eq 0 ]; then
 fi
 
 %postun
-if [ $1 -ge 1 ]; then
-	# Package upgrade, not uninstall
-	for service in %(sed 's!\S*/!!g' <<< '%{nfs_services}') ; do
-    	/usr/bin/systemctl try-restart $service >/dev/null 2>&1 || :
-	done
-fi
-/usr/bin/systemctl --system daemon-reload >/dev/null 2>&1 || :
+%systemd_postun_with_restart  nfs-client.target
+%systemd_postun_with_restart  nfs-server
+
+/bin/systemctl --system daemon-reload >/dev/null 2>&1 || :
 
 %triggerun -- nfs-utils < 1:1.2.4-2
-/usr/bin/systemctl enable nfs-lock.service >/dev/null 2>&1 || :
-if /usr/sbin/chkconfig --level 3 nfs ; then
-	/usr/bin/systemctl enable nfs-server.service >/dev/null 2>&1 || :
+/bin/systemctl enable nfs-lock.service >/dev/null 2>&1 || :
+if /sbin/chkconfig --level 3 nfs ; then
+	/bin/systemctl enable nfs-server.service >/dev/null 2>&1 || :
 fi
-if /usr/sbin/chkconfig --level 3 rpcgssd ; then
-	/usr/bin/systemctl enable nfs-secure.service >/dev/null 2>&1 || :
-fi
-if /usr/sbin/chkconfig --level 3 rpcsvcgssd ; then
-	/usr/bin/systemctl enable nfs-secure-server.service >/dev/null 2>&1 || :
+
+%triggerin -- nfs-utils < 1:1.3.0-0.2
+/bin/systemctl restart nfs-config >/dev/null 2>&1 || :
+
+%triggerin -- nfs-utils < 1:1.3.0-7.1
+/bin/systemctl stop rpc-svcgssd  >/dev/null 2>&1 || :
+
+%triggerin -- nfs-utils < 1:1.3.1-4.0
+# reset configuration files and running daemons
+if [ $1 -eq 2 ] ; then
+	/bin/systemctl enable nfs-client.target >/dev/null 2>&1 || :
+	/bin/systemctl restart nfs-config  >/dev/null 2>&1 || :
+	/bin/systemctl restart nfs-client.target  >/dev/null 2>&1 || :
 fi
 
 %files
-%defattr(-,root,root)
+%defattr(-,root,root,-)
 %config(noreplace) /etc/sysconfig/nfs
 %config(noreplace) /etc/nfsmount.conf
-%dir /etc/exports.d
-%dir /var/lib/nfs/v4recovery
-%dir /var/lib/nfs/rpc_pipefs
-%dir /var/lib/nfs
-%dir %attr(700,rpcuser,rpcuser) /var/lib/nfs/statd
-%dir %attr(700,rpcuser,rpcuser) /var/lib/nfs/statd/sm
-%dir %attr(700,rpcuser,rpcuser) /var/lib/nfs/statd/sm.bak
-%config(noreplace) %attr(644,rpcuser,rpcuser) /var/lib/nfs/state
-%config(noreplace) /var/lib/nfs/xtab
-%config(noreplace) /var/lib/nfs/etab
-%config(noreplace) /var/lib/nfs/rmtab
+%dir %{_sysconfdir}/exports.d
+%dir %{_sharedstatedir}/nfs/v4recovery
+%dir %{_sharedstatedir}/nfs/rpc_pipefs
+%dir %{_sharedstatedir}/nfs
+%dir %attr(700,rpcuser,rpcuser) %{_sharedstatedir}/nfs/statd
+%dir %attr(700,rpcuser,rpcuser) %{_sharedstatedir}/nfs/statd/sm
+%dir %attr(700,rpcuser,rpcuser) %{_sharedstatedir}/nfs/statd/sm.bak
+%config(noreplace) %attr(644,rpcuser,rpcuser) %{_statdpath}/state
+%config(noreplace) %{_sharedstatedir}/nfs/xtab
+%config(noreplace) %{_sharedstatedir}/nfs/etab
+%config(noreplace) %{_sharedstatedir}/nfs/rmtab
 %config(noreplace) %{_sysconfdir}/request-key.d/id_resolver.conf
+%config(noreplace) %{_sysconfdir}/modprobe.d/lockd.conf
 %doc linux-nfs/ChangeLog linux-nfs/KNOWNBUGS linux-nfs/NEW linux-nfs/README
 %doc linux-nfs/THANKS linux-nfs/TODO
-/usr/sbin/rpc.statd
-/usr/sbin/exportfs
-/usr/sbin/nfsstat
-/usr/sbin/rpcdebug
-/usr/sbin/rpc.mountd
-/usr/sbin/rpc.nfsd
-/usr/sbin/showmount
-/usr/sbin/rpc.idmapd
-/usr/sbin/rpc.gssd
-/usr/sbin/rpc.svcgssd
-/usr/sbin/gss_clnt_send_err
-/usr/sbin/gss_destroy_creds
-/usr/sbin/sm-notify
-/usr/sbin/start-statd
-/usr/sbin/mountstats
-/usr/sbin/nfsiostat
-/usr/sbin/nfsidmap
-/usr/sbin/blkmapd
+/sbin/rpc.statd
+/sbin/osd_login
+/sbin/nfsdcltrack
+%{_sbindir}/exportfs
+%{_sbindir}/nfsstat
+%{_sbindir}/rpcdebug
+%{_sbindir}/rpc.mountd
+%{_sbindir}/rpc.nfsd
+%{_sbindir}/showmount
+%{_sbindir}/rpc.idmapd
+%{_sbindir}/rpc.gssd
+%{_sbindir}/sm-notify
+%{_sbindir}/start-statd
+%{_sbindir}/mountstats
+%{_sbindir}/nfsiostat
+%{_sbindir}/nfsidmap
+%{_sbindir}/blkmapd
 %{_mandir}/*/*
-%{_prefix}/lib/systemd/system/*
-/usr/lib/%{name}/scripts/*
+%{_unitdir}/*
+%attr(755,root,root) /usr/lib/systemd/scripts/nfs-utils_env.sh
 
-%attr(4755,root,root)   /usr/sbin/mount.nfs
-%attr(4755,root,root)   /usr/sbin/mount.nfs4
-%attr(4755,root,root)   /usr/sbin/umount.nfs
-%attr(4755,root,root)   /usr/sbin/umount.nfs4
+%attr(4755,root,root)	/sbin/mount.nfs
+/sbin/mount.nfs4
+/sbin/umount.nfs
+/sbin/umount.nfs4
 
 %changelog
-* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 1:1.2.5-15
+* Thu Feb 12 2015 Liu Di <liudidi@gmail.com> - 1:1.3.2-0.2
 - 为 Magic 3.0 重建
+
+* Sun Feb  1 2015 Steve Dickson <steved@redhat.com> 1.3.2-0.1
+- statd: Fix test for foreground mode (bz 1188040)
+
+* Sat Jan 31 2015 Steve Dickson <steved@redhat.com> 1.3.2-0.0
+- Updated to latest upstream release: 1-3-2
+
+* Mon Jan 19 2015 Steve Dickson <steved@redhat.com> 1.3.1-6.0
+- Set the GSS_USE_PROXY variable in nfs-utils_env.sh (bz 1183787)
+
+* Thu Jan 15 2015 Steve Dickson <steved@redhat.com> 1.3.1-5.0
+- Updated to latest upstream RC release: nfs-utils-1-3-2-rc5 (bz 1181708)
+
+* Wed Jan 14 2015 Steve Dickson <steved@redhat.com> 1.3.1-4.2
+- Added SMNOTIFYARGS to /etc/sysconf/nfs (bz 1182227)
+
+* Fri Jan  2 2015 Steve Dickson <steved@redhat.com> 1.3.1-4.1
+- Change if statments to string comparisons in nfs-utils_env.sh (bz 1170354)
+
+* Sat Dec 13 2014 Steve Dickson <steved@redhat.com> 1.3.1-4.0
+- Updated to latest upstream RC release: nfs-utils-1-3-2-rc4 (bz 1164477)
+- Handle the rpcuser like other created users (bz 1165322)
+- Restored lockd port and v4 grace/lease interface (bz 1115225)
+- Make sure nfs-client target is enabled (bz 1173564)
+
+* Wed Dec  3 2014 Steve Dickson <steved@redhat.com> 1.3.1-2.4
+- Fixed typos in nfs-utils sysconfig files (bz 1170354)
+
+* Thu Nov 13 2014 Steve Dickson <steved@redhat.com> 1.3.1-2.3
+- Fixed a mount DOS (bz 1163886)
+
+* Thu Nov  6 2014 Richard W.M. Jones <rjones@redhat.com> 1.3.1-2.2
+- Rebuild against new libnfsimap (bz 1160883)
+
+* Thu Nov  6 2014 Steve Dickson <steved@redhat.com> 1.3.1-2.1
+- Rebuild against new libnfsimap (bz 1160883)
+
+* Tue Nov  4 2014 Steve Dickson <steved@redhat.com> 1.3.1-2.0
+- Updated to latest upstream RC release: nfs-utils-1-3-2-rc2 (bz 1115179)
+
+* Tue Nov  4 2014 Steve Dickson <steved@redhat.com> 1.3.1-1.2
+- Rebuild with new glibc (bz 1158846)
+
+* Fri Oct 24 2014 Steve Dickson <steved@redhat.com> 1.3.1-1.1
+- Added fix to umount in the nfs-utils-1.3.2-rc1.patch
+
+* Wed Oct 22 2014 Steve Dickson <steved@redhat.com> 1.3.1-1.0
+- Updated to latest upstream RC release: nfs-utils-1-3-2-rc1 (bz 1142842)
+
+* Thu Sep 25 2014 Steve Dickson <steved@redhat.com> 1.3.1-0.0
+- Update to the latest upstream release: nfs-utils-1-3-1
+- Enable gssproxy to manage the GSSAPI creds on the server.
+
+* Fri Sep 12 2014 Steve Dickson <steved@redhat.com> 1.3.0-7.0
+- Updated to latest upstream RC release: nfs-utils-1-3-1-rc4 (bz 1108615)
+
+* Sun Aug 17 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1:1.3.0-6.0
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
+
+* Sun Jul 27 2014 Steve Dickson <steved@redhat.com> 1.3.0-5.0
+- Updated to latest upstream RC release: nfs-utils-1-3-1-rc3
+- Use _statdpath to define where statd's state lives
+
+* Tue Jul 01 2014 Jeff Layton <jlayton@primarydata.com> - 1:1.3.0-4.0
+- clean up lockd configuration
+
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1:1.3.0-3.0
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Sun Jun  1 2014 Steve Dickson <steved@redhat.com> 1.3.0-2.0
+- Updated to latest upstream RC release: nfs-utils-1-3-1-rc2
+
+* Sat May 24 2014 Steve Dickson <steved@redhat.com> 1.3.0-1.3
+- Use systemd_post macro to enable services (bz 1087950)
+
+* Thu May  1 2014 Steve Dickson <steved@redhat.com> 1.3.0-1.2
+- mountd: fix segfault in add_name with newer gcc compilers
+
+* Thu May  1 2014 Steve Dickson <steved@redhat.com> 1.3.0-1.1
+- start-statd: rpc.statd's systemd unit changed names
+
+* Wed Apr 30 2014 Steve Dickson <steved@redhat.com> 1.3.0-1.0
+- Updated to latest upstream RC release: nfs-utils-1-3-1-rc1
+
+* Fri Apr 25 2014 Steve Dickson <steved@redhat.com> 1.3.0-0.2
+- Fix PATH problem in start-statd (bz 1088226)
+
+* Mon Apr 14 2014 Steve Dickson <steved@redhat.com> 1.3.0-0.1
+- Incorporated new upstream systemd units
+
+* Tue Mar 25 2014 Steve Dickson <steved@redhat.com> 1.3.0-0.0
+- Updated to latest major release: nfs-utils-1-3-0
+
+* Wed Jan 22 2014 Steve Dickson <steved@redhat.com> 1.2.9-3.0
+- Updated to latest upstream RC release: nfs-utils-1-2-10-rc3
+  - gssd: Improve first attempt at acquiring GSS credentials (bz 1055077)
+- gssd: set $HOME to prevent recursion (bz 1052902)
+
+* Fri Jan 10 2014 Steve Dickson <steved@redhat.com> 1.2.9-2.1
+- Fixed typo in nfs-service file. (bz 1047972)
+
+* Wed Jan 8 2014  Steve Dickson <steved@redhat.com> 1.2.9-2.0
+- Updated to latest upstream RC release: nfs-utils-1-2-10-rc2
+- Added Also=nfs.target to nfs-service file. (bz 1047972)
+
+* Wed Nov 20 2013 Steve Dickson <steved@redhat.com> 1.2.9-1.0
+- Updated to latest upstream RC release: nfs-utils-1-2-10-rc1
+
+* Tue Nov  5 2013 Steve Dickson <steved@redhat.com> 1.2.9-0.0
+- Updated to latest upstream Release: nfs-utils-1-2-9
+
+* Tue Sep 24 2013 Steve Dickson <steved@redhat.com> 1.2.8-6.0
+- Updated to latest upstream RC release: nfs-utils-1-2-9-rc6
+
+* Wed Sep 18 2013 Steve Dickson <steved@redhat.com> 1.2.8-5.0
+- Updated to latest upstream RC release: nfs-utils-1-2-9-rc5
+
+* Thu Aug 22 2013 Steve Dickson <steved@redhat.com> 1.2.8-4.1
+- nfs-utils: fix a number of specfile problems
+
+* Mon Aug 19 2013 Steve Dickson <steved@redhat.com> 1.2.8-4.0
+- Updated to latest upstream RC release: nfs-utils-1-2-9-rc4
+
+* Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1:1.2.8-4.0
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Tue Jul 23 2013 Steve Dickson <steved@redhat.com> 1.2.8-3.0
+- Updated to latest upstream RC release: nfs-utils-1-2-9-rc3
+
+* Tue Jul 23 2013 Steve Dickson <steved@redhat.com> 1.2.8-2.1
+- Make sure nfs.target is enabled (bz 970595)
+- Fix nfs server reloads (bz 951247)
+
+* Fri May 31 2013 Steve Dickson <steved@redhat.com> 1.2.8-2.0
+- Update to latest upstream RC release: nfs-utils.1.2.9-rc1
+- Added GSS_USE_PROXY variable to nfs.sysconfig (bz 967112)
+
+* Tue May  7 2013 Steve Dickson <steved@redhat.com> 1.2.8-1.1
+  systemd: nfs-server.service needs to be split up (bz 769879)
+
+* Tue May  7 2013 Steve Dickson <steved@redhat.com> 1.2.8-1
+- Updated to the latest upstream RC release: nfs-utils.1.2.9-rc1
+
+* Tue Apr 23 2013 Steve Dickson <steved@redhat.com> 1.2.8-0
+- Updated to latest upstream release: 1.2.8
+- Removed the libgssglue dependency
+
+* Mon Apr  1 2013 Steve Dickson <steved@redhat.com> 1.2.7-6
+- Added v4.1 support rpc.nfsd (bz 947073)
+
+* Mon Mar 25 2013 Steve Dickson <steved@redhat.com> 1.2.7-5
+- Updated to latest upstream RC release: nfs-utils.1.2.8-rc4
+- Added nfs-lock.service to After line in nfs-server.service (bz 914792)
+
+* Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1:1.2.7-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
+
+* Wed Jan 16 2013 Steve Dickson <steved@redhat.com> 1.2.7-3
+- Updated to latest upstream RC release: nfs-utils.1.2.8-rc3
+- Took ownership of /usr/lib/nfs-utils (bz 894535)
+
+* Mon Dec 17 2012 Steve Dickson <steved@redhat.com> 1.2.7-2
+- Update to latest upstream RC release: nfs-utils.1.2.8-rc2
+
+* Wed Nov 28 2012 Steve Dickson <steved@redhat.com> 1.2.7-1
+- Update to latest upstream RC release: nfs-utils.1.2.8-rc1
+
+* Fri Nov  9 2012 Steve Dickson <steved@redhat.com> 1.2.7-0
+- Updated to latest upstream release: nfs-utils.1.2.7
+
+* Thu Nov  8 2012 Steve Dickson <steved@redhat.com> 1.2.6-14
+- Allow the service to start when RPCNFSDCOUNT is comment out. (bz 870143)
+- Removed some old cruft from the spec file (bz 226198)
+
+* Mon Oct 15 2012 Steve Dickson <steved@redhat.com> 1.2.6-13
+- Added a Requires for the quota package (bz 866225)
+
+* Thu Aug 23 2012 Steve Dickson <steved@redhat.com> 1.2.6-12 
+- Added FedFS support by added a BuildRequires for fedfs-utils-devel
+- Introduce new systemd-rpm macros (bz 850227)
+- Updated to latest upstream RC release: nfs-utils.1.2.7-rc5 (bz 833024)
+
+* Mon Aug  6 2012 Steve Dickson <steved@redhat.com> 1.2.6-11
+- Updated to latest upstream RC release: nfs-utils.1.2.7-rc4
+
+* Thu Aug  2 2012 Steve Dickson <steved@redhat.com> 1.2.6-10
+- Removed modprobe.d/nfs.conf 
+
+* Thu Jul 19 2012 Steve Dickson <steved@redhat.com> 1.2.6-9
+- Updated to latest upstream RC release: nfs-utils.1.2.7-rc3
+
+* Thu Jul  5 2012 Steve Dickson <steved@redhat.com> 1.2.6-8
+- nfsidmap: default domain no being set (bz 829362)
+
+* Fri Jun 22 2012 Steve Dickson <steved@redhat.com> 1.2.6-7
+- Reworked how the legacy names are enabled in systemd
+- Fixed typo in nfs-mountd.service
+
+* Tue Jun 12 2012 Steve Dickson <steved@redhat.com> 1.2.6-6
+- Updated to latest upstream RC release: nfs-utils.1.2.7-rc2 (bz 833555)
+
+* Tue Jun 12 2012 Steve Dickson <steved@redhat.com> 1.2.6-5
+- Reworked how the services are restarted.
+
+* Tue Jun 12 2012 Steve Dickson <steved@redhat.com> 1.2.6-4
+- Enable legacy service names.
+
+* Tue May 29 2012 Steve Dickson <steved@redhat.com> 1.2.6-3
+- Updated to latest upstream RC release: nfs-utils.1.2.7-rc1
+
+* Tue May 29 2012 Steve Dickson <steved@redhat.com> 1.2.6-2
+* Fixed typo in the checking of nfsnobody (bz 816149)
+
+* Fri May 25 2012 Steve Dickson <steved@redhat.com> 1.2.6-1
+- Correctly search for the existence of nfsnobody (bz 816149)
+- Correctly change the default group id for nfsnobody (bz 816149)
+
+* Tue May 15 2012 Steve Dickson <steved@redhat.com> 1.2.6-0
+- Update to the latest upstream release: nfs-utils-1.2.6 (bz 821673)
+- Split out NFS server daemons into individual service files (bz 769879) 
+- Removed Wants= from nfs-lock.service (bz 817895)
+- Only enable services if they are enabled on upgrades (bz 807020)
+
+* Thu May  3 2012 Steve Dickson <steved@redhat.com> 1.2.5-16
+- Update to the latest RC release: nfs-utils-1.2.6-rc7
+
+* Thu Apr 26 2012 Josh Boyer <jwboyer@redhat.com> 1.2.5-15
+- Add modprobe config file to alias 'nfs4' to 'nfs' (bz 806333)
 
 * Thu Mar 22 2012 Steve Dickson <steved@redhat.com> 1.2.5-14
 - gssd: Look for user creds in user defined directory (bz 786993)
@@ -503,7 +743,7 @@ fi
 - Updated to the latest pseudo root release (rel10) which
   containts the upstream pseudo root release
 
-* Mon Jan 12 2010 Steve Dickson <steved@redhat.com> 1.2.1-9
+* Tue Jan 12 2010 Steve Dickson <steved@redhat.com> 1.2.1-9
 - Updated to latest upstream RC release: nfs-utils-1-2-2-rc5
 
 * Mon Jan  4 2010 Steve Dickson <steved@redhat.com> 1.2.1-8
@@ -894,7 +1134,7 @@ fi
 - Added -o nordirplus mount option to disable READDIRPLUS (bz 240357)
 - Disabled the FSCache patch, for now... 
 
-* Wed May 10 2007 Steve Dickson <steved@redhat.com> 1.0.12-5
+* Thu May 10 2007 Steve Dickson <steved@redhat.com> 1.0.12-5
 - Fix mount.nfs4 to display correct error message (bz 227212)
 - Updated mountd and showmount reverse lookup flags (bz 220772)
 - Eliminate timeout on nfsd shutdowns (bz 222001)
@@ -937,7 +1177,7 @@ fi
 * Wed Dec 13 2006 Steve Dickson <steved@redhat.com> 1.0.10-5
 - Stopped v4 umounts from ping rpc.mountd (bz 215553)
 
-* Wed Nov 28 2006 Steve Dickson <steved@redhat.com> 1.0.10-4
+* Tue Nov 28 2006 Steve Dickson <steved@redhat.com> 1.0.10-4
 - Doing a connect on UDP sockets causes the linux network
   stack to reject UDP patches from multi-home server with
   nic on the same subnet. (bz 212471)
@@ -1068,7 +1308,7 @@ fi
 - Updated libevent from 1.0b to 1.1a
 - Added libgssapi-0.4 and librpcsecgss-0.6 libs from CITI
 
-* Tue Sep  8 2005 Steve Dickson <SteveD@RedHat.com> 1.0.7-16
+* Thu Sep  8 2005 Steve Dickson <SteveD@RedHat.com> 1.0.7-16
 - Reworked the nfslock init script so if lockd is running
   it will be killed which is what the HA community needs. (bz 162446)
 - Stopped rpcidmapd.init from doing extra echoing when
@@ -1099,7 +1339,7 @@ fi
 * Wed Apr 13 2005 Steve Dickson <SteveD@RedHat.com> 1.0.7-6
 - Fixed misformated output from nfslock script (bz 154648)
 
-* Mon Mar 29 2005 Steve Dickson <SteveD@RedHat.com> 1.0.7-4
+* Tue Mar 29 2005 Steve Dickson <SteveD@RedHat.com> 1.0.7-4
 - Fixed a compile error on x86_64 machines in the gss code.
 - Updated the statd-notify-hostname.patch to eliminate 
   a segmentation fault in rpc.statd when an network 
@@ -1194,7 +1434,7 @@ fi
   by default, there only needs to be away of 
   turning them off.
 
-* Thu May 10 2004 <SteveD@RedHat.com>
+* Mon May 10 2004 <SteveD@RedHat.com>
 - Rebuilt
 
 * Thu Apr 15 2004 <SteveD@RedHat.com>
@@ -1269,7 +1509,7 @@ fi
 - Upgrated to 1.0.6
 - Commented out the acl path for fedora
 
-* Thu Aug  27 2003 Steve Dickson <SteveD@RedHat.com>
+* Wed Aug  27 2003 Steve Dickson <SteveD@RedHat.com>
 - Added the setting of lockd ports via sysclt interface
 - Removed queue setting code since its no longer needed
 
@@ -1279,7 +1519,7 @@ fi
 * Wed Jul 23 2003 Steve Dickson <SteveD@RedHat.com>
 - Commented out the acl patch (for now)
 
-* Wed Jul 21 2003 Steve Dickson <SteveD@RedHat.com>
+* Mon Jul 21 2003 Steve Dickson <SteveD@RedHat.com>
 - Upgrated to 1.0.5
 
 * Wed Jun 18 2003 Steve Dickson <SteveD@RedHat.com>
@@ -1368,7 +1608,7 @@ the mountd man page.
 - don't use rquotad from here now; quota package contains a version that 
   works with 2.4 (#33738)
 
-* Tue Mar 12 2001 Bob Matthews <bmatthews@redhat.com>
+* Mon Mar 12 2001 Bob Matthews <bmatthews@redhat.com>
 - Statd logs at LOG_DAEMON rather than LOG_LOCAL5
 - s/nfs/\$0/ where appropriate in init scripts
 
@@ -1394,7 +1634,7 @@ the mountd man page.
 - Fix incorrect file specifications in statd manpage.
 - Require gawk 'cause it's used in nfslock init script.
 
-* Thu Dec 13 2000 Bob Matthews <bmatthews@redhat.com>
+* Wed Dec 13 2000 Bob Matthews <bmatthews@redhat.com>
 - Require sed because it's used in nfs init script
 
 * Tue Dec 12 2000 Bob Matthews <bmatthews@redhat.com>

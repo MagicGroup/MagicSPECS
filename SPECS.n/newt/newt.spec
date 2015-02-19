@@ -5,11 +5,13 @@
 %endif
 
 Summary: A library for text mode user interfaces
+Summary(zh_CN.UTF-8): 文本模式下用户界面库
 Name: newt
-Version: 0.52.17
-Release: 3%{?dist}
+Version: 0.52.18
+Release: 1%{?dist}
 License: LGPLv2
 Group: System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 URL: https://fedorahosted.org/newt/
 Source: https://fedorahosted.org/released/newt/newt-%{version}.tar.gz
 BuildRequires: popt-devel python-devel slang-devel
@@ -21,17 +23,21 @@ Provides: snack = %{version}-%{release}
 
 %package devel
 Summary: Newt windowing toolkit development files
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Requires: slang-devel %{name}%{?_isa} = %{version}-%{release}
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 
 # The loader portion of the installer needs to link statically against libnewt,
 # so the static library must be shipped.
 %package static
 Summary: Newt windowing toolkit static library
+Summary(zh_CN.UTF-8): %{name} 的静态库
 Requires: %{name}-devel%{?_isa} = %{version}-%{release}
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 
-%Description
+%description
 Newt is a programming library for color text mode, widget based user
 interfaces.  Newt can be used to add stacked windows, entry widgets,
 checkboxes, radio buttons, labels, plain text fields, scrollbars,
@@ -39,6 +45,9 @@ etc., to text mode user interfaces.  This package also contains the
 shared library needed by programs built with newt, as well as a
 /usr/bin/dialog replacement called whiptail.  Newt is based on the
 slang library.
+
+%description -l zh_CN.UTF-8
+文本模式下用户界面库。
 
 %description devel
 The newt-devel package contains the header files and libraries
@@ -49,28 +58,45 @@ the slang library.
 Install newt-devel if you want to develop applications which will use
 newt.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
+
 %description static
 The newt-static package contains the static version of the newt library.
 Install it if you need to link statically with libnewt.
 
+%description static -l zh_CN.UTF-8
+%{name} 的静态库。
+
 %package python
 Summary: Python 2 bindings for newt
+Summary(zh_CN.UTF-8): %{name} 的 Python 绑定
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: %{name}%{?_isa} = %{version}-%{release}
 
 %description python
 The newt-python package contains the Python 2 bindings for the newt library
 providing a python API for creating text mode interfaces.
 
+%description python -l zh_CN.UTF-8
+ %{name} 的 Python 绑定。
+
 %if 0%{?with_python3}
 %package python3
 Summary: Python 3 bindings for newt
+Summary(zh_CN.UTF-8): %{name} 的 Python3 绑定
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: %{name}%{?_isa} = %{version}-%{release}
 
 %description python3
 The newt-python3 package contains the Python 3 bindings for the newt library
 providing a python API for creating text mode interfaces.
+
+%description python3 -l zh_CN.UTF-8
+ %{name} 的 Python3 绑定。
 %endif
 
 %prep
@@ -86,7 +112,7 @@ docbook2txt tutorial.sgml
 
 %install
 make DESTDIR=$RPM_BUILD_ROOT install
-
+magic_rpm_clean.sh
 %find_lang %{name}
 
 %post -p /sbin/ldconfig
@@ -122,6 +148,9 @@ make DESTDIR=$RPM_BUILD_ROOT install
 %endif
 
 %changelog
+* Wed Feb 11 2015 Liu Di <liudidi@gmail.com> - 0.52.18-1
+- 更新到 0.52.18
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.52.17-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

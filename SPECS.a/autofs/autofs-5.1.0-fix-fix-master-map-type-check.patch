@@ -1,0 +1,42 @@
+autofs-5.1.0 - fix fix master map type check
+
+From: Ian Kent <ikent@redhat.com>
+
+The map type is of the form <type>[,<format>] but the master map type
+check for the old style map syntax wasn't allowing for <format> to be
+given (see commit 7c104167).
+
+When fixing this an incorrect length was accidently used when checking
+for the "yp" map type which causes it to never match.
+---
+ CHANGELOG       |    1 +
+ daemon/lookup.c |    4 ++--
+ 2 files changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/CHANGELOG b/CHANGELOG
+index b0dce1e..9e2dc89 100644
+--- a/CHANGELOG
++++ b/CHANGELOG
+@@ -33,6 +33,7 @@
+ - clarify multiple mounts description.
+ - gaurd against incorrect umount return.
+ - update man page autofs(8) for systemd.
++- fix fix master map type check.
+ 
+ 04/06/2014 autofs-5.1.0
+ =======================
+diff --git a/daemon/lookup.c b/daemon/lookup.c
+index 1a0881f..6444fa5 100644
+--- a/daemon/lookup.c
++++ b/daemon/lookup.c
+@@ -233,8 +233,8 @@ int lookup_nss_read_master(struct master *master, time_t age)
+ 			memset(source, 0, 10);
+ 			if ((!strncmp(name, "file", 4) &&
+ 				 (name[4] == ',' || name[4] == ':')) ||
+-			    (!strncmp(name, "yp", 3) &&
+-				 (name[3] == ',' || name[3] == ':')) ||
++			    (!strncmp(name, "yp", 2) &&
++				 (name[2] == ',' || name[2] == ':')) ||
+ 			    (!strncmp(name, "nis", 3) &&
+ 				 (name[3] == ',' || name[3] == ':')) ||
+ 			    (!strncmp(name, "nisplus", 7) &&

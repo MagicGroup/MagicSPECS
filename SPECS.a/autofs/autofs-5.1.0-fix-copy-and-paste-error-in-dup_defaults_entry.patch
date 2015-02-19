@@ -1,0 +1,35 @@
+autofs-5.1.0 - fix copy and paste error in dup_defaults_entry()
+
+From: Ian Kent <ikent@redhat.com>
+
+
+---
+ CHANGELOG           |    1 +
+ modules/parse_amd.c |    2 +-
+ 2 files changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/CHANGELOG b/CHANGELOG
+index 4e00929..cb74c60 100644
+--- a/CHANGELOG
++++ b/CHANGELOG
+@@ -18,6 +18,7 @@
+ - check host macro is set before use.
+ - check options length before use in parse_amd.c.
+ - fix some out of order evaluations in parse_amd.c.
++- fix copy and paste error in dup_defaults_entry().
+ 
+ 04/06/2014 autofs-5.1.0
+ =======================
+diff --git a/modules/parse_amd.c b/modules/parse_amd.c
+index c4992c1..a912385 100644
+--- a/modules/parse_amd.c
++++ b/modules/parse_amd.c
+@@ -1631,7 +1631,7 @@ static struct amd_entry *dup_defaults_entry(struct amd_entry *defaults)
+ 			entry->rfs = tmp;
+ 	}
+ 
+-	if (defaults->rhost && *defaults->rfs) {
++	if (defaults->rhost && *defaults->rhost) {
+ 		tmp = strdup(defaults->rhost);
+ 		if (tmp)
+ 			entry->rhost = tmp;

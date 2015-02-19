@@ -209,7 +209,7 @@ main(int argc, char **argv)
 	}
 
 	if (verbose || opt_version)
-		printf(version);
+		printf("%s", version);
 
 	/* Open a basic socket. */
 	if ((skfd = socket(AF_INET, SOCK_DGRAM,0)) < 0) {
@@ -246,6 +246,7 @@ main(int argc, char **argv)
 		u16 *data = (u16 *)(&ifr.ifr_data);
 
 		strncpy(ifr.ifr_name, ifname, IFNAMSIZ);
+		ifr.ifr_name[IFNAMSIZ-1] = '\0';
 		data[0] = 0;
 
 		if (ioctl(skfd, 0x8947, &ifr) >= 0) {
@@ -540,7 +541,7 @@ int show_basic_mii(long ioaddr, int phy_id)
 			   bmcr & 0x0100 ? "full":"half");
 	for (i = 0; i < 9; i++)
 		if (bmcr & (0x0080<<i))
-			printf(bmcr_bits[i]);
+			printf("%s", bmcr_bits[i]);
 
 	new_bmsr = mdio_read(ioaddr, phy_id, 1);
 	if ((bmsr & 0x0016) == 0x0004)

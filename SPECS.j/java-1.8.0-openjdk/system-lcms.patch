@@ -62,12 +62,13 @@ diff -ruN jdk8/jdk/make/lib/Awt2dLibraries.gmk jdk8/jdk/make/lib/Awt2dLibraries.
      OUTPUT_DIR := $(INSTALL_LIBRARIES_HERE), \
      SRC := $(JDK_TOPDIR)/src/share/native/sun/java2d/cmm/lcms, \
      LANG := C, \
-@@ -680,18 +680,18 @@
+@@ -680,19 +680,19 @@
      LDFLAGS_windows := $(WIN_AWT_LIB) $(WIN_JAVA_LIB), \
      LDFLAGS_SUFFIX_solaris := -lawt -ljava -ljvm -lc, \
      LDFLAGS_SUFFIX_macosx := $(LIBM) -lawt -ljava -ljvm, \
 -    LDFLAGS_SUFFIX_linux := -lm -lawt -ljava -ljvm, \
 +    LDFLAGS_SUFFIX_linux := -lm -lawt -ljava -ljvm -llcms2, \
+     LDFLAGS_SUFFIX_aix := -lm -lawt -ljava -ljvm,\
      VERSIONINFO_RESOURCE := $(JDK_TOPDIR)/src/windows/resource/version.rc, \
      RC_FLAGS := $(RC_FLAGS) \
 -        -D "JDK_FNAME=lcms.dll" \

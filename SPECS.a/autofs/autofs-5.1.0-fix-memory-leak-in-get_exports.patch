@@ -1,0 +1,85 @@
+autofs-5.1.0 - fix memory leak in get_exports()
+
+From: Ian Kent <ikent@redhat.com>
+
+In modules/lookup_hosts.c:get_exports() looping over the returned list of
+exports uses the pointer that contains the list. The pointer is updated
+in the process of creating the exports multi-mount so a pointer to the
+returned list is no longer available to be freed when done.
+---
+ CHANGELOG              |    1 +
+ modules/lookup_hosts.c |   17 +++++++++--------
+ 2 files changed, 10 insertions(+), 8 deletions(-)
+
+diff --git a/CHANGELOG b/CHANGELOG
+index 0cb1d36..2bb0500 100644
+--- a/CHANGELOG
++++ b/CHANGELOG
+@@ -24,6 +24,7 @@
+ - force disable browse mode for amd format maps.
+ - fix hosts map options check in lookup_amd_instance().
+ - fix memory leak in create_client().
++- fix memory leak in get_exports().
+ 
+ 04/06/2014 autofs-5.1.0
+ =======================
+diff --git a/modules/lookup_hosts.c b/modules/lookup_hosts.c
+index ea8f5d6..9d689ff 100644
+--- a/modules/lookup_hosts.c
++++ b/modules/lookup_hosts.c
+@@ -82,18 +82,19 @@ static char *get_exports(struct autofs_point *ap, const char *host)
+ {
+ 	char buf[MAX_ERR_BUF];
+ 	char *mapent;
+-	exports exp;
++	exports exp, this;
+ 
+ 	debug(ap->logopt, MODPREFIX "fetchng export list for %s", host);
+ 
+ 	exp = rpc_get_exports(host, 10, 0, RPC_CLOSE_NOLINGER);
+ 
+ 	mapent = NULL;
+-	while (exp) {
++	this = exp;
++	while (this) {
+ 		if (mapent) {
+ 			int len = strlen(mapent) + 1;
+ 
+-			len += strlen(host) + 2*(strlen(exp->ex_dir) + 2) + 3;
++			len += strlen(host) + 2*(strlen(this->ex_dir) + 2) + 3;
+ 			mapent = realloc(mapent, len);
+ 			if (!mapent) {
+ 				char *estr;
+@@ -103,10 +104,10 @@ static char *get_exports(struct autofs_point *ap, const char *host)
+ 				return NULL;
+ 			}
+ 			strcat(mapent, " \"");
+-			strcat(mapent, exp->ex_dir);
++			strcat(mapent, this->ex_dir);
+ 			strcat(mapent, "\"");
+ 		} else {
+-			int len = 2*(strlen(exp->ex_dir) + 2) + strlen(host) + 3;
++			int len = 2*(strlen(this->ex_dir) + 2) + strlen(host) + 3;
+ 
+ 			mapent = malloc(len);
+ 			if (!mapent) {
+@@ -117,16 +118,16 @@ static char *get_exports(struct autofs_point *ap, const char *host)
+ 				return NULL;
+ 			}
+ 			strcpy(mapent, "\"");
+-			strcat(mapent, exp->ex_dir);
++			strcat(mapent, this->ex_dir);
+ 			strcat(mapent, "\"");
+ 		}
+ 		strcat(mapent, " \"");
+ 		strcat(mapent, host);
+ 		strcat(mapent, ":");
+-		strcat(mapent, exp->ex_dir);
++		strcat(mapent, this->ex_dir);
+ 		strcat(mapent, "\"");
+ 
+-		exp = exp->ex_next;
++		this = this->ex_next;
+ 	}
+ 	rpc_exports_free(exp);
+ 
