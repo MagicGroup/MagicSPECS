@@ -58,7 +58,7 @@ for pkg in xsm smproxy rstart ; do
     pushd $pkg-*
 
     sed -i '/XAW_/ s/)/, xaw7)/; /XAW_/ s/XAW_CHECK_XPRINT_SUPPORT/PKG_CHECK_MODULES/' configure.ac
-    aclocal ; automake ; autoconf
+    aclocal ; automake -avf ; autoconf
 
     %configure
     make  %{?_smp_mflags}
