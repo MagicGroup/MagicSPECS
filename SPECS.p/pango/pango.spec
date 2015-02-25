@@ -1,27 +1,23 @@
-%define glib2_version 2.33.12
-%define pkgconfig_version 0.12
-%define freetype_version 2.1.5
-%define fontconfig_version 2.10.91
-%define cairo_version 1.7.6
-%define libthai_version 0.1.9
-%define harfbuzz_version 0.9.9
-%define bin_version 1.8.0
+%global glib2_version 2.33.12
+%global pkgconfig_version 0.12
+%global freetype_version 2.1.5
+%global fontconfig_version 2.10.91
+%global cairo_version 1.7.6
+%global libthai_version 0.1.9
+%global harfbuzz_version 0.9.9
+%global libXft_version 2.0.0
+%global bin_version 1.8.0
 
 Summary: System for layout and rendering of internationalized text
 Name: pango
-Version: 1.33.7
-Release: 1%{?dist}
+Version: 1.36.8
+Release: 3%{?dist}
 License: LGPLv2+
 Group: System Environment/Libraries
 #VCS: git:git://git.gnome.org/pango
-Source: http://download.gnome.org/sources/pango/1.33/pango-%{version}.tar.xz
+Source: http://download.gnome.org/sources/pango/1.36/pango-%{version}.tar.xz
 URL: http://www.pango.org
 
-Requires: glib2 >= %{glib2_version}
-Requires: freetype >= %{freetype_version}
-Requires: freetype >= %{freetype_version}
-Requires: cairo >= %{cairo_version}
-Requires: libthai >= %{libthai_version}
 BuildRequires: glib2-devel >= %{glib2_version}
 BuildRequires: pkgconfig >= %{pkgconfig_version}
 BuildRequires: freetype-devel >= %{freetype_version}
@@ -34,6 +30,13 @@ BuildRequires: gobject-introspection-devel
 BuildRequires: cairo-gobject-devel
 # Bootstrap requirements
 BuildRequires: gnome-common intltool gtk-doc
+
+Requires: glib2%{?_isa} >= %{glib2_version}
+Requires: freetype%{?_isa} >= %{freetype_version}
+Requires: fontconfig%{?_isa} >= %{fontconfig_version}
+Requires: cairo%{?_isa} >= %{cairo_version}
+Requires: libthai%{?_isa} >= %{libthai_version}
+Requires(post): libXft%{?_isa} >= %{libXft_version}
 
 %description
 Pango is a library for laying out and rendering of text, with an emphasis
@@ -51,14 +54,24 @@ quality text handling and graphics rendering.
 Summary: Development files for pango
 Group: Development/Libraries
 Requires: pango%{?_isa} = %{version}-%{release}
-Requires: glib2-devel >= %{glib2_version}
-Requires: freetype-devel >= %{freetype_version}
-Requires: fontconfig-devel >= %{fontconfig_version}
-Requires: cairo-devel >= %{cairo_version}
+Requires: glib2-devel%{?_isa} >= %{glib2_version}
+Requires: freetype-devel%{?_isa} >= %{freetype_version}
+Requires: fontconfig-devel%{?_isa} >= %{fontconfig_version}
+Requires: cairo-devel%{?_isa} >= %{cairo_version}
 
 %description devel
 The pango-devel package includes the header files and developer documentation
 for the pango package.
+
+%package tests
+Summary: Tests for the %{name} package
+Group: Development/Libraries
+Requires: %{name}%{?_isa} = %{version}-%{release}
+
+%description tests
+The %{name}-tests package contains tests that can be used to verify
+the functionality of the installed %{name} package.
+
 
 %prep
 %setup -q -n pango-%{version}
@@ -69,8 +82,10 @@ for the pango package.
 (if ! test -x configure; then NOCONFIGURE=1 ./autogen.sh; CONFIGFLAGS=--enable-gtk-doc; fi;
  %configure $CONFIGFLAGS \
           --enable-doc-cross-references \
-          --with-included-modules=basic-fc )
-make %{?_smp_mflags}
+          --with-included-modules=basic-fc \
+          --enable-installed-tests
+)
+make %{?_smp_mflags} V=1
 
 
 %install
@@ -93,6 +108,9 @@ fi
 # (we might have x86_64 and i686 packages on the same system, for example.)
 mv $RPM_BUILD_ROOT%{_bindir}/pango-querymodules $RPM_BUILD_ROOT%{_bindir}/pango-querymodules-%{__isa_bits}
 
+# and add a man page too
+echo ".so man1/pango-querymodules.1" > $RPM_BUILD_ROOT%{_mandir}/man1/pango-querymodules-%{__isa_bits}.1
+
 touch $RPM_BUILD_ROOT%{_libdir}/pango/%{bin_version}/modules.cache
 
 %post
@@ -112,8 +130,10 @@ fi
 %{_bindir}/pango-querymodules*
 %{_bindir}/pango-view
 %{_mandir}/man1/pango-view.1.gz
-%{_mandir}/man1/pango-querymodules.1.gz
-%{_libdir}/pango
+%{_mandir}/man1/pango-querymodules*
+%dir %{_libdir}/pango
+%dir %{_libdir}/pango/%{bin_version}
+%{_libdir}/pango/%{bin_version}/modules
 %ghost %{_libdir}/pango/%{bin_version}/modules.cache
 %{_libdir}/girepository-1.0/Pango-1.0.typelib
 %{_libdir}/girepository-1.0/PangoCairo-1.0.typelib
@@ -132,7 +152,93 @@ fi
 %{_datadir}/gir-1.0/PangoXft-1.0.gir
 
 
+%files tests
+%{_libexecdir}/installed-tests/%{name}
+%{_datadir}/installed-tests
+
+
 %changelog
+* Sat Feb 21 2015 Till Maas <opensource@till.name> - 1.36.8-3
+- Rebuilt for Fedora 23 Change
+  https://fedoraproject.org/wiki/Changes/Harden_all_packages_with_position-independent_code
+
+* Mon Jan 26 2015 Akira TAGOH <tagoh@redhat.com> - 1.36.8-2
+- Add Requires(post): libXft deps. (#1155261)
+
+* Mon Sep 22 2014 Kalev Lember <kalevlember@gmail.com> - 1.36.8-1
+- Update to 1.36.8
+
+* Wed Sep 03 2014 Kalev Lember <kalevlember@gmail.com> - 1.36.7-1
+- Update to 1.36.7
+- Tighten deps with the _isa macro
+
+* Sun Aug 17 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.36.6-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
+
+* Sat Aug 16 2014 Kalev Lember <kalevlember@gmail.com> - 1.36.6-1
+- Update to 1.36.6
+
+* Tue Jul 22 2014 Kalev Lember <kalevlember@gmail.com> - 1.36.5-2
+- Rebuilt for gobject-introspection 1.41.4
+
+* Wed Jun 25 2014 Richard Hughes <rhughes@redhat.com> - 1.36.5-1
+- Update to 1.36.5
+
+* Tue Jun 24 2014 Richard Hughes <rhughes@redhat.com> - 1.36.4-1
+- Update to 1.36.4
+
+* Fri Jun 06 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.36.3-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Tue Mar 18 2014 Richard Hughes <rhughes@redhat.com> - 1.36.3-1
+- Update to 1.36.3
+
+* Wed Feb 05 2014 Richard Hughes <rhughes@redhat.com> - 1.36.2-1
+- Update to 1.36.2
+
+* Wed Jan 22 2014 Akira TAGOH <tagoh@redhat.com> - 1.36.1-2
+- Backport a patch to fix SIGFPE in pango_layout_iter_get_char_extents() (#1036351)
+
+* Thu Nov 14 2013 Richard Hughes <rhughes@redhat.com> - 1.36.1-1
+- Update to 1.36.1
+
+* Tue Sep 24 2013 Kalev Lember <kalevlember@gmail.com> - 1.36.0-1
+- Update to 1.36.0
+
+* Tue Sep 03 2013 Kalev Lember <kalevlember@gmail.com> - 1.35.3-1
+- Update to 1.35.3
+
+* Thu Aug 22 2013 Akira TAGOH <tagoh@redhat.com> - 1.35.2-2
+- Fix duplicate file list for modules.cache
+- s/%%define/%%global/g
+- Fix bogus date in %%changelog
+- Do not suppress the detailed build log.
+
+* Thu Aug 22 2013 Kalev Lember <kalevlember@gmail.com> - 1.35.2-1
+- Update to 1.35.2
+
+* Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.35.0-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Fri Jun 21 2013 Matthias Clasen <mclasen@redhat.com> - 1.35.0-1
+- Update to 1.35.0
+- Add a tests subpackage
+
+* Mon May 13 2013 Richard Hughes <rhughes@redhat.com> - 1.34.1-1
+- Update to 1.34.1
+
+* Wed May  8 2013 Matthias Clasen <mclasen@redhat.com> - 1.34.0-2
+- Make man pango-query-modules-64 work
+
+* Tue Mar 26 2013 Kalev Lember <kalevlember@gmail.com> - 1.34.0-1
+- Update to 1.34.0
+
+* Tue Mar 19 2013 Richard Hughes <rhughes@redhat.com> - 1.33.9-1
+- Update to 1.33.9
+
+* Tue Mar  5 2013 Matthias Clasen <mclasen@redhat.com> - 1.33.8-1
+- Update to 1.33.8
+
 * Tue Feb 05 2013 Kalev Lember <kalevlember@gmail.com> - 1.33.7-1
 - Update to 1.33.7
 
@@ -248,7 +354,7 @@ fi
 * Thu Aug 20 2009 Karsten Hopp <karsten@redhat.com> 1.25.4-2
 - fix autoconf host on s390x
 
-* Tue Aug 17 2009 Behdad Esfahbod <besfahbo@redhat.com> - 1.25.4-1
+* Mon Aug 17 2009 Behdad Esfahbod <besfahbo@redhat.com> - 1.25.4-1
 - 1.25.4
 
 * Tue Aug 11 2009 Behdad Esfahbod <besfahbo@redhat.com> - 1.25.3-1
@@ -302,7 +408,7 @@ fi
 - Update to 1.24.1
 - See http://download.gnome.org/sources/pango/1.24/pango-1.24.1.news
 
-* Wed Mar 26 2009 Behdad Esfahbod <besfahbo@redhat.com> - 1.24.0-2
+* Thu Mar 26 2009 Behdad Esfahbod <besfahbo@redhat.com> - 1.24.0-2
 - Remove weird Requires(pre).
 - Resolves #486641
 
@@ -347,7 +453,7 @@ fi
 * Mon Sep  8 2008 Matthias Clasen <mclasen@redhat.com> - 1.21.6-1
 - Update to 1.21.6
 
-* Mon Aug 26 2008 Behdad Esfahbod <besfahbo@redhat.com> - 1.21.5-1
+* Tue Aug 26 2008 Behdad Esfahbod <besfahbo@redhat.com> - 1.21.5-1
 - Update to 1.21.5
 
 * Mon Aug 11 2008 Matthias Clasen <mclasen@redhat.com> - 1.21.4-1
@@ -380,7 +486,7 @@ fi
 * Mon Feb 18 2008 Fedora Release Engineering <rel-eng@fedoraproject.org> - 1.19.3-3
 - Autorebuild for GCC 4.3
 
-* Mon Jan 29 2008 Behdad Esfahbod <besfahbo@redhat.com> - 1.19.3-2
+* Tue Jan 29 2008 Behdad Esfahbod <besfahbo@redhat.com> - 1.19.3-2
 - Bump libthai requirement.
 
 * Mon Jan 21 2008 Behdad Esfahbod <besfahbo@redhat.com> - 1.19.3-1
@@ -436,7 +542,7 @@ fi
 * Sat May 19 2007 Matthias Clasen <mclasen@redhat.com> - 1.17.0-1
 - Update to 1.17.0
 
-* Fri Apr 10 2007 Behdad Esfahbod <besfahbo@redhat.com> - 1.16.4-1
+* Fri Apr 27 2007 Behdad Esfahbod <besfahbo@redhat.com> - 1.16.4-1
 - Update to 1.16.4.
 - Enable doc rebuilding to get cross-references right.
 
@@ -456,13 +562,13 @@ fi
 - Update to 1.15.5.
 - Drop upstreamed pango-1.15.4-slighthint.patch
 
-* Wed Jan 18 2007 Behdad Esfahbod <besfahbo@redhat.com> - 1.15.4-5
+* Thu Jan 18 2007 Behdad Esfahbod <besfahbo@redhat.com> - 1.15.4-5
 - Again... HELLO.txt is moved.
 
-* Wed Jan 18 2007 Behdad Esfahbod <besfahbo@redhat.com> - 1.15.4-4
+* Thu Jan 18 2007 Behdad Esfahbod <besfahbo@redhat.com> - 1.15.4-4
 - Bump again.  I accidentally tagged 1.15.3-4 as 1.15.4-3 previously :(.
 
-* Wed Jan 18 2007 Behdad Esfahbod <besfahbo@redhat.com> - 1.15.4-3
+* Thu Jan 18 2007 Behdad Esfahbod <besfahbo@redhat.com> - 1.15.4-3
 - s/HELLO.utf8/HELLO.txt/ to match upstream.
 
 * Wed Jan 17 2007 Behdad Esfahbod <besfahbo@redhat.com> - 1.15.4-2
@@ -495,7 +601,7 @@ fi
 - Update to 1.15.3
 - Pass --with-included-modules=basic-fc.  Saves one page of memory per process.
 
-* Tue Dec 21 2006 Matthias Clasen <mclasen@redhat.com> - 1.15.2-1
+* Thu Dec 21 2006 Matthias Clasen <mclasen@redhat.com> - 1.15.2-1
 - Update to 1.15.2
 
 * Tue Dec  5 2006 Matthias Clasen <mclasen@redhat.com> - 1.15.1-1
@@ -533,16 +639,16 @@ fi
 * Thu Aug 17 2006 Behdad Esfahbod <besfahbo@redhat.com> - 1.14.0-3
 - Bump glib requirement to 2.12.0. (bug #201586)
 
-* Wed Aug 07 2006 Behdad Esfahbod <besfahbo@redhat.com> - 1.14.0-2
+* Mon Aug 07 2006 Behdad Esfahbod <besfahbo@redhat.com> - 1.14.0-2
 - Incorrect sources in last update.  Fix.
 
-* Wed Aug 07 2006 Behdad Esfahbod <besfahbo@redhat.com> - 1.14.0-1
+* Mon Aug 07 2006 Behdad Esfahbod <besfahbo@redhat.com> - 1.14.0-1
 - Update to 1.14.0
 
 * Wed Aug 02 2006 Behdad Esfahbod <besfahbo@redhat.com> - 1.13.5-1
 - Update to 1.13.5
 
-* Mon Jul 27 2006 Behdad Esfahbod <besfahbo@redhat.com> - 1.13.4-2
+* Thu Jul 27 2006 Behdad Esfahbod <besfahbo@redhat.com> - 1.13.4-2
 - Add umask 022 to post (#185419)
 
 * Tue Jul 25 2006 Matthias Clasen <mclasen@redhat.com> - 1.13.4-1
@@ -583,7 +689,7 @@ fi
 - Fix a crash in pango_split
 - Hide some private API
 
-* Mon Feb 11 2006 Matthias Clasen <mclasen@redhat.com> - 1.11.5-1
+* Mon Feb 13 2006 Matthias Clasen <mclasen@redhat.com> - 1.11.5-1
 - Update to 1.11.5
 
 * Fri Feb 10 2006 Jesse Keating <jkeating@redhat.com> - 1.11.4-1.2
@@ -601,7 +707,7 @@ fi
 * Mon Jan 16 2006 Matthias Clasen <mclasen@redhat.com> - 1.11.2-1
 - Update to 1.11.2
 
-* Wed Dec 19 2005 Matthias Clasen <mclasen@redhat.com> - 1.11.1-2
+* Mon Dec 19 2005 Matthias Clasen <mclasen@redhat.com> - 1.11.1-2
 - BuildRequire cairo-devel
 
 * Wed Dec 14 2005 Matthias Clasen <mclasen@redhat.com> - 1.11.1-1
