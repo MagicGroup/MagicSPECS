@@ -60,7 +60,7 @@ Allows legacy ~/.xsession and ~/.Xclients files to be used from display managers
 %patch3 -p1 -b .unset
 
 %build
-autoreconf
+autoreconf -ivf
 %configure
 # FIXME: Upstream should default to XINITDIR being this.  Make a patch to
 # Makefile.am and submit it in a bug report or check into CVS.
