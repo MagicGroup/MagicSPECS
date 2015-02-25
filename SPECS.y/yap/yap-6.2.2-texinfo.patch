@@ -1,0 +1,26 @@
+Author: Ralf Treinen <treinen@debian.org> (following indications by Vitor
+        Santos Costa)
+Description: fix texinfo code that makes makeinfo v5.1 choke
+
+Index: yap/docs/yap.tex
+===================================================================
+--- yap.orig/docs/yap.tex	2013-06-21 09:18:54.000000000 +0200
++++ yap/docs/yap.tex	2013-06-21 09:19:47.000000000 +0200
+@@ -15820,7 +15820,7 @@
+ We next discuss several issues on trying to make Prolog programs run
+ fast in YAP. We assume two different programming styles:
+ 
+-@table @bullet
++@itemize @bullet
+ @item Execution of @emph{deterministic} programs often
+ boils down to a recursive loop of the form:
+ @example
+@@ -15829,7 +15829,7 @@
+         loop(NewEnv).
+ @end example
+ 
+-@end table
++@end itemize
+ 
+ @section Deterministic Programs
+ 
