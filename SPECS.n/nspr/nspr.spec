@@ -1,7 +1,7 @@
 Summary:        Netscape Portable Runtime
 Name:           nspr
-Version:        4.10.2
-Release:        3%{?dist}
+Version:        4.10.8
+Release:        1%{?dist}
 License:        MPLv2.0
 URL:            http://www.mozilla.org/projects/nspr/
 Group:          System Environment/Libraries
@@ -9,9 +9,9 @@ BuildRoot:      %{_tmppath}/%{name}-%{version}-root
 Conflicts:      filesystem < 3
 
 # Sources available at ftp://ftp.mozilla.org/pub/mozilla.org/nspr/releases/
-# When CVS tag based snapshots are being used, refer to CVS documentation on
+# When hg tag based snapshots are being used, refer to hg documentation on
 # mozilla.org and check out subdirectory mozilla/nsprpub.
-Source0:        %{name}-%{version}.tar.bz2
+Source0:        %{name}-%{version}.tar.gz
 Source1:        nspr-config.xml
 
 Patch1:         nspr-config-pc.patch
@@ -128,6 +128,8 @@ done
 
 %files
 %defattr(-,root,root)
+%{!?_licensedir:%global license %%doc}
+%license nspr/LICENSE
 %{_libdir}/libnspr4.so
 %{_libdir}/libplc4.so
 %{_libdir}/libplds4.so
@@ -140,6 +142,35 @@ done
 %{_mandir}/man*/*
 
 %changelog
+* Thu Jan 29 2015 Elio Maldonado <emaldona@redhat.com> - 4.10.8-1
+- Update to NSPR_4_10_8_RTM
+
+* Tue Aug 19 2014 Elio Maldonado <emaldona@redhat.com> - 4.10.7-1
+- Update to NSPR_4_10_7_RTM
+
+* Sun Aug 17 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 4.10.6-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
+
+* Fri Jul 18 2014 Tom Callaway <spot@fedoraproject.org> - 4.10.6-2
+- fix license handling
+
+* Tue Jun 10 2014 Elio Maldonado <emaldona@redhat.com> - 4.10.6-1
+- Update to NSPR_4_10_6_RTM
+
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 4.10.5-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Tue May 06 2014 Elio Maldonado <emaldona@redhat.com> - 4.10.5-1
+- Update to NSPR_4_10_5_RTM
+- Remove patch no longer needed due to the rebase
+
+* Wed Apr 02 2014 Elio Maldonado <emaldona@redhat.com> - 4.10.4-2
+- Resolves: Bug 1083725 - Add ppc64le support to nspr
+- Use a patch by Ulrich Weigand already applied upstream
+
+* Sat Mar 15 2014 Elio Maldonado <emaldona@redhat.com> - 4.10.4-1
+- Update to NSPR_4_10_4_RTM
+
 * Thu Dec 05 2013 Dennis Gilmore <dennis@ausil.us> - 4.10.2-3
 - escape the rpm macro in the previous commit
 
