@@ -1,6 +1,6 @@
-%global nspr_version 4.10.2
+%global nspr_version 4.10.7
 %global nss_name nss
-%global nss_util_version 3.15.5
+%global nss_util_version 3.17.4
 %global unsupported_tools_directory %{_libdir}/nss/unsupported-tools
 %global saved_files_dir %{_libdir}/nss/saved
 
@@ -24,14 +24,14 @@
 
 Summary:          Network Security Services Softoken Module
 Name:             nss-softokn
-Version:          3.15.5
-Release:          2%{?dist}
+Version:          3.17.4
+Release:          1%{?dist}
 License:          MPLv2.0
 URL:              http://www.mozilla.org/projects/security/pki/nss/
 Group:            System Environment/Libraries
 Requires:         nspr >= %{nspr_version}
 Requires:         nss-util >= %{nss_util_version}
-Requires:         nss-softokn-freebl%{_isa} >= %{version}
+Requires:         nss-softokn-freebl%{_isa} >= %{version}-%{release}
 BuildRoot:        %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:    nspr-devel >= %{nspr_version}
 BuildRequires:    nss-util-devel >= %{nss_util_version}
@@ -61,8 +61,6 @@ Patch1:           build-nss-softoken-only.patch
 # Build only the softoken and freebl related tools
 Patch8:           softoken-minimal-test-dependencies.patch
 # Select the tests to run based on the type of build
-# Upstream: https://bugzilla.mozilla.org/show_bug.cgi?id=902171
-Patch9:           nss-versus-softoken-tests.patch
 # This patch uses the gcc-iquote dir option documented at
 # http://gcc.gnu.org/onlinedocs/gcc/Directory-Options.html#Directory-Options
 # to place the in-tree directories at the head of the list on list of directories
@@ -71,12 +69,8 @@ Patch9:           nss-versus-softoken-tests.patch
 # NSSUTIL_INCLUDE_DIR, after all, contains both util and freebl headers. 
 # Once has been bootstapped the patch may be removed, but it doesn't hurt to keep it.
 Patch10:           iquote.patch
-# Upstream: https://bugzilla.mozilla.org/show_bug.cgi?id=972450
-# Define -DMP_USE_UINT_DIGIT for Linux x86 because mpi_x86.s
-# requires mp_digit to be an unsigned int. The MP_USE_UINT_DIGIT macro
-# ensures that. We were previously relying on ULLONG_MAX being undefined
-# in the compilation environment, which isn't true in C99 mode.
-Patch11:           mozbug-972450.patch
+# TODO: File an upstream bug
+Patch97:	nss-softokn-add_encrypt_derive.patch
 
 %description
 Network Security Services Softoken Cryptographic Module
@@ -89,7 +83,7 @@ Conflicts:        prelink < 0.4.3
 Conflicts:        filesystem < 3
 
 %description freebl
-NSS Softoken Cryptographic Module Freelb Library
+NSS Softoken Cryptographic Module Freebl Library
 
 Install the nss-softokn-freebl package if you need the freebl 
 library.
@@ -101,7 +95,7 @@ Provides:         nss-softokn-freebl-static = %{version}-%{release}
 Requires:         nss-softokn-freebl%{?_isa} = %{version}-%{release}
 
 %description freebl-devel
-NSS Softoken Cryptographic Module Freelb Library Development Tools
+NSS Softoken Cryptographic Module Freebl Library Development Tools
 This package supports special needs of some PKCS #11 module developers and
 is otherwise considered private to NSS. As such, the programming interfaces
 may change and the usual NSS binary compatibility commitments do not apply.
@@ -128,13 +122,9 @@ Header and library files for doing development with Network Security Services.
 
 %patch1 -p0 -b .softokenonly
 %patch8 -p0 -b .crypto
-%patch9 -p0 -b .cryptotests
 # activate if needed when doing a major update with new apis
 %patch10 -p0 -b .iquote
-pushd nss
-%patch11 -p1 -b .fixsegfault
-popd
-
+%patch97 -p0 -b .add_encrypt_derive
 
 %build
 
@@ -185,12 +175,10 @@ export NSSUTIL_LIB_DIR=%{_libdir}
 NSS_USE_SYSTEM_SQLITE=1
 export NSS_USE_SYSTEM_SQLITE
 
-%ifarch x86_64 ppc64 ia64 s390x sparc64 aarch64 ppc64le mips64el
+%ifarch x86_64 %{power64} ia64 s390x sparc64 aarch64
 USE_64=1
 export USE_64
 %endif
-
-export NSS_ENABLE_ECC=1
 
 # uncomment if the iquote patch is activated
 export IN_TREE_FREEBL_HEADERS_FIRST=1
@@ -251,7 +239,7 @@ export FREEBL_NO_DEPEND
 BUILD_OPT=1
 export BUILD_OPT
 
-%ifarch x86_64 ppc64 ia64 s390x sparc64 aarch64 ppc64le mips64el
+%ifarch x86_64 %{power64} ia64 s390x sparc64 aarch64
 USE_64=1
 export USE_64
 %endif
@@ -284,11 +272,20 @@ cd ./nss/tests/
 %global nss_ssl_tests " "
 %global nss_ssl_run " "
 
-HOST=localhost DOMSUF=localdomain PORT=$MYRAND NSS_CYCLES=%{?nss_cycles} NSS_TESTS=%{?nss_tests} NSS_SSL_TESTS=%{?nss_ssl_tests} NSS_SSL_RUN=%{?nss_ssl_run} ./all.sh
+SKIP_NSS_TEST_SUITE=`echo $SKIP_NSS_TEST_SUITE`
 
-cd ../../../../
+if [ "x$SKIP_NSS_TEST_SUITE" == "x" ]; then
+  HOST=localhost DOMSUF=localdomain PORT=$MYRAND NSS_CYCLES=%{?nss_cycles} NSS_TESTS=%{?nss_tests} NSS_SSL_TESTS=%{?nss_ssl_tests} NSS_SSL_RUN=%{?nss_ssl_run} ./all.sh
+fi
 
-TEST_FAILURES=`grep -c FAILED ./tests_results/security/localhost.1/output.log` || :
+cd ../..
+
+if [ "x$SKIP_NSS_TEST_SUITE" == "x" ]; then
+  TEST_FAILURES=`grep -c FAILED ./tests_results/security/localhost.1/output.log` || :
+else
+  TEST_FAILURES=0
+fi
+
 if [ $TEST_FAILURES -ne 0 ]; then
   echo "error: test suite returned failure(s)"
   exit 1
@@ -367,6 +364,8 @@ done
 
 %files freebl
 %defattr(-,root,root)
+%{!?_licensedir:%global license %%doc}
+%license nss/COPYING
 %{_libdir}/libfreebl3.so
 %{_libdir}/libfreebl3.chk
 
@@ -398,6 +397,58 @@ done
 %{_includedir}/nss3/shsign.h
 
 %changelog
+* Wed Jan 28 2015 Elio Maldonado <emaldona@redhat.com> - 3.17.4-1
+- Update to nss-3.17.4
+- fix dependencies so nss-softokn pulls in nss-softokn-freebl of the same version and release
+
+* Fri Dec 05 2014 Elio Maldonado <emaldona@redhat.com> - 3.17.3-1
+- Update to nss-3.17.3
+
+* Sat Nov 08 2014 Elio Maldonado <emaldona@redhat.com> - 3.17.2-2
+- Resolves: Bug 1155306 - Provide sym key derive mechansm as result of encryption of message
+
+* Sun Oct 12 2014 Elio Maldonado <emaldona@redhat.com> - 3.17.2-1
+- Update to nss-3.17.2
+
+* Wed Sep 24 2014 Kai Engert <kaie@redhat.com> - 3.17.1-2
+- Update nss-util build dependency
+- Fix check of test suite result
+
+* Wed Sep 24 2014 Kai Engert <kaie@redhat.com> - 3.17.1-1
+- Update to nss-3.17.1
+- Add a mechanism to skip test suite execution during development work
+
+* Tue Aug 19 2014 Elio Maldonado <emaldona@redhat.com> - 3.17.0-1
+- Update to nss-3.17.0
+
+* Sun Aug 17 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.16.2-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
+
+* Fri Jul 18 2014 Tom Callaway <spot@fedoraproject.org> - 3.16.2-2
+- fix license handling
+
+* Sun Jun 29 2014 Elio Maldonado <emaldona@redhat.com> - 3.16.2-1
+- Update to nss-3.16.2
+
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.16.1-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Mon May 12 2014 Jaromir Capik <jcapik@redhat.com> - 3.16.1-2
+- Replacing ppc64 and ppc64le with the power64 macro
+- Related: Bug 1052546 - Trivial change for ppc64le in nss-softokn spec
+
+* Tue May 06 2014 Elio Maldonado <emaldona@redhat.com> - 3.16.1-1
+- Update to nss-3.16.1
+- Remove patch no longer needed due to the rebase
+- Resolves: Bug 1094702 - nss-3.16.1 is available
+
+* Mon Apr 14 2014 Elio Maldonado <emaldona@redhat.com> - 3.16.0-2
+- Refactor ecdecode support from softoken to freebl
+- Resolves: Bug 1075702 - ECC decode refactoring needed to build OpenJDK SunEC provider for ECC support
+
+* Tue Mar 18 2014 Elio Maldonado <emaldona@redhat.com> - 3.16.0-0
+- Update to nss-3.16.0
+
 * Sun Mar 02 2014 Elio Maldonado <emaldona@redhat.com> - 3.15.5-2
 - Fix a segmentation fault when signing on i686 that occurs in Rawhide
 - Patch contributed by Stephan Bergmann 
