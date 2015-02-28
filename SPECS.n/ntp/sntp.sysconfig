@@ -1,0 +1,2 @@
+# Options for sntp
+OPTIONS="-s 0.VENDORZONE.pool.ntp.org"

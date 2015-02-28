@@ -1,12 +1,13 @@
 [Unit]
-Description=Set time via NTP
+Description=Set time via SNTP
 After=network-online.target
 Before=time-sync.target
 Wants=time-sync.target network-online.target
 
 [Service]
 Type=oneshot
-ExecStart=/usr/libexec/ntpdate-wrapper
+EnvironmentFile=/etc/sysconfig/sntp
+ExecStart=/usr/sbin/sntp $OPTIONS
 RemainAfterExit=yes
 
 [Install]
