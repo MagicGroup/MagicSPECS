@@ -1,7 +1,9 @@
+%global _hardened_build 1
+
 Summary: The NTP daemon and utilities
 Name: ntp
-Version: 4.2.6p4
-Release: 3%{?dist}
+Version: 4.2.6p5
+Release: 28%{?dist}
 # primary license (COPYRIGHT) : MIT
 # ElectricFence/ (not used) : GPLv2
 # kernel/sys/ppsclock.h (not used) : BSD with advertising
@@ -18,7 +20,6 @@ Release: 3%{?dist}
 # libntp/memmove.c : BSD with advertising
 # libntp/ntp_rfc2553.c : BSD with advertising
 # libntp/adjtimex.c (not used) : BSD
-# libopts/ : BSD or GPLv2+
 # libparse/ : BSD
 # ntpd/refclock_jjy.c: MIT
 # ntpd/refclock_oncore.c : BEERWARE License (aka, Public Domain)
@@ -27,6 +28,7 @@ Release: 3%{?dist}
 # ntpd/refclock_mx4200.c : BSD with advertising
 # ntpd/refclock_palisade.h : BSD with advertising
 # ntpstat-0.2/ : GPLv2
+# sntp/libopts/ (not used) : BSD or GPLv3+
 # util/ansi2knr.c (not used) : GPL+
 License: (MIT and BSD and BSD with advertising) and GPLv2
 Group: System Environment/Daemons
@@ -44,6 +46,8 @@ Source10: ntp.dhclient
 Source12: ntpd.service
 Source13: ntpdate.service
 Source14: ntp-wait.service
+Source15: sntp.service
+Source16: sntp.sysconfig
 
 # ntpbz #802
 Patch1: ntp-4.2.6p1-sleep.patch
@@ -55,24 +59,66 @@ Patch3: ntp-4.2.6p3-bcast.patch
 Patch4: ntp-4.2.6p1-cmsgalign.patch
 # link ntpd with -ffast-math on ia64
 Patch5: ntp-4.2.6p1-linkfastmath.patch
+# ntpbz #2294
+Patch6: ntp-4.2.6p5-fipsmd5.patch
 # ntpbz #759
 Patch7: ntp-4.2.6p1-retcode.patch
-# ntpbz #992
-Patch8: ntp-4.2.6p4-rtnetlink.patch
+# ntpbz #2085
+Patch8: ntp-4.2.6p5-rootdisp.patch
+# ntpbz #2309
+Patch9: ntp-4.2.6p5-hexpw.patch
 # ntpbz #898
 Patch10: ntp-4.2.6p4-htmldoc.patch
+# ntpbz #1402
+Patch11: ntp-4.2.6p5-updatebclient.patch
 # fix precision calculation on fast CPUs
 Patch12: ntp-4.2.4p7-getprecision.patch
 # ntpbz #1408
-Patch13: ntp-4.2.6p1-logdefault.patch
+Patch13: ntp-4.2.6p5-logdefault.patch
 # add option -m to lock memory
-Patch14: ntp-4.2.6p4-mlock.patch
-# allow -u and -p options to be used twice (#639101)
-Patch15: ntp-4.2.6p2-multiopts.patch
+Patch14: ntp-4.2.6p5-mlock.patch
+# ntpbz #2506
+Patch15: ntp-4.2.6p5-refreshroute.patch
+# ntpbz #2040
+Patch16: ntp-4.2.6p5-identlen.patch
 # ntpbz #1670
 Patch17: ntp-4.2.6p3-broadcastdelay.patch
 # ntpbz #1671
-Patch18: ntp-4.2.6p3-delaycalib.patch
+Patch18: ntp-4.2.6p5-delaycalib.patch
+# ntpbz #2019
+Patch19: ntp-4.2.6p5-pwcipher.patch
+# ntpbz #2320
+Patch20: ntp-4.2.6p5-noservres.patch
+# ntpbz #2612
+Patch21: ntp-4.2.6p5-monwarn.patch
+# ntpbz #2538
+Patch22: ntp-4.2.6p5-testmain.patch
+# ntpbz #1232
+Patch23: ntp-4.2.6p5-nanoshm.patch
+# ntpbz #2666
+Patch24: ntp-4.2.6p5-cve-2014-9294.patch
+# ntpbz #2665
+Patch25: ntp-4.2.6p5-cve-2014-9293.patch
+# ntpbz #2667
+Patch26: ntp-4.2.6p5-cve-2014-9295.patch
+# ntpbz #2670
+Patch27: ntp-4.2.6p5-cve-2014-9296.patch
+# ntpbz #2671
+Patch28: ntp-4.2.6p5-cve-2014-9297.patch
+# ntpbz #2672
+Patch29: ntp-4.2.6p5-cve-2014-9298.patch
+# ntpbz #2174
+Patch30: ntp-4.2.6p5-sourceport.patch
+# ntpbz #2661
+Patch31: ntp-4.2.6p5-mreadvar.patch
+# ntpbz #730
+Patch32: ntp-4.2.6p5-rsaexp.patch
+# ntpbz #2537
+Patch33: ntp-4.2.6p5-keylen.patch
+# ntpbz #2627
+Patch34: ntp-4.2.6p5-shmperm.patch
+# ntpbz #2745
+Patch35: ntp-4.2.6p5-xleap.patch
 
 # handle unknown clock types
 Patch50: ntpstat-0.2-clksrc.patch
@@ -91,8 +137,12 @@ Requires(preun): systemd-units
 Requires(postun): systemd-units
 Requires: ntpdate = %{version}-%{release}
 BuildRequires: libcap-devel openssl-devel libedit-devel perl-HTML-Parser
-BuildRequires: pps-tools-devel
-BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+BuildRequires: pps-tools-devel autogen autogen-libopts-devel systemd-units
+
+%if 0%{?fedora} >= 22 || 0%{?rhel} >= 8
+# install timedated implementation that can control ntpd service
+Requires: timedatex
+%endif
 
 %description
 The Network Time Protocol (NTP) is used to synchronize a computer's
@@ -100,9 +150,9 @@ time with another reference time source. This package includes ntpd
 (a daemon which continuously adjusts system time) and utilities used
 to query and configure the ntpd daemon.
 
-Perl scripts ntp-wait and ntptrace are in the ntp-perl package and
-the ntpdate program is in the ntpdate package. The documentation is
-in the ntp-doc package.
+Perl scripts ntp-wait and ntptrace are in the ntp-perl package,
+ntpdate is in the ntpdate package and sntp is in the sntp package.
+The documentation is in the ntp-doc package.
 
 %package perl
 Summary: NTP utilities written in Perl
@@ -110,8 +160,10 @@ Group: Applications/System
 Requires: %{name} = %{version}-%{release}
 Requires(post): systemd-units
 Requires(preun): systemd-units
+Requires(postun): systemd-units
 # perl introduced in 4.2.4p4-7
 Obsoletes: %{name} < 4.2.4p4-7
+BuildArch: noarch
 %description perl
 This package contains Perl scripts ntp-wait and ntptrace.
  
@@ -121,10 +173,23 @@ Group: Applications/System
 Requires(pre): shadow-utils
 Requires(post): systemd-units
 Requires(preun): systemd-units
+Requires(postun): systemd-units
 
 %description -n ntpdate
 ntpdate is a program for retrieving the date and time from
 NTP servers.
+
+%package -n sntp
+Summary: Standard Simple Network Time Protocol program
+Group: Applications/System
+Requires(post): systemd-units
+Requires(preun): systemd-units
+Requires(postun): systemd-units
+
+%description -n sntp
+sntp can be used as a SNTP client to query a NTP or SNTP server and either
+display the time or set the local system's time (given suitable privilege).
+It can be run as an interactive command or in a cron job.
 
 %package doc
 Summary: NTP documentation
@@ -134,12 +199,12 @@ BuildArch: noarch
 %description doc
 This package contains NTP documentation in HTML format.
  
-%define ntpdocdir %{_datadir}/doc/%{name}-%{version}
+%global ntpdocdir %{?_pkgdocdir}%{!?_pkgdocdir:%{_docdir}/%{name}-%{version}}
 
 # pool.ntp.org vendor zone which will be used in ntp.conf
 %if 0%{!?vendorzone:1}
-%{?fedora: %define vendorzone fedora.}
-%{?rhel: %define vendorzone rhel.}
+%{?fedora: %global vendorzone fedora.}
+%{?rhel: %global vendorzone rhel.}
 %endif
 
 %prep
@@ -152,15 +217,36 @@ This package contains NTP documentation in HTML format.
 %ifarch ia64
 %patch5 -p1 -b .linkfastmath
 %endif
+%patch6 -p1 -b .fipsmd5
 %patch7 -p1 -b .retcode
-%patch8 -p1 -b .rtnetlink
+%patch8 -p1 -b .rootdisp
+%patch9 -p1 -b .hexpw
 %patch10 -p1 -b .htmldoc
+%patch11 -p1 -b .updatebclient
 %patch12 -p1 -b .getprecision
 %patch13 -p1 -b .logdefault
 %patch14 -p1 -b .mlock
-%patch15 -p1 -b .multiopts
+%patch15 -p1 -b .refreshroute
+%patch16 -p1 -b .identlen
 %patch17 -p1 -b .broadcastdelay
 %patch18 -p1 -b .delaycalib
+%patch19 -p1 -b .pwcipher
+%patch20 -p1 -b .noservres
+%patch21 -p1 -b .monwarn
+%patch22 -p1 -b .testmain
+%patch23 -p1 -b .nanoshm
+%patch24 -p1 -b .cve-2014-9294
+%patch25 -p1 -b .cve-2014-9293
+%patch26 -p1 -b .cve-2014-9295
+%patch27 -p1 -b .cve-2014-9296
+%patch28 -p1 -b .cve-2014-9297
+%patch29 -p1 -b .cve-2014-9298
+%patch30 -p1 -b .sourceport
+%patch31 -p1 -b .mreadvar
+%patch32 -p1 -b .rsaexp
+%patch33 -p1 -b .keylen
+%patch34 -p1 -b .shmperm
+%patch35 -p1 -b .xleap
 
 # ntpstat patches
 %patch50 -p1 -b .clksrc
@@ -170,7 +256,7 @@ This package contains NTP documentation in HTML format.
 %patch54 -p1 -b .errorbit
 
 # set default path to sntp KoD database
-sed -i 's|/var/db/ntp-kod|%{_localstatedir}/lib/ntp/sntp-kod|' sntp/{sntp.1,main.c}
+sed -i 's|/var/db/ntp-kod|%{_localstatedir}/lib/sntp/kod|' sntp/{sntp.1,main.c}
 
 # fix line terminators
 sed -i 's|\r||g' html/scripts/{footer.txt,style.css}
@@ -179,18 +265,19 @@ for f in COPYRIGHT ChangeLog; do
 	iconv -f iso8859-1 -t utf8 -o ${f}{_,} && touch -r ${f}{,_} && mv -f ${f}{_,}
 done
 
+# don't regenerate texinfo files as it breaks build with _smp_mflags
+touch */*opts.texi
+
 %build
-export CFLAGS="$RPM_OPT_FLAGS -fno-strict-aliasing"
-if echo 'int main () { return 0; }' | gcc -pie -fPIE -O2 -xc - -o pietest 2>/dev/null; then
-	./pietest && export CFLAGS="$CFLAGS -pie -fPIE"
-	rm -f pietest
-fi
-export LDFLAGS="-Wl,-z,relro,-z,now"
+sed -i 's|$CFLAGS -Wstrict-overflow|$CFLAGS|' configure sntp/configure
+export CFLAGS="$RPM_OPT_FLAGS -fno-strict-aliasing -fno-strict-overflow"
 %configure \
 	--sysconfdir=%{_sysconfdir}/ntp/crypto \
 	--with-openssl-libdir=%{_libdir} \
+	--without-ntpsnmpd \
 	--enable-all-clocks --enable-parse-clocks \
-	--enable-ntp-signd=%{_localstatedir}/run/ntp_signd
+	--enable-ntp-signd=%{_localstatedir}/run/ntp_signd \
+	--disable-local-libopts
 echo '#define KEYFILE "%{_sysconfdir}/ntp/keys"' >> ntpdate/ntpdate.h
 echo '#define NTP_VAR "%{_localstatedir}/log/ntpstats/"' >> config.h
 
@@ -208,8 +295,6 @@ popd
 make -C ntpstat-0.2 CFLAGS="$CFLAGS"
 
 %install
-rm -rf $RPM_BUILD_ROOT
-
 make DESTDIR=$RPM_BUILD_ROOT bindir=%{_sbindir} install
 
 mkdir -p $RPM_BUILD_ROOT%{_mandir}/man{5,8}
@@ -238,8 +323,8 @@ find $RPM_BUILD_ROOT%{ntpdocdir} -type d | xargs chmod 755
 
 pushd $RPM_BUILD_ROOT
 mkdir -p .%{_sysconfdir}/{ntp/crypto,sysconfig,dhcp/dhclient.d} .%{_libexecdir}
-mkdir -p .%{_localstatedir}/{lib/ntp,log/ntpstats} ./lib/systemd/system
-touch .%{_localstatedir}/lib/ntp/{drift,sntp-kod}
+mkdir -p .%{_localstatedir}/{lib/{s,}ntp,log/ntpstats} .%{_unitdir}
+touch .%{_localstatedir}/lib/{ntp/drift,sntp/kod}
 sed -e 's|VENDORZONE\.|%{vendorzone}|' \
 	-e 's|ETCNTP|%{_sysconfdir}/ntp|' \
 	-e 's|VARNTP|%{_localstatedir}/lib/ntp|' \
@@ -249,60 +334,65 @@ install -p -m600 %{SOURCE2} .%{_sysconfdir}/ntp/keys
 install -p -m755 %{SOURCE7} .%{_libexecdir}/ntpdate-wrapper
 install -p -m644 %{SOURCE4} .%{_sysconfdir}/sysconfig/ntpd
 install -p -m644 %{SOURCE9} .%{_sysconfdir}/sysconfig/ntpdate
-install -p -m644 %{SOURCE6} .%{_sysconfdir}/ntp/step-tickers
+sed -e 's|VENDORZONE\.|%{vendorzone}|' \
+	< %{SOURCE6} > .%{_sysconfdir}/ntp/step-tickers
+touch -r %{SOURCE6} .%{_sysconfdir}/ntp/step-tickers
+sed -e 's|VENDORZONE\.|%{vendorzone}|' \
+	< %{SOURCE16} > .%{_sysconfdir}/sysconfig/sntp
+touch -r %{SOURCE16} .%{_sysconfdir}/sysconfig/sntp
 install -p -m600 %{SOURCE8} .%{_sysconfdir}/ntp/crypto/pw
 install -p -m755 %{SOURCE10} .%{_sysconfdir}/dhcp/dhclient.d/ntp.sh
-install -p -m644 %{SOURCE12} ./lib/systemd/system/ntpd.service
-install -p -m644 %{SOURCE13} ./lib/systemd/system/ntpdate.service
-install -p -m644 %{SOURCE14} ./lib/systemd/system/ntp-wait.service
-popd
+install -p -m644 %{SOURCE12} .%{_unitdir}/ntpd.service
+install -p -m644 %{SOURCE13} .%{_unitdir}/ntpdate.service
+install -p -m644 %{SOURCE14} .%{_unitdir}/ntp-wait.service
+install -p -m644 %{SOURCE15} .%{_unitdir}/sntp.service
 
-%clean
-rm -rf $RPM_BUILD_ROOT
+mkdir .%{_prefix}/lib/systemd/ntp-units.d
+echo 'ntpd.service' > .%{_prefix}/lib/systemd/ntp-units.d/60-ntpd.list
+
+popd
 
 %pre -n ntpdate
 /usr/sbin/groupadd -g 38 ntp  2> /dev/null || :
 /usr/sbin/useradd -u 38 -g 38 -s /sbin/nologin -M -r -d %{_sysconfdir}/ntp ntp 2>/dev/null || :
 
 %post
-/bin/systemctl daemon-reload &> /dev/null || :
+%systemd_post ntpd.service
 
 %post -n ntpdate
-/bin/systemctl daemon-reload &> /dev/null || :
+%systemd_post ntpdate.service
+
+%post -n sntp
+%systemd_post sntp.service
 
 %post perl
-/bin/systemctl daemon-reload &> /dev/null || :
+%systemd_post ntp-wait.service
 
 %preun
-if [ "$1" -eq 0 ]; then
-	/bin/systemctl --no-reload disable ntpd.service &> /dev/null
-	/bin/systemctl stop ntpd.service &> /dev/null
-fi
-:
+%systemd_preun ntpd.service
 
 %preun -n ntpdate
-if [ "$1" -eq 0 ]; then
-	/bin/systemctl --no-reload disable ntpdate.service &> /dev/null
-	/bin/systemctl stop ntpdate.service &> /dev/null
-fi
-:
+%systemd_preun ntpdate.service
+
+%preun -n sntp
+%systemd_preun sntp.service
 
 %preun perl
-if [ "$1" -eq 0 ]; then
-	/bin/systemctl --no-reload disable ntp-wait.service &> /dev/null
-	/bin/systemctl stop ntp-wait.service &> /dev/null
-fi
-:
+%systemd_preun ntp-wait.service
 
 %postun
-/bin/systemctl daemon-reload &> /dev/null
-if [ "$1" -ge 1 ]; then
-	/bin/systemctl try-restart ntpd.service &> /dev/null
-fi
-:
+%systemd_postun_with_restart ntpd.service
+
+%postun -n ntpdate
+%systemd_postun
+
+%postun -n sntp
+%systemd_postun
+
+%postun perl
+%systemd_postun
 
 %files
-%defattr(-,root,root)
 %dir %{ntpdocdir}
 %{ntpdocdir}/COPYRIGHT
 %{ntpdocdir}/ChangeLog
@@ -311,9 +401,7 @@ fi
 %{_sbindir}/ntpd
 %{_sbindir}/ntpdc
 %{_sbindir}/ntpq
-%{_sbindir}/ntpsnmpd
 %{_sbindir}/ntptime
-%{_sbindir}/sntp
 %{_sbindir}/tickadj
 %config(noreplace) %{_sysconfdir}/sysconfig/ntpd
 %config(noreplace) %verify(not md5 size mtime) %{_sysconfdir}/ntp.conf
@@ -323,7 +411,6 @@ fi
 %{_sysconfdir}/dhcp/dhclient.d/ntp.sh
 %dir %attr(-,ntp,ntp) %{_localstatedir}/lib/ntp
 %ghost %attr(644,ntp,ntp) %{_localstatedir}/lib/ntp/drift
-%ghost %{_localstatedir}/lib/ntp/sntp-kod
 %dir %attr(-,ntp,ntp) %{_localstatedir}/log/ntpstats
 %{_bindir}/ntpstat
 %{_mandir}/man5/*.5*
@@ -333,20 +420,18 @@ fi
 %{_mandir}/man8/ntpq.8*
 %{_mandir}/man8/ntpstat.8*
 %{_mandir}/man8/ntptime.8*
-%{_mandir}/man8/sntp.8*
 %{_mandir}/man8/tickadj.8*
-/lib/systemd/system/ntpd.service
+%{_prefix}/lib/systemd/ntp-units.d/*.list
+%{_unitdir}/ntpd.service
 
 %files perl
-%defattr(-,root,root)
 %{_sbindir}/ntp-wait
 %{_sbindir}/ntptrace
 %{_mandir}/man8/ntp-wait.8*
 %{_mandir}/man8/ntptrace.8*
-/lib/systemd/system/ntp-wait.service
+%{_unitdir}/ntp-wait.service
 
 %files -n ntpdate
-%defattr(-,root,root)
 %doc COPYRIGHT
 %config(noreplace) %{_sysconfdir}/sysconfig/ntpdate
 %dir %{_sysconfdir}/ntp
@@ -355,15 +440,156 @@ fi
 %{_libexecdir}/ntpdate-wrapper
 %{_sbindir}/ntpdate
 %{_mandir}/man8/ntpdate.8*
-/lib/systemd/system/ntpdate.service
+%{_unitdir}/ntpdate.service
+
+%files -n sntp
+%doc sntp/COPYRIGHT
+%config(noreplace) %{_sysconfdir}/sysconfig/sntp
+%{_sbindir}/sntp
+%{_mandir}/man8/sntp.8*
+%dir %{_localstatedir}/lib/sntp
+%ghost %{_localstatedir}/lib/sntp/kod
+%{_unitdir}/sntp.service
 
 %files doc
-%defattr(-,root,root)
 %{ntpdocdir}/html
 
 %changelog
-* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 4.2.6p4-3
-- 为 Magic 3.0 重建
+* Thu Feb 26 2015 Miroslav Lichvar <mlichvar@redhat.com> 4.2.6p5-28
+- don't step clock for leap second with -x option (#1196635)
+- allow creating all SHM segments with owner-only access
+- allow symmetric keys up to 32 bytes again
+- use larger RSA exponent in ntp-keygen
+- fix crash in ntpq mreadvar command
+- don't drop packets with source port below 123
+- increase memlock limit again
+- fix typos in ntpd man page
+- improve documentation of restrict command
+
+* Thu Feb 05 2015 Miroslav Lichvar <mlichvar@redhat.com> 4.2.6p5-27
+- validate lengths of values in extension fields (CVE-2014-9297)
+- drop packets with spoofed source address ::1 (CVE-2014-9298)
+
+* Thu Jan 29 2015 Miroslav Lichvar <mlichvar@redhat.com> 4.2.6p5-26
+- require timedatex (#1136905)
+
+* Fri Dec 19 2014 Miroslav Lichvar <mlichvar@redhat.com> 4.2.6p5-25
+- don't generate weak control key for resolver (CVE-2014-9293)
+- don't generate weak MD5 keys in ntp-keygen (CVE-2014-9294)
+- fix buffer overflows via specially-crafted packets (CVE-2014-9295)
+- don't mobilize passive association when authentication fails (CVE-2014-9296)
+
+* Tue Nov 04 2014 Miroslav Lichvar <mlichvar@redhat.com> 4.2.6p5-24
+- use network-online target in ntpdate and sntp services (#1116474)
+- move sntp kod database to allow SELinux labeling
+
+* Mon Aug 25 2014 Miroslav Lichvar <mlichvar@redhat.com> 4.2.6p5-23
+- don't print exit status (#1050148)
+- add nanosecond support to SHM refclock
+
+* Sun Aug 17 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 4.2.6p5-22
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
+
+* Thu Jul 03 2014 Miroslav Lichvar <mlichvar@redhat.com> 4.2.6p5-21
+- disable monitor in default ntp.conf
+- warn when monitor can't be disabled due to limited restrict
+- add conflict with systemd-timesyncd service
+
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 4.2.6p5-20
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Fri Jan 03 2014 Miroslav Lichvar <mlichvar@redhat.com> 4.2.6p5-19
+- update logconfig documentation for patched default (#1048249)
+- remove kod from default restrict in ntp.conf (#1048196)
+
+* Mon Dec 09 2013 Miroslav Lichvar <mlichvar@redhat.com> 4.2.6p5-18
+- fix calculation of root dispersion (#1037981)
+- refresh peers on routing updates (#1028176)
+- drop patch allowing -p and -u options to be used twice (#639101)
+- remove unnecessary IPv6 restrict line from default ntp.conf
+- replace hardening build flags with _hardened_build
+
+* Mon Sep 23 2013 Miroslav Lichvar <mlichvar@redhat.com> 4.2.6p5-17
+- remove ControlGroup in ntpd service (#1011047)
+
+* Thu Aug 08 2013 Miroslav Lichvar <mlichvar@redhat.com> 4.2.6p5-16
+- don't build ntpsnmpd
+- remove workaround for failing autogen
+
+* Fri Jul 26 2013 Ville Skyttä <ville.skytta@iki.fi> - 4.2.6p5-15
+- Install docs to %%{_pkgdocdir} where available.
+
+* Wed Jul 17 2013 Petr Pisar <ppisar@redhat.com> - 4.2.6p5-14
+- Perl 5.18 rebuild
+
+* Mon Jul 15 2013 Miroslav Lichvar <mlichvar@redhat.com> 4.2.6p5-13
+- ignore duplicate servers from dhclient
+- don't use -Wstrict-overflow with -fno-strict-overflow
+- buildrequire systemd-units
+- remove pie test
+
+* Thu May 02 2013 Miroslav Lichvar <mlichvar@redhat.com> 4.2.6p5-12
+- workaround failing autogen
+- move files from /lib
+- don't own ntp-units.d directory
+- drop old systemd scriptlets
+- fix dates in changelog
+
+* Tue Apr 02 2013 Miroslav Lichvar <mlichvar@redhat.com> 4.2.6p5-11
+- avoid rereading /etc/services (#768804)
+- remove ntp-wait dependency from ntpd service (#906753)
+- add missing and remove unrecognized options in documentation
+- update comments in some config files
+
+* Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 4.2.6p5-10
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
+
+* Fri Jan 04 2013 Miroslav Lichvar <mlichvar@redhat.com> 4.2.6p5-9
+- compile with -fno-strict-overflow
+
+* Wed Dec 05 2012 Miroslav Lichvar <mlichvar@redhat.com> 4.2.6p5-8
+- add option to set identity modulus size in ntp-keygen
+
+* Fri Nov 23 2012 Miroslav Lichvar <mlichvar@redhat.com> 4.2.6p5-7
+- allow selection of cipher for private key files
+- set identity modulus size in ntp-keygen
+- create sntp subpackage
+- add sntp service
+- use system libopts
+- add Wants=ntp-wait.service to ntpd service
+- don't fail when /etc/sysconfig/ntpd is missing
+- modify mlock and multiopts patches to use autogen
+- make perl subpackage noarch
+
+* Tue Nov 20 2012 Miroslav Lichvar <mlichvar@redhat.com> 4.2.6p5-6
+- bind broadcast client to new interfaces (#722690)
+- decode hex encoded passwords in ntpq/ntpdc
+- remove sample MD5 keys from default keys config
+
+* Wed Oct 24 2012 Miroslav Lichvar <mlichvar@redhat.com> 4.2.6p5-5
+- fix crash in FIPS mode (#839280)
+- use systemd macros if available (#850235)
+- remove obsolete macros
+
+* Tue Aug 07 2012 Miroslav Lichvar <mlichvar@redhat.com> 4.2.6p5-4
+- start ntpdate service after nss-lookup.target (#837486)
+- update systemd-timedated integration (#846077)
+
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 4.2.6p5-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Fri Apr 27 2012 Miroslav Lichvar <mlichvar@redhat.com> 4.2.6p5-2
+- update service file for systemd-timedated-ntp target (#816495)
+- allow service to set realtime scheduler (#810801)
+- drop comment enabling local driver in default config
+
+* Tue Feb 28 2012 Miroslav Lichvar <mlichvar@redhat.com> 4.2.6p5-1
+- update to 4.2.6p5
+- switch service type to forking
+
+* Tue Feb 07 2012 Miroslav Lichvar <mlichvar@redhat.com> 4.2.6p4-3
+- add default servers to step-tickers (#772389)
+- enable PrivateTmp in ntpd service (#782520)
 
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 4.2.6p4-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
@@ -785,10 +1011,10 @@ fi
 - added ntpstat
 - added manpages
 
-* Wed Jul 01 2003 Harald Hoyer <harald@redhat.de> 0:4.1.2-1.rc3.5
+* Tue Jul 01 2003 Harald Hoyer <harald@redhat.de> 0:4.1.2-1.rc3.5
 - move driftfile to /var
 
-* Wed Jul 01 2003 Harald Hoyer <harald@redhat.de> 0:4.1.2-1.rc3.4
+* Tue Jul 01 2003 Harald Hoyer <harald@redhat.de> 0:4.1.2-1.rc3.4
 - make a seperate directory for drift
 - security fix, patch ntp-4.1.1c-rc3-authkey.patch #96927
  
@@ -808,7 +1034,7 @@ fi
 * Thu May 22 2003 Harald Hoyer <harald@redhat.de> 0:4.1.2-0.rc2.2
 - corrected pid file name in %%{_sysconfdir}/sysconfig/ntpd
 
-* Tue Apr 28 2003 Harald Hoyer <harald@redhat.de> 0:4.1.2-0.rc2.1
+* Mon Apr 28 2003 Harald Hoyer <harald@redhat.de> 0:4.1.2-0.rc2.1
 - update to 4.1.1rc2
 
 * Tue Feb 25 2003 Harald Hoyer <harald@redhat.de> 0:4.1.2-0.rc1.3
@@ -901,7 +1127,7 @@ fi
 * Tue Jan 08 2002 Harald Hoyer <harald@redhat.de> 4.1.0b-2
 - added --enable-all-clocks --enable-parse-clocks (#57761)
 
-* Tue Dec 13 2001 Harald Hoyer <harald@redhat.de> 4.1.0b-1
+* Thu Dec 13 2001 Harald Hoyer <harald@redhat.de> 4.1.0b-1
 - bumped version
 - fixed #57391, #44580
 - set startup position to 58 after named

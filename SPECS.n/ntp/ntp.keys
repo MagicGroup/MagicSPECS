@@ -1,5 +1,3 @@
+# For more information about this file, see the man page ntp_auth(5).
 #
-# PLEASE DO NOT USE THE DEFAULT VALUES HERE.
-#
-#65535	M	akey
-#1	M	pass
+# id	type	key
