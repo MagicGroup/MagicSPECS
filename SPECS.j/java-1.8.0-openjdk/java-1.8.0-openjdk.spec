@@ -43,7 +43,7 @@
 # sometimes we need to distinguish big and little endian PPC64
 %global ppc64le         ppc64le
 %global ppc64be         ppc64 ppc64p7
-%global multilib_arches %{power64} sparc64 x86_64
+%global multilib_arches %{power64} sparc64 x86_64 mips64el
 %global jit_arches      %{ix86} x86_64 sparcv9 sparc64 %{aarch64} %{power64}
 
 # With diabled nss is NSS deactivated, so in NSS_LIBDIR can be wrong path
@@ -83,6 +83,9 @@
 %endif
 %ifarch %{aarch64}
 %global archinstall aarch64
+%endif
+%ifarch mips64el
+%global archinstall mips64el
 %endif
 # 32 bit sparc, optimized for v9
 %ifarch sparcv9
@@ -725,6 +728,8 @@ Patch400: ppc_stack_overflow_fix.patch
 Patch401: fix_ZERO_ARCHDEF_ppc.patch
 Patch402: atomic_linux_zero.inline.hpp.patch
 
+Patch1000: java-1.8.0-openjdk-mips64el-fix.patch
+
 Patch9999: enableArm64.patch
 
 BuildRequires: autoconf
@@ -1002,6 +1007,10 @@ sh %{SOURCE12}
 %patch401
 %patch402
 
+%ifarch mips64el
+%patch1000
+%endif
+
 # Extract systemtap tapsets
 %if %{with_systemtap}
 
@@ -1050,7 +1059,7 @@ export NUM_PROC=`/usr/bin/getconf _NPROCESSORS_ONLN 2> /dev/null || :`
 export NUM_PROC=${NUM_PROC:-1}
 
 # Build IcedTea and OpenJDK.
-%ifarch s390x sparc64 alpha %{power64} %{aarch64}
+%ifarch s390x sparc64 alpha %{power64} %{aarch64} mips64el
 export ARCH_DATA_MODEL=64
 %endif
 %ifarch alpha
