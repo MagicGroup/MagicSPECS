@@ -15,7 +15,7 @@ Patch0:	    vesa-2.3.0-24bpp-sucks.patch
 Patch1:	    vesa-2.3.0-no-virt-shadowfb.patch
 Patch2:	    0001-Fix-check-function-in-VESASaveRestore.patch
 Patch3:	    0002-Remove-mibstore.h.patch
-ExclusiveArch: %{ix86} x86_64
+ExclusiveArch: %{ix86} x86_64 mips64el
 
 BuildRequires: xorg-x11-server-devel >= 1.10.99.902
 BuildRequires: autoconf automake libtool

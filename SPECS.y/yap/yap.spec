@@ -29,6 +29,8 @@ Patch8:     yap-6.2.0-gprof-macro.patch
 Patch9:     yap-6.2.0-Remove-feature-macro.patch
 # Reported to upstream <yap-users@lists.sourceforge.net>
 Patch10:    yap-6.2.2-Off-by-one-error-when-initializing-yap_flags.patch
+# texinfo fix
+Patch11:    yap-6.2.2-texinfo.patch
 # yap 6.2.2 does not work on PPC (bug #790625)
 ExcludeArch:    ppc ppc64
 BuildRequires:  autoconf
@@ -86,6 +88,7 @@ Documentation for Yap.
 %patch8 -p1 -b .macro
 %patch9 -p1 -b .remove_feature_macro
 %patch10 -p1 -b .initialization
+%patch11 -p1
 
 # remove redundant RPATH
 sed -i 's/-Wl,-R\(,\)\{0,1\}\\$(LIBDIR)//' configure.in
