@@ -16,7 +16,7 @@
 
 Summary: The GIMP ToolKit (GTK+), a library for creating GUIs for X
 Name: gtk3
-Version:	3.13.7
+Version:	3.15.9
 Release: 1%{?dist}
 License: LGPLv2+
 Group: System Environment/Libraries
@@ -24,8 +24,6 @@ URL: http://www.gtk.org
 #VCS: git:git://git.gnome.org/gtk+
 %define majorver %(echo %{version} | awk -F. '{print $1"."$2}')
 Source: http://download.gnome.org/sources/gtk+/%{majorver}/gtk+-%{version}.tar.xz
-
-Patch1:	gtk3-3.13.3-test.patch
 
 BuildRequires: gnome-common autoconf automake intltool gettext
 BuildRequires: atk-devel >= %{atk_version}
@@ -80,6 +78,17 @@ projects ranging from small one-off tools to complete application
 suites.
 
 This package contains version 3 of GTK+.
+
+%package -n gtk-update-icon-cache
+Summary: Icon theme caching utility
+# gtk-update-icon-cache used to be shipped in the gtk2 package
+Conflicts: gtk2 < 2.24.25-2
+
+%description -n gtk-update-icon-cache
+GTK+ can use the cache files created by gtk-update-icon-cache to avoid a lot of
+system call and disk seek overhead when the application starts. Since the
+format of the cache files allows them to be mmap()ed shared between multiple
+applications, the overall memory consumption is reduced as well.
 
 %package immodules
 Summary: Input methods for GTK+
@@ -139,7 +148,6 @@ the functionality of the installed %{name} package.
 
 %prep
 %setup -q -n gtk+-%{version}
-%patch1 -p1
 
 %build
 (if ! test -x configure; then NOCONFIGURE=1 ./autogen.sh; CONFIGFLAGS=--enable-gtk-doc; fi;
@@ -252,7 +260,6 @@ gtk-query-immodules-3.0-%{__isa_bits} --update-cache
 %{_mandir}/man1/gtk-query-immodules-3.0*
 %{_mandir}/man1/gtk-launch.1.gz
 %{_mandir}/man1/gtk-encode-symbolic-svg.1.gz
-%exclude %{_mandir}/man1/gtk-update-icon-cache.1.gz
 %{_datadir}/glib-2.0/schemas/org.gtk.Settings.FileChooser.gschema.xml
 %{_datadir}/glib-2.0/schemas/org.gtk.Settings.ColorChooser.gschema.xml
 %{_datadir}/glib-2.0/schemas/org.gtk.exampleapp.gschema.xml
@@ -267,6 +274,11 @@ gtk-query-immodules-3.0-%{__isa_bits} --update-cache
 %{_datadir}/glib-2.0/schemas/org.gtk.Settings.Debug.gschema.xml
 %{_mandir}/man1/gtk3-demo.1.gz
 %{_mandir}/man1/gtk3-widget-factory.1.gz
+
+%files -n gtk-update-icon-cache
+#%doc COPYING
+%{_bindir}/gtk-update-icon-cache
+%{_mandir}/man1/gtk-update-icon-cache.1*
 
 %files immodules
 %{_libdir}/gtk-3.0/%{bin_version}/immodules/im-cedilla.so
@@ -297,11 +309,14 @@ gtk-query-immodules-3.0-%{__isa_bits} --update-cache
 %{_datadir}/applications/gtk3-widget-factory.desktop
 %{_datadir}/icons/hicolor/*/apps/gtk3-demo.png
 %{_datadir}/icons/hicolor/*/apps/gtk3-widget-factory.png
+%{_datadir}/icons/hicolor/*/apps/gtk3-demo-symbolic.symbolic.png
+%{_datadir}/icons/hicolor/*/apps/gtk3-widget-factory-symbolic.symbolic.png
 %{_bindir}/gtk3-demo-application
 %{_bindir}/gtk3-widget-factory
 %{_datadir}/gtk-3.0/gtkbuilder.rng
 %{_datadir}/gir-1.0
 %{_datadir}/glib-2.0/schemas/org.gtk.Demo.gschema.xml
+%{_mandir}/man1/gtk3-demo-application.1*
 
 %files devel-docs
 %{_datadir}/gtk-doc
@@ -311,6 +326,12 @@ gtk-query-immodules-3.0-%{__isa_bits} --update-cache
 %{_datadir}/installed-tests
 
 %changelog
+* Wed Feb 25 2015 Liu Di <liudidi@gmail.com> - 3.15.9-1
+- 更新到 3.15.9
+
+* Wed Feb 25 2015 Liu Di <liudidi@gmail.com> - 3.15.8-1
+- 更新到 3.15.8
+
 * Fri Aug 22 2014 Liu Di <liudidi@gmail.com> - 3.13.7-1
 - 更新到 3.13.7
 

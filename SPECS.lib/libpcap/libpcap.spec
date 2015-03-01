@@ -1,7 +1,7 @@
 Name: libpcap
 Epoch: 14
-Version: 1.5.3
-Release: 1%{?dist}
+Version: 1.6.2
+Release: 2%{?dist}
 Summary: A system-independent interface for user-level packet capture
 Summary(zh_CN.UTF-8): 系统无关的用户级包捕捉库
 Group: Development/Libraries
@@ -12,9 +12,11 @@ BuildRequires: glibc-kernheaders >= 2.2.0 bison flex bluez-libs-devel
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 Source: http://www.tcpdump.org/release/%{name}-%{version}.tar.gz
-Patch1: libpcap-man.patch
-Patch2: libpcap-multilib.patch
-Patch3: libpcap-s390.patch
+
+Patch0001:      0001-man-tcpdump-and-tcpslice-have-manpages-in-man8.patch
+Patch0002:      0002-pcap-config-mitigate-multilib-conflict.patch
+Patch0003:      0003-pcap-linux-apparently-ctc-interfaces-on-s390-has-eth.patch
+Patch0004:      0004-pcap-linux-don-t-use-TPACKETV3-for-memory-mmapped-ca.patch
 
 %description
 Libpcap provides a portable framework for low-level network
@@ -56,9 +58,7 @@ resources needed for developing libpcap applications.
 %prep
 %setup -q
 
-%patch1 -p1 -b .man 
-%patch2 -p1 -b .multilib
-#%patch3 -p1 -b .s390
+%autopatch -p1
 
 #sparc needs -fPIC 
 %ifarch %{sparc}
@@ -74,7 +74,7 @@ make %{?_smp_mflags}
 rm -rf $RPM_BUILD_ROOT
 
 make DESTDIR=$RPM_BUILD_ROOT install
-rm -f $RPM_BUILD_ROOT%{_libdir}/libpcap.a
+#rm -f $RPM_BUILD_ROOT%{_libdir}/libpcap.a
 magic_rpm_clean.sh
 
 %clean
@@ -96,11 +96,30 @@ rm -rf $RPM_BUILD_ROOT
 %{_includedir}/pcap*.h
 %{_includedir}/pcap
 %{_libdir}/libpcap.so
+%{_libdir}/libpcap.a
 %{_mandir}/man1/pcap-config.1*
 %{_mandir}/man3/pcap*.3*
 %{_mandir}/man5/pcap*.5*
 
 %changelog
+* Tue Feb 17 2015 Liu Di <liudidi@gmail.com> - 14:1.6.2-2
+- 为 Magic 3.0 重建
+
+* Mon Feb 16 2015 Liu Di <liudidi@gmail.com> - 14:1.6.2-1
+- 更新到 1.6.2
+
+* Mon Feb 16 2015 Liu Di <liudidi@gmail.com> - 14:0.5.2-1
+- 更新到 0.5.2
+
+* Mon Feb 16 2015 Liu Di <liudidi@gmail.com> - 14:1.6.2-1
+- 更新到 1.6.2
+
+* Mon Feb 16 2015 Liu Di <liudidi@gmail.com> - 14:1.6.2-1
+- 更新到 1.6.2
+
+* Mon Feb 16 2015 Liu Di <liudidi@gmail.com> - 14:1.5.3-2
+- 为 Magic 3.0 重建
+
 * Fri Jul 25 2014 Liu Di <liudidi@gmail.com> - 14:1.5.3-1
 - 更新到 1.5.3
 

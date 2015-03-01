@@ -1,6 +1,6 @@
 Name:           pwgen
 Version:        2.07
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Automatic password generation
 
 Group:          Applications/System
@@ -40,6 +40,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sun Mar 01 2015 Liu Di <liudidi@gmail.com> - 2.07-2
+- 为 Magic 3.0 重建
+
 * Fri Dec 5 2014 Orion Poplawski <orion@cora.nwra.com> - 2.07-1
 - Update to 2.07 (bug 1159526) fixes:
   CVE-2013-4440 (bug 1020222, 1020223)

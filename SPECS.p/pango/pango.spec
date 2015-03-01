@@ -11,7 +11,7 @@
 Summary: System for layout and rendering of internationalized text
 Name: pango
 Version: 1.36.8
-Release: 3%{?dist}
+Release: 4%{?dist}
 License: LGPLv2+
 Group: System Environment/Libraries
 #VCS: git:git://git.gnome.org/pango
@@ -158,6 +158,9 @@ fi
 
 
 %changelog
+* Wed Feb 25 2015 Liu Di <liudidi@gmail.com> - 1.36.8-4
+- 为 Magic 3.0 重建
+
 * Sat Feb 21 2015 Till Maas <opensource@till.name> - 1.36.8-3
 - Rebuilt for Fedora 23 Change
   https://fedoraproject.org/wiki/Changes/Harden_all_packages_with_position-independent_code

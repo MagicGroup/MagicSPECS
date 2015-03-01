@@ -4,6 +4,6 @@ if [ -z "$1" ] ; then
         exit 1
 fi
 pushd $(dirname $0)
-sed -i "s/Version:.*/Version: $1/g" libpcap.spec
-sed -i "s/Release:.*/Release: 1%{?dist}/g" libpcap.spec
+sed -i "s/Version:.*/Version: $1/g" numactl.spec
+sed -i "s/Release:.*/Release: 1%{?dist}/g" numactl.spec
 popd

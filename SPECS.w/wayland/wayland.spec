@@ -2,7 +2,7 @@
 
 Name:           wayland
 Version:        1.7.0
-Release:        2%{?gitdate:.%{gitdate}}%{?dist}
+Release:        3%{?gitdate:.%{gitdate}}%{?dist}
 Summary:        Wayland Compositor Infrastructure
 
 Group:          User Interface/X
@@ -171,6 +171,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/pkgconfig/wayland-server.pc
 
 %changelog
+* Wed Feb 25 2015 Liu Di <liudidi@gmail.com> - 1.7.0-3
+- 为 Magic 3.0 重建
+
 * Sat Feb 21 2015 Till Maas <opensource@till.name> - 1.7.0-2
 - Rebuilt for Fedora 23 Change
   https://fedoraproject.org/wiki/Changes/Harden_all_packages_with_position-independent_code

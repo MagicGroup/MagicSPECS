@@ -2,11 +2,13 @@
 
 Name: numad
 Version: 0.5
-Release: 18.20140620git%{?dist}
+Release: 19.20140620git%{?dist}
 Summary: NUMA user daemon
+Summary(zh_CN.UTF-8): NUMA 用户服务
 
 License: LGPLv2
 Group: System Environment/Daemons
+Group(zh_CN.UTF-8): 系统环境/服务
 URL: http://git.fedorahosted.org/git/?p=numad.git
 # The source for this package was pulled from upstream's vcs.  Use the
 # following commands to generate the tarball:
@@ -27,6 +29,9 @@ Numad, a daemon for NUMA (Non-Uniform Memory Architecture) systems,
 that monitors NUMA characteristics and manages placement of processes
 and memory to minimize memory latency and thus provide optimum performance.
 
+%description -l zh_CN.UTF-8
+NUMA 用户服务。
+
 %prep
 %setup -q -n %{name}-%{version}git
 %patch1 -p1
@@ -42,6 +47,7 @@ mkdir -p %{buildroot}%{_mandir}/man8/
 install -p -m 644 numad.service %{buildroot}%{_unitdir}/
 install -p -m 644 numad.logrotate %{buildroot}%{_sysconfdir}/logrotate.d/%{name}
 make install prefix=%{buildroot}/usr
+magic_rpm_clean.sh
 
 %files
 %{_bindir}/numad
@@ -59,6 +65,9 @@ make install prefix=%{buildroot}/usr
 %systemd_postun numad.service
 
 %changelog
+* Sat Feb 28 2015 Liu Di <liudidi@gmail.com> - 0.5-19.20140620git
+- 为 Magic 3.0 重建
+
 * Thu Aug 07 2014 Liu Di <liudidi@gmail.com> - 0.5-18.20140620git
 - 为 Magic 3.0 重建
 

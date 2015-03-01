@@ -4,7 +4,7 @@
 
 Name:           nx-libs
 Version:        3.5.0.28
-Release:        1%{?dist}
+Release:        3%{?dist}
 Summary:        NX X11 protocol compression libraries
 
 Group:          System Environment/Libraries
@@ -892,6 +892,12 @@ ln -s -f ../../../../%{_lib}/libXext.so.6 %{buildroot}%{_libdir}/nx/X11/Xinerama
 
 
 %changelog
+* Sat Feb 28 2015 Liu Di <liudidi@gmail.com> - 3.5.0.28-3
+- 为 Magic 3.0 重建
+
+* Sat Feb 28 2015 Liu Di <liudidi@gmail.com> - 3.5.0.28-2
+- 为 Magic 3.0 重建
+
 * Thu Nov 13 2014 Orion Poplawski <orion@cora.nwra.com> - 3.5.0.28-1
 - Update to 3.5.0.28
 - Fix unowned directories

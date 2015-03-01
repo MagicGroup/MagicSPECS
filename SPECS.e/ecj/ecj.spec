@@ -5,7 +5,7 @@ Epoch: 1
 Summary: Eclipse Compiler for Java
 Name: ecj
 Version: 4.4.1
-Release: 1%{?dist}
+Release: 2%{?dist}
 URL: http://www.eclipse.org
 License: EPL
 Group: Development/Languages
@@ -87,6 +87,9 @@ install -pm 644 pom.xml \
 %{_mandir}/man1/ecj.1.gz
 
 %changelog
+* Thu Feb 26 2015 Liu Di <liudidi@gmail.com> - 1:4.4.1-2
+- 为 Magic 3.0 重建
+
 * Thu Jan 8 2015 Alexander Kurtakov <akurtako@redhat.com> 1:4.4.1-1
 - Update to 4.4.1.
 

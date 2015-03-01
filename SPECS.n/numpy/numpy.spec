@@ -9,7 +9,7 @@
 
 Name:           numpy
 Version:        1.9.1
-Release:        2%{?dist}
+Release:        3%{?dist}
 Epoch:          1
 Summary:        A fast multidimensional array facility for Python
 
@@ -227,6 +227,9 @@ popd &> /dev/null
 
 
 %changelog
+* Sat Feb 28 2015 Liu Di <liudidi@gmail.com> - 1:1.9.1-3
+- 为 Magic 3.0 重建
+
 * Tue Jan 6 2015 Orion Poplawski <orion@nwra.com> - 1:1.9.1-2
 - Add upstream patch to fix xerbla linkage (bug #1172834)
 
