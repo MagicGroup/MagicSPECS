@@ -1,0 +1,107 @@
+#!/bin/sh
+#
+# x2gocleansessions - Starts/stop the "x2gocleansessions" daemon
+#
+# chkconfig:   2345 99 1
+# description: Cleans the X2Go session database
+
+### BEGIN INIT INFO
+# Provides: x2gocleansessions at batch
+# Required-Start: $local_fs
+# Required-Stop: $local_fs
+# Default-Start: 2345
+# Default-Stop: 016
+# Short-Description: Starts/stop the "x2gocleansessions" daemon
+# Description:      Cleans the X2Go session database
+### END INIT INFO
+
+# Source function library.
+. /etc/rc.d/init.d/functions
+
+exec=/usr/sbin/x2gocleansessions
+prog="x2gocleansessions"
+config=/etc/sysconfig/x2gocleansessions
+XSOCKDIR=/tmp/.X11-unix
+
+[ -e /etc/sysconfig/$prog ] && . /etc/sysconfig/$prog
+
+lockfile=/var/lock/subsys/$prog
+
+start() {
+    [ -x $exec ] || exit 5
+    # Make sure these are created by default so that nobody else can
+    if [ ! -d $XSOCKDIR ]
+    then
+        mkdir $XSOCKDIR
+        chmod 1777 $XSOCKDIR
+        restorecon $XSOCKDIR
+    fi
+    echo -n $"Starting $prog: "
+    daemon $exec $OPTS
+    retval=$?
+    echo
+    [ $retval -eq 0 ] && touch $lockfile
+}
+
+stop() {
+    echo -n $"Stopping $prog: "
+    killproc $exec
+    retval=$?
+    echo
+    rm -f $lockfile
+}
+
+restart() {
+    stop
+    start
+}
+
+reload() {
+    restart
+}
+
+force_reload() {
+    restart
+}
+
+rh_status() {
+    # run checks to determine if the service is running or use generic status
+    status $prog
+}
+
+rh_status_q() {
+    rh_status >/dev/null 2>&1
+}
+
+
+case "$1" in
+    start)
+        rh_status_q && exit 0
+        $1
+        ;;
+    stop)
+        rh_status_q || exit 0
+        $1
+        ;;
+    restart)
+        $1
+        ;;
+    reload)
+        rh_status_q || exit 7
+        $1
+        ;;
+    force-reload)
+        force_reload
+        ;;
+    status)
+        rh_status
+        ;;
+    condrestart|try-restart)
+        rh_status_q || exit 0
+        restart
+        ;;
+    *)
+        echo $"Usage: $0 {start|stop|status|restart|condrestart|try-restart|reload|force-reload}"
+        exit 2
+esac
+exit $?
