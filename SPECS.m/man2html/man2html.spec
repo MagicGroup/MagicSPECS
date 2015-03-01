@@ -3,8 +3,9 @@
 
 Name:       man2html
 Version:    1.6
-Release:    15.%{posttag}%{?dist}
+Release:    16.%{posttag}%{?dist}
 Summary:    Convert man pages to HTML - CGI scripts
+Summary(zh_CN.UTF-8): 转换手册页为 HTML - CGI 脚本
 
 # man2html.c and debian/sources/man2html.cgi.c are Copyright Only
 # utils.c is GPL+
@@ -120,15 +121,21 @@ man2html is a man page to HTML converter.
 This package contains CGI scripts that allow you to view, browse, and search
 man pages using a web server.
 
+%description -l zh_CN.UTF-8
+转换手册页为 HTML，这个包包括了 CGI 脚可以让你在 web 服务上查看、浏览和搜索手册页。
 
 %package core
 Summary:  Convert man pages to HTML
+
+Summary(zh_CN.UTF-8): 转换手册页为 HTML
 
 %description core
 man2html is a man page to HTML converter.
 
 This package contains the man2html executable.
 
+%description core -l zh_CN.UTF-8
+转换手册页为 HTML，这个包是 man2html 可执行程序。
 
 %prep
 %setup -q -n man-%{version}%{posttag} -a1
@@ -174,7 +181,7 @@ install -Dpm0644 %SOURCE2 %{buildroot}%{_sysconfdir}/httpd/conf.d/man2html.conf
 
 #create cache directory for cgi scripts
 mkdir -p %{buildroot}%{_localstatedir}/cache/man2html
-
+magic_rpm_clean.sh
 
 %post
 #clear out the cache directory so all future pages are regenerated with the new build
@@ -192,11 +199,14 @@ rm -f %{_localstatedir}/cache/man2html/* || :
 %files core
 %{_bindir}/man2html
 %{_mandir}/man1/man2html.1.*
-%{_mandir}/*/man1/*.1.*
+#%{_mandir}/*/man1/*.1.*
 %doc COPYING HISTORY man2html/README man2html/TODO
 
 
 %changelog
+* Sun Mar 01 2015 Liu Di <liudidi@gmail.com> - 1.6-16.g
+- 为 Magic 3.0 重建
+
 * Sun Aug 17 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.6-15.g
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
 

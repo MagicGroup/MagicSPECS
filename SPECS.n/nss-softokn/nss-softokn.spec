@@ -23,12 +23,14 @@
 %{nil}
 
 Summary:          Network Security Services Softoken Module
+Summary(zh_CN.UTF-8): 网络安全层 Softoken 模块
 Name:             nss-softokn
 Version:          3.17.4
-Release:          1%{?dist}
+Release:          2%{?dist}
 License:          MPLv2.0
 URL:              http://www.mozilla.org/projects/security/pki/nss/
 Group:            System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 Requires:         nspr >= %{nspr_version}
 Requires:         nss-util >= %{nss_util_version}
 Requires:         nss-softokn-freebl%{_isa} >= %{version}-%{release}
@@ -75,9 +77,14 @@ Patch97:	nss-softokn-add_encrypt_derive.patch
 %description
 Network Security Services Softoken Cryptographic Module
 
+%description -l zh_CN.UTF-8
+网络安全层 Softoken 模块。
+
 %package freebl
 Summary:          Freebl library for the Network Security Services
+Summary(zh_CN.UTF-8): 网络安全服务的 Freebl 库
 Group:            System Environment/Base
+Group(zh_CN.UTF-8): 系统环境/基本
 Conflicts:        nss < 3.12.2.99.3-5
 Conflicts:        prelink < 0.4.3
 Conflicts:        filesystem < 3
@@ -88,9 +95,14 @@ NSS Softoken Cryptographic Module Freebl Library
 Install the nss-softokn-freebl package if you need the freebl 
 library.
 
+%description freebl -l zh_CN.UTF-8
+网络安全服务的 Freebl 库、
+
 %package freebl-devel
 Summary:          Header and Library files for doing development with the Freebl library for NSS
+Summary(zh_CN.UTF-8): %{name}-freebl 的开发包
 Group:            System Environment/Base
+Group(zh_CN.UTF-8): 系统环境/基本
 Provides:         nss-softokn-freebl-static = %{version}-%{release}
 Requires:         nss-softokn-freebl%{?_isa} = %{version}-%{release}
 
@@ -101,9 +113,14 @@ is otherwise considered private to NSS. As such, the programming interfaces
 may change and the usual NSS binary compatibility commitments do not apply.
 Developers should rely only on the officially supported NSS public API.
 
+%description freebl-devel -l zh_CN.UTF-8
+%{name}-freebl 的开发包。
+
 %package devel
 Summary:          Development libraries for Network Security Services
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:            Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:         nss-softokn%{?_isa} = %{version}-%{release}
 Requires:         nss-softokn-freebl-devel%{?_isa} = %{version}-%{release}
 Requires:         nspr-devel >= %{nspr_version}
@@ -116,6 +133,8 @@ BuildRequires:    nss-util-devel >= %{nss_util_version}
 %description devel
 Header and library files for doing development with Network Security Services.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -338,7 +357,7 @@ done
 # Copy the package configuration files
 %{__install} -p -m 644 ./dist/pkgconfig/nss-softokn.pc $RPM_BUILD_ROOT/%{_libdir}/pkgconfig/nss-softokn.pc
 %{__install} -p -m 755 ./dist/pkgconfig/nss-softokn-config $RPM_BUILD_ROOT/%{_bindir}/nss-softokn-config
-
+magic_rpm_clean.sh
 
 %clean
 %{__rm} -rf $RPM_BUILD_ROOT
@@ -397,6 +416,9 @@ done
 %{_includedir}/nss3/shsign.h
 
 %changelog
+* Thu Feb 26 2015 Liu Di <liudidi@gmail.com> - 3.17.4-2
+- 为 Magic 3.0 重建
+
 * Wed Jan 28 2015 Elio Maldonado <emaldona@redhat.com> - 3.17.4-1
 - Update to nss-3.17.4
 - fix dependencies so nss-softokn pulls in nss-softokn-freebl of the same version and release

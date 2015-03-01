@@ -4,9 +4,10 @@
 #global shortcommit %(c=%{commit}; echo ${c:0:7})
 
 Summary: Direct Rendering Manager runtime library
+Summary(zh_CN.UTF-8): 直接渲染管理 (DRM) 运行库
 Name: libepoxy
 Version: 1.2
-Release: 1%{?dist}
+Release: 2%{?dist}
 License: MIT
 URL: http://github.com/anholt/libepoxy
 # github url - generated archive
@@ -23,13 +24,20 @@ BuildRequires: python3
 %description
 A library for handling OpenGL function pointer management.
 
+%description -l zh_CN.UTF-8
+处理 OpenGL 函数的库。
+
 %package devel
 Summary: Development files for libepoxy
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Requires: %{name}%{?_isa} = %{version}-%{release}
 
 %description devel
 This package contains libraries and header files for
 developing applications that use %{name}.
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -44,6 +52,7 @@ make install DESTDIR=$RPM_BUILD_ROOT
 
 # NOTE: We intentionally don't ship *.la files
 find $RPM_BUILD_ROOT -type f -name '*.la' -delete -print
+magic_rpm_clean.sh
 
 %check
 # In theory this is fixed in 1.2 but we still see errors on most platforms
@@ -69,6 +78,9 @@ make check ||:
 %{_libdir}/pkgconfig/epoxy.pc
 
 %changelog
+* Wed Feb 25 2015 Liu Di <liudidi@gmail.com> - 1.2-2
+- 为 Magic 3.0 重建
+
 * Mon Oct 13 2014 Peter Robinson <pbrobinson@fedoraproject.org> 1.2.0-1
 - Update to 1.2 GA
 - Don't fail build on make check failure for some architectures

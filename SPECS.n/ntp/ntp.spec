@@ -1,9 +1,10 @@
 %global _hardened_build 1
 
 Summary: The NTP daemon and utilities
+Summary(zh_CN.UTF-8): NTF 服务和工具
 Name: ntp
 Version: 4.2.6p5
-Release: 28%{?dist}
+Release: 29%{?dist}
 # primary license (COPYRIGHT) : MIT
 # ElectricFence/ (not used) : GPLv2
 # kernel/sys/ppsclock.h (not used) : BSD with advertising
@@ -32,6 +33,7 @@ Release: 28%{?dist}
 # util/ansi2knr.c (not used) : GPL+
 License: (MIT and BSD and BSD with advertising) and GPLv2
 Group: System Environment/Daemons
+Group(zh_CN.UTF-8): 系统环境/服务
 Source0: http://www.eecis.udel.edu/~ntp/ntp_spool/ntp4/ntp-4.2/ntp-%{version}.tar.gz
 Source1: ntp.conf
 Source2: ntp.keys
@@ -154,9 +156,14 @@ Perl scripts ntp-wait and ntptrace are in the ntp-perl package,
 ntpdate is in the ntpdate package and sntp is in the sntp package.
 The documentation is in the ntp-doc package.
 
+%description -l zh_CN.UTF-8
+网络时间同步协议的服务和同步工具。
+
 %package perl
 Summary: NTP utilities written in Perl
+Summary(zh_CN.UTF-8): Perl 编写的 NTP 工具
 Group: Applications/System
+Group(zh_CN.UTF-8): 应用程序/系统
 Requires: %{name} = %{version}-%{release}
 Requires(post): systemd-units
 Requires(preun): systemd-units
@@ -166,10 +173,15 @@ Obsoletes: %{name} < 4.2.4p4-7
 BuildArch: noarch
 %description perl
 This package contains Perl scripts ntp-wait and ntptrace.
- 
+
+%description perl -l zh_CN.UTF-8 
+Perl 编写的 NTP 工具
+
 %package -n ntpdate
 Summary: Utility to set the date and time via NTP
+Summary(zh_CN.UTF-8): 通过 NTP 设置日期和时间的工具
 Group: Applications/System
+Group(zh_CN.UTF-8): 应用程序/系统
 Requires(pre): shadow-utils
 Requires(post): systemd-units
 Requires(preun): systemd-units
@@ -179,9 +191,14 @@ Requires(postun): systemd-units
 ntpdate is a program for retrieving the date and time from
 NTP servers.
 
+%description -n ntpdate -l zh_CN.UTF-8
+通过 NTP 设置日期和时间的工具。
+
 %package -n sntp
 Summary: Standard Simple Network Time Protocol program
+Summary(zh_CN.UTF-8): 标准的 SNTP 程序
 Group: Applications/System
+Group(zh_CN.UTF-8): 应用程序/系统
 Requires(post): systemd-units
 Requires(preun): systemd-units
 Requires(postun): systemd-units
@@ -191,14 +208,22 @@ sntp can be used as a SNTP client to query a NTP or SNTP server and either
 display the time or set the local system's time (given suitable privilege).
 It can be run as an interactive command or in a cron job.
 
+%description -n sntp -l zh_CN.UTF-8
+sntp 可以做为 SNTP 客户端来查询 NTP 或 SNTP 服务。
+
 %package doc
 Summary: NTP documentation
+Summary(zh_CN.UTF-8): %{name} 的文档
 Group: Documentation
+Group(zh_CN.UTF-8): 文档
 Requires: %{name} = %{version}-%{release}
 BuildArch: noarch
 %description doc
 This package contains NTP documentation in HTML format.
- 
+
+%description doc -l zh_CN.UTF-8 
+%{name} 的文档。
+
 %global ntpdocdir %{?_pkgdocdir}%{!?_pkgdocdir:%{_docdir}/%{name}-%{version}}
 
 # pool.ntp.org vendor zone which will be used in ntp.conf
@@ -351,6 +376,7 @@ mkdir .%{_prefix}/lib/systemd/ntp-units.d
 echo 'ntpd.service' > .%{_prefix}/lib/systemd/ntp-units.d/60-ntpd.list
 
 popd
+magic_rpm_clean.sh
 
 %pre -n ntpdate
 /usr/sbin/groupadd -g 38 ntp  2> /dev/null || :
@@ -455,6 +481,9 @@ popd
 %{ntpdocdir}/html
 
 %changelog
+* Sat Feb 28 2015 Liu Di <liudidi@gmail.com> - 4.2.6p5-29
+- 为 Magic 3.0 重建
+
 * Thu Feb 26 2015 Miroslav Lichvar <mlichvar@redhat.com> 4.2.6p5-28
 - don't step clock for leap second with -x option (#1196635)
 - allow creating all SHM segments with owner-only access

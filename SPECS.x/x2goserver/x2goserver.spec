@@ -1,7 +1,7 @@
 #global checkout 20130722git65169c9
 Name:           x2goserver
 Version:        4.0.1.19
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        X2Go Server
 
 Group:          Applications/Communications
@@ -14,6 +14,8 @@ Source0:        http://code.x2go.org/releases/source/%{name}/%{name}-%{version}.
 #Source0:        %{name}/%{name}-%{version}-%{checkout}.tar.gz
 Source1:        x2gocleansessions.service
 Source2:        x2gocleansessions.init
+
+Patch1:		x2goserver-4.0.1.19-magic.patch
 
 BuildRequires:  desktop-file-utils
 BuildRequires:  perl(ExtUtils::MakeMaker)
@@ -146,6 +148,7 @@ X2Go session login automagically.
 
 %prep
 %setup -q
+%patch1 -p1
 
 # Set path
 find -type f | xargs sed -i -r -e '/^LIBDIR=/s,/lib/,/%{_lib}/,'
@@ -331,6 +334,9 @@ exit 0
 
 
 %changelog
+* Sun Mar 01 2015 Liu Di <liudidi@gmail.com> - 4.0.1.19-2
+- 为 Magic 3.0 重建
+
 * Tue Feb 24 2015 Orion Poplawski <orion@cora.nwra.com> - 4.0.1.19-1
 - Update to 4.0.1.19
 - Drop Xsession and path patches fixed upstream

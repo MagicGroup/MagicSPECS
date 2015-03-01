@@ -7,10 +7,12 @@
 
 Name:		ntfs-3g
 Summary:	Linux NTFS userspace driver
+Summary(zh_CN.UTF-8): Linux 下的用户空间 NTFS 驱动
 Version:	2014.2.15
-Release:	8%{?dist}
+Release:	9%{?dist}
 License:	GPLv2+
 Group:		System Environment/Base
+Group(zh_CN.UTF-8): 系统环境/基本
 Source0:	http://tuxera.com/opensource/%{name}_ntfsprogs-%{version}%{?subver}.tgz
 URL:		http://www.ntfs-3g.org/
 %if %{with_externalfuse}
@@ -37,9 +39,14 @@ streams and sparse files; it can handle special files like symbolic links,
 devices, and FIFOs, ACL, extended attributes; moreover it provides full 
 file access right and ownership support.
 
+%description -l zh_CN.UTF-8
+Linux 下的用户空间 NTFS 驱动。
+
 %package devel
 Summary:	Development files and libraries for ntfs-3g
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:		Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:	%{name} = %{epoch}:%{version}-%{release}
 Requires:	pkgconfig
 Provides:	ntfsprogs-devel = %{epoch}:%{version}-%{release}
@@ -51,9 +58,14 @@ Obsoletes:	ntfsprogs-devel < 2.0.0-17
 Headers and libraries for developing applications that use ntfs-3g
 functionality.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
 %package -n ntfsprogs
 Summary:	NTFS filesystem libraries and utilities
+Summary(zh_CN.UTF-8): NTFS 文件系统的库和工具
 Group:		System Environment/Base
+Group(zh_CN.UTF-8): 系统环境/基本
 # We don't really provide this. This code is dead and buried now.
 Provides:	ntfsprogs-gnomevfs = %{epoch}:%{version}-%{release}
 Obsoletes:	ntfsprogs-gnomevfs
@@ -66,6 +78,9 @@ Obsoletes:	ntfsprogs < 2.0.0-17
 The ntfsprogs package currently consists of a library and utilities such as 
 mkntfs, ntfscat, ntfsls, ntfsresize, and ntfsundelete (for a full list of 
 included utilities see man 8 ntfsprogs after installation).
+
+%description -n ntfsprogs -l zh_CN.UTF-8
+NTFS 文件系统的库和工具。
 
 %prep
 %setup -q -n %{name}_ntfsprogs-%{version}%{?subver}
@@ -110,6 +125,7 @@ rmdir %{buildroot}/sbin
 
 # We get this on our own, thanks.
 rm -rf %{buildroot}%{_defaultdocdir}/%{name}/README
+magic_rpm_clean.sh
 
 %post -p /sbin/ldconfig
 %postun -p /sbin/ldconfig
@@ -168,6 +184,9 @@ rm -rf %{buildroot}%{_defaultdocdir}/%{name}/README
 %exclude %{_mandir}/man8/ntfs-3g*
 
 %changelog
+* Sat Feb 28 2015 Liu Di <liudidi@gmail.com> - 2:2014.2.15-9
+- 为 Magic 3.0 重建
+
 * Sat May 03 2014 Liu Di <liudidi@gmail.com> - 2:2014.2.15-8
 - 为 Magic 3.0 重建
 

@@ -3,15 +3,17 @@
 %global _hardened_build 1
 
 Summary: Network exploration tool and security scanner
+Summary(zh_CN.UTF-8): 网络探测工具和安全扫描器
 Name: nmap
 Epoch: 2
 Version: 6.47
 #global prerelease TEST5
-Release: 2%{?dist}
+Release: 3%{?dist}
 # Uses combination of licenses based on GPL license, but with extra modification
 # so it got its own license tag rhbz#1055861
 License: Nmap
 Group: Applications/System
+Group(zh_CN.UTF-8): 应用程序/系统
 Requires: %{name}-ncat = %{epoch}:%{version}-%{release}
 Source0: http://nmap.org/dist/%{name}-%{version}%{?prerelease}.tar.bz2
 Source1: zenmap.desktop
@@ -51,9 +53,14 @@ data transfer, redirection, and debugging tool (netcat utility ncat), a utility
 for comparing scan results (ndiff), and a packet generation and response analysis
 tool (nping). 
 
+%description -l zh_CN.UTF-8
+网络探测工具和安全扫描器。
+
 %package frontend
 Summary: The GTK+ front end for nmap
+Summary(zh_CN.UTF-8): nmap 的 GTK+ 前端
 Group: Applications/System
+Group(zh_CN.UTF-8): 应用程序/系统
 Requires: nmap = %{epoch}:%{version} gtk2 python >= 2.5 pygtk2 usermode
 BuildRequires: python >= 2.5 python-devel pygtk2-devel libpng-devel
 BuildArch: noarch
@@ -61,9 +68,14 @@ BuildArch: noarch
 This package includes zenmap, a GTK+ front end for nmap. The nmap package must
 be installed before installing nmap front end.
 
+%description frontend -l zh_CN.UTF-8
+nmap 的 pyGTK+ 前端
+
 %package ncat
 Group:   Applications/System
+Group(zh_CN.UTF-8): 应用程序/系统
 Summary: Nmap's Netcat replacement
+Summary(zh_CN.UTF-8): Nmap 的 Netcat 替代
 Obsoletes: nc < 1.109.20120711-2
 Provides: nc
 %description ncat
@@ -75,6 +87,8 @@ applications and users. Ncat will not only work with IPv4 and IPv6
 but provides the user with a virtually limitless number of potential
 uses.
 
+%description ncat -l zh_CN.UTF-8
+Nmap 的 Netcat 替代。
 
 %prep
 %setup -q -n %{name}-%{version}%{?prerelease}
@@ -159,7 +173,7 @@ do
   mv -f $fe.new $fe
 done
 popd
-
+magic_rpm_clean.sh
 %find_lang nmap --with-man
 %find_lang zenmap
 
@@ -216,6 +230,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man1/xnmap.1.gz
 
 %changelog
+* Mon Feb 16 2015 Liu Di <liudidi@gmail.com> - 2:6.47-3
+- 为 Magic 3.0 重建
+
 * Wed Dec 10 2014 Michal Hlavinka <mhlavink@redhat.com> - 2:6.47-2
 - do not own icons/hicolor/<size>/apps directory (#1171813)
 
