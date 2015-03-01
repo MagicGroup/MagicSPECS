@@ -1,0 +1,29 @@
+diff -Nur ../man-1.6g.orig/man2html/cgibase.c ./man2html/cgibase.c
+--- ../man-1.6g.orig/man2html/cgibase.c	2005-08-20 16:26:06.000000000 -0700
++++ ./man2html/cgibase.c	2011-12-15 02:45:00.826764389 -0700
+@@ -97,7 +97,7 @@
+ 
+ void
+ include_file_html(char *g) {
+-     printf("<A HREF=\"file:/usr/include/%s\">%s</A>&gt;", g,g);
++     printf("<A HREF=\"file:///usr/include/%s\">%s</A>&gt;", g,g);
+ }
+ 
+ void
+diff -Nur ../man-1.6g.orig/man2html/man2html.c ./man2html/man2html.c
+--- ../man-1.6g.orig/man2html/man2html.c	2007-08-05 12:15:23.000000000 -0700
++++ ./man2html/man2html.c	2011-12-15 02:45:00.837764508 -0700
+@@ -116,11 +116,11 @@
+     ** www.host.name           -> http://www.host.name
+     ** ftp.host.name           -> ftp://ftp.host.name
+     ** name@host               -> mailto:name@host
+-    ** <name.h>                -> file:/usr/include/name.h   (guess)
++    ** <name.h>                -> file:///usr/include/name.h   (guess)
+     **
+     ** Other possible links to add in the future:
+     **
+-    ** /dir/dir/file  -> file:/dir/dir/file
++    ** /dir/dir/file  -> file:///dir/dir/file
+     */
+     int i,j,nr;
+     char *f, *g, *h;
