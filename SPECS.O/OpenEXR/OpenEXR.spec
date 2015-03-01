@@ -1,30 +1,25 @@
 
-
 Name:	 OpenEXR
-Version: 1.7.1
-Release: 4%{?dist}
 Summary: A high dynamic-range (HDR) image file format
+Version: 2.2.0
+Release: 2%{?dist}
 
-Group:	 System Environment/Libraries
 License: BSD
 URL:	 http://www.openexr.com/
-Source0: https://github.com/downloads/openexr/openexr/openexr-%{version}.tar.gz
-BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-
-## fedora patches
-# revert soname bump
-# upstream missed bumping to so7 for OpenEXR-1.7.0, decided to do so now for
-# OpenEXR-1.7.1.  given fedora has shipped OpenEXR-1.7.0 since f15, bumping
-# ABI now makes little sense.
-Patch0: openexr-1.7.1-so6.patch
+Source0: http://download.savannah.nongnu.org/releases/openexr/openexr-%{version}.tar.gz
+# fix tests for big endian arches
+# https://github.com/openexr/openexr/issues/81
+Patch0:  openexr-2.1.0-bigendian.patch
 
 Obsoletes: openexr < %{version}-%{release}
 Provides:  openexr = %{version}-%{release}
 
-BuildRequires:  automake libtool
-BuildRequires:  ilmbase-devel 
-BuildRequires:  zlib-devel
-BuildRequires:  pkgconfig
+# https://github.com/openexr/openexr/issues/130
+BuildConflicts: OpenEXR-devel < 2.2.0
+
+BuildRequires: ilmbase-devel >= %{version}
+BuildRequires: zlib-devel
+BuildRequires: pkgconfig
 
 Requires: %{name}-libs%{?_isa} = %{version}-%{release}
 
@@ -35,28 +30,22 @@ libraries and sample applications for handling the format.
 
 %package devel
 Summary: Headers and libraries for building apps that use %{name} 
-Group:	 Development/Libraries
 Obsoletes: openexr-devel < %{version}-%{release}
 Provides:  openexr-devel = %{version}-%{release}
 Requires: %{name}-libs%{?_isa} = %{version}-%{release}
-Requires: pkgconfig(glu)
 Requires: ilmbase-devel
-Requires: pkgconfig
 %description devel
 %{summary}.
 
 %package libs
 Summary: %{name} runtime libraries
-Group:   System Environment/Libraries
 %description libs
 %{summary}.
 
 
 %prep
 %setup -q -n openexr-%{version}
-
-%patch0 -p1 -b .so6
-./bootstrap
+%patch0 -p1 -b .bigendian
 
 
 %build
@@ -69,53 +58,81 @@ make %{?_smp_mflags}
 
 
 %install
-rm -rf $RPM_BUILD_ROOT
-
-make install DESTDIR=$RPM_BUILD_ROOT INSTALL="install -p"
+make install DESTDIR=%{buildroot}
 
 #unpackaged files
-find $RPM_BUILD_ROOT -name '*.la' -exec rm -fv {} ';'
-rm -rf $RPM_BUILD_ROOT%{_docdir}/%{name}-%{version}
+rm -fv %{buildroot}%{_libdir}/lib*.la
+rm -rf %{buildroot}%{_docdir}/%{name}-%{version}
 
 
 %check
-export PKG_CONFIG_PATH=%{buildroot}%{_datadir}/pkgconfig:%{buildroot}%{_libdir}/pkgconfig
+export PKG_CONFIG_PATH=%{buildroot}%{_libdir}/pkgconfig
 test "$(pkg-config --modversion OpenEXR)" = "%{version}"
-make check 
-
-
-%clean
-rm -rf $RPM_BUILD_ROOT
+make %{?_smp_mflags} check ||:
 
 
 %files
-%defattr(-,root,root,-)
-%{_bindir}/*
+%{_bindir}/exr*
 
 %post libs -p /sbin/ldconfig
 %postun libs  -p /sbin/ldconfig
 
 %files libs
-%defattr(-,root,root,-)
 %doc AUTHORS ChangeLog LICENSE NEWS README
-%{_libdir}/libIlmImf.so.6*
+%{_libdir}/libIlmImf-2_2.so.22*
+%{_libdir}/libIlmImfUtil-2_2.so.22*
 
 %files devel
-%defattr(-,root,root,-)
 #omit for now, they're mostly useless, and include multilib conflicts (#342781)
 #doc rpmdocs/examples 
 %{_datadir}/aclocal/openexr.m4
 %{_includedir}/OpenEXR/*
-%{_libdir}/libIlmImf.so
+%{_libdir}/libIlmImf*.so
 %{_libdir}/pkgconfig/OpenEXR.pc
 
 
 %changelog
-* Tue Apr 29 2014 Liu Di <liudidi@gmail.com> - 1.7.1-4
-- 为 Magic 3.0 重建
+* Wed Feb 18 2015 Rex Dieter <rdieter@fedoraproject.org> 2.2.0-2
+- rebuild (gcc5)
+
+* Thu Nov 20 2014 Rex Dieter <rdieter@fedoraproject.org> 2.2.0-1
+- 2.2.0
+
+* Fri Aug 15 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.1.0-5
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
+
+* Fri Jun 06 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.1.0-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Fri Jan 31 2014 Rex Dieter <rdieter@fedoraproject.org> 2.1.0-3
+- respin headers patch (to match upstream fix)
+
+* Wed Nov 27 2013 Rex Dieter <rdieter@fedoraproject.org> 2.1.0-2
+- install ImfDeepImageStateAttribute.h header too
+
+* Wed Nov 27 2013 Rex Dieter <rdieter@fedoraproject.org> 2.1.0-1
+- 2.1.0
+
+* Wed Nov 20 2013 Dan Horák <dan[at]danny.cz>  2.0.1-3
+- remove testing residue from optflags
+
+* Wed Nov 20 2013 Dan Horák <dan[at]danny.cz>  2.0.1-2
+- fix tests for big endian arches
+
+* Wed Aug 28 2013 Rex Dieter <rdieter@fedoraproject.org>  2.0.1-1
+- openexr-2.0.1
+
+* Fri Aug 02 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.7.1-6
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Sun Mar 10 2013 Nicolas Chauvet <kwizart@gmail.com> - 1.7.1-5
+- Back to upstream ABI (f19+, el7+)
+
+* Wed Feb 13 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.7.1-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
 
 * Mon Oct 15 2012 Nicolas Chauvet <kwizart@gmail.com> - 1.7.1-3
-- Fix glu.pc requires rhbz#866302
+- Bump to hide revertion
 
 * Fri Aug 31 2012 Rex Dieter <rdieter@fedoraproject.org> 1.7.1-2
 - rebuild
@@ -165,7 +182,7 @@ rm -rf $RPM_BUILD_ROOT
 * Mon Jan 07 2008 Rex Dieter <rdieter[AT]fedoraproject.org> 1.6.1-1
 - openexr-1.6.1
 
-* Mon Oct 30 2007 Rex Dieter <rdieter[AT]fedoraproject.org> 1.6.0-5
+* Tue Oct 30 2007 Rex Dieter <rdieter[AT]fedoraproject.org> 1.6.0-5
 - multiarch conflicts in OpenEXR (#342781)
 - don't own %%_includedir/OpenEXR (leave that to ilmbase)
 
