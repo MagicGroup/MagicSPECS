@@ -1,5 +1,5 @@
 Name:    ilmbase
-Version: 2.1.0
+Version:	2.2.0
 Release: 1%{?dist}
 Summary: Abstraction/convenience libraries
 
@@ -18,8 +18,6 @@ BuildRequires: pkgconfig(gl) pkgconfig(glu)
 Patch51: ilmbase-2.0.1-no_undefined.patch
 # add Requires.private: gl glu to IlmBase.pc
 Patch53:  ilmbase-1.0.3-pkgconfig.patch
-# use ucontext only on ix86/x86_64, avoid FTBFS on arm (patch borrowed from opensuse)
-Patch54: ilmbase-2.0-1-arm.patch
 
 ## upstream patches
 
@@ -46,7 +44,6 @@ Requires: %{name}%{?_isa} = %{version}-%{release}
 
 %patch51 -p1 -b .no_undefined
 %patch53 -p1 -b .pkgconfig
-%patch54 -p1 -b .arm
 
 #/bootstrap
 
@@ -81,11 +78,11 @@ make check
 
 %files
 %doc AUTHORS ChangeLog COPYING NEWS README
-%{_libdir}/libHalf.so.11*
-%{_libdir}/libIex-2_1.so.11*
-%{_libdir}/libIexMath-2_1.so.11*
-%{_libdir}/libIlmThread-2_1.so.11*
-%{_libdir}/libImath-2_1.so.11*
+%{_libdir}/libHalf.so.1*
+%{_libdir}/libIex-2_*.so.1*
+%{_libdir}/libIexMath-2_*.so.1*
+%{_libdir}/libIlmThread-2_*.so.1*
+%{_libdir}/libImath-2_*.so.1*
 
 %files devel
 %{_includedir}/OpenEXR/
@@ -94,6 +91,9 @@ make check
 
 
 %changelog
+* Sun Mar 01 2015 Liu Di <liudidi@gmail.com> - 2.2.0-1
+- 更新到 2.2.0
+
 * Wed Nov 27 2013 Rex Dieter <rdieter@fedoraproject.org> 2.1.0-1
 - 2.1.0
 

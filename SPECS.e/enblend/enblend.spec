@@ -10,7 +10,7 @@ Summary: Image Blending with Multiresolution Splines
 Summary(zh_CN.UTF-8): 图像的多分辨率样条融合
 Name: enblend
 Version: 4.1.3
-Release: 7%{?dist}
+Release: 8%{?dist}
 License: GPLv2+
 Group: Applications/Multimedia
 Group(zh_CN.UTF-8): 应用程序/多媒体
@@ -115,6 +115,9 @@ fi
 %doc COPYING doc/enblend.pdf doc/enfuse.pdf
 
 %changelog
+* Sun Mar 01 2015 Liu Di <liudidi@gmail.com> - 4.1.3-8
+- 为 Magic 3.0 重建
+
 * Sat Dec 27 2014 Liu Di <liudidi@gmail.com> - 4.1.3-7
 - 为 Magic 3.0 重建
 

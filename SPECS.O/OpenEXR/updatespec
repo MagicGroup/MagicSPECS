@@ -4,6 +4,6 @@ if [ -z "$1" ] ; then
         exit 1
 fi
 pushd $(dirname $0)
-sed -i "s/Version:.*/Version:\t$1/g" inkscape.spec
-sed -i "s/Release:.*/Release:\t1%{?dist}/g" inkscape.spec
+sed -i "s/Version:.*/Version: $1/g" OpenEXR.spec
+sed -i "s/Release:.*/Release: 1%{?dist}/g" OpenEXR.spec
 popd
