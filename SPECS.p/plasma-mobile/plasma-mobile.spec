@@ -1,7 +1,7 @@
 
 Name:           plasma-mobile
 Version:        0.4
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        A Plasma Active mobile workspace
 
 License:        GPLv2+
@@ -109,7 +109,7 @@ fi
 %{_kde4_bindir}/plasma-device
 %{_kde4_bindir}/plasma-widgetstrip
 %{_kde4_libdir}/kde4/imports/org/kde/active/
-%{_kde4_libdir}/kde4/imports/org/kde/dirmodel/
+%exclude %{_kde4_libdir}/kde4/imports/org/kde/dirmodel/
 %{_kde4_libdir}/kde4/imports/org/kde/metadatamodels/
 %{_kde4_libdir}/kde4/imports/org/kde/plasma/mobilecomponents/
 %{_kde4_libdir}/kde4/*.so
@@ -157,6 +157,9 @@ fi
 
 
 %changelog
+* Mon Mar 02 2015 Liu Di <liudidi@gmail.com> - 0.4-3
+- 为 Magic 3.0 重建
+
 * Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.4-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
 

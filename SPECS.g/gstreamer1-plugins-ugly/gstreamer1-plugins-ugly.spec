@@ -9,7 +9,7 @@
 %endif
 
 Name:           gstreamer1-plugins-ugly
-Version:	1.3.90
+Version:	1.4.5
 Release:        2%{?dist}
 Summary:        GStreamer streaming media framework "ugly" plugins
 
@@ -139,6 +139,9 @@ find $RPM_BUILD_ROOT -name '*.la' -exec rm -f {} ';'
 %{_datadir}/gstreamer-%{majorminor}/presets/GstX264Enc.prs
 
 %changelog
+* Mon Mar 02 2015 Liu Di <liudidi@gmail.com> - 1.4.5-2
+- 更新到 1.4.5
+
 * Thu Jul 10 2014 Liu Di <liudidi@gmail.com> - 1.3.90-2
 - 更新到 1.3.90
 

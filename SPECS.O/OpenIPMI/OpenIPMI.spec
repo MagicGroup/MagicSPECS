@@ -3,8 +3,8 @@
 %{!?python_sitearch: %global python_sitearch %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib(1)")}
 Summary: IPMI (Intelligent Platform Management Interface) library and tools
 Name: OpenIPMI
-Version: 2.0.19
-Release: 4%{?dist}
+Version: 2.0.21
+Release: 1%{?dist}
 License: LGPLv2+ and GPLv2+ or BSD
 Group: System Environment/Base
 URL: http://sourceforge.net/projects/openipmi/
@@ -140,6 +140,13 @@ magic_rpm_clean.sh
 %{_mandir}/man7/ipmi_cmdlang*
 %{_mandir}/man7/openipmi_conparms*
 %{_mandir}/man8/ipmilan*
+%{_sysconfdir}/ipmi/ipmisim1.emu
+%{_sysconfdir}/ipmi/lan.conf
+%{_bindir}/ipmi_sim
+%{_bindir}/sdrcomp
+%{_mandir}/man1/ipmi_sim*
+%{_mandir}/man5/ipmi_lan*
+%{_mandir}/man5/ipmi_sim_cmd*
 
 %files perl
 %attr(644,root,root) %{perl_vendorarch}/OpenIPMI.pm
@@ -157,6 +164,9 @@ magic_rpm_clean.sh
 %{_libdir}/pkgconfig/*.pc
 
 %changelog
+* Mon Mar 02 2015 Liu Di <liudidi@gmail.com> - 2.0.21-1
+- 更新到 2.0.21
+
 * Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 2.0.19-4
 - 为 Magic 3.0 重建
 

@@ -1,8 +1,9 @@
 
 Name:	 OpenEXR
 Summary: A high dynamic-range (HDR) image file format
+Summary(zh_CN.UTF-8): 大动态范围 (HDR) 图像文件格式
 Version: 2.2.0
-Release: 2%{?dist}
+Release: 3%{?dist}
 
 License: BSD
 URL:	 http://www.openexr.com/
@@ -28,8 +29,12 @@ OpenEXR is a high dynamic-range (HDR) image file format developed by Industrial
 Light & Magic for use in computer imaging applications. This package contains
 libraries and sample applications for handling the format.
 
+%description -l zh_CN.UTF-8
+大动态范围 (HDR) 图像文件格式的库。
+
 %package devel
 Summary: Headers and libraries for building apps that use %{name} 
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Obsoletes: openexr-devel < %{version}-%{release}
 Provides:  openexr-devel = %{version}-%{release}
 Requires: %{name}-libs%{?_isa} = %{version}-%{release}
@@ -37,11 +42,17 @@ Requires: ilmbase-devel
 %description devel
 %{summary}.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
 %package libs
 Summary: %{name} runtime libraries
+Summary(zh_CN.UTF-8): %{name} 的运行库
 %description libs
 %{summary}.
 
+%description libs -l zh_CN.UTF-8
+%{name} 的运行库。
 
 %prep
 %setup -q -n openexr-%{version}
@@ -63,7 +74,7 @@ make install DESTDIR=%{buildroot}
 #unpackaged files
 rm -fv %{buildroot}%{_libdir}/lib*.la
 rm -rf %{buildroot}%{_docdir}/%{name}-%{version}
-
+magic_rpm_clean.sh
 
 %check
 export PKG_CONFIG_PATH=%{buildroot}%{_libdir}/pkgconfig
@@ -92,6 +103,9 @@ make %{?_smp_mflags} check ||:
 
 
 %changelog
+* Sun Mar 01 2015 Liu Di <liudidi@gmail.com> - 2.2.0-3
+- 为 Magic 3.0 重建
+
 * Wed Feb 18 2015 Rex Dieter <rdieter@fedoraproject.org> 2.2.0-2
 - rebuild (gcc5)
 
