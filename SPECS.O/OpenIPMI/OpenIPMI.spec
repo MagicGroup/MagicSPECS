@@ -4,7 +4,7 @@
 Summary: IPMI (Intelligent Platform Management Interface) library and tools
 Name: OpenIPMI
 Version: 2.0.21
-Release: 1%{?dist}
+Release: 3%{?dist}
 License: LGPLv2+ and GPLv2+ or BSD
 Group: System Environment/Base
 URL: http://sourceforge.net/projects/openipmi/
@@ -12,6 +12,7 @@ Source: http://downloads.sourceforge.net/openipmi/%{name}-%{version}.tar.gz
 Source1: openipmi.sysconf
 Source2: openipmi-helper
 Source3: ipmi.service
+Source4: openipmi.modalias
 BuildRequires: gdbm-devel swig glib2-devel net-snmp-devel ncurses-devel
 BuildRequires: openssl-devel python-devel perl-devel tcl-devel tkinter
 BuildRequires: desktop-file-utils
@@ -21,11 +22,24 @@ Requires(postun): systemd-units
 Requires(post): systemd-sysv
 
 Patch1: OpenIPMI-2.0.18-pthread-pkgconfig.patch
+Patch2: OpenIPMI-2.0.19-man.patch
+# switch from libedit bundle to system libedit
+Patch3: OpenIPMI-2.0.21-nobundle.patch
 
 %description
 The Open IPMI project aims to develop an open code base to allow access to
 platform information using Intelligent Platform Management Interface (IPMI).
 This package contains the tools of the OpenIPMI project.
+
+%package modalias
+Group: System Environment/Kernel
+Summary: Module aliases for IPMI subsystem
+Requires: systemd
+Requires: kmod
+
+%description modalias
+The OpenIPMI-modalias provides configuration file with module aliases
+of ACPI and PNP wildcards.
 
 %package libs
 Group: Development/Libraries
@@ -60,12 +74,35 @@ Requires: %{name} = %{version}-%{release}
 The OpenIPMI-devel package contains the development libraries and header files
 of the OpenIPMI project.
 
+%package lanserv
+Summary: Emulates an IPMI network listener
+Group: Utilities
+Requires: %{name} = %{version}
+
+%description lanserv
+This package contains a network IPMI listener.
+
+
 %prep
 %setup -q
-%patch1 -p1
+%patch1 -p1 -b .pthread
+%patch2 -p1 -b .manscan
+%patch3 -p1 -b .nobundle
+rm -rf ./libedit
 
 %build
-export CFLAGS="-fPIC $RPM_OPT_FLAGS"
+export EDIT_CFLAGS=`pkg-config --cflags libedit`
+export EDIT_LIBS=`pkg-config --libs libedit`
+export CFLAGS="-fPIC $RPM_OPT_FLAGS -fno-strict-aliasing"
+
+# aarch64 workaround remove once released package's config.sub contains aarch64
+%{__libtoolize} --copy --force --automake
+%{__aclocal}
+%{__autoheader}
+%{__automake} --add-missing --copy --foreign --force-missing
+%{__autoconf}
+# aarch64 end
+
 %configure \
     --with-pythoninstall=%{python_sitearch} \
     --disable-dependency-tracking \
@@ -73,9 +110,10 @@ export CFLAGS="-fPIC $RPM_OPT_FLAGS"
     --disable-static \
     --with-tkinter=no
 
-# get rid of rpath
-#sed -i 's|^hardcode_libdir_flag_spec=.*|hardcode_libdir_flag_spec=""|g' libtool
-#sed -i 's|^runpath_var=LD_RUN_PATH|runpath_var=DIE_RPATH_DIE|g' libtool
+# https://fedoraproject.org/wiki/Packaging:Guidelines?rd=Packaging/Guidelines#Beware_of_Rpath
+# get rid of rpath still present in OpenIPMI-perl package
+sed -i 's|^hardcode_libdir_flag_spec=.*|hardcode_libdir_flag_spec=""|g' libtool
+sed -i 's|^runpath_var=LD_RUN_PATH|runpath_var=DIE_RPATH_DIE|g' libtool
 
 make   # not %{?_smp_mflags} safe
 
@@ -89,9 +127,37 @@ install -d ${RPM_BUILD_ROOT}%{_libexecdir}
 install -m 755 %SOURCE2 ${RPM_BUILD_ROOT}%{_libexecdir}/openipmi-helper
 install -d ${RPM_BUILD_ROOT}%{_unitdir}
 install -m 644 %SOURCE3 ${RPM_BUILD_ROOT}%{_unitdir}/ipmi.service
+install -d ${RPM_BUILD_ROOT}%{_sysconfdir}/modprobe.d
+install -m 644 %SOURCE4 ${RPM_BUILD_ROOT}%{_sysconfdir}/modprobe.d/OpenIPMI.conf
+install -d ${RPM_BUILD_ROOT}%{_localstatedir}/run/%{name}
 
 rm ${RPM_BUILD_ROOT}/%{_mandir}/man1/openipmigui.1
+
+# add missing documentation symlinks
+if test -L ${RPM_BUILD_ROOT}/%{_bindir}/ipmicmd && ! test -a ${RPM_BUILD_ROOT}/%{_mandir}/man1/ipmicmd.1.gz ; then
+    %{__ln_s} openipmicmd.1.gz ${RPM_BUILD_ROOT}/%{_mandir}/man1/ipmicmd.1.gz
+fi
+
+if test -L ${RPM_BUILD_ROOT}/%{_bindir}/ipmish && ! test -a ${RPM_BUILD_ROOT}/%{_mandir}/man1/ipmish.1.gz ; then
+    %{__ln_s} openipmish.1.gz ${RPM_BUILD_ROOT}/%{_mandir}/man1/ipmish.1.gz
+fi
+
+%posttrans modalias
+if [ -f "%{once}" ]; then
+    if /usr/bin/udevadm info --export-db | grep -qie 'acpi:IPI0'; then
+        /sbin/modprobe ipmi_si || :;
+        /sbin/modprobe ipmi_devintf || :;
+        /sbin/modprobe ipmi_msghandler || :;
+        %{__rm} -f %{once} || :;
+        /usr/bin/udevadm settle
+    fi
+fi
 magic_rpm_clean.sh
+
+%post modalias
+if [ "$1" -eq 1 ]; then
+    /bin/touch %{once}
+fi
 
 %post
 %systemd_post ipmi.service
@@ -114,10 +180,10 @@ magic_rpm_clean.sh
 # User must manually run systemd-sysv-convert --apply httpd
 # to migrate them to systemd targets
 /usr/bin/systemd-sysv-convert --save ipmi >/dev/null 2>&1 ||:
-/usr/bin/systemctl --no-reload enable ipmi.service >/dev/null 2>&1 ||:
+/bin/systemctl --no-reload enable ipmi.service >/dev/null 2>&1 ||:
 # Run these because the SysV package being removed won't do them
-/usr/sbin/chkconfig --del ipmi >/dev/null 2>&1 || :
-/usr/bin/systemctl try-restart ipmi.service >/dev/null 2>&1 || :
+/sbin/chkconfig --del ipmi >/dev/null 2>&1 || :
+/bin/systemctl try-restart ipmi.service >/dev/null 2>&1 || :
 
 %files
 %doc CONFIGURING_FOR_LAN COPYING COPYING.BSD COPYING.LIB FAQ README README.Force README.MotorolaMXP
@@ -137,16 +203,11 @@ magic_rpm_clean.sh
 %{_mandir}/man1/openipmish*
 %{_mandir}/man1/rmcp_ping*
 %{_mandir}/man1/solterm*
+%{_mandir}/man1/ipmish*
+%{_mandir}/man1/ipmicmd*
 %{_mandir}/man7/ipmi_cmdlang*
 %{_mandir}/man7/openipmi_conparms*
 %{_mandir}/man8/ipmilan*
-%{_sysconfdir}/ipmi/ipmisim1.emu
-%{_sysconfdir}/ipmi/lan.conf
-%{_bindir}/ipmi_sim
-%{_bindir}/sdrcomp
-%{_mandir}/man1/ipmi_sim*
-%{_mandir}/man5/ipmi_lan*
-%{_mandir}/man5/ipmi_sim_cmd*
 
 %files perl
 %attr(644,root,root) %{perl_vendorarch}/OpenIPMI.pm
@@ -163,7 +224,30 @@ magic_rpm_clean.sh
 %{_libdir}/*.so
 %{_libdir}/pkgconfig/*.pc
 
+%files lanserv
+%defattr(-,root,root)
+%config(noreplace) %{_sysconfdir}/ipmi/ipmisim1.emu
+%config(noreplace) %{_sysconfdir}/ipmi/lan.conf
+%{_bindir}/ipmilan
+%{_bindir}/ipmi_sim
+%{_bindir}/sdrcomp
+%{_libdir}/libIPMIlanserv.so.*
+%doc %{_mandir}/man8/ipmilan.8*
+%doc %{_mandir}/man1/ipmi_sim.1*
+%doc %{_mandir}/man5/ipmi_lan.5*
+%doc %{_mandir}/man5/ipmi_sim_cmd.5*
+
+%files modalias
+%config(noreplace) %{_sysconfdir}/modprobe.d/OpenIPMI.conf
+%{_localstatedir}/run/%{name}
+
 %changelog
+* Mon Mar 02 2015 Liu Di <liudidi@gmail.com> - 2.0.21-3
+- 为 Magic 3.0 重建
+
+* Mon Mar 02 2015 Liu Di <liudidi@gmail.com> - 2.0.21-2
+- 为 Magic 3.0 重建
+
 * Mon Mar 02 2015 Liu Di <liudidi@gmail.com> - 2.0.21-1
 - 更新到 2.0.21
 

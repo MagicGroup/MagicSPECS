@@ -1,0 +1,70 @@
+diff -up ./cmdlang/Makefile.am.nobundle ./cmdlang/Makefile.am
+--- ./cmdlang/Makefile.am.nobundle	2013-01-21 18:24:13.000000000 +0100
++++ ./cmdlang/Makefile.am	2014-08-12 13:35:09.836655867 +0200
+@@ -4,7 +4,8 @@ LD_VERSION = 0:5:0
+ 
+ AM_CFLAGS = -Wall -Wsign-compare -I$(top_builddir)/include \
+ 	-I$(top_srcdir)/include \
+-	-I$(top_srcdir)/libedit -DIPMI_CHECK_LOCKS $(GLIB_CFLAGS) \
++	-DIPMI_CHECK_LOCKS $(GLIB_CFLAGS) \
++	$(EDIT_CFLAGS) \
+ 	$(TCL_CFLAGS)
+ 
+ lib_LTLIBRARIES = libOpenIPMIcmdlang.la
+@@ -25,7 +26,7 @@ openipmish_LDADD =  libOpenIPMIcmdlang.l
+ 		$(top_builddir)/utils/libOpenIPMIutils.la \
+ 		$(top_builddir)/lib/libOpenIPMI.la \
+ 		$(top_builddir)/unix/libOpenIPMIposix.la \
+-		$(top_builddir)/libedit/libedit.a \
++		$(EDIT_LIBS) \
+ 		$(TERM_LIBS) \
+ 		$(SNMPLIBS) $(GLIB_LIB) $(GLIB_LIBS) \
+ 		$(TCL_LIB) $(TCL_LIBS) \
+diff -up ./configure.ac.nobundle ./configure.ac
+--- ./configure.ac.nobundle	2014-01-28 20:35:02.000000000 +0100
++++ ./configure.ac	2014-08-12 13:35:09.836655867 +0200
+@@ -930,7 +930,6 @@ AC_OUTPUT(Makefile
+ 	  swig/perl/Makefile
+ 	  swig/python/Makefile
+ 	  swig/python/openipmigui/Makefile
+-	  libedit/Makefile
+ 	  cmdlang/Makefile
+ 	  include/Makefile
+ 	  include/OpenIPMI/Makefile
+diff -up ./Makefile.am.nobundle ./Makefile.am
+--- ./Makefile.am.nobundle	2012-07-22 00:01:45.000000000 +0200
++++ ./Makefile.am	2014-08-12 13:35:09.836655867 +0200
+@@ -1,10 +1,10 @@
+ RPM		= rpmbuild
+ RPMFLAGS	= -ta
+ 
+-SUBDIRS    = include utils lib unix $(GLIB_DIR) $(TCL_DIR) libedit cmdlang \
++SUBDIRS    = include utils lib unix $(GLIB_DIR) $(TCL_DIR) cmdlang \
+ 	     ui lanserv sample doc man $(SWIG_DIR)
+ 
+-DIST_SUBDIRS = include utils lib unix glib tcl libedit cmdlang \
++DIST_SUBDIRS = include utils lib unix glib tcl cmdlang \
+ 	     ui lanserv sample doc man swig
+ 
+ EXTRA_DIST = FAQ TODO README.Force README.MotorolaMXP OpenIPMI.spec.in \
+diff -up ./sample/Makefile.am.nobundle ./sample/Makefile.am
+--- ./sample/Makefile.am.nobundle	2014-08-12 13:36:19.033804459 +0200
++++ ./sample/Makefile.am	2014-08-12 13:37:07.478907706 +0200
+@@ -53,8 +53,8 @@ solterm_LDADD = $(POPTLIBS) $(top_buildd
+ rmcp_ping_SOURCES = rmcp_ping.c
+ 
+ ipmi_serial_bmc_emu_SOURCES = ipmi_serial_bmc_emu.c
+-ipmi_serial_bmc_emu_LDADD = $(top_builddir)/libedit/libedit.a $(TERM_LIBS)
+-ipmi_serial_bmc_emu_CFLAGS = -I $(top_srcdir)/libedit
++ipmi_serial_bmc_emu_LDADD = $(EDIT_LIBS) $(TERM_LIBS)
++ipmi_serial_bmc_emu_CFLAGS = $(EDIT_CFLAGS)
+ 
+ EXTRA_DIST = example_oem.c
+ 
+@@ -65,4 +65,4 @@ install-data-local:
+ 	$(LN_S) openipmicmd $(DESTDIR)$(bindir)/ipmicmd
+ 
+ uninstall-local:
+-	rm -f $(DESTDIR)$(bindir)/ipmicmd
+\ No newline at end of file
++	rm -f $(DESTDIR)$(bindir)/ipmicmd
