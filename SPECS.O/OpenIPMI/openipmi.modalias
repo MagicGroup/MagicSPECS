@@ -1,0 +1,10 @@
+#
+# This configuration file was provided
+# by OpenIPMI-modalias package.
+# Feel free to update as needed.
+#
+
+alias acpi:IPI000*:* ipmi_si
+alias acpi:IPI000*:* ipmi_devintf
+alias acpi:IPI000*:* ipmi_msghandler
+
