@@ -2,8 +2,9 @@
 
 Name:           ocaml-camomile
 Version:        0.8.3
-Release:        15%{?dist}
+Release:        16%{?dist}
 Summary:        Unicode library for OCaml
+Summary(zh_CN.UTF-8): OCaml 的 Unicode 库
 
 # Several files are MIT and UCD licensed, but the overall work is LGPLv2+
 # and the LGPL/GPL supercedes compatible licenses.
@@ -29,9 +30,12 @@ character type, UTF-8, UTF-16, UTF-32 strings, conversion to/from
 about 200 encodings, collation and locale-sensitive case mappings, and
 more.
 
+%description -l zh_CN.UTF-8
+OCaml 的 Unicode 库。
 
 %package        devel
 Summary:        Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Requires:       %{name} = %{version}-%{release}
 
 
@@ -39,9 +43,12 @@ Requires:       %{name} = %{version}-%{release}
 The %{name}-devel package contains libraries and signature files for
 developing applications that use %{name}.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %package        data
 Summary:        Data files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的数据文件
 Requires:       %{name} = %{version}-%{release}
 
 
@@ -49,6 +56,8 @@ Requires:       %{name} = %{version}-%{release}
 The %{name}-data package contains data files for developing
 applications that use %{name}.
 
+%description data -l zh_CN.UTF-8
+%{name} 的数据文件。
 
 %prep
 %setup -q -n camomile-%{version}
@@ -75,7 +84,7 @@ make install prefix=$RPM_BUILD_ROOT%{_prefix} DATADIR=$RPM_BUILD_ROOT%{_datadir}
 cp tools/camomilecharmap.opt $RPM_BUILD_ROOT%{_bindir}/camomilecharmap
 cp tools/camomilelocaledef.opt $RPM_BUILD_ROOT%{_bindir}/camomilelocaledef
 %endif
-
+magic_rpm_clean.sh
 
 %files
 %defattr(-,root,root,-)
@@ -111,6 +120,9 @@ cp tools/camomilelocaledef.opt $RPM_BUILD_ROOT%{_bindir}/camomilelocaledef
 
 
 %changelog
+* Thu Mar 05 2015 Liu Di <liudidi@gmail.com> - 0.8.3-16
+- 为 Magic 3.0 重建
+
 * Fri Jun 20 2014 Liu Di <liudidi@gmail.com> - 0.8.3-15
 - 为 Magic 3.0 重建
 

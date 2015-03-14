@@ -5,8 +5,9 @@
 
 Name:           ocaml-easy-format
 Version:        1.0.2
-Release:        5%{?dist}
+Release:        6%{?dist}
 Summary:        High-level and functional interface to the Format module
+Summary(zh_CN.UTF-8): 格式化棋块的高级的函数化的接口
 
 License:        BSD
 URL:            http://mjambon.com/easy-format.html
@@ -37,15 +38,20 @@ can model any sequence of items such as arrays of data or lists of
 definitions that are labeled with something like "int main", "let x
 =" or "x:".
 
+%description -l zh_CN.UTF-8
+格式化棋块的高级的函数化的接口。
 
 %package        devel
 Summary:        Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Requires:       %{name}%{?_isa} = %{version}-%{release}
 
 %description    devel
 The %{name}-devel package contains libraries and signature files for
 developing applications that use %{name}.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q -n %{libname}-%{version}
@@ -70,7 +76,7 @@ export DESTDIR=$RPM_BUILD_ROOT
 export OCAMLFIND_DESTDIR=$RPM_BUILD_ROOT%{_libdir}/ocaml
 mkdir -p $OCAMLFIND_DESTDIR
 make install
-
+magic_rpm_clean.sh
 
 %check
 make test
@@ -96,6 +102,9 @@ make test
 
 
 %changelog
+* Tue Mar 03 2015 Liu Di <liudidi@gmail.com> - 1.0.2-6
+- 为 Magic 3.0 重建
+
 * Fri Jun 20 2014 Liu Di <liudidi@gmail.com> - 1.0.2-5
 - 为 Magic 3.0 重建
 

@@ -1,7 +1,8 @@
 Name:           ocaml-omake
 Version:        0.9.8.6
-Release:        0.rc1%{?dist}.10
+Release:        0.rc1%{?dist}.11
 Summary:        Build system with automated dependency analysis
+Summary(zh_CN.UTF-8): 自动分析依赖的编译系统
 License:        LGPLv2+ with exceptions and GPLv2+ and BSD
 
 URL:            http://omake.metaprl.org/download.html
@@ -11,6 +12,7 @@ ExcludeArch:    sparc64 s390 s390x
 
 Patch0:         omake-debian-disable-ocaml-warnings.patch
 Patch1:         omake-0.9.8.6-fix-and-or-operators.patch
+Patch2:         omake-0.9.8.6-kill-warn-error.patch
 
 # omake can be used on non-OCaml projects (RHBZ#548536).
 Provides:       omake
@@ -43,13 +45,15 @@ features many additional enhancements, including the following.
    standard tasks in C, C++, OCaml, and LaTeX projects, or a mixture
    thereof.
 
+%description -l zh_CN.UTF-8
+自动分析依赖的编译系统。
 
 %prep
 %setup -q -n omake-%{version}
 
 %patch0 -p1
 %patch1 -p1
-
+%patch2 -p1
 
 %build
 make all \
@@ -62,7 +66,7 @@ make install \
   PREFIX=%{_prefix} MANDIR=%{_mandir} BINDIR=%{_bindir} LIBDIR=%{_libdir}
 
 chmod 0755 $RPM_BUILD_ROOT%{_bindir}/*
-
+magic_rpm_clean.sh
 
 %files
 %doc LICENSE LICENSE.OMake
@@ -75,6 +79,9 @@ chmod 0755 $RPM_BUILD_ROOT%{_bindir}/*
 
 
 %changelog
+* Tue Mar 10 2015 Liu Di <liudidi@gmail.com> - 0.9.8.6-0.rc1.11
+- 为 Magic 3.0 重建
+
 * Fri Jun 20 2014 Liu Di <liudidi@gmail.com> - 0.9.8.6-0.rc1.10
 - 为 Magic 3.0 重建
 

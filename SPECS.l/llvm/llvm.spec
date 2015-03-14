@@ -36,7 +36,7 @@
 
 Name:           llvm
 Version:        3.4
-Release:        18%{?dist}
+Release:        19%{?dist}
 Summary:        The Low Level Virtual Machine
 
 Group:          Development/Languages
@@ -670,6 +670,9 @@ exit 0
 %endif
 
 %changelog
+* Thu Mar 05 2015 Liu Di <liudidi@gmail.com> - 3.4-19
+- 为 Magic 3.0 重建
+
 * Mon Jun 23 2014 Liu Di <liudidi@gmail.com> - 3.4-18
 - 为 Magic 3.0 重建
 

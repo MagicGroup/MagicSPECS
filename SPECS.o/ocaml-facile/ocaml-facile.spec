@@ -4,9 +4,9 @@
 
 Name:          ocaml-facile
 Version:       1.1
-Release:       25%{?dist}
+Release:       26%{?dist}
 Summary:       OCaml library for constraint programming
-Summary(fr):   Librairie OCaml de programmation par contraintes
+Summary(zh_CN.UTF-8): 约束程序的 OCaml 库
 License:       LGPLv2+
 
 URL:           http://www.recherche.enac.fr/log/facile/
@@ -39,34 +39,22 @@ OCaml (among many others) that allow to prototype and experiment quickly:
 modeling, data processing and interface are implemented with the same powerful
 and efficient language.
 
-%description -l fr
-FaCiLe est une librairie de Programmation par Contraintes sur les domaines
-finis (entiers et ensembles d'entiers) entièrement écrite avec OCaml. FaCiLe
-intègre toutes les fonctionnalités standards de création et manipulation de
-variables (logiques) à domaine fini, d'expressions et de contraintes
-arithmétiques (éventuellement non-linéaires), de contraintes globales
-(différence, cardinalité, tri etc.) et de buts de recherche et d'optimisation.
-FaCiLe permet aussi de construire facilement de nouvelles contraintes et de
-nouveaux buts (éventuellement récursifs) définis par l'utilisateur, à l'aide
-d'interfaces simples et puissantes qui utilisent intensivement des fonctions
-d'ordre supérieur. Comme FaCiLe est une librairie OCaml et pas "encore un
-nouveau langage", l'utilisateur bénéficie de l'inférence de type et du typage
-statique strict, d'un haut niveau d'abstraction, des systèmes de modules et
-d'objets, ainsi que de l'efficacité du compilateur qui produit du code natif
-optimisé (pour toutes les plates-formes courantes), de la gestion automatique de
-la mémoire et du débogueur avec retour arrière, autant de caractéristiques
-d'OCaml qui permettent de prototyper et expérimenter très rapidement: la
-modélisation, le traitement des données et les interfaces sont implémentés à
-l'aide du même langage puissant et efficace.
+%description -l zh_CN.UTF-8
+约束程序的 OCaml 库。
 
 %package        devel
 Summary:        Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       %{name} = %{version}-%{release}
 
 %description    devel
 The %{name}-devel package contains libraries and signature files for
 developing applications that use %{name}.
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q -n facile-%{version}
@@ -82,6 +70,7 @@ make
 %install
 mkdir -p $RPM_BUILD_ROOT%{_libdir}/ocaml
 make install
+magic_rpm_clean.sh
 
 %files
 %doc LICENSE README
@@ -100,6 +89,9 @@ make install
 %{_libdir}/ocaml/facile/*.mli
 
 %changelog
+* Thu Mar 05 2015 Liu Di <liudidi@gmail.com> - 1.1-26
+- 为 Magic 3.0 重建
+
 * Fri Jun 20 2014 Liu Di <liudidi@gmail.com> - 1.1-25
 - 为 Magic 3.0 重建
 

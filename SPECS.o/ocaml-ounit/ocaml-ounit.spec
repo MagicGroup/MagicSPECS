@@ -2,8 +2,9 @@
 
 Name:           ocaml-ounit
 Version:        1.1.2
-Release:        10%{?dist}
+Release:        11%{?dist}
 Summary:        Unit test framework for OCaml
+Summary(zh_CN.UTF-8): OCaml 的单元测试框架
 
 License:        MIT
 URL:            http://ounit.forge.ocamlcore.org/
@@ -22,9 +23,12 @@ create unit-tests for OCaml code. It is based on HUnit, a unit testing
 framework for Haskell. It is similar to JUnit, and other xUnit testing
 frameworks.
 
+%description -l zh_CN.UTF-8
+OCaml 的单元测试框架。
 
 %package        devel
 Summary:        Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Requires:       %{name} = %{version}-%{release}
 
 
@@ -32,6 +36,8 @@ Requires:       %{name} = %{version}-%{release}
 The %{name}-devel package contains libraries and signature files for
 developing applications that use %{name}.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q -n ounit-%{version}
@@ -54,7 +60,7 @@ make install
 
 # Remove this, reinstall it properly with a %%doc rule below.
 rm -rf $RPM_BUILD_ROOT/usr/local/share/doc
-
+magic_rpm_clean.sh
 
 %files
 %doc LICENSE.txt
@@ -77,6 +83,9 @@ rm -rf $RPM_BUILD_ROOT/usr/local/share/doc
 
 
 %changelog
+* Tue Mar 10 2015 Liu Di <liudidi@gmail.com> - 1.1.2-11
+- 为 Magic 3.0 重建
+
 * Fri Jun 20 2014 Liu Di <liudidi@gmail.com> - 1.1.2-10
 - 为 Magic 3.0 重建
 

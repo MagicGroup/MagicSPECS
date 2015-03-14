@@ -6,9 +6,10 @@
 
 Name:          ocaml-labltk
 Version:       8.06.0
-Release:       1%{?dist}
+Release:       2%{?dist}
 
 Summary:       Tcl/Tk interface for OCaml
+Summary(zh_CN.UTF-8): OCaml 的 Tcl/Tk 接口
 
 License:       LGPLv2+ with exceptions
 
@@ -26,9 +27,12 @@ BuildRequires: tcl-devel, tk-devel
 labltk or mlTk is a library for interfacing OCaml with the scripting
 language Tcl/Tk (all versions since 8.0.3, but no betas).
 
+%description -l zh_CN.UTF-8
+OCaml 的 Tcl/Tk 接口。
 
 %package devel
 Summary:       Tcl/Tk interface for OCaml
+Summary(zh_CN.UTF-8): %{name} 的开发包
 
 Requires:      %{name}%{?_isa} = %{version}-%{release}
 
@@ -39,6 +43,8 @@ language Tcl/Tk (all versions since 8.0.3, but no betas).
 
 This package contains the development files.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q -n labltk-%{version}
@@ -70,7 +76,7 @@ make install \
 # The *.o files are not installed by the Makefile.  AIUI
 # that prevents linking with native code programs.
 install -m 0644 camltk/*.o $RPM_BUILD_ROOT%{_libdir}/ocaml/labltk
-
+magic_rpm_clean.sh
 
 %files
 %doc Changes README.mlTk
@@ -100,6 +106,9 @@ install -m 0644 camltk/*.o $RPM_BUILD_ROOT%{_libdir}/ocaml/labltk
 
 
 %changelog
+* Thu Mar 05 2015 Liu Di <liudidi@gmail.com> - 8.06.0-2
+- 为 Magic 3.0 重建
+
 * Mon Feb 16 2015 Richard W.M. Jones <rjones@redhat.com> - 8.06.0-1
 - New upstream version 8.06.0.
 - Big jump in upstream version numbers to match Tk versions.

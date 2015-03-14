@@ -1,0 +1,84 @@
+From 632c63206ec47f67af0027b5c0d173784e510c08 Mon Sep 17 00:00:00 2001
+From: "Richard W.M. Jones" <rjones@redhat.com>
+Date: Fri, 24 Oct 2014 10:10:54 +0100
+Subject: [PATCH 15/15] ppc64/ppc64le: proc: Interim definitions for op_is_pure
+ and regs_are_volatile.
+
+See: https://bugzilla.redhat.com/show_bug.cgi?id=1156300
+
+These are based somewhat on guesswork and need to be checked by
+someone more familiar with the compiler and POWER architecture.
+---
+ asmcomp/power64/proc.ml   | 15 +++++++++++++++
+ asmcomp/power64le/proc.ml | 15 +++++++++++++++
+ 2 files changed, 30 insertions(+)
+
+diff --git a/asmcomp/power64/proc.ml b/asmcomp/power64/proc.ml
+index a5a35f3..c377f69 100644
+--- a/asmcomp/power64/proc.ml
++++ b/asmcomp/power64/proc.ml
+@@ -202,6 +202,10 @@ let loc_external_results res =
+ 
+ let loc_exn_bucket = phys_reg 0
+ 
++(* Volatile registers: none *)
++
++let regs_are_volatile rs = false
++
+ (* Registers destroyed by operations *)
+ 
+ let destroyed_at_c_call =
+@@ -226,6 +230,17 @@ let max_register_pressure = function
+     Iextcall(_, _) -> [| 15; 18 |]
+   | _ -> [| 23; 30 |]
+ 
++(* Pure operations (without any side effect besides updating their result
++   registers). *)
++
++let op_is_pure = function
++  | Icall_ind | Icall_imm _ | Itailcall_ind | Itailcall_imm _
++  | Iextcall _ | Istackoffset _ | Istore _ | Ialloc _
++  | Iintop(Icheckbound) | Iintop_imm(Icheckbound, _) -> false
++  | Ispecific(Imultaddf | Imultsubf) -> true
++  | Ispecific _ -> false
++  | _ -> true
++
+ (* Layout of the stack *)
+ 
+ let num_stack_slots = [| 0; 0 |]
+diff --git a/asmcomp/power64le/proc.ml b/asmcomp/power64le/proc.ml
+index 476c984..56473ac 100644
+--- a/asmcomp/power64le/proc.ml
++++ b/asmcomp/power64le/proc.ml
+@@ -202,6 +202,10 @@ let loc_external_results res =
+ 
+ let loc_exn_bucket = phys_reg 0
+ 
++(* Volatile registers: none *)
++
++let regs_are_volatile rs = false
++
+ (* Registers destroyed by operations *)
+ 
+ let destroyed_at_c_call =
+@@ -226,6 +230,17 @@ let max_register_pressure = function
+     Iextcall(_, _) -> [| 15; 18 |]
+   | _ -> [| 23; 30 |]
+ 
++(* Pure operations (without any side effect besides updating their result
++   registers). *)
++
++let op_is_pure = function
++  | Icall_ind | Icall_imm _ | Itailcall_ind | Itailcall_imm _
++  | Iextcall _ | Istackoffset _ | Istore _ | Ialloc _
++  | Iintop(Icheckbound) | Iintop_imm(Icheckbound, _) -> false
++  | Ispecific(Imultaddf | Imultsubf) -> true
++  | Ispecific _ -> false
++  | _ -> true
++
+ (* Layout of the stack *)
+ 
+ let num_stack_slots = [| 0; 0 |]
+-- 
+2.1.0
+

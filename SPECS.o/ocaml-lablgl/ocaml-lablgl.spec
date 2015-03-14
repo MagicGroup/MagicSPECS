@@ -1,8 +1,9 @@
 Name:           ocaml-lablgl
 Epoch:          1
 Version:        1.05
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        LablGL is an OpenGL interface for Objective Caml
+Summary(zh_CN.UTF-8): OCaml 的 OpenGL 接口
 License:        BSD
 
 URL:            http://forge.ocamlcore.org/projects/lablgl/
@@ -31,9 +32,12 @@ support for LablGL.  It can be used either with proprietary OpenGL
 implementations (SGI, Digital Unix, Solaris...), with XFree86 GLX
 extension, or with open-source Mesa.
 
+%description -l zh_CN.UTF-8
+OCaml 的 OpenGL 接口。
 
 %package        devel
 Summary:        Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Requires:       %{name} = %{epoch}:%{version}-%{release}
 Requires:       ocaml-labltk-devel
 
@@ -41,6 +45,8 @@ Requires:       ocaml-labltk-devel
 The %{name}-devel package contains libraries and signature files for
 developing applications that use %{name}.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q -n lablgl-%{version}
@@ -110,7 +116,7 @@ for f in *.ml; do \
   fi; \
 done
 popd
-
+magic_rpm_clean.sh
 
 %files
 %doc README
@@ -133,6 +139,9 @@ popd
 
 
 %changelog
+* Thu Mar 05 2015 Liu Di <liudidi@gmail.com> - 1:1.05-4
+- 为 Magic 3.0 重建
+
 * Thu Jun 19 2014 Richard W.M. Jones <rjones@redhat.com> - 1.05-3
 - Make -devel subpackage depend on the epoch + base version.
 

@@ -1,9 +1,11 @@
 Name:		openbox
-Version:	3.5.0
-Release:	5%{?dist}
+Version: 3.5.2
+Release: 1%{?dist}
 Summary:	A highly configurable and standards-compliant X11 window manager
+Summary(zh_CN.UTF-8): 高度可配置并标准化的 X11 窗口管理器
 
 Group:		User Interface/Desktops
+Group(zh_CN.UTF-8): 用户界面/桌面
 License:	GPLv2+
 URL:		http://openbox.org
 Source0:	http://openbox.org/releases/%{name}-%{version}.tar.gz
@@ -48,10 +50,14 @@ For a graphical configuration editor, you'll need to install the obconf
 package. For a graphical menu editor, you'll need to install the obmenu
 package.
 
+%description -l zh_CN.UTF-8
+高度可配置并标准化的 X11 窗口管理器。
 
 %package	devel
 Summary:	Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:		Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:	%{name}-libs = %{version}-%{release}
 Requires:	pkgconfig
 Requires:	pango-devel
@@ -62,18 +68,26 @@ Requires:	glib2-devel
 The %{name}-devel package contains libraries and header files for
 developing applications that use %{name}.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %package	libs
 Summary:	Shared libraries for %{name}
+Summary(zh_CN.UTF-8): %{name} 的运行库
 Group:		Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 
 %description	libs
 The %{name}-libs package contains shared libraries used by %{name}.
 
+%description libs -l zh_CN.UTF-8
+%{name} 的运行库。
 
 %package	gnome
 Summary:	GNOME integration for %{name}
+Summary(zh_CN.UTF-8): %{name} 的 GNOME 集成 
 Group:		User Interface/Desktops
+Group(zh_CN.UTF-8): 用户界面/桌面
 Requires:	%{name} = %{version}-%{release}
 Requires:	gnome-session
 
@@ -81,10 +95,14 @@ Requires:	gnome-session
 The %{name}-gnome package contains the files needed for using %{name} inside a
 GNOME session.
 
+%description gnome -l zh_CN.UTF-8
+%{name} 的 GNOME 集成。
 
 %package	kde4
 Summary:	KDE integration for %{name}
+Summary(zh_CN.UTF-8): %{name} 的 KDE 集成
 Group:		User Interface/Desktops
+Group(zh_CN.UTF-8): 用户界面/桌面
 Requires:	%{name} = %{version}-%{release}
 Requires:	kdebase4-workspace
 
@@ -92,6 +110,8 @@ Requires:	kdebase4-workspace
 The %{name}-kde4 package contains the files needed for using %{name} inside a
 KDE4 session.
 
+%description kde4 -l zh_CN.UTF-8
+%{name} 的 KDE 集成。
 
 %prep
 %setup -q
@@ -124,7 +144,7 @@ desktop-file-install --vendor="" \
 install -m644 -p %{SOURCE5} %{buildroot}%{_sysconfdir}/xdg/%{name}/terminals.menu
 install -m644 -D %{SOURCE6} \
 	%{buildroot}%{_datadir}/gnome-session/sessions/gnome-openbox.session
-
+magic_rpm_clean.sh
 %find_lang %{name}
 rm -f %{buildroot}%{_libdir}/*.la
 rm -rf %{buildroot}%{_datadir}/doc/%{name}
@@ -174,6 +194,8 @@ rm -rf %{buildroot}
 %{_datadir}/xsessions/%{name}-gnome.desktop
 %{_datadir}/gnome/wm-properties/openbox.desktop
 %{_datadir}/gnome-session/sessions/gnome-openbox.session
+%{_datadir}/gnome-session/sessions/openbox-gnome-fallback.session
+%{_datadir}/gnome-session/sessions/openbox-gnome.session
 %{_mandir}/man1/%{name}-gnome-session*.1*
 
 %files  kde4
@@ -190,6 +212,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Mar 03 2015 Liu Di <liudidi@gmail.com> - 3.5.2-1
+- 更新到 3.5.2
+
 * Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 3.5.0-5
 - 为 Magic 3.0 重建
 

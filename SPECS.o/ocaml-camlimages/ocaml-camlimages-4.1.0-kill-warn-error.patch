@@ -1,0 +1,11 @@
+--- camlspotter-camlimages-668faa3494fe.old/OMakefile	2014-08-19 18:37:14.405009781 +0100
++++ camlspotter-camlimages-668faa3494fe/OMakefile	2014-08-19 18:37:55.930019935 +0100
+@@ -12,6 +12,8 @@
+ #                                                                     #
+ #*********************************************************************#
+ 
++OCAMLFLAGS =
++
+ include OMyMakeroot
+ 
+ ########################################## External arguments

@@ -7,17 +7,16 @@
 %endif
 
 Name:           ocaml-menhir
-Version:        20140422
-Release:        3%{?dist}
+Version:	20141215
+Release:	1%{?dist}
 Summary:        LR(1) parser generator for OCaml
+Summary(zh_CN.UTF-8): OCaml 的 LR(1) 解析器生成器
 
 # The library is LGPLv2+ with a linking exception.
 # The remaining code is QPL, with an exception granted to clause 6c.
 License:        (QPL with exceptions) and (LGPLv2+ with exceptions)
 URL:            http://gallium.inria.fr/~fpottier/menhir/
 Source0:        http://gallium.inria.fr/~fpottier/menhir/menhir-%{version}.tar.gz
-# Patch from Scott Tsai to allow demos to build outside of source tree
-Patch0:         0001-Makfile-use-menhir-ocamldep-instead-of-ocamldep.wra.patch
 
 BuildRequires:  ocaml
 BuildRequires:  ocaml-findlib
@@ -28,8 +27,12 @@ language.  That is, Menhir compiles LR(1) grammar specifications down to
 OCaml code.  Menhir was designed and implemented by François Pottier and
 Yann Régis-Gianas.
 
+%description -l zh_CN.UTF-8
+OCaml 的 LR(1) 解析器生成器。
+
 %package        devel
 Summary:        Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 License:        LGPLv2+ with exceptions
 Requires:       %{name}%{?_isa} = %{version}-%{release}
 
@@ -37,9 +40,11 @@ Requires:       %{name}%{?_isa} = %{version}-%{release}
 The %{name}-devel package contains libraries and signature files
 for developing applications that use %{name}.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
 %prep
 %setup -q -n menhir-%{version}
-%patch0 -p1
 
 # Fix encodings
 for f in AUTHORS menhir.1 src/standard.mly; do
@@ -72,6 +77,7 @@ rm -fr $RPM_BUILD_ROOT%{_docdir}/menhir
 
 # Install the ocamldep wrapper
 mv demos/ocamldep.wrapper $RPM_BUILD_ROOT%{_bindir}/menhir-ocamldep
+magic_rpm_clean.sh
 
 %files
 %doc AUTHORS CHANGES LICENSE manual.pdf demos
@@ -83,6 +89,9 @@ mv demos/ocamldep.wrapper $RPM_BUILD_ROOT%{_bindir}/menhir-ocamldep
 %{_libdir}/ocaml/menhirLib/
 
 %changelog
+* Mon Mar 09 2015 Liu Di <liudidi@gmail.com> - 20141215-1
+- 更新到 20141215
+
 * Fri Jun 20 2014 Liu Di <liudidi@gmail.com> - 20140422-3
 - 为 Magic 3.0 重建
 

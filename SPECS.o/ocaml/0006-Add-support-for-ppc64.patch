@@ -1,7 +1,7 @@
-From a85437a0d2ffdf7a340d379789500eb583ae4708 Mon Sep 17 00:00:00 2001
+From 5022b33b094d5a88c5c372b0873d81023f0d7bb4 Mon Sep 17 00:00:00 2001
 From: "Richard W.M. Jones" <rjones@redhat.com>
 Date: Tue, 29 May 2012 20:47:07 +0100
-Subject: [PATCH 06/14] Add support for ppc64.
+Subject: [PATCH 06/15] Add support for ppc64.
 
 Note (1): This patch was rejected upstream because they don't have
 appropriate hardware for testing.
@@ -1576,10 +1576,10 @@ index 0000000..53b7828
 +
 +let fundecl f = (new selector)#emit_fundecl f
 diff --git a/asmrun/Makefile b/asmrun/Makefile
-index 5ebf7aa..6a8ed98 100644
+index 63ff80c..5da022c 100644
 --- a/asmrun/Makefile
 +++ b/asmrun/Makefile
-@@ -90,6 +90,12 @@ power.o: power-$(SYSTEM).o
+@@ -93,6 +93,12 @@ power.o: power-$(SYSTEM).o
  power.p.o: power-$(SYSTEM).o
  	cp power-$(SYSTEM).o power.p.o
  
@@ -2085,7 +2085,7 @@ index 0000000..b2c24d6
 +        .align  3
 +
 diff --git a/asmrun/stack.h b/asmrun/stack.h
-index 57c87fa..756db95 100644
+index 92b3c28..5202c3a 100644
 --- a/asmrun/stack.h
 +++ b/asmrun/stack.h
 @@ -46,6 +46,15 @@
@@ -2105,26 +2105,26 @@ index 57c87fa..756db95 100644
  #define Saved_return_address(sp) *((intnat *)((sp) - 4))
  #define Callback_link(sp) ((struct caml_context *)((sp) + 8))
 diff --git a/configure b/configure
-index 39b38dc..9b02664 100755
+index 18b95cd..57c8699 100755
 --- a/configure
 +++ b/configure
-@@ -694,6 +694,7 @@ case "$host" in
-                                   arch=i386; system=macosx
+@@ -814,6 +814,7 @@ case "$target" in
                                  fi;;
    i[3456]86-*-gnu*)             arch=i386; system=gnu;;
+   i[3456]86-*-mingw*)           arch=i386; system=mingw;;
 +  powerpc64-*-linux*)           arch=power64; model=ppc64; system=elf;;
    powerpc*-*-linux*)            arch=power; model=ppc; system=elf;;
    powerpc-*-netbsd*)            arch=power; model=ppc; system=elf;;
    powerpc-*-openbsd*)           arch=power; model=ppc; system=bsd_elf;;
-@@ -776,6 +777,8 @@ case "$arch,$model,$system" in
-                     aspp='gcc -c';;
-   power,*,bsd*)     as='as'
-                     aspp='gcc -c';;
-+  power64,*,elf)    as='as -u -m ppc64'
-+                    aspp='gcc -c';;
-   power,*,rhapsody) as="as -arch $model"
-                     aspp="$bytecc -c";;
-   sparc,*,solaris)  as='as'
+@@ -894,6 +895,8 @@ case "$arch,$system" in
+                   aspp="/usr/ccs/bin/${TOOLPREF}as -P";;
+   power,elf)      as="${TOOLPREF}as -u -m ppc"
+                   aspp="${TOOLPREF}gcc -c";;
++  power64,elf)    as='${TOOLPREF}as -u -m ppc64'
++                  aspp='${TOOLPREF}gcc -c';;
+   power,rhapsody) as="${TOOLPREF}as -arch $model"
+                   aspp="$bytecc -c";;
+   sparc,solaris)  as="${TOOLPREF}as"
 -- 
-1.9.0
+2.1.0
 

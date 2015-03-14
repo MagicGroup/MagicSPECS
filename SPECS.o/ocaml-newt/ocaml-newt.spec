@@ -2,8 +2,9 @@
 
 Name:           ocaml-newt
 Version:        0.9
-Release:        19%{?dist}
+Release:        20%{?dist}
 Summary:        OCaml library for using newt text mode window system
+Summary(zh_CN.UTF-8): 使用 newt 文本模式窗口系统的 OCaml 库
 License:        LGPLv2+ with exceptions
 
 URL:            http://et.redhat.com/~rjones/ocaml-newt/
@@ -30,9 +31,12 @@ rich feature set advanced applications may require, it has proven to
 be flexible enough for a wide range of applications (most notably, the
 Red Hat installation process).
 
+%description -l zh_CN.UTF-8
+使用 newt 文本模式窗口系统的 OCaml 库。
 
 %package        devel
 Summary:        Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Requires:       %{name} = %{version}-%{release}
 Requires:       newt-devel
 
@@ -41,6 +45,8 @@ Requires:       newt-devel
 The %{name}-devel package contains libraries and signature files for
 developing applications that use %{name}.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -69,7 +75,7 @@ mkdir -p $OCAMLFIND_DESTDIR $OCAMLFIND_DESTDIR/stublibs
 make install
 
 chrpath --delete $OCAMLFIND_DESTDIR/stublibs/dll*.so
-
+magic_rpm_clean.sh
 
 %files
 %doc COPYING.LIB
@@ -95,6 +101,9 @@ chrpath --delete $OCAMLFIND_DESTDIR/stublibs/dll*.so
 
 
 %changelog
+* Mon Mar 09 2015 Liu Di <liudidi@gmail.com> - 0.9-20
+- 为 Magic 3.0 重建
+
 * Fri Jun 20 2014 Liu Di <liudidi@gmail.com> - 0.9-19
 - 为 Magic 3.0 重建
 

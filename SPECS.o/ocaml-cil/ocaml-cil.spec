@@ -2,8 +2,9 @@
 
 Name:           ocaml-cil
 Version:        1.7.3
-Release:        7%{?dist}
+Release:        10%{?dist}
 Summary:        CIL - Infrastructure for C Program Analysis and Transformation
+Summary(zh_CN.UTF-8): CIL - C 程序分析和转换的基础
 License:        BSD
 
 URL:            http://cil.sourceforge.net/
@@ -22,9 +23,13 @@ Patch1:         0002-Do-not-fail-testsuite-on-new-gcc-behaviour.patch
 # Enable ocamlopt -g.
 Patch2:         cil-1.7.3-enable-ocamlopt-g.patch
 
-# A%description -l zh_CN.UTF-8 package directive to App::Cilly::CilConfig so that perl
+# Add package directive to App::Cilly::CilConfig so that perl
 # dependencies are calculated properly.
 Patch3:         cil-1.7.3-add-package-cilconfig.patch
+
+# Fix unsafe use of Obj.magic (upstream in > 1.7.3).
+# https://bugzilla.redhat.com/show_bug.cgi?id=1120273
+Patch4:         ocaml-4.02.0.patch
 
 %description
 CIL (C Intermediate Language) is a high-level representation along
@@ -53,9 +58,12 @@ function bodies are given explicit return statements, syntactic sugar
 like "->" is eliminated and function arguments with array types become
 pointers.
 
+%description -l zh_CN.UTF-8
+CIL - C 程序分析和转换的基础。
 
 %package        devel
 Summary:        Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Requires:       %{name} = %{version}-%{release}
 
 
@@ -63,9 +71,12 @@ Requires:       %{name} = %{version}-%{release}
 The %{name}-devel package contains libraries and signature files for
 developing applications that use %{name}.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %package        doc
 Summary:        Documentation for %{name}
+Summary(zh_CN.UTF-8): %{name} 的文档
 Requires:       %{name} = %{version}-%{release}
 BuildRequires:  tex(latex), hevea
 
@@ -73,9 +84,12 @@ BuildRequires:  tex(latex), hevea
 %description    doc
 The %{name}-doc package contains documentation for users of %{name}.
 
+%description doc -l zh_CN.UTF-8
+%{name} 的文档。
 
 %package        cilly
 Summary:        Support programs for %{name}
+Summary(zh_CN.UTF-8): %{name} 的支持程序
 Requires:       %{name} = %{version}-%{release}
 Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
 # test and doc use cilly: Requires must also be BuildRequires
@@ -99,6 +113,8 @@ BuildRequires:  perl(ExtUtils::MakeMaker)
 The %{name}-cilly package contains the 'cilly' wrapper/replacement
 for gcc.
 
+%description cilly -l zh_CN.UTF-8
+这个包包含了 cilly，gcc 的接口。
 
 %prep
 %setup -q -n cil-%{version}
@@ -107,6 +123,7 @@ for gcc.
 %patch1 -p1
 %patch2 -p1
 %patch3 -p1
+%patch4 -p1
 
 %build
 
@@ -143,6 +160,7 @@ cp doc/html/cil/*.gif doc/ocaml-cil/html/
 cp doc/html/cil/*.html doc/ocaml-cil/html/
 cp doc/html/cil/*.css doc/ocaml-cil/html/
 cp doc/html/cil/CIL.pdf doc/ocaml-cil/cil-manual.pdf
+magic_rpm_clean.sh
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -181,6 +199,15 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Wed Mar 04 2015 Liu Di <liudidi@gmail.com> - 1.7.3-10
+- 为 Magic 3.0 重建
+
+* Wed Mar 04 2015 Liu Di <liudidi@gmail.com> - 1.7.3-9
+- 为 Magic 3.0 重建
+
+* Wed Mar 04 2015 Liu Di <liudidi@gmail.com> - 1.7.3-8
+- 为 Magic 3.0 重建
+
 * Fri Jun 20 2014 Liu Di <liudidi@gmail.com> - 1.7.3-7
 - 为 Magic 3.0 重建
 

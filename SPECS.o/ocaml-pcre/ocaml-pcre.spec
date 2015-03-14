@@ -1,13 +1,14 @@
 %global opt %(test -x %{_bindir}/ocamlopt && echo 1 || echo 0)
 
 Name:           ocaml-pcre
-Version:        7.0.2
-Release:        7%{?dist}
+Version: 7.1.5
+Release: 1%{?dist}
 Summary:        Perl compatibility regular expressions (PCRE) for OCaml
+Summary(zh_CN.UTF-8): OCaml 的 Perl 兼容正则表达式库
 
 License:        LGPLv2
-URL:            https://bitbucket.org/mmottl/pcre-ocaml
-Source0:        https://bitbucket.org/mmottl/pcre-ocaml/downloads/pcre-ocaml-%{version}.tar.gz
+URL:            https://github.com/mmottl/pcre-ocaml
+Source0:        https://github.com/mmottl/pcre-ocaml/releases/download/v%{version}/pcre-ocaml-%{version}.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 ExcludeArch:    sparc64 s390 s390x
 
@@ -21,9 +22,12 @@ BuildRequires:  ocaml-ocamldoc
 %description
 Perl compatibility regular expressions (PCRE) for OCaml.
 
+%description -l zh_CN.UTF-8
+OCaml 的 Perl 兼容正则表达式库。
 
 %package        devel
 Summary:        Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Requires:       %{name} = %{version}-%{release}
 # This isn't quite right - we need to specify same architecture of pcre-devel
 Requires:       pcre-devel
@@ -33,6 +37,8 @@ Requires:       pcre-devel
 The %{name}-devel package contains libraries and signature files for
 developing applications that use %{name}.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q -n pcre-ocaml-%{version}
@@ -62,7 +68,7 @@ make LIBINSTALL_FILES="pcre.mli pcre.cmi pcre.cma libpcre_stubs.a dllpcre_stubs.
 
 # Installs API docs in %{_docdir}/api.  Install this using %doc instead.
 mv $RPM_BUILD_ROOT%{_docdir}/api .
-
+magic_rpm_clean.sh
 
 %files
 %doc COPYING.txt
@@ -86,6 +92,9 @@ mv $RPM_BUILD_ROOT%{_docdir}/api .
 
 
 %changelog
+* Fri Mar 06 2015 Liu Di <liudidi@gmail.com> - 7.1.5-1
+- 更新到 7.1.5
+
 * Fri Jun 20 2014 Liu Di <liudidi@gmail.com> - 7.0.2-7
 - 为 Magic 3.0 重建
 

@@ -1,14 +1,16 @@
 %global opt %(test -x %{_bindir}/ocamlopt && echo 1 || echo 0)
 
 Name:           ocaml-lacaml
-Version:        7.0.9
-Release:        5%{?dist}
+Version: 7.1.5
+Release: 1%{?dist}
 Summary:        BLAS/LAPACK-interface for OCaml
+Summary(zh_CN.UTF-8): OCaml 的 BLAS/LAPACK 接口
 
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 License:        LGPLv2 with exceptions
-URL:            https://bitbucket.org/mmottl/lacaml
-Source0:        https://bitbucket.org/mmottl/lacaml/downloads/lacaml-%{version}.tar.gz
+URL:            https://github.com/mmottl/lacaml
+Source0:        https://github.com/mmottl/lacaml/releases/download/v%{version}/lacaml-%{version}.tar.gz
 
 BuildRequires:  ocaml
 BuildRequires:  ocaml-camlp4-devel
@@ -30,10 +32,14 @@ written in FORTRAN.
 This allows people to write high-performance numerical code for
 applications that need linear algebra.
 
+%description -l zh_CN.UTF-8
+OCaml 的 BLAS/LAPACK 接口。
 
 %package        devel
 Summary:        Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       %{name}%{?_isa} = %{version}-%{release}
 
 
@@ -41,6 +47,8 @@ Requires:       %{name}%{?_isa} = %{version}-%{release}
 The %{name}-devel package contains libraries and signature files for
 developing applications that use %{name}.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q -n lacaml-%{version}
@@ -60,7 +68,7 @@ make install
 
 # By installing the *.cmx files, the compiler can do cross-module inlining.
 install -m 0644 _build/lib/*.cmx $RPM_BUILD_ROOT%{_libdir}/ocaml/lacaml
-
+magic_rpm_clean.sh
 
 %files
 %doc COPYING.txt
@@ -88,6 +96,9 @@ install -m 0644 _build/lib/*.cmx $RPM_BUILD_ROOT%{_libdir}/ocaml/lacaml
 
 
 %changelog
+* Fri Mar 06 2015 Liu Di <liudidi@gmail.com> - 7.1.5-1
+- 更新到 7.1.5
+
 * Fri Jun 20 2014 Liu Di <liudidi@gmail.com> - 7.0.9-5
 - 为 Magic 3.0 重建
 

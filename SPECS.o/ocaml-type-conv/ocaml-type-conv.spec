@@ -4,8 +4,9 @@
 
 Name:           ocaml-type-conv
 Version:        3.0.5
-Release:        9%{?dist}
+Release:        10%{?dist}
 Summary:        OCaml base library for type conversion
+Summary(zh_CN.UTF-8): 类型转换的 OCaml 基本库
 License:        LGPLv2+ with exceptions and BSD
 
 URL:            http://forge.ocamlcore.org/projects/type-conv/
@@ -27,6 +28,8 @@ different preprocessors that generate code from type specifications,
 because this functionality cannot be duplicated without losing the
 ability to use these preprocessors simultaneously.
 
+%description -l zh_CN.UTF-8
+类型转换的 OCaml 基本库。
 
 %prep
 %setup -q -n type_conv-%{version}
@@ -53,7 +56,7 @@ export DESTDIR=$RPM_BUILD_ROOT
 export OCAMLFIND_DESTDIR=$RPM_BUILD_ROOT%{_libdir}/ocaml
 mkdir -p $OCAMLFIND_DESTDIR $OCAMLFIND_DESTDIR/stublibs
 ocaml setup.ml -install
-
+magic_rpm_clean.sh
 
 %files
 %doc LICENSE LICENSE.Tywith Changelog COPYRIGHT README.txt
@@ -61,6 +64,9 @@ ocaml setup.ml -install
 
 
 %changelog
+* Wed Mar 04 2015 Liu Di <liudidi@gmail.com> - 3.0.5-10
+- 为 Magic 3.0 重建
+
 * Fri Jun 20 2014 Liu Di <liudidi@gmail.com> - 3.0.5-9
 - 为 Magic 3.0 重建
 

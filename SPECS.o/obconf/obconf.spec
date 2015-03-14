@@ -1,9 +1,11 @@
 Name:		obconf
 Version:	2.0.4
-Release:	4%{?dist}
+Release:	5%{?dist}
 Summary:	A graphical configuration editor for the Openbox window manager
+Summary(zh_CN.UTF-8): Openbox 窗口管理器的配置编辑器
 
 Group:		User Interface/X
+Group(zh_CN.UTF-8): 用户界面/X
 License:	GPLv2+
 URL:		http://icculus.org/openbox/index.php/ObConf:About
 Source0:	http://icculus.org/openbox/obconf/%{name}-%{version}.tar.gz
@@ -20,6 +22,8 @@ BuildRequires:	libtool
 %description
 ObConf is a graphical configuration editor for the Openbox window manager. 
 
+%description -l zh_CN.UTF-8
+Openbox 窗口管理器的配置编辑器。
 
 %prep
 %setup -q
@@ -32,6 +36,7 @@ make %{?_smp_mflags}
 
 %install
 make install DESTDIR=%{buildroot}
+magic_rpm_clean.sh
 %find_lang %{name}
 desktop-file-install \
 	--dir %{buildroot}%{_datadir}/applications	\
@@ -66,6 +71,9 @@ update-mime-database %{?fedora:-n} %{_datadir}/mime &> /dev/null || :
 
 
 %changelog
+* Tue Mar 03 2015 Liu Di <liudidi@gmail.com> - 2.0.4-5
+- 为 Magic 3.0 重建
+
 * Thu Oct 02 2014 Rex Dieter <rdieter@fedoraproject.org> 2.0.4-4
 - update mime scriptlets
 

@@ -4,8 +4,9 @@
 
 Name:           ocaml-ancient
 Version:        0.9.0
-Release:        15%{?dist}
+Release:        16%{?dist}
 Summary:        OCaml library for large memory structures and sharing
+Summary(zh_CN.UTF-8): 大内存结构和共享的 Ocaml 库
 License:        LGPLv2+ with exceptions
 
 # Upstream website is dead, but the code is maintained at
@@ -42,9 +43,12 @@ file in and see the structures.
 Developers should read the README.txt file included with the
 ocaml-ancient-devel package carefully.
 
+%description -l zh_CN.UTF-8
+大内存结构和共享的 Ocaml 库。
 
 %package        devel
 Summary:        Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Requires:       %{name} = %{version}-%{release}
 
 
@@ -52,6 +56,8 @@ Requires:       %{name} = %{version}-%{release}
 The %{name}-devel package contains libraries and signature files for
 developing applications that use %{name}.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q -n ancient-%{version}
@@ -79,7 +85,7 @@ ocamlfind install ancient ancient.cmi *.mli *.cma ancient.cmx *.cmxa *.a *.so \
   mmalloc/*.a META
 
 chrpath --delete $OCAMLFIND_DESTDIR/stublibs/dll*.so
-
+magic_rpm_clean.sh
 
 %files
 %doc mmalloc/COPYING.LIB
@@ -105,6 +111,9 @@ chrpath --delete $OCAMLFIND_DESTDIR/stublibs/dll*.so
 
 
 %changelog
+* Tue Mar 03 2015 Liu Di <liudidi@gmail.com> - 0.9.0-16
+- 为 Magic 3.0 重建
+
 * Fri Jun 20 2014 Liu Di <liudidi@gmail.com> - 0.9.0-15
 - 为 Magic 3.0 重建
 

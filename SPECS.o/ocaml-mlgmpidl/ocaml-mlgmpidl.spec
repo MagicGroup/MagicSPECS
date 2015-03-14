@@ -4,8 +4,9 @@
 
 Name:           ocaml-mlgmpidl
 Version:        1.2.1
-Release:        0.8.%{svndate}%{?dist}
+Release:        0.9.%{svndate}%{?dist}
 Summary:        OCaml interface to GMP and MPFR libraries
+Summary(zh_CN.UTF-8): GMP 和 MPFR 库的 OCaml 接口
 Group:          Development/Libraries
 License:        LGPLv2
 
@@ -47,10 +48,14 @@ functional) interface to conserve memory and that this one uses
 CAMLIDL to take care of the C/OCaml interface in a convenient and
 modular way.
 
+%description -l zh_CN.UTF-8
+GMP 和 MPFR 库的 OCaml 接口。
 
 %package        devel
 Summary:        Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       %{name} = %{version}-%{release}
 
 
@@ -58,12 +63,20 @@ Requires:       %{name} = %{version}-%{release}
 The %{name}-devel package contains libraries and signature files for
 developing applications that use %{name}.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
 %package        doc
 Summary:        Documentation files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的文档
 Group:          Documentation
+Group(zh_CN.UTF-8): 文档
 
 %description    doc
 The %{name}-doc package contains documentation for using %{name}.
+
+%description doc -l zh_CN.UTF-8
+%{name} 的文档。
 
 %prep
 %setup -q -n trunk
@@ -119,7 +132,7 @@ mv $RPM_BUILD_ROOT%{my_ocaml_lib_dir}/gmp_caml.h $RPM_BUILD_ROOT%{_includedir}
 mkdir -p %{buildroot}%{doc_dir}
 cp -p *.pdf %{buildroot}%{doc_dir}
 cp -pr html %{buildroot}%{doc_dir}
-
+magic_rpm_clean.sh
 
 %files
 %{my_ocaml_lib_dir}
@@ -149,6 +162,9 @@ cp -pr html %{buildroot}%{doc_dir}
 
 
 %changelog
+* Mon Mar 09 2015 Liu Di <liudidi@gmail.com> - 1.2.1-0.9.20120830
+- 为 Magic 3.0 重建
+
 * Fri Jun 20 2014 Liu Di <liudidi@gmail.com> - 1.2.1-0.8.20120830
 - 为 Magic 3.0 重建
 

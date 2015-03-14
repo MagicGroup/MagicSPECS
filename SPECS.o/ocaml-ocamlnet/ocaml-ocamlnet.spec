@@ -10,9 +10,10 @@
 %global __strip /bin/true
 
 Name:           ocaml-ocamlnet
-Version:        3.7.3
-Release:        6%{?dist}
+Version: 4.0.2
+Release: 1%{?dist}
 Summary:        Network protocols for OCaml
+Summary(zh_CN.UTF-8): OCaml 的网络协议库
 License:        BSD
 
 URL:            http://projects.camlcity.org/projects/ocamlnet.html
@@ -72,9 +73,14 @@ In detail, the following features are available:
  * smtp and pop are two further client implementations for the SMTP
    and POP3 protocols.
 
+%description -l zh_CN.UTF-8
+OCaml 的网络协议库。
+
 %package        devel
 Summary:        Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       %{name} = %{version}-%{release}
 
 
@@ -82,11 +88,15 @@ Requires:       %{name} = %{version}-%{release}
 The %{name}-devel package contains libraries and signature files for
 developing applications that use %{name}.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %package        nethttpd
 Summary:        Ocamlnet HTTP daemon
+Summary(zh_CN.UTF-8): OCamlnet 的 HTTP 服务
 License:        GPLv2+
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       %{name} = %{version}-%{release}
 
 
@@ -95,11 +105,15 @@ Nethttpd is a web server component (HTTP server implementation). It
 can be used for web applications without using an extra web server, or
 for serving web services.
 
+%description nethttpd -l zh_CN.UTF-8
+OCamlnet 的 HTTP 服务。
 
 %package        nethttpd-devel
 Summary:        Development files for %{name}-nethttpd
+Summary(zh_CN.UTF-8): %{name}-nethttpd 的开发包
 License:        GPLv2+
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       %{name}-nethttpd = %{version}-%{release}
 
 
@@ -107,22 +121,29 @@ Requires:       %{name}-nethttpd = %{version}-%{release}
 The %{name}-nethttpd-devel package contains libraries and signature
 files for developing applications that use %{name}-nethttpd.
 
+%description nethttpd-devel -l zh_CN.UTF-8
+%{name}-nethttpd 的开发包。
 
 %prep
 %setup -q -n ocamlnet-%{version}
 
 
 %build
-./configure -enable-tcl -with-nethttpd \
+# Parallel builds don't work:
+unset MAKEFLAGS
+
+./configure \
   -bindir %{_bindir} \
   -datadir %{_datadir}/%{name} \
-  -prefer-netcgi2 \
-  -with-nethttpd \
   -disable-apache \
-  -enable-ssl \
-  -enable-gtk2
-# In future:
-# -with-rpc-auth-dh (requires cryptgps)
+  -enable-pcre \
+  -enable-gtk2 \
+  -enable-gnutls \
+  -enable-gssapi \
+  -enable-nethttpd \
+  -enable-tcl \
+  -enable-zip
+
 
 make all
 %if %opt
@@ -145,30 +166,36 @@ rm -f $RPM_BUILD_ROOT%{_libdir}/ocaml/rpc-generator/dummy.mli
 mkdir -p $RPM_BUILD_ROOT/etc/prelink.conf.d
 echo -e '-b /usr/bin/netplex-admin\n-b /usr/bin/ocamlrpcgen' \
   > $RPM_BUILD_ROOT/etc/prelink.conf.d/ocaml-ocamlnet.conf
+magic_rpm_clean.sh
 
 %files
 %doc ChangeLog RELNOTES
 %{_libdir}/ocaml/equeue
 %{_libdir}/ocaml/equeue-gtk2
-%{_libdir}/ocaml/equeue-ssl
+#%{_libdir}/ocaml/equeue-ssl
 %{_libdir}/ocaml/equeue-tcl
 %{_libdir}/ocaml/netcamlbox
 %{_libdir}/ocaml/netcgi2
 %{_libdir}/ocaml/netcgi2-plex
 %{_libdir}/ocaml/netclient
-%{_libdir}/ocaml/netgssapi
+#%{_libdir}/ocaml/netgssapi
 %{_libdir}/ocaml/netmulticore
 %{_libdir}/ocaml/netplex
 %{_libdir}/ocaml/netshm
 %{_libdir}/ocaml/netstring
 %{_libdir}/ocaml/netsys
-%{_libdir}/ocaml/pop
+#%{_libdir}/ocaml/pop
 %{_libdir}/ocaml/rpc
 %{_libdir}/ocaml/rpc-auth-local
 %{_libdir}/ocaml/rpc-generator
-%{_libdir}/ocaml/rpc-ssl
+#%{_libdir}/ocaml/rpc-ssl
 %{_libdir}/ocaml/shell
-%{_libdir}/ocaml/smtp
+#%{_libdir}/ocaml/smtp
+%{_libdir}/ocaml/netgss-system
+%{_libdir}/ocaml/netstring-pcre
+%{_libdir}/ocaml/nettls-gnutls
+%{_libdir}/ocaml/netunidata
+%{_libdir}/ocaml/netzip
 %if %opt
 %exclude %{_libdir}/ocaml/*/*.a
 %exclude %{_libdir}/ocaml/*/*.cmxa
@@ -199,7 +226,7 @@ echo -e '-b /usr/bin/netplex-admin\n-b /usr/bin/ocamlrpcgen' \
 %files nethttpd
 %defattr(-,root,root,-)
 %doc ChangeLog RELNOTES
-%{_libdir}/ocaml/nethttpd-for-netcgi2
+#%{_libdir}/ocaml/nethttpd-for-netcgi2
 %{_libdir}/ocaml/nethttpd
 %if %opt
 %exclude %{_libdir}/ocaml/*/*.a
@@ -219,6 +246,9 @@ echo -e '-b /usr/bin/netplex-admin\n-b /usr/bin/ocamlrpcgen' \
 
 
 %changelog
+* Fri Mar 06 2015 Liu Di <liudidi@gmail.com> - 4.0.2-1
+- 更新到 4.0.2
+
 * Fri Jun 20 2014 Liu Di <liudidi@gmail.com> - 3.7.3-6
 - 为 Magic 3.0 重建
 

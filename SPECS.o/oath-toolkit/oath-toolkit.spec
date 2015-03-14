@@ -1,9 +1,11 @@
 Name:          oath-toolkit
-Version:       2.4.0
-Release:       2%{?dist}
+Version: 2.4.1
+Release: 1%{?dist}
 License:       GPLv3+
 Group:         System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 Summary:       One-time password components
+Summary(zh_CN.UTF-8): 一次性密码组件
 BuildRequires: xmlsec1-devel, pam-devel, gtk-doc, libtool, libtool-ltdl-devel
 Source:        http://download.savannah.gnu.org/releases/%{name}/%{name}-%{version}.tar.gz
 URL:           http://www.nongnu.org/oath-toolkit/
@@ -20,9 +22,14 @@ AuTHentication, which is the organization that specify the algorithms. For
 managing secret key files, the Portable Symmetric Key Container (PSKC) format
 described in RFC6030 is supported.
 
+%description -l zh_CN.UTF-8
+一次性密码组件。
+
 %package -n liboath
 Summary:          Library for OATH handling
+Summary(zh_CN.UTF-8): 处理 OATH 的库
 Group:            Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 License:          LGPLv2+
 Requires(post):   /sbin/ldconfig
 Requires(postun): /sbin/ldconfig
@@ -34,14 +41,22 @@ OATH stands for Open AuTHentication, which is the organization that
 specify the algorithms. Supported technologies include the event-based
 HOTP algorithm (RFC4226) and the time-based TOTP algorithm (RFC6238).
 
+%description -n liboath -l zh_CN.UTF-8
+处理 OATH 的库。
+
 %package -n liboath-devel
 Summary:  Development files for liboath
+Summary(zh_CN.UTF-8): liboath 的开发包
 Group:    Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 License:  LGPLv2+
 Requires: liboath%{?_isa} = %{version}-%{release}
 
 %description -n liboath-devel
 Development files for liboath.
+
+%description -n liboath-devel -l zh_CN.UTF-8
+liboath 的开发包。
 
 %package -n liboath-doc
 Summary:   Documentation files for liboath
@@ -190,6 +205,9 @@ mkdir -p -m 0600 %{buildroot}%{_sysconfdir}/liboath
 %{_libdir}/security/pam_oath.so
 
 %changelog
+* Tue Mar 03 2015 Liu Di <liudidi@gmail.com> - 2.4.1-1
+- 更新到 2.4.1
+
 * Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.4.0-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
 

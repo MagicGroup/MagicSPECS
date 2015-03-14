@@ -2,8 +2,9 @@
 
 Name:           ocaml-pa-do
 Version:        0.8.16
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        OCaml syntax extension for delimited overloading
+Summary(zh_CN.UTF-8): OCaml 的高效算术语法扩展
 License:        LGPLv2+ with exceptions
 
 URL:            http://forge.ocamlcore.org/projects/pa-do/
@@ -37,9 +38,12 @@ This package contains three syntax extensions.
 - pa_do (includes Delimited_overloading, Macros)
 - pa_do_nums
 
+%description -l zh_CN.UTF-8
+OCaml 的高效算术语法扩展。
 
 %package        devel
 Summary:        Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Requires:       %{name} = %{version}-%{release}
 
 
@@ -47,6 +51,8 @@ Requires:       %{name} = %{version}-%{release}
 The %{name}-devel package contains libraries and signature files for
 developing applications that use %{name}.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q -n pa_do-%{version}
@@ -79,7 +85,7 @@ make install
 
 # Install API docs using %doc section.
 mv $RPM_BUILD_ROOT%{_docdir}/api .
-
+magic_rpm_clean.sh
 
 %files
 %doc LICENSE.txt
@@ -93,6 +99,9 @@ mv $RPM_BUILD_ROOT%{_docdir}/api .
 
 
 %changelog
+* Tue Mar 10 2015 Liu Di <liudidi@gmail.com> - 0.8.16-4
+- 为 Magic 3.0 重建
+
 * Fri Jun 20 2014 Liu Di <liudidi@gmail.com> - 0.8.16-3
 - 为 Magic 3.0 重建
 

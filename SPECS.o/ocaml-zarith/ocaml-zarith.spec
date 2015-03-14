@@ -4,14 +4,14 @@
 %endif
 
 Name:           ocaml-zarith
-Version:        1.2.1
-Release:        8%{?dist}
+Version:	1.3
+Release:	1%{?dist}
 Summary:        OCaml interface to GMP
 
 # The license has a static linking exception
 License:        LGPLv2 with exceptions
 URL:            http://forge.ocamlcore.org/projects/zarith
-Source0:        http://forge.ocamlcore.org/frs/download.php/1199/zarith-%{version}.tgz
+Source0:        http://forge.ocamlcore.org/frs/download.php/1471/zarith-%{version}.tgz
 
 BuildRequires:  gmp-devel
 BuildRequires:  ocaml
@@ -56,9 +56,6 @@ developing applications that use %{name}.
 
 %prep
 %setup -q -n zarith-%{version}
-
-# Fix a broken makefile rule that kills installation
-sed -i 's/dllzarith\.dll/dllzarith.$(DLLSUFFIX)/' project.mak
 
 # Fix compilation flags
 sed -i "s/^asopt=''/asopt='%{optflags}'/" configure
@@ -111,6 +108,9 @@ make tests
 %{_libdir}/ocaml/zarith/*.h
 
 %changelog
+* Sat Mar 14 2015 Liu Di <liudidi@gmail.com> - 1.3-1
+- 更新到 1.3
+
 * Fri Jun 20 2014 Liu Di <liudidi@gmail.com> - 1.2.1-8
 - 为 Magic 3.0 重建
 

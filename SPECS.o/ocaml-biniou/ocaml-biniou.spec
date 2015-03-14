@@ -5,8 +5,9 @@
 
 Name:           ocaml-biniou
 Version:        1.0.9
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        Safe and fast binary data format
+Summary(zh_CN.UTF-8): 安全快速的二进制数据格式
 
 License:        BSD
 URL:            http://mjambon.com/biniou.html
@@ -31,15 +32,20 @@ of type definitions except for field and variant names which are
 represented by 31-bit hashes. A program named bdump is provided for
 routine visualization of biniou data files.
 
+%description -l zh_CN.UTF-8
+安全快速的二进制数据格式。
 
 %package        devel
 Summary:        Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Requires:       %{name}%{?_isa} = %{version}-%{release}
 
 %description    devel
 The %{name}-devel package contains libraries and signature files for
 developing applications that use %{name}.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q -n %{libname}-%{version}
@@ -72,7 +78,7 @@ make install #DESTDIR=$RPM_BUILD_ROOT
 # avoid potential future name conflict
 mv $RPM_BUILD_ROOT%{_bindir}/{,ocaml-}bdump
 %endif
-
+magic_rpm_clean.sh
 
 %check
 make test
@@ -103,6 +109,9 @@ make test
 
 
 %changelog
+* Tue Mar 03 2015 Liu Di <liudidi@gmail.com> - 1.0.9-5
+- 为 Magic 3.0 重建
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.0.9-4
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

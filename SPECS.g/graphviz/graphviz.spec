@@ -50,22 +50,25 @@
 Name:			graphviz
 Summary:		Graph Visualization Tools
 Version:	2.38.0
-Release:		10%{?dist}
+Release:		11%{?dist}
 Group:			Applications/Multimedia
 License:		EPL
 URL:			http://www.graphviz.org/
 Source0:		http://www.graphviz.org/pub/graphviz/ARCHIVE/%{name}-%{version}.tar.gz
-# Fix SIGSEGVs on testsuite (#645703).
-Patch1:			graphviz-2.32.0-testsuite-sigsegv-fix.patch
-# Testsuite now do diff check also in case of err output (#645703).
-Patch2:			graphviz-2.32.0-rtest-errout-fix.patch
-# Upstream bug 0002387
-Patch3:			graphviz-2.34.0-lefty-getaddrinfo.patch
-# Fix yyerror overflow (CVE-2014-0978, CVE-2014-1235)
-Patch4:			graphviz-2.34.0-CVE-2014-0978-CVE-2014-1235.patch
-# Fix chknum overflow (CVE-2014-1236)
-Patch5:			graphviz-2.34.0-CVE-2014-1236.patch
+
+# Fix typo in testsuite (upstream ticket #2441).
+Patch0:			graphviz-2.38.0-rtest-fix.patch
+Patch1:			graphviz-2.38.0-find-fix.patch
+# Not upstream patch to fix build with OCaml > 4.02.0 (upstream) and Fedora.
+Patch2:			graphviz-2.38.0-ocaml-fix-ints.patch
+# Backported from upstream
+Patch3:			graphviz-2.38.0-format-string.patch
+# Make vimdot to work with vi (upstream ticket #2507)
+Patch4:			graphviz-2.38.0-vimdot-vi.patch
+Patch5:			graphviz-2.38.0-rbconfig.patch
+# 修正 mips64el 编译错误
 Patch6:			graphviz-2.38.0-mips64-lib64-fix.patch
+
 BuildRoot:		%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:		zlib-devel, libpng-devel, libjpeg-devel, expat-devel, freetype-devel >= 2
 BuildRequires:		ksh, bison, m4, flex, tk-devel, tcl-devel >= 8.3, swig
@@ -272,9 +275,12 @@ Various tcl packages (extensions) for the graphviz tools.
 
 %prep
 %setup -q
-#%patch1 -p1 -b .testsuite-sigsegv-fix
-#%patch2 -p1 -b .rtest-errout-fix
-#%patch3 -p1 -b .lefty-getaddrinfo
+%patch0 -p1 -b .rtest-fix
+%patch1 -p1 -b .find-fix
+%patch2 -p1
+%patch3 -p1 -b .format-string
+%patch4 -p1 -b .vimdot-vi
+%patch5 -p1 -b .rbconfig
 %patch6 -p1 -b .mips64el
 
 # Attempt to fix rpmlint warnings about executable sources
@@ -568,6 +574,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Mar 05 2015 Liu Di <liudidi@gmail.com> - 2.38.0-11
+- 为 Magic 3.0 重建
+
 * Thu Jun 26 2014 Liu Di <liudidi@gmail.com> - 2.38.0-10
 - 为 Magic 3.0 重建
 

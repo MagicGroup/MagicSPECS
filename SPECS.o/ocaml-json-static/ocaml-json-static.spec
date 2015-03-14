@@ -3,8 +3,9 @@
 
 Name:           ocaml-json-static
 Version:        0.9.8
-Release:        13%{?dist}
+Release:        14%{?dist}
 Summary:        OCaml JSON validator and converter (syntax extension)
+Summary(zh_CN.UTF-8): OCaml 的 JSON 验证和转换程序 (语法扩展)
 License:        BSD
 
 URL:            http://martin.jambon.free.fr/json-static.html
@@ -31,6 +32,8 @@ unchecked structure into specialized OCaml types and vice-versa.
 It is a complement to the json-wheel library which provides a
 parser and a (pretty-) printer.
 
+%description -l zh_CN.UTF-8
+OCaml 的 JSON 验证和转换程序 (语法扩展)。
 
 %prep
 %setup -q -n json-static-%{version}
@@ -45,7 +48,7 @@ export DESTDIR=$RPM_BUILD_ROOT
 export OCAMLFIND_DESTDIR=$RPM_BUILD_ROOT%{_libdir}/ocaml
 mkdir -p $OCAMLFIND_DESTDIR $OCAMLFIND_DESTDIR/stublibs
 make install
-
+magic_rpm_clean.sh
 
 %files
 %doc LICENSE README Changes yahoo.ml
@@ -53,6 +56,9 @@ make install
 
 
 %changelog
+* Fri Mar 06 2015 Liu Di <liudidi@gmail.com> - 0.9.8-14
+- 为 Magic 3.0 重建
+
 * Fri Jun 20 2014 Liu Di <liudidi@gmail.com> - 0.9.8-13
 - 为 Magic 3.0 重建
 
