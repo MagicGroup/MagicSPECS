@@ -1,0 +1,44 @@
+From 315cc494a67d5b33e1d3356feb483c561192418a Mon Sep 17 00:00:00 2001
+From: andrewray <evilkidder@gmail.com>
+Date: Sun, 8 Jun 2014 11:28:44 +0100
+Subject: [PATCH 2/2] fix for pcre 7.10
+
+---
+ VERSION                   | 2 +-
+ pcre/run_mikmatch_pcre.ml | 4 ++--
+ 2 files changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/VERSION b/VERSION
+index 3acc00b..22b2c19 100755
+--- a/VERSION
++++ b/VERSION
+@@ -1,3 +1,3 @@
+ #!/bin/sh
+-mikmatch_version="1.0.7"
++mikmatch_version="1.0.8"
+ echo -n $mikmatch_version
+diff --git a/pcre/run_mikmatch_pcre.ml b/pcre/run_mikmatch_pcre.ml
+index 34f82ff..50db948 100644
+--- a/pcre/run_mikmatch_pcre.ml
++++ b/pcre/run_mikmatch_pcre.ml
+@@ -16,7 +16,7 @@ let search rex f ?(pos = 0) subj =
+     if 
+       try
+ 	unsafe_pcre_exec 
+-	  irflags rex cur_pos subj subgroup_offsets offset_vector None; true
++	  irflags rex ~pos:cur_pos ~subj_start:0 ~subj ~subgroups2:subgroup_offsets offset_vector None; true
+       with Not_found -> false
+     then
+       (f substrings;
+@@ -34,7 +34,7 @@ let scan ~full rex pos ~ftext ~fmatch subj =
+     if 
+       try
+ 	unsafe_pcre_exec 
+-	  irflags rex cur_pos subj subgroup_offsets offset_vector None; true
++	  irflags rex ~pos:cur_pos ~subj_start:0 ~subj ~subgroups2:subgroup_offsets offset_vector None; true
+       with Not_found -> 
+ 	let last = String.length subj in
+ 	if full || last > previous_last then
+-- 
+1.9.3
+

@@ -1,7 +1,8 @@
 Name:           obexftp
 Version:        0.24
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        Tool to access devices via the OBEX protocol
+Summary(zh_CN.UTF-8): 通过 OBEX 协议访问设备的工具
 License:        GPLv2+
 URL:            https://gitorious.org/obexftp
 Source0:        http://download.sourceforge.net/openobex/%{name}-%{version}-Source.tar.gz
@@ -92,7 +93,7 @@ developing applications that use %{name}.
 %patch3 -p1 -b .pythonpath
 
 %build
-%cmake
+%cmake -DPythonLibs=%{_libdir}/libpython2.7.so
 # 'all' doesn't include doc, it seems - thanks, SUSE.
 make %{?_smp_mflags} all doc
 
@@ -135,6 +136,9 @@ make DESTDIR=%{buildroot} RUBYARCHDIR=%{buildroot}%{ruby_vendorarchdir} install
 %{ruby_vendorarchdir}/obexftp.so
 
 %changelog
+* Tue Mar 03 2015 Liu Di <liudidi@gmail.com> - 0.24-4
+- 为 Magic 3.0 重建
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.24-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

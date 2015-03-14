@@ -3,8 +3,9 @@
 
 Name:           ocaml-openin
 Version:        20070524
-Release:        22%{?dist}
+Release:        23%{?dist}
 Summary:        OCaml syntax to locally open modules
+Summary(zh_CN.UTF-8): 本地打开模块的 OCaml 语法
 
 License:        Public Domain
 URL:            http://alain.frisch.fr/soft#openin
@@ -30,6 +31,8 @@ that can appear in any context where an expression is expected. M is
 an arbitrary module expression (not only qualified names as for usual
 open statements) and e is an expression.
 
+%description -l zh_CN.UTF-8
+本地打开模块的 OCaml 语法。
 
 %prep
 %setup -q -n openin-%{version}
@@ -53,7 +56,7 @@ export OCAMLFIND_DESTDIR=$RPM_BUILD_ROOT%{_libdir}/ocaml
 mkdir -p $OCAMLFIND_DESTDIR $OCAMLFIND_DESTDIR/stublibs
 
 ocamlfind install openin META pa_openin.cmo
-
+magic_rpm_clean.sh
 
 %files
 %doc README
@@ -61,6 +64,9 @@ ocamlfind install openin META pa_openin.cmo
 
 
 %changelog
+* Tue Mar 10 2015 Liu Di <liudidi@gmail.com> - 20070524-23
+- 为 Magic 3.0 重建
+
 * Fri Jun 20 2014 Liu Di <liudidi@gmail.com> - 20070524-22
 - 为 Magic 3.0 重建
 

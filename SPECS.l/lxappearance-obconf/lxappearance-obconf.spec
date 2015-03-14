@@ -16,7 +16,7 @@
 
 Name:           lxappearance-obconf
 Version:        0.2.0
-Release:        2%{?git_version:.%{?git_version}}%{?dist}
+Release:        3%{?git_version:.%{?git_version}}%{?dist}
 Summary:        Plugin to configure Openbox inside LXAppearance
 Summary(zh_CN.UTF-8): 在 LXAppearance 配置 Openbox 的插件
 
@@ -30,6 +30,9 @@ Source0:        %{name}-%{?git_version}.tar.bz2
 %else
 Source0:        http://downloads.sourceforge.net/sourceforge/lxde/%{name}-%{version}.tar.gz
 %endif
+#与 openbox 5.3.2 兼容
+Patch1:		obconf-rrbutton.patch
+
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildRequires:  gtk2-devel
@@ -51,7 +54,7 @@ It is only visible when the plugin is installed and Openbox is in use.
 
 %prep
 %setup -q %{?git_version:-n %{name}}
-
+%patch1 -p1
 
 %build
 %{?git_version:sh autogen.sh}
@@ -80,6 +83,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Tue Mar 03 2015 Liu Di <liudidi@gmail.com> - 0.2.0-3
+- 为 Magic 3.0 重建
+
 * Fri Jul 04 2014 Liu Di <liudidi@gmail.com> - 0.2.0-2
 - 为 Magic 3.0 重建
 

@@ -1,7 +1,8 @@
 Name:           ocaml-extlib
 Version:        1.6.1
-Release:        8%{?dist}
+Release:        9%{?dist}
 Summary:        OCaml ExtLib additions to the standard library
+Summary(zh_CN.UTF-8): OCaml 标准库的附加组件
 License:        LGPLv2+ with exceptions
 
 URL:            http://code.google.com/p/ocaml-extlib/
@@ -29,9 +30,12 @@ modules, to modify some functions in order to get better performances
 or more safety (tail-recursive) but also to provide new modules which
 should be useful for the average OCaml programmer.
 
+%description -l zh_CN.UTF-8
+OCaml 标准库的附加组件。
 
 %package        devel
 Summary:        Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Requires:       %{name} = %{version}-%{release}
 
 
@@ -39,6 +43,8 @@ Requires:       %{name} = %{version}-%{release}
 The %{name}-devel package contains libraries and signature files for
 developing applications that use %{name}.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q -n extlib-%{version}
@@ -69,7 +75,7 @@ install -m 0644 META $RPM_BUILD_ROOT%{_libdir}/ocaml/extlib/
 
 # Move the HTML documentation - we'll install it using a %doc rule.
 mv $extlibdir/extlib-doc .
-
+magic_rpm_clean.sh
 
 %files
 %doc README.txt LICENSE
@@ -95,6 +101,9 @@ mv $extlibdir/extlib-doc .
 
 
 %changelog
+* Wed Mar 04 2015 Liu Di <liudidi@gmail.com> - 1.6.1-9
+- 为 Magic 3.0 重建
+
 * Mon Feb 16 2015 Richard W.M. Jones <rjones@redhat.com> - 1.6.1-8
 - ocaml-4.02.1 rebuild.
 

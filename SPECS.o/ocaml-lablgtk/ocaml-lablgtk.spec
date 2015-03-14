@@ -1,13 +1,14 @@
 Name:           ocaml-lablgtk
-Version:        2.18.0
-Release:        2%{?dist}
+Version: 2.18.3
+Release: 2%{?dist}
 
 Summary:        Objective Caml interface to gtk+
+Summary(zh_CN.UTF-8): OCaml 的 gtk+ 接口
 
 License:        LGPLv2 with exceptions
 
 URL:            http://lablgtk.forge.ocamlcore.org/
-Source:         https://forge.ocamlcore.org/frs/download.php/1261/lablgtk-%{version}.tar.gz
+Source:         https://forge.ocamlcore.org/frs/download.php/1479/lablgtk-%{version}.tar.gz
 
 ExcludeArch:    sparc64 s390 s390x
 
@@ -43,19 +44,27 @@ typed, yet very comfortable, object-oriented interface to gtk+. This
 is not that easy if you know the dynamic typing approach taken by
 gtk+.
 
+%description -l zh_CN.UTF-8
+OCaml 的 gtk+ 接口。
 
 %package doc
 Group:          System Environment/Libraries
+Group(zh_CN.UTF-8): 文档
 Summary:        Documentation for LablGTK
+Summary(zh_CN.UTF-8): %{name} 的文档
 Requires:       %{name} = %{version}-%{release}
 
 %description doc
 Documentation for %{name}.
 
+%description doc -l zh_CN.UTF-8
+%{name} 的文档。
 
 %package devel
 Summary:        Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       %{name} = %{version}-%{release}
 Requires:       gtk2-devel
 
@@ -63,6 +72,8 @@ Requires:       gtk2-devel
 The %{name}-devel package contains libraries and signature files for
 developing applications that use %{name}.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q -n lablgtk-%{version}
@@ -108,7 +119,7 @@ popd
 
 # Remove .cvsignore files from examples directory.
 find examples -name .cvsignore -exec rm {} \;
-
+magic_rpm_clean.sh
 
 %files
 %doc README COPYING CHANGES
@@ -146,6 +157,12 @@ find examples -name .cvsignore -exec rm {} \;
 
 
 %changelog
+* Thu Mar 05 2015 Liu Di <liudidi@gmail.com> - 2.18.3-2
+- 为 Magic 3.0 重建
+
+* Thu Mar 05 2015 Liu Di <liudidi@gmail.com> - 2.18.3-1
+- 更新到 2.18.3
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.18.0-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

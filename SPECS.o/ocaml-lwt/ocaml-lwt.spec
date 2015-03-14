@@ -1,17 +1,17 @@
+%global commit 75b1dc1aefae75dc4ac6455f5a2688b3a52adabd
 %global opt %(test -x %{_bindir}/ocamlopt && echo 1 || echo 0)
 
 Name:           ocaml-lwt
-Version:        2.4.3
-Release:        9%{?dist}
+Version: 2.4.5
+Release: 1%{?dist}
 Summary:        OCaml lightweight thread library
+Summary(zh_CN.UTF-8): OCaml 的轻量级线程库
 
 # The openssl linking exception is granted.
 License:        LGPLv2+ with exceptions
 URL:            http://ocsigen.org/lwt
-Source0:        http://ocsigen.org/download/lwt-%{version}.tar.gz
-
-# Adapt to changes in OCaml 4.01.0
-Patch1:         lwt-2.4.3-ocaml41.patch
+Source0:        https://github.com/ocsigen/lwt/archive/%{commit}/lwt-%{commit}.tar.gz
+#Source0:        https://github.com/ocsigen/lwt/archive/%{version}.tar.gz
 
 BuildRequires:  ocaml >= 3.10.0
 BuildRequires:  ocaml-findlib-devel
@@ -28,9 +28,12 @@ BuildRequires:  libev-devel
 Lwt is a lightweight thread library for Objective Caml.  This library
 is part of the Ocsigen project.
 
+%description -l zh_CN.UTF-8
+OCaml 的轻量级线程库。
 
 %package        devel
 Summary:        Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Requires:       %{name}%{?_isa} = %{version}-%{release}
 
 
@@ -38,19 +41,14 @@ Requires:       %{name}%{?_isa} = %{version}-%{release}
 The %{name}-devel package contains libraries and signature files for
 developing applications that use %{name}.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
-%setup -q -n lwt-%{version}
-
-%patch1
-
-mv README README.old
-iconv -f iso-8859-1 -t utf-8 < README.old > README
-touch -r README.old README
-
+%setup -q -n lwt-%{commit}
 
 %build
-./configure --enable-ssl --enable-glib --enable-react --prefix=%{_prefix}
+./configure --enable-ssl --enable-glib --disable-react --prefix=%{_prefix}
 make
 
 
@@ -61,10 +59,10 @@ mkdir -p $OCAMLFIND_DESTDIR $OCAMLFIND_DESTDIR/stublibs
 make install
 
 chrpath --delete $OCAMLFIND_DESTDIR/stublibs/dll*.so
-
+magic_rpm_clean.sh
 
 %check
-./configure --enable-ssl --enable-glib --enable-react --enable-tests \
+./configure --enable-ssl --enable-glib --disable-react --enable-tests \
   --prefix=%{_prefix}
 make test
 
@@ -86,7 +84,7 @@ OCAMLPATH=$RPM_BUILD_ROOT%{_libdir}/ocaml ocamlfind query lwt.react
 
 
 %files devel
-%doc CHANGES CHANGES.darcs README manual/manual.pdf
+%doc CHANGES
 %if %opt
 %{_libdir}/ocaml/lwt/*.a
 %{_libdir}/ocaml/lwt/*.cmxa
@@ -96,6 +94,9 @@ OCAMLPATH=$RPM_BUILD_ROOT%{_libdir}/ocaml ocamlfind query lwt.react
 
 
 %changelog
+* Fri Mar 06 2015 Liu Di <liudidi@gmail.com> - 2.4.5-1
+- 更新到 2.4.5
+
 * Fri Jun 20 2014 Liu Di <liudidi@gmail.com> - 2.4.3-9
 - 为 Magic 3.0 重建
 

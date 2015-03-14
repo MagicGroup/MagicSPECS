@@ -1,0 +1,204 @@
+From 8d86aba4983a254f36f2f1758079b3099ba5fc07 Mon Sep 17 00:00:00 2001
+From: "Richard W.M. Jones" <rjones@redhat.com>
+Date: Fri, 24 Oct 2014 12:59:23 +0200
+Subject: [PATCH 09/15] ppc64le: Update for OCaml 4.02.0.
+
+These are based on the power (ppc32) branch and some guesswork.  In
+particular, I'm not convinced that my changes to floating point
+constant handling are correct.
+
+Therefore these are not yet integrated into the main patch.
+---
+ asmcomp/power64le/CSE.ml        | 37 +++++++++++++++++++++++++++++++++++++
+ asmcomp/power64le/emit.mlp      | 23 ++++++++++++++---------
+ asmcomp/power64le/proc.ml       |  8 ++++----
+ asmcomp/power64le/scheduling.ml |  2 +-
+ 4 files changed, 56 insertions(+), 14 deletions(-)
+ create mode 100644 asmcomp/power64le/CSE.ml
+
+diff --git a/asmcomp/power64le/CSE.ml b/asmcomp/power64le/CSE.ml
+new file mode 100644
+index 0000000..ec10d2d
+--- /dev/null
++++ b/asmcomp/power64le/CSE.ml
+@@ -0,0 +1,37 @@
++(***********************************************************************)
++(*                                                                     *)
++(*                                OCaml                                *)
++(*                                                                     *)
++(*            Xavier Leroy, projet Gallium, INRIA Rocquencourt         *)
++(*                                                                     *)
++(*  Copyright 2014 Institut National de Recherche en Informatique et   *)
++(*  en Automatique.  All rights reserved.  This file is distributed    *)
++(*  under the terms of the Q Public License version 1.0.               *)
++(*                                                                     *)
++(***********************************************************************)
++
++(* CSE for the PowerPC *)
++
++open Arch
++open Mach
++open CSEgen
++
++class cse = object (self)
++
++inherit cse_generic as super
++
++method! class_of_operation op =
++  match op with
++  | Ispecific(Imultaddf | Imultsubf) -> Op_pure
++  | Ispecific(Ialloc_far _) -> Op_other
++  | _ -> super#class_of_operation op
++
++method! is_cheap_operation op =
++  match op with
++  | Iconst_int n | Iconst_blockheader n -> n <= 32767n && n >= -32768n
++  | _ -> false
++
++end
++
++let fundecl f =
++  (new cse)#fundecl f
+diff --git a/asmcomp/power64le/emit.mlp b/asmcomp/power64le/emit.mlp
+index 5736a18..3f34102 100644
+--- a/asmcomp/power64le/emit.mlp
++++ b/asmcomp/power64le/emit.mlp
+@@ -297,6 +297,7 @@ let name_for_int_comparison = function
+ let name_for_intop = function
+     Iadd -> "add"
+   | Imul -> "mulld"
++  | Imulh -> "mulhd"
+   | Idiv -> "divd"
+   | Iand -> "and"
+   | Ior  -> "or"
+@@ -359,7 +360,8 @@ let load_store_size = function
+ let instr_size = function
+     Lend -> 0
+   | Lop(Imove | Ispill | Ireload) -> 1
+-  | Lop(Iconst_int n) -> if is_native_immediate n then 1 else 2
++  | Lop(Iconst_int n | Iconst_blockheader n) ->
++    if is_native_immediate n then 1 else 2
+   | Lop(Iconst_float s) -> 2
+   | Lop(Iconst_symbol s) -> 2
+   | Lop(Icall_ind) -> 4
+@@ -375,7 +377,7 @@ let instr_size = function
+       if chunk = Byte_signed
+       then load_store_size addr + 1
+       else load_store_size addr
+-  | Lop(Istore(chunk, addr)) -> load_store_size addr
++  | Lop(Istore(chunk, addr, _)) -> load_store_size addr
+   | Lop(Ialloc n) -> 4
+   | Lop(Ispecific(Ialloc_far n)) -> 5
+   | Lop(Iintop Imod) -> 3
+@@ -402,7 +404,7 @@ let instr_size = function
+   | Lsetuptrap lbl -> 1
+   | Lpushtrap -> 7
+   | Lpoptrap -> 1
+-  | Lraise -> 6
++  | Lraise _ -> 6
+ 
+ let label_map code =
+   let map = Hashtbl.create 37 in
+@@ -497,7 +499,7 @@ let rec emit_instr i dslot =
+             | (_, _) ->
+                 fatal_error "Emit: Imove"
+         end
+-    | Lop(Iconst_int n) ->
++    | Lop(Iconst_int n | Iconst_blockheader n) ->
+         if is_native_immediate n then
+           `    li      {emit_reg i.res.(0)}, {emit_nativeint n}\n`
+         else if n >= -0x8000_0000n && n <= 0x7FFF_FFFFn then begin
+@@ -507,7 +509,8 @@ let rec emit_instr i dslot =
+         end else begin
+            `   ld      {emit_reg i.res.(0)}, {emit_tocref (TocInt n)}\n`
+         end
+-    | Lop(Iconst_float s) ->
++    | Lop(Iconst_float f) ->
++        let s = string_of_float f in
+         `      lfd     {emit_reg i.res.(0)}, {emit_tocref (TocFloat s)}\n`
+     | Lop(Iconst_symbol s) ->
+         `      ld      {emit_reg i.res.(0)}, {emit_tocref (TocSymOfs (s,0))}\n`
+@@ -576,7 +579,7 @@ let rec emit_instr i dslot =
+         emit_load_store loadinstr addr i.arg 0 i.res.(0);
+         if chunk = Byte_signed then
+           `    extsb   {emit_reg i.res.(0)}, {emit_reg i.res.(0)}\n`
+-    | Lop(Istore(chunk, addr)) ->
++    | Lop(Istore(chunk, addr, _)) ->
+         let storeinstr =
+           match chunk with
+             Byte_unsigned | Byte_signed -> "stb"
+@@ -767,7 +770,7 @@ let rec emit_instr i dslot =
+        `       mr      {emit_gpr 29}, {emit_gpr 11}\n`
+     | Lpoptrap ->
+         `      ld      {emit_gpr 29}, 0({emit_gpr 29})\n`
+-    | Lraise ->
++    | Lraise _ ->
+         `      ld      {emit_gpr 0}, 8({emit_gpr 29})\n`;
+         `      ld      {emit_gpr 1}, 16({emit_gpr 29})\n`;
+         `      ld      {emit_gpr 2}, 24({emit_gpr 29})\n`;
+@@ -895,9 +898,11 @@ let emit_item = function
+   | Cint n ->
+       `        .quad   {emit_nativeint n}\n`
+   | Csingle f ->
+-      `        .float  0d{emit_string f}\n`
++      let s = string_of_float f in
++      `        .float  0d{emit_string s}\n`
+   | Cdouble f ->
+-      `        .double 0d{emit_string f}\n`
++      let s = string_of_float f in
++      `        .double 0d{emit_string s}\n`
+   | Csymbol_address s ->
+       `        .quad   {emit_symbol s}\n`
+   | Clabel_address lbl ->
+diff --git a/asmcomp/power64le/proc.ml b/asmcomp/power64le/proc.ml
+index 9b98577..476c984 100644
+--- a/asmcomp/power64le/proc.ml
++++ b/asmcomp/power64le/proc.ml
+@@ -85,11 +85,11 @@ let rotate_registers = true
+ (* Representation of hard registers by pseudo-registers *)
+ 
+ let hard_int_reg =
+-  let v = Array.create 23 Reg.dummy in
++  let v = Array.make 23 Reg.dummy in
+   for i = 0 to 22 do v.(i) <- Reg.at_location Int (Reg i) done; v
+ 
+ let hard_float_reg =
+-  let v = Array.create 31 Reg.dummy in
++  let v = Array.make 31 Reg.dummy in
+   for i = 0 to 30 do v.(i) <- Reg.at_location Float (Reg(100 + i)) done; v
+ 
+ let all_phys_regs =
+@@ -105,7 +105,7 @@ let stack_slot slot ty =
+ 
+ let calling_conventions
+     first_int last_int first_float last_float make_stack stack_ofs arg =
+-  let loc = Array.create (Array.length arg) Reg.dummy in
++  let loc = Array.make (Array.length arg) Reg.dummy in
+   let int = ref first_int in
+   let float = ref first_float in
+   let ofs = ref stack_ofs in
+@@ -159,7 +159,7 @@ let loc_results res =
+ 
+ let poweropen_external_conventions first_int last_int
+                                    first_float last_float arg =
+-  let loc = Array.create (Array.length arg) Reg.dummy in
++  let loc = Array.make (Array.length arg) Reg.dummy in
+   let int = ref first_int in
+   let float = ref first_float in
+   let ofs = ref (14 * size_addr) in
+diff --git a/asmcomp/power64le/scheduling.ml b/asmcomp/power64le/scheduling.ml
+index b7bba9b..b582b6a 100644
+--- a/asmcomp/power64le/scheduling.ml
++++ b/asmcomp/power64le/scheduling.ml
+@@ -46,7 +46,7 @@ method reload_retaddr_latency = 12
+ method oper_issue_cycles = function
+     Iconst_float _ | Iconst_symbol _ -> 2
+   | Iload(_, Ibased(_, _)) -> 2
+-  | Istore(_, Ibased(_, _)) -> 2
++  | Istore(_, Ibased(_, _), _) -> 2
+   | Ialloc _ -> 4
+   | Iintop(Imod) -> 40 (* assuming full stall *)
+   | Iintop(Icomp _) -> 4
+-- 
+2.1.0
+

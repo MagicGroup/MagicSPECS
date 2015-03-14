@@ -1,9 +1,10 @@
 %global opt %(test -x %{_bindir}/ocamlopt && echo 1 || echo 0)
 
 Name:           ocaml-ssl
-Version:        0.4.6
-Release:        11%{?dist}
+Version:	0.4.7
+Release:	1%{?dist}
 Summary:        SSL bindings for OCaml
+Summary(zh_CN.UTF-8): OCaml 的 SSL 绑定
 
 License:        LGPLv2+ with exceptions
 URL:            http://savonet.sourceforge.net/
@@ -21,9 +22,12 @@ Requires:       openssl
 %description
 SSL bindings for OCaml.
 
+%description -l zh_CN.UTF-8
+OCaml 的 SSL 绑定。
 
 %package        devel
 Summary:        Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Requires:       %{name} = %{version}-%{release}
 Requires:       openssl-devel
 
@@ -32,6 +36,8 @@ Requires:       openssl-devel
 The %{name}-devel package contains libraries and signature files for
 developing applications that use %{name}.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -58,7 +64,7 @@ make install
 # Copy the examples to the docdir.
 mkdir -p $RPM_BUILD_ROOT%{_docdir}/%{name}-devel/examples
 cp examples/*.ml $RPM_BUILD_ROOT%{_docdir}/%{name}-devel/examples
-
+magic_rpm_clean.sh
 
 %files
 %doc CHANGES COPYING README
@@ -82,6 +88,9 @@ cp examples/*.ml $RPM_BUILD_ROOT%{_docdir}/%{name}-devel/examples
 
 
 %changelog
+* Mon Mar 09 2015 Liu Di <liudidi@gmail.com> - 0.4.7-1
+- 更新到 0.4.7
+
 * Fri Jun 20 2014 Liu Di <liudidi@gmail.com> - 0.4.6-11
 - 为 Magic 3.0 重建
 

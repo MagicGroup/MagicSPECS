@@ -1,9 +1,10 @@
 %global opt %(test -x %{_bindir}/ocamlopt && echo 1 || echo 0)
 
 Name:           ocaml-gettext
-Version:        0.3.4
-Release:        13%{?dist}
+Version: 0.3.5
+Release: 1%{?dist}
 Summary:        OCaml library for i18n
+Summary(zh_CN.UTF-8): 多语言支持的 OCaml 库
 
 License:        LGPLv2+ with exceptions
 URL:            http://forge.ocamlcore.org/projects/ocaml-gettext
@@ -49,9 +50,12 @@ Constraints :
 * provides a way to automatically extract translatable
   strings from Ocaml source code.
 
+%description -l zh_CN.UTF-8
+多语言支持的 OCaml 库。
 
 %package        devel
 Summary:        Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Requires:       %{name} = %{version}-%{release}
 
 # BZ 446919.
@@ -62,10 +66,12 @@ Requires:       ocaml-fileutils-devel >= 0.4.0
 The %{name}-devel package contains libraries and signature files for
 developing applications that use %{name}.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
-%if !0%{?rhel}
 %package        camomile
 Summary:        Parts of %{name} which depend on Camomile
+Summary(zh_CN.UTF-8): 依赖 Camomile 的 %{name} 部分
 Requires:       %{name} = %{version}-%{release}
 
 
@@ -73,9 +79,12 @@ Requires:       %{name} = %{version}-%{release}
 The %{name}-camomile package contains the parts of %{name} which
 depend on Camomile.
 
+%description camomile -l zh_CN.UTF-8
+依赖 Camomile 的 %{name} 部分。
 
 %package        camomile-devel
 Summary:        Development files for %{name}-camomile
+Summary(zh_CN.UTF-8): %{name}-camomile 的开发包
 Requires:       %{name}-devel = %{version}-%{release}
 
 
@@ -83,11 +92,14 @@ Requires:       %{name}-devel = %{version}-%{release}
 The %{name}-camomile-devel package contains libraries and
 signature files for developing applications that use
 %{name}-camomile.
-%endif
+
+%description camomile-devel -l zh_CN.UTF-8
+%{name}-camomile 的开发包。
 
 
 %prep
-%setup -q
+#0.3.5 的包有问题，解出来是0.3.4
+%setup -q -n %{name}-0.3.4
 
 %patch1 -p1
 
@@ -98,21 +110,15 @@ unset MAKEFLAGS
 CFLAGS="$RPM_OPT_FLAGS" \
 ./configure \
   --libdir=%{_libdir} \
-%if 0%{?rhel}
-  --disable-camomile \
-%else
   --enable-test \
-%endif
   --with-docbook-stylesheet=/usr/share/sgml/docbook/xsl-stylesheets
 make all
 
 
 %check
-%if !0%{?rhel}
 pushd test
 ../_build/bin/test
 popd
-%endif
 
 
 %install
@@ -128,14 +134,12 @@ find _build -name '*.o' -exec rm {} \;
 
 ocamlfind install gettext _build/lib/gettext/*
 ocamlfind install gettext-stub _build/lib/gettext-stub/*
-%if !0%{?rhel}
 ocamlfind install gettext-camomile _build/lib/gettext-camomile/*
-%endif
 install -m 0755 _build/bin/ocaml-gettext $RPM_BUILD_ROOT%{_bindir}/
 install -m 0755 _build/bin/ocaml-xgettext $RPM_BUILD_ROOT%{_bindir}/
 
 chrpath --delete $OCAMLFIND_DESTDIR/stublibs/dll*.so
-
+magic_rpm_clean.sh
 
 %files
 %doc COPYING
@@ -198,6 +202,12 @@ chrpath --delete $OCAMLFIND_DESTDIR/stublibs/dll*.so
 
 
 %changelog
+* Thu Mar 05 2015 Liu Di <liudidi@gmail.com> - 0.3.5-1
+- 更新到 0.3.5
+
+* Thu Mar 05 2015 Liu Di <liudidi@gmail.com> - 0.3.4-14
+- 为 Magic 3.0 重建
+
 * Fri Jun 20 2014 Liu Di <liudidi@gmail.com> - 0.3.4-13
 - 为 Magic 3.0 重建
 

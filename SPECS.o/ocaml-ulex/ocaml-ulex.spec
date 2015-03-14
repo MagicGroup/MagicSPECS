@@ -3,8 +3,9 @@
 
 Name:           ocaml-ulex
 Version:        1.1
-Release:        20%{?dist}
+Release:        21%{?dist}
 Summary:        OCaml lexer generator for Unicode
+Summary(zh_CN.UTF-8): OCaml 支持 Unicode 的 lexer 生成器
 License:        MIT
 
 URL:            http://www.cduce.org/download.html#side
@@ -28,9 +29,12 @@ Ulex is an OCaml lexer generator for Unicode
 - the lexers work with a new kind of "lexbuf" that supports Unicode;
   a single lexer can work with arbitrary encodings of the input stream.
 
+%description -l zh_CN.UTF-8
+OCaml 支持 Unicode 的 lexer 生成器。
 
 %package        devel
 Summary:        Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Requires:       %{name} = %{version}-%{release}
 
 
@@ -38,6 +42,8 @@ Requires:       %{name} = %{version}-%{release}
 The %{name}-devel package contains libraries and signature files for
 developing applications that use %{name}.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q -n ulex-%{version}
@@ -55,7 +61,7 @@ export DESTDIR=$RPM_BUILD_ROOT
 export OCAMLFIND_DESTDIR=$RPM_BUILD_ROOT%{_libdir}/ocaml
 mkdir -p $OCAMLFIND_DESTDIR
 make install
-
+magic_rpm_clean.sh
 
 %files
 %doc CHANGES README LICENSE
@@ -77,6 +83,9 @@ make install
 
 
 %changelog
+* Thu Mar 12 2015 Liu Di <liudidi@gmail.com> - 1.1-21
+- 为 Magic 3.0 重建
+
 * Fri Jun 20 2014 Liu Di <liudidi@gmail.com> - 1.1-20
 - 为 Magic 3.0 重建
 

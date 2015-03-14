@@ -11,7 +11,7 @@
 
 Name:          ocaml-camlp4
 Version:       4.02.1
-Release:       0.2.git%{shortcommit}%{?dist}
+Release:       0.3.git%{shortcommit}%{?dist}
 
 Summary:       Pre-Processor-Pretty-Printer for OCaml
 Summary(zh_CN.UTF-8): OCaml 的预处理程序
@@ -119,6 +119,9 @@ magic_rpm_clean.sh
 
 
 %changelog
+* Wed Mar 04 2015 Liu Di <liudidi@gmail.com> - 4.02.1-0.3.gitcf1935d3
+- 为 Magic 3.0 重建
+
 * Mon Feb 16 2015 Richard W.M. Jones <rjones@redhat.com> - 4.02.1-0.2.gitcf1935d3
 - ocaml-4.02.1 rebuild.
 - Update to latest upstream git release from branch 4.02.

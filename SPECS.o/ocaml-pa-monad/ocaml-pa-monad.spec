@@ -3,8 +3,9 @@
 
 Name:           ocaml-pa-monad
 Version:        6.0
-Release:        15%{?dist}
+Release:        16%{?dist}
 Summary:        OCaml syntax extension for monads
+Summary(zh_CN.UTF-8): monads 的 OCaml 语法扩展
 License:        LGPLv2+ with exceptions
 
 URL:            http://www.cas.mcmaster.ca/~carette/pa_monad/
@@ -25,6 +26,8 @@ This Camlp4 parser adds some syntactic sugar to beautify monadic
 expressions.  The name of the syntax extension is a bit misleading as
 it does not provide any monad nor monadic computation.
 
+%description -l zh_CN.UTF-8
+monads 的 OCaml 语法扩展。
 
 %prep
 %setup -q -c
@@ -44,7 +47,7 @@ export DESTDIR=$RPM_BUILD_ROOT
 export OCAMLFIND_DESTDIR=$RPM_BUILD_ROOT%{_libdir}/ocaml
 mkdir -p $OCAMLFIND_DESTDIR $OCAMLFIND_DESTDIR/stublibs
 make findlib-install
-
+magic_rpm_clean.sh
 
 %files
 %doc COPYING README ChangeLog html-doc
@@ -52,6 +55,9 @@ make findlib-install
 
 
 %changelog
+* Tue Mar 10 2015 Liu Di <liudidi@gmail.com> - 6.0-16
+- 为 Magic 3.0 重建
+
 * Fri Jun 20 2014 Liu Di <liudidi@gmail.com> - 6.0-15
 - 为 Magic 3.0 重建
 

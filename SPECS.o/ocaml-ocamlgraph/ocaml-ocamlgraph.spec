@@ -4,10 +4,15 @@
 %global debug_package %{nil}
 %endif
 
+# Disable documentation.  In ocamldoc 4.02 we get the error
+#   analyse_module: parsetree and typedtree don't match.
+%global documentation 0
+
 Name:           ocaml-ocamlgraph
 Version:        1.8.5
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        OCaml library for arc and node graphs
+Summary(zh_CN.UTF-8): arc 和 node 图形的 OCaml 库
 
 License:        LGPLv2 with exceptions
 URL:            http://ocamlgraph.lri.fr/
@@ -38,9 +43,12 @@ reusability. Also has input and output capability for Graph Modeling
 Language file format and Dot and Neato graphviz (graph visualization)
 tools.
 
+%description -l zh_CN.UTF-8
+arc 和 node 图形的 OCaml 库。
 
 %package        devel
 Summary:        Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Requires:       %{name}%{?_isa} = %{version}-%{release}
 
 
@@ -48,6 +56,8 @@ Requires:       %{name}%{?_isa} = %{version}-%{release}
 The %{name}-devel package contains libraries and signature files for
 developing applications that use %{name}.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %package        tools
 Summary:        Graph editing tools for %{name}
@@ -88,7 +98,9 @@ done
 %endif
 make depend
 make %{opt_option}
+%if %documentation
 make doc
+%endif
 
 %check
 make --no-print-directory check >& test
@@ -106,7 +118,9 @@ install -m 0755 -p graph.cmxs %{buildroot}%{ocaml_destdir}/%{libname}
 mkdir -p dox-devel/examples
 mkdir -p dox-devel/API
 cp -p examples/*.ml dox-devel/examples
+%if %documentation
 cp -p doc/* dox-devel/API
+%endif
 
 # Install the graph editing tools
 mkdir -p %{buildroot}%{_bindir}
@@ -121,7 +135,7 @@ install -m 0755 -p dgraph/dgraph.byte %{buildroot}%{_bindir}/ocaml-graph-viewer
 install -m 0755 -p view_graph/viewgraph.byte \
      %{buildroot}%{_bindir}/ocaml-viewgraph
 %endif
-
+magic_rpm_clean.sh
 
 %files
 %doc COPYING CREDITS FAQ LICENSE
@@ -151,6 +165,9 @@ install -m 0755 -p view_graph/viewgraph.byte \
 
 
 %changelog
+* Mon Mar 09 2015 Liu Di <liudidi@gmail.com> - 1.8.5-4
+- 为 Magic 3.0 重建
+
 * Fri Jun 20 2014 Liu Di <liudidi@gmail.com> - 1.8.5-3
 - 为 Magic 3.0 重建
 

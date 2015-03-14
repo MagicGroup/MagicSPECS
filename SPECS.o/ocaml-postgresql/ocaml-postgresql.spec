@@ -1,13 +1,14 @@
 %global opt %(test -x %{_bindir}/ocamlopt && echo 1 || echo 0)
 
 Name:           ocaml-postgresql
-Version:        2.0.4
-Release:        3%{?dist}
+Version:	3.0.0
+Release:	1%{?dist}
 Summary:        OCaml library for accessing PostgreSQL databases
+Summary(zh_CN.UTF-8): 访问 PostgreSQL 数据库的 OCaml 库
 
 License:        LGPLv2+ with exceptions
-URL:            https://bitbucket.org/mmottl/postgresql-ocaml
-Source0:        https://bitbucket.org/mmottl/postgresql-ocaml/downloads/postgresql-ocaml-%{version}.tar.gz
+URL:            https://github.com/mmottl/postgresql-ocaml
+Source0:        https://github.com/mmottl/postgresql-ocaml/releases/download/v%{version}/postgresql-ocaml-%{version}.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 ExcludeArch:    sparc64 s390 s390x
 
@@ -28,9 +29,12 @@ functionality available through the C-API (libpq) is replicated in a
 type-safe way.  This library uses objects for representing database
 connections and results of queries.
 
+%description -l zh_CN.UTF-8
+访问 PostgreSQL 数据库的 OCaml 库。
 
 %package        devel
 Summary:        Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Requires:       %{name} = %{version}-%{release}
 
 
@@ -38,6 +42,8 @@ Requires:       %{name} = %{version}-%{release}
 The %{name}-devel package contains libraries and signature files for
 developing applications that use %{name}.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q -n postgresql-ocaml-%{version}
@@ -56,7 +62,7 @@ export DESTDIR=$RPM_BUILD_ROOT
 export OCAMLFIND_DESTDIR=$RPM_BUILD_ROOT%{_libdir}/ocaml
 mkdir -p $OCAMLFIND_DESTDIR $OCAMLFIND_DESTDIR/stublibs
 make install
-
+magic_rpm_clean.sh
 
 %files
 %doc COPYING.txt
@@ -80,6 +86,9 @@ make install
 
 
 %changelog
+* Wed Mar 11 2015 Liu Di <liudidi@gmail.com> - 3.0.0-1
+- 更新到 3.0.0
+
 * Fri Jun 20 2014 Liu Di <liudidi@gmail.com> - 2.0.4-3
 - 为 Magic 3.0 重建
 

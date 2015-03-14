@@ -1,0 +1,11 @@
+--- zlibstubs.c.orig	2012-10-11 21:36:07.000000000 -0600
++++ zlibstubs.c	2014-09-02 13:17:35.738662922 -0600
+@@ -23,6 +23,8 @@
+ #include <caml/fail.h>
+ #include <caml/memory.h>
+ 
++#define uint32 uint32_t
++
+ #define ZStream_val(v) ((z_stream *) (v))
+ 
+ static value * camlzip_error_exn = NULL;

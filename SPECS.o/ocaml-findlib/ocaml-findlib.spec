@@ -1,9 +1,10 @@
 %global opt %(test -x %{_bindir}/ocamlopt && echo 1 || echo 0)
 
 Name:           ocaml-findlib
-Version:        1.4
-Release:        4%{?dist}
+Version: 1.5.5
+Release: 1%{?dist}
 Summary:        Objective CAML package manager and build helper
+Summary(zh_CN.UTF-8): OCaml 包管理器和构建帮助程序
 License:        BSD
 
 URL:            http://projects.camlcity.org/projects/findlib.html
@@ -27,9 +28,12 @@ Requires:       ocaml
 %description
 Objective CAML package manager and build helper.
 
+%description -l zh_CN.UTF-8
+OCaml 包管理器和构建帮助程序。
 
 %package        devel
 Summary:        Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Requires:       %{name} = %{version}-%{release}
 
 
@@ -37,6 +41,8 @@ Requires:       %{name} = %{version}-%{release}
 The %{name}-devel package contains libraries and header files for
 developing applications that use %{name}.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q -n findlib-%{version}
@@ -66,7 +72,7 @@ rm doc/guide-html/TIMESTAMP
 mkdir -p $RPM_BUILD_ROOT%{_bindir}
 make install prefix=$RPM_BUILD_ROOT OCAMLFIND_BIN=$RPM_BUILD_ROOT%{_bindir}
 mv $RPM_BUILD_ROOT/$RPM_BUILD_ROOT%{_bindir}/* $RPM_BUILD_ROOT%{_bindir}
-
+magic_rpm_clean.sh
 
 %files
 %doc LICENSE doc/README
@@ -101,6 +107,9 @@ mv $RPM_BUILD_ROOT/$RPM_BUILD_ROOT%{_bindir}/* $RPM_BUILD_ROOT%{_bindir}
 
 
 %changelog
+* Thu Mar 05 2015 Liu Di <liudidi@gmail.com> - 1.5.5-1
+- 更新到 1.5.5
+
 * Fri Jun 20 2014 Liu Di <liudidi@gmail.com> - 1.4-4
 - 为 Magic 3.0 重建
 

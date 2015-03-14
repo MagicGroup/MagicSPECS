@@ -3,8 +3,9 @@
 
 Name:           ocaml-perl4caml
 Version:        0.9.5
-Release:        30%{?dist}
+Release:        31%{?dist}
 Summary:        OCaml library for calling Perl libraries and code
+Summary(zh_CN.UTF-8): 调用 Perl 库和代码的 OCaml 库
 License:        LGPLv2+ with exceptions
 
 URL:            http://git.annexia.org/?p=perl4caml.git;a=summary
@@ -48,9 +49,12 @@ thus neatly side-stepping the (old) problem with OCaml which was that
 it lacked a comprehensive set of libraries. Well now you can use any
 part of CPAN in your OCaml code.
 
+%description -l zh_CN.UTF-8
+调用 Perl 库和代码的 OCaml 库。
 
 %package        devel
 Summary:        Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Requires:       %{name} = %{version}-%{release}
 
 
@@ -58,6 +62,8 @@ Requires:       %{name} = %{version}-%{release}
 The %{name}-devel package contains libraries and signature files for
 developing applications that use %{name}.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q -n perl4caml-%{version}
@@ -91,7 +97,7 @@ make install
 
 # Don't delete rpath!  See:
 # https://www.redhat.com/archives/fedora-packaging/2008-March/thread.html#00070
-
+magic_rpm_clean.sh
 
 %files
 %doc COPYING.LIB
@@ -116,6 +122,9 @@ make install
 
 
 %changelog
+* Tue Mar 10 2015 Liu Di <liudidi@gmail.com> - 0.9.5-31
+- 为 Magic 3.0 重建
+
 * Fri Jun 20 2014 Liu Di <liudidi@gmail.com> - 0.9.5-30
 - 为 Magic 3.0 重建
 

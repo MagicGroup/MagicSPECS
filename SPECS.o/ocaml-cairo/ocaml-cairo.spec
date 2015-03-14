@@ -1,5 +1,8 @@
 %global opt %(test -x %{_bindir}/ocamlopt && echo 1 || echo 0)
 
+%define git 1
+%define vcsdate 20150305
+
 # Important note!  There are at least two quite separate OCaml cairo
 # projects.  This one is: http://cairographics.org/cairo-ocaml/
 # The other one is: http://forge.ocamlcore.org/projects/cairo/
@@ -16,7 +19,7 @@
 Name:           ocaml-cairo
 Epoch:          1
 Version:        1.2.0
-Release:        0.20.git%{commit}%{?dist}
+Release:        0.22.git%{vcsdate}%{?dist}
 Summary:        OCaml library for accessing cairo graphics
 
 ExcludeArch:    sparc64 s390 s390x
@@ -24,8 +27,9 @@ ExcludeArch:    sparc64 s390 s390x
 License:        LGPLv2
 URL:            http://cairographics.org/cairo-ocaml/
 
-Source0:        ocaml-cairo-%{version}-git%{commit}.tar.gz
+Source0:        ocaml-cairo-git%{vcsdate}.tar.xz
 Source1:        ocaml-cairo-META
+Source2:	make_ocaml-cairo_git_package.sh
 
 Patch1:         ocaml-cairo-1.2.0-enable-ocamlopt-debug.patch
 
@@ -66,7 +70,7 @@ developing applications that use %{name}.
 
 
 %prep
-%setup -q
+%setup -q -n %{name}-git%{vcsdate}
 
 %patch1 -p1
 
@@ -115,6 +119,15 @@ chrpath --delete $RPM_BUILD_ROOT%{_libdir}/ocaml/stublibs/dll*.so
 
 
 %changelog
+* Thu Mar 05 2015 Liu Di <liudidi@gmail.com> - 1:1.2.0-0.22.git20150305
+- 为 Magic 3.0 重建
+
+* Thu Mar 05 2015 Liu Di <liudidi@gmail.com> - 1:1.2.0-0.21.git20150305
+- 更新到 20150305 日期的仓库源码
+
+* Thu Mar 05 2015 Liu Di <liudidi@gmail.com> - 1:1.2.0-0.21.git20150303
+- 为 Magic 3.0 重建
+
 * Tue Feb 17 2015 Richard W.M. Jones <rjones@redhat.com> - 1:1.2.0-0.20.git872c9bc92e6
 - ocaml-4.02.1 rebuild.
 

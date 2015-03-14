@@ -2,8 +2,9 @@
 
 Name:           ocaml-fileutils
 Version:        0.4.5
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        OCaml library for common file and filename operations
+Summary(zh_CN.UTF-8): 通用的文件和文件名操作 OCaml 库
 
 License:        LGPLv2 with exceptions
 URL:            https://forge.ocamlcore.org/projects/ocaml-fileutils/
@@ -29,9 +30,12 @@ It is separated into two modules: SysUtil and SysPath.  The first one
 manipulates real files, the second one is made for manipulating
 abstract filenames.
 
+%description -l zh_CN.UTF-8
+通用的文件和文件名操作 OCaml 库。
 
 %package        devel
 Summary:        Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Requires:       %{name} = %{version}-%{release}
 
 
@@ -39,6 +43,8 @@ Requires:       %{name} = %{version}-%{release}
 The %{name}-devel package contains libraries and signature files for
 developing applications that use %{name}.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -66,7 +72,7 @@ mkdir -p $OCAMLFIND_DESTDIR $OCAMLFIND_DESTDIR/stublibs
 # Set htmldir to current directory, then copy the docs (in api/)
 # as a %doc rule.
 make htmldir=. install
-
+magic_rpm_clean.sh
 
 %check
 make test
@@ -96,6 +102,9 @@ make test
 
 
 %changelog
+* Thu Mar 05 2015 Liu Di <liudidi@gmail.com> - 0.4.5-4
+- 为 Magic 3.0 重建
+
 * Fri Jun 20 2014 Liu Di <liudidi@gmail.com> - 0.4.5-3
 - 为 Magic 3.0 重建
 

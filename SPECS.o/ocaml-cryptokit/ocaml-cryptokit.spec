@@ -1,13 +1,14 @@
 %global opt %(test -x %{_bindir}/ocamlopt && echo 1 || echo 0)
 
 Name:           ocaml-cryptokit
-Version:        1.9
-Release:        3%{?dist}
+Version: 1.10
+Release: 1%{?dist}
 Summary:        OCaml library of cryptographic and hash functions
+Summary(zh_CN.UTF-8): 密码和哈希函数的 OCaml 库
 License:        LGPLv2 with exceptions
 
 URL:            http://forge.ocamlcore.org/projects/cryptokit/
-Source0:        https://forge.ocamlcore.org/frs/download.php/1229/cryptokit-%{version}.tar.gz
+Source0:        https://forge.ocamlcore.org/frs/download.php/1493/cryptokit-%{version}.tar.gz
 
 ExcludeArch:    sparc64 s390 s390x
 
@@ -40,9 +41,12 @@ easily be composed with user-provided ciphers. More generally, the
 library promotes a "Lego"-like style of constructing and composing
 transformations over character streams.
 
+%description -l zh_CN.UTF-8
+密码和哈希函数的 OCaml 库。
 
 %package        devel
 Summary:        Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Requires:       %{name} = %{version}-%{release}
 
 
@@ -50,6 +54,8 @@ Requires:       %{name} = %{version}-%{release}
 The %{name}-devel package contains libraries and signature files for
 developing applications that use %{name}.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q -n cryptokit-%{version}
@@ -76,7 +82,7 @@ mkdir -p $RPM_BUILD_ROOT/%{_libdir}/ocaml/stublibs
 export DESTDIR=$RPM_BUILD_ROOT
 export OCAMLFIND_DESTDIR=$RPM_BUILD_ROOT/%{_libdir}/ocaml
 make install
-
+magic_rpm_clean.sh
 
 %files
 %doc LICENSE.txt
@@ -101,6 +107,9 @@ make install
 
 
 %changelog
+* Thu Mar 05 2015 Liu Di <liudidi@gmail.com> - 1.10-1
+- 更新到 1.10
+
 * Fri Jun 20 2014 Liu Di <liudidi@gmail.com> - 1.9-3
 - 为 Magic 3.0 重建
 

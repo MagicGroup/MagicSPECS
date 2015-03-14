@@ -2,8 +2,9 @@
 
 Name:           ocaml-calendar
 Version:        2.03.2
-Release:        7%{?dist}
+Release:        8%{?dist}
 Summary:        Objective Caml library for managing dates and times
+Summary(zh_CN.UTF-8): 管理日期和时间的 OCaml 库
 License:        LGPLv2
 
 URL:            http://calendar.forge.ocamlcore.org/
@@ -27,9 +28,12 @@ BuildRequires:  gawk
 %description
 Objective Caml library for managing dates and times.
 
+%description -l zh_CN.UTF-8
+管理日期和时间的 OCaml 库。
 
 %package        devel
 Summary:        Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Requires:       %{name} = %{version}-%{release}
 
 
@@ -37,6 +41,8 @@ Requires:       %{name} = %{version}-%{release}
 The %{name}-devel package contains libraries and signature files for
 developing applications that use %{name}.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q -n calendar-%{version}
@@ -57,7 +63,7 @@ export DESTDIR=$RPM_BUILD_ROOT
 export OCAMLFIND_DESTDIR=$RPM_BUILD_ROOT%{_libdir}/ocaml
 mkdir -p $OCAMLFIND_DESTDIR $OCAMLFIND_DESTDIR/stublibs
 make install
-
+magic_rpm_clean.sh
 
 %files
 %doc CHANGES README TODO LGPL COPYING
@@ -77,6 +83,9 @@ make install
 
 
 %changelog
+* Thu Mar 05 2015 Liu Di <liudidi@gmail.com> - 2.03.2-8
+- 为 Magic 3.0 重建
+
 * Fri Jun 20 2014 Liu Di <liudidi@gmail.com> - 2.03.2-7
 - 为 Magic 3.0 重建
 

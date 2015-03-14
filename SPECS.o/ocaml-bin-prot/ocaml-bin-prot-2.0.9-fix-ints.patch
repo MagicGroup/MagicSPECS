@@ -1,0 +1,14 @@
+--- bin_prot-2.0.9/lib/common_stubs.h.orig	2012-03-15 13:59:16.000000000 -0600
++++ bin_prot-2.0.9/lib/common_stubs.h	2014-09-25 12:00:00.000000000 -0600
+@@ -41,6 +41,11 @@
+ #include <caml/callback.h>
+ #include <caml/signals.h>
+ 
++#define int64 int64_t
++#define uint64 uint64_t
++#define int32 int32_t
++#define uint32 uint32_t
++
+ #ifdef ARCH_INT64_TYPE
+ #include "int64_native.h"
+ #else

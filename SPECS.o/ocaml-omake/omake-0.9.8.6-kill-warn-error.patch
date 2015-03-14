@@ -1,0 +1,11 @@
+--- omake-0.9.8.6.old/lib/build/OCaml.om	2008-03-05 01:07:25.000000000 +0000
++++ omake-0.9.8.6/lib/build/OCaml.om	2014-08-18 10:01:19.433742023 +0100
+@@ -176,7 +176,7 @@
+ #
+ declare OCAMLDEPFLAGS
+ public.OCAMLPPFLAGS  =
+-public.OCAMLFLAGS    = -warn-error A
++public.OCAMLFLAGS    =
+ public.OCAMLCFLAGS   = -g
+ public.OCAMLOPTFLAGS =
+ public.OCAMLCPPFLAGS =

@@ -2,8 +2,9 @@
 
 Name:           ocaml-bisect
 Version:        1.3
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        OCaml code coverage tool
+Summary(zh_CN.UTF-8): OCaml 代理覆盖工具
 License:        GPLv3+
 
 ExcludeArch:    sparc64 s390 s390x
@@ -28,10 +29,14 @@ running tests. After application execution, it is possible to generate
 a report in HTML format that is the replica of the application source
 code annotated with code coverage information.
 
+%description -l zh_CN.UTF-8
+OCaml 代理覆盖工具。
 
 %package        devel
 Summary:        Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       %{name} = %{version}-%{release}
 
 
@@ -39,6 +44,8 @@ Requires:       %{name} = %{version}-%{release}
 The %{name}-devel package contains libraries and signature files for
 developing applications that use %{name}.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q -n bisect-%{version}
@@ -70,7 +77,7 @@ make install PATH_OCAML_PREFIX=$RPM_BUILD_ROOT%{_prefix}
 pushd $RPM_BUILD_ROOT%{_bindir}
 rm ocamlbuild
 popd
-
+magic_rpm_clean.sh
 
 %files
 %doc COPYING
@@ -91,6 +98,9 @@ popd
 
 
 %changelog
+* Wed Mar 04 2015 Liu Di <liudidi@gmail.com> - 1.3-4
+- 为 Magic 3.0 重建
+
 * Fri Jun 20 2014 Liu Di <liudidi@gmail.com> - 1.3-3
 - 为 Magic 3.0 重建
 

@@ -4,14 +4,14 @@
 %endif
 
 Name:           ocaml-sqlite
-Version:        2.0.5
-Release:        3%{?dist}
+Version:	2.0.9
+Release:	1%{?dist}
 Summary:        OCaml library for accessing SQLite3 databases
+Summary(zh_CN.UTF-8): 访问 SQLite3 数据库的 OCaml 库
 License:        BSD
 
-URL:            https://bitbucket.org/mmottl/sqlite3-ocaml
-Source0:        https://bitbucket.org/mmottl/sqlite3-ocaml/downloads/sqlite3-ocaml-%{version}.tar.gz
-
+URL:            https://github.com/mmottl/sqlite3-ocaml
+Source0:        https://github.com/mmottl/sqlite3-ocaml/releases/download/v%{version}/sqlite3-ocaml-%{version}.tar.gz
 BuildRequires:  ocaml >= 3.10.0
 BuildRequires:  ocaml-findlib
 BuildRequires:  ocaml-ocamldoc
@@ -72,16 +72,19 @@ make install
 
 
 %files devel
-%doc CHANGES.txt README.md TODO.md
+%doc CHANGES.txt README.md TODO.md 
 %if %opt
 %{_libdir}/ocaml/sqlite3/*.a
 %{_libdir}/ocaml/sqlite3/*.cmxa
 %{_libdir}/ocaml/sqlite3/*.cmx
 %endif
 %{_libdir}/ocaml/sqlite3/*.mli
-
+%{_docdir}/*
 
 %changelog
+* Sat Mar 14 2015 Liu Di <liudidi@gmail.com> - 2.0.9-1
+- 更新到 2.0.9
+
 * Fri Jun 20 2014 Liu Di <liudidi@gmail.com> - 2.0.5-3
 - 为 Magic 3.0 重建
 
