@@ -1,8 +1,8 @@
 # This is stable release:
 #%%global rcversion RC1
 Name: pcre
-Version: 8.30
-Release: %{?rcversion:0.}2%{?rcversion:.%rcversion}%{?dist}.1
+Version: 8.36
+Release: %{?rcversion:0.}3%{?rcversion:.%rcversion}%{?dist}.1
 %global myversion %{version}%{?rcversion:-%rcversion}
 Summary: Perl-compatible regular expression library
 Group: System Environment/Libraries
@@ -12,7 +12,13 @@ Source: ftp://ftp.csx.cam.ac.uk/pub/software/programming/%{name}/%{?rcversion:Te
 # Upstream thinks RPATH is good idea.
 Patch0: pcre-8.21-multilib.patch
 # Refused by upstream, bug #675477
-Patch1: pcre-8.30-refused_spelling_terminated.patch
+Patch1: pcre-8.32-refused_spelling_terminated.patch
+# Reset non-matched groups within capturing group up to forced match,
+# bug #1161587, in upstream after 8.36
+Patch2: pcre-8.36-Fix-bug-when-there-are-unset-groups-prior-to-ACCEPT-.patch
+# Fix unused memory usage on zero-repeat assertion condition, bug #1165626,
+# CVE-2014-8964, in upstream after 8.36
+Patch3: pcre-8.36-Fix-zero-repeat-assertion-condition-bug.patch
 BuildRequires: readline-devel
 # New libtool to get rid of rpath
 BuildRequires: autoconf, automake, libtool
@@ -28,7 +34,7 @@ for the POSIX-style functions is called pcreposix.h.
 %package devel
 Summary: Development files for %{name}
 Group: Development/Libraries
-Requires: %{name} = %{version}-%{release}
+Requires: %{name}%{?_isa} = %{version}-%{release}
 
 %description devel
 Development files (Headers, libraries for dynamic linking, etc) for %{name}.
@@ -36,6 +42,7 @@ Development files (Headers, libraries for dynamic linking, etc) for %{name}.
 %package static
 Summary: Static library for %{name}
 Group: Development/Libraries
+Requires: %{name}-devel%{_isa} = %{version}-%{release}
 
 %description static
 Library for static linking for %{name}.
@@ -43,6 +50,7 @@ Library for static linking for %{name}.
 %package tools
 Summary: Auxiliary utilities for %{name}
 Group: Development/Tools
+Requires: %{name}%{_isa} = %{version}-%{release}
 
 %description tools
 Utilities demonstrating PCRE capabilities like pcregrep or pcretest.
@@ -52,8 +60,10 @@ Utilities demonstrating PCRE capabilities like pcregrep or pcretest.
 # Get rid of rpath
 %patch0 -p1 -b .multilib
 %patch1 -p1 -b .terminated_typos
+%patch2 -p1 -b .reset_groups
+%patch3 -p1 -b .zero_repeat_assertion
 # Because of rpath patch
-libtoolize --copy --force && autoreconf
+libtoolize --copy --force && autoreconf -vif
 # One contributor's name is non-UTF-8
 for F in ChangeLog; do
     iconv -f latin1 -t utf8 "$F" >"${F}.utf8"
@@ -62,14 +72,18 @@ for F in ChangeLog; do
 done
 
 %build
+# There is a strict-aliasing problem on PPC64, bug #881232
+%ifarch ppc64
+%global optflags %{optflags} -fno-strict-aliasing
+%endif
 %configure \
-%ifarch s390 s390x
+%ifarch s390 s390x sparc64 sparcv9
     --disable-jit \
 %else
     --enable-jit \
 %endif
     --enable-pcretest-libreadline --enable-utf --enable-unicode-properties \
-    --enable-pcre8 --enable-pcre16
+    --enable-pcre8 --enable-pcre16 --enable-pcre32
 make %{?_smp_mflags}
 
 %install
@@ -80,11 +94,11 @@ rm -f $RPM_BUILD_ROOT%{_libdir}/*.la
 rm -rf $RPM_BUILD_ROOT%{_docdir}/pcre
 
 %check
-%ifarch s390 ppc
+%ifarch s390 s390x ppc
 # larger stack is needed on s390, ppc
 ulimit -s 10240
 %endif
-make check
+make %{?_smp_mflags} check VERBOSE=yes
 
 %post -p /sbin/ldconfig
 
@@ -92,7 +106,9 @@ make check
 
 %files
 %{_libdir}/*.so.*
-%doc AUTHORS COPYING LICENCE NEWS README ChangeLog
+%{!?_licensedir:%global license %%doc}
+%license COPYING LICENCE
+%doc AUTHORS NEWS README ChangeLog
 
 %files devel
 %{_libdir}/*.so
@@ -106,7 +122,8 @@ make check
 
 %files static
 %{_libdir}/*.a
-%doc COPYING LICENCE 
+%{!?_licensedir:%global license %%doc}
+%license COPYING LICENCE
 
 %files tools
 %{_bindir}/pcregrep
@@ -115,8 +132,142 @@ make check
 %{_mandir}/man1/pcretest.*
 
 %changelog
-* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 8.30-2.1
-- 为 Magic 3.0 重建
+* Thu Feb 19 2015 David Tardon <dtardon@redhat.com> - 8.36-3.1
+- rebuild for C++ stdlib API changes in gcc5
+
+* Thu Nov 20 2014 Petr Pisar <ppisar@redhat.com> - 8.36-3
+- Fix CVE-2014-8964 (unused memory usage on zero-repeat assertion condition)
+  (bug #1165626)
+
+* Fri Nov 07 2014 Petr Pisar <ppisar@redhat.com> - 8.36-2
+- Reset non-matched groups within capturing group up to forced match
+  (bug #1161587)
+
+* Tue Oct 07 2014 Petr Pisar <ppisar@redhat.com> - 8.36-1
+- 8.36 bump
+
+* Tue Sep 16 2014 Petr Pisar <ppisar@redhat.com> - 8.36-0.1.RC1
+- 8.36 RC1 bump
+- Enable JIT on aarch64
+
+* Sun Aug 17 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 8.35-6.1
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
+
+* Mon Aug 11 2014 Petr Pisar <ppisar@redhat.com> - 8.35-6
+- Fix compile-time loop for recursive reference within a group with an
+  indefinite repeat (bug #1128577)
+
+* Wed Jul 30 2014 Tom Callaway <spot@fedoraproject.org> - 8.35-5
+- fix license handling
+
+* Mon Jul 14 2014 Petr Pisar <ppisar@redhat.com> - 8.35-4
+- Fix empty-matching possessive zero-repeat groups in interpreted mode
+  (bug #1119241)
+- Fix memory leaks in pcregrep (bug #1119257)
+- Fix compiler crash for zero-repeated groups with a recursive back reference
+  (bug #1119272)
+
+* Thu Jun 19 2014 Petr Pisar <ppisar@redhat.com> - 8.35-3
+- Fix bad starting data when char with more than one other case follows
+  circumflex in multiline UTF mode (bug #1110620)
+- Fix not including VT in starting characters for \s if pcre_study() is used
+  (bug #1111045)
+- Fix character class with a literal quotation (bug #1111054)
+
+* Fri Jun 06 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 8.35-2.1
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Fri Apr 11 2014 Petr Pisar <ppisar@redhat.com> - 8.35-2
+- Do no rely on wrapping signed integer while parsing {min,max} expression
+  (bug #1086630)
+
+* Wed Apr 09 2014 Petr Pisar <ppisar@redhat.com> - 8.35-1
+- 8.35 bump
+- Run tests in parallel
+
+* Fri Mar 14 2014 Petr Pisar <ppisar@redhat.com> - 8.35-0.1.RC1
+- 8.35-RC1 bump
+
+* Tue Mar 11 2014 Petr Pisar <ppisar@redhat.com> - 8.34-4
+- Fix max/min quantifiers in ungreedy mode (bug #1074500)
+
+* Tue Jan 21 2014 Dan Horák <dan[at]danny.cz> - 8.34-3
+- enlarge stack for tests on s390x
+
+* Thu Jan 09 2014 Petr Pisar <ppisar@redhat.com> - 8.34-2
+- Fix jitted range check (bug #1048097)
+
+* Mon Dec 16 2013 Petr Pisar <ppisar@redhat.com> - 8.34-1
+- 8.34 bump
+
+* Wed Oct 16 2013 Petr Pisar <ppisar@redhat.com> - 8.33-3
+- Disable strict-aliasing on PPC64 (bug #881232)
+
+* Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 8.33-2.1
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Mon Jun 03 2013 Petr Pisar <ppisar@redhat.com> - 8.33-2
+- Disable unsupported JIT on aarch64 (bug #969693)
+
+* Thu May 30 2013 Petr Pisar <ppisar@redhat.com> - 8.33-1
+- 8.33 bump
+
+* Thu May 16 2013 Petr Pisar <ppisar@redhat.com> - 8.33-0.3.RC1
+- Fix passing too small output vector to pcre_dfa_exec (bug #963284)
+
+* Mon May 13 2013 Petr Pisar <ppisar@redhat.com> - 8.33-0.2.RC1
+- Fix bad handling of empty lines in pcregrep tool (bug #961789)
+- Fix possible pcretest crash with a data line longer than 65536 bytes
+
+* Thu May 02 2013 Petr Pisar <ppisar@redhat.com> - 8.33-0.1.RC1
+- 8.33-RC1 bump
+
+* Mon Jan 28 2013 Petr Pisar <ppisar@redhat.com> - 8.32-4
+- Fix forward search in JIT when link size is 3 or greater
+- Fix buffer over-read in UTF-16 and UTF-32 modes with JIT
+
+* Fri Jan 25 2013 Peter Robinson <pbrobinson@fedoraproject.org> 8.32-3
+- Adjust autoreconf to fix FTBFS on F-19
+
+* Mon Jan 07 2013 Petr Pisar <ppisar@redhat.com> - 8.32-2
+- Make inter-subpackage dependencies architecture specific (bug #892187)
+
+* Fri Nov 30 2012 Petr Pisar <ppisar@redhat.com> - 8.32-1
+- 8.32 bump
+
+* Thu Nov 29 2012 Petr Pisar <ppisar@redhat.com> - 8.32-0.2.RC1
+- Inter-depend sub-packages to prevent from mixing different versions
+
+* Tue Nov 13 2012 Petr Pisar <ppisar@redhat.com> - 8.32-0.1.RC1
+- 8.32-RC1 bump
+
+* Mon Sep 03 2012 Petr Pisar <ppisar@redhat.com> - 8.31-2
+- Set re_nsub in regcomp() properly (bug #853990)
+
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 8.31-1.1
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Fri Jul 13 2012 Petr Pisar <ppisar@redhat.com> - 8.31-1
+- 8.31 bump
+
+* Tue Jun 05 2012 Petr Pisar <ppisar@redhat.com> - 8.31-0.1.RC1
+- 8.31-RC1 bump
+
+* Sat May 12 2012 Tom Callaway <spot@fedoraproject.org> - 8.30-7
+- disable jit for sparcv9 and sparc64
+
+* Fri May 11 2012 Petr Pisar <ppisar@redhat.com> - 8.30-6
+- Fix spelling in manual pages (bug #820978)
+
+* Mon Apr 23 2012 Petr Pisar <ppisar@redhat.com> - 8.30-5
+- Possessify high ASCII (bug #815217)
+- Fix ovector overflow (bug #815214)
+
+* Fri Apr 20 2012 Petr Pisar <ppisar@redhat.com> - 8.30-4
+- Possesify \s*\R (bug #813237)
+
+* Thu Apr 05 2012 Petr Pisar <ppisar@redhat.com> - 8.30-3
+- Fix look-behind assertion in UTF-8 JIT mode (bug #810314)
 
 * Tue Feb 28 2012 Petr Pisar <ppisar@redhat.com> - 8.30-2
 - Remove old libpcre.so.0 from distribution
@@ -350,7 +501,7 @@ make check
 * Thu Sep 19 2002 Than Ngo <than@redhat.com> 3.9-5.1
 - Fixed to build s390/s390x/x86_64
 
-* Wed Jun 27 2002 Bernhard Rosenkraenzer <bero@redhat.com> 3.9-5
+* Thu Jun 27 2002 Bernhard Rosenkraenzer <bero@redhat.com> 3.9-5
 - Fix #65009
 
 * Fri Jun 21 2002 Tim Powers <timp@redhat.com>
