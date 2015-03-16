@@ -1,4 +1,4 @@
-From a0530232f6ba0499bd14390fc54244fadd82b5d7 Mon Sep 17 00:00:00 2001
+From 6f8b68f2740f3100154342338ed3d26e676dae69 Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?Petr=20P=C3=ADsa=C5=99?= <ppisar@redhat.com>
 Date: Mon, 7 Feb 2011 11:37:09 +0100
 Subject: [PATCH] Fix spelling in pcretest(1) manual
@@ -14,28 +14,28 @@ Collins dictionary of spelling and word division shows "termin-ate" and
 British and American hyphenation conventions; I try to follow the
 British ones, as exemplified in the Collins.
 ---
- doc/pcretest.1 |    8 ++++----
- 1 files changed, 4 insertions(+), 4 deletions(-)
+ doc/pcretest.1 | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
 diff --git a/doc/pcretest.1 b/doc/pcretest.1
-index 2689bfa..cef1727 100644
+index 41ef6ac..258a62f 100644
 --- a/doc/pcretest.1
 +++ b/doc/pcretest.1
-@@ -413,8 +413,8 @@ recognized:
+@@ -601,8 +601,8 @@ recognized:
                 after a successful match (number less than 32)
  .\" JOIN
-   \eCname     call pcre_copy_named_substring() for substring
+   \eCname     call pcre[16|32]_copy_named_substring() for substring
 -               "name" after a successful match (name termin-
 -               ated by next non alphanumeric character)
 +               "name" after a successful match (name terminated
-+               by next non-alphanumeric character)
++               by next non alphanumeric character)
  .\" JOIN
    \eC+        show the current captured substrings at callout
                 time
-@@ -435,8 +435,8 @@ recognized:
+@@ -623,8 +623,8 @@ recognized:
                 after a successful match (number less than 32)
  .\" JOIN
-   \eGname     call pcre_get_named_substring() for substring
+   \eGname     call pcre[16|32]_get_named_substring() for substring
 -               "name" after a successful match (name termin-
 -               ated by next non-alphanumeric character)
 +               "name" after a successful match (name terminated
@@ -44,5 +44,5 @@ index 2689bfa..cef1727 100644
    \eJdd       set up a JIT stack of dd kilobytes maximum (any
                 number of digits)
 -- 
-1.7.6.1
+1.7.11.7
 
