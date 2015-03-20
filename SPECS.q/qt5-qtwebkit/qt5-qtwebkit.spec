@@ -9,18 +9,20 @@
 %endif
 
 Summary: Qt5 - QtWebKit components
+Summary(zh_CN.UTF-8): Qt5 - QtWebKit 组件
 Name:    qt5-qtwebkit
-Version: 5.3.1
+Version: 5.4.1
 Release: 2%{?dist}
 
 # See LICENSE.GPL LICENSE.LGPL LGPL_EXCEPTION.txt, for details
 # See also http://qt-project.org/doc/qt-5.0/qtdoc/licensing.html
 License: LGPLv2 with exceptions or GPLv3 with exceptions
 Url: http://qt-project.org/
+%define majorver %(echo %{version} | awk -F. '{print $1"."$2}')
 %if 0%{?pre:1}
-Source0: http://download.qt-project.org/development_releases/qt/5.3/%{version}-%{pre}/submodules/%{qt_module}-opensource-src-%{version}-%{pre}.tar.xz
+Source0: http://download.qt-project.org/development_releases/qt/%{majorver}/%{version}-%{pre}/submodules/%{qt_module}-opensource-src-%{version}-%{pre}.tar.xz
 %else
-Source0: http://download.qt-project.org/official_releases/qt/5.3/%{version}/submodules/%{qt_module}-opensource-src-%{version}.tar.xz
+Source0: http://download.qt-project.org/official_releases/qt/%{majorver}/%{version}/submodules/%{qt_module}-opensource-src-%{version}.tar.xz
 %endif
 
 # Search /usr/lib{,64}/mozilla/plugins-wrapped for browser plugins too
@@ -45,6 +47,9 @@ Patch7: 0001-Add-ARM-64-support.patch
 
 # truly madly deeply no rpath please, kthxbye
 Patch8: qtwebkit-opensource-src-5.2.1-no_rpath.patch
+
+# fix GMutexLocker build issue
+Patch9: qtwebkit-opensource-src-5.4.0-mutexlocker.patch
 
 %if 0%{?system_angle}
 BuildRequires: angleproject-devel angleproject-static
@@ -90,23 +95,32 @@ BuildRequires: zlib-devel
 %description
 %{summary}
 
+%description -l zh_CN.UTF-8
+QtWebkit 组件。
+
 %package devel
 Summary: Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Requires: %{name}%{?_isa} = %{version}-%{release}
 Requires: qt5-qtbase-devel%{?_isa}
 Requires: qt5-qtdeclarative-devel%{?_isa}
 %description devel
 %{summary}.
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %if 0%{?docs}
 %package doc
 Summary: API documentation for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发文档
 Requires: %{name} = %{version}-%{release}
 # for qhelpgenerator
 BuildRequires: qt5-qttools-devel
 BuildArch: noarch
 %description doc
 %{summary}.
+%description doc -l zh_CN.UTF-8
+%{name} 的开发文档。
 %endif
 
 
@@ -122,6 +136,7 @@ BuildArch: noarch
 %endif
 %patch7 -p1 -b .aarch64
 %patch8 -p1 -b .no_rpath
+%patch9 -p1 -b .MutexLocker
 
 echo "nuke bundled code..."
 # nuke bundled code
@@ -168,7 +183,7 @@ for prl_file in libQt5*.prl ; do
   fi
 done
 popd
-
+magic_rpm_clean.sh
 
 %post -p /sbin/ldconfig
 %postun -p /sbin/ldconfig
@@ -198,6 +213,12 @@ popd
 
 
 %changelog
+* Fri Mar 20 2015 Liu Di <liudidi@gmail.com> - 5.4.1-2
+- 为 Magic 3.0 重建
+
+* Fri Mar 20 2015 Liu Di <liudidi@gmail.com> - 5.4.1-1
+- 更新到 5.4.1
+
 * Wed Aug 06 2014 Liu Di <liudidi@gmail.com> - 5.3.1-2
 - 为 Magic 3.0 重建
 

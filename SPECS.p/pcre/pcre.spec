@@ -2,7 +2,7 @@
 #%%global rcversion RC1
 Name: pcre
 Version: 8.36
-Release: %{?rcversion:0.}3%{?rcversion:.%rcversion}%{?dist}.1
+Release: %{?rcversion:0.}3%{?rcversion:.%rcversion}%{?dist}.2
 %global myversion %{version}%{?rcversion:-%rcversion}
 Summary: Perl-compatible regular expression library
 Group: System Environment/Libraries
@@ -132,6 +132,9 @@ make %{?_smp_mflags} check VERBOSE=yes
 %{_mandir}/man1/pcretest.*
 
 %changelog
+* Mon Mar 16 2015 Liu Di <liudidi@gmail.com> - 8.36-3.2
+- 为 Magic 3.0 重建
+
 * Thu Feb 19 2015 David Tardon <dtardon@redhat.com> - 8.36-3.1
 - rebuild for C++ stdlib API changes in gcc5
 

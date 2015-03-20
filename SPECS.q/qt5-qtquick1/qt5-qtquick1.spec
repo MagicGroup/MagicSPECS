@@ -6,20 +6,22 @@
 #define docs 1
 
 Summary: A declarative language for describing user interfaces in Qt5
+Summary(zh_CN.UTF-8): 描述 Qt5 用户界面的声明语言
 Name:    qt5-%{qt_module}
-Version: 5.3.1
-Release: 2%{?dist}
+Version: 5.4.1
+Release: 1%{?dist}
 
 # See LGPL_EXCEPTIONS.txt, LICENSE.GPL3, respectively, for exception details
 License: LGPLv2 with exceptions or GPLv3 with exceptions
 Url: http://qt-project.org/
+%define majorver %(echo %{version} | awk -F. '{print $1"."$2}')
 %if 0%{?snap:1}
-Source0: http://download.qt-project.org/snapshots/qt/5.3/%{version}-%{pre}/%{snap}/submodules/%{qt_module}-opensource-src-%{version}-%{pre}.tar.xz
+Source0: http://download.qt-project.org/snapshots/qt/%{majorver}/%{version}-%{pre}/%{snap}/submodules/%{qt_module}-opensource-src-%{version}-%{pre}.tar.xz
 %else
 %if 0%{?pre:1}
-Source0: http://download.qt-project.org/development_releases/qt/5.3/%{version}-%{pre}/submodules/%{qt_module}-opensource-src-%{version}-%{pre}.tar.xz
+Source0: http://download.qt-project.org/development_releases/qt/%{majorver}/%{version}-%{pre}/submodules/%{qt_module}-opensource-src-%{version}-%{pre}.tar.xz
 %else
-Source0: http://download.qt-project.org/official_releases/qt/5.3/%{version}/submodules/%{qt_module}-opensource-src-%{version}.tar.xz
+Source0: http://download.qt-project.org/official_releases/qt/%{majorver}/%{version}/submodules/%{qt_module}-opensource-src-%{version}.tar.xz
 %endif
 %endif
 
@@ -41,22 +43,31 @@ language for describing user interfaces and a language runtime. A
 collection of C++ APIs is used to integrate these high level features
 with classic Qt applications.
 
+%description -l zh_CN.UTF-8
+描述 Qt5 用户界面的声明语言。
+
 %package devel
 Summary: Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Requires: %{name}%{?_isa} = %{version}-%{release}
 Requires: qt5-qtbase-devel%{?_isa}
 %description devel
 %{summary}.
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %if 0%{?docs}
 %package doc
 Summary: API documentation for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发文档
 Requires: %{name} = %{version}-%{release}
 # for qhelpgenerator
 BuildRequires: qt5-qttools-devel
 BuildArch: noarch
 %description doc
 %{summary}.
+%description doc -l zh_CN.UTF-8
+%{name} 的开发文档。
 %endif
 
 %package examples
@@ -114,13 +125,13 @@ for prl_file in libQt5*.prl ; do
   fi
 done
 popd
-
+magic_rpm_clean.sh
 
 %post -p /sbin/ldconfig
 %postun -p /sbin/ldconfig
 
 %files
-%doc LICENSE.GPL LICENSE.LGPL LGPL_EXCEPTION.txt
+%doc LGPL_EXCEPTION.txt
 %{_qt5_libdir}/libQt5Declarative.so.5*
 %{_qt5_bindir}/qml*
 %{_bindir}/qml*
@@ -151,6 +162,9 @@ popd
 
 
 %changelog
+* Fri Mar 20 2015 Liu Di <liudidi@gmail.com> - 5.4.1-1
+- 更新到 5.4.1
+
 * Wed Aug 06 2014 Liu Di <liudidi@gmail.com> - 5.3.1-2
 - 为 Magic 3.0 重建
 

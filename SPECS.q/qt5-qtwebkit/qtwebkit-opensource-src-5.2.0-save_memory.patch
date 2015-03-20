@@ -6,7 +6,7 @@ diff -up qtwebkit-opensource-src-5.2.0-rc1/Source/WebCore/WebCore.pri.save_memor
  unix:!mac:*-g++*:QMAKE_CXXFLAGS += -fdata-sections
  unix:!mac:*-g++*:QMAKE_LFLAGS += -Wl,--gc-sections
 +unix:!mac:*-g++*:!equals(QT_ARCH, powerpc):!equals(QT_ARCH, s390):!equals(QT_ARCH, mips):!equals(QT_ARCH, arm):QMAKE_LFLAGS += -Wl,--no-keep-memory
-+unix:!mac:*-g++*:!equals(QT_ARCH, powerpc):!equals(QT_ARCH, s390):!equals(QT_ARCH, mips):!equals(QT_ARCH, arm):QMAKE_LFLAGS += -Wl,--reduce-memory-overheads
++#unix:!mac:*-g++*:!equals(QT_ARCH, powerpc):!equals(QT_ARCH, s390):!equals(QT_ARCH, mips):!equals(QT_ARCH, arm):QMAKE_LFLAGS += -Wl,--reduce-memory-overheads
  linux*-g++*:QMAKE_LFLAGS += $$QMAKE_LFLAGS_NOUNDEF
  
  enable_fast_mobile_scrolling: DEFINES += ENABLE_FAST_MOBILE_SCROLLING=1

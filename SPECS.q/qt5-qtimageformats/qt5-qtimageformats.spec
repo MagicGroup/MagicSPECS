@@ -6,19 +6,20 @@
 %define docs 1
 
 Summary: Qt5 - QtImageFormats component
+Summary(zh_CN.UTF-8): Qt5 - QTImageFormats 组件
 Name:    qt5-%{qt_module}
-Version: 5.3.1
-Release: 2%{?dist}
+Version: 5.4.1
+Release: 1%{?dist}
 
 # See LGPL_EXCEPTIONS.txt, LICENSE.GPL3, respectively, for details
 License: LGPLv2 with exceptions or GPLv3 with exceptions
 Url: http://qt-project.org/
+%define majorver %(echo %{version} | awk -F. '{print $1"."$2}')
 %if 0%{?pre:1}
-Source0: http://download.qt-project.org/development_releases/qt/5.3/%{version}-%{pre}/submodules/%{qt_module}-opensource-src-%{version}-%{pre}.tar.xz
+Source0: http://download.qt-project.org/development_releases/qt/%{majorver}/%{version}-%{pre}/submodules/%{qt_module}-opensource-src-%{version}-%{pre}.tar.xz
 %else
-Source0: http://download.qt-project.org/official_releases/qt/5.3/%{version}/submodules/%{qt_module}-opensource-src-%{version}.tar.xz
+Source0: http://download.qt-project.org/official_releases/qt/%{majorver}/%{version}/submodules/%{qt_module}-opensource-src-%{version}.tar.xz
 %endif
-Patch0: qtimageformats-opensource-src-5.2.1-libmng-test.patch
 
 BuildRequires: qt5-qtbase-devel >= %{version}
 BuildRequires: libmng-devel
@@ -35,28 +36,38 @@ ref. Reading and Writing Image Files. The Qt Image Formats add-on module
 provides optional support for other image file formats, including:
 MNG, TGA, TIFF, WBMP.
 
+%description -l zh_CN.UTF-8
+核心的 Qt Gui 库默认支持大多数常见的图形格式：PNG, JPEG, BMP, GIF 等。
+这个包提供了其它的一些图像格式的支持，包括：MNG, TGA, TIFF, WBMP。
+
 %package devel
 Summary: Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Requires: %{name}%{?_isa} = %{version}-%{release}
 Requires: qt5-qtbase-devel%{?_isa}
 %description devel
 %{summary}.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
 %if 0%{?docs}
 %package doc
 Summary: API documentation for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发文档
 Requires: %{name} = %{version}-%{release}
 # for qhelpgenerator
 BuildRequires: qt5-qttools-devel
 BuildArch: noarch
 %description doc
 %{summary}.
+%description doc -l zh_CN.UTF-8
+%{name} 的开发文档。
 %endif
 
 
 %prep
 %setup -q -n %{qt_module}-opensource-src-%{version}%{?pre:-%{pre}}
-%patch0 -p1
 rm -r src/3rdparty
 
 
@@ -76,10 +87,10 @@ make install INSTALL_ROOT=%{buildroot}
 %if 0%{?docs}
 make install_docs INSTALL_ROOT=%{buildroot}
 %endif
-
+magic_rpm_clean.sh
 
 %files
-%doc LGPL_EXCEPTION.txt LICENSE.GPL LICENSE.LGPL
+%doc LGPL_EXCEPTION.txt
 %{_qt5_plugindir}/imageformats/libqmng.so
 %{_qt5_plugindir}/imageformats/libqtga.so
 %{_qt5_plugindir}/imageformats/libqtiff.so
@@ -100,6 +111,9 @@ make install_docs INSTALL_ROOT=%{buildroot}
 
 
 %changelog
+* Tue Mar 17 2015 Liu Di <liudidi@gmail.com> - 5.4.1-1
+- 更新到 5.4.1
+
 * Wed Aug 06 2014 Liu Di <liudidi@gmail.com> - 5.3.1-2
 - 为 Magic 3.0 重建
 

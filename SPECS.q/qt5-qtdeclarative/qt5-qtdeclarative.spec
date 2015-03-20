@@ -11,17 +11,19 @@
 %endif
 
 Summary: Qt5 - QtDeclarative component
+Summary(zh_CN.UTF-8): Qt5 - QtDeclarative 组件
 Name:    qt5-%{qt_module}
-Version: 5.3.1
-Release: 2%{?dist}
+Version: 5.4.1
+Release: 1%{?dist}
 
 # See LICENSE.GPL LICENSE.LGPL LGPL_EXCEPTION.txt, for details
 License: LGPLv2 with exceptions or GPLv3 with exceptions
 Url: http://qt-project.org/
+%define majorver %(echo %{version} | awk -F. '{print $1"."$2}')
 %if 0%{?pre:1}
-Source0: http://download.qt-project.org/development_releases/qt/5.3/%{version}-%{pre}/submodules/%{qt_module}-opensource-src-%{version}-%{pre}.tar.xz
+Source0: http://download.qt-project.org/development_releases/qt/%{majorver}/%{version}-%{pre}/submodules/%{qt_module}-opensource-src-%{version}-%{pre}.tar.xz
 %else
-Source0: http://download.qt-project.org/official_releases/qt/5.3/%{version}/submodules/%{qt_module}-opensource-src-%{version}.tar.xz
+Source0: http://download.qt-project.org/official_releases/qt/%{majorver}/%{version}/submodules/%{qt_module}-opensource-src-%{version}.tar.xz
 %endif
 
 # support no_sse2 CONFIG (fedora i686 builds cannot assume -march=pentium4 -msse2 -mfpmath=sse flags, or the JIT that needs them)
@@ -41,42 +43,59 @@ BuildRequires: python
 %description
 %{summary}
 
+%description -l zh_CN.UTF-8
+Qt5 - QtDeclarative 组件。
+
 %package devel
 Summary: Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Obsoletes: qt5-qtjsbackend-devel < 5.2.0
 Requires: %{name}%{?_isa} = %{version}-%{release}
 Requires: qt5-qtbase-devel%{?_isa}
 %description devel
 %{summary}.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
 %package static
 Summary: Static library files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的静态库
 Requires: %{name}-devel%{?_isa} = %{version}-%{release}
 %description static
 %{summary}.
 
+%description static -l zh_CN.UTF-8
+%{name} 的静态库。
+
 %if 0%{?docs}
 %package doc
 Summary: API documentation for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发文档
 Requires: %{name} = %{version}-%{release}
 # for qhelpgenerator
 BuildRequires: qt5-qttools-devel
 BuildArch: noarch
 %description doc
 %{summary}.
+%description doc -l zh_CN.UTF-8
+%{name} 的开发文档。
 %endif
 
 %package examples
 Summary: Programming examples for %{name}
+Summary(zh_CN.UTF-8): %{name} 的样例程序
 Requires: %{name}%{?_isa} = %{version}-%{release}
 %description examples
 %{summary}.
 
+%description examples -l zh_CN.UTF-8
+%{name} 的样例程序。
 
 %prep
 %setup -q -n %{qt_module}-opensource-src-%{version}%{?pre:-%{pre}}
 
-%patch1 -p1 -b .no_sse2
+#patch1 -p1 -b .no_sse2
 
 
 %build
@@ -142,13 +161,13 @@ for prl_file in libQt5*.prl ; do
   fi
 done
 popd
-
+magic_rpm_clean.sh
 
 %post -p /sbin/ldconfig
 %postun -p /sbin/ldconfig
 
 %files
-%doc LICENSE.GPL LICENSE.LGPL LGPL_EXCEPTION.txt
+%doc LGPL_EXCEPTION.txt
 %doc dist/changes*
 %{_qt5_libdir}/libQt5Qml.so.5*
 %ifarch %{ix86}
@@ -158,7 +177,7 @@ popd
 %{_qt5_libdir}/libQt5QuickWidgets.so.5*
 %{_qt5_libdir}/libQt5QuickParticles.so.5*
 %{_qt5_libdir}/libQt5QuickTest.so.5*
-%{_qt5_plugindir}/accessible/libqtaccessiblequick.so
+#%{_qt5_plugindir}/accessible/libqtaccessiblequick.so
 %{_qt5_plugindir}/qmltooling/
 %{_qt5_archdatadir}/qml/
 
@@ -194,6 +213,9 @@ popd
 
 
 %changelog
+* Tue Mar 17 2015 Liu Di <liudidi@gmail.com> - 5.4.1-1
+- 更新到 5.4.1
+
 * Tue Aug 05 2014 Liu Di <liudidi@gmail.com> - 5.3.1-2
 - 为 Magic 3.0 重建
 
