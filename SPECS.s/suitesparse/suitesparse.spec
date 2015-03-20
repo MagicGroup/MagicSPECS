@@ -12,7 +12,7 @@
 
 Name:           suitesparse
 Version:        4.3.1
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        A collection of sparse matrix libraries
 
 Group:          System Environment/Libraries
@@ -441,6 +441,9 @@ rm -rf ${RPM_BUILD_ROOT}
 %doc Doc/*
 
 %changelog
+* Sat Mar 14 2015 Liu Di <liudidi@gmail.com> - 4.3.1-5
+- 为 Magic 3.0 重建
+
 * Tue Oct 14 2014 Peter Robinson <pbrobinson@fedoraproject.org> 4.3.1-4
 - Only s390 doesn't have tbb
 

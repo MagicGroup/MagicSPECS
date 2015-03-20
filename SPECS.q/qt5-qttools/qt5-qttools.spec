@@ -10,17 +10,19 @@
 %endif
 
 Summary: Qt5 - QtTool components
+Summary(zh_CN.UTF-8): Qt5 - Qt 工具组件
 Name:    qt5-qttools
-Version: 5.3.1
-Release: 2%{?dist}
+Version: 5.4.1
+Release: 1%{?dist}
 
 # See LGPL_EXCEPTIONS.txt, LICENSE.GPL3, respectively, for exception details
 License: LGPLv2 with exceptions or GPLv3 with exceptions
 Url: http://qt-project.org/
+%define majorver %(echo %{version} | awk -F. '{print $1"."$2}')
 %if 0%{?pre:1}
-Source0: http://download.qt-project.org/development_releases/qt/5.3/%{version}-%{pre}/submodules/%{qt_module}-opensource-src-%{version}-%{pre}.tar.xz
+Source0: http://download.qt-project.org/development_releases/qt/%{majorver}/%{version}-%{pre}/submodules/%{qt_module}-opensource-src-%{version}-%{pre}.tar.xz
 %else
-Source0: http://download.qt-project.org/official_releases/qt/5.3/%{version}/submodules/%{qt_module}-opensource-src-%{version}.tar.xz
+Source0: http://download.qt-project.org/official_releases/qt/%{majorver}/%{version}/submodules/%{qt_module}-opensource-src-%{version}.tar.xz
 %endif
 
 Patch1: qttools-opensource-src-5.3.0-system-clucene.patch
@@ -60,21 +62,31 @@ BuildRequires: clucene-core-devel
 %description
 %{summary}.
 
+%description -l zh_CN.UTF-8
+Qt5 - Qt 工具组件。
+
 %package devel
 Summary: Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Requires: %{name}%{?_isa} = %{version}-%{release}
 Requires: qt5-qtbase-devel%{?_isa}
 Provides: qt5-designer = %{version}-%{release}
 Provides: qt5-linguist = %{version}-%{release}
 %description devel
 %{summary}.
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %package static
 Summary: Static library files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的静态库
 Requires: %{name}-devel%{?_isa} = %{version}-%{release}
 %description static
 %{summary}.
 
+%description static -l zh_CN.UTF-8
+%{name} 的静态库
+。
 %package -n qt5-assistant
 Summary: Documentation browser for Qt5
 Requires: %{name}%{?_isa} = %{version}-%{release}
@@ -83,34 +95,46 @@ Requires: %{name}%{?_isa} = %{version}-%{release}
 
 %package -n qt5-designer-plugin-webkit
 Summary: Qt5 designer plugin for WebKit
+Summary(zh_CN.UTF-8): Webkit 的 Qt5 设计器插件
 Requires: %{name}%{?_isa} = %{version}-%{release}
 %description -n qt5-designer-plugin-webkit
 %{summary}.
 
+%description -n qt5-designer-plugin-webkit -l zh_CN.UTF-8
+Webkit 的 Qt5 设计器插件。
+
 %package -n qt5-qdbusviewer
 Summary: D-Bus debugger and viewer
+Summary(zh_CN.UTF-8): D-Bus 调试器和查看器
 %{?_qt5_version:Requires: qt5-qtbase%{?_isa} >= %{_qt5_version}}
 %description -n qt5-qdbusviewer
 QDbusviewer can be used to inspect D-Bus objects of running programs
 and invoke methods on those objects.
+%description -n qt5-qdbusviewer -l zh_CN.UTF-8
+D-Bus 调试器和查看器。
 
 %if 0%{?docs}
 %package doc
 Summary: API documentation for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发文档
 Requires: %{name} = %{version}-%{release}
 # for qhelpgenerator
 BuildRequires: qt5-qttools-devel
 BuildArch: noarch
 %description doc
 %{summary}.
+%description doc -l zh_CN.UTF-8
+%{name} 的开发文档。
 %endif
 
 %package examples
 Summary: Programming examples for %{name}
+Summary(zh_CN.UTF-8): %{name} 的样例程序
 Requires: %{name}%{?_isa} = %{version}-%{release}
 %description examples
 %{summary}.
-
+%description examples -l zh_CN.UTF-8
+%{name} 的样例程序。
 
 %prep
 %setup -q -n qttools-opensource-src-%{version}%{?pre:-%{pre}}
@@ -185,6 +209,7 @@ for prl_file in libQt5*.prl ; do
   fi
 done
 popd
+magic_rpm_clean.sh
 
 ## work-in-progress... -- rex
 %if 0%{?fedora} || 0%{?rhel} > 6
@@ -198,7 +223,6 @@ cmake ..
 ctest --output-on-failure ||:
 popd
 %endif
-
 
 %post
 /sbin/ldconfig
@@ -355,6 +379,9 @@ fi
 
 
 %changelog
+* Fri Mar 20 2015 Liu Di <liudidi@gmail.com> - 5.4.1-1
+- 更新到 5.4.1
+
 * Wed Aug 06 2014 Liu Di <liudidi@gmail.com> - 5.3.1-2
 - 为 Magic 3.0 重建
 

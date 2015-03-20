@@ -4,17 +4,19 @@
 %define docs 1
 
 Summary: Qt5 - Location component
+Summary(zh_CN.UTF-8): Qt5 - 位置组件
 Name:    qt5-%{qt_module}
-Version: 5.3.1
-Release: 2%{?dist}
+Version: 5.4.1
+Release: 1%{?dist}
 
 # See LGPL_EXCEPTIONS.txt, LICENSE.GPL3, respectively, for exception details
 License: LGPLv2 with exceptions or GPLv3 with exceptions
 Url: http://qt-project.org/
+%define majorver %(echo %{version} | awk -F. '{print $1"."$2}')
 %if 0%{?pre:1}
-Source0: http://download.qt-project.org/development_releases/qt/5.3/%{version}-%{pre}/submodules/%{qt_module}-opensource-src-%{version}-%{pre}.tar.xz
+Source0: http://download.qt-project.org/development_releases/qt/%{majorver}/%{version}-%{pre}/submodules/%{qt_module}-opensource-src-%{version}-%{pre}.tar.xz
 %else
-Source0: http://download.qt-project.org/official_releases/qt/5.3/%{version}/submodules/%{qt_module}-opensource-src-%{version}.tar.xz
+Source0: http://download.qt-project.org/official_releases/qt/%{majorver}/%{version}/submodules/%{qt_module}-opensource-src-%{version}.tar.xz
 %endif
 
 BuildRequires: qt5-qtbase-devel >= %{version}
@@ -33,29 +35,42 @@ by using a variety of possible sources, including satellite, or wifi, or
 determine a position on a map. In addition satellite information can be
 retrieved and area based monitoring can be performed.
 
+%description -l zh_CN.UTF-8
+Qt5 的位置组件。
+
 %package devel
 Summary: Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Requires: %{name}%{?_isa} = %{version}-%{release}
 Requires: qt5-qtbase-devel%{?_isa}
 %description devel
 %{summary}.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
 %if 0%{?docs}
 %package doc
 Summary: API documentation for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发文档
 Requires: %{name} = %{version}-%{release}
 # for qhelpgenerator
 BuildRequires: qt5-qttools-devel
 BuildArch: noarch
 %description doc
 %{summary}.
+%description doc -l zh_CN.UTF-8
+%{name} 的开发文档。
 %endif
 
 %package examples
 Summary: Programming examples for %{name}
+Summary(zh_CN.UTF-8): %{name} 的程序样例
 Requires: %{name}%{?_isa} = %{version}-%{release}
 %description examples
 %{summary}.
+%description examples -l zh_CN.UTF-8
+%{name} 的程序样例。
 
 
 %prep
@@ -90,18 +105,29 @@ for prl_file in libQt5*.prl ; do
   fi
 done
 popd
-
+magic_rpm_clean.sh
 
 %post -p /sbin/ldconfig
 %postun -p /sbin/ldconfig
 
 %files
-%doc LGPL_EXCEPTION.txt LICENSE.GPL LICENSE.LGPL
+%doc LGPL_EXCEPTION.txt LICENSE.GPL* LICENSE.LGPL*
+%{_qt5_libdir}/libQt5Location.so.5*
+%{_qt5_archdatadir}/qml/QtLocation/
+%{_qt5_plugindir}/geoservices/
 %{_qt5_libdir}/libQt5Positioning.so.5*
 %{_qt5_plugindir}/position/
 %{_qt5_archdatadir}/qml/QtPositioning/
+%dir %{_qt5_libdir}/cmake/Qt5Location
+%{_qt5_libdir}/cmake/Qt5Location/Qt5Location_QGeoServiceProviderFactory*.cmake
 
 %files devel
+%{_qt5_headerdir}/QtLocation/
+%{_qt5_libdir}/libQt5Location.so
+%{_qt5_libdir}/libQt5Location.prl
+%{_qt5_libdir}/pkgconfig/Qt5Location.pc
+%{_qt5_archdatadir}/mkspecs/modules/qt_lib_location*.pri
+%{_qt5_libdir}/cmake/Qt5Location/Qt5LocationConfig*.cmake
 %{_qt5_headerdir}/QtPositioning/
 %{_qt5_libdir}/libQt5Positioning.so
 %{_qt5_libdir}/libQt5Positioning.prl
@@ -111,9 +137,10 @@ popd
 
 %if 0%{?docs}
 %files doc
-%doc LICENSE.FDL
 %{_qt5_docdir}/qtpositioning.qch
 %{_qt5_docdir}/qtpositioning/
+%{_qt5_docdir}/qtlocation.qch
+%{_qt5_docdir}/qtlocation/
 %endif
 
 %if 0%{?_qt5_examplesdir:1}
@@ -123,6 +150,9 @@ popd
 
 
 %changelog
+* Wed Mar 18 2015 Liu Di <liudidi@gmail.com> - 5.4.1-1
+- 更新到 5.4.1
+
 * Wed Aug 06 2014 Liu Di <liudidi@gmail.com> - 5.3.1-2
 - 为 Magic 3.0 重建
 

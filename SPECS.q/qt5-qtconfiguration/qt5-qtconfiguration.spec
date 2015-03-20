@@ -2,9 +2,10 @@
 %global qt_module qtconfiguration
 
 Summary:        Qt5 - QtConfiguration module
+Summary(zh_CN.UTF-8): Qt5 - QtConfiguration 模块
 Name:           qt5-%{qt_module}
 Version:        0.3.0
-Release:        2%{?dist}
+Release:        3%{?dist}
 
 # See LGPL_EXCEPTIONS.txt, LICENSE.GPL3, respectively, for exception details
 License:        LGPLv2 with exceptions or GPLv3 with exceptions
@@ -20,15 +21,20 @@ BuildRequires:  cmake
 %description
 Settings API with change notifications.
 
+%description -l zh_CN.UTF-8
+Qt5 - QtConfiguration 模块。
 
 %package devel
 Summary:        Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Requires:       %{name}%{?_isa} = %{version}-%{release}
 Requires:       qt5-qtbase-devel%{?_isa}
 
 %description devel
 %{summary}.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q -n %{qt_module}-%{version}
@@ -41,7 +47,7 @@ make %{?_smp_mflags} LINK='g++ -Wl,--as-needed'
 
 %install
 make install DESTDIR=$RPM_BUILD_ROOT
-
+magic_rpm_clean.sh
 
 %post -p /sbin/ldconfig
 
@@ -65,6 +71,9 @@ make install DESTDIR=$RPM_BUILD_ROOT
 
 
 %changelog
+* Thu Mar 19 2015 Liu Di <liudidi@gmail.com> - 0.3.0-3
+- 为 Magic 3.0 重建
+
 * Tue Aug 05 2014 Liu Di <liudidi@gmail.com> - 0.3.0-2
 - 为 Magic 3.0 重建
 
