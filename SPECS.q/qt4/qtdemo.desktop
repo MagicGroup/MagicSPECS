@@ -4,6 +4,5 @@ Comment=Show Qt4 demos and programming examples
 Exec=qtdemo-qt4
 Icon=qt4-logo
 Terminal=false
-Encoding=UTF-8
 Type=Application
 Categories=Qt;Development;
