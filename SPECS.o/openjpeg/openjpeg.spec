@@ -2,57 +2,69 @@
 # use cmake-buildsys, else autofoo
 # will probably rip this macro out soon, did so to help make
 # upstreamable patches -- Rex
-%define cmake_build 1
+%global cmake_build 1
 
-## enable conformance tests, bloats srpm
-# enable for rawhide only, should disable in production releases
-%if 0%{?fedora} > 15
-%define runcheck 0
-%endif
+# enable conformance tests
+#global runcheck 1
 
 Name:    openjpeg
-Version: 1.4
-Release: 10%{?dist}
+Version: 1.5.1
+Release: 13%{?dist}
 Summary: JPEG 2000 command line tools
 
-Group:   Applications/Multimedia
 License: BSD
-URL:     http://code.google.com/p/openjpeg/ 
-BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+URL:     http://code.google.com/p/openjpeg/
 
-Source0: http://openjpeg.googlecode.com/files/openjpeg_v1_4_sources_r697.tgz 
+Source0: http://downloads.sourceforge.net/openjpeg.mirror/%{name}-%{version}.tar.gz
 %if 0%{?runcheck}
-Source1: http://www.crc.ricoh.com/~gormish/jpeg2000conformance/j2kp4files_v1_5.zip
+# svn checkout http://openjpeg.googlecode.com/svn/data
+Source1: data.tar.xz
 %endif
 
-%if 0%{?cmake_build}
-BuildRequires: cmake 
-%else
-BuildRequires: automake libtool 
-%endif
-BuildRequires: libtiff-devel
-
-Requires: %{name}-libs%{?_isa} = %{version}-%{release}
+# revert soname bump compared to 1.5.0 release (for now)
+Patch1: openjpeg-1.5.1-soname.patch
+# 1.5.2 -> 1.5.1 backport
+Patch2: openjpeg-1.5.1-offset-check.patch
 
 ## upstreamable patches
-# libopenjpeg has undefined references, http://bugzilla.redhat.com/467661
-# http://groups.google.com/group/openjpeg/browse_thread/thread/fba9ad2a35b12e6a
-Patch50: openjpeg-1.4-no_undefined.patch
-# Use soversion 3 (instead of 1.4)
-# http://groups.google.com/group/openjpeg/browse_thread/thread/b9a1d1bfb6f8d09a
-Patch51: openjpeg-1.4-cmake_soversion_3.patch
-# fix autoconf buildsys (+DESTDIR support mostly) 
-# http://groups.google.com/group/openjpeg/browse_thread/thread/6326363ebb969a99
-Patch52: openjpeg-1.4-autoconf.patch
-# fix cmake to install pkgconfig file(s)
-# http://groups.google.com/group/openjpeg/browse_thread/thread/545a90cf2b0e4af2
-Patch53: openjpeg-1.4-cmake_pkgconfig.patch
-# fix cmake create_symlink usage
-Patch54: openjpeg-1.4-cmake_symlink_fix.patch
-#  fix OpenJPEGConfig.cmake, https://bugzilla.redhat.com/show_bug.cgi?id=669425
-Patch55: openjpeg-1.4-OpenJPEGConfig.patch
-# 修正在 libpng 1.5 上的编译错误
-Patch56: openjpeg-libpng15.patch
+Patch50: openjpeg-1.5.1-cmake_libdir.patch
+Patch51: openjpeg-1.5.1-doxygen_timestamp.patch
+
+## upstream patches:
+# http://code.google.com/p/openjpeg/issues/detail?id=155
+Patch100: openjpeg-1.5-r2029.patch
+# http://code.google.com/p/openjpeg/issues/detail?id=152
+Patch101: openjpeg-1.5-r2031.patch
+# http://code.google.com/p/openjpeg/issues/detail?id=169
+Patch102: openjpeg-1.5-r2032.patch
+# http://code.google.com/p/openjpeg/issues/detail?id=166
+Patch103: openjpeg-1.5-r2033.patch
+
+## security patches
+# https://bugzilla.redhat.com/show_bug.cgi?id=1036491
+Patch200: openjpeg-1.5.1-CVE-2013-6052.patch
+# https://bugzilla.redhat.com/show_bug.cgi?id=1036493
+Patch201: openjpeg-1.5.1-CVE-2013-6053.patch
+# https://bugzilla.redhat.com/show_bug.cgi?id=1036495
+# omitted due to regression https://bugzilla.redhat.com/show_bug.cgi?id=1047494
+Patch202: openjpeg-1.5.1-CVE-2013-6045.patch
+# https://bugzilla.redhat.com/show_bug.cgi?id=1037945
+Patch203: openjpeg-1.5.1-CVE-2013-1447.patch
+# https://bugzilla.redhat.com/show_bug.cgi?id=1037948
+Patch204: openjpeg-1.5.1-CVE-2013-6887.patch
+
+%if 0%{?cmake_build}
+BuildRequires: cmake
+%else
+BuildRequires: automake libtool
+%endif
+BuildRequires: doxygen
+BuildRequires: libtiff-devel
+BuildRequires: pkgconfig(lcms2)
+BuildRequires: pkgconfig(libpng)
+BuildRequires: pkgconfig(zlib)
+
+Requires: %{name}-libs%{?_isa} = %{version}-%{release}
 
 %description
 OpenJPEG is an open-source JPEG 2000 codec written in C. It has been
@@ -61,52 +73,65 @@ compression standard from the Joint Photographic Experts Group (JPEG).
 
 %package libs
 Summary: JPEG 2000 codec runtime library
-Group:   System Environment/Libraries
 %description libs
 The %{name}-libs package contains runtime libraries for applications that use
 OpenJPEG.
 
 %package  devel
 Summary:  Development files for %{name} 
-Group:    Development/Libraries
 Requires: %{name}-libs%{?_isa} = %{version}-%{release}
+Requires: %{name} = %{version}-%{release}
 %description devel
 The %{name}-devel package contains libraries and header files for
 developing applications that use OpenJPEG.
 
+%package  devel-docs
+Summary:  Developer documentation for %{name}
+BuildArch: noarch
+%description devel-docs
+%{summary}.
+
 
 %prep
-%setup -q -n openjpeg_v1_4_sources_r697 
+%setup -q %{?runcheck:-a 1}
 
-# Make sure we use system libraries
-rm -rf libs
+%patch1 -p1 -b .soname
+%patch2 -p1 -b .offset
 
-%patch50 -p1 -b .no_undefined
 %if 0%{?cmake_build}
-%patch51 -p1 -b .cmake_soversion_3
-%patch53 -p1 -b .cmake_pkgconfig
-%patch54 -p1 -b .cmake_symlink_fix
-%patch55 -p1 -b .cmake_OpenJPEGConfig
+%patch50 -p1 -b .cmake_libdir
 %else
-%patch52 -p1 -b .autoconf
 autoreconf -i -f
 %endif
-%patch56 -p1
+
+%patch51 -p1 -b .doxygen_timestamp
+
+%patch100 -p0 -b .r2029
+%patch101 -p0 -b .r2031
+%patch102 -p0 -b .r2032
+%patch103 -p0 -b .r2033
+
+%patch200 -p1 -b .CVE-2013-6052
+%patch201 -p1 -b .CVE-2013-6053
+%patch202 -p1 -b .CVE-2013-6045
+%patch203 -p1 -b .CVE-2013-1447
+%patch204 -p1 -b .CVE-2013-6887
+
 
 %build
+
+%{?runcheck:export OPJ_DATA_ROOT=$(pwd)/data}
 
 %if 0%{?cmake_build}
 mkdir -p %{_target_platform}
 pushd %{_target_platform}
 %{cmake} \
-  -DBUILD_EXAMPLES:BOOL=ON \
+  -DBUILD_DOC:BOOL=ON \
   -DBUILD_SHARED_LIBS:BOOL=ON \
+  -DBUILD_MJ2:BOOL=ON \
   %{?runcheck:-DBUILD_TESTING:BOOL=ON} \
-  -DJPEG2000_CONFORMANCE_DATA_ROOT:PATH=../J2KP4files/ \
-  -DOPENJPEG_INSTALL_BIN_DIR:PATH=%{_bindir} \
-  -DOPENJPEG_INSTALL_DATA_DIR:PATH=%{_datadir} \
-  -DOPENJPEG_INSTALL_INCLUDE_DIR:PATH=%{_includedir} \
-  -DOPENJPEG_INSTALL_LIB_DIR:PATH=%{_libdir} \
+  -DCMAKE_BUILD_TYPE=Release \
+  -DOPENJPEG_INSTALL_LIB_DIR:PATH=%{_lib} \
    ..
 popd
 
@@ -117,76 +142,137 @@ make %{?_smp_mflags} -C %{_target_platform}
   --enable-shared \
   --disable-static
 
-# smp build busted
-make 
+make %{?_smp_mflags}
 %endif
 
 
 %install
-rm -rf %{buildroot}
-
 %if 0%{?cmake_build}
 make install/fast DESTDIR=%{buildroot} -C %{_target_platform}
 %else
 make install DESTDIR=%{buildroot}
 %endif
 
-ln -s openjpeg-1.4 %{buildroot}%{_includedir}/openjpeg
+# continue to ship compat header symlink
+ln -s openjpeg-1.5/openjpeg.h %{buildroot}%{_includedir}/openjpeg.h
 
 ## unpackaged files
 # we use %%doc in -libs below instead
-rm -rfv %buildroot%{_docdir}/openjpeg-1.4/
+rm -rfv %{buildroot}%{_docdir}/openjpeg-1.5/
+rm -fv  %{buildroot}%{_libdir}/lib*.la
 
 
 %check
-## known failures (on rex's f14/x86_64 box anyway)
-# lots, all raw image tests fail atm (command-line options need tweaking)
+test -f %{buildroot}%{_includedir}/openjpeg.h
+## known failures (on rex's f16/x86_64 box anyway)
 %if 0%{?runcheck}
-make test -C %{_target_platform} ||:
+make test -C %{_target_platform}
 %endif
 
 
-%clean
-rm -rf %{buildroot}
-
-
-%post libs -p /sbin/ldconfig
-
-%postun libs -p /sbin/ldconfig
-
-
 %files
-%defattr(-,root,root,-)
 %{_bindir}/image_to_j2k
 %{_bindir}/j2k_dump
 %{_bindir}/j2k_to_image
-%{_mandir}/man1/image_to_j2k.1*
-%{_mandir}/man1/j2k_dump.1*
-%{_mandir}/man1/j2k_to_image.1*
+%{_bindir}/extract_j2k_from_mj2
+%{_bindir}/frames_to_mj2
+%{_bindir}/mj2_to_frames
+%{_bindir}/wrap_j2k_in_mj2
+%{_mandir}/man1/*image_to_j2k.1*
+%{_mandir}/man1/*j2k_dump.1*
+%{_mandir}/man1/*j2k_to_image.1*
+
+%post libs -p /sbin/ldconfig
+%postun libs -p /sbin/ldconfig
 
 %files libs
-%defattr(-,root,root,-)
-%doc CHANGES LICENSE 
-%{_libdir}/libopenjpeg.so.3*
-%{_mandir}/man3/libopenjpeg.3*
+%doc CHANGES LICENSE
+%{_libdir}/libopenjpeg.so.1*
+%{_mandir}/man3/*libopenjpeg.3*
 
 %files devel
-%defattr(-,root,root,-)
-%{_includedir}/openjpeg-1.4/
+%{_includedir}/openjpeg-1.5/
+# fedora-only compat symlink
+%{_includedir}/openjpeg.h
 %{_libdir}/libopenjpeg.so
 %{_libdir}/pkgconfig/libopenjpeg.pc
 %{_libdir}/pkgconfig/libopenjpeg1.pc
 %if 0%{?cmake_build}
-%{_libdir}/openjpeg-1.4/
+%{_libdir}/openjpeg-1.5/
 %endif
-# legacy/compat header locations
-%{_includedir}/openjpeg.h
-%{_includedir}/openjpeg
+
+#files devel-docs
+%doc %{?cmake_build:%{_target_platform}/}doc/html/
 
 
 %changelog
-* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 1.4-10
-- 为 Magic 3.0 重建
+* Wed Oct 08 2014 Jaromir Capik <jcapik@redhat.com> - 1.5.1-13
+- Reworked fix for CVE-2013-6045 (#1093379)
+- Offset check (1.5.2 -> 1.5.1 backport)
+
+* Thu Sep 04 2014 Petr Hracek <phracek@redhat.com> - 1.5.1-12
+- OpenJPEG does not provide some binaries (#1138141)
+
+* Sun Aug 17 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.5.1-11
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
+
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.5.1-10
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Thu Apr 17 2014 Jaromir Capik <jcapik@redhat.com> - 1.5.1-9
+- Minor spec file changes according to the latest guidelines
+- Fixing source URL
+
+* Sat Jan 11 2014 Rex Dieter <rdieter@fedoraproject.org> 1.5.1-8
+- revert CVE-2013-6045 patch due to regression (#1047494)
+
+* Tue Jan 07 2014 Rex Dieter <rdieter@fedoraproject.org> 1.5.1-7
+- plethora of security updates (#1038409)
+- CVE-2013-6052 (#1036491)
+- CVE-2013-6053 (#1036493)
+- CVE-2013-6045 (#1036495)
+- CVE-2013-1447 (#1037945)
+- CVE-2013-6887 (#1037948)
+
+* Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.5.1-6
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.5.1-5
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
+
+* Fri Dec 07 2012 Rex Dieter <rdieter@fedoraproject.org> 1.5.1-4
+- *really* fix multilib bugs due to timestamps in generated doc files (#884827)
+
+* Fri Dec 07 2012 Rex Dieter <rdieter@fedoraproject.org> 1.5.1-3
+- int main() in t1_generate_luts.c breaks mplayer (issue#152)
+- jp2_read_boxhdr() can trigger random pointer memory access (issue#155)
+- missing range check in j2k_read_coc et al (issue#166)
+- division by zero in j2k_read_siz (issue#169)
+
+* Thu Dec 06 2012 Rex Dieter <rdieter@fedoraproject.org> 1.5.1-2
+- fix multilib bugs due to timestamps in generated doc files (#884827)
+
+* Thu Sep 13 2012 Rex Dieter <rdieter@fedoraproject.org> 1.5.1-1
+- 1.5.1
+
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.5.0-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Thu Mar 15 2012 Rex Dieter <rdieter@fedoraproject.org> 1.5.0-3
+- -DCMAKE_BUILD_TYPE=Release
+
+* Sat Feb 25 2012 Rex Dieter <rdieter@fedoraproject.org> 1.5.0-2
+- first try at fixing pkgconfig includedir paths (upstream issue #118)
+
+* Thu Feb 09 2012 Rex Dieter <rdieter@fedoraproject.org> 1.5.0-1
+- 1.5.0
+
+* Wed Feb 01 2012 Jaromir Capik <jcapik@redhat.com> 1.4-11
+- fix for #726262 - /usr/include/openjpeg changed to a symlink
+- rpm bug workaround
+
+* Tue Jan 31 2012 Rex Dieter <rdieter@fedoraproject.org> 1.4-10
+- backport upstream patch to avoid poppler regressions (upstream issue #104)
 
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.4-9
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild

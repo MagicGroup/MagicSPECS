@@ -1,0 +1,32 @@
+diff -Naur openjpeg-1.5.1.orig/libopenjpeg/tcd.c openjpeg-1.5.1/libopenjpeg/tcd.c
+--- openjpeg-1.5.1.orig/libopenjpeg/tcd.c	2012-09-13 09:58:39.000000000 +0200
++++ openjpeg-1.5.1/libopenjpeg/tcd.c	2014-03-27 11:58:08.000000000 +0100
+@@ -32,6 +32,7 @@
+ 
+ #define _ISOC99_SOURCE /* lrintf is C99 */
+ #include "opj_includes.h"
++#include <assert.h>
+ 
+ void tcd_dump(FILE *fd, opj_tcd_t *tcd, opj_tcd_image_t * img) {
+ 	int tileno, compno, resno, bandno, precno;/*, cblkno;*/
+@@ -1478,10 +1494,19 @@
+ 		int tw = tilec->x1 - tilec->x0;
+ 		int w = imagec->w;
+ 
++		int i, j;
+ 		int offset_x = int_ceildivpow2(imagec->x0, imagec->factor);
+ 		int offset_y = int_ceildivpow2(imagec->y0, imagec->factor);
++    /* NR-DEC-2977.pdf.asan.67.2198.jp2-52-decode */
++    if( res->x0 - offset_x < 0 || res->x1 - offset_x < 0
++     || res->y0 - offset_y < 0 || res->y1 - offset_y < 0 )
++      {
++      opj_event_msg(tcd->cinfo, EVT_ERROR, "Impossible offsets %d / %d\n", offset_x, offset_y);
++      return OPJ_FALSE;
++      }
++    assert( 0 <= res->x0 - offset_x && 0 <= res->x1 - offset_x );
++    assert( 0 <= res->y0 - offset_y && 0 <= res->y1 - offset_y );
+ 
+-		int i, j;
+ 		if(!imagec->data){
+ 			imagec->data = (int*) opj_malloc(imagec->w * imagec->h * sizeof(int));
+ 		}
