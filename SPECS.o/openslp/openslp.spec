@@ -1,10 +1,12 @@
 
 Summary: Open implementation of Service Location Protocol V2
+Summary(zh_CN.UTF-8): 服务位置协议 V2 的开源实现
 Name:    openslp
 Version: 2.0.0
-Release: 6%{?dist}
+Release: 7%{?dist}
 
 Group:   System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 License: BSD
 URL:     http://sourceforge.net/projects/openslp/
 Source0: http://downloads.sf.net/openslp/openslp-%{version}.tar.gz
@@ -37,16 +39,26 @@ enterprise networks.
 OpenSLP is an open source implementation of the SLPv2 protocol as defined
 by RFC 2608 and RFC 2614.
 
+%description -l zh_CN.UTF-8
+服务位置协议 V2 的开源实现。
+
 %package devel
 Summary: OpenSLP headers and libraries
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:   Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: %{name}%{?_isa} = %{version}-%{release}
 %description devel
 OpenSLP header files and libraries.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
 %package server
 Summary: OpenSLP server daemon
+Summary(zh_CN.UTF-8): %{name} 的服务端
 Group:   System Environment/Daemons
+Group(zh_CN.UTF-8): 系统环境/服务
 Requires: %{name}%{?_isa} = %{version}-%{release}
 Requires(preun): chkconfig, /sbin/service
 Requires(post): chkconfig
@@ -55,6 +67,8 @@ Requires: net-tools
 %description server
 OpenSLP server daemon to dynamically register services.
 
+%description server -l zh_CN.UTF-8
+%{name} 的服务端。
 
 %prep
 %setup -q
@@ -122,7 +136,7 @@ cp %SOURCE3 ${RPM_BUILD_ROOT}/%{_mandir}/man1/
 # nuke unpackaged/unwanted files
 rm -rf $RPM_BUILD_ROOT/usr/doc
 rm -f  $RPM_BUILD_ROOT%{_libdir}/lib*.la
-
+magic_rpm_clean.sh
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -174,6 +188,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Thu Apr 02 2015 Liu Di <liudidi@gmail.com> - 2.0.0-7
+- 为 Magic 3.0 重建
+
 * Wed Mar 11 2015 Adam Jackson <ajax@redhat.com> 2.0.0-6
 - Drop sysvinit script from F23+
 

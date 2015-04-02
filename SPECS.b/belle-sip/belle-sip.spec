@@ -1,6 +1,6 @@
 Name:           belle-sip
-Version:        1.3.0
-Release:        1%{?dist}
+Version:        1.4.0
+Release:        0%{?dist}
 Summary:        Linphone SIP stack
 License:        GPLv2+
 URL:            http://www.linphone.org/
@@ -54,6 +54,12 @@ find %{buildroot} -name '*.la' -delete
 %{_libdir}/pkgconfig/belle-sip.pc
 
 %changelog
+* Mon Mar 30 2015 Liu Di <liudidi@gmail.com> - 1.3.1-3
+- 为 Magic 3.0 重建
+
+* Mon Mar 30 2015 Liu Di <liudidi@gmail.com> - 1.3.0-2
+- 为 Magic 3.0 重建
+
 * Fri Feb 21 2014 Alexey Kurov <nucleo@fedoraproject.org> - 1.3.0-1
 - belle-sip-1.3.0
 - revert fix FSF address in COPYING

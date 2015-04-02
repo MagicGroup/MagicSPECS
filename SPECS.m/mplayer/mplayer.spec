@@ -1,5 +1,5 @@
 %define _sysconfdir /etc
-%define date 2014-12-31
+%define date 2015-03-27
 %define with_gui 1
 %define with_vdpau 1
 
@@ -200,6 +200,12 @@ rm -rf %{buildroot} %{_builddir}/%{buildsubdir}
 %endif
 
 %changelog
+* Fri Mar 27 2015 Liu Di <liudidi@gmail.com> - 1.0svn20150326-1
+- 更新到 1.0svn20150327
+
+* Fri Mar 27 2015 Liu Di <liudidi@gmail.com> - 1.0svn20150326-1
+- 更新到 1.0svn20150326
+
 * Thu Jan 01 2015 Liu Di <liudidi@gmail.com> - 1.0svn20141231-1
 - 更新到 1.0svn20141231
 

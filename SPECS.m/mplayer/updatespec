@@ -4,7 +4,8 @@ if [ -z "$1" ] ; then
         exit 1
 fi
 pushd $(dirname $0)
-DATE=$(date -d '-1 day' +%Y-%m-%d)
+#DATE=$(date -d '-1 day' +%Y-%m-%d)
+DATE=$(date +%Y-%m-%d)
 sed -i "s/%define date.*/%define date $DATE/g" mplayer.spec
 sed -i "s/Release:.*/Release: 1%{?dist}/g" mplayer.spec
 #这个地方的处理方法不是太好，需要改进

@@ -5,7 +5,7 @@
 Summary:        Firmware for several ALSA-supported sound cards
 Summary(zh_CN.UTF-8): ALSA 支持的几个声卡需要的固件
 Name:           alsa-firmware
-Version:        1.0.27
+Version:	1.0.29
 Release:        2%{?dist}
 # See later in the spec for a breakdown of licensing
 License:        GPL+ and BSD and GPLv2+ and GPLv2 and LGPLv2+
@@ -48,8 +48,8 @@ the alsa-tools-firmware package.
 # pndspini.bin -> /etc/sound/pndspini.bin
 #
 # Probably an upstream package bug.
-sed -i s#'multisound/Makefile \\'## configure.in
-sed -i s#multisound## Makefile.am
+#sed -i s#'multisound/Makefile \\'## configure.in
+#sed -i s#multisound## Makefile.am
 
 %__aclocal
 %__automake --add-missing
@@ -197,6 +197,17 @@ rm -rf $RPM_BUILD_ROOT
 /lib/firmware/ctefx.bin
 /lib/firmware/ctspeq.bin
 
+/lib/firmware/cs46xx/ba1
+/lib/firmware/cs46xx/cwc4630
+/lib/firmware/cs46xx/cwcasync
+/lib/firmware/cs46xx/cwcbinhack
+/lib/firmware/cs46xx/cwcdma
+/lib/firmware/cs46xx/cwcsnoop
+/lib/firmware/turtlebeach/msndinit.bin
+/lib/firmware/turtlebeach/msndperm.bin
+/lib/firmware/turtlebeach/pndsperm.bin
+/lib/firmware/turtlebeach/pndspini.bin
+
 # Even with --disable-loader, we still get usxxx firmware here; looking at the
 # alsa-tools-firmware package, it seems like these devices probably use an old- 
 # style hotplug loading method
@@ -205,6 +216,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Fri Mar 27 2015 Liu Di <liudidi@gmail.com> - 1.0.29-2
+- 更新到 1.0.29
+
 * Fri Apr 12 2013 Jaroslav Kysela <perex@perex.cz> - 1.0.27-1
 - Update to 1.0.27
 

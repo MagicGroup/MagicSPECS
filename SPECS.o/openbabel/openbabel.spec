@@ -3,18 +3,45 @@
 %{!?python_sitelib: %define python_sitelib %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib()")}
 %{!?python_sitearch: %define python_sitearch %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib(1)")}
 %define ruby_sitearch %(ruby -rrbconfig -e 'puts Config::CONFIG["sitearchdir"]')
+%define git 1
+%define vcsdate 20150325
 
 Name: openbabel
-Version: 2.3.1
-Release: 3%{?dist}
+Version: 2.3.90
+%if 0%{?git}
+Release: 0.git%{vcsdate}%{?dist}.1
+%else
+Release: 5%{?dist}
+%endif
 Summary: Chemistry software file format converter
 Summary(zh_CN.UTF-8): 化学软件文件格式转换器
 License: GPLv2
 Group: Applications/File
 Group(zh_CN.UTF-8): 应用程序/文件
 URL: http://openbabel.org/
-Source: http://downloads.sourceforge.net/project/%{name}/%{name}/%{version}/%{name}-%{version}.tar.gz
-Patch1: openbabel-2.3.1-rpm.patch
+%if 0%{?git}
+Source0: %{name}-git%{vcsdate}.tar.xz
+%else
+Source0: http://downloads.sourceforge.net/project/%{name}/%{name}/%{version}/%{name}-%{version}.tar.gz
+%endif
+Source1: obgui.desktop
+Source2: make_openbabel_git_package.sh
+
+# fix perl modules install path
+Patch1: %{name}-perl.patch
+# fix plugin directory location (#680292, patch by lg)
+Patch4: openbabel-plugindir.patch
+# fix SWIG_init even when not using swig (#772149)
+Patch6: openbabel-noswig-rubymethod.patch
+# On F-17, directory for C ruby files changed to use vendorarch directory
+Patch7: openbabel-ruby19-vendorarch.patch
+# temporarily disable some tests on:
+# - ppc64 and s390(x) to unblock other builds (#1108103)
+# - ARM (#1094491)
+# - aarch64 (#1094513)
+# Upstream bugs: https://sourceforge.net/p/openbabel/bugs/927/ https://sourceforge.net/p/openbabel/bugs/945/
+Patch8: openbabel-disable-tests-some-arches.patch
+
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: inchi-devel >= 1.0.3
 BuildRequires: libtool
@@ -74,6 +101,56 @@ you should install %{name}-devel.  You'll also need to have the
 如果您想要使用这个库开发程序，那么您应该安装 %{name}-devel。您也需要
 安装 %{name} 软件包。
 
+%package doc
+Summary: Additional documentation for the Open Babel library
+Summary(zh_CN.UTF-8): %{name} 的附加文档
+Group: Documentation
+Group(zh_CN.UTF-8): 文档
+BuildArch: noarch
+
+%description doc
+This package contains additional documentation for Open Babel.
+
+%description doc -l zh_CN.UTF-8
+%{name} 的附加文档。
+
+%package gui
+Summary: Chemistry software file format converter - GUI version
+Summary(zh_CN.UTF-8): %{name} 的图形界面
+Group: Applications/File
+Group(zh_CN.UTF-8): 应用程序/文件
+
+%description gui
+Open Babel is a free, open-source version of the Babel chemistry file
+translation program. Open Babel is a project designed to pick up where
+Babel left off, as a cross-platform program and library designed to
+interconvert between many file formats used in molecular modeling,
+computational chemistry, and many related areas.
+
+This package contains the graphical interface.
+
+%description gui -l zh_CN.UTF-8
+%{name} 的图形界面。
+
+%package libs
+Summary: Chemistry software file format converter - libraries
+Summary(zh_CN.UTF-8): %{name} 的运行库
+Group: System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
+
+%description libs
+Open Babel is a free, open-source version of the Babel chemistry file
+translation program. Open Babel is a project designed to pick up where
+Babel left off, as a cross-platform program and library designed to
+interconvert between many file formats used in molecular modeling,
+computational chemistry, and many related areas.
+
+This package contains the C++ library, which includes all of the
+file-translation code.
+
+%description libs -l zh_CN.UTF-8
+%{name} 的运行库。
+
 %package -n perl-%{name}
 Group: System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
@@ -119,90 +196,95 @@ Ruby wrapper for the Open Babel library.
 Open Babel 库的 ruby 包装。
 
 %prep
+%if 0%{?git}
+%setup -q -n %{name}-git%{vcsdate}
+%else
 %setup -q -n %{name}-%{version}
-%patch1 -p1
+%endif
+%patch1 -p1 -b .perl_path
+%patch4 -p1 -b .plugindir
+%patch6 -p1 -b .noswig_ruby
+%patch7 -p1 -b .ruby_vendor
+%ifarch %{power64} s390 s390x armv7hl aarch64
+%patch8 -p1 -b .some_arches
+%endif
+convert src/GUI/babel.xpm -transparent white babel.png
+
+# Remove duplicate html files
+pushd doc
+for man in *.1; do
+ html=`basename $man .1`.html
+ if [ -f $html ]; then
+   rm $html
+ fi
+done
 
 %build
-#这里应该加个开关
-%cmake -DOPENBABEL_USE_SYSTEM_INCHI=ON .
-%{__make} %{?_smp_mflags}
-
-%if 0
-pushd scripts/perl
-perl Makefile.PL INSTALLDIRS="vendor"
-%{__make} %{?_smp_mflags} OPTIMIZE="$RPM_OPT_FLAGS"
-popd
-
-pushd scripts/python
-python setup.py build
-popd
-
-pushd scripts/ruby
-ruby extconf.rb --with-openbabel-include=../../include --with-openbabel-lib=../../src/.libs
-%{__make} %{?_smp_mflags}
-popd
-%endif
+%cmake \
+ -DCMAKE_SKIP_RPATH:BOOL=ON \
+ -DBUILD_GUI:BOOL=ON \
+ -DPYTHON_BINDINGS:BOOL=ON \
+ -DPERL_BINDINGS:BOOL=ON \
+ -DRUBY_BINDINGS:BOOL=ON \
+ -DOPENBABEL_USE_SYSTEM_INCHI=true \
+ -DENABLE_VERSIONED_FORMATS=false \
+ -DRUN_SWIG=true \
+ -DENABLE_TESTS:BOOL=ON \
+ .
+make VERBOSE=1 
+#%{?_smp_mflags}
 
 %install
-%{__rm} -rf %{buildroot}
+make VERBOSE=1 DESTDIR=%{buildroot} install
 
-%{__make} install DESTDIR=%{buildroot}
+rm %{buildroot}%{_libdir}/cmake/openbabel2/*.cmake
 
-#%{__rm} %{buildroot}%{_libdir}{,/%{name}/%{version}}/*.la
-
-%if 0
-# perl 部分安装
-pushd scripts/perl
-%{__make} install DESTDIR=%{buildroot}
-popd
-%{__rm} -f %{buildroot}%{perl_archlib}/perllocal.pod
-%{__rm} -f %{buildroot}%{perl_vendorarch}/*/Chemistry/OpenBabel/{.packlist,OpenBabel.bs}
-chmod 755 %{buildroot}%{perl_vendorarch}/*/Chemistry/OpenBabel/OpenBabel.so
-
-# python 部分安装
-pushd scripts/python
-%{__python} setup.py install --skip-build --root %{buildroot}
-%{__python} setup.py install -O1 --skip-build --root %{buildroot}
-popd
-chmod 755 $RPM_BUILD_ROOT%{python_sitearch}/_openbabel.so
-
-# ruby 部分安装
-pushd scripts/ruby
-%{__make} install DESTDIR=%{buildroot}
-popd
-%endif
-
+desktop-file-install --dir=%{buildroot}%{_datadir}/applications %{SOURCE1}
+install -Dpm644 babel.png %{buildroot}%{_datadir}/pixmaps/babel.png
 magic_rpm_clean.sh
+
+%check
+# rm the built ruby bindings for testsuite to succeed (bug #1191173)
+rm %{_lib}/openbabel.so
+export CTEST_OUTPUT_ON_FAILURE=1
+make test
 
 %clean
 %{__rm} -rf %{buildroot} %{_builddir}/%{buildsubdir}
 
-%check
-%{__make} check
+%post libs -p /sbin/ldconfig
 
-%post -p /sbin/ldconfig
-
-%postun -p /sbin/ldconfig
+%postun libs -p /sbin/ldconfig
 
 %files
 %defattr(-,root,root,-)
-%doc AUTHORS COPYING README THANKS
-%doc doc/*.html
-%doc doc/README* doc/dioxin.*
-%{_bindir}/*
-%{_mandir}/man1/*
-%{_datadir}/%{name}
-%{_libdir}/libopenbabel.so.*
-%{_libdir}/%{name}
+%{_bindir}/babel
+%{_bindir}/ob*
+%{_bindir}/roundtrip
+%{_mandir}/man1/*.1*
 
 %files devel
 %defattr(-,root,root,-)
 %{_includedir}/%{name}-2.0
 %{_libdir}/libopenbabel.so
 %{_libdir}/pkgconfig/*.pc
-%{_libdir}/cmake/*
 
-%if 0
+%files doc
+%defattr(-,root,root,-)
+%doc doc/*.html doc/README* doc/dioxin.*
+
+%files gui
+%defattr(-,root,root,-)
+%{_bindir}/obgui
+%{_datadir}/applications/obgui.desktop
+%{_datadir}/pixmaps/babel.png
+
+%files libs
+%defattr(-,root,root,-)
+%{_datadir}/%{name}/
+%{_libdir}/%{name}/
+%{_libdir}/libopenbabel.so.*
+
 %files -n perl-%{name}
 %defattr(-,root,root,-)
 %{perl_vendorarch}/Chemistry/OpenBabel.pm
@@ -211,17 +293,27 @@ magic_rpm_clean.sh
 
 %files -n python-%{name}
 %defattr(-,root,root,-)
-%{python_sitearch}/_openbabel.so
-%{python_sitearch}/openbabel.py*
-%{python_sitearch}/pybel.py*
-%{python_sitearch}/openbabel*.egg-info
+%{python2_sitearch}/_openbabel.so
+%{python2_sitearch}/openbabel.py*
+%{python2_sitearch}/pybel.py*
+# Egg-info is not generated in 2.3.2, see upstream bug 837
+#%{python_sitearch}/openbabel*.egg-info
 
 %files -n ruby-%{name}
 %defattr(-,root,root,-)
-%{ruby_sitearch}/openbabel.so
-%endif
+%{ruby_vendorarchdir}/openbabel.so
+
 
 %changelog
+* Wed Mar 25 2015 Liu Di <liudidi@gmail.com> - 2.3.90-0.git20150325.1
+- 更新到 20150325 日期的仓库源码
+
+* Wed Mar 25 2015 Liu Di <liudidi@gmail.com> - 2.3.90-0.git20150301.1
+- 为 Magic 3.0 重建
+
+* Wed Mar 25 2015 Liu Di <liudidi@gmail.com> - 2.3.1-4
+- 为 Magic 3.0 重建
+
 * Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 2.3.1-3
 - 为 Magic 3.0 重建
 

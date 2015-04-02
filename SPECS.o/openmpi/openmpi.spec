@@ -22,7 +22,7 @@
 
 Name:			openmpi%{?_cc_name_suffix}
 Version:		1.8.4
-Release:		7.20150324gitg9ad2aa8%{?dist}
+Release:		8.20150324gitg9ad2aa8%{?dist}
 Summary:		Open Message Passing Interface
 Group:			Development/Libraries
 License:		BSD, MIT and Romio
@@ -248,6 +248,9 @@ make check
 
 
 %changelog
+* Wed Apr 01 2015 Liu Di <liudidi@gmail.com> - 1.8.4-8.20150324gitg9ad2aa8
+- 为 Magic 3.0 重建
+
 * Mon Mar 30 2015 Orion Poplawski <orion@cora.nwra.com> 1.8.4-7.20150324gitg9ad2aa8
 - Add upstream patch to fix race/hang on 32bit machines
 

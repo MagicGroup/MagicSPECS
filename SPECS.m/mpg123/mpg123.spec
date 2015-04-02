@@ -3,14 +3,15 @@
 %global apriority 99
 
 Name:           mpg123
-Version:        1.19.0
-Release:        2%{?dist}
+Version:	1.22.0
+Release:	1%{?dist}
 Summary:        MPEG audio player
+Summary(zh_CN.UTF-8): MPEG 音频播放器
 Group:          Applications/Multimedia
+Group(zh_CN.UTF-8): 应用程序/多媒体
 License:        GPLv2+ and LGPLv2
 URL:            http://mpg123.org/
 Source:         http://downloads.sourceforge.net/mpg123/mpg123-%{version}.tar.bz2
-Patch0:         mpg123-1.19.0-armv7hl.patch
 BuildRequires:  libtool-ltdl-devel SDL-devel portaudio-devel
 BuildRequires:  jack-audio-connection-kit-devel nas-devel
 BuildRequires:  alsa-lib-devel pulseaudio-libs-devel openal-soft-devel
@@ -24,56 +25,78 @@ Provides:       mp3-cmdline = %{version}-%{release}
 %description
 Real time command line MPEG audio player for Layer 1, 2 and Layer3.
 
+%description -l zh_CN.UTF-8
+实时的命令行 MPEG 音频播放器。
 
 %package plugins-pulseaudio
 Summary:        Pulseaudio output plug-in for mpg123
+Summary(zh_CN.UTF-8): %{name} 的 Pulseaudio 插件
 Group:          Applications/Multimedia
+Group(zh_CN.UTF-8): 应用程序/多媒体
 Requires:       %{name}%{?_isa} = %{version}-%{release}
 
 %description plugins-pulseaudio
 Pulseaudio output plug-in for mpg123.
 
+%description  plugins-pulseaudio -l zh_CN.UTF-8
+%{name} 的 Pulseaudio 插件。
 
 %package plugins-jack
 Summary:        JACK output plug-in for mpg123
+Summary(zh_CN.UTF-8): %{name} 的 JACK 插件
 Group:          Applications/Multimedia
+Group(zh_CN.UTF-8): 应用程序/多媒体
 Requires:       %{name}%{?_isa} = %{version}-%{release}
 
 %description plugins-jack
 JACK output plug-in for mpg123.
 
+%description plugins-jack -l zh_CN.UTF-8
+%{name} 的 JACK 插件。
 
 %package plugins-extras
 Summary:        Extra output plugins for mpg123
+Summary(zh_CN.UTF-8): %{name} 的附加输出插件
 Group:          Applications/Multimedia
+Group(zh_CN.UTF-8): 应用程序/多媒体
 Requires:       %{name}%{?_isa} = %{version}-%{release}
 
 %description plugins-extras
 Extra (non often used) output plugins for mpg123 which require additional
 dependencies to be installed.
 
+%description plugins-extras -l zh_CN.UTF-8
+%{name} 的附加输出插件。
+
 
 %package -n libmpg123
 Summary:        MPEG audio Layer 1, 2 and Layer3 library
+Summary(zh_CN.UTF-8): %{name} 的运行库
 Group:          System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 
 %description -n libmpg123
 MPEG audio Layer 1, 2 and Layer3 library.
 
+%description -n libmpg123 -l zh_CN.UTF-8
+%{name} 的运行库。
 
 %package -n libmpg123-devel
 Summary:        Development files for mpg123
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       libmpg123%{?_isa} = %{version}-%{release}
 
 %description -n libmpg123-devel
 The libmpg123-devel package contains libraries and header files for
 developing applications that use libmpg123.
 
+%description -n libmpg123-devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
-%patch0 -p1
 # for patch0
 autoreconf -i -f
 iconv -f iso8859-1 -t utf8 AUTHORS -o AUTHORS.utf8
@@ -109,7 +132,7 @@ mv $RPM_BUILD_ROOT%{_mandir}/man1/mpg123.1 \
 ln -s mpg123.bin $RPM_BUILD_ROOT%{_bindir}/mpg123
 ln -s mpg123.bin $RPM_BUILD_ROOT%{_bindir}/mp3-cmdline
 ln -s mpg123.bin.1 $RPM_BUILD_ROOT%{_mandir}/man1/mpg123.1
-
+magic_rpm_clean.sh
 
 %post
 %{_sbindir}/alternatives \
@@ -135,6 +158,10 @@ fi
 %{_bindir}/mpg123.bin
 %{_bindir}/mpg123-id3dump
 %{_bindir}/mpg123-strip
+%{_bindir}/out123
+%{_libdir}/mpg123/output_arts.*
+%{_libdir}/mpg123/output_esd.*
+%{_mandir}/man1/out123.1.gz
 %ghost %{_bindir}/mpg123
 %ghost %{_bindir}/mp3-cmdline
 %dir %{_libdir}/mpg123
@@ -169,6 +196,9 @@ fi
 
 
 %changelog
+* Mon Mar 30 2015 Liu Di <liudidi@gmail.com> - 1.22.0-1
+- 更新到 1.22.0
+
 * Mon Sep 01 2014 Sérgio Basto <sergio@serjux.com> - 1.19.0-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
 

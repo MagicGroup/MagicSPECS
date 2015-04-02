@@ -2,9 +2,11 @@
 
 Name:           opencv
 Version:        2.4.9
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Collection of algorithms for computer vision
+Summary(zh_CN.UTF-8): 计算机视觉算法集合
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 # This is normal three clause BSD.
 License:        BSD
 URL:            http://opencv.org
@@ -75,17 +77,27 @@ OpenCV means Intel® Open Source Computer Vision Library. It is a collection of
 C functions and a few C++ classes that implement some popular Image Processing
 and Computer Vision algorithms.
 
+%description -l zh_CN.UTF-8
+计算机视觉算法集合。
+
 
 %package        core
 Summary:        OpenCV core libraries
+Summary(zh_CN.UTF-8): OpenCV 核心库
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 
 %description    core
 This package contains the OpenCV C/C++ core libraries.
 
+%description core -l zh_CN.UTF-8
+OpenCV 的 C/C++ 核心库。
+
 %package        devel
 Summary:        Development files for using the OpenCV library
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       opencv%{_isa} = %{version}-%{release}
 
 %description    devel
@@ -94,24 +106,36 @@ documentation. It should be installed if you want to develop programs that
 will use the OpenCV library. You should consider installing opencv-devel-docs
 package.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
 %package        devel-docs
 Summary:        Development files for using the OpenCV library
+Summary(zh_CN.UTF-8): %{name} 的开发文档
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       opencv-devel = %{version}-%{release}
 BuildArch:      noarch
 
 %description    devel-docs
 This package contains the OpenCV documentation and examples programs.
 
+%description devel-docs -l zh_CN.UTF-8
+%{name} 的开发文档。
+
 %package        python
 Summary:        Python bindings for apps which use OpenCV
+Summary(zh_CN.UTF-8): %{name} 的 Python 绑定
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       opencv%{_isa} = %{version}-%{release}
 Requires:       numpy
 
 %description    python
 This package contains Python bindings for the OpenCV library.
 
+%description python -l zh_CN.UTF-8
+%{name} 的 Python 绑定。
 
 %prep
 %setup -q
@@ -188,6 +212,7 @@ install -pm644 %{SOURCE1} %{buildroot}%{_datadir}/OpenCV/samples/c/GNUmakefile
 rm -rf %{buildroot}%{_datadir}/OpenCV/doc
 
 popd
+magic_rpm_clean.sh
 
 %check
 # Check fails since we don't support most video
@@ -250,6 +275,9 @@ popd
 %{python2_sitearch}/cv2.so
 
 %changelog
+* Fri Mar 27 2015 Liu Di <liudidi@gmail.com> - 2.4.9-3
+- 为 Magic 3.0 重建
+
 * Fri Jul 18 2014 Liu Di <liudidi@gmail.com> - 2.4.9-2
 - 为 Magic 3.0 重建
 

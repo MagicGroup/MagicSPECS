@@ -1,6 +1,6 @@
 Name:           opengl-games-utils
 Version:        0.2
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        Utilities to check proper 3d support before launching 3d games
 Group:          Amusements/Games
 License:        Public Domain
@@ -48,6 +48,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Fri Mar 27 2015 Liu Di <liudidi@gmail.com> - 0.2-4
+- 为 Magic 3.0 重建
+
 * Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 0.2-3
 - 为 Magic 3.0 重建
 

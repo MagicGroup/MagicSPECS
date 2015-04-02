@@ -1,16 +1,16 @@
 Name:           ode
-Version:        0.11.1
-Release:        8%{?dist}
+Version:	0.13.1
+Release:	1%{?dist}
 Summary:        High performance library for simulating rigid body dynamics
+Summary(zh_CN.UTF-8): 模拟刚体动力学的高性能库
 Group:          System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 License:        BSD or LGPLv2+
 URL:            http://www.ode.org
-Source0:        http://downloads.sourceforge.net/opende/ode-%{version}.tar.bz2
+Source0:        https://bitbucket.org/odedevs/ode/downloads/ode-%{version}.tar.gz
 # This works around a bug in rpmbuild, where with localbuilds it will pass
 # the machine being build on as host param to configure instead of the machine
 # on which the code will run
-Patch0:         ode-0.10.0-no-pentium-on-i386.patch
-Patch1:         ode-0.11.1-multilib.patch
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  libGL-devel libGLU-devel
 
@@ -22,19 +22,27 @@ detection with friction. ODE is useful for simulating vehicles, objects in
 virtual reality environments and virtual creatures. It is currently used in
 many computer games, 3D authoring tools and simulation tools.
 
+%description -l zh_CN.UTF-8
+模拟刚体动力学的高性能库.
 
 %package        double
 Summary:        Ode physics library compiled with double precision
+Summary(zh_CN.UTF-8): 双精度的 Ode 库
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 
 %description    double
 The %{name}-double package contains a version of the ODE library for simulating
 rigid body dynamics compiled with double precision.
 
+%description double -l zh_CN.UTF-8
+双精度的 Ode 库。
 
 %package        devel
 Summary:        Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       %{name} = %{version}-%{release}
 Requires:       %{name}-double = %{version}-%{release}
 
@@ -42,17 +50,11 @@ Requires:       %{name}-double = %{version}-%{release}
 The %{name}-devel package contains libraries and header files for
 developing applications that use %{name} or %{name}-double.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
-%patch0 -p1
-%patch1 -p1
-# to stop autoxxx from getting regenerated because of our configure patch
-touch -r CHANGELOG.txt configure.in
-# stop rpmlint from complaining about executable files in the debug package
-chmod -x ode/src/stepfast.cpp include/ode/collision_trimesh.h \
-  include/ode/odeconfig.h
-
 
 %build
 %configure --enable-shared --disable-static --enable-double-precision
@@ -80,7 +82,7 @@ install -m 755 libode-double.so.1.1.1 $RPM_BUILD_ROOT%{_libdir}
 ln -s libode-double.so.1.1.1 $RPM_BUILD_ROOT%{_libdir}/libode-double.so.1
 ln -s libode-double.so.1.1.1 $RPM_BUILD_ROOT%{_libdir}/libode-double.so
 install -m 644 ode-double.pc $RPM_BUILD_ROOT%{_libdir}/pkgconfig
-
+magic_rpm_clean.sh
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -97,13 +99,13 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(-,root,root,-)
-%doc CHANGELOG.txt LICENSE*.TXT README.txt
-%{_libdir}/libode.so.1*
+%doc CHANGELOG.txt LICENSE*.TXT 
+%{_libdir}/libode.so.*
 
 %files double
 %defattr(-,root,root,-)
-%doc CHANGELOG.txt LICENSE*.TXT README.txt
-%{_libdir}/libode-double.so.1*
+%doc CHANGELOG.txt LICENSE*.TXT
+%{_libdir}/libode-double.so.*
 
 %files devel
 %defattr(-,root,root,-)
@@ -117,6 +119,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Tue Mar 24 2015 Liu Di <liudidi@gmail.com> - 0.13.1-1
+- 更新到 0.13.1
+
 * Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 0.11.1-8
 - 为 Magic 3.0 重建
 

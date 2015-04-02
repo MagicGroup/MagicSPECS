@@ -1,7 +1,8 @@
 Summary: A DSSSL implementation
+Summary(zh_CN.UTF-8): DSSSL 实现
 Name: openjade
 Version: 1.3.2
-Release: 41%{?dist}
+Release: 42%{?dist}
 Requires: sgml-common
 URL: http://openjade.sourceforge.net/
 Source: http://download.sourceforge.net/openjade/openjade-%{version}.tar.gz
@@ -35,6 +36,8 @@ command-line application and a set of components. The DSSSL engine
 inputs an SGML or XML document and can output a variety of formats:
 XML, RTF, TeX, MIF (FrameMaker), SGML, or XML.
 
+%description -l zh_CN.UTF-8
+DSSSL 的一个实现。
 
 %prep
 %setup -q
@@ -73,6 +76,7 @@ ln -s %{name}-%{version}-%{release}.soc %{name}.soc
 cd -
 
 rm -f $RPM_BUILD_ROOT%{_libdir}/*.so $RPM_BUILD_ROOT%{_libdir}/*.la
+magic_rpm_clean.sh
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -100,6 +104,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/sgml/%{name}-%{version}
 
 %changelog
+* Fri Mar 27 2015 Liu Di <liudidi@gmail.com> - 1.3.2-42
+- 为 Magic 3.0 重建
+
 * Fri Aug 10 2012 Ondrej Vasik <ovasik@redhat.com> 1.3.2-41
 - avoid build failure with using Getopt::Std;
 

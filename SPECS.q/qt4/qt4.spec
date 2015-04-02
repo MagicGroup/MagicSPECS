@@ -1,608 +1,1199 @@
-# Fedora Review: http://bugzilla.redhat.com/188180
-
-# configure options
-# -no-pch disables precompiled headers, make ccache-friendly
-%define no_pch -no-pch
+#define pre_tag rc1
+#define pre -%{pre_tag}
 
 # See http://bugzilla.redhat.com/223663
-%define multilib_archs x86_64 %{ix86} ppc64 ppc s390x s390 sparc64 sparcv9 ppc64le
-%define multilib_basearchs x86_64 ppc64 s390x sparc64 ppc64le
+%define multilib_archs x86_64 %{ix86} ppc64 ppc s390x s390 sparc64 sparcv9 mips64el mipsel
+%define multilib_basearchs x86_64 ppc64 s390x sparc64 mips64el
 
-%if 0%{?fedora} > 16 || 0%{?rhel} > 6
-# use external qt_settings pkg
-%define qt_settings 1
-%endif
+%define real_version 4.8.6
+%define release_number 1
 
-%if 0%{?fedora} > 19 || 0%{?rhel} > 6
-%global system_clucene 1
-%endif
+# switches: whether to build it or not
+%define with_phonon 1
+# 已经单列包
+%define with_webkit 1
+%define with_dbus_linked 1
+%define with_gtkstyle 1
 
-%global rpm_macros_dir %(d=%{_rpmconfigdir}/macros.d; [ -d $d ] || d=%{_sysconfdir}/rpm; echo $d)
+%define with_mysql 1
+%define with_postgresql 1
+%define with_odbc 1
+%define with_tds 1
+%define with_firebird 1
 
-# trim changelog included in binary rpms
-%global _changelog_trimtime %(date +%s -d "1 year ago")
+# switches: whether to ship it or not
+%define ship_phonon_pkg 1
+%define ship_webkit_pkg 1
 
-# support qtchooser
-%define qtchooser 1
-%if 0%{?qtchooser}
-%define priority 20
-%ifarch %{multilib_basearchs}
-%define priority 25
-%endif
-%endif
+# Let's hope this is just a temporary glitch...
+%define styles_are_gone 1
+%define type x11
 
-Summary: Qt toolkit
-Name:    qt4
-Epoch:   1
-Version: 4.8.6
-Release: 26%{?dist}
-
-# See LGPL_EXCEPTIONS.txt, LICENSE.GPL3, respectively, for exception details
-License: (LGPLv2 with exceptions or GPLv3 with exceptions) and ASL 2.0 and BSD and FTL and MIT
-Group: System Environment/Libraries
-Url:     http://qt-project.org/
-%if 0%{?pre:1}
-Source0: http://download.qt-project.org/development_releases/qt/4.8/%{version}-%{pre}/qt-everywhere-opensource-src-%{version}-%{pre}.tar.gz
+%if "%type" == "x11"
+Name: qt4
+%define _qtdir %_libdir/qt4
 %else
-Source0: http://download.qt-project.org/official_releases/qt/4.8/%{version}/qt-everywhere-opensource-src-%{version}.tar.gz
+Name: qt4-%type
+%define _qtdir %_libdir/qt4-%type
 %endif
-BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+%if "%type" == "embedded"
+PLUGINS="$PLUGINS -qt-decoration-default"
+for decoration in `ls src/plugins/decorations |grep -v .pro |grep -v default`; do
+	PLUGINS="$PLUGINS -plugin-decoration-$decoration"
+done
+for gfx in `ls src/plugins/gfxdrivers |grep -v .pro`; do
+	PLUGINS="$PLUGINS -plugin-gfx-$gfx"
+done
+%endif
 
-Obsoletes: qt4 < %{version}-%{release}
-Provides: qt4 = %{version}-%{release}
-%{?_isa:Provides: qt4%{?_isa} = %{version}-%{release}}
 
-# default Qt config file
-Source4: Trolltech.conf
+Version: %{real_version}
+Release: 2%{?dist}
+%define ver %version
 
+Source0: http://releases.qt-project.org/qt4/source/qt-everywhere-opensource-src-%{version}.tar.gz
+#Source0: http://get.qt.nokia.com/qt/source/qt-everywhere-opensource-src-%{version}.tar.gz
+#Source1: Trolltech.conf
+#Source2: Designer.conf
+
+# multilib hacks
 # header file to workaround multilib issue
 Source5: qconfig-multilib.h
-
 # set default QMAKE_CFLAGS_RELEASE
-Patch2: qt-everywhere-opensource-src-4.8.0-tp-multilib-optflags.patch
-
+Patch2: qt-x11-opensource-src-4.2.2-multilib-optflags.patch
 # get rid of timestamp which causes multilib problem
-Patch4: qt-everywhere-opensource-src-4.8.5-uic_multilib.patch
+Patch4: qt-everywhere-opensource-src-4.7.0-beta1-uic_multilib.patch
 
-# reduce debuginfo in qtwebkit (webcore)
-Patch5: qt-everywhere-opensource-src-4.8.5-webcore_debuginfo.patch
-
-# cups16 printer discovery
-Patch6: qt-cupsEnumDests.patch
-
-# prefer adwaita over gtk+ on DE_GNOME
-# https://bugzilla.redhat.com/show_bug.cgi?id=1192453
-Patch10: qt-prefer_adwaita_on_gnome.patch
-
-# enable ft lcdfilter
 Patch15: qt-x11-opensource-src-4.5.1-enable_ft_lcdfilter.patch
+# use system ca-bundle certs, http://bugzilla.redhat.com/521911
+#Patch17: qt-x11-opensource-src-4.5.3-system_ca_certificates.patch
+#Requires: ca-certificates
+# phonon gstreamer services
+Patch19: qt-everywhere-opensource-src-4.7.0-beta2-phonon_servicesfile.patch
 
 # may be upstreamable, not sure yet
 # workaround for gdal/grass crashers wrt glib_eventloop null deref's
 Patch23: qt-everywhere-opensource-src-4.6.3-glib_eventloop_nullcheck.patch
 
-# hack out largely useless (to users) warnings about qdbusconnection
-# (often in kde apps), keep an eye on https://git.reviewboard.kde.org/r/103699/
-Patch25: qt-everywhere-opensource-src-4.8.3-qdbusconnection_no_debug.patch
-
-# lrelease-qt4 tries to run qmake not qmake-qt4 (http://bugzilla.redhat.com/820767)
-Patch26: qt-everywhere-opensource-src-4.8.1-linguist_qmake-qt4.patch
-
-# enable debuginfo in libQt3Support
-Patch27: qt-everywhere-opensource-src-4.8.1-qt3support_debuginfo.patch
-
-# kde4/multilib QT_PLUGIN_PATH
-Patch28: qt-everywhere-opensource-src-4.8.5-qt_plugin_path.patch
-
 ## upstreamable bits
-# add support for pkgconfig's Requires.private to qmake
-Patch50: qt-everywhere-opensource-src-4.8.4-qmake_pkgconfig_requires_private.patch
-
-# backport part of 'Fix detection of GCC5'
-# https://qt.gitorious.org/qt/qtbase/commit/9fb4c2c412621b63c06dbbd899f44041b2e126c2
-Patch51: qt-fix_detection_of_gcc5.patch
-
-# F22's gcc5 uses gcc4 ABI, so ensure QT_BUILD_KEY remains the same too
-# TODO: ask upstream how to handle gcc5 moving forward, use g++-5 or not?
-Patch52: qt-gcc5_compat_qt_build_key.patch
-
 # fix invalid inline assembly in qatomic_{i386,x86_64}.h (de)ref implementations
 Patch53: qt-x11-opensource-src-4.5.0-fix-qatomic-inline-asm.patch
-
 # fix invalid assumptions about mysql_config --libs
 # http://bugzilla.redhat.com/440673
-Patch54: qt-everywhere-opensource-src-4.8.5-mysql_config.patch
-
+Patch54: qt-everywhere-opensource-src-4.7.0-beta2-mysql_config.patch
 # http://bugs.kde.org/show_bug.cgi?id=180051#c22
 Patch55: qt-everywhere-opensource-src-4.6.2-cups.patch
+# fix type cast issue on s390x
+Patch56: qt-everywhere-opensource-src-4.7.0-beta1-s390x.patch
+# qtwebkit to search nspluginwrapper paths too
+Patch58: qt-everywhere-opensource-src-4.7.0-beta1-qtwebkit_pluginpath.patch
 
-# Fails to create debug build of Qt projects on mingw (rhbz#653674)
-Patch64: qt-everywhere-opensource-src-4.8.5-QTBUG-14467.patch
+# indic incorrect rendering
+Patch59: qt-4.6.3-bn-rendering-bz562049.patch
+Patch60: qt-4.6.3-bn-rendering-bz562058.patch
+Patch61: qt-4.6.3-indic-rendering-bz631732.patch
+Patch62: qt-4.6.3-indic-rendering-bz636399.patch
 
-# fix QTreeView crash triggered by KPackageKit (patch by David Faure)
-Patch65: qt-everywhere-opensource-src-4.8.0-tp-qtreeview-kpackagekit-crash.patch
-
-# fix the outdated standalone copy of JavaScriptCore
-Patch67: qt-everywhere-opensource-src-4.8.6-s390.patch
-
-# https://bugs.webkit.org/show_bug.cgi?id=63941
-# -Wall + -Werror = fail
-Patch68: qt-everywhere-opensource-src-4.8.3-no_Werror.patch
-
-# revert qlist.h commit that seems to induce crashes in qDeleteAll<QList (QTBUG-22037)
-Patch69: qt-everywhere-opensource-src-4.8.0-QTBUG-22037.patch
-
-# Buttons in Qt applications not clickable when run under gnome-shell (#742658, QTBUG-21900)
-Patch71:  qt-everywhere-opensource-src-4.8.5-QTBUG-21900.patch
-
-# workaround
-# sql/drivers/tds/qsql_tds.cpp:341:49: warning: dereferencing type-punned pointer will break strict-aliasing rules [-Wstrict-aliasing]
-Patch74: qt-everywhere-opensource-src-4.8.5-tds_no_strict_aliasing.patch
-
-# add missing method for QBasicAtomicPointer on s390(x)
-Patch76: qt-everywhere-opensource-src-4.8.0-s390-atomic.patch
-
-# don't spam in release/no_debug mode if libicu is not present at runtime
-Patch77: qt-everywhere-opensource-src-4.8.3-icu_no_debug.patch
-
-# https://bugzilla.redhat.com/show_bug.cgi?id=810500
-Patch81: qt-everywhere-opensource-src-4.8.2--assistant-crash.patch
-
-# https://bugzilla.redhat.com/show_bug.cgi?id=694385
-# https://bugs.kde.org/show_bug.cgi?id=249217
-# https://bugreports.qt-project.org/browse/QTBUG-4862
-# QDir::homePath() should account for an empty HOME environment variable on X11
-Patch82: qt-everywhere-opensource-src-4.8.5-QTBUG-4862.patch
-
-# poll support
-Patch83: qt-4.8-poll.patch
-
-# fix QTBUG-35459 (too low entityCharacterLimit=1024 for CVE-2013-4549)
-Patch84: qt-everywhere-opensource-src-4.8.5-QTBUG-35459.patch
-
-# systemtrayicon plugin support (for appindicators)
-Patch86: qt-everywhere-opensource-src-4.8.6-systemtrayicon.patch
-
-# fixes for LibreOffice from the upstream Qt bug tracker (#1105422):
-Patch87: qt-everywhere-opensource-src-4.8.6-QTBUG-37380.patch
-Patch88: qt-everywhere-opensource-src-4.8.6-QTBUG-34614.patch
-Patch89: qt-everywhere-opensource-src-4.8.6-QTBUG-38585.patch
-
-# build against the system clucene09-core
-Patch90: qt-everywhere-opensource-src-4.8.6-system-clucene.patch
+Patch80: qt-everywhere-opensource-src-4.8.0-ld-gold.patch
 
 # upstream patches
+# upstream patches
+# http://codereview.qt-project.org/#change,22006
+Patch100: qt-everywhere-opensource-src-4.8.1-qtgahandle.patch
 # backported from Qt5 (essentially)
 # http://bugzilla.redhat.com/702493
 # https://bugreports.qt-project.org/browse/QTBUG-5545
 Patch102: qt-everywhere-opensource-src-4.8.5-qgtkstyle_disable_gtk_theme_check.patch
+# revert fix for QTBUG-15319, fixes regression QTBUG-32908
+# http://bugzilla.redhat.com/968367
+# https://bugreports.qt-project.org/browse/QTBUG-32908
+Patch103: QTBUG-15319-fix-shortcuts-with-secondary-Xkb-layout.patch
 # workaround for MOC issues with Boost headers (#756395)
 # https://bugreports.qt-project.org/browse/QTBUG-22829
-Patch113: qt-everywhere-opensource-src-4.8.6-QTBUG-22829.patch
+Patch113: qt-everywhere-opensource-src-4.8.5-QTBUG-22829.patch
+# https://codereview.qt-project.org/#change,55874
+# REVERT, causes regressions http://bugzilla.redhat.com/968794
+#Patch155: qt-everywhere-opensource-src-4.8-QTBUG-27809.patch
 
-# aarch64 support, https://bugreports.qt-project.org/browse/QTBUG-35442
-Patch180: qt-aarch64.patch
+## qt-copy patches
+# magic patches
+Patch1100: qt-4.6.0-use-ft_glyph_embolden-to-fake-bold.patch
+Patch1101: qt-4.5.0rc1-add-missing-bold-style.patch
+Patch1102: qt-4.5.0rc1-faster-native-graphicssystem.patch
+# qt 标签中文竖排支持
+Patch1103: qt-4.7.1-qtabbartablabel-vertical_cjk_label.patch
+# qt webkit 默认编码设为 gb18030
+Patch1104: qt-4.7.0-qwebsettings-gb18030-default.patch
+# qt webkit html/xml gb2312/gbk 认作为 gb18030
+Patch1105: qt-4.8.0-webkit-htmlxml-gb-gb18030.patch
+# qt webkit 在 2.31.0 以上版本的 glib 上编译的补丁
+Patch1106: qt-4.8.0-webkit-newglib.patch
 
-## upstream git
-Patch210: 0010-QDbus-Fix-a-b-comparison.patch
-Patch223: 0023-Don-t-crash-on-broken-GIF-images.patch
-Patch225: 0025-Fix-visual-index-lookup-in-QTreeViewPrivate-adjustVi.patch
-Patch230: 0030-Memory-and-file-descriptor-leak-in-QFontCache.patch
-Patch234: 0034-Fix-raster-graphics-on-X11-RGB30.patch
-Patch247: 0047-QSslCertificate-blacklist-NIC-certificates-from-Indi.patch
-Patch265: 0065-Fix-QPainter-drawPolyline-painting-errors-with-cosme.patch
-Patch266: 0066-Allow-Qt4-to-also-build-in-ppc64-el-le.patch
-Patch267: 0067-Fix-AArch64-arm64-detection.patch
-Patch272: 0072-Fix-font-cache-check-in-QFontEngineFT-recalcAdvances.patch
 
-## security patches
-# CVE-2015-0295
-# http://lists.qt-project.org/pipermail/announce/2015-February/000059.html
-Patch337: 0137-Fix-a-division-by-zero-when-processing-malformed-BMP.patch
+# kde-qt git patches
+#Patch202: 0002-This-patch-makes-override-redirect-windows-popup-men.patch
+#Patch204: 0004-This-patch-adds-support-for-using-isystem-to-allow-p.patch
+#Patch205: 0005-When-tabs-are-inserted-or-removed-in-a-QTabBar.patch
+#Patch212: 0012-Add-context-to-tr-calls-in-QShortcut.patch
 
-# desktop files
+# from opensuse project
+Patch1001: use-freetype-default.diff
+
+## qt-copy patches
+Patch10118: 0118-qtcopy-define.diff
+Patch10180: 0180-window-role.diff
+Patch10195: 0195-compositing-properties.diff
+Patch10209: 0209-prevent-qt-mixing.diff
+Patch10216: 0216-allow-isystem-for-headers.diff
+Patch10225: 0225-invalidate-tabbar-geometry-on-refresh.diff
+Patch10289: 0289-context-for-shortcuts-tr.diff
+
+Patch20000: qt4-4.8.6-atomics_not_const.diff
+# compile patches
+
+
+Source10: qt4-wrapper.sh
+Source11: qt4.sh
+Source12: qt4.csh
+
 Source20: assistant.desktop
 Source21: designer.desktop
 Source22: linguist.desktop
-Source23: qdbusviewer.desktop
-Source24: qtdemo.desktop
-Source25: qtconfig.desktop
+Source23: qtdemo.desktop
+Source24: qtconfig.desktop
 
 # upstream qt4-logo, http://trolltech.com/images/products/qt/qt4-logo
 Source30: hi128-app-qt4-logo.png
 Source31: hi48-app-qt4-logo.png
 
-## BOOTSTRAPPING, undef docs, demos, examples, phonon, webkit
-
-## optional plugin bits
-# set to -no-sql-<driver> to disable
-# set to -qt-sql-<driver> to enable *in* qt library
-%define mysql -plugin-sql-mysql
-%define odbc -plugin-sql-odbc
-%define psql -plugin-sql-psql
-%define sqlite -plugin-sql-sqlite
-%if 0%{?fedora} < 21 && 0%{?rhel} < 8
-%define phonon -phonon
-%define phonon_backend -phonon-backend
-%endif
-%define dbus -dbus-linked
-%define graphicssystem -graphicssystem raster
-%define gtkstyle -gtkstyle
-%if 0%{?fedora}
-# FIXME/TODO: use system webkit for assistant, examples/webkit, demos/browser
-%define webkit -webkit
-%define ibase -plugin-sql-ibase
-%define tds -plugin-sql-tds
-%endif
-%if 0%{?rhel}
-%define no_javascript_jit -no-javascript-jit
-%define ibase -no-sql-ibase
-%define tds -no-sql-tds
-%endif
-
-# macros, be mindful to keep sync'd with macros.qt4
-Source1: macros.qt4
-%define _qt4 %{name}
-%define _qt4_prefix %{_libdir}/qt4
-%define _qt4_bindir %{_qt4_prefix}/bin
-# _qt4_datadir is not multilib clean, and hacks to workaround that breaks stuff.
-#define _qt4_datadir %{_datadir}/qt4
-%define _qt4_datadir %{_qt4_prefix}
-%define _qt4_demosdir %{_qt4_prefix}/demos
-%define _qt4_docdir %{_docdir}/qt4
-%define _qt4_examplesdir %{_qt4_prefix}/examples
-%define _qt4_headerdir %{_includedir} 
-%define _qt4_importdir %{_qt4_prefix}/imports 
-%define _qt4_libdir %{_libdir}
-%define _qt4_plugindir %{_qt4_prefix}/plugins
-%define _qt4_sysconfdir %{_sysconfdir}
-%define _qt4_translationdir %{_datadir}/qt4/translations
-
 BuildRequires: cups-devel
 BuildRequires: desktop-file-utils
 BuildRequires: findutils
+BuildRequires: fontconfig-devel
+BuildRequires: freetype-devel
 BuildRequires: libjpeg-devel
 BuildRequires: libmng-devel
+BuildRequires: libpng-devel
 BuildRequires: libtiff-devel
-BuildRequires: pkgconfig
-BuildRequires: pkgconfig(alsa) 
-BuildRequires: pkgconfig(dbus-1)
-BuildRequires: pkgconfig(fontconfig)
-BuildRequires: pkgconfig(glib-2.0)
-%if 0%{?fedora} || 0%{?rhel} > 6
-BuildRequires: pkgconfig(icu-i18n)
-%else
-BuildRequires: libicu-devel
+BuildRequires: libungif-devel
+BuildRequires: freetype-devel
+BuildRequires: zlib-devel
+BuildRequires: glib2-devel
+BuildRequires: openssl-devel
+%if %with_gtkstyle
+BuildRequires: gtk2-devel
 %endif
-BuildRequires: pkgconfig(NetworkManager)
-BuildRequires: pkgconfig(openssl)
-BuildRequires: pkgconfig(libpng)
-BuildRequires: pkgconfig(libpulse)
-BuildRequires: pkgconfig(xtst) 
-BuildRequires: pkgconfig(zlib)
-BuildRequires: rsync
-
-%define gl_deps pkgconfig(gl) pkgconfig(glu)
-%define x_deps pkgconfig(ice) pkgconfig(sm) pkgconfig(xcursor) pkgconfig(xext) pkgconfig(xfixes) pkgconfig(xft) pkgconfig(xi) pkgconfig(xinerama) pkgconfig(xrandr) pkgconfig(xrender) pkgconfig(xt) pkgconfig(xv) pkgconfig(x11) pkgconfig(xproto)
-BuildRequires: %{gl_deps}
-BuildRequires: %{x_deps}
-
-%if 0%{?system_clucene}
-BuildRequires: clucene09-core-devel >= 0.9.21b-12
+%if %with_phonon
+BuildRequires: gstreamer-devel >= 0.10.12
+BuildRequires: gstreamer-plugins-base-devel
 %endif
-
-%if "%{?ibase}" != "-no-sql-ibase"
+%if %with_mysql
+BuildRequires: mysql-devel
+%endif
+%if %with_postgresql
+BuildRequires: postgresql-devel
+%endif
+%if %with_odbc
+BuildRequires: unixODBC-devel
+%endif
+%if %with_tds
+BuildRequires: freetds-devel
+%endif
+%if %with_firebird
 BuildRequires: firebird-devel
 %endif
 
-%if "%{?mysql}" != "-no-sql-mysql"
-BuildRequires: mysql-devel >= 4.0
-%endif
+Summary: Newer version of the Qt toolkit
+Summary(zh_CN.UTF-8): 新版 Qt 开发工具集
+URL: http://www.trolltech.com/qt/
+License: LGPLv2 with exceptions or GPLv3 with exceptions
+Group: System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
+BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-buildroot-%(%{__id_u} -n)
+Requires: %name-core = %version-%release
+Requires: %name-network = %version-%release
+Requires: %name-xml = %version-%release
+Requires: %name-gui = %version-%release
+Requires: %name-compat = %version-%release
+Requires: %name-opengl = %version-%release
+Requires: %name-sql = %version-%release
+Requires: %name-jpeg = %version-%release
+Requires: %name-gif = %version-%release
+Requires: %name-svg = %version-%release
+Requires: %name-mng = %version-%release
+Requires: %name-script = %version-%release
+Requires: %name-dbus = %version-%release
+Obsoletes: %name-png
+Provides: %name-png = %version-%release
 
-%if "%{?phonon_backend}" == "-phonon-backend"
-BuildRequires: pkgconfig(gstreamer-0.10) 
-BuildRequires: pkgconfig(gstreamer-plugins-base-0.10) 
-%endif
+%description
+This is a newer version of the Qt toolkit than the Qt 3.x.x version
+used by most applications at this time.
 
-%if "%{?gtkstyle}" == "-gtkstyle"
-BuildRequires: pkgconfig(gtk+-2.0) 
-%endif
+It is recommended to use this for the development of new applications.
 
-%if "%{?psql}" != "-no-sql-psql"
-BuildRequires: postgresql-devel
-%endif
-
-%if "%{?odbc}" != "-no-sql-odbc"
-BuildRequires: unixODBC-devel
-%endif
-
-%if "%{?sqlite}" != "-no-sql-sqlite"
-%define _system_sqlite -system-sqlite
-BuildRequires: pkgconfig(sqlite3) 
-%endif
-
-Provides:  qt4-sqlite = %{version}-%{release}
-%{?_isa:Provides: qt4-sqlite%{?_isa} = %{version}-%{release}}
-Obsoletes: qt-sqlite < 1:4.7.1-16
-Provides:  qt-sqlite = %{?epoch:%{epoch}:}%{version}-%{release} 
-%{?_isa:Provides: qt-sqlite%{?_isa} = %{?epoch:%{epoch}:}%{version}-%{release}}
-
-%if "%{?tds}" != "-no-sql-tds"
-BuildRequires: freetds-devel
-%endif
-
-Obsoletes: qgtkstyle < 0.1
-Provides:  qgtkstyle = 0.1-1
-Requires: ca-certificates
-%if 0%{?qt_settings}
-Requires: qt-settings
-%endif
-%if 0%{?qtchooser}
-Requires(post): %{_sbindir}/update-alternatives
-Requires(postun): %{_sbindir}/update-alternatives
-%endif
-
-%description 
-Qt is a software toolkit for developing applications.
-
-This package contains base tools, like string, xml, and network
-handling.
-
-%package assistant
-Summary: Documentation browser for Qt 4
-Group: Documentation
-Requires: %{name}-sqlite%{?_isa} = %{?epoch:%{epoch}:}%{version}-%{release}
-Provides: qt4-assistant = %{version}-%{release}
-Requires: %{name}-x11%{?_isa} = %{?epoch:%{epoch}:}%{version}-%{release}
-%description assistant
-%{summary}.
-
-%package config
-Summary: Graphical configuration tool for programs using Qt 4 
-Group: User Interface/Desktops
-# -config introduced in 4.7.1-10 , for upgrade path
-# seems to tickle a pk bug, https://bugzilla.redhat.com/674326
-#Obsoletes: %{name}-x11 < 1:4.7.1-10
-Obsoletes: qt4-config < 4.5.0
-Provides:  qt4-config = %{version}-%{release}
-Requires: %{name}-x11%{?_isa} = %{?epoch:%{epoch}:}%{version}-%{release}
-%description config 
-%{summary}.
-
-%define demos 1
-%package demos
-Summary: Demonstration applications for %{name}
-Group:   Documentation
-Requires: %{name} = %{?epoch:%{epoch}:}%{version}-%{release}
-Requires: %{name}-doc
-%description demos
-%{summary}.
-
-%define docs 1
-%package doc
-Summary: API documentation for %{name}
-Group: Documentation
-Requires: %{name} = %{?epoch:%{epoch}:}%{version}-%{release}
-Requires: %{name}-assistant
-Obsoletes: qt4-doc < %{version}-%{release}
-Provides:  qt4-doc = %{version}-%{release}
-# help workaround yum bug http://bugzilla.redhat.com/502401
-Obsoletes: qt-doc < 1:4.5.1-4
-BuildArch: noarch
-%description doc
-%{summary}.  Includes:
-Qt Assistant
-
-%package designer-plugin-webkit
-Summary: Qt designer plugin for WebKit
-Group: Development/Libraries
-Requires: %{name}-x11%{?_isa} = %{?epoch:%{epoch}:}%{version}-%{release}
-%description designer-plugin-webkit
-%{summary}.
+%description -l zh_CN.UTF-8
+这是新版的 Qt 开发工具集。
 
 %package devel
-Summary: Development files for the Qt toolkit
+Summary: Development files for %name
+Summary(zh_CN.UTF-8): %name 的开发文件
 Group: Development/Libraries
-Requires: %{name}%{?_isa} = %{?epoch:%{epoch}:}%{version}-%{release}
-Requires: %{name}-x11%{?_isa}
-Requires: %{name}-sqlite%{?_isa} = %{?epoch:%{epoch}:}%{version}-%{release}
-Requires: %{gl_deps}
-Requires: %{x_deps}
-Requires: pkgconfig
-%if 0%{?phonon:1}
-Provides: qt4-phonon-devel = %{version}-%{release}
-%endif
-Obsoletes: qt4-designer < %{version}-%{release}
-Provides:  qt4-designer = %{version}-%{release}
-# as long as libQtUiTools.a is included
-Provides:  %{name}-static = %{version}-%{release}
-Obsoletes: qt4-devel < %{version}-%{release}
-Provides:  qt4-devel = %{version}-%{release}
-%{?_isa:Provides: qt4-devel%{?_isa} = %{version}-%{release}}
-Provides:  qt4-static = %{version}-%{release}
+Group(zh_CN.UTF-8): 开发/库
+Requires: %name = %version-%release
+Requires: %name-core-devel = %version-%release
+Requires: %name-network-devel = %version-%release
+Requires: %name-xml-devel = %version-%release
+Requires: %name-gui-devel = %version-%release
+Requires: %name-compat-devel = %version-%release
+Requires: %name-opengl-devel = %version-%release
+Requires: %name-sql-devel = %version-%release
+Requires: %name-svg-devel = %version-%release
+Requires: %name-script-devel = %version-%release
+Requires: %name-dbus-devel = %version-%release
+Requires: qmake = %version-%release
 
 %description devel
-This package contains the files necessary to develop
-applications using the Qt toolkit.  Includes:
-Qt Linguist
+Development files (Headers etc.) for %name.
 
-# make a devel private subpkg or not?
-%define private 1
-%package devel-private
-Summary: Private headers for Qt toolkit 
+%description devel -l zh_CN.UTF-8
+%name 的开发文件(头文件等)。
+
+%package -n qmake
+Summary: Makefile generator for Qt based applications
+Summary(zh_CN.UTF-8): 基于 Qt 应用程序的 Makefile 生成器
+Group: Development/Tools
+Group(zh_CN.UTF-8): 开发/工具
+Provides: %name-qmake = %version-%release
+
+%description -n qmake
+Makefile generator for Qt based applications.
+
+%description -n qmake -l zh_CN.UTF-8
+基于 Qt 应用程序的 Makefile 生成器。
+
+%package doc
+Summary: Document files for %name
+Summary(zh_CN.UTF-8): %name 的开发文档文件
+Group: Development/Document
+Group(zh_CN.UTF-8): 开发/文档
+
+%description doc
+Document files for %name.
+
+%description doc -l zh_CN.UTF-8
+%name 的开发文档文件。
+
+%package core
+Summary: The core of the %name library
+Summary(zh_CN.UTF-8): %name 库的核心
+Group: System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
+
+%description core
+Basic functionality of the Qt library.
+
+%description core -l zh_CN.UTF-8
+%name 库的基本核心功能。
+
+%package core-devel
+Summary: Development files for the core of the %name library
+Summary(zh_CN.UTF-8): %name 库的核心开发文件
+Requires: %name-core = %version-%release
 Group: Development/Libraries
-Provides: qt4-devel-private = %{version}-%{release}
-Requires: %{name}-devel = %{?epoch:%{epoch}:}%{version}-%{release}
-BuildArch: noarch
-%description devel-private
-%{summary}.
+Group(zh_CN.UTF-8): 开发/库
 
-%define examples 1
-%package examples
-Summary: Programming examples for %{name}
-Group: Documentation
-Requires: %{name}%{?_isa} = %{?epoch:%{epoch}:}%{version}-%{release}
-%description examples
-%{summary}.
+%description core-devel
+Development files for Qt basics.
 
-%define qvfb 1
-%package qvfb
-Summary: Virtual frame buffer for Qt for Embedded Linux
-Group: Applications/Emulators
-Requires: %{name}%{?_isa} = %{?epoch:%{epoch}:}%{version}-%{release}
-%description qvfb
-%{summary}.
+%description core-devel -l zh_CN.UTF-8
+%name 库的核心开发文件。
 
-%package ibase
-Summary: IBase driver for Qt's SQL classes
-Group:  System Environment/Libraries
-Requires: %{name}%{?_isa} = %{?epoch:%{epoch}:}%{version}-%{release}
-Provides:  qt4-ibase = %{version}-%{release}
-%{?_isa:Provides: qt4-ibase%{?_isa} = %{version}-%{release}}
-%description ibase
-%{summary}.
+%package network
+Summary: Network support for the %name library
+Summary(zh_CN.UTF-8): %name 库的网络支持
+Group: System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 
+%description network
+Network support for %name.
+
+%description network -l zh_CN.UTF-8
+%name 库的网络支持。
+
+%package network-devel
+Summary: Development files for %name network support
+Summary(zh_CN.UTF-8): %name 网络支持的开发文件
+Requires: %name-network = %version-%release
+Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
+
+%description network-devel
+Development files for %name network support.
+
+%description network-devel -l zh_CN.UTF-8
+%name 网络支持的开发文件。
+
+%package script
+Summary: Script support for the %name library
+Summary(zh_CN.UTF-8): %name 库的脚本支持
+Group: System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
+Obsoletes: %{name}-qtscript
+
+%description script
+Script support for %name.
+
+%description script -l zh_CN.UTF-8
+%name 库的脚本支持。
+
+%package script-devel
+Summary: Development files for %name script support
+Summary(zh_CN.UTF-8): %name 脚本支持的开发文件
+Requires: %name-script = %version-%release
+Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
+Obsoletes: %{name}-qtscript-devel
+
+%description script-devel
+Development files for %name script support.
+
+%description script-devel -l zh_CN.UTF-8
+%name 脚本支持的开发文件。
+
+%package scripttools
+Summary: Script tools support for the %name library
+Summary(zh_CN.UTF-8): %name 库的脚本工具支持
+Group: System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
+Obsoletes: %{name}-qtscripttools
+
+%description scripttools
+Script tools support for %name.
+
+%description scripttools -l zh_CN.UTF-8
+%name 库的脚本工具支持。
+
+%package scripttools-devel
+Summary: Development files for %name scripttools support
+Summary(zh_CN.UTF-8): %name 脚本工具支持的开发文件
+Requires: %name-scripttools = %version-%release
+Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
+Obsoletes: %{name}-qtscripttools-devel
+
+%description scripttools-devel
+Development files for %name scripttools support.
+
+%description scripttools-devel -l zh_CN.UTF-8
+%name 脚本工具支持的开发文件。
+
+%package xml
+Summary: XML support for the %name library
+Summary(zh_CN.UTF-8): %name 库的可扩展标记语言支持
+Group: System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
+
+%description xml
+XML parsing support for the %name library.
+
+%description xml -l zh_CN.UTF-8
+%name 库的可扩展标记语言解析支持。
+
+%package xml-devel
+Summary: Development files for %name XML support
+Summary(zh_CN.UTF-8): %name 可扩展标记语言支持的开发文件
+Requires: %name-xml = %version-%release
+Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
+
+%description xml-devel
+Development files for %name XML support.
+
+%description xml-devel -l zh_CN.UTF-8
+%name 可扩展标记语言支持的开发文件。
+
+%package declarative
+Summary: QML declarative support for the %name library
+Summary(zh_CN.UTF-8): %name 库的 QML 声明性语言支持
+Group: System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
+
+%description declarative
+QML declarative support for the %name library.
+
+%description declarative -l zh_CN.UTF-8
+%name 库的 QML 声明性语言支持。
+
+%package declarative-devel
+Summary: Development files for %name QML declarative support
+Summary(zh_CN.UTF-8): %name QML 声明性语言支持的开发文件
+Requires: %name-declarative = %version-%release
+Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
+
+%description declarative-devel
+Development files for %name QML declarative support.
+
+%description declarative-devel -l zh_CN.UTF-8
+%name QML 声明性语言支持的开发文件。
+
+%package gui
+Summary: GUI part of the %name library
+Summary(zh_CN.UTF-8): %name 库的图形用户界面部分
+Group: System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
+
+%description gui
+GUI support for the %name library.
+
+%description gui -l zh_CN.UTF-8
+%name 库的图形用户界面支持。
+
+%package gui-devel
+Summary: Development files for %name GUI support
+Summary(zh_CN.UTF-8): %name 图形用户界面支持的开发文件
+Requires: %name-gui = %version-%release
+Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
+
+%description gui-devel
+Development files for %name GUI support.
+
+%description gui-devel -l zh_CN.UTF-8
+%name 图形用户界面支持的开发文件。
+
+%package compat
+Summary: Qt 3.x compatibility support for %name
+Summary(zh_CN.UTF-8): %name 的 Qt 3.x 兼容支持
+Group: System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
+
+%description compat
+Qt 3.x compatibility support for %name.
+
+%description compat -l zh_CN.UTF-8
+%name 的 Qt 3.x 兼容支持。
+
+%package compat-devel
+Summary: Development files for %name Qt 3.x compatibility support
+Summary(zh_CN.UTF-8): %name Qt 3.x 兼容支持的开发文件
+Requires: %name-compat = %version-%release
+Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
+
+%description compat-devel
+Development files for %name Qt 3.x compatibility.
+
+%description compat-devel -l zh_CN.UTF-8
+%name Qt 3.x 兼容支持的开发文件。
+
+%package designer
+Summary: Graphical user interface designer
+Summary(zh_CN.UTF-8): 图形用户界面设计器
+Group: Development/Tools
+Group(zh_CN.UTF-8): 开发/工具
+
+%description designer
+A graphical user interface designer.
+
+%description designer -l zh_CN.UTF-8
+图形用户界面设计器。
+
+%package linguist
+Summary: Translation tool
+Summary(zh_CN.UTF-8): 翻译工具
+Group: Development/Tools
+Group(zh_CN.UTF-8): 开发/工具
+
+%description linguist
+Application translation tool.
+
+%description linguist -l zh_CN.UTF-8
+应用程序翻译工具。
+
+%package opengl
+Summary: OpenGL (3D API) support for the %name library
+Summary(zh_CN.UTF-8): %name 库的 OpenGL (3D API) 支持
+Group: System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
+
+%description opengl
+OpenGL (3D API) support for %name.
+
+%description opengl -l zh_CN.UTF-8
+%name 库的 OpenGL (3D API) 支持。
+
+%package opengl-devel
+Summary: Development files for %name OpenGL (3D API) support
+Summary(zh_CN.UTF-8): %name OpenGL (3D API) 支持的开发文件
+Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
+
+%description opengl-devel
+Development files for %name OpenGL (3D) support.
+
+%description opengl-devel -l zh_CN.UTF-8
+%name OpenGL (3D API) 支持的开发文件。
+
+%package qtconfig
+Summary: %name configuration tool
+Summary(zh_CN.UTF-8): %name 配置工具
+Group: Development/Tools
+Group(zh_CN.UTF-8): 开发/工具
+
+%description qtconfig
+%name configuration tool.
+
+%description qtconfig -l zh_CN.UTF-8
+%name 配置工具。
+
+%package sql
+Summary: SQL (Database protocol) support for the %name library
+Summary(zh_CN.UTF-8): %name 库的结构化查询语言(数据库协议)支持
+Group: System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
+
+%description sql
+SQL database connectivity for %name.
+
+%description sql -l zh_CN.UTF-8
+%name 库的结构化查询语言(数据库协议)支持。
+
+%package sql-devel
+Summary: Development files for %name SQL (database protocol) support
+Summary(zh_CN.UTF-8): %name 结构化查询语言(数据库协议)支持的开发文件
+Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
+
+%description sql-devel
+Development files for %name SQL support.
+
+%description sql-devel -l zh_CN.UTF-8
+%name 结构化查询语言(数据库协议)支持的开发文件。
+
+%package assistant
+Summary: Qt development documentation viewer
+Summary(zh_CN.UTF-8): Qt 开发文档查看器
+Group: Development/Tools
+Group(zh_CN.UTF-8): 开发/工具
+# assisitant-devel not necessary any more
+Obsoletes: %{name}-assistant-devel
+
+%description assistant
+API documentation viewer for %name.
+
+%description assistant -l zh_CN.UTF-8
+Qt API 开发文档查看器。
+
+#%package assistant-devel
+#Summary: Development files for the Qt documentation viewer
+#Summary(zh_CN.UTF-8): Qt 文档查看器的开发文件
+#Group: Development/Libraries/C++/Documentation
+#Group(zh_CN.UTF-8): 开发/库/C++/文档
+#
+#%description assistant-devel
+#Development files for the Qt documentation viewer.
+#
+#Install this package if you wish to embed Qt Assistant into your own
+#applications.
+#
+#%description assistant-devel -l zh_CN.UTF-8
+#Qt 文档查看器的开发文件。可内嵌 Qt 助手到您自己的应用程序中。
+
+%package inputmethods
+Summary: Support for non-latin character input
+Summary(zh_CN.UTF-8): 非拉丁字符输入支持
+Group: System/Libraries
+Group(zh_CN.UTF-8): 系统/库
+Requires: %name-gui = %version-%release
+
+%description inputmethods
+Support for non-latin character input.
+
+%description inputmethods -l zh_CN.UTF-8
+非拉丁字符输入支持。
+
+%package chinese
+Summary: Chinese character coding support for %name
+Summary(zh_CN.UTF-8): %name 的中文字符编码支持
+Group: Internationalization/Chinese
+Group(zh_CN.UTF-8): 国际化/中文
+
+%description chinese
+Chinese character coding support for %name.
+
+%description chinese -l zh_CN.UTF-8
+%name 的中文字符编码支持。
+
+%package japanese
+Summary: Japanese character coding support for %name
+Summary(zh_CN.UTF-8): %name 的日文字符编码支持
+Group: Internationalization/Japanese
+Group(zh_CN.UTF-8): 国际化/日文
+
+%description japanese
+Japanese character coding support for %name.
+
+%description japanese -l zh_CN.UTF-8
+%name 的日文字符编码支持。
+
+%package korean
+Summary: Korean character coding support for %name
+Summary(zh_CN.UTF-8): %name 的韩文字符编码支持
+Group: Internationalization/Korean
+Group(zh_CN.UTF-8): 国际化/韩文
+
+%description korean
+Korean character coding support for %name.
+
+%description korean -l zh_CN.UTF-8
+%name 的韩文字符编码支持。
+
+%package taiwanese
+Summary: Taiwanese character coding support for %name
+Summary(zh_CN.UTF-8): %name 的台湾字字符编码支持
+Group: Internationalization/Taiwanese
+Group(zh_CN.UTF-8): 国际化/台湾字
+
+%description taiwanese
+Taiwanese character coding support for %name.
+
+%description taiwanese -l zh_CN.UTF-8
+%name 的台湾字字符编码支持。
+
+%package cjk
+Summary: CJK character coding support for %name
+Summary(zh_CN.UTF-8): %name 的中日韩字符编码支持
+Group: Internationalization/CJK
+Group(zh_CN.UTF-8): 国际化/中日韩
+Requires: %name = %version-%release
+Requires: %name-chinese = %version-%release
+Requires: %name-japanese = %version-%release
+Requires: %name-korean = %version-%release
+Requires: %name-taiwanese = %version-%release
+Requires: %name-inputmethods = %version-%release
+
+%description cjk
+CJK character coding support for %name.
+
+%description cjk -l zh_CN.UTF-8
+%name 的中日韩字符编码支持。
+
+%package jpeg
+Summary: JPEG image format support for %name
+Summary(zh_CN.UTF-8): %name 的 JPEG 图像格式支持
+Group: System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
+
+%description jpeg
+JPEG image format support for %name.
+
+%description jpeg -l zh_CN.UTF-8
+%name 的 JPEG 图像格式支持。
+
+%package gif
+Summary: GIF image format support for %name
+Summary(zh_CN.UTF-8): %name 的 GIF 图像格式支持
+Group: System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
+
+%description gif
+GIF image format support for %name.
+
+%description gif -l zh_CN.UTF-8
+%name 的 GIF 图像格式支持。
+
+%package tga
+Summary: TGA image format support for %name
+Summary(zh_CN.UTF-8): %name 的 TGA 图像格式支持
+Group: System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
+
+%description tga
+TGA image format support for %name.
+
+%description tga -l zh_CN.UTF-8
+%name 的 TGA 图像格式支持。
+
+%package ico
+Summary: ICO image format support for %name
+Summary(zh_CN.UTF-8): %name 的 ICO 图像格式支持
+Group: System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
+
+%description ico
+ICO image format support for %name.
+
+%description ico -l zh_CN.UTF-8
+%name 的 ICO 图像格式支持。
+
+%package mng
+Summary: MNG image format support for %name
+Summary(zh_CN.UTF-8): %name 的 MNG 图像格式支持
+Group: System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
+
+%description mng
+MNG image format support for %name.
+
+%description mng -l zh_CN.UTF-8
+%name 的 MNG 图像格式支持。
+
+%package svg
+Summary: SVG image format support for %name
+Summary(zh_CN.UTF-8): %name 的 SVG 图像格式支持
+Group: System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
+
+%description svg
+SVG image format support for %name.
+
+%description svg -l zh_CN.UTF-8
+%name 的 SVG 图像格式支持。
+
+%package svg-devel
+Summary: Development files for SVG image format support for %name
+Summary(zh_CN.UTF-8): %name 的 SVG 图像格式支持的开发文件
+Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
+
+%description svg-devel
+Development files for SVG image format support for %name.
+
+%description svg-devel -l zh_CN.UTF-8
+%name 的 SVG 图像格式支持的开发文件。
+
+%package test
+Summary: Qt unit test support
+Summary(zh_CN.UTF-8): Qt 单元测试支持
+Group: Development/Tools
+Group(zh_CN.UTF-8): 开发/工具
+Requires: %name = %version-%release
+
+%description test
+Qt unit test support.
+
+%description test -l zh_CN.UTF-8
+Qt 单元测试支持。
+
+%if %with_mysql
 %package mysql
-Summary: MySQL driver for Qt's SQL classes
+Summary: MySQL connectivity support for %name
+Summary(zh_CN.UTF-8): %name 的 MySQL 数据库通讯连接支持
+Requires: %name-sql = %version-%release
 Group: System Environment/Libraries
-Requires: %{name}%{?_isa} = %{?epoch:%{epoch}:}%{version}-%{release}
-Obsoletes: qt4-MySQL < %{version}-%{release}
-Provides:  qt4-MySQL = %{version}-%{release}
-Obsoletes: qt4-mysql < %{version}-%{release}
-Provides:  qt4-mysql = %{version}-%{release}
-%{?_isa:Provides: qt4-mysql%{?_isa} = %{version}-%{release}}
-%description mysql 
-%{summary}.
+Group(zh_CN.UTF-8): 系统环境/库
 
-%package odbc 
-Summary: ODBC driver for Qt's SQL classes
+%description mysql
+MySQL connectivity support for %name.
+
+%description mysql -l zh_CN.UTF-8
+%name 的 MySQL 数据库通讯连接支持。
+%endif
+
+%package sqlite
+Summary: SQLite connectivity support for %name
+Summary(zh_CN.UTF-8): %name 的 SQLite 数据库通讯连接支持
+Requires: %name-sql = %version-%release
 Group: System Environment/Libraries
-Requires: %{name}%{?_isa} = %{?epoch:%{epoch}:}%{version}-%{release}
-Obsoletes: qt4-ODBC < %{version}-%{release}
-Provides:  qt4-ODBC = %{version}-%{release}
-Obsoletes: qt4-odbc < %{version}-%{release}
-Provides:  qt4-odbc = %{version}-%{release}
-%{?_isa:Provides: qt4-odbc%{?_isa} = %{version}-%{release}}
-%description odbc 
-%{summary}.
+Group(zh_CN.UTF-8): 系统环境/库
 
-%package postgresql 
-Summary: PostgreSQL driver for Qt's SQL classes
-Group: System Environment/Libraries
-Requires: %{name}%{?_isa} = %{?epoch:%{epoch}:}%{version}-%{release}
-Obsoletes: qt4-PostgreSQL < %{version}-%{release}
-Provides:  qt4-PostgreSQL = %{version}-%{release}
-Obsoletes: qt4-postgresql < %{version}-%{release}
-Provides:  qt4-postgresql = %{version}-%{release}
-%{?_isa:Provides: qt4-postgresql%{?_isa} = %{version}-%{release}}
-%description postgresql 
-%{summary}.
+%description sqlite
+SQLite connectivity support for %name.
 
+%description sqlite -l zh_CN.UTF-8
+%name 的 SQLite 数据库通讯连接支持。
+
+%if %with_tds
 %package tds
-Summary: TDS driver for Qt's SQL classes
+Summary: TDS connectivity support for %name
+Summary(zh_CN.UTF-8): %name 的 TDS 数据库通讯连接支持
+Requires: %name-sql = %version-%release
 Group: System Environment/Libraries
-Requires: %{name}%{?_isa} = %{?epoch:%{epoch}:}%{version}-%{release}
-Provides: qt4-tds = %{version}-%{release}
-%{?_isa:Provides: qt4-tds%{?_isa} = %{version}-%{release}}
+Group(zh_CN.UTF-8): 系统环境/库
+
 %description tds
-%{summary}.
+TDS connectivity support for %name.
 
-%package x11
-Summary: Qt GUI-related libraries
+%description tds -l zh_CN.UTF-8
+%name 的 TDS 数据库通讯连接支持。
+%endif
+
+%if %with_odbc
+%package odbc
+Summary: ODBC connectivity support for %name
+Summary(zh_CN.UTF-8): %name 的 ODBC 数据库通讯连接支持
+Requires: %name-sql = %version-%release
 Group: System Environment/Libraries
-# include Obsoletes here to be safe(r) bootstrap-wise with phonon-4.5.0
-# that will Provides: it -- Rex
-Obsoletes: qt-designer-plugin-phonon < 1:4.7.2-6
-Requires: %{name}%{?_isa} = %{?epoch:%{epoch}:}%{version}-%{release}
-Obsoletes: qt4-x11 < %{version}-%{release}
-Provides:  qt4-x11 = %{version}-%{release}
-%{?_isa:Provides: qt4-x11%{?_isa} = %{version}-%{release}}
-%description x11
-Qt libraries used for drawing widgets and OpenGL items.
+Group(zh_CN.UTF-8): 系统环境/库
 
-%package qdbusviewer
-Summary: D-Bus debugger and viewer
-# When split out from qt4-x11
-Obsoletes: qt4-x11 < 1:4.8.5-2
-Requires: %{name}-x11%{?_isa} = %{?epoch:%{epoch}:}%{version}-%{release}
-%description qdbusviewer
-QDbusviewer can be used to inspect D-Bus objects of running programs
-and invoke methods on those objects.
+%description odbc
+ODBC connectivity support for %name.
 
+%description odbc -l zh_CN.UTF-8
+%name 的 ODBC 数据库通讯连接支持。
+%endif
+
+%if %with_postgresql
+%package postgresql
+Summary: PostgreSQL connectivity support for %name
+Summary(zh_CN.UTF-8): %name 的 PostgreSQL 数据库通讯连接支持
+Requires: %name-sql = %version-%release
+Group: System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
+
+%description postgresql
+PostgreSQL connectivity support for %name.
+
+%description postgresql -l zh_CN.UTF-8
+%name 的 PostgreSQL 数据库通讯连接支持。
+%endif
+
+%if %with_firebird
+%package firebird
+Summary: IBase connectivity support for %name
+Summary(zh_CN.UTF-8): %name 的 IBase 数据库通讯连接支持
+Requires: %name-sql = %version-%release
+Group: System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
+
+%description firebird
+IBase connectivity support for %name.
+
+%description firebird -l zh_CN.UTF-8
+%name 的 IBase 数据库通讯连接支持。
+%endif
+
+%package style-windows
+Summary: Qt theme emulating the look of Windows(tm) 9x/Me/NT4/2000
+Summary(zh_CN.UTF-8): Windows(tm) 9x/Me/NT4/2000 主题外观模拟
+Group: User Interface/Desktops
+Group(zh_CN.UTF-8): 用户界面/桌面
+Requires: %name-gui = %version-%release
+
+%description style-windows
+Qt theme emulating the look of Windows(tm) 9x/Me/NT4/2000.
+
+%description style-windows -l zh_CN.UTF-8
+Windows(tm) 9x/Me/NT4/2000 主题外观模拟。
+
+%package style-motif
+Summary: Qt theme emulating the look of Motif (traditional UNIX)
+Summary(zh_CN.UTF-8): Motif (传统 UNIX) 主题外观模拟
+Group: User Interface/Desktops
+Group(zh_CN.UTF-8): 用户界面/桌面
+Requires: %name-gui = %version-%release
+
+%description style-motif
+Qt theme emulating the look of Motif (traditional UNIX).
+
+%description style-motif -l zh_CN.UTF-8
+Motif (传统 UNIX) 主题外观模拟。
+
+%package style-cde
+Summary: Qt theme emulating the look of CDE (traditional UNIX)
+Summary(zh_CN.UTF-8): CDE (传统 UNIX) 主题外观模拟
+Group: User Interface/Desktops
+Group(zh_CN.UTF-8): 用户界面/桌面
+Requires: %name-gui = %version-%release
+
+%description style-cde
+Qt theme emulating the look of CDE (traditional UNIX).
+
+%description style-cde -l zh_CN.UTF-8
+CDE (传统 UNIX) 主题外观模拟。
+
+%package demos
+Summary: Demo programs for the Qt toolkit
+Summary(zh_CN.UTF-8): Qt 开发工具集的演示程序
+Group: User Interface/Desktops
+Group(zh_CN.UTF-8): 用户界面/桌面
+Requires: %name-gui = %version-%release
+Requires: %name-doc = %version-%release
+
+%description demos
+%summary.
+
+%description demos -l zh_CN.UTF-8
+Qt 开发工具集的演示程序。
+
+%package examples
+Summary: Example programs for the Qt toolkit
+Summary(zh_CN.UTF-8): Qt 开发工具集的示例程序
+Group: User Interface/Desktops
+Group(zh_CN.UTF-8): 用户界面/桌面
+Requires: %name-gui = %version-%release
+
+%description examples
+%summary.
+
+%description examples -l zh_CN.UTF-8
+Qt 开发工具集的示例程序。
+
+%package dbus
+Summary: DBus support for the %name library
+Summary(zh_CN.UTF-8): %name 库的进程通讯总线支持
+Group: System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
+Obsoletes: %{name}-qtdbus
+
+%description dbus
+DBus support for %name.
+
+%description dbus -l zh_CN.UTF-8
+%name 库的进程通讯总线支持。
+
+%package dbus-devel
+Summary: Development files for %name dbus support
+Summary(zh_CN.UTF-8): %name 进程通讯总线支持的开发文件
+Requires: %name-dbus = %version-%release
+Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
+Obsoletes: %{name}-qtdbus-devel
+
+%description dbus-devel
+Development files for %name dbus support.
+
+%description dbus-devel -l zh_CN.UTF-8
+%name 进程通讯总线支持的开发文件。
+
+%package clucene
+Summary: clucene support for the %name library
+Summary(zh_CN.UTF-8): %name 库的 clucene 支持
+Group: System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
+
+%description clucene
+clucene support for %name.
+
+%description clucene -l zh_CN.UTF-8
+%name 库的 clucene 支持。
+
+%package clucene-devel
+Summary: Development files for %name clucene support
+Summary(zh_CN.UTF-8): %name clucene 支持的开发文件
+Requires: %name-clucene = %version-%release
+Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
+
+%description clucene-devel
+Development files for %name clucene support.
+
+%description clucene-devel -l zh_CN.UTF-8
+%name clucene 支持的开发文件。
+
+%package xmlpatterns
+Summary: xmlpatterns support for the %name library
+Summary(zh_CN.UTF-8): %name 库的可扩展标记语言模式支持
+Group: System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
+
+%description xmlpatterns
+xmlpatterns support for %name.
+
+%description xmlpatterns -l zh_CN.UTF-8
+%name 库的可扩展标记语言模式支持。
+
+%package xmlpatterns-devel
+Summary: Development files for %name xmlpatterns support
+Summary(zh_CN.UTF-8): %name 可扩展标记语言模式支持的开发文件
+Requires: %name-xmlpatterns = %version-%release
+Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
+
+%description xmlpatterns-devel
+Development files for %name xmlpatterns support.
+
+%description xmlpatterns-devel -l zh_CN.UTF-8
+%name 可扩展标记语言模式支持的开发文件。
+
+%package multimedia
+Summary: multimedia support for the %name library
+Summary(zh_CN.UTF-8): %name 库的多媒体服务支持
+Group: System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
+
+%description multimedia
+multimedia support for %name.
+
+%description multimedia -l zh_CN.UTF-8
+%name 库的多媒体服务支持。
+
+%package multimedia-devel
+Summary: Development files for %name multimedia support
+Summary(zh_CN.UTF-8): %name 多媒体服务支持的开发文件
+Requires: %name-multimedia = %version-%release
+Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
+
+%description multimedia-devel
+Development files for %name multimedia support.
+
+%description multimedia-devel -l zh_CN.UTF-8
+%name 多媒体服务支持的开发文件。
+
+%package help
+Summary: help support for the %name library
+Summary(zh_CN.UTF-8): %name 库的帮助支持
+Group: System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
+
+%description help
+help support for %name.
+
+%description help -l zh_CN.UTF-8
+%name 库的帮助支持。
+
+%package help-devel
+Summary: Development files for %name help support
+Summary(zh_CN.UTF-8): %name 帮助支持的开发文件
+Requires: %name-help = %version-%release
+Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
+
+%description help-devel
+Development files for %name help support.
+
+%description help-devel -l zh_CN.UTF-8
+%name 帮助支持的开发文件。
+
+%if %with_phonon
+%package phonon
+Summary: Phonon support for %name library
+Summary(zh_CN.UTF-8): %name 库的通用多媒体后端支持
+Group: System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
+# FIXME
+#Conflicts: kdelibs4-devel < 4.1
+
+%description phonon
+%summary.
+
+%description phonon -l zh_CN.UTF-8
+%name 库的通用多媒体后端支持。
+
+%package phonon-gstreamer
+Summary: Phonon gstreamer backend
+Summary(zh_CN.UTF-8): Phonon gstreamer 后端
+Group: System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
+# FIXME
+#Conflicts: phonon-gstreamer
+
+%description phonon-gstreamer
+%summary.
+
+%description phonon-gstreamer -l zh_CN.UTF-8
+Phonon gstreamer 后端。
+
+%package phonon-devel
+Summary: Development files for %name phonon support
+Summary(zh_CN.UTF-8): %name 通用多媒体后端支持的开发文件
+Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
+Requires: %name-phonon = %version-%release
+# FIXME
+#Conflicts: kdelibs4-devel < 4.1
+
+%description phonon-devel
+%summary.
+
+%description phonon-devel -l zh_CN.UTF-8
+%name 通用多媒体后端支持的开发文件。
+%endif
+
+%if %with_webkit
+%package webkit
+Summary: WebKit support for %name library
+Summary(zh_CN.UTF-8): %name 库的 WebKit 网页渲染支持
+Group: System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
+# FIXME
+#Conflicts: WebKit-qt-devel
+
+%description webkit
+%summary.
+
+%description webkit -l zh_CN.UTF-8
+%name 库的 WebKit 网页渲染支持。
+
+%package webkit-devel
+Summary: Development files for %name WebKit support
+Summary(zh_CN.UTF-8): %name WebKit 网页渲染支持的开发文件
+Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
+# FIXME
+#Conflicts: WebKit-qt-devel
+Requires: %name-webkit = %version-%release
+
+%description webkit-devel
+%summary.
+
+%description webkit-devel -l zh_CN.UTF-8
+%name WebKit 网页渲染支持的开发文件。
+
+%endif
 
 %prep
-%setup -q -n qt-everywhere-opensource-src-%{version} 
 
-%patch2 -p1 -b .multilib-optflags
-# drop backup file(s), else they get installed too, http://bugzilla.redhat.com/639463
-rm -fv mkspecs/linux-g++*/qmake.conf.multilib-optflags
-%patch4 -p1 -b .uic_multilib
-%patch5 -p1 -b .webcore_debuginfo
-# ie, where cups-1.6+ is present
-%if 0%{?fedora} > 18
-#patch6 -p1 -b .cupsEnumDests
-%endif
-%patch10 -p0 -b .prefer_adwaita_on_gnome
+%setup -q -n qt-everywhere-opensource-src-%{version}%{?pre}
+
+#export QTDIR=%_qtdir
+#export QMAKE=`pwd`/qmake/qmake
+
+# multilib hacks
+# don't use -b on mkspec files, else they get installed too.
+# multilib hacks no longer required
+#%patch2 -p1
+#%patch4 -p1 -b .uic_multilib
+
 %patch15 -p1 -b .enable_ft_lcdfilter
+#%patch17 -p1 -b .system_ca_certificates
+%patch19 -p1 -b .phonon_servicesfile
 %patch23 -p1 -b .glib_eventloop_nullcheck
-%patch25 -p1 -b .qdbusconnection_no_debug
-%patch26 -p1 -b .linguist_qtmake-qt4
-%patch27 -p1 -b .qt3support_debuginfo
-%patch28 -p1 -b .qt_plugin_path
-%patch50 -p1 -b .qmake_pkgconfig_requires_private
-%patch51 -p1 -b .fix_detection_of_gcc5
-%patch52 -p1 -b .gcc5_compat_qt_build_key
-## TODO: still worth carrying?  if so, upstream it.
+
 %patch53 -p1 -b .qatomic-inline-asm
-## TODO: upstream me
 %patch54 -p1 -b .mysql_config
 %patch55 -p1 -b .cups-1
-%patch64 -p1 -b .QTBUG-14467
-%patch65 -p1 -b .qtreeview-kpackagekit-crash
-%patch67 -p1 -b .s390
-%patch68 -p1 -b .no_Werror
-%patch69 -p1 -b .QTBUG-22037
-%patch71 -p1 -b .QTBUG-21900
-%patch74 -p1 -b .tds_no_strict_aliasing
-%patch76 -p1 -b .s390-atomic
-%patch77 -p1 -b .icu_no_debug
-%patch81 -p1 -b .assistant-crash
-%patch82 -p1 -b .QTBUG-4862
-%patch83 -p1 -b .poll
-%patch87 -p1 -b .QTBUG-37380
-%patch88 -p0 -b .QTBUG-34614
-%patch89 -p0 -b .QTBUG-38585
+#%patch56 -p1 -b .typecast_s390x
+#%patch57 -p1 -b .typecast_sparc64
+%patch58 -p1 -b .qtwebkit_pluginpath
 
-%if 0%{?system_clucene}
-%patch90 -p1 -b .system_clucene
-# delete bundled copy
-rm -rf src/3rdparty/clucene
-%endif
+#%patch59 -p1 -b .bn-rendering-bz562049
+#%patch60 -p1 -b .bn-rendering-bz562058
+#%patch61 -p1 -b .indic-rendering-bz631732
+#%patch62 -p1 -b .indic-rendering-bz636399
+
+#%patch80 -p1 -b .gold_ld
 
 # upstream patches
 %patch102 -p1 -b .qgtkstyle_disable_gtk_theme_check
 %patch113 -p1 -b .QTBUG-22829
 
-%patch180 -p1 -b .aarch64
+# patches from magic
+#%patch100 -p1
+#%patch101 -p1
+#%patch102 -p0
+%patch1103 -p1
+%patch1104 -p1
+%patch1105 -p1
+#%patch106 -p1
 
-# upstream git
-%patch210 -p1 -b .0010
-%patch223 -p1 -b .0023
-%patch225 -p1 -b .0025
-%patch230 -p1 -b .0030
-%patch234 -p1 -b .0034
-%patch247 -p1 -b .0047
-%patch265 -p1 -b .0065
-%patch266 -p1 -b .0066
-%patch267 -p1 -b .0067
-%patch272 -p1 -b .0072
-%patch337 -p1 -b .0137
+# opensuse patches
+# %patch1001 -p0
 
-# security fixes
-# regression fixes for the security fixes
-%patch84 -p1 -b .QTBUG-35459
+## qt-copy patches
+#%patch10118 -p0
+#%patch10180 -p1
+#%patch10195 -p0
+#%patch10209 -p0
+#%patch10216 -p0
+#%patch10225 -p1
+#%patch10289 -p1
 
-%patch86 -p1 -b .systemtrayicon
+%patch20000 -p1
+# compile patches
 
 # drop -fexceptions from $RPM_OPT_FLAGS
 RPM_OPT_FLAGS=`echo $RPM_OPT_FLAGS | sed 's|-fexceptions||g'`
@@ -615,18 +1206,17 @@ RPM_OPT_FLAGS=`echo $RPM_OPT_FLAGS | sed 's|-fexceptions||g'`
 %endif
 
 # https://bugzilla.redhat.com/478481
-%ifarch x86_64 aarch64
+%ifarch x86_64 mips64el
 %define platform linux-g++
 %endif
 
-sed -i -e "s|-O2|$RPM_OPT_FLAGS|g" \
-  mkspecs/%{platform}/qmake.conf 
+sed -i \
+  -e "s|-O2|$RPM_OPT_FLAGS|g" \
+  -e "s|g++.conf|g++-multilib.conf|g" \
+  mkspecs/%{platform}/qmake.conf
 
-sed -i -e "s|^\(QMAKE_LFLAGS_RELEASE.*\)|\1 $RPM_LD_FLAGS|" \
-  mkspecs/common/g++-unix.conf
-
-# undefine QMAKE_STRIP (and friends), so we get useful -debuginfo pkgs (#193602)
-sed -i -e 's|^\(QMAKE_STRIP.*=\).*$|\1|g' mkspecs/common/linux.conf
+# undefine QMAKE_STRIP, so we get useful -debuginfo pkgs
+sed -i -e "s|^QMAKE_STRIP.*=.*|QMAKE_STRIP             =|" mkspecs/common/linux.conf
 
 # set correct lib path
 if [ "%{_lib}" == "lib64" ] ; then
@@ -639,185 +1229,163 @@ for f in translations/*.ts ; do
   touch ${f%.ts}.qm
 done
 
+#perl -pi -e 's,^QMAKE_CFLAGS_RELEASE	=.*,QMAKE_CFLAGS_RELEASE	= %optflags,g' mkspecs/*g++*/qmake.conf
+
+# undefine QMAKE_STRIP, so we get useful -debuginfo pkgs
+#sed -i -e "s|^QMAKE_STRIP.*=.*|QMAKE_STRIP             =|" mkspecs/common/linux.conf
 
 %build
-
 # build shared, threaded (default) libraries
 ./configure -v \
-  -confirm-license \
-  -opensource \
-  -optimized-qmake \
-  -prefix %{_qt4_prefix} \
-  -bindir %{_qt4_bindir} \
-  -datadir %{_qt4_datadir} \
-  -demosdir %{_qt4_demosdir} \
-  -docdir %{_qt4_docdir} \
-  -examplesdir %{_qt4_examplesdir} \
-  -headerdir %{_qt4_headerdir} \
-  -importdir %{_qt4_importdir} \
-  -libdir %{_qt4_libdir} \
-  -plugindir %{_qt4_plugindir} \
-  -sysconfdir %{_qt4_sysconfdir} \
-  -translationdir %{_qt4_translationdir} \
-  -platform %{platform} \
-  -release \
-  -shared \
-  -cups \
-  -fontconfig \
-  -largefile \
-  -gtkstyle \
-  -no-rpath \
-  -reduce-relocations \
-  -no-separate-debug-info \
-  %{?phonon} %{!?phonon:-no-phonon} \
-  %{?phonon_backend} \
-  %{?no_pch} \
-  %{?no_javascript_jit} \
-  -sm \
-  -stl \
-  -system-libmng \
-  -system-libpng \
-  -system-libjpeg \
-  -system-libtiff \
-  -system-zlib \
-  -xinput \
-  -xcursor \
-  -xfixes \
-  -xinerama \
-  -xshape \
-  -xrandr \
-  -xrender \
-  -xkb \
-  -glib \
-  -icu \
-  -openssl-linked \
-  -xmlpatterns \
-  %{?dbus} %{!?dbus:-no-dbus} \
-  %{?graphicssystem} \
-  %{?webkit} %{!?webkit:-no-webkit } \
-  %{?ibase} \
-  %{?mysql} \
-  %{?psql} \
-  %{?odbc} \
-  %{?sqlite} %{?_system_sqlite} \
-  %{?tds} \
-  %{!?docs:-nomake docs} \
-  %{!?demos:-nomake demos} \
-  %{!?examples:-nomake examples}
+%ifarch mips64el
+    -platform %{platform} \
+%endif
+    -confirm-license \
+    -opensource \
+	-optimized-qmake \
+	-prefix %_qtdir \
+	-sysconfdir %{_sysconfdir} \
+	-release \
+	-shared \
+	-system-zlib \
+	-system-libmng \
+	-system-libpng \
+	-system-libjpeg \
+	-system-libtiff \
+	-no-nis \
+	-no-rpath \
+	-cups \
+	-stl \
+%ifarch mips64el
+	-no-pch \
+%else
+	pch \
+%endif
+	-accessibility \
+	-reduce-exports \
+	-reduce-relocations \
+	-no-separate-debug-info \
+%if "%type" == "x11"
+	-no-nas-sound \
+	-sm \
+	-stl \
+	-xshape \
+	-xinerama \
+	-xinput \
+	-xcursor \
+	-xrandr \
+	-xrender \
+	-xkb \
+	-fontconfig \
+%endif
+%if "%type" == "embedded"
+	-freetype -depths 4,8,16,24,32 \
+	-qt-kbd-tty \
+	-qt-kbd-usb \
+	-qt-mouse-pc \
+%endif
+	-openssl-linked \
+	-xmlpatterns \
+%if %with_gtkstyle
+	-gtkstyle \
+%endif
+%if %with_dbus_linked
+	-dbus-linked \
+%else
+	-no-dbus \
+%endif
+%if %with_phonon
+	-phonon -gstreamer \
+%else
+	-no-phonon -no-gstreamer \
+%endif
+%if %with_webkit
+	-webkit \
+%else
+	-no-webkit \
+%endif
+%if %with_postgresql
+	-plugin-sql-psql \
+%endif
+%if %with_mysql
+	-plugin-sql-mysql \
+%endif
+%if %with_odbc
+	-plugin-sql-odbc \
+%endif
+%if %with_tds
+	-plugin-sql-tds \
+%endif
+%if %with_firebird
+	-plugin-sql-ibase \
+%endif
+	-plugin-sql-sqlite
 
-make %{?_smp_mflags}
-
-# TODO: consider patching tools/tools.pro to enable building this by default
-%{?qvfb:make %{?_smp_mflags} -C tools/qvfb}
+export QTDIR=`pwd`
+make %?_smp_mflags
 
 # recreate .qm files
 LD_LIBRARY_PATH=`pwd`/lib bin/lrelease translations/*.ts
 
-
 %install
-rm -rf %{buildroot}
+rm -rf $RPM_BUILD_ROOT
+export QTDIR=`pwd`
 
-make install INSTALL_ROOT=%{buildroot}
+# Kill some build root references
+sed -i -e "s,`pwd`,%_qtdir,g" lib/*.prl lib/*.la
 
-%if 0%{?qvfb}
-make install INSTALL_ROOT=%{buildroot} -C tools/qvfb
-%find_lang qvfb --with-qt --without-mo
-%else
-rm -f %{buildroot}%{_qt4_translationdir}/qvfb*.qm
-%endif
+make %?_smp_mflags install INSTALL_ROOT="$RPM_BUILD_ROOT"
+cp -a plugins/codecs $RPM_BUILD_ROOT%_qtdir/plugins
 
-%if 0%{?private}
-# install private headers
-# using rsync -R as easy way to preserve relative path names
-# we're cheating and using %%_prefix (/usr) directly here
-rsync -aR \
-  include/Qt{Core,Declarative,Gui,Script}/private \
-  src/{corelib,declarative,gui,script}/*/*_p.h \
-  %{buildroot}%{_prefix}/
-%endif
+# FHS-ify a bit... And remove buildroot references
+mkdir -p $RPM_BUILD_ROOT%_libdir $RPM_BUILD_ROOT%_includedir $RPM_BUILD_ROOT%_bindir
+mkdir -p $RPM_BUILD_ROOT%_libdir/pkgconfig
+mv $RPM_BUILD_ROOT%_qtdir/lib/pkgconfig/*.pc $RPM_BUILD_ROOT%_libdir/pkgconfig
+perl -pi -e "s,-L$RPM_BUILD_DIR/.*/lib ,," $RPM_BUILD_ROOT%_libdir/pkgconfig/*
 
-# Add desktop files, --vendor=qt4 helps avoid possible conflicts with qt3/qt5
+# 删除 *.la 文件
+rm -f %{buildroot}%_qtdir/lib/lib*.la
+
+# 添加 qt4 对 /usr/lib/ 目录的链接
+pushd %{buildroot}%_qtdir/lib
+for i in *.so* *.a *.prl; do
+	ln -sf %_qtdir/lib/$i %{buildroot}%_libdir
+done
+popd
+
+# 添加 qt4 对 /usr/include/ 目录的链接
+pushd %{buildroot}%_qtdir/include
+for i in *; do
+	ln -sf %_qtdir/include/$i %{buildroot}%_includedir
+done
+popd
+
+# 添加 qt4 对 /usr/bin/ 目录的链接
+pushd %{buildroot}%_qtdir/bin
+for i in *; do
+	if [ "$i" = "qt3to4" -o "$i" = "uic3" -o "$i" = "qdoc3" ]; then
+		ln -sf %_qtdir/bin/$i %{buildroot}%_bindir
+	else
+		ln -sf %_qtdir/bin/$i %{buildroot}%_bindir/${i}4
+		ln -sf %_qtdir/bin/$i %{buildroot}%_bindir/${i}-qt4
+	fi
+done
+popd
+
+# 添加菜单项
 desktop-file-install \
-  --dir=%{buildroot}%{_datadir}/applications \
-  --vendor="qt4" \
-  %{SOURCE20} %{SOURCE21} %{SOURCE22} %{?dbus:%{SOURCE23}} %{?demos:%{SOURCE24}} %{SOURCE25}
+  --dir %{buildroot}%{_datadir}/applications \
+  --vendor="%{name}" \
+  %{SOURCE20} %{SOURCE21} %{SOURCE22} %{SOURCE23} %{SOURCE24}
 
-## pkg-config
-# strip extraneous dirs/libraries 
-# safe ones
-glib2_libs=$(pkg-config --libs glib-2.0 gobject-2.0 gthread-2.0)
-ssl_libs=$(pkg-config --libs openssl)
-for dep in \
-  -laudio -ldbus-1 -lfreetype -lfontconfig ${glib2_libs} \
-  -ljpeg -lm -lmng -lpng -lpulse -lpulse-mainloop-glib ${ssl_libs} -lsqlite3 -lz \
-  -L/usr/X11R6/lib -L/usr/X11R6/%{_lib} -L%{_libdir} ; do
-  sed -i -e "s|$dep ||g" %{buildroot}%{_qt4_libdir}/lib*.la 
-#  sed -i -e "s|$dep ||g" %{buildroot}%{_qt4_libdir}/pkgconfig/*.pc
-  sed -i -e "s|$dep ||g" %{buildroot}%{_qt4_libdir}/*.prl
+# qt4-logo (generic) icons
+install -p -m 644 -D %{SOURCE30} %{buildroot}%{_datadir}/icons/hicolor/128x128/apps/qt4-logo.png
+install -p -m 644 -D %{SOURCE31} %{buildroot}%{_datadir}/icons/hicolor/48x48/apps/qt4-logo.png
+# linguist icons
+for icon in tools/linguist/linguist/images/icons/linguist-*-32.png ; do
+  size=$(echo $(basename ${icon}) | cut -d- -f2)
+  install -p -m644 -D ${icon} %{buildroot}%{_datadir}/icons/hicolor/${size}x${size}/apps/linguist4.png
 done
-# riskier
-for dep in -ldl -lphonon -lpthread -lICE -lSM -lX11 -lXcursor -lXext -lXfixes -lXft -lXinerama -lXi -lXrandr -lXrender -lXt ; do
-  sed -i -e "s|$dep ||g" %{buildroot}%{_qt4_libdir}/lib*.la 
-#  sed -i -e "s|$dep ||g" %{buildroot}%{_qt4_libdir}/pkgconfig/*.pc 
-  sed -i -e "s|$dep ||g" %{buildroot}%{_qt4_libdir}/*.prl
-done
-
-# nuke dangling reference(s) to %buildroot
-sed -i -e "/^QMAKE_PRL_BUILD_DIR/d" %{buildroot}%{_qt4_libdir}/*.prl
-sed -i -e "s|-L%{_builddir}/qt-everywhere-opensource-src-%{version}%{?pre:-%{pre}}/lib||g" \
-  %{buildroot}%{_qt4_libdir}/pkgconfig/*.pc \
-  %{buildroot}%{_qt4_libdir}/*.prl
-
-# nuke QMAKE_PRL_LIBS, seems similar to static linking and .la files (#520323)
-# don't nuke, just drop -lphonon (above)
-#sed -i -e "s|^QMAKE_PRL_LIBS|#QMAKE_PRL_LIBS|" %{buildroot}%{_qt4_libdir}/*.prl
-
-# .la files, die, die, die.
-rm -f %{buildroot}%{_qt4_libdir}/lib*.la
-
-%if 0
-#if "%{_qt4_docdir}" != "%{_qt4_prefix}/doc"
-# -doc make symbolic link to _qt4_docdir
-rm -rf %{buildroot}%{_qt4_prefix}/doc
-ln -s  ../../share/doc/qt4 %{buildroot}%{_qt4_prefix}/doc
-%endif
-
-# hardlink files to %{_bindir}, add -qt4 postfix to not conflict
-mkdir %{buildroot}%{_bindir}
-pushd %{buildroot}%{_qt4_bindir}
-for i in * ; do
-  case "${i}" in
-    # qt3 stuff
-    assistant|designer|linguist|lrelease|lupdate|moc|qmake|qtconfig|qtdemo|uic)
-      ln -v  ${i} %{buildroot}%{_bindir}/${i}-qt4
-      ln -sv ${i} ${i}-qt4
-      ;;
-    # qt5/qtchooser stuff
-    qmlviewer)
-      ln -v  ${i} %{buildroot}%{_bindir}/${i}
-      ln -v  ${i} %{buildroot}%{_bindir}/${i}-qt4
-      ln -sv ${i} ${i}-qt4
-      ;;
-    *)
-      ln -v  ${i} %{buildroot}%{_bindir}/${i}
-      ;;
-  esac
-done
-popd
-
-# _debug targets (see bug #196513)
-pushd %{buildroot}%{_qt4_libdir}
-for lib in libQt*.so ; do
-   libbase=`basename $lib .so | sed -e 's/^lib//'`
-#  ln -s $lib lib${libbase}_debug.so
-   echo "INPUT(-l${libbase})" > lib${libbase}_debug.so 
-done
-for lib in libQt*.a ; do
-   libbase=`basename $lib .a | sed -e 's/^lib//' `
-#  ln -s $lib lib${libbase}_debug.a
-   echo "INPUT(-l${libbase})" > lib${libbase}_debug.a
-done
-popd
 
 %ifarch %{multilib_archs}
 # multilib: qconfig.h
@@ -827,47 +1395,59 @@ popd
   ln -sf ../QtCore/qconfig.h %{buildroot}%{_qt4_headerdir}/Qt/qconfig.h
 %endif
 
+# ld 目录支持
 %if "%{_qt4_libdir}" != "%{_libdir}"
   mkdir -p %{buildroot}/etc/ld.so.conf.d
   echo "%{_qt4_libdir}" > %{buildroot}/etc/ld.so.conf.d/qt4-%{__isa_bits}.conf
 %endif
 
-# qtchooser conf
-%if 0%{?qtchooser}
-  mkdir -p %{buildroot}%{_sysconfdir}/xdg/qtchooser
-  pushd    %{buildroot}%{_sysconfdir}/xdg/qtchooser
-  echo "%{_qt4_bindir}" >  4-%{__isa_bits}.conf
-  echo "%{_qt4_prefix}" >> 4-%{__isa_bits}.conf
-  # alternatives targets
-  touch default.conf 4.conf
-  popd
+# 添加 qt4.sh/qt4.csh 以方便编译
+mkdir -p %{buildroot}/etc/profile.d
+cp %SOURCE11 %{buildroot}/etc/profile.d
+cp %SOURCE12 %{buildroot}/etc/profile.d
+
+magic_rpm_clean.sh
+
+# FIXME do we really need to remove the following files? --- nihui
+%if 0
+# 删除其它平台编译器的 qmake 配置文件
+# rm -rfv %{buildroot}%_qtdir/mkspecs/aix*
+# rm -rfv %{buildroot}%_qtdir/mkspecs/cygwin*
+# rm -rfv %{buildroot}%_qtdir/mkspecs/darwin*
+# rm -rfv %{buildroot}%_qtdir/mkspecs/features/mac
+# rm -rfv %{buildroot}%_qtdir/mkspecs/features/win32
+# rm -rfv %{buildroot}%_qtdir/mkspecs/freebsd*
+# rm -rfv %{buildroot}%_qtdir/mkspecs/hpux*
+# rm -rfv %{buildroot}%_qtdir/mkspecs/hurd*
+# rm -rfv %{buildroot}%_qtdir/mkspecs/irix*
+# rm -rfv %{buildroot}%_qtdir/mkspecs/lynxos*
+# rm -rfv %{buildroot}%_qtdir/mkspecs/macx*
+# rm -rfv %{buildroot}%_qtdir/mkspecs/netbsd*
+# rm -rfv %{buildroot}%_qtdir/mkspecs/openbsd*
+# rm -rfv %{buildroot}%_qtdir/mkspecs/sco*
+# rm -rfv %{buildroot}%_qtdir/mkspecs/solaris*
+# rm -rfv %{buildroot}%_qtdir/mkspecs/tru64*
+# rm -rfv %{buildroot}%_qtdir/mkspecs/win*
 %endif
 
-%if ! 0%{?qt_settings}
-# Trolltech.conf
-install -p -m644 -D %{SOURCE4} %{buildroot}%{_qt4_sysconfdir}/Trolltech.conf
+# 不提供的第三方已有的软件包文件
+%if %with_phonon && !%ship_phonon_pkg
+rm -rfv %{buildroot}%_libdir/libphonon.*
+rm -rfv %{buildroot}%_qtdir/lib/libphonon.*
+rm -rfv %{buildroot}%_includedir/phonon
+rm -rfv %{buildroot}%_qtdir/include/phonon/
+#rm -rfv %{buildroot}%_qtdir/include/Qt/phonon
+rm -rfv %{buildroot}%_libdir/pkgconfig/phonon.pc
+rm -rfv %{buildroot}%_qtdir/plugins/phonon_backend
 %endif
-
-# qt4-logo (generic) icons
-install -p -m644 -D %{SOURCE30} %{buildroot}%{_datadir}/icons/hicolor/128x128/apps/qt4-logo.png
-install -p -m644 -D %{SOURCE31} %{buildroot}%{_datadir}/icons/hicolor/48x48/apps/qt4-logo.png
-
-# assistant icons
-install -p -m644 -D tools/assistant/tools/assistant/images/assistant.png %{buildroot}%{_datadir}/icons/hicolor/32x32/apps/assistant.png
-install -p -m644 -D tools/assistant/tools/assistant/images/assistant-128.png %{buildroot}%{_datadir}/icons/hicolor/128x128/apps/assistant.png
-
-# designer icons
-install -p -m644 -D tools/designer/src/designer/images/designer.png %{buildroot}%{_datadir}/icons/hicolor/128x128/apps/designer.png
-
-# linguist icons
-for icon in tools/linguist/linguist/images/icons/linguist-*-32.png ; do
-  size=$(echo $(basename ${icon}) | cut -d- -f2)
-  install -p -m644 -D ${icon} %{buildroot}%{_datadir}/icons/hicolor/${size}x${size}/apps/linguist.png
-done
-
-# qdbusviewer icons
-install -p -m644 -D tools/qdbus/qdbusviewer/images/qdbusviewer.png %{buildroot}%{_datadir}/icons/hicolor/32x32/apps/qdbusviewer.png
-install -p -m644 -D tools/qdbus/qdbusviewer/images/qdbusviewer-128.png %{buildroot}%{_datadir}/icons/hicolor/128x128/apps/qdbusviewer.png
+%if %with_webkit && !%ship_webkit_pkg
+rm -rfv %{buildroot}%_libdir/libQtWebKit.*
+rm -rfv %{buildroot}%_qtdir/lib/libQtWebKit.*
+rm -rfv %{buildroot}%_includedir/QtWebKit
+rm -rfv %{buildroot}%_qtdir/include/QtWebKit
+rm -rfv %{buildroot}%_qtdir/include/Qt/QtWebKit
+rm -rfv %{buildroot}%_libdir/pkgconfig/QtWebKit.pc
+%endif
 
 # Qt.pc
 cat >%{buildroot}%{_libdir}/pkgconfig/Qt.pc<<EOF
@@ -892,1545 +1472,855 @@ Version: %{version}
 EOF
 
 # rpm macros
-install -p -m644 -D %{SOURCE1} \
-  %{buildroot}%{rpm_macros_dir}/macros.qt4
-sed -i \
-  -e "s|@@NAME@@|%{name}|g" \
-  -e "s|@@EPOCH@@|%{?epoch}%{!?epoch:0}|g" \
-  -e "s|@@VERSION@@|%{version}|g" \
-  -e "s|@@EVR@@|%{?epoch:%{epoch}:}%{version}-%{release}|g" \
-  %{buildroot}%{rpm_macros_dir}/macros.qt4
-
-# create/own stuff under %%_qt4_docdir
-mkdir -p %{buildroot}%{_qt4_docdir}/{html,qch,src}
-
- # create/own stuff under %%_qt4_plugindir
-mkdir -p %{buildroot}%{_qt4_plugindir}/{crypto,gui_platform,styles}
-
-## nuke bundled phonon bits
-rm -fv  %{buildroot}%{_qt4_libdir}/libphonon.so*
-rm -rfv %{buildroot}%{_libdir}/pkgconfig/phonon.pc
-# contents slightly different between phonon-4.3.1 and qt-4.5.0
-rm -fv  %{buildroot}%{_includedir}/phonon/phononnamespace.h
-# contents dup'd but should remove just in case
-rm -fv  %{buildroot}%{_includedir}/phonon/*.h
-rm -rfv %{buildroot}%{_qt4_headerdir}/phonon*
-#rm -rfv %{buildroot}%{_qt4_headerdir}/Qt/phonon*
-rm -fv %{buildroot}%{_datadir}/dbus-1/interfaces/org.kde.Phonon.AudioOutput.xml
-rm -fv %{buildroot}%{_qt4_plugindir}/designer/libphononwidgets.so
-# backend
-rm -fv %{buildroot}%{_qt4_plugindir}/phonon_backend/*_gstreamer.so
-rm -fv %{buildroot}%{_datadir}/kde4/services/phononbackends/gstreamer.desktop
-
-# nuke bundled webkit bits 
-rm -fv %{buildroot}%{_qt4_datadir}/mkspecs/modules/qt_webkit_version.pri
-rm -fv %{buildroot}%{_qt4_headerdir}/Qt/qgraphicswebview.h
-rm -fv %{buildroot}%{_qt4_headerdir}/Qt/qweb*.h
-rm -fv %{buildroot}%{_qt4_headerdir}/Qt/QtWebKit
-rm -frv %{buildroot}%{_qt4_headerdir}/QtWebKit/
-rm -frv %{buildroot}%{_qt4_importdir}/QtWebKit/
-rm -fv %{buildroot}%{_qt4_libdir}/libQtWebKit*
-rm -fv %{buildroot}%{_libdir}/pkgconfig/QtWebKit.pc
-rm -frv %{buildroot}%{_qt4_prefix}/tests/
-
-%find_lang qt --with-qt --without-mo
-
-%find_lang assistant --with-qt --without-mo
-%find_lang qt_help --with-qt --without-mo
-%find_lang qtconfig --with-qt --without-mo
-%find_lang qtscript --with-qt --without-mo
-cat assistant.lang qt_help.lang qtconfig.lang qtscript.lang >qt4-x11.lang
-
-%find_lang designer --with-qt --without-mo
-%find_lang linguist --with-qt --without-mo
-cat designer.lang linguist.lang >qt4-devel.lang
-
+# 无下划线开头的宏由 magiclinux project 定义
+# 下划线开头的宏为 fedora project 兼容目的
+mkdir -p %{buildroot}%{_sysconfdir}/rpm
+cat >%{buildroot}%{_sysconfdir}/rpm/macros.qt4<<EOF
+%%qt4_name		%{name}
+%%qt4_version		%{version}
+%%qt4_prefix		%{_qtdir}
+%%qt4_bindir		%%{qt4_prefix}/bin
+%%qt4_libdir		%%{qt4_prefix}/lib
+%%qt4_docdir		%%{qt4_prefix}/doc
+%%qt4_includedir	%%{qt4_prefix}/include
+%%qt4_pluginsdir	%%{qt4_prefix}/plugins
+%%qt4_qmake		%%{qt4_prefix}/bin/qmake
+%%qt4_importdir		%%{qt4_prefix}/imports
+#
+###  以下为 fedora project 兼容部分  ###
+#
+%%_qt4			%%{qt4_name}
+%%_qt4_version		%%{qt4_version}
+%%_qt4_prefix		%%{qt4_prefix}
+%%_qt4_bindir		%%{qt4_bindir}
+%%_qt4_datadir		%%{qt4_prefix}
+%%_qt4_demosdir		%%{qt4_prefix}/demos
+%%_qt4_docdir		%%{qt4_docdir}
+%%_qt4_examples		%%{qt4_prefix}/examples
+%%_qt4_headerdir	%%{qt4_includedir}
+%%_qt4_libdir		%%{qt4_libdir}
+%%_qt4_plugindir	%%{qt4_pluginsdir}
+%%_qt4_qmake		%%{qt4_qmake}
+%%_qt4_sysconfdir	%%{_sysconfdir}
+%%_qt4_translationdir	%%{qt4_prefix}/translations
+%%_qt4_importdir	%%{qt4_importdir}
+EOF
 
 %clean
-rm -rf %{buildroot}
+rm -rf %{buildroot} %{_builddir}/%{buildsubdir}
 
+%files
 
-%if 0%{?qtchooser}
-%pre
-if [ $1 -gt 1 ] ; then
-# remove short-lived qt4.conf alternatives
-%{_sbindir}/update-alternatives  \
-  --remove qtchooser-qt4 \
-  %{_sysconfdir}/xdg/qtchooser/qt4-%{__isa_bits}.conf >& /dev/null ||:
+%files devel
+%defattr(-,root,root)
+%_qtdir/include/Qt/*.h
+%_includedir/Qt
+%{_sysconfdir}/rpm/macros.qt4
+%_libdir/pkgconfig/Qt.pc
 
-%{_sbindir}/update-alternatives  \
-  --remove qtchooser-default \
-  %{_sysconfdir}/xdg/qtchooser/qt4.conf >& /dev/null ||:
-fi
-%endif
-
-%post
-/sbin/ldconfig
-%if 0%{?qtchooser}
-%{_sbindir}/update-alternatives \
-  --install %{_sysconfdir}/xdg/qtchooser/4.conf \
-  qtchooser-4 \
-  %{_sysconfdir}/xdg/qtchooser/4-%{__isa_bits}.conf \
-  %{priority}
-
-%{_sbindir}/update-alternatives \
-  --install %{_sysconfdir}/xdg/qtchooser/default.conf \
-  qtchooser-default \
-  %{_sysconfdir}/xdg/qtchooser/4.conf \
-  %{priority}
-%endif
-
-%postun
-/sbin/ldconfig
-%if 0%{?qtchooser}
-if [ $1 -eq 0 ]; then
-%{_sbindir}/update-alternatives  \
-  --remove qtchooser-4 \
-  %{_sysconfdir}/xdg/qtchooser/4-%{__isa_bits}.conf
-
-%{_sbindir}/update-alternatives  \
-  --remove qtchooser-default \
-  %{_sysconfdir}/xdg/qtchooser/4.conf
-fi
-%endif
-
-%files -f qt.lang
-%defattr(-,root,root,-)
-%doc README LICENSE.GPL3 LICENSE.LGPL LGPL_EXCEPTION.txt
-%if 0%{?qtchooser}
-%dir %{_sysconfdir}/xdg/qtchooser
-# not editable config files, so not using %%config here
-%ghost %{_sysconfdir}/xdg/qtchooser/default.conf
-%ghost %{_sysconfdir}/xdg/qtchooser/4.conf
-%{_sysconfdir}/xdg/qtchooser/4-%{__isa_bits}.conf
-%endif
-%if "%{_qt4_libdir}" != "%{_libdir}"
-/etc/ld.so.conf.d/*
-%dir %{_qt4_libdir}
-%endif
-%dir %{_qt4_prefix}
-%if "%{_qt4_bindir}" == "%{_bindir}"
-%{_qt4_prefix}/bin
-%else
-%dir %{_qt4_bindir}
-%endif
-%if "%{_qt4_datadir}" != "%{_datadir}/qt4"
-%dir %{_datadir}/qt4
-%else
-%dir %{_qt4_datadir}
-%endif
-%dir %{_qt4_docdir}
-%dir %{_qt4_docdir}/html/
-%dir %{_qt4_docdir}/qch/
-%dir %{_qt4_docdir}/src/
-
-%if "%{_qt4_sysconfdir}" != "%{_sysconfdir}"
-%dir %{_qt4_sysconfdir}
-%endif
-%if ! 0%{?qt_settings}
-%config(noreplace) %{_qt4_sysconfdir}/Trolltech.conf
-%endif
-%{_qt4_datadir}/phrasebooks/
-%{_qt4_libdir}/libQtCore.so.4*
-%if 0%{?dbus:1}
-%if "%{_qt4_bindir}" != "%{_bindir}"
-%{_bindir}/qdbus
-%endif
-%{_qt4_bindir}/qdbus
-%{_qt4_libdir}/libQtDBus.so.4*
-%endif
-%{_qt4_libdir}/libQtNetwork.so.4*
-%{_qt4_libdir}/libQtScript.so.4*
-%{_qt4_libdir}/libQtSql.so.4*
-%{_qt4_libdir}/libQtTest.so.4*
-%{_qt4_libdir}/libQtXml.so.4*
-%{_qt4_libdir}/libQtXmlPatterns.so.4*
-%dir %{_qt4_plugindir}
-%dir %{_qt4_plugindir}/crypto/
-%dir %{_qt4_plugindir}/sqldrivers/
-%dir %{_qt4_translationdir}/
-%{_qt4_plugindir}/sqldrivers/libqsqlite*
-
-%post assistant
-touch --no-create %{_datadir}/icons/hicolor ||:
-
-%posttrans assistant
-gtk-update-icon-cache -q %{_datadir}/icons/hicolor 2> /dev/null ||:
-
-%postun assistant
-if [ $1 -eq 0 ] ; then
-touch --no-create %{_datadir}/icons/hicolor ||:
-gtk-update-icon-cache -q %{_datadir}/icons/hicolor 2> /dev/null ||:
-fi
-
-%files assistant
-%defattr(-,root,root,-)
-%if "%{_qt4_bindir}" != "%{_bindir}"
-%{_bindir}/assistant*
-%endif
-%{_qt4_bindir}/assistant*
-%{_datadir}/applications/*assistant.desktop
-%{_datadir}/icons/hicolor/*/apps/assistant*
-
-%files config
-%defattr(-,root,root,-)
-%if "%{_qt4_bindir}" != "%{_bindir}"
-%{_bindir}/qt*config*
-%endif
-%{_qt4_bindir}/qt*config*
-%{_datadir}/applications/*qtconfig.desktop
-
-%files demos
-%defattr(-,root,root,-)
-%if 0%{?demos}
-%{_qt4_bindir}/qt*demo*
-%if "%{_qt4_bindir}" != "%{_bindir}"
-%{_bindir}/qt*demo*
-%endif
-%{_datadir}/applications/*qtdemo.desktop
-%endif
-%{_qt4_demosdir}/
-
-%if "%{?webkit}" == "-webkit"
-%files designer-plugin-webkit
-%defattr(-,root,root,-)
-%{_qt4_plugindir}/designer/libqwebview.so
-%endif
-
-%post devel
-touch --no-create %{_datadir}/icons/hicolor ||:
-
-%posttrans devel
-gtk-update-icon-cache -q %{_datadir}/icons/hicolor 2> /dev/null ||:
-update-desktop-database -q &> /dev/null ||:
-
-%postun devel
-if [ $1 -eq 0 ] ; then
-touch --no-create %{_datadir}/icons/hicolor ||:
-gtk-update-icon-cache -q %{_datadir}/icons/hicolor 2> /dev/null ||:
-update-desktop-database -q &> /dev/null ||:
-fi
-
-%files devel -f qt4-devel.lang
-%defattr(-,root,root,-)
-%{rpm_macros_dir}/macros.qt4
-%{_qt4_bindir}/lconvert
-%{_qt4_bindir}/lrelease*
-%{_qt4_bindir}/lupdate*
-%{_qt4_bindir}/moc*
-%{_qt4_bindir}/pixeltool*
-%{_qt4_bindir}/qdoc3*
-%{_qt4_bindir}/qmake*
-%{_qt4_bindir}/qmlviewer*
-%{_qt4_bindir}/qmlplugindump
-%{_qt4_bindir}/qt3to4
-%{_qt4_bindir}/qttracereplay
-%{_qt4_bindir}/rcc*
-%{_qt4_bindir}/uic*
-%{_qt4_bindir}/qcollectiongenerator
-%if 0%{?dbus:1}
-%{_qt4_bindir}/qdbuscpp2xml
-%{_qt4_bindir}/qdbusxml2cpp
-%endif
-%{_qt4_bindir}/qhelpconverter
-%{_qt4_bindir}/qhelpgenerator
-%{_qt4_bindir}/xmlpatterns
-%{_qt4_bindir}/xmlpatternsvalidator
-%if "%{_qt4_bindir}" != "%{_bindir}"
-%{_bindir}/lrelease*
-%{_bindir}/lupdate*
-%{_bindir}/moc*
-%{_bindir}/uic*
-%{_bindir}/designer*
-%{_bindir}/linguist*
-%{_bindir}/lconvert
-%{_bindir}/pixeltool
-%{_bindir}/qcollectiongenerator
-%{_bindir}/qdoc3
-%{_bindir}/qmake*
-%{_bindir}/qmlviewer*
-%{_bindir}/qt3to4
-%{_bindir}/qttracereplay
-%if 0%{?dbus:1}
-%{_bindir}/qdbuscpp2xml
-%{_bindir}/qdbusxml2cpp
-%endif
-%{_bindir}/qhelpconverter
-%{_bindir}/qhelpgenerator
-%{_bindir}/qmlplugindump
-%{_bindir}/rcc
-%{_bindir}/xmlpatterns
-%{_bindir}/xmlpatternsvalidator
-%endif
-%if "%{_qt4_headerdir}" != "%{_includedir}"
-%dir %{_qt4_headerdir}/
-%endif
-%{_qt4_headerdir}/*
-%{_qt4_datadir}/mkspecs/
-%if "%{_qt4_datadir}" != "%{_qt4_prefix}"
-%{_qt4_prefix}/mkspecs/
-%endif
-%{_qt4_datadir}/q3porting.xml
-%if 0%{?phonon:1}
-## nuke this one too?  -- Rex
-%{_qt4_libdir}/libphonon.prl
-%endif
-%{_qt4_libdir}/libQt*.so
-%{_qt4_libdir}/libQtUiTools*.a
-%{_qt4_libdir}/libQt*.prl
-%{_libdir}/pkgconfig/*.pc
-# Qt designer
-%{_qt4_bindir}/designer*
-%{_datadir}/applications/*designer.desktop
-%{_datadir}/icons/hicolor/*/apps/designer*
-%{?docs:%{_qt4_docdir}/qch/designer.qch}
-# Qt Linguist
-%{_qt4_bindir}/linguist*
-%{_datadir}/applications/*linguist.desktop
-%{_datadir}/icons/hicolor/*/apps/linguist*
-%{?docs:%{_qt4_docdir}/qch/linguist.qch}
-%if 0%{?private}
-%exclude %{_qt4_headerdir}/*/private/
-
-%files devel-private
-%defattr(-,root,root,-)
-%{_qt4_headerdir}/QtCore/private/
-%{_qt4_headerdir}/QtDeclarative/private/
-%{_qt4_headerdir}/QtGui/private/
-%{_qt4_headerdir}/QtScript/private/
-%{_qt4_headerdir}/../src/corelib/
-%{_qt4_headerdir}/../src/declarative/
-%{_qt4_headerdir}/../src/gui/
-%{_qt4_headerdir}/../src/script/
-%endif
-
-%if 0%{?docs}
 %files doc
-%defattr(-,root,root,-)
-%{_qt4_docdir}/html/*
-%{_qt4_docdir}/qch/*.qch
-%exclude %{_qt4_docdir}/qch/designer.qch
-%exclude %{_qt4_docdir}/qch/linguist.qch
-%{_qt4_docdir}/src/*
-#{_qt4_prefix}/doc
+%defattr(-,root,root)
+%doc %_qtdir/doc
+
+%files -n qmake
+%defattr(-,root,root)
+%_bindir/qmake*
+%_qtdir/bin/qmake
+%_qtdir/mkspecs
+%exclude %_qtdir/mkspecs/modules/qt_webkit_version.pri 
+
+%files script
+%defattr(-,root,root)
+%_libdir/libQtScript.so.*
+%_qtdir/lib/libQtScript.so.*
+
+%files script-devel
+%defattr(-,root,root)
+%_libdir/libQtScript.so
+%_qtdir/lib/libQtScript.so
+%_libdir/libQtScript.prl
+%_qtdir/lib/libQtScript.prl
+%_includedir/QtScript
+%_qtdir/include/QtScript
+%_qtdir/include/Qt/QtScript
+%_libdir/pkgconfig/QtScript.pc
+
+%files scripttools
+%defattr(-,root,root)
+%_libdir/libQtScriptTools.so.*
+%_qtdir/lib/libQtScriptTools.so.*
+
+%files scripttools-devel
+%defattr(-,root,root)
+%_libdir/libQtScriptTools.so
+%_qtdir/lib/libQtScriptTools.so
+%_libdir/libQtScriptTools.prl
+%_qtdir/lib/libQtScriptTools.prl
+%_includedir/QtScriptTools
+%_qtdir/include/QtScriptTools
+%_qtdir/include/Qt/QtScriptTools
+%_libdir/pkgconfig/QtScriptTools.pc
+
+%files core
+%defattr(-,root,root)
+%{_sysconfdir}/ld.so.conf.d/*
+%{_sysconfdir}/profile.d/qt4.*
+%dir %_qtdir
+%dir %_qtdir/lib
+%_qtdir/lib/libQtCore.so.*
+%_libdir/libQtCore.so.*
+%dir %_qtdir/plugins
+%dir %_qtdir/plugins/codecs
+%dir %_qtdir/plugins/imageformats
+%dir %_qtdir/plugins/sqldrivers
+%if ! %styles_are_gone
+%dir %_qtdir/plugins/styles
 %endif
+%dir %_qtdir/translations
+%_qtdir/translations/*
 
-%files examples
-%defattr(-,root,root,-)
-%{_qt4_examplesdir}/
+%files core-devel
+%defattr(-,root,root)
+%_qtdir/lib/libQtCore.so
+%_libdir/libQtCore.so
+%_qtdir/lib/libQtCore.prl
+%_libdir/libQtCore.prl
+%dir %_qtdir/include
+%_qtdir/include/QtCore
+%_includedir/QtCore
+%_qtdir/include/Qt/QtCore
+%_libdir/pkgconfig/QtCore*.pc
+%_bindir/lrelease*
+%_bindir/lupdate*
+%_bindir/moc*
+%_qtdir/bin/lrelease
+%_qtdir/bin/lupdate
+%_qtdir/bin/moc
+%{_bindir}/qmlplugindump*
+%_qtdir/bin/qmlplugindump
 
-%if 0%{?qvfb}
-%files qvfb -f qvfb.lang
-%defattr(-,root,root,-)
-%{_bindir}/qvfb
-%{_qt4_bindir}/qvfb
-%endif
+%files network
+%defattr(-,root,root)
+%_qtdir/lib/libQtNetwork.so.*
+%_libdir/libQtNetwork.so.*
 
-%if "%{?ibase}" == "-plugin-sql-ibase"
-%files ibase
-%defattr(-,root,root,-)
-%{_qt4_plugindir}/sqldrivers/libqsqlibase*
-%endif
+%files network-devel
+%defattr(-,root,root)
+%_qtdir/lib/libQtNetwork.so
+%_libdir/libQtNetwork.so
+%_qtdir/lib/libQtNetwork.prl
+%_libdir/libQtNetwork.prl
+%_qtdir/include/QtNetwork
+%_includedir/QtNetwork
+%_qtdir/include/Qt/QtNetwork
+%_libdir/pkgconfig/QtNetwork*.pc
 
-%if "%{?mysql}" == "-plugin-sql-mysql"
-%files mysql
-%defattr(-,root,root,-)
-%{_qt4_plugindir}/sqldrivers/libqsqlmysql*
-%endif
+%files xml
+%defattr(-,root,root)
+%_qtdir/lib/libQtXml.so.*
+%_libdir/libQtXml.so.*
 
-%if "%{?odbc}" == "-plugin-sql-odbc"
-%files odbc 
-%defattr(-,root,root,-)
-%{_qt4_plugindir}/sqldrivers/libqsqlodbc*
-%endif
+%files xml-devel
+%defattr(-,root,root)
+%_qtdir/lib/libQtXml.so
+%_libdir/libQtXml.so
+%_qtdir/lib/libQtXml.prl
+%_libdir/libQtXml.prl
+%_qtdir/include/QtXml
+%_includedir/QtXml
+%_qtdir/include/Qt/QtXml
+%_libdir/pkgconfig/QtXml.pc
 
-%if "%{?psql}" == "-plugin-sql-psql"
-%files postgresql 
-%defattr(-,root,root,-)
-%{_qt4_plugindir}/sqldrivers/libqsqlpsql*
-%endif
+%files declarative
+%defattr(-,root,root)
+%_bindir/qmlviewer*
+%_qtdir/bin/qmlviewer
+%_qtdir/lib/libQtDeclarative.so.*
+%_libdir/libQtDeclarative.so.*
+%_qtdir/plugins/designer/libqdeclarativeview.so
+%_qtdir/plugins/qmltooling/libqmldbg_tcp.so
+%_qtdir/plugins/qmltooling/libqmldbg_inspector.so
 
-%if "%{?tds}" == "-plugin-sql-tds"
-%files tds
-%defattr(-,root,root,-)
-%{_qt4_plugindir}/sqldrivers/libqsqltds*
-%endif
+%_qtdir/imports/Qt/labs/folderlistmodel/libqmlfolderlistmodelplugin.so
+%_qtdir/imports/Qt/labs/folderlistmodel/qmldir
+%_qtdir/imports/Qt/labs/gestures/libqmlgesturesplugin.so
+%_qtdir/imports/Qt/labs/gestures/qmldir
+%_qtdir/imports/Qt/labs/particles/libqmlparticlesplugin.so
+%_qtdir/imports/Qt/labs/particles/qmldir
+%_qtdir/imports/Qt/labs/shaders/libqmlshadersplugin.so
+%_qtdir/imports/Qt/labs/shaders/qmldir
+%_qtdir/plugins/bearer/libqconnmanbearer.so
+%_qtdir/plugins/bearer/libqgenericbearer.so
+%_qtdir/plugins/bearer/libqnmbearer.so
 
-%post x11
-/sbin/ldconfig
-touch --no-create %{_datadir}/icons/hicolor ||:
+%files declarative-devel
+%defattr(-,root,root)
+%_qtdir/lib/libQtDeclarative.so
+%_libdir/libQtDeclarative.so
+%_qtdir/lib/libQtDeclarative.prl
+%_libdir/libQtDeclarative.prl
+%_qtdir/include/QtDeclarative
+%_includedir/QtDeclarative
+%_qtdir/include/Qt/QtDeclarative
+%_libdir/pkgconfig/QtDeclarative.pc
 
-%posttrans x11
-gtk-update-icon-cache -q %{_datadir}/icons/hicolor 2> /dev/null ||:
-
-%postun x11
-/sbin/ldconfig
-if [ $1 -eq 0 ] ; then
-touch --no-create %{_datadir}/icons/hicolor ||:
-gtk-update-icon-cache -q %{_datadir}/icons/hicolor 2> /dev/null ||:
-fi
-
-%files x11 -f qt4-x11.lang
-%defattr(-,root,root,-)
-%dir %{_qt4_importdir}/
-%{_qt4_importdir}/Qt/
-%{_qt4_libdir}/libQt3Support.so.4*
-%{_qt4_libdir}/libQtCLucene.so.4*
-%{_qt4_libdir}/libQtDesigner.so.4*
-%{_qt4_libdir}/libQtDeclarative.so.4*
-%{_qt4_libdir}/libQtDesignerComponents.so.4*
-%{_qt4_libdir}/libQtGui.so.4*
-%{_qt4_libdir}/libQtHelp.so.4*
-%{_qt4_libdir}/libQtMultimedia.so.4*
-%{_qt4_libdir}/libQtOpenGL.so.4*
-%{_qt4_libdir}/libQtScriptTools.so.4*
-%{_qt4_libdir}/libQtSvg.so.4*
-%{_qt4_plugindir}/*
-%exclude %{_qt4_plugindir}/crypto
-%if "%{?webkit}" == "-webkit"
-%exclude %{_qt4_plugindir}/designer/libqwebview.so
-%endif
-%exclude %{_qt4_plugindir}/sqldrivers
+%files gui
+%defattr(-,root,root)
+%_bindir/qttracereplay*
+%_qtdir/bin/qttracereplay
+%dir %_qtdir/plugins/accessible
+%dir %_qtdir/plugins/imageformats
+%_qtdir/plugins/accessible/libqtaccessiblewidgets.so
+%_qtdir/plugins/graphicssystems/libqtracegraphicssystem.so
+%_qtdir/lib/libQtGui.so.*
+%_libdir/libQtGui.so.*
+%_qtdir/plugins/imageformats/libqtiff.so
 %{_datadir}/icons/hicolor/*/apps/qt4-logo.*
 
-%if 0%{?dbus:1}
-%post qdbusviewer
-touch --no-create %{_datadir}/icons/hicolor ||:
+%files gui-devel
+%defattr(-,root,root)
+%_qtdir/lib/libQtGui.so
+%_libdir/libQtGui.so
+%_qtdir/lib/libQtGui.prl
+%_libdir/libQtGui.prl
+%_bindir/uic*
+%_qtdir/include/QtGui
+%_qtdir/include/QtDesigner
+%_qtdir/include/QtUiTools
+%_qtdir/bin/uic
+%_includedir/QtGui
+%_includedir/QtDesigner
+%_includedir/QtUiTools
+%_qtdir/include/Qt/QtGui
+%_libdir/pkgconfig/QtGui*.pc
+%_libdir/pkgconfig/QtUiTools.pc
+%_libdir/pkgconfig/QtDesigner*.pc
 
-%posttrans qdbusviewer
-gtk-update-icon-cache -q %{_datadir}/icons/hicolor 2> /dev/null ||:
+%files compat
+%defattr(-,root,root)
+%_qtdir/lib/libQt3Support.so.*
+%_libdir/libQt3Support.so.*
+%_qtdir/plugins/accessible/libqtaccessiblecompatwidgets.so
+%_qtdir/plugins/designer/libqt3supportwidgets.so
 
-%postun qdbusviewer
-if [ $1 -eq 0 ] ; then
-touch --no-create %{_datadir}/icons/hicolor ||:
-gtk-update-icon-cache -q %{_datadir}/icons/hicolor 2> /dev/null ||:
-fi
+%files compat-devel
+%defattr(-,root,root)
+%_qtdir/lib/libQt3Support.so
+%_libdir/libQt3Support.so
+%_qtdir/lib/libQt3Support.prl
+%_libdir/libQt3Support.prl
+%_qtdir/include/Qt3Support
+%_qtdir/q3porting.xml
+%_includedir/Qt3Support
+%_qtdir/include/Qt/Qt3Support
+%_libdir/pkgconfig/Qt3Support*.pc
+%_bindir/qt3to*
+%_bindir/uic3
+%_qtdir/bin/qt3to*
+%_qtdir/bin/uic3
 
-%files qdbusviewer
-%if "%{_qt4_bindir}" != "%{_bindir}"
-%{_bindir}/qdbusviewer
+%files designer
+%defattr(-,root,root)
+%_qtdir/lib/libQtDesigner.*
+%_qtdir/lib/libQtDesignerComponents.*
+%_libdir/libQtDesigner.*
+%_libdir/libQtDesignerComponents.*
+%_libdir/libQtUiTools.*
+%_qtdir/lib/libQtUiTools.*
+%_qtdir/bin/designer
+%_qtdir/bin/rcc
+%_qtdir/plugins/designer/libarthurplugin.so
+%_qtdir/plugins/designer/libcontainerextension.so
+%_qtdir/plugins/designer/libcustomwidgetplugin.so
+%_qtdir/plugins/designer/libtaskmenuextension.so
+%_qtdir/plugins/designer/libworldtimeclockplugin.so
+%_bindir/designer*
+%_bindir/rcc*
+%_qtdir/bin/pixeltool
+%_bindir/pixeltool*
+%{_datadir}/applications/qt4-designer.desktop
+
+%files linguist
+%defattr(-,root,root)
+%_qtdir/bin/linguist
+%_qtdir/bin/lconvert
+%dir %_qtdir/phrasebooks
+%_qtdir/phrasebooks/*
+%_bindir/linguist*
+%_bindir/lconvert*
+%{_datadir}/applications/qt4-linguist.desktop
+%{_datadir}/icons/hicolor/*/apps/linguist4.png
+
+%files opengl
+%defattr(-,root,root)
+%_qtdir/lib/libQtOpenGL.so.*
+%_libdir/libQtOpenGL.so.*
+%_qtdir/plugins/graphicssystems/libqglgraphicssystem.so
+
+%files opengl-devel
+%defattr(-,root,root)
+%_qtdir/lib/libQtOpenGL.so
+%_libdir/libQtOpenGL.so
+%_qtdir/lib/libQtOpenGL.prl
+%_libdir/libQtOpenGL.prl
+%_qtdir/include/QtOpenGL
+%_includedir/QtOpenGL
+%_qtdir/include/Qt/QtOpenGL
+%_libdir/pkgconfig/QtOpenGL*.pc
+
+%files qtconfig
+%defattr(-,root,root)
+%_bindir/qtconfig*
+%_qtdir/bin/qtconfig
+%{_datadir}/applications/qt4-qtconfig.desktop
+
+%files sql
+%defattr(-,root,root)
+%_qtdir/lib/libQtSql.so.*
+%_libdir/libQtSql.so.*
+
+%files sql-devel
+%defattr(-,root,root)
+%_qtdir/lib/libQtSql.so
+%_libdir/libQtSql.so
+%_qtdir/lib/libQtSql.prl
+%_libdir/libQtSql.prl
+%_qtdir/include/QtSql
+%_includedir/QtSql
+%_qtdir/include/Qt/QtSql
+%_libdir/pkgconfig/QtSql*.pc
+
+%files xmlpatterns
+%defattr(-,root,root)
+%_bindir/xmlpatterns*
+%_qtdir/bin/xmlpatterns*
+%_qtdir/lib/libQtXmlPatterns.so.*
+%_libdir/libQtXmlPatterns.so.*
+
+%files xmlpatterns-devel
+%defattr(-,root,root)
+%_qtdir/lib/libQtXmlPatterns.so
+%_libdir/libQtXmlPatterns.so
+%_qtdir/lib/libQtXmlPatterns.prl
+%_libdir/libQtXmlPatterns.prl
+%_qtdir/include/QtXmlPatterns
+%_includedir/QtXmlPatterns
+%_qtdir/include/Qt/QtXmlPatterns
+%_libdir/pkgconfig/QtXmlPatterns.pc
+
+%files multimedia
+%defattr(-,root,root)
+%_qtdir/lib/libQtMultimedia.so.*
+%_libdir/libQtMultimedia.so.*
+
+%files multimedia-devel
+%defattr(-,root,root)
+%_qtdir/lib/libQtMultimedia.so
+%_libdir/libQtMultimedia.so
+%_qtdir/lib/libQtMultimedia.prl
+%_libdir/libQtMultimedia.prl
+%_qtdir/include/QtMultimedia
+%_includedir/QtMultimedia
+%_qtdir/include/Qt/QtMultimedia
+%_libdir/pkgconfig/QtMultimedia.pc
+
+%files clucene
+%defattr(-,root,root)
+%_qtdir/lib/libQtCLucene.so.*
+%_libdir/libQtCLucene.so.*
+
+%files clucene-devel
+%defattr(-,root,root)
+%_qtdir/lib/libQtCLucene.so
+%_libdir/libQtCLucene.so
+%_qtdir/lib/libQtCLucene.prl
+%_libdir/libQtCLucene.prl
+%_libdir/pkgconfig/QtCLucene.pc
+
+%files help
+%defattr(-,root,root)
+%_bindir/qhelp*
+%_qtdir/bin/qhelp*
+%_qtdir/lib/libQtHelp.so.*
+%_libdir/libQtHelp.so.*
+
+%files help-devel
+%defattr(-,root,root)
+%_qtdir/lib/libQtHelp.so
+%_libdir/libQtHelp.so
+%_qtdir/lib/libQtHelp.prl
+%_libdir/libQtHelp.prl
+%_qtdir/include/QtHelp
+%_includedir/QtHelp
+%_qtdir/include/Qt/QtHelp
+%_libdir/pkgconfig/QtHelp.pc
+
+%files test
+%defattr(-,root,root)
+%_includedir/QtTest
+%_libdir/libQtTest.*
+%_libdir/pkgconfig/QtTest.pc
+%_qtdir/lib/libQtTest.*
+%_qtdir/include/QtTest
+%_qtdir/include/Qt/QtTest
+
+%files assistant
+%defattr(-,root,root)
+%_qtdir/bin/assistant*
+%_bindir/assistant*
+%{_datadir}/applications/qt4-assistant.desktop
+# FIXME:
+%_bindir/qcollectiongenerator*
+%_qtdir/bin/qcollectiongenerator
+%_bindir/qdoc3*
+%_qtdir/bin/qdoc3*
+
+#%files assistant-devel
+#%defattr(-,root,root)
+#%_includedir/QtAssistant
+#%_libdir/libQtAssistantClient.*
+#%_qtdir/include/QtAssistant
+#%_qtdir/lib/libQtAssistantClient.*
+#%_libdir/pkgconfig/QtAssistantClient.pc
+
+%files inputmethods
+%defattr(-,root,root)
+%_qtdir/plugins/inputmethods
+
+%files chinese
+%defattr(-,root,root)
+%_qtdir/plugins/codecs/libqcncodecs.so
+
+%files japanese
+%defattr(-,root,root)
+%_qtdir/plugins/codecs/libqjpcodecs.so
+
+%files korean
+%defattr(-,root,root)
+%_qtdir/plugins/codecs/libqkrcodecs.so
+
+%files taiwanese
+%defattr(-,root,root)
+%_qtdir/plugins/codecs/libqtwcodecs.so
+
+%files cjk
+
+%files jpeg
+%defattr(-,root,root)
+%_qtdir/plugins/imageformats/libqjpeg.so
+
+%files gif
+%defattr(-,root,root)
+%_qtdir/plugins/imageformats/libqgif.so
+
+%files tga
+%defattr(-,root,root)
+%_qtdir/plugins/imageformats/libqtga.so
+
+%files ico
+%defattr(-,root,root)
+%_qtdir/plugins/imageformats/libqico.so
+
+%files mng
+%defattr(-,root,root)
+%_qtdir/plugins/imageformats/libqmng.so
+
+%files svg
+%defattr(-,root,root)
+%_libdir/libQtSvg.so.*
+%_qtdir/lib/libQtSvg.so.*
+%_qtdir/plugins/imageformats/libqsvg.so
+%_qtdir/plugins/iconengines/libqsvgicon.so
+
+%files svg-devel
+%defattr(-,root,root)
+%_libdir/libQtSvg.so
+%_qtdir/lib/libQtSvg.so
+%_libdir/libQtSvg.prl
+%_qtdir/lib/libQtSvg.prl
+%_qtdir/include/QtSvg
+%_includedir/QtSvg
+%_qtdir/include/Qt/QtSvg
+%_libdir/pkgconfig/QtSvg*
+
+%if %with_mysql
+%files mysql
+%defattr(-,root,root)
+%_qtdir/plugins/sqldrivers/libqsqlmysql.so
 %endif
-%{_qt4_bindir}/qdbusviewer
-%{_datadir}/applications/*qdbusviewer.desktop
-%{_datadir}/icons/hicolor/*/apps/qdbusviewer.*
+
+%files sqlite
+%defattr(-,root,root)
+%_qtdir/plugins/sqldrivers/libqsqlite*.so
+
+%if %with_tds
+%files tds
+%defattr(-,root,root)
+%_qtdir/plugins/sqldrivers/libqsqltds.so
 %endif
 
+%if %with_odbc
+%files odbc
+%defattr(-,root,root)
+%_qtdir/plugins/sqldrivers/libqsqlodbc.so
+%endif
+
+%if %with_postgresql
+%files postgresql
+%defattr(-,root,root)
+%_qtdir/plugins/sqldrivers/libqsqlpsql.so
+%endif
+
+%if %with_firebird
+%files firebird
+%defattr(-,root,root)
+%_qtdir/plugins/sqldrivers/libqsqlibase.so
+%endif
+
+%files demos
+%defattr(-,root,root)
+%_qtdir/bin/qtdemo
+%_qtdir/demos
+%_bindir/qtdemo*
+%{_datadir}/applications/qt4-qtdemo.desktop
+
+%files examples
+%defattr(-,root,root)
+%_qtdir/examples
+
+%if ! %styles_are_gone
+%files style-windows
+%defattr(-,root,root)
+%_qtdir/plugins/styles/libqwindowsstyle.so
+
+%files style-motif
+%defattr(-,root,root)
+%_qtdir/plugins/styles/libqmotifstyle.so
+
+%files style-cde
+%defattr(-,root,root)
+%_qtdir/plugins/styles/libqcdestyle.so
+%endif
+
+%files dbus
+%defattr(-,root,root)
+# qdbus4 qdbuscpp2xml-qt4 qdbusviewer4 qdbusxml2cpp4 qdbuscpp2xml4
+# qdbus-qt4 qdbusviewer-qt4 qdbusxml2cpp-qt4
+%_bindir/qdbus*
+%_qtdir/bin/qdbus
+#%_bindir/qdbuscpp2xml*
+%_qtdir/bin/qdbuscpp2xml
+#%_bindir/qdbusxml2cpp*
+%_qtdir/bin/qdbusxml2cpp
+#%_bindir/qdbusviewer*
+%_qtdir/bin/qdbusviewer
+%_qtdir/lib/libQtDBus.so.*
+%_libdir/libQtDBus.so.*
+
+%_qtdir/plugins/script/libqtscriptdbus.so
+
+%files dbus-devel
+%defattr(-,root,root)
+%_qtdir/lib/libQtDBus.so
+%_libdir/libQtDBus.so
+%_qtdir/lib/libQtDBus.prl
+%_libdir/libQtDBus.prl
+%_qtdir/include/QtDBus
+%_libdir/pkgconfig/QtDBus*
+%_includedir/QtDBus
+%_qtdir/include/Qt/QtDBus
+
+%if %with_phonon && %ship_phonon_pkg
+%files phonon
+%defattr(-,root,root,-)
+%_qtdir/lib/libphonon.so.*
+%_libdir/libphonon.so.*
+%_qtdir/plugins/designer/libphononwidgets.so
+%{_datadir}/dbus-1/interfaces/org.kde.Phonon.AudioOutput.xml
+
+%files phonon-gstreamer
+%defattr(-,root,root,-)
+%_qtdir/plugins/phonon_backend/libphonon_gstreamer.so
+%{_datadir}/kde4/services/phononbackends/gstreamer.desktop
+
+%files phonon-devel
+%defattr(-,root,root,-)
+%_qtdir/include/phonon/
+#%_qtdir/include/Qt/phonon
+%_includedir/phonon
+%_qtdir/lib/libphonon.so
+%_libdir/libphonon.so
+%_qtdir/lib/libphonon.prl
+%_libdir/libphonon.prl
+%_libdir/pkgconfig/phonon.pc
+%endif
+
+%if %with_webkit && %ship_webkit_pkg
+%files webkit
+%defattr(-,root,root,-)
+%_qtdir/lib/libQtWebKit.so.*
+%_libdir/libQtWebKit.so.*
+%_qtdir/plugins/designer/libqwebview.so
+%_qtdir/imports/QtWebKit/libqmlwebkitplugin.so
+%_qtdir/imports/QtWebKit/qmldir
+
+%files webkit-devel
+%defattr(-,root,root,-)
+%_qtdir/lib/libQtWebKit.so
+%_libdir/libQtWebKit.so
+%_qtdir/lib/libQtWebKit.prl
+%_libdir/libQtWebKit.prl
+%_qtdir/mkspecs/modules/qt_webkit_version.pri 
+%_libdir/pkgconfig/QtWebKit.pc
+%_includedir/QtWebKit
+%_qtdir/include/QtWebKit
+%_qtdir/include/Qt/QtWebKit
+%_qtdir/tests/*
+%endif
 
 %changelog
-* Fri Mar 20 2015 Rex Dieter <rdieter@fedoraproject.org> 1:4.8.6-26
-- macros.qt4: fix _qt4_evr macro (missing : after epoch)
-
-* Fri Feb 27 2015 Rex Dieter <rdieter@fedoraproject.org> 1:4.8.6-25
-- DoS vulnerability in the BMP image handler (CVE-2015-0295)
-
-* Mon Feb 16 2015 Rex Dieter <rdieter@fedoraproject.org> 1:4.8.6-24
-- more gcc5 detection fixes, in particular, ensure same QT_BUILD_KEY as gcc4 for now
-
-* Fri Feb 13 2015 Rex Dieter <rdieter@fedoraproject.org> - 1:4.8.6-23
-- Qt: FTBFS with gcc5 (#1192464)
-- Make Adwaita the default theme for applications running in the GNOME DE (#1192453)
-
-* Wed Feb 11 2015 Rex Dieter <rdieter@fedoraproject.org> 1:4.8.6-22
-- rebuild (gcc5)
-
-* Thu Jan 29 2015 Rex Dieter <rdieter@fedoraproject.org> 1:4.8.6-21
-- refresh boost/moc patch (QTBUG-22829)
-
-* Sun Jan 18 2015 Rex Dieter <rdieter@fedoraproject.org> 1:4.8.6-20
-- fix %%pre scriptlet (#1183299)
-
-* Sat Jan 17 2015 Rex Dieter <rdieter@fedoraproject.org> 1:4.8.6-19
-- ship /etc/xdg/qtchooser/4.conf alternative instead (of qt4.conf)
-
-* Wed Nov 26 2014 Rex Dieter <rdieter@fedoraproject.org> 1:4.8.6-18
-- omit previously-overlooked webkit bits (#1168259)
-
-* Sun Nov 09 2014 Rex Dieter <rdieter@fedoraproject.org> 1:4.8.6-17
-- Broken qmake_qt4 in /usr/lib/rpm/macros.d/macros.qt4 (#1161927)
-
-* Mon Nov 03 2014 Rex Dieter <rdieter@fedoraproject.org> 1:4.8.6-16
-- macros.qt4: standalone, improved %%qmake_qt4 macro (sync'd with qt5 version)
-
-* Sat Nov 01 2014 Kevin Kofler <Kevin@tigcc.ticalc.org> - 1:4.8.6-15
-- sync system-clucene patch from qt5-qttools (some QDir::mkpath in QtCLucene)
-
-* Sun Oct 26 2014 Kevin Kofler <Kevin@tigcc.ticalc.org> - 1:4.8.6-14
-- build against the system clucene09-core (same patch as for qt5-qttools)
-
-* Tue Sep 16 2014 Rex Dieter <rdieter@fedoraproject.org> - 1:4.8.6-13
-- qmlviewer: -qt4 wrapper, move to -devel
-- pull in some upstream fixes
-
-* Sun Aug 17 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1:4.8.6-12
-- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
-
-* Tue Aug 12 2014 Kevin Kofler <Kevin@tigcc.ticalc.org> - 4.8.6-11
-- drop Phonon-GStreamer0.10 support from qtconfig-qt4 on F21+ (#1123112)
-
-* Wed Jul 23 2014 Rex Dieter <rdieter@fedoraproject.org> - 4.8.6-10
-- use alternatives to fix qtchooser conf's in non-basearch multilib case (#1122316)
-
-* Thu Jul 17 2014 Rex Dieter <rdieter@fedoraproject.org> 4.8.6-9.1
-- rebuild (for pulseaudio, bug #1117683)
-
-* Sat Jun 07 2014 Kevin Kofler <Kevin@tigcc.ticalc.org> 4.8.6-9
-- apply proposed fixes for QTBUG-34614,37380,38585 for LibreOffice (#1105422)
-
-* Tue Jun 03 2014 Rex Dieter <rdieter@fedoraproject.org> 4.8.6-8
-- backport selected upstream commits...
-- Fix visual index lookup (QTBUG-37813)
-- RGB30 fix (QTBUG-25998,#1018566)
-- QDBus comparison
-
-* Wed May 07 2014 Rex Dieter <rdieter@fedoraproject.org> 4.8.6-7
-- gcc should be fixed, drop workaround (#1091482)
-
-* Mon May 05 2014 Rex Dieter <rdieter@fedoraproject.org> 4.8.6-6
-- try -fno-devirtualize workaround fc21+ (#1091482, gcc #60965)
-
-* Mon May 05 2014 Rex Dieter <rdieter@fedoraproject.org> - 4.8.6-5
-- drop f21 gcc-4.9 workarounds (they didn't work)
-- omit qt-cupsEnumDests.patch, again, pending more testing (#980952)
-
-* Fri Apr 25 2014 Rex Dieter <rdieter@fedoraproject.org> 4.8.6-4
-- -fno-tree-vrp (#1091482)
-
-* Fri Apr 25 2014 Rex Dieter <rdieter@fedoraproject.org> 4.8.6-3
-- try -fno-delete-null-pointer-checks to workaround bug #1091482
-
-* Thu Apr 24 2014 Rex Dieter <rdieter@fedoraproject.org> 4.8.6-2
-- DoS vulnerability in the GIF image handler (QTBUG-38367)
-
-* Thu Apr 24 2014 Rex Dieter <rdieter@fedoraproject.org> 4.8.6-1
-- 4.8.6 (final)
-
-* Tue Apr 15 2014 Rex Dieter <rdieter@fedoraproject.org> 4.8.6-0.2.rc2
-- 4.8.6-rc2
-
-* Tue Apr 01 2014 Rex Dieter <rdieter@fedoraproject.org> - 4.8.6-0.1.rc1
-- 4.8.6-rc1
-
-* Wed Mar 26 2014 Rex Dieter <rdieter@fedoraproject.org> 4.8.5-24
-- support ppc64le arch (#1081216)
-
-* Sat Mar 08 2014 Kevin Kofler <Kevin@tigcc.ticalc.org> 4.8.5-23
-- fix QMAKE_STRIP handling (#1074041)
-
-* Fri Mar 07 2014 Rex Dieter <rdieter@fedoraproject.org> 4.8.5-22
-- respin mysql_config patch
-
-* Fri Mar 07 2014 Rex Dieter <rdieter@fedoraproject.org> 4.8.5-21
-- restore qt-cupsEnumDests.patch (#980952)
-
-* Thu Mar 06 2014 Rex Dieter <rdieter@fedoraproject.org> 4.8.5-20
-- systemtrayicon plugin support (from kubuntu)
-
-* Tue Feb 18 2014 Rex Dieter <rdieter@fedoraproject.org> 4.8.5-19
-- cleanup QMAKE_STRIP handling
-
-* Wed Feb 12 2014 Rex Dieter <rdieter@fedoraproject.org> 4.8.5-18
-- rebuild (libicu)
-
-* Sat Feb 01 2014 Rex Dieter <rdieter@fedoraproject.org> 4.8.5-17
-- better %%rpm_macros_dir handling
-
-* Sun Jan 26 2014 Rex Dieter <rdieter@fedoraproject.org> 4.8.5-16
-- macros.qt4: ++%%_qt4_examplesdir (keep %%_qt4_examples around for compatibility)
-
-* Fri Jan 17 2014 Kevin Kofler <Kevin@tigcc.ticalc.org> - 4.8.5-15
-- drop "Discover printers shared by CUPS 1.6 (#980952)" (#1054312, #980952#c18)
-
-* Mon Jan 13 2014 Kevin Kofler <Kevin@tigcc.ticalc.org> - 4.8.5-14
-- fix QTBUG-35459 (too low entityCharacterLimit=1024 for CVE-2013-4549)
-- fix QTBUG-35460 (error message for CVE-2013-4549 is misspelled)
-
-* Mon Dec 23 2013 Peter Robinson <pbrobinson@fedoraproject.org> 4.8.5-13
-- Add support for aarch64 (#1046360) 
-
-* Thu Dec 05 2013 Rex Dieter <rdieter@fedoraproject.org> 4.8.5-12
-- XML Entity Expansion Denial of Service (CVE-2013-4549)
-
-* Wed Oct 09 2013 Rex Dieter <rdieter@fedoraproject.org> 4.8.5-11
-- Discover printers shared by CUPS 1.6 (#980952)
-
-* Mon Oct 07 2013 Daniel Vrátil <dvratil@redhat.com> 4.8.5-10
-- drop revert of the PostgreSQL driver patch (fixed in Akonadi 1.10.3)
-
-* Thu Oct 03 2013 Rex Dieter <rdieter@fedoraproject.org> 4.8.5-9
-- rework %%_bindir %%_qt4_bindir links to be more qtchooser friendly
-
-* Thu Sep 12 2013 Rex Dieter <rdieter@fedoraproject.org> 4.8.5-8
-- Keyboard shortcuts doesn't work for russian keyboard layout (#968367, QTBUG-32908)
-
-* Mon Aug 26 2013 Jon Ciesla <limburgher@gmail.com> - 4.8.5-7
-- libmng rebuild.
-
-* Thu Aug 08 2013 Rex Dieter <rdieter@fedoraproject.org> 4.8.5-6.1
-- qt4 rpm macros not found by rpm in F18 (#994739)
-
-* Tue Jul 30 2013 Rex Dieter <rdieter@fedoraproject.org> 4.8.5-6
-- enable qtchooser support
-
-* Tue Jul 30 2013 Rex Dieter <rdieter@fedoraproject.org> 4.8.5-5
-- revert upstream postgresql driver changes wrt escaping (QTBUG-30076)
-
-* Thu Jul 11 2013 Rex Dieter <rdieter@fedoraproject.org> 4.8.5-4
-- drop qtscript(javascriptcore) debuginfo patch, savings not significant
-
-* Thu Jul 11 2013 Rex Dieter <rdieter@fedoraproject.org> 4.8.5-3
-- reduce debuginfo in qtwebkit(webcore) and qtscript(javascriptcore)
-
-* Tue Jul 02 2013 Rex Dieter <rdieter@fedoraproject.org> 4.8.5-2
-- qdbusviewer subpkg (#968336)
-
-* Tue Jul 02 2013 Rex Dieter <rdieter@fedoraproject.org> 4.8.5-1
-- 4.8.5 (final)
-
-* Wed Jun 26 2013 Rex Dieter <rdieter@fedoraproject.org> 4.8.5-0.6.rc2
-- trim changelog
-- cleaner rpm_macros_dir handling
-
-* Fri Jun 21 2013 Rex Dieter <rdieter@fedoraproject.org> 4.8.5-0.5.rc2
-- drop multilib portion from qt_plugin_path.patch
-
-* Tue Jun 18 2013 Rex Dieter <rdieter@fedoraproject.org> 4.8.5-0.4.rc2
-- (re)add kde4/multilib QT_PLUGIN_PATH
-
-* Mon Jun 10 2013 Rex Dieter <rdieter@fedoraproject.org> 4.8.5-0.3.rc2
-- 4.8.5-rc2
-
-* Mon Jun 10 2013 Rex Dieter <rdieter@fedoraproject.org> 4.8.5-0.2.rc
-- RFE: Add %%qmake_qt4 macro (#870199)
-
-* Sun Jun 09 2013 Rex Dieter <rdieter@fedoraproject.org> 4.8.5-0.1.rc
-- 4.8.5-RC
-
-* Thu May 30 2013 Rex Dieter <rdieter@fedoraproject.org> 4.8.4-19
-- drop QTBUG-27809 candidate fix, causes regressions (#968794)
-
-* Tue May 28 2013 Than Ngo <than@redhat.com> - 4.8.4-18
-- QTBUG-27809, fix multiple calls to QDBusPendingReply::waitForFinished on separate objects
-
-* Thu Apr 25 2013 Than Ngo <than@redhat.com> - 4.8.4-17
-- Desktop file sanity, drop key "Encoding", it's deprecated
-
-* Fri Apr 19 2013 Rex Dieter <rdieter@fedoraproject.org> 4.8.4-16
-- update URL (#859286)
-- include qdbusviewer .desktop/icon
-- .desktop files: +mime scriptlets, +GenericName keys
-
-* Wed Mar 20 2013 Rex Dieter <rdieter@fedoraproject.org> 4.8.4-15
-- pull in a few more upstream fixes
-
-* Mon Feb 11 2013 Rex Dieter <rdieter@fedoraproject.org> 4.8.4-14
-- SIGSEGV when called from QMetaObject::metaCall (QTBUG-29082, kde#311751)
-
-* Mon Feb 11 2013 Rex Dieter <rdieter@fedoraproject.org> 4.8.4-13
-- qmake: add support for pkgconfig Requires.private
-
-* Mon Feb 11 2013 Rex Dieter <rdieter@fedoraproject.org> 4.8.4-12
-- add more moc/boost workarounds, thanks boost-1.53 (QTBUG-22829)
-
-* Mon Feb 04 2013 Than Ngo <than@redhat.com> - 4.8.4-11
-- backport: fix security flaw was found in the way QSharedMemory class, CVE-2013-0254
-
-* Sat Jan 26 2013 Rex Dieter <rdieter@fedoraproject.org> 1:4.8.4-10
-- rebuild (icu)
-
-* Thu Jan 24 2013 Rex Dieter <rdieter@fedoraproject.org> 1:4.8.4-9
-- make qtchooser support non-conflicting
-
-* Mon Jan 21 2013 Adam Tkac <atkac redhat com> - 1:4.8.4-8
-- rebuild due to "jpeg8-ABI" feature drop
-
-* Wed Jan 09 2013 Rex Dieter <rdieter@fedoraproject.org> 4.8.4-7
-- add qtchooser support (disabled by default)
-
-* Mon Jan 07 2013 Rex Dieter <rdieter@fedoraproject.org> 4.8.4-6
-- blacklist unauthorized SSL certificates by Türktrust
-
-* Fri Jan 04 2013 Rex Dieter <rdieter@fedoraproject.org> 1:4.8.4-5
-- QGtkStyle was unable to detect the current GTK+ theme (#702493, QTBUG-5545))
-
-* Fri Jan 04 2013 Rex Dieter <rdieter@fedoraproject.org> 1:4.8.4-4
-- QSslSocket may report incorrect errors when certificate verification fails
-
-* Thu Jan 03 2013 Rex Dieter <rdieter@fedoraproject.org> 1:4.8.4-3
-- -x11: %%exclude %%{_qt4_plugindir}/designer/libqwebview.so
-
-* Sun Dec 16 2012 Rex Dieter <rdieter@fedoraproject.org> 1:4.8.4-2
-- -designer-plugin-webkit subpkg (#887501)
-- fix/prune/changelog
-
-* Thu Nov 29 2012 Rex Dieter <rdieter@fedoraproject.org> 1:4.8.4-1
-- 4.8.4
-
-* Wed Oct 31 2012 Than Ngo <than@redhat.com> - 1:4.8.3-8
-- add poll support to fix QAbstractSocket errors with more than
-  1024 file descriptors, thanks Florian for the patch
-
-* Wed Oct 24 2012 Rex Dieter <rdieter@fedoraproject.org> 1:4.8.3-7
-- Crash in Qt script (QTBUG-27322)
-
-* Tue Oct 23 2012 Rex Dieter <rdieter@fedoraproject.org> 1:4.8.3-6
-- fix/respin qdevice_pri patch
-
-* Mon Oct 22 2012 Rex Dieter <rdieter@fedoraproject.org> 1:4.8.3-5
-- QDir::homePath() should account for an empty $HOME (QTBUG-4862, kde#249217, #694385)
-
-* Sat Oct 20 2012 Rex Dieter <rdieter@fedoraproject.org> 1:4.8.3-4
-- $RPM_LD_FLAGS should be propagated to qmake's defaults (#868554)
-
-* Fri Sep 28 2012 Rex Dieter <rdieter@fedoraproject.org> 1:4.8.3-3
-- find qdevice.pri even for installed qt builds
-
-* Thu Sep 27 2012 Rex Dieter <rdieter@fedoraproject.org> 1:4.8.3-2
-- upstream disable-SSL-compression patch
-
-* Thu Sep 13 2012 Rex Dieter <rdieter@fedoraproject.org> - 1:4.8.3-1
-- qt-4.8.3 final
-- revert QtScript-JIT commit
-
-* Tue Sep 04 2012 Rex Dieter <rdieter@fedoraproject.org> 4.8.2-6
-- revert "fix QtScript JIT crash" patch, causes frequent segmentation faults (#853587)
-
-* Mon Aug 13 2012 Rex Dieter <rdieter@fedoraproject.org> 4.8.2-5
-- fix QtScript JIT crash (QTBUG-23871, kde#297661) 
-
-* Thu Jul 05 2012 Rex Dieter <rdieter@fedoraproject.org> 4.8.2-4
-- text cursor blinks not in the current cell (kde#296490)
-
-* Tue Jun 19 2012 Than Ngo <than@redhat.com> - 4.8.2-3
-- fix bz#810500, fix crash in assistant
-
-* Tue May 29 2012 Than Ngo <than@redhat.com> - 4.8.2-2
-- fix bz#820767, lrelease-qt4 tries to run qmake not qmake-qt4
-
-* Tue May 22 2012 Than Ngo <than@redhat.com> - 4.8.2-1
-- 4.8.2
-
-* Fri May 18 2012 Than Ngo <than@redhat.com> - 4.8.1-15
-- add rhel/fedora condition
-
-* Thu May 17 2012 Rex Dieter <rdieter@fedoraproject.org> 4.8.1-14
-- Can't build 32bit Qt release application on 64bit (#822710)
-
-* Wed May 16 2012 Than Ngo <than@redhat.com> - 4.8.1-13
-- add upstream patch to fix crash on big endian machine
-
-* Fri May 11 2012 Rex Dieter <rdieter@fedoraproject.org> 4.8.1-12
-- enable debuginfo in libQt3Support
-
-* Fri May 11 2012 Rex Dieter <rdieter@fedoraproject.org> 4.8.1-11
-- lrelease-qt4 tries to run qmake not qmake-qt4 (#820767)
-
-* Thu May 10 2012 Rex Dieter <rdieter@fedoraproject.org> 4.8.1-10
-- Requires: qt-settings (f17+)
-
-* Tue May 08 2012 Rex Dieter <rdieter@fedoraproject.org> 4.8.1-9
-- rebuild (libtiff)
-
-* Thu May 03 2012 Than Ngo <than@redhat.com> - 4.8.1-8
-- add rhel/fedora condition
-
-* Wed Apr 18 2012 Than Ngo <than@redhat.com> - 4.8.1-7
-- add rhel condition
-
-* Tue Apr 17 2012 Rex Dieter <rdieter@fedoraproject.org> 4.8.1-6
-- omit qdbusconnection warnings in release/no-debug mode
-
-* Tue Apr 03 2012 Jaroslav Reznik <jreznik@redhat.com> - 4.8.1-5
-- Fix a crash in cursorToX() when new block is added (QTBUG-24718)
-
-* Fri Mar 30 2012 Than Ngo <than@redhat.com> - 4.8.1-4
-- Fix QTgaHandler::canRead() not obeying image plugin specs
-
-* Thu Mar 29 2012 Rex Dieter <rdieter@fedoraproject.org> 4.8.1-3
-- Header file name mismatch in qt-devel i686 (#808087)
-
-* Thu Mar 29 2012 Than Ngo <than@redhat.com> - 4.8.1-2
-- add correct flags
-
-* Wed Mar 28 2012 Than Ngo <than@redhat.com> - 4.8.1-1
-- 4.8.1
-
-* Wed Feb 22 2012 Rex Dieter <rdieter@fedoraproject.org> 4.8.0-10
-- -demos: Requires: -doc (#795859)
-
-* Mon Feb 20 2012 Than Ngo <than@redhat.com> - 4.8.0-9
-- get rid of timestamp which causes multilib problem
-
-* Tue Jan 24 2012 Than Ngo <than@redhat.com> - 4.8.0-8
-- disable Using gold linker, g++ doesn't support flags gold linker
-- fix gcc-4.7 issue
-
-* Tue Jan 10 2012 Rex Dieter <rdieter@fedoraproject.org> 4.8.0-7
-- improved filter_event patch (kde#275469)
-
-* Mon Jan 09 2012 Than Ngo <than@redhat.com> - 4.8.0-6
-- bz#772128, CVE-2011-3922, Stack-based buffer overflow in embedded harfbuzz code
-
-* Tue Dec 27 2011 Rex Dieter <rdieter@fedoraproject.org> 4.8.0-5
-- fix qvfb 
-
-* Tue Dec 27 2011 Rex Dieter <rdieter@fedoraproject.org> 4.8.0-4
-- filter event patch, avoid "ghost entries in kde taskbar" problem (kde#275469)
-
-* Tue Dec 20 2011 Rex Dieter <rdieter@fedoraproject.org> 4.8.0-3
-- don't spam if libicu is not present at runtime (#759923)
-
-* Mon Dec 19 2011 Dan Horák <dan[at]dannu.cz> 4.8.0-2
-- add missing method for QBasicAtomicPointer on s390(x)
-
-* Thu Dec 15 2011 Jaroslav Reznik <jreznik@redhat.com> 4.8.0-1
-- 4.8.0
-
-* Mon Dec 12 2011 Jaroslav Reznik <jreznik@redhat.com> 4.8.0-0.29.rc1
-- Fixes the position of misplaced mouse input (QTBUG-22420)
-
-* Sun Dec 04 2011 Rex Dieter <rdieter@fedoraproject.org> 4.8.0-0.28.rc1
-- Control whether icu support is built (#759923)
-
-* Sat Dec 03 2011 Kevin Kofler <Kevin@tigcc.ticalc.org> 4.8.0-0.27.rc1
-- work around a MOC issue with Boost 1.48 headers (#756395)
-
-* Wed Nov 30 2011 Than Ngo <than@redhat.com> - 4.8.0-0.26.rc1
-- workaround crash on ppc64
-
-* Mon Nov 14 2011 Rex Dieter <rdieter@fedoraproject.org> 4.8.0-0.25.rc1
-- BuildRequires: pkgconfig(libpng)
-- -devel: drop Requires: libpng-devel libjpeg-devel 
-- qt4.macros: +%%_qt4_epoch, %%_qt4_evr
-
-* Thu Nov 03 2011 Rex Dieter <rdieter@fedoraproject.org> 4.8.0-0.24.rc1
-- build tds sql driver with -fno-strict-aliasing 
-
-* Fri Oct 28 2011 Rex Dieter <rdieter@fedoraproject.org> 4.8.0-0.23.rc1
-- crash when using a visual with 24 bits per pixel (#749647,QTBUG-21754)
-
-* Fri Oct 28 2011 Kevin Kofler <Kevin@tigcc.ticalc.org> 4.8.0-0.22.rc1
-- fix FTBFS in QtWebKit's wtf library with GLib 2.31
-
-* Thu Oct 27 2011 Kevin Kofler <Kevin@tigcc.ticalc.org> 4.8.0-0.21.rc1
-- fix missing NULL check in the toLocalFile patch (fixes Digikam segfault)
-
-* Thu Oct 27 2011 Rex Dieter <rdieter@fedoraproject.org> 4.8.0-0.20.rc1
-- restore qt-4.7-compatible behavior to QUrl.toLocalFile (#749213)
-
-* Wed Oct 26 2011 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1:4.8.0-0.19.rc1
-- Rebuilt for glibc bug#747377
-
-* Mon Oct 24 2011 Than Ngo <than@redhat.com> 4.8.0-0.18.rc1
-- bz#748297, update the URL of qt packages
-
-* Tue Oct 18 2011 Rex Dieter <rdieter@fedoraproject.org> 4.8.0-0.17.rc1
-- Buttons in Qt applications not clickable when run under gnome-shell (#742658, QTBUG-21900)
-
-* Mon Oct 17 2011 Rex Dieter <rdieter@fedoraproject.org> 4.8.0-0.16.rc1
-- Qt doesn't close orphaned file descriptors after printing (#746601, QTBUG-14724)
-
-* Sat Oct 15 2011 Rex Dieter <rdieter@fedoraproject.org> 4.8.0-0.15.rc1
-- revert qlist.h commit that seems to induce crashes in qDeleteAll<QList... (QTBUG-22037)
-
-* Sat Oct 15 2011 Rex Dieter <rdieter@fedoraproject.org> 4.8.0-0.14.rc1
-- pkgconfig-style deps
-
-* Thu Oct 13 2011 Rex Dieter <rdieter@fedoraproject.org> 4.8.0-0.13.rc1
-- 4.8.0-rc1
-
-* Mon Oct 03 2011 Rex Dieter <rdieter@fedoraproject.org> 4.8.0-0.12.20111002
-- 20111002 4.8 branch snapshot
-
-* Sat Sep 17 2011 Rex Dieter <rdieter@fedoraproject.org> 4.8.0-0.11.beta1
-- ./configure -webkit
-
-* Wed Sep 14 2011 Lukas Tinkl <ltinkl@redhat.com> 1:4.8.0-0.10.beta1
-- fix missing CSS styles and JS functions in the generated HTML
-  documentation, omitted from the upstream tarball
-
-* Wed Aug 17 2011 Rex Dieter <rdieter@fedoraproject.org> 1:4.8.0-0.9.beta1
-- -graphicssystem raster (#712617)
-- drop sqlite_pkg option
-
-* Sun Jul 31 2011 Rex Dieter <rdieter@fedoraproject.org> 1:4.8.0-0.8.beta1
-- macros.qt4: s|_qt47|_qt48|
-
-* Thu Jul 28 2011 Dan Horák <dan[at]danny.cz> 1:4.8.0-0.7.beta1
-- fix the outdated standalone copy of JavaScriptCore (s390)
-
-* Sat Jul 23 2011 Rex Dieter <rdieter@fedoraproject.org> 1:4.8.0-0.6.beta1
-- fix QMAKE_LIBDIR_QT, for missing QT_SHARED define (#725183)
-
-* Wed Jul 20 2011 Rex Dieter <rdieter@fedoraproject.org> 1:4.8.0-0.5.beta1
-- 4.8.0-beta1
-- drop webkit_packaged conditional
-- drop old patches
-- drop qvfb (for now, ftbfs)
-
-* Wed Jul 13 2011 Than Ngo <than@redhat.com> - 1:4.8.0-0.4.tp
-- move macros.* to -devel
-
-* Tue Jul 05 2011 Rex Dieter <rdieter@fedoraproject.org> 1:4.8.0-0.3.tp
-- Adding qt-sql-ibase driver for qt (#719002) 
-- qvfb subpackage (#718416)
-
-* Tue Jun 21 2011 Rex Dieter <rdieter@fedoraproject.org> 1:4.8.0-0.2.tp
-- fontconfig patch (#705348, QTBUG-19947)
-
-* Wed May 25 2011 Jaroslav Reznik <jreznik@redhat.com> 1:4.8.0-0.1.tp
-- 4.8.0-tp
-- drop phonon_internal, phonon_backend_packaged build options
-
-* Thu May 19 2011 Rex Dieter <rdieter@fedoraproject.org> 1:4.7.3-3
-- omit %%{_qt4_plugindir}/designer/libqwebview.so too
-
-* Thu May 19 2011 Rex Dieter <rdieter@fedoraproject.org> 1:4.7.3-2
-- omit bundled webkit on f16+ (in favor of separately packaged qtwebkit)
-
-* Thu May 05 2011 Jaroslav Reznik <jreznik@redhat.com> 1:4.7.3-1
-- 4.7.3
-
-* Thu Apr 21 2011 Rex Dieter <rdieter@fedoraproject.org> 1:4.7.2-9
-- -webkit-devel: move qt_webkit_version.pri here
-
-* Fri Apr 01 2011 Rex Dieter <rdieter@fedoraproject.org> 1:4.7.2-8
-- -devel-private: qt-creator/QmlDesigner requires qt private headers (#657498)
-
-* Fri Mar 25 2011 Rex Dieter <rdieter@fedoraproject.org> 1:4.7.2-7
-- followup patch for QTBUG-18338, blacklist fraudulent SSL certifcates
-
-* Fri Mar 25 2011 Rex Dieter <rdieter@fedoraproject.org> 1:4.7.2-6
-- drop qt-designer-plugin-phonon
-
-* Fri Mar 25 2011 Than Ngo <than@redhat.com> - 1:4.7.2-5
-- apply patch to fix QTBUG-18338, blacklist fraudulent SSL certifcates
-
-* Tue Mar 22 2011 Jaroslav Reznik <jreznik@redhat.com> 1:4.7.2-4
-- rebuild (mysql)
-
-* Fri Mar 11 2011 Dan Horák <dan[at]danny.cz> 1:4.7.2-3
-- workaround memory exhaustion during linking of libQtWebKit on s390
-
-* Mon Mar 07 2011 Jaroslav Reznik <jreznik@redhat.com> 1:4.7.2-2
-- Fix QNetworkConfigurationManager crash due to null private pointer (#682656)
-
-* Tue Mar 01 2011 Jaroslav Reznik <jreznik@redhat.com> 1:4.7.2-1
-- 4.7.2
-
-* Wed Feb 23 2011 Rex Dieter <rdieter@fedoraproject.org> 1:4.7.1-18
-- libQtWebKit.so has no debug info (#667175)
-
-* Wed Feb 16 2011 Rex Dieter <rdieter@fedoraproject.org> 1:4.7.1-17
-- Obsoletes: qt-sqlite < 1:4.7.1-16
-
-* Tue Feb 15 2011 Rex Dieter <rdieter@fedoraproject.org> 1:4.7.1-16
-- drop -sqlite subpkg, move into main (#677418) 
-
-* Wed Feb 09 2011 Rex Dieter <rdieter@fedoraproject.org> 1:4.7.1-15
-- -assistant subpkg (#660287)
-- -config drop Obsoletes: qt-x11 (avoid/workaround #674326)
-- -config unconditionally drop NoDisplay (since we're dropping the Obsoletes too)
-- -designer-plugin-phonon subpkg (#672088)
-
-* Tue Feb 08 2011 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1:4.7.1-14
-- Rebuilt for https://fedoraproject.org/wiki/Fedora_15_Mass_Rebuild
-
-* Wed Jan 26 2011 Rex Dieter <rdieter@fedoraproject.org> 4.7.1-13
-- -config: fix Obsoletes for real this time
-
-* Wed Jan 26 2011 Rex Dieter <rdieter@fedoraproject.org> 4.7.1-12
-- fix qt-config related Obsoletes/Provides
-
-* Wed Jan 26 2011 Rex Dieter <rdieter@fedoraproject.org> 4.7.1-11
-- upstream fix for QTextCursor regression (QTBUG-15857, kde#249373)
-
-* Tue Jan 25 2011 Rex Dieter <rdieter@fedoraproject.org> 4.7.1-10
-- -config subpkg
-- qt-x11 pulls in phonon (#672088)
-- qtconfig.desktop: drop NoDisplay (f15+ only, for now)
-
-* Thu Jan 20 2011 Rex Dieter <rdieter@fedoraproject.org> 4.7.1-9.1
-- apply the Assistant QtWebKit dependency removal (#660287) everywhere
-
-* Thu Jan 06 2011 Rex Dieter <rdieter@fedoraproject.org> 4.7.1-9
-- qsortfilterproxymodel fix (merge_request/934)
-
-* Tue Jan 04 2011 Rex Dieter <rdieter@fedoraproject.org> 4.7.1-8
-- only do Requires: phonon-backend if using qt's phonon
-
-* Fri Dec 24 2010 Kevin Kofler <Kevin@tigcc.ticalc.org> 4.7.1-7
-- fix QTreeView crash triggered by KPackageKit (patch by David Faure)
-
-* Fri Dec 24 2010 Rex Dieter <rdieter@fedoraproject.org> 4.7.1-6
-- rebuild (mysql)
-
-* Wed Dec 08 2010 Kevin Kofler <Kevin@tigcc.ticalc.org> 4.7.1-5
-- make the Assistant QtWebKit dependency removal (#660287) F15+ only for now
-- fix QTextCursor crash in Lokalize and Psi (QTBUG-15857, kde#249373, #660028)
-- add some more NULL checks to the glib_eventloop_nullcheck patch (#622164)
-
-* Mon Dec 06 2010 Than Ngo <than@redhat.com> 4.7.1-4
-- bz#660287, using QTextBrowser in assistant to drop qtwebkit dependency
-
-* Tue Nov 23 2010 Rex Dieter <rdieter@fedoraproject.org> - 4.7.1-3
-- Fails to create debug build of Qt projects on mingw (#653674, QTBUG-14467)
-
-* Mon Nov 22 2010 Than Ngo <than@redhat.com> - 4.7.1-2
-- bz#528303, Reordering of Malayalam Rakar not working properly
-
-* Thu Nov 11 2010 Than Ngo <than@redhat.com> - 4.7.1-1
-- 4.7.1
-
-* Mon Oct 25 2010 Jaroslav Reznik <jreznik@redhat.com> - 4.7.0-8
-- QtWebKit, CVE-2010-1822: crash by processing certain SVG images (#640290)
-
-* Mon Oct 18 2010 Rex Dieter <rdieter@fedoraproject.org> - 4.7.0-7
-- qt-devel contains residues from patch run (#639463)
-
-* Fri Oct 15 2010 Than Ngo <than@redhat.com> - 4.7.0-6
-- apply patch to fix the color issue in 24bit mode (cirrus driver)
-
-* Thu Sep 30 2010 Rex Dieter <rdieter@fedoraproject.org> - 4.7.0-5
-- Wrong Cursor when widget become native on X11 (QTBUG-6185)
-
-* Mon Sep 27 2010 Than Ngo <than@redhat.com> - 4.7.0-4
-- apply upstream patch to fix QTreeView-regression (QTBUG-13567)
-
-* Thu Sep 23 2010 Than Ngo <than@redhat.com> - 4.7.0-3
-- fix typo in license
-
-* Thu Sep 23 2010 Than Ngo <than@redhat.com> - 4.7.0-2
-- fix bz#562049, bn-IN Incorrect rendering
-- fix bz#562058, bn_IN init feature is not applied properly
-- fix bz#631732, indic invalid syllable's are not recognized properly
-- fix bz#636399, oriya script open type features are not applied properly
-
-* Tue Sep 21 2010 Than Ngo <than@redhat.com> - 4.7.0-1
-- 4.7.0
-
-* Thu Sep 09 2010 Rex Dieter <rdieter@fedoraproject.org> - 4.7.0-0.31.rc1
-- -webkit-devel: add missing %%defattr
-- -webkit: move qml/webkit bits here
-
-* Wed Sep 08 2010 Rex Dieter <rdieter@fedoraproject.org> - 4.7.0-0.30.rc1
-- Crash in drawPixmap in Qt 4.7rc1 (#631845, QTBUG-12826)
-
-* Mon Aug 30 2010 Than Ngo <than@redhat.com> - 4.7.0-0.29.rc1
-- drop the patch, it's already fixed in upstream
-
-* Thu Aug 26 2010 Than Ngo <than@redhat.com> - 4.7.0-0.28.rc1
-- 4.7.0 rc1
-
-* Thu Jul 08 2010 Rex Dieter <rdieter@fedoraproject.org> - 4.7.0-0.26.beta2
-- rebase patches, avoiding use of patch fuzz
-- omit old qt-copy/kde-qt patches, pending review
-- omit kde4_plugin patch
-- ftbfs:s/qml/qmlviewer, libQtMediaServices no longer included
-
-* Thu Jul 08 2010 Rex Dieter <rdieter@fedoraproject.org> - 4.7.0-0.25.beta2
-- 4.7.0-beta2
-
-* Thu Jul 01 2010 Rex Dieter <rdieter@fedoraproject.org> - 4.7.0-0.24.beta1
-- X11Embed broken (rh#609757, QTBUG-10809)
-
-* Thu Jul 01 2010 Kevin Kofler <Kevin@tigcc.ticalc.org> - 4.7.0-0.23.beta1
-- use find_lang to package the qm files (#609749)
-- put the qm files into the correct subpackages
-- remove qvfb translations, we don't ship qvfb
-
-* Tue Jun 29 2010 Rex Dieter <rdieter@fedoraproject.org. 4.7.0-0.22.beta1
-- workaround glib_eventloop crasher induced by gdal/grass (bug #498111)
-
-* Sun Jun 20 2010 Rex Dieter <rdieter@fedoraproject.org> 4.7.0-0.20.beta1
-- avoid timestamps in uic-generated files to be multilib-friendly
-
-* Fri Jun 18 2010 Rex Dieter <rdieter@fedoraproject.org> 4.7.0-0.19.beta1
-- revert -no-javascript-jit change, false-alarm (#604003)
-- QtWebKit does not search correct plugin path(s) (#568860)
-- QtWebKit browsers crash with flash-plugin (rh#605677,webkit#40567)
-- drop qt-x11-opensource-src-4.5.0-gcc_hack.patch
-
-* Wed Jun 16 2010 Rex Dieter <rdieter@fedoraproject.org> 4.7.0-0.18.beta1
-- -no-javascript-jit on i686 (#604003)
-
-* Wed Jun 16 2010 Karsten Hopp <karsten@redhat.com> 4.7.0-0.17.beta1 
-- add s390 and s390x to 3rdparty/webkit/JavaScriptCore/wtf/Platform.h and
-  3rdparty/javascriptcore/JavaScriptCore/wtf/Platform.h
-
-* Fri Jun 11 2010 Rex Dieter <rdieter@fedoraproject.org> - 4.7.0-0.16.beta1
-- scrub -lpulse-mainloop-glib from .prl files (#599844)
-- scrub references to %%buildroot in .pc, .prl files
-
-* Thu May 27 2010 Rex Dieter <rdieter@fedoraproject.org> - 4.7.0-0.15.beta1
-- Unsafe use of rand() in X11 (QTBUG-9793)
-
-* Fri May 21 2010 Rex Dieter <rdieter@fedoraproject.org> - 4.7.0-0.14.beta1
-- drop -no-javascript-jit (webkit#35154)
-
-* Mon May 17 2010 Rex Dieter <rdieter@fedoraproject.org> - 4.7.0-0.13.beta1
-- QT_GRAPHICSSYSTEM env support
-
-* Sun May 16 2010 Rex Dieter <rdieter@fedoraproject.org> - 4.7.0-0.12.beta1
-- -webkit-devel: move Qt/qweb*.h here (#592680)
-
-* Fri May 07 2010 Rex Dieter <rdieter@fedoraproject.org> - 4.7.0-0.11.beta1
-- -webkit-devel: Obsoletes: qt-devel ... (upgrade path)
-
-* Thu May 06 2010 Rex Dieter <rdieter@fedoraproject.org> - 4.7.0-0.10.beta1
-- -webkit-devel: Provides: qt4-webkit-devel , Requires: %%name-devel
-
-* Thu May 06 2010 Rex Dieter <rdieter@fedoraproject.org> - 4.7.0-0.9.beta1
-- 4.7.0-beta1
-- -webkit-devel : it lives! brainz!
-
-* Fri Apr 30 2010 Rex Dieter <rdieter@fedoraproject.org> - 4.7.0-0.8.tp
-- prepping for separate QtWebKit(-2.0)
-- -webkit subpkg,  Provides: QtWebKit ...
-- -devel: Provides: QtWebKit-devel ...
-- TODO: -webkit-devel (and see what breaks)
-
-* Wed Apr 28 2010 Rex Dieter <rdieter@fedoraproject.org> - 4.7.0-0.7.tp
-- own %%{_qt4_plugindir}/crypto
-
-* Sat Apr 03 2010 Kevin Kofler <Kevin@tigcc.ticalc.org> - 4.7.0-0.6.tp
-- backport fix for QTBUG-9354 which breaks kdeutils build
-
-* Fri Apr 02 2010 Rex Dieter <rdieter@fedoraproject.org> - 4.7.0-0.5.tp
-- Associate text/vnd.trolltech.linguist with linguist (#579082)
-
-* Tue Mar 23 2010 Tom "spot" Callaway <tcallawa@redhat.com> - 4.7.0-0.4.tp
-- fix type cast issue on sparc64
-
-* Sun Mar 21 2010 Kevin Kofler <Kevin@tigcc.ticalc.org> - 4.7.0-0.3.tp
-- also strip -lpulse from .prl files (fixes PyQt4 QtMultimedia binding build)
-
-* Tue Mar 16 2010 Rex Dieter <rdieter@fedoraproject.org> - 4.7.0-0.2.tp
-- qt-4.7.0-tp
-- macros.qt4 : +%%_qt4_importdir
-- don't strip libs from pkgconfig files, Libs.private is now used properly
-- add -lphonon to stripped libs instead of brutally hacking out
-  QMAKE_PRL_LIBS altogether (#520323)
-- qt-assistant-adp packaged separately now, not included here
-
-* Sat Mar 13 2010 Kevin Kofler <Kevin@tigcc.ticalc.org> - 4.6.2-7
-- BR alsa-lib-devel (for QtMultimedia)
-
-* Sat Mar 13 2010 Kevin Kofler <Kevin@tigcc.ticalc.org> - 4.6.2-6
-- Provides: qt-assistant-adp(-devel)
-
-* Fri Mar 05 2010 Than Ngo <than@redhat.com> - 4.6.2-5
-- Make tablet detection work with new wacom drivers (#569132)
-
-* Mon Mar 01 2010 Rex Dieter <rdieter@fedoraproject.org> - 4.6.2-4
-- fix 64bit platform logic, use linux-g++-64 everywhere except x86_64 (#569542)
-
-* Sun Feb 28 2010 Kevin Kofler <Kevin@tigcc.ticalc.org> - 4.6.2-3
-- fix CUPS patch not to crash if currentPPD is NULL (#566304)
-
-* Tue Feb 16 2010 Rex Dieter <rdieter@fedoraproject.org> - 4.6.2-2
-- macros.qt4: s/qt45/qt46/
-
-* Mon Feb 15 2010 Rex Dieter <rdieter@fedoraproject.org> - 4.6.2-1
-- 4.6.2
-
-* Fri Feb 05 2010 Rex Dieter <rdieter@fedoraproject.org> - 4.6.1-3
-- improve cups support (#523846, kde#180051#c22)
-
-* Tue Jan 19 2010 Rex Dieter <rdieter@fedoraproject.org> - 4.6.1-2
-- drop bitmap_font_speed patch, rejected upstream
-
-* Tue Jan 19 2010 Than Ngo <than@redhat.com> - 4.6.1-1
-- 4.6.1
-
-* Mon Jan 11 2010 Rex Dieter <rdieter@fedoraproject.org> - 4.6.0-5
-- bitmap_font_speed patch (QTBUG-7255)
-
-* Sat Jan 09 2010 Rex Dieter <rdieter@fedoraproject.org> - 4.6.0-4
-- Fix crash when QGraphicsItem destructor deletes other QGraphicsItem (kde-qt cec34b01)
-- Fix a crash in KDE/Plasma with QGraphicsView. TopLevel list of items (kde-qt 63839f0c)
-
-* Wed Dec 23 2009 Kevin Kofler <Kevin@tigcc.ticalc.org> - 4.6.0-3
-- disable QtWebKit JavaScript JIT again, incompatible with SELinux (#549994)
-
-* Sat Dec 05 2009 Kevin Kofler <Kevin@tigcc.ticalc.org> - 4.6.0-2
-- own %%{_qt4_plugindir}/gui_platform
-
-* Tue Dec 01 2009 Than Ngo <than@redhat.com> - 4.6.0-1
-- 4.6.0
-
-* Tue Nov 17 2009 Rex Dieter <rdieter@fedoraproject.org> - 4.6.0-0.6.rc1
-- qt-4.6.0-rc1
-
-* Sat Nov 14 2009 Rex Dieter <rdieter@fedoraproject.org> - 4.6.0-0.5.beta1 
-- -tds: Add package with TDS sqldriver (#537586)
-- add arch'd provides for sql drivers
-
-* Sun Nov 08 2009 Rex Dieter <rdieter@fedoraproject.org> - 4.6.0-0.4.beta1
-- -x11: Requires: %%{name}-sqlite%{?_isa}
-
-* Mon Oct 26 2009 Rex Dieter <rdieter@fedoraproject.org> - 4.6.0-0.3.beta1
-- kde-qt patches (as of 20091026)
-
-* Fri Oct 16 2009 Than Ngo <than@redhat.com> - 4.6.0-0.2.beta1 
-- subpackage sqlite plugin, add Require on qt-sqlite in qt-x11
-  for assistant
-- build/install qdoc3 again
-
-* Wed Oct 14 2009 Rex Dieter <rdieter@fedoraproject.org> - 4.6.0-0.1.beta1
-- qt-4.6.0-beta1
-- no kde-qt patches (yet)
-
-* Sat Oct 10 2009 Than Ngo <than@redhat.com> - 4.5.3-4
-- fix translation build issue
-- rhel cleanup
-
-* Tue Oct 06 2009 Jaroslav Reznik <jreznik@redhat.com> - 4.5.3-3
-- disable JavaScriptCore JIT, SE Linux crashes (#527079)
-
-* Fri Oct 02 2009 Than Ngo <than@redhat.com> - 4.5.3-2
-- cleanup patches
-- if ! phonon_internal, exclude more/all phonon headers
-- qt-devel must Requires: phonon-devel (#520323)
-
-* Thu Oct 01 2009 Rex Dieter <rdieter@fedoraproject.org> - 4.5.3-1
-- qt-4.5.3
-
-* Tue Sep 29 2009 Rex Dieter <rdieter@fedoraproject.org> - 4.5.2-21
-- switch to external/kde phonon
-
-* Mon Sep 28 2009 Rex Dieter <rdieter@fedoraproject.org> - 4.5.2-20
-- use internal Qt Assistant/Designer icons
-- -devel: move designer.qch,linguist.qch here
-- move ownership of %%_qt4_docdir, %%_qt4_docdir/qch to main pkg
-
-* Sun Sep 20 2009 Rex Dieter <rdieter@fedoraproject.org> - 4.5.2-19
-- Missing Qt Designer icon (#476605)
-
-* Fri Sep 11 2009 Rex Dieter <rdieter@fedoraproject.org> - 4.5.2-18
-- drop gcc -fno-var-tracking-assignments hack (#522576)
-
-* Fri Sep 11 2009 Than Ngo <than@redhat.com> - 4.5.2-17
-- drop useless check for ossl patch, the patch works fine with old ossl
-
-* Wed Sep 09 2009 Than Ngo <than@redhat.com> - 4.5.2-16
-- add a correct system_ca_certificates patch
-
-* Tue Sep 08 2009 Rex Dieter <rdieter@fedoraproject.org> - 4.5.2-15
-- use system ca-certificates (#521911)
-
-* Tue Sep 01 2009 Than Ngo <than@redhat.com> - 4.5.2-14
-- drop fedora < 9 support
-- only apply ossl patch for fedora > 11
-
-* Mon Aug 31 2009 Than Ngo <than@redhat.com> - 4.5.2-13
-- fix for CVE-2009-2700
-
-* Thu Aug 27 2009 Rex Dieter <rdieter@fedoraproject.org> 4.5.2-12
-- use platform linux-g++ everywhere (ie, drop linux-g++-64 on 64 bit),
-  avoids plugin/linker weirdness (bug #478481)
-
-* Wed Aug 26 2009 Tomas Mraz <tmraz@redhat.com> - 1:4.5.2-11
-- rebuilt with new openssl
-
-* Thu Aug 20 2009 Than Ngo <than@redhat.com> - 4.5.2-10
-- switch to kde-qt branch
-
-* Tue Aug 18 2009 Than Ngo <than@redhat.com> - 4.5.2-9
-- security fix for CVE-2009-1725 (bz#513813)
-
-* Sun Aug 16 2009 Than Ngo <than@redhat.com> - 4.5.2-8
-- fix phonon-backend-gstreamer for using pulsaudio (#513421)
-
-* Fri Aug 14 2009 Rex Dieter <rdieter@fedoraproject.org> 4.5.2-7
-- kde-qt: 287-qmenu-respect-minwidth
-- kde-qt: 0288-more-x-keycodes (#475247)
-
-* Wed Aug 05 2009 Rex Dieter <rdieter@fedoraproject.org> 4.5.2-6
-- use linker scripts for _debug targets (#510246)
-- tighten deps using %%{?_isa}
-- -x11: Requires(post,postun): /sbin/ldconfig
-
-* Thu Jul 30 2009 Than Ngo <than@redhat.com> - 4.5.2-5
-- apply upstream patch to fix issue in Copy and paste
-
-* Sun Jul 26 2009 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1:4.5.2-4
-- Rebuilt for https://fedoraproject.org/wiki/Fedora_12_Mass_Rebuild
-
-* Thu Jul 02 2009 Than Ngo <than@redhat.com> - 4.5.2-3
-- pregenerate PNG, drop BR on GraphicsMagick (bz#509244)
-
-* Fri Jun 26 2009 Kevin Kofler <Kevin@tigcc.ticalc.org> - 4.5.2-2
-- take current qt-copy-patches snapshot (20090626)
-- disable patches which are already in 4.5.2
-- fix the qt-copy patch 0274-shm-native-image-fix.diff to apply against 4.5.2
-
-* Thu Jun 25 2009 Lukáš Tinkl <ltinkl@redhat.com> - 4.5.2-1
-- Qt 4.5.2
-
-* Sun Jun 07 2009 Rex Dieter <rdieter@fedoraproject.org> - 4.5.1-18
-- phonon-backend-gstreamer pkg, with icons
-- optimize (icon-mostly) scriptlets
-
-* Sun Jun 07 2009 Than Ngo <than@redhat.com> - 4.5.1-17
-- drop the hack, apply patch to install Global header, gstreamer.desktop
-  and dbus services file
-
-* Sat Jun 06 2009 Rex Dieter <rdieter@fedoraproject.org> - 4.5.1-16
-- install awol Phonon/Global header
-
-* Fri Jun 05 2009 Kevin Kofler <Kevin@tigcc.ticalc.org> - 4.5.1-15
-- apply Phonon PulseAudio patch (needed for the xine-lib backend)
-
-* Fri Jun 05 2009 Than Ngo <than@redhat.com> - 4.5.1-14
-- enable phonon and gstreamer-backend
-
-* Sat May 30 2009 Rex Dieter <rdieter@fedoraproject.org> - 4.5.1-13
-- -doc: Obsoletes: qt-doc < 1:4.5.1-4 (workaround bug #502401)
-
-* Sat May 23 2009 Rex Dieter <rdieter@fedoraproject.org> - 4.5.1-12
-- +phonon_internal macro to toggle packaging of qt's phonon (default off)
-
-* Fri May 22 2009 Rex Dieter <rdieter@fedoraproject.org> - 4.5.1-11
-- qt-copy-patches-20090522
-
-* Wed May 20 2009 Rex Dieter <rdieter@fedoraproject.org> - 4.5.1-10.2
-- full (non-bootstrap) build
-
-* Wed May 20 2009 Rex Dieter <rdieter@fedoraproject.org> - 4.5.1-10.1
-- allow for minimal bootstrap build (*cough* arm *cough*)
-
-* Wed May 06 2009 Rex Dieter <rdieter@fedoraproject.org> - 4.5.1-10
-- improved kde4_plugins patch, skip expensive/unneeded canonicalPath
-
-* Wed May 06 2009 Rex Dieter <rdieter@fedoraproject.org> - 4.5.1-9
-- include kde4 plugin path by default (#498809)
-
-* Mon May 04 2009 Rex Dieter <rdieter@fedoraproject.org> - 4.5.1-8
-- fix invalid assumptions about mysql_config --libs (bug #440673)
-- fix %%files breakage from 4.5.1-5
-
-* Wed Apr 29 2009 Rex Dieter <rdieter@fedoraproject.org> - 4.5.1-7
-- -devel: Provides: qt4-devel%%{?_isa} ...
-
-* Mon Apr 27 2009 Than Ngo <than@redhat.com> - 4.5.1-6
-- drop useless hunk of qt-x11-opensource-src-4.5.1-enable_ft_lcdfilter.patch
-
-* Mon Apr 27 2009 Rex Dieter <rdieter@fedoraproject.org> - 4.5.1-5
-- -devel: Provides: *-static for libQtUiTools.a
-
-* Fri Apr 24 2009 Rex Dieter <rdieter@fedoraproject.org> - 4.5.1-4
-- qt-doc noarch
-- qt-demos, qt-examples (split from -doc)
-- (cosmetic) re-order subpkgs in alphabetical order
-- drop unused profile.d bits
-
-* Fri Apr 24 2009 Rex Dieter <rdieter@fedoraproject.org> - 4.5.1-3
-- enable FT_LCD_FILTER (uses freetype subpixel filters if available at runtime)
-
-* Fri Apr 24 2009 Than Ngo <than@redhat.com> - 4.5.1-2
-- apply upstream patch to fix the svg rendering regression
-
-* Thu Apr 23 2009 Than Ngo <than@redhat.com> - 4.5.1-1
-- 4.5.1
-
-* Tue Apr 14 2009 Rex Dieter <rdieter@fedoraproject.org> - 4.5.0-14
-- fix vrgb/vgbr corruption, disable QT_USE_FREETYPE_LCDFILTER (#490377)
-
-* Fri Apr 10 2009 Than Ngo <than@redhat.com> - 4.5.0-13
-- unneeded executable permissions for profile.d scripts
-
-* Wed Apr 01 2009 Kevin Kofler <Kevin@tigcc.ticalc.org> - 4.5.0-12
-- fix inline asm in qatomic (de)ref (i386/x86_64), should fix Kolourpaint crash
-
-* Mon Mar 30 2009 Rex Dieter <rdieter@fedoraproject.org> - 4.5.0-11
-- qt fails to build on ia64 (#492174)
-
-* Wed Mar 25 2009 Rex Dieter <rdieter@fedoraproject.org> - 4.5.0-10
-- qt-copy-patches-20090325
-
-* Tue Mar 24 2009 Than Ngo <than@redhat.com> - 4.5.0-9
-- lrelease only shows warning when duplicate messages found in *.ts( #491514)
-
-* Fri Mar 20 2009 Rex Dieter <rdieter@fedoraproject.org> - 4.5.0-8
-- qt-copy-patches-20090319
-
-* Thu Mar 19 2009 Rex Dieter <rdieter@fedoraproject.org> - 4.5.0-7
-- include more phonon bits, attempt to fix/provide phonon bindings
-  for qtscriptgenerator, PyQt, ...
-
-* Tue Mar 17 2009 Than Ngo <than@redhat.com> - 4.5.0-6
-- fix lupdate segfault (#486866)
-
-* Sat Mar 14 2009 Dennis Gilmore <dennis@ausil.us> - 4.5.0-5
-- add patch for sparc64. 
-- _Atomic_word is not always an int
-
-* Tue Mar 10 2009 Rex Dieter <rdieter@fedoraproject.org> - 4.5.0-4
-- macros.qt4: %%_qt45
-- cleanup more phonon-related left-overs 
-
-* Wed Mar 04 2009 Rex Dieter <rdieter@fedoraproject.org> - 4.5.0-3
-- -no-phonon-backend
-- include qdoc3
-- move designer plugins to runtime (#487622)
-
-* Tue Mar 03 2009 Rex Dieter <rdieter@fedoraproject.org> - 4.5.0-2
-- License: LGPLv2 with exceptions or GPLv3 with exceptions
-- BR: gstreamer-devel
-- drop qgtkstyle patch (no longer needed)
-- -x11: move libQtScriptTools here (linked with libQtGui)
-
-* Tue Mar 03 2009 Than Ngo <than@redhat.com> - 4.5.0-1
-- 4.5.0
-
-* Fri Feb 27 2009 Rex Dieter <rdieter@fedoraproject.org> - 1:4.5.0-0.8.20090224
-- 20090224 snapshot
-- adjust pkgconfig hackery
-
-* Wed Feb 25 2009 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1:4.5.0-0.7.rc1
-- Rebuilt for https://fedoraproject.org/wiki/Fedora_11_Mass_Rebuild
-
-* Sun Feb 22 2009 Rex Dieter <rdieter@fedoraproject.org> 4.5.0-0.5.rc1
-- revert license, change won't land until official 4.5.0 release
-- workaround broken qhostaddress.h (#485677)
-- Provides: qgtkstyle = 0.1
-
-* Fri Feb 20 2009 Rex Dieter <rdieter@fedoraproject.org> 4.5.0-0.4.rc1
-- saner versioned Obsoletes
-- -gtkstyle, Obsoletes: qgtkstyle < 0.1
-- enable phonon support and associated hackery
-
-* Mon Feb 16 2009 Than Ngo <than@redhat.com> 4.5.0-0.3.rc1
-- fix callgrindChildExitCode is uninitialzed
-
-* Sun Feb 15 2009 Rex Dieter <rdieter@fedoraproject.org> - 4.5.0-0.2.rc1
-- qt-copy-patches-20090215
-- License: +LGPLv2
-
-* Wed Feb 11 2009 Than Ngo <than@redhat.com> - 4.5.0-0.rc1.0
-- 4.5.0 rc1
-
-* Thu Feb 05 2009 Rex Dieter <rdieter@fedoraproject.org> 4.4.3-16
-- track branches/qt-copy/4.4, and backout previous trunk(qt45) ones
-
-* Mon Feb 02 2009 Than Ngo <than@redhat.com> 4.4.3-15
-- disable 0269,0270,0271 patches, it causes issue in systray
-
-* Thu Jan 29 2009 Rex Dieter <rdieter@fedoraproject.org> - 4.4.3-14
-- qt-copy-patches-20090129
-
-* Mon Jan 26 2009 Rex Dieter <rdieter@fedoraproject.org> - 4.4.3-13
-- Provides: qt4%%{?_isa} = %%version-%%release
-- add %%_qt4 to macros.qt4
-
-* Thu Jan 22 2009 Rex Dieter <rdieter@fedoraproject.org> - 4.4.3-12 
-- respin (mysql)
-
-* Fri Jan 16 2009 Kevin Kofler <Kevin@tigcc.ticalc.org> - 4.4.3-11
-- rebuild for new OpenSSL
-
-* Mon Jan 12 2009 Rex Dieter <rdieter@fedoraproject.org> - 4.4.3-10
-- drop qt-x11-opensource-src-4.3.4-no-hardcoded-font-aliases.patch (#447298),
-  in favor of qt-copy's 0263-fix-fontconfig-handling.diff
-
-* Mon Jan 12 2009 Than Ngo <than@redhat.com> - 4.4.3-9
-- qt-copy-patches-20090112
-
-* Tue Dec 30 2008 Rex Dieter <rdieter@fedoraproject.org> 4.4.3-8
-- qt-copy-patches-20081225
-
-* Fri Dec 12 2008 Rex Dieter <rdieter@fedoraproject.org> 4.4.3-7
-- rebuild for pkgconfig deps
-
-* Wed Nov 12 2008 Rex Dieter <rdieter@fedoraproject.org> 4.4.3-6
-- qt-copy-patches-20081112
-
-* Tue Nov 11 2008 Than Ngo <than@redhat.com> 4.4.3-5
-- drop 0256-fix-recursive-backingstore-sync-crash.diff, it's
-  included in qt-copy-pathes-20081110
-
-* Mon Nov 10 2008 Rex Dieter <rdieter@fedoraproject.org> 4.4.3-4
-- qt-copy-patches-20081110
-
-* Mon Nov 10 2008 Than Ngo <than@redhat.com> 4.4.3-3
-- apply 0256-fix-recursive-backingstore-sync-crash.diff
-
-* Thu Nov 06 2008 Than Ngo <than@redhat.com> 4.4.3-2
-- bz#468814, immodule selection behavior is unpredictable without QT_IM_MODULE,
-  patch from Peng Wu
-- backport fix from 4.5
-
-* Sun Sep 28 2008 Rex Dieter <rdieter@fedoraproject.org> 4.4.3-1
-- 4.4.3
-
-* Wed Sep 24 2008 Rex Dieter <rdieter@fedoraproject.org> 4.4.2-2
-- omit systray patch (for now)
-
-* Sat Sep 20 2008 Than Ngo <than@redhat.com> 4.4.2-1
-- 4.4.2
-
-* Mon Sep 08 2008 Rex Dieter <rdieter@fedoraproject.org> - 4.4.1-3
-- apply QMAKEPATH portion of multilib patch only if needed
-- qt-copy-patches-20080908
-
-* Wed Aug 06 2008 Than Ngo <than@redhat.com> -  4.4.1-2
-- fix license tag
-- fix Obsoletes: qt-sqlite (missing epoch)
-
-* Tue Aug 05 2008 Than Ngo <than@redhat.com> -  4.4.1-1
-- 4.4.1
-
-* Tue Aug 05 2008 Rex Dieter <rdieter@fedoraproject.org> 4.4.0-17
-- fold -sqlite subpkg into main (#454930)
-
-* Wed Jul 23 2008 Rex Dieter <rdieter@fedoraproject.org> 4.4.0-16
-- qt-copy-patches-20080723 (kde#162793)
-- omit deprecated phonon bits
-
-* Sat Jul 19 2008 Rex Dieter <rdieter@fedoraproject.org> 4.4.0-15
-- fix/workaround spec syntax 
-
-* Sat Jul 19 2008 Rex Dieter <rdieter@fedoraproject.org> 4.4.0-14
-- macros.qt4: fix %%_qt4_datadir, %%_qt4_translationdir
-
-* Thu Jul 17 2008 Rex Dieter <rdieter@fedoraproject.org> 4.4.0-13
-- (re)fix qconfig-multilib.h for sparc64
-
-* Fri Jul 11 2008 Rex Dieter <rdieter@fedoraproject.org> 4.4.0-12
-- qt-copy-patches-20080711
-
-* Mon Jun 23 2008 Rex Dieter <rdieter@fedoraproject.org> 4.4.0-11
-- fix dbus conditional (#452487)
-
-* Sat Jun 14 2008 Rex Dieter <rdieter@fedoraproject.org> 4.4.0-10
-- strip -lsqlite3 from .pc files (#451490)
-
-* Sat Jun 14 2008 Kevin Kofler <Kevin@tigcc.ticalc.org> 4.4.0-9
-- restore -qt4 suffixes
-
-* Fri Jun 13 2008 Than Ngo <than@redhat.com> 4.4.0-8
-- drop qt wrapper, make symlinks to /usr/bin
-
-* Tue Jun 10 2008 Than Ngo <than@redhat.com> 4.4.0-7
-- fix #450310, multilib issue 
-
-* Fri Jun 06 2008 Rex Dieter <rdieter@fedoraproject.org> 4.4.0-6
-- qt-copy-patches-20080606
-- drop BR: libungif-devel (not used)
-- move libQtXmlPatters, -x11 -> main
-- move qdbuscpp2xml, qdbusxml2cpp, xmlpatters, -x11 -> -devel
-
-* Tue May 27 2008 Kevin Kofler <Kevin@tigcc.ticalc.org> 4.4.0-5
-- under GNOME, default to QGtkStyle if available
-
-* Mon May 19 2008 Kevin Kofler <Kevin@tigcc.ticalc.org> 4.4.0-4
-- don't hardcode incorrect font substitutions (#447298)
-
-* Fri May 16 2008 Rex Dieter <rdieter@fedoraproject.org> 4.4.0-3
-- qt-copy-patches-20080516
-
-* Tue May 13 2008 Kevin Kofler <Kevin@tigcc.ticalc.org> 4.4.0-2
-- revert _qt4_bindir change for now, needs more work (#446167)
-
-* Tue May 06 2008 Rex Dieter <rdieter@fedoraproject.org> 4.4.0-1
-- qt-4.4.0
+* Tue Aug 05 2014 Liu Di <liudidi@gmail.com> - 4.8.6-2
+- 为 Magic 3.0 重建
+
+* Fri Jun 06 2014 Liu Di <liudidi@gmail.com> - 4.8.6-1.4
+- 为 Magic 3.0 重建
+
+* Fri Jun 06 2014 Liu Di <liudidi@gmail.com> - 4.8.6-1.3
+- 为 Magic 3.0 重建
+
+* Fri Jun 06 2014 Liu Di <liudidi@gmail.com> - 4.8.6-1.2
+- 为 Magic 3.0 重建
+
+* Fri Jun 06 2014 Liu Di <liudidi@gmail.com> - 4.8.6-1.1
+- 为 Magic 3.0 重建
+
+* Wed Mar 28 2012 Liu Di <liudidi@gmail.com> - 4.8.0-1.4
+- 为 Magic 3.0 重建
+
+* Tue Mar 27 2012 Liu Di <liudidi@gmail.com> - 4.8.0-1.3
+- 为 Magic 3.0 重建
+
+* Tue Mar 13 2012 Liu Di <liudidi@gmail.com> - 4.8.0-1.2
+- 为 Magic 3.0 重建
+
+* Tue Mar 13 2012 Liu Di <liudidi@gmail.com> - 4.8.0-1.1
+- 为 Magic 3.0 重建
+
+* Tue Oct 20 2011 Liu Di <liudidi@gmail.com> - 4.8.0-1
+- 更新到 4.8.0
+- 添加在新版本 glib 上编译的补丁
+- 修正一些文件打包问题
+
+* Wed Oct 13 2010 Ni Hui <shuizhuyuanluo@126.com> 4.7.0-2mgc
+- qt webkit 默认编码设为 gb18030(patch 104 written by nihui)
+- qt webkit gb2312/gbk 直接认作为 gb18030(patch 105 written by nihui)
+- 庚寅  九月初六
+
+* Mon Oct 11 2010 Ni Hui <shuizhuyuanluo@126.com> 4.7.0-1mgc
+- 更新至 4.7.0
+- core-devel 包添加 qt4.sh 和 qt4.csh
+- qt4-qtscript/qt4-qtscripttools/qt4-qtdbus 重命名为 qt4-script/qt4-scripttools/qt4-dbus
+- qtabbar 标签中文竖排支持(patch 103 written by nihui)
+- 庚寅  九月初四
+
+* Sat Mar 20 2010 Ni Hui <shuizhuyuanluo@126.com> 4.6.2-1mgc
+- 更新至 4.6.2
+- 庚寅  二月初五
+
+* Thu Dec 3 2009 Ni Hui <shuizhuyuanluo@126.com> 4.6.0-1mgc
+- 更新至 4.6.0
+- 新设立 multimedia 包
+- 未纳入 declarative 模块
+- 未纳入 openvg 支持
+- qttracereplay 和 libqtracegraphicssystem.so 归入 gui 包
+- 乙丑  十月十七
+
+* Fri Oct 2 2009 Ni Hui <shuizhuyuanluo@126.com> 4.5.3-1mgc
+- 更新至 4.5.3
+- 为何没有翻译文件
+- 乙丑  八月十四
+
+* Tue Aug 18 2009 Ni Hui <shuizhuyuanluo@126.com> 4.5.2-3mgc
+- 删除其它平台编译器的 qmake 配置
+- ldconfig 目录支持
+- 乙丑  六月廿八
+
+* Fri Jul 31 2009 Ni Hui <shuizhuyuanluo@126.com> 4.5.2-2mgc
+- 更新 qt-copy 补丁
+- qt4-webkit 安全补丁 CVE-2009-1725
+- 己丑  六月初十
+
+* Fri Jun 26 2009 Ni Hui <shuizhuyuanluo@126.com> 4.5.2-1mgc
+- 更新至 4.5.2
+- with_tds 开关
+- 默认禁用 raster 图形渲染
+- 己丑  闰五月初四
+
+* Fri May 29 2009 Ni Hui <shuizhuyuanluo@126.com> 4.5.1-2mgc
+- 更新 qt-copy 补丁
+- 己丑  五月初六
+
+* Sat Apr 25 2009 Ni Hui <shuizhuyuanluo@126.com> 4.5.1-1mgc
+- 更新至 4.5.1
+- 更新 qt-copy 补丁
+- 启用 FT_LCD_FILTER
+- 修复 (i386/x86_64) qatomic 内联汇编，以修复 Kolourpaint 崩溃
+- -no-exceptions 编译参数
+- 新设立 tds sql 连接插件包
+- 己丑  四月初一
+
+* Fri Mar 6 2009 Ni Hui <shuizhuyuanluo@126.com> 4.5.0-1mgc
+- 更新至 4.5.0 正式版
+- qdoc3 组件(用于生成 Qt 参考文档的工具)，纳入 assistant 包
+- 去除 patch 8 和 patch 9
+- 己丑  二月初十
+
+* Sat Feb 28 2009 Ni Hui <shuizhuyuanluo@126.com> 4.5.0-0.rc1.5mgc
+- qgtkstyle 编译参数开关开启
+- qhostaddress.h 头文件修正(patch 50 from fedora project)
+- 更新 qt-copy 补丁
+- 去除编译时进行 strip 操作，以便留下有用的 debuginfo rpm 包
+- 编译参数： -reduce-relocations -no-separate-debug-info -stl
+- 不删除 debug 文件
+- 对共享库添加 debug 链接
+- 添加 qt4 安装路径的 rpm 宏定义(兼容 fedora project)
+- ship_phonon_pkg 和 ship_webkit_pkg 开关，phonon 包不予提供(FIXME: use external phonon module)
+- 己丑  二月初四
+
+* Thu Feb 12 2009 Ni Hui <shuizhuyuanluo@126.com> 4.5.0-0.rc1.4mgc
+- spec 开关修正
+- 己丑  正月十八
+
+* Sun Feb 8 2009 Ni Hui <shuizhuyuanluo@126.com> 4.5.0-0.rc1.3mgc
+- 新设立 qt-qtconfig 包，避免 qt-gui 库包依赖其它包
+- %_qtdir/plugins/graphicssystems/libqglgraphicssystem.so 从 gui 移入 opengl 包
+- 己丑  正月十四
+
+* Sun Feb 8 2009 Ni Hui <shuizhuyuanluo@126.com> 4.5.0-0.rc1.2mgc
+- patch 10255
+- 优先使用 native 渲染图形(patch 102 imported)
+- -xinput 编译参数
+- 己丑  正月十四
+
+* Fri Feb 6 2009 Ni Hui <shuizhuyuanluo@126.com> 4.5.0-0.rc1.1mgc
+- 更新至 4.5.0-rc1
+- 恢复 Qt 窗体控件样式编译
+- 纳入 phonon/gstreamer 支持(独立于 KDE 4.x phonon)
+- FIXME: qt4-phonon 开发包与 phonon 开发包冲突
+- 新设立 qtscripttools 包(qtscript 附加工具和调试器)、phonon-gstreamer 包
+- lconvert 翻译辅助程序纳入 linguist 包
+- %_qtdir/plugins/imageformats/libqsvg.so 从 gui 包移入 svg 包
+- %_qtdir/plugins/graphicssystems/libqglgraphicssystem.so 纳入 gui 包(new in Qt 4.5，opengl 图形渲染)
+- 许可证添加 LGPL
+- 更新 qt4 中文字体伪粗体补丁
+- 弃用 qt-4.4.x 补丁
+- 己丑  正月十二
+
+* Sat Jan 31 2009 Ni Hui <shuizhuyuanluo@126.com> 4.4.3-0.4mgc
+- 更新 qt-copy 补丁
+- 己丑  正月初六
+
+* Mon Jan 12 2009 Ni Hui <shuizhuyuanluo@126.com> 4.4.3-0.3mgc
+- 更新 qt-copy 补丁，调整(patch 10259 未使用)
+- 添加一个输入法光标跟随补丁(replace patch 1008)
+- mysql/postgresql/odbc 数据库插件编译支持开关
+- 戊子  十二月十七
+
+* Mon Sep 29 2008 Ni Hui <shuizhuyuanluo@126.com> 4.4.3-0.2mgc
+- opensuse patches
+- 戊子  九月初一
+
+* Mon Sep 29 2008 Ni Hui <shuizhuyuanluo@126.com> 4.4.3-0.1mgc
+- 更新至 4.4.3 正式版
+- 菜单项中文化
+- 戊子  九月初一
+
+* Sun Sep 28 2008 Ni Hui <shuizhuyuanluo@126.com> 4.4.2-0.1mgc
+- 更新至 4.4.2 正式版
+- 禁用 systray 修正补丁(fixed by upstream)
+- 更新 qt-copy 补丁
+- 戊子  八月廿九
+
+* Thu Aug 28 2008 Ni Hui <shuizhuyuanluo@126.com> 4.4.1-0.1mgc
+- 更新至 4.4.2-20080827 快照(4.4.1 正式版发布时没有来得及加入中文翻译，参见 http://feeds.feedburner.com/~r/cavendish/~3/351445241/qt-441.html)
+- 纳入 odbc 数据库插件支持
+- 更新 qt-copy 补丁，禁用一些上游已应用的补丁
+- 将 %_includedir/Qt 符号链接文件加入 qt4-devel 包中(FIXME!)
+- 戊子  七月廿八
+
+* Thu May 29 2008 Ni Hui <shuizhuyuanluo@126.com> 4.4.0-1.2mgc
+- 添加 qt-copy 补丁
+- 纳入 mysql 数据库插件支持
+- qt4-core-devel 中的 phrasebooks 文档移入 linguist 包避免重复
+- 添加参数 -optimized-qmake
+- 重新引入中文伪粗体补丁
+- 戊子  四月廿五
+
+* Fri May 09 2008 Ni Hui <shuizhuyuanluo@126.com> 4.4.0-1.1mgc
+- 更新至 4.4.0 正式版
+- 添加 qt4-demos 对 qt4-doc 的依赖关系(否则演示程序的描述文字不可用)
+- 使用 pushd/popd 替换 spec 中的“cd”，规范化安装流程
+- 修正 linguist 的菜单项图标
+- qt4-core 中的 phrasebooks 文档移入 qt4-core-devel
+- 将 qt4-devel 包中的非头文件分类至子包中，%_qtdir/include/Qt 文件夹仅保留 *.h 文件
+- 删除无用的 %_qtdir/lib/*.la 编译残留文件
+- %_qtdir/lib/*.{so,prl} 文件移入各自的 devel 包，assistant/designer/test 相关文件不移动
+- 戊子  四月初五
+
+* Mon Apr 07 2008 Ni Hui <shuizhuyuanluo@126.com> 4.4.0-0.rc1.1mgc
+- 修正 release 版本号为 0.rc1.1mgc
+- 从 qt4-devel 中拆出 doc 包
+- 戊子  三月初二
+
+* Sat Apr 05 2008 Ni Hui <shuizhuyuanluo@126.com> 4.4.0-0.1.rc1mgc
+- 更新至 4.4.0-rc1
+- FIXME: lib/*.{so,prl} 文件应该纳入 devel 包，而 lib/*.la 应该去除
+- FIXME: %_bindir/qcollectiongenerator-qt4，%_bindir/qcollectiongenerator4，%_qtdir/bin/qcollectiongenerator 暂时纳入 assisitant 中，以后考虑独立分包
+- -reduce-relocations, -dbus-linked, -openssl-linked
+- -no-nas
+- -no-phonon (-no-gstreamer), -no-webkit (for now, at least until conflicts with WebKit-qt and kdelibs4 are sorted out)
+- nihui 注：KDE 4.0.x 提供 phonon 4.0，Qt 4.4.x 提供 phonon 4.1，KDE 4.1.x 提供 phonon 4.2
+- 未纳入 gstreamer 支持
+- 未纳入 phonon 支持
+- -no-exceptions 以用于编译 QtXmlPatterns
+- 去掉了所有补丁 ;)
+- docdir/qch/ 新增，放入 qt4-devel
+- docdir/src/ 新增，放入 qt4-devel
+- lib/pkgconfig/QtDesigner.pc 新增，放入 qt4-gui-devel
+- lib/pkgconfig/QtDesignerComponents.pc 新增，放入 qt4-gui-devel
+- 新设立 webkit、webkit-devel、phonon、phonon-devel 包
+- 新设立 help、help-devel、clucene、clucene-devel 包
+- 新设立 ico 包
+- 新设立 xmlpatterns、xmlpatterns-devel 包
+- 戊子  二月廿九
+
+* Thu Apr 03 2008 Ni Hui <shuizhuyuanluo@126.com> 4.3.4-1.1mgc
+- 添加 fedora patches 4 5 6
+- 修正 qt4 对于 openssl 库的支持
+- 戊子  二月廿七
+
+* Thu Mar 06 2008 haulm <haulm@126.com> 4.3.4-1mgc
+- Add build postgresql-plugin
+
+* Wed Mar 01 2008 Ni Hui <shuizhuyuanluo@126.com> 4.3.4-0.1mgc
+- 更新至 4.3.4
+- 添加依赖：qt4-devel -> qmake & qt4-{svg,qtscript,qtdbus}-devel
+- 添加依赖：qt4 -> qt4-{svg,mng,qtscript,qtdbus}
+- 添加分包 qt4-cjk 依赖 qt4-{chinese,japanese,korean,taiwanese,inputmethods}
+- 戊子  正月廿四
+
+* Wed Feb 06 2008 Ni Hui <shuizhuyuanluo@126.com> 4.3.3-1.3mgc
+- 添加菜单项和部分 logo 图标
+- rebuild against MagicLinux-2.1beta1
+
+* Tue Jan 08 2008 Ni Hui <shuizhuyuanluo@126.com> 4.3.3-1.1mgc
+- 启用 dbus 支持(用于 KDE4 编译)
+
+* Fri Dec 28 2007 KanKer <kanker@163.com> 4.3.3-1mgc
+- build for MagicLinux
+- Add Designer.conf
+- Add resume_rpmbuild define to resume build rpm process
+- Add two font patches from cjacker
+
+*  Wed Oct 8 2006 haulm <haulm@126.com> 4.2.0-1mgc
+- First build for MagicLinux

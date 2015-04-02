@@ -16,9 +16,9 @@ Group(zh_CN.UTF-8): 系统/GUI/KDE
 URL: http://amarok.kde.org/
 Version:	2.8.0
 %if %{svn}
-Release: 0.svn%rversion.1%{?dist}.5
+Release: 0.svn%rversion.1%{?dist}.6
 %else
-Release: 4%{?dist}
+Release: 5%{?dist}
 %endif
 
 %if %{svn}
@@ -275,6 +275,9 @@ rm -rf %{buildroot} %{_builddir}/%{buildsubdir}
 %{kde4_datadir}/mime/packages/amzdownloader.xml
 
 %changelog
+* Fri Mar 27 2015 Liu Di <liudidi@gmail.com> - 2.8.0-5
+- 为 Magic 3.0 重建
+
 * Thu Feb 27 2014 Liu Di <liudidi@gmail.com> - 2.8.0-3
 - 更新到 2.8.0
 

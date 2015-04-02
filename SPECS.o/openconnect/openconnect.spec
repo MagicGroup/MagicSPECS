@@ -12,11 +12,13 @@
 %endif
 
 Name:		openconnect
-Version:	7.02
-Release:	2%{?dist}
+Version: 7.06
+Release: 1%{?dist}
 Summary:	Open client for Cisco AnyConnect VPN
+Summary(zh_CN.UTF-8): Cisco AnyConnect VPN 的开源客户端
 
 Group:		Applications/Internet
+Group(zh_CN.UTF-8): 应用程序/互联网
 License:	LGPLv2+
 URL:		http://www.infradead.org/openconnect.html
 Source0:	ftp://ftp.infradead.org/pub/openconnect/openconnect-%{version}.tar.gz
@@ -45,9 +47,14 @@ BuildRequires:  pkgconfig(liboath) pkgconfig(stoken)
 This package provides a client for the Cisco AnyConnect VPN protocol, which
 is based on HTTPS and DTLS.
 
+%description -l zh_CN.UTF-8
+Cisco AnyConnect VPN 的开源客户端。
+
 %package devel
 Summary: Development package for OpenConnect VPN authentication tools
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: Applications/Internet
+Group(zh_CN.UTF-8): 应用程序/互联网
 Requires: %{name}%{?_isa} = %{version}-%{release}
 # RHEL5 needs these spelled out because it doesn't automatically infer from pkgconfig
 %if 0%{?rhel} && 0%{?rhel} <= 5
@@ -58,6 +65,9 @@ Requires: openssl-devel zlib-devel
 This package provides the core HTTP and authentication support from
 the OpenConnect VPN client, to be used by GUI authentication dialogs
 for NetworkManager etc.
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -75,6 +85,7 @@ make %{?_smp_mflags} V=1
 rm -rf $RPM_BUILD_ROOT
 %make_install
 rm -f $RPM_BUILD_ROOT/%{_libdir}/libopenconnect.la
+magic_rpm_clean.sh
 %find_lang %{name}
 
 %clean
@@ -98,6 +109,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/pkgconfig/openconnect.pc
 
 %changelog
+* Fri Mar 27 2015 Liu Di <liudidi@gmail.com> - 7.06-1
+- 更新到 7.06
+
 * Sun Jan 04 2015 Liu Di <liudidi@gmail.com> - 7.02-2
 - 为 Magic 3.0 重建
 
