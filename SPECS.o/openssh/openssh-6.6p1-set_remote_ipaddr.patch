@@ -1,0 +1,84 @@
+diff -up openssh-6.8p1/canohost.c.set_remote_ipaddr openssh-6.8p1/canohost.c
+--- openssh-6.8p1/canohost.c.set_remote_ipaddr	2015-03-18 12:40:03.702925550 +0100
++++ openssh-6.8p1/canohost.c	2015-03-18 12:40:03.749925432 +0100
+@@ -349,6 +349,21 @@ clear_cached_addr(void)
+ 	cached_port = -1;
+ }
+ 
++void set_remote_ipaddr(void) {
++	if (canonical_host_ip != NULL)
++		free(canonical_host_ip);
++
++	if (packet_connection_is_on_socket()) {
++		canonical_host_ip =
++		    get_peer_ipaddr(packet_get_connection_in());
++		if (canonical_host_ip == NULL)
++			cleanup_exit(255);
++	} else {
++		/* If not on socket, return UNKNOWN. */
++		canonical_host_ip = xstrdup("UNKNOWN");
++	}
++}
++
+ /*
+  * Returns the IP-address of the remote host as a string.  The returned
+  * string must not be freed.
+@@ -358,17 +373,9 @@ const char *
+ get_remote_ipaddr(void)
+ {
+ 	/* Check whether we have cached the ipaddr. */
+-	if (canonical_host_ip == NULL) {
+-		if (packet_connection_is_on_socket()) {
+-			canonical_host_ip =
+-			    get_peer_ipaddr(packet_get_connection_in());
+-			if (canonical_host_ip == NULL)
+-				cleanup_exit(255);
+-		} else {
+-			/* If not on socket, return UNKNOWN. */
+-			canonical_host_ip = xstrdup("UNKNOWN");
+-		}
+-	}
++	if (canonical_host_ip == NULL)
++		set_remote_ipaddr();
++
+ 	return canonical_host_ip;
+ }
+ 
+diff -up openssh-6.8p1/canohost.h.set_remote_ipaddr openssh-6.8p1/canohost.h
+--- openssh-6.8p1/canohost.h.set_remote_ipaddr	2015-03-17 06:49:20.000000000 +0100
++++ openssh-6.8p1/canohost.h	2015-03-18 12:40:03.749925432 +0100
+@@ -13,6 +13,7 @@
+  */
+ 
+ const char	*get_canonical_hostname(int);
++void		 set_remote_ipaddr(void);
+ const char	*get_remote_ipaddr(void);
+ const char	*get_remote_name_or_ip(u_int, int);
+ 
+diff -up openssh-6.8p1/sshconnect.c.set_remote_ipaddr openssh-6.8p1/sshconnect.c
+--- openssh-6.8p1/sshconnect.c.set_remote_ipaddr	2015-03-17 06:49:20.000000000 +0100
++++ openssh-6.8p1/sshconnect.c	2015-03-18 12:40:58.096788804 +0100
+@@ -65,6 +65,7 @@
+ #include "version.h"
+ #include "authfile.h"
+ #include "ssherr.h"
++#include "canohost.h"
+ 
+ char *client_version_string = NULL;
+ char *server_version_string = NULL;
+@@ -174,6 +175,7 @@ ssh_proxy_fdpass_connect(const char *hos
+ 
+ 	/* Set the connection file descriptors. */
+ 	packet_set_connection(sock, sock);
++	set_remote_ipaddr();
+ 
+ 	return 0;
+ }
+@@ -496,6 +498,7 @@ ssh_connect_direct(const char *host, str
+ 
+ 	/* Set the connection. */
+ 	packet_set_connection(sock, sock);
++	set_remote_ipaddr();
+ 
+ 	return 0;
+ }

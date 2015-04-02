@@ -1,0 +1,40 @@
+diff --git a/canohost.c b/canohost.c
+index a61a8c9..97ce58c 100644
+--- a/canohost.c
++++ b/canohost.c
+@@ -165,12 +165,29 @@ check_ip_options(int sock, char *ipaddr)
+ 	option_size = sizeof(options);
+ 	if (getsockopt(sock, ipproto, IP_OPTIONS, options,
+ 	    &option_size) >= 0 && option_size != 0) {
+-		text[0] = '\0';
+-		for (i = 0; i < option_size; i++)
+-			snprintf(text + i*3, sizeof(text) - i*3,
+-			    " %2.2x", options[i]);
+-		fatal("Connection from %.100s with IP options:%.800s",
+-		    ipaddr, text);
++		i = 0;
++		do {
++			switch (options[i]) {
++				case 0:
++				case 1:
++					++i;
++					break;
++				case 130:
++				case 133:
++				case 134:
++					i += options[i + 1];
++					break;
++				default:
++				/* Fail, fatally, if we detect either loose or strict
++			 	 * source routing options. */
++					text[0] = '\0';
++					for (i = 0; i < option_size; i++)
++						snprintf(text + i*3, sizeof(text) - i*3,
++							" %2.2x", options[i]);
++					fatal("Connection from %.100s with IP options:%.800s",
++						ipaddr, text);
++			}
++		} while (i < option_size);
+ 	}
+ #endif /* IP_OPTIONS */
+ }

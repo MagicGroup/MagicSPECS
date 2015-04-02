@@ -1,0 +1,282 @@
+diff --git a/entropy.c b/entropy.c
+index 1e9d52a..d24e724 100644
+--- a/entropy.c
++++ b/entropy.c
+@@ -227,6 +227,9 @@ seed_rng(void)
+ 	memset(buf, '\0', sizeof(buf));
+ 
+ #endif /* OPENSSL_PRNG_ONLY */
++#ifdef __linux__
++	linux_seed();
++#endif /* __linux__ */
+ 	if (RAND_status() != 1)
+ 		fatal("PRNG is not seeded");
+ }
+diff --git a/openbsd-compat/Makefile.in b/openbsd-compat/Makefile.in
+index 843225d..041bbab 100644
+--- a/openbsd-compat/Makefile.in
++++ b/openbsd-compat/Makefile.in
+@@ -20,7 +20,7 @@ OPENBSD=base64.o basename.o bcrypt_pbkdf.o bindresvport.o blowfish.o daemon.o di
+ 
+ COMPAT=arc4random.o bsd-asprintf.o bsd-closefrom.o bsd-cray.o bsd-cygwin_util.o bsd-getpeereid.o getrrsetbyname-ldns.o bsd-misc.o bsd-nextstep.o bsd-openpty.o bsd-poll.o bsd-setres_id.o bsd-snprintf.o bsd-statvfs.o bsd-waitpid.o fake-rfc2553.o openssl-compat.o xmmap.o xcrypt.o kludge-fd_set.o
+ 
+-PORTS=port-aix.o port-irix.o port-linux.o port-linux-sshd.o port-solaris.o port-tun.o port-uw.o
++PORTS=port-aix.o port-irix.o port-linux.o port-linux-sshd.o port-linux-prng.o port-solaris.o port-tun.o port-uw.o
+ 
+ .c.o:
+ 	$(CC) $(CFLAGS) $(CPPFLAGS) -c $<
+diff --git a/openbsd-compat/port-linux-prng.c b/openbsd-compat/port-linux-prng.c
+new file mode 100644
+index 0000000..da84bf2
+--- /dev/null
++++ b/openbsd-compat/port-linux-prng.c
+@@ -0,0 +1,59 @@
++/* $Id: port-linux.c,v 1.11.4.2 2011/02/04 00:43:08 djm Exp $ */
++
++/*
++ * Copyright (c) 2011 Jan F. Chadima <jchadima@redhat.com>
++ *
++ * Permission to use, copy, modify, and distribute this software for any
++ * purpose with or without fee is hereby granted, provided that the above
++ * copyright notice and this permission notice appear in all copies.
++ *
++ * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
++ * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
++ * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
++ * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
++ * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
++ * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
++ * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
++ */
++
++/*
++ * Linux-specific portability code - prng support
++ */
++
++#include "includes.h"
++
++#include <errno.h>
++#include <stdarg.h>
++#include <string.h>
++#include <stdio.h>
++#include <openssl/rand.h>
++
++#include "log.h"
++#include "xmalloc.h"
++#include "misc.h"      /* servconf.h needs misc.h for struct ForwardOptions */
++#include "servconf.h"
++#include "port-linux.h"
++#include "key.h"
++#include "hostfile.h"
++#include "auth.h"
++
++void
++linux_seed(void)
++{
++	char *env = getenv("SSH_USE_STRONG_RNG");
++	char *random = "/dev/random";
++	size_t len, ienv, randlen = 14;
++
++	if (!env || !strcmp(env, "0"))
++		random = "/dev/urandom";
++	else if ((ienv = atoi(env)) > randlen)
++		randlen = ienv;
++
++	errno = 0;
++	if ((len = RAND_load_file(random, randlen)) != randlen) {
++		if (errno)
++			fatal ("cannot read from %s, %s", random, strerror(errno));
++		else
++			fatal ("EOF reading %s", random);
++	}
++}
+diff --git a/ssh-add.0 b/ssh-add.0
+index f16165a..17d22cf 100644
+--- a/ssh-add.0
++++ b/ssh-add.0
+@@ -82,6 +82,16 @@ ENVIRONMENT
+              Identifies the path of a UNIX-domain socket used to communicate
+              with the agent.
+ 
++     SSH_USE_STRONG_RNG
++             The reseeding of the OpenSSL random generator is usually done
++             from /dev/urandom.  If the SSH_USE_STRONG_RNG environment vari-
++             able is set to value other than 0 the OpenSSL random generator is
++             reseeded from /dev/random.  The number of bytes read is defined
++             by the SSH_USE_STRONG_RNG value.  Minimum is 14 bytes.  This set-
++             ting is not recommended on the computers without the hardware
++             random generator because insufficient entropy causes the connec-
++             tion to be blocked until enough entropy is available.
++
+ FILES
+      ~/.ssh/identity
+              Contains the protocol version 1 RSA authentication identity of
+diff --git a/ssh-add.1 b/ssh-add.1
+index 04d1840..db883a4 100644
+--- a/ssh-add.1
++++ b/ssh-add.1
+@@ -170,6 +170,20 @@ to make this work.)
+ Identifies the path of a
+ .Ux Ns -domain
+ socket used to communicate with the agent.
++.It Ev SSH_USE_STRONG_RNG
++The reseeding of the OpenSSL random generator is usually done from
++.Cm /dev/urandom .
++If the 
++.Cm SSH_USE_STRONG_RNG
++environment variable is set to value other than
++.Cm 0
++the OpenSSL random generator is reseeded from
++.Cm /dev/random .
++The number of bytes read is defined by the SSH_USE_STRONG_RNG value. 
++Minimum is 14 bytes.
++This setting is not recommended on the computers without the hardware
++random generator because insufficient entropy causes the connection to 
++be blocked until enough entropy is available.
+ .El
+ .Sh FILES
+ .Bl -tag -width Ds
+diff --git a/ssh-agent.1 b/ssh-agent.1
+index d7e791b..7332f0d 100644
+--- a/ssh-agent.1
++++ b/ssh-agent.1
+@@ -189,6 +189,24 @@ sockets used to contain the connection to the authentication agent.
+ These sockets should only be readable by the owner.
+ The sockets should get automatically removed when the agent exits.
+ .El
++.Sh ENVIRONMENT
++.Bl -tag -width Ds -compact
++.Pp
++.It Pa SSH_USE_STRONG_RNG
++The reseeding of the OpenSSL random generator is usually done from
++.Cm /dev/urandom .
++If the 
++.Cm SSH_USE_STRONG_RNG
++environment variable is set to value other than
++.Cm 0
++the OpenSSL random generator is reseeded from
++.Cm /dev/random .
++The number of bytes read is defined by the SSH_USE_STRONG_RNG value. 
++Minimum is 14 bytes.
++This setting is not recommended on the computers without the hardware
++random generator because insufficient entropy causes the connection to 
++be blocked until enough entropy is available.
++.El
+ .Sh SEE ALSO
+ .Xr ssh 1 ,
+ .Xr ssh-add 1 ,
+diff --git a/ssh-keygen.1 b/ssh-keygen.1
+index 276dacc..a09d9b1 100644
+--- a/ssh-keygen.1
++++ b/ssh-keygen.1
+@@ -841,6 +841,24 @@ Contains Diffie-Hellman groups used for DH-GEX.
+ The file format is described in
+ .Xr moduli 5 .
+ .El
++.Sh ENVIRONMENT
++.Bl -tag -width Ds -compact
++.Pp
++.It Pa SSH_USE_STRONG_RNG
++The reseeding of the OpenSSL random generator is usually done from
++.Cm /dev/urandom .
++If the 
++.Cm SSH_USE_STRONG_RNG
++environment variable is set to value other than
++.Cm 0
++the OpenSSL random generator is reseeded from
++.Cm /dev/random .
++The number of bytes read is defined by the SSH_USE_STRONG_RNG value. 
++Minimum is 14 bytes.
++This setting is not recommended on the computers without the hardware
++random generator because insufficient entropy causes the connection to 
++be blocked until enough entropy is available.
++.El
+ .Sh SEE ALSO
+ .Xr ssh 1 ,
+ .Xr ssh-add 1 ,
+diff --git a/ssh-keysign.8 b/ssh-keysign.8
+index 69d0829..02d79f8 100644
+--- a/ssh-keysign.8
++++ b/ssh-keysign.8
+@@ -80,6 +80,24 @@ must be set-uid root if host-based authentication is used.
+ If these files exist they are assumed to contain public certificate
+ information corresponding with the private keys above.
+ .El
++.Sh ENVIRONMENT
++.Bl -tag -width Ds -compact
++.Pp
++.It Pa SSH_USE_STRONG_RNG
++The reseeding of the OpenSSL random generator is usually done from
++.Cm /dev/urandom .
++If the 
++.Cm SSH_USE_STRONG_RNG
++environment variable is set to value other than
++.Cm 0
++the OpenSSL random generator is reseeded from
++.Cm /dev/random .
++The number of bytes read is defined by the SSH_USE_STRONG_RNG value. 
++Minimum is 14 bytes.
++This setting is not recommended on the computers without the hardware
++random generator because insufficient entropy causes the connection to 
++be blocked until enough entropy is available.
++.El
+ .Sh SEE ALSO
+ .Xr ssh 1 ,
+ .Xr ssh-keygen 1 ,
+diff --git a/ssh.1 b/ssh.1
+index 4a476c2..410a04a 100644
+--- a/ssh.1
++++ b/ssh.1
+@@ -1299,6 +1299,23 @@ For more information, see the
+ .Cm PermitUserEnvironment
+ option in
+ .Xr sshd_config 5 .
++.Sh ENVIRONMENT
++.Bl -tag -width Ds -compact
++.It Ev SSH_USE_STRONG_RNG
++The reseeding of the OpenSSL random generator is usually done from
++.Cm /dev/urandom .
++If the 
++.Cm SSH_USE_STRONG_RNG
++environment variable is set to value other than
++.Cm 0
++the OpenSSL random generator is reseeded from
++.Cm /dev/random .
++The number of bytes read is defined by the SSH_USE_STRONG_RNG value. 
++Minimum is 14 bytes.
++This setting is not recommended on the computers without the hardware
++random generator because insufficient entropy causes the connection to 
++be blocked until enough entropy is available.
++.El
+ .Sh FILES
+ .Bl -tag -width Ds -compact
+ .It Pa ~/.rhosts
+diff --git a/sshd.8 b/sshd.8
+index cb866b5..adcaaf9 100644
+--- a/sshd.8
++++ b/sshd.8
+@@ -945,6 +945,24 @@ concurrently for different ports, this contains the process ID of the one
+ started last).
+ The content of this file is not sensitive; it can be world-readable.
+ .El
++.Sh ENVIRONMENT
++.Bl -tag -width Ds -compact
++.Pp
++.It Pa SSH_USE_STRONG_RNG
++The reseeding of the OpenSSL random generator is usually done from
++.Cm /dev/urandom .
++If the 
++.Cm SSH_USE_STRONG_RNG
++environment variable is set to value other than
++.Cm 0
++the OpenSSL random generator is reseeded from
++.Cm /dev/random .
++The number of bytes read is defined by the SSH_USE_STRONG_RNG value. 
++Minimum is 14 bytes.
++This setting is not recommended on the computers without the hardware
++random generator because insufficient entropy causes the connection to 
++be blocked until enough entropy is available.
++.El
+ .Sh IPV6
+ IPv6 address can be used everywhere where IPv4 address. In all entries must be the IPv6 address enclosed in square brackets. Note: The square brackets are metacharacters for the shell and must be escaped in shell.
+ .Sh SEE ALSO
