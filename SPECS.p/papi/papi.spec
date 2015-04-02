@@ -2,7 +2,7 @@
 Summary: Performance Application Programming Interface
 Name: papi
 Version: 5.4.1
-Release: 2%{?dist}
+Release: 3%{?dist}
 License: BSD
 Group: Development/System
 Requires: papi-libs = %{version}-%{release}
@@ -153,6 +153,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/*.a
 
 %changelog
+* Wed Apr 01 2015 Liu Di <liudidi@gmail.com> - 5.4.1-3
+- 为 Magic 3.0 重建
+
 * Fri Mar 6 2015 William Cohen <wcohen@redhat.com> - 5.4.1-2
 - Make sure using libpfm-4.6.0.
 

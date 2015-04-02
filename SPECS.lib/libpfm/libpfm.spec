@@ -10,11 +10,13 @@
 
 Name:		libpfm
 Version:	4.6.0
-Release:	1%{?dist}
+Release:	2%{?dist}
 
 Summary:	Library to encode performance events for use by perf tool
+Summary(zh_CN.UTF-8): 编码性能事件以使用 Perl 工具的库
 
 Group:		System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 License:	MIT
 URL:		http://perfmon2.sourceforge.net/
 Source0:	http://sourceforge.net/projects/perfmon2/files/libpfm4/%{name}-%{version}.tar.gz
@@ -31,32 +33,50 @@ libpfm4 is a library to help encode events for use with operating system
 kernels performance monitoring interfaces. The current version provides support
 for the perf_events interface available in upstream Linux kernels since v2.6.31.
 
+%description -l zh_CN.UTF-8
+编码性能事件以使用 Perl 工具的库。
+
 %package devel
 Summary:	Development library to encode performance events for perf_events based tools
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:		Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:	%{name}%{?_isa} = %{version}
 
 %description devel
 Development library and header files to create performance monitoring
 applications for the perf_events interface.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
 %package static
 Summary:	Static library to encode performance events for perf_events based tools
+Summary(zh_CN.UTF-8): %{name} 的静态库
 Group:		Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:	%{name}%{?_isa} = %{version}
 
 %description static
 Static version of the libpfm library for performance monitoring
 applications for the perf_events interface.
 
+%description static -l zh_CN.UTF-8
+%{name} 的静态库。
+
 %if %{with python}
 %package python
 Summary:	Python bindings for libpfm and perf_event_open system call
+Summary(zh_CN.UTF-8): %{name} 的 Python 绑定
 Group:		Development/Languages
+Group(zh_CN.UTF-8): 开发/语言
 Requires:	%{name}%{?_isa} = %{version}
 
 %description python
 Python bindings for libpfm4 and perf_event_open system call.
+
+%description python -l zh_CN.UTF-8
+%{name} 的 Python 绑定。
 %endif
 
 %prep
@@ -86,6 +106,7 @@ make \
     %{python_config} \
     LDCONFIG=/bin/true \
     install
+magic_rpm_clean.sh
 
 %post -p /sbin/ldconfig
 %postun	-p /sbin/ldconfig
@@ -108,6 +129,9 @@ make \
 %endif
 
 %changelog
+* Wed Apr 01 2015 Liu Di <liudidi@gmail.com> - 4.6.0-2
+- 为 Magic 3.0 重建
+
 * Thu Mar 5 2015 William Cohen <wcohen@redhat.com> - 4.6.0-1
 - Rebase on libpfm-4.6.0.
 

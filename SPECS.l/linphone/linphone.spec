@@ -15,7 +15,7 @@
 
 
 Name:           linphone
-Version:	3.7.0
+Version:	3.8.0
 Release:        6%{?dist}
 Summary:        Phone anywhere in the whole world by using the Internet
 
@@ -141,7 +141,7 @@ Static version of Linphone libraries.
 
 %prep
 %setup0 -q
-%patch0 -p1 -b .rootca
+#%patch0 -p1 -b .rootca
 %ifarch %{arm}
 %patch1 -p1 -b .arm
 %endif
@@ -269,6 +269,8 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/pixmaps/linphone/*
 %{_datadir}/linphone
 %{_mandir}/man1/linphone.1*
+%{_datadir}/appdata/linphone.appdata.xml
+%{_datadir}/applications/audio-assistant.desktop
 
 %files -n linphonec
 %defattr(644,root,root,755)
@@ -285,6 +287,8 @@ rm -rf $RPM_BUILD_ROOT
 %if %{without system_mediastreamer} || %{without system_ortp}
 %dir %{_libdir}/%{name}
 %endif
+%attr(755,root,root) %{_libdir}/liblinphonetester.so.?
+%attr(755,root,root) %{_libdir}/liblinphonetester.so.*.*.*
 %if %{without system_mediastreamer}
 %attr(755,root,root) %{_libdir}/%{name}/libmediastreamer.so.*.*.*
 %attr(755,root,root) %ghost %{_libdir}/%{name}/libmediastreamer.so.?
@@ -304,6 +308,8 @@ rm -rf $RPM_BUILD_ROOT
 %{_includedir}/linphone
 %{_libdir}/pkgconfig/linphone.pc
 %{_libdir}/liblinphone.la
+%{_libdir}/liblinphonetester.la
+%{_libdir}/liblinphonetester.so
 %if %{without system_mediastreamer} || %{without system_ortp}
 %dir %{_libdir}/%{name}/include
 %dir %{_libdir}/%{name}/pkgconfig
@@ -325,6 +331,7 @@ rm -rf $RPM_BUILD_ROOT
 %files static
 %defattr(644,root,root,755)
 %{_libdir}/liblinphone.a
+%{_libdir}/liblinphonetester.a
 %if %{without system_mediastreamer}
 %{_libdir}/%{name}/libmediastreamer.a
 %endif
@@ -333,6 +340,9 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Mon Mar 30 2015 Liu Di <liudidi@gmail.com> - 3.8.0-6
+- 更新到 3.8.0
+
 * Tue Jun 24 2014 Liu Di <liudidi@gmail.com> - 3.7.0-6
 - 为 Magic 3.0 重建
 

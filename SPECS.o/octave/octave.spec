@@ -187,7 +187,7 @@ touch %{buildroot}%{_datadir}/%{name}/ls-R
 rm -f %{buildroot}%{_datadir}/applications/www.octave.org-octave.desktop
 desktop-file-install --remove-category Development --add-category "Education" \
   --add-category "DataVisualization" --add-category "NumericalAnalysis" --add-category "Engineering" --add-category "Physics" \
-  --dir %{buildroot}%{_datadir}/applications doc/icons/octave.desktop
+  --dir %{buildroot}%{_datadir}/applications etc/icons/octave.desktop
 
 # Create directories for add-on packages
 HOST_TYPE=`%{buildroot}%{_bindir}/octave-config -p CANONICAL_HOST_TYPE`

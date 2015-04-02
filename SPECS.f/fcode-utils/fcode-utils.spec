@@ -1,7 +1,8 @@
 Name:		fcode-utils
 Version:	1.0.2
-Release:	11%{?dist}
+Release:	12%{?dist}
 Summary:	Utilities for dealing with FCode
+Summary(zh_CN.UTF-8): 处理 FCode 的工具
 Group:		Development/Languages
 # The entire source code is GPLv2 except localvalues/ and documentation/ which are CPL-licensed
 License:	GPLv2 and CPL
@@ -19,6 +20,8 @@ BuildRoot:	%(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
 Utilities for dealing with FCode, a Forth programming language dialect
 compliant with ANS Forth.
 
+%description -l zh_CN.UTF-8
+处理 FCode 的工具.
 
 %prep
 %setup -q -n %{name}
@@ -40,7 +43,7 @@ install -p -m 0755 detok/detok $RPM_BUILD_ROOT%{_bindir}
 install -p -m 0755 romheaders/romheaders $RPM_BUILD_ROOT%{_bindir}
 install -p -m 0755 toke/toke $RPM_BUILD_ROOT%{_bindir}
 cp -a localvalues $RPM_BUILD_ROOT%{_datadir}/%{name}
-
+magic_rpm_clean.sh
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -56,6 +59,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Fri Mar 27 2015 Liu Di <liudidi@gmail.com> - 1.0.2-12
+- 为 Magic 3.0 重建
+
 * Sat Aug 16 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.0.2-11
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
 

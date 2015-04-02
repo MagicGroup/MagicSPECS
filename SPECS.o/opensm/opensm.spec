@@ -1,8 +1,10 @@
 Name:    opensm
-Version: 3.3.17
-Release: 4%{?dist}
+Version: 3.3.19
+Release: 1%{?dist}
 Summary: OpenIB InfiniBand Subnet Manager and management utilities
+Summary(zh_CN.UTF-8): OpenIB InfiniBand 子网管理器和管理工具
 Group:   System Environment/Daemons
+Group(zh_CN.UTF-8): 系统环境/服务
 License: GPLv2 or BSD
 Url:     http://www.openfabrics.org/
 
@@ -29,27 +31,44 @@ also contains various tools for diagnosing and testing Infiniband networks
 that can be used from any machine and do not need to be run on a machine
 running the opensm daemon.
 
+%description -l zh_CN.UTF-8
+OpenIB InfiniBand 子网管理器和管理工具。
+
 %package libs
 Summary: Libraries used by opensm and included utilities
+Summary(zh_CN.UTF-8): %{name} 的运行库
 Group: System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 
 %description libs
 Shared libraries for Infiniband user space access
 
+%description libs -l zh_CN.UTF-8
+%{name} 的运行库。
+
 %package devel
 Summary: Development files for the opensm-libs libraries
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: %{name}-libs%{?_isa} = %{version}-%{release}
 
 %description devel
 Development environment for the opensm libraries
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
 %package static
 Summary: Static version of the opensm libraries
+Summary(zh_CN.UTF-8): %{name} 的静态库
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: %{name}-devel%{?_isa} = %{version}-%{release}
 %description static
 Static version of opensm libraries
+%description static -l zh_CN.UTF-8
+%{name} 的静态库。
 
 %prep
 %setup -q
@@ -73,6 +92,7 @@ install -D -m644 %{SOURCE5} %{buildroot}%{_unitdir}/opensm.service
 install -D -m755 %{SOURCE6} %{buildroot}%{_libexecdir}/opensm-launch
 install -D -m644 %{SOURCE7} %{buildroot}%{_sysconfdir}/rwtab.d/opensm
 mkdir -p ${RPM_BUILD_ROOT}/var/cache/opensm
+magic_rpm_clean.sh
 
 %post
 %systemd_post opensm.service
@@ -118,6 +138,9 @@ fi
 %{_libdir}/lib*.a
 
 %changelog
+* Thu Apr 02 2015 Liu Di <liudidi@gmail.com> - 3.3.19-1
+- 更新到 3.3.19
+
 * Sun Aug 17 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.3.17-4
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
 

@@ -5,9 +5,11 @@
 
 Name: openldap
 Version: 2.4.40
-Release: 11%{?dist}
+Release: 12%{?dist}
 Summary: LDAP support libraries
+Summary(zh_CN.UTF-8): LDAP 支持库
 Group: System Environment/Daemons
+Group(zh_CN.UTF-8): 系统环境/服务
 License: OpenLDAP
 URL: http://www.openldap.org/
 Source0: ftp://ftp.OpenLDAP.org/pub/OpenLDAP/openldap-release/openldap-%{version}.tgz
@@ -70,9 +72,14 @@ similar to the way DNS (Domain Name System) information is propagated
 over the Internet. The openldap package contains configuration files,
 libraries, and documentation for OpenLDAP.
 
+%description -l zh_CN.UTF-8
+轻量级目录访问协议（LDAP）的开源套件。
+
 %package devel
 Summary: LDAP development libraries and header files
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: openldap%{?_isa} = %{version}-%{release}, cyrus-sasl-devel%{?_isa}
 
 %description devel
@@ -83,8 +90,12 @@ protocols for enabling directory services over the Internet. Install
 this package only if you plan to develop or will need to compile
 customized LDAP clients.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
 %package servers
 Summary: LDAP server
+Summary(zh_CN.UTF-8): %{name} 的服务端
 License: OpenLDAP
 Requires: openldap%{?_isa} = %{version}-%{release}, libdb-utils
 Requires(pre): shadow-utils
@@ -95,6 +106,7 @@ BuildRequires: libdb-devel
 BuildRequires: systemd-units
 BuildRequires: cracklib-devel
 Group: System Environment/Daemons
+Group(zh_CN.UTF-8): 系统环境/服务
 # migrationtools (slapadd functionality):
 Provides: ldif2ldbm
 
@@ -106,10 +118,15 @@ information, but other information is possible) over the Internet,
 similar to the way DNS (Domain Name System) information is propagated
 over the Internet. This package contains the slapd server and related files.
 
+%description servers -l zh_CN.UTF-8
+OpenLDAP 的服务端。
+
 %package clients
 Summary: LDAP client utilities
+Summary(zh_CN.UTF-8): %{name} 的客户端工具
 Requires: openldap%{?_isa} = %{version}-%{release}
 Group: Applications/Internet
+Group(zh_CN.UTF-8): 应用程序/互联网
 
 %description clients
 OpenLDAP is an open-source suite of LDAP (Lightweight Directory Access
@@ -119,6 +136,9 @@ information, but other information is possible) over the Internet,
 similar to the way DNS (Domain Name System) information is propagated
 over the Internet. The openldap-clients package contains the client
 programs needed for accessing and modifying OpenLDAP directories.
+
+%description clients -l zh_CN.UTF-8
+%{name} 的客户端工具。
 
 %prep
 %setup -q -c -a 0 -a 10
@@ -333,6 +353,7 @@ mv %{buildroot}%{_libdir}/openldap/check_password.so{.tmp,}
 
 rm -f %{buildroot}%{_localstatedir}/openldap-data/DB_CONFIG.example
 rmdir %{buildroot}%{_localstatedir}/openldap-data
+magic_rpm_clean.sh
 
 %post
 
@@ -536,6 +557,9 @@ exit 0
 %{_mandir}/man3/*
 
 %changelog
+* Wed Apr 01 2015 Liu Di <liudidi@gmail.com> - 2.4.40-12
+- 为 Magic 3.0 重建
+
 * Mon Mar 30 2015 Jan Synáček <jsynacek@redhat.com> - 2.4.40-11
 - remove spurious ghosted file
 

@@ -1,0 +1,50 @@
+qt-bugs@ issue : 199610
+Trolltech task ID : 
+bugs.kde.org number : 
+applied: no
+author: Benjamin Reed <rangerrick@befunk.com>
+
+I don't have the exact output anymore (I've since patched Qt's configure) but
+essentially, since I have pcre.h in /opt/kde4-deps/include, it was
+conflicting with Qt's (modified) pcre.h in the WebKit bits, since
+-I /opt/kde4-deps/include ends up in CXXFLAGS in the generated makefiles, it
+comes *before* the specific locations in INCPATH on the compile line, and you
+end up with a conflict with the system-installed pcre.h.
+
+Presumably, if your pcre.h is in /usr/include as on most Linux systems, you
+wouldn't notice this issue since /usr/include's already in your include path
+and people likely don't pass -I /usr/include to configure.  I suspect that on
+any platform with a regular, system-installed pcre.h (or clucene headers),
+adding -I /usr/include would exhibit this bug, just as a custom-installed
+pcre/clucene in another root would.
+
+This patch adds support for using -isystem to allow putting an include
+directory at the end of the compiler's header search path.
+
+
+Index: configure
+===================================================================
+--- configure	(revision 777050)
++++ configure	(working copy)
+@@ -811,6 +811,11 @@
+             VAL=`echo $1 | sed 's,-D,,'`
+         fi
+         ;;
++    -isystem)
++        VAR="add_isystempath"
++        shift
++        VAL="$1"
++        ;;
+     -I?*|-I)
+         VAR="add_ipath"
+         if [ "$1" = "-I" ]; then
+@@ -1666,6 +1671,9 @@
+     add_ipath)
+         I_FLAGS="$I_FLAGS -I\"${VAL}\""
+         ;;
++    add_isystempath)
++        I_FLAGS="$I_FLAGS -isystem \"${VAL}\""
++        ;;
+     add_lpath)
+         L_FLAGS="$L_FLAGS -L\"${VAL}\""
+         ;;

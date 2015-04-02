@@ -10,6 +10,7 @@ Name:           openjpeg2
 Version:        2.1.0
 Release:        4%{?dist}
 Summary:        C-Library for JPEG 2000
+Summary(zh_CN.UTF-8): JPEG 2000 的 C 库
 
 # windirent.h is MIT, the rest is BSD
 License:        BSD and MIT
@@ -53,27 +54,36 @@ This package contains
 * JP2 (JPEG 2000 standard Part 2 - Handling of JP2 boxes and extended multiple
   component transforms for multispectral and hyperspectral imagery)
 
+%description -l zh_CN.UTF-8
+JPEG 2000 的 C 语言库。
 
 %package devel
 Summary:        Development files for OpenJPEG 2
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Requires:       %{name}%{?_isa} = %{version}-%{release}
 
 %description devel
 The %{name}-devel package contains libraries and header files for developing
 applications that use OpenJPEG 2.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %package devel-docs
 Summary:        Developer documentation for OpenJPEG 2
+Summary(zh_CN.UTF-8): %{name} 的开发文档
 BuildArch:      noarch
 
 %description devel-docs
 The %{name}-devel-docs package contains documentation files for developing
 applications that use OpenJPEG 2.
 
+%description devel-docs -l zh_CN.UTF-8
+%{name} 的开发文档。
 
 %package tools
 Summary:        OpenJPEG 2 command line tools
+Summary(zh_CN.UTF-8): OpenJPEG 2 的命令行工具
 Requires:       %{name}%{?_isa} = %{version}-%{release}
 
 %description tools
@@ -82,11 +92,15 @@ Command line tools for JPEG 2000 file manipulation, using OpenJPEG2:
  * opj2_decompress
  * opj2_dump
 
+%description tools -l zh_CN.UTF-8 
+处理 JPEG 2000 文件的命令行工具。
+
 %if 0%{?optional_components}
 ##### MJ2 #####
  
 %package mj2
 Summary:        OpenJPEG2 MJ2 module
+Summary(zh_CN.UTF-8): OpenJPEG2 的 MJ2 模块
 Requires:       %{name}%{?_isa} = %{version}-%{release}
 
 %description mj2

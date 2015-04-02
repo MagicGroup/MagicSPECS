@@ -23,7 +23,7 @@
 Summary:        Specialist tools for ALSA
 Summary(zh_CN.UTF-8): ALSA 的一些专门工具
 Name:           alsa-tools
-Version:        1.0.27
+Version:	1.0.29
 Release:        3%{?dist}
 
 # Checked at least one source file from all the sub-projects contained in
@@ -112,7 +112,7 @@ The following tools are available:
 
 %prep
 %setup -q -n %{name}-%{version}
-%patch0 -p1 -b .non-x86
+#%patch0 -p1 -b .non-x86
 
 %build
 mv seq/sbiload . ; rm -rf seq
@@ -247,6 +247,9 @@ install -m 644 %{SOURCE5} %{buildroot}/lib/udev/rules.d
 %endif
 
 %changelog
+* Fri Mar 27 2015 Liu Di <liudidi@gmail.com> - 1.0.29-3
+- 更新到 1.0.29
+
 * Tue May 21 2013 Dan Horák <dan[at]danny.cz> - 1.0.27-2
 - fix build on non-x86 arches
 

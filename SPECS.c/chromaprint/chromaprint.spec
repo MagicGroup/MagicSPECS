@@ -1,6 +1,6 @@
 Name:           chromaprint
 Version:        1.1
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Library implementing the AcoustID fingerprinting
 
 Group:          System Environment/Libraries
@@ -72,6 +72,9 @@ rm  -f %{buildroot}%{_libdir}/lib*.la
 %{_libdir}/pkgconfig/*.pc
 
 %changelog
+* Mon Mar 30 2015 Liu Di <liudidi@gmail.com> - 1.1-2
+- 为 Magic 3.0 重建
+
 * Sat Nov 23 2013 Ismael Olea <ismael@olea.org> - 1.1-1   
 - update to 1.1
 - CHANGES.txt file removed in upstream

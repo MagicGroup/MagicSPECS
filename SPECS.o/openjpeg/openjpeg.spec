@@ -9,8 +9,9 @@
 
 Name:    openjpeg
 Version: 1.5.1
-Release: 13%{?dist}
+Release: 14%{?dist}
 Summary: JPEG 2000 command line tools
+Summary(zh_CN.UTF-8): JPEG 2000 命令行工具
 
 License: BSD
 URL:     http://code.google.com/p/openjpeg/
@@ -71,25 +72,38 @@ OpenJPEG is an open-source JPEG 2000 codec written in C. It has been
 developed in order to promote the use of JPEG 2000, the new still-image
 compression standard from the Joint Photographic Experts Group (JPEG).
 
+%description -l zh_CN.UTF-8
+OpenJPEG 是一个用 C 编写的开源 JPEG 2000 编码器。
+
 %package libs
 Summary: JPEG 2000 codec runtime library
+Summary(zh_CN.UTF-8): %{name} 的运行库
 %description libs
 The %{name}-libs package contains runtime libraries for applications that use
 OpenJPEG.
+%description libs -l zh_CN.UTF-8
+%{name} 的运行库。
+
 
 %package  devel
 Summary:  Development files for %{name} 
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Requires: %{name}-libs%{?_isa} = %{version}-%{release}
 Requires: %{name} = %{version}-%{release}
 %description devel
 The %{name}-devel package contains libraries and header files for
 developing applications that use OpenJPEG.
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %package  devel-docs
 Summary:  Developer documentation for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发文档
 BuildArch: noarch
 %description devel-docs
 %{summary}.
+%description devel-docs -l zh_CN.UTF-8
+%{name} 的开发文档。
 
 
 %prep
@@ -160,7 +174,7 @@ ln -s openjpeg-1.5/openjpeg.h %{buildroot}%{_includedir}/openjpeg.h
 # we use %%doc in -libs below instead
 rm -rfv %{buildroot}%{_docdir}/openjpeg-1.5/
 rm -fv  %{buildroot}%{_libdir}/lib*.la
-
+magic_rpm_clean.sh
 
 %check
 test -f %{buildroot}%{_includedir}/openjpeg.h
@@ -206,6 +220,9 @@ make test -C %{_target_platform}
 
 
 %changelog
+* Fri Mar 27 2015 Liu Di <liudidi@gmail.com> - 1.5.1-14
+- 为 Magic 3.0 重建
+
 * Wed Oct 08 2014 Jaromir Capik <jcapik@redhat.com> - 1.5.1-13
 - Reworked fix for CVE-2013-6045 (#1093379)
 - Offset check (1.5.2 -> 1.5.1 backport)

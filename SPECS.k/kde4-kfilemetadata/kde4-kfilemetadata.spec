@@ -9,7 +9,7 @@ Summary(zh_CN.UTF-8): 解压文件元数据的库
 Group: System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
 Version: 4.14.3
-Release: 1%{?dist}
+Release: 2%{?dist}
 License: LGPL
 URL: http://extragear.kde.org/apps/kipi
 %define rversion %version
@@ -80,6 +80,9 @@ rm -rf %{buildroot} %{_builddir}/%{buildsubdir}
 %{_libdir}/cmake/*
 
 %changelog
+* Mon Mar 30 2015 Liu Di <liudidi@gmail.com> - 4.14.3-2
+- 为 Magic 3.0 重建
+
 * Tue Dec 30 2014 Liu Di <liudidi@gmail.com> - 4.14.3-1
 - 更新到 4.14.3
 

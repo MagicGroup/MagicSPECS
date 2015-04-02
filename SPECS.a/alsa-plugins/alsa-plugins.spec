@@ -5,8 +5,8 @@
 %endif
 
 Name:           alsa-plugins
-Version:        1.0.27
-Release:        3%{?dist}
+Version:	1.0.29
+Release:        4%{?dist}
 Summary:        The Advanced Linux Sound Architecture (ALSA) Plugins
 Summary(zh_CN.UTF-8): 高级 Linux 声音架构 (ALSA) 插件
 # All packages are LGPLv2+ with the exception of samplerate which is GPLv2+
@@ -208,7 +208,7 @@ ALSA native applications can run over DSP Gateway and use DSP PCM task nodes.
 
 %prep
 %setup -q -n %{name}-%{version}%{?prever}
-%patch1 -p1
+#%patch1 -p1
 
 %build
 %configure --disable-static \
@@ -336,6 +336,12 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Fri Mar 27 2015 Liu Di <liudidi@gmail.com> - 1.0.29-4
+- 为 Magic 3.0 重建
+
+* Fri Mar 27 2015 Liu Di <liudidi@gmail.com> - 1.0.29-3
+- 更新到 1.0.29
+
 * Sat Jul 06 2013 Liu Di <liudidi@gmail.com> - 1.0.27-2
 - 为 Magic 3.0 重建
 
