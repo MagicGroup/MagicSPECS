@@ -30,7 +30,7 @@ diff -up openssh-6.3p1/auth-krb5.c.ccache_name openssh-6.3p1/auth-krb5.c
 +	if (authctxt->krb5_ticket_file[0] == ':')
 +		authctxt->krb5_ticket_file++;
 +
-+	len = strlen(authctxt->krb5_ticket_file) + strlen(ccache_type);
++	len = strlen(authctxt->krb5_ticket_file) + strlen(ccache_type) + 2;
  	authctxt->krb5_ccname = xmalloc(len);
 -	snprintf(authctxt->krb5_ccname, len, "FILE:%s",
 +

@@ -1,0 +1,118 @@
+diff --git a/openbsd-compat/port-linux-sshd.c b/openbsd-compat/port-linux-sshd.c
+index 8f32464..18a2ca4 100644
+--- a/openbsd-compat/port-linux-sshd.c
++++ b/openbsd-compat/port-linux-sshd.c
+@@ -32,6 +32,7 @@
+ #include "misc.h"      /* servconf.h needs misc.h for struct ForwardOptions */
+ #include "servconf.h"
+ #include "port-linux.h"
++#include "misc.h"
+ #include "key.h"
+ #include "hostfile.h"
+ #include "auth.h"
+@@ -445,7 +446,7 @@ sshd_selinux_setup_exec_context(char *pwname)
+ void
+ sshd_selinux_copy_context(void)
+ {
+-	security_context_t *ctx;
++	char *ctx;
+ 
+ 	if (!sshd_selinux_enabled())
+ 		return;
+@@ -461,6 +462,58 @@ sshd_selinux_copy_context(void)
+ 	}
+ }
+ 
++void
++sshd_selinux_change_privsep_preauth_context(void)
++{
++	int len;
++	char line[1024], *preauth_context = NULL, *cp, *arg;
++	const char *contexts_path;
++	FILE *contexts_file;
++
++	contexts_path = selinux_openssh_contexts_path();
++	if (contexts_path != NULL) {
++		if ((contexts_file = fopen(contexts_path, "r")) != NULL) {
++			struct stat sb;
++
++			if (fstat(fileno(contexts_file), &sb) == 0 && ((sb.st_uid == 0) && ((sb.st_mode & 022) == 0))) {
++				while (fgets(line, sizeof(line), contexts_file)) {
++					/* Strip trailing whitespace */
++					for (len = strlen(line) - 1; len > 0; len--) {
++						if (strchr(" \t\r\n", line[len]) == NULL)
++							break;
++						line[len] = '\0';
++					}
++
++					if (line[0] == '\0')
++						continue;
++
++					cp = line;
++					arg = strdelim(&cp);
++					if (*arg == '\0')
++						arg = strdelim(&cp);
++
++					if (strcmp(arg, "privsep_preauth") == 0) {
++						arg = strdelim(&cp);
++						if (!arg || *arg == '\0') {
++							debug("%s: privsep_preauth is empty", __func__);
++							fclose(contexts_file);
++							return;
++						}
++						preauth_context = xstrdup(arg);
++					}
++				}
++			}
++			fclose(contexts_file);
++		}
++	}
++
++	if (preauth_context == NULL)
++		preauth_context = xstrdup("sshd_net_t");
++
++	ssh_selinux_change_context(preauth_context);
++	free(preauth_context);
++}
++
+ #endif
+ #endif
+ 
+diff --git a/openbsd-compat/port-linux.c b/openbsd-compat/port-linux.c
+index 22ea8ef..1fc963d 100644
+--- a/openbsd-compat/port-linux.c
++++ b/openbsd-compat/port-linux.c
+@@ -179,7 +179,7 @@ ssh_selinux_change_context(const char *newname)
+ 	strlcpy(newctx + len, newname, newlen - len);
+ 	if ((cx = index(cx + 1, ':')))
+ 		strlcat(newctx, cx, newlen);
+-	debug3("%s: setting context from '%s' to '%s'", __func__,
++	debug("%s: setting context from '%s' to '%s'", __func__,
+ 	    oldctx, newctx);
+ 	if (setcon(newctx) < 0)
+ 		switchlog("%s: setcon %s from %s failed with %s", __func__,
+diff --git a/openbsd-compat/port-linux.h b/openbsd-compat/port-linux.h
+index cb51f99..8b7cda2 100644
+--- a/openbsd-compat/port-linux.h
++++ b/openbsd-compat/port-linux.h
+@@ -29,6 +29,7 @@ int sshd_selinux_enabled(void);
+ void sshd_selinux_copy_context(void);
+ void sshd_selinux_setup_exec_context(char *);
+ int sshd_selinux_setup_env_variables(void);
++void sshd_selinux_change_privsep_preauth_context(void);
+ #endif
+ 
+ #ifdef LINUX_OOM_ADJUST
+diff --git a/sshd.c b/sshd.c
+index 2871fe9..39b9c08 100644
+--- a/sshd.c
++++ b/sshd.c
+@@ -629,7 +629,7 @@ privsep_preauth_child(void)
+ 	demote_sensitive_data();
+ 
+ #ifdef WITH_SELINUX
+-	ssh_selinux_change_context("sshd_net_t");
++	sshd_selinux_change_privsep_preauth_context();
+ #endif
+ 
+ 	/* Change our root directory */
