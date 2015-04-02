@@ -1,15 +1,14 @@
-diff -up opensm-3.3.13/man/opensm.8.in.prefix opensm-3.3.13/man/opensm.8.in
---- opensm-3.3.13/man/opensm.8.in.prefix	2012-02-28 18:27:33.297714661 -0500
-+++ opensm-3.3.13/man/opensm.8.in	2012-02-28 18:31:00.957696942 -0500
-@@ -11,6 +11,7 @@ opensm \- InfiniBand subnet manager and 
+--- opensm-3.3.17/man/opensm.8.in.orig	2014-03-17 22:57:54.510928914 +0000
++++ opensm-3.3.17/man/opensm.8.in	2014-03-17 22:59:18.885215712 +0000
+@@ -11,6 +11,7 @@
  [\-g(uid) <GUID in hex>]
  [\-l(mc) <LMC>]
  [\-p(riority) <PRIORITY>]
 +[\-\-subnet_prefix <PREFIX in hex>]
- [\-smkey <SM_Key>]
+ [\-\-smkey <SM_Key>]
  [\-\-sm_sl <SL number>]
  [\-r(eassign_lids)]
-@@ -130,6 +131,13 @@ This will effect the handover cases, whe
+@@ -135,6 +136,13 @@
  is chosen by priority and GUID.  Range goes from 0
  (default and lowest priority) to 15 (highest).
  .TP
@@ -20,13 +19,12 @@ diff -up opensm-3.3.13/man/opensm.8.in.prefix opensm-3.3.13/man/opensm.8.in
 +separate fabrics plugged into different ports to
 +have different prefixes or else it won't run.
 +.TP
- \fB\-smkey\fR <SM_Key value>
+ \fB\-\-smkey\fR <SM_Key value>
  This option specifies the SM\'s SM_Key (64 bits).
  This will effect SM authentication.
-diff -up opensm-3.3.13/opensm/main.c.prefix opensm-3.3.13/opensm/main.c
---- opensm-3.3.13/opensm/main.c.prefix	2012-01-17 08:22:40.000000000 -0500
-+++ opensm-3.3.13/opensm/main.c	2012-02-28 18:31:34.224694111 -0500
-@@ -156,6 +156,9 @@ static void show_usage(void)
+--- opensm-3.3.17/opensm/main.c.orig	2014-01-29 20:50:51.000000000 +0000
++++ opensm-3.3.17/opensm/main.c	2014-03-17 22:57:54.513928955 +0000
+@@ -160,6 +160,9 @@
  	       "          This will effect the handover cases, where master\n"
  	       "          is chosen by priority and GUID.  Range goes\n"
  	       "          from 0 (lowest priority) to 15 (highest).\n\n");
@@ -36,19 +34,19 @@ diff -up opensm-3.3.13/opensm/main.c.prefix opensm-3.3.13/opensm/main.c
  	printf("--smkey, -k <SM_Key>\n"
  	       "          This option specifies the SM's SM_Key (64 bits).\n"
  	       "          This will effect SM authentication.\n"
-@@ -607,6 +610,7 @@ int main(int argc, char *argv[])
+@@ -654,6 +657,7 @@
  		{"once", 0, NULL, 'o'},
  		{"reassign_lids", 0, NULL, 'r'},
  		{"priority", 1, NULL, 'p'},
-+		{"subnet_prefix", 1, NULL, 13},
++		{"subnet_prefix", 1, NULL, 15},
  		{"smkey", 1, NULL, 'k'},
  		{"routing_engine", 1, NULL, 'R'},
  		{"ucast_cache", 0, NULL, 'A'},
-@@ -911,6 +915,11 @@ int main(int argc, char *argv[])
+@@ -996,6 +1000,11 @@
  			printf(" Priority = %d\n", temp);
  			break;
  
-+		case 13:
++		case 15:
 +			opt.subnet_prefix = cl_hton64(strtoull(optarg, NULL, 16));
 +			printf(" Subnet_Prefix = <0x%" PRIx64 ">\n", cl_hton64(opt.subnet_prefix));
 +			break;
