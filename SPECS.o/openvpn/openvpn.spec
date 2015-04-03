@@ -5,8 +5,9 @@
 
 Name:              openvpn
 Version:           2.3.2
-Release:           1%{?prerelease:.%{prerelease}}%{?dist}
+Release:           3%{?prerelease:.%{prerelease}}%{?dist}
 Summary:           A full-featured SSL VPN solution
+Summary(zh_CN.UTF-8): 全功能的 SSL VPN 解决方案
 URL:               http://openvpn.net/
 #Source0:           http://openvpn.net/beta/%{name}-%{version}%{?prerelease:_%{prerelease}}.tar.gz
 #Source0:           https://secure.openvpn.net/beta/%{name}-%{version}%{?prerelease:_%{prerelease}}.tar.gz
@@ -56,6 +57,9 @@ of the encryption, authentication, and certification features of the
 OpenSSL library to securely tunnel IP networks over a single UDP or TCP
 port.  It can use the Marcus Franz Xaver Johannes Oberhumer's LZO library
 for compression.
+
+%description -l zh_CN.UTF-8
+全功能的 SSL VPN 解决方案。
 
 %prep
 %setup -q -n %{name}-%{version}%{?prerelease:_%{prerelease}}
@@ -152,6 +156,7 @@ mkdir -p %{buildroot}%{_prefix}/lib/tmpfiles.d
 install -m 0644 %{SOURCE5} %{buildroot}%{_prefix}/lib/tmpfiles.d/%{name}.conf
 mkdir -p %{buildroot}%{_localstatedir}/run/
 install -d -m 0710 %{buildroot}%{_localstatedir}/run/%{name}/
+magic_rpm_clean.sh
 
 %pre
 getent group openvpn &>/dev/null || groupadd -r openvpn
@@ -204,6 +209,12 @@ fi
 %exclude %{_datadir}/doc/%{name}/
 
 %changelog
+* Fri Apr 03 2015 Liu Di <liudidi@gmail.com> - 2.3.2-3
+- 为 Magic 3.0 重建
+
+* Fri Apr 03 2015 Liu Di <liudidi@gmail.com> - 2.3.2-2
+- 为 Magic 3.0 重建
+
 * Thu May 16 2013 Jon Ciesla <limburgher@gmail.com> 2.3.1-4
 - chmod -x .service, BZ 963914.
 

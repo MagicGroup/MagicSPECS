@@ -1,6 +1,6 @@
 Name:		orc
 Version:	0.4.22
-Release:	4%{?dist}
+Release:	5%{?dist}
 Summary:	The Oil Run-time Compiler
 
 Group:		System Environment/Libraries
@@ -12,7 +12,6 @@ URL:		http://cgit.freedesktop.org/gstreamer/orc/
 # git clone git://anongit.freedesktop.org/gstreamer/orc
 # git archive --format=tar --prefix=%{name}-%{version}/ %{name}-%{version} | bzip2 > %{name}-%{version}.tar.bz2
 Source0:	%{name}-%{version}.tar.bz2
-Patch0:		orc-selinux-tmplocation.patch
 
 BuildRequires:	gtk-doc, libtool
 
@@ -55,7 +54,6 @@ The Orc compiler, to produce optimized code.
 
 %prep
 %setup -q
-%patch0 -p1 -b .selinux
 NOCONFIGURE=1 autoreconf -vif
 
 
@@ -107,6 +105,9 @@ make check
 
 
 %changelog
+* Fri Apr 03 2015 Liu Di <liudidi@gmail.com> - 0.4.22-5
+- 为 Magic 3.0 重建
+
 * Sat Feb 21 2015 Till Maas <opensource@till.name> - 0.4.22-4
 - Rebuilt for Fedora 23 Change
   https://fedoraproject.org/wiki/Changes/Harden_all_packages_with_position-independent_code

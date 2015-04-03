@@ -1,12 +1,14 @@
 Name:           os-prober
-Version:        1.48
-Release:        4%{?dist}
+Version: 1.65
+Release: 1%{?dist}
 Summary:        Probes disks on the system for installed operating systems
+Summary(zh_CN.UTF-8): 在驱动器上探测其它操作系统的工具
 
 Group:          System Environment/Base
+Group(zh_CN.UTF-8): 系统环境/基本
 License:        GPL+
 URL:            http://kitenet.net/~joey/code/os-prober/
-Source0:        http://ftp.de.debian.org/debian/pool/main/o/os-prober/%{name}_%{version}.tar.gz
+Source0:        http://ftp.de.debian.org/debian/pool/main/o/os-prober/%{name}_%{version}.tar.xz
 # move newns binary outside of os-prober subdirectory, so that debuginfo
 # can be automatically generated for it
 Patch0:         os-prober-newnsdirfix.patch
@@ -18,6 +20,10 @@ Requires:       /bin/grep /bin/sed /sbin/modprobe
 This package detects other OSes available on a system and outputs the results
 in a generic machine-readable format. Support for new OSes and Linux
 distributions can be added easily. 
+
+%description -l zh_CN.UTF-8
+本包探测系统上可用的其它操作系统，并以通用的机器可读的格式输出结果，
+本包来自 Debian。
 
 %prep
 %setup -q -n %{name}
@@ -69,6 +75,9 @@ fi
 %{_var}/lib/%{name}
 
 %changelog
+* Fri Apr 03 2015 Liu Di <liudidi@gmail.com> - 1.65-1
+- 更新到 1.65
+
 * Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 1.48-4
 - 为 Magic 3.0 重建
 
