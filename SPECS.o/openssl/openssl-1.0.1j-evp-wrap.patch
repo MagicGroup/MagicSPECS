@@ -1,0 +1,1242 @@
+diff -up openssl-1.0.1j/crypto/aes/aes_wrap.c.wrap openssl-1.0.1j/crypto/aes/aes_wrap.c
+--- openssl-1.0.1j/crypto/aes/aes_wrap.c.wrap	2014-10-15 13:15:29.000000000 +0200
++++ openssl-1.0.1j/crypto/aes/aes_wrap.c	2014-10-16 13:30:10.679654927 +0200
+@@ -53,207 +53,18 @@
+ 
+ #include "cryptlib.h"
+ #include <openssl/aes.h>
+-#include <openssl/bio.h>
+-
+-static const unsigned char default_iv[] = {
+-  0xA6, 0xA6, 0xA6, 0xA6, 0xA6, 0xA6, 0xA6, 0xA6,
+-};
++#include <openssl/modes.h>
+ 
+ int AES_wrap_key(AES_KEY *key, const unsigned char *iv,
+ 		unsigned char *out,
+ 		const unsigned char *in, unsigned int inlen)
+ 	{
+-	unsigned char *A, B[16], *R;
+-	unsigned int i, j, t;
+-	if ((inlen & 0x7) || (inlen < 8))
+-		return -1;
+-	A = B;
+-	t = 1;
+-	memcpy(out + 8, in, inlen);
+-	if (!iv)
+-		iv = default_iv;
+-
+-	memcpy(A, iv, 8);
+-
+-	for (j = 0; j < 6; j++)
+-		{
+-		R = out + 8;
+-		for (i = 0; i < inlen; i += 8, t++, R += 8)
+-			{
+-			memcpy(B + 8, R, 8);
+-			AES_encrypt(B, B, key);
+-			A[7] ^= (unsigned char)(t & 0xff);
+-			if (t > 0xff)	
+-				{
+-				A[6] ^= (unsigned char)((t >> 8) & 0xff);
+-				A[5] ^= (unsigned char)((t >> 16) & 0xff);
+-				A[4] ^= (unsigned char)((t >> 24) & 0xff);
+-				}
+-			memcpy(R, B + 8, 8);
+-			}
+-		}
+-	memcpy(out, A, 8);
+-	return inlen + 8;
++	return CRYPTO_128_wrap(key, iv, out, in, inlen, (block128_f)AES_encrypt);
+ 	}
+ 
+ int AES_unwrap_key(AES_KEY *key, const unsigned char *iv,
+ 		unsigned char *out,
+ 		const unsigned char *in, unsigned int inlen)
+ 	{
+-	unsigned char *A, B[16], *R;
+-	unsigned int i, j, t;
+-	inlen -= 8;
+-	if (inlen & 0x7)
+-		return -1;
+-	if (inlen < 8)
+-		return -1;
+-	A = B;
+-	t =  6 * (inlen >> 3);
+-	memcpy(A, in, 8);
+-	memcpy(out, in + 8, inlen);
+-	for (j = 0; j < 6; j++)
+-		{
+-		R = out + inlen - 8;
+-		for (i = 0; i < inlen; i += 8, t--, R -= 8)
+-			{
+-			A[7] ^= (unsigned char)(t & 0xff);
+-			if (t > 0xff)	
+-				{
+-				A[6] ^= (unsigned char)((t >> 8) & 0xff);
+-				A[5] ^= (unsigned char)((t >> 16) & 0xff);
+-				A[4] ^= (unsigned char)((t >> 24) & 0xff);
+-				}
+-			memcpy(B + 8, R, 8);
+-			AES_decrypt(B, B, key);
+-			memcpy(R, B + 8, 8);
+-			}
+-		}
+-	if (!iv)
+-		iv = default_iv;
+-	if (memcmp(A, iv, 8))
+-		{
+-		OPENSSL_cleanse(out, inlen);
+-		return 0;
+-		}
+-	return inlen;
+-	}
+-
+-#ifdef AES_WRAP_TEST
+-
+-int AES_wrap_unwrap_test(const unsigned char *kek, int keybits,
+-			 const unsigned char *iv,
+-			 const unsigned char *eout,
+-			 const unsigned char *key, int keylen)
+-	{
+-	unsigned char *otmp = NULL, *ptmp = NULL;
+-	int r, ret = 0;
+-	AES_KEY wctx;
+-	otmp = OPENSSL_malloc(keylen + 8);
+-	ptmp = OPENSSL_malloc(keylen);
+-	if (!otmp || !ptmp)
+-		return 0;
+-	if (AES_set_encrypt_key(kek, keybits, &wctx))
+-		goto err;
+-	r = AES_wrap_key(&wctx, iv, otmp, key, keylen);
+-	if (r <= 0)
+-		goto err;
+-
+-	if (eout && memcmp(eout, otmp, keylen))
+-		goto err;
+-		
+-	if (AES_set_decrypt_key(kek, keybits, &wctx))
+-		goto err;
+-	r = AES_unwrap_key(&wctx, iv, ptmp, otmp, r);
+-
+-	if (memcmp(key, ptmp, keylen))
+-		goto err;
+-
+-	ret = 1;
+-
+-	err:
+-	if (otmp)
+-		OPENSSL_free(otmp);
+-	if (ptmp)
+-		OPENSSL_free(ptmp);
+-
+-	return ret;
+-
++	return CRYPTO_128_unwrap(key, iv, out, in, inlen, (block128_f)AES_decrypt);
+ 	}
+-
+-
+-
+-int main(int argc, char **argv)
+-{
+-
+-static const unsigned char kek[] = {
+-  0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07,
+-  0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f,
+-  0x10, 0x11, 0x12, 0x13, 0x14, 0x15, 0x16, 0x17,
+-  0x18, 0x19, 0x1a, 0x1b, 0x1c, 0x1d, 0x1e, 0x1f
+-};
+-
+-static const unsigned char key[] = {
+-  0x00, 0x11, 0x22, 0x33, 0x44, 0x55, 0x66, 0x77,
+-  0x88, 0x99, 0xaa, 0xbb, 0xcc, 0xdd, 0xee, 0xff,
+-  0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07,
+-  0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f
+-};
+-
+-static const unsigned char e1[] = {
+-  0x1f, 0xa6, 0x8b, 0x0a, 0x81, 0x12, 0xb4, 0x47,
+-  0xae, 0xf3, 0x4b, 0xd8, 0xfb, 0x5a, 0x7b, 0x82,
+-  0x9d, 0x3e, 0x86, 0x23, 0x71, 0xd2, 0xcf, 0xe5
+-};
+-
+-static const unsigned char e2[] = {
+-  0x96, 0x77, 0x8b, 0x25, 0xae, 0x6c, 0xa4, 0x35,
+-  0xf9, 0x2b, 0x5b, 0x97, 0xc0, 0x50, 0xae, 0xd2,
+-  0x46, 0x8a, 0xb8, 0xa1, 0x7a, 0xd8, 0x4e, 0x5d
+-};
+-
+-static const unsigned char e3[] = {
+-  0x64, 0xe8, 0xc3, 0xf9, 0xce, 0x0f, 0x5b, 0xa2,
+-  0x63, 0xe9, 0x77, 0x79, 0x05, 0x81, 0x8a, 0x2a,
+-  0x93, 0xc8, 0x19, 0x1e, 0x7d, 0x6e, 0x8a, 0xe7
+-};
+-
+-static const unsigned char e4[] = {
+-  0x03, 0x1d, 0x33, 0x26, 0x4e, 0x15, 0xd3, 0x32,
+-  0x68, 0xf2, 0x4e, 0xc2, 0x60, 0x74, 0x3e, 0xdc,
+-  0xe1, 0xc6, 0xc7, 0xdd, 0xee, 0x72, 0x5a, 0x93,
+-  0x6b, 0xa8, 0x14, 0x91, 0x5c, 0x67, 0x62, 0xd2
+-};
+-
+-static const unsigned char e5[] = {
+-  0xa8, 0xf9, 0xbc, 0x16, 0x12, 0xc6, 0x8b, 0x3f,
+-  0xf6, 0xe6, 0xf4, 0xfb, 0xe3, 0x0e, 0x71, 0xe4,
+-  0x76, 0x9c, 0x8b, 0x80, 0xa3, 0x2c, 0xb8, 0x95,
+-  0x8c, 0xd5, 0xd1, 0x7d, 0x6b, 0x25, 0x4d, 0xa1
+-};
+-
+-static const unsigned char e6[] = {
+-  0x28, 0xc9, 0xf4, 0x04, 0xc4, 0xb8, 0x10, 0xf4,
+-  0xcb, 0xcc, 0xb3, 0x5c, 0xfb, 0x87, 0xf8, 0x26,
+-  0x3f, 0x57, 0x86, 0xe2, 0xd8, 0x0e, 0xd3, 0x26,
+-  0xcb, 0xc7, 0xf0, 0xe7, 0x1a, 0x99, 0xf4, 0x3b,
+-  0xfb, 0x98, 0x8b, 0x9b, 0x7a, 0x02, 0xdd, 0x21
+-};
+-
+-	AES_KEY wctx, xctx;
+-	int ret;
+-	ret = AES_wrap_unwrap_test(kek, 128, NULL, e1, key, 16);
+-	fprintf(stderr, "Key test result %d\n", ret);
+-	ret = AES_wrap_unwrap_test(kek, 192, NULL, e2, key, 16);
+-	fprintf(stderr, "Key test result %d\n", ret);
+-	ret = AES_wrap_unwrap_test(kek, 256, NULL, e3, key, 16);
+-	fprintf(stderr, "Key test result %d\n", ret);
+-	ret = AES_wrap_unwrap_test(kek, 192, NULL, e4, key, 24);
+-	fprintf(stderr, "Key test result %d\n", ret);
+-	ret = AES_wrap_unwrap_test(kek, 256, NULL, e5, key, 24);
+-	fprintf(stderr, "Key test result %d\n", ret);
+-	ret = AES_wrap_unwrap_test(kek, 256, NULL, e6, key, 32);
+-	fprintf(stderr, "Key test result %d\n", ret);
+-}
+-	
+-	
+-#endif
+diff -up openssl-1.0.1j/crypto/evp/c_allc.c.wrap openssl-1.0.1j/crypto/evp/c_allc.c
+--- openssl-1.0.1j/crypto/evp/c_allc.c.wrap	2014-10-16 13:30:10.583652760 +0200
++++ openssl-1.0.1j/crypto/evp/c_allc.c	2014-10-16 13:30:10.679654927 +0200
+@@ -98,6 +98,7 @@ void OpenSSL_add_all_ciphers(void)
+ 	EVP_add_cipher(EVP_des_ecb());
+ 	EVP_add_cipher(EVP_des_ede());
+ 	EVP_add_cipher(EVP_des_ede3());
++	EVP_add_cipher(EVP_des_ede3_wrap());
+ #endif
+ 
+ #ifndef OPENSSL_NO_RC4
+@@ -177,6 +178,8 @@ void OpenSSL_add_all_ciphers(void)
+ 	EVP_add_cipher(EVP_aes_128_ctr());
+ 	EVP_add_cipher(EVP_aes_128_gcm());
+ 	EVP_add_cipher(EVP_aes_128_xts());
++	EVP_add_cipher(EVP_aes_128_wrap());
++	EVP_add_cipher(EVP_aes_128_wrap_pad());
+ 	EVP_add_cipher_alias(SN_aes_128_cbc,"AES128");
+ 	EVP_add_cipher_alias(SN_aes_128_cbc,"aes128");
+ 	EVP_add_cipher(EVP_aes_192_ecb());
+@@ -187,6 +190,8 @@ void OpenSSL_add_all_ciphers(void)
+ 	EVP_add_cipher(EVP_aes_192_ofb());
+ 	EVP_add_cipher(EVP_aes_192_ctr());
+ 	EVP_add_cipher(EVP_aes_192_gcm());
++	EVP_add_cipher(EVP_aes_192_wrap());
++	EVP_add_cipher(EVP_aes_192_wrap_pad());
+ 	EVP_add_cipher_alias(SN_aes_192_cbc,"AES192");
+ 	EVP_add_cipher_alias(SN_aes_192_cbc,"aes192");
+ 	EVP_add_cipher(EVP_aes_256_ecb());
+@@ -198,6 +203,8 @@ void OpenSSL_add_all_ciphers(void)
+ 	EVP_add_cipher(EVP_aes_256_ctr());
+ 	EVP_add_cipher(EVP_aes_256_gcm());
+ 	EVP_add_cipher(EVP_aes_256_xts());
++	EVP_add_cipher(EVP_aes_256_wrap());
++	EVP_add_cipher(EVP_aes_256_wrap_pad());
+ 	EVP_add_cipher_alias(SN_aes_256_cbc,"AES256");
+ 	EVP_add_cipher_alias(SN_aes_256_cbc,"aes256");
+ #if !defined(OPENSSL_NO_SHA) && !defined(OPENSSL_NO_SHA1)
+@@ -250,6 +257,7 @@ void OpenSSL_add_all_ciphers(void)
+ 
+ 	EVP_add_cipher(EVP_des_ede());
+ 	EVP_add_cipher(EVP_des_ede3());
++	EVP_add_cipher(EVP_des_ede3_wrap());
+ #endif
+ 
+ #ifndef OPENSSL_NO_AES
+@@ -262,6 +270,8 @@ void OpenSSL_add_all_ciphers(void)
+ 	EVP_add_cipher(EVP_aes_128_ctr());
+ 	EVP_add_cipher(EVP_aes_128_gcm());
+ 	EVP_add_cipher(EVP_aes_128_xts());
++	EVP_add_cipher(EVP_aes_128_wrap());
++	EVP_add_cipher(EVP_aes_128_wrap_pad());
+ 	EVP_add_cipher_alias(SN_aes_128_cbc,"AES128");
+ 	EVP_add_cipher_alias(SN_aes_128_cbc,"aes128");
+ 	EVP_add_cipher(EVP_aes_192_ecb());
+@@ -272,6 +282,8 @@ void OpenSSL_add_all_ciphers(void)
+ 	EVP_add_cipher(EVP_aes_192_ofb());
+ 	EVP_add_cipher(EVP_aes_192_ctr());
+ 	EVP_add_cipher(EVP_aes_192_gcm());
++	EVP_add_cipher(EVP_aes_192_wrap());
++	EVP_add_cipher(EVP_aes_192_wrap_pad());
+ 	EVP_add_cipher_alias(SN_aes_192_cbc,"AES192");
+ 	EVP_add_cipher_alias(SN_aes_192_cbc,"aes192");
+ 	EVP_add_cipher(EVP_aes_256_ecb());
+@@ -283,6 +295,8 @@ void OpenSSL_add_all_ciphers(void)
+ 	EVP_add_cipher(EVP_aes_256_ctr());
+ 	EVP_add_cipher(EVP_aes_256_gcm());
+ 	EVP_add_cipher(EVP_aes_256_xts());
++	EVP_add_cipher(EVP_aes_256_wrap());
++	EVP_add_cipher(EVP_aes_256_wrap_pad());
+ 	EVP_add_cipher_alias(SN_aes_256_cbc,"AES256");
+ 	EVP_add_cipher_alias(SN_aes_256_cbc,"aes256");
+ #endif
+diff -up openssl-1.0.1j/crypto/evp/e_aes.c.wrap openssl-1.0.1j/crypto/evp/e_aes.c
+--- openssl-1.0.1j/crypto/evp/e_aes.c.wrap	2014-10-16 13:30:10.584652782 +0200
++++ openssl-1.0.1j/crypto/evp/e_aes.c	2014-10-16 13:30:10.679654927 +0200
+@@ -1,5 +1,5 @@
+ /* ====================================================================
+- * Copyright (c) 2001-2011 The OpenSSL Project.  All rights reserved.
++ * Copyright (c) 2001-2014 The OpenSSL Project.  All rights reserved.
+  *
+  * Redistribution and use in source and binary forms, with or without
+  * modification, are permitted provided that the following conditions
+@@ -1384,4 +1384,180 @@ BLOCK_CIPHER_custom(NID_aes,128,1,12,ccm
+ BLOCK_CIPHER_custom(NID_aes,192,1,12,ccm,CCM,EVP_CIPH_FLAG_FIPS|CUSTOM_FLAGS)
+ BLOCK_CIPHER_custom(NID_aes,256,1,12,ccm,CCM,EVP_CIPH_FLAG_FIPS|CUSTOM_FLAGS)
+ 
++typedef struct
++	{
++	union { double align; AES_KEY ks; } ks;
++	/* Indicates if IV has been set */
++	unsigned char *iv;
++	} EVP_AES_WRAP_CTX;
++
++static int aes_wrap_init_key(EVP_CIPHER_CTX *ctx, const unsigned char *key,
++                        const unsigned char *iv, int enc)
++	{
++	EVP_AES_WRAP_CTX *wctx = ctx->cipher_data;
++	if (!iv && !key)
++		return 1;
++	if (key)
++		{
++		if (ctx->encrypt)
++			AES_set_encrypt_key(key, ctx->key_len * 8, &wctx->ks.ks);
++		else
++			AES_set_decrypt_key(key, ctx->key_len * 8, &wctx->ks.ks);
++		if (!iv)
++			wctx->iv = NULL;
++		}
++	if (iv)
++		{
++		memcpy(ctx->iv, iv, EVP_CIPHER_CTX_iv_length(ctx));
++		wctx->iv = ctx->iv;
++		}
++	return 1;
++	}
++
++static int aes_wrap_cipher(EVP_CIPHER_CTX *ctx, unsigned char *out,
++		const unsigned char *in, size_t inlen)
++	{
++	EVP_AES_WRAP_CTX *wctx = ctx->cipher_data;
++	size_t rv;
++	/* AES wrap with padding has IV length of 4, without padding 8 */
++	int pad = EVP_CIPHER_CTX_iv_length(ctx) == 4;
++	/* No final operation so always return zero length */
++	if (!in)
++		return 0;
++	/* Input length must always be non-zero */
++	if (!inlen)
++		return -1;
++	/* If decrypting need at least 16 bytes and multiple of 8 */
++	if (!ctx->encrypt && (inlen < 16 || inlen & 0x7))
++		return -1;
++	/* If not padding input must be multiple of 8 */
++	if (!pad && inlen & 0x7)
++		return -1;
++	if (!out)
++		{
++		if (ctx->encrypt)
++			{
++			/* If padding round up to multiple of 8 */
++			if (pad)
++				inlen = (inlen + 7)/8 * 8;
++			/* 8 byte prefix */
++			return inlen + 8;
++			}
++		else
++			{
++			/* If not padding output will be exactly 8 bytes
++			 * smaller than input. If padding it will be at
++			 * least 8 bytes smaller but we don't know how
++			 * much.
++			 */
++			return inlen - 8;
++			}
++		}
++	if (pad)
++		{
++		if (ctx->encrypt)
++			rv = CRYPTO_128_wrap_pad(&wctx->ks.ks, wctx->iv,
++						out, in, inlen,
++						(block128_f)AES_encrypt);
++		else
++			rv = CRYPTO_128_unwrap_pad(&wctx->ks.ks, wctx->iv,
++						out, in, inlen,
++						(block128_f)AES_decrypt);
++		}
++	else
++		{
++		if (ctx->encrypt)
++			rv = CRYPTO_128_wrap(&wctx->ks.ks, wctx->iv,
++						out, in, inlen,
++						(block128_f)AES_encrypt);
++		else
++			rv = CRYPTO_128_unwrap(&wctx->ks.ks, wctx->iv,
++						out, in, inlen,
++						(block128_f)AES_decrypt);
++		}
++	return rv ? (int)rv : -1;
++	}
++
++#define WRAP_FLAGS	(EVP_CIPH_WRAP_MODE | EVP_CIPH_FLAG_FIPS \
++		| EVP_CIPH_CUSTOM_IV | EVP_CIPH_FLAG_CUSTOM_CIPHER \
++		| EVP_CIPH_ALWAYS_CALL_INIT | EVP_CIPH_FLAG_DEFAULT_ASN1)
++
++static const EVP_CIPHER aes_128_wrap = {
++	NID_id_aes128_wrap,
++	8, 16, 8, WRAP_FLAGS,
++	aes_wrap_init_key, aes_wrap_cipher,
++	NULL,
++	sizeof(EVP_AES_WRAP_CTX),
++	NULL,NULL,NULL,NULL };
++
++const EVP_CIPHER *EVP_aes_128_wrap(void)
++	{
++	return &aes_128_wrap;
++	}
++
++static const EVP_CIPHER aes_192_wrap = {
++	NID_id_aes192_wrap,
++	8, 24, 8, WRAP_FLAGS,
++	aes_wrap_init_key, aes_wrap_cipher,
++	NULL,
++	sizeof(EVP_AES_WRAP_CTX),
++	NULL,NULL,NULL,NULL };
++
++const EVP_CIPHER *EVP_aes_192_wrap(void)
++	{
++	return &aes_192_wrap;
++	}
++
++static const EVP_CIPHER aes_256_wrap = {
++	NID_id_aes256_wrap,
++	8, 32, 8, WRAP_FLAGS,
++	aes_wrap_init_key, aes_wrap_cipher,
++	NULL,
++	sizeof(EVP_AES_WRAP_CTX),
++	NULL,NULL,NULL,NULL };
++
++const EVP_CIPHER *EVP_aes_256_wrap(void)
++	{
++	return &aes_256_wrap;
++	}
++
++static const EVP_CIPHER aes_128_wrap_pad = {
++	NID_id_aes128_wrap_pad,
++	8, 16, 4, WRAP_FLAGS,
++	aes_wrap_init_key, aes_wrap_cipher,
++	NULL,
++	sizeof(EVP_AES_WRAP_CTX),
++	NULL,NULL,NULL,NULL };
++
++const EVP_CIPHER *EVP_aes_128_wrap_pad(void)
++	{
++	return &aes_128_wrap_pad;
++	}
++
++static const EVP_CIPHER aes_192_wrap_pad = {
++	NID_id_aes192_wrap_pad,
++	8, 24, 4, WRAP_FLAGS,
++	aes_wrap_init_key, aes_wrap_cipher,
++	NULL,
++	sizeof(EVP_AES_WRAP_CTX),
++	NULL,NULL,NULL,NULL };
++
++const EVP_CIPHER *EVP_aes_192_wrap_pad(void)
++	{
++	return &aes_192_wrap_pad;
++	}
++
++static const EVP_CIPHER aes_256_wrap_pad = {
++	NID_id_aes256_wrap_pad,
++	8, 32, 4, WRAP_FLAGS,
++	aes_wrap_init_key, aes_wrap_cipher,
++	NULL,
++	sizeof(EVP_AES_WRAP_CTX),
++	NULL,NULL,NULL,NULL };
++
++const EVP_CIPHER *EVP_aes_256_wrap_pad(void)
++	{
++	return &aes_256_wrap_pad;
++	}
++
+ #endif
+diff -up openssl-1.0.1j/crypto/evp/e_des3.c.wrap openssl-1.0.1j/crypto/evp/e_des3.c
+--- openssl-1.0.1j/crypto/evp/e_des3.c.wrap	2014-10-16 13:30:10.584652782 +0200
++++ openssl-1.0.1j/crypto/evp/e_des3.c	2014-10-16 13:30:10.679654927 +0200
+@@ -310,4 +310,112 @@ const EVP_CIPHER *EVP_des_ede3(void)
+ {
+ 	return &des_ede3_ecb;
+ }
++
++#ifndef OPENSSL_NO_SHA
++
++#include <openssl/sha.h>
++
++static const unsigned char wrap_iv[8] = {0x4a,0xdd,0xa2,0x2c,0x79,0xe8,0x21,0x05};
++
++static int des_ede3_unwrap(EVP_CIPHER_CTX *ctx, unsigned char *out,
++				const unsigned char *in, size_t inl)
++	{
++	unsigned char icv[8], iv[8], sha1tmp[SHA_DIGEST_LENGTH];
++	int rv = -1;
++	if (inl < 24)
++		return -1;
++	if (!out)
++		return inl - 16;
++	memcpy(ctx->iv, wrap_iv, 8);
++	/* Decrypt first block which will end up as icv */
++	des_ede_cbc_cipher(ctx, icv, in, 8);
++	/* Decrypt central blocks */
++	/* If decrypting in place move whole output along a block
++	 * so the next des_ede_cbc_cipher is in place.
++	 */
++	if (out == in)
++		{
++		memmove(out, out + 8, inl - 8);
++		in -= 8;
++		}
++	des_ede_cbc_cipher(ctx, out, in + 8, inl - 16);
++	/* Decrypt final block which will be IV */
++	des_ede_cbc_cipher(ctx, iv, in + inl - 8, 8);
++	/* Reverse order of everything */
++	BUF_reverse(icv, NULL, 8);
++	BUF_reverse(out, NULL, inl - 16);
++	BUF_reverse(ctx->iv, iv, 8);
++	/* Decrypt again using new IV */
++	des_ede_cbc_cipher(ctx, out, out, inl - 16);
++	des_ede_cbc_cipher(ctx, icv, icv, 8);
++	/* Work out SHA1 hash of first portion */
++	SHA1(out, inl - 16, sha1tmp);
++
++	if (!CRYPTO_memcmp(sha1tmp, icv, 8))
++		rv = inl - 16;
++	OPENSSL_cleanse(icv, 8);
++	OPENSSL_cleanse(sha1tmp, SHA_DIGEST_LENGTH);
++	OPENSSL_cleanse(iv, 8);
++	OPENSSL_cleanse(ctx->iv, 8);
++	if (rv == -1)
++		OPENSSL_cleanse(out, inl - 16);
++	
++	return rv;
++	}
++
++static int des_ede3_wrap(EVP_CIPHER_CTX *ctx, unsigned char *out,
++				const unsigned char *in, size_t inl)
++	{
++	unsigned char sha1tmp[SHA_DIGEST_LENGTH];
++	if (!out)
++		return inl + 16;
++	/* Copy input to output buffer + 8 so we have space for IV */
++	memmove(out + 8, in, inl);
++	/* Work out ICV */
++	SHA1(in, inl, sha1tmp);
++	memcpy(out + inl + 8, sha1tmp, 8);
++	OPENSSL_cleanse(sha1tmp, SHA_DIGEST_LENGTH);
++	/* Generate random IV */
++	RAND_bytes(ctx->iv, 8);
++	memcpy(out, ctx->iv, 8);
++	/* Encrypt everything after IV in place */
++	des_ede_cbc_cipher(ctx, out + 8, out + 8, inl + 8);
++	BUF_reverse(out, NULL, inl + 16);
++	memcpy(ctx->iv, wrap_iv, 8);
++	des_ede_cbc_cipher(ctx, out, out, inl + 16);
++	return inl + 16;
++	}
++
++static int des_ede3_wrap_cipher(EVP_CIPHER_CTX *ctx, unsigned char *out,
++				const unsigned char *in, size_t inl)
++	{
++	/* Sanity check input length: we typically only wrap keys
++	 * so EVP_MAXCHUNK is more than will ever be needed. Also
++	 * input length must be a multiple of 8 bits.
++	 */
++	if (inl >= EVP_MAXCHUNK || inl % 8)
++		return -1;
++	if (ctx->encrypt)
++		return des_ede3_wrap(ctx, out, in, inl);
++	else
++		return des_ede3_unwrap(ctx, out, in, inl);
++	}
++
++static const EVP_CIPHER des3_wrap = {
++	NID_id_smime_alg_CMS3DESwrap,
++	8, 24, 0,
++	EVP_CIPH_WRAP_MODE|EVP_CIPH_CUSTOM_IV|EVP_CIPH_FLAG_CUSTOM_CIPHER
++		|EVP_CIPH_FLAG_DEFAULT_ASN1|EVP_CIPH_FLAG_FIPS,
++	des_ede3_init_key, des_ede3_wrap_cipher,
++	NULL,	
++	sizeof(DES_EDE_KEY),
++	NULL,NULL,NULL,NULL };
++
++
++const EVP_CIPHER *EVP_des_ede3_wrap(void)
++	{
++	return &des3_wrap;
++	}
++
++# endif
+ #endif
+diff -up openssl-1.0.1j/crypto/evp/evp_enc.c.wrap openssl-1.0.1j/crypto/evp/evp_enc.c
+--- openssl-1.0.1j/crypto/evp/evp_enc.c.wrap	2014-10-16 13:30:10.584652782 +0200
++++ openssl-1.0.1j/crypto/evp/evp_enc.c	2014-10-16 13:30:10.680654949 +0200
+@@ -234,7 +234,8 @@ int EVP_CipherInit_ex(EVP_CIPHER_CTX *ct
+ 			ctx->cipher_data = NULL;
+ 			}
+ 		ctx->key_len = cipher->key_len;
+-		ctx->flags = 0;
++		/* Preserve wrap enable flag, zero everything else */
++		ctx->flags &= EVP_CIPHER_CTX_FLAG_WRAP_ALLOW;
+ 		if(ctx->cipher->flags & EVP_CIPH_CTRL_INIT)
+ 			{
+ 			if(!EVP_CIPHER_CTX_ctrl(ctx, EVP_CTRL_INIT, 0, NULL))
+@@ -257,6 +258,13 @@ skip_to_init:
+ 	    || ctx->cipher->block_size == 8
+ 	    || ctx->cipher->block_size == 16);
+ 
++	if(!(ctx->flags & EVP_CIPHER_CTX_FLAG_WRAP_ALLOW)
++		&& EVP_CIPHER_CTX_mode(ctx) == EVP_CIPH_WRAP_MODE)
++		{
++		EVPerr(EVP_F_EVP_CIPHERINIT_EX, EVP_R_WRAP_MODE_NOT_ALLOWED);
++		return 0;
++		}
++
+ 	if(!(EVP_CIPHER_CTX_flags(ctx) & EVP_CIPH_CUSTOM_IV)) {
+ 		switch(EVP_CIPHER_CTX_mode(ctx)) {
+ 
+diff -up openssl-1.0.1j/crypto/evp/evp_err.c.wrap openssl-1.0.1j/crypto/evp/evp_err.c
+--- openssl-1.0.1j/crypto/evp/evp_err.c.wrap	2014-10-15 14:53:39.000000000 +0200
++++ openssl-1.0.1j/crypto/evp/evp_err.c	2014-10-16 13:30:10.680654949 +0200
+@@ -1,6 +1,6 @@
+ /* crypto/evp/evp_err.c */
+ /* ====================================================================
+- * Copyright (c) 1999-2011 The OpenSSL Project.  All rights reserved.
++ * Copyright (c) 1999-2013 The OpenSSL Project.  All rights reserved.
+  *
+  * Redistribution and use in source and binary forms, with or without
+  * modification, are permitted provided that the following conditions
+@@ -220,6 +220,7 @@ static ERR_STRING_DATA EVP_str_reasons[]
+ {ERR_REASON(EVP_R_UNSUPPORTED_PRF)       ,"unsupported prf"},
+ {ERR_REASON(EVP_R_UNSUPPORTED_PRIVATE_KEY_ALGORITHM),"unsupported private key algorithm"},
+ {ERR_REASON(EVP_R_UNSUPPORTED_SALT_TYPE) ,"unsupported salt type"},
++{ERR_REASON(EVP_R_WRAP_MODE_NOT_ALLOWED) ,"wrap mode not allowed"},
+ {ERR_REASON(EVP_R_WRONG_FINAL_BLOCK_LENGTH),"wrong final block length"},
+ {ERR_REASON(EVP_R_WRONG_PUBLIC_KEY_TYPE) ,"wrong public key type"},
+ {0,NULL}
+diff -up openssl-1.0.1j/crypto/evp/evp.h.wrap openssl-1.0.1j/crypto/evp/evp.h
+--- openssl-1.0.1j/crypto/evp/evp.h.wrap	2014-10-16 13:30:10.585652805 +0200
++++ openssl-1.0.1j/crypto/evp/evp.h	2014-10-16 13:30:10.680654949 +0200
+@@ -336,6 +336,7 @@ struct evp_cipher_st
+ #define		EVP_CIPH_GCM_MODE		0x6
+ #define		EVP_CIPH_CCM_MODE		0x7
+ #define		EVP_CIPH_XTS_MODE		0x10001
++#define		EVP_CIPH_WRAP_MODE		0x10002
+ #define 	EVP_CIPH_MODE			0xF0007
+ /* Set if variable length cipher */
+ #define 	EVP_CIPH_VARIABLE_LENGTH	0x8
+@@ -367,6 +368,13 @@ struct evp_cipher_st
+ #define 	EVP_CIPH_FLAG_CUSTOM_CIPHER	0x100000
+ #define		EVP_CIPH_FLAG_AEAD_CIPHER	0x200000
+ 
++/* Cipher context flag to indicate we can handle
++ * wrap mode: if allowed in older applications it could
++ * overflow buffers.
++ */
++
++#define 	EVP_CIPHER_CTX_FLAG_WRAP_ALLOW	0x1
++
+ /* ctrl() values */
+ 
+ #define		EVP_CTRL_INIT			0x0
+@@ -729,6 +737,7 @@ const EVP_CIPHER *EVP_des_cbc(void);
+ const EVP_CIPHER *EVP_des_ede_cbc(void);
+ const EVP_CIPHER *EVP_des_ede3_cbc(void);
+ const EVP_CIPHER *EVP_desx_cbc(void);
++const EVP_CIPHER *EVP_des_ede3_wrap(void);
+ /* This should now be supported through the dev_crypto ENGINE. But also, why are
+  * rc4 and md5 declarations made here inside a "NO_DES" precompiler branch? */
+ #if 0
+@@ -788,6 +797,8 @@ const EVP_CIPHER *EVP_aes_128_ctr(void);
+ const EVP_CIPHER *EVP_aes_128_ccm(void);
+ const EVP_CIPHER *EVP_aes_128_gcm(void);
+ const EVP_CIPHER *EVP_aes_128_xts(void);
++const EVP_CIPHER *EVP_aes_128_wrap(void);
++const EVP_CIPHER *EVP_aes_128_wrap_pad(void);
+ const EVP_CIPHER *EVP_aes_192_ecb(void);
+ const EVP_CIPHER *EVP_aes_192_cbc(void);
+ const EVP_CIPHER *EVP_aes_192_cfb1(void);
+@@ -798,6 +809,8 @@ const EVP_CIPHER *EVP_aes_192_ofb(void);
+ const EVP_CIPHER *EVP_aes_192_ctr(void);
+ const EVP_CIPHER *EVP_aes_192_ccm(void);
+ const EVP_CIPHER *EVP_aes_192_gcm(void);
++const EVP_CIPHER *EVP_aes_192_wrap(void);
++const EVP_CIPHER *EVP_aes_192_wrap_pad(void);
+ const EVP_CIPHER *EVP_aes_256_ecb(void);
+ const EVP_CIPHER *EVP_aes_256_cbc(void);
+ const EVP_CIPHER *EVP_aes_256_cfb1(void);
+@@ -809,6 +822,8 @@ const EVP_CIPHER *EVP_aes_256_ctr(void);
+ const EVP_CIPHER *EVP_aes_256_ccm(void);
+ const EVP_CIPHER *EVP_aes_256_gcm(void);
+ const EVP_CIPHER *EVP_aes_256_xts(void);
++const EVP_CIPHER *EVP_aes_256_wrap(void);
++const EVP_CIPHER *EVP_aes_256_wrap_pad(void);
+ #if !defined(OPENSSL_NO_SHA) && !defined(OPENSSL_NO_SHA1)
+ const EVP_CIPHER *EVP_aes_128_cbc_hmac_sha1(void);
+ const EVP_CIPHER *EVP_aes_256_cbc_hmac_sha1(void);
+@@ -1397,6 +1412,7 @@ void ERR_load_EVP_strings(void);
+ #define EVP_R_UNSUPPORTED_PRF				 125
+ #define EVP_R_UNSUPPORTED_PRIVATE_KEY_ALGORITHM		 118
+ #define EVP_R_UNSUPPORTED_SALT_TYPE			 126
++#define EVP_R_WRAP_MODE_NOT_ALLOWED			 170
+ #define EVP_R_WRONG_FINAL_BLOCK_LENGTH			 109
+ #define EVP_R_WRONG_PUBLIC_KEY_TYPE			 110
+ 
+diff -up openssl-1.0.1j/crypto/evp/evp_lib.c.wrap openssl-1.0.1j/crypto/evp/evp_lib.c
+--- openssl-1.0.1j/crypto/evp/evp_lib.c.wrap	2014-10-16 13:30:10.585652805 +0200
++++ openssl-1.0.1j/crypto/evp/evp_lib.c	2014-10-16 13:30:10.680654949 +0200
+@@ -68,7 +68,15 @@ int EVP_CIPHER_param_to_asn1(EVP_CIPHER_
+ 	if (c->cipher->set_asn1_parameters != NULL)
+ 		ret=c->cipher->set_asn1_parameters(c,type);
+ 	else if (c->cipher->flags & EVP_CIPH_FLAG_DEFAULT_ASN1)
+-		ret=EVP_CIPHER_set_asn1_iv(c, type);
++		{
++		if (EVP_CIPHER_CTX_mode(c) == EVP_CIPH_WRAP_MODE)
++			{
++			ASN1_TYPE_set(type, V_ASN1_NULL, NULL);
++			ret = 1;
++			}
++		else
++			ret=EVP_CIPHER_set_asn1_iv(c, type);
++		}
+ 	else
+ 		ret=-1;
+ 	return(ret);
+@@ -81,7 +89,11 @@ int EVP_CIPHER_asn1_to_param(EVP_CIPHER_
+ 	if (c->cipher->get_asn1_parameters != NULL)
+ 		ret=c->cipher->get_asn1_parameters(c,type);
+ 	else if (c->cipher->flags & EVP_CIPH_FLAG_DEFAULT_ASN1)
++		{
++		if (EVP_CIPHER_CTX_mode(c) == EVP_CIPH_WRAP_MODE)
++			return 1;
+ 		ret=EVP_CIPHER_get_asn1_iv(c, type);
++		}
+ 	else
+ 		ret=-1;
+ 	return(ret);
+diff -up openssl-1.0.1j/crypto/evp/evp_test.c.wrap openssl-1.0.1j/crypto/evp/evp_test.c
+--- openssl-1.0.1j/crypto/evp/evp_test.c.wrap	2014-10-15 14:51:06.000000000 +0200
++++ openssl-1.0.1j/crypto/evp/evp_test.c	2014-10-16 13:30:10.680654949 +0200
+@@ -141,7 +141,7 @@ static void test1(const EVP_CIPHER *c,co
+     {
+     EVP_CIPHER_CTX ctx;
+     unsigned char out[4096];
+-    int outl,outl2;
++    int outl,outl2,mode;
+ 
+     printf("Testing cipher %s%s\n",EVP_CIPHER_name(c),
+ 	   (encdec == 1 ? "(encrypt)" : (encdec == 0 ? "(decrypt)" : "(encrypt/decrypt)")));
+@@ -151,6 +151,7 @@ static void test1(const EVP_CIPHER *c,co
+     hexdump(stdout,"Plaintext",plaintext,pn);
+     hexdump(stdout,"Ciphertext",ciphertext,cn);
+     
++    mode = EVP_CIPHER_mode(c); 
+     if(kn != c->key_len)
+ 	{
+ 	fprintf(stderr,"Key length doesn't match, got %d expected %lu\n",kn,
+@@ -158,9 +159,19 @@ static void test1(const EVP_CIPHER *c,co
+ 	test1_exit(5);
+ 	}
+     EVP_CIPHER_CTX_init(&ctx);
++    EVP_CIPHER_CTX_set_flags(&ctx,EVP_CIPHER_CTX_FLAG_WRAP_ALLOW);
+     if (encdec != 0)
+         {
+-	if(!EVP_EncryptInit_ex(&ctx,c,NULL,key,iv))
++	if (mode == EVP_CIPH_WRAP_MODE)
++	    {
++	    if(!EVP_EncryptInit_ex(&ctx,c,NULL,key,in ? iv : NULL))
++	        {
++		fprintf(stderr,"EncryptInit failed\n");
++		ERR_print_errors_fp(stderr);
++		test1_exit(10);
++		}
++	    }
++	else if(!EVP_EncryptInit_ex(&ctx,c,NULL,key,iv))
+ 	    {
+ 	    fprintf(stderr,"EncryptInit failed\n");
+ 	    ERR_print_errors_fp(stderr);
+@@ -199,7 +210,16 @@ static void test1(const EVP_CIPHER *c,co
+ 
+     if (encdec <= 0)
+         {
+-	if(!EVP_DecryptInit_ex(&ctx,c,NULL,key,iv))
++	if (mode == EVP_CIPH_WRAP_MODE)
++	    {
++	    if(!EVP_DecryptInit_ex(&ctx,c,NULL,key,in ? iv : NULL))
++	        {
++		fprintf(stderr,"EncryptInit failed\n");
++		ERR_print_errors_fp(stderr);
++		test1_exit(10);
++		}
++	    }
++	else if(!EVP_DecryptInit_ex(&ctx,c,NULL,key,iv))
+ 	    {
+ 	    fprintf(stderr,"DecryptInit failed\n");
+ 	    ERR_print_errors_fp(stderr);
+@@ -339,7 +359,7 @@ int main(int argc,char **argv)
+ 	perror(szTestFile);
+ 	EXIT(2);
+ 	}
+-
++    ERR_load_crypto_strings();
+     /* Load up the software EVP_CIPHER and EVP_MD definitions */
+     OpenSSL_add_all_ciphers();
+     OpenSSL_add_all_digests();
+diff -up openssl-1.0.1j/crypto/evp/evptests.txt.wrap openssl-1.0.1j/crypto/evp/evptests.txt
+--- openssl-1.0.1j/crypto/evp/evptests.txt.wrap	2014-10-15 14:53:39.000000000 +0200
++++ openssl-1.0.1j/crypto/evp/evptests.txt	2014-10-16 13:30:10.681654972 +0200
+@@ -332,3 +332,15 @@ SEED-ECB:0000000000000000000000000000000
+ SEED-ECB:000102030405060708090A0B0C0D0E0F::00000000000000000000000000000000:C11F22F20140505084483597E4370F43:1
+ SEED-ECB:4706480851E61BE85D74BFB3FD956185::83A2F8A288641FB9A4E9A5CC2F131C7D:EE54D13EBCAE706D226BC3142CD40D4A:1
+ SEED-ECB:28DBC3BC49FFD87DCFA509B11D422BE7::B41E6BE2EBA84A148E2EED84593C5EC7:9B9B7BFCD1813CB95D0B3618F40F5122:1
++
++# AES wrap tests from RFC3394
++id-aes128-wrap:000102030405060708090A0B0C0D0E0F::00112233445566778899AABBCCDDEEFF:1FA68B0A8112B447AEF34BD8FB5A7B829D3E862371D2CFE5
++id-aes192-wrap:000102030405060708090A0B0C0D0E0F1011121314151617::00112233445566778899AABBCCDDEEFF:96778B25AE6CA435F92B5B97C050AED2468AB8A17AD84E5D
++id-aes256-wrap:000102030405060708090A0B0C0D0E0F101112131415161718191A1B1C1D1E1F::00112233445566778899AABBCCDDEEFF:64E8C3F9CE0F5BA263E9777905818A2A93C8191E7D6E8AE7
++id-aes192-wrap:000102030405060708090A0B0C0D0E0F1011121314151617::00112233445566778899AABBCCDDEEFF0001020304050607:031D33264E15D33268F24EC260743EDCE1C6C7DDEE725A936BA814915C6762D2
++id-aes256-wrap:000102030405060708090A0B0C0D0E0F101112131415161718191A1B1C1D1E1F::00112233445566778899AABBCCDDEEFF0001020304050607:A8F9BC1612C68B3FF6E6F4FBE30E71E4769C8B80A32CB8958CD5D17D6B254DA1
++id-aes256-wrap:000102030405060708090A0B0C0D0E0F101112131415161718191A1B1C1D1E1F::00112233445566778899AABBCCDDEEFF000102030405060708090A0B0C0D0E0F:28C9F404C4B810F4CBCCB35CFB87F8263F5786E2D80ED326CBC7F0E71A99F43BFB988B9B7A02DD21
++# AES wrap tests from RFC5649
++id-aes192-wrap-pad:5840df6e29b02af1ab493b705bf16ea1ae8338f4dcc176a8::c37b7e6492584340bed12207808941155068f738:138bdeaa9b8fa7fc61f97742e72248ee5ae6ae5360d1ae6a5f54f373fa543b6a
++id-aes192-wrap-pad:5840df6e29b02af1ab493b705bf16ea1ae8338f4dcc176a8::466f7250617369:afbeb0f07dfbf5419200f2ccb50bb24f
++
+diff -up openssl-1.0.1j/crypto/modes/Makefile.wrap openssl-1.0.1j/crypto/modes/Makefile
+--- openssl-1.0.1j/crypto/modes/Makefile.wrap	2014-10-16 13:30:10.560652240 +0200
++++ openssl-1.0.1j/crypto/modes/Makefile	2014-10-16 13:30:10.681654972 +0200
+@@ -22,9 +22,9 @@ APPS=
+ 
+ LIB=$(TOP)/libcrypto.a
+ LIBSRC= cbc128.c ctr128.c cts128.c cfb128.c ofb128.c gcm128.c \
+-	ccm128.c xts128.c
++	ccm128.c xts128.c wrap128.c
+ LIBOBJ= cbc128.o ctr128.o cts128.o cfb128.o ofb128.o gcm128.o \
+-	ccm128.o xts128.o $(MODES_ASM_OBJ)
++	ccm128.o xts128.o wrap128.o $(MODES_ASM_OBJ)
+ 
+ SRC= $(LIBSRC)
+ 
+diff -up openssl-1.0.1j/crypto/modes/modes.h.wrap openssl-1.0.1j/crypto/modes/modes.h
+--- openssl-1.0.1j/crypto/modes/modes.h.wrap	2014-10-16 13:30:10.681654972 +0200
++++ openssl-1.0.1j/crypto/modes/modes.h	2014-10-16 13:31:01.232796186 +0200
+@@ -136,6 +136,20 @@ typedef struct xts128_context XTS128_CON
+ 
+ int CRYPTO_xts128_encrypt(const XTS128_CONTEXT *ctx, const unsigned char iv[16],
+ 	const unsigned char *inp, unsigned char *out, size_t len, int enc);
++
++size_t CRYPTO_128_wrap(void *key, const unsigned char *iv,
++		unsigned char *out,
++		const unsigned char *in, size_t inlen, block128_f block);
++
++size_t CRYPTO_128_unwrap(void *key, const unsigned char *iv,
++		unsigned char *out,
++		const unsigned char *in, size_t inlen, block128_f block);
++size_t CRYPTO_128_wrap_pad(void *key, const unsigned char *icv,
++		unsigned char *out,
++		const unsigned char *in, size_t inlen, block128_f block);
++size_t CRYPTO_128_unwrap_pad(void *key, const unsigned char *icv,
++		unsigned char *out,
++		const unsigned char *in, size_t inlen, block128_f block);
+ #ifdef  __cplusplus
+ }
+ #endif
+diff -up openssl-1.0.1j/crypto/modes/wrap128.c.wrap openssl-1.0.1j/crypto/modes/wrap128.c
+--- openssl-1.0.1j/crypto/modes/wrap128.c.wrap	2014-10-16 13:30:10.681654972 +0200
++++ openssl-1.0.1j/crypto/modes/wrap128.c	2014-10-16 13:30:10.681654972 +0200
+@@ -0,0 +1,372 @@
++/* crypto/modes/wrap128.c */
++/* Written by Dr Stephen N Henson (steve@openssl.org) for the OpenSSL
++ * project.
++ * Mode with padding contributed by Petr Spacek (pspacek@redhat.com).
++ */
++/* ====================================================================
++ * Copyright (c) 2013 The OpenSSL Project.  All rights reserved.
++ *
++ * Redistribution and use in source and binary forms, with or without
++ * modification, are permitted provided that the following conditions
++ * are met:
++ *
++ * 1. Redistributions of source code must retain the above copyright
++ *    notice, this list of conditions and the following disclaimer. 
++ *
++ * 2. Redistributions in binary form must reproduce the above copyright
++ *    notice, this list of conditions and the following disclaimer in
++ *    the documentation and/or other materials provided with the
++ *    distribution.
++ *
++ * 3. All advertising materials mentioning features or use of this
++ *    software must display the following acknowledgment:
++ *    "This product includes software developed by the OpenSSL Project
++ *    for use in the OpenSSL Toolkit. (http://www.OpenSSL.org/)"
++ *
++ * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to
++ *    endorse or promote products derived from this software without
++ *    prior written permission. For written permission, please contact
++ *    licensing@OpenSSL.org.
++ *
++ * 5. Products derived from this software may not be called "OpenSSL"
++ *    nor may "OpenSSL" appear in their names without prior written
++ *    permission of the OpenSSL Project.
++ *
++ * 6. Redistributions of any form whatsoever must retain the following
++ *    acknowledgment:
++ *    "This product includes software developed by the OpenSSL Project
++ *    for use in the OpenSSL Toolkit (http://www.OpenSSL.org/)"
++ *
++ * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY
++ * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
++ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
++ * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR
++ * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
++ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
++ * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
++ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
++ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
++ * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
++ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
++ * OF THE POSSIBILITY OF SUCH DAMAGE.
++ * ====================================================================
++ */
++
++/**  Beware!
++ *
++ *  Following wrapping modes were designed for AES but this implementation
++ *  allows you to use them for any 128 bit block cipher.
++ */
++
++#include "cryptlib.h"
++#include <openssl/modes.h>
++
++/** RFC 3394 section 2.2.3.1 Default Initial Value */
++static const unsigned char default_iv[] = {
++  0xA6, 0xA6, 0xA6, 0xA6, 0xA6, 0xA6, 0xA6, 0xA6,
++};
++
++/** RFC 5649 section 3 Alternative Initial Value 32-bit constant */
++static const unsigned char default_aiv[] = {
++  0xA6, 0x59, 0x59, 0xA6
++};
++
++/** Input size limit: lower than maximum of standards but far larger than
++ *  anything that will be used in practice.
++ */
++#define CRYPTO128_WRAP_MAX (1UL << 31)
++
++/** Wrapping according to RFC 3394 section 2.2.1.
++ *
++ *  @param[in]  key    Key value. 
++ *  @param[in]  iv     IV value. Length = 8 bytes. NULL = use default_iv.
++ *  @param[in]  in     Plain text as n 64-bit blocks, n >= 2.
++ *  @param[in]  inlen  Length of in.
++ *  @param[out] out    Cipher text. Minimal buffer length = (inlen + 8) bytes.
++ *                     Input and output buffers can overlap if block function
++ *                     supports that.
++ *  @param[in]  block  Block processing function.
++ *  @return            0 if inlen does not consist of n 64-bit blocks, n >= 2.
++ *                     or if inlen > CRYPTO128_WRAP_MAX.
++ *                     Output length if wrapping succeeded.
++ */
++size_t CRYPTO_128_wrap(void *key, const unsigned char *iv,
++		unsigned char *out,
++		const unsigned char *in, size_t inlen, block128_f block)
++	{
++	unsigned char *A, B[16], *R;
++	size_t i, j, t;
++	if ((inlen & 0x7) || (inlen < 16) || (inlen > CRYPTO128_WRAP_MAX))
++		return 0;
++	A = B;
++	t = 1;
++	memmove(out + 8, in, inlen);
++	if (!iv)
++		iv = default_iv;
++
++	memcpy(A, iv, 8);
++
++	for (j = 0; j < 6; j++)
++		{
++		R = out + 8;
++		for (i = 0; i < inlen; i += 8, t++, R += 8)
++			{
++			memcpy(B + 8, R, 8);
++			block(B, B, key);
++			A[7] ^= (unsigned char)(t & 0xff);
++			if (t > 0xff)	
++				{
++				A[6] ^= (unsigned char)((t >> 8) & 0xff);
++				A[5] ^= (unsigned char)((t >> 16) & 0xff);
++				A[4] ^= (unsigned char)((t >> 24) & 0xff);
++				}
++			memcpy(R, B + 8, 8);
++			}
++		}
++	memcpy(out, A, 8);
++	return inlen + 8;
++	}
++
++
++/** Unwrapping according to RFC 3394 section 2.2.2 steps 1-2.
++ *  IV check (step 3) is responsibility of the caller.
++ *
++ *  @param[in]  key    Key value. 
++ *  @param[out] iv     Unchecked IV value. Minimal buffer length = 8 bytes.
++ *  @param[out] out    Plain text without IV.
++ *                     Minimal buffer length = (inlen - 8) bytes.
++ *                     Input and output buffers can overlap if block function
++ *                     supports that.
++ *  @param[in]  in     Ciphertext text as n 64-bit blocks
++ *  @param[in]  inlen  Length of in.
++ *  @param[in]  block  Block processing function.
++ *  @return            0 if inlen is out of range [24, CRYPTO128_WRAP_MAX]
++ *                     or if inlen is not multiply of 8.
++ *                     Output length otherwise.
++ */
++static size_t crypto_128_unwrap_raw(void *key, unsigned char *iv,
++		unsigned char *out, const unsigned char *in,
++		size_t inlen, block128_f block)
++	{
++	unsigned char *A, B[16], *R;
++	size_t i, j, t;
++	inlen -= 8;
++	if ((inlen & 0x7) || (inlen < 16) || (inlen > CRYPTO128_WRAP_MAX))
++		return 0;
++	A = B;
++	t =  6 * (inlen >> 3);
++	memcpy(A, in, 8);
++	memmove(out, in + 8, inlen);
++	for (j = 0; j < 6; j++)
++		{
++		R = out + inlen - 8;
++		for (i = 0; i < inlen; i += 8, t--, R -= 8)
++			{
++			A[7] ^= (unsigned char)(t & 0xff);
++			if (t > 0xff)	
++				{
++				A[6] ^= (unsigned char)((t >> 8) & 0xff);
++				A[5] ^= (unsigned char)((t >> 16) & 0xff);
++				A[4] ^= (unsigned char)((t >> 24) & 0xff);
++				}
++			memcpy(B + 8, R, 8);
++			block(B, B, key);
++			memcpy(R, B + 8, 8);
++			}
++		}
++	memcpy(iv, A, 8);
++	return inlen;
++	}
++
++/** Unwrapping according to RFC 3394 section 2.2.2 including IV check.
++ *  First block of plain text have to match supplied IV otherwise an error is
++ *  returned.
++ *
++ *  @param[in]  key    Key value. 
++ *  @param[out] iv     Unchecked IV value. Minimal buffer length = 8 bytes.
++ *  @param[out] out    Plain text without IV.
++ *                     Minimal buffer length = (inlen - 8) bytes.
++ *                     Input and output buffers can overlap if block function
++ *                     supports that.
++ *  @param[in]  in     Ciphertext text as n 64-bit blocks
++ *  @param[in]  inlen  Length of in.
++ *  @param[in]  block  Block processing function.
++ *  @return            0 if inlen is out of range [24, CRYPTO128_WRAP_MAX]
++ *                     or if inlen is not multiply of 8
++ *                     or if IV doesn't match expected value.
++ *                     Output length otherwise.
++ */
++size_t CRYPTO_128_unwrap(void *key, const unsigned char *iv,
++		unsigned char *out, const unsigned char *in, size_t inlen,
++		block128_f block)
++	{
++	size_t ret;
++	unsigned char got_iv[8];
++
++	ret = crypto_128_unwrap_raw(key, got_iv, out, in, inlen, block);
++	if (ret == 0)
++		return 0;
++
++	if (!iv)
++		iv = default_iv;
++	if (CRYPTO_memcmp(got_iv, iv, 8))
++		{
++		OPENSSL_cleanse(out, ret);
++		return 0;
++		}
++	return ret;
++	}
++
++/** Wrapping according to RFC 5649 section 4.1.
++ *
++ *  @param[in]  key    Key value. 
++ *  @param[in]  icv    (Non-standard) IV, 4 bytes. NULL = use default_aiv.
++ *  @param[out] out    Cipher text. Minimal buffer length = (inlen + 15) bytes.
++ *                     Input and output buffers can overlap if block function
++ *                     supports that.
++ *  @param[in]  in     Plain text as n 64-bit blocks, n >= 2.
++ *  @param[in]  inlen  Length of in.
++ *  @param[in]  block  Block processing function.
++ *  @return            0 if inlen is out of range [1, CRYPTO128_WRAP_MAX].
++ *                     Output length if wrapping succeeded.
++ */
++size_t CRYPTO_128_wrap_pad(void *key, const unsigned char *icv,
++		unsigned char *out,
++		const unsigned char *in, size_t inlen, block128_f block)
++	{
++	/* n: number of 64-bit blocks in the padded key data */
++	const size_t blocks_padded = (inlen + 7) / 8;
++	const size_t padded_len = blocks_padded * 8;
++	const size_t padding_len = padded_len - inlen;
++	/* RFC 5649 section 3: Alternative Initial Value */
++	unsigned char aiv[8];
++	int ret;
++
++	/* Section 1: use 32-bit fixed field for plaintext octet length */
++	if (inlen == 0 || inlen >= CRYPTO128_WRAP_MAX)
++		return 0;
++
++	/* Section 3: Alternative Initial Value */
++	if (!icv)
++		memcpy(aiv, default_aiv, 4);
++	else
++		memcpy(aiv, icv, 4); /* Standard doesn't mention this. */
++
++	aiv[4] = (inlen >> 24) & 0xFF;
++	aiv[5] = (inlen >> 16) & 0xFF;
++	aiv[6] = (inlen >> 8) & 0xFF;
++	aiv[7] = inlen & 0xFF;
++
++	if (padded_len == 8)
++		{
++		/* Section 4.1 - special case in step 2:
++		 * If the padded plaintext contains exactly eight octets, then
++		 * prepend the AIV and encrypt the resulting 128-bit block
++		 * using AES in ECB mode. */
++		memmove(out + 8, in, inlen);
++		memcpy(out, aiv, 8);
++		memset(out + 8 + inlen, 0, padding_len);
++		block(out, out, key);
++		ret = 16; /* AIV + padded input */
++		}
++	else
++		{
++		memmove(out, in, inlen);
++		memset(out + inlen, 0, padding_len); /* Section 4.1 step 1 */
++		ret = CRYPTO_128_wrap(key, aiv, out, out, padded_len, block);
++		}
++
++	return ret;
++	}
++
++/** Unwrapping according to RFC 5649 section 4.2.
++ *
++ *  @param[in]  key    Key value. 
++ *  @param[in]  icv    (Non-standard) IV, 4 bytes. NULL = use default_aiv.
++ *  @param[out] out    Plain text. Minimal buffer length = inlen bytes.
++ *                     Input and output buffers can overlap if block function
++ *                     supports that.
++ *  @param[in]  in     Ciphertext text as n 64-bit blocks
++ *  @param[in]  inlen  Length of in.
++ *  @param[in]  block  Block processing function.
++ *  @return            0 if inlen is out of range [16, CRYPTO128_WRAP_MAX],
++ *                     or if inlen is not multiply of 8
++ *                     or if IV and message length indicator doesn't match.
++ *                     Output length if unwrapping succeeded and IV matches.
++ */
++size_t CRYPTO_128_unwrap_pad(void *key, const unsigned char *icv,
++		unsigned char *out,
++		const unsigned char *in, size_t inlen, block128_f block)
++	{
++	/* n: number of 64-bit blocks in the padded key data */
++	size_t n = inlen / 8 - 1;
++	size_t padded_len;
++	size_t padding_len;
++	size_t ptext_len;
++	/* RFC 5649 section 3: Alternative Initial Value */
++	unsigned char aiv[8];
++	static unsigned char zeros[8] = {0x0};
++	size_t ret;
++
++	/* Section 4.2: Cipher text length has to be (n+1) 64-bit blocks. */
++	if ((inlen & 0x7) != 0 || inlen < 16 || inlen >= CRYPTO128_WRAP_MAX)
++		return 0;
++
++	memmove(out, in, inlen);
++	if (inlen == 16)
++		{
++		/* Section 4.2 - special case in step 1:
++		 * When n=1, the ciphertext contains exactly two 64-bit
++		 * blocks and they are decrypted as a single AES
++		 * block using AES in ECB mode:
++		 * AIV | P[1] = DEC(K, C[0] | C[1])
++		 */
++		block(out, out, key);
++		memcpy(aiv, out, 8);
++		/* Remove AIV */
++		memmove(out, out + 8, 8);
++		padded_len = 8;
++		}
++	else
++		{
++		padded_len = inlen - 8;
++		ret = crypto_128_unwrap_raw(key, aiv, out, out, inlen, block);
++		if (padded_len != ret)
++			{
++			OPENSSL_cleanse(out, inlen);
++			return 0;
++			}
++		}
++
++	/* Section 3: AIV checks: Check that MSB(32,A) = A65959A6.
++	 * Optionally a user-supplied value can be used
++	 * (even if standard doesn't mention this). */
++	if ((!icv && CRYPTO_memcmp(aiv, default_aiv, 4))
++		|| (icv && CRYPTO_memcmp(aiv, icv, 4)))
++		{
++		OPENSSL_cleanse(out, inlen);
++		return 0;
++		}
++
++	/* Check that 8*(n-1) < LSB(32,AIV) <= 8*n.
++	 * If so, let ptext_len = LSB(32,AIV). */
++
++	ptext_len = (aiv[4] << 24) | (aiv[5] << 16) | (aiv[6] << 8) | aiv[7];
++	if (8*(n-1) >= ptext_len || ptext_len > 8*n)
++		{
++		OPENSSL_cleanse(out, inlen);
++		return 0;
++		}
++
++	/* Check that the rightmost padding_len octets of the output data
++	 * are zero. */
++	padding_len = padded_len - ptext_len;
++	if (CRYPTO_memcmp(out + ptext_len, zeros, padding_len) != 0)
++		{
++		OPENSSL_cleanse(out, inlen);
++		return 0;
++		}
++
++	/* Section 4.2 step 3: Remove padding */
++	return ptext_len;
++	}
