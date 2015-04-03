@@ -4,8 +4,9 @@
 
 Name:           crypto-policies
 Version:        %{git_date}
-Release:        3.git%{git_commit_hash}%{?dist}
+Release:        4.git%{git_commit_hash}%{?dist}
 Summary:        Crypto policies package for Fedora
+Summary(zh_CN.UTF-8): Fedora 提供的加密策略包
 
 License:        LGPLv2+
 URL:            https://github.com/nmav/fedora-crypto-policies
@@ -31,6 +32,8 @@ SSL/TLS libraries. The policy set by the tool will be the default policy
 used by these back-ends unless the application user configures them otherwise.
 https://fedoraproject.org/wiki/Changes/CryptoPolicy
 
+%description -l zh_CN.UTF-8
+Fedora 提供的加密策略包。
 
 %prep
 %setup -q -n %{aname}
@@ -71,6 +74,9 @@ make check %{?_smp_mflags}
 %license COPYING.LESSER
 
 %changelog
+* Fri Apr 03 2015 Liu Di <liudidi@gmail.com> - 20150305-4.git2eeb03b
+- 为 Magic 3.0 重建
+
 * Fri Mar  6 2015 Nikos Mavrogiannopoulos <nmav@redhat.com> - 20150305-3-git2eeb03b
 - Added make check
 

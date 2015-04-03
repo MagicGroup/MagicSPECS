@@ -1,5 +1,5 @@
 # Do we want SELinux & Audit
-%if 0%{?!noselinux:1}
+%if 0%{?!selinux:0}
 %define WITH_SELINUX 1
 %else
 %define WITH_SELINUX 0
@@ -73,7 +73,7 @@
 Summary: An open source implementation of SSH protocol versions 1 and 2
 Name: openssh
 Version: %{openssh_ver}
-Release: %{openssh_rel}%{?dist}%{?rescue_rel}
+Release: %{openssh_rel}%{?dist}%{?rescue_rel}.1
 URL: http://www.openssh.com/portable.html
 #URL1: http://pamsshagentauth.sourceforge.net
 Source0: ftp://ftp.openbsd.org/pub/OpenBSD/OpenSSH/portable/openssh-%{version}.tar.gz
@@ -127,6 +127,7 @@ Patch404: openssh-6.6p1-privsep-selinux.patch
 Patch501: openssh-6.7p1-ldap.patch
 #?
 Patch502: openssh-6.6p1-keycat.patch
+Patch503: openssh-6.6p1-noselinux-keycat.patch
 
 #http6://bugzilla.mindrot.org/show_bug.cgi?id=1644
 Patch601: openssh-6.6p1-allow-ip-opts.patch
@@ -153,6 +154,7 @@ Patch706: openssh-6.6.1p1-localdomain.patch
 Patch707: openssh-6.6p1-redhat.patch
 #https://bugzilla.mindrot.org/show_bug.cgi?id=1890 (WONTFIX) need integration to prng helper which is discontinued :)
 Patch708: openssh-6.6p1-entropy.patch
+Patch718: openssh-6.6p1-noselinux-entropy.patch
 #https://bugzilla.mindrot.org/show_bug.cgi?id=1640 (WONTFIX)
 Patch709: openssh-6.2p1-vendor.patch
 # warn users for unsupported UsePAM=no (#757545)
@@ -240,7 +242,9 @@ BuildRequires: gnome-libs-devel
 BuildRequires: openldap-devel
 %endif
 BuildRequires: autoconf, automake, perl, zlib-devel
+%if %{WITH_SELINUX}
 BuildRequires: audit-libs-devel >= 2.0.5
+%endif
 BuildRequires: util-linux, groff
 BuildRequires: pam-devel
 BuildRequires: tcp_wrappers-devel
@@ -310,7 +314,7 @@ Requires: openssh = %{version}-%{release}
 Summary: PAM module for authentication with ssh-agent
 Group: System Environment/Base
 Version: %{pam_ssh_agent_ver}
-Release: %{pam_ssh_agent_rel}.%{openssh_rel}%{?dist}%{?rescue_rel}.1
+Release: %{pam_ssh_agent_rel}.%{openssh_rel}%{?dist}%{?rescue_rel}.2
 License: BSD
 
 %description
@@ -395,7 +399,11 @@ popd
 %if %{ldap}
 %patch501 -p1 -b .ldap
 %endif
+%if %{WITH_SELINUX}
 %patch502 -p1 -b .keycat
+%else
+%patch503 -p1 -b .keycat
+%endif
 
 %patch601 -p1 -b .ip-opts
 %patch603 -p1 -b .glob
@@ -407,7 +415,11 @@ popd
 %patch703 -p1 -b .grab-info
 %patch706 -p1 -b .localdomain
 %patch707 -p1 -b .redhat
+%if %{WITH_SELINUX}
 %patch708 -p1 -b .entropy
+%else
+%patch718 -p1 -b .entropy
+%endif
 %patch709 -p1 -b .vendor
 %patch711 -p1 -b .log-usepam-no
 %patch712 -p1 -b .evp-ctr
@@ -425,7 +437,9 @@ popd
 %patch911 -p1 -b .set_remote_ipaddr
 %patch912 -p1 -b .utf8-banner
 %patch914 -p1 -b .servconf
+%if %{WITH_SELINUX}
 %patch916 -p1 -b .contexts
+%endif
 %patch917 -p1 -b .cisco-dh
 %patch918 -p1 -b .log-in-chroot
 %patch919 -p1 -b .scp
@@ -439,7 +453,9 @@ popd
 %patch926 -p1 -b .sftp-force-mode
 %patch927 -p1 -b .bz880575
 
+%if %{WITH_SELINUX}
 %patch200 -p1 -b .audit
+%endif
 %patch700 -p1 -b .fips
 
 %patch100 -p1 -b .coverity
@@ -559,7 +575,13 @@ popd
 %if %{pam_ssh_agent}
 pushd pam_ssh_agent_auth-%{pam_ssh_agent_ver}
 LDFLAGS="$SAVE_LDFLAGS"
-%configure --with-selinux --libexecdir=/%{_libdir}/security --with-mantype=man
+%configure \
+%if %{WITH_SELINUX}
+	--with-selinux \
+%else
+	--without-selinux \
+%endif
+        --libexecdir=/%{_libdir}/security --with-mantype=man
 make
 popd
 %endif
@@ -757,6 +779,9 @@ getent passwd sshd >/dev/null || \
 %endif
 
 %changelog
+* Fri Apr 03 2015 Liu Di <liudidi@gmail.com> - 6.8p1-3.1
+- 为 Magic 3.0 重建
+
 * Tue Mar 31 2015 Jakub Jelen <jjelen@redhat.com> 6.8p1-3 + 0.9.3-5
 - Fixed issue with GSSAPI key exchange (#1207719)
 - Add pam_namespace to sshd pam stack (based on #1125110)
