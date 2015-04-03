@@ -1,19 +1,20 @@
 Name:		orc
-Version:	0.4.18
-Release:	1%{?dist}
+Version:	0.4.22
+Release:	4%{?dist}
 Summary:	The Oil Run-time Compiler
 
 Group:		System Environment/Libraries
 License:	BSD
 URL:		http://cgit.freedesktop.org/gstreamer/orc/
-Source0:	http://code.entropywave.com/download/orc/orc-%{version}.tar.gz
-BuildRoot:	%(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
+
+# Source0:	http://code.entropywave.com/download/orc/orc-%{version}.tar.gz
+# Tarfile created using git
+# git clone git://anongit.freedesktop.org/gstreamer/orc
+# git archive --format=tar --prefix=%{name}-%{version}/ %{name}-%{version} | bzip2 > %{name}-%{version}.tar.bz2
+Source0:	%{name}-%{version}.tar.bz2
+Patch0:		orc-selinux-tmplocation.patch
 
 BuildRequires:	gtk-doc, libtool
-
-# Upstream bugs: https://bugs.freedesktop.org/show_bug.cgi?id=41446
-Patch1:		0001-Use-a-subdirectory-for-temporary-files.patch
-Patch2:		0002-Add-compiler-option-for-ENABLE_USER_CODEMEM.patch
 
 %description
 Orc is a library and set of tools for compiling and executing
@@ -52,23 +53,19 @@ Requires:	pkgconfig
 The Orc compiler, to produce optimized code.
 
 
-
 %prep
 %setup -q
-%patch1 -p1 -b .subdir
-%patch2 -p1 -b .condtmp
-
-autoreconf -vif
+%patch0 -p1 -b .selinux
+NOCONFIGURE=1 autoreconf -vif
 
 
 %build
 %configure --disable-static --enable-gtk-doc --enable-user-codemem
 
-make %{?_smp_mflags}
+make %{?_smp_mflags} V=1
 
 
 %install
-rm -rf %{buildroot}
 make install DESTDIR=%{buildroot} INSTALL="install -p"
 
 # Remove unneeded files.
@@ -78,12 +75,8 @@ rm -rf %{buildroot}/%{_libdir}/orc
 touch -r stamp-h1 %{buildroot}%{_includedir}/%{name}-0.4/orc/orc-stdint.h   
 
 
-%clean
-rm -rf %{buildroot}
-
-
 %check
-%ifnarch s390 s390x ppc ppc64 %{arm} i686
+%ifnarch s390 s390x ppc %{power64} %{arm} i686 aarch64
 make check
 %endif
 
@@ -94,19 +87,15 @@ make check
 %postun -p /sbin/ldconfig
 
 
-
 %files
-%defattr(-,root,root,-)
 %doc COPYING README
 %{_libdir}/liborc-*.so.*
 %{_bindir}/orc-bugreport
 
 %files doc
-%defattr(-,root,root,-)
 %doc %{_datadir}/gtk-doc/html/orc/
 
 %files devel
-%defattr(-,root,root,-)
 %doc examples/*.c
 %{_includedir}/%{name}-0.4/
 %{_libdir}/liborc-*.so
@@ -114,12 +103,29 @@ make check
 %{_datadir}/aclocal/orc.m4
 
 %files compiler
-%defattr(-,root,root,-)
 %{_bindir}/orcc
 
 
-
 %changelog
+* Sat Feb 21 2015 Till Maas <opensource@till.name> - 0.4.22-4
+- Rebuilt for Fedora 23 Change
+  https://fedoraproject.org/wiki/Changes/Harden_all_packages_with_position-independent_code
+
+* Thu Sep 11 2014 Yaakov Selkowitz <yselkowi@redhat.com> - 0.4.22-3
+- Do not run tests on aarch64
+
+* Thu Sep  4 2014 Peter Robinson <pbrobinson@fedoraproject.org> 0.4.22-2
+- Add upstream patch for selinux issue with tmp files
+
+* Fri Aug 29 2014 Peter Robinson <pbrobinson@fedoraproject.org> 0.4.22-1
+- Update to 0.4.22
+
+* Sun Aug 17 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.4.18-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
+
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.4.18-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
 * Thu Sep 19 2013 Brian Pepple <bpepple@fedoraproject.org> - 0.4.18-1
 - Update to 0.4.18.
 
