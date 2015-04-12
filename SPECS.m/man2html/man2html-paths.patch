@@ -1,0 +1,28 @@
+diff -ur ../man-1.6g-orig/man2html/cgibase.c ./man2html/cgibase.c
+--- ../man-1.6g-orig/man2html/cgibase.c	2005-08-20 16:26:06.000000000 -0700
++++ ./man2html/cgibase.c	2012-05-11 16:44:18.842807125 -0700
+@@ -18,10 +18,10 @@
+ /*
+  * Either the user is non-local (or local, but using httpd),
+  * in which case we use http:/cgi-bin, or the user is local
+- * and uses lynx, and we use lynxcgi:/home/httpd/cgi-bin.
++ * and uses lynx, and we use lynxcgi:/usr/lib/man2html/cgi-bin.
+  */
+ 
+-static char *man2htmlpath = "/cgi-bin/man/man2html"; 	/* default */
++static char *man2htmlpath = "/man/man2html"; 	/* default */
+ static char *cgibase_format = "http://%s"; 		/* host.domain:port */
+ static char *cgibase_ll_format = "lynxcgi:%s"; 		/* directory */
+ static char *cgibase = "http://localhost";		/* default */
+diff -ur ../man-1.6g-orig/man2html/man2html.c ./man2html/man2html.c
+--- ../man-1.6g-orig/man2html/man2html.c	2007-08-05 12:15:23.000000000 -0700
++++ ./man2html/man2html.c	2012-05-11 16:47:46.057231585 -0700
+@@ -3109,7 +3109,7 @@
+ 	 case 'H':
+ 	      set_cgibase(optarg); break;
+ 	 case 'l':
+-	      set_lynxcgibase("/home/httpd"); break;
++	      set_lynxcgibase("/usr/lib/man2html"); break;
+ 	 case 'L':
+ 	      set_lynxcgibase(optarg); break;
+ 	 case 'M':

@@ -1,0 +1,11 @@
+--- Makefile.in.orig	2013-02-14 12:08:25.000000000 +0100
++++ Makefile.in	2014-08-28 18:31:03.000000000 +0200
+@@ -31,7 +31,7 @@
+ CP = cp
+ RANLIB = ranlib
+ BUILD_DIR = _build
+-OCAMLBUILD = @OCAMLBUILD@ -ocamlc ocp-ocamlc.opt -ocamlopt ocp-ocamlopt.opt -classic-display -no-links -build-dir $(BUILD_DIR) -use-ocamlfind
++OCAMLBUILD = @OCAMLBUILD@ -classic-display -no-links -build-dir $(BUILD_DIR) -use-ocamlfind
+ OCAMLFIND = @OCAMLFIND@
+ TPLIB = @PACKAGE_NAME@
+ 

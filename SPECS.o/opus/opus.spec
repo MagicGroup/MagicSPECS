@@ -1,9 +1,11 @@
 Name:          opus
 Version:       1.1
-Release:       1%{?dist}
+Release:       2%{?dist}
 Summary:       An audio codec for use in low-delay speech and audio communication
+Summary(zh_CN.UTF-8): 低延迟语音通信使用的音频编码
 
 Group:         System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 License:       BSD
 URL:           http://www.opus-codec.org/
 Source0:       http://downloads.xiph.org/releases/%{name}/%{name}-%{version}.tar.gz
@@ -16,22 +18,35 @@ The Opus codec is designed for interactive speech and audio transmission over
 the Internet. It is designed by the IETF Codec Working Group and incorporates 
 technology from Skype's SILK codec and Xiph.Org's CELT codec.
 
+%description -l zh_CN.UTF-8
+低延迟语音通信使用的音频编码。
+
 %package devel
 Summary: Development package for opus
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: libogg-devel
 Requires: opus = %{version}-%{release}
 
 %description devel
 Files for development with opus.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
 %package doc
 Summary: Doc package for opus
+Summary(zh_CN.UTF-8): %{name} 的文档
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: opus = %{version}-%{release}
 
 %description doc
 Document files with opus.
+
+%description doc -l zh_CN.UTF-8
+%{name} 的文档。
 
 %prep
 %setup -q
@@ -49,6 +64,7 @@ make install DESTDIR=%{buildroot}
 # Remove libtool archives and static libs
 find %{buildroot} -name '*.la' -exec rm -f {} ';'
 find %{buildroot} -name '*.a' -exec rm -f {} ';'
+magic_rpm_clean.sh
 
 %check
 make check
@@ -78,6 +94,9 @@ rm -rf %{buildroot}
 %{_docdir}/opus/html/*
 
 %changelog
+* Fri Apr 03 2015 Liu Di <liudidi@gmail.com> - 1.1-2
+- 为 Magic 3.0 重建
+
 * Fri Dec  6 2013 Peter Robinson <pbrobinson@fedoraproject.org> 1.1-1
 - 1.1 release
 

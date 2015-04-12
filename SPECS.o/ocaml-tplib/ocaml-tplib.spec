@@ -4,6 +4,7 @@ Name:           ocaml-tplib
 Version:        1.3
 Release:        8%{?dist}
 Summary:        Tropical Polyhedra Library
+Summary(zh_CN.UTF-8): Tropical Polyhedra 库
 
 License:        LGPLv2+
 URL:            https://gforge.inria.fr/projects/tplib
@@ -17,6 +18,10 @@ Source3:        compute_halfspaces.1
 Source4:        compute_minimal_external_representations.1
 Source5:        compute_tangent_hypergraph.1
 Source6:        compute_tropical_complex.1
+
+# Upstream patch to adapt to new ocamlbuild behavior.  See
+# https://github.com/ocaml/opam-repository/blob/master/packages/tplib/tplib.1.3/files/fix-makefile.diff
+Patch0:         %{name}-ocamlbuild.patch
 
 BuildRequires:  ocaml
 BuildRequires:  ocaml-camlidl-devel
@@ -37,23 +42,35 @@ polyhedra defined by means of inequalities, and conversely.
 It also provides a numerical abstract domain based on tropical
 polyhedra, in order to infer min-/max- invariants over programs.
 
+%description -l zh_CN.UTF-8
+Tropical Polyhedra 库。
+
 %package devel
 Summary:        Library files and headers for developing with TPLib
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Requires:       %{name}%{?_isa} = %{version}-%{release}
 Provides:       %{name}-static = %{version}-%{release}
 
 %description devel
 Library files and headers for developing applications that use TPLib.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
 %package tools
 Summary:        Tools that use TPLib
+Summary(zh_CN.UTF-8): %{name} 的工具
 Requires:       %{name}%{?_isa} = %{version}-%{release}
 
 %description tools
 Tools that use TPLib.
 
+%description tools -l zh_CN.UTF-8
+%{name} 的工具。
+
 %prep
 %setup -q -n tplib-%{version}
+%patch0
 
 # Enable debuginfo generation
 sed -i 's/@OCAMLBUILD@/& -cflag -g -lflag -g/' Makefile.in
@@ -73,6 +90,7 @@ make install bindir=%{buildroot}%{_bindir} libdir=%{buildroot}%{_libdir} \
 mkdir -p %{buildroot}%{_mandir}/man1
 cp -p %{SOURCE1} %{SOURCE2} %{SOURCE3} %{SOURCE4} %{SOURCE5} %{SOURCE6} \
    %{buildroot}%{_mandir}/man1
+magic_rpm_clean.sh
 
 %check
 make test

@@ -1,0 +1,106 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+	<link href="/css/02.css" rel="stylesheet" type="text/css" />
+	<meta name="author" content="Michael Hipp &amp; Thomas Orgis" />
+	<meta name="copyright" content="Michael Hipp &amp; Thomas Orgis" />
+	<meta name="publisher" content="Thomas Orgis" />
+
+	<title>mpg123: download</title>
+</head>
+<body>
+	<div class="center">
+	<a href="/index.shtml" title="mpg123 website entry page"><img alt="mpg123 logo" src="/pics/logo-current.png" /></a>
+	<div>
+		<a href="/download.shtml">download</a>
+		:
+		<a href="/cgi-bin/viewvc.cgi">svn</a>
+		::
+		<a href="/features.shtml">features</a>
+		::
+		<a href="http://sourceforge.net/projects/mpg123">sf.net project</a>
+		-
+		<a href="http://sourceforge.net/p/mpg123/bugs/">bug tracker</a>
+		::
+		<a href="/cgi-bin/news.cgi">news archive</a>
+	</div>
+	<div>
+		<a href="/api/">libmpg123 API</a>
+		::
+		<a href="/hacking.shtml">hacking</a>
+		::
+		<a href="/testing.shtml">testing</a>
+		::
+		<a href="/benchmarking.shtml">benchmarking</a>
+		::
+		<a href="/faq.shtml">FAQ</a>
+		::
+		<a href="/links.shtml">links</a>
+		::
+		<a href="/contact.shtml">contact</a>
+	</div>
+</div>
+
+	<h1>Downloads</h1>
+
+	<p>
+		The sources are signed with <a href="http://thomas.orgis.org/public_key">Thomas&acute; GPG key</a>.
+	</p>
+
+	<h2>Current Release</h2>
+
+	<p>Please see the the</p>
+	<div style="text-align:center">
+	    <a href="http://sourceforge.net/project/showfiles.php?group_id=135704">sourceforge.net files section</a>
+	</div>
+	<p>
+	    for current and past downloads including release notes etc.
+	    Sourceforge is providing a number of download mirrors to ensure the best availability. Please let&acute;s use this kind service.
+	</p>
+
+	<h3>Local Fallback</h3>
+
+	<div style="text-align:center">
+	    <a href="download/mpg123-1.22.0
+.tar.bz2">mpg123 1.22.0
+</a> <a href="download/mpg123-1.22.0
+.tar.bz2.sig">(signature)</a>
+	</div>
+
+	<h3>Win32 and Win64 binaries</h3>
+	<p>
+		You Windows folks are lucky since version 1.6.0: Patrick joined the team as a Windows developer and is providing binaries regulary, see <a href="download/win32/?V=1&amp;O=D">download/win32/</a>!
+		Also, JonY chipped in with builds for 64bit Windows, to be found in <a href="download/win64/?V=1&amp;O=D">download/win64/</a>.
+		The latter files are signed with <a href="download/win64/jon_y.asc">JonY's GPG key</a>. He likes to play with freshest toolsets, p.ex. 1.12.4 binaries are built with gcc 4.6 and link time optimization.
+	</p>
+
+	<h2>Developer Version</h2>
+
+	<p>Development happens in the subversion repository on scm.orgis.org:</p>
+	<div style="text-align:center;font-weight:bold;">svn://scm.orgis.org/mpg123/trunk</div>
+	<p>You can also browse it via the <a href="cgi-bin/viewvc.cgi">ViewVC web interface</a>. You can get snapshots from both places. </p>
+	<p>A nightly tarball with the the autotool stuff prepared is at <a href="/snapshot">http://mpg123.org/snapshot</a>.</a>
+
+	<h2>Archived Downloads</h2>
+
+	<p>
+		Old downloads as well as gzipped variants of the bzipped tarballs are to be found either on the
+		<a href="http://sourceforge.net/project/showfiles.php?group_id=135704">sourceforge.net files section</a>
+		or in the local <a href="download/?V=1&O=D">download directory</a>.
+	</p>
+
+	<h2>Historic downloads from Michael&acute;s site</h2>
+	<p>
+		The old mpg123 versions contain various problems including security vulnerabilities.
+		That doesn't mean that mpg123 is insecure and bad, this is just a result of aging code that lacks active maintainership.<br />
+		So please use these downloads with care and check the news section for known issues.
+	</p>
+	<ul>
+		<li>Last stable release before 0.60: <a href="mpg123/mpg123-0.59r.tar.gz">mpg123 0.59r</a></li>
+		<li>Last DEVELOPMENT mpg123 release before 0.60: <a href="mpg123/mpg123-pre0.59s.tar.gz">mpg123 pre0.59s</a></li>
+		<li>100% pure Java MP3 Player <a href="mpg123/jmpg123-0.1.tar.gz">jmpg123</a></li>
+		<li>MP2 Player for ADSP 2115, <em>very old!</em><a href="mpg123/dsp_mp2.tar.gz">dsp_mp2</a></li>
+	</ul>
+</body>
+</html>

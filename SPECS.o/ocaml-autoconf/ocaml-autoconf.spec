@@ -1,9 +1,11 @@
 Name:           ocaml-autoconf
 Version:        1.1
-Release:        11%{?dist}
+Release:        12%{?dist}
 Summary:        Autoconf macros for OCaml
+Summary(zh_CN.UTF-8): Ocaml 的 Autoconf 宏
 
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 
 # https://fedoraproject.org/wiki/Licensing/BSD#3ClauseBSD
 License:        BSD
@@ -23,6 +25,8 @@ Requires:       automake
 %description
 Autoconf macros for OCaml projects.
 
+%description -l zh_CN.UTF-8
+Ocaml 项目的 Autoconf 宏。
 
 %prep
 %setup -q
@@ -39,7 +43,7 @@ make install \
   datadir=%{_datadir} \
   mandir=%{_mandir} \
   DESTDIR=$RPM_BUILD_ROOT
-
+magic_rpm_clean.sh
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -53,6 +57,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Tue Mar 03 2015 Liu Di <liudidi@gmail.com> - 1.1-12
+- 为 Magic 3.0 重建
+
 * Fri Jun 20 2014 Liu Di <liudidi@gmail.com> - 1.1-11
 - 为 Magic 3.0 重建
 

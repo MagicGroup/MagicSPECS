@@ -1,9 +1,11 @@
 Name:           numlockx
 Version:        1.2
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        Turns on NumLock after starting X
+Summary(zh_CN.UTF-8): 启动 X 后打开 Numlock
 
 Group:          Applications/System
+Group(zh_CN.UTF-8): 应用程序/系统
 License:        MIT
 URL:            http://ktown.kde.org/~seli/numlockx/
 Source0:        http://ktown.kde.org/~seli/numlockx/numlockx-%{version}.tar.gz
@@ -14,6 +16,9 @@ Requires:       xorg-x11-xinit
 
 %description
 %{summary}
+
+%description -l zh_CN.UTF-8
+启动 X 后打开 Numlock。
 
 %prep
 %setup -q
@@ -28,7 +33,7 @@ make %{?_smp_mflags}
 rm -rf $RPM_BUILD_ROOT
 make install DESTDIR=$RPM_BUILD_ROOT
 install -p -D %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/X11/xinit/xinitrc.d/numlockx.sh
-
+magic_rpm_clean.sh
 
 
 %files
@@ -38,6 +43,9 @@ install -p -D %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/X11/xinit/xinitrc.d/numlo
 %doc AUTHORS README LICENSE
 
 %changelog
+* Sat Feb 28 2015 Liu Di <liudidi@gmail.com> - 1.2-4
+- 为 Magic 3.0 重建
+
 * Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 1.2-3
 - 为 Magic 3.0 重建
 

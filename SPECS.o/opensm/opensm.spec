@@ -1,19 +1,26 @@
-Name: opensm
-Version: 3.3.13
-Release: 4%{?dist}
+Name:    opensm
+Version: 3.3.19
+Release: 1%{?dist}
 Summary: OpenIB InfiniBand Subnet Manager and management utilities
-Group: System Environment/Daemons
+Summary(zh_CN.UTF-8): OpenIB InfiniBand 子网管理器和管理工具
+Group:   System Environment/Daemons
+Group(zh_CN.UTF-8): 系统环境/服务
 License: GPLv2 or BSD
-Url: http://www.openfabrics.org/
+Url:     http://www.openfabrics.org/
+
 Source0: http://www.openfabrics.org/downloads/management/%{name}-%{version}.tar.gz
-Source1: opensm.conf
 Source2: opensm.logrotate
-Source3: opensm.initd
 Source4: opensm.sysconfig
-Patch0: opensm-3.3.13-prefix.patch
-BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-BuildRequires: libibmad-devel = 1.3.8, libtool, bison, flex, byacc
-Requires: %{name}-libs = %{version}-%{release}, logrotate, rdma
+Source5: opensm.service
+Source6: opensm.launch
+Source7: opensm.rwtab
+Patch0:  opensm-3.3.17-prefix.patch
+
+BuildRequires: libibmad-devel >= 1.3.9, libtool, bison, flex, byacc, systemd
+Requires: %{name}-libs%{?_isa} = %{version}-%{release}, logrotate, rdma
+Requires(post): systemd
+Requires(preun): systemd
+Requires(postun): systemd
 ExcludeArch: s390 s390x
 
 %description
@@ -24,27 +31,44 @@ also contains various tools for diagnosing and testing Infiniband networks
 that can be used from any machine and do not need to be run on a machine
 running the opensm daemon.
 
+%description -l zh_CN.UTF-8
+OpenIB InfiniBand 子网管理器和管理工具。
+
 %package libs
 Summary: Libraries used by opensm and included utilities
+Summary(zh_CN.UTF-8): %{name} 的运行库
 Group: System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 
 %description libs
 Shared libraries for Infiniband user space access
 
+%description libs -l zh_CN.UTF-8
+%{name} 的运行库。
+
 %package devel
 Summary: Development files for the opensm-libs libraries
-Group: Development/System
-Requires: %{name}-libs = %{version}-%{release}
+Summary(zh_CN.UTF-8): %{name} 的开发包
+Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
+Requires: %{name}-libs%{?_isa} = %{version}-%{release}
 
 %description devel
 Development environment for the opensm libraries
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
 %package static
 Summary: Static version of the opensm libraries
-Group: Development/System
-Requires: %{name}-devel = %{version}-%{release}
+Summary(zh_CN.UTF-8): %{name} 的静态库
+Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
+Requires: %{name}-devel%{?_isa} = %{version}-%{release}
 %description static
 Static version of opensm libraries
+%description static -l zh_CN.UTF-8
+%{name} 的静态库。
 
 %prep
 %setup -q
@@ -54,69 +78,115 @@ Static version of opensm libraries
 %configure --with-opensm-conf-sub-dir=rdma
 make %{?_smp_mflags}
 cd opensm
-./opensm -c ../../opensm-%{version}.conf
+./opensm -c ../opensm-%{version}.conf
 
 %install
-rm -rf %{buildroot}
 make install DESTDIR=%{buildroot}
 # remove unpackaged files from the buildroot
 rm -f %{buildroot}%{_libdir}/*.la
 rm -fr %{buildroot}%{_sysconfdir}/init.d
-install -D -m644 %{SOURCE1} %{buildroot}%{_sysconfdir}/rdma/opensm.conf
+install -D -m644 opensm-%{version}.conf %{buildroot}%{_sysconfdir}/rdma/opensm.conf
 install -D -m644 %{SOURCE2} %{buildroot}%{_sysconfdir}/logrotate.d/opensm
-install -D -m755 %{SOURCE3} %{buildroot}%{_initddir}/opensm
 install -D -m644 %{SOURCE4} %{buildroot}%{_sysconfdir}/sysconfig/opensm
+install -D -m644 %{SOURCE5} %{buildroot}%{_unitdir}/opensm.service
+install -D -m755 %{SOURCE6} %{buildroot}%{_libexecdir}/opensm-launch
+install -D -m644 %{SOURCE7} %{buildroot}%{_sysconfdir}/rwtab.d/opensm
 mkdir -p ${RPM_BUILD_ROOT}/var/cache/opensm
 magic_rpm_clean.sh
 
-%clean
-rm -rf %{buildroot}
-
 %post
-if [ $1 = 1 ]; then
-	/sbin/chkconfig --add opensm
-else
-	/sbin/service opensm condrestart
-fi
+%systemd_post opensm.service
 
 %preun
+# Don't use the macro because we need to remove our cache directory as well
+# and the macro doesn't have the ability to do that.  But, here the macro
+# is for future reference:
+# %systemd_preun opensm.service
 if [ $1 = 0 ]; then
-	/sbin/service opensm stop
-	/sbin/chkconfig --del opensm
-	rm -f /var/cache/opensm/*
+	/bin/systemctl --no-reload disable opensm.service >/dev/null 2>&1 || :
+	/bin/systemctl stop opensm.service >/dev/null 2>&1 || :
+	rm -fr /var/cache/opensm
 fi
+
+%postun
+%systemd_postun_with_restart opensm.service
 
 %post libs -p /sbin/ldconfig
 
 %postun libs -p /sbin/ldconfig
 
 %files
-%defattr(-,root,root,-)
 %dir /var/cache/opensm
 %{_sbindir}/*
-%{_initddir}/opensm
-%{_mandir}/*
+%{_mandir}/*/*
+%{_unitdir}/*
+%{_libexecdir}/*
 %config(noreplace) %{_sysconfdir}/logrotate.d/opensm
 %config(noreplace) %{_sysconfdir}/rdma/opensm.conf
 %config(noreplace) %{_sysconfdir}/sysconfig/opensm
+%{_sysconfdir}/rwtab.d/opensm
 %doc AUTHORS COPYING ChangeLog INSTALL README NEWS
 
 %files libs
-%defattr(-,root,root,-)
 %{_libdir}/lib*.so.*
 
 %files devel
-%defattr(-,root,root,-)
 %{_libdir}/lib*.so
 %{_includedir}/infiniband
 
 %files static
-%defattr(-,root,root,-)
 %{_libdir}/lib*.a
 
 %changelog
-* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 3.3.13-4
-- 为 Magic 3.0 重建
+* Thu Apr 02 2015 Liu Di <liudidi@gmail.com> - 3.3.19-1
+- 更新到 3.3.19
+
+* Sun Aug 17 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.3.17-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
+
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.3.17-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Thu May 29 2014 Michael Schwendt <mschwendt@fedoraproject.org> - 3.3.17-2
+- Don't include manual page directories (#1089412).
+- Use standard group Development/Libraries in library devel packages.
+- Use %%?_isa in base package dependencies.
+
+* Mon Mar 17 2014 Peter Robinson <pbrobinson@fedoraproject.org> 3.3.17-1
+- Update to 3.3.17
+
+* Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.3.15-7
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Mon Mar 25 2013 Doug Ledford <dledford@redhat.com> - 3.3.15-6
+- Oops, forgot to remove the -B option to opensm when starting it
+
+* Mon Mar 25 2013 Doug Ledford <dledford@redhat.com> - 3.3.15-5
+- Drop the old sysv init script
+- Fix opensm-launch to restart opensm in a loop.  This works around the
+  fact that systemd starts opensm so early that we very well might not have
+  sync on the link yet.  Without the physical link being up, opensm exits
+  immediately.  This way opensm will get restarted every 30 seconds until
+  sync is active on the link or until the opensm service is stopped.
+- Always install the newly generated opensm-%%{version}.conf as opensm.conf
+- Make the launch work properly in the event that no GUIDs are set and
+  there are no numbered config files
+
+* Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.3.15-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
+
+* Wed Dec 05 2012 Doug Ledford <dledford@redhat.com> - 3.3.15-3
+- Fix startup on read only root
+- Update default config file
+- Resolves: bz817591
+
+* Wed Dec 05 2012 Doug Ledford <dledford@redhat.com> - 3.3.15-2
+- More tweaks to systemd setup (proper scriptlets now)
+- More tweaks to old sysv init script support (fix Requires)
+
+* Tue Nov 27 2012 Doug Ledford <dledford@redhat.com> - 3.3.15-1
+- Update to latest upstream release
+- Update to systemd startup
 
 * Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.3.13-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild

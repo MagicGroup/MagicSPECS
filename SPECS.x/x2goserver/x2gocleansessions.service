@@ -1,0 +1,10 @@
+[Unit]
+Description=X2go session cleanup
+
+[Service]
+Type=forking
+ExecStart=/usr/sbin/x2gocleansessions
+PIDFile=/run/x2goserver.pid
+
+[Install]
+WantedBy=multi-user.target

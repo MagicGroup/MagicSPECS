@@ -1,5 +1,5 @@
 %define name audacious
-%define version 3.4.3
+%define version 3.6
 %define testver %{nil}
 %if 0%{?testver}
 %define release 0.%{testver}.1%{?dist}.2
@@ -24,7 +24,7 @@ Group(zh_CN.UTF-8): 应用程序/多媒体
 URL:		http://www.audacious-media-player.org/
 License:	GPL
 BuildRoot:	%{_tmppath}/%{name}-%{version}-root
-BuildRequires:	libguess-devel
+BuildRequires:	libguess-devel >= 1.2
 BuildRequires:  libmowgli-devel mcs-devel
 %description
 Audacious is a fork of Beep Media Player(BMP).
@@ -87,6 +87,9 @@ rm -rf %{buildroot} %{_builddir}/%{buildsubdir}
 %{_libdir}/pkgconfig/*
 
 %changelog
+* Sun Mar 29 2015 Liu Di <liudidi@gmail.com> - 3.6-1
+- 更新到 3.6
+
 * Sun Mar 02 2014 Liu Di <liudidi@gmail.com> - 3.4.3-1
 - 更新到 3.4.3
 

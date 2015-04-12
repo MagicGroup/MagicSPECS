@@ -1,26 +1,24 @@
 #TODO: stop using local copy of libdnet, once system distributed version supports sctp (grep sctp /usr/include/dnet.h)
+
+%global _hardened_build 1
+
 Summary: Network exploration tool and security scanner
+Summary(zh_CN.UTF-8): 网络探测工具和安全扫描器
 Name: nmap
 Epoch: 2
-Version: 6.25
+Version: 6.47
 #global prerelease TEST5
-Release: 6.20130624svn%{?dist}
-# nmap is GPLv2
-# zenmap is GPLv2 and LGPLv2+ (zenmap/higwidgets) and GPLv2+ (zenmap/radialnet)
-# libdnet-stripped is BSD (advertising clause rescinded by the Univ. of California in 1999) with some parts as Public Domain (crc32)
-# openssl is OpenSSL
-# openssl and libdnet-striped is removed in %%prep section
-License: GPLv2 and LGPLv2+ and GPLv2+ and BSD
+Release: 3%{?dist}
+# Uses combination of licenses based on GPL license, but with extra modification
+# so it got its own license tag rhbz#1055861
+License: Nmap
 Group: Applications/System
+Group(zh_CN.UTF-8): 应用程序/系统
 Requires: %{name}-ncat = %{epoch}:%{version}-%{release}
-Source0: http://nmap.org/dist/%{name}-%{version}%{?prerelease}svn20130624.tar.bz2
+Source0: http://nmap.org/dist/%{name}-%{version}%{?prerelease}.tar.bz2
 Source1: zenmap.desktop
 Source2: zenmap-root.pamd
 Source3: zenmap-root.consoleapps
-
-# TEMPORARY - obsoleting nc caused troubles for libvirt, because ncat does not support
-# unix sockets, use wrapper with socat failback when unix sockets are required
-Source4: nc
 
 #prevent possible race condition for shtool, rhbz#158996
 Patch1: nmap-4.03-mktemp.patch
@@ -28,21 +26,18 @@ Patch1: nmap-4.03-mktemp.patch
 #don't suggest to scan microsoft
 Patch2: nmap-4.52-noms.patch
 
-# rhbz#637403, workaround for rhbz#621887=gnome#623965
-Patch4: zenmap-621887-workaround.patch
-
 # upstream provided patch for rhbz#845005, not yet in upstream repository
 Patch5: ncat_reg_stdin.diff
 Patch6: nmap-6.25-displayerror.patch
+
+#rhbz#994376
+Patch7: nmap-6.40-logdebug.patch
 
 URL: http://nmap.org/
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: openssl-devel, gtk2-devel, lua-devel, libpcap-devel, pcre-devel
 BuildRequires: desktop-file-utils, dos2unix
 BuildRequires: libtool, automake, autoconf, gettext-devel
-
-# exception granted in FPC ticket 255
-Provides: bundled(lua) = 5.2
 
 %define pixmap_srcdir zenmap/share/pixmaps
 
@@ -58,9 +53,14 @@ data transfer, redirection, and debugging tool (netcat utility ncat), a utility
 for comparing scan results (ndiff), and a packet generation and response analysis
 tool (nping). 
 
+%description -l zh_CN.UTF-8
+网络探测工具和安全扫描器。
+
 %package frontend
 Summary: The GTK+ front end for nmap
+Summary(zh_CN.UTF-8): nmap 的 GTK+ 前端
 Group: Applications/System
+Group(zh_CN.UTF-8): 应用程序/系统
 Requires: nmap = %{epoch}:%{version} gtk2 python >= 2.5 pygtk2 usermode
 BuildRequires: python >= 2.5 python-devel pygtk2-devel libpng-devel
 BuildArch: noarch
@@ -68,12 +68,16 @@ BuildArch: noarch
 This package includes zenmap, a GTK+ front end for nmap. The nmap package must
 be installed before installing nmap front end.
 
+%description frontend -l zh_CN.UTF-8
+nmap 的 pyGTK+ 前端
+
 %package ncat
 Group:   Applications/System
+Group(zh_CN.UTF-8): 应用程序/系统
 Summary: Nmap's Netcat replacement
+Summary(zh_CN.UTF-8): Nmap 的 Netcat 替代
 Obsoletes: nc < 1.109.20120711-2
 Provides: nc
-Requires: socat
 %description ncat
 Ncat is a feature packed networking utility which will read and
 write data across a network from the command line.  It uses both
@@ -83,14 +87,16 @@ applications and users. Ncat will not only work with IPv4 and IPv6
 but provides the user with a virtually limitless number of potential
 uses.
 
+%description ncat -l zh_CN.UTF-8
+Nmap 的 Netcat 替代。
 
 %prep
 %setup -q -n %{name}-%{version}%{?prerelease}
 %patch1 -p1 -b .mktemp
 %patch2 -p1 -b .noms
-%patch4 -p1 -b .bz637403
 %patch5 -p1 -b .ncat_reg_stdin
 %patch6 -p1 -b .displayerror
+%patch7 -p1 -b .logdebug
 
 # for aarch64 support, not needed with autotools 2.69+
 for f in acinclude.m4 configure.ac nping/configure.ac
@@ -101,19 +107,13 @@ autoreconf -I . -fiv --no-recursive
 cd nping; autoreconf -I .. -fiv --no-recursive; cd ..
 
 #be sure we're not using tarballed copies of some libraries
-#rm -rf liblua libpcap libpcre macosx mswin32
-rm -rf         libpcap libpcre macosx mswin32
-
+rm -rf liblua libpcap libpcre macosx mswin32
 
 #fix locale dir
 mv zenmap/share/zenmap/locale zenmap/share
 sed -i -e "s|^locale_dir =.*$|locale_dir = os.path.join('share','locale')|" \
  -e 's|join(self.install_data, data_dir)|join(self.install_data, "share")|' zenmap/setup.py
 sed -i 's|^LOCALE_DIR = .*|LOCALE_DIR = join(prefix, "share", "locale")|' zenmap/zenmapCore/Paths.py
-
-#fix jp->ja locale
-sed -i '/ALL_LINGUAS =/s/jp/ja/' Makefile.in
-mv docs/man-xlate/nmap-jp.1 docs/man-xlate/nmap-ja.1
 
 %build
 export CFLAGS="$RPM_OPT_FLAGS -fno-strict-aliasing"
@@ -153,8 +153,7 @@ popd
 
 #we provide 'nc' replacement
 ln -s ncat.1.gz $RPM_BUILD_ROOT%{_mandir}/man1/nc.1.gz
-#ln -s ncat $RPM_BUILD_ROOT%{_bindir}/nc
-install -m 0755 %{SOURCE4} $RPM_BUILD_ROOT%{_bindir}/nc
+ln -s ncat $RPM_BUILD_ROOT%{_bindir}/nc
 
 desktop-file-install --vendor nmap \
 	--dir $RPM_BUILD_ROOT%{_datadir}/applications \
@@ -174,7 +173,7 @@ do
   mv -f $fe.new $fe
 done
 popd
-
+magic_rpm_clean.sh
 %find_lang nmap --with-man
 %find_lang zenmap
 
@@ -199,13 +198,11 @@ rm -rf $RPM_BUILD_ROOT
 %doc docs/README
 %doc docs/nmap.usage.txt
 %{_bindir}/nmap
-%{_bindir}/nmap-update
 %{_bindir}/ndiff
 %{_bindir}/nping
 %{_mandir}/man1/ndiff.1.gz
 %{_mandir}/man1/nmap.1.gz
 %{_mandir}/man1/nping.1.gz
-%{_mandir}/man1/nmap-update.1.gz
 %{_datadir}/nmap
 
 %files ncat 
@@ -226,13 +223,55 @@ rm -rf $RPM_BUILD_ROOT
 %{_bindir}/xnmap
 %{python_sitelib}/*
 %{_datadir}/applications/nmap-zenmap.desktop
-%{_datadir}/icons/hicolor/*
+%{_datadir}/icons/hicolor/256x256/apps/*
 %{_datadir}/zenmap
 %{_mandir}/man1/zenmap.1.gz
 %{_mandir}/man1/nmapfe.1.gz
 %{_mandir}/man1/xnmap.1.gz
 
 %changelog
+* Mon Feb 16 2015 Liu Di <liudidi@gmail.com> - 2:6.47-3
+- 为 Magic 3.0 重建
+
+* Wed Dec 10 2014 Michal Hlavinka <mhlavink@redhat.com> - 2:6.47-2
+- do not own icons/hicolor/<size>/apps directory (#1171813)
+
+* Mon Aug 25 2014 Michal Hlavinka <mhlavink@redhat.com> - 2:6.47-1
+- nmap updated to 6.47
+
+* Sun Aug 17 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2:6.46-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
+
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2:6.46-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Tue Apr 22 2014 Michal Hlavinka <mhlavink@redhat.com> - 2:6.46-1
+- nmap updated to 6.46
+
+* Mon Apr 14 2014 Michal Hlavinka <mhlavink@redhat.com> - 2:6.45-1
+- nmap updated to 6.45
+
+* Wed Apr 09 2014 Michal Hlavinka <mhlavink@redhat.com> - 2:6.40-6
+- fix unexpected crash when too much paralelism is used (#1057912)
+
+* Wed Apr 09 2014 Michal Hlavinka <mhlavink@redhat.com> - 2:6.40-5
+- update license tag (#1055861)
+
+* Tue Mar 04 2014 Michal Hlavinka <mhlavink@redhat.com> - 2:6.40-4
+- use _hardened_build
+
+* Thu Oct 17 2013 Michal Hlavinka <mhlavink@redhat.com> - 2:6.40-3
+- ncat should support UNIX sockets correctly, drop wrapper with socat
+
+* Thu Aug 08 2013 Michal Hlavinka <mhlavink@redhat.com> - 2:6.40-2
+- do not print debug messages during normal use (#994376)
+
+* Tue Jul 30 2013 Michal Hlavinka <mhlavink@redhat.com> - 2:6.40-1
+- nmap updated to 6.40
+
+* Mon Jul 22 2013 Michal Hlavinka <mhlavink@redhat.com> - 2:6.25-7
+- bundled lua no longer required
+
 * Mon Jun 24 2013 Michal Hlavinka <mhlavink@redhat.com> - 2:6.25-6.20130624svn
 - use svn snapshot that contains all necessary UDP patches
 
@@ -347,7 +386,7 @@ rm -rf $RPM_BUILD_ROOT
 * Tue Jan 12 2010 Michal Hlavinka <mhlavink@redhat.com> - 2:5.00-6
 - use sqlite3 (instead of sqlite2)
 
-* Mon Dec 01 2009 Michal Hlavinka <mhlavink@redhat.com> - 2:5.00-5
+* Tue Dec 01 2009 Michal Hlavinka <mhlavink@redhat.com> - 2:5.00-5
 - spec cleanup
 
 * Mon Nov 02 2009 Michal Hlavinka <mhlavink@redhat.com> - 2:5.00-4
@@ -457,7 +496,7 @@ rm -rf $RPM_BUILD_ROOT
 * Fri Dec 09 2005 Jesse Keating <jkeating@redhat.com>
 - rebuilt
 
-* Tue Nov 11 2005 Harald Hoyer <harald@redhat.com> - 2:3.93-3
+* Fri Nov 11 2005 Harald Hoyer <harald@redhat.com> - 2:3.93-3
 - fixed wrong __attribute__ test
 
 * Thu Nov 10 2005 Tomas Mraz <tmraz@redhat.com> - 2:3.93-2
@@ -509,7 +548,7 @@ rm -rf $RPM_BUILD_ROOT
 * Tue Sep 23 2003 Florian La Roche <Florian.LaRoche@redhat.de>
 - allow disabling frontend if gtk1 is not available
 
-* Mon Jul 30 2003 Harald Hoyer <harald@redhat.de> 2:3.30-1
+* Wed Jul 30 2003 Harald Hoyer <harald@redhat.de> 2:3.30-1
 - version 3.30
 
 * Wed Jun 04 2003 Elliot Lee <sopwith@redhat.com>

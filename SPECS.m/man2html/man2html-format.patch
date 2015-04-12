@@ -1,0 +1,20 @@
+--- ./debian.orig/sources/manwhatis.c	2011-11-02 12:45:37.000000000 -0700
++++ ./debian/sources/manwhatis.c	2012-05-13 15:15:40.690492812 -0700
+@@ -291,7 +291,7 @@
+     fputs("<center>",f);
+     for(j=33; j<sizeof(usedletters); j++)
+         if(usedletters[j])
+-            fprintf(f,"<a href=\"#%c\">%c</a>\n",j,j);
++            fprintf(f,"<a href=\"#%c\">%c</a>\n",(char)j,(char)j);
+     fprintf(f,"<br><a href=\"%s/man2html\">Section index</a>\n", cgibase);
+     fputs("</center>\n<hr>\n",f);
+ 
+@@ -337,7 +337,7 @@
+     fputs("<hr>\n<center>\n",f);
+     for(j=0; j< sizeof(usedletters); j++)
+         if(usedletters[j])
+-            fprintf(f,"<a href=\"#%c\">%c</a>\n",j,j);
++            fprintf(f,"<a href=\"#%c\">%c</a>\n",(char)j,(char)j);
+     fputs("</center>\n",f);
+ 
+     fprintf(f,"</body>\n</html>\n");

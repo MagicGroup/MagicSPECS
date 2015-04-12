@@ -5,4 +5,5 @@ if [ -z "$1" ] ; then
 fi
 pushd $(dirname $0)
 sed -i "s/Version:.*/Version:\t$1/g" inkscape.spec
+sed -i "s/Release:.*/Release:\t1%{?dist}/g" inkscape.spec
 popd

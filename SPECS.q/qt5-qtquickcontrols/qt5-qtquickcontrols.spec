@@ -7,15 +7,17 @@
 
 Name:           qt5-%{qt_module}
 Summary:        Qt5 - module with set of QtQuick controls
-Version:        5.3.1
-Release:        2%{?dist}
+Summary(zh_CN.UTF-8): Qt5 - QtQuick 控件集的模块
+Version: 5.4.1
+Release: 1%{?dist}
 
 License:        BSD and (LGPLv2 with exceptions or GPLv3 with exceptions) and GFDL
 Url:            http://qt-project.org/
+%define majorver %(echo %{version} | awk -F. '{print $1"."$2}')
 %if 0%{?pre:1}
-Source0: http://download.qt-project.org/development_releases/qt/5.3/%{version}-%{pre}/submodules/%{qt_module}-opensource-src-%{version}-%{pre}.tar.xz
+Source0: http://download.qt-project.org/development_releases/qt/%{majorver}/%{version}-%{pre}/submodules/%{qt_module}-opensource-src-%{version}-%{pre}.tar.xz
 %else
-Source0: http://download.qt-project.org/official_releases/qt/5.3/%{version}/submodules/%{qt_module}-opensource-src-%{version}.tar.xz
+Source0: http://download.qt-project.org/official_releases/qt/%{majorver}/%{version}/submodules/%{qt_module}-opensource-src-%{version}.tar.xz
 %endif
 
 BuildRequires:  qt5-qtbase-devel >= %{version}
@@ -32,24 +34,32 @@ BuildRequires:  pkgconfig(Qt5Core)
 The Qt Quick Controls module provides a set of controls that can be used to
 build complete interfaces in Qt Quick.
 
+%description -l zh_CN.UTF-8
+Qt5 - QtQuick 控件集的模块。
 
 %if 0%{?docs}
 %package doc
 Summary: API documentation for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发文档
 Requires: %{name} = %{version}-%{release}
 # for qhelpgenerator
 BuildRequires: qt5-qttools-devel
 BuildArch: noarch
 %description doc
 %{summary}.
+%description doc -l zh_CN.UTF-8
+%{name} 的开发文档。
 %endif
 
 %package examples
 Summary: Programming examples for %{name}
+Summary(zh_CN.UTF-8): %{name} 的样例程序
 Requires: %{name}%{?_isa} = %{version}-%{release}
 %description examples
 %{summary}.
 
+%description examples -l zh_CN.UTF-8
+%{name} 的样例程序。
 
 %prep
 %setup -q -n %{qt_module}-opensource-src-%{version}%{?pre:-%{pre}}
@@ -70,15 +80,12 @@ make install INSTALL_ROOT=%{buildroot}
 %if 0%{?docs}
 make install_docs INSTALL_ROOT=%{buildroot}
 %endif
-
+magic_rpm_clean.sh
 
 %files
 # better to own this elsewhere? qt5-qtbase? -- rex
 %dir %{_qt5_archdatadir}/qml
 %{_qt5_archdatadir}/qml/QtQuick/
-%doc LICENSE.FDL
-%doc LICENSE.LGPL
-%doc LICENSE.GPL
 %doc LGPL_EXCEPTION.txt
 %doc header.BSD
 
@@ -99,6 +106,9 @@ make install_docs INSTALL_ROOT=%{buildroot}
 
 
 %changelog
+* Fri Mar 20 2015 Liu Di <liudidi@gmail.com> - 5.4.1-1
+- 更新到 5.4.1
+
 * Wed Aug 06 2014 Liu Di <liudidi@gmail.com> - 5.3.1-2
 - 为 Magic 3.0 重建
 

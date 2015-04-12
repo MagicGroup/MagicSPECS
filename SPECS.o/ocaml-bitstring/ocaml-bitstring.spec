@@ -2,8 +2,9 @@
 
 Name:           ocaml-bitstring
 Version:        2.0.4
-Release:        5%{?dist}
+Release:        6%{?dist}
 Summary:        OCaml library for matching and constructing bitstrings
+Summary(zh_CN.UTF-8): 匹配和构建位串的库
 License:        LGPLv2+ with exceptions and GPLv2+
 
 URL:            http://code.google.com/p/bitstring/
@@ -11,6 +12,10 @@ Source0:        http://bitstring.googlecode.com/files/%{name}-%{version}.tar.gz
 
 # Upstream patch to enable debugging.
 Patch1:         bitstring-r201.patch
+# Add support for signed ints (upstream).
+Patch2:         bitstring-r202.patch
+# Fix for OCaml 4.02 (upstream).
+Patch3:         bitstring-r203.patch
 
 ExcludeArch:    sparc64 s390 s390x
 
@@ -37,9 +42,12 @@ a syntax extension and library for OCaml.  You can use this module to
 both parse and generate binary formats, for example, communications
 protocols, disk formats and binary files.
 
+%description -l zh_CN.UTF-8
+匹配和构建位串的库。
 
 %package        devel
 Summary:        Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Requires:       %{name} = %{version}-%{release}
 
 # Upstream project used to be called ocaml-bitmatch.
@@ -52,11 +60,15 @@ Provides:       ocaml-bitmatch-devel = %{version}-%{release}
 The %{name}-devel package contains libraries and signature files for
 developing applications that use %{name}.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
 
 %patch1 -p0
+%patch2 -p0
+%patch3 -p1
 
 # Keep a pristine copy of the examples directory for distribution.
 cp -a examples bitstring-examples
@@ -69,8 +81,7 @@ cp -a examples bitstring-examples
 make -j1
 
 make doc
-make examples
-
+#make examples
 
 %check
 make check
@@ -88,7 +99,7 @@ mkdir -p $RPM_BUILD_ROOT%{_bindir}
 
 # Install bitstring-objinfo by hand for now.
 install -m 0755 bitstring-objinfo $RPM_BUILD_ROOT%{_bindir}
-
+magic_rpm_clean.sh
 
 %files
 %doc COPYING.LIB
@@ -115,6 +126,9 @@ install -m 0755 bitstring-objinfo $RPM_BUILD_ROOT%{_bindir}
 
 
 %changelog
+* Wed Mar 04 2015 Liu Di <liudidi@gmail.com> - 2.0.4-6
+- 为 Magic 3.0 重建
+
 * Fri Jun 20 2014 Liu Di <liudidi@gmail.com> - 2.0.4-5
 - 为 Magic 3.0 重建
 

@@ -1,0 +1,108 @@
+diff --git a/openbsd-compat/port-linux-sshd.c b/openbsd-compat/port-linux-sshd.c
+index c18524e..d04f4ed 100644
+--- a/openbsd-compat/port-linux-sshd.c
++++ b/openbsd-compat/port-linux-sshd.c
+@@ -409,6 +409,25 @@ sshd_selinux_setup_exec_context(char *pwname)
+ 	debug3("%s: done", __func__);
+ }
+ 
++void
++sshd_selinux_copy_context(void)
++{
++	security_context_t *ctx;
++
++	if (!ssh_selinux_enabled())
++		return;
++
++	if (getexeccon((security_context_t *)&ctx) != 0) {
++		logit("%s: getcon failed with %s", __func__, strerror (errno));
++		return;
++	}
++	if (ctx != NULL) {
++		if (setcon(ctx) != 0)
++			logit("%s: setcon failed with %s", __func__, strerror (errno));
++		freecon(ctx);
++	}
++}
++
+ #endif
+ #endif
+ 
+diff --git a/openbsd-compat/port-linux.h b/openbsd-compat/port-linux.h
+index 8ef6cc4..b18893c 100644
+--- a/openbsd-compat/port-linux.h
++++ b/openbsd-compat/port-linux.h
+@@ -25,6 +25,7 @@ void ssh_selinux_setup_pty(char *, const char *);
+ void ssh_selinux_change_context(const char *);
+ void ssh_selinux_setfscreatecon(const char *);
+ 
++void sshd_selinux_copy_context(void);
+ void sshd_selinux_setup_exec_context(char *);
+ #endif
+ 
+diff --git a/session.c b/session.c
+index 2bcf818..b5dc144 100644
+--- a/session.c
++++ b/session.c
+@@ -1538,6 +1538,9 @@ do_setusercontext(struct passwd *pw)
+ 			    pw->pw_uid);
+ 			chroot_path = percent_expand(tmp, "h", pw->pw_dir,
+ 			    "u", pw->pw_name, (char *)NULL);
++#ifdef WITH_SELINUX
++			sshd_selinux_copy_context();
++#endif
+ 			safely_chroot(chroot_path, pw->pw_uid);
+ 			free(tmp);
+ 			free(chroot_path);
+@@ -1565,6 +1568,12 @@ do_setusercontext(struct passwd *pw)
+ 		/* Permanently switch to the desired uid. */
+ 		permanently_set_uid(pw);
+ #endif
++
++#ifdef WITH_SELINUX
++		if (options.chroot_directory == NULL ||
++		    strcasecmp(options.chroot_directory, "none") == 0)
++			sshd_selinux_copy_context();
++#endif
+ 	} else if (options.chroot_directory != NULL &&
+ 	    strcasecmp(options.chroot_directory, "none") != 0) {
+ 		fatal("server lacks privileges to chroot to ChrootDirectory");
+@@ -1826,9 +1835,6 @@ do_child(Session *s, const char *command)
+ 		argv[i] = NULL;
+ 		optind = optreset = 1;
+ 		__progname = argv[0];
+-#ifdef WITH_SELINUX
+-		ssh_selinux_change_context("sftpd_t");
+-#endif
+ 		exit(sftp_server_main(i, argv, s->pw));
+ 	}
+ 
+diff --git a/sshd.c b/sshd.c
+index 07f9926..a97f8b7 100644
+--- a/sshd.c
++++ b/sshd.c
+@@ -632,6 +632,10 @@ privsep_preauth_child(void)
+ 	/* Demote the private keys to public keys. */
+ 	demote_sensitive_data();
+ 
++#ifdef WITH_SELINUX
++	ssh_selinux_change_context("sshd_net_t");
++#endif
++
+ 	/* Change our root directory */
+ 	if (chroot(_PATH_PRIVSEP_CHROOT_DIR) == -1)
+ 		fatal("chroot(\"%s\"): %s", _PATH_PRIVSEP_CHROOT_DIR,
+@@ -768,6 +772,13 @@ privsep_postauth(Authctxt *authctxt)
+ 	do_setusercontext(authctxt->pw);
+ 
+  skip:
++#ifdef WITH_SELINUX
++	/* switch SELinux content for root too */
++	if (authctxt->pw->pw_uid == 0) {
++		sshd_selinux_copy_context();
++	}
++#endif
++
+ 	/* It is safe now to apply the key state */
+ 	monitor_apply_keystate(pmonitor);
+ 

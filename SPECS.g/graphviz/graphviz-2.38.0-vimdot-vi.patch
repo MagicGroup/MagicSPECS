@@ -1,0 +1,12 @@
+diff --git a/plugin/xlib/vimdot.sh b/plugin/xlib/vimdot.sh
+index 749fe6a..a45927e 100755
+--- a/plugin/xlib/vimdot.sh
++++ b/plugin/xlib/vimdot.sh
+@@ -4,6 +4,7 @@
+ error() { echo "$0: $*" >&2; exit 1; }
+ 
+ editor="/usr/bin/vim"
++[ -x "$editor" ] || editor="/usr/bin/vi"
+ 
+ if ! test -x "$editor"; then error "the \"$editor\" editor not found or not executable"; fi
+ 

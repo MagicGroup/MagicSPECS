@@ -1,13 +1,14 @@
 %global opt %(test -x %{_bindir}/ocamlopt && echo 1 || echo 0)
 
 Name:           ocaml-res
-Version:        4.0.3
-Release:        3%{?dist}
+Version: 4.0.7
+Release: 1%{?dist}
 Summary:        OCaml library for resizing arrays and strings
+Summary(zh_CN.UTF-8): 调整数组和字符串大小的 OCaml 库
 License:        LGPLv2+ with exceptions
 
-URL:            https://bitbucket.org/mmottl/res/
-Source0:        https://bitbucket.org/mmottl/res/downloads/res-%{version}.tar.gz
+URL:            https://github.com/mmottl/res
+Source0:        https://github.com/mmottl/res/releases/download/v%{version}/res-%{version}.tar.gz
 
 ExcludeArch:    sparc64 s390 s390x
 
@@ -30,9 +31,12 @@ constant-time access to elements.
 There are also functors that allow the generation of similar modules
 which use different reallocation strategies.
 
+%description -l zh_CN.UTF-8
+调整数组和字符串大小的 OCaml 库。
 
 %package        devel
 Summary:        Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Requires:       %{name} = %{version}-%{release}
 
 
@@ -40,6 +44,8 @@ Requires:       %{name} = %{version}-%{release}
 The %{name}-devel package contains libraries and signature files for
 developing applications that use %{name}.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q -n res-%{version}
@@ -63,7 +69,7 @@ make install
 
 # Remove installed documentation.  We'll add it with a %doc directive.
 rm -r $RPM_BUILD_ROOT/usr/share/doc
-
+magic_rpm_clean.sh
 
 %files
 %doc COPYING.txt
@@ -86,6 +92,12 @@ rm -r $RPM_BUILD_ROOT/usr/share/doc
 
 
 %changelog
+* Sat Mar 14 2015 Liu Di <liudidi@gmail.com> - 4.0.7-1
+- 更新到 4.0.7
+
+* Sat Mar 14 2015 Liu Di <liudidi@gmail.com> - 4.0.3-3
+- 更新到 4.0.7
+
 * Fri Jun 20 2014 Liu Di <liudidi@gmail.com> - 4.0.3-3
 - 为 Magic 3.0 重建
 

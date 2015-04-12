@@ -2,8 +2,9 @@
 
 Name:           ocaml-SDL
 Version:        0.9.1
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        OCaml bindings for SDL
+Summary(zh_CN.UTF-8): SDL 的 OCaml 绑定
 License:        LGPLv2+
 
 URL:            http://ocamlsdl.sourceforge.net
@@ -22,10 +23,14 @@ Requires:       ocaml
 Runtime libraries to allow programs written in OCaml to write to SDL 
 (Simple DirectMedia Layer) interfaces.
 
+%description -l zh_CN.UTF-8
+SDL 的 OCaml 绑定。
 
 %package        devel
 Summary:        Development files for ocamlSDL
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       %{name} = %{version}-%{release} 
 
 
@@ -33,6 +38,8 @@ Requires:       %{name} = %{version}-%{release}
 The ocamlSDL-devel package provides libraries and headers for developing 
 applications using ocamlSDL
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q -n ocamlsdl-%{version} -a 1
@@ -50,7 +57,7 @@ export OCAMLFIND_DESTDIR=$RPM_BUILD_ROOT%{_libdir}/ocaml
 mkdir -p $OCAMLFIND_DESTDIR
 mkdir -p $OCAMLFIND_DESTDIR/stublibs
 make install DESTDIR=$RPM_BUILD_ROOT
-
+magic_rpm_clean.sh
 
 %files
 %doc README COPYING AUTHORS NEWS
@@ -73,6 +80,9 @@ make install DESTDIR=$RPM_BUILD_ROOT
 
 
 %changelog
+* Sat Mar 14 2015 Liu Di <liudidi@gmail.com> - 0.9.1-4
+- 为 Magic 3.0 重建
+
 * Fri Jun 20 2014 Liu Di <liudidi@gmail.com> - 0.9.1-3
 - 为 Magic 3.0 重建
 

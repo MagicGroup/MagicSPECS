@@ -1,9 +1,11 @@
 Name:           nss_compat_ossl
 Version:        0.9.6
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        Source-level compatibility library for OpenSSL to NSS porting
+Summary(zh_CN.UTF-8): OpenSSL 移植到 NSS 的源代码级别兼容库
 
 Group:          System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 License:        MIT
 URL:            http://rcritten.fedorapeople.org/nss_compat_ossl.html
 Source0:        http://rcritten.fedorapeople.org/%{name}-%{version}.tar.gz
@@ -17,14 +19,22 @@ BuildRequires:  nspr-devel
 This library provides a source-level compatibility layer to aid porting
 programs that use OpenSSL to use the NSS instead.
 
+%description -l zh_CN.UTF-8
+OpenSSL 移植到 NSS 的源代码级别兼容库。
+
 %package devel
 Summary:          Development libraries for nss_compat_ossl
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:            Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:         %{name} = %{version}-%{release}
 Requires:         nss-devel
 
 %description devel
 Header and library files for doing porting work from OpenSSL to NSS.
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -66,6 +76,9 @@ rm -rf $RPM_BUILD_ROOT
 %postun -p /sbin/ldconfig
 
 %changelog
+* Sat Feb 28 2015 Liu Di <liudidi@gmail.com> - 0.9.6-5
+- 为 Magic 3.0 重建
+
 * Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 0.9.6-4
 - 为 Magic 3.0 重建
 

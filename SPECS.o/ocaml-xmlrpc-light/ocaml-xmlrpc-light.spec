@@ -3,8 +3,9 @@
 
 Name:           ocaml-xmlrpc-light
 Version:        0.6.1
-Release:        16%{?dist}
+Release:        17%{?dist}
 Summary:        OCaml library for writing XML-RPC clients and servers
+Summary(zh_CN.UTF-8): 编写 XML-RPC 客户端和服务端的 OCaml 库
 License:        LGPLv2 with exceptions
 
 URL:            http://code.google.com/p/xmlrpc-light/
@@ -22,14 +23,20 @@ BuildRequires:  dos2unix
 
 Patch1:         debian_patches_0002-Compile-with-ocamlnet-3.3.5.patch
 
+# Further fix the package to work with ocamlnet 4.x.
+Patch2:         xmlrpc-light-0.6.1-ocamlnet4.patch
 
 %description
 XmlRpc-Light is an XmlRpc library written in OCaml.
 
+%description -l zh_CN.UTF-8
+编写 XML-RPC 客户端和服务端的 OCaml 库。
 
 %package        devel
 Summary:        Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       %{name} = %{version}-%{release}
 
 
@@ -37,6 +44,8 @@ Requires:       %{name} = %{version}-%{release}
 The %{name}-devel package contains libraries and signature files for
 developing applications that use %{name}.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q -n xmlrpc-light-%{version}
@@ -44,7 +53,7 @@ dos2unix LICENSE
 dos2unix README.txt
 
 %patch1 -p1
-
+%patch2 -p1
 
 %build
 make
@@ -55,7 +64,7 @@ export DESTDIR=$RPM_BUILD_ROOT
 export OCAMLFIND_DESTDIR=$RPM_BUILD_ROOT%{_libdir}/ocaml
 mkdir -p $OCAMLFIND_DESTDIR $OCAMLFIND_DESTDIR/stublibs
 make install
-
+magic_rpm_clean.sh
 
 %files
 %doc LICENSE
@@ -77,6 +86,9 @@ make install
 
 
 %changelog
+* Sat Mar 14 2015 Liu Di <liudidi@gmail.com> - 0.6.1-17
+- 为 Magic 3.0 重建
+
 * Fri Jun 20 2014 Liu Di <liudidi@gmail.com> - 0.6.1-16
 - 为 Magic 3.0 重建
 

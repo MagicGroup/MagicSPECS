@@ -1,0 +1,54 @@
+Support TLSv1 and later.
+
+Author: Mark Reynolds <mreynolds@redhat.com>
+Backported-by: Jan Synacek <jsynacek@redhat.com>
+Upstream ITS: #7979
+Upstream commit: 7a7d9419432954cac18a582bed85a7c489d90f00
+
+--- openldap-2.4.40/libraries/libldap/tls_m.c	2014-11-14 09:02:39.489493061 +0100
++++ openldap-2.4.40/libraries/libldap/tls_m.c	2014-11-14 09:23:07.239463097 +0100
+@@ -790,7 +790,7 @@ tlsm_bad_cert_handler(void *arg, PRFileD
+ 	case SSL_ERROR_BAD_CERT_DOMAIN:
+ 		break;
+ 	default:
+-		success = SECFailure;
++ 		success = SECFailure;
+ 		break;
+ 	}
+ 
+@@ -1729,6 +1729,8 @@ tlsm_deferred_init( void *arg )
+ 	NSSInitContext *initctx = NULL;
+ 	PK11SlotInfo *certdb_slot = NULL;
+ #endif
++	SSLVersionRange range;
++	SSLProtocolVariant variant;
+ 	SECStatus rc;
+ 	int done = 0;
+ 
+@@ -1911,6 +1913,16 @@ tlsm_deferred_init( void *arg )
+ 			}
+ 		}
+ 
++		/*
++		 * Set the SSL version range.  MozNSS SSL versions are the same as openldap's:
++		 *
++		 * SSL_LIBRARY_VERSION_TLS_1_* are equivalent to LDAP_OPT_X_TLS_PROTOCOL_TLS1_*
++		 */
++		SSL_VersionRangeGetSupported(ssl_variant_stream, &range); /* this sets the max */
++		range.min = lt->lt_protocol_min ? lt->lt_protocol_min : range.min;
++		variant = ssl_variant_stream;
++		SSL_VersionRangeSetDefault(variant, &range);
++
+ 		NSS_SetDomesticPolicy();
+ 
+ 		PK11_SetPasswordFunc( tlsm_pin_prompt );
+--- openldap-2.4.40/include/ldap.h	2014-09-19 03:48:49.000000000 +0200
++++ openldap-2.4.40/include/ldap.h	2014-11-14 09:25:54.560801030 +0100
+@@ -176,6 +176,7 @@ LDAP_BEGIN_DECL
+ #define LDAP_OPT_X_TLS_PROTOCOL_TLS1_0		((3 << 8) + 1)
+ #define LDAP_OPT_X_TLS_PROTOCOL_TLS1_1		((3 << 8) + 2)
+ #define LDAP_OPT_X_TLS_PROTOCOL_TLS1_2		((3 << 8) + 3)
++#define LDAP_OPT_X_TLS_PROTOCOL_TLS1_3		((3 << 8) + 4)
+ 
+ /* OpenLDAP SASL options */
+ #define LDAP_OPT_X_SASL_MECH			0x6100

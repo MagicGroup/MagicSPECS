@@ -17,7 +17,7 @@
 
 Summary: The GIMP ToolKit (GTK+), a library for creating GUIs for X
 Name: gtk2
-Version:	2.24.23
+Version:	2.24.26
 Release: 2%{?dist}
 License: LGPLv2+
 Group: System Environment/Libraries
@@ -75,6 +75,8 @@ Obsoletes: gail < 2.13.0-1
 
 # required for icon theme apis to work
 Requires: hicolor-icon-theme
+# built as a subpackage of gtk3
+Requires: gtk-update-icon-cache
 
 # We need to prereq these so we can run gtk-query-immodules-2.0
 Requires(post): glib2 >= %{glib2_version}
@@ -197,7 +199,7 @@ fi
 
 make install DESTDIR=$RPM_BUILD_ROOT        \
              RUN_QUERY_IMMODULES_TEST=false
-
+magic_rpm_clean.sh
 %find_lang gtk20
 %find_lang gtk20-properties
 
@@ -241,6 +243,8 @@ cp %{SOURCE3} $RPM_BUILD_ROOT%{_sysconfdir}/X11/xinit/xinput.d
 rm $RPM_BUILD_ROOT%{_libdir}/*.la
 rm $RPM_BUILD_ROOT%{_libdir}/gtk-2.0/*/*.la
 rm $RPM_BUILD_ROOT%{_libdir}/gtk-2.0/%{bin_version}/*/*.la
+rm $RPM_BUILD_ROOT%{_bindir}/gtk-update-icon-cache
+#rm $RPM_BUILD_ROOT%{_mandir}/man1/gtk-update-icon-cache.1*
 
 mkdir -p $RPM_BUILD_ROOT%{_sysconfdir}/gtk-2.0/$host
 touch $RPM_BUILD_ROOT%{_sysconfdir}/gtk-2.0/$host/gtk.immodules
@@ -282,7 +286,6 @@ fi
 %doc AUTHORS COPYING NEWS README
 %{_bindir}/gtk-query-immodules-2.0*
 %{_bindir}/update-gtk-immodules
-%{_bindir}/gtk-update-icon-cache
 %{_libdir}/libgtk-x11-2.0.so.*
 %{_libdir}/libgdk-x11-2.0.so.*
 %{_libdir}/libgailutil.so.*
@@ -337,6 +340,9 @@ fi
 %doc tmpdocs/examples
 
 %changelog
+* Wed Feb 25 2015 Liu Di <liudidi@gmail.com> - 2.24.26-2
+- 更新到 2.24.26
+
 * Wed May 28 2014 Liu Di <liudidi@gmail.com> - 2.24.23-2
 - 为 Magic 3.0 重建
 

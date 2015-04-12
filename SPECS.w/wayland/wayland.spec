@@ -1,8 +1,8 @@
 #global gitdate 20130515
 
 Name:           wayland
-Version:        1.5.0
-Release:        5%{?gitdate:.%{gitdate}}%{?dist}
+Version:        1.7.0
+Release:        3%{?gitdate:.%{gitdate}}%{?dist}
 Summary:        Wayland Compositor Infrastructure
 
 Group:          User Interface/X
@@ -15,14 +15,15 @@ Source0:        http://wayland.freedesktop.org/releases/%{name}-%{version}.tar.x
 %endif
 Source1:        make-git-snapshot.sh
 
-Patch1: 0001-protocol-add-wl_surface-errors-enum-for-bad-scale-an.patch
-
 BuildRequires:  autoconf automake libtool
+BuildRequires:  chrpath
 BuildRequires:  doxygen
 BuildRequires:  pkgconfig(libffi)
 BuildRequires:  expat-devel
 BuildRequires:  libxslt
 BuildRequires:  docbook-style-xsl
+BuildRequires:  xmlto
+BuildRequires:  graphviz
 
 Provides:       %{name}-common = %{version}-%{release}
 Obsoletes:      %{name}-common < 0.85.0
@@ -84,11 +85,9 @@ Headers and symlinks for developing wayland server applications.
 
 %prep
 %setup -q -n %{name}-%{?gitdate:%{gitdate}}%{!?gitdate:%{version}}
-%patch1 -p1
 
 %build
-#libtoolize -f 
-#autoreconf -fisv 
+autoreconf -v --install
 %configure --disable-static --enable-documentation
 make %{?_smp_mflags}
 
@@ -98,6 +97,9 @@ rm -rf $RPM_BUILD_ROOT
 make install DESTDIR=$RPM_BUILD_ROOT
 
 find $RPM_BUILD_ROOT -name \*.la | xargs rm -f
+
+# Remove lib64 rpaths
+chrpath -d $RPM_BUILD_ROOT%{_libdir}/libwayland-cursor.so
 
 %check
 mkdir -m 700 tests/run
@@ -169,8 +171,25 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/pkgconfig/wayland-server.pc
 
 %changelog
-* Wed Jul 16 2014 Liu Di <liudidi@gmail.com> - 1.5.0-5
+* Wed Feb 25 2015 Liu Di <liudidi@gmail.com> - 1.7.0-3
 - 为 Magic 3.0 重建
+
+* Sat Feb 21 2015 Till Maas <opensource@till.name> - 1.7.0-2
+- Rebuilt for Fedora 23 Change
+  https://fedoraproject.org/wiki/Changes/Harden_all_packages_with_position-independent_code
+
+* Tue Feb 17 2015 Richard Hughes <rhughes@redhat.com> - 1.7.0-1
+- Wayland 1.7.0
+
+* Fri Sep 19 2014 Kalev Lember <kalevlember@gmail.com> - 1.6.0-1
+- Update to 1.6.0
+- Remove lib64 rpaths
+
+* Fri Aug 22 2014 Kevin Fenzi <kevin@scrye.com> 1.5.91-1
+- Update to 1.5.90
+
+* Mon Aug 18 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.5.0-5
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
 
 * Wed Jul 02 2014 Adam Jackson <ajax@redhat.com> 1.5.0-4
 - Update protocol: new surface error enums

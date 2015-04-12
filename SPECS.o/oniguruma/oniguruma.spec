@@ -1,9 +1,11 @@
 Name:		oniguruma
-Version:	5.9.2
-Release:	4%{?dist}
+Version:	5.9.6
+Release:	1%{?dist}
 Summary:	Regular expressions library
+Summary(zh_CN.UTF-8): 正则表达式库
 
 Group:		System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 License:	BSD
 URL:		http://www.geocities.jp/kosako3/oniguruma/
 Source0:	http://www.geocities.jp/kosako3/oniguruma/archive/onig-%{version}.tar.gz
@@ -22,16 +24,23 @@ The characteristics of this library is that different character encoding
 for every regular expression object can be specified.
 (supported APIs: GNU regex, POSIX and Oniguruma native)
 
+%description -l zh_CN.UTF-8
+这是一个正则表达式库，可以支持多种编码，包括 UTF-8, GB18030 等。
+支持的 API 包括 GNU, POSIX 和本地支持。
 
 %package	devel
 Summary:	Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:		Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:	%{name} = %{version}-%{release}
 
 %description    devel
 The %{name}-devel package contains libraries and header files for
 developing applications that use %{name}.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q -n onig-%{version}
@@ -63,6 +72,7 @@ done
 	INSTALL="%{__install} -c -p"
 find $RPM_BUILD_ROOT -name '*.la' \
 	-exec %{__rm} -f {} ';'
+magic_rpm_clean.sh
 
 %clean
 %{__rm} -rf $RPM_BUILD_ROOT
@@ -97,11 +107,14 @@ find $RPM_BUILD_ROOT -name '*.la' \
 %lang(ja)	%doc	doc/RE.ja
 
 %{_bindir}/onig-config
-
+%{_libdir}/pkgconfig/*.pc
 %{_libdir}/libonig.so
 %{_includedir}/onig*.h
 
 %changelog
+* Wed Mar 25 2015 Liu Di <liudidi@gmail.com> - 5.9.6-1
+- 更新到 5.9.6
+
 * Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 5.9.2-4
 - 为 Magic 3.0 重建
 

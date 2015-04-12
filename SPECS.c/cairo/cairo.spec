@@ -1,33 +1,25 @@
-%define pixman_version 0.18.4
+%define pixman_version 0.30.0
 %define freetype_version 2.1.9
 %define fontconfig_version 2.2.95
 
-%define shortcommit 337ab1f
-
-%define git 0
-%define vcsdate 20140309
-
 Summary:	A 2D graphics library
 Name:		cairo
-Version:	1.13.1
-Release:	0.1.git%{shortcommit}%{?dist}
+Version:	1.14.0
+Release:	3%{?dist}
 URL:		http://cairographics.org
-#VCS:		git:git://git.freedesktop.org/git/cairo
-#Source0:	http://cairographics.org/snapshots/%{name}-%{version}.tar.gz
-#Source0:	http://cairographics.org/releases/%{name}-%{version}.tar.xz
-
-# git clone git://anongit.freedesktop.org/git/cairo
-# ./autogen.sh --enable-gtk-doc --enable-test-surfaces --enable-full-testing
-# make -j4
-# make dist
-# mv cairo-1.13.1.tar.xz cairo-1.13.1-`git rev-parse --short HEAD`.tar.xz
-Source0:	%{name}-%{version}-%{shortcommit}.tar.xz
+Source0:	http://cairographics.org/releases/%{name}-%{version}.tar.xz
 License:	LGPLv2 or MPLv1.1
 Group:		System Environment/Libraries
 
 Patch0:		0001-xlib-Don-t-crash-when-swapping-a-0-sized-glyph.patch
 Patch1:		0002-xcb-Don-t-crash-when-swapping-a-0-sized-glyph.patch
 Patch3:         cairo-multilib.patch
+#
+# Fix for dot crashes
+# https://bugzilla.redhat.com/show_bug.cgi?id=1183242
+# Already upstreamed: 
+# http://cgit.freedesktop.org/cairo/patch/src/cairo-image-compositor.c?id=5c82d91a5e15d29b1489dcb413b24ee7fdf59934
+Patch4:         cairo-fix_crash_in_fill_xrgb32_lerp_opaque_spans.patch
 
 BuildRequires: pkgconfig
 BuildRequires: libXrender-devel
@@ -55,12 +47,7 @@ through the X Render Extension or OpenGL).
 %package devel
 Summary: Development files for cairo
 Group: Development/Libraries
-Requires: %{name} = %{version}-%{release}
-Requires: libXrender-devel
-Requires: libpng-devel
-Requires: pixman-devel >= %{pixman_version}
-Requires: freetype-devel >= %{freetype_version}
-Requires: fontconfig-devel >= %{fontconfig_version}
+Requires: %{name}%{?_isa} = %{version}-%{release}
 
 %description devel
 Cairo is a 2D graphics library designed to provide high-quality display
@@ -72,7 +59,7 @@ needed for developing software which uses the cairo graphics library.
 %package gobject
 Summary: GObject bindings for cairo
 Group: System Environment/Libraries
-Requires: %{name} = %{version}-%{release}
+Requires: %{name}%{?_isa} = %{version}-%{release}
 
 %description gobject
 Cairo is a 2D graphics library designed to provide high-quality display
@@ -84,8 +71,8 @@ integrate well with the GObject object system used by GNOME.
 %package gobject-devel
 Summary: Development files for cairo-gobject
 Group: Development/Libraries
-Requires: %{name}-devel = %{version}-%{release}
-Requires: %{name}-gobject = %{version}-%{release}
+Requires: %{name}-devel%{?_isa} = %{version}-%{release}
+Requires: %{name}-gobject%{?_isa} = %{version}-%{release}
 
 %description gobject-devel
 Cairo is a 2D graphics library designed to provide high-quality display
@@ -110,6 +97,7 @@ This package contains tools for working with the cairo graphics library.
 %patch0 -p1 -b .xlib-swap
 %patch1 -p1 -b .xcb-swap
 %patch3 -p1 -b .multilib
+%patch4 -p1
 
 %build
 %configure --disable-static	\
@@ -193,6 +181,30 @@ rm $RPM_BUILD_ROOT%{_libdir}/*.la
 %{_libdir}/cairo/
 
 %changelog
+* Sat Feb 21 2015 Till Maas <opensource@till.name> - 1.14.0-3
+- Rebuilt for Fedora 23 Change
+  https://fedoraproject.org/wiki/Changes/Harden_all_packages_with_position-independent_code
+
+* Thu Jan 29 2015 Kevin Fenzi <kevin@scrye.com> 1.14.0-2
+- Add patch to fix crashes in dot. Fixes bug #1183242
+
+* Sun Nov 23 2014 Kalev Lember <kalevlember@gmail.com> - 1.14.0-1
+- Update to 1.14.0
+
+* Tue Oct 14 2014 Kalev Lember <kalevlember@gmail.com> - 1.13.1-0.5.git337ab1f
+- Minor spec file cleanup:
+- Drop manual -devel subpackage deps
+- Tighten deps with the _isa macro
+
+* Fri Aug 15 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.13.1-0.4.git337ab1f
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
+
+* Fri Jul 11 2014 Peter Robinson <pbrobinson@fedoraproject.org> 1.13.1-0.3.git337ab1f
+- Enable make check but don't (currently) fail the build on failure
+
+* Fri Jun  6 2014 Peter Robinson <pbrobinson@fedoraproject.org> 1.13.1-0.2.git337ab1f
+- Compile with -flto -ffat-lto-objects CFLAGS to fix FTBFSF with gcc 4.9
+
 * Tue Sep 17 2013 Kalev Lember <kalevlember@gmail.com> - 1.13.1-0.1.git337ab1f
 - Update to 1.13.1 git snapshot for device scale support
 

@@ -3,8 +3,9 @@
 
 Name:           ocaml-reins
 Version:        0.1a
-Release:        19%{?dist}
+Release:        20%{?dist}
 Summary:        Library of OCaml persistent data structures
+Summary(zh_CN.UTF-8): 持续性数据结构的 OCaml 库
 License:        LGPLv2 with exceptions
 
 URL:            http://ocaml-reins.sourceforge.net/
@@ -64,10 +65,14 @@ Current features:
   few operations on splay trees which currently have O(log n) expected
   time, but O(n) worst case)
 
+%description -l zh_CN.UTF-8
+持续性数据结构的 OCaml 库。
 
 %package        devel
 Summary:        Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       %{name} = %{version}-%{release}
 
 
@@ -75,6 +80,8 @@ Requires:       %{name} = %{version}-%{release}
 The %{name}-devel package contains libraries and signature files for
 developing applications that use %{name}.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -94,7 +101,7 @@ export DESTDIR=$RPM_BUILD_ROOT
 export OCAMLFIND_DESTDIR=$RPM_BUILD_ROOT%{_libdir}/ocaml
 mkdir -p $OCAMLFIND_DESTDIR $OCAMLFIND_DESTDIR/stublibs
 omake install
-
+magic_rpm_clean.sh
 
 %files
 %doc COPYING LGPL-2.1
@@ -118,6 +125,9 @@ omake install
 
 
 %changelog
+* Fri Mar 13 2015 Liu Di <liudidi@gmail.com> - 0.1a-20
+- 为 Magic 3.0 重建
+
 * Fri Jun 20 2014 Liu Di <liudidi@gmail.com> - 0.1a-19
 - 为 Magic 3.0 重建
 

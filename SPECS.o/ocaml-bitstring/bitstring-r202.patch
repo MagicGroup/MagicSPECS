@@ -1,0 +1,475 @@
+Index: bitstring.mli
+===================================================================
+--- bitstring.mli	(revision 201)
++++ bitstring.mli	(revision 202)
+@@ -940,14 +940,24 @@
+ 
+ val extract_char_unsigned : string -> int -> int -> int -> int
+ 
++val extract_char_signed : string -> int -> int -> int -> int
++
+ val extract_int_be_unsigned : string -> int -> int -> int -> int
+ 
++val extract_int_be_signed : string -> int -> int -> int -> int
++
+ val extract_int_le_unsigned : string -> int -> int -> int -> int
+ 
++val extract_int_le_signed : string -> int -> int -> int -> int
++
+ val extract_int_ne_unsigned : string -> int -> int -> int -> int
+ 
++val extract_int_ne_signed : string -> int -> int -> int -> int
++
+ val extract_int_ee_unsigned : endian -> string -> int -> int -> int -> int
+ 
++val extract_int_ee_signed : endian -> string -> int -> int -> int -> int
++
+ val extract_int32_be_unsigned : string -> int -> int -> int -> int32
+ 
+ val extract_int32_le_unsigned : string -> int -> int -> int -> int32
+@@ -1057,6 +1067,8 @@
+ 
+ val construct_char_unsigned : Buffer.t -> int -> int -> exn -> unit
+ 
++val construct_char_signed : Buffer.t -> int -> int -> exn -> unit
++
+ val construct_int_be_unsigned : Buffer.t -> int -> int -> exn -> unit
+ 
+ val construct_int_le_unsigned : Buffer.t -> int -> int -> exn -> unit
+@@ -1065,6 +1077,14 @@
+ 
+ val construct_int_ee_unsigned : endian -> Buffer.t -> int -> int -> exn -> unit
+ 
++val construct_int_be_signed : Buffer.t -> int -> int -> exn -> unit
++
++val construct_int_le_signed : Buffer.t -> int -> int -> exn -> unit
++
++val construct_int_ne_signed : Buffer.t -> int -> int -> exn -> unit
++
++val construct_int_ee_signed : endian -> Buffer.t -> int -> int -> exn -> unit
++
+ val construct_int32_be_unsigned : Buffer.t -> int32 -> int -> exn -> unit
+ 
+ val construct_int32_le_unsigned : Buffer.t -> int32 -> int -> exn -> unit
+Index: pa_bitstring.ml
+===================================================================
+--- pa_bitstring.ml	(revision 201)
++++ pa_bitstring.ml	(revision 202)
+@@ -623,7 +623,7 @@
+ 	     * be known at runtime) but we may be able to directly access
+ 	     * the bytes in the string.
+ 	     *)
+-	  | P.Int, Some 8, Some field_byte_offset, _, _ ->
++	  | P.Int, Some 8, Some field_byte_offset, _, signed ->
+ 	      let extract_fn = int_extract_const 8 endian signed in
+ 
+               (* The fast-path code when everything is aligned. *)
+@@ -637,7 +637,7 @@
+               <:expr<
+ 		if $lid:len$ >= 8 then (
+                   let v =
+-                    if $lid:off_aligned$ then
++                    if not $`bool:signed$ && $lid:off_aligned$ then
+                       $fastpath$
+                     else
+                       $extract_fn$ $lid:data$ $lid:off$ $lid:len$ 8 in
+Index: t12_signed_bytes_limits.ml
+===================================================================
+--- t12_signed_bytes_limits.ml	(revision 0)
++++ t12_signed_bytes_limits.ml	(revision 202)
+@@ -0,0 +1,36 @@
++let a = Array.init 387 (fun i -> i - 129)
++
++let limits b =
++  Array.fold_left
++    (fun (mini,maxi) i ->
++       try 
++	 ignore (b i);
++	 (min mini i, max maxi i)
++       with 
++	   _ -> (mini, maxi))
++    (0,0)
++    a
++
++let () =
++  if
++    List.map limits [
++      (fun i -> BITSTRING { i : 2 : signed });
++      (fun i -> BITSTRING { i : 3 : signed });
++      (fun i -> BITSTRING { i : 4 : signed });
++      (fun i -> BITSTRING { i : 5 : signed });
++      (fun i -> BITSTRING { i : 6 : signed });
++      (fun i -> BITSTRING { i : 7 : signed });
++      (fun i -> BITSTRING { i : 8 : signed });
++    ]
++    <>
++      [
++	(-2, 3); 
++	(-4, 7); 
++	(-8, 15); 
++	(-16, 31); 
++	(-32, 63); 
++	(-64, 127); 
++	(-128, 255)
++      ]
++  then
++    failwith("t12_signed_bytes_limits: failed")
+Index: t141_signed_int_limits.ml
+===================================================================
+--- t141_signed_int_limits.ml	(revision 0)
++++ t141_signed_int_limits.ml	(revision 202)
+@@ -0,0 +1,131 @@
++let () = Random.self_init ();;
++
++
++if not (
++  fst (List.fold_left (fun (ok, i) (b,m) ->
++			 let above_maxp = 1 lsl i in
++			 let maxp = pred above_maxp in
++			 let minp = - (above_maxp lsr 1) in
++			 let below_minp = pred minp in
++			 let gut = 
++			   try ignore (b maxp); true
++			   with _ -> false in
++			 let gut2 = 
++			   try ignore (b above_maxp); false
++			   with _ -> true in
++			 let gut3 = 
++			   try ignore (b minp); true
++			   with _ -> false in
++			 let gut4 =
++			   try ignore (b below_minp); false
++			   with _ -> true in
++		    	   
++			   
++			 let gut5 =
++			   let plage = Int32.shift_left 1l i in
++			   let test () =
++			     let signed_number = 
++			       Int32.to_int ( Int32.add (Random.int32 plage) (Int32.of_int minp) ) in
++			     let bits = b signed_number in
++			     let number' = m bits in
++			       if signed_number = number' then true
++			       else
++				 begin
++				   Printf.printf "bits:%d n=%d read=%d (%d %d)\n" i signed_number number' minp maxp;
++				   false
++				 end in
++			   let res = ref true in
++			     for i = 1 to 10_000 do
++			       res := !res && test ()
++			     done;
++			     !res in
++			   
++			   (gut && gut2 && gut3 && gut4 && gut5 && ok, succ i)
++			     
++		      )
++	 (true, 9)
++			 [
++			   (fun n -> BITSTRING { n : 9 : signed }),
++			   (fun b -> bitmatch b with { n: 9 : signed } -> n);
++			   (fun n -> BITSTRING { n : 10 : signed }),
++			   (fun b -> bitmatch b with  { n : 10 : signed } -> n);
++			   (fun n -> BITSTRING { n : 11 : signed }),
++			   (fun b -> bitmatch b with  { n : 11 : signed } -> n);
++			   (fun n -> BITSTRING { n : 12 : signed }),
++			   (fun b -> bitmatch b with  { n : 12 : signed } -> n);
++			   (fun n -> BITSTRING { n : 13 : signed }),
++			   (fun b -> bitmatch b with  { n : 13 : signed } -> n);
++			   (fun n -> BITSTRING { n : 14 : signed }),
++			   (fun b -> bitmatch b with  { n : 14 : signed } -> n);
++			   (fun n -> BITSTRING { n : 15 : signed }),
++			   (fun b -> bitmatch b with  { n : 15 : signed } -> n);
++			   (fun n -> BITSTRING { n : 16 : signed }),
++			   (fun b -> bitmatch b with  { n : 16 : signed } -> n);
++			   (fun n -> BITSTRING { n : 17 : signed }),
++			   (fun b -> bitmatch b with  { n : 17 : signed } -> n);
++			   (fun n -> BITSTRING { n : 18 : signed }),
++			   (fun b -> bitmatch b with  { n : 18 : signed } -> n);
++			   (fun n -> BITSTRING { n : 19 : signed }),
++			   (fun b -> bitmatch b with  { n : 19 : signed } -> n);
++			   (fun n -> BITSTRING { n : 20 : signed }),
++			   (fun b -> bitmatch b with  { n : 20 : signed } -> n);
++			   (fun n -> BITSTRING { n : 21 : signed }),
++			   (fun b -> bitmatch b with  { n : 21 : signed } -> n);
++			   (fun n -> BITSTRING { n : 22 : signed }),
++			   (fun b -> bitmatch b with  { n : 22 : signed } -> n);
++			   (fun n -> BITSTRING { n : 23 : signed }),
++			   (fun b -> bitmatch b with  { n : 23 : signed } -> n);
++			   (fun n -> BITSTRING { n : 24 : signed }),
++			   (fun b -> bitmatch b with  { n : 24 : signed } -> n);
++			   (fun n -> BITSTRING { n : 25 : signed }),
++			   (fun b -> bitmatch b with  { n : 25 : signed } -> n);
++			   (fun n -> BITSTRING { n : 26 : signed }),
++			   (fun b -> bitmatch b with  { n : 26 : signed } -> n);
++			   (fun n -> BITSTRING { n : 27 : signed }),
++			   (fun b -> bitmatch b with  { n : 27 : signed } -> n);
++			   (fun n -> BITSTRING { n : 28 : signed }),
++			   (fun b -> bitmatch b with  { n : 28 : signed } -> n);
++			   (fun n -> BITSTRING { n : 29 : signed }),
++			   (fun b -> bitmatch b with  { n : 29 : signed } -> n);
++			   (fun n -> BITSTRING { n : 30 : signed }),
++			   (fun b -> bitmatch b with  { n : 30 : signed } -> n);
++			 ]
++      ) &&
++
++    begin
++      try
++	if Sys.word_size = 32 then
++	  begin
++	    ignore (BITSTRING { max_int : 31 : signed });
++	    ignore (BITSTRING { min_int : 31 : signed });
++	  end
++	else
++	  begin
++	    ignore (BITSTRING { pred (1 lsl 31) : 31 : signed });
++	    ignore (BITSTRING { (-1 lsl 30) : 31 : signed });
++	  end;
++	true
++      with 
++	  _ ->
++	    false;
++    end
++
++  &&
++
++    begin
++      if Sys.word_size = 64 then
++	try
++	  ignore (BITSTRING { 1 lsl 31 : 31 : signed });
++	  ignore (BITSTRING { pred (-1 lsl 30) : 31 : signed });
++	  false
++	with _ -> true
++      else
++	true
++    end
++
++)
++then
++  failwith("t141_signed_int_limits: failed")
++
++
++(* Manquent les tests random pour bits = 31 *)
+Index: t14_signed_byte_match.ml
+===================================================================
+--- t14_signed_byte_match.ml	(revision 0)
++++ t14_signed_byte_match.ml	(revision 202)
+@@ -0,0 +1,27 @@
++let a n =
++  let n' = 1 lsl (pred n) in
++    Array.to_list (Array.init (n' lsl 1) (fun i -> i-n'))
++
++let t s i =
++    List.fold_left 
++      (fun ok n -> s n = n && ok )
++      true
++      (a i);;
++
++let ok = fst (List.fold_left (fun (ok,i) s ->
++		    t s i && ok, succ i) (true, 2)
++[
++  (fun n -> bitmatch BITSTRING { n : 2 : signed } with { i : 2 : signed } -> i | { _ } -> assert false); 
++  (fun n -> bitmatch BITSTRING { n : 3 : signed } with { i : 3 : signed } -> i | { _ } -> assert false);
++  (fun n -> bitmatch BITSTRING { n : 4 : signed } with { i : 4 : signed } -> i | { _ } -> assert false);
++  (fun n -> bitmatch BITSTRING { n : 5 : signed } with { i : 5 : signed } -> i | { _ } -> assert false);
++  (fun n -> bitmatch BITSTRING { n : 6 : signed } with { i : 6 : signed } -> i | { _ } -> assert false);
++  (fun n -> bitmatch BITSTRING { n : 7 : signed } with { i : 7 : signed } -> i | { _ } -> assert false); 
++  (fun n -> bitmatch BITSTRING { n : 8 : signed } with { i : 8 : signed } -> i | { _ } -> assert false);
++])
++
++in
++if not ok then
++  failwith("t13_signed_byte_create: failed")
++
++
+Index: bitstring.ml
+===================================================================
+--- bitstring.ml	(revision 201)
++++ bitstring.ml	(revision 202)
+@@ -161,7 +161,8 @@
+ 
+   (* Create a mask 0-31 bits wide. *)
+   let mask bits =
+-    if bits < 30 then
++    if bits < 30 || 
++      (bits < 32 && Sys.word_size = 64) then
+       (one <<< bits) - 1
+     else if bits = 30 then
+       max_int
+@@ -198,6 +199,19 @@
+     let mask = lnot (mask bits) in
+     (v land mask) = zero
+ 
++  let range_signed v bits =
++    if 
++      v >= zero 
++    then
++      range_unsigned v bits
++    else
++      if
++	bits = 31 && Sys.word_size = 32
++      then
++	v >= min_int		
++      else
++	pred (minus_one <<< pred bits) < v
++
+   (* Call function g on the top bits, then f on each full byte
+    * (big endian - so start at top).
+    *)
+@@ -399,6 +413,16 @@
+ let _get_byte64 data byteoff strlen =
+   if strlen > byteoff then Int64.of_int (Char.code data.[byteoff]) else 0L
+ 
++(* Extend signed [2..31] bits int to 31 bits int or 63 bits int for 64
++   bits platform*)
++let extend_sign len v =
++  let b = pred Sys.word_size - len in
++    (v lsl b) asr b
++
++let extract_and_extend_sign f data off len flen =
++  let w = f data off len flen in
++    extend_sign len w
++
+ (* Extract [2..8] bits.  Because the result fits into a single
+  * byte we don't have to worry about endianness, only signedness.
+  *)
+@@ -429,6 +453,9 @@
+     word (*, off+flen, len-flen*)
+   )
+ 
++let extract_char_signed =
++  extract_and_extend_sign extract_char_unsigned
++
+ (* Extract [9..31] bits.  We have to consider endianness and signedness. *)
+ let extract_int_be_unsigned data off len flen =
+   let byteoff = off lsr 3 in
+@@ -472,21 +499,33 @@
+     ) in
+   word (*, off+flen, len-flen*)
+ 
++let extract_int_be_signed =
++  extract_and_extend_sign extract_int_be_unsigned
++
+ let extract_int_le_unsigned data off len flen =
+   let v = extract_int_be_unsigned data off len flen in
+   let v = I.byteswap v flen in
+   v
+ 
++let extract_int_le_signed =
++  extract_and_extend_sign extract_int_le_unsigned
++
+ let extract_int_ne_unsigned =
+   if nativeendian = BigEndian
+   then extract_int_be_unsigned
+   else extract_int_le_unsigned
+ 
++let extract_int_ne_signed = 
++  extract_and_extend_sign extract_int_ne_unsigned
++
+ let extract_int_ee_unsigned = function
+   | BigEndian -> extract_int_be_unsigned
+   | LittleEndian -> extract_int_le_unsigned
+   | NativeEndian -> extract_int_ne_unsigned
+ 
++let extract_int_ee_signed e =
++  extract_and_extend_sign (extract_int_ee_unsigned e)
++
+ let _make_int32_be c0 c1 c2 c3 =
+   Int32.logor
+     (Int32.logor
+@@ -896,30 +935,53 @@
+   else
+     Buffer._add_bits buf v flen
+ 
+-(* Construct a field of up to 31 bits. *)
+-let construct_int_be_unsigned buf v flen exn =
+-  (* Check value is within range. *)
+-  if not (I.range_unsigned v flen) then raise exn;
+-  (* Add the bytes. *)
+-  I.map_bytes_be (Buffer._add_bits buf) (Buffer.add_byte buf) v flen
++let construct_char_signed buf v flen exn =
++  let max_val = 1 lsl flen 
++  and min_val = - (1 lsl pred flen) in
++    if v < min_val || v >= max_val then
++	raise exn;
++    if flen = 8 then
++      Buffer.add_byte buf (if v >= 0 then v else 256 + v)
++    else 
++      Buffer._add_bits buf v flen
+ 
+ (* Construct a field of up to 31 bits. *)
+-let construct_int_le_unsigned buf v flen exn =
+-  (* Check value is within range. *)
+-  if not (I.range_unsigned v flen) then raise exn;
+-  (* Add the bytes. *)
+-  I.map_bytes_le (Buffer._add_bits buf) (Buffer.add_byte buf) v flen
++let construct_int check_func map_func buf v flen exn =
++  if not (check_func v flen) then raise exn;
++  map_func (Buffer._add_bits buf) (Buffer.add_byte buf) v flen
+ 
++let construct_int_be_unsigned =
++  construct_int I.range_unsigned I.map_bytes_be
++
++let construct_int_be_signed =
++  construct_int I.range_signed I.map_bytes_be
++
++let construct_int_le_unsigned =
++  construct_int I.range_unsigned I.map_bytes_le
++
++let construct_int_le_signed =
++  construct_int I.range_signed I.map_bytes_le
++
+ let construct_int_ne_unsigned =
+   if nativeendian = BigEndian
+   then construct_int_be_unsigned
+   else construct_int_le_unsigned
+ 
++let construct_int_ne_signed =
++  if nativeendian = BigEndian
++  then construct_int_be_signed
++  else construct_int_le_signed
++
+ let construct_int_ee_unsigned = function
+   | BigEndian -> construct_int_be_unsigned
+   | LittleEndian -> construct_int_le_unsigned
+   | NativeEndian -> construct_int_ne_unsigned
+ 
++let construct_int_ee_signed = function
++  | BigEndian -> construct_int_be_signed
++  | LittleEndian -> construct_int_le_signed
++  | NativeEndian -> construct_int_ne_signed
++
+ (* Construct a field of exactly 32 bits. *)
+ let construct_int32_be_unsigned buf v flen _ =
+   Buffer.add_byte buf
+Index: t13_signed_byte_create.ml
+===================================================================
+--- t13_signed_byte_create.ml	(revision 0)
++++ t13_signed_byte_create.ml	(revision 202)
+@@ -0,0 +1,26 @@
++let a n =
++  let n' = 1 lsl (pred n) in
++     Array.to_list (Array.init n' (fun i -> -(n'-i), n'+i)) @
++      Array.to_list (Array.init (n' lsl 1) (fun i -> i,i));;
++
++let t s i =
++    List.fold_left 
++      (fun ok (n,c) -> s n =  String.make 1 (Char.chr (c lsl (8-i))) && ok )
++      true
++      (a i);;
++
++let ok = fst (List.fold_left (fun (ok,i) s ->
++		    t s i && ok, succ i) (true, 2)
++  [
++    (fun i -> Bitstring.string_of_bitstring (BITSTRING { i : 2 : signed }));
++    (fun i -> Bitstring.string_of_bitstring (BITSTRING { i : 3 : signed }));
++    (fun i -> Bitstring.string_of_bitstring (BITSTRING { i : 4 : signed }));
++    (fun i -> Bitstring.string_of_bitstring (BITSTRING { i : 5 : signed }));
++    (fun i -> Bitstring.string_of_bitstring (BITSTRING { i : 6 : signed }));
++    (fun i -> Bitstring.string_of_bitstring (BITSTRING { i : 7 : signed }));
++    (fun i -> Bitstring.string_of_bitstring (BITSTRING { i : 8 : signed }));
++  ])
++
++in
++if not ok then
++  failwith("t13_signed_byte_create: failed")

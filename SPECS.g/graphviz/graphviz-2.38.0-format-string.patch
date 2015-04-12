@@ -1,0 +1,13 @@
+diff --git a/lib/cgraph/scan.l b/lib/cgraph/scan.l
+index 87db5d4..4edda50 100644
+--- a/lib/cgraph/scan.l
++++ b/lib/cgraph/scan.l
+@@ -225,7 +225,7 @@ void yyerror(char *str)
+ 	agxbput (&xb, buf);
+ 	agxbput (&xb, yytext);
+ 	agxbput (&xb,"'\n");
+-	agerr(AGERR,agxbuse(&xb));
++	agerr(AGERR, "%s", agxbuse(&xb));
+ 	agxbfree(&xb);
+ }
+ /* must be here to see flex's macro defns */

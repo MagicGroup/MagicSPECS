@@ -1,0 +1,12 @@
+diff -up openbabel-75414ad4e043f16ba72ae51c7ca60f448576688d/CMakeLists.txt.plugindir openbabel-75414ad4e043f16ba72ae51c7ca60f448576688d/CMakeLists.txt
+--- openbabel-75414ad4e043f16ba72ae51c7ca60f448576688d/CMakeLists.txt.plugindir	2015-02-07 21:42:44.431479900 +0100
++++ openbabel-75414ad4e043f16ba72ae51c7ca60f448576688d/CMakeLists.txt	2015-02-07 21:43:29.000429326 +0100
+@@ -266,7 +266,7 @@ if(NOT MSVC)
+     }
+    " SCANDIR_NEEDS_CONST)
+ 
+-  set(OB_MODULE_PATH "${CMAKE_INSTALL_PREFIX}/${OB_PLUGIN_INSTALL_DIR}"
++  set(OB_MODULE_PATH "${OB_PLUGIN_INSTALL_DIR}"
+       CACHE PATH "Set to system install for bindings only build")
+   add_definitions(-DOB_MODULE_PATH="\\"${OB_MODULE_PATH}\\"")
+ 

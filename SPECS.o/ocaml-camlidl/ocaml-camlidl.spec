@@ -2,8 +2,9 @@
 
 Name:           ocaml-camlidl
 Version:        1.05
-Release:        24%{?dist}
+Release:        25%{?dist}
 Summary:        Stub code generator and COM binding for Objective Caml
+Summary(zh_CN.UTF-8): OCaml 的 COM 绑定和 Stub 代码生成器
 License:        QPL and LGPLv2 with exceptions
 
 URL:            http://caml.inria.fr/pub/old_caml_site/camlidl/
@@ -37,10 +38,14 @@ CamlIDL comprises two parts:
   components in Caml applications, and export Caml code as COM
   components.
 
+%description -l zh_CN.UTF-8
+OCaml 的 COM 绑定和 Stub 代码生成器。
 
 %package        devel
 Summary:        Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       %{name} = %{version}-%{release}
 
 
@@ -48,6 +53,8 @@ Requires:       %{name} = %{version}-%{release}
 The %{name}-devel package contains libraries and signature files for
 developing applications that use %{name}.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q -n camlidl-%{version}
@@ -97,7 +104,7 @@ sed 's/@VERSION@/%{version}/' < %{SOURCE2} > $RPM_BUILD_ROOT/%{_libdir}/ocaml/ME
 make OCAMLLIB=$RPM_BUILD_ROOT/%{_libdir}/ocaml \
      BINDIR=$RPM_BUILD_ROOT/%{_bindir} \
      install
-
+magic_rpm_clean.sh
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -125,6 +132,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Thu Mar 05 2015 Liu Di <liudidi@gmail.com> - 1.05-25
+- 为 Magic 3.0 重建
+
 * Fri Jun 20 2014 Liu Di <liudidi@gmail.com> - 1.05-24
 - 为 Magic 3.0 重建
 

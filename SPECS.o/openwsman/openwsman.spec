@@ -16,12 +16,14 @@ BuildRequires:  perl-devel pkgconfig openssl-devel
 #BuildRequires: java-1.8.0-openjdk-devel
 BuildRequires:  cmake
 BuildRequires:  systemd-units
-Version:        2.4.6
-Release:        3%{?dist}
+Version: 2.4.14
+Release: 1%{?dist}
 Url:            http://www.openwsman.org/
 License:        BSD
 Group:          Applications/System
+Group(zh_CN.UTF-8): 应用程序/系统
 Summary:        Open source Implementation of WS-Management
+Summary(zh_CN.UTF-8): WS-Management 的开发源实现 
 Source:         https://github.com/Openwsman/openwsman/archive/v%{version}.tar.gz
 # help2man generated manpage for openwsmand binary
 Source1:        openwsmand.8.gz
@@ -41,26 +43,31 @@ is based on a suite of web services specifications and usage
 requirements that exposes a set of operations focused on and covers
 all system management aspects.
 
-
+%description -l zh_CN.UTF-8
+Web 服务管理的开源实现。
 
 
 %package -n libwsman1
 License:        BSD
 Group:          System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 Summary:        Open source Implementation of WS-Management
+Summary(zh_CN.UTF-8): %{name} 的运行库
 Provides:       %{name} = %{version}-%{release}
 Obsoletes:      %{name} < %{version}-%{release}
 
 %description -n libwsman1
 Openwsman library for packages dependent on openwsman
 
-
-
+%description -n libwsman1 -l zh_CN.UTF-8
+%{name} 的运行库。
 
 %package -n libwsman-devel
 License:        BSD
 Group:          Development/Libraries
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Summary:        Open source Implementation of WS-Management
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Provides:       %{name}-devel = %{version}-%{release}
 Obsoletes:      %{name}-devel < %{version}-%{release}
 Requires:       libwsman1 = %{version}-%{release}
@@ -72,39 +79,46 @@ Requires:       libcurl-devel
 %description -n libwsman-devel
 Development files for openwsman
 
-
+%description -n libwsman-devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %package client
 License:        BSD
 Group:          System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 Summary:        Openwsman Client libraries
+Summary(zh_CN.UTF-8): %{name} 的客户端运行库
 
 %description client
 Openwsman Client libraries
 
-
-
+%description client -l zh_CN.UTF-8
+%{name} 的客户端运行库。
 
 %package server
 License:        BSD
 Group:          System Environment/Daemons
+Group(zh_CN.UTF-8): 系统环境/服务
 Requires:       net-tools
 Requires(post):       chkconfig
 Requires(preun):      chkconfig
 Requires(postun):     initscripts
 Summary:        Openwsman Server and service libraries
+Summary(zh_CN.UTF-8): %{name} 的服务端和服务端运行库
 Requires:       libwsman1 = %{version}-%{release}
 
 %description server
 Openwsman Server and service libraries
 
-
-
+%description server -l zh_CN.UTF-8
+%{name} 的服务端和服务端运行库。
 
 %package python
 License:        BSD
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Summary:        Python bindings for openwsman client API
+Summary(zh_CN.UTF-8): %{name} 的 Python 绑定
 Requires:       python
 Requires:       libwsman1 = %{version}-%{release}
 
@@ -112,51 +126,66 @@ Requires:       libwsman1 = %{version}-%{release}
 This package provides Python bindings to access the openwsman client
 API.
 
-
-
+%description python -l zh_CN.UTF-8
+%{name} 的 Python 绑定。
 
 %package -n rubygem-%{gem_name}
 License:        BSD
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Summary:        Ruby client bindings for Openwsman
+Summary(zh_CN.UTF-8): %{name} 的 Ruby 客户端绑定
 Obsoletes:      %{name}-ruby < %{version}-%{release}
 
 %description -n rubygem-%{gem_name}
 The openwsman gem provides a Ruby API to manage systems using
 the WS-Management protocol.
 
+%description -n rubygem-%{gem_name} -l zh_CN.UTF-8
+%{name} 的 Ruby 客户端绑定。
+
 %package -n rubygem-%{gem_name}-doc
 Summary: Documentation for %{name}
+Summary(zh_CN.UTF-8): %{name} 的文档
 Group: Documentation
+Group(zh_CN.UTF-8): 文档
 Requires: rubygem-%{gem_name} = %{version}-%{release}
 BuildArch: noarch
 
 %description -n rubygem-%{gem_name}-doc
 Documentation for rubygem-%{gem_name}
 
+%description -n rubygem-%{gem_name}-doc -l zh_CN.UTF-8
+%{name} 的文档。
 
-#%package java
-#Requires:      java
-#Requires:      libwsman1 = %{version}
-#Summary:       Java bindings for openwsman client API
-#Group:          Development/Libraries
+%package java
+Requires:      java
+Requires:      libwsman1 = %{version}
+Summary:       Java bindings for openwsman client API
+Summary(zh_CN.UTF-8): openwsman 客户端 API 的 JAVA 绑定
+Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 
-#%description java
-#This package provides Java bindings to access the openwsman client API.
+%description java
+This package provides Java bindings to access the openwsman client API.
 
-
+%description java -l zh_CN.UTF-8
+openwsman 客户端 API 的 JAVA 绑定。
 
 %package perl
 License:        BSD
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
 Summary:        Perl bindings for openwsman client API
+Summary(zh_CN.UTF-8): %{name} 的 Perl 绑定
 Requires:       libwsman1 = %{version}-%{release}
 
 %description perl
 This package provides Perl bindings to access the openwsman client API.
 
-
+%description perl -l zh_CN.UTF-8
+%{name} 的 Perl 绑定。
 
 
 %prep
@@ -199,7 +228,9 @@ export LIBRARY_PATH=/builddir/build/BUILD/%{name}-%{version}/build/src/lib
 export CPATH=/builddir/build/BUILD/%{name}-%{version}/include/
 export LD_LIBRARY_PATH=/builddir/build/BUILD/%{name}-%{version}/build/src/lib/
 
+%if 0%{?RUBY}
 %gem_install -n ./bindings/ruby/%{name}-%{version}.gem
+%endif
 
 %install
 cd build
@@ -229,6 +260,7 @@ install -m 644 include/wsman-xml.h %{buildroot}/%{_includedir}/openwsman
 install -m 644 include/wsman-xml-binding.h %{buildroot}/%{_includedir}/openwsman
 install -m 644 include/wsman-dispatcher.h %{buildroot}/%{_includedir}/openwsman
 
+%if 0%{?RUBY}
 mkdir -p %{buildroot}%{gem_dir}
 cp -pa ./build%{gem_dir}/* \
         %{buildroot}%{gem_dir}/
@@ -237,7 +269,8 @@ rm -rf %{buildroot}%{gem_instdir}/ext
 
 mkdir -p %{buildroot}%{gem_extdir_mri}
 cp -a ./build%{gem_extdir_mri}/{gem.build_complete,*.so} %{buildroot}%{gem_extdir_mri}/
-
+%endif
+magic_rpm_clean.sh
 
 %post -n libwsman1 -p /sbin/ldconfig
 
@@ -278,6 +311,7 @@ rm -f /var/log/wsmand.log
 %{python_sitearch}/*.pyo
 %doc AUTHORS COPYING ChangeLog README.md
 
+%if 0%{?RUBY}
 %files -n rubygem-%{gem_name}
 %doc AUTHORS COPYING ChangeLog README.md
 %dir %{gem_instdir}
@@ -288,10 +322,11 @@ rm -f /var/log/wsmand.log
 
 %files -n rubygem-%{gem_name}-doc
 %doc %{gem_docdir}
+%endif
 
-#%files java
-#%defattr(-,root,root)
-#%{_javadir}/*jar
+%files java
+%defattr(-,root,root)
+%{_javadir}/*jar
 
 
 %files perl
@@ -328,6 +363,9 @@ rm -f /var/log/wsmand.log
 
 
 %changelog
+* Fri Apr 03 2015 Liu Di <liudidi@gmail.com> - 2.4.14-1
+- 更新到 2.4.14
+
 * Fri Jun 20 2014 Liu Di <liudidi@gmail.com> - 2.4.6-3
 - 为 Magic 3.0 重建
 

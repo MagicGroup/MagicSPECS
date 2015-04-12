@@ -2,8 +2,9 @@
 
 Name:           ocaml-json-wheel
 Version:        1.0.6
-Release:        15%{?dist}
+Release:        16%{?dist}
 Summary:        OCaml library for parsing JSON
+Summary(zh_CN.UTF-8): 解析 JSON 的 OCaml 库
 License:        BSD
 
 URL:            http://martin.jambon.free.fr/json-wheel.html
@@ -25,9 +26,12 @@ JSON library for OCaml following RFC 4627.
 If you use this library, consider installing ocaml-json-static, the
 syntax extension to the language which makes using JSON much easier.
 
+%description -l zh_CN.UTF-8
+解析 JSON 的 OCaml 库。
 
 %package        devel
 Summary:        Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Requires:       %{name} = %{version}-%{release}
 
 
@@ -35,6 +39,8 @@ Requires:       %{name} = %{version}-%{release}
 The %{name}-devel package contains libraries and signature files for
 developing applications that use %{name}.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q -n json-wheel-%{version}
@@ -56,7 +62,7 @@ mkdir -p $OCAMLFIND_DESTDIR $OCAMLFIND_DESTDIR/stublibs
 mkdir -p $RPM_BUILD_ROOT%{_bindir}
 
 make BINDIR=$RPM_BUILD_ROOT%{_bindir} install
-
+magic_rpm_clean.sh
 
 %files
 %doc LICENSE
@@ -87,6 +93,9 @@ make BINDIR=$RPM_BUILD_ROOT%{_bindir} install
 
 
 %changelog
+* Fri Mar 06 2015 Liu Di <liudidi@gmail.com> - 1.0.6-16
+- 为 Magic 3.0 重建
+
 * Fri Jun 20 2014 Liu Di <liudidi@gmail.com> - 1.0.6-15
 - 为 Magic 3.0 重建
 

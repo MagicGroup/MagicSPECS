@@ -1,0 +1,30 @@
+diff -up ntp-4.2.6p5/html/miscopt.html.logdefault ntp-4.2.6p5/html/miscopt.html
+--- ntp-4.2.6p5/html/miscopt.html.logdefault	2009-12-09 08:36:36.000000000 +0100
++++ ntp-4.2.6p5/html/miscopt.html	2014-01-03 15:08:11.947681966 +0100
+@@ -56,11 +56,11 @@
+ 			<dd>While not strictly a security function, the Autokey protocol provides means to securely retrieve the current or updated leapsecond values from a server.</dd>
+ 			<dt id="logconfig"><tt>logconfig <i>configkeyword</i></tt></dt>
+ 			<dd>This command controls the amount and type of output written to the system <tt>syslog</tt> facility or the alternate <tt>logfile</tt> log file. All <i><tt>configkeyword</tt></i> keywords can be prefixed with <tt>=</tt>, <tt>+</tt> and <tt>-</tt>, where <tt>=</tt> sets the <tt>syslogmask</tt>, <tt>+</tt> adds and <tt>-</tt> removes messages. <tt>syslog messages</tt> can be controlled in four classes (<tt>clock</tt>, <tt>peer</tt>, <tt>sys</tt> and <tt>sync</tt>). Within these classes four types of messages can be controlled: informational messages (<tt>info</tt>), event messages (<tt>events</tt>), statistics messages (<tt>statistics</tt>) and status messages (<tt>status</tt>).</dd>
+-				<dd>Configuration keywords are formed by concatenating the message class with the event class. The <tt>all</tt> prefix can be used instead of a message class. A message class may also be followed by the <tt>all</tt> keyword to enable/disable all messages of the respective message class. By default, <tt>logconfig</tt> output is set to <tt>allsync</tt>.</dd>
++				<dd>Configuration keywords are formed by concatenating the message class with the event class. The <tt>all</tt> prefix can be used instead of a message class. A message class may also be followed by the <tt>all</tt> keyword to enable/disable all messages of the respective message class. By default, <tt>logconfig</tt> output is set to <tt>=syncall +sysevents +sysstatus</tt>.</dd>
+ 				<dd>Thus, a minimal log configuration could look like this:</dd>
+-				<dd><tt>logconfig=syncstatus +sysevents</tt></dd>
++				<dd><tt>logconfig =syncstatus +sysevents</tt></dd>
+ 						<dd>This would just list the synchronizations state of <tt>ntpd</tt> and the major system events. For a simple reference server, the following minimum message configuration could be useful:</dd>
+-				<dd><tt>logconfig allsync +allclock</tt></dd>
++				<dd><tt>logconfig =syncall +clockall</tt></dd>
+ 				<dd>This configuration will list all clock information and synchronization information. All other events and messages about peers, system events and so on is suppressed.</dd>
+ 			<dt id="logfile"><tt>logfile <i>logfile</i></tt></dt>
+ 			<dd>This command specifies the location of an alternate log file to be used instead of the default system <tt>syslog</tt> facility. This is the same operation as the <tt>-l </tt>command line option.</dd>
+diff -up ntp-4.2.6p5/ntpd/ntp_config.c.logdefault ntp-4.2.6p5/ntpd/ntp_config.c
+--- ntp-4.2.6p5/ntpd/ntp_config.c.logdefault	2011-12-01 03:55:17.000000000 +0100
++++ ntp-4.2.6p5/ntpd/ntp_config.c	2014-01-03 15:05:44.293553494 +0100
+@@ -3835,7 +3835,7 @@ getconfig(
+ 
+ #endif /* SYS_WINNT */
+ 	res_fp = NULL;
+-	ntp_syslogmask = NLOG_SYNCMASK; /* set more via logconfig */
++	ntp_syslogmask = NLOG_SYNCMASK | NLOG_SYSEVENT | NLOG_SYSSTATUS; /* set more via logconfig */
+ 
+ 	/*
+ 	 * install a non default variable with this daemon version

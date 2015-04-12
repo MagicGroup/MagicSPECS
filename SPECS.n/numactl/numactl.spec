@@ -1,17 +1,14 @@
 Name:		numactl
 Summary:	Library for tuning for Non Uniform Memory Access machines
-Version:	2.0.7
-Release:	8%{dist} 
+Summary(zh_CN.UTF-8): 调整非一致内存访问机的库
+Version: 2.0.10
+Release: 1%{?dist}
 License:	LGPLv2/GPLv2
 Group:		System Environment/Base
+Group(zh_CN.UTF-8): 系统环境/基本
 URL:		ftp://oss.sgi.com/www/projects/libnuma/download
 Source0:	ftp://oss.sgi.com/www/projects/libnuma/download/numactl-%{version}.tar.gz
 Buildroot:	%{_tmppath}/%{name}-buildroot
-
-Patch1: numactl-2.0.3-rc3-no-nodes-warning.patch
-Patch2: numactl-2.0.7-manpages.patch
-Patch3: numactl-2.0.7-numademo-alloc.patch
-Patch4: numactl-2.0.7-numademo-msize-check.patch
 
 ExcludeArch: s390 s390x %{arm}
 
@@ -19,52 +16,49 @@ ExcludeArch: s390 s390x %{arm}
 Simple NUMA policy support. It consists of a numactl program to run
 other programs with a specific NUMA policy.
 
+%description -l zh_CN.UTF-8
+调整非一致内存访问机的库。
+
 %package libs
 Summary: libnuma libraries
+Summary(zh_CN.UTF-8): %{name} 的运行库
 Group: System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 
 %description libs
 numactl-libs provides libnuma, a library to do allocations with
 NUMA policy in applications.
 
+%description libs -l zh_CN.UTF-8
+%{name} 的运行库。
+
 %package devel
 Summary: Development package for building Applications that use numa
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: System Environment/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: %{name}-libs = %{version}-%{release}
 
 %description devel
 Provides development headers for numa library calls
 
-%package compat
-Summary: Library for tuning for Non Uniform Memory Access machines
-Obsoletes: numactl < 2.0.7-5
-
-Requires:  numactl = 2.0.7-5
-Requires:  numactl-libs = 2.0.7-5
-
-%description compat
-This package only exists to help transition numactl users to the new
-package split. It will be removed after one distribution release cycle, please
-do not reference it or depend on it in any way.
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q -n %{name}-%{version}
-%patch1 -p1
-%patch2 -p1
-%patch3 -p1
-%patch4 -p1
 
 %build
+./autogen.sh
+./configure --prefix=/usr --libdir=%{_libdir}
+make clean
 make CFLAGS="$RPM_OPT_FLAGS -I."
 
 %install
 rm -rf $RPM_BUILD_ROOT
-mkdir -p $RPM_BUILD_ROOT%{_bindir}
-mkdir -p $RPM_BUILD_ROOT%{_libdir}
-mkdir -p $RPM_BUILD_ROOT%{_includedir}
-mkdir -p $RPM_BUILD_ROOT%{_mandir}/man8
 
-make prefix=$RPM_BUILD_ROOT/usr libdir=$RPM_BUILD_ROOT/%{_libdir} install
+make DESTDIR=$RPM_BUILD_ROOT install
+
 magic_rpm_clean.sh
 
 %clean
@@ -78,6 +72,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(-,root,root,-)
+%doc README
 %{_bindir}/numactl
 %{_bindir}/numademo
 %{_bindir}/numastat
@@ -85,21 +80,27 @@ rm -rf $RPM_BUILD_ROOT
 %{_bindir}/migspeed
 %{_bindir}/migratepages
 %{_mandir}/man8/*.8*
+%exclude %{_mandir}/man2/*.2*
 
 %files libs
 %defattr(-,root,root,-)
+%{_libdir}/libnuma.so.1.0.0
 %{_libdir}/libnuma.so.1
 
 %files devel
 %defattr(-,root,root,-)
 %{_libdir}/libnuma.so
 %exclude %{_libdir}/libnuma.a
+%exclude %{_libdir}/libnuma.la
 %{_includedir}/numa.h
 %{_includedir}/numaif.h
 %{_includedir}/numacompat1.h
 %{_mandir}/man3/*.3*
 
 %changelog
+* Sat Feb 28 2015 Liu Di <liudidi@gmail.com> - 2.0.10-1
+- 更新到 2.0.10
+
 * Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 2.0.7-8
 - 为 Magic 3.0 重建
 

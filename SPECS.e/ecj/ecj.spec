@@ -1,19 +1,19 @@
 Epoch: 1
 
-%global qualifier R-4.4-201406061215
+%global qualifier R-4.4.1-201409250400
 
 Summary: Eclipse Compiler for Java
 Name: ecj
-Version: 4.4.0
+Version: 4.4.1
 Release: 2%{?dist}
 URL: http://www.eclipse.org
 License: EPL
 Group: Development/Languages
-Source0: http://download.eclipse.org/eclipse/downloads/drops4/%{qualifier}/%{name}src-4.4.jar
+Source0: http://download.eclipse.org/eclipse/downloads/drops4/%{qualifier}/%{name}src-%{version}.jar
 Source1: ecj.sh.in
 #Patched from http://central.maven.org/maven2/org/eclipse/jdt/core/compiler/ecj/4.4/ecj-4.4.pom 
 # No dependencies are needed for ecj, dependencies are for using of jdt.core which makes no sense outside of eclipse
-Source3: ecj-4.4.pom
+Source3: ecj-4.4.1.pom
 Source4: ecj.1
 Source5: http://git.eclipse.org/c/jdt/eclipse.jdt.core.git/plain/org.eclipse.jdt.core/scripts/binary/META-INF/MANIFEST.MF
 # Always generate debug info when building RPMs (Andrew Haley)
@@ -81,16 +81,17 @@ install -pm 644 pom.xml \
 
 %files -f .mfiles
 %doc about.html
-%{_mavenpomdir}/JPP-%{name}.pom
 %{_bindir}/%{name}
-%{_javadir}/%{name}.jar
 %{_javadir}/eclipse-%{name}.jar
 %{_javadir}/jdtcore.jar
 %{_mandir}/man1/ecj.1.gz
 
 %changelog
-* Tue Aug 12 2014 Liu Di <liudidi@gmail.com> - 1:4.4.0-2
+* Thu Feb 26 2015 Liu Di <liudidi@gmail.com> - 1:4.4.1-2
 - 为 Magic 3.0 重建
+
+* Thu Jan 8 2015 Alexander Kurtakov <akurtako@redhat.com> 1:4.4.1-1
+- Update to 4.4.1.
 
 * Thu Jul 3 2014 Alexander Kurtakov <akurtako@redhat.com> 1:4.4.0-1
 - Update to 4.4 final.

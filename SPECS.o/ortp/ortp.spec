@@ -1,5 +1,5 @@
 Name:           ortp
-Version:	0.23.0
+Version:	0.24.0
 Release:        1%{?dist}
 Summary:        A C library implementing the RTP protocol (RFC3550)
 Summary(zh_CN.UTF-8): RTP 协议的 C 库实现
@@ -9,7 +9,7 @@ Group:          System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
 License:        LGPLv2+ and VSL
 URL:            http://www.linphone.org/eng/documentation/dev/ortp.html
-Source:         http://download.savannah.gnu.org/releases/linphone/ortp/%{name}-%{version}.tar.gz
+Source:         http://download.savannah.gnu.org/releases/linphone/ortp/sources/%{name}-%{version}.tar.gz
 
 Patch1:		ortp-0.23.0-libzrtpcpp.patch
 
@@ -49,7 +49,7 @@ Libraries and headers required to develop software with ortp.
 
 %prep
 %setup0 -q
-%patch1 -p1
+#%patch1 -p1
 
 autoreconf -i -f
 
@@ -94,6 +94,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_docdir}/*
 
 %changelog
+* Tue Mar 31 2015 Liu Di <liudidi@gmail.com> - 1:0.24.0-1
+- 更新到 0.24.0
+
 * Mon Jun 23 2014 Liu Di <liudidi@gmail.com> - 1:0.23.0-1
 - 更新到 0.23.0
 

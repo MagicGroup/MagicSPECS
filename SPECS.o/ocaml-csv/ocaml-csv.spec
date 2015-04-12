@@ -1,13 +1,14 @@
 %global opt %(test -x %{_bindir}/ocamlopt && echo 1 || echo 0)
 
 Name:           ocaml-csv
-Version:        1.3.1
-Release:        3%{?dist}
+Version: 1.3.3
+Release: 1%{?dist}
 Summary:        OCaml library for reading and writing CSV files
+Summary(zh_CN.UTF-8): 读写 CSV 文件的 OCaml 库
 License:        LGPLv2+
 
 URL:            https://forge.ocamlcore.org/projects/csv/
-Source0:        https://forge.ocamlcore.org/frs/download.php/1235/csv-%{version}.tar.gz
+Source0:        https://forge.ocamlcore.org/frs/download.php/1376/csv-%{version}.tar.gz
 
 ExcludeArch:    sparc64 s390 s390x
 
@@ -26,9 +27,12 @@ fields, quote-0 etc.
 The library comes with a handy command line tool called csvtool for
 handling CSV files from shell scripts.
 
+%description -l zh_CN.UTF-8
+读写 CSV 文件的 OCaml 库。
 
 %package        devel
 Summary:        Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Requires:       %{name} = %{version}-%{release}
 
 
@@ -36,6 +40,8 @@ Requires:       %{name} = %{version}-%{release}
 The %{name}-devel package contains libraries and signature files for
 developing applications that use %{name}.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q -n csv-%{version}
@@ -57,7 +63,7 @@ make install
 mkdir -p $DESTDIR%{_bindir}
 install -m 0755 csvtool.native $DESTDIR%{_bindir}/csvtool
 %endif
-
+magic_rpm_clean.sh
 
 %check
 make test
@@ -88,6 +94,9 @@ make test
 
 
 %changelog
+* Thu Mar 05 2015 Liu Di <liudidi@gmail.com> - 1.3.3-1
+- 更新到 1.3.3
+
 * Fri Jun 20 2014 Liu Di <liudidi@gmail.com> - 1.3.1-3
 - 为 Magic 3.0 重建
 

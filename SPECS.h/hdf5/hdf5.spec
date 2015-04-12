@@ -7,7 +7,7 @@
 # You need to recompile all users of HDF5 for each version change
 Name: hdf5
 Version: 1.8.14
-Release: 4%{?dist}
+Release: 5%{?dist}
 Summary: A general purpose library and file format for storing scientific data
 License: BSD
 Group: System Environment/Libraries
@@ -409,6 +409,15 @@ done
 
 
 %changelog
+* Thu Apr 02 2015 Liu Di <liudidi@gmail.com> - 1.8.14-5
+- 为 Magic 3.0 重建
+
+* Thu Apr 02 2015 Liu Di <liudidi@gmail.com> - 1.8.14-4
+- 更新到 1.8.14
+
+* Thu Apr 02 2015 Liu Di <liudidi@gmail.com> - 1.8.14-4
+- 更新到 1.8.14
+
 * Thu Jan 01 2015 Liu Di <liudidi@gmail.com> - 1.8.14-4
 - 更新到 1.8.14
 

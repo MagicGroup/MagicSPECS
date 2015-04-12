@@ -16,8 +16,8 @@
 %endif
 
 Name:           ocaml
-Version:        4.01.0
-Release:        20%{?dist}
+Version: 4.02.1
+Release: 1%{?dist}
 
 Summary:        OCaml compiler and programming environment
 
@@ -25,10 +25,11 @@ License:        QPL and (LGPLv2+ with exceptions)
 
 URL:            http://www.ocaml.org
 
-Source0:        http://caml.inria.fr/pub/distrib/ocaml-4.01/ocaml-%{version}.tar.gz
-Source1:        http://caml.inria.fr/pub/distrib/ocaml-4.01/ocaml-4.01-refman-html.tar.gz
-Source2:        http://caml.inria.fr/pub/distrib/ocaml-4.01/ocaml-4.01-refman.pdf
-Source3:        http://caml.inria.fr/pub/distrib/ocaml-4.01/ocaml-4.01-refman.info.tar.gz
+%define majorver %(echo %{version} | awk -F. '{print $1"."$2}')
+Source0:        http://caml.inria.fr/pub/distrib/ocaml-%{majorver}/ocaml-%{version}.tar.gz
+Source1:        http://caml.inria.fr/pub/distrib/ocaml-%{majorver}/ocaml-%{majorver}-refman-html.tar.gz
+Source2:        http://caml.inria.fr/pub/distrib/ocaml-%{majorver}/ocaml-%{majorver}-refman.pdf
+Source3:        http://caml.inria.fr/pub/distrib/ocaml-%{majorver}/ocaml-%{majorver}-refman.info.tar.gz
 
 # IMPORTANT NOTE:
 #
@@ -43,28 +44,21 @@ Source3:        http://caml.inria.fr/pub/distrib/ocaml-4.01/ocaml-4.01-refman.in
 # existing patches unchanged) adding a comment to note that it should
 # be incorporated into the git repo at a later time.
 #
-Patch0001:      0001-Add-.gitignore-file-to-ignore-generated-files.patch
+Patch0001:      0001-Don-t-ignore-.-configure-it-s-a-real-git-file.patch
 Patch0002:      0002-Ensure-empty-compilerlibs-directory-is-created-by-gi.patch
-Patch0003:      0003-ocamlbyteinfo-ocamlplugininfo-Useful-utilities-from-.patch
-Patch0004:      0004-Don-t-add-rpaths-to-libraries.patch
+Patch0003:      0003-Don-t-add-rpaths-to-libraries.patch
+Patch0004:      0004-ocamlbyteinfo-ocamlplugininfo-Useful-utilities-from-.patch
 Patch0005:      0005-configure-Allow-user-defined-C-compiler-flags.patch
 Patch0006:      0006-Add-support-for-ppc64.patch
-Patch0007:      0007-yacc-Use-mkstemp-instead-of-mktemp.patch
-
-# Aarch64 patches.
-Patch0008:      0008-Port-to-the-ARM-64-bits-AArch64-architecture-experim.patch
-Patch0009:      0009-Updated-with-latest-versions-from-FSF.patch
-Patch0010:      0010-arm64-Align-code-and-data-to-8-bytes.patch
-
-# NON-upstream patch to allow '--flag=arg' as an alternative to '--flag arg'.
+Patch0007:      0007-ppc64-Update-for-OCaml-4.02.0.patch
+Patch0008:      0008-Add-support-for-ppc64le.patch
+Patch0009:      0009-ppc64le-Update-for-OCaml-4.02.0.patch
+Patch0010:      0010-arm-arm64-Mark-stack-as-non-executable.patch
 Patch0011:      0011-arg-Add-no_arg-and-get_arg-helper-functions.patch
 Patch0012:      0012-arg-Allow-flags-such-as-flag-arg-as-well-as-flag-arg.patch
-
-# ppc64le support (Michel Normand).
-Patch0013:      0013-Add-support-for-ppc64le.patch
-
-# ARM & Aarch64 non-executable stack.
-Patch0014:      0014-arm-arm64-Mark-stack-as-non-executable.patch
+Patch0013:      0013-PR-6517-use-ISO-C99-types-u-int-32-64-_t-in-preferen.patch
+Patch0014:      0014-ppc-ppc64-ppc64le-Mark-stack-as-non-executable.patch
+Patch0015:      0015-ppc64-ppc64le-proc-Interim-definitions-for-op_is_pur.patch
 
 # Temporary, we can drop this explicit BR in June 2014:
 BuildRequires:  ocaml-srpm-macros
@@ -145,56 +139,6 @@ Requires:       libX11-devel
 X11 support for OCaml.
 
 
-%package labltk
-Summary:        Tk bindings for OCaml
-Requires:       ocaml-runtime = %{version}-%{release}
-
-%description labltk
-Labltk is a library for interfacing OCaml with the scripting language
-Tcl/Tk.
-
-This package contains the runtime files.
-
-
-%package labltk-devel
-Summary:        Development files for labltk
-Requires:       ocaml = %{version}-%{release}
-Requires:       %{name}-labltk = %{version}-%{release}
-Requires:       libX11-devel
-Requires:       tcl-devel
-Requires:       tk-devel
-
-%description labltk-devel
-Labltk is a library for interfacing OCaml with the scripting language
-Tcl/Tk.
-
-This package contains the development files.  It includes the ocaml
-browser for code editing and library browsing.
-
-
-%package camlp4
-Summary:        Pre-Processor-Pretty-Printer for OCaml
-Requires:       ocaml-runtime = %{version}-%{release}
-
-%description camlp4
-Camlp4 is a Pre-Processor-Pretty-Printer for OCaml, parsing a source
-file and printing some result on standard output.
-
-This package contains the runtime files.
-
-
-%package camlp4-devel
-Summary:        Pre-Processor-Pretty-Printer for OCaml
-Requires:       ocaml = %{version}-%{release}
-Requires:       %{name}-camlp4 = %{version}-%{release}
-
-%description camlp4-devel
-Camlp4 is a Pre-Processor-Pretty-Printer for OCaml, parsing a source
-file and printing some result on standard output.
-
-This package contains the development files.
-
-
 %package ocamldoc
 Summary:        Documentation generator for OCaml
 Requires:       ocaml = %{version}-%{release}
@@ -253,9 +197,9 @@ git init
 git config user.email "noone@example.com"
 git config user.name "no one"
 git add .
+git add -f configure   ;# required because .gitignore lists this file
 git commit -a -q -m "%{version} baseline"
 git am %{patches} </dev/null
-
 
 %build
 # make -jN (N > 1) breaks the build.  Therefore we cannot use
@@ -273,12 +217,7 @@ ulimit -Ss 65536
 
 # For the use of -mpreferred-stack-boundary to workaround gcc stack
 # alignment issues, see: http://caml.inria.fr/mantis/view.php?id=5700
-# ONLY use this on i386.
-%ifarch %{ix86}
-CFLAGS="$RPM_OPT_FLAGS -mpreferred-stack-boundary=2" \
-%else
-CFLAGS="$RPM_OPT_FLAGS" \
-%endif
+CFLAGS="$RPM_OPT_FLAGS -fno-strict-aliasing" \
 ./configure \
     -bindir %{_bindir} \
     -libdir %{_libdir}/ocaml \
@@ -324,7 +263,7 @@ perl -pi -e "s|^$RPM_BUILD_ROOT||" $RPM_BUILD_ROOT%{_libdir}/ocaml/ld.conf
     cd infoman; cp ocaml*.gz $RPM_BUILD_ROOT%{_infodir}
 )
 
-echo %{version} > $RPM_BUILD_ROOT%{_libdir}/ocaml/fedora-ocaml-release
+echo %{version} > $RPM_BUILD_ROOT%{_libdir}/ocaml/magic-ocaml-release
 
 # Remove rpaths from stublibs .so files.
 chrpath --delete $RPM_BUILD_ROOT%{_libdir}/ocaml/stublibs/*.so
@@ -430,7 +369,7 @@ fi
 %dir %{_libdir}/ocaml/threads
 %{_libdir}/ocaml/threads/*.cmi
 %{_libdir}/ocaml/threads/*.cma
-%{_libdir}/ocaml/fedora-ocaml-release
+%{_libdir}/ocaml/magic-ocaml-release
 %exclude %{_libdir}/ocaml/graphicsX11.cmi
 %exclude %{_libdir}/ocaml/stublibs/dlllabltk.so
 #%exclude %{_libdir}/ocaml/stublibs/dlltkanim.so
@@ -447,74 +386,6 @@ fi
 %{_libdir}/ocaml/graphicsX11.mli
 
 
-%files labltk
-%doc LICENSE
-%{_bindir}/labltk
-%dir %{_libdir}/ocaml/labltk
-%{_libdir}/ocaml/labltk/*.cmi
-%{_libdir}/ocaml/labltk/*.cma
-%{_libdir}/ocaml/labltk/*.cmo
-%{_libdir}/ocaml/stublibs/dlllabltk.so
-#%{_libdir}/ocaml/stublibs/dlltkanim.so
-
-
-%files labltk-devel
-%doc LICENSE
-%doc otherlibs/labltk/examples_labltk
-%doc otherlibs/labltk/examples_camltk
-%{_bindir}/ocamlbrowser
-%{_libdir}/ocaml/labltk/labltktop
-%{_libdir}/ocaml/labltk/pp
-%{_libdir}/ocaml/labltk/tkcompiler
-%{_libdir}/ocaml/labltk/*.a
-%if %{native_compiler}
-%{_libdir}/ocaml/labltk/*.cmxa
-%{_libdir}/ocaml/labltk/*.cmx
-%{_libdir}/ocaml/labltk/*.o
-%endif
-%{_libdir}/ocaml/labltk/*.mli
-
-
-%files camlp4
-%doc LICENSE
-%dir %{_libdir}/ocaml/camlp4
-%{_libdir}/ocaml/camlp4/*.cmi
-%{_libdir}/ocaml/camlp4/*.cma
-%{_libdir}/ocaml/camlp4/*.cmo
-%dir %{_libdir}/ocaml/camlp4/Camlp4Filters
-%{_libdir}/ocaml/camlp4/Camlp4Filters/*.cmi
-%{_libdir}/ocaml/camlp4/Camlp4Filters/*.cmo
-%dir %{_libdir}/ocaml/camlp4/Camlp4Parsers
-%{_libdir}/ocaml/camlp4/Camlp4Parsers/*.cmo
-%{_libdir}/ocaml/camlp4/Camlp4Parsers/*.cmi
-%dir %{_libdir}/ocaml/camlp4/Camlp4Printers
-%{_libdir}/ocaml/camlp4/Camlp4Printers/*.cmi
-%{_libdir}/ocaml/camlp4/Camlp4Printers/*.cmo
-%dir %{_libdir}/ocaml/camlp4/Camlp4Top
-%{_libdir}/ocaml/camlp4/Camlp4Top/*.cmi
-%{_libdir}/ocaml/camlp4/Camlp4Top/*.cmo
-
-
-%files camlp4-devel
-%{_bindir}/camlp4*
-%{_bindir}/mkcamlp4
-%if %{native_compiler}
-%{_libdir}/ocaml/camlp4/*.a
-%{_libdir}/ocaml/camlp4/*.cmxa
-%{_libdir}/ocaml/camlp4/*.cmx
-%{_libdir}/ocaml/camlp4/*.o
-%{_libdir}/ocaml/camlp4/Camlp4Filters/*.cmx
-%{_libdir}/ocaml/camlp4/Camlp4Filters/*.o
-%{_libdir}/ocaml/camlp4/Camlp4Parsers/*.cmx
-%{_libdir}/ocaml/camlp4/Camlp4Parsers/*.o
-%{_libdir}/ocaml/camlp4/Camlp4Printers/*.cmx
-%{_libdir}/ocaml/camlp4/Camlp4Printers/*.o
-%{_libdir}/ocaml/camlp4/Camlp4Top/*.cmx
-%{_libdir}/ocaml/camlp4/Camlp4Top/*.o
-%endif
-%{_mandir}/man1/*
-
-
 %files ocamldoc
 %doc LICENSE
 %doc ocamldoc/Changes.txt
@@ -526,7 +397,7 @@ fi
 %doc refman.pdf htmlman
 %{_infodir}/*
 %{_mandir}/man3/*
-
+%{_mandir}/man1/*
 
 %files emacs
 %doc emacs/README
@@ -549,6 +420,9 @@ fi
 
 
 %changelog
+* Tue Mar 03 2015 Liu Di <liudidi@gmail.com> - 4.02.1-1
+- 更新到 4.02.1
+
 * Fri Jun 20 2014 Liu Di <liudidi@gmail.com> - 4.01.0-20
 - 为 Magic 3.0 重建
 

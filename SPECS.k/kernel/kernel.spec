@@ -74,7 +74,7 @@ Summary: The Linux kernel
 %if 0%{?released_kernel}
 
 # Do we have a -stable update to apply?
-%define stable_update 44
+%define stable_update 70
 # Is it a -stable RC?
 %define stable_rc 0
 # Set rpm version accordingly
@@ -230,7 +230,7 @@ Summary: The Linux kernel
 
 %define using_upstream_branch 0
 %if 0%{?upstream_branch:1}
-%define stable_update 44
+%define stable_update 70
 %define using_upstream_branch 1
 %define variant -%{upstream_branch}%{?variant_fedora}
 %define pkg_release 0.%{fedora_build}%{upstream_branch_tag}%{?buildid}%{?dist}
@@ -731,9 +731,6 @@ Patch25007: fix-child-thread-introspection.patch
 
 #rhbz 948262
 Patch25024: intel_iommu-Downgrade-the-warning-if-enabling-irq-remapping-fails.patch
-
-#rhbz 969644
-Patch25046: KVM-x86-handle-idiv-overflow-at-kvm_write_tsc.patch
 
 #rhbz 903741
 Patch25052: HID-input-return-ENODATA-if-reading-battery-attrs-fails.patch
@@ -1462,9 +1459,6 @@ ApplyPatch fix-child-thread-introspection.patch
 
 #rhbz 948262
 ApplyPatch intel_iommu-Downgrade-the-warning-if-enabling-irq-remapping-fails.patch
-
-#rhbz 969644
-ApplyPatch KVM-x86-handle-idiv-overflow-at-kvm_write_tsc.patch
 
 #rhbz 903741
 ApplyPatch HID-input-return-ENODATA-if-reading-battery-attrs-fails.patch
@@ -2336,6 +2330,9 @@ fi
 #                 ||     ||
 
 %changelog
+* Wed Mar 04 2015 Liu Di <liudidi@gmail.com> - 3.10.70-4.3
+- 更新到 3.10.70
+
 * Thu Jun 19 2014 Liu Di <liudidi@gmail.com> - 3.10.44-4.3
 - 更新到 3.10.44
 

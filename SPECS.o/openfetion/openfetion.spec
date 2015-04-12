@@ -1,6 +1,6 @@
 Name: openfetion
 Version: 2.2.1
-Release: 2%{?dist}
+Release: 3%{?dist}
 Summary: Fetion GTK+ fronted, based on Fetion v4 protocal
 Summary(zh_CN.UTF-8): 飞信 GTK+ 前端，基于飞信 v4 协议
 Group: Appications/Internet
@@ -48,6 +48,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/*
 
 %changelog
+* Fri Mar 27 2015 Liu Di <liudidi@gmail.com> - 2.2.1-3
+- 为 Magic 3.0 重建
+
 * Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 2.2.1-2
 - 为 Magic 3.0 重建
 

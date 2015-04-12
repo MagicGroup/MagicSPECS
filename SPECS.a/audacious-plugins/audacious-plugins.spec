@@ -1,6 +1,6 @@
 %define name audacious-plugins
 %define summary Audacious-Plugins
-%define version 3.4.3
+%define version 3.6
 %define testver %{nil}
 %if 0%{testver}
 %define release 0.%{testver}.1%{?dist}.3
@@ -57,13 +57,15 @@ rm -rf %{buildroot} %{_builddir}/%{buildsubdir}
 
 %files
 %defattr(-, root, root)
-%doc AUTHORS COPYING INSTALL
 #%{_bindir}/aud*
 %{plugindir}/*
 %{_datadir}/audacious/*
 %{_datadir}/locale/*
 
 %changelog
+* Sun Mar 29 2015 Liu Di <liudidi@gmail.com> - 3.6-1
+- 更新到 3.6
+
 * Sun Mar 02 2014 Liu Di <liudidi@gmail.com> - 3.4.3-1
 - 更新到 3.4.3
 

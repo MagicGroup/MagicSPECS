@@ -1,13 +1,14 @@
 Name:           inkscape
-Version:	0.48.5
-Release:        13%{?dist}
+Version:	0.91
+Release:        1%{?dist}
 Summary:        Vector-based drawing program using SVG
 
 Group:          Applications/Productivity
 License:        GPLv2+
 URL:            http://inkscape.sourceforge.net/
-Source0:        http://downloads.sourceforge.net/project/inkscape/inkscape/%{version}/inkscape-%{version}.tar.bz2
+Source0:        http://downloads.sourceforge.net/project/inkscape/inkscape-%{version}.tar.bz2
 Patch0:         inkscape-0.48.2-types.patch
+Patch1:         inkscape-0.91-desktop.patch
 
 %if 0%{?fedora} && 0%{?fedora} < 18
 %define desktop_vendor fedora
@@ -118,6 +119,7 @@ graphics in W3C standard Scalable Vector Graphics (SVG) file format.
 %prep
 %setup -q
 %patch0 -p1 -b .types
+%patch1 -p1 -b .desktop
 
 # https://bugs.launchpad.net/inkscape/+bug/314381
 # A couple of files have executable bits set,
@@ -128,9 +130,6 @@ find share/extensions -name '*.py' | xargs chmod -x
 
 # Fix end of line encodings
 dos2unix -k -q share/extensions/*.py
-
-autoreconf -i
-
 
 %build
 %configure                      \
@@ -154,7 +153,7 @@ desktop-file-install --vendor="%{?desktop_vendor}" --delete-original  \
 
 # No skencil anymore
 rm -f $RPM_BUILD_ROOT%{_datadir}/%{name}/extensions/sk2svg.sh
-
+magic_rpm_clean.sh
 %find_lang %{name}
 
 
@@ -185,7 +184,7 @@ fi
 %defattr(-,root,root,-)
 %{_bindir}/inkscape
 %dir %{_datadir}/inkscape
-%{_datadir}/inkscape/clipart
+#%{_datadir}/inkscape/clipart
 %{_datadir}/inkscape/extensions
 %{_datadir}/inkscape/filters
 %{_datadir}/inkscape/fonts
@@ -197,11 +196,15 @@ fi
 %{_datadir}/inkscape/patterns
 %{_datadir}/inkscape/screens
 %{_datadir}/inkscape/templates
+%{_datadir}/inkscape/attributes/*
+%{_datadir}/inkscape/branding/*
+%{_datadir}/inkscape/symbols/*
 %{_datadir}/inkscape/ui
 %{_datadir}/applications/*inkscape.desktop
 %{_datadir}/icons/hicolor/*/*/inkscape*
 %{_mandir}/*/*gz
 %{_mandir}/*/*/*gz
+
 %exclude %{_mandir}/man1/inkview.1*
 %doc AUTHORS COPYING ChangeLog NEWS README
 
@@ -221,6 +224,9 @@ fi
 
 
 %changelog
+* Mon Mar 02 2015 Liu Di <liudidi@gmail.com> - 0.91-1
+- 更新到 0.91
+
 * Fri Aug 08 2014 Liu Di <liudidi@gmail.com> - 0.48.5-13
 - 更新到 0.48.5
 

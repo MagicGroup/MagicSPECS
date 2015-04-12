@@ -1,13 +1,13 @@
 Name:           ntrack
 Summary:        Network Connectivity Tracking library for Desktop Applications
-Version:        016
-Release:        2%{?dist}
+Summary(zh_CN.UTF-8): 桌面程序的网络连接能力跟踪库
+Version: 017
+Release: 1%{?dist}
 License:        LGPLv3
 Url:            https://launchpad.net/%{name}
 Source:         http://launchpad.net/%{name}/main/%{version}/+download/%{name}-%{version}.tar.gz
-Patch0:		ntrack-016-relaxed_flags.diff
-Patch1:         ntrack-016-fix-nl_object_ops.patch
 Group:          Development/C
+Group(zh_CN.UTF-8): 开发/库
 BuildRequires:  autoconf automake libtool
 BuildRequires:  qt4-devel
 BuildRequires:  libnl-devel
@@ -22,6 +22,9 @@ as online, offline or route changes.
 The primary goal is to serve desktop applications in a network manager 
 and desktop environment independent fashion.
 Also its supposed to be lightweight, resource un-intensive and extensible.
+
+%description -l zh_CN.UTF-8
+桌面程序的网络连接能力跟踪库。
 
 %files
 %defattr(-,root,root)
@@ -174,8 +177,6 @@ Development files (headers and libraries) for ntrack
  
 %prep
 %setup -q 
-%patch0 -p1
-%patch1 -p1
 
 %build
 mkdir -p m4
@@ -200,6 +201,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sat Feb 28 2015 Liu Di <liudidi@gmail.com> - 017-1
+- 更新到 017
+
 * Mon Dec 31 2012 Liu Di <liudidi@gmail.com> - 016-2
 - 为 Magic 3.0 重建
 

@@ -5,7 +5,7 @@ downcommand="wget -q"
 pushd $(dirname $0) > /dev/null
 rm -f index.html && $downcommand "$url" -O index.html
 if [ -f index.html ];then
-	newver=`grep "$new1.*" index.html|head -n 1| sed "s/.*$new1//" `
+	newver=`grep "$new1.*" index.html|head -n 1| sed "s/.*$new1//" |dos2unix`
 	echo $newver
 else
 	echo "不能正常取得新版本号"

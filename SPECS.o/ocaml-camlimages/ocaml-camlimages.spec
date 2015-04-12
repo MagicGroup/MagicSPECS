@@ -1,9 +1,11 @@
 Name:           ocaml-camlimages
 Version:        4.1.0
-Release:        5%{?dist}
+Release:        6%{?dist}
 Summary:        OCaml image processing library
+Summary(zh_CN.UTF-8): OCaml 的图像处理库
 
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 License:        LGPLv2 with exceptions
 URL:            http://cristal.inria.fr/camlimages/eng.html
 
@@ -16,6 +18,9 @@ Source1:        camlimages-2.2.0-htmlref.tar.gz
 
 # https://bitbucket.org/camlspotter/camlimages/issue/9
 Patch0:         ocaml-camlimages-4.1.0-exifcheck.patch
+
+# Kill -warn-error A so we can build on OCaml 4.02.
+Patch1:         ocaml-camlimages-4.1.0-kill-warn-error.patch
 
 BuildRequires:  ocaml, ocaml-findlib-devel, ocaml-omake
 BuildRequires:  ocaml-lablgtk-devel
@@ -34,9 +39,14 @@ formats. In addition the library can handle huge images that cannot be
 (or can hardly be) stored into the memory (the library automatically
 creates swap files and escapes them to reduce the memory usage).
 
+%description -l zh_CN.UTF-8
+OCaml 的图像处理库。
+
 %package        devel
 Summary:        Development files for camlimages
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       %{name}%{?_isa} = %{version}-%{release} 
 
 
@@ -46,10 +56,14 @@ developing applications using camlimages
 
 Includes documentation provided by ocamldoc
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
 %prep
 %setup -q -n camlspotter-camlimages-668faa3494fe
 %setup -q -T -D -a 1 -n camlspotter-camlimages-668faa3494fe
 %patch0 -p1
+%patch1 -p1
 
 %build
 omake CFLAGS="$RPM_OPT_FLAGS"
@@ -63,6 +77,7 @@ omake install
 
 mkdir -p $RPM_BUILD_ROOT/usr/share/doc/ocaml-camlimages
 cp -pr License.txt htmlref $RPM_BUILD_ROOT/usr/share/doc/ocaml-camlimages
+magic_rpm_clean.sh
 
 %files
 %doc README License.txt
@@ -86,6 +101,9 @@ cp -pr License.txt htmlref $RPM_BUILD_ROOT/usr/share/doc/ocaml-camlimages
 
 
 %changelog
+* Thu Mar 05 2015 Liu Di <liudidi@gmail.com> - 4.1.0-6
+- 为 Magic 3.0 重建
+
 * Fri Jun 20 2014 Liu Di <liudidi@gmail.com> - 4.1.0-5
 - 为 Magic 3.0 重建
 

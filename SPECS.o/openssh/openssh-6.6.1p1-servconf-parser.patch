@@ -1,0 +1,31 @@
+diff --git a/servconf.c b/servconf.c
+index b7f3294..bc1e909 100644
+--- a/servconf.c
++++ b/servconf.c
+@@ -1550,7 +1550,7 @@ process_server_config_line(ServerOptions *options, char *line,
+ 		break;
+ 
+ 	case sForceCommand:
+-		if (cp == NULL)
++		if (cp == NULL || *cp == '\0')
+ 			fatal("%.200s line %d: Missing argument.", filename,
+ 			    linenum);
+ 		len = strspn(cp, WHITESPACE);
+@@ -1595,7 +1595,7 @@ process_server_config_line(ServerOptions *options, char *line,
+ 		break;
+ 
+ 	case sVersionAddendum:
+-		if (cp == NULL)
++		if (cp == NULL || *cp == '\0')
+ 			fatal("%.200s line %d: Missing argument.", filename,
+ 			    linenum);
+ 		len = strspn(cp, WHITESPACE);
+@@ -1630,6 +1630,8 @@ process_server_config_line(ServerOptions *options, char *line,
+ 		break;
+ 
+ 	case sAuthenticationMethods:
++		if (cp == NULL || *cp == '\0')
++			fatal("%.200s line %d: Missing argument.", filename, linenum);
+ 		if (*activep && options->num_auth_methods == 0) {
+ 			while ((arg = strdelim(&cp)) && *arg != '\0') {
+ 				if (options->num_auth_methods >=

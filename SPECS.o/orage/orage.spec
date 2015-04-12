@@ -1,11 +1,12 @@
 Summary: 	Time-managing application for xfce4.
 Summary(zh_CN):	Xfce4的时间管理程序
 Name: 		orage
-Version: 	4.8.4
-Release: 	1%{?dist}
+Version:	4.10.0
+Release: 2%{?dist}
 License:	GPL
 URL: 		http://www.xfce.org/
-Source0: 	http://archive.xfce.org/src/apps/orage/%{name}-%{version}.tar.bz2
+%define majorver %(echo %{version} | awk -F. '{print $1"."$2}')
+Source0: 	http://archive.xfce.org/src/apps/orage/%{majorver}/%{name}-%{version}.tar.bz2
 Group: 		User Interface/Desktops
 Group(zh_CN):	用户界面/桌面
 BuildRoot: 	%{_tmppath}/%{name}-root
@@ -48,11 +49,17 @@ fi
 %files
 %defattr(-,root,root)
 %doc README ChangeLog INSTALL COPYING AUTHORS
-%{_bindir}/
-%{_datadir}/
-/usr/libexec/xfce4/panel-plugins/xfce4-orageclock-plugin
+%{_bindir}/*
+%{_datadir}/*
+%{_libexecdir}/xfce4/panel-plugins/xfce4-orageclock-plugin
 
 %changelog
+* Fri Apr 03 2015 Liu Di <liudidi@gmail.com> - 4.10.0-2
+- 为 Magic 3.0 重建
+
+* Fri Apr 03 2015 Liu Di <liudidi@gmail.com> - 4.10.0-1
+- 更新到 4.10.0
+
 * Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 4.8.3-2
 - 为 Magic 3.0 重建
 

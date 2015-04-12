@@ -5,8 +5,9 @@
 
 Name:           ocaml-xml-light
 Version:        2.3
-Release:        0.8.svn%{svnrev}%{?dist}
+Release:        0.9.svn%{svnrev}%{?dist}
 Summary:        Minimal XML parser and printer for OCaml
+Summary(zh_CN.UTF-8): OCaml 下迷你版的 XML 解析器和打印程序
 
 Group:          Development/Libraries
 License:        LGPLv2+
@@ -41,10 +42,14 @@ with it, and print it back to an XML document. It support also DTD
 parsing and checking, and is entirely written in OCaml, hence it does
 not require additional C library.
 
+%description -l zh_CN.UTF-8
+OCaml 下迷你版的 XML 解析器和打印程序。
 
 %package        devel
 Summary:        Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       %{name} = %{version}-%{release}
 
 
@@ -52,6 +57,8 @@ Requires:       %{name} = %{version}-%{release}
 The %{name}-devel package contains libraries and signature files for
 developing applications that use %{name}.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -n xml-light-%{svnrev}
@@ -88,7 +95,7 @@ export OCAMLFIND_DESTDIR=$RPM_BUILD_ROOT%{_libdir}/ocaml
 mkdir -p $OCAMLFIND_DESTDIR $OCAMLFIND_DESTDIR/stublibs
 rm -f test.cmi
 ocamlfind install xml-light META *.mli *.cmi *.cma *.a *.cmxa *.cmx
-
+magic_rpm_clean.sh
 
 %files
 %doc README
@@ -112,6 +119,9 @@ ocamlfind install xml-light META *.mli *.cmi *.cma *.a *.cmxa *.cmx
 
 
 %changelog
+* Sat Mar 14 2015 Liu Di <liudidi@gmail.com> - 2.3-0.9.svn234
+- 为 Magic 3.0 重建
+
 * Fri Jun 20 2014 Liu Di <liudidi@gmail.com> - 2.3-0.8.svn234
 - 为 Magic 3.0 重建
 

@@ -2,7 +2,7 @@
 
 Summary: Bluetooth utilities
 Name: bluez
-Version: 5.21
+Version: 5.28
 Release: 1%{?dist}
 License: GPLv2+
 Group: Applications/System
@@ -190,6 +190,8 @@ mkdir -p $RPM_BUILD_ROOT/%{_libdir}/bluetooth/
 %{_bindir}/hcidump
 %{_bindir}/l2test
 %{_bindir}/rctest
+%{_bindir}/hex2hcd
+%{_bindir}/mpris-proxy
 %{_mandir}/man1/ciptool.1.gz
 %{_mandir}/man1/hcitool.1.gz
 %{_mandir}/man1/rfcomm.1.gz
@@ -231,6 +233,9 @@ mkdir -p $RPM_BUILD_ROOT/%{_libdir}/bluetooth/
 /lib/udev/rules.d/97-hid2hci.rules
 
 %changelog
+* Mon Feb 16 2015 Liu Di <liudidi@gmail.com> - 5.28-1
+- 更新到 5.28
+
 * Fri Jul 25 2014 Liu Di <liudidi@gmail.com> - 5.21-1
 - 更新到 5.21
 

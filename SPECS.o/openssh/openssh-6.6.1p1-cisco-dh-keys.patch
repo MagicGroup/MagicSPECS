@@ -1,0 +1,54 @@
+diff -up openssh-6.8p1/compat.c.cisco-dh openssh-6.8p1/compat.c
+--- openssh-6.8p1/compat.c.cisco-dh	2015-03-17 06:49:20.000000000 +0100
++++ openssh-6.8p1/compat.c	2015-03-19 12:57:58.862606969 +0100
+@@ -167,6 +167,7 @@ compat_datafellows(const char *version)
+ 					SSH_BUG_SCANNER },
+ 		{ "Probe-*",
+ 					SSH_BUG_PROBE },
++		{ "Cisco-*",		SSH_BUG_MAX4096DH },
+ 		{ NULL,			0 }
+ 	};
+ 
+diff -up openssh-6.8p1/compat.h.cisco-dh openssh-6.8p1/compat.h
+--- openssh-6.8p1/compat.h.cisco-dh	2015-03-17 06:49:20.000000000 +0100
++++ openssh-6.8p1/compat.h	2015-03-19 12:57:58.862606969 +0100
+@@ -60,6 +60,7 @@
+ #define SSH_NEW_OPENSSH		0x04000000
+ #define SSH_BUG_DYNAMIC_RPORT	0x08000000
+ #define SSH_BUG_CURVE25519PAD	0x10000000
++#define SSH_BUG_MAX4096DH       0x20000000
+ 
+ void     enable_compat13(void);
+ void     enable_compat20(void);
+diff -up openssh-6.8p1/kexgexc.c.cisco-dh openssh-6.8p1/kexgexc.c
+--- openssh-6.8p1/kexgexc.c.cisco-dh	2015-03-19 12:57:58.862606969 +0100
++++ openssh-6.8p1/kexgexc.c	2015-03-19 13:11:52.320519969 +0100
+@@ -64,8 +64,27 @@ kexgex_client(struct ssh *ssh)
+ 
+ 	kex->min = DH_GRP_MIN;
+ 	kex->max = DH_GRP_MAX;
++
++	/* Servers with MAX4096DH need a preferred size (nbits) <= 4096.
++ 	 * We need to also ensure that min < nbits < max */
++
++	if (datafellows & SSH_BUG_MAX4096DH) {
++		/* The largest min for these servers is 4096 */
++		kex->min = MIN(kex->min, 4096);
++	}
++
+ 	kex->nbits = nbits;
+-	if (ssh->compat & SSH_OLD_DHGEX) {
++	kex->nbits = MIN(nbits, kex->max);
++	kex->nbits = MAX(nbits, kex->min);
++
++	if (ssh->compat & SSH_BUG_MAX4096DH) {
++		/* Cannot have a nbits > 4096 for these servers */
++		kex->nbits = MIN(kex->nbits, 4096);
++		/* nbits has to be powers of two */
++		if (kex->nbits == 3072)
++			kex->nbits = 4096;
++	}
++	if (ssh->compat & SSH_OLD_DHGEX) {	/* Old GEX request */
+ 		/* Old GEX request */
+ 		if ((r = sshpkt_start(ssh, SSH2_MSG_KEX_DH_GEX_REQUEST_OLD))
+ 		    != 0 ||

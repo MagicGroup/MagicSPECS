@@ -2,8 +2,9 @@
 
 Name:           ocaml-curses
 Version:        1.0.3
-Release:        21%{?dist}
+Release:        22%{?dist}
 Summary:        OCaml bindings for ncurses
+Summary(zh_CN.UTF-8): ncurses 的 OCaml 绑定
 License:        LGPLv2+
 
 URL:            http://savannah.nongnu.org/projects/ocaml-tmk/
@@ -23,9 +24,12 @@ BuildRequires:  autoconf, automake, libtool
 %description
 OCaml bindings for ncurses.
 
+%description -l zh_CN.UTF-8
+ncurses 的 OCaml 绑定。
 
 %package        devel
 Summary:        Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Requires:       %{name} = %{version}-%{release}
 
 # On aarch64, it is reported that ncurses-devel is not pulled in
@@ -39,6 +43,8 @@ Requires:       ncurses-devel
 The %{name}-devel package contains libraries and signature files for
 developing applications that use %{name}.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -56,7 +62,7 @@ export DESTDIR=$RPM_BUILD_ROOT
 export OCAMLFIND_DESTDIR=$RPM_BUILD_ROOT%{_libdir}/ocaml
 mkdir -p $OCAMLFIND_DESTDIR $OCAMLFIND_DESTDIR/stublibs
 ocamlfind install curses META *.cmi *.cmx *.cma *.cmxa *.a *.so *.mli
-
+magic_rpm_clean.sh
 
 %files
 %doc COPYING
@@ -82,6 +88,9 @@ ocamlfind install curses META *.cmi *.cmx *.cma *.cmxa *.a *.so *.mli
 
 
 %changelog
+* Thu Mar 05 2015 Liu Di <liudidi@gmail.com> - 1.0.3-22
+- 为 Magic 3.0 重建
+
 * Fri Jun 20 2014 Liu Di <liudidi@gmail.com> - 1.0.3-21
 - 为 Magic 3.0 重建
 

@@ -17,8 +17,8 @@
 Summary: A GNU collection of binary utilities
 Summary(zh_CN.UTF-8): 一组 GNU 二进制工具
 Name: %{?cross}binutils%{?_with_debug:-debug}
-Version: 2.24
-Release: 10%{?dist}
+Version: 2.25
+Release: 3%{?dist}
 License: GPLv3+
 Group: Development/Tools
 Group(zh_CN.UTF-8): 开发/工具
@@ -28,14 +28,14 @@ URL: http://sources.redhat.com/binutils
 # many controversial patches so we stick with the official FSF version
 # instead.
 
-Source: http://ftp.gnu.org/gnu/binutils/binutils-2.24.tar.bz2
+Source: http://ftp.gnu.org/gnu/binutils/binutils-%{version}.tar.bz2
 
 Source2: binutils-2.19.50.0.1-output-format.sed
 Patch01: binutils-2.20.51.0.2-libtool-lib64.patch
 Patch02: binutils-2.20.51.0.10-ppc64-pie.patch
 Patch03: binutils-2.20.51.0.2-ia64-lib64.patch
-Patch04: binutils-2.20.51.0.2-version.patch
-Patch05: binutils-2.20.51.0.2-set-long-long.patch
+Patch04: binutils-2.25-version.patch
+Patch05: binutils-2.25-set-long-long.patch
 Patch06: binutils-2.20.51.0.10-copy-osabi.patch
 Patch07: binutils-2.20.51.0.10-sec-merge-emit.patch
 # Enable -zrelro by default: BZ #621983
@@ -46,17 +46,19 @@ Patch09: binutils-2.22.52.0.1-export-demangle.h.patch
 Patch10: binutils-2.22.52.0.4-no-config-h-check.patch
 # Fix addr2line to use the dynamic symbol table if it could not find any ordinary symbols.
 Patch11: binutils-2.23.52.0.1-addr2line-dynsymtab.patch
-Patch12: binutils-2.23.2-kernel-ld-r.patch
+# Patch12: binutils-2.23.2-kernel-ld-r.patch
+Patch12: binutils-2.25-kernel-ld-r.patch
 # Correct bug introduced by patch 12
 Patch13: binutils-2.23.2-aarch64-em.patch
-# Fix building opcodes library with -Werror=format-security
-Patch14: binutils-2.24-s390-mkopc.patch
-# Import fixes for IFUNC and PLT handling for AArch64.
-Patch15: binutils-2.24-elfnn-aarch64.patch
-# Fix decoding of abstract instance names using DW_FORM_ref_addr.
-Patch16: binutils-2.24-DW_FORM_ref_addr.patch
+# Fix detections little endian PPC shared libraries
+Patch14: binutils-2.24-ldforcele.patch
+# Fix allocation of space for x86_64 PIE relocs.
+Patch15: binutils-2.25-x86_64-pie-relocs.patch
 
 Provides: bundled(libiberty)
+
+# BZ 1173780: Building GOLD for PPC is not working at the moment.
+# %define gold_arches %ix86 x86_64 %arm ppc* %{power64}
 
 %define gold_arches %ix86 x86_64 %arm mips64el
 
@@ -160,28 +162,29 @@ using libelf instead of BFD.
 
 %prep
 %setup -q -n binutils-%{version}
-%patch01 -p0 -b .libtool-lib64~
-%patch02 -p0 -b .ppc64-pie~
+%patch01 -p1 -b .libtool-lib64~
+%patch02 -p1 -b .ppc64-pie~
 %ifarch ia64
 %if "%{_lib}" == "lib64"
-%patch03 -p0 -b .ia64-lib64~
+%patch03 -p1 -b .ia64-lib64~
 %endif
 %endif
-%patch04 -p0 -b .version~
-%patch05 -p0 -b .set-long-long~
-%patch06 -p0 -b .copy-osabi~
-%patch07 -p0 -b .sec-merge-emit~
+%patch04 -p1 -b .version~
+%patch05 -p1 -b .set-long-long~
+%patch06 -p1 -b .copy-osabi~
+%patch07 -p1 -b .sec-merge-emit~
 %if 0%{?fedora} >= 18 || 0%{?rhel} >= 7
-%patch08 -p0 -b .relro~
+%patch08 -p1 -b .relro~
 %endif
-%patch09 -p0 -b .export-demangle-h~
-%patch10 -p0 -b .no-config-h-check~
-%patch11 -p0 -b .addr2line~
-%patch12 -p0 -b .kernel-ld-r~
-%patch13 -p0 -b .aarch64~
-%patch14 -p0 -b .mkopc~
-%patch15 -p0 -b .elf-aarch64~
-%patch16 -p0 -b .ref-addr~
+%patch09 -p1 -b .export-demangle-h~
+%patch10 -p1 -b .no-config-h-check~
+%patch11 -p1 -b .addr2line~
+%patch12 -p1 -b .kernel-ld-r~
+%patch13 -p1 -b .aarch64~
+%ifarch ppc64le
+%patch14 -p1 -b .ldforcele~
+%endif
+%patch15 -p1 -b .x86_64-pie~
 
 # We cannot run autotools as there is an exact requirement of autoconf-2.59.
 
@@ -389,7 +392,7 @@ rm -rf %{buildroot}%{_libdir}/libiberty.a
 # This one comes from gcc
 rm -f %{buildroot}%{_infodir}/dir
 rm -rf %{buildroot}%{_prefix}/%{binutils_target}
-
+magic_rpm_clean.sh
 %find_lang %{?cross}binutils
 %find_lang %{?cross}opcodes
 %find_lang %{?cross}bfd
@@ -498,6 +501,12 @@ exit 0
 %endif # %{isnative}
 
 %changelog
+* Fri Mar 20 2015 Liu Di <liudidi@gmail.com> - 2.25-3
+- 为 Magic 3.0 重建
+
+* Fri Mar 20 2015 Liu Di <liudidi@gmail.com> - 2.25-2
+- 为 Magic 3.0 重建
+
 * Tue Jan 28 2014 Nick Clifton <nickc@redhat.com> - 2.24-10
 - Fix decoding of abbrevs using a DW_FORM_ref_addr attribute.  (#1056797)
 

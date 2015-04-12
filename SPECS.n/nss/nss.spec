@@ -1,11 +1,11 @@
-%global nspr_version 4.10.2
-%global nss_util_version 3.15.5
-%global nss_softokn_version 3.15.4
+%global nspr_version 4.10.7
+%global nss_util_version 3.17.4
+%global nss_softokn_version 3.17.4
 %global unsupported_tools_directory %{_libdir}/nss/unsupported-tools
-%global allTools "certutil cmsutil crlutil derdump modutil pk12util pp signtool signver ssltap vfychain vfyserv"
+%global allTools "certutil cmsutil crlutil derdump modutil pk12util signtool signver ssltap vfychain vfyserv"
 
 # solution taken from icedtea-web.spec
-%define multilib_arches ppc64 sparc64 x86_64 ppc64le mips64el
+%define multilib_arches %{power64} sparc64 x86_64
 %ifarch %{multilib_arches}
 %define alt_ckbi  libnssckbi.so.%{_arch}
 %else
@@ -18,8 +18,8 @@
 
 Summary:          Network Security Services
 Name:             nss
-Version:          3.15.5
-Release:          1%{?dist}
+Version:          3.17.4
+Release:          5%{?dist}
 License:          MPLv2.0
 URL:              http://www.mozilla.org/projects/security/pki/nss/
 Group:            System Environment/Libraries
@@ -74,7 +74,6 @@ Patch2:           add-relro-linker-option.patch
 Patch3:           renegotiate-transitional.patch
 Patch6:           nss-enable-pem.patch
 Patch16:          nss-539183.patch
-Patch18:          nss-646045.patch
 # must statically link pem against the freebl in the buildroot
 # Needed only when freebl on tree has new APIS
 Patch25:          nsspem-use-system-freebl.patch
@@ -82,8 +81,6 @@ Patch25:          nsspem-use-system-freebl.patch
 Patch40:          nss-3.14.0.0-disble-ocsp-test.patch
 # Fedora / RHEL-only patch, the templates directory was originally introduced to support mod_revocator
 Patch47:          utilwrap-include-templates.patch
-# Upstream: https://bugzilla.mozilla.org/show_bug.cgi?id=902171
-Patch48:          nss-versus-softoken-tests.patch
 # TODO remove when we switch to building nss without softoken
 Patch49:          nss-skip-bltest-and-fipstest.patch
 # This patch uses the gcc-iquote dir option documented at
@@ -93,6 +90,13 @@ Patch49:          nss-skip-bltest-and-fipstest.patch
 # headers are older. Such is the case when starting an update with API changes or even private export changes.
 # Once the buildroot aha been bootstrapped the patch may be removed but it doesn't hurt to keep it.
 Patch50:          iquote.patch
+# Upstream: https://bugzilla.mozilla.org/show_bug.cgi?id=1083900
+Patch51:          tls12.patch
+# SSL2 support has been disabled downstream in RHEL since RHEL-7.0
+Patch52:          disableSSL2libssl.patch
+Patch53:          disableSSL2tests.patch
+# Upstream: https://bugzilla.mozilla.org/show_bug.cgi?id=1128367
+Patch92:          scripts-syntax-errors.patch
 
 %description
 Network Security Services (NSS) is a set of libraries designed to
@@ -173,14 +177,18 @@ low level services.
 %patch3 -p0 -b .transitional
 %patch6 -p0 -b .libpem
 %patch16 -p0 -b .539183
-%patch18 -p0 -b .646045
 # link pem against buildroot's freebl, essential when mixing and matching
 %patch25 -p0 -b .systemfreebl
 %patch40 -p0 -b .noocsptest
 %patch47 -p0 -b .templates
-%patch48 -p0 -b .crypto
 %patch49 -p0 -b .skipthem
 %patch50 -p0 -b .iquote
+pushd nss
+%patch51 -p1 -b .994599
+%patch52 -p1 -b .disableSSL2libssl
+%patch53 -p1 -b .disableSSL2tests
+%patch92 -p1 -b .syntax
+popd
 
 #########################################################
 # Higher-level libraries and test tools need access to
@@ -198,8 +206,21 @@ done
 %{__cp} ./nss/lib/softoken/lowkeyi.h ./nss/cmd/rsaperf
 %{__cp} ./nss/lib/softoken/lowkeyti.h ./nss/cmd/rsaperf
 
+##### Remove util/freebl/softoken and low level tools
+######## Remove freebl, softoken and util
+%{__rm} -rf ./nss/lib/freebl
+%{__rm} -rf ./nss/lib/softoken
+%{__rm} -rf ./nss/lib/util
+######## Remove nss-softokn test tools as we already ran
+# the cipher test suite as part of the nss-softokn build
+%{__rm} -rf ./nss/cmd/bltest
+%{__rm} -rf ./nss/cmd/fipstest
+%{__rm} -rf ./nss/cmd/rsaperf_low
 
 %build
+
+# uncomment this line when the work is ready
+#export NSS_NO_SSL2=1
 
 NSS_NO_PKCS11_BYPASS=1
 export NSS_NO_PKCS11_BYPASS
@@ -254,7 +275,7 @@ export NSS_BUILD_WITHOUT_SOFTOKEN=1
 NSS_USE_SYSTEM_SQLITE=1
 export NSS_USE_SYSTEM_SQLITE
 
-%ifarch x86_64 ppc64 ia64 s390x sparc64 aarch64 ppc64le mips64el
+%ifarch x86_64 %{power64} ia64 s390x sparc64 aarch64
 USE_64=1
 export USE_64
 %endif
@@ -262,21 +283,8 @@ export USE_64
 # uncomment if the iquote patch is activated
 export IN_TREE_FREEBL_HEADERS_FIRST=1
 
-##### phase 1: remove util/freebl/softoken and low level tools
-#
-######## Remove freebl, softoken and util
-%{__rm} -rf ./mozilla/security/nss/lib/freebl
-%{__rm} -rf ./mozilla/security/nss/lib/softoken
-%{__rm} -rf ./mozilla/security/nss/lib/util
-######## Remove nss-softokn test tools
-%{__rm} -rf ./mozilla/security/nss/cmd/bltest
-%{__rm} -rf ./mozilla/security/nss/cmd/fipstest
-%{__rm} -rf ./mozilla/security/nss/cmd/rsaperf_low
-
 ##### phase 2: build the rest of nss
-# nss supports pluggable ecc
-NSS_ENABLE_ECC=1
-export NSS_ENABLE_ECC
+# nss supports pluggable ecc with more than suite-b
 NSS_ECC_MORE_THAN_SUITE_B=1
 export NSS_ECC_MORE_THAN_SUITE_B
 
@@ -291,10 +299,9 @@ pushd ./nss
 %{__make} clean_docs build_docs
 popd
 
-# and copy them here
-for m in "%{allTools}"; do 
-  cp ./nss/doc/nroff/${m}.1 .
-done
+# and copy them to the dist directory for %%install to find them
+%{__mkdir_p} ./dist/docs/nroff
+%{__cp} ./nss/doc/nroff/* ./dist/docs/nroff
 
 # Set up our package file
 # The nspr_version and nss_{util|softokn}_version globals used
@@ -356,19 +363,24 @@ done
  
 
 %check
-if [ $DISABLETEST -eq 1 ]; then
+if [ ${DISABLETEST:-0} -eq 1 ]; then
   echo "testing disabled"
   exit 0
 fi
 
 # Begin -- copied from the build section
+
+# inform the ssl test scripts that SSL2 is disabled
+# uncomment this line when the work is ready
+#export NSS_NO_SSL2=1
+
 FREEBL_NO_DEPEND=1
 export FREEBL_NO_DEPEND
 
 BUILD_OPT=1
 export BUILD_OPT
 
-%ifarch x86_64 ppc64 ia64 s390x sparc64 aarch64 ppc64le mips64el
+%ifarch x86_64 %{power64} ia64 s390x sparc64 aarch64
 USE_64=1
 export USE_64
 %endif
@@ -416,12 +428,12 @@ find ./nss/tests -type f |\
 killall $RANDSERV || :
 
 rm -rf ./tests_results
-cd ./nss/tests/
+pushd ./nss/tests/
 # all.sh is the test suite script
 
 #  don't need to run all the tests when testing packaging
 #  nss_cycles: standard pkix upgradedb sharedb
-nss_tests="cipher libpkix cert dbtests tools fips sdr crmf smime ssl ocsp merge pkits chains"
+nss_tests="libpkix cert dbtests tools fips sdr crmf smime ssl ocsp merge pkits chains"
 #  nss_ssl_tests: crl bypass_normal normal_bypass normal_fips fips_normal iopr
 #  nss_ssl_run: cov auth stress
 #
@@ -430,16 +442,48 @@ nss_tests="cipher libpkix cert dbtests tools fips sdr crmf smime ssl ocsp merge 
 # global nss_ssl_tests "normal_fips"
 # global nss_ssl_run "cov auth"
 
-HOST=localhost DOMSUF=localdomain PORT=$MYRAND NSS_CYCLES=%{?nss_cycles} NSS_TESTS=%{?nss_tests} NSS_SSL_TESTS=%{?nss_ssl_tests} NSS_SSL_RUN=%{?nss_ssl_run} ./all.sh
+SKIP_NSS_TEST_SUITE=`echo $SKIP_NSS_TEST_SUITE`
 
-cd ../../
+if [ "x$SKIP_NSS_TEST_SUITE" == "x" ]; then
+  HOST=localhost DOMSUF=localdomain PORT=$MYRAND NSS_CYCLES=%{?nss_cycles} NSS_TESTS=%{?nss_tests} NSS_SSL_TESTS=%{?nss_ssl_tests} NSS_SSL_RUN=%{?nss_ssl_run} ./all.sh
+else
+  echo "skipped test suite"
+fi
 
+popd
+
+# Normally, the grep exit status is 0 if selected lines are found and 1 otherwise,
+# Grep exits with status greater than 1 if an error ocurred. 
+# If there are test failures we expect TEST_FAILURES > 0 and GREP_EXIT_STATUS = 0, 
+# With no test failures we expect TEST_FAILURES = 0 and GREP_EXIT_STATUS = 1, whereas 
+# GREP_EXIT_STATUS > 1 would indicate an error in grep such as failure to find the log file.
 killall $RANDSERV || :
 
-TEST_FAILURES=`grep -c FAILED ./tests_results/security/localhost.1/output.log` || :
-if [ $TEST_FAILURES -ne 0 ]; then
-  echo "error: test suite returned failure(s)"
-  exit 1
+if [ "x$SKIP_NSS_TEST_SUITE" == "x" ]; then
+  TEST_FAILURES=$(grep -c FAILED ./tests_results/security/localhost.1/output.log) || GREP_EXIT_STATUS=$?
+else
+  TEST_FAILURES=0
+  GREP_EXIT_STATUS=1
+fi
+
+if [ ${GREP_EXIT_STATUS:-0} -eq 1 ]; then
+  echo "okay: test suite detected no failures"
+else
+  if [ ${GREP_EXIT_STATUS:-0} -eq 0 ]; then
+    # while a situation in which grep return status is 0 and it doesn't output
+    # anything shouldn't happen, set the default to something that is
+    # obviously wrong (-1)
+    echo "error: test suite had ${TEST_FAILURES:--1} test failure(s)"
+    exit 1
+  else
+    if [ ${GREP_EXIT_STATUS:-0} -eq 2 ]; then
+      echo "error: grep has not found log file"
+      exit 1
+    else
+      echo "error: grep failed with exit code: ${GREP_EXIT_STATUS}"
+      exit 1
+    fi
+  fi
 fi
 echo "test suite completed"
 
@@ -455,6 +499,12 @@ echo "test suite completed"
 %{__mkdir_p} $RPM_BUILD_ROOT/%{_libdir}
 %{__mkdir_p} $RPM_BUILD_ROOT/%{unsupported_tools_directory}
 %{__mkdir_p} $RPM_BUILD_ROOT/%{_libdir}/pkgconfig
+%if %{defined rhel}
+# not needed for rhel and its derivatives only fedora
+%else
+# because of the pp.1 conflict with perl-PAR-Packer
+%{__mkdir_p} $RPM_BUILD_ROOT%{_datadir}/doc/nss-tools
+%endif
 
 mkdir -p $RPM_BUILD_ROOT%{_mandir}/man1
 mkdir -p $RPM_BUILD_ROOT%{_mandir}/man5
@@ -524,8 +574,14 @@ for f in nss-config setup-nsssysinit; do
 done
 # Copy the man pages for the nss tools
 for f in "%{allTools}"; do 
-   install -c -m 644 ${f}.1 $RPM_BUILD_ROOT%{_mandir}/man1/${f}.1
+   install -c -m 644 ./dist/docs/nroff/${f}.1 $RPM_BUILD_ROOT%{_mandir}/man1/${f}.1
 done
+%if %{defined rhel}
+install -c -m 644 ./dist/docs/nroff/pp.1 $RPM_BUILD_ROOT%{_mandir}/man1/pp.1
+%else
+install -c -m 644 ./dist/docs/nroff/pp.1 $RPM_BUILD_ROOT%{_datadir}/doc/nss-tools/pp.1
+%endif
+
 # Copy the man pages for the configuration files
 for f in pkcs11.txt; do 
    install -c -m 644 ${f}.5 $RPM_BUILD_ROOT%{_mandir}/man5/${f}.5
@@ -594,6 +650,8 @@ fi
 
 %files
 %defattr(-,root,root)
+%{!?_licensedir:%global license %%doc}
+%license nss/COPYING
 %{_libdir}/libnss3.so
 %{_libdir}/libssl3.so
 %{_libdir}/libsmime3.so
@@ -607,12 +665,12 @@ fi
 %config(noreplace) %verify(not md5 size mtime) %{_sysconfdir}/pki/nssdb/cert9.db
 %config(noreplace) %verify(not md5 size mtime) %{_sysconfdir}/pki/nssdb/key4.db
 %config(noreplace) %verify(not md5 size mtime) %{_sysconfdir}/pki/nssdb/pkcs11.txt
-%attr(0644,root,root) %doc /usr/share/man/man5/cert8.db.5.gz
-%attr(0644,root,root) %doc /usr/share/man/man5/key3.db.5.gz
-%attr(0644,root,root) %doc /usr/share/man/man5/secmod.db.5.gz
-%attr(0644,root,root) %doc /usr/share/man/man5/cert9.db.5.gz
-%attr(0644,root,root) %doc /usr/share/man/man5/key4.db.5.gz
-%attr(0644,root,root) %doc /usr/share/man/man5/pkcs11.txt.5.gz
+%attr(0644,root,root) %doc %{_mandir}/man5/cert8.db.5.gz
+%attr(0644,root,root) %doc %{_mandir}/man5/key3.db.5.gz
+%attr(0644,root,root) %doc %{_mandir}/man5/secmod.db.5.gz
+%attr(0644,root,root) %doc %{_mandir}/man5/cert9.db.5.gz
+%attr(0644,root,root) %doc %{_mandir}/man5/key4.db.5.gz
+%attr(0644,root,root) %doc %{_mandir}/man5/pkcs11.txt.5.gz
 
 %files sysinit
 %defattr(-,root,root)
@@ -620,7 +678,7 @@ fi
 %{_bindir}/setup-nsssysinit.sh
 # symbolic link to setup-nsssysinit.sh
 %{_bindir}/setup-nsssysinit
-%attr(0644,root,root) %doc /usr/share/man/man1/setup-nsssysinit.1.gz
+%attr(0644,root,root) %doc %{_mandir}/man1/setup-nsssysinit.1.gz
 
 %files tools
 %defattr(-,root,root)
@@ -645,26 +703,31 @@ fi
 %{unsupported_tools_directory}/vfychain
 # instead of %%{_mandir}/man*/* let's list them explicitely
 # supported tools
-%attr(0644,root,root) %doc /usr/share/man/man1/certutil.1.gz
-%attr(0644,root,root) %doc /usr/share/man/man1/cmsutil.1.gz
-%attr(0644,root,root) %doc /usr/share/man/man1/crlutil.1.gz
-%attr(0644,root,root) %doc /usr/share/man/man1/modutil.1.gz
-%attr(0644,root,root) %doc /usr/share/man/man1/pk12util.1.gz
-%attr(0644,root,root) %doc /usr/share/man/man1/signtool.1.gz
-%attr(0644,root,root) %doc /usr/share/man/man1/signver.1.gz
+%attr(0644,root,root) %doc %{_mandir}/man1/certutil.1.gz
+%attr(0644,root,root) %doc %{_mandir}/man1/cmsutil.1.gz
+%attr(0644,root,root) %doc %{_mandir}/man1/crlutil.1.gz
+%attr(0644,root,root) %doc %{_mandir}/man1/modutil.1.gz
+%attr(0644,root,root) %doc %{_mandir}/man1/pk12util.1.gz
+%attr(0644,root,root) %doc %{_mandir}/man1/signtool.1.gz
+%attr(0644,root,root) %doc %{_mandir}/man1/signver.1.gz
 # unsupported tools
-%attr(0644,root,root) %doc /usr/share/man/man1/derdump.1.gz
-%attr(0644,root,root) %doc /usr/share/man/man1/pp.1.gz
-%attr(0644,root,root) %doc /usr/share/man/man1/ssltap.1.gz
-%attr(0644,root,root) %doc /usr/share/man/man1/vfychain.1.gz
-%attr(0644,root,root) %doc /usr/share/man/man1/vfyserv.1.gz
+%attr(0644,root,root) %doc %{_mandir}/man1/derdump.1.gz
+%if %{defined rhel}
+%attr(0644,root,root) %doc %{_mandir}/man1/pp.1.gz
+%else
+%dir %{_datadir}/doc/nss-tools
+%attr(0644,root,root) %doc %{_datadir}/doc/nss-tools/pp.1
+%endif
+%attr(0644,root,root) %doc %{_mandir}/man1/ssltap.1.gz
+%attr(0644,root,root) %doc %{_mandir}/man1/vfychain.1.gz
+%attr(0644,root,root) %doc %{_mandir}/man1/vfyserv.1.gz
 
 %files devel
 %defattr(-,root,root)
 %{_libdir}/libcrmf.a
 %{_libdir}/pkgconfig/nss.pc
 %{_bindir}/nss-config
-%attr(0644,root,root) %doc /usr/share/man/man1/nss-config.1.gz
+%attr(0644,root,root) %doc %{_mandir}/man1/nss-config.1.gz
 
 %dir %{_includedir}/nss3
 %{_includedir}/nss3/cert.h
@@ -734,6 +797,94 @@ fi
 
 
 %changelog
+* Thu Feb 26 2015 Liu Di <liudidi@gmail.com> - 3.17.4-5
+- 为 Magic 3.0 重建
+
+* Sat Feb 21 2015 Till Maas <opensource@till.name> - 3.17.4-4
+- Rebuilt for Fedora 23 Change
+  https://fedoraproject.org/wiki/Changes/Harden_all_packages_with_position-independent_code
+
+* Tue Feb 10 2015 Elio Maldonado <emaldona@redhat.com> - 3.17.4-3
+- Commented out the export NSS_NO_SSL2=1 line to not disable ssl2
+- Backing out from disabling ssl2 until the patches are fixed
+
+* Mon Feb 09 2015 Elio Maldonado <emaldona@redhat.com> - 3.17.4-2
+- Disable SSL2 support at build time 
+- Fix syntax errors in various shell scripts
+- Resolves: Bug 1189952 - Disable SSL2 and the export cipher suites
+
+* Wed Jan 28 2015 Elio Maldonado <emaldona@redhat.com> - 3.17.4-1
+- Update to nss-3.17.4
+
+* Sat Jan 24 2015 Ville Skyttä <ville.skytta@iki.fi> - 3.17.3-4
+- Own the %%{_datadir}/doc/nss-tools dir
+
+* Tue Dec 16 2014 Elio Maldonado <emaldona@redhat.com> - 3.17.3-3
+- Resolves: Bug 987189 - nss-tools RPM conflicts with perl-PAR-Packer
+- Install pp man page in %%{_datadir}/doc/nss-tools/pp.1
+- Use %%{_mandir} instead of /usr/share/man as more generic
+
+* Mon Dec 15 2014 Elio Maldonado <emaldona@redhat.com> - 3.17.3-2
+- Install pp man page in alternative location
+- Resolves: Bug 987189 - nss-tools RPM conflicts with perl-PAR-Packer
+
+* Fri Dec 05 2014 Elio Maldonado <emaldona@redhat.com> - 3.17.3-1
+- Update to nss-3.17.3
+- Resolves: Bug 1171012 - nss-3.17.3 is available
+
+* Thu Oct 16 2014 Elio Maldonado <emaldona@redhat.com> - 3.17.2-2
+- Resolves: Bug 994599 - Enable TLS 1.2 by default
+
+* Sun Oct 12 2014 Elio Maldonado <emaldona@redhat.com> - 3.17.2-1
+- Update to nss-3.17.2
+
+* Wed Sep 24 2014 Kai Engert <kaie@redhat.com> - 3.17.1-1
+- Update to nss-3.17.1
+- Add a mechanism to skip test suite execution during development work
+
+* Thu Aug 21 2014 Kevin Fenzi <kevin@scrye.com> - 3.17.0-2
+- Rebuild for rpm bug 1131960
+
+* Tue Aug 19 2014 Elio Maldonado <emaldona@redhat.com> - 3.17.0-1
+- Update to nss-3.17.0
+
+* Sun Aug 17 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.16.2-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
+
+* Wed Jul 30 2014 Elio Maldonado <emaldona@redhat.com> - 3.16.2-3
+- Replace expired PayPal test cert with current one to prevent build failure
+
+* Fri Jul 18 2014 Tom Callaway <spot@fedoraproject.org> - 3.16.2-2
+- fix license handling
+
+* Sun Jun 29 2014 Elio Maldonado <emaldona@redhat.com> - 3.16.2-1
+- Update to nss-3.16.2
+
+* Sun Jun 15 2014 Elio Maldonado <emaldona@redhat.com> - 3.16.1-4
+- Remove unwanted source directories at end of %%prep so it truly does it
+- Skip the cipher suite already run as part of the nss-softokn build
+
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.16.1-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Mon May 12 2014 Jaromir Capik <jcapik@redhat.com> - 3.16.1-2
+- Replacing ppc64 and ppc64le with the power64 macro
+- Related: Bug 1052545 - Trivial change for ppc64le in nss spec
+
+* Tue May 06 2014 Elio Maldonado <emaldona@redhat.com> - 3.16.1-1
+- Update to nss-3.16.1
+- Update the iquote patch on account of the rebase
+- Improve error detection in the %%section
+- Resolves: Bug 1094702 - nss-3.16.1 is available
+
+* Tue Mar 18 2014 Elio Maldonado <emaldona@redhat.com> - 3.16.0-1
+- Update to nss-3.16.0
+- Cleanup the copying of the tools man pages
+- Update the iquote.patch on account of the rebase
+
+* Tue Mar 04 2014 Elio Maldonado <emaldona@redhat.com> - 3.15.5-2
+- Restore requiring nss_softokn_version >= 3.15.5
+
 * Wed Feb 19 2014 Elio Maldonado <emaldona@redhat.com> - 3.15.5-1
 - Update to nss-3.15.5
 - Temporarily requiring only nss_softokn_version >= 3.15.4
