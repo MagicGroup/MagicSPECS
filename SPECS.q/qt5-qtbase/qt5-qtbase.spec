@@ -354,7 +354,7 @@ rm -fv mkspecs/linux-g++*/qmake.conf.multilib-optflags
 %patch349 -p1 -b .0149
 
 %patch1000 -p1
-#%patch1001 -p1
+%patch1001 -p1
 
 # drop -fexceptions from $RPM_OPT_FLAGS
 RPM_OPT_FLAGS=`echo $RPM_OPT_FLAGS | sed 's|-fexceptions||g'`
