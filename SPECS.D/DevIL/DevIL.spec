@@ -1,6 +1,6 @@
 Name:           DevIL
 Version:        1.7.8
-Release:        12%{?dist}
+Release:        13%{?dist}
 Summary:        A cross-platform image library
 Summary(zh_CN.UTF-8): 一个跨平台的图像库
 Group:          System Environment/Libraries
@@ -89,14 +89,20 @@ iconv -f iso8859-1 CREDITS -t utf8 > CREDITS.conv
 touch -r CREDITS CREDITS.conv
 mv CREDITS.conv CREDITS
 chmod -x src-IL/src/il_*.c
-
+sed -i 's|png12|png16|g' configure
 
 %build
-%configure --enable-ILU --enable-ILUT --disable-static --disable-allegrotest
+%ifarch x86_64
+DISABLE_SSE="--disable-sse3"
+%endif
+%ifarch %{ix86}
+DISABLE_SSE="--disable-sse --disable-sse2 --disable-sse3"
+%endif
+%configure --enable-ILU --enable-ILUT --disable-static --disable-allegrotest \
+	   $DISABLE_SSE
 sed -i 's|^hardcode_libdir_flag_spec=.*|hardcode_libdir_flag_spec=""|g' libtool
 sed -i 's|LD_RUN_PATH|DIE_RPATH_DIE|g' libtool
 make %{?_smp_mflags}
-
 
 %install
 rm -rf %{buildroot}
@@ -158,6 +164,9 @@ fi
 
 
 %changelog
+* Sun Mar 01 2015 Liu Di <liudidi@gmail.com> - 1.7.8-13
+- 为 Magic 3.0 重建
+
 * Tue Apr 29 2014 Liu Di <liudidi@gmail.com> - 1.7.8-12
 - 为 Magic 3.0 重建
 

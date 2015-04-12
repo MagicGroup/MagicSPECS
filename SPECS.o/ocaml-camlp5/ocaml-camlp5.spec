@@ -1,15 +1,17 @@
 %global opt %(test -x %{_bindir}/ocamlopt && echo 1 || echo 0)
 
 Name:           ocaml-camlp5
-Version:        6.11
-Release:        5%{?dist}
+Version: 6.12
+Release: 1%{?dist}
 Summary:        Classical version of camlp4 OCaml preprocessor
+Summary(zh_CN.UTF-8): camlp4 OCaml 预处理器的经典版本
 
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 License:        BSD
-URL:            http://pauillac.inria.fr/~ddr/camlp5/
+URL:            http://camlp5.gforge.inria.fr/
 
-Source0:        http://pauillac.inria.fr/~ddr/camlp5/distrib/src/camlp5-%{version}.tgz
+Source0:        http://camlp5.gforge.inria.fr/distrib/src/camlp5-%{version}.tgz
 
 BuildRequires:  ocaml
 BuildRequires:  ocaml-ocamldoc
@@ -26,10 +28,14 @@ OCaml 3.10 and above have an official camlp4 which is incompatible
 with classical (<= 3.09) versions.  You can find that in the
 ocaml-camlp4 package.
 
+%description -l zh_CN.UTF-8
+camlp4 OCaml 预处理器的经典版本。
 
 %package        devel
 Summary:        Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       %{name} = %{version}-%{release}
 
 
@@ -37,6 +43,8 @@ Requires:       %{name} = %{version}-%{release}
 The %{name}-devel package contains libraries and signature files for
 developing applications that use %{name}.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q -n camlp5-%{version}
@@ -81,7 +89,7 @@ make install \
   MANDIR=$RPM_BUILD_ROOT%{_mandir}
 cp -p etc/META $RPM_BUILD_ROOT%{_libdir}/ocaml/camlp5
 rm -f doc/html/.cvsignore doc/htmlp/{.cvsignore,*.sh,Makefile,html2*}
-
+magic_rpm_clean.sh
 
 %files
 %doc README LICENSE
@@ -109,6 +117,9 @@ rm -f doc/html/.cvsignore doc/htmlp/{.cvsignore,*.sh,Makefile,html2*}
 
 
 %changelog
+* Thu Mar 05 2015 Liu Di <liudidi@gmail.com> - 6.12-1
+- 更新到 6.12
+
 * Fri Jun 20 2014 Liu Di <liudidi@gmail.com> - 6.11-5
 - 为 Magic 3.0 重建
 

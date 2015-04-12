@@ -1,9 +1,11 @@
 # Do we want SELinux & Audit
-%if 0%{?!selinux:1}
-%define WITH_SELINUX 0
-%else
+%if 0%{?!selinux:0}
 %define WITH_SELINUX 1
+%else
+%define WITH_SELINUX 0
 %endif
+
+%global _hardened_build 1
 
 # OpenSSH privilege separation requires a user & group ID
 %define sshd_uid    74
@@ -63,15 +65,15 @@
 %endif
 
 # Do not forget to bump pam_ssh_agent_auth release if you rewind the main package release to 1
-%define openssh_ver 6.4p1
+%define openssh_ver 6.8p1
 %define openssh_rel 3
 %define pam_ssh_agent_ver 0.9.3
-%define pam_ssh_agent_rel 1
+%define pam_ssh_agent_rel 5
 
 Summary: An open source implementation of SSH protocol versions 1 and 2
 Name: openssh
 Version: %{openssh_ver}
-Release: %{openssh_rel}%{?dist}%{?rescue_rel}
+Release: %{openssh_rel}%{?dist}%{?rescue_rel}.1
 URL: http://www.openssh.com/portable.html
 #URL1: http://pamsshagentauth.sourceforge.net
 Source0: ftp://ftp.openbsd.org/pub/OpenBSD/OpenSSH/portable/openssh-%{version}.tar.gz
@@ -87,14 +89,13 @@ Source10: sshd.socket
 Source11: sshd.service
 Source12: sshd-keygen.service
 Source13: sshd-keygen
+Source14: sshd.tmpfiles
 
 # Internal debug
 Patch0: openssh-5.9p1-wIm.patch
 
 #?
-Patch100: openssh-6.3p1-coverity.patch
-#https://bugzilla.mindrot.org/show_bug.cgi?id=1872
-Patch101: openssh-6.3p1-fingerprint.patch
+Patch100: openssh-6.7p1-coverity.patch
 #https://bugzilla.mindrot.org/show_bug.cgi?id=1894
 #https://bugzilla.redhat.com/show_bug.cgi?id=735889
 Patch102: openssh-5.8p1-getaddrinfo.patch
@@ -102,7 +103,9 @@ Patch102: openssh-5.8p1-getaddrinfo.patch
 Patch103: openssh-5.8p1-packet.patch
 
 #https://bugzilla.mindrot.org/show_bug.cgi?id=1402
-Patch200: openssh-6.4p1-audit.patch
+# https://bugzilla.redhat.com/show_bug.cgi?id=1171248
+# record pfs= field in CRYPTO_SESSION audit event
+Patch200: openssh-6.7p1-audit.patch
 
 # --- pam_ssh-agent ---
 # make it build reusing the openssh sources
@@ -113,75 +116,110 @@ Patch301: pam_ssh_agent_auth-0.9.2-seteuid.patch
 Patch302: pam_ssh_agent_auth-0.9.2-visibility.patch
 # don't use xfree (#1024965)
 Patch303: pam_ssh_agent_auth-0.9.3-no-xfree.patch
+# use SSH_DIGEST_* for fingerprint hashes
+Patch304: pam_ssh_agent_auth-0.9.3-fingerprint-hash.patch
 #https://bugzilla.mindrot.org/show_bug.cgi?id=1641 (WONTFIX)
-Patch400: openssh-6.3p1-role-mls.patch
+Patch400: openssh-6.6p1-role-mls.patch
 #https://bugzilla.redhat.com/show_bug.cgi?id=781634
-Patch404: openssh-6.3p1-privsep-selinux.patch
+Patch404: openssh-6.6p1-privsep-selinux.patch
 
 #?-- unwanted child :(
-Patch501: openssh-6.3p1-ldap.patch
+Patch501: openssh-6.7p1-ldap.patch
 #?
-Patch502: openssh-6.3p1-keycat.patch
+Patch502: openssh-6.6p1-keycat.patch
+Patch503: openssh-6.6p1-noselinux-keycat.patch
 
 #http6://bugzilla.mindrot.org/show_bug.cgi?id=1644
-Patch601: openssh-5.2p1-allow-ip-opts.patch
-#https://bugzilla.mindrot.org/show_bug.cgi?id=1701
-Patch602: openssh-5.9p1-randclean.patch
+Patch601: openssh-6.6p1-allow-ip-opts.patch
 #http://cvsweb.netbsd.org/cgi-bin/cvsweb.cgi/src/crypto/dist/ssh/Attic/sftp-glob.c.diff?r1=1.13&r2=1.13.12.1&f=h
 Patch603: openssh-5.8p1-glob.patch
 #https://bugzilla.mindrot.org/show_bug.cgi?id=1893
-Patch604: openssh-5.8p1-keyperm.patch
-#https://bugzilla.mindrot.org/show_bug.cgi?id=1329 (WONTFIX)
-Patch605: openssh-5.8p2-remove-stale-control-socket.patch
+Patch604: openssh-6.6p1-keyperm.patch
 #https://bugzilla.mindrot.org/show_bug.cgi?id=1925
 Patch606: openssh-5.9p1-ipv6man.patch
 #?
 Patch607: openssh-5.8p2-sigpipe.patch
-#?
-Patch608: openssh-6.1p1-askpass-ld.patch
 #https://bugzilla.mindrot.org/show_bug.cgi?id=1789
 Patch609: openssh-5.5p1-x11.patch
 
 #?
-Patch700: openssh-6.3p1-fips.patch
-#?
-Patch701: openssh-5.6p1-exit-deadlock.patch
+Patch700: openssh-6.7p1-fips.patch
 #?
 Patch702: openssh-5.1p1-askpass-progress.patch
 #?
 Patch703: openssh-4.3p2-askpass-grab-info.patch
 #?
-Patch704: openssh-5.9p1-edns.patch
-#?
-Patch705: openssh-5.1p1-scp-manpage.patch
-#?
-Patch706: openssh-5.8p1-localdomain.patch
+Patch706: openssh-6.6.1p1-localdomain.patch
 #https://bugzilla.mindrot.org/show_bug.cgi?id=1635 (WONTFIX)
-Patch707: openssh-6.3p1-redhat.patch
+Patch707: openssh-6.6p1-redhat.patch
 #https://bugzilla.mindrot.org/show_bug.cgi?id=1890 (WONTFIX) need integration to prng helper which is discontinued :)
-Patch708: openssh-6.2p1-entropy.patch
+Patch708: openssh-6.6p1-entropy.patch
+Patch718: openssh-6.6p1-noselinux-entropy.patch
 #https://bugzilla.mindrot.org/show_bug.cgi?id=1640 (WONTFIX)
 Patch709: openssh-6.2p1-vendor.patch
 # warn users for unsupported UsePAM=no (#757545)
-Patch711: openssh-6.1p1-log-usepam-no.patch
+Patch711: openssh-6.6p1-log-usepam-no.patch
 # make aes-ctr ciphers use EVP engines such as AES-NI from OpenSSL
 Patch712: openssh-6.3p1-ctr-evp-fast.patch
 # add cavs test binary for the aes-ctr
-Patch713: openssh-6.3p1-ctr-cavstest.patch
+Patch713: openssh-6.6p1-ctr-cavstest.patch
+# add SSH KDF CAVS test driver
+Patch714: openssh-6.7p1-kdf-cavs.patch
 
 
 #http://www.sxw.org.uk/computing/patches/openssh.html
 #changed cache storage type - #848228
-Patch800: openssh-6.3p1-gsskex.patch
+Patch800: openssh-6.6p1-gsskex.patch
 #http://www.mail-archive.com/kerberos@mit.edu/msg17591.html
-Patch801: openssh-6.3p1-force_krb.patch
+Patch801: openssh-6.6p1-force_krb.patch
+# add new option GSSAPIEnablek5users and disable using ~/.k5users by default (#1169843)
+# CVE-2014-9278
+Patch802: openssh-6.6p1-GSSAPIEnablek5users.patch
 Patch900: openssh-6.1p1-gssapi-canohost.patch
 #https://bugzilla.mindrot.org/show_bug.cgi?id=1780
-Patch901: openssh-6.3p1-kuserok.patch
+Patch901: openssh-6.6p1-kuserok.patch
 # use default_ccache_name from /etc/krb5.conf (#991186)
 Patch902: openssh-6.3p1-krb5-use-default_ccache_name.patch
-# increase the size of the Diffie-Hellman groups (#1010607)
-Patch903: openssh-6.3p1-increase-size-of-DF-groups.patch
+# Run ssh-copy-id in the legacy mode when SSH_COPY_ID_LEGACY variable is set (#969375
+Patch905: openssh-6.4p1-legacy-ssh-copy-id.patch
+# Use tty allocation for a remote scp (#985650)
+Patch906: openssh-6.4p1-fromto-remote.patch
+# set a client's address right after a connection is set
+# http://bugzilla.mindrot.org/show_bug.cgi?id=2257
+Patch911: openssh-6.6p1-set_remote_ipaddr.patch
+# apply RFC3454 stringprep to banners when possible
+# https://bugzilla.mindrot.org/show_bug.cgi?id=2058
+# slightly changed patch from comment 10
+Patch912: openssh-6.6.1p1-utf8-banner.patch
+# fix parsing of empty options in sshd_conf
+# https://bugzilla.mindrot.org/show_bug.cgi?id=2281
+Patch914: openssh-6.6.1p1-servconf-parser.patch
+# privsep_preauth: use SELinux context from selinux-policy (#1008580)
+Patch916: openssh-6.6.1p1-selinux-contexts.patch
+# use different values for DH for Cisco servers (#1026430)
+Patch917: openssh-6.6.1p1-cisco-dh-keys.patch
+# log via monitor in chroots without /dev/log
+Patch918: openssh-6.6.1p1-log-in-chroot.patch
+# scp file into non-existing directory (#1142223)
+Patch919: openssh-6.6.1p1-scp-non-existing-directory.patch
+# Config parser shouldn't accept ip/port syntax (#1130733)
+Patch920: openssh-6.6.1p1-ip-port-config-parser.patch
+# restore tcp wrappers support, based on Debian patch
+# https://lists.mindrot.org/pipermail/openssh-unix-dev/2014-April/032497.html
+Patch921: openssh-6.7p1-debian-restore-tcp-wrappers.patch
+# apply upstream patch and make sshd -T more consistent (#1187521)
+Patch922: openssh-6.7p1-sshdT-output.patch
+# fix ssh-copy-id on non-sh shells (#1045191)
+Patch923: openssh-6.7p1-fix-ssh-copy-id-on-non-sh-shell.patch
+# AArch64 has seccomp support since 3.19 kernel (#1195065)
+Patch924: openssh-6.7p1-seccomp-aarch64.patch
+# Solve issue with ssh-copy-id and keys without trailing newline (#1093168)
+Patch925: openssh-6.7p1-ssh-copy-id-truncated-keys.patch
+# Add sftp option to force mode of created files (#1191055)
+Patch926: openssh-6.7p1-sftp-force-permission.patch
+# Upstream bug #1878 reintroduced in openssh6.7p1
+Patch927: openssh-6.8p1-880575.patch
+
 
 
 License: BSD
@@ -189,6 +227,7 @@ Group: Applications/Internet
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 Requires: /sbin/nologin
 Obsoletes: openssh-clients-fips, openssh-server-fips
+Obsoletes: openssh-server-sysvinit
 
 %if ! %{no_gnome_askpass}
 %if %{gtk2}
@@ -203,6 +242,9 @@ BuildRequires: gnome-libs-devel
 BuildRequires: openldap-devel
 %endif
 BuildRequires: autoconf, automake, perl, zlib-devel
+%if %{WITH_SELINUX}
+BuildRequires: audit-libs-devel >= 2.0.5
+%endif
 BuildRequires: util-linux, groff
 BuildRequires: pam-devel
 BuildRequires: tcp_wrappers-devel
@@ -219,8 +261,8 @@ BuildRequires: libedit-devel ncurses-devel
 %endif
 
 %if %{WITH_SELINUX}
-Requires: libselinux >= 1.27.7
-BuildRequires: libselinux-devel >= 1.27.7
+Requires: libselinux >= 2.3-5
+BuildRequires: libselinux-devel >= 2.3-5
 Requires: audit-libs >= 1.0.8
 BuildRequires: audit-libs >= 1.0.8
 %endif
@@ -244,17 +286,6 @@ Requires(post): systemd-units
 Requires(preun): systemd-units
 Requires(postun): systemd-units
 
-# Not yet ready
-# %package server-ondemand
-# Summary: Systemd unit file to run an ondemand OpenSSH server
-# Group: System Environment/Daemons
-# Requires: %{name}-server%{?_isa} = %{version}-%{release}
-
-%package server-sysvinit
-Summary: The SysV initscript to manage the OpenSSH server.
-Group: System Environment/Daemons
-Requires: %{name}-server%{?_isa} = %{version}-%{release}
-
 %if %{ldap}
 %package ldap
 Summary: A LDAP support for open source SSH server daemon
@@ -274,11 +305,16 @@ Requires: openssh = %{version}-%{release}
 Obsoletes: openssh-askpass-gnome
 Provides: openssh-askpass-gnome
 
+%package cavs
+Summary: CAVS tests for FIPS validation
+Group: Applications/Internet
+Requires: openssh = %{version}-%{release}
+
 %package -n pam_ssh_agent_auth
 Summary: PAM module for authentication with ssh-agent
 Group: System Environment/Base
 Version: %{pam_ssh_agent_ver}
-Release: %{pam_ssh_agent_rel}.%{openssh_rel}%{?dist}%{?rescue_rel}
+Release: %{pam_ssh_agent_rel}.%{openssh_rel}%{?dist}%{?rescue_rel}.2
 License: BSD
 
 %description
@@ -306,14 +342,6 @@ into and executing commands on a remote machine. This package contains
 the secure shell daemon (sshd). The sshd daemon allows SSH clients to
 securely connect to your SSH server.
 
-%description server-sysvinit
-OpenSSH is a free version of SSH (Secure SHell), a program for logging
-into and executing commands on a remote machine. This package contains
-the SysV init script to manage the OpenSSH server when running a legacy
-SysV-compatible init system.
-
-It is not required when the init system used is systemd.
-
 %if %{ldap}
 %description ldap
 OpenSSH LDAP backend is a way how to distribute the authorized tokens
@@ -328,6 +356,10 @@ openssh in the mls mode.
 OpenSSH is a free version of SSH (Secure SHell), a program for logging
 into and executing commands on a remote machine. This package contains
 an X11 passphrase dialog for OpenSSH.
+
+%description cavs
+This package contains test binaries and scripts to make FIPS validation
+easier. Now contains CTR and KDF CAVS test driver.
 
 %description -n pam_ssh_agent_auth
 This package contains a PAM module which can be used to authenticate
@@ -344,12 +376,8 @@ The module is most useful for su and sudo service stacks.
 %patch0 -p1 -b .wIm
 %endif
 
-%patch100 -p1 -b .coverity
-%patch101 -p1 -b .fingerprint
-%patch102 -p1 -b .getaddrinfo
+# investigate %patch102 -p1 -b .getaddrinfo
 %patch103 -p1 -b .packet
-
-#%patch200 -p1 -b .audit
 
 %if %{pam_ssh_agent}
 pushd pam_ssh_agent_auth-%{pam_ssh_agent_ver}
@@ -357,52 +385,80 @@ pushd pam_ssh_agent_auth-%{pam_ssh_agent_ver}
 %patch301 -p1 -b .psaa-seteuid
 %patch302 -p1 -b .psaa-visibility
 %patch303 -p1 -b .psaa-xfree
+%patch304 -p2 -b .psaa-fingerprint
 # Remove duplicate headers
 rm -f $(cat %{SOURCE5})
 popd
 %endif
 
 %if %{WITH_SELINUX}
-#%patch400 -p1 -b .role-mls
-#%patch404 -p1 -b .privsep-selinux
+%patch400 -p1 -b .role-mls
+%patch404 -p1 -b .privsep-selinux
 %endif
 
 %if %{ldap}
 %patch501 -p1 -b .ldap
 %endif
-#%patch502 -p1 -b .keycat
+%if %{WITH_SELINUX}
+%patch502 -p1 -b .keycat
+%else
+%patch503 -p1 -b .keycat
+%endif
 
 %patch601 -p1 -b .ip-opts
-%patch602 -p1 -b .randclean
 %patch603 -p1 -b .glob
 %patch604 -p1 -b .keyperm
-%patch605 -p1 -b .remove_stale
 %patch606 -p1 -b .ipv6man
 %patch607 -p1 -b .sigpipe
-%patch608 -p1 -b .askpass-ld
 %patch609 -p1 -b .x11
-
-%patch700 -p1 -b .fips
-%patch701 -p1 -b .exit-deadlock
 %patch702 -p1 -b .progress
 %patch703 -p1 -b .grab-info
-%patch704 -p1 -b .edns
-%patch705 -p1 -b .manpage
 %patch706 -p1 -b .localdomain
 %patch707 -p1 -b .redhat
-#%patch708 -p1 -b .entropy
+%if %{WITH_SELINUX}
+%patch708 -p1 -b .entropy
+%else
+%patch718 -p1 -b .entropy
+%endif
 %patch709 -p1 -b .vendor
 %patch711 -p1 -b .log-usepam-no
 %patch712 -p1 -b .evp-ctr
-#%patch713 -p1 -b .ctr-cavs
-
-#%patch800 -p1 -b .gsskex
+%patch713 -p1 -b .ctr-cavs
+%patch714 -p1 -b .kdf-cavs
+# 
+%patch800 -p1 -b .gsskex
 %patch801 -p1 -b .force_krb
-
-#%patch900 -p1 -b .canohost
+# 
+%patch900 -p1 -b .canohost
 %patch901 -p1 -b .kuserok
 %patch902 -p1 -b .ccache_name
-%patch903 -p1 -b .dh
+%patch905 -p1 -b .legacy-ssh-copy-id
+%patch906 -p1 -b .fromto-remote
+%patch911 -p1 -b .set_remote_ipaddr
+%patch912 -p1 -b .utf8-banner
+%patch914 -p1 -b .servconf
+%if %{WITH_SELINUX}
+%patch916 -p1 -b .contexts
+%endif
+%patch917 -p1 -b .cisco-dh
+%patch918 -p1 -b .log-in-chroot
+%patch919 -p1 -b .scp
+%patch920 -p1 -b .config
+%patch802 -p1 -b .GSSAPIEnablek5users
+%patch921 -p1 -b .tcp_wrappers
+%patch922 -p1 -b .sshdt
+%patch923 -p1 -b .ssh-copy-id
+%patch924 -p1 -b .seccomp
+%patch925 -p1 -b .newline
+%patch926 -p1 -b .sftp-force-mode
+%patch927 -p1 -b .bz880575
+
+%if %{WITH_SELINUX}
+%patch200 -p1 -b .audit
+%endif
+%patch700 -p1 -b .fips
+
+%patch100 -p1 -b .coverity
 
 %if 0
 # Nothing here yet
@@ -435,7 +491,7 @@ export LDFLAGS
 %endif
 %if %{kerberos5}
 if test -r /etc/profile.d/krb5-devel.sh ; then
-        source /etc/profile.d/krb5-devel.sh
+	source /etc/profile.d/krb5-devel.sh
 fi
 krb5_prefix=`krb5-config --prefix`
 if test "$krb5_prefix" != "%{_prefix}" ; then
@@ -457,11 +513,12 @@ fi
 	--with-default-path=/usr/local/bin:/usr/bin \
 	--with-superuser-path=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin \
 	--with-privsep-path=%{_var}/empty/sshd \
-	--enable-vendor-patchlevel="FC-%{version}-%{release}" \
+	--enable-vendor-patchlevel="FC-%{openssh_ver}-%{openssh_rel}" \
 	--disable-strip \
 	--without-zlib-version-check \
 	--with-ssl-engine \
 	--with-ipaddr-display \
+	--with-pie=no \
 %if %{ldap}
 	--with-ldap \
 %endif
@@ -472,8 +529,7 @@ fi
 %endif
 %if %{WITH_SELINUX}
 	--with-selinux --with-audit=linux \
-%if 0
-#seccomp_filter cannot be build right now
+%ifarch %{ix86} x86_64 %{arm} aarch64
 	--with-sandbox=seccomp_filter \
 %else
 	--with-sandbox=rlimit \
@@ -519,7 +575,13 @@ popd
 %if %{pam_ssh_agent}
 pushd pam_ssh_agent_auth-%{pam_ssh_agent_ver}
 LDFLAGS="$SAVE_LDFLAGS"
-%configure --without-selinux --libexecdir=/%{_libdir}/security --with-mantype=man
+%configure \
+%if %{WITH_SELINUX}
+	--with-selinux \
+%else
+	--without-selinux \
+%endif
+        --libexecdir=/%{_libdir}/security --with-mantype=man
 make
 popd
 %endif
@@ -548,14 +610,10 @@ rm -f $RPM_BUILD_ROOT%{_sysconfdir}/ssh/ldap.conf
 
 install -d $RPM_BUILD_ROOT/etc/pam.d/
 install -d $RPM_BUILD_ROOT/etc/sysconfig/
-install -d $RPM_BUILD_ROOT/etc/rc.d/init.d
 install -d $RPM_BUILD_ROOT%{_libexecdir}/openssh
 install -d $RPM_BUILD_ROOT%{_libdir}/fipscheck
 install -m644 %{SOURCE2} $RPM_BUILD_ROOT/etc/pam.d/sshd
-%if %{WITH_SELINUX}
 install -m644 %{SOURCE6} $RPM_BUILD_ROOT/etc/pam.d/ssh-keycat
-%endif
-install -m755 %{SOURCE3} $RPM_BUILD_ROOT/etc/rc.d/init.d/sshd
 install -m644 %{SOURCE7} $RPM_BUILD_ROOT/etc/sysconfig/sshd
 install -m755 %{SOURCE13} $RPM_BUILD_ROOT/%{_sbindir}/sshd-keygen
 install -d -m755 $RPM_BUILD_ROOT/%{_unitdir}
@@ -565,6 +623,7 @@ install -m644 %{SOURCE11} $RPM_BUILD_ROOT/%{_unitdir}/sshd.service
 install -m644 %{SOURCE12} $RPM_BUILD_ROOT/%{_unitdir}/sshd-keygen.service
 install -m755 contrib/ssh-copy-id $RPM_BUILD_ROOT%{_bindir}/
 install contrib/ssh-copy-id.1 $RPM_BUILD_ROOT%{_mandir}/man1/
+install -m644 -D %{SOURCE14} $RPM_BUILD_ROOT%{_tmpfilesdir}/%{name}.conf
 
 %if ! %{no_gnome_askpass}
 install contrib/gnome-ssh-askpass $RPM_BUILD_ROOT%{_libexecdir}/openssh/gnome-ssh-askpass
@@ -618,20 +677,18 @@ getent passwd sshd >/dev/null || \
 %triggerun -n openssh-server -- openssh-server < 5.9p1-22
 /bin/systemctl --no-reload disable sshd-keygen.service >/dev/null 2>&1 || :
 
-%triggerpostun -n openssh-server-sysvinit -- openssh-server < 5.8p2-12
-/sbin/chkconfig --add sshd >/dev/null 2>&1 || :
-
 %files
 %defattr(-,root,root)
-%doc CREDITS ChangeLog INSTALL LICENCE OVERVIEW PROTOCOL* README README.platform README.privsep README.tun README.dns TODO
+%{!?_licensedir:%global license %%doc}
+%license LICENCE
+%doc CREDITS ChangeLog INSTALL OVERVIEW PROTOCOL* README README.platform README.privsep README.tun README.dns TODO
 %attr(0755,root,root) %dir %{_sysconfdir}/ssh
-%attr(0600,root,root) %config(noreplace) %{_sysconfdir}/ssh/moduli
+%attr(0644,root,root) %config(noreplace) %{_sysconfdir}/ssh/moduli
 %if ! %{rescue}
 %attr(0755,root,root) %{_bindir}/ssh-keygen
 %attr(0644,root,root) %{_mandir}/man1/ssh-keygen.1*
 %attr(0755,root,root) %dir %{_libexecdir}/openssh
 %attr(2111,root,ssh_keys) %{_libexecdir}/openssh/ssh-keysign
-#%attr(0755,root,root) %{_libexecdir}/openssh/ctr-cavstest
 %attr(0644,root,root) %{_mandir}/man8/ssh-keysign.8*
 %endif
 
@@ -680,10 +737,7 @@ getent passwd sshd >/dev/null || \
 %attr(0644,root,root) %{_unitdir}/sshd@.service
 %attr(0644,root,root) %{_unitdir}/sshd.socket
 %attr(0644,root,root) %{_unitdir}/sshd-keygen.service
-
-%files server-sysvinit
-%defattr(-,root,root)
-%attr(0755,root,root) /etc/rc.d/init.d/sshd
+%attr(0644,root,root) %{_tmpfilesdir}/openssh.conf
 %endif
 
 %if %{ldap}
@@ -696,13 +750,11 @@ getent passwd sshd >/dev/null || \
 %attr(0644,root,root) %{_mandir}/man5/ssh-ldap.conf.5*
 %endif
 
-%if %{WITH_SELINUX}
 %files keycat
 %defattr(-,root,root)
 %doc HOWTO.ssh-keycat
 %attr(0755,root,root) %{_libexecdir}/openssh/ssh-keycat
 %attr(0644,root,root) %config(noreplace) /etc/pam.d/ssh-keycat
-%endif
 
 %if ! %{no_gnome_askpass}
 %files askpass
@@ -712,15 +764,157 @@ getent passwd sshd >/dev/null || \
 %attr(0755,root,root) %{_libexecdir}/openssh/ssh-askpass
 %endif
 
+%files cavs
+%attr(0755,root,root) %{_libexecdir}/openssh/ctr-cavstest
+%attr(0755,root,root) %{_libexecdir}/openssh/ssh-cavs
+%attr(0755,root,root) %{_libexecdir}/openssh/ssh-cavs_driver.pl
+
 %if %{pam_ssh_agent}
 %files -n pam_ssh_agent_auth
 %defattr(-,root,root)
-%doc pam_ssh_agent_auth-%{pam_ssh_agent_ver}/OPENSSH_LICENSE
+%{!?_licensedir:%global license %%doc}
+%license pam_ssh_agent_auth-%{pam_ssh_agent_ver}/OPENSSH_LICENSE
 %attr(0755,root,root) %{_libdir}/security/pam_ssh_agent_auth.so
 %attr(0644,root,root) %{_mandir}/man8/pam_ssh_agent_auth.8*
 %endif
 
 %changelog
+* Fri Apr 03 2015 Liu Di <liudidi@gmail.com> - 6.8p1-3.1
+- 为 Magic 3.0 重建
+
+* Tue Mar 31 2015 Jakub Jelen <jjelen@redhat.com> 6.8p1-3 + 0.9.3-5
+- Fixed issue with GSSAPI key exchange (#1207719)
+- Add pam_namespace to sshd pam stack (based on #1125110)
+- Remove krb5-config workaround for #1203900
+- Fix handling SELinux context in MLS systems
+- Regression: solve sshd segfaults if other instance already running
+
+* Thu Mar 26 2015 Jakub Jelen <jjelen@redhat.com> 6.8p1-2 + 0.9.3-5
+- Update audit and gss patches after rebase
+- Fix reintroduced upstrem bug #1878
+
+* Tue Mar 24 2015 Jakub Jelen <jjelen@redhat.com> 6.8p1-1 + 0.9.3-5
+- new upstream release openssh-6.8p1 (#1203245)
+- Resolve segfault with auditing commands (#1203900)
+- Workaround krb5-config bug (#1204646)
+
+* Thu Mar 12 2015 Jakub Jelen <jjelen@redhat.com> 6.7p1-11 + 0.9.3-4
+- Ability to specify LDAP filter in ldap.conf for ssh-ldap-helper
+- Fix auditing when using combination of ForceCommand and PTY
+- Add sftp option to force mode of created files (from rhel)
+- Fix tmpfiles.d entries to be more consistent (#1196807)
+
+* Mon Mar 02 2015 Jakub Jelen <jjelen@redhat.com> 6.7p1-10 + 0.9.3-4
+- Add tmpfiles.d entries (#1196807)
+
+* Fri Feb 27 2015 Jakub Jelen <jjelen@redhat.com> 6.7p1-9 + 0.9.3-4
+- Adjust seccomp filter for primary architectures and solve aarch64 issue (#1197051)
+- Solve issue with ssh-copy-id and keys without trailing newline (#1093168)
+
+* Tue Feb 24 2015 Jakub Jelen <jjelen@redhat.com> 6.7p1-8 + 0.9.3-4
+- Add AArch64 support for seccomp_filter sandbox (#1195065)
+
+* Mon Feb 23 2015 Jakub Jelen <jjelen@redhat.com> 6.7p1-7 + 0.9.3-4
+- Fix seccomp filter on architectures without getuid32
+
+* Mon Feb 23 2015 Jakub Jelen <jjelen@redhat.com> 6.7p1-6 + 0.9.3-4
+- Update seccomp filter to work on i686 architectures (#1194401)
+- Fix previous failing build (#1195065)
+
+* Sun Feb 22 2015 Peter Robinson <pbrobinson@fedoraproject.org> 6.7p1-5 + 0.9.3-4
+- Only use seccomp for sandboxing on supported platforms
+
+* Fri Feb 20 2015 Jakub Jelen <jjelen@redhat.com> 6.7p1-4 + 0.9.3-4
+- Move cavs tests into subpackage -cavs (#1194320)
+
+* Wed Feb 18 2015 Jakub Jelen <jjelen@redhat.com> 6.7p1-3 + 0.9.3-4
+- update coverity patch
+- make output of sshd -T more consistent (#1187521)
+- enable seccomp for sandboxing instead of rlimit (#1062953)
+- update hardening to compile on gcc5
+- Add SSH KDF CAVS test driver (#1193045)
+- Fix ssh-copy-id on non-sh remote shells (#1045191)
+
+* Tue Jan 27 2015 Jakub Jelen <jjelen@redhat.com> 6.7p1-2 + 0.9.3-4
+- fixed audit patch after rebase
+
+* Tue Jan 20 2015 Petr Lautrbach <plautrba@redhat.com> 6.7p1-1 + 0.9.3-4
+- new upstream release openssh-6.7p1
+
+* Thu Jan 15 2015 Jakub Jelen <jjelen@redhat.com> 6.6.1p1-11.1 + 0.9.3-3
+- error message if scp when directory doesn't exist (#1142223)
+- parsing configuration file values (#1130733)
+- documentation in service and socket files for systemd (#1181593)
+- updated ldap patch (#981058)
+- fixed vendor-patchlevel
+- add new option GSSAPIEnablek5users and disable using ~/.k5users by default CVE-2014-9278 (#1170745)
+
+* Fri Dec 19 2014 Petr Lautrbach <plautrba@redhat.com> 6.6.1p1-10 + 0.9.3-3
+- log via monitor in chroots without /dev/log
+
+* Wed Dec 03 2014 Petr Lautrbach <plautrba@redhat.com> 6.6.1p1-9 + 0.9.3-3
+- the .local domain example should be in ssh_config, not in sshd_config
+- use different values for DH for Cisco servers (#1026430)
+
+* Thu Nov 13 2014 Petr Lautrbach <plautrba@redhat.com> 6.6.1p1-8 + 0.9.3-3
+- fix gsskex patch to correctly handle MONITOR_REQ_GSSSIGN request (#1118005)
+
+* Fri Nov 07 2014 Petr Lautrbach <plautrba@redhat.com> 6.6.1p1-7 + 0.9.3-3
+- correct the calculation of bytes for authctxt->krb5_ccname <ams@corefiling.com> (#1161073)
+
+* Tue Nov 04 2014 Petr Lautrbach <plautrba@redhat.com> 6.6.1p1-6 + 0.9.3-3
+- privsep_preauth: use SELinux context from selinux-policy (#1008580)
+- change audit trail for unknown users (mindrot#2245)
+- fix kuserok patch which checked for the existence of .k5login
+  unconditionally and hence prevented other mechanisms to be used properly
+- revert the default of KerberosUseKuserok back to yes (#1153076)
+- ignore SIGXFSZ in postauth monitor (mindrot#2263)
+- sshd-keygen - don't generate DSA and ED25519 host keys in FIPS mode
+
+* Mon Sep 08 2014 Petr Lautrbach <plautrba@redhat.com> 6.6.1p1-5 + 0.9.3-3
+- set a client's address right after a connection is set (mindrot#2257)
+- apply RFC3454 stringprep to banners when possible (mindrot#2058)
+- don't consider a partial success as a failure (mindrot#2270)
+
+* Sun Aug 17 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 6.6.1p1-4.1
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
+
+* Fri Jul 18 2014 Tom Callaway <spot@fedoraproject.org> 6.6.1p1-4 + 0.9.3-3
+- fix license handling (both)
+
+* Fri Jul 18 2014 Petr Lautrbach <plautrba@redhat.com> 6.6.1p1-3 + 0.9.3-2
+- standardise on NI_MAXHOST for gethostname() string lengths (#1051490)
+
+* Mon Jul 14 2014 Petr Lautrbach <plautrba@redhat.com> 6.6.1p1-2 + 0.9.3-2
+- add pam_reauthorize.so to sshd.pam (#1115977)
+- spec file and patches clenup
+
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 6.6.1p1-1.1
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Tue Jun 03 2014 Petr Lautrbach <plautrba@redhat.com> 6.6.1p1-1 + 0.9.3-2
+- disable the curve25519 KEX when speaking to OpenSSH 6.5 or 6.6
+- add support for ED25519 keys to sshd-keygen and sshd.sysconfig
+- drop openssh-server-sysvinit subpackage
+- slightly change systemd units logic - use sshd-keygen.service (#1066615)
+
+* Tue Jun 03 2014 Petr Lautrbach <plautrba@redhat.com> 6.6p1-1 + 0.9.3-2
+- new upstream release openssh-6.6p1
+
+* Thu May 15 2014 Petr Lautrbach <plautrba@redhat.com> 6.4p1-4 + 0.9.3-1
+- use SSH_COPY_ID_LEGACY variable to run ssh-copy-id in the legacy mode
+- make /etc/ssh/moduli file public (#1043661)
+- test existence of /etc/ssh/ssh_host_ecdsa_key in sshd-keygen.service
+- don't clean up gssapi credentials by default (#1055016)
+- ssh-agent - try CLOCK_BOOTTIME with fallback (#1091992)
+- prevent a server from skipping SSHFP lookup - CVE-2014-2653 (#1081338)
+- ignore environment variables with embedded '=' or '\0' characters - CVE-2014-2532
+  (#1077843)
+
+* Wed Dec 11 2013 Petr Lautrbach <plautrba@redhat.com> 6.4p1-3 + 0.9.3-1
+- sshd-keygen - use correct permissions on ecdsa host key (#1023945)
+- use only rsa and ecdsa host keys by default
+
 * Tue Nov 26 2013 Petr Lautrbach <plautrba@redhat.com> 6.4p1-2 + 0.9.3-1
 - fix fatal() cleanup in the audit patch (#1029074)
 - fix parsing logic of ldap.conf file (#1033662)

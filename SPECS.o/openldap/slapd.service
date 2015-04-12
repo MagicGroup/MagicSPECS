@@ -9,9 +9,8 @@ Documentation=file:///usr/share/doc/openldap-servers/guide.html
 
 [Service]
 Type=forking
-PIDFile=/var/run/openldap/slapd.pid
 ExecStartPre=/usr/libexec/openldap/check-config.sh
-ExecStart=/usr/sbin/slapd -u ldap -h "ldap:/// ldapi:///"
+ExecStart=/usr/sbin/slapd -u ldap -h "ldap:/// ldaps:/// ldapi:///"
 
 [Install]
 WantedBy=multi-user.target

@@ -1,9 +1,10 @@
 %global opt %(test -x %{_bindir}/ocamlopt && echo 1 || echo 0)
 
 Name:           ocaml-react
-Version:        0.9.4
-Release:        7%{?dist}
+Version: 0.9.4
+Release: 8%{?dist}
 Summary:        OCaml framework for Functional Reactive Programming (FRP)
+Summary(zh_CN.UTF-8): 函数响应式编程 (FRP) 的 OCaml 框架
 
 License:        BSD
 URL:            http://erratique.ch/software/react
@@ -28,9 +29,12 @@ the new BSD license.
 Given an absolute notion of time Rtime helps you to manage a timeline
 and provides time stamp events, delayed events and delayed signals.
 
+%description -l zh_CN.UTF-8
+函数响应式编程 (FRP) 的 OCaml 框架。
 
 %package        devel
 Summary:        Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Requires:       %{name}%{?_isa} = %{version}-%{release}
 
 
@@ -38,6 +42,8 @@ Requires:       %{name}%{?_isa} = %{version}-%{release}
 The %{name}-devel package contains libraries and signature files for
 developing applications that use %{name}.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q -n react-%{version}
@@ -59,7 +65,7 @@ export DESTDIR=$RPM_BUILD_ROOT
 export OCAMLFIND_DESTDIR=$RPM_BUILD_ROOT%{_libdir}/ocaml
 mkdir -p $OCAMLFIND_DESTDIR $OCAMLFIND_DESTDIR/stublibs
 ocaml setup.ml -install
-
+magic_rpm_clean.sh
 
 %check
 %if %opt
@@ -87,6 +93,9 @@ ocaml setup.ml -install
 
 
 %changelog
+* Fri Mar 06 2015 Liu Di <liudidi@gmail.com> - 0.9.4-8
+- 为 Magic 3.0 重建
+
 * Fri Jun 20 2014 Liu Di <liudidi@gmail.com> - 0.9.4-7
 - 为 Magic 3.0 重建
 

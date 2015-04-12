@@ -1,0 +1,58 @@
+diff -up ntp-4.2.6p5/html/keygen.html.identlen ntp-4.2.6p5/html/keygen.html
+--- ntp-4.2.6p5/html/keygen.html.identlen	2012-12-05 11:43:46.666828864 +0100
++++ ntp-4.2.6p5/html/keygen.html	2012-12-05 12:00:45.331085982 +0100
+@@ -43,7 +43,7 @@
+ 
+ <h4 id="synop">Synopsis</h4>
+ 
+-<p id="intro"><tt>ntp-keygen [ -deGHIMPT ] [ -c [RSA-MD2 | RSA-MD5 | RSA-SHA
++<p id="intro"><tt>ntp-keygen [ -deGHIMPT ] [ -b <i>modulus</i> ] [ -c [RSA-MD2 | RSA-MD5 | RSA-SHA
+ 		| RSA-SHA1 | RSA-MDC2 | RSA-RIPEMD160 | DSA-SHA | DSA-SHA1 ] ] [
+ 		-i <i>group</i> ]
+ 		[ -m <i>modulus</i> ]  [ -p <i>passwd2</i> ] [ -q <i>passwd1</i> ] [ -S
+@@ -140,6 +140,8 @@
+ <h4 id="cmd">Command Line Options</h4>
+ 
+ <dl>
++<dt><tt>-b <i>modulus</i></tt></dt>
++<dd>Set the modulus for generating identity keys to <i>modulus</i> bits. The modulus defaults to 256, but can be set from 256 (32 octets) to 2048 (256 octets). Use the larger moduli with caution, as this can consume considerable computing resources and increases the size of authenticated packets.</dd>
+ 
+ <dt><tt>-c [ RSA-MD2 | RSA-MD5 | RSA-SHA | RSA-SHA1 | RSA-MDC2 | RSA-RIPEMD160 | DSA-SHA | DSA-SHA1 ]</tt></dt>
+ <dd>Select certificate and message digest/signature encryption scheme. Note that
+diff -up ntp-4.2.6p5/util/ntp-keygen-opts.def.identlen ntp-4.2.6p5/util/ntp-keygen-opts.def
+--- ntp-4.2.6p5/util/ntp-keygen-opts.def.identlen	2009-12-09 08:36:35.000000000 +0100
++++ ntp-4.2.6p5/util/ntp-keygen-opts.def	2012-12-05 12:03:17.991124514 +0100
+@@ -16,6 +16,19 @@ include        = '#include <stdlib.h>';
+ #include       version.def
+ 
+ flag = {
++    value     = b;
++    name      = imbits;
++    arg-type  = number;
++    arg-name  = imbits;
++    arg-range = '256->2048';
++    ifdef     = OPENSSL;
++    descrip   = "identity modulus bits";
++    doc = <<-  _EndOfDoc_
++	The number of bits in the identity modulus.  The default is 256.
++	_EndOfDoc_;
++};
++
++flag = {
+     value     = c;
+     name      = certificate;
+     arg-type  = string;
+diff -up ntp-4.2.6p5/util/ntp-keygen.c.identlen ntp-4.2.6p5/util/ntp-keygen.c
+--- ntp-4.2.6p5/util/ntp-keygen.c.identlen	2011-12-25 00:27:16.000000000 +0100
++++ ntp-4.2.6p5/util/ntp-keygen.c	2012-12-05 12:03:43.318130907 +0100
+@@ -318,6 +318,10 @@ main(
+ 		mvpar++;
+ 		nkeys = OPT_VALUE_MV_KEYS;
+ 	}
++
++	if (HAVE_OPT( IMBITS ))
++		modulus2 = OPT_VALUE_IMBITS;
++
+ 	if (HAVE_OPT( MODULUS ))
+ 		modulus = OPT_VALUE_MODULUS;
+ 

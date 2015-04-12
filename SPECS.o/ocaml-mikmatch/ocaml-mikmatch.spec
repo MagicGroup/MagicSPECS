@@ -2,13 +2,18 @@
 %global debug_package %{nil}
 
 Name:           ocaml-mikmatch
-Version:        1.0.6
-Release:        7%{?dist}
+Version:	1.0.7
+Release:	1%{?dist}
 Summary:        OCaml extension for pattern matching with regexps
+Summary(zh_CN.UTF-8): 使用正则表达式模式匹配的 OCaml 扩展
 License:        BSD
 
 URL:            http://mjambon.com/micmatch.html
 Source0:        http://mjambon.com/releases/mikmatch/mikmatch-%{version}.tar.gz
+
+# Upstream patches that fix the build with new ocaml-pcre.
+Patch1:         0001-minor-fix-to-str-ocamlfind-requirements.patch
+Patch2:         0002-fix-for-pcre-7.10.patch
 
 ExcludeArch:    sparc64 s390 s390x
 
@@ -35,9 +40,13 @@ Micmatch/Mikmatch provides a concise and highly readable syntax for
 regular expressions, and integrates it into the syntax of OCaml thanks
 to Camlp4.
 
+%description -l zh_CN.UTF-8
+使用正则表达式模式匹配的 OCaml 扩展。
+
 
 %package        devel
 Summary:        Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Requires:       %{name} = %{version}-%{release}
 Requires:       ocaml-pcre-devel
 
@@ -46,9 +55,13 @@ Requires:       ocaml-pcre-devel
 The %{name}-devel package contains libraries and signature files for
 developing applications that use %{name}.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q -n mikmatch-%{version}
+%patch1 -p1
+%patch2 -p1
 
 %build
 # Parallel builds don't work:
@@ -64,7 +77,7 @@ export DESTDIR=$RPM_BUILD_ROOT
 export OCAMLFIND_DESTDIR=$RPM_BUILD_ROOT%{_libdir}/ocaml
 mkdir -p $OCAMLFIND_DESTDIR $OCAMLFIND_DESTDIR/stublibs
 make install-str install-pcre
-
+magic_rpm_clean.sh
 
 %files
 %doc LICENSE
@@ -97,6 +110,9 @@ make install-str install-pcre
 
 
 %changelog
+* Mon Mar 09 2015 Liu Di <liudidi@gmail.com> - 1.0.7-1
+- 更新到 1.0.7
+
 * Fri Jun 20 2014 Liu Di <liudidi@gmail.com> - 1.0.6-7
 - 为 Magic 3.0 重建
 

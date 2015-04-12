@@ -1,9 +1,11 @@
 Name:		obexd
-Version:	0.43
-Release:	3%{?dist}
+Version: 0.48
+Release: 1%{?dist}
 Summary:	D-Bus service for Obex Client access
+Summary(zh_CN.UTF-8): 访问 Obex 客户端的 D-Bus 服务
 
 Group:		System Environment/Daemons
+Group(zh_CN.UTF-8): 系统环境/服务
 License:	GPLv2+
 Source0:	http://www.kernel.org/pub/linux/bluetooth/obexd-%{version}.tar.gz
 Url:		http://www.bluez.org/
@@ -21,6 +23,9 @@ obexd contains obex-client, a D-Bus service to allow sending files
 using the Obex Push protocol, common on mobile phones and
 other Bluetooth-equipped devices.
 
+%description -l zh_CN.UTF-8
+访问 Obex 客户端的 D-Bus 服务。
+
 %prep
 %setup -q
 
@@ -29,22 +34,24 @@ other Bluetooth-equipped devices.
 
 make %{?_smp_mflags}
 
-chmod -x test/send-files
-
 %install
 rm -rf $RPM_BUILD_ROOT
 make install DESTDIR=$RPM_BUILD_ROOT
+magic_rpm_clean.sh
 
 %clean
 rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(-,root,root,-)
-%doc README COPYING AUTHORS doc/client-api.txt test/send-files
+%doc README COPYING AUTHORS doc/client-api.txt
 %{_libexecdir}/obex-client
 %{_datadir}/dbus-1/services/obex-client.service
 
 %changelog
+* Tue Mar 03 2015 Liu Di <liudidi@gmail.com> - 0.48-1
+- 更新到 0.48
+
 * Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 0.43-3
 - 为 Magic 3.0 重建
 

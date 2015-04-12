@@ -6,8 +6,9 @@
 
 Name:           ocaml-pgocaml
 Version:        1.6
-Release:        7%{?dist}
+Release:        8%{?dist}
 Summary:        OCaml library for type-safe access to PostgreSQL databases
+Summary(zh_CN.UTF-8): 类型安全的访问 PostgreSQL 数据库的 OCaml 库
 License:        LGPLv2+ with exceptions
 
 URL:            http://pgocaml.forge.ocamlcore.org/
@@ -35,9 +36,12 @@ BuildRequires:  ocaml-camlp4-devel
 PG'OCaml is a type-safe, simple interface to PostgreSQL from OCaml. It
 lets you embed SQL statements directly into OCaml code.
 
+%description -l zh_CN.UTF-8
+类型安全的访问 PostgreSQL 数据库的 OCaml 库。
 
 %package        devel
 Summary:        Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Requires:       %{name} = %{version}-%{release}
 
 
@@ -45,6 +49,8 @@ Requires:       %{name} = %{version}-%{release}
 The %{name}-devel package contains libraries and signature files for
 developing applications that use %{name}.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q -n pgocaml-%{version}
@@ -64,7 +70,7 @@ ocamlfind install pgocaml META *.mli *.cmi *.cmx *.cma *.cmxa *.a pa_*.cmo
 
 mkdir -p $RPM_BUILD_ROOT%{_bindir}
 install -m 0755 pgocaml_prof $RPM_BUILD_ROOT%{_bindir}
-
+magic_rpm_clean.sh
 
 %files
 %doc COPYING.LIB
@@ -89,6 +95,9 @@ install -m 0755 pgocaml_prof $RPM_BUILD_ROOT%{_bindir}
 
 
 %changelog
+* Wed Mar 11 2015 Liu Di <liudidi@gmail.com> - 1.6-8
+- 为 Magic 3.0 重建
+
 * Fri Jun 20 2014 Liu Di <liudidi@gmail.com> - 1.6-7
 - 为 Magic 3.0 重建
 

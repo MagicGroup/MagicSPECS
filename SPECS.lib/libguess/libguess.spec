@@ -1,6 +1,6 @@
 Name: libguess
-Version: 1.1
-Release: 5%{?dist}
+Version: 1.2
+Release: 2%{?dist}
 
 Summary: High-speed character set detection library
 Summary(zh_CN.UTF-8): 高速的字符集检测库
@@ -46,6 +46,7 @@ sed -i '\,^.SILENT:,d' buildsys.mk.in
 
 
 %build
+autoreconf -fisv
 %configure
 make %{?_smp_mflags}
 
@@ -77,6 +78,12 @@ LD_LIBRARY_PATH=${RPM_BUILD_ROOT}%{_libdir} make
 
 
 %changelog
+* Sun Mar 29 2015 Liu Di <liudidi@gmail.com> - 1.2-2
+- 为 Magic 3.0 重建
+
+* Sun Mar 29 2015 Liu Di <liudidi@gmail.com> - 1.1-6
+- 为 Magic 3.0 重建
+
 * Wed Jul 16 2014 Liu Di <liudidi@gmail.com> - 1.1-5
 - 为 Magic 3.0 重建
 

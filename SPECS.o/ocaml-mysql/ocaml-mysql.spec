@@ -1,13 +1,14 @@
 %global opt %(test -x %{_bindir}/ocamlopt && echo 1 || echo 0)
 
 Name:           ocaml-mysql
-Version:        1.1.1
-Release:        8%{?dist}
+Version:	1.1.3
+Release:	1%{?dist}
 Summary:        OCaml library for accessing MySQL databases
+Summary(zh_CN.UTF-8): 访问 MySQL 数据库的 OCaml 库
 License:        LGPLv2+ with exceptions
 
 URL:            http://forge.ocamlcore.org/projects/ocaml-mysql/
-Source0:        https://forge.ocamlcore.org/frs/download.php/870/ocaml-mysql-1.1.1.tar.gz
+Source0:        https://forge.ocamlcore.org/frs/download.php/1472/ocaml-mysql-%{version}.tar.gz
 
 ExcludeArch:    sparc64 s390 s390x
 
@@ -19,7 +20,7 @@ BuildRequires:  mysql-devel
 BuildRequires:  chrpath
 
 # See: https://bugzilla.redhat.com/show_bug.cgi?id=916822
-Patch1:         ocaml-mysql-paths.patch
+Patch1:         ocaml-mysql-1.1.3-int64.patch
 
 
 %description
@@ -27,9 +28,12 @@ ocaml-mysql is a package for ocaml that provides access to mysql
 databases. It consists of low level functions implemented in C and a
 module Mysql intended for application development.
 
+%description -l zh_CN.UTF-8
+访问 MySQL 数据库的 OCaml 库。
 
 %package        devel
 Summary:        Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Requires:       %{name} = %{version}-%{release}
 
 
@@ -37,6 +41,8 @@ Requires:       %{name} = %{version}-%{release}
 The %{name}-devel package contains libraries and signature files for
 developing applications that use %{name}.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -44,6 +50,7 @@ developing applications that use %{name}.
 
 
 %build
+LDFLAGS="-L%{_libdir}/mysql" \
 %configure
 make
 %if %opt
@@ -58,7 +65,7 @@ export DESTDIR=$RPM_BUILD_ROOT
 export OCAMLFIND_DESTDIR=$RPM_BUILD_ROOT%{_libdir}/ocaml
 mkdir -p $OCAMLFIND_DESTDIR $OCAMLFIND_DESTDIR/stublibs
 make install
-
+magic_rpm_clean.sh
 
 %files
 %doc COPYING
@@ -84,6 +91,9 @@ make install
 
 
 %changelog
+* Mon Mar 09 2015 Liu Di <liudidi@gmail.com> - 1.1.3-1
+- 更新到 1.1.3
+
 * Fri Jun 20 2014 Liu Di <liudidi@gmail.com> - 1.1.1-8
 - 为 Magic 3.0 重建
 

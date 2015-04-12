@@ -12,9 +12,10 @@
 
 Name:           ocaml-srpm-macros
 Version:        2
-Release:        3%{?dist}
+Release:        4%{?dist}
 
 Summary:        OCaml architecture macros
+Summary(zh_CN.UTF-8): OCaml 架构的宏
 License:        GPLv2+
 
 BuildArch:      noarch
@@ -45,6 +46,9 @@ install -m 0644 %{SOURCE0} $RPM_BUILD_ROOT%{macros_dir}/macros.ocaml-srpm
 
 
 %changelog
+* Sat Mar 14 2015 Liu Di <liudidi@gmail.com> - 2-4
+- 为 Magic 3.0 重建
+
 * Fri Jun 20 2014 Liu Di <liudidi@gmail.com> - 2-3
 - 为 Magic 3.0 重建
 

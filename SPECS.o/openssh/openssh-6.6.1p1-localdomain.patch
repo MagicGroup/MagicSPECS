@@ -1,0 +1,12 @@
+diff --git a/ssh_config b/ssh_config
+index 03a228f..49a4f6c 100644
+--- a/ssh_config
++++ b/ssh_config
+@@ -46,3 +46,7 @@
+ #   VisualHostKey no
+ #   ProxyCommand ssh -q -W %h:%p gateway.example.com
+ #   RekeyLimit 1G 1h
++#
++# Uncomment this if you want to use .local domain
++# Host *.local
++#   CheckHostIP no

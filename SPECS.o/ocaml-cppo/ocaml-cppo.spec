@@ -4,9 +4,10 @@
 %endif
 
 Name:           ocaml-cppo
-Version:        0.9.3
-Release:        5%{?dist}
+Version: 1.1.2
+Release: 1%{?dist}
 Summary:        Equivalent of the C preprocessor for OCaml programs
+Summary(zh_CN.UTF-8): 相当于 C 预处理器的 OCaml 程序
 
 License:        BSD
 URL:            http://mjambon.com/cppo.html
@@ -34,6 +35,8 @@ The implementation of cppo relies on the standard library of OCaml and
 on the standard parsing tools Ocamllex and Ocamlyacc, which contribute
 to the robustness of cppo across OCaml versions.
 
+%description -l zh_CN.UTF-8
+相当于 C 预处理器的 OCaml 程序。
 
 %prep
 %setup -q -n %{libname}-%{version}
@@ -53,18 +56,21 @@ make %{?_smp_mflags} all
 %install
 %{__install} -d $RPM_BUILD_ROOT%{_bindir}
 %{__install} -p cppo $RPM_BUILD_ROOT%{_bindir}/
-
+magic_rpm_clean.sh
 
 %check
 make test
 
 
 %files
-%doc LICENSE README Changes
+%doc LICENSE Changes
 %{_bindir}/cppo
 
 
 %changelog
+* Thu Mar 05 2015 Liu Di <liudidi@gmail.com> - 1.1.2-1
+- 更新到 1.1.2
+
 * Fri Jun 20 2014 Liu Di <liudidi@gmail.com> - 0.9.3-5
 - 为 Magic 3.0 重建
 

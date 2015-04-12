@@ -2,8 +2,9 @@
 
 Name:           ocaml-augeas
 Version:        0.5
-Release:        8%{?dist}
+Release:        9%{?dist}
 Summary:        OCaml bindings for Augeas configuration API
+Summary(zh_CN.UTF-8): Augeas 配置 API 的 OCaml 绑定
 License:        LGPLv2+ with exceptions
 
 URL:            http://people.redhat.com/~rjones/augeas/files/
@@ -24,10 +25,14 @@ BuildRequires:  chrpath
 Augeas is a unified system for editing arbitrary configuration
 files. This provides complete OCaml bindings for Augeas.
 
+%description -l zh_CN.UTF-8
+Augeas 配置 API 的 OCaml 绑定。
 
 %package        devel
 Summary:        Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       %{name} = %{version}-%{release}
 
 
@@ -35,6 +40,8 @@ Requires:       %{name} = %{version}-%{release}
 The %{name}-devel package contains libraries and signature files for
 developing applications that use %{name}.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -62,7 +69,7 @@ mkdir -p $OCAMLFIND_DESTDIR $OCAMLFIND_DESTDIR/stublibs
 ocamlfind install augeas META *.mli *.cmx *.cma *.cmxa *.a augeas.cmi *.so
 
 chrpath --delete $OCAMLFIND_DESTDIR/stublibs/dll*.so
-
+magic_rpm_clean.sh
 
 %files
 %doc COPYING.LIB
@@ -88,6 +95,9 @@ chrpath --delete $OCAMLFIND_DESTDIR/stublibs/dll*.so
 
 
 %changelog
+* Tue Mar 03 2015 Liu Di <liudidi@gmail.com> - 0.5-9
+- 为 Magic 3.0 重建
+
 * Fri Jun 20 2014 Liu Di <liudidi@gmail.com> - 0.5-8
 - 为 Magic 3.0 重建
 

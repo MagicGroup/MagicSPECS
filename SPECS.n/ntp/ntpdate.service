@@ -1,8 +1,8 @@
 [Unit]
 Description=Set time via NTP
-After=syslog.target network.target
+After=network-online.target
 Before=time-sync.target
-Wants=time-sync.target
+Wants=time-sync.target network-online.target
 
 [Service]
 Type=oneshot

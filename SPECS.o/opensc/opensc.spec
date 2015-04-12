@@ -1,12 +1,14 @@
 Name:           opensc
-Version:        0.12.2
-Release:        3%{?dist}
+Version: 0.14.0
+Release: 1%{?dist}
 Summary:        Smart card library and applications
+Summary(zh_CN.UTF-8): 智能卡的库和应用程序
 
 Group:          System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 License:        LGPLv2+
-URL:            http://www.opensc-project.org/opensc/
-Source0:        http://www.opensc-project.org/files/opensc/%{name}-%{version}.tar.gz
+URL:            http://sourceforge.net/projects/opensc/
+Source0:        http://downloads.sourceforge.net/project/opensc/OpenSC/opensc-%{version}/%{name}-%{version}.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildRequires:  pcsc-lite-devel
@@ -27,6 +29,8 @@ supporting this API (such as Mozilla Firefox and Thunderbird) can use it. On
 the card OpenSC implements the PKCS#15 standard and aims to be compatible with
 every software/card that does so, too.
 
+%description -l zh_CN.UTF-8
+智能卡的库和应用程序。
 
 %prep
 %setup -q
@@ -60,7 +64,7 @@ rm -rf $RPM_BUILD_ROOT%{_datadir}/doc/opensc
 # public headers and pkgconfig files.
 # Remove the symlink as nothing is supposed to link against libopensc.
 rm -f $RPM_BUILD_ROOT%{_libdir}/libopensc.so
-
+magic_rpm_clean.sh
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -87,6 +91,14 @@ rm -rf $RPM_BUILD_ROOT
 %{_bindir}/pkcs15-init
 %{_bindir}/pkcs15-tool
 %{_bindir}/westcos-tool
+%{_bindir}/dnie-tool
+%{_bindir}/iasecc-tool
+%{_bindir}/openpgp-tool
+%{_bindir}/sc-hsm-tool
+%{_libdir}/libsmm-local.so
+%{_mandir}/man1/iasecc-tool.1*
+%{_mandir}/man1/openpgp-tool.1*
+%{_mandir}/man1/sc-hsm-tool.1*
 %{_libdir}/lib*.so.*
 %{_libdir}/onepin-opensc-pkcs11.so
 %{_libdir}/opensc-pkcs11.so
@@ -112,6 +124,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Thu Apr 02 2015 Liu Di <liudidi@gmail.com> - 0.14.0-1
+- 更新到 0.14.0
+
 * Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 0.12.2-3
 - 为 Magic 3.0 重建
 

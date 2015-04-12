@@ -1,0 +1,13 @@
+--- ocamlp3l-2.03.old/makefile.application	2007-01-23 17:13:34.000000000 +0000
++++ ocamlp3l-2.03/makefile.application	2014-08-02 20:14:20.669271938 +0100
+@@ -46,8 +46,8 @@
+ MODEL = process
+ 
+ # Caml commands
+-CAMLCBYTFLAGS = -warn-error A -g
+-CAMLCBINFLAGS = -warn-error A -inline 10000 -noassert
++CAMLCBYTFLAGS = -warn-error A-3 -g
++CAMLCBINFLAGS = -warn-error A-3 -inline 10000 -noassert
+ CAMLCBYT = ocamlc $(CAMLCBYTFLAGS)
+ CAMLCBIN = ocamlopt $(CAMLCBINFLAGS)
+ 

@@ -1,4 +1,0 @@
-#!/bin/bash
-DATE=`date -d '-1 day' +%Y%m%d`
-newver="1.0svn$DATE"
-echo $newver

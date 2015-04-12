@@ -8,8 +8,8 @@
 %global relc %{nil}
 
 Name:           numpy
-Version:        1.8.0
-Release:        5%{?dist}
+Version:        1.9.1
+Release:        3%{?dist}
 Epoch:          1
 Summary:        A fast multidimensional array facility for Python
 
@@ -18,13 +18,9 @@ Group:          Development/Languages
 License:        BSD and Python
 URL:            http://www.numpy.org/
 Source0:        http://downloads.sourceforge.net/numpy/%{name}-%{version}%{?relc}.tar.gz
-
-# Fix of CVE-2014-1858, CVE-2014-1859: #1062009, #1062359
-# Modified version of 3 upstream commits, so they apply to current version:
-# - 8296aa0b911c036c984e23665ee0f7ddca579b91
-# - 524b9eaa33ec67e34eb31a208e02bb934f778096
-# - 0bb46c1448b0d3f5453d5182a17ea7ac5854ee15
-Patch0:         numpy-insecure-mktemp-use.patch
+# Upstream patch to fix xerbla linkage
+# https://bugzilla.redhat.com/show_bug.cgi?id=1172834
+Patch0:         https://github.com/numpy/numpy/pull/5392.patch
 
 BuildRequires:  python2-devel lapack-devel python-setuptools gcc-gfortran atlas-devel python-nose
 Requires:       python-nose
@@ -90,11 +86,11 @@ This package includes a version of f2py that works properly with NumPy.
 
 %prep
 %setup -q -n %{name}-%{version}%{?relc}
+%patch0 -p1 -b .xerbla
+
 # workaround for rhbz#849713
 # http://mail.scipy.org/pipermail/numpy-discussion/2012-July/063530.html
 rm numpy/distutils/command/__init__.py && touch numpy/distutils/command/__init__.py
-
-%patch0 -p1
 
 # Atlas 3.10 library names
 %if 0%{?fedora} >= 21
@@ -113,13 +109,13 @@ cp -a . %{py3dir}
 %build
 %if 0%{?with_python3}
 pushd %{py3dir}
-env ATLAS=%{_libdir} FFTW=%{_libdir} BLAS=%{_libdir} \
+env ATLAS=%{_libdir} BLAS=%{_libdir} \
     LAPACK=%{_libdir} CFLAGS="%{optflags}" \
     %{__python3} setup.py build
 popd
 %endif # with _python3
 
-env ATLAS=%{_libdir} FFTW=%{_libdir} BLAS=%{_libdir} \
+env ATLAS=%{_libdir} BLAS=%{_libdir} \
     LAPACK=%{_libdir} CFLAGS="%{optflags}" \
     %{__python} setup.py build
 
@@ -132,9 +128,6 @@ pushd %{py3dir}
 env ATLAS=%{_libdir} FFTW=%{_libdir} BLAS=%{_libdir} \
     LAPACK=%{_libdir} CFLAGS="%{optflags}" \
     %{__python3} setup.py install --root %{buildroot}
-rm -rf docs-f2py ; mv %{buildroot}%{python3_sitearch}/%{name}/f2py/docs docs-f2py
-mv -f %{buildroot}%{python3_sitearch}/%{name}/f2py/f2py.1 f2py.1
-install -D -p -m 0644 f2py.1 %{buildroot}%{_mandir}/man1/f2py.1
 pushd %{buildroot}%{_bindir} &> /dev/null
 popd &> /dev/null
 
@@ -146,13 +139,11 @@ popd
 env ATLAS=%{_libdir} FFTW=%{_libdir} BLAS=%{_libdir} \
     LAPACK=%{_libdir} CFLAGS="%{optflags}" \
     %{__python} setup.py install --root %{buildroot}
-rm -rf docs-f2py ; mv %{buildroot}%{python_sitearch}/%{name}/f2py/docs docs-f2py
-mv -f %{buildroot}%{python_sitearch}/%{name}/f2py/f2py.1 f2py.1
-install -D -p -m 0644 f2py.1 %{buildroot}%{_mandir}/man1/f2py.1
 pushd %{buildroot}%{_bindir} &> /dev/null
 # symlink for anyone who was using f2py.numpy
 ln -s f2py f2py.numpy
 popd &> /dev/null
+install -D -p -m 0644 doc/f2py/f2py.1 %{buildroot}%{_mandir}/man1/f2py.1
 
 #symlink for includes, BZ 185079
 mkdir -p %{buildroot}/usr/include
@@ -182,7 +173,7 @@ popd &> /dev/null
 
 
 %files
-%doc doc/cython LICENSE.txt README.txt THANKS.txt DEV_README.txt COMPATIBILITY site.cfg.example
+%doc LICENSE.txt README.txt THANKS.txt DEV_README.txt COMPATIBILITY site.cfg.example
 %dir %{python_sitearch}/%{name}
 %{python_sitearch}/%{name}/*.py*
 %{python_sitearch}/%{name}/core
@@ -192,8 +183,6 @@ popd &> /dev/null
 %{python_sitearch}/%{name}/lib
 %{python_sitearch}/%{name}/linalg
 %{python_sitearch}/%{name}/ma
-%{python_sitearch}/%{name}/numarray
-%{python_sitearch}/%{name}/oldnumeric
 %{python_sitearch}/%{name}/random
 %{python_sitearch}/%{name}/testing
 %{python_sitearch}/%{name}/tests
@@ -204,7 +193,7 @@ popd &> /dev/null
 %{_includedir}/numpy
 
 %files f2py
-%doc docs-f2py
+%doc doc/f2py/*.txt
 %{_mandir}/man*/*
 %{_bindir}/f2py
 %{_bindir}/f2py.numpy
@@ -212,8 +201,8 @@ popd &> /dev/null
 
 %if 0%{?with_python3}
 %files -n python3-numpy
-%doc doc/cython LICENSE.txt README.txt THANKS.txt DEV_README.txt COMPATIBILITY site.cfg.example
-%{python3_sitearch}/%{name}/__pycache__/*
+%doc LICENSE.txt README.txt THANKS.txt DEV_README.txt COMPATIBILITY site.cfg.example
+%{python3_sitearch}/%{name}/__pycache__
 %dir %{python3_sitearch}/%{name}
 %{python3_sitearch}/%{name}/*.py*
 %{python3_sitearch}/%{name}/core
@@ -223,8 +212,6 @@ popd &> /dev/null
 %{python3_sitearch}/%{name}/lib
 %{python3_sitearch}/%{name}/linalg
 %{python3_sitearch}/%{name}/ma
-%{python3_sitearch}/%{name}/numarray
-%{python3_sitearch}/%{name}/oldnumeric
 %{python3_sitearch}/%{name}/random
 %{python3_sitearch}/%{name}/testing
 %{python3_sitearch}/%{name}/tests
@@ -234,15 +221,47 @@ popd &> /dev/null
 %{python3_sitearch}/%{name}-*.egg-info
 
 %files -n python3-numpy-f2py
-%doc docs-f2py
 %{_bindir}/f2py3
 %{python3_sitearch}/%{name}/f2py
 %endif # with_python3
 
 
 %changelog
-* Wed Jun 18 2014 Liu Di <liudidi@gmail.com> - 1:1.8.0-5
+* Sat Feb 28 2015 Liu Di <liudidi@gmail.com> - 1:1.9.1-3
 - 为 Magic 3.0 重建
+
+* Tue Jan 6 2015 Orion Poplawski <orion@nwra.com> - 1:1.9.1-2
+- Add upstream patch to fix xerbla linkage (bug #1172834)
+
+* Tue Nov 04 2014 Jon Ciesla <limburgher@gmail.com> - 1:1.9.1-1
+- Update to 1.9.1, BZ 1160273.
+
+* Sun Sep 7 2014 Orion Poplawski <orion@nwra.com> - 1:1.9.0-1
+- Update to 1.9.0
+
+* Wed Aug 27 2014 Orion Poplawski <orion@nwra.com> - 1:1.9.0-0.1.rc1
+- Update to 1.9.0rc1
+
+* Sun Aug 17 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1:1.8.2-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
+
+* Sun Aug 10 2014 Orion Poplawski <orion@nwra.com> - 1:1.8.2-1
+- Update to 1.8.2
+
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1:1.8.1-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Fri May 9 2014 Orion Poplawski <orion@nwra.com> - 1:1.8.1-3
+- Rebuild for Python 3.4
+
+* Wed May 07 2014 Jaromir Capik <jcapik@redhat.com> - 1:1.8.1-2
+- Fixing FTBFS on ppc64le (#1078354)
+
+* Tue Mar 25 2014 Orion Poplawski <orion@nwra.com> - 1:1.8.1-1
+- Update to 1.8.1
+
+* Tue Mar 4 2014 Orion Poplawski <orion@nwra.com> - 1:1.8.0-5
+- Fix __pycache__ ownership (bug #1072467)
 
 * Mon Feb 10 2014 Thomas Spura <tomspur@fedoraproject.org> - 1:1.8.0-4
 - Fix CVE-2014-1858, CVE-2014-1859: #1062009, #1062359

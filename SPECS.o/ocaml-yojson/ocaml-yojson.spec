@@ -5,8 +5,9 @@
 
 Name:           ocaml-yojson
 Version:        1.1.8
-Release:        5%{?dist}
+Release:        6%{?dist}
 Summary:        An optimized parsing and printing library for the JSON format
+Summary(zh_CN.UTF-8): 优化的解析和打印 JSON 格式的库
 
 License:        BSD
 URL:            http://mjambon.com/yojson.html
@@ -36,15 +37,20 @@ yojson package.
 The program atdgen can be used to derive OCaml-JSON serializers and
 deserializers from type definitions.
 
+%description -l zh_CN.UTF-8
+优化的解析和打印 JSON 格式的库。
 
 %package        devel
 Summary:        Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Requires:       %{name}%{?_isa} = %{version}-%{release}
 
 %description    devel
 The %{name}-devel package contains libraries and signature files for
 developing applications that use %{name}.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q -n %{libname}-%{version}
@@ -65,7 +71,7 @@ export OCAMLFIND_DESTDIR=$RPM_BUILD_ROOT%{_libdir}/ocaml
 mkdir -p $RPM_BUILD_ROOT%{_bindir}
 mkdir -p $OCAMLFIND_DESTDIR
 make install
-
+magic_rpm_clean.sh
 
 %check
 # Against valid JSON
@@ -97,6 +103,9 @@ $RPM_BUILD_ROOT%{_bindir}/ydump %{SOURCE1} >/dev/null 2>valid-err.log
 
 
 %changelog
+* Sat Mar 14 2015 Liu Di <liudidi@gmail.com> - 1.1.8-6
+- 为 Magic 3.0 重建
+
 * Fri Jun 20 2014 Liu Di <liudidi@gmail.com> - 1.1.8-5
 - 为 Magic 3.0 重建
 

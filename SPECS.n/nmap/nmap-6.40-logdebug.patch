@@ -1,0 +1,33 @@
+diff -up nmap-6.40/ncat/ncat_connect.c.logdebug nmap-6.40/ncat/ncat_connect.c
+--- nmap-6.40/ncat/ncat_connect.c.logdebug	2013-08-08 16:49:23.541312607 +0200
++++ nmap-6.40/ncat/ncat_connect.c	2013-08-08 16:50:07.311943322 +0200
+@@ -420,7 +420,8 @@ static int do_proxy_http(void)
+         goto bail;
+     }
+     code = http_parse_status_line_code(status_line);
+-    logdebug("Proxy returned status code %d.\n", code);
++    if (o.debug)
++        logdebug("Proxy returned status code %d.\n", code);
+     free(status_line);
+     status_line = NULL;
+     if (http_read_header(&sockbuf, &header) != 0) {
+@@ -461,7 +462,8 @@ static int do_proxy_http(void)
+             http_challenge_free(&challenge);
+             goto bail;
+         }
+-        logdebug("Reconnection header:\n%s", request);
++        if (o.debug)
++            logdebug("Reconnection header:\n%s", request);
+         if (send(sd, request, n, 0) < 0) {
+             loguser("Error sending proxy request: %s.\n", socket_strerror(socket_errno()));
+             free(request);
+@@ -478,7 +480,8 @@ static int do_proxy_http(void)
+             goto bail;
+         }
+         code = http_parse_status_line_code(status_line);
+-        logdebug("Proxy returned status code %d.\n", code);
++        if (o.debug)
++            logdebug("Proxy returned status code %d.\n", code);
+         free(status_line);
+         status_line = NULL;
+         if (http_read_header(&sockbuf, &header) != 0) {

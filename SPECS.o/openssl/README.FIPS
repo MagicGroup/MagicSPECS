@@ -3,8 +3,6 @@ User guide for the FIPS Red Hat Enterprise Linux - OpenSSL Module
 
 This package contains libraries which comprise the FIPS 140-2
 Red Hat Enterprise Linux - OPENSSL Module.
-Note that the openssl-fips subpackage needs to be installed for the
-OpenSSL FIPS module installation to be complete.
 
 The module files
 ================

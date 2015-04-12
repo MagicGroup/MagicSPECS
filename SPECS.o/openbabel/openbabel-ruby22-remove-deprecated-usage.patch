@@ -1,0 +1,12 @@
+diff -up openbabel-75414ad4e043f16ba72ae51c7ca60f448576688d/scripts/ruby/extconf.rb.rbconfig openbabel-75414ad4e043f16ba72ae51c7ca60f448576688d/scripts/ruby/extconf.rb
+--- openbabel-75414ad4e043f16ba72ae51c7ca60f448576688d/scripts/ruby/extconf.rb.rbconfig	2015-02-07 21:51:50.828130289 +0100
++++ openbabel-75414ad4e043f16ba72ae51c7ca60f448576688d/scripts/ruby/extconf.rb	2015-02-07 21:57:02.185770250 +0100
+@@ -3,7 +3,7 @@
+ # Compensate for the fact that Ruby will try to build universal
+ # binaries on OS X by default
+ require 'rbconfig'
+-if Config::CONFIG["arch"] =~ /universal-darwin/
++if RbConfig::CONFIG["arch"] =~ /universal-darwin/
+   ENV['ARCHFLAGS'] = case `uname -smr`.chomp
+     when "i386" then '-arch i386'
+     when "ppc"  then '-arch ppc'

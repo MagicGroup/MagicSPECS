@@ -1,7 +1,7 @@
 #!/bin/bash
-url="http://deadbeef.sourceforge.net/"
-new1="DeaDBeeF "
-new2=" is out"
+url="http://sourceforge.net/projects/deadbeef/"
+new1="deadbeef-"
+new2=".tar.bz2"
 downcommand="wget -q" 
 pushd $(dirname $0) > /dev/null
 rm -f index.html && $downcommand "$url" -O index.html

@@ -1,0 +1,12 @@
+diff -up openbabel-75414ad4e043f16ba72ae51c7ca60f448576688d/scripts/CMakeLists.txt.ruby_vendor openbabel-75414ad4e043f16ba72ae51c7ca60f448576688d/scripts/CMakeLists.txt
+--- openbabel-75414ad4e043f16ba72ae51c7ca60f448576688d/scripts/CMakeLists.txt.ruby_vendor	2015-02-04 20:04:57.000000000 +0100
++++ openbabel-75414ad4e043f16ba72ae51c7ca60f448576688d/scripts/CMakeLists.txt	2015-02-07 23:38:54.649356914 +0100
+@@ -400,7 +416,7 @@ if (DO_RUBY_BINDINGS)
+     endif()
+ 
+     install(TARGETS bindings_ruby
+-            LIBRARY DESTINATION ${LIB_INSTALL_DIR}
++            LIBRARY DESTINATION ${LIB_INSTALL_DIR}/ruby/vendor_ruby
+             COMPONENT bindings_ruby)
+ 
+ endif (DO_RUBY_BINDINGS)

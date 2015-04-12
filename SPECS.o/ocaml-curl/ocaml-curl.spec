@@ -3,8 +3,9 @@
 
 Name:           ocaml-curl
 Version:        0.5.3
-Release:        12%{?dist}
+Release:        13%{?dist}
 Summary:        OCaml Curl library (ocurl)
+Summary(zh_CN.UTF-8): OCaml Curl 库 (ocurl)
 License:        MIT
 
 URL:            http://sourceforge.net/projects/ocurl
@@ -27,10 +28,14 @@ Requires: curl-devel >= 7.12.0
 The Ocaml Curl Library (Ocurl) is an interface library for the
 programming language Ocaml to the networking library libcurl.
 
+%description -l zh_CN.UTF-8
+OCaml Curl 库 (ocurl)。
 
 %package        devel
 Summary:        Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       %{name} = %{version}-%{release}
 
 
@@ -38,6 +43,8 @@ Requires:       %{name} = %{version}-%{release}
 The %{name}-devel package contains libraries and signature files for
 developing applications that use %{name}.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q -n ocurl
@@ -73,7 +80,7 @@ cp curl.mli $OCAMLFIND_DESTDIR/curl
 
 # Make clean in the examples dir so our docs don't contain binaries.
 make -C examples clean
-
+magic_rpm_clean.sh
 
 %files
 %doc COPYING
@@ -99,6 +106,9 @@ make -C examples clean
 
 
 %changelog
+* Thu Mar 05 2015 Liu Di <liudidi@gmail.com> - 0.5.3-13
+- 为 Magic 3.0 重建
+
 * Fri Jun 20 2014 Liu Di <liudidi@gmail.com> - 0.5.3-12
 - 为 Magic 3.0 重建
 

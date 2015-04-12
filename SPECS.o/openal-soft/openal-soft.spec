@@ -1,9 +1,11 @@
 Name:           openal-soft
-Version:        1.15.1
-Release:        2%{?dist}
+Version: 1.16.0
+Release: 1%{?dist}
 Summary:        Open Audio Library
+Summary(zh_CN.UTF-8): 开放音频库
 
 Group:          System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 License:        LGPLv2+
 URL:            http://kcat.strangesoft.net/openal.html
 Source0:        http://kcat.strangesoft.net/openal-releases/openal-soft-%{version}.tar.bz2
@@ -26,9 +28,14 @@ absorption, low-pass filters, and reverb, are available through the
 EFX extension. It also facilitates streaming audio, multi-channel buffers,
 and audio capture.
 
+%description -l zh_CN.UTF-8
+这是一个 OpenAL 3D 音频 API 的跨平台实现。
+
 %package        devel
 Summary:        Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       %{name} = %{version}-%{release}
 Obsoletes:      openal-devel <= 0.0.10
 Provides:       openal-devel = %{version}
@@ -36,6 +43,9 @@ Provides:       openal-devel = %{version}
 %description    devel
 The %{name}-devel package contains libraries and header files for
 developing applications that use %{name}.
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -49,6 +59,7 @@ make install DESTDIR=%{buildroot}
 find %{buildroot} -name '*.la' -exec rm -f {} ';'
 install -Dpm644 alsoftrc.sample %{buildroot}%{_sysconfdir}/openal/alsoft.conf
 #cp -ar examples %{buildroot}%{_datarootdir}/openal/
+magic_rpm_clean.sh
 
 %post -p /sbin/ldconfig
 
@@ -57,14 +68,17 @@ install -Dpm644 alsoftrc.sample %{buildroot}%{_sysconfdir}/openal/alsoft.conf
 %files
 %doc COPYING
 %{_bindir}/openal-info
-%{_bindir}/allatency
-%{_bindir}/alreverb
-%{_bindir}/alstream
+#%{_bindir}/allatency
+#%{_bindir}/alreverb
+#%{_bindir}/alstream
+%{_bindir}/alsoft-config
 %{_libdir}/libopenal.so.*
 %dir %{_sysconfdir}/openal
 %config(noreplace) %{_sysconfdir}/openal/alsoft.conf
 %dir %{_datarootdir}/openal
 %{_datarootdir}/openal/alsoftrc.sample
+%{_datadir}/openal/hrtf/default-44100.mhr
+%{_datadir}/openal/hrtf/default-48000.mhr
 
 %files devel
 %{_bindir}/makehrtf
@@ -77,6 +91,9 @@ install -Dpm644 alsoftrc.sample %{buildroot}%{_sysconfdir}/openal/alsoft.conf
 
 
 %changelog
+* Wed Mar 25 2015 Liu Di <liudidi@gmail.com> - 1.16.0-1
+- 更新到 1.16.0
+
 * Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.15.1-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
 

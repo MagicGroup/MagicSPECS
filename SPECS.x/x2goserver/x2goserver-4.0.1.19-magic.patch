@@ -1,0 +1,24 @@
+diff -ur x2goserver-4.0.1.19.orig/x2goserver-xsession/etc/Xsession x2goserver-4.0.1.19/x2goserver-xsession/etc/Xsession
+--- x2goserver-4.0.1.19.orig/x2goserver-xsession/etc/Xsession	2015-03-01 00:12:53.322756135 +0000
++++ x2goserver-4.0.1.19/x2goserver-xsession/etc/Xsession	2015-03-01 00:15:28.036752169 +0000
+@@ -130,7 +130,7 @@
+ 		done
+ 		set -e
+ 	fi
+-elif [ -f /etc/redhat-release ] || [ -f /etc/gentoo-release ] || [ -f /etc/SUSE-brand ] || [ -f /etc/SuSE-release ]; then
++elif [ -f /etc/redhat-release ] || [ -f /etc/magic-release ] || [ -f /etc/gentoo-release ] || [ -f /etc/SUSE-brand ] || [ -f /etc/SuSE-release ]; then
+ 
+ 	# define a fallback... (should never be needed). The XSESSION_EXEC var gets set in
+ 	# X2Go's x2goruncommand script and can be used with obsolete switchdesk or with
+diff -ur x2goserver-4.0.1.19.orig/x2goserver-xsession/Makefile x2goserver-4.0.1.19/x2goserver-xsession/Makefile
+--- x2goserver-4.0.1.19.orig/x2goserver-xsession/Makefile	2015-03-01 00:12:53.321756135 +0000
++++ x2goserver-4.0.1.19/x2goserver-xsession/Makefile	2015-03-01 00:14:49.213753164 +0000
+@@ -58,6 +58,8 @@
+ 	if [ -e /etc/debian_version ]; then if [ -d $(XSESSIONDIR) ]; then $(INSTALL_SYMLINK) $(XSESSIONDIR) $(DESTDIR)$(ETCDIR)/Xsession.d; else $(INSTALL_DIR) $(DESTDIR)$(ETCDIR)/Xsession.d; fi; fi
+ 	if [ -e /etc/redhat-release ]; then if [ -d $(XINITRCDIR) ]; then $(INSTALL_SYMLINK) $(XINITRCDIR) $(DESTDIR)$(ETCDIR)/xinitrc.d; else $(INSTALL_DIR) $(DESTDIR)$(ETCDIR)/xinitrc.d; fi; fi
+ 	if [ -e /etc/redhat-release ]; then if [ -d $(XCLIENTSDIR) ]; then $(INSTALL_SYMLINK) $(XCLIENTSDIR) $(DESTDIR)$(ETCDIR)/Xclients.d; else $(INSTALL_DIR) $(DESTDIR)$(ETCDIR)/Xclients.d; fi; fi
++	if [ -e /etc/magic-release ]; then if [ -d $(XINITRCDIR) ]; then $(INSTALL_SYMLINK) $(XINITRCDIR) $(DESTDIR)$(ETCDIR)/xinitrc.d; else $(INSTALL_DIR) $(DESTDIR)$(ETCDIR)/xinitrc.d; fi; fi
++	if [ -e /etc/magic-release ]; then if [ -d $(XCLIENTSDIR) ]; then $(INSTALL_SYMLINK) $(XCLIENTSDIR) $(DESTDIR)$(ETCDIR)/Xclients.d; else $(INSTALL_DIR) $(DESTDIR)$(ETCDIR)/Xclients.d; fi; fi
+ 	if [ -e /etc/gentoo-release ]; then if [ -d $(XINITRCDIR) ]; then $(INSTALL_SYMLINK) $(XINITRCDIR) $(DESTDIR)$(ETCDIR)/xinitrc.d; else $(INSTALL_DIR) $(DESTDIR)$(ETCDIR)/xinitrc.d; fi; fi
+ 	if [ -e /etc/gentoo-release ]; then if [ -d $(XCLIENTSDIR) ]; then $(INSTALL_SYMLINK) $(XCLIENTSDIR) $(DESTDIR)$(ETCDIR)/Xclients.d; else $(INSTALL_DIR) $(DESTDIR)$(ETCDIR)/Xclients.d; fi; fi
+ 	if [ -e /etc/os-release ] && cat /etc/os-release | grep "suse" 1>/dev/null || [ -d /usr/share/doc/packages/brp-check-suse ]; then if [ -d $(XINITRCDIR) ]; then $(INSTALL_SYMLINK) $(XINITRCDIR) $(DESTDIR)$(ETCDIR)/xinitrc.d; else $(INSTALL_DIR) $(DESTDIR)$(ETCDIR)/xinitrc.d; fi; fi

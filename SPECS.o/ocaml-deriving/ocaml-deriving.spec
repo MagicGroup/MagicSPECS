@@ -3,8 +3,9 @@
 
 Name:           ocaml-deriving
 Version:        0.1.1a
-Release:        22%{?dist}
+Release:        23%{?dist}
 Summary:        Extension to OCaml for deriving functions from types
+Summary(zh_CN.UTF-8): 从类型中派生函数的 OCaml 扩展
 License:        MIT
 
 URL:            http://code.google.com/p/deriving/
@@ -13,8 +14,6 @@ Source0:        http://deriving.googlecode.com/files/deriving-%{version}.tar.gz
 ExcludeArch:    sparc64 s390 s390x
 
 Patch0:         ocaml-deriving-no-link-libs.patch
-# This is included as part of the general fixes in patch 2.
-#Patch1:         ocaml-deriving-0.1.1a-dynlink.patch
 Patch2:         0001-fixes-for-3.12.0.patch
 Patch3:         ocaml-deriving-0.1.1a-no-bimap-mli.patch
 
@@ -29,10 +28,14 @@ Extension to OCaml for deriving functions from type declarations.
 Includes derivers for pretty-printing, type-safe marshalling with
 structure-sharing, dynamic typing, equality, and more.
 
+%description -l zh_CN.UTF-8
+从类型中派生函数的 OCaml 扩展。
 
 %package        devel
 Summary:        Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       %{name} = %{version}-%{release}
 
 
@@ -40,11 +43,12 @@ Requires:       %{name} = %{version}-%{release}
 The %{name}-devel package contains libraries and signature files for
 developing applications that use %{name}.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q -n deriving-0.1.1
 %patch0
-#%patch1 -p1
 %patch2 -p1
 %patch3 -p1
 
@@ -91,7 +95,7 @@ package "syntax_tc" (
     )
 )
 EOF
-
+magic_rpm_clean.sh
 
 %check
 # Parallel builds don't work.
@@ -136,6 +140,9 @@ install -m 0755 syntax/deriving $RPM_BUILD_ROOT%{_bindir}
 
 
 %changelog
+* Thu Mar 05 2015 Liu Di <liudidi@gmail.com> - 0.1.1a-23
+- 为 Magic 3.0 重建
+
 * Fri Jun 20 2014 Liu Di <liudidi@gmail.com> - 0.1.1a-22
 - 为 Magic 3.0 重建
 

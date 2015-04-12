@@ -9,10 +9,10 @@ Summary: Hyper fast MPEG1/MPEG4/H263/RV and AC3/MPEG audio encoder and decoder
 Summary(zh_CN.UTF-8): 非常快速的 MPEG1/MPEG4/H263/RV 和 AC3/MPEG 声音编码和解码器
 Name: ffmpeg
 %if %{svn}
-Version:	2.2
+Version:	2.5.5
 Release: 0.svn%{date}.1%{?dist}.3
 %else
-Version:	2.2
+Version:	2.5.5
 Release: 1%{?dist}
 %endif
 License: GPL
@@ -184,7 +184,6 @@ make install DESTDIR=$RPM_BUILD_ROOT
 
 %files
 %defattr(-, root, root, 0755)
-%doc CREDITS README
 %doc %{_mandir}/man1/*
 %{_bindir}/*
 %{_libdir}/libavcodec.so.*
@@ -195,7 +194,7 @@ make install DESTDIR=$RPM_BUILD_ROOT
 %{_libdir}/libpostproc.so.*
 %{_libdir}/libswscale.so.*
 %{_libdir}/libswresample.so.*
-%{_datadir}/ffmpeg/libx264-*.ffpreset
+#%{_datadir}/ffmpeg/libx264-*.ffpreset
 %{_datadir}/ffmpeg/libvpx-*.ffpreset
 %{_datadir}/ffmpeg/ffprobe.xsd
 
@@ -222,6 +221,9 @@ make install DESTDIR=$RPM_BUILD_ROOT
 %{_mandir}/man3/lib*.3*
 
 %changelog
+* Fri Mar 27 2015 Liu Di <liudidi@gmail.com> - 2.5.5-1
+- 更新到 2.5.5
+
 * Wed Apr 02 2014 Liu Di <liudidi@gmail.com> - 2.2-1
 - 更新到 2.2
 

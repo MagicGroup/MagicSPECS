@@ -9,10 +9,12 @@
 
 Name:           octave
 Epoch:          6
-Version:        3.8.1
-Release:        3%{?dist}
+Version:	3.8.2
+Release:	1%{?dist}
 Summary:        A high-level language for numerical computations
+Summary(zh_CN.UTF-8): 数值计算的高级语言
 Group:          Applications/Engineering
+Group(zh_CN.UTF-8): 应用程序/工程
 License:        GPLv3+
 URL:            http://www.octave.org
 
@@ -26,7 +28,9 @@ Source1:        macros.octave
 # Fix to allow pkg build to use a directory
 # https://savannah.gnu.org/bugs/?func=detailitem&item_id=32839
 Patch0:         octave-3.8.0-pkgbuilddir.patch
-Patch1:         octave-3.8.1-disable-qt5.patch
+# Patch to compile with suitesparse 4.3.1
+# https://savannah.gnu.org/bugs/?func=detailitem&item_id=43063
+Patch1:         octave-suitesparse.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
@@ -88,10 +92,14 @@ extensible and customizable via user-defined functions written in
 Octave's own language, or using dynamically loaded modules written in
 C++, C, Fortran, or other languages.
 
+%description -l zh_CN.UTF-8
+数值计算的高级语言。
 
 %package devel
 Summary:        Development headers and files for Octave
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       %{name} = %{epoch}:%{version}-%{release}
 Requires:       readline-devel fftw-devel hdf5-devel zlib-devel
 Requires:       atlas-devel gcc-c++ gcc-gfortran
@@ -100,16 +108,23 @@ Requires:       atlas-devel gcc-c++ gcc-gfortran
 The octave-devel package contains files needed for developing
 applications which use GNU Octave.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %package doc
 Summary:        Documentation for Octave
+Summary(zh_CN.UTF-8): %{name} 的文档
 Group:          Documentation
+Group(zh_CN.UTF-8): 文档
 %if 0%{?fedora} > 10 || 0%{?rhel} > 5
 BuildArch:      noarch
 %endif
 
 %description doc
 This package contains documentation for Octave.
+
+%description doc -l zh_CN.UTF-8
+%{name} 的文档。
 
 %prep
 %setup -q -n %{name}-%{version}%{?rctag}
@@ -172,7 +187,7 @@ touch %{buildroot}%{_datadir}/%{name}/ls-R
 rm -f %{buildroot}%{_datadir}/applications/www.octave.org-octave.desktop
 desktop-file-install --remove-category Development --add-category "Education" \
   --add-category "DataVisualization" --add-category "NumericalAnalysis" --add-category "Engineering" --add-category "Physics" \
-  --dir %{buildroot}%{_datadir}/applications doc/icons/octave.desktop
+  --dir %{buildroot}%{_datadir}/applications etc/icons/octave.desktop
 
 # Create directories for add-on packages
 HOST_TYPE=`%{buildroot}%{_bindir}/octave-config -p CANONICAL_HOST_TYPE`
@@ -240,6 +255,7 @@ sed -i -e '/^# Created by Octave/d' %{buildroot}%{_datadir}/%{name}/%{version}%{
 # rpm macros
 mkdir -p %{buildroot}%{_rpmconfigdir}/macros.d
 cp -p %SOURCE1 %{buildroot}%{_rpmconfigdir}/macros.d/
+magic_rpm_clean.sh
 
 %check
 make check
@@ -293,6 +309,9 @@ fi
 
 
 %changelog
+* Sat Mar 14 2015 Liu Di <liudidi@gmail.com> - 6:3.8.2-1
+- 更新到 3.8.2
+
 * Wed Apr 30 2014 Liu Di <liudidi@gmail.com> - 6:3.8.1-3
 - 为 Magic 3.0 重建
 

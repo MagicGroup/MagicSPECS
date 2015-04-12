@@ -4,17 +4,19 @@
 %define docs 1
 
 Summary: Qt5 - SerialPort component
+Summary(zh_CN.UTF-8): Qt5 - 串口组件
 Name:    qt5-%{qt_module}
-Version: 5.3.1
-Release: 2%{?dist}
+Version: 5.4.1
+Release: 1%{?dist}
 
 # See LGPL_EXCEPTIONS.txt, LICENSE.GPL3, respectively, for exception details
 License: LGPLv2 with exceptions or GPLv3 with exceptions
 Url: http://qt-project.org/
+%define majorver %(echo %{version} | awk -F. '{print $1"."$2}')
 %if 0%{?pre:1}
-Source0: http://download.qt-project.org/development_releases/qt/5.3/%{version}-%{pre}/submodules/%{qt_module}-opensource-src-%{version}-%{pre}.tar.xz
+Source0: http://download.qt-project.org/development_releases/qt/%{majorver}/%{version}-%{pre}/submodules/%{qt_module}-opensource-src-%{version}-%{pre}.tar.xz
 %else
-Source0: http://download.qt-project.org/official_releases/qt/5.3/%{version}/submodules/%{qt_module}-opensource-src-%{version}.tar.xz
+Source0: http://download.qt-project.org/official_releases/qt/%{majorver}/%{version}/submodules/%{qt_module}-opensource-src-%{version}.tar.xz
 %endif
 
 BuildRequires: qt5-qtbase-devel >= %{version}
@@ -25,30 +27,43 @@ BuildRequires: pkgconfig(libudev)
 Qt Serial Port provides the basic functionality, which includes configuring,
 I/O operations, getting and setting the control signals of the RS-232 pinouts.
 
+%description -l zh_CN.UTF-8
+Qt5 - 串口组件。
+
 %package devel
 Summary: Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Requires: %{name}%{?_isa} = %{version}-%{release}
 Requires: qt5-qtbase-devel%{?_isa}
 %description devel
 %{summary}.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
 %if 0%{?docs}
 %package doc
 Summary: API documentation for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发文档
 Requires: %{name} = %{version}-%{release}
 # for qhelpgenerator
 BuildRequires: qt5-qttools-devel
 BuildArch: noarch
 %description doc
 %{summary}.
+%description doc -l zh_CN.UTF-8
+%{name} 的开发文档。
 %endif
 
 %package examples
 Summary: Programming examples for %{name}
+Summary(zh_CN.UTF-8): %{name} 的样例程序
 Requires: %{name}%{?_isa} = %{version}-%{release}
 %description examples
 %{summary}.
 
+%description examples -l zh_CN.UTF-8
+%{name} 的样例程序。
 
 %prep
 %setup -q -n %{qt_module}-opensource-src-%{version}%{?pre:-%{pre}}
@@ -82,13 +97,13 @@ for prl_file in libQt5*.prl ; do
   fi
 done
 popd
-
+magic_rpm_clean.sh
 
 %post -p /sbin/ldconfig
 %postun -p /sbin/ldconfig
 
 %files
-%doc LGPL_EXCEPTION.txt LICENSE.GPL LICENSE.LGPL
+%doc LGPL_EXCEPTION.txt 
 %{_qt5_libdir}/libQt5SerialPort.so.5*
 
 %files devel
@@ -115,6 +130,9 @@ popd
 
 
 %changelog
+* Fri Mar 20 2015 Liu Di <liudidi@gmail.com> - 5.4.1-1
+- 更新到 5.4.1
+
 * Wed Aug 06 2014 Liu Di <liudidi@gmail.com> - 5.3.1-2
 - 为 Magic 3.0 重建
 

@@ -2,16 +2,18 @@
 %global qt_module qttranslations
 
 Summary: Qt5 - QtTranslations module
+Summary(zh_CN.UTF-8): Qt5 - 翻译模块
 Name:    qt5-%{qt_module}
-Version: 5.3.1
-Release: 2%{?dist}
+Version: 5.4.1
+Release: 1%{?dist}
 
 License: LGPLv2 with exceptions or GPLv3 with exceptions and GFDL
 Url:     http://qt-project.org/
+%define majorver %(echo %{version} | awk -F. '{print $1"."$2}')
 %if 0%{?pre:1}
-Source0: http://download.qt-project.org/development_releases/qt/5.3/%{version}-%{pre}/submodules/%{qt_module}-opensource-src-%{version}-%{pre}.tar.xz
+Source0: http://download.qt-project.org/development_releases/qt/%{majorver}/%{version}-%{pre}/submodules/%{qt_module}-opensource-src-%{version}-%{pre}.tar.xz
 %else
-Source0: http://download.qt-project.org/official_releases/qt/5.3/%{version}/submodules/%{qt_module}-opensource-src-%{version}.tar.xz
+Source0: http://download.qt-project.org/official_releases/qt/%{majorver}/%{version}/submodules/%{qt_module}-opensource-src-%{version}.tar.xz
 %endif
 
 BuildArch: noarch
@@ -21,6 +23,8 @@ BuildRequires: qt5-qttools-devel >= %{version}
 %description
 %{summary}.
 
+%description -l zh_CN.UTF-8
+Qt5 - 翻译模块。
 
 %prep
 %setup -q -n %{qt_module}-opensource-src-%{version}%{?pre:-%{pre}}
@@ -33,17 +37,20 @@ make %{?_smp_mflags}
 
 %install
 make install INSTALL_ROOT=$RPM_BUILD_ROOT
-
+magic_rpm_clean.sh
 %find_lang %{name} --all-name --with-qt --without-mo
 
 
 %files -f %{name}.lang
-%doc LICENSE.GPL LICENSE.LGPL LGPL_EXCEPTION.txt
+%doc LGPL_EXCEPTION.txt
 ## skip this if using %%find_lang macro
 #{_qt5_translationdir}/*
 
 
 %changelog
+* Fri Mar 20 2015 Liu Di <liudidi@gmail.com> - 5.4.1-1
+- 更新到 5.4.1
+
 * Wed Aug 06 2014 Liu Di <liudidi@gmail.com> - 5.3.1-2
 - 为 Magic 3.0 重建
 

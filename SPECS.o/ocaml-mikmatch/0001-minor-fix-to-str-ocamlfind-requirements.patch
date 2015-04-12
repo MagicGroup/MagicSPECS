@@ -1,0 +1,26 @@
+From 27ff31a6c901e04a96162930f484ac341346e35c Mon Sep 17 00:00:00 2001
+From: andrewray <evilkidder@gmail.com>
+Date: Sun, 8 Jun 2014 10:11:46 +0100
+Subject: [PATCH 1/2] minor fix to str ocamlfind requirements
+
+needs package str rather than pcre
+---
+ str/META.template | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/str/META.template b/str/META.template
+index b692995..961e89b 100644
+--- a/str/META.template
++++ b/str/META.template
+@@ -2,7 +2,7 @@ name = "mikmatch_str"
+ version = "VERSION"
+ description = "Pattern matching extended with regexps in Ocamllex syntax"
+ 
+-requires = "camlp4 pcre unix"
++requires = "camlp4 str unix"
+ requires(toploop) += "tophide"
+ 
+ archive(syntax,toploop) = "pa_mikmatch_str.cma run_mikmatch_str.cma"
+-- 
+1.9.3
+

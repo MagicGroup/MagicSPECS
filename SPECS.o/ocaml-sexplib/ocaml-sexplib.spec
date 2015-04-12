@@ -5,8 +5,9 @@
 
 Name:           ocaml-sexplib
 Version:        7.0.5
-Release:        10%{?dist}
+Release:        11%{?dist}
 Summary:        OCaml library for converting OCaml values to S-expressions
+Summary(zh_CN.UTF-8): 转换 OCaml 值到 S 表达式的 OCaml 库
 License:        LGPLv2+ with exceptions and BSD
 
 URL:            http://forge.ocamlcore.org/projects/sexplib
@@ -37,9 +38,12 @@ S-expressions to OCaml-values are reported in a very human-readable
 way. Another module in the library allows you to extract and replace
 sub-expressions in S-expressions.
 
+%description -l zh_CN.UTF-8
+转换 OCaml 值到 S 表达式的 OCaml 库。
 
 %package        devel
 Summary:        Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Requires:       %{name} = %{version}-%{release}
 
 
@@ -47,6 +51,8 @@ Requires:       %{name} = %{version}-%{release}
 The %{name}-devel package contains libraries and signature files for
 developing applications that use %{name}.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q -n sexplib-%{version}
@@ -78,7 +84,7 @@ export DESTDIR=$RPM_BUILD_ROOT
 export OCAMLFIND_DESTDIR=$RPM_BUILD_ROOT%{_libdir}/ocaml
 mkdir -p $OCAMLFIND_DESTDIR $OCAMLFIND_DESTDIR/stublibs
 ocaml setup.ml -install
-
+magic_rpm_clean.sh
 
 %files
 %doc LICENSE LICENSE.Tywith
@@ -102,6 +108,9 @@ ocaml setup.ml -install
 
 
 %changelog
+* Sat Mar 14 2015 Liu Di <liudidi@gmail.com> - 7.0.5-11
+- 为 Magic 3.0 重建
+
 * Fri Jun 20 2014 Liu Di <liudidi@gmail.com> - 7.0.5-10
 - 为 Magic 3.0 重建
 

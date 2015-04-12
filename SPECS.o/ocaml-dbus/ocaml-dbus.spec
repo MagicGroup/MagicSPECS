@@ -2,8 +2,9 @@
 
 Name:           ocaml-dbus
 Version:        0.29
-Release:        11%{?dist}
+Release:        12%{?dist}
 Summary:        OCaml library for using D-Bus
+Summary(zh_CN.UTF-8): 使用 D-Bus 需要的 OCaml 库
 License:        LGPLv2
 
 URL:            http://projects.snarc.org/ocaml-dbus/
@@ -21,9 +22,12 @@ D-Bus is a project that permits programs to communicate with each
 other, using a simple IPC protocol.  This is an OCaml binding for
 D-Bus.
 
+%description -l zh_CN.UTF-8
+使用 D-Bus 需要的 OCaml 库。
 
 %package        devel
 Summary:        Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:          Development/Libraries
 Requires:       %{name} = %{version}-%{release}
 
@@ -32,6 +36,8 @@ Requires:       %{name} = %{version}-%{release}
 The %{name}-devel package contains libraries and signature files for
 developing applications that use %{name}.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q -n ocaml_dbus-%{version}
@@ -60,7 +66,7 @@ mkdir -p $OCAMLFIND_DESTDIR $OCAMLFIND_DESTDIR/stublibs
 make OCAMLDESTDIR=$OCAMLFIND_DESTDIR install
 
 chrpath --delete $OCAMLFIND_DESTDIR/stublibs/dlldbus_stubs.so
-
+magic_rpm_clean.sh
 
 %files
 %doc README
@@ -86,6 +92,9 @@ chrpath --delete $OCAMLFIND_DESTDIR/stublibs/dlldbus_stubs.so
 
 
 %changelog
+* Thu Mar 05 2015 Liu Di <liudidi@gmail.com> - 0.29-12
+- 为 Magic 3.0 重建
+
 * Fri Jun 20 2014 Liu Di <liudidi@gmail.com> - 0.29-11
 - 为 Magic 3.0 重建
 

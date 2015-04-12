@@ -1,0 +1,11 @@
+--- graphviz-2.38.0/configure.ac.rbconfig	2014-04-14 05:40:25.000000000 +0900
++++ graphviz-2.38.0/configure.ac	2015-01-17 03:13:15.341730456 +0900
+@@ -1587,7 +1587,7 @@
+ 	    if test "x$DARWIN" = "xyes"; then
+ 	      RUBY_CFLAGS=`echo $RUBY_CFLAGS | sed 's/powerpc/universal/'`
+ 	    fi
+-            RUBY_LIBS="-L`$RUBY $srcdir/config/config_ruby.rb lib` `$RUBY -rrbconfig -e \"puts Config::CONFIG[['LIBRUBYARG_SHARED']]\"`"
++            RUBY_LIBS="-L`$RUBY $srcdir/config/config_ruby.rb lib` `$RUBY -rrbconfig -e \"puts RbConfig::CONFIG[['LIBRUBYARG_SHARED']]\"`"
+             RUBY_INSTALL_DIR="`$RUBY $srcdir/config/config_ruby.rb vendorarchdir`"
+ 	    if test "x$RUBY_INSTALL_DIR" = "x"; then
+ 	  	  RUBY_INSTALL_DIR="`$RUBY $srcdir/config/config_ruby.rb sitearchdir`"

@@ -1,11 +1,13 @@
 %global udevdir %{_prefix}/lib/udev
 
 Summary: Library for using OBEX
+Summary(zh_CN.UTF-8): 使用 OBEX 的库
 Name: openobex
 Version: 1.7.1
-Release: 4%{?dist}
+Release: 5%{?dist}
 License: GPLv2+ and LGPLv2+
 Group: System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 URL: http://openobex.sourceforge.net
 # git clone https://git.gitorious.org/openobex/mainline.git
 Source: http://downloads.sourceforge.net/%{name}/%{name}-%{version}-Source.tar.gz
@@ -22,22 +24,35 @@ devices to exchange all kind of objects like files, pictures, calendar
 entries (vCal) and business cards (vCard).  This package contains the
 Open OBEX shared C library.
 
+%description -l zh_CN.UTF-8
+使用 OBEX 的库.
+
 %package devel
 Summary: Files for development of applications which will use OBEX
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: %{name} = %{version}-%{release}
 Requires: bluez-libs-devel libusb-devel
 
 %description devel
 Header files for development of applications which use OpenOBEX.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
 %package apps
 Summary: Applications for using OBEX
+Summary(zh_CN.UTF-8): %{name} 的应用程序
 Group: System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 
 %description apps
 Open OBEX Applications to exchange all kind of objects like files, pictures,
 calendar entries (vCal) and business cards (vCard) using the OBEX protocol.
+
+%description apps -l zh_CN.UTF-8
+%{name} 的应用程序。
 
 %prep
 %setup -q -n %{name}-%{version}-Source
@@ -63,6 +78,7 @@ rm -f $RPM_BUILD_ROOT%{_libdir}/*.la
 # and has some problems (multiple buffer overflows etc.)
 rm -f $RPM_BUILD_ROOT%{_bindir}/obex_test
 rm -f $RPM_BUILD_ROOT%{_mandir}/man1/obex_test.1*
+magic_rpm_clean.sh
 
 %post -p /sbin/ldconfig
 
@@ -100,6 +116,9 @@ rm -f $RPM_BUILD_ROOT%{_mandir}/man1/obex_test.1*
 %{_mandir}/man1/obex_push.1*
 
 %changelog
+* Thu Apr 02 2015 Liu Di <liudidi@gmail.com> - 1.7.1-5
+- 为 Magic 3.0 重建
+
 * Sun Jun 22 2014 Liu Di <liudidi@gmail.com> - 1.7.1-4
 - 为 Magic 3.0 重建
 

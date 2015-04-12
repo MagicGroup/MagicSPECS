@@ -5,8 +5,9 @@
 
 Name:           ocaml-xmlm
 Version:        1.2.0
-Release:        6%{?dist}
+Release:        7%{?dist}
 Summary:        A streaming XML codec
+Summary(zh_CN.UTF-8): 流式 XML 编码器
 
 License:        BSD
 URL:            http://erratique.ch/software/xmlm
@@ -27,15 +28,20 @@ Xmlm is an OCaml streaming codec to decode and encode the XML data
 format. It can process XML documents without a complete in-memory
 representation of the data.
 
+%description -l zh_CN.UTF-8
+流式 XML 编码器。
 
 %package        devel
 Summary:        Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Requires:       %{name}%{?_isa} = %{version}-%{release}
 
 %description    devel
 The %{name}-devel package contains libraries and signature files for
 developing applications that use %{name}.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q -n %{libname}-%{version}
@@ -65,7 +71,7 @@ install -m 755 -p _build/src/xmlm.cmxs $OCAMLFIND_DESTDIR/%{libname}/
 install -m 755 -p _build/test/xmltrip.byte $RPM_BUILD_ROOT%{_bindir}/xmltrip
 %endif
 install -m 644 -p _build/pkg/META _build/src/xmlm.{cm?,mli} $OCAMLFIND_DESTDIR/%{libname}/
-
+magic_rpm_clean.sh
 
 %check
 # Against valid XML
@@ -103,6 +109,9 @@ grep expected invalid-err.log >/dev/null
 
 
 %changelog
+* Sat Mar 14 2015 Liu Di <liudidi@gmail.com> - 1.2.0-7
+- 为 Magic 3.0 重建
+
 * Fri Jun 20 2014 Liu Di <liudidi@gmail.com> - 1.2.0-6
 - 为 Magic 3.0 重建
 

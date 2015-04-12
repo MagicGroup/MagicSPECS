@@ -8,8 +8,9 @@
 
 Name:           ocaml-preludeml
 Version:        0.1
-Release:        0.27.%{gitdate}%{?dist}
+Release:        0.28.%{gitdate}%{?dist}
 Summary:        OCaml utility functions
+Summary(zh_CN.UTF-8): OCaml 工具函数
 License:        MIT
 
 ExcludeArch:    sparc64 s390 s390x
@@ -36,10 +37,14 @@ Prelude.ml is a collection of utility functions for OCaml programs.
 Of particular interest are high level parallel combinators, which make
 multicore parallelization of OCaml programs easy.
 
+%description -l zh_CN.UTF-8
+OCaml 工具函数。
 
 %package        devel
 Summary:        Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       %{name} = %{version}-%{release}
 
 
@@ -47,6 +52,8 @@ Requires:       %{name} = %{version}-%{release}
 The %{name}-devel package contains libraries and signature files for
 developing applications that use %{name}.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q -n preludeml
@@ -86,7 +93,7 @@ ocamlfind install preludeml \
   src/prelude.cmx \
   src/prelude.a \
   src/prelude.cmxa
-
+magic_rpm_clean.sh
 
 %files
 %doc LICENSE
@@ -110,6 +117,9 @@ ocamlfind install preludeml \
 
 
 %changelog
+* Wed Mar 11 2015 Liu Di <liudidi@gmail.com> - 0.1-0.28.20100314
+- 为 Magic 3.0 重建
+
 * Fri Jun 20 2014 Liu Di <liudidi@gmail.com> - 0.1-0.27.20100314
 - 为 Magic 3.0 重建
 

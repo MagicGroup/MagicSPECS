@@ -11,14 +11,16 @@
 %endif
 
 Name:           suitesparse
-Version:        4.2.1
-Release:        2%{?dist}
+Version:        4.3.1
+Release:        5%{?dist}
 Summary:        A collection of sparse matrix libraries
 
 Group:          System Environment/Libraries
 License:        LGPLv2+ and GPLv2+
 URL:            http://www.cise.ufl.edu/research/sparse/SuiteSparse
 Source0:        http://www.cise.ufl.edu/research/sparse/SuiteSparse/SuiteSparse-%{version}.tar.gz
+# Move #include <math.h> out of StuiteSparse_config.h and into SuiteSparse_config.c
+Patch0:         suitesparse-math.patch
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 %if %{with atlas310}
@@ -26,7 +28,7 @@ BuildRequires:  atlas-devel >= 3.10
 %else
 BuildRequires:  atlas-devel
 %endif
-%ifarch %{ix86} x86_64 ia64
+%ifnarch s390 s390x
 BuildRequires:  tbb-devel
 %global with_tbb 1
 %endif
@@ -93,36 +95,37 @@ This package contains documentation files for %{name}.
 
 %prep
 %setup -q -n SuiteSparse
+%patch0 -p1 -b .math
 
 %build
-%define amd_version 2.3.1
+%define amd_version 2.4.0
 %define amd_version_major 2
 %define btf_version 1.2.0
 %define btf_version_major 1
-%define camd_version 2.3.1
+%define camd_version 2.4.0
 %define camd_version_major 2
-%define ccolamd_version 2.8.0
+%define ccolamd_version 2.9.0
 %define ccolamd_version_major 2
-%define cholmod_version 2.1.2
-%define cholmod_version_major 2
-%define colamd_version 2.8.0
+%define cholmod_version 3.0.1
+%define cholmod_version_major 3
+%define colamd_version 2.9.0
 %define colamd_version_major 2
-%define csparse_version 3.1.2
+%define csparse_version 3.1.3
 %define csparse_version_major 3
-%define cxsparse_version 3.1.2
+%define cxsparse_version 3.1.3
 %define cxsparse_version_major 3
-%define klu_version 1.2.1
+%define klu_version 1.3.0
 %define klu_version_major 1
-%define ldl_version 2.1.0
+%define ldl_version 2.2.0
 %define ldl_version_major 2
-%define umfpack_version 5.6.2
-%define umfpack_version_major 5
-%define spqr_version 1.3.1
-%define spqr_version_major 1
-%define rbio_version 2.1.1
+%define rbio_version 2.2.0
 %define rbio_version_major 2
-%define SuiteSparse_config_ver 4.2.1
+%define spqr_version 1.3.3
+%define spqr_version_major 1
+%define SuiteSparse_config_ver 4.3.1
 %define SuiteSparse_config_major 4
+%define umfpack_version 5.7.0
+%define umfpack_version_major 5
 ### CHOLMOD can also be compiled to use the METIS library, but it is not
 ### used here because its licensing terms exclude it from Fedora Extras.
 ### To compile with METIS, define enable_metis as 1 below.
@@ -141,7 +144,7 @@ pushd SuiteSparse_config
   ar x libsuitesparseconfig.a
   pushd ../Lib
     gcc -shared -Wl,-soname,libsuitesparseconfig.so.%{SuiteSparse_config_major} -o \
-        libsuitesparseconfig.so.%{SuiteSparse_config_ver} ../SuiteSparse_config/*.o
+        libsuitesparseconfig.so.%{SuiteSparse_config_ver} ../SuiteSparse_config/*.o -lm
     ln -sf libsuitesparseconfig.so.%{SuiteSparse_config_ver} libsuitesparseconfig.so.%{SuiteSparse_config_major}
     ln -sf libsuitesparseconfig.so.%{SuiteSparse_config_ver} libsuitesparseconfig.so
     cp -p ../SuiteSparse_config/*.a ./
@@ -155,7 +158,8 @@ pushd AMD
   popd
   pushd ../Lib
     gcc -shared -Wl,-soname,libamd.so.%{amd_version_major} -o \
-        libamd.so.%{amd_version} ../AMD/Lib/*.o -lm
+        libamd.so.%{amd_version} ../AMD/Lib/*.o \
+        libsuitesparseconfig.so.%{SuiteSparse_config_major} -lm
     ln -sf libamd.so.%{amd_version} libamd.so.%{amd_version_major}
     ln -sf libamd.so.%{amd_version} libamd.so
     cp -p ../AMD/Lib/*.a ./
@@ -185,7 +189,8 @@ pushd CAMD
   popd
   pushd ../Lib
     gcc -shared -Wl,-soname,libcamd.so.%{camd_version_major} -o \
-        libcamd.so.%{camd_version} ../CAMD/Lib/*.o -lm
+        libcamd.so.%{camd_version} ../CAMD/Lib/*.o \
+        libsuitesparseconfig.so.%{SuiteSparse_config_major} -lm
     ln -sf libcamd.so.%{camd_version} libcamd.so.%{camd_version_major}
     ln -sf libcamd.so.%{camd_version} libcamd.so
     cp -p ../CAMD/Lib/*.a ./
@@ -200,7 +205,8 @@ pushd CCOLAMD
   popd
   pushd ../Lib
     gcc -shared -Wl,-soname,libccolamd.so.%{ccolamd_version_major} -o \
-        libccolamd.so.%{ccolamd_version} ../CCOLAMD/Lib/*.o -lm
+        libccolamd.so.%{ccolamd_version} ../CCOLAMD/Lib/*.o \
+        libsuitesparseconfig.so.%{SuiteSparse_config_major} -lm
     ln -sf libccolamd.so.%{ccolamd_version} libccolamd.so.%{ccolamd_version_major}
     ln -sf libccolamd.so.%{ccolamd_version} libccolamd.so
     cp -p ../CCOLAMD/Lib/*.a ./
@@ -215,7 +221,8 @@ pushd COLAMD
   popd
   pushd ../Lib
     gcc -shared -Wl,-soname,libcolamd.so.%{colamd_version_major} -o \
-        libcolamd.so.%{colamd_version} ../COLAMD/Lib/*.o -lm
+        libcolamd.so.%{colamd_version} ../COLAMD/Lib/*.o \
+        libsuitesparseconfig.so.%{SuiteSparse_config_major} -lm
     ln -sf libcolamd.so.%{colamd_version} libcolamd.so.%{colamd_version_major}
     ln -sf libcolamd.so.%{colamd_version} libcolamd.so
     cp -p ../COLAMD/Lib/*.a ./
@@ -297,7 +304,7 @@ pushd KLU
     gcc -shared -Wl,-soname,libklu.so.%{klu_version_major} -o \
         libklu.so.%{klu_version} ../KLU/Lib/*.o \
         libamd.so.%{amd_version_major} libcolamd.so.%{colamd_version_major} \
-        libbtf.so.%{btf_version_major} libcholmod.so.%{cholmod_version_major} \
+        libbtf.so.%{btf_version_major} \
         libsuitesparseconfig.so.%{SuiteSparse_config_major}
     ln -sf libklu.so.%{klu_version} libklu.so.%{klu_version_major}
     ln -sf libklu.so.%{klu_version} libklu.so
@@ -349,7 +356,7 @@ pushd SPQR
     g++ -shared -Wl,-soname,libspqr.so.%{spqr_version_major} -o \
         libspqr.so.%{spqr_version} ../SPQR/Lib/*.o \
         -L%{_libdir}/atlas -L%{_libdir} %{atlaslibs} \
-        %{?with_tbb:-ltbb -ltbbmalloc} \
+        %{?with_tbb:-ltbb} \
         libcholmod.so.%{cholmod_version_major} \
         libsuitesparseconfig.so.%{SuiteSparse_config_major} -lm
     ln -sf libspqr.so.%{spqr_version} libspqr.so.%{spqr_version_major}
@@ -386,6 +393,7 @@ pushd Lib
     cp -a $f ${RPM_BUILD_ROOT}%{_libdir}/$f
   done
 popd
+chmod 755 ${RPM_BUILD_ROOT}%{_libdir}/*.so.*
 pushd Include
   for f in *.h *.hpp;  do
     cp -a $f ${RPM_BUILD_ROOT}%{_includedir}/%{name}/$f
@@ -433,6 +441,28 @@ rm -rf ${RPM_BUILD_ROOT}
 %doc Doc/*
 
 %changelog
+* Sat Mar 14 2015 Liu Di <liudidi@gmail.com> - 4.3.1-5
+- 为 Magic 3.0 重建
+
+* Tue Oct 14 2014 Peter Robinson <pbrobinson@fedoraproject.org> 4.3.1-4
+- Only s390 doesn't have tbb
+
+* Mon Sep 15 2014 Orion Poplawski <orion@cora.nwra.com> - 4.3.1-3
+- Change patch to move math.h include into SuiteSparse_config.c
+- Fix linkage and library file permission issues
+
+* Sat Sep 13 2014 Orion Poplawski <orion@cora.nwra.com> - 4.3.1-2
+- Add patch to allow octave compilation
+
+* Mon Sep 08 2014 Clément David <c.david86@gmail.com> - 4.3.1-1
+- Update to release 4.3.1. 
+
+* Mon Aug 18 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 4.2.1-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
+
+* Sun Jun 08 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 4.2.1-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
 * Mon Feb 10 2014 Nils Philippsen <nils@redhat.com> - 4.2.2-2
 - ship licenses as documentation in the base package
 - hardlink duplicate documentation/license files

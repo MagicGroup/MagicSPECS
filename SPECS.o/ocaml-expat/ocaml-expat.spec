@@ -2,8 +2,9 @@
 
 Name:           ocaml-expat
 Version:        0.9.1
-Release:        29%{?dist}
+Release:        30%{?dist}
 Summary:        OCaml wrapper for the Expat XML parsing library
+Summary(zh_CN.UTF-8): Expat XML 解析库的 OCaml 绑定
 License:        MIT
 
 URL:            http://www.xs4all.nl/~mmzeeman/ocaml/
@@ -21,9 +22,12 @@ An ocaml wrapper for the Expat XML parsing library. It allows you to
 write XML-Parsers using the SAX method. An XML document is parsed on
 the fly without needing to load the entire XML-Tree into memory.
 
+%description -l zh_CN.UTF-8
+Expat XML 解析库的 OCaml 绑定。
 
 %package        devel
 Summary:        Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Requires:       %{name} = %{version}-%{release}
 
 
@@ -31,6 +35,8 @@ Requires:       %{name} = %{version}-%{release}
 The %{name}-devel package contains libraries and signature files for
 developing applications that use %{name}.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -54,7 +60,7 @@ make install
 
 # Remove rpath from stublibs .so file.
 chrpath --delete $RPM_BUILD_ROOT%{_libdir}/ocaml/stublibs/*.so
-
+magic_rpm_clean.sh
 
 %files
 %doc LICENCE README changelog
@@ -78,6 +84,9 @@ chrpath --delete $RPM_BUILD_ROOT%{_libdir}/ocaml/stublibs/*.so
 
 
 %changelog
+* Thu Mar 05 2015 Liu Di <liudidi@gmail.com> - 0.9.1-30
+- 为 Magic 3.0 重建
+
 * Fri Jun 20 2014 Liu Di <liudidi@gmail.com> - 0.9.1-29
 - 为 Magic 3.0 重建
 

@@ -1,9 +1,10 @@
 %global debug_package %{nil}
 
 Name:           ocaml-pxp
-Version:        1.2.4
-Release:        3%{?dist}
+Version:	1.2.7
+Release:	1%{?dist}
 Summary:        Validating XML parser
+Summary(zh_CN.UTF-8): 检验 XML 解析器
 License:        BSD
 
 URL:            http://projects.camlcity.org/projects/pxp.html
@@ -31,8 +32,12 @@ possible to validate the XML document against a DTD.
 The acronym PXP means Polymorphic XML Parser. This name reflects the
 ability to create XML trees with polymorphic type parameters.
 
+%description -l zh_CN.UTF-8
+检验 XML 解析器。
+
 %package        devel
 Summary:        Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Requires:       %{name} = %{version}-%{release}
 
 
@@ -40,6 +45,8 @@ Requires:       %{name} = %{version}-%{release}
 The %{name}-devel package contains libraries and signature files for
 developing applications that use %{name}.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q -n pxp-%{version}
@@ -62,7 +69,7 @@ export DESTDIR=$RPM_BUILD_ROOT
 export OCAMLFIND_DESTDIR=$RPM_BUILD_ROOT%{_libdir}/ocaml
 mkdir -p $OCAMLFIND_DESTDIR
 make install
-
+magic_rpm_clean.sh
 
 %files
 %doc LICENSE
@@ -99,6 +106,9 @@ make install
 
 
 %changelog
+* Wed Mar 11 2015 Liu Di <liudidi@gmail.com> - 1.2.7-1
+- 更新到 1.2.7
+
 * Fri Jun 20 2014 Liu Di <liudidi@gmail.com> - 1.2.4-3
 - 为 Magic 3.0 重建
 

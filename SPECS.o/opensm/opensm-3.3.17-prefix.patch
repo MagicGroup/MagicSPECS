@@ -1,0 +1,56 @@
+--- opensm-3.3.17/man/opensm.8.in.orig	2014-03-17 22:57:54.510928914 +0000
++++ opensm-3.3.17/man/opensm.8.in	2014-03-17 22:59:18.885215712 +0000
+@@ -11,6 +11,7 @@
+ [\-g(uid) <GUID in hex>]
+ [\-l(mc) <LMC>]
+ [\-p(riority) <PRIORITY>]
++[\-\-subnet_prefix <PREFIX in hex>]
+ [\-\-smkey <SM_Key>]
+ [\-\-sm_sl <SL number>]
+ [\-r(eassign_lids)]
+@@ -135,6 +136,13 @@
+ is chosen by priority and GUID.  Range goes from 0
+ (default and lowest priority) to 15 (highest).
+ .TP
++\fB\-\-subnet_prefix\fR <PREFIX in hex>
++This option specifies the subnet prefix to use in
++on the fabric.  The default prefix is
++0xfe80000000000000.  OpenMPI in particular requires
++separate fabrics plugged into different ports to
++have different prefixes or else it won't run.
++.TP
+ \fB\-\-smkey\fR <SM_Key value>
+ This option specifies the SM\'s SM_Key (64 bits).
+ This will effect SM authentication.
+--- opensm-3.3.17/opensm/main.c.orig	2014-01-29 20:50:51.000000000 +0000
++++ opensm-3.3.17/opensm/main.c	2014-03-17 22:57:54.513928955 +0000
+@@ -160,6 +160,9 @@
+ 	       "          This will effect the handover cases, where master\n"
+ 	       "          is chosen by priority and GUID.  Range goes\n"
+ 	       "          from 0 (lowest priority) to 15 (highest).\n\n");
++	printf("--subnet_prefix <prefix>\n"
++	       "          Set the subnet prefix to something other than the\n"
++	       "          default value of 0xfe80000000000000\n\n");
+ 	printf("--smkey, -k <SM_Key>\n"
+ 	       "          This option specifies the SM's SM_Key (64 bits).\n"
+ 	       "          This will effect SM authentication.\n"
+@@ -654,6 +657,7 @@
+ 		{"once", 0, NULL, 'o'},
+ 		{"reassign_lids", 0, NULL, 'r'},
+ 		{"priority", 1, NULL, 'p'},
++		{"subnet_prefix", 1, NULL, 15},
+ 		{"smkey", 1, NULL, 'k'},
+ 		{"routing_engine", 1, NULL, 'R'},
+ 		{"ucast_cache", 0, NULL, 'A'},
+@@ -996,6 +1000,11 @@
+ 			printf(" Priority = %d\n", temp);
+ 			break;
+ 
++		case 15:
++			opt.subnet_prefix = cl_hton64(strtoull(optarg, NULL, 16));
++			printf(" Subnet_Prefix = <0x%" PRIx64 ">\n", cl_hton64(opt.subnet_prefix));
++			break;
++
+ 		case 'k':
+ 			sm_key = cl_hton64(strtoull(optarg, NULL, 16));
+ 			printf(" SM Key <0x%" PRIx64 ">\n", cl_hton64(sm_key));

@@ -2,12 +2,14 @@
 
 Name:           ocaml-zip
 Version:        1.05
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        OCaml library for reading and writing zip, jar and gzip files
+Summary(zh_CN.UTF-8): 读写 zip, jar 和 gzip 文件的 OCaml 库
 License:        LGPLv2 with exceptions
 
 URL:            http://forge.ocamlcore.org/projects/camlzip/
 Source0:        https://forge.ocamlcore.org/frs/download.php/1037/camlzip-%{version}.tar.gz
+Patch1:		ocaml-zip-1.05-fix-ints.patch
 
 ExcludeArch:    sparc64 s390 s390x
 
@@ -23,10 +25,14 @@ in ZIP and GZIP format, as well as to Java JAR files. It provides
 functions for reading from and writing to compressed files in these
 formats.
 
+%description -l zh_CN.UTF-8
+读写 zip, jar 和 gzip 文件的 OCaml 库。
 
 %package        devel
 Summary:        Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       %{name} = %{version}-%{release}
 
 
@@ -34,10 +40,12 @@ Requires:       %{name} = %{version}-%{release}
 The %{name}-devel package contains libraries and signature files for
 developing applications that use %{name}.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q -n camlzip-%{version}
-
+%patch1 -p0
 
 %build
 make all
@@ -64,7 +72,7 @@ export DESTDIR=$RPM_BUILD_ROOT
 export OCAMLFIND_DESTDIR=$RPM_BUILD_ROOT%{_libdir}/ocaml
 
 ocamlfind install zip *.cma *.cmxa *.a *.cmx *.cmi *.mli dll*.so META
-
+magic_rpm_clean.sh
 
 %files
 %doc LICENSE
@@ -90,6 +98,9 @@ ocamlfind install zip *.cma *.cmxa *.a *.cmx *.cmi *.mli dll*.so META
 
 
 %changelog
+* Fri Mar 06 2015 Liu Di <liudidi@gmail.com> - 1.05-4
+- 为 Magic 3.0 重建
+
 * Fri Jun 20 2014 Liu Di <liudidi@gmail.com> - 1.05-3
 - 为 Magic 3.0 重建
 

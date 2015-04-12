@@ -1,13 +1,14 @@
 %global opt %(test -x %{_bindir}/ocamlopt && echo 1 || echo 0)
 
 Name:           ocaml-gsl
-Version:        1.13.0
-Release:        3%{?dist}
+Version: 1.18.2
+Release: 1%{?dist}
 Summary:        Interface to GSL (GNU scientific library) for OCaml
+Summary(zh_CN.UTF-8): OCaml 的 GSL (GNU 科学库) 接口
 License:        GPLv2
 
-URL:            https://bitbucket.org/mmottl/gsl-ocaml
-Source0:        https://bitbucket.org/mmottl/gsl-ocaml/downloads/gsl-ocaml-%{version}.tar.gz
+URL:            https://github.com/mmottl/gsl-ocaml
+Source0:        https://github.com/mmottl/gsl-ocaml/releases/download/v%{version}/gsl-ocaml-%{version}.tar.gz
 
 ExcludeArch:    armv7hl sparc64 s390 s390x
 
@@ -23,9 +24,12 @@ BuildRequires:  /usr/bin/awk
 This is an interface to GSL (GNU scientific library), for the
 Objective Caml language.
 
+%description -l zh_CN.UTF-8
+OCaml 的 GSL (GNU 科学库) 接口。
 
 %package        devel
 Summary:        Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Requires:       %{name} = %{version}-%{release}
 Requires:       /sbin/install-info
 
@@ -34,6 +38,8 @@ Requires:       /sbin/install-info
 The %{name}-devel package contains libraries and signature files for
 developing applications that use %{name}.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q -n gsl-ocaml-%{version}
@@ -48,7 +54,7 @@ export DESTDIR=$RPM_BUILD_ROOT
 export OCAMLFIND_DESTDIR=$RPM_BUILD_ROOT%{_libdir}/ocaml
 mkdir -p $OCAMLFIND_DESTDIR $OCAMLFIND_DESTDIR/stublibs
 make install
-
+magic_rpm_clean.sh
 
 %files
 %doc COPYING.txt
@@ -74,6 +80,9 @@ make install
 
 
 %changelog
+* Fri Mar 06 2015 Liu Di <liudidi@gmail.com> - 1.18.2-1
+- 更新到 1.18.2
+
 * Fri Jun 20 2014 Liu Di <liudidi@gmail.com> - 1.13.0-3
 - 为 Magic 3.0 重建
 

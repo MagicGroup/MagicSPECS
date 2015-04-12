@@ -10,7 +10,7 @@ Group: User Interface/Desktops
 Group(zh_CN.UTF-8): 用户界面/桌面
 URL: http://www.kde.org/
 Version: 4.14.3
-Release: 1%{?dist}
+Release: 2%{?dist}
 %define rversion %version
 Source0: http://download.kde.org/stable/%{rversion}/src/%{real_name}-%{rversion}.tar.xz
 Source1: im.png
@@ -318,6 +318,9 @@ rm -rf %{buildroot} %{_builddir}/%{buildsubdir}
 
 # 需要进一步处理
 %changelog
+* Mon Mar 02 2015 Liu Di <liudidi@gmail.com> - 4.14.3-2
+- 为 Magic 3.0 重建
+
 * Tue Dec 30 2014 Liu Di <liudidi@gmail.com> - 4.14.3-1
 - 更新到 4.14.3
 

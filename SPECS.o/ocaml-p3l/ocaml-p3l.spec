@@ -2,8 +2,9 @@
 
 Name:           ocaml-p3l
 Version:        2.03
-Release:        17%{?dist}
+Release:        18%{?dist}
 Summary:        OCaml compiler for parallel programs
+Summary(zh_CN.UTF-8): 并行程序的 OCaml 编译器
 License:        LGPLv2+ with exceptions
 
 ExcludeArch:    sparc64 s390 s390x
@@ -18,6 +19,9 @@ Patch1:         debian-02-install-mli.patch
 
 # Fix for new OCaml Marshal flags in OCaml 4.01.0.
 Patch2:         ocamlp3l-2.03-fix-ocaml-marshal.patch
+
+# Fix for warning about immutable strings, OCaml 4.02.
+Patch3:         ocamlp3l-2.03-fix-warn-error.patch
 
 BuildRequires:  ocaml >= 3.10.0
 BuildRequires:  ocaml-ocamldoc
@@ -43,9 +47,12 @@ different operational interpretations of the same source program:
   of the parallel computing network deployed at run-time by the
   parallel interpretation. 
 
+%description -l zh_CN.UTF-8
+并行程序的 OCaml 编译器。
 
 %package        devel
 Summary:        Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Requires:       %{name} = %{version}-%{release}
 
 
@@ -53,9 +60,12 @@ Requires:       %{name} = %{version}-%{release}
 The %{name}-devel package contains libraries and signature files for
 developing applications that use %{name}.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %package        doc
 Summary:        User manual and other documentation for %{name}
+Summary(zh_CN.UTF-8): %{name} 的文档
 Requires:       %{name} = %{version}-%{release}
 
 
@@ -63,6 +73,8 @@ Requires:       %{name} = %{version}-%{release}
 The %{name}-doc package contains the user manual and other
 documentation for %{name}.
 
+%description doc -l zh_CN.UTF-8
+%{name} 的文档。
 
 %prep
 %setup -q -n ocamlp3l-%{version}
@@ -70,7 +82,7 @@ documentation for %{name}.
 %patch0 -p1
 %patch1 -p1
 %patch2 -p1
-
+%patch3 -p1
 
 %build
 # Parallel builds don't work:
@@ -91,7 +103,7 @@ make install \
 rm doc/favicon.ico
 
 cp %{SOURCE1} README.Fedora
-
+magic_rpm_clean.sh
 
 %files
 %doc doc/LICENSE
@@ -123,6 +135,9 @@ cp %{SOURCE1} README.Fedora
 
 
 %changelog
+* Tue Mar 10 2015 Liu Di <liudidi@gmail.com> - 2.03-18
+- 为 Magic 3.0 重建
+
 * Fri Jun 20 2014 Liu Di <liudidi@gmail.com> - 2.03-17
 - 为 Magic 3.0 重建
 

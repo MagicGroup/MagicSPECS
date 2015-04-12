@@ -9,8 +9,8 @@
 %endif
 
 Name:           gstreamer1-plugins-bad
-Version:	1.3.90
-Release:        2%{?dist}
+Version:	1.4.5
+Release:        3%{?dist}
 Summary:        GStreamer streaming media framework "bad" plugins
 
 License:        LGPLv2+ and LGPLv2
@@ -307,7 +307,7 @@ chrpath --delete $RPM_BUILD_ROOT%{_libdir}/gstreamer-%{majorminor}/libgstcamerab
 #%{_datadir}/gir-1.0/GstEGL-%{majorminor}.gir
 %{_datadir}/gir-1.0/GstInsertBin-%{majorminor}.gir
 %{_datadir}/gir-1.0/GstMpegts-%{majorminor}.gir
-%{_datadir}/gir-%{majorminor}/GstWayland-%{majorminor}.gir
+#%{_datadir}/gir-%{majorminor}/GstWayland-%{majorminor}.gir
 %{_datadir}/gtk-doc/html/gst-plugins-bad-plugins-%{majorminor}/*
 
 %{_libdir}/libgstbasecamerabinsrc-%{majorminor}.so
@@ -330,14 +330,14 @@ chrpath --delete $RPM_BUILD_ROOT%{_libdir}/gstreamer-%{majorminor}/libgstcamerab
 %{_includedir}/gstreamer-%{majorminor}/gst/interfaces/photography*
 %{_includedir}/gstreamer-%{majorminor}/gst/mpegts
 %{_includedir}/gstreamer-%{majorminor}/gst/uridownloader
-%{_includedir}/gstreamer-%{majorminor}/gst/base/gstaggregator.h
+#%{_includedir}/gstreamer-%{majorminor}/gst/base/gstaggregator.h
 %{_includedir}/gstreamer-%{majorminor}/gst/gl/egl/*.h
 %{_includedir}/gstreamer-%{majorminor}/gst/gl/*.h
 %{_includedir}/gstreamer-%{majorminor}/gst/gl/glprototypes/*.h
 %{_includedir}/gstreamer-%{majorminor}/gst/gl/x11/*.h
-%{_includedir}/gstreamer-%{majorminor}/gst/video/*.h
-%{_includedir}/gstreamer-%{majorminor}/gst/wayland/*.h
-%{_libdir}/girepository-%{majorminor}/GstWayland-%{majorminor}.typelib
+#%{_includedir}/gstreamer-%{majorminor}/gst/video/*.h
+#%{_includedir}/gstreamer-%{majorminor}/gst/wayland/*.h
+#%{_libdir}/girepository-%{majorminor}/GstWayland-%{majorminor}.typelib
 
 # pkg-config files
 %{_libdir}/pkgconfig/gstreamer-codecparsers-%{majorminor}.pc
@@ -346,9 +346,15 @@ chrpath --delete $RPM_BUILD_ROOT%{_libdir}/gstreamer-%{majorminor}/libgstcamerab
 %{_libdir}/pkgconfig/gstreamer-mpegts-%{majorminor}.pc
 %{_libdir}/pkgconfig/gstreamer-plugins-bad-%{majorminor}.pc
 %{_libdir}/pkgconfig/gstreamer-gl-%{majorminor}.pc
-%{_libdir}/pkgconfig/gstreamer-wayland-%{majorminor}.pc
+#%{_libdir}/pkgconfig/gstreamer-wayland-%{majorminor}.pc
 
 %changelog
+* Mon Mar 02 2015 Liu Di <liudidi@gmail.com> - 1.4.5-3
+- 为 Magic 3.0 重建
+
+* Sun Mar 01 2015 Liu Di <liudidi@gmail.com> - 1.4.5-2
+- 更新到 1.4.5
+
 * Thu Jul 10 2014 Liu Di <liudidi@gmail.com> - 1.3.90-2
 - 更新到 1.3.90
 

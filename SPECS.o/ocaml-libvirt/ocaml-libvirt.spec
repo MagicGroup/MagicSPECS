@@ -1,13 +1,16 @@
 %global opt %(test -x %{_bindir}/ocamlopt && echo 1 || echo 0)
 
 Name:           ocaml-libvirt
-Version:        0.6.1.2
-Release:        11%{?dist}
+Version: 0.6.1.4
+Release: 1%{?dist}
 Summary:        OCaml binding for libvirt
+Summary(zh_CN.UTF-8): libvirt 的 OCaml 绑定
 License:        LGPLv2+
 
 URL:            http://libvirt.org/ocaml/
 Source0:        http://libvirt.org/sources/ocaml/%{name}-%{version}.tar.gz
+
+Patch1:		0001-Use-C99-standard-int64_t-instead-of-OCaml-defined-an.patch
 
 ExcludeArch:    sparc64 s390 s390x
 
@@ -19,15 +22,15 @@ BuildRequires:  libvirt-devel >= 0.2.1
 BuildRequires:  perl
 BuildRequires:  gawk
 
-Patch1:         0001-remove-parameter-nr_pcpus-of-Libvirt.Domain.get_cpu_.patch
-
-
 %description
 OCaml binding for libvirt.
 
+%description -l zh_CN.UTF-8
+libvirt 的 OCaml 绑定
 
 %package        devel
 Summary:        Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Requires:       %{name} = %{version}-%{release}
 
 
@@ -35,11 +38,12 @@ Requires:       %{name} = %{version}-%{release}
 The %{name}-devel package contains libraries and signature files for
 developing applications that use %{name}.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
 %patch1 -p1
-
 
 %build
 %configure
@@ -60,7 +64,7 @@ make install-opt
 %else
 make install-byte
 %endif
-
+magic_rpm_clean.sh
 
 %files
 %doc COPYING.LIB README ChangeLog
@@ -86,6 +90,9 @@ make install-byte
 
 
 %changelog
+* Fri Mar 06 2015 Liu Di <liudidi@gmail.com> - 0.6.1.4-1
+- 更新到 0.6.1.4
+
 * Fri Jun 20 2014 Liu Di <liudidi@gmail.com> - 0.6.1.2-11
 - 为 Magic 3.0 重建
 

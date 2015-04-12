@@ -1,0 +1,65 @@
+--- detok/Makefile.optflags	2006-10-15 18:54:08.000000000 +0400
++++ detok/Makefile	2009-02-28 18:42:55.710057720 +0300
+@@ -25,11 +25,9 @@
+ PROGRAM = detok
+ 
+ CC      = gcc
+-STRIP	= strip
+ INCLUDES = -I../shared
+ 
+ # Normal Flags:
+-CFLAGS  = -O2 -Wall -Wno-pointer-sign 
+ LDFLAGS = 
+ 
+ # Coverage:
+@@ -47,7 +45,6 @@
+ 
+ $(PROGRAM): $(OBJS)
+ 	$(CC) -o $(PROGRAM) $(OBJS) $(LDFLAGS)
+-	$(STRIP) -s $(PROGRAM)
+ 
+ clean:
+ 	rm -f $(OBJS) *~
+--- toke/Makefile~	2006-10-30 09:48:28.000000000 +0300
++++ toke/Makefile	2009-02-28 18:48:17.165060267 +0300
+@@ -25,11 +25,9 @@
+ PROGRAM = toke
+ 
+ CC      = gcc
+-STRIP	= strip
+ INCLUDES = -I../shared
+ 
+ # Normal flags
+-CFLAGS  = -O2 -Wall -Wno-pointer-sign -fno-strict-aliasing 
+ LDFLAGS =
+ 
+ # Coverage:
+@@ -48,7 +46,6 @@
+ 
+ $(PROGRAM): $(OBJS)
+ 	$(CC) -o $(PROGRAM) $(OBJS) $(LDFLAGS)
+-	$(STRIP) -s $(PROGRAM)
+ 
+ clean:
+ 	rm -f $(OBJS) *~
+--- romheaders/Makefile~	2006-08-18 12:47:12.000000000 +0400
++++ romheaders/Makefile	2009-02-28 18:49:11.928060542 +0300
+@@ -22,7 +22,7 @@
+ #
+ 
+ CC  = gcc
+-CFLAGS= -O2 -Wall -W -ansi -I../shared
++INCLUDES=-I../shared
+ 
+ SOURCES = romheaders.c ../shared/classcodes.c
+ 
+@@ -31,8 +31,7 @@
+ all: romheaders
+ 
+ romheaders: $(SOURCES)
+-	$(CC) $(CFLAGS) $(SOURCES) -o $@
+-	strip romheaders
++	$(CC) $(CFLAGS) $(INCLUDES) $(SOURCES) -o $@
+ 	
+ clean:
+ 	rm -f *~

@@ -1,5 +1,8 @@
 %global opt %(test -x %{_bindir}/ocamlopt && echo 1 || echo 0)
 
+%define git 1
+%define vcsdate 20150305
+
 # Important note!  There are at least two quite separate OCaml cairo
 # projects.  This one is: http://cairographics.org/cairo-ocaml/
 # The other one is: http://forge.ocamlcore.org/projects/cairo/
@@ -11,12 +14,12 @@
 # cd cairo-ocaml
 # git archive --prefix=ocaml-cairo-%{version}/ %{commit} | \
 #   gzip > ../ocaml-cairo-1.2.0-git%{commit}.tar.gz
-%global commit 08b40192975
+%global commit 872c9bc92e6
 
 Name:           ocaml-cairo
 Epoch:          1
 Version:        1.2.0
-Release:        0.13.git%{commit}%{?dist}
+Release:        0.22.git%{vcsdate}%{?dist}
 Summary:        OCaml library for accessing cairo graphics
 
 ExcludeArch:    sparc64 s390 s390x
@@ -24,8 +27,9 @@ ExcludeArch:    sparc64 s390 s390x
 License:        LGPLv2
 URL:            http://cairographics.org/cairo-ocaml/
 
-Source0:        ocaml-cairo-%{version}-git%{commit}.tar.gz
+Source0:        ocaml-cairo-git%{vcsdate}.tar.xz
 Source1:        ocaml-cairo-META
+Source2:	make_ocaml-cairo_git_package.sh
 
 Patch1:         ocaml-cairo-1.2.0-enable-ocamlopt-debug.patch
 
@@ -66,7 +70,7 @@ developing applications that use %{name}.
 
 
 %prep
-%setup -q
+%setup -q -n %{name}-git%{vcsdate}
 
 %patch1 -p1
 
@@ -115,8 +119,38 @@ chrpath --delete $RPM_BUILD_ROOT%{_libdir}/ocaml/stublibs/dll*.so
 
 
 %changelog
-* Fri Jun 20 2014 Liu Di <liudidi@gmail.com> - 1:1.2.0-0.13.git08b40192975
+* Thu Mar 05 2015 Liu Di <liudidi@gmail.com> - 1:1.2.0-0.22.git20150305
 - 为 Magic 3.0 重建
+
+* Thu Mar 05 2015 Liu Di <liudidi@gmail.com> - 1:1.2.0-0.21.git20150305
+- 更新到 20150305 日期的仓库源码
+
+* Thu Mar 05 2015 Liu Di <liudidi@gmail.com> - 1:1.2.0-0.21.git20150303
+- 为 Magic 3.0 重建
+
+* Tue Feb 17 2015 Richard W.M. Jones <rjones@redhat.com> - 1:1.2.0-0.20.git872c9bc92e6
+- ocaml-4.02.1 rebuild.
+
+* Fri Oct 31 2014 Orion Poplawski <orion@cora.nwra.com> - 1:1.2.0-0.19.git872c9bc92e6
+- Update to latest git
+
+* Sat Aug 30 2014 Richard W.M. Jones <rjones@redhat.com> - 1:1.2.0-0.18.git08b40192975
+- ocaml-4.02.0 final rebuild.
+
+* Sat Aug 23 2014 Richard W.M. Jones <rjones@redhat.com> - 1:1.2.0-0.17.git08b40192975
+- ocaml-4.02.0+rc1 rebuild.
+
+* Sun Aug 17 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1:1.2.0-0.16.git08b40192975
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
+
+* Sat Aug 02 2014 Richard W.M. Jones <rjones@redhat.com> - 1:1.2.0-0.15.git08b40192975
+- ocaml-4.02.0-0.8.git10e45753.fc22 rebuild.
+
+* Wed Jul 23 2014 Richard W.M. Jones <rjones@redhat.com> - 1:1.2.0-0.14.git08b40192975
+- OCaml 4.02.0 beta rebuild.
+
+* Mon Jul 14 2014 Orion Poplawski <orion@cora.nwra.com> - 1:1.2.0-0.13.git08b40192975
+- Rebuild for OCaml 4.02
 
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1:1.2.0-0.12.git08b40192975
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild

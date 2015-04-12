@@ -1,0 +1,62 @@
+diff -ur xmlrpc-light-0.6.1/Makefile xmlrpc-light-0.6.1-fixed-for-ocamlnet4/Makefile
+--- xmlrpc-light-0.6.1/Makefile	2009-01-29 14:30:21.000000000 +0000
++++ xmlrpc-light-0.6.1-fixed-for-ocamlnet4/Makefile	2015-02-18 11:20:07.614033224 +0000
+@@ -2,9 +2,9 @@
+ 
+ RESULT = xmlrpc-light
+ SOURCES = XmlRpcBase64.mli XmlRpcBase64.ml XmlRpcDateTime.mli XmlRpcDateTime.ml XmlRpc.mli XmlRpc.ml XmlRpcServer.mli XmlRpcServer.ml
+-PACKS = xml-light,netclient,nethttpd-for-netcgi2
++PACKS = xml-light,netclient,netplex,netcgi2,nethttpd
+ LIBINSTALL_FILES = XmlRpcBase64.mli XmlRpcBase64.cmi XmlRpcDateTime.mli XmlRpcDateTime.cmi XmlRpc.mli XmlRpc.cmi XmlRpcServer.mli XmlRpcServer.cmi xmlrpc-light.cma xmlrpc-light.cmxa xmlrpc-light.a
+-OCAMLDOC = ocamlfind ocamldoc -package xml-light,nethttpd-for-netcgi2
++OCAMLDOC = ocamlfind ocamldoc -package xml-light,netplex,netcgi2,nethttpd
+ DOC_FILES = XmlRpc.mli XmlRpcServer.mli XmlRpcDateTime.mli XmlRpcBase64.mli
+ 
+ all: native-code-library byte-code-library
+diff -ur xmlrpc-light-0.6.1/META xmlrpc-light-0.6.1-fixed-for-ocamlnet4/META
+--- xmlrpc-light-0.6.1/META	2009-01-29 14:30:21.000000000 +0000
++++ xmlrpc-light-0.6.1-fixed-for-ocamlnet4/META	2015-02-18 11:20:03.269020209 +0000
+@@ -1,6 +1,6 @@
+ name = "xmlrpc-light"
+ version = "0.6.1"
+ description = "XML-RPC client based on Xml-Light"
+-requires = "xml-light,netclient,nethttpd-for-netcgi2"
++requires = "xml-light,netclient,netplex,netcgi2,nethttpd"
+ archive(byte) = "xmlrpc-light.cma"
+ archive(native) = "xmlrpc-light.cmxa"
+diff -ur xmlrpc-light-0.6.1/XmlRpc.ml xmlrpc-light-0.6.1-fixed-for-ocamlnet4/XmlRpc.ml
+--- xmlrpc-light-0.6.1/XmlRpc.ml	2009-01-29 14:30:21.000000000 +0000
++++ xmlrpc-light-0.6.1-fixed-for-ocamlnet4/XmlRpc.ml	2015-02-18 11:19:00.013830739 +0000
+@@ -414,7 +414,7 @@
+           Neturl.string_of_url
+             (Neturl.remove_from_url ~user:true ~password:true parsed_url) in
+ 
+-        let call = new Http_client.post_raw url xml in
++        let call = new Nethttp_client.post_raw url xml in
+         call#set_req_header "User-Agent" useragent;
+         call#set_req_header "Content-Type" "text/xml";
+         List.iter (fun (n, v) -> call#set_req_header n v) headers;
+@@ -428,12 +428,12 @@
+             | None -> ()
+         end;
+ 
+-        let pipeline = new Http_client.pipeline in
++        let pipeline = new Nethttp_client.pipeline in
+         pipeline#set_proxy_from_environment ();
+ 
+         let opt = pipeline#get_options in
+         pipeline#set_options
+-          {opt with Http_client.
++          {opt with Nethttp_client.
+              connection_timeout = timeout;
+           };
+ 
+@@ -441,7 +441,7 @@
+           begin
+             let opt = pipeline#get_options in
+             pipeline#set_options
+-              {opt with Http_client.
++              {opt with Nethttp_client.
+                  verbose_status = true;
+                  verbose_request_header = true;
+                  verbose_response_header = true;

@@ -2,16 +2,18 @@
 %global qt_module qtdoc
 
 Summary: Main Qt5 Reference Documentation
+Summary(zh_CN.UTF-8): 主要的 Qt5 参考文档
 Name:    qt5-%{qt_module}
-Version: 5.3.1
-Release: 2%{?dist}
+Version: 5.4.1
+Release: 1%{?dist}
 
 License: GFDL
 Url:     http://qt-project.org/
+%define majorver %(echo %{version} | awk -F. '{print $1"."$2}')
 %if 0%{?pre:1}
-Source0: http://download.qt-project.org/development_releases/qt/5.3/%{version}-%{pre}/submodules/%{qt_module}-opensource-src-%{version}-%{pre}.tar.xz
+Source0: http://download.qt-project.org/development_releases/qt/%{majorver}/%{version}-%{pre}/submodules/%{qt_module}-opensource-src-%{version}-%{pre}.tar.xz
 %else
-Source0: http://download.qt-project.org/official_releases/qt/5.3/%{version}/submodules/%{qt_module}-opensource-src-%{version}.tar.xz
+Source0: http://download.qt-project.org/official_releases/qt/%{majorver}/%{version}/submodules/%{qt_module}-opensource-src-%{version}.tar.xz
 %endif
 
 BuildArch: noarch
@@ -23,6 +25,8 @@ BuildRequires: qt5-qttools-devel
 QtDoc contains the main Qt Reference Documentation, which includes
 overviews, Qt topics, and examples not specific to any Qt module.
 
+%description -l zh_CN.UTF-8
+主要的 Qt5 参考文档。
 
 %prep
 %setup -q -n %{qt_module}-opensource-src-%{version}%{?pre:-%{pre}}
@@ -35,15 +39,18 @@ make docs %{?_smp_mflags}
 
 %install
 make install_docs INSTALL_ROOT=%{buildroot}
-
+magic_rpm_clean.sh
 
 %files
-%doc LICENSE.GPL LICENSE.LGPL LGPL_EXCEPTION.txt
+%doc LGPL_EXCEPTION.txt
 %{_qt5_docdir}/qtdoc.qch
 %{_qt5_docdir}/qtdoc/
 
 
 %changelog
+* Tue Mar 17 2015 Liu Di <liudidi@gmail.com> - 5.4.1-1
+- 更新到 5.4.1
+
 * Tue Aug 05 2014 Liu Di <liudidi@gmail.com> - 5.3.1-2
 - 为 Magic 3.0 重建
 

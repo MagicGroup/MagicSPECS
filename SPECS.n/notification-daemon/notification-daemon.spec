@@ -2,12 +2,14 @@
 %define dbus_version            0.90
 
 Summary: Desktop Notification Daemon
+Summary(zh_CN.UTF-8): 桌面通知服务
 Name: notification-daemon
-Version: 0.7.3
-Release: 4%{?dist}
+Version: 3.15.2
+Release: 1%{?dist}
 URL: http://live.gnome.org/NotificationDaemon
 License: GPLv2+
 Group: System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 Provides: desktop-notification-daemon
 
 BuildRequires: gtk3-devel >= %{gtk3_version}
@@ -20,14 +22,17 @@ Obsoletes: notify-daemon
 Provides: notify-daemon
 Obsoletes: notification-daemon-engine-slider < 0.2.0-3
 Provides: notification-daemon-engine-slider = %{version}-%{release}
-
-Source0: http://download.gnome.org/sources/notification-daemon/0.7/%{name}-%{version}.tar.xz
+%define majorver %(echo %{version} | awk -F. '{print $1"."$2}')
+Source0: http://download.gnome.org/sources/notification-daemon/%{majorver}/%{name}-%{version}.tar.xz
 
 %description
 notification-daemon is the server implementation of the freedesktop.org
 desktop notification specification. Notifications can be used to inform
 the user about an event or display some form of information without getting
 in the user's way.
+
+%description -l zh_CN.UTF-8
+freedesktop.org 桌面通知标准的实现。
 
 %prep
 %setup -q
@@ -38,7 +43,7 @@ make
 
 %install
 make install DESTDIR=$RPM_BUILD_ROOT
-
+magic_rpm_clean.sh
 %find_lang %{name}
 
 
@@ -47,9 +52,12 @@ make install DESTDIR=$RPM_BUILD_ROOT
 
 %{_libexecdir}/notification-daemon
 %{_datadir}/applications/notification-daemon.desktop
-
+%{_sysconfdir}/xdg/autostart/notification-daemon-autostart.desktop
 
 %changelog
+* Wed Feb 25 2015 Liu Di <liudidi@gmail.com> - 3.15.2-1
+- 更新到 3.15.2
+
 * Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 0.7.3-4
 - 为 Magic 3.0 重建
 

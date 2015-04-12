@@ -1,5 +1,5 @@
-%global VER 6.8.9
-%global Patchlevel 4
+%global VER 6.9.0
+%global Patchlevel 9
 
 Name:           ImageMagick
 Version:        %{VER}.%{Patchlevel}
@@ -306,6 +306,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sun Mar 01 2015 Liu Di <liudidi@gmail.com> - 6.9.0.9-4
+- 更新到 6.9.0.9
+
 * Mon Jun 30 2014 Liu Di <liudidi@gmail.com> - 6.8.9.4-4
 - 更新到 6.8.9.4
 

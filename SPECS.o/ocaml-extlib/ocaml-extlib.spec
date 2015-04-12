@@ -1,9 +1,8 @@
-%global opt %(test -x %{_bindir}/ocamlopt && echo 1 || echo 0)
-
 Name:           ocaml-extlib
-Version:        1.5.4
-Release:        3%{?dist}
+Version:        1.6.1
+Release:        9%{?dist}
 Summary:        OCaml ExtLib additions to the standard library
+Summary(zh_CN.UTF-8): OCaml 标准库的附加组件
 License:        LGPLv2+ with exceptions
 
 URL:            http://code.google.com/p/ocaml-extlib/
@@ -12,13 +11,13 @@ Source0:        http://ocaml-extlib.googlecode.com/files/extlib-%{version}.tar.g
 ExcludeArch:    sparc64 s390 s390x
 
 Patch0:         extlib-install.patch
-Patch1:         extlib-enable-debug.patch
 
 # Omitted from source tarball, I think.  This is copied from 1.5.2.
 Source1:        odoc_style.css
 
 BuildRequires:  ocaml >= 4.00.1
 BuildRequires:  ocaml-findlib-devel >= 1.3.3-3
+BuildRequires:  ocaml-camlp4-devel
 BuildRequires:  ocaml-ocamldoc
 BuildRequires:  gawk
 
@@ -31,9 +30,12 @@ modules, to modify some functions in order to get better performances
 or more safety (tail-recursive) but also to provide new modules which
 should be useful for the average OCaml programmer.
 
+%description -l zh_CN.UTF-8
+OCaml 标准库的附加组件。
 
 %package        devel
 Summary:        Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Requires:       %{name} = %{version}-%{release}
 
 
@@ -41,6 +43,8 @@ Requires:       %{name} = %{version}-%{release}
 The %{name}-devel package contains libraries and signature files for
 developing applications that use %{name}.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q -n extlib-%{version}
@@ -48,7 +52,6 @@ developing applications that use %{name}.
 cp %{SOURCE1} .
 
 %patch0 -p1
-%patch1 -p1
 
 
 %build
@@ -56,16 +59,13 @@ cp %{SOURCE1} .
 
 
 %install
-rm -rf $RPM_BUILD_ROOT
-
 extlibdir=$RPM_BUILD_ROOT%{_libdir}/ocaml/extlib
 mkdir -p $extlibdir
 
 # This does the build and install.
-%if %opt
-ocaml install.ml -d $extlibdir -b -n -doc
-%else
-ocaml install.ml -d $extlibdir -b -doc
+ocaml install.ml -d $extlibdir -b -min -doc \
+%ifarch %{ocaml_native_compiler}
+  -n
 %endif
 
 # Copy the interface files, and extLib.ml which is really an interface.
@@ -75,12 +75,12 @@ install -m 0644 META $RPM_BUILD_ROOT%{_libdir}/ocaml/extlib/
 
 # Move the HTML documentation - we'll install it using a %doc rule.
 mv $extlibdir/extlib-doc .
-
+magic_rpm_clean.sh
 
 %files
 %doc README.txt LICENSE
 %{_libdir}/ocaml/extlib
-%if %opt
+%ifarch %{ocaml_native_compiler}
 %exclude %{_libdir}/ocaml/extlib/*.a
 %exclude %{_libdir}/ocaml/extlib/*.cmxa
 %exclude %{_libdir}/ocaml/extlib/*.cmx
@@ -91,7 +91,7 @@ mv $extlibdir/extlib-doc .
 
 %files devel
 %doc extlib-doc/*
-%if %opt
+%ifarch %{ocaml_native_compiler}
 %{_libdir}/ocaml/extlib/*.a
 %{_libdir}/ocaml/extlib/*.cmxa
 %{_libdir}/ocaml/extlib/*.cmx
@@ -101,8 +101,32 @@ mv $extlibdir/extlib-doc .
 
 
 %changelog
-* Fri Jun 20 2014 Liu Di <liudidi@gmail.com> - 1.5.4-3
+* Wed Mar 04 2015 Liu Di <liudidi@gmail.com> - 1.6.1-9
 - 为 Magic 3.0 重建
+
+* Mon Feb 16 2015 Richard W.M. Jones <rjones@redhat.com> - 1.6.1-8
+- ocaml-4.02.1 rebuild.
+
+* Sat Aug 30 2014 Richard W.M. Jones <rjones@redhat.com> - 1.6.1-7
+- ocaml-4.02.0 final rebuild.
+
+* Sat Aug 23 2014 Richard W.M. Jones <rjones@redhat.com> - 1.6.1-6
+- ocaml-4.02.0+rc1 rebuild.
+
+* Sun Aug 17 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.6.1-5
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
+
+* Fri Aug 01 2014 Richard W.M. Jones <rjones@redhat.com> - 1.6.1-4
+- ocaml-4.02.0-0.8.git10e45753.fc22 build.
+
+* Mon Jul 21 2014 Richard W.M. Jones <rjones@redhat.com> - 1.6.1-3
+- Bump release and rebuild.
+
+* Thu Jul 17 2014 Richard W.M. Jones <rjones@redhat.com> - 1.6.1-2
+- New upstream version 1.6.1.
+- Rebuild for OCaml 4.02.0 beta.
+- Remove enable debug patch which is now upstream.
+- New version requires camlp4.
 
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.5.4-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild

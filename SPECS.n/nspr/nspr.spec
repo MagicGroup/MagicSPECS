@@ -1,17 +1,19 @@
 Summary:        Netscape Portable Runtime
+Summary(zh_CN.UTF-8): Netscape 可移植运行库
 Name:           nspr
-Version:        4.10.2
-Release:        3%{?dist}
+Version:        4.10.8
+Release:        2%{?dist}
 License:        MPLv2.0
 URL:            http://www.mozilla.org/projects/nspr/
 Group:          System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 BuildRoot:      %{_tmppath}/%{name}-%{version}-root
 Conflicts:      filesystem < 3
 
 # Sources available at ftp://ftp.mozilla.org/pub/mozilla.org/nspr/releases/
-# When CVS tag based snapshots are being used, refer to CVS documentation on
+# When hg tag based snapshots are being used, refer to hg documentation on
 # mozilla.org and check out subdirectory mozilla/nsprpub.
-Source0:        %{name}-%{version}.tar.bz2
+Source0:        ftp://ftp.mozilla.org/pub/mozilla.org/nspr/releases/v%{version}/src/%{name}-%{version}.tar.gz
 Source1:        nspr-config.xml
 
 Patch1:         nspr-config-pc.patch
@@ -22,9 +24,14 @@ facilities. These facilities include threads, thread synchronization,
 normal file and network I/O, interval timing and calendar time, basic 
 memory management (malloc and free) and shared library linking.
 
+%description -l zh_CN.UTF-8
+Netscape 可移植运行库。
+
 %package devel
 Summary:        Development libraries for the Netscape Portable Runtime
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       nspr = %{version}-%{release}
 Requires:       pkgconfig
 BuildRequires:  xmlto
@@ -32,6 +39,9 @@ Conflicts:      filesystem < 3
 
 %description devel
 Header files for doing development with the Netscape Portable Runtime.
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 
@@ -118,6 +128,7 @@ NSPR_VERSION=`./config/nspr-config --version`
 for f in nspr-config; do 
    install -c -m 644 ${f}.1 $RPM_BUILD_ROOT%{_mandir}/man1/${f}.1
 done
+magic_rpm_clean.sh
 
 %clean
 %{__rm} -Rf $RPM_BUILD_ROOT
@@ -128,6 +139,8 @@ done
 
 %files
 %defattr(-,root,root)
+%{!?_licensedir:%global license %%doc}
+%license nspr/LICENSE
 %{_libdir}/libnspr4.so
 %{_libdir}/libplc4.so
 %{_libdir}/libplds4.so
@@ -140,6 +153,38 @@ done
 %{_mandir}/man*/*
 
 %changelog
+* Thu Feb 26 2015 Liu Di <liudidi@gmail.com> - 4.10.8-2
+- 为 Magic 3.0 重建
+
+* Thu Jan 29 2015 Elio Maldonado <emaldona@redhat.com> - 4.10.8-1
+- Update to NSPR_4_10_8_RTM
+
+* Tue Aug 19 2014 Elio Maldonado <emaldona@redhat.com> - 4.10.7-1
+- Update to NSPR_4_10_7_RTM
+
+* Sun Aug 17 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 4.10.6-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
+
+* Fri Jul 18 2014 Tom Callaway <spot@fedoraproject.org> - 4.10.6-2
+- fix license handling
+
+* Tue Jun 10 2014 Elio Maldonado <emaldona@redhat.com> - 4.10.6-1
+- Update to NSPR_4_10_6_RTM
+
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 4.10.5-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Tue May 06 2014 Elio Maldonado <emaldona@redhat.com> - 4.10.5-1
+- Update to NSPR_4_10_5_RTM
+- Remove patch no longer needed due to the rebase
+
+* Wed Apr 02 2014 Elio Maldonado <emaldona@redhat.com> - 4.10.4-2
+- Resolves: Bug 1083725 - Add ppc64le support to nspr
+- Use a patch by Ulrich Weigand already applied upstream
+
+* Sat Mar 15 2014 Elio Maldonado <emaldona@redhat.com> - 4.10.4-1
+- Update to NSPR_4_10_4_RTM
+
 * Thu Dec 05 2013 Dennis Gilmore <dennis@ausil.us> - 4.10.2-3
 - escape the rpm macro in the previous commit
 

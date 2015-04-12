@@ -4,8 +4,9 @@
 
 Name:           ocaml-bin-prot
 Version:        2.0.9
-Release:        9%{?dist}
+Release:        10%{?dist}
 Summary:        Read and write OCaml values in a type-safe binary protocol
+Summary(zh_CN.UTF-8): 使用类型安全的二进制协议读取和写入 OCaml 值
 License:        LGPLv2+ with exceptions
 
 URL:            http://forge.ocamlcore.org/projects/bin-prot
@@ -13,6 +14,8 @@ Source0:        http://forge.ocamlcore.org/frs/download.php/%{dlnode}/bin_prot-%
 
 # Remove -Werror from flags.
 Patch1:         ocaml-bin-prot-2.0.9-remove-Werror.patch
+# Update integer types for ocaml 4.02
+Patch2:         %{name}-2.0.9-fix-ints.patch
 
 BuildRequires:  ocaml >= 3.12.0
 BuildRequires:  ocaml-findlib-devel
@@ -36,9 +39,12 @@ values will lead to non-termination whereas shared values, besides
 requiring significantly more space when encoded, may lead to a
 substantial increase in memory footprint when they are read back in.
 
+%description -l zh_CN.UTF-8
+使用类型安全的二进制协议读取和写入 OCaml 值。
 
 %package        devel
 Summary:        Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Requires:       %{name} = %{version}-%{release}
 
 
@@ -46,11 +52,13 @@ Requires:       %{name} = %{version}-%{release}
 The %{name}-devel package contains libraries and signature files for
 developing applications that use %{name}.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q -n bin_prot-%{version}
 %patch1 -p1
-
+%patch2 -p1
 
 %build
 ocaml setup.ml -configure --prefix %{_prefix} \
@@ -78,7 +86,7 @@ mkdir -p $OCAMLFIND_DESTDIR $OCAMLFIND_DESTDIR/stublibs
 ocaml setup.ml -install
 
 chrpath --delete $OCAMLFIND_DESTDIR/stublibs/dll*.so
-
+magic_rpm_clean.sh
 
 %files
 %doc COPYRIGHT LICENSE LICENSE.Tywith
@@ -102,6 +110,9 @@ chrpath --delete $OCAMLFIND_DESTDIR/stublibs/dll*.so
 
 
 %changelog
+* Wed Mar 04 2015 Liu Di <liudidi@gmail.com> - 2.0.9-10
+- 为 Magic 3.0 重建
+
 * Fri Jun 20 2014 Liu Di <liudidi@gmail.com> - 2.0.9-9
 - 为 Magic 3.0 重建
 

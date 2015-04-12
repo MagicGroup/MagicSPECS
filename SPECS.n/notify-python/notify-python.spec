@@ -2,7 +2,7 @@
 
 Name:           notify-python
 Version:        0.1.1
-Release:        15%{?dist}
+Release:        16%{?dist}
 Summary:        Python bindings for libnotify
 Summary(zh_CN.UTF-8): libnotify 的 Python 绑定
 
@@ -63,6 +63,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/pkgconfig/%{name}.pc
 
 %changelog
+* Thu Feb 26 2015 Liu Di <liudidi@gmail.com> - 0.1.1-16
+- 为 Magic 3.0 重建
+
 * Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 0.1.1-15
 - 为 Magic 3.0 重建
 
