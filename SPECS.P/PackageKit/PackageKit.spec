@@ -7,7 +7,7 @@
 Summary:   Package management service
 Name:      PackageKit
 Version:   1.0.5
-Release:   2%{?dist}
+Release:   3%{?dist}
 License:   GPLv2+ and LGPLv2+
 URL:       http://www.freedesktop.org/software/PackageKit/
 Source0:   http://www.freedesktop.org/software/PackageKit/releases/%{name}-%{version}.tar.xz
@@ -317,6 +317,9 @@ systemctl disable packagekit-offline-update.service > /dev/null 2>&1 || :
 %{_datadir}/gtk-doc/html/PackageKit
 
 %changelog
+* Fri Apr 03 2015 Liu Di <liudidi@gmail.com> - 1.0.5-3
+- 为 Magic 3.0 重建
+
 * Sat Mar 28 2015 Kalev Lember <kalevlember@gmail.com> - 1.0.5-2
 - Backport a crash fix from upstream (#1185544)
 - Update cached metadata

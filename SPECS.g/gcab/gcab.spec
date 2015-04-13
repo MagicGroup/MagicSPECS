@@ -1,7 +1,8 @@
 Name:           gcab
 Version:        0.6
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Cabinet file library and tool
+Summary(zh_CN.UTF-8): Cabinet 文件库和工具
 
 License:        LGPLv2+
 #VCS:           git:git://git.gnome.org/gcab
@@ -17,14 +18,22 @@ BuildRequires:  zlib-devel
 %description
 gcab is a tool to manipulate Cabinet archive.
 
+%description -l zh_CN.UTF-8
+Cabinet 文件库和工具。
+
 %package -n libgcab1
 Summary:        Library to create Cabinet archives
+Summary(zh_CN.UTF-8): %{name} 的运行库
 
 %description -n libgcab1
 libgcab is a library to manipulate Cabinet archive using GIO/GObject.
 
+%description -n libgcab1 -l zh_CN.UTF-8
+%{name} 的运行库。
+
 %package -n libgcab1-devel
 Summary:        Development files to create Cabinet archives
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Requires:       libgcab1%{?_isa} = %{version}-%{release}
 Requires:       glib2-devel
 Requires:       pkgconfig
@@ -33,6 +42,9 @@ Requires:       pkgconfig
 libgcab is a library to manipulate Cabinet archive.
 
 Libraries, includes, etc. to compile with the gcab library.
+
+%description -n libgcab1-devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -48,7 +60,7 @@ make DESTDIR=%{buildroot} install
 
 rm -f %{buildroot}%{_libdir}/*.a
 rm -f %{buildroot}%{_libdir}/*.la
-
+magic_rpm_clean.sh
 %find_lang %{name}
 
 %post -n libgcab1 -p /sbin/ldconfig
@@ -73,6 +85,9 @@ rm -f %{buildroot}%{_libdir}/*.la
 %{_libdir}/pkgconfig/libgcab-1.0.pc
 
 %changelog
+* Mon Apr 13 2015 Liu Di <liudidi@gmail.com> - 0.6-3
+- 为 Magic 3.0 重建
+
 * Mon Mar 23 2015 Kalev Lember <kalevlember@gmail.com> - 0.6-2
 - Pull in the base library package when installing -devel
 

@@ -1,14 +1,11 @@
 Summary:   Simple package library built on top of hawkey and librepo
 Summary(zh_CN.UTF-8): 在 hawkey 和 librepo 上构建的简单包库
 Name:      libhif
-Version:   0.1.2
-Release:   5%{?dist}
+Version: 0.2.0
+Release: 1%{?dist}
 License:   LGPLv2+
 URL:       https://github.com/hughsie/libhif
 Source0:   http://people.freedesktop.org/~hughsient/releases/libhif-%{version}.tar.xz
-
-# Backported from upstream
-Patch0:    0001-repos-Don-t-error-out-for-missing-treeinfo-files.patch
 
 BuildRequires: glib2-devel >= 2.16.1
 BuildRequires: libtool
@@ -40,7 +37,6 @@ GLib headers and libraries for libhif.
 
 %prep
 %setup -q
-%patch0 -p1
 
 %build
 %configure \
@@ -74,6 +70,12 @@ magic_rpm_clean.sh
 %{_datadir}/gir-1.0/*.gir
 
 %changelog
+* Mon Apr 13 2015 Liu Di <liudidi@gmail.com> - 0.2.0-1
+- 更新到 0.2.0
+
+* Sun Apr 05 2015 Liu Di <liudidi@gmail.com> - 0.1.2-6
+- 为 Magic 3.0 重建
+
 * Sun Aug 10 2014 Liu Di <liudidi@gmail.com> - 0.1.2-5
 - 为 Magic 3.0 重建
 

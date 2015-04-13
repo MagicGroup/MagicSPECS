@@ -1,7 +1,8 @@
 Summary:   Library for AppStream metadata
+Summary(zh_CN.UTF-8): 应用程序流元数据的库
 Name:      libappstream-glib
 Version:   0.3.6
-Release:   1%{?dist}
+Release:   2%{?dist}
 License:   LGPLv2+
 URL:       http://people.freedesktop.org/~hughsient/appstream-glib/
 Source0:   http://people.freedesktop.org/~hughsient/appstream-glib/releases/appstream-glib-%{version}.tar.xz
@@ -41,27 +42,42 @@ write AppStream metadata. It also provides a simple DOM implementation that
 makes it easy to edit nodes and convert to and from the standardized XML
 representation.
 
+%description -l zh_CN.UTF-8
+应用程序流元数据的库。
+
 %package devel
 Summary: GLib Libraries and headers for appstream-glib
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Requires: %{name}%{?_isa} = %{version}-%{release}
 
 %description devel
 GLib headers and libraries for appstream-glib.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
 %package builder
 Summary: Library and command line tools for building AppStream metadata
+Summary(zh_CN.UTF-8): 构建应用程序流元数据的库和命令行工具
 Requires: %{name}%{?_isa} = %{version}-%{release}
 
 %description builder
 This library and command line tool is used for building AppStream metadata
 from a directory of packages.
 
+%description builder -l zh_CN.UTF-8
+构建应用程序流元数据的库和命令行工具。
+
 %package builder-devel
 Summary: GLib Libraries and headers for appstream-builder
+Summary(zh_CN.UTF-8): %{name}-builder 的开发包
 Requires: %{name}-builder%{?_isa} = %{version}-%{release}
 
 %description builder-devel
 GLib headers and libraries for appstream-builder.
+
+%description builder-devel -l zh_CN.UTF-8
+%{name}-builder 的开发包。
 
 %prep
 %setup -q -n appstream-glib-%{version}
@@ -82,7 +98,7 @@ make install DESTDIR=$RPM_BUILD_ROOT
 %__rm -f %{buildroot}%{_libdir}/libappstream-glib*.la
 %__rm -f %{buildroot}%{_libdir}/libappstream-builder*.la
 %__rm -f %{buildroot}%{_libdir}/asb-plugins/*.la
-
+magic_rpm_clean.sh
 %find_lang appstream-glib
 
 %post -p /sbin/ldconfig
@@ -128,6 +144,9 @@ make install DESTDIR=$RPM_BUILD_ROOT
 %{_datadir}/gir-1.0/AppStreamBuilder-1.0.gir
 
 %changelog
+* Mon Apr 13 2015 Liu Di <liudidi@gmail.com> - 0.3.6-2
+- 为 Magic 3.0 重建
+
 * Mon Mar 30 2015 Richard Hughes <richard@hughsie.com> 0.3.6-1
 - New upstream release
 - Add a 'replace-screenshots' command to appstream-util
