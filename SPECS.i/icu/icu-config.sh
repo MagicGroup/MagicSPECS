@@ -1,7 +1,7 @@
 #!/bin/sh
 OOO_ARCH=$(uname -m)
 case $OOO_ARCH in
-	x86_64 | s390x | ppc64 | sparc64 | aarch64 | ppc64le )
+	x86_64 | s390x | ppc64 | sparc64 | aarch64 | ppc64le | mips64 )
 		bits=64
 		;;
 	* )
