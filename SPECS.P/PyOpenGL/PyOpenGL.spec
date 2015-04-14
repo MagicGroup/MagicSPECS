@@ -1,9 +1,11 @@
 Name:           PyOpenGL
-Version:        3.0.1
-Release:        5%{?dist}
+Version: 3.1.0
+Release: 1%{?dist}
 Summary:        Python bindings for OpenGL
+Summary(zh_CN.UTF-8): OpenGL 的 Python 绑定
 License:        BSD
 Group:          System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 URL:            http://pyopengl.sourceforge.net/
 # It was reported in https://bugzilla.redhat.com/show_bug.cgi?id=760366
 # that there are some binary blobs in the upstream archive. 
@@ -11,10 +13,7 @@ URL:            http://pyopengl.sourceforge.net/
 # and upstream packages will not match. However I'm not changig the 
 # source URL since I hope it will be fixed in a next release.
 # Upstream bug: https://sourceforge.net/tracker/?func=detail&aid=3451797&group_id=5988&atid=105988
-Source0:        http://downloads.sourceforge.net/pyopengl/%{name}-%{version}.tar.gz
-# Remove shebang from Tk module, since it's not needed
-# Upstream bug: https://sourceforge.net/tracker/?func=detail&aid=3287895&group_id=5988&atid=105988
-Patch0:         PyOpenGL_shebang.patch
+Source0:        https://pypi.python.org/packages/source/P/PyOpenGL/PyOpenGL-%{version}.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  python2-devel 
 BuildRequires:  python-setuptools-devel
@@ -33,18 +32,24 @@ implementation).
 PyOpenGL is interoperable with a large number of external GUI libraries
 for Python including (Tkinter, wxPython, FxPy, PyGame, and Qt). 
 
+%description -l zh_CN.UTF-8
+OpenGL 的 Python 绑定。
 
 %package Tk
 Summary:        %{name} OpenGL Tk widget
+Summary(zh_CN.UTF-8): %{name} 的 Tk 部件
 Group:          System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 Requires:       %{name} = %{version}-%{release}, tkinter
 
 %description Tk
 %{name} Togl (Tk OpenGL widget) 1.6 support.
 
+%description Tk -l zh_CN.UTF-8
+%{name} 的 Tk 部件。
+
 %prep
 %setup -q -n %{name}-%{version}
-%patch0 -p0 
 
 %build
 %{__python} setup.py build
@@ -53,7 +58,8 @@ Requires:       %{name} = %{version}-%{release}, tkinter
 %install
 %{__python} setup.py install -O1 --skip-build --root="$RPM_BUILD_ROOT" \
   --prefix="%{_prefix}"
-chmod -x %{buildroot}%{python_sitelib}/%{name}-%{version}-py?.?.egg-info
+#chmod -x %{buildroot}%{python_sitelib}/%{name}-%{version}-py?.?.egg-info
+magic_rpm_clean.sh
 
 %files
 %defattr(-,root,root,-)
@@ -66,6 +72,9 @@ chmod -x %{buildroot}%{python_sitelib}/%{name}-%{version}-py?.?.egg-info
 %{python_sitelib}/OpenGL/Tk
 
 %changelog
+* Mon Apr 13 2015 Liu Di <liudidi@gmail.com> - 3.1.0-1
+- 更新到 3.1.0
+
 * Wed Jul 18 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.0.1-5
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 

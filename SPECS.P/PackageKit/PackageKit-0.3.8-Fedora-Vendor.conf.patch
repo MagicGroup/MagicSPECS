@@ -6,7 +6,7 @@ diff -urNp PackageKit-0.8.14.old/etc/Vendor.conf PackageKit-0.8.14/etc/Vendor.co
  #
  # default=http://www.packagekit.org/pk-package-not-found.html
 -DefaultUrl=http://www.packagekit.org/pk-package-not-found.html
-+DefaultUrl=https://fedoraproject.org/wiki/PackageKit_Items_Not_Found#Missing_Package
++DefaultUrl=https://www.magiclinux.org/wiki/PackageKit_Items_Not_Found#Missing_Package
  
  # The URL which is shown to the user when a codec could not be found.
  # It should explain why certain codecs cannot be used, and perhaps show
@@ -15,7 +15,7 @@ diff -urNp PackageKit-0.8.14.old/etc/Vendor.conf PackageKit-0.8.14/etc/Vendor.co
  #
  # default=none
 -CodecUrl=none
-+CodecUrl=https://fedoraproject.org/wiki/PackageKit_Items_Not_Found#Missing_Codec
++CodecUrl=https://www.magiclinux.org/wiki/PackageKit_Items_Not_Found#Missing_Codec
  
  # The URL which is shown to the user when hardware drivers could not be found.
  # It should explain why some hardware is not supported, and links to futher
@@ -24,7 +24,7 @@ diff -urNp PackageKit-0.8.14.old/etc/Vendor.conf PackageKit-0.8.14/etc/Vendor.co
  #
  # default=none
 -HardwareUrl=none
-+HardwareUrl=https://fedoraproject.org/wiki/PackageKit_Items_Not_Found#Missing_Driver
++HardwareUrl=https://www.magiclinux.org/wiki/PackageKit_Items_Not_Found#Missing_Driver
  
  # The URL which is shown to the user when fonts could not be found.
  # Alternatives should probably be suggested where possible.
@@ -33,7 +33,7 @@ diff -urNp PackageKit-0.8.14.old/etc/Vendor.conf PackageKit-0.8.14/etc/Vendor.co
  #
  # default=none
 -FontUrl=none
-+FontUrl=https://fedoraproject.org/wiki/PackageKit_Items_Not_Found#Missing_Font
++FontUrl=https://www.magiclinux.org/wiki/PackageKit_Items_Not_Found#Missing_Font
  
  # The URL which is shown to the user when programs handing a mime tpye could not
  # be found. It should probably explain how to use wine if the program is a
@@ -42,4 +42,4 @@ diff -urNp PackageKit-0.8.14.old/etc/Vendor.conf PackageKit-0.8.14/etc/Vendor.co
  #
  # default=none
 -MimeUrl=none
-+MimeUrl=https://fedoraproject.org/wiki/PackageKit_Items_Not_Found#Missing_MIME_Support
++MimeUrl=https://www.magiclinux.org/wiki/PackageKit_Items_Not_Found#Missing_MIME_Support

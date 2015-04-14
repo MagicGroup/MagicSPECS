@@ -1,15 +1,13 @@
-%if 0%{?fedora} > 12
 %global with_python3 1
-%else
-%{!?python_sitearch: %global python_sitearch %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib(1)")}
-%endif
 
 Name:           PyYAML
-Version:        3.10
-Release:        8%{?dist}
+Version:	3.11
+Release:	1%{?dist}
 Summary:        YAML parser and emitter for Python
+Summary(zh_CN.UTF-8): Python 下的 YAML 解析器
 
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 License:        MIT
 URL:            http://pyyaml.org/
 Source0:        http://pyyaml.org/download/pyyaml/%{name}-%{version}.tar.gz
@@ -35,10 +33,15 @@ allow to represent an arbitrary Python object.
 PyYAML is applicable for a broad range of tasks from complex
 configuration files to object serialization and persistance.
 
+%description -l zh_CN.UTF-8
+Python 下的 YAML 解析器。
+
 %if 0%{?with_python3}
 %package -n python3-PyYAML
 Summary: YAML parser and emitter for Python
+Summary(zh_CN.UTF-8): Python3 下的 YAML 解析器
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 
 %description -n python3-PyYAML
 YAML is a data serialization format designed for human readability and
@@ -52,6 +55,9 @@ allow to represent an arbitrary Python object.
 
 PyYAML is applicable for a broad range of tasks from complex
 configuration files to object serialization and persistance.
+
+%description -n python3-PyYAML -l zh_CN.UTF-8
+Python3 下的 YAML 解析器。
 %endif
 
 
@@ -104,6 +110,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Apr 14 2015 Liu Di <liudidi@gmail.com> - 3.11-1
+- 更新到 3.11
+
 * Tue Jun 17 2014 Liu Di <liudidi@gmail.com> - 3.10-8
 - 为 Magic 3.0 重建
 

@@ -1,8 +1,0 @@
-diff -up PyQt-x11-gpl-snapshot-4.8.3-454d07a16153/pyuic/uic/pyuic.py.pyuic_shbang PyQt-x11-gpl-snapshot-4.8.3-454d07a16153/pyuic/uic/pyuic.py
---- PyQt-x11-gpl-snapshot-4.8.3-454d07a16153/pyuic/uic/pyuic.py.pyuic_shbang	2011-01-14 21:44:29.000000000 -0600
-+++ PyQt-x11-gpl-snapshot-4.8.3-454d07a16153/pyuic/uic/pyuic.py	2011-01-15 08:56:58.371972273 -0600
-@@ -1,3 +1,4 @@
-+#!/usr/bin/python -tt
- #############################################################################
- ##
- ## Copyright (c) 2011 Riverbank Computing Limited <info@riverbankcomputing.com>

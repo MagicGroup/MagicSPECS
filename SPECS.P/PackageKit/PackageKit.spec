@@ -6,8 +6,8 @@
 
 Summary:   Package management service
 Name:      PackageKit
-Version:   1.0.5
-Release:   3%{?dist}
+Version: 1.0.6
+Release: 1%{?dist}
 License:   GPLv2+ and LGPLv2+
 URL:       http://www.freedesktop.org/software/PackageKit/
 Source0:   http://www.freedesktop.org/software/PackageKit/releases/%{name}-%{version}.tar.xz
@@ -17,9 +17,6 @@ Source1:   cached-metadata.tar
 
 # Fedora-specific: set Vendor.conf up for Fedora.
 Patch0:    PackageKit-0.3.8-Fedora-Vendor.conf.patch
-# Backported from upstream
-Patch1:    PackageKit-new-missing-codecs-API.patch
-Patch2:    0001-hif-Fix-use-after-free-during-untrusted-repo-check.patch
 
 Requires: %{name}-glib%{?_isa} = %{version}-%{release}
 Requires: shared-mime-info
@@ -176,8 +173,6 @@ using PackageKit.
 %prep
 %setup -q
 %patch0 -p1 -b .fedora
-%patch1 -p1 -b .new-missing-codecs-API
-%patch2 -p1
 
 %build
 %configure \
@@ -317,6 +312,9 @@ systemctl disable packagekit-offline-update.service > /dev/null 2>&1 || :
 %{_datadir}/gtk-doc/html/PackageKit
 
 %changelog
+* Mon Apr 13 2015 Liu Di <liudidi@gmail.com> - 1.0.6-1
+- 更新到 1.0.6
+
 * Fri Apr 03 2015 Liu Di <liudidi@gmail.com> - 1.0.5-3
 - 为 Magic 3.0 重建
 

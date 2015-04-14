@@ -1,0 +1,53 @@
+From 4953f89845a55bddd21df1b505301b884ab2809a Mon Sep 17 00:00:00 2001
+From: Colin Walters <walters@verbum.org>
+Date: Tue, 18 Mar 2014 16:04:23 -0400
+Subject: [PATCH] Move python modules to architecture-specific directory
+
+This is because dbus-python gets dragged in as a dependency of other
+things people want to be multilib-compatible.  As is the Python
+modules conflict.
+---
+ Makefile.am | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
+
+diff --git a/Makefile.am b/Makefile.am
+index ebc2e43..1a14da4 100644
+--- a/Makefile.am
++++ b/Makefile.am
+@@ -17,7 +17,8 @@ EXTRA_DIST = \
+ 
+ # === dbus package ===
+ 
+-nobase_python_PYTHON = \
++dbuspydir = $(pyexecdir)
++nobase_dbuspy_DATA = \
+     dbus/bus.py \
+     dbus/connection.py \
+     dbus/_compat.py \
+@@ -38,12 +39,12 @@ nobase_python_PYTHON = \
+     dbus/types.py
+ 
+ if !HAVE_PYTHON_3
+-nobase_python_PYTHON += \
++nobase_dbuspy_DATA += \
+     dbus/gobject_service.py \
+     $(NULL)
+ endif
+ 
+-check_py_sources = $(nobase_python_PYTHON)
++check_py_sources = $(nobase_dbuspy_DATA)
+ include $(top_srcdir)/tools/check-coding-style.mk
+ 
+ # === Devel stuff ===
+@@ -130,7 +131,7 @@ _dbus_glib_bindings/_dbus_glib_bindings.la:
+ 
+ APIDOC_PYTHONPATH = $(abs_top_srcdir):$(abs_top_builddir)/_dbus_bindings/.libs:$(abs_top_builddir)/_dbus_glib_bindings/.libs
+ 
+-api api/index.html: $(nobase_python_PYTHON) \
++api api/index.html: $(nobase_dbuspy_DATA) \
+ 		    _dbus_bindings/_dbus_bindings.la \
+ 		    _dbus_glib_bindings/_dbus_glib_bindings.la
+ 	rm -rf api
+-- 
+1.8.3.1
+

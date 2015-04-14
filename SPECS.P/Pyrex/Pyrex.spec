@@ -12,11 +12,13 @@
 
 Name:           Pyrex
 Version:        0.9.9
-Release:        5%{?dist}
+Release:        6%{?dist}
 Epoch:          0
 BuildArch:      noarch
 Summary:        A compiler/language for writing Python extension modules
+Summary(zh_CN.UTF-8): 编写 Python 扩展模块的编译器/语言
 Group:          Development/Languages
+Group(zh_CN.UTF-8): 开发/语言
 License:        Public Domain
 URL:            http://www.cosc.canterbury.ac.nz/~greg/python/Pyrex/
 Source0:        http://www.cosc.canterbury.ac.nz/~greg/python/Pyrex/Pyrex-%{version}.tar.gz
@@ -43,9 +45,14 @@ of your Python code or wrapping an external library.
 Please see the documentation for how to get the best performance from your
 code.
 
+%description -l zh_CN.UTF-8
+编写 Python 扩展模块的编译器/语言。
+
 %package -n emacs-pyrex
 Summary: Pyrex editing mode for Emacs
+Summary(zh_CN.UTF-8): Emacs 的 Pyrex 编辑模式
 Group: Applications/Editors
+Group(zh_CN.UTF-8): 应用程序/编辑器
 BuildArch: noarch
 Requires: emacs(bin) >= %{emacs_version}
 
@@ -53,6 +60,9 @@ Requires: emacs(bin) >= %{emacs_version}
 %description -n emacs-pyrex
 An emacs mode for editing Pyrex source code, supporting the variations in
 syntax as it differs from Python.
+
+%description -n emacs-pyrex -l zh_CN.UTF-8
+Emacs 的 Pyrex 编辑模式。
 
 %prep
 %setup -q
@@ -76,6 +86,7 @@ mkdir -p $RPM_BUILD_ROOT/%{emacs_lispdir}
 mkdir -p $RPM_BUILD_ROOT/%{emacs_startdir}
 cp -p Tools/pyrex-mode.* $RPM_BUILD_ROOT/%{emacs_lispdir}
 cp -p %{SOURCE1} $RPM_BUILD_ROOT/%{emacs_startdir}
+magic_rpm_clean.sh
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -93,6 +104,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Tue Apr 14 2015 Liu Di <liudidi@gmail.com> - 0:0.9.9-6
+- 为 Magic 3.0 重建
+
 * Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 0:0.9.9-5
 - 为 Magic 3.0 重建
 

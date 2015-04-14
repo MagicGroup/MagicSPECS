@@ -16,12 +16,6 @@ Group(zh_CN.UTF-8): 用户界面/桌面
 URL: http://developer.kde.org/language-bindings/
 Source0: http://download.kde.org/stable/%{version}/src/pykde4-%{version}.tar.xz
 
-Patch100: pykde4-pyqt495.patch
-
-# debian patches
-Patch200: make_pykde4_respect_sip_flags.diff
-Patch201: fix_kpythonpluginfactory_build.diff
-
 # rhel patches
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
@@ -119,10 +113,6 @@ Requires: python3-PyKDE4-akonadi%{?_isa} = %{version}-%{release}
 
 %prep
 %setup -q -n pykde4-%{version}
-
-#%patch100 -p1 -b .pyqt495
-#%patch200 -p1 -b .respect_sip_flags
-#%patch201 -p1 -b .kpythonpluginfactory_slots
 
 %build
 %if 0%{?python3}
