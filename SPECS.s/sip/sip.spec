@@ -5,38 +5,44 @@
 %if 0%{?with_python3}
 %{!?python3_inc:%global python3_inc %(%{__python3} -c "from distutils.sysconfig import get_python_inc; print(get_python_inc(1))")}
 %endif
-%{!?python_sitearch:%global python_sitearch %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib(1)")}
-%{!?python_inc:%global python_inc %(%{__python} -c "from distutils.sysconfig import get_python_inc; print get_python_inc(1)")}
+%{!?__python2:%global __python2 /usr/bin/python2}
+%{!?python2_sitearch:%global python2_sitearch %(%{__python2} -c "from distutils.sysconfig import get_python_lib; print(get_python_lib(1))")}
+%{!?python2_inc:%global python2_inc %(%{__python2} -c "from distutils.sysconfig import get_python_inc; print get_python_inc(1)")}
+
+%global rpm_macros_dir %(d=%{_rpmconfigdir}/macros.d; [ -d $d ] || d=%{_sysconfdir}/rpm; echo $d)
+
+# trim changelog included in binary rpms
+%global _changelog_trimtime %(date +%s -d "1 year ago")
 
 Summary: SIP - Python/C++ Bindings Generator
 Name: sip
-Version: 4.14.2
-Release: 2%{?dist}
+Version: 4.16.7
+Release: 1%{?dist}
 
 # sipgen/parser.{c.h} is GPLv3+ with exceptions (bison)
 License: GPLv2 or GPLv3 and (GPLv3+ with exceptions)
-Group: Development/Tools
 Url: http://www.riverbankcomputing.com/software/sip/intro 
 #URL: http://sourceforge.net/projects/pyqt/
 Source0:  http://downloads.sourceforge.net/pyqt/sip-%{version}%{?snap:-snapshot-%{snap}}.tar.gz
-BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 ## upstreamable patches
 # make install should not strip (by default), kills -debuginfo
-Patch50: sip-4.12.1-no_strip.patch
+Patch50: sip-4.16.3-no_strip.patch
 # try not to rpath the world
-Patch51: sip-4.13.3-no_rpath.patch
+Patch51: sip-4.16.3-no_rpath.patch
+
+## upstream patches
 
 # extracted from sip.h, SIP_API_MAJOR_NR SIP_API_MINOR_NR defines
 Source1: macros.sip
-%global _sip_api_major 9
+%global _sip_api_major 11
 %global _sip_api_minor 1
 %global _sip_api %{_sip_api_major}.%{_sip_api_minor}
 
 Provides: sip-api(%{_sip_api_major}) = %{_sip_api}
 Provides: sip-api(%{_sip_api_major})%{?_isa} = %{_sip_api}
 
-BuildRequires: python-devel
+BuildRequires: python2-devel
 BuildRequires: sed
 
 %if 0%{?with_python3}
@@ -56,18 +62,19 @@ class library.
 
 %package devel
 Summary: Files needed to generate Python bindings for any C++ class library
-Group: Development/Libraries
 Requires: %{name}%{?_isa} = %{version}-%{release}
 Requires: %{name}-macros = %{version}-%{release}
-Requires: python-devel 
+Requires: python2-devel
 %description devel
 This package contains files needed to generate Python bindings for any C++
 classes library.
 
 %package macros
 Summary: RPM macros for use when working with SIP
-Group: Development/Tools
 Requires: rpm
+# when arch->noarch happened
+Obsoletes: sip-macros < 4.15.5
+BuildArch: noarch
 %description macros
 This package contains RPM macros for use when working with SIP.
 %if 0%{?with_python3}
@@ -77,7 +84,6 @@ It is used by both the sip-devel (python 2) and python3-sip-devel subpackages.
 %if 0%{?with_python3}
 %package -n python3-sip
 Summary: SIP - Python 3/C++ Bindings Generator
-Group: Development/Tools
 Provides: python3-sip-api(%{_sip_api_major}) = %{_sip_api}
 Provides: python3-sip-api(%{_sip_api_major})%{?_isa} = %{_sip_api}
 %description -n python3-sip
@@ -95,7 +101,6 @@ class library.
 
 %package -n python3-sip-devel
 Summary: Files needed to generate Python 3 bindings for any C++ class library
-Group: Development/Libraries
 Requires: %{name}-macros = %{version}-%{release}
 Requires: python3-sip%{?_isa} = %{version}-%{release}
 Requires: python3-devel
@@ -127,14 +132,12 @@ make %{?_smp_mflags}
 popd
 %endif
 
-%{__python} configure.py -d %{python_sitearch} CXXFLAGS="%{optflags}" CFLAGS="%{optflags}"
+%{__python2} configure.py -d %{python2_sitearch} CXXFLAGS="%{optflags}" CFLAGS="%{optflags}"
 
 make %{?_smp_mflags}
 
 
 %install
-rm -rf %{buildroot}
-
 # Perform the Python 3 installation first, to avoid stomping over the Python 2
 # /usr/bin/sip:
 %if 0%{?with_python3}
@@ -150,36 +153,30 @@ make install DESTDIR=%{buildroot}
 mkdir -p %{buildroot}%{_datadir}/sip
 
 # Macros used by -devel subpackages:
-install -D -p -m644 %{SOURCE1} %{buildroot}%{_sysconfdir}/rpm/macros.sip
-
-
-%clean
-rm -rf %{buildroot}
+install -D -p -m644 %{SOURCE1} %{buildroot}%{rpm_macros_dir}/macros.sip
 
 
 %files
-%defattr(-,root,root,-)
 %doc LICENSE LICENSE-GPL2 LICENSE-GPL3
 %doc NEWS README
-%{python_sitearch}/*
+%{python2_sitearch}/sip.so
+%{python2_sitearch}/sip*.py*
 
 %files devel
-%defattr(-,root,root,-)
 %{_bindir}/sip
 %{_datadir}/sip/
-%{python_inc}/*
+%{python2_inc}/*
 
 %files macros
-%defattr(-,root,root,-)
-%{_sysconfdir}/rpm/macros.sip
+%{rpm_macros_dir}/macros.sip
 
 %if 0%{?with_python3}
 %files -n python3-sip
-%defattr(-,root,root,-)
-%{python3_sitearch}/*
+%{python3_sitearch}/sip.so
+%{python3_sitearch}/sip*.py*
+%{python3_sitearch}/__pycache__/*
 
 %files -n python3-sip-devel
-%defattr(-,root,root,-)
 # Note that the "sip" binary is invoked by name in a few places higher up
 # in the KDE-Python stack; these will need changing to "python3-sip":
 %{_bindir}/python3-sip
@@ -189,8 +186,72 @@ rm -rf %{buildroot}
 
 
 %changelog
-* Wed Jun 18 2014 Liu Di <liudidi@gmail.com> - 4.14.2-2
-- 为 Magic 3.0 重建
+* Wed Feb 25 2015 Rex Dieter <rdieter@fedoraproject.org> 4.16.6-1
+- sip-4.16.6
+
+* Fri Dec 26 2014 Rex Dieter <rdieter@fedoraproject.org> 4.16.5-1
+- sip-4.16.5
+
+* Sun Oct 26 2014 Rex Dieter <rdieter@fedoraproject.org> 4.16.4-1
+- sip-4.16.4
+
+* Mon Sep 15 2014 Rex Dieter <rdieter@fedoraproject.org> 4.16.3-1
+- sip-4.16.3
+
+* Mon Aug 18 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 4.16.2-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
+
+* Thu Jul 03 2014 Rex Dieter <rdieter@fedoraproject.org> 4.16.2-1
+- sip-4.16.2
+
+* Mon Jun 09 2014 Rex Dieter <rdieter@fedoraproject.org> 4.16.1-1
+- sip-4.16.1
+
+* Sun Jun 08 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 4.16-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Sun Jun 01 2014 Rex Dieter <rdieter@fedoraproject.org> 4.16-2
+- pull in upstream fix for PyQt-4.11.1 ftbfs
+
+* Wed May 28 2014 Rex Dieter <rdieter@fedoraproject.org> 4.16-1
+- sip-4.16, sip-api(11)=11.1
+
+* Mon May 12 2014 Rex Dieter <rdieter@fedoraproject.org> 4.15.5-2
+- rebuild (f21-python)
+
+* Sun Mar 16 2014 Rex Dieter <rdieter@fedoraproject.org> - 4.15.5-1
+- sip-4.15.5, sip-api(11)=11.0
+- -macros: noarch
+- s/python/python2/
+
+* Sat Feb 01 2014 Rex Dieter <rdieter@fedoraproject.org> 4.15.4-2
+- -macros: use %%_rpmconfigdir/macros.d (where supported)
+- .spec cleanup
+
+* Wed Jan 08 2014 Rex Dieter <rdieter@fedoraproject.org> 4.15.4-1
+- sip-4.15.4
+
+* Wed Oct 16 2013 Rex Dieter <rdieter@fedoraproject.org> 4.15.3-1
+- sip-4.15.3
+
+* Sun Aug 04 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 4.14.7-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Mon Jun 17 2013 Rex Dieter <rdieter@fedoraproject.org> 4.14.7-1
+- sip-4.14.7
+- sip-api(10) = 10.0
+
+* Sun Apr 21 2013 Rex Dieter <rdieter@fedoraproject.org> 4.14.6-1
+- sip-4.14.6
+
+* Tue Mar 26 2013 Rex Dieter <rdieter@fedoraproject.org> 4.14.5-1
+- sip-4.14.5 (#928340)
+
+* Sun Mar 03 2013 Rex Dieter <rdieter@fedoraproject.org> 4.14.4-1
+- sip-4.14.4, sip-api 9.2
+
+* Thu Jan 31 2013 Rex Dieter <rdieter@fedoraproject.org> 4.14.3-1
+- sip-4.14.3
 
 * Sun Dec 09 2012 Rex Dieter <rdieter@fedoraproject.org> 4.14.2-1
 - sip-4.14.2
@@ -266,7 +327,7 @@ rm -rf %{buildroot}
 * Fri Dec 24 2010 Rex Dieter <rdieter@fedoraproject.org> - 4.12-1
 - sip-4.12
 
-* Tue Nov 16 2010 Rex Dieter <rdieter@fedoraproject.org> - 4.11.2-2
+* Mon Nov 16 2010 Rex Dieter <rdieter@fedoraproject.org> - 4.11.2-2
 - add missing %%defattr to python3- pkgs (#226419)
 
 * Sat Oct 23 2010 Rex Dieter <rdieter@fedoraproject.org> - 4.11.2-1
