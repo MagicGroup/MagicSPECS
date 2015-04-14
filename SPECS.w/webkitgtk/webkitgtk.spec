@@ -98,7 +98,7 @@ This package contains developer documentation for %{name}.
 %endif
 
 %build
-%ifarch s390 %{arm} ppc
+%ifarch s390 %{arm} ppc mips64el
 # Use linker flags to reduce memory consumption on low-mem architectures
 %global optflags %{optflags} -Wl,--no-keep-memory -Wl,--reduce-memory-overheads
 %endif
