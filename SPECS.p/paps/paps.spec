@@ -1,12 +1,12 @@
 Name:           paps
 Version:        0.6.8
-Release:        19%{?dist}
+Release:        33%{?dist}
 
 License:        LGPLv2+
 URL:            http://paps.sourceforge.net/
 Source0:        http://downloads.sourceforge.net/%{name}/%{name}-%{version}.tar.gz
 Source1:        paps.convs
-BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+Source2:	29-paps.conf
 BuildRequires:  pango-devel automake autoconf libtool doxygen cups-devel
 ## https://sourceforge.net/tracker/index.php?func=detail&aid=1832897&group_id=153049&atid=786241
 Patch0:         paps-0.6.8-shared.patch
@@ -18,16 +18,31 @@ Patch2:         paps-langinfo.patch
 Patch3:         paps-0.6.6-lcnumeric.patch
 ## https://sourceforge.net/tracker/index.php?func=detail&aid=1832935&group_id=153049&atid=786241
 Patch4:         paps-exitcode.patch
+## rhbz#854897
+Patch5:         paps-854897-manpage.patch
+## Fedora specific patch to integrate with CUPS
 Patch50:        paps-cups.patch
 Patch51:        paps-cpilpi.patch
+## rhbz#424951
 Patch52:        paps-dsc-compliant.patch
 Patch53:        paps-autoconf262.patch
+## rhbz#524883
 Patch54:        paps-fix-cpi.patch
-Patch55:	paps-fix-loop-in-split.patch
-Patch56:        paps-freetype2.5.patch
+## rhbz#618483
+Patch55:        paps-fix-loop-in-split.patch
+## rhbz#857592
+Patch56:        paps-fix-tab-width.patch
+Patch57:        paps-fix-non-weak-symbol.patch
+Patch58:        paps-correct-fsf-address.patch
+## rhbz#1078519
+Patch59:        %{name}-ft-header.patch
+## rhbz#1196997
+Patch60:        %{name}-a3.patch
 
 Summary:        Plain Text to PostScript converter
 Group:          Applications/Publishing
+Requires:       %{name}-libs = %{version}-%{release}
+Requires:       cups-filesystem fontpackages-filesystem
 %description
 paps is a PostScript converter from plain text file using Pango.
 
@@ -56,15 +71,20 @@ applications using paps API.
 %patch2 -p1 -b .langinfo
 %patch3 -p1 -b .lcnumeric
 %patch4 -p1 -b .exitcode
+%patch5 -p1 -b .manpage
 %patch50 -p1 -b .cups
 %patch51 -p1 -b .cpilpi
 %patch52 -p1 -b .dsc
 %patch53 -p1 -b .autoconf262
 %patch54 -p1 -b .fixcpi
 %patch55 -p1 -b .loop
-%patch56 -p1 -b .freetype
+%patch56 -p1 -b .tab
+%patch57 -p1 -b .weak-symbol
+%patch58 -p1 -b .fsf
+%patch59 -p1 -b .ft-header
+%patch60 -p1 -b .a3
 libtoolize -f -c
-autoreconf
+autoreconf -f -i
 
 
 %build
@@ -73,48 +93,90 @@ make %{?_smp_mflags}
 
 
 %install
-rm -rf $RPM_BUILD_ROOT
-
-make install DESTDIR=$RPM_BUILD_ROOT
+make install DESTDIR=$RPM_BUILD_ROOT INSTALL="/usr/bin/install -p"
 
 # remove unnecessary files
 rm $RPM_BUILD_ROOT%{_libdir}/libpaps.la
 
 # make a symlink for CUPS filter
-%{__mkdir_p} $RPM_BUILD_ROOT%{_cups_serverbin}/filter # Not libdir
+install -d $RPM_BUILD_ROOT%{_cups_serverbin}/filter # Not libdir
 ln -s %{_bindir}/paps $RPM_BUILD_ROOT%{_cups_serverbin}/filter/texttopaps
 
-install -d $RPM_BUILD_ROOT%{_sysconfdir}/cups
-install -p -m0644 %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/cups
-%clean
-rm -rf $RPM_BUILD_ROOT
+install -d $RPM_BUILD_ROOT%{_datadir}/cups/mime
+install -p -m0644 %{SOURCE1} $RPM_BUILD_ROOT%{_datadir}/cups/mime/
+
+install -d $RPM_BUILD_ROOT%{_sysconfdir}/fonts/conf.d
+install -p -m0644 %{SOURCE2} $RPM_BUILD_ROOT%{_sysconfdir}/fonts/conf.d/
+
 
 %post libs -p /sbin/ldconfig
 %postun libs -p /sbin/ldconfig
 
 %files
-%defattr(-, root, root, -)
 %doc AUTHORS COPYING.LIB README TODO
 %{_bindir}/paps
 %{_mandir}/man1/paps.1*
 %{_cups_serverbin}/filter/texttopaps
-%dir %attr (0755, root, lp) %{_sysconfdir}/cups
-%{_sysconfdir}/cups/paps.convs
+%{_datadir}/cups/mime/paps.convs
+%{_sysconfdir}/fonts/conf.d/29-paps.conf
 
 %files libs
-%defattr(-, root, root, -)
 %doc COPYING.LIB
 %{_libdir}/libpaps.so.*
 
 %files devel
-%defattr(-, root, root, -)
 %doc COPYING.LIB
 %{_includedir}/libpaps.h
 %{_libdir}/libpaps.so
 
 %changelog
-* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 0.6.8-19
-- 为 Magic 3.0 重建
+* Mon Mar  2 2015 Akira TAGOH <tagoh@redhat.com> - 0.6.8-33
+- Support A3 paper size.
+
+* Sat Feb 21 2015 Till Maas <opensource@till.name> - 0.6.8-32
+- Rebuilt for Fedora 23 Change
+  https://fedoraproject.org/wiki/Changes/Harden_all_packages_with_position-independent_code
+
+* Fri Oct 31 2014 Akira TAGOH <tagoh@redhat.com> - 0.6.8-31
+- Add a fontconfig config to force the scalable font.
+
+* Sun Aug 17 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.6.8-30
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
+
+* Fri Jun 06 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.6.8-29
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Thu Mar 20 2014 Akira TAGOH <tagoh@redhat.com> - 0.6.8-28
+- Fix FTBFS against freetype's header files location change. (#1078519)
+
+* Mon Dec 16 2013 Akira TAGOH <tagoh@redhat.com> - 0.6.8-27
+- Move the place of paps.convs to %%{_datadir}/cups/mime. (#1042984)
+
+* Wed Jul 31 2013 Akira TAGOH <tagoh@redhat.com> - 0.6.8-26
+- Fix the width calculation with CPI enabled. (#990228)
+
+* Thu Apr 18 2013 Akira TAGOH <tagoh@redhat.com> - 0.6.8-25
+- Rebuilt for aarch64 support. (#926309)
+
+* Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.6.8-24
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
+
+* Fri Nov 23 2012 Akira TAGOH <tagoh@redhat.com> - 0.6.8-23
+- the spec file cleanup
+- Fix the undefined symbol issue in libpaps.so.0
+- Correct FSF address in the COPYING.LIB
+
+* Mon Sep 24 2012 Akira TAGOH <tagoh@redhat.com> - 0.6.8-22
+- Ensure the latest version of paps-libs are installed.
+
+* Fri Sep 21 2012 Akira TAGOH <tagoh@redhat.com> - 0.6.8-21
+- Fix wrong width for whitespaces when enabling CPI feature. (#857592)
+
+* Thu Sep  6 2012 Akira TAGOH <tagoh@redhat.com> - 0.6.8-20
+- Add a missing description of --encoding in manpage. (#854897)
+
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.6.8-19
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 
 * Wed Jan 11 2012 Akira TAGOH <tagoh@redhat.com> - 0.6.8-18
 - Use %%{_cups_serverbin} instead of the hardcoded path. (#772240)
@@ -203,7 +265,7 @@ rm -rf $RPM_BUILD_ROOT
 - Fix PostScript breakage following the non-monetary numeric format from
   current locale. (#231916)
 
-* Thu Mar  7 2007 Akira TAGOH <tagoh@redhat.com> - 0.6.6-18
+* Wed Mar  7 2007 Akira TAGOH <tagoh@redhat.com> - 0.6.6-18
 - default to lpi=6 and cpi=10 if paps is bringing up as cups filter. (#223862)
 
 * Tue Jan 23 2007 Akira TAGOH <tagoh@redhat.com>
