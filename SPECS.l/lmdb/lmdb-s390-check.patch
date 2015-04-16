@@ -1,0 +1,16 @@
+The s390 arch needs a pause between accesing the database
+
+diff -up liblmdb/Makefile.old liblmdb/Makefile
+--- liblmdb/Makefile.old	2014-06-26 09:34:24.593559711 +0200
++++ liblmdb/Makefile	2014-06-26 09:34:48.131007841 +0200
+@@ -50,7 +50,9 @@ clean:
+ 
+ test:	all
+ 	mkdir testdb
+-	./mtest && ./mdb_stat testdb
++	./mtest
++	sleep 1
++	./mdb_stat testdb
+ 
+ liblmdb.a:	mdb.o midl.o
+ 	ar rs $@ mdb.o midl.o
