@@ -105,7 +105,7 @@ This package contains developer documentation for %{name}.
 # Use linker flags to reduce memory consumption
 %global optflags %{optflags} -Wl,--no-keep-memory -Wl,--reduce-memory-overheads
 
-%ifarch s390 %{arm}
+%ifarch s390 %{arm} mips64el
 # Decrease debuginfo verbosity to reduce memory consumption even more
 %global optflags %(echo %{optflags} | sed 's/-g /-g1 /')
 %endif
