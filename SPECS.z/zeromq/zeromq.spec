@@ -2,7 +2,7 @@
 
 Name:           zeromq
 Version:        4.0.5
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Software library for fast, message-based applications
 
 Group:          System Environment/Libraries
@@ -116,6 +116,9 @@ make check
 
 
 %changelog
+* Thu Apr 16 2015 Liu Di <liudidi@gmail.com> - 4.0.5-2
+- 为 Magic 3.0 重建
+
 * Mon Nov 17 2014 Thomas Spura <tomspur@fedoraproject.org> - 4.0.5-1
 - update to 4.0.5
 

@@ -3,9 +3,11 @@
 
 Name: pdns
 Version: 3.4.3
-Release: 1%{?dist}
+Release: 2%{?dist}
 Summary: A modern, advanced and high performance authoritative-only nameserver
+Summary(zh_CN.UTF-8): 一个现代化，先进的高性能的域名服务
 Group: System Environment/Daemons
+Group(zh_CN.UTF-8): 系统环境/服务
 License: GPLv2
 URL: http://powerdns.com
 Source0: http://downloads.powerdns.com/releases/%{name}-%{version}.tar.bz2
@@ -35,12 +37,20 @@ authoritative-only nameserver. It is written from scratch and conforms
 to all relevant DNS standards documents.
 Furthermore, PowerDNS interfaces with almost any database.
 
+%description -l zh_CN.UTF-8
+一个现代化，先进的高性能的域名服务。
+
 %package tools
 Summary: Extra tools for %{name}
+Summary(zh_CN.UTF-8): %{name} 的额外工具
 Group: System Environment/Daemons
+Group(zh_CN.UTF-8): 系统环境/服务
 
 %description tools
 This package contains the extra tools for %{name}
+
+%description tools -l zh_CN.UTF-8
+%{name} 的额外工具。
 
 %package backend-mysql
 Summary: MySQL backend for %{name}
@@ -326,6 +336,9 @@ exit 0
 %{_libdir}/%{name}/liblmdbbackend.so
 
 %changelog
+* Thu Apr 16 2015 Liu Di <liudidi@gmail.com> - 3.4.3-2
+- 为 Magic 3.0 重建
+
 * Mon Mar 02 2015 Morten Stevens <mstevens@imt-systems.com> - 3.4.3-1
 - Update to 3.4.3
 

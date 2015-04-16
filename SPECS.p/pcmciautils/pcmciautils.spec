@@ -1,9 +1,11 @@
 Name: pcmciautils
 Summary: PCMCIA utilities and initialization programs
+Summary(zh_CN.UTF-8): PCMCIA 工具和初始化程序
 License: GPLv2
 Version: 018
-Release: 3%{?dist}
+Release: 4%{?dist}
 Group: System Environment/Base
+Group(zh_CN.UTF-8): 系统环境/基本
 ExclusiveArch: i386 i586 i686 x86_64 ia64 ppc ppc64 %{?arm} mips64el
 URL: http://www.kernel.org/pub/linux/utils/kernel/pcmcia/pcmcia.html
 Source: http://www.kernel.org/pub/linux/utils/kernel/pcmcia/pcmciautils-%{version}.tar.bz2
@@ -21,6 +23,9 @@ BuildRequires: byacc, flex
 The pcmciautils package contains utilities for initializing and
 debugging PCMCIA and Cardbus sockets.
 
+%description -l zh_CN.UTF-8
+PCMCIA 工具和初始化程序。
+
 %prep
 %setup -q
 
@@ -33,6 +38,7 @@ make install DESTDIR=$RPM_BUILD_ROOT
 
 mkdir -p $RPM_BUILD_ROOT/lib/udev
 cp -p src/yacc_config.c y.tab.c # for -debuginfo
+magic_rpm_clean.sh
 
 %clean
 %{__rm} -rf $RPM_BUILD_ROOT
@@ -50,6 +56,9 @@ cp -p src/yacc_config.c y.tab.c # for -debuginfo
 %{_mandir}/man*/pccardctl*
 
 %changelog
+* Thu Apr 16 2015 Liu Di <liudidi@gmail.com> - 018-4
+- 为 Magic 3.0 重建
+
 * Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 018-3
 - 为 Magic 3.0 重建
 

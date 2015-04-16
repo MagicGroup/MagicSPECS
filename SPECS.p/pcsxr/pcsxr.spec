@@ -1,4 +1,4 @@
-%define rver 82044
+%define rver 94433
 Name:           pcsxr
 BuildRequires:  gtk2-devel nasm libglade2-devel libXv-devel libX11-devel libXext-devel libXxf86vm-devel libXtst-devel gettext mesa-libGL-devel SDL-devel
 URL:            http://pcsxr.codeplex.com
@@ -9,7 +9,7 @@ Group(zh_CN.UTF-8):	应用程序/模拟器
 Obsoletes:      pcsx
 Provides:	pcsx
 Autoreqprov:    on
-Version:        1.9.92
+Version:        1.9.94
 Release:        svn%{rver}%{dist}
 Summary:        Free Sony PlayStation emulator
 Summary(zh_CN.UTF-8):	自由的 Sony PlayStation 模拟器
@@ -90,6 +90,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/pixmaps/*
 
 %changelog
+* Thu Apr 16 2015 Liu Di <liudidi@gmail.com> - 1.9.94-svn94433.1
+- 更新到 1.9.94
+
 * Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 1.9.92-svn73976.1
 - 为 Magic 3.0 重建
 

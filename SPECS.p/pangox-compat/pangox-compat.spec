@@ -1,7 +1,8 @@
 Name:           pangox-compat
 Version:        0.0.2
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Compatibility library for pangox
+Summary(zh_CN.UTF-8): pangox 的兼容库
 
 License:        LGPLv2+
 URL:            http://ftp.gnome.org/pub/GNOME/sources/pangox-compat/0.0/
@@ -13,14 +14,22 @@ BuildRequires:  pango-devel
 This is a compatibility library providing the obsolete pangox library
 that is not shipped by Pango itself anymore.  
 
+%description -l zh_CN.UTF-8
+pangox 的兼容库。
+
 %package devel
 Summary: Development files for pangox-compat
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: %{name} = %{version}-%{release}
 
 %description devel
 The %{name}-devel package contains libraries and header files for
 developing applications that use %{name}.
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -33,6 +42,7 @@ make %{?_smp_mflags}
 %install
 make install DESTDIR=$RPM_BUILD_ROOT INSTALL="install -p"
 find $RPM_BUILD_ROOT -name '*.la' -exec rm -f {} ';'
+magic_rpm_clean.sh
 
 %post -p /sbin/ldconfig
 
@@ -50,6 +60,9 @@ find $RPM_BUILD_ROOT -name '*.la' -exec rm -f {} ';'
 %{_libdir}/pkgconfig/*
 
 %changelog
+* Wed Apr 15 2015 Liu Di <liudidi@gmail.com> - 0.0.2-2
+- 为 Magic 3.0 重建
+
 * Fri Nov 09 2012 Kalev Lember <kalevlember@gmail.com> - 0.0.2-1
 - Update to 0.0.2
 

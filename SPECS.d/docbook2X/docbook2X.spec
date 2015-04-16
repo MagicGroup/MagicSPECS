@@ -1,9 +1,11 @@
 Name:           docbook2X
 Version:        0.8.8
-Release:        20%{?dist}
+Release:        21%{?dist}
 Summary:        Convert docbook into man and Texinfo
+Summary(zh_CN.UTF-8): 转换 docbook 到手册页和 Texinfo 格式
 
 Group:          Applications/Text
+Group(zh_CN.UTF-8): 应用程序/文本
 License:        MIT
 URL:            http://docbook2x.sourceforge.net/
 Source0:        http://downloads.sourceforge.net/docbook2x/docbook2X-%{version}.tar.gz
@@ -31,6 +33,8 @@ Requires(preun): /sbin/install-info
 docbook2X converts DocBook documents into man pages and Texinfo
 documents.
 
+%description -l zh_CN.UTF-8
+转换 docbook 到手册页和 Texinfo 格式文档。
 
 %prep
 %setup -q
@@ -49,7 +53,7 @@ rm -rf $RPM_BUILD_ROOT
 make install DESTDIR=$RPM_BUILD_ROOT INSTALL='install -c -p'
 rm -rf $RPM_BUILD_ROOT/%{_datadir}/doc/
 rm -f $RPM_BUILD_ROOT%{_infodir}/dir
-
+magic_rpm_clean.sh
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -85,6 +89,9 @@ fi
 
 
 %changelog
+* Thu Apr 16 2015 Liu Di <liudidi@gmail.com> - 0.8.8-21
+- 为 Magic 3.0 重建
+
 * Thu Aug 28 2014 Jitka Plesnikova <jplesnik@redhat.com> - 0.8.8-20
 - Perl 5.20 rebuild
 

@@ -1,8 +1,10 @@
 Name:           opendbx
 Version:        1.4.6
-Release:        6%{?dist}
+Release:        7%{?dist}
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Summary:        Lightweight but extensible database access library written in C
+Summary(zh_CN.UTF-8): 使用 C 编写的轻量级但是可扩展的数据库访问库
 
 #License:        LGPLv2+
 # (util/argmap.{cpp,hpp}) have a GPL license header rather than an LGPL one
@@ -31,14 +33,22 @@ and simple interface that leads to an elegant code design automatically.
 If you want your application to support different databases with little effort,
 this is definitively the right thing for you!
 
+%description -l zh_CN.UTF-8
+使用 C 编写的轻量级但是可扩展的数据库访问库。
+
 %package        devel
 Summary:        Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       %{name}%{?_isa} = %{version}-%{release}
 
 %description    devel
 The %{name}-devel package contains libraries and header files for developing
 applications that use %{name}.
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %package        mysql
 Summary:        MySQL backend - provides mysql support in %{name}
@@ -174,6 +184,9 @@ find $RPM_BUILD_ROOT -name '*.la' -exec rm -f {} ';'
 %{_mandir}/man1/odbx-sql.1.gz
 
 %changelog
+* Thu Apr 16 2015 Liu Di <liudidi@gmail.com> - 1.4.6-7
+- 为 Magic 3.0 重建
+
 * Fri Apr 03 2015 Steve Jenkins <steve@stevejenkins.com> - 1.4.6-6
 - Removing percentage sign from 1.4.6-5 comments; it made EL6 choke
 

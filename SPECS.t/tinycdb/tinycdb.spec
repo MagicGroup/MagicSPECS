@@ -1,7 +1,7 @@
 Name:		tinycdb
 Summary:	Utility and library for manipulating constant databases
 Version:	0.78
-Release:	3%{?dist}
+Release:	4%{?dist}
 Group:		System Environment/Libraries
 License:	Public Domain
 URL:		http://www.corpit.ru/mjt/tinycdb.html
@@ -63,6 +63,9 @@ cp -p debian/libcdb.pc %{buildroot}%{_libdir}/pkgconfig/libcdb.pc
 %{_libdir}/pkgconfig/*.pc
 
 %changelog
+* Thu Apr 16 2015 Liu Di <liudidi@gmail.com> - 0.78-4
+- 为 Magic 3.0 重建
+
 * Mon Aug 18 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.78-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
 

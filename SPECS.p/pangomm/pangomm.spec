@@ -3,9 +3,10 @@
 %define release_version %(echo %{version} | awk -F. '{print $1"."$2}')
 
 Name:           pangomm
-Version:        2.28.4
-Release:        3%{?dist}
+Version:	2.36.0
+Release:	1%{?dist}
 Summary:        C++ interface for Pango
+Summary(zh_CN.UTF-8): Pango 的 C++ 接口
 
 Group:          System Environment/Libraries
 License:        LGPLv2+
@@ -24,10 +25,14 @@ include typesafe callbacks, widgets extensible via inheritance and a
 comprehensive set of widget classes that can be freely combined to
 quickly create complex user interfaces.
 
+%description -l zh_CN.UTF-8
+Pango 的 C++ 接口。
 
 %package devel
 Summary:        Headers for developing programs that will use %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       %{name} = %{version}-%{release}
 Requires:       glibmm24-devel
 Requires:       cairomm-devel
@@ -38,10 +43,14 @@ Requires:       pango-devel
 This package contains the libraries and header files needed for
 developing pangomm applications.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %package          doc
 Summary:          Developer's documentation for the pangomm library
+Summary(zh_CN.UTF-8): %{name} 的文档
 Group:            Documentation
+Group(zh_CN.UTF-8): 文档
 BuildArch:        noarch
 Requires:         %{name} = %{version}-%{release}
 Requires:         libsigc++20-doc
@@ -53,6 +62,9 @@ library. Pangomm is the C++ API for the Pango font layout library.
 
 The documentation can be viewed either through the devhelp
 documentation browser or through a web browser.
+
+%description doc -l zh_CN.UTF-8
+%{name} 的文档。
 
 %prep
 %setup -q
@@ -91,6 +103,9 @@ magic_rpm_clean.sh
 %{_datadir}/devhelp/
 
 %changelog
+* Wed Apr 15 2015 Liu Di <liudidi@gmail.com> - 2.36.0-1
+- 更新到 2.36.0
+
 * Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 2.28.4-3
 - 为 Magic 3.0 重建
 

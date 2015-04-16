@@ -1,6 +1,6 @@
 Name:           yaml-cpp
 Version:        0.5.1
-Release:        6%{?dist}
+Release:        7%{?dist}
 Summary:        A YAML parser and emitter for C++
 Group:          Development/Libraries
 License:        MIT 
@@ -59,6 +59,9 @@ make VERBOSE=1 %{?_smp_mflags}
 
 
 %changelog
+* Thu Apr 16 2015 Liu Di <liudidi@gmail.com> - 0.5.1-7
+- 为 Magic 3.0 重建
+
 * Thu Feb 26 2015 Guido Grazioli <guido.grazioli@gmail.com> - 0.5.1-6
 - Rebuild for gcc switching default to -std=gnu11
 

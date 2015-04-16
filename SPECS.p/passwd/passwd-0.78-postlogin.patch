@@ -1,8 +1,0 @@
-diff -up passwd-0.78/passwd.pamd.postlogin passwd-0.78/passwd.pamd
---- passwd-0.78/passwd.pamd.postlogin	2011-02-08 16:31:20.000000000 +0100
-+++ passwd-0.78/passwd.pamd	2011-02-08 16:30:07.000000000 +0100
-@@ -3,3 +3,4 @@ auth       include	system-auth
- account    include	system-auth
- password   substack	system-auth
- -password   optional	pam_gnome_keyring.so use_authtok
-+password   substack	postlogin

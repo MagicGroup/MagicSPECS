@@ -1,9 +1,11 @@
 Summary: POSIX File System Archiver
+Summary(zh_CN.UTF-8): POSIX 文件系统归档
 Name: pax
 Version: 3.4
-Release: 15%{?dist}
+Release: 16%{?dist}
 License: BSD
 Group: Applications/Archiving
+Group(zh_CN.UTF-8): 应用程序/归档
 Source: ftp://ftp.suse.com/pub/people/kukuk/pax/%{name}-%{version}.tar.bz2
 URL:    ftp://ftp.suse.com/pub/people/kukuk/pax/
 #use Linux PATH_MAX (4092) for maximum PATHLENGTH instead of pax default 3072
@@ -20,6 +22,9 @@ BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 'pax' is the POSIX standard archive tool.  It supports the two most
 common forms of standard Unix archive (backup) files - CPIO and TAR.
 
+%description -l zh_CN.UTF-8
+POSIX 标准归档工具，支持两种 Unix 常用归档文件 - CPIO 和 TAR。
+
 %prep
 %setup -q
 %patch0 -p1 -b .PATHMAX
@@ -34,6 +39,7 @@ make %{?_smp_mflags}
 %install
 rm -rf %{buildroot}
 make DESTDIR=%{buildroot} install
+magic_rpm_clean.sh
 
 %clean
 rm -rf %{buildroot}
@@ -45,6 +51,9 @@ rm -rf %{buildroot}
 %doc %{_mandir}/man1/*
 
 %changelog
+* Thu Apr 16 2015 Liu Di <liudidi@gmail.com> - 3.4-16
+- 为 Magic 3.0 重建
+
 * Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 3.4-15
 - 为 Magic 3.0 重建
 

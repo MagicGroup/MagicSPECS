@@ -1,9 +1,11 @@
 Name:          openpgm
 Version:       5.2.122
-Release:       4%{?dist}
+Release:       5%{?dist}
 Summary:       An implementation of the PGM reliable multicast protocol
+Summary(zh_CN.UTF-8): PGM 可靠组播协议实现
 
 Group:         System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 # The license is LGPLv2.1
 License:       LGPLv2
 URL:           http://openpgm.googlecode.com/
@@ -18,15 +20,21 @@ BuildRequires: python
 OpenPGM is an open source implementation of the Pragmatic General
 Multicast (PGM) specification in RFC 3208.
 
+%description -l zh_CN.UTF-8
+PGM 可靠组播协议实现。
 
 %package devel
 Summary:       Development files for openpgm
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:         Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:      %{name}%{?_isa} = %{version}-%{release}
 
 %description devel
 This package contains OpenPGM related development libraries and header files.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q -n libpgm-%{version}~dfsg/openpgm/pgm
@@ -40,6 +48,7 @@ rm -rf %{buildroot}
 make DESTDIR=%{buildroot} install
 
 rm %{buildroot}%{_libdir}/libpgm.{a,la}
+magic_rpm_clean.sh
 
 %clean
 rm -rf %{buildroot}
@@ -63,6 +72,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Apr 16 2015 Liu Di <liudidi@gmail.com> - 5.2.122-5
+- 为 Magic 3.0 重建
+
 * Sun Aug 17 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 5.2.122-4
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
 

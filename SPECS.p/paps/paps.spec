@@ -40,29 +40,44 @@ Patch59:        %{name}-ft-header.patch
 Patch60:        %{name}-a3.patch
 
 Summary:        Plain Text to PostScript converter
+Summary(zh_CN.UTF-8): 纯文本到 PostScript 的转换程序
 Group:          Applications/Publishing
+Group(zh_CN.UTF-8): 应用程序/出版
 Requires:       %{name}-libs = %{version}-%{release}
 Requires:       cups-filesystem fontpackages-filesystem
 %description
 paps is a PostScript converter from plain text file using Pango.
 
+%description -l zh_CN.UTF-8
+纯文本到 PostScript 的转换程序。
+
 %package libs
 Summary:        Libraries for paps
+Summary(zh_CN.UTF-8): %{name} 的运行库
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 %description libs
 paps is a PostScript converter from plain text file using Pango.
 
 This package contains the library for paps.
 
+%description libs -l zh_CN.UTF-8
+%{name} 的运行库。
+
 %package devel
 Summary:        Development files for paps
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       %{name}-libs = %{version}-%{release}
 %description devel
 paps is a PostScript converter from plain text file using Pango.
 
 This package contains the development files that is necessary to develop
 applications using paps API.
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -107,7 +122,7 @@ install -p -m0644 %{SOURCE1} $RPM_BUILD_ROOT%{_datadir}/cups/mime/
 
 install -d $RPM_BUILD_ROOT%{_sysconfdir}/fonts/conf.d
 install -p -m0644 %{SOURCE2} $RPM_BUILD_ROOT%{_sysconfdir}/fonts/conf.d/
-
+magic_rpm_clean.sh
 
 %post libs -p /sbin/ldconfig
 %postun libs -p /sbin/ldconfig

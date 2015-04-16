@@ -1,13 +1,15 @@
 %global dropdir %(pkg-config libpcsclite --variable usbdropdir 2>/dev/null)
-%global pcsc_lite_ver 1.8.3
-%global upstream_build 3768
+%global pcsc_lite_ver 1.8.13
+%global upstream_build 4111
 
 Name:           pcsc-lite-ccid
-Version:        1.4.8
-Release:        1%{dist}
+Version:	1.4.18
+Release:	1%{?dist}
 Summary:        Generic USB CCID smart card reader driver
+Summary(zh_CN.UTF-8): 通用 USB CCID 智能卡读取器驱动
 
 Group:          System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 License:        LGPLv2+
 URL:            http://pcsclite.alioth.debian.org/ccid.html
 Source0:        http://alioth.debian.org/download.php/%{upstream_build}/ccid-%{version}.tar.bz2
@@ -26,6 +28,8 @@ Provides:       ccid = %{version}-%{release}
 Generic USB CCID (Chip/Smart Card Interface Devices) driver for use with the
 PC/SC Lite daemon.
 
+%description -l zh_CN.UTF-8
+通用 USB CCID 智能卡读取器驱动。
 
 %prep
 %setup -q -n ccid-%{version}
@@ -39,7 +43,7 @@ make %{?_smp_mflags}
 %install
 make install DESTDIR=$RPM_BUILD_ROOT
 cp -p src/openct/LICENSE LICENSE.openct
-
+magic_rpm_clean.sh
 
 %post
 /bin/systemctl try-restart pcscd.service >/dev/null 2>&1 || :
@@ -56,6 +60,9 @@ cp -p src/openct/LICENSE LICENSE.openct
 
 
 %changelog
+* Thu Apr 16 2015 Liu Di <liudidi@gmail.com> - 1.4.18-1
+- 更新到 1.4.18
+
 * Sun Oct 07 2012 Kalev Lember <kalevlember@gmail.com> - 1.4.8-1
 - Update to 1.4.8
 

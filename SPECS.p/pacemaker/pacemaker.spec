@@ -28,7 +28,7 @@
 %bcond_with profiling
 
 # We generate docs using Publican, Asciidoc and Inkscape, but they're not available everywhere
-%bcond_without doc
+%bcond_with doc
 
 # Use a different versioning scheme
 %bcond_with pre_release
@@ -51,7 +51,7 @@
 Name:          pacemaker
 Summary:       Scalable High-Availability cluster resource manager
 Version:       1.1.12
-Release:       %{pcmk_release}%{?dist}
+Release:       %{pcmk_release}%{?dist}.1
 License:       GPLv2+ and LGPLv2+
 Url:           http://www.clusterlabs.org
 Group:         System Environment/Daemons
@@ -94,7 +94,7 @@ BuildRequires: libqb-devel > 0.11.0
 Requires:      libqb > 0.11.0
 
 # Enables optional functionality
-BuildRequires: ncurses-devel openssl-devel libselinux-devel docbook-style-xsl
+BuildRequires: ncurses-devel openssl-devel docbook-style-xsl
 BuildRequires: bison byacc flex help2man dbus-devel
 
 %if %{defined _unitdir}
@@ -512,6 +512,9 @@ exit 0
 %doc AUTHORS
 
 %changelog
+* Tue Apr 14 2015 Liu Di <liudidi@gmail.com> - 1.1.12-2.1
+- 为 Magic 3.0 重建
+
 * Tue Nov 05 2014 Andrew Beekhof <abeekhof@redhat.com> - 1.1.12-2
 - Address incorrect use of the dbus API for interacting with systemd
 

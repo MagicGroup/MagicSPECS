@@ -1,13 +1,13 @@
 Name: pacpl
 Summary: A tool for converting multiple audio types from one format to another
 Summary(zh_CN): 一个用于转换多种音频格式的工具
-Version: 4.0.5
-Release: 1%{?dist}
+Version:	5.0.1
+Release:	1%{?dist}
 Group: Applications/Multimedia
 Group(zh_CN): 应用程序/多媒体
 License: GPL
 Source0: http://downloads.sourceforge.net/project/pacpl/pacpl/%{version}/%{name}-%{version}.tar.gz
-Source1: http://pacpl.sourceforge.net/po_files/zh_CN.po
+Source1: zh_CN.po
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-buildroot-%(%{__id_u} -n)
 URL: http://viiron.googlepages.com/
 Prefix: %{_prefix}
@@ -22,9 +22,9 @@ BuildRequires: perl(File::Basename)
 BuildRequires: perl(File::Find)
 BuildRequires: perl(File::Spec::Functions)
 BuildRequires: perl(CDDB_get)
-BuildRequires: perl(Ogg::Vorbis::Header)
+#BuildRequires: perl(Ogg::Vorbis::Header)
 BuildRequires: perl(Audio::Musepack)
-BuildRequires: perl(Audio::APETags)
+#BuildRequires: perl(Audio::APETags)
 BuildRequires: perl(Audio::WMA)
 BuildRequires: perl(MP3::Tag)
 BuildRequires: perl(MP4::Info)
@@ -43,10 +43,6 @@ BuildRequires: faad2 >= 2.0
 BuildRequires: ffmpeg >= 0.4.9
 BuildRequires: mppenc >= 1.15
 BuildRequires: wavpack >= 4.3.2
-
-# 插件主程序依赖
-BuildRequires: kdebase >= 3.5.3
-BuildRequires: amarok >= 1.4
 
 %description
 Perl Audio Converter is a tool for converting multiple audio types from
@@ -108,7 +104,8 @@ pacpl dolphin 菜单。
 %setup -q -n %{name}-%{version}
 
 %build
-%configure
+%configure  --enable-kde || :
+#--enable-nautilus
 
 %{__make} %{?_smp_mflags}
 
@@ -134,7 +131,7 @@ install -D -m 644 %{SOURCE1} %{buildroot}%{_sysconfdir}/pacpl/po/zh_CN.UTF-8.po
 %files
 %defattr(-,root,root)
 %{_sysconfdir}/pacpl*
-%{_bindir}/pacpl
+%{_bindir}/*
 %{_docdir}/pacpl*
 #%{_datadir}/mimelnk/audio/*.desktop
 %{_mandir}/man1/*.1.gz
@@ -145,19 +142,20 @@ install -D -m 644 %{SOURCE1} %{buildroot}%{_sysconfdir}/pacpl/po/zh_CN.UTF-8.po
 %files -n pacpl-konqueror
 %defattr(-,root,root)
 %{_datadir}/apps/konqueror*
-%endif
 
 %files -n pacpl-amarok
 %defattr(-,root,root)
 %{_datadir}/apps/amarok*
 
-%if 0
 %files -n pacpl-dolphin
 %defattr(-,root,root)
 %{_datadir}/apps/dolphin*
 %endif
 
 %changelog
+* Tue Apr 14 2015 Liu Di <liudidi@gmail.com> - 5.0.1-1
+- 更新到 5.0.1
+
 * Sat Nov 10 2007 Ni Hui <shuizhuyuanluo@126.com> - 4.0.0-0.3mgc
 - 修正语言文件名称，使之与 $LANG 变量对应
 

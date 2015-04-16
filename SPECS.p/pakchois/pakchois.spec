@@ -1,9 +1,11 @@
 Summary: A wrapper library for PKCS#11
+Summary(zh_CN.UTF-8): PKCS#11 的接口库
 Name: pakchois
 Version: 0.4
-Release: 6%{?dist}
+Release: 7%{?dist}
 License: LGPLv2+
 Group: System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 URL: http://www.manyfish.co.uk/pakchois/
 Source0: http://www.manyfish.co.uk/pakchois/pakchois-%{version}.tar.gz
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -16,13 +18,21 @@ modern object-oriented C interface which does not hide any of the
 underlying interface, and avoids dependencies on any cryptography
 toolkit.
 
+%description -l zh_CN.UTF-8
+PKCS#11 的接口库。
+
 %package devel
 Summary: Development library and C header files for the pakchois library
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: pkgconfig, pakchois = %{version}-%{release}
 
 %description devel
 The development library for the pakchois PKCS#11 wrapper library.
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -40,6 +50,7 @@ make %{?_smp_mflags}
 rm -rf $RPM_BUILD_ROOT
 make install DESTDIR=$RPM_BUILD_ROOT
 rm -f $RPM_BUILD_ROOT%{_libdir}/lib*.la
+magic_rpm_clean.sh
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -61,6 +72,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/*.so
 
 %changelog
+* Wed Apr 15 2015 Liu Di <liudidi@gmail.com> - 0.4-7
+- 为 Magic 3.0 重建
+
 * Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.4-6
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 

@@ -1,0 +1,24 @@
+diff -ur Audio-Musepack-1.0.1/Makefile.PL Audio-Musepack-1.0.1.new/Makefile.PL
+--- Audio-Musepack-1.0.1/Makefile.PL	2010-12-25 04:05:33.000000000 +0000
++++ Audio-Musepack-1.0.1.new/Makefile.PL	2015-04-14 17:38:25.140973875 +0000
+@@ -5,7 +5,7 @@
+ perl_version('5.005');
+ all_from('lib/Audio/Musepack.pm');
+ 
+-requires('Audio::Scan' => '0.85');
++requires('Audio::Scan' => '0.93');
+ 
+ auto_install();
+ WriteAll();
+diff -ur Audio-Musepack-1.0.1/META.yml Audio-Musepack-1.0.1.new/META.yml
+--- Audio-Musepack-1.0.1/META.yml	2010-12-26 05:06:04.000000000 +0000
++++ Audio-Musepack-1.0.1.new/META.yml	2015-04-14 17:38:36.564973582 +0000
+@@ -18,7 +18,7 @@
+     - inc
+     - t
+ requires:
+-  Audio::Scan: 0.85
++  Audio::Scan: 0.93
+   perl: 5.005
+ resources:
+   license: http://dev.perl.org/licenses/

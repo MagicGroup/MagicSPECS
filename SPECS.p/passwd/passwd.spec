@@ -5,14 +5,15 @@
 %define WITH_AUDIT 0
 %endif
 Summary: An utility for setting or changing passwords using PAM
+Summary(zh_CN.UTF-8): 使用 PAM 设置和更新密码的工具
 Name: passwd
-Version: 0.78
-Release: 5%{?dist}
+Version:	0.79
+Release:	2%{?dist}
 License: BSD or GPLv2+
 Group: System Environment/Base
+Group(zh_CN.UTF-8): 系统环境/基本
 URL: http://fedorahosted.org/passwd
 Source: https://fedorahosted.org/releases/p/a/%{name}/%{name}-%{version}.tar.bz2
-Patch1: passwd-0.78-postlogin.patch
 Buildroot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 Requires: pam >= 1.1.3-7, /etc/pam.d/system-auth
 %if %{WITH_SELINUX}
@@ -30,9 +31,11 @@ This package contains a system utility (passwd) which sets
 or changes passwords, using PAM (Pluggable Authentication
 Modules) library.
 
+%description -l zh_CN.UTF-8
+使用 PAM 设置和更新密码的工具。
+
 %prep
 %setup -q -n %{name}-%{version}
-%patch1 -p1 -b .postlogin
 
 %build
 %configure \
@@ -54,6 +57,7 @@ rm -rf $RPM_BUILD_ROOT
 make install DESTDIR=$RPM_BUILD_ROOT
 install -m 755 -d $RPM_BUILD_ROOT%{_sysconfdir}/pam.d/
 install -m 644 passwd.pamd $RPM_BUILD_ROOT%{_sysconfdir}/pam.d/passwd
+magic_rpm_clean.sh
 %find_lang %{name}
 for dir in $(ls -1d $RPM_BUILD_ROOT%{_mandir}/{??,??_??}) ; do
     dir=$(echo $dir | sed -e "s|^$RPM_BUILD_ROOT||")
@@ -73,6 +77,12 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man1/passwd.1*
 
 %changelog
+* Wed Apr 15 2015 Liu Di <liudidi@gmail.com> - 0.79-2
+- 为 Magic 3.0 重建
+
+* Wed Apr 15 2015 Liu Di <liudidi@gmail.com> - 0.79-1
+- 更新到 0.79
+
 * Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 0.78-5
 - 为 Magic 3.0 重建
 

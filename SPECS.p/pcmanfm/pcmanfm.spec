@@ -23,17 +23,19 @@
 %global	libfm_minver	1.1.0
 
 Name:		pcmanfm
-Version:	1.1.0
-Release:	%{fedorarel}%{?dist}
+Version:	1.2.3
+Release:	1%{?dist}
 Summary:	Extremly fast and lightweight file manager
+Summary(zh_CN.UTF-8): 非常快速和轻量级的文件管理器
 
 Group:		User Interface/Desktops
+Group(zh_CN.UTF-8): 用户界面/桌面
 License:	GPLv2+
 URL:		http://pcmanfm.sourceforge.net/
 %if 0%{?usegit} >= 1
 Source0:        %{name}-%{version}-D%{gitdate_num}git%{shorthash}.tar.gz
 %else
-Source0:	http://downloads.sourceforge.net/pcmanfm/%{name}-%{version}.tar.gz
+Source0:	http://downloads.sourceforge.net/pcmanfm/%{name}-%{version}.tar.xz
 %endif
 ## Missing in the tarball, taken from git tree
 #Source1:	pcmanfm.conf
@@ -55,6 +57,9 @@ Requires:	libfm >= %{libfm_minver}
 %description
 PCMan File Manager is an extremly fast and lightweight file manager 
 which features tabbed browsing and user-friendly interface.
+
+%description -l zh_CN.UTF-8
+快速、轻量级的文件管理器。
 
 %prep
 %setup -q
@@ -108,12 +113,16 @@ exit 0
 
 %{_bindir}/%{name}
 %{_mandir}/man1/%{name}.1*
+%{_includedir}/pcmanfm-modules.h
 
 %{_datadir}/%{name}/
 %{_datadir}/applications/fedora-%{name}*.desktop
 %config(noreplace) %{_sysconfdir}/xdg/%{name}/
 
 %changelog
+* Thu Apr 16 2015 Liu Di <liudidi@gmail.com> - 1.2.3-1
+- 更新到 1.2.3
+
 * Sun Nov  4 2012 Mamoru TASAKA <mtasaka@fedoraproject.org> - 1.1.0-1
 - 1.1.0
 

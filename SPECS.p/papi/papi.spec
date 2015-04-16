@@ -1,10 +1,12 @@
 %bcond_with bundled_libpfm
 Summary: Performance Application Programming Interface
+Summary(zh_CN.UTF-8): 性能监控程序接口
 Name: papi
 Version: 5.4.1
-Release: 3%{?dist}
+Release: 4%{?dist}
 License: BSD
 Group: Development/System
+Group(zh_CN.UTF-8): 开发/系统
 Requires: papi-libs = %{version}-%{release}
 URL: http://icl.cs.utk.edu/papi/
 Source0: http://icl.cs.utk.edu/projects/papi/downloads/%{name}-%{version}.tar.gz
@@ -31,38 +33,57 @@ ExcludeArch: s390 s390x
 PAPI provides a programmer interface to monitor the performance of
 running programs.
 
+%description -l zh_CN.UTF-8
+PAPI 提供了一个程序员接口，可以监控正在运行程序的性能。
+
 %package libs
 Summary: Libraries for PAPI clients
+Summary(zh_CN.UTF-8): %{name} 的运行库
 Group: Development/System
+Group(zh_CN.UTF-8): 开发/系统
 %description libs
 This package contains the run-time libraries for any application that wishes
 to use PAPI.
+%description libs -l zh_CN.UTF-8
+%{name} 的运行库。
 
 %package devel
 Summary: Header files for the compiling programs with PAPI
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: Development/System
+Group(zh_CN.UTF-8): 开发/系统
 Requires: papi = %{version}-%{release}
 Requires: pkgconfig
 %description devel
 PAPI-devel includes the C header files that specify the PAPI user-space
 libraries and interfaces. This is required for rebuilding any program
 that uses PAPI.
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %package testsuite
 Summary: Set of tests for checking PAPI functionality
+Summary(zh_CN.UTF-8): %{name} 的测试套件
 Group: Development/System
+Group(zh_CN.UTF-8): 开发/系统
 Requires: papi = %{version}-%{release}
 %description testsuite
 PAPI-testuiste includes compiled versions of papi tests to ensure
 that PAPI functions on particular hardware.
+%description testsuite -l zh_CN.UTF-8
+%{name} 的测试套件。
 
 %package static
 Summary: Static libraries for the compiling programs with PAPI
+Summary(zh_CN.UTF-8): %{name} 的静态库
 Group: Development/System
+Group(zh_CN.UTF-8): 开发/系统
 Requires: papi = %{version}-%{release}
 %description static
 PAPI-static includes the static versions of the library files for
 the PAPI user-space libraries and interfaces.
+%description static -l zh_CN.UTF-8
+%{name} 的静态库。
 
 %prep
 %setup -q
@@ -110,6 +131,7 @@ cd src
 make DESTDIR=$RPM_BUILD_ROOT LDCONFIG=/bin/true install-all
 
 chrpath --delete $RPM_BUILD_ROOT%{_libdir}/*.so*
+magic_rpm_clean.sh
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -153,6 +175,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/*.a
 
 %changelog
+* Wed Apr 15 2015 Liu Di <liudidi@gmail.com> - 5.4.1-4
+- 为 Magic 3.0 重建
+
 * Wed Apr 01 2015 Liu Di <liudidi@gmail.com> - 5.4.1-3
 - 为 Magic 3.0 重建
 
