@@ -1,0 +1,11 @@
+--- pdns-3.4.2/pdns/common_startup.cc.orig	2015-02-03 09:12:06.000000000 +0100
++++ pdns-3.4.2/pdns/common_startup.cc	2015-02-07 15:42:33.333920459 +0100
+@@ -165,7 +165,7 @@ void declareArguments()
+   ::arg().set("max-nsec3-iterations","Limit the number of NSEC3 hash iterations")="500"; // RFC5155 10.3
+ 
+   ::arg().set("include-dir","Include *.conf files from this directory");
+-  ::arg().set("security-poll-suffix","Domain name from which to query security update notifications")="secpoll.powerdns.com.";
++  ::arg().set("security-poll-suffix","Domain name from which to query security update notifications")="";
+ }
+ 
+ static uint64_t uptimeOfProcess(const std::string& str)
