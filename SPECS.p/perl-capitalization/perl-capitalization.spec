@@ -2,8 +2,10 @@ Name:           perl-capitalization
 Version:        0.03
 Release:        18%{?dist}
 Summary:        No capitalization on method names
+Summary(zh_CN.UTF-8): 不区分方法名称的大小写
 
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 License:        GPL+ or Artistic
 URL:            http://search.cpan.org/dist/capitalization
 Source0:        http://search.cpan.org/CPAN/authors/id/M/MI/MIYAGAWA/capitalization-%{version}.tar.gz
@@ -18,6 +20,9 @@ BuildRequires:	perl(Test::More)
 
 %description
 %{summary}.
+
+%description -l zh_CN.UTF-8
+不区分方法名称的大小写。
 
 %prep
 %setup -q -n capitalization-%{version}
@@ -34,7 +39,7 @@ make pure_install PERL_INSTALL_ROOT=$RPM_BUILD_ROOT
 find $RPM_BUILD_ROOT -type f -name .packlist -exec rm -f {} ';'
 find $RPM_BUILD_ROOT -type d -depth -exec rmdir {} 2>/dev/null ';'
 chmod -R u+w $RPM_BUILD_ROOT/*
-
+magic_rpm_clean.sh
 
 %check
 

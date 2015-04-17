@@ -1,7 +1,8 @@
 Name:           perl-autobox-Core
-Version:        1.2
-Release:        9%{?dist}
+Version:	1.28
+Release:	1%{?dist}
 Summary:        Core functions exposed as methods in primitive types
+Summary(zh_CN.UTF-8): 以原始类型公开方法的核心函数
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 URL:            http://search.cpan.org/dist/autobox-Core/
@@ -18,6 +19,9 @@ Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $versi
 The autobox module lets you call methods on primitive datatypes such as
 scalars and arrays.
 
+%description -l zh_CN.UTF-8
+以原始类型公开方法的核心函数。
+
 %prep
 %setup -q -n autobox-Core-%{version}
 
@@ -32,6 +36,7 @@ find %{buildroot} -type f -name .packlist -exec rm -f {} \;
 find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null \;
 
 %{_fixperms} %{buildroot}/*
+magic_rpm_clean.sh
 
 %check
 
@@ -42,6 +47,9 @@ find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_mandir}/man3/*
 
 %changelog
+* Fri Apr 17 2015 Liu Di <liudidi@gmail.com> - 1.28-1
+- 更新到 1.28
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.2-9
 - 为 Magic 3.0 重建
 

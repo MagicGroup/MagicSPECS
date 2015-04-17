@@ -1,9 +1,11 @@
 Name:           perl-autobox-List-Util
 Version:        20090629
-Release:        13%{?dist}
+Release:        14%{?dist}
 Summary:        Bring the List::Util functions to autobox
+Summary(zh_CN.UTF-8): 把 List::Util 函数转换到 autobox
 License:        GPL+ or Artistic
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 URL:            http://search.cpan.org/dist/autobox-List-Util/
 Source0:        http://www.cpan.org/modules/by-module/autobox/autobox-List-Util-%{version}.tar.gz
 BuildArch:      noarch
@@ -20,6 +22,9 @@ Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $versi
 autobox::List::Util brings all of the functions from List::Util to arrays as
 methods.
 
+%description -l zh_CN.UTF-8
+把 List::Util 函数转换到 autobox。
+
 %prep
 %setup -q -n autobox-List-Util-%{version}
 
@@ -32,6 +37,7 @@ methods.
 find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null \;
 
 %{_fixperms} %{buildroot}/*
+magic_rpm_clean.sh
 
 %check
 ./Build test
@@ -42,6 +48,9 @@ find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_mandir}/man3/*
 
 %changelog
+* Fri Apr 17 2015 Liu Di <liudidi@gmail.com> - 20090629-14
+- 为 Magic 3.0 重建
+
 * Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 20090629-13
 - 为 Magic 3.0 重建
 

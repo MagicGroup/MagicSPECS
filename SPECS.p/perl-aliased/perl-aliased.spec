@@ -1,11 +1,13 @@
 Name:		perl-aliased
-Version:	0.30
-Release:	18%{?dist}
+Version:	0.34
+Release:	1%{?dist}
 Summary:	Use shorter versions of class names
+Summary(zh_CN.UTF-8): 使用类名的短版本
 License:	GPL+ or Artistic
 Group:		Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 URL:		http://search.cpan.org/dist/aliased/
-Source0:	http://search.cpan.org/CPAN/authors/id/O/OV/OVID/aliased-%{version}.tar.gz
+Source0:	http://search.cpan.org/CPAN/authors/id/E/ET/ETHER/aliased-%{version}.tar.gz
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(id -nu)
 BuildArch:	noarch
 BuildRequires:	perl(Exporter)
@@ -21,6 +23,9 @@ the class name. You can explicitly alias the class to another name or, if
 you prefer, you can do so implicitly. In the latter case, the name of the
 subroutine is the last part of the class name.
 
+%description -l zh_CN.UTF-8
+使用类名的短版本。
+
 %prep
 %setup -q -n aliased-%{version}
 
@@ -33,6 +38,7 @@ rm -rf %{buildroot}
 ./Build install destdir=%{buildroot} create_packlist=0
 find %{buildroot} -depth -type d -exec rmdir {} \; 2>/dev/null
 %{_fixperms} %{buildroot}
+magic_rpm_clean.sh
 
 %check
 ./Build test
@@ -47,6 +53,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/aliased.3pm*
 
 %changelog
+* Fri Apr 17 2015 Liu Di <liudidi@gmail.com> - 0.34-1
+- 更新到 0.34
+
 * Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 0.30-18
 - 为 Magic 3.0 重建
 

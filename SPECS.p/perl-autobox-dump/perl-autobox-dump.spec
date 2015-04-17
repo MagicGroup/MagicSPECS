@@ -1,9 +1,11 @@
 Name:           perl-autobox-dump
 Version:        20090426.1746
-Release:        13%{?dist}
+Release:        14%{?dist}
 Summary:        Human/perl readable strings from the results of an EXPR
+Summary(zh_CN.UTF-8): 从表达式结果中获取人类可读的字符串
 License:        GPL+ or Artistic
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 URL:            http://search.cpan.org/dist/autobox-dump/
 Source0:        http://www.cpan.org/modules/by-module/autobox/autobox-dump-%{version}.tar.gz
 BuildArch:      noarch
@@ -19,6 +21,9 @@ The autobox::dump pragma adds, via the autobox pragma, a method to normal
 expression (such as scalars, arrays, hashes, math, literals, etc.) that
 produces a human/perl readable representation of the value of that expression.
 
+%description -l zh_CN.UTF-8
+从表达式结果中获取人类可读的字符串。
+
 %prep
 %setup -q -n autobox-dump-%{version}
 
@@ -31,6 +36,7 @@ produces a human/perl readable representation of the value of that expression.
 find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null \;
 
 %{_fixperms} %{buildroot}/*
+magic_rpm_clean.sh
 
 %check
 ./Build test
@@ -41,6 +47,9 @@ find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_mandir}/man3/*
 
 %changelog
+* Fri Apr 17 2015 Liu Di <liudidi@gmail.com> - 20090426.1746-14
+- 为 Magic 3.0 重建
+
 * Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 20090426.1746-13
 - 为 Magic 3.0 重建
 

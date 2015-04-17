@@ -7,16 +7,16 @@
 %define testver %{nil}
 
 %define git 1
-%define vcsdate 20150330
+%define vcsdate 20150417
 
 Summary:        Excellent CD-Burner for KDE4
 Summary(zh_CN.UTF-8): KDE4 下优秀的 CD/DVD 刻录程序
 Name:           kde4-k3b
 Version:        2.0.2
 %if 0%{?git}
-Release:	10.git%{vcsdate}%{?dist}
+Release:	11.git%{vcsdate}%{?dist}
 %else
-Release:        10%{?dist}
+Release:        11%{?dist}
 %endif
 License:        GPL
 Vendor:         Magic Linux
@@ -122,9 +122,9 @@ rm -rf %{buildroot} %{_builddir}/%{buildsubdir}
 %files
 %defattr(-,root,root,-)
 %doc COPYING
-%{_sysconfdir}/dbus-1/system.d/org.kde.k3b.conf
-%{_datadir}/dbus-1/system-services/org.kde.k3b.service
-%{kde4_datadir}/polkit-1/actions/org.kde.k3b.policy
+#%{_sysconfdir}/dbus-1/system.d/org.kde.k3b.conf
+#%{_datadir}/dbus-1/system-services/org.kde.k3b.service
+#%{kde4_datadir}/polkit-1/actions/org.kde.k3b.policy
 %{kde4_datadir}/appdata/k3b.appdata.xml
 %{kde4_iconsdir}/hicolor/*/mimetypes/application-x-k3b.*
 %{kde4_bindir}/*
@@ -148,6 +148,12 @@ rm -rf %{buildroot} %{_builddir}/%{buildsubdir}
 %{kde4_libdir}/*.so
 
 %changelog
+* Fri Apr 17 2015 Liu Di <liudidi@gmail.com> - 2.0.2-11.git20150417
+- 更新到 20150417 日期的仓库源码
+
+* Fri Apr 17 2015 Liu Di <liudidi@gmail.com> - 2.0.2-11.git20150330
+- 为 Magic 3.0 重建
+
 * Mon Mar 30 2015 Liu Di <liudidi@gmail.com> - 2.0.2-10.git20150330
 - 更新到 20150330 日期的仓库源码
 

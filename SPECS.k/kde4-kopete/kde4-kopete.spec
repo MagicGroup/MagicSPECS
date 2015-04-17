@@ -12,8 +12,11 @@ Group: User Interface/Desktops
 Group(zh_CN.UTF-8): 用户界面/桌面
 URL: http://www.kde.org
 Version: 4.14.3
-Release: 1%{?dist}
+Release: 2%{?dist}
 Source0: http://download.kde.org/stable/%{rversion}/src/%{real_name}-%{rversion}.tar.xz
+
+#修复在 medistreamer 2.11 以上版本的编译问题
+Patch0: 0001-Fix-libjingle-compilation-with-mediastreamer-2.11.patch
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
@@ -43,6 +46,7 @@ Contains the development files.
 
 %prep
 %setup -q -n %{real_name}-%{rversion}
+%patch0 -p1
 
 %build
 mkdir build
@@ -93,6 +97,9 @@ rm -rf %{buildroot} %{_builddir}/%{buildsubdir}
 %{kde4_libdir}/*.so
 
 %changelog
+* Fri Apr 17 2015 Liu Di <liudidi@gmail.com> - 4.14.3-2
+- 为 Magic 3.0 重建
+
 * Wed Dec 31 2014 Liu Di <liudidi@gmail.com> - 4.14.3-1
 - 更新到 4.14.3
 

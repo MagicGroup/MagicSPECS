@@ -2,8 +2,10 @@ Name:           perl-bioperl-run
 Version:        1.6.1
 Release:        26%{?dist}
 Summary:        Modules to provide a Perl interface to various bioinformatics applications
+Summary(zh_CN.UTF-8): 各种生物信息学应用的 Perl 接口模块
 
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 License:        GPL+ or Artistic
 URL:            http://bioperl.org
 Source0:        http://bioperl.org/DIST/BioPerl-run-%{version}.tar.bz2
@@ -22,6 +24,9 @@ Requires:  perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
 Bioperl-run contain modules that provide a Perl interface to various
 bioinformatics applications. This allows various applications to be
 used with common Bioperl objects.
+
+%description -l zh_CN.UTF-8
+各种生物信息学应用的 Perl 接口模块。
 
 %prep
 # note that archive and tarball version numbers don't quite match in this release
@@ -48,6 +53,7 @@ find $RPM_BUILD_ROOT -type f -a \( -name .packlist \
 find $RPM_BUILD_ROOT -type f -name '*.pm' -exec chmod -x {} 2>/dev/null ';'
 # correct all binaries in /usr/bin to be 0755
 find $RPM_BUILD_ROOT/%{_bindir} -type f -name '*.pl' -exec chmod 0755 {} 2>/dev/null ';'
+magic_rpm_clean.sh
 
 %check
 %{?_with_check:./Build test || :}

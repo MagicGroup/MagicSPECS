@@ -2,8 +2,10 @@ Name:           perl-boolean
 Version:        0.28
 Release:        6%{?dist}
 Summary:        Boolean support for Perl
+Summary(zh_CN.UTF-8): Perl 的布尔值支持
 License:        GPL+ or Artistic
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 URL:            http://search.cpan.org/dist/boolean/
 Source0:        http://www.cpan.org/authors/id/I/IN/INGY/boolean-%{version}.tar.gz
 BuildArch:      noarch
@@ -16,6 +18,9 @@ Requires:       perl(Readonly)
 
 %description
 Most programming languages have a native Boolean data type. Perl does not.
+
+%description -l zh_CN.UTF-8
+Perl 的布尔值支持。
 
 %prep
 %setup -q -n boolean-%{version}
@@ -31,6 +36,7 @@ find $RPM_BUILD_ROOT -type f -name .packlist -exec rm -f {} \;
 find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 
 %{_fixperms} $RPM_BUILD_ROOT/*
+magic_rpm_clean.sh
 
 %check
 
