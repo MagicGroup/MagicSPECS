@@ -2,7 +2,11 @@
 #%%global rcversion RC1
 Name: pcre
 Version: 8.36
+<<<<<<< HEAD
 Release: %{?rcversion:0.}3%{?rcversion:.%rcversion}%{?dist}.3
+=======
+Release: %{?rcversion:0.}3%{?rcversion:.%rcversion}%{?dist}.2
+>>>>>>> 54cb407384ac63300039a28ea6cd00ef0bab6697
 %global myversion %{version}%{?rcversion:-%rcversion}
 Summary: Perl-compatible regular expression library
 Summary(zh_CN.UTF-8): 兼容 Perl 的正则表达式库
@@ -40,7 +44,10 @@ for the POSIX-style functions is called pcreposix.h.
 Summary: Development files for %{name}
 Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: Development/Libraries
+<<<<<<< HEAD
 Group(zh_CN.UTF-8): 开发/库
+=======
+>>>>>>> 54cb407384ac63300039a28ea6cd00ef0bab6697
 Requires: %{name}%{?_isa} = %{version}-%{release}
 
 %description devel
@@ -53,7 +60,10 @@ Development files (Headers, libraries for dynamic linking, etc) for %{name}.
 Summary: Static library for %{name}
 Summary(zh_CN.UTF-8): %{name} 的静态库
 Group: Development/Libraries
+<<<<<<< HEAD
 Group(zh_CN.UTF-8): 开发/库
+=======
+>>>>>>> 54cb407384ac63300039a28ea6cd00ef0bab6697
 Requires: %{name}-devel%{_isa} = %{version}-%{release}
 
 %description static
@@ -66,7 +76,10 @@ Library for static linking for %{name}.
 Summary: Auxiliary utilities for %{name}
 Summary(zh_CN.UTF-8): %{name} 的工具
 Group: Development/Tools
+<<<<<<< HEAD
 Group(zh_CN.UTF-8): 开发/工具
+=======
+>>>>>>> 54cb407384ac63300039a28ea6cd00ef0bab6697
 Requires: %{name}%{_isa} = %{version}-%{release}
 
 %description tools
@@ -153,9 +166,12 @@ make %{?_smp_mflags} check VERBOSE=yes
 %{_mandir}/man1/pcretest.*
 
 %changelog
+<<<<<<< HEAD
 * Thu Apr 16 2015 Liu Di <liudidi@gmail.com> - 8.36-3.3
 - 为 Magic 3.0 重建
 
+=======
+>>>>>>> 54cb407384ac63300039a28ea6cd00ef0bab6697
 * Mon Mar 16 2015 Liu Di <liudidi@gmail.com> - 8.36-3.2
 - 为 Magic 3.0 重建
 

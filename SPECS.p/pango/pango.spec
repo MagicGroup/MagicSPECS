@@ -12,13 +12,21 @@ Summary: System for layout and rendering of internationalized text
 Summary(zh_CN.UTF-8): 国际化文本的布局和渲染系统
 Name: pango
 Version: 1.36.8
+<<<<<<< HEAD
 Release: 5%{?dist}
+=======
+Release: 4%{?dist}
+>>>>>>> 54cb407384ac63300039a28ea6cd00ef0bab6697
 License: LGPLv2+
 Group: System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
 #VCS: git:git://git.gnome.org/pango
+<<<<<<< HEAD
 %define majorver %(echo %{version} | awk -F. '{print $1"."$2}')
 Source: http://download.gnome.org/sources/pango/%{majorver}/pango-%{version}.tar.xz
+=======
+Source: http://download.gnome.org/sources/pango/1.36/pango-%{version}.tar.xz
+>>>>>>> 54cb407384ac63300039a28ea6cd00ef0bab6697
 URL: http://www.pango.org
 
 BuildRequires: glib2-devel >= %{glib2_version}
@@ -71,6 +79,7 @@ Requires: cairo-devel%{?_isa} >= %{cairo_version}
 The pango-devel package includes the header files and developer documentation
 for the pango package.
 
+<<<<<<< HEAD
 %description devel -l zh_CN.UTF-8
 %{name} 的开发包。
 
@@ -79,14 +88,22 @@ Summary: Tests for the %{name} package
 Summary(zh_CN.UTF-8): %{name} 的测试程序
 Group: Development/Libraries
 Group(zh_CN.UTF-8): 开发/库
+=======
+%package tests
+Summary: Tests for the %{name} package
+Group: Development/Libraries
+>>>>>>> 54cb407384ac63300039a28ea6cd00ef0bab6697
 Requires: %{name}%{?_isa} = %{version}-%{release}
 
 %description tests
 The %{name}-tests package contains tests that can be used to verify
 the functionality of the installed %{name} package.
 
+<<<<<<< HEAD
 %description tests -l zh_CN.UTF-8
 %{name} 的测试程序。
+=======
+>>>>>>> 54cb407384ac63300039a28ea6cd00ef0bab6697
 
 %prep
 %setup -q -n pango-%{version}
@@ -174,9 +191,12 @@ fi
 
 
 %changelog
+<<<<<<< HEAD
 * Wed Apr 15 2015 Liu Di <liudidi@gmail.com> - 1.36.8-5
 - 为 Magic 3.0 重建
 
+=======
+>>>>>>> 54cb407384ac63300039a28ea6cd00ef0bab6697
 * Wed Feb 25 2015 Liu Di <liudidi@gmail.com> - 1.36.8-4
 - 为 Magic 3.0 重建
 
