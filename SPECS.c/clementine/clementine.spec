@@ -63,6 +63,10 @@ rm -fr 3rdparty
 # Don't build tests. They require gmock which is not available on MagicLinux
 sed -i '/tests/d' CMakeLists.txt
 
+# Fix cannot find header file
+sed -i 's/<ApiRequest.h>/<mygpo-qt\/ApiRequest.h>/g' `grep "#include <ApiRequest.h>" * -rl`
+sed -i 's/<Podcast.h>/<mygpo-qt\/Podcast.h>/g' `grep "#include <Podcast.h>" * -rl`
+
 
 %build
 mkdir -p %{_target_platform}
