@@ -1,14 +1,8 @@
 Name:           PyXB
-<<<<<<< HEAD
 Version:	1.2.4
 Release:	1%{?dist}
 Summary:        Python XML Schema Bindings
 Summary(zh_CN.UTF-8): Python XML Schema 绑定
-=======
-Version:        1.2.3
-Release:        3%{?dist}
-Summary:        Python XML Schema Bindings
->>>>>>> 54cb407384ac63300039a28ea6cd00ef0bab6697
 License:        Apache
 URL:            http://pyxb.sourceforge.net/
 Source0:        http://downloads.sourceforge.net/project/pyxb/pyxb/%{version}/%{name}-%{version}.tar.gz
@@ -21,12 +15,9 @@ PyXB (“pixbee”) is a pure Python package that generates Python source
 code for classes that correspond to data structures defined by
 XMLSchema.
 
-<<<<<<< HEAD
 %description -l zh_CN.UTF-8
 Python XML Schema 绑定。
 
-=======
->>>>>>> 54cb407384ac63300039a28ea6cd00ef0bab6697
 %prep
 %setup -q
 
@@ -35,24 +26,17 @@ Python XML Schema 绑定。
 
 %install
 %{__python} setup.py install -O1 --skip-build --root $RPM_BUILD_ROOT
-<<<<<<< HEAD
 magic_rpm_clean.sh
 
-=======
- 
->>>>>>> 54cb407384ac63300039a28ea6cd00ef0bab6697
 %files
 %doc doc/* LICENSE NOTICE PKG-INFO README.txt examples/*
 %{python_sitelib}/*
 %{_bindir}/pyx*
 
 %changelog
-<<<<<<< HEAD
 * Tue Apr 14 2015 Liu Di <liudidi@gmail.com> - 1.2.4-1
 - 更新到 1.2.4
 
-=======
->>>>>>> 54cb407384ac63300039a28ea6cd00ef0bab6697
 * Wed Aug 13 2014 Liu Di <liudidi@gmail.com> - 1.2.3-3
 - 为 Magic 3.0 重建
 
