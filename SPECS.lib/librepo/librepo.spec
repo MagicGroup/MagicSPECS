@@ -1,8 +1,5 @@
-<<<<<<< HEAD
 %define git 1
 %define vcsdate 20150413
-=======
->>>>>>> 54cb407384ac63300039a28ea6cd00ef0bab6697
 %global gitrev f9ca1a4
 # gitrev is output of: git rev-parse --short HEAD
 
@@ -14,17 +11,12 @@
 %endif
 
 Name:           librepo
-<<<<<<< HEAD
 Version:        1.7.14
 %if 0%{git}
 Release:        0.git%{vcsdate}%{?dist}.1
 %else
 Release:	2%{?dist}
 %endif
-=======
-Version:        1.7.5
-Release:        2%{?dist}
->>>>>>> 54cb407384ac63300039a28ea6cd00ef0bab6697
 Summary:        Repodata downloading library
 Summary(zh_CN.UTF-8): Repo 数据下载库
  
@@ -36,16 +28,12 @@ URL:            https://github.com/Tojaj/librepo
 #  git clone https://github.com/Tojaj/librepo.git
 #  cd librepo
 #  utils/make_tarball.sh %{gitrev}
-<<<<<<< HEAD
 %if 0%{git}
 Source0:	librepo-git%{vcsdate}.tar.xz
 %else
 Source0:        librepo-%{gitrev}.tar.xz
 %endif
 Source1:	make_librepo_git_package.sh
-=======
-Source0:        librepo-%{gitrev}.tar.xz
->>>>>>> 54cb407384ac63300039a28ea6cd00ef0bab6697
 
 BuildRequires:  check-devel
 BuildRequires:  cmake
@@ -123,15 +111,11 @@ Python 3 bindings for the librepo library.
 %endif
 
 %prep
-<<<<<<< HEAD
 %if 0%{git}
 %setup -q -n librepo-git%{vcsdate}
 %else
 %setup -q -n librepo
 %endif
-=======
-%setup -q -n librepo
->>>>>>> 54cb407384ac63300039a28ea6cd00ef0bab6697
 
 %if %{with python3}
 rm -rf py3
@@ -191,15 +175,12 @@ magic_rpm_clean.sh
 %endif
 
 %changelog
-<<<<<<< HEAD
 * Mon Apr 13 2015 Liu Di <liudidi@gmail.com> - 1.7.14-0.git20150413.1
 - 更新到 20150413 日期的仓库源码
 
 * Mon Apr 13 2015 Liu Di <liudidi@gmail.com> - 1.7.14-0.git20150402.1
 - 为 Magic 3.0 重建
 
-=======
->>>>>>> 54cb407384ac63300039a28ea6cd00ef0bab6697
 * Sun Aug 10 2014 Liu Di <liudidi@gmail.com> - 1.7.5-2
 - 为 Magic 3.0 重建
 
