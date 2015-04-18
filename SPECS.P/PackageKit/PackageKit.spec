@@ -1,6 +1,5 @@
 %global _changelog_trimtime %(date +%s -d "1 year ago")
 
-<<<<<<< HEAD
 %define gitdate 20141015
 
 %define _default_patch_fuzz 2
@@ -15,21 +14,6 @@ Source0:   http://www.freedesktop.org/software/PackageKit/releases/%{name}-%{ver
 
 # generated using contrib/generate-md-archive.sh in the PackageKit source tree
 Source1:   cached-metadata.tar
-=======
-##%define gitdate 20140307
-
-%define _default_patch_fuzz 2
-%global __python %{__python3}
-%{!?python_sitelib: %define python_sitelib %(python -c "from distutils.sysconfig import get_python_lib; print get_python_lib()")}
-
-Summary:   Package management service
-Name:      PackageKit
-Version:   0.9.4
-Release:   3%{?dist}
-License:   GPLv2+ and LGPLv2+
-URL:       http://www.freedesktop.org/software/PackageKit/
-Source0:   http://www.freedesktop.org/software/PackageKit/releases/%{name}-%{version}.tar.xz
->>>>>>> 54cb407384ac63300039a28ea6cd00ef0bab6697
 
 # Fedora-specific: set Vendor.conf up for Fedora.
 Patch0:    PackageKit-0.3.8-Fedora-Vendor.conf.patch
@@ -55,10 +39,6 @@ BuildRequires: gtk2-devel
 BuildRequires: gtk3-devel
 BuildRequires: docbook-utils
 BuildRequires: gnome-doc-utils
-<<<<<<< HEAD
-=======
-BuildRequires: python3-devel
->>>>>>> 54cb407384ac63300039a28ea6cd00ef0bab6697
 BuildRequires: perl(XML::Parser)
 BuildRequires: intltool
 BuildRequires: gettext
@@ -72,20 +52,10 @@ BuildRequires: fontconfig-devel
 BuildRequires: libappstream-glib-devel
 BuildRequires: systemd-devel
 BuildRequires: gobject-introspection-devel
-<<<<<<< HEAD
 BuildRequires: libhif-devel >= 0.1.6
 %if !0%{?rhel}
 BuildRequires: bash-completion
 %endif
-=======
-%if !0%{?rhel}
-BuildRequires: bash-completion
-%endif
-
-%if !0%{?rhel}
-BuildRequires: libhif-devel
-%endif
->>>>>>> 54cb407384ac63300039a28ea6cd00ef0bab6697
 
 # functionality moved to udev itself
 Obsoletes: PackageKit-udev-helper < %{version}-%{release}
@@ -103,10 +73,7 @@ Obsoletes: PackageKit-zif < 0.8.13-2
 # components now built-in
 Obsoletes: PackageKit-debug-install < 0.9.1
 Obsoletes: PackageKit-hawkey < 0.9.1
-<<<<<<< HEAD
 Obsoletes: PackageKit-backend-devel < 0.9.6
-=======
->>>>>>> 54cb407384ac63300039a28ea6cd00ef0bab6697
 
 # Udev no longer provides this functionality
 Obsoletes: PackageKit-device-rebind < 0.8.13-2
@@ -134,7 +101,6 @@ Provides: PackageKit-libs = %{version}-%{release}
 %description glib
 GLib libraries for accessing PackageKit.
 
-<<<<<<< HEAD
 %package cached-metadata
 Summary: Cached metadata for PackageKit
 Requires: %{name}%{?_isa} = %{version}-%{release}
@@ -144,8 +110,6 @@ Cached metadata allows application installers to start instantly on the
 LiveCD or installed system without downloading files from the internet or
 regenerating the SAT caches. It can safely removed if not required.
 
-=======
->>>>>>> 54cb407384ac63300039a28ea6cd00ef0bab6697
 %package cron
 Summary: Cron job and related utilities for PackageKit
 Requires: crontabs
@@ -167,18 +131,6 @@ Provides: PackageKit-docs = %{version}-%{release}
 %description glib-devel
 GLib headers and libraries for PackageKit.
 
-<<<<<<< HEAD
-=======
-%package backend-devel
-Summary: Headers to compile out of tree PackageKit backends
-# explicit dep: packagekit-plugin.pc links with -lpackagekit-glib2
-# but doesn't refer to packagekit-glib2.pc
-Requires: %{name}-glib-devel%{?_isa} = %{version}-%{release}
-
-%description backend-devel
-Headers to compile out of tree PackageKit backends.
-
->>>>>>> 54cb407384ac63300039a28ea6cd00ef0bab6697
 %package browser-plugin
 Summary: Browser Plugin for PackageKit
 Requires: gtk2
@@ -220,16 +172,11 @@ using PackageKit.
 
 %prep
 %setup -q
-#%setup -q -n %{name}-%{version}-%{gitdate}
 %patch0 -p1 -b .fedora
 
 %build
 %configure \
         --disable-static \
-<<<<<<< HEAD
-=======
-        --enable-python3 \
->>>>>>> 54cb407384ac63300039a28ea6cd00ef0bab6697
 %if 0%{?rhel} == 0
         --enable-hif \
         --enable-introspection \
@@ -237,17 +184,8 @@ using PackageKit.
 %else
         --disable-bash-completion \
 %endif
-<<<<<<< HEAD
         --disable-local \
         --disable-silent-rules
-=======
-        --with-default-backend=auto \
-        --with-python-package-dir=%{python3_sitearch} \
-        --disable-local \
-        --disable-strict \
-        --disable-silent-rules \
-        --disable-tests
->>>>>>> 54cb407384ac63300039a28ea6cd00ef0bab6697
 
 make %{?_smp_mflags} V=1
 
@@ -256,10 +194,6 @@ make install DESTDIR=$RPM_BUILD_ROOT
 
 rm -f $RPM_BUILD_ROOT%{_libdir}/libpackagekit*.la
 rm -f $RPM_BUILD_ROOT%{_libdir}/packagekit-backend/*.la
-<<<<<<< HEAD
-=======
-rm -f $RPM_BUILD_ROOT%{_libdir}/packagekit-plugins-2/*.la
->>>>>>> 54cb407384ac63300039a28ea6cd00ef0bab6697
 rm -f $RPM_BUILD_ROOT%{_libdir}/mozilla/plugins/packagekit-plugin.la
 rm -f $RPM_BUILD_ROOT%{_libdir}/gtk-2.0/modules/*.la
 rm -f $RPM_BUILD_ROOT%{_libdir}/gtk-3.0/modules/*.la
@@ -280,7 +214,6 @@ pushd ${RPM_BUILD_ROOT}%{_datadir}/PackageKit > /dev/null
 ln -s ../pixmaps/comps icons
 popd > /dev/null
 
-<<<<<<< HEAD
 # ship cached metadata on the LiveCD
 # http://blogs.gnome.org/hughsie/2014/08/29/putting-packagekit-metadata-on-the-fedora-livecd/
 tar -xf %{SOURCE1} --directory=$RPM_BUILD_ROOT
@@ -293,22 +226,6 @@ tar -xf %{SOURCE1} --directory=$RPM_BUILD_ROOT
 systemctl disable packagekit-offline-update.service > /dev/null 2>&1 || :
 
 %post glib -p /sbin/ldconfig
-=======
-%find_lang %name
-
-%post
-%systemd_post packagekit-offline-update.service packagekit.service
-
-%post glib -p /sbin/ldconfig
-
-%preun
-%systemd_preun packagekit-offline-update.service packagekit.service
-
-%postun
-# Reload the systemd configuration but do _not_ restart the daemon. Killing the
-# update process while it's updating packages causes the transaction to fail.
-%systemd_postun packagekit-offline-update.service packagekit.service
->>>>>>> 54cb407384ac63300039a28ea6cd00ef0bab6697
 
 %postun glib -p /sbin/ldconfig
 
@@ -319,18 +236,10 @@ systemctl disable packagekit-offline-update.service > /dev/null 2>&1 || :
 %dir %{_datadir}/PackageKit/helpers
 %dir %{_sysconfdir}/PackageKit
 %dir %{_localstatedir}/lib/PackageKit
-<<<<<<< HEAD
-=======
-%dir %{python3_sitearch}/packagekit
->>>>>>> 54cb407384ac63300039a28ea6cd00ef0bab6697
 %dir %{_localstatedir}/cache/PackageKit
 %ghost %verify(not md5 size mtime) %{_localstatedir}/cache/PackageKit/groups.sqlite
 %dir %{_localstatedir}/cache/PackageKit/downloads
 %dir %{_localstatedir}/cache/PackageKit/metadata
-<<<<<<< HEAD
-=======
-%{python3_sitearch}/packagekit/*py*
->>>>>>> 54cb407384ac63300039a28ea6cd00ef0bab6697
 %if !0%{?rhel}
 %{_datadir}/bash-completion/completions/pkcon
 %endif
@@ -343,53 +252,31 @@ systemctl disable packagekit-offline-update.service > /dev/null 2>&1 || :
 %{_datadir}/PackageKit/helpers/test_spawn/*
 %{_datadir}/man/man1/pkcon.1.gz
 %{_datadir}/man/man1/pkmon.1.gz
-<<<<<<< HEAD
-=======
-%{_datadir}/man/man1/pk-debuginfo-install.1.gz
->>>>>>> 54cb407384ac63300039a28ea6cd00ef0bab6697
 %{_datadir}/polkit-1/actions/*.policy
 %{_datadir}/polkit-1/rules.d/*
 %{_datadir}/PackageKit/pk-upgrade-distro.sh
 %{_libexecdir}/packagekitd
-<<<<<<< HEAD
 %{_libexecdir}/packagekit-direct
 %{_bindir}/pkmon
 %{_bindir}/pkcon
-=======
-%{_bindir}/pkmon
-%{_bindir}/pkcon
-%{_bindir}/pk-debuginfo-install
->>>>>>> 54cb407384ac63300039a28ea6cd00ef0bab6697
 %exclude %{_libdir}/libpackagekit*.so.*
 %{_libdir}/packagekit-backend/libpk_backend_dummy.so
 %{_libdir}/packagekit-backend/libpk_backend_test_*.so
 %ghost %verify(not md5 size mtime) %{_localstatedir}/lib/PackageKit/transactions.db
 %{_datadir}/dbus-1/system-services/*.service
-<<<<<<< HEAD
 %{_datadir}/dbus-1/interfaces/*.xml
 %{_unitdir}/packagekit-offline-update.service
 %{_unitdir}/packagekit.service
 %{_unitdir}/system-update.target.wants/
-=======
-%dir %{_libdir}/packagekit-plugins-2
-%{_libdir}/packagekit-plugins-2/*.so
-%{_libdir}/girepository-1.0/PackageKitPlugin-1.0.typelib
-%{_datadir}/dbus-1/interfaces/*.xml
-%{_unitdir}/packagekit-offline-update.service
-%{_unitdir}/packagekit.service
->>>>>>> 54cb407384ac63300039a28ea6cd00ef0bab6697
 %{_libexecdir}/pk-*offline-update
 %if 0%{?rhel} == 0
 %{_libdir}/packagekit-backend/libpk_backend_hif.so
 %endif
 
-<<<<<<< HEAD
 %files cached-metadata
 %{_datadir}/PackageKit/hawkey/
 %{_datadir}/PackageKit/metadata/
 
-=======
->>>>>>> 54cb407384ac63300039a28ea6cd00ef0bab6697
 %files glib
 %{_libdir}/*packagekit-glib2.so.*
 %{_libdir}/girepository-1.0/PackageKitGlib-1.0.typelib
@@ -406,10 +293,6 @@ systemctl disable packagekit-offline-update.service > /dev/null 2>&1 || :
 %{_libexecdir}/gst-install-plugins-helper
 
 %files gtk3-module
-<<<<<<< HEAD
-=======
-%defattr(-,root,root,-)
->>>>>>> 54cb407384ac63300039a28ea6cd00ef0bab6697
 %{_libdir}/gtk-2.0/modules/*.so
 %{_libdir}/gtk-3.0/modules/*.so
 %{_libdir}/gnome-settings-daemon-3.0/gtk-modules/*.desktop
@@ -426,7 +309,6 @@ systemctl disable packagekit-offline-update.service > /dev/null 2>&1 || :
 %dir %{_includedir}/PackageKit/packagekit-glib2
 %{_includedir}/PackageKit/packagekit-glib*/*.h
 %{_datadir}/gir-1.0/PackageKitGlib-1.0.gir
-<<<<<<< HEAD
 %{_datadir}/gtk-doc/html/PackageKit
 
 %changelog
@@ -547,57 +429,6 @@ systemctl disable packagekit-offline-update.service > /dev/null 2>&1 || :
 * Tue May 13 2014 Kalev Lember <kalevlember@gmail.com> - 0.9.2-2
 - Fix parallel kernel package installation
 
-=======
-%{_datadir}/gir-1.0/PackageKitPlugin-1.0.gir
-%{_datadir}/gtk-doc/html/PackageKit
-
-%files backend-devel
-%defattr(-,root,root,-)
-%dir %{_includedir}/PackageKit
-%{_includedir}/PackageKit/plugin
-%{_libdir}/pkgconfig/packagekit-plugin.pc
-
-
-%changelog
-* Mon Jul 28 2014 Kalev Lember <kalevlember@gmail.com> - 0.9.4-3
-- Rebuilt for hawkey soname bump
-
-* Tue Jul 22 2014 Kalev Lember <kalevlember@gmail.com> - 0.9.4-2
-- Rebuilt for gobject-introspection 1.41.4
-
-* Thu Jul 17 2014 Richard Hughes <rhughes@redhat.com> - 0.9.4-1
-- New upstream release
-- Automatically switch to hif backend when the config file says hawkey
-- Fix up a signature mismatch with a libhif signal handler
-- Include both available and installed packages in NEWEST filter
-- Plug a small leak in the gstreamer-plugin
-
-* Mon Jun 23 2014 Richard Hughes <rhughes@redhat.com> - 0.9.3-1
-- New upstream release
-- Add PK_ROLE_ENUM_GET_OLD_TRANSACTIONS to get-roles response
-- Fix crash when a plugin is using the backend in it's initialization stage
-- Make the polkit policy not be desktop-centric
-- Port to libhif and rename the backend to "Hif"
-
-* Tue Jun 10 2014 Kalev Lember <kalevlember@gmail.com> - 0.9.2-7
-- Backport an offline updates fix
-
-* Fri Jun 06 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.9.2-6
-- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
-
-* Sun Jun 01 2014 Kalev Lember <kalevlember@gmail.com> - 0.9.2-5
-- Rebuilt for new hawkey
-
-* Tue May 27 2014 Kalev Lember <kalevlember@gmail.com> - 0.9.2-4
-- Rebuilt for https://fedoraproject.org/wiki/Changes/Python_3.4
-
-* Wed May 21 2014 Kalev Lember <kalevlember@gmail.com> - 0.9.2-3
-- Don't restart PackageKit after updating itself
-
-* Tue May 13 2014 Kalev Lember <kalevlember@gmail.com> - 0.9.2-2
-- Fix parallel kernel package installation
-
->>>>>>> 54cb407384ac63300039a28ea6cd00ef0bab6697
 * Tue Apr 29 2014 Richard Hughes <rhughes@redhat.com> - 0.9.2-1
 - New upstream release
 - Don't crash when polkit_authority_get_sync() fails

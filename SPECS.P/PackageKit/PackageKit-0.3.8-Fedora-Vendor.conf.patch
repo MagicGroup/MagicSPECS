@@ -42,8 +42,4 @@ diff -urNp PackageKit-0.8.14.old/etc/Vendor.conf PackageKit-0.8.14/etc/Vendor.co
  #
  # default=none
 -MimeUrl=none
-<<<<<<< HEAD
 +MimeUrl=https://www.magiclinux.org/wiki/PackageKit_Items_Not_Found#Missing_MIME_Support
-=======
-+MimeUrl=https://fedoraproject.org/wiki/PackageKit_Items_Not_Found#Missing_MIME_Support
->>>>>>> 54cb407384ac63300039a28ea6cd00ef0bab6697
