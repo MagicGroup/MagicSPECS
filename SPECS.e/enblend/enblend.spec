@@ -64,6 +64,11 @@ PDF usage documentation for the enblend and enfuse command line tools
 
 %build
 sed -i 's/can_build_doc=yes/can_build_doc=no/g' configure
+%ifarch mips64el
+# Decrease debuginfo verbosity to reduce memory consumption even more
+%global optflags %(echo %{optflags} | sed 's/-g /-g1 /')
+%endif
+
 %configure --with-boost-filesystem
 
 make %{?_smp_mflags}
