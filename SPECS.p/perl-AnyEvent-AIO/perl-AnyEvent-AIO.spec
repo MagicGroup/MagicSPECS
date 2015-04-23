@@ -1,9 +1,11 @@
 Name:           perl-AnyEvent-AIO
 Version:        1.1
-Release:        16%{?dist}
+Release:        17%{?dist}
 Summary:        Truly asynchronous file and directrory I/O
+Summary(zh_CN.UTF-8): 真正的异步文件和目录 I/O
 
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 License:        GPL+ or Artistic
 URL:            http://search.cpan.org/dist/AnyEvent-AIO/
 Source0:        http://search.cpan.org/CPAN/authors/id/M/ML/MLEHMANN/AnyEvent-AIO-%{version}.tar.gz
@@ -18,6 +20,9 @@ Requires:  perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
 %description
 Truly asynchronous file and directrory I/O.
 
+%description -l zh_CN.UTF-8
+真正的异步文件和目录 I/O。
+
 %prep
 %setup -q -n AnyEvent-AIO-%{version}
 
@@ -31,7 +36,7 @@ make %{?_smp_mflags}
 rm -rf $RPM_BUILD_ROOT
 make pure_install PERL_INSTALL_ROOT=$RPM_BUILD_ROOT
 find $RPM_BUILD_ROOT -type f -name .packlist -exec rm -f {} ';'
-
+magic_rpm_clean.sh
 
 %check
 
@@ -49,6 +54,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Wed Apr 22 2015 Liu Di <liudidi@gmail.com> - 1.1-17
+- 为 Magic 3.0 重建
+
 * Thu Jun 12 2014 Liu Di <liudidi@gmail.com> - 1.1-16
 - 为 Magic 3.0 重建
 

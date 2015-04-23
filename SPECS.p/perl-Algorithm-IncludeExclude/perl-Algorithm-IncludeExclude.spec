@@ -1,9 +1,11 @@
 Name:           perl-Algorithm-IncludeExclude
 Version:        0.01
-Release:        12%{?dist}
+Release:        13%{?dist}
 Summary:        Build and evaluate include/exclude lists
+Summary(zh_CN.UTF-8): 构建和计算包含/排除列表
 License:        GPL+ or Artistic
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 URL:            http://search.cpan.org/dist/Algorithm-IncludeExclude/
 Source0:        http://www.cpan.org/authors/id/J/JR/JROCKWAY/Algorithm-IncludeExclude-%{version}.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -18,6 +20,9 @@ Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $versi
 %description
 Algorithm::IncludeExclude lets you define a tree of include / exclude rules and
 then allows you to determine the best rule for a given path.
+
+%description -l zh_CN.UTF-8
+构建和计算包含/排除列表。
 
 %prep
 %setup -q -n Algorithm-IncludeExclude-%{version}
@@ -35,6 +40,7 @@ find $RPM_BUILD_ROOT -type f -name .packlist -exec rm -f {} \;
 find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 
 %{_fixperms} $RPM_BUILD_ROOT/*
+magic_rpm_clean.sh
 
 %check
 
@@ -49,6 +55,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Mon Apr 20 2015 Liu Di <liudidi@gmail.com> - 0.01-13
+- 为 Magic 3.0 重建
+
 * Thu Jun 12 2014 Liu Di <liudidi@gmail.com> - 0.01-12
 - 为 Magic 3.0 重建
 

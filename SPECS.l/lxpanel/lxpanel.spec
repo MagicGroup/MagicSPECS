@@ -1,6 +1,6 @@
 # Review: https://bugzilla.redhat.com/show_bug.cgi?id=219930
 
-%global         usegtk3     0
+%global         usegtk3     1
 
 Name:           lxpanel
 Version:	0.8.0
@@ -14,6 +14,9 @@ License:        GPLv2+
 URL:            http://lxde.org/
 #VCS: git:git://lxde.git.sourceforge.net/gitroot/lxde/lxpanel
 Source0:        http://downloads.sourceforge.net/sourceforge/lxde/%{name}-%{version}.tar.xz
+
+#gtk3 的补丁
+Patch0:		lxpanel-0.8.0-gtk3.patch 
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
@@ -63,6 +66,8 @@ developing applications that use %{name}.
 
 %prep
 %setup -q
+%patch0 -p1
+autoreconf -fisv
 
 %build
 %configure \
@@ -91,6 +96,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/lxpanel/
 %{_libdir}/lxpanel/
 %{_mandir}/man1/lxpanel*
+%{_sysconfdir}/xdg/lxpanel/*
 
 %files devel
 %defattr(-,root,root,-)

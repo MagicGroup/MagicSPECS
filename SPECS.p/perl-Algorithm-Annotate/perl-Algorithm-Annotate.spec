@@ -1,9 +1,11 @@
 Name:           perl-Algorithm-Annotate
 Version:        0.10
-Release:        19%{?dist}
+Release:        20%{?dist}
 Summary:        Represent a series of changes in annotate form
+Summary(zh_CN.UTF-8): 注释系列变化的代表
 License:        GPL+ or Artistic
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 URL:            http://search.cpan.org/dist/Algorithm-Annotate/
 Source0:        http://www.cpan.org/modules/by-module/Algorithm/Algorithm-Annotate-%{version}.tar.gz
 BuildArch:      noarch
@@ -15,6 +17,9 @@ Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $versi
 %description
 Algorithm::Annotate generates a list that is useful for generating output
 simlar to cvs annotate.
+
+%description -l zh_CN.UTF-8
+这个包生成一个列表，对生成 cvs 的变化注释有用。
 
 %prep
 %setup -q -n Algorithm-Annotate-%{version}
@@ -28,6 +33,7 @@ make pure_install PERL_INSTALL_ROOT=%{buildroot}
 find %{buildroot} -type f -name .packlist -exec rm -f {} \;
 find %{buildroot} -type d -depth -exec rmdir {} 2>/dev/null \;
 chmod -R u+rwX,go+rX,go-w %{buildroot}/*
+magic_rpm_clean.sh
 
 %check
 
@@ -37,6 +43,9 @@ chmod -R u+rwX,go+rX,go-w %{buildroot}/*
 %{_mandir}/man3/*
 
 %changelog
+* Sun Apr 19 2015 Liu Di <liudidi@gmail.com> - 0.10-20
+- 为 Magic 3.0 重建
+
 * Thu Jun 12 2014 Liu Di <liudidi@gmail.com> - 0.10-19
 - 为 Magic 3.0 重建
 

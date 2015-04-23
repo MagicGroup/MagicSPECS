@@ -5,7 +5,7 @@
 
 Name: PyKDE4 
 Version: 4.14.3
-Release: 1%{?dist}
+Release: 2%{?dist}
 Summary: Python bindings for KDE4 
 Summary(zh_CN.UTF-8): KDE4 的 Python 绑定
 
@@ -219,6 +219,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Apr 19 2015 Liu Di <liudidi@gmail.com> - 4.14.3-2
+- 为 Magic 3.0 重建
+
 * Sun Feb 15 2015 Liu Di <liudidi@gmail.com> - 4.14.3-1
 - 更新到 4.14.3
 

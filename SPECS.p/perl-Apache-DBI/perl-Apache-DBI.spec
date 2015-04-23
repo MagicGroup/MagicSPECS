@@ -1,11 +1,13 @@
 %global perlname Apache-DBI
 
 Name:      perl-Apache-DBI
-Version:   1.11
-Release:   9%{?dist}
+Version:	1.12
+Release:	1%{?dist}
 Summary:   Persistent database connections with Apache/mod_perl
+Summary(zh_CN.UTF-8): 使用 Apache/mod_perl 的持久数据库连接
 
 Group:     Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 License:   GPL+ or Artistic
 URL:       http://search.cpan.org/dist/Apache-DBI/
 Source:    http://search.cpan.org/CPAN/authors/id/P/PH/PHRED/%{perlname}-%{version}.tar.gz
@@ -42,6 +44,9 @@ Apache::DBI has been in widespread deployment on many platforms for
 years.  Apache::DBI is one of the most widely used mod_perl related
 modules.  It can be considered stable.
 
+%description -l zh_CN.UTF-8
+使用 Apache/mod_perl 的持久数据库连接。
+
 %prep
 %setup -q -n %{perlname}-%{version}
 %{__perl} -pi -e 's|/usr/local/bin/perl|%{__perl}|' eg/startup.pl
@@ -58,6 +63,7 @@ make pure_install PERL_INSTALL_ROOT=%{buildroot}
 find %{buildroot} -type f -name .packlist -exec rm -f {} ';' -print
 find %{buildroot} -type d -depth -exec rmdir {} 2>/dev/null ';' -print
 chmod -R u+rwX,go+rX,go-w %{buildroot}/*
+magic_rpm_clean.sh
 
 %clean
 rm -rf %{buildroot}
@@ -72,6 +78,9 @@ rm -rf %{buildroot}
 %{perl_vendorlib}/Apache
 
 %changelog
+* Thu Apr 23 2015 Liu Di <liudidi@gmail.com> - 1.12-1
+- 更新到 1.12
+
 * Thu Jun 12 2014 Liu Di <liudidi@gmail.com> - 1.11-9
 - 为 Magic 3.0 重建
 

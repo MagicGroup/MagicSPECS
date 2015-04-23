@@ -4,10 +4,12 @@
 %global debug_package %{nil}
 
 Name:           perl-AnyEvent
-Version:        7.02
-Release:        9%{?dist}
+Version:	7.08
+Release:	2%{?dist}
 Summary:        Framework for multiple event loops
+Summary(zh_CN.UTF-8): 多种事件循环的框架
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 License:        GPL+ or Artistic
 URL:            http://search.cpan.org/dist/AnyEvent/
 Source0:        http://search.cpan.org/CPAN/authors/id/M/ML/MLEHMANN/AnyEvent-%{version}%{?subver}.tar.gz
@@ -89,6 +91,8 @@ module authors to utilize an event loop without forcing module users to use the
 same event loop (as multiple event loops cannot coexist peacefully at any one
 time).
 
+%description -l zh_CN.UTF-8
+多种事件循环的框架。
 
 %prep
 %setup -q -n AnyEvent-%{version}%{?subver}
@@ -102,7 +106,7 @@ make %{?_smp_mflags}
 %install
 make pure_install DESTDIR=$RPM_BUILD_ROOT
 find $RPM_BUILD_ROOT -type f -name .packlist -exec rm -f {} ';'
-
+magic_rpm_clean.sh
 
 %check
 # PERL_ANYEVENT_NET_TESTS shouldn't be set to avoid network tests
@@ -144,9 +148,15 @@ export PERL_ANYEVENT_LOOP_TESTS=1
 %{_mandir}/man3/AnyEvent::Strict.3pm*
 %{_mandir}/man3/AnyEvent::TLS.3pm*
 %{_mandir}/man3/AnyEvent::Util.3pm*
-
+%{_mandir}/man3/AnyEvent::Impl::UV.3pm*
 
 %changelog
+* Wed Apr 22 2015 Liu Di <liudidi@gmail.com> - 7.08-2
+- 为 Magic 3.0 重建
+
+* Wed Apr 22 2015 Liu Di <liudidi@gmail.com> - 7.08-1
+- 更新到 7.08
+
 * Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 7.02-9
 - 为 Magic 3.0 重建
 

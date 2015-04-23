@@ -1,10 +1,12 @@
 Name:           perl-Any-Moose
 Summary:        Use Moose or Mouse automagically (DEPRECATED)
-Version:        0.21
-Release:        9%{?dist}
+Summary(zh_CN.UTF-8): 自动化使用 Moose 或 Mouse（已过时）
+Version:	0.26
+Release:	1%{?dist}
 License:        GPL+ or Artistic
 Group:          Development/Libraries
-Source0:        http://search.cpan.org/CPAN/authors/id/S/SA/SARTAK/Any-Moose-%{version}.tar.gz 
+Group(zh_CN.UTF-8): 开发/库
+Source0:        http://search.cpan.org/CPAN/authors/id/E/ET/ETHER/Any-Moose-%{version}.tar.gz 
 URL:            http://search.cpan.org/dist/Any-Moose
 Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
 BuildArch:      noarch
@@ -36,6 +38,9 @@ provides, while allowing one to let the program author determine if Moose
 or Mouse should be used; when use'd, we load Mouse if Moose isn't already
 loaded, otherwise we go with Moose.
 
+%description -l zh_CN.UTF-8
+自动化使用 Moose 或 Mouse（已过时）。
+
 %prep
 %setup -q -n Any-Moose-%{version}
 
@@ -52,6 +57,7 @@ find %{buildroot} -type f -name .packlist -exec rm -f {} ';'
 find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null ';'
 
 %{_fixperms} %{buildroot}/*
+magic_rpm_clean.sh
 
 %check
 make test
@@ -62,6 +68,9 @@ make test
 %{_mandir}/man3/*.3*
 
 %changelog
+* Thu Apr 23 2015 Liu Di <liudidi@gmail.com> - 0.26-1
+- 更新到 0.26
+
 * Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 0.21-9
 - 为 Magic 3.0 重建
 

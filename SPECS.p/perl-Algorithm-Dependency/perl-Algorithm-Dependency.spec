@@ -1,9 +1,11 @@
 Name: 		perl-Algorithm-Dependency
 Version: 	1.110
-Release: 	17%{?dist}
+Release: 	18%{?dist}
 Summary: 	Algorithmic framework for implementing dependency trees
+Summary(zh_CN.UTF-8): 实现依赖树的算法框架
 License: 	GPL+ or Artistic
 Group: 		Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 URL: 		http://search.cpan.org/dist/Algorithm-Dependency/
 Source0:	http://search.cpan.org/CPAN/authors/id/A/AD/ADAMK/Algorithm-Dependency-%{version}.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -26,6 +28,9 @@ Algorithm::Dependency is a framework for creating simple read-only
 dependency hierarchies, where you have a set of items that rely on other
 items in the set, and require actions on them as well.
 
+%description -l zh_CN.UTF-8
+实现依赖树的算法框架。
+
 %prep
 %setup -q -n Algorithm-Dependency-%{version}
 
@@ -39,6 +44,7 @@ make pure_install PERL_INSTALL_ROOT=$RPM_BUILD_ROOT
 find $RPM_BUILD_ROOT -type f -name .packlist -exec rm -f {} ';'
 find $RPM_BUILD_ROOT -type d -depth -exec rmdir {} 2>/dev/null ';'
 chmod -R u+w $RPM_BUILD_ROOT/*
+magic_rpm_clean.sh
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -53,6 +59,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Sun Apr 19 2015 Liu Di <liudidi@gmail.com> - 1.110-18
+- 为 Magic 3.0 重建
+
 * Thu Jun 12 2014 Liu Di <liudidi@gmail.com> - 1.110-17
 - 为 Magic 3.0 重建
 

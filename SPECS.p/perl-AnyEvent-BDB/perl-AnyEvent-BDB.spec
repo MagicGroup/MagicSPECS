@@ -1,9 +1,11 @@
 Name:           perl-AnyEvent-BDB
 Version:        1.1
-Release:        12%{?dist}
+Release:        13%{?dist}
 Summary:        Truly asynchronous Berkeley DB access
+Summary(zh_CN.UTF-8): 真正的异步伯克利 DB 访问
 
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 License:        GPL+ or Artistic
 URL:            http://search.cpan.org/dist/AnyEvent-BDB/
 Source0:        http://search.cpan.org/CPAN/authors/id/M/ML/MLEHMANN/AnyEvent-BDB-%{version}.tar.gz
@@ -19,6 +21,9 @@ Requires:  perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
 This module is an AnyEvent user, you need to make sure that you use and run
 a supported event loop.
 
+%description -l zh_CN.UTF-8
+真正的异步伯克利 DB 访问。
+
 %prep
 %setup -q -n AnyEvent-BDB-%{version}
 
@@ -32,7 +37,7 @@ make %{?_smp_mflags}
 rm -rf $RPM_BUILD_ROOT
 make pure_install PERL_INSTALL_ROOT=$RPM_BUILD_ROOT
 find $RPM_BUILD_ROOT -type f -name .packlist -exec rm -f {} ';'
-
+magic_rpm_clean.sh
 
 %check
 
@@ -50,6 +55,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Wed Apr 22 2015 Liu Di <liudidi@gmail.com> - 1.1-13
+- 为 Magic 3.0 重建
+
 * Thu Jun 12 2014 Liu Di <liudidi@gmail.com> - 1.1-12
 - 为 Magic 3.0 重建
 

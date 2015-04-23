@@ -1,6 +1,6 @@
 Name:           perl-capitalization
 Version:        0.03
-Release:        18%{?dist}
+Release:        19%{?dist}
 Summary:        No capitalization on method names
 Summary(zh_CN.UTF-8): 不区分方法名称的大小写
 
@@ -57,6 +57,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sat Apr 18 2015 Liu Di <liudidi@gmail.com> - 0.03-19
+- 为 Magic 3.0 重建
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.03-18
 - 为 Magic 3.0 重建
 

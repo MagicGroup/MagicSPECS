@@ -1,9 +1,11 @@
 Name:           perl-App-CLI
 Version:        0.313
-Release:        5%{?dist}
+Release:        6%{?dist}
 Summary:        Dispatcher module for command line interface programs
+Summary(zh_CN.UTF-8): 命令行界面程序调度模块
 License:        GPL+ or Artistic
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 URL:            http://search.cpan.org/dist/App-CLI/
 Source0:        http://search.cpan.org/CPAN/authors/id/C/CO/CORNELIUS/App-CLI-%{version}.tar.gz
 BuildArch:      noarch
@@ -20,6 +22,9 @@ Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $versi
 App::CLI dispatches CLI (command line interface) based commands into
 command classes. It also supports subcommand and per-command options.
 
+%description -l zh_CN.UTF-8
+命令行界面程序调度模块。
+
 %prep
 %setup -q -n App-CLI-%{version}
 
@@ -34,6 +39,7 @@ find $RPM_BUILD_ROOT -type f -name .packlist -exec rm -f {} \;
 find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 
 %{_fixperms} $RPM_BUILD_ROOT/*
+magic_rpm_clean.sh
 
 %check
 
@@ -44,6 +50,9 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_mandir}/man3/*
 
 %changelog
+* Thu Apr 23 2015 Liu Di <liudidi@gmail.com> - 0.313-6
+- 为 Magic 3.0 重建
+
 * Thu Jun 12 2014 Liu Di <liudidi@gmail.com> - 0.313-5
 - 为 Magic 3.0 重建
 

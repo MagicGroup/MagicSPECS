@@ -1,7 +1,8 @@
 Name:           perl-App-Cache
 Summary:        Easy application-level caching
+Summary(zh_CN.UTF-8): 易用的应用程序级别缓存
 Version:        0.37
-Release:        15%{?dist}
+Release:        16%{?dist}
 License:        GPL+ or Artistic
 
 Source0:        http://search.cpan.org/CPAN/authors/id/L/LB/LBROCARD/App-Cache-%{version}.tar.gz 
@@ -49,6 +50,9 @@ Parse::BACKPAN::Packages cache is actually stored underneath
 "~/.parse_backpan_packages/cache/". This is so that permissions are not a
 problem -- it is a per-user, per-application cache.
 
+%description -l zh_CN.UTF-8
+易用的应用程序级别缓存。
+
 %prep
 %setup -q -n App-Cache-%{version}
 
@@ -62,6 +66,7 @@ find %{buildroot} -type f -name .packlist -exec rm -f {} ';'
 find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null ';'
 
 %{_fixperms} %{buildroot}/*
+magic_rpm_clean.sh
 
 %check
 make test
@@ -72,6 +77,9 @@ make test
 %{_mandir}/man3/*.3*
 
 %changelog
+* Thu Apr 23 2015 Liu Di <liudidi@gmail.com> - 0.37-16
+- 为 Magic 3.0 重建
+
 * Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 0.37-15
 - 为 Magic 3.0 重建
 

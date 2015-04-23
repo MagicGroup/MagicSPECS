@@ -1,9 +1,11 @@
 Name:           perl-Algorithm-Permute
 Version:        0.12
-Release:        13%{?dist}
+Release:        14%{?dist}
 Summary:        Handy and fast permutation with object oriented interface
+Summary(zh_CN.UTF-8): 方便快捷面向对象的排列算法接口
 License:        GPL+ or Artistic
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 URL:            http://search.cpan.org/dist/Algorithm-Permute/
 Source0:        http://archive.cpan.cz//authors/id/E/ED/EDPRATOMO/Algorithm-Permute-%{version}.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -16,6 +18,8 @@ This handy module makes performing permutation in Perl easy and fast,
 although perhaps its algorithm is not the fastest on the earth. It supports
 permutation r of n objects where 0 < r <= n.
 
+%description -l zh_CN.UTF-8
+方便快捷面向对象的排列算法接口。
 
 %prep
 %setup -q -n Algorithm-Permute-%{version}
@@ -36,7 +40,7 @@ find $RPM_BUILD_ROOT -type f -name '*.bs' -size 0 -exec rm -f {} \;
 find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 
 %{_fixperms} $RPM_BUILD_ROOT/*
-
+magic_rpm_clean.sh
 
 %check
 
@@ -55,6 +59,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Wed Apr 22 2015 Liu Di <liudidi@gmail.com> - 0.12-14
+- 为 Magic 3.0 重建
+
 * Thu Jun 12 2014 Liu Di <liudidi@gmail.com> - 0.12-13
 - 为 Magic 3.0 重建
 

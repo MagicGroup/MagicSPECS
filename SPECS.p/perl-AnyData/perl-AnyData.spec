@@ -1,11 +1,13 @@
 Name:           perl-AnyData
-Version:        0.10
-Release:        19%{?dist}
+Version:	0.12
+Release:	1%{?dist}
 Summary:        Easy access to data in many formats
+Summary(zh_CN.UTF-8): 以多种格式方便的访问数据
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 License:        GPL+ or Artistic
 URL:            http://search.cpan.org/dist/AnyData
-Source0:        http://search.cpan.org/CPAN/authors/id/J/JZ/JZUCKER/AnyData-%{version}.tar.gz
+Source0:        http://search.cpan.org/CPAN/authors/id/R/RE/REHSACK/AnyData-%{version}.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildArch:      noarch
@@ -40,6 +42,9 @@ AnyData.pm provides a simple tied hash interface and DBD::AnyData
 provides a DBI/SQL interface.  You can use either or both depending on
 your needs.
 
+%description -l zh_CN.UTF-8
+以多种格式方便的访问数据。
+
 %prep
 %setup -q -n AnyData-%{version}
 
@@ -53,6 +58,7 @@ make pure_install PERL_INSTALL_ROOT=$RPM_BUILD_ROOT
 find $RPM_BUILD_ROOT -type f -name .packlist -exec rm -f {} ';'
 find $RPM_BUILD_ROOT -type d -depth -exec rmdir {} 2>/dev/null ';'
 chmod -R u+w $RPM_BUILD_ROOT/*
+magic_rpm_clean.sh
 
 %check
 
@@ -69,6 +75,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Wed Apr 22 2015 Liu Di <liudidi@gmail.com> - 0.12-1
+- 更新到 0.12
+
 * Thu Jun 12 2014 Liu Di <liudidi@gmail.com> - 0.10-19
 - 为 Magic 3.0 重建
 

@@ -1,6 +1,6 @@
 Name:           perl-boolean
-Version:        0.28
-Release:        6%{?dist}
+Version:	0.45
+Release:	1%{?dist}
 Summary:        Boolean support for Perl
 Summary(zh_CN.UTF-8): Perl 的布尔值支持
 License:        GPL+ or Artistic
@@ -47,6 +47,9 @@ magic_rpm_clean.sh
 %{_mandir}/man3/*
 
 %changelog
+* Sat Apr 18 2015 Liu Di <liudidi@gmail.com> - 0.45-1
+- 更新到 0.45
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.28-6
 - 为 Magic 3.0 重建
 

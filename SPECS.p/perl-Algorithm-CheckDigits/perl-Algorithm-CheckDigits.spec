@@ -1,13 +1,15 @@
 Name:		perl-Algorithm-CheckDigits
-Version:	0.53
-Release:	9%{?dist}
+Version:	1.3.0
+Release:	1%{?dist}
 
 Summary:	Perl extension to generate and test check digits
+Summary(zh_CN.UTF-8): 生成和测试校验数字的 Perl 扩展
 
 Group:		Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 License:	GPL+ or Artistic
 URL:		http://search.cpan.org/dist/Algorithm-CheckDigits/
-Source0:	http://search.cpan.org/CPAN/authors/id/M/MA/MAMAWE/Algorithm-CheckDigits-%{version}.tar.gz
+Source0:	http://search.cpan.org/CPAN/authors/id/M/MA/MAMAWE/Algorithm-CheckDigits-v%{version}.tar.gz
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildArch:	noarch
@@ -20,16 +22,11 @@ Requires:	perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
 %description
 This module provides a number of methods to test and generate check digits.
 
+%description -l zh_CN.UTF-8
+生成和测试校验数字的 Perl 扩展。
 
 %prep
-%setup -q -n Algorithm-CheckDigits-%{version}
-cd CheckDigits
-for i in M11_006 MBase_002 MXX_006 M11_004 MXX_003; do
-  {
-  iconv -f iso-8859-1 -t utf-8 -o $i.pm{.utf8,}
-  mv $i.pm{.utf8,}
-  };
-done;
+%setup -q -n Algorithm-CheckDigits-v%{version}
 
 
 %build
@@ -43,7 +40,7 @@ make pure_install PERL_INSTALL_ROOT=$RPM_BUILD_ROOT
 find $RPM_BUILD_ROOT -type f -name .packlist -exec rm -f {} ';'
 find $RPM_BUILD_ROOT -type d -depth -exec rmdir {} 2>/dev/null ';'
 chmod -R u+w $RPM_BUILD_ROOT/*
-
+magic_rpm_clean.sh
 
 %check
 
@@ -58,9 +55,20 @@ rm -rf $RPM_BUILD_ROOT
 %doc Changes README
 %{perl_vendorlib}/*
 %{_mandir}/man3/Algorithm::CheckDigits*3pm.gz
+%{_bindir}/checkdigits.pl
+%{_mandir}/man1/checkdigits.pl.1*
 
 
 %changelog
+* Sun Apr 19 2015 Liu Di <liudidi@gmail.com> - 1.3.0-1
+- 更新到 1.3.0
+
+* Sun Apr 19 2015 Liu Di <liudidi@gmail.com> - v1.3.0-2
+- 为 Magic 3.0 重建
+
+* Sun Apr 19 2015 Liu Di <liudidi@gmail.com> - v1.3.0-1
+- 更新到 v1.3.0
+
 * Thu Jun 12 2014 Liu Di <liudidi@gmail.com> - 0.53-9
 - 为 Magic 3.0 重建
 

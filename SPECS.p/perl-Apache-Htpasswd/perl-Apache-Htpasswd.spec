@@ -1,9 +1,11 @@
 Name:           perl-Apache-Htpasswd
-Version:        1.8
-Release:        13%{?dist}
+Version:	1.9
+Release:	1%{?dist}
 Summary:        Manage Unix crypt-style password file
+Summary(zh_CN.UTF-8): 管理 Unix 加密类型密码文件
 
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 License:        GPL+ or Artistic
 URL:            http://search.cpan.org/dist/Apache-Htpasswd/
 Source0:        http://search.cpan.org/CPAN/authors/id/K/KM/KMELTZ/Apache-Htpasswd-%{version}.tar.gz
@@ -23,6 +25,8 @@ The passwords file is a flat-file with login name and their associated
 encrypted password. You can use this for non-Apache files if you wish, but it
 was written specifically for .htaccess style files.
 
+%description -l zh_CN.UTF-8
+管理 Unix 加密类型密码文件。
 
 %prep
 %setup -q -n Apache-Htpasswd-%{version}
@@ -39,7 +43,7 @@ make pure_install PERL_INSTALL_ROOT=$RPM_BUILD_ROOT
 find $RPM_BUILD_ROOT -type f -name .packlist -exec rm -f {} ';'
 find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null ';'
 chmod -R u+w $RPM_BUILD_ROOT/*
-
+magic_rpm_clean.sh
 
 %check
 
@@ -57,6 +61,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Thu Apr 23 2015 Liu Di <liudidi@gmail.com> - 1.9-1
+- 更新到 1.9
+
 * Thu Jun 12 2014 Liu Di <liudidi@gmail.com> - 1.8-13
 - 为 Magic 3.0 重建
 

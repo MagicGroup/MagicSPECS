@@ -1,9 +1,11 @@
 Name:           perl-App-cpanminus
-Version:        1.5007
-Release:        6%{?dist}
+Version:	1.7031
+Release:	1%{?dist}
 Summary:        Library for get, unpack, build and install CPAN modules
+Summary(zh_CN.UTF-8): 获取、编译和安装 CPAN 模块的库
 License:        GPL+ or Artistic
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 URL:            http://search.cpan.org/dist/App-cpanminus/
 Source0:        http://www.cpan.org/authors/id/M/MI/MIYAGAWA/App-cpanminus-%{version}.tar.gz
 BuildArch:      noarch
@@ -42,6 +44,9 @@ Why? It's dependency free, requires zero configuration, and stands alone
 but it's maintainable and extensible with plug-ins and friendly to shell 
 scripting. When running, it requires only 10 MB of RAM.
 
+%description -l zh_CN.UTF-8
+获取、编译和安装 CPAN 模块的库。
+
 %prep
 %setup -q -n App-cpanminus-%{version}
 
@@ -54,6 +59,7 @@ make pure_install DESTDIR=%{buildroot}
 find %{buildroot} -type f -name .packlist -exec rm -f {} \;
 find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_fixperms} %{buildroot}/*
+magic_rpm_clean.sh
 
 %check
 
@@ -66,6 +72,9 @@ find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_bindir}/cpanm
 
 %changelog
+* Thu Apr 23 2015 Liu Di <liudidi@gmail.com> - 1.7031-1
+- 更新到 1.7031
+
 * Thu Jun 12 2014 Liu Di <liudidi@gmail.com> - 1.5007-6
 - 为 Magic 3.0 重建
 

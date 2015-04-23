@@ -5,7 +5,7 @@
 Summary:	msiLBC is low bitrate audio codec - plugin for mediastreamer
 Summary(zh_CN.UTF-8): msiLBC 是一个低采样率的音频编码，可用在媒体服务插件
 Name:		msilbc
-Version:	2.0.3
+Version:	2.1.1
 Release:	6%{?dist}
 License:	GPL2
 Group:  System Environment/Libraries
@@ -95,6 +95,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sat Apr 18 2015 Liu Di <liudidi@gmail.com> - 2.1.1-6
+- 更新到 2.1.1
+
 * Thu Jan 01 2015 Liu Di <liudidi@gmail.com> - 2.0.3-6
 - 为 Magic 3.0 重建
 

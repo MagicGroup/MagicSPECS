@@ -22,7 +22,7 @@
 %global         build_doc   1
 
 Name:           libfm
-Version: 1.2.1
+Version: 1.2.3
 Release:        2%{?dist}
 Summary:        GIO-based library for file manager-like programs
 Summary(zh_CN.UTF-8): 基于 GIO 的文件管理类程序的库
@@ -280,6 +280,7 @@ update-mime-database %{_datadir}/mime &> /dev/null || :
 %{_libdir}/%{name}.so
 %{_libdir}/%{name}-extra.so
 %{_libdir}/pkgconfig/libfm.pc
+%{_libdir}/pkgconfig/libfm-extra.pc
 
 %files gtk-devel -f gtk-header.files
 %defattr(-,root,root,-)
@@ -297,6 +298,9 @@ update-mime-database %{_datadir}/mime &> /dev/null || :
 
 
 %changelog
+* Mon Apr 20 2015 Liu Di <liudidi@gmail.com> - 1.2.3-2
+- 更新到 1.2.3
+
 * Fri Aug 22 2014 Liu Di <liudidi@gmail.com> - 1.2.1-2.1
 - 为 Magic 3.0 重建
 
