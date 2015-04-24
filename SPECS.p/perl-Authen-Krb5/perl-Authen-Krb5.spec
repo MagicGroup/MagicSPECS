@@ -1,9 +1,11 @@
 Name:           perl-Authen-Krb5
-Version:        1.9
-Release:        8%{?dist}
+Version:	1.9
+Release:	9%{?dist}
 Summary:        Krb5 Perl module
+Summary(zh_CN.UTF-8): Krb5 Perl 模块
 License:        GPL+ or Artistic
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 URL:            http://search.cpan.org/dist/Krb5/
 Source0:        http://www.cpan.org/authors/id/J/JH/JHORWITZ/Krb5-%{version}.tar.gz
 BuildRoot:      %(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
@@ -17,6 +19,9 @@ the implementation and documentation are nowhere near complete, and may
 require previous experience with Kerberos 5 programming. Most of the
 functions here are documented in detail in the Kerberos 5 API
 documentation.
+
+%description -l zh_CN.UTF-8
+Krb5 Perl 模块。
 
 %prep
 %setup -q -n Krb5-%{version}
@@ -48,6 +53,7 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 
 %{_fixperms} $RPM_BUILD_ROOT
 chmod 644 sample_client sample_server simple_client simple_server
+magic_rpm_clean.sh
 
 %check
 
@@ -63,6 +69,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Fri Apr 24 2015 Liu Di <liudidi@gmail.com> - 1.9-9
+- 为 Magic 3.0 重建
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.9-8
 - 为 Magic 3.0 重建
 

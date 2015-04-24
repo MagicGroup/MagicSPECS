@@ -1,9 +1,11 @@
 Name:           perl-AutoClass
 Version:        1_01
-Release:        21%{?dist}
+Release:        22%{?dist}
 Summary:        Automatically define classes and objects for Perl
+Summary(zh_CN.UTF-8): 自动的为 Perl 定义类和对象
 License:        GPL+ or Artistic
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 URL:            http://search.cpan.org/dist/autoclass/
 Source0:        http://www.cpan.org/modules/by-module/Class/autoclass_v%{version}.tgz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -18,6 +20,9 @@ Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $versi
 AutoClass is a Perl module to automatically define simple get and set
 methods to automatically initialize objects in a (possibly multiple)
 inheritance structure.
+
+%description -l zh_CN.UTF-8
+自动的为 Perl 定义类和对象。
 
 %prep
 %setup -q -n AutoClass
@@ -35,6 +40,7 @@ find $RPM_BUILD_ROOT -type f -name .packlist -exec rm -f {} \;
 find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 
 %{_fixperms} $RPM_BUILD_ROOT/*
+magic_rpm_clean.sh
 
 %check
 
@@ -49,6 +55,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Fri Apr 24 2015 Liu Di <liudidi@gmail.com> - 1_01-22
+- 为 Magic 3.0 重建
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1_01-21
 - 为 Magic 3.0 重建
 

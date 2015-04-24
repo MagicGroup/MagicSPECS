@@ -1,9 +1,11 @@
 Name:           perl-Authen-Simple-Passwd
 Version:        0.6
-Release:        13%{?dist}
+Release:        14%{?dist}
 Summary:        Simple Passwd authentication
+Summary(zh_CN.UTF-8): 简单密码认证模块
 License:        GPL+ or Artistic
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 URL:            http://search.cpan.org/dist/Authen-Simple-Passwd/
 Source0:        http://www.cpan.org/authors/id/C/CH/CHANSEN/Authen-Simple-Passwd-%{version}.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -25,6 +27,9 @@ Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $versi
 %description
 Authenticate against a passwd file.
 
+%description -l zh_CN.UTF-8
+通过密码文件认证。
+
 %prep
 %setup -q -n Authen-Simple-Passwd-%{version}
 
@@ -39,6 +44,7 @@ rm -rf $RPM_BUILD_ROOT
 find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 
 %{_fixperms} $RPM_BUILD_ROOT/*
+magic_rpm_clean.sh
 
 %check
 TEST_POD=1 ./Build test
@@ -53,6 +59,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Fri Apr 24 2015 Liu Di <liudidi@gmail.com> - 0.6-14
+- 为 Magic 3.0 重建
+
 * Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 0.6-13
 - 为 Magic 3.0 重建
 

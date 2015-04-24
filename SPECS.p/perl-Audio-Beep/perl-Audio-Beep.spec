@@ -1,9 +1,11 @@
 Name:		perl-Audio-Beep
 Version:	0.11
-Release:	12%{?dist}
+Release:	14%{?dist}
 Summary:	Audio::Beep Perl module
+Summary(zh_CN.UTF-8): Audio::Beep Perl 模块
 License:	GPL+ or Artistic
 Group:		Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 URL:		http://search.cpan.org/dist/Audio-Beep/
 Source0:	http://www.cpan.org/authors/id/G/GI/GIULIENK/Audio-Beep-%{version}.tar.gz
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -18,11 +20,15 @@ BuildArch:	noarch
 %description
 Audio::Beep - Perl module to use your computer beeper in fancy ways
 
+%description -l zh_CN.UTF-8
+以多样的方式使用计算机的喇叭。
+
 %prep
 %setup -q -n Audio-Beep-%{version}
 chmod -x music/*.pl
+
 %build
-%{__perl} Makefile.PL INSTALLDIRS=vendor OPTIMIZE="$RPM_OPT_FLAGS"
+echo "N\n" | %{__perl} Makefile.PL INSTALLDIRS=vendor OPTIMIZE="$RPM_OPT_FLAGS"
 make %{?_smp_mflags}
 
 %install
@@ -35,6 +41,7 @@ find $RPM_BUILD_ROOT -type f -name '*.bs' -size 0 -exec rm -f {} \;
 find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 
 %{_fixperms} $RPM_BUILD_ROOT/*
+magic_rpm_clean.sh
 
 %check
 make test
@@ -49,6 +56,12 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Thu Apr 23 2015 Liu Di <liudidi@gmail.com> - 0.11-14
+- 为 Magic 3.0 重建
+
+* Thu Apr 23 2015 Liu Di <liudidi@gmail.com> - 0.11-13
+- 为 Magic 3.0 重建
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.11-12
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

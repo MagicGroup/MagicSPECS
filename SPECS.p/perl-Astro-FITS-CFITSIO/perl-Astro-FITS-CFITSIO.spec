@@ -1,10 +1,12 @@
 Name:           perl-Astro-FITS-CFITSIO
-Version:        1.07
-Release:        5%{?dist}
+Version:	1.10
+Release:	1%{?dist}
 Summary:        Perl extension for using the cfitsio library
+Summary(zh_CN.UTF-8): 使用 cfitsio 库的 Perl 扩展
 # tarball m51 doesn't state license https://rt.cpan.org/Public/Bug/Display.html?id=66226
 License:        GPL+ or Artistic
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 URL:            http://search.cpan.org/dist/Astro-FITS-CFITSIO/
 Source0:        http://www.cpan.org/authors/id/P/PR/PRATZLAFF/Astro-FITS-CFITSIO-%{version}.tar.gz
 BuildRequires:  perl(ExtUtils::MakeMaker)
@@ -14,6 +16,9 @@ Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $versi
 %description
 Perl interface to William Pence's cfitsio subroutine library. For more
 information on cfitsio, see http://heasarc.gsfc.nasa.gov/fitsio.
+
+%description -l zh_CN.UTF-8
+使用 cfitsio 库的 Perl 扩展。
 
 %prep
 %setup -q -n Astro-FITS-CFITSIO-%{version}
@@ -30,6 +35,7 @@ find $RPM_BUILD_ROOT -type f -name '*.bs' -size 0 -exec rm -f {} \;
 find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 
 %{_fixperms} $RPM_BUILD_ROOT/*
+magic_rpm_clean.sh
 
 %check
 #works locally
@@ -42,6 +48,9 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_mandir}/man3/*
 
 %changelog
+* Thu Apr 23 2015 Liu Di <liudidi@gmail.com> - 1.10-1
+- 更新到 1.10
+
 * Thu Jun 12 2014 Liu Di <liudidi@gmail.com> - 1.07-5
 - 为 Magic 3.0 重建
 

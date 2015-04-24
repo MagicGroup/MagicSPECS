@@ -1,12 +1,13 @@
 Name:           perl-Authen-Captcha
-Version:        1.023
-Release:        18%{?dist}
+Version:	1.024
+Release:	1%{?dist}
 Summary:        Perl extension for creating captchas
+Summary(zh_CN.UTF-8): 创建 captchas 的 Perl 扩展
 License:        GPLv2
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 URL:            http://search.cpan.org/dist/Authen-Captcha/
-Source0:        http://www.cpan.org//authors/id/U/UN/UNRTST/Authen-Captcha-%{version}.tar.gz
-Patch0:         perl-Authen-Captcha-1.023-taint.patch
+Source0:        http://www.cpan.org//authors/id/L/LK/LKUNDRAK/Authen-Captcha-%{version}.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 BuildRequires:  perl(ExtUtils::MakeMaker)
@@ -21,11 +22,11 @@ Authen::Captcha provides an object oriented interface to captcha file
 creations. Captcha stands for Completely Automated Public Turning test to
 tell Computers and Humans Apart.
 
+%description -l zh_CN.UTF-8
+创建 captchas 的 Perl 扩展。
 
 %prep
 %setup -q -n Authen-Captcha-%{version}
-%patch0 -p1 -b .taint
-
 
 %build
 dos2unix -q -k license.txt
@@ -42,7 +43,7 @@ find $RPM_BUILD_ROOT -type f -name .packlist -exec rm -f {} \;
 find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 
 %{_fixperms} $RPM_BUILD_ROOT/*
-
+magic_rpm_clean.sh
 
 %check
 
@@ -60,6 +61,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Thu Apr 23 2015 Liu Di <liudidi@gmail.com> - 1.024-1
+- 更新到 1.024
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.023-18
 - 为 Magic 3.0 重建
 

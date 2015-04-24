@@ -1,9 +1,11 @@
 Name:           perl-Array-RefElem
 Version:        1.00
-Release:        14%{?dist}
+Release:        15%{?dist}
 Summary:        Set up array elements as aliases
+Summary(zh_CN.UTF-8): 设置数组元素的别名
 License:        GPL+ or Artistic
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 URL:            http://search.cpan.org/dist/Array-RefElem/
 Source0:        http://www.cpan.org/authors/id/G/GA/GAAS/Array-RefElem-%{version}.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -14,6 +16,9 @@ BuildRequires:  perl(ExtUtils::MakeMaker)
 %description
 This module gives direct access to some of the internal Perl routines that
 let you store things in arrays and hashes.
+
+%description -l zh_CN.UTF-8
+设置数组元素的别名。
 
 %prep
 %setup -q -n Array-RefElem-%{version}
@@ -32,6 +37,8 @@ find %{buildroot} -type f -name '*.bs' -size 0 -exec rm -f {} +
 find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null \;
 
 %{_fixperms} %{buildroot}/*
+magic_rpm_clean.sh
+
 
 %check
 
@@ -47,6 +54,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/*
 
 %changelog
+* Thu Apr 23 2015 Liu Di <liudidi@gmail.com> - 1.00-15
+- 为 Magic 3.0 重建
+
 * Thu Jun 12 2014 Liu Di <liudidi@gmail.com> - 1.00-14
 - 为 Magic 3.0 重建
 

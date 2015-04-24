@@ -1,9 +1,11 @@
 Name:           perl-Async-MergePoint
-Version:        0.03
-Release:        12%{?dist}
+Version:	0.04
+Release:	1%{?dist}
 Summary:        Resynchronise diverged control flow
+Summary(zh_CN.UTF-8): 重新同步分支控制流
 License:        GPL+ or Artistic
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 URL:            http://search.cpan.org/dist/Async-MergePoint/
 Source0:        http://www.cpan.org/authors/id/P/PE/PEVANS/Async-MergePoint-%{version}.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -18,6 +20,9 @@ Often in program logic, multiple different steps need to be taken that are
 independent of each other, but their total result is needed before the next
 step can be taken. In synchonous code, the usual approach is to do them
 sequentially.
+
+%description -l zh_CN.UTF-8
+重新同步分支控制流。
 
 %prep
 %setup -q -n Async-MergePoint-%{version}
@@ -34,7 +39,7 @@ make pure_install PERL_INSTALL_ROOT=$RPM_BUILD_ROOT
 find $RPM_BUILD_ROOT -type f -name .packlist -exec rm -f {} ';'
 
 %{_fixperms} $RPM_BUILD_ROOT/*
-
+magic_rpm_clean.sh
 
 %check
 
@@ -51,6 +56,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Thu Apr 23 2015 Liu Di <liudidi@gmail.com> - 0.04-1
+- 更新到 0.04
+
 * Thu Jun 12 2014 Liu Di <liudidi@gmail.com> - 0.03-12
 - 为 Magic 3.0 重建
 

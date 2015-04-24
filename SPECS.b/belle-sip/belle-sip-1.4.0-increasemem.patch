@@ -1,0 +1,10 @@
+--- belle-sip-1.4.0/configure.ac.orig   2015-04-22 17:16:29.033041146 +0800
++++ belle-sip-1.4.0/configure.ac        2015-04-22 17:16:56.546727108 +0800
+@@ -16342,7 +16342,7 @@
+        if test $JAVA = "no" ; then
+                as_fn_error $? "Could not find java prog. Please install java " "$LINENO" 5
+        else
+-               ANTLR="$JAVA -Xmx256m -jar $antlr_jar"
++               ANTLR="$JAVA -Xmx1024m -jar $antlr_jar"
+        fi
+fi

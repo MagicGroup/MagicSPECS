@@ -1,9 +1,11 @@
 Summary:	SASL DIGEST-MD5 authentication (RFC2831)
+Summary(zh_CN.UTF-8): SASL DIGEST-MD5 认证 (RFC2831)
 Name:		perl-Authen-DigestMD5
 Version:	0.04
-Release:	17%{?dist}
+Release:	18%{?dist}
 License:	GPL+ or Artistic
 Group:		Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Url:		http://search.cpan.org/dist/Authen-DigestMD5/
 Source0:	http://search.cpan.org/CPAN/authors/id/S/SA/SALVA/Authen-DigestMD5-%{version}.tar.gz
 Patch0:		Authen-DigestMD5-0.04-UTF8.patch
@@ -17,6 +19,9 @@ Requires:	perl(:MODULE_COMPAT_%(eval "`perl -V:version`"; echo $version))
 
 %description
 This module supports DIGEST-MD5 SASL authentication as defined in RFC-2831.
+
+%description -l zh_CN.UTF-8
+这个模块支持 RFC-2831 定义的 DIGEST-MD5 SASL 认证。
 
 %prep
 %setup -q -n Authen-DigestMD5-%{version}
@@ -41,6 +46,7 @@ find %{buildroot} -depth -type d -exec rmdir {} ';' 2>/dev/null
 
 # Get rid of sample code that introduces additional dep on perl(OpenLDAP)
 rm -f %{buildroot}%{perl_vendorlib}/Authen/digest-md5-auth.pl
+magic_rpm_clean.sh
 
 %check
 
@@ -55,6 +61,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/Authen::DigestMD5.3pm*
 
 %changelog
+* Thu Apr 23 2015 Liu Di <liudidi@gmail.com> - 0.04-18
+- 为 Magic 3.0 重建
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.04-17
 - 为 Magic 3.0 重建
 

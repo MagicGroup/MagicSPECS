@@ -1,9 +1,11 @@
 Name:           perl-MooseX-Types-DateTimeX
 Version:        0.10
-Release:        14%{?dist}
+Release:        15%{?dist}
 Summary:        Extensions to MooseX::Types::DateTime::ButMaintained
+Summary(zh_CN.UTF-8): MooseX::Types::DateTime::ButMaintained 的扩展 
 License:        GPL+ or Artistic
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 URL:            http://search.cpan.org/dist/MooseX-Types-DateTimeX/
 Source0:        http://www.cpan.org/authors/id/E/EC/ECARROLL/MooseX-Types-DateTimeX-%{version}.tar.gz
 # https://rt.cpan.org/Public/Bug/Display.html?id=73467
@@ -48,6 +50,9 @@ This module builds on MooseX::Types::DateTime to add additional custom
 types and coercions. Since it builds on an existing type, all coercions and
 constraints are inherited.
 
+%description -l zh_CN.UTF-8
+MooseX::Types::DateTime::ButMaintained 的扩展。
+
 %prep
 %setup -q -n MooseX-Types-DateTimeX-%{version}
 %patch0 -p1
@@ -63,6 +68,7 @@ find $RPM_BUILD_ROOT -type f -name .packlist -exec rm -f {} \;
 find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 
 %{_fixperms} $RPM_BUILD_ROOT/*
+magic_rpm_clean.sh
 
 %check
 make test
@@ -73,6 +79,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Thu Apr 23 2015 Liu Di <liudidi@gmail.com> - 0.10-15
+- 为 Magic 3.0 重建
+
 * Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 0.10-14
 - 为 Magic 3.0 重建
 

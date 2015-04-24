@@ -1,9 +1,11 @@
 Name:           perl-Authen-SASL
-Version:        2.15
-Release:        10%{?dist}
+Version:	2.16
+Release:	1%{?dist}
 Summary:        SASL Authentication framework for Perl
+Summary(zh_CN.UTF-8): Perl 下的 SASL 认证框架
 License:        GPL+ or Artistic
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 URL:            http://search.cpan.org/dist/Authen-SASL/
 Source0:        http://www.cpan.org/authors/id/G/GB/GBARR/Authen-SASL-%{version}.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -18,6 +20,9 @@ Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $versi
 SASL is a generic mechanism for authentication used by several network
 protocols. Authen::SASL provides an implementation framework that all
 protocols should be able to share.
+
+%description -l zh_CN.UTF-8
+Perl 下的 SASL 认证框架。
 
 %prep
 %setup -q -n Authen-SASL-%{version}
@@ -37,6 +42,7 @@ find $RPM_BUILD_ROOT -type f -name .packlist -exec rm -f {} \;
 find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 
 %{_fixperms} $RPM_BUILD_ROOT/*
+magic_rpm_clean.sh
 
 %check
 
@@ -51,6 +57,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Fri Apr 24 2015 Liu Di <liudidi@gmail.com> - 2.16-1
+- 更新到 2.16
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 2.15-10
 - 为 Magic 3.0 重建
 

@@ -1,7 +1,8 @@
 Name:		perl-Archive-Any-Lite
-Version:	0.09
-Release:	4%{?dist}
+Version:	0.10
+Release:	1%{?dist}
 Summary:	Simple CPAN package extractor 
+Summary(zh_CN.UTF-8): 简单的 CPAN 包解压器
 License:	GPL+ or Artistic
 URL:		https://metacpan.org/release/Archive-Any-Lite
 Source0:	http://cpan.metacpan.org/authors/id/I/IS/ISHIGAKI/Archive-Any-Lite-%{version}.tar.gz
@@ -40,6 +41,9 @@ less memory to extract a tarball. On the other hand, this isn't pluggable
 (it only supports file formats used in the CPAN toolchains), and it doesn't
 check MIME types.
 
+%description -l zh_CN.UTF-8
+简单的 CPAN 包解压器。
+
 %prep
 %setup -q -n Archive-Any-Lite-%{version}
 
@@ -54,6 +58,7 @@ make %{?_smp_mflags}
 make pure_install DESTDIR=%{buildroot}
 find %{buildroot} -type f -name .packlist -exec rm -f {} \;
 %{_fixperms} %{buildroot}
+magic_rpm_clean.sh
 
 %check
 make test TEST_POD=1
@@ -64,6 +69,12 @@ make test TEST_POD=1
 %{_mandir}/man3/Archive::Any::Lite.3pm*
 
 %changelog
+* Thu Apr 23 2015 Liu Di <liudidi@gmail.com> - 0.10-1
+- 更新到 0.10
+
+* Thu Apr 23 2015 Liu Di <liudidi@gmail.com> - 0.09-5
+- 为 Magic 3.0 重建
+
 * Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 0.09-4
 - 为 Magic 3.0 重建
 

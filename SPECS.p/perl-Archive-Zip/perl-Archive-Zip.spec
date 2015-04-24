@@ -1,6 +1,6 @@
 Name:           perl-Archive-Zip
-Version:        1.31_04
-Release:        4%{?dist}
+Version:	1.46
+Release:	1%{?dist}
 Summary:        Perl library for accessing Zip archives
 Summary(zh_CN.UTF-8): 访问 Zip 归档的 Perl 库
 
@@ -8,7 +8,7 @@ Group:          Development/Libraries
 Group(zh_CN.UTF-8):	开发/库
 License:        GPL+ or Artistic
 URL:            http://search.cpan.org/dist/Archive-Zip/
-Source0:        http://search.cpan.org/CPAN/authors/id/A/AD/ADAMK/Archive-Zip-%{version}.tar.gz
+Source0:        http://search.cpan.org/CPAN/authors/id/P/PH/PHRED/Archive-Zip-%{version}.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 
@@ -52,7 +52,7 @@ make pure_install PERL_INSTALL_ROOT=$RPM_BUILD_ROOT
 find $RPM_BUILD_ROOT -type f -name .packlist -exec rm -f {} ';'
 find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null ';'
 %{_fixperms} $RPM_BUILD_ROOT/*
-
+magic_rpm_clean.sh
 
 %check
 
@@ -64,13 +64,15 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(-,root,root,-)
-%doc Changes LICENSE README examples/
 %{_bindir}/crc32
 %{perl_vendorlib}/Archive/
 %{_mandir}/man3/Archive*.3*
 
 
 %changelog
+* Thu Apr 23 2015 Liu Di <liudidi@gmail.com> - 1.46-1
+- 更新到 1.46
+
 * Thu Jun 12 2014 Liu Di <liudidi@gmail.com> - 1.31_04-4
 - 为 Magic 3.0 重建
 

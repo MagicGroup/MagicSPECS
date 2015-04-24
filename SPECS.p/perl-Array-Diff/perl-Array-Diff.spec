@@ -3,13 +3,15 @@
 
 Name:           perl-Array-Diff
 Version:        0.07
-Release:        12%{?dist}
+Release:        13%{?dist}
 # Because 0.07 compares newer than 0.05002 in Perl world
 # but not in RPM world :-(
 Epoch:          1
 Summary:        Find the differences between two arrays
+Summary(zh_CN.UTF-8): 在两个数组之间寻找不同
 License:        GPL+ or Artistic
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 URL:            http://search.cpan.org/dist/Array-Diff/
 Source0:        http://www.cpan.org/authors/id/T/TY/TYPESTER/Array-Diff-%{version}.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(id -nu)
@@ -30,6 +32,9 @@ two separate arrays. It's a simple wrapper around Algorithm::Diff.
 
 If you need more complex array tools, check Array::Compare.
 
+%description -l zh_CN.UTF-8
+在两个数组之间寻找不同。
+
 %prep
 %setup -q -n Array-Diff-%{version}
 
@@ -42,6 +47,7 @@ rm -rf $RPM_BUILD_ROOT
 make pure_install DESTDIR=$RPM_BUILD_ROOT
 find $RPM_BUILD_ROOT -type f -name .packlist -exec rm -f {} \;
 %{_fixperms} $RPM_BUILD_ROOT
+magic_rpm_clean.sh
 
 %check
 
@@ -56,6 +62,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/Array::Diff.3pm*
 
 %changelog
+* Thu Apr 23 2015 Liu Di <liudidi@gmail.com> - 1:0.07-13
+- 为 Magic 3.0 重建
+
 * Thu Jun 12 2014 Liu Di <liudidi@gmail.com> - 1:0.07-12
 - 为 Magic 3.0 重建
 

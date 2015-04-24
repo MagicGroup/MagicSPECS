@@ -8,6 +8,7 @@ URL:            http://www.linphone.org/
 Source0:        http://download.savannah.gnu.org/releases/linphone/belle-sip/%{name}-%{version}.tar.gz
 Source1:	antlr-3.4-complete.jar
 Patch1:		belle-sip-1.4.0-disable-systembin.patch
+Patch2:		belle-sip-1.4.0-increasemem.patch
 BuildRequires:  antlr3-C-devel
 BuildRequires:  antlr3-tool
 BuildRequires:  polarssl-devel
@@ -34,6 +35,7 @@ Libraries and headers required to develop software with belle-sip.
 %prep
 %setup -q
 %patch1 -p1
+%patch2 -p1
 
 mkdir -p share/java
 cp %{SOURCE1} share/java/antlr3.jar

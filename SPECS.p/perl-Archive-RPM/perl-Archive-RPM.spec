@@ -1,13 +1,18 @@
 Name:       perl-Archive-RPM
 Version:    0.07
-Release:    13%{?dist}
+Release:    16%{?dist}
 Summary:    Work with a RPM
+Summary(zh_CN.UTF-8): 解压 RPM
 # lib/Archive/RPM.pm -> LGPLv2+
 # lib/Archive/RPM/ChangeLogEntry.pm -> LGPLv2+
 License:    LGPLv2+
 Group:      Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Url:        http://search.cpan.org/dist/Archive-RPM
 Source:     http://search.cpan.org/CPAN/authors/id/R/RS/RSRCHBOY/Archive-RPM-%{version}.tar.gz
+# Restore compatibility with Moose > 2.1005, bug #1168859, CPAN RT#100701
+Patch0:     Archive-RPM-0.07-Inject-RPM2-Headers-into-INC-for-Moose-2.1005.patch
+
 Requires:   perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
 BuildArch:  noarch
 # non-perl
@@ -21,7 +26,6 @@ BuildRequires: perl(Moose)
 BuildRequires: perl(MooseX::AttributeHelpers)
 BuildRequires: perl(MooseX::MarkAsMethods)
 BuildRequires: perl(MooseX::Traits)
-BuildRequires: perl(MooseX::Types::DateTime)
 BuildRequires: perl(MooseX::Types::DateTimeX)
 BuildRequires: perl(MooseX::Types::Path::Class)
 BuildRequires: perl(Path::Class)
@@ -39,8 +43,19 @@ and actual data. We access this information by leveraging RPM2 where we
 can, and by "exploding" the rpm with rpm2cpio and cpio when we need
 information we can't get through RPM2.
 
+%description -l zh_CN.UTF-8
+解压 RPM。
+
 %prep
 %setup -q -n Archive-RPM-%{version}
+%patch0 -p1
+# Remove bundled modules
+rm -r ./inc
+sed -i -e '/^inc\//d' MANIFEST
+# Remove useless dependency, CPAN RT#100703
+sed -i -e "/^requires 'MooseX::Types::DateTime';\$/d" Makefile.PL
+# Disable authors tests
+sed -i -e '/^extra_tests;$/d' Makefile.PL
 
 %build
 perl Makefile.PL INSTALLDIRS=vendor
@@ -51,6 +66,7 @@ make pure_install DESTDIR=%{buildroot}
 find %{buildroot} -type f -name .packlist -exec rm -f {} ';'
 find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null ';'
 %{_fixperms} %{buildroot}/*
+magic_rpm_clean.sh
 
 %check
 make test
@@ -61,6 +77,15 @@ make test
 %{_mandir}/man3/*.3*
 
 %changelog
+* Thu Apr 23 2015 Liu Di <liudidi@gmail.com> - 0.07-16
+- 为 Magic 3.0 重建
+
+* Thu Apr 23 2015 Liu Di <liudidi@gmail.com> - 0.07-15
+- 为 Magic 3.0 重建
+
+* Thu Apr 23 2015 Liu Di <liudidi@gmail.com> - 0.07-14
+- 为 Magic 3.0 重建
+
 * Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 0.07-13
 - 为 Magic 3.0 重建
 

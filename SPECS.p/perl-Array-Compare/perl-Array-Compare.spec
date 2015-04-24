@@ -1,9 +1,11 @@
 Name:           perl-Array-Compare
-Version:        2.01
-Release:        18%{?dist}
+Version:	2.11
+Release:	1%{?dist}
 Summary:        Perl extension for comparing arrays
+Summary(zh_CN.UTF-8): 比较数组的 Perl 扩展
 
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 License:        GPL+ or Artistic
 URL:            http://search.cpan.org/dist/Array-Compare/
 Source0:        http://www.cpan.org/authors/id/D/DA/DAVECROSS/Array-Compare-%{version}.tar.gz
@@ -18,6 +20,8 @@ Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $versi
 If you have two arrays and you want to know if they are the same or
 different, then Array::Compare will be useful to you.
 
+%description -l zh_CN.UTF-8
+比较数组的 Perl 扩展。
 
 %prep
 %setup -q -n Array-Compare-%{version}
@@ -33,7 +37,7 @@ chmod -c a-x lib/Array/*.pm
 rm -rf $RPM_BUILD_ROOT
 ./Build install destdir=$RPM_BUILD_ROOT create_packlist=0
 chmod -R u+w $RPM_BUILD_ROOT/*
-
+magic_rpm_clean.sh
 
 %check
 ./Build test
@@ -51,6 +55,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Thu Apr 23 2015 Liu Di <liudidi@gmail.com> - 2.11-1
+- 更新到 2.11
+
 * Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 2.01-18
 - 为 Magic 3.0 重建
 
