@@ -1,8 +1,11 @@
 Name:           perl-Business-ISBN-Data
-Version:        20120719.001
-Release:        4%{?dist}
+Version:	20140910.002
+Release:	1%{?dist}
+Summary(zh_CN.UTF-8): Business::ISBN 的数据包
 Summary:        The data pack for Business::ISBN
+
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 License:        GPL+ or Artistic
 URL:            http://search.cpan.org/dist/Business-ISBN-Data/
 Source0:        http://search.cpan.org/CPAN/authors/id/B/BD/BDFOY/Business-ISBN-Data-%{version}.tar.gz
@@ -28,6 +31,9 @@ This is a data pack for Business::ISBN.  You can update
 the ISBN data without changing the version of Business::ISBN.
 Most of the interesting stuff is in Business::ISBN.
 
+%description -l zh_CN.UTF-8
+Business::ISBN 的数据包。
+
 %prep
 %setup -q -n Business-ISBN-Data-%{version}
 
@@ -43,6 +49,7 @@ make %{?_smp_mflags}
 make pure_install DESTDIR=%{buildroot}
 find %{buildroot} -type f -name .packlist -exec rm -f {} ';'
 %{_fixperms} %{buildroot}
+magic_rpm_clean.sh
 
 %check
 
@@ -53,6 +60,9 @@ find %{buildroot} -type f -name .packlist -exec rm -f {} ';'
 %{_mandir}/man3/Business::ISBN::Data.3*
 
 %changelog
+* Thu Apr 30 2015 Liu Di <liudidi@gmail.com> - 20140910.002-1
+- 更新到 20140910.002
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 20120719.001-4
 - 为 Magic 3.0 重建
 

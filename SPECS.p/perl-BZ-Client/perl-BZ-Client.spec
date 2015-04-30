@@ -1,11 +1,13 @@
 Name:           perl-BZ-Client
-Version:        1.04
-Release:        13%{?dist}
+Version:	1.061
+Release:	1%{?dist}
 Summary:        A client for the Bugzilla web services API
+Summary(zh_CN.UTF-8): Bugzilla 网页服务 API 的客户端
 License:        GPL+ or Artistic
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 URL:            http://search.cpan.org/dist/BZ-Client/
-Source0:        http://www.cpan.org/authors/id/J/JW/JWIED/BZ-Client-%{version}.tar.gz
+Source0:        http://www.cpan.org/authors/id/D/DJ/DJZORT/BZ-Client-%{version}.tar.gz
 BuildArch:      noarch
 BuildRequires:  perl(DateTime)
 BuildRequires:  perl(DateTime::Format::ISO8601)
@@ -19,6 +21,9 @@ Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $versi
 
 %description
 This module provides an interface to the Bugzilla web services API.
+
+%description -l zh_CN.UTF-8
+Bugzilla 网页服务 API 的客户端。
 
 %prep
 %setup -q -n BZ-Client-%{version}
@@ -36,6 +41,7 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 find $RPM_BUILD_ROOT -type f -name '*.pm' -exec chmod -x {} 2>/dev/null \;
 
 %{_fixperms} $RPM_BUILD_ROOT/*
+magic_rpm_clean.sh
 
 %check
 
@@ -46,6 +52,9 @@ find $RPM_BUILD_ROOT -type f -name '*.pm' -exec chmod -x {} 2>/dev/null \;
 %{_mandir}/man3/*
 
 %changelog
+* Thu Apr 30 2015 Liu Di <liudidi@gmail.com> - 1.061-1
+- 更新到 1.061
+
 * Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 1.04-13
 - 为 Magic 3.0 重建
 

@@ -1,9 +1,11 @@
 Name:           perl-Bencode
-Version:        1.4
-Release:        8%{?dist}
+Version:	1.402
+Release:	1%{?dist}
 Summary:        BitTorrent serialization format
+Summary(zh_CN.UTF-8): BitTorrent 的序列化格式
 License:        GPL+ or Artistic
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 URL:            http://search.cpan.org/dist/Bencode/
 Source0:        http://www.cpan.org/authors/id/A/AR/ARISTOTLE/Bencode-%{version}.tar.gz
 BuildArch:      noarch
@@ -17,6 +19,9 @@ Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $versi
 %description
 This module implements the BitTorrent bencode serialization format as
 described in http://www.bittorrent.org/protocol.html.
+
+%description -l zh_CN.UTF-8
+BitTorrent 的序列化格式。
 
 %prep
 %setup -q -n Bencode-%{version}
@@ -32,6 +37,7 @@ find %{buildroot} -type f -name .packlist -exec rm -f {} \;
 find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null \;
 
 %{_fixperms} %{buildroot}/*
+magic_rpm_clean.sh
 
 %check
 
@@ -43,6 +49,9 @@ find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_mandir}/man3/*
 
 %changelog
+* Fri Apr 24 2015 Liu Di <liudidi@gmail.com> - 1.402-1
+- 更新到 1.402
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.4-8
 - 为 Magic 3.0 重建
 

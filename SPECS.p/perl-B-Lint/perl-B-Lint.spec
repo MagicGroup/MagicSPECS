@@ -1,9 +1,11 @@
 Name:           perl-B-Lint
-Version:        1.17
-Release:        293%{?dist}
+Version:	1.20
+Release:	1%{?dist}
 Summary:        Perl lint
+Summary(zh_CN.UTF-8): Perl 的 B::Lint 模块
 License:        GPL+ or Artistic
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 URL:            http://search.cpan.org/dist/B-Lint/
 Source0:        http://www.cpan.org/authors/id/R/RJ/RJBS/B-Lint-%{version}.tar.gz
 BuildArch:      noarch
@@ -37,6 +39,9 @@ The B::Lint module is equivalent to an extended version of the -w option of
 perl. It is named after the program lint which carries out a similar process
 for C programs.
 
+%description -l zh_CN.UTF-8
+Perl 的 B::Lint 模块。
+
 %prep
 %setup -q -n B-Lint-%{version}
 # Install into architercture-agnostic path, CPAN RT #83049
@@ -50,6 +55,7 @@ make %{?_smp_mflags}
 make pure_install DESTDIR=$RPM_BUILD_ROOT
 find $RPM_BUILD_ROOT -type f -name .packlist -exec rm -f {} \;
 %{_fixperms} $RPM_BUILD_ROOT/*
+magic_rpm_clean.sh
 
 %check
 make test
@@ -60,6 +66,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Mon Apr 27 2015 Liu Di <liudidi@gmail.com> - 1.20-1
+- 更新到 1.20
+
 * Tue Jun 17 2014 Liu Di <liudidi@gmail.com> - 1.17-293
 - 为 Magic 3.0 重建
 

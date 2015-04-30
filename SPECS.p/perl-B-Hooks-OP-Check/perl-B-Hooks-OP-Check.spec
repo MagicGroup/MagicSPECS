@@ -1,9 +1,11 @@
 Name:           perl-B-Hooks-OP-Check
 Summary:        Wrap OP check callbacks
+Summary(zh_CN.UTF-8): OP 检查回退的接口
 Version:        0.19
-Release:        13%{?dist}
+Release:        14%{?dist}
 License:        GPL+ or Artistic
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Source0:        http://search.cpan.org/CPAN/authors/id/Z/ZE/ZEFRAM/B-Hooks-OP-Check-%{version}.tar.gz
 URL:            http://search.cpan.org/dist/B-Hooks-OP-Check
 Requires:   perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
@@ -26,6 +28,9 @@ Provides:       %{name}-tests = %{version}-%{release}
 This module provides a C API for XS modules to hook into the callbacks
 of 'PL_check'.
 
+%description -l zh_CN.UTF-8
+OP 检查回退的接口。
+
 %prep
 %setup -q -n B-Hooks-OP-Check-%{version}
 
@@ -40,6 +45,7 @@ find %{buildroot} -type f -name '*.bs' -a -size 0 -exec rm -f {} ';'
 find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null ';'
 
 %{_fixperms} %{buildroot}/*
+magic_rpm_clean.sh
 
 %check
 
@@ -51,6 +57,9 @@ find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null ';'
 %{_mandir}/man3/*.3*
 
 %changelog
+* Fri Apr 24 2015 Liu Di <liudidi@gmail.com> - 0.19-14
+- 为 Magic 3.0 重建
+
 * Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 0.19-13
 - 为 Magic 3.0 重建
 

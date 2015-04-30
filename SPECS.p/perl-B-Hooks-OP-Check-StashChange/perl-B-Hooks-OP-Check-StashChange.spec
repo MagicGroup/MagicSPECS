@@ -1,9 +1,11 @@
 Name:           perl-B-Hooks-OP-Check-StashChange
 Version:        0.06
-Release:        17%{?dist}
+Release:        18%{?dist}
 Summary:        Invoke callbacks when the stash code is being compiled in changes
+Summary(zh_CN.UTF-8): 当隐藏代码在编译时变化的调用回调
 License:        GPL+ or Artistic
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 URL:            http://search.cpan.org/dist/B-Hooks-OP-Check-StashChange/
 Source0:        http://www.cpan.org/authors/id/F/FL/FLORA/B-Hooks-OP-Check-StashChange-%{version}.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -26,6 +28,9 @@ BuildRequires:  perl(Test::More)
 Register callbacks when an opcode is being compiled in a different namespace
 than the previous one.
 
+%description -l zh_CN.UTF-8
+当隐藏代码在编译时变化的调用回调
+
 %prep
 %setup -q -n B-Hooks-OP-Check-StashChange-%{version}
 
@@ -43,6 +48,7 @@ find %{buildroot} -type f -name '*.bs' -size 0 -exec rm -f {} \;
 find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null \;
 
 %{_fixperms} %{buildroot}/*
+magic_rpm_clean.sh
 
 %check
 
@@ -58,6 +64,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/*.3*
 
 %changelog
+* Fri Apr 24 2015 Liu Di <liudidi@gmail.com> - 0.06-18
+- 为 Magic 3.0 重建
+
 * Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 0.06-17
 - 为 Magic 3.0 重建
 

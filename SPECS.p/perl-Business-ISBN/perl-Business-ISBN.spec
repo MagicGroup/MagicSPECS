@@ -1,13 +1,15 @@
 Name:           perl-Business-ISBN
-Version:        2.05.03
+Version:	2.09
 %define module_version 2.05_03
-Release:        6%{?dist}
+Release:	1%{?dist}
 Summary:        Perl module to work with International Standard Book Numbers
+Summary(zh_CN.UTF-8): 国际标准书刊号的 Perl 模块
 
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 License:        GPL+ or Artistic
 URL:            http://search.cpan.org/dist/Business-ISBN/
-Source0:        http://search.cpan.org/CPAN/authors/id/B/BD/BDFOY/Business-ISBN-%{module_version}.tar.gz
+Source0:        http://search.cpan.org/CPAN/authors/id/B/BD/BDFOY/Business-ISBN-%{version}.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildArch:      noarch
@@ -31,9 +33,11 @@ Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $versi
 This modules handles International Standard Book Numbers, including
 ISBN-10 and ISBN-13.
 
+%description -l zh_CN.UTF-8
+国际标准书刊号的 Perl 模块。
 
 %prep
-%setup -q -n Business-ISBN-%{module_version}
+%setup -q -n Business-ISBN-%{version}
 
 %build
 %{__perl} Makefile.PL INSTALLDIRS=vendor
@@ -46,7 +50,7 @@ make pure_install PERL_INSTALL_ROOT=$RPM_BUILD_ROOT
 find $RPM_BUILD_ROOT -type f -name .packlist -exec rm -f {} ';'
 find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null ';'
 chmod -R u+w $RPM_BUILD_ROOT/*
-
+magic_rpm_clean.sh
 
 %check
 
@@ -64,6 +68,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Thu Apr 30 2015 Liu Di <liudidi@gmail.com> - 2.09-1
+- 更新到 2.09
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 2.05.03-6
 - 为 Magic 3.0 重建
 

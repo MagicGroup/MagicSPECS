@@ -3,7 +3,7 @@
 Summary: Tools needed to create Texinfo format documentation files
 Name: texinfo
 Version: 5.2
-Release: 1%{?dist}
+Release: 2%{?dist}
 License: GPLv3+
 Group: Applications/Publishing
 Url: http://www.gnu.org/software/texinfo/
@@ -151,6 +151,9 @@ fi
 %{_mandir}/man1/pdftexi2dvi.1*
 
 %changelog
+* Wed Apr 29 2015 Liu Di <liudidi@gmail.com> - 5.2-2
+- 为 Magic 3.0 重建
+
 * Tue Oct 01 2013 Vitezslav Crhonek <vcrhonek@redhat.com> - 5.2-1
 - Update to texinfo-5.2
 

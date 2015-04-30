@@ -1,12 +1,13 @@
 Name:		perl-B-Hooks-EndOfScope
-Version:	0.11
-Release:	6%{?dist}
+Version:	0.14
+Release:	1%{?dist}
 License:	GPL+ or Artistic
 Group:		Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Summary:	Execute code after scope compilation finishes
+Summary(zh_CN.UTF-8): 在编译范围完成后执行代码
 Url:		http://search.cpan.org/dist/B-Hooks-EndOfScope
-Source0:	http://search.cpan.org/CPAN/authors/id/F/FL/FLORA/B-Hooks-EndOfScope-%{version}.tar.gz
-Patch0:		B-Hooks-EndOfScope-0.10-shellbangs.patch
+Source0:	http://search.cpan.org/CPAN/authors/id/E/ET/ETHER/B-Hooks-EndOfScope-%{version}.tar.gz
 BuildArch:	noarch
 # Build
 BuildRequires:	perl(ExtUtils::MakeMaker) >= 6.30
@@ -28,11 +29,11 @@ Requires:	perl(:MODULE_COMPAT_%(eval "`perl -V:version`"; echo $version))
 This module allows you to execute code when Perl has finished compiling the
 surrounding scope.
 
+%description -l zh_CN.UTF-8
+在编译范围完成后执行代码。
+
 %prep
 %setup -q -n B-Hooks-EndOfScope-%{version}
-
-# Remove shellbangs from tests to placate rpmlint
-%patch0 -p1
 
 %build
 perl Makefile.PL INSTALLDIRS=vendor
@@ -42,6 +43,7 @@ make %{?_smp_mflags}
 make pure_install DESTDIR=%{buildroot}
 find %{buildroot} -type f -name .packlist -exec rm -f {} ';'
 %{_fixperms} %{buildroot}
+magic_rpm_clean.sh
 
 %check
  RELEASE_TESTING=1
@@ -49,9 +51,12 @@ find %{buildroot} -type f -name .packlist -exec rm -f {} ';'
 %files
 %doc Changes LICENSE README t/
 %{perl_vendorlib}/B/
-%{_mandir}/man3/B::Hooks::EndOfScope.3pm*
+%{_mandir}/man3/B::Hooks::EndOfScope*.3pm*
 
 %changelog
+* Fri Apr 24 2015 Liu Di <liudidi@gmail.com> - 0.14-1
+- 更新到 0.14
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.11-6
 - 为 Magic 3.0 重建
 

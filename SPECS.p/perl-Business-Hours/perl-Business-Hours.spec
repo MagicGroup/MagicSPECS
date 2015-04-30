@@ -1,9 +1,11 @@
 Summary: 	Calculate business hours in a time period
+Summary(zh_CN.UTF-8): 在一个时间周期内计算营业时间
 Name: 		perl-Business-Hours
-Version: 	0.10
-Release: 	8%{?dist}
+Version:	0.12
+Release:	1%{?dist}
 License: 	GPL+ or Artistic
 Group: 		Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 URL: 		http://search.cpan.org/dist/Business-Hours/
 
 Source0: http://search.cpan.org/CPAN/authors/id/R/RU/RUZ/Business-Hours-%{version}.tar.gz
@@ -23,6 +25,9 @@ A simple tool for calculating business hours in a time period. Over time,
 additional functionality will be added to make it easy to calculate the 
 number of business hours between arbitrary dates.
 
+%description -l zh_CN.UTF-8
+在一个时间周期内计算营业时间。
+
 %prep
 %setup -q -n Business-Hours-%{version}
 
@@ -36,6 +41,7 @@ make pure_install PERL_INSTALL_ROOT=$RPM_BUILD_ROOT
 find $RPM_BUILD_ROOT -type f -name .packlist -exec rm -f {} ';'
 find $RPM_BUILD_ROOT -type d -depth -exec rmdir {} 2>/dev/null ';'
 chmod -R u+w $RPM_BUILD_ROOT/*
+magic_rpm_clean.sh
 
 %check
 
@@ -47,6 +53,9 @@ chmod -R u+w $RPM_BUILD_ROOT/*
 %{_mandir}/man3/*
 
 %changelog
+* Thu Apr 30 2015 Liu Di <liudidi@gmail.com> - 0.12-1
+- 更新到 0.12
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.10-8
 - 为 Magic 3.0 重建
 

@@ -1,9 +1,11 @@
 Name:       perl-Best 
-Version:    0.14
-Release:    5%{?dist}
+Version:	0.15
+Release:	1%{?dist}
 License:    MIT 
 Group:      Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Summary:    Fallbackable module loader 
+Summary(zh_CN.UTF-8): 能回退的模块加载程序
 Source:     http://search.cpan.org/CPAN/authors/id/G/GA/GAAL/Best-%{version}.tar.gz 
 Url:        http://search.cpan.org/dist/Best
 Requires:   perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
@@ -26,6 +28,9 @@ the core Perl distribution and thus not necessarily installed.*Best*
 attempts to load modules from a list, stopping at the first successful
 load and failing only if no alternative was found.
 
+%description -l zh_CN.UTF-8
+能回退的模块加载程序。
+
 %prep
 %setup -q -n Best-%{version}
 
@@ -38,6 +43,7 @@ make pure_install PERL_INSTALL_ROOT=%{buildroot}
 find %{buildroot} -type f -name .packlist -exec rm -f {} ';'
 find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null ';'
 %{_fixperms} %{buildroot}/*
+magic_rpm_clean.sh
 
 %check
 
@@ -48,6 +54,9 @@ find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null ';'
 %{_mandir}/man3/*.3*
 
 %changelog
+* Fri Apr 24 2015 Liu Di <liudidi@gmail.com> - 0.15-1
+- 更新到 0.15
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.14-5
 - 为 Magic 3.0 重建
 

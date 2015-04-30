@@ -1,9 +1,11 @@
 Name:           perl-Boulder
 Version:        1.30
-Release:        19%{?dist}
+Release:        20%{?dist}
 Summary:        An API for hierarchical tag/value structures
+Summary(zh_CN.UTF-8): 分层 标记/值 结构的 API
 License:        GPL+ or Artistic
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 URL:            http://search.cpan.org/dist/Boulder/
 Source0:        http://www.cpan.org/modules/by-module/Boulder/Boulder-%{version}.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -17,6 +19,9 @@ Boulder provides a simple stream-oriented format for transmitting data
 objects between one or more processes.  It does not provide for the
 serialization of Perl objects the way FreezeThaw or Data::Dumper do, but it
 does provide the advantage of being language independent.
+
+%description -l zh_CN.UTF-8
+分层 标记/值 结构的 API.
 
 %prep
 %setup -q -n Boulder-%{version}
@@ -40,6 +45,7 @@ chmod -R u+rwX,go+rX,go-w $RPM_BUILD_ROOT/*
 
 perldoc -t perlgpl > COPYING
 perldoc -t perlartistic > Artistic
+magic_rpm_clean.sh
 
 %check
 
@@ -56,6 +62,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Wed Apr 29 2015 Liu Di <liudidi@gmail.com> - 1.30-20
+- 为 Magic 3.0 重建
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.30-19
 - 为 Magic 3.0 重建
 

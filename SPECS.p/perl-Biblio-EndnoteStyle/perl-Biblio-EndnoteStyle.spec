@@ -1,9 +1,11 @@
 Name:           perl-Biblio-EndnoteStyle
 Version:        0.05
-Release:        7%{?dist}
+Release:        8%{?dist}
 Summary:        Reference formatting using Endnote-like templates
+Summary(zh_CN.UTF-8): 采用类尾注模板的参考格式
 License:        GPL+ or Artistic
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 URL:            http://search.cpan.org/dist/Biblio-EndnoteStyle/
 Source0:        http://www.cpan.org/authors/id/M/MI/MIRK/Biblio-EndnoteStyle-%{version}.tar.gz
 BuildArch:      noarch
@@ -19,6 +21,9 @@ embarrassingly simple: a formatter object is made using the class's
 constructor, the new() method; format() may then be repeatedly called on
 this object, using the same or different templates.
 
+%description -l zh_CN.UTF-8
+采用类尾注模板的参考格式。
+
 %prep
 %setup -q -n Biblio-EndnoteStyle-%{version}
 
@@ -33,6 +38,7 @@ find $RPM_BUILD_ROOT -type f -name .packlist -exec rm -f {} \;
 find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 
 %{_fixperms} $RPM_BUILD_ROOT/*
+magic_rpm_clean.sh
 
 %check
 
@@ -44,6 +50,9 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_bindir}/*
 
 %changelog
+* Fri Apr 24 2015 Liu Di <liudidi@gmail.com> - 0.05-8
+- 为 Magic 3.0 重建
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.05-7
 - 为 Magic 3.0 重建
 
