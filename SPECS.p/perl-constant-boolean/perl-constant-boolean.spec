@@ -1,9 +1,11 @@
 Name:           perl-constant-boolean
 Version:        0.02
-Release:        16%{?dist}
+Release:        17%{?dist}
 Summary:        Define TRUE and FALSE constants
+Summary(zh_CN.UTF-8): 定义 TRUE 和 FALSE 常量
 License:        GPL+ or Artistic
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 URL:            http://search.cpan.org/dist/constant-boolean/
 Source0:        http://www.cpan.org/authors/id/D/DE/DEXTER/constant-boolean-%{version}.tar.gz
 BuildArch:      noarch
@@ -20,6 +22,9 @@ simple values like empty string or zero for false, or any non-empty and non-
 zero string value as true, but the TRUE and FALSE constants are more
 descriptive.
 
+%description -l zh_CN.UTF-8
+定义 TRUE 和 FALSE 常量。
+
 %prep
 %setup -q -n constant-boolean-%{version}
 
@@ -32,6 +37,7 @@ descriptive.
 find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 
 %{_fixperms} $RPM_BUILD_ROOT/*
+magic_rpm_clean.sh
 
 %check
 ./Build test
@@ -42,6 +48,9 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_mandir}/man3/*
 
 %changelog
+* Fri May 08 2015 Liu Di <liudidi@gmail.com> - 0.02-17
+- 为 Magic 3.0 重建
+
 * Sun Jun 15 2014 Liu Di <liudidi@gmail.com> - 0.02-16
 - 为 Magic 3.0 重建
 

@@ -3,6 +3,7 @@
 
 Name:    libkgeomap
 Summary: A wrapper around different world-map components, to browse and arrange photos over a map
+Summary(zh_CN.UTF-8): 不同的世界地图组件的包装器，可以在地图上浏览和安排图像
 Version: 15.04.0
 Release: 2%{?dist}
 
@@ -24,14 +25,19 @@ BuildRequires: marble-widget-devel
 %description
 %{summary}.
 
+%description -l zh_CN.UTF-8
+不同的世界地图组件的包装器，可以在地图上浏览和安排图像。
+
 %package devel
 Summary:  Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 License: GPLv2+ and LGPLv2+ and BSD
 Requires: %{name}%{?_isa} = %{version}-%{release}
 Requires: kdelibs4-devel 
 %description devel
 %{summary}.
-
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -48,7 +54,7 @@ make %{?_smp_mflags} -C %{_target_platform}
 
 %install
 make install/fast DESTDIR=%{buildroot} -C %{_target_platform}
-
+magic_rpm_clean.sh
 
 %check
 export PKG_CONFIG_PATH=%{buildroot}%{_libdir}/pkgconfig

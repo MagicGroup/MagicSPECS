@@ -22,7 +22,7 @@
 # 是否使用 gcc 的位置无关型可执行文件特性(Position Independent Executables)
 %define enable_fpie OFF
 
-%define rversion 4.14.3
+%define rversion 4.14.7
 
 # 定义 kdehome 环境变量的 cmake 编译参数
 %define KDE_DEFAULT_HOME .kde4
@@ -75,7 +75,7 @@
 Summary: KDE4 rpm macros 
 Name: kde4-rpm-config
 Version: %{rversion}
-Release: 2%{?dist}
+Release: 3%{?dist}
 
 Group: System Environment/Base
 License: Public Domain
@@ -281,6 +281,9 @@ rm -rf $RPM_BUILD_ROOT %{name}.list
 %{rpm_macros_dir}/macros.kde4
 
 %changelog
+* Mon May 04 2015 Liu Di <liudidi@gmail.com> - 4.14.7-3
+- 为 Magic 3.0 重建
+
 * Tue Dec 30 2014 Liu Di <liudidi@gmail.com> - 4.14.3-2
 - 更新到 4.14.3
 
