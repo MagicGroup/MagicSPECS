@@ -1,9 +1,11 @@
 Name:           perl-Cache-FastMmap
 Version:        1.40
-Release:        5%{?dist}
+Release:        6%{?dist}
 Summary:        Uses an mmap'ed file to act as a shared memory interprocess cache
+Summary(zh_CN.UTF-8): 使用 mmap 文件做为共享内存间的缓存
 License:        GPL+ or Artistic
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 URL:            http://search.cpan.org/dist/Cache-FastMmap/
 Source0:        http://www.cpan.org/authors/id/R/RO/ROBM/Cache-FastMmap-%{version}.tar.gz
 BuildRequires:  perl(ExtUtils::MakeMaker)
@@ -20,6 +22,9 @@ it's common to want to cache information, but have that cache shared
 between processes. Many solutions already exist, and may suit your
 situation better.
 
+%description -l zh_CN.UTF-8
+使用 mmap 文件做为共享内存间的缓存。
+
 %prep
 %setup -q -n Cache-FastMmap-%{version}
 
@@ -35,6 +40,7 @@ find $RPM_BUILD_ROOT -type f -name '*.bs' -size 0 -exec rm -f {} \;
 find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 
 %{_fixperms} $RPM_BUILD_ROOT/*
+magic_rpm_clean.sh
 
 %check
 
@@ -46,6 +52,9 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_mandir}/man3/*
 
 %changelog
+* Fri May 08 2015 Liu Di <liudidi@gmail.com> - 1.40-6
+- 为 Magic 3.0 重建
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.40-5
 - 为 Magic 3.0 重建
 

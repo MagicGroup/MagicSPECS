@@ -1,9 +1,11 @@
 Name: 		perl-Cache-Simple-TimedExpiry
 Version: 	0.27
-Release: 	16%{?dist}
+Release: 	17%{?dist}
 Summary: 	A lightweight cache with timed expiration
+Summary(zh_CN.UTF-8): 一个有超时设置的轻量级缓存
 License: 	GPL+ or Artistic
 Group: 		Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 URL: 		http://search.cpan.org/dist/Cache-Simple-TimedExpiry/
 Source0: 	http://www.cpan.org/authors/id/J/JE/JESSE/Cache-Simple-TimedExpiry-%{version}.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -15,6 +17,9 @@ Requires:  	perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
 
 %description
 A lightweight cache with timed expiration
+
+%description -l zh_CN.UTF-8
+一个有超时设置的轻量级缓存。
 
 %prep
 %setup -q -n Cache-Simple-TimedExpiry-%{version}
@@ -29,6 +34,7 @@ make pure_install PERL_INSTALL_ROOT=$RPM_BUILD_ROOT
 find $RPM_BUILD_ROOT -type f -name .packlist -exec rm -f {} ';'
 find $RPM_BUILD_ROOT -type d -depth -exec rmdir {} 2>/dev/null ';'
 chmod -R u+w $RPM_BUILD_ROOT/*
+magic_rpm_clean.sh
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -43,6 +49,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Fri May 08 2015 Liu Di <liudidi@gmail.com> - 0.27-17
+- 为 Magic 3.0 重建
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.27-16
 - 为 Magic 3.0 重建
 

@@ -1,9 +1,11 @@
 Name:           perl-Cache-Memcached
-Version:        1.29
-Release:        14%{?dist}
+Version:	1.30
+Release:	1%{?dist}
 Summary:        Perl client for memcached
+Summary(zh_CN.UTF-8): memcached 的 Perl 客户端
 
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 License:        GPL+ or Artistic
 URL:            http://search.cpan.org/dist/Cache-Memcached/
 Source0:        http://search.cpan.org/CPAN/authors/id/D/DO/DORMANDO/Cache-Memcached-%{version}.tar.gz
@@ -15,6 +17,9 @@ Requires:  perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
 
 %description
 Cache::Memcached - client library for memcached (memory cache daemon)
+
+%description -l zh_CN.UTF-8
+memcached 的 Perl 客户端。
 
 %prep
 %setup -q -n Cache-Memcached-%{version}
@@ -31,7 +36,7 @@ make pure_install PERL_INSTALL_ROOT=%{buildroot}
 find %{buildroot} -type f -name .packlist -exec rm -f {} ';'
 find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null ';'
 chmod -R u+w %{buildroot}/*
-
+magic_rpm_clean.sh
 
 #%check
 # This requires a running memcached on the local host, which isn't very
@@ -54,6 +59,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri May 08 2015 Liu Di <liudidi@gmail.com> - 1.30-1
+- 更新到 1.30
+
 * Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 1.29-14
 - 为 Magic 3.0 重建
 

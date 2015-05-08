@@ -1,11 +1,13 @@
 Name:           perl-Cache-Cache
-Version:        1.06
-Release:        14%{?dist}
+Version:	1.08
+Release:	1%{?dist}
 Summary:        Generic cache interface and implementations
+Summary(zh_CN.UTF-8): 通用的缓存接口和实现
 License:        GPL+ or Artistic
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 URL:            http://search.cpan.org/dist/Cache-Cache/
-Source0:        http://www.cpan.org/authors/id/J/JS/JSWARTZ/Cache-Cache-%{version}.tar.gz
+Source0:        http://www.cpan.org/authors/id/R/RJ/RJBS/Cache-Cache-%{version}.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 BuildRequires:  perl(Digest::SHA1) >= 2.02
@@ -23,6 +25,9 @@ its straightforward interface in sharing data between runs of an application
 or invocations of a CGI-style script or simply as an easy to use abstraction
 of the filesystem or shared memory.
 
+%description -l zh_CN.UTF-8
+通用的缓存接口和实现。
+
 %prep
 %setup -q -n Cache-Cache-%{version}
 
@@ -39,6 +44,7 @@ find $RPM_BUILD_ROOT -type f -name .packlist -exec rm -f {} \;
 find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 
 %{_fixperms} $RPM_BUILD_ROOT/*
+magic_rpm_clean.sh
 
 %check
 
@@ -53,6 +59,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Fri May 08 2015 Liu Di <liudidi@gmail.com> - 1.08-1
+- 更新到 1.08
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.06-14
 - 为 Magic 3.0 重建
 

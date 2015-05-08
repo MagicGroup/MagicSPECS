@@ -1,9 +1,11 @@
 Name:           perl-Cache-Mmap
 Version:        0.11
-Release:        14%{?dist}
+Release:        15%{?dist}
 Summary:        Shared data cache using memory mapped files
+Summary(zh_CN.UTF-8): 使用内存映射文件共享数据缓存
 License:        GPL+ or Artistic
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 URL:            http://search.cpan.org/dist/Cache-Mmap/
 Source0:        http://www.cpan.org/authors/id/P/PM/PMH/Cache-Mmap-%{version}.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -16,6 +18,9 @@ This module implements a shared data cache, using memory mapped files. If
 routines are provided which interact with the underlying data, access to
 the cache is completely transparent, and the module handles all the details
 of refreshing cache contents, and updating underlying data, if necessary.
+
+%description -l zh_CN.UTF-8
+使用内存映射文件共享数据缓存。
 
 %prep
 %setup -q -n Cache-Mmap-%{version}
@@ -35,6 +40,7 @@ find $RPM_BUILD_ROOT -type f -name '*.bs' -size 0 -exec rm -f {} \;
 find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 
 %{_fixperms} $RPM_BUILD_ROOT/*
+magic_rpm_clean.sh
 
 %check
 
@@ -50,6 +56,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Fri May 08 2015 Liu Di <liudidi@gmail.com> - 0.11-15
+- 为 Magic 3.0 重建
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.11-14
 - 为 Magic 3.0 重建
 
