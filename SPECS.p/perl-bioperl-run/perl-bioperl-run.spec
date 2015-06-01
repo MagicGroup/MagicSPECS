@@ -1,12 +1,14 @@
 Name:           perl-bioperl-run
-Version:        1.6.1
-Release:        26%{?dist}
+Version:	1.006900
+Release:	1%{?dist}
 Summary:        Modules to provide a Perl interface to various bioinformatics applications
+Summary(zh_CN.UTF-8): 各种生物信息学应用的 Perl 接口模块
 
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 License:        GPL+ or Artistic
 URL:            http://bioperl.org
-Source0:        http://bioperl.org/DIST/BioPerl-run-%{version}.tar.bz2
+Source0:        http://search.cpan.org/CPAN/authors/id/C/CJ/CJFIELDS/BioPerl-Run-%{version}.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildArch:      noarch
@@ -23,9 +25,12 @@ Bioperl-run contain modules that provide a Perl interface to various
 bioinformatics applications. This allows various applications to be
 used with common Bioperl objects.
 
+%description -l zh_CN.UTF-8
+各种生物信息学应用的 Perl 接口模块。
+
 %prep
 # note that archive and tarball version numbers don't quite match in this release
-%setup -q -n BioPerl-run-1.6.0
+%setup -q -n BioPerl-Run-%{version}
 
 # remove all execute bits from the doc stuff
 chmod -x INSTALL INSTALL.PROGRAMS
@@ -47,7 +52,8 @@ find $RPM_BUILD_ROOT -type f -a \( -name .packlist \
 # remove errant execute bit from the .pm's
 find $RPM_BUILD_ROOT -type f -name '*.pm' -exec chmod -x {} 2>/dev/null ';'
 # correct all binaries in /usr/bin to be 0755
-find $RPM_BUILD_ROOT/%{_bindir} -type f -name '*.pl' -exec chmod 0755 {} 2>/dev/null ';'
+# find $RPM_BUILD_ROOT/%{_bindir} -type f -name '*.pl' -exec chmod 0755 {} 2>/dev/null ';'
+magic_rpm_clean.sh
 
 %check
 %{?_with_check:./Build test || :}
@@ -61,10 +67,13 @@ rm -rf $RPM_BUILD_ROOT
 %doc AUTHORS Changes INSTALL INSTALL.PROGRAMS README
 %{perl_vendorlib}/*
 %{_mandir}/man3/*.3*    
-%{_bindir}/*
-%{_mandir}/man1/*.1*
+#%{_bindir}/*
+#%{_mandir}/man1/*.1*
 
 %changelog
+* Sat Apr 18 2015 Liu Di <liudidi@gmail.com> - 1.006900-1
+- 更新到 1.006900
+
 * Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 1.6.1-26
 - 为 Magic 3.0 重建
 

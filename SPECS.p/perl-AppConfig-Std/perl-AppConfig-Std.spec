@@ -1,11 +1,13 @@
 
 Name:       perl-AppConfig-Std 
-Version:    1.07 
-Release:        14%{?dist}
+Version:	1.09
+Release:	1%{?dist}
 # see lib/AppConfig/Std.pm
 License:    GPL+ or Artistic 
 Group:      Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Summary:    Provides standard configuration options 
+Summary(zh_CN.UTF-8): 提供了标准的配置选项
 Source:     http://search.cpan.org/CPAN/authors/id/N/NE/NEILB/AppConfig-Std-%{version}.tar.gz 
 Url:        http://search.cpan.org/dist/AppConfig-Std
 BuildRoot:  %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n) 
@@ -23,6 +25,8 @@ configuration variables and command-line switches. It is implemented as a
 subclass of AppConfig; AppConfig provides a general mechanism for handling
 global configuration variables.
 
+%description -l zh_CN.UTF-8
+提供了标准的配置选项。
 
 %prep
 %setup -q -n AppConfig-Std-%{version}
@@ -41,6 +45,7 @@ find %{buildroot} -type f -name .packlist -exec rm -f {} ';'
 find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null ';'
 
 %{_fixperms} %{buildroot}/*
+magic_rpm_clean.sh
 
 %check
 
@@ -50,11 +55,13 @@ rm -rf %{buildroot}
 
 %files
 %defattr(-,root,root,-)
-%doc ChangeLog README t/
 %{perl_vendorlib}/*
 %{_mandir}/man3/*.3*
 
 %changelog
+* Thu Apr 23 2015 Liu Di <liudidi@gmail.com> - 1.09-1
+- 更新到 1.09
+
 * Thu Jun 12 2014 Liu Di <liudidi@gmail.com> - 1.07-14
 - 为 Magic 3.0 重建
 

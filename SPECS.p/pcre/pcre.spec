@@ -2,10 +2,12 @@
 #%%global rcversion RC1
 Name: pcre
 Version: 8.36
-Release: %{?rcversion:0.}3%{?rcversion:.%rcversion}%{?dist}.2
+Release: %{?rcversion:0.}3%{?rcversion:.%rcversion}%{?dist}.3
 %global myversion %{version}%{?rcversion:-%rcversion}
 Summary: Perl-compatible regular expression library
+Summary(zh_CN.UTF-8): 兼容 Perl 的正则表达式库
 Group: System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 License: BSD
 URL: http://www.pcre.org/
 Source: ftp://ftp.csx.cam.ac.uk/pub/software/programming/%{name}/%{?rcversion:Testing/}%{name}-%{myversion}.tar.bz2
@@ -31,29 +33,47 @@ just provides a POSIX calling interface to PCRE: the regular expressions
 themselves still follow Perl syntax and semantics. The header file
 for the POSIX-style functions is called pcreposix.h.
 
+%description -l zh_CN.UTF-8
+兼容 Perl 的正则表达式库。
+
 %package devel
 Summary: Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: %{name}%{?_isa} = %{version}-%{release}
 
 %description devel
 Development files (Headers, libraries for dynamic linking, etc) for %{name}.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
 %package static
 Summary: Static library for %{name}
+Summary(zh_CN.UTF-8): %{name} 的静态库
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: %{name}-devel%{_isa} = %{version}-%{release}
 
 %description static
 Library for static linking for %{name}.
 
+%description static -l zh_CN.UTF-8
+%{name} 的静态库。
+
 %package tools
 Summary: Auxiliary utilities for %{name}
+Summary(zh_CN.UTF-8): %{name} 的工具
 Group: Development/Tools
+Group(zh_CN.UTF-8): 开发/工具
 Requires: %{name}%{_isa} = %{version}-%{release}
 
 %description tools
 Utilities demonstrating PCRE capabilities like pcregrep or pcretest.
+
+%description tools -l zh_CN.UTF-8
+%{name} 的工具。
 
 %prep
 %setup -q -n %{name}-%{myversion}
@@ -92,6 +112,7 @@ make install DESTDIR=$RPM_BUILD_ROOT
 rm -f $RPM_BUILD_ROOT%{_libdir}/*.la
 # These are handled by %%doc in %%files
 rm -rf $RPM_BUILD_ROOT%{_docdir}/pcre
+magic_rpm_clean.sh
 
 %check
 %ifarch s390 s390x ppc
@@ -132,6 +153,9 @@ make %{?_smp_mflags} check VERBOSE=yes
 %{_mandir}/man1/pcretest.*
 
 %changelog
+* Thu Apr 16 2015 Liu Di <liudidi@gmail.com> - 8.36-3.3
+- 为 Magic 3.0 重建
+
 * Mon Mar 16 2015 Liu Di <liudidi@gmail.com> - 8.36-3.2
 - 为 Magic 3.0 重建
 

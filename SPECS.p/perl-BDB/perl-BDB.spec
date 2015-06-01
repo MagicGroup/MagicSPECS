@@ -2,14 +2,16 @@
 
 Name:           perl-BDB
 # Extend to 2 digits to get higher RPM package version than 1.88
-Version:        %{cpan_version}0
-Release:        6%{?dist}
+Version:	1.91
+Release:	2%{?dist}
 Summary:        Asynchronous Berkeley DB access
+Summary(zh_CN.UTF-8): 异步的伯克利 DB 访问
 
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 License:        GPL+ or Artistic
 URL:            http://search.cpan.org/dist/BDB/
-Source0:        http://search.cpan.org/CPAN/authors/id/M/ML/MLEHMANN/BDB-%{cpan_version}.tar.gz
+Source0:        http://search.cpan.org/CPAN/authors/id/M/ML/MLEHMANN/BDB-%{version}.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildRequires:  perl(ExtUtils::MakeMaker)
@@ -26,9 +28,11 @@ Requires:  perl(XSLoader)
 %description
 Asynchronous Berkeley DB access.
 
+%description -l zh_CN.UTF-8
+异步的伯克利 DB 访问。
 
 %prep
-%setup -q -n BDB-%{cpan_version}
+%setup -q -n BDB-%{version}
 
 
 %build
@@ -43,7 +47,7 @@ find $RPM_BUILD_ROOT -type f -name .packlist -exec rm -f {} ';'
 find $RPM_BUILD_ROOT -type f -name '*.bs' -a -size 0 -exec rm -f {} ';'
 find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null ';'
 chmod -R u+w $RPM_BUILD_ROOT/*
-
+magic_rpm_clean.sh
 
 %check
 
@@ -62,6 +66,12 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Fri Apr 24 2015 Liu Di <liudidi@gmail.com> - 1.91-2
+- 为 Magic 3.0 重建
+
+* Fri Apr 24 2015 Liu Di <liudidi@gmail.com> - 1.91-1
+- 更新到 1.91
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.90-6
 - 为 Magic 3.0 重建
 

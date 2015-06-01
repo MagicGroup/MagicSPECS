@@ -1,14 +1,16 @@
 Name:           perl-Authen-Krb5-Admin
-Version:        0.11
-Release:        16%{?dist}
+Version:	0.17
+Release:	1%{?dist}
 Summary:        Perl extension for MIT Kerberos 5 admin interface
+Summary(zh_CN.UTF-8): MIT kerberos 5 管理接口的 Perl 扩展
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 # admin.h - MIT
 # ppport.h - GPL+ or Artisic (same as any version of Perl)
 # everything else: BSD (two clause)
 License:        MIT and BSD and (GPL+ or Artistic)
 URL:            http://search.cpan.org/dist/Authen-Krb5-Admin/
-Source0:        http://www.cpan.org/authors/id/K/KO/KORTY/Authen-Krb5-Admin-0.11.tar.gz
+Source0:        http://www.cpan.org/authors/id/S/SJ/SJQUINNEY/Authen-Krb5-Admin-%{version}.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildRequires:  openssl-devel
@@ -20,6 +22,9 @@ Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $versi
 Authen::Krb5::Admin is an object-oriented interface to the Kerberos 5 admin
 server. Currently only MIT KDCs are supported, but the author envisions
 seamless integration with other KDCs.
+
+%description -l zh_CN.UTF-8
+MIT kerberos 5 管理接口的 Perl 扩展。
 
 %prep
 %setup -q -n Authen-Krb5-Admin-%{version}
@@ -43,7 +48,7 @@ find $RPM_BUILD_ROOT -type f -name .packlist -exec rm -f {} ';'
 find $RPM_BUILD_ROOT -type f -name '*.bs' -size 0 -exec rm -f {} \;
 find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 chmod -R u+w $RPM_BUILD_ROOT/*
-
+magic_rpm_clean.sh
 
 %check
 # not possible due to required kerberso environment
@@ -60,6 +65,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Fri Apr 24 2015 Liu Di <liudidi@gmail.com> - 0.17-1
+- 更新到 0.17
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.11-16
 - 为 Magic 3.0 重建
 

@@ -1,12 +1,14 @@
 Name:           perl-AppConfig
-Version:        1.66
-Release:        19%{?dist}
+Version:	1.71
+Release:	1%{?dist}
 Summary:        Perl module for reading configuration files
+Summary(zh_CN.UTF-8): 读取配置文件的 Perl 模块
 
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 License:        GPL+ or Artistic
 URL:            http://search.cpan.org/dist/AppConfig/
-Source0:        http://search.cpan.org/CPAN/authors/id/A/AB/ABW/AppConfig-%{version}.tar.gz
+Source0:        http://search.cpan.org/CPAN/authors/id/N/NE/NEILB/AppConfig-%{version}.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildArch:      noarch
@@ -22,6 +24,9 @@ parsing, a module is provided for interfacing AppConfig to Johan
 Vromans' extensive Getopt::Long module.  Johan will continue to
 develop the functionality of this package and its features will
 automatically become available through AppConfig.
+
+%description -l zh_CN.UTF-8
+读取配置文件的 Perl 模块。
 
 # filter out the unversioned provide AppConfig::State from Getopt.pm:
 # RPM 4.8 style
@@ -48,7 +53,7 @@ make pure_install PERL_INSTALL_ROOT=$RPM_BUILD_ROOT
 find $RPM_BUILD_ROOT -type f -name .packlist -exec rm -f {} ';'
 find $RPM_BUILD_ROOT -depth -type d -empty -exec rmdir {} ';'
 chmod -R u+w $RPM_BUILD_ROOT/*
-
+magic_rpm_clean.sh
 
 %check
 AUTOMATED_TESTING=1 
@@ -66,6 +71,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Thu Apr 23 2015 Liu Di <liudidi@gmail.com> - 1.71-1
+- 更新到 1.71
+
 * Thu Jun 12 2014 Liu Di <liudidi@gmail.com> - 1.66-19
 - 为 Magic 3.0 重建
 

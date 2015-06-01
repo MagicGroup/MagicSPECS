@@ -1,7 +1,8 @@
 Name:           perl-App-Cmd
 Summary:        Write command line apps with less suffering
-Version:        0.323
-Release:        3%{?dist}
+Summary(zh_CN.UTF-8): 更方便的编写命令行程序
+Version:	0.327
+Release:	1%{?dist}
 License:        GPL+ or Artistic
 
 Source0:        http://search.cpan.org/CPAN/authors/id/R/RJ/RJBS/App-Cmd-%{version}.tar.gz 
@@ -44,6 +45,9 @@ usually involved.
 
 For information on how to start using App::Cmd, see App::Cmd::Tutorial.
 
+%description -l zh_CN.UTF-8
+更方便的编写命令行程序。
+
 %prep
 %setup -q -n App-Cmd-%{version}
 
@@ -59,6 +63,7 @@ find %{buildroot} -type f -name .packlist -exec rm -f {} ';'
 find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null ';'
 
 %{_fixperms} %{buildroot}/*
+magic_rpm_clean.sh
 
 %check
 make test
@@ -69,6 +74,9 @@ make test
 %{_mandir}/man3/*.3*
 
 %changelog
+* Thu Apr 23 2015 Liu Di <liudidi@gmail.com> - 0.327-1
+- 更新到 0.327
+
 * Thu Jun 19 2014 Liu Di <liudidi@gmail.com> - 0.323-3
 - 为 Magic 3.0 重建
 

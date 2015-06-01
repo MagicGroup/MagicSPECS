@@ -1,9 +1,11 @@
 Name:           perl-AutoXS-Header
 Version:        1.02
-Release:        13%{?dist}
+Release:        14%{?dist}
 Summary:        Container for the AutoXS header files
+Summary(zh_CN.UTF-8): AutoXS 头文件的容器
 License:        GPL+ or Artistic
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 URL:            http://search.cpan.org/dist/AutoXS-Header/
 Source0:        http://www.cpan.org/authors/id/S/SM/SMUELLER/AutoXS-Header-%{version}.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -15,6 +17,9 @@ Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $versi
 %description
 This module is a simple container for the newest version of the AutoXS
 header file AutoXS.h.
+
+%description -l zh_CN.UTF-8
+AutoXS 头文件的容器。
 
 %prep
 %setup -q -n AutoXS-Header-%{version}
@@ -32,6 +37,7 @@ find $RPM_BUILD_ROOT -type f -name .packlist -exec rm -f {} \;
 find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 
 %{_fixperms} $RPM_BUILD_ROOT/*
+magic_rpm_clean.sh
 
 %check
 
@@ -46,6 +52,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Fri Apr 24 2015 Liu Di <liudidi@gmail.com> - 1.02-14
+- 为 Magic 3.0 重建
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.02-13
 - 为 Magic 3.0 重建
 

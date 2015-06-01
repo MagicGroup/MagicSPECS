@@ -1,6 +1,6 @@
 Name:           perl-B-Compiling
-Version:        0.02
-Release:        10%{?dist}
+Version:	0.06
+Release:	1%{?dist}
 Summary:        Expose PL_compiling to perl
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -43,6 +43,9 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_mandir}/man3/*
 
 %changelog
+* Fri Apr 24 2015 Liu Di <liudidi@gmail.com> - 0.06-1
+- 更新到 0.06
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.02-10
 - 为 Magic 3.0 重建
 

@@ -1,11 +1,13 @@
 Name:           perl-Apache-LogRegex
-Version:        1.5
-Release:        13%{?dist}
+Version:	1.70
+Release:	1%{?dist}
 Summary:        Parse a line from an Apache logfile into a hash
+Summary(zh_CN.UTF-8): 解析 Apache 日志文件的一行到哈希
 License:        GPL+ or Artistic
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 URL:            http://search.cpan.org/dist/Apache-LogRegex/
-Source0:        http://www.cpan.org/authors/id/P/PE/PETERHI/Apache-LogRegex-%{version}.tar.gz
+Source0:        http://www.cpan.org/authors/id/S/SP/SPACEBAT/Apache-LogRegex-%{version}.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 BuildRequires:  perl(ExtUtils::MakeMaker)
@@ -17,6 +19,9 @@ Designed as a simple class to parse Apache log files.
 It will construct a regex that will parse the given log 
 file format and can then parse lines from the log file 
 line by line returning a hash of each line.
+
+%description -l zh_CN.UTF-8
+解析 Apache 日志文件的一行到哈希。
 
 %prep
 %setup -q -n Apache-LogRegex-%{version}
@@ -34,6 +39,8 @@ find $RPM_BUILD_ROOT -type f -name .packlist -exec rm -f {} \;
 find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 
 %{_fixperms} $RPM_BUILD_ROOT/*
+magic_rpm_clean.sh
+
 
 %check
 # http://rt.perl.org/rt3//Public/Bug/Display.html?id=78008
@@ -45,11 +52,13 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(-,root,root,-)
-%doc README
 %{perl_vendorlib}/*
 %{_mandir}/man3/*
 
 %changelog
+* Thu Apr 23 2015 Liu Di <liudidi@gmail.com> - 1.70-1
+- 更新到 1.70
+
 * Thu Jun 12 2014 Liu Di <liudidi@gmail.com> - 1.5-13
 - 为 Magic 3.0 重建
 

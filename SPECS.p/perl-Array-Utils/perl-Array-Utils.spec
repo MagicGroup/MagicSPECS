@@ -1,9 +1,11 @@
 Name:           perl-Array-Utils
 Version:        0.5
-Release:        8%{?dist}
+Release:        9%{?dist}
 Summary:        Small utils for array manipulation
+Summary(zh_CN.UTF-8): 处理数组的小工具
 License:        GPL+ or Artistic
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 URL:            http://search.cpan.org/dist/Array-Utils/
 Source0:        http://www.cpan.org/authors/id/Z/ZM/ZMIJ/Array/Array-Utils-%{version}.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -16,6 +18,8 @@ Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $versi
 A small pure-perl module containing list manipulation routines,
 to avoid code duplication, idioms.
 
+%description -l zh_CN.UTF-8
+处理数组的小工具。
 
 %prep
 %setup -q -n Array-Utils-%{version}
@@ -35,7 +39,7 @@ find $RPM_BUILD_ROOT -type f -name .packlist -exec rm -f {} \;
 find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 
 %{_fixperms} $RPM_BUILD_ROOT/*
-
+magic_rpm_clean.sh
 
 %check
 
@@ -53,6 +57,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Thu Apr 23 2015 Liu Di <liudidi@gmail.com> - 0.5-9
+- 为 Magic 3.0 重建
+
 * Thu Jun 12 2014 Liu Di <liudidi@gmail.com> - 0.5-8
 - 为 Magic 3.0 重建
 

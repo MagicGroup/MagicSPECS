@@ -1,18 +1,19 @@
 %global _changelog_trimtime %(date +%s -d "1 year ago")
 
-##%define gitdate 20140307
+%define gitdate 20141015
 
 %define _default_patch_fuzz 2
-%global __python %{__python3}
-%{!?python_sitelib: %define python_sitelib %(python -c "from distutils.sysconfig import get_python_lib; print get_python_lib()")}
 
 Summary:   Package management service
 Name:      PackageKit
-Version:   0.9.4
-Release:   3%{?dist}
+Version: 1.0.6
+Release: 1%{?dist}
 License:   GPLv2+ and LGPLv2+
 URL:       http://www.freedesktop.org/software/PackageKit/
 Source0:   http://www.freedesktop.org/software/PackageKit/releases/%{name}-%{version}.tar.xz
+
+# generated using contrib/generate-md-archive.sh in the PackageKit source tree
+Source1:   cached-metadata.tar
 
 # Fedora-specific: set Vendor.conf up for Fedora.
 Patch0:    PackageKit-0.3.8-Fedora-Vendor.conf.patch
@@ -38,7 +39,6 @@ BuildRequires: gtk2-devel
 BuildRequires: gtk3-devel
 BuildRequires: docbook-utils
 BuildRequires: gnome-doc-utils
-BuildRequires: python3-devel
 BuildRequires: perl(XML::Parser)
 BuildRequires: intltool
 BuildRequires: gettext
@@ -49,14 +49,12 @@ BuildRequires: gstreamer1-devel
 BuildRequires: gstreamer1-plugins-base-devel
 BuildRequires: pango-devel
 BuildRequires: fontconfig-devel
+BuildRequires: libappstream-glib-devel
 BuildRequires: systemd-devel
 BuildRequires: gobject-introspection-devel
+BuildRequires: libhif-devel >= 0.1.6
 %if !0%{?rhel}
 BuildRequires: bash-completion
-%endif
-
-%if !0%{?rhel}
-BuildRequires: libhif-devel
 %endif
 
 # functionality moved to udev itself
@@ -75,6 +73,7 @@ Obsoletes: PackageKit-zif < 0.8.13-2
 # components now built-in
 Obsoletes: PackageKit-debug-install < 0.9.1
 Obsoletes: PackageKit-hawkey < 0.9.1
+Obsoletes: PackageKit-backend-devel < 0.9.6
 
 # Udev no longer provides this functionality
 Obsoletes: PackageKit-device-rebind < 0.8.13-2
@@ -102,6 +101,15 @@ Provides: PackageKit-libs = %{version}-%{release}
 %description glib
 GLib libraries for accessing PackageKit.
 
+%package cached-metadata
+Summary: Cached metadata for PackageKit
+Requires: %{name}%{?_isa} = %{version}-%{release}
+
+%description cached-metadata
+Cached metadata allows application installers to start instantly on the
+LiveCD or installed system without downloading files from the internet or
+regenerating the SAT caches. It can safely removed if not required.
+
 %package cron
 Summary: Cron job and related utilities for PackageKit
 Requires: crontabs
@@ -122,15 +130,6 @@ Provides: PackageKit-docs = %{version}-%{release}
 
 %description glib-devel
 GLib headers and libraries for PackageKit.
-
-%package backend-devel
-Summary: Headers to compile out of tree PackageKit backends
-# explicit dep: packagekit-plugin.pc links with -lpackagekit-glib2
-# but doesn't refer to packagekit-glib2.pc
-Requires: %{name}-glib-devel%{?_isa} = %{version}-%{release}
-
-%description backend-devel
-Headers to compile out of tree PackageKit backends.
 
 %package browser-plugin
 Summary: Browser Plugin for PackageKit
@@ -173,13 +172,11 @@ using PackageKit.
 
 %prep
 %setup -q
-#%setup -q -n %{name}-%{version}-%{gitdate}
 %patch0 -p1 -b .fedora
 
 %build
 %configure \
         --disable-static \
-        --enable-python3 \
 %if 0%{?rhel} == 0
         --enable-hif \
         --enable-introspection \
@@ -187,12 +184,8 @@ using PackageKit.
 %else
         --disable-bash-completion \
 %endif
-        --with-default-backend=auto \
-        --with-python-package-dir=%{python3_sitearch} \
         --disable-local \
-        --disable-strict \
-        --disable-silent-rules \
-        --disable-tests
+        --disable-silent-rules
 
 make %{?_smp_mflags} V=1
 
@@ -201,7 +194,6 @@ make install DESTDIR=$RPM_BUILD_ROOT
 
 rm -f $RPM_BUILD_ROOT%{_libdir}/libpackagekit*.la
 rm -f $RPM_BUILD_ROOT%{_libdir}/packagekit-backend/*.la
-rm -f $RPM_BUILD_ROOT%{_libdir}/packagekit-plugins-2/*.la
 rm -f $RPM_BUILD_ROOT%{_libdir}/mozilla/plugins/packagekit-plugin.la
 rm -f $RPM_BUILD_ROOT%{_libdir}/gtk-2.0/modules/*.la
 rm -f $RPM_BUILD_ROOT%{_libdir}/gtk-3.0/modules/*.la
@@ -222,40 +214,32 @@ pushd ${RPM_BUILD_ROOT}%{_datadir}/PackageKit > /dev/null
 ln -s ../pixmaps/comps icons
 popd > /dev/null
 
+# ship cached metadata on the LiveCD
+# http://blogs.gnome.org/hughsie/2014/08/29/putting-packagekit-metadata-on-the-fedora-livecd/
+tar -xf %{SOURCE1} --directory=$RPM_BUILD_ROOT
+
 %find_lang %name
 
 %post
-%systemd_post packagekit-offline-update.service packagekit.service
+# Remove leftover symlinks from /etc/systemd; the offline update service is
+# instead now hooked into /usr/lib/systemd/system/system-update.target.wants
+systemctl disable packagekit-offline-update.service > /dev/null 2>&1 || :
 
 %post glib -p /sbin/ldconfig
-
-%preun
-%systemd_preun packagekit-offline-update.service packagekit.service
-
-%postun
-# Reload the systemd configuration but do _not_ restart the daemon. Killing the
-# update process while it's updating packages causes the transaction to fail.
-%systemd_postun packagekit-offline-update.service packagekit.service
 
 %postun glib -p /sbin/ldconfig
 
 %files -f %{name}.lang
-%defattr(-,root,root,-)
-%doc README AUTHORS NEWS COPYING
+%license COPYING
+%doc README AUTHORS NEWS
 %dir %{_datadir}/PackageKit
 %dir %{_datadir}/PackageKit/helpers
 %dir %{_sysconfdir}/PackageKit
-%dir %{_sysconfdir}/PackageKit/events
-%dir %{_sysconfdir}/PackageKit/events/post-transaction.d
-%dir %{_sysconfdir}/PackageKit/events/pre-transaction.d
-%{_sysconfdir}/PackageKit/events/*.d/README
 %dir %{_localstatedir}/lib/PackageKit
-%dir %{python3_sitearch}/packagekit
 %dir %{_localstatedir}/cache/PackageKit
 %ghost %verify(not md5 size mtime) %{_localstatedir}/cache/PackageKit/groups.sqlite
 %dir %{_localstatedir}/cache/PackageKit/downloads
 %dir %{_localstatedir}/cache/PackageKit/metadata
-%{python3_sitearch}/packagekit/*py*
 %if !0%{?rhel}
 %{_datadir}/bash-completion/completions/pkcon
 %endif
@@ -268,80 +252,145 @@ popd > /dev/null
 %{_datadir}/PackageKit/helpers/test_spawn/*
 %{_datadir}/man/man1/pkcon.1.gz
 %{_datadir}/man/man1/pkmon.1.gz
-%{_datadir}/man/man1/pk-debuginfo-install.1.gz
 %{_datadir}/polkit-1/actions/*.policy
 %{_datadir}/polkit-1/rules.d/*
 %{_datadir}/PackageKit/pk-upgrade-distro.sh
 %{_libexecdir}/packagekitd
+%{_libexecdir}/packagekit-direct
 %{_bindir}/pkmon
 %{_bindir}/pkcon
-%{_bindir}/pk-debuginfo-install
 %exclude %{_libdir}/libpackagekit*.so.*
 %{_libdir}/packagekit-backend/libpk_backend_dummy.so
 %{_libdir}/packagekit-backend/libpk_backend_test_*.so
 %ghost %verify(not md5 size mtime) %{_localstatedir}/lib/PackageKit/transactions.db
 %{_datadir}/dbus-1/system-services/*.service
-%dir %{_libdir}/packagekit-plugins-2
-%{_libdir}/packagekit-plugins-2/*.so
-%{_libdir}/girepository-1.0/PackageKitPlugin-1.0.typelib
 %{_datadir}/dbus-1/interfaces/*.xml
 %{_unitdir}/packagekit-offline-update.service
 %{_unitdir}/packagekit.service
+%{_unitdir}/system-update.target.wants/
 %{_libexecdir}/pk-*offline-update
 %if 0%{?rhel} == 0
 %{_libdir}/packagekit-backend/libpk_backend_hif.so
 %endif
 
+%files cached-metadata
+%{_datadir}/PackageKit/hawkey/
+%{_datadir}/PackageKit/metadata/
+
 %files glib
-%defattr(-,root,root,-)
 %{_libdir}/*packagekit-glib2.so.*
 %{_libdir}/girepository-1.0/PackageKitGlib-1.0.typelib
 
 %files cron
-%defattr(-,root,root,-)
 %config %{_sysconfdir}/cron.daily/packagekit-background.cron
 %config(noreplace) %{_sysconfdir}/sysconfig/packagekit-background
 
 %files browser-plugin
-%defattr(-,root,root,-)
 %{_libdir}/mozilla/plugins/packagekit-plugin.so
 
 %files gstreamer-plugin
-%defattr(-,root,root,-)
 %{_libexecdir}/pk-gstreamer-install
 %{_libexecdir}/gst-install-plugins-helper
 
 %files gtk3-module
-%defattr(-,root,root,-)
 %{_libdir}/gtk-2.0/modules/*.so
 %{_libdir}/gtk-3.0/modules/*.so
 %{_libdir}/gnome-settings-daemon-3.0/gtk-modules/*.desktop
 
 %files command-not-found
-%defattr(-,root,root,-)
 %{_sysconfdir}/profile.d/*
 %{_libexecdir}/pk-command-not-found
 %config(noreplace) %{_sysconfdir}/PackageKit/CommandNotFound.conf
 
 %files glib-devel
-%defattr(-,root,root,-)
 %{_libdir}/libpackagekit-glib2.so
 %{_libdir}/pkgconfig/packagekit-glib2.pc
 %dir %{_includedir}/PackageKit
 %dir %{_includedir}/PackageKit/packagekit-glib2
 %{_includedir}/PackageKit/packagekit-glib*/*.h
 %{_datadir}/gir-1.0/PackageKitGlib-1.0.gir
-%{_datadir}/gir-1.0/PackageKitPlugin-1.0.gir
 %{_datadir}/gtk-doc/html/PackageKit
 
-%files backend-devel
-%defattr(-,root,root,-)
-%dir %{_includedir}/PackageKit
-%{_includedir}/PackageKit/plugin
-%{_libdir}/pkgconfig/packagekit-plugin.pc
-
-
 %changelog
+* Mon Apr 13 2015 Liu Di <liudidi@gmail.com> - 1.0.6-1
+- 更新到 1.0.6
+
+* Fri Apr 03 2015 Liu Di <liudidi@gmail.com> - 1.0.5-3
+- 为 Magic 3.0 重建
+
+* Sat Mar 28 2015 Kalev Lember <kalevlember@gmail.com> - 1.0.5-2
+- Backport a crash fix from upstream (#1185544)
+- Update cached metadata
+- Use license macro for the COPYING file
+
+* Sat Feb 21 2015 Kalev Lember <kalevlember@gmail.com> - 1.0.5-1
+- Update to 1.0.5
+- Backport new missing gstreamer codecs API
+
+* Fri Feb 06 2015 Richard Hughes <rhughes@redhat.com> - 1.0.4-2
+- Adapt to the new hawkey API.
+
+* Mon Jan 19 2015 Richard Hughes <rhughes@redhat.com> - 1.0.4-1
+- New upstream release
+- Actually inhibit logind when the transaction can't be cancelled
+- Add 'quit' command to pkcon
+- Automatically import metadata public keys when safe to do so
+- Automatically install AppStream metadata
+- Do not attempt to run command-not-found for anything prefixed with '.'
+- Don't use PkBackendSpawn helpers in compiled backends
+- Fix a hard-to-debug crash when cancelling a task that has never been run
+- Look for unavailable packages during resolve
+- Make pk_backend_job_call_vfunc() threadsafe
+- Make pk_backend_repo_list_changed() threadsafe
+- Return 'unavailable' packages for metadata-only repos
+- Use a thread-local HifTransaction to avoid db3 index corruption
+
+* Mon Nov 17 2014 Kalev Lember <kalevlember@gmail.com> - 1.0.3-2
+- Update cached metadata in preparation for F21 release
+
+* Mon Nov 10 2014 Richard Hughes <rhughes@redhat.com> - 1.0.3-1
+- New upstream release
+- Add support for reinstallation and downgrades
+- Be smarter when using the vendor cache
+
+* Tue Oct 21 2014 Richard Hughes <rhughes@redhat.com> - 1.0.1-1
+- New upstream release
+- Add a KeepCache config parameter
+- Do not install the python helpers
+- Invalidate offline updates when the rpmdb changes
+- Never allow cancelling a transaction twice
+
+* Wed Oct 15 2014 Kalev Lember <kalevlember@gmail.com> - 1.0.1-0.1.20141015
+- Update to today's git snapshot
+
+* Tue Sep 16 2014 Richard Hughes <rhughes@redhat.com> - 1.0.0-2
+- Add a new subpackage designed for the workstation spin.
+- See http://blogs.gnome.org/hughsie/2014/08/29/ for details.
+
+* Fri Sep 12 2014 Richard Hughes <rhughes@redhat.com> - 1.0.0-1
+- New upstream release
+- Add a D-Bus interface and helpers for offline support
+- Do not shutdown the daemon on idle by default
+- Refresh the NetworkManager state when the daemon starts
+- Remove pk-debuginfo-install
+- Remove the events/pre-transaction.d functionality
+- Remove the pkexec systemd helpers
+- Remove the plugin interface
+- Remove various options from the config file
+
+* Tue Sep 02 2014 Richard Hughes <rhughes@redhat.com> - 0.9.5-1
+- New upstream release
+- Add a new tool called packagekit-direct that can run without a daemon
+- Do not commit the transaction manually but instead set the correct state
+- Do not log a critical warning when idle exiting
+- Fix a crash when refreshing a repo that is not enabled
+- Fix a crash when we are cancelling a transaction that has not yet been run
+- Regenerate the SAT indexes when refreshing the cache
+- Remove remaining time reporting
+
+* Fri Aug 15 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.9.4-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
+
 * Mon Jul 28 2014 Kalev Lember <kalevlember@gmail.com> - 0.9.4-3
 - Rebuilt for hawkey soname bump
 

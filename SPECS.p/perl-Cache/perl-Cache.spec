@@ -1,12 +1,14 @@
 Name:           perl-Cache
-Version:        2.04
-Release:        23%{?dist}
+Version:	2.11
+Release:	1%{?dist}
 Summary:        The Cache interface
+Summary(zh_CN.UTF-8): 缓存接口
 
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 License:        GPL+ or Artistic
 URL:            http://search.cpan.org/dist/Cache
-Source0:        http://search.cpan.org/CPAN/authors/id/C/CL/CLEISHMAN/Cache-%{version}.tar.gz
+Source0:        http://search.cpan.org/CPAN/authors/id/S/SH/SHLOMIF/Cache-%{version}.tar.gz
 
 BuildArch:      noarch
 BuildRequires:  perl(ExtUtils::MakeMaker), perl(Test::More)
@@ -26,33 +28,38 @@ expensive calls to remote machines or databases.
 The Cache interface is implemented by derived classes that store cached 
 data in different manners (such as as files on a filesystem, or in memory).
 
+%description -l zh_CN.UTF-8
+缓存接口。
 
 %package -n perl-Cache-Tester
 Summary:        Test utility for perl Cache implementations
+Summary(zh_CN.UTF-8): Perl 缓存实现的测试工具
 Requires:       %{name} = %{version}-%{release}
 
 %description -n perl-Cache-Tester
 This module is used to run tests against an instance of a Cache implementation
 to ensure that it operates as required by the Cache specification.
 
+%description -n perl-Cache-Tester -l zh_CN.UTF-8
+Perl 缓存实现的测试工具。
 
 %prep
 %setup -q -n Cache-%{version}
 
 %build
-%{__perl} Makefile.PL INSTALLDIRS=vendor
-make %{?_smp_mflags}
+%{__perl} Build.PL installdirs=vendor
+./Build
 
 
 %install
-make pure_install PERL_INSTALL_ROOT=$RPM_BUILD_ROOT
-find $RPM_BUILD_ROOT -type f -name .packlist -exec rm -f {} ';'
+./Build install destdir=$RPM_BUILD_ROOT create_packlist=0
+
 find $RPM_BUILD_ROOT -type d -depth -exec rmdir {} 2>/dev/null ';'
 chmod -R u+w $RPM_BUILD_ROOT/*
 
 
 %check
-
+./Build test
 
 
 %files
@@ -71,6 +78,9 @@ chmod -R u+w $RPM_BUILD_ROOT/*
 
 
 %changelog
+* Wed May 06 2015 Liu Di <liudidi@gmail.com> - 2.11-1
+- 更新到 2.11
+
 * Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 2.04-23
 - 为 Magic 3.0 重建
 

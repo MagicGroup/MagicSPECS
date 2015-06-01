@@ -1,11 +1,13 @@
 Name:		perl-Archive-Any
-Version:	0.0932
-Release:	19%{?dist}
+Version:	0.0942
+Release:	1%{?dist}
 Summary:	Single interface to deal with file archives
+Summary(zh_CN.UTF-8): 与归档文件打交道的单一接口
 License:	GPL+ or Artistic
 Group:		Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 URL:		http://search.cpan.org/dist/Archive-Any/
-Source0:	http://search.cpan.org/CPAN/authors/id/C/CM/CMOORE/Archive-Any-%{version}.tar.gz
+Source0:	http://search.cpan.org/CPAN/authors/id/O/OA/OALDERS/Archive-Any-%{version}.tar.gz
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(id -nu)
 BuildArch:	noarch
 # Build
@@ -30,6 +32,9 @@ Requires:	perl(:MODULE_COMPAT_%(eval "`perl -V:version`"; echo $version))
 This module is a single interface for manipulating different archive
 formats. Tarballs, zip files, etc.
 
+%description -l zh_CN.UTF-8
+与归档文件打交道的单一接口，支持 tar 包，zip 文件等。
+
 %prep
 %setup -q -n Archive-Any-%{version}
 
@@ -42,6 +47,7 @@ rm -rf %{buildroot}
 ./Build install destdir=%{buildroot} create_packlist=0
 find %{buildroot} -depth -type d -exec rmdir {} \; 2>/dev/null
 %{_fixperms} %{buildroot}
+magic_rpm_clean.sh
 
 %check
 ./Build test
@@ -57,8 +63,13 @@ rm -rf %{buildroot}
 %{_mandir}/man3/Archive::Any::Plugin.3pm*
 %{_mandir}/man3/Archive::Any::Plugin::Tar.3pm*
 %{_mandir}/man3/Archive::Any::Plugin::Zip.3pm*
+%{_mandir}/man3/Archive::Any::Tar.3pm*
+%{_mandir}/man3/Archive::Any::Zip.3pm*
 
 %changelog
+* Thu Apr 23 2015 Liu Di <liudidi@gmail.com> - 0.0942-1
+- 更新到 0.0942
+
 * Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 0.0932-19
 - 为 Magic 3.0 重建
 

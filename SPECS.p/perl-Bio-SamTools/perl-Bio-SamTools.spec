@@ -1,9 +1,11 @@
 Name:		perl-Bio-SamTools
-Version:	1.35
-Release:	12%{?dist}
+Version:	1.41
+Release:	2%{?dist}
 Summary:	Bio::SamTools Perl module
+Summary(zh_CN.UTF-8): Bio::SamTools Perl 模块
 License:	GPL+ or Artistic 2.0
 Group:		Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 URL:		http://search.cpan.org/dist/Bio-SamTools/
 Source0:	http://search.cpan.org/CPAN/authors/id/L/LD/LDS/Bio-SamTools-%{version}.tar.gz
 BuildRequires:	perl >= 0:5.008
@@ -29,6 +31,8 @@ Requires:	 perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
 This is a Perl interface to the SAMtools sequence alignment interface.
 See http://samtools.sourceforge.net/.
 
+%description -l zh_CN.UTF-8
+这是 SAMtools 的 Perl 接口。
 
 %prep
 %setup -q -n Bio-SamTools-%{version}
@@ -44,6 +48,7 @@ find %{buildroot} -type f -name '*.bs' -size 0 -exec rm -f {} \;
 find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null \;
 
 %{_fixperms} %{buildroot}/*
+magic_rpm_clean.sh
 
 %check
 ./Build test
@@ -55,8 +60,16 @@ find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_mandir}/man3/*
 %{_bindir}/bamToGBrowse.pl
 %{_bindir}/genomeCoverageBed.pl
+%{_bindir}/bam2bedgraph
+%{_bindir}/chrom_sizes.pl
 
 %changelog
+* Fri Apr 24 2015 Liu Di <liudidi@gmail.com> - 1.41-2
+- 为 Magic 3.0 重建
+
+* Fri Apr 24 2015 Liu Di <liudidi@gmail.com> - 1.41-1
+- 更新到 1.41
+
 * Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 1.35-12
 - 为 Magic 3.0 重建
 

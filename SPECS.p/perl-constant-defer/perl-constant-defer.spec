@@ -1,9 +1,11 @@
 Name:           perl-constant-defer
-Version:        5
-Release:        8%{?dist}
+Version:	6
+Release:	1%{?dist}
 Summary:        Constant subs with deferred value calculation
+Summary(zh_CN.UTF-8): 常量子程序的延迟计算
 License:        GPLv3+
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 URL:            http://search.cpan.org/dist/constant-defer/
 Source0:        http://www.cpan.org/authors/id/K/KR/KRYDE/constant-defer-%{version}.tar.gz
 BuildArch:      noarch
@@ -30,6 +32,9 @@ code to calculate its value, and on the second and subsequent calls just
 returns that value, like a constant. The value code is discarded once run,
 allowing it to be garbage collected.
 
+%description -l zh_CN.UTF-8
+常量子程序的延迟计算。
+
 %prep
 %setup -q -n constant-defer-%{version}
 chmod -x examples/*
@@ -43,6 +48,7 @@ make pure_install PERL_INSTALL_ROOT=$RPM_BUILD_ROOT
 find $RPM_BUILD_ROOT -type f -name .packlist -exec rm -f {} \;
 find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_fixperms} $RPM_BUILD_ROOT/*
+magic_rpm_clean.sh
 
 %check
 make test
@@ -53,6 +59,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Fri May 08 2015 Liu Di <liudidi@gmail.com> - 6-1
+- 更新到 6
+
 * Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 5-8
 - 为 Magic 3.0 重建
 

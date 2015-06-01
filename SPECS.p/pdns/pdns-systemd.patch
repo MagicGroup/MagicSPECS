@@ -1,0 +1,11 @@
+--- pdns-3.4.0/contrib/systemd-pdns.service.orig	2014-09-02 10:02:05.000000000 +0200
++++ pdns-3.4.0/contrib/systemd-pdns.service	2014-09-30 13:10:07.441999290 +0200
+@@ -1,7 +1,7 @@
+ [Unit]
+ Description=PowerDNS Authoritative Server
+ Wants=network-online.target
+-After=network-online.target mysqld.service postgresql.service slapd.service
++After=network-online.target mariadb.service postgresql.service slapd.service
+ 
+ [Service]
+ Type=forking

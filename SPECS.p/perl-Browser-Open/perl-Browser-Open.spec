@@ -1,11 +1,13 @@
 Name:           perl-Browser-Open
-Version:        0.03
-Release:        8%{?dist}
+Version:	0.04
+Release:	1%{?dist}
 Summary:        Open a browser in a given URL
+Summary(zh_CN.UTF-8): 在浏览器中打开给定的网址
 License:        GPL+ or Artistic
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 URL:            http://search.cpan.org/dist/Browser-Open/
-Source0:        http://www.cpan.org/authors/id/M/ME/MELO/Browser-Open-%{version}.tar.gz
+Source0:        http://www.cpan.org/authors/id/C/CF/CFRANKS/Browser-Open-%{version}.tar.gz
 BuildArch:      noarch
 BuildRequires:  perl(ExtUtils::MakeMaker)
 BuildRequires:  perl(File::Spec::Functions)
@@ -25,6 +27,9 @@ Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $versi
 The functions optionally exported by this module allows you to open URLs in
 the user browser.
 
+%description -l zh_CN.UTF-8
+在浏览器中打开给定的网址。
+
 %prep
 %setup -q -n Browser-Open-%{version}
 
@@ -42,17 +47,20 @@ find $RPM_BUILD_ROOT -type f -name .packlist -exec rm -f {} \;
 find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 
 %{_fixperms} $RPM_BUILD_ROOT/*
+magic_rpm_clean.sh
 
 %check
 RELEASE_TESTING=1 
 
 %files
 %defattr(-,root,root,-)
-%doc Changes LICENSE README
 %{perl_vendorlib}/*
 %{_mandir}/man3/*
 
 %changelog
+* Wed Apr 29 2015 Liu Di <liudidi@gmail.com> - 0.04-1
+- 更新到 0.04
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.03-8
 - 为 Magic 3.0 重建
 

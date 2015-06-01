@@ -2,11 +2,13 @@
 %{?perl_default_filter}
 
 Summary: 	Perl module for context-sensitive phonetic string replacement
+Summary(zh_CN.UTF-8): 上下文相关的语音字符串替换的 Perl 模块
 Name: 		perl-ccom
 Version: 	1.4.1
-Release: 	14%{?dist}
+Release: 	15%{?dist}
 License: 	LGPLv2+
 Group: 		Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 URL: 		http://www.heise.de/ct/ftp/99/25/252/
 Source:		ftp://ftp.heise.de/pub/ct/listings/phonet.tgz
 Requires:	perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
@@ -21,7 +23,11 @@ same string. This can, for example, be used to implement error-tolerant
 search routines in address databases. It contains phonetic rules for German
 only, but the software has been prepared for multi-language support.
                                                                                                         
+%description -l zh_CN.UTF-8
+上下文相关的语音字符串替换的 Perl 模块。
+
 %prep
+
 %setup -q -c -n %{name}
 
 # Clean the strange packaging first
@@ -54,6 +60,7 @@ sed -e 's@#! /opt/perl5/bin/perl@#!%{_bindir}/perl@' -i ccom_test.pl
 
 # Remove test/example from regulars
 rm -f $RPM_BUILD_ROOT%{perl_vendorarch}/ccom_test.pl
+magic_rpm_clean.sh
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -67,6 +74,9 @@ rm -rf $RPM_BUILD_ROOT
 %{perl_vendorarch}/*.pm
 
 %changelog
+* Fri May 08 2015 Liu Di <liudidi@gmail.com> - 1.4.1-15
+- 为 Magic 3.0 重建
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.4.1-14
 - 为 Magic 3.0 重建
 

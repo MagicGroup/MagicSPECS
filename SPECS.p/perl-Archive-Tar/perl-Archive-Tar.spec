@@ -1,8 +1,10 @@
 Name:           perl-Archive-Tar
-Version:        1.96
-Release:        4%{?dist}
+Version:	2.04
+Release:	1%{?dist}
 Summary:        A module for Perl manipulation of .tar files
+Summary(zh_CN.UTF-8): 处理 .tar 文件的 Perl 模块
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 License:        GPL+ or Artistic
 URL:            http://search.cpan.org/dist/Archive-Tar/
 Source0:        http://www.cpan.org/authors/id/B/BI/BINGOS/Archive-Tar-%{version}.tar.gz
@@ -49,6 +51,9 @@ while also allowing for the creation of tar file objects for custom
 manipulation.  If you have the IO::Zlib module installed, Archive::Tar
 will also support compressed or gzipped tar files.
 
+%description -l zh_CN.UTF-8
+处理 .tar 文件的 Perl 模块。
+
 %prep
 %setup -q -n Archive-Tar-%{version}
 
@@ -60,6 +65,7 @@ make %{?_smp_mflags}
 make pure_install DESTDIR=%{buildroot}
 find %{buildroot} -type f -name .packlist -exec rm -f {} ';'
 chmod -R u+w %{buildroot}/*
+magic_rpm_clean.sh
 
 %check
 make test
@@ -73,6 +79,9 @@ make test
 
 
 %changelog
+* Thu Apr 23 2015 Liu Di <liudidi@gmail.com> - 2.04-1
+- 更新到 2.04
+
 * Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 1.96-4
 - 为 Magic 3.0 重建
 

@@ -1,10 +1,12 @@
 Name:       perl-asa 
 Version:    1.03
-Release:    7%{?dist}
+Release:    8%{?dist}
 # see lib/asa.pm
 License:    GPL+ or Artistic
 Group:      Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Summary:    Lets your class/object say it works like something else 
+Summary(zh_CN.UTF-8): 让你的类/对象像其它的东西一样工作
 Source:     http://search.cpan.org/CPAN/authors/id/A/AD/ADAMK/asa-%{version}.tar.gz 
 Url:        http://search.cpan.org/dist/asa
 Requires:   perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
@@ -31,6 +33,9 @@ implementing your code.
 This package overrides the isa() method, allowing your class to claim it's a
 class it's not (that is, isn't in @ISA).
 
+%description -l zh_CN.UTF-8
+让你的类/对象像其它的东西一样工作。
+
 %prep
 %setup -q -n asa-%{version}
 
@@ -44,6 +49,7 @@ find %{buildroot} -type f -name .packlist -exec rm -f {} ';'
 find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null ';'
 
 %{_fixperms} %{buildroot}/*
+magic_rpm_clean.sh
 
 %check
 
@@ -54,6 +60,9 @@ find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null ';'
 %{_mandir}/man3/*.3*
 
 %changelog
+* Fri Apr 17 2015 Liu Di <liudidi@gmail.com> - 1.03-8
+- 为 Magic 3.0 重建
+
 * Thu Jun 12 2014 Liu Di <liudidi@gmail.com> - 1.03-7
 - 为 Magic 3.0 重建
 

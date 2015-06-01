@@ -1,9 +1,11 @@
 Name:           perl-Bio-Graphics
-Version:        2.25
-Release:        16%{?dist}
+Version:	2.39
+Release:	1%{?dist}
 Summary:        Generate GD images of Bio::Seq objects
+Summary(zh_CN.UTF-8): Bio::Seq 对象生成 GD 图像
 License:        GPL+ or Artistic
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 URL:            http://search.cpan.org/dist/Bio-Graphics/
 Source0:        http://www.cpan.org/authors/id/L/LD/LDS/Bio-Graphics-%{version}.tar.gz
 BuildArch:      noarch
@@ -23,6 +25,9 @@ Das::Segment::Feature and Bio::DB::Graphics objects.  It can be used
 to draw sequence annotations, physical (contig) maps, protein domains,
 or any other type of map in which a set of discrete ranges need to be
 laid out on the number line
+
+%description -l zh_CN.UTF-8
+Bio::Seq 对象生成 GD 图像。
 
 # RPM 4.8 style
 %{?filter_setup:
@@ -48,7 +53,7 @@ rm lib/Bio/Graphics/Glyph/trace.pm
 find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 
 %{_fixperms} $RPM_BUILD_ROOT/*
-
+magic_rpm_clean.sh
 
 %check
 #./Build test
@@ -61,6 +66,9 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_mandir}/man3/*
 
 %changelog
+* Fri Apr 24 2015 Liu Di <liudidi@gmail.com> - 2.39-1
+- 更新到 2.39
+
 * Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 2.25-16
 - 为 Magic 3.0 重建
 

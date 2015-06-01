@@ -3,30 +3,23 @@
 # unresolvable dependency on phonon-backend (and friends)
 #define bootstrap 1
 
-%if 0%{?fedora}
 # enable zeitgeist support
 %define zeitgeist 1
-%endif
 
 Summary: Multimedia framework api
+Summary(zh_CN.UTF-8): 多媒体框架 API
 Name:    phonon
-Version: 4.7.1
-Release: 4%{?dist}
+Version:	4.8.3
+Release:	1%{?dist}
 License: LGPLv2+
 URL:     http://phonon.kde.org/
 %if 0%{?snap}
 Source0: phonon-%{version}-%{snap}.tar.xz
 %else
-Source0: http://download.kde.org/stable/phonon/%{version}/phonon-%{version}.tar.xz
+Source0: http://download.kde.org/stable/phonon/%{version}/src/phonon-%{version}.tar.xz
 %endif
 
 Patch0: phonon-4.7.0-rpath_use_link_path.patch 
-# workaround cmake bogosity calculating relative dirs + /usr-move
-Patch1: phonon-4.7.0-rootDir.patch
-
-## upstream patches
-Patch103: 0003-sync-FindQt4-from-kdelibs-master-to-unbreak-build-wi.patch
-Patch104: 0004-don-t-emit-backendchanged-when-we-have-no-backend.patch
 
 BuildRequires: automoc4 >= 0.9.86
 BuildRequires: cmake >= 2.6.9
@@ -61,15 +54,23 @@ Provides:  phonon-experimental = %{version}-%{release}
 %description
 %{summary}.
 
+%description -l zh_CN.UTF-8
+多媒体框架 API。
+
 %package devel
 Summary: Developer files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Requires: %{name}%{?_isa} = %{version}-%{release}
 Provides:  phonon-experimental-devel = %{version}-%{release}
 %description devel
 %{summary}.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
 %package qt5 
 Summary: phonon for Qt5
+Summary(zh_CN.UTF-8): Qt5 版本的 phonon
 %{?_qt5_version:Requires: qt5-qtbase%{?_isa} >= %{_qt5_version}}
 %if 0%{?bootstrap}
 Provides: %{name}-qt5-backend%{?_isa} = 4.7
@@ -79,22 +80,23 @@ Requires: %{name}-qt5-backend%{?_isa} => 4.7
 %description qt5 
 %{summary}.
 
+%description qt5 -l zh_CN.UTF-8
+Qt5 版本的 phonon。
+
 %package qt5-devel
 Summary: Developer files for %{name}-qt5 
+Summary(zh_CN.UTF-8): %{name}-qt5 的开发包
 Requires: %{name}-qt5%{?_isa} = %{version}-%{release}
 %description qt5-devel
 %{summary}.
+%description qt5-devel -l zh_CN.UTF-8
+%{name}-qt5 的开发包。
 
 
 %prep
 %setup -q 
 
-%patch103 -p1 -b .0003
-%patch104 -p1 -b .0004
-
 %patch0 -p1 -b .rpath_use_link_path
-%patch1 -p1 -b .rootDir
-
 
 %build
 mkdir -p %{_target_platform}
@@ -128,7 +130,7 @@ ln -s ../KDE/Phonon %{buildroot}%{_includedir}/phonon/Phonon
 mkdir -p %{buildroot}%{_kde4_libdir}/kde4/plugins/phonon_backend/
 mkdir -p %{buildroot}%{_kde4_datadir}/kde4/services/phononbackends/
 mkdir -p %{buildroot}%{_qt5_plugindir}/phonon4qt5_backend
-
+magic_rpm_clean.sh
 
 %check
 export PKG_CONFIG_PATH=%{buildroot}%{_datadir}/pkgconfig:%{buildroot}%{_libdir}/pkgconfig
@@ -200,6 +202,9 @@ test "$(pkg-config --modversion phonon4qt5)" = "%{version}"
 
 
 %changelog
+* Tue Apr 14 2015 Liu Di <liudidi@gmail.com> - 4.8.3-1
+- 更新到 4.8.3
+
 * Tue May 06 2014 Liu Di <liudidi@gmail.com> - 4.7.1-4
 - 为 Magic 3.0 重建
 
@@ -397,7 +402,7 @@ test "$(pkg-config --modversion phonon4qt5)" = "%{version}"
 
 * Tue Sep 29 2009 Rex Dieter <rdieter@fedoraproject.org> - 4.3.1-101
 - revert to kde/phonon
-- inflate to Release: 101
+- inflate to Release:	1%{?dist}
 - -backend-gstreamer: Epoch: 2
 
 * Sun Jul 26 2009 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 4.3.1-12

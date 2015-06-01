@@ -1,9 +1,12 @@
 Name:           perl-AnyEvent-DBus
 Version:        0.31
-Release:        12%{?dist}
+Release:        13%{?dist}
 Summary:        Adapt Net::DBus to AnyEvent
+Summary(zh_CN.UTF-8): 适配 Net::DBus 到 AnyEvent
+
 License:        GPL+ or Artistic
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 URL:            http://search.cpan.org/dist/AnyEvent-DBus/
 Source0:        http://www.cpan.org/authors/id/M/ML/MLEHMANN/AnyEvent-DBus-%{version}.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -19,6 +22,8 @@ Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $versi
 Loading this module will install the necessary magic to seamlessly integrate
 Net::DBus into AnyEvent.
 
+%description -l zh_CN.UTF-8
+适配 Net::DBus 到 AnyEvent。
 
 %prep
 %setup -q -n AnyEvent-DBus-%{version}
@@ -38,7 +43,7 @@ find %{buildroot} -type f -name .packlist -exec rm -f {} \;
 find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null \;
 
 %{_fixperms} %{buildroot}/*
-
+magic_rpm_clean.sh
 
 %check
 
@@ -56,6 +61,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Apr 22 2015 Liu Di <liudidi@gmail.com> - 0.31-13
+- 为 Magic 3.0 重建
+
 * Thu Jun 12 2014 Liu Di <liudidi@gmail.com> - 0.31-12
 - 为 Magic 3.0 重建
 

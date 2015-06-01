@@ -1,11 +1,13 @@
 Name:           perl-App-Nopaste
-Version:        0.90
-Release:        3%{?dist}
+Version:	1.004
+Release:	1%{?dist}
 Summary:        Easy access to any pastebin
+Summary(zh_CN.UTF-8): 简单访问任何 pastebin
 License:        GPL+ or Artistic
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 URL:            http://search.cpan.org/dist/App-Nopaste/
-Source0:        http://www.cpan.org/authors/id/S/SA/SARTAK/App-Nopaste-%{version}.tar.gz
+Source0:        http://www.cpan.org/authors/id/E/ET/ETHER/App-Nopaste-%{version}.tar.gz
 BuildArch:      noarch
 BuildRequires:  perl(inc::Module::Install)
 BuildRequires:  perl(Browser::Open)
@@ -37,12 +39,17 @@ for public viewing. They're used a lot in IRC channels to show code that
 would normally be too long to give directly in the channel (hence the
 name nopaste).
 
+%description -l zh_CN.UTF-8
+简单访问任何 pastebin。
+
 %package -n nopaste
 # needs to beat old nopaste-2835-3
 Epoch:          1
 License:        GPL+ or Artistic
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Summary:        Access pastebins from the command line
+Summary(zh_CN.UTF-8): 从命令行访问 pastebin
 Requires:       %{name} = 0:%{version}-%{release}
 
 %description -n nopaste
@@ -52,13 +59,15 @@ Pastebins (also known as nopaste sites) let you post text, usually code, for
 public viewing. They're used a lot in IRC channels to show code that would
 normally be too long to give directly in the channel (hence the name nopaste).
 
+%description -n nopaste -l zh_CN.UTF-8
+从命令行访问 pastebin。
 
 %prep
 %setup -q -n App-Nopaste-%{version}
 find lib -type f | xargs chmod -x
 
 %build
-PERL5_CPANPLUS_IS_RUNNING=1 %{__perl} Makefile.PL INSTALLDIRS=vendor
+echo "y\n" | PERL5_CPANPLUS_IS_RUNNING=1 %{__perl} Makefile.PL INSTALLDIRS=vendor
 make %{?_smp_mflags}
 
 %install
@@ -68,6 +77,7 @@ find $RPM_BUILD_ROOT -type f -name .packlist -exec rm -f {} \;
 find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 
 %{_fixperms} $RPM_BUILD_ROOT/*
+magic_rpm_clean.sh
 
 %check
 make test
@@ -82,6 +92,9 @@ make test
 %{_mandir}/man1/*
 
 %changelog
+* Thu Apr 23 2015 Liu Di <liudidi@gmail.com> - 1.004-1
+- 更新到 1.004
+
 * Thu Jun 12 2014 Liu Di <liudidi@gmail.com> - 0.90-3
 - 为 Magic 3.0 重建
 

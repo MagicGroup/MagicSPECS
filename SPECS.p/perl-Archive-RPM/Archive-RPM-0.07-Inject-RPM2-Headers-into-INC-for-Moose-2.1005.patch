@@ -1,0 +1,38 @@
+From b70bfb107ea444b0e574e46757c409b4344620e3 Mon Sep 17 00:00:00 2001
+From: Paul Howarth <paul@city-fan.org>
+Date: Thu, 4 Dec 2014 14:51:00 +0100
+Subject: [PATCH] Inject RPM2::Headers into %INC for Moose > 2.1005
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Moose > 2.1005 inspects %INC for loaded classes which is not true for
+RPM2::Headers which comes from RPM2.pm
+
+Fixes CPAN RT#100701. See Moose's CPAN RT#100702.
+
+Signed-off-by: Petr Písař <ppisar@redhat.com>
+---
+ lib/Archive/RPM.pm | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/lib/Archive/RPM.pm b/lib/Archive/RPM.pm
+index c89c07c..913ce8c 100644
+--- a/lib/Archive/RPM.pm
++++ b/lib/Archive/RPM.pm
+@@ -32,6 +32,12 @@ use Archive::RPM::ChangeLogEntry;
+ 
+ our $VERSION = '0.07';
+ 
++# Moose 2.14 onwards looks for RPM2::Header in %INC but it's from RPM2.pm
++# (CPAN RT#100701)
++unless ( $INC{ "RPM2/Header.pm" } ) {
++    $INC{ "RPM2/Header.pm" } = $INC{ "RPM2.pm" };
++}
++
+ with 'MooseX::Traits';
+ has '+_trait_namespace' => (default => 'Archive::RPM::TraitFor');
+ 
+-- 
+1.9.3
+

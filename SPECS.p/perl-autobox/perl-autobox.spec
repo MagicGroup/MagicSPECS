@@ -1,9 +1,11 @@
 Name:           perl-autobox
-Version:        2.75
-Release:        8%{?dist}
+Version:	2.83
+Release:	1%{?dist}
 Summary:        Call methods on native types
+Summary(zh_CN.UTF-8): 以基本类型调用方法
 License:        GPL+ or Artistic
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 URL:            http://search.cpan.org/dist/autobox/
 Source0:        http://www.cpan.org/authors/id/C/CH/CHOCOLATE/autobox-%{version}.tar.gz
 BuildRequires:  perl(ExtUtils::MakeMaker)
@@ -23,6 +25,9 @@ The autobox pragma allows methods to be called on integers, floats,
 strings, arrays, hashes, and code references in exactly the same manner as
 blessed references.
 
+%description -l zh_CN.UTF-8
+以基本类型调用方法。
+
 %prep
 %setup -q -n autobox-%{version}
 
@@ -38,6 +43,8 @@ find $RPM_BUILD_ROOT -type f -name '*.bs' -size 0 -exec rm -f {} \;
 find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 
 %{_fixperms} $RPM_BUILD_ROOT/*
+magic_rpm_clean.sh
+
 
 %check
 
@@ -49,6 +56,9 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_mandir}/man3/*
 
 %changelog
+* Fri Apr 17 2015 Liu Di <liudidi@gmail.com> - 2.83-1
+- 更新到 2.83
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 2.75-8
 - 为 Magic 3.0 重建
 

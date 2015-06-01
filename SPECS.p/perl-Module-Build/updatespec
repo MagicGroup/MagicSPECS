@@ -1,0 +1,16 @@
+#!/bin/bash
+if [ -z "$1" ] ; then
+        echo "使用方法：$0 新版本号"
+        exit 1
+fi
+majorver=$(echo $1 |awk -F. '{print $1"."$2}')
+minorver=$(echo $1 |awk -F. '{print $3}')
+if [ -z "$minorver" ] ; then
+minorver="%nil"
+fi
+pushd $(dirname $0)
+NAME=$(basename $(pwd))
+sed -i "s/%global cpan_version_major.*/%global cpan_version_major $majorver/g" $NAME.spec
+sed -i "s/%global cpan_version_minor.*/%global cpan_version_minor $minorver/g" $NAME.spec
+sed -i "s/Release:.*/Release:\t1%{?dist}/g" $NAME.spec
+popd

@@ -1,11 +1,11 @@
 %define real_name digikam
 #define pre %{nil}
-%define bootsrap 0
+%define bootsrap 1
 %if 0%{?bootsrap}
 %global _unpackaged_files_terminate_build	0
 %endif
 Name:	 kde4-digikam
-Version: 4.5.0
+Version: 4.9.0
 Release: 3%{?dist}
 Summary: A digital camera accessing & photo management application
 Summary(zh_CN.UTF-8): 一个数码相机访问和照片管理程序
@@ -117,19 +117,6 @@ Conflicts: digikam-libs < 2.0.0-2
 %package -n libkface-devel
 Summary: Development files for libkface 
 %description -n libkface-devel
-%{summary}.
-
-%package -n libkgeomap
-Summary: A world map library
-# when libs were split 
-Conflicts: digikam-libs < 2.0.0-2
-Requires: kde4-marble%{?_kde4_version: >= %{_kde4_version}}
-%description -n libkgeomap
-%{summary}.
-
-%package -n libkgeomap-devel
-Summary: Development files for libkgeomap
-%description -n libkgeomap-devel
 %{summary}.
 
 %package -n libmediawiki
@@ -469,6 +456,9 @@ update-desktop-database -q &> /dev/null
 
 
 %changelog
+* Fri May 01 2015 Liu Di <liudidi@gmail.com> - 4.9.0-3
+- 更新到 4.9.0
+
 * Wed Nov 26 2014 Liu Di <liudidi@gmail.com> - 4.5.0-3
 - 为 Magic 3.0 重建
 

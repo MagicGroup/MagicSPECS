@@ -1,9 +1,11 @@
 Name:           perl-Apache-DBI-Cache
 Version:        0.08
-Release:        29%{?dist}
+Release:        30%{?dist}
 Summary:        Perl DBI connection cache
+Summary(zh_CN.UTF-8): Perl DBI 连接缓存
 License:        GPL+ or Artistic
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 URL:            http://search.cpan.org/dist/Apache-DBI-Cache/
 Source0:        http://www.cpan.org/authors/id/O/OP/OPI/Apache-DBI-Cache-%{version}.tar.gz
 Patch0:         0001-DBI-dr-connect-can-clobber-the-arguments.patch
@@ -35,6 +37,8 @@ Apache::DBI replacement it provides persistent DBI connections
 while overcoming certain limitations. It is compatible with mod_perl,
 though it does not require it.
 
+%description -l zh_CN.UTF-8
+Perl DBI 连接缓存。
 
 %prep
 %setup -q -n Apache-DBI-Cache-%{version}
@@ -55,7 +59,7 @@ find $RPM_BUILD_ROOT -type f -name .packlist -exec rm -f {} \;
 find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 
 %{_fixperms} $RPM_BUILD_ROOT/*
-
+magic_rpm_clean.sh
 
 %check
 
@@ -72,6 +76,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Thu Apr 23 2015 Liu Di <liudidi@gmail.com> - 0.08-30
+- 为 Magic 3.0 重建
+
 * Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 0.08-29
 - 为 Magic 3.0 重建
 

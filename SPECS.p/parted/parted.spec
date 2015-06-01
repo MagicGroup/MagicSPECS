@@ -1,18 +1,28 @@
+%define _sbindir /sbin
+%define _libdir /%{_lib}
+
 Summary: The GNU disk partition manipulation program
+Summary(zh_CN.UTF-8): GNU 磁盘分区处理程序
 Name:    parted
-Version: 3.1
-Release: 3%{?dist}
+Version: 3.2
+Release: 6%{?dist}
 License: GPLv3+
 Group:   Applications/System
+Group(zh_CN.UTF-8): 应用程序/系统
 URL:     http://www.gnu.org/software/parted
 
-Source0: ftp://ftp.gnu.org/gnu/%{name}/%{name}-%{version}.tar.xz
-Source1: ftp://ftp.gnu.org/gnu/%{name}/%{name}-%{version}.tar.xz.sig
+Source0: https://ftp.gnu.org/gnu/%{name}/%{name}-%{version}.tar.xz
+Source1: https://ftp.gnu.org/gnu/%{name}/%{name}-%{version}.tar.xz.sig
 Source2: pubkey.jim.meyering
+Source3: pubkey.phillip.susi
 
-Patch0: parted-3.0-libparted-copy-pmbr_boot-when-duplicating-GPT-disk.patch
-Patch1: parted-3.1-libparted-check-PMBR-before-GPT-partition-table-8052.patch
-Patch2: parted-3.1-tests-add-t0301-overwrite-gpt-pmbr.sh.patch
+Patch0001: 0001-tests-Try-several-UTF8-locales.patch
+Patch0002: 0002-maint-post-release-administrivia.patch
+Patch0003: 0003-libparted-also-link-to-UUID_LIBS.patch
+Patch0004: 0004-lib-fs-resize-Prevent-crash-resizing-FAT16-file-syst.patch
+Patch0005: 0005-tests-t3000-resize-fs.sh-Add-FAT16-resizing-test.patch
+Patch0006: 0006-tests-t3000-resize-fs.sh-Add-requirement-on-mkfs.vfa.patch
+Patch0007: 0007-tests-Change-minimum-size-to-256MiB.patch
 
 Buildroot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: e2fsprogs-devel
@@ -27,12 +37,19 @@ BuildRequires: gnupg
 BuildRequires: git
 BuildRequires: autoconf automake
 BuildRequires: e2fsprogs
+BuildRequires: xfsprogs
 BuildRequires: dosfstools
+BuildRequires: perl-Digest-CRC
+BuildRequires: bc
 
-Requires(post): /usr/sbin/ldconfig
+Requires(post): /sbin/ldconfig
 Requires(post): /sbin/install-info
 Requires(preun): /sbin/install-info
-Requires(postun): /usr/sbin/ldconfig
+Requires(postun): /sbin/ldconfig
+
+# bundled gnulib library exception, as per packaging guidelines
+# https://fedoraproject.org/wiki/Packaging:No_Bundled_Libraries
+Provides: bundled(gnulib)
 
 %description
 The GNU Parted program allows you to create, destroy, resize, move,
@@ -40,10 +57,14 @@ and copy hard disk partitions. Parted can be used for creating space
 for new operating systems, reorganizing disk usage, and copying data
 to new hard disks.
 
+%description -l zh_CN.UTF-8
+GNU 磁盘分区处理程序，可以创建，删除，调整，移动和复制硬盘分区。
 
 %package devel
 Summary:  Files for developing apps which will manipulate disk partitions
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:    Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: %{name} = %{version}-%{release}
 Requires: pkgconfig
 
@@ -53,17 +74,19 @@ manipulation. If you want to develop programs that manipulate disk
 partitions and filesystems using the routines provided by the GNU
 Parted library, you need to install this package.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
-gpg --import %{SOURCE2}
+gpg --import %{SOURCE2} %{SOURCE3}
 gpg --verify %{SOURCE1} %{SOURCE0}
 git init
 git config user.email "parted-owner@fedoraproject.org"
 git config user.name "Fedora Ninjas"
 git add .
 git commit -a -q -m "%{version} baseline."
-git am %{patches}
+[ -n "%{patches}" ] && git am %{patches}
 iconv -f ISO-8859-1 -t UTF8 AUTHORS > tmp; touch -r AUTHORS tmp; mv tmp AUTHORS
 git commit -a -m "run iconv"
 
@@ -71,7 +94,7 @@ git commit -a -m "run iconv"
 autoreconf
 autoconf
 CFLAGS="$RPM_OPT_FLAGS -Wno-unused-but-set-variable"; export CFLAGS
-%configure --disable-selinux --disable-static
+%configure --disable-selinux --disable-static --disable-gcc-warnings
 # Don't use rpath!
 %{__sed} -i 's|^hardcode_libdir_flag_spec=.*|hardcode_libdir_flag_spec=""|g' libtool
 %{__sed} -i 's|^runpath_var=LD_RUN_PATH|runpath_var=DIE_RPATH_DIE|g' libtool
@@ -83,23 +106,22 @@ V=1 %{__make} %{?_smp_mflags}
 %{__make} install DESTDIR=%{buildroot}
 
 # Move devel package components in to the correct location
-#%{__mkdir} -p %{buildroot}%{_exec_prefix}/%{_lib}
-#%{__mv} %{buildroot}%{_libdir}/libparted.so %{buildroot}%{_exec_prefix}/%{_lib}
-#%{__mv} %{buildroot}%{_libdir}/pkgconfig %{buildroot}%{_exec_prefix}/%{_lib}
-#pushd %{buildroot}%{_exec_prefix}/%{_lib}
-#reallibrary="$(readlink libparted.so)"
-#%{__rm} -f libparted.so
-#ln -sf ../../%{_lib}/${reallibrary} libparted.so
-#popd
+%{__mkdir} -p %{buildroot}%{_exec_prefix}/%{_lib}
+%{__mv} %{buildroot}%{_libdir}/libparted.so %{buildroot}%{_exec_prefix}/%{_lib}
+%{__mv} %{buildroot}%{_libdir}/pkgconfig %{buildroot}%{_exec_prefix}/%{_lib}
+pushd %{buildroot}%{_exec_prefix}/%{_lib}
+reallibrary="$(readlink libparted.so)"
+%{__rm} -f libparted.so
+ln -sf ../../%{_lib}/${reallibrary} libparted.so
+popd
 
 # Remove components we do not ship
 %{__rm} -rf %{buildroot}%{_libdir}/*.la
 %{__rm} -rf %{buildroot}%{_infodir}/dir
 %{__rm} -rf %{buildroot}%{_bindir}/label
 %{__rm} -rf %{buildroot}%{_bindir}/disk
-
 magic_rpm_clean.sh
-%find_lang %{name} || touch %{name}.lang
+%find_lang %{name}
 
 
 %check
@@ -112,7 +134,7 @@ make check
 
 
 %post
-/usr/sbin/ldconfig
+/sbin/ldconfig
 if [ -f %{_infodir}/parted.info.gz ]; then
     /sbin/install-info %{_infodir}/parted.info.gz %{_infodir}/dir || :
 fi
@@ -122,12 +144,14 @@ if [ $1 = 0 ]; then
     /sbin/install-info --delete %{_infodir}/parted.info.gz %{_infodir}/dir >/dev/null 2>&1 || :
 fi
 
-%postun -p /usr/sbin/ldconfig
+%postun -p /sbin/ldconfig
 
 
 %files -f %{name}.lang
 %defattr(-,root,root,-)
-%doc AUTHORS BUGS COPYING ChangeLog NEWS README THANKS TODO doc/API doc/FAT
+%doc AUTHORS NEWS README THANKS
+%{!?_licensedir:%global license %%doc}
+%license COPYING
 %{_sbindir}/parted
 %{_sbindir}/partprobe
 %{_mandir}/man8/parted.8.gz
@@ -138,14 +162,169 @@ fi
 
 %files devel
 %defattr(-,root,root,-)
+%doc TODO doc/API doc/FAT
 %{_includedir}/parted
 %{_exec_prefix}/%{_lib}/libparted.so
 %{_exec_prefix}/%{_lib}/pkgconfig/libparted.pc
 
 
 %changelog
-* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 3.1-3
+* Wed Apr 15 2015 Liu Di <liudidi@gmail.com> - 3.2-6
 - 为 Magic 3.0 重建
+
+* Fri Nov 07 2014 Brian C. Lane <bcl@redhat.com> 3.2-5
+- tests: Change minimum size to 256MiB for t1700-probe-fs
+
+* Fri Oct 31 2014 Brian C. Lane <bcl@redhat.com> 3.2-4
+- Update to current master commit ac74b83 to fix fat16 resize (#1159083)
+- tests: t3000-resize-fs.sh: Add requirement on mkfs.vfat (mike.fleetwood)
+- tests: t3000-resize-fs.sh: Add FAT16 resizing test (mike.fleetwood)
+- lib-fs-resize: Prevent crash resizing FAT16 file systems (mike.fleetwood)
+- libparted: also link to UUID_LIBS (heirecka)
+
+* Sun Aug 17 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.2-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
+
+* Wed Aug 13 2014 Brian C. Lane <bcl@redhat.com> 3.2-2
+- Use a better patch to find the UTF8 locale for t0251
+
+* Wed Jul 30 2014 Brian C. Lane <bcl@redhat.com> 3.2-1
+- Rebase on upstream stable release v3.2
+- Drop upstream patches.
+- Patch t0251 to use en_US.UTF-8 if possible. Fedora doesn't have C.UTF-8
+
+* Wed Jul 30 2014 Tom Callaway <spot@fedoraproject.org> 3.1.90-2
+- fix license handling
+
+* Mon Jul 28 2014 Brian C. Lane <bcl@redhat.com> 3.1.90-1
+- Rebase on upstream Alpha source release
+- drop included patches (all but one)
+- add Phillip Susi's GPG key
+- make sure gcc warnings as errors remains disabled since we use git for patches
+
+* Mon Jul 14 2014 Brian C. Lane <bcl@redhat.com> 3.1-29
+- Rebase on parted master commit 081ed98
+- libparted: Add support for partition resize
+- parted: add resizepart command
+
+* Wed Jun 11 2014 Brian C. Lane <bcl@redhat.com> 3.1-28
+- Rebase on parted master commit 1da239e2ebd2
+- libparted: Fix bug with dupe and empty name
+
+* Fri Jun 06 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.1-27
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Sat May 31 2014 Peter Robinson <pbrobinson@fedoraproject.org> 3.1-26
+- Move dev docs to devel
+- Drop duplicated/outdated docs
+
+* Tue May 27 2014 Brian C. Lane <bcl@redhat.com> 3.1-25
+- Use mkfs.xfs to create files (#1101112)
+
+* Thu May 22 2014 Brian C. Lane <bcl@redhat.com> 3.1-24
+- Add some missing patches from master and the loop label fixes
+- tests: test loop labels (psusi)
+- libparted: don't trash filesystem when writing loop label (psusi)
+- libparted: give correct partition device name on loop labels (psusi)
+- partprobe: do not skip loop labels (psusi)
+- libparted: don't create partition on loop label (psusi)
+- libparted: fix loop labels to not vanish (psusi)
+- libparted: remove all old partitions, even if new label allows less (psusi)
+- libparted: remove old partitions *first* before adding new ones (psusi)
+- libparted: don't detect fat and ntfs boot sectors as dos MBR (psusi)
+- Fix filesystem detection on non 512 byte sectors (psusi)
+- tests: fix t2310-dos-extended-2-sector-min-offset.sh (psusi)
+- libparted: remove last_usable_if_grown (psusi)
+
+* Fri May 16 2014 Brian C. Lane <bcl@redhat.com> 3.1-23
+- Fix partition naming patch for big endian systems.
+
+* Fri May 16 2014 Brian C. Lane <bcl@redhat.com> 3.1-22
+- Fix a problem with GPT Partition names using. They are UCS-2LE not UTF-16
+
+* Fri Apr 18 2014 Brian C. Lane <bcl@redhat.com> 3.1-21
+- Fix t1700 probe patch -- remove loop before making new fs
+
+* Thu Apr 17 2014 Brian C. Lane <bcl@redhat.com> 3.1-20
+- Use force for xfs in t1700 and a larger file
+- Make t4100 xfs filesystem larger and sparse
+- Fix part dupe with empty name
+- check name when duplicating
+- Add ntfs vfat hfsplus to t1700 probe test
+
+* Wed Apr 09 2014 Brian C. Lane <bcl@redhat.com> 3.1-19
+- Use little endian packing in gpt tests
+- Fix integer overflows with DVH disk label
+
+* Tue Apr 08 2014 Brian C. Lane <bcl@redhat.com> 3.1-18
+- Rebase on new upstream master commit cc382c3
+- Drop patches incorporated into upstream
+- Still adds the various DASD patches
+
+* Thu Feb 27 2014 Brian C. Lane <bcl@redhat.com> 3.1-17
+- Drop hfs_esp patch. Idea didn't work.
+
+* Wed Sep 11 2013 Brian C. Lane <bcl@redhat.com> 3.1-16
+- tests: Restrict gpt header munge to little-endian systems
+- Add perl Digest::CRC as a build requirement so more tests will run
+
+* Wed Sep 04 2013 Brian C. Lane <bcl@redhat.com> 3.1-15
+- libparted: Flush parent device on open (#962611)
+
+* Wed Aug 28 2013 Brian C. Lane <bcl@redhat.com> 3.1-14
+- Rebasing Fedora patches with upstream master since v3.1 release
+- Summary of important changes from upstream:
+  - add support for a new Linux-specific GPT partition type code
+  - partprobe: remove partitions when there is no partition table
+  - libparted: refactor device-mapper partition sync code
+  - libparted: remove extraneous blkpg add partition ped exception
+  - libparted: don't probe every dm device in probe_all
+- New Fedora changes:
+  - libparted: Add Intel Rapid Start Technology partition flag.
+  - libparted: Add UEFI System Partition flag.
+  - libparted: Add hfs_esp partition flag to GPT.
+  - libparted: Recognize btrfs filesystem
+  - tests: Add btrfs and xfs to the fs probe test
+
+* Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.1-13
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Wed Apr 17 2013 Brian C. Lane <bcl@redhat.com> 3.1-12
+- libparted: mklabel to support EDEV DASD (#953146)
+- tests: rewrite t6001 to use /dev/mapper
+
+* Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.1-11
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
+
+* Wed Dec 12 2012 Brian C. Lane <bcl@redhat.com> 3.1-10
+- libparted: mklabel to support EAV DASD (#707032)
+- libparted: Avoid dasd as default disk type while probe (#707032)
+
+* Thu Nov 01 2012 Brian C. Lane <bcl@redhat.com> 3.1-9
+- don't canonicalize /dev/md/ paths (#872361)
+
+* Tue Oct 16 2012 Brian C. Lane <bcl@redhat.com> 3.1-8
+- change partition UUID to use partX-UUID (#858704)
+- fixup losetup usage in tests
+- add support for implicit FBA DASD partitions (#707027)
+- add support for EAV DASD partitions (#707032)
+
+* Tue Sep 04 2012 Brian C. Lane <bcl@redhat.com> 3.1-7
+- reallocate buf after _disk_analyse_block_size (#835601)
+
+* Fri Aug 03 2012 Brian C. Lane <bcl@redhat.com> 3.1-6
+- Use dm_udev_wait for dm operations (#844257) (bcl)
+- use largest_partnum in _dm_reread_part_table (bcl)
+- set uuid on dm partitions (#832145) (bcl)
+
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.1-5
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Fri Jun 08 2012 Brian C. Lane <bcl@redhat.com> 3.1-4
+- Fix crash on ppc64 with GPT (#829960) (rwmj)
+
+* Tue May 15 2012 Brian C. Lane <bcl@redhat.com> 3.1-3
+- Added Provides: bundled(gnulib) (#821782)
 
 * Wed Mar 21 2012 Brian C. Lane <bcl@redhat.com> 3.1-2
 - libparted: check PMBR before GPT partition table (#805272)

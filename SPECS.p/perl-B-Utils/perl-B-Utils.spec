@@ -1,11 +1,13 @@
 Name:           perl-B-Utils
-Version:        0.17
-Release:        10%{?dist}
+Version:	0.26
+Release:	1%{?dist}
 Summary:        Helper functions for op tree manipulation
+Summary(zh_CN.UTF-8): op 树操作的辅助函数
 License:        GPL+ or Artistic
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 URL:            http://search.cpan.org/dist/B-Utils/
-Source0:        http://www.cpan.org/authors/id/J/JJ/JJORE/B-Utils-%{version}.tar.gz
+Source0:        http://www.cpan.org/authors/id/E/ET/ETHER/B-Utils-%{version}.tar.gz
 
 BuildRequires:  perl(B)
 BuildRequires:  perl(Carp)
@@ -29,6 +31,9 @@ Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $versi
 %description
 Helper functions for op tree manipulation.
 
+%description -l zh_CN.UTF-8
+op 树操作的辅助函数。
+
 %prep
 %setup -q -n B-Utils-%{version}
 
@@ -44,6 +49,7 @@ find $RPM_BUILD_ROOT -type f -name '*.bs' -size 0 -exec rm -f {} \;
 find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 
 %{_fixperms} $RPM_BUILD_ROOT/*
+magic_rpm_clean.sh
 
 %check
 
@@ -56,6 +62,9 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_mandir}/man3/*
 
 %changelog
+* Thu Apr 30 2015 Liu Di <liudidi@gmail.com> - 0.26-1
+- 更新到 0.26
+
 * Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 0.17-10
 - 为 Magic 3.0 重建
 

@@ -1,13 +1,14 @@
 Name:           perl-bioperl
-Version:        1.6.1
-Release:        30%{?dist}
+Version:	1.6.924
+Release:	3%{?dist}
 Summary:        Perl tools for computational molecular biology
+Summary(zh_CN.UTF-8): 用于计算分子生物学的 Perl 工具
 
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 License:        GPL+ or Artistic
 URL:            http://www.bioperl.org/
-Source0:        http://bioperl.org/DIST/BioPerl-%{version}.tar.bz2
-Patch0:         bioperl-1.6.1-paths.patch
+Source0:        http://search.cpan.org/CPAN/authors/id/C/CJ/CJFIELDS/BioPerl-%{version}.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildArch:      noarch
@@ -70,9 +71,11 @@ BioPerl is a toolkit of Perl modules useful in building bioinformatics
 solutions in Perl. It is built in an object-oriented manner so that
 many modules depend on each other to achieve a task.
 
+%description -l zh_CN.UTF-8
+用于计算分子生物学的 Perl 工具。
+
 %prep
 %setup -q -n BioPerl-%{version}
-%patch0 -p1 
 
 # temporarily remove PhyloNetwork before compiling until upstream says
 # they are ready for primetime and deps Math::Random and
@@ -111,6 +114,7 @@ find $RPM_BUILD_ROOT -type d -depth -exec rmdir {} 2>/dev/null ';'
 find $RPM_BUILD_ROOT -type f -name '*.pm' -exec chmod -x {} 2>/dev/null ';'
 # correct all binaries in /usr/bin to be 0755
 find $RPM_BUILD_ROOT/%{_bindir} -type f -name '*.pl' -exec chmod 0755 {} 2>/dev/null ';'
+magic_rpm_clean.sh
 
 %check
 %{?_with_check:./Build test || :}
@@ -130,6 +134,15 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*.3*    
 
 %changelog
+* Fri Apr 17 2015 Liu Di <liudidi@gmail.com> - 1.6.924-3
+- 为 Magic 3.0 重建
+
+* Fri Apr 17 2015 Liu Di <liudidi@gmail.com> - 1.6.924-2
+- 为 Magic 3.0 重建
+
+* Fri Apr 17 2015 Liu Di <liudidi@gmail.com> - 1.6.924-1
+- 更新到 1.6.924
+
 * Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 1.6.1-30
 - 为 Magic 3.0 重建
 

@@ -1,11 +1,13 @@
 Name:           perl-autodie
-Version:        2.25
-Release:        3%{?dist}
+Version:	2.26
+Release:	1%{?dist}
 Summary:        Replace functions with ones that succeed or die
+Summary(zh_CN.UTF-8): 把函数替换成执行成功或失败
 License:        GPL+ or Artistic
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 URL:            http://search.cpan.org/dist/autodie/
-Source0:        http://www.cpan.org/authors/id/P/PJ/PJF/autodie-%{version}.tar.gz
+Source0:        http://search.cpan.org/CPAN/authors/id/N/NT/NTHYKIER/autodie-%{version}.tar.gz
 BuildArch:      noarch
 BuildRequires:  perl
 BuildRequires:  perl(ExtUtils::MakeMaker) >= 6.30
@@ -60,6 +62,9 @@ exception on failure.
 However "Fatal" has been obsoleted by the new autodie pragma. Please use
 autodie in preference to "Fatal".
 
+%description -l zh_CN.UTF-8
+把函数替换成执行成功或失败。
+
 %prep
 %setup -q -n autodie-%{version}
 find -type f -exec chmod -x {} +
@@ -72,6 +77,7 @@ make %{?_smp_mflags}
 make pure_install DESTDIR=$RPM_BUILD_ROOT
 find $RPM_BUILD_ROOT -type f -name .packlist -exec rm -f {} \;
 %{_fixperms} $RPM_BUILD_ROOT/*
+magic_rpm_clean.sh
 
 %check
 make test
@@ -82,6 +88,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Fri Apr 17 2015 Liu Di <liudidi@gmail.com> - 2.26-1
+- 更新到 2.26
+
 * Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 2.25-3
 - 为 Magic 3.0 重建
 

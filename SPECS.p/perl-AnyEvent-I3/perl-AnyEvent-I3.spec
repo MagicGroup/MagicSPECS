@@ -1,11 +1,13 @@
 %define srcname AnyEvent-I3
 
 Name:           perl-AnyEvent-I3
-Version:        0.06
-Release:        10%{?dist}
+Version:	0.16
+Release:	1%{?dist}
 Summary:        Communicate with the i3 window manager
+Summary(zh_CN.UTF-8): 与 I3 窗口管理器通信
 
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 License:        GPL+ or Artistic
 URL:            http://search.cpan.org/dist/anyevent-i3/
 Source0:        http://search.cpan.org/CPAN/authors/id/M/MS/MSTPLBG/%{srcname}-%{version}.tar.gz
@@ -24,6 +26,8 @@ This module connects to the i3 window manager using the UNIX socket based
 IPC interface it provides (if enabled in the configuration file). You can
 then subscribe to events or send messages and receive their replies.
 
+%description -l zh_CN.UTF-8
+与 I3 窗口管理器通信。
 
 %prep
 %setup -q -n %{srcname}-%{version}
@@ -39,7 +43,7 @@ rm -rf %{buildroot}
 make pure_install DESTDIR=%{buildroot}
 find %{buildroot} -type f -name .packlist -exec rm -f {} ';'
 %{_fixperms} %{buildroot}/*
-
+magic_rpm_clean.sh
 
 %clean
 rm -rf %{buildroot}
@@ -53,6 +57,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Apr 22 2015 Liu Di <liudidi@gmail.com> - 0.16-1
+- 更新到 0.16
+
 * Thu Jun 12 2014 Liu Di <liudidi@gmail.com> - 0.06-10
 - 为 Magic 3.0 重建
 

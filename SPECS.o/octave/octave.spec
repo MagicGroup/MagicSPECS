@@ -10,7 +10,7 @@
 Name:           octave
 Epoch:          6
 Version:	3.8.2
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:        A high-level language for numerical computations
 Summary(zh_CN.UTF-8): 数值计算的高级语言
 Group:          Applications/Engineering
@@ -31,6 +31,8 @@ Patch0:         octave-3.8.0-pkgbuilddir.patch
 # Patch to compile with suitesparse 4.3.1
 # https://savannah.gnu.org/bugs/?func=detailitem&item_id=43063
 Patch1:         octave-suitesparse.patch
+
+Patch2:		octave-disable-qt5.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
@@ -129,7 +131,8 @@ This package contains documentation for Octave.
 %prep
 %setup -q -n %{name}-%{version}%{?rctag}
 %patch0 -p1 -b .pkgbuilddir
-%patch1 -p1 -b .noqt5
+%patch1 -p1 -b .suite
+%patch2 -p1 -b .noqt5
 find -name \*.h -o -name \*.cc | xargs sed -i -e 's/<config.h>/"config.h"/' -e 's/<base-list.h>/"base-list.h"/'
 
 # Check permissions
@@ -309,6 +312,9 @@ fi
 
 
 %changelog
+* Wed Apr 29 2015 Liu Di <liudidi@gmail.com> - 6:3.8.2-2
+- 为 Magic 3.0 重建
+
 * Sat Mar 14 2015 Liu Di <liudidi@gmail.com> - 6:3.8.2-1
 - 更新到 3.8.2
 

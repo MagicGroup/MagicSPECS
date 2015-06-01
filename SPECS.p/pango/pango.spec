@@ -9,13 +9,16 @@
 %global bin_version 1.8.0
 
 Summary: System for layout and rendering of internationalized text
+Summary(zh_CN.UTF-8): 国际化文本的布局和渲染系统
 Name: pango
 Version: 1.36.8
-Release: 4%{?dist}
+Release: 5%{?dist}
 License: LGPLv2+
 Group: System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 #VCS: git:git://git.gnome.org/pango
-Source: http://download.gnome.org/sources/pango/1.36/pango-%{version}.tar.xz
+%define majorver %(echo %{version} | awk -F. '{print $1"."$2}')
+Source: http://download.gnome.org/sources/pango/%{majorver}/pango-%{version}.tar.xz
 URL: http://www.pango.org
 
 BuildRequires: glib2-devel >= %{glib2_version}
@@ -50,9 +53,14 @@ with different font backends.
 The integration of Pango with Cairo provides a complete solution with high
 quality text handling and graphics rendering.
 
+%description -l zh_CN.UTF-8
+国际化文本的布局和渲染系统。
+
 %package devel
 Summary: Development files for pango
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: pango%{?_isa} = %{version}-%{release}
 Requires: glib2-devel%{?_isa} >= %{glib2_version}
 Requires: freetype-devel%{?_isa} >= %{freetype_version}
@@ -63,15 +71,22 @@ Requires: cairo-devel%{?_isa} >= %{cairo_version}
 The pango-devel package includes the header files and developer documentation
 for the pango package.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
 %package tests
 Summary: Tests for the %{name} package
+Summary(zh_CN.UTF-8): %{name} 的测试程序
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: %{name}%{?_isa} = %{version}-%{release}
 
 %description tests
 The %{name}-tests package contains tests that can be used to verify
 the functionality of the installed %{name} package.
 
+%description tests -l zh_CN.UTF-8
+%{name} 的测试程序。
 
 %prep
 %setup -q -n pango-%{version}
@@ -112,6 +127,7 @@ mv $RPM_BUILD_ROOT%{_bindir}/pango-querymodules $RPM_BUILD_ROOT%{_bindir}/pango-
 echo ".so man1/pango-querymodules.1" > $RPM_BUILD_ROOT%{_mandir}/man1/pango-querymodules-%{__isa_bits}.1
 
 touch $RPM_BUILD_ROOT%{_libdir}/pango/%{bin_version}/modules.cache
+magic_rpm_clean.sh
 
 %post
 /sbin/ldconfig
@@ -158,6 +174,9 @@ fi
 
 
 %changelog
+* Wed Apr 15 2015 Liu Di <liudidi@gmail.com> - 1.36.8-5
+- 为 Magic 3.0 重建
+
 * Wed Feb 25 2015 Liu Di <liudidi@gmail.com> - 1.36.8-4
 - 为 Magic 3.0 重建
 

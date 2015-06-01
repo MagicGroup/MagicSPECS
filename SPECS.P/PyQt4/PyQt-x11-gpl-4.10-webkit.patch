@@ -1,0 +1,38 @@
+diff -up PyQt-x11-gpl-4.10/configure.py.webkit PyQt-x11-gpl-4.10/configure.py
+--- PyQt-x11-gpl-4.10/configure.py.webkit	2013-04-02 14:19:41.012879837 +0200
++++ PyQt-x11-gpl-4.10/configure.py	2013-04-02 14:21:15.233319365 +0200
+@@ -387,7 +387,6 @@ class ConfigurePyQt4:
+                 extra_libs=sql_libs)
+         check_module("QtSvg", "qsvgwidget.h", "new QSvgWidget()")
+         check_module("QtTest", "QtTest", "QTest::qSleep(0)")
+-        check_module("QtWebKit", "qwebpage.h", "new QWebPage()")
+         check_module("QtXml", "qdom.h", "new QDomDocument()")
+         check_module("QtXmlPatterns", "qxmlname.h", "new QXmlName()")
+         check_module("phonon", "phonon/videowidget.h",
+@@ -530,9 +529,6 @@ class ConfigurePyQt4:
+         if "QtTest" in pyqt_modules:
+             generate_code("QtTest")
+ 
+-        if "QtWebKit" in pyqt_modules:
+-            generate_code("QtWebKit")
+-
+         if "QtXml" in pyqt_modules:
+             generate_code("QtXml")
+ 
+@@ -1310,7 +1306,7 @@ def compile_qt_program(name, mname, extr
+     opengl = (mname == "QtOpenGL")
+ 
+     qt = [mname]
+-    if mname in ("QtAssistant", "QtHelp", "QtOpenGL", "QtWebKit"):
++    if mname in ("QtAssistant", "QtHelp", "QtOpenGL"):
+         qt.append("QtCore")
+ 
+     makefile = sipconfig.ProgramMakefile(sipcfg, console=1, qt=qt, warnings=0,
+@@ -1609,7 +1605,6 @@ def needed_qt_libs(mname, qt_libs):
+         "QtSql": ["QtGui"],
+         "QtSvg": ["QtGui"],
+         "QtTest": ["QtGui"],
+-        "QtWebKit": ["QtNetwork", "QtGui"],
+         "QtXml": ["QtCore"],
+         "QtXmlPatterns": ["QtNetwork", "QtCore"],
+         "phonon": ["QtGui"],

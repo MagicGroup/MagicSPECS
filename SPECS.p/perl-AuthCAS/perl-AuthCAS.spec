@@ -1,9 +1,11 @@
 Name:           perl-AuthCAS
-Version:        1.5
-Release:        13%{?dist}
+Version:	1.6
+Release:	1%{?dist}
 Summary:        Client library for CAS 2.0 authentication server
+Summary(zh_CN.UTF-8): CAS 2.0 认证服务器的客户端库
 License:        GPL+ or Artistic
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 URL:            http://search.cpan.org/dist/AuthCAS/
 Source0:        http://search.cpan.org/CPAN/authors/id/O/OS/OSALAUN/AuthCAS-%{version}.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -22,6 +24,8 @@ AuthCAS aims at providing a Perl API to Yale's Central Authentication
 System (CAS). Only a basic Perl library is provided with CAS whereas
 AuthCAS is a full object-oriented library.
 
+%description -l zh_CN.UTF-8
+CAS 2.0 认证服务器的客户端库。
 
 %prep
 %setup -q -n AuthCAS-%{version}
@@ -42,7 +46,7 @@ rm -rf $RPM_BUILD_ROOT
 find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 
 %{_fixperms} $RPM_BUILD_ROOT/*
-
+magic_rpm_clean.sh
 
 %check
 ./Build test
@@ -60,6 +64,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Thu Apr 23 2015 Liu Di <liudidi@gmail.com> - 1.6-1
+- 更新到 1.6
+
 * Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 1.5-13
 - 为 Magic 3.0 重建
 

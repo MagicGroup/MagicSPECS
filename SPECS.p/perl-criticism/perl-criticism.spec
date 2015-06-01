@@ -1,9 +1,11 @@
 Name:           perl-criticism
 Version:        1.02
-Release:        10%{?dist}
+Release:        11%{?dist}
 Summary:        Perl pragma to enforce coding standards and best-practices
+Summary(zh_CN.UTF-8):Perl的编译执行编码标准和最佳实践
 License:        GPL+ or Artistic
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 URL:            http://search.cpan.org/dist/criticism/
 Source0:        http://www.cpan.org/authors/id/T/TH/THALJEF/criticism/criticism-%{version}.tar.gz
 BuildArch:      noarch
@@ -28,6 +30,9 @@ can effectively bypass the criticism pragma by not installing Perl::Critic
 in the production environment. If Perl::Critic can't be loaded, then
 criticism just fails silently.
 
+%description -l zh_CN.UTF-8
+Perl的编译执行编码标准和最佳实践。
+
 %prep
 %setup -q -n criticism-%{version}
 chmod 644 lib/*.pm
@@ -40,6 +45,7 @@ chmod 644 lib/*.pm
 ./Build install destdir=$RPM_BUILD_ROOT create_packlist=0
 find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_fixperms} $RPM_BUILD_ROOT/*
+magic_rpm_clean.sh
 
 %check
 ./Build test
@@ -51,6 +57,9 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_mandir}/man3/*
 
 %changelog
+* Fri May 08 2015 Liu Di <liudidi@gmail.com> - 1.02-11
+- 为 Magic 3.0 重建
+
 * Thu Jun 19 2014 Liu Di <liudidi@gmail.com> - 1.02-10
 - 为 Magic 3.0 重建
 

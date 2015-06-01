@@ -10,7 +10,7 @@
 
 Name:           gstreamer1-plugins-bad
 Version:	1.4.5
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        GStreamer streaming media framework "bad" plugins
 
 License:        LGPLv2+ and LGPLv2
@@ -293,6 +293,8 @@ chrpath --delete $RPM_BUILD_ROOT%{_libdir}/gstreamer-%{majorminor}/libgstcamerab
 %{_libdir}/gstreamer-%{majorminor}/libgstvideosignal.so
 %{_libdir}/gstreamer-%{majorminor}/libgstvmnc.so
 
+%{_libdir}/gstreamer-%{majorminor}/libgstmpg123.so
+
 %{_libdir}/gstreamer-%{majorminor}/libgstofa.so
 %{_libdir}/gstreamer-%{majorminor}/libgstopencv.so
 %{_datadir}/gst-plugins-bad/%{majorminor}/opencv_haarcascades/fist.xml
@@ -349,6 +351,9 @@ chrpath --delete $RPM_BUILD_ROOT%{_libdir}/gstreamer-%{majorminor}/libgstcamerab
 #%{_libdir}/pkgconfig/gstreamer-wayland-%{majorminor}.pc
 
 %changelog
+* Fri Apr 17 2015 Liu Di <liudidi@gmail.com> - 1.4.5-4
+- 为 Magic 3.0 重建
+
 * Mon Mar 02 2015 Liu Di <liudidi@gmail.com> - 1.4.5-3
 - 为 Magic 3.0 重建
 

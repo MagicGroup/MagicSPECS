@@ -4,15 +4,15 @@
 %define pkg_name Audio-Scan
 
 Summary: Fast C metadata and tag reader for all common audio file formats  
+Summary(zh_CN.UTF-8): 快速的 C 编写的所有通用音频文件格式的元数据和标记读取程序
 Name: perl-Audio-Scan
 Version: 0.93
-Release: 5%{?dist}
+Release: 9%{?dist}
 Group: Development/Libraries
 Group(zh_CN): 开发/库
 License: Artistic
 URL: http://search.cpan.org/dist/%{pkg_name}/
 Source0: http://www.cpan.org/authors/id/D/DA/DANIEL/%{pkg_name}-%{version}.tar.gz
-BuildArch: noarch
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: perl(ExtUtils::MakeMaker)
 BuildRequires: perl(MP3::Info) >= 1.20
@@ -20,11 +20,16 @@ BuildRequires: perl(MP3::Info) >= 1.20
 %description
 Fast C metadata and tag reader for all common audio file formats  
 
+%description -l zh_CN.UTF-8
+快速的 C 编写的所有通用音频文件格式的元数据和标记读取程序。
 
 %prep
 %setup -q -n %{pkg_name}-%{version}
 
 %build
+export PERL_MM_USE_DEFAULT=1 PERL5LIB=""                 \
+  PERL_AUTOINSTALL=--skipdeps                            \
+  MODULEBUILDRC=/dev/null
 %{__perl} Makefile.PL INSTALLDIRS="vendor" PREFIX="%{buildroot}%{_prefix}"
 %{__make} %{?_smp_mflags}
 
@@ -35,7 +40,9 @@ Fast C metadata and tag reader for all common audio file formats
 %{__rm} -rf %{buildroot}
 
 %makeinstall
-%{__rm} -rf %{buildroot}%{perl_archlib}/perllocal.pod %{buildroot}%{perl_vendorarch}/auto
+%{__rm} -rf %{buildroot}%{perl_archlib}/perllocal.pod 
+#%{buildroot}%{perl_vendorarch}/auto
+magic_rpm_clean.sh
 
 %clean
 %{__rm} -rf %{buildroot} %{_builddir}/%{buildsubdir}
@@ -44,9 +51,22 @@ Fast C metadata and tag reader for all common audio file formats
 %defattr(-,root,root,-)
 %doc Changes README
 %doc %{_mandir}/man3/*.3pm*
-%{perl_vendorarch}
+%{perl_archlib}/*
+%{perl_vendorarch}/*
 
 %changelog
+* Wed Apr 15 2015 Liu Di <liudidi@gmail.com> - 0.93-9
+- 为 Magic 3.0 重建
+
+* Wed Apr 15 2015 Liu Di <liudidi@gmail.com> - 0.93-8
+- 为 Magic 3.0 重建
+
+* Tue Apr 14 2015 Liu Di <liudidi@gmail.com> - 0.93-7
+- 为 Magic 3.0 重建
+
+* Tue Apr 14 2015 Liu Di <liudidi@gmail.com> - 0.93-6
+- 为 Magic 3.0 重建
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.93-5
 - 为 Magic 3.0 重建
 

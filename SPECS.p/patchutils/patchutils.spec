@@ -1,11 +1,13 @@
 Summary: A collection of programs for manipulating patch files
+Summary(zh_CN.UTF-8): 处理补丁文件的一组程序
 Name: patchutils
-Version: 0.3.2
-Release: 4%{?dist}
+Version:	0.3.3
+Release:	1%{?dist}
 License: GPLv2+
 Group: Applications/System
+Group(zh_CN.UTF-8): 应用程序/系统
 URL: http://cyberelk.net/tim/patchutils/
-Source0: http://cyberelk.net/tim/data/patchutils/stable/%{name}-%{version}.tar.bz2
+Source0: http://cyberelk.net/tim/data/patchutils/stable/%{name}-%{version}.tar.xz
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 Obsoletes: interdiff <= 0.0.10
 Provides: interdiff = 0.0.10
@@ -20,6 +22,9 @@ a variety of ways, such as interpolating between two pre-patches,
 combining two incremental patches, fixing line numbers in hand-edited 
 patches, and simply listing the files modified by a patch.
 
+%description -l zh_CN.UTF-8
+处理补丁文件的一组程序。
+
 %prep
 %setup -q
 
@@ -33,6 +38,7 @@ make %{?smp_mflags}
 %install
 rm -rf %{buildroot}
 make DESTDIR=%{buildroot} install
+magic_rpm_clean.sh
 
 %clean
 rm -rf %{buildroot}
@@ -44,6 +50,9 @@ rm -rf %{buildroot}
 %{_mandir}/*/*
 
 %changelog
+* Thu Apr 16 2015 Liu Di <liudidi@gmail.com> - 0.3.3-1
+- 更新到 0.3.3
+
 * Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 0.3.2-4
 - 为 Magic 3.0 重建
 

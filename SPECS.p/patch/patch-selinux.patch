@@ -1,28 +1,16 @@
-diff -up patch-2.6.1/Makefile.in.selinux patch-2.6.1/Makefile.in
---- patch-2.6.1/Makefile.in.selinux	2011-02-08 11:29:34.590271489 +0000
-+++ patch-2.6.1/Makefile.in	2011-02-08 11:29:34.602271607 +0000
-@@ -40,7 +40,7 @@ EXEEXT = @EXEEXT@
- LDFLAGS = @LDFLAGS@
- LIBOBJDIR = gl/lib/
- LIBOBJS = @LIBOBJS@ ${LIBOBJDIR}full-write$U.o
--LIBS = @LIBS@
-+LIBS = @LIBS@ -lselinux
- OBJEXT = @OBJEXT@
- PACKAGE_NAME = @PACKAGE_NAME@
- PACKAGE_VERSION = @PACKAGE_VERSION@
-diff -up patch-2.6.1/src/common.h.selinux patch-2.6.1/src/common.h
---- patch-2.6.1/src/common.h.selinux	2009-12-30 12:56:30.000000000 +0000
-+++ patch-2.6.1/src/common.h	2011-02-08 11:29:34.602271607 +0000
-@@ -32,6 +32,8 @@
+diff -up patch-2.7.5/src/common.h.selinux patch-2.7.5/src/common.h
+--- patch-2.7.5/src/common.h.selinux	2015-02-28 16:02:30.000000000 +0000
++++ patch-2.7.5/src/common.h	2015-03-09 09:29:46.083415914 +0000
+@@ -30,6 +30,8 @@
  #include <sys/types.h>
  #include <time.h>
  
 +#include <selinux/selinux.h>
 +
  #include <sys/stat.h>
- #if ! defined S_ISDIR && defined S_IFDIR
- # define S_ISDIR(m) (((m) & S_IFMT) == S_IFDIR)
-@@ -118,6 +120,7 @@ XTERN char *outfile;
+ 
+ #include <limits.h>
+@@ -84,6 +86,7 @@ XTERN char *outfile;
  XTERN int inerrno;
  XTERN int invc;
  XTERN struct stat instat;
@@ -30,31 +18,19 @@ diff -up patch-2.6.1/src/common.h.selinux patch-2.6.1/src/common.h
  XTERN bool dry_run;
  XTERN bool posixly_correct;
  
-diff -up patch-2.6.1/src/inp.c.selinux patch-2.6.1/src/inp.c
---- patch-2.6.1/src/inp.c.selinux	2011-02-08 11:29:34.576271352 +0000
-+++ patch-2.6.1/src/inp.c	2011-02-08 11:29:34.604271627 +0000
-@@ -152,8 +152,18 @@ get_input_file (char const *filename, ch
-     char *diffbuf;
+diff -up patch-2.7.5/src/inp.c.selinux patch-2.7.5/src/inp.c
+--- patch-2.7.5/src/inp.c.selinux	2015-03-07 00:34:20.000000000 +0000
++++ patch-2.7.5/src/inp.c	2015-03-09 09:29:46.084415918 +0000
+@@ -145,7 +145,7 @@ get_input_file (char const *filename, ch
      char *getbuf;
  
--    if (inerrno == -1)
--      inerrno = stat (filename, &instat) == 0 ? 0 : errno;
-+    inerrno = stat (filename, &instat) == 0 ? 0 : errno;
-+    if (inerrno == 0)
-+      {
-+        inerrno = getfilecon (inname, &incontext) == -1 ? errno : 0;
-+        if (inerrno == ENODATA || inerrno == ENOTSUP)
-+          {
-+    	inerrno = 0;
-+    	incontext = NULL;
-+          }
-+      }
-+    else
-+      incontext = NULL;
+     if (inerrno == -1)
+-      inerrno = stat_file (filename, &instat);
++	inerrno = stat_file (filename, &instat, &incontext);
  
      /* Perhaps look for RCS or SCCS versions.  */
-     if (patch_get
-@@ -197,7 +207,7 @@ get_input_file (char const *filename, ch
+     if (S_ISREG (file_type)
+@@ -190,7 +190,7 @@ get_input_file (char const *filename, ch
  	    }
  
  	    if (cs && version_get (filename, cs, ! inerrno, elsewhere, getbuf,
@@ -63,77 +39,206 @@ diff -up patch-2.6.1/src/inp.c.selinux patch-2.6.1/src/inp.c
  	      inerrno = 0;
  
  	    free (getbuf);
-@@ -209,6 +219,7 @@ get_input_file (char const *filename, ch
+@@ -201,6 +201,7 @@ get_input_file (char const *filename, ch
        {
  	instat.st_mode = S_IRUSR|S_IWUSR|S_IRGRP|S_IWGRP|S_IROTH|S_IWOTH;
  	instat.st_size = 0;
 +	incontext = NULL;
        }
-     else if (! S_ISREG (instat.st_mode))
-       fatal ("File %s is not a regular file -- can't patch",
-diff -up patch-2.6.1/src/patch.c.selinux patch-2.6.1/src/patch.c
---- patch-2.6.1/src/patch.c.selinux	2011-02-08 11:29:34.586271450 +0000
-+++ patch-2.6.1/src/patch.c	2011-02-08 11:29:34.606271646 +0000
-@@ -421,6 +421,21 @@ main (int argc, char **argv)
- 			      /* Fails if we are not in group instat.st_gid.  */
- 			      chown (outname, -1, instat.st_gid);
- 			    }
-+
-+			  if (! inerrno && incontext)
-+			    {
-+			      security_context_t outcontext;
-+			      if (getfilecon (outname, &outcontext) != -1 &&
-+				  outcontext &&
-+				  strcmp(outcontext, incontext) && 
-+				  setfilecon (outname, incontext) != 0)
-+				{
-+				  if (errno != ENOTSUP && errno != EPERM)
-+				    pfatal ("Can't set security context "
-+					    "on file %s", quotearg (outname));
-+				}
-+			    }
-+
- 			  /* FIXME: There may be other attributes to preserve.  */
+     else if (! ((S_ISREG (file_type) || S_ISLNK (file_type))
+ 	        && (file_type & S_IFMT) == (instat.st_mode & S_IFMT)))
+diff -up patch-2.7.5/src/Makefile.am.selinux patch-2.7.5/src/Makefile.am
+--- patch-2.7.5/src/Makefile.am.selinux	2015-03-07 00:34:20.000000000 +0000
++++ patch-2.7.5/src/Makefile.am	2015-03-09 09:29:46.084415918 +0000
+@@ -37,7 +37,7 @@ patch_SOURCES = \
+ 
+ AM_CPPFLAGS = -I$(top_builddir)/lib -I$(top_srcdir)/lib
+ patch_LDADD = $(LDADD) $(top_builddir)/lib/libpatch.a $(LIB_CLOCK_GETTIME) \
+-	      $(LIB_XATTR) $(LIB_EACCESS)
++	      $(LIB_XATTR) $(LIB_EACCESS) -lselinux
+ 
+ if ENABLE_MERGE
+   patch_SOURCES += merge.c
+diff -up patch-2.7.5/src/Makefile.in.selinux patch-2.7.5/src/Makefile.in
+--- patch-2.7.5/src/Makefile.in.selinux	2015-03-07 00:34:34.000000000 +0000
++++ patch-2.7.5/src/Makefile.in	2015-03-09 09:29:46.084415918 +0000
+@@ -1068,7 +1068,7 @@ patch_SOURCES = bestmatch.h common.h inp
+ AM_CPPFLAGS = -I$(top_builddir)/lib -I$(top_srcdir)/lib \
+ 	$(am__append_2)
+ patch_LDADD = $(LDADD) $(top_builddir)/lib/libpatch.a $(LIB_CLOCK_GETTIME) \
+-	      $(LIB_XATTR) $(LIB_EACCESS)
++	      $(LIB_XATTR) $(LIB_EACCESS) -lselinux
+ 
+ all: all-am
+ 
+diff -up patch-2.7.5/src/patch.c.selinux patch-2.7.5/src/patch.c
+--- patch-2.7.5/src/patch.c.selinux	2015-03-07 00:34:20.000000000 +0000
++++ patch-2.7.5/src/patch.c	2015-03-09 09:29:46.085415923 +0000
+@@ -263,19 +263,19 @@ main (int argc, char **argv)
+ 	  if (! strcmp (inname, outname))
+ 	    {
+ 	      if (inerrno == -1)
+-		inerrno = stat_file (inname, &instat);
++		inerrno = stat_file (inname, &instat, NULL);
+ 	      outstat = instat;
+ 	      outerrno = inerrno;
+ 	    }
+ 	  else
+-	    outerrno = stat_file (outname, &outstat);
++	    outerrno = stat_file (outname, &outstat, NULL);
+ 
+ 	  if (! outerrno)
+ 	    {
+ 	      if (has_queued_output (&outstat))
+ 		{
+ 		  output_files (&outstat);
+-		  outerrno = stat_file (outname, &outstat);
++		  outerrno = stat_file (outname, &outstat, NULL);
+ 		  inerrno = -1;
+ 		}
+ 	      if (! outerrno)
+@@ -588,7 +588,7 @@ main (int argc, char **argv)
+ 					     mode, &new_time);
+ 		      else
+ 			{
+-			  attr |= FA_IDS | FA_MODE | FA_XATTRS;
++			  attr |= FA_IDS | FA_MODE | FA_XATTRS | FA_SECCONTEXT;
+ 			  set_file_attributes (TMPOUTNAME, attr, inname, &instat,
+ 					       mode, &new_time);
  			}
- 		    }
-diff -up patch-2.6.1/src/pch.c.selinux patch-2.6.1/src/pch.c
---- patch-2.6.1/src/pch.c.selinux	2011-02-08 11:29:34.591271499 +0000
-+++ patch-2.6.1/src/pch.c	2011-02-08 11:30:08.810621570 +0000
-@@ -307,7 +307,12 @@ there_is_another_patch (bool need_header
- 	    inname[t - buf - 1] = 0;
- 	    if (stat (inname, &instat) == 0)
+@@ -648,7 +648,7 @@ main (int argc, char **argv)
+ 			struct stat oldst;
+ 			int olderrno;
+ 
+-			olderrno = stat_file (rej, &oldst);
++			olderrno = stat_file (rej, &oldst, NULL);
+ 			if (olderrno && olderrno != ENOENT)
+ 			  write_fatal ();
+ 		        if (! olderrno && lookup_file_id (&oldst) == CREATED)
+@@ -1780,7 +1780,7 @@ delete_file_later (const char *name, con
+ 
+   if (! st)
+     {
+-      if (stat_file (name, &st_tmp) != 0)
++      if (stat_file (name, &st_tmp, NULL) != 0)
+ 	pfatal ("Can't get file attributes of %s %s", "file", name);
+       st = &st_tmp;
+     }
+diff -up patch-2.7.5/src/pch.c.selinux patch-2.7.5/src/pch.c
+--- patch-2.7.5/src/pch.c.selinux	2015-03-07 00:34:20.000000000 +0000
++++ patch-2.7.5/src/pch.c	2015-03-09 09:29:46.085415923 +0000
+@@ -1,6 +1,6 @@
+ /* reading patches */
+ 
+-/* Copyright (C) 1986, 1987, 1988 Larry Wall
++/* Copyright (C) 1986, 1987, 1988, 2012 Larry Wall
+ 
+    Copyright (C) 1990-1993, 1997-2003, 2006, 2009-2012 Free Software
+    Foundation, Inc.
+@@ -296,7 +296,7 @@ there_is_another_patch (bool need_header
+ 	if (t > buf + 1 && *(t - 1) == '\n')
+ 	  {
+ 	    inname = xmemdup0 (buf, t - buf - 1);
+-	    inerrno = stat_file (inname, &instat);
++	    inerrno = stat_file (inname, &instat, &incontext);
+ 	    if (inerrno)
  	      {
--		inerrno = 0;
-+		inerrno = getfilecon (inname, &incontext) == -1 ? errno : 0;
-+		if (inerrno == ENODATA || inerrno == ENOTSUP)
-+		  {
-+		    inerrno = 0;
-+		    incontext = NULL;
-+		  }
- 		invc = -1;
- 	      }
- 	    else
-@@ -681,7 +686,7 @@ intuit_diff_type (bool need_header)
+ 		perror (inname);
+@@ -433,6 +433,7 @@ intuit_diff_type (bool need_header, mode
+     bool extended_headers = false;
+     enum nametype i;
+     struct stat st[3];
++    security_context_t con[3];
+     int stat_errno[3];
+     int version_controlled[3];
+     enum diff retval;
+@@ -473,6 +474,7 @@ intuit_diff_type (bool need_header, mode
+     version_controlled[OLD] = -1;
+     version_controlled[NEW] = -1;
+     version_controlled[INDEX] = -1;
++    con[OLD] = con[NEW] = con[INDEX] = NULL;
+     p_rfc934_nesting = 0;
+     p_timestamp[OLD].tv_sec = p_timestamp[NEW].tv_sec = -1;
+     p_says_nonexistent[OLD] = p_says_nonexistent[NEW] = 0;
+@@ -882,7 +884,7 @@ intuit_diff_type (bool need_header, mode
+ 		}
+ 	      else
+ 		{
+-		  stat_errno[i] = stat_file (p_name[i], &st[i]);
++		  stat_errno[i] = stat_file (p_name[i], &st[i], &con[i]);
+ 		  if (! stat_errno[i])
+ 		    {
+ 		      if (lookup_file_id (&st[i]) == DELETE_LATER)
+@@ -921,7 +923,7 @@ intuit_diff_type (bool need_header, mode
  			  if (cs)
  			    {
  			      if (version_get (p_name[i], cs, false, readonly,
 -					       getbuf, &st[i]))
-+					       getbuf, &st[i], NULL))
++					       getbuf, &st[i], &con[i]))
  				stat_errno[i] = 0;
  			      else
  				version_controlled[i] = 0;
-@@ -746,6 +751,7 @@ intuit_diff_type (bool need_header)
+@@ -984,7 +986,7 @@ intuit_diff_type (bool need_header, mode
+       {
+ 	if (inname)
+ 	  {
+-	    inerrno = stat_file (inname, &instat);
++	    inerrno = stat_file (inname, &instat, &incontext);
+ 	    if (inerrno || (instat.st_mode & S_IFMT) == file_type)
+ 	      maybe_reverse (inname, inerrno, inerrno || instat.st_size == 0);
+ 	  }
+@@ -997,8 +999,14 @@ intuit_diff_type (bool need_header, mode
+ 	inerrno = stat_errno[i];
  	invc = version_controlled[i];
  	instat = st[i];
- 	validate_target_name (inname);
-+	getfilecon (inname, &incontext);
++	incontext = con[i];
++	con[i] = NULL;
        }
  
++    for (i = OLD; i <= INDEX; i++)
++      if (con[i])
++	freecon (con[i]);
++
      return retval;
-diff -up patch-2.6.1/src/util.c.selinux patch-2.6.1/src/util.c
---- patch-2.6.1/src/util.c.selinux	2009-11-02 19:09:57.000000000 +0000
-+++ patch-2.6.1/src/util.c	2011-02-08 11:29:34.613271715 +0000
-@@ -574,7 +574,8 @@ version_controller (char const *filename
+ }
+ 
+diff -up patch-2.7.5/src/util.c.selinux patch-2.7.5/src/util.c
+--- patch-2.7.5/src/util.c.selinux	2015-03-07 00:34:20.000000000 +0000
++++ patch-2.7.5/src/util.c	2015-03-09 09:36:02.025206352 +0000
+@@ -300,6 +300,23 @@ set_file_attributes (char const *to, enu
+ 		S_ISLNK (mode) ? "symbolic link" : "file",
+ 		quotearg (to));
+     }
++  if (attr & FA_SECCONTEXT)
++    {
++      security_context_t outcontext;
++      if (incontext && getfilecon (to, &outcontext) != -1 && outcontext)
++	{
++	  if (strcmp (outcontext, incontext) &&
++	      setfilecon (to, incontext) != 0)
++	    {
++	      freecon (outcontext);
++	      if (errno != ENOTSUP && errno != EPERM)
++		pfatal ("Can't set security context on file %s",
++			quotearg (to));
++	    }
++	  else
++	    freecon (outcontext);
++	}
++    }
+ }
+ 
+ static void
+@@ -446,7 +463,7 @@ move_file (char const *from, bool *from_
+   struct stat to_st;
+   int to_errno;
+ 
+-  to_errno = stat_file (to, &to_st);
++  to_errno = stat_file (to, &to_st, NULL);
+   if (backup)
+     create_backup (to, to_errno ? NULL : &to_st, false);
+   if (! to_errno)
+@@ -816,7 +833,8 @@ version_controller (char const *filename
     Return true if successful.  */
  bool
  version_get (char const *filename, char const *cs, bool exists, bool readonly,
@@ -143,9 +248,9 @@ diff -up patch-2.6.1/src/util.c.selinux patch-2.6.1/src/util.c
  {
    if (patch_get < 0)
      {
-@@ -599,6 +600,13 @@ version_get (char const *filename, char 
+@@ -841,6 +859,13 @@ version_get (char const *filename, char
  	fatal ("Can't get file %s from %s", quotearg (filename), cs);
-       if (stat (filename, filestat) != 0)
+       if (safe_stat (filename, filestat) != 0)
  	pfatal ("%s", quotearg (filename));
 +      if (filecontext && getfilecon (filename, filecontext) == -1)
 +	{
@@ -157,10 +262,41 @@ diff -up patch-2.6.1/src/util.c.selinux patch-2.6.1/src/util.c
      }
  
    return 1;
-diff -up patch-2.6.1/src/util.h.selinux patch-2.6.1/src/util.h
---- patch-2.6.1/src/util.h.selinux	2009-11-02 19:09:57.000000000 +0000
-+++ patch-2.6.1/src/util.h	2011-02-08 11:29:34.614271726 +0000
-@@ -51,7 +51,7 @@ char *fetchname (char *, int, char **, t
+@@ -1664,12 +1689,28 @@ make_tempfile (char const **name, char l
+   return fd;
+ }
+ 
+-int stat_file (char const *filename, struct stat *st)
++int stat_file (char const *filename, struct stat *st, security_context_t *con)
+ {
+   int (*xstat)(char const *, struct stat *) =
+     follow_symlinks ? safe_stat : safe_lstat;
++  int (*xgetfilecon)(char const *, security_context_t *) =
++    follow_symlinks ? getfilecon : lgetfilecon;
++
++  if (xstat (filename, st) == 0)
++    {
++      if (con)
++	{
++	  if (xgetfilecon (filename, con) != -1 ||
++	      errno == ENODATA || errno == ENOTSUP)
++	    return 0;
+ 
+-  return xstat (filename, st) == 0 ? 0 : errno;
++	  *con = NULL;
++	}
++      else
++	return 0;
++    }
++ 
++  return errno;
+ }
+ 
+ /* Check if a filename is relative and free of ".." components.
+diff -up patch-2.7.5/src/util.h.selinux patch-2.7.5/src/util.h
+--- patch-2.7.5/src/util.h.selinux	2015-01-31 21:14:01.000000000 +0000
++++ patch-2.7.5/src/util.h	2015-03-09 09:29:46.085415923 +0000
+@@ -44,7 +44,7 @@ char *parse_name (char const *, int, cha
  char *savebuf (char const *, size_t);
  char *savestr (char const *);
  char const *version_controller (char const *, bool, struct stat const *, char **, char **);
@@ -168,4 +304,23 @@ diff -up patch-2.6.1/src/util.h.selinux patch-2.6.1/src/util.h
 +bool version_get (char const *, char const *, bool, bool, char const *, struct stat *, security_context_t *);
  int create_file (char const *, int, mode_t, bool);
  int systemic (char const *);
- char *format_linenum (char[LINENUM_LENGTH_BOUND + 1], LINENUM);
+ char *format_linenum (char[LINENUM_LENGTH_BOUND + 1], lin);
+@@ -67,7 +67,7 @@ void insert_file_id (struct stat const *
+ enum file_id_type lookup_file_id (struct stat const *);
+ void set_queued_output (struct stat const *, bool);
+ bool has_queued_output (struct stat const *);
+-int stat_file (char const *, struct stat *);
++int stat_file (char const *, struct stat *, security_context_t *);
+ bool filename_is_safe (char const *);
+ bool cwd_is_root (char const *);
+ 
+@@ -75,7 +75,8 @@ enum file_attributes {
+   FA_TIMES = 1,
+   FA_IDS = 2,
+   FA_MODE = 4,
+-  FA_XATTRS = 8
++  FA_XATTRS = 8,
++  FA_SECCONTEXT = 16
+ };
+ 
+ void set_file_attributes (char const *, enum file_attributes, char const *,

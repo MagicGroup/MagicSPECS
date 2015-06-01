@@ -1,9 +1,11 @@
 Summary:	Macros to process XSL formatting objects
+Summary(zh_CN.UTF-8): 处理 XSL 格式对象的宏
 Name:		passivetex
 Version:	1.25
-Release:  15%{?dist}
+Release:  16%{?dist}
 License:	Copyright only
 Group:		Applications/Publishing
+Group(zh_CN.UTF-8): 应用程序/出版
 #Source0 could be obtained at
 # http://www.tei-c.org.uk/Software/passivetex/passivetex.zip (non-reachable atm)
 # or at http://www.tex.ac.uk/tex-archive/macros/xmltex/contrib/passivetex.zip
@@ -24,6 +26,8 @@ PassiveTeX is a library of TeX macros which can be used to process an
 XML document which results from an XSL transformation to formatting
 objects.
 
+%description -l zh_CN.UTF-8
+处理 XSL 格式对象的 TeX 宏。
 
 %prep
 %setup -q -n %{name}
@@ -33,6 +37,7 @@ objects.
 rm -rf $RPM_BUILD_ROOT
 install -m 0755 -p -d $RPM_BUILD_ROOT%{_datadir}/texmf/tex/xmltex/passivetex
 install -m 0644 -p *.sty *.xmt $RPM_BUILD_ROOT%{_datadir}/texmf/tex/xmltex/passivetex
+magic_rpm_clean.sh
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -60,6 +65,9 @@ exit 0
 
 
 %changelog
+* Wed Apr 15 2015 Liu Di <liudidi@gmail.com> - 1.25-16
+- 为 Magic 3.0 重建
+
 * Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.25-15
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 

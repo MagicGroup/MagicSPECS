@@ -1,11 +1,13 @@
-%global upstream_build 3842
+%global upstream_build 4126
 
 Name:           pcsc-lite
-Version:        1.8.7
-Release:        1%{?dist}
+Version:	1.8.13
+Release:	1%{?dist}
 Summary:        PC/SC Lite smart card framework and applications
+Summary(zh_CN.UTF-8): PC/SC Lite 智能卡框架和应用程序
 
 Group:          System Environment/Daemons
+Group(zh_CN.UTF-8): 系统环境/服务
 License:        BSD
 URL:            http://pcsclite.alioth.debian.org/
 Source0:        http://alioth.debian.org/download.php/%{upstream_build}/%{name}-%{version}.tar.bz2
@@ -31,30 +33,47 @@ manager that coordinates communications with smart card readers and
 smart cards that are connected to the system, as well as other command
 line tools.
 
+%description -l zh_CN.UTF-8
+PC/SC Lite 智能卡框架和应用程序。
+
 %package        libs
 Summary:        PC/SC Lite libraries
+Summary(zh_CN.UTF-8): %{name} 的运行库
 Group:          System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 
 %description    libs
 PC/SC Lite libraries.
 
+%description libs -l zh_CN.UTF-8
+%{name} 的运行库。
+
 %package        devel
 Summary:        PC/SC Lite development files
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       %{name}-libs = %{version}-%{release}
 
 %description    devel
 PC/SC Lite development files.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
 %package        doc
 Summary:        PC/SC Lite developer documentation
+Summary(zh_CN.UTF-8): %{name} 的文档
 Group:          Documentation
+Group(zh_CN.UTF-8): 文档
 BuildArch:      noarch
 Requires:       %{name}-libs = %{version}-%{release}
 
 %description    doc
 %{summary}.
 
+%description doc -l zh_CN.UTF-8
+%{name} 的文档。
 
 %prep
 %setup -q
@@ -87,7 +106,7 @@ rm $RPM_BUILD_ROOT%{_libdir}/*.la
 
 # Remove documentation installed in a wrong directory
 rm $RPM_BUILD_ROOT%{_docdir}/pcsc-lite/README.DAEMON
-
+magic_rpm_clean.sh
 
 %post
 if [ $1 -eq 1 ] ; then
@@ -161,6 +180,9 @@ fi
 
 
 %changelog
+* Thu Apr 16 2015 Liu Di <liudidi@gmail.com> - 1.8.13-1
+- 更新到 1.8.13
+
 * Fri Nov 30 2012 Kalev Lember <kalevlember@gmail.com> - 1.8.7-1
 - Update to 1.8.7
 

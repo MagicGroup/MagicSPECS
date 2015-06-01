@@ -1,9 +1,10 @@
 Name:           perl-Acme-Damn
-Version:        0.04
-Release:        17%{?dist}
+Version:	0.06
+Release:	1%{?dist}
 Summary:        Unbless Perl objects
 License:        GPL+ or Artistic
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 URL:            http://search.cpan.org/dist/Acme-Damn/
 Source0:        http://search.cpan.org/CPAN/authors/id/I/IB/IBB/Acme-Damn-%{version}.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -45,6 +46,7 @@ find %{buildroot} -type f -name '*.bs' -size 0 -exec rm -f {} \;
 find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null \;
 
 %{_fixperms} %{buildroot}/*
+magic_rpm_clean.sh
 
 %check
 
@@ -60,6 +62,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/*
 
 %changelog
+* Sun Apr 19 2015 Liu Di <liudidi@gmail.com> - 0.06-1
+- 更新到 0.06
+
 * Thu Jun 12 2014 Liu Di <liudidi@gmail.com> - 0.04-17
 - 为 Magic 3.0 重建
 

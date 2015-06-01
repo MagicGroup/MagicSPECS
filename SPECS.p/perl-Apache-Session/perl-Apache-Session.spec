@@ -1,9 +1,11 @@
 Name:           perl-Apache-Session
-Version:        1.89
-Release:        14%{?dist}
+Version:	1.93
+Release:	1%{?dist}
 Summary:        Persistence framework for session data
+Summary(zh_CN.UTF-8): 持续会话数据的框架
 License:        GPL+ or Artistic
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 URL:            http://search.cpan.org/dist/Apache-Session/
 Source0:        http://www.cpan.org/authors/id/C/CH/CHORNY/Apache-Session-%{version}.tar.gz
 # https://bugzilla.redhat.com/bugzilla/attachment.cgi?id=118577, from Chris Grau
@@ -24,6 +26,9 @@ tracking session data between httpd requests. Apache::Session is designed
 to work with Apache and mod_perl, but it should work under CGI and other
 web servers, and it also works outside of a web server altogether.
 
+%description -l zh_CN.UTF-8
+持续会话数据的框架。
+
 %prep
 %setup -q -n Apache-Session-%{version}
 
@@ -42,6 +47,8 @@ rm -rf $RPM_BUILD_ROOT
 find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 
 %{_fixperms} $RPM_BUILD_ROOT/*
+magic_rpm_clean.sh
+
 
 %check
 ./Build test
@@ -57,6 +64,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Thu Apr 23 2015 Liu Di <liudidi@gmail.com> - 1.93-1
+- 更新到 1.93
+
 * Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 1.89-14
 - 为 Magic 3.0 重建
 

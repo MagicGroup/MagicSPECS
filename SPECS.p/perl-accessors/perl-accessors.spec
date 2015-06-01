@@ -1,9 +1,11 @@
 Name:           perl-accessors
 Version:        1.01
-Release:        20%{?dist}
+Release:        21%{?dist}
 Summary:        Create accessor methods in caller's package
+Summary(zh_CN.UTF-8): 在调用者包中创建访问方法
 License:        GPL+ or Artistic
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 URL:            http://search.cpan.org/dist/accessors/
 Source0:        http://www.cpan.org/authors/id/S/SP/SPURKIS/accessors-%{version}.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -15,6 +17,9 @@ Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $versi
 
 %description
 The accessors pragma lets you create simple accessors at compile-time.
+
+%description -l zh_CN.UTF-8
+在调用者包中创建访问方法。
 
 %prep
 %setup -q -n accessors-%{version}
@@ -33,6 +38,7 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 
 # A few of the .pm modules have bogus execute permission
 find $RPM_BUILD_ROOT%{perl_vendorlib} -name *.pm | xargs chmod a-x
+magic_rpm_clean.sh
 
 %check
 ./Build test
@@ -47,6 +53,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Fri Apr 17 2015 Liu Di <liudidi@gmail.com> - 1.01-21
+- 为 Magic 3.0 重建
+
 * Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 1.01-20
 - 为 Magic 3.0 重建
 

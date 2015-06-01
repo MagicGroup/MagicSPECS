@@ -1,9 +1,11 @@
 Name:           perl-Affix-Infix2Postfix
 Version:        0.03
-Release:        14%{?dist}
+Release:        15%{?dist}
 Summary:        Perl extension for converting from infix notation to postfix notation
+Summary(zh_CN.UTF-8): 从中缀表示法转换到后缀表示法的 Perl 扩展
 License:        GPL+ or Artistic
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 URL:            http://search.cpan.org/dist/Affix-Infix2Postfix/
 Source0:        http://www.cpan.org/authors/id/A/AD/ADDI/Affix-Infix2Postfix-%{version}.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -18,6 +20,9 @@ generally much easier to do in computers. For example take an expression
 like: a+b+c*d. For us humans it's pretty easy to do that calculation. But
 it's actually much better for computers to get a string of operations such
 as: a b + c d * +, where the variable names mean put variable on stack.
+
+%description -l zh_CN.UTF-8
+从中缀表示法转换到后缀表示法的 Perl 扩展。
 
 %prep
 %setup -q -n Affix-Infix2Postfix-%{version}
@@ -35,6 +40,7 @@ find $RPM_BUILD_ROOT -type f -name .packlist -exec rm -f {} \;
 find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 
 %{_fixperms} $RPM_BUILD_ROOT/*
+magic_rpm_clean.sh
 
 %check
 
@@ -49,6 +55,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Sun Apr 19 2015 Liu Di <liudidi@gmail.com> - 0.03-15
+- 为 Magic 3.0 重建
+
 * Thu Jun 12 2014 Liu Di <liudidi@gmail.com> - 0.03-14
 - 为 Magic 3.0 重建
 

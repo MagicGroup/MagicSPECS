@@ -5,11 +5,13 @@
 %endif
 
 Name:           pcsc-perl
-Version:        1.4.12
-Release:        7%{?dist}
+Version:	1.4.13
+Release:	2%{?dist}
 Summary:        Perl interface to the PC/SC smart card library
+Summary(zh_CN.UTF-8): PC/SC 智能卡库的 Perl 接口
 
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 License:        GPLv2+
 URL:            http://ludovic.rousseau.free.fr/softwares/pcsc-perl/
 Source0:        http://ludovic.rousseau.free.fr/softwares/pcsc-perl/%{name}-%{version}.tar.bz2
@@ -25,6 +27,9 @@ Provides:       perl-pcsc = %{version}-%{release}
 %description
 This library allows to communicate with a smart card using PC/SC
 interface (pcsc-lite) from a Perl script.
+
+%description -l zh_CN.UTF-8
+PC/SC 智能卡库的 Perl 接口。
 
 %prep
 %setup -q
@@ -44,7 +49,7 @@ find $RPM_BUILD_ROOT -type f -name .packlist -exec rm -f {} ';'
 find $RPM_BUILD_ROOT -type f -name '*.bs' -a -size 0 -exec rm -f {} ';'
 find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null ';'
 chmod -R u+w $RPM_BUILD_ROOT/*
-
+magic_rpm_clean.sh
 
 %check
 # tests need configured readers etc
@@ -66,6 +71,12 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Thu Apr 16 2015 Liu Di <liudidi@gmail.com> - 1.4.13-2
+- 为 Magic 3.0 重建
+
+* Thu Apr 16 2015 Liu Di <liudidi@gmail.com> - 1.4.13-1
+- 更新到 1.4.13
+
 * Fri Jun 20 2014 Liu Di <liudidi@gmail.com> - 1.4.12-7
 - 为 Magic 3.0 重建
 

@@ -1,16 +1,13 @@
 %define WITH_SELINUX 0
 Summary: Utility for modifying/upgrading files
+Summary(zh_CN.UTF-8): 修改/更新文件的工具
 Name: patch
-Version: 2.6.1
-Release: 11%{?dist}
+Version:	2.7.5
+Release:	1%{?dist}
 License: GPLv2+
 URL: http://www.gnu.org/software/patch/patch.html
 Group: Development/Tools
 Source: ftp://ftp.gnu.org/gnu/patch/patch-%{version}.tar.xz
-Patch1: patch-2.5.4-sigsegv.patch
-Patch2: patch-get-arg.patch
-Patch3: patch-CVE-2010-4651.patch
-Patch4: patch-backup-if-mismatch.patch
 Patch100: patch-selinux.patch
 Buildroot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
@@ -29,22 +26,11 @@ original file (patching the file).
 Patch should be installed because it is a common way of upgrading
 applications.
 
+%description -l zh_CN.UTF-8
+修改/更新文件的工具。
+
 %prep
 %setup -q
-
-# Avoid segfault.
-%patch1 -p1 -b .sigsegv
-
-# Fixed argument type for --get (bug #553624).
-%patch2 -p1 -b .get-arg
-
-# Applied upstream patch to fix CVE-2010-4651 so that malicious
-# patches cannot create files above the current directory
-# (bug #667529).
-%patch3 -p1 -b .CVE-2010-4651
-
-# Let --posix cause --no-backup-if-mismatch (bug #678016).
-%patch4 -p1 -b .backup-if-mismatch
 
 %if %{WITH_SELINUX}
 # SELinux support.
@@ -76,6 +62,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/*/*
 
 %changelog
+* Wed Apr 15 2015 Liu Di <liudidi@gmail.com> - 2.7.5-1
+- 更新到 2.7.5
+
 * Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 2.6.1-11
 - 为 Magic 3.0 重建
 

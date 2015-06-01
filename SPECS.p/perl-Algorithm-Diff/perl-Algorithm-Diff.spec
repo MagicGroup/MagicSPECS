@@ -1,9 +1,11 @@
 Name:           perl-Algorithm-Diff
-Version:        1.1902
-Release:        19%{?dist}
+Version:	1.1903
+Release:	1%{?dist}
 Summary:        Algorithm::Diff Perl module
+Summary(zh_CN.UTF-8): Algorithm::Diff Perl 模块
 License:        GPL+ or Artistic
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 URL:            http://search.cpan.org/dist/Algorithm-Diff/
 Source0:        http://www.cpan.org/authors/id/T/TY/TYEMQ/Algorithm-Diff-%{version}.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -26,6 +28,9 @@ algorithm similar to (or identical to) the one used by the Unix "diff"
 program.  It is guaranteed to find the *smallest possible* set of
 differences.
 
+%description -l zh_CN.UTF-8
+这是一个在两个文件，两上字符串或任何其它的两个事物之间计算不同的模块。
+
 %prep
 %setup -q -n Algorithm-Diff-%{version}
 chmod 644 *.pl
@@ -45,6 +50,7 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_fixperms} $RPM_BUILD_ROOT/*
 
 rm -f $RPM_BUILD_ROOT%{perl_vendorlib}/Algorithm/*.pl
+magic_rpm_clean.sh
 
 %check
 
@@ -59,6 +65,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Sun Apr 19 2015 Liu Di <liudidi@gmail.com> - 1.1903-1
+- 更新到 1.1903
+
 * Thu Jun 12 2014 Liu Di <liudidi@gmail.com> - 1.1902-19
 - 为 Magic 3.0 重建
 

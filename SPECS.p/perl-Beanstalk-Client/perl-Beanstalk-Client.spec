@@ -1,9 +1,11 @@
 Name:           perl-Beanstalk-Client
-Version:        1.06
-Release:        28%{?dist}
+Version:	1.07
+Release:	1%{?dist}
 Summary:        Client class to talk to a beanstalkd server
+Summary(zh_CN.UTF-8): 与 beanstalkd 服务器对话的客户端
 License:        GPL+ or Artistic
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 URL:            http://search.cpan.org/dist/Beanstalk-Client/
 Source0:        http://search.cpan.org/CPAN/authors/id/G/GB/GBARR/Beanstalk-Client-%{version}.tar.gz
 BuildArch:      noarch
@@ -19,6 +21,9 @@ Beanstalk::Client provides a Perl API of protocol version 1.0 to the
 beanstalkd server, a fast, general-purpose, in-memory workqueue service by
 Keith Rarick.
 
+%description -l zh_CN.UTF-8
+与 beanstalkd 服务器对话的客户端。
+
 %prep
 %setup -q -n Beanstalk-Client-%{version}
 
@@ -33,6 +38,7 @@ find %{buildroot} -type f -name .packlist -exec rm -f {} \;
 find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null \;
 
 %{_fixperms} %{buildroot}/*
+magic_rpm_clean.sh
 
 %check
 
@@ -44,6 +50,9 @@ find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_mandir}/man3/Beanstalk::*
 
 %changelog
+* Fri Apr 24 2015 Liu Di <liudidi@gmail.com> - 1.07-1
+- 更新到 1.07
+
 * Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 1.06-28
 - 为 Magic 3.0 重建
 

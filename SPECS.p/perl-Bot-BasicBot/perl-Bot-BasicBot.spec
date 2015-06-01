@@ -1,9 +1,11 @@
 Name:           perl-Bot-BasicBot
-Version:        0.87
-Release:        8%{?dist}
+Version:	0.89
+Release:	1%{?dist}
 Summary:        Simple irc bot baseclass
+Summary(zh_CN.UTF-8): 简单的 irc 机器人
 License:        GPL+ or Artistic
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 URL:            http://search.cpan.org/dist/Bot-BasicBot/
 Source0:        http://www.cpan.org/authors/id/H/HI/HINRIK/Bot-BasicBot-%{version}.tar.gz
 BuildArch:      noarch
@@ -32,6 +34,9 @@ Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $versi
 Basic bot system designed to make it easy to do simple bots, optionally
 forking longer processes (like searches) concurrently in the background.
 
+%description -l zh_CN.UTF-8
+简单的 irc 机器人。
+
 %prep
 %setup -q -n Bot-BasicBot-%{version}
 find examples -type f -exec chmod 644 {} \;
@@ -46,6 +51,7 @@ make pure_install PERL_INSTALL_ROOT=%{buildroot}
 find %{buildroot} -type f -name .packlist -exec rm -f {} \;
 find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_fixperms} %{buildroot}/*
+magic_rpm_clean.sh
 
 %check
 
@@ -56,6 +62,9 @@ find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_mandir}/man3/*
 
 %changelog
+* Mon Apr 27 2015 Liu Di <liudidi@gmail.com> - 0.89-1
+- 更新到 0.89
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.87-8
 - 为 Magic 3.0 重建
 

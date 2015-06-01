@@ -1,11 +1,13 @@
 Name:           perl-Archive-Extract
 # Epoch to compete with core module from perl.spec
 Epoch:          1
-Version:        0.72
-Release:        3%{?dist}
+Version:	0.74
+Release:	1%{?dist}
 Summary:        Generic archive extracting mechanism
+Summary(zh_CN.UTF-8): 通用的归档解压机制
 License:        GPL+ or Artistic
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 URL:            http://search.cpan.org/dist/Archive-Extract/
 Source0:        http://www.cpan.org/authors/id/B/BI/BINGOS/Archive-Extract-%{version}.tar.gz
 BuildArch:      noarch
@@ -55,6 +57,9 @@ extract any archive file of the type .tar, .tar.gz, .gz, .Z, tar.bz2, .tbz,
 so, or use different interfaces for each type by using either perl modules, or
 command-line tools on your system.
 
+%description -l zh_CN.UTF-8
+通用的归档解压机制。
+
 %prep
 %setup -q -n Archive-Extract-%{version}
 
@@ -66,6 +71,8 @@ make %{?_smp_mflags}
 make pure_install DESTDIR=$RPM_BUILD_ROOT
 find $RPM_BUILD_ROOT -type f -name .packlist -exec rm -f {} \;
 %{_fixperms} $RPM_BUILD_ROOT/*
+magic_rpm_clean.sh
+
 
 %check
 make test
@@ -76,6 +83,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Thu Apr 23 2015 Liu Di <liudidi@gmail.com> - 1:0.74-1
+- 更新到 0.74
+
 * Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 1:0.72-3
 - 为 Magic 3.0 重建
 

@@ -1,9 +1,11 @@
 Name:           perl-boolean
-Version:        0.28
-Release:        6%{?dist}
+Version:	0.45
+Release:	1%{?dist}
 Summary:        Boolean support for Perl
+Summary(zh_CN.UTF-8): Perl 的布尔值支持
 License:        GPL+ or Artistic
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 URL:            http://search.cpan.org/dist/boolean/
 Source0:        http://www.cpan.org/authors/id/I/IN/INGY/boolean-%{version}.tar.gz
 BuildArch:      noarch
@@ -16,6 +18,9 @@ Requires:       perl(Readonly)
 
 %description
 Most programming languages have a native Boolean data type. Perl does not.
+
+%description -l zh_CN.UTF-8
+Perl 的布尔值支持。
 
 %prep
 %setup -q -n boolean-%{version}
@@ -31,6 +36,7 @@ find $RPM_BUILD_ROOT -type f -name .packlist -exec rm -f {} \;
 find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 
 %{_fixperms} $RPM_BUILD_ROOT/*
+magic_rpm_clean.sh
 
 %check
 
@@ -41,6 +47,9 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_mandir}/man3/*
 
 %changelog
+* Sat Apr 18 2015 Liu Di <liudidi@gmail.com> - 0.45-1
+- 更新到 0.45
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.28-6
 - 为 Magic 3.0 重建
 

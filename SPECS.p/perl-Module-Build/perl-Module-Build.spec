@@ -1,11 +1,11 @@
-%global cpan_version_major 0.40
-%global cpan_version_minor 03
+%global cpan_version_major 0.42
+%global cpan_version_minor 11
 %global cpan_version %{cpan_version_major}%{?cpan_version_minor}
 
 Name:           perl-Module-Build
 Epoch:          2
 Version:        %{cpan_version_major}%{?cpan_version_minor:.%cpan_version_minor}
-Release:        11%{?dist}
+Release:	1%{?dist}
 Summary:        Build and install Perl modules
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -111,6 +111,9 @@ LANG=C TEST_SIGNATURE=1 MB_TEST_EXPERIMENTAL=1 ./Build test
 %{_mandir}/man3/*
 
 %changelog
+* Fri Apr 24 2015 Liu Di <liudidi@gmail.com> - 2:0.42.11-1
+- 更新到 0.42.11
+
 * Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 2:0.40.03-11
 - 为 Magic 3.0 重建
 

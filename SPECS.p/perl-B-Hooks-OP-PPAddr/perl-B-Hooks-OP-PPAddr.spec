@@ -1,9 +1,11 @@
 Name:           perl-B-Hooks-OP-PPAddr
-Version:        0.03
-Release:        12%{?dist}
+Version:	0.04_01
+Release:	1%{?dist}
 Summary:        Hook into opcode execution
+Summary(zh_CN.UTF-8): 挂接到代码执行
 License:        GPL+ or Artistic
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 URL:            http://search.cpan.org/dist/B-Hooks-OP-PPAddr/
 Source0:        http://www.cpan.org/authors/id/F/FL/FLORA/B-Hooks-OP-PPAddr-%{version}.tar.gz
 BuildRequires:  perl(ExtUtils::MakeMaker)
@@ -21,6 +23,9 @@ Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $versi
 This module provides a c api for XS modules to hook into the execution of
 perl opcodes.
 
+%description -l zh_CN.UTF-8
+挂接到代码执行。
+
 %prep
 %setup -q -n B-Hooks-OP-PPAddr-%{version}
 
@@ -37,6 +42,7 @@ find $RPM_BUILD_ROOT -type f -name '*.bs' -size 0 -exec rm -f {} \;
 find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 
 %{_fixperms} $RPM_BUILD_ROOT/*
+magic_rpm_clean.sh
 
 %check
 
@@ -49,6 +55,9 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_mandir}/man3/*
 
 %changelog
+* Fri Apr 24 2015 Liu Di <liudidi@gmail.com> - 0.04_01-1
+- 更新到 0.04_01
+
 * Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 0.03-12
 - 为 Magic 3.0 重建
 

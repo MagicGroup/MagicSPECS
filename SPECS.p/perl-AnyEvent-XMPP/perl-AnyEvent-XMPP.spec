@@ -1,11 +1,13 @@
 Name:           perl-AnyEvent-XMPP
-Version:        0.52
-Release:        13%{?dist}
+Version:	0.55
+Release:	1%{?dist}
 Summary:        Implementation of the XMPP Protocol
+Summary(zh_CN.UTF-8): XMPP 协议的实现
 License:        GPL+ or Artistic
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 URL:            http://search.cpan.org/dist/AnyEvent-XMPP/
-Source0:        http://www.cpan.org/authors/id/E/EL/ELMEX/AnyEvent-XMPP-%{version}.tar.gz
+Source0:        http://www.cpan.org/authors/id/M/MS/MSTPLBG/AnyEvent-XMPP-%{version}.tar.gz
 Patch0:         AnyEvent-XMPP-0.51-timezone.patch
 BuildArch:      noarch
 BuildRequires:  perl(base)
@@ -34,6 +36,9 @@ Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $versi
 %description
 AnyEvent::XMPP - An implementation of the XMPP Protocol.
 
+%description -l zh_CN.UTF-8
+XMPP 协议的实现。
+
 %prep
 %setup -q -n AnyEvent-XMPP-%{version}
 %patch0 -p1 -b .timezone
@@ -51,6 +56,8 @@ make pure_install PERL_INSTALL_ROOT=%{buildroot}
 find %{buildroot} -type f -name .packlist -exec rm -f {} \;
 find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_fixperms} %{buildroot}/*
+magic_rpm_clean.sh
+
 
 %check
 
@@ -61,6 +68,9 @@ find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_mandir}/man3/*
 
 %changelog
+* Thu Apr 23 2015 Liu Di <liudidi@gmail.com> - 0.55-1
+- 更新到 0.55
+
 * Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 0.52-13
 - 为 Magic 3.0 重建
 

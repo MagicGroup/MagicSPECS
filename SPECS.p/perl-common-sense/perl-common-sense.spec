@@ -1,9 +1,11 @@
 Name:		perl-common-sense
 Summary:	"Common sense" Perl defaults 
-Version:	3.6
-Release:	6%{?dist}
+Summary(zh_CN.UTF-8): Perl 的常识默认
+Version:	3.73
+Release:	1%{?dist}
 License:	GPL+ or Artistic
 Group:		Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 URL:		http://search.cpan.org/dist/common-sense
 Source0:	http://search.cpan.org/CPAN/authors/id/M/ML/MLEHMANN/common-sense-%{version}.tar.gz 
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(id -nu)
@@ -34,6 +36,9 @@ It's supposed to be mostly the same, with much lower memory usage, as:
 			reserved taint closure semicolon);
 	no warnings qw(exec newline unopened);
 
+%description -l zh_CN.UTF-8
+Perl 的常识默认。
+
 %prep
 %setup -q -n common-sense-%{version}
 
@@ -56,10 +61,13 @@ rm -rf %{buildroot}
 
 %files
 %doc LICENSE Changes README t/
-%{perl_vendorlib}/common/
+%{perl_vendorarch}/common/
 %{_mandir}/man3/common::sense.3pm*
 
 %changelog
+* Fri May 08 2015 Liu Di <liudidi@gmail.com> - 3.73-1
+- 更新到 3.73
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 3.6-6
 - 为 Magic 3.0 重建
 

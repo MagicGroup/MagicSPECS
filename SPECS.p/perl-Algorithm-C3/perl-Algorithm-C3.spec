@@ -1,11 +1,13 @@
 Name:		perl-Algorithm-C3
-Version:	0.08
-Release:	19%{?dist}
+Version:	0.10
+Release:	1%{?dist}
 Summary:	Module for merging hierarchies using the C3 algorithm
+Summary(zh_CN.UTF-8): 使用 C3 算法合并层次的模块
 License:	GPL+ or Artistic
 Group:		Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 URL:		http://search.cpan.org/dist/Algorithm-C3/
-Source0:	http://search.cpan.org/CPAN/authors/id/F/FL/FLORA/Algorithm-C3-%{version}.tar.gz
+Source0:	http://search.cpan.org/CPAN/authors/id/H/HA/HAARG/Algorithm-C3-%{version}.tar.gz
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(id -nu)
 BuildArch:	noarch
 # Build
@@ -25,18 +27,24 @@ revolve around class building and metamodels but it could also be used for
 things like dependency resolution as well since it tends to do such a nice
 job of preserving local precedence orderings.
 
+%description -l zh_CN.UTF-8
+使用 C3 算法合并层次的模块。
+
 %prep
 %setup -q -n Algorithm-C3-%{version}
 
 %build
-perl Build.PL installdirs=vendor
-./Build
+perl Makefile.PL installdirs=vendor
+%__make
 
 %install
 rm -rf %{buildroot}
-./Build install destdir=%{buildroot} create_packlist=0
+make install DESTDIR=%{buildroot} create_packlist=0
 find %{buildroot} -depth -type d -exec rmdir {} \; 2>/dev/null
+rm -f   %{buildroot}%{_libdir}/perl5/perllocal.pod
+rm -rf   %{buildroot}%{perl_vendorarch}/auto
 %{_fixperms} %{buildroot}
+magic_rpm_clean.sh
 
 %check
 ./Build test
@@ -51,6 +59,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/Algorithm::C3.3pm*
 
 %changelog
+* Sun Apr 19 2015 Liu Di <liudidi@gmail.com> - 0.10-1
+- 更新到 0.10
+
 * Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 0.08-19
 - 为 Magic 3.0 重建
 

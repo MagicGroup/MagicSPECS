@@ -99,7 +99,7 @@ signature files for developing applications that use
 
 %prep
 #0.3.5 的包有问题，解出来是0.3.4
-%setup -q -n %{name}-0.3.4
+%setup -q -n %{name}-%{version}
 
 %patch1 -p1
 

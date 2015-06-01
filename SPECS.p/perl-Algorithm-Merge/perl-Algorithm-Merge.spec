@@ -1,9 +1,11 @@
 Name:           perl-Algorithm-Merge
 Version:        0.08
-Release:        12%{?dist}
+Release:        13%{?dist}
 Summary:        Three-way merge and diff
+Summary(zh_CN.UTF-8): 三种方式合并和比较
 License:        GPL+ or Artistic
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 URL:            http://search.cpan.org/dist/Algorithm-Merge/
 Source0:        http://www.cpan.org/authors/id/J/JS/JSMITH/Algorithm-Merge-%{version}.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -16,6 +18,9 @@ Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $versi
 %description
 This module complements Algorithm::Diff by providing three-way merge and diff
 functions.
+
+%description -l zh_CN.UTF-8
+三种方式合并和比较。
 
 %prep
 %setup -q -n Algorithm-Merge-%{version}
@@ -33,6 +38,7 @@ find $RPM_BUILD_ROOT -type f -name .packlist -exec rm -f {} \;
 find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 
 %{_fixperms} $RPM_BUILD_ROOT/*
+magic_rpm_clean.sh
 
 %check
 
@@ -47,6 +53,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Mon Apr 20 2015 Liu Di <liudidi@gmail.com> - 0.08-13
+- 为 Magic 3.0 重建
+
 * Thu Jun 12 2014 Liu Di <liudidi@gmail.com> - 0.08-12
 - 为 Magic 3.0 重建
 

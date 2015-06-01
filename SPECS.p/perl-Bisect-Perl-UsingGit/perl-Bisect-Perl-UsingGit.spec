@@ -1,9 +1,11 @@
 Name:           perl-Bisect-Perl-UsingGit
 Version:        0.33
-Release:        6%{?dist}
+Release:        10%{?dist}
 Summary:        Help you to bisect Perl
+Summary(zh_CN.UTF-8): 帮助你平分 Perl 
 License:        GPL+ or Artistic
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 URL:            http://search.cpan.org/dist/Bisect-Perl-UsingGit/
 Source0:        http://www.cpan.org/authors/id/L/LB/LBROCARD/Bisect-Perl-UsingGit-%{version}.tar.gz
 BuildArch:      noarch
@@ -24,6 +26,9 @@ Requires:       perl(MooseX::Getopt)
 Bisect::Perl::UsingGit is a module which holds the code which helps you to
 bisect Perl. See bisect_perl_using_git for practical examples.
 
+%description -l zh_CN.UTF-8
+帮助你平分 Perl。
+
 %prep
 %setup -q -n Bisect-Perl-UsingGit-%{version}
 
@@ -36,6 +41,7 @@ make pure_install PERL_INSTALL_ROOT=$RPM_BUILD_ROOT
 find $RPM_BUILD_ROOT -type f -name .packlist -exec rm -f {} \;
 find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_fixperms} $RPM_BUILD_ROOT/*
+magic_rpm_clean.sh
 
 %check
 
@@ -48,6 +54,18 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_mandir}/man3/*
 
 %changelog
+* Sat Apr 25 2015 Liu Di <liudidi@gmail.com> - 0.33-10
+- 为 Magic 3.0 重建
+
+* Sat Apr 25 2015 Liu Di <liudidi@gmail.com> - 0.33-9
+- 为 Magic 3.0 重建
+
+* Sat Apr 25 2015 Liu Di <liudidi@gmail.com> - 0.33-8
+- 为 Magic 3.0 重建
+
+* Sat Apr 25 2015 Liu Di <liudidi@gmail.com> - 0.33-7
+- 为 Magic 3.0 重建
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.33-6
 - 为 Magic 3.0 重建
 

@@ -1,12 +1,13 @@
 name:           perl-Barcode-Code128
-Version:        2.01
-Release:        12%{?dist}
+Version:	2.21
+Release:	1%{?dist}
 Summary:        Generate CODE 128 bar codes
+Summary(zh_CN.UTF-8): 生成 CODE 128 条码
 License:        Public Domain
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 URL:            http://search.cpan.org/dist/Barcode-Code128/
 Source0:        http://www.cpan.org/authors/id/W/WR/WRW/Barcode-Code128-%{version}.tar.gz
-Patch0:         perl-Barcode-Code128-testfix.patch
 BuildArch:      noarch
 BuildRequires:  perl(ExtUtils::MakeMaker)
 BuildRequires:  perl(GD)
@@ -19,9 +20,11 @@ generate images in PNG or GIF format using the GD package, or it can
 generate a text string representing the barcode that you can render using
 some other technology if desired.
 
+%description -l zh_CN.UTF-8
+生成 CODE 128 条码。
+
 %prep
 %setup -q -n Barcode-Code128-%{version}
-%patch0
 rm t/gif.t
 
 %build
@@ -35,6 +38,7 @@ find $RPM_BUILD_ROOT -type f -name .packlist -exec rm -f {} \;
 find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 
 %{_fixperms} $RPM_BUILD_ROOT/*
+magic_rpm_clean.sh
 
 %check
 
@@ -45,6 +49,9 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_mandir}/man3/*
 
 %changelog
+* Fri Apr 24 2015 Liu Di <liudidi@gmail.com> - 2.21-1
+- 更新到 2.21
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 2.01-12
 - 为 Magic 3.0 重建
 

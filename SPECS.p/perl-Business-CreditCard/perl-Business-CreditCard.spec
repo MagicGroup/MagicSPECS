@@ -1,9 +1,11 @@
 Name:           perl-Business-CreditCard
-Version:        0.31
-Release:        6%{?dist}
+Version:	0.33
+Release:	1%{?dist}
 Summary:        Validate/generate credit card check-sums/names
+Summary(zh_CN.UTF-8): 校验/生成信用卡校验码/名称
 License:        GPL+ or Artistic
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 URL:            http://search.cpan.org/dist/Business-CreditCard/
 Source0:        http://www.cpan.org/modules/by-module/Business/Business-CreditCard-%{version}.tar.gz
 BuildArch:      noarch
@@ -17,6 +19,9 @@ Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $versi
 These subroutines tell you whether a credit card number is self-consistent
 -- whether the last digit of the number is a valid check-sum for the
 preceding digits.
+
+%description -l zh_CN.UTF-8
+校验/生成信用卡校验码/名称。
 
 %prep
 %setup -q -n Business-CreditCard-%{version}
@@ -35,6 +40,7 @@ make pure_install PERL_INSTALL_ROOT=$RPM_BUILD_ROOT
 find $RPM_BUILD_ROOT -type f -name .packlist -exec rm -f {} \;
 find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_fixperms} $RPM_BUILD_ROOT/*
+magic_rpm_clean.sh
 
 %check
 
@@ -45,6 +51,9 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_mandir}/man3/*
 
 %changelog
+* Thu Apr 30 2015 Liu Di <liudidi@gmail.com> - 0.33-1
+- 更新到 0.33
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.31-6
 - 为 Magic 3.0 重建
 

@@ -1,9 +1,11 @@
 Name:           perl-Authen-Simple
 Version:        0.5
-Release:        5%{?dist}
+Release:        6%{?dist}
 Summary:        Simple Authentication
+Summary(zh_CN.UTF-8): 简单的认证模块
 License:        GPL+ or Artistic
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 URL:            http://search.cpan.org/dist/Authen-Simple/
 Source0:        http://www.cpan.org/authors/id/C/CH/CHANSEN/Authen-Simple-%{version}.tar.gz
 BuildArch:      noarch
@@ -26,6 +28,9 @@ Requires:       perl(Class::Data::Inheritable)
 %description
 Simple and consistent framework for authentication.
 
+%description -l zh_CN.UTF-8
+简单的认证模块。
+
 %prep
 %setup -q -n Authen-Simple-%{version}
 
@@ -40,6 +45,7 @@ find $RPM_BUILD_ROOT -type f -name .packlist -exec rm -f {} \;
 find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 
 %{_fixperms} $RPM_BUILD_ROOT/*
+magic_rpm_clean.sh
 
 %check
 make test
@@ -50,6 +56,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Fri Apr 24 2015 Liu Di <liudidi@gmail.com> - 0.5-6
+- 为 Magic 3.0 重建
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.5-5
 - 为 Magic 3.0 重建
 

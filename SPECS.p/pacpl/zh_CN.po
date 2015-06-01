@@ -1,0 +1,152 @@
+############################################
+# Chinese_Simplified - Ni Hui (shuizhuyuanluo@126.com)
+############################################
+#
+# 翻译介绍：
+#
+# 1) 只需翻译在 = 等号后面的文本(翻译值而不是键名称)
+# 2) 确定在 = 等号两边都只有一个空格
+# 3) 确认在文件顶部包含语言名称，以及您的姓名/电子邮件地址
+# 4) 拼写检查
+# 5) 请翻译这段介绍并包含在您的 lang.po 中
+# 
+# 您可以将您的翻译提交到 vorzox@gmail.com
+
+##################
+# 错误消息 #
+##################
+
+error = 错误
+failed = failed:
+bad_input = 目标格式不支持。
+multi_out = 当编码多个文件时不能使用 --outfile。
+no_config = 未找到配置文件...使用默认设置。
+unk_encoder = selected encoder not valid for:
+unk_decoder = selected decoder not valid for:
+no_decoder = 警告：无法编码以下文件：
+no_encoder = 不支持编码“至”以下格式：
+no_encode_app = could not find suitable application to encode:
+no_decode_app = could not find suitable application to decode:
+no_app = 无法找到程序：
+no_outdir = 输出目录不存在。
+no_infile = 以下不是一个文件或目录：
+no_input = 您必须至少指定一个输出文件。
+no_read_tag = 无法读取标记：
+no_write_tag = 无法写入标记：
+no_disc = 无法打开音频碟片：
+no_cddb = 无法找到 cddb 条目。 使用 --nocddb 选项。
+no_kdialog = 未找到 kdialog。 请安装 kdebase 软件包。
+need_outdir = 您必须指定一个输出目录。
+encode_failed = 编码失败，退出状态：
+decode_failed = 解码失败，退出状态：
+empty_dir = 目录为空，尝试使用 --recursive 选项：
+opening_dir = 无法打开目录：
+opening_file = 无法打开文件：
+seek_help = 参见“pacpl --help”或“pacpl --longhelp”以查看选项清单。
+
+###########
+# 通知 #
+###########
+
+converting = 正在转换：
+conv_comp = 转换完成。
+removed_tmp = 删除临时文件：
+removed_src = 删除源文件：
+enc_fmts = 编码格式：
+dec_fmts = 解码格式：
+tag_info = 附上标记信息：
+write_tag_i = 正在写入标记信息：
+creating_dir = 正在创建目录：
+imported = 导入的模块：
+debug = 调试：
+loaded_config = 装入的配置文件：
+ripping_track = 正在抓取音轨：
+total_converted = Total files converted:
+overwrite = 输出文件已存在。 使用 --overwrite 来替换存在的文件。
+show_encoders = encoders for
+show_decoders = decoders for
+
+#######################################
+# Konqueror 和 Dolphin 的用户提示符 #
+#######################################
+
+gui_overwrite = 如果输出文件已存在是否覆盖？(1 = 是，0 = 否)
+gui_bitrate = 选择比特率
+gui_freq = 音频采样率
+gui_chans = 音频通道
+gui_fcomp = FLAC 压缩级别
+gui_acomp = APE 压缩级别
+gui_oggqual = Ogg Vorbis 质量级别
+gui_spxqual = speex 质量级别
+gui_aacqual = AAC/MP4/M4A 质量级别
+gui_mpcqual = Musepack 质量级别
+gui_ofmode = OptimFrog 压缩模式
+gui_ofopt = OptimFrog 最佳级别
+gui_bratio = BONK 下载采样率
+gui_bquanl = BONK 量化级别
+gui_bpsize = BONK 预计大小
+gui_outdir = Select output folder
+
+##################
+# 帮助菜单文本 #
+##################
+
+to = 目标格式
+recursive = 递归转换目录
+preserve = 保持目录结构
+formats = 列出支持的编码/解码格式
+only = 只转换匹配扩展名的文件
+keep = 保持文件匹配目标格式
+jobs = number of simultaneous files to process
+help = 本帮助菜单
+longhelp = 完整的选项清单
+version = 显示版本信息
+usage = 用法：pacpl --to <格式> <选项> [文件/目录]
+defopts = turn off default encoder options (0)
+eopts = 用户提供的编码选项
+dopts = 用户提供的解码选项
+nopts = user supplied normalize options
+outfile = 输出文件名称
+outdir = 输出目录
+dryrun = 不转换文件
+overwrited = 覆盖目标文件
+normalize = normalize wav file before encoding
+delete = 转换后删除源文件
+encoder = specify an alternate encoder
+decoder = specify an alternate decoder
+verbose = 显示详细信息
+user_opts = 用户选项：
+enc_opts = 编码选项：
+bitrate = 比特率 (默认：128)
+freq = 声频 (默认：44100)
+channels = 音频通道数 (默认：2)
+effect = sox 效果 (aiff/au/snd/raw/voc/smp/avr/cdr)
+fcomp = flac/fla 压缩级别 (默认：2)
+acomp = ape 压缩级别 (默认：3000)
+oggqual = ogg 质量级别 (默认：3)
+spxqual = spx 质量级别 (默认：8)
+aacqual = aac/mp4/m4a 质量级别 (默认：100)
+mpcqual = mpc/mpp 质量级别 (默认：radio)
+ofmode = ofr/ofs 模式 (默认：normal)
+ofopt = ofr/ofs 最佳 (默认：fast)
+bratio = bonk 下载采样率 (默认：2)
+bquanl = bonk 量化级别 (默认：1.0)
+bpsize = bonk 预计大小 (默认：128)
+tag_opts = 标记选项：
+artist = 设定艺术家信息
+title = 设定标题
+track = 设定音轨号
+year = 设定专辑/音轨的年/日期
+album = 设定专辑标题信息
+genre = 设定流派
+comment = 设定评论
+taginfo = 显示选择文件的标记信息
+tag_usage = 附上标记用法：pacpl <选项> [文件]
+rip_opts = 抓取选项：
+rip = 抓取以逗号分隔的音轨或者全部
+nocddb = 禁用 cddb
+noinput = 禁用 cddb 交互
+nscheme = 命名方案
+cdinfo = 显示当前碟片的 cddb 信息
+device = 默认 = /dev/dvd
+rip_usage = 抓取用法：pacpl --rip [音轨/全部] --to <格式> <选项>

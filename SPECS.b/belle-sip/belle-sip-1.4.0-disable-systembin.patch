@@ -1,0 +1,12 @@
+diff -ur belle-sip-1.4.0.orig/configure.ac belle-sip-1.4.0/configure.ac
+--- belle-sip-1.4.0.orig/configure.ac	2015-04-23 15:44:05.397220263 +0000
++++ belle-sip-1.4.0/configure.ac	2015-04-23 16:24:07.010158711 +0000
+@@ -194,7 +194,7 @@
+ 	ANTLR_CFLAGS=
+ 	ANTLR_LIBS=
+ fi
+-AC_PATH_PROG([ANTLR],[antlr3],[no],[$antlr_prefix/bin /usr/bin])
++AC_PATH_PROG([ANTLR],[antlr3],[no],[$antlr_prefix/bin])
+ 
+ if test $ANTLR = "no" ; then
+ antlr_java_prefixes="$antlr_prefix/share/java /usr/local/share/java /usr/share/java /opt/local/share/java"

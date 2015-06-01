@@ -1,9 +1,11 @@
 Name:           perl-Ace
 Version:        1.92
-Release:        20%{?dist}
+Release:        21%{?dist}
 Summary:        Perl module for interfacing with ACE bioinformatics databases
+Summary(zh_CN.UTF-8): 提供 ACE 生物信息学数据库接口的 Perl 模块
 License:        GPL+ or Artistic
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 URL:            http://search.cpan.org/dist/AcePerl/
 Source0:        http://www.cpan.org/modules/by-module/Ace/AcePerl-%{version}.tar.gz
 BuildArch:      noarch
@@ -16,6 +18,9 @@ AcePerl is a Perl interface for the ACEDB object-oriented database.
 Designed specifically for use in genome sequencing projects, ACEDB
 provides powerful modeling and management services for biological and
 laboratory data.
+
+%description -l zh_CN.UTF-8
+提供 ACE 生物信息学数据库接口的 Perl 模块。
 
 %{?perl_default_filter}
 
@@ -50,6 +55,7 @@ find $RPM_BUILD_ROOT -type f -name '*.bs' -size 0 -exec rm -f {} \;
 find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 
 %{_fixperms} $RPM_BUILD_ROOT/*
+magic_rpm_clean.sh
 
 ## disable tests because they require network access
 %check
@@ -65,6 +71,9 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_mandir}/man3/*
 
 %changelog
+* Sun Apr 19 2015 Liu Di <liudidi@gmail.com> - 1.92-21
+- 为 Magic 3.0 重建
+
 * Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 1.92-20
 - 为 Magic 3.0 重建
 

@@ -5,7 +5,7 @@
 
 Name: PyKDE4 
 Version: 4.14.3
-Release: 1%{?dist}
+Release: 2%{?dist}
 Summary: Python bindings for KDE4 
 Summary(zh_CN.UTF-8): KDE4 的 Python 绑定
 
@@ -15,12 +15,6 @@ Group: User Interface/Desktops
 Group(zh_CN.UTF-8): 用户界面/桌面
 URL: http://developer.kde.org/language-bindings/
 Source0: http://download.kde.org/stable/%{version}/src/pykde4-%{version}.tar.xz
-
-Patch100: pykde4-pyqt495.patch
-
-# debian patches
-Patch200: make_pykde4_respect_sip_flags.diff
-Patch201: fix_kpythonpluginfactory_build.diff
 
 # rhel patches
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -119,10 +113,6 @@ Requires: python3-PyKDE4-akonadi%{?_isa} = %{version}-%{release}
 
 %prep
 %setup -q -n pykde4-%{version}
-
-#%patch100 -p1 -b .pyqt495
-#%patch200 -p1 -b .respect_sip_flags
-#%patch201 -p1 -b .kpythonpluginfactory_slots
 
 %build
 %if 0%{?python3}
@@ -229,6 +219,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Apr 19 2015 Liu Di <liudidi@gmail.com> - 4.14.3-2
+- 为 Magic 3.0 重建
+
 * Sun Feb 15 2015 Liu Di <liudidi@gmail.com> - 4.14.3-1
 - 更新到 4.14.3
 

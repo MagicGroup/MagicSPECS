@@ -1,8 +1,10 @@
 Name:           perl-B-Keywords
-Version:        1.12
-Release:        7%{?dist}
+Version:	1.14
+Release:	1%{?dist}
 Summary:        Lists of reserved barewords and symbol names
+Summary(zh_CN.UTF-8): 保留字和符号名称的列表
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 License:        GPL+ or Artistic
 URL:            http://search.cpan.org/dist/B-Keywords/
 Source0:        http://search.cpan.org/CPAN/authors/id/R/RU/RURBAN/B-Keywords-%{version}.tar.gz
@@ -21,6 +23,8 @@ Requires:       perl(:MODULE_COMPAT_%(eval "`perl -V:version`"; echo $version))
 %description
 %{summary}.
 
+%description -l zh_CN.UTF-8
+保留字和符号名称的列表。
 
 %prep
 %setup -q -n B-Keywords-%{version}
@@ -36,7 +40,7 @@ make pure_install DESTDIR=$RPM_BUILD_ROOT
 find $RPM_BUILD_ROOT -type f -name .packlist -exec rm -f {} ';'
 find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} ';' 2>/dev/null
 %{_fixperms} $RPM_BUILD_ROOT
-
+magic_rpm_clean.sh
 
 %check
 
@@ -49,6 +53,9 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} ';' 2>/dev/null
 
 
 %changelog
+* Sat Apr 25 2015 Liu Di <liudidi@gmail.com> - 1.14-1
+- 更新到 1.14
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.12-7
 - 为 Magic 3.0 重建
 

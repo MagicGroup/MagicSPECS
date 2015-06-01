@@ -1,12 +1,14 @@
 Name:           perl-Alien-wxWidgets
-Version:        0.51
-Release:        15%{?dist}
+Version:	0.67
+Release:	1%{?dist}
 Summary:        Building, finding and using wxWidgets binaries
+Summary(zh_CN.UTF-8): 构建、查找和使用二进制的 wx 部件
 
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 License:        GPL+ or Artistic
 URL:            http://search.cpan.org/dist/Alien-wxWidgets/
-Source0:        http://search.cpan.org/CPAN/authors/id/M/MB/MBARBON/Alien-wxWidgets-%{version}.tar.gz
+Source0:        http://search.cpan.org/CPAN/authors/id/M/MD/MDOOTSON/Alien-wxWidgets-%{version}.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildRequires:  wx-gtk2-unicode-devel
@@ -38,6 +40,8 @@ Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $versi
 "Alien::wxWidgets" can be used to detect and get configuration
 settings from an installed wxWidgets.
 
+%description -l zh_CN.UTF-8
+构建、查找和使用二进制的 wx 部件。
 
 %prep
 %setup -q -n Alien-wxWidgets-%{version}
@@ -52,7 +56,7 @@ settings from an installed wxWidgets.
 rm -rf $RPM_BUILD_ROOT
 ./Build install destdir=$RPM_BUILD_ROOT create_packlist=0
 chmod -R u+w $RPM_BUILD_ROOT/*
-
+magic_rpm_clean.sh
 
 %check
 ./Build test
@@ -70,6 +74,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Wed Apr 22 2015 Liu Di <liudidi@gmail.com> - 0.67-1
+- 更新到 0.67
+
 * Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 0.51-15
 - 为 Magic 3.0 重建
 

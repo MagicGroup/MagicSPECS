@@ -1,11 +1,13 @@
 %global perlname AnyEvent-HTTP
 
 Name:      perl-AnyEvent-HTTP
-Version:   1.46
-Release:   9%{?dist}
+Version:	2.21
+Release:	1%{?dist}
 Summary:   Simple but non-blocking HTTP/HTTPS client  
+Summary(zh_CN.UTF-8): 简单的但非阻塞式的 HTTP/HTTPS 客户端
 
 Group:     Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 License:   GPL+ or Artistic
 URL:       http://search.cpan.org/dist/AnyEvent-HTTP/
 Source:    http://search.cpan.org/CPAN/authors/id/M/ML/MLEHMANN/%{perlname}-%{version}.tar.gz
@@ -40,6 +42,8 @@ simplistic implementation in this module doesn't suffice), referrer and
 other high-level protocol details for which this module offers only
 limited support.
 
+%description -l zh_CN.UTF-8
+简单的但非阻塞式的 HTTP/HTTPS 客户端。
 
 %prep
 %setup -q -n %{perlname}-%{version}
@@ -56,7 +60,7 @@ make pure_install DESTDIR=%{buildroot}
 find %{buildroot} -type f -name .packlist -exec rm -f {} ';' -print
 find %{buildroot} -type d -depth -exec rmdir {} 2>/dev/null ';' -print
 %{_fixperms} %{buildroot}%{_prefix}
-
+magic_rpm_clean.sh
 
 %clean
 rm -rf %{buildroot}
@@ -74,6 +78,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Apr 22 2015 Liu Di <liudidi@gmail.com> - 2.21-1
+- 更新到 2.21
+
 * Thu Jun 12 2014 Liu Di <liudidi@gmail.com> - 1.46-9
 - 为 Magic 3.0 重建
 

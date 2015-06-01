@@ -1,6 +1,6 @@
 Name:		pciutils
-Version:	3.1.9
-Release:	4%{?dist}
+Version:	3.3.1
+Release:	1%{?dist}
 Source:		ftp://atrey.karlin.mff.cuni.cz/pub/linux/pci/%{name}-%{version}.tar.gz
 Source1:        multilibconfigh
 
@@ -17,7 +17,9 @@ ExclusiveOS:	Linux
 Requires:	hwdata
 BuildRequires:	sed
 Summary: PCI bus related utilities
+Summary(zh_CN.UTF-8): PCI 总线相关工具
 Group: Applications/System
+Group(zh_CN.UTF-8): 应用程序/系统
 
 %description
 The pciutils package contains various utilities for inspecting and
@@ -25,31 +27,49 @@ setting devices connected to the PCI bus. The utilities provided
 require kernel version 2.1.82 or newer (which support the
 /proc/bus/pci interface).
 
+%description -l zh_CN.UTF-8
+PCI 总线相关工具。
+
 %package devel
 Summary: Linux PCI development library
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: zlib-devel pkgconfig %{name} = %{version}-%{release}
 
 %description devel
 This package contains a library for inspecting and setting
 devices connected to the PCI bus.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
 %package libs
 Summary: Linux PCI library
+Summary(zh_CN.UTF-8): %{name} 的运行库
 Group: System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 
 %description libs
 This package contains a library for inspecting and setting
 devices connected to the PCI bus.
 
+%description libs -l zh_CN.UTF-8
+%{name} 的运行库。
+
 %package devel-static
 Summary: Linux PCI static library
+Summary(zh_CN.UTF-8): %{name} 的静态库
 Group: System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 Requires: %{name}-devel = %{version}-%{release}
 
 %description devel-static
 This package contains a static library for inspecting and setting
 devices connected to the PCI bus.
+
+%description devel-static -l zh_CN.UTF-8
+%{name} 的静态库。
 
 %prep
 %setup -q -n pciutils-%{version}
@@ -124,6 +144,9 @@ magic_rpm_clean.sh
 rm -rf $RPM_BUILD_ROOT
 
 %changelog
+* Thu Apr 16 2015 Liu Di <liudidi@gmail.com> - 3.3.1-1
+- 更新到 3.3.1
+
 * Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 3.1.9-4
 - 为 Magic 3.0 重建
 

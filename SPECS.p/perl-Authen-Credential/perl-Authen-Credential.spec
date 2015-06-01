@@ -1,9 +1,11 @@
 Name:           perl-Authen-Credential
-Version:        0.5
-Release:        6%{?dist}
+Version:	1.1
+Release:	1%{?dist}
 Summary:        Abstraction of a credential
+Summary(zh_CN.UTF-8): 凭据的抽象层
 License:        GPL+ or Artistic
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 URL:            http://search.cpan.org/dist/Authen-Credential/
 Source0:        http://search.cpan.org/CPAN/authors/id/L/LC/LCONS/Authen-Credential-%{version}.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -30,6 +32,9 @@ be stored in structured configuration files or using JSON) and
 "preparators" that can transform credentials into ready-to-use data for
 well known targets.
 
+%description -l zh_CN.UTF-8
+凭据的抽象层。
+
 %prep
 %setup -q -n Authen-Credential-%{version}
 
@@ -46,6 +51,7 @@ find $RPM_BUILD_ROOT -type f -name .packlist -exec rm -f {} \;
 find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 
 %{_fixperms} $RPM_BUILD_ROOT/*
+magic_rpm_clean.sh
 
 %check
 
@@ -60,6 +66,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Thu Apr 23 2015 Liu Di <liudidi@gmail.com> - 1.1-1
+- 更新到 1.1
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.5-6
 - 为 Magic 3.0 重建
 

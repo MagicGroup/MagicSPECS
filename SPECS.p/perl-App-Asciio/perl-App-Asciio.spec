@@ -1,10 +1,12 @@
 Name:       perl-App-Asciio 
 Version:    1.02.71 
-Release:    20%{?dist}
+Release:    21%{?dist}
 # see lib/App/Asciio.pm
 License:    GPL+ or Artistic
 Group:      Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Summary:    Asciio back-end libraries 
+Summary(zh_CN.UTF-8): Asciio 后端库
 Source:     http://search.cpan.org/CPAN/authors/id/N/NK/NKH/App-Asciio-%{version}.tar.gz 
 Url:        http://search.cpan.org/dist/App-Asciio
 Requires:   perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
@@ -72,10 +74,15 @@ or in a format that allows you to modify them later.
 This package contains the back-end libraries needed to implement asciio.  For
 the actual application itself, please install the 'asciio' package.
 
+%description -l zh_CN.UTF-8
+Asciio 后端库.
+
 %package -n asciio
 License:    GPL+ or Artistic
 Group:      Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Summary:    Draw ascii art quickly and easily!
+Summary(zh_CN.UTF-8): 简单快速的描画 ascii 艺术图
 Requires:   %{name} = %{version}-%{release}
 
 %description -n asciio
@@ -84,6 +91,9 @@ graphical application. The ASCII graphs can be saved as ASCII or in a format
 that allows you to modify them later.
 
 Think: Visio for ASCII :-)
+
+%description -l zh_CN.UTF-8
+简单快速的描画 ascii 艺术图。
 
 %prep
 %setup -q -n App-Asciio-%{version}
@@ -128,6 +138,7 @@ find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null ';'
 
 # desktop file
 desktop-file-install --dir=%{buildroot}%{_datadir}/applications asciio.desktop
+magic_rpm_clean.sh
 
 %check
 # passes outside of rpm, but fails in rpmbuild F-10+ (no $DISPLAY)
@@ -146,6 +157,9 @@ desktop-file-install --dir=%{buildroot}%{_datadir}/applications asciio.desktop
 
 
 %changelog
+* Thu Apr 23 2015 Liu Di <liudidi@gmail.com> - 1.02.71-21
+- 为 Magic 3.0 重建
+
 * Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 1.02.71-20
 - 为 Magic 3.0 重建
 

@@ -1,9 +1,11 @@
 Name:           perl-Bit-Vector
-Version:        7.2
-Release:        12%{?dist}
+Version:	7.4
+Release:	1%{?dist}
 Summary:        Efficient bit vector, set of integers and "big int" math library
+Summary(zh_CN.UTF-8): 高效位向量，整数和大整数集合的数学库
 
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 # Clarified by a private mail from the author:
 License:        (GPLv2+ or Artistic) and LGPLv2+
 URL:            http://search.cpan.org/dist/Bit-Vector/
@@ -27,6 +29,8 @@ The library is efficient (in terms of algorithmical complexity) and
 therefore fast (in terms of execution speed) for instance through the
 widespread use of divide-and-conquer algorithms.
 
+%description -l zh_CN.UTF-8
+高效位向量，整数和大整数集合的数学库。
 
 %prep
 %setup -q -n Bit-Vector-%{version} 
@@ -45,6 +49,7 @@ find %{buildroot} -type f -name .packlist -exec rm -f {} ';'
 find %{buildroot} -type f -name '*.bs' -a -size 0 -exec rm -f {} ';'
 find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null ';'
 %{_fixperms} %{buildroot}/*
+magic_rpm_clean.sh
 
 %check
 
@@ -58,6 +63,9 @@ find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null ';'
 
 
 %changelog
+* Sat Apr 25 2015 Liu Di <liudidi@gmail.com> - 7.4-1
+- 更新到 7.4
+
 * Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 7.2-12
 - 为 Magic 3.0 重建
 

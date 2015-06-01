@@ -9,11 +9,13 @@
 %global db_ver %(sed '/DB_VERSION_STRING/!d;s/.*Berkeley DB[[:space:]]*\\([^:]*\\):.*/\\1/' /usr/include/db.h 2>/dev/null || echo 4.0.0)
 
 Name:           perl-BerkeleyDB
-Version:        0.49
-Release:        7%{?dist}
+Version:	0.55
+Release:	1%{?dist}
 Summary:        Interface to Berkeley DB
+Summary(zh_CN.UTF-8): 伯克利 DB 的接口
 License:        GPL+ or Artistic
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 URL:            http://search.cpan.org/dist/BerkeleyDB/
 Source0:        http://www.cpan.org/authors/id/P/PM/PMQS/BerkeleyDB-%{version}.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -37,6 +39,9 @@ facilities provided by Berkeley DB. Berkeley DB is a C library that
 provides a consistent interface to a number of database formats.
 BerkeleyDB provides an interface to all four of the database types
 (hash, btree, queue and recno) currently supported by Berkeley DB.
+
+%description -l zh_CN.UTF-8
+伯克利 DB 的接口。
 
 %prep
 %setup -q -n BerkeleyDB-%{version}
@@ -62,6 +67,7 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 rm -f $RPM_BUILD_ROOT%{perl_vendorarch}/{mkconsts,scan}.pl
 
 %{_fixperms} $RPM_BUILD_ROOT/*
+magic_rpm_clean.sh
 
 %check
 
@@ -80,6 +86,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/BerkeleyDB.3pm*
 
 %changelog
+* Fri Apr 24 2015 Liu Di <liudidi@gmail.com> - 0.55-1
+- 更新到 0.55
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.49-7
 - 为 Magic 3.0 重建
 

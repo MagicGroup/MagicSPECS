@@ -4,9 +4,10 @@
 %define pkg_name Audio-Musepack
 
 Summary: An OOP interface to Musepack file information and APE tag fields
+Summary(zh_CN.UTF-8): Musepack 文件信息和 APE 标记的面向对象的接口
 Name: perl-Audio-Musepack
-Version: 1.0.1
-Release: 5%{?dist}
+Version:	1.0.1
+Release:	8%{?dist}
 Group: Development/Libraries
 Group(zh_CN): 开发/库
 License: Artistic
@@ -22,6 +23,8 @@ This module returns a hash containing basic information about a Musepack
 file, as well as tag information contained in the Musepack file's APE tags.
 See Audio::APETags for more information about the tags.
 
+%description -l zh_CN.UTF-8
+Musepack 文件信息和 APE 标记的面向对象的接口。
 
 %prep
 %setup -q -n %{pkg_name}-%{version}
@@ -38,6 +41,7 @@ See Audio::APETags for more information about the tags.
 
 %makeinstall
 %{__rm} -rf %{buildroot}%{perl_archlib} %{buildroot}%{perl_vendorarch}
+magic_rpm_clean.sh
 
 %clean
 %{__rm} -rf %{buildroot} %{_builddir}/%{buildsubdir}
@@ -49,6 +53,15 @@ See Audio::APETags for more information about the tags.
 %{perl_vendorlib}
 
 %changelog
+* Wed Apr 15 2015 Liu Di <liudidi@gmail.com> - 1.0.1-8
+- 为 Magic 3.0 重建
+
+* Tue Apr 14 2015 Liu Di <liudidi@gmail.com> - 1.0.1-7
+- 为 Magic 3.0 重建
+
+* Tue Apr 14 2015 Liu Di <liudidi@gmail.com> - 1.0.1-6
+- 为 Magic 3.0 重建
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.0.1-5
 - 为 Magic 3.0 重建
 

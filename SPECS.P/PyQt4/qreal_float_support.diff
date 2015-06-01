@@ -1,24 +1,9 @@
 ## 03_qreal_float_support.dpatch by Michael Casadevall <sonicmctails@gmail.com>
-Index: python-qt4-4.9.1/configure.py
+Index: python-qt4-4.10.3/sip/QtCore/qlist.sip
 ===================================================================
---- python-qt4-4.9.1.orig/configure.py	2012-02-11 16:59:33.402554204 -0500
-+++ python-qt4-4.9.1/configure.py	2012-02-11 17:02:46.626548495 -0500
-@@ -2072,8 +2072,9 @@
-     out << "PyQt_NoOpenGLES\\n";
- #endif
- 
--    if (sizeof (qreal) != sizeof (double))
-+#if defined(QT_NO_FPU) || defined(QT_ARCH_ARM) || defined(QT_ARCH_WINDOWSCE)
-         out << "PyQt_qreal_double\\n";
-+#endif
- 
-     return 0;
- }
-Index: python-qt4-4.9.1/sip/QtCore/qlist.sip
-===================================================================
---- python-qt4-4.9.1.orig/sip/QtCore/qlist.sip	2012-02-11 16:59:33.422554203 -0500
-+++ python-qt4-4.9.1/sip/QtCore/qlist.sip	2012-02-11 17:05:31.546543622 -0500
-@@ -807,3 +807,227 @@
+--- python-qt4-4.10.3.orig/sip/QtCore/qlist.sip	2013-09-20 07:55:07.028033774 +0100
++++ python-qt4-4.10.3/sip/QtCore/qlist.sip	2013-09-20 07:55:07.024033774 +0100
+@@ -819,3 +819,227 @@
      return sipGetState(sipTransferObj);
  %End
  };

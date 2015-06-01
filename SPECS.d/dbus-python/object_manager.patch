@@ -1,0 +1,473 @@
+From b5f097c622ac89df3ccb97931decd45bae3c4bd2 Mon Sep 17 00:00:00 2001
+From: Marko Kohtala <marko.kohtala@gmail.com>
+Date: Tue, 13 May 2014 22:06:07 +0300
+Subject: [PATCH] Implement dbus.service.property decorator and
+ PropertiesInterface
+
+This adds dbus server side support for properties using a decorator.
+The decorator automagically adds PropertiesInterface to the object.
+
+It also simplifies the _dbus_class_table shared by all derived classes
+and containing them to a _dbus_interface_table on each derived class.
+---
+ dbus/decorators.py          |  95 ++++++++++++++++++++++++++
+ dbus/service.py             | 163 ++++++++++++++++++++++++++++++++++++++------
+ examples/example-client.py  |  18 +++--
+ examples/example-service.py |  14 +++-
+ 4 files changed, 261 insertions(+), 29 deletions(-)
+
+diff --git a/dbus/decorators.py b/dbus/decorators.py
+index b164582..d41869a 100644
+--- a/dbus/decorators.py
++++ b/dbus/decorators.py
+@@ -343,3 +343,98 @@ def signal(dbus_interface, signature=None, path_keyword=None,
+         return emit_signal
+ 
+     return decorator
++
++
++class property(object):
++    """A decorator used to mark properties of a `dbus.service.Object`.
++    """
++
++    def __init__(self, dbus_interface=None, signature=None,
++                 property_name=None, emits_changed_signal=None,
++                 fget=None, fset=None, doc=None):
++        """Initialize the decorator used to mark properties of a
++        `dbus.service.Object`.
++
++        :Parameters:
++            `dbus_interface` : str
++                The D-Bus interface owning the property
++
++            `signature` : str
++                The signature of the property in the usual D-Bus notation. The
++                signature must be suitable to be carried in a variant.
++
++            `property_name` : str
++                A name for the property. Defaults to the name of the getter or
++                setter function.
++
++            `emits_changed_signal` : True, False, "invalidates", or None
++                Tells for introspection if the object emits PropertiesChanged
++                signal.
++
++            `fget` : func
++                Getter function taking the instance from which to read the
++                property.
++
++            `fset` : func
++                Setter function taking the instance to which set the property
++                and the property value.
++
++            `doc` : str
++                Documentation string for the property. Defaults to documentation
++                string of getter function.
++
++                :Since: 1.3.0
++        """
++        validate_interface_name(dbus_interface)
++        self._dbus_interface = dbus_interface
++
++        self._init_property_name = property_name
++        if property_name is None:
++            if fget is not None:
++                property_name = fget.__name__
++            elif fset is not None:
++                property_name = fset.__name__
++        if property_name:
++            validate_member_name(property_name)
++        self.__name__ = property_name
++
++        self._init_doc = doc
++        if doc is None and fget is not None:
++            doc = getattr(fget, "__doc__", None)
++        self.fget = fget
++        self.fset = fset
++        self.__doc__ = doc
++
++        self._emits_changed_signal = emits_changed_signal
++        if len(tuple(Signature(signature))) != 1:
++            raise ValueError('signature must have only one item')
++        self._dbus_signature = signature
++
++    def __get__(self, inst, type=None):
++        if inst is None:
++            return self
++        if self.fget is None:
++            raise AttributeError("unreadable attribute")
++        return self.fget(inst)
++
++    def __set__(self, inst, value):
++        if self.fset is None:
++            raise AttributeError("can't set attribute")
++        self.fset(inst, value)
++
++    def __call__(self, fget):
++        return self.getter(fget)
++
++    def _copy(self, fget=None, fset=None):
++        return property(dbus_interface=self._dbus_interface,
++                        signature=self._dbus_signature,
++                        property_name=self._init_property_name,
++                        emits_changed_signal=self._emits_changed_signal,
++                        fget=fget or self.fget, fset=fset or self.fset,
++                        doc=self._init_doc)
++
++    def getter(self, fget):
++        return self._copy(fget=fget)
++
++    def setter(self, fset):
++        return self._copy(fset=fset)
+diff --git a/dbus/service.py b/dbus/service.py
+index b1fc21d..fdb3ee4 100644
+--- a/dbus/service.py
++++ b/dbus/service.py
+@@ -23,7 +23,7 @@
+ # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+ # DEALINGS IN THE SOFTWARE.
+ 
+-__all__ = ('BusName', 'Object', 'method', 'signal')
++__all__ = ('BusName', 'Object', 'PropertiesInterface', 'method', 'property', 'signal')
+ __docformat__ = 'restructuredtext'
+ 
+ import sys
+@@ -34,8 +34,10 @@ from collections import Sequence
+ 
+ import _dbus_bindings
+ from dbus import (
+-    INTROSPECTABLE_IFACE, ObjectPath, SessionBus, Signature, Struct,
+-    validate_bus_name, validate_object_path)
++    INTROSPECTABLE_IFACE, ObjectPath, PROPERTIES_IFACE, SessionBus, Signature,
++    Struct, validate_bus_name, validate_object_path)
++_builtin_property = property
++from dbus.decorators import method, signal, property
+ from dbus.decorators import method, signal
+ from dbus.exceptions import (
+     DBusException, NameExistsException, UnknownMethodException)
+@@ -297,20 +299,25 @@ def _method_reply_error(connection, message, exception):
+ 
+ 
+ class InterfaceType(type):
+-    def __init__(cls, name, bases, dct):
+-        # these attributes are shared between all instances of the Interface
+-        # object, so this has to be a dictionary that maps class names to
+-        # the per-class introspection/interface data
+-        class_table = getattr(cls, '_dbus_class_table', {})
+-        cls._dbus_class_table = class_table
+-        interface_table = class_table[cls.__module__ + '.' + name] = {}
++    def __new__(cls, name, bases, dct):
++        # Properties require the PropertiesInterface base.
++        for func in dct.values():
++            if isinstance(func, property):
++                for b in bases:
++                    if issubclass(b, PropertiesInterface):
++                        break
++                else:
++                    bases += (PropertiesInterface,)
++                break
++
++        interface_table = dct.setdefault('_dbus_interface_table', {})
+ 
+         # merge all the name -> method tables for all the interfaces
+         # implemented by our base classes into our own
+         for b in bases:
+-            base_name = b.__module__ + '.' + b.__name__
+-            if getattr(b, '_dbus_class_table', False):
+-                for (interface, method_table) in class_table[base_name].items():
++            base_interface_table = getattr(b, '_dbus_interface_table', False)
++            if base_interface_table:
++                for (interface, method_table) in base_interface_table.items():
+                     our_method_table = interface_table.setdefault(interface, {})
+                     our_method_table.update(method_table)
+ 
+@@ -320,9 +327,9 @@ class InterfaceType(type):
+                 method_table = interface_table.setdefault(func._dbus_interface, {})
+                 method_table[func.__name__] = func
+ 
+-        super(InterfaceType, cls).__init__(name, bases, dct)
++        return type.__new__(cls, name, bases, dct)
+ 
+-    # methods are different to signals, so we have two functions... :)
++    # methods are different to signals and properties, so we have three functions... :)
+     def _reflect_on_method(cls, func):
+         args = func._dbus_args
+ 
+@@ -370,12 +377,107 @@ class InterfaceType(type):
+ 
+         return reflection_data
+ 
++    def _reflect_on_property(cls, descriptor):
++        signature = descriptor._dbus_signature
++        if signature is None:
++            signature = 'v'
++
++        if descriptor.fget:
++            if descriptor.fset:
++                access = "readwrite"
++            else:
++                access = "read"
++        elif descriptor.fset:
++            access = "write"
++        else:
++            return ""
++        reflection_data = '    <property access="%s" type="%s" name="%s"' % (access, signature, descriptor.__name__)
++        if descriptor._emits_changed_signal is not None:
++            value = {True: "true", False: "false", "invalidates": "invalidates"}[descriptor._emits_changed_signal]
++            reflection_data += '>\n      <annotation name="org.freedesktop.DBus.Property.EmitsChangedSignal" value="%s"/>\n    </property>\n' % (value,)
++        else:
++            reflection_data += ' />\n'
++        return reflection_data
++
+ 
+ # Define Interface as an instance of the metaclass InterfaceType, in a way
+ # that is compatible across both Python 2 and Python 3.
+ Interface = InterfaceType('Interface', (object,), {})
+ 
+ 
++class PropertiesInterface(Interface):
++    """An object with properties must inherit from this interface."""
++
++    def _get_decorator(self, interface_name, property_name):
++        interfaces = self._dbus_interface_table
++        if interface_name:
++            interface = interfaces.get(interface_name)
++            if interface is None:
++                raise DBusException("No interface %s on object" % interface_name)
++            prop = interface.get(property_name)
++            if prop is None:
++                raise DBusException("No property %s on object interface %s" % (property_name, interface_name))
++            if not isinstance(prop, property):
++                raise DBusException("Name %s on object interface %s is not a property" % (property_name, interface_name))
++            return prop
++        else:
++            for interface in interfaces.itervalues():
++                prop = interface.get(property_name)
++                if prop and isinstance(prop, property):
++                    return prop
++            raise DBusException("No property %s found" % (property_name,))
++
++    @method(PROPERTIES_IFACE, in_signature="ss", out_signature="v")
++    def Get(self, interface_name, property_name):
++        """Get the value of the property on named interface. interface_name
++        may be empty, but if there are many properties with the same name the
++        behaviour is undefined.
++        """
++        prop = self._get_decorator(interface_name, property_name)
++        if not prop.fget:
++            raise DBusException("Property %s not readable" % property_name)
++        return prop.fget(self)
++
++    @method(PROPERTIES_IFACE, in_signature="ssv")
++    def Set(self, interface_name, property_name, value):
++        """Set value of property on named interface to value. interface_name
++        may be empty, but if there are many properties with the same name the
++        behaviour is undefined.
++        """
++        prop = self._get_decorator(interface_name, property_name)
++        if not prop.fset:
++            raise DBusException("Property %s not writable" % property_name)
++        return prop.fset(self, value)
++
++    @method(PROPERTIES_IFACE, in_signature="s", out_signature="a{sv}")
++    def GetAll(self, interface_name):
++        """Return a dictionary of all property names and values. Returns only
++        readable properties.
++        """
++        interfaces = self._dbus_interface_table
++        if interface_name:
++            iface = interfaces.get(interface_name)
++            if iface is None:
++                raise DBusException("No interface %s on object" % interface_name)
++            ifaces = [iface]
++        else:
++            ifaces = interfaces.values()
++        properties = {}
++        for iface in ifaces:
++            for name, prop in iface.items():
++                if not isinstance(prop, property):
++                    continue
++                if not prop.fget or name in properties:
++                    continue
++                properties[name] = prop.fget(self)
++        return properties
++
++    @signal(PROPERTIES_IFACE, signature='sa{sv}as')
++    def PropertiesChanged(self, interface_name, changed_properties,
++                          invalidated_properties):
++        pass
++
++
+ #: A unique object used as the value of Object._object_path and
+ #: Object._connection if it's actually in more than one place
+ _MANY = object()
+@@ -384,11 +486,12 @@ class Object(Interface):
+     r"""A base class for exporting your own Objects across the Bus.
+ 
+     Just inherit from Object and mark exported methods with the
+-    @\ `dbus.service.method` or @\ `dbus.service.signal` decorator.
++    @\ `dbus.service.method`, @\ `dbus.service.signal` or
++    @\ `dbus.service.property` decorator.
+ 
+     Example::
+ 
+-        class Example(dbus.service.object):
++        class Example(dbus.service.Object):
+             def __init__(self, object_path):
+                 dbus.service.Object.__init__(self, dbus.SessionBus(), path)
+                 self._last_input = None
+@@ -397,6 +500,8 @@ class Object(Interface):
+                                  in_signature='v', out_signature='s')
+             def StringifyVariant(self, var):
+                 self.LastInputChanged(var)      # emits the signal
++                # Emit the property changed signal
++                self.PropertiesChanged('com.example.Sample', {'LastInput': var}, [])
+                 return str(var)
+ 
+             @dbus.service.signal(interface='com.example.Sample',
+@@ -410,6 +515,20 @@ class Object(Interface):
+                                  in_signature='', out_signature='v')
+             def GetLastInput(self):
+                 return self._last_input
++
++            @dbus.service.property(interface='com.example.Sample',
++                                   signature='s')
++            def LastInput(self):
++                return self._last_input
++
++            @LastInput.setter
++            def LastInput(self, value):
++                self._last_input = value
++                # By default a property is expected to send the
++                # PropertiesChanged signal when value changes.
++                self.PropertiesChanged('com.example.Sample',
++                                       {'LastInput': var}, [])
++
+     """
+ 
+     #: If True, this object can be made available at more than one object path.
+@@ -484,7 +603,7 @@ class Object(Interface):
+         if conn is not None and object_path is not None:
+             self.add_to_connection(conn, object_path)
+ 
+-    @property
++    @_builtin_property
+     def __dbus_object_path__(self):
+         """The object-path at which this object is available.
+         Access raises AttributeError if there is no object path, or more than
+@@ -500,7 +619,7 @@ class Object(Interface):
+         else:
+             return self._object_path
+ 
+-    @property
++    @_builtin_property
+     def connection(self):
+         """The Connection on which this object is available.
+         Access raises AttributeError if there is no Connection, or more than
+@@ -516,7 +635,7 @@ class Object(Interface):
+         else:
+             return self._connection
+ 
+-    @property
++    @_builtin_property
+     def locations(self):
+         """An iterable over tuples representing locations at which this
+         object is available.
+@@ -762,7 +881,7 @@ class Object(Interface):
+         reflection_data = _dbus_bindings.DBUS_INTROSPECT_1_0_XML_DOCTYPE_DECL_NODE
+         reflection_data += '<node name="%s">\n' % object_path
+ 
+-        interfaces = self._dbus_class_table[self.__class__.__module__ + '.' + self.__class__.__name__]
++        interfaces = self._dbus_interface_table
+         for (name, funcs) in interfaces.items():
+             reflection_data += '  <interface name="%s">\n' % (name)
+ 
+@@ -771,6 +890,8 @@ class Object(Interface):
+                     reflection_data += self.__class__._reflect_on_method(func)
+                 elif getattr(func, '_dbus_is_signal', False):
+                     reflection_data += self.__class__._reflect_on_signal(func)
++                elif isinstance(func, property):
++                    reflection_data += self.__class__._reflect_on_property(func)
+ 
+             reflection_data += '  </interface>\n'
+ 
+diff --git a/examples/example-client.py b/examples/example-client.py
+index 262f892..b8fdc17 100644
+--- a/examples/example-client.py
++++ b/examples/example-client.py
+@@ -46,30 +46,36 @@ def main():
+             dbus_interface = "com.example.SampleInterface")
+     except dbus.DBusException:
+         print_exc()
+-        print usage
++        print(usage)
+         sys.exit(1)
+ 
+-    print (hello_reply_list)
++    print(hello_reply_list)
+ 
+     # ... or create an Interface wrapper for the remote object
+     iface = dbus.Interface(remote_object, "com.example.SampleInterface")
+ 
+     hello_reply_tuple = iface.GetTuple()
+ 
+-    print hello_reply_tuple
++    print(hello_reply_tuple)
+ 
+     hello_reply_dict = iface.GetDict()
+ 
+-    print hello_reply_dict
++    print(hello_reply_dict)
+ 
+     # D-Bus exceptions are mapped to Python exceptions
+     try:
+         iface.RaiseException()
+     except dbus.DBusException as e:
+-        print str(e)
++        print(str(e))
++
++    # D-Bus properties are implemented on server, but client needs to access
++    # them directly.
++    properties = dbus.Interface(remote_object, dbus.PROPERTIES_IFACE)
++    property_value = properties.Get("com.example.SampleInterface", "Property")
++    print(property_value)
+ 
+     # introspection is automatically supported
+-    print remote_object.Introspect(dbus_interface="org.freedesktop.DBus.Introspectable")
++    print(remote_object.Introspect(dbus_interface="org.freedesktop.DBus.Introspectable"))
+ 
+     if sys.argv[1:] == ['--exit-service']:
+         iface.Exit()
+diff --git a/examples/example-service.py b/examples/example-service.py
+index c42b526..5da98d5 100644
+--- a/examples/example-service.py
++++ b/examples/example-service.py
+@@ -69,6 +69,16 @@ class SomeObject(dbus.service.Object):
+     def Exit(self):
+         mainloop.quit()
+ 
++    _property_default = "Hello world!"
++    @dbus.service.property("com.example.SampleInterface",
++                           signature='s')
++    def Property(self):
++        """Sample property"""
++        return self._property_default
++
++    @Property.setter
++    def Property(self, value):
++        self._property_default = value
+ 
+ if __name__ == '__main__':
+     dbus.mainloop.glib.DBusGMainLoop(set_as_default=True)
+@@ -78,6 +88,6 @@ if __name__ == '__main__':
+     object = SomeObject(session_bus, '/SomeObject')
+ 
+     mainloop = gobject.MainLoop()
+-    print "Running example service."
+-    print usage
++    print("Running example service.")
++    print(usage)
+     mainloop.run()
+-- 
+1.8.4.5
+

@@ -1,10 +1,12 @@
 Name:           perl-Authen-Radius
-Version:        0.13
-Release:        15%{?dist}
+Version:	0.22
+Release:	1%{?dist}
 Summary:        Perl Authen::Radius modules
+Summary(zh_CN.UTF-8): Perl Authen::Radius 模块
 # See LICENSING.txt
 License:        Artistic 2.0
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 URL:            http://search.cpan.org/dist/RadiusPerl/
 Source0:        http://www.cpan.org/modules/by-module/Authen/RadiusPerl-%{version}.tar.gz
 Source1:	LICENSING.txt
@@ -19,6 +21,9 @@ RadiusPerl is a Perl 5 module (Radius.pm) which allows you to
 communicate with a Radius server from Perl. You can just authenticate 
 usernames/passwords via Radius, or completely imitate AAA requests and 
 process server response.
+
+%description -l zh_CN.UTF-8
+这个模块允许你使用 Perl 与 Radius 认证服务器通信。
 
 %prep
 %setup -q -n Authen-Radius-%{version}
@@ -37,6 +42,7 @@ find %{buildroot} -type f -name .packlist -exec rm -f {} \;
 find %{buildroot} -type d -depth -exec rmdir {} 2>/dev/null \;
 
 chmod -R u+rwX,go+rX,go-w %{buildroot}/*
+magic_rpm_clean.sh
 
 %check
 # Disabled check, as a running Radius-server is needed
@@ -52,6 +58,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/*
 
 %changelog
+* Fri Apr 24 2015 Liu Di <liudidi@gmail.com> - 0.22-1
+- 更新到 0.22
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.13-15
 - 为 Magic 3.0 重建
 

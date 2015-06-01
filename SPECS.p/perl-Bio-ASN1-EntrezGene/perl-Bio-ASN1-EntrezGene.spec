@@ -1,11 +1,14 @@
 Name:           perl-Bio-ASN1-EntrezGene
-Version:        1.091
-Release:        18%{?dist}
+Version:	1.70
+Release:	2%{?dist}
+Epoch:		1
 Summary:        Regular expression-based Perl Parser for NCBI Entrez Gene
+Summary(zh_CN.UTF-8): 基于正则表达式的 NCBI Entrez Gene 的 Perl 解析器
 License:        GPL+ or Artistic
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 URL:            http://search.cpan.org/dist/Bio-ASN1-EntrezGene/
-Source0:        http://www.cpan.org/modules/by-module/Bio/Bio-ASN1-EntrezGene-%{version}.tgz
+Source0:        http://search.cpan.org/CPAN/authors/id/C/CJ/CJFIELDS/Bio-ASN1-EntrezGene-%{version}.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 BuildRequires:  perl(ExtUtils::MakeMaker)
@@ -18,8 +21,11 @@ Entrez Gene genome databases
 formatted Entrez Gene record and returns a data structure that contains all
 data items from the gene record.
 
+%description -l zh_CN.UTF-8
+基于正则表达式的 NCBI Entrez Gene 的 Perl 解析器。
+
 %prep
-%setup -q -n Bio-ASN1-EntrezGene-1.09
+%setup -q -n Bio-ASN1-EntrezGene-%{version}
 
 # remove all execute bits from the doc stuff
 # so that dependency generator doesn't try to fulfill deps
@@ -38,6 +44,7 @@ find $RPM_BUILD_ROOT -type f -name .packlist -exec rm -f {} \;
 find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 
 %{_fixperms} $RPM_BUILD_ROOT/*
+magic_rpm_clean.sh
 
 ## disable tests because of circular BuildRequires with bioperl
 %check
@@ -49,11 +56,16 @@ rm -rf $RPM_BUILD_ROOT
 %files
 %defattr(-,root,root,-)
 %doc examples
-%doc Changes README README.1st
 %{perl_vendorlib}/*
 %{_mandir}/man3/*
 
 %changelog
+* Fri Apr 24 2015 Liu Di <liudidi@gmail.com> - 1:1.70-2
+- 为 Magic 3.0 重建
+
+* Fri Apr 24 2015 Liu Di <liudidi@gmail.com> - 1.70-1
+- 更新到 1.70
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.091-18
 - 为 Magic 3.0 重建
 

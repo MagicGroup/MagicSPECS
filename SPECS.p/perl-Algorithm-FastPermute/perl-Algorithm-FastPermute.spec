@@ -2,10 +2,12 @@
 
 Name:		perl-%{short_name}           
 Version:	0.999
-Release:	14%{?dist}
+Release:	15%{?dist}
 Summary:	Rapid generation of permutations
+Summary(zh_CN.UTF-8): 快速的生成排列
 
 Group:		Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 License:	GPL+ or Artistic
 URL:		http://search.cpan.org/dist/%{short_name}/
 Source0:	http://www.cpan.org/authors/id/R/RO/ROBIN/%{short_name}-%{version}.tar.gz
@@ -21,6 +23,8 @@ will be changed in place, and then changed back again before "permute"
 returns. During the execution of the callback, the array is read-only and
 you'll get an error if you try to change its length.
 
+%description -l zh_CN.UTF-8
+快速的生成排列。
 
 %prep
 %setup -q -n %{short_name}-%{version}
@@ -38,7 +42,7 @@ find $RPM_BUILD_ROOT -type f -name .packlist -exec rm -f {} ';'
 find $RPM_BUILD_ROOT -type f -name '*.bs' -a -size 0 -exec rm -f {} ';'
 find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null ';'
 chmod -R u+w $RPM_BUILD_ROOT/*
-
+magic_rpm_clean.sh
 
 %check
 
@@ -58,6 +62,9 @@ rm -rf $RPM_BUILD_ROOT
 %exclude %{perl_vendorarch}/Algorithm/perms.pl
 
 %changelog
+* Mon Apr 20 2015 Liu Di <liudidi@gmail.com> - 0.999-15
+- 为 Magic 3.0 重建
+
 * Thu Jun 12 2014 Liu Di <liudidi@gmail.com> - 0.999-14
 - 为 Magic 3.0 重建
 
