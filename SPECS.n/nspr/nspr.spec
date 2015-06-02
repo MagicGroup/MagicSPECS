@@ -17,6 +17,7 @@ Source0:        ftp://ftp.mozilla.org/pub/mozilla.org/nspr/releases/v%{version}/
 Source1:        nspr-config.xml
 
 Patch1:         nspr-config-pc.patch
+Patch2:         nspr-4.10.8-add-mips64el.patch
 
 %description
 NSPR provides platform independence for non-GUI operating system 
@@ -56,6 +57,7 @@ Header files for doing development with the Netscape Portable Runtime.
 
 cp ./nspr/config/nspr-config.in ./nspr/config/nspr-config-pc.in
 %patch1 -p0 -b .flags
+%patch2 -p1 -b .mips64el
 
 %build
 

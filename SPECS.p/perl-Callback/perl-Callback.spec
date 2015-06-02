@@ -1,9 +1,11 @@
 Name:           perl-Callback
 Version:        1.07
-Release:        19%{?dist}
+Release:        20%{?dist}
 Summary:        Object interface for function callbacks
+Summary(zh_CN.UTF-8): 回调函数的对象接口
 License:        GPL+ or Artistic
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 URL:            http://search.cpan.org/dist/Callback/
 Source0:        http://www.cpan.org/modules/by-module/Callback/Callback-%{version}.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -16,6 +18,9 @@ BuildRequires:  perl(Storable)
 Callback provides a standard interface to register callbacks. Those
 callbacks can be either purely functional (i.e. a function call with
 arguments) or object-oriented (a method call on an object).
+
+%description -l zh_CN.UTF-8
+回调函数的对象接口。
 
 %prep
 %setup -q -n Callback-%{version}
@@ -33,6 +38,7 @@ find $RPM_BUILD_ROOT -type f -name .packlist -exec rm -f {} \;
 find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 
 %{_fixperms} $RPM_BUILD_ROOT/*
+magic_rpm_clean.sh
 
 %check
 
@@ -47,6 +53,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Mon May 11 2015 Liu Di <liudidi@gmail.com> - 1.07-20
+- 为 Magic 3.0 重建
+
 * Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 1.07-19
 - 为 Magic 3.0 重建
 

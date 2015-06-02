@@ -1,9 +1,11 @@
 Name:           perl-Capture-Tiny
-Version:        0.20
-Release:        4%{?dist}
+Version:	0.30
+Release:	1%{?dist}
 Summary:        Capture STDOUT and STDERR from Perl, XS or external programs
+Summary(zh_CN.UTF-8): 从 Perl, XS 或外部程序中抓取 STDOUT 和 STDERR
 License:        ASL 2.0
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 URL:            http://search.cpan.org/dist/Capture-Tiny/
 Source0:        http://www.cpan.org/authors/id/D/DA/DAGOLDEN/Capture-Tiny-%{version}.tar.gz
 BuildArch:      noarch
@@ -31,6 +33,9 @@ captured while being passed through to the original handles. Yes, it even
 works on Windows. Stop guessing which of a dozen capturing modules to use
 in any particular situation and just use this one.
 
+%description -l zh_CN.UTF-8
+从 Perl, XS 或外部程序中抓取 STDOUT 和 STDERR。
+
 %prep
 %setup -q -n Capture-Tiny-%{version}
 
@@ -43,6 +48,7 @@ make pure_install PERL_INSTALL_ROOT=%{buildroot}
 find %{buildroot} -type f -name .packlist -exec rm -f {} \;
 find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_fixperms} %{buildroot}/*
+magic_rpm_clean.sh
 
 %check
 
@@ -53,6 +59,9 @@ find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_mandir}/man3/*
 
 %changelog
+* Tue May 26 2015 Liu Di <liudidi@gmail.com> - 0.30-1
+- 更新到 0.30
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.20-4
 - 为 Magic 3.0 重建
 
