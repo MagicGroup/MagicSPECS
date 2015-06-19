@@ -5,14 +5,16 @@
 #
 
 Name:           perl-Cairo
-Version:        1.060
-Release:        17%{?dist}
+Version:	1.105
+Release:	1%{?dist}
 Summary:        Perl interface to the cairo library
+Summary(zh_CN.UTF-8): cairo 库的 Perl 接口
 
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 License:        LGPLv2+
 URL:            http://search.cpan.org/dist/Cairo/
-Source0:        http://www.cpan.org/authors/id/T/TS/TSCH/Cairo-%{version}.tar.gz
+Source0:        http://www.cpan.org/authors/id/X/XA/XAOC/Cairo-%{version}.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildRequires:  perl(ExtUtils::Depends), perl(ExtUtils::PkgConfig)
@@ -26,6 +28,8 @@ It supports multiple output targets, including the X Window Systems,
 PDF, and PNG.  Cairo produces identical output on all those targets
 and makes use of hardware acceleration wherever possible.
 
+%description -l zh_CN.UTF-8
+cairo 库的 Perl 接口。
 
 %prep
 %setup -q -n Cairo-%{version}
@@ -44,7 +48,7 @@ find $RPM_BUILD_ROOT -type f -name .packlist -exec rm -f {} ';'
 find $RPM_BUILD_ROOT -type f -name '*.bs' -empty -exec rm -f {} ';'
 find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null ';'
 chmod -R u+w $RPM_BUILD_ROOT/*
-
+magic_rpm_clean.sh
 
 %check
 %{?_with_testsuite:}
@@ -56,13 +60,15 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(-,root,root,-)
-%doc ChangeLog LICENSE NEWS README TODO examples/
 %{perl_vendorarch}/Cairo*
 %{perl_vendorarch}/auto/Cairo/
 %{_mandir}/man3/*.3pm*
 
 
 %changelog
+* Mon May 11 2015 Liu Di <liudidi@gmail.com> - 1.105-1
+- 更新到 1.105
+
 * Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 1.060-17
 - 为 Magic 3.0 重建
 

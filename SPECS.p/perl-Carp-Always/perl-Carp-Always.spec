@@ -1,9 +1,11 @@
 Name:           perl-Carp-Always
-Version:        0.09
-Release:        10%{?dist}
+Version:	0.13
+Release:	1%{?dist}
 Summary:        Warn and die in Perl noisily with stack backtraces
+Summary(zh_CN.UTF-8): 使用堆栈的 Perl 警告模块
 License:        GPL+ or Artistic
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 URL:            http://search.cpan.org/dist/Carp-Always/
 Source0:        http://www.cpan.org//authors/id/F/FE/FERREIRA/Carp-Always-%{version}.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -19,6 +21,8 @@ Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $versi
 This module is meant as a debugging aid. It can be used to make a script
 complain loudly with stack backtraces when warn()ing or die()ing.
 
+%description -l zh_CN.UTF-8
+使用堆栈的 Perl 警告模块。
 
 %prep
 %setup -q -n Carp-Always-%{version}
@@ -43,7 +47,7 @@ find $RPM_BUILD_ROOT -type f -name .packlist -exec rm -f {} \;
 find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 
 %{_fixperms} $RPM_BUILD_ROOT/*
-
+magic_rpm_clean.sh
 
 %check
 
@@ -61,6 +65,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Mon Jun 01 2015 Liu Di <liudidi@gmail.com> - 0.13-1
+- 更新到 0.13
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.09-10
 - 为 Magic 3.0 重建
 

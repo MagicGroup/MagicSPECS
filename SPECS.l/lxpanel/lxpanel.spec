@@ -14,6 +14,7 @@ License:        GPLv2+
 URL:            http://lxde.org/
 #VCS: git:git://lxde.git.sourceforge.net/gitroot/lxde/lxpanel
 Source0:        http://downloads.sourceforge.net/sourceforge/lxde/%{name}-%{version}.tar.xz
+
 #gtk3 的补丁
 Patch0:		lxpanel-0.8.0-gtk3.patch 
 

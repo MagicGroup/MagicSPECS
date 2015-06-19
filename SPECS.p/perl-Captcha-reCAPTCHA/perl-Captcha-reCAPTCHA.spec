@@ -1,11 +1,13 @@
 Name:           perl-Captcha-reCAPTCHA
-Version:        0.94
-Release:        11%{?dist}
+Version:	0.97
+Release:	1%{?dist}
 Summary:        Perl implementation of the reCAPTCHA API
+Summary(zh_CN.UTF-8): reCAPTCHA API 的 Perl 实现
 License:        GPL+ or Artistic
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 URL:            http://search.cpan.org/dist/Captcha-reCAPTCHA/
-Source0:        http://www.cpan.org/authors/id/A/AN/ANDYA/Captcha-reCAPTCHA-%{version}.tar.gz
+Source0:        http://www.cpan.org/authors/id/P/PH/PHRED/Captcha-reCAPTCHA-%{version}.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 BuildRequires:  perl(ExtUtils::MakeMaker)
@@ -19,6 +21,9 @@ Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $versi
 %description
 reCAPTCHA is a hybrid mechanical turk and captcha that allows visitors who
 complete the captcha to assist in the digitization of books.
+
+%description -l zh_CN.UTF-8
+reCAPTCHA API 的 Perl 实现。
 
 %prep
 %setup -q -n Captcha-reCAPTCHA-%{version}
@@ -36,6 +41,7 @@ find $RPM_BUILD_ROOT -type f -name .packlist -exec rm -f {} \;
 find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 
 %{_fixperms} $RPM_BUILD_ROOT/*
+magic_rpm_clean.sh
 
 %check
 
@@ -50,6 +56,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Mon May 11 2015 Liu Di <liudidi@gmail.com> - 0.97-1
+- 更新到 0.97
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.94-11
 - 为 Magic 3.0 重建
 

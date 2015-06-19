@@ -1,11 +1,13 @@
 Name:           perl-Carp
-Version:        1.26
-Release:        242%{?dist}
+Version:	1.36
+Release:	1%{?dist}
 Summary:        Alternative warn and die for modules
+Summary(zh_CN.UTF-8): 用于模块的可替代的警告
 License:        GPL+ or Artistic
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 URL:            http://search.cpan.org/dist/Carp/
-Source0:        http://www.cpan.org/authors/id/Z/ZE/ZEFRAM/Carp-%{version}.tar.gz
+Source0:        http://www.cpan.org/authors/id/R/RJ/RJBS/Carp-%{version}.tar.gz
 BuildArch:      noarch
 BuildRequires:  perl(ExtUtils::MakeMaker)
 # Tests:
@@ -25,6 +27,9 @@ you can use carp or croak which report the error as being from where your
 module was called. There is no guarantee that that is where the error was,
 but it is a good educated guess.
 
+%description -l zh_CN.UTF-8
+用于模块的可替代的警告。
+
 %prep
 %setup -q -n Carp-%{version}
 
@@ -37,6 +42,7 @@ make pure_install PERL_INSTALL_ROOT=$RPM_BUILD_ROOT
 find $RPM_BUILD_ROOT -type f -name .packlist -exec rm -f {} \;
 find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_fixperms} $RPM_BUILD_ROOT/*
+magic_rpm_clean.sh
 
 %check
 make test
@@ -47,6 +53,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Tue May 26 2015 Liu Di <liudidi@gmail.com> - 1.36-1
+- 更新到 1.36
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.26-242
 - 为 Magic 3.0 重建
 

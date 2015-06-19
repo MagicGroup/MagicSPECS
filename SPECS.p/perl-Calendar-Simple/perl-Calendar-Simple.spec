@@ -1,9 +1,11 @@
 Summary:	Perl extension to create simple calendars
+Summary(zh_CN.UTF-8): 创建简单日历的 Perl 扩展
 Name:		perl-Calendar-Simple
 Version:	1.21
-Release:	10%{?dist}
+Release:	11%{?dist}
 License:	GPL+ or Artistic
 Group:		Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 URL:		http://search.cpan.org/dist/Calendar-Simple/
 Source0:	http://search.cpan.org/CPAN/authors/id/D/DA/DAVECROSS/Calendar-Simple-%{version}.tar.gz
 BuildArch:	noarch
@@ -20,6 +22,9 @@ BuildRequires:	perl(Test::Pod::Coverage)
 %description
 Perl extension to create simple calendars.
 
+%description -l zh_CN.UTF-8
+创建简单日历的 Perl 扩展。
+
 %prep
 %setup -q -n Calendar-Simple-%{version}
 chmod -x lib/*/Simple.pm
@@ -35,7 +40,7 @@ make pure_install PERL_INSTALL_ROOT=$RPM_BUILD_ROOT
 find $RPM_BUILD_ROOT -type f -name .packlist -exec rm -f {} ';'
 find $RPM_BUILD_ROOT -type d -depth -exec rmdir {} 2>/dev/null ';'
 chmod -R u+w $RPM_BUILD_ROOT/*
-
+magic_rpm_clean.sh
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -52,6 +57,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Mon May 11 2015 Liu Di <liudidi@gmail.com> - 1.21-11
+- 为 Magic 3.0 重建
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.21-10
 - 为 Magic 3.0 重建
 
