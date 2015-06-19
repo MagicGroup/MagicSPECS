@@ -1,9 +1,11 @@
 Name:           perl-Catalyst-ActionRole-ACL
-Version:        0.06
-Release:        17%{?dist}
+Version:	0.07
+Release:	1%{?dist}
 Summary:        User role-based authorization action class
+Summary(zh_CN.UTF-8): 基于角色的用户认证的类操作
 License:        GPL+ or Artistic
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 URL:            http://search.cpan.org/dist/Catalyst-ActionRole-ACL/
 Source0:        http://www.cpan.org/authors/id/B/BO/BOBTFISH/Catalyst-ActionRole-ACL-%{version}.tar.gz
 BuildArch:      noarch
@@ -24,6 +26,9 @@ Provides a Catalyst reusable action role for user role-based authorization.
 ACLs are applied via the assignment of attributes to application action
 subroutines.
 
+%description -l zh_CN.UTF-8
+基于角色的用户认证的类操作。
+
 %prep
 %setup -q -n Catalyst-ActionRole-ACL-%{version}
 
@@ -38,6 +43,7 @@ find %{buildroot} -type f -name .packlist -exec rm -f {} \;
 find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null \;
 
 %{_fixperms} %{buildroot}/*
+magic_rpm_clean.sh
 
 %check
 
@@ -48,6 +54,9 @@ find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_mandir}/man3/*
 
 %changelog
+* Fri Jun 05 2015 Liu Di <liudidi@gmail.com> - 0.07-1
+- 更新到 0.07
+
 * Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 0.06-17
 - 为 Magic 3.0 重建
 

@@ -1,12 +1,14 @@
 Name:           perl-Carp-Assert
-Version:        0.20
-Release:        14%{?dist}
+Version:	0.21
+Release:	1%{?dist}
 Summary:        Executable comments
+Summary(zh_CN.UTF-8): 可执行注释
 
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 License:        GPL+ or Artistic
 URL:            http://search.cpan.org/dist/Carp-Assert/
-Source0:        http://www.cpan.org/authors/id/M/MS/MSCHWERN/Carp-Assert-%{version}.tar.gz
+Source0:        http://www.cpan.org/authors/id/N/NE/NEILB/Carp-Assert-%{version}.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildArch:      noarch
@@ -16,6 +18,8 @@ Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $versi
 %description
 Carp::Assert is intended for a purpose like the ANSI C library assert.h.
 
+%description -l zh_CN.UTF-8
+可执行注释。
 
 %prep
 %setup -q -n Carp-Assert-%{version}
@@ -32,7 +36,7 @@ make pure_install PERL_INSTALL_ROOT=$RPM_BUILD_ROOT
 find $RPM_BUILD_ROOT -type f -name .packlist -exec rm -f {} ';'
 find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null ';'
 chmod -R u+w $RPM_BUILD_ROOT/*
-
+magic_rpm_clean.sh
 
 %check
 
@@ -50,6 +54,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Wed Jun 03 2015 Liu Di <liudidi@gmail.com> - 0.21-1
+- 更新到 0.21
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.20-14
 - 为 Magic 3.0 重建
 

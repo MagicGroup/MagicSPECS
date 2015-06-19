@@ -1,9 +1,11 @@
 Name:           perl-Carp-Clan
 Version:        6.04
-Release:        12%{?dist}
+Release:        13%{?dist}
 Summary:        Perl module to print improved warning messages
+Summary(zh_CN.UTF-8): 打印增强的警告信息的 Perl 模块
 
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 License:        GPL+ or Artistic
 URL:            http://search.cpan.org/dist/Carp-Clan/
 Source0:        http://www.cpan.org/authors/id/S/ST/STBEY/Carp-Clan-%{version}.tar.gz
@@ -26,6 +28,8 @@ it a number of levels to skip on the calling stack, you give it a
 pattern to characterize the package names of the "clan" of modules
 which shall never be blamed for any error.
 
+%description -l zh_CN.UTF-8
+打印增强的警告信息的 Perl 模块。
 
 %prep
 %setup -q -n Carp-Clan-%{version}
@@ -41,7 +45,7 @@ make pure_install PERL_INSTALL_ROOT=$RPM_BUILD_ROOT
 find $RPM_BUILD_ROOT -type f -name .packlist -exec rm -f {} ';'
 find $RPM_BUILD_ROOT -type d -depth -exec rmdir {} 2>/dev/null ';'
 chmod -R u+w $RPM_BUILD_ROOT/*
-
+magic_rpm_clean.sh
 
 %check
 %if !%{defined perl_bootstrap}
@@ -60,6 +64,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Fri Jun 05 2015 Liu Di <liudidi@gmail.com> - 6.04-13
+- 为 Magic 3.0 重建
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 6.04-12
 - 为 Magic 3.0 重建
 

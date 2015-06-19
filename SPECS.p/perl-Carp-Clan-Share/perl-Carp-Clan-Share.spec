@@ -1,9 +1,11 @@
 Name:           perl-Carp-Clan-Share
 Version:        0.013
-Release:        13%{?dist}
+Release:        14%{?dist}
 Summary:        Share your Carp::Clan settings with your whole Clan
+Summary(zh_CN.UTF-8): 在整个 Clan 中共享你的 Carp::Clan 配置
 License:        GPL+ or Artistic
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 URL:            http://search.cpan.org/dist/Carp-Clan-Share/
 Source0:        http://www.cpan.org/authors/id/R/RK/RKRIMEN/Carp-Clan-Share-%{version}.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -16,6 +18,9 @@ Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $versi
 %description
 This is a very lightweight helper module (actually just an import method)
 that will automagically create a __PACKAGE__::Carp module for you.
+
+%description -l zh_CN.UTF-8
+在整个 Clan 中共享你的 Carp::Clan 配置。
 
 %prep
 %setup -q -n Carp-Clan-Share-%{version}
@@ -33,6 +38,7 @@ find $RPM_BUILD_ROOT -type f -name .packlist -exec rm -f {} \;
 find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 
 %{_fixperms} $RPM_BUILD_ROOT/*
+magic_rpm_clean.sh
 
 %check
 
@@ -47,6 +53,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Fri Jun 05 2015 Liu Di <liudidi@gmail.com> - 0.013-14
+- 为 Magic 3.0 重建
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.013-13
 - 为 Magic 3.0 重建
 

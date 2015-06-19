@@ -1,10 +1,12 @@
 Name:           perl-Catalyst-Devel
 Summary:        Catalyst Development Tools
-Version:        1.36
-Release:        17%{?dist}
+Summary(zh_CN.UTF-8): Catalyst 开发工具
+Version:	1.39
+Release:	1%{?dist}
 License:        GPL+ or Artistic
 Group:          Development/Libraries
-Source0:        http://search.cpan.org/CPAN/authors/id/B/BO/BOBTFISH/Catalyst-Devel-%{version}.tar.gz
+Group(zh_CN.UTF-8): 开发/库
+Source0:        http://search.cpan.org/CPAN/authors/id/I/IL/ILMARI/Catalyst-Devel-%{version}.tar.gz
 URL:            http://search.cpan.org/dist/Catalyst-Devel/
 Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
 BuildArch:      noarch
@@ -61,6 +63,9 @@ development of Catalyst applications, but not required to run them. This is
 intended to make it easier to deploy Catalyst apps. The runtime parts of
 Catalyst are now known as Catalyst::Runtime.
 
+%description -l zh_CN.UTF-8
+Catalyst 开发工具。
+
 %prep
 %setup -q -n Catalyst-Devel-%{version}
 
@@ -74,6 +79,7 @@ find %{buildroot} -type f -name .packlist -exec rm -f {} ';'
 find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null ';'
 
 %{_fixperms} %{buildroot}/*
+magic_rpm_clean.sh
 
 %check
 
@@ -87,6 +93,9 @@ find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null ';'
 %exclude %{perl_vendorlib}/Catalyst/Restarter/Win32.pm
 
 %changelog
+* Fri Jun 05 2015 Liu Di <liudidi@gmail.com> - 1.39-1
+- 更新到 1.39
+
 * Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 1.36-17
 - 为 Magic 3.0 重建
 

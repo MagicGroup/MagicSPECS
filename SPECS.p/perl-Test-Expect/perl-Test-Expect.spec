@@ -1,12 +1,14 @@
 Name:           perl-Test-Expect
-Version:        0.31
-Release:        16%{?dist}
+Version:	0.33
+Release:	1%{?dist}
 Summary:        Automated driving and testing of terminal-based programs
+Summary(zh_CN.UTF-8): 自动驱动和测试基于命令行的程序
 
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 License:        GPL+ or Artistic
 URL:            http://search.cpan.org/dist/Test-Expect/
-Source0:        http://www.cpan.org/authors/id/L/LB/LBROCARD/Test-Expect-%{version}.tar.gz
+Source0:        http://www.cpan.org/authors/id/B/BP/BPS/Test-Expect-%{version}.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildArch:      noarch
@@ -27,6 +29,8 @@ tweaking.
 
 Test::Expect is intended for use in a test script.
 
+%description -l zh_CN.UTF-8
+自动驱动和测试基于命令行的程序。
 
 %prep
 %setup -q -n Test-Expect-%{version}
@@ -41,7 +45,7 @@ Test::Expect is intended for use in a test script.
 rm -rf $RPM_BUILD_ROOT
 ./Build install destdir=$RPM_BUILD_ROOT create_packlist=0
 chmod -R u+w $RPM_BUILD_ROOT/*
-
+magic_rpm_clean.sh
 
 %check
 # switch off because of broken mock
@@ -60,6 +64,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Fri Jun 05 2015 Liu Di <liudidi@gmail.com> - 0.33-1
+- 更新到 0.33
+
 * Fri Aug 29 2014 Jitka Plesnikova <jplesnik@redhat.com> - 0.31-16
 - Perl 5.20 rebuild
 

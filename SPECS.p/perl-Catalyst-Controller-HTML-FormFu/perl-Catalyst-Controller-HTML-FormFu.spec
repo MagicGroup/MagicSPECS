@@ -1,11 +1,13 @@
 Name:           perl-Catalyst-Controller-HTML-FormFu
-Version:        0.09003
-Release:        18%{?dist}
+Version:	1.00
+Release:	1%{?dist}
 Summary:        HTML::FormFu controller for Catalyst
+Summary(zh_CN.UTF-8): Catalyst 的 HTML::FormFu 控制器
 License:        GPL+ or Artistic
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 URL:            http://search.cpan.org/dist/Catalyst-Controller-HTML-FormFu/
-Source0:        http://search.cpan.org/CPAN/authors/id/P/PE/PERLER/Catalyst-Controller-HTML-FormFu-%{version}.tar.gz
+Source0:        http://search.cpan.org/CPAN/authors/id/C/CF/CFRANKS/Catalyst-Controller-HTML-FormFu-%{version}.tar.gz
 BuildArch:      noarch
 BuildRequires:  perl(Catalyst::Action::RenderView)
 BuildRequires:  perl(Catalyst::Component::InstancePerContext)
@@ -34,6 +36,9 @@ Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $versi
 %description
 This base controller merges the functionality of HTML::FormFu with Catalyst.
 
+%description -l zh_CN.UTF-8
+Catalyst 的 HTML::FormFu 控制器。
+
 %prep
 %setup -q -n Catalyst-Controller-HTML-FormFu-%{version}
 
@@ -48,6 +53,7 @@ find $RPM_BUILD_ROOT -type f -name .packlist -exec rm -f {} \;
 find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 
 %{_fixperms} $RPM_BUILD_ROOT/*
+magic_rpm_clean.sh
 
 %check
 
@@ -58,6 +64,9 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_mandir}/man3/*
 
 %changelog
+* Fri Jun 05 2015 Liu Di <liudidi@gmail.com> - 1.00-1
+- 更新到 1.00
+
 * Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 0.09003-18
 - 为 Magic 3.0 重建
 

@@ -1,13 +1,15 @@
 Name:           perl-Catalyst-Action-REST
-Version:        0.95
-Release:        21%{?dist}
+Version:	1.19
+Release:	1%{?dist}
 Summary:        Automated REST Method Dispatching
+Summary(zh_CN.UTF-8): REST 自动调度方法
 License:        GPL+ or Artistic
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 URL:            http://search.cpan.org/dist/Catalyst-Action-REST/
 # upstream releases tend to flip between these locations
 #Source0:        http://search.cpan.org/CPAN/authors/id/D/DR/DROLSKY/Catalyst-Action-REST-%{version}.tar.gz
-Source0:        http://search.cpan.org/CPAN/authors/id/B/BO/BOBTFISH/Catalyst-Action-REST-%{version}.tar.gz
+Source0:        http://search.cpan.org/CPAN/authors/id/F/FR/FREW/Catalyst-Action-REST-%{version}.tar.gz
 #Source0:        http://search.cpan.org/CPAN/authors/id/F/FL/FLORA/Catalyst-Action-REST-%{version}.tar.gz
 BuildArch:      noarch
 BuildRequires:  perl(Catalyst::Runtime) >= 5.80030
@@ -54,6 +56,9 @@ underscore and method name. First it will try dispatching to an action
 with the generated name, and failing that it will try to dispatch to a
 regular method.
 
+%description -l zh_CN.UTF-8
+REST 自动调度方法。
+
 %prep
 %setup -q -n Catalyst-Action-REST-%{version}
 
@@ -68,6 +73,7 @@ find $RPM_BUILD_ROOT -type f -name .packlist -exec rm -f {} \;
 find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 
 %{_fixperms} $RPM_BUILD_ROOT/*
+magic_rpm_clean.sh
 
 %check
 
@@ -78,6 +84,9 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_mandir}/man3/*
 
 %changelog
+* Fri Jun 05 2015 Liu Di <liudidi@gmail.com> - 1.19-1
+- 更新到 1.19
+
 * Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 0.95-21
 - 为 Magic 3.0 重建
 

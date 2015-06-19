@@ -8,8 +8,9 @@
 
 Name:		perl-JSON-MaybeXS
 Summary:	Use Cpanel::JSON::XS with a fallback to JSON::XS and JSON::PP
+Summary(zh_CN.UTF-8): 带有回调 JSON::XS 和 JSON::PP 的使用 Cpanel::JSON::XS
 Version:	1.003005
-Release:	1%{?dist}
+Release:	2%{?dist}
 License:	GPL+ or Artistic
 URL:		http://search.cpan.org/dist/JSON-MaybeXS/
 Source0:	http://search.cpan.org/CPAN/authors/id/E/ET/ETHER/JSON-MaybeXS-%{version}.tar.gz
@@ -52,6 +53,9 @@ If you're writing fresh code rather than replacing JSON.pm usage, you
 might want to pass options as constructor args rather than calling
 mutators, so we provide our own "new" method that supports that.
 
+%description -l zh_CN.UTF-8
+带有回调 JSON::XS 和 JSON::PP 的使用 Cpanel::JSON::XS。
+
 %prep
 %setup -q -n JSON-MaybeXS-%{version}
 
@@ -63,6 +67,7 @@ make %{?_smp_mflags}
 make pure_install DESTDIR=%{buildroot}
 find %{buildroot} -type f -name .packlist -exec rm -f {} ';'
 %{_fixperms} %{buildroot}
+magic_rpm_clean.sh
 
 %check
 make test
@@ -73,6 +78,9 @@ make test
 %{_mandir}/man3/JSON::MaybeXS.3*
 
 %changelog
+* Fri Jun 05 2015 Liu Di <liudidi@gmail.com> - 1.003005-2
+- 为 Magic 3.0 重建
+
 * Mon Mar 23 2015 Paul Howarth <paul@city-fan.org> - 1.003005-1
 - Update to 1.003005
   - Fix x_contributors metadata that was killing metacpan (see

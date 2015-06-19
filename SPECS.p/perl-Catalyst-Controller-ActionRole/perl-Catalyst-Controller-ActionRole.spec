@@ -1,10 +1,12 @@
 Name:           perl-Catalyst-Controller-ActionRole
 Summary:        Apply roles to action instances
-Version:        0.15
-Release:        27%{?dist}
+Summary(zh_CN.UTF-8): 对操作实例应用角色
+Version:	0.17
+Release:	1%{?dist}
 License:        GPL+ or Artistic
 Group:          Development/Libraries
-Source0:        http://search.cpan.org/CPAN/authors/id/F/FL/FLORA/Catalyst-Controller-ActionRole-%{version}.tar.gz 
+Group(zh_CN.UTF-8): 开发/库
+Source0:        http://search.cpan.org/CPAN/authors/id/E/ET/ETHER/Catalyst-Controller-ActionRole-%{version}.tar.gz 
 URL:            http://search.cpan.org/dist/Catalyst-Controller-ActionRole/
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
@@ -42,6 +44,9 @@ Requires:       perl(Moose) >= 0.90
 This module allows to apply roles to the Catalyst::Actions for different
 controller methods.
 
+%description -l zh_CN.UTF-8
+对操作实例应用角色。
+
 %prep
 %setup -q -n Catalyst-Controller-ActionRole-%{version}
 
@@ -58,6 +63,7 @@ find $RPM_BUILD_ROOT -type f -name .packlist -exec rm -f {} \;
 find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 
 %{_fixperms} $RPM_BUILD_ROOT/*
+magic_rpm_clean.sh
 
 %check
 
@@ -72,6 +78,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Fri Jun 05 2015 Liu Di <liudidi@gmail.com> - 0.17-1
+- 更新到 0.17
+
 * Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 0.15-27
 - 为 Magic 3.0 重建
 

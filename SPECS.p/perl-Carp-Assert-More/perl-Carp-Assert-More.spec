@@ -1,9 +1,11 @@
 Name:           perl-Carp-Assert-More
-Version:        1.12
-Release:        17%{?dist}
+Version:	1.14
+Release:	1%{?dist}
 Summary:        Convenience wrappers around Carp::Assert
+Summary(zh_CN.UTF-8): Carp::Assert 的简易接口
 
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 License:        GPL+ or Artistic
 URL:            http://search.cpan.org/dist/Carp-Assert-More/
 Source0:        http://www.cpan.org/authors/id/P/PE/PETDANCE/Carp-Assert-More-%{version}.tar.gz
@@ -18,6 +20,8 @@ Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $versi
 Carp::Assert::More is a set of wrappers around the Carp::Assert
 functions to make the habit of writing assertions even easier.
 
+%description -l zh_CN.UTF-8
+Carp::Assert 的简易接口。
 
 %prep
 %setup -q -n Carp-Assert-More-%{version}
@@ -34,7 +38,7 @@ make pure_install PERL_INSTALL_ROOT=$RPM_BUILD_ROOT
 find $RPM_BUILD_ROOT -type f -name .packlist -exec rm -f {} ';'
 find $RPM_BUILD_ROOT -type d -depth -exec rmdir {} 2>/dev/null ';'
 chmod -R u+w $RPM_BUILD_ROOT/*
-
+magic_rpm_clean.sh
 
 %check
 
@@ -52,6 +56,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Fri Jun 05 2015 Liu Di <liudidi@gmail.com> - 1.14-1
+- 更新到 1.14
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.12-17
 - 为 Magic 3.0 重建
 

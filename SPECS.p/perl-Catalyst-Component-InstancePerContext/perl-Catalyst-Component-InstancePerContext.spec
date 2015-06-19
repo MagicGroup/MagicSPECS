@@ -1,9 +1,11 @@
 Name:           perl-Catalyst-Component-InstancePerContext
 Version:        0.001001
-Release:        16%{?dist}
+Release:        17%{?dist}
 Summary:        Return a new instance a component on each request
+Summary(zh_CN.UTF-8): 对每个请求返回一个新的实例
 License:        GPL+ or Artistic
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 URL:            http://search.cpan.org/dist/Catalyst-Component-InstancePerContext/
 Source0:        http://www.cpan.org/authors/id/G/GR/GRODITI/Catalyst-Component-InstancePerContext-%{version}.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -18,6 +20,9 @@ Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $versi
 
 %description
 Return a new instance a component on each request.
+
+%description -l zh_CN.UTF-8
+对每个请求返回一个新的实例。
 
 %prep
 %setup -q -n Catalyst-Component-InstancePerContext-%{version}
@@ -35,6 +40,7 @@ find $RPM_BUILD_ROOT -type f -name .packlist -exec rm -f {} \;
 find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 
 %{_fixperms} $RPM_BUILD_ROOT/*
+magic_rpm_clean.sh
 
 %check
 make test
@@ -49,6 +55,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Fri Jun 05 2015 Liu Di <liudidi@gmail.com> - 0.001001-17
+- 为 Magic 3.0 重建
+
 * Thu Jun 19 2014 Liu Di <liudidi@gmail.com> - 0.001001-16
 - 为 Magic 3.0 重建
 

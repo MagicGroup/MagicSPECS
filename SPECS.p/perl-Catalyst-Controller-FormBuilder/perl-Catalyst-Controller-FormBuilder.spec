@@ -1,9 +1,11 @@
 Name:           perl-Catalyst-Controller-FormBuilder
 Version:        0.06
-Release:        19%{?dist}
+Release:        20%{?dist}
 Summary:        Catalyst FormBuilder Base Controller
+Summary(zh_CN.UTF-8): 催化表单生成器基本控制程序
 License:        GPL+ or Artistic
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 URL:            http://search.cpan.org/dist/Catalyst-Controller-FormBuilder/
 Source0:        http://search.cpan.org/CPAN/authors/id/M/MS/MSTROUT/Catalyst-Controller-FormBuilder-%{version}.tar.gz
 BuildArch:      noarch
@@ -35,6 +37,8 @@ such as controllablefield stickiness, multilingual support, and Javascript
 generation. For more details, see CGI::FormBuilder or the website at:
 http://www.formbuilder.org
 
+%description -l zh_CN.UTF-8
+催化表单生成器基本控制程序。
 
 %{?filter_setup:
 %filter_from_requires /perl(FindBin)/d; /perl(Test::.*)/d
@@ -58,6 +62,7 @@ find %{buildroot} -type f -name .packlist -exec rm -f {} +
 find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null \;
 
 %{_fixperms} %{buildroot}/*
+magic_rpm_clean.sh
 
 %check
 
@@ -69,6 +74,9 @@ find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_mandir}/man3/*
 
 %changelog
+* Fri Jun 05 2015 Liu Di <liudidi@gmail.com> - 0.06-20
+- 为 Magic 3.0 重建
+
 * Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 0.06-19
 - 为 Magic 3.0 重建
 

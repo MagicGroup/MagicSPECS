@@ -1,7 +1,8 @@
 Name:           perl-Test-WWW-Mechanize-Catalyst
 Summary:        Test::WWW::Mechanize for Catalyst
+Summary(zh_CN.UTF-8): Catalyst 的 Test::WWW::Mechanize 模块
 Version:        0.60
-Release:        1%{?dist}
+Release:        2%{?dist}
 License:        GPL+ or Artistic
 
 Source0:        http://search.cpan.org/CPAN/authors/id/I/IL/ILMARI/Test-WWW-Mechanize-Catalyst-%{version}.tar.gz
@@ -48,6 +49,9 @@ application testing. The Test::WWW::Mechanize::Catalyst module meshes the
 two to allow easy testing of Catalyst applications without starting up a
 web server.
 
+%description -l zh_CN.UTF-8
+Catalyst 的 Test::WWW::Mechanize 模块。
+
 %prep
 %setup -q -n Test-WWW-Mechanize-Catalyst-%{version}
 
@@ -65,6 +69,7 @@ find %{buildroot} -type f -name .packlist -exec rm -f {} +
 find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null \;
 
 %{_fixperms} %{buildroot}/*
+magic_rpm_clean.sh
 
 %check
 make test
@@ -75,6 +80,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Fri Jun 05 2015 Liu Di <liudidi@gmail.com> - 0.60-2
+- 为 Magic 3.0 重建
+
 * Mon Dec 29 2014 Emmanuel Seyman <emmanuel@seyman.fr> - 0.60-1
 - Update to 0.60
 

@@ -1,11 +1,13 @@
 Name:           perl-Carp-REPL
-Version:        0.15
-Release:        18%{?dist}
+Version:	0.17
+Release:	1%{?dist}
 Summary:        Read-eval-print-loop on die and/or warn
+Summary(zh_CN.UTF-8): 在程序出错或警告里读取值和循环
 License:        GPL+ or Artistic
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 URL:            http://search.cpan.org/dist/Carp-REPL/
-Source0:        http://www.cpan.org/authors/id/S/SA/SARTAK/Carp-REPL-%{version}.tar.gz
+Source0:        http://www.cpan.org/authors/id/T/TS/TSIBLEY/Carp-REPL-%{version}.tar.gz
 BuildArch:      noarch
 BuildRequires:  perl(Data::Dump::Streamer)
 BuildRequires:  perl(Devel::LexAlias)
@@ -31,6 +33,9 @@ Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $versi
 Carp-REPL is a debugging aid for Perl programs. When a program dies (or warns),
 you get a REPL instead of dying or continuing blindly.
 
+%description -l zh_CN.UTF-8
+在程序出错或警告里读取值和循环。
+
 %prep
 %setup -q -n Carp-REPL-%{version}
 
@@ -45,6 +50,7 @@ find %{buildroot} -type f -name .packlist -exec rm -f {} \;
 find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null \;
 
 %{_fixperms} %{buildroot}/*
+magic_rpm_clean.sh
 
 %check
 # Test::Expect and/or Devel::REPL is failing under mock 1.1.8 in koji
@@ -60,6 +66,9 @@ grep -lZ 'Test::Expect' t/*.t |xargs -0 rm -f
 %{_mandir}/man3/*
 
 %changelog
+* Fri Jun 05 2015 Liu Di <liudidi@gmail.com> - 0.17-1
+- 更新到 0.17
+
 * Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 0.15-18
 - 为 Magic 3.0 重建
 

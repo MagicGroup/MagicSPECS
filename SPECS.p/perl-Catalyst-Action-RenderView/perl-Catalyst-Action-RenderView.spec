@@ -1,9 +1,11 @@
 Name:           perl-Catalyst-Action-RenderView
 Summary:        Sensible default end action for view rendering
+Summary(zh_CN.UTF-8): 视图渲染的合理结束动作
 Version:        0.16
-Release:        25%{?dist}
+Release:        26%{?dist}
 License:        GPL+ or Artistic
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Source0:        http://search.cpan.org/CPAN/authors/id/B/BO/BOBTFISH/Catalyst-Action-RenderView-%{version}.tar.gz 
 URL:            http://search.cpan.org/dist/Catalyst-Action-RenderView/
 Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
@@ -31,6 +33,9 @@ the first available view, unless status is set to 3xx, or there is a
 response body. It also allows you to pass dump_info=1 to the url in order
 to force a debug screen, while in debug mode.
 
+%description -l zh_CN.UTF-8
+视图渲染的合理结束动作。
+
 %prep
 %setup -q -n Catalyst-Action-RenderView-%{version}
 
@@ -47,6 +52,7 @@ find %{buildroot} -type f -name .packlist -exec rm -f {} +
 find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null ';'
 
 %{_fixperms} %{buildroot}/*
+magic_rpm_clean.sh
 
 %check
 
@@ -58,6 +64,9 @@ find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null ';'
 %{_mandir}/man3/*
 
 %changelog
+* Fri Jun 05 2015 Liu Di <liudidi@gmail.com> - 0.16-26
+- 为 Magic 3.0 重建
+
 * Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 0.16-25
 - 为 Magic 3.0 重建
 
