@@ -1,27 +1,31 @@
 # API/ABI check
-%global apiver      20121113
-%global zendver     20121212
+%global apiver      20131106
+%global zendver     20131226
 %global pdover      20080721
 # Extension version
-%global opcachever  7.0.3
+%global opcachever  7.0.6-dev
+
+# Use for first build of PHP (before pecl/zip and pecl/jsonc)
+%global php_bootstrap   0
 
 # Adds -z now to the linker flags
 %global _hardened_build 1
 
 # version used for php embedded library soname
-%global embed_version 5.5
+%global embed_version 5.6
 
 %global mysql_sock %(mysql_config --socket 2>/dev/null || echo /var/lib/mysql/mysql.sock)
 
 # Regression tests take a long time, you can skip 'em with this
-%{!?runselftest: %{expand: %%global runselftest 1}}
+%if %{php_bootstrap}
+%global runselftest 0
+%else
+%{!?runselftest: %global runselftest 1}
+%endif
 
 # Use the arch-specific mysql_config binary to avoid mismatch with the
 # arch detection heuristic used by bindir/mysql_config.
 %global mysql_config %{_libdir}/mysql/mysql_config
-
-# Build mysql/mysqli/pdo extensions using libmysqlclient or only mysqlnd
-%global with_libmysql 0
 
 # Build ZTS extension or only NTS
 %global with_zts      1
@@ -32,14 +36,8 @@
 %global isasuffix %nil
 %endif
 
-# /usr/sbin/apsx with httpd < 2.4 and defined as /usr/bin/apxs with httpd >= 2.4
-%{!?_httpd_apxs:       %{expand: %%global _httpd_apxs       %%{_sbindir}/apxs}}
+# needed at srpm build time, when httpd-devel not yet installed
 %{!?_httpd_mmn:        %{expand: %%global _httpd_mmn        %%(cat %{_includedir}/httpd/.mmn 2>/dev/null || echo 0-0)}}
-%{!?_httpd_confdir:    %{expand: %%global _httpd_confdir    %%{_sysconfdir}/httpd/conf.d}}
-# /etc/httpd/conf.d with httpd < 2.4 and defined as /etc/httpd/conf.modules.d with httpd >= 2.4
-%{!?_httpd_modconfdir: %{expand: %%global _httpd_modconfdir %%{_sysconfdir}/httpd/conf.d}}
-%{!?_httpd_moddir:     %{expand: %%global _httpd_moddir     %%{_libdir}/httpd/modules}}
-%{!?_httpd_contentdir: %{expand: %%global _httpd_contentdir /var/www}}
 
 %global with_dtrace 1
 
@@ -50,13 +48,8 @@
 %global  with_libgd 1
 %endif
 
-%if 0%{?fedora} == 17 || 0%{?fedora} == 18 || 0%{?fedora} == 19 || 0%{?rhel} == 7
-%global with_zip     1
-%global with_libzip  1
-%else
 %global with_zip     0
 %global with_libzip  0
-%endif
 
 %if 0%{?fedora} < 18 && 0%{?rhel} < 7
 %global db_devel  db4-devel
@@ -64,12 +57,17 @@
 %global db_devel  libdb-devel
 %endif
 
-#global rcver RC3
+%global rcver  RC1
+%global rpmrel 1
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: php
-Version: 5.5.9
-Release: 3%{?dist}
+Version: 5.6.10
+%if 0%{?rcver:1}
+Release: 0.%{rpmrel}.%{rcver}%{?dist}
+%else
+Release: %{rpmrel}%{?dist}
+%endif
 # All files licensed under PHP version 3.01, except
 # Zend is licensed under Zend
 # TSRM is licensed under BSD
@@ -80,8 +78,7 @@ URL: http://www.php.net/
 # Need to download official tarball and strip non-free stuff
 # wget http://www.php.net/distributions/php-%{version}%{?rcver}.tar.xz
 # ./strip.sh %{version}
-Source0: http://www.php.net/distributions/php-%{version}%{?rcver}.tar.xz
-#Source0: php-%{version}%{?rcver}-strip.tar.xz
+Source0: php-%{version}%{?rcver}-strip.tar.xz
 Source1: php.conf
 Source2: php.ini
 Source3: macros.php
@@ -89,19 +86,20 @@ Source4: php-fpm.conf
 Source5: php-fpm-www.conf
 Source6: php-fpm.service
 Source7: php-fpm.logrotate
-Source8: php-fpm.sysconfig
 Source9: php.modconf
 Source10: php.ztsmodconf
 Source11: strip.sh
+Source13: nginx-fpm.conf
+Source14: nginx-php.conf
 # Configuration files for some extensions
 Source50: opcache.ini
 Source51: opcache-default.blacklist
 
 # Build fixes
-Patch5: php-5.2.0-includedir.patch
+Patch5: php-5.6.3-includedir.patch
 Patch6: php-5.2.4-embed.patch
 Patch7: php-5.3.0-recode.patch
-Patch8: php-5.4.7-libdb.patch
+Patch8: php-5.6.3-libdb.patch
 
 # Fixes for extension modules
 # https://bugs.php.net/63171 no odbc call during timeout
@@ -109,28 +107,31 @@ Patch21: php-5.4.7-odbctimer.patch
 
 # Functional changes
 Patch40: php-5.4.0-dlopen.patch
-Patch42: php-5.3.1-systzdata-v10.patch
+Patch42: php-5.6.9-systzdata-v12.patch
 # See http://bugs.php.net/53436
 Patch43: php-5.4.0-phpize.patch
-# Use system libzip instead of bundled one
-Patch44: php-5.5.2-system-libzip.patch
 # Use -lldap_r for OpenLDAP
-Patch45: php-5.4.8-ldap_r.patch
+Patch45: php-5.6.3-ldap_r.patch
 # Make php_config.h constant across builds
-Patch46: php-5.4.9-fixheader.patch
+Patch46: php-5.6.3-fixheader.patch
 # drop "Configure command" from phpinfo output
-Patch47: php-5.4.9-phpinfo.patch
+Patch47: php-5.6.3-phpinfo.patch
 
-# Upstream fixes
-Patch100: php-bug66731.patch
+# Upstream fixes (100+)
 
-# Security fixes
+# Security fixes (200+)
 
-# Fixes for tests
+# Fixes for tests (300+)
+# Factory is droped from system tzdata
+Patch300: php-5.6.3-datetests.patch
 
 
 BuildRequires: bzip2-devel, curl-devel >= 7.9
 BuildRequires: httpd-devel >= 2.0.46-1, pam-devel
+# to ensure we are using httpd with filesystem feature (see #1081453)
+BuildRequires: httpd-filesystem
+# to ensure we are using nginx with filesystem feature (see #1142298)
+BuildRequires: nginx-filesystem
 BuildRequires: libstdc++-devel, openssl-devel
 BuildRequires: sqlite-devel >= 3.6.0
 BuildRequires: zlib-devel, smtpdaemon, libedit-devel
@@ -138,8 +139,7 @@ BuildRequires: pcre-devel >= 6.6
 BuildRequires: bzip2, perl, libtool >= 1.4.3, gcc-c++
 BuildRequires: libtool-ltdl-devel
 %if %{with_libzip}
-BuildRequires: libzip-devel >= 0.10
-BuildRequires: libzip-devel <  0.11
+BuildRequires: libzip-devel >= 0.11
 %endif
 %if %{with_dtrace}
 BuildRequires: systemtap-sdt-devel
@@ -157,14 +157,9 @@ Requires: php-common%{?_isa} = %{version}-%{release}
 # For backwards-compatibility, require php-cli for the time being:
 Requires: php-cli%{?_isa} = %{version}-%{release}
 # To ensure correct /var/lib/php/session ownership:
-Requires(pre): httpd
-
-
-# Don't provides extensions, which are not shared library, as .so
-%{?filter_provides_in: %filter_provides_in %{_libdir}/php/modules/.*\.so$}
-%{?filter_provides_in: %filter_provides_in %{_libdir}/php-zts/modules/.*\.so$}
-%{?filter_provides_in: %filter_provides_in %{_httpd_moddir}/.*\.so$}
-%{?filter_setup}
+Requires(pre): httpd-filesystem
+# php engine for Apache httpd webserver
+Provides: php(httpd)
 
 
 %description
@@ -173,7 +168,7 @@ easy for developers to write dynamically generated web pages. PHP also
 offers built-in database integration for several commercial and
 non-commercial database management systems, so writing a
 database-enabled webpage with PHP is fairly simple. The most common
-use of PHP coding is probably as a replacement for CGI scripts. 
+use of PHP coding is probably as a replacement for CGI scripts.
 
 The php package contains the module (often referred to as mod_php)
 which adds support for the PHP language to Apache HTTP Server.
@@ -187,8 +182,17 @@ Provides: php-pcntl, php-pcntl%{?_isa}
 Provides: php-readline, php-readline%{?_isa}
 
 %description cli
-The php-cli package contains the command-line interface 
+The php-cli package contains the command-line interface
 executing PHP scripts, /usr/bin/php, and the CGI interface.
+
+
+%package dbg
+Group: Development/Languages
+Summary: The interactive PHP debugger
+Requires: php-common%{?_isa} = %{version}-%{release}
+
+%description dbg
+The php-dbg package contains the interactive PHP debugger.
 
 
 %package fpm
@@ -198,6 +202,7 @@ Summary: PHP FastCGI Process Manager
 # Zend is licensed under Zend
 # TSRM and fpm are licensed under BSD
 License: PHP and Zend and BSD
+BuildRequires: libacl-devel
 Requires: php-common%{?_isa} = %{version}-%{release}
 Requires(pre): /usr/sbin/useradd
 BuildRequires: systemd-units
@@ -206,6 +211,15 @@ Requires: systemd-units
 Requires(post): systemd-units
 Requires(preun): systemd-units
 Requires(postun): systemd-units
+# To ensure correct /var/lib/php/session ownership:
+Requires(pre): httpd-filesystem
+# For php.conf in /etc/httpd/conf.d
+# and version 2.4.10 for proxy support in SetHandler
+Requires: httpd-filesystem >= 2.4.10
+# php engine for Apache httpd webserver
+Provides: php(httpd)
+# for /etc/nginx ownership
+Requires: nginx-filesystem
 
 %description fpm
 PHP-FPM (FastCGI Process Manager) is an alternative PHP FastCGI
@@ -250,8 +264,9 @@ Provides: php-sockets, php-sockets%{?_isa}
 Provides: php-spl, php-spl%{?_isa}
 Provides: php-standard = %{version}, php-standard%{?_isa} = %{version}
 Provides: php-tokenizer, php-tokenizer%{?_isa}
-# Temporary circular dep (to remove for bootstrap)
+%if ! %{php_bootstrap}
 Requires: php-pecl-jsonc%{?_isa}
+%endif
 %if %{with_zip}
 Provides: php-zip, php-zip%{?_isa}
 Obsoletes: php-pecl-zip < 1.11
@@ -274,8 +289,9 @@ Requires: pcre-devel%{?_isa}
 Provides: php-zts-devel = %{version}-%{release}
 Provides: php-zts-devel%{?_isa} = %{version}-%{release}
 %endif
-# Temporary circular dep (to remove for bootstrap)
+%if ! %{php_bootstrap}
 Requires: php-pecl-jsonc-devel%{?_isa}
+%endif
 
 %description devel
 The php-devel package contains the files needed for building PHP
@@ -342,30 +358,8 @@ Provides: php-pdo_sqlite, php-pdo_sqlite%{?_isa}
 %description pdo
 The php-pdo package contains a dynamic shared object that will add
 a database access abstraction layer to PHP.  This module provides
-a common interface for accessing MySQL, PostgreSQL or other 
+a common interface for accessing MySQL, PostgreSQL or other
 databases.
-
-%if %{with_libmysql}
-%package mysql
-Summary: A module for PHP applications that use MySQL databases
-Group: Development/Languages
-# All files licensed under PHP version 3.01
-License: PHP
-Requires: php-pdo%{?_isa} = %{version}-%{release}
-Provides: php_database
-Provides: php-mysqli = %{version}-%{release}
-Provides: php-mysqli%{?_isa} = %{version}-%{release}
-Provides: php-pdo_mysql, php-pdo_mysql%{?_isa}
-BuildRequires: mysql-devel >= 4.1.0
-Conflicts: php-mysqlnd
-
-%description mysql
-The php-mysql package contains a dynamic shared object that will add
-MySQL database support to PHP. MySQL is an object-relational database
-management system. PHP is an HTML-embeddable scripting language. If
-you need MySQL support for PHP applications, you will need to install
-this package and the php package.
-%endif
 
 %package mysqlnd
 Summary: A module for PHP applications that use MySQL databases
@@ -379,9 +373,7 @@ Provides: php-mysql%{?_isa} = %{version}-%{release}
 Provides: php-mysqli = %{version}-%{release}
 Provides: php-mysqli%{?_isa} = %{version}-%{release}
 Provides: php-pdo_mysql, php-pdo_mysql%{?_isa}
-%if ! %{with_libmysql}
 Obsoletes: php-mysql < %{version}-%{release}
-%endif
 
 %description mysqlnd
 The php-mysqlnd package contains a dynamic shared object that will add
@@ -475,11 +467,11 @@ The php-interbase package contains a dynamic shared object that will add
 database support through Interbase/Firebird to PHP.
 
 InterBase is the name of the closed-source variant of this RDBMS that was
-developed by Borland/Inprise. 
+developed by Borland/Inprise.
 
-Firebird is a commercially independent project of C and C++ programmers, 
-technical advisors and supporters developing and enhancing a multi-platform 
-relational database management system based on the source code released by 
+Firebird is a commercially independent project of C and C++ programmers,
+technical advisors and supporters developing and enhancing a multi-platform
+relational database management system based on the source code released by
 Inprise Corp (now known as Borland Software Corp) under the InterBase Public
 License.
 
@@ -523,7 +515,7 @@ Group: Development/Languages
 # All files licensed under PHP version 3.01, except
 # libXMLRPC is licensed under BSD
 License: PHP and BSD
-Requires: php-common%{?_isa} = %{version}-%{release}
+Requires: php-xml%{?_isa} = %{version}-%{release}
 
 %description xmlrpc
 The php-xmlrpc package contains a dynamic shared object that will add
@@ -709,6 +701,9 @@ support for using the enchant library to PHP.
 %prep
 %setup -q -n php-%{version}%{?rcver}
 
+# ensure than current httpd use prefork MPM.
+httpd -V  | grep -q 'threaded:.*yes' && exit 1
+
 %patch5 -p1 -b .includedir
 %patch6 -p1 -b .embed
 %patch7 -p1 -b .recode
@@ -719,16 +714,18 @@ support for using the enchant library to PHP.
 %patch40 -p1 -b .dlopen
 %patch42 -p1 -b .systzdata
 %patch43 -p1 -b .headers
-%if %{with_libzip}
-%patch44 -p1 -b .systzip
-%endif
 %if 0%{?fedora} >= 18 || 0%{?rhel} >= 7
 %patch45 -p1 -b .ldap_r
 %endif
 %patch46 -p1 -b .fixheader
 %patch47 -p1 -b .phpinfo
 
-%patch100 -p1 -b .bug66731
+# upstream patches
+
+# security patches
+
+# Fixes for tests
+%patch300 -p1 -b .datetests
 
 
 # Prevent %%doc confusion over LICENSE files
@@ -756,9 +753,13 @@ mkdir build-cgi build-apache build-embedded \
 
 # ----- Manage known as failed test -------
 # affected by systzdata patch
-rm -f ext/date/tests/timezone_location_get.phpt
+rm ext/date/tests/timezone_location_get.phpt
+rm ext/date/tests/timezone_version_get.phpt
+rm ext/date/tests/timezone_version_get_basic1.phpt
 # fails sometime
-rm -f ext/sockets/tests/mcast_ipv?_recv.phpt
+rm ext/sockets/tests/mcast_ipv?_recv.phpt
+# cause stack exhausion
+rm Zend/tests/bug54268.phpt
 
 # Safety check for API version change.
 pver=$(sed -n '/#define PHP_VERSION /{s/.* "//;s/".*$//;p}' main/php_version.h)
@@ -791,9 +792,9 @@ if test "x${vpdo}" != "x%{pdover}"; then
 fi
 
 # Check for some extension version
-ver=$(sed -n '/#define ACCELERATOR_VERSION /{s/.* "//;s/".*$//;p}' ext/opcache/ZendAccelerator.h)
+ver=$(sed -n '/#define PHP_ZENDOPCACHE_VERSION /{s/.* "//;s/".*$//;p}' ext/opcache/ZendAccelerator.h)
 if test "$ver" != "%{opcachever}"; then
-   : Error: Upstream PHAR version is now ${ver}, expecting %{opcachever}.
+   : Error: Upstream OPCACHE version is now ${ver}, expecting %{opcachever}.
    : Update the opcachever macro and rebuild.
    exit 1
 fi
@@ -817,7 +818,7 @@ chmod 644 README.*
 echo "d /run/php-fpm 755 root root" >php-fpm.tmpfiles
 
 # Some extensions have their own configuration file
-cp %{SOURCE50} .
+cp %{SOURCE50} 10-opcache.ini
 
 
 %build
@@ -878,6 +879,7 @@ ln -sf ../configure
     --without-gdbm \
     --with-jpeg-dir=%{_prefix} \
     --with-openssl \
+    --with-system-ciphers \
     --with-pcre-regex=%{_prefix} \
     --with-zlib \
     --with-layout=GNU \
@@ -889,7 +891,7 @@ ln -sf ../configure
     --enable-dtrace \
 %endif
     $*
-if test $? != 0; then 
+if test $? != 0; then
   tail -500 config.log
   : configure failed
   exit 1
@@ -904,6 +906,7 @@ pushd build-cgi
 build --libdir=%{_libdir}/php \
       --enable-pcntl \
       --enable-opcache \
+      --enable-phpdbg \
       --with-imap=shared --with-imap-ssl \
       --enable-mbstring=shared \
       --enable-mbregex \
@@ -990,22 +993,15 @@ without_shared="--without-gd \
 pushd build-apache
 build --with-apxs2=%{_httpd_apxs} \
       --libdir=%{_libdir}/php \
-%if %{with_libmysql}
-      --enable-pdo=shared \
-      --with-mysql=shared,%{_prefix} \
-      --with-mysqli=shared,%{mysql_config} \
-      --with-pdo-mysql=shared,%{mysql_config} \
-      --without-pdo-sqlite \
-%else
       --without-mysql \
       --disable-pdo \
-%endif
       ${without_shared}
 popd
 
 # Build php-fpm
 pushd build-fpm
 build --enable-fpm \
+      --with-fpm-acl \
       --with-fpm-systemd \
       --libdir=%{_libdir}/php \
       --without-mysql \
@@ -1029,6 +1025,8 @@ EXTENSION_DIR=%{_libdir}/php-zts/modules
 build --includedir=%{_includedir}/php-zts \
       --libdir=%{_libdir}/php-zts \
       --enable-maintainer-zts \
+      --program-prefix=zts- \
+      --disable-cgi \
       --with-config-file-scan-dir=%{_sysconfdir}/php-zts.d \
       --enable-pcntl \
       --enable-opcache \
@@ -1110,16 +1108,8 @@ build --with-apxs2=%{_httpd_apxs} \
       --libdir=%{_libdir}/php-zts \
       --enable-maintainer-zts \
       --with-config-file-scan-dir=%{_sysconfdir}/php-zts.d \
-%if %{with_libmysql}
-      --enable-pdo=shared \
-      --with-mysql=shared,%{_prefix} \
-      --with-mysqli=shared,%{mysql_config} \
-      --with-pdo-mysql=shared,%{mysql_config} \
-      --without-pdo-sqlite \
-%else
       --without-mysql \
       --disable-pdo \
-%endif
       ${without_shared}
 popd
 
@@ -1130,11 +1120,8 @@ popd
 
 %check
 %if %runselftest
-
-# Increase stack size (required by bug54268.phpt)
-ulimit -s 32712
-
 cd build-apache
+
 # Run tests, using the CLI SAPI
 export NO_INTERACTION=1 REPORT_EXIT_STATUS=1 MALLOC_CHECK_=2
 export SKIP_ONLINE_TESTS=1
@@ -1160,25 +1147,6 @@ unset NO_INTERACTION REPORT_EXIT_STATUS MALLOC_CHECK_
 # Install the extensions for the ZTS version
 make -C build-ztscli install \
      INSTALL_ROOT=$RPM_BUILD_ROOT
-
-# rename extensions build with mysqlnd
-mv $RPM_BUILD_ROOT%{_libdir}/php-zts/modules/mysql.so \
-   $RPM_BUILD_ROOT%{_libdir}/php-zts/modules/mysqlnd_mysql.so
-mv $RPM_BUILD_ROOT%{_libdir}/php-zts/modules/mysqli.so \
-   $RPM_BUILD_ROOT%{_libdir}/php-zts/modules/mysqlnd_mysqli.so
-mv $RPM_BUILD_ROOT%{_libdir}/php-zts/modules/pdo_mysql.so \
-   $RPM_BUILD_ROOT%{_libdir}/php-zts/modules/pdo_mysqlnd.so
-
-%if %{with_libmysql}
-# Install the extensions for the ZTS version modules for libmysql
-make -C build-zts install-modules \
-     INSTALL_ROOT=$RPM_BUILD_ROOT
-%endif
-
-# rename ZTS binary
-mv $RPM_BUILD_ROOT%{_bindir}/php        $RPM_BUILD_ROOT%{_bindir}/zts-php
-mv $RPM_BUILD_ROOT%{_bindir}/phpize     $RPM_BUILD_ROOT%{_bindir}/zts-phpize
-mv $RPM_BUILD_ROOT%{_bindir}/php-config $RPM_BUILD_ROOT%{_bindir}/zts-php-config
 %endif
 
 # Install the version for embedded script language in applications + php_embed.h
@@ -1192,20 +1160,6 @@ make -C build-fpm install-fpm \
 # Install everything from the CGI SAPI build
 make -C build-cgi install \
      INSTALL_ROOT=$RPM_BUILD_ROOT
-
-# rename extensions build with mysqlnd
-mv $RPM_BUILD_ROOT%{_libdir}/php/modules/mysql.so \
-   $RPM_BUILD_ROOT%{_libdir}/php/modules/mysqlnd_mysql.so
-mv $RPM_BUILD_ROOT%{_libdir}/php/modules/mysqli.so \
-   $RPM_BUILD_ROOT%{_libdir}/php/modules/mysqlnd_mysqli.so
-mv $RPM_BUILD_ROOT%{_libdir}/php/modules/pdo_mysql.so \
-   $RPM_BUILD_ROOT%{_libdir}/php/modules/pdo_mysqlnd.so
-
-%if %{with_libmysql}
-# Install the mysql extension build with libmysql
-make -C build-apache install-modules \
-     INSTALL_ROOT=$RPM_BUILD_ROOT
-%endif
 
 # Install the default configuration file and icons
 install -m 755 -d $RPM_BUILD_ROOT%{_sysconfdir}/
@@ -1226,30 +1180,20 @@ install -m 755 build-zts/libs/libphp5.so $RPM_BUILD_ROOT%{_httpd_moddir}/libphp5
 %endif
 
 # Apache config fragment
-%if "%{_httpd_modconfdir}" == "%{_httpd_confdir}"
-# Single config file with httpd < 2.4 (fedora <= 17)
-install -D -m 644 %{SOURCE9} $RPM_BUILD_ROOT%{_httpd_confdir}/php.conf
-%if %{with_zts}
-cat %{SOURCE10} >>$RPM_BUILD_ROOT%{_httpd_confdir}/php.conf
-%endif
-cat %{SOURCE1} >>$RPM_BUILD_ROOT%{_httpd_confdir}/php.conf
-%else
 # Dual config file with httpd >= 2.4 (fedora >= 18)
 install -D -m 644 %{SOURCE9} $RPM_BUILD_ROOT%{_httpd_modconfdir}/10-php.conf
 %if %{with_zts}
 cat %{SOURCE10} >>$RPM_BUILD_ROOT%{_httpd_modconfdir}/10-php.conf
 %endif
-
 install -D -m 644 %{SOURCE1} $RPM_BUILD_ROOT%{_httpd_confdir}/php.conf
-%endif
 
 install -m 755 -d $RPM_BUILD_ROOT%{_sysconfdir}/php.d
 %if %{with_zts}
 install -m 755 -d $RPM_BUILD_ROOT%{_sysconfdir}/php-zts.d
 %endif
-install -m 755 -d $RPM_BUILD_ROOT%{_localstatedir}/lib/php
-install -m 700 -d $RPM_BUILD_ROOT%{_localstatedir}/lib/php/session
-install -m 700 -d $RPM_BUILD_ROOT%{_localstatedir}/lib/php/wsdlcache
+install -m 755 -d $RPM_BUILD_ROOT%{_sharedstatedir}/php
+install -m 700 -d $RPM_BUILD_ROOT%{_sharedstatedir}/php/session
+install -m 700 -d $RPM_BUILD_ROOT%{_sharedstatedir}/php/wsdlcache
 
 # PHP-FPM stuff
 # Log
@@ -1270,36 +1214,40 @@ install -m 644 %{SOURCE6} $RPM_BUILD_ROOT%{_unitdir}/
 # LogRotate
 install -m 755 -d $RPM_BUILD_ROOT%{_sysconfdir}/logrotate.d
 install -m 644 %{SOURCE7} $RPM_BUILD_ROOT%{_sysconfdir}/logrotate.d/php-fpm
-# Environment file
-install -m 755 -d $RPM_BUILD_ROOT%{_sysconfdir}/sysconfig
-install -m 644 %{SOURCE8} $RPM_BUILD_ROOT%{_sysconfdir}/sysconfig/php-fpm
+# Nginx configuration
+install -D -m 644 %{SOURCE13} $RPM_BUILD_ROOT%{_sysconfdir}/nginx/conf.d/php-fpm.conf
+install -D -m 644 %{SOURCE14} $RPM_BUILD_ROOT%{_sysconfdir}/nginx/default.d/php.conf
 
 # Fix the link
 (cd $RPM_BUILD_ROOT%{_bindir}; ln -sfn phar.phar phar)
 
 # Generate files lists and stub .ini files for each subpackage
 for mod in pgsql odbc ldap snmp xmlrpc imap \
-    mysqlnd mysqlnd_mysql mysqlnd_mysqli pdo_mysqlnd \
+    mysqlnd mysql mysqli pdo_mysql \
     mbstring gd dom xsl soap bcmath dba xmlreader xmlwriter \
     simplexml bz2 calendar ctype exif ftp gettext gmp iconv \
     sockets tokenizer opcache \
     pdo pdo_pgsql pdo_odbc pdo_sqlite \
-    sqlite3  interbase pdo_firebird \
-    enchant phar fileinfo intl \
-    mcrypt tidy pdo_dblib mssql pspell curl wddx \
-    posix shmop sysvshm sysvsem sysvmsg recode xml \
-%if %{with_libmysql}
-    mysql mysqli pdo_mysql \
-%endif
 %if %{with_zip}
     zip \
 %endif
+    interbase pdo_firebird \
+    sqlite3 \
+    enchant phar fileinfo intl \
+    mcrypt tidy pdo_dblib mssql pspell curl wddx \
+    posix shmop sysvshm sysvsem sysvmsg recode xml \
     ; do
-    # for extension load order
-    if [ "$mod" = "wddx" ]
-    then   ini=xml_${mod}.ini
-    else   ini=${mod}.ini
-    fi
+    case $mod in
+      opcache)
+        # Zend extensions
+        ini=10-${mod}.ini;;
+      pdo_*|mysql|mysqli|wddx|xmlreader|xmlrpc)
+        # Extensions with dependencies on 20-*
+        ini=30-${mod}.ini;;
+      *)
+        # Extensions with no dependency
+        ini=20-${mod}.ini;;
+    esac
     # some extensions have their own config file
     if [ -f ${ini} ]; then
       cp -p ${ini} $RPM_BUILD_ROOT%{_sysconfdir}/php.d/${ini}
@@ -1330,16 +1278,10 @@ done
 cat files.dom files.xsl files.xml{reader,writer} files.wddx \
     files.simplexml >> files.xml
 
-# The mysql and mysqli modules are both packaged in php-mysql
-%if %{with_libmysql}
-cat files.mysqli >> files.mysql
-cat files.pdo_mysql >> files.mysql
-%endif
-
 # mysqlnd
-cat files.mysqlnd_mysql \
-    files.mysqlnd_mysqli \
-    files.pdo_mysqlnd \
+cat files.mysql \
+    files.mysqli \
+    files.pdo_mysql \
     >> files.mysqlnd
 
 # Split out the PDO modules
@@ -1369,7 +1311,7 @@ cat files.zip >> files.common
 install -m 644 %{SOURCE51} $RPM_BUILD_ROOT%{_sysconfdir}/php.d/opcache-default.blacklist
 install -m 644 %{SOURCE51} $RPM_BUILD_ROOT%{_sysconfdir}/php-zts.d/opcache-default.blacklist
 sed -e '/blacklist_filename/s/php.d/php-zts.d/' \
-    -i $RPM_BUILD_ROOT%{_sysconfdir}/php-zts.d/opcache.ini
+    -i $RPM_BUILD_ROOT%{_sysconfdir}/php-zts.d/10-opcache.ini
 
 # Install the macros file:
 sed -e "s/@PHP_APIVER@/%{apiver}%{isasuffix}/" \
@@ -1394,15 +1336,6 @@ rm -rf $RPM_BUILD_ROOT%{_libdir}/php/modules/*.a \
 rm -f README.{Zeus,QNX,CVS-RULES}
 
 
-%pre fpm
-# Add the "apache" user as we don't require httpd
-getent group  apache >/dev/null || \
-  groupadd -g 48 -r apache
-getent passwd apache >/dev/null || \
-  useradd -r -u 48 -g apache -s /sbin/nologin \
-    -d %{_httpd_contentdir} -c "Apache" apache
-exit 0
-
 %post fpm
 %systemd_post php-fpm.service
 
@@ -1420,19 +1353,17 @@ exit 0
 %if %{with_zts}
 %{_httpd_moddir}/libphp5-zts.so
 %endif
-%attr(0770,root,apache) %dir %{_localstatedir}/lib/php/session
-%attr(0770,root,apache) %dir %{_localstatedir}/lib/php/wsdlcache
+%attr(0770,root,apache) %dir %{_sharedstatedir}/php/session
+%attr(0770,root,apache) %dir %{_sharedstatedir}/php/wsdlcache
 %config(noreplace) %{_httpd_confdir}/php.conf
-%if "%{_httpd_modconfdir}" != "%{_httpd_confdir}"
 %config(noreplace) %{_httpd_modconfdir}/10-php.conf
-%endif
 %{_httpd_contentdir}/icons/php.gif
 
 %files common -f files.common
-%doc CODING_STANDARDS CREDITS EXTENSIONS LICENSE NEWS README*
-%doc Zend/ZEND_* TSRM_LICENSE regex_COPYRIGHT
-%doc libmagic_LICENSE
-%doc phar_LICENSE
+%doc CODING_STANDARDS CREDITS EXTENSIONS NEWS README*
+%license LICENSE Zend/ZEND_* TSRM_LICENSE regex_COPYRIGHT
+%license libmagic_LICENSE
+%license phar_LICENSE
 %doc php.ini-*
 %config(noreplace) %{_sysconfdir}/php.ini
 %dir %{_sysconfdir}/php.d
@@ -1443,30 +1374,43 @@ exit 0
 %dir %{_libdir}/php-zts
 %dir %{_libdir}/php-zts/modules
 %endif
-%dir %{_localstatedir}/lib/php
+%dir %{_sharedstatedir}/php
 %dir %{_datadir}/php
 
 %files cli
 %{_bindir}/php
+%if %{with_zts}
+%{_bindir}/zts-php
+%endif
 %{_bindir}/php-cgi
 %{_bindir}/phar.phar
 %{_bindir}/phar
 # provides phpize here (not in -devel) for pecl command
 %{_bindir}/phpize
 %{_mandir}/man1/php.1*
+%{_mandir}/man1/zts-php.1*
 %{_mandir}/man1/php-cgi.1*
 %{_mandir}/man1/phar.1*
 %{_mandir}/man1/phar.phar.1*
 %{_mandir}/man1/phpize.1*
 %doc sapi/cgi/README* sapi/cli/README
 
+%files dbg
+%{_bindir}/phpdbg
+%doc sapi/phpdbg/{README.md,CREDITS}
+%{_mandir}/man1/phpdbg.1*
+
 %files fpm
 %doc php-fpm.conf.default
-%doc fpm_LICENSE
+%license fpm_LICENSE
+%attr(0770,root,apache) %dir %{_sharedstatedir}/php/session
+%attr(0770,root,apache) %dir %{_sharedstatedir}/php/wsdlcache
+%config(noreplace) %{_httpd_confdir}/php.conf
 %config(noreplace) %{_sysconfdir}/php-fpm.conf
 %config(noreplace) %{_sysconfdir}/php-fpm.d/www.conf
 %config(noreplace) %{_sysconfdir}/logrotate.d/php-fpm
-%config(noreplace) %{_sysconfdir}/sysconfig/php-fpm
+%config(noreplace) %{_sysconfdir}/nginx/conf.d/php-fpm.conf
+%config(noreplace) %{_sysconfdir}/nginx/default.d/php.conf
 %{_prefix}/lib/tmpfiles.d/php-fpm.conf
 %{_unitdir}/php-fpm.service
 %{_sbindir}/php-fpm
@@ -1485,11 +1429,11 @@ exit 0
 %{_libdir}/php/build
 %if %{with_zts}
 %{_bindir}/zts-php-config
-%{_includedir}/php-zts
 %{_bindir}/zts-phpize
-# usefull only to test other module during build
-%{_bindir}/zts-php
+%{_includedir}/php-zts
 %{_libdir}/php-zts/build
+%{_mandir}/man1/zts-php-config.1*
+%{_mandir}/man1/zts-phpize.1*
 %endif
 %{_mandir}/man1/php-config.1*
 %{_rpmconfigdir}/macros.d/macros.php
@@ -1499,9 +1443,6 @@ exit 0
 %{_libdir}/libphp5-%{embed_version}.so
 
 %files pgsql -f files.pgsql
-%if %{with_libmysql}
-%files mysql -f files.mysql
-%endif
 %files odbc -f files.odbc
 %files imap -f files.imap
 %files ldap -f files.ldap
@@ -1509,17 +1450,17 @@ exit 0
 %files xml -f files.xml
 %files xmlrpc -f files.xmlrpc
 %files mbstring -f files.mbstring
-%doc libmbfl_LICENSE
-%doc oniguruma_COPYING
-%doc ucgendat_LICENSE
+%license libmbfl_LICENSE
+%license oniguruma_COPYING
+%license ucgendat_LICENSE
 %files gd -f files.gd
 %if ! %{with_libgd}
-%doc libgd_README
-%doc libgd_COPYING
+%license libgd_README
+%license libgd_COPYING
 %endif
 %files soap -f files.soap
 %files bcmath -f files.bcmath
-%doc libbcmath_COPYING
+%license libbcmath_COPYING
 %files gmp -f files.gmp
 %files dba -f files.dba
 %files pdo -f files.pdo
@@ -1539,8 +1480,185 @@ exit 0
 
 
 %changelog
-* Sat May 03 2014 Liu Di <liudidi@gmail.com> - 5.5.9-3
-- 为 Magic 3.0 重建
+* Thu May 28 2015 Remi Collet <remi@fedoraproject.org> 5.6.10-0.1.RC1
+- update to 5.6.10RC1
+- opcache is now 7.0.6-dev
+
+* Fri May 15 2015 Remi Collet <remi@fedoraproject.org> 5.6.9-1
+- Update to 5.6.9
+  http://www.php.net/releases/5_6_9.php
+
+* Thu Apr 30 2015 Remi Collet <remi@fedoraproject.org> 5.6.9-0.1.RC1
+- update to 5.6.9RC1
+- adapt systzdata patch for upstream changes for new zic
+
+* Thu Apr 16 2015 Remi Collet <remi@fedoraproject.org> 5.6.8-1
+- Update to 5.6.8
+  http://www.php.net/releases/5_6_8.php
+
+* Fri Apr 10 2015 Remi Collet <remi@fedoraproject.org> 5.6.8-0.3.RC1
+- add upstream patch to drop SSLv3 tests
+
+* Mon Apr  6 2015 Tom Callaway <spot@fedoraproject.org> - 5.6.8-0.2.RC1
+- rebuild for libvpx 1.4.0
+
+* Wed Apr  1 2015 Remi Collet <remi@fedoraproject.org> 5.6.8-0.1.RC1
+- update to 5.6.8RC1
+
+* Fri Mar 20 2015 Remi Collet <remi@fedoraproject.org> 5.6.7-2
+- Update to 5.6.7
+  http://www.php.net/releases/5_6_7.php
+
+* Sun Mar  8 2015 Remi Collet <remi@fedoraproject.org> 5.6.7-1
+- update to 5.6.7RC1
+
+* Thu Feb 19 2015 Remi Collet <remi@fedoraproject.org> 5.6.6-1
+- Update to 5.6.6
+  http://www.php.net/releases/5_6_6.php
+
+* Thu Feb  5 2015 Remi Collet <rcollet@redhat.com> 5.6.6-0.1.RC1
+- php 5.6.6RC1 for Koschei
+
+* Mon Jan 26 2015 David Tardon <dtardon@redhat.com> - 5.6.5-2
+- rebuild for ICU 54.1
+
+* Thu Jan 22 2015 Remi Collet <remi@fedoraproject.org> 5.6.5-1
+- Update to 5.6.5
+  http://www.php.net/releases/5_6_5.php
+- drop deprecated php-fpm EnvironmentFile
+
+* Fri Jan  9 2015 Remi Collet <remi@fedoraproject.org> 5.6.5-0.1.RC1
+- update to 5.6.5RC1
+- FPM: enable ACL support for Unix Domain Socket
+- FPM: switch default configuration to use UDS
+
+* Wed Dec 17 2014 Remi Collet <remi@fedoraproject.org> 5.6.4-2
+- Update to 5.6.4 (real)
+  http://www.php.net/releases/5_6_4.php
+- php-xmlrpc requires php-xml
+
+* Wed Dec 10 2014 Remi Collet <remi@fedoraproject.org> 5.6.4-1
+- Update to 5.6.4
+  http://www.php.net/releases/5_6_4.php
+
+* Fri Nov 28 2014 Remi Collet <rcollet@redhat.com> 5.6.4-0.1.RC1
+- php 5.6.4RC1
+
+* Mon Nov 17 2014 Remi Collet <remi@fedoraproject.org> 5.6.3-4
+- FPM: add upstream patch for https://bugs.php.net/68428
+  listen.allowed_clients is IPv4 only
+
+* Mon Nov 17 2014 Remi Collet <remi@fedoraproject.org> 5.6.3-3
+- sync php-fpm configuration with upstream
+- refresh upstream patch for 68421
+
+* Sun Nov 16 2014 Remi Collet <remi@fedoraproject.org> 5.6.3-2
+- FPM: add upstream patch for https://bugs.php.net/68421
+  access.format=R doesn't log ipv6 address
+- FPM: add upstream patch for https://bugs.php.net/68420
+  listen=9000 listens to ipv6 localhost instead of all addresses
+- FPM: add upstream patch for https://bugs.php.net/68423
+  will no longer load all pools
+
+* Thu Nov 13 2014 Remi Collet <remi@fedoraproject.org> 5.6.3-1
+- Update to PHP 5.6.3
+  http://php.net/releases/5_6_3.php
+
+* Fri Oct 31 2014 Remi Collet <rcollet@redhat.com> 5.6.3-0.2.RC1
+- php 5.6.3RC1 (refreshed, phpdbg changes reverted)
+- new version of systzdata patch, fix case sensitivity
+- ignore Factory in date tests
+
+* Wed Oct 29 2014 Remi Collet <rcollet@redhat.com> 5.6.3-0.1.RC1
+- php 5.6.3RC1
+- disable opcache.fast_shutdown in default config
+- enable phpdbg_webhelper new extension (in php-dbg)
+
+* Thu Oct 16 2014 Remi Collet <remi@fedoraproject.org> 5.6.1-1
+- Update to PHP 5.6.2
+  http://php.net/releases/5_6_2.php
+
+* Fri Oct  3 2014 Remi Collet <remi@fedoraproject.org> 5.6.1-1
+- Update to PHP 5.6.1
+  http://php.net/releases/5_6_1.php
+- use default system cipher list by Fedora policy
+  http://fedoraproject.org/wiki/Changes/CryptoPolicy
+
+* Wed Sep 24 2014 Remi Collet <rcollet@redhat.com> 5.6.1-0.2.RC1
+- provides nginx configuration (see #1142298)
+
+* Sat Sep 13 2014 Remi Collet <rcollet@redhat.com> 5.6.1-0.1.RC1
+- php 5.6.1RC1
+
+* Thu Aug 28 2014 Remi Collet <remi@fedoraproject.org> 5.6.0-1
+- PHP 5.6.0 is GA
+  http://php.net/releases/5_6_0.php
+- fix ZTS man pages, upstream patch for 67878
+- provides php(httpd)
+
+* Sun Aug 17 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 5.6.0-0.7.RC4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
+
+* Thu Aug 14 2014 Remi Collet <rcollet@redhat.com> 5.6.0-0.6.RC4
+- php 5.6.0RC4
+
+* Thu Jul 31 2014 Remi Collet <rcollet@redhat.com> 5.6.0-0.5.RC3
+- fpm requires httpd >= 2.4.10 for proxy support in SetHandler
+
+* Thu Jul 31 2014 Remi Collet <rcollet@redhat.com> 5.6.0-0.4.RC3
+- php 5.6.0RC3
+- cleanup with_libmysql
+- fix licenses handling
+- fix zts-php-config --php-binary output #1124605
+- provide php.conf with php-fpm, allow apache + fpm
+  to work with default configuration, without mod_php
+
+* Mon Jul  7 2014 Remi Collet <rcollet@redhat.com> 5.6.0-0.3.RC2
+- php 5.6.0RC2
+
+* Mon Jun 23 2014 Remi Collet <rcollet@redhat.com> 5.6.0-0.2.RC1
+- fix phpdbg with libedit https://bugs.php.net/67499
+- add workaround for unserialize/mock issue from 5.4/5.5
+
+* Thu Jun 19 2014 Remi Collet <rcollet@redhat.com> 5.6.0-0.1.RC1
+- php 5.6.0RC1
+  https://fedoraproject.org/wiki/Changes/Php56
+- add php-dbg subpackage
+- update php.ini and opcache.ini from upstream production template
+- move zts-php to php-cli
+
+* Thu Jun  5 2014 Remi Collet <rcollet@redhat.com> 5.5.13-3
+- fix regression introduce in fix for #67118
+
+* Tue Jun  3 2014 Remi Collet <remi@fedoraproject.org> 5.5.13-2
+- fileinfo: fix insufficient boundary check
+- workaround regression introduce in fix for 67072 in
+  serialize/unzerialize functions
+
+* Fri May 30 2014 Remi Collet <rcollet@redhat.com> 5.5.13-1
+- Update to 5.5.13
+  http://www.php.net/releases/5_5_13.php
+- sync php.ini with upstream php.ini-production
+
+* Sat May  3 2014 Remi Collet <rcollet@redhat.com> 5.5.12-1
+- Update to 5.5.12
+  http://www.php.net/releases/5_5_12.php
+- php-fpm: change default unix socket permission CVE-2014-0185
+
+* Wed Apr 23 2014 Remi Collet <rcollet@redhat.com> 5.5.11-2
+- add numerical prefix to extension configuration files
+- prevent .user.ini files from being viewed by Web clients
+- load php directives only when mod_php is active
+
+* Thu Apr  3 2014 Remi Collet <rcollet@redhat.com> 5.5.11-1
+- Update to 5.5.11
+  http://www.php.net/ChangeLog-5.php#5.5.11
+
+* Thu Mar  6 2014 Remi Collet <rcollet@redhat.com> 5.5.10-1
+- Update to 5.5.10
+  http://www.php.net/ChangeLog-5.php#5.5.10
+- php-fpm should own /var/lib/php/session and wsdlcache
+- fix pcre test results with libpcre < 8.34
 
 * Tue Feb 18 2014 Remi Collet <rcollet@redhat.com> 5.5.9-2
 - upstream patch for https://bugs.php.net/66731
