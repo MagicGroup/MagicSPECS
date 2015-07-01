@@ -1,25 +1,27 @@
 Summary: Signing utility for UEFI binaries
 Name: pesign
-Version: 0.100
-Release: 1%{?dist}
+Version: 0.108
+Release: 4%{?dist}
 Group: Development/System
 License: GPLv2
 URL: https://github.com/vathpela/pesign
-BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-BuildRequires: git gnu-efi nspr nss nss-util popt-devel
+BuildRequires: git nspr nss nss-util popt-devel
 BuildRequires: coolkey opensc nss-tools
 BuildRequires: nspr-devel >= 4.9.2-1
 BuildRequires: nss-devel >= 3.13.6-1
 Requires: nspr nss nss-util popt rpm coolkey opensc
 Requires(pre): shadow-utils
 ExclusiveArch: i686 x86_64 ia64
+%if 0%{?rhel} >= 7
+BuildRequires: rh-signing-tools >= 1.20-2
+%endif
 
 # there is no tarball at github, of course.  To get this version do:
 # git clone https://github.com/vathpela/pesign.git
 # git checkout %%{version}
 Source0: pesign-%{version}.tar.bz2
 Source1: rh-test-certs.tar.bz2
-Patch0: 0001-Fix-a-casting-problem-on-32-bit.patch
+Patch0001: 0001-Don-t-set-SO_PASSCRED.patch
 
 %description
 This package contains the pesign utility for signing UEFI binaries as
@@ -41,7 +43,11 @@ make PREFIX=%{_prefix} LIBDIR=%{_libdir}
 rm -rf %{buildroot}
 mkdir -p %{buildroot}/%{_libdir}
 make PREFIX=%{_prefix} LIBDIR=%{_libdir} INSTALLROOT=%{buildroot} \
-	install install_systemd
+	install
+%if 0%{?rhel} >= 7 || 0%{?fedora} >= 17
+make PREFIX=%{_prefix} LIBDIR=%{_libdir} INSTALLROOT=%{buildroot} \
+	install_systemd
+%endif
 
 # there's some stuff that's not really meant to be shipped yet
 rm -rf %{buildroot}/boot %{buildroot}/usr/include
@@ -50,8 +56,8 @@ mv rh-test-certs/etc/pki/pesign/* %{buildroot}/etc/pki/pesign/
 
 #modutil -force -dbdir %{buildroot}/etc/pki/pesign -add coolkey \
 #	-libfile %{_libdir}/pkcs11/libcoolkeypk11.so
-#modutil -force -dbdir %{buildroot}/etc/pki/pesign -add opensc \
-#	-libfile %{_libdir}/pkcs11/opensc-pkcs11.so
+modutil -force -dbdir %{buildroot}/etc/pki/pesign -add opensc \
+	-libfile %{_libdir}/pkcs11/opensc-pkcs11.so
 
 %clean
 rm -rf %{buildroot}
@@ -63,6 +69,7 @@ getent passwd pesign >/dev/null || \
 		-c "Group for the pesign signing daemon" pesign
 exit 0
 
+%if 0%{?rhel} >= 7 || 0%{?fedora} >= 17
 %post
 %systemd_post pesign.service
 
@@ -71,24 +78,73 @@ exit 0
 
 %postun
 %systemd_postun_with_restart pesign.service
+%endif
 
 %files
 %defattr(-,root,root,-)
 %doc README TODO COPYING
 %{_bindir}/pesign
 %{_bindir}/pesign-client
+%{_bindir}/efikeygen
 %{_sysconfdir}/popt.d/pesign.popt
 %{_sysconfdir}/rpm/macros.pesign
 %{_mandir}/man*/*
-%{_unitdir}/pesign.service
-%{_prefix}/lib/tmpfiles.d/pesign.conf
 %dir %attr(0775,pesign,pesign) /etc/pki/pesign
 %attr(0664,pesign,pesign) /etc/pki/pesign/*
 %dir %attr(0770, pesign, pesign) %{_localstatedir}/run/%{name}
 %ghost %attr(0660, -, -) %{_localstatedir}/run/%{name}/socket
 %ghost %attr(0660, -, -) %{_localstatedir}/run/%{name}/pesign.pid
+%if 0%{?rhel} >= 7 || 0%{?fedora} >= 17
+%{_prefix}/lib/tmpfiles.d/pesign.conf
+%{_unitdir}/pesign.service
+%endif
 
 %changelog
+* Sun Aug 17 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.108-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
+
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.108-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Thu May 29 2014 Peter Jones <pjones@redhat.com> - 0.108-2
+- Fix a networking problem nirik observed when reinstalling builders.
+
+* Sat Aug 10 2013 Peter Jones <pjones@redhat.com> - 0.108-1
+- Remove errant result files and raise an error from %%pesign 
+
+* Tue Aug 06 2013 Peter Jones <pjones@redhat.com> - 0.106-3
+- Add code for signing in RHEL 7
+
+* Mon Aug 05 2013 Peter Jones <pjones@redhat.com> - 0.106-2
+- Fix for new %%doc rules.
+
+* Sun Aug 04 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.106-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Tue May 21 2013 Peter Jones <pjones@redhat.com> - 0.106-1
+- Update to 0.106
+- Hopefully fix the segfault dgilmore was seeing.
+
+* Mon May 20 2013 Peter Jones <pjones@redhat.com> - 0.105-1
+- Various bug fixes.
+
+* Wed May 15 2013 Peter Jones <pjones@redhat.com> - 0.104-1
+- Make sure alignment is correct on signature list entries
+  Resolves: rhbz#963361
+- Make sure section alignment is correct if we have to extend the file
+
+* Wed Feb 06 2013 Peter Jones <pjones@redhat.com> - 0.103-2
+- Conditionalize systemd bits so they don't show up in RHEL 6 builds
+
+* Tue Feb 05 2013 Peter Jones <pjones@redhat.com> - 0.103-1
+- One more compiler problem.  Let's expect a few more, shall we?
+
+* Tue Feb 05 2013 Peter Jones <pjones@redhat.com> - 0.102-1
+- Don't use --std=gnu11 because we have to work on RHEL 6 builders.
+
+* Mon Feb 04 2013 Peter Jones <pjones@redhat.com> - 0.101-1
+- Update to 0.101 to fix more "pesign -E" issues.
+
 * Fri Nov 30 2012 Peter Jones <pjones@redhat.com> - 0.100-1
 - Fix insertion of signatures from a file.
 

@@ -1,0 +1,43 @@
+From c877f0187d337374960f02046800a313d2326848 Mon Sep 17 00:00:00 2001
+From: Peter Jones <pjones@redhat.com>
+Date: Thu, 29 May 2014 16:10:05 -0400
+Subject: [PATCH] Don't set SO_PASSCRED.
+
+It would appear that on recent kernels, setting SO_PASSCRED means you
+always get SCM_CREDENTIALS control messages back instead of what
+sendmsg() sent you, and SCM_RIGHTS works just fine without it.
+
+Signed-off-by: Peter Jones <pjones@redhat.com>
+---
+ src/daemon.c | 10 +---------
+ 1 file changed, 1 insertion(+), 9 deletions(-)
+
+diff --git a/src/daemon.c b/src/daemon.c
+index 55c08c3..af3a2b6 100644
+--- a/src/daemon.c
++++ b/src/daemon.c
+@@ -744,20 +744,12 @@ set_up_socket(context *ctx)
+ 		exit(1);
+ 	}
+ 
+-	int one = 1;
+-	int rc = setsockopt(sd, SOL_SOCKET, SO_PASSCRED, &one, sizeof(one));
+-	if (rc < 0) {
+-		ctx->backup_cms->log(ctx->backup_cms, ctx->priority|LOG_ERR,
+-			"unable to set socket options: %m");
+-		exit(1);
+-	}
+-
+ 	struct sockaddr_un addr_un = {
+ 		.sun_family = AF_UNIX,
+ 		.sun_path = SOCKPATH,
+ 	};
+ 
+-	rc = bind(sd, &addr_un, sizeof(addr_un));
++	int rc = bind(sd, &addr_un, sizeof(addr_un));
+ 	if (rc < 0) {
+ 		ctx->backup_cms->log(ctx->backup_cms, ctx->priority|LOG_ERR,
+ 			"unable to bind to \"%s\": %m",
+-- 
+1.9.0
+
