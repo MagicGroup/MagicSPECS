@@ -3,18 +3,12 @@
 %define suexec_caller apache
 %define mmn 20120211
 %define mmnisa %{mmn}%{__isa_name}%{__isa_bits}
-%define vstring Fedora
-
-# Drop automatic provides for module DSOs
-%{?filter_setup:
-%filter_provides_in %{_libdir}/httpd/modules/.*\.so$
-%filter_setup
-}
+%define vstring %(source /etc/os-release; echo ${REDHAT_SUPPORT_PRODUCT})
 
 Summary: Apache HTTP Server
 Name: httpd
-Version: 2.4.7
-Release: 7%{?dist}
+Version: 2.4.12
+Release: 1%{?dist}
 URL: http://httpd.apache.org/
 Source0: http://www.apache.org/dist/httpd/httpd-%{version}.tar.bz2
 Source1: index.html
@@ -41,6 +35,9 @@ Source22: welcome.conf
 Source23: manual.conf
 Source24: 00-systemd.conf
 Source25: 01-session.conf
+Source26: 10-listen443.conf
+Source27: httpd.socket
+Source28: 00-optional.conf
 # Documentation
 Source30: README.confd
 Source31: README.confmod
@@ -48,31 +45,35 @@ Source40: htcacheclean.service
 Source41: htcacheclean.sysconf
 # build/scripts patches
 Patch1: httpd-2.4.1-apctl.patch
-Patch2: httpd-2.4.3-apxs.patch
+Patch2: httpd-2.4.9-apxs.patch
 Patch3: httpd-2.4.1-deplibs.patch
 Patch5: httpd-2.4.3-layout.patch
 Patch6: httpd-2.4.3-apctl-systemd.patch
+Patch7: httpd-2.4.10-lua53.patch
+# Needed for socket activation and mod_systemd patch
+Patch19: httpd-2.4.10-detect-systemd.patch
 # Features/functional changes
 Patch23: httpd-2.4.4-export.patch
 Patch24: httpd-2.4.1-corelimit.patch
 Patch25: httpd-2.4.1-selinux.patch
 Patch26: httpd-2.4.4-r1337344+.patch
 Patch27: httpd-2.4.2-icons.patch
-Patch29: httpd-2.4.3-mod_systemd.patch
+Patch29: httpd-2.4.10-mod_systemd.patch
 Patch30: httpd-2.4.4-cachehardmax.patch
 Patch31: httpd-2.4.6-sslmultiproxy.patch
-Patch32: httpd-2.4.7-r1537535.patch
+Patch34: httpd-2.4.9-socket-activation.patch
+Patch35: httpd-2.4.10-sslciphdefault.patch
 # Bug fixes
-Patch51: httpd-2.4.7-sslsninotreq.patch
 Patch55: httpd-2.4.4-malformed-host.patch
 Patch56: httpd-2.4.4-mod_unique_id.patch
-Patch58: httpd-2.4.6-r1534321.patch
+Patch57: httpd-2.4.10-sigint.patch
+# Security fixes
 License: ASL 2.0
 Group: System Environment/Daemons
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: autoconf, perl, pkgconfig, findutils, xmlto
-BuildRequires: zlib-devel, lua-devel
-BuildRequires: apr-devel >= 1.5.0, apr-util-devel >= 1.2.0, pcre-devel >= 5.0
+BuildRequires: zlib-devel, libselinux-devel, lua-devel
+BuildRequires: apr-devel >= 1.5.0, apr-util-devel >= 1.5.0, pcre-devel >= 5.0
 BuildRequires: systemd-devel
 Requires: /etc/mime.types, system-logos-httpd
 Obsoletes: httpd-suexec
@@ -80,7 +81,8 @@ Provides: webserver
 Provides: mod_dav = %{version}-%{release}, httpd-suexec = %{version}-%{release}
 Provides: httpd-mmn = %{mmn}, httpd-mmn = %{mmnisa}
 Requires: httpd-tools = %{version}-%{release}
-Requires(pre): /usr/sbin/useradd
+Requires: httpd-filesystem = %{version}-%{release}
+Requires(pre): httpd-filesystem
 Requires(preun): systemd-units
 Requires(postun): systemd-units
 Requires(post): systemd-units
@@ -118,6 +120,17 @@ The httpd-manual package contains the complete manual and
 reference guide for the Apache HTTP server. The information can
 also be found at http://httpd.apache.org/docs/2.2/.
 
+%package filesystem
+Group: System Environment/Daemons
+Summary: The basic directory layout for the Apache HTTP server
+BuildArch: noarch
+Requires(pre): /usr/sbin/useradd
+
+%description filesystem
+The httpd-filesystem package contains the basic directory layout
+for the Apache HTTP server including the correct permissions
+for the directories.
+
 %package tools
 Group: System Environment/Daemons
 Summary: Tools for use with the Apache HTTP Server
@@ -131,10 +144,12 @@ Group: System Environment/Daemons
 Summary: SSL/TLS module for the Apache HTTP Server
 Epoch: 1
 BuildRequires: openssl-devel
-Requires(post): openssl, /bin/cat
-Requires(pre): httpd
+Requires(post): openssl, /bin/cat, hostname
+Requires(pre): httpd-filesystem
 Requires: httpd = 0:%{version}-%{release}, httpd-mmn = %{mmnisa}
 Obsoletes: stronghold-mod_ssl
+# Require an OpenSSL which supports PROFILE=SYSTEM
+Conflicts: openssl-libs < 1:1.0.1h-4
 
 %description -n mod_ssl
 The mod_ssl module provides strong cryptography for the Apache Web
@@ -179,6 +194,9 @@ interface for storing and accessing per-user session data.
 %patch3 -p1 -b .deplibs
 %patch5 -p1 -b .layout
 %patch6 -p1 -b .apctlsystemd
+%patch7 -p0 -b .lua53
+
+%patch19 -p1 -b .detectsystemd
 
 %patch23 -p1 -b .export
 %patch24 -p1 -b .corelimit
@@ -188,12 +206,12 @@ interface for storing and accessing per-user session data.
 %patch29 -p1 -b .systemd
 %patch30 -p1 -b .cachehardmax
 %patch31 -p1 -b .sslmultiproxy
-%patch32 -p1 -b .r1537535
+%patch34 -p1 -b .socketactivation
+%patch35 -p1 -b .sslciphdefault
 
-%patch51 -p1 -b .sslsninotreq
 %patch55 -p1 -b .malformedhost
 %patch56 -p1 -b .uniqueid
-%patch58 -p1 -b .r1534321
+%patch57 -p1 -b .sigint
 
 # Patch in the vendor string
 sed -i '/^#define PLATFORM/s/Unix/%{vstring}/' os/unix/os.h
@@ -251,7 +269,7 @@ export LYNX_PATH=/usr/bin/links
 	--without-suexec-logfile \
         --with-suexec-syslog \
 	--with-suexec-bin=%{_sbindir}/suexec \
-	--with-suexec-uidmin=500 --with-suexec-gidmin=100 \
+	--with-suexec-uidmin=1000 --with-suexec-gidmin=1000 \
         --enable-pie \
         --with-pcre \
         --enable-mods-shared=all \
@@ -273,9 +291,9 @@ make DESTDIR=$RPM_BUILD_ROOT install
 
 # Install systemd service files
 mkdir -p $RPM_BUILD_ROOT%{_unitdir}
-for s in httpd htcacheclean; do
-  install -p -m 644 $RPM_SOURCE_DIR/${s}.service \
-                    $RPM_BUILD_ROOT%{_unitdir}/${s}.service
+for s in httpd.service htcacheclean.service httpd.socket; do
+  install -p -m 644 $RPM_SOURCE_DIR/${s} \
+                    $RPM_BUILD_ROOT%{_unitdir}/${s}
 done
 
 # install conf file/directory
@@ -287,7 +305,7 @@ install -m 644 $RPM_SOURCE_DIR/README.confmod \
     $RPM_BUILD_ROOT%{_sysconfdir}/httpd/conf.modules.d/README
 for f in 00-base.conf 00-mpm.conf 00-lua.conf 01-cgi.conf 00-dav.conf \
          00-proxy.conf 00-ssl.conf 01-ldap.conf 00-proxyhtml.conf \
-         01-ldap.conf 00-systemd.conf 01-session.conf; do
+         01-ldap.conf 00-systemd.conf 01-session.conf 00-optional.conf; do
   install -m 644 -p $RPM_SOURCE_DIR/$f \
         $RPM_BUILD_ROOT%{_sysconfdir}/httpd/conf.modules.d/$f
 done
@@ -296,6 +314,10 @@ done
 # Web application packages can drop snippets into this location if
 # they need ExecStart[pre|post].
 mkdir $RPM_BUILD_ROOT%{_unitdir}/httpd.service.d
+mkdir $RPM_BUILD_ROOT%{_unitdir}/httpd.socket.d
+
+install -m 644 -p $RPM_SOURCE_DIR/10-listen443.conf \
+      $RPM_BUILD_ROOT%{_unitdir}/httpd.socket.d/10-listen443.conf
 
 for f in welcome.conf ssl.conf manual.conf userdir.conf; do
   install -m 644 -p $RPM_SOURCE_DIR/$f \
@@ -330,6 +352,15 @@ install -m 644 -p $RPM_SOURCE_DIR/httpd.tmpfiles \
 mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/lib/dav \
          $RPM_BUILD_ROOT/run/httpd/htcacheclean
 
+# Substitute in defaults which are usually done (badly) by "make install"
+sed -i \
+   "s,@@ServerRoot@@/var,%{_localstatedir}/lib/dav,;
+    s,@@ServerRoot@@/user.passwd,/etc/httpd/conf/user.passwd,;
+    s,@@ServerRoot@@/docs,%{docroot},;
+    s,@@ServerRoot@@,%{docroot},;
+    s,@@Port@@,80,;" \
+    docs/conf/extra/*.conf
+
 # Create cache directory
 mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/cache/httpd \
          $RPM_BUILD_ROOT%{_localstatedir}/cache/httpd/proxy \
@@ -337,8 +368,8 @@ mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/cache/httpd \
 
 # Make the MMN accessible to module packages
 echo %{mmnisa} > $RPM_BUILD_ROOT%{_includedir}/httpd/.mmn
-mkdir -p $RPM_BUILD_ROOT%{_sysconfdir}/rpm
-cat > $RPM_BUILD_ROOT%{_sysconfdir}/rpm/macros.httpd <<EOF
+mkdir -p $RPM_BUILD_ROOT%{_rpmconfigdir}/macros.d
+cat > $RPM_BUILD_ROOT%{_rpmconfigdir}/macros.d/macros.httpd <<EOF
 %%_httpd_mmn %{mmnisa}
 %%_httpd_apxs %%{_bindir}/apxs
 %%_httpd_modconfdir %%{_sysconfdir}/httpd/conf.modules.d
@@ -433,13 +464,18 @@ rm -rf $RPM_BUILD_ROOT/etc/httpd/conf/{original,extra}
 %pre
 # Add the "apache" user
 /usr/sbin/useradd -c "Apache" -u 48 \
+    -s /sbin/nologin -r -d %{contentdir} apache 2> /dev/null || :
+
+%pre filesystem
+# Add the "apache" user
+/usr/sbin/useradd -c "Apache" -u 48 \
 	-s /sbin/nologin -r -d %{contentdir} apache 2> /dev/null || :
 
 %post
-%systemd_post httpd.service htcacheclean.service
+%systemd_post httpd.service htcacheclean.service httpd.socket
 
 %preun
-%systemd_preun httpd.service htcacheclean.service
+%systemd_preun httpd.service htcacheclean.service httpd.socket
 
 %postun
 %systemd_postun
@@ -504,7 +540,6 @@ rm -rf $RPM_BUILD_ROOT
 %doc ABOUT_APACHE README CHANGES LICENSE VERSIONING NOTICE
 %doc docs/conf/extra/*.conf
 
-%dir %{_sysconfdir}/httpd
 %{_sysconfdir}/httpd/modules
 %{_sysconfdir}/httpd/logs
 %{_sysconfdir}/httpd/run
@@ -514,14 +549,12 @@ rm -rf $RPM_BUILD_ROOT
 
 %config(noreplace) %{_sysconfdir}/logrotate.d/httpd
 
-%dir %{_sysconfdir}/httpd/conf.d
-%{_sysconfdir}/httpd/conf.d/README
-%{_sysconfdir}/httpd/conf.modules.d/README
 %config(noreplace) %{_sysconfdir}/httpd/conf.d/*.conf
 %exclude %{_sysconfdir}/httpd/conf.d/ssl.conf
 %exclude %{_sysconfdir}/httpd/conf.d/manual.conf
 
 %dir %{_sysconfdir}/httpd/conf.modules.d
+%{_sysconfdir}/httpd/conf.modules.d/README
 %config(noreplace) %{_sysconfdir}/httpd/conf.modules.d/*.conf
 %exclude %{_sysconfdir}/httpd/conf.modules.d/00-ssl.conf
 %exclude %{_sysconfdir}/httpd/conf.modules.d/00-proxyhtml.conf
@@ -550,8 +583,6 @@ rm -rf $RPM_BUILD_ROOT
 %exclude %{_libdir}/httpd/modules/mod_xml2enc.so
 %exclude %{_libdir}/httpd/modules/mod_session*.so
 
-%dir %{contentdir}
-%dir %{contentdir}/icons
 %dir %{contentdir}/error
 %dir %{contentdir}/error/include
 %dir %{contentdir}/noindex
@@ -560,10 +591,6 @@ rm -rf $RPM_BUILD_ROOT
 %{contentdir}/error/*.var
 %{contentdir}/error/include/*.html
 %{contentdir}/noindex/index.html
-
-%dir %{docroot}
-%dir %{docroot}/cgi-bin
-%dir %{docroot}/html
 
 %attr(0710,root,apache) %dir /run/httpd
 %attr(0700,apache,apache) %dir /run/httpd/htcacheclean
@@ -575,7 +602,19 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man8/*
 
 %{_unitdir}/*.service
+%{_unitdir}/*.socket
 %attr(755,root,root) %dir %{_unitdir}/httpd.service.d
+%attr(755,root,root) %dir %{_unitdir}/httpd.socket.d
+
+%files filesystem
+%dir %{_sysconfdir}/httpd
+%dir %{_sysconfdir}/httpd/conf.d
+%{_sysconfdir}/httpd/conf.d/README
+%dir %{docroot}
+%dir %{docroot}/cgi-bin
+%dir %{docroot}/html
+%dir %{contentdir}
+%dir %{contentdir}/icons
 
 %files tools
 %defattr(-,root,root)
@@ -597,6 +636,7 @@ rm -rf $RPM_BUILD_ROOT
 %config(noreplace) %{_sysconfdir}/httpd/conf.d/ssl.conf
 %attr(0700,apache,root) %dir %{_localstatedir}/cache/httpd/ssl
 %{_libexecdir}/httpd-ssl-pass-dialog
+%{_unitdir}/httpd.socket.d/10-listen443.conf
 
 %files -n mod_proxy_html
 %defattr(-,root,root)
@@ -623,11 +663,98 @@ rm -rf $RPM_BUILD_ROOT
 %dir %{_libdir}/httpd/build
 %{_libdir}/httpd/build/*.mk
 %{_libdir}/httpd/build/*.sh
-%{_sysconfdir}/rpm/macros.httpd
+%{_rpmconfigdir}/macros.d/macros.httpd
 
 %changelog
-* Tue Apr 15 2014 Liu Di <liudidi@gmail.com> - 2.4.7-7
-- 为 Magic 3.0 重建
+* Fri Mar 27 2015 Jan Kaluza <jkaluza@redhat.com> - 2.4.12-1
+- update to 2.4.12
+
+* Tue Mar 24 2015 Jan Kaluza <jkaluza@redhat.com> - 2.4.10-17
+- fix compilation with lua-5.3
+
+* Tue Mar 24 2015 Jan Kaluza <jkaluza@redhat.com> - 2.4.10-16
+- remove filter for auto-provides of httpd modules, it is not needed since F20
+
+* Wed Dec 17 2014 Jan Kaluza <jkaluza@redhat.com> - 2.4.10-15
+- core: fix bypassing of mod_headers rules via chunked requests (CVE-2013-5704)
+- mod_cache: fix NULL pointer dereference on empty Content-Type (CVE-2014-3581)
+- mod_proxy_fcgi: fix a potential crash with long headers (CVE-2014-3583)
+- mod_lua: fix handling of the Require line when a LuaAuthzProvider is used
+  in multiple Require directives with different arguments (CVE-2014-8109)
+
+* Tue Oct 14 2014 Joe Orton <jorton@redhat.com> - 2.4.10-14
+- require apr-util 1.5.x
+
+* Thu Sep 18 2014 Jan Kaluza <jkaluza@redhat.com> - 2.4.10-13
+- use NoDelay and DeferAcceptSec in httpd.socket
+
+* Mon Sep 08 2014 Jan Kaluza <jkaluza@redhat.com> - 2.4.10-12
+- increase suexec minimum acceptable uid/gid to 1000 (#1136391)
+
+* Wed Sep 03 2014 Jan Kaluza <jkaluza@redhat.com> - 2.4.10-11
+- fix hostname requirement and conflict with openssl-libs
+
+* Mon Sep 01 2014 Jan Kaluza <jkaluza@redhat.com> - 2.4.10-10
+- use KillMode=mixed in httpd.service (#1135122)
+
+* Fri Aug 29 2014 Joe Orton <jorton@redhat.com> - 2.4.10-9
+- set vstring based on /etc/os-release (Pat Riehecky, #1114539)
+
+* Fri Aug 29 2014 Joe Orton <jorton@redhat.com> - 2.4.10-8
+- pull in httpd-filesystem as Requires(pre) (#1128328)
+- fix cipher selection in default ssl.conf, depend on new OpenSSL (#1134348)
+- require hostname for mod_ssl post script (#1135118)
+
+* Fri Aug 22 2014 Jan Kaluza <jkaluza@redhat.com> - 2.4.10-7
+- mod_systemd: updated to the latest version
+- use -lsystemd instead of -lsystemd-daemon (#1125084)
+- fix possible crash in SIGINT handling (#958934)
+
+* Thu Aug 21 2014 Joe Orton <jorton@redhat.com> - 2.4.10-6
+- mod_ssl: treat "SSLCipherSuite PROFILE=..." as special (#1109119)
+- switch default ssl.conf to use PROFILE=SYSTEM (#1109119)
+
+* Sat Aug 16 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.4.10-5
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
+
+* Fri Aug 15 2014 Jan Kaluza <jkaluza@redhat.com> - 2.4.10-4
+- add /usr/bin/useradd dependency to -filesystem requires
+
+* Thu Aug 14 2014 Jan Kaluza <jkaluza@redhat.com> - 2.4.10-3
+- fix creating apache user in pre script (#1128328)
+
+* Thu Jul 31 2014 Joe Orton <jorton@redhat.com> - 2.4.10-2
+- enable mod_request by default for mod_auth_form
+- move disabled-by-default modules from 00-base.conf to 00-optional.conf
+
+* Mon Jul 21 2014 Joe Orton <jorton@redhat.com> - 2.4.10-1
+- update to 2.4.10
+- expand variables in docdir example configs
+
+* Tue Jul 08 2014 Jan Kaluza <jkaluza@redhat.com> - 2.4.9-8
+- add support for systemd socket activation (#1111648)
+
+* Mon Jul 07 2014 Jan Kaluza <jkaluza@redhat.com> - 2.4.9-7
+- remove conf.modules.d from httpd-filesystem subpackage (#1081453)
+
+* Mon Jul 07 2014 Jan Kaluza <jkaluza@redhat.com> - 2.4.9-6
+- add httpd-filesystem subpackage (#1081453)
+
+* Fri Jun 20 2014 Joe Orton <jorton@redhat.com> - 2.4.9-5
+- mod_ssl: don't use the default OpenSSL cipher suite in ssl.conf (#1109119)
+
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.4.9-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Fri Mar 28 2014 Jan Kaluza <jkaluza@redhat.com> - 2.4.9-3
+- add support for SetHandler + proxy (#1078970)
+
+* Thu Mar 27 2014 Jan Kaluza <jkaluza@redhat.com> - 2.4.9-2
+- move macros from /etc/rpm to macros.d (#1074277)
+- remove unused patches
+
+* Mon Mar 17 2014 Jan Kaluza <jkaluza@redhat.com> - 2.4.9-1
+- update to 2.4.9
 
 * Fri Feb 28 2014 Joe Orton <jorton@redhat.com> - 2.4.7-6
 - use 2048-bit RSA key with SHA-256 signature in dummy certificate
