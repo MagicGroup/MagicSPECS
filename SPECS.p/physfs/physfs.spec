@@ -1,16 +1,16 @@
 Name:		physfs
-Version:	2.0.2
-Release:	3%{?dist}
+Version:	2.0.3
+Release:	4%{?dist}
 License:	zlib
 Group:		System Environment/Libraries
 Summary:	Library to provide abstract access to various archives
 URL:		http://www.icculus.org/physfs/
-Source0:	http://www.icculus.org/physfs/downloads/physfs-%{version}.tar.gz
-Patch0:		physfs-2.0.2-unused.patch
+Source0:	http://www.icculus.org/physfs/downloads/physfs-%{version}.tar.bz2
 Patch1:		physfs-2.0.2-system-lzma-sdk.patch
-Patch2:		physfs-2.0.2-wx29.patch
 BuildRequires:	doxygen, zlib-devel, readline-devel, libtool, cmake
-BuildRequires:	wx-gtk2-unicode-devel, lzma-sdk457-devel
+# Only needed to build a test program.
+# BuildRequires:	wxGTK-devel
+BuildRequires:	lzma-sdk457-devel
 
 %description
 PhysicsFS is a library to provide abstract access to various archives. It is
@@ -40,9 +40,7 @@ packages with physfs functionality.
 
 %prep
 %setup -q
-%patch0 -p1 -b .unused
 %patch1 -p1 -b .system-lzmasdk
-%patch2 -p1
 rm -rf lzma
 
 %build
@@ -88,14 +86,28 @@ rm -rf $RPM_BUILD_ROOT%{_libdir}/*.a
 %files devel
 %doc docs/html/
 %{_bindir}/test_physfs
-%{_bindir}/wxtest_physfs
 %{_includedir}/physfs.h
 %{_libdir}/*.so
 %{_mandir}/man3/*
 
 %changelog
-* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 2.0.2-3
-- 为 Magic 3.0 重建
+* Sun Aug 17 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.0.3-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
+
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.0.3-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Sun Aug 04 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.0.3-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Fri Feb 22 2013 Tom Callaway <spot@fedoraproject.org> - 2.0.3-1
+- update to 2.0.3
+
+* Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.0.2-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
+
+* Sat Jul 21 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.0.2-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 
 * Sat Jan 14 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.0.2-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
