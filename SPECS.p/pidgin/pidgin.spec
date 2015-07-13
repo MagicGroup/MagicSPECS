@@ -46,6 +46,8 @@
 %global use_system_certs        0
 %global use_system_libgadu      0
 %global build_only_libs         0
+%global gstreamer_version       0.10
+%global farstream_version       0.1
 
 # RHEL4: Use ALSA aplay to output sounds because it lacks gstreamer
 %if 0%{?fedora} < 5
@@ -116,10 +118,20 @@
 %global disable_evolution       1
 %global split_evolution         0
 %endif
+# F2+ Build against GStreamer 1.x
+%if 0%{?fedora} >= 22
+%global gstreamer_version       1.0
+%global farstream_version       0.2
+%global gst1                    1
+%endif
+# valgrind available only on selected arches
+%ifarch %{ix86} x86_64 ppc ppc64 ppc64le s390x armv7hl aarch64
+%global has_valgrind 1
+%endif
 
 Name:           pidgin
-Version:        2.10.9
-Release:        4%{?dist}
+Version:        2.10.11
+Release:        14%{?dist}
 License:        GPLv2+ and GPLv2 and MIT
 # GPLv2+ - libpurple, gnt, finch, pidgin, most prpls
 # GPLv2 - silc & novell prpls
@@ -154,10 +166,44 @@ Source1:        purple-fedora-prefs.xml
 
 ## Patches 0-99: Fedora specific or upstream wont accept
 Patch0:         pidgin-NOT-UPSTREAM-2.5.2-rhel4-sound-migration.patch
+Patch1:         pidgin-2.10.9-valgrind.patch
+Patch2:         pidgin-2.10.11-purple-remote-python3.patch
 
 ## Patches 100+: To be Included in Future Upstream
 Patch100:       pidgin-2.10.1-fix-msn-ft-crashes.patch
 #Patch101:       pidgin-2.10.7-link-libirc-to-libsasl2.patch
+# upstream ticket https://developer.pidgin.im/ticket/16593
+Patch102:         pidgin-2.10.11-do-not-disable-wall.patch
+
+# http://hg.pidgin.im/pidgin/main/rev/2b41ba1fde8a
+Patch103:       pidgin-2.10.11-send-video-enum.patch
+# http://hg.pidgin.im/pidgin/main/rev/b52be4fef1de
+Patch104:       pidgin-2.10.11-gst-references.patch
+# http://hg.pidgin.im/pidgin/main/rev/6b4576edf2a6
+Patch105:       pidgin-2.10.11-add-dtmf-support.patch
+# http://hg.pidgin.im/pidgin/main/rev/2415067473ba
+Patch106:       pidgin-2.10.11-gstreamer1.patch
+# http://hg.pidgin.im/pidgin/main/rev/fcecf7f838e2
+Patch107:       pidgin-2.10.11-rtp-tcp.patch
+# http://hg.pidgin.im/pidgin/main/rev/a0906e7a6bae
+Patch108:       pidgin-2.10.11-rtp-encryption.patch
+# http://hg.pidgin.im/pidgin/main/rev/5f5abd63c305
+Patch109:      pidgin-2.10.11-rtcp-mux.patch
+# http://hg.pidgin.im/pidgin/main/rev/88b09a22b7c4
+Patch110:      pidgin-2.10.11-signal-pair-established.patch
+# http://hg.pidgin.im/pidgin/main/rev/a52798da5cfa
+Patch111:      pidgin-2.10.11-farstream027.patch
+# http://hg.pidgin.im/pidgin/main/rev/a071658c3725
+Patch112:      pidgin-2.10.11-xfer-rw-file.patch
+# http://hg.pidgin.im/pidgin/main/rev/8e4fa54f1662
+Patch113:      pidgin-2.10.11-unlink-source.patch
+# http://hg.pidgin.im/pidgin/main/rev/7767aaeade64
+Patch114:      pidgin-2.10.11-init-media-optional.patch
+# http://hg.pidgin.im/pidgin/main/rev/d729a9b21265
+Patch115:      pidgin-2.10.11-private-media.patch
+# http://hg.pidgin.im/pidgin/main/rev/4fe1034f3dce
+Patch116:      pidgin-2.10.11-application-media.patch
+
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-root
 Summary:        A Gtk+ based multiprotocol instant messaging client
@@ -174,6 +220,7 @@ Requires:       libpurple%{?_isa} = %{version}-%{release}
 Requires(pre):  GConf2
 Requires(post): GConf2
 Requires(preun): GConf2
+BuildRequires: GConf2
 
 # Basic Library Requirements
 BuildRequires:  autoconf
@@ -215,11 +262,11 @@ BuildRequires:  libsilc-devel
 # DBus integration (FC5+)
 %if %{dbus_integration}
 BuildRequires:  dbus-devel >= 0.60
-BuildRequires:  python     >= 2.4
+BuildRequires:  python3
 %endif
 # GStreamer integration (FC5+)
 %if %{gstreamer_integration}
-BuildRequires:  gstreamer-devel >= 0.10
+BuildRequires:  pkgconfig(gstreamer-%{gstreamer_version})
 %endif
 # NetworkManager integration (FC5+)
 %if %{nm_integration}
@@ -258,13 +305,13 @@ BuildRequires:  perl(ExtUtils::Embed)
 # Voice and video support (F11+)
 %if %{vv_support}
 %if 0%{?fedora} >= 17
-BuildRequires:  farstream-devel
+BuildRequires:  pkgconfig(farstream-%{farstream_version})
 %else
 BuildRequires:  farsight2-devel
 %endif
-Requires:       gstreamer-plugins-good
+Requires:       gstreamer%{?gst1}-plugins-good
 %if 0%{?fedora} >= 12
-Requires:       gstreamer-plugins-bad-free
+Requires:       gstreamer%{?gst1}-plugins-bad-free
 %endif
 %endif
 # libidn punycode domain support (F11+)
@@ -277,6 +324,11 @@ BuildRequires:  libgadu-devel
 
 %if %{api_docs}
 BuildRequires:  doxygen
+%endif
+
+# Use distribution's valgrind.h
+%if 0%{?has_valgrind}
+BuildRequires:  valgrind-devel
 %endif
 
 # Need rpm 4.9+ to be able to do this filtering in arch packages with binaries
@@ -363,6 +415,9 @@ Requires:   ca-certificates
 # Workaround for accidental shipping of pidgin-docs
 %if 0%{?rhel} == 5
 Obsoletes:  pidgin-docs = 2.5.2
+%endif
+%if %{dbus_integration}
+Requires:   python3-dbus
 %endif
 
 %description -n libpurple
@@ -457,6 +512,8 @@ echo "FEDORA=%{fedora} RHEL=%{rhel}"
 %if %{force_sound_aplay}
 %patch0 -p1 -b .aplay
 %endif
+%patch1 -p1
+%patch2 -p1
 
 ## Patches 100+: To be Included in Future Upstream
 
@@ -464,6 +521,36 @@ echo "FEDORA=%{fedora} RHEL=%{rhel}"
 %patch100 -p0 -R -b .ftcrash
 # https://developer.pidgin.im/ticket/15517
 #%patch101 -p1 -b .irc-sasl
+# https://developer.pidgin.im/ticket/16593
+%patch102 -p1
+# http://hg.pidgin.im/pidgin/main/rev/2b41ba1fde8a
+%patch103 -p1
+# http://hg.pidgin.im/pidgin/main/rev/b52be4fef1de
+%patch104 -p1
+# https://hg.pidgin.im/pidgin/main/rev/6b4576edf2a6
+%patch105 -p1
+# http://hg.pidgin.im/pidgin/main/rev/2415067473ba
+%patch106 -p1
+# http://hg.pidgin.im/pidgin/main/rev/fcecf7f838e2
+%patch107 -p1
+# http://hg.pidgin.im/pidgin/main/rev/a0906e7a6bae
+%patch108 -p1
+# http://hg.pidgin.im/pidgin/main/rev/5f5abd63c305
+%patch109 -p1
+# http://hg.pidgin.im/pidgin/main/rev/88b09a22b7c4
+%patch110 -p1
+# http://hg.pidgin.im/pidgin/main/rev/a52798da5cfa
+%patch111 -p1
+# http://hg.pidgin.im/pidgin/main/rev/a071658c3725
+%patch112 -p1
+# http://hg.pidgin.im/pidgin/main/rev/8e4fa54f1662
+%patch113 -p1
+# http://hg.pidgin.im/pidgin/main/rev/7767aaeade64
+%patch114 -p1
+# http://hg.pidgin.im/pidgin/main/rev/d729a9b21265
+%patch115 -p1
+# http://hg.pidgin.im/pidgin/main/rev/4fe1034f3dce
+%patch116 -p1
 
 # Our preferences
 cp %{SOURCE1} prefs.xml
@@ -477,8 +564,14 @@ fi
 # Upstream refuses to use ./configure --python-path= in these scripts.
 for file in finch/plugins/pietray.py libpurple/purple-remote libpurple/plugins/dbus-buddyicons-example.py \
             libpurple/plugins/startup.py libpurple/purple-url-handler libpurple/purple-notifications-example; do
-    sed -i 's/env python/python/' $file
+    sed -i 's/env python/python3/' $file
 done
+
+# Bug #1141477
+%if 0%{?has_valgrind}
+rm -f libpurple/valgrind.h
+sed -ie 's/include "valgrind.h"/include <valgrind\/valgrind.h>/' libpurple/plugin.c
+%endif
 
 %build
 SWITCHES="--with-extraversion=%{release}"
@@ -500,9 +593,9 @@ SWITCHES="--with-extraversion=%{release}"
     SWITCHES="$SWITCHES --enable-nm"
 %endif
 %if %{gstreamer_integration}
-    SWITCHES="$SWITCHES --enable-gstreamer"
+    SWITCHES="$SWITCHES --with-gstreamer=%{gstreamer_version}"
 %else
-    SWITCHES="$SWITCHES --disable-gstreamer"
+    SWITCHES="$SWITCHES --without-gstreamer"
 %endif
 %if ! %{bonjour_support}
     SWITCHES="$SWITCHES --disable-avahi"
@@ -522,12 +615,6 @@ SWITCHES="--with-extraversion=%{release}"
 %if %{build_only_libs}
     SWITCHES="$SWITCHES --disable-consoleui --disable-gtkui"
 %endif
-
-# FC5+ automatic -fstack-protector-all switch
-# F20+ uses -fstack-protector-strong
-export RPM_OPT_FLAGS=${RPM_OPT_FLAGS//-fstack-protector /-fstack-protector-all }
-#Work around broken Werror=format-security macro on F21/Rawhide by adding -Wformat in front of it.
-export CFLAGS="-O2 -g -pipe -Wall -Wformat -Werror=format-security -Wp,-D_FORTIFY_SOURCE=2 -fexceptions -fstack-protector-strong --param=ssp-buffer-size=4 -grecord-gcc-switches -fstack-protector -fstack-protector-all"
 
 # remove after irc-sasl patch has been merged upstream
 autoreconf --force --install
@@ -668,6 +755,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/applications/pidgin.desktop
 %{_datadir}/pixmaps/pidgin/
 %{_datadir}/icons/hicolor/*/apps/pidgin.*
+%{_datadir}/appdata/pidgin.appdata.xml
 %{_sysconfdir}/gconf/schemas/purple.schemas
 
 %if %{split_evolution}
@@ -757,8 +845,74 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
-* Tue Jun 24 2014 Liu Di <liudidi@gmail.com> - 2.10.9-4
-- 为 Magic 3.0 重建
+* Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.10.11-14
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
+
+* Sat Jun 06 2015 Jitka Plesnikova <jplesnik@redhat.com> - 2.10.11-13
+- Perl 5.22 rebuild
+
+* Wed Jun  3 2015 Jan Synáček <jsynacek@redhat.com> - 2.10.11-12
+- Refix purple-remote when running in python3 (#1226468)
+- Add python3-dbus to Requires (needed by purple-remote from libpurple)
+
+* Mon Jun  1 2015 Jan Synáček <jsynacek@redhat.com> - 2.10.11-11
+- Fix purple-remote when running in python3 (#1226468)
+
+* Tue Mar 17 2015 David Woodhouse <dwmw2@infradead.org> - 2.10.11-10
+- Import all Lync-collab patches now that they are upstream.
+
+* Fri Mar 13 2015 David Woodhouse <dwmw2@infradead.org> - 2.10.11-9
+- Add TCP and media encryption support
+
+* Thu Mar 12 2015 David Woodhouse <dwmw2@infradead.org> - 2.10.11-8
+- Update to final upstream version of GStreamer 1.0 patch
+
+* Thu Mar 12 2015 David Woodhouse <dwmw2@infradead.org> - 2.10.11-7
+- Update BuildRequires for farstream
+- Add GConf2 to BuildRequires
+
+* Thu Mar 12 2015 David Woodhouse <dwmw2@infradead.org> - 2.10.11-6
+- Build against GStreamer 1.x (#962028)
+
+* Mon Mar  9 2015 Jan Synáček <jsynacek@redhat.com> - 2.10.11-5
+- Add In-call DTMF support (#1199771)
+
+* Tue Mar  3 2015 Jaroslav Škarvada <jskarvad@redhat.com> - 2.10.11-4
+- Removed CFLAGS hacks
+- Fixed building with gcc-5 (by do-not-disable-wall patch)
+  Resolves: rhbz#1197698
+
+* Sat Feb 21 2015 Till Maas <opensource@till.name> - 2.10.11-3
+- Rebuilt for Fedora 23 Change
+  https://fedoraproject.org/wiki/Changes/Harden_all_packages_with_position-independent_code
+
+* Fri Feb 13 2015 Jan Synáček <jsynacek@redhat.com> - 2.10.11-2
+- Switch to Python 3 (#1192115)
+
+* Tue Nov 25 2014 Jan Synáček <jsynacek@redhat.com> - 2.10.11-1
+- Update to 2.10.11 (#1157503)
+
+* Thu Nov 20 2014 Jan Synáček <jsynacek@redhat.com> - 2.10.10-4
+- Fix: Bump MSN ApplicationID again (#1165066)
+
+* Tue Nov 18 2014 Jan Synáček <jsynacek@redhat.com> - 2.10.10-3
+- Fix: Pidgin 2.10.10 can't connect to MSN (#1165066)
+
+* Fri Oct 31 2014 Dan Horák <dan[at]danny.cz> - 2.10.10-2
+- valgrind available only on selected arches
+
+* Wed Oct 29 2014 Jan Synáček <jsynacek@redhat.com> - 2.10.10-1
+- Update to 2.10.10, includes security fixes for CVE-2014-3694,
+  CVE-2014-3695, CVE-2014-3696, CVE-2014-3697 and CVE-2014-3698
+
+* Mon Sep 15 2014 Jan Synacek <jsynacek@redhat.com> - 2.10.9-6
+- Use system valgrind.h, BZ 1141477
+
+* Thu Aug 28 2014 Jitka Plesnikova <jplesnik@redhat.com> - 2.10.9-5
+- Perl 5.20 rebuild
+
+* Sun Aug 17 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.10.9-4.el6
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
 
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.10.9-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
