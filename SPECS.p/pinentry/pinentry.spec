@@ -1,47 +1,24 @@
 
-%if 0%{?fedora} > 8 || 0%{?rhel} > 5
-%define _enable_pinentry_qt4 --enable-pinentry-qt4
-%define _enable_pinentry_qt --enable-pinentry-qt
-%define qt_major 3
-%define qt3 qt3
-%else
-%define qt3 qt
-%define _enable_pinentry_qt --enable-pinentry-qt
-%endif
-
-%if 0%{?fedora} && 0%{?fedora} > 12
-%define _enable_pinentry_qt4 --enable-pinentry-qt4
-%define qt_major 4
-%undefine _enable_pinentry_qt
-%endif
-
 Name:    pinentry
-Version: 0.8.1
-Release: 7%{?dist}
+Version: 0.9.5
+Release: 1%{?dist}
 Summary: Collection of simple PIN or passphrase entry dialogs
 
-Group:   Applications/System
+# qt & qt4 subpackage have different license, see subpackage definitions
 License: GPLv2+
 URL:     http://www.gnupg.org/aegypten/
-Source0: ftp://ftp.gnupg.org/gcrypt/pinentry/%{name}-%{version}.tar.gz
-Source1: ftp://ftp.gnupg.org/gcrypt/pinentry/%{name}-%{version}.tar.gz.sig
-BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+Source0: ftp://ftp.gnupg.org/gcrypt/pinentry/%{name}-%{version}.tar.bz2
+Source1: ftp://ftp.gnupg.org/gcrypt/pinentry/%{name}-%{version}.tar.bz2.sig
 
 # borrowed from opensuse
 Source10: pinentry-wrapper
 
-## Patches not yet in SVN
-Patch53: 0001-Fix-qt4-pinentry-window-created-in-the-background.patch
-
 BuildRequires: gtk2-devel
 BuildRequires: libcap-devel
 BuildRequires: ncurses-devel
-%if 0%{?_enable_pinentry_qt:1}
-BuildRequires: %{qt3}-devel
-%endif
-%if 0%{?_enable_pinentry_qt4:1}
 BuildRequires: qt4-devel
-%endif
+BuildRequires: libgpg-error-devel
+BuildRequires: libassuan-devel
 
 Requires(pre): %{_sbindir}/update-alternatives
 Requires(post): /sbin/install-info
@@ -57,9 +34,9 @@ This package contains the curses (text) based version of the PIN entry dialog.
 
 %package gtk
 Summary: Passphrase/PIN entry dialog based on GTK+
-Group:   Applications/System
 Requires: %{name} = %{version}-%{release}
 Provides: %{name}-gui = %{version}-%{release}
+Provides: pinentry-gtk2 = %{version}-%{release}
 %description gtk
 Pinentry is a collection of simple PIN or passphrase entry dialogs which
 utilize the Assuan protocol as described by the aegypten project; see
@@ -67,81 +44,60 @@ http://www.gnupg.org/aegypten/ for details.
 This package contains the GTK GUI based version of the PIN entry dialog.
 
 %package qt
-Summary: Passphrase/PIN entry dialog based on Qt%{?qt_major}
-Group:   Applications/System
+Summary: Passphrase/PIN entry dialog based on Qt4
+# original code for secstring.cpp doesn't allow GPL versions higher than 3 to be
+# used
+License: GPLv2 or GPLv3
 Requires: %{name} = %{version}-%{release}
 Provides: %{name}-gui = %{version}-%{release}
-%if ! 0%{?_enable_pinentry_qt}
-Obsoletes: %{name}-qt4 < 0.8.0-2
-Provides:  %{name}-qt4 = %{version}-%{release}
-%endif
+Obsoletes: pinentry-qt4 < 0.8.0-2
+Provides:  pinentry-qt4 = %{version}-%{release}
 %description qt
 Pinentry is a collection of simple PIN or passphrase entry dialogs which
 utilize the Assuan protocol as described by the aegypten project; see
 http://www.gnupg.org/aegypten/ for details.
-This package contains the Qt%{?qt_major} GUI based version of the PIN entry dialog.
+This package contains the Qt4 GUI based version of the PIN entry dialog.
 
-%package qt4
-Summary: Passphrase/PIN entry dialog based on Qt4
-Group:   Applications/System
+%package emacs
+Summary: Passphrase/PIN entry dialog based on emacs
 Requires: %{name} = %{version}-%{release}
-Provides: %{name}-gui = %{version}-%{release}
-%description qt4
+%description emacs
 Pinentry is a collection of simple PIN or passphrase entry dialogs which
 utilize the Assuan protocol as described by the aegypten project; see
 http://www.gnupg.org/aegypten/ for details.
-This package contains the Qt4 GUI based version of the PIN entry dialog.
-Support for Qt4 is new, and a bit experimental.
-
+This package contains the emacs based version of the PIN entry dialog.
 
 %prep
 %setup -q
 
-%patch53 -p1 -b .rhbug_589532
-
-# hack around auto* madness, lack of proper support for moc
-%if %{?_enable_pinentry_qt4:1}
-pushd qt4
-moc-qt4 pinentrydialog.h > pinentrydialog.moc
-moc-qt4 qsecurelineedit.h > qsecurelineedit.moc
-popd
-%endif
-
 %build
-%if 0%{?_enable_pinentry_qt:1}
-unset QTDIR || : ; . /etc/profile.d/qt.sh
+
+%if 0%{?fedora} > 22
+# FTBFS on f23/gcc5 without this
+CXXFLAGS="%{optflags} -std=c++11"
 %endif
 
 %configure \
   --disable-rpath \
   --disable-dependency-tracking \
-  --disable-pinentry-gtk \
   --without-libcap \
-  %{?_enable_pinentry_qt} %{!?_enable_pinentry_qt:--disable-pinentry-qt} \
-  %{?_enable_pinentry_qt4} %{!?_enable_pinentry_qt4:--disable-pinentry-qt4}
+  --enable-pinentry-gtk2 \
+  --enable-pinentry-qt4
 
 make %{?_smp_mflags}
 
 
 %install
-rm -rf $RPM_BUILD_ROOT
-
 make install DESTDIR=$RPM_BUILD_ROOT
 
 # Backwards compatibility
 ln -s pinentry-gtk-2 $RPM_BUILD_ROOT%{_bindir}/pinentry-gtk
-%if ! 0%{?_enable_pinentry_qt}
 ln -s pinentry-qt4 $RPM_BUILD_ROOT%{_bindir}/pinentry-qt
-%endif
 
 install -p -m755 -D %{SOURCE10} $RPM_BUILD_ROOT%{_bindir}/pinentry
 
 # unpackaged files
-rm -f $RPM_BUILD_ROOT%{_infodir}/dir
-
-
-%clean
-rm -rf $RPM_BUILD_ROOT
+rm -fv $RPM_BUILD_ROOT%{_infodir}/dir
 
 
 # alternatives dropped at 0.7.6-3 (use %%trigger instead?)
@@ -149,6 +105,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_sbindir}/update-alternatives --remove pinentry %{_bindir}/pinentry-curses ||:
 %{_sbindir}/update-alternatives --remove pinentry %{_bindir}/pinentry-gtk ||:
 %{_sbindir}/update-alternatives --remove pinentry %{_bindir}/pinentry-qt ||:
+%{_sbindir}/update-alternatives --remove pinentry %{_bindir}/pinentry-emacs ||:
 
 %post
 if [ -f %{_infodir}/pinentry.info* ]; then
@@ -160,37 +117,93 @@ if [ $1 -eq 0 -a -f %{_infodir}/pinentry.info* ] ; then
   /sbin/install-info --delete %{_infodir}/pinentry.info %{_infodir}/dir ||:
 fi
 
-
 %files
-%defattr(-,root,root,-)
-%doc AUTHORS ChangeLog COPYING NEWS README THANKS TODO
+%{!?_licensedir:%global license %%doc}
+%license COPYING
+%doc AUTHORS ChangeLog NEWS README THANKS TODO
 %{_bindir}/pinentry-curses
 %{_bindir}/pinentry
 %{_infodir}/pinentry.info*
 
 %files gtk
-%defattr(-,root,root,-)
 %{_bindir}/pinentry-gtk
 %{_bindir}/pinentry-gtk-2
 
 %files qt
-%defattr(-,root,root,-)
 %{_bindir}/pinentry-qt
-%if ! 0%{?_enable_pinentry_qt}
 %{_bindir}/pinentry-qt4
-%else
 
-%if 0%{?_enable_pinentry_qt4:1}
-%files qt4
-%defattr(-,root,root,-)
-%{_bindir}/pinentry-qt4
-%endif
-%endif
-
+%files emacs
+%{_bindir}/pinentry-emacs
 
 %changelog
-* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 0.8.1-7
-- 为 Magic 3.0 重建
+* Thu Jul 02 2015 Boris Ranto <branto@redhat.com> - 0.9.5-1
+- Rebase to latest upstream version
+- Removing qt4 pinentry patch -- got merged upstream
+- New package pinentry-emacs that hosts pinentry-emacs
+- New dependencies on libassuan and libgpg-error (de-bundling)
+
+* Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.9.2-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
+
+* Thu May 14 2015 Boris Ranto <branto@redhat.com> - 0.9.2-1
+- Rebase to latest upstream version
+
+* Sat May 02 2015 Kalev Lember <kalevlember@gmail.com> - 0.9.1-2
+- Rebuilt for GCC 5 C++11 ABI change
+
+* Wed Mar 25 2015 Boris Ranto <branto@redhat.com> - 0.9.1-1
+- Rebase to latest upstream version
+- There are no longer any moc files so there is no need to patch them
+
+* Fri Mar 13 2015 Rex Dieter <rdieter@fedoraproject.org> - 0.9.0-3
+- fix FTBFS on f23/gcc5
+- drop deprecated configure flags
+
+* Sat Feb 21 2015 Till Maas <opensource@till.name> - 0.9.0-2
+- Rebuilt for Fedora 23 Change
+  https://fedoraproject.org/wiki/Changes/Harden_all_packages_with_position-independent_code
+
+* Wed Nov 12 2014 Boris Ranto <branto@redhat.com> - 0.9.0-1
+- Rebase to latest upstream version
+
+* Sun Aug 17 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.8.3-7
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
+
+* Tue Aug 12 2014 Boris Ranto <branto@redhat.com> - 0.8.3-6
+- fix bogus dates
+- upgrade pinentry-wrapper to handle corner cases better
+
+* Wed Jul 30 2014 Tom Callaway <spot@fedoraproject.org> - 0.8.3-5
+- fix license handling
+
+* Sat Jul 19 2014 Rex Dieter <rdieter@fedoraproject.org> 0.8.3-4
+- /usr/bin/pinentry should not check if stderr is opened (#787775)
+
+* Sat Jul 19 2014 Rex Dieter <rdieter@fedoraproject.org> - 0.8.3-3
+- .spec cleanup (drop support for old releases)
+- -gtk: Provides: pinentry-gtk2
+
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.8.3-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Thu Jan 30 2014 Stanislav Ochotnicky <sochotnicky@redhat.com> - 0.8.3-1
+- Update to latest upstream version (0.8.3)
+
+* Sun Aug 04 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.8.1-11
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.8.1-10
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
+
+* Wed Nov 14 2012 Stanislav Ochotnicky <sochotnicky@redhat.com> - 0.8.1-9
+- Fix macros expansions so that conditionals work
+
+* Mon Nov 12 2012 Stanislav Ochotnicky <sochotnicky@redhat.com> - 0.8.1-8
+- Fix up licenses for qt and qt4 subpackages (#875875)
+
+* Sat Jul 21 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.8.1-7
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 
 * Sat Jan 14 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.8.1-6
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
@@ -224,10 +237,10 @@ fi
 * Sun Apr 18 2010 Rex Dieter <rdieter@fedoraproject.org> - 0.7.6-5
 - pinentry-gtk -g segfaults on focus change (#520236)
 
-* Wed Sep 13 2009 Rex Dieter <rdieter@fedoraproject.org> - 0.7.6-4
+* Sun Sep 13 2009 Rex Dieter <rdieter@fedoraproject.org> - 0.7.6-4
 - Errors installing with --excludedocs (#515925)
 
-* Wed Sep 13 2009 Rex Dieter <rdieter@fedoraproject.org> - 0.7.6-3
+* Sun Sep 13 2009 Rex Dieter <rdieter@fedoraproject.org> - 0.7.6-3
 - drop alternatives, use app-wrapper instead (borrowed from opensuse)
 - -qt4 experimental subpkg, -qt includes qt3 version again  (#523488)
 
@@ -290,7 +303,7 @@ fi
 - Build with dependency tracking disabled.
 - Clean up obsolete pre-FC2 support.
 
-* Fri Apr  7 2005 Michael Schwendt <mschwendt[AT]users.sf.net> - 0.7.1-4
+* Thu Apr  7 2005 Michael Schwendt <mschwendt[AT]users.sf.net> - 0.7.1-4
 - rebuilt
 
 * Wed Jun 30 2004 Ville Skyttä <ville.skytta at iki.fi> - 0:0.7.1-0.fdr.3
@@ -314,7 +327,7 @@ fi
 * Sat Mar 22 2003 Ville Skyttä <ville.skytta at iki.fi> - 0:0.6.8-0.fdr.1
 - Update to current Fedora guidelines.
 
-* Tue Feb 12 2003 Warren Togami <warren@togami.com> 0.6.8-1.fedora.3
+* Wed Feb 12 2003 Warren Togami <warren@togami.com> 0.6.8-1.fedora.3
 - info/dir temporary workaround
 
 * Sat Feb  8 2003 Ville Skyttä <ville.skytta at iki.fi> - 0.6.8-1.fedora.1
