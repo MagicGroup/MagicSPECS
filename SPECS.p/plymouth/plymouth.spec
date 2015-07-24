@@ -3,22 +3,21 @@
 %define plymouth_libdir %{_libdir}
 %define plymouth_initrd_file /boot/initrd-plymouth.img
 
+%define snapshot_date .2013.08.14
+
 Summary: Graphical Boot Animation and Logger
 Name: plymouth
-Version: 0.8.5.1
-Release: 4%{?dist}
+Version: 0.8.9
+Release: 10%{?snapshot_date}%{?dist}
 License: GPLv2+
 Group: System Environment/Base
 Source0: http://freedesktop.org/software/plymouth/releases/%{name}-%{version}.tar.bz2
 Source1: boot-duration
 Source2: charge.plymouth
-Source3: plymouth-set-default-plugin
-Source4: plymouth-update-initrd
 
-URL: http://freedesktop.org/software/plymouth/releases
+URL: http://www.freedesktop.org/wiki/Software/Plymouth
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
-Requires: system-logos
 Requires(post): plymouth-scripts
 Requires: initscripts >= 8.83-1
 Conflicts: filesystem < 3
@@ -32,6 +31,10 @@ Obsoletes: plymouth-plugin-pulser < 0.7.0-0.2009.05.08.2
 Obsoletes: plymouth-theme-pulser < 0.7.0-0.2009.05.08.2
 Obsoletes: plymouth-gdm-hooks < 0.8.4-0.20101119.4
 Obsoletes: plymouth-utils < 0.8.4-0.20101119.4
+
+Patch0: dont-timeout-waiting.patch
+Patch1: sysfs-tty-fix.patch
+Patch2: fix-theme-override.patch
 
 %description
 Plymouth provides an attractive graphical boot animation in
@@ -64,6 +67,7 @@ used by Plymouth.
 Summary: Plymouth graphics libraries
 Group: Development/Libraries
 Requires: %{name}-core-libs = %{version}-%{release}
+Requires: system-logos
 Obsoletes: %{name}-libs < %{version}-%{release}
 Provides: %{name}-libs = %{version}-%{release}
 BuildRequires: libpng-devel
@@ -95,6 +99,7 @@ the system.
 %package plugin-label
 Summary: Plymouth label plugin
 Group: System Environment/Base
+Requires: %{name} = %{version}-%{release}
 Requires: %{name}-libs = %{version}-%{release}
 BuildRequires: pango-devel >= 1.21.0
 BuildRequires: cairo-devel
@@ -107,6 +112,7 @@ graphical boot splashes using pango and cairo.
 %package plugin-fade-throbber
 Summary: Plymouth "Fade-Throbber" plugin
 Group: System Environment/Base
+Requires: %{name} = %{version}-%{release}
 Requires: %{name}-libs = %{version}-%{release}
 
 %description plugin-fade-throbber
@@ -130,6 +136,7 @@ while stars twinkle around the logo during system boot up.
 %package plugin-throbgress
 Summary: Plymouth "Throbgress" plugin
 Group: System Environment/Base
+Requires: %{name} = %{version}-%{release}
 Requires: %{name}-libs = %{version}-%{release}
 Requires: plymouth-plugin-label
 
@@ -155,6 +162,7 @@ spins in the shape of an infinity sign.
 %package plugin-space-flares
 Summary: Plymouth "space-flares" plugin
 Group: System Environment/Base
+Requires: %{name} = %{version}-%{release}
 Requires: %{name}-libs = %{version}-%{release}
 Requires: plymouth-plugin-label
 
@@ -179,6 +187,7 @@ Plymouth. It features a blue flamed sun with animated solar flares.
 %package plugin-two-step
 Summary: Plymouth "two-step" plugin
 Group: System Environment/Base
+Requires: %{name} = %{version}-%{release}
 Requires: %{name}-libs = %{version}-%{release}
 Requires: plymouth-plugin-label
 
@@ -203,6 +212,7 @@ and finally burst into full form.
 %package plugin-script
 Summary: Plymouth "script" plugin
 Group: System Environment/Base
+Requires: %{name} = %{version}-%{release}
 Requires: %{name}-libs = %{version}-%{release}
 
 %description plugin-script
@@ -234,6 +244,9 @@ Plymouth. It features a small spinner on a dark background.
 
 %prep
 %setup -q
+%patch0 -p1 -b .dont-timeout-waiting
+%patch1 -p1 -b .sysfs-tty-fix
+%patch2 -p1 -b .fix-theme-override
 
 # Change the default theme
 sed -i -e 's/fade-in/charge/g' src/plymouthd.defaults
@@ -247,8 +260,8 @@ sed -i -e 's/fade-in/charge/g' src/plymouthd.defaults
            --disable-gdm-transition                              \
            --enable-systemd-integration                          \
            --without-system-root-install                         \
-           --with-rhgb-compat-link                               \
            --without-log-viewer					 \
+           --without-rhgb-compat-link                            \
            --disable-libkms
 
 make
@@ -274,20 +287,8 @@ mkdir -p $RPM_BUILD_ROOT%{_datadir}/plymouth/themes/charge
 cp %{SOURCE2} $RPM_BUILD_ROOT%{_datadir}/plymouth/themes/charge
 cp $RPM_BUILD_ROOT%{_datadir}/plymouth/themes/glow/{box,bullet,entry,lock}.png $RPM_BUILD_ROOT%{_datadir}/plymouth/themes/charge
 
-# Override plymouth-update-initrd to work dracut or mkinitrd
-cp -f $RPM_SOURCE_DIR/plymouth-update-initrd $RPM_BUILD_ROOT%{_libexecdir}/plymouth/plymouth-update-initrd
-
 # Drop glow, it's not very Fedora-y
 rm -rf $RPM_BUILD_ROOT%{_datadir}/plymouth/themes/glow
-
-# Add compat script for upgrades
-cp $RPM_SOURCE_DIR/plymouth-set-default-plugin $RPM_BUILD_ROOT%{_sbindir}
-chmod +x $RPM_BUILD_ROOT%{_sbindir}/plymouth-set-default-plugin
-
-mkdir -p  %{buildroot}%{_prefix}/lib/systemd
-cp -rf %{buildroot}/lib/systemd/* %{buildroot}%{_prefix}/lib/systemd
-rm -rf %{buildroot}/lib
-magic_rpm_clean.sh
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -381,7 +382,6 @@ fi
 %{plymouthdaemon_execdir}/plymouthd
 %{plymouthclient_execdir}/plymouth
 %{_bindir}/plymouth
-%{_bindir}/rhgb-client
 %{_libdir}/plymouth/details.so
 %{_libdir}/plymouth/text.so
 %{_libdir}/plymouth/renderers/drm*
@@ -394,7 +394,8 @@ fi
 %{_localstatedir}/spool/plymouth
 %{_mandir}/man?/*
 %ghost %{_localstatedir}/lib/plymouth/boot-duration
-%{_prefix}/lib/systemd/system/plymouth-*.service
+%{_prefix}/lib/systemd/system/*
+%{_prefix}/lib/systemd/system/
 
 %files devel
 %defattr(-, root, root)
@@ -422,7 +423,6 @@ fi
 %files scripts
 %defattr(-, root, root)
 %{_sbindir}/plymouth-set-default-theme
-%{_sbindir}/plymouth-set-default-plugin
 %{_libexecdir}/plymouth/plymouth-update-initrd
 %{_libexecdir}/plymouth/plymouth-generate-initrd
 %{_libexecdir}/plymouth/plymouth-populate-initrd
@@ -499,8 +499,97 @@ fi
 %defattr(-, root, root)
 
 %changelog
-* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 0.8.5.1-4
-- 为 Magic 3.0 重建
+* Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.8.9-10.2013.08.14
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
+
+* Wed May 20 2015 Will Woods <wwoods@redhat.com> 0.8.9-9.2013.08.14
+- Fix theme override using PLYMOUTH_THEME_NAME (#1223344)
+
+* Sat Feb 21 2015 Till Maas <opensource@till.name> - 0.8.9-8.2013.08.14
+- Rebuilt for Fedora 23 Change
+  https://fedoraproject.org/wiki/Changes/Harden_all_packages_with_position-independent_code
+
+* Sun Aug 17 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.8.9-7.2013.08.14
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
+
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.8.9-6.2013.08.14
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Sat May 31 2014 Peter Robinson <pbrobinson@fedoraproject.org> 0.8.9-4.2013.08.15
+- Move system-logos dep to graphics-libs (no use on text/serial console minimal installs)
+
+* Thu Feb 20 2014 Ray Strode <rstrode@redhat.com> 0.8.9-4.2013.08.14
+- Fix splash after change in /sys/class/tty/console/active
+
+* Thu Oct 31 2013 Ray Strode <rstrode@redhat.com> 0.8.9-3.2013.08.14
+- Don't timeout plymouth quit waiting
+  Related: #967521
+
+* Wed Oct 16 2013 Ray Strode <rstrode@redhat.com> 0.8.9-2.2013.08.14
+- Drop rhgb-client compat link
+
+* Sun Oct 06 2013 Kalev Lember <kalevlember@gmail.com> - 0.8.9-1.2013.08.14
+- Make sure the release number compares higher than the previous builds
+
+* Wed Aug 14 2013 Ray Strode <rstrode@redhat.com> 0.8.9-0.1.2013.08.14.0
+- Update to snapshot to fix system units
+
+* Sun Aug 04 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.8.9-0.2014.03.26.0
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Tue Mar 26 2013 Ray Strode <rstrode@redhat.com> 0.8.9-0.2013.03.26.0
+- Update to snapshot to fix systemd vconsole issue
+
+* Thu Feb 21 2013 Peter Robinson <pbrobinson@fedoraproject.org> 0.8.8-6
+- Merge newer F18 release into rawhide
+
+* Thu Dec 13 2012 Ray Strode <rstrode@redhat.com> 0.8.8-5
+- Ensure fedup gets right splash screen
+  Related: #879295
+
+* Thu Nov 15 2012 Ray Strode <rstrode@redhat.com> 0.8.8-4
+- Drop set-default-plugin compat script
+- Just use upstream update-initrd
+
+* Fri Nov 02 2012 Ray Strode <rstrode@redhat.com> 0.8.8-3
+- More boot blocking fixes
+  Related: #870695
+
+* Thu Nov 01 2012 Ray Strode <rstrode@redhat.com> 0.8.8-2
+- Fix crash when deactivating multiple times
+  Related: #870695
+
+* Fri Oct 26 2012 Ray Strode <rstrode@redhat.com> 0.8.8-1
+- Latest upstream release
+- includes systemd fixes and system update fixes
+
+* Tue Aug 21 2012 Ray Strode <rstrode@redhat.com> 0.8.7-1
+- Latest upstream release
+- includes systemd fixes
+
+* Tue Aug 21 2012 Dave Airlie <airlied@redhat.com> 0.8.6.2-1.2012.07.23
+- fix plymouth race at bootup breaking efi/vesa handoff.
+- fix version number - its against fedora package policy to have 0.year
+
+* Mon Jul 23 2012 Ray Strode <rstrode@redhat.com> 0.8.6.2-0.2012.07.23
+- One more crack at #830482 (will probably need additional fixes tomorrow)
+
+* Mon Jul 23 2012 Tom Callaway <spot@fedoraproject.org> - 0.8.6.1-3
+- fix bz704658 (thanks to Ian Pilcher for the patch), resolves issue where spinfinity theme
+  never goes idle and thus, never exits to gdm
+
+* Sat Jul 21 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.8.6.1-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Tue Jul 10 2012 Ray Strode <rstrode@redhat.com> 0.8.6.1-1
+- Update to 0.8.6.1 since I mucked up 0.8.6
+  Resolves: #830482
+
+* Mon Jul 09 2012 Ray Strode <rstrode@redhat.com> 0.8.6-1
+- Update to 0.8.6
+- Fixes encrypted fs bug
+  Resolves: #830482
+- Adds support for offline package updates
 
 * Mon Jun 25 2012 Adam Jackson <ajax@redhat.com> 0.8.5.1-3
 - Rebuild without libkms
@@ -971,7 +1060,7 @@ fi
 - Add the ability to show text prompts in graphical plugin
 - Fix crasher for users with encrypted disks
 
-* Fri Aug 23 2008 Ray Strode <rstrode@redhat.com> 0.6.0-0.2008.08.22
+* Fri Aug 24 2008 Ray Strode <rstrode@redhat.com> 0.6.0-0.2008.08.22
 - Update to latest snapshot
 
 * Wed Aug 13 2008 Ray Strode <rstrode@redhat.com> 0.5.0-20.2008.08.13
@@ -1046,7 +1135,7 @@ fi
   needs work.  We need to separate distro default from
   user choice.
 
-* Thu Jul  1 2008 Ray Strode <rstrode@redhat.com> - 0.5.0-1
+* Tue Jul  1 2008 Ray Strode <rstrode@redhat.com> - 0.5.0-1
 - Add new client "ask-for-password" command which feeds
   the user input to a program instead of standard output,
   and loops when the program returns non-zero exit status.
