@@ -1,36 +1,15 @@
-
-%global with_maven 1
-
-%global parent plexus
-%global subname containers
-
-# this needs to be exact version of maven-javadoc-plugin for
-# integration tests
-%global javadoc_plugin_version 2.9.1
-
-Name:           %{parent}-%{subname}
-Version:        1.5.5
-Release:        19%{?dist}
+Name:           plexus-containers
+Version:        1.6
+Release:        4%{?dist}
 Summary:        Containers for Plexus
 License:        ASL 2.0 and MIT
-URL:            http://plexus.codehaus.org/
-# svn export \
-#  http://svn.codehaus.org/plexus/plexus-containers/tags/plexus-containers-1.5.5
-# tar caf plexus-containers-1.5.5.tar.xz plexus-containers-1.5.5
-Source0:        %{name}-%{version}.tar.xz
-Source1:        plexus-container-default-build.xml
-Source2:        plexus-component-annotations-build.xml
-Source3:        plexus-containers-settings.xml
-
-Patch0:         0001-Fix-test-oom.patch
-Patch1:         0002-Update-to-Plexus-Classworlds-2.5.patch
-Patch2:         0003-Port-to-objectweb-asm-5.patch
-
+URL:            https://github.com/codehaus-plexus/plexus-containers
 BuildArch:      noarch
+
+Source0:        https://github.com/sonatype/%{name}/archive/%{name}-%{version}.tar.gz
 
 BuildRequires:  maven-local
 BuildRequires:  maven-invoker-plugin
-BuildRequires:  maven-javadoc-plugin = %{javadoc_plugin_version}
 BuildRequires:  maven-resources-plugin
 BuildRequires:  maven-site-plugin
 BuildRequires:  maven-shared-invoker
@@ -42,12 +21,7 @@ BuildRequires:  plexus-cli
 BuildRequires:  xbean >= 3.14
 BuildRequires:  guava
 BuildRequires:  objectweb-asm >= 5.0.2
-
-Requires:       plexus-classworlds >= 2.5
-Requires:       plexus-utils
-Requires:       xbean >= 3.14
-Requires:       guava
-Requires:       objectweb-asm >= 5.0.2
+BuildRequires:  qdox >= 2.0
 
 
 %description
@@ -78,6 +52,7 @@ Summary:        Component API from %{name}
 
 %package container-default
 Summary:        Default Container from %{name}
+Obsoletes:      plexus-container-default < 1.0-1
 Provides:       plexus-containers-component-api = %{version}-%{release}
 
 %description container-default
@@ -99,19 +74,16 @@ Obsoletes:      %{name}-container-default-javadoc < %{version}-%{release}
 %{summary}.
 
 %prep
-%setup -q -n plexus-containers-%{version}
-
-cp %{SOURCE1} plexus-container-default/build.xml
-cp %{SOURCE2} plexus-component-annotations/build.xml
-
-%patch0 -p1
-%patch1 -p1
-%patch2 -p1
+%setup -q -n %{name}-%{name}-%{version}
 
 # For Maven 3 compat
 %pom_add_dep org.apache.maven:maven-core plexus-component-metadata
 
-# OpenJDK7 compatibility
+# ASM dependency was changed to "provided" in XBean 4.x, so we need to provide ASM
+%pom_add_dep org.ow2.asm:asm:5.0.3:runtime plexus-container-default
+%pom_add_dep org.ow2.asm:asm-commons:5.0.3:runtime plexus-container-default
+
+%pom_remove_dep com.sun:tools plexus-component-javadoc
 %pom_add_dep com.sun:tools plexus-component-javadoc
 
 # Generate OSGI info
@@ -162,8 +134,23 @@ sed -i "s|<version>2.3</version>|<version> %{javadoc_plugin_version}</version>|"
 %files javadoc -f .mfiles-javadoc
 
 %changelog
-* Thu Aug 14 2014 Liu Di <liudidi@gmail.com> - 1.5.5-19
-- 为 Magic 3.0 重建
+* Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.6-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
+
+* Wed Apr  1 2015 Mikolaj Izdebski <mizdebsk@redhat.com> - 1.6-3
+- Update upstream URL
+
+* Thu Feb  5 2015 Mikolaj Izdebski <mizdebsk@redhat.com> - 1.6-2
+- Add runtime dependenty on ASM5
+
+* Mon Oct 27 2014 Mikolaj Izdebski <mizdebsk@redhat.com> - 1.6-1
+- Update to upstream version 1.6
+
+* Mon Oct  6 2014 Mikolaj Izdebski <mizdebsk@redhat.com> - 1.5.5-20
+- Obsolete plexus-container-default
+
+* Wed Sep 24 2014 Mikolaj Izdebski <mizdebsk@redhat.com> - 1.5.5-19
+- Remove verioned build-requires on maven-javadoc-plugin
 
 * Fri Jul 04 2014 Mat Booth <mat.booth@redhat.com> - 1.5.5-18
 - Port to lastest objectweb-asm
