@@ -2,37 +2,97 @@
 %define separate_xpce 1
 
 Name:       pl
-Version:    6.2.6
-Release:    3%{?dist}
-
+Version:    7.2.2
+Release:    1%{?dist}
 Summary:    SWI-Prolog - Edinburgh compatible Prolog compiler
-
 Group:      Development/Languages
 #library/dialect/iso/iso_predicates.pl  GPLv2+ with SWI-Prolog extra clause
 #                                       or Artistic 2.0
-#packages/clib/uri.c            LGPLv2+
-#packages/sgml/Test/test.pl     LGPLv2
-#library/qsave.pl               GPLv2+
-#library/COPYING                GPLv2 with SWI-Prolog extra clause
-#library/unicode/blocks.pl      UCD
-#packages/http/examples/calc.pl Public Domain
-#External: JavaConfig.java      GPLv3+
-License:    (GPLv2+ or Artistic 2.0) and LGPLv2+ and LGPLv2 and GPLv2 and GPLv2+ and UCD and Public Domain and GPLv3+
+#library/qsave.pl                       GPLv2+ with SWI-Prolog extra clause
+#library/COPYING                        GPLv2+ with SWI-Prolog extra clause
+#packages/clib/uri.c                    LGPLv2+
+#packages/nlp/snowball.c                LGPLv2+
+#packages/protobufs/protobufs.c         LGPLv2+
+#packages/xpce/src/ari/expression.c     LGPLv2+
+#packages/nlp/double_metaphone.c        GPL+ or Artistic (as Perl)
+#packages/clib/maildrop/                GPLv2 with OpenSSL exception
+#packages/RDF/online.pl                 LGPLv2
+#library/unicode/blocks.pl              UCD
+#packages/utf8proc/utf8proc_data.c      UCD
+#packages/utf8proc/LICENSE              UCD and MIT
+#packages/http/examples/calc.pl         Public Domain
+#packages/xpce/src/gnu/getdate.c        Public Domain
+#External: JavaConfig.java              GPLv3+
+#External: repackage.sh                 GPLv2+
+#packages/jpl/src/java/org/jpl7/fli/ObjectHolder.java   GPLv2+
+#packages/xpce/prolog/contrib/rubik     GPLv2
+#packages/xpce/src/img/gifwrite.c       Part is free for any purpose
+#packages/xpce/src/rgx/                 BSD
+#packages/clib/bsd-crypt.c              BSD
+#packages/clib/clib.doc                 BSD
+#packages/clib/md5.c                    BSD
+#packages/clib/sha1/sha1.c              BSD
+#packages/pengines/web/js/pengines.js   BSD
+#packages/tipc/tipcutils/tipc-config.c  BSD
+#library/prolog_metainference.pl        EPL
+# Not compiled into a binary package:
+#packages/http/web/js/jquery-1.11.3.min.js  MIT
+#packages/utf8proc/data_generator.rb    MIT
+#packages/xpce/src/msw/simx.h           MIT
+#packages/xpce/src/msw/xpm.h            MIT
+#packages/xpce/TeX/name.bst             Bibtex
+#packages/clib/configure                FSFUL
+#packages/clib/maildrop/rfc2045/configure   FSFUL
+#packages/clpqr/configure               FSFUL
+#packages/cpp/configure                 FSFUL
+#packages/nlp/configure                 FSFUL
+#packages/protobufs/configure           FSFUL
+#packages/RDF/configure                 FSFUL
+#packages/sgml/configure                FSFUL
+#packages/ssl/configure                 FSFUL
+#packages/xpce/src/aclocal.m4           GPLv3+
+#packages/xpce/src/configure            FSFUL
+#packages/zlib/configure                FSFUL
+# Removed from repackaged tar ball, see
+# <https://github.com/SWI-Prolog/issues/issues/16>:
+#bench/unify.pl                         Free for non-commercial
+#bench/simple_analyzer.pl               Free for non-commercial
+#man/txt/dvi2tty/dvi2tty.c              Free for non-commercial
+License:    (GPLv2+ with exceptions or Artistic 2.0) and (GPLv2+ with exceptions) and (GPLv2 with exception) and (GPL+ or Artistic) and LGPLv2+ and LGPLv2 and UCD and (UCD and MIT) and BSD and Public Domain and EPL and GPLv2 and GPLv2+ and GPLv3+
 URL:        http://www.swi-prolog.org/
-Source:     %{url}download/stable/src/%{name}-%{version}.tar.gz
+# Source0: %%{url}download/stable/src/swipl-%%{version}.tar.gz
+# To create the repackaged archive, use ./repackage.sh %%{version}
+Source0:    swipl-%{version}_repackaged.tar.gz
 Source1:    %{url}download/stable/doc/SWI-Prolog-%{version}.pdf
 Source2:    %{url}download/xpce/doc/userguide/userguide.html.tgz
 Source3:    JavaConfig.java
-Patch1:     %{name}-6.2.2-jpl-configure.patch
-Patch2:     %{name}-5.10.5-man-files.patch
-Patch3:     %{name}-6.0.2-jni.patch
+Source4:    repackage.sh
+# Fix paths to JDK libraries
+Patch1:     swipl-7.2.0-jpl-configure.patch
+# Upstream installation paths differ from distribution ones
+Patch2:     swipl-7.2.0-Remove-files-locations-from-swipl-1-manual.patch
+# Use JNI for Java binding
+Patch3:     swipl-7.2.2-Fix-JNI.patch
+# Fix paths in pkg-config module
 Patch4:     %{name}-6.2.0-pc.patch
-
+# Pass -Werrror=format-security, bug #1037250
+Patch5:     %{name}-6.6.0-xpce-Inhibit-compiler-warning-on-sscanf-without-arguments.patch
+# Unbundle jquery
+Patch6:     swipl-7.2.1-Unbundle-jquery1.patch
+BuildRequires:  coreutils
+BuildRequires:  findutils
+BuildRequires:  gcc
+BuildRequires:  make
+BuildRequires:  sed
 # Base
 BuildRequires:  gmp-devel
 BuildRequires:  ncurses-devel
 BuildRequires:  pkgconfig
 BuildRequires:  readline-devel
+# archive
+BuildRequires:  libarchive-devel
+# http
+BuildRequires:  js-jquery1
 # XPCE
 BuildRequires:  libICE-devel
 BuildRequires:  libjpeg-devel
@@ -55,28 +115,37 @@ BuildRequires:  unixODBC-devel
 BuildRequires:  openssl-devel
 # jpl
 %if %{with_java}
-BuildRequires:  jpackage-utils
 BuildRequires:  java-devel
 %endif
 # zlib
 BuildRequires:  zlib-devel
 # helpers for export_dynamic patch
 BuildRequires:  autoconf
+# http
+Requires:       js-jquery1
 
 %description
 ISO/Edinburgh-style Prolog compiler including modules, auto-load,
 libraries, Garbage-collector, stack-expandor, C/C++-interface,
 GNU-readline interface, very fast compiler.  Including packages clib
 (Unix process control and sockets), cpp (C++ interface), sgml (reading
-XML/SGML), sgml/RDF (reading RDF into triples) and XPCE (Graphics UI
-toolkit, integrated editor (Emacs-clone) and source-level debugger).
+XML/SGML), sgml/RDF (reading RDF into triples).
+%if %{separate_xpce}
+XPCE (Graphics UI toolkit, integrated editor (Emacs-clone) and source-level
+debugger) is available in %{name}-xpce package.
+%else
+Also XPCE (Graphics UI toolkit, integrated editor (Emacs-clone) and
+source-level debugger) is included.
+%endif
 
 
 %package devel
 Summary: Development files for SWI Prolog
 Group: Development/Languages
 Requires: %{name} = %{version}-%{release}
-Requires: readline-devel, pkgconfig
+Requires: gcc
+Requires: pkgconfig
+Requires: readline-devel
 
 %description devel
 Development files for SWI Prolog.
@@ -85,7 +154,7 @@ Development files for SWI Prolog.
 %package compat-yap-devel
 Summary: Development files building YAP application against SWI Prolog
 Group: Development/Languages
-License: GPLv2+
+License: GPLv2+ with exceptions
 Requires: %{name}-devel = %{version}-%{release}
 
 %description compat-yap-devel
@@ -96,6 +165,10 @@ Prolog implementation.
 %package doc
 Summary: Documentation for SWI Prolog
 Group: Documentation
+#SWI-Prolog-*.pdf                       CC-BY-SA
+#man/Manual/index.html                  CC-BY-SA
+#userguide.html.tgz is from xpce        LGPLv2+
+License: CC-BY-SA and LGPLv2+
 # This must be archicture dependend because some files live in %%{_libdir}
 # because they are used by built-in documentation system.
 Requires: %{name} = %{version}-%{release}
@@ -158,8 +231,8 @@ approach of for developing GUI applications, as follows:
 Summary: A bidirectional Prolog/Java interface for SWI Prolog
 Group: Development/Languages
 Requires: %{name} = %{version}-%{release}
-Requires: java
-Requires: jpackage-utils
+Requires: java-headless
+Requires: javapackages-tools
 
 %description jpl
 JPL is a library using the SWI-Prolog foreign interface and the Java Native
@@ -171,11 +244,16 @@ in Prolog. In both setups it provides a re-entrant bidirectional interface.
 
 %prep
 %global docdir doc-install
-%setup -q
+%setup -q -n swipl-%{version}
 %patch1 -p1 -b .libjvm
 %patch2 -p1 -b .man-files
 %patch3 -p1 -b .jni
 %patch4 -p1 -b .pc
+(
+cd packages/xpce
+%patch5 -p1 -b .format
+)
+%patch6 -p1
 (
    cd src
    autoconf
@@ -196,8 +274,7 @@ in Prolog. In both setups it provides a re-entrant bidirectional interface.
 
 # Adjustments to take into account the new location of JNI stuff
 sed --in-place=.jni2 -e 's#LIBDIR#%{_libdir}#g' packages/jpl/jpl.pl
-sed --in-place=.jni2 -e 's#LIBDIR#%{_libdir}#g' packages/jpl/src/java/jpl/fli/Prolog.java
-sed --in-place=.jni2 -e 's#LIBDIR#"%{_libdir}/swipl-jpl"#g' packages/jpl/src/java/jpl/JPL.java
+sed --in-place=.jni2 -e 's#LIBDIR#"%{_libdir}/swipl-jpl"#g' packages/jpl/src/java/org/jpl7/JPL.java
 
 
 %build
@@ -255,7 +332,7 @@ find packages/jpl/examples -name ".cvsignore" | xargs rm -f
 
 %files
 %doc ReleaseNotes/relnotes-5.10 README COPYING VERSION
-%doc customize/dotplrc
+%doc customize/dotswiplrc
 %{_mandir}/man1/*
 %dir %{_libdir}/swipl-%{version}
 %{_libdir}/swipl-%{version}/*
@@ -327,6 +404,8 @@ find packages/jpl/examples -name ".cvsignore" | xargs rm -f
 %if %{with_java}
 %files jpl
 %doc packages/jpl/docs/*
+# The Test.java fails after 7.2.0 moved to new syntax,
+# <https://github.com/SWI-Prolog/packages-jpl/issues/1>
 %doc packages/jpl/examples
 %{_libdir}/swipl-%{version}/lib/jpl.jar
 %{_libdir}/swipl-%{version}/library/jpl.pl
@@ -335,6 +414,93 @@ find packages/jpl/examples -name ".cvsignore" | xargs rm -f
 
 
 %changelog
+* Thu Jun 25 2015 Petr Pisar <ppisar@redhat.com> - 7.2.2-1
+- 7.2.2 bump
+- License changed from ((GPLv2+ with exceptions or Artistic 2.0) and (GPLv2+
+  with exceptions) and (GPLv2 with exception) and (GPL+ or Artistic) and
+  LGPLv2+ and LGPLv2 and UCD and (UCD and MIT) and BSD and Public Domain and
+  EPL and GPLv2 and GPLv3+) to ((GPLv2+ with exceptions or Artistic 2.0) and
+  (GPLv2+ with exceptions) and (GPLv2 with exception) and (GPL+ or Artistic)
+  and LGPLv2+ and LGPLv2 and UCD and (UCD and MIT) and BSD and Public Domain
+  and EPL and GPLv2 and GPLv2+ and GPLv3+)
+
+* Mon Jun 22 2015 Petr Pisar <ppisar@redhat.com> - 7.2.1-3
+- Depend on javapackages-tools instead of jpackage-utils to conform to new Java
+  guidelines
+
+* Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 7.2.1-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
+
+* Mon Jun 15 2015 Petr Pisar <ppisar@redhat.com> - 7.2.1-1
+- 7.2.1 bump
+- Depend on gcc because glibc-headers package will be removed (bug #1230490)
+- Unbundle jquery-1
+
+* Fri Jun 05 2015 Petr Pisar <ppisar@redhat.com> - 7.2.0-1
+- 7.2.0 bump
+- License changed from ((GPLv2+ with exceptions or Artistic 2.0) and (GPLv2+
+  with exceptions) and LGPLv2+ and LGPLv2 and UCD and BSD and Public Domain
+  and EPL and GPLv2 and GPLv3+) to ((GPLv2+ with exceptions or Artistic 2.0)
+  and (GPLv2+ with exceptions) and (GPLv2 with exception) and (GPL+ or
+  Artistic) and LGPLv2+ and LGPLv2 and UCD and (UCD and MIT) and BSD and Public
+  Domain and EPL and GPLv2 and GPLv3+)
+
+* Wed Apr 22 2015 Petr Pisar <ppisar@redhat.com> - 6.6.6-6
+- Describe XPCE is in pl-xpce (bug #1204623)
+
+* Fri Feb 27 2015 Petr Pisar <ppisar@redhat.com> - 6.6.6-5
+- Build binding for libarchive (bug #1195960)
+
+* Sun Aug 17 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 6.6.6-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
+
+* Wed Jun 25 2014 Yaakov Selkowitz <yselkowi@redhat.com> - 6.6.6-3
+- Fix detection of libjvm on aarch64 (#1112012)
+
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 6.6.6-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Mon Jun 02 2014 Petr Pisar <ppisar@redhat.com> - 6.6.6-1
+- 6.6.6 bump
+
+* Mon Apr 28 2014 Petr Pisar <ppisar@redhat.com> - 6.6.5-1
+- 6.6.5 bump
+
+* Mon Mar 24 2014 Petr Pisar <ppisar@redhat.com> - 6.6.4-1
+- 6.6.4 bump
+
+* Thu Mar 20 2014 Petr Pisar <ppisar@redhat.com> - 6.6.3-1
+- 6.6.3 bump
+
+* Wed Mar 05 2014 Petr Pisar <ppisar@redhat.com> - 6.6.2-1
+- 6.6.2 bump
+- License changed from ((GPLv2+ with exceptions or Artistic 2.0) and (GPLv2+
+  with exceptions) and LGPLv2+ and LGPLv2 and UCD and BSD and Public Domain
+  and GPLv2 and GPLv3+) to ((GPLv2+ with exceptions or Artistic 2.0) and (GPLv2+
+  with exceptions) and LGPLv2+ and LGPLv2 and UCD and BSD and Public Domain and
+  EPL and GPLv2 and GPLv3+)
+
+* Tue Feb 25 2014 Petr Pisar <ppisar@redhat.com> - 6.6.1-2
+- Require headless JRE only (bug #1068485)
+
+* Mon Dec 16 2013 Petr Pisar <ppisar@redhat.com> - 6.6.1-1
+- 6.6.1 bump
+
+* Mon Dec 02 2013 Petr Pisar <ppisar@redhat.com> - 6.6.0-1
+- 6.6.0 bump
+- Inhibit format-security compiler warning on custom sscanf() parser
+  (bug #1037250)
+
+* Tue Sep 03 2013 Petr Pisar <ppisar@redhat.com> - 6.4.1-1
+- 6.4.1 bump
+- License changed from ((GPLv2+ or Artistic 2.0) and LGPLv2+ and LGPLv2 and
+  GPLv2 and GPLv2+ and UCD and Public Domain and GPLv3+) to ((GPLv2+ with
+  exceptions or Artistic 2.0) and (GPLv2+ with exceptions) and LGPLv2+ and
+  LGPLv2 and UCD and Public Domain and GPLv3+ and CC-BY-SA)
+
+* Sun Aug 04 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 6.2.6-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
 * Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 6.2.6-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
 
@@ -601,7 +767,7 @@ find packages/jpl/examples -name ".cvsignore" | xargs rm -f
 * Sun May 22 2005 Jeremy Katz <katzj@redhat.com> - 5.4.6-9
 - rebuild on all arches
 
-* Fri Apr  7 2005 Michael Schwendt <mschwendt[AT]users.sf.net>
+* Wed Apr  6 2005 Michael Schwendt <mschwendt[AT]users.sf.net>
 - rebuilt
 
 * Wed Feb 23 2005 David Woodhouse <dwmw2@infradead.org> - 5.4.6-7

@@ -71,13 +71,17 @@ class JavaConfig {
     }
 
     /* The java.library.path does not work since JDK 1.7. See
-     * <https://bugzilla.redhat.com/show_bug.cgi?id=740762>. */
+     * <https://bugzilla.redhat.com/show_bug.cgi?id=740762>.
+     * The "client" subdirectory is need on AArch64 since JDK 1.8. See
+     * <https://bugzilla.redhat.com/show_bug.cgi?id=1112012>. */
     if (null == architecture || null == home || null == filesep) {
       return null;
     }
     value = value + ":" +
       home + filesep + "lib" + filesep + architecture + ":" +
-      home + filesep + "lib" + filesep + architecture + filesep + "server";
+      home + filesep + "lib" + filesep + architecture + filesep + "server" +
+        ":" +
+      home + filesep + "lib" + filesep + architecture + filesep + "client";
 
 
     /* Convert the collon delimited paths to LDFLAGS format */

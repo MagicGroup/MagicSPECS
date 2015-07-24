@@ -1,0 +1,72 @@
+From 297ec8a0675a0d5e99c7044989890085b125f60e Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Petr=20P=C3=ADsa=C5=99?= <ppisar@redhat.com>
+Date: Mon, 15 Jun 2015 14:31:34 +0200
+Subject: [PATCH] Unbundle jquery1
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+This changes the required file name to jquery-1.min.js. The file is
+provided by js-jquery1 RPM package.
+
+Signed-off-by: Petr Písař <ppisar@redhat.com>
+---
+ packages/http/Makefile.in | 14 ++++++++++++--
+ packages/http/jquery.pl   |  2 +-
+ 2 files changed, 13 insertions(+), 3 deletions(-)
+
+diff --git a/packages/http/Makefile.in b/packages/http/Makefile.in
+index 651efb3..2f41239 100644
+--- a/packages/http/Makefile.in
++++ b/packages/http/Makefile.in
+@@ -19,7 +19,7 @@ JSONOBJ=	json.o
+ WEBSOCKETOBJ=	websocket.o
+ SOLIBS=		http_stream.@SO@ json.@SO@ websocket.@SO@
+ 
+-all:		$(SOLIBS)
++all:		$(SOLIBS) jquery
+ 
+ http_stream.@SO@:	$(STREAMOBJ)
+ 		$(LD) $(LDSOFLAGS) -o $@ $(STREAMOBJ) @LIBS@ $(LIBPLSO)
+@@ -31,6 +31,10 @@ websocket.@SO@:	$(WEBSOCKETOBJ)
+ http_stream.o:	http_error.c http_chunked.c cgi_stream.c stream_range.c \
+ 		multipart.c
+ 
++jquery:
++		rm -f web/js/jquery-1.*.min.js
++	    ln -s $(datarootdir)/javascript/jquery/1/jquery.min.js web/js/jquery-1.min.js
++
+ install:	$(LIBPL) $(SOLIBS)
+ 		mkdir -p $(DESTDIR)$(SOLIBDIR)
+ 		for f in $(SOLIBS); do \
+@@ -44,7 +48,13 @@ install:	$(LIBPL) $(SOLIBS)
+ 		$(INSTALL_DATA) README $(DESTDIR)$(PKGPLLIBDIR)/README$(TXTEXT)
+ 		$(INSTALL_DATA) web/icons/*.png $(DESTDIR)$(PKGPLLIBDIR)/web/icons
+ 		$(INSTALL_DATA) web/css/*.css $(DESTDIR)$(PKGPLLIBDIR)/web/css
+-		$(INSTALL_DATA) web/js/*.js $(DESTDIR)$(PKGPLLIBDIR)/web/js
++		for F in web/js/*.js; do \
++			if test -L "$$F"; then \
++				cp -d "$$F" $(DESTDIR)$(PKGPLLIBDIR)/web/js ;\
++			else \
++				$(INSTALL_DATA) web/js/*.js $(DESTDIR)$(PKGPLLIBDIR)/web/js ;\
++			fi ;\
++		done
+ 		$(MKPKGINDEX)
+ 		$(MKINDEX)
+ 
+diff --git a/packages/http/jquery.pl b/packages/http/jquery.pl
+index 4f2585c..94cecc9 100644
+--- a/packages/http/jquery.pl
++++ b/packages/http/jquery.pl
+@@ -33,7 +33,7 @@
+ :- use_module(library(settings)).
+ :- use_module(library(broadcast)).
+ 
+-:- setting(version, atom, '1.11.3.min',
++:- setting(version, atom, '1.min',
+ 	   'Version of jquery served by the html resource "jquery"').
+ 
+ /** <module> Provide JQuery
+-- 
+2.1.0
+

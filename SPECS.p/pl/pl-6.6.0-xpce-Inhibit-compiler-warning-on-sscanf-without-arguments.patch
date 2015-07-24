@@ -1,0 +1,39 @@
+From ad7eedc7eb9051443548392884d8c349341fe2f1 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Petr=20P=C3=ADsa=C5=99?= <ppisar@redhat.com>
+Date: Tue, 3 Dec 2013 10:01:55 +0100
+Subject: [PATCH] Inhibit compiler warning on sscanf() without arguments
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+This code will not pass if GCC is invoked with
+-Werror=format-security. This is a false positive as the format string
+is sanitized before.
+
+<https://bugzilla.redhat.com/show_bug.cgi?id=1037250>
+
+Signed-off-by: Petr Písař <ppisar@redhat.com>
+---
+ src/ker/goodies.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
+
+diff --git a/src/ker/goodies.c b/src/ker/goodies.c
+index 153a685..039858a 100644
+--- a/src/ker/goodies.c
++++ b/src/ker/goodies.c
+@@ -845,7 +845,11 @@ scanstr(char *str, char *fmt, Any *r)
+   ar = vsscanf(str, fmt, (va_list) ptrs);
+ #else
+   switch(argn)
+-  { case 0:	ar = sscanf(str, fmt); break;
++  {
++#pragma GCC diagnostic push
++#pragma GCC diagnostic ignored "-Wformat-security"
++    case 0:	ar = sscanf(str, fmt); break;
++#pragma GCC diagnostic pop
+     case 1:	ar = sscanf(str, fmt, ptrs[0]); break;
+     case 2:	ar = sscanf(str, fmt, ptrs[0], ptrs[1]); break;
+     case 3:	ar = sscanf(str, fmt, ptrs[0], ptrs[1], ptrs[2]);
+-- 
+1.8.3.1
+

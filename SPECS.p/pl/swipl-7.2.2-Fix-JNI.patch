@@ -1,0 +1,55 @@
+From d075de8c9c775b05415241c074fe61cfa2dd3dd2 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Petr=20P=C3=ADsa=C5=99?= <ppisar@redhat.com>
+Date: Thu, 25 Jun 2015 10:02:10 +0200
+Subject: [PATCH] Fix JNI
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Prefer JNI per Java Fedora packaging guidelines.
+
+Signed-off-by: Petr Písař <ppisar@redhat.com>
+---
+ packages/jpl/jpl.pl                     | 5 +++--
+ packages/jpl/src/java/org/jpl7/JPL.java | 2 +-
+ 2 files changed, 4 insertions(+), 3 deletions(-)
+
+diff --git a/packages/jpl/jpl.pl b/packages/jpl/jpl.pl
+index 448cd9a..35583fe 100644
+--- a/packages/jpl/jpl.pl
++++ b/packages/jpl/jpl.pl
+@@ -3892,7 +3892,8 @@ prolog:error_message(java_exception(Ex)) -->
+ :- multifile user:file_search_path/2.
+ :- dynamic   user:file_search_path/2.
+ 
+-user:file_search_path(jar, swi(lib)).
++user:file_search_path(jar, 'LIBDIR/swipl-jpl').
++user:file_search_path(jni, 'LIBDIR/swipl-jpl').
+ 
+ %%    add_search_path(+Var, +Value) is det.
+ %
+@@ -4036,7 +4037,7 @@ add_jpl_to_classpath :-
+ 
+ libjpl(File) :-
+     (   current_prolog_flag(unix, true)
+-    ->  File = foreign(libjpl)
++    ->  File = jni(libjpl)
+     ;   File = foreign(jpl)
+     ).
+ 
+diff --git a/packages/jpl/src/java/org/jpl7/JPL.java b/packages/jpl/src/java/org/jpl7/JPL.java
+index 18e4014..e76d3fd 100644
+--- a/packages/jpl/src/java/org/jpl7/JPL.java
++++ b/packages/jpl/src/java/org/jpl7/JPL.java
+@@ -76,7 +76,7 @@ public class JPL {
+ 		} else if (nativeLibraryDir != null) {
+ 			System.load((new File(nativeLibraryDir, System.mapLibraryName(nativeLibraryName))).getAbsolutePath());
+ 		} else {
+-			System.loadLibrary(nativeLibraryName); // as resolved somewhere on system property 'java.library.path'
++			System.load((new File(LIBDIR, System.mapLibraryName(nativeLibraryName))).getAbsolutePath());
+ 		}
+ 	}
+ 
+-- 
+2.1.0
+

@@ -1,8 +1,9 @@
---- a/packages/jpl/configure
-+++ b/packages/jpl/configure
-@@ -4267,21 +4267,6 @@ fi
+diff -Naur swipl-7.2.0-old/packages/jpl/configure swipl-7.2.0-new/packages/jpl/configure
+--- swipl-7.2.0-old/packages/jpl/configure	2015-05-18 09:50:50.000000000 +0200
++++ swipl-7.2.0-new/packages/jpl/configure	2015-06-05 15:08:26.326780713 +0200
+@@ -4596,24 +4596,6 @@
  
- 
+ CMDEXT=sh
  
 -if test "x$JAVALIBS" = "x"; then
 -  case "$PLARCH" in
@@ -12,17 +13,20 @@
 -     *powerpc-linux*)
 -	  JAVALIBS="-ljava -ljvm"
 -	  ;;
+-     *win32*|*win64*)
+-	  JAVALIBS="-ljvm"
+-	  CMDEXT=bat
+-	  ;;
 -     *)
 -	  JAVALIBS="-ljava -lverify -ljvm"
 -	  ;;
 -  esac
 -fi
 -
--
- # Make sure we can run config.sub.
- $SHELL "$ac_aux_dir/config.sub" sun4 >/dev/null 2>&1 ||
-   as_fn_error $? "cannot run $SHELL $ac_aux_dir/config.sub" "$LINENO" 5
-@@ -5203,15 +5188,25 @@ case "$host_cpu" in
+ case "$PLARCH" in
+   *win32*)
+ 	JPLLDFLAGS="$JPLLDFLAGS -Wl,--kill-at"
+@@ -5618,19 +5600,29 @@
  		_JNI_LIBDIRS="lib/amd64"
  		_JNI_LIBSUBDIRS="server"
  		;;
@@ -30,6 +34,10 @@
 +                _JNI_LIBDIRS="lib/alpha"
 +                _JNI_LIBSUBDIRS="server"
 +                ;;
+ 	arm*)
+ 		_JNI_LIBDIRS="lib/arm"
+ 		_JNI_LIBSUBDIRS="server"
+ 		;;
  	powerpc)
 -		case "$host_os" in
 -		linux*)
@@ -56,7 +64,7 @@
  		;;
  	*)
  		# Fallback option should work on all architectures except
-@@ -5220,6 +5215,26 @@ case "$host_cpu" in
+@@ -5639,6 +5631,29 @@
  		_JNI_LIBSUBDIRS="server"
  esac
  
@@ -71,6 +79,9 @@
 +            ;;
 +            *powerpc-linux*)
 +            JAVALIBS="-ljava -ljvm"
++            ;;
++            *win32*|*win64*)
++            JAVALIBS="-ljvm"
 +            ;;
 +            *)
 +            JAVALIBS="-ljava -lverify -ljvm"

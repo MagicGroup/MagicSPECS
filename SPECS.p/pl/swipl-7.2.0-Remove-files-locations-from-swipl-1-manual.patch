@@ -1,40 +1,26 @@
-From 026ccc44b46537fb1976446601d1f9c08139dcbe Mon Sep 17 00:00:00 2001
+From 58724c908d580aa53ef6a4a43530182d8e18971b Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?Petr=20P=C3=ADsa=C5=99?= <ppisar@redhat.com>
 Date: Mon, 22 Aug 2011 17:03:22 +0200
 Subject: [PATCH] Remove files locations from swipl(1) manual
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
 We install the files somewhere else.
+
+Signed-off-by: Petr Písař <ppisar@redhat.com>
 ---
- src/swipl.1.in |   54 ------------------------------------------------------
- 1 files changed, 0 insertions(+), 54 deletions(-)
+ src/swipl.1.in | 35 -----------------------------------
+ 1 file changed, 35 deletions(-)
 
 diff --git a/src/swipl.1.in b/src/swipl.1.in
-index b3e3076..baa7363 100644
+index e6eeda5..81c5abb 100644
 --- a/src/swipl.1.in
 +++ b/src/swipl.1.in
-@@ -337,57 +337,6 @@ to
- .BR apropos/1
- and
- .BR explain/1.
--.RE
--.SH FILES
--This installation of SWI-Prolog has been configured using the configure
--option
--.BI \-\-prefix= @prefix@.
--If the files listed below are not at the indicated place, the installation
--has probably been moved.  Use
--.TP
--?- current_prolog_flag(home, Home).
--.P
--to find the local installation directory of SWI-Prolog.
--.TP
--.I .plrc
--.TP
--.I ~/.plrc
--Personal initialisation files consulted by SWI-Prolog on startup.
--If both exist
--.I .plrc
--is used.
+@@ -369,38 +369,6 @@ Personal initialisation files consulted by SWI-Prolog on startup.
+ If both exist
+ .I .swiplrc
+ is used.
 -.TP
 -.I @prefix@/lib/@PL@-@PLVERSION@/bin/@PLARCH@/
 -Location for the executables.
@@ -48,17 +34,17 @@ index b3e3076..baa7363 100644
 -.TP
 -.I @prefix@/lib/@PL@-@PLVERSION@/boot/
 -SWI-Prolog kernel parts written in Prolog.  The startup file
--@prefix@/lib/@PL@-@PLVERSION@/boot32.prc may be recreated using
+-@prefix@/lib/@PL@-@PLVERSION@/@BOOTFILE@ may be recreated using
 -the command from the directory @prefix@/lib/@PL@-@PLVERSION@:
 -.RS
 -.TP
--bin/@PLARCH@/@PL@ \-O \-o boot32.prc \-b boot/init.pl
+-bin/@PLARCH@/@PL@ \-O \-o @BOOTFILE@ \-b boot/init.pl
 -.RE
 -.TP
 -.I @prefix@/lib/@PL@-@PLVERSION@/doc/packages
 -HTML and/or PDF documentation on the installed add-ons.
 -.TP
--.I @prefix@/lib/@PL@-@PLVERSION@/boot32.prc
+-.I @prefix@/lib/@PL@-@PLVERSION@/@BOOTFILE@
 -Default startup file.  This is a `intermediate code' file containing
 -precompiled code from the boot directory.  The
 -.BI \-x bootfile
@@ -70,7 +56,7 @@ index b3e3076..baa7363 100644
  .SH SEE ALSO
  .PP
  The SWI-Prolog web-home at
-@@ -397,9 +346,6 @@ Jan\ Wielemaker
+@@ -410,9 +378,6 @@ Jan\ Wielemaker
  .IR "SWI-Prolog Reference Manual" " at"
  .I http://www.swi-prolog.org/pldoc/index.html
  .PP
@@ -81,5 +67,5 @@ index b3e3076..baa7363 100644
  .IR "Programming in Prolog" ,
  fourth edition, Springer Verlag, Berlin 1994.
 -- 
-1.7.6
+2.1.0
 
