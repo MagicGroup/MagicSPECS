@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=JFlex
+GenericName=JFlex
+Comment=Fast Scanner Generator for Java
+Exec=jflex
+Icon=jflex
+Terminal=false
+Type=Application
+Categories=Development;
