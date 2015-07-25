@@ -15,15 +15,17 @@
 %global macrosdir %(d=%{_rpmconfigdir}/macros.d; [ -d $d ] || d=%{_sysconfdir}/rpm; echo $d)
 
 Summary: PHP Extension and Application Repository framework
+Summary(zh_CN.UTF-8): PHP 扩展和应用仓库框架
 Name: php-pear
-Version: 1.9.4
-Release: 28%{?dist}
+Version:	1.9.5
+Release:	1%{?dist}
 Epoch: 1
 # PEAR, Archive_Tar, XML_Util are BSD
 # Console_Getopt is PHP
 # Structures_Graph is LGPLv2+
 License: BSD and PHP and LGPLv2+
 Group: Development/Languages
+Group(zh_CN.UTF-8): 开发/语言
 URL: http://pear.php.net/package/PEAR
 Source0: http://download.pear.php.net/package/PEAR-%{version}.tgz
 # wget https://raw.github.com/pear/pear-core/master/install-pear.php
@@ -87,6 +89,9 @@ Requires:  php-bz2
 %description
 PEAR is a framework and distribution system for reusable PHP
 components.  This package contains the basic PEAR components.
+
+%description -l zh_CN.UTF-8
+PEAR 是一个 PHP 使用的框架和发布系统。
 
 %prep
 %setup -cT
@@ -189,7 +194,7 @@ install -d $RPM_BUILD_ROOT%{_mandir}/man1
 install -p -m 644 pear.1 pecl.1 peardev.1 $RPM_BUILD_ROOT%{_mandir}/man1/
 install -d $RPM_BUILD_ROOT%{_mandir}/man5
 install -p -m 644 pear.conf.5 $RPM_BUILD_ROOT%{_mandir}/man5/
-
+magic_rpm_clean.sh
 
 %check
 # Check that no bogus paths are left in the configuration, or in
@@ -309,6 +314,9 @@ fi
 
 
 %changelog
+* Thu Jul 02 2015 Liu Di <liudidi@gmail.com> - 1:1.9.5-1
+- 更新到 1.9.5
+
 * Sat May 03 2014 Liu Di <liudidi@gmail.com> - 1:1.9.4-28
 - 为 Magic 3.0 重建
 

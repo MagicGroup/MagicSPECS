@@ -1,10 +1,12 @@
 Summary: Very high compression ratio file archiver
+Summary(zh_CN.UTF-8): 非常高压缩率的文件归档程序
 Name: p7zip
-Version: 9.20.1
-Release: 3%{?dist}
+Version:	9.38.1
+Release:	1%{?dist}
 # Files under C/Compress/Lzma/ are dual LGPL or CPL
 License: LGPLv2 and (LGPLv2+ or CPL)
 Group: Applications/Archiving
+Group(zh_CN.UTF-8): 应用程序/归档
 URL: http://p7zip.sourceforge.net/
 # RAR sources removed since their license is incompatible with the LGPL
 #Source: http://downloads.sf.net/p7zip/p7zip_%{version}_src_all.tar.bz2
@@ -14,9 +16,9 @@ URL: http://p7zip.sourceforge.net/
 # rm -rf p7zip_${VERSION}/CPP/7zip/{Archive,Compress,Crypto}/Rar*
 # rm -f p7zip_${VERSION}/DOCS/unRarLicense.txt
 # tar --numeric-owner -cjvf p7zip_${VERSION}_src_all-norar.tar.bz2 p7zip_${VERSION}
-Source: p7zip_%{version}_src_all.tar.bz2
+Source: http://downloads.sourceforge.net/project/p7zip/p7zip/%{version}/p7zip_%{version}_src_all.tar.bz2
 Patch0: p7zip_9.13-norar.patch
-Patch1: p7zip_9.20-install.patch
+Patch1: p7zip_9.38-install.patch
 Patch2: p7zip_9.13-nostrip.patch
 Buildroot: %{_tmppath}/%{name}-%{version}-%{release}-root
 %ifarch %{ix86}
@@ -30,16 +32,22 @@ BuildRequires: yasm
 p7zip is a port of 7za.exe for Unix. 7-Zip is a file archiver with a very high
 compression ratio. The original version can be found at http://www.7-zip.org/.
 
+%description -l zh_CN.UTF-8
+p7zip 是 7za.exe 的 Unix 移植。7-Zip 是一个非常高压缩率的文件归档格式。
 
 %package plugins
 Summary: Additional plugins for p7zip
+Summary(zh_CN.UTF-8): %{name} 的附加插件
 Group: Applications/Archiving
+Group(zh_CN.UTF-8): 应用程序/归档
 Requires: %{name} = %{version}-%{release}
 
 %description plugins
 Additional plugins that can be used with 7z to extend its abilities.
 This package contains also a virtual file system for Midnight Commander.
 
+%description plugins -l zh_CN.UTF-8
+%{name} 的附加插件。
 
 %prep
 %setup -q -n %{name}_%{version}
@@ -48,7 +56,7 @@ This package contains also a virtual file system for Midnight Commander.
 %patch2 -p1 -b .nostrip
 # Move docs early so that they don't get installed by "make install" and we
 # can include them in %%doc
-%{__mv} DOCS docs
+%{__mv} DOC docs
 %{__mv} ChangeLog README TODO docs/
 # And fix useless executable bit while we're at it
 find docs    -type f -exec chmod -x {} \;
@@ -111,6 +119,9 @@ find contrib -type f -exec chmod -x {} \;
 
 
 %changelog
+* Wed Jul 01 2015 Liu Di <liudidi@gmail.com> - 9.38.1-1
+- 更新到 9.38.1
+
 * Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 9.20.1-3
 - 为 Magic 3.0 重建
 

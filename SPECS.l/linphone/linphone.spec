@@ -15,7 +15,7 @@
 
 
 Name:           linphone
-Version:	3.8.0
+Version:	3.8.5
 Release:        6%{?dist}
 Summary:        Phone anywhere in the whole world by using the Internet
 
@@ -271,6 +271,8 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man1/linphone.1*
 %{_datadir}/appdata/linphone.appdata.xml
 %{_datadir}/applications/audio-assistant.desktop
+%{_bindir}/lp-autoanswer
+%{_datadir}/icons/hicolor/48x48/apps/linphone.png
 
 %files -n linphonec
 %defattr(644,root,root,755)
@@ -283,7 +285,7 @@ rm -rf $RPM_BUILD_ROOT
 %files libs
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/liblinphone.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/liblinphone.so.6
+%attr(755,root,root) %ghost %{_libdir}/liblinphone.so.7
 %if %{without system_mediastreamer} || %{without system_ortp}
 %dir %{_libdir}/%{name}
 %endif
@@ -340,6 +342,9 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Fri Jul 24 2015 Liu Di <liudidi@gmail.com> - 3.8.5-6
+- 更新到 3.8.5
+
 * Mon Mar 30 2015 Liu Di <liudidi@gmail.com> - 3.8.0-6
 - 更新到 3.8.0
 

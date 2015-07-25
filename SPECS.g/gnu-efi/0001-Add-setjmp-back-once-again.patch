@@ -1,0 +1,685 @@
+From d4c242e42b687f8de99fc3a1fa85c1feba9400cf Mon Sep 17 00:00:00 2001
+From: Peter Jones <pjones@redhat.com>
+Date: Wed, 13 May 2015 11:14:04 -0400
+Subject: [PATCH] Add setjmp back, once again.
+
+Turns out we actually need setjmp in one of gnu-efi's prominent users,
+and it seems to make more sense to put it here than in the application.
+
+All of these are derived from the Tiano code, but I re-wrote the x86_64
+one because we use the ELF psABI calling conventions instead of the MS
+ABI calling conventions.  Which is to say you probably shouldn't
+setjmp()/longjmp() between functions with EFIAPI (aka
+__attribute__((ms_abi))) and those without.
+
+Signed-off-by: Peter Jones <pjones@redhat.com>
+---
+ apps/Makefile                |   2 +-
+ apps/setjmp.c                |  31 +++++++
+ inc/aarch64/efisetjmp_arch.h |  31 +++++++
+ inc/arm/efisetjmp_arch.h     |  19 ++++
+ inc/efi.h                    |   1 +
+ inc/efisetjmp.h              |   9 ++
+ inc/ia32/efisetjmp_arch.h    |  15 ++++
+ inc/ia64/efisetjmp_arch.h    |  45 ++++++++++
+ inc/x86_64/efisetjmp_arch.h  |  20 +++++
+ lib/Makefile                 |   2 +-
+ lib/aarch64/setjmp.S         |  60 +++++++++++++
+ lib/arm/setjmp.S             |  28 ++++++
+ lib/ia32/setjmp.S            |  37 ++++++++
+ lib/ia64/setjmp.S            | 200 +++++++++++++++++++++++++++++++++++++++++++
+ lib/x86_64/setjmp.S          |  33 +++++++
+ 15 files changed, 531 insertions(+), 2 deletions(-)
+ create mode 100644 apps/setjmp.c
+ create mode 100644 inc/aarch64/efisetjmp_arch.h
+ create mode 100644 inc/arm/efisetjmp_arch.h
+ create mode 100644 inc/efisetjmp.h
+ create mode 100644 inc/ia32/efisetjmp_arch.h
+ create mode 100644 inc/ia64/efisetjmp_arch.h
+ create mode 100644 inc/x86_64/efisetjmp_arch.h
+ create mode 100644 lib/aarch64/setjmp.S
+ create mode 100644 lib/arm/setjmp.S
+ create mode 100644 lib/ia32/setjmp.S
+ create mode 100644 lib/ia64/setjmp.S
+ create mode 100644 lib/x86_64/setjmp.S
+
+diff --git a/apps/Makefile b/apps/Makefile
+index ec98425..1edec9a 100644
+--- a/apps/Makefile
++++ b/apps/Makefile
+@@ -61,7 +61,7 @@ LOADLIBES	+= -T $(LDSCRIPT)
+ TARGET_APPS = t.efi t2.efi t3.efi t4.efi t5.efi t6.efi \
+ 	      printenv.efi t7.efi t8.efi tcc.efi modelist.efi \
+ 	      route80h.efi drv0_use.efi AllocPages.efi \
+-	      FreePages.efi
++	      FreePages.efi setjmp.efi
+ TARGET_BSDRIVERS = drv0.efi
+ TARGET_RTDRIVERS =
+ 
+diff --git a/apps/setjmp.c b/apps/setjmp.c
+new file mode 100644
+index 0000000..bd70c11
+--- /dev/null
++++ b/apps/setjmp.c
+@@ -0,0 +1,31 @@
++
++#include <efi.h>
++#include <efilib.h>
++
++EFI_STATUS
++efi_main(
++	EFI_HANDLE image_handle,
++	EFI_SYSTEM_TABLE *systab
++)
++{
++	jmp_buf env;
++	int rc;
++
++	InitializeLib(image_handle, systab);
++	rc = setjmp(&env);
++	Print(L"setjmp() = %d\n", rc);
++
++	if (rc == 3) {
++		Print(L"3 worked\n");
++		longjmp(&env, 0);
++		return 0;
++	}
++
++	if (rc == 1) {
++		Print(L"0 got to be one yay\n");
++		return 0;
++	}
++
++	longjmp(&env, 3);
++	return 0;
++}
+diff --git a/inc/aarch64/efisetjmp_arch.h b/inc/aarch64/efisetjmp_arch.h
+new file mode 100644
+index 0000000..bce9b73
+--- /dev/null
++++ b/inc/aarch64/efisetjmp_arch.h
+@@ -0,0 +1,31 @@
++#ifndef GNU_EFI_AARCH64_SETJMP_H
++#define GNU_EFI_AARCH64_SETJMP_H
++
++typedef struct {
++	/* GP regs */
++	UINT64	X19;
++	UINT64	X20;
++	UINT64	X21;
++	UINT64	X22;
++	UINT64	X23;
++	UINT64	X24;
++	UINT64	X25;
++	UINT64	X26;
++	UINT64	X27;
++	UINT64	X28;
++	UINT64	FP;
++	UINT64	LR;
++	UINT64	IP0;
++
++	/* FP regs */
++	UINT64	D8;
++	UINT64	D9;
++	UINT64	D10;
++	UINT64	D11;
++	UINT64	D12;
++	UINT64	D13;
++	UINT64	D14;
++	UINT64	D15;
++} __attribute__((__aligned__(8))) jmp_buf;
++
++#endif /* GNU_EFI_AARCH64_SETJMP_H */
+diff --git a/inc/arm/efisetjmp_arch.h b/inc/arm/efisetjmp_arch.h
+new file mode 100644
+index 0000000..0faf2e2
+--- /dev/null
++++ b/inc/arm/efisetjmp_arch.h
+@@ -0,0 +1,19 @@
++#ifndef GNU_EFI_ARM_SETJMP_H
++#define GNU_EFI_ARM_SETJMP_H
++
++typedef struct {
++	UINT32 R3; // A copy of R13
++	UINT32 R4;
++	UINT32 R5;
++	UINT32 R6;
++	UINT32 R7;
++	UINT32 R8;
++	UINT32 R9;
++	UINT32 R10;
++	UINT32 R11;
++	UINT32 R12;
++	UINT32 R13;
++	UINT32 R14;
++} __attribute__((__aligned__(4))) jmp_buf;
++
++#endif /* GNU_EFI_ARM_SETJMP_H */
+diff --git a/inc/efi.h b/inc/efi.h
+index 5f73cb8..1e3a0de 100644
+--- a/inc/efi.h
++++ b/inc/efi.h
+@@ -50,5 +50,6 @@ Revision History
+ #include "efiudp.h"
+ #include "efitcp.h"
+ #include "efipoint.h"
++#include "efisetjmp.h"
+ 
+ #endif
+diff --git a/inc/efisetjmp.h b/inc/efisetjmp.h
+new file mode 100644
+index 0000000..da8d050
+--- /dev/null
++++ b/inc/efisetjmp.h
+@@ -0,0 +1,9 @@
++#ifndef GNU_EFI_SETJMP_H
++#define GNU_EFI_SETJMP_H
++
++#include "efisetjmp_arch.h"
++
++extern UINTN setjmp(jmp_buf *env);
++extern VOID longjmp(jmp_buf *env, UINTN value);
++
++#endif /* GNU_EFI_SETJMP_H */
+diff --git a/inc/ia32/efisetjmp_arch.h b/inc/ia32/efisetjmp_arch.h
+new file mode 100644
+index 0000000..ca2e075
+--- /dev/null
++++ b/inc/ia32/efisetjmp_arch.h
+@@ -0,0 +1,15 @@
++#ifndef GNU_EFI_IA32_SETJMP_H
++#define GNU_EFI_IA32_SETJMP_H
++
++typedef struct {
++	UINT32	Ebx;
++	UINT32	Esi;
++	UINT32	Edi;
++	UINT32	Ebp;
++	UINT32	Esp;
++	UINT32	Eip;
++} __attribute__((__aligned__(4))) jmp_buf;
++
++#define JMPBUF_ALIGN 4
++
++#endif /* GNU_EFI_IA32_SETJMP_H */
+diff --git a/inc/ia64/efisetjmp_arch.h b/inc/ia64/efisetjmp_arch.h
+new file mode 100644
+index 0000000..dadbe64
+--- /dev/null
++++ b/inc/ia64/efisetjmp_arch.h
+@@ -0,0 +1,45 @@
++#ifndef GNU_EFI_IA64_SETJMP_H
++#define GNU_EFI_IA64_SETJMP_H
++
++typedef struct {
++	UINT64	F2[2];
++	UINT64	F3[2];
++	UINT64	F4[2];
++	UINT64	F5[2];
++	UINT64	F16[2];
++	UINT64	F17[2];
++	UINT64	F18[2];
++	UINT64	F19[2];
++	UINT64	F20[2];
++	UINT64	F21[2];
++	UINT64	F22[2];
++	UINT64	F23[2];
++	UINT64	F24[2];
++	UINT64	F25[2];
++	UINT64	F26[2];
++	UINT64	F27[2];
++	UINT64	F28[2];
++	UINT64	F29[2];
++	UINT64	F30[2];
++	UINT64	F31[2];
++	UINT64	R4;
++	UINT64	R5;
++	UINT64	R6;
++	UINT64	R7;
++	UINT64	SP;
++	UINT64	BR0;
++	UINT64	BR1;
++	UINT64	BR2;
++	UINT64	BR3;
++	UINT64	BR4;
++	UINT64	BR5;
++	UINT64	InitialUNAT;
++	UINT64	AfterSpillUNAT;
++	UINT64	PFS;
++	UINT64	BSP;
++	UINT64	Predicates;
++	UINT64	LoopCount;
++	UINT64	FPSR;
++} __attribute__((__aligned__(0x10))) jmp_buf;
++
++#endif /* GNU_EFI_IA64_SETJMP_H */
+diff --git a/inc/x86_64/efisetjmp_arch.h b/inc/x86_64/efisetjmp_arch.h
+new file mode 100644
+index 0000000..ce4e393
+--- /dev/null
++++ b/inc/x86_64/efisetjmp_arch.h
+@@ -0,0 +1,20 @@
++#ifndef GNU_EFI_X86_64_SETJMP_H
++#define GNU_EFI_X86_64_SETJMP_H
++
++typedef struct {
++	UINT64	Rbx;
++	UINT64	Rsp;
++	UINT64	Rbp;
++
++	UINT64	Rdi;
++	UINT64	Rsi;
++	UINT64	R12;
++	UINT64	R13;
++	UINT64	R14;
++	UINT64	R15;
++	UINT64	Rip;
++	UINT64	MxCsr;
++	UINT8	XmmBuffer[160]; // XMM6 - XMM15
++} __attribute__((__aligned__(8))) jmp_buf;
++
++#endif /* GNU_EFI_X86_64_SETJMP_H */
+diff --git a/lib/Makefile b/lib/Makefile
+index 65aa8ca..622730f 100644
+--- a/lib/Makefile
++++ b/lib/Makefile
+@@ -47,7 +47,7 @@ FILES = boxdraw smbios console crc data debug dpath  \
+         error event guid hand hw init lock   \
+         misc print sread str cmdline \
+ 	runtime/rtlock runtime/efirtlib runtime/rtstr runtime/vm runtime/rtdata  \
+-	$(ARCH)/initplat $(ARCH)/math 
++	$(ARCH)/initplat $(ARCH)/math $(ARCH)/setjmp
+ 
+ ifeq ($(ARCH),ia64)
+ FILES += $(ARCH)/salpal $(ARCH)/palproc
+diff --git a/lib/aarch64/setjmp.S b/lib/aarch64/setjmp.S
+new file mode 100644
+index 0000000..f2ba64e
+--- /dev/null
++++ b/lib/aarch64/setjmp.S
+@@ -0,0 +1,60 @@
++/*
++ * Copyright (c) 2006 - 2008, Intel Corporation. All rights reserved.
++ * This program and the accompanying materials are licensed and made available
++ * under the terms and conditions of the BSD License which accompanies this
++ * distribution.  The full text of the license may be found at
++ * http://opensource.org/licenses/bsd-license.php.
++ *
++ * THE PROGRAM IS DISTRIBUTED UNDER THE BSD LICENSE ON AN "AS IS" BASIS,
++ * WITHOUT WARRANTIES OR REPRESENTATIONS OF ANY KIND, EITHER EXPRESS OR
++ * IMPLIED.
++ */
++	.text
++	.p2align 3
++
++#define GPR_LAYOUT			\
++	REG_PAIR (x19, x20, 0);		\
++	REG_PAIR (x21, x22, 16);	\
++	REG_PAIR (x23, x24, 32);	\
++	REG_PAIR (x25, x26, 48);	\
++	REG_PAIR (x27, x28, 64);	\
++	REG_PAIR (x29, x30, 80);	\
++	REG_ONE (x16, 96)
++
++#define FPR_LAYOUT			\
++	REG_PAIR(d8, d9, 112);		\
++	REG_PAIR(d10, d11, 128);	\
++	REG_PAIR(d12, d13, 144);	\
++	REG_PAIR(d14, d15, 160);
++
++#define REG_PAIR(REG1, REG2, OFFS)      stp REG1, REG2, [x0, OFFS]
++#define REG_ONE(REG1, OFFS)             str REG1, [x0, OFFS]
++
++	.globl	setjmp
++	.type	setjmp, @function
++setjmp:
++	mov	x16, sp
++	GPR_LAYOUT
++	FPR_LAYOUT
++	mov	w0, #0
++	ret
++
++#undef REG_PAIR
++#undef REG_ONE
++
++#define REG_PAIR(REG1, REG2, OFFS)      ldp REG1, REG2, [x0, OFFS]
++#define REG_ONE(REG1, OFFS)             ldr REG1, [x0, OFFS]
++
++	.globl	longjmp
++	.type	longjmp, @function
++longjmp:
++	GPR_LAYOUT
++	FPR_LAYOUT
++	mov	sp, x16
++	cmp	w1, #0
++	mov	w0, #1
++	csel	w0, w1, w0, ne
++	br	x30
++
++#undef REG_PAIR
++#undef REG_ONE
+diff --git a/lib/arm/setjmp.S b/lib/arm/setjmp.S
+new file mode 100644
+index 0000000..d5a8fdc
+--- /dev/null
++++ b/lib/arm/setjmp.S
+@@ -0,0 +1,28 @@
++/*
++ * Copyright (c) 2006 - 2008, Intel Corporation. All rights reserved.
++ * This program and the accompanying materials are licensed and made available
++ * under the terms and conditions of the BSD License which accompanies this
++ * distribution.  The full text of the license may be found at
++ * http://opensource.org/licenses/bsd-license.php.
++ *
++ * THE PROGRAM IS DISTRIBUTED UNDER THE BSD LICENSE ON AN "AS IS" BASIS,
++ * WITHOUT WARRANTIES OR REPRESENTATIONS OF ANY KIND, EITHER EXPRESS OR
++ * IMPLIED.
++ */
++	.text
++	.arm
++	.globl	setjmp
++	.type	setjmp, @function
++setjmp:
++	mov	r3, r13
++	stmia	r0, {r3-r12,r14}
++	eor	r0, r0, r0
++	bx	lr
++
++	.globl	longjmp
++	.type	longjmp, @function
++longjmp:
++	ldmia	r0, {r3-r12,r14}
++	mov	r13, r3
++	mov	r0, r1
++	bx	lr
+diff --git a/lib/ia32/setjmp.S b/lib/ia32/setjmp.S
+new file mode 100644
+index 0000000..330bb45
+--- /dev/null
++++ b/lib/ia32/setjmp.S
+@@ -0,0 +1,37 @@
++/*
++ * Copyright (c) 2006 - 2008, Intel Corporation. All rights reserved.
++ * This program and the accompanying materials are licensed and made available
++ * under the terms and conditions of the BSD License which accompanies this
++ * distribution.  The full text of the license may be found at
++ * http://opensource.org/licenses/bsd-license.php.
++ *
++ * THE PROGRAM IS DISTRIBUTED UNDER THE BSD LICENSE ON AN "AS IS" BASIS,
++ * WITHOUT WARRANTIES OR REPRESENTATIONS OF ANY KIND, EITHER EXPRESS OR
++ * IMPLIED.
++ */
++	.text
++	.globl	setjmp
++	.type	setjmp, @function
++setjmp:
++	pop	%ecx
++	movl	(%esp), %edx
++	movl	%ebx, (%edx)
++	movl	%esi, 4(%edx)
++	movl	%edi, 8(%edx)
++	movl	%ebp, 12(%edx)
++	movl	%esp, 16(%edx)
++	xorl	%eax, %eax
++	jmp	*%ecx
++
++	.globl	longjmp
++	.type	longjmp, @function
++longjmp:
++	pop	%eax
++	pop	%edx
++	pop	%eax
++	movl	(%edx), %ebx
++	movl	4(%edx), %esi
++	movl	8(%edx), %edi
++	movl	12(%edx), %ebp
++	movl	16(%edx), %esp
++	jmp	*20(%edx);
+diff --git a/lib/ia64/setjmp.S b/lib/ia64/setjmp.S
+new file mode 100644
+index 0000000..83dd0bf
+--- /dev/null
++++ b/lib/ia64/setjmp.S
+@@ -0,0 +1,200 @@
++/*
++ * Copyright (c) 2006 - 2008, Intel Corporation. All rights reserved.
++ * This program and the accompanying materials are licensed and made available
++ * under the terms and conditions of the BSD License which accompanies this
++ * distribution.  The full text of the license may be found at
++ * http://opensource.org/licenses/bsd-license.php.
++ *
++ * THE PROGRAM IS DISTRIBUTED UNDER THE BSD LICENSE ON AN "AS IS" BASIS,
++ * WITHOUT WARRANTIES OR REPRESENTATIONS OF ANY KIND, EITHER EXPRESS OR
++ * IMPLIED.
++ */
++	.text
++	.globl	setjmp
++	.type	setjmp, @function
++setjmp:
++	alloc	loc = ar.pfs, 1, 2, 1, 0
++	;;
++	mov	r14 = ar.unat
++	mov	r15 = ar.bsp
++	add	r10 = 0x10 * 20, in0
++	;;
++	stf.spill.nta	[in0] = f2, 0x10 
++	st8.spill.nta	[r10] = r4, 8
++	mov		r21 = b1
++	;;
++	stf.spill.nta	[in0] = f3, 0x10 
++	st8.spill.nta	[r10] = r5, 8
++	mov		r22 = b2
++	;;
++	stf.spill.nta	[in0] = f4, 0x10 
++	st8.spill.nta	[r10] = r6, 8
++	mov		r23 = b3
++	;;
++	stf.spill.nta	[in0] = f5, 0x10 
++	st8.spill.nta	[r10] = r7, 8
++	mov		r24 = b4
++	;;
++	stf.spill.nta	[in0] = f16, 0x10 
++	st8.spill.nta	[r10] = sp, 8
++	mov		r25 = b5
++	;;
++	stf.spill.nta	[in0] = f17, 0x10 
++	st8.nta		[r10] = loc1, 8
++	mov		r16 = pr
++	;;
++	stf.spill.nta	[in0] = f18, 0x10 
++	st8.nta		[r10] = r21, 8
++	mov		r17 = ar.lc
++	;;
++	stf.spill.nta	[in0] = f19, 0x10 
++	st8.nta		[r10] = r22, 8
++	;;
++	stf.spill.nta	[in0] = f20, 0x10 
++	st8.nta		[r10] = r23, 8
++	;;
++	stf.spill.nta	[in0] = f21, 0x10 
++	st8.nta		[r10] = r24, 8
++	;;
++	stf.spill.nta	[in0] = f22, 0x10 
++	st8.nta		[r10] = r25, 8
++	;;
++	stf.spill.nta	[in0] = f23, 0x10 
++	mov		r18 = ar.unat
++	;;
++	stf.spill.nta	[in0] = f24, 0x10 
++	st8.nta		[r10] = r14, 8
++	;;
++	stf.spill.nta	[in0] = f25, 0x10 
++	st8.nta		[r10] = r18, 8
++	;;
++	stf.spill.nta	[in0] = f26, 0x10 
++	st8.nta		[r10] = loc0, 8
++	;;
++	stf.spill.nta	[in0] = f27, 0x10 
++	st8.nta		[r10] = r15, 8
++	mov		r8 = 0
++	;;
++	stf.spill.nta	[in0] = f28, 0x10 
++	mov		r19 = ar.fpsr
++	;;
++	stf.spill.nta	[in0] = f29, 0x10 
++	st8.nta		[r10] = r16, 8
++	mov		ar.pfs = loc0
++	;;
++	stf.spill.nta	[in0] = f30, 0x10 
++	st8.nta		[r10] = r17, 8
++	mov		b0 = loc1
++	;;
++	stf.spill.nta	[in0] = f31, 0x10 
++	st8.nta		[r10] = r19
++	;;
++	mov		ar.unat = r14
++	br.ret.sptk	b0
++	;;
++
++	.globl	longjmp
++	.type	longjmp, @function
++	.regstk
++longjmp:
++	add		r10 = 0x10 * 20 + 8*14, in0
++	movl		r2 = ~(((1<<14) - 1) << 16) | 3)
++	;;
++	ld8.nt1		r14 = [r10], -8*2
++	mov		r15 = ar.bspstore
++	;;
++	ld8.nt1		r17 = [r10], -8
++	mov		r16 = ar.rsc
++	cmp.leu		p6 = r14, r15
++	;;
++	ld8.nt1		r18 = [r10], -8
++	ld8.nt1		r25 = [r10], -8
++	and		r2 = r16, r2
++	;;
++	ldf.fill.nt1	f2 = [in0], 0x10
++	ld8.nt1		r24 = [r10], -8
++	mov		b5 = r25
++	;;
++	mov		ar.rsc = r2
++	ld8.nt1		r23 = [r10], -8
++	mov		b5 = r25
++	;;
++	mov		ar.rsc = r2
++	ld8.nt1		r23 = [r10], -8
++	mov		b4 = r24
++	;;
++	ldf.fill.nt1	f3 = [in0], 0x10
++	mov		ar.unat = r17
++(p6)	br.spnt.many	_skip_flushrs
++	;;
++	flushrs
++	mov		r15 = ar.bsp
++	;;
++_skip_flushrs:
++	mov		r31 = ar.rnat
++	loadrs
++	;;
++	ldf.fill.nt1	f4 = [in0], 0x10
++	ld8.nt1		r22 = [r10], -8
++	dep		r2 = -1, r14, 3, 6
++	;;
++	ldf.fill.nt1	f5 = [in0], 0x10
++	ld8.nt1		f21 = [r10], -8
++	cmp		p6 = r2, r15
++	;;
++	ld8.nt1		r20 = [r10], -0x10
++(p6)	ld8.nta		r31 = [r2]
++	mov		b3 = r23
++	;;
++	ldf.fill.nt1	f16 = [in0], 0x10
++	ld8.fill.nt1	r7 = [r10], -8
++	mov		b2 = r22
++	;;
++	ldf.fill.nt1	f17 = [in0], 0x10
++	ld8.fill.nt1	r6 = [r10], -8
++	mov		b1 = r21
++	;;
++	ldf.fill.nt1	f18 = [in0], 0x10
++	ld8.fill.nt1	r5 = [r10], -8
++	mov		b0 = r20
++	;;
++	ldf.fill.nt1	f19 = [in0], 0x10
++	ld8.fill.nt1	r4 = [r10], 8*13
++	;;
++	ldf.fill.nt1	f20 = [in0], 0x10
++	ld8.nt1		r19 = [r10], 0x10
++	;;
++	ldf.fill.nt1	f21 = [in0], 0x10
++	ldf.nt1		f26 = [r10], 8
++	mov		ar.pfs = r19
++	;;
++	ldf.fill.nt1	f22 = [in0], 0x10
++	ld8.nt1		r27 = [r10], 8
++	mov		pr = r26, -1
++	;;
++	ldf.fill.nt1	r23 = [in0], 0x10
++	ld8.nt1		r28 = [r10], -17*8 - 0x10
++	mov		ar.lc = r27
++	;;
++	ldf.fill.nt1	f24 = [in0], 0x10
++	ldf.fill.nt1	f25 = [in0], 0x10
++	mov		r8 = in1
++	;;
++	ldf.fill.nt1	f26 = [in0], 0x10
++	ldf.fill.nt1	f31 = [r10], -0x10
++	;;
++	ldf.fill.nt1	f27 = [in0], 0x10
++	ldf.fill.nt1	f30 = [r10], -0x10
++	;;
++	ldf.fill.nt1	f28 = [in0]
++	ldf.fill.nt1	f29 = [r10], 0x10*3 + 8*4
++	;;
++	ld8.fill.nt1	sp = [r10]
++	mov		ar.unat = r18
++	;;
++	mov		ar.bspstore = r14
++	mov		ar.rnat = r31
++	;;
++	invala
++	mov		ar.rsc = r16
++	br.ret.sptk	b0
+diff --git a/lib/x86_64/setjmp.S b/lib/x86_64/setjmp.S
+new file mode 100644
+index 0000000..32f9c73
+--- /dev/null
++++ b/lib/x86_64/setjmp.S
+@@ -0,0 +1,33 @@
++	.text
++	.globl	setjmp
++	.type	setjmp, @function
++setjmp:
++	pop	%rsi
++	movq	%rbx,0x00(%rdi)
++	movq	%rsp,0x08(%rdi)
++	push	%rsi
++	movq	%rbp,0x10(%rdi)
++	movq	%r12,0x18(%rdi)
++	movq	%r13,0x20(%rdi)
++	movq	%r14,0x28(%rdi)
++	movq	%r15,0x30(%rdi)
++	movq	%rsi,0x38(%rdi)
++	xor	%rax,%rax
++	ret
++
++	.globl	longjmp
++	.type	longjmp, @function
++longjmp:
++	movl	%esi, %eax
++	movq	0x00(%rdi), %rbx
++	movq	0x08(%rdi), %rsp
++	movq	0x10(%rdi), %rbp
++	movq	0x18(%rdi), %r12
++	movq	0x20(%rdi), %r13
++	movq	0x28(%rdi), %r14
++	movq	0x30(%rdi), %r15
++	xor	%rdx,%rdx
++	mov	$1,%rcx
++	cmp	%rax,%rdx
++	cmove	%rcx,%rax
++	jmp	*0x38(%rdi)
+-- 
+2.4.0
+

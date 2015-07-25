@@ -14,10 +14,12 @@
 
 Name:		po-debconf
 Version:	1.0.16
-Release:	3%{release_posttag}%{?dist}
+Release:	4%{release_posttag}%{?dist}
 Summary:	Tool for managing templates file translations with gettext
+Summary(zh_CN.UTF-8):管理 gettext 使用的模板文件翻译的工具
 
 Group:		Development/Tools
+Group(zh_CN.UTF-8): 开发/工具
 License:	GPLv2+
 URL:		http://packages.debian.org/sid/po-debconf
 Source0:	http://ftp.de.debian.org/debian/pool/main/p/%{name}/%{name}_%{version}%{tarball_posttag}.tar.gz
@@ -50,6 +52,9 @@ Requires:	perl(Mail::Box::Manager)
 This package is an alternative to debconf-utils, and provides
 tools for managing translated debconf templates files with
 common gettext utilities.
+
+%description -l zh_CN.UTF-8
+管理 gettext 使用的模板文件翻译的工具。
 
 %prep
 %setup -q -n %{name}-%{version}%{tarball_posttag}
@@ -91,7 +96,7 @@ done
 install -pm 644 encodings %{buildroot}/%{_datadir}/%{name}
 install -pm 644 pot-header %{buildroot}/%{_datadir}/%{name}/
 cp -a podebconf-report-po_templates/ %{buildroot}/%{_datadir}/%{name}/templates
-
+magic_rpm_clean.sh
 %find_lang po-debconf --without-mo --with-man --all-name
 
 %clean
@@ -109,6 +114,9 @@ rm -rf %{buildroot}
 %{_datadir}/%{name}
 
 %changelog
+* Fri Jul 24 2015 Liu Di <liudidi@gmail.com> - 1.0.16-4.nmu2
+- 为 Magic 3.0 重建
+
 * Wed Aug 07 2013 Oron Peled <oron@actcom.co.il> - 1.0.16-3.nmu2
 - Fixed build dependency
 - Fix FTBFS in rawhide - bug #992741

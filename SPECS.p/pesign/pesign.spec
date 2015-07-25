@@ -1,8 +1,10 @@
 Summary: Signing utility for UEFI binaries
+Summary(zh_CN.UTF-8): UEFI 二进制签名工具
 Name: pesign
 Version: 0.108
 Release: 4%{?dist}
 Group: Development/System
+Group(zh_CN.UTF-8): 开发/系统
 License: GPLv2
 URL: https://github.com/vathpela/pesign
 BuildRequires: git nspr nss nss-util popt-devel
@@ -26,6 +28,9 @@ Patch0001: 0001-Don-t-set-SO_PASSCRED.patch
 %description
 This package contains the pesign utility for signing UEFI binaries as
 well as other associated tools.
+
+%description -l zh_CN.UTF-8
+UEFI 二进制签名工具。
 
 %prep
 %setup -q -a 1
@@ -58,6 +63,7 @@ mv rh-test-certs/etc/pki/pesign/* %{buildroot}/etc/pki/pesign/
 #	-libfile %{_libdir}/pkcs11/libcoolkeypk11.so
 modutil -force -dbdir %{buildroot}/etc/pki/pesign -add opensc \
 	-libfile %{_libdir}/pkcs11/opensc-pkcs11.so
+magic_rpm_clean.sh
 
 %clean
 rm -rf %{buildroot}

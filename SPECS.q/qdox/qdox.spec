@@ -3,7 +3,7 @@
 Summary:        Extract class/interface/method definitions from sources
 Name:           qdox
 Version:        2.0
-Release:        0.4.%{vertag}%{?dist}
+Release:        0.5.%{vertag}%{?dist}
 Epoch:          0
 License:        ASL 2.0
 URL:            https://github.com/paul-hammant/qdox
@@ -78,6 +78,9 @@ zip -u target/%{name}-%{version}.jar META-INF/MANIFEST.MF
 %doc LICENSE.txt
 
 %changelog
+* Fri Jul 24 2015 Liu Di <liudidi@gmail.com> - 0:2.0-0.5.M3
+- 为 Magic 3.0 重建
+
 * Mon Jun 22 2015 Mikolaj Izdebski <mizdebsk@redhat.com> - 0:2.0-0.4.M3
 - Update to upstream version 2.0-M3
 

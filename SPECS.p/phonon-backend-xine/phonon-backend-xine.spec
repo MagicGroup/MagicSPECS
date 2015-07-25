@@ -8,7 +8,7 @@ Summary(zh_CN.UTF-8): Phonon 的 XINE 后端
 Version: 4.4.4
 Release: 1%{?dist}
 URL: http://www.videolan.org/
-Source: ftp://ftp.kde.org/pub/kde/stable/%{real_name}/%{version}/src/%{real_name}-%{version}.tar.bz2
+Source: http://download.kde.org/stable/phonon/%{real_name}/%{version}/src/%{real_name}-%{version}.tar.bz2
 Patch:  	phonon-backend-xine-4.4.4-new.patch
 License: LGPL v2+
 Group: System/Libraries

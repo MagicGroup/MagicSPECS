@@ -29,9 +29,10 @@
 #
 
 Summary:	Parser Generator with Java Extension
+Summary(zh_CN.UTF-8): 解析器的 JAVA 扩展
 Name:		byaccj
 Version:	1.15
-Release:	11%{?dist}
+Release:	12%{?dist}
 Epoch:		0
 License:	Public Domain
 URL:		http://byaccj.sourceforge.net/
@@ -49,6 +50,9 @@ C/C++ parsers. I have added a "-J" flag which will cause BYACC to
 generate Java source code, instead. So there finally is a YACC for 
 Java now! 
 
+%description -l zh_CN.UTF-8
+YACC 兼容的解析器的 JAVA 扩展。
+
 %prep
 %setup -q -n %{name}%{version}
 chmod -c -x src/* docs/*
@@ -64,12 +68,16 @@ popd
 mkdir -p %{buildroot}%{_bindir}
 cp -p src/yacc.linux \
   %{buildroot}%{_bindir}/%{name}
+magic_rpm_clean.sh
 
 %files
 %doc docs/* src/README
 %attr(755, root, root) %{_bindir}/%{name}
 
 %changelog
+* Fri Jul 24 2015 Liu Di <liudidi@gmail.com> - 0:1.15-12
+- 为 Magic 3.0 重建
+
 * Tue Jun 23 2015 Mikolaj Izdebski <mizdebsk@redhat.com> - 0:1.15-11
 - Don't install bogus manpage
 

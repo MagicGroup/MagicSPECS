@@ -1,6 +1,6 @@
 Name: uClibc
 Version: 0.9.33.2
-Release: 6%{?dist}
+Release: 7%{?dist}
 Summary: C library for embedded Linux
 
 Group: Development/Libraries
@@ -86,6 +86,9 @@ rm -rf  $RPM_BUILD_ROOT/include/
 %{_libdir}/uClibc
 
 %changelog
+* Tue Jun 30 2015 Liu Di <liudidi@gmail.com> - 0.9.33.2-7
+- 为 Magic 3.0 重建
+
 * Mon Aug 18 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.9.33.2-6
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
 

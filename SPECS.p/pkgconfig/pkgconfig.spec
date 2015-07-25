@@ -1,8 +1,8 @@
 Summary: A tool for determining compilation options
 Summary(zh_CN.UTF-8): 决定编译选项的工具
 Name: pkgconfig
-Version: 0.25
-Release: 3%{?dist}
+Version:	0.28
+Release:	1%{?dist}
 Epoch: 1
 License: GPLv2+
 URL: http://pkgconfig.freedesktop.org
@@ -12,13 +12,12 @@ Source:  http://www.freedesktop.org/software/pkgconfig/releases/pkg-config-%{ver
 BuildRequires: glib2-devel
 BuildRequires: popt-devel
 
-# don't call out to glib-config, since our glib-config is a pkg-config wrapper
-Patch2:  pkg-config-0.21-compat-loop.patch
-# https://bugs.freedesktop.org/show_bug.cgi?id=16095
-Patch3: pkg-config-lib64-excludes.patch
-# workaround for breakage with autoconf 2.66
-# https://bugzilla.redhat.com/show_bug.cgi?id=611781
-Patch4: pkg-config-dnl.patch
+# https://bugs.freedesktop.org/show_bug.cgi?id=66155
+Patch0: pkg-config-man-cleanup.patch
+
+# https://bugzilla.redhat.com/show_bug.cgi?id=1212956
+Patch1: pkg-config-large-fs.patch
+
 
 Provides: pkgconfig(pkg-config) = %{version}
 
@@ -33,9 +32,8 @@ pkgconfig 工具决定编译选项。它为每一个需要的库读取配置文�
 
 %prep
 %setup -n pkg-config-%{version} -q
-%patch2 -p1 -b .compat-loop
-%patch3 -p0 -b .lib64
-%patch4 -p1 -R -b .dnl
+%patch0 -p1 -b .man-cleanup
+%patch1 -p1 -b .lfs
 
 %build
 %configure \
@@ -63,6 +61,9 @@ rm -rf $RPM_BUILD_ROOT%{_datadir}/doc/pkg-config
 %{_datadir}/aclocal/*
 
 %changelog
+* Fri Jul 24 2015 Liu Di <liudidi@gmail.com> - 1:0.28-1
+- 更新到 0.28
+
 * Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 1:0.25-3
 - 为 Magic 3.0 重建
 

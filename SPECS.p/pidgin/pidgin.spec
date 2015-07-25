@@ -131,7 +131,7 @@
 
 Name:           pidgin
 Version:        2.10.11
-Release:        14%{?dist}
+Release:        16%{?dist}
 License:        GPLv2+ and GPLv2 and MIT
 # GPLv2+ - libpurple, gnt, finch, pidgin, most prpls
 # GPLv2 - silc & novell prpls
@@ -311,7 +311,7 @@ BuildRequires:  farsight2-devel
 %endif
 Requires:       gstreamer%{?gst1}-plugins-good
 %if 0%{?fedora} >= 12
-Requires:       gstreamer%{?gst1}-plugins-bad-free
+Requires:       gstreamer%{?gst1}-plugins-bad
 %endif
 %endif
 # libidn punycode domain support (F11+)
@@ -845,6 +845,12 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Tue Jul 14 2015 Liu Di <liudidi@gmail.com> - 2.10.11-16
+- 为 Magic 3.0 重建
+
+* Mon Jul 13 2015 Liu Di <liudidi@gmail.com> - 2.10.11-15
+- 为 Magic 3.0 重建
+
 * Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.10.11-14
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

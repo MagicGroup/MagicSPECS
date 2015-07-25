@@ -1,7 +1,8 @@
 Name:           p11-kit
-Version:        0.20.2
-Release:        2%{?dist}
+Version:	0.23.1
+Release:	1%{?dist}
 Summary:        Library for loading and sharing PKCS#11 modules
+Summary(zh_CN.UTF-8): 载入和共享 PKCS#11 模块的库
 
 License:        BSD
 URL:            http://p11-glue.freedesktop.org/p11-kit.html
@@ -17,18 +18,24 @@ p11-kit provides a way to load and enumerate PKCS#11 modules, as well
 as a standard configuration setup for installing PKCS#11 modules in
 such a way that they're discoverable.
 
+%description -l zh_CN.UTF-8
+载入和共享 PKCS#11 模块的库。
 
 %package devel
 Summary:        Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Requires:       %{name}%{?_isa} = %{version}-%{release}
 
 %description devel
 The %{name}-devel package contains libraries and header files for
 developing applications that use %{name}.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %package trust
 Summary:        System trust module from %{name}
+Summary(zh_CN.UTF-8): %{name} 的系统信任模块
 Requires:       %{name}%{?_isa} = %{version}-%{release}
 Requires(post):   %{_sbindir}/update-alternatives
 Requires(postun): %{_sbindir}/update-alternatives
@@ -38,6 +45,8 @@ Conflicts:        nss < 3.14.3-9
 The %{name}-trust package contains a system trust PKCS#11 module which
 contains certificate anchors and black lists.
 
+%description trust -l zh_CN.UTF-8
+%{name} 的系统信任模块
 
 # solution taken from icedtea-web.spec
 %define multilib_arches ppc64 sparc64 x86_64 ppc64le
@@ -65,6 +74,7 @@ rm -f $RPM_BUILD_ROOT%{_libdir}/pkcs11/*.la
 install -p -m 755 %{SOURCE1} $RPM_BUILD_ROOT%{_libdir}/p11-kit/
 # Install the example conf with %%doc instead
 rm $RPM_BUILD_ROOT%{_sysconfdir}/pkcs11/pkcs11.conf.example
+magic_rpm_clean.sh
 
 %check
 make check
@@ -96,9 +106,11 @@ fi
 %{_bindir}/p11-kit
 %{_libdir}/libp11-kit.so.*
 %{_libdir}/p11-kit-proxy.so
+%{_libdir}/p11-kit/p11-kit-remote
 %{_mandir}/man1/trust.1.gz
 %{_mandir}/man8/p11-kit.8.gz
 %{_mandir}/man5/pkcs11.conf.5.gz
+
 
 %files devel
 %{_includedir}/p11-kit-1/
@@ -113,8 +125,10 @@ fi
 %{_datadir}/p11-kit/modules/p11-kit-trust.module
 %{_libdir}/p11-kit/trust-extract-compat
 
-
 %changelog
+* Wed Jul 01 2015 Liu Di <liudidi@gmail.com> - 0.23.1-1
+- 更新到 0.23.1
+
 * Sat Jan 25 2014 Ville Skyttä <ville.skytta@iki.fi> - 0.20.2-2
 - Own the %%{_libdir}/pkcs11 dir in -trust.
 

@@ -1,5 +1,5 @@
 Name:           libnice
-Version: 0.1.7
+Version: 0.1.13
 Release:        1%{?dist}
 Summary:        GLib ICE implementation
 Summary(zh_CN.UTF-8): GLib ICE 实现 
@@ -90,9 +90,13 @@ magic_rpm_clean.sh
 %{_libdir}/*.so
 %{_libdir}/pkgconfig/nice.pc
 %{_datadir}/gtk-doc/html/%{name}/
-
+%{_libdir}/girepository-1.0/Nice-0.1.typelib
+%{_datadir}/gir-1.0/Nice-0.1.gir
 
 %changelog
+* Mon Jul 13 2015 Liu Di <liudidi@gmail.com> - 0.1.13-1
+- 更新到 0.1.13
+
 * Tue Jul 22 2014 Liu Di <liudidi@gmail.com> - 0.1.7-1
 - 更新到 0.1.7
 

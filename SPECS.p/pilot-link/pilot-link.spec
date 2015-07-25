@@ -20,12 +20,16 @@ Source5: 60-pilot.perms
 Source6: 69-pilot-link.rules
 
 ExcludeArch: s390 s390x
-Patch4: pilot-link-0.12.1-var.patch
-Patch6: pilot-link-0.12.2-open.patch
-Patch10: pilot-link-0.12.3-clio.patch
-Patch11: pilot-link-0.12.5-mp.patch
-Patch12: pilot-link-0.12.5-redefinePerlsymbols.patch
-Patch13: pilot-link-0.12.5-compiler_warnings.patch
+Patch0: pilot-link-0.12.1-var.patch
+Patch1: pilot-link-0.12.2-open.patch
+Patch2: pilot-link-0.12.3-clio.patch
+Patch3: pilot-link-0.12.5-mp.patch
+Patch4: pilot-link-0.12.5-redefinePerlsymbols.patch
+Patch5: pilot-link-0.12.5-compiler_warnings.patch
+Patch6: pilot-link-0.12.5-ftbfs-f19.patch
+Patch7: pilot-link-0.12.5-aarch64.patch
+Patch8: pilot-link-0.12.5-ftbfs-f21.patch
+
 
 Requires: pilot-link-libs = %{epoch}:%{version}-%{release}
 
@@ -86,12 +90,15 @@ Libraries for applications communicating with PalmPilot
 
 %prep
 %setup -q
-%patch4 -p1 -b .var
-%patch6 -p1 -b .open
-%patch10 -p1 -b .clio
-%patch11 -p1 -b .mp
-%patch12 -p1 -b .symbol
-%patch13 -p1 -b .compiler
+%patch0 -p1 -b .var
+%patch1 -p1 -b .open
+%patch2 -p1 -b .clio
+%patch3 -p1 -b .mp
+%patch4 -p1 -b .symbol
+%patch5 -p1 -b .compiler
+%patch6 -p1 -b .ftbfs-f19
+%patch7 -p1 -b .aarch64
+%patch8 -p1 -b .ftbfs-f21
 iconv -f windows-1252 -t UTF8 doc/README.usb > doc/README.usb.aux
 mv doc/README.usb.aux doc/README.usb
 iconv -f windows-1252 -t UTF8 ChangeLog > ChangeLog.aux

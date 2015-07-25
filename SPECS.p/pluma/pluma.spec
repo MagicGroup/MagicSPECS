@@ -15,9 +15,9 @@
 Summary:  Text editor for the MATE desktop
 Summary(zh_CN.UTF-8): MATE 桌面的文本编辑器
 Name:     pluma
-Version:  1.9.0
-Release:  2%{?dist}
-#Release:  0.1%{?git_rel}%{?dist}
+Version: 1.10.2
+Release: 1%{?dist}
+#Release: 1%{?dist}
 License:  GPLv2+ and LGPLv2+
 Group:    Applications/Editors
 Group(zh_CN.UTF-8): 应用程序/编辑器
@@ -179,6 +179,7 @@ fi
 %{_datadir}/glib-2.0/schemas/org.mate.pluma.gschema.xml
 %{_datadir}/glib-2.0/schemas/org.mate.pluma.plugins.filebrowser.gschema.xml
 %{_datadir}/glib-2.0/schemas/org.mate.pluma.plugins.time.gschema.xml
+%{_datadir}/appdata/pluma.appdata.xml
 
 %files data -f %{name}.lang
 %doc README COPYING AUTHORS
@@ -190,8 +191,10 @@ fi
 %{_libdir}/pkgconfig/pluma.pc
 %{_datadir}/gtk-doc/html/pluma/
 
-
 %changelog
+* Fri Jul 24 2015 Liu Di <liudidi@gmail.com> - 1.10.2-1
+- 更新到 1.10.2
+
 * Mon Aug 11 2014 Liu Di <liudidi@gmail.com> - 1.9.0-2
 - 为 Magic 3.0 重建
 

@@ -1,7 +1,8 @@
 Name:           plexus-containers
 Version:        1.6
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        Containers for Plexus
+Summary(zh_CN.UTF-8): Plexus 的容器
 License:        ASL 2.0 and MIT
 URL:            https://github.com/codehaus-plexus/plexus-containers
 BuildArch:      noarch
@@ -134,6 +135,9 @@ sed -i "s|<version>2.3</version>|<version> %{javadoc_plugin_version}</version>|"
 %files javadoc -f .mfiles-javadoc
 
 %changelog
+* Fri Jul 24 2015 Liu Di <liudidi@gmail.com> - 1.6-5
+- 为 Magic 3.0 重建
+
 * Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.6-4
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

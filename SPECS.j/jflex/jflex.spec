@@ -1,7 +1,8 @@
 Summary:        Fast Scanner Generator
+Summary(zh_CN.UTF-8): 快速扫描器生成器
 Name:           jflex
 Version:        1.6.1
-Release:        2%{?dist}
+Release:        3%{?dist}
 License:        BSD
 URL:            http://jflex.de/
 BuildArch:      noarch
@@ -34,11 +35,18 @@ modification of Berkeley Yacc BYacc/J by Bob Jamison.  It can also be
 used together with other parser generators like ANTLR or as a
 standalone tool.
 
+%description -l zh_CN.UTF-8
+快速扫描器生成器。
+
 %package javadoc
 Summary:        API documentation for %{name}
+Summary(zh_CN.UTF-8): %{name} 的 API 文档
 
 %description javadoc
 This package provides %{summary}.
+
+%description javadoc -l zh_CN.UTF-8
+%{name} 的 API 文档。
 
 %prep
 %setup -q
@@ -80,6 +88,7 @@ install -p -m 644 %{SOURCE3} %{buildroot}%{_datadir}/pixmaps/%{name}.png
 # Emacs files
 install -p -m 644 lib/jflex-mode.el %{buildroot}%{_emacs_sitelispdir}/%{name}
 install -p -m 644 lib/jflex-mode.elc %{buildroot}%{_emacs_sitelispdir}/%{name}
+magic_rpm_clean.sh
 
 %files -f .mfiles
 %doc doc
@@ -96,6 +105,9 @@ install -p -m 644 lib/jflex-mode.elc %{buildroot}%{_emacs_sitelispdir}/%{name}
 
 
 %changelog
+* Fri Jul 24 2015 Liu Di <liudidi@gmail.com> - 1.6.1-3
+- 为 Magic 3.0 重建
+
 * Wed Jun 17 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.6.1-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

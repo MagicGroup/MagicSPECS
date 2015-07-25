@@ -1,30 +1,42 @@
 Name:           efivar
 Version:        0.20
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Tools to manage UEFI variables
+Summary(zh_CN.UTF-8): 管理 UEFI 变量的工具
 License:        LGPLv2.1
 URL:            https://github.com/rhinstaller/efivar
 Requires:       %{name}-libs = %{version}-%{release}
 ExclusiveArch:	%{ix86} x86_64 aarch64
 
 BuildRequires:  popt-devel git
-Source0:        https://github.com/rhinstaller/efivar/releases/download/efivar-%{version}/efivar-%{version}.tar.bz2
+Source0:        https://github.com/rhinstaller/efivar/releases/download/%{version}/efivar-%{version}.tar.bz2
 
 %description
 efivar provides a simple command line interface to the UEFI variable facility.
 
+%description -l zh_CN.UTF-8
+管理 UEFI 变量的工具。
+
 %package libs
 Summary: Library to manage UEFI variables
+Summary(zh_CN.UTF-8): %{name} 的运行库
 
 %description libs
 Library to allow for the simple manipulation of UEFI variables.
 
+%description libs -l zh_CN.UTF-8
+%{name} 的运行库。
+
 %package devel
 Summary: Development headers for libefivar
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Requires: %{name}-libs = %{version}-%{release}
 
 %description devel
 development headers required to use libefivar.
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q -n %{name}-%{version}
@@ -43,6 +55,7 @@ make libdir=%{_libdir} bindir=%{_bindir} OPT_FLAGS="$RPM_OPT_FLAGS"
 %install
 rm -rf $RPM_BUILD_ROOT
 %makeinstall
+magic_rpm_clean.sh
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -68,6 +81,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/*.so.*
 
 %changelog
+* Tue Jun 30 2015 Liu Di <liudidi@gmail.com> - 0.20-2
+- 为 Magic 3.0 重建
+
 * Tue Jun 02 2015 Peter Jones <pjones@redhat.com> - 0.20-1
 - Update to 0.20
 - Make sure tester is build with the right link order for libraries.

@@ -57,16 +57,16 @@
 %global db_devel  libdb-devel
 %endif
 
-%global rcver  RC1
+#global rcver  RC1 
 %global rpmrel 1
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: php
 Version: 5.6.10
 %if 0%{?rcver:1}
-Release: 0.%{rpmrel}.%{rcver}%{?dist}
+Release: 0.%{rpmrel}.%{rcver}%{?dist}.2
 %else
-Release: %{rpmrel}%{?dist}
+Release: %{rpmrel}%{?dist}.2
 %endif
 # All files licensed under PHP version 3.01, except
 # Zend is licensed under Zend
@@ -78,7 +78,8 @@ URL: http://www.php.net/
 # Need to download official tarball and strip non-free stuff
 # wget http://www.php.net/distributions/php-%{version}%{?rcver}.tar.xz
 # ./strip.sh %{version}
-Source0: php-%{version}%{?rcver}-strip.tar.xz
+Source0: http://cn2.php.net/distributions/php-%{version}%{?rcver}.tar.xz
+#Source0: php-%{version}%{?rcver}-strip.tar.xz
 Source1: php.conf
 Source2: php.ini
 Source3: macros.php
@@ -1335,6 +1336,10 @@ rm -rf $RPM_BUILD_ROOT%{_libdir}/php/modules/*.a \
 # Remove irrelevant docs
 rm -f README.{Zeus,QNX,CVS-RULES}
 
+# 删除与 php-pecl-jsonc 冲突文件
+rm -f $RPM_BUILD_ROOT%{_includedir}/php-zts/php/ext/json/php_json.h
+rm -f $RPM_BUILD_ROOT%{_includedir}/php/ext/json/php_json.h 
+magic_rpm_clean.sh
 
 %post fpm
 %systemd_post php-fpm.service
@@ -1480,6 +1485,12 @@ rm -f README.{Zeus,QNX,CVS-RULES}
 
 
 %changelog
+* Fri Jul 03 2015 Liu Di <liudidi@gmail.com> - 5.6.10-1.2
+- 为 Magic 3.0 重建
+
+* Wed Jul 01 2015 Liu Di <liudidi@gmail.com>
+- 为 Magic 3.0 重建
+
 * Thu May 28 2015 Remi Collet <remi@fedoraproject.org> 5.6.10-0.1.RC1
 - update to 5.6.10RC1
 - opcache is now 7.0.6-dev

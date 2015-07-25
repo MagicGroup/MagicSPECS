@@ -1,5 +1,5 @@
 Name:           ortp
-Version:	0.24.0
+Version:	0.24.2
 Release:        1%{?dist}
 Summary:        A C library implementing the RTP protocol (RFC3550)
 Summary(zh_CN.UTF-8): RTP 协议的 C 库实现
@@ -94,6 +94,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_docdir}/*
 
 %changelog
+* Sat Jul 25 2015 Liu Di <liudidi@gmail.com> - 1:0.24.2-1
+- 更新到 0.24.2
+
 * Tue Mar 31 2015 Liu Di <liudidi@gmail.com> - 1:0.24.0-1
 - 更新到 0.24.0
 

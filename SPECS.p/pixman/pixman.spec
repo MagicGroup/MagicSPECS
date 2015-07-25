@@ -2,8 +2,8 @@
 %define gitrev 8ff7213f39edc1b2b8b60d6b0cc5d5f14ca1928d
 
 Name:           pixman
-Version:        0.30.0
-Release:        1%{?dist}
+Version:	0.32.6
+Release:	1%{?dist}
 Summary:        Pixel manipulation library
 
 Group:          System Environment/Libraries
@@ -62,6 +62,9 @@ rm -f $RPM_BUILD_ROOT%{_libdir}/*.la
 %{_libdir}/pkgconfig/pixman-1.pc
 
 %changelog
+* Thu Jul 23 2015 Liu Di <liudidi@gmail.com> - 0.32.6-1
+- 更新到 0.32.6
+
 * Wed May 8 2013 Soren Sandmann <ssp@redhat.com> 0.30.0-1
 - pixman 0.30.0
 

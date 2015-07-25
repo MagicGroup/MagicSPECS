@@ -1,0 +1,51 @@
+diff -ur belle-sip-1.4.1.orig/configure belle-sip-1.4.1/configure
+--- belle-sip-1.4.1.orig/configure	2015-07-24 14:01:58.402756858 +0000
++++ belle-sip-1.4.1/configure	2015-07-24 14:03:37.218754325 +0000
+@@ -16973,7 +16973,7 @@
+ 	POLARSSL_LIBS="-L${polarssl_prefix}/lib"
+ fi
+ 
+-POLARSSL_LIBS="$POLARSSL_LIBS -lpolarssl"
++POLARSSL_LIBS="$POLARSSL_LIBS -lmbedtls"
+ found_polarssl=no
+ 
+ if test "$use_tls" = "true" ; then
+@@ -17010,7 +17010,7 @@
+ _ACEOF
+ if ac_fn_c_try_link "$LINENO"; then :
+   found_polarssl=yes
+-			POLARSSL_LIBS=" -lpolarssl"
++			POLARSSL_LIBS=" -lmbedtls"
+ 			{ $as_echo "$as_me:${as_lineno-$LINENO}: polarssl usable" >&5
+ $as_echo "$as_me: polarssl usable" >&6;}
+ 
+diff -ur belle-sip-1.4.1.orig/configure.ac belle-sip-1.4.1/configure.ac
+--- belle-sip-1.4.1.orig/configure.ac	2015-07-24 14:01:58.397756858 +0000
++++ belle-sip-1.4.1/configure.ac	2015-07-24 14:05:48.711750955 +0000
+@@ -221,7 +221,7 @@
+ 	if test $JAVA = "no" ; then
+ 		AC_MSG_ERROR([Could not find java prog. Please install java ])
+ 	else
+-		ANTLR="$JAVA -Xmx256m -jar $antlr_jar"
++		ANTLR="$JAVA -Xmx1024m -jar $antlr_jar"
+ 	fi
+ fi
+ AC_SUBST(ANTLR_CFLAGS)
+@@ -244,7 +244,7 @@
+ 	POLARSSL_LIBS="-L${polarssl_prefix}/lib"
+ fi
+ 
+-POLARSSL_LIBS="$POLARSSL_LIBS -lpolarssl"
++POLARSSL_LIBS="$POLARSSL_LIBS -lmbedtls"
+ found_polarssl=no
+ 
+ if test "$use_tls" = "true" ; then
+@@ -264,7 +264,7 @@
+ 			]],
+                       	[[x509parse_crtpath(0,0)]])]
+ 			,[found_polarssl=yes
+-			POLARSSL_LIBS=" -lpolarssl"
++			POLARSSL_LIBS=" -lmbedtls"
+ 			AC_MSG_NOTICE([polarssl usable])]
+ 			,[AC_MSG_ERROR([polarssl not found or usable but TLS support required.])])
+ 

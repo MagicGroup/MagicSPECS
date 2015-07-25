@@ -1,6 +1,6 @@
 Name:           belle-sip
-Version:        1.4.0
-Release:        7%{?dist}
+Version:	1.4.1
+Release:	2%{?dist}
 Summary:        Linphone SIP stack
 Summary(zh_CN.UTF-8): Linphone 的 SIP 协议栈
 License:        GPLv2+
@@ -8,7 +8,7 @@ URL:            http://www.linphone.org/
 Source0:        http://download.savannah.gnu.org/releases/linphone/belle-sip/%{name}-%{version}.tar.gz
 Source1:	antlr-3.4-complete.jar
 Patch1:		belle-sip-1.4.0-disable-systembin.patch
-Patch2:		belle-sip-1.4.0-increasemem.patch
+Patch2:		belle-sip-1.4.1-mbedtls.patch
 BuildRequires:  antlr3-C-devel
 BuildRequires:  antlr3-tool
 BuildRequires:  polarssl-devel
@@ -69,6 +69,12 @@ magic_rpm_clean.sh
 %{_libdir}/pkgconfig/belle-sip.pc
 
 %changelog
+* Fri Jul 24 2015 Liu Di <liudidi@gmail.com> - 1.4.1-2
+- 为 Magic 3.0 重建
+
+* Fri Jul 24 2015 Liu Di <liudidi@gmail.com> - 1.4.1-1
+- 更新到 1.4.1
+
 * Thu Apr 23 2015 Liu Di <liudidi@gmail.com> - 1.4.0-7
 - 为 Magic 3.0 重建
 

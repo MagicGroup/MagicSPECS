@@ -3,7 +3,9 @@ Version:	2.0.3
 Release:	4%{?dist}
 License:	zlib
 Group:		System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 Summary:	Library to provide abstract access to various archives
+Summary(zh_CN.UTF-8): 提供了多种归档文件抽象层的库
 URL:		http://www.icculus.org/physfs/
 Source0:	http://www.icculus.org/physfs/downloads/physfs-%{version}.tar.bz2
 Patch1:		physfs-2.0.2-system-lzma-sdk.patch
@@ -29,14 +31,22 @@ previous archive on a per-file basis. Finally, PhysicsFS gives you
 platform-abstracted means to determine if CD-ROMs are available, the user's 
 home directory, where in the real filesystem your program is running, etc.
 
+%description -l zh_CN.UTF-8
+提供了多种归档文件抽象层的库。
+
 %package devel
 Summary:	Development libraries and headers for physfs
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:		Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:	%{name}%{?_isa} = %{version}-%{release}
 
 %description devel
 This package contains the libraries and headers necessary for developing
 packages with physfs functionality.
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -74,6 +84,7 @@ touch -r LICENSE.txt docs/latex/*
 
 # Get rid of static library.
 rm -rf $RPM_BUILD_ROOT%{_libdir}/*.a
+magic_rpm_clean.sh
 
 %post -p /sbin/ldconfig
 

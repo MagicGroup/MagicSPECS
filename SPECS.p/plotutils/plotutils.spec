@@ -1,10 +1,12 @@
 
 Name:      plotutils
 Version:   2.6
-Release:   10%{?dist}
+Release:   11%{?dist}
 Summary:   GNU vector and raster graphics utilities and libraries
+Summary(zh_CN.UTF-8): GNU 向量和栅格图形的工具和库
 
 Group:     Applications/Productivity
+Group(zh_CN.UTF-8): 应用程序/生产力
 # libxmi is GPLv2+
 # rest is GPLv3+
 License:   GPLv2+ and GPLv3+
@@ -35,10 +37,14 @@ vector and raster. It can also do vector graphics animations. Besides
 libplot, the package contains command-line programs for plotting
 scientific data. Many of them use libplot to export graphics
 
+%description -l zh_CN.UTF-8
+GNU 向量和栅格图形的工具和库。
 
 %package devel
 Summary:     Headers for developing programs that will use %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:       Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:    %{name} = %{version}-%{release}
 
 
@@ -46,6 +52,8 @@ Requires:    %{name} = %{version}-%{release}
 This package contains the header files needed for developing %{name}
 applications
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -73,7 +81,7 @@ mv ${RPM_BUILD_ROOT}%{_datadir}/libplot docs-to-include
 mv ${RPM_BUILD_ROOT}%{_datadir}/tek2plot docs-to-include
 find $RPM_BUILD_ROOT -type f -name "*.la" -exec rm -f {} ';'
 rm -f $RPM_BUILD_ROOT%{_infodir}/dir
-
+magic_rpm_clean.sh
 
 %post
 /sbin/install-info %{_infodir}/libxmi.info %{_infodir}/dir || :
@@ -117,6 +125,9 @@ fi
 
 
 %changelog
+* Fri Jul 24 2015 Liu Di <liudidi@gmail.com> - 2.6-11
+- 为 Magic 3.0 重建
+
 * Wed Dec 04 2013 Stanislav Ochotnicky <sochotnicky@redhat.com> - 2.6-10
 - Fix FTBFS when "-Werror=format-security" is used
 

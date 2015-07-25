@@ -16,10 +16,17 @@
 %global ini_name   40-%{pec_name}.ini
 %endif
 
+%if 0%{?fedora} < 19 || 0%{?fedora} > 20
+# https://fedorahosted.org/fpc/ticket/449
+%global with_libjson 0
+%else
+%global with_libjson 1
+%endif
+
 Summary:       Support for JSON serialization
 Name:          php-pecl-%{proj_name}
-Version:       1.3.5
-Release:       3%{?dist}
+Version:	1.3.7
+Release:	2%{?dist}
 License:       PHP
 Group:         Development/Languages
 URL:           http://pecl.php.net/package/%{proj_name}
@@ -28,7 +35,13 @@ Source0:       http://pecl.php.net/get/%{proj_name}-%{version}.tgz
 BuildRequires: php-devel >= 5.4
 BuildRequires: php-pear
 BuildRequires: pcre-devel
+%if %{with_libjson}
 BuildRequires: json-c-devel >= 0.11
+BuildRequires: json-c-devel <  0.12
+%else
+Provides:      bundled(libjson-c) = 0.11
+Provides:      bundled(bobjenkins-hash)
+%endif
 
 Requires(post): %{__pecl}
 Requires(postun): %{__pecl}
@@ -66,10 +79,18 @@ Requires:      php-devel%{?_isa}
 %description devel
 These are the files needed to compile programs using JSON serializer.
 
-
 %prep
 %setup -q -c 
 cd %{proj_name}-%{version}
+
+%if %{with_libjson}
+rm -rf json-c
+%else
+# https://github.com/remicollet/pecl-json-c/commit/09501b8c0fdb27ee5d1c225a368f7a8c3654fe0f
+sed -e '/AUTHORS/s/role="src"/role="doc"/' \
+    -e '/COPYING/s/role="src"/role="doc"/' \
+    -i ../package.xml
+%endif
 
 # Sanity check, really often broken
 extver=$(sed -n '/#define PHP_JSON_VERSION/{s/.* "//;s/".*$//;p}' php_json.h )
@@ -92,14 +113,18 @@ cp -pr %{proj_name}-%{version} %{proj_name}-zts
 cd %{proj_name}-%{version}
 %{_bindir}/phpize
 %configure \
+%if %{with_libjson}
   --with-libjson \
+%endif
   --with-php-config=%{_bindir}/php-config
 make %{?_smp_mflags}
 
 cd ../%{proj_name}-zts
 %{_bindir}/zts-phpize
 %configure \
+%if %{with_libjson}
   --with-libjson \
+%endif
   --with-php-config=%{_bindir}/zts-php-config
 make %{?_smp_mflags}
 
@@ -145,17 +170,29 @@ REPORT_EXIT_STATUS=1 \
 %{__ztsphp} -n run-tests.php
 
 
-%post
-%{pecl_install} %{pecl_xmldir}/%{name}.xml >/dev/null || :
+# when pear installed alone, after us
+%triggerin -- %{?scl_prefix}php-pear
+if [ -x %{__pecl} ] ; then
+    %{pecl_install} %{pecl_xmldir}/%{name}.xml >/dev/null || :
+fi
 
+# posttrans as pear can be installed after us
+%posttrans
+if [ -x %{__pecl} ] ; then
+    %{pecl_install} %{pecl_xmldir}/%{name}.xml >/dev/null || :
+fi
 
 %postun
-if [ $1 -eq 0 ] ; then
+if [ $1 -eq 0 -a -x %{__pecl} ] ; then
     %{pecl_uninstall} %{proj_name} >/dev/null || :
 fi
 
 
 %files
+%{?_licensedir:%license %{proj_name}-%{version}/LICENSE}
+%if ! %{with_libjson}
+%{?_licensedir:%license %{proj_name}-%{version}/json-c/COPYING}
+%endif
 %doc %{pecl_docdir}/%{pecl_name}
 %config(noreplace) %{php_inidir}/%{ini_name}
 %config(noreplace) %{php_ztsinidir}/%{ini_name}
@@ -170,7 +207,14 @@ fi
 %doc %{pecl_testdir}/%{pecl_name}
 
 
+
 %changelog
+* Thu Jul 02 2015 Liu Di <liudidi@gmail.com> - 1.3.7-2
+- 为 Magic 3.0 重建
+
+* Thu Jul 02 2015 Liu Di <liudidi@gmail.com> - 1.3.7-1
+- 更新到 1.3.7
+
 * Sat May 03 2014 Liu Di <liudidi@gmail.com> - 1.3.5-3
 - 为 Magic 3.0 重建
 

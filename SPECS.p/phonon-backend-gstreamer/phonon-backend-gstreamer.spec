@@ -1,9 +1,10 @@
 
 Summary: Gstreamer phonon backend 
+Summary(zh_CN.UTF-8): phonon 的 gstreamer 后端
 Name:    phonon-backend-gstreamer
 Epoch:   2
-Version: 4.7.1
-Release: 3%{?dist}
+Version:	4.8.2
+Release:	1%{?dist}
 
 License: LGPLv2+
 URL:     http://phonon.kde.org/
@@ -12,12 +13,8 @@ Source0: phonon-backend-gstreamer-%{version}-%{snap}.tar.bz2
 # run this script to generate a snapshot tarball
 Source1: phonon-gstreamer_snapshot.sh
 %else
-Source0: http://download.kde.org/stable/phonon/phonon-backend-gstreamer/%{version}/phonon-backend-gstreamer-%{version}.tar.xz
+Source0: http://download.kde.org/stable/phonon/phonon-backend-gstreamer/%{version}/src/phonon-backend-gstreamer-%{version}.tar.xz
 %endif
-
-## upstream patches
-Patch2: 0002-do-not-unlock-not-locked-mutexes-prevent-crashing-wi.patch
-Patch3: 0003-Only-call-QApplication-syncX-from-the-main-thread.patch
 
 BuildRequires: automoc4
 BuildRequires: cmake
@@ -51,21 +48,23 @@ Requires: qt4%{?_isa} >= %{_qt4_version}
 %description
 %{summary}.
 
+%description -l zh_CN.UTF-8
+phonon 的 gstreamer 后端。
+
 %package -n phonon-qt5-backend-gstreamer
 Summary:  Gstreamer phonon-qt5 backend
+Summary(zh_CN.UTF-8): phonon-qt5 的 gstreamer 后端
 Provides: phonon-qt5-backend%{?_isa} = %{phonon_version}
 %{?_qt5_version:Requires: qt5-qtbase%{?_isa} >= %{_qt5_version}}
 Requires: gstreamer-plugins-good
 %description -n phonon-qt5-backend-gstreamer
 %{summary}.
+%description -l zh_CN.UTF-8
+phonon-qt5 的 gstreamer 后端。
 
 
 %prep
 %setup -q -n phonon-backend-gstreamer-%{version}
-
-%patch2 -p1 -b .0002
-%patch3 -p1 -b .0003
-
 
 %build
 mkdir -p %{_target_platform}
@@ -117,6 +116,9 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &> /dev/null ||:
 
 
 %changelog
+* Wed Jul 01 2015 Liu Di <liudidi@gmail.com> - 2:4.8.2-1
+- 更新到 4.8.2
+
 * Tue May 06 2014 Liu Di <liudidi@gmail.com> - 2:4.7.1-3
 - 为 Magic 3.0 重建
 

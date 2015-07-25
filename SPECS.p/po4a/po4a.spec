@@ -1,12 +1,13 @@
+%define num 4134
 Name: po4a
-Version: 0.45
-Release: 2%{?dist}
+Version:	0.46
+Release:	1%{?dist}
 Summary: A tool maintaining translations anywhere
+Summary(zh_CN.UTF-8): 在任何地方处理翻译的工具
 License: GPL+
 URL: http://alioth.debian.org/projects/po4a/
 
-Source0: http://alioth.debian.org/frs/download.php/3786/%{name}-%{version}.tar.gz
-Patch0: 0001-Remove-defined-anachronism.patch
+Source0: http://alioth.debian.org/frs/download.php/%{num}/%{name}-%{version}.tar.gz
 
 BuildArch: noarch
 BuildRequires: perl(Locale::gettext) >= 1.01
@@ -45,10 +46,11 @@ The po4a (po for anything) project goal is to ease translations (and
 more interestingly, the maintenance of translations) using gettext
 tools on areas where they were not expected like documentation.
 
+%description -l zh_CN.UTF-8
+在任何地方处理翻译的工具。
+
 %prep
 %setup -q -n %{name}-%{version}
-#%patch0 -p1
-#%patch1 -p1
 
 chmod +x scripts/*
 
@@ -88,6 +90,9 @@ magic_rpm_clean.sh
 %{_mandir}/man7/po4a.7*
 
 %changelog
+* Fri Jul 24 2015 Liu Di <liudidi@gmail.com> - 0.46-1
+- 更新到 0.46
+
 * Tue Jun 17 2014 Liu Di <liudidi@gmail.com> - 0.45-2
 - 为 Magic 3.0 重建
 

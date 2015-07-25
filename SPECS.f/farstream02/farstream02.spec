@@ -3,7 +3,7 @@
 %global far farstream
 
 Name:           %{far}02
-Version:	0.2.3
+Version:	0.2.7
 Release:        4%{?dist}
 Summary:        Libraries for videoconferencing
 Summary(zh_CN.UTF-8): 视频会议库
@@ -82,7 +82,7 @@ magic_rpm_clean.sh
 %{_libdir}/%{far}-0.2/libshm-transmitter.so
 %{_libdir}/gstreamer-1.0/libfsmsnconference.so
 %{_libdir}/gstreamer-1.0/libfsrawconference.so
-%{_libdir}/gstreamer-1.0/libfsrtcpfilter.so
+%{_libdir}/gstreamer-1.0/libfsrtpxdata.so
 %{_libdir}/gstreamer-1.0/libfsrtpconference.so
 %{_libdir}/gstreamer-1.0/libfsvideoanyrate.so
 %{_libdir}/girepository-1.0/Farstream-0.2.typelib
@@ -99,11 +99,14 @@ magic_rpm_clean.sh
 %{_libdir}/pkgconfig/%{far}-0.2.pc
 %{_includedir}/%{far}-0.2/%{far}/
 %{_datadir}/gir-1.0/Farstream-0.2.gir
-%{_datadir}/gtk-doc/html/%{far}-libs-1.0/
+%{_datadir}/gtk-doc/html/%{far}-libs-0.2/
 %{_datadir}/gtk-doc/html/%{far}-plugins-0.2/
 
 
 %changelog
+* Mon Jul 13 2015 Liu Di <liudidi@gmail.com> - 0.2.7-4
+- 更新到 0.2.7
+
 * Wed Apr 30 2014 Liu Di <liudidi@gmail.com> - 0.2.3-4
 - 为 Magic 3.0 重建
 

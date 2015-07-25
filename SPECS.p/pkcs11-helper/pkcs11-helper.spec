@@ -1,9 +1,11 @@
 Name:           pkcs11-helper
 Version:        1.10
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        A library for using PKCS#11 providers
+Summary(zh_CN.UTF-8): 使用 PKCS#11 的库
 
 Group:          System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 License:        GPLv2 or BSD
 URL:            http://www.opensc-project.org/opensc/wiki/pkcs11-helper
 Source0:        http://downloads.sourceforge.net/opensc/pkcs11-helper-%{version}.tar.bz2
@@ -20,9 +22,14 @@ by serialized id, handling card removal and card insert events, handling card
 re-insert to a different slot, supporting session expiration and much more all
 using a simple API. 
 
+%description -l zh_CN.UTF-8
+使用 PKCS#11 的库。
+
 %package        devel
 Summary:        Development files for pkcs11-helper
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       %{name} = %{version}-%{release}
 Requires:       openssl-devel
 # for /usr/share/aclocal
@@ -32,6 +39,8 @@ Requires:       automake
 This package contains header files and documentation necessary for developing
 programs using the pkcs11-helper library.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -52,7 +61,7 @@ rm -rf $RPM_BUILD_ROOT%{_datadir}/doc/%{name}/
 
 # Remove libtool .la files
 rm -f $RPM_BUILD_ROOT%{_libdir}/*.la
-
+magic_rpm_clean.sh
 
 %post -p /sbin/ldconfig
 
@@ -74,6 +83,9 @@ rm -f $RPM_BUILD_ROOT%{_libdir}/*.la
 
 
 %changelog
+* Thu Jul 23 2015 Liu Di <liudidi@gmail.com> - 1.10-3
+- 为 Magic 3.0 重建
+
 * Sun Aug 04 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.10-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
 

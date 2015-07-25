@@ -1,16 +1,14 @@
 Summary: Development Libraries and headers for EFI
 Summary(zh_CN.UTF-8): EFI 的开发库和头文件 
 Name: gnu-efi
-Version: 3.0u
-Release: 0.3%{?dist}
+Version:	3.0.2
+Release:	2%{?dist}
 Group: Development/System
 Group(zh_CN.UTF-8): 开发/系统
 License: BSD 
 URL: ftp://ftp.hpl.hp.com/pub/linux-ia64
-Source: ftp://ftp.hpl.hp.com/pub/linux-ia64/gnu-efi_%{version}.orig.tar.gz
-Patch0001: 0001-fix-compilation-on-x86_64-without-HAVE_USE_MS_ABI.patch
-Patch0002: 0002-be-more-pedantic-when-linking.patch
-Patch0003: 0003-Sample-boot-service-driver.patch
+Source: http://superb-dca2.dl.sourceforge.net/project/gnu-efi/gnu-efi-%{version}.tar.bz2
+Patch0001: 0001-Add-setjmp-back-once-again.patch
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 ExclusiveArch: i686 x86_64 ia64
 BuildRequires: git
@@ -18,11 +16,16 @@ BuildRequires: git
 %define debug_package %{nil}
 
 # Figure out the right file path to use
-%if 0%{?rhel}
-%global efidir redhat
+%global efidir %(eval grep ^ID= /etc/os-release | sed -e 's/^ID=//' -e 's/rhel/redhat/')
+
+%ifarch x86_64
+%global efiarch x86_64
 %endif
-%if 0%{?fedora}
-%global efidir fedora
+%ifarch aarch64
+%global efiarch aarch64
+%endif
+%ifarch %{ix86}
+%global efiarch ia32
 %endif
 
 %description
@@ -59,17 +62,20 @@ This package contains utilties for debugging and developing EFI systems.
 EFI 系统的工具。
 
 %prep
-%setup -q -n gnu-efi-3.0
+%setup -q -n gnu-efi-%{version}
 git init
-git config user.email "pjones@fedoraproject.org"
-git config user.name "Fedora Ninjas"
+git config user.email "gnu-efi-owner@magiclinux.org"
+git config user.name "Magic Group"
 git add .
 git commit -a -q -m "%{version} baseline."
 git am %{patches} </dev/null
+git config --unset user.email
+git config --unset user.name
 
 %build
 # Package cannot build with %{?_smp_mflags}.
 make
+make apps
 
 %install
 rm -rf %{buildroot}
@@ -81,9 +87,8 @@ make PREFIX=%{_prefix} LIBDIR=%{_libdir} INSTALLROOT=%{buildroot} install
 mkdir -p %{buildroot}/%{_libdir}/gnuefi
 mv %{buildroot}/%{_libdir}/*.lds %{buildroot}/%{_libdir}/*.o %{buildroot}/%{_libdir}/gnuefi
 
-make -C apps clean route80h.efi modelist.efi
 mkdir -p %{buildroot}/boot/efi/EFI/%{efidir}/
-mv apps/{route80h.efi,modelist.efi} %{buildroot}/boot/efi/EFI/%{efidir}/
+mv %{efiarch}/apps/{route80h.efi,modelist.efi} %{buildroot}/boot/efi/EFI/%{efidir}/
 magic_rpm_clean.sh
 
 %clean
@@ -102,6 +107,12 @@ rm -rf %{buildroot}
 %attr(0644,root,root) /boot/efi/EFI/%{efidir}/*.efi
 
 %changelog
+* Tue Jun 30 2015 Liu Di <liudidi@gmail.com> - 3.0.2-2
+- 为 Magic 3.0 重建
+
+* Tue Jun 30 2015 Liu Di <liudidi@gmail.com> - 3.0.2-1
+- 更新到 3.0.2
+
 * Fri Apr 11 2014 Liu Di <liudidi@gmail.com> - 3.0u-0.3
 - 为 Magic 3.0 重建
 

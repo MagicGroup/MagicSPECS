@@ -2,8 +2,8 @@
 %global backends %{nil}
 
 Name: pdns
-Version: 3.4.3
-Release: 2%{?dist}
+Version:	3.4.5
+Release:	1%{?dist}
 Summary: A modern, advanced and high performance authoritative-only nameserver
 Summary(zh_CN.UTF-8): 一个现代化，先进的高性能的域名服务
 Group: System Environment/Daemons
@@ -336,6 +336,9 @@ exit 0
 %{_libdir}/%{name}/liblmdbbackend.so
 
 %changelog
+* Sat Jul 25 2015 Liu Di <liudidi@gmail.com> - 3.4.5-1
+- 更新到 3.4.5
+
 * Thu Apr 16 2015 Liu Di <liudidi@gmail.com> - 3.4.3-2
 - 为 Magic 3.0 重建
 

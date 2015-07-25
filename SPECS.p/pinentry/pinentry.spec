@@ -1,7 +1,7 @@
 
 Name:    pinentry
 Version: 0.9.5
-Release: 1%{?dist}
+Release: 2%{?dist}
 Summary: Collection of simple PIN or passphrase entry dialogs
 
 # qt & qt4 subpackage have different license, see subpackage definitions
@@ -128,6 +128,7 @@ fi
 %files gtk
 %{_bindir}/pinentry-gtk
 %{_bindir}/pinentry-gtk-2
+%{_bindir}/pinentry-gnome3
 
 %files qt
 %{_bindir}/pinentry-qt
@@ -137,6 +138,9 @@ fi
 %{_bindir}/pinentry-emacs
 
 %changelog
+* Thu Jul 23 2015 Liu Di <liudidi@gmail.com> - 0.9.5-2
+- 为 Magic 3.0 重建
+
 * Thu Jul 02 2015 Boris Ranto <branto@redhat.com> - 0.9.5-1
 - Rebase to latest upstream version
 - Removing qt4 pinentry patch -- got merged upstream

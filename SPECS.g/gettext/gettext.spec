@@ -6,7 +6,7 @@
 Summary: GNU libraries and utilities for producing multi-lingual messages
 Summary(zh_CN.UTF-8): 用于生成多语言信息的 GNU 库和工具
 Name: gettext
-Version: 0.18.3.2
+Version:	0.19.5.1
 Release: 1%{?dist}
 License: GPLv3+ and LGPLv2+
 Group: Development/Tools
@@ -15,7 +15,6 @@ URL: http://www.gnu.org/software/gettext/
 Source: ftp://ftp.gnu.org/gnu/gettext/%{name}-%{version}.tar.gz
 Source2: msghack.py
 Source3: msghack.1
-Patch0: gettext-gnulib-tests-format-security.patch
 # removal of openmp.m4
 BuildRequires: autoconf >= 2.62
 BuildRequires: automake
@@ -160,8 +159,6 @@ Emacs.
 
 %prep
 %setup -q
-%patch0 -p1 -b .gnulib-tests-format-security
-
 
 %build
 %if %{with java}
@@ -356,6 +353,12 @@ fi
 %{_emacs_sitelispdir}/%{name}/*.el
 
 %changelog
+* Thu Jul 23 2015 Liu Di <liudidi@gmail.com> - 0.19.5.1-1
+- 更新到 0.19.5.1
+
+* Thu Jul 23 2015 Liu Di <liudidi@gmail.com> - latest-1
+- 更新到 latest
+
 * Tue Jan  7 2014 Daiki Ueno <dueno@redhat.com> - 0.18.3.2-1
 - update to 0.18.3.2 release
 - apply patch to suppress -Wformat-security warnings in gnulib-tests

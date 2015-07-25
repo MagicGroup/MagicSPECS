@@ -1,11 +1,12 @@
 Summary: Library for error values used by GnuPG components
 Summary(zh_CN.UTF-8): GnuPG 组件使用的错误值
 Name: libgpg-error
-Version: 1.13
+Version: 1.19
 Release: 1%{?dist}
 URL: ftp://ftp.gnupg.org/gcrypt/libgpg-error/
 Source0: ftp://ftp.gnupg.org/gcrypt/libgpg-error/%{name}-%{version}.tar.bz2
 Source1: ftp://ftp.gnupg.org/gcrypt/libgpg-error/%{name}-%{version}.tar.bz2.sig
+Patch1: libgpg-error-1.19-multilib.patch
 Group: System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
 License: LGPLv2+
@@ -44,13 +45,14 @@ contains files necessary to develop applications using libgpg-error.
 
 %prep
 %setup -q
+%patch1 -p1 -b .multilib
 # The config script already suppresses the -L if it's /usr/lib, so cheat and
 # set it to a value which we know will be suppressed.
 sed -i -e 's|^libdir=@libdir@$|libdir=@exec_prefix@/lib|g;s|@GPG_ERROR_CONFIG_HOST@|none|g' src/gpg-error-config.in
 
-# We need a version of libtool that won't decide to add an rpath of /usr/lib64
-# even when we ask it not to.
-autoreconf -f -i
+# Modify configure to drop rpath for /usr/lib64
+sed -i -e 's|sys_lib_dlsearch_path_spec="/lib /usr/lib|sys_lib_dlsearch_path_spec="/lib /usr/lib %{_libdir}|g' configure
+
 
 %build
 %configure --disable-static --disable-rpath --disable-languages
@@ -60,35 +62,9 @@ make %{?_smp_mflags}
 rm -fr $RPM_BUILD_ROOT
 make install DESTDIR=$RPM_BUILD_ROOT
 rm -f $RPM_BUILD_ROOT/%{_libdir}/*.la
+rm -f $RPM_BUILD_ROOT/%{_infodir}/dir
 magic_rpm_clean.sh
 %find_lang %{name}
-
-# Relocate the shared libraries to /%{_lib}.
-mkdir -p $RPM_BUILD_ROOT/%{_lib}
-for shlib in $RPM_BUILD_ROOT/%{_libdir}/*.so* ; do
-	if test -L "$shlib" ; then
-		rm "$shlib"
-	else
-		mv "$shlib" $RPM_BUILD_ROOT/%{_lib}/
-	fi
-done
-# Figure out where /%{_lib} is relative to %{_libdir}.
-touch $RPM_BUILD_ROOT/root_marker
-relroot=..
-while ! test -f $RPM_BUILD_ROOT/%{_libdir}/$relroot/root_marker ; do
-	relroot=$relroot/..
-done
-# Overwrite development symlinks.
-pushd $RPM_BUILD_ROOT/%{_libdir}
-for shlib in $relroot/%{_lib}/lib*.so.* ; do
-	shlib=`echo "$shlib" | sed -e 's,//,/,g'`
-	target=`basename "$shlib" | sed -e 's,\.so.*,,g'`.so
-	ln -sf $shlib $target
-done
-popd
-# Add the soname symlink.
-/sbin/ldconfig -n $RPM_BUILD_ROOT/%{_lib}/
-rm -f $RPM_BUILD_ROOT/root_marker
 
 %check
 make check
@@ -100,11 +76,22 @@ rm -fr $RPM_BUILD_ROOT
 
 %postun -p /sbin/ldconfig
 
+%post devel
+[ -f %{_infodir}/gpgrt.info.gz ] && \
+    /sbin/install-info %{_infodir}/gpgrt.info.gz %{_infodir}/dir
+exit 0
+
+%preun devel
+if [ $1 = 0 -a -f %{_infodir}/gpgrt.info.gz ]; then
+    /sbin/install-info --delete %{_infodir}/gpgrt.info.gz %{_infodir}/dir
+fi
+exit 0
+
 %files -f %{name}.lang
 %defattr(-,root,root)
 %doc COPYING COPYING.LIB AUTHORS README NEWS ChangeLog
 %{_bindir}/gpg-error
-/%{_lib}/libgpg-error.so.0*
+%{_libdir}/libgpg-error.so.0*
 
 %files devel
 %defattr(-,root,root)
@@ -112,8 +99,13 @@ rm -fr $RPM_BUILD_ROOT
 %{_libdir}/libgpg-error.so
 %{_includedir}/gpg-error.h
 %{_datadir}/aclocal/gpg-error.m4
+%{_infodir}/gpgrt.info*
+%{_mandir}/man1/gpg-error-config.*
 
 %changelog
+* Thu Jul 23 2015 Liu Di <liudidi@gmail.com> - 1.19-1
+- 更新到 1.19
+
 * Wed Jul 16 2014 Liu Di <liudidi@gmail.com> - 1.13-1
 - 更新到 1.13
 
