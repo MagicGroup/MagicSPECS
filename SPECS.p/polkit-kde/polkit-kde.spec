@@ -1,78 +1,137 @@
+%global         base_name polkit-kde-agent-1
+
 Name:           polkit-kde
-Version:        0.99.0
-Release:        5%{?dist}
 Summary:        PolicyKit integration for KDE Desktop
+Version:        5.3.2
+Release:        1%{?dist}
 
-Group:          Applications/System
 License:        GPLv2+
-URL:            http://www.kde.org/
+URL:            https://projects.kde.org/projects/kde/workspace/polkit-kde-agent-1
 
-Source0:        ftp://ftp.kde.org/pub/kde/stable/apps/KDE4.x/admin/polkit-kde-agent-1-%{version}.tar.bz2
-BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+%global revision %(echo %{version} | cut -d. -f3)
+%if %{revision} >= 50
+%global stable unstable
+%else
+%global stable stable
+%endif
+Source0:        http://download.kde.org/%{stable}/plasma/%{version}/%{base_name}-%{version}.tar.xz
 
-## upstream patches
-Patch05: 0005-Bring-the-auth-dialog-to-the-front-when-it-is-shown..patch
-Patch16: 0016-Autorestart-when-we-crash.-This-way-a-polkit-kde-1-c.patch
-Patch17: 0017-Of-course-we-can-only-set-KCrash-flags-after-KCmdLin.patch
-Patch19: 0019-Remove-unused-Remember-authorization-checkboxes.patch
-Patch20: 0020-CCMAIL-echidnaman-kubuntu.org.patch
 
-BuildRequires:  kdelibs4-devel
-BuildRequires:  polkit-qt-devel >= 0.99.0
-BuildRequires:  cmake
-BuildRequires:  gettext
+BuildRequires:  extra-cmake-modules
+BuildRequires:  kf5-rpm-macros
+BuildRequires:  qt5-qtbase-devel
 
-%{?_kde4_macros_api:Requires: kde4-macros(api) = %{_kde4_macros_api} }
+BuildRequires:  kf5-ki18n-devel
+BuildRequires:  kf5-kwindowsystem-devel
+BuildRequires:  kf5-kdbusaddons-devel
+BuildRequires:  kf5-kwidgetsaddons-devel
+BuildRequires:  kf5-kcoreaddons-devel
+BuildRequires:  kf5-kcrash-devel
+BuildRequires:  kf5-kconfig-devel
+BuildRequires:  kf5-kiconthemes-devel
+BuildRequires:  kf5-knotifications-devel
 
-Provides: PolicyKit-authentication-agent
+BuildRequires:  polkit-qt5-1-devel
+
+Provides: PolicyKit-authentication-agent = %{version}-%{release}
 Provides: polkit-kde-1 = %{version}-%{release}
+Provides: polkit-kde-agent-1 = %{version}-%{release}
 
 Obsoletes: PolicyKit-kde < 4.5
+
+# Add explicit dependency on polkit, since polkit-libs were split out
+Requires: polkit
 
 %description
 Provides Policy Kit Authentication Agent that nicely fits to KDE.
 
-%prep
-%setup -q -n polkit-kde-agent-1-%{version}
 
-%patch05 -p1 -b .0005
-%patch16 -p1 -b .0016
-%patch17 -p1 -b .0017
-%patch19 -p1 -b .0019
-%patch20 -p1 -b .0020
+%prep
+%setup -q -n %{base_name}-%{version}
 
 
 %build
 mkdir -p %{_target_platform}
 pushd %{_target_platform}
-%{cmake_kde4} ..
+%{cmake_kf5} ..
 popd
 
 make %{?_smp_mflags} -C %{_target_platform}
 
-
 %install
-rm -rf %{buildroot}
 make install/fast DESTDIR=%{buildroot} -C %{_target_platform}
+%find_lang polkit-kde-authentication-agent-1 --with-kde
 
-%find_lang polkit-kde-authentication-agent-1
-
-
-%clean
-rm -rf %{buildroot}
+# Move the agent from libexec to libexec/kf5
+sed -i "s/Exec=\/usr\/libexec\//Exec=\/usr\/libexec\/kf5\//" %{buildroot}/%{_sysconfdir}/xdg/autostart/polkit-kde-authentication-agent-1.desktop
+mkdir -p %{buildroot}/%{_kf5_libexecdir}/
+mv %{buildroot}/%{_libexecdir}/polkit-kde-authentication-agent-1 \
+   %{buildroot}/%{_kf5_libexecdir}
 
 
 %files -f polkit-kde-authentication-agent-1.lang
-%defattr(-,root,root,-)
 %doc COPYING
-%{_kde4_libexecdir}/polkit-kde-authentication-agent-1
-%{kde4_datadir}/autostart/polkit-kde-authentication-agent-1.desktop
-%{_kde4_appsdir}/policykit1-kde/policykit1-kde.notifyrc
+%{_kf5_libexecdir}/polkit-kde-authentication-agent-1
+%{_sysconfdir}/xdg/autostart/polkit-kde-authentication-agent-1.desktop
+%{_kf5_datadir}/knotifications5/policykit1-kde.notifyrc
 
 
 %changelog
-* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 0.99.0-5
-- 为 Magic 3.0 重建
+* Thu Jun 25 2015 Daniel Vrátil <dvratil@redhat.com> - 5.3.2-1
+- Plasma 5.3.2
+
+* Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 5.3.1-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
+
+* Tue May 26 2015 Daniel Vrátil <dvratil@redhat.com> - 5.3.1-1
+- Plasma 5.3.1
+
+* Mon Apr 27 2015 Daniel Vrátil <dvratil@redhat.com> - 5.3.0-1
+- Plasma 5.3.0
+
+* Wed Apr 22 2015 Daniel Vrátil <dvratil@redhat.com> - 5.2.95-1
+- Plasma 5.2.95
+
+* Fri Mar 20 2015 Daniel Vrátil <dvratil@redhat.com> - 5.2.2-1
+- Plasma 5.2.2
+
+* Fri Feb 27 2015 Daniel Vrátil <dvratil@redhat.com> - 5.2.1-2
+- Rebuild (GCC 5)
+
+* Tue Feb 24 2015 Daniel Vrátil <dvratil@redhat.com> - 5.2.1-1
+- Plasma 5.2.1
+
+* Mon Jan 26 2015 Daniel Vrátil <dvratil@redhat.com> - 5.2.0-1
+- Plasma 5.2.0
+
+* Sun Jan 25 2015 Rex Dieter <rdieter@fedoraproject.org> 0.99.1-6.20130311git
+- Requires: polkit
+
+* Tue Jan 13 2015 Daniel Vrátil <dvratil@redhat.com> - 5.1.95-1.beta
+- Plasma 5.1.95 Beta
+
+* Wed Oct 22 2014 Daniel Vrátil <dvratil@redhat.com> - 0.99.1-5.20130311git
+- Install autostart file to /etc/xdg/autostart so that Plasma 5 picks it up too
+
+* Sun Aug 17 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.99.1-4.20130311git
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
+
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.99.1-3.20130311git
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Sun Aug 04 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.99.1-2.20130311git
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Mon Mar 11 2013 Rex Dieter <rdieter@fedoraproject.org> - 0.99.1-1.20130311git
+- 0.99.1 git snapshot
+- Provides: polkit-kde-agent-1
+- .spec cosmetics
+
+* Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.99.0-6
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
+
+* Sat Jul 21 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.99.0-5
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 
 * Sat Jan 14 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.99.0-4
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
