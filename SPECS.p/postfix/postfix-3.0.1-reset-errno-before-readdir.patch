@@ -1,0 +1,22 @@
+This patch comes from Mika Ilmaranta who attched it to the bug
+https://bugzilla.redhat.com/show_bug.cgi?id=1204139.
+
+--- postfix-3.0.1/src/util/scan_dir.c	2015-04-21 20:44:19.985338673 +0300
++++ postfix-3.0.1/src/util/scan_dir.c.reset-errno-before-readdir	2015-04-21 20:47:32.791855824 +0300
+@@ -78,6 +78,7 @@ 
+ #endif
+ #endif
+ #include <string.h>
++#include <errno.h>
+ 
+ /* Utility library. */
+ 
+@@ -177,6 +178,8 @@ char   *scan_dir_next(SCAN_DIR *scan)
+ #define STREQ(x,y)	(strcmp((x),(y)) == 0)
+ 
+     if (info) {
++	/* Some implementations report spurious errors. */
++	errno = 0;
+ 	while ((dp = readdir(info->dir)) != 0) {
+ 	    if (STREQ(dp->d_name, ".") || STREQ(dp->d_name, "..")) {
+ 		if (msg_verbose > 1)
