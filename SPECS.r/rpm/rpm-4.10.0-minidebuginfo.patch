@@ -90,8 +90,8 @@
      chmod u-w "$f"
    fi
  
-+  $include_minidebug && add_minidebug "${debugfn}" "$f"
-+
++  # strip -g implies we have full symtab, don't add mini symtab in that case.
++  $strip_g || ($include_minidebug && add_minidebug "${debugfn}" "$f")
 +  
    if [ -n "$id" ]; then
      make_id_link "$id" "$dn/$(basename $f)"

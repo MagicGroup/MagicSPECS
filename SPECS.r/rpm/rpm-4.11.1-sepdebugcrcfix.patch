@@ -26,10 +26,11 @@
  
  debugdir="${RPM_BUILD_ROOT}/usr/lib/debug"
  
-@@ -316,6 +318,7 @@ while read nlinks inum f; do
+@@ -316,6 +318,8 @@
  
-   $include_minidebug && add_minidebug "${debugfn}" "$f"
- 
+   # strip -g implies we have full symtab, don't add mini symtab in that case.
+   $strip_g || ($include_minidebug && add_minidebug "${debugfn}" "$f")
++
 +  echo "./${f#$RPM_BUILD_ROOT}" >> "$ELFBINSFILE"
    
    if [ -n "$id" ]; then

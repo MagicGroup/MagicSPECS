@@ -4,16 +4,19 @@
 %bcond_with int_bdb
 # run internal testsuite?
 %bcond_with check
-# disable plugins initially
-%bcond_with plugins
+# build with plugins?
+%bcond_without plugins
 # build with sanitizers?
 %bcond_with sanitizer
+# build with libarchive? (needed for rpm2archive)
+%bcond_without libarchive
 
 %{!?python_sitearch: %global python_sitearch %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib(1)")}
 
 %define rpmhome /usr/lib/rpm
 
-%define rpmver 4.11.2
+%define rpmver 4.12.90
+#define snapver rc1
 %define srcver %{rpmver}%{?snapver:-%{snapver}}
 %define eggver %{rpmver}%{?snapver:_%{snapver}}
 
@@ -23,11 +26,11 @@
 
 Summary: The RPM package management system
 Name: rpm
-Version: 4.11.2
-Release: 15%{?dist}
+Version: %{rpmver}
+Release: %{?snapver:0.%{snapver}.}1%{?dist}
 Group: System Environment/Base
 Url: http://www.rpm.org/
-Source0: http://rpm.org/releases/rpm-4.11.x/%{name}-%{srcver}.tar.bz2
+Source0: http://rpm.org/releases/rpm-4.12.x/%{name}-%{srcver}.tar.bz2
 %if %{with int_bdb}
 Source1: db-%{bdbver}.tar.gz
 %else
@@ -43,26 +46,12 @@ Patch2: rpm-4.9.90-fedora-specspo.patch
 Patch3: rpm-4.9.90-no-man-dirs.patch
 # gnupg2 comes installed by default, avoid need to drag in gnupg too
 Patch4: rpm-4.8.1-use-gpg2.patch
-Patch5: rpm-4.9.90-armhfp.patch
-#conditionally applied patch for arm hardware floating point
-Patch6: rpm-4.9.0-armhfp-logic.patch
+# Temporary band-aid for rpm2cpio whining on payload size mismatch (#1142949)
+Patch5: rpm-4.12.0-rpm2cpio-hack.patch
 
-# Fedora has big package stacks based on broken dependency EVRs, reduce the
-# double separator error into an error on released versions (#1065563)
-Patch10: rpm-4.11.2-double-separator-warning.patch
-
-# Patches already in upstream
-# Filter soname dependencies by name
-Patch100: rpm-4.11.x-filter-soname-deps.patch
-Patch101: rpm-4.11.x-do-not-filter-ld64.patch
-Patch102: rpm-4.11.2-macro-newlines.patch
-Patch103: rpm-4.11.x-reset-fileactions.patch
-Patch104: rpm-4.11.2-python3-buildsign.patch
-Patch105: rpm-4.11.x-rpmdeps-wrap.patch
-Patch106: rpm-4.11.2-appdata-prov.patch
+# Patches already upstream:
 
 # These are not yet upstream
-Patch301: rpm-4.6.0-niagara.patch
 Patch302: rpm-4.7.1-geode-i686.patch
 # Probably to be upstreamed in slightly different form
 Patch304: rpm-4.9.1.1-ld-flags.patch
@@ -72,13 +61,10 @@ Patch305: rpm-4.10.0-dwz-debuginfo.patch
 Patch306: rpm-4.10.0-minidebuginfo.patch
 # Fix CRC32 after dwz (#971119)
 Patch307: rpm-4.11.1-sepdebugcrcfix.patch
-# To be upstreamed in slightly different form
-Patch308: rpm-4.11.0.1-setuppy-fixes.patch
-# Temporary Patch to provide support for updates
-Patch400: rpm-4.10.90-rpmlib-filesystem-check.patch
-
-# Mips64el
-Patch500: rpm-4.11.2-mips64el.patch
+# Fix race condidition where unchecked data is exposed in the file system
+Patch308: rpm-4.12.0.x-CVE-2013-6435.patch
+# Add check against malicious CPIO file name size
+Patch309: rpm-4.12.0.x-CVE-2014-8118.patch
 
 # Partially GPL/LGPL dual-licensed and some bits with BSD
 # SourceLicense: (GPLv2+ and LGPLv2+ with exceptions) and BSD 
@@ -102,7 +88,7 @@ BuildRequires: fakechroot
 
 # XXX generally assumed to be installed but make it explicit as rpm
 # is a bit special...
-BuildRequires: magic-rpm-config
+BuildRequires: redhat-rpm-config
 BuildRequires: gawk
 BuildRequires: elfutils-devel >= 0.112
 BuildRequires: elfutils-libelf-devel
@@ -123,10 +109,18 @@ BuildRequires: libacl-devel
 %if ! %{without xz}
 BuildRequires: xz-devel >= 4.999.8
 %endif
+%if ! %{without libarchive}
+BuildRequires: libarchive-devel
+%endif
 # Only required by sepdebugcrcfix patch
 BuildRequires: binutils-devel
 # Couple of patches change makefiles so, require for now...
 BuildRequires: automake libtool
+
+%if %{with plugins}
+BuildRequires: libselinux-devel
+BuildRequires: dbus-devel
+%endif
 
 %if %{with sanitizer}
 BuildRequires: libasan
@@ -135,8 +129,6 @@ BuildRequires: libubsan
 #BuildRequires: libtsan
 %global sanitizer_flags -fsanitize=address -fsanitize=undefined
 %endif
-
-BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 %description
 The RPM Package Manager (RPM) is a powerful command line driven
@@ -153,6 +145,10 @@ Requires: rpm = %{version}-%{release}
 # librpm uses cap_compare, introduced sometimes between libcap 2.10 and 2.16.
 # A manual require is needed, see #505596
 Requires: libcap%{_isa} >= 2.16
+# Drag in SELinux support at least for transition phase
+%if %{with plugins}
+Requires: rpm-plugin-selinux%{_isa} = %{version}-%{release}
+%endif
 
 %description libs
 This package contains the RPM shared libraries.
@@ -202,7 +198,7 @@ Requires: /usr/bin/gdb-add-index
 # "just work" while allowing for alternatives, depend on a virtual
 # provide, typically coming from redhat-rpm-config.
 Requires: system-rpm-config
-Conflicts: ocaml-runtime < 3.11.1-7
+Requires: perl-generators
 
 %description build
 The rpm-build package contains the scripts and executable programs
@@ -261,40 +257,34 @@ Requires: crontabs logrotate rpm = %{version}-%{release}
 This package contains a cron job which creates daily logs of installed
 packages on a system.
 
-%prep
-%setup -q -n %{name}-%{srcver} %{?with_int_bdb:-a 1}
-%patch1 -p1 -b .siteconfig
-%patch2 -p1 -b .fedora-specspo
-%patch3 -p1 -b .no-man-dirs
-%patch4 -p1 -b .use-gpg2
+%if %{with plugins}
+%package plugin-selinux
+Summary: Rpm plugin for SELinux functionality
+Group: System Environment/Base
+Requires: rpm-libs%{_isa} = %{version}-%{release}
 
-%patch10 -p1 -b .double-sep-warning
+%description plugin-selinux
+%{summary}
 
-%patch100 -p1 -b .filter-soname-deps
-%patch101 -p1 -b .dont-filter-ld64
-#patch102 -p1 -b .macro-newlines
-%patch103 -p1 -b .reset-fileactions
-%patch104 -p1 -b .python3-buildsign
-%patch105 -p1 -b .rpmdeps-wrap
-%patch106 -p1 -b .appdata-prov
+%package plugin-syslog
+Summary: Rpm plugin for syslog functionality
+Group: System Environment/Base
+Requires: rpm-libs%{_isa} = %{version}-%{release}
 
-%patch301 -p1 -b .niagara
-%patch302 -p1 -b .geode
-%patch304 -p1 -b .ldflags
-%patch305 -p1 -b .dwz-debuginfo
-%patch306 -p1 -b .minidebuginfo
-%patch307 -p1 -b .sepdebugcrcfix
-%patch308 -p1 -b .setuppy-fixes
+%description plugin-syslog
+%{summary}
 
-%patch400 -p1 -b .rpmlib-filesystem-check
+%package plugin-systemd-inhibit
+Summary: Rpm plugin for systemd inhibit functionality
+Group: System Environment/Base
+Requires: rpm-libs%{_isa} = %{version}-%{release}
 
-%patch500 -p1 -b .mips64el
-
-%patch5 -p1 -b .armhfp
-# this patch cant be applied on softfp builds
-%ifnarch armv3l armv4b armv4l armv4tl armv5tel armv5tejl armv6l armv7l
-%patch6 -p1 -b .armhfp-logic
+%description plugin-systemd-inhibit
+%{summary}
 %endif
+
+%prep
+%autosetup -n %{name}-%{srcver} %{?with_int_bdb:-a 1} -p1
 
 %if %{with int_bdb}
 ln -s db-%{bdbver} db
@@ -305,8 +295,8 @@ ln -s db-%{bdbver} db
 #CPPFLAGS=-I%{_includedir}/db%{bdbver} 
 #LDFLAGS=-L%{_libdir}/db%{bdbver}
 %endif
-CPPFLAGS="$CPPFLAGS `pkg-config --cflags nss`"
-CFLAGS="$RPM_OPT_FLAGS %{?sanitizer_flags}"
+CPPFLAGS="$CPPFLAGS `pkg-config --cflags nss` -DLUA_COMPAT_APIINTCASTS"
+CFLAGS="$RPM_OPT_FLAGS %{?sanitizer_flags} -DLUA_COMPAT_APIINTCASTS"
 export CPPFLAGS CFLAGS LDFLAGS
 
 autoreconf -i -f
@@ -321,11 +311,11 @@ autoreconf -i -f
     --libdir=%{_libdir} \
     --build=%{_target_platform} \
     --host=%{_target_platform} \
-    --with-vendor=magic \
+    --with-vendor=redhat \
     %{!?with_int_bdb: --with-external-db} \
     %{!?with_plugins: --disable-plugins} \
     --with-lua \
-    --without-selinux \
+    --with-selinux \
     --with-cap \
     --with-acl \
     --enable-python
@@ -386,14 +376,11 @@ done
 
 find $RPM_BUILD_ROOT -name "*.la"|xargs rm -f
 
-# avoid dragging in tonne of perl libs for an unused script
-chmod 0644 $RPM_BUILD_ROOT/%{rpmhome}/perldeps.pl
-
-# compress our ChangeLog, it's fairly big...
-bzip2 -9 ChangeLog
-
-%clean
-rm -rf $RPM_BUILD_ROOT
+# These live in perl-generators now
+rm -f $RPM_BUILD_ROOT/%{rpmhome}/{perldeps.pl,perl.*}
+rm -f $RPM_BUILD_ROOT/%{_fileattrsdir}/perl*
+# Axe unused cruft
+rm -f $RPM_BUILD_ROOT/%{rpmhome}/{tcl.req,osgideps.pl}
 
 %if %{with check}
 %check
@@ -419,7 +406,8 @@ exit 0
 
 %files -f %{name}.lang
 %defattr(-,root,root,-)
-%doc GROUPS COPYING CREDITS doc/manual/[a-z]*
+%license COPYING
+%doc GROUPS CREDITS doc/manual/[a-z]*
 
 /usr/lib/tmpfiles.d/rpm.conf
 %dir %{_sysconfdir}/rpm
@@ -428,6 +416,7 @@ exit 0
 %attr(0644, root, root) %verify(not md5 size mtime) %ghost %config(missingok,noreplace) /var/lib/rpm/*
 
 /bin/rpm
+%{_bindir}/rpm2archive
 %{_bindir}/rpm2cpio
 %{_bindir}/rpmdb
 %{_bindir}/rpmkeys
@@ -467,7 +456,16 @@ exit 0
 %{_libdir}/librpmio.so.*
 %{_libdir}/librpm.so.*
 %if %{with plugins}
-%{_libdir}/rpm-plugins
+%dir %{_libdir}/rpm-plugins
+
+%files plugin-syslog
+%{_libdir}/rpm-plugins/syslog.so
+
+%files plugin-selinux
+%{_libdir}/rpm-plugins/selinux.so
+
+%files plugin-systemd-inhibit
+%{_libdir}/rpm-plugins/systemd_inhibit.so
 %endif
 
 %files build-libs
@@ -532,14 +530,148 @@ exit 0
 
 %files apidocs
 %defattr(-,root,root)
-%doc COPYING doc/librpm/html/*
+%license COPYING
+%doc doc/librpm/html/*
 
 %changelog
-* Wed Jun 18 2014 Liu Di <liudidi@gmail.com> - 4.11.2-15
-- 为 Magic 3.0 重建
+* Fri Jul 24 2015 Florian Festi <ffesti@rpm.org> - 4.12.90-1
+- Update to upstream alpha release
 
-* Wed Jun 18 2014 Liu Di <liudidi@gmail.com> - 4.11.2-14
-- 为 Magic 3.0 重建
+* Tue Jul 14 2015 Michal Toman <mtoman@fedoraproject.org> - 4.12.0.1-18
+- Add support for MIPS platform
+
+* Mon Jun 29 2015 Florian Festi <ffesti@rpm.org> - 4.12.0.1-17
+- Fix Python import directive for more strict Python3 search rules (#1236493)
+
+* Fri Jun 19 2015 Lubos Kardos <lkardos@redhat.com> 4.12.0.1-16
+- Allow gpg to get passphrase by itself (#1228234)
+
+* Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 4.12.0.1-15.1
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
+
+* Fri Jun 12 2015 Florian Festi <ffesti@rpm.org> - 4.12.0.1-15
+- Add --whatrecommends and friends (#1231247)
+
+* Wed Apr 15 2015 Florian Festi <ffesti@rpm.org> - 4.12.0.1-14
+- Fix references to sources in golang debuginfo packages (#1184221)
+
+* Tue Mar 31 2015 Lubos Kardos <lkardos@redhat.com> 4.12.0-13
+- Fix wrong use of variable strip_g in find-debuginfo.sh (#1207434)
+
+* Mon Mar 30 2015 Lubos Kardos <lkardos@redhat.com> 4.12.0-12
+- Fix segmentation fault (#1206750)
+
+* Fri Mar 27 2015 Lubos Kardos <lkardos@redhat.com> 4.12.0-11
+- Pass _find_debuginfo_opts -g to eu-strip for executables (#1186563)
+- add_minidebug is not ran when strip_g is set (#1186563)
+
+* Fri Mar 20 2015 Lubos Kardos <lkardos@redhat.com> 4.12.0-10
+- Fix "--excludedocs" option (#1192625)
+
+* Fri Mar 20 2015 Florian Festi <ffesti@rpm.org> - 4.12.0.1-9
+- Fix spec to allow building without plugins (#1182385)
+
+* Mon Mar 16 2015 Than Ngo <than@redhat.com> - 4.12.0.1-8
+- bump release and rebuild so that koji-shadow can rebuild it
+  against new gcc on secondary arch
+
+* Sat Feb 21 2015 Till Maas <opensource@till.name> - 4.12.0.1-7.1
+- Rebuilt for Fedora 23 Change
+  https://fedoraproject.org/wiki/Changes/Harden_all_packages_with_position-independent_code
+
+* Tue Feb 17 2015 Richard W.M. Jones <rjones@redhat.com> - 4.12.0.1-7
+- Include upstream patch to fix find-debuginfo (http://www.rpm.org/ticket/887).
+
+* Fri Jan 16 2015 Tom Callaway <spot@fedoraproject.org> - 4.12.0.1-6
+- rebuild against lua 5.3
+
+* Fri Dec 12 2014 Lubos Kardos <lkardos@redhat.com> - 4.12.0.1-5
+- Add check against malicious CPIO file name size (#1168715)
+- Fixes CVE-2014-8118
+- Fix race condidition where unchecked data is exposed in the file system
+  (#1039811)
+- Fixes CVE-2013-6435
+
+* Thu Oct 30 2014 Panu Matilainen <pmatilai@redhat.com> - 4.12.0.1-4
+- Axe unused generator scripts forcing a perl dependency (#1158580, #1158583)
+
+* Tue Oct 28 2014 Panu Matilainen <pmatilai@redhat.com> - 4.12.0.1-3
+- Skip ghost files in payload (#1156497)
+- Fix size and archice size tag generation on big-endian systems
+
+* Wed Oct 01 2014 Panu Matilainen <pmatilai@redhat.com> - 4.12.0.1-2
+- Dont wait for transaction lock inside scriptlets (#1135596)
+
+* Thu Sep 18 2014 Panu Matilainen <pmatilai@redhat.com> - 4.12.0.1-1
+- Update to rpm-4.12.0.1 final (http://rpm.org/wiki/Releases/4.12.0.1)
+- Temporary workaround payload size mismatch issue in rpm2cpio (#1142949)
+
+* Wed Sep 17 2014 Panu Matilainen <pmatilai@redhat.com> - 4.12.0-2
+- Reduce the double separator spec parse error into a warning (#1065563)
+
+* Tue Sep 16 2014 Panu Matilainen <pmatilai@redhat.com> - 4.12.0-1
+- Update to rpm-4.12.0 final (http://rpm.org/wiki/Releases/4.12.0)
+
+* Tue Sep 02 2014 Panu Matilainen <pmatilai@redhat.com> - 4.12.0-0.rc1.2
+- Resurrect payload and tilde rpmlib() dependencies
+
+* Wed Aug 27 2014 Panu Matilainen <pmatilai@redhat.com> - 4.12.0-0.rc1.1
+- Update to rpm-4.12.0-rc1
+
+* Mon Aug 25 2014 Panu Matilainen <pmatilai@redhat.com> - 4.12.0-0.beta1.6
+- Resurrect dependency logging on package build
+- Resurrect rpmlib() dependencies in src.rpms
+
+* Wed Aug 20 2014 Panu Matilainen <pmatilai@redhat.com> - 4.12.0-0.beta1.5
+- Fix duplicate trigger indexes caused by beta1.3 fix (#1131960)
+
+* Wed Aug 20 2014 Panu Matilainen <pmatilai@redhat.com> - 4.12.0-0.beta1.4
+- Emergency hack for #1131892
+
+* Mon Aug 18 2014 Panu Matilainen <pmatilai@redhat.com> - 4.12.0-0.beta1.3
+- Fix regression on rpmspec dependency queries
+
+* Mon Aug 18 2014 Panu Matilainen <pmatilai@redhat.com> - 4.12.0-0.beta1.2
+- Fix regression on BuildRequires checking
+
+* Mon Aug 18 2014 Panu Matilainen <pmatilai@redhat.com> - 4.12.0-0.beta1.1
+- Update to 4.12.0-beta1 (http://rpm.org/wiki/Releases/4.12.0)
+- Fixes #1122004, #1111349, #1117912, #1123722
+- Drop upstreamed patches
+
+* Mon Aug 18 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 4.11.90-0.git12844.5.1
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
+
+* Thu Jul 03 2014 Panu Matilainen <pmatilai@redhat.com> - 4.11.90-0.git12844.5
+- Fix wildcard database iterator (#1115824)
+
+* Wed Jul 02 2014 Panu Matilainen <pmatilai@redhat.com> - 4.11.90-0.git12844.4
+- Use autosetup for building rpm itself
+- Hopefully fix armv7 vfp/neon detection
+
+* Tue Jul 01 2014 Panu Matilainen <pmatilai@redhat.com> - 4.11.90-0.git12844.3
+- Drop no longer needed temporary UsrMove patch
+- Macro-expand load macro argument
+
+* Mon Jun 30 2014 Panu Matilainen <pmatilai@redhat.com> - 4.11.90-0.git12844.2
+- Fix multiple interleaved hardlink groups during build
+
+* Mon Jun 30 2014 Panu Matilainen <pmatilai@redhat.com> - 4.11.90-0.git12844.1
+- Update to rpm 4.12-alpha ((http://rpm.org/wiki/Releases/4.12.0)
+- Drop/adjust patches as appropriate
+- New sub-package(s) for plugins
+
+* Thu Jun 26 2014 Panu Matilainen <pmatilai@redhat.com> - 4.11.2-17
+- Clean up old, no longer needed cruft from spec
+
+* Thu Jun 26 2014 Panu Matilainen <pmatilai@redhat.com> - 4.11.2-16
+- Mark licenses as such, not documentation
+
+* Wed Jun 25 2014 Panu Matilainen <pmatilai@redhat.com> - 4.11.2-15
+- Perl dependency generators live in perl-generators (#1110823) now
+
+* Wed Jun 18 2014 Lubomir Rintel <lkundrak@v3.sk> - 4.11.2-14
+- Fix the armhfp patch for armv6hl
 
 * Tue Jun 10 2014 Panu Matilainen <pmatilai@redhat.com> - 4.11.2-13
 - Rawhide broke our test-suite, disable for now to allow builds to be done
