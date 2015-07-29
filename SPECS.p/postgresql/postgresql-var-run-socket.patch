@@ -12,29 +12,11 @@ server package update, without requiring any existing postgresql.conf
 to be updated.  (Of course, a user who dislikes this behavior can still
 override it via postgresql.conf.)
 
-
-diff --git a/contrib/pg_upgrade/test.sh b/contrib/pg_upgrade/test.sh
-index 30bc527..4e8f6a4 100644
---- a/contrib/pg_upgrade/test.sh
-+++ b/contrib/pg_upgrade/test.sh
-@@ -107,6 +107,12 @@ done
- EXTRA_REGRESS_OPTS="$EXTRA_REGRESS_OPTS --port=$PGPORT"
- export EXTRA_REGRESS_OPTS
- 
-+# we want the Unix sockets in $temp_root
-+PGHOST=$temp_root
-+export PGHOST
-+
-+POSTMASTER_OPTS="$POSTMASTER_OPTS -c unix_socket_directories='$PGHOST'"
-+
- # enable echo so the user can see what is being executed
- set -x
- 
 diff --git a/src/backend/utils/misc/guc.c b/src/backend/utils/misc/guc.c
-index a055231..20b8c87 100644
+index 2b6527f..8e178d4 100644
 --- a/src/backend/utils/misc/guc.c
 +++ b/src/backend/utils/misc/guc.c
-@@ -2929,7 +2929,7 @@ static struct config_string ConfigureNamesString[] =
+@@ -2971,7 +2971,7 @@ static struct config_string ConfigureNamesString[] =
  		},
  		&Unix_socket_directories,
  #ifdef HAVE_UNIX_SOCKETS
@@ -44,10 +26,10 @@ index a055231..20b8c87 100644
  		"",
  #endif
 diff --git a/src/bin/initdb/initdb.c b/src/bin/initdb/initdb.c
-index 5fc7291..d871341 100644
+index abf1586..8c01d48 100644
 --- a/src/bin/initdb/initdb.c
 +++ b/src/bin/initdb/initdb.c
-@@ -1203,7 +1203,7 @@ setup_config(void)
+@@ -1204,7 +1204,7 @@ setup_config(void)
  
  #ifdef HAVE_UNIX_SOCKETS
  	snprintf(repltok, sizeof(repltok), "#unix_socket_directories = '%s'",
@@ -57,7 +39,7 @@ index 5fc7291..d871341 100644
  	snprintf(repltok, sizeof(repltok), "#unix_socket_directories = ''");
  #endif
 diff --git a/src/include/pg_config_manual.h b/src/include/pg_config_manual.h
-index 02bcd92..8aaf58b 100644
+index 24c5069..aeec705 100644
 --- a/src/include/pg_config_manual.h
 +++ b/src/include/pg_config_manual.h
 @@ -144,7 +144,7 @@
@@ -69,25 +51,3 @@ index 02bcd92..8aaf58b 100644
  
  /*
   * The random() function is expected to yield values between 0 and
-diff --git a/src/test/regress/pg_regress.c b/src/test/regress/pg_regress.c
-index b632326..943165c 100644
---- a/src/test/regress/pg_regress.c
-+++ b/src/test/regress/pg_regress.c
-@@ -772,7 +772,7 @@ initialize_environment(void)
- 		if (hostname != NULL)
- 			doputenv("PGHOST", hostname);
- 		else
--			unsetenv("PGHOST");
-+			doputenv("PGHOST", "/tmp");
- 		unsetenv("PGHOSTADDR");
- 		if (port != -1)
- 		{
-@@ -2249,7 +2249,7 @@ regression_main(int argc, char *argv[], init_function ifunc, test_function tfunc
- 		 */
- 		header(_("starting postmaster"));
- 		snprintf(buf, sizeof(buf),
--				 SYSTEMQUOTE "\"%s/postgres\" -D \"%s/data\" -F%s -c \"listen_addresses=%s\" > \"%s/log/postmaster.log\" 2>&1" SYSTEMQUOTE,
-+				 SYSTEMQUOTE "\"%s/postgres\" -D \"%s/data\" -F%s -c \"listen_addresses=%s\" -c \"unix_socket_directories=/tmp\" > \"%s/log/postmaster.log\" 2>&1" SYSTEMQUOTE,
- 				 bindir, temp_install,
- 				 debug ? " -d 5" : "",
- 				 hostname ? hostname : "",

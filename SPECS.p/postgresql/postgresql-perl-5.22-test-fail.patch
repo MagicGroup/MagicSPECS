@@ -1,0 +1,18 @@
+Upstream report:
+http://www.postgresql.org/message-id/flat/55739876.5010403@gmx.net
+
+diff --git a/src/pl/plperl/expected/plperl_elog.out b/src/pl/plperl/expected/plperl_elog.out
+index c447fa2..0932fde 100644
+--- a/src/pl/plperl/expected/plperl_elog.out
++++ b/src/pl/plperl/expected/plperl_elog.out
+@@ -36,8 +36,8 @@ create or replace function uses_global() returns text language plperl as $$
+   return 'uses_global worked';
+ 
+ $$;
+-ERROR:  Global symbol "$global" requires explicit package name at line 3.
+-Global symbol "$other_global" requires explicit package name at line 4.
++ERROR:  Global symbol "$global" requires explicit package name (did you forget to declare "my $global"?) at line 3.
++Global symbol "$other_global" requires explicit package name (did you forget to declare "my $other_global"?) at line 4.
+ CONTEXT:  compilation of PL/Perl function "uses_global"
+ select uses_global();
+ ERROR:  function uses_global() does not exist

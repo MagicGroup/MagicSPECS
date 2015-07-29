@@ -3,12 +3,10 @@ PostgreSQL ecpg/initdb manual page fixes
 This was generated based on automatic Red Hat manual page scan (private
 RHBZ#948933).
 
-### ecpg ###
-
-diff -up postgresql-9.2.4/doc/src/sgml/man1/ecpg.1.broken postgresql-9.2.4/doc/src/sgml/man1/ecpg.1
---- postgresql-9.2.4/doc/src/sgml/man1/ecpg.1.broken	2013-06-05 10:54:39.610443837 +0200
-+++ postgresql-9.2.4/doc/src/sgml/man1/ecpg.1	2013-06-05 10:59:24.115997253 +0200
-@@ -81,6 +81,11 @@ INFORMIX_SE\&.
+diff -up ./doc/src/sgml/man1/ecpg.1.man948933 ./doc/src/sgml/man1/ecpg.1
+--- ./doc/src/sgml/man1/ecpg.1.man948933	2014-12-16 02:13:15.000000000 +0100
++++ ./doc/src/sgml/man1/ecpg.1	2014-12-23 11:26:37.883644047 +0100
+@@ -80,6 +80,11 @@ INFORMIX_SE\&.
  Define a C preprocessor symbol\&.
  .RE
  .PP
@@ -20,7 +18,7 @@ diff -up postgresql-9.2.4/doc/src/sgml/man1/ecpg.1.broken postgresql-9.2.4/doc/s
  \fB\-i\fR
  .RS 4
  Parse system include files as well\&.
-@@ -129,6 +134,11 @@ Allow question mark as placeholder for c
+@@ -128,6 +133,11 @@ Allow question mark as placeholder for c
  .RE
  .RE
  .PP
@@ -32,21 +30,20 @@ diff -up postgresql-9.2.4/doc/src/sgml/man1/ecpg.1.broken postgresql-9.2.4/doc/s
  \fB\-t\fR
  .RS 4
  Turn on autocommit of transactions\&. In this mode, each SQL command is automatically committed unless it is inside an explicit transaction block\&. In the default mode, commands are committed only when
-
-### initdb ###
-
-diff -up postgresql-9.2.4/doc/src/sgml/man1/initdb.1.broken postgresql-9.2.4/doc/src/sgml/man1/initdb.1
---- postgresql-9.2.4/doc/src/sgml/man1/initdb.1.broken	2013-06-06 10:26:48.405835762 +0200
-+++ postgresql-9.2.4/doc/src/sgml/man1/initdb.1	2013-06-06 10:29:46.084209958 +0200
-@@ -227,6 +227,11 @@ determines that an error prevented it fr
+diff -up ./doc/src/sgml/man1/initdb.1.man948933 ./doc/src/sgml/man1/initdb.1
+--- ./doc/src/sgml/man1/initdb.1.man948933	2014-12-16 02:13:21.000000000 +0100
++++ ./doc/src/sgml/man1/initdb.1	2014-12-23 11:26:37.883644047 +0100
+@@ -281,6 +281,13 @@ determines that an error prevented it fr
  .PP
  Other options:
  .PP
-+\fB\-s\fR, \fB\-\-show\fR
++\fB\-s\fR
++.br
++\fB\-\-show\fR
 +.RS 4
 +Print the internal settings, then exit\&.
 +.RE
 +.PP
- \fB\-V\fR, \fB\-\-version\fR
- .RS 4
- Print the
+ \fB\-V\fR
+ .br
+ \fB\-\-version\fR
