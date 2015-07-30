@@ -1,14 +1,18 @@
-%global gitrev 98c23be
+%global gitrev a3aaa03
 # gitrev is output of: git rev-parse --short HEAD
 
+%if 0%{?rhel} == 6
+%define bash_completion %config%{_sysconfdir}/bash_completion.d/createrepo_c.bash
+%else
+%define bash_completion %{_datadir}/bash-completion/completions/*
+%endif
+
 Summary:        Creates a common metadata repository
-Summary(zh_CN.UTF-8): 建立 YUM 仓库工具的 C 版本
 Name:           createrepo_c
-Version:        0.2.2
-Release:        1%{?dist}
+Version:        0.9.0
+Release:        4%{?dist}
 License:        GPLv2
 Group:          System Environment/Base
-Group(zh_CN.UTF-8): 系统环境/库
 # Use the following commands to generate the tarball:
 #  git clone https://github.com/Tojaj/createrepo_c.git
 #  cd createrepo_c
@@ -17,7 +21,6 @@ Source0:        createrepo_c-%{gitrev}.tar.xz
 URL:            https://github.com/Tojaj/createrepo_c
 
 BuildRequires:  bzip2-devel
-BuildRequires:  check-devel
 BuildRequires:  cmake
 BuildRequires:  doxygen
 BuildRequires:  expat-devel
@@ -37,34 +40,31 @@ Requires:       %{name}-libs =  %{version}-%{release}
 %if 0%{?rhel} == 6
 Requires: rpm >= 4.8.0-28
 %else
+BuildRequires:  bash-completion
 Requires: rpm >= 4.9.0
+%endif
+%if 0%{?fedora} >= 21
+BuildRequires:  drpm >= 0.1.3
 %endif
 
 %description
-C implementation of Createrepo. This utility will generate a common
-metadata repository from a directory of rpm packages
-
-%description -l zh_CN.UTF-8
-从含有 rpm 文件的目录中建立 YUM 仓库的 C 语言版本工具。
+C implementation of Createrepo.
+A set of utilities (createrepo_c, mergerepo_c, modifyrepo_c)
+for generating a common metadata repository from a directory of
+rpm packages and maintaining it.
 
 %package libs
 Summary:    Library for repodata manipulation
-Summary(zh_CN.UTF-8): %{name} 的运行库
 Group:      Development/Libraries
-Group(zh_CN.UTF-8): 开发/库
 
 %description libs
 Libraries for applications using the createrepo_c library
 for easy manipulation with a repodata.
 
-%description libs -l zh_CN.UTF-8
-%{name} 的运行库。
 
 %package devel
 Summary:    Library for repodata manipulation
-Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:      Development/Libraries
-Group(zh_CN.UTF-8): 开发/库
 Requires:   pkgconfig >= 1:0.14
 Requires:   %{name}-libs =  %{version}-%{release}
 
@@ -72,39 +72,13 @@ Requires:   %{name}-libs =  %{version}-%{release}
 This package contains the createrepo_c C library and header files.
 These development files are for easy manipulation with a repodata.
 
-%description devel -l zh_CN.UTF-8
-%{name} 的开发包。
-
 %package -n python-createrepo_c
 Summary:    Python bindings for the createrepo_c library
-Summary(zh_CN.UTF-8): %{name} 的 Python 语言绑定
 Group:      Development/Languages
-Group(zh_CN.UTF-8): 开发/语言
-Requires:   %{name}%{?_isa} = %{version}-%{release}
+Requires:   %{name}-libs = %{version}-%{release}
 
 %description -n python-createrepo_c
 Python bindings for the createrepo_c library.
-
-%description -n python-createrepo_c -l zh_CN.UTF-8
-%{name} 的 Python 语言绑定。
-
-#%package -n python-deltarepo
-#Summary:    Python library for generation and application of delta repositories.
-#Group:      Development/Languages
-#Requires:   %{name}%{?_isa} = %{version}-%{release}
-#Requires:   python-createrepo_c = %{version}-%{release}
-
-#%description -n python-deltarepo
-#Python library for generation and application of delta repositories.
-
-#%package -n deltarepo
-#Summary:    Tool for generation and application of delta repositories.
-#Group:      Development/Languages
-#Requires:   %{name}%{?_isa} = %{version}-%{release}
-#Requires:   python-deltarepo = %{version}-%{release}
-
-#%description -n deltarepo
-#Tool for generation and application of delta repositories.
 
 %prep
 %setup -q -n createrepo_c
@@ -131,10 +105,12 @@ make install DESTDIR=$RPM_BUILD_ROOT/
 %_mandir/man8/createrepo_c.8.*
 %_mandir/man8/mergerepo_c.8.*
 %_mandir/man8/modifyrepo_c.8.*
-%config%{_sysconfdir}/bash_completion.d/createrepo_c.bash
+%_mandir/man8/sqliterepo_c.8.*
+%{bash_completion}
 %{_bindir}/createrepo_c
 %{_bindir}/mergerepo_c
 %{_bindir}/modifyrepo_c
+%{_bindir}/sqliterepo_c
 
 %files libs
 %doc COPYING
@@ -150,13 +126,120 @@ make install DESTDIR=$RPM_BUILD_ROOT/
 %files -n python-createrepo_c
 %{python_sitearch}/createrepo_c/
 
-#%files -n python-deltarepo
-#%{python_sitearch}/deltarepo/
-
-#%files -n deltarepo
-#%{_bindir}/deltarepo
-
 %changelog
+* Sun Jul 26 2015 Kevin Fenzi <kevin@scrye.com> 0.9.0-4
+- Rebuild for new librpm
+
+* Tue Jul   7 2015 Tomas Mlcoch <tmlcoch at redhat.com> - 0.9.0-3
+- Add drpm as a BuildRequire
+
+* Thu May  28 2015 Tomas Mlcoch <tmlcoch at redhat.com> - 0.9.0-1
+- mergerepo_c: Prepend protocol (file://) for URLs in pkgorigins (if --koji is used)
+- Update bash completion
+- doc: Update manpages
+- mergerepo: Fix NVR merging method
+- mergerepo: Fix behavior of --all param
+- createrepo: Add --cut-dirs and --location-prefix options
+- misc: Add cr_cut_dirs()
+- mergerepo: Use better version comparison algorithm
+- utils: Port cr_cmp_version_str() to rpm's algorithm (rpmvercmp)
+- misc: Rename elements in cr_Version structure
+- mergerepo: Fix version-release comparison for packages when --all is used
+- mergerepo: Show warnings if some groupfile cannot be automatically used
+- mergerepo: Exit with error code when a groupfile cannot be copied
+
+* Fri May  15 2015 Tomas Mlcoch <tmlcoch at redhat.com> - 0.8.3-1
+- mergerepo: Do not prepend file:// if protocol is already specified
+
+* Thu May  14 2015 Tomas Mlcoch <tmlcoch at redhat.com> - 0.8.2-1
+- doc: Add man pages for sqliterepo and update manpages for other tools
+- mergerepo: Work only with noarch packages if --koji is used and
+  no archlist is specified
+- mergerepo: Use file:// protocol in local baseurl
+- mergerepo: Do not include baseurl for first repo if --koji is specified (RhBug: 1220082)
+- mergerepo_c: Support multilib arch for --koji repos
+- mergerepo_c: Refactoring
+- Print debug message with version in each tool when --verbose is used
+- modifyrepo: Don't override file with itself (RhBug: 1215229)
+
+* Wed May   6 2015 Tomas Mlcoch <tmlcoch at redhat.com> - 0.8.1-1
+- Fix bash completion for RHEL 6
+
+* Tue May   5 2015 Tomas Mlcoch <tmlcoch at redhat.com> - 0.8.0-1
+- New tool Sqliterepo_c - It generates sqlite databases into repos
+  where the sqlite is missing.
+- Internal refactoring and code cleanup
+
+* Fri Feb  20 2015 Tomas Mlcoch <tmlcoch at redhat.com> - 0.7.7-1
+- Proper directory for temporary files when --local-sqlite is used (Issue #12)
+- Bring bash completion install dir and filenames up to date with current bash-completion
+
+* Thu Jan   8 2015 Tomas Mlcoch <tmlcoch at redhat.com> - 0.7.6-1
+- Python: Add __contains__ method to Repomd() class
+
+* Sun Dec  28 2014 Tomas Mlcoch <tmlcoch at redhat.com> - 0.7.5-1
+- Python repomd: Support for iteration and indexing by type - e.g. record = repomd['primary']
+- Show warning if an XML parser probably parsed a bad type of medata (New XML parser warning type CR_XML_WARNING_BADMDTYPE)
+- drpm library: Explicitly try to locate libdrpm.so.0
+- deltarpms: Don't show options for delta rpms if support is not available
+
+* Tue Nov  11 2014 Tomas Mlcoch <tmlcoch at redhat.com> - 0.7.4-1
+- createrepo_c, mergerepo_c: Follow redirs by default while downloading remote repos
+- mergerepo_c: Fix segfault when a package without sourcerpm is part of metadata and --koji option is used
+
+* Mon Nov  10 2014 Tomas Mlcoch <tmlcoch at redhat.com> - 0.7.3-1
+- xml_parser: Add file path into error messages
+- Refactor: Replace g_error() with g_critical() (RhBug: 1162102)
+
+* Thu Nov  06 2014 Tomas Mlcoch <tmlcoch at redhat.com> - 0.7.2-1
+- createrepo_c: New option --local-sqlite
+
+* Fri Oct  31 2014 Tomas Mlcoch <tmlcoch at redhat.com> - 0.7.1-1
+- Mergerepo: Fix mergerepo
+- Mergerepo: Add some debugging of metadata read.
+
+* Mon Oct  20 2014 Tomas Mlcoch <tmlcoch at redhat.com> - 0.7.0-1
+- deltarpms: Update module to work with current version of drpm
+- mergerepo_c: Add --omit-baseurl option
+- craterepo_c: Gen empty repo if empty pkglist is used
+- Docs: Output python docs to separate directory
+- Several small fixes
+
+* Tue Aug  12 2014 Tomas Mlcoch <tmlcoch at redhat.com> - 0.6.1-1
+- updateinfo: Use Python datetime objects in python bindings
+
+* Tue Aug   5 2014 Tomas Mlcoch <tmlcoch at redhat.com> - 0.6.0-1
+- Support for updateinfo.xml manipulation (including Python bindings)
+
+* Fri Jul  18 2014 Tomas Mlcoch <tmlcoch at redhat.com> - 0.5.0-1
+- Experimental delta rpm (DRPM) support (Disabled in Fedora build).
+
+* Thu Jun  26 2014 Tomas Mlcoch <tmlcoch at redhat.com> - 0.4.1-1
+- Initialize threads correctly on old versions of GLib2 (RhBug: 1108787)
+- Do not print log domain (get rid off C_CREATEREPOLIB prefix in log messages)
+- Implements support for --cachedir
+- New option --retain-old-md-by-age
+- Few small API changes
+
+* Tue May   6 2014 Tomas Mlcoch <tmlcoch at redhat.com> - 0.4.0-1
+- Change default behavior of repodata files handling. (RhBug: 1094539)
+  See: https://github.com/Tojaj/createrepo_c/wiki/New-File-Handling
+  By default, createrepo leaves old groupfiles (comps files)
+  in the repodata/ directory during update.
+  Createrepo_c did the same thing but the version 0.4.0 changes this behaviour.
+
+* Thu Apr  10 2014 Tomas Mlcoch <tmlcoch at redhat.com> - 0.3.1-2
+- Support for weak and rich dependecies
+
+* Mon Mar  10 2014 Tomas Mlcoch <tmlcoch at redhat.com> - 0.3.0-1
+- Relevant only for developers using createrepo_c library: New approach for
+  metadata loading in case of internal high-level parser functions (see commit
+  messages for more information: d6ed327595, 0b0e75203e, ad1e8450f5)
+- Support for changelog limit value == -1 (include all changelogs)
+- Update debug compilation flags
+- Update man pages (Add synompsis with usage)
+- Update usage examples in help
+
 * Thu Feb  20 2014 Tomas Mlcoch <tmlcoch at redhat.com> - 0.2.2-1
 - Temporary remove deltarepo subpackages
 - cmake: Do not install deltarepo stuff yet
