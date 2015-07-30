@@ -1,0 +1,69 @@
+commit bec6243394ed78897c14e3fa46f934e0ea3d453e
+Author: Jan Safranek <jsafranek@users.sourceforge.net>
+Date:   Fri Jun 26 13:30:07 2015 +0200
+
+    snmpstatus: CHANGES: Fixed crash when receiving non-standard compliant responses.
+    
+    Some HW sends ifOperStatus as NULL instead of INTEGER type. We should not try to dereference this NULL.
+
+diff --git a/apps/snmpstatus.c b/apps/snmpstatus.c
+index ae08369..6f31c42 100644
+--- a/apps/snmpstatus.c
++++ b/apps/snmpstatus.c
+@@ -310,30 +310,38 @@ main(int argc, char *argv[])
+                         continue;
+                     }
+                     if (vars->name_length >= length_ifOperStatus
+-                        && !memcmp(objid_ifOperStatus, vars->name,
+-                                   sizeof(objid_ifOperStatus))) {
++                            && !memcmp(objid_ifOperStatus, vars->name,
++                                    sizeof(objid_ifOperStatus))
++                            && vars->type == ASN_INTEGER
++                            && vars->val.integer) {
+                         if (*vars->val.integer != MIB_IFSTATUS_UP)
+                             down_interfaces++;
+                         snmp_add_null_var(pdu, vars->name,
+                                           vars->name_length);
+                         good_var++;
+-                    } else if (vars->name_length >= length_ifInUCastPkts &&
+-                               !memcmp(objid_ifInUCastPkts, vars->name,
+-                                       sizeof(objid_ifInUCastPkts))) {
++                    } else if (vars->name_length >= length_ifInUCastPkts
++                            &&!memcmp(objid_ifInUCastPkts, vars->name,
++                                    sizeof(objid_ifInUCastPkts))
++                            && vars->type == ASN_COUNTER
++                            && vars->val.integer) {
+                         ipackets += *vars->val.integer;
+                         snmp_add_null_var(pdu, vars->name,
+                                           vars->name_length);
+                         good_var++;
+                     } else if (vars->name_length >= length_ifInNUCastPkts
+                                && !memcmp(objid_ifInNUCastPkts, vars->name,
+-                                          sizeof(objid_ifInNUCastPkts))) {
++                                          sizeof(objid_ifInNUCastPkts))
++                               && vars->type == ASN_COUNTER
++                               && vars->val.integer) {
+                         ipackets += *vars->val.integer;
+                         snmp_add_null_var(pdu, vars->name,
+                                           vars->name_length);
+                         good_var++;
+                     } else if (vars->name_length >= length_ifOutUCastPkts
+                                && !memcmp(objid_ifOutUCastPkts, vars->name,
+-                                          sizeof(objid_ifOutUCastPkts))) {
++                                          sizeof(objid_ifOutUCastPkts))
++                               && vars->type == ASN_COUNTER
++                               && vars->val.integer) {
+                         opackets += *vars->val.integer;
+                         snmp_add_null_var(pdu, vars->name,
+                                           vars->name_length);
+@@ -341,7 +349,9 @@ main(int argc, char *argv[])
+                     } else if (vars->name_length >= length_ifOutNUCastPkts
+                                && !memcmp(objid_ifOutNUCastPkts,
+                                           vars->name,
+-                                          sizeof(objid_ifOutNUCastPkts))) {
++                                          sizeof(objid_ifOutNUCastPkts))
++                               && vars->type == ASN_COUNTER
++                               && vars->val.integer) {
+                         opackets += *vars->val.integer;
+                         snmp_add_null_var(pdu, vars->name,
+                                           vars->name_length);

@@ -10,8 +10,8 @@
 
 Summary: A collection of SNMP protocol tools and libraries
 Name: net-snmp
-Version: 5.7.2
-Release: 24%{?dist}
+Version: 5.7.3
+Release: 7%{?dist}
 Epoch: 1
 
 License: BSD
@@ -36,15 +36,12 @@ Patch3: net-snmp-5.6-multilib.patch
 Patch4: net-snmp-5.5-apsl-copying.patch
 Patch5: net-snmp-5.6-test-debug.patch
 Patch6: net-snmp-5.7.2-systemd.patch
-Patch7: net-snmp-5.7.2-python-ipaddress-size.patch
-Patch8: net-snmp-5.7.2-create-user-multilib.patch
-Patch9: net-snmp-5.7.2-autoreconf.patch
-Patch10: net-snmp-5.7.2-btrfs.patch
-Patch11: net-snmp-5.7-agentx-crash.patch
-Patch12: net-snmp-5.5-agentx-disconnect-crash.patch
-Patch13: net-snmp-5.7.2-icmp-mib.patch
-Patch14: net-snmp-CVE-2014-3565.patch
-Patch15: net-snmp-5.7.2-cert-path.patch
+Patch7: net-snmp-5.7.2-create-user-multilib.patch
+Patch8: net-snmp-5.7.2-autoreconf.patch
+Patch9: net-snmp-5.7-agentx-crash.patch
+Patch10: net-snmp-5.5-agentx-disconnect-crash.patch
+Patch11: net-snmp-5.7.2-cert-path.patch
+Patch12: net-snmp-5.7.3-snmpstatus-null.patch
 
 Requires(post): chkconfig
 Requires(preun): chkconfig
@@ -52,16 +49,16 @@ Requires(preun): chkconfig
 Requires(preun): initscripts
 # for /bin/rm
 Requires(preun): coreutils
-Requires: %{name}-libs = %{epoch}:%{version}-%{release}
-Requires: %{name}-agent-libs = %{epoch}:%{version}-%{release}
+Requires: %{name}-libs%{?_isa} = %{epoch}:%{version}-%{release}
+Requires: %{name}-agent-libs%{?_isa} = %{epoch}:%{version}-%{release}
 # This is actually needed for the %%triggerun script but Requires(triggerun)
 # is not valid.  We can use %%post because this particular %triggerun script
 # should fire just after this package is installed.
 Requires(post): systemd-sysv
 
 BuildRequires: openssl-devel, bzip2-devel, elfutils-devel
-BuildRequires: elfutils-libelf-devel, rpm-devel
-BuildRequires: perl-devel, perl(ExtUtils::Embed), gawk, procps
+BuildRequires: libselinux-devel, elfutils-libelf-devel, rpm-devel
+BuildRequires: perl-devel, perl(ExtUtils::Embed), procps
 BuildRequires: python-devel, python-setuptools
 BuildRequires: chrpath
 BuildRequires: mysql-devel
@@ -93,7 +90,7 @@ which contains NET-SNMP utilities.
 %package utils
 Group: Applications/System
 Summary: Network management utilities using SNMP, from the NET-SNMP project
-Requires: %{name}-libs = %{epoch}:%{version}-%{release}
+Requires: %{name}-libs%{?_isa} = %{epoch}:%{version}-%{release}
 
 %description utils
 The net-snmp-utils package contains various utilities for use with the
@@ -106,8 +103,8 @@ package.
 %package devel
 Group: Development/Libraries
 Summary: The development environment for the NET-SNMP project
-Requires: %{name}-libs = %{epoch}:%{version}-%{release}
-Requires: %{name}-agent-libs = %{epoch}:%{version}-%{release}
+Requires: %{name}-libs%{?_isa} = %{epoch}:%{version}-%{release}
+Requires: %{name}-agent-libs%{?_isa} = %{epoch}:%{version}-%{release}
 Requires: elfutils-devel, rpm-devel, elfutils-libelf-devel, openssl-devel
 %if %{netsnmp_tcp_wrappers}
 Requires: tcp_wrappers-devel
@@ -131,8 +128,8 @@ packages installed.
 %package perl
 Group: Development/Libraries
 Summary: The perl NET-SNMP module and the mib2c tool
-Requires: %{name}-libs = %{epoch}:%{version}-%{release}, perl
-Requires: %{name}-agent-libs = %{epoch}:%{version}-%{release}
+Requires: %{name}-libs%{?_isa} = %{epoch}:%{version}-%{release}, perl
+Requires: %{name}-agent-libs%{?_isa} = %{epoch}:%{version}-%{release}
 BuildRequires: perl
 
 %description perl
@@ -145,7 +142,7 @@ with perl.
 %package gui
 Group: Applications/System
 Summary: An interactive graphical MIB browser for SNMP
-Requires: perl-Tk, net-snmp-perl = %{epoch}:%{version}-%{release}
+Requires: perl-Tk, net-snmp-perl%{?_isa} = %{epoch}:%{version}-%{release}
 
 %description gui
 The net-snmp-gui package contains tkmib utility, which is a graphical user 
@@ -168,7 +165,7 @@ Group: Development/Libraries
 Summary: The NET-SNMP runtime agent libraries
 # the libs link against libperl.so:
 Requires:  perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
-Requires: %{name}-libs = %{epoch}:%{version}-%{release}
+Requires: %{name}-libs%{?_isa} = %{epoch}:%{version}-%{release}
 
 %description agent-libs
 The net-snmp-agent-libs package contains the runtime agent libraries for shared
@@ -177,20 +174,22 @@ binaries and applications.
 %package python
 Group: Development/Libraries
 Summary: The Python 'netsnmp' module for the Net-SNMP
-Requires: %{name}-libs = %{epoch}:%{version}-%{release}
+Requires: %{name}-libs%{?_isa} = %{epoch}:%{version}-%{release}
 
 %description python
 The 'netsnmp' module provides a full featured, tri-lingual SNMP (SNMPv3, 
 SNMPv2c, SNMPv1) client API. The 'netsnmp' module internals rely on the
 Net-SNMP toolkit library.
 
+%if 0%{?fedora} < 23
 %package sysvinit
 Group: System Environment/Daemons
 Summary: Legacy SysV init scripts for Net-SNMP daemons
-Requires: %{name} = %{epoch}:%{version}-%{release}
+Requires: %{name}%{?_isa} = %{epoch}:%{version}-%{release}
 
 %description sysvinit
 The net-snmp-sysvinit package provides SysV init scripts for Net-SNMP daemons.
+%endif
 
 %prep
 %setup -q
@@ -205,15 +204,12 @@ cp %{SOURCE12} .
 %patch4 -p1 -b .apsl
 %patch5 -p1
 %patch6 -p1 -b .systemd
-%patch7 -p1 -b .ipaddress-size
-%patch8 -p1 -b .multilib
-%patch9 -p1 -b .autoreconf
-%patch10 -p1 -b .btrfs
-%patch11 -p1 -b .agentx-crash
-%patch12 -p1 -b .agentx-disconnect-crash
-%patch13 -p1 -b .icmp-mib
-%patch14 -p1 -b .CVE-2014-3565
-%patch15 -p1 -b .cert-path
+%patch7 -p1 -b .multilib
+%patch8 -p1 -b .autoreconf
+%patch9 -p1 -b .agentx-crash
+%patch10 -p1 -b .agentx-disconnect-crash
+%patch11 -p1 -b .cert-path
+%patch12 -p1 -b .snmpstatus-null
 
 %ifarch sparc64 s390 s390x
 # disable failing test - see https://bugzilla.redhat.com/show_bug.cgi?id=680697
@@ -240,7 +236,7 @@ MIBS="$MIBS ucd-snmp/lmsensorsMib"
 
 %configure \
     --disable-static --enable-shared \
-    --with-cflags="$RPM_OPT_FLAGS -D_RPM_4_4_COMPAT" \
+    --with-cflags="$RPM_OPT_FLAGS -D_RPM_4_4_COMPAT -Wformat" \
     --with-ldflags="-Wl,-z,relro -Wl,-z,now" \
     --with-sys-location="Unknown" \
     --with-logfile="/var/log/snmpd.log" \
@@ -309,9 +305,11 @@ install -d ${RPM_BUILD_ROOT}%{_sysconfdir}/snmp
 install -m 644 %SOURCE1 ${RPM_BUILD_ROOT}%{_sysconfdir}/snmp/snmpd.conf
 install -m 644 %SOURCE6 ${RPM_BUILD_ROOT}%{_sysconfdir}/snmp/snmptrapd.conf
 
+%if 0%{?fedora} < 23
 install -d ${RPM_BUILD_ROOT}%{_initrddir}
 install -m 755 %SOURCE2 ${RPM_BUILD_ROOT}%{_initrddir}/snmpd
 install -m 755 %SOURCE3 ${RPM_BUILD_ROOT}%{_initrddir}/snmptrapd
+%endif
 
 install -d ${RPM_BUILD_ROOT}%{_sysconfdir}/sysconfig
 install -m 644 %SOURCE7 ${RPM_BUILD_ROOT}%{_sysconfdir}/sysconfig/snmpd
@@ -411,9 +409,11 @@ LD_LIBRARY_PATH=${RPM_BUILD_ROOT}/%{_libdir} make test
 /bin/systemctl try-restart snmpd.service >/dev/null 2>&1 || :
 /bin/systemctl try-restart snmptrapd.service >/dev/null 2>&1 || :
 
+%if 0%{?fedora} < 23
 %triggerpostun -n net-snmp-sysvinit -- net-snmp < 1:5.7-5
 /sbin/chkconfig --add snmpd >/dev/null 2>&1 || :
 /sbin/chkconfig --add snmptrapd >/dev/null 2>&1 || :
+%endif
 
 %post libs -p /sbin/ldconfig
 
@@ -510,11 +510,34 @@ rm -rf ${RPM_BUILD_ROOT}
 %{_libdir}/libnetsnmpmibs*.so.*
 %{_libdir}/libnetsnmptrapd*.so.*
 
+%if 0%{?fedora} < 23
 %files sysvinit
 %{_initrddir}/snmpd
 %{_initrddir}/snmptrapd
+%endif
 
 %changelog
+* Mon Jul 27 2015 Richard W.M. Jones <rjones@redhat.com> - 1:5.7.3-7
+- Bump version to rebuild against new RPM in Rawhide.
+
+* Tue Jul 14 2015 Jan Safranek <jsafrane@redhat.com> - 1:5.7.3-6
+- Recompile with -Wformat (#1242766)
+
+* Fri Jun 26 2015 Jan Safranek <jsafrane@redhat.com> - 1:5.7.3-5
+- Fixed snmpstatus crashing when receiving invalid response (#1233738)
+
+* Wed Jun 17 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1:5.7.3-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
+
+* Wed Jun 03 2015 Jitka Plesnikova <jplesnik@redhat.com> - 1:5.7.3-3
+- Perl 5.22 rebuild
+
+* Thu Mar 05 2015 Adam Jackson <ajax@redhat.com> 1:5.7.3-2
+- Disable sysvinit subpackage on F23+
+
+* Tue Feb 17 2015 Jan Safranek <jsafrane@redhat.com> - 1:5.7.3-1
+- Update to 5.7.3
+
 * Fri Sep 05 2014 Jitka Plesnikova <jplesnik@redhat.com> - 1:5.7.2-24
 - Perl 5.20 rebuild
 
