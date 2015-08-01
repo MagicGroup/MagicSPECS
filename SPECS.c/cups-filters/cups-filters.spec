@@ -3,7 +3,7 @@
 
 Summary: OpenPrinting CUPS filters and backends
 Name:    cups-filters
-Version: 1.0.46
+Version: 1.0.71
 Release: 2%{?dist}
 
 # For a breakdown of the licensing, see COPYING file
@@ -12,13 +12,16 @@ Release: 2%{?dist}
 #         backends: parallel, serial
 # GPLv2+:  filters: gstopxl, textonly, texttops, imagetops, foomatic-rip
 # GPLv3:   filters: bannertopdf
-# GPLv3+:  filters: urftopdf
+# GPLv3+:  filters: urftopdf, rastertopdf
 # LGPLv2+:   utils: cups-browsed
 # MIT:     filters: gstoraster, pdftoijs, pdftoopvp, pdftopdf, pdftoraster
 License: GPLv2 and GPLv2+ and GPLv3 and GPLv3+ and LGPLv2+ and MIT
 
 Url:     http://www.linuxfoundation.org/collaborate/workgroups/openprinting/cups-filters
 Source0: http://www.openprinting.org/download/cups-filters/cups-filters-%{version}.tar.xz
+# Upstream patch for poppler 0.34 support
+# http://bzr.linuxfoundation.org/loggerhead/openprinting/cups-filters/revision/7371
+Patch0:  cups-filters-poppler34.patch
 
 Requires: cups-filters-libs%{?_isa} = %{version}-%{release}
 
@@ -28,24 +31,28 @@ Obsoletes: cups-php < 1:1.6.0-1
 #Provides: cups-php = 1:1.6.0-1
 
 BuildRequires: cups-devel
+BuildRequires: pkgconfig
 # pdftopdf
-BuildRequires: qpdf-devel
+BuildRequires: pkgconfig(libqpdf)
 # pdftops
 BuildRequires: poppler-utils
 # pdftoijs, pdftoopvp, pdftoraster, gstoraster
-BuildRequires: poppler-devel poppler-cpp-devel
+BuildRequires: pkgconfig(poppler)
+BuildRequires: poppler-cpp-devel
 BuildRequires: libjpeg-devel
-BuildRequires: libpng-devel
 BuildRequires: libtiff-devel
-BuildRequires: zlib-devel
-BuildRequires: pkgconfig dbus-devel
+BuildRequires: pkgconfig(libpng)
+BuildRequires: pkgconfig(zlib)
+BuildRequires: pkgconfig(dbus-1)
 # libijs
-BuildRequires: ghostscript-devel
-BuildRequires: freetype-devel
-BuildRequires: fontconfig-devel
-BuildRequires: lcms2-devel
+BuildRequires: pkgconfig(ijs)
+BuildRequires: pkgconfig(freetype2)
+BuildRequires: pkgconfig(fontconfig)
+BuildRequires: pkgconfig(lcms2)
 # cups-browsed
-BuildRequires: avahi-devel avahi-glib-devel
+BuildRequires: avahi-devel
+BuildRequires: pkgconfig(avahi-glib)
+BuildRequires: pkgconfig(glib-2.0)
 BuildRequires: systemd
 
 # Make sure we get postscriptdriver tags.
@@ -61,6 +68,10 @@ BuildRequires: libtool
 
 Requires: cups-filesystem
 Requires: poppler-utils
+
+# texttopdf
+Requires: liberation-mono-fonts
+
 # pstopdf
 Requires: bc grep sed
 
@@ -105,6 +116,7 @@ This is the development package for OpenPrinting CUPS filters and backends.
 
 %prep
 %setup -q
+%patch0 -p0 -b .poppler34
 
 %build
 # work-around Rpath
@@ -125,16 +137,15 @@ make %{?_smp_mflags}
 %install
 make install DESTDIR=%{buildroot}
 
-# https://fedoraproject.org/wiki/Packaging_tricks#With_.25doc
-mkdir __doc
-mv  %{buildroot}%{_datadir}/doc/cups-filters/* __doc
-rm -rf %{buildroot}%{_datadir}/doc/cups-filters
-
 # Don't ship libtool la files.
 rm -f %{buildroot}%{_libdir}/lib*.la
 
 # Not sure what is this good for.
 rm -f %{buildroot}%{_bindir}/ttfread
+
+rm -f %{buildroot}%{_defaultdocdir}/cups-filters/INSTALL
+mkdir -p %{buildroot}%{_defaultdocdir}/cups-filters/fontembed/
+cp -p fontembed/README %{buildroot}%{_defaultdocdir}/cups-filters/fontembed/
 
 # systemd unit file
 mkdir -p %{buildroot}%{_unitdir}
@@ -143,6 +154,15 @@ install -p -m 644 utils/cups-browsed.service %{buildroot}%{_unitdir}
 # LSB3.2 requires /usr/bin/foomatic-rip,
 # create it temporarily as a relative symlink
 ln -sf ../lib/cups/filter/foomatic-rip %{buildroot}%{_bindir}/foomatic-rip
+
+# Don't ship urftopdf for now (bug #1002947).
+rm -f %{buildroot}%{_cups_serverbin}/filter/urftopdf
+sed -i '/urftopdf/d' %{buildroot}%{_datadir}/cups/mime/cupsfilters.convs
+
+# Don't ship pdftoopvp for now (bug #1027557).
+rm -f %{buildroot}%{_cups_serverbin}/filter/pdftoopvp
+rm -f %{buildroot}%{_sysconfdir}/fonts/conf.d/99pdftoopvp.conf
+
 
 %check
 make check
@@ -158,7 +178,7 @@ if [ $1 -eq 1 ] ; then
 
     # We can remove this after few releases, it's just for the introduction of cups-browsed.
     if [ -f "$OUT" ]; then
-        echo -e "\n# NOTE: This file is not part of CUPS. You need to start & enable cups-browsed service." >> "$OUT"
+        echo -e "\n# NOTE: This file is not part of CUPS.\n# You need to enable cups-browsed service\n# and allow ipp-client service in firewall." >> "$OUT"
     fi
 
     # move BrowsePoll from cupsd.conf to cups-browsed.conf
@@ -188,9 +208,10 @@ fi
 
 
 %files
-%doc __doc/README __doc/AUTHORS __doc/NEWS
+%{_defaultdocdir}/cups-filters/README
+%{_defaultdocdir}/cups-filters/AUTHORS
+%{_defaultdocdir}/cups-filters/NEWS
 %config(noreplace) %{_sysconfdir}/cups/cups-browsed.conf
-%config(noreplace) %{_sysconfdir}/fonts/conf.d/99pdftoopvp.conf
 %attr(0755,root,root) %{_cups_serverbin}/filter/*
 %attr(0755,root,root) %{_cups_serverbin}/backend/parallel
 # Serial backend needs to run as root (bug #212577#c4).
@@ -212,7 +233,9 @@ fi
 %{_bindir}/foomatic-rip
 
 %files libs
-%doc __doc/COPYING fontembed/README
+%dir %{_defaultdocdir}/cups-filters/
+%{_defaultdocdir}/cups-filters/COPYING
+%{_defaultdocdir}/cups-filters/fontembed/README
 %{_libdir}/libcupsfilters.so.*
 %{_libdir}/libfontembed.so.*
 
@@ -226,6 +249,126 @@ fi
 %{_libdir}/libfontembed.so
 
 %changelog
+* Thu Jul 23 2015 Orion Poplawski <orion@cora.nwra.com> - 1.0.71-2
+- Add upstream patch for poppler 0.34 support
+
+* Wed Jul 22 2015 Marek Kasik <mkasik@redhat.com> - 1.0.71-2
+- Rebuild (poppler-0.34.0)
+
+* Fri Jul 03 2015 Jiri Popelka <jpopelka@redhat.com> - 1.0.71-1
+- 1.0.71
+
+* Mon Jun 29 2015 Jiri Popelka <jpopelka@redhat.com> - 1.0.70-1
+- 1.0.70
+
+* Mon Jun 22 2015 Tim Waugh <twaugh@redhat.com> - 1.0.69-3
+- Fixes for glib source handling (bug #1228555).
+
+* Wed Jun 17 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.0.69-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
+
+* Thu Jun 11 2015 Jiri Popelka <jpopelka@redhat.com> - 1.0.69-1
+- 1.0.69
+
+* Fri Jun  5 2015 Marek Kasik <mkasik@redhat.com> - 1.0.68-2
+- Rebuild (poppler-0.33.0)
+
+* Tue Apr 14 2015 Jiri Popelka <jpopelka@redhat.com> - 1.0.68-1
+- 1.0.68
+
+* Wed Mar 11 2015 Jiri Popelka <jpopelka@redhat.com> - 1.0.67-1
+- 1.0.67
+
+* Mon Mar 02 2015 Jiri Popelka <jpopelka@redhat.com> - 1.0.66-1
+- 1.0.66
+
+* Mon Feb 16 2015 Jiri Popelka <jpopelka@redhat.com> - 1.0.65-1
+- 1.0.65
+
+* Fri Jan 23 2015 Marek Kasik <mkasik@redhat.com> - 1.0.61-3
+- Rebuild (poppler-0.30.0)
+
+* Thu Nov 27 2014 Marek Kasik <mkasik@redhat.com> - 1.0.61-2
+- Rebuild (poppler-0.28.1)
+
+* Fri Oct 10 2014 Jiri Popelka <jpopelka@redhat.com> - 1.0.61-1
+- 1.0.61 
+
+* Tue Oct 07 2014 Jiri Popelka <jpopelka@redhat.com> - 1.0.60-1
+- 1.0.60
+
+* Sun Sep 28 2014 Jiri Popelka <jpopelka@redhat.com> - 1.0.59-1
+- 1.0.59
+
+* Thu Aug 21 2014 Jiri Popelka <jpopelka@redhat.com> - 1.0.58-1
+- 1.0.58
+
+* Sat Aug 16 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.0.55-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
+
+* Fri Aug 15 2014 Jiri Popelka <jpopelka@redhat.com> - 1.0.55-2
+- Use %%_defaultdocdir instead of %%doc
+
+* Mon Jul 28 2014 Jiri Popelka <jpopelka@redhat.com> - 1.0.55-1
+- 1.0.55
+
+* Fri Jun 13 2014 Tim Waugh <twaugh@redhat.com> - 1.0.54-4
+- Really fix execmem issue (bug #1079534).
+
+* Wed Jun 11 2014 Jiri Popelka <jpopelka@redhat.com> - 1.0.54-3
+- Remove (F21) pdf-landscape.patch
+
+* Wed Jun 11 2014 Tim Waugh <twaugh@redhat.com> - 1.0.54-2
+- Fix build issue (bug #1106101).
+- Don't use grep's -P switch in pstopdf as it needs execmem (bug #1079534).
+- Return work-around patch for bug #768811.
+
+* Mon Jun 09 2014 Jiri Popelka <jpopelka@redhat.com> - 1.0.54-1
+- 1.0.54
+
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.0.53-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Tue Jun 03 2014 Jiri Popelka <jpopelka@redhat.com> - 1.0.53-3
+- Remove BuildRequires pkgconfig(lcms). pkgconfig(lcms2) is enough.
+
+* Tue May 13 2014 Marek Kasik <mkasik@redhat.com> - 1.0.53-2
+- Rebuild (poppler-0.26.0)
+
+* Mon Apr 28 2014 Jiri Popelka <jpopelka@redhat.com> - 1.0.53-1
+- 1.0.53
+
+* Wed Apr 23 2014 Jiri Popelka <jpopelka@redhat.com> - 1.0.52-2
+- Remove pdftoopvp and urftopdf in %%install instead of not building them.
+
+* Tue Apr 08 2014 Jiri Popelka <jpopelka@redhat.com> - 1.0.52-1
+- 1.0.52
+
+* Wed Apr 02 2014 Jiri Popelka <jpopelka@redhat.com> - 1.0.51-1
+- 1.0.51 (#1083327)
+
+* Thu Mar 27 2014 Jiri Popelka <jpopelka@redhat.com> - 1.0.50-1
+- 1.0.50
+
+* Mon Mar 24 2014 Jiri Popelka <jpopelka@redhat.com> - 1.0.49-1
+- 1.0.49
+
+* Wed Mar 12 2014 Jiri Popelka <jpopelka@redhat.com> - 1.0.48-1
+- 1.0.48
+
+* Tue Mar 11 2014 Jiri Popelka <jpopelka@redhat.com> - 1.0.47-2
+- Don't ship pdftoopvp (#1027557) and urftopdf (#1002947).
+
+* Tue Mar 11 2014 Jiri Popelka <jpopelka@redhat.com> - 1.0.47-1
+- 1.0.47: CVE-2013-6473 CVE-2013-6476 CVE-2013-6474 CVE-2013-6475 (#1074840)
+
+* Mon Mar 10 2014 Jiri Popelka <jpopelka@redhat.com> - 1.0.46-3
+- BuildRequires: pkgconfig(foo) instead of foo-devel
+
+* Tue Mar  4 2014 Tim Waugh <twaugh@redhat.com> - 1.0.46-2
+- The texttopdf filter requires a TrueType monospaced font
+  (bug #1070729).
+
 * Thu Feb 20 2014 Jiri Popelka <jpopelka@redhat.com> - 1.0.46-1
 - 1.0.46
 
