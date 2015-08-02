@@ -1,0 +1,38 @@
+diff -up ppl-1.1/src/Pointset_Powerset_defs.hh.orig ppl-1.1/src/Pointset_Powerset_defs.hh
+--- ppl-1.1/src/Pointset_Powerset_defs.hh.orig	2013-10-28 10:38:33.000000000 -0200
++++ ppl-1.1/src/Pointset_Powerset_defs.hh	2015-02-08 17:33:06.414149334 -0200
+@@ -1391,6 +1391,7 @@ template <typename PSET>
+ bool
+ check_containment(const PSET& ph, const Pointset_Powerset<PSET>& ps);
+ 
++#if __GNUC__ < 5
+ // CHECKME: according to the Intel compiler, the declaration of the
+ // following specialization (of the class template parameter) should come
+ // before the declaration of the corresponding full specialization
+@@ -1400,6 +1401,7 @@ template <typename QH>
+ Pointset_Powerset<NNC_Polyhedron>
+ ::Pointset_Powerset(const Pointset_Powerset<QH>& y,
+                     Complexity_Class);
++#endif
+ 
+ // Non-inline full specializations should be declared here
+ // so as to inhibit multiple instantiations of the generic template.
+diff -up ppl-1.1/src/ppl.hh.dist.orig ppl-1.1/src/ppl.hh.dist
+--- ppl-1.1/src/ppl.hh.dist.orig	2015-02-08 17:32:26.594146810 -0200
++++ ppl-1.1/src/ppl.hh.dist	2015-02-08 17:33:11.833149677 -0200
+@@ -100618,6 +100618,7 @@ template <typename PSET>
+ bool
+ check_containment(const PSET& ph, const Pointset_Powerset<PSET>& ps);
+ 
++#if __GNUC__ < 5
+ // CHECKME: according to the Intel compiler, the declaration of the
+ // following specialization (of the class template parameter) should come
+ // before the declaration of the corresponding full specialization
+@@ -100627,6 +100628,7 @@ template <typename QH>
+ Pointset_Powerset<NNC_Polyhedron>
+ ::Pointset_Powerset(const Pointset_Powerset<QH>& y,
+                     Complexity_Class);
++#endif
+ 
+ // Non-inline full specializations should be declared here
+ // so as to inhibit multiple instantiations of the generic template.

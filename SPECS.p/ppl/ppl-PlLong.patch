@@ -1,0 +1,20 @@
+diff -up ppl-1.1/interfaces/Prolog/GNU/gprolog_efli.hh.orig ppl-1.1/interfaces/Prolog/GNU/gprolog_efli.hh
+--- ppl-1.1/interfaces/Prolog/GNU/gprolog_efli.hh.orig	2014-04-29 17:25:21.639273848 -0300
++++ ppl-1.1/interfaces/Prolog/GNU/gprolog_efli.hh	2014-04-29 17:25:30.757274198 -0300
+@@ -45,14 +45,14 @@ extern bool Prolog_has_unbounded_integer
+   integer value representable by a Prolog integer.
+   Holds zero otherwise.
+ */
+-extern long Prolog_min_integer;
++extern PlLong Prolog_min_integer;
+ 
+ /*!
+   If \p Prolog_has_unbounded_integers is false, holds the maximum
+   integer value representable by a Prolog integer.
+   Holds zero otherwise.
+ */
+-extern long Prolog_max_integer;
++extern PlLong Prolog_max_integer;
+ 
+ /*!
+   Performs system-dependent initialization.

@@ -1,6 +1,6 @@
 Name:			ppl
-Version:		1.0
-Release:		3%{?dist}.3
+Version:		1.1
+Release:		11%{?dist}
 Summary:		The Parma Polyhedra Library: a library of numerical abstractions
 Group:			Development/Libraries
 License:		GPLv3+
@@ -8,19 +8,16 @@ URL:			http://www.cs.unipr.it/ppl/
 Source0:		ftp://ftp.cs.unipr.it/pub/ppl/releases/%{version}/%{name}-%{version}.tar.bz2
 Source1:		ppl.hh
 Source2:		ppl_c.h
-Patch1:		ppl-1.0-gmp-5.1.0-fix.patch
 Requires(post):		/sbin/ldconfig
 Requires(postun):	/sbin/ldconfig
 # Merged into ppl as of 0.12
 Provides:		ppl-pwl = %{version}-%{release}
 Obsoletes:		ppl-pwl <= 0.11.2-11
 BuildRequires:		gmp-devel >= 4.1.3, m4 >= 1.4.8
-# Hack
-%if %{_lib} == lib64
-Provides:		libppl.so.9()(64bit)
-%else
-Provides:		libppl.so.9
-%endif
+Patch0:			%{name}-cstddef.patch
+Patch1:			%{name}-PlLong.patch
+Patch2:			%{name}-gcc5.patch
+Patch3:			%{name}-swiprolog.patch
 
 %description
 The Parma Polyhedra Library (PPL) is a library for the manipulation of
@@ -110,7 +107,7 @@ Requires:	%{name}-swiprolog%{?_isa} = %{version}-%{release}
 This package contains the static archive for the SWI-Prolog interface
 of the Parma Polyhedra Library.
 
-%ifnarch sparc64 sparcv9 %{arm} ppc ppc64
+%ifnarch sparc64 sparcv9 %{arm} ppc %{power64}
 %package yap
 Summary:	The YAP Prolog interface of the Parma Polyhedra Library
 BuildRequires:	yap-devel >= 5.1.1
@@ -122,13 +119,10 @@ This package adds YAP Prolog support to the Parma Polyhedra Library (PPL).
 Install this package if you want to use the library in YAP Prolog programs.
 %endif
 
-%if 0%{?JAVA}
 %package java
 Summary:	The Java interface of the Parma Polyhedra Library
 BuildRequires:	java-devel >= 1:1.6.0
-BuildRequires:	jpackage-utils
-Requires:	java%{?_isa} >= 1:1.6.0
-Requires:	jpackage-utils%{?_isa}
+Requires:	java-headless >= 1:1.6.0
 Requires:	%{name}%{?_isa} = %{version}-%{release}
 
 %description java
@@ -138,12 +132,10 @@ Install this package if you want to use the library in Java programs.
 %package java-javadoc
 Summary:	Javadocs for %{name}-java
 Requires:	%{name}-java%{?_isa} = %{version}-%{release}
-Requires:	jpackage-utils%{?_isa}
 
 %description java-javadoc
 This package contains the API documentation for Java interface
 of the Parma Polyhedra Library.
-%endif
 
 %package docs
 Summary:	Documentation for the Parma Polyhedra Library
@@ -156,7 +148,10 @@ Install this package if you want to program with the PPL.
 
 %prep
 %setup -q
-%patch1 -p0
+%patch0 -p1
+%patch1 -p1
+%patch2 -p1
+%patch3 -p1
 
 %build
 CPPFLAGS="-I%{_includedir}/glpk"
@@ -164,15 +159,11 @@ CPPFLAGS="-I%{_includedir}/glpk"
 %ifarch x86_64 %{ix86} ppc alpha
 CPPFLAGS="$CPPFLAGS -I%{_libdir}/gprolog-`gprolog --version 2>&1 | head -1 | sed -e "s/.* \([^ ]*\)$/\1/g"`/include"
 %endif
-%ifnarch sparc64 sparcv9 %{arm} ppc ppc64
+%ifnarch sparc64 sparcv9 %{arm} ppc %{power64}
 CPPFLAGS="$CPPFLAGS -I`swipl -dump-runtime-variables | grep PLBASE= | sed 's/PLBASE="\(.*\)";/\1/'`/include"
 CPPFLAGS="$CPPFLAGS -I%{_includedir}/Yap"
 %endif
-%if 0%{?JAVA}
-%configure --docdir=%{_datadir}/doc/%{name}-%{version} --enable-shared --disable-rpath --enable-interfaces="c++ c gnu_prolog swi_prolog yap_prolog java" CPPFLAGS="$CPPFLAGS"
-%else
-%configure --docdir=%{_datadir}/doc/%{name}-%{version} --enable-shared --disable-rpath --enable-interfaces="c++ c gnu_prolog swi_prolog" CPPFLAGS="$CPPFLAGS"
-%endif
+%configure --docdir=%{_datadir}/doc/%{name} --enable-shared --disable-rpath --enable-interfaces="c++ c gnu_prolog swi_prolog yap_prolog java" CPPFLAGS="$CPPFLAGS"
 sed -i 's|^hardcode_libdir_flag_spec=.*|hardcode_libdir_flag_spec=""|g' libtool
 sed -i 's|^runpath_var=LD_RUN_PATH|runpath_var=DIE_RPATH_DIE|g' libtool
 make %{?_smp_mflags}
@@ -206,29 +197,27 @@ install -m644 %{SOURCE1} %{buildroot}/%{_includedir}/ppl.hh
 mv %{buildroot}/%{_includedir}/ppl_c.h %{buildroot}/%{_includedir}/ppl_c-${normalized_arch}.h
 install -m644 %{SOURCE2} %{buildroot}/%{_includedir}/ppl_c.h
 
-%if 0%{?JAVA}
 # Install the Javadocs for ppl-java.
 mkdir -p %{buildroot}%{_javadocdir}
 mv \
-%{buildroot}/%{_datadir}/doc/%{name}-%{version}/ppl-user-java-interface-%{version}-html \
+%{buildroot}/%{_datadir}/doc/%{name}/ppl-user-java-interface-%{version}-html \
 %{buildroot}%{_javadocdir}/%{name}-java
-%endif
 
 %files
-%doc %{_datadir}/doc/%{name}-%{version}/BUGS
-%doc %{_datadir}/doc/%{name}-%{version}/COPYING
-%doc %{_datadir}/doc/%{name}-%{version}/CREDITS
-%doc %{_datadir}/doc/%{name}-%{version}/NEWS
-%doc %{_datadir}/doc/%{name}-%{version}/README
-%doc %{_datadir}/doc/%{name}-%{version}/README.configure
-%doc %{_datadir}/doc/%{name}-%{version}/TODO
-%doc %{_datadir}/doc/%{name}-%{version}/gpl.txt
+%doc %{_datadir}/doc/%{name}/BUGS
+%doc %{_datadir}/doc/%{name}/COPYING
+%doc %{_datadir}/doc/%{name}/CREDITS
+%doc %{_datadir}/doc/%{name}/NEWS
+%doc %{_datadir}/doc/%{name}/README
+%doc %{_datadir}/doc/%{name}/README.configure
+%doc %{_datadir}/doc/%{name}/TODO
+%doc %{_datadir}/doc/%{name}/gpl.txt
 %{_libdir}/libppl.so.*
 %{_libdir}/libppl_c.so.*
 %{_bindir}/ppl-config
 %{_mandir}/man1/ppl-config.1.gz
 %dir %{_libdir}/%{name}
-%dir %{_datadir}/doc/%{name}-%{version}
+%dir %{_datadir}/doc/%{name}
 %dir %{_datadir}/ppl/
 
 %files devel
@@ -253,7 +242,7 @@ mv \
 %{_mandir}/man1/ppl_lpsol.1.gz
 %{_mandir}/man1/ppl_pips.1.gz
 
-%ifnarch ia64 ppc64 s390 s390x sparc64 sparcv9 %{arm} mips64el
+%ifarch x86_64 %{ix86} ppc alpha
 %files gprolog
 %doc interfaces/Prolog/GNU/README.gprolog
 %{_bindir}/ppl_gprolog
@@ -277,16 +266,13 @@ mv \
 %files swiprolog-static
 %{_libdir}/%{name}/libppl_swiprolog.a
 
-%if 0%{?YAP}
-%ifnarch sparc64 sparcv9 %{arm} ppc ppc64
+%ifnarch sparc64 sparcv9 %{arm} ppc %{power64}
 %files yap
 %doc interfaces/Prolog/YAP/README.yap
 %{_datadir}/%{name}/ppl_yap.pl
 %{_libdir}/%{name}/ppl_yap.so
 %endif
-%endif
 
-%if 0%{?JAVA}
 %files java
 %doc interfaces/Java/README.java
 %{_libdir}/%{name}/libppl_java.so
@@ -294,34 +280,98 @@ mv \
 
 %files java-javadoc
 %{_javadocdir}/%{name}-java
-%endif
 
 %files docs
-%doc %{_datadir}/doc/%{name}-%{version}/ChangeLog*
-%doc %{_datadir}/doc/%{name}-%{version}/README.doc
-%doc %{_datadir}/doc/%{name}-%{version}/fdl.*
-%doc %{_datadir}/doc/%{name}-%{version}/gpl.pdf
-%doc %{_datadir}/doc/%{name}-%{version}/gpl.ps.gz
-%doc %{_datadir}/doc/%{name}-%{version}/ppl-user-%{version}-html/
-%doc %{_datadir}/doc/%{name}-%{version}/ppl-user-c-interface-%{version}-html/
-%doc %{_datadir}/doc/%{name}-%{version}/ppl-user-prolog-interface-%{version}-html/
-%doc %{_datadir}/doc/%{name}-%{version}/ppl-user-%{version}.pdf
-%doc %{_datadir}/doc/%{name}-%{version}/ppl-user-c-interface-%{version}.pdf
-%if 0%{?JAVA}
-%doc %{_datadir}/doc/%{name}-%{version}/ppl-user-java-interface-%{version}.pdf
-%endif
-%doc %{_datadir}/doc/%{name}-%{version}/ppl-user-prolog-interface-%{version}.pdf
-%doc %{_datadir}/doc/%{name}-%{version}/ppl-user-%{version}.ps.gz
-%doc %{_datadir}/doc/%{name}-%{version}/ppl-user-c-interface-%{version}.ps.gz
-%if 0%{?JAVA}
-%doc %{_datadir}/doc/%{name}-%{version}/ppl-user-java-interface-%{version}.ps.gz
-%endif
-%doc %{_datadir}/doc/%{name}-%{version}/ppl-user-prolog-interface-%{version}.ps.gz
+%doc %{_datadir}/doc/%{name}/ChangeLog*
+%doc %{_datadir}/doc/%{name}/README.doc
+%doc %{_datadir}/doc/%{name}/fdl.*
+%doc %{_datadir}/doc/%{name}/gpl.pdf
+%doc %{_datadir}/doc/%{name}/gpl.ps.gz
+%doc %{_datadir}/doc/%{name}/ppl-user-%{version}-html/
+%doc %{_datadir}/doc/%{name}/ppl-user-c-interface-%{version}-html/
+%doc %{_datadir}/doc/%{name}/ppl-user-prolog-interface-%{version}-html/
+%doc %{_datadir}/doc/%{name}/ppl-user-%{version}.pdf
+%doc %{_datadir}/doc/%{name}/ppl-user-c-interface-%{version}.pdf
+%doc %{_datadir}/doc/%{name}/ppl-user-java-interface-%{version}.pdf
+%doc %{_datadir}/doc/%{name}/ppl-user-prolog-interface-%{version}.pdf
+%doc %{_datadir}/doc/%{name}/ppl-user-%{version}.ps.gz
+%doc %{_datadir}/doc/%{name}/ppl-user-c-interface-%{version}.ps.gz
+%doc %{_datadir}/doc/%{name}/ppl-user-java-interface-%{version}.ps.gz
+%doc %{_datadir}/doc/%{name}/ppl-user-prolog-interface-%{version}.ps.gz
 
 %post -p /sbin/ldconfig
 %postun -p /sbin/ldconfig
 
 %changelog
+* Tue Jun 30 2015 pcpa <paulo.cesar.pereira.de.andrade@gmail.com> - 1.1-11
+- Rebuild with newer pl
+- Remove jpackage-utils dependency
+
+* Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.1-10
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
+
+* Sun Jun 14 2015 pcpa <paulo.cesar.pereira.de.andrade@gmail.com> - 1.1-9
+- Rebuild with newer pl
+
+* Sat May 02 2015 Kalev Lember <kalevlember@gmail.com> - 1.1-8
+- Rebuilt for GCC 5 C++11 ABI change
+
+* Sun Feb  8 2015 pcpa <paulo.cesar.pereira.de.andrade@gmail.com> - 1.1-7
+- Correct build with gcc 5.0.
+
+* Sun Aug 17 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.1-6
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
+
+* Sun Jun 22 2014 Peter Robinson <pbrobinson@fedoraproject.org> 1.1-5
+- fix FTBFS on aarch64
+
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.1-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Mon Jun 02 2014 Brent Baude <baude@us.ibm.com> - 1.1-3
+- Fixing include detection for ppc64 and ppc64le
+
+* Thu May 22 2014 Brent Baude <baude@us.ibm.com> - 1.1-2
+- Replace ppc64 arch with power64 macro
+
+* Tue Apr 29 2014 pcpa <paulo.cesar.pereira.de.andrade@gmail.com> - 1.1-1
+- Update to latest upstream release
+- Remove patches added upstream
+- Add new cstddef patch to build recent gcc
+- Correct bogus dates in chagelog
+- Remove hack with explicit provides of (wrong) library major
+
+* Fri Mar 28 2014 Michael Simacek <msimacek@redhat.com> - 1.0-5.10
+- Use Requires: java-headless rebuild (#1067528)
+
+* Thu Mar 13 2014 pcpa <paulo.cesar.pereira.de.andrade@gmail.com> - 1.0-4.10
+- Rebuild with newer pl
+
+* Fri Dec 27 2013 pcpa <paulo.cesar.pereira.de.andrade@gmail.com> - 1.0-4.9
+- Rebuild with newer pl
+
+* Fri Dec  6 2013 pcpa <paulo.cesar.pereira.de.andrade@gmail.com> - 1.0-4.8
+- Rebuild with newer pl
+
+* Thu Sep  5 2013 pcpa <paulo.cesar.pereira.de.andrade@gmail.com> - 1.0-4.7
+- Rebuild with newer pl
+
+* Tue Aug  6 2013 pcpa <paulo.cesar.pereira.de.andrade@gmail.com> - 1.0-4.6
+- Rebuild with newer glpk
+- Adapt to unversioned docdir (#994050)
+
+* Sun Aug 04 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.0-4.5
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Thu Feb  7 2013 pcpa <paulo.cesar.pereira.de.andrade@gmail.com> - 1.0-3.5
+- The gmp patch itself is conditional, no need to conditionally apply
+- Correct jpackage-utils requires as it is noarch
+- Correct java requires as the virtual provides in noarch
+- Rebuild for newer swiprolog and glpk (#907477, #905420)
+
+* Wed Jan 30 2013 pcpa <paulo.cesar.pereira.de.andrade@gmail.com> - 1.0-3.4
+- Correct problem with gmp 5.1.0 or newer (#905420)
+
 * Wed Dec 26 2012 Kevin Fenzi <kevin@scrye.com> 1.0-3.3
 - Rebuild for new libswipl
 
@@ -431,7 +481,7 @@ mv \
 * Wed Feb 18 2009 Roberto Bagnara <bagnara@cs.unipr.it> 0.10-8
 - Install the documentation according to the Fedora packaging conventions.
 
-* Wed Feb 17 2009 Karsten Hopp <karsten@redhat.comt> 0.10-7
+* Tue Feb 17 2009 Karsten Hopp <karsten@redhat.comt> 0.10-7
 - There are no GNU Prolog packages available on s390 and s390x: disable
   the GNU Prolog interface also on those platforms (besides ppc64).
 
@@ -446,13 +496,13 @@ mv \
 - Added `%%dir %%{_datadir}/doc/pwl' to the `%%files' section
   of the `ppl-pwl' package.
 
-* Thu Nov 04 2008 Roberto Bagnara <bagnara@cs.unipr.it> 0.10-3
+* Tue Nov 04 2008 Roberto Bagnara <bagnara@cs.unipr.it> 0.10-3
 - Fixed the requirements of the `ppl-java' package.
 
-* Thu Nov 04 2008 Roberto Bagnara <bagnara@cs.unipr.it> 0.10-2
+* Tue Nov 04 2008 Roberto Bagnara <bagnara@cs.unipr.it> 0.10-2
 - Added m4 >= 1.4.8 to build requirements.
 
-* Thu Nov 04 2008 Roberto Bagnara <bagnara@cs.unipr.it> 0.10-1
+* Tue Nov 04 2008 Roberto Bagnara <bagnara@cs.unipr.it> 0.10-1
 - Updated and extended for PPL 0.10.  In particular, the `ppl-config'
   program, being useful also for non-development activities, has been
   brought back to the main package.

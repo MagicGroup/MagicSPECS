@@ -25,8 +25,12 @@ site: http://www.cs.unipr.it/ppl/ . */
 #include "ppl-x86_64.hh"
 #elif defined(__i386__)
 #include "ppl-i386.hh"
-#elif defined(__powerpc64__)
+#elif defined(__powerpc64__) 
+#if __BYTE_ORDER__ == __ORDER_BIG_ENDIAN__
 #include "ppl-ppc64.hh"
+#else
+#include "ppl-ppc64le.hh"
+#endif
 #elif defined(__powerpc__)
 #include "ppl-ppc.hh"
 #elif defined(__ia64__)
@@ -35,6 +39,8 @@ site: http://www.cs.unipr.it/ppl/ . */
 #include "ppl-alpha.hh"
 #elif defined(__arm__)
 #include "ppl-arm.hh"
+#elif defined(__aarch64__)
+#include "ppl-aarch64.hh"
 #elif defined(__s390x__)
 #include "ppl-s390x.hh"
 #elif defined(__s390__)
@@ -45,8 +51,6 @@ site: http://www.cs.unipr.it/ppl/ . */
 #include "ppl-sparc64.hh"
 #elif defined(__sparc__)
 #include "ppl-sparc.hh"
-#elif defined(__mips64) && defined(__MIPSEL)
-#include "ppl-mips64el.hh"
 #else
 #error "This architecture is not supported by the currently installed ppl-devel packages."
 #endif

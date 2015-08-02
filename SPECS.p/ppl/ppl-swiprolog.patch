@@ -1,0 +1,13 @@
+diff -up ppl-1.1/interfaces/Prolog/SWI/ppl_interface_generator_swiprolog_cc.m4.orig ppl-1.1/interfaces/Prolog/SWI/ppl_interface_generator_swiprolog_cc.m4
+--- ppl-1.1/interfaces/Prolog/SWI/ppl_interface_generator_swiprolog_cc.m4.orig	2015-06-14 20:20:41.157476020 -0300
++++ ppl-1.1/interfaces/Prolog/SWI/ppl_interface_generator_swiprolog_cc.m4	2015-06-14 20:20:58.923476700 -0300
+@@ -33,7 +33,8 @@ m4_include(`ppl_interface_generator_copy
+ 
+ #include "../ppl_prolog_domains.hh"
+ 
+-#define PL_EXTENSION_ENTRY(name, arity) { #name, arity, (void*) name, 0 },
++#define PL_EXTENSION_ENTRY(name, arity) \
++  { #name, arity, reinterpret_cast<pl_function_t>(name), 0 },
+ 
+ namespace {
+ 
