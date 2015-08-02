@@ -1,21 +1,28 @@
 Name:           cloog
-%define         tarball_name %{name}-ppl
-Version:        0.15.11
-Release:        7%{?dist}
+%global         tarball_name %{name}
+Version:        0.18.3
+Release:        2%{?dist}
 Epoch:		1
 Summary:        The Chunky Loop Generator
 
 Group:          System Environment/Libraries
 License:        GPLv2+
 URL:            http://www.cloog.org
-Source0:        ftp://gcc.gnu.org/pub/gcc/infrastructure/%{tarball_name}-%{version}.tar.gz
-BuildRoot:      %{_tmppath}/%{tarball_name}-%{version}-%{release}-root-%(%{__id_u} -n)
-Patch0:		cloog-ppl-0.15.11-ppl-verfix.patch
 
-BuildRequires:  ppl-devel >= 0.10
+# This tarball was retrieved directly from the Git source code
+# repository of the Cloog project by doing:
+#
+#    git clone git://repo.or.cz/cloog.git -b cloog-0.18.3 cloog-0.18.3
+#    tar -cvf cloog-0.18.3.tar.gz cloog-0.18.3
+
+Source0:        cloog-0.18.3.tar.gz
+
+BuildRequires:  isl-devel >= 0.12
 BuildRequires:  gmp-devel >= 4.1.3
 BuildRequires:  texinfo >= 4.12
+BuildRequires:  texinfo-tex >= 4.12
 BuildRequires:  libtool
+Obsoletes:	cloog-ppl cloog-ppl-devel
 
 Requires(post): info
 Requires(preun): info
@@ -26,26 +33,23 @@ CLooG finds the code or pseudo-code where each integral point of one or more
 parametrized polyhedron or parametrized polyhedra union is reached. CLooG is
 designed to avoid control overhead and to produce a very efficient code.
 
-%package ppl
-Summary: Parma Polyhedra Library backend (ppl) based version of the Cloog binaries
-Group: Development/Libraries
-%description ppl
-The dynamic shared libraries of the Chunky Loop Generator
-
-%package ppl-devel
-Summary:        Development tools for the ppl based version of Chunky Loop Generator
+%package devel
+Summary:        Development tools for the Chunky Loop Generator
 Group:          Development/Libraries
-Requires:       %{name}-ppl = %{epoch}:%{version}-%{release}
-Requires:       ppl-devel >= 0.10, gmp-devel >= 4.1.3
-%description ppl-devel
+Requires:       %{name} = %{epoch}:%{version}-%{release}
+Requires:       isl-devel >= 0.12, gmp-devel >= 4.1.3
+
+%description devel
 The header files and dynamic shared libraries of the Chunky Loop Generator.
 
 %prep
 %setup -q -n %{tarball_name}-%{version}
-%patch0 -p1 -b .verfix
 
 %build
-%configure --with-ppl
+./autogen.sh
+%configure \
+    --with-isl=system \
+    --with-isl-prefix=%{_prefix}
 
 # Remove the cloog.info in the tarball
 # to force the re-generation of a new one
@@ -54,45 +58,69 @@ test -f doc/cloog.info && rm doc/cloog.info
 # Remove the -fomit-frame-pointer compile flag
 # Use system libtool to disable standard rpath
 make %{?_smp_mflags} AM_CFLAGS= LIBTOOL=%{_bindir}/libtool
-
+make %{?_smp_mflags} AM_CFLAGS= LIBTOOL=%{_bindir}/libtool -C doc cloog.pdf
 
 %install
-rm -rf $RPM_BUILD_ROOT
-make DESTDIR=$RPM_BUILD_ROOT INSTALL="%{__install} -p" install
-rm -rf $RPM_BUILD_ROOT%{_infodir}/dir
+%make_install INSTALL="%{__install} -p"
+# GCC wants the library to be named libcloog.so, as it's what it uses
+# at runtime.
+rm %{buildroot}%{_libdir}/*/*.cmake
+mkdir -p %{buildroot}%{_docdir}/cloog-%{version}
+%{__install} -m0644 -p README LICENSE ChangeLog doc/cloog.pdf %{buildroot}%{_docdir}/cloog-%{version}
 
 %clean
-rm -rf $RPM_BUILD_ROOT
+rm -rf %{buildroot}
 
-%files ppl
-%defattr(-,root,root,-)
-%doc README LICENSE
-%{_infodir}/cloog.info*gz
+%files
+%{_docdir}/cloog-%{version}/README
+%{_docdir}/cloog-%{version}/LICENSE
+%{_docdir}/cloog-%{version}/ChangeLog
 %{_bindir}/cloog
-%{_libdir}/libcloog.so.*
+%{_libdir}/libcloog-isl.so.*
 
-%files ppl-devel
-%defattr(-,root,root,-)
+%files devel
 %{_includedir}/cloog
-%{_libdir}/libcloog.so
-%exclude %{_libdir}/libcloog.a
-%exclude %{_libdir}/libcloog.la
+%{_libdir}/libcloog-isl.so
+%{_libdir}/pkgconfig/cloog-isl.pc
+%exclude %{_libdir}/libcloog-isl.a
+%exclude %{_libdir}/libcloog-isl.la
+%{_docdir}/cloog-%{version}/cloog.pdf
 
-%post ppl
+%post
 /sbin/ldconfig
 test -f %{_infodir}/%{name}.info \
      && /sbin/install-info %{_infodir}/%{name}.info %{_infodir}/dir || :
 
-%preun ppl
+%preun
 if [ $1 = 0 ] ; then
   test -f %{_infodir}/%{name}.info && \
       /sbin/install-info \
           --delete %{_infodir}/%{name}.info %{_infodir}/dir || :
 fi
 
-%postun ppl -p /sbin/ldconfig
+%postun -p /sbin/ldconfig
 
 %changelog
+* Wed Jun 17 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1:0.18.3-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
+
+* Mon Jan 12 2015 David Howells <dhowells@redhat.com> - 1:0.18.3-1
+      	     	  Dodji Seketeli <dodji@seketeli.org>
+- Update to upstream cloog-0.18.3
+- Obsoletes the previous cloog-ppl package.
+- Requires isl-devel.
+- Ship the ChangeLog file.
+- Ship the libcloog-isl.so* files.
+
+* Sat Aug 16 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1:0.15.11-10
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
+
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1:0.15.11-9
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Tue May 06 2014 Adam Williamson <awilliam@redhat.com> - 1:0.15.11-8
+- rebuild for new libppl
+
 * Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1:0.15.11-7
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
 
