@@ -1,0 +1,31 @@
+diff -up source/texk/kpathsea/mktexlsr.than source/texk/kpathsea/mktexlsr
+--- source/texk/kpathsea/mktexlsr.than	2015-07-28 21:31:52.595540260 -0400
++++ source/texk/kpathsea/mktexlsr	2015-07-28 21:32:12.347422108 -0400
+@@ -217,7 +217,8 @@ for TEXMFLS_R in "$@"; do
+   until PERMS=`kpsestat = "$db_file"`; do sleep 1; done
+   chmod $PERMS "$db_file_tmp"
+   rm -f "$db_file"
+-  mv "$db_file_tmp" "$db_file"
++  # selinux fix
++  cp "$db_file_tmp" "$db_file"
+   rm -rf "$db_dir_tmp"
+ done
+ 
+diff -up source/texk/texlive/linked_scripts/texlive/fmtutil.pl.than source/texk/texlive/linked_scripts/texlive/fmtutil.pl
+--- source/texk/texlive/linked_scripts/texlive/fmtutil.pl.than	2015-07-28 21:34:04.856749097 -0400
++++ source/texk/texlive/linked_scripts/texlive/fmtutil.pl	2015-07-28 21:35:19.212304314 -0400
+@@ -582,12 +582,12 @@ sub rebuild_one_format {
+   }
+   TeXLive::TLUtils::mkdirhier($fulldestdir);
+   
+-  if (!File::Copy::move( "$fmt.log", "$fulldestdir/$fmt.log")) {
++  if (!File::Copy::copy( "$fmt.log", "$fulldestdir/$fmt.log")) {
+     print_deferred_error("Cannot move $fmt.log to $fulldestdir.\n");
+   }
+ 
+   my $destfile = "$fulldestdir/$fmtfile";
+-  if (File::Copy::move( $fmtfile, $destfile )) {
++  if (File::Copy::copy( $fmtfile, $destfile )) {
+     print_info("$destfile installed.\n");
+     #
+     # original fmtutil.sh did some magic trick for mplib-luatex.mem

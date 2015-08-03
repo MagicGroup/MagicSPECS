@@ -1459,7 +1459,6 @@ void solve(char *name) {
 				if ( !strcmp(name, "tex4ht") ) {
 					fprintf(fpack, "Provides: tetex-tex4ht = %%{tl_version}\n");
 					fprintf(fpack, "Obsoletes: tetex-tex4ht < %%{tl_version}\n");
-					fprintf(fpack, "Conflicts: ht\n");
 				}
 				if ( !strcmp(name, "latex") ) {
 					fprintf(fpack, "Provides: tetex-latex = 3.1-99, texlive-texmf-latex = %%{tl_version}\n");
@@ -2092,7 +2091,6 @@ void solve(char *name) {
 				fprintf(fpack, "Version: %s\n", print_noarch_version(&pkg[i]));
 				if ( strncmp(name, "kpathsea", 8) ) fprintf(fpack, "Requires: texlive-base\n");
 				if ( has_noarch_pkg ) fprintf(fpack, "Requires: texlive-%s\n", name);
-				fprintf(fpack, "Requires: texlive-kpathsea-lib = %%{epoch}:%%{tl_version}-%%{tl_release}\n");
 				if ( !strcmp(name, "xetex") ) {
 					fprintf(fpack, "Requires: teckit\n");
 					fprintf(fpack, "Provides: xdvipdfmx = %%{version}-%%{release}\n");
@@ -2164,6 +2162,8 @@ void solve(char *name) {
 					fprintf(fpack, "Release: %%{tl_release}\n");
 					if ( noarch ) {
 						fprintf(fpack, "BuildArch: noarch\n");
+					} else {
+						fprintf(fpack, "Requires: texlive-kpathsea-lib%{?_isa} = %%{epoch}:%%{tl_version}\n");
 					}
 				}
 				fprintf(fpack, "\n%%description %s-bin\n", name);

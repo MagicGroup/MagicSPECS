@@ -1,6 +1,6 @@
 %global source_date 20140525_r34255
 %global tl_version 2014
-%global tl_rel 0.1
+%global tl_rel 12
 %global tl_release %{tl_rel}.%{source_date}%{?dist}
 %global tl_noarch_release %{tl_rel}%{?dist}
 %global source_name texlive-%{source_date}-source
@@ -20,10 +20,12 @@
 %global __os_install_post /usr/lib/rpm/brp-compress %{nil}
 %global __arch_install_post %{nil}
 
+%global macrosdir %(d=%{_rpmconfigdir}/macros.d; [ -d $d ] || d=%{_sysconfdir}/rpm; echo $d)
+
 Name: texlive
 Version: %{tl_version}
 Release: %{tl_release}
-Epoch: 3
+Epoch: 4
 Summary: TeX formatting system
 Group: Applications/Publishing
 License: Artistic 2.0 and GPLv2 and GPLv2+ and LGPLv2+ and LPPL and MIT and Public Domain and UCD and Utopia
@@ -51,6 +53,8 @@ Obsoletes: texlive-texmf-errata-latex < %{tl_version}, texlive-texmf-errata-xete
 Conflicts: texlive-dvips = 2007
 Patch1: tl-kpfix.patch
 Patch2: tl-format.patch
+Patch3: texlive-20140525-selinux-context.patch
+Patch100:  texlive-bz979176.patch
 Source0: %{source_name}.tar.xz
 Source1: tl2rpm.c
 Source2: texlive.tlpdb
@@ -112,6 +116,9 @@ xz -dc %{SOURCE0} | tar x
 [ -e %{source_name} ] && mv %{source_name} source
 %patch1 -p0
 %patch2 -p0
+%patch3 -p0
+# security fix for bz#979176
+%patch100 -p0
 for l in `unxz -c %{SOURCE3} | tar t`; do
 	ln -s %{_texdir}/licenses/$l $l
 done
@@ -325,8 +332,8 @@ touch %{buildroot}%{_texdir}/texmf-dist/ls-R
 sed -i -e 's|^TEXMFLOCAL.*|TEXMFLOCAL\ =\ \$TEXMFROOT/texmf-local//|' %{buildroot}/%{_texdir}/texmf-dist/web2c/texmf.cnf
 
 # create macro file for building texlive
-mkdir -p %{buildroot}%{_sysconfdir}/rpm
-cat << EOF > %{buildroot}%{_sysconfdir}/rpm/macros.texlive
+mkdir -p %{buildroot}%{macrosdir}
+cat << EOF > %{buildroot}%{macrosdir}/macros.texlive
 # macros to keep trees in texlive consistent
 %_texmf_main     /usr/share/texlive/texmf
 %_texmf_vendor   /usr/share/texlive/texmf
@@ -334,15 +341,15 @@ cat << EOF > %{buildroot}%{_sysconfdir}/rpm/macros.texlive
 %_texmf_conf     /usr/share/texlive/texmf-config
 EOF
 
+# install correct fmtutil.sh which has selinux fix
+install -m 755 source/inst/share/texmf-dist/scripts/texlive/fmtutil.sh %{buildroot}/%{_texdir}/texmf-dist/scripts/texlive/fmtutil.sh
+
 %clean
 rm -rf %{buildroot}
 
 %pre base
 rm -rf %{_texdir}/texmf-var
 rm -rf %{_texmf_var}/*
-for i in `find /home/*/.texlive* -type d -prune`; do
-	find $i -name \*.fmt -type f | xargs rm -f > /dev/null 2>&1
-done
 :
 
 %posttrans base
@@ -367,7 +374,7 @@ fi
 %attr(0644, root, root) %verify(not md5 size mtime) %ghost %{_texdir}/texmf-dist/ls-R
 %attr(0644, root, root) %verify(not md5 size mtime) %ghost %{_texdir}/texmf-local/ls-R
 %{_texdir}/texlive.tlpdb
-%{_sysconfdir}/rpm/macros.texlive
+%{macrosdir}/macros.texlive
 
 %include _files.spec
 
@@ -386,6 +393,46 @@ fi
 %{_libdir}/*.so
 
 %changelog
+* Wed Jul 22 2015 Marek Kasik <mkasik@redhat.com> - 4:2014-12.20140525_r34255
+- Rebuild (poppler-0.34.0)
+
+* Wed Jun 10 2015 Than Ngo <than@redhat.com> - 4:2014-11.20140525_r34255
+- fix wrong selinux context
+
+* Mon Jun  8 2015 Marek Kasik <mkasik@redhat.com> - 4:2014-10.20140525_r34255
+- Rebuild (poppler-0.33.0)
+
+* Fri Jun  5 2015 Marek Kasik <mkasik@redhat.com> - 4:2014-9.20140525_r34255
+- Rebuild (poppler-0.33.0)
+
+* Wed Apr 29 2015 Than Ngo <than@redhat.com> - 4:2014-8.20140525_r34255
+- Resolves: bz#1181169, insecure use of /tmp in mktexlsr
+
+* Wed Mar  4 2015 Ville Skyttä <ville.skytta@iki.fi> - 4:2014-7.20140525_r34255
+- Install rpm macros in %%{_rpmconfidir}/macros.d where available (#1074287)
+
+* Mon Jan 26 2015 David Tardon <dtardon@redhat.com> - 4:2014-6.20140525_r34255
+- rebuild for ICU 54.1
+
+* Fri Jan 23 2015 Marek Kasik <mkasik@redhat.com> - 4:2014-5.20140525_r34255
+- Rebuild (poppler-0.30.0)
+
+* Sat Dec 27 2014 Kevin Fenzi <kevin@scrye.com> - 4:2014-4.20140525_r34255
+* Drop scriptlet that touches /home. Fixes bugs: #1128240 #1047361 #1073518 #1054338
+
+* Thu Nov 27 2014 Marek Kasik <mkasik@redhat.com> - 4:2014-3.20140525_r34255
+- Rebuild (poppler-0.28.1)
+
+* Tue Aug 26 2014 David Tardon <dtardon@redhat.com> - 4:2014-2.20140525_r34255
+- rebuild for ICU 53.1
+
+* Mon Aug 18 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 4:2014-1.20140525_r34255.1
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
+
+* Tue Jul 22 2014 Jindrich Novy <novyjindrich@gmail.com> - 2014-1-20140525
+- Tex Live 2014 is out
+- fix package dependencies to make update path smoother
+
 * Sun Jun  8 2014 Jindrich Novy <novyjindrich@gmail.com> - 2014-0.1-20140525
 - update to TeX Live 2014 release candidate
 - conflict with ht package (#959696)

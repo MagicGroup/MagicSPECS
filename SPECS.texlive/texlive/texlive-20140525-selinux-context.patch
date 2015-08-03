@@ -1,0 +1,29 @@
+diff -up source/texk/kpathsea/mktexlsr.than source/texk/kpathsea/mktexlsr
+--- source/texk/kpathsea/mktexlsr.than	2015-06-10 17:43:50.012950721 +0200
++++ source/texk/kpathsea/mktexlsr	2015-06-10 17:48:11.452194948 +0200
+@@ -210,7 +210,8 @@ for TEXMFLS_R in "$@"; do
+   until PERMS=`kpsestat = "$db_file"`; do sleep 1; done
+   chmod $PERMS "$db_file_tmp"
+   rm -f "$db_file"
+-  mv "$db_file_tmp" "$db_file"
++  # selinux fix
++  cp "$db_file_tmp" "$db_file"
+   rm -rf "$db_dir_tmp"
+ done
+ 
+diff -up source/texk/texlive/tl_scripts/fmtutil.sh.than source/texk/texlive/tl_scripts/fmtutil.sh
+--- source/texk/texlive/tl_scripts/fmtutil.sh.than	2015-06-10 17:48:30.002070364 +0200
++++ source/texk/texlive/tl_scripts/fmtutil.sh	2015-06-10 17:49:11.923788832 +0200
+@@ -796,10 +796,10 @@ run_initex()
+       log_warning "\`$engine -ini $tcxflag $jobswitch $prgswitch $texargs' possibly failed."
+ 
+     # We don't want user-interaction for the following "mv" commands:
+-    mv "$format.log" "$fulldestdir/$format.log" </dev/null
++    cp "$format.log" "$fulldestdir/$format.log" </dev/null
+     #
+     destfile=$fulldestdir/$fmtfile
+-    if mv "$fmtfile" "$destfile" </dev/null; then
++    if cp "$fmtfile" "$destfile" </dev/null; then
+       verboseMsg "$progname: $destfile installed."
+       #
+       # As a special special case, we create mplib-luatex.mem for use by
