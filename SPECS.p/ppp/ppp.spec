@@ -2,8 +2,8 @@
 
 Summary: The Point-to-Point Protocol daemon
 Name: ppp
-Version: 2.4.6
-Release: 7%{?dist}
+Version: 2.4.7
+Release: 8%{?dist}
 License: BSD and LGPLv2+ and GPLv2+ and Public Domain
 Group: System Environment/Daemons
 URL: http://www.samba.org/ppp
@@ -22,33 +22,34 @@ Source11: ifdown-ppp
 Source12: ppp-watch.tar.xz
 
 # Fedora-specific
-Patch0001:	0001-build-sys-use-gcc-as-our-compiler-of-choice.patch
-Patch0002:	0002-build-sys-enable-PAM-support.patch
-Patch0003:	0003-build-sys-utilize-compiler-flags-handed-to-us-by-rpm.patch
-Patch0004:	0004-doc-add-configuration-samples.patch
-Patch0005:	0005-build-sys-don-t-hardcode-LIBDIR-but-set-it-according.patch
-Patch0006:	0006-scritps-use-change_resolv_conf-function.patch
-Patch0007:	0007-build-sys-don-t-strip-binaries-during-installation.patch
-Patch0008:	0008-build-sys-use-prefix-usr-instead-of-usr-local.patch
-Patch0009:	0009-pppd-introduce-ipv6-accept-remote.patch
-Patch0010:	0010-build-sys-enable-CBCP.patch
-Patch0011:	0011-build-sys-don-t-put-connect-errors-log-to-etc-ppp.patch
-Patch0012:	0012-pppd-we-don-t-want-to-accidentally-leak-fds.patch
-Patch0013:	0013-everywhere-O_CLOEXEC-harder.patch
-Patch0014:	0014-everywhere-use-SOCK_CLOEXEC-when-creating-socket.patch
-Patch0015:	0015-pppd-move-pppd-database-to-var-run-ppp.patch
-Patch0016:	0016-rp-pppoe-add-manpage-for-pppoe-discovery.patch
-Patch0017:	0017-pppd-rebase-EAP-TLS-patch-v0.994.patch
-Patch0018:	0018-scritps-fix-ip-up.local-sample.patch
-Patch0019:	0019-sys-linux-rework-get_first_ethernet.patch
-Patch0020:	0020-pppd-put-lock-files-in-var-lock-ppp.patch
-Patch0021:	0021-build-sys-compile-pppol2tp-plugin-with-RPM_OPT_FLAGS.patch
-Patch0022:	0022-build-sys-compile-pppol2tp-with-multilink-support.patch
-Patch0023:	0023-build-sys-install-rp-pppoe-plugin-files-with-standar.patch
-Patch0024:	0024-build-sys-install-pppoatm-plugin-files-with-standard.patch
-Patch0025:	0025-pppd-install-pppd-binary-using-standard-perms-755.patch
-Patch0026:	0026-Revert-pppd-rebase-EAP-TLS-patch-v0.994.patch
-Patch0027:	0027-pppd-EAP-TLS-patch-v0.997.patch
+Patch0001:      0001-build-sys-use-gcc-as-our-compiler-of-choice.patch
+Patch0002:      0002-build-sys-enable-PAM-support.patch
+Patch0003:      0003-build-sys-utilize-compiler-flags-handed-to-us-by-rpm.patch
+Patch0004:      0004-doc-add-configuration-samples.patch
+Patch0005:      0005-build-sys-don-t-hardcode-LIBDIR-but-set-it-according.patch
+Patch0006:      0006-scritps-use-change_resolv_conf-function.patch
+Patch0007:      0007-build-sys-don-t-strip-binaries-during-installation.patch
+Patch0008:      0008-build-sys-use-prefix-usr-instead-of-usr-local.patch
+Patch0009:      0009-pppd-introduce-ipv6-accept-remote.patch
+Patch0010:      0010-build-sys-enable-CBCP.patch
+Patch0011:      0011-build-sys-don-t-put-connect-errors-log-to-etc-ppp.patch
+Patch0012:      0012-pppd-we-don-t-want-to-accidentally-leak-fds.patch
+Patch0013:      0013-everywhere-O_CLOEXEC-harder.patch
+Patch0014:      0014-everywhere-use-SOCK_CLOEXEC-when-creating-socket.patch
+Patch0015:      0015-pppd-move-pppd-database-to-var-run-ppp.patch
+Patch0016:      0016-rp-pppoe-add-manpage-for-pppoe-discovery.patch
+Patch0017:      0017-pppd-rebase-EAP-TLS-patch-v0.994.patch
+Patch0018:      0018-scritps-fix-ip-up.local-sample.patch
+Patch0019:      0019-sys-linux-rework-get_first_ethernet.patch
+Patch0020:      0020-pppd-put-lock-files-in-var-lock-ppp.patch
+Patch0021:      0021-build-sys-compile-pppol2tp-plugin-with-RPM_OPT_FLAGS.patch
+Patch0022:      0022-build-sys-compile-pppol2tp-with-multilink-support.patch
+Patch0023:      0023-build-sys-install-rp-pppoe-plugin-files-with-standar.patch
+Patch0024:      0024-build-sys-install-pppoatm-plugin-files-with-standard.patch
+Patch0025:      0025-pppd-install-pppd-binary-using-standard-perms-755.patch
+Patch0026:      0026-Revert-pppd-rebase-EAP-TLS-patch-v0.994.patch
+Patch0027:      0027-pppd-EAP-TLS-patch-v0.997.patch
+Patch0028:      0028-Fix-logical-expression-in-eap_client_active-macro.patch
 
 BuildRequires: pam-devel, libpcap-devel, openssl-devel, systemd, systemd-devel, glib2-devel
 Requires: glibc >= 2.0.6, /etc/pam.d/system-auth, libpcap >= 14:0.8.3-6, systemd, initscripts >= 9.54
@@ -65,6 +66,7 @@ organization over a modem and phone line.
 %package devel
 Summary: Headers for ppp plugin development
 Group: Development/Libraries
+Requires: %{name}%{?_isa} = %{version}-%{release}
 
 %description devel
 This package contains the header files for building plugins for ppp.
@@ -76,7 +78,7 @@ This package contains the header files for building plugins for ppp.
 tar -xJf %{SOURCE12}
 
 %build
-export RPM_OPT_FLAGS="$RPM_OPT_FLAGS -fPIC -Wall"
+export RPM_OPT_FLAGS="$RPM_OPT_FLAGS -fPIC -Wall -fno-strict-aliasing"
 %configure
 make %{?_smp_mflags}
 make -C ppp-watch %{?_smp_mflags}
@@ -95,11 +97,11 @@ install -m 644 %{SOURCE1} %{buildroot}%{_sysconfdir}/pam.d/ppp
 
 # install logrotate script
 install -d %{buildroot}%{_sysconfdir}/logrotate.d
-install -p %{SOURCE2} %{buildroot}%{_sysconfdir}/logrotate.d/ppp
+install -m 644 -p %{SOURCE2} %{buildroot}%{_sysconfdir}/logrotate.d/ppp
 
 # install tmpfiles drop-in
 install -d %{buildroot}%{_tmpfilesdir}
-install -p %{SOURCE3} %{buildroot}%{_tmpfilesdir}/ppp.conf
+install -m 644 -p %{SOURCE3} %{buildroot}%{_tmpfilesdir}/ppp.conf
 
 # install scripts (previously owned by initscripts package)
 install -d %{buildroot}%{_sysconfdir}/ppp
@@ -166,8 +168,29 @@ install -p %{SOURCE11} %{buildroot}%{_sysconfdir}/sysconfig/network-scripts/ifdo
 %doc PLUGINS
 
 %changelog
-* Sun Aug 10 2014 Liu Di <liudidi@gmail.com> - 2.4.6-7
-- 为 Magic 3.0 重建
+* Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.4.7-8
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
+
+* Mon Feb 09 2015 Michal Sekletar <msekleta@redhat.com> - 2.4.7-7
+- prevent running into issues caused by undefined behavior (pointers of incompatible types aliasing the same object)
+
+* Wed Dec 10 2014 Michal Sekletar <msekleta@redhat.com> - 2.4.7-6
+- fix logical expression in eap_client_active macro (#1023620)
+
+* Wed Nov 19 2014 Michal Sekletar <msekleta@redhat.com> - 2.4.7-5
+- don't mark logrotate config as executable (#1164435)
+
+* Tue Sep  2 2014 Peter Robinson <pbrobinson@fedoraproject.org> 2.4.7-4
+- devel package should depend on base package as per guidelines
+
+* Tue Aug 19 2014 Michal Sekletar <msekleta@redhat.com> - 2.4.7-3
+- don't mark tmpfiles dropin as executable (#1131293)
+
+* Sun Aug 17 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.4.7-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
+
+* Mon Aug 11 2014 Michal Sekletar <msekleta@redhat.com> - 2.4.7-1
+- rebase to 2.4.7. Includes fix for CVE-2014-3158 (#1128716)
 
 * Fri Jun 20 2014 Michal Sekletar <msekleta@redhat.com> - 2.4.6-6
 - version 0.997 of EAP-TLS patch
