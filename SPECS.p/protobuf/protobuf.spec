@@ -1,30 +1,33 @@
 # Build -python subpackage
 %bcond_without python
 # Build -java subpackage
-%bcond_with java
+%bcond_without java
 # Don't require gtest
 %bcond_with gtest
 
-%if %{with python}
-%define python_sitelib %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib()")
-%endif
+%global emacs_version %(pkg-config emacs --modversion)
+%global emacs_lispdir %(pkg-config emacs --variable sitepkglispdir)
+%global emacs_startdir %(pkg-config emacs --variable sitestartdir)
 
 Summary:        Protocol Buffers - Google's data interchange format
 Name:           protobuf
-Version:        2.4.1
-Release:        8%{?dist}
+Version:        2.6.1
+Release:        2%{?dist}
 License:        BSD
 Group:          Development/Libraries
-Source:         http://protobuf.googlecode.com/files/%{name}-%{version}.tar.bz2
+Source:         https://github.com/google/protobuf/releases/download/v%{version}/protobuf-%{version}.tar.bz2
 Source1:        ftdetect-proto.vim
-Patch1:         protobuf-2.3.0-fedora-gtest.patch
-Patch2:    	    protobuf-2.4.1-java-fixes.patch
-URL:            http://code.google.com/p/protobuf/
-BuildRoot:      %(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
+Source2:        protobuf-init.el
+Patch0:         protobuf-2.5.0-emacs-24.4.patch
+Patch1:         protobuf-2.5.0-fedora-gtest.patch
+URL:            https://github.com/google/protobuf
 BuildRequires:  automake autoconf libtool pkgconfig zlib-devel
+BuildRequires:  emacs(bin)
+BuildRequires:  emacs-el >= 24.1
 %if %{with gtest}
 BuildRequires:  gtest-devel
 %endif
+BuildRequires:  mvn(org.easymock:easymock)
 
 %description
 Protocol Buffers are a way of encoding structured data in an efficient
@@ -53,6 +56,7 @@ Summary: Protocol Buffers C++ headers and libraries
 Group: Development/Libraries
 Requires: %{name} = %{version}-%{release}
 Requires: %{name}-compiler = %{version}-%{release}
+Requires: zlib-devel
 Requires: pkgconfig
 
 %description devel
@@ -62,7 +66,7 @@ C++ headers and libraries
 %package static
 Summary: Static development files for %{name}
 Group: Development/Libraries
-Requires: %{name} = %{version}-%{release}
+Requires: %{name}-devel = %{version}-%{release}
 
 %description static
 Static libraries for Protocol Buffers
@@ -109,7 +113,9 @@ lacks descriptors, reflection, and some other features.
 Summary: Python bindings for Google Protocol Buffers
 Group: Development/Languages
 BuildRequires: python-devel
-BuildRequires: python-setuptools-devel
+BuildRequires: python-setuptools
+# For tests
+BuildRequires: python-google-apputils
 Conflicts: %{name}-compiler > %{version}
 Conflicts: %{name}-compiler < %{version}
 
@@ -126,24 +132,33 @@ Requires: vim-enhanced
 This package contains syntax highlighting for Google Protocol Buffers
 descriptions in Vim editor
 
+%package emacs
+Summary: Emacs mode for Google Protocol Buffers descriptions
+Group: Applications/Editors
+Requires: emacs(bin) >= 0%{emacs_version}
+
+%description emacs
+This package contains syntax highlighting for Google Protocol Buffers
+descriptions in the Emacs editor.
+
+%package emacs-el
+Summary: Elisp source files for Google protobuf Emacs mode
+Group: Applications/Editors
+Requires: protobuf-emacs = %{version}
+
+%description emacs-el
+This package contains the elisp source files for %{pkgname}-emacs
+under GNU Emacs. You do not need to install this package to use
+%{pkgname}-emacs.
+
+
 %if %{with java}
 %package java
 Summary: Java Protocol Buffers runtime library
 Group:   Development/Languages
-BuildRequires:    java-devel >= 1.6
-BuildRequires:    jpackage-utils
-BuildRequires:    maven
-BuildRequires:    maven-compiler-plugin
-BuildRequires:    maven-install-plugin
-BuildRequires:    maven-jar-plugin
-BuildRequires:    maven-javadoc-plugin
-BuildRequires:    maven-resources-plugin
-BuildRequires:    maven-surefire-plugin
-BuildRequires:    maven-antrun-plugin
-BuildRequires:    maven-doxia
-BuildRequires:    maven-doxia-sitetools
-Requires:         java
-Requires:         jpackage-utils
+BuildRequires:    maven-local
+BuildRequires:    mvn(org.apache.felix:maven-bundle-plugin)
+BuildRequires:    mvn(org.apache.maven.plugins:maven-antrun-plugin)
 Conflicts:        %{name}-compiler > %{version}
 Conflicts:        %{name}-compiler < %{version}
 
@@ -153,7 +168,6 @@ This package contains Java Protocol Buffers runtime library.
 %package javadoc
 Summary: Javadocs for %{name}-java
 Group:   Documentation
-Requires: jpackage-utils
 Requires: %{name}-java = %{version}-%{release}
 
 %description javadoc
@@ -163,13 +177,15 @@ This package contains the API documentation for %{name}-java.
 
 %prep
 %setup -q
+%patch0 -p1 -b .emacs
 %if %{with gtest}
 rm -rf gtest
 %patch1 -p1 -b .gtest
 %endif
 chmod 644 examples/*
 %if %{with java}
-%patch2 -p1 -b .java-fixes
+%pom_remove_parent java/pom.xml
+%pom_remove_dep org.easymock:easymockclassextension java/pom.xml
 rm -rf java/src/test
 %endif
 
@@ -191,12 +207,21 @@ popd
 
 %if %{with java}
 pushd java
-mvn-rpmbuild install javadoc:javadoc
+%mvn_file : %{name}
+%mvn_build
 popd
 %endif
 
+emacs -batch -f batch-byte-compile editors/protobuf-mode.el
+
 %check
-#make %{?_smp_mflags} check
+# Tets is segfaulting on arm
+# https://github.com/google/protobuf/issues/298
+%ifnarch %{arm}
+make %{?_smp_mflags} check
+%else
+make %{?_smp_mflags} check || :
+%endif
 
 %install
 rm -rf %{buildroot}
@@ -213,18 +238,16 @@ install -p -m 644 -D editors/proto.vim %{buildroot}%{_datadir}/vim/vimfiles/synt
 
 %if %{with java}
 pushd java
-install -d -m 755 %{buildroot}%{_javadir}
-install -pm 644 target/%{name}-java-%{version}.jar %{buildroot}%{_javadir}/%{name}.jar
-
-install -d -m 755 %{buildroot}%{_javadocdir}/%{name}
-cp -rp target/site/apidocs %{buildroot}%{_javadocdir}/%{name}
-
-install -d -m 755 %{buildroot}%{_mavenpomdir}
-install -pm 644 pom.xml %{buildroot}%{_mavenpomdir}/JPP-%{name}.pom
-%add_maven_depmap JPP-%{name}.pom %{name}.jar
-
+%mvn_install
+popd
 %endif
-magic_rpm_clean.sh
+
+mkdir -p $RPM_BUILD_ROOT%{emacs_lispdir}
+mkdir -p $RPM_BUILD_ROOT%{emacs_startdir}
+install -p -m 0644 editors/protobuf-mode.el $RPM_BUILD_ROOT%{emacs_lispdir}
+install -p -m 0644 editors/protobuf-mode.elc $RPM_BUILD_ROOT%{emacs_lispdir}
+install -p -m 0644 %{SOURCE2} $RPM_BUILD_ROOT%{emacs_startdir}
+
 
 %post -p /sbin/ldconfig
 %postun -p /sbin/ldconfig
@@ -235,22 +258,18 @@ magic_rpm_clean.sh
 %post compiler -p /sbin/ldconfig
 %postun compiler -p /sbin/ldconfig
 
-%clean
-rm -rf %{buildroot}
-
 %files
-%defattr(-, root, root, -)
 %{_libdir}/libprotobuf.so.*
-%doc CHANGES.txt CONTRIBUTORS.txt COPYING.txt README.txt
+%doc CHANGES.txt CONTRIBUTORS.txt README.md
+%license LICENSE
 
 %files compiler
-%defattr(-, root, root, -)
 %{_bindir}/protoc
 %{_libdir}/libprotoc.so.*
-%doc COPYING.txt README.txt
+%doc README.md
+%license LICENSE
 
 %files devel
-%defattr(-, root, root, -)
 %dir %{_includedir}/google
 %{_includedir}/google/protobuf/
 %{_libdir}/libprotobuf.so
@@ -259,26 +278,21 @@ rm -rf %{buildroot}
 %doc examples/add_person.cc examples/addressbook.proto examples/list_people.cc examples/Makefile examples/README.txt
 
 %files static
-%defattr(-, root, root, -)
 %{_libdir}/libprotobuf.a
 %{_libdir}/libprotoc.a
 
 %files lite
-%defattr(-, root, root, -)
 %{_libdir}/libprotobuf-lite.so.*
 
 %files lite-devel
-%defattr(-, root, root, -)
 %{_libdir}/libprotobuf-lite.so
 %{_libdir}/pkgconfig/protobuf-lite.pc
 
 %files lite-static
-%defattr(-, root, root, -)
 %{_libdir}/libprotobuf-lite.a
 
 %if %{with python}
 %files python
-%defattr(-, root, root, -)
 %dir %{python_sitelib}/google
 %{python_sitelib}/google/protobuf/
 %{python_sitelib}/protobuf-%{version}-py2.?.egg-info/
@@ -288,26 +302,106 @@ rm -rf %{buildroot}
 %endif
 
 %files vim
-%defattr(-, root, root, -)
 %{_datadir}/vim/vimfiles/ftdetect/proto.vim
 %{_datadir}/vim/vimfiles/syntax/proto.vim
 
+%files emacs
+%{emacs_startdir}/protobuf-init.el
+%{emacs_lispdir}/protobuf-mode.elc
+
+%files emacs-el
+%{emacs_lispdir}/protobuf-mode.el
+
 %if %{with java}
-%files java
-%defattr(-, root, root, -)
-%{_mavenpomdir}/JPP-%{name}.pom
-%{_mavendepmapfragdir}/%{name}
-%{_javadir}/%{name}.jar
+%files java -f java/.mfiles
 %doc examples/AddPerson.java examples/ListPeople.java
 
-%files javadoc
-%defattr(-, root, root, -)
-%{_javadocdir}/%{name}
+%files javadoc -f java/.mfiles-javadoc
 %endif
 
 %changelog
-* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 2.4.1-8
-- 为 Magic 3.0 重建
+* Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.6.1-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
+
+* Mon Apr 6 2015 Orion Poplawski <orion@cora.nwra.com> - 2.6.1-1
+- Update to 2.6.1
+- New URL
+- Cleanup spec
+- Add patch to fix emacs compilation with emacs 24.4
+- Drop java-fixes patch, use pom macros instead
+- Add BR on python-google-apputils and mvn(org.easymock:easymock)
+- Run make check
+- Make -static require -devel (bug #1067475)
+
+* Thu Mar 26 2015 Kalev Lember <kalevlember@gmail.com> - 2.6.0-4
+- Rebuilt for GCC 5 ABI change
+
+* Sat Feb 21 2015 Till Maas <opensource@till.name> - 2.6.0-3
+- Rebuilt for Fedora 23 Change
+  https://fedoraproject.org/wiki/Changes/Harden_all_packages_with_position-independent_code
+
+* Wed Dec 17 2014 Peter Lemenkov <lemenkov@gmail.com> - 2.6.0-2
+- Added missing Requires zlib-devel to protobuf-devel (see rhbz #1173343). See
+  also rhbz #732087.
+
+* Sun Oct 19 2014 Conrad Meyer <cemeyer@uw.edu> - 2.6.0-1
+- Bump to upstream release 2.6.0 (rh# 1154474).
+- Rebase 'java fixes' patch on 2.6.0 pom.xml.
+- Drop patch #3 (fall back to generic GCC atomics if no specialized atomics
+  exist, e.g. AArch64 GCC); this has been upstreamed.
+
+* Sun Oct 19 2014 Conrad Meyer <cemeyer@uw.edu> - 2.5.0-11
+- protobuf-emacs requires emacs(bin), not emacs (rh# 1154456)
+
+* Sun Aug 17 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.5.0-10
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
+
+* Mon Jun 16 2014 Mikolaj Izdebski <mizdebsk@redhat.com> - 2.5.0-9
+- Update to current Java packaging guidelines
+
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.5.0-8
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Tue Mar 04 2014 Stanislav Ochotnicky <sochotnicky@redhat.com> - 2.5.0-7
+- Use Requires: java-headless rebuild (#1067528)
+
+* Thu Dec 12 2013 Conrad Meyer <cemeyer@uw.edu> - 2.5.0-6
+- BR python-setuptools-devel -> python-setuptools
+
+* Sun Aug 04 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.5.0-5
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Thu May 16 2013 Dan Horák <dan[at]danny.cz> - 2.5.0-4
+- export the new generic atomics header (rh #926374)
+
+* Mon May 6 2013 Stanislav Ochotnicky <sochotnicky@redhat.com> - 2.5.0-3
+- Add support for generic gcc atomic operations (rh #926374)
+
+* Sat Apr 27 2013 Conrad Meyer <cemeyer@uw.edu> - 2.5.0-2
+- Remove changelog history from before 2010
+- This spec already runs autoreconf -fi during %%build, but bump build for
+  rhbz #926374
+
+* Sat Mar 9 2013 Conrad Meyer <cemeyer@uw.edu> - 2.5.0-1
+- Bump to latest upstream (#883822)
+- Rebase gtest, maven patches on 2.5.0
+
+* Tue Feb 26 2013 Conrad Meyer <cemeyer@uw.edu> - 2.4.1-12
+- Nuke BR on maven-doxia, maven-doxia-sitetools (#915620)
+
+* Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.4.1-11
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
+
+* Wed Feb 06 2013 Java SIG <java-devel@lists.fedoraproject.org> - 2.4.1-10
+- Update for https://fedoraproject.org/wiki/Fedora_19_Maven_Rebuild
+- Replace maven BuildRequires with maven-local
+
+* Sun Jan 20 2013 Conrad Meyer <konrad@tylerc.org> - 2.4.1-9
+- Fix packaging bug, -emacs-el subpackage should depend on -emacs subpackage of
+  the same version (%%version), not the emacs version number...
+
+* Thu Jan 17 2013 Tim Niemueller <tim@niemueller.de> - 2.4.1-8
+- Added sub-package for Emacs editing mode
 
 * Sat Jul 21 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.4.1-7
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
@@ -353,69 +447,3 @@ rm -rf %{buildroot}
 
 * Tue May 4 2010 Conrad Meyer <konrad@tylerc.org> - 2.3.0-1
 - bump to 2.3.0
-
-* Wed Sep 30 2009 Lev Shamardin <shamardin@gmail.com> - 2.2.0-2
-- added export PTHREAD_LIBS="-lpthread"
-
-* Fri Sep 18 2009 Lev Shamardin <shamardin@gmail.com> - 2.2.0-1
-- Upgraded to upstream protobuf-2.2.0
-- New -lite packages
-
-* Sun Mar 01 2009 Caolán McNamra <caolanm@redhat.com> - 2.0.2-8
-- add stdio.h for sprintf, perror, etc.
-
-* Thu Feb 26 2009 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.0.2-7
-- Rebuilt for https://fedoraproject.org/wiki/Fedora_11_Mass_Rebuild
-
-* Tue Dec 23 2008 Lev Shamardin <shamardin@gmail.com> - 2.0.2-6
-- Small fixes for python 2.6 eggs.
-- Temporarily disabled java subpackage due to build problems, will be fixed and
-  turned back on in future.
-
-* Thu Nov 27 2008 Lev Shamardin <shamardin@gmail.com> - 2.0.2-5
-- No problems with ppc & ppc64 arch in rawhide, had to do a release bump.
-
-* Sat Nov 22 2008 Lev Shamardin <shamardin@gmail.com> - 2.0.2-4
-- Added patch from subversion r70 to workaround gcc 4.3.0 bug (see
-  http://code.google.com/p/protobuf/issues/detail?id=45 for more
-  details).
-
-* Tue Nov 11 2008 Lev Shamardin <shamardin@gmail.com> - 2.0.2-3
-- Added conflicts to java and python subpackages to prevent using with
-  wrong compiler versions.
-- Fixed license.
-- Fixed BuildRequires for -python subpackage.
-- Fixed Requires and Group for -javadoc subpackage.
-- Fixed Requires for -devel subpackage.
-- Fixed issue with wrong shebang in descriptor_pb2.py.
-- Specify build options via --with/--without.
-- Use Fedora-packaged gtest library instead of a bundled one by
-  default (optional).
-
-* Fri Oct 31 2008 Lev Shamardin <shamardin@gmail.com> - 2.0.2-2
-- Use python_sitelib macro instead of INSTALLED_FILES.
-- Fix the license.
-- Fix redundant requirement for -devel subpackage.
-- Fix wrong dependences for -python subpackage.
-- Fix typo in requirements for -javadoc subpackage.
-- Use -p option for cp and install to preserve timestamps.
-- Remove unneeded ldconfig call for post scripts of -devel subpackage.
-- Fix directories ownership.
-
-* Sun Oct 12 2008 Lev Shamardin <shamardin@gmail.com> - 2.0.2-1
-- Update to version 2.0.2
-- New -java and -javadoc subpackages.
-- Options to disable building of -python and -java* subpackages
-
-* Mon Sep 15 2008 Lev Shamardin <shamardin@gmail.com> - 2.0.1-2
-- Added -p switch to install commands to preserve timestamps.
-- Fixed Version and Libs in pkgconfig script.
-- Added pkgconfig requires for -devel package.
-- Removed libtool archives from -devel package.
-
-* Thu Sep 04 2008 Lev Shamardin <shamardin@gmail.com> - 2.0.1-1
-- Updated to 2.0.1 version.
-
-* Wed Aug 13 2008 Lev Shamardin <shamardin@gmail.com> - 2.0.0-0.1.beta
-- Initial package version. Credits for vim subpackage and pkgconfig go
-  to Rick L Vinyard Jr <rvinyard@cs.nmsu.edu>
