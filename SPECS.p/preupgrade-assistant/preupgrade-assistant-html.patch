@@ -1,0 +1,13 @@
+diff --git a/preup/xml_manager.py b/preup/xml_manager.py
+index 21798db..1102a71 100644
+--- a/preup/xml_manager.py
++++ b/preup/xml_manager.py
+@@ -255,8 +255,6 @@ class XmlManager(object):
+             section = dir_name.replace(os.path.join(self.dirname, self.scenario),
+                                        "").replace("/", "_")
+             solution_text = section + "_SOLUTION_MSG"
+-            if extension == "html":
+-                solution_text = "<p>" + solution_text
+             file_name = self._return_correct_text_file(section, files)
+             if not file_name or file_name is None:
+                 continue

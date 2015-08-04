@@ -1,0 +1,103 @@
+commit 4cdba258528375146efb5feb8866b994e453edf2
+Author: Petr Hracek <phracek@redhat.com>
+Date:   Mon May 18 17:03:15 2015 +0200
+
+    Fix for updating solution.txt caused by splitting reports
+    
+    Signed-off-by: Petr Hracek <phracek@redhat.com>
+
+diff --git a/preup/application.py b/preup/application.py
+index adb1836..ab75323 100644
+--- a/preup/application.py
++++ b/preup/application.py
+@@ -356,16 +356,7 @@ class Application(object):
+ 
+     def prepare_for_generation(self):
+         """Function prepares the XML file for conversion to HTML format"""
+-        # We separate admin contents
+-        reports = [self.get_default_xml_result_path()]
+-        report_admin = self.report_parser.get_report_type(settings.REPORTS[0])
+-        if report_admin:
+-            reports.append(report_admin)
+-        # We separate user contents
+-        report_user = self.report_parser.get_report_type(settings.REPORTS[1])
+-        if report_user:
+-            reports.append(report_user)
+-        for report in reports:
++        for report in self._get_reports():
+             ReportParser.write_xccdf_version(report, direction=True)
+             self.run_generate(report, report.replace('.xml', '.html'))
+             # Switching back namespace
+@@ -392,6 +383,17 @@ class Application(object):
+                            print_output=False,
+                            shell=True)
+ 
++    def _get_reports(self):
++        reports = [self.get_default_xml_result_path()]
++        report_admin = self.report_parser.get_report_type(settings.REPORTS[0])
++        if report_admin:
++            reports.append(report_admin)
++        # We separate user contents
++        report_user = self.report_parser.get_report_type(settings.REPORTS[1])
++        if report_user:
++            reports.append(report_user)
++        return reports
++
+     def finalize_xml_files(self):
+         """
+         Function copies postupgrade scripts and creates hash postupgrade file.
+@@ -401,7 +403,9 @@ class Application(object):
+         remediate.special_postupgrade_scripts(self.conf.result_dir)
+         remediate.hash_postupgrade_file(self.conf.verbose,
+                                         self.get_postupgrade_dir())
+-        self.xml_mgr.find_solution_files(self.report_parser.get_solution_files())
++        solution_files = self.report_parser.get_solution_files()
++        for report in self._get_reports():
++            self.xml_mgr.find_solution_files(report.split('.')[0], solution_files)
+         remediate.copy_modified_config_files(self.conf.result_dir)
+ 
+     def run_third_party_modules(self, dir_name):
+diff --git a/preup/xml_manager.py b/preup/xml_manager.py
+index 15037b4..21798db 100644
+--- a/preup/xml_manager.py
++++ b/preup/xml_manager.py
+@@ -246,7 +246,7 @@ class XmlManager(object):
+                 pass
+         return file_name
+ 
+-    def update_html(self, solution_files, extension="html"):
++    def update_html(self, result_name, solution_files, extension="html"):
+         """
+          Function updates a XML or HTML file with relevant solution
+          texts
+@@ -264,7 +264,7 @@ class XmlManager(object):
+                                     "rb",
+                                     method=True)
+             orig_file = os.path.join(self.dirname,
+-                                     self.result_base + "." + extension)
++                                     result_name + "." + extension)
+             lines = get_file_content(orig_file, "rb", method=True)
+ 
+             for cnt, line in enumerate(lines):
+@@ -283,7 +283,7 @@ class XmlManager(object):
+                                                    extension)
+             write_to_file(orig_file, "wb", lines)
+ 
+-    def find_solution_files(self, xml_solution_files):
++    def find_solution_files(self, result_name, xml_solution_files):
+         """
+         Function finds all text files in conten
+         and updates XML and HTML results
+@@ -294,9 +294,9 @@ class XmlManager(object):
+             files = [x for x in file_name if x.endswith(".txt")]
+             if files:
+                 solution_files[dir_name] = files
+-        self.update_html(solution_files)
+-        self.update_html(solution_files, extension="xml")
+-        clean_html(os.path.join(self.dirname, self.result_base + ".html"))
++        self.update_html(result_name, solution_files)
++        self.update_html(result_name, solution_files, extension="xml")
++        clean_html(os.path.join(self.dirname, result_name + ".html"))
+ 
+     def remove_html_information(self):
+         report_path = os.path.join(self.dirname, self.result_base + ".html")
