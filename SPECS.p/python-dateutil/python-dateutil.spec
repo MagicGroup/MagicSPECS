@@ -1,43 +1,121 @@
 Name:           python-dateutil
-Version:        1.5
-Release:        6%{?dist}
+Version:        2.4.2
+Release:        2%{?dist}
+Epoch:          1
 Summary:        Powerful extensions to the standard datetime module
 
 Group:          Development/Languages
 License:        Python
-URL:            http://labix.org/python-dateutil
-Source0:        http://labix.org/download/%{name}/%{name}-%{version}.tar.gz
-Patch0:		python-dateutil-1.5-system-zoneinfo.patch
+URL:            https://github.com/dateutil/dateutil
+Source0:        https://github.com/dateutil/dateutil/archive/%{version}.tar.gz
+# https://github.com/dateutil/dateutil/issues/11
+Patch0:         python-dateutil-system-zoneinfo.patch
+Patch1:         python-dateutil-timelex-string.patch
 
 BuildArch:      noarch
-BuildRequires:  python-devel,python-setuptools
-Requires:	tzdata
+BuildRequires:  python2-devel
+BuildRequires:  python-setuptools
+BuildRequires:  python-sphinx
+BuildRequires:  python-six
+Requires:       tzdata
+Requires:       python-six
+Conflicts:      python-vobject <= 0.8.1c-10
+
+# Use the same directory of the main package for subpackage licence and docs
+%global _docdir_fmt %{name}
+
 %description
 The dateutil module provides powerful extensions to the standard datetime
 module available in Python 2.3+.
 
-%prep
-%setup -q
-%patch0 -p1
+This is the version for Python 2.
 
+%package -n python3-dateutil
+Summary:        Powerful extensions to the standard datetime module
+BuildRequires:  python3-devel
+BuildRequires:  python3-six
+Requires:       tzdata
+Requires:       python3-six
+
+%description -n python3-dateutil
+The dateutil module provides powerful extensions to the standard datetime
+module available in Python 2.3+.
+
+This is the version for Python 3.
+
+%package doc
+Summary: API documentation for python-dateutil
+%description doc
+This package contains %{summary}.
+
+%prep
+%autosetup -p0 -n dateutil-%{version}
 iconv --from=ISO-8859-1 --to=UTF-8 NEWS > NEWS.new
 mv NEWS.new NEWS
 
 %build
-%{__python} setup.py build
+%{__python2} setup.py build
+%{__python3} setup.py build
+make -C docs html
 
 %install
-%{__python} setup.py install --skip-build --root $RPM_BUILD_ROOT
+%{__python2} setup.py install --skip-build --root $RPM_BUILD_ROOT
+%{__python3} setup.py install --skip-build --root $RPM_BUILD_ROOT
+
+%check
+%{__python2} setup.py test
+%{__python3} setup.py test
 
 %files
-%doc example.py LICENSE NEWS README
-%{python_sitelib}/dateutil/
-%exclude %{python_sitelib}/dateutil/zoneinfo/zoneinfo-2010g.tar.gz
-%{python_sitelib}/*.egg-info
+%license LICENSE
+%doc NEWS README.rst
+%{python2_sitelib}/dateutil/
+%{python2_sitelib}/*.egg-info
+
+%files -n python3-dateutil
+%license LICENSE
+%doc NEWS README.rst
+%{python3_sitelib}/dateutil/
+%{python3_sitelib}/*.egg-info
+
+%files doc
+%license LICENSE
+%doc docs/_build/html
 
 %changelog
-* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 1.5-6
-- 为 Magic 3.0 重建
+* Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1:2.4.2-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
+
+* Mon Apr  6 2015 Zbigniew Jędrzejewski-Szmek <zbyszek@in.waw.pl> - 1:2.4.2-1
+- Update to latest upstream release.
+
+* Tue Mar  3 2015 Zbigniew Jędrzejewski-Szmek <zbyszek@in.waw.pl> - 1:2.4.0-3
+- Add patch for string handling in dateutil.tz.tzstr (#1197791)
+
+* Wed Jan 21 2015 Zbigniew Jędrzejewski-Szmek <zbyszek@in.waw.pl> - 1:2.4.0-2
+- Add python3 subpackage.
+- Conflict with python-vobject <= 0.8.1c-10 (workaround until #1183377
+  is fixed one way or another).
+
+* Wed Jan 21 2015 Zbigniew Jędrzejewski-Szmek <zbyszek@in.waw.pl> - 1:2.4.0-1
+- Change to new upstream, update to 2.4 (#1126521)
+- Build documentation.
+
+* Tue Aug 05 2014 Jon Ciesla <limburgher@gmail.com> - 1:1.5-9
+- Reverting to 1.5 pre user feedback and upstream.
+
+* Mon Aug 04 2014 Jon Ciesla <limburgher@gmail.com> - 2.2-1
+- Update to 2.2, BZ 1126521.
+- Fix bad dates.
+
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.5-8
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Sun Aug 04 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.5-7
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.5-6
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
 
 * Sat Jul 21 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.5-5
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
@@ -45,10 +123,10 @@ mv NEWS.new NEWS
 * Sat Jan 14 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.5-4
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 
-* Wed Sep 15 2011 Jef Spaleta <jspaleta@fedoraproject.org> - 1.5-3
+* Thu Sep 15 2011 Jef Spaleta <jspaleta@fedoraproject.org> - 1.5-3
 - Adjust patch to respect systemwide tzdata. Ref bug 729786
 
-* Wed Sep 15 2011 Jef Spaleta <jspaleta@fedoraproject.org> - 1.5-2
+* Thu Sep 15 2011 Jef Spaleta <jspaleta@fedoraproject.org> - 1.5-2
 - Added a patch to respect systemwide tzdata. Ref bug 729786
 
 * Wed Jul 13 2011 Rahul Sundaram <sundaram@fedoraproject.org> - 1.5-1
@@ -81,7 +159,7 @@ mv NEWS.new NEWS
 - fix license tag
 
 * Tue Jul 01 2008 Jef Spaleta <jspaleta AT fedoraproject DOT org> 1.4-1
-- Latest upstream release 
+- Latest upstream release
 
 * Fri Jan 04 2008 Jef Spaleta <jspaleta@fedoraproject.org> 1.2-2
 - Fix for egg-info file creation
