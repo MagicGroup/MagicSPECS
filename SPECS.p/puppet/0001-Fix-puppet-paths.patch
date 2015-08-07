@@ -1,0 +1,45 @@
+From 92ec714fc77a5cc5c743367be39cd83afa2356b6 Mon Sep 17 00:00:00 2001
+From: Haikel Guemar <hguemar@redhat.com>
+Date: Wed, 29 Apr 2015 01:38:35 +0200
+Subject: [PATCH 1/2] Fix puppet paths
+
+---
+ lib/puppet/util/run_mode.rb | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
+
+diff --git a/lib/puppet/util/run_mode.rb b/lib/puppet/util/run_mode.rb
+index 453095c..bcdde95 100644
+--- a/lib/puppet/util/run_mode.rb
++++ b/lib/puppet/util/run_mode.rb
+@@ -72,23 +72,23 @@ module Puppet
+ 
+     class UnixRunMode < RunMode
+       def conf_dir
+-        which_dir("/etc/puppetlabs/puppet", "~/.puppetlabs/etc/puppet")
++        which_dir("/etc/puppet", "~/.puppet")
+       end
+ 
+       def code_dir
+-        which_dir("/etc/puppetlabs/code", "~/.puppetlabs/etc/code")
++        which_dir("/etc/puppet", "~/.puppet/code")
+       end
+ 
+       def var_dir
+-        which_dir("/opt/puppetlabs/puppet/cache", "~/.puppetlabs/opt/puppet/cache")
++        which_dir("/var/lib/puppet", "~/.puppet/cache")
+       end
+ 
+       def run_dir
+-        which_dir("/var/run/puppetlabs", "~/.puppetlabs/var/run")
++        which_dir("/var/run/puppet", "~/.puppet/var/run")
+       end
+ 
+       def log_dir
+-        which_dir("/var/log/puppetlabs/puppet", "~/.puppetlabs/var/log")
++        which_dir("/var/log/puppet", "~/.puppet/var/log")
+       end
+     end
+ 
+-- 
+2.4.0
+
