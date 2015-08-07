@@ -1,15 +1,15 @@
 Name:           protobuf-c
-Version:        0.15
-Release:        9%{?dist}
+Version:        1.1.1
+Release:        2%{?dist}
 Summary:        C bindings for Google's Protocol Buffers
 
-Group:          System Environment/Libraries
-License:        ASL 2.0
-URL:            http://code.google.com/p/protobuf-c/
-Source0:        http://protobuf-c.googlecode.com/files/protobuf-c-%{version}.tar.gz
-Source1:        http://protobuf-c.googlecode.com/svn/tags/%{version}/LICENSE
 
-BuildRequires:  protobuf-devel
+Group:          System Environment/Libraries
+License:        BSD
+URL:            https://github.com/protobuf-c/protobuf-c
+Source0:	https://github.com/protobuf-c/protobuf-c/releases/download/v%{version}/%{name}-%{version}.tar.gz
+
+BuildRequires:  autoconf automake libtool protobuf-devel
 
 %description
 Protocol Buffers are a way of encoding structured data in an efficient yet 
@@ -28,13 +28,11 @@ This package contains protobuf-c headers and libraries.
 
 %prep
 %setup -q
-cp %{SOURCE1} .
 
 %build
+autoreconf -ifv
 %configure --disable-static
-# Causes build to fail
-#make %{?_smp_mflags}
-make
+make %{?_smp_mflags}
 
 %check
 make check
@@ -55,13 +53,33 @@ rm -f $RPM_BUILD_ROOT/%{_libdir}/libprotobuf-c.la
 %files devel
 %defattr(-,root,root,-)
 %dir %{_includedir}/google
+%{_includedir}/protobuf-c
 %{_includedir}/google/protobuf-c
 %{_libdir}/libprotobuf-c.so
 %{_libdir}/pkgconfig/libprotobuf-c.pc
 
 %changelog
-* Wed May 07 2014 Liu Di <liudidi@gmail.com> - 0.15-9
-- 为 Magic 3.0 重建
+* Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.1.1-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
+
+* Thu Apr 23 2015 Nikos Mavrogiannopoulos <nmav@redhat.com> - 1.1.1-1
+- new upstream release (#1142988)
+
+* Sat Feb 21 2015 Till Maas <opensource@till.name> - 1.0.1-3
+- Rebuilt for Fedora 23 Change
+  https://fedoraproject.org/wiki/Changes/Harden_all_packages_with_position-independent_code
+
+* Sun Aug 17 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.0.1-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
+
+* Wed Aug 06 2014 Nikos Mavrogiannopoulos <nmav@redhat.com> - 1.0.1-1
+- new upstream release
+
+* Mon Aug 04 2014 Nikos Mavrogiannopoulos <nmav@redhat.com> - 1.0.0-1
+- new upstream release (#1126116)
+
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.15-9
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 
 * Sun Aug 04 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.15-8
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
