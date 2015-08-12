@@ -1,0 +1,14 @@
+# Sanity fix; should resolve segfault when no space aviable (#740631)
+
+diff -up db-4.8.30/env/env_file.c.orig db-4.8.30/env/env_file.c
+--- db-4.8.30/env/env_file.c.orig	2013-04-24 16:40:37.367003987 +0200
++++ db-4.8.30/env/env_file.c	2013-04-24 16:40:50.303026442 +0200
+@@ -49,7 +49,7 @@ __db_file_extend(env, fhp, size)
+ 
+ err:	__os_free(env, buf);
+ 
+-	return (0);
++	return (ret);
+ }
+ 
+ /*
