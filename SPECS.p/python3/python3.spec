@@ -71,7 +71,7 @@
 %global with_systemtap 1
 
 # some arches don't have valgrind so we need to disable its support on them
-%ifnarch s390 ppc64le
+%ifnarch s390
 %global with_valgrind 1
 %else
 %global with_valgrind 0
@@ -139,8 +139,8 @@
 # ==================
 Summary: Version 3 of the Python programming language aka Python 3000
 Name: python3
-Version: %{pybasever}.1
-Release: 15%{?dist}
+Version: %{pybasever}.3
+Release: 5%{?dist}
 License: Python
 Group: Development/Languages
 
@@ -155,7 +155,7 @@ BuildRequires: autoconf
 BuildRequires: bluez-libs-devel
 BuildRequires: bzip2
 BuildRequires: bzip2-devel
-BuildRequires: libdb-devel >= 4.7
+BuildRequires: db4-devel >= 4.7
 
 # expat 2.1.0 added the symbol XML_SetHashSalt without bumping SONAME.  We use
 # it (in pyexpat) in order to enable the fix in Python-3.2.3 for CVE-2012-0876:
@@ -218,12 +218,12 @@ Source1: find-provides-without-python-sonames.sh
 
 # Supply various useful macros for building python 3 modules:
 #  __python3, python3_sitelib, python3_sitearch
-Source2: macros.python3
+Source2: macros.python%{pybasever}
 
 # Supply an RPM macro "py_byte_compile" for the python3-devel subpackage
 # to enable specfiles to selectively byte-compile individual files and paths
 # with different Python runtimes as necessary:
-Source3: macros.pybytecompile
+Source3: macros.pybytecompile%{pybasever}
 
 # Systemtap tapset to make it easier to use the systemtap static probes
 # (actually a template; LIBRARY_PATH will get fixed up during install)
@@ -445,7 +445,8 @@ Patch150: 00150-disable-rAssertAlmostEqual-cmath-on-ppc.patch
 # when running test_gdb.py; also cope with change to gdb in F17 onwards in
 # which values are printed as "v@entry" rather than just "v":
 # Not yet sent upstream
-Patch153: 00153-fix-test_gdb-noise.patch
+# Upstream as of 3.4.3
+#  Patch153: 00153-fix-test_gdb-noise.patch
 
 # 00154 #
 # python3.spec on f15 has:
@@ -461,8 +462,8 @@ Patch155: 00155-avoid-ctypes-thunks.patch
 # Recent builds of gdb will only auto-load scripts from certain safe
 # locations.  Turn off this protection when running test_gdb in the selftest
 # suite to ensure that it can load our -gdb.py script (rhbz#817072):
-# Not yet sent upstream
-Patch156: 00156-gdb-autoload-safepath.patch
+# Upsream as of 3.4.3
+#  Patch156: 00156-gdb-autoload-safepath.patch
 
 # 00157 #
 # Update uid/gid handling throughout the standard library: uid_t and gid_t are
@@ -539,10 +540,16 @@ Patch164: 00164-disable-interrupted_write-tests-on-ppc.patch
 # in python.spec
 # TODO: python3 status?
 
-# 00170 #
-#  Patch170: 00170-gc-assertions.patch
-# in python.spec
-# TODO: python3 status?
+# 00170 #                                                                                           
+# In debug builds, try to print repr() when a C-level assert fails in the                           
+# garbage collector (typically indicating a reference-counting error                                
+# somewhere else e.g in an extension module)                                                        
+# Backported to 2.7 from a patch I sent upstream for py3k                                           
+#   http://bugs.python.org/issue9263  (rhbz#614680)                                                 
+# hiding the proposed new macros/functions within gcmodule.c to avoid exposing                      
+# them within the extension API.                                                                    
+# (rhbz#850013
+Patch170: 00170-gc-assertions.patch
 
 # 00171 #
 # python.spec had:
@@ -682,12 +689,50 @@ Patch194: temporarily-disable-tests-requiring-SIGHUP.patch
 # Don't declare Werror=declaration-after-statement for extension
 # modules through setup.py
 # http://bugs.python.org/issue21121
-Patch195: 00195-dont-add-Werror-declaration-after-statement.patch
+# FIXED UPSTREAM
+# Patch195: 00195-dont-add-Werror-declaration-after-statement.patch
 
 # 00196
 #
 #  Fix test_gdb failure on ppc64le
 Patch196: 00196-test-gdb-match-addr-before-builtin.patch
+
+# 00197
+#
+# The CGIHTTPServer Python module did not properly handle URL-encoded
+# path separators in URLs. This may have enabled attackers to disclose a CGI
+# script's source code or execute arbitrary scripts in the server's
+# document root.
+# FIXED UPSTREAM
+# Patch197: 00197-fix-CVE-2014-4650.patch
+
+# OpenSSL disabled SSLv3 in SSLv23 method
+# This patch alters python tests to reflect this change
+# Issue: http://bugs.python.org/issue22638 Upstream discussion about SSLv3 in Python
+Patch199: 00199-alter-tests-to-reflect-sslv3-disabled.patch
+
+# 00200 #                                                                                           
+# Fix for gettext plural form headers (lines that begin with "#")                                   
+# Note: Backported from scl
+Patch200: 00200-gettext-plural-fix.patch
+
+# 00201 #                                                                                           
+# Fixes memory leak in gdbm module (rhbz#977308)                                                    
+# This was upstreamed as a part of bigger patch, but for our purposes                               
+# this is ok: http://bugs.python.org/issue18404                                                     
+# Note: Backported from scl
+Patch201: 00201-fix-memory-leak-in-gdbm.patch 
+
+# 00202 #
+# Fixes undefined behaviour in faulthandler which caused test to hang on x86_64
+# http://bugs.python.org/issue23433
+Patch202: 00202-fix-undefined-behaviour-in-faulthandler.patch
+
+# test_threading fails in koji dues to it's handling of signals
+Patch203: 00203-disable-threading-test-koji.patch
+
+# openssl requires DH keys to be > 768bits
+Patch204: 00204-increase-dh-keys-size.patch
 
 
 # (New patches go here ^^^)
@@ -758,10 +803,12 @@ Summary: Libraries and header files needed for Python 3 development
 Group: Development/Libraries
 Requires: %{name} = %{version}-%{release}
 Requires: %{name}-libs%{?_isa} = %{version}-%{release}
+BuildRequires: python-macros
+Requires: python-macros
 Conflicts: %{name} < %{version}-%{release}
 
 %description devel
-This package contains libraries and header files used to build applications 
+This package contains libraries and header files used to build applications
 with and native libraries for Python 3
 
 %package tools
@@ -867,6 +914,11 @@ for f in md5module.c sha1module.c sha256module.c sha512module.c; do
     rm Modules/$f
 done
 
+%if 0%{with_rewheel}
+%global pip_version 7.0.3
+sed -r -i s/'_PIP_VERSION = "[0-9.]+"'/'_PIP_VERSION = "%{pip_version}"'/ Lib/ensurepip/__init__.py
+%endif
+
 #
 # Apply patches:
 #
@@ -919,10 +971,10 @@ done
 %endif
 # 00151: not for python3
 # 00152: upstream as of Python 3.3.0b2
-%patch153 -p0
+# 00153: upstream as of Python 3.4.3
 # 00154: not for this branch
 %patch155 -p1
-%patch156 -p1
+# 00156: upstream as of 3.4.3
 %patch157 -p1
 #00158: FIXME
 #00159: FIXME
@@ -965,8 +1017,13 @@ done
 # 00190: upstream as of Python 3.4.1
 # 00193: upstream as of Python 3.4.1
 %patch194 -p1
-%patch195 -p1
+# 00195: upstream as of Python 3.4.2
 %patch196 -p1
+# 00197: upstream as of Python 3.4.2
+%patch199 -p1
+%patch202 -p1
+%patch203 -p1
+%patch204 -p1
 
 # Currently (2010-01-15), http://docs.python.org/library is for 2.6, and there
 # are many differences between 2.6 and the Python 3 library.
@@ -1029,6 +1086,7 @@ BuildPython() {
   SymlinkName=$3
   ExtraConfigArgs=$4
   PathFixWithThisBinary=$5
+  MoreCFlags=$6
 
   ConfDir=build/$ConfName
 
@@ -1066,8 +1124,7 @@ BuildPython() {
   #    missing symbol AnnotateRWLockDestroy
   #
   # Invoke the build:
-  # TODO: it seems that 3.4.0a4 fails with %{?_smp_flags}, have to figure out why
-  make EXTRA_CFLAGS="$CFLAGS"
+  make EXTRA_CFLAGS="$CFLAGS $MoreCFlags" %{?_smp_mflags}
 
   popd
   echo FINISHED: BUILD OF PYTHON FOR CONFIGURATION: $ConfDir
@@ -1084,7 +1141,8 @@ BuildPython debug \
 %else
   "--with-pydebug --with-count-allocs --with-call-profile --without-ensurepip" \
 %endif
-  false
+  false \
+  -O0
 %endif # with_debug_build
 
 BuildPython optimized \
@@ -1106,6 +1164,7 @@ InstallPython() {
 
   ConfName=$1	      
   PyInstSoName=$2
+  MoreCFlags=$3
 
   ConfDir=build/$ConfName
 
@@ -1114,7 +1173,7 @@ InstallPython() {
 
   pushd $ConfDir
 
-make install DESTDIR=%{buildroot} INSTALL="install -p"
+make install DESTDIR=%{buildroot} INSTALL="install -p" EXTRA_CFLAGS="$MoreCFlags"
 
   popd
 
@@ -1157,7 +1216,8 @@ make install DESTDIR=%{buildroot} INSTALL="install -p"
 # Install the "debug" build first, so that we can move some files aside
 %if 0%{?with_debug_build}
 InstallPython debug \
-  %{py_INSTSONAME_debug}
+  %{py_INSTSONAME_debug} \
+  -O0
 %endif # with_debug_build
 
 # Now the optimized build:
@@ -1187,14 +1247,14 @@ cp -ar Tools/demo %{buildroot}%{pylibdir}/Tools/
 rm -f %{buildroot}%{pylibdir}/email/test/data/audiotest.au %{buildroot}%{pylibdir}/test/audiotest.au
 
 %if "%{_lib}" == "lib64"
-install -d -m 0755 %{buildroot}/usr/lib/python%{pybasever}/site-packages/__pycache__
+install -d -m 0755 %{buildroot}/%{_prefix}/lib/python%{pybasever}/site-packages/__pycache__
 %endif
 
 # Make python3-devel multilib-ready (bug #192747, #139911)
 %global _pyconfig32_h pyconfig-32.h
 %global _pyconfig64_h pyconfig-64.h
 
-%ifarch %{power64} s390x x86_64 ia64 alpha sparc64 aarch64 mips64el
+%ifarch %{power64} s390x x86_64 ia64 alpha sparc64 aarch64
 %global _pyconfig_h %{_pyconfig64_h}
 %else
 %global _pyconfig_h %{_pyconfig32_h}
@@ -1353,7 +1413,7 @@ ln -s \
 # Install a tapset for this libpython into tapsetdir, fixing up the path to the
 # library:
 mkdir -p %{buildroot}%{tapsetdir}
-%ifarch %{power64} s390x x86_64 ia64 alpha sparc64 aarch64 mips64el
+%ifarch %{power64} s390x x86_64 ia64 alpha sparc64 aarch64
 %global libpython_stp_optimized libpython%{pybasever}-64.stp
 %global libpython_stp_debug     libpython%{pybasever}-debug-64.stp
 %else
@@ -1419,8 +1479,12 @@ CheckPython() {
   WITHIN_PYTHON_RPM_BUILD= \
   LD_LIBRARY_PATH=$ConfDir $ConfDir/python -m test.regrtest \
     --verbose --findleaks \
+    -x test_distutils \
     %ifarch ppc64le aarch64
-    -x test_faulthandler
+    -x test_faulthandler \
+    %endif
+    %ifarch %{power64} s390 s390x armv7hl aarch64
+    -x test_gdb
     %endif
 
   echo FINISHED: CHECKING OF PYTHON FOR CONFIGURATION: $ConfName
@@ -1671,6 +1735,8 @@ rm -fr %{buildroot}
 %{_libdir}/%{py_INSTSONAME_optimized}
 %{_libdir}/libpython3.so
 %if 0%{?with_systemtap}
+%dir %(dirname %{tapsetdir})
+%dir %{tapsetdir}
 %{tapsetdir}/%{libpython_stp_optimized}
 %doc systemtap-example.stp pyfuntop.stp
 %endif
@@ -1690,8 +1756,8 @@ rm -fr %{buildroot}
 %{_libdir}/pkgconfig/python-%{LDVERSION_optimized}.pc
 %{_libdir}/pkgconfig/python-%{pybasever}.pc
 %{_libdir}/pkgconfig/python3.pc
-%{_rpmconfigdir}/macros.d/macros.python3
-%{_rpmconfigdir}/macros.d/macros.pybytecompile
+%{_rpmconfigdir}/macros.d/macros.python%{pybasever}
+%{_rpmconfigdir}/macros.d/macros.pybytecompile%{pybasever}
 
 %files tools
 %defattr(-,root,root,755)
@@ -1710,7 +1776,6 @@ rm -fr %{buildroot}
 %{pylibdir}/__pycache__/turtle*%{bytecode_suffixes}
 %dir %{pylibdir}/turtledemo
 %{pylibdir}/turtledemo/*.py
-%{pylibdir}/turtledemo/*.txt
 %{pylibdir}/turtledemo/*.cfg
 %dir %{pylibdir}/turtledemo/__pycache__/
 %{pylibdir}/turtledemo/__pycache__/*%{bytecode_suffixes}
@@ -1809,6 +1874,8 @@ rm -fr %{buildroot}
 
 %{_libdir}/%{py_INSTSONAME_debug}
 %if 0%{?with_systemtap}
+%dir %(dirname %{tapsetdir})
+%dir %{tapsetdir}
 %{tapsetdir}/%{libpython_stp_debug}
 %endif
 
@@ -1853,14 +1920,69 @@ rm -fr %{buildroot}
 # ======================================================
 
 %changelog
-* Wed Jun 18 2014 Liu Di <liudidi@gmail.com> - 3.4.1-15
-- 为 Magic 3.0 重建
+* Mon Jun 29 2015 Thomas Spura <tomspur@fedoraproject.org> - 3.4.3-4
+- python3-devel: Require python-macros for version independant macros such as
+  python_provide. See fpc#281 and fpc#534.
 
-* Tue Jun 17 2014 Liu Di <liudidi@gmail.com> - 3.4.1-14
-- 为 Magic 3.0 重建
+* Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.4.3-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 
-* Tue Jun 17 2014 Liu Di <liudidi@gmail.com> - 3.4.1-13
-- 为 Magic 3.0 重建
+* Wed Jun 17 2015 Matej Stuchlik <mstuchli@redhat.com> - 3.4.3-4
+- Use 1024bit DH key in test_ssl
+- Use -O0 when compiling -debug build
+- Update pip version variable to the version we actually ship
+
+* Wed Jun 17 2015 Matej Stuchlik <mstuchli@redhat.com> - 3.4.3-3
+- Make relocating Python by changing _prefix actually work
+Resolves: rhbz#1231801
+
+* Mon May  4 2015 Peter Robinson <pbrobinson@fedoraproject.org> 3.4.3-2
+- Disable test_gdb on aarch64 (rhbz#1196181), it joins all other non x86 arches
+
+* Thu Mar 12 2015 Matej Stuchlik <mstuchli@redhat.com> - 3.4.3-1
+- Updated to 3.4.3
+- BuildPython now accepts additional build options
+- Temporarily disabled test_gdb on arm (rhbz#1196181)
+
+* Wed Feb 25 2015 Matej Stuchlik <mstuchli@redhat.com> - 3.4.2-7
+- Fixed undefined behaviour in faulthandler which caused test to hang on x86_64
+  (http://bugs.python.org/issue23433)
+
+* Sat Feb 21 2015 Till Maas <opensource@till.name> - 3.4.2-6
+- Rebuilt for Fedora 23 Change
+  https://fedoraproject.org/wiki/Changes/Harden_all_packages_with_position-independent_code
+
+* Tue Feb 17 2015 Ville Skyttä <ville.skytta@iki.fi> - 3.4.2-5
+- Own systemtap dirs (#710733)
+
+* Mon Jan 12 2015 Dan Horák <dan[at]danny.cz> - 3.4.2-4
+- build with valgrind on ppc64le
+- disable test_gdb on s390(x) until rhbz#1181034 is resolved
+
+* Tue Dec 16 2014 Robert Kuska <rkuska@redhat.com> - 3.4.2-3
+- New patches: 170 (gc asserts), 200 (gettext headers),
+  201 (gdbm memory leak)
+
+* Thu Dec 11 2014 Robert Kuska <rkuska@redhat.com> - 3.4.2-2
+- OpenSSL disabled SSLv3 in SSLv23 method
+
+* Thu Nov 13 2014 Matej Stuchlik <mstuchli@redhat.com> - 3.4.2-1
+- Update to 3.4.2
+- Refreshed patches: 156 (gdb autoload)
+- Removed: 195 (Werror declaration), 197 (CVE-2014-4650)
+
+* Mon Nov 03 2014 Slavek Kabrda <bkabrda@redhat.com> - 3.4.1-16
+- Fix CVE-2014-4650 - CGIHTTPServer URL handling
+Resolves: rhbz#1113529
+
+* Sun Sep 07 2014 Karsten Hopp <karsten@redhat.com> 3.4.1-15
+- exclude test_gdb on ppc* (rhbz#1132488)
+
+* Thu Aug 21 2014 Slavek Kabrda <bkabrda@redhat.com> - 3.4.1-14
+- Update rewheel patch with fix from https://github.com/bkabrda/rewheel/pull/1
+
+* Sun Aug 17 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.4.1-13
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
 
 * Sun Jun  8 2014 Peter Robinson <pbrobinson@fedoraproject.org> 3.4.1-12
 - aarch64 has valgrind, just list those that don't support it
