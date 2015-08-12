@@ -1,33 +1,30 @@
 %{!?python_sitelib: %global python_sitelib %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib()")}
 %{!?python_sitearch: %global python_sitearch %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib(1)")}
 
-%define buildflags WXPORT=gtk2 UNICODE=1
+%define buildflags WX_CONFIG=/usr/bin/wx-config-3.0 WXPORT=gtk3
 
 Name:           wxPython
-Version:        2.8.12.0
-Release:        3%{?dist}
+Version:        3.0.2.0
+Release:        6%{?dist}
 
 Summary:        GUI toolkit for the Python programming language
-Summary(zh_CN.UTF-8): Python 程序开发的 GUI 工具箱
 
 Group:          Development/Languages
-Group(zh_CN.UTF-8): 开发/语言
 License:        LGPLv2+ and wxWidgets 
 URL:            http://www.wxpython.org/
 Source0:        http://downloads.sourceforge.net/wxpython/%{name}-src-%{version}.tar.bz2
-# fix aui imports
-# http://trac.wxwidgets.org/ticket/12107
-Patch0:         wxPython-2.8.12.0-aui.patch
-Patch1:		wxPython-2.8.12.0-format.patch
-
-BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+# Remove Editra - it doesn't work and is technically a bundle.  Thanks to
+# Debian for the patch.
+Patch0:         fix-editra-removal.patch
+Patch1:         wxPython-3.0.0.0-format.patch
+# http://trac.wxwidgets.org/ticket/16765
+Patch2:         wxPython-3.0.2.0-getxwindowcrash.patch
+# http://trac.wxwidgets.org/ticket/16767
+Patch3:         wxPython-3.0.2.0-plot.patch
 # make sure to keep this updated as appropriate
-BuildRequires:  wx-gtk2-unicode-devel >= 2.8.11
+BuildRequires:  wxGTK3-devel >= 3.0.0
 BuildRequires:  python-devel
-
-# packages should depend on "wxPython", not "wxPythonGTK2", but in case
-# one does, here's the provides for it.
-Provides:       wxPythonGTK2 = %{version}-%{release}
+Provides:       bundled(scintilla) = 3.2.1
 
 %description
 wxPython is a GUI toolkit for the Python programming language. It allows
@@ -36,46 +33,38 @@ graphical user interface, simply and easily. It is implemented as a Python
 extension module (native code) that wraps the popular wxWindows cross
 platform GUI library, which is written in C++.
 
-%description -l zh_CN.UTF-8
-Python 语言的图形界面开发工具箱，是 wxWindows 的 Python 扩展模块实现。
-
 %package        devel
 Group:          Development/Libraries
-Group(zh_CN.UTF-8): 开发/库
 Summary:        Development files for wxPython add-on modules
-Summary(zh_CN.UTF-8): %{name} 的开发包
 Requires:       %{name} = %{version}-%{release}
-Requires:       wx-gtk2-unicode-devel
+Requires:       wxGTK3-devel
 
 %description devel
 This package includes C++ header files and SWIG files needed for developing
 add-on modules for wxPython. It is NOT needed for development of most
 programs which use the wxPython toolkit.
 
-%description devel -l zh_CN.UTF-8
-%{name} 的开发包。
-
 %package        docs
 Group:          Documentation
-Group(zh_CN.UTF-8): 文档
 Summary:        Documentation and samples for wxPython
-Summary(zh_CN.UTF-8): %{name} 的文档。
 Requires:       %{name} = %{version}-%{release}
+%if 0%{?fedora} > 9
 BuildArch:      noarch
+%endif
 
 %description docs
 Documentation, samples and demo application for wxPython.
 
-%description docs -l zh_CN.UTF-8
-%{name} 的文档。
 
 %prep
 %setup -q -n wxPython-src-%{version}
-%patch0 -p1 -b .aui
+%patch0 -p1 -b .editra-removal
 %patch1 -p1 -b .format
+%patch2 -p1 -b .getxwindowcrash
+%patch3 -p1 -b .plot
 
-# fix libdir otherwise additional wx libs cannot be found
-sed -i -e 's|/usr/lib|%{_libdir}|' wxPython/config.py
+# fix libdir otherwise additional wx libs cannot be found, fix default optimization flags
+sed -i -e 's|/usr/lib|%{_libdir}|' -e 's|-O3|-O2|' wxPython/config.py
 
 
 %build
@@ -88,7 +77,6 @@ python setup.py %{buildflags} build
 
 
 %install
-rm -rf $RPM_BUILD_ROOT
 cd wxPython
 python setup.py %{buildflags} install --root=$RPM_BUILD_ROOT
 
@@ -97,41 +85,67 @@ python setup.py %{buildflags} install --root=$RPM_BUILD_ROOT
 mv $RPM_BUILD_ROOT%{python_sitelib}/wx.pth  $RPM_BUILD_ROOT%{python_sitearch}
 mv $RPM_BUILD_ROOT%{python_sitelib}/wxversion.py* $RPM_BUILD_ROOT%{python_sitearch}
 %endif
-magic_rpm_clean.sh
-
-%clean
-rm -rf $RPM_BUILD_ROOT
 
 
 %files
-%defattr(-,root,root,-)
 %doc wxPython/licence
 %{_bindir}/*
 %{python_sitearch}/wx.pth
 %{python_sitearch}/wxversion.py*
-%dir %{python_sitearch}/wx-2.8-gtk2-unicode/
-%{python_sitearch}/wx-2.8-gtk2-unicode/wx
-%{python_sitearch}/wx-2.8-gtk2-unicode/wxPython
+%dir %{python_sitearch}/wx-3.0-gtk3/
+%{python_sitearch}/wx-3.0-gtk3/wx
 %if 0%{?fedora} >= 9 || 0%{?rhel} >= 6
 %{python_sitelib}/*egg-info
-%{python_sitearch}/wx-2.8-gtk2-unicode/*egg-info
+%{python_sitearch}/wx-3.0-gtk3/*egg-info
 %endif
 
 %files devel
-%defattr(-,root,root,-)
-%dir %{_includedir}/wx-2.8/wx/wxPython
-%{_includedir}/wx-2.8/wx/wxPython/*.h
-%dir %{_includedir}/wx-2.8/wx/wxPython/i_files
-%{_includedir}/wx-2.8/wx/wxPython/i_files/*.i
-%{_includedir}/wx-2.8/wx/wxPython/i_files/*.py*
-%{_includedir}/wx-2.8/wx/wxPython/i_files/*.swg
+%dir %{_includedir}/wx-3.0/wx/wxPython
+%{_includedir}/wx-3.0/wx/wxPython/*.h
+%dir %{_includedir}/wx-3.0/wx/wxPython/i_files
+%{_includedir}/wx-3.0/wx/wxPython/i_files/*.i
+%{_includedir}/wx-3.0/wx/wxPython/i_files/*.py*
+%{_includedir}/wx-3.0/wx/wxPython/i_files/*.swg
 
 %files docs
-%defattr(-,root,root,-)
 %doc wxPython/docs wxPython/demo wxPython/samples
 
 
 %changelog
+* Fri Jun 19 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.0.2.0-6
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
+
+* Mon May 04 2015 Jason L Tibbitts III <tibbs@math.uh.edu> - 3.0.2.0-5
+- Indicate that this package bundles scintilla 3.2.1.
+
+* Sat May 02 2015 Kalev Lember <kalevlember@gmail.com> - 3.0.2.0-4
+- Rebuilt for GCC 5 C++11 ABI change
+
+* Thu Mar 19 2015 Devrim Gunduz <devrim@gunduz.org> - 3.0.2.0-3
+- Rebuild for new GCC to fix C++ ABI issues.
+
+* Sun Jan 04 2015 Scott Talbert <swt@techie.net> - 3.0.2.0-2
+- Added patches for fixing crash in GetXWindow() and wx.lib.plot bugs
+
+* Tue Dec 23 2014 Scott Talbert <swt@techie.net> - 3.0.2.0-1
+- New upstream release 3.0.2.0, built against wxGTK3
+
+* Mon Aug 18 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.8.12.0-8
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
+
+* Sun Jun 08 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.8.12.0-7
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Fri Mar 14 2014 Dan Horák <dan[at]danny.cz> - 2.8.12.0-6
+- fix FTBFS due -Werror=format-security
+- modernize spec
+
+* Sun Aug 04 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.8.12.0-5
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Fri Feb 15 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.8.12.0-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
+
 * Sun Jul 22 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.8.12.0-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 
@@ -210,7 +224,7 @@ rm -rf $RPM_BUILD_ROOT
 - Fix an attribute error when importing wxPython (compat) module
   (redhat bugzilla 450073, 450074)
 
-* Sat Jun  6 2008 Matthew Miller <mattdm@mattdm.org> - 2.8.7.1-4
+* Sat Jun  7 2008 Matthew Miller <mattdm@mattdm.org> - 2.8.7.1-4
 - gratuitously bump package release number to work around build system
   glitch. again, but it will work this time.
 
