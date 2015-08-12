@@ -6,6 +6,6 @@ diff -up Python-2.7.6/Lib/test/test_file2k.py.stdin-test Python-2.7.6/Lib/test/t
                  f.close()
  
 +    @unittest._skipInRpmBuild('seems not to raise the exception when run in Koji')
-     def testStdin(self):
-         # This causes the interpreter to exit on OSF1 v5.1.
-         if sys.platform != 'osf1V5':
+     def testStdinSeek(self):
+         if sys.platform == 'osf1V5':
+             # This causes the interpreter to exit on OSF1 v5.1.

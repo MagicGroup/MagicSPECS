@@ -193,14 +193,14 @@ diff -up Python-2.7.6/Misc/python-config.in.debug-build Python-2.7.6/Misc/python
 --- Python-2.7.6/Misc/python-config.in.debug-build	2013-11-10 08:36:41.000000000 +0100
 +++ Python-2.7.6/Misc/python-config.in	2014-01-29 14:13:08.816888470 +0100
 @@ -45,7 +45,7 @@ for opt in opt_flags:
+         print ' '.join(flags)
  
      elif opt in ('--libs', '--ldflags'):
-         libs = getvar('LIBS').split() + getvar('SYSLIBS').split()
--        libs.append('-lpython'+pyver)
-+        libs.append('-lpython' + pyver + (sys.pydebug and "_d" or ""))
+-        libs = ['-lpython' + pyver]
++        libs = ['-lpython' + pyver + (sys.pydebug and "_d" or "")]
+         libs += getvar('LIBS').split()
+         libs += getvar('SYSLIBS').split()
          # add the prefix/lib/pythonX.Y/config dir, but only if there is no
-         # shared library in prefix/lib/.
-         if opt == '--ldflags':
 diff -up Python-2.7.6/Modules/makesetup.debug-build Python-2.7.6/Modules/makesetup
 --- Python-2.7.6/Modules/makesetup.debug-build	2013-11-10 08:36:41.000000000 +0100
 +++ Python-2.7.6/Modules/makesetup	2014-01-29 14:13:08.817888407 +0100

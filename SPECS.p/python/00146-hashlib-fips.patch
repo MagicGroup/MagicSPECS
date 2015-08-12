@@ -38,8 +38,8 @@ diff -up Python-2.7.2/Lib/hashlib.py.hashlib-fips Python-2.7.2/Lib/hashlib.py
  Hash objects have these methods:
   - update(arg): Update the hash object with the string arg. Repeated calls
                  are equivalent to a single call with the concatenation of all
-@@ -63,74 +80,39 @@ algorithms = __always_supported
- __all__ = __always_supported + ('new', 'algorithms', 'pbkdf2_hmac')
+@@ -63,76 +80,41 @@ algorithms = __always_supported
+                                 'pbkdf2_hmac')
  
  
 -def __get_builtin_constructor(name):
@@ -118,6 +118,8 @@ diff -up Python-2.7.2/Lib/hashlib.py.hashlib-fips Python-2.7.2/Lib/hashlib.py
      import _hashlib
      new = __hash_new
      __get_hash = __get_openssl_constructor
+     algorithms_available = algorithms_available.union(
+         _hashlib.openssl_md_meth_names)
  except ImportError:
 -    new = __py_new
 -    __get_hash = __get_builtin_constructor
@@ -570,7 +572,7 @@ diff -up Python-2.7.2/setup.py.hashlib-fips Python-2.7.2/setup.py
  
      return ret_obj;
 @@ -713,51 +785,111 @@
- #endif
+ 
  
  /*
 - *  This macro generates constructor function definitions for specific
@@ -711,13 +713,14 @@ diff -up Python-2.7.2/setup.py.hashlib-fips Python-2.7.2/setup.py
  GEN_CONSTRUCTOR(md5)
  GEN_CONSTRUCTOR(sha1)
  #ifdef _OPENSSL_SUPPORTS_SHA2
-@@ -794,13 +926,10 @@
+@@ -794,14 +926,11 @@
  {
-     PyObject *m;
+     PyObject *m, *openssl_md_meth_names;
  
 +    SSL_load_error_strings();
 +    SSL_library_init();
      OpenSSL_add_all_digests();
+     ERR_load_crypto_strings();
  
 -    /* TODO build EVP_functions openssl_* entries dynamically based
 -     * on what hashes are supported rather than listing many

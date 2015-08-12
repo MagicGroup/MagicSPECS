@@ -3,8 +3,8 @@ diff -up Python-2.7.3/Lib/test/test_gc.py.gc-assertions Python-2.7.3/Lib/test/te
 +++ Python-2.7.3/Lib/test/test_gc.py	2013-02-20 16:39:52.720489297 -0500
 @@ -1,6 +1,7 @@
  import unittest
--from test.test_support import verbose, run_unittest
-+from test.test_support import verbose, run_unittest, import_module
+-from test.test_support import verbose, run_unittest, start_threads
++from test.test_support import verbose, run_unittest, start_threads, import_module
  import sys
 +import sysconfig
  import time

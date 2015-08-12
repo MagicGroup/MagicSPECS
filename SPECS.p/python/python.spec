@@ -2,6 +2,8 @@
 # Conditionals and other variables controlling the build
 # ======================================================
 
+%global with_rewheel 1
+
 %{!?__python_ver:%global __python_ver EMPTY}
 #global __python_ver 27
 %global unicode ucs4
@@ -45,7 +47,7 @@
 %global with_systemtap 1
 
 # some arches don't have valgrind so we need to disable its support on them
-%ifnarch s390 ppc64le
+%ifnarch s390
 %global with_valgrind 1
 %else
 %global with_valgrind 0
@@ -105,8 +107,8 @@
 Summary: An interpreted, interactive, object-oriented programming language
 Name: %{python}
 # Remember to also rebase python-docs when changing this:
-Version: 2.7.8
-Release: 4%{?dist}
+Version: 2.7.10
+Release: 6%{?dist}
 License: Python
 Group: Development/Languages
 Requires: %{python}-libs%{?_isa} = %{version}-%{release}
@@ -164,6 +166,14 @@ BuildRequires: valgrind-devel
 
 BuildRequires: zlib-devel
 
+%if 0%{?with_rewheel}
+BuildRequires: python-setuptools
+BuildRequires: python-pip
+
+Requires: python-setuptools
+Requires: python-pip
+%endif
+
 
 
 # =======================
@@ -196,6 +206,10 @@ Source5: pyfuntop.stp
 Source6: macros.python2
 
 Source7: pynche
+
+# Supply version independent macros such as python_provide, py_build and
+# py_install
+Source8: macros.python
 
 # Modules/Setup.dist is ultimately used by the "makesetup" script to construct
 # the Makefile and config.c
@@ -881,7 +895,29 @@ Patch193: 00193-enable-loading-sqlite-extensions.patch
 # are disabled by default in openssl, according the comment in openssl
 # patch this affects only SSLv23_method, this patch enables SSLv2
 # and SSLv3 when SSLv23_method is used
-Patch195: 00195-enable-sslv23-in-ssl.patch
+# Update:
+# Patch disabled, Openssl reverted disabling sslv3 and now
+# disables only sslv2 all tests pass
+#Patch195: 00195-enable-sslv23-in-ssl.patch
+
+# http://bugs.python.org/issue21308
+# Backport of ssl module from python3
+# FIXED UPSTREAM
+# Patch196: 00196-ssl-backport.patch
+
+# http://bugs.python.org/issue22023
+# Patch seg fault in unicodeobject.c
+# FIXED UPSTREAM
+# Patch197: 00197-unicode_fromformat.patch
+
+%if 0%{with_rewheel}
+Patch198: 00198-add-rewheel-module.patch
+%endif
+
+# OpenSSL disabled SSLv3 in SSLv23 method
+# This patch alters python tests to reflect this change
+# Issue: http://bugs.python.org/issue22638 Upstream discussion about SSLv3 in Python
+Patch199: 00199-alter-tests-to-reflect-sslv3-disabled.patch
 
 # (New patches go here ^^^)
 #
@@ -925,8 +961,6 @@ Obsoletes: python-ctypes < 1.0.1
 Provides: python-ctypes = 1.0.1
 Obsoletes: python-hashlib < 20081120
 Provides: python-hashlib = 20081120
-Obsoletes: python-unittest2 < 0.5.1-9
-Provides: python-unittest2 = 0.5.1-9
 Obsoletes: python-uuid < 1.31
 Provides: python-uuid = 1.31
 # obsolete, not provide PyXML as proposed in feature
@@ -984,6 +1018,7 @@ a scripting language, and by the main "python" executable
 Summary: The libraries and header files needed for Python development
 Group: Development/Libraries
 Requires: %{python}%{?_isa} = %{version}-%{release}
+Requires: python-macros = %{version}-%{release}
 Requires: pkgconfig
 # Needed here because of the migration of Makefile from -devel to the main
 # package
@@ -991,6 +1026,7 @@ Conflicts: %{python} < %{version}-%{release}
 %if %{main_python}
 Obsoletes: python2-devel
 Provides: python2-devel = %{version}-%{release}
+Provides: python2-devel%{?_isa} = %{version}-%{release}
 %endif
 
 %description devel
@@ -1003,6 +1039,18 @@ Install python-devel if you want to develop Python extensions.  The
 python package will also need to be installed.  You'll probably also
 want to install the python-docs package, which contains Python
 documentation.
+
+%package -n python-macros
+Summary: The unversioned Python RPM macros
+Group: Development/Libraries
+BuildArch: noarch
+
+%description -n python-macros
+This package contains the unversioned Python RPM macros, that most
+implementations should rely on.
+
+You should not need to install this package manually as the various
+python?-devel packages require it. So install a python-devel package instead.
 
 %package tools
 Summary: A collection of development tools included with Python
@@ -1239,7 +1287,13 @@ mv Modules/cryptmodule.c Modules/_cryptmodule.c
 # 00192: upstream as of Python 2.7.7
 %patch193 -p1
 # 00194: upstream as of Python 2.7.7
-%patch195 -p1
+#%patch195 -p1
+# 00196: upstream as of Python 2.7.9
+# 00197: upstream as of Python 2.7.9
+%if 0%{with_rewheel}
+%patch198 -p1
+%patch199 -p1
+%endif
 
 
 # This shouldn't be necesarry, but is right now (2.2a3)
@@ -1344,7 +1398,7 @@ if $PathFixWithThisBinary
 then
   LD_LIBRARY_PATH="$topdir/$ConfDir" ./$BinaryName \
     $topdir/Tools/scripts/pathfix.py \
-      -i "%{_bindir}/env $BinaryName" \
+      -i "/usr/bin/env $BinaryName" \
       $topdir
 fi
 
@@ -1465,7 +1519,7 @@ InstallPython optimized \
 # (which changes them by itself)
 # Make sure we preserve the file permissions
 for fixed in %{buildroot}%{_bindir}/pydoc; do
-    sed 's,#!.*/python$,#!%{_bindir}/env python%{pybasever},' $fixed > $fixed- \
+    sed 's,#!.*/python$,#!/usr/bin/env python%{pybasever},' $fixed > $fixed- \
         && cat $fixed- > $fixed && rm -f $fixed-
 done
 
@@ -1551,14 +1605,14 @@ rm -f %{buildroot}%{pylibdir}/email/test/data/audiotest.au %{buildroot}%{pylibdi
 
 # Fix bug #143667: python should own /usr/lib/python2.x on 64-bit machines
 %if "%{_lib}" == "lib64"
-install -d %{buildroot}/usr/lib/python%{pybasever}/site-packages
+install -d %{buildroot}/%{_prefix}/lib/python%{pybasever}/site-packages
 %endif
 
 # Make python-devel multilib-ready (bug #192747, #139911)
 %global _pyconfig32_h pyconfig-32.h
 %global _pyconfig64_h pyconfig-64.h
 
-%ifarch %{power64} s390x x86_64 ia64 alpha sparc64 aarch64 mips64el
+%ifarch %{power64} s390x x86_64 ia64 alpha sparc64 aarch64
 %global _pyconfig_h %{_pyconfig64_h}
 %else
 %global _pyconfig_h %{_pyconfig32_h}
@@ -1601,6 +1655,7 @@ sed -i -e "s/'pyconfig.h'/'%{_pyconfig_h}'/" \
 # Install macros for rpm:
 mkdir -p %{buildroot}/%{_rpmconfigdir}/macros.d/
 install -m 644 %{SOURCE6} %{buildroot}/%{_rpmconfigdir}/macros.d/
+install -m 644 %{SOURCE8} %{buildroot}/%{_rpmconfigdir}/macros.d/
 
 # Ensure that the curses module was linked against libncursesw.so, rather than
 # libncurses.so (bug 539917)
@@ -1631,7 +1686,7 @@ done
 # Install a tapset for this libpython into tapsetdir, fixing up the path to the
 # library:
 mkdir -p %{buildroot}%{tapsetdir}
-%ifarch %{power64} s390x x86_64 ia64 alpha sparc64 aarch64 mips64el
+%ifarch %{power64} s390x x86_64 ia64 alpha sparc64 aarch64
 %global libpython_stp_optimized libpython%{pybasever}-64.stp
 %global libpython_stp_debug     libpython%{pybasever}-debug-64.stp
 %else
@@ -1677,6 +1732,10 @@ CheckPython() {
   pushd $ConfDir
 
   EXTRATESTOPTS="--verbose"
+
+%ifarch s390 s390x %{power64} %{arm} aarch64
+    EXTRATESTOPTS="$EXTRATESTOPTS -x test_gdb"
+%endif
 
 %if 0%{?with_huntrleaks}
   # Try to detect reference leaks on debug builds.  By default this means
@@ -1876,9 +1935,21 @@ rm -fr %{buildroot}
 
 %{_libdir}/%{py_INSTSONAME_optimized}
 %if 0%{?with_systemtap}
+%dir %(dirname %{tapsetdir})
+%dir %{tapsetdir}
 %{tapsetdir}/%{libpython_stp_optimized}
 %doc systemtap-example.stp pyfuntop.stp
 %endif
+
+%dir %{pylibdir}/ensurepip/
+%{pylibdir}/ensurepip/*.py*
+%exclude %{pylibdir}/ensurepip/_bundled
+
+%if 0%{?with_rewheel}
+%dir %{pylibdir}/ensurepip/rewheel/
+%{pylibdir}/ensurepip/rewheel/*.py*
+%endif
+
 
 %files devel
 %defattr(-,root,root,-)
@@ -1898,6 +1969,10 @@ rm -fr %{buildroot}
 %{_bindir}/python%{pybasever}-config
 %{_libdir}/libpython%{pybasever}.so
 %{_rpmconfigdir}/macros.d/macros.python2
+
+%files -n python-macros
+%defattr(-,root,root,-)
+%{_rpmconfigdir}/macros.d/macros.python
 
 %files tools
 %defattr(-,root,root,755)
@@ -2029,6 +2104,8 @@ rm -fr %{buildroot}
 
 %{_libdir}/%{py_INSTSONAME_debug}
 %if 0%{?with_systemtap}
+%dir %(dirname %{tapsetdir})
+%dir %{tapsetdir}
 %{tapsetdir}/%{libpython_stp_debug}
 %endif
 
@@ -2078,8 +2155,91 @@ rm -fr %{buildroot}
 # ======================================================
 
 %changelog
-* Wed Aug 13 2014 Liu Di <liudidi@gmail.com> - 2.7.8-4
-- 为 Magic 3.0 重建
+* Thu Jul 23 2015 Thomas Spura <tomspur@fedoraproject.org> - 2.7.10-6
+- python-macros: remove R on python (#1246036)
+
+* Wed Jul 22 2015 Thomas Spura <tomspur@fedoraproject.org> - 2.7.10-5
+- Include epoch in the python_provide macro fpc#534 (Slavek Kabrda)
+
+* Mon Jun 29 2015 Thomas Spura <tomspur@fedoraproject.org> - 2.7.10-4
+- correct python_provide macro to include version only when emiting provides
+
+* Thu Jun 25 2015 Thomas Spura <tomspur@fedoraproject.org> - 2.7.10-3
+- Add unversioned python-macros from fpc#281 and fpc#534
+  and require it from python-devel
+- Make python-macros noarch
+
+* Wed Jun 17 2015 Matej Stuchlik <mstuchli@redhat.com> - 2.7.10-2
+- Make relocating Python by changing _prefix actually work
+Resolves: rhbz#1231801
+
+* Mon May 25 2015 Matej Stuchlik <mstuchli@redhat.com> - 2.7.10-1
+- Update to 2.7.10
+
+* Tue May  5 2015 Peter Robinson <pbrobinson@fedoraproject.org> 2.7.9-11
+- Disable test_gdb on aarch64 (rhbz#1196181), it joins all other non x86 arches
+
+* Wed Apr 15 2015 Robert Kuska <rkuska@redhat.com> - 2.7.9-10
+- Remove provides/obsolates for unittest2
+- Skip test_gdb on arm until rhbz#1196181 is resolved
+
+* Thu Mar 05 2015 Matej Stuchlik <mstuchli@redhat.com> - 2.7.9-9
+- Add proper rewheel Requires
+
+* Sat Feb 21 2015 Till Maas <opensource@till.name> - 2.7.9-8
+- Rebuilt for Fedora 23 Change
+  https://fedoraproject.org/wiki/Changes/Harden_all_packages_with_position-independent_code
+
+* Sat Feb 21 2015 Till Maas <opensource@till.name> - 2.7.9-7
+- Rebuilt for Fedora 23 Change
+  https://fedoraproject.org/wiki/Changes/Harden_all_packages_with_position-independent_code
+
+* Tue Feb 17 2015 Ville Skyttä <ville.skytta@iki.fi> - 2.7.9-6
+- Own systemtap dirs (#710733)
+
+* Fri Feb 06 2015 Karsten Hopp <karsten@redhat.com> 2.7.9-5
+- disable test_gdb on ppc64* until rhbz#1132488 is really resolved
+
+* Tue Jan 20 2015 Slavek Kabrda <bkabrda@redhat.com> - 2.7.9-4
+- We need to provide both arch specific and noarch Provide for python2-devel
+in order not to break noarch builds.
+
+* Tue Jan 20 2015 Slavek Kabrda <bkabrda@redhat.com> - 2.7.9-3
+- Make python2-devel provide arch specific.
+Resolves: rhbz#1183530
+
+* Mon Jan 12 2015 Dan Horák <dan[at]danny.cz> - 2.7.9-2
+- build with valgrind on ppc64le
+- disable test_gdb on s390(x) until rhbz#1181034 is resolved
+
+* Thu Dec 11 2014 Matej Stuchlik <mstuchli@redhat.com> - 2.7.9-1
+- Update to 2.7.9
+- Refreshed patches: #55, #137, #146, #153, #156, #198
+- Dropped patches: #196, #197
+- New patch: #199
+- Added the rewheel module
+
+* Mon Nov 24 2014 Matej Stuchlik <mstuchli@redhat.com> - 2.7.8-10
+- Improve python2_version macros
+
+* Thu Nov 13 2014 Matej Stuchlik <mstuchli@redhat.com> - 2.7.8-9
+- Add python2_version_nodots macro
+
+* Mon Nov 10 2014 Slavek Kabrda <bkabrda@redhat.com> - 2.7.8-8
+- Revert previous change, see rhbz#1161166#c6.
+
+* Fri Nov 07 2014 Slavek Kabrda <bkabrda@redhat.com> - 2.7.8-7
+- Provide importable unittest2
+Resolves: rhbz#1161166
+
+* Thu Aug 21 2014 Robert Kuska <rkuska@redhat.com> - 2.7.8-6
+- Update patch 196 (ssl backport)
+
+* Tue Aug 19 2014 Robert Kuska <rkuska@redhat.com> - 2.7.8-5
+- Backport ssl module from python3
+
+* Sun Aug 17 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.7.8-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
 
 * Thu Jul 31 2014 Tom Callaway <spot@fedoraproject.org> - 2.7.8-3
 - fix license handling

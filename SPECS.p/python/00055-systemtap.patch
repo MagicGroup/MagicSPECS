@@ -88,8 +88,8 @@ diff -up Python-2.7rc1/Makefile.pre.in.systemtap Python-2.7rc1/Makefile.pre.in
  .PHONY: frameworkinstall frameworkinstallframework frameworkinstallstructure
  .PHONY: frameworkinstallmaclib frameworkinstallapps frameworkinstallunixtools
  .PHONY: frameworkaltinstallunixtools recheck autoconf clean clobber distclean
--.PHONY: smelly funny patchcheck touch altmaninstall
-+.PHONY: smelly funny patchcheck touch altmaninstall buildinclude
+-.PHONY: smelly funny patchcheck touch altmaninstall commoninstall
++.PHONY: smelly funny patchcheck touch altmaninstall commoninstall buildinclude
  .PHONY: gdbhooks
  
  # IF YOU PUT ANYTHING HERE IT WILL GO AWAY
