@@ -1,23 +1,25 @@
 %if 0%{?fedora} > 12
-%global with_python3 0
+%global with_python3 1
 %else
 %{!?python_sitelib: %global python_sitelib %(%{__python} -c "from distutils.sysconfig import get_python_lib; print (get_python_lib())")}
 %endif
 
 Name:           python-logilab-common
-Version:        0.58.3
-Release:        2%{?dist}
+Version:        0.63.2
+Release:        3%{?dist}
 Summary:        Common libraries for Logilab projects
 Group:          Development/Libraries
 License:        GPLv2+
 URL:            http://www.logilab.org/projects/common
-Source0:        ftp://ftp.logilab.org/pub/common/logilab-common-%{version}.tar.gz
+Source0:        https://pypi.python.org/packages/source/l/logilab-common/logilab-common-%{version}.tar.gz
 BuildArch:      noarch
 BuildRoot:      %(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
 
-BuildRequires:  python-devel python-setuptools
+BuildRequires:  python-devel python-setuptools python-tools
+BuildRequires:  python-six
 %if 0%{?with_python3}
-BuildRequires:  python3-devel python3-setuptools
+BuildRequires:  python3-devel python3-setuptools python3-tools
+BuildRequires:  python3-six
 %endif # if with_python3
 
 %description
@@ -97,6 +99,38 @@ rm -rf %{buildroot}
 %endif # with_python3
 
 %changelog
+* Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.63.2-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
+
+* Thu Jan 29 2015 Brian C. Lane <bcl@redhat.com> 0.63.2-2
+- Add python-six dependency
+
+* Wed Jan 28 2015 Brian C. Lane <bcl@redhat.com> 0.63.2-1
+- Upstream 0.63.2
+  Switched source url from ftp to pypi.python.org
+
+* Fri Oct 03 2014 Brian C. Lane <bcl@redhat.com> 0.62.1-1
+- Upstream 0.62.1
+
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.61.0-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Wed May 14 2014 Bohuslav Kabrda <bkabrda@redhat.com> - 0.61.0-2
+- Rebuilt for https://fedoraproject.org/wiki/Changes/Python_3.4
+
+* Thu Feb 27 2014 Brian C. Lane <bcl@redhat.com> 0.61.0-1
+- Upstream 0.61.0
+  Fixes CVE-2014-1838 and CVE-2014-1839
+
+* Thu Oct 24 2013 Brian C. Lane <bcl@redhat.com> 0.60.0-2
+- Switching on python3 support
+
+* Tue Aug 13 2013 Brian C. Lane <bcl@redhat.com> 0.60.0-1
+- Upstream 0.60.0
+
+* Sun Aug 04 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.58.3-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
 * Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.58.3-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
 
