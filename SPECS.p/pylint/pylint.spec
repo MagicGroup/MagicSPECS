@@ -1,29 +1,29 @@
 %if 0%{?fedora} > 12
-%global with_python3 0
+%global with_python3 1
 %else
 %{!?python_sitelib: %global python_sitelib %(%{__python} -c "from distutils.sysconfig import get_python_lib; print (get_python_lib())")}
 %endif
 
+# This needs to be pulled from the source tarball
+%global commit b8ff6bf98468
+
+
 Name:           pylint
-Version:        0.26.0
-Release:        2%{?dist}
+Version:        1.4.3
+Release:        3%{?dist}
 Summary:        Analyzes Python code looking for bugs and signs of poor quality
 Group:          Development/Debuggers
 License:        GPLv2+
-URL:            http://www.logilab.org/projects/pylint
-Source0:        ftp://ftp.logilab.org/pub/pylint/pylint-%{version}.tar.gz
+URL:            http://www.pylint.org/
+Source0:        https://bitbucket.org/logilab/pylint/get/pylint-%{version}.tar.bz2
+
 BuildArch:      noarch
-BuildRoot:      %(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
-
-BuildRequires:  python-devel python-setuptools
-BuildRequires:  python-logilab-astng >= 0.24.0
-Requires:       python-logilab-astng >= 0.24.0
+BuildRequires:  python-devel python-setuptools python-tools
+BuildRequires:  python-six
+BuildRequires:  python-astroid >= 1.3.6
+Requires:       python-astroid >= 1.3.6
 Requires:       python-setuptools
-
-%if 0%{?with_python3}
-BuildRequires:  python3-devel python3-setuptools
-BuildRequires:  python3-logilab-astng >= 0.24.0
-%endif # with_python3
+Requires:       python-six
 
 %description
 Pylint is a python tool that checks if a module satisfy a coding standard.
@@ -39,8 +39,12 @@ write a small plugin to add a personal feature.
 %package -n python3-pylint
 Summary:        Analyzes Python code looking for bugs and signs of poor quality
 Group:          Development/Debuggers
-Requires:       python3-logilab-astng >= 0.24.0
+BuildRequires:  python3-devel python3-setuptools python3-tools
+BuildRequires:  python3-six
+BuildRequires:  python3-astroid >= 1.3.6
+Requires:       python3-astroid >= 1.3.6
 Requires:       python3-setuptools
+Requires:       python3-six
 
 %description -n python3-pylint
 Pylint is a python tool that checks if a module satisfy a coding standard.
@@ -67,14 +71,14 @@ This package provides a gui tool for pylint written in tkinter.
 Summary:        Graphical Interface tool for Pylint
 Group:          Development/Debuggers
 Requires:       python3-pylint = %{version}-%{release}
-Requires:       tkinter
+Requires:       python3-tkinter
 
 %description -n python3-pylint-gui
 This package provides a gui tool for pylint written in tkinter.
 %endif # with_python3
 
 %prep
-%setup -q
+%setup -q -n logilab-pylint-%{commit}
 
 %if 0%{?with_python3}
 rm -rf %{py3dir}
@@ -91,18 +95,12 @@ popd
 %endif # with_python3
 
 %install
-rm -rf %{buildroot}
-
 %if 0%{?with_python3}
 pushd %{py3dir}
 %{__python3} setup.py install -O1 --skip-build --root %{buildroot}
 rm -rf %{buildroot}%{python3_sitelib}/pylint/test
 mkdir -pm 755 %{buildroot}%{_mandir}/man1
 install -pm 644 man/*.1 %{buildroot}%{_mandir}/man1/
-for FILE in README doc/*.txt; do
-    iconv -f iso-8859-15 -t utf-8 $FILE > $FILE.utf8
-    mv -f $FILE.utf8 $FILE
-done
 # Add python3- to the binaries
 for FILE in %{buildroot}%{_bindir}/*; do
     NAME=$(basename $FILE)
@@ -120,10 +118,6 @@ popd
 rm -rf %{buildroot}%{python_sitelib}/pylint/test
 mkdir -pm 755 %{buildroot}%{_mandir}/man1
 install -pm 644 man/*.1 %{buildroot}%{_mandir}/man1/
-for FILE in README doc/*.txt; do
-    iconv -f iso-8859-15 -t utf-8 $FILE > $FILE.utf8
-    mv -f $FILE.utf8 $FILE
-done
 
 %check
 %{__python} setup.py test
@@ -134,13 +128,9 @@ pushd %{py3dir}
 popd
 %endif # with_python3
 
-%clean
-rm -rf %{buildroot}
-
-
 %files
 %defattr(-,root,root,-)
-%doc doc/*.txt README ChangeLog examples elisp COPYING
+%doc README ChangeLog examples elisp COPYING
 %{python_sitelib}/pylint*
 %{_bindir}/*
 %{_mandir}/man?/*
@@ -158,7 +148,7 @@ rm -rf %{buildroot}
 %if 0%{?with_python3}
 %files -n python3-pylint
 %defattr(-,root,root,-)
-%doc doc/*.txt README ChangeLog examples elisp COPYING
+%doc README ChangeLog examples elisp COPYING
 %{python3_sitelib}/pylint*
 %{_bindir}/python3-*
 %{_mandir}/man?/python3-*
@@ -173,6 +163,72 @@ rm -rf %{buildroot}
 %endif # with_python3
 
 %changelog
+* Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.4.3-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
+
+* Wed May 27 2015 Mathieu Bridon <bochecha@daitauha.fr> - 1.4.3-2
+- Drop python3 requirements from the python2 package.
+- Add missing requirement on six.
+
+* Tue Apr 28 2015 Brian C. Lane <bcl@redhat.com> 1.4.3-1
+- Upstream v1.4.3
+
+* Fri Jan 30 2015 Brian C. Lane <bcl@redhat.com> 1.4.1-3
+- Exclude the python3-* files from the python2 package
+
+* Thu Jan 29 2015 Brian C. Lane <bcl@redhat.com> 1.4.1-2
+- Add python-six requirement
+
+* Wed Jan 28 2015 Brian C. Lane <bcl@redhat.com> 1.4.1-1
+- Upstream v1.4.1
+
+* Mon Oct 27 2014 Brian C. Lane <bcl@redhat.com> 1.3.1-2
+- python3-pylint-gui needs python3-tkinter
+
+* Fri Oct 03 2014 Brian C. Lane <bcl@redhat.com> 1.3.1-1
+- Upstream v1.3.1
+  Dropped patches included in upstream
+
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.2-7
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Mon Jun 02 2014 Brian C. Lane <bcl@redhat.com> 1.2-6
+- Add python3-astroid and python3-setuptools as Requires (#1103479)
+
+* Tue May 27 2014 Kalev Lember <kalevlember@gmail.com> - 1.2-5
+- Rebuilt for https://fedoraproject.org/wiki/Changes/Python_3.4
+
+* Fri May 09 2014 Brian C. Lane <bcl@redhat.com> 1.2-4
+- Fix a potential AttributeError when checking for `reversed` arguments.
+  https://bitbucket.org/logilab/pylint/commits/93babaf6bffc59a49c75319d9850086b4935edbc
+
+* Thu May 08 2014 Brian C. Lane <bcl@redhat.com> 1.2-3
+- fix explicit check of python script
+  https://bitbucket.org/logilab/pylint/issue/219/
+
+* Thu Apr 24 2014 Brian C. Lane <bcl@redhat.com> 1.2-2
+- Patch to Fix --init-hook typo (dshea)
+  https://bitbucket.org/logilab/pylint/issue/211/init-hook-no-longer-works
+
+* Tue Apr 22 2014 Brian C. Lane <bcl@redhat.com> 1.2-1
+- Upstream v1.2
+
+* Thu Feb 27 2014 Brian C. Lane <bcl@redhat.com> 1.1.0-1
+- Upstream v1.1.0
+  Drop patch included in upstream
+
+* Thu Oct 24 2013 Brian C. Lane <bcl@redhat.com> 1.0.0-3
+- Switching on python3 support
+
+* Tue Sep 03 2013 Brian C. Lane <bcl@redhat.com> 1.0.0-2
+- Add upstream patch for epylint input validation (#981859)
+
+* Tue Aug 13 2013 Brian C. Lane <bcl@redhat.com> 1.0.0-1
+- Upstream 1.0.0
+
+* Sun Aug 04 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.26.0-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
 * Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.26.0-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
 
