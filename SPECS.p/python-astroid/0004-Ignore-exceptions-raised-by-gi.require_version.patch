@@ -1,0 +1,27 @@
+# HG changeset patch
+# User David Shea <dshea@redhat.com>
+# Date 1436370427 14400
+#      Wed Jul 08 11:47:07 2015 -0400
+# Branch pygobject-require_version
+# Node ID cd394ae4751407e17f3d0737f3962fde4d5b221a
+# Parent  57b1f06de1794f1fdc4b89f995d6db7c0e2f7b9e
+Ignore exceptions raised by gi.require_version
+
+diff -r 57b1f06de179 -r cd394ae47514 astroid/brain/py2gi.py
+--- a/astroid/brain/py2gi.py	Wed Jul 08 10:43:10 2015 -0400
++++ b/astroid/brain/py2gi.py	Wed Jul 08 11:47:07 2015 -0400
+@@ -183,8 +183,12 @@
+ 
+ def _register_require_version(node):
+     # Load the gi.require_version locally
+-    import gi
+-    gi.require_version(node.args[0].value, node.args[1].value)
++    try:
++        import gi
++        gi.require_version(node.args[0].value, node.args[1].value)
++    except Exception:
++        pass
++
+     return node
+ 
+ MANAGER.register_failed_import_hook(_import_gi_module)

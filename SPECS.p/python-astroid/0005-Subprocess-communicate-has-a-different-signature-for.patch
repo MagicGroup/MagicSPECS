@@ -1,0 +1,50 @@
+From 988f0cde7f3ca067a272bf296b5ca1e174aedb4a Mon Sep 17 00:00:00 2001
+From: David Shea <dshea@redhat.com>
+Date: Thu, 30 Jul 2015 10:15:33 -0700
+Subject: [PATCH] Subprocess communicate() has a different signature for Py3.3
+
+In Python 3.3 the timeout argument was added to the communicate method.
+---
+ astroid/brain/py2stdlib.py | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/astroid/brain/py2stdlib.py b/astroid/brain/py2stdlib.py
+index 54cf2a7..eb8bedc 100644
+--- a/astroid/brain/py2stdlib.py
++++ b/astroid/brain/py2stdlib.py
+@@ -189,6 +189,7 @@ def cleanup_resources(force=False):
+ def subprocess_transform():
+     if PY3K:
+         communicate = (bytes('string', 'ascii'), bytes('string', 'ascii'))
++        communicate_signature = 'def communicate(self, input=None, timeout=None)'
+         init = """
+     def __init__(self, args, bufsize=0, executable=None,
+                  stdin=None, stdout=None, stderr=None,
+@@ -200,6 +201,7 @@ def subprocess_transform():
+         """
+     else:
+         communicate = ('string', 'string')
++        communicate_signature = 'def communicate(self, input=None)'
+         init = """
+     def __init__(self, args, bufsize=0, executable=None,
+                  stdin=None, stdout=None, stderr=None,
+@@ -220,7 +222,7 @@ class Popen(object):
+ 
+     %(init)s
+ 
+-    def communicate(self, input=None):
++    %(communicate_signature)s:
+         return %(communicate)r
+     %(wait_signature)s:
+         return self.returncode
+@@ -234,6 +236,7 @@ class Popen(object):
+         pass
+    ''' % {'init': init,
+           'communicate': communicate,
++          'communicate_signature': communicate_signature,
+           'wait_signature': wait_signature})
+ 
+ 
+-- 
+2.4.3
+

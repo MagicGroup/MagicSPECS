@@ -1,0 +1,49 @@
+From b9aef5ac624041f1427f61f7698a0b3f553b1d69 Mon Sep 17 00:00:00 2001
+Message-Id: <b9aef5ac624041f1427f61f7698a0b3f553b1d69.1427492532.git.crobinso@redhat.com>
+From: Cole Robinson <crobinso@redhat.com>
+Date: Fri, 27 Mar 2015 17:32:42 -0400
+Subject: [PATCH] brain: py2gi: Silence pygi deprecation warnings
+
+The way we inspect gi modules can trigger python-gobject deprecation
+warnings. At least on Fedora 22 this is very noisy with a ton of
+warnings right after running pylint on gi using code.
+
+Silence the specific pygi deprecation warnings.
+---
+ astroid/brain/py2gi.py | 13 ++++++++++++-
+ 1 file changed, 12 insertions(+), 1 deletion(-)
+
+diff --git a/astroid/brain/py2gi.py b/astroid/brain/py2gi.py
+index 6747898..8ff8c8f 100644
+--- a/astroid/brain/py2gi.py
++++ b/astroid/brain/py2gi.py
+@@ -7,6 +7,7 @@ import inspect
+ import itertools
+ import sys
+ import re
++import warnings
+ 
+ from astroid import MANAGER, AstroidBuildingException
+ from astroid.builder import AstroidBuilder
+@@ -135,7 +136,17 @@ def _import_gi_module(modname):
+             for m in itertools.chain(modnames, optional_modnames):
+                 try:
+                     __import__(m)
+-                    modcode += _gi_build_stub(sys.modules[m])
++                    with warnings.catch_warnings():
++                        # Just inspecting the code can raise gi deprecation
++                        # warnings, so ignore them.
++                        try:
++                            from gi import PyGIDeprecationWarning
++                            warnings.simplefilter("ignore",
++                                PyGIDeprecationWarning)
++                        except:
++                            pass
++
++                        modcode += _gi_build_stub(sys.modules[m])
+                 except ImportError:
+                     if m not in optional_modnames:
+                         raise
+-- 
+2.3.3
+

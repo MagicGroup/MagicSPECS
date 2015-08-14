@@ -1,0 +1,124 @@
+From 1d81b5521c1567fb11f680b1e6386b073b2f7a4d Mon Sep 17 00:00:00 2001
+From: "Brian C. Lane" <bcl@redhat.com>
+Date: Tue, 28 Apr 2015 09:58:03 -0700
+Subject: [PATCH] Fix multiprocessing on py3.4
+
+---
+ astroid/brain/py2stdlib.py | 83 +++++++++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 82 insertions(+), 1 deletion(-)
+
+diff --git a/astroid/brain/py2stdlib.py b/astroid/brain/py2stdlib.py
+index 2bfcbcd..54cf2a7 100644
+--- a/astroid/brain/py2stdlib.py
++++ b/astroid/brain/py2stdlib.py
+@@ -12,7 +12,7 @@ from textwrap import dedent
+ 
+ from astroid import (
+     MANAGER, AsStringRegexpPredicate,
+-    UseInferenceDefault, inference_tip,
++    UseInferenceDefault, inference_tip, BoundMethod,
+     YES, InferenceError, register_module_extender)
+ from astroid import exceptions
+ from astroid import nodes
+@@ -20,6 +20,7 @@ from astroid.builder import AstroidBuilder
+ 
+ PY3K = sys.version_info > (3, 0)
+ PY33 = sys.version_info >= (3, 3)
++PY34 = sys.version_info >= (3, 4)
+ 
+ # general function
+ 
+@@ -322,6 +323,83 @@ def infer_enum_class(node):
+         break
+     return node
+ 
++def multiprocessing_transform():
++    module = AstroidBuilder(MANAGER).string_build(dedent('''
++    from multiprocessing.managers import SyncManager
++    def Manager():
++        return SyncManager()
++    '''))
++    if not PY34:
++        return module
++
++    # On Python 3.4, multiprocessing uses a getattr lookup inside contexts,
++    # in order to get the attributes they need. Since it's extremely
++    # dynamic, we use this approach to fake it.
++    node = AstroidBuilder(MANAGER).string_build(dedent('''
++    from multiprocessing.context import DefaultContext, BaseContext
++    default = DefaultContext()
++    base = BaseContext()
++    '''))
++    try:
++        context = next(node['default'].infer())
++        base = next(node['base'].infer())
++    except InferenceError:
++        return module
++
++    for node in (context, base):
++        for key, value in node.locals.items():
++            if key.startswith("_"):
++                continue
++
++            value = value[0]
++            if isinstance(value, nodes.Function):
++                # We need to rebound this, since otherwise
++                # it will have an extra argument (self).
++                value = BoundMethod(value, node)
++            module[key] = value
++    return module
++
++def multiprocessing_managers_transform():
++    return AstroidBuilder(MANAGER).string_build(dedent('''
++    import array
++    import threading
++    import multiprocessing.pool as pool
++
++    import six
++
++    class Namespace(object):
++        pass
++
++    class Value(object):
++        def __init__(self, typecode, value, lock=True):
++            self._typecode = typecode
++            self._value = value
++        def get(self):
++            return self._value
++        def set(self, value):
++            self._value = value
++        def __repr__(self):
++            return '%s(%r, %r)'%(type(self).__name__, self._typecode, self._value)
++        value = property(get, set)
++
++    def Array(typecode, sequence, lock=True):
++        return array.array(typecode, sequence)
++
++    class SyncManager(object):
++        Queue = JoinableQueue = six.moves.queue.Queue
++        Event = threading.Event
++        RLock = threading.RLock
++        BoundedSemaphore = threading.BoundedSemaphore
++        Condition = threading.Condition
++        Barrier = threading.Barrier
++        Pool = pool.Pool
++        list = list
++        dict = dict
++        Value = Value
++        Array = Array
++        Namespace = Namespace
++    '''))
++
+ 
+ MANAGER.register_transform(nodes.CallFunc, inference_tip(infer_named_tuple),
+                            looks_like_namedtuple)
+@@ -332,3 +410,6 @@ register_module_extender(MANAGER, 'hashlib', hashlib_transform)
+ register_module_extender(MANAGER, 'collections', collections_transform)
+ register_module_extender(MANAGER, 'pkg_resources', pkg_resources_transform)
+ register_module_extender(MANAGER, 'subprocess', subprocess_transform)
++register_module_extender(MANAGER, 'multiprocessing.managers',
++                         multiprocessing_managers_transform)
++register_module_extender(MANAGER, 'multiprocessing', multiprocessing_transform)
+-- 
+2.1.0
+
