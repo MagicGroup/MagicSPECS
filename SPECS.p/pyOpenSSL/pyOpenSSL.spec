@@ -1,24 +1,28 @@
+%if 0%{?fedora} > 12
+%global with_python3 1
+%endif
+
 Summary: Python wrapper module around the OpenSSL library
 Name: pyOpenSSL
-Version: 0.12
-Release: 3%{?dist}
-Source0: http://pypi.python.org/packages/source/p/pyOpenSSL/%{name}-%{version}.tar.gz
+Version: 0.15.1
+Release: 1%{?dist}
+Source0: http://pypi.python.org/packages/source/p/pyOpenSSL/pyOpenSSL-%{version}.tar.gz
 
-# Fedora specific patches
-
-Patch2: pyOpenSSL-elinks.patch
-Patch3: pyOpenSSL-nopdfout.patch
-License: LGPLv2+
+BuildArch: noarch
+License: ASL 2.0
 Group: Development/Libraries
 Url: http://pyopenssl.sourceforge.net/
-BuildRequires: elinks openssl-devel python-devel
-BuildRequires: tetex-dvips tetex-latex latex2html
 
-# we don't want to provide private python extension libs
-%{?filter_setup:
-%filter_provides_in %{python_sitearch}/.*\.so$ 
-%filter_setup
-}
+BuildRequires: python-setuptools
+BuildRequires: python-sphinx
+
+BuildRequires: python2-devel
+BuildRequires: python-cryptography
+Requires: python-cryptography
+%if 0%{?with_python3}
+BuildRequires: python3-devel
+BuildRequires: python3-cryptography
+%endif
 
 %description
 High-level wrapper around a subset of the OpenSSL library, includes among others
@@ -27,36 +31,130 @@ High-level wrapper around a subset of the OpenSSL library, includes among others
  * Callbacks written in Python
  * Extensive error-handling mechanism, mirroring OpenSSL's error codes
 
-%prep
-%setup -q
-%patch2 -p1 -b .elinks
-%patch3 -p1 -b .nopdfout
+%if 0%{?with_python3}
+%package -n python3-pyOpenSSL
+Summary: Python wrapper module around the OpenSSL library
+Requires: python3-cryptography
 
-# Fix permissions for debuginfo package
-%{__chmod} -x OpenSSL/ssl/connection.c
+%description -n python3-pyOpenSSL
+High-level wrapper around a subset of the OpenSSL library, includes among others
+ * SSL.Connection objects, wrapping the methods of Python's portable
+   sockets
+ * Callbacks written in Python
+ * Extensive error-handling mechanism, mirroring OpenSSL's error codes
+%endif
+
+%package doc
+Summary: Documentation for pyOpenSSL
+BuildArch: noarch
+
+%description doc
+Documentation for pyOpenSSL
+
+%prep
+%setup -q -n pyOpenSSL-%{version}
 
 %build
+%if 0%{?with_python3}
+rm -rf %{py3dir}
+cp -a . %{py3dir}
+find %{py3dir} -name '*.py' | xargs sed -i '1s|^#!python|#!%{__python3}|'
+%endif
+
+find -name '*.py' | xargs sed -i '1s|^#!python|#!%{__python}|'
+
 CFLAGS="%{optflags} -fno-strict-aliasing" %{__python} setup.py build
-%{__make} -C doc ps
-%{__make} -C doc text html
-find doc/ -name pyOpenSSL.\*
+
+%if 0%{?with_python3}
+pushd %{py3dir}
+CFLAGS="%{optflags} -fno-strict-aliasing" %{__python3} setup.py build
+popd
+%endif
+
+%{__make} -C doc html
 
 %install
 %{__python} setup.py install --skip-build --root %{buildroot}
 
+%if 0%{?with_python3}
+pushd %{py3dir}
+%{__python3} setup.py install --skip-build --root %{buildroot}
+popd
+%endif
 
 %files
-%defattr(-,root,root,-)
-%doc README doc/pyOpenSSL.* doc/html
-%{python_sitearch}/OpenSSL/
-%{python_sitearch}/%{name}*.egg-info
+%{python_sitelib}/OpenSSL/
+%{python_sitelib}/pyOpenSSL-*.egg-info
+
+%if 0%{?with_python3}
+%files -n python3-pyOpenSSL
+%{python3_sitelib}/OpenSSL/
+%{python3_sitelib}/pyOpenSSL-*.egg-info
+%endif
+
+%files doc
+%doc examples doc/_build/html
 
 %changelog
-* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 0.12-3
-- 为 Magic 3.0 重建
+* Fri Aug  7 2015 Tomáš Mráz <tmraz@redhat.com> - 0.15.1-1
+- Upgrade to 0.15.1
 
-* Mon Jan 23 2012 Liu Di <liudidi@gmail.com> - 0.12-2
-- 为 Magic 3.0 重建
+* Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.14-5
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
+
+* Thu May 14 2015 Tomáš Mráz <tmraz@redhat.com> - 0.14-4
+- allow changing the digest used when exporting CRL and use SHA1 by default
+
+* Fri Jan 30 2015 Miro Hrončok <mhroncok@redhat.com> - 0.14-3
+- Fix bogus requires (python3-cryptography should belong to python3-pyOpenSSL)
+
+* Wed Jan  7 2015 Tomáš Mráz <tmraz@redhat.com> - 0.14-2
+- Add missing python-cryptography requires
+
+* Wed Jan  7 2015 Tomáš Mráz <tmraz@redhat.com> - 0.14-1
+- Upgrade to 0.14 with help of Matěj Cepl and Kevin Fenzi
+
+* Sun Aug 17 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.13.1-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
+
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.13.1-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Tue May 27 2014 Kalev Lember <kalevlember@gmail.com> - 0.13.1-2
+- Rebuilt for https://fedoraproject.org/wiki/Changes/Python_3.4
+
+* Thu Sep  5 2013 Tomáš Mráz <tmraz@redhat.com> - 0.13.1-1
+- new upstream release fixing a security issue with string
+  formatting subjectAltName of a certificate
+
+* Tue Aug 06 2013 Jeffrey C. Ollie <jeff@ocjtech.us> - 0.13-8
+- Python 3 subpackage
+- Split documentation off into noarch subpackage
+
+* Sun Aug 04 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.13-7
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Thu Apr  4 2013 Tomáš Mráz <tmraz@redhat.com> - 0.13-6
+- Check for error returns which cause segfaults in FIPS mode
+- Fix missing error check and leak found by gcc-with-cpychecker (#800086)
+
+* Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.13-5
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
+
+* Fri Oct 12 2012 Petr Pisar <ppisar@redhat.com> - 0.13-4
+- Do not scan documentation for dependencies (bug #865806)
+
+* Mon Oct 08 2012 Dan Horák <dan[at]danny.cz> - 0.13-3
+- rebuilt because ARM packages had wrong Requires autodetected
+
+* Sat Jul 21 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.13-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Wed Jun 20 2012 Tomas Mraz <tmraz@redhat.com> - 0.13-1
+- New upstream release
+
+* Sat Jan 14 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.12-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 
 * Tue Jun 28 2011 Tomas Mraz <tmraz@redhat.com> - 0.12-1
 - New upstream release
@@ -94,7 +192,7 @@ find doc/ -name pyOpenSSL.\*
 - Rebuild for Python 2.6
 
 * Fri Sep 19 2008 Dennis Gilmore <dennis@ausil.us> - 0.7-2
-- update threadsafe  patch 
+- update threadsafe  patch
 - bug#462807
 
 * Mon Sep 15 2008 Paul F. Johnson <paul@all-the-johnsons.co.uk> 0.7-1
@@ -192,7 +290,7 @@ find doc/ -name pyOpenSSL.\*
 - Built on 7.x
 
 * Mon Mar  3 2003 Mihai Ibanescu <misa@redhat.com> 0.5.1-9
-- bug #73967: Added Requires: python 
+- bug #73967: Added Requires: python
 
 * Mon Feb 24 2003 Elliot Lee <sopwith@redhat.com>
 - rebuilt
