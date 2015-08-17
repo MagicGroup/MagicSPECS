@@ -6,8 +6,8 @@
 
 Name:			python-ply
 Summary: 		Python Lex-Yacc
-Version:		3.4
-Release:		5%{?dist}
+Version:		3.6
+Release:		1%{?dist}
 License:		BSD
 Group:			System Environment/Libraries
 URL:			http://www.dabeaz.com/ply/
@@ -102,21 +102,33 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(-,root,root,-)
-%doc CHANGES README example/
+%doc CHANGES example/
 %{python_sitelib}/ply/
 %{python_sitelib}/ply*.egg-info
 
 %if 0%{?with_python3}
 %files -n python3-ply
 %defattr(-,root,root,-)
-%doc CHANGES README example/
+%doc CHANGES example/
 %{python3_sitelib}/ply/
 %{python3_sitelib}/ply*.egg-info
 %endif # with_python3
 
 %changelog
-* Tue Jun 17 2014 Liu Di <liudidi@gmail.com> - 3.4-5
-- 为 Magic 3.0 重建
+* Tue Jul 14 2015 Stephen Gallagher <sgallagh@redhat.com> 3.6-1
+- Update to latest ply 3.6 for Python 3 fixes
+
+* Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.4-8
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
+
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.4-7
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Mon May 12 2014 Bohuslav Kabrda <bkabrda@redhat.com> - 3.4-6
+- Rebuilt for https://fedoraproject.org/wiki/Changes/Python_3.4
+
+* Sun Aug 04 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.4-5
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
 
 * Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.4-4
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
