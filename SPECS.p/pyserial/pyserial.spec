@@ -1,15 +1,14 @@
-%{!?python_sitelib: %define python_sitelib %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib()")}
-
 Summary: Python serial port access library
 Name: pyserial
-Version: 2.6
-Release: 3%{?dist}
+Version: 2.7
+Release: 2%{?dist}
 Source0: http://easynews.dl.sourceforge.net/sourceforge/%{name}/%{name}-%{version}.tar.gz
 License: Python
 Group: Development/Libraries
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 URL: http://pyserial.sourceforge.net
 BuildRequires: python-devel
+BuildRequires: python3-devel
 BuildArch: noarch
 
 %description
@@ -18,16 +17,34 @@ for standard Python running on Windows, Linux, BSD (possibly any POSIX
 compilant system) and Jython. The module named "serial" automaticaly selects
 the appropriate backend.
 
+%package -n python3-pyserial
+Summary: Python serial port access library
+
+%description -n python3-pyserial
+This module encapsulates the access for the serial port. It provides backends
+for standard Python running on Windows, Linux, BSD (possibly any POSIX
+compilant system) and Jython. The module named "serial" automaticaly selects
+the appropriate backend.
+
+
 %prep
 export UNZIP="-aa"
 %setup -q
+rm -rf %{py3dir}
+cp -a . %{py3dir}
 
 %build
-CFLAGS="$RPM_OPT_FLAGS" %{__python} setup.py build
+CFLAGS="$RPM_OPT_FLAGS" %{__python2} setup.py build
+pushd %{py3dir}
+CFLAGS="$RPM_OPT_FLAGS" %{__python3} setup.py build
+popd
 
 %install
 rm -rf $RPM_BUILD_ROOT
-%{__python} setup.py install -O1 --skip-build --root $RPM_BUILD_ROOT
+pushd %{py3dir}
+%{__python3} setup.py install --skip-build --root $RPM_BUILD_ROOT
+popd
+%{__python2} setup.py install -O1 --skip-build --root $RPM_BUILD_ROOT
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -38,9 +55,37 @@ rm -rf $RPM_BUILD_ROOT
 %{python_sitelib}/*
 %{_bindir}/miniterm.py
 
+%files -n python3-pyserial
+%doc LICENSE.txt CHANGES.txt README.txt examples
+%{python3_sitelib}/*
+
 %changelog
-* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 2.6-3
-- 为 Magic 3.0 重建
+* Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.7-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
+
+* Sun Mar 08 2015 Paul Komkoff <i@stingr.net> 2.7-1
+- new upstream version
+
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.6-9
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Tue May 27 2014 Kalev Lember <kalevlember@gmail.com> - 2.6-8
+- Rebuilt for https://fedoraproject.org/wiki/Changes/Python_3.4
+
+* Sat Sep 07 2013 Till Maas <opensource@till.name> - 2.6-7
+- Add python3 package
+
+* Sat Sep 07 2013 Paul P. Komkoff <i@stingr.net> - 2.6-6
+- patched to allow arbitrary speeds bz#982368
+
+* Sun Aug 04 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.6-5
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.6-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
+
+* Sat Jul 21 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.6-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 
 * Sat Jan 14 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.6-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
