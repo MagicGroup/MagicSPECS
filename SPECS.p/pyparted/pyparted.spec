@@ -1,43 +1,173 @@
+%define with_python3 1
+
 Summary: Python module for GNU parted
 Name:    pyparted
-Version: 3.9
+Epoch:   1
+Version: 3.10.5
 Release: 2%{?dist}
 License: GPLv2+
 Group:   System Environment/Libraries
-URL:     http://fedorahosted.org/pyparted
+URL:     https://github.com/dcantrell/%{name}
 
-Source0: http://fedorahosted.org/releases/p/y/%{name}/%{name}-%{version}.tar.gz
+Source0: https://github.com/dcantrell/%{name}/releases/%{name}-%{version}.tar.gz
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(id -u -n)
 BuildRequires: python-devel
-BuildRequires: parted-devel >= 3.1
+%if 0%{?with_python3}
+BuildRequires: python3-devel
+%endif
+BuildRequires: parted-devel >= 3.1-14
 BuildRequires: pkgconfig
+BuildRequires: e2fsprogs
 
 %description
 Python module for the parted library.  It is used for manipulating
 partition tables.
 
+%if 0%{?with_python3}
+%package -n python3-pyparted
+Summary: Python 3 module for GNU parted
+Group:   System Environment/Libraries
+
+%description -n python3-pyparted
+Python module for the parted library.  It is used for manipulating
+partition tables. This package provides Python 3 bindings for parted.
+%endif
+
 %prep
 %setup -q
+
+%if 0%{?with_python3}
+rm -rf %{py3dir}
+cp -a . %{py3dir}
+%endif
 
 %build
 make %{?_smp_mflags}
 
+%if 0%{?with_python3}
+pushd %{py3dir}
+PYTHON=python3 make %{?_smp_mflags}
+popd
+%endif
+
 %install
 rm -rf %{buildroot}
 make install DESTDIR=%{buildroot}
+
+%if 0%{?with_python3}
+pushd %{py3dir}
+PYTHON=python3 make install DESTDIR=%{buildroot}
+popd
+%endif
+
+%check
+make test
+
+%if 0%{?with_python3}
+pushd %{py3dir}
+PYTHON=python3 make test
+popd
+%endif
 
 %clean
 rm -rf %{buildroot}
 
 %files
 %defattr(-,root,root,-)
-%doc AUTHORS BUGS COPYING ChangeLog NEWS README TODO
-%{python_sitearch}/_pedmodule.so
+%doc AUTHORS BUGS COPYING NEWS README TODO
+%{python_sitearch}/_ped.so
 %{python_sitearch}/parted
 %{python_sitearch}/%{name}-%{version}-*.egg-info
 
+%if 0%{?with_python3}
+%files -n python3-pyparted
+%defattr(-,root,root,-)
+%doc AUTHORS BUGS COPYING NEWS README TODO
+%{python3_sitearch}/_ped.*.so
+%{python3_sitearch}/parted
+%{python3_sitearch}/%{name}-%{version}-*.egg-info
+%endif
+
 %changelog
+* Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1:3.10.5-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
+
+* Thu May 07 2015 David Cantrell <dcantrell@redhat.com> - 3.10.5-1
+- Upgrade to pyparted-3.10.5
+
+* Tue May 05 2015 David Cantrell <dcantrell@redhat.com> - 3.10.4-1
+- Upgrade to pyparted-3.10.4
+
+* Fri Jan 16 2015 David Cantrell <dcantrell@redhat.com> - 3.10.3-1
+- Upgrade to pyparted-3.10.3
+
+* Wed Nov 26 2014 David Cantrell <dcantrell@redhat.com> - 3.10.2-1
+- Upgrade to pyparted-3.10.2
+
+* Mon Nov 10 2014 David Cantrell <dcantrell@redhat.com> - 3.10.1-1
+- Upgrade to pyparted-3.10.1
+
+* Wed Sep 24 2014 David Cantrell <dcantrell@redhat.com> - 3.10.0a-1
+- Upgrade to pyparted-3.10.0
+- Add python3 subpackage (#985308)
+
+* Sun Aug 17 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1:3.9.5-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
+
+* Tue Jun 24 2014 David Cantrell <dcantrell@redhat.com> - 3.9.5-1
+- Upgrade to pyparted-3.9.5
+
+* Tue Jun 24 2014 David Cantrell <dcantrell@redhat.com> - 3.9.4-2
+- Handle building on armv7l hosts
+
+* Tue Jun 24 2014 David Cantrell <dcantrell@redhat.com> - 3.9.4-1
+- Support gpt and msdos disk labels on aarch64 (#1095904)
+
+* Thu Jun 12 2014 David Cantrell <dcantrell@redhat.com> - 3.9.3-3
+- Fix GetLabelsTestCase for aarch64 (#1102854)
+
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1:3.9.3-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Wed May 07 2014 Chris Lumens <clumens@redhat.com> 3.9.3-1
+- Upgrade to pyparted-3.9.3
+- Revert "Add support for hfs_esp flag" (bcl)
+- Add btrfs and ext4 for filesystem type test (bcl)
+- Remove geom tests that don't fail (bcl)
+
+* Mon Sep 09 2013 David Cantrell <dcantrell@redhat.com> - 3.9.2-1
+- Upgrade to pyparted-3.9.2
+- Enable 'make check' in the spec file, patch for koji use
+- Add armv7l to the list of acceptable arches for gpt and msdos disklabels
+
+* Mon Sep 09 2013 David Cantrell <dcantrell@redhat.com> - 3.9.1-1
+- Fix 'make bumpver' to handle multiple decimal points. (dcantrell)
+- Add support for hfs_esp flag (dcantrell)
+- Add support for esp flag (bcl)
+- Add support for irst flag (bcl)
+- Add support for msftdata flag (bcl)
+- Subject: [PATCH] pyparted: export ped_disk_new functionality (rnsastry)
+- Convert Constraint to __ped.Constraint in partition.getMaxGeometry()
+  (chris)
+- Do not traceback when calling setlocale (#875354). (clumens)
+- Enable 'make check' in the spec file, patch for koji use
+- Add armv7l to the list of acceptable arches for gpt and msdos disklabels
+
+* Sun Aug 04 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1:3.9-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Mon Jul 08 2013 David Cantrell <dcantrell@redhat.com> - 3.9-3
+- Revert to pyparted-3.9 plus critical patches due to issues with the 3.10
+  release which are actively being worked on.  The 3.10 release does not
+  work with the installer right now.
+
+* Thu May 23 2013 David Cantrell <dcantrell@redhat.com> - 3.10-2
+- Fix build errors.
+
+* Thu May 23 2013 David Cantrell <dcantrell@redhat.com> - 3.10-1
+- Upgrade to pyparted-3.10 (#886033)
+
 * Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.9-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
 
@@ -210,7 +340,7 @@ rm -rf %{buildroot}
 * Mon Mar 23 2009 David Cantrell <dcantrell@redhat.com> - 2.0.9-1
 - Upgrade to pyparted-2.0.9
 
-* Thu Mar 20 2009 David Cantrell <dcantrell@redhat.com> - 2.0.8-1
+* Fri Mar 20 2009 David Cantrell <dcantrell@redhat.com> - 2.0.8-1
 - Upgrade to pyparted-2.0.8
 
 * Thu Mar 19 2009 David Cantrell <dcantrell@redhat.com> - 2.0.7-1
@@ -266,7 +396,7 @@ rm -rf %{buildroot}
 * Mon Apr 23 2007 David Cantrell <dcantrell@redhat.com> - 1.8.6-2
 - Ensure build env CFLAGS are included (#226337)
 
-* Fri Apr 19 2007 David Cantrell <dcantrell@redhat.com> - 1.8.6-1
+* Thu Apr 19 2007 David Cantrell <dcantrell@redhat.com> - 1.8.6-1
 - Merge review (#226337)
 
 * Tue Mar 20 2007 David Cantrell <dcantrell@redhat.com> - 1.8.5-4
