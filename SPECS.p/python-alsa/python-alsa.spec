@@ -4,8 +4,8 @@
 
 Summary:	Python binding for the ALSA library
 Name:		python-alsa
-Version:	1.0.24
-Release:	3%{?dist}
+Version:	1.0.29
+Release:	2%{?dist}
 License:	LGPLv2+
 Group:		Development/Languages
 Source0:	ftp://ftp.alsa-project.org/pub/pyalsa/pyalsa-%{version}.tar.bz2
@@ -35,11 +35,35 @@ rm -rf $RPM_BUILD_ROOT
 %{python_sitearch}/*
 
 %changelog
-* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 1.0.24-3
-- 为 Magic 3.0 重建
+* Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.0.29-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 
-* Mon Jan 23 2012 Liu Di <liudidi@gmail.com> - 1.0.24-2
-- 为 Magic 3.0 重建
+* Thu Feb 26 2015 Jaroslav Kysela <perex@perex.cz> - 1.0.29-1
+- Updated to 1.0.29
+
+* Sun Aug 17 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.0.26-5
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
+
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.0.26-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Sun Aug 04 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.0.26-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.0.26-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
+
+* Thu Sep  6 2012 Jaroslav Kysela <jkysela@redhat.com> - 1.0.26-1
+- Updated to 1.0.26
+
+* Sat Jul 21 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.0.25-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Fri Jan 27 2012 Jon Ciesla <limburgher@gmail.com> - 1.0.25-1
+- New upstream.
+
+* Sat Jan 14 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.0.24-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 
 * Tue Mar 29 2011 Robin Lee <cheeselee@fedoraproject.org> - 1.0.24-1
 - Update to 1.0.24 (#674260)
