@@ -1,0 +1,41 @@
+From dc0f584c88eb48d39479234a62b4fcabfbb4f661 Mon Sep 17 00:00:00 2001
+From: Jamie Lennox <jamielennox@redhat.com>
+Date: Mon, 28 Jul 2014 11:10:20 +1000
+Subject: [PATCH 1/4] Replace unicode character with ASCII
+
+setuptools has a problem with unicode characters and as these files are
+now imported at setup time we need to remove them.
+---
+ README.rst            | 2 +-
+ httpretty/__init__.py | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/README.rst b/README.rst
+index 6d615c0..1888500 100644
+--- a/README.rst
++++ b/README.rst
+@@ -483,7 +483,7 @@ License
+ ::
+ 
+     <HTTPretty - HTTP client mock for Python>
+-    Copyright (C) <2011-2013>  Gabriel Falcão <gabriel@nacaolivre.org>
++    Copyright (C) <2011-2013>  Gabriel Falcao <gabriel@nacaolivre.org>
+ 
+     Permission is hereby granted, free of charge, to any person
+     obtaining a copy of this software and associated documentation
+diff --git a/httpretty/__init__.py b/httpretty/__init__.py
+index 7f3c4bf..b9ec739 100644
+--- a/httpretty/__init__.py
++++ b/httpretty/__init__.py
+@@ -1,7 +1,7 @@
+ # #!/usr/bin/env python
+ # -*- coding: utf-8 -*-
+ # <HTTPretty - HTTP client mock for Python>
+-# Copyright (C) <2011-2013>  Gabriel Falcão <gabriel@nacaolivre.org>
++# Copyright (C) <2011-2013>  Gabriel Falcao <gabriel@nacaolivre.org>
+ #
+ # Permission is hereby granted, free of charge, to any person
+ # obtaining a copy of this software and associated documentation
+-- 
+1.9.3
+
