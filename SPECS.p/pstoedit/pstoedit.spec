@@ -1,9 +1,11 @@
 Name:           pstoedit
-Version:        3.62
-Release:        3%{?dist}
+Version:	3.70
+Release:	1%{?dist}
 Summary:        Translates PostScript and PDF graphics into other vector formats
+Summary(zh_CN.UTF-8): 转换 PostScript 和 PDF 图像到其它向量格式
 
 Group:          Applications/Productivity
+Group(zh_CN.UTF-8): 应用程序/生产力
 License:        GPLv2+
 URL:            http://www.pstoedit.net/
 Source0:        http://downloads.sourceforge.net/pstoedit/pstoedit-%{version}.tar.gz
@@ -24,10 +26,14 @@ formats. The resulting files can be edited or imported into various
 drawing packages. Pstoedit comes with a large set of integrated format
 drivers
 
+%description -l zh_CN.UTF-8
+ 转换 PostScript 和 PDF 图像到其它向量格式。
 
 %package devel
 Summary:        Headers for developing programs that will use %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       %{name} = %{version}-%{release}
 Requires:       libpng-devel
 
@@ -35,6 +41,8 @@ Requires:       libpng-devel
 This package contains the header files needed for developing %{name}
 applications
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -58,7 +66,7 @@ make install DESTDIR=$RPM_BUILD_ROOT
 mkdir -p $RPM_BUILD_ROOT%{_mandir}/man1
 install -m 644 doc/pstoedit.1 $RPM_BUILD_ROOT%{_mandir}/man1/
 find $RPM_BUILD_ROOT -type f -name "*.la" -exec rm -f {} ';'
-
+magic_rpm_clean.sh
 
 %post -p /sbin/ldconfig
 
@@ -67,7 +75,7 @@ find $RPM_BUILD_ROOT -type f -name "*.la" -exec rm -f {} ';'
 
 
 %files
-%doc copying doc/readme.txt doc/index.htm doc/pstoedit.htm
+%doc copying doc/readme.txt 
 %{_datadir}/pstoedit
 %{_mandir}/man1/*
 %{_bindir}/pstoedit
@@ -84,6 +92,9 @@ find $RPM_BUILD_ROOT -type f -name "*.la" -exec rm -f {} ';'
 
 
 %changelog
+* Fri Aug 07 2015 Liu Di <liudidi@gmail.com> - 3.70-1
+- 更新到 3.70
+
 * Sun Aug 04 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.62-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
 

@@ -4,11 +4,13 @@ BuildRequires:  glibc-devel
 
 Name:           cmocka
 Version:        1.0.1
-Release:        2%{?dist}
+Release:        3%{?dist}
 
 License:        ASL 2.0
 Group:          Development/Tools
+Group(zh_CN.UTF-8): 开发/工具
 Summary:        Lightweight library to simplify and generalize unit tests for C
+Summary(zh_CN.UTF-8): 简化 C 单元测试的轻量级库
 Url:            http://cmocka.org
 
 Source0:        https://open.cryptomilk.org/attachments/download/54/%{name}-%{version}.tar.xz
@@ -36,9 +38,14 @@ preferable.
 
 This is the successor of Google's Cmockery.
 
+%description -l zh_CN.UTF-8
+简化 C 单元测试的轻量级库。
+
 %package -n libcmocka
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Summary:        Lightweight library to simplify and generalize unit tests for C
+Summary(zh_CN.UTF-8): %{name} 的运行库
 
 Conflicts: cmockery2
 
@@ -64,22 +71,35 @@ preferable.
 
 This is the successor of Google's Cmockery.
 
+%description -n libcmocka -l zh_CN.UTF-8
+%{name} 的运行库。
+
 %package -n libcmocka-static
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
+Summary(zh_CN.UTF-8): %{name} 的静态库
 Summary:        Lightweight library to simplify and generalize unit tests for C
 
 %description -n libcmocka-static
 Static version of the cmocka library.
 
+%description -n libcmocka-static -l zh_CN.UTF-8
+%{name} 的静态库。
+
 %package -n libcmocka-devel
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Summary:        Development headers for the cmocka library
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Requires:       libcmocka = %{version}-%{release}
 
 Conflicts: cmockery2-devel
 
 %description -n libcmocka-devel
 Development headers for the cmocka unit testing library.
+
+%description -n libcmocka-devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -104,6 +124,7 @@ pushd obj
 make DESTDIR=%{buildroot} install
 popd
 ln -s libcmocka.so %{buildroot}%{_libdir}/libcmockery.so
+magic_rpm_clean.sh
 
 %post -n libcmocka -p /sbin/ldconfig
 
@@ -137,6 +158,9 @@ popd
 %{_libdir}/cmake/cmocka/cmocka-config.cmake
 
 %changelog
+* Thu Jul 30 2015 Liu Di <liudidi@gmail.com> - 1.0.1-3
+- 为 Magic 3.0 重建
+
 * Wed Jun 17 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.0.1-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

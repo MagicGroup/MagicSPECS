@@ -1,8 +1,8 @@
 Summary:   Library for AppStream metadata
 Summary(zh_CN.UTF-8): 应用程序流元数据的库
 Name:      libappstream-glib
-Version:   0.3.6
-Release:   2%{?dist}
+Version: 0.4.1
+Release: 1%{?dist}
 License:   LGPLv2+
 URL:       http://people.freedesktop.org/~hughsient/appstream-glib/
 Source0:   http://people.freedesktop.org/~hughsient/appstream-glib/releases/appstream-glib-%{version}.tar.xz
@@ -97,9 +97,9 @@ make install DESTDIR=$RPM_BUILD_ROOT
 
 %__rm -f %{buildroot}%{_libdir}/libappstream-glib*.la
 %__rm -f %{buildroot}%{_libdir}/libappstream-builder*.la
-%__rm -f %{buildroot}%{_libdir}/asb-plugins/*.la
+%__rm -f %{buildroot}%{_libdir}/asb-plugins-2/*.la
 magic_rpm_clean.sh
-%find_lang appstream-glib
+#find_lang appstream-glib
 
 %post -p /sbin/ldconfig
 %post builder -p /sbin/ldconfig
@@ -107,7 +107,8 @@ magic_rpm_clean.sh
 %postun -p /sbin/ldconfig
 %postun builder -p /sbin/ldconfig
 
-%files -f appstream-glib.lang
+#files -f appstream-glib.lang
+%files
 %doc README.md AUTHORS NEWS COPYING
 %{_libdir}/libappstream-glib.so.7*
 %{_libdir}/girepository-1.0/*.typelib
@@ -131,7 +132,7 @@ magic_rpm_clean.sh
 %doc COPYING
 %{_bindir}/appstream-builder
 %{_datadir}/bash-completion/completions/appstream-builder
-%{_libdir}/asb-plugins/*.so
+%{_libdir}/asb-plugins-2/*.so
 %{_libdir}/libappstream-builder.so.7*
 %{_mandir}/man1/appstream-builder.1.gz
 
@@ -144,6 +145,9 @@ magic_rpm_clean.sh
 %{_datadir}/gir-1.0/AppStreamBuilder-1.0.gir
 
 %changelog
+* Thu Jul 30 2015 Liu Di <liudidi@gmail.com> - 0.4.1-1
+- 更新到 0.4.1
+
 * Mon Apr 13 2015 Liu Di <liudidi@gmail.com> - 0.3.6-2
 - 为 Magic 3.0 重建
 

@@ -5,14 +5,16 @@
 %endif
 
 # This needs to be pulled from the source tarball
-%global commit cda2deee65e3
+%global commit ee51df3a10b6
 
 
 Name:           python-astroid
-Version:        1.3.7
-Release:        1%{?dist}
+Version:	1.3.8
+Release:	1%{?dist}
 Summary:        Python Abstract Syntax Tree New Generation
+Summary(zh_CN.UTF-8): Python 的新一代抽象语法树
 Group:          Development/Languages
+Group(zh_CN.UTF-8): 开发/语言
 License:        GPLv2+
 URL:            http://www.astroid.org
 Source0:        https://bitbucket.org/logilab/astroid/get/astroid-%{version}.tar.bz2
@@ -44,10 +46,15 @@ python source code for projects such as pychecker, pyreverse,
 pylint, and others. It extends the class defined in the compiler.ast
 python module with some additional methods and attributes.
 
+%description -l zh_CN.UTF-8
+Python 的新一代抽象语法树。
+
 %if 0%{?with_python3}
 %package -n python3-astroid
 Summary:        Python Abstract Syntax Tree New Generation
+Summary(zh_CN.UTF-8):  Python3 的新一代抽象语法树
 Group:          Development/Languages
+Group(zh_CN.UTF-8): 开发/语言
 Requires:       python3-logilab-common >= 0.63.2
 
 %description -n python3-astroid
@@ -55,6 +62,9 @@ The aim of this module is to provide a common base representation of
 python source code for projects such as pychecker, pyreverse,
 pylint, and others. It extends the class defined in the compiler.ast
 python module with some additional methods and attributes.
+
+%description -n python3-astroid -l zh_CN.UTF-8
+Python3 的新一代抽象语法树。
 %endif # if with_python3
 
 %prep
@@ -64,7 +74,7 @@ python module with some additional methods and attributes.
 %patch3 -p1
 %patch4 -p1
 %patch5 -p1
-%patch6 -p1
+#patch6 -p1
 
 %if 0%{?with_python3}
 rm -rf %{py3dir}
@@ -100,6 +110,7 @@ for FILE in README; do
     iconv -f iso-8859-15 -t utf-8 $FILE > $FILE.utf8
     mv -f $FILE.utf8 $FILE
 done
+magic_rpm_clean.sh
 
 %check
 %{__python} setup.py test
@@ -123,6 +134,12 @@ popd
 %endif # with_python3
 
 %changelog
+* Tue Aug 18 2015 Liu Di <liudidi@gmail.com> - 1.3.8-1
+- 更新到 1.3.8
+
+* Fri Aug 14 2015 Liu Di <liudidi@gmail.com> - 1.3.7-2
+- 为 Magic 3.0 重建
+
 * Thu Jul 30 2015 Brian C. Lane <bcl@redhat.com> 1.3.7-1
 - Upstream 1.3.7
 - Fix for subprocess communicate() timeout argument

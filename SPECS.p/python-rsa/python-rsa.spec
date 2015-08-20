@@ -8,7 +8,7 @@
 
 Name:           python-rsa
 Version:        3.1.1
-Release:        7%{?dist}
+Release:        8%{?dist}
 Summary:        Pure-Python RSA implementation
 
 License:        ASL 2.0
@@ -90,6 +90,9 @@ popd
 %endif
 
 %changelog
+* Wed Aug 19 2015 Liu Di <liudidi@gmail.com> - 3.1.1-8
+- 为 Magic 3.0 重建
+
 * Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.1.1-7
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

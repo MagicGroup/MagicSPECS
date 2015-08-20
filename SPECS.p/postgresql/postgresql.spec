@@ -50,8 +50,8 @@
 %{!?xml:%global xml 1}
 %{!?pam:%global pam 1}
 %{!?sdt:%global sdt 1}
-%{!?selinux:%global selinux 1}
-%{!?runselftest:%global runselftest 1}
+%{!?selinux:%global selinux 0}
+%{!?runselftest:%global runselftest 0}
 
 # do not fail on 32-bit architectures with globally enabled hardening, see the
 # FESCO ticket #1384 and rhbz#947022 for more info.
@@ -71,7 +71,7 @@ Summary: PostgreSQL client programs
 Name: postgresql
 %global majorversion 9.4
 Version: 9.4.4
-Release: 3%{?dist}
+Release: 4%{?dist}
 
 # The PostgreSQL license is very similar to other MIT licenses, but the OSI
 # recognizes it as an independent license, so we do as well.
@@ -122,6 +122,8 @@ Patch4: postgresql-config-comment.patch
 Patch5: postgresql-var-run-socket.patch
 Patch6: postgresql-man.patch
 Patch7: postgresql-perl-5.22-test-fail.patch
+
+Patch11: postgresql-setup-3.3-magic.patch
 
 BuildRequires: perl(ExtUtils::MakeMaker) glibc-devel bison flex gawk help2man
 BuildRequires: perl(ExtUtils::Embed), perl-devel
@@ -364,6 +366,8 @@ benchmarks.
 %patch6 -p1
 %patch7 -p1
 
+%patch11 -p0
+
 # We used to run autoconf here, but there's no longer any real need to,
 # since Postgres ships with a reasonably modern configure script.
 
@@ -402,7 +406,7 @@ find . -type f -name .gitignore | xargs rm
 # Building postgresql-setup
 
 cd postgresql-setup-%{setup_version}
-
+autoreconf -fisv
 %configure \
     pgdocdir=%{_pkgdocdir} \
     systemdunitsdir=%{_prefix}/lib/systemd/system \
@@ -915,7 +919,7 @@ fi
 
 %files -f main.lst
 %doc doc/KNOWN_BUGS doc/MISSING_FEATURES doc/TODO
-%doc COPYRIGHT README HISTORY doc/bug.template
+%doc COPYRIGHT README README.rpm-dist HISTORY doc/bug.template
 %{_bindir}/clusterdb
 %{_bindir}/createdb
 %{_bindir}/createlang
@@ -1200,6 +1204,9 @@ fi
 %endif
 
 %changelog
+* Wed Jul 29 2015 Liu Di <liudidi@gmail.com> - 9.4.4-4
+- 为 Magic 3.0 重建
+
 * Tue Jul 14 2015 Pavel Raiskup <praiskup@redhat.com> - 9.4.4-3
 - revert/fix part of e6acde1a9 commit related to multilib hack (rhbz#1242873)
 

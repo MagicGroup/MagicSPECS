@@ -2,10 +2,12 @@
 
 Name: pygobject2
 Version: 2.28.6
-Release: 11%{?dist}
+Release: 12%{?dist}
 License: LGPLv2+
 Group: Development/Languages
+Group(zh_CN.UTF-8): 开发/语言
 Summary: Python 2 bindings for GObject 
+Summary(zh_CN.UTF-8): GObject 的 Python 2 绑定
 URL: http://www.pygtk.org/
 BuildRoot: %{_tmppath}/%{name}-%{version}-root
 #VCS: git:git://git.gnome.org/pygobject
@@ -34,16 +36,26 @@ BuildRequires: automake autoconf libtool
 The %{name} package provides a convenient wrapper for the GObject library
 for use in Python programs.
 
+%description -l zh_CN.UTF-8
+GObject 的 Python 2 绑定。
+
 %package codegen
 Summary: The code generation program for PyGObject
+Summary(zh_CN.UTF-8): PyGObject 的代码生成程序
 Group: Development/Languages
+Group(zh_CN.UTF-8): 开发/语言
 
 %description codegen
 The package contains the C code generation program for PyGObject.
 
+%description codegen -l zh_CN.UTF-8
+PyGObject 的代码生成程序。
+
 %package devel
 Summary: Development files for building add-on libraries
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: Development/Languages
+Group(zh_CN.UTF-8): 开发/库
 Requires: %{name} = %{version}-%{release}
 Requires: %{name}-codegen = %{version}-%{release}
 Requires: %{name}-doc = %{version}-%{release}
@@ -55,12 +67,20 @@ Requires: pkgconfig
 This package contains files required to build wrappers for %{name}-based
 libraries such as pygtk2.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
 %package doc
 Summary: Documentation files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的文档
 Group: Development/Languages
+Group(zh_CN.UTF-8): 开发/语言
 
 %description doc
 This package contains documentation files for %{name}.
+
+%description doc -l zh_CN.UTF-8
+%{name} 的文档。
 
 %prep
 %setup -q -n pygobject-%{version}
@@ -84,6 +104,7 @@ find $RPM_BUILD_ROOT -name '*.la' -delete
 find $RPM_BUILD_ROOT -name '*.a' -delete
 
 rm examples/Makefile*
+magic_rpm_clean.sh
 
 %post -p /sbin/ldconfig
 %postun -p /sbin/ldconfig
@@ -125,6 +146,9 @@ rm examples/Makefile*
 %{_datadir}/pygobject/xsl
 
 %changelog
+* Thu Aug 13 2015 Liu Di <liudidi@gmail.com> - 2.28.6-12
+- 为 Magic 3.0 重建
+
 * Thu Sep 19 2013 Tomáš Mráz <tmraz@redhat.com> - 2.28.6-11
 - allow old pygtk applications to work with pygobject 2.28.x and glib 2.35.x
 

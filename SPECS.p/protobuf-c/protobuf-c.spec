@@ -1,10 +1,11 @@
 Name:           protobuf-c
 Version:        1.1.1
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        C bindings for Google's Protocol Buffers
-
+Summary(zh_CN.UTF-8): 谷歌 Protocol Buffers 的 C 绑定
 
 Group:          System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 License:        BSD
 URL:            https://github.com/protobuf-c/protobuf-c
 Source0:	https://github.com/protobuf-c/protobuf-c/releases/download/v%{version}/%{name}-%{version}.tar.gz
@@ -18,13 +19,21 @@ libraries to use Protocol Buffers from pure C (not C++).
 
 It uses a modified version of protoc called protoc-c. 
 
+%description -l zh_CN.UTF-8
+谷歌 Protocol Buffers 的 C 绑定。
+
 %package devel
 Summary:        Protocol Buffers C headers and libraries
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       %{name} = %{version}-%{release}
 
 %description devel
 This package contains protobuf-c headers and libraries.
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -40,6 +49,7 @@ make check
 %install
 make install DESTDIR=$RPM_BUILD_ROOT
 rm -f $RPM_BUILD_ROOT/%{_libdir}/libprotobuf-c.la
+magic_rpm_clean.sh
 
 %post -p /sbin/ldconfig
 %postun -p /sbin/ldconfig
@@ -59,6 +69,9 @@ rm -f $RPM_BUILD_ROOT/%{_libdir}/libprotobuf-c.la
 %{_libdir}/pkgconfig/libprotobuf-c.pc
 
 %changelog
+* Fri Aug 07 2015 Liu Di <liudidi@gmail.com> - 1.1.1-3
+- 为 Magic 3.0 重建
+
 * Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.1.1-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

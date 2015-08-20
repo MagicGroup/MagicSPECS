@@ -3,15 +3,18 @@
 %global debug_package %{nil}
 
 Name:           pyatspi
-Version:        2.2.1
-Release:        2%{?dist}
+Version:	2.16.0
+Release:	1%{?dist}
 Summary:        Python bindings for at-spi
+Summary(zh_CN.UTF-8): at-spi 的 Python 绑定
 
 Group:          Development/Languages
+Group(zh_CN.UTF-8): 开发/语言
 License:        LGPLv2 and GPLv2
 URL:            http://www.linuxfoundation.org/en/AT-SPI_on_D-Bus
 #VCS: git:git://git.gnome.org/pyatspi
-Source0:        http://download.gnome.org/sources/pyatspi/2.2/%{name}-%{version}.tar.xz
+%define majorver %(echo %{version} | awk -F. '{print $1"."$2}')
+Source0:        http://download.gnome.org/sources/pyatspi/%{majorver}/%{name}-%{version}.tar.xz
 
 BuildRequires:  python
 BuildRequires:  pygobject3-devel >= 2.90.1
@@ -34,6 +37,8 @@ ORBIT / CORBA for its transport protocol.
 
 This package includes a python client library for at-spi.
 
+%description -l zh_CN.UTF-8
+at-spi 的 Python 绑定。
 
 %prep
 %setup -q
@@ -45,7 +50,7 @@ make
 
 %install
 make install DESTDIR=$RPM_BUILD_ROOT
-
+magic_rpm_clean.sh
 
 %files
 %doc COPYING COPYING.GPL AUTHORS README
@@ -53,6 +58,9 @@ make install DESTDIR=$RPM_BUILD_ROOT
 
 
 %changelog
+* Wed Aug 12 2015 Liu Di <liudidi@gmail.com> - 2.16.0-1
+- 更新到 2.16.0
+
 * Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 2.2.1-2
 - 为 Magic 3.0 重建
 

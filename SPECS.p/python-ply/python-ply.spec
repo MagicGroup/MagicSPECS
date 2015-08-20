@@ -7,7 +7,7 @@
 Name:			python-ply
 Summary: 		Python Lex-Yacc
 Version:		3.6
-Release:		1%{?dist}
+Release:		2%{?dist}
 License:		BSD
 Group:			System Environment/Libraries
 URL:			http://www.dabeaz.com/ply/
@@ -115,6 +115,9 @@ rm -rf $RPM_BUILD_ROOT
 %endif # with_python3
 
 %changelog
+* Mon Aug 17 2015 Liu Di <liudidi@gmail.com> - 3.6-2
+- 为 Magic 3.0 重建
+
 * Tue Jul 14 2015 Stephen Gallagher <sgallagh@redhat.com> 3.6-1
 - Update to latest ply 3.6 for Python 3 fixes
 

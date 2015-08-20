@@ -1,12 +1,14 @@
 Name:           portaudio
 Version:        19
-Release:        17%{?dist}
+Release:        18%{?dist}
 Summary:        Free, cross platform, open-source, audio I/O library
+Summary(zh_CN.UTF-8): 自由，跨平台，开源的音频 I/O 库
 Group:          System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 License:        MIT
 URL:            http://www.portaudio.com/
 # This is http://www.portaudio.com/archives/pa_snapshot.tgz svn rev 1890
-Source0:        pa_snapshot.tgz
+Source0:        http://www.portaudio.com/archives/pa_stable_v19_20140130.tgz
 Patch1:         portaudio-doxynodate.patch
 Patch2:         portaudio-pkgconfig-alsa.patch
 # Add some extra API needed by audacity
@@ -23,10 +25,14 @@ support of audio. It uses a callback mechanism to request audio processing.
 Audio can be generated in various formats, including 32 bit floating point,
 and will be converted to the native format internally.
 
+%description -l zh_CN.UTF-8
+自由，跨平台，开源的音频 I/O 库。
 
 %package devel
 Summary:        Development files for the portaudio audio I/O library
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       %{name}%{?_isa} = %{version}-%{release}
 
 %description devel
@@ -38,6 +44,8 @@ and will be converted to the native format internally.
 This package contains files required to build applications that will use the
 portaudio library.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q -n %{name}
@@ -58,7 +66,7 @@ doxygen
 
 %install
 make install DESTDIR=$RPM_BUILD_ROOT
-
+magic_rpm_clean.sh
 
 %post -p /sbin/ldconfig
 %postun -p /sbin/ldconfig
@@ -81,6 +89,9 @@ make install DESTDIR=$RPM_BUILD_ROOT
 
 
 %changelog
+* Wed Jul 29 2015 Liu Di <liudidi@gmail.com> - 19-18
+- 为 Magic 3.0 重建
+
 * Sun Aug 04 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 19-17
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
 

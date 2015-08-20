@@ -1,12 +1,14 @@
 %define with_python3 1
 
 Summary: Python module for GNU parted
+Summary(zh_CN.UTF-8): GNU parted 的 Python 模块
 Name:    pyparted
 Epoch:   1
 Version: 3.10.5
-Release: 2%{?dist}
+Release: 3%{?dist}
 License: GPLv2+
 Group:   System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 URL:     https://github.com/dcantrell/%{name}
 
 Source0: https://github.com/dcantrell/%{name}/releases/%{name}-%{version}.tar.gz
@@ -24,14 +26,22 @@ BuildRequires: e2fsprogs
 Python module for the parted library.  It is used for manipulating
 partition tables.
 
+%description -l zh_CN.UTF-8
+GNU parted 的 Python 模块。
+
 %if 0%{?with_python3}
 %package -n python3-pyparted
 Summary: Python 3 module for GNU parted
+Summary(zh_CN.UTF-8): GNU parted 的 Python3 模块
 Group:   System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 
 %description -n python3-pyparted
 Python module for the parted library.  It is used for manipulating
 partition tables. This package provides Python 3 bindings for parted.
+
+%description  -n python3-pyparted -l zh_CN.UTF-8
+GNU parted 的 Python3 模块。
 %endif
 
 %prep
@@ -60,6 +70,7 @@ pushd %{py3dir}
 PYTHON=python3 make install DESTDIR=%{buildroot}
 popd
 %endif
+magic_rpm_clean.sh
 
 %check
 make test
@@ -90,6 +101,9 @@ rm -rf %{buildroot}
 %endif
 
 %changelog
+* Mon Aug 17 2015 Liu Di <liudidi@gmail.com> - 1:3.10.5-3
+- 为 Magic 3.0 重建
+
 * Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1:3.10.5-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

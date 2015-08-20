@@ -1,0 +1,24 @@
+diff -ur postgresql-setup-3.3.orig/configure postgresql-setup-3.3/configure
+--- postgresql-setup-3.3.orig/configure	2015-07-29 06:19:14.798396521 +0000
++++ postgresql-setup-3.3/configure	2015-07-29 06:42:44.394360393 +0000
+@@ -2739,7 +2739,7 @@
+ else
+ 
+       pgsetup_cv_os_family=
+-      if test -r /etc/redhat-release; then
++      if test -r /etc/magic-release; then
+         pgsetup_cv_os_family=redhat
+       fi
+ 
+diff -ur postgresql-setup-3.3.orig/m4/packaging.m4 postgresql-setup-3.3/m4/packaging.m4
+--- postgresql-setup-3.3.orig/m4/packaging.m4	2015-07-29 06:19:14.797396521 +0000
++++ postgresql-setup-3.3/m4/packaging.m4	2015-07-29 06:42:36.386360599 +0000
+@@ -3,7 +3,7 @@
+     [for oprating system (distribution)],
+     [pgsetup_cv_os_family], [
+       pgsetup_cv_os_family=
+-      if test -r /etc/redhat-release; then
++      if test -r /etc/magic-release; then
+         pgsetup_cv_os_family=redhat
+       fi
+     ]

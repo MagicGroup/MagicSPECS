@@ -1,12 +1,14 @@
 Name:           prison
-Version:        1.0
-Release:        5%{?dist}
+Version:        1.1.1
+Release:        3%{?dist}
 Summary:        A Qt-based barcode abstraction library
+Summary(zh_CN.UTF-8): 基于 Qt 的条码抽象库
 
 Group:          System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 License:        MIT
 URL:            https://projects.kde.org/projects/kdesupport/prison
-Source0:        ftp://ftp.kde.org/pub/kde/stable/prison/1.0/src/%{name}-%{version}.tar.gz
+Source0:        http://download.kde.org/stable/prison/%{version}/src/%{name}-%{version}.tar.xz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildRequires:  cmake
@@ -18,12 +20,17 @@ BuildRequires:  qt4-devel
 Prison is a Qt-based barcode abstraction layer/library that provides
 an uniform access to generation of barcodes with data.
 
+%description -l zh_CN.UTF-8
+基于 Qt 的条码抽象库。
+
 %package devel
 Summary: Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Requires: %{name}%{?_isa} = %{version}-%{release}
 %description devel
 %{summary}
-
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -40,7 +47,7 @@ make %{?_smp_mflags} -C %{_target_platform}
 %install
 rm -rf %{buildroot}
 make install/fast -C %{_target_platform} DESTDIR=%{buildroot}
-
+magic_rpm_clean.sh
 
 %clean
 rm -rf %{buildroot}
@@ -64,6 +71,12 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Aug 04 2015 Liu Di <liudidi@gmail.com> - 1.1.1-3
+- 为 Magic 3.0 重建
+
+* Tue Aug 04 2015 Liu Di <liudidi@gmail.com> - 1.1.1-2
+- 为 Magic 3.0 重建
+
 * Tue Jan 08 2013 Liu Di <liudidi@gmail.com> - 1.0-5
 - 为 Magic 3.0 重建
 

@@ -1,28 +1,38 @@
 Name:		pps-tools
 Version:	0
-Release:	0.6.20120215gitac0aa6%{?dist}
+Release:	0.7.20120407git0deb9c%{?dist}
 Summary:	LinuxPPS user-space tools
+Summary(zh_CN.UTF-8): LinuxPPS 用户空间工具
 
 Group:		System Environment/Base
+Group(zh_CN.UTF-8): 系统环境/基本
 License:	GPLv2+
 URL:		https://github.com/ago/pps-tools
 
 # git clone git://github.com/ago/pps-tools; cd pps-tools
 # git archive --prefix=pps-tools/ ac0aa6 | gzip > pps-tools-20120215gitac0aa6.tar.gz
-Source0:	pps-tools-20120215gitac0aa6.tar.gz
+Source0:	pps-tools-20120407git0deb9c.tar.xz
 
 BuildRoot:	%(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
 
 %description
 This package includes the LinuxPPS user-space tools.
 
+%description -l zh_CN.UTF-8
+LinuxPPS 用户空间工具。
+
 %package devel
 Summary: LinuxPPS PPSAPI header file
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: Development/System
+Group(zh_CN.UTF-8): 开发/库
 
 %description devel
 This package includes the header needed to compile PPSAPI (RFC-2783)
 applications.
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q -n %{name}
@@ -52,6 +62,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_includedir}/sys/timepps.h
 
 %changelog
+* Tue Aug 04 2015 Liu Di <liudidi@gmail.com> - 0-0.7.20120407git0deb9c
+- 为 Magic 3.0 重建
+
 * Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 0-0.6.20120215gitac0aa6
 - 为 Magic 3.0 重建
 

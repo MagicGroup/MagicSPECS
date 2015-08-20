@@ -2,7 +2,7 @@ Summary:    A GNU tool for automatically configuring source code
 Summary(zh_CN.UTF-8): 自动配置源代码的 GNU 工具
 Name:       autoconf
 Version:    2.69
-Release:    10%{?dist}
+Release:    11%{?dist}
 License:    GPLv2+ and GFDL
 Group:      Development/Tools
 Group(zh_CN.UTF-8): 开发/工具
@@ -102,6 +102,9 @@ fi
 %doc AUTHORS COPYING* ChangeLog NEWS README THANKS TODO
 
 %changelog
+* Wed Jul 29 2015 Liu Di <liudidi@gmail.com> - 2.69-11
+- 为 Magic 3.0 重建
+
 * Thu Feb 14 2013 Pavel Raiskup <praiskup@redhat.com> - 2.69-10
 - BR the perl(Text::ParseWords) explicitly to enable build again
 

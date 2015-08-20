@@ -1,9 +1,11 @@
 Summary: Utilities for managing processes on your system
+Summary(zh_CN.UTF-8): 在你的系统上管理进程的工具
 Name: psmisc
-Version: 22.16
-Release: 2%{?dist}
+Version:	22.21
+Release:	1%{?dist}
 License: GPLv2+
 Group: Applications/System
+Group(zh_CN.UTF-8): 应用程序/系统
 Source: http://downloads.sourceforge.net/%{name}/%{name}-%{version}.tar.gz
 URL: http://sourceforge.net/projects/psmisc
 
@@ -23,6 +25,12 @@ structure of all of the running processes on your system.  The killall
 command sends a specified signal (SIGTERM if nothing is specified) to
 processes identified by name.  The fuser command identifies the PIDs
 of processes that are using specified files or filesystems.
+
+%description -l zh_CN.UTF-8
+在你的系统上管理进程的工具，包括：pstree, killall 和 fuser。
+pstree 命令以树状结构显示你系统上运行的所有程序。
+killall 命令按名称给进程发送指定信号（不指定的话是 SIGTERM）。
+fuser 命令标识正在使用文件或文件系统的进程 PID。
 
 %prep
 %setup -q
@@ -56,6 +64,9 @@ magic_rpm_clean.sh
 %doc AUTHORS ChangeLog COPYING README
 
 %changelog
+* Fri Aug 07 2015 Liu Di <liudidi@gmail.com> - 22.21-1
+- 更新到 22.21
+
 * Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 22.16-2
 - 为 Magic 3.0 重建
 

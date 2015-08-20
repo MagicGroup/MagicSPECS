@@ -1,10 +1,12 @@
 Summary: PolicyKit integration for the GNOME desktop
+Summary(zh_CN.UTF-8): GNOME 桌面的 PolicyKit 集成
 Name: polkit-gnome
 Version: 0.105
-Release: 3%{?dist}
+Release: 4%{?dist}
 License: LGPLv2+
 URL: http://www.freedesktop.org/wiki/Software/PolicyKit
 Group: Applications/System
+Group(zh_CN.UTF-8): 应用程序/系统
 Source0: http://hal.freedesktop.org/releases/%{name}-%{version}.tar.xz
 
 BuildRequires: gtk3-devel
@@ -32,6 +34,9 @@ Requires: polkit >= 0.97
 polkit-gnome provides an authentication agent for PolicyKit
 that matches the look and feel of the GNOME desktop.
 
+%description -l zh_CN.UTF-8
+GNOME 桌面的 PolicyKit 集成。
+
 %prep
 %setup -q
 
@@ -44,7 +49,7 @@ make install DESTDIR=$RPM_BUILD_ROOT
 
 rm -f $RPM_BUILD_ROOT%{_libdir}/*.a
 rm -f $RPM_BUILD_ROOT%{_libdir}/*.la
-
+magic_rpm_clean.sh
 %find_lang polkit-gnome-1
 
 %post -p /sbin/ldconfig
@@ -57,6 +62,9 @@ rm -f $RPM_BUILD_ROOT%{_libdir}/*.la
 
 
 %changelog
+* Sat Jul 25 2015 Liu Di <liudidi@gmail.com> - 0.105-4
+- 为 Magic 3.0 重建
+
 * Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 0.105-3
 - 为 Magic 3.0 重建
 

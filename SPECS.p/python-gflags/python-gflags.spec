@@ -2,7 +2,7 @@
 
 Name:           python-%{upstream_name}
 Version:        2.0
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        Commandline flags module for Python
 
 Group:          Development/Languages
@@ -109,6 +109,9 @@ popd
 
 
 %changelog
+* Thu Aug 06 2015 Liu Di <liudidi@gmail.com> - 2.0-4
+- 为 Magic 3.0 重建
+
 * Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.0-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

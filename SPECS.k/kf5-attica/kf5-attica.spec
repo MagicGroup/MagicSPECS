@@ -1,9 +1,10 @@
 %global framework attica
 
 Name:           kf5-attica
-Version:        5.12.0
-Release:        1%{?dist}
+Version:	5.12.0
+Release:	1%{?dist}
 Summary:        KDE Frameworks Tier 1 Addon with Open Collaboration Services API
+Summary(zh_CN.UTF-8): 开放协作服务 API 的 KDE 框架实现
 
 License:        LGPLv2+
 URL:            https://projects.kde.org/projects/frameworks/attica
@@ -27,14 +28,20 @@ Requires:       kf5-filesystem
 Attica is a Qt library that implements the Open Collaboration Services
 API version 1.4.
 
+%description -l zh_CN.UTF-8
+这是开放协作服务 API 版本 1.4 实现的 Qt 库。
+
 %package        devel
 Summary:        Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Requires:       %{name}%{?_isa} = %{version}-%{release}
 Requires:       qt5-qtbase-devel
 
 %description    devel
 %{summary}.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q -n %{framework}-%{version}
@@ -51,7 +58,7 @@ make %{?_smp_mflags} -C %{_target_platform}
 
 %install
 make install/fast DESTDIR=%{buildroot} -C %{_target_platform}
-
+magic_rpm_clean.sh
 
 %post -p /sbin/ldconfig
 %postun -p /sbin/ldconfig

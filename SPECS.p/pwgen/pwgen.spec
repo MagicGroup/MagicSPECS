@@ -1,9 +1,11 @@
 Name:           pwgen
 Version:        2.07
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Automatic password generation
+Summary(zh_CN.UTF-8): 自动密码生成器
 
 Group:          Applications/System
+Group(zh_CN.UTF-8): 应用程序/系统
 License:        GPL+
 URL:            http://sf.net/projects/pwgen
 Source0:        http://download.sf.net/pwgen/pwgen-%{version}.tar.gz
@@ -14,6 +16,9 @@ pwgen generates random, meaningless but pronounceable passwords. These
 passwords contain either only lowercase letters, or upper and lower case, or
 upper case, lower case and numeric digits. Upper case letters and numeric
 digits are placed in a way that eases memorizing the password.
+
+%description -l zh_CN.UTF-8
+自动密码生成器。生成随机，无意义但可读的密码。
 
 %prep
 %setup -q
@@ -27,7 +32,7 @@ make %{?_smp_mflags}
 %install
 rm -rf $RPM_BUILD_ROOT
 make install DESTDIR=$RPM_BUILD_ROOT
-
+magic_rpm_clean.sh
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -40,6 +45,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Wed Aug 12 2015 Liu Di <liudidi@gmail.com> - 2.07-3
+- 为 Magic 3.0 重建
+
 * Sun Mar 01 2015 Liu Di <liudidi@gmail.com> - 2.07-2
 - 为 Magic 3.0 重建
 

@@ -1,9 +1,11 @@
 Name:           pycryptopp
 Version:        0.6.0.1206569328141510525648634803928199668821045408958
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        Python wrappers for the Crypto++ library
+Summary(zh_CN.UTF-8): Crypto++ 库的 Python 接口
 
 Group:          Development/Languages
+Group(zh_CN.UTF-8): 开发/语言
 
 # we don't use the embedded cryptopp library
 # but link against the one in Fedora
@@ -24,6 +26,9 @@ PyCryptopp is a set of Python wrappers for a few
 of the best crypto algorithms from the Crypto++ library
 (including SHA-256, AES, RSA signatures and Elliptic Curve DSA signatures).
 
+%description -l zh_CN.UTF-8
+Crypto++ 库的 Python 接口。
+
 %prep
 %setup -q
 
@@ -41,7 +46,7 @@ rm -rf %{buildroot}%{_docdir}/%{name}/
 # This file isn't needed.  It's used to mark the embedded crytopp as having
 # come from pycrypto.  We're not installing the embedded version.
 rm -rf %{buildroot}/%{_prefix}/cryptopp/extraversion.h
-
+magic_rpm_clean.sh
 
 %check
 CFLAGS="%{optflags}" %{__python} setup.py test
@@ -57,6 +62,9 @@ rm -rf %{buildroot}%{python_sitearch}/%{name}/testvectors/
 %{python_sitearch}/%{name}-%{version}-*.egg-info
 
 %changelog
+* Wed Aug 12 2015 Liu Di <liudidi@gmail.com> - 0.6.0.1206569328141510525648634803928199668821045408958-5
+- 为 Magic 3.0 重建
+
 * Sun Aug 04 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.6.0.1206569328141510525648634803928199668821045408958-4
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
 

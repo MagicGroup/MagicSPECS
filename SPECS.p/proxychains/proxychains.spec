@@ -1,8 +1,10 @@
 Name:		proxychains
 Version:	3.1
-Release:	16%{?dist}
+Release:	17%{?dist}
 Summary:	Provides proxy support to any application
+Summary(zh_CN.UTF-8): 给任意程序添加代理支持
 Group:		Applications/Internet
+Group(zh_CN.UTF-8): 应用程序/互联网
 License:	GPLv2+
 URL:		http://proxychains.sourceforge.net
 Source0:	http://downloads.sourceforge.net/%{name}/%{name}-%{version}.tar.gz
@@ -17,6 +19,9 @@ them through a user defined proxy
 
 You must configure /etc/proxychains.conf before use
 
+%description -l zh_CN.UTF-8
+给任意程序添加代理支持。
+
 %prep
 %setup -q
 %patch0 -p1 -b .ld_preload
@@ -30,6 +35,7 @@ make %{?_smp_mflags}
 make install DESTDIR=$RPM_BUILD_ROOT INSTALL="%{__install} -p"
 rm -f $RPM_BUILD_ROOT%{_libdir}/lib*.la
 rm -f $RPM_BUILD_ROOT%{_libdir}/lib*.so
+magic_rpm_clean.sh
 
 %post -p /sbin/ldconfig
 %postun -p /sbin/ldconfig
@@ -43,6 +49,9 @@ rm -f $RPM_BUILD_ROOT%{_libdir}/lib*.so
 %{_libdir}/libproxychains.so.3.0.0
 
 %changelog
+* Fri Aug 07 2015 Liu Di <liudidi@gmail.com> - 3.1-17
+- 为 Magic 3.0 重建
+
 * Fri Aug 08 2014 Liu Di <liudidi@gmail.com> - 3.1-16
 - 为 Magic 3.0 重建
 

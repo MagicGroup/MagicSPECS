@@ -5,9 +5,10 @@
 
 
 Summary:    Python bindings for lzma
+Summary(zh_CN.UTF-8): lzma 的 Python 绑定
 Name:       pyliblzma
 Version:    0.5.3
-Release:    8%{?dist}
+Release:    9%{?dist}
 License:    LGPLv3+
 URL:        https://launchpad.net/pyliblzma
 Source0:    http://pypi.python.org/packages/source/p/pyliblzma/%{name}-%{version}.tar.bz2
@@ -20,6 +21,9 @@ BuildRoot:    %{_tmppath}/%{name}-%{version}-%{release}-buildroot
 PylibLZMA provides a python interface for the liblzma library
 to read and write data that has been compressed or can be decompressed
 by Lasse Collin's lzma utils.
+
+%description -l zh_CN.UTF-8
+lzma 的 Python 绑定。
 
 %prep
 %setup -qn %{name}-%{version}
@@ -35,6 +39,7 @@ by Lasse Collin's lzma utils.
 %install
 rm -rf %{buildroot}
 %{__python} setup.py install --root=%{buildroot}
+magic_rpm_clean.sh
 
 %clean
 rm -rf %{buildroot}
@@ -47,6 +52,9 @@ rm -rf %{buildroot}
 %{python_sitearch}/%{name}*.egg-info
 
 %changelog
+* Fri Aug 14 2015 Liu Di <liudidi@gmail.com> - 0.5.3-9
+- 为 Magic 3.0 重建
+
 * Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 0.5.3-8
 - 为 Magic 3.0 重建
 

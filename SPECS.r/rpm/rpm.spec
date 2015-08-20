@@ -5,7 +5,7 @@
 # run internal testsuite?
 %bcond_with check
 # build with plugins?
-%bcond_without plugins
+%bcond_with plugins
 # build with sanitizers?
 %bcond_with sanitizer
 # build with libarchive? (needed for rpm2archive)
@@ -27,7 +27,7 @@
 Summary: The RPM package management system
 Name: rpm
 Version: %{rpmver}
-Release: %{?snapver:0.%{snapver}.}1%{?dist}
+Release: %{?snapver:0.%{snapver}.}1%{?dist}.5
 Group: System Environment/Base
 Url: http://www.rpm.org/
 Source0: http://rpm.org/releases/rpm-4.12.x/%{name}-%{srcver}.tar.bz2
@@ -88,7 +88,7 @@ BuildRequires: fakechroot
 
 # XXX generally assumed to be installed but make it explicit as rpm
 # is a bit special...
-BuildRequires: redhat-rpm-config
+BuildRequires: magic-rpm-config
 BuildRequires: gawk
 BuildRequires: elfutils-devel >= 0.112
 BuildRequires: elfutils-libelf-devel
@@ -311,11 +311,11 @@ autoreconf -i -f
     --libdir=%{_libdir} \
     --build=%{_target_platform} \
     --host=%{_target_platform} \
-    --with-vendor=redhat \
+    --with-vendor=magic \
     %{!?with_int_bdb: --with-external-db} \
     %{!?with_plugins: --disable-plugins} \
     --with-lua \
-    --with-selinux \
+    --without-selinux \
     --with-cap \
     --with-acl \
     --enable-python
@@ -371,7 +371,7 @@ do
     ln -s ../../bin/%{dbprefix}_${dbutil} $RPM_BUILD_ROOT/%{rpmhome}/rpmdb_${dbutil}
 done
 %endif
-
+magic_rpm_clean.sh
 %find_lang %{name}
 
 find $RPM_BUILD_ROOT -name "*.la"|xargs rm -f
@@ -428,14 +428,6 @@ exit 0
 %{_mandir}/man8/rpmkeys.8*
 %{_mandir}/man8/rpm2cpio.8*
 
-# XXX this places translated manuals to wrong package wrt eg rpmbuild
-%lang(fr) %{_mandir}/fr/man[18]/*.[18]*
-%lang(ko) %{_mandir}/ko/man[18]/*.[18]*
-%lang(ja) %{_mandir}/ja/man[18]/*.[18]*
-%lang(pl) %{_mandir}/pl/man[18]/*.[18]*
-%lang(ru) %{_mandir}/ru/man[18]/*.[18]*
-%lang(sk) %{_mandir}/sk/man[18]/*.[18]*
-
 %attr(0755, root, root) %dir %{rpmhome}
 %{rpmhome}/macros
 %{rpmhome}/macros.d
@@ -461,8 +453,10 @@ exit 0
 %files plugin-syslog
 %{_libdir}/rpm-plugins/syslog.so
 
+%if 0
 %files plugin-selinux
 %{_libdir}/rpm-plugins/selinux.so
+%endif
 
 %files plugin-systemd-inhibit
 %{_libdir}/rpm-plugins/systemd_inhibit.so
@@ -534,6 +528,21 @@ exit 0
 %doc doc/librpm/html/*
 
 %changelog
+* Fri Aug 14 2015 Liu Di <liudidi@gmail.com> - 4.12.90-1.5
+- 为 Magic 3.0 重建
+
+* Fri Aug 14 2015 Liu Di <liudidi@gmail.com> - 4.12.90-1.4
+- 为 Magic 3.0 重建
+
+* Fri Aug 14 2015 Liu Di <liudidi@gmail.com> - 4.12.90-1.3
+- 为 Magic 3.0 重建
+
+* Thu Aug 13 2015 Liu Di <liudidi@gmail.com> - 4.12.90-1.2
+- 为 Magic 3.0 重建
+
+* Thu Jul 30 2015 Liu Di <liudidi@gmail.com> - 4.12.90-1.1
+- 为 Magic 3.0 重建
+
 * Fri Jul 24 2015 Florian Festi <ffesti@rpm.org> - 4.12.90-1
 - Update to upstream alpha release
 

@@ -16,6 +16,9 @@
 
 %global with_rewheel 1
 
+#临时措施
+%global _unpackaged_files_terminate_build       0
+
 %global pybasever 3.4
 
 # pybasever without the dot:
@@ -140,7 +143,7 @@
 Summary: Version 3 of the Python programming language aka Python 3000
 Name: python3
 Version: %{pybasever}.3
-Release: 5%{?dist}
+Release: 7%{?dist}
 License: Python
 Group: Development/Languages
 
@@ -155,7 +158,7 @@ BuildRequires: autoconf
 BuildRequires: bluez-libs-devel
 BuildRequires: bzip2
 BuildRequires: bzip2-devel
-BuildRequires: db4-devel >= 4.7
+BuildRequires: libdb4-devel >= 4.7
 
 # expat 2.1.0 added the symbol XML_SetHashSalt without bumping SONAME.  We use
 # it (in pyexpat) in order to enable the fix in Python-3.2.3 for CVE-2012-0876:
@@ -1920,6 +1923,12 @@ rm -fr %{buildroot}
 # ======================================================
 
 %changelog
+* Thu Aug 13 2015 Liu Di <liudidi@gmail.com> - 3.4.3-7
+- 为 Magic 3.0 重建
+
+* Wed Aug 12 2015 Liu Di <liudidi@gmail.com> - 3.4.3-6
+- 为 Magic 3.0 重建
+
 * Mon Jun 29 2015 Thomas Spura <tomspur@fedoraproject.org> - 3.4.3-4
 - python3-devel: Require python-macros for version independant macros such as
   python_provide. See fpc#281 and fpc#534.

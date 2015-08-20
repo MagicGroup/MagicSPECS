@@ -1,8 +1,8 @@
 Summary: Lightweight, fast and secure FTP server
 Summary(zh_CN.UTF-8): 轻量、快速和安全的 FTP 服务器
 Name: pure-ftpd
-Version: 1.0.35
-Release: 3%{?dist}
+Version:	1.0.42
+Release:	1%{?dist}
 License: GPL
 Group: System Environment/Daemons
 URL: http://www.pureftpd.org/
@@ -96,6 +96,9 @@ rm -rf %{buildroot}
 %{_bindir}/*
 
 %changelog
+* Mon Aug 10 2015 Liu Di <liudidi@gmail.com> - 1.0.42-1
+- 更新到 1.0.42
+
 * Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 1.0.35-3
 - 为 Magic 3.0 重建
 

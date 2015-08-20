@@ -4,7 +4,7 @@
 
 Name:           python-%{pypi_name}
 Version:        0.8.0
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        The new features in unittest backported to Python 2.4+
 
 License:        BSD
@@ -106,6 +106,9 @@ popd
 %endif # with_python3
 
 %changelog
+* Wed Aug 19 2015 Liu Di <liudidi@gmail.com> - 0.8.0-4
+- 为 Magic 3.0 重建
+
 * Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.8.0-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

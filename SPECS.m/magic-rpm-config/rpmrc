@@ -28,7 +28,8 @@ optflags: ppc %{__global_cflags} -m32
 optflags: ppciseries %{__global_cflags} -m32
 optflags: ppcpseries %{__global_cflags} -m32
 optflags: ppc64 %{__global_cflags} -m64
-optflags: ppc64le %{__global_cflags} -m64
+optflags: ppc64p7 %{__global_cflags} -m64 -O3 -mcpu=power7 -mtune=power7
+optflags: ppc64le %{__global_cflags} -m64 -mcpu=power7 -mtune=power8
 optflags: ppc64iseries %{__global_cflags} -m64
 optflags: ppc64pseries %{__global_cflags} -m64
 optflags: ppc8260 %{__global_cflags} -m32

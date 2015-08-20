@@ -1,7 +1,7 @@
 Summary:   Simple package library built on top of hawkey and librepo
 Summary(zh_CN.UTF-8): 在 hawkey 和 librepo 上构建的简单包库
 Name:      libhif
-Version: 0.2.0
+Version: 0.2.1
 Release: 1%{?dist}
 License:   LGPLv2+
 URL:       https://github.com/hughsie/libhif
@@ -70,6 +70,9 @@ magic_rpm_clean.sh
 %{_datadir}/gir-1.0/*.gir
 
 %changelog
+* Thu Jul 30 2015 Liu Di <liudidi@gmail.com> - 0.2.1-1
+- 更新到 0.2.1
+
 * Mon Apr 13 2015 Liu Di <liudidi@gmail.com> - 0.2.0-1
 - 更新到 0.2.0
 

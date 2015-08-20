@@ -11,7 +11,7 @@
 
 Name:           python-%{srcname}
 Version:        0.1.10
-Release:        5%{?dist}
+Release:        6%{?dist}
 Summary:        Simple module to parse ISO 8601 dates
 
 Group:          Development/Languages
@@ -79,6 +79,9 @@ popd
 %endif
 
 %changelog
+* Mon Aug 17 2015 Liu Di <liudidi@gmail.com> - 0.1.10-6
+- 为 Magic 3.0 重建
+
 * Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.1.10-5
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

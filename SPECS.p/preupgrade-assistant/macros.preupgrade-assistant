@@ -1,7 +1,0 @@
-%preupg_number 23
-%postupg_number 24
-%preupg_results results
-%preupgrade_name Fedora%{preupg_number}_%postupg_number
-%preupgrade_dir /usr/share/preupgrade/%preupgrade_name
-
-%preupgrade_build /usr/bin/preupg-create-group-xml 

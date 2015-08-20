@@ -5,12 +5,12 @@
 %endif
 
 # This needs to be pulled from the source tarball
-%global commit b8ff6bf98468
+%global commit 4e17fe0c44f9
 
 
 Name:           pylint
-Version:        1.4.3
-Release:        3%{?dist}
+Version:	1.4.4
+Release:	1%{?dist}
 Summary:        Analyzes Python code looking for bugs and signs of poor quality
 Group:          Development/Debuggers
 License:        GPLv2+
@@ -163,6 +163,12 @@ popd
 %endif # with_python3
 
 %changelog
+* Fri Aug 14 2015 Liu Di <liudidi@gmail.com> - 1.4.4-1
+- 更新到 1.4.4
+
+* Fri Aug 14 2015 Liu Di <liudidi@gmail.com> - 1.4.3-4
+- 为 Magic 3.0 重建
+
 * Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.4.3-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

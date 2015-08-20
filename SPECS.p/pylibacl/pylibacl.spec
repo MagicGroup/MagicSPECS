@@ -1,12 +1,14 @@
 Name:		pylibacl
 Summary:	POSIX.1e ACLs library wrapper for python
-Version:	0.5.1
-Release:	4%{?dist}
+Summary(zh_CN.UTF-8): POSIX.1e ACL 库的 Python 接口
+Version:	0.5.3
+Release:	1%{?dist}
 #license version is precised on a website
 License:	LGPLv2+
 Group:		Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 URL:		http://pylibacl.sourceforge.net/
-Source:		https://github.com/downloads/iustin/pylibacl/pylibacl-%{version}.tar.gz
+Source:		https://github.com/iustin/pylibacl/archive/pylibacl-%{version}.tar.gz
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 Provides:	python-libacl = %{version}-%{release}
 Obsoletes:	python-libacl <= %{version}-%{release}
@@ -18,6 +20,9 @@ BuildRequires:	python-devel, libacl-devel, python-setuptools
 Python extension module for POSIX ACLs. It allows to query, list,
 add and remove ACLs from files and directories.
 
+%description -l zh_CN.UTF-8
+POSIX.1e ACL 库的 Python 接口。
+
 %prep
 %setup -q
 
@@ -27,6 +32,7 @@ CFLAGS="%{optflags}" %{__python} setup.py build
 %install
 %{__rm} -rf %{buildroot}
 %{__python} setup.py install --root="%{buildroot}"
+magic_rpm_clean.sh
 
 %clean
 %{__rm} -rf %{buildroot}
@@ -38,6 +44,9 @@ CFLAGS="%{optflags}" %{__python} setup.py build
 %{python_sitearch}/*egg-info
 
 %changelog
+* Fri Aug 14 2015 Liu Di <liudidi@gmail.com> - 0.5.3-1
+- 更新到 0.5.3
+
 * Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.5.1-4
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
 

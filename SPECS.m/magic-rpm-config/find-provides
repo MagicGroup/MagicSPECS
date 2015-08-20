@@ -10,8 +10,6 @@ fi
 
 filelist=`sed "s/['\"]/\\\&/g"`
 
-#
-# --- libtool
 [ -x /usr/lib/rpm/rpmdeps -a -n "$filelist" ] &&
     echo $filelist | tr '[:blank:]' \\n | /usr/lib/rpm/rpmdeps --provides
 

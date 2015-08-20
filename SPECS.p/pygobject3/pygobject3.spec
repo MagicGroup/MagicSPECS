@@ -21,14 +21,15 @@
 ### Abstract ###
 
 Name: pygobject3
-Version: 3.11.90
-Release: 3%{?dist}
+Version:	3.17.1
+Release:	1%{?dist}
 License: LGPLv2+ and MIT
 Group: Development/Languages
 Summary: Python 2 bindings for GObject Introspection
 URL: https://live.gnome.org/PyGObject
 #VCS: git:git://git.gnome.org/pygobject
-Source: http://ftp.gnome.org/pub/GNOME/sources/pygobject/3.11/pygobject-%{version}.tar.xz
+%define majorver %(echo %{version} | awk -F. '{print $1"."$2}')
+Source: http://ftp.gnome.org/pub/GNOME/sources/pygobject/%{majorver}/pygobject-%{version}.tar.xz
 
 # Mark some tests as known to fail; currently:
 #
@@ -258,6 +259,9 @@ xvfb-run make DESTDIR=$RPM_BUILD_ROOT check %{verbosity}
 %endif # with_python3
 
 %changelog
+* Fri Aug 14 2015 Liu Di <liudidi@gmail.com> - 3.17.1-1
+- 更新到 3.17.1
+
 * Wed Jun 18 2014 Liu Di <liudidi@gmail.com> - 3.11.90-3
 - 为 Magic 3.0 重建
 

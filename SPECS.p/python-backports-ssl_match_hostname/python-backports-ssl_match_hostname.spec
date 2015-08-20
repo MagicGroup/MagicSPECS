@@ -2,8 +2,9 @@
 
 Name:           python-backports-ssl_match_hostname
 Version:        3.4.0.2
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        The ssl.match_hostname() function from Python 3
+Summary(zh_CN.UTF-8): 来自 Python3 的 ssl.match_hostname() 函数
 
 License:        Python
 URL:            https://bitbucket.org/brandon/backports.ssl_match_hostname
@@ -27,6 +28,8 @@ every application to implement the check separately.
 This backport brings match_hostname() to users of earlier versions of Python.
 The actual code inside comes verbatim from Python 3.2.
 
+%description -l zh_CN.UTF-8
+来自 Python3 的 ssl.match_hostname() 函数。
 
 %prep
 %setup -qn %{module_name}-%{version}
@@ -41,7 +44,7 @@ python setup.py build
 %install
 python setup.py install --skip-build --root %{buildroot}
 rm %{buildroot}%{python_sitelib}/backports/__init__.py*
-
+magic_rpm_clean.sh
  
 %files
 %doc README.txt LICENSE.txt
@@ -49,6 +52,9 @@ rm %{buildroot}%{python_sitelib}/backports/__init__.py*
 
 
 %changelog
+* Wed Aug 19 2015 Liu Di <liudidi@gmail.com> - 3.4.0.2-4
+- 为 Magic 3.0 重建
+
 * Tue Jul 01 2014 Liu Di <liudidi@gmail.com> - 3.4.0.2-3
 - 为 Magic 3.0 重建
 

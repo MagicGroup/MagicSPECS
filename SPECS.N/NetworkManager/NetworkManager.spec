@@ -75,7 +75,7 @@ Name: NetworkManager
 Summary: Network connection manager and user applications
 Epoch: %{epoch_version}
 Version: %{realversion}
-Release: %{release_version}%{snapshot}%{git_sha_version}%{?dist}.1
+Release: %{release_version}%{snapshot}%{git_sha_version}%{?dist}.2
 Group: System Environment/Base
 License: GPLv2+
 URL: http://www.gnome.org/projects/NetworkManager/
@@ -661,6 +661,9 @@ fi
 %endif
 
 %changelog
+* Mon Aug 03 2015 Liu Di <liudidi@gmail.com> - 1:1.0.0-1.2
+- 为 Magic 3.0 重建
+
 * Sun Jan 04 2015 Liu Di <liudidi@gmail.com> - 1:1.0.0-1.1
 - 为 Magic 3.0 重建
 

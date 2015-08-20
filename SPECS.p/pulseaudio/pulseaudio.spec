@@ -18,8 +18,9 @@
 
 Name:           pulseaudio
 Summary:        Improved Linux Sound Server
+Summary(zh_CN.UTF-8): 增强的 Linux 声音服务
 Version:        %{pa_major}%{?pa_minor:.%{pa_minor}}
-Release:        8%{?snap:.%{snap}git%{shortcommit}}%{?dist}
+Release:        9%{?snap:.%{snap}git%{shortcommit}}%{?dist}
 License:        LGPLv2+
 URL:            http://www.freedesktop.org/wiki/Software/PulseAudio
 %if 0%{?gitrel}
@@ -310,7 +311,7 @@ mv $RPM_BUILD_ROOT/etc/bash_completion.d/* \
 rm -fv $RPM_BUILD_ROOT%{_libdir}/*.la $RPM_BUILD_ROOT%{_libdir}/pulse-%{pa_major}/modules/*.la
 # PA_MODULE_DEPRECATED("Please use module-udev-detect instead of module-detect!");
 rm -fv $RPM_BUILD_ROOT%{_libdir}/pulse-%{pa_major}/modules/module-detect.so
-
+magic_rpm_clean.sh
 %find_lang %{name}
 
 
@@ -437,6 +438,7 @@ exit 0
 %{_libdir}/pulse-%{pa_major}/modules/module-echo-cancel.so
 %{_libdir}/pulse-%{pa_major}/modules/module-switch-on-connect.so
 %{_libdir}/pulse-%{pa_major}/modules/module-virtual-sink.so
+%{_libdir}/pulse-%{pa_major}/modules/module-xenpv-sink.so
 %{_libdir}/pulse-%{pa_major}/modules/module-virtual-source.so
 %{_libdir}/pulse-%{pa_major}/modules/module-virtual-surround-sink.so
 %dir %{_datadir}/pulseaudio/
@@ -572,6 +574,9 @@ exit 0
 
 
 %changelog
+* Fri Aug 07 2015 Liu Di <liudidi@gmail.com> - 6.0-9
+- 为 Magic 3.0 重建
+
 * Mon Jul 06 2015 Rex Dieter <rdieter@fedoraproject.org> - 6.0-8
 - autostart.patch: fix stdout/stderr redirection
 

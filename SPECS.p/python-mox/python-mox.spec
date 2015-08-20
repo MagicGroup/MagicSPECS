@@ -4,7 +4,7 @@
 
 Name:           python-%{upstream_name}
 Version:        0.5.3
-Release:        9%{?dist}
+Release:        10%{?dist}
 Summary:        Mock object framework
 
 Group:          Development/Languages
@@ -47,6 +47,9 @@ rm -rf %{buildroot}
 %{python_sitelib}/%{upstream_name}-%{version}*.egg-info
 
 %changelog
+* Thu Aug 06 2015 Liu Di <liudidi@gmail.com> - 0.5.3-10
+- 为 Magic 3.0 重建
+
 * Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.5.3-9
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

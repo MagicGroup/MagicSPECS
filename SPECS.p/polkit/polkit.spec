@@ -4,22 +4,16 @@
 %define enable_autoreconf 1
 
 Summary: An authorization framework
+Summary(zh_CN.UTF-8): 认证的框架
 Name: polkit
-Version: 0.112
-Release: 9%{?dist}
+Version:	0.113
+Release:	1%{?dist}
 License: LGPLv2+
 URL: http://www.freedesktop.org/wiki/Software/polkit
 Source0: http://www.freedesktop.org/software/polkit/releases/%{name}-%{version}.tar.gz
 Source1: http://www.freedesktop.org/software/polkit/releases/%{name}-%{version}.tar.gz.sign
-# https://bugs.freedesktop.org/show_bug.cgi?id=71894
-Patch0: polkit-0.112-XDG_RUNTIME_DIR.patch
-# https://bugs.freedesktop.org/show_bug.cgi?id=60847
-Patch1: polkit-0.112-PolkitAgentSession-race.patch
-# http://cgit.freedesktop.org/polkit/commit/?id=26d0c0578211fb96fc8fe75572aa11ad6ecbf9b8
-Patch2: polkit-0.112-systemd-Deduplicate-code-paths.patch
-# http://cgit.freedesktop.org/polkit/commit/?id=a68f5dfd7662767b7b9822090b70bc5bd145c50c
-Patch3: polkit-0.112-systemd-prepare-for-D-Bus-user-bus.patch
 Group: System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 BuildRequires: glib2-devel >= 2.30.0
 BuildRequires: expat-devel
 BuildRequires: pam-devel
@@ -60,9 +54,14 @@ polkit is a toolkit for defining and handling authorizations.  It is
 used for allowing unprivileged processes to speak to privileged
 processes.
 
+%description -l zh_CN.UTF-8
+认证的框架。
+
 %package devel
 Summary: Development files for polkit
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: %name = %{version}-%{release}
 Requires: %name-docs = %{version}-%{release}
 Requires: glib2-devel
@@ -72,9 +71,14 @@ Provides: PolicyKit-devel = 0.11
 %description devel
 Development files for polkit.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
 %package docs
 Summary: Development documentation for polkit
+Summary(zh_CN.UTF-8): %{name} 的开发文档
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: %name-devel = %{version}-%{release}
 Obsoletes: PolicyKit-docs <= 0.10
 Provides: PolicyKit-docs = 0.11
@@ -83,20 +87,23 @@ BuildArch: noarch
 %description docs
 Development documentation for polkit.
 
+%description docs -l zh_CN.UTF-8
+%{name} 的开发文档。
+
 %package libs
 Summary: Libraries for polkit
+Summary(zh_CN.UTF-8): %{name} 的运行库
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 
 %description libs
 Libraries files for polkit.
 
+%description libs -l zh_CN.UTF-8
+%{name} 的运行库。
 
 %prep
 %setup -q
-%patch0 -p1 -b .XDG_RUNTIME_DIR
-%patch1 -p1 -b .PolkitAgentSession-race
-%patch2 -p1 -b .dbus-user-bus
-%patch3 -p1 -b .session-dedup-code
 
 %build
 %if 0%{?enable_autoreconf}
@@ -117,7 +124,7 @@ make V=1
 make install DESTDIR=$RPM_BUILD_ROOT INSTALL='install -p'
 
 rm -f $RPM_BUILD_ROOT%{_libdir}/*.la
-
+magic_rpm_clean.sh
 %find_lang polkit-1
 
 %pre
@@ -185,6 +192,9 @@ exit 0
 %{_libdir}/girepository-1.0/*.typelib
 
 %changelog
+* Sat Jul 25 2015 Liu Di <liudidi@gmail.com> - 0.113-1
+- 更新到 0.113
+
 * Tue Dec 23 2014 Liu Di <liudidi@gmail.com> - 0.112-9
 - 为 Magic 3.0 重建
 

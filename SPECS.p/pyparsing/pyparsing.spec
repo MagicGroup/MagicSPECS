@@ -4,9 +4,11 @@
 
 Name:           pyparsing
 Version:        2.0.3
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        An object-oriented approach to text processing
+Summary(zh_CN.UTF-8): 面向对象的文本处理方法
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 License:        MIT
 URL:            http://pyparsing.wikispaces.com/
 Source0:        http://downloads.sourceforge.net/pyparsing/pyparsing-%{version}.tar.gz
@@ -22,23 +24,36 @@ BuildRequires: python3-devel
 pyparsing is a module that can be used to easily and directly configure syntax
 definitions for any number of text parsing applications.
 
+%description -l zh_CN.UTF-8
+面向对象的文本处理方法。
+
 %package doc
 Summary:        Documentation for pyparsing
+Summary(zh_CN.UTF-8): %{name} 的文档
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 
 %description doc
 The package contains documentation for pyparsing.
 
+%description doc -l zh_CN.UTF-8
+%{name} 的文档。
+
 %if 0%{?with_python3}
 %package -n python3-pyparsing
 Summary:        An object-oriented approach to text processing (Python 3 version)
+Summary(zh_CN.UTF-8): 面向对象的文本处理方法（Python3 版本）
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 
 %description -n python3-pyparsing
 pyparsing is a module that can be used to easily and directly configure syntax
 definitions for any number of text parsing applications.
 
 This is the Python 3 version.
+
+%description -n python3-pyparsing -l zh_CN.UTF-8
+面向对象的文本处理方法（Python3 版本）。
 %endif # if with_python3
 
 %prep
@@ -78,6 +93,7 @@ popd
 %endif # with_python3
 
 %{__python2} setup.py install -O1 --skip-build --root %{buildroot}
+magic_rpm_clean.sh
 
 %clean
 rm -rf %{buildroot}
@@ -103,6 +119,9 @@ rm -rf %{buildroot}
 %doc CHANGES README LICENSE HowToUsePyparsing.html docs examples htmldoc
 
 %changelog
+* Mon Aug 17 2015 Liu Di <liudidi@gmail.com> - 2.0.3-3
+- 为 Magic 3.0 重建
+
 * Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.0.3-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

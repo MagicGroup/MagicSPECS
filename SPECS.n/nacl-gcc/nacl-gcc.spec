@@ -5,7 +5,7 @@
 Name:		nacl-gcc
 Summary:	Various compilers (C, C++) for nacl
 Version:	4.4.3
-Release:	9.git%{gitver}%{?dist}
+Release:	10.git%{gitver}%{?dist}
 # Generated from git
 # git clone http://git.chromium.org/native_client/nacl-gcc.git
 # (Checkout ID taken from chromium-35.0.1916.114/native_client/tools/REVISIONS)
@@ -19,7 +19,7 @@ License:	GPLv3+ and GPLv3+ with exceptions and GPLv2+ with exceptions
 Source0:	nacl-gcc-%{version}-git%{gitver}.tar.bz2
 Patch0:		nacl-gcc-4.4.3-git0622fce-tex-fixes.patch
 URL:		http://sourceware.org/gcc/
-BuildRequires:	gmp-devel, mpfr-devel, cloog-ppl-devel
+BuildRequires:	gmp-devel, mpfr-devel, cloog-devel
 BuildRequires:	ppl-pwl-devel, elfutils-devel
 BuildRequires:	nacl-binutils
 %if %{bootstrap} < 1
@@ -136,6 +136,9 @@ rm -rf %{buildroot}%{_libdir}/libiberty.a
 %endif
 
 %changelog
+* Mon Aug 03 2015 Liu Di <liudidi@gmail.com> - 4.4.3-10.git093bbb4
+- 为 Magic 3.0 重建
+
 * Tue Jan 20 2015 Liu Di <liudidi@gmail.com> - 4.4.3-9.git093bbb4
 - 为 Magic 3.0 重建
 

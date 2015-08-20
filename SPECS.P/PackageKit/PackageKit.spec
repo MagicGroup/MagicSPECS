@@ -6,14 +6,14 @@
 
 Summary:   Package management service
 Name:      PackageKit
-Version: 1.0.6
+Version: 1.0.7
 Release: 1%{?dist}
 License:   GPLv2+ and LGPLv2+
 URL:       http://www.freedesktop.org/software/PackageKit/
 Source0:   http://www.freedesktop.org/software/PackageKit/releases/%{name}-%{version}.tar.xz
 
 # generated using contrib/generate-md-archive.sh in the PackageKit source tree
-Source1:   cached-metadata.tar
+Source1:   http://apt.linuxfans.org/magic/3.0/sources/SOURCES.P/PackageKit/cached-metadata.tar
 
 # Fedora-specific: set Vendor.conf up for Fedora.
 Patch0:    PackageKit-0.3.8-Fedora-Vendor.conf.patch
@@ -202,22 +202,22 @@ rm -f $RPM_BUILD_ROOT%{_libdir}/polkit-1/extensions/libpackagekit-action-lookup.
 touch $RPM_BUILD_ROOT%{_localstatedir}/cache/PackageKit/groups.sqlite
 
 # create a link that GStreamer will recognise
-pushd ${RPM_BUILD_ROOT}%{_libexecdir} > /dev/null
-ln -s pk-gstreamer-install gst-install-plugins-helper
-popd > /dev/null
+#pushd ${RPM_BUILD_ROOT}%{_libexecdir} > /dev/null
+#ln -s pk-gstreamer-install gst-install-plugins-helper
+#popd > /dev/null
 
 # create a link that from the comps icons to PK, as PackageKit frontends
 # cannot add /usr/share/pixmaps/comps to the icon search path as some distros
 # do not use comps. Patching this in the frontend is not a good idea, as there
 # are multiple frontends in multiple programming languages.
-pushd ${RPM_BUILD_ROOT}%{_datadir}/PackageKit > /dev/null
-ln -s ../pixmaps/comps icons
-popd > /dev/null
+#pushd ${RPM_BUILD_ROOT}%{_datadir}/PackageKit > /dev/null
+#ln -s ../pixmaps/comps icons
+#popd > /dev/null
 
 # ship cached metadata on the LiveCD
 # http://blogs.gnome.org/hughsie/2014/08/29/putting-packagekit-metadata-on-the-fedora-livecd/
 tar -xf %{SOURCE1} --directory=$RPM_BUILD_ROOT
-
+magic_rpm_clean.sh
 %find_lang %name
 
 %post
@@ -312,6 +312,9 @@ systemctl disable packagekit-offline-update.service > /dev/null 2>&1 || :
 %{_datadir}/gtk-doc/html/PackageKit
 
 %changelog
+* Fri Jul 31 2015 Liu Di <liudidi@gmail.com> - 1.0.7-1
+- 更新到 1.0.7
+
 * Mon Apr 13 2015 Liu Di <liudidi@gmail.com> - 1.0.6-1
 - 更新到 1.0.6
 

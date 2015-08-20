@@ -4,7 +4,7 @@
 
 Name:            polkit-qt
 Version:         0.112.0
-Release:         5%{?dist}
+Release:         6%{?dist}
 Summary:         Qt bindings for PolicyKit
 
 License:         GPLv2+
@@ -161,6 +161,9 @@ install -p -m644 -D %{SOURCE10} %{buildroot}%{rpm_macros_dir}/macros.polkit-qt
 
 
 %changelog
+* Sat Jul 25 2015 Liu Di <liudidi@gmail.com> - 0.112.0-6
+- 为 Magic 3.0 重建
+
 * Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.112.0-5
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

@@ -10,7 +10,7 @@
 
 Name:           python-cryptography
 Version:        1.0
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        PyCA's cryptography library
 
 Group:          Development/Libraries
@@ -106,6 +106,9 @@ popd
 
 
 %changelog
+* Sun Aug 16 2015 Liu Di <liudidi@gmail.com> - 1.0-2
+- 为 Magic 3.0 重建
+
 * Wed Aug 12 2015 Nathaniel McCallum <npmccallum@redhat.com> - 1.0-1
 - New upstream release
 

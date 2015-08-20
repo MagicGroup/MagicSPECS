@@ -11,7 +11,7 @@
 Summary: A collection of SNMP protocol tools and libraries
 Name: net-snmp
 Version: 5.7.3
-Release: 7%{?dist}
+Release: 8%{?dist}
 Epoch: 1
 
 License: BSD
@@ -57,7 +57,7 @@ Requires: %{name}-agent-libs%{?_isa} = %{epoch}:%{version}-%{release}
 Requires(post): systemd-sysv
 
 BuildRequires: openssl-devel, bzip2-devel, elfutils-devel
-BuildRequires: libselinux-devel, elfutils-libelf-devel, rpm-devel
+BuildRequires: elfutils-libelf-devel, rpm-devel
 BuildRequires: perl-devel, perl(ExtUtils::Embed), procps
 BuildRequires: python-devel, python-setuptools
 BuildRequires: chrpath
@@ -517,6 +517,9 @@ rm -rf ${RPM_BUILD_ROOT}
 %endif
 
 %changelog
+* Thu Jul 30 2015 Liu Di <liudidi@gmail.com> - 1:5.7.3-8
+- 为 Magic 3.0 重建
+
 * Mon Jul 27 2015 Richard W.M. Jones <rjones@redhat.com> - 1:5.7.3-7
 - Bump version to rebuild against new RPM in Rawhide.
 

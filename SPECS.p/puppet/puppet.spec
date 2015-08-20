@@ -1,5 +1,5 @@
 # Augeas and SELinux requirements may be disabled at build time by passing
-# --without augeas and/or --without selinux to rpmbuild or mock
+# --without augeas and/or --with selinux to rpmbuild or mock
 
 # Specifically not using systemd on F18 as it's technically a break between
 # using SystemV on 2.7.x and Systemd on 3.1.0.
@@ -19,7 +19,7 @@
 
 Name:           puppet
 Version:        4.2.1
-Release:        1%{?dist}
+Release:        3%{?dist}
 Summary:        A network tool for managing many disparate systems
 License:        ASL 2.0
 URL:            http://puppetlabs.com
@@ -58,12 +58,13 @@ Requires:       ruby
 
 # Pull in ruby selinux bindings where available
 %if 0%{?fedora} || 0%{?rhel} >= 6
-%{!?_without_selinux:Requires: ruby(selinux), libselinux-utils}
+%{?_with_selinux:Requires: ruby(selinux), libselinux-utils}
 %else
 %if 0%{?rhel} && 0%{?rhel} == 5
-%{!?_without_selinux:Requires: libselinux-ruby, libselinux-utils}
+%{?_with_selinux:Requires: libselinux-ruby, libselinux-utils}
 %endif
 %endif
+
 
 BuildRequires:  hiera >= 1.0.0
 
@@ -388,6 +389,12 @@ exit 0
 rm -rf %{buildroot}
 
 %changelog
+* Sun Aug 09 2015 Liu Di <liudidi@gmail.com> - 4.2.1-3
+- 为 Magic 3.0 重建
+
+* Fri Aug 07 2015 Liu Di <liudidi@gmail.com> - 4.2.1-2
+- 为 Magic 3.0 重建
+
 * Wed Jul 29 2015 Gael Chamoulaud <gchamoul@redhat.com> - 4.2.1-1
 - Upstream 4.2.1
 

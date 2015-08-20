@@ -5,7 +5,7 @@
 
 Name:           clementine
 Version:	1.2.3
-Release:        5%{?dist}
+Release:        6%{?dist}
 Summary:        A music player and library organiser
 Summary(zh_CN.UTF-8):	一个音乐播放器和曲库管理工具
 
@@ -104,6 +104,9 @@ rm -rf %{buildroot}
 %{kde4_servicesdir}/clementine-*.protocol
 
 %changelog
+* Thu Aug 06 2015 Liu Di <liudidi@gmail.com> - 1.2.3-6
+- 为 Magic 3.0 重建
+
 * Tue Jul 15 2014 Liu Di <liudidi@gmail.com> - 1.2.3-5
 - 为 Magic 3.0 重建
 

@@ -1,10 +1,12 @@
 Summary: Python serial port access library
+Summary(zh_CN.UTF-8): Python 的串口访问库
 Name: pyserial
 Version: 2.7
-Release: 2%{?dist}
+Release: 3%{?dist}
 Source0: http://easynews.dl.sourceforge.net/sourceforge/%{name}/%{name}-%{version}.tar.gz
 License: Python
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 URL: http://pyserial.sourceforge.net
 BuildRequires: python-devel
@@ -17,8 +19,12 @@ for standard Python running on Windows, Linux, BSD (possibly any POSIX
 compilant system) and Jython. The module named "serial" automaticaly selects
 the appropriate backend.
 
+%description -l zh_CN.UTF-8
+Python 的串口访问库。
+
 %package -n python3-pyserial
 Summary: Python serial port access library
+Summary(zh_CN.UTF-8):  Python 的串口访问库（Python3 版本）
 
 %description -n python3-pyserial
 This module encapsulates the access for the serial port. It provides backends
@@ -26,6 +32,8 @@ for standard Python running on Windows, Linux, BSD (possibly any POSIX
 compilant system) and Jython. The module named "serial" automaticaly selects
 the appropriate backend.
 
+%description -n python3-pyserial -l zh_CN.UTF-8
+Python 的串口访问库（Python3 版本）。
 
 %prep
 export UNZIP="-aa"
@@ -45,6 +53,7 @@ pushd %{py3dir}
 %{__python3} setup.py install --skip-build --root $RPM_BUILD_ROOT
 popd
 %{__python2} setup.py install -O1 --skip-build --root $RPM_BUILD_ROOT
+magic_rpm_clean.sh
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -60,6 +69,9 @@ rm -rf $RPM_BUILD_ROOT
 %{python3_sitelib}/*
 
 %changelog
+* Mon Aug 17 2015 Liu Di <liudidi@gmail.com> - 2.7-3
+- 为 Magic 3.0 重建
+
 * Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.7-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

@@ -1,8 +1,10 @@
 Name:		pptp
 Version:	1.8.0
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:	Point-to-Point Tunneling Protocol (PPTP) Client
+Summary(zh_CN.UTF-8): 点对点隧道协议 (PPTP) 客户端
 Group:		Applications/Internet
+Group(zh_CN.UTF-8): 应用程序/互联网
 License:	GPLv2+
 URL:		http://pptpclient.sourceforge.net/
 Source0:	http://downloads.sf.net/pptpclient/pptp-%{version}.tar.gz
@@ -20,14 +22,22 @@ Client for the proprietary Microsoft Point-to-Point Tunneling
 Protocol, PPTP. Allows connection to a PPTP based VPN as used
 by employers and some cable and ADSL service providers.
 
+%description -l zh_CN.UTF-8
+点对点隧道协议 (PPTP) 客户端。
+
 %package setup
 Summary:	PPTP Tunnel Configuration Script
+Summary(zh_CN.UTF-8): PPTP 隧道配置脚本
 Group:		Applications/Internet
+Group(zh_CN.UTF-8): 应用程序/互联网
 Requires:	%{name} = %{version}-%{release}
 
 %description setup
 This package provides a simple configuration script for setting up PPTP
 tunnels.
+
+%description setup -l zh_CN.UTF-8
+PPTP 隧道配置脚本。
 
 %prep
 %setup -q
@@ -54,6 +64,7 @@ install -d -m 750 %{buildroot}%{_localstatedir}/run/pptp
 install -d -m 755 %{buildroot}%{_prefix}/lib/tmpfiles.d
 install -p -m 644 %{SOURCE1} %{buildroot}%{_prefix}/lib/tmpfiles.d/pptp.conf
 %endif
+magic_rpm_clean.sh
 
 %clean
 rm -rf %{buildroot}
@@ -76,6 +87,9 @@ rm -rf %{buildroot}
 %{_mandir}/man8/pptpsetup.8*
 
 %changelog
+* Tue Aug 04 2015 Liu Di <liudidi@gmail.com> - 1.8.0-2
+- 为 Magic 3.0 重建
+
 * Fri Oct 25 2013 Jaroslav Škarvada <jskarvad@redhat.com> - 1.8.0-1
 - New version
   Resolves: rhbz#1022685

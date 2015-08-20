@@ -12,7 +12,7 @@
 
 Name:           python-enum34
 Version:        1.0.4
-Release:        2%{?dist}
+Release:        3%{?dist}
 Group:          Development/Libraries
 Summary:        Backport of Python 3.4 Enum
 License:        BSD
@@ -108,6 +108,9 @@ rm -rf %{buildroot}%{python2_sitelib}/enum/{LICENSE,README,doc}
 %endif # with_python3
 
 %changelog
+* Mon Aug 17 2015 Liu Di <liudidi@gmail.com> - 1.0.4-3
+- 为 Magic 3.0 重建
+
 * Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.0.4-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

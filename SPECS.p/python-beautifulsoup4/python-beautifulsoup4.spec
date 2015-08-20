@@ -5,9 +5,11 @@
 
 Name:           python-beautifulsoup4
 Version:        4.4.0
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        HTML/XML parser for quick-turnaround applications like screen-scraping
+Summary(zh_CN.UTF-8): 类似抓取屏幕的快速周转的应用使用的 HTML/XML 解析器
 Group:          Development/Languages
+Group(zh_CN.UTF-8): 开发/语言
 License:        MIT
 URL:            http://www.crummy.com/software/BeautifulSoup/
 Source0:        https://pypi.python.org/packages/source/b/beautifulsoup4/beautifulsoup4-%{version}.tar.gz
@@ -55,10 +57,15 @@ Valuable data that was once locked up in poorly-designed websites is
 now within your reach. Projects that would have taken hours take only
 minutes with Beautiful Soup.
 
+%description -l zh_CN.UTF-8
+类似抓取屏幕的快速周转的应用使用的 HTML/XML 解析器。
+
 %if 0%{?with_python3}
 %package -n     python3-beautifulsoup4
 Summary:        HTML/XML parser for quick-turnaround applications like screen-scraping
+Summary(zh_CN.UTF-8): 类似抓取屏幕的快速周转的应用使用的 HTML/XML 解析器
 Group:          Development/Languages
+Group(zh_CN.UTF-8): 开发/语言
 Requires:       python3-html5lib
 Requires:       python3-lxml
 Obsoletes:      python3-BeautifulSoup < 1:3.2.1-2
@@ -83,6 +90,9 @@ now within your reach. Projects that would have taken hours take only
 minutes with Beautiful Soup.
 
 This is the Python 3 build of Beautiful Soup.
+
+%description -n python3-beautifulsoup4 -l zh_CN.UTF-8
+类似抓取屏幕的快速周转的应用使用的 HTML/XML 解析器。
 
 %endif # if with_python3
 
@@ -113,6 +123,7 @@ pushd %{py3dir}
 pushd %{py3dir}
 %{__python3} setup.py install -O1 --skip-build --root %{buildroot}
 %endif
+magic_rpm_clean.sh
 
 %check
 %if 0%{?rhel} && 0%{?rhel} <= 6
@@ -141,6 +152,9 @@ pushd %{py3dir}
 %endif
 
 %changelog
+* Wed Aug 19 2015 Liu Di <liudidi@gmail.com> - 4.4.0-2
+- 为 Magic 3.0 重建
+
 * Sat Jul 04 2015 Terje Rosten <terje.rosten@ntnu.no> - 4.4.0-1
 - 4.4.0
 

@@ -1,6 +1,6 @@
 Name:           kf5
 Version:        5.12.0
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Filesystem and RPM macros for KDE Frameworks 5
 Summary(zh_CN.UTF-8): KDE 框架 5 的文件系统和 RPM 宏
 License:        BSD
@@ -57,6 +57,9 @@ install -Dpm644 %{_sourcedir}/macros.kf5 %{buildroot}%{_rpmconfigdir}/macros.d/m
 
 
 %changelog
+* Sat Jul 25 2015 Liu Di <liudidi@gmail.com> - 5.12.0-2
+- 为 Magic 3.0 重建
+
 * Fri Jul 17 2015 Daniel Vrátil <dvratil@redhat.com> - 5.12.0
 - KDE Frameworks 5.12.0
 

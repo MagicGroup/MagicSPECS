@@ -1,7 +1,8 @@
 Name:           extra-cmake-modules
 Summary:        Additional modules for CMake build system
+Summary(zh_CN.UTF-8): CMake 构建系统的附加模块
 Version:        5.12.0
-Release:        1%{?dist}
+Release:        2%{?dist}
 
 License:        BSD
 URL:            https://projects.kde.org/projects/kdesupport/extra-cmake-modules
@@ -24,6 +25,8 @@ Requires:       cmake >= 2.8.12
 %description
 Additional modules for CMake build system needed by KDE Frameworks.
 
+%description -l zh_CN.UTF-8
+KDE 框架需要的 CMake 构建系统的附加模块。
 
 %prep
 %setup -q
@@ -40,14 +43,18 @@ make %{?_smp_mflags} -C %{_target_platform}
 
 %install
 make install/fast DESTDIR=%{buildroot} -C %{_target_platform}
-
+magic_rpm_clean.sh
 
 %files
 %doc README.rst COPYING-CMAKE-SCRIPTS
 %{_datadir}/ECM/
-
+%{_docdir}/*
+%{_mandir}/man7/*
 
 %changelog
+* Sat Jul 25 2015 Liu Di <liudidi@gmail.com> - 5.12.0-2
+- 为 Magic 3.0 重建
+
 * Thu Jul 09 2015 Rex Dieter <rdieter@fedoraproject.org> - 5.12.0-1
 - 5.12.0, update URL (to reference projects.kde.org), .spec cosmetics
 

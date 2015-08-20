@@ -1,9 +1,11 @@
 Summary: TCP port reservation utility
+Summary(zh_CN.UTF-8): TCP 端口预订工具
 Name: portreserve
 Version: 0.0.5
-Release: 5%{?dist}
+Release: 6%{?dist}
 License: GPLv2+
 Group: System Environment/Daemons
+Group(zh_CN.UTF-8): 系统环境/服务
 URL: http://cyberelk.net/tim/portreserve/
 Source0: http://cyberelk.net/tim/data/portreserve/stable/%{name}-%{version}.tar.bz2
 Source1: portreserve.service
@@ -27,6 +29,9 @@ lie in the portmap range.  It prevents portmap from a real service's port
 by occupying it itself, until the real service tells it to release the
 port (generally in the init script).
 
+%description -l zh_CN.UTF-8
+TCP 端口预订工具。
+
 %prep
 %setup -q
 
@@ -45,6 +50,7 @@ mkdir -p %{buildroot}%{_sysconfdir}/tmpfiles.d
 cat <<EOF > %{buildroot}%{_sysconfdir}/tmpfiles.d/portreserve.conf
 d %{_localstatedir}/run/portreserve 0755 root root 10d
 EOF
+magic_rpm_clean.sh
 
 %clean
 rm -rf %{buildroot}
@@ -90,6 +96,9 @@ fi
 %{_mandir}/*/*
 
 %changelog
+* Wed Jul 29 2015 Liu Di <liudidi@gmail.com> - 0.0.5-6
+- 为 Magic 3.0 重建
+
 * Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 0.0.5-5
 - 为 Magic 3.0 重建
 

@@ -1,5 +1,5 @@
 # Use these macros to differentiate between RH and other KMP implementation(s).
-magic_kernel_module_package	1
+redhat_kernel_module_package	1
 kernel_module_package_release	1
 
 %__find_provides        /usr/lib/rpm/magic/find-provides
@@ -58,5 +58,5 @@ kernel_module_package_release	1
 	then \
 		nobuildreqs="yes" \
 	fi \
-	kmp_override_filelist="$filelist" kmp_override_preamble="$preamble" kmp_nobuildreqs="$buildreqs" %{kmodtool} rpmtemplate_kmp %{-n*}%{!-n:%name} %{kverrel} $flavors_to_build 2>/dev/null \
+	kmp_override_filelist="$filelist" kmp_override_preamble="$preamble" kmp_nobuildreqs="$nobuildreqs" %{kmodtool} rpmtemplate_kmp %{-n*}%{!-n:%name} %{kverrel} $flavors_to_build 2>/dev/null \
 )}

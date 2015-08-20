@@ -3,8 +3,9 @@
 
 Name:           kf5-%{framework}
 Version:        5.9.2
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        A Tier 3 KDE Frameworks 5 module that provides indexing and search functionality
+Summary(zh_CN.UTF-8): 查找和管理元数据的框架
 License:        LGPLv2+
 URL:            https://projects.kde.org/projects/kde/workspace/baloo
 # backup URL: https://community.kde.org/Baloo
@@ -45,9 +46,14 @@ Provides:       baloo = %{version}-%{release}
 %description
 %{summary}.
 
+%description -l zh_CN.UTF-8
+查找和管理元数据的框架。
+
 %package        devel
 Summary:        Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       %{name}%{?_isa} = %{version}-%{release}
 Requires:       %{name}-file%{?_isa} = %{version}-%{release}
 Requires:       kf5-kfilemetadata-devel
@@ -56,8 +62,12 @@ Requires:       xapian-core-devel
 The %{name}-devel package contains libraries and header files for
 developing applications that use %{name}.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
 %package        file
 Summary:        File indexing and search for Baloo
+Summary(zh_CN.UTF-8): Baloo 的文件索引和查找
 Obsoletes:      %{name} < 5.0.1-2
 Obsoletes:      baloo-file < 5.0.1-2
 Provides:       baloo-file = %{version}-%{release}
@@ -65,11 +75,17 @@ Requires:       %{name} = %{version}-%{release}
 %description    file
 %{summary}.
 
+%description file -l zh_CN.UTF-8
+Baloo 的文件索引和查找。
+
 %package        libs
 Summary:        Runtime libraries for %{name}
+Summary(zh_CN.UTF-8): %{name} 的运行库
 %description    libs
 %{summary}.
 
+%description libs -l zh_CN.UTF-8
+%{name} 的运行库。
 
 %prep
 %setup -qn %{framework}-%{version}
@@ -88,7 +104,7 @@ make %{?_smp_mflags} -C %{_target_platform}
 make install/fast  DESTDIR=%{buildroot} -C %{_target_platform}
 
 install -p -m644 -D %{SOURCE1} %{buildroot}%{_prefix}/lib/sysctl.d/97-kde-baloo-filewatch-inotify.conf
-
+magic_rpm_clean.sh
 %find_lang balooctl --with-qt
 %find_lang kio_baloosearch --with-qt
 %find_lang baloo_file --with-qt
@@ -163,6 +179,9 @@ fi
 
 
 %changelog
+* Sat Jul 25 2015 Liu Di <liudidi@gmail.com> - 5.9.2-2
+- 为 Magic 3.0 重建
+
 * Thu Jun 25 2015 Daniel Vrátil <dvratil@redhat.com> - 5.9.2-1
 - Plasma 5.3.2
 

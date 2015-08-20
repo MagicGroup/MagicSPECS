@@ -2,8 +2,9 @@
 
 Name:           autoconf-archive
 Version:        2015.02.24
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        The Autoconf Macro Archive
+Summary(zh_CN.UTF-8): Autoconf 宏文件
 License:        GPLv3+ with exceptions
 URL:            http://www.gnu.org/software/autoconf-archive/
 Source0:        http://ftp.gnu.org/gnu/%{name}/%{name}-%{version}.tar.xz
@@ -16,6 +17,9 @@ Requires(preun):info
 The GNU Autoconf Archive is a collection of more than 450 macros for
 GNU Autoconf that have been contributed as free software by friendly
 supporters of the cause from all over the Internet.
+
+%description -l zh_CN.UTF-8
+Autoconf 宏文件。
 
 %prep
 %setup -q
@@ -30,6 +34,7 @@ supporters of the cause from all over the Internet.
 rm -frv %{buildroot}%{_infodir}/dir
 # document files are installed another location
 rm -frv %{buildroot}%{_datadir}/%{name}
+magic_rpm_clean.sh
 
 %post
 install-info %{_infodir}/%{name}.info.gz %{_infodir}/dir || :
@@ -46,6 +51,9 @@ fi
 %{_infodir}/autoconf-archive.info*
 
 %changelog
+* Wed Jul 29 2015 Liu Di <liudidi@gmail.com> - 2015.02.24-3
+- 为 Magic 3.0 重建
+
 * Wed Jun 17 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2015.02.24-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

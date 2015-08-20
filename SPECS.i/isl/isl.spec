@@ -1,19 +1,21 @@
 Summary: Integer point manipulation library
+Summary(zh_CN.UTF-8): 整点数处理库
 Name: isl
-Version: 0.14
+Version:	0.15
 License: MIT
 Group: System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 URL: http://isl.gforge.inria.fr/
 
-%global libmajor 13
-%global libversion %{libmajor}.1.0
+%global libmajor 15
+%global libversion %{libmajor}.0.0
 
 # Please set buildid below when building a private version of this rpm to
 # differentiate it from the stock rpm.
 #
 # % global buildid .local
 
-Release: 4%{?buildid}%{?dist}
+Release:	1%{?dist}
 
 BuildRequires: gmp-devel
 BuildRequires: pkgconfig
@@ -30,11 +32,16 @@ vertex enumeration.  It also includes an ILP solver based on generalized
 basis reduction, transitive closures on maps (which may encode infinite
 graphs), dependence analysis and bounds on piecewise step-polynomials.
 
+%description -l zh_CN.UTF-8
+整点数处理库。
+
 %package devel
 Summary: Development for building integer point manipulation library
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Requires: isl%{?_isa} == %{version}-%{release}
 Requires: gmp-devel%{?_isa}
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 
 %description devel
 isl is a library for manipulating sets and relations of integer points
@@ -45,6 +52,9 @@ minimum using parametric integer programming, coalescing and parametric
 vertex enumeration.  It also includes an ILP solver based on generalized
 basis reduction, transitive closures on maps (which may encode infinite
 graphs), dependence analysis and bounds on piecewise step-polynomials.
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -61,6 +71,7 @@ mkdir -p %{buildroot}/%{_datadir}
 %global gdbprettydir %{_datadir}/gdb/auto-load/%{_libdir}
 mkdir -p %{buildroot}/%{gdbprettydir}
 mv %{buildroot}/%{_libdir}/*-gdb.py* %{buildroot}/%{gdbprettydir}
+magic_rpm_clean.sh
 
 %check
 make check
@@ -82,6 +93,9 @@ make check
 
 
 %changelog
+* Sun Aug 02 2015 Liu Di <liudidi@gmail.com> - 0.15-1
+- 更新到 0.15
+
 * Wed Jun 17 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.14-4
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

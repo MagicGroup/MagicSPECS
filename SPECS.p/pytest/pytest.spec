@@ -8,11 +8,13 @@
 %global pylib_version 1.4.17
 
 Name:           pytest
-Version:        2.4.2
-Release:        3%{?dist}
+Version:	2.7.2
+Release:	1%{?dist}
 Summary:        Simple powerful testing with Python
+Summary(zh_CN.UTF-8): Python 的简单强力的测试模块
 
 Group:          Development/Languages
+Group(zh_CN.UTF-8): 开发/语言
 License:        MIT
 URL:            http://pytest.org
 Source0:        http://pypi.python.org/packages/source/p/%{name}/%{name}-%{version}.tar.gz
@@ -55,17 +57,24 @@ BuildRequires:  python3-mock
 %description
 py.test provides simple, yet powerful testing for Python.
 
+%description -l zh_CN.UTF-8
+Python 的简单强力的测试模块。
 
 %if 0%{?with_python3}
 %package -n python3-pytest
 Summary:        Simple powerful testing with Python
+Summary(zh_CN.UTF-8): Python3 的简单强力的测试模块
 Group:          Development/Languages
+Group(zh_CN.UTF-8): 开发/语言
 Requires:       python3-setuptools
 Requires:       python3-py >= %{pylib_version}
 
 
 %description -n python3-pytest
 py.test provides simple, yet powerful testing for Python.
+
+%description -n python3-pytest -l zh_CN.UTF-8
+Python3 的简单强力的测试模块。
 %endif # with_python3
 
 
@@ -129,7 +138,7 @@ rst2html README.rst > README.html
 pushd %{buildroot}%{_bindir}
 ln -snf py.test-2.* py.test
 popd
-
+magic_rpm_clean.sh
 
 %clean
 rm -rf %{buildroot}
@@ -168,6 +177,9 @@ popd
 
 
 %changelog
+* Mon Aug 17 2015 Liu Di <liudidi@gmail.com> - 2.7.2-1
+- 更新到 2.7.2
+
 * Wed Jun 18 2014 Liu Di <liudidi@gmail.com> - 2.4.2-3
 - 为 Magic 3.0 重建
 

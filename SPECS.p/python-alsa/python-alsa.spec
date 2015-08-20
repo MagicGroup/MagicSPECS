@@ -3,11 +3,13 @@
 %filter_setup
 
 Summary:	Python binding for the ALSA library
+Summary(zh_CN.UTF-8): ALSA 库的 Python 绑定
 Name:		python-alsa
 Version:	1.0.29
-Release:	2%{?dist}
+Release:	3%{?dist}
 License:	LGPLv2+
 Group:		Development/Languages
+Group(zh_CN.UTF-8): 开发/语言
 Source0:	ftp://ftp.alsa-project.org/pub/pyalsa/pyalsa-%{version}.tar.bz2
 URL:		http://www.alsa-project.org/
 BuildRequires:	alsa-lib-devel >= %{version}
@@ -16,6 +18,9 @@ BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 %description
 Python binding for the ALSA library.
+
+%description -l zh_CN.UTF-8
+ALSA 库的 Python 绑定。
 
 %prep
 %setup -q -n pyalsa-%{version}
@@ -26,6 +31,7 @@ CFLAGS="$RPM_OPT_FLAGS" %{__python} setup.py build
 %install
 rm -rf $RPM_BUILD_ROOT
 %{__python} setup.py install -O1 --skip-build --root $RPM_BUILD_ROOT
+magic_rpm_clean.sh
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -35,6 +41,9 @@ rm -rf $RPM_BUILD_ROOT
 %{python_sitearch}/*
 
 %changelog
+* Tue Aug 18 2015 Liu Di <liudidi@gmail.com> - 1.0.29-3
+- 为 Magic 3.0 重建
+
 * Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.0.29-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

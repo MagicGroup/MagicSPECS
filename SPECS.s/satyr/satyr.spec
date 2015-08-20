@@ -19,7 +19,7 @@
 
 Name: satyr
 Version: 0.13
-Release: 4%{?dist}
+Release: 5%{?dist}
 Summary: Tools to create anonymous, machine-friendly problem reports
 Group: System Environment/Libraries
 License: GPLv2+
@@ -110,6 +110,9 @@ make check
 %endif
 
 %changelog
+* Sat Aug 01 2015 Liu Di <liudidi@gmail.com> - 0.13-5
+- 为 Magic 3.0 重建
+
 * Tue May 27 2014 Liu Di <liudidi@gmail.com> - 0.13-4
 - 为 Magic 3.0 重建
 

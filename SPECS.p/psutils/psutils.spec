@@ -1,7 +1,8 @@
 Summary: PostScript Utilities
+Summary(zh_CN.UTF-8): PostScript 工具
 Name:    psutils
 Version: 1.23
-Release: 1%{?dist}
+Release: 2%{?dist}
 License: psutils
 
 # We can't follow https://fedoraproject.org/wiki/Packaging:SourceURL#Github
@@ -25,13 +26,21 @@ Utilities for manipulating PostScript documents.
 Page selection and rearrangement are supported, including arrangement into
 signatures for booklet printing, and page merging for n-up printing.
 
+%description -l zh_CN.UTF-8
+处理 PostScript 文档的工具。
+
+
 %package perl
 Summary: psutils scripts requiring perl
+Summary(zh_CN.UTF-8): 使用 perl 的 psutils 脚本
 BuildArch: noarch
 Requires: perl
 
 %description perl
 Various scripts from the psutils distribution that require perl.
+
+%description perl -l zh_CN.UTF-8
+使用 perl 的 psutils 脚本。
 
 %prep
 %setup -q
@@ -73,6 +82,9 @@ Various scripts from the psutils distribution that require perl.
 
 
 %changelog
+* Fri Aug 07 2015 Liu Di <liudidi@gmail.com> - 1.23-2
+- 为 Magic 3.0 重建
+
 * Wed Jan 22 2014 Jiri Popelka <jpopelka@redhat.com> - 1.23-1
 - 1.23
 

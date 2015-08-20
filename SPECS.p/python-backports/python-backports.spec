@@ -2,8 +2,9 @@
 
 Name:           python-backports
 Version:        1.0
-Release:        5%{?dist}
+Release:        6%{?dist}
 Summary:        Namespace for backported Python features
+Summary(zh_CN.UTF-8): 向后移植的命名空间
 
 # Only code is sourced from http://www.python.org/dev/peps/pep-0382/
 License:        Public Domain
@@ -23,6 +24,8 @@ Backports to earlier versions of Python 3, if they exist, do not need this
 package because of changes made in Python 3.3 in PEP 420
 (http://www.python.org/dev/peps/pep-0420/).
 
+%description -l zh_CN.UTF-8
+向后移植的命名空间。
 
 %prep
 
@@ -37,7 +40,7 @@ install -pm 644 %{SOURCE0} %{buildroot}%{python_sitelib}/backports/__init__.py
 mkdir -pm 755 %{buildroot}%{python_sitearch}/backports
 install -pm 644 %{SOURCE0} %{buildroot}%{python_sitearch}/backports/__init__.py
 %endif
-
+magic_rpm_clean.sh
  
 %files
 %{python_sitelib}/backports
@@ -47,6 +50,9 @@ install -pm 644 %{SOURCE0} %{buildroot}%{python_sitearch}/backports/__init__.py
 
 
 %changelog
+* Wed Aug 19 2015 Liu Di <liudidi@gmail.com> - 1.0-6
+- 为 Magic 3.0 重建
+
 * Tue Jul 01 2014 Liu Di <liudidi@gmail.com> - 1.0-5
 - 为 Magic 3.0 重建
 

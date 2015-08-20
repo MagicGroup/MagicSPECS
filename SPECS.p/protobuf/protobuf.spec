@@ -10,11 +10,13 @@
 %global emacs_startdir %(pkg-config emacs --variable sitestartdir)
 
 Summary:        Protocol Buffers - Google's data interchange format
+Summary(zh_CN.UTF-8): Protocol Buffers - 谷歌的数据交换格式
 Name:           protobuf
 Version:        2.6.1
-Release:        2%{?dist}
+Release:        3%{?dist}
 License:        BSD
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Source:         https://github.com/google/protobuf/releases/download/v%{version}/protobuf-%{version}.tar.bz2
 Source1:        ftdetect-proto.vim
 Source2:        protobuf-init.el
@@ -42,18 +44,28 @@ your structured data to and from a variety of data streams and using a
 variety of languages. You can even update your data structure without
 breaking deployed programs that are compiled against the "old" format.
 
+%description -l zh_CN.UTF-8
+Protocol Buffers - 谷歌的数据交换格式。
+
 %package compiler
 Summary: Protocol Buffers compiler
+Summary(zh_CN.UTF-8): Protocol Buffers 编译器
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: %{name} = %{version}-%{release}
 
 %description compiler
 This package contains Protocol Buffers compiler for all programming
 languages
 
+%description compiler -l zh_CN.UTF-8
+Protocol Buffers 编译器。
+
 %package devel
 Summary: Protocol Buffers C++ headers and libraries
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: %{name} = %{version}-%{release}
 Requires: %{name}-compiler = %{version}-%{release}
 Requires: zlib-devel
@@ -62,6 +74,9 @@ Requires: pkgconfig
 %description devel
 This package contains Protocol Buffers compiler for all languages and
 C++ headers and libraries
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %package static
 Summary: Static development files for %{name}
@@ -320,6 +335,9 @@ install -p -m 0644 %{SOURCE2} $RPM_BUILD_ROOT%{emacs_startdir}
 %endif
 
 %changelog
+* Tue Aug 04 2015 Liu Di <liudidi@gmail.com> - 2.6.1-3
+- 为 Magic 3.0 重建
+
 * Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.6.1-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

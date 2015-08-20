@@ -1,8 +1,8 @@
 Summary: PDF rendering library
 Summary(zh_CN.UTF-8): PDF 渲染库
 Name: poppler
-Version:	0.24.5
-Release: 2%{?dist}
+Version:	0.34.0
+Release: 3%{?dist}
 License: GPLv2 and Redistributable, no modification permitted
 # the code is GPLv2
 # the charmap data in /usr/share/poppler is redistributable
@@ -136,6 +136,34 @@ Requires: qt4-devel
 
 %description qt4-devel -l zh_CN.UTF-8
 Qt4 包装的开发文件。
+
+%package qt5
+Summary: Qt5 wrapper for poppler
+Summary(zh_CN.UTF-8): Poppler 的 Qt5 包装
+Group:   System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
+Requires: %{name} = %{version}-%{release}
+
+%description qt5
+%{summary}.
+
+%description qt5 -l zh_CN.UTF-8
+Poppler 的 Qt4 包装。
+
+%package qt5-devel
+Summary: Development files for Qt5 wrapper
+Summary(zh_CN.UTF-8): Qt5 包装的开发文件
+Group:   Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
+Requires: %{name}-qt4 = %{version}-%{release}
+Requires: %{name}-devel = %{version}-%{release}
+Requires: qt5-qtbase-devel
+
+%description qt5-devel
+%{summary}.
+
+%description qt5-devel -l zh_CN.UTF-8
+Qt5 包装的开发文件。
 
 %package cpp
 Summary: Pure C++ wrapper for poppler
@@ -279,6 +307,16 @@ rm -rf %{buildroot} %{_builddir}/%{buildsubdir}
 %{_libdir}/pkgconfig/poppler-qt4.pc
 %{_includedir}/poppler/qt4/
 
+%files qt5
+%defattr(-,root,root,-)
+%{_libdir}/libpoppler-qt5.so.*
+
+%files qt5-devel
+%defattr(-,root,root,-)
+%{_libdir}/libpoppler-qt5.so
+%{_libdir}/pkgconfig/poppler-qt5.pc
+%{_includedir}/poppler/qt5/
+
 %files cpp
 %defattr(-,root,root,-)
 %{_libdir}/libpoppler-cpp.so.0*
@@ -294,6 +332,12 @@ rm -rf %{buildroot} %{_builddir}/%{buildsubdir}
 %{_mandir}/man1/*
 
 %changelog
+* Tue Jul 28 2015 Liu Di <liudidi@gmail.com> - 0.34.0-3
+- 为 Magic 3.0 重建
+
+* Tue Jul 28 2015 Liu Di <liudidi@gmail.com> - 0.34.0-2
+- 更新到 0.34.0
+
 * Fri Apr 11 2014 Liu Di <liudidi@gmail.com> - 0.24.5-2
 - 更新到 0.24.5
 

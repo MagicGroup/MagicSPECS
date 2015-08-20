@@ -1,7 +1,7 @@
 #global rcver -rc2
 
 Name:		libgadu
-Version:	1.12.0
+Version: 1.12.1
 Release:	3%{?dist}
 Summary:	A Gadu-gadu protocol compatible communications library
 Summary(zh_CN.UTF-8): Gadu-gadu 协议兼容通信库
@@ -92,6 +92,9 @@ make check
 %doc docs/protocol.html docs/html
 
 %changelog
+* Fri Aug 07 2015 Liu Di <liudidi@gmail.com> - 1.12.1-3
+- 更新到 1.12.1
+
 * Wed Jul 16 2014 Liu Di <liudidi@gmail.com> - 1.12.0-3
 - 为 Magic 3.0 重建
 

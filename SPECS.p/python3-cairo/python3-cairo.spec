@@ -4,14 +4,15 @@
 
 Name: python3-cairo
 Version: 1.10.0
-Release: 3%{?dist}
+Release: 4%{?dist}
 License: MPLv1.1 or LGPLv2
 Group: Development/Languages
+Group(zh_CN.UTF-8): 开发/库
 Summary: Python 3 bindings for the cairo library
+Summary(zh_CN.UTF-8): cairo 库的 Python3 绑定
 URL: http://cairographics.org/pycairo
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 Source: http://cairographics.org/releases/pycairo-%{version}.tar.bz2
-
 # Since Python 3.4, pythonX.Y-config is shell script, not Python script,
 #  so prevent waf from trying to invoke it as a Python script
 Patch0: cairo-waf-use-python-config-as-shell-script.patch
@@ -26,9 +27,14 @@ BuildRequires: python3-devel
 %description
 Python 3 bindings for the cairo library.
 
+%description -l zh_CN.UTF-8
+cairo 库的 Python3 绑定。
+
 %package devel
 Summary: Libraries and headers for python3-cairo
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: %{name} = %{version}-%{release}
 Requires: cairo-devel
 Requires: pkgconfig
@@ -37,6 +43,9 @@ Requires: python3-devel
 %description devel
 This package contains files required to build wrappers for cairo add-on
 libraries so that they interoperate with python3-cairo.
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q -n pycairo-%{version}
@@ -74,6 +83,7 @@ DESTDIR=$RPM_BUILD_ROOT python3 ./waf install
 find $RPM_BUILD_ROOT -name '*.so' | xargs chmod +x
 
 find $RPM_BUILD_ROOT -name '*.la' | xargs rm -f
+magic_rpm_clean.sh
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -91,6 +101,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/pkgconfig/py3cairo.pc
 
 %changelog
+* Mon Aug 17 2015 Liu Di <liudidi@gmail.com> - 1.10.0-4
+- 为 Magic 3.0 重建
+
 * Wed Jun 18 2014 Liu Di <liudidi@gmail.com> - 1.10.0-3
 - 为 Magic 3.0 重建
 

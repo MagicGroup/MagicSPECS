@@ -6,7 +6,7 @@
 Name:		python-%{modulename}
 Summary:	A python based HTML parser/tokenizer
 Version:	0.999
-Release:	6%{?dist}
+Release:	7%{?dist}
 Epoch:		1
 Group:		Development/Libraries
 License:	MIT
@@ -94,6 +94,9 @@ popd
 
 
 %changelog
+* Wed Aug 19 2015 Liu Di <liudidi@gmail.com> - 1:0.999-7
+- 为 Magic 3.0 重建
+
 * Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1:0.999-6
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

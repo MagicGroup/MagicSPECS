@@ -1,7 +1,7 @@
 Name:           cloog
 %global         tarball_name %{name}
-Version:        0.18.3
-Release:        2%{?dist}
+Version:	0.18.4
+Release:	1%{?dist}
 Epoch:		1
 Summary:        The Chunky Loop Generator
 
@@ -15,7 +15,7 @@ URL:            http://www.cloog.org
 #    git clone git://repo.or.cz/cloog.git -b cloog-0.18.3 cloog-0.18.3
 #    tar -cvf cloog-0.18.3.tar.gz cloog-0.18.3
 
-Source0:        cloog-0.18.3.tar.gz
+Source0:        http://www.bastoul.net/cloog/pages/download/cloog-%{version}.tar.gz
 
 BuildRequires:  isl-devel >= 0.12
 BuildRequires:  gmp-devel >= 4.1.3
@@ -46,7 +46,7 @@ The header files and dynamic shared libraries of the Chunky Loop Generator.
 %setup -q -n %{tarball_name}-%{version}
 
 %build
-./autogen.sh
+
 %configure \
     --with-isl=system \
     --with-isl-prefix=%{_prefix}
@@ -58,7 +58,8 @@ test -f doc/cloog.info && rm doc/cloog.info
 # Remove the -fomit-frame-pointer compile flag
 # Use system libtool to disable standard rpath
 make %{?_smp_mflags} AM_CFLAGS= LIBTOOL=%{_bindir}/libtool
-make %{?_smp_mflags} AM_CFLAGS= LIBTOOL=%{_bindir}/libtool -C doc cloog.pdf
+make %{?_smp_mflags} AM_CFLAGS= LIBTOOL=%{_bindir}/libtool -C doc
+# cloog.pdf
 
 %install
 %make_install INSTALL="%{__install} -p"
@@ -66,14 +67,13 @@ make %{?_smp_mflags} AM_CFLAGS= LIBTOOL=%{_bindir}/libtool -C doc cloog.pdf
 # at runtime.
 rm %{buildroot}%{_libdir}/*/*.cmake
 mkdir -p %{buildroot}%{_docdir}/cloog-%{version}
-%{__install} -m0644 -p README LICENSE ChangeLog doc/cloog.pdf %{buildroot}%{_docdir}/cloog-%{version}
+%{__install} -m0644 -p README ChangeLog %{buildroot}%{_docdir}/cloog-%{version}
 
 %clean
 rm -rf %{buildroot}
 
 %files
 %{_docdir}/cloog-%{version}/README
-%{_docdir}/cloog-%{version}/LICENSE
 %{_docdir}/cloog-%{version}/ChangeLog
 %{_bindir}/cloog
 %{_libdir}/libcloog-isl.so.*
@@ -84,7 +84,7 @@ rm -rf %{buildroot}
 %{_libdir}/pkgconfig/cloog-isl.pc
 %exclude %{_libdir}/libcloog-isl.a
 %exclude %{_libdir}/libcloog-isl.la
-%{_docdir}/cloog-%{version}/cloog.pdf
+#%{_docdir}/cloog-%{version}/cloog.pdf
 
 %post
 /sbin/ldconfig
@@ -101,6 +101,12 @@ fi
 %postun -p /sbin/ldconfig
 
 %changelog
+* Sun Aug 02 2015 Liu Di <liudidi@gmail.com> - 1:0.18.4-1
+- 更新到 0.18.4
+
+* Sun Aug 02 2015 Liu Di <liudidi@gmail.com> - 1:0.18.3-3
+- 为 Magic 3.0 重建
+
 * Wed Jun 17 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1:0.18.3-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

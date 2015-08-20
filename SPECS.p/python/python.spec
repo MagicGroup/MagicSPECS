@@ -4,6 +4,9 @@
 
 %global with_rewheel 1
 
+#临时措施
+%global _unpackaged_files_terminate_build	0
+
 %{!?__python_ver:%global __python_ver EMPTY}
 #global __python_ver 27
 %global unicode ucs4
@@ -108,7 +111,7 @@ Summary: An interpreted, interactive, object-oriented programming language
 Name: %{python}
 # Remember to also rebase python-docs when changing this:
 Version: 2.7.10
-Release: 6%{?dist}
+Release: 7%{?dist}
 License: Python
 Group: Development/Languages
 Requires: %{python}-libs%{?_isa} = %{version}-%{release}
@@ -1771,7 +1774,6 @@ CheckPython \
 
 %endif # run_selftest_suite
 
-
 # ======================================================
 # Cleaning up
 # ======================================================
@@ -2155,6 +2157,9 @@ rm -fr %{buildroot}
 # ======================================================
 
 %changelog
+* Wed Aug 12 2015 Liu Di <liudidi@gmail.com> - 2.7.10-7
+- 为 Magic 3.0 重建
+
 * Thu Jul 23 2015 Thomas Spura <tomspur@fedoraproject.org> - 2.7.10-6
 - python-macros: remove R on python (#1246036)
 

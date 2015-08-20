@@ -1,8 +1,10 @@
 Name:		potrace
-Version:	1.11
-Release:	4%{?dist}
+Version:	1.12
+Release:	1%{?dist}
 Summary:	Transform bitmaps into vector graphics
+Summary(zh_CN.UTF-8): 转换位图到向量图形
 Group:		Applications/Multimedia
+Group(zh_CN.UTF-8): 应用程序/多媒体
 # README defines license as GPLv2+
 License:	GPLv2+
 URL:		http://potrace.sourceforge.net
@@ -32,19 +34,27 @@ antialiasing). Additional backends might be added in the future.
 Mkbitmap is a program distributed with Potrace which can be used to pre-process
 the input for better tracing behavior on greyscale and color images.
 
+%description -l zh_CN.UTF-8
+转换位图到向量图形。
 
 %package devel
 Summary:	Potrace development library and headers
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:		Applications/Multimedia
+Group(zh_CN.UTF-8): 开发/库
 Requires:	%{name} = %{version}-%{release}
 
 %description devel
 This package contains the potrace development library and headers.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %package doc
 Summary:	Documentation on how to use the potrace library
+Summary(zh_CN.UTF-8): %{name} 的文档
 Group:		Documentation
+Group(zh_CN.UTF-8): 文档
 %if 0%{?fedora} > 10 || 0%{?rhel} > 5
 BuildArch:	noarch
 %endif
@@ -52,6 +62,9 @@ BuildArch:	noarch
 %description doc
 This package contains documentation for the potrace algorithm and the potrace
 library.
+
+%description doc -l zh_CN.UTF-8
+%{name} 的文档。
 
 %prep
 %setup -q
@@ -70,6 +83,7 @@ find %{buildroot} -name *.la -exec rm -rf {} \;
 
 # Get rid of installed copy of placement.pdf
 rm -rf %{buildroot}%{_docdir}/%{name}
+magic_rpm_clean.sh
 
 %clean
 rm -rf %{buildroot}
@@ -93,6 +107,9 @@ rm -rf %{buildroot}
 %doc potrace.pdf potracelib.pdf
 
 %changelog
+* Sun Aug 02 2015 Liu Di <liudidi@gmail.com> - 1.12-1
+- 更新到 1.12
+
 * Mon Apr 14 2014 Liu Di <liudidi@gmail.com> - 1.11-4
 - 为 Magic 3.0 重建
 

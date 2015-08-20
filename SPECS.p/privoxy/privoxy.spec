@@ -6,9 +6,10 @@
 #define beta_or_stable beta
 
 Name: privoxy
-Version: 3.0.21
-Release: 6%{?dist}
+Version:	3.0.23
+Release:	2%{?dist}
 Summary: Privacy enhancing proxy
+Summary(zh_CN.UTF-8): 增强的代理服务
 License: GPLv2+
 Source0: http://downloads.sourceforge.net/ijbswa/%{name}-%{version}-%{beta_or_stable}-src.tar.gz
 Source1: privoxy.service
@@ -17,6 +18,7 @@ Source2: privoxy.logrotate
 #Patch1:  privoxy-3.0.16-configdir.patch
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 Group: System Environment/Daemons
+Group(zh_CN.UTF-8): 系统环境/服务
 URL: http://www.privoxy.org/
 Requires(pre): shadow-utils
 Requires(post): systemd-units
@@ -35,6 +37,9 @@ can be customized to suit individual needs and tastes. Privoxy has application
 for both stand-alone systems and multi-user networks.
 
 Privoxy is based on the Internet Junkbuster.
+
+%description -l zh_CN.UTF-8
+增强的代理服务。
 
 %prep
 %setup -q -n %{name}-%{version}-%{beta_or_stable}
@@ -77,7 +82,7 @@ touch %{buildroot}%{_sysconfdir}/privoxy/user.filter
 
 mkdir -p $RPM_BUILD_ROOT/%{_sysconfdir}/logrotate.d
 cp -p %{SOURCE2} $RPM_BUILD_ROOT/%{_sysconfdir}/logrotate.d/%{name}
-
+magic_rpm_clean.sh
 
 %pre
 # Add user/group on install
@@ -147,6 +152,12 @@ fi
 #doc/source/developer-manual doc/source/faq doc/source/user-manual
 
 %changelog
+* Tue Aug 04 2015 Liu Di <liudidi@gmail.com> - 3.0.23-2
+- 为 Magic 3.0 重建
+
+* Tue Aug 04 2015 Liu Di <liudidi@gmail.com> - 3.0.21-1
+- 更新到 3.0.21
+
 * Thu Aug 15 2013 Jon Ciesla <limburgher@gmail.com> - 3.0.21-6
 - Fix logrotate file issue, BZ 997382.
 
@@ -558,7 +569,7 @@ fi
 - New package name: junkbusterng (all in lower case, acording to
   the LSB recomendation)
 - Version changed to: 2.9.13
-- Release: 1
+- Release:	1%{?dist}
 - Added: junkbuster to obsoletes and conflicts (Not sure this is
   right. If it obsoletes, why conflict ? Have to check it later)
 - Summary changed: Stefan, please check and aprove it

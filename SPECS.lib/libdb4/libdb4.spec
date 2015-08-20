@@ -4,7 +4,7 @@
 Summary: The Berkeley DB database library (version 4) for C
 Name: libdb4
 Version: 4.8.30
-Release: 19%{?dist}
+Release: 20%{?dist}
 URL: http://www.oracle.com/database/berkeley-db/
 License: Sleepycat and BSD
 Group: System Environment/Libraries
@@ -215,7 +215,7 @@ test -d dist/dist-tls || mkdir dist/dist-tls
 
 # Update gnu-config files for AArch64
 chmod 644 dist/config.{guess,sub}
-cp /usr/lib/rpm/redhat/config.{guess,sub} dist/
+cp /usr/lib/rpm/magic/config.{guess,sub} dist/
 
 pushd dist/dist-tls
 ln -sf ../configure .
@@ -392,6 +392,9 @@ chrpath -d ${RPM_BUILD_ROOT}%{_libdir}/*.so ${RPM_BUILD_ROOT}%{_bindir}/*
 %{_libdir}/%{name}/libdb_java.so
 
 %changelog
+* Wed Aug 12 2015 Liu Di <liudidi@gmail.com> - 4.8.30-20
+- 为 Magic 3.0 重建
+
 * Wed Jun 17 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 4.8.30-19
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

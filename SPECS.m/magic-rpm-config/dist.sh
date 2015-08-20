@@ -11,7 +11,7 @@
 # If we successfully detect the version number, we output the
 # dist tag. Otherwise, we exit with no output.
 
-RELEASEFILE=/etc/magic-release
+RELEASEFILE=/etc/redhat-release
 
 function check_num {
     MAINVER=`cut -d "(" -f 1 < $RELEASEFILE | \

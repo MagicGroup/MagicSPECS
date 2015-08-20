@@ -6,7 +6,7 @@
 
 Name:           python-%{srcname}
 Version:        2.0
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Internationalized Domain Names in Applications (IDNA)
 
 License:        BSD and Python and Unicode
@@ -105,6 +105,9 @@ popd
 %endif # with_python3
 
 %changelog
+* Mon Aug 17 2015 Liu Di <liudidi@gmail.com> - 2.0-2
+- 为 Magic 3.0 重建
+
 * Thu Aug 13 2015 Paul Wouters <pwouters@redhat.com> - 2.0-1
 - Update to 2.0 which is required by python-cryptography
 

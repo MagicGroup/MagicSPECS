@@ -2,7 +2,7 @@ Summary: The procmail mail processing program
 Summary(zh_CN.UTF-8): procmail 邮件处理系统
 Name: procmail
 Version: 3.22
-Release: 25%{?dist}
+Release: 26%{?dist}
 License: GPLv2+ or Artistic
 Group: Applications/Internet
 Group(zh_CN.UTF-8): 应用程序/互联网
@@ -75,6 +75,9 @@ rm -rf ${RPM_BUILD_ROOT}
 %{_mandir}/man[15]/*
 
 %changelog
+* Tue Aug 04 2015 Liu Di <liudidi@gmail.com> - 3.22-26
+- 为 Magic 3.0 重建
+
 * Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 3.22-25
 - 为 Magic 3.0 重建
 

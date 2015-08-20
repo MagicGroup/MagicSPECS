@@ -16,7 +16,7 @@
 
 Name:           python-pretend
 Version:        1.0.8
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        A library for stubbing in Python
 
 Group:          Development/Libraries
@@ -96,6 +96,9 @@ popd
 
 
 %changelog
+* Mon Aug 17 2015 Liu Di <liudidi@gmail.com> - 1.0.8-4
+- 为 Magic 3.0 重建
+
 * Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.0.8-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

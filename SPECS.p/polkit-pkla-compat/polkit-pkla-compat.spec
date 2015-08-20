@@ -1,7 +1,8 @@
 Name:		polkit-pkla-compat
 Version:	0.1
-Release:	6%{?dist}
+Release:	7%{?dist}
 Summary:	Rules for polkit to add compatibility with pklocalauthority
+Summary(zh_CN.UTF-8): 与 pk 本地认证兼容的 polkit 规则
 # GPLv2-licensed ltmain.sh and Apache-licensed mocklibc are not shipped in
 # the binary package.
 License:	LGPLv2+
@@ -19,6 +20,9 @@ A polkit JavaScript rule and associated helpers that mostly provide
 compatibility with the .pkla file format supported in polkit <= 0.105 for users
 of later polkit releases.
 
+%description -l zh_CN.UTF-8
+与 pk 本地认证兼容的 polkit 规则。
+
 %prep
 %setup -q
 
@@ -28,6 +32,7 @@ make %{?_smp_mflags} V=1
 
 %install
 %make_install INSTALL='install -p'
+magic_rpm_clean.sh
 
 %check
 make check
@@ -48,6 +53,9 @@ make check
 %dir %{_localstatedir}/lib/polkit-1/localauthority/*.d
 
 %changelog
+* Sat Jul 25 2015 Liu Di <liudidi@gmail.com> - 0.1-7
+- 为 Magic 3.0 重建
+
 * Tue Dec 23 2014 Liu Di <liudidi@gmail.com> - 0.1-6
 - 为 Magic 3.0 重建
 

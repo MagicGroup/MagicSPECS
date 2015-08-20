@@ -1,10 +1,10 @@
 Name:           polipo
-Version:        1.0.4.1
-Release:        12%{?dist}
+Version:	1.1.1
+Release:	1%{?dist}
 Summary:        Lightweight caching web proxy
 Summary(zh_CN.UTF-8): 轻量级的 Web 缓存代理
 License:        MIT
-Source0:        http://freehaven.net/~chrisd/%{name}/%{name}-%{version}.tar.gz
+Source0:        http://www.pps.univ-paris-diderot.fr/~jch/software/files/%{name}/%{name}-%{version}.tar.gz
 Source2:        %{name}.config
 Source3:        %{name}.forbidden
 Source4:        %{name}.logrotate
@@ -45,7 +45,7 @@ server.
 %prep
 %setup -q
 
-%patch0 -p1 -b .http-assertion-failure
+#patch0 -p1 -b .http-assertion-failure
 
 %build
 make %{?_smp_mflags} PREFIX=%{_prefix} BINDIR=%{_bindir} CDEBUGFLAGS="%{optflags}"
@@ -148,6 +148,9 @@ fi
 %attr(0755,%{name},%{name}) %dir %{_localstatedir}/run/%{name}
 
 %changelog
+* Sat Jul 25 2015 Liu Di <liudidi@gmail.com> - 1.1.1-1
+- 更新到 1.1.1
+
 * Wed Apr 30 2014 Liu Di <liudidi@gmail.com> - 1.0.4.1-12
 - 为 Magic 3.0 重建
 

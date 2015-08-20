@@ -6,7 +6,7 @@
 
 Name:           python-cffi
 Version:        1.1.2
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        Foreign Function Interface for Python to call C code
 License:        MIT
 URL:            http://cffi.readthedocs.org/
@@ -99,6 +99,9 @@ popd
 %doc doc/build/html
 
 %changelog
+* Mon Aug 17 2015 Liu Di <liudidi@gmail.com> - 1.1.2-4
+- 为 Magic 3.0 重建
+
 * Wed Jul 15 2015 Parag Nemade <pnemade AT redhat DOT com> - 1.1.2-3
 - Modernize spec file
 - add missing source

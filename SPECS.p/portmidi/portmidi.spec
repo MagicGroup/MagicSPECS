@@ -1,10 +1,12 @@
 %global _desktopdir %{?_desktopdir:%{_datadir}/applications}
 Summary:        Real-time Midi I/O Library
+Summary(zh_CN.UTF-8): 实时 Midi I/O 库
 Name:           portmidi
 Version:        217
-Release:        7%{?dist}
+Release:        8%{?dist}
 License:        MIT
 Group:          System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 URL:            http://portmedia.sourceforge.net/
 Source0:        http://downloads.sourceforge.net/portmedia/%{name}-src-%{version}.zip
 Source1:        pmdefaults.desktop
@@ -31,9 +33,14 @@ implementations for music and other media. PortMidi sub-project provides a
 real-time MIDI input/output library. This package contains the PortMidi
 libraries.
 
+%description -l zh_CN.UTF-8
+实时 Midi I/O 库。
+
 %package devel
 Summary:        Headers for developing programs that will use %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:          System Environment/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       %{name}%{?_isa} = %{version}-%{release}
 
 %description devel
@@ -42,9 +49,14 @@ implementations for music and other media. PortMidi sub-project provides a
 real-time MIDI input/output library. This package contains the header files
 and the documentation of PortMidi libraries.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
 %package -n python-%{name}
 Summary:        Python wrapper for %{name}
+Summary(zh_CN.UTF-8): %{name} 的 Python 绑定
 Group:          System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 Requires:       %{name}%{?_isa} = %{version}-%{release}
 
 %description -n python-%{name}
@@ -54,9 +66,14 @@ real-time MIDI input/output library. This package contains the python
 bindings of PortMidi libraries. It can send and receive MIDI data in
 real-time from Python.
 
+%description -n python-%{name} -l zh_CN.UTF-8
+%{name} 的 Python 绑定。
+
 %package tools
 Summary:          Tools to configure and use %{name}
+Summary(zh_CN.UTF-8): %{name} 的配置工具
 Group:            Applications/Multimedia
+Group(zh_CN.UTF-8): 应用程序/多媒体
 Requires:         hicolor-icon-theme
 %if 0%{?JAVA}
 Requires:         java >= 1.7
@@ -69,6 +86,9 @@ PortMedia is a set of simple clean APIs and cross-platform library
 implementations for music and other media. PortMidi sub-project provides a
 real-time MIDI input/output library. This package contains the PortMidi
 configuration utility "pmdefaults" and some test applications.
+
+%description tools -l zh_CN.UTF-8
+%{name} 的配置工具。
 
 %prep
 %setup -q -n %{name}
@@ -174,6 +194,7 @@ popd
 
 # Remove duplicate library
 rm -f %{buildroot}%{_libdir}/libportmidi_s.so
+magic_rpm_clean.sh
 
 %post -p /sbin/ldconfig
 
@@ -203,6 +224,9 @@ rm -f %{buildroot}%{_libdir}/libportmidi_s.so
 %{_libdir}/lib*.so
 
 %changelog
+* Wed Jul 29 2015 Liu Di <liudidi@gmail.com> - 217-8
+- 为 Magic 3.0 重建
+
 * Sat Jul 21 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 217-7
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 

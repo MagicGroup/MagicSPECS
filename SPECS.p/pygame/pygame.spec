@@ -2,10 +2,12 @@
 
 Name:           pygame
 Version:        1.9.1
-Release:        11%{?dist}
+Release:        12%{?dist}
 Summary:        Python modules for writing games
+Summary(zh_CN.UTF-8): 编写游戏的 Python 模块
 
 Group:          Development/Languages
+Group(zh_CN.UTF-8): 开发/语言
 License:        LGPLv2+
 URL:            http://www.pygame.org
 #Patch0:         %{name}-1.8.1-config.patch
@@ -34,9 +36,14 @@ fully featured games and multimedia programs in the python language.
 Pygame is highly portable and runs on nearly every platform and
 operating system.
 
+%description -l zh_CN.UTF-8
+编写游戏的 Python 模块。
+
 %package devel
 Summary:        Files needed for developing programs which use pygame
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       %{name} = %{version}-%{release}
 Requires:       SDL_ttf-devel SDL_mixer-devel
 Requires:       python-devel
@@ -45,6 +52,8 @@ Requires:       python-devel
 This package contains headers required to build applications that use
 pygame.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -qn %{name}-%{version}release
@@ -84,7 +93,7 @@ ln -s /usr/share/fonts/gnu-free/FreeSansBold.ttf $RPM_BUILD_ROOT%{python_sitearc
 
 # Fix permissions
 chmod 755 $RPM_BUILD_ROOT%{python_sitearch}/%{name}/*.so
-
+magic_rpm_clean.sh
 
 %check
 # base_test fails in mock, unable to find soundcard
@@ -111,6 +120,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Wed Aug 12 2015 Liu Di <liudidi@gmail.com> - 1.9.1-12
+- 为 Magic 3.0 重建
+
 * Tue Dec 04 2012 Jan Kaluza <jkaluza@redhat.com> - 1.9.1-11
 - fix #881545 - fix memory leak when saving png images
 

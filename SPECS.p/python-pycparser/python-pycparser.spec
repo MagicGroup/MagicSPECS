@@ -7,7 +7,7 @@
 Name:           python-pycparser
 Summary:        C parser and AST generator written in Python
 Version:        2.14
-Release:        3%{?dist}
+Release:        4%{?dist}
 License:        BSD
 Group:          System Environment/Libraries
 URL:            http://github.com/eliben/pycparser
@@ -114,6 +114,9 @@ popd
 %endif # with_python3
 
 %changelog
+* Mon Aug 17 2015 Liu Di <liudidi@gmail.com> - 2.14-4
+- 为 Magic 3.0 重建
+
 * Tue Jul 14 2015 Stephen Gallagher <sgallagh@redhat.com> - 2.14-3
 - Rebuild alongside python-ply 3.6
 

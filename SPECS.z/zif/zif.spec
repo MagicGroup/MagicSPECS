@@ -1,7 +1,7 @@
 Summary:   Simple wrapper for rpm and the Fedora package metadata
 Name:      zif
 Version:   0.3.5
-Release:   2%{?dist}
+Release:   3%{?dist}
 License:   GPLv2+
 URL:       http://people.freedesktop.org/~hughsient/zif/
 Source0:   http://people.freedesktop.org/~hughsient/zif/releases/%{name}-%{version}.tar.xz
@@ -97,6 +97,9 @@ rm -f $RPM_BUILD_ROOT%{_libdir}/libzif*.la
 %{_datadir}/gir-1.0/*.gir
 
 %changelog
+* Sat Aug 01 2015 Liu Di <liudidi@gmail.com> - 0.3.5-3
+- 为 Magic 3.0 重建
+
 * Thu Jan 17 2013 Tomas Bzatek <tbzatek@redhat.com> - 0.3.5-2
 - Rebuilt for new libarchive
 

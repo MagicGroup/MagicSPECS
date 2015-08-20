@@ -3,7 +3,7 @@
 Summary: The Point-to-Point Protocol daemon
 Name: ppp
 Version: 2.4.7
-Release: 8%{?dist}
+Release: 9%{?dist}
 License: BSD and LGPLv2+ and GPLv2+ and Public Domain
 Group: System Environment/Daemons
 URL: http://www.samba.org/ppp
@@ -168,6 +168,9 @@ install -p %{SOURCE11} %{buildroot}%{_sysconfdir}/sysconfig/network-scripts/ifdo
 %doc PLUGINS
 
 %changelog
+* Mon Aug 03 2015 Liu Di <liudidi@gmail.com> - 2.4.7-9
+- 为 Magic 3.0 重建
+
 * Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.4.7-8
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

@@ -2,7 +2,7 @@
 
 Name:           drpm
 Version:        0.2.0
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        A small library for fetching information from deltarpm packages
 Summary(zh_CN.UTF-8): 从 deltarpm 包中取得信息的一个小库
 License:        LGPLv3+
@@ -65,6 +65,9 @@ make check %{?_smp_mflags}
 %{_libdir}/pkgconfig/drpm.pc
 
 %changelog
+* Thu Jul 30 2015 Liu Di <liudidi@gmail.com> - 0.2.0-4
+- 为 Magic 3.0 重建
+
 * Sun Jul 26 2015 Kevin Fenzi <kevin@scrye.com> 0.2.0-3
 - Rebuild for new librpm
 

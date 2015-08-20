@@ -6,10 +6,12 @@
 
 Name:           pygtksourceview
 Version:        2.10.1
-Release:        6%{?dist}
+Release:        7%{?dist}
 Summary:        Python bindings for gtksourceview
+Summary(zh_CN.UTF-8): gtksourceview 的 Python 绑定
 
 Group:          Development/Languages
+Group(zh_CN.UTF-8): 开发/语言
 # No version specified.
 License:        LGPLv2+
 URL:            http://download.gnome.org/sources/pygtksourceview/
@@ -26,9 +28,14 @@ BuildRequires:  python-devel
 The %{name} package contains Python bindings for the gtksourceview
 library.
 
+%description -l zh_CN.UTF-8
+gtksourceview 的 Python 绑定。
+
 %package devel
 Summary: Development files for using %{name} in Python programs
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: Development/Languages
+Group(zh_CN.UTF-8): 开发/库
 Requires: %{name} = %{version}-%{release}
 Requires: %{name}-doc = %{version}-%{release}
 Requires: gtksourceview2-devel >= %{gtksourceview_version}
@@ -39,12 +46,20 @@ Requires: pygtk2-devel >= %{pygtk_version}
 This package contains files required to build Python programs that
 use the %{name} bindings.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
 %package doc
 Summary: Documentation files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的文档
 Group: Development/Languages
+Group(zh_CN.UTF-8): 文档
 
 %description doc
 This package contains documentation files for %{name}.
+
+%description doc -l zh_CN.UTF-8
+%{name} 的文档。
 
 %prep
 %setup -q
@@ -57,6 +72,7 @@ make
 make install DESTDIR=$RPM_BUILD_ROOT
 
 rm $RPM_BUILD_ROOT%{python_sitearch}/gtksourceview2.la
+magic_rpm_clean.sh
 
 %files
 %defattr(-,root,root,-)
@@ -73,6 +89,9 @@ rm $RPM_BUILD_ROOT%{python_sitearch}/gtksourceview2.la
 %{_datadir}/gtk-doc/html/pygtksourceview2
 
 %changelog
+* Fri Aug 14 2015 Liu Di <liudidi@gmail.com> - 2.10.1-7
+- 为 Magic 3.0 重建
+
 * Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 2.10.1-6
 - 为 Magic 3.0 重建
 

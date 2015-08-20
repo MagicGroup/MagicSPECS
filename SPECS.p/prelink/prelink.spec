@@ -1,11 +1,13 @@
 Summary: An ELF prelinking utility
+Summary(zh_CN.UTF-8): ELF 预链接工具
 Name: prelink
-Version: 0.4.6
-Release: 5%{?dist}
-%global svnver 195
+Version: 0.5.0
+Release: 2%{?dist}
+%global svnver 205
 License: GPLv2+
 Group: System Environment/Base
-%define date 20111012
+Group(zh_CN.UTF-8): 系统环境/基本
+%define date 20130503
 # svn export svn://sourceware.org/svn/prelink/trunk@%{svnver} prelink
 # tar cf - prelink | bzip2 -9 > prelink-%{date}.tar.bz2
 Source: http://people.redhat.com/jakub/prelink/prelink-%{date}.tar.bz2
@@ -24,6 +26,9 @@ ExclusiveArch: %{ix86} alpha sparc sparcv9 sparc64 s390 s390x x86_64 ppc ppc64 %
 The prelink package contains a utility which modifies ELF shared libraries
 and executables, so that far fewer relocations need to be resolved at runtime
 and thus programs come up faster.
+
+%description -l zh_CN.UTF-8
+ELF 预链接工具。
 
 %prep
 %setup -q -n prelink
@@ -64,6 +69,7 @@ touch %{buildroot}/var/log/prelink/prelink.log
 %ifarch %{sparc}
 sed -i -e 's|PRELINKING=yes|PRELINKING=no|g' %{buildroot}%{_sysconfdir}/sysconfig/prelink
 %endif
+magic_rpm_clean.sh
 
 %post
 touch /var/lib/prelink/force
@@ -89,6 +95,12 @@ touch /var/lib/prelink/force
 %attr(0644,root,root) %verify(not md5 size mtime) %ghost %config(missingok,noreplace) /var/log/prelink/prelink.log
 
 %changelog
+* Tue Aug 04 2015 Liu Di <liudidi@gmail.com> - 0.5.0-2
+- 为 Magic 3.0 重建
+
+* Tue Aug 04 2015 Liu Di <liudidi@gmail.com> - 0.4.6-6
+- 为 Magic 3.0 重建
+
 * Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 0.4.6-5
 - 为 Magic 3.0 重建
 

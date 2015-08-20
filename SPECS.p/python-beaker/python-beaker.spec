@@ -10,10 +10,12 @@
 
 Name: python-beaker
 Version: 1.5.4
-Release: 9%{?dist}
+Release: 11%{?dist}
 Summary: WSGI middleware layer to provide sessions
+Summary(zh_CN.UTF-8): 提供会话的 WSGI 中间层
 
 Group: Development/Languages
+Group(zh_CN.UTF-8): 开发/语言
 License: BSD and MIT
 URL: http://beaker.groovie.org/
 Source0: http://pypi.python.org/packages/source/B/Beaker/Beaker-%{version}.tar.gz
@@ -50,10 +52,15 @@ Beaker is a caching library that includes Session and Cache objects built on
 Myghty's Container API used in MyghtyUtils. WSGI middleware is also included to
 manage Session objects and signed cookies.
 
+%description -l zh_CN.UTF-8
+提供会话的 WSGI 中间层
+
 %if 0%{?with_python3}
 %package -n python3-beaker
 Summary: WSGI middleware layer to provide sessions
+Summary(zh_CN.UTF-8): 提供会话的 WSGI 中间层
 Group: Development/Languages
+Group(zh_CN.UTF-8): 开发/语言
 # Paste is not python3 compatible at the moment
 #Requires: python3-paste
 # Without one of these there's no aes implementation which means there's no way to
@@ -71,6 +78,8 @@ Group: Development/Languages
 Beaker is a caching library that includes Session and Cache objects built on
 Myghty's Container API used in MyghtyUtils. WSGI middleware is also included to
 manage Session objects and signed cookies.
+%description -n python3-beaker -l zh_CN.UTF-8
+提供会话的 WSGI 中间层。
 %endif # with_python3
 
 
@@ -105,7 +114,7 @@ pushd %{py3dir}
 %{__python3} setup.py install --skip-build --root $RPM_BUILD_ROOT
 popd
 %endif # with_python3
-
+magic_rpm_clean.sh
 
 %check
 PYTHONPATH=$(pwd) nosetests
@@ -135,6 +144,12 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Wed Aug 19 2015 Liu Di <liudidi@gmail.com> - 1.5.4-11
+- 为 Magic 3.0 重建
+
+* Wed Aug 19 2015 Liu Di <liudidi@gmail.com> - 1.5.4-10
+- 为 Magic 3.0 重建
+
 * Tue Jun 17 2014 Liu Di <liudidi@gmail.com> - 1.5.4-9
 - 为 Magic 3.0 重建
 

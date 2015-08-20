@@ -13,7 +13,7 @@
 
 Name:           python-httpretty
 Version:        0.8.3
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        HTTP request mock tool for Python
 
 License:        MIT
@@ -118,6 +118,9 @@ popd
 
 
 %changelog
+* Wed Aug 19 2015 Liu Di <liudidi@gmail.com> - 0.8.3-5
+- 为 Magic 3.0 重建
+
 * Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.8.3-4
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

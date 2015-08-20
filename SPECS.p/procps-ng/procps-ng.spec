@@ -2,20 +2,19 @@
 %global tests_enabled 0
 
 Summary: System and process monitoring utilities
+Summary(zh_CN.UTF-8): 系统和进程监视工具
 Name: procps-ng
-Version: 3.3.9
-Release: 5%{?dist}
+Version:	3.3.10
+Release:	1%{?dist}
 License: GPL+ and GPLv2 and GPLv2+ and GPLv3+ and LGPLv2+
 Group: Applications/System
+Group(zh_CN.UTF-8): 应用程序/系统
 URL: https://sourceforge.net/projects/procps-ng/
 
 Source0: http://downloads.sourceforge.net/%{name}/%{name}-%{version}.tar.xz
 
 Patch0: vmstat-wide-not-wide-enough.patch
 Patch1: ksh-skip-trailing-zeros.patch
-Patch2: vmstat-timestamps.patch
-Patch3: watch-fd-leak.patch
-Patch4: vmstat-format-security.patch
 
 Requires(post): /sbin/ldconfig
 Requires(postun): /sbin/ldconfig
@@ -66,9 +65,14 @@ virtual memory statistics about processes, memory, paging, block
 I/O, traps, and CPU activity. The pwdx command reports the current
 working directory of a process or processes.
 
+%description -l zh_CN.UTF-8
+系统和进程监视工具。
+
 %package devel
 Summary:  System and process monitoring utilities
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:    Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: %{name}%{?_isa} = %{version}-%{release}
 Provides: procps-devel = %{version}-%{release}
 Obsoletes: procps-devel < 3.2.9-1
@@ -76,15 +80,11 @@ Obsoletes: procps-devel < 3.2.9-1
 %description devel
 System and process monitoring utilities development headers
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
 %prep
 %setup -q -n %{name}-%{version}
-
-%patch0 -p1
-%patch1 -p1
-%patch2 -p1
-%patch3 -p1
-%patch4 -p1
-
 
 %build
 # The following stuff is needed for git archives only
@@ -100,16 +100,17 @@ autoreconf --verbose --force --install
             --mandir=%{_mandir} \
             --includedir=%{_includedir} \
             --sysconfdir=%{_sysconfdir} \
+            --localedir=%{_datadir}/locale \
             --docdir=/unwanted \
             --disable-static \
             --disable-w-from \
             --disable-kill \
-            --disable-rpath \
             --enable-watch8bit \
             --enable-skill \
             --enable-sigwinch \
-            --enable-libselinux \
-            --with-systemd
+            --disable-libselinux \
+            --with-systemd \
+            --disable-modern-top
 
 make CFLAGS="%{optflags}"
 
@@ -123,7 +124,17 @@ make check
 %install
 make DESTDIR=%{buildroot} install
 
-mkdir -p %{buildroot}%{_sysconfdir}/sysctl.d
+# --localedir doesn't work correctly
+cp -r %{buildroot}/share/locale %{buildroot}%{_datadir}
+rm -rf %{buildroot}/share
+
+# translated man pages
+find man-po/ -type d -maxdepth 1 -mindepth 1 | while read dirname; do cp -a $dirname %{buildroot}%{_mandir}/ ; done
+rm -f %{buildroot}%{_mandir}/{de,fr,uk}/man1/kill.1
+
+magic_rpm_clean.sh
+
+%find_lang %{name}
 
 ln -s %{_bindir}/pidof %{buildroot}%{_sbindir}/pidof
 
@@ -137,13 +148,12 @@ ln -s %{_bindir}/pidof %{buildroot}%{_sbindir}/pidof
 %{_libdir}/libprocps.so.*
 %{_bindir}/*
 %{_sbindir}/*
-%{_sysconfdir}/sysctl.d
 %{_mandir}/man1/*
 %{_mandir}/man8/*
 %{_mandir}/man5/*
+%{_mandir}/man3/*
 
 %exclude %{_libdir}/libprocps.la
-%exclude %{_sysconfdir}/sysctl.conf
 %exclude /unwanted/*
 
 %files devel
@@ -153,6 +163,9 @@ ln -s %{_bindir}/pidof %{buildroot}%{_sbindir}/pidof
 %{_includedir}/proc
 
 %changelog
+* Tue Aug 04 2015 Liu Di <liudidi@gmail.com> - 3.3.10-1
+- 更新到 3.3.10
+
 * Wed Feb 05 2014 Jaromir Capik <jcapik@redhat.com> - 3.3.9-5
 - Support for timestamps & wide diskstat (#1053428, #1025833)
 - Fixing fd leak in watch

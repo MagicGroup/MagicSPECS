@@ -1,5 +1,5 @@
 #!/bin/bash
-url="http://www.samba.org/ftp/tdb/?C=M;O=D"
+url="https://www.samba.org/ftp/tdb/?C=M;O=D"
 new1="tdb-"
 new2=".tar.gz"
 downcommand="wget -q" 

@@ -3,10 +3,12 @@
 
 Name:           pygtkglext
 Version:        1.1.0
-Release:        8%{?dist}
+Release:        9%{?dist}
 Summary:        Python bindings for GtkGLExt
+Summary(zh_CN.UTF-8): GtkGLExt 的 Python 绑定
 License:        LGPLv2+
 Group:          System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 URL:            http://www.k-3d.org/gtkglext/Main_Page
 Source:         http://downloads.sourceforge.net/gtkglext/%{name}-%{version}.tar.bz2
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -16,10 +18,14 @@ Requires:       pygtk2 PyOpenGL
 %description
 Python bindings for GtkGTLExt
 
+%description -l zh_CN.UTF-8
+GtkGLExt 的 Python 绑定。
 
 %package        devel
 Summary:        Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       %{name} = %{version}-%{release}
 Requires:       pkgconfig pygtk2-devel
 
@@ -27,6 +33,8 @@ Requires:       pkgconfig pygtk2-devel
 The %{name}-devel package contains libraries and header files for
 developing applications that use %{name}.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -58,7 +66,7 @@ chmod +x $RPM_BUILD_ROOT%{python_sitearch}/gtk-2.0/gtk/gtkgl/apputils.py
 
 # for %%doc
 rm examples/Makefile*
-
+magic_rpm_clean.sh
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -77,6 +85,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Fri Aug 14 2015 Liu Di <liudidi@gmail.com> - 1.1.0-9
+- 为 Magic 3.0 重建
+
 * Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 1.1.0-8
 - 为 Magic 3.0 重建
 

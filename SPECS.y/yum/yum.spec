@@ -29,7 +29,7 @@
 Summary: RPM package installer/updater/manager
 Name: yum
 Version: 3.4.3
-Release: 65%{?dist}
+Release: 66%{?dist}
 License: GPLv2+
 Group: System Environment/Base
 Source0: http://yum.baseurl.org/download/3.4/%{name}-%{version}.tar.gz
@@ -385,6 +385,9 @@ exit 0
 %endif
 
 %changelog
+* Thu Jul 30 2015 Liu Di <liudidi@gmail.com> - 3.4.3-66
+- 为 Magic 3.0 重建
+
 * Fri Feb 22 2013 Zdeněk Pavlas <zpavlas@redhat.com> - 3.4.3-64
 - use multiple applydeltarpm workers (4 by default)
 

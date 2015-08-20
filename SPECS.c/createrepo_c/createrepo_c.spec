@@ -8,11 +8,13 @@
 %endif
 
 Summary:        Creates a common metadata repository
+Summary(zh_CN.UTF-8): 创建通用元数据仓库
 Name:           createrepo_c
 Version:        0.9.0
-Release:        4%{?dist}
+Release:        5%{?dist}
 License:        GPLv2
 Group:          System Environment/Base
+Group(zh_CN.UTF-8): 系统环境/基本
 # Use the following commands to generate the tarball:
 #  git clone https://github.com/Tojaj/createrepo_c.git
 #  cd createrepo_c
@@ -53,18 +55,27 @@ A set of utilities (createrepo_c, mergerepo_c, modifyrepo_c)
 for generating a common metadata repository from a directory of
 rpm packages and maintaining it.
 
+%description -l zh_CN.UTF-8
+Createrepo 的 C 实现。
+
 %package libs
 Summary:    Library for repodata manipulation
+Summary(zh_CN.UTF-8): %{name} 的运行库
 Group:      Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 
 %description libs
 Libraries for applications using the createrepo_c library
 for easy manipulation with a repodata.
 
+%description libs -l zh_CN.UTF-8
+%{name} 的运行库。
 
 %package devel
 Summary:    Library for repodata manipulation
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:      Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:   pkgconfig >= 1:0.14
 Requires:   %{name}-libs =  %{version}-%{release}
 
@@ -72,13 +83,21 @@ Requires:   %{name}-libs =  %{version}-%{release}
 This package contains the createrepo_c C library and header files.
 These development files are for easy manipulation with a repodata.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
 %package -n python-createrepo_c
 Summary:    Python bindings for the createrepo_c library
+Summary(zh_CN.UTF-8): %{name} 的 Python 绑定
 Group:      Development/Languages
+Group(zh_CN.UTF-8): 开发/语言
 Requires:   %{name}-libs = %{version}-%{release}
 
 %description -n python-createrepo_c
 Python bindings for the createrepo_c library.
+
+%description -n python-createrepo_c -l zh_CN.UTF-8
+%{name} 的 Python 绑定。
 
 %prep
 %setup -q -n createrepo_c
@@ -94,6 +113,7 @@ make ARGS="-V" test
 
 %install
 make install DESTDIR=$RPM_BUILD_ROOT/
+magic_rpm_clean.sh
 
 %post -n %{name}-libs -p /sbin/ldconfig
 
@@ -127,6 +147,9 @@ make install DESTDIR=$RPM_BUILD_ROOT/
 %{python_sitearch}/createrepo_c/
 
 %changelog
+* Thu Jul 30 2015 Liu Di <liudidi@gmail.com> - 0.9.0-5
+- 为 Magic 3.0 重建
+
 * Sun Jul 26 2015 Kevin Fenzi <kevin@scrye.com> 0.9.0-4
 - Rebuild for new librpm
 

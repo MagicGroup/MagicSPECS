@@ -5,7 +5,7 @@
 %{!?python_version: %global python_version %(%{__python} -c "from distutils.sysconfig import get_python_version; print(get_python_version())")}
 
 Name: libtdb
-Version: 1.3.0
+Version: 1.3.7
 Release: 1%{?dist}
 Group: System Environment/Daemons
 Group(zh_CN.UTF-8): 系统环境/服务
@@ -120,6 +120,7 @@ rm -rf $RPM_BUILD_ROOT
 %files -n python-tdb
 %defattr(-,root,root,-)
 %{python_sitearch}/tdb.so
+%{python_sitearch}/_tdb_text.py
 
 %post -p /sbin/ldconfig
 
@@ -130,6 +131,12 @@ rm -rf $RPM_BUILD_ROOT
 %postun -n python-tdb -p /sbin/ldconfig
 
 %changelog
+* Fri Aug 07 2015 Liu Di <liudidi@gmail.com> - 1.3.7-1
+- 更新到 1.3.7
+
+* Fri Aug 07 2015 Liu Di <liudidi@gmail.com> - 1.0-1
+- 更新到 1.0
+
 * Fri Aug 01 2014 Liu Di <liudidi@gmail.com> - 1.3.0-1
 - 更新到 1.3.0
 

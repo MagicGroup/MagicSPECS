@@ -22,11 +22,13 @@
 %endif  # with python3
 
 Summary:        A simple, lightweight interface to Amazon Web Services
+Summary(zh_CN.UTF-8): Amazon 网页服务的简单轻量级接口
 Name:           python-boto
 Version:        2.38.0
-Release:        3%{?dist}
+Release:        4%{?dist}
 License:        MIT
 Group:          Development/Languages
+Group(zh_CN.UTF-8): 开发/语言
 URL:            https://github.com/boto/boto
 Source0:        http://pypi.python.org/packages/source/b/boto/boto-%{version}.tar.gz
 # Taken from sourcecode 2014-07-31
@@ -77,10 +79,13 @@ and depth of Amazon Web Services.  In addition, boto provides support
 for other public services such as Google Storage in addition to private
 cloud systems like Eucalyptus, OpenStack and Open Nebula.
 
+%description -l zh_CN.UTF-8
+Amazon 网页服务的简单轻量级接口。
 
 %if %{with python3}
 %package -n python3-boto
 Summary:        A simple, lightweight interface to Amazon Web Services
+Summary(zh_CN.UTF-8): Amazon 网页服务的简单轻量级接口
 
 Requires:       python3-requests
 Requires:       python3-six
@@ -100,6 +105,9 @@ REST and Query APIs.  The goal of boto is to support the full breadth
 and depth of Amazon Web Services.  In addition, boto provides support
 for other public services such as Google Storage in addition to private
 cloud systems like Eucalyptus, OpenStack and Open Nebula.
+
+%description -n python3-boto -l zh_CN.UTF-8
+Amazon 网页服务的简单轻量级接口。
 %endif  # with python3
 
 
@@ -139,7 +147,7 @@ rm -f $RPM_BUILD_ROOT/%{_bindir}/*
 chmod -x $RPM_BUILD_ROOT/%{_bindir}/*
 mv $RPM_BUILD_ROOT/%{_bindir} examples
 %endif
-
+magic_rpm_clean.sh
 
 %check
 %if %{with unittests}
@@ -172,6 +180,9 @@ mv $RPM_BUILD_ROOT/%{_bindir} examples
 
 
 %changelog
+* Wed Aug 19 2015 Liu Di <liudidi@gmail.com> - 2.38.0-4
+- 为 Magic 3.0 重建
+
 * Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.38.0-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

@@ -6,7 +6,7 @@
 
 Name:           python-logilab-common
 Version:        0.63.2
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        Common libraries for Logilab projects
 Group:          Development/Libraries
 License:        GPLv2+
@@ -99,6 +99,9 @@ rm -rf %{buildroot}
 %endif # with_python3
 
 %changelog
+* Fri Aug 14 2015 Liu Di <liudidi@gmail.com> - 0.63.2-4
+- 为 Magic 3.0 重建
+
 * Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.63.2-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

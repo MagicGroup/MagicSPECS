@@ -4,15 +4,17 @@
 #define gs_bootstrap 9.06
 
 Summary: Encoding files 
+Summary(zh_CN.UTF-8): 编码文件
 Name:    poppler-data
-Version: 0.4.6
-Release: 2%{?dist}
+Version:	0.4.7
+Release:	1%{?dist}
 # The cMap data files installed by the poppler-data package are
 # under the COPYING.adobe license
 # cidToUnicode, nameToUnicode and unicodeMap data files
 # are under the COPYING.gpl2 license
 License: BSD and GPLv2
 Group:   Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 URL:     http://poppler.freedesktop.org/
 Source0: http://poppler.freedesktop.org/poppler-data-%{version}.tar.gz
 Source1: http://downloads.sourceforge.net/project/cmap.adobe/cmapresources_identity0.tar.z
@@ -31,6 +33,8 @@ This package consists of encoding files for poppler.  When installed,
 the encoding files enables poppler to correctly render CJK and Cyrillic 
 properly.
 
+%description -l zh_CN.UTF-8
+poppler 使用的编码文件。
 
 %prep
 %setup -q -a 1
@@ -55,7 +59,7 @@ ln -s $target
 test -f $(basename $target)
 done
 popd
-
+magic_rpm_clean.sh
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -68,9 +72,12 @@ rm -rf $RPM_BUILD_ROOT
 %dir %{_datadir}/ghostscript/%{gs_ver}
 %dir %{_datadir}/ghostscript/%{gs_ver}/Resource
 %{_datadir}/ghostscript/%{gs_ver}/Resource/CMap/
-
+%{_datadir}/pkgconfig/poppler-data.pc
 
 %changelog
+* Tue Jul 28 2015 Liu Di <liudidi@gmail.com> - 0.4.7-1
+- 更新到 0.4.7
+
 * Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 0.4.6-2
 - 为 Magic 3.0 重建
 
