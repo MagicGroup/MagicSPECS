@@ -1,5 +1,5 @@
 %global use_alternatives 1
-%global lspp 0
+%global lspp 1
 
 # {_exec_prefix}/lib/cups is correct, even on x86_64.
 # It is not used for shared objects but for executables.
@@ -7,21 +7,19 @@
 # but we use lib for compatibility with 3rd party drivers (at upstream request).
 %global cups_serverbin %{_exec_prefix}/lib/cups
 
+%global prever rc1
+%global VERSION %{version}%{prever}
+
 Summary: CUPS printing system
 Name: cups
 Epoch: 1
-Version: 1.7.1
-Release: 4%{?dist}
+Version: 2.1
+Release: 0.3%{prever}%{?dist}
 License: GPLv2
-Group: System Environment/Daemons
 Url: http://www.cups.org/
-Source: http://www.cups.org/software/%{version}/cups-%{version}-source.tar.bz2
+Source0: http://www.cups.org/software/%{VERSION}/cups-%{VERSION}-source.tar.bz2
 # Pixmap for desktop file
 Source2: cupsprinter.png
-# socket unit for cups-lpd service
-Source3: cups-lpd.socket
-# cups-lpd service unit configuration
-Source4: cups-lpd@.service
 # Logrotate configuration
 Source6: cups.logrotate
 # Backend for NCP protocol
@@ -52,49 +50,43 @@ Patch22: cups-hp-deviceid-oid.patch
 Patch23: cups-dnssd-deviceid.patch
 Patch24: cups-ricoh-deviceid-oid.patch
 Patch25: cups-systemd-socket.patch
-Patch26: cups-lpd-manpage.patch
 Patch27: cups-avahi-address.patch
-Patch29: cups-enum-all.patch
-Patch31: cups-dymo-deviceid.patch
-Patch32: cups-freebind.patch
-Patch33: cups-no-gcry.patch
-Patch34: cups-libusb-quirks.patch
-Patch35: cups-use-ipp1.1.patch
-Patch36: cups-avahi-no-threaded.patch
-Patch37: cups-ipp-multifile.patch
-Patch38: cups-full-relro.patch
-Patch39: cups-web-devices-timeout.patch
-Patch40: cups-final-content-type.patch
-Patch41: cups-journal.patch
-Patch42: cups-synconclose.patch
-Patch43: cups-avahi-browse.patch
+Patch28: cups-enum-all.patch
+Patch29: cups-dymo-deviceid.patch
+Patch30: cups-freebind.patch
+Patch31: cups-no-gcry.patch
+Patch32: cups-libusb-quirks.patch
+Patch33: cups-use-ipp1.1.patch
+Patch34: cups-avahi-no-threaded.patch
+Patch35: cups-ipp-multifile.patch
+Patch36: cups-web-devices-timeout.patch
+Patch37: cups-journal.patch
+Patch38: cups-synconclose.patch
 
 Patch100: cups-lspp.patch
 
-Requires: /sbin/chkconfig
 Requires: %{name}-filesystem = %{epoch}:%{version}-%{release}
 Requires: %{name}-libs%{?_isa} = %{epoch}:%{version}-%{release}
-%if %use_alternatives
-Provides: /usr/bin/lpq /usr/bin/lpr /usr/bin/lp /usr/bin/cancel /usr/bin/lprm /usr/bin/lpstat
-Requires: /usr/sbin/alternatives
-%endif
+Requires: %{name}-client%{?_isa} = %{epoch}:%{version}-%{release}
 
-Provides: lpd lpr cupsddk cupsddk-drivers
+Provides: cupsddk cupsddk-drivers
 
 BuildRequires: pam-devel pkgconfig
-BuildRequires: openssl-devel libacl-devel
+BuildRequires: pkgconfig(gnutls)
+BuildRequires: libacl-devel
 BuildRequires: openldap-devel
-BuildRequires: libusb1-devel
+BuildRequires: pkgconfig(libusb-1.0)
 BuildRequires: krb5-devel
-BuildRequires: avahi-devel
-BuildRequires: systemd, systemd-devel
-BuildRequires: dbus-devel
+BuildRequires: pkgconfig(avahi-client)
+BuildRequires: systemd
+BuildRequires: pkgconfig(libsystemd-daemon) pkgconfig(libsystemd-journal)
+BuildRequires: pkgconfig(dbus-1)
 BuildRequires: automake
 
 # Make sure we get postscriptdriver tags.
 BuildRequires: python-cups
 
-%if %lspp
+%if %{lspp}
 BuildRequires: libselinux-devel
 BuildRequires: audit-libs-devel
 %endif
@@ -116,35 +108,41 @@ Requires: acl
 Requires: ghostscript-cups
 Requires: cups-filters
 
+%package client
+Summary: CUPS printing system - client programs
+License: GPLv2
+Requires: %{name}-libs%{?_isa} = %{epoch}:%{version}-%{release}
+%if %{use_alternatives}
+Provides: /usr/bin/lpq /usr/bin/lpr /usr/bin/lp /usr/bin/cancel /usr/bin/lprm /usr/bin/lpstat
+Requires: /usr/sbin/alternatives
+%endif
+Provides: lpr
+
 %package devel
 Summary: CUPS printing system - development environment
-Group: Development/Libraries
 License: LGPLv2
 Requires: %{name}-libs%{?_isa} = %{epoch}:%{version}-%{release}
-Requires: openssl-devel
+Requires: gnutls-devel
 Requires: krb5-devel
 Requires: zlib-devel
 Provides: cupsddk-devel
 
 %package libs
 Summary: CUPS printing system - libraries
-Group: System Environment/Libraries
 License: LGPLv2 and zlib
 
 %package filesystem
 Summary: CUPS printing system - directory layout
-Group: System Environment/Base
 BuildArch: noarch
 
 %package lpd
 Summary: CUPS printing system - lpd emulation
-Group: System Environment/Daemons
-Requires: %{name} = %{epoch}:%{version}-%{release}
+Requires: %{name}%{?_isa} = %{epoch}:%{version}-%{release}
 Requires: %{name}-libs%{?_isa} = %{epoch}:%{version}-%{release}
+Provides: lpd
 
 %package ipptool
 Summary: CUPS printing system - tool for performing IPP requests
-Group: System Environment/Daemons
 Requires: %{name}-libs%{?_isa} = %{epoch}:%{version}-%{release}
 
 %description
@@ -152,6 +150,11 @@ CUPS printing system provides a portable printing layer for
 UNIX® operating systems. It has been developed by Apple Inc.
 to promote a standard printing solution for all UNIX vendors and users.
 CUPS provides the System V and Berkeley command-line interfaces.
+
+%description client
+CUPS printing system provides a portable printing layer for
+UNIX® operating systems. This package contains command-line client
+programs.
 
 %description devel
 CUPS printing system provides a portable printing layer for
@@ -180,7 +183,8 @@ lpd emulation.
 Sends IPP requests to the specified URI and tests and/or displays the results.
 
 %prep
-%setup -q
+%setup -q -n cups-%{VERSION}
+
 # Don't gzip man pages in the Makefile, let rpmbuild do it.
 %patch1 -p1 -b .no-gzip-man
 # Use the system pam configuration.
@@ -227,49 +231,42 @@ Sends IPP requests to the specified URI and tests and/or displays the results.
 %patch23 -p1 -b .dnssd-deviceid
 # Add an SNMP query for Ricoh's device ID OID (STR #3552).
 %patch24 -p1 -b .ricoh-deviceid-oid
-# Add support for systemd socket activation (patch from Lennart
-# Poettering).
+# Make cups.service Type=notify (bug #1088918).
 %patch25 -p1 -b .systemd-socket
-# Talk about systemd in cups-lpd manpage (part of bug #884641).
-%patch26 -p1 -b .lpd-manpage
 # Use IP address when resolving DNSSD URIs (bug #948288).
 %patch27 -p1 -b .avahi-address
 # Return from cupsEnumDests() once all records have been returned.
-%patch29 -p1 -b .enum-all
+%patch28 -p1 -b .enum-all
 # Added IEEE 1284 Device ID for a Dymo device (bug #747866).
-%patch31 -p1 -b .dymo-deviceid
+%patch29 -p1 -b .dymo-deviceid
 # Use IP_FREEBIND socket option when binding listening sockets (bug #970809).
-%patch32 -p1 -b .freebind
+%patch30 -p1 -b .freebind
 # Don't link against libgcrypt needlessly.
-%patch33 -p1 -b .no-gcry
+%patch31 -p1 -b .no-gcry
 # Added libusb quirk for Canon PIXMA MP540 (bug #967873).
-%patch34 -p1 -b .libusb-quirks
+%patch32 -p1 -b .libusb-quirks
 # Default to IPP/1.1 for now (bug #977813).
-%patch35 -p1 -b .use-ipp1.1
+%patch33 -p1 -b .use-ipp1.1
 # Don't use D-Bus from two threads (bug #979748).
-%patch36 -p1 -b .avahi-no-threaded
+%patch34 -p1 -b .avahi-no-threaded
 # Fixes for jobs with multiple files and multiple formats.
-%patch37 -p1 -b .ipp-multifile
-# Full relro (bug #996740).
-%patch38 -p1 -b .full-relro
+%patch35 -p1 -b .ipp-multifile
 # Increase web interface get-devices timeout to 10s (bug #996664).
-%patch39 -p1 -b .web-devices-timeout
-# Reverted upstream change to FINAL_CONTENT_TYPE in order to fix
-# printing to remote CUPS servers (bug #1010580).
-%patch40 -p1 -b .final-content-type
+%patch36 -p1 -b .web-devices-timeout
 # Allow "journal" log type for log output to system journal.
-%patch41 -p1 -b .journal
+%patch37 -p1 -b .journal
 # Set the default for SyncOnClose to Yes.
-%patch42 -p1 -b .synconclose
-# Prevent dnssd backend exiting too early (bug #1026940, STR #4365).
-%patch43 -p1 -b .avahi-browse
+%patch38 -p1 -b .synconclose
 
-%if %lspp
+%if %{lspp}
 # LSPP support.
 %patch100 -p1 -b .lspp
 %endif
 
 sed -i -e '1iMaxLogSize 0' conf/cupsd.conf.in
+
+# Log to the system journal by default (bug #1078781).
+sed -i -e 's,^ErrorLog .*$,ErrorLog syslog,' conf/cups-files.conf.in
 
 # Let's look at the compilation command lines.
 perl -pi -e "s,^.SILENT:,," Makedefs.in
@@ -286,7 +283,7 @@ autoconf -I config-scripts
 export CFLAGS="$RPM_OPT_FLAGS -fstack-protector-all -DLDAP_DEPRECATED=1"
 # --enable-debug to avoid stripping binaries
 %configure --with-docdir=%{_datadir}/%{name}/www --enable-debug \
-%if %lspp
+%if %{lspp}
 	--enable-lspp \
 %endif
 	--with-cupsd-file-perm=0755 \
@@ -295,7 +292,8 @@ export CFLAGS="$RPM_OPT_FLAGS -fstack-protector-all -DLDAP_DEPRECATED=1"
 	--with-dbusdir=%{_sysconfdir}/dbus-1 \
 	--with-php=/usr/bin/php-cgi \
 	--enable-avahi \
-	--enable-threads --enable-openssl \
+	--enable-threads \
+	--enable-gnutls \
 	--enable-webif \
 	--with-xinetd=no \
 	localedir=%{_datadir}/locale
@@ -304,60 +302,65 @@ export CFLAGS="$RPM_OPT_FLAGS -fstack-protector-all -DLDAP_DEPRECATED=1"
 make %{?_smp_mflags}
 
 %install
-make BUILDROOT=$RPM_BUILD_ROOT install 
+make BUILDROOT=%{buildroot} install
 
-rm -rf	$RPM_BUILD_ROOT%{_initddir} \
-	$RPM_BUILD_ROOT%{_sysconfdir}/init.d \
-	$RPM_BUILD_ROOT%{_sysconfdir}/rc?.d
-mkdir -p $RPM_BUILD_ROOT%{_unitdir}
+rm -rf	%{buildroot}%{_initddir} \
+	%{buildroot}%{_sysconfdir}/init.d \
+	%{buildroot}%{_sysconfdir}/rc?.d
+mkdir -p %{buildroot}%{_unitdir}
 
-find $RPM_BUILD_ROOT%{_datadir}/cups/model -name "*.ppd" |xargs gzip -n9f
+find %{buildroot}%{_datadir}/cups/model -name "*.ppd" |xargs gzip -n9f
 
-%if %use_alternatives
-pushd $RPM_BUILD_ROOT%{_bindir}
+%if %{use_alternatives}
+pushd %{buildroot}%{_bindir}
 for i in cancel lp lpq lpr lprm lpstat; do
 	mv $i $i.cups
 done
-cd $RPM_BUILD_ROOT%{_sbindir}
+cd %{buildroot}%{_sbindir}
 mv lpc lpc.cups
-cd $RPM_BUILD_ROOT%{_mandir}/man1
+cd %{buildroot}%{_mandir}/man1
 for i in cancel lp lpq lpr lprm lpstat; do
 	mv $i.1 $i-cups.1
 done
-cd $RPM_BUILD_ROOT%{_mandir}/man8
+cd %{buildroot}%{_mandir}/man8
 mv lpc.8 lpc-cups.8
 popd
 %endif
 
-mkdir -p $RPM_BUILD_ROOT%{_datadir}/pixmaps $RPM_BUILD_ROOT%{_sysconfdir}/X11/sysconfig $RPM_BUILD_ROOT%{_sysconfdir}/X11/applnk/System $RPM_BUILD_ROOT%{_sysconfdir}/logrotate.d
-install -p -m 644 %{SOURCE2} $RPM_BUILD_ROOT%{_datadir}/pixmaps
-install -p -m 644 %{SOURCE3} %{buildroot}%{_unitdir}
-install -p -m 644 %{SOURCE4} %{buildroot}%{_unitdir}
-install -p -m 644 %{SOURCE6} $RPM_BUILD_ROOT%{_sysconfdir}/logrotate.d/cups
-install -p -m 755 %{SOURCE7} $RPM_BUILD_ROOT%{cups_serverbin}/backend/ncp
+mv %{buildroot}%{_unitdir}/org.cups.cupsd.path %{buildroot}%{_unitdir}/cups.path
+mv %{buildroot}%{_unitdir}/org.cups.cupsd.service %{buildroot}%{_unitdir}/cups.service
+mv %{buildroot}%{_unitdir}/org.cups.cupsd.socket %{buildroot}%{_unitdir}/cups.socket
+mv %{buildroot}%{_unitdir}/org.cups.cups-lpd.socket %{buildroot}%{_unitdir}/cups-lpd.socket
+mv %{buildroot}%{_unitdir}/org.cups.cups-lpd@.service %{buildroot}%{_unitdir}/cups-lpd@.service
+/bin/sed -i -e "s,org.cups.cupsd,cups,g" %{buildroot}%{_unitdir}/cups.service
+
+mkdir -p %{buildroot}%{_datadir}/pixmaps %{buildroot}%{_sysconfdir}/X11/sysconfig %{buildroot}%{_sysconfdir}/X11/applnk/System %{buildroot}%{_sysconfdir}/logrotate.d
+install -p -m 644 %{SOURCE2} %{buildroot}%{_datadir}/pixmaps
+install -p -m 644 %{SOURCE6} %{buildroot}%{_sysconfdir}/logrotate.d/cups
+install -p -m 755 %{SOURCE7} %{buildroot}%{cups_serverbin}/backend/ncp
 
 # Ship an rpm macro for where to put driver executables.
-mkdir -p $RPM_BUILD_ROOT%{_rpmconfigdir}/macros.d
-install -m 0644 %{SOURCE8} $RPM_BUILD_ROOT%{_rpmconfigdir}/macros.d
+mkdir -p %{buildroot}%{_rpmconfigdir}/macros.d
+install -m 0644 %{SOURCE8} %{buildroot}%{_rpmconfigdir}/macros.d
 
 # Ship a printers.conf file, and a client.conf file.  That way, they get
 # their SELinux file contexts set correctly.
-touch $RPM_BUILD_ROOT%{_sysconfdir}/cups/printers.conf
-touch $RPM_BUILD_ROOT%{_sysconfdir}/cups/classes.conf
-touch $RPM_BUILD_ROOT%{_sysconfdir}/cups/client.conf
-touch $RPM_BUILD_ROOT%{_sysconfdir}/cups/subscriptions.conf
-touch $RPM_BUILD_ROOT%{_sysconfdir}/cups/lpoptions
+touch %{buildroot}%{_sysconfdir}/cups/printers.conf
+touch %{buildroot}%{_sysconfdir}/cups/classes.conf
+touch %{buildroot}%{_sysconfdir}/cups/client.conf
+touch %{buildroot}%{_sysconfdir}/cups/subscriptions.conf
+touch %{buildroot}%{_sysconfdir}/cups/lpoptions
 
 # LSB 3.2 printer driver directory
-mkdir -p $RPM_BUILD_ROOT%{_datadir}/ppd
+mkdir -p %{buildroot}%{_datadir}/ppd
 
 # Remove unshipped files.
-rm -rf $RPM_BUILD_ROOT%{_mandir}/cat? $RPM_BUILD_ROOT%{_mandir}/*/cat?
-rm -f $RPM_BUILD_ROOT%{_datadir}/applications/cups.desktop
-rm -rf $RPM_BUILD_ROOT%{_datadir}/icons
+rm -rf %{buildroot}%{_mandir}/cat? %{buildroot}%{_mandir}/*/cat?
+rm -f %{buildroot}%{_datadir}/applications/cups.desktop
+rm -rf %{buildroot}%{_datadir}/icons
 # there are pdf-banners shipped with cups-filters (#919489)
-rm -rf $RPM_BUILD_ROOT%{_datadir}/cups/banners
-rm -f $RPM_BUILD_ROOT%{_datadir}/cups/data/testprint
+rm -rf %{buildroot}%{_datadir}/cups/banners
+rm -f %{buildroot}%{_datadir}/cups/data/testprint
 
 # install /usr/lib/tmpfiles.d/cups.conf (bug #656566, bug #893834)
 mkdir -p ${RPM_BUILD_ROOT}%{_tmpfilesdir}
@@ -383,7 +386,7 @@ c /dev/lp2 0660 root lp - 6:2
 c /dev/lp3 0660 root lp - 6:3
 EOF
 
-find $RPM_BUILD_ROOT -type f -o -type l | sed '
+find %{buildroot} -type f -o -type l | sed '
 s:.*\('%{_datadir}'/\)\([^/_]\+\)\(.*\.po$\):%lang(\2) \1\2\3:
 /^%lang(C)/d
 /^\([^%].*\)/d
@@ -394,8 +397,24 @@ s:.*\('%{_datadir}'/\)\([^/_]\+\)\(.*\.po$\):%lang(\2) \1\2\3:
 
 # Remove old-style certs directory; new-style is /var/run
 # (see bug #194581 for why this is necessary).
-/bin/rm -rf %{_sysconfdir}/cups/certs
-%if %use_alternatives
+rm -rf %{_sysconfdir}/cups/certs
+rm -f %{_localstatedir}/cache/cups/*.ipp %{_localstatedir}/cache/cups/*.cache
+
+# Previous migration script unnecessarily put PageLogFormat into cups-files.conf
+# (see bug #1148995)
+FILE=%{_sysconfdir}/cups/cups-files.conf
+for keyword in PageLogFormat; do
+    /bin/sed -i -e "s,^$keyword,#$keyword,i" "$FILE" || :
+done
+
+# We've been using 'journal' name in our journal.patch for couple releases,
+# but upstream decided not to use 'journal', but 'syslog'.
+sed -i -e 's,^ErrorLog journal,ErrorLog syslog,' %{_sysconfdir}/cups/cups-files.conf
+
+exit 0
+
+%post client
+%if %{use_alternatives}
 /usr/sbin/alternatives --install %{_bindir}/lpr print %{_bindir}/lpr.cups 40 \
 	 --slave %{_bindir}/lp print-lp %{_bindir}/lp.cups \
 	 --slave %{_bindir}/lpq print-lpq %{_bindir}/lpq.cups \
@@ -411,45 +430,6 @@ s:.*\('%{_datadir}'/\)\([^/_]\+\)\(.*\.po$\):%lang(\2) \1\2\3:
 	 --slave %{_mandir}/man1/lprm.1.gz print-lprmman %{_mandir}/man1/lprm-cups.1.gz \
 	 --slave %{_mandir}/man1/lpstat.1.gz print-lpstatman %{_mandir}/man1/lpstat-cups.1.gz
 %endif
-rm -f %{_localstatedir}/cache/cups/*.ipp %{_localstatedir}/cache/cups/*.cache
-
-# Deal with config migration due to CVE-2012-5519 (STR #4223)
-IN=%{_sysconfdir}/cups/cupsd.conf
-OUT=%{_sysconfdir}/cups/cups-files.conf
-copiedany=no
-for keyword in AccessLog CacheDir ConfigFilePerm	\
-    DataDir DocumentRoot ErrorLog FatalErrors		\
-    FileDevice FontPath Group LogFilePerm		\
-    LPDConfigFile PageLog Printcap PrintcapFormat	\
-    RemoteRoot RequestRoot ServerBin ServerCertificate	\
-    ServerKey ServerRoot SMBConfigFile StateDir		\
-    SystemGroup SystemGroupAuthKey TempDir User; do
-    if ! [ -f "$IN" ] || ! /bin/grep -iq ^$keyword "$IN"; then continue; fi
-    copy=yes
-    if /bin/grep -iq ^$keyword "$OUT"; then
-	if [ "`/bin/grep -i ^$keyword "$IN"`" ==	\
-	     "`/bin/grep -i ^$keyword "$OUT"`" ]; then
-	    copy=no
-	else
-	    /bin/sed -i -e "s,^$keyword,#$keyword,i" "$OUT" || :
-	fi
-    fi
-    if [ "$copy" == "yes" ]; then
-	if [ "$copiedany" == "no" ]; then
-	    (cat >> "$OUT" <<EOF
-
-# Settings automatically moved from cupsd.conf by RPM package:
-EOF
-	    ) || :
-	fi
-
-	(/bin/grep -i ^$keyword "$IN" >> "$OUT") || :
-	copiedany=yes
-    fi
-
-    /bin/sed -i -e "s,^$keyword,#$keyword,i" "$IN" || :
-done
-
 exit 0
 
 %post lpd
@@ -462,13 +442,14 @@ exit 0
 
 %preun
 %systemd_preun %{name}.path %{name}.socket %{name}.service
+exit 0
 
-%if %use_alternatives
+%preun client
+%if %{use_alternatives}
 if [ $1 -eq 0 ] ; then
 	/usr/sbin/alternatives --remove print %{_bindir}/lpr.cups
 fi
 %endif
-
 exit 0
 
 %preun lpd
@@ -476,18 +457,12 @@ exit 0
 exit 0
 
 %postun
-%systemd_postun_with_restart %{name}.service
+%systemd_postun_with_restart %{name}.path %{name}.socket %{name}.service
 exit 0
 
 %postun lpd
 %systemd_postun_with_restart cups-lpd.socket
 exit 0
-
-%triggerun -- %{name} < 1:1.5.0-22
-# This package is allowed to autostart; however, the upgrade trigger
-# in Fedora 16 final failed to actually do this.  Do it now as a
-# one-off fix for bug #748841.
-/bin/systemctl --no-reload enable %{name}.{service,socket,path} >/dev/null 2>&1 || :
 
 %triggerin -- samba-client
 ln -sf ../../../bin/smbspool %{cups_serverbin}/backend/smb || :
@@ -513,12 +488,14 @@ rm -f %{cups_serverbin}/backend/smb
 %{_tmpfilesdir}/cups.conf
 %{_tmpfilesdir}/cups-lp.conf
 %verify(not md5 size mtime) %config(noreplace) %attr(0640,root,lp) %{_sysconfdir}/cups/cupsd.conf
-%verify(not md5 size mtime) %config(noreplace) %attr(0640,root,lp) %{_sysconfdir}/cups/cups-files.conf
 %attr(0640,root,lp) %{_sysconfdir}/cups/cupsd.conf.default
+%verify(not md5 size mtime) %config(noreplace) %attr(0640,root,lp) %{_sysconfdir}/cups/cups-files.conf
+%attr(0640,root,lp) %{_sysconfdir}/cups/cups-files.conf.default
 %verify(not md5 size mtime) %config(noreplace) %attr(0644,root,lp) %{_sysconfdir}/cups/client.conf
 %verify(not md5 size mtime) %config(noreplace) %attr(0600,root,lp) %{_sysconfdir}/cups/classes.conf
 %verify(not md5 size mtime) %config(noreplace) %attr(0600,root,lp) %{_sysconfdir}/cups/printers.conf
 %verify(not md5 size mtime) %config(noreplace) %attr(0644,root,lp) %{_sysconfdir}/cups/snmp.conf
+%attr(0640,root,lp) %{_sysconfdir}/cups/snmp.conf.default
 %verify(not md5 size mtime) %config(noreplace) %attr(0644,root,lp) %{_sysconfdir}/cups/subscriptions.conf
 %{_sysconfdir}/cups/interfaces
 %verify(not md5 size mtime) %config(noreplace) %attr(0644,root,lp) %{_sysconfdir}/cups/lpoptions
@@ -527,11 +504,8 @@ rm -f %{cups_serverbin}/backend/smb
 %config(noreplace) %{_sysconfdir}/pam.d/cups
 %config(noreplace) %{_sysconfdir}/logrotate.d/cups
 %dir %{_datadir}/%{name}/www
-%dir %{_datadir}/%{name}/www/ca
-%dir %{_datadir}/%{name}/www/cs
+%dir %{_datadir}/%{name}/www/de
 %dir %{_datadir}/%{name}/www/es
-%dir %{_datadir}/%{name}/www/fr
-%dir %{_datadir}/%{name}/www/it
 %dir %{_datadir}/%{name}/www/ja
 %dir %{_datadir}/%{name}/www/ru
 %{_datadir}/%{name}/www/images
@@ -539,13 +513,11 @@ rm -f %{cups_serverbin}/backend/smb
 %doc %{_datadir}/%{name}/www/index.html
 %doc %{_datadir}/%{name}/www/help
 %doc %{_datadir}/%{name}/www/robots.txt
-%doc %{_datadir}/%{name}/www/ca/index.html
-%doc %{_datadir}/%{name}/www/cs/index.html
+%doc %{_datadir}/%{name}/www/de/index.html
 %doc %{_datadir}/%{name}/www/es/index.html
-%doc %{_datadir}/%{name}/www/fr/index.html
-%doc %{_datadir}/%{name}/www/it/index.html
 %doc %{_datadir}/%{name}/www/ja/index.html
 %doc %{_datadir}/%{name}/www/ru/index.html
+%doc %{_datadir}/%{name}/www/apple-touch-icon.png
 %dir %{_datadir}/%{name}/usb
 %{_datadir}/%{name}/usb/org.cups.usb-quirks
 %{_unitdir}/%{name}.service
@@ -553,8 +525,6 @@ rm -f %{cups_serverbin}/backend/smb
 %{_unitdir}/%{name}.path
 %{_bindir}/cupstestppd
 %{_bindir}/cupstestdsc
-%{_bindir}/cancel*
-%{_bindir}/lp*
 %{_bindir}/ppd*
 %{cups_serverbin}/backend/*
 %{cups_serverbin}/cgi-bin
@@ -566,6 +536,10 @@ rm -f %{cups_serverbin}/backend/smb
 %{cups_serverbin}/filter/*
 %{cups_serverbin}/monitor
 %{_mandir}/man[1578]/*
+# client subpackage
+%exclude %{_mandir}/man1/lp*.1.gz
+%exclude %{_mandir}/man1/cancel-cups.1.gz
+%exclude %{_mandir}/man8/lpc-cups.8.gz
 # devel subpackage
 %exclude %{_mandir}/man1/cups-config.1.gz
 # ipptool subpackage
@@ -574,20 +548,16 @@ rm -f %{cups_serverbin}/backend/smb
 # lpd subpackage
 %exclude %{_mandir}/man8/cups-lpd.8.gz
 %{_sbindir}/*
+# client subpackage
+%exclude %{_sbindir}/lpc.cups
 %dir %{_datadir}/cups/templates
-%dir %{_datadir}/cups/templates/ca
-%dir %{_datadir}/cups/templates/cs
+%dir %{_datadir}/cups/templates/de
 %dir %{_datadir}/cups/templates/es
-%dir %{_datadir}/cups/templates/fr
-%dir %{_datadir}/cups/templates/it
 %dir %{_datadir}/cups/templates/ja
 %dir %{_datadir}/cups/templates/ru
 %{_datadir}/cups/templates/*.tmpl
-%{_datadir}/cups/templates/ca/*.tmpl
-%{_datadir}/cups/templates/cs/*.tmpl
+%{_datadir}/cups/templates/de/*.tmpl
 %{_datadir}/cups/templates/es/*.tmpl
-%{_datadir}/cups/templates/fr/*.tmpl
-%{_datadir}/cups/templates/it/*.tmpl
 %{_datadir}/cups/templates/ja/*.tmpl
 %{_datadir}/cups/templates/ru/*.tmpl
 %dir %attr(1770,root,lp) %{_localstatedir}/spool/cups/tmp
@@ -601,6 +571,14 @@ rm -f %{cups_serverbin}/backend/smb
 %{_datadir}/cups/mime/mime.convs
 %{_datadir}/cups/ppdc/*.defs
 %{_datadir}/cups/ppdc/*.h
+
+%files client
+%{_sbindir}/lpc.cups
+%{_bindir}/cancel*
+%{_bindir}/lp*
+%{_mandir}/man1/lp*.1.gz
+%{_mandir}/man1/cancel-cups.1.gz
+%{_mandir}/man8/lpc-cups.8.gz
 
 %files libs
 %doc LICENSE.txt
@@ -643,6 +621,178 @@ rm -f %{cups_serverbin}/backend/smb
 %{_mandir}/man5/ipptoolfile.5.gz
 
 %changelog
+* Thu Aug 13 2015 Jiri Popelka <jpopelka@redhat.com> - 1:2.1-0.3rc1
+- fix crash in scheduler (#1253135)
+
+* Mon Aug 10 2015 Jiri Popelka <jpopelka@redhat.com> - 1:2.1-0.2rc1
+- better fix for STR#4687
+
+* Mon Aug 10 2015 Jiri Popelka <jpopelka@redhat.com> - 1:2.1-0.1rc1
+- 2.1rc1
+
+* Mon Aug 10 2015 Jiri Popelka <jpopelka@redhat.com> - 1:2.0.4-1
+- 2.0.4
+
+* Tue Jul 28 2015 Jiri Popelka <jpopelka@redhat.com> - 1:2.0.3-5
+- BuildRequires: gnutls-devel -> pkgconfig(gnutls)
+
+* Tue Jul 07 2015 Jiri Popelka <jpopelka@redhat.com> - 1:2.0.3-4
+- RPM_BUILD_ROOT -> %%{buildroot}, put braces around lspp and use_alternatives
+
+* Thu Jun 25 2015 Tim Waugh <twaugh@redhat.com> - 1:2.0.3-3
+- Fix slow resume of jobs after restart (STR #4646).
+- Fix redirection from CGI scripts (bug #1232030, STR #4538).
+
+* Wed Jun 17 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1:2.0.3-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
+
+* Tue Jun 09 2015 Jiri Popelka <jpopelka@redhat.com> - 1:2.0.3-1
+- 2.0.3
+
+* Sat May 02 2015 Kalev Lember <kalevlember@gmail.com> - 1:2.0.2-6
+- Rebuilt for GCC 5 C++11 ABI change
+
+* Mon Mar 16 2015 Tim Waugh <twaugh@redhat.com> - 1:2.0.2-5
+- Avoid busy loop in cupsd when connection is closed after request
+  sent (bug #1179596).
+
+* Mon Feb 16 2015 Jiri Popelka <jpopelka@redhat.com> - 1:2.0.2-2
+- Fixed multilib.patch to check for gnutls instead of openssl.
+
+* Tue Feb 10 2015 Jiri Popelka <jpopelka@redhat.com> - 1:2.0.2-1
+- 2.0.2
+
+* Tue Jan 27 2015 Tim Waugh <twaugh@redhat.com> - 1:2.0.1-2
+- Fixed systemd notify support (bug #1184453).
+
+* Sat Nov 15 2014 Jiri Popelka <jpopelka@redhat.com> - 1:2.0.1-1
+- 2.0.1
+
+* Fri Nov  7 2014 Tim Waugh <twaugh@redhat.com> - 1:2.0.0-12
+- Re-introduce SSLOptions configuration directive, disable SSL3 by
+  default (STR #4476).
+- Enable SSL again via GnuTLS (bug #1161235).
+
+* Thu Nov  6 2014 Tim Waugh <twaugh@redhat.com> - 1:2.0.0-11
+- Removed openssl requirements from spec file as it is no longer
+  supported upstream (see bug #1161235).
+
+* Thu Nov  6 2014 Tim Waugh <twaugh@redhat.com> - 1:2.0.0-10
+- cups-lspp.patch: use cupsdLogJob() when appropriate.
+- Fixed some warnings in cups-lspp.patch.
+- New systemd journal fields CUPS_DEST and CUPS_PRINTER, as well as
+  accurate code location fields.
+
+* Wed Oct 22 2014 Tim Waugh <twaugh@redhat.com> - 1:2.0.0-9
+- Upstream fix for cupsd crash on restart when colord not available
+- (STR #4496).
+
+* Sat Oct 18 2014 Tim Waugh <twaugh@redhat.com> - 1:2.0.0-7
+- Fix for last fix (bug #1153660, bug #1154284).
+
+* Thu Oct 16 2014 Tim Waugh <twaugh@redhat.com> - 1:2.0.0-6
+- Start cupsd systemd service after network.target (bug #1153660).
+
+* Wed Oct 15 2014 Tim Waugh <twaugh@redhat.com> - 1:2.0.0-5
+- Fix cupsGetPPD3() so it doesn't give the caller an unreadable file
+  (bug #1150917, STR #4500).
+
+* Wed Oct 15 2014 Tim Waugh <twaugh@redhat.com> - 1:2.0.0-4
+- Can no longer reproduce bug #1010580 so removing final-content-type
+  patch as it causes issues for some backends (bug #1149244).
+
+* Fri Oct 03 2014 Jiri Popelka <jpopelka@redhat.com> - 1:2.0.0-3
+- comment out unnecessary PageLogFormat from cups-files.conf (#1148995)
+
+* Fri Oct 03 2014 Jiri Popelka <jpopelka@redhat.com> - 1:2.0.0-2
+- s/org.cups.cupsd/cups/ cups.service
+
+* Wed Oct 01 2014 Jiri Popelka <jpopelka@redhat.com> - 1:2.0.0-1
+- 2.0.0
+
+* Fri Sep 12 2014 Jiri Popelka <jpopelka@redhat.com> - 1:2.0-0.1.rc1
+- 2.0rc1
+
+* Mon Sep  1 2014 Tim Waugh <twaugh@redhat.com> - 1:1.7.5-7
+- Fix icon display in web interface during server restart (STR #4475).
+
+* Mon Sep  1 2014 Tim Waugh <twaugh@redhat.com> - 1:1.7.5-6
+- More STR #4461 fixes from upstream.
+
+* Tue Aug 26 2014 Tim Waugh <twaugh@redhat.com> - 1:1.7.5-5
+- Use upstream patch for STR #4461.
+
+* Wed Aug 20 2014 Tim Waugh <twaugh@redhat.com> - 1:1.7.5-4
+- Removed old one-off trigger now it's no longer needed.
+- Run systemd postun script for path and socket unit files as well as
+  the main service unit file.
+- Upstream patch for STR #4396, pre-requisite for STR #2913 patch.
+- Upstream patch for STR #2913 to limit Get-Jobs replies to 500 jobs
+  (bug #421671).
+
+* Sat Aug 16 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1:1.7.5-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
+
+* Mon Aug 11 2014 Tim Waugh <twaugh@redhat.com> - 1:1.7.5-2
+- Fix conf/log file reading for authenticated users (STR #4461).
+
+* Fri Aug 01 2014 Jiri Popelka <jpopelka@redhat.com> - 1:1.7.5-1
+- 1.7.5
+
+* Wed Jul 23 2014 Jiri Popelka <jpopelka@redhat.com> - 1:1.7.4-3
+- CVE-2014-5029, CVE-2014-5030, CVE-2014-5031 (#1122601)
+
+* Wed Jul 23 2014 Tim Waugh <twaugh@redhat.com> - 1:1.7.4-2
+- Fix CGI handling (STR #4454).
+
+* Mon Jul 14 2014 Jiri Popelka <jpopelka@redhat.com> - 1:1.7.4-1
+- 1.7.4: CVE-2014-3537
+
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1:1.7.3-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Wed May 28 2014 Jiri Popelka <jpopelka@redhat.com> - 1:1.7.3-1
+- 1.7.3
+- str4386.patch merged upstream in STR #4403
+
+* Fri May  9 2014 Tim Waugh <twaugh@redhat.com> - 1:1.7.2-3
+- Another attempt at avoiding race condition when sending IPP requests
+  (STR #4386, bug #1072952).
+
+* Thu Apr 17 2014 Jiri Popelka <jpopelka@redhat.com> - 1:1.7.2-2
+- Make cups.service Type=notify (bug #1088918).
+
+* Mon Apr 14 2014 Jiri Popelka <jpopelka@redhat.com> - 1:1.7.2-1
+- 1.7.2
+
+* Fri Apr  4 2014 Tim Waugh <twaugh@redhat.com> - 1:1.7.1-11
+- Log to the system journal by default (bug #1078781).
+
+* Thu Apr  3 2014 Tim Waugh <twaugh@redhat.com> - 1:1.7.1-10
+- libcups: avoid race condition when sending IPP requests (STR #4386,
+  bug #1072952).
+
+* Wed Apr 02 2014 Jiri Popelka <jpopelka@redhat.com> - 1:1.7.1-9
+- New client subpackage containing command line client tools (bug #1002342).
+- Removed unneeded Group tags.
+- Removed 'Requires: /sbin/chkconfig'.
+- Moved 'Provides: lpd' to lpd subpackage.
+
+* Tue Mar 18 2014 Tim Waugh <twaugh@redhat.com> - 1:1.7.1-8
+- Removed patch for STR #4386 as it does not work and causes problems
+  instead (bug #1077239).
+
+* Mon Mar 10 2014 Jiri Popelka <jpopelka@redhat.com> - 1:1.7.1-7
+- BuildRequires: pkgconfig(foo) instead of foo-devel
+
+* Thu Mar  6 2014 Tim Waugh <twaugh@redhat.com> - 1:1.7.1-6
+- Track local default in cupsEnumDests() (STR #4332).
+- libcups: avoid race condition when sending IPP requests (STR #4386).
+- Prevent feedback loop when fetching error_log over HTTP (STR #4366).
+
+* Wed Mar  5 2014 Tim Waugh <twaugh@redhat.com> - 1:1.7.1-5
+- Fix for cupsEnumDest() 'removed' callbacks (bug #1054312, STR #4380).
+
 * Mon Feb 17 2014 Tim Waugh <twaugh@redhat.com> - 1:1.7.1-4
 - Document 'journal' logging target.
 
