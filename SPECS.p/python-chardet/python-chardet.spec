@@ -1,52 +1,96 @@
-%{!?python_sitelib: %define python_sitelib %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib()")}
-
-Name:           python-chardet
-Version:        2.0.1
-Release:        9%{?dist}
+%global with_python3 1
+%global pypi_name chardet
+Name:           python-%{pypi_name}
+Version:        2.2.1
+Release:        3%{?dist}
 Summary:        Character encoding auto-detection in Python
 
 Group:          Development/Languages
 License:        LGPLv2
-URL:            http://chardet.feedparser.org
-Source0:        http://chardet.feedparser.org/download/python2-chardet-%{version}.tgz
-BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+URL:            https://github.com/%{pypi_name}/%{pypi_name}
+Source0:        https://pypi.python.org/packages/source/c/%{pypi_name}/%{pypi_name}-%{version}.tar.gz
 
 BuildArch:      noarch
-BuildRequires:  python-devel, python-setuptools
+BuildRequires:  python2-devel, python-setuptools
+
+%if 0%{?with_python3}
+BuildRequires:  python3-devel, python3-setuptools
+%endif # with_python3
 
 %description
 Character encoding auto-detection in Python. As 
 smart as your browser. Open source.
 
+%if 0%{?with_python3}
+%package -n python3-%{pypi_name}
+Summary:        Character encoding auto-detection in Python 3
+
+%description -n python3-%{pypi_name}
+Character encoding auto-detection in Python. As 
+smart as your browser. Open source.
+
+Python 3 version.
+%endif # with_python3
+
 %prep
-%setup -q -n python2-chardet-%{version}
+%setup -q -n %{pypi_name}-%{version}
+sed -ie '1d' %{pypi_name}/chardetect.py
 
-
+%if 0%{?with_python3}
+rm -rf %{py3dir}
+cp -a . %{py3dir}
+%endif # with_python3
 
 %build
-# Remove CFLAGS=... for noarch packages (unneeded)
-%{__python} setup.py build
+%{__python2} setup.py build
+
+%if 0%{?with_python3}
+pushd %{py3dir}
+%{__python3} setup.py build
+popd
+%endif # with_python3
 
 
 %install
-rm -rf $RPM_BUILD_ROOT
-%{__python} setup.py install -O1 --skip-build --root $RPM_BUILD_ROOT
-chmod -x COPYING
- 
-%clean
-rm -rf $RPM_BUILD_ROOT
+# Do Python 3 first not to overwrite the entrypoint
+%if 0%{?with_python3}
+pushd %{py3dir}
+%{__python3} setup.py install -O1 --skip-build --root $RPM_BUILD_ROOT
+mv $RPM_BUILD_ROOT%{_bindir}/{,python3-}chardetect
+popd
+%endif # with_python3
 
+%{__python2} setup.py install -O1 --skip-build --root $RPM_BUILD_ROOT
 
 %files
-%defattr(-,root,root,-)
-%doc COPYING
-# For noarch packages: sitelib
-%{python_sitelib}/*
+%{!?_licensedir:%global license %%doc}
+%license LICENSE
+%doc README.rst
+%{python2_sitelib}/*
+%{_bindir}/chardetect
+
+%if 0%{?with_python3}
+%files -n python3-%{pypi_name}
+%{!?_licensedir:%global license %%doc}
+%license LICENSE
+%doc README.rst
+%{python3_sitelib}/*
+%{_bindir}/python3-chardetect
+%endif # with_python3
 
 
 %changelog
-* Tue Jul 01 2014 Liu Di <liudidi@gmail.com> - 2.0.1-9
-- 为 Magic 3.0 重建
+* Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.2.1-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
+
+* Thu Jul 31 2014 Tom Callaway <spot@fedoraproject.org> - 2.2.1-2
+- fix license handling
+
+* Wed Jul 02 2014 Miro Hrončok <mhroncok@redhat.com> - 2.2.1-1
+- Updated to 2.2.1
+- Introduced Python 3 subpackage (upstream has merged the codebase)
+- Removed BuildRoot and python_sitelib definition
+- Use python2 macros instead of just python
 
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.0.1-8
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
