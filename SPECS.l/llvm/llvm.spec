@@ -6,8 +6,8 @@
 %bcond_without crt
 
 # Components enabled if supported by target arch:
-%ifnarch s390 s390x sparc64 mips64el
-  %bcond_without ocaml
+%ifnarch s390 s390x sparc64
+  %bcond_with ocaml
 %else
   %bcond_with ocaml
 %endif
@@ -17,7 +17,7 @@
   %bcond_with gold
 %endif
 # lldb not ported to anything but x86 so far.
-%ifarch x86_64 %{ix86} mips64el
+%ifarch x86_64 %{ix86}
   %bcond_without lldb
 %else
   %bcond_with lldb
@@ -32,11 +32,10 @@
 %endif
 
 #global prerel rc3
-%global downloadurl http://llvm.org/%{?prerel:pre-}releases/%{version}%{?prerel:/%{prerel}}
 
 Name:           llvm
-Version:        3.4
-Release:        19%{?dist}
+Version:        3.6.2
+Release:        1%{?dist}
 Summary:        The Low Level Virtual Machine
 
 Group:          Development/Languages
@@ -44,29 +43,36 @@ License:        NCSA
 URL:            http://llvm.org/
 
 # source archives
-Source0:        %{downloadurl}/llvm-%{version}%{?prerel}.src.tar.gz
-Source1:        %{downloadurl}/clang-%{version}%{?prerel}.src.tar.gz
-Source2:        %{downloadurl}/compiler-rt-%{version}%{?prerel}.src.tar.gz
-%if %{with lldb}
-Source3:        %{downloadurl}/lldb-%{version}%{?prerel}.src.tar.gz
-%endif
+Source0:        http://llvm.org/releases/%{version}/llvm-%{version}.src.tar.xz
+Source1:        http://llvm.org/releases/%{version}/cfe-%{version}.src.tar.xz
+Source2:        http://llvm.org/releases/%{version}/compiler-rt-%{version}.src.tar.xz
+Source3:        http://llvm.org/releases/%{version}/lldb-%{version}.src.tar.xz
 
 # multilib fixes
 Source10:       llvm-Config-config.h
 Source11:       llvm-Config-llvm-config.h
 
 # patches
-Patch1:         0001-data-install-preserve-timestamps.patch
-Patch2:         0002-linker-flags-speedup-memory.patch
+Patch2:         0001-data-install-preserve-timestamps.patch
 
-# radeonsi GL 3.3 backport
-Patch3:         llvm-3.4-radeonsi-backport.patch
+# the next two are various attempts to get clang to actually work on arm
+# by forcing a hard-float ABI.  They don't apply anymore as of 3.5.0,
+# and didn't seem to work very well in the first place.  Interested parties
+# are advised to follow:
+#
+# https://bugzilla.redhat.com/show_bug.cgi?id=803433
+# http://llvm.org/bugs/show_bug.cgi?id=15666
+#Patch20:        clang-3.4-arm-hard-float.patch
+# http://llvm.org/bugs/attachment.cgi?id=12586
+#Patch22:        pr12586.patch
 
-Patch10: 	clang-3.4-magic.patch
+Patch200:       lldb-python.patch
+Patch202:       lldb-python-module-symlink.patch
 
 BuildRequires:  bison
 BuildRequires:  chrpath
 BuildRequires:  flex
+BuildRequires:  gcc-c++
 BuildRequires:  groff
 BuildRequires:  libffi-devel
 BuildRequires:  libtool-ltdl-devel
@@ -86,7 +92,7 @@ BuildRequires:  doxygen graphviz
 %endif
 # pod2man moved to perl-podlators in F19
 BuildRequires:  %{_bindir}/pod2man
-Requires:       llvm-libs%{?_isa} = %{version}-%{release}
+Requires:       %{name}-libs%{?_isa} = %{version}-%{release}
 
 %description
 LLVM is a compiler infrastructure designed for compile-time,
@@ -126,21 +132,25 @@ Documentation for the LLVM compiler infrastructure.
 %package libs
 Summary:        LLVM shared libraries
 Group:          System Environment/Libraries
+%if 0%{?fedora} > 20
 ## retire OpenGTL/libQtGTL here
 Obsoletes: OpenGTL < 0.9.18-50
 Obsoletes: OpenGTL-libs < 0.9.18-50
 Obsoletes: OpenGTL-devel < 0.9.18-50
 Obsoletes: libQtGTL < 0.9.3-50
 Obsoletes: libQtGTL-devel < 0.9.3-50
+%endif
+Obsoletes: python-llvmpy < 0.12.7-2
+Obsoletes: python3-llvmpy < 0.12.7-2
 
 %description libs
 Shared libraries for the LLVM compiler infrastructure.
 
 
 %package static
-Summary:	LLVM static libraries
-Group:		Development/Languages
-Requires:	%{name}-devel%{?_isa} = %{version}-%{release}
+Summary:        LLVM static libraries
+Group:          Development/Languages
+Requires:       %{name}-devel%{?_isa} = %{version}-%{release}
 
 %description static
 Static libraries for the LLVM compiler infrastructure.  Not recommended
@@ -152,9 +162,12 @@ for general consumption.
 Summary:        A C language family front-end for LLVM
 License:        NCSA
 Group:          Development/Languages
-Requires:       llvm%{?_isa} = %{version}-%{release}
+Requires:       %{name}%{?_isa} = %{version}-%{release}
 # clang requires gcc, clang++ requires libstdc++-devel
 Requires:       libstdc++-devel
+# See https://bugzilla.redhat.com/show_bug.cgi?id=1021645
+# and https://bugzilla.redhat.com/show_bug.cgi?id=1158594
+Requires:       gcc-c++
 # remove clang-doc pacakge
 Obsoletes:      clang-doc < %{version}-%{release}
 
@@ -167,6 +180,14 @@ clang: noun
 The goal of the Clang project is to create a new C, C++, Objective C
 and Objective C++ front-end for the LLVM compiler. Its tools are built
 as libraries and designed to be loosely-coupled and extensible.
+
+
+%Package -n clang-libs
+Summary:        Runtime library for clang
+Group:          System Environment/Libraries
+
+%description -n clang-libs
+Runtime library for clang.
 
 
 %package -n clang-devel
@@ -201,7 +222,7 @@ intended to run in tandem with a build of a project or code base.
 Summary:        Next generation high-performance debugger
 License:        NCSA
 Group:          Development/Languages
-Requires:       llvm%{?_isa} = %{version}-%{release}
+Requires:       %{name}%{?_isa} = %{version}-%{release}
 BuildRequires:  swig
 BuildRequires:  libedit-devel
 BuildRequires:  python-devel
@@ -281,36 +302,50 @@ HTML documentation for LLVM's OCaml binding.
 
 
 %prep
-%setup -q %{?with_clang:-a1} %{?with_crt:-a2} %{?with_lldb:-a3}
+%setup -q %{?with_clang:-a1} %{?with_crt:-a2} %{?with_lldb:-a3} -n llvm-%{version}.src
 rm -rf tools/clang tools/lldb projects/compiler-rt
 %if %{with clang}
-mv clang-%{version} tools/clang
+mv cfe-*/ tools/clang
 %endif
 %if %{with crt}
-mv compiler-rt-%{version} projects/compiler-rt
+mv compiler-rt-*/ projects/compiler-rt
 %endif
 %if %{with lldb}
-mv lldb-%{version} tools/lldb
+mv lldb-*/ tools/lldb
 %endif
 
-%patch1 -p1
 %patch2 -p1
-%patch3 -p1
 
-pushd tools/clang
-%patch10 -p1
+%if %{with lldb}
+pushd tools/lldb
+# careful when recreating this patch...
+%patch200 -p1 -b .python
+%patch202 -p1
+sed -i s/@lib@/%{_lib}/g scripts/Python/modules/readline/Makefile
 popd
+%endif
 
 # fix library paths
-sed -i 's|/lib /usr/lib $lt_ld_extra|%{_libdir} $lt_ld_extra|' ./configure
+sed -i 's|/lib /usr/lib $lt_ld_extra|%{_libdir} $lt_ld_extra|' configure
 sed -i 's|(PROJ_prefix)/lib|(PROJ_prefix)/%{_lib}/%{name}|g' Makefile.config.in
 sed -i 's|/lib\>|/%{_lib}/%{name}|g' tools/llvm-config/llvm-config.cpp
 
 %build
+%ifarch s390
+# Decrease debuginfo verbosity to reduce memory consumption in linker
+%global optflags %(echo %{optflags} | sed 's/-g /-g1 /')
+%endif
+
 # clang is lovely and all, but fedora builds with gcc
+# -fno-devirtualize shouldn't be necessary, but gcc has scary template-related
+# bugs that make it so.  gcc 5 ought to be fixed.
 export CC=gcc
-export CXX=c++
+export CXX=g++
+export CFLAGS="%{optflags} -DLLDB_DISABLE_PYTHON"
+export CXXFLAGS="%{optflags} -DLLDB_DISABLE_PYTHON"
 %configure \
+  --with-extra-options="-fno-devirtualize" \
+  --with-extra-ld-options=-Wl,-Bsymbolic \
   --libdir=%{_libdir}/%{name} \
   --disable-polly \
   --disable-libcpp \
@@ -340,8 +375,7 @@ export CXX=c++
   --disable-embed-stdcxx \
   --enable-timestamps \
   --enable-backtraces \
-  --enable-targets=x86,powerpc,arm,mips,aarch64,cpp,nvptx,systemz \
-  --enable-experimental-targets=R600 \
+  --enable-targets=x86,powerpc,arm,aarch64,cpp,nvptx,systemz,r600 \
 %if %{with ocaml}
   --enable-bindings=ocaml \
 %else
@@ -356,29 +390,23 @@ export CXX=c++
   --with-arch=armv7-a \
   --with-float=hard \
   --with-fpu=vfpv3-d16 \
-  --with-abi=aapcs-linux \
-%endif
-%ifarch mips64el
-  --with-arch=mips3 \
-  --with-abi=64 \
+  --with-abi=aapcs-vfp \
 %endif
   \
 %if %{with gold}
   --with-binutils-include=%{_includedir} \
 %endif
-  --with-c-include-dirs=%{_includedir}:$(echo %{_prefix}/lib/gcc/%{_target_cpu}-magic-linux/*/include) \
+  --with-c-include-dirs=%{_includedir}:$(echo %{_prefix}/lib/gcc/%{_target_cpu}*/*/include) \
   --with-optimize-option=-O3
 
-make %{_smp_mflags} REQUIRES_RTTI=1 VERBOSE=1 \
-%ifarch ppc
-  OPTIMIZE_OPTION="%{optflags} -UPPC"
-%else
-  OPTIMIZE_OPTION="%{optflags}"
-%endif
-
+make %{?_smp_mflags} REQUIRES_RTTI=1 VERBOSE=1
+#make REQUIRES_RTTI=1 VERBOSE=1
 
 %install
 make install DESTDIR=%{buildroot} PROJ_docsdir=/moredocs
+
+# you have got to be kidding me
+rm -f %{buildroot}%{_bindir}/{FileCheck,count,not,verify-uselistorder,obj2yaml,yaml2obj}
 
 # multilib fixes
 mv %{buildroot}%{_bindir}/llvm-config{,-%{__isa_bits}}
@@ -392,8 +420,8 @@ popd
 
 # Create ld.so.conf.d entry
 mkdir -p %{buildroot}%{_sysconfdir}/ld.so.conf.d
-cat >> %{buildroot}%{_sysconfdir}/ld.so.conf.d/llvm-%{_arch}.conf << EOF
-%{_libdir}/llvm
+cat >> %{buildroot}%{_sysconfdir}/ld.so.conf.d/%{name}-%{_arch}.conf << EOF
+%{_libdir}/%{name}
 EOF
 
 %if %{with clang}
@@ -439,25 +467,19 @@ cp tools/lldb/docs/lldb.1 %{buildroot}%{_mandir}/man1/
 find %{buildroot}/moredocs/ -name "*.tar.gz" -print0 | xargs -0 rm -rf
 mkdir -p %{buildroot}%{_docdir}
 
-# llvm
-mkdir -p %{buildroot}%{llvmdocdir llvm}
-for f in CREDITS.TXT LICENSE.TXT README.txt; do
-	cp $f %{buildroot}%{llvmdocdir llvm}
-done
-
 # llvm-doc
-mkdir -p %{buildroot}%{llvmdocdir llvm-doc}
-cp -ar examples %{buildroot}%{llvmdocdir llvm-doc}/examples
-find %{buildroot}%{llvmdocdir llvm-doc} -name Makefile -o -name CMakeLists.txt -o -name LLVMBuild.txt -print0 | xargs -0 rm -f
+mkdir -p %{buildroot}%{llvmdocdir %{name}-doc}
+cp -ar examples %{buildroot}%{llvmdocdir %{name}-doc}/examples
+find %{buildroot}%{llvmdocdir %{name}-doc} -name Makefile -o -name CMakeLists.txt -o -name LLVMBuild.txt -print0 | xargs -0 rm -f
 
 # llvm-apidoc
 %if %{with doxygen}
-mv %{buildroot}/moredocs/html/doxygen %{buildroot}%{llvmdocdir llvm-apidoc}
+mv %{buildroot}/moredocs/html/doxygen %{buildroot}%{llvmdocdir %{name}-apidoc}
 %endif
 
 # llvm-ocaml-doc
 %if %{with ocaml}
-mv %{buildroot}/moredocs/ocamldoc/html %{buildroot}%{llvmdocdir llvm-ocaml-doc}
+mv %{buildroot}/moredocs/ocamldoc/html %{buildroot}%{llvmdocdir %{name}-ocaml-doc}
 %endif
 
 # clang
@@ -490,7 +512,7 @@ cp -p cmake/modules/*.cmake %{buildroot}%{_datadir}/llvm/cmake/
 
 # remove RPATHs
 file %{buildroot}/%{_bindir}/* | awk -F: '$2~/ELF/{print $1}' | xargs -r chrpath -d
-file %{buildroot}/%{_libdir}/llvm/*.so | awk -F: '$2~/ELF/{print $1}' | xargs -r chrpath -d
+file %{buildroot}/%{_libdir}/%{name}/*.so | awk -F: '$2~/ELF/{print $1}' | xargs -r chrpath -d
 
 %check
 # the Koji build server does not seem to have enough RAM
@@ -500,8 +522,8 @@ file %{buildroot}/%{_libdir}/llvm/*.so | awk -F: '$2~/ELF/{print $1}' | xargs -r
 # broken makefiles in the doc dirs.
 
 # LLVM test suite failing on ARM, PPC64 and s390(x)
-mkdir -p %{buildroot}%{llvmdocdir llvm-devel}
-make -k check LIT_ARGS="-v -j4" | tee %{buildroot}%{llvmdocdir llvm-devel}/testlog-%{_arch}.txt || :
+mkdir -p %{buildroot}%{llvmdocdir %{name}-devel}
+make -k check LIT_ARGS="-v -j4" | tee %{buildroot}%{llvmdocdir %{name}-devel}/testlog-%{_arch}.txt || :
 
 %if %{with clang}
 # clang test suite failing on PPC and s390(x)
@@ -517,8 +539,8 @@ make -C tools/clang/test TESTARGS="-v -j4" | tee %{buildroot}%{llvmdocdir clang-
 %postun libs -p /sbin/ldconfig
 
 %if %{with clang}
-%post -n clang -p /sbin/ldconfig
-%postun -n clang -p /sbin/ldconfig
+%post -n clang-libs -p /sbin/ldconfig
+%postun -n clang-libs -p /sbin/ldconfig
 %endif
 
 %if %{with lldb}
@@ -551,8 +573,8 @@ exit 0
 
 
 %files
-%defattr(-,root,root,-)
-%doc %{llvmdocdir llvm}/
+%doc CREDITS.TXT
+%doc README.txt
 %dir %{_datadir}/llvm
 %{_bindir}/bugpoint
 %{_bindir}/llc
@@ -572,17 +594,15 @@ exit 0
 %doc %{_mandir}/man1/*.1.*
 
 %files devel
-%defattr(-,root,root,-)
-#只有执行 check 段才有这个。
-#doc %{llvmdocdir llvm-devel}/
+%doc %{llvmdocdir %{name}-devel}/
 %{_bindir}/llvm-config-%{__isa_bits}
 %{_includedir}/%{name}
 %{_includedir}/%{name}-c
 %{_datadir}/llvm/cmake
 
 %files libs
-%defattr(-,root,root,-)
-%config(noreplace) %{_sysconfdir}/ld.so.conf.d/llvm-%{_arch}.conf
+%doc LICENSE.TXT
+%config(noreplace) %{_sysconfdir}/ld.so.conf.d/%{name}-%{_arch}.conf
 %dir %{_libdir}/%{name}
 %if %{with clang}
 %exclude %{_libdir}/%{name}/libclang.so
@@ -593,27 +613,25 @@ exit 0
 %{_libdir}/%{name}/*.so
 
 %files static
-%defattr(-,root,root,-)
 %{_libdir}/%{name}/*.a
 
 %if %{with clang}
 %files -n clang
-%defattr(-,root,root,-)
 %doc %{llvmdocdir clang}/
 %{_bindir}/clang*
 %{_bindir}/c-index-test
-%{_libdir}/%{name}/libclang.so
 %{_prefix}/lib/clang
 %doc %{_mandir}/man1/clang.1.*
 
+%files -n clang-libs
+%{_libdir}/%{name}/libclang.so
+
 %files -n clang-devel
-%defattr(-,root,root,-)
-#doc %{llvmdocdir clang-devel}/
+%doc %{llvmdocdir clang-devel}/
 %{_includedir}/clang
 %{_includedir}/clang-c
 
 %files -n clang-analyzer
-%defattr(-,root,root,-)
 %{_mandir}/man1/scan-build.1.*
 %{_bindir}/scan-build
 %{_bindir}/scan-view
@@ -622,92 +640,141 @@ exit 0
 
 %if %{with lldb}
 %files -n lldb
-%defattr(-,root,root,-)
 %doc %{llvmdocdir lldb}/
 %{_bindir}/lldb
-%{_bindir}/lldb-platform
+%{_bindir}/lldb-*
 %{_libdir}/%{name}/liblldb.so
+# XXX double check this
+#{python2_sitearch}/*
 %doc %{_mandir}/man1/lldb.1.*
 
 %files -n lldb-devel
-%defattr(-,root,root,-)
 %{_includedir}/lldb
 %endif
 
 %files doc
-%defattr(-,root,root,-)
-%doc %{llvmdocdir llvm-doc}/
+%doc %{llvmdocdir %{name}-doc}/
 
 %if %{with ocaml}
 %files ocaml
-%defattr(-,root,root,-)
 %{_libdir}/ocaml/*.cma
 %{_libdir}/ocaml/*.cmi
 %{_libdir}/ocaml/dll*.so
 %{_libdir}/ocaml/META.llvm*
 
 %files ocaml-devel
-%defattr(-,root,root,-)
 %{_libdir}/ocaml/*.a
 %{_libdir}/ocaml/*.cmx*
 %{_libdir}/ocaml/*.mli
 
 %files ocaml-doc
-%defattr(-,root,root,-)
-%doc %{llvmdocdir llvm-ocaml-doc}/
+%doc %{llvmdocdir %{name}-ocaml-doc}/
 %endif
 
 %if %{with doxygen}
 %files apidoc
-%defattr(-,root,root,-)
-%doc %{llvmdocdir llvm-apidoc}/
+%doc %{llvmdocdir %{name}-apidoc}/
 
 %if %{with clang}
 %files -n clang-apidoc
-%defattr(-,root,root,-)
 %doc %{llvmdocdir clang-apidoc}/
 %endif
 %endif
 
 %changelog
-* Thu Mar 05 2015 Liu Di <liudidi@gmail.com> - 3.4-19
-- 为 Magic 3.0 重建
+* Wed Jul 22 2015 Adam Jackson <ajax@redhat.com> 3.6.2-1
+- llvm 3.6.2
 
-* Mon Jun 23 2014 Liu Di <liudidi@gmail.com> - 3.4-18
-- 为 Magic 3.0 重建
+* Wed Jun 17 2015 Dave Airlie <airlied@redhat.com> 3.6.1-1
+- llvm 3.6.1
 
-* Wed May 21 2014 Liu Di <liudidi@gmail.com> - 3.4-17
-- 为 Magic 3.0 重建
+* Fri May 29 2015 Zbigniew Jędrzejewski-Szmek <zbyszek@in.waw.pl> - 3.6.0-2
+- Also require gcc-c++ at runtime (#1021645)
 
-* Wed May 21 2014 Liu Di <liudidi@gmail.com> - 3.4-16
-- 为 Magic 3.0 重建
+* Thu Apr 09 2015 Adam Jackson <ajax@redhat.com> 3.6.0-1
+- llvm 3.6.0
 
-* Wed May 21 2014 Liu Di <liudidi@gmail.com> - 3.4-15
-- 为 Magic 3.0 重建
+* Wed Feb 18 2015 Jonathan Wakely <jwakely@redhat.com> - 3.5.0-11
+- Add patch for http://llvm.org/bugs/show_bug.cgi?id=22625
 
-* Wed May 21 2014 Liu Di <liudidi@gmail.com> - 3.4-14
-- 为 Magic 3.0 重建
+* Wed Feb 18 2015 Richard W.M. Jones <rjones@redhat.com> - 3.5.0-10
+- Bump release and rebuild.
 
-* Wed May 21 2014 Liu Di <liudidi@gmail.com> - 3.4-13
-- 为 Magic 3.0 重建
+* Tue Feb 17 2015 Peter Robinson <pbrobinson@fedoraproject.org> 3.5.0-9
+- Run ldconfig on clang-libs not clang
+- Update ARMv7 config options
 
-* Wed May 21 2014 Liu Di <liudidi@gmail.com> - 3.4-12
-- 为 Magic 3.0 重建
+* Tue Feb 17 2015 Richard W.M. Jones <rjones@redhat.com> - 3.5.0-8
+- ocaml-4.02.1 rebuild.
 
-* Wed May 21 2014 Liu Di <liudidi@gmail.com> - 3.4-11
-- 为 Magic 3.0 重建
+* Mon Feb 16 2015 Orion Poplawski <orion@cora.nwra.com> - 3.5.0-7
+- Rebuild for gcc 5 C++11
 
-* Wed May 21 2014 Liu Di <liudidi@gmail.com> - 3.4-10
-- 为 Magic 3.0 重建
+* Thu Dec 25 2014 Jan Vcelak <jvcelak@fedoraproject.org> 3.5.0-6
+- lldb: fix broken expression parser
+- lldb, python module: fix symlink to lldb.so (#1177143)
 
-* Wed May 21 2014 Liu Di <liudidi@gmail.com> - 3.4-9
-- 为 Magic 3.0 重建
+* Thu Dec 18 2014 Dan Horák <dan[at]danny.cz> - 3.5.0-5
+- use the common workaround for OOM during linking on s390
 
-* Wed May 21 2014 Liu Di <liudidi@gmail.com> - 3.4-8
-- 为 Magic 3.0 重建
+* Wed Nov 19 2014 Jens Petersen <petersen@redhat.com> - 3.5.0-4
+- minor spec file cleanup from llvm34 package review:
+- move LICENSE to llvm-libs
+- remove tabs from spec
+- use name macro to keep llvm34.spec closer
+- remove defattr's
 
-* Wed May 21 2014 Liu Di <liudidi@gmail.com> - 3.4-7
-- 为 Magic 3.0 重建
+* Wed Nov 05 2014 Adam Jackson <ajax@redhat.com> 3.5.0-3
+- Split out clang-libs
+
+* Tue Oct 28 2014 Kalev Lember <kalevlember@gmail.com> - 3.5.0-2
+- Obsolete python-llvmpy
+
+* Mon Oct 27 2014 Adam Jackson <ajax@redhat.com> 3.5.0-1
+- llvm 3.5.0
+
+* Sun Aug 31 2014 Richard W.M. Jones <rjones@redhat.com> - 3.4-20
+- Bump release and rebuild.
+
+* Sun Aug 31 2014 Richard W.M. Jones <rjones@redhat.com> - 3.4-19
+- ocaml-4.02.0 final rebuild.
+
+* Sun Aug 24 2014 Richard W.M. Jones <rjones@redhat.com> - 3.4-18
+- Bump release and rebuild.
+
+* Sat Aug 23 2014 Richard W.M. Jones <rjones@redhat.com> - 3.4-17
+- ocaml-4.02.0+rc1 rebuild.
+
+* Sun Aug 17 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.4-16
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
+
+* Thu Aug 14 2014 Adam Jackson <ajax@redhat.com> 3.4-15
+- Restore ppc64le fix
+
+* Sat Aug 02 2014 Richard W.M. Jones <rjones@redhat.com> - 3.4-14
+- ocaml-4.02.0-0.8.git10e45753.fc22 rebuild.
+
+* Thu Jul 24 2014 Adam Jackson <ajax@redhat.com> 3.4-13
+- llvm and clang 3.4.2
+
+* Tue Jul 22 2014 Richard W.M. Jones <rjones@redhat.com> - 3.4-12
+- OCaml 4.02.0 beta rebuild.
+
+* Wed Jun 11 2014 Adam Jackson <ajax@redhat.com> 3.4-11
+- Different attempt to default to hard-float on arm (#803433)
+
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.4-10
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Wed Jun 04 2014 Adam Jackson <ajax@redhat.com> 3.4-9
+- Backport a ppc64le fix to get things started bootstrapping
+
+* Mon Jun 02 2014 Adam Jackson <ajax@redhat.com> 3.4-8
+- Attempt to default to hard-float on arm (#803433)
+
+* Thu May 29 2014 Adam Jackson <ajax@redhat.com> 3.4-7
+- Update to llvm 3.4.1 plus a few things from svn
+- Drop radeonsi patch, merged in 3.4.1
 
 * Thu Mar 27 2014 Rex Dieter <rdieter@fedoraproject.org> 3.4-6
 - -libs: Obsoletes: OpenGTL libQtGTL
