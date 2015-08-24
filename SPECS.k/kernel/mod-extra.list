@@ -76,7 +76,6 @@ softing_cs.ko
 softing.ko
 ems_usb.ko
 esd_usb2.ko
-wimax.ko
 nfc.ko
 nci.ko
 mptbase.ko
@@ -165,10 +164,6 @@ ksdazzle-sir.ko
 ma600-sir.ko
 mcp2120-sir.ko
 toim3232-sir.ko
-tpm_atmel.ko
-tpm_infineon.ko
-tpm_nsc.ko
-tpm_tis.ko
 slip.ko
 nilfs2.ko
 batman-adv.ko
@@ -194,3 +189,6 @@ orinoco_plx.ko
 orinoco_pci.ko
 orinoco_nortel.ko
 orinoco_usb.ko
+usbip-core.ko
+vhci-hcd.ko
+usbip-host.ko

@@ -1,10 +1,10 @@
-aufs3.10 kbuild patch
+aufs3.18.1+ kbuild patch
 
 diff --git a/fs/Kconfig b/fs/Kconfig
-index c229f82..397b473 100644
+index 664991a..1481093 100644
 --- a/fs/Kconfig
 +++ b/fs/Kconfig
-@@ -212,6 +212,7 @@ source "fs/ufs/Kconfig"
+@@ -210,6 +210,7 @@ source "fs/ufs/Kconfig"
  source "fs/exofs/Kconfig"
  source "fs/f2fs/Kconfig"
  source "fs/efivarfs/Kconfig"
@@ -13,7 +13,7 @@ index c229f82..397b473 100644
  endif # MISC_FILESYSTEMS
  
 diff --git a/fs/Makefile b/fs/Makefile
-index 4fe6df3..4a57676 100644
+index da0bbb4..c8bc724 100644
 --- a/fs/Makefile
 +++ b/fs/Makefile
 @@ -126,3 +126,4 @@ obj-y				+= exofs/ # Multiple modules
@@ -22,7 +22,7 @@ index 4fe6df3..4a57676 100644
  obj-$(CONFIG_EFIVAR_FS)		+= efivarfs/
 +obj-$(CONFIG_AUFS_FS)           += aufs/
 diff --git a/include/uapi/linux/Kbuild b/include/uapi/linux/Kbuild
-index bdc6e87..349600c 100644
+index 8523f9b..11f8f74 100644
 --- a/include/uapi/linux/Kbuild
 +++ b/include/uapi/linux/Kbuild
 @@ -56,6 +56,7 @@ header-y += atmppp.h

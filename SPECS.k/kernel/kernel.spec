@@ -22,6 +22,16 @@ Summary: The Linux kernel
 %undefine buildid
 %endif
 
+# Loongson cpu
+%ifarch mips64el
+%define debugbuildsenabled 0
+%define _without_headers 0
+%define _without_debug 1
+%define _without_doc 0
+%define variant -loongson3a
+%define upstream_branch 1
+%endif
+
 ###################################################################
 # Polite request for people who spin their own kernel rpms:
 # please modify the "buildid" define in a way that identifies
@@ -68,13 +78,13 @@ Summary: The Linux kernel
 # base_sublevel is the kernel version we're starting with and patching
 # on top of -- for example, 3.1-rc7-git1 starts with a 3.0 base,
 # which yields a base_sublevel of 0.
-%define base_sublevel 10
+%define base_sublevel 18
 
 ## If this is a released kernel ##
 %if 0%{?released_kernel}
 
 # Do we have a -stable update to apply?
-%define stable_update 70
+%define stable_update 20
 # Is it a -stable RC?
 %define stable_rc 0
 # Set rpm version accordingly
@@ -230,10 +240,12 @@ Summary: The Linux kernel
 
 %define using_upstream_branch 0
 %if 0%{?upstream_branch:1}
-%define stable_update 70
+%define stable_update 20
 %define using_upstream_branch 1
+%ifnarch mips64el
 %define variant -%{upstream_branch}%{?variant_fedora}
 %define pkg_release 0.%{fedora_build}%{upstream_branch_tag}%{?buildid}%{?dist}
+%endif
 %endif
 
 %if !%{debugbuildsenabled}
@@ -348,6 +360,17 @@ Summary: The Linux kernel
 %define kernel_image arch/x86/boot/bzImage
 %endif
 
+%ifarch mips64el
+%define asmarch mips
+%define hdrarch mips
+%define all_arch_configs kernel-%{version}-mips64el*.config
+%define image_install_path boot
+%define make_target vmlinuz
+%define kernel_image vmlinuz
+%define kernel_image_elf 1
+%define with_headers 1
+%endif
+
 %ifarch ppc64 ppc64p7
 %define asmarch powerpc
 %define hdrarch powerpc
@@ -430,7 +453,7 @@ Summary: The Linux kernel
 %endif
 
 # Architectures we build tools/cpupower on
-%define cpupowerarchs %{ix86} x86_64 ppc ppc64 ppc64p7 %{arm}
+%define cpupowerarchs %{ix86} x86_64 ppc ppc64 ppc64p7 %{arm} mips64el
 
 #
 # Three sets of minimum package version requirements in the form of Conflicts:
@@ -506,7 +529,7 @@ Version: %{rpmversion}
 Release: %{pkg_release}.3
 # DO NOT CHANGE THE 'ExclusiveArch' LINE TO TEMPORARILY EXCLUDE AN ARCHITECTURE BUILD.
 # SET %%nobuildarches (ABOVE) INSTEAD
-ExclusiveArch: noarch %{all_x86} x86_64 ppc ppc64 ppc64p7 s390 s390x %{arm}
+ExclusiveArch: noarch %{all_x86} x86_64 ppc ppc64 ppc64p7 s390 s390x %{arm} mips64el
 ExclusiveOS: Linux
 
 %kernel_reqprovconf
@@ -543,7 +566,15 @@ BuildRequires: openssl
 BuildRequires: pesign >= 0.10-4
 %endif
 
+%ifarch mips64el
+%if 0%{?stable_update}
+Source0: http://dev.lemote.com/cgit/linux-loongson-community.git/snapshot/linux-%{kversion}.%{stable_update}.tar.gz
+%else
+Source0: http://dev.lemote.com/cgit/linux-loongson-community.git/snapshot/linux-%{kversion}.tar.gz
+%endif
+%else
 Source0: ftp://ftp.kernel.org/pub/linux/kernel/v3.0/linux-%{kversion}.tar.xz
+%endif
 
 %if %{signmodules}
 Source11: x509.genkey
@@ -582,6 +613,9 @@ Source102: config-armv7-generic
 # Legacy ARM kernels
 Source103: config-arm-kirkwood
 
+#loongson3a
+Source115: config-mips
+
 # This file is intentionally left empty in the stock kernel. Its a nicety
 # added for those wanting to do custom rebuilds with altered config opts.
 Source1000: config-local
@@ -595,8 +629,10 @@ Source2001: cpupower.config
 # For a stable release kernel
 %if 0%{?stable_update}
 %if 0%{?stable_base}
+%ifnarch mips64el
 %define    stable_patch_00  patch-3.%{base_sublevel}.%{stable_base}.xz
 Patch00: %{stable_patch_00}
+%endif
 %endif
 %if 0%{?stable_rc}
 %define    stable_patch_01  patch-3.%{base_sublevel}.%{stable_update}-rc%{stable_rc}.xz
@@ -628,7 +664,7 @@ Patch00: patch-3.%{base_sublevel}-git%{gitrev}.xz
 Patch04: compile-fixes.patch
 
 # build tweak for build ID magic, even for -vanilla
-Patch05: makefile-after_link.patch
+Patch05: kbuild-AFTER_LINK.patch
 
 %if !%{nopatches}
 
@@ -639,140 +675,140 @@ Patch09: upstream-reverts.patch
 
 # Standalone patches
 
-Patch100: taint-vbox.patch
-
-Patch110: vmbugon-warnon.patch
-
-Patch390: defaults-acpi-video.patch
-Patch391: acpi-video-dos.patch
-Patch394: acpi-debug-infinite-loop.patch
-Patch396: acpi-sony-nonvs-blacklist.patch
-
 Patch450: input-kill-stupid-messages.patch
 Patch452: no-pcspkr-modalias.patch
 
-Patch460: serial-460800.patch
-
 Patch470: die-floppy-die.patch
 
-Patch510: silence-noise.patch
+Patch500: Revert-Revert-ACPI-video-change-acpi-video-brightnes.patch
+
+Patch510: input-silence-i8042-noise.patch
 Patch530: silence-fbcon-logo.patch
+
+Patch600: lib-cpumask-Make-CPUMASK_OFFSTACK-usable-without-deb.patch
+
+#rhbz 1126580
+Patch601: Kbuild-Add-an-option-to-enable-GCC-VTA.patch
 
 Patch800: crash-driver.patch
 
+# crypto/
+
 # secure boot
-Patch1000: devel-pekey-secure-boot-20130502.patch
+Patch1000: Add-secure_modules-call.patch
+Patch1001: PCI-Lock-down-BAR-access-when-module-security-is-ena.patch
+Patch1002: x86-Lock-down-IO-port-access-when-module-security-is.patch
+Patch1003: ACPI-Limit-access-to-custom_method.patch
+Patch1004: asus-wmi-Restrict-debugfs-interface-when-module-load.patch
+Patch1005: Restrict-dev-mem-and-dev-kmem-when-module-loading-is.patch
+Patch1006: acpi-Ignore-acpi_rsdp-kernel-parameter-when-module-l.patch
+Patch1007: kexec-Disable-at-runtime-if-the-kernel-enforces-modu.patch
+Patch1008: x86-Restrict-MSR-access-when-module-loading-is-restr.patch
+Patch1009: Add-option-to-automatically-enforce-module-signature.patch
+Patch1010: efi-Disable-secure-boot-if-shim-is-in-insecure-mode.patch
+Patch1011: efi-Make-EFI_SECURE_BOOT_SIG_ENFORCE-depend-on-EFI.patch
+Patch1012: efi-Add-EFI_SECURE_BOOT-bit.patch
+Patch1013: hibernate-Disable-in-a-signed-modules-environment.patch
+
+Patch1014: Add-EFI-signature-data-types.patch
+Patch1015: Add-an-EFI-signature-blob-parser-and-key-loader.patch
+Patch1016: KEYS-Add-a-system-blacklist-keyring.patch
+Patch1017: MODSIGN-Import-certificates-from-UEFI-Secure-Boot.patch
+Patch1018: MODSIGN-Support-not-importing-certs-from-db.patch
+
+Patch1019: Add-sysrq-option-to-disable-secure-boot-mode.patch
 
 # virt + ksm patches
 
 # DRM
-#atch1700: drm-edid-try-harder-to-fix-up-broken-headers.patch
-#Patch1800: drm-vgem.patch
 
 # nouveau + drm fixes
 # intel drm is all merged upstream
-Patch1824: drm-intel-next.patch
-Patch1825: drm-i915-dp-stfu.patch
-# mustard patch to shut abrt up. please drop (and notify ajax) whenever it
-# fails to apply
-Patch1826: drm-i915-tv-detect-hush.patch
+Patch1826: drm-i915-tame-the-chattermouth-v2.patch
+Patch1827: drm-i915-Disable-verbose-state-checks.patch
 
 # Quiet boot fixes
-# silence the ACPI blacklist code
-Patch2802: silence-acpi-blacklist.patch
-
-# media patches
-Patch2899: v4l-dvb-fixes.patch
-Patch2900: v4l-dvb-update.patch
-Patch2901: v4l-dvb-experimental.patch
 
 # fs fixes
 
 # NFSv4
 
 # patches headed upstream
-Patch10000: fs-proc-devtree-remove_proc_entry.patch
-
 Patch12016: disable-i8042-check-on-apple-mac.patch
 
 Patch14000: hibernate-freeze-filesystems.patch
 
 Patch14010: lis3-improve-handling-of-null-rate.patch
 
+Patch15000: watchdog-Disable-watchdog-on-virtual-machines.patch
 
-Patch20000: 0001-efifb-Skip-DMI-checks-if-the-bootloader-knows-what-i.patch
-Patch20001: 0002-x86-EFI-Calculate-the-EFI-framebuffer-size-instead-o.patch
+# PPC
 
-# ARM
-Patch21000: arm-export-read_current_timer.patch
+# ARM64
 
-# lpae
-Patch21001: arm-lpae-ax88796.patch
+# ARMv7
+Patch21020: ARM-tegra-usb-no-reset.patch
+Patch21021: arm-dts-am335x-boneblack-lcdc-add-panel-info.patch
+Patch21022: arm-dts-am335x-boneblack-add-cpu0-opp-points.patch
+Patch21023: arm-dts-am335x-bone-common-enable-and-use-i2c2.patch
+Patch21024: arm-dts-am335x-bone-common-setup-default-pinmux-http.patch
+Patch21025: arm-dts-am335x-bone-common-add-uart2_pins-uart4_pins.patch
+Patch21026: pinctrl-pinctrl-single-must-be-initialized-early.patch
 
-# ARM omap
-Patch21003: arm-omap-load-tfp410.patch
+Patch21028: arm-i.MX6-Utilite-device-dtb.patch
+Patch21029: arm-dts-sun7i-bananapi.patch
 
-# ARM tegra
-Patch21005: arm-tegra-usb-no-reset-linux33.patch
+Patch21100: arm-highbank-l2-reverts.patch
 
 #rhbz 754518
 Patch21235: scsi-sd_revalidate_disk-prevent-NULL-ptr-deref.patch
 
-Patch22000: weird-root-dentry-name-debug.patch
-
-#selinux ptrace child permissions
-Patch22001: selinux-apply-different-permission-to-ptrace-child.patch
+# https://fedoraproject.org/wiki/Features/Checkpoint_Restore
+Patch21242: criu-no-expert.patch
 
 #rhbz 892811
-Patch22247: ath9k_rx_dma_stop_check.patch
+Patch21247: ath9k-rx-dma-stop-check.patch
 
-#rhbz 927469
-Patch25007: fix-child-thread-introspection.patch
+Patch22000: weird-root-dentry-name-debug.patch
 
-#rhbz 948262
-Patch25024: intel_iommu-Downgrade-the-warning-if-enabling-irq-remapping-fails.patch
+# Patch series from Hans for various backlight and platform driver fixes
+Patch26002: samsung-laptop-Add-broken-acpi-video-quirk-for-NC210.patch
 
-#rhbz 903741
-Patch25052: HID-input-return-ENODATA-if-reading-battery-attrs-fails.patch
+#rhbz 1089731
+Patch26058: asus-nb-wmi-Add-wapf4-quirk-for-the-X550VB.patch
 
-#rhbz 880035
-Patch25053: bridge-only-expire-the-mdb-entry-when-query-is-received.patch
-Patch25054: bridge-send-query-as-soon-as-leave-is-received.patch
-#rhbz 980254
-Patch25061: bridge-timer-fix.patch
-Patch25066: bridge-do-not-call-setup_timer-multiple-times.patch
+#rhbz 1173806
+Patch26101: powerpc-powernv-force-all-CPUs-to-be-bootable.patch
 
-#rhbz 977040
-Patch25057: iwl4965-better-skb-management-in-rx-path.patch
+#rhbz 1163927
+Patch26121: Set-UID-in-sess_auth_rawntlmssp_authenticate-too.patch
 
-#rhbz 959721
-Patch25063: HID-kye-Add-report-fixup-for-Genius-Gila-Gaming-mouse.patch
 
-#rhbz 969473
-Patch25070: Input-elantech-fix-for-newer-hardware-versions-v7.patch
+#rhbz 1163574
+Patch26130: acpi-video-Add-disable_native_backlight-quirk-for-De.patch
+#rhbz 1094948
+Patch26131: acpi-video-Add-disable_native_backlight-quirk-for-Sa.patch
 
-#rhbz 963715
-Patch25077: media-cx23885-Fix-TeVii-S471-regression-since-introduction-of-ts2020.patch
+# git clone ssh://git.fedorahosted.org/git/kernel-arm64.git, git diff master...devel
+Patch30000: kernel-arm64.patch
 
-#rhbz 928561
-Patch25105: 0001-HID-kye-Add-report-fixup-for-Genius-Gx-Imperator-Key.patch
+# Fix for big-endian arches, already upstream
+Patch30001: mpssd-x86-only.patch
 
-#rhbz 971893
-Patch25106: bonding-driver-alb-learning.patch
+#rhbz 1186097
+Patch30004: acpi-video-add-disable_native_backlight_quirk_for_samsung_510r.patch
 
-#rhbz 902012
-Patch25114: elevator-Fix-a-race-in-elevator-switching-and-md.patch
-Patch25115: elevator-acquire-q-sysfs_lock-in-elevator_change.patch
+#CVE-XXXX-XXXX rhbz 1189864 1192079
+Patch26136: vhost-scsi-potential-memory-corruption.patch
 
-#rhbz 1013000
-Patch25116: HID-Revert-Revert-HID-Fix-logitech-dj-missing-Unifying-device-issue.patch
+#CVE-2015-0275 rhbz 1193907 1195178
+Patch26138: ext4-Allocate-entire-range-in-zero-range.patch
 
-#fbcondetor
-Patch5000: fbcondecor-3.10.patch
+#fbcondecor
+Patch50000: 4200_fbcondecor-3.16.patch
 
-#UTF-8
-Patch40001: kernel-utf8-core-1.patch
-Patch40002: utf8-kernel-2.6-fonts-3.patch
+#utf8
+Patch50001: 3.18.20-utf8.diff
 
 # fs fixes
 # aufs
@@ -780,11 +816,9 @@ Patch3001: aufs001.patch
 Patch3002: aufs3-base.patch
 Patch3003: aufs3-kbuild.patch
 Patch3004: aufs3-loopback.patch
-Patch3005: aufs3-proc_map.patch
+Patch3005: aufs3-mmap.patch
 Patch3006: aufs3-standalone.patch
-
 # END OF PATCH DEFINITIONS
-
 %endif
 
 BuildRoot: %{_tmppath}/kernel-%{KVERREL}-root
@@ -1100,7 +1134,7 @@ if [ "%{patches}" != "%%{patches}" ] ; then
   done
 fi 2>/dev/null
 
-patch_command='patch -p1 -F1 -s'
+patch_command='patch -p1 -F5 -s'
 ApplyPatch()
 {
   local patch=$1
@@ -1216,7 +1250,11 @@ if [ ! -d kernel-%{kversion}%{?dist}/vanilla-%{vanillaversion} ]; then
       cp -rl $sharedir/vanilla-%{kversion} .
     else
 %setup -q -n kernel-%{kversion}%{?dist} -c
+%ifarch mips64el
+      mv linux-%{kversion}.%{stable_update} vanilla-%{kversion}
+%else
       mv linux-%{kversion} vanilla-%{kversion}
+%endif
     fi
 
   fi
@@ -1272,7 +1310,9 @@ cd linux-%{KVERREL}
 
 # released_kernel with possible stable updates
 %if 0%{?stable_base}
+%ifnarch mips64el
 ApplyPatch %{stable_patch_00}
+%endif
 %endif
 %if 0%{?stable_rc}
 ApplyPatch %{stable_patch_01}
@@ -1305,7 +1345,7 @@ do
   rm $i.tmp
 done
 
-ApplyPatch makefile-after_link.patch
+ApplyPatch kbuild-AFTER_LINK.patch
 
 #
 # misc small stuff to make things compile
@@ -1317,21 +1357,30 @@ ApplyOptionalPatch compile-fixes.patch
 # revert patches from upstream that conflict or that we get via other means
 ApplyOptionalPatch upstream-reverts.patch -R
 
-
-ApplyPatch taint-vbox.patch
-
-ApplyPatch vmbugon-warnon.patch
-
 # Architecture patches
 # x86(-64)
+ApplyPatch lib-cpumask-Make-CPUMASK_OFFSTACK-usable-without-deb.patch
+
+# PPC
+
+# ARM64
 
 #
 # ARM
 #
-ApplyPatch arm-export-read_current_timer.patch
-ApplyPatch arm-lpae-ax88796.patch
-ApplyPatch arm-omap-load-tfp410.patch
-ApplyPatch arm-tegra-usb-no-reset-linux33.patch
+ApplyPatch ARM-tegra-usb-no-reset.patch
+
+ApplyPatch arm-dts-am335x-boneblack-lcdc-add-panel-info.patch
+ApplyPatch arm-dts-am335x-boneblack-add-cpu0-opp-points.patch
+ApplyPatch arm-dts-am335x-bone-common-enable-and-use-i2c2.patch
+ApplyPatch arm-dts-am335x-bone-common-setup-default-pinmux-http.patch
+ApplyPatch arm-dts-am335x-bone-common-add-uart2_pins-uart4_pins.patch
+ApplyPatch pinctrl-pinctrl-single-must-be-initialized-early.patch
+
+ApplyPatch arm-i.MX6-Utilite-device-dtb.patch
+ApplyPatch arm-dts-sun7i-bananapi.patch
+
+ApplyPatch arm-highbank-l2-reverts.patch
 
 #
 # bugfixes to drivers and filesystems
@@ -1352,10 +1401,6 @@ ApplyPatch arm-tegra-usb-no-reset-linux33.patch
 # WMI
 
 # ACPI
-ApplyPatch defaults-acpi-video.patch
-ApplyPatch acpi-video-dos.patch
-ApplyPatch acpi-debug-infinite-loop.patch
-ApplyPatch acpi-sony-nonvs-blacklist.patch
 
 #
 # PCI
@@ -1366,6 +1411,8 @@ ApplyPatch acpi-sony-nonvs-blacklist.patch
 #
 
 # ACPI
+
+ApplyPatch Revert-Revert-ACPI-video-change-acpi-video-brightnes.patch
 
 # ALSA
 
@@ -1380,59 +1427,62 @@ ApplyPatch die-floppy-die.patch
 
 ApplyPatch no-pcspkr-modalias.patch
 
-# Allow to use 480600 baud on 16C950 UARTs
-ApplyPatch serial-460800.patch
-
 # Silence some useless messages that still get printed with 'quiet'
-ApplyPatch silence-noise.patch
+ApplyPatch input-silence-i8042-noise.patch
 
 # Make fbcon not show the penguins with 'quiet'
 ApplyPatch silence-fbcon-logo.patch
 
 # Changes to upstream defaults.
-
+#rhbz 1126580
+ApplyPatch Kbuild-Add-an-option-to-enable-GCC-VTA.patch
 
 # /dev/crash driver.
+%ifnarch mips64el
 ApplyPatch crash-driver.patch
+%endif
+
+# crypto/
 
 # secure boot
-ApplyPatch devel-pekey-secure-boot-20130502.patch
+ApplyPatch Add-secure_modules-call.patch
+ApplyPatch PCI-Lock-down-BAR-access-when-module-security-is-ena.patch
+ApplyPatch x86-Lock-down-IO-port-access-when-module-security-is.patch
+ApplyPatch ACPI-Limit-access-to-custom_method.patch
+ApplyPatch asus-wmi-Restrict-debugfs-interface-when-module-load.patch
+ApplyPatch Restrict-dev-mem-and-dev-kmem-when-module-loading-is.patch
+ApplyPatch acpi-Ignore-acpi_rsdp-kernel-parameter-when-module-l.patch
+ApplyPatch kexec-Disable-at-runtime-if-the-kernel-enforces-modu.patch
+ApplyPatch x86-Restrict-MSR-access-when-module-loading-is-restr.patch
+ApplyPatch Add-option-to-automatically-enforce-module-signature.patch
+ApplyPatch efi-Disable-secure-boot-if-shim-is-in-insecure-mode.patch
+ApplyPatch efi-Make-EFI_SECURE_BOOT_SIG_ENFORCE-depend-on-EFI.patch
+ApplyPatch efi-Add-EFI_SECURE_BOOT-bit.patch
+ApplyPatch hibernate-Disable-in-a-signed-modules-environment.patch
+
+ApplyPatch Add-EFI-signature-data-types.patch
+ApplyPatch Add-an-EFI-signature-blob-parser-and-key-loader.patch
+ApplyPatch KEYS-Add-a-system-blacklist-keyring.patch
+ApplyPatch MODSIGN-Import-certificates-from-UEFI-Secure-Boot.patch
+ApplyPatch MODSIGN-Support-not-importing-certs-from-db.patch
+
+ApplyPatch Add-sysrq-option-to-disable-secure-boot-mode.patch
 
 # Assorted Virt Fixes
 
 # DRM core
-#ApplyPatch drm-edid-try-harder-to-fix-up-broken-headers.patch
-#ApplyPatch drm-vgem.patch
 
 # Nouveau DRM
 
-#aufs
-ApplyPatch aufs001.patch
-ApplyPatch aufs3-base.patch
-ApplyPatch aufs3-kbuild.patch
-ApplyPatch aufs3-loopback.patch
-ApplyPatch aufs3-proc_map.patch
-ApplyPatch aufs3-standalone.patch
-
-ApplyPatch fbcondecor-3.10.patch
-
 # Intel DRM
-ApplyOptionalPatch drm-intel-next.patch
-ApplyPatch drm-i915-dp-stfu.patch
-ApplyPatch drm-i915-tv-detect-hush.patch
+%ifnarch mips64el
+ApplyPatch drm-i915-tame-the-chattermouth-v2.patch
+ApplyPatch drm-i915-Disable-verbose-state-checks.patch 
+%endif
 
-# silence the ACPI blacklist code
-ApplyPatch silence-acpi-blacklist.patch
-
-# V4L/DVB updates/fixes/experimental drivers
-#  apply if non-empty
-ApplyOptionalPatch v4l-dvb-fixes.patch
-ApplyOptionalPatch v4l-dvb-update.patch
-ApplyOptionalPatch v4l-dvb-experimental.patch
+# Radeon DRM
 
 # Patches headed upstream
-ApplyPatch fs-proc-devtree-remove_proc_entry.patch
-
 ApplyPatch disable-i8042-check-on-apple-mac.patch
 
 # FIXME: REBASE
@@ -1440,53 +1490,69 @@ ApplyPatch disable-i8042-check-on-apple-mac.patch
 
 ApplyPatch lis3-improve-handling-of-null-rate.patch
 
-#ApplyPatch 0001-efifb-Skip-DMI-checks-if-the-bootloader-knows-what-i.patch
-#ApplyPatch 0002-x86-EFI-Calculate-the-EFI-framebuffer-size-instead-o.patch
+# Disable watchdog on virtual machines.
+ApplyPatch watchdog-Disable-watchdog-on-virtual-machines.patch
 
 #rhbz 754518
+%ifnarch mips64el
 ApplyPatch scsi-sd_revalidate_disk-prevent-NULL-ptr-deref.patch
+%endif
 
-ApplyPatch weird-root-dentry-name-debug.patch
+#pplyPatch weird-root-dentry-name-debug.patch
 
-#selinux ptrace child permissions
-ApplyPatch selinux-apply-different-permission-to-ptrace-child.patch
+# https://fedoraproject.org/wiki/Features/Checkpoint_Restore
+ApplyPatch criu-no-expert.patch
 
 #rhbz 892811
-ApplyPatch ath9k_rx_dma_stop_check.patch
+ApplyPatch ath9k-rx-dma-stop-check.patch
 
-#rhbz 927469
-ApplyPatch fix-child-thread-introspection.patch
+# Patch series from Hans for various backlight and platform driver fixes
+ApplyPatch samsung-laptop-Add-broken-acpi-video-quirk-for-NC210.patch
 
-#rhbz 948262
-ApplyPatch intel_iommu-Downgrade-the-warning-if-enabling-irq-remapping-fails.patch
+#rhbz 1089731
+ApplyPatch asus-nb-wmi-Add-wapf4-quirk-for-the-X550VB.patch
 
-#rhbz 903741
-ApplyPatch HID-input-return-ENODATA-if-reading-battery-attrs-fails.patch
+#rhbz 1173806
+ApplyPatch powerpc-powernv-force-all-CPUs-to-be-bootable.patch
 
-#rhbz 880035
-ApplyPatch bridge-only-expire-the-mdb-entry-when-query-is-received.patch
-ApplyPatch bridge-send-query-as-soon-as-leave-is-received.patch
-#rhbz 980254
-ApplyPatch bridge-timer-fix.patch
-ApplyPatch bridge-do-not-call-setup_timer-multiple-times.patch
+#rhbz 1163927
+ApplyPatch Set-UID-in-sess_auth_rawntlmssp_authenticate-too.patch
 
-#rhbz 977040
+#rhbz 1163574
+ApplyPatch acpi-video-Add-disable_native_backlight-quirk-for-De.patch
+#rhbz 1094948
+ApplyPatch acpi-video-Add-disable_native_backlight-quirk-for-Sa.patch
 
-#rhbz 959721
-ApplyPatch HID-kye-Add-report-fixup-for-Genius-Gila-Gaming-mouse.patch
+# Fix for big-endian arches, already upstream
+ApplyPatch mpssd-x86-only.patch
 
-#rhbz 969473
-ApplyPatch Input-elantech-fix-for-newer-hardware-versions-v7.patch
+#rhbz 1186097
+ApplyPatch acpi-video-add-disable_native_backlight_quirk_for_samsung_510r.patch
 
-#rhbz 928561
-ApplyPatch 0001-HID-kye-Add-report-fixup-for-Genius-Gx-Imperator-Key.patch
+#CVE-XXXX-XXXX rhbz 1189864 1192079
+ApplyPatch vhost-scsi-potential-memory-corruption.patch
 
-#rhbz 971893
-ApplyPatch bonding-driver-alb-learning.patch
+#CVE-2015-0275 rhbz 1193907 1195178
+ApplyPatch ext4-Allocate-entire-range-in-zero-range.patch
 
-#中文补丁
-ApplyPatch kernel-utf8-core-1.patch
-ApplyPatch utf8-kernel-2.6-fonts-3.patch
+%if 0%{?aarch64patches}
+ApplyPatch kernel-arm64.patch
+%ifnarch aarch64 # this is stupid, but i want to notice before secondary koji does.
+ApplyPatch kernel-arm64.patch -R
+%endif
+%endif
+
+ApplyPatch 4200_fbcondecor-3.16.patch
+
+#aufs
+ApplyPatch aufs001.patch
+ApplyPatch aufs3-base.patch
+ApplyPatch aufs3-kbuild.patch
+ApplyPatch aufs3-loopback.patch
+ApplyPatch aufs3-mmap.patch
+ApplyPatch aufs3-standalone.patch
+
+ApplyPatch 3.18.20-utf8.diff
 
 # END OF PATCH APPLICATIONS
 
@@ -1512,7 +1578,11 @@ rm -f kernel-%{version}-*debug.config
 # now run oldconfig over all the config files
 for i in *.config
 do
+%ifarch mips64el
+  cp %{SOURCE115} .config
+%else
   mv $i .config
+%endif
   Arch=`head -1 .config | cut -b 3-`
   make ARCH=$Arch listnewconfig | grep -E '^CONFIG_' >.newoptions || true
 %if %{listnewconfig_fail}
@@ -2066,6 +2136,11 @@ install -m644 %{SOURCE2001} %{buildroot}%{_sysconfdir}/sysconfig/cpupower
 make DESTDIR=$RPM_BUILD_ROOT bootwrapper_install WRAPPER_OBJDIR=%{_libdir}/kernel-wrapper WRAPPER_DTSDIR=%{_libdir}/kernel-wrapper/dts
 %endif
 
+#临时性措施
+%ifarch mips64el
+mv %{buildroot}/usr/lib/traceevent %{buildroot}%{_libdir}
+mv %{buildroot}/usr/lib/libperf-gtk.so %{buildroot}%{_libdir}
+%endif
 
 ###
 ### clean
@@ -2207,6 +2282,7 @@ fi
 %files -n perf
 %defattr(-,root,root)
 %{_bindir}/perf
+%{_libdir}/libperf-gtk.so
 %dir %{_libexecdir}/perf-core
 %{_libexecdir}/perf-core/*
 %{_mandir}/man[1-8]/perf*
@@ -2235,6 +2311,8 @@ fi
 %{_bindir}/centrino-decode
 %{_bindir}/powernow-k8-decode
 %endif
+%{_bindir}/trace
+%{_libdir}/traceevent/plugins/*.so
 %{_unitdir}/cpupower.service
 %{_mandir}/man[1-8]/cpupower*
 %config(noreplace) %{_sysconfdir}/sysconfig/cpupower
