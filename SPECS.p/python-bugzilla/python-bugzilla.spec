@@ -6,16 +6,15 @@
 %endif
 
 Name:           python-bugzilla
-Version:        1.1.0
-Release:        2%{?dist}
+Version:	1.2.1
+Release:	1%{?dist}
 Summary:        A python library and tool for interacting with Bugzilla
+Summary(zh_CN.UTF-8): 与 Bugzilla 交互的 PYthon 库和工具
 
 License:        GPLv2+
 URL:            https://fedorahosted.org/python-bugzilla
 Source0:        https://fedorahosted.org/releases/p/y/%{name}/%{name}-%{version}.tar.gz
 
-# Fix tests on rawhide (bz #1106734)
-Patch0001: 0001-tests-Fix-cookie-comparison-on-rawhide.patch
 BuildArch:      noarch
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
@@ -36,24 +35,27 @@ python-bugzilla is a python 2 library for interacting with bugzilla instances
 over XML-RPC. This package also includes the 'bugzilla' command-line tool
 for interacting with bugzilla from shell scripts.
 
+%description -l zh_CN.UTF-8
+与 Bugzilla 交互的 PYthon 库和工具。
 
 %if 0%{?with_python3}
 %package -n python3-bugzilla
 Summary: A python 3 library for interacting with Bugzilla
+Summary(zh_CN.UTF-8): 与 Bugzilla 交互的 PYthon3 库和工具
 Requires: python3-requests
 Requires: python3-magic
 
 %description -n python3-bugzilla
 python3-bugzilla is a python 3 library for interacting with bugzilla instances
 over XML-RPC.
+
+%description -n python3-bugzilla -l zh_CN.UTF-8
+与 Bugzilla 交互的 PYthon3 库和工具。
 %endif # if with_python3
 
 
 %prep
 %setup -q
-
-# Fix tests on rawhide (bz #1106734)
-%patch0001 -p1
 
 %if 0%{?with_python3}
 rm -rf %{py3dir}
@@ -80,7 +82,7 @@ popd
 %endif # with_python3
 
 %{__python2} setup.py install -O1 --skip-build --root %{buildroot}
-
+magic_rpm_clean.sh
 
 %check
 %{__python2} setup.py test
@@ -99,6 +101,9 @@ popd
 %{python3_sitelib}/*
 %endif # with_python3
 %changelog
+* Sat Aug 22 2015 Liu Di <liudidi@gmail.com> - 1.2.1-1
+- 更新到 1.2.1
+
 * Wed Jun 18 2014 Cole Robinson <crobinso@redhat.com> - 1.1.0-2
 - Fix tests on rawhide (bz #1106734)
 

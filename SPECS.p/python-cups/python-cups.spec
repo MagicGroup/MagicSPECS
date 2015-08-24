@@ -4,13 +4,15 @@
 }
 
 Summary:       Python bindings for CUPS
+Summary(zh_CN.UTF-8): CUPS 的 Python 绑定
 Name:          python-cups
-Version:       1.9.72
-Release:       3%{?dist}
+Version:	1.9.73
+Release:	1%{?dist}
 URL:           http://cyberelk.net/tim/software/pycups/
 Source:        http://cyberelk.net/tim/data/pycups/pycups-%{version}.tar.bz2
 License:       GPLv2+
 Group:         Development/Languages
+Group(zh_CN.UTF-8): 开发/语言
 BuildRequires: cups-devel
 BuildRequires: python2-devel python3-devel
 BuildRequires: epydoc
@@ -20,9 +22,15 @@ This package provides Python bindings for CUPS API,
 known as pycups. It was written for use with
 system-config-printer, but can be put to other uses as well.
 
+%description -l zh_CN.UTF-8
+CUPS 的 Python 绑定，也叫 pycups。它是为使用 system-config-printer
+编写的，但是其它场合也可以使用。
+
 %package -n python3-cups
 Summary:       Python3 bindings for CUPS API, known as pycups.
+Summary(zh_CN.UTF-8): CUPS 的 Python3 绑定
 Group:         Development/Languages
+Group(zh_CN.UTF-8): 开发/语言
 
 %description -n python3-cups
 This package provides Python bindings for CUPS API,
@@ -31,12 +39,21 @@ system-config-printer, but can be put to other uses as well.
 
 This is a ported release for python 3
 
+%description -n python3-cups -l zh_CN.UTF-8
+CUPS 的 Python3 绑定，也叫 pycups。它是为使用 system-config-printer
+编写的，但是其它场合也可以使用。
+
 %package doc
 Summary:       Documentation for python-cups
+Summary(zh_CN.UTF-8): %{name} 的文档
 Group:         Documentation
+Group(zh_CN.UTF-8): 文档
 
 %description doc
 Documentation for python-cups.
+
+%description doc -l zh_CN.UTF-8
+%{name} 的文档。
 
 %prep
 %setup -q -n pycups-%{version}
@@ -60,7 +77,7 @@ pushd %{py3dir}
 %py3_install
 chmod 755 %{buildroot}%{python3_sitearch}/cups*.so
 popd
-
+magic_rpm_clean.sh
 
 
 %files
@@ -79,6 +96,9 @@ popd
 %doc examples html
 
 %changelog
+* Sun Aug 23 2015 Liu Di <liudidi@gmail.com> - 1.9.73-1
+- 更新到 1.9.73
+
 * Tue Aug 11 2015 Jiri Popelka <jpopelka@redhat.com> - 1.9.72-3
 - %%py3_build && %%py3_install
 

@@ -1,8 +1,6 @@
-%if 0%{?fedora} > 12
 %global with_python3 1
-%endif
 
-# %%global betaver b1
+%global prever b2
 
 %{!?python_sitearch: %global python_sitearch %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib(1)")}
 
@@ -13,13 +11,14 @@
 
 Name:           python-coverage
 Summary:        Code coverage testing module for Python
-Version:        3.5.3
-Release:        3%{?dist}
+Summary(zh_CN.UTF-8): Python 的代码覆盖测试模块
+Version:        4.0
+Release:        0.2.%{?prever}%{?dist}
 License:        BSD and (MIT or GPLv2)
 Group:          System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 URL:            http://nedbatchelder.com/code/modules/coverage.html
-Source0:        http://pypi.python.org/packages/source/c/coverage/coverage-%{version}.tar.gz
-Patch0:         python-coverage-3.5.3-pickle.patch
+Source0:        http://pypi.python.org/packages/source/c/coverage/coverage-%{version}%{?prever}.tar.gz
 BuildRequires:  python-setuptools, python-devel
 Requires:       python-setuptools
 %if 0%{?with_python3}
@@ -33,10 +32,15 @@ execution. It uses the code analysis tools and tracing hooks provided in the
 Python standard library to determine which lines are executable, and which 
 have been executed.
 
+%description -l zh_CN.UTF-8
+Python 的代码覆盖测试模块。
+
 %if 0%{?with_python3}
 %package -n python3-coverage
 Summary:        Code coverage testing module for Python 3
+Summary(zh_CN.UTF-8): Python3 的代码覆盖测试模块
 Group:          System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 # As the "coverage" executable requires the setuptools at runtime (#556290),
 # so the "python3-coverage" executable requires python3-setuptools:
 Requires:       python3-setuptools
@@ -46,12 +50,12 @@ Coverage.py is a Python 3 module that measures code coverage during Python
 execution. It uses the code analysis tools and tracing hooks provided in the 
 Python standard library to determine which lines are executable, and which 
 have been executed.
+%description -n python3-coverage -l zh_CN.UTF-8
+Python3 的代码覆盖测试模块。
 %endif # with_python3
 
 %prep
-%setup -q -n coverage-%{version}
-
-%patch0 -p1
+%setup -q -n coverage-%{version}%{?prever}
 
 find . -type f -exec chmod 0644 \{\} \;
 sed -i 's/\r//g' README.txt
@@ -87,18 +91,25 @@ magic_rpm_clean.sh
 %files
 %doc README.txt
 %{_bindir}/coverage
+%{_bindir}/coverage2
+%{_bindir}/coverage-2*
 %{python_sitearch}/coverage/
 %{python_sitearch}/coverage*.egg-info/
 
 %if 0%{?with_python3}
 %files -n python3-coverage
 %{_bindir}/python3-coverage
+%{_bindir}/coverage3
+%{_bindir}/coverage-3*
 %{python3_sitearch}/coverage/
 %{python3_sitearch}/coverage*.egg-info/
 %endif # if with_python3
 
 
 %changelog
+* Sun Aug 23 2015 Liu Di <liudidi@gmail.com> - 4.0-0.2.b11
+- 为 Magic 3.0 重建
+
 * Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 3.5.3-3
 - 为 Magic 3.0 重建
 

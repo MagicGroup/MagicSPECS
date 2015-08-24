@@ -5,9 +5,10 @@
 %endif
 
 Name:           python-cffi
-Version:        1.1.2
-Release:        4%{?dist}
+Version:	1.2.1
+Release:	1%{?dist}
 Summary:        Foreign Function Interface for Python to call C code
+Summary(zh_CN.UTF-8): Python 调用 C 代码的外部函数接口
 License:        MIT
 URL:            http://cffi.readthedocs.org/
 Source0:        http://pypi.python.org/packages/source/c/cffi/cffi-%{version}.tar.gz
@@ -29,24 +30,34 @@ Foreign Function Interface for Python, providing a convenient and
 reliable way of calling existing C code from Python. The interface is
 based on LuaJIT’s FFI.
 
+%description -l zh_CN.UTF-8
+Python 调用 C 代码的外部函数接口。
+
 %if 0%{?with_python3}
 %package -n python3-cffi
 Summary:        Foreign Function Interface for Python 3 to call C code
+Summary(zh_CN.UTF-8): Python3 调用 C 代码的外部函数接口
 Requires:       python3-pycparser
 
 %description -n python3-cffi
 Foreign Function Interface for Python, providing a convenient and
 reliable way of calling existing C code from Python. The interface is
 based on LuaJIT’s FFI.
+%description -n python3-cffi -l zh_CN.UTF-8
+Python3 调用 C 代码的外部函数接口。
 %endif # with_python3
 
 %package doc
 Summary:        Documentation for CFFI
+Summary(zh_CN.UTF-8): %{name} 的文档
 BuildArch:      noarch
 Requires:       %{name} = %{version}-%{release}
 
 %description doc
 Documentation for CFFI, the Foreign Function Interface for Python.
+
+%description doc -l zh_CN.UTF-8
+%{name} 的文档。
 
 %prep
 %setup -q -n cffi-%{version}
@@ -82,6 +93,7 @@ pushd %{py3dir}
 popd
 %endif # with_python3
 %{__python} setup.py install --skip-build --prefix=%{_prefix} --root %{buildroot}
+magic_rpm_clean.sh
 
 %files
 %doc PKG-INFO
@@ -99,6 +111,9 @@ popd
 %doc doc/build/html
 
 %changelog
+* Sun Aug 23 2015 Liu Di <liudidi@gmail.com> - 1.2.1-1
+- 更新到 1.2.1
+
 * Mon Aug 17 2015 Liu Di <liudidi@gmail.com> - 1.1.2-4
 - 为 Magic 3.0 重建
 

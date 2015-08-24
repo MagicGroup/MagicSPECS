@@ -1,11 +1,13 @@
 %global with_python3 1
 %global pypi_name chardet
 Name:           python-%{pypi_name}
-Version:        2.2.1
-Release:        3%{?dist}
+Version:	2.3.0
+Release:	1%{?dist}
 Summary:        Character encoding auto-detection in Python
+Summary(zh_CN.UTF-8): Python 的自动字符编码检测
 
 Group:          Development/Languages
+Group(zh_CN.UTF-8): 开发/语言
 License:        LGPLv2
 URL:            https://github.com/%{pypi_name}/%{pypi_name}
 Source0:        https://pypi.python.org/packages/source/c/%{pypi_name}/%{pypi_name}-%{version}.tar.gz
@@ -21,15 +23,22 @@ BuildRequires:  python3-devel, python3-setuptools
 Character encoding auto-detection in Python. As 
 smart as your browser. Open source.
 
+%description -l zh_CN.UTF-8
+Python 的自动字符编码检测。
+
 %if 0%{?with_python3}
 %package -n python3-%{pypi_name}
 Summary:        Character encoding auto-detection in Python 3
+Summary(zh_CN.UTF-8): Python3 的自动字符编码检测
 
 %description -n python3-%{pypi_name}
 Character encoding auto-detection in Python. As 
 smart as your browser. Open source.
 
 Python 3 version.
+
+%description -n python3-%{pypi_name} -l zh_CN.UTF-8
+Python3 的自动字符编码检测。
 %endif # with_python3
 
 %prep
@@ -61,6 +70,7 @@ popd
 %endif # with_python3
 
 %{__python2} setup.py install -O1 --skip-build --root $RPM_BUILD_ROOT
+magic_rpm_clean.sh
 
 %files
 %{!?_licensedir:%global license %%doc}
@@ -80,6 +90,9 @@ popd
 
 
 %changelog
+* Sun Aug 23 2015 Liu Di <liudidi@gmail.com> - 2.3.0-1
+- 更新到 2.3.0
+
 * Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.2.1-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

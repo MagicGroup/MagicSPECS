@@ -1,16 +1,17 @@
 %global pythonver %(%{__python} -c "import sys; print sys.version[:3]" 2>/dev/null || echo 0.0)
 %{!?python_sitearch: %global python_sitearch %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib(1)" 2>/dev/null)}
 
-# Python3 introduced in Fedora 13
-%global with_python3 %([ 0%{?fedora} -gt 12 ] && echo 1 || echo 0)
+%global with_python3 1
 
 Summary:	Cryptography library for Python
+Summary(zh_CN.UTF-8): Python 的加密算法库
 Name:		python-crypto
-Version:	2.6
-Release:	7%{?dist}
+Version:	2.6.1
+Release:	1%{?dist}
 # Mostly Public Domain apart from parts of HMAC.py and setup.py, which are Python
 License:	Public Domain and Python
 Group:		Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 URL:		http://www.pycrypto.org/
 Source0:	http://ftp.dlitz.net/pub/dlitz/crypto/pycrypto/pycrypto-%{version}.tar.gz
 Patch0:		python-crypto-2.4-optflags.patch
@@ -34,16 +35,23 @@ BuildRoot:	%{_tmppath}/%{name}-%{version}-buildroot-%(id -nu)
 PyCrypto is a collection of both secure hash functions (such as MD5 and
 SHA), and various encryption algorithms (AES, DES, RSA, ElGamal, etc.).
 
+%description -l zh_CN.UTF-8
+Python 的加密算法库（AES, DES, RSA 等等）。
+
 %if %{with_python3}
 %package -n python3-crypto
 Summary:	Cryptography library for Python 3
+Summary(zh_CN.UTF-8): Python3 的加密算法库
 Group:		Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 
 %description -n python3-crypto
 PyCrypto is a collection of both secure hash functions (such as MD5 and
 SHA), and various encryption algorithms (AES, DES, RSA, ElGamal, etc.).
 
 This is the Python 3 build of the package.
+%description -n python3-crypto -l zh_CN.UTF-8
+Python3 的加密算法库（AES, DES, RSA 等等）。
 %endif
 
 %prep
@@ -123,6 +131,9 @@ rm -rf %{buildroot}
 %endif
 
 %changelog
+* Sun Aug 23 2015 Liu Di <liudidi@gmail.com> - 2.6.1-1
+- 更新到 2.6.1
+
 * Tue Jun 17 2014 Liu Di <liudidi@gmail.com> - 2.6-7
 - 为 Magic 3.0 重建
 

@@ -1,5 +1,5 @@
 %global use_alternatives 1
-%global lspp 1
+%global lspp 0
 
 # {_exec_prefix}/lib/cups is correct, even on x86_64.
 # It is not used for shared objects but for executables.
@@ -14,7 +14,7 @@ Summary: CUPS printing system
 Name: cups
 Epoch: 1
 Version: 2.1
-Release: 0.3%{prever}%{?dist}
+Release: 0.4%{prever}%{?dist}
 License: GPLv2
 Url: http://www.cups.org/
 Source0: http://www.cups.org/software/%{VERSION}/cups-%{VERSION}-source.tar.bz2
@@ -621,6 +621,9 @@ rm -f %{cups_serverbin}/backend/smb
 %{_mandir}/man5/ipptoolfile.5.gz
 
 %changelog
+* Sun Aug 23 2015 Liu Di <liudidi@gmail.com> - 1:2.1-0.4rc1
+- 为 Magic 3.0 重建
+
 * Thu Aug 13 2015 Jiri Popelka <jpopelka@redhat.com> - 1:2.1-0.3rc1
 - fix crash in scheduler (#1253135)
 

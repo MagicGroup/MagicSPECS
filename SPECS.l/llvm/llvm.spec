@@ -25,17 +25,13 @@
 
 
 # Documentation install path
-%if 0%{?fedora} < 20
-  %global llvmdocdir() %{_docdir}/%1-%{version}
-%else
-  %global llvmdocdir() %{_docdir}/%1
-%endif
+%global llvmdocdir() %{_docdir}/%1
 
 #global prerel rc3
 
 Name:           llvm
 Version:        3.6.2
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        The Low Level Virtual Machine
 
 Group:          Development/Languages
@@ -54,6 +50,8 @@ Source11:       llvm-Config-llvm-config.h
 
 # patches
 Patch2:         0001-data-install-preserve-timestamps.patch
+
+Patch10:	clang-3.6.2-magic.patch
 
 # the next two are various attempts to get clang to actually work on arm
 # by forcing a hard-float ABI.  They don't apply anymore as of 3.5.0,
@@ -316,6 +314,10 @@ mv lldb-*/ tools/lldb
 
 %patch2 -p1
 
+pushd tools/clang
+%patch10 -p1
+popd
+
 %if %{with lldb}
 pushd tools/lldb
 # careful when recreating this patch...
@@ -396,7 +398,7 @@ export CXXFLAGS="%{optflags} -DLLDB_DISABLE_PYTHON"
 %if %{with gold}
   --with-binutils-include=%{_includedir} \
 %endif
-  --with-c-include-dirs=%{_includedir}:$(echo %{_prefix}/lib/gcc/%{_target_cpu}*/*/include) \
+  --with-c-include-dirs=%{_includedir}:$(echo %{_prefix}/lib/gcc/%{_target_cpu}-magic-linux/*/include) \
   --with-optimize-option=-O3
 
 make %{?_smp_mflags} REQUIRES_RTTI=1 VERBOSE=1
@@ -594,16 +596,13 @@ exit 0
 %doc %{_mandir}/man1/*.1.*
 
 %files devel
-%doc %{llvmdocdir %{name}-devel}/
 %{_bindir}/llvm-config-%{__isa_bits}
 %{_includedir}/%{name}
 %{_includedir}/%{name}-c
 %{_datadir}/llvm/cmake
 
 %files libs
-%doc LICENSE.TXT
 %config(noreplace) %{_sysconfdir}/ld.so.conf.d/%{name}-%{_arch}.conf
-%dir %{_libdir}/%{name}
 %if %{with clang}
 %exclude %{_libdir}/%{name}/libclang.so
 %endif
@@ -627,7 +626,6 @@ exit 0
 %{_libdir}/%{name}/libclang.so
 
 %files -n clang-devel
-%doc %{llvmdocdir clang-devel}/
 %{_includedir}/clang
 %{_includedir}/clang-c
 
@@ -682,6 +680,9 @@ exit 0
 %endif
 
 %changelog
+* Sun Aug 23 2015 Liu Di <liudidi@gmail.com> - 3.6.2-2
+- 为 Magic 3.0 重建
+
 * Wed Jul 22 2015 Adam Jackson <ajax@redhat.com> 3.6.2-1
 - llvm 3.6.2
 

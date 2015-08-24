@@ -1,19 +1,16 @@
-%if 0%{?fedora} > 20
 %global with_python3 1
-%else
-%{!?__python2: %global __python2 /usr/bin/python2}
-%{!?python2_sitearch: %global python2_sitearch %(%{__python2} -c "from distutils.sysconfig import get_python_lib; print(get_python_lib(1))")}
-%endif
 
 %global reqs() %1-idna >= 2.0 %1-pyasn1 %1-six >= 1.4.1 %1-cffi >= 0.8
 %global breqs() %1-setuptools %1-pretend %1-iso8601 %1-cryptography-vectors = %{version}
 
 Name:           python-cryptography
 Version:        1.0
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        PyCA's cryptography library
+Summary(zh_CN.UTF-8): PyCA 的加密库
 
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 License:        ASL 2.0 or BSD
 URL:            https://cryptography.io/en/latest/
 Source0:        https://pypi.python.org/packages/source/c/cryptography/cryptography-%{version}.tar.gz
@@ -37,10 +34,15 @@ BuildRequires:  %reqs python3
 cryptography is a package designed to expose cryptographic primitives and
 recipes to Python developers.
 
+%description -l zh_CN.UTF-8
+PyCA 的加密库。
+
 %if 0%{?with_python3}
 %package -n  python3-cryptography
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Summary:        PyCA's cryptography library
+Summary(zh_CN.UTF-8): PyCA 的加密库（Python3）
 
 Requires:       openssl
 Requires:       %reqs python3
@@ -48,6 +50,8 @@ Requires:       %reqs python3
 %description -n python3-cryptography
 cryptography is a package designed to expose cryptographic primitives and
 recipes to Python developers.
+%description -n python3-cryptography -l zh_CN.UTF-8
+PyCA 的加密库（Python3）。
 %endif
 
 %prep
@@ -81,7 +85,7 @@ pushd %{py3dir}
 %{__python3} setup.py install --skip-build --prefix=%{_prefix} --root %{buildroot}
 popd
 %endif
-
+magic_rpm_clean.sh
 
 %check
 %{__python} setup.py test
@@ -106,6 +110,9 @@ popd
 
 
 %changelog
+* Sun Aug 23 2015 Liu Di <liudidi@gmail.com> - 1.0-3
+- 为 Magic 3.0 重建
+
 * Sun Aug 16 2015 Liu Di <liudidi@gmail.com> - 1.0-2
 - 为 Magic 3.0 重建
 

@@ -7,11 +7,13 @@
 %endif
 
 Name:           python-configobj
-Version:        5.0.5
-Release:        3%{?dist}
+Version:	5.0.6
+Release:	1%{?dist}
 Summary:        Config file reading, writing, and validation
+Summary(zh_CN.UTF-8): 配置文件读取、写入和校验
 
 Group:          System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 License:        BSD
 URL:            http://configobj.readthedocs.org/
 Source0:        https://pypi.python.org/packages/source/c/configobj/configobj-%{version}.tar.gz
@@ -51,10 +53,13 @@ It has lots of other features though:
     * Full Unicode support
     * A powerful unrepr mode for storing basic datatypes
 
+%description -l zh_CN.UTF-8
+配置文件读取、写入和校验。
+
 %if 0%{?with_python3}
 %package -n python3-configobj
 Summary:        Config file reading, writing, and validation for Python 3
-
+Summary(zh_CN.UTF-8): 配置文件读取、写入和校验（Python3）
 BuildRequires:  python3-devel
 BuildRequires:  python3-six
 BuildRequires:  python3-pytest
@@ -81,6 +86,9 @@ It has lots of other features though:
     * A powerful unrepr mode for storing basic datatypes
 
 This package ships Python 3 build of configobj.
+
+%description -n python3-configobj -l zh_CN.UTF-8
+配置文件读取、写入和校验，这是 Python3 版本。
 %endif
 
 
@@ -151,6 +159,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sun Aug 23 2015 Liu Di <liudidi@gmail.com> - 5.0.6-1
+- 更新到 5.0.6
+
 * Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 5.0.5-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 
