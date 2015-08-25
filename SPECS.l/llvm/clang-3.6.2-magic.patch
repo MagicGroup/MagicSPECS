@@ -15,7 +15,7 @@ diff -ur cfe-3.6.2.src.orig/lib/Driver/ToolChains.cpp cfe-3.6.2.src/lib/Driver/T
    static const char *const X86_64Triples[] = {
      "x86_64-linux-gnu", "x86_64-unknown-linux-gnu", "x86_64-pc-linux-gnu",
      "x86_64-redhat-linux6E", "x86_64-redhat-linux", "x86_64-suse-linux",
-+    "x86_64-redhat-linux",
++    "x86_64-magic-linux",
      "x86_64-manbo-linux-gnu", "x86_64-linux-gnu", "x86_64-slackware-linux",
      "x86_64-linux-android", "x86_64-unknown-linux"
    };
