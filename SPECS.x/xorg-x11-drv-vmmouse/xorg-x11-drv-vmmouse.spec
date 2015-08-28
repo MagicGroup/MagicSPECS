@@ -3,12 +3,12 @@
 %global driverdir %{moduledir}/input
 
 #global gitdate 20101209
-%global gitversion 07232feb6
+#global gitversion 07232feb6
 
 Summary:    Xorg X11 vmmouse input driver
 Name:	    xorg-x11-drv-vmmouse
-Version:    13.0.0
-Release:    11%{?gitdate:.%{gitdate}git%{gitversion}}%{?dist}
+Version:    13.1.0
+Release:    2%{?gitdate:.%{gitdate}git%{gitversion}}%{?dist}
 URL:	    http://www.x.org
 License:    MIT
 Group:	    User Interface/X Hardware Support
@@ -18,36 +18,34 @@ Source0:    %{tarball}-%{gitdate}.tar.bz2
 Source1:    make-git-snapshot.sh
 Source2:    commitid
 %else
-Source0:    http://ftp.nara.wide.ad.jp/pub/X11/x.org/individual/driver/%{tarball}-%{version}.tar.bz2
+Source0:    ftp://ftp.x.org/pub/individual/driver/%{tarball}-%{version}.tar.bz2
 %endif
-
-# 604660 - vmmouse_detect unexpected exit with status 0x000b
-Patch2:     vmmouse-12.6.9-iopl-revert.patch
 
 # Yes, this is not the same as vmware.  Yes, this is intentional.
 ExclusiveArch: %{ix86} x86_64
 
-BuildRequires: xorg-x11-server-devel >= 1.10.99.902
+BuildRequires: xorg-x11-server-devel >= 1.10.99.902 systemd-devel
 BuildRequires: automake autoconf libtool
 
 Requires: Xorg %(xserver-sdk-abi-requires ansic)
 Requires: Xorg %(xserver-sdk-abi-requires xinput)
+Requires: xorg-x11-server-wrapper
 
 %description 
 X.Org X11 vmmouse input driver.
 
 %prep
 %setup -q -n %{tarball}-%{?gitdate:%{gitdate}}%{!?gitdate:%{version}}
-%patch2 -p1 
 
 %build
 autoreconf -v --install --force || exit 1
-%configure --disable-static --disable-silent-rules --with-xorg-conf-dir='%{_datadir}/X11/xorg.conf.d'
+%configure --disable-static --disable-silent-rules \
+    --with-xorg-conf-dir='%{_datadir}/X11/xorg.conf.d' \
+    --with-udev-rules-dir=%{_prefix}/lib/udev/rules.d
 make %{?_smp_mflags}
 
 %install
-rm -rf $RPM_BUILD_ROOT
-make install DESTDIR=$RPM_BUILD_ROOT
+%make_install
 
 # FIXME: Remove all libtool archives (*.la) from modules directory.  This
 # should be fixed in upstream Makefile.am or whatever.
@@ -57,11 +55,7 @@ find $RPM_BUILD_ROOT -regex ".*\.la$" | xargs rm -f --
 rm -rf $RPM_BUILD_ROOT/%{_libdir}/hal/hal-probe-vmmouse
 rm -rf $RPM_BUILD_ROOT/%{_datadir}/hal/fdi/
 
-%clean
-rm -rf $RPM_BUILD_ROOT
-
 %files
-%defattr(-,root,root,-)
 %{driverdir}/vmmouse_drv.so
 %{_mandir}/man4/vmmouse.4*
 %{_mandir}/man1/vmmouse_detect.1*
@@ -70,6 +64,33 @@ rm -rf $RPM_BUILD_ROOT
 %{_prefix}/lib/udev/rules.d/*.rules
 
 %changelog
+* Wed Jul 29 2015 Dave Airlie <airlied@redhat.com> - 13.1.0-2
+- 1.15 ABI rebuild
+
+* Fri Jun 26 2015 Peter Hutterer <peter.hutterer@redhat.com> 13.1.0-1
+- vmmouse 13.1.0
+
+* Fri Jun 19 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 13.0.99-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
+
+* Fri May 15 2015 Hans de Goede <hdegoede@redhat.com> - 13.0.99-1
+- vmmouse 13.0.99
+- This ensures that xorg-x11-drv-vmmouse plays nice together with the
+  upcoming vmmouse kernel driver (related rhbz#1214474)
+
+* Sat Feb 21 2015 Till Maas <opensource@till.name> - 13.0.0-15
+- Rebuilt for Fedora 23 Change
+  https://fedoraproject.org/wiki/Changes/Harden_all_packages_with_position-independent_code
+
+* Mon Aug 18 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 13.0.0-14
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
+
+* Sun Jun 08 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 13.0.0-13
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Mon Apr 28 2014 Hans de Goede <hdegoede@redhat.com> - 13.0.0-12
+- xserver 1.15.99-20140428 git snapshot ABI rebuild
+
 * Mon Jan 13 2014 Adam Jackson <ajax@redhat.com> - 13.0.0-11
 - 1.15 ABI rebuild
 
