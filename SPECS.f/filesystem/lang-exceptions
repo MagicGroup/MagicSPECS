@@ -1,0 +1,16 @@
+# This file contains a list of locality-specifc locales for which we ship
+# translations.
+#
+# The easiest way to generate this file is something along the lines of:
+#
+# repoquery -qal | awk -F '/' '/^\/usr\/share\/locale\/[a-z]*[_@]+/ { print $5 }' | sort -u
+#
+# and then sorting out the various invalid entires. (all_languages, locales
+# with charset definitions (.UTF-8, etc.))
+en_US
+en_US@piglatin
+zh_CN
+zh_CN.GB2312
+zh_HK
+zh_TW
+zh_TW.Big5
