@@ -1,0 +1,21 @@
+diff --git a/biosdevname.rules.in b/biosdevname.rules.in
+index 0a32aa5..52aaea5 100644
+--- a/biosdevname.rules.in
++++ b/biosdevname.rules.in
+@@ -12,13 +15,13 @@ ENV{biosdevname}=="?*", ENV{UDEV_BIOSDEVNAME}="$env{biosdevname}"
+ ENV{UDEV_BIOSDEVNAME}=="0", GOTO="netdevicename_end"
+ ENV{UDEV_BIOSDEVNAME}=="1", GOTO="netdevicename_start"
+ 
+-# uncomment the next line for biosdevname to be off by default
+-# GOTO="netdevicename_end"
++# off by default
++GOTO="netdevicename_end"
+ 
+ LABEL="netdevicename_start"
+ 
+ # using NAME= instead of setting INTERFACE_NAME, so that persistent
+ # names aren't generated for these devices, they are "named" on each boot.
+-SUBSYSTEMS=="pci", PROGRAM="/sbin/biosdevname --policy physical -i %k", NAME="%c",  OPTIONS+="string_escape=replace"
++SUBSYSTEMS=="pci", PROGRAM="/sbin/biosdevname --smbios 2.6 --nopirq --policy physical -i %k", NAME="%c"  OPTIONS+="string_escape=replace"
+ 
+ LABEL="netdevicename_end"
