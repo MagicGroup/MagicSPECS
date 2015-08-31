@@ -1,10 +1,12 @@
 Name:           python-dateutil
 Version:        2.4.2
-Release:        3%{?dist}
+Release:        4%{?dist}
 Epoch:          1
 Summary:        Powerful extensions to the standard datetime module
+Summary(zh_CN.UTF-8): 标准日期时间模块的强力扩展
 
 Group:          Development/Languages
+Group(zh_CN.UTF-8): 开发/语言
 License:        Python
 URL:            https://github.com/dateutil/dateutil
 Source0:        https://github.com/dateutil/dateutil/archive/%{version}.tar.gz
@@ -30,8 +32,12 @@ module available in Python 2.3+.
 
 This is the version for Python 2.
 
+%description -l zh_CN.UTF-8
+标准日期时间模块的强力扩展。这是 Python2 版本。
+
 %package -n python3-dateutil
 Summary:        Powerful extensions to the standard datetime module
+Summary(zh_CN.UTF-8): 标准日期时间模块的强力扩展
 BuildRequires:  python3-devel
 BuildRequires:  python3-six
 Requires:       tzdata
@@ -43,10 +49,17 @@ module available in Python 2.3+.
 
 This is the version for Python 3.
 
+%description -n python3-dateutil -l zh_CN.UTF-8
+标准日期时间模块的强力扩展，这是 Python3 版本。
+
 %package doc
 Summary: API documentation for python-dateutil
+Summary(zh_CN.UTF-8): %{name} 的文档
 %description doc
 This package contains %{summary}.
+
+%description doc -l zh_CN.UTF-8
+%{name} 的文档。
 
 %prep
 %autosetup -p0 -n dateutil-%{version}
@@ -61,6 +74,7 @@ make -C docs html
 %install
 %{__python2} setup.py install --skip-build --root $RPM_BUILD_ROOT
 %{__python3} setup.py install --skip-build --root $RPM_BUILD_ROOT
+magic_rpm_clean.sh
 
 %check
 %{__python2} setup.py test
@@ -83,6 +97,9 @@ make -C docs html
 %doc docs/_build/html
 
 %changelog
+* Tue Aug 25 2015 Liu Di <liudidi@gmail.com> - 1:2.4.2-4
+- 为 Magic 3.0 重建
+
 * Thu Aug 06 2015 Liu Di <liudidi@gmail.com> - 1:2.4.2-3
 - 为 Magic 3.0 重建
 

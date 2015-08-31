@@ -1,9 +1,11 @@
 Name:		biosdevname
 Version:	0.6.2
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:	Udev helper for naming devices per BIOS names
+Summary(zh_CN.UTF-8): 通过 BIOS 名称命名设备的 Udev 辅助程序
 
 Group:		System Environment/Base
+Group(zh_CN.UTF-8): 系统环境/基本
 License:	GPLv2
 URL:		http://linux.dell.com/files/%{name}
 # SMBIOS only exists on these arches.  It's also likely that other
@@ -30,6 +32,9 @@ argument, and returns the BIOS-given name it "should" be.  This is necessary
 on systems where the BIOS name for a given device (e.g. the label on
 the chassis is "Gb1") doesn't map directly and obviously to the kernel
 name (e.g. eth0).
+
+%description -l zh_CN.UTF-8
+通过 BIOS 名称命名设备的 Udev 辅助程序。
 
 %prep
 %setup -q
@@ -58,6 +63,9 @@ make install install-data DESTDIR=%{buildroot}
 
 
 %changelog
+* Mon Aug 31 2015 Liu Di <liudidi@gmail.com> - 0.6.2-2
+- 为 Magic 3.0 重建
+
 * Fri Jun 26 2015 Michal Sekletar <msekleta@redhat.com> - 0.6.2-1
 - Rebase to 0.6.2
 

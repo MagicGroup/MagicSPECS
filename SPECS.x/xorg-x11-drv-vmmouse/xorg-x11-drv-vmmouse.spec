@@ -8,7 +8,7 @@
 Summary:    Xorg X11 vmmouse input driver
 Name:	    xorg-x11-drv-vmmouse
 Version:    13.1.0
-Release:    2%{?gitdate:.%{gitdate}git%{gitversion}}%{?dist}
+Release:    5%{?gitdate:.%{gitdate}git%{gitversion}}%{?dist}
 URL:	    http://www.x.org
 License:    MIT
 Group:	    User Interface/X Hardware Support
@@ -29,7 +29,7 @@ BuildRequires: automake autoconf libtool
 
 Requires: Xorg %(xserver-sdk-abi-requires ansic)
 Requires: Xorg %(xserver-sdk-abi-requires xinput)
-Requires: xorg-x11-server-wrapper
+Requires: xorg-x11-server-Xorg
 
 %description 
 X.Org X11 vmmouse input driver.
@@ -64,6 +64,15 @@ rm -rf $RPM_BUILD_ROOT/%{_datadir}/hal/fdi/
 %{_prefix}/lib/udev/rules.d/*.rules
 
 %changelog
+* Fri Aug 28 2015 Liu Di <liudidi@gmail.com> - 13.1.0-5
+- 为 Magic 3.0 重建
+
+* Fri Aug 28 2015 Liu Di <liudidi@gmail.com> - 13.1.0-4
+- 为 Magic 3.0 重建
+
+* Fri Aug 28 2015 Liu Di <liudidi@gmail.com> - 13.1.0-3
+- 为 Magic 3.0 重建
+
 * Wed Jul 29 2015 Dave Airlie <airlied@redhat.com> - 13.1.0-2
 - 1.15 ABI rebuild
 
