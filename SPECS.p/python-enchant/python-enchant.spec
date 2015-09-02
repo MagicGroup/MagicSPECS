@@ -1,8 +1,8 @@
 %global with_python3 1
 
 Name:           python-enchant
-Version:        1.6.5
-Release:        11%{?dist}
+Version:        1.6.6
+Release:        2%{?dist}
 Summary:        Python bindings for Enchant spellchecking library
 
 Group:          Development/Languages
@@ -10,9 +10,6 @@ License:        LGPLv2+
 URL:            http://packages.python.org/pyenchant/
 Source0:        http://pypi.python.org/packages/source/p/pyenchant/pyenchant-%{version}.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-
-Patch0:         python-enchant-1.6.5-fix-tests-without-X.patch
-Patch1:         python-enchant-1.6.5-fix-docstring-test.patch
 
 BuildArch:      noarch
 BuildRequires:  enchant-devel
@@ -27,6 +24,8 @@ BuildRequires:  python-nose
 %if 0%{?with_python3}
 BuildRequires:  python3-devel
 BuildRequires:  python3-setuptools >= 0:0.6a9
+# For running tests
+BuildRequires:  python3-nose
 %endif # if with_python3
 
 # Work around a problem with libenchant versioning
@@ -54,8 +53,6 @@ library by Dom Lachowicz.
 
 %prep
 %setup -q -n pyenchant-%{version}
-%patch0 -p1 -b .fix-tests-without-X
-%patch1 -p1 -b .fix-docstring-test
 
 %if 0%{?with_python3}
 rm -rf %{py3dir}
@@ -94,11 +91,15 @@ rm -rf $RPM_BUILD_ROOT/%{python_sitelib}/enchant/share
 %check
 pushd $RPM_BUILD_ROOT/%{python_sitelib}
 # There is no dictionary for language C, need to use en_US
-LANG=en_US.UTF-8 /usr/bin/nosetests
+LANG=en_US.UTF-8 /usr/bin/nosetests-2.*
 popd
 
 # Tests are failing in python3 because of collision between 
 # local and stdlib tokenize module
+pushd $RPM_BUILD_ROOT/%{python3_sitelib}
+# There is no dictionary for language C, need to use en_US
+LANG=en_US.UTF-8 /usr/bin/nosetests-3.*
+popd
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -135,11 +136,27 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
-* Tue Jun 17 2014 Liu Di <liudidi@gmail.com> - 1.6.5-11
-- 为 Magic 3.0 重建
+* Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.6.6-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 
-* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 1.6.5-10
-- 为 Magic 3.0 重建
+* Mon Jan 26 2015 Radek Novacek <rnovacek@redhat.com> 1.6.6-1
+- Update to 1.6.6
+- Enable python3 tests in the check section
+
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.6.5-14
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Wed May 28 2014 Kalev Lember <kalevlember@gmail.com> - 1.6.5-13
+- Rebuilt for https://fedoraproject.org/wiki/Changes/Python_3.4
+
+* Tue Aug 06 2013 Radek Novacek <rnovacek@redhat.com> 1.6.5-12
+- Disable distribute setup
+
+* Sun Aug 04 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.6.5-11
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.6.5-10
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
 
 * Thu Nov 01 2012 Radek Novacek <rnovacek@redhat.com> 1.6.5-9
 - Enable tests in %check
