@@ -1,0 +1,26 @@
+commit 4add89acc9cb0786aa123af4f33b6e45c724dca0
+Author: Qu Wenruo <quwenruo@cn.fujitsu.com>
+Date:   Wed Jul 29 10:28:17 2015 +0800
+
+    btrfs-progs: Add missing exit for parse_profile function
+    
+    In parse_profile() function, in error handling route, it output error
+    message but forgot to exit(1), causing even profile is not valid, it
+    will just fallback to single.
+    
+    Reported-by: James Harvey <jamespharvey20@gmail.com>
+    Signed-off-by: Qu Wenruo <quwenruo@cn.fujitsu.com>
+    Signed-off-by: David Sterba <dsterba@suse.com>
+
+diff --git a/mkfs.c b/mkfs.c
+index 9073f87..7d635dc 100644
+--- a/mkfs.c
++++ b/mkfs.c
+@@ -356,6 +356,7 @@ static u64 parse_profile(char *s)
+ 		return 0;
+ 	} else {
+ 		fprintf(stderr, "Unknown profile %s\n", s);
++		exit(1);
+ 	}
+ 	/* not reached */
+ 	return 0;
