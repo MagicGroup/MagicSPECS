@@ -4,14 +4,14 @@
 %endif
 
 %if 0%{?fedora}
-%global with_python3 1
+%global with_python3 0%{!?_without_python3:1}
 %endif
 
 %global srcname docutils
 
 Name:           python-%{srcname}
-Version:        0.10
-Release:        0.8.20120824svn7502%{?dist}
+Version:        0.12
+Release:        0.3.20140510svn7747%{?dist}
 Summary:        System for processing plaintext documentation
 
 Group:          Development/Languages
@@ -20,25 +20,11 @@ License:        Public Domain and BSD and Python and GPLv3+
 URL:            http://docutils.sourceforge.net
 #Source0:        http://downloads.sourceforge.net/docutils/%{srcname}-%{version}.tar.gz
 # Sometimes we need snapshots.  Instructions below:
-# svn co -r 7502 https://docutils.svn.sourceforge.net/svnroot/docutils/trunk/docutils
+# svn co -r 7687 svn://svn.code.sf.net/p/docutils/code/trunk/docutils
 # cd docutils
 # python setup.py sdist
 # The tarball is in dist/docutils-VERSION.tar.gz
 Source0:        %{srcname}-%{version}.tar.gz
-# Submitted upstream: https://sourceforge.net/tracker/index.php?func=detail&aid=3560841&group_id=38414&atid=422030
-Patch0: docutils-__import__-tests.patch
-Patch1: docutils-__import__-fixes2.patch
-
-# Disable some tests known to fail with Python 3.3
-# Bug reports filed upstream as:
-#   https://sourceforge.net/tracker/?func=detail&aid=3555164&group_id=38414&atid=422030
-# and:
-#   http://sourceforge.net/tracker/?func=detail&aid=3561133&group_id=38414&atid=422030
-# Unicode test is failing because of a python3.3b2 bug:
-# ImportError(b'str').__str__() returns bytes rather than str
-# http://bugs.python.org/issue15778
-Patch100: disable-failing-tests.patch
-
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:       noarch
@@ -70,7 +56,7 @@ Python inline documentation modules and packages.
 Summary:        System for processing plaintext documentation for python3
 Group:          Development/Languages
 # This module is optional and not yet available for python3
-#Requires: python3-imaging
+Requires: python3-imaging
 
 %description -n python3-%{srcname}
 The Docutils project specifies a plaintext markup language, reStructuredText,
@@ -88,12 +74,9 @@ This package contains the module, ported to run under python3.
 
 %prep
 %setup -q -n %{srcname}-%{version}
-%patch0 -p0
-%patch1 -p0
-%patch100 -p1 -b .disable-failing-tests
 
 # Remove shebang from library files
-for file in docutils/utils/{code_analyzer.py,punctuation_chars.py,error_reporting.py} docutils/utils/math/{latex2mathml.py,math2html.py} docutils/writers/xetex/__init__.py; do
+for file in docutils/utils/{code_analyzer.py,punctuation_chars.py,error_reporting.py,smartquotes.py} docutils/utils/math/{latex2mathml.py,math2html.py} docutils/writers/xetex/__init__.py; do
 sed -i -e '/#! *\/usr\/bin\/.*/{1D}' $file
 done
 
@@ -129,6 +112,8 @@ pushd %{py3dir}
 # docutils setup.py runs 2to3 on a copy of the tests and puts it in sitelib.
 rm -rf %{buildroot}%{python3_sitelib}/test
 
+# Flash file is used for testing docutils but shouldn't be in the installed package.
+mv docs/user/rst/images/biohazard.swf ./biohazard.swf 
 popd
 
 rm -rf %{buildroot}%{_bindir}/*
@@ -143,12 +128,19 @@ done
 # We want the licenses but don't need this build file
 rm -f licenses/docutils.conf
 
+# Flash file is used for testing docutils but shouldn't be in the installed package.
+mv docs/user/rst/images/biohazard.swf ./biohazard.swf 
+
 %check
+mv  biohazard.swf docs/user/rst/images/biohazard.swf
 python test/alltests.py
+rm docs/user/rst/images/biohazard.swf
 
 %if 0%{?with_python3}
 pushd %{py3dir}
+mv  biohazard.swf docs/user/rst/images/biohazard.swf
 python3 test3/alltests.py
+rm docs/user/rst/images/biohazard.swf
 popd
 %endif
 
@@ -156,7 +148,6 @@ popd
 rm -rf %{buildroot}
 
 %files
-%defattr(-,root,root,-)
 %doc BUGS.txt COPYING.txt FAQ.txt HISTORY.txt README.txt RELEASE-NOTES.txt 
 %doc THANKS.txt licenses docs tools/editors
 %{_bindir}/*
@@ -164,18 +155,41 @@ rm -rf %{buildroot}
 
 %if 0%{?with_python3}
 %files -n python3-%{srcname}
-%defattr(-,root,root,-)
 %doc BUGS.txt COPYING.txt FAQ.txt HISTORY.txt README.txt RELEASE-NOTES.txt 
 %doc THANKS.txt licenses docs tools/editors
 %{python3_sitelib}/*
 %endif
 
 %changelog
-* Tue Jun 17 2014 Liu Di <liudidi@gmail.com> - 0.10-0.8.20120824svn7502
-- 为 Magic 3.0 重建
+* Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.12-0.3.20140510svn7747
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 
-* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 0.10-0.7.20120824svn7502
-- 为 Magic 3.0 重建
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.12-0.2.20140510svn7747
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Sat May 10 2014 Orion Poplawski <orion@cora.nwra.com> - 0.12-0.1.20140510svn7747
+- Update to svn snapshot for Python 3.4 support
+- Drop unneeded patch
+
+* Fri May  9 2014 Orion Poplawski <orion@cora.nwra.com> - 0.11-2
+- Rebuild for Python 3.4
+
+* Thu Aug 15 2013 Toshio Kuratomi <toshio@fedoraproject.org> - 0.11-1
+- 0.11 final tarball.
+- Remove flash file from the install (it was only used to run the unittests anyhow)
+
+* Sun Aug 04 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.11-0.2.20130715svn7687
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Mon Jul 15 2013 Matej Stuchlik <mstuchli@redhat.com> - 0.11-0.1.20130715svn7687
+- Rebased to new snapshot
+- Removed unnecessary patches
+
+* Thu Mar 21 2013 Toshio Kuratomi <toshio@fedoraproject.org> - 0.10-0.8.20120824svn7502
+- Add python3-imaging support :-)
+
+* Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.10-0.7.20120824svn7502
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
 
 * Sat Aug 25 2012 Toshio Kuratomi <toshio@fedoraproject.org> - 0.10-0.6.20120824svn7502
 - Further fix of places in the code that use__import__
