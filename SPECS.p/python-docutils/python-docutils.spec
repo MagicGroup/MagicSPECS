@@ -11,10 +11,12 @@
 
 Name:           python-%{srcname}
 Version:        0.12
-Release:        0.3.20140510svn7747%{?dist}
+Release:        0.4.20140510svn7747%{?dist}
 Summary:        System for processing plaintext documentation
+Summary(zh_CN.UTF-8): 处理纯文本文档的系统
 
 Group:          Development/Languages
+Group(zh_CN.UTF-8): 开发/语言
 # See COPYING.txt for information
 License:        Public Domain and BSD and Python and GPLv3+
 URL:            http://docutils.sourceforge.net
@@ -51,10 +53,15 @@ Currently, the library supports parsing rST that is in standalone files and
 PEPs (Python Enhancement Proposals).  Work is underway to parse rST from
 Python inline documentation modules and packages.
 
+%description -l zh_CN.UTF-8
+处理纯文本文档的系统。
+
 %if 0%{?with_python3}
 %package -n python3-%{srcname}
 Summary:        System for processing plaintext documentation for python3
+Summary(zh_CN.UTF-8): 处理纯文本文档的系统。
 Group:          Development/Languages
+Group(zh_CN.UTF-8): 开发/语言
 # This module is optional and not yet available for python3
 Requires: python3-imaging
 
@@ -70,6 +77,8 @@ PEPs (Python Enhancement Proposals).  Work is underway to parse rST from
 Python inline documentation modules and packages.
 
 This package contains the module, ported to run under python3.
+%description -n python3-%{srcname} -l zh_CN.UTF-8
+处理纯文本文档的系统。
 %endif # with_python3
 
 %prep
@@ -130,6 +139,7 @@ rm -f licenses/docutils.conf
 
 # Flash file is used for testing docutils but shouldn't be in the installed package.
 mv docs/user/rst/images/biohazard.swf ./biohazard.swf 
+magic_rpm_clean.sh
 
 %check
 mv  biohazard.swf docs/user/rst/images/biohazard.swf
@@ -161,6 +171,9 @@ rm -rf %{buildroot}
 %endif
 
 %changelog
+* Wed Sep 02 2015 Liu Di <liudidi@gmail.com> - 0.12-0.4.20140510svn7747
+- 为 Magic 3.0 重建
+
 * Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.12-0.3.20140510svn7747
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

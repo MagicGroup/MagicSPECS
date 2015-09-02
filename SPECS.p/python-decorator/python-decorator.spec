@@ -1,15 +1,13 @@
-%if 0%{?fedora}
 %global with_python3 1
-%else
-%{!?python_sitelib: %global python_sitelib %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib()")}
-%endif
 
 Name:           python-decorator
-Version:        3.3.3
-Release:        6%{?dist}
+Version:	4.0.2
+Release:	1%{?dist}
 Summary:        Module to simplify usage of decorators
+Summary(zh_CN.UTF-8): 简化修饰器使用的模块
 
 Group:          Development/Languages
+Group(zh_CN.UTF-8): 开发/语言
 License:        BSD
 URL:            http://pypi.python.org/pypi/decorator/
 Source0:        http://pypi.python.org/packages/source/d/decorator/decorator-%{version}.tar.gz
@@ -31,23 +29,29 @@ the average programmer, and to popularize decorators usage giving examples
 of useful decorators, such as memoize, tracing, redirecting_stdout, locked,
 etc.  The core of this module is a decorator factory called decorator.
 
+%description -l zh_CN.UTF-8
+简化修饰器使用的模块。
+
 %if 0%{?with_python3}
 %package -n python3-decorator
 Summary:        Module to simplify usage of decorators in python3
+Summary(zh_CN.UTF-8): 简化修饰器使用的模块（Python3）
 Group:          Development/Languages
+Group(zh_CN.UTF-8): 开发/语言
 
 %description -n python3-decorator
 The aim of the decorator module is to simplify the usage of decorators for
 the average programmer, and to popularize decorators usage giving examples
 of useful decorators, such as memoize, tracing, redirecting_stdout, locked,
 etc.  The core of this module is a decorator factory called decorator.
+%description -n python3-decorator -l zh_CN.UTF-8
+简化修饰器使用的模块。
 %endif # if with_python3
 
 %prep
 %setup -q -n decorator-%{version}
 
 chmod a-x *.txt *.py
-%{__sed} -i 's/\r//' README.txt
 
 %if 0%{?with_python3}
 rm -rf %{py3dir}
@@ -95,18 +99,21 @@ popd
 
 %files
 %defattr(-,root,root,-)
-%doc *.txt documentation.py
+%doc *.txt 
 %{python_sitelib}/*
 
 %if 0%{?with_python3}
 %files -n python3-decorator
 %defattr(-,root,root,-)
-%doc *.txt documentation3.py
+%doc *.txt
 %{python3_sitelib}/*
 %endif # with_python3
 
 
 %changelog
+* Wed Sep 02 2015 Liu Di <liudidi@gmail.com> - 4.0.2-1
+- 更新到 4.0.2
+
 * Tue Jun 17 2014 Liu Di <liudidi@gmail.com> - 3.3.3-6
 - 为 Magic 3.0 重建
 

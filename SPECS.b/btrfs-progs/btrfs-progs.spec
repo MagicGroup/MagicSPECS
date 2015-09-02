@@ -1,9 +1,11 @@
 Name:		btrfs-progs
 Version:	4.1.2
-release:	1%{?dist}
+release:	2%{?dist}
 Summary:	Userspace programs for btrfs
+Summary(zh_CN.UTF-8): btrfs 的用户空间程序
 
 Group:		System Environment/Base
+Group(zh_CN.UTF-8): 系统环境/基本
 License:	GPLv2
 URL:		http://btrfs.wiki.kernel.org/index.php/Main_Page
 Source0:	https://www.kernel.org/pub/linux/kernel/people/kdave/%{name}/%{name}-v%{version}.tar.xz
@@ -28,9 +30,14 @@ BuildRequires:	asciidoc, xmlto
 The btrfs-progs package provides all the userspace programs needed to create,
 check, modify and correct any inconsistencies in the btrfs filesystem.
 
+%description -l zh_CN.UTF-8
+btrfs 的用户空间程序，用来创建、检查、修改和修复 btrfs 文件系统。
+
 %package devel
 Summary:	btrfs filesystem-specific libraries and headers
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:		Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:	btrfs-progs = %{version}-%{release}
 
 %description devel
@@ -39,6 +46,9 @@ develop btrfs filesystem-specific programs.
 
 You should install btrfs-progs-devel if you want to develop
 btrfs filesystem-specific programs.
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q -n %{name}-v%{version}
@@ -55,6 +65,7 @@ rm -rf $RPM_BUILD_ROOT
 make mandir=%{_mandir} bindir=%{_sbindir} libdir=%{_libdir} incdir=%{_includedir}/btrfs install DESTDIR=$RPM_BUILD_ROOT
 # Nuke the static lib
 rm -f $RPM_BUILD_ROOT/%{_libdir}/*.a
+magic_rpm_clean.sh
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -84,6 +95,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/libbtrfs.so
 
 %changelog
+* Wed Sep 02 2015 Liu Di <liudidi@gmail.com> - 4.1.2-2
+- 为 Magic 3.0 重建
+
 * Thu Aug 06 2015 Eric Sandeen <sandeen@redhat.com> 4.1.2-1
 - New upstream release
 - Fix to reject unknown mkfs options (#1246468)

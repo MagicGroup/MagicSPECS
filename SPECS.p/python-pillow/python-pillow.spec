@@ -28,7 +28,7 @@
 
 Name:           python-pillow
 Version:        2.9.0
-Release:        2%{?snap}%{?dist}
+Release:        3%{?snap}%{?dist}
 Summary:        Python image processing library
 
 # License: see http://www.pythonware.com/products/pil/license.htm
@@ -342,6 +342,9 @@ popd
 %endif
 
 %changelog
+* Wed Sep 02 2015 Liu Di <liudidi@gmail.com> - 2.9.0-3
+- 为 Magic 3.0 重建
+
 * Wed Jul 29 2015 Sandro Mani <manisandro@gmail.com> - 2.9.0-2
 - Fix python3-pillow-tk Requires: tkinter -> python3-tkinter (#1248085)
 

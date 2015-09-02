@@ -1,15 +1,15 @@
 %{!?python_sitelib: %global python_sitelib %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib()")}
 
-%if 0%{?fedora} > 12
 %global with_python3 1
-%endif
 
 Name:           python-dtopt
 Summary:        Add options to doctest examples while they are running
+Summary(zh_CN.UTF-8): 给 doctest 样例运行的时候添加选项
 Version:        0.1
-Release:        14%{?dist}
+Release:        15%{?dist}
 License:        MIT
 Group:          System Environment/Libraries
+Group(zh_CN.UTF-8): 开发/库
 URL:            http://pypi.python.org/pypi/dtopt/
 Source0:        http://pypi.python.org/packages/source/d/dtopt/dtopt-%{version}.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -31,9 +31,13 @@ to setup the test runner to use this option, or you must put #doctest:
 this option globally from within a doctest, by doing:
 >>> from dtopt import ELLIPSIS
 
+%description -l zh_CN.UTF-8
+给 doctest 样例运行的时候添加选项。
+
 %if 0%{?with_python3}
 %package -n python3-dtopt
 Summary:        Add options to doctest examples while they are running
+Summary(zh_CN.UTF-8): 给 doctest 样例运行的时候添加选项
 Version:        0.1
 
 %description -n python3-dtopt
@@ -44,6 +48,8 @@ to setup the test runner to use this option, or you must put #doctest:
 +ELLIPSIS on every example that uses this feature. dtopt lets you enable
 this option globally from within a doctest, by doing:
 >>> from dtopt import ELLIPSIS
+%description -n python3-dtopt -l zh_CN.UTF-8
+给 doctest 样例运行的时候添加选项。
 %endif
 
 %prep
@@ -80,6 +86,7 @@ pushd %{py3dir}
 %{__python3} setup.py install -O1 --skip-build --root %{buildroot}
 popd
 %endif
+magic_rpm_clean.sh
 
 %clean
 %{__rm} -rf %{buildroot}
@@ -98,6 +105,9 @@ popd
 %endif
 
 %changelog
+* Wed Sep 02 2015 Liu Di <liudidi@gmail.com> - 0.1-15
+- 为 Magic 3.0 重建
+
 * Tue Jun 17 2014 Liu Di <liudidi@gmail.com> - 0.1-14
 - 为 Magic 3.0 重建
 

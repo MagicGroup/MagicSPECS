@@ -6,7 +6,7 @@
 
 Name:           python-%{pkgname}
 Version:        0.1.8
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Sphinx theme for readthedocs.org
 
 License:        MIT
@@ -119,6 +119,9 @@ ln -s %{_datadir}/fonts/lato/Lato-Regular.ttf \
 %endif
 
 %changelog
+* Wed Sep 02 2015 Liu Di <liudidi@gmail.com> - 0.1.8-3
+- 为 Magic 3.0 重建
+
 * Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.1.8-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 
