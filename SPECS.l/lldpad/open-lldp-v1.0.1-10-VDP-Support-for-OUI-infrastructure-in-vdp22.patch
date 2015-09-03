@@ -1,0 +1,172 @@
+From 7289ac24898ae74a3a47fb4e4378d1535c21adba Mon Sep 17 00:00:00 2001
+From: padkrish <padkrish@cisco.com>
+Date: Wed, 21 Jan 2015 03:39:47 +0000
+Subject: [PATCH] VDP: Support for OUI infrastructure in vdp22.
+
+This commit is a framework for supporting OUI fields
+in VDP22. This specific patch adds helper functions
+(functions exported by VDP to OUI code) to be called by OUI
+specific handler code.
+
+Signed-off-by: padkrish <padkrish@cisco.com>
+Signed-off-by: John Fastabend <john.r.fastabend@intel.com>
+---
+ Makefile.am             |  2 +-
+ include/qbg_utils.h     |  1 +
+ include/qbg_vdp22_oui.h | 48 +++++++++++++++++++++++++++++++++++++
+ qbg/vdp22_oui.c         | 63 +++++++++++++++++++++++++++++++++++++++++++++++++
+ 4 files changed, 113 insertions(+), 1 deletion(-)
+ create mode 100644 qbg/vdp22_oui.c
+
+diff --git a/Makefile.am b/Makefile.am
+index 403088b..f63311c 100644
+--- a/Makefile.am
++++ b/Makefile.am
+@@ -70,7 +70,7 @@ include/lldp_evb22.h lldp_evb22.c lldp_evb22_cmds.c \
+ include/qbg22.h include/qbg_ecp22.h qbg/ecp22.c \
+ include/qbg_vdp22.h qbg/vdp22.c qbg/vdpnl.c qbg/vdp22sm.c qbg/vdp22br.c \
+ include/qbg_vdp22def.h qbg/vdp22_cmds.c qbg/vdp_ascii.c \
+-include/qbg_vdp22_oui.h
++include/qbg_vdp22_oui.h qbg/vdp22_oui.c
+ 
+ lib_LTLIBRARIES = liblldp_clif.la
+ liblldp_clif_la_LDFLAGS = -version-info 1:0:0
+diff --git a/include/qbg_utils.h b/include/qbg_utils.h
+index 6033556..963cb87 100644
+--- a/include/qbg_utils.h
++++ b/include/qbg_utils.h
+@@ -42,4 +42,5 @@ int modules_notify(int, int, char *, void *);
+ 
+ /* Convert VSI IDs to strings */
+ int vdp_uuid2str(const unsigned char *, char *, size_t);
++int vdp_str2uuid(unsigned char *, char *, size_t);
+ #endif
+diff --git a/include/qbg_vdp22_oui.h b/include/qbg_vdp22_oui.h
+index 0cce31e..79e1ff5 100644
+--- a/include/qbg_vdp22_oui.h
++++ b/include/qbg_vdp22_oui.h
+@@ -92,4 +92,52 @@ struct vdp22_oui_handler_s {
+ 	unsigned long (*oui_ptlv_size_hndlr)(void *);
+ };
+ 
++unsigned char vdp22_oui_get_vsi22_fmt(void *);
++unsigned char *vdp22_oui_get_vsi22_len(void *, unsigned char *);
++int oui_vdp_str2uuid(unsigned char *, char *, size_t);
++bool oui_vdp_hndlr_init(struct vdp22_oui_handler_s *);
++int oui_vdp_hexstr2bin(const char *hex, unsigned char *buf, size_t len);
++
++static inline size_t oui_append_1o(unsigned char *cp, const unsigned char data)
++{
++	*cp = data;
++	return 1;
++}
++
++static inline size_t oui_append_2o(unsigned char *cp, const unsigned short data)
++{
++	*cp = (data >> 8) & 0xff;
++	*(cp + 1) = data & 0xff;
++	return 2;
++}
++
++static inline size_t oui_append_3o(unsigned char *cp, const unsigned long data)
++{
++	*cp = (data >> 16) & 0xff;
++	*(cp + 1) = (data >> 8) & 0xff;
++	*(cp + 2) = data & 0xff;
++	return 3;
++}
++static inline size_t oui_append_4o(unsigned char *cp, const unsigned long data)
++{
++	*cp = (data >> 24) & 0xff;
++	*(cp + 1) = (data >> 16) & 0xff;
++	*(cp + 2) = (data >> 8) & 0xff;
++	*(cp + 3) = data & 0xff;
++	return 4;
++}
++
++static inline size_t oui_append_nb(unsigned char *cp, const unsigned char *data,
++				   const size_t nlen)
++{
++	memcpy(cp, data, nlen);
++	return nlen;
++}
++
++static inline unsigned short oui_get_tlv_head(unsigned short type,
++					      unsigned short len)
++{
++	return (type & 0x7f) << 9 | (len & 0x1ff);
++}
++
+ #endif /* __VDP22_OUI_H__ */
+diff --git a/qbg/vdp22_oui.c b/qbg/vdp22_oui.c
+new file mode 100644
+index 0000000..3a2d0cc
+--- /dev/null
++++ b/qbg/vdp22_oui.c
+@@ -0,0 +1,63 @@
++/*******************************************************************************
++
++  Implementation of OUI Functionality for VDP2.2
++  This file contains the exported functions from VDP to the OUI handlers file.
++  Copyright (c) 2012-2014 by Cisco Systems, Inc.
++
++  Author(s): Padmanabhan Krishnan <padkrish at cisco dot com>
++
++  This program is free software; you can redistribute it and/or modify it
++  under the terms and conditions of the GNU General Public License,
++  version 2, as published by the Free Software Foundation.
++
++  This program is distributed in the hope it will be useful, but WITHOUT
++  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
++  FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
++  more details.
++
++  You should have received a copy of the GNU General Public License along with
++  this program; if not, write to the Free Software Foundation, Inc.,
++  51 Franklin St - Fifth Floor, Boston, MA 02110-1301 USA.
++
++  The full GNU General Public License is included in this distribution in
++  the file called "COPYING".
++*******************************************************************************/
++
++#include <stdio.h>
++#include <stdlib.h>
++#include <string.h>
++#include <errno.h>
++#include <ctype.h>
++#include "messages.h"
++#include "lldp_util.h"
++#include "qbg_vdp22.h"
++#include "qbg_utils.h"
++#include "qbg_vdp22_oui.h"
++
++unsigned char vdp22_oui_get_vsi22_fmt(void *vsi_data)
++{
++	if (vsi_data != NULL)
++		return ((struct vsi22 *)(vsi_data))->vsi_fmt;
++	LLDPAD_ERR("%s: NULL Arg\n", __func__);
++	return 0;
++}
++
++unsigned char *vdp22_oui_get_vsi22_len(void *vsi_data, unsigned char *len)
++{
++	if ((vsi_data != NULL) && (len != NULL)) {
++		*len = VDP22_IDSZ;
++		return ((struct vsi22 *)(vsi_data))->vsi;
++	}
++	LLDPAD_ERR("%s: NULL Arg\n", __func__);
++	return NULL;
++}
++
++int oui_vdp_str2uuid(unsigned char *to, char *buffer, size_t max)
++{
++	return vdp_str2uuid(to, buffer, max);
++}
++
++int oui_vdp_hexstr2bin(const char *hex, unsigned char *buf, size_t len)
++{
++	return hexstr2bin(hex, buf, len);
++}
+-- 
+2.1.0
+

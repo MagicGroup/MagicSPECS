@@ -1,0 +1,894 @@
+From faf19bd8bdb1a6ca0dd98843cd09fd96b1f2f901 Mon Sep 17 00:00:00 2001
+From: padkrish <padkrish@cisco.com>
+Date: Wed, 21 Jan 2015 03:37:57 +0000
+Subject: [PATCH] VDP: Support in VDP22 for correct error code/status to
+ vdptool
+
+This commit has the following changes:
+a. Returning the status or error code to vdptool for the error cases. Errors
+can be Tx error, invalid parameters, incorrect configuration etc. The vdptool
+ is modified to print the error messages from lldpad.
+b. Modify the vdptool option from set-tlv/get-tlv to set-vsi/get-vsi. The
+ vdptool man page document is also modified accordingly.
+c. Re-arrange the definitions in header files.
+d. Fix some formatting issues.
+
+Signed-off-by: padkrish <padkrish@cisco.com>
+Signed-off-by: John Fastabend <john.r.fastabend@intel.com>
+---
+ docs/vdptool.8           |  12 ++--
+ include/lldpad_status.h  |  25 +++++----
+ include/qbg_vdp22.h      |  50 +++++++++--------
+ include/qbg_vdp22_clif.h |   8 +++
+ include/qbg_vdp22def.h   |  39 +++++++++++++
+ qbg/vdp22.c              |  20 ++++++-
+ qbg/vdp22_cmds.c         |  63 +++++++++++++++------
+ qbg/vdp22sm.c            |  15 -----
+ qbg/vdp_ascii.c          |  56 +++++++++++++++----
+ vdptool.c                | 141 ++++++++++++++++++++++++++++++++++++++---------
+ 10 files changed, 316 insertions(+), 113 deletions(-)
+
+diff --git a/docs/vdptool.8 b/docs/vdptool.8
+index 02b4e8e..0b50a13 100644
+--- a/docs/vdptool.8
++++ b/docs/vdptool.8
+@@ -98,7 +98,7 @@ Wait for the bridge response message
+ .SS VSI Parameter
+ Each VDP22 TLVs contains a command mode, manager identifier,
+ type identifier, type identifier version, VSI instance identifier,
+-migiration hints and filter information.
++migration hints and filter information.
+ The fields are explained next:
+ .TP
+ .B "mode (Command Mode):"
+@@ -140,7 +140,7 @@ an UUID according to RFC 4122
+ with optional dashes in between.
+ .TP
+ .B "hints (Migration Hints):"
+-The migiration hints is a string aiding in
++The migration hints is a string aiding in
+ migration of virtual machines:
+ .RS
+ .IP none:
+@@ -193,11 +193,11 @@ show usage information
+ .B \-v, version
+ show version information
+ .TP
+-.B \-t, get-tlv
+-get TLV information for the specified interface
++.B \-t, get-vsi
++get VSI information for the specified interface
+ .TP
+-.B \-T, set-tlv
+-set TLV information for the specified interface
++.B \-T, set-vsi
++set VSI information for the specified interface
+ .TP
+ .B \-p, ping
+ display the process identifier of the running lldpad process
+diff --git a/include/lldpad_status.h b/include/lldpad_status.h
+index df6e0f7..568063b 100644
+--- a/include/lldpad_status.h
++++ b/include/lldpad_status.h
+@@ -33,18 +33,19 @@
+ #define LLDPAD_STATUS_H
+ 
+ typedef enum {
+-    cmd_success = 0,
+-    cmd_failed,
+-    cmd_device_not_found,
+-    cmd_agent_not_found,
+-    cmd_invalid,
+-    cmd_bad_params,
+-    cmd_peer_not_present,
+-    cmd_ctrl_vers_not_compatible,
+-    cmd_not_capable,
+-    cmd_not_applicable,
+-    cmd_no_access,
+-    cmd_agent_not_supported,
++	cmd_success = 0,
++	cmd_failed,
++	cmd_device_not_found,
++	cmd_agent_not_found,
++	cmd_invalid,
++	cmd_bad_params,
++	cmd_peer_not_present,
++	cmd_ctrl_vers_not_compatible,
++	cmd_not_capable,
++	cmd_not_applicable,
++	cmd_no_access,
++	cmd_agent_not_supported,
++	cmd_max_status,
+ } cmd_status;
+ 
+ #endif /* LLDPAD_STATUS_H */
+diff --git a/include/qbg_vdp22.h b/include/qbg_vdp22.h
+index af0aa15..6c3c9ee 100644
+--- a/include/qbg_vdp22.h
++++ b/include/qbg_vdp22.h
+@@ -65,22 +65,36 @@ enum vdp22_role {		/* State for VDP22 bridge processing */
+ 	VDP22_STATION		/* State role */
+ };
+ 
+-enum vdp22_cmdresp {			/* VDP22 Protocol command responses */
+-	VDP22_RESP_SUCCESS = 0,		/* Success */
+-	VDP22_RESP_INVALID_FORMAT = 1,
+-	VDP22_RESP_NO_RESOURCES = 2,
+-	VDP22_RESP_NO_VSIMGR = 3,	/* No contact to VSI manager */
+-	VDP22_RESP_OTHER = 4,		/* Other reasons */
+-	VDP22_RESP_NOADDR = 5,		/* Invalid VID, MAC, GROUP etc */
+-	VDP22_RESP_DEASSOC = 252,	/* Deassoc response */
+-	VDP22_RESP_TIMEOUT = 253,	/* Timeout response */
+-	VDP22_RESP_KEEP = 254,		/* Keep response */
+-	VDP22_RESP_NONE = 255		/* No response returned so far */
++/*
++ * VSI information. One node per matching entry (same mgrid, type_id, type_ver,
++ * id_fmt, id and fif). Filter data can be added and removed.
++ */
++enum vsi22_flags {			/* Flags (or'ed in) */
++	VDP22_BUSY = 1,			/* This node is under work */
++	VDP22_DELETE_ME = 2,		/* Deallocate this node */
++	VDP22_RETURN_VID = 4,		/* Return wildcard vlan id */
++	VDP22_NOTIFY = 8,		/* Send netlink message to requestor */
++	VDP22_NLCMD = 16		/* Netlink command pending */
++};
++
++enum {                                  /* VDP22 Protocol command responses */
++	USEC_PER_SEC = 1000000,         /* Microseconds per second */
++	VDP22_RESBIT = 0x80,            /* VSI reserved bit */
++	VDP22_ACKBIT = 0x40,            /* VSI Acknowledgement bit */
++	VDP22_KEEPBIT = 0x20,           /* VSI keep error bit */
++	VDP22_HARDBIT = 0x10,           /* VSI hard error bit */
++	VDP22_STATUS_MASK = 0x0f,       /* Status mask */
++	VDP22_STATUS_SHIFT = 0,         /* Status offset */
+ };
+ 
+ enum {
+ 	VDP22_MGRIDSZ = 16,		/* Size of manager identifier */
+-	VDP22_IDSZ = 16			/* Size of vsi identifier */
++	VDP22_IDSZ = 16,		/* Size of vsi identifier */
++};
++
++struct vdp22_ptlv {                     /* Packed TLV for VDP data exchange */
++	unsigned short head;            /* TLV 16 bit header */
++	unsigned char data[];           /* TLV Data buffer */
+ };
+ 
+ struct vsi_origin {		/* Originator of VSI request */
+@@ -99,18 +113,6 @@ struct fid22 {				/* Filter data: GROUP,MAC,VLAN entry */
+ 	struct vsi_origin requestor;
+ };
+ 
+-/*
+- * VSI information. One node per matching entry (same mgrid, type_id, type_ver,
+- * id_fmt, id and fif). Filter data can be added and removed.
+- */
+-enum vsi22_flags {			/* Flags (or'ed in) */
+-	VDP22_BUSY = 1,			/* This node is under work */
+-	VDP22_DELETE_ME = 2,		/* Deallocate this node */
+-	VDP22_RETURN_VID = 4,		/* Return wildcard vlan id */
+-	VDP22_NOTIFY = 8,		/* Send netlink message to requestor */
+-	VDP22_NLCMD = 16		/* Netlink command pending */
+-};
+-
+ struct vdp22smi {		/* Data structure for VDP22 state machine */
+ 	int state;		/* State of VDP state machine for VSI */
+ 	bool kato;		/* VSI KA ACK timeout hit for this VSI */
+diff --git a/include/qbg_vdp22_clif.h b/include/qbg_vdp22_clif.h
+index 8346b98..0cc603e 100644
+--- a/include/qbg_vdp22_clif.h
++++ b/include/qbg_vdp22_clif.h
+@@ -33,6 +33,8 @@
+ #define OP_FID_POS 8 /* Second Byte */
+ #define OP_OUI_POS 16 /* Third Byte */
+ 
++#include "lldpad_status.h"
++
+ typedef enum {
+ 	cmd_getstats,
+ 	cmd_gettlv,
+@@ -60,5 +62,11 @@ typedef enum {
+ 	 */
+ } vdp22_op;
+ 
++enum vdp22_cmd_status {
++	cmd_vdp_prot_no_support = cmd_max_status + 1,
++	cmd_vdp_nomem,
++	cmd_vdp_busy,
++};
++
+ struct lldp_module *vdp22_cli_register(void);
+ #endif
+diff --git a/include/qbg_vdp22def.h b/include/qbg_vdp22def.h
+index ff4270c..c305a2b 100644
+--- a/include/qbg_vdp22def.h
++++ b/include/qbg_vdp22def.h
+@@ -94,6 +94,31 @@ enum vsi_key_arg {
+ 	VSI_INVALID_ARG
+ };
+ 
++enum vdp22_cmdresp {			/* VDP22 Protocol command responses */
++	VDP22_RESP_SUCCESS = 0,		/* Success */
++	VDP22_RESP_INVALID_FORMAT = 1,
++	VDP22_RESP_NO_RESOURCES = 2,
++	VDP22_RESP_NO_VSIMGR = 3,	/* No contact to VSI manager */
++	VDP22_RESP_OTHER = 4,		/* Other reasons */
++	VDP22_RESP_NOADDR = 5,		/* Invalid VID, MAC, GROUP etc */
++	VDP22_RESP_DEASSOC = 252,	/* Deassoc response */
++	VDP22_RESP_TIMEOUT = 253,	/* Timeout response */
++	VDP22_RESP_KEEP = 254,		/* Keep response */
++	VDP22_RESP_NONE = 255		/* No response returned so far */
++};
++
++/*
++ * Errors applicable mostly for VDP22_RESP_NONE
++ */
++
++enum vdp22_cmderr {
++	VDP22_KATO = 0,
++	VDP22_ACKTO,
++	VDP22_TXERR
++};
++
++#define VDP22_STATUS_BITS  8          /* Number of bits in Status field */
++
+ #define VSI22_ARG_MODE_STR "mode"
+ #define VSI22_ARG_MGRID_STR "mgrid2"
+ #define VSI22_ARG_TYPEID_STR "typeid"
+@@ -105,4 +130,18 @@ enum vsi_key_arg {
+ #define VSI22_ARG_FILTER_STR "filter"
+ #define VSI22_ARG_OUI_STR "oui"
+ 
++#define VSI22_KATO_ERR_STR "Keepalive Timeout"
++#define VSI22_ACKTO_ERR_STR "Ack not received from bridge"
++#define VSI22_TX_ERR_STR "Transmission Error"
++
++#define VSI22_INVALID_FRMT_ERR_STR "VDP TLV Format is Invalid"
++#define VSI22_NO_RES_ERR_STR "Insufficient resources at bridge"
++#define VSI22_NO_VSIMGR_ERR_STR "Unable to contact VSI Mgr"
++#define VSI22_OTHER_ERR_STR "Other Failures"
++#define VSI22_NOADDR_ERR_STR "Invalid VID, GroupID or MAC address field"
++#define VSI22_DEASS_ERR_STR "Deassoc received from switch"
++#define VSI22_TIMEOUT_ERR_STR "Timeout Error"
++#define VSI22_KEEP_ERR_STR "Command rejected by bridge and state prior to" \
++			   " requested command is kept"
++
+ #endif
+diff --git a/qbg/vdp22.c b/qbg/vdp22.c
+index af11af8..d7aa648 100644
+--- a/qbg/vdp22.c
++++ b/qbg/vdp22.c
+@@ -42,6 +42,7 @@
+ #include "qbg_vdp22.h"
+ #include "qbg_utils.h"
+ #include "qbg_vdp22_cmds.h"
++#include "qbg_vdp22def.h"
+ 
+ /*
+  * VDP22 helper functions
+@@ -469,7 +470,8 @@ static bool filter_ok(unsigned char ffmt, struct fid22 *fp,
+ 		else
+ 			rc = false;
+ 	}
+-	LLDPAD_DBG("%s:rc:%d\n", __func__, rc);
++	LLDPAD_DBG("%s: ffmt:%d gpid_on:%d rc:%d\n", __func__, ffmt,
++		   gpid_on, rc);
+ 	return rc;
+ }
+ 
+@@ -1007,12 +1009,26 @@ static pid_t havepid(struct vsi22 *vsi)
+ 	return mypid;
+ }
+ 
++unsigned char vdp22_getsm_errcode(struct vsi22 *vsi)
++{
++	unsigned char err_code = 0;
++
++	if (vsi->smi.kato)
++		err_code |= (1 << VDP22_KATO);
++	if (vsi->smi.acktimeout)
++		err_code |= (1 << VDP22_ACKTO);
++	if (vsi->smi.txmit_error)
++		err_code |= (1 << VDP22_TXERR);
++	return err_code;
++}
++
+ /*
+  * Convert and VSI22 to VDP netlink format and send it back to the originator.
+  */
+ static int vdp22_back(struct vsi22 *vsi, pid_t to,
+ 		      int (*fct)(struct vdpnl_vsi *))
+ {
++	unsigned char err_code;
+ 	int i;
+ 	struct vdpnl_vsi nl;
+ 	struct vdpnl_mac nlmac[vsi->no_fdata];
+@@ -1025,6 +1041,8 @@ static int vdp22_back(struct vsi22 *vsi, pid_t to,
+ 	memcpy(nl.ifname, vsi->vdp->ifname, sizeof(nl.ifname));
+ 	nl.request = vsi->vsi_mode;
+ 	nl.response = vsi->status;
++	err_code = vdp22_getsm_errcode(vsi);
++	nl.response |= (err_code << VDP22_STATUS_BITS);
+ 	nl.vsi_mgrid = vsi->mgrid[0];
+ 	memcpy(nl.vsi_mgrid2, vsi->mgrid, sizeof(nl.vsi_mgrid2));
+ 	nl.vsi_typeversion = vsi->type_ver;
+diff --git a/qbg/vdp22_cmds.c b/qbg/vdp22_cmds.c
+index 409858d..5d5ef6b 100644
+--- a/qbg/vdp22_cmds.c
++++ b/qbg/vdp22_cmds.c
+@@ -165,7 +165,8 @@ static int handle_set_arg(struct cmd *cmd, char *arg, char *argvalue,
+  * bb:  C for command and 2 or 3 for message version number
+  * cc: 1 for get command and 2 for set command
+  * dddddddd: 8 hex digits options, supported are op_arg, op_argval, op_conifg
+- *           and op_local
++ *           and op_local. The number of filter (fid) parameters are encoded
++ *           here (second byte from right).
+  * ee: 2 hex digit length of interface name
+  * ffff: string for interface name
+  * gg: 2 hex digit for bridge type (nearest customer bridge only)
+@@ -179,7 +180,7 @@ static int handle_set_arg(struct cmd *cmd, char *arg, char *argvalue,
+  * The total input length can be used to determine the number of arguaments.
+  *
+  * The member ops of struct cmd settings depends on the invoked with
+- * -T (cmd_gettlv) -a assoc:
++ * -T (cmd_getvsi) -a assoc:
+  * -c key      --> ops=(0x15) op_config,op_arg,op_local), numargs > 0
+  * -c key=abc  --> ops=(0x1d) op_config,op_arg,op_argval,op_local), numargs > 0
+  * -c          --> ops=0x11 (op_config,op_local), numargs = 0
+@@ -279,8 +280,16 @@ int vdp22_clif_cmd(UNUSED void *data, UNUSED struct sockaddr_un *from,
+ int vdp22_sendevent(struct vdpnl_vsi *p)
+ {
+ 	char msg[MAX_CLIF_MSGBUF];
++	char tmp_buf[MAX_CLIF_MSGBUF];
++	int c, len;
+ 
+-	vdp_vdpnl2str(p, msg, sizeof(msg));
++	vdp_vdpnl2str(p, tmp_buf, sizeof(msg));
++	len = strlen(tmp_buf);
++	if ((unsigned)len > sizeof(msg))
++		return 0;
++	c = snprintf(msg, sizeof(msg), "%04x%s", len, tmp_buf);
++	if ((c < 0) || ((unsigned)c >= sizeof(msg)))
++		return 0;
+ 	LLDPAD_DBG("%s:%s vsi:%p(%#2x), len:%zd msg:%s\n", __func__,
+ 		   p->ifname, p, p->vsi_uuid[0], strlen(msg), msg);
+ 	send_event(16, LLDP_MOD_VDP22, msg);
+@@ -324,6 +333,29 @@ static int ifok(struct cmd *cmd)
+ 	return good_cmd;
+ }
+ 
++static int get_vdp22_retval(int rc)
++{
++	if (!rc)
++		return cmd_success;
++
++	switch (rc) {
++	case -EPROTONOSUPPORT:
++		return cmd_vdp_prot_no_support;
++	case -EOPNOTSUPP:
++		return cmd_not_capable;
++	case -EINVAL:
++		return cmd_bad_params;
++	case -ENOMEM:
++		return cmd_vdp_nomem;
++	case -EBUSY:
++		return cmd_vdp_busy;
++	case -ENODEV:
++		return cmd_device_not_found;
++	default:
++		return cmd_failed;
++	}
++}
++
+ static int set_arg_vsi3(struct cmd *cmd, char *argvalue, bool test, int size)
+ {
+ 	cmd_status good_cmd = vdp22_cmdok(cmd, cmd_settlv);
+@@ -340,7 +372,7 @@ static int set_arg_vsi3(struct cmd *cmd, char *argvalue, bool test, int size)
+ 	vsi.macsz = size;
+ 	rc = vdp_str2vdpnl(argvalue, &vsi, cmd->ifname);
+ 	if (rc) {
+-		good_cmd = cmd_bad_params;
++		good_cmd = get_vdp22_retval(rc);
+ 		goto out;
+ 	}
+ 	if (!port_find_by_ifindex(get_ifidx(cmd->ifname))) {
+@@ -351,12 +383,8 @@ static int set_arg_vsi3(struct cmd *cmd, char *argvalue, bool test, int size)
+ 	if (good_cmd != cmd_success || test)
+ 		goto out;
+ 	rc = vdp22_request(&vsi, 1);
+-	if (!rc)
+-		good_cmd = cmd_success;
+-	else if (rc == -ENODEV)
+-		good_cmd = cmd_device_not_found;
+-	else
+-		good_cmd = cmd_failed;
++	good_cmd = get_vdp22_retval(rc);
++
+ out:
+ 	return good_cmd;
+ }
+@@ -480,7 +508,8 @@ static int get_vsi_partial_arg(UNUSED char *arg, char *orig_argvalue,
+ 	int rc = -ENOMEM, len, c;
+ 	u16 vsi_arg_key_flags = 0;
+ 
+-	if (vdp22_parse_str_vdpnl(vsinl, &vsi_arg_key_flags, orig_argvalue))
++	rc = vdp22_parse_str_vdpnl(vsinl, &vsi_arg_key_flags, orig_argvalue);
++	if (rc)
+ 		goto out;
+ 	vdp = vdp22_getvdp(vsinl->ifname);
+ 	if (!vdp)
+@@ -498,7 +527,6 @@ static int get_vsi_partial_arg(UNUSED char *arg, char *orig_argvalue,
+ 			len = strlen(tmp_buf);
+ 			c = snprintf(out + used, out_len - used, "%04x%s",
+ 				     len, tmp_buf);
+-			vdp22_freemaclist(vsinl);
+ 			if ((c < 0) || ((unsigned)c >= (out_len - used)))
+ 				goto out_delvsi;
+ 			if (rc)
+@@ -544,11 +572,14 @@ static int get_arg_vsi(struct cmd *cmd, char *arg, char *argvalue,
+ 		memset(&mac, 0, sizeof(mac));
+ 		vsi.macsz = fsize;
+ 		vsi.maclist = mac;
+-		if (!get_vsi_partial_arg(arg, argvalue, &vsi, vsi_str,
+-					 sizeof(vsi_str)))
+-			goto out;
+-	} else if (!catvsis(&vsi, vsi_str, sizeof(vsi_str)))
++		rc = get_vsi_partial_arg(arg, argvalue, &vsi, vsi_str,
++					 sizeof(vsi_str));
++	} else
++		rc = catvsis(&vsi, vsi_str, sizeof(vsi_str));
++	if (!rc) {
++		good_cmd = get_vdp22_retval(rc);
+ 		goto out;
++	}
+ 	rc = snprintf(obuf, obuf_len, "%s", vsi_str);
+ 	if (rc > 0 || rc < obuf_len)
+ 		good_cmd = cmd_success;
+diff --git a/qbg/vdp22sm.c b/qbg/vdp22sm.c
+index 6264f74..83a97fb 100644
+--- a/qbg/vdp22sm.c
++++ b/qbg/vdp22sm.c
+@@ -46,21 +46,6 @@
+ #include "qbg_vdp22.h"
+ #include "qbg_utils.h"
+ 
+-struct vdp22_ptlv {			/* Packed TLV for VDP data exchange */
+-	unsigned short head;		/* TLV 16 bit header */
+-	unsigned char data[];		/* TLV Data buffer */
+-};
+-
+-enum {					/* VDP22 Protocol command responses */
+-	USEC_PER_SEC = 1000000,		/* Microseconds per second */
+-	VDP22_RESBIT = 0x80,		/* VSI reserved bit */
+-	VDP22_ACKBIT = 0x40,		/* VSI Acknowledgement bit */
+-	VDP22_KEEPBIT = 0x20,		/* VSI keep error bit */
+-	VDP22_HARDBIT = 0x10,		/* VSI hard error bit */
+-	VDP22_STATUS_MASK = 0x0f,	/* Status mask */
+-	VDP22_STATUS_SHIFT = 0,		/* Status offset */
+-};
+-
+ /*
+  * Set status code
+  */
+diff --git a/qbg/vdp_ascii.c b/qbg/vdp_ascii.c
+index 76dde4a..70ec79b 100644
+--- a/qbg/vdp_ascii.c
++++ b/qbg/vdp_ascii.c
+@@ -44,6 +44,7 @@
+ #include "qbg_vdpnl.h"
+ #include "qbg_utils.h"
+ #include "lldp_util.h"
++#include "messages.h"
+ 
+ struct vsi_keyword_handler vsi_key_handle[] = {
+ 	{VSI22_ARG_MODE_STR, VSI_MODE_ARG},
+@@ -285,6 +286,24 @@ enum vsi_key_arg get_keywork_val(char *keyword)
+ 	return VSI_INVALID_ARG;
+ }
+ 
++/*
++ * If the ordering is maintained in vsi_key_handle, then this function is not
++ * necessary as the keyword can be retrieved using
++ * 'vsi_key_handle[keyval].keyword'.
++ */
++
++char *get_keyword_str(enum vsi_key_arg keyval)
++{
++	int count, key_str_size;
++
++	key_str_size = sizeof(vsi_key_handle) / sizeof(vsi_key_handle[0]);
++	for (count = 0; count < key_str_size; count++) {
++		if (vsi_key_handle[count].val == keyval)
++			return vsi_key_handle[count].keyword;
++	}
++	return NULL;
++}
++
+ int vdp22_parse_str_vdpnl(struct vdpnl_vsi *vsi, u16 *key_flags,
+ 			  char *orig_argvalue)
+ {
+@@ -315,52 +334,57 @@ int vdp22_parse_str_vdpnl(struct vdpnl_vsi *vsi, u16 *key_flags,
+ 	numargs = get_arg_val_list(argvalue, ilen, &ioff, args, argvals);
+ 	if (numargs == 0)
+ 		goto out_free;
++	rc = -EINVAL;
+ 	for (i = 0; i < numargs; i++) {
+ 		vsi_key = get_keywork_val(args[i]);
+ 		switch (vsi_key) {
+ 		case VSI_MODE_ARG:
+ 			if (!argvals[i] || !getmode(vsi, argvals[i]))
+-				goto out_free;
++				goto out_err;
+ 			break;
+ 		case VSI_MGRID2_ARG:
+ 			if (!argvals[i] || !getmgr2id(vsi, argvals[i]))
+-				goto out_free;
++				goto out_err;
+ 			break;
+ 		case VSI_TYPEID_ARG:
+ 			if (!argvals[i] ||
+ 				!getnumber(argvals[i], 0, 0xffffff, &no))
+-				goto out_free;
++				goto out_err;
+ 			vsi->vsi_typeid = no;
+ 			break;
+ 		case VSI_TYPEIDVER_ARG:
+ 			if (!argvals[i] || !getnumber(argvals[i], 0, 0xff, &no))
+-				goto out_free;
++				goto out_err;
+ 			vsi->vsi_typeversion = no;
+ 			break;
+ 		case VSI_VSIID_ARG:
+ 			if (!argvals[i] ||
+ 				vdp_str2uuid(vsi->vsi_uuid, argvals[i],
+ 					sizeof(vsi->vsi_uuid)))
+-				goto out_free;
++				goto out_err;
+ 			vsi->vsi_idfmt = VDP22_ID_UUID;
+ 			break;
+ 		case VSI_FILTER_ARG:
+ 			if (idx < vsi->macsz && !getfid(vsi, argvals[i], idx))
+-				goto out_free;
++				goto out_err;
+ 			idx++;
+ 			break;
+ 		case VSI_HINTS_ARG:
+ 			if (!argvals[i] || !gethints(vsi, argvals[i]))
+-				goto out_free;
++				goto out_err;
+ 			break;
+ 		default:
+-			goto out_free;
++			goto out_err;
+ 		}
+ 		num_arg_keys |= (1 << vsi_key);
+ 	}
+ 	*key_flags = num_arg_keys;
+ 	rc = 0;
+ 
++out_err:
++	if (rc)
++		LLDPAD_ERR("Incorrect arguments specified for key %s\n",
++			   get_keyword_str(vsi_key));
+ out_free:
+ 	free(argvals);
+ out_args:
+@@ -400,11 +424,16 @@ static int str2vdpnl(char *orig_argvalue, struct vdpnl_vsi *vsi)
+ 	u16 vsi_mand_mask = (1 << VSI_MAND_NUM_ARG) - 1;
+ 	u16 num_arg_keys = 0;
+ 
+-	if (vdp22_parse_str_vdpnl(vsi, &num_arg_keys, orig_argvalue))
++	rc = vdp22_parse_str_vdpnl(vsi, &num_arg_keys, orig_argvalue);
++	if (rc) {
++		LLDPAD_ERR("%s: Incorrect arguments\n", __func__);
+ 		goto out;
++	}
+ 	/* Return error if no filter information provided */
+ 	if ((num_arg_keys & vsi_mand_mask) == vsi_mand_mask)
+ 		rc = 0;
++	else
++		LLDPAD_ERR("%s: Incomplete arguments\n", __func__);
+ out:
+ 	return rc;
+ }
+@@ -444,7 +473,6 @@ static char *check_and_update(size_t *total, size_t *length, char *s, int c)
+ /*
+  * Convert VSI association to string.
+  */
+-#ifdef LATER_USE
+ static const char *mode2str(unsigned char x)
+ {
+ 	if (x == VDP22_ASSOC)
+@@ -457,7 +485,6 @@ static const char *mode2str(unsigned char x)
+ 		return "deassoc";
+ 	return "unknown";
+ }
+-#endif
+ 
+ /*
+  * Convert filter information format into vlan[-mac][-group] string.
+@@ -544,7 +571,12 @@ int vdp_vdpnl2str(struct vdpnl_vsi *p, char *s, size_t length)
+ 	char instance[VDP_UUID_STRLEN + 2];
+ 
+ 	mgrid2str(instance, p, sizeof(instance));
+-	c = snprintf(s, length, "%02x%s%04x%s%02x%s%04x%lu%02x%s%04x%d",
++	c = snprintf(s, length, "%02x%s%04x%s%02x%s%04x%s%02x%s%04x%lu%02x%s"
++		     "%04x%d",
++		     (unsigned int)strlen(VSI22_ARG_MODE_STR),
++		     VSI22_ARG_MODE_STR,
++		     (unsigned int)strlen(mode2str(p->request)),
++		     mode2str(p->request),
+ 		     (unsigned int)strlen(VSI22_ARG_MGRID_STR),
+ 		     VSI22_ARG_MGRID_STR,
+ 		     (unsigned int)strlen(instance), instance,
+diff --git a/vdptool.c b/vdptool.c
+index 551e829..f7fd288 100644
+--- a/vdptool.c
++++ b/vdptool.c
+@@ -54,6 +54,28 @@
+ #include "qbg22.h"
+ #include "qbg_vdp22_clif.h"
+ #include "lldp_util.h"
++#include "qbg_vdp22def.h"
++
++static char *print_vdp_status(enum vdp22_cmd_status status)
++{
++	char *str;
++
++	switch (status) {
++	case cmd_vdp_prot_no_support:
++		str = "VDP protocol not supported on interface";
++		break;
++	case cmd_vdp_nomem:
++		str = "Not enough memory";
++		break;
++	case cmd_vdp_busy:
++		str = "VSI association in progress";
++		break;
++	default:
++		str = "Unknown status";
++		break;
++	}
++	return str;
++}
+ 
+ static char *print_status(cmd_status status)
+ {
+@@ -97,7 +119,7 @@ static char *print_status(cmd_status status)
+ 		str = "TLV does not support agent type";
+ 		break;
+ 	default:
+-		str = "Unknown status";
++		str = print_vdp_status(status);
+ 		break;
+ 	}
+ 	return str;
+@@ -165,7 +187,7 @@ static int render_cmd(struct cmd *cmd, int argc, char **args, char **argvals)
+ 
+ int vdp_clif_command(struct clif *, char *, int);
+ 
+-static int vdp_cmd_gettlv(struct clif *clif, int argc, char *argv[],
++static int vdp_cmd_getvsi(struct clif *clif, int argc, char *argv[],
+ 			  struct cmd *cmd, int raw)
+ {
+ 	int numargs = 0;
+@@ -219,7 +241,7 @@ out:
+ 	return cmd_invalid;
+ }
+ 
+-static int vdp_cmd_settlv(struct clif *clif, int argc, char *argv[],
++static int vdp_cmd_setvsi(struct clif *clif, int argc, char *argv[],
+ 			  struct cmd *cmd, int raw)
+ {
+ 	int numargs = 0;
+@@ -299,12 +321,77 @@ static int vdp_parse_response(char *buf)
+ 	return hex2u8(buf + CLIF_STAT_OFF);
+ }
+ 
+-int get_vsi_args(char *ibuf)
++void print_vsi_err_msg(char *key_val)
++{
++	unsigned long errcode;
++	int resp_err, smi_err;
++
++	errcode = strtol(key_val, NULL, 10);
++	resp_err = errcode & 0xff;
++	smi_err = (errcode >> VDP22_STATUS_BITS) & 0xff;
++
++	switch (resp_err) {
++	case VDP22_RESP_INVALID_FORMAT:
++		printf("\tError returned by Bridge: %s\n",
++			VSI22_INVALID_FRMT_ERR_STR);
++		break;
++	case VDP22_RESP_NO_RESOURCES:
++		printf("\tError returned by Bridge: %s\n",
++			VSI22_NO_RES_ERR_STR);
++		break;
++	case VDP22_RESP_NO_VSIMGR:
++		printf("\tError returned by Bridge: %s\n",
++			VSI22_NO_VSIMGR_ERR_STR);
++		break;
++	case VDP22_RESP_OTHER:
++		printf("\tError returned by Bridge: %s\n", VSI22_OTHER_ERR_STR);
++		break;
++	case VDP22_RESP_NOADDR:
++		printf("\tError returned by Bridge: %s\n",
++			VSI22_NOADDR_ERR_STR);
++		break;
++	case VDP22_RESP_DEASSOC:
++		printf("\tError returned by Bridge: %s\n", VSI22_DEASS_ERR_STR);
++		break;
++	case VDP22_RESP_TIMEOUT:
++		printf("\tError returned by Bridge: %s\n",
++			VSI22_TIMEOUT_ERR_STR);
++		break;
++	case VDP22_RESP_KEEP:
++		printf("\tError returned by Bridge: %s\n", VSI22_KEEP_ERR_STR);
++		break;
++	default:
++		break;
++	}
++	if (smi_err & (1 << VDP22_KATO))
++		printf("\tInternal Error : %s\n", VSI22_KATO_ERR_STR);
++	if (smi_err & (1 << VDP22_ACKTO))
++		printf("\tInternal Error : %s\n", VSI22_ACKTO_ERR_STR);
++	if (smi_err & (1 << VDP22_TXERR))
++		printf("\tInternal Error : %s\n", VSI22_TX_ERR_STR);
++}
++
++static void print_vsi(char **args, char **argvals, int numargs,
++		      bool err_flag)
++{
++	int i;
++
++	for (i = 0; i < numargs; i++) {
++		if (err_flag && (!strcmp(args[i], VSI22_ARG_HINTS_STR)))
++			print_vsi_err_msg(argvals[i]);
++		else {
++			printf("\t%s", args[i]);
++			printf(" = %s\n", argvals[i]);
++		}
++	}
++}
++
++int get_vsi_args(char *ibuf, bool print_err_code)
+ {
+ 	int ioff = 0;
+ 	char **args;
+ 	char **argvals;
+-	int numargs, i;
++	int numargs;
+ 	int ilen = strlen(ibuf);
+ 
+ 	/* count args and argvalus */
+@@ -321,17 +408,14 @@ int get_vsi_args(char *ibuf)
+ 	}
+ 
+ 	numargs = get_arg_val_list(ibuf, ilen, &ioff, args, argvals);
+-	for (i = 0; i < numargs; i++) {
+-		printf("\t%s", args[i]);
+-		printf(" = %s\n", argvals[i]);
+-	}
++	print_vsi(args, argvals, numargs, print_err_code);
+ 
+ 	free(args);
+ 	free(argvals);
+ 	return ioff;
+ }
+ 
+-static void print_all_vsis(char *ibuf)
++static void print_all_vsis(char *ibuf, bool err_code, char *msg)
+ {
+ 	size_t ilen = strlen(ibuf);
+ 	u16 vsi_len;
+@@ -346,8 +430,11 @@ static void print_all_vsis(char *ibuf)
+ 		ilen -= 2 * sizeof(u16);
+ 		strncpy(tmp_ibuf, ibuf + offset, vsi_len);
+ 		tmp_ibuf[vsi_len] = '\0';
+-		printf("%s %d:\n", "VSI ", vsi_cnt);
+-		get_vsi_args(tmp_ibuf);
++		if (msg)
++			printf("%s\n", msg);
++		else
++			printf("%s %d:\n", "VSI ", vsi_cnt);
++		get_vsi_args(tmp_ibuf, err_code);
+ 		offset += vsi_len;
+ 		ilen -= vsi_len;
+ 		vsi_cnt++;
+@@ -361,7 +448,7 @@ static void print_cmd_response(char *ibuf, int status)
+ 	int ioff;
+ 
+ 	if (status != cmd_success) {
+-		printf("%s\n", print_status(status));
++		printf("FAILED: %s\n", print_status(status));
+ 		return;
+ 	}
+ 
+@@ -385,7 +472,7 @@ static void print_cmd_response(char *ibuf, int status)
+ 
+ 	switch (cmd.cmd) {
+ 	case cmd_gettlv:
+-		print_all_vsis(ibuf + ioff);
++		print_all_vsis(ibuf + ioff, false, NULL);
+ 		break;
+ 	case cmd_settlv:
+ 		printf("%s", ibuf + ioff);
+@@ -423,6 +510,7 @@ static void vdp_print_response(char *buf, int status)
+ static void vdp_print_event_msg(char *buf)
+ {
+ 	printf("%s buf:%s\n", __func__, buf);
++	print_all_vsis(buf + CLIF_RSP_OFF, true, "Response from VDP");
+ }
+ 
+ /*
+@@ -519,8 +607,8 @@ static const char *commands_help =
+ "  -v|version show version\n"
+ "  -p|ping    ping lldpad and query pid of lldpad\n"
+ "  -q|quit    exit lldptool (interactive mode)\n"
+-"  -t|get-tlv get tlvid value\n"
+-"  -T|set-tlv set arg for tlvid to value\n";
++"  -t|get-vsi get VSI association(s)\n"
++"  -T|set-vsi set VSI association\n";
+ 
+ static struct clif *clif_conn;
+ static int cli_quit;
+@@ -638,7 +726,7 @@ static int _clif_command(struct clif *clif, char *cmd, int print)
+ 	size_t len;
+ 	int ret;
+ 	int rc;
+-	char reply[200];
++	char reply[MAX_CLIF_MSGBUF];
+ 	size_t reply_len2 = sizeof(reply);
+ 
+ 	print_raw_message(cmd, print);
+@@ -653,7 +741,8 @@ static int _clif_command(struct clif *clif, char *cmd, int print)
+ 		printf("'%s' command timed out.\n", cmd);
+ 		return -2;
+ 	} else if (ret < 0) {
+-		printf("'%s' command failed.\n", cmd);
++		printf("'%s' command failed with error %s.\n", cmd,
++			strerror(errno));
+ 		return -1;
+ 	}
+ 	if (print) {
+@@ -662,10 +751,8 @@ static int _clif_command(struct clif *clif, char *cmd, int print)
+ 	}
+ 	if (cli_attached) {
+ 		rc = clif_vsievt(clif, reply, &reply_len2, 5);
+-		printf("\nReturn from vsievt %d ret %d Reply %s\n", rc, ret,
+-			reply);
+ 		if (!rc)
+-			printf("\nMsg is %s\n", reply);
++			print_all_vsis(reply, true, "Response from VDP");
+ 	}
+ 
+ 	return ret;
+@@ -739,10 +826,10 @@ static struct cli_cmd {
+ 	{ cmd_license,  "license",   cli_cmd_license },
+ 	{ cmd_version,  "version",   cli_cmd_version },
+ 	{ cmd_quit,     "quit",      cli_cmd_quit },
+-	{ cmd_gettlv,   "gettlv",    vdp_cmd_gettlv },
+-	{ cmd_gettlv,   "get-tlv",   vdp_cmd_gettlv },
+-	{ cmd_settlv,   "settlv",    vdp_cmd_settlv },
+-	{ cmd_settlv,   "set-tlv",   vdp_cmd_settlv },
++	{ cmd_gettlv,   "getvsi",    vdp_cmd_getvsi },
++	{ cmd_gettlv,   "get-vsi",   vdp_cmd_getvsi },
++	{ cmd_settlv,   "setvsi",    vdp_cmd_setvsi },
++	{ cmd_settlv,   "set-vsi",   vdp_cmd_setvsi },
+ 	{ cmd_nop,       NULL,       cli_cmd_nop }
+ };
+ 
+@@ -774,8 +861,8 @@ static struct option lldptool_opts[] = {
+ 	{"help", 0, NULL, 'h'},
+ 	{"version", 0, NULL, 'v'},
+ 	{"stats", 0, NULL, 'S'},
+-	{"get-tlv", 0, NULL, 't'},
+-	{"set-tlv", 0, NULL, 'T'},
++	{"get-vsi", 0, NULL, 't'},
++	{"set-vsi", 0, NULL, 'T'},
+ 	{"get-lldp", 0, NULL, 'l'},
+ 	{"set-lldp", 0, NULL, 'L'},
+ 	{0, 0, 0, 0}
+-- 
+2.1.0
+

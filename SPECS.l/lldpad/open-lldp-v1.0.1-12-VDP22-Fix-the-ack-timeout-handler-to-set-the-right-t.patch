@@ -1,0 +1,33 @@
+From c26e175bea45306657c3435dc1ac2203584cf77a Mon Sep 17 00:00:00 2001
+From: padkrish <padkrish@cisco.com>
+Date: Wed, 21 Jan 2015 03:40:32 +0000
+Subject: [PATCH] VDP22: Fix the ack timeout handler to set the right timeout
+ variable
+
+Currently the acktimeout handler sets the keepalive timeout boolean
+variable as a result of which the profiles don't get deleted when
+there's a timeout. This diff sets the acktimeout variable in the
+acktimeout handler.
+
+Signed-off-by: padkrish <padkrish@cisco.com>
+Signed-off-by: John Fastabend <john.r.fastabend@intel.com>
+---
+ qbg/vdp22sm.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/qbg/vdp22sm.c b/qbg/vdp22sm.c
+index db0e413..14356ac 100644
+--- a/qbg/vdp22sm.c
++++ b/qbg/vdp22sm.c
+@@ -439,7 +439,7 @@ static void vdp22st_handle_ackto(UNUSED void *ctx, void *data)
+ 	LLDPAD_DBG("%s:%s timeout ack timer for %p(%02x) ackreceived:%d\n",
+ 		   __func__, p->vdp->ifname, p, p->vsi[0], p->smi.ackreceived);
+ 	if (!p->smi.ackreceived) {
+-		p->smi.kato = true;
++		p->smi.acktimeout = true;
+ 		vdp22st_run(p);
+ 	}
+ }
+-- 
+2.1.0
+

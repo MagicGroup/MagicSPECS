@@ -1,0 +1,45 @@
+From b6c5d86ea57594893d4fd95a0bf8043c45c953a4 Mon Sep 17 00:00:00 2001
+From: Paddu Krishnan <padkrish@cisco.com>
+Date: Wed, 21 Jan 2015 03:42:01 +0000
+Subject: [PATCH] VDP: Fixed DBG print compile errors in 32-bit systems
+
+Signed-off-by: Paddu Krishnan <padkrish@cisco.com>
+Signed-off-by: John Fastabend <john.r.fastabend@intel.com>
+---
+ qbg/vdp22cisco_oui.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/qbg/vdp22cisco_oui.c b/qbg/vdp22cisco_oui.c
+index e8a824c..272d480 100644
+--- a/qbg/vdp22cisco_oui.c
++++ b/qbg/vdp22cisco_oui.c
+@@ -92,7 +92,7 @@ bool cisco_str2vdpnl_hndlr(struct vdpnl_oui_data_s *vdp_oui_p, char *token)
+ 			strncpy(vdp_cisco_oui_p->vm_name, token, data_len);
+ 			vdp_cisco_oui_p->vm_name[data_len] = '\0';
+ 			vdp_cisco_oui_p->vm_name_len = data_len;
+-			LLDPAD_DBG("Name %s Len %ld\n",
++			LLDPAD_DBG("Name %s Len %zu\n",
+ 				   vdp_cisco_oui_p->vm_name,
+ 				   vdp_cisco_oui_p->vm_name_len);
+ 			break;
+@@ -364,7 +364,7 @@ static inline size_t cisco_vdp22_gen_l3addr(char unsigned *cp, size_t offset,
+ 		offset += oui_append_4o(cp + offset, 0);
+ 		LLDPAD_ERR("%s: Not supported for now\n", __func__);
+ 	}
+-	LLDPAD_DBG("%s: Valid VM Addr offset %ld\n", __func__, offset);
++	LLDPAD_DBG("%s: Valid VM Addr offset %zu\n", __func__, offset);
+ 	return offset;
+ }
+ 
+@@ -395,7 +395,7 @@ static inline size_t cisco_vdp22_gen_vmname(char unsigned *cp, size_t offset,
+ 	offset += oui_append_nb(cp + offset,
+ 				(char unsigned *)vdp_cisco_oui_str->vm_name,
+ 				vdp_cisco_oui_str->vm_name_len);
+-	LLDPAD_DBG("%s: Valid VM Name offset %ld\n", __func__, offset);
++	LLDPAD_DBG("%s: Valid VM Name offset %zu\n", __func__, offset);
+ 	return offset;
+ }
+ 
+-- 
+2.1.0
+

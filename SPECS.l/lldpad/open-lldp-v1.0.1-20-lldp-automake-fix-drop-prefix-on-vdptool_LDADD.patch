@@ -1,0 +1,34 @@
+From 7a7150e3e6443e2fff0f3967995fa16a4b8665d7 Mon Sep 17 00:00:00 2001
+From: John Fastabend <john.r.fastabend@intel.com>
+Date: Fri, 30 Jan 2015 08:55:00 -0800
+Subject: [PATCH] lldp: automake fix, drop prefix on vdptool_LDADD
+
+Add another fix to the Makefile to drop prefix in vdptool_LDADD
+this resolves the following error from 'make distcheck'
+
+libtool: link: cannot find the library `../liblldp_clif.la' or unhandled argument `../liblldp_clif.la'
+make[1]: *** [vdptool] Error 1
+make[1]: Leaving directory `/home/john/git/lldp/lldpad/lldpad-1.0.1/_build'
+make: *** [distcheck] Error 1
+
+Signed-off-by: John Fastabend <john.r.fastabend@intel.com>
+---
+ Makefile.am | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/Makefile.am b/Makefile.am
+index b1c381b..84d68ee 100644
+--- a/Makefile.am
++++ b/Makefile.am
+@@ -82,7 +82,7 @@ liblldp_clif_includedir = ${srcdir}/include
+ liblldp_clif_la_SOURCES = clif.c
+ 
+ vdptool_SOURCES = vdptool.c lldp_util.c qbg/vdp22_clif.c vdptool_cisco_oui.c
+-vdptool_LDADD = ${srcdir}/liblldp_clif.la
++vdptool_LDADD = liblldp_clif.la
+ vdptool_LDFLAGS = -llldp_clif $(LIBNL_LIBS)
+ 
+ dcbtool_SOURCES = dcbtool.c dcbtool_cmds.c parse_cli.l \
+-- 
+2.1.0
+

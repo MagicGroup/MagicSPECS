@@ -1,0 +1,355 @@
+From 321bfe6c5cbad58e97fbb2df3c93564c89f1e09b Mon Sep 17 00:00:00 2001
+From: padkrish <padkrish@cisco.com>
+Date: Wed, 21 Jan 2015 03:38:53 +0000
+Subject: [PATCH] VDP: Support for OUI infrastructure in vdptool.
+
+This patch contains the changes made in vdptool to support OUI fields
+in vdptool. This commit has only the infra-structure changes needed
+for supporting OUI. No specific OUI fields are added as a part of this
+commit. The man page for vdptool is also modified accordingly.
+
+The OUI data can be given as input to vdptool in different ways. It
+could be
+
+   vdptool .... -c oui=companyA,Data1 -c oui=companyB,Data2 -c oui=companyA,Data3
+
+ Or
+
+   vdptool .... -c oui=companyA,Data1Data3 -c oui=companyB,data2
+
+where companyA and companyB are the name of the Organizations.
+Anything after the comma in OUI data field is Org specific and it's
+upto the respective organization specific handlers to encode it so
+that it could be decoded appropriately by the ORG specific handlers
+inside lldpad. That is, Data1 and Data3 is specific to Organization
+'companyA' and the OUI handlers of companyA in vdptool and lldpad is
+responsible for encoding/decoding the data. The common code in vdptool
+and lldpad just treats it as opaque data. 'companyA' or 'companyB'
+above is the key using which the right handlers will be called.
+
+Irrespective of how the command line interface to vdptool is, the
+input to lldpad is always the same. i.e. KeywordlenKeywordDatalenData
+For OUI, the data field will have the complete OUI data starting with
+ORG name (e.g companyA). So, in order to call the right handler
+routine, the OUI data field is split as OUInamelenOUInameOUIData.
+
+OUInamelen is 2B.
+
+For example if the following is given:
+
+vdptool -T -W -i eth2  -V assoc \
+    -c mode=assoc -c mgrid2=0 -c typeid=0 -c typeidver=0  \
+    -c uuid=18ea3452-b364-4e13-a1a2-9c6524deb685 -c hints=none \
+    -c filter=0-fa:16:3e:4c:2d:85-90001 -c oui=companyA,val1=data1
+
+The data sent to lldpad by vdptool will be as follows assuming
+companyA encode handlers in vdptool encodes it the same way:
+
+04mode0005assoc06mgrid20001006typeid0001009typeidver0001004uuid002418ea3452-b364-4e13-a1a2-9c6524deb68505hints0004none06filter00190-fa:16:3e:4c:2d:85-9000103oui001408companyAval1=data1
+
+This commit will not insert the oui fields as given above because no OUI
+specific handlers are added.
+
+Signed-off-by: padkrish <padkrish@cisco.com>
+Signed-off-by: John Fastabend <john.r.fastabend@intel.com>
+---
+ docs/vdptool.8          |  50 +++++++++++++++-
+ include/qbg_vdp22_oui.h |  11 ++++
+ vdptool.c               | 149 +++++++++++++++++++++++++++++++++++++++++++++---
+ 3 files changed, 201 insertions(+), 9 deletions(-)
+
+diff --git a/docs/vdptool.8 b/docs/vdptool.8
+index 0b50a13..4580c71 100644
+--- a/docs/vdptool.8
++++ b/docs/vdptool.8
+@@ -182,6 +182,31 @@ delimited by two slashes ('--'),
+ also known as filter information format 3.
+ For vlan and group details see (1) and (4).
+ .RE
++.TP
++.B "oui (Organizationally Unique Identifier):"
++This defines the optional Organizationally
++defined information field. This contains the
++specific sets of values for this entry. There
++can be multiple organizational specific fields,
++in which case there will be multiple keywords
++.I oui=
++followed by the values.
++The value is of the following format:
++.EX
++oui=OUI,[Organization specific values ]
++.EE
++The OUI specifies the name of the Organization
++that is responsible for defining
++this content. A comma is mandatory after the OUI
++field. The fields following this
++ is specified by the organization and
++hence will be decoded based on the value of this
++OUI field. Currently, the following values for
++OUI are supported.
++.RS
++.IP cisco -
++Specifies Cisco defined OUI.
++.TP
+ .SH COMMANDS
+ .TP
+ .B license
+@@ -226,13 +251,33 @@ vdptool -i eth2 -T -V assoc -c mode=assoc -c mgrid2=blabla \\
+ 	-c filter=2-52:00:00:11:22:33-200
+ .fi
+ .TP
+-Create a VSI association on interface eth2 and wait for the response from the bridge
++Create a VSI association on interface eth2 and wait for the
++response from the bridge
+ .br
+ .nf
+ vdptool -i eth2 -T -W -V assoc -c mode=assoc -c mgrid2=blabla \\
+ 	-c typeid=5 -c uuid=1122 -c typeidver=4 -c hints=none \\
+ 	-c filter=0-52:00:00:11:22:33-200
+ .fi
++.TP
++Create a VSI association on interface eth2 wth OUI parameters
++and wait for the response from the bridge
++.br
++.nf
++vdptool -i eth2 -T -W -V assoc -c mode=assoc -c mgrid2=blabla \\
++	-c typeid=5 -c uuid=1122 -c typeidver=4 -c hints=none \\
++	-c filter=0-52:00:00:11:22:33-200 -c oui=CompanyA,data
++.fi
++.TP
++Create a VSI association on interface eth2 wth multiple OUI parameters
++and wait for the response from the bridge
++.br
++.nf
++vdptool -i eth2 -T -W -V assoc -c mode=assoc -c mgrid2=blabla \\
++	-c typeid=5 -c uuid=1122 -c typeidver=4 -c hints=none \\
++	-c filter=0-52:00:00:11:22:33-200 -c oui=CompanyA,data \\
++	-c oui=CompanyB,data
++.fi
+ 
+ .TP
+ Query all VSI association on interface eth2
+@@ -240,7 +285,8 @@ Query all VSI association on interface eth2
+ vdptool -i eth2 -t -V assoc
+ 
+ .TP
+-Query  VSI association on interface eth2 that matches specific VSI parameters. Any of the VSI parameters below can be omitted.
++Query  VSI association on interface eth2 that matches specific
++VSI parameters. Any of the VSI parameters below can be omitted.
+ .br
+ vdptool -i eth2 -t -V assoc -t -V assoc -c mode=assoc \\
+         -c mgrid2=blabla -c typeid=5 -c uuid=1122 \\
+diff --git a/include/qbg_vdp22_oui.h b/include/qbg_vdp22_oui.h
+index 0aeb7b9..d31c6ad 100644
+--- a/include/qbg_vdp22_oui.h
++++ b/include/qbg_vdp22_oui.h
+@@ -33,6 +33,7 @@
+ enum vdp22_oui {
+ 	VDP22_OUI_TYPE_LEN = 3,          /* Size of OUI Type field */
+ 	VDP22_OUI_MAX_NAME = 20,
++	MAX_OUI_DATA_LEN = 200
+ };
+ 
+ struct vdp22_oui_data_s {
+@@ -43,4 +44,14 @@ struct vdp22_oui_data_s {
+ 	void *data;
+ };
+ 
++typedef struct vdptool_oui_data_s {
++	char oui_name[VDP22_OUI_MAX_NAME];
++	char data[MAX_OUI_DATA_LEN];
++} vdptool_oui_data_t;
++
++typedef struct vdptool_oui_hndlr_tbl_s {
++	char *oui_name;
++	bool (*oui_cli_encode_hndlr)(char *dst, char *src, size_t len);
++} vdptool_oui_hndlr_tbl_t;
++
+ #endif /* __VDP22_OUI_H__ */
+diff --git a/vdptool.c b/vdptool.c
+index f7fd288..c857a85 100644
+--- a/vdptool.c
++++ b/vdptool.c
+@@ -55,6 +55,22 @@
+ #include "qbg_vdp22_clif.h"
+ #include "lldp_util.h"
+ #include "qbg_vdp22def.h"
++#include "qbg_vdp22_oui.h"
++
++#define OUI_ENCODE_HNDLR(name) name##_oui_encode_hndlr
++#define EXTERN_OUI_FN(name) \
++	extern bool name##_oui_encode_hndlr(char *, char *, size_t)
++
++/* The handler declaration  for encoding OUI specific information should be
++ * here. The corresponding decoder handler should be in lldpad.
++ */
++
++
++/* The OUI specific handlers should be added here */
++
++vdptool_oui_hndlr_tbl_t oui_hndlr_tbl[] = {
++};
++
+ 
+ static char *print_vdp_status(enum vdp22_cmd_status status)
+ {
+@@ -144,23 +160,137 @@ static void get_arg_value(char *str, char **arg, char **argval)
+ 	*arg = str;
+ }
+ 
+-static int render_cmd(struct cmd *cmd, int argc, char **args, char **argvals)
++static char *get_oui_name(char *argvals)
++{
++	char *oui_loc;
++
++	oui_loc = strchr(argvals, ',');
++	if (oui_loc == NULL)
++		return NULL;
++	*oui_loc = '\0';
++	return oui_loc + 1;
++}
++
++static void fill_oui_hdr(vdptool_oui_data_t *oui_data, char *oui_name)
++{
++	strncpy(oui_data->oui_name, oui_name, sizeof(oui_data->oui_name));
++	snprintf(oui_data->data, sizeof(oui_data->data), "%02x%s",
++		 (unsigned int)strlen(oui_data->oui_name), oui_data->oui_name);
++}
++
++static bool run_vdptool_oui_hndlr(vdptool_oui_data_t *oui_data, char *argvals)
++{
++	int cnt = 0, tbl_size;
++	char *dst;
++	size_t len = 0;
++
++	tbl_size = sizeof(oui_hndlr_tbl) / sizeof(vdptool_oui_hndlr_tbl_t);
++	for (cnt = 0; cnt < tbl_size; cnt++) {
++		if (!strncmp(oui_hndlr_tbl[cnt].oui_name, oui_data->oui_name,
++			     VDP22_OUI_MAX_NAME)) {
++			len = strlen(oui_data->data);
++			if (len >= sizeof(oui_data->data))
++				return false;
++			dst = oui_data->data + len;
++			return oui_hndlr_tbl[cnt].oui_cli_encode_hndlr(dst,
++								argvals, len);
++		}
++	}
++	return false;
++}
++
++/*
++ * The OUI can be input in many ways.
++ * It could be vdptool .... -c oui=companyA,Data1 -c oui=companyB,Data2 \
++ *			    -c oui=companyA,Data3
++ * Or
++ * vdptool .... -c oui=companyA,Data1Data3 -c oui=companyB,data2
++ * This function takes care of both the case cases
++ *
++ * Anything after the comma in OUI data field is Org specific and it's upto
++ * the respective organization specific handlers to encode it so that it could
++ * be decoded appropriately by the ORG specific handlers inside lldpad.
++ * That is, Data1 and Data3 is ORG companyA specific and the OUI handlers
++ * of ORG companyA in vdptool and lldpad is responsible for encoding/decoding.
++ *
++ * Irrespective of how the command line interface to vdptool is, the input to
++ * lldpad is always the same. i.e. KeywordlenKeywordDatalenData
++ * For OUI, the data field will have the complete OUI data starting with
++ * ORG name (e.g companyA). So, in order to call the right handler routine,
++ * the OUI data field is split as OUInamelenOUInameOUIData.
++ * OUInamelen is 2B.
++ */
++
++static bool rewrite_oui_argval(char *argvals, vdptool_oui_data_t **oui_data,
++			       int total_oui)
++{
++	char *new_oui_argvals, *new_oui_name, *exist_oui_name;
++	bool flag = true, ret = false;
++	int cnt;
++
++	new_oui_argvals = get_oui_name(argvals);
++	if (!new_oui_argvals) {
++		printf("Incorrect OUI Value, missing comma as delimited for "
++		       "OUI Type\n");
++		return false;
++	}
++	new_oui_name = argvals;
++	for (cnt = 0; cnt < total_oui; cnt++) {
++		if (!oui_data[cnt])
++			continue;
++		exist_oui_name = oui_data[cnt]->oui_name;
++		if (!strncmp(new_oui_name, exist_oui_name,
++			     VDP22_OUI_MAX_NAME)) {
++			flag = false;
++			break;
++		}
++	}
++	if (flag) {
++		oui_data[total_oui] = calloc(1, sizeof(vdptool_oui_data_t));
++		fill_oui_hdr(oui_data[total_oui], new_oui_name);
++		ret = run_vdptool_oui_hndlr(oui_data[total_oui],
++					    new_oui_argvals);
++	} else
++		ret = run_vdptool_oui_hndlr(oui_data[cnt], new_oui_argvals);
++	if (!ret)
++		return false;
++	return flag;
++}
++
++int render_cmd(struct cmd *cmd, int argc, char **args, char **argvals)
+ {
+ 	int len;
+ 	int i;
+ 	int fid = 0, oui = 0;
++	vdptool_oui_data_t **oui_data;
++	bool is_new;
+ 
+ 	len = sizeof(cmd->obuf);
+ 
++	/* To avoid another loop to figure the number of OUI's */
++	oui_data = calloc(argc, sizeof(vdptool_oui_data_t *));
++	if (!oui_data) {
++		printf("Not enough memory\n");
++		return 0;
++	}
++
+ 	if ((cmd->cmd == cmd_settlv) || (cmd->cmd == cmd_gettlv)) {
+ 		for (i = 0; i < argc; i++) {
+-			if (args[i]) {
+-				if (!strncasecmp(args[i], "filter",
+-						strlen("filter")))
+-					fid++;
+-				else if (!strncasecmp(args[i], "oui",
+-						strlen("oui")))
++			if (!args[i])
++				continue;
++			if (!strncasecmp(args[i], "filter", strlen("filter")))
++				fid++;
++			else if (!strncasecmp(args[i], "oui", strlen("oui"))) {
++				is_new = rewrite_oui_argval(argvals[i],
++							    oui_data,
++							    oui);
++				if (is_new) {
++					argvals[i] = oui_data[oui]->data;
+ 					oui++;
++				} else {
++					args[i] = NULL;
++					argvals[i] = NULL;
++				}
+ 			}
+ 		}
+ 	}
+@@ -182,6 +312,11 @@ static int render_cmd(struct cmd *cmd, int argc, char **args, char **argvals)
+ 				 len - strlen(cmd->obuf), "%04x%s",
+ 				 (unsigned int)strlen(argvals[i]), argvals[i]);
+ 	}
++	for (i = 0; i < oui; i++) {
++		if (oui_data[i])
++			free(oui_data[i]);
++	}
++	free(oui_data);
+ 	return strlen(cmd->obuf);
+ }
+ 
+-- 
+2.1.0
+

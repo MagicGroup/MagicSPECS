@@ -1,0 +1,40 @@
+From 53ebbfd6dd8cf475884fd523207e354696a0670d Mon Sep 17 00:00:00 2001
+From: Chris Leech <cleech@redhat.com>
+Date: Fri, 30 Jan 2015 08:21:42 +0000
+Subject: [PATCH] nltest build error
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+test/nltest.c: In function ‘set_hw_bcn’:
+test/nltest.c:994:38: error: iteration 8u invokes undefined behavior
+[-Werror=aggressive-loop-optimizations]
+    bcn_data->up_settings[i].rp_admin = 1;
+                                      ^
+test/nltest.c:993:3: note: containing loop
+   for (i = 0; i <= 8; i++) {
+   ^
+cc1: all warnings being treated as errors
+
+Signed-off-by: Chris Leech <cleech@redhat.com>
+Signed-off-by: John Fastabend <john.r.fastabend@intel.com>
+---
+ test/nltest.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/test/nltest.c b/test/nltest.c
+index da05463..cd28977 100644
+--- a/test/nltest.c
++++ b/test/nltest.c
+@@ -990,7 +990,7 @@ static int set_hw_bcn(char *device_name, bcn_cfg *bcn_data,
+ 	oper_mode = 1;
+ 
+ 	{
+-		for (i = 0; i <= 8; i++) {
++		for (i = 0; i < 8; i++) {
+ 			bcn_data->up_settings[i].rp_admin = 1;
+ 		}
+ 		bcn_data->rp_alpha = 0.5;
+-- 
+2.1.0
+

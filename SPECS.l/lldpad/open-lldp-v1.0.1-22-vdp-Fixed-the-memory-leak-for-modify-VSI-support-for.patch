@@ -1,0 +1,223 @@
+From 73e0c42cc00f537fee1f58e5475cab1f2193e3cc Mon Sep 17 00:00:00 2001
+From: padkrish <padkrish@cisco.com>
+Date: Fri, 10 Apr 2015 09:03:24 +0000
+Subject: [PATCH] vdp: Fixed the memory leak for modify VSI, support for OUI
+ modify
+
+This patch has a fix for freeing the memory after a VSI update.
+Support for modifying the OUI parameters have been added
+to the infra.
+Cisco specific handler is also added to support OUI modify.
+
+Signed-off-by: padkrish <padkrish@cisco.com>
+Signed-off-by: John Fastabend <john.r.fastabend@intel.com>
+---
+ include/qbg_vdp22.h     |  2 +-
+ include/qbg_vdp22_oui.h |  3 +++
+ include/vdp_cisco.h     |  2 ++
+ qbg/vdp22.c             |  5 +++--
+ qbg/vdp22cisco_oui.c    | 44 +++++++++++++++++++++++++++++++++++++++++---
+ qbg/vdp22sm.c           | 35 ++++++++++++++++++++++++++++++++---
+ 6 files changed, 82 insertions(+), 9 deletions(-)
+
+diff --git a/include/qbg_vdp22.h b/include/qbg_vdp22.h
+index 6585a10..b1896a5 100644
+--- a/include/qbg_vdp22.h
++++ b/include/qbg_vdp22.h
+@@ -181,7 +181,7 @@ void vdp22_stop(char *);
+ int vdp22_from_ecp22(struct vdp22 *);
+ int vdp22_query(const char *);
+ struct vdp22 *vdp22_getvdp(const char *);
+-int vdp22_addreq(struct vsi22 *, struct vdp22 *);
++int vdp22_addreq(struct vsi22 *, struct vdp22 *, bool *);
+ int vdp22_nlback(struct vsi22 *);
+ int vdp22_clntback(struct vsi22 *);
+ struct vsi22 *vdp22_copy_vsi(struct vsi22 *);
+diff --git a/include/qbg_vdp22_oui.h b/include/qbg_vdp22_oui.h
+index 923e19f..d60075d 100644
+--- a/include/qbg_vdp22_oui.h
++++ b/include/qbg_vdp22_oui.h
+@@ -82,6 +82,9 @@ struct vdp22_oui_handler_s {
+ 	/* This handler converts the vdpnl structure to vsi22 structure */
+ 	bool (*vdpnl2vsi22_hndlr)(void *, struct vdpnl_oui_data_s *,
+ 				   struct vdp22_oui_data_s *);
++	/* This handler modifies the existing OUI parameters */
++	bool (*vsi22_mod_hndlr)(void *, struct vdp22_oui_data_s *,
++				struct vdp22_oui_data_s *);
+ 	/* This handler converts the vdpnl structure to string */
+ 	bool (*vdpnl2str_hndlr)(struct vdpnl_oui_data_s *, char *,
+ 				int *, int);
+diff --git a/include/vdp_cisco.h b/include/vdp_cisco.h
+index 821db68..4abe802 100644
+--- a/include/vdp_cisco.h
++++ b/include/vdp_cisco.h
+@@ -113,6 +113,8 @@ bool cisco_str2vdpnl_hndlr(struct vdpnl_oui_data_s *, char *);
+ bool cisco_vdp_free_oui(struct vdp22_oui_data_s *);
+ bool cisco_vdpnl2vsi22_hndlr(void *, struct vdpnl_oui_data_s *,
+ 			     struct vdp22_oui_data_s *);
++bool cisco_vsi22_mod_hndlr(void *, struct vdp22_oui_data_s *,
++			   struct vdp22_oui_data_s *);
+ bool cisco_vdpnl2str_hndlr(struct vdpnl_oui_data_s *, char *, int *, int);
+ bool cisco_vsi2vdpnl_hndlr(void *, struct vdp22_oui_data_s *,
+ 			   struct vdpnl_oui_data_s *);
+diff --git a/qbg/vdp22.c b/qbg/vdp22.c
+index 10b80a4..8f14fdd 100644
+--- a/qbg/vdp22.c
++++ b/qbg/vdp22.c
+@@ -900,6 +900,7 @@ int vdp22_request(struct vdpnl_vsi *vsi, int clif)
+ 	int rc;
+ 	struct vsi22 *p;
+ 	struct vdp22 *vdp;
++	bool modf_vsi = false;
+ 
+ 	LLDPAD_DBG("%s:%s clif:%d\n", __func__, vsi->ifname, clif);
+ 	vdp = vdp22_findif(vsi->ifname, NULL);
+@@ -917,8 +918,8 @@ int vdp22_request(struct vdpnl_vsi *vsi, int clif)
+ 			vsi->request += 1;
+ 		p = vdp22_alloc_vsi_int(vsi, vdp, &rc, true);
+ 		if (p) {
+-			rc = vdp22_addreq(p, vdp);
+-			if (rc)
++			rc = vdp22_addreq(p, vdp, &modf_vsi);
++			if (rc || modf_vsi)
+ 				vdp22_delete_vsi(p);
+ 		}
+ 	} else
+diff --git a/qbg/vdp22cisco_oui.c b/qbg/vdp22cisco_oui.c
+index 272d480..da6ce24 100644
+--- a/qbg/vdp22cisco_oui.c
++++ b/qbg/vdp22cisco_oui.c
+@@ -34,8 +34,9 @@
+ 
+ struct vdp22_oui_handler_s cisco_oui_hndlr = {
+ 		{0x00, 0x00, 0x0c}, "cisco", cisco_str2vdpnl_hndlr,
+-		cisco_vdpnl2vsi22_hndlr, cisco_vdpnl2str_hndlr,
+-		cisco_vsi2vdpnl_hndlr, cisco_vdp_tx_hndlr, cisco_vdp_rx_hndlr,
++		cisco_vdpnl2vsi22_hndlr, cisco_vsi22_mod_hndlr,
++		cisco_vdpnl2str_hndlr, cisco_vsi2vdpnl_hndlr,
++		cisco_vdp_tx_hndlr, cisco_vdp_rx_hndlr,
+ 		cisco_vdp_free_oui, cisco_vdp_oui_ptlvsize};
+ 
+ /*
+@@ -104,9 +105,11 @@ bool cisco_str2vdpnl_hndlr(struct vdpnl_oui_data_s *vdp_oui_p, char *token)
+ 			}
+ 			strncpy(uuid, token, data_len);
+ 			if (oui_vdp_str2uuid(vdp_cisco_oui_p->uuid, uuid,
+-					     sizeof(vdp_cisco_oui_p->uuid)))
++					     sizeof(vdp_cisco_oui_p->uuid))) {
+ 				memset(vdp_cisco_oui_p->uuid, 0,
+ 					sizeof(vdp_cisco_oui_p->uuid));
++				vdp_cisco_oui_p->uuid_set = false;
++			} else
+ 				vdp_cisco_oui_p->uuid_set = true;
+ 			free(uuid);
+ 			break;
+@@ -177,6 +180,41 @@ bool cisco_vdpnl2vsi22_hndlr(void *vsi_data, struct vdpnl_oui_data_s *from,
+ }
+ 
+ /*
++ * This converts modifies the existing OUI parameters
++ */
++
++bool cisco_vsi22_mod_hndlr(UNUSED void *vsi_data, struct vdp22_oui_data_s *from,
++			   struct vdp22_oui_data_s *to)
++{
++	vdp_cisco_oui_t *from_oui;
++	vdp_cisco_oui_t *to_oui;
++
++	from_oui = (vdp_cisco_oui_t *)from->data;
++	to_oui = (vdp_cisco_oui_t *)to->data;
++	if ((!from_oui) || (!to_oui)) {
++		LLDPAD_DBG("%s: NULL OUI data\n", __func__);
++		return false;
++	}
++	if (from_oui->vm_name_len != 0) {
++		to_oui->vm_name_len = from_oui->vm_name_len;
++		strncpy(to_oui->vm_name, from_oui->vm_name,
++			to_oui->vm_name_len);
++	}
++	/* UUID can be modified only if not set */
++	if (!to_oui->uuid_set) {
++		memcpy(to_oui->uuid, from_oui->uuid, sizeof(to_oui->uuid));
++		to_oui->uuid_set = true;
++	}
++	if (from_oui->vm_addr_len != 0) {
++		to_oui->vm_addr_len = from_oui->vm_addr_len;
++		to_oui->afi = from_oui->afi;
++		memcpy(&(to_oui->l3_addr), &(from_oui->l3_addr),
++			sizeof(to_oui->l3_addr));
++	}
++	return true;
++}
++
++/*
+  * This function converts the OUI information from vdpnl struct to string
+  */
+ 
+diff --git a/qbg/vdp22sm.c b/qbg/vdp22sm.c
+index 14356ac..be838a9 100644
+--- a/qbg/vdp22sm.c
++++ b/qbg/vdp22sm.c
+@@ -184,10 +184,36 @@ static inline size_t vsi22_ptlv_sz(struct vsi22 *vp)
+ }
+ 
+ /*
++ * This function modifies the existing OUI parameters in a VSI.
++ */
++static void vdp22_modoui(struct vsi22 *p, struct vsi22 *vsip)
++{
++	struct vdp22_oui_handler_s *oui_hndlr;
++	int idx, inn_idx, ret;
++
++	for (idx = 0; idx < vsip->no_ouidata; idx++) {
++		struct vdp22_oui_data_s *from = &vsip->oui_str_data[idx];
++
++		for (inn_idx = 0; inn_idx < p->no_ouidata; inn_idx++) {
++			struct vdp22_oui_data_s *to = &p->oui_str_data[inn_idx];
++
++			if (!strncmp(to->oui_name, from->oui_name,
++				     sizeof(to->oui_name))) {
++				oui_hndlr = vdp22_get_oui_hndlr(to->oui_name);
++				ret = oui_hndlr->vsi22_mod_hndlr(p, from, to);
++				if (!ret)
++					LLDPAD_ERR("%s: handler return error for oui %s\n",
++						   __func__, from->oui_name);
++				return;
++			}
++		}
++	}
++}
++
++/*
+  * This function calls the registered OUI handlers that returns the size of
+  * the OUI data.
+  */
+-
+ static inline size_t oui22_ptlv_sz(struct vsi22 *vp)
+ {
+ 	struct vdp22_oui_handler_s *oui_hndlr;
+@@ -1054,7 +1080,7 @@ bool vdp22_cmp_fdata(struct vsi22 *p, struct vsi22 *vsip)
+ /*
+  * Handle a new request.
+  */
+-int vdp22_addreq(struct vsi22 *vsip, struct vdp22 *vdp)
++int vdp22_addreq(struct vsi22 *vsip, struct vdp22 *vdp, bool *modf_vsi)
+ {
+ 	int rc = 0;
+ 	struct vsi22 *p;
+@@ -1094,8 +1120,11 @@ int vdp22_addreq(struct vsi22 *vsip, struct vdp22 *vdp)
+ 			LLDPAD_DBG("%s:%s TODO mismatch filter data [%02x]\n",
+ 				   __func__, vsip->vdp->ifname, vsip->vsi[0]);
+ 			rc = -EINVAL;
+-		} else
++		} else {
++			vdp22_modoui(p, vsip);
+ 			rc = vdp22_modvsi(p, vsip->vsi_mode);
++			*modf_vsi = true;
++		}
+ 	}
+ out:
+ 	LLDPAD_DBG("%s:%s rc:%d\n", __func__, vsip->vdp->ifname, rc);
+-- 
+2.1.0
+

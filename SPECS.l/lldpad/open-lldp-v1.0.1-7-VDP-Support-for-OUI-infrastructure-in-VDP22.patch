@@ -1,0 +1,158 @@
+From 64c9ba3c03c735e8031964edf52e148373ec29ce Mon Sep 17 00:00:00 2001
+From: padkrish <padkrish@cisco.com>
+Date: Wed, 21 Jan 2015 03:38:24 +0000
+Subject: [PATCH] VDP: Support for OUI infrastructure in VDP22.
+
+This patch contains the header field changes for a general framework
+for supporting OUI fields in VDP22 at the station side. The specific
+changes are described below.
+
+qbg_vdpnl.h:
+-------------
+Couple of parameters are added to the vdpnl_vsi structure. One is
+the number of OUI parameters. Generally, this will be 1, as the
+chances of having different OUI in a single message for VDP22 is
+quite low. Nevertheless, there's support for having multiple OUI
+in a single VSI. The other field is a general structure of len,opaque
+data format for carrying the OUI data.
+
+qbg_vdp22_oui.h:
+----------------
+This is a new header file added for supporting the OUI framework. This
+file contains the OUI specific sub-structures for vdpnl and vsi22
+structures and function handler structure.:w
+
+Signed-off-by: padkrish <padkrish@cisco.com>
+Signed-off-by: John Fastabend <john.r.fastabend@intel.com>
+---
+ Makefile.am             |  3 ++-
+ include/qbg_vdp22.h     |  4 ++++
+ include/qbg_vdp22_oui.h | 46 ++++++++++++++++++++++++++++++++++++++++++++++
+ include/qbg_vdp22def.h  |  1 +
+ include/qbg_vdpnl.h     |  2 ++
+ 5 files changed, 55 insertions(+), 1 deletion(-)
+ create mode 100644 include/qbg_vdp22_oui.h
+
+diff --git a/Makefile.am b/Makefile.am
+index fc4f8d6..403088b 100644
+--- a/Makefile.am
++++ b/Makefile.am
+@@ -69,7 +69,8 @@ lldp_8021qaz_cmds.c include/lldp_8021qaz_cmds.h \
+ include/lldp_evb22.h lldp_evb22.c lldp_evb22_cmds.c \
+ include/qbg22.h include/qbg_ecp22.h qbg/ecp22.c \
+ include/qbg_vdp22.h qbg/vdp22.c qbg/vdpnl.c qbg/vdp22sm.c qbg/vdp22br.c \
+-include/qbg_vdp22def.h qbg/vdp22_cmds.c qbg/vdp_ascii.c
++include/qbg_vdp22def.h qbg/vdp22_cmds.c qbg/vdp_ascii.c \
++include/qbg_vdp22_oui.h
+ 
+ lib_LTLIBRARIES = liblldp_clif.la
+ liblldp_clif_la_LDFLAGS = -version-info 1:0:0
+diff --git a/include/qbg_vdp22.h b/include/qbg_vdp22.h
+index 6c3c9ee..6585a10 100644
+--- a/include/qbg_vdp22.h
++++ b/include/qbg_vdp22.h
+@@ -59,6 +59,7 @@
+ #include	<linux/if_link.h>
+ 
+ #include	<qbg_vdp22def.h>
++#include        <qbg_vdp22_oui.h>
+ 
+ enum vdp22_role {		/* State for VDP22 bridge processing */
+ 	VDP22_BRIDGE = 1,	/* Bridge role */
+@@ -140,6 +141,8 @@ struct vsi22 {
+ 	unsigned char fif;		/* Filter info format */
+ 	unsigned short no_fdata;	/* Entries in filter data */
+ 	struct fid22 *fdata;		/* Filter data variable length */
++	unsigned short no_ouidata;      /* Entries in OUI data */
++	struct vdp22_oui_data_s *oui_str_data; /* OUI data variable length */
+ 	struct vdp22 *vdp;		/* Back pointer to VDP head */
+ 	unsigned long flags;		/* Flags, see above */
+ 	struct vdp22smi smi;		/* State machine information */
+@@ -189,6 +192,7 @@ void vdp22_stop_timers(struct vsi22 *);
+ int vdp22_start_localchange_timer(struct vsi22 *);
+ bool vdp22_cmp_fdata(struct vsi22 *, struct vsi22 *);
+ void vdp22_delete_vsi(struct vsi22 *);
++struct vdp22_oui_handler_s * vdp22_get_oui_hndlr(char *);
+ 
+ /*
+  * Functions to get and set vlan identifier and qos.
+diff --git a/include/qbg_vdp22_oui.h b/include/qbg_vdp22_oui.h
+new file mode 100644
+index 0000000..0aeb7b9
+--- /dev/null
++++ b/include/qbg_vdp22_oui.h
+@@ -0,0 +1,46 @@
++/*******************************************************************************
++
++  Implementation of OUI for VDP2.2
++  Copyright (c) 2012-2014 by Cisco Systems, Inc.
++
++  Author(s): Padmanabhan Krishnan <padkrish at cisco dot com>
++
++  This program is free software; you can redistribute it and/or modify it
++  under the terms and conditions of the GNU General Public License,
++  version 2, as published by the Free Software Foundation.
++
++  This program is distributed in the hope it will be useful, but WITHOUT
++  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
++  FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
++  more details.
++
++  You should have received a copy of the GNU General Public License along with
++  this program; if not, write to the Free Software Foundation, Inc.,
++  51 Franklin St - Fifth Floor, Boston, MA 02110-1301 USA.
++
++  The full GNU General Public License is included in this distribution in
++  the file called "COPYING".
++*******************************************************************************/
++
++#ifndef __VDP22_OUI_H__
++#define __VDP22_OUI_H__
++
++#include <stdbool.h>
++
++/*
++ * Generic OUI related defines
++ */
++enum vdp22_oui {
++	VDP22_OUI_TYPE_LEN = 3,          /* Size of OUI Type field */
++	VDP22_OUI_MAX_NAME = 20,
++};
++
++struct vdp22_oui_data_s {
++	void *vsi_data;
++	unsigned char oui_type[VDP22_OUI_TYPE_LEN];
++	char oui_name[VDP22_OUI_MAX_NAME];
++	int len;
++	void *data;
++};
++
++#endif /* __VDP22_OUI_H__ */
+diff --git a/include/qbg_vdp22def.h b/include/qbg_vdp22def.h
+index c305a2b..a2d2654 100644
+--- a/include/qbg_vdp22def.h
++++ b/include/qbg_vdp22def.h
+@@ -91,6 +91,7 @@ enum vsi_key_arg {
+ 	VSI_FILTER_ARG,
+ 	VSI_MAND_NUM_ARG,
+ 	VSI_HINTS_ARG,
++	VSI_OUI_ARG,
+ 	VSI_INVALID_ARG
+ };
+ 
+diff --git a/include/qbg_vdpnl.h b/include/qbg_vdpnl.h
+index c5c93ed..bf18e71 100644
+--- a/include/qbg_vdpnl.h
++++ b/include/qbg_vdpnl.h
+@@ -66,6 +66,8 @@ struct vdpnl_vsi {		/* Data structure for VSI data via netlink */
+ 	unsigned char filter_fmt;	/* Filter format type */
+ 	int macsz;			/* Entries in mac-vlan pair list */
+ 	struct vdpnl_mac *maclist;	/* List of MAC-VLAN pairs */
++	int ouisz;                      /* No of OUI entries */
++	struct vdpnl_oui_data_s *oui_list; /* OUI Entries */
+ };
+ 
+ int vdpnl_recv(unsigned char *, size_t);
+-- 
+2.1.0
+

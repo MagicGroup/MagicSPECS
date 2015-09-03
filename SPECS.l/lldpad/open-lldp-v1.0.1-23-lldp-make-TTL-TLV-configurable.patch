@@ -1,0 +1,312 @@
+From 986eb2e84fd3339a30a4ab09c6d788c63236fed6 Mon Sep 17 00:00:00 2001
+From: Gary Loughnane <gary.loughnane@intel.com>
+Date: Tue, 21 Apr 2015 17:45:41 +0000
+Subject: [PATCH] lldp: make TTL TLV configurable
+
+This allows the TTL TLV to be configured.
+
+Currently the Time To Live TLV is a static value set to 120 seconds.
+LLDP specification says this can be a value of between 0 and 65535
+seconds. This patch makes the TTL TLV a configurable entity.
+
+Signed-off-by: Gary Loughnane <gary.loughnane@intel.com>
+Signed-off-by: John Fastabend <john.r.fastabend@intel.com>
+---
+ include/lldp_mand.h      |  1 +
+ include/lldp_mand_cmds.h |  4 +++
+ lldp/agent.c             |  2 +-
+ lldp/ports.c             |  3 +-
+ lldp/states.h            |  2 +-
+ lldp/tx.c                | 30 ++++++++++++++--
+ lldp_mand.c              | 21 ++++++++---
+ lldp_mand_cmds.c         | 90 ++++++++++++++++++++++++++++++++++++++++++++++++
+ 8 files changed, 141 insertions(+), 12 deletions(-)
+
+diff --git a/include/lldp_mand.h b/include/lldp_mand.h
+index 9154b7c..fc21ede 100644
+--- a/include/lldp_mand.h
++++ b/include/lldp_mand.h
+@@ -93,4 +93,5 @@ void mand_unregister(struct lldp_module *mod);
+ struct packed_tlv *mand_gettlv(struct port *, struct lldp_agent *);
+ void mand_ifdown(char *, struct lldp_agent *);
+ void mand_ifup(char *, struct lldp_agent *);
++void mand_update_ttl(const char *, u16);
+ #endif /* _LLDP_MAND_H */
+diff --git a/include/lldp_mand_cmds.h b/include/lldp_mand_cmds.h
+index aacac7c..8effc6e 100644
+--- a/include/lldp_mand_cmds.h
++++ b/include/lldp_mand_cmds.h
+@@ -28,6 +28,10 @@
+ #define _LLDP_MAND_CMDS_H
+ 
+ #define ARG_MAND_SUBTYPE "subtype"
++#define ARG_TTL_VALUE "value"
++
++#define TTL_MIN_VAL 0x0
++#define TTL_MAX_VAL 0xFFFF
+ 
+ struct arg_handlers *mand_get_arg_handlers();
+ 
+diff --git a/lldp/agent.c b/lldp/agent.c
+index 4bc5394..73ab054 100644
+--- a/lldp/agent.c
++++ b/lldp/agent.c
+@@ -101,7 +101,7 @@ void lldp_init_agent(struct port *port, struct lldp_agent *agent, int type)
+ 
+ 	/* init TX path */
+ 	txInitializeTimers(agent);
+-	txInitializeLLDP(agent);
++	txInitializeLLDP(port, agent);
+ }
+ 
+ int lldp_add_agent(const char *ifname, enum agent_type type)
+diff --git a/lldp/ports.c b/lldp/ports.c
+index 3bd6a2a..6384f14 100644
+--- a/lldp/ports.c
++++ b/lldp/ports.c
+@@ -230,7 +230,6 @@ int reinit_port(const char *ifname)
+ 		/* Reset relevant state variables */
+ 		agent->tx.state  = TX_LLDP_INITIALIZE;
+ 		agent->rx.state = LLDP_WAIT_PORT_OPERATIONAL;
+-		agent->tx.txTTL = 0;
+ 		agent->msap.length1 = 0;
+ 		agent->msap.msap1 = NULL;
+ 		agent->msap.length2 = 0;
+@@ -243,7 +242,7 @@ int reinit_port(const char *ifname)
+ 
+ 		/* init TX path */
+ 		txInitializeTimers(agent);
+-		txInitializeLLDP(agent);
++		txInitializeLLDP(port, agent);
+ 	}
+ 
+ 	return 0;
+diff --git a/lldp/states.h b/lldp/states.h
+index fa5f11f..7cf69b8 100644
+--- a/lldp/states.h
++++ b/lldp/states.h
+@@ -52,7 +52,7 @@ enum {
+  * The txInitializeLLDP () procedure initializes the LLDP transmit module as
+  * defined in 10.1.1.
+ */
+-void txInitializeLLDP(struct lldp_agent *agent);
++void txInitializeLLDP(struct port *port, struct lldp_agent *agent);
+ 
+ /**
+  * The mibConstrInfoLLDPDU () procedure constructs an information LLDPDU as
+diff --git a/lldp/tx.c b/lldp/tx.c
+index 69c1a1a..c3a5c62 100644
+--- a/lldp/tx.c
++++ b/lldp/tx.c
+@@ -34,6 +34,8 @@
+ #include "lldp_tlv.h"
+ #include "lldp_mod.h"
+ #include "lldp_mand.h"
++#include "config.h"
++#include "lldp_mand_clif.h"
+ 
+ bool mibConstrInfoLLDPDU(struct port *port, struct lldp_agent *agent)
+ {
+@@ -110,7 +112,29 @@ error:
+ 	return false;
+ }
+ 
+-void txInitializeLLDP(struct lldp_agent *agent)
++static u16 get_ttl_init_val(char *ifname, struct lldp_agent *agent)
++{
++	u16 ttl;
++	int config_ttl;
++	int read_config_err;
++	char arg_path[512] = { 0 };
++
++	snprintf(arg_path, sizeof(arg_path), "%s%08x.%s",
++			TLVID_PREFIX,
++			TLVID_NOUI(TIME_TO_LIVE_TLV),
++			ARG_TTL_VALUE);
++	read_config_err = get_config_setting(ifname, agent->type,
++			arg_path, &config_ttl, CONFIG_TYPE_INT);
++
++	if (read_config_err)
++		ttl = DEFAULT_TX_HOLD * DEFAULT_TX_INTERVAL;
++	else
++		ttl = (u16)(config_ttl);
++
++	return ttl;
++}
++
++void txInitializeLLDP(struct port *port, struct lldp_agent *agent)
+ {
+ 	if (agent->tx.frameout) {
+ 		free(agent->tx.frameout);
+@@ -125,7 +149,7 @@ void txInitializeLLDP(struct lldp_agent *agent)
+ 	agent->timers.msgTxInterval = DEFAULT_TX_INTERVAL;
+ 	agent->timers.msgFastTx     = FAST_TX_INTERVAL;
+ 
+-	agent->tx.txTTL = 0;
++	agent->tx.txTTL = get_ttl_init_val(port->ifname, agent);
+ 	agent->msap.length1 = 0;
+ 	agent->msap.msap1 = NULL;
+ 	agent->msap.length2 = 0;
+@@ -240,7 +264,7 @@ void run_tx_sm(struct port *port, struct lldp_agent *agent)
+ 	do {
+ 		switch(agent->tx.state) {
+ 		case TX_LLDP_INITIALIZE:
+-			txInitializeLLDP(agent);
++			txInitializeLLDP(port, agent);
+ 			break;
+ 		case TX_IDLE:
+ 			process_tx_idle(agent);
+diff --git a/lldp_mand.c b/lldp_mand.c
+index b269d3f..652a454 100644
+--- a/lldp_mand.c
++++ b/lldp_mand.c
+@@ -446,11 +446,7 @@ static int mand_bld_ttl_tlv(struct mand_data *md, struct lldp_agent *agent)
+ 	}
+ 	memset(tlv->info, 0, tlv->length);
+ 
+-	if (agent->tx.txTTL)
+-		ttl = htons(agent->tx.txTTL);
+-	else
+-		ttl = htons(DEFAULT_TX_HOLD * DEFAULT_TX_INTERVAL);
+-
++	ttl = htons(agent->tx.txTTL);
+ 	memcpy(tlv->info, &ttl, tlv->length);
+ 	LLDPAD_DBG("%s:%s:done:type=%d length=%d ttl=%d\n", __func__,
+ 		md->ifname, tlv->type, tlv->length, ntohs(ttl));
+@@ -685,3 +681,18 @@ void mand_unregister(struct lldp_module *mod)
+ 	free(mod);
+ 	LLDPAD_INFO("%s:done\n", __func__); 
+ }
++
++void mand_update_ttl(const char *ifname, u16 ttl_val)
++{
++	struct port *port = port_find_by_ifindex(get_ifidx(ifname));
++	struct lldp_agent *agent;
++
++	if (!port)
++		return;
++
++	LIST_FOREACH(agent, &port->agent_head, entry) {
++		agent->tx.txTTL = ttl_val;
++		agent->tx.localChange = 1;
++		agent->tx.txFast = agent->timers.txFastInit;
++	}
++}
+diff --git a/lldp_mand_cmds.c b/lldp_mand_cmds.c
+index 532337b..7d24bf8 100644
+--- a/lldp_mand_cmds.c
++++ b/lldp_mand_cmds.c
+@@ -58,6 +58,11 @@ static int get_mand_subtype(struct cmd *, char *, char *, char *, int);
+ static int set_mand_subtype(struct cmd *, char *, char *, char *, int);
+ static int test_mand_subtype(struct cmd *, char *, char *, char *, int);
+ 
++
++static int get_mand_ttl_value(struct cmd *, char *, char *, char *, int);
++static int set_mand_ttl_value(struct cmd *, char *, char *, char *, int);
++static int test_mand_ttl_value(struct cmd *, char *, char *, char *, int);
++
+ static struct arg_handlers arg_handlers[] = {
+ 	{	.arg = ARG_ADMINSTATUS, .arg_class = LLDP_ARG,
+ 		.handle_get = get_arg_adminstatus,
+@@ -72,6 +77,11 @@ static struct arg_handlers arg_handlers[] = {
+ 		.handle_get = get_mand_subtype,
+ 		.handle_set = set_mand_subtype,
+ 		.handle_test = test_mand_subtype, },
++	{	.arg = ARG_TTL_VALUE,
++		.arg_class = TLV_ARG,
++		.handle_get = get_mand_ttl_value,
++		.handle_set = set_mand_ttl_value,
++		.handle_test = test_mand_ttl_value, },
+ 	{	.arg = 0 }
+ };
+ 
+@@ -271,6 +281,86 @@ static int _set_mand_subtype(struct cmd *cmd, char *arg, char *argvalue,
+ 	return 0;
+ }
+ 
++static int get_mand_ttl_value(struct cmd *cmd, char *arg,
++		UNUSED char *argvalue, char *obuf, int obuf_len)
++{
++	int ttl_val;
++	char string[8], arg_path[256];
++
++	if (cmd->cmd != cmd_gettlv)
++		return cmd_invalid;
++
++	switch (cmd->tlvid) {
++	case TIME_TO_LIVE_TLV:
++		snprintf(arg_path, sizeof(arg_path), "%s%08x.%s",
++			 TLVID_PREFIX, TLVID_NOUI(TIME_TO_LIVE_TLV),
++			 ARG_TTL_VALUE);
++		get_config_setting(cmd->ifname, cmd->type, arg_path,
++				   &ttl_val, CONFIG_TYPE_INT);
++		break;
++	case INVALID_TLVID:
++		return cmd_invalid;
++	default:
++		return cmd_not_applicable;
++	}
++
++	snprintf(string, sizeof(string), "%d", ttl_val);
++	snprintf(obuf, obuf_len, "%02x%s%04x%s",
++		 (unsigned int) strlen(arg), arg,
++		 (unsigned int)strlen(string), string);
++
++	return 0;
++}
++
++static int _set_mand_ttl_value(struct cmd *cmd, char *arg, char *argvalue,
++			     char *obuf, int obuf_len, bool test)
++{
++	int ttl_val;
++	char *end;
++	char arg_path[256];
++
++	if (cmd->cmd != cmd_settlv)
++		return cmd_invalid;
++
++	switch (cmd->tlvid) {
++	case TIME_TO_LIVE_TLV:
++		break;
++	case INVALID_TLVID:
++		return cmd_invalid;
++	default:
++		return cmd_not_applicable;
++	}
++
++	ttl_val = strtoul(argvalue, &end, 0);
++	if ((*end) || (TTL_MIN_VAL > ttl_val) || (ttl_val > TTL_MAX_VAL))
++		return cmd_bad_params;
++
++	if (test)
++		return cmd_success;
++
++	snprintf(arg_path, sizeof(arg_path), "%s%08x.%s", TLVID_PREFIX,
++			cmd->tlvid, arg);
++	snprintf(obuf, obuf_len, "%s=%s\n", arg, argvalue);
++	set_config_setting(cmd->ifname, cmd->type,
++			arg_path, &ttl_val, CONFIG_TYPE_INT);
++
++	mand_update_ttl(cmd->ifname, ttl_val);
++
++	return 0;
++}
++
++static int set_mand_ttl_value(struct cmd *cmd, char *arg, char *argvalue,
++		char *obuf, int obuf_len)
++{
++	return _set_mand_ttl_value(cmd, arg, argvalue, obuf, obuf_len, false);
++}
++
++static int test_mand_ttl_value(struct cmd *cmd, char *arg, char *argvalue,
++		char *obuf, int obuf_len)
++{
++	return _set_mand_ttl_value(cmd, arg, argvalue, obuf, obuf_len, true);
++}
++
+ static int set_mand_subtype(struct cmd *cmd, char *arg, char *argvalue,
+ 			    char *obuf, int obuf_len)
+ {
+-- 
+2.1.0
+

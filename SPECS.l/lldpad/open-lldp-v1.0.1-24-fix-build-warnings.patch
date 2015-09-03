@@ -1,0 +1,59 @@
+From 2b5539cbf6baa72da39881f1d2b13aa325509998 Mon Sep 17 00:00:00 2001
+From: Chris Leech <cleech@redhat.com>
+Date: Wed, 17 Jun 2015 10:40:34 -0700
+Subject: [PATCH] fix build warnings
+
+---
+ include/lldp_8021qaz.h | 6 ------
+ lldp_util.c            | 4 ++--
+ 2 files changed, 2 insertions(+), 8 deletions(-)
+
+diff --git a/include/lldp_8021qaz.h b/include/lldp_8021qaz.h
+index 55353b8..09dee20 100644
+--- a/include/lldp_8021qaz.h
++++ b/include/lldp_8021qaz.h
+@@ -218,9 +218,6 @@ int ieee8021qaz_mod_app(struct app_tlv_head *head, int peer,
+ 			u8 prio, u8 sel, u16 proto, u32 ops);
+ int ieee8021qaz_app_sethw(char *ifname, struct app_tlv_head *head);
+ 
+-inline int get_prio_map(u32 prio_map, int tc);
+-inline void set_prio_map(u32 *prio_map, u8 prio, int tc);
+-
+ struct ieee8021qaz_tlvs *ieee8021qaz_data(const char *);
+ 
+ int ieee8021qaz_tlvs_rxed(const char *ifname);
+@@ -234,9 +231,6 @@ int ieee8021qaz_rchange(struct port *port, struct lldp_agent *,
+ void ieee8021qaz_ifup(char *ifname, struct lldp_agent *);
+ void ieee8021qaz_ifdown(char *ifname, struct lldp_agent *);
+ u8 ieee8021qaz_mibDeleteObject(struct port *port, struct lldp_agent *);
+-inline int ieee8021qaz_clif_cmd(void *data, struct sockaddr_un *from,
+-				socklen_t fromlen, char *ibuf, int ilen,
+-				char *rbuf);
+ int ieee8021qaz_check_operstate(void);
+ int get_dcbx_hw(const char *ifname, __u8 *dcbx);
+ 
+diff --git a/lldp_util.c b/lldp_util.c
+index f1fb7b9..f36033d 100644
+--- a/lldp_util.c
++++ b/lldp_util.c
+@@ -1177,7 +1177,7 @@ int check_link_status(const char *ifname)
+ int get_arg_val_list(char *ibuf, int ilen, int *ioff,
+ 			    char **args, char **argvals)
+ {
+-	u8 arglen;
++	u8 arglen = 0;
+ 	u16 argvalue_len;
+ 	int *arglens = NULL;
+ 	int *argvallens = NULL;
+@@ -1245,7 +1245,7 @@ int get_arg_val_list(char *ibuf, int ilen, int *ioff,
+ 
+ int get_arg_list(char *ibuf, int ilen, int *ioff, char **args)
+ {
+-	u8 arglen;
++	u8 arglen = 0;
+ 	int *arglens = NULL;
+ 	int *p;
+ 	int numargs;
+-- 
+2.1.0
+

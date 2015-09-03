@@ -1,0 +1,141 @@
+From 9ad33e441e018352a95621f2cecfb31234bd6b00 Mon Sep 17 00:00:00 2001
+From: Neerav Parikh <Neerav.Parikh@intel.com>
+Date: Fri, 20 Mar 2015 05:38:09 +0000
+Subject: [PATCH] lldpad: Fix DCBX event generation from lldpad
+
+Whenever there is a change in LLDP TLVs lldpad notifies clients that
+may have registered for event notification based on TLV type.
+For legacy clients like "fcoemon" lldpad by default registers them
+for any changes to CEE DCBX TLV type; when such clients attach to
+lldpad clif interface.
+
+Now, the lldpad code that registers such clients for CEE DCBX TLV
+types is not generating correct DCBX TLV module id when it registers
+these clients for change event notification. Hence, whenever there
+is a change in such TLVs lldpad determines that the client is not
+registered for CEE DCBX TLV change notification and does not notify
+these clients.
+
+These results in clients not taking appropriate actions based on
+changes to CEE DCBX TLVs.
+
+The patch fixes the issue by setting the correct module id value for
+the CEE DCBX for legacy clients like "fcoemon".
+
+Tested-by: Jack Morgan <jack.morgan@intel.com>
+Signed-off-by: Neerav Parikh <neerav.parikh@intel.com>
+Signed-off-by: John Fastabend <john.r.fastabend@intel.com>
+---
+ ctrl_iface.c | 68 +++++++++++++++++++++++++++++++-----------------------------
+ lldpad.c     |  2 ++
+ 2 files changed, 37 insertions(+), 33 deletions(-)
+
+diff --git a/ctrl_iface.c b/ctrl_iface.c
+index e4fd0b7..1734f49 100644
+--- a/ctrl_iface.c
++++ b/ctrl_iface.c
+@@ -173,46 +173,44 @@ int clif_iface_attach(struct clif_data *clifd,
+ 	 */
+ 	/* set default string to DCBX Events */
+ 	if (ibuf[1] == '\0') {
+-		u32 hex = LLDP_MOD_DCBX;
+-		tlv = malloc(sizeof(char) * (8 + 2));
+-		if (!tlv)
++		dst->tlv_types = malloc(sizeof(u32) * 2);
++		if (!dst->tlv_types)
+ 			goto err_tlv;
+-		tlv[0] = 'A';
+-		tlv[9] = 0;
+-		bin2hexstr((u8*)&hex, 4, &tlv[1], 8);
+-	} else
++		dst->tlv_types[0] = LLDP_MOD_DCBX;
++		/* Insert Termination Pattern */
++		dst->tlv_types[1] = ~0;
++	} else {
+ 		tlv = strdup(ibuf);
+-
+-	str = tlv;
+-	str++;
+-	/* Count number of TLV Modules */
+-	tokenize = strtok(str, delim);
+-	tlv_count++;
+-	do {
+-		tokenize = strtok(NULL, delim);
++		str = tlv;
++		str++;
++		/* Count number of TLV Modules */
++		tokenize = strtok(str, delim);
+ 		tlv_count++;
+-	} while (tokenize);
++		do {
++			tokenize = strtok(NULL, delim);
++			tlv_count++;
++		} while (tokenize);
+ 
+-	dst->tlv_types = malloc(sizeof(u32) * tlv_count);
+-	if (!dst->tlv_types)
+-		goto err_types;
+-	memset(dst->tlv_types, 0, sizeof(u32) * tlv_count);
+-
+-	/* Populate tlv_types from comma separated string */
+-	tokenize = strtok(str, delim);
+-	for (i=0; tokenize; i++) {
+-		char *myend;
+-
+-		dst->tlv_types[i] = strtol(tokenize, &myend, 16);
+-		if (*myend)		/* No hexnumber for module id */
++		dst->tlv_types = malloc(sizeof(u32) * tlv_count);
++		if (!dst->tlv_types)
+ 			goto err_types;
+-		tokenize = strtok(NULL, delim);
++		memset(dst->tlv_types, 0, sizeof(u32) * tlv_count);
++
++		/* Populate tlv_types from comma separated string */
++		tokenize = strtok(str, delim);
++		for (i = 0; tokenize; i++) {
++			char *myend;
++
++			dst->tlv_types[i] = strtol(tokenize, &myend, 16);
++			if (*myend)		/* No hexnumber for module id */
++				goto err_types;
++			tokenize = strtok(NULL, delim);
++		}
++		free(tlv);
++		/* Insert Termination Pattern */
++		dst->tlv_types[i] = ~0;
+ 	}
+ 
+-	/* Insert Termination Pattern */
+-	dst->tlv_types[i] = ~0;
+-	free(tlv);
+-
+ 	/* Insert new node at beginning */
+ 	dst->next = clifd->ctrl_dst;
+ 	clifd->ctrl_dst = dst;
+@@ -595,6 +593,10 @@ void ctrl_iface_send(struct clif_data *clifd, int level, u32 moduleid,
+ 						dst->addrlen);
+ 				}
+ 			} else {
++				fprintf(stderr,
++					"CTRL_IFACE monitor[%d][%d] %d:%s: ",
++					idx, clifd->ctrl_sock, dst->addrlen,
++					dst->addr.sun_path);
+ 				dst->errors = 0;
+ 			}
+ 		}
+diff --git a/lldpad.c b/lldpad.c
+index 406dcd5..72ab69d 100644
+--- a/lldpad.c
++++ b/lldpad.c
+@@ -150,6 +150,8 @@ void send_event(int level, u32 moduleid, char *msg)
+ {
+ 	struct clif_data *cd = NULL;
+ 
++	LLDPAD_DBG("lldpad: send_event level=%d moduleid=%d msg=%s\n",
++		   level, moduleid, msg);
+ 	cd = (struct clif_data *) eloop_get_user_data();
+ 	if (cd)
+ 		ctrl_iface_send(cd, level, moduleid, msg, strlen(msg));
+-- 
+2.1.0
+

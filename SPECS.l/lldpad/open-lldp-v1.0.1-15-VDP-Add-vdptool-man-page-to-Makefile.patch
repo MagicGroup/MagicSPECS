@@ -1,0 +1,27 @@
+From 5add0baccd0c888742a00af4b17754990dbcbf93 Mon Sep 17 00:00:00 2001
+From: padkrish <padkrish@cisco.com>
+Date: Wed, 21 Jan 2015 03:41:38 +0000
+Subject: [PATCH] VDP: Add vdptool man page to Makefile
+
+Signed-off-by: padkrish <padkrish@cisco.com>
+Signed-off-by: John Fastabend <john.r.fastabend@intel.com>
+---
+ Makefile.am | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/Makefile.am b/Makefile.am
+index abc9348..27dffc2 100644
+--- a/Makefile.am
++++ b/Makefile.am
+@@ -109,7 +109,7 @@ dist_man_MANS = docs/lldpad.8 docs/dcbtool.8 docs/lldptool.8 \
+ 		docs/lldptool-ets.8 docs/lldptool-pfc.8 docs/lldptool-app.8 \
+ 		docs/lldptool-evb.8 docs/lldptool-vdp.8 docs/lldptool-med.8 \
+ 		docs/lldptool-dcbx.8 \
+-		docs/lldptool-evb22.8
++		docs/lldptool-evb22.8 docs/vdptool.8
+ if BUILD_DEBUG
+ nodist_man_MANS = test/qbg22sim.1 test/vdptest.1
+ endif
+-- 
+2.1.0
+

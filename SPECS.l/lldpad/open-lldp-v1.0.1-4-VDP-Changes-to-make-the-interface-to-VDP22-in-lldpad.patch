@@ -1,0 +1,593 @@
+From e3f6d0eab95ef6b7336aaea2f44ecb79ead4216d Mon Sep 17 00:00:00 2001
+From: padkrish <padkrish@cisco.com>
+Date: Wed, 21 Jan 2015 03:37:09 +0000
+Subject: [PATCH] VDP: Changes to make the interface to VDP22 (in lldpad) as
+ TLV
+
+Changes to make the interface to VDP22 (in lldpad) as len, key, len,
+value, which is in sync with other modules of lldpad.
+
+Currently, the VSI parameters of VDP22 to LLDPAD are comma separated.
+This patch has changes to have VSI Parameters being given to VDP22 as
+Keyword_len followed by Keyword followed by value_len followed by
+value. vdptool is also modified to reflect the same. This is
+synchronous with other interface of lldpad like lldptool.
+
+As an example, if vdptool is invoked as:
+
+"vdptool -i eth2 -T  -S -V assoc -c mode=assoc -c mgrid2=0 \
+ -c typeid=0 -c typeidver=0 -c uuid=00000000-3333-2222-888a-aabbccddee72 \
+ -c hints=none -c filter=0-00:00:00:11:22:72-90001",
+
+the input to lldpad will be:
+
+"M000080c4C3020000011c04eth2020000000304mode0005assoc06mgrid20001006typeid0001009typeidver0001004uuid002400000000-3333-2222-888a-aabbccddee7205hints0004none06filter00190-00:00:00:11:22:72-90001"
+
+Another option is also added to vdptool to wait and print the response
+from the bridge.
+
+Signed-off-by: padkrish <padkrish@cisco.com>
+---
+ include/qbg_vdp22.h      |   5 ++
+ include/qbg_vdp22_clif.h |   7 +++
+ include/qbg_vdp22def.h   |  24 ++++++++
+ qbg/vdp22_cmds.c         | 125 +++++++-------------------------------
+ qbg/vdp_ascii.c          | 152 +++++++++++++++++++++++++++++++----------------
+ vdptool.c                |  53 +++++++++++------
+ 6 files changed, 193 insertions(+), 173 deletions(-)
+
+diff --git a/include/qbg_vdp22.h b/include/qbg_vdp22.h
+index b345602..45f44d5 100644
+--- a/include/qbg_vdp22.h
++++ b/include/qbg_vdp22.h
+@@ -163,6 +163,11 @@ struct vdp22_user_data {		/* Head for all VDP data */
+ 	LIST_HEAD(vdp22_head, vdp22) head;
+ };
+ 
++struct vsi_keyword_handler {
++	char *keyword;
++	enum vsi_mand_arg val;
++};
++
+ struct lldp_module *vdp22_register(void);
+ void vdp22_unregister(struct lldp_module *);
+ void vdp22_start(const char *, int);
+diff --git a/include/qbg_vdp22_clif.h b/include/qbg_vdp22_clif.h
+index 008022a..8346b98 100644
+--- a/include/qbg_vdp22_clif.h
++++ b/include/qbg_vdp22_clif.h
+@@ -29,6 +29,10 @@
+ 
+ #ifndef QBG_VDP22_CLIF_H
+ #define QBG_VDP22_CLIF_H
++
++#define OP_FID_POS 8 /* Second Byte */
++#define OP_OUI_POS 16 /* Third Byte */
++
+ typedef enum {
+ 	cmd_getstats,
+ 	cmd_gettlv,
+@@ -51,6 +55,9 @@ typedef enum {
+ 	op_config = 0x10,
+ 	op_delete = 0x20,
+ 	op_key = 0x40
++	/* Second Byte is used for signifying the number of Filter fields and
++	 * the third byte is used for signifying the number of OUI fields.
++	 */
+ } vdp22_op;
+ 
+ struct lldp_module *vdp22_cli_register(void);
+diff --git a/include/qbg_vdp22def.h b/include/qbg_vdp22def.h
+index 52f4502..21ba15d 100644
+--- a/include/qbg_vdp22def.h
++++ b/include/qbg_vdp22def.h
+@@ -72,4 +72,28 @@ enum vdp22_migration_hints {
+ 	VDP22_MIGFROM = 32		/* S-bit migrate from hint */
+ };
+ 
++enum vsi_mand_arg {
++	VSI_MODE_ARG = 0,
++	VSI_MGRID2_ARG,
++	VSI_TYPEID_ARG,
++	VSI_TYPEIDVER_ARG,
++/*	VSI_VSIIDFRMT_ARG, TODO */
++	VSI_VSIID_ARG,
++	VSI_FILTER_ARG,
++	VSI_MAND_NUM_ARG,
++	VSI_HINTS_ARG,
++	VSI_INVALID_ARG
++};
++
++#define VSI22_ARG_MODE_STR "mode"
++#define VSI22_ARG_MGRID_STR "mgrid2"
++#define VSI22_ARG_TYPEID_STR "typeid"
++#define VSI22_ARG_TYPEIDVER_STR "typeidver"
++#define VSI22_ARG_VSIIDFRMT_STR "vsiidfrmt"
++/*#define VSI22_ARG_VSIID_STR "vsiid" TODO*/
++#define VSI22_ARG_VSIID_STR "uuid"
++#define VSI22_ARG_HINTS_STR "hints"
++#define VSI22_ARG_FILTER_STR "filter"
++#define VSI22_ARG_OUI_STR "oui"
++
+ #endif
+diff --git a/qbg/vdp22_cmds.c b/qbg/vdp22_cmds.c
+index f055441..dde4669 100644
+--- a/qbg/vdp22_cmds.c
++++ b/qbg/vdp22_cmds.c
+@@ -104,37 +104,6 @@ static int handle_get_arg(struct cmd *cmd, char *arg, char *argvalue,
+ 	return status;
+ }
+ 
+-static int handle_get(struct cmd *cmd, UNUSED char *arg, char *argvalue,
+-		      char *obuf, int obuf_len)
+-{
+-	struct arg_handlers *ah;
+-	int rval;
+-	char *nbuf;
+-	int nbuf_len;
+-
+-	memset(obuf, 0, obuf_len);
+-	nbuf = obuf + 12;
+-	nbuf_len = obuf_len - 12;
+-
+-	ah = get_my_arghndl(cmd->module_id);
+-	if (!ah)
+-		return cmd_not_applicable;
+-	for (; ah->arg; ++ah) {
+-		if (strcmp(ah->arg, ARG_VDP22_VSI))
+-			continue;
+-		if (ah->handle_get && (ah->arg_class == TLV_ARG)) {
+-			rval = ah->handle_get(cmd, ah->arg, argvalue,
+-					      nbuf, nbuf_len);
+-			if (rval != cmd_success && rval != cmd_not_applicable)
+-				return rval;
+-
+-			nbuf_len -= strlen(nbuf);
+-			nbuf = nbuf + strlen(nbuf);
+-		}
+-	}
+-	return cmd_success;
+-}
+-
+ static int handle_test_arg(struct cmd *cmd, char *arg, char *argvalue,
+ 			   char *obuf, int obuf_len)
+ {
+@@ -223,17 +192,13 @@ static int handle_set_arg(struct cmd *cmd, char *arg, char *argvalue,
+  */
+ int vdp22_clif_cmd(UNUSED void *data, UNUSED struct sockaddr_un *from,
+ 		   UNUSED socklen_t fromlen,
+-		   char *ibuf, int ilen, char *rbuf, int rlen)
++		   char *ibuf, UNUSED int ilen, char *rbuf, int rlen)
+ {
+ 	struct cmd cmd;
+ 	u8 len, version;
+ 	int ioff, roff;
+ 	int rstatus = cmd_invalid;
+-	char **args;
+-	char **argvals;
+ 	bool test_failed = false;
+-	int numargs = 0;
+-	int i, offset;
+ 
+ 	memset(&cmd, 0, sizeof(cmd));
+ 	cmd.module_id = LLDP_MOD_VDP22;
+@@ -275,32 +240,6 @@ int vdp22_clif_cmd(UNUSED void *data, UNUSED struct sockaddr_un *from,
+ 	if (!(cmd.ops & op_config))
+ 		return cmd_invalid;
+ 
+-	/* Count args and argvalues */
+-	offset = ioff;
+-	for (numargs = 0; (ilen - offset) > 2; numargs++) {
+-		offset += 2;
+-		if (ilen - offset > 0) {
+-			offset++;
+-			if (ilen - offset > 4)
+-				offset += 4;
+-		}
+-	}
+-
+-	args = calloc(numargs, sizeof(char *));
+-	if (!args)
+-		return cmd_failed;
+-
+-	argvals = calloc(numargs, sizeof(char *));
+-	if (!argvals) {
+-		free(args);
+-		return cmd_failed;
+-	}
+-
+-	if ((cmd.ops & op_arg) && (cmd.ops & op_argval))
+-		numargs = get_arg_val_list(ibuf, ilen, &ioff, args, argvals);
+-	else if (cmd.ops & op_arg)
+-		numargs = get_arg_list(ibuf, ilen, &ioff, args);
+-
+ 	snprintf(rbuf, rlen, "%c%1x%02x%08x%02x%s",
+ 		 CMD_REQUEST, CLIF_MSG_VERSION,
+ 		 cmd.cmd, cmd.ops,
+@@ -309,42 +248,29 @@ int vdp22_clif_cmd(UNUSED void *data, UNUSED struct sockaddr_un *from,
+ 
+ 	/* Confirm port is a valid LLDP port */
+ 	if (!get_ifidx(cmd.ifname) || !is_valid_lldp_device(cmd.ifname)) {
+-		free(argvals);
+-		free(args);
+ 		return cmd_device_not_found;
+ 	}
+ 
+ 	snprintf(rbuf + roff, rlen - roff, "%08x", cmd.tlvid);
+ 	roff += 8;
+ 	if (cmd.cmd == cmd_gettlv) {
+-		if (!numargs)
+-			rstatus = handle_get(&cmd, NULL, NULL,
+-					     rbuf + strlen(rbuf),
+-					     rlen - strlen(rbuf));
+-		else
+-			for (i = 0; i < numargs; i++)
+-				rstatus = handle_get_arg(&cmd, args[i], NULL,
+-							 rbuf + strlen(rbuf),
+-							 rlen - strlen(rbuf));
++		rstatus = handle_get_arg(&cmd, ARG_VDP22_VSI,
++						NULL,
++						rbuf + strlen(rbuf),
++						rlen - strlen(rbuf));
+ 	} else {
+-		for (i = 0; i < numargs; i++) {
+-			rstatus = handle_test_arg(&cmd, args[i], argvals[i],
+-						  rbuf + strlen(rbuf),
+-						  rlen - strlen(rbuf));
+-			if (rstatus != cmd_not_applicable &&
+-			    rstatus != cmd_success)
+-				test_failed = true;
+-		}
++		rstatus = handle_test_arg(&cmd, ARG_VDP22_VSI,
++						ibuf + ioff,
++						rbuf + strlen(rbuf),
++						rlen - strlen(rbuf));
++		if (rstatus != cmd_not_applicable && rstatus != cmd_success)
++			test_failed = true;
+ 		if (!test_failed)
+-			for (i = 0; i < numargs; i++)
+-				rstatus = handle_set_arg(&cmd, args[i],
+-							 argvals[i],
+-							 rbuf + strlen(rbuf),
+-							 rlen - strlen(rbuf));
++			rstatus = handle_set_arg(&cmd,
++						ARG_VDP22_VSI, ibuf + ioff,
++						rbuf + strlen(rbuf),
++						rlen - strlen(rbuf));
+ 	}
+-
+-	free(argvals);
+-	free(args);
+ 	return rstatus;
+ }
+ 
+@@ -436,27 +362,16 @@ out:
+ 	return good_cmd;
+ }
+ 
+-/*
+- * Count the number of fid data fields in the argument value.
+- */
+-#define	VDP22_FID_IDX	6		/* Min index of fid data */
+-static int count_fid(char *argvalue)
+-{
+-	char *p = argvalue;
+-	int i;
+-
+-	for (i = 0; (p = strchr(p, ',')); ++i, ++p)
+-		;
+-	return i + 1 - VDP22_FID_IDX;
+-}
+-
+ static int set_arg_vsi2(struct cmd *cmd, char *argvalue, bool test)
+ {
+-	int no = count_fid(argvalue);
++	int no = (cmd->ops >> OP_FID_POS) & 0xff;
+ 
+ 	if (no <= 0)
+ 		return -EINVAL;
+-	return set_arg_vsi3(cmd, argvalue, test, no);
++	if ((cmd->ops & op_arg) && (cmd->ops & op_argval))
++		return set_arg_vsi3(cmd, argvalue, test, no);
++	else /* Not supported for now */
++		return cmd_failed;
+ }
+ 
+ static int set_arg_vsi(struct cmd *cmd, UNUSED char *arg, char *argvalue,
+diff --git a/qbg/vdp_ascii.c b/qbg/vdp_ascii.c
+index 0ace562..09e53c6 100644
+--- a/qbg/vdp_ascii.c
++++ b/qbg/vdp_ascii.c
+@@ -43,6 +43,17 @@
+ #include "qbg_vdp22.h"
+ #include "qbg_vdpnl.h"
+ #include "qbg_utils.h"
++#include "lldp_util.h"
++
++struct vsi_keyword_handler vsi_key_handle[] = {
++	{VSI22_ARG_MODE_STR, VSI_MODE_ARG},
++	{VSI22_ARG_MGRID_STR, VSI_MGRID2_ARG},
++	{VSI22_ARG_TYPEID_STR, VSI_TYPEID_ARG},
++	{VSI22_ARG_TYPEIDVER_STR, VSI_TYPEIDVER_ARG},
++/*	{VSI22_ARG_VSIIDFRMT_STR, VSI_VSIIDFRMT_ARG}, TODO*/
++	{VSI22_ARG_VSIID_STR, VSI_VSIID_ARG},
++	{VSI22_ARG_HINTS_STR, VSI_HINTS_ARG},
++	{VSI22_ARG_FILTER_STR, VSI_FILTER_ARG} };
+ 
+ /*
+  * Check if it is a UUID and consists  of hexadecimal digits and dashes only.
+@@ -253,6 +264,18 @@ static bool getmode(struct vdpnl_vsi *p, char *s)
+ 	return true;
+ }
+ 
++enum vsi_mand_arg get_keywork_val(char *keyword)
++{
++	int count, key_str_size;
++
++	key_str_size = sizeof(vsi_key_handle) / sizeof(vsi_key_handle[0]);
++	for (count = 0; count < key_str_size; count++) {
++		if (!strcmp(keyword, vsi_key_handle[count].keyword))
++			return vsi_key_handle[count].val;
++	}
++	return VSI_INVALID_ARG;
++}
++
+ /*
+  * Parse the mode parameter to create/change an VSI assoication.
+  * The format is a comma separated list of tokens:
+@@ -276,66 +299,95 @@ static bool getmode(struct vdpnl_vsi *p, char *s)
+  * mac := xx:xx:xx:xx:xx:xx
+  */
+ 
+-static int str2vdpnl(char *argvalue, struct vdpnl_vsi *vsi)
++static int str2vdpnl(char *orig_argvalue, struct vdpnl_vsi *vsi)
+ {
++	char **args;
++	char **argvals;
++	char *argvalue;
+ 	int rc = -ENOMEM;
+ 	unsigned int no;
+-	unsigned short idx;
+-	char *cmdstring, *token;
++	unsigned short idx = 0;
++	int i, ioff = 0, offset;
++	int ilen = strlen(orig_argvalue);
++	int numargs;
++	enum vsi_mand_arg vsi_key;
++	u16 vsi_mand_mask = (1 << VSI_MAND_NUM_ARG) - 1;
++	u16 num_arg_keys = 0;
+ 
+-	cmdstring = strdup(argvalue);
+-	if (!cmdstring)
+-		goto out_free;
+-	rc = -EINVAL;
+-	/* 1st field is VSI command */
+-	token = strtok(cmdstring, ",");
+-	if (!token || !getmode(vsi, token))
+-		goto out_free;
++	argvalue = strdup(orig_argvalue);
++	if (!argvalue)
++		goto out;
++	/* Count args and argvalues */
++	offset = ioff;
++	for (numargs = 0; (ilen - offset) > 2; numargs++) {
++		offset += 2;
++		if (ilen - offset > 0) {
++			offset++;
++			if (ilen - offset > 4)
++				offset += 4;
++		}
++	}
++	args = calloc(numargs, sizeof(char *));
++	if (!args)
++		goto out_argvalue;
+ 
+-	/* 2nd field is VSI Manager Identifer (16 bytes maximum) */
+-	token = strtok(NULL, ",");
+-	if (!token || !getmgr2id(vsi, token))
+-		goto out_free;
+-
+-	/* 3rd field is type identifier */
+-	token = strtok(NULL, ",");
+-	if (!token || !getnumber(token, 0, 0xffffff, &no))
+-		goto out_free;
+-	vsi->vsi_typeid = no;
+-
+-	/* 4th field is type version identifier */
+-	token = strtok(NULL, ",");
+-	if (!token || !getnumber(token, 0, 0xff, &no))
+-		goto out_free;
+-	vsi->vsi_typeversion = no;
+-
+-	/* 5th field is filter VSI UUID */
+-	token = strtok(NULL, ",");
+-	if (!token || vdp_str2uuid(vsi->vsi_uuid, token, sizeof(vsi->vsi_uuid)))
+-		goto out_free;
+-	vsi->vsi_idfmt = VDP22_ID_UUID;
+-
+-	/* 6th field is migration hints */
+-	token = strtok(NULL, ",");
+-	if (!token || !gethints(vsi, token))
+-		goto out_free;
+-
+-	/*
+-	 * 7th and remaining fields are filter information format data.
+-	 * All fields must have the same format. The first fid field determines
+-	 * the format.
+-	 */
+-	for (idx = 0, token = strtok(NULL, ","); token != NULL;
+-					++idx, token = strtok(NULL, ",")) {
+-		if (idx < vsi->macsz && !getfid(vsi, token, idx))
++	argvals = calloc(numargs, sizeof(char *));
++	if (!argvals)
++		goto out_args;
++	numargs = get_arg_val_list(argvalue, ilen, &ioff, args, argvals);
++	for (i = 0; i < numargs; i++) {
++		vsi_key = get_keywork_val(args[i]);
++		switch (vsi_key) {
++		case VSI_MODE_ARG:
++			if (!argvals[i] || !getmode(vsi, argvals[i]))
++				goto out_free;
++			break;
++		case VSI_MGRID2_ARG:
++			if (!argvals[i] || !getmgr2id(vsi, argvals[i]))
++				goto out_free;
++			break;
++		case VSI_TYPEID_ARG:
++			if (!argvals[i] ||
++				!getnumber(argvals[i], 0, 0xffffff, &no))
++				goto out_free;
++			vsi->vsi_typeid = no;
++			break;
++		case VSI_TYPEIDVER_ARG:
++			if (!argvals[i] || !getnumber(argvals[i], 0, 0xff, &no))
++				goto out_free;
++			vsi->vsi_typeversion = no;
++			break;
++		case VSI_VSIID_ARG:
++			if (!argvals[i] ||
++				vdp_str2uuid(vsi->vsi_uuid, argvals[i],
++					sizeof(vsi->vsi_uuid)))
++				goto out_free;
++			vsi->vsi_idfmt = VDP22_ID_UUID;
++			break;
++		case VSI_FILTER_ARG:
++			if (idx < vsi->macsz && !getfid(vsi, argvals[i], idx))
++				goto out_free;
++			idx++;
++			break;
++		case VSI_HINTS_ARG:
++			if (!argvals[i] || !gethints(vsi, argvals[i]))
++				goto out_free;
++			break;
++		default:
+ 			goto out_free;
++		}
++		num_arg_keys |= (1 << vsi_key);
+ 	}
+-
+ 	/* Return error if no filter information provided */
+-	if (idx)
++	if ((num_arg_keys & vsi_mand_mask) == vsi_mand_mask)
+ 		rc = 0;
+ out_free:
+-	free(cmdstring);
++	free(argvals);
++out_args:
++	free(args);
++out_argvalue:
++	free(argvalue);
++out:
+ 	return rc;
+ }
+ 
+diff --git a/vdptool.c b/vdptool.c
+index e7d384a..f506020 100644
+--- a/vdptool.c
++++ b/vdptool.c
+@@ -125,31 +125,28 @@ static int render_cmd(struct cmd *cmd, int argc, char **args, char **argvals)
+ {
+ 	int len;
+ 	int i;
++	int fid = 0, oui = 0;
+ 
+ 	len = sizeof(cmd->obuf);
+ 
++	if (cmd->cmd == cmd_settlv) {
++		for (i = 0; i < argc; i++) {
++			if (args[i]) {
++				if (!strncasecmp(args[i], "filter",
++						strlen("filter")))
++					fid++;
++				else if (!strncasecmp(args[i], "oui",
++						strlen("oui")))
++					oui++;
++			}
++		}
++	}
++	cmd->ops |= (fid << OP_FID_POS) | (oui << OP_OUI_POS);
+ 	/* all command messages begin this way */
+ 	snprintf(cmd->obuf, len, "%c%08x%c%1x%02x%08x%02x%s%02x%08x",
+ 		MOD_CMD, cmd->module_id, CMD_REQUEST, CLIF_MSG_VERSION,
+ 		cmd->cmd, cmd->ops, (unsigned int) strlen(cmd->ifname),
+ 		cmd->ifname, cmd->type, cmd->tlvid);
+-#if PADDU
+-	if (cmd->cmd == cmd_settlv) {
+-		size_t len2 = 0;
+-		/*
+-		 * Get total length and append it plus any args and argvals
+-		 * to the command message
+-		 */
+-		for (i = 0; i < argc; i++) {
+-			if (args[i])
+-				len2 += 2 + strlen(args[i]);
+-			if (argvals[i])
+-				len2 += 4 + strlen(argvals[i]);
+-		}
+-		snprintf(cmd->obuf + strlen(cmd->obuf), len - strlen(cmd->obuf),
+-			 "%04zx", len2);
+-	}
+-#endif
+ 	/* Add any args and argvals to the command message */
+ 	for (i = 0; i < argc; i++) {
+ 		if (args[i])
+@@ -710,6 +707,9 @@ static int _clif_command(struct clif *clif, char *cmd, int print)
+ 	char buf[MAX_CLIF_MSGBUF];
+ 	size_t len;
+ 	int ret;
++	int rc;
++	char reply[100];
++	size_t reply_len2 = sizeof(reply);
+ 
+ 	print_raw_message(cmd, print);
+ 
+@@ -730,6 +730,13 @@ static int _clif_command(struct clif *clif, char *cmd, int print)
+ 		buf[len] = '\0';
+ 		ret = parse_print_message(buf, print);
+ 	}
++	if (cli_attached) {
++		rc = clif_vsievt(clif, reply, &reply_len2, 5);
++		printf("\nReturn from vsievt %d ret %d Reply %s\n", rc, ret,
++			reply);
++		if (!rc)
++			printf("\nMsg is %s\n", reply);
++	}
+ 
+ 	return ret;
+ }
+@@ -854,6 +861,7 @@ static int request(struct clif *clif, int argc, char *argv[])
+ 	int numargs = 0;
+ 	char **argptr = &argv[0];
+ 	char *end;
++	char attach_str[9] = "";
+ 	int c;
+ 	int option_index;
+ 
+@@ -865,7 +873,7 @@ static int request(struct clif *clif, int argc, char *argv[])
+ 
+ 	opterr = 0;
+ 	for (;;) {
+-		c = getopt_long(argc, argv, "i:tThcnvrRpqV:",
++		c = getopt_long(argc, argv, "i:tTWhcnvrRpqV:",
+ 				lldptool_opts, &option_index);
+ 		if (c < 0)
+ 			break;
+@@ -936,6 +944,15 @@ static int request(struct clif *clif, int argc, char *argv[])
+ 		case 'v':
+ 			command.cmd = cmd_version;
+ 			break;
++		case 'W':
++			snprintf(attach_str, sizeof(attach_str), "%x",
++				LLDP_MOD_VDP22);
++			if (clif_attach(clif, attach_str) != 0) {
++				printf("Warning: Failed to attach to lldpad.\n");
++				return -1;
++			}
++			cli_attached = 1;
++			break;
+ 		default:
+ 			usage();
+ 			ret = -1;
+-- 
+2.1.0
+

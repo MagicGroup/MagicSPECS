@@ -1,0 +1,2722 @@
+From 61965537b574e8dcd1d7b61ef543ab11fcbbbe6b Mon Sep 17 00:00:00 2001
+From: Thomas Richter <tmricht@linux.vnet.ibm.com>
+Date: Wed, 21 Jan 2015 03:36:48 +0000
+Subject: [PATCH] VDP: vdptool test cases Some test cases to test the new
+ vdptool.
+
+Signed-off-by: Thomas Richter <tmricht@linux.vnet.ibm.com>
+Signed-off-by: John Fastabend <john.r.fastabend@intel.com>
+---
+ test/qbg22/vdp22/300-lldpad.conf | 55 +++++++++++++++++++++++
+ test/qbg22/vdp22/300.nlc         | 54 +++++++++++++++++++++++
+ test/qbg22/vdp22/300.vdp         | 55 +++++++++++++++++++++++
+ test/qbg22/vdp22/301-lldpad.conf | 55 +++++++++++++++++++++++
+ test/qbg22/vdp22/301.nlc         | 54 +++++++++++++++++++++++
+ test/qbg22/vdp22/301.vdp         | 55 +++++++++++++++++++++++
+ test/qbg22/vdp22/302-lldpad.conf | 55 +++++++++++++++++++++++
+ test/qbg22/vdp22/302.nlc         | 54 +++++++++++++++++++++++
+ test/qbg22/vdp22/302.vdp         | 55 +++++++++++++++++++++++
+ test/qbg22/vdp22/303-lldpad.conf | 55 +++++++++++++++++++++++
+ test/qbg22/vdp22/303.nlc         | 54 +++++++++++++++++++++++
+ test/qbg22/vdp22/303.vdp         | 55 +++++++++++++++++++++++
+ test/qbg22/vdp22/304-lldpad.conf | 55 +++++++++++++++++++++++
+ test/qbg22/vdp22/304.nlc         | 54 +++++++++++++++++++++++
+ test/qbg22/vdp22/304.vdp         | 55 +++++++++++++++++++++++
+ test/qbg22/vdp22/305-lldpad.conf | 55 +++++++++++++++++++++++
+ test/qbg22/vdp22/305.nlc         | 54 +++++++++++++++++++++++
+ test/qbg22/vdp22/305.vdp         | 55 +++++++++++++++++++++++
+ test/qbg22/vdp22/306-lldpad.conf | 55 +++++++++++++++++++++++
+ test/qbg22/vdp22/306.nlc         | 54 +++++++++++++++++++++++
+ test/qbg22/vdp22/306.vdp         | 55 +++++++++++++++++++++++
+ test/qbg22/vdp22/307-lldpad.conf | 55 +++++++++++++++++++++++
+ test/qbg22/vdp22/307.nlc         | 54 +++++++++++++++++++++++
+ test/qbg22/vdp22/307.vdp         | 55 +++++++++++++++++++++++
+ test/qbg22/vdp22/308-lldpad.conf | 55 +++++++++++++++++++++++
+ test/qbg22/vdp22/308.nlc         | 54 +++++++++++++++++++++++
+ test/qbg22/vdp22/308.vdp         | 55 +++++++++++++++++++++++
+ test/qbg22/vdp22/309-lldpad.conf | 55 +++++++++++++++++++++++
+ test/qbg22/vdp22/309.nlc         | 54 +++++++++++++++++++++++
+ test/qbg22/vdp22/309.vdp         | 55 +++++++++++++++++++++++
+ test/qbg22/vdp22/310-lldpad.conf | 55 +++++++++++++++++++++++
+ test/qbg22/vdp22/310.nlc         | 54 +++++++++++++++++++++++
+ test/qbg22/vdp22/310.vdp         | 55 +++++++++++++++++++++++
+ test/qbg22/vdp22/320-lldpad.conf | 55 +++++++++++++++++++++++
+ test/qbg22/vdp22/320.nlc         | 65 +++++++++++++++++++++++++++
+ test/qbg22/vdp22/320.vdp         | 55 +++++++++++++++++++++++
+ test/qbg22/vdp22/321-lldpad.conf | 55 +++++++++++++++++++++++
+ test/qbg22/vdp22/321.nlc         | 78 +++++++++++++++++++++++++++++++++
+ test/qbg22/vdp22/321.vdp         | 55 +++++++++++++++++++++++
+ test/qbg22/vdp22/322-lldpad.conf | 55 +++++++++++++++++++++++
+ test/qbg22/vdp22/322.nlc         | 95 ++++++++++++++++++++++++++++++++++++++++
+ test/qbg22/vdp22/322.vdp         | 55 +++++++++++++++++++++++
+ 42 files changed, 2372 insertions(+)
+ create mode 100644 test/qbg22/vdp22/300-lldpad.conf
+ create mode 100755 test/qbg22/vdp22/300.nlc
+ create mode 100644 test/qbg22/vdp22/300.vdp
+ create mode 100644 test/qbg22/vdp22/301-lldpad.conf
+ create mode 100755 test/qbg22/vdp22/301.nlc
+ create mode 100644 test/qbg22/vdp22/301.vdp
+ create mode 100644 test/qbg22/vdp22/302-lldpad.conf
+ create mode 100755 test/qbg22/vdp22/302.nlc
+ create mode 100644 test/qbg22/vdp22/302.vdp
+ create mode 100644 test/qbg22/vdp22/303-lldpad.conf
+ create mode 100755 test/qbg22/vdp22/303.nlc
+ create mode 100644 test/qbg22/vdp22/303.vdp
+ create mode 100644 test/qbg22/vdp22/304-lldpad.conf
+ create mode 100755 test/qbg22/vdp22/304.nlc
+ create mode 100644 test/qbg22/vdp22/304.vdp
+ create mode 100644 test/qbg22/vdp22/305-lldpad.conf
+ create mode 100755 test/qbg22/vdp22/305.nlc
+ create mode 100644 test/qbg22/vdp22/305.vdp
+ create mode 100644 test/qbg22/vdp22/306-lldpad.conf
+ create mode 100755 test/qbg22/vdp22/306.nlc
+ create mode 100644 test/qbg22/vdp22/306.vdp
+ create mode 100644 test/qbg22/vdp22/307-lldpad.conf
+ create mode 100755 test/qbg22/vdp22/307.nlc
+ create mode 100644 test/qbg22/vdp22/307.vdp
+ create mode 100644 test/qbg22/vdp22/308-lldpad.conf
+ create mode 100755 test/qbg22/vdp22/308.nlc
+ create mode 100644 test/qbg22/vdp22/308.vdp
+ create mode 100644 test/qbg22/vdp22/309-lldpad.conf
+ create mode 100755 test/qbg22/vdp22/309.nlc
+ create mode 100644 test/qbg22/vdp22/309.vdp
+ create mode 100644 test/qbg22/vdp22/310-lldpad.conf
+ create mode 100755 test/qbg22/vdp22/310.nlc
+ create mode 100644 test/qbg22/vdp22/310.vdp
+ create mode 100644 test/qbg22/vdp22/320-lldpad.conf
+ create mode 100755 test/qbg22/vdp22/320.nlc
+ create mode 100644 test/qbg22/vdp22/320.vdp
+ create mode 100644 test/qbg22/vdp22/321-lldpad.conf
+ create mode 100755 test/qbg22/vdp22/321.nlc
+ create mode 100644 test/qbg22/vdp22/321.vdp
+ create mode 100644 test/qbg22/vdp22/322-lldpad.conf
+ create mode 100755 test/qbg22/vdp22/322.nlc
+ create mode 100644 test/qbg22/vdp22/322.vdp
+
+diff --git a/test/qbg22/vdp22/300-lldpad.conf b/test/qbg22/vdp22/300-lldpad.conf
+new file mode 100644
+index 0000000..6027a6d
+--- /dev/null
++++ b/test/qbg22/vdp22/300-lldpad.conf
+@@ -0,0 +1,55 @@
++#
++# Test case for LLDPAD testing according to IEEE 802.1Qbg ratified standard
++#
++# Copyright (c) International Business Machines Corp., 2014
++#
++# Author(s): Thomas Richter <tmricht at linux.vnet.ibm.com>
++#
++# This program is free software; you can redistribute it and/or modify it
++# under the terms and conditions of the GNU General Public License,
++# version 2, as published by the Free Software Foundation.
++#
++# This program is distributed in the hope it will be useful, but WITHOUT
++# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
++# FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
++# more details.
++#
++# You should have received a copy of the GNU General Public License along with
++# this program; if not, write to the Free Software Foundation, Inc.,
++# 51 Franklin St - Fifth Floor, Boston, MA 02110-1301 USA.
++#
++
++# Configuration file for lldpad station mode setup.
++
++dcbx : 
++{
++  version = "1.0";
++  dcbx_version = 2;
++};
++nearest_customer_bridge : 
++{
++  veth0 : 
++  {
++    tlvid00000001 : 
++    {
++      info = "04CA802A1EE5D1";
++    };
++    tlvid00000002 : 
++    {
++      info = "03CA802A1EE5D1";
++    };
++    adminStatus = 3;
++    tlvid0080c20d : 
++    {
++      enableTx = true;
++      evbmode = "station";
++      evbrrcap = false;
++      evbrrreq = true;
++      evbgpid = false;
++      ecpretries = 3;
++      ecprte = 14;
++      vdprwd = 20;
++      vdprka = 20;
++    };
++  };
++};
+diff --git a/test/qbg22/vdp22/300.nlc b/test/qbg22/vdp22/300.nlc
+new file mode 100755
+index 0000000..ea801b2
+--- /dev/null
++++ b/test/qbg22/vdp22/300.nlc
+@@ -0,0 +1,54 @@
++#!/bin/bash
++#
++# Test case for LLDPAD VDP testing according to IEEE 802.1Qbg ratified standard
++#
++# Copyright (c) International Business Machines Corp., 2013
++#
++# Author(s): Thomas Richter <tmricht at linux.vnet.ibm.com>
++#
++# This program is free software; you can redistribute it and/or modify it
++# under the terms and conditions of the GNU General Public License,
++# version 2, as published by the Free Software Foundation.
++#
++# This program is distributed in the hope it will be useful, but WITHOUT
++# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
++# FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
++# more details.
++#
++# You should have received a copy of the GNU General Public License along with
++# this program; if not, write to the Free Software Foundation, Inc.,
++# 51 Franklin St - Fifth Floor, Boston, MA 02110-1301 USA.
++#
++
++# 
++# Thomas Richter, IBM Research & Development, Boeblingen, Germany, 20-Apr-2013
++#
++# Execute a simple assoc with wrong user input using vdptool.
++# Wrong association command
++#
++
++sleep 30	# Must: Wait some time for lldpad to start up and initialize
++outfile=$(basename $0)
++dirfile=$(dirname $0)
++cd $dirfile
++
++vsi_ok="Invalid parameters"
++reply=$(../../../vdptool -i veth0 -T -V assoc -c vsi=Xassoc,hello,1,2,001122334-455667788-99aabbccddee,none,22222-a:b:c:0:0:0)
++rc=$?
++if [ "$rc" -eq 1 ]
++then
++	if [ "$reply" != "$vsi_ok" ]
++	then
++		echo "vdptool reply mismatch"
++		echo "expected reply:$vsi_ok"
++		echo "returned reply:$reply"
++	else
++		let rc=0
++	fi
++else
++	echo "vdptool unexpected success"
++	let rc=1
++fi
++
++sleep 5
++exit $rc
+diff --git a/test/qbg22/vdp22/300.vdp b/test/qbg22/vdp22/300.vdp
+new file mode 100644
+index 0000000..cb9bacd
+--- /dev/null
++++ b/test/qbg22/vdp22/300.vdp
+@@ -0,0 +1,55 @@
++#
++# Test case for LLDPAD testing according to IEEE 802.1Qbg ratified standard
++#
++# Copyright (c) International Business Machines Corp., 2014
++#
++# Author(s): Thomas Richter <tmricht at linux.vnet.ibm.com>
++#
++# This program is free software; you can redistribute it and/or modify it
++# under the terms and conditions of the GNU General Public License,
++# version 2, as published by the Free Software Foundation.
++#
++# This program is distributed in the hope it will be useful, but WITHOUT
++# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
++# FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
++# more details.
++#
++# You should have received a copy of the GNU General Public License along with
++# this program; if not, write to the Free Software Foundation, Inc.,
++# 51 Franklin St - Fifth Floor, Boston, MA 02110-1301 USA.
++#
++
++# Configuration file for lldpad bridge mode setup.
++
++dcbx : 
++{
++  version = "1.0";
++  dcbx_version = 2;
++};
++nearest_customer_bridge : 
++{
++  veth2 : 
++  {
++    tlvid00000001 : 
++    {
++      info = "041E64AF9A93DF";
++    };
++    tlvid00000002 : 
++    {
++      info = "031E64AF9A93DF";
++    };
++    adminStatus = 3;
++    tlvid0080c20d : 
++    {
++      enableTx = true;
++      evbmode = "bridge";
++      evbrrcap = true;
++      evbrrreq = true;
++      evbgpid = false;
++      ecpretries = 3;
++      ecprte = 14;
++      vdprwd = 20;
++      vdprka = 20;
++    };
++  };
++};
+diff --git a/test/qbg22/vdp22/301-lldpad.conf b/test/qbg22/vdp22/301-lldpad.conf
+new file mode 100644
+index 0000000..11ed7a2
+--- /dev/null
++++ b/test/qbg22/vdp22/301-lldpad.conf
+@@ -0,0 +1,55 @@
++#
++# Test case for LLDPAD testing according to IEEE 802.1Qbg ratified standard
++#
++# Copyright (c) International Business Machines Corp., 2014
++#
++# Author(s): Thomas Richter <tmricht at linux.vnet.ibm.com>
++#
++# This program is free software; you can redistribute it and/or modify it
++# under the terms and conditions of the GNU General Public License,
++# version 2, as published by the Free Software Foundation.
++#
++# This program is distributed in the hope it will be useful, but WITHOUT
++# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
++# FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
++# more details.
++#
++# You should have received a copy of the GNU General Public License along with
++# this program; if not, write to the Free Software Foundation, Inc.,
++# 51 Franklin St - Fifth Floor, Boston, MA 02110-1301 USA.
++#
++
++# Configuration file for lldpad station mode setup.
++
++dcbx : 
++{
++  version = "1.0";
++  dcbx_version = 2;
++};
++nearest_customer_bridge : 
++{
++  veth0 : 
++  {
++    tlvid00000001 : 
++    {
++      info = "04C68829509676";
++    };
++    tlvid00000002 : 
++    {
++      info = "03C68829509676";
++    };
++    adminStatus = 3;
++    tlvid0080c20d : 
++    {
++      enableTx = true;
++      evbmode = "station";
++      evbrrcap = false;
++      evbrrreq = true;
++      evbgpid = false;
++      ecpretries = 3;
++      ecprte = 14;
++      vdprwd = 20;
++      vdprka = 20;
++    };
++  };
++};
+diff --git a/test/qbg22/vdp22/301.nlc b/test/qbg22/vdp22/301.nlc
+new file mode 100755
+index 0000000..90409d7
+--- /dev/null
++++ b/test/qbg22/vdp22/301.nlc
+@@ -0,0 +1,54 @@
++#!/bin/bash
++#
++# Test case for LLDPAD VDP testing according to IEEE 802.1Qbg ratified standard
++#
++# Copyright (c) International Business Machines Corp., 2014
++#
++# Author(s): Thomas Richter <tmricht at linux.vnet.ibm.com>
++#
++# This program is free software; you can redistribute it and/or modify it
++# under the terms and conditions of the GNU General Public License,
++# version 2, as published by the Free Software Foundation.
++#
++# This program is distributed in the hope it will be useful, but WITHOUT
++# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
++# FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
++# more details.
++#
++# You should have received a copy of the GNU General Public License along with
++# this program; if not, write to the Free Software Foundation, Inc.,
++# 51 Franklin St - Fifth Floor, Boston, MA 02110-1301 USA.
++#
++
++# 
++# Thomas Richter, IBM Research & Development, Boeblingen, Germany, 20-Apr-2013
++#
++# Execute a simple assoc with wrong user input using vdptool.
++# Wrong manager identifier
++#
++
++sleep 30	# Must: Wait some time for lldpad to start up and initialize
++outfile=$(basename $0)
++dirfile=$(dirname $0)
++cd $dirfile
++
++vsi_ok="Invalid parameters"
++reply=$(../../../vdptool -i veth0 -T -V assoc -c vsi=assoc,\\hello,1,2,001122334-455667788-99aabbccddee,none,22222-a:b:c:0:0:0)
++rc=$?
++if [ "$rc" -eq 1 ]
++then
++	if [ "$reply" != "$vsi_ok" ]
++	then
++		echo "vdptool reply mismatch"
++		echo "expected reply:$vsi_ok"
++		echo "returned reply:$reply"
++	else
++		let rc=0
++	fi
++else
++	echo "vdptool unexpected success"
++	let rc=1
++fi
++
++sleep 5
++exit $rc
+diff --git a/test/qbg22/vdp22/301.vdp b/test/qbg22/vdp22/301.vdp
+new file mode 100644
+index 0000000..0c7e96a
+--- /dev/null
++++ b/test/qbg22/vdp22/301.vdp
+@@ -0,0 +1,55 @@
++#
++# Test case for LLDPAD testing according to IEEE 802.1Qbg ratified standard
++#
++# Copyright (c) International Business Machines Corp., 2014
++#
++# Author(s): Thomas Richter <tmricht at linux.vnet.ibm.com>
++#
++# This program is free software; you can redistribute it and/or modify it
++# under the terms and conditions of the GNU General Public License,
++# version 2, as published by the Free Software Foundation.
++#
++# This program is distributed in the hope it will be useful, but WITHOUT
++# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
++# FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
++# more details.
++#
++# You should have received a copy of the GNU General Public License along with
++# this program; if not, write to the Free Software Foundation, Inc.,
++# 51 Franklin St - Fifth Floor, Boston, MA 02110-1301 USA.
++#
++
++# Configuration file for lldpad bridge mode setup.
++
++dcbx : 
++{
++  version = "1.0";
++  dcbx_version = 2;
++};
++nearest_customer_bridge : 
++{
++  veth2 : 
++  {
++    tlvid00000001 : 
++    {
++      info = "04C68829509676";
++    };
++    tlvid00000002 : 
++    {
++      info = "03C68829509676";
++    };
++    adminStatus = 3;
++    tlvid0080c20d : 
++    {
++      enableTx = true;
++      evbmode = "bridge";
++      evbrrcap = true;
++      evbrrreq = true;
++      evbgpid = false;
++      ecpretries = 3;
++      ecprte = 14;
++      vdprwd = 20;
++      vdprka = 20;
++    };
++  };
++};
+diff --git a/test/qbg22/vdp22/302-lldpad.conf b/test/qbg22/vdp22/302-lldpad.conf
+new file mode 100644
+index 0000000..11ed7a2
+--- /dev/null
++++ b/test/qbg22/vdp22/302-lldpad.conf
+@@ -0,0 +1,55 @@
++#
++# Test case for LLDPAD testing according to IEEE 802.1Qbg ratified standard
++#
++# Copyright (c) International Business Machines Corp., 2014
++#
++# Author(s): Thomas Richter <tmricht at linux.vnet.ibm.com>
++#
++# This program is free software; you can redistribute it and/or modify it
++# under the terms and conditions of the GNU General Public License,
++# version 2, as published by the Free Software Foundation.
++#
++# This program is distributed in the hope it will be useful, but WITHOUT
++# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
++# FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
++# more details.
++#
++# You should have received a copy of the GNU General Public License along with
++# this program; if not, write to the Free Software Foundation, Inc.,
++# 51 Franklin St - Fifth Floor, Boston, MA 02110-1301 USA.
++#
++
++# Configuration file for lldpad station mode setup.
++
++dcbx : 
++{
++  version = "1.0";
++  dcbx_version = 2;
++};
++nearest_customer_bridge : 
++{
++  veth0 : 
++  {
++    tlvid00000001 : 
++    {
++      info = "04C68829509676";
++    };
++    tlvid00000002 : 
++    {
++      info = "03C68829509676";
++    };
++    adminStatus = 3;
++    tlvid0080c20d : 
++    {
++      enableTx = true;
++      evbmode = "station";
++      evbrrcap = false;
++      evbrrreq = true;
++      evbgpid = false;
++      ecpretries = 3;
++      ecprte = 14;
++      vdprwd = 20;
++      vdprka = 20;
++    };
++  };
++};
+diff --git a/test/qbg22/vdp22/302.nlc b/test/qbg22/vdp22/302.nlc
+new file mode 100755
+index 0000000..1f0dfed
+--- /dev/null
++++ b/test/qbg22/vdp22/302.nlc
+@@ -0,0 +1,54 @@
++#!/bin/bash
++#
++# Test case for LLDPAD VDP testing according to IEEE 802.1Qbg ratified standard
++#
++# Copyright (c) International Business Machines Corp., 2014
++#
++# Author(s): Thomas Richter <tmricht at linux.vnet.ibm.com>
++#
++# This program is free software; you can redistribute it and/or modify it
++# under the terms and conditions of the GNU General Public License,
++# version 2, as published by the Free Software Foundation.
++#
++# This program is distributed in the hope it will be useful, but WITHOUT
++# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
++# FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
++# more details.
++#
++# You should have received a copy of the GNU General Public License along with
++# this program; if not, write to the Free Software Foundation, Inc.,
++# 51 Franklin St - Fifth Floor, Boston, MA 02110-1301 USA.
++#
++
++# 
++# Thomas Richter, IBM Research & Development, Boeblingen, Germany, 20-Apr-2013
++#
++# Execute a simple assoc with wrong user input using vdptool.
++# Wrong type identifier
++#
++
++sleep 30	# Must: Wait some time for lldpad to start up and initialize
++outfile=$(basename $0)
++dirfile=$(dirname $0)
++cd $dirfile
++
++vsi_ok="Invalid parameters"
++reply=$(../../../vdptool -i veth0 -T -V assoc -c vsi=assoc,hello,1000000999,2,001122334-455667788-99aabbccddee,none,22222-a:b:c:0:0:0)
++rc=$?
++if [ "$rc" -eq 1 ]
++then
++	if [ "$reply" != "$vsi_ok" ]
++	then
++		echo "vdptool reply mismatch"
++		echo "expected reply:$vsi_ok"
++		echo "returned reply:$reply"
++	else
++		let rc=0
++	fi
++else
++	echo "vdptool unexpected success"
++	let rc=1
++fi
++
++sleep 5
++exit $rc
+diff --git a/test/qbg22/vdp22/302.vdp b/test/qbg22/vdp22/302.vdp
+new file mode 100644
+index 0000000..0c7e96a
+--- /dev/null
++++ b/test/qbg22/vdp22/302.vdp
+@@ -0,0 +1,55 @@
++#
++# Test case for LLDPAD testing according to IEEE 802.1Qbg ratified standard
++#
++# Copyright (c) International Business Machines Corp., 2014
++#
++# Author(s): Thomas Richter <tmricht at linux.vnet.ibm.com>
++#
++# This program is free software; you can redistribute it and/or modify it
++# under the terms and conditions of the GNU General Public License,
++# version 2, as published by the Free Software Foundation.
++#
++# This program is distributed in the hope it will be useful, but WITHOUT
++# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
++# FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
++# more details.
++#
++# You should have received a copy of the GNU General Public License along with
++# this program; if not, write to the Free Software Foundation, Inc.,
++# 51 Franklin St - Fifth Floor, Boston, MA 02110-1301 USA.
++#
++
++# Configuration file for lldpad bridge mode setup.
++
++dcbx : 
++{
++  version = "1.0";
++  dcbx_version = 2;
++};
++nearest_customer_bridge : 
++{
++  veth2 : 
++  {
++    tlvid00000001 : 
++    {
++      info = "04C68829509676";
++    };
++    tlvid00000002 : 
++    {
++      info = "03C68829509676";
++    };
++    adminStatus = 3;
++    tlvid0080c20d : 
++    {
++      enableTx = true;
++      evbmode = "bridge";
++      evbrrcap = true;
++      evbrrreq = true;
++      evbgpid = false;
++      ecpretries = 3;
++      ecprte = 14;
++      vdprwd = 20;
++      vdprka = 20;
++    };
++  };
++};
+diff --git a/test/qbg22/vdp22/303-lldpad.conf b/test/qbg22/vdp22/303-lldpad.conf
+new file mode 100644
+index 0000000..11ed7a2
+--- /dev/null
++++ b/test/qbg22/vdp22/303-lldpad.conf
+@@ -0,0 +1,55 @@
++#
++# Test case for LLDPAD testing according to IEEE 802.1Qbg ratified standard
++#
++# Copyright (c) International Business Machines Corp., 2014
++#
++# Author(s): Thomas Richter <tmricht at linux.vnet.ibm.com>
++#
++# This program is free software; you can redistribute it and/or modify it
++# under the terms and conditions of the GNU General Public License,
++# version 2, as published by the Free Software Foundation.
++#
++# This program is distributed in the hope it will be useful, but WITHOUT
++# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
++# FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
++# more details.
++#
++# You should have received a copy of the GNU General Public License along with
++# this program; if not, write to the Free Software Foundation, Inc.,
++# 51 Franklin St - Fifth Floor, Boston, MA 02110-1301 USA.
++#
++
++# Configuration file for lldpad station mode setup.
++
++dcbx : 
++{
++  version = "1.0";
++  dcbx_version = 2;
++};
++nearest_customer_bridge : 
++{
++  veth0 : 
++  {
++    tlvid00000001 : 
++    {
++      info = "04C68829509676";
++    };
++    tlvid00000002 : 
++    {
++      info = "03C68829509676";
++    };
++    adminStatus = 3;
++    tlvid0080c20d : 
++    {
++      enableTx = true;
++      evbmode = "station";
++      evbrrcap = false;
++      evbrrreq = true;
++      evbgpid = false;
++      ecpretries = 3;
++      ecprte = 14;
++      vdprwd = 20;
++      vdprka = 20;
++    };
++  };
++};
+diff --git a/test/qbg22/vdp22/303.nlc b/test/qbg22/vdp22/303.nlc
+new file mode 100755
+index 0000000..b40e6c6
+--- /dev/null
++++ b/test/qbg22/vdp22/303.nlc
+@@ -0,0 +1,54 @@
++#!/bin/bash
++#
++# Test case for LLDPAD VDP testing according to IEEE 802.1Qbg ratified standard
++#
++# Copyright (c) International Business Machines Corp., 2014
++#
++# Author(s): Thomas Richter <tmricht at linux.vnet.ibm.com>
++#
++# This program is free software; you can redistribute it and/or modify it
++# under the terms and conditions of the GNU General Public License,
++# version 2, as published by the Free Software Foundation.
++#
++# This program is distributed in the hope it will be useful, but WITHOUT
++# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
++# FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
++# more details.
++#
++# You should have received a copy of the GNU General Public License along with
++# this program; if not, write to the Free Software Foundation, Inc.,
++# 51 Franklin St - Fifth Floor, Boston, MA 02110-1301 USA.
++#
++
++# 
++# Thomas Richter, IBM Research & Development, Boeblingen, Germany, 20-Apr-2013
++#
++# Execute a simple assoc with wrong user input using vdptool.
++# Wrong typeidversion
++#
++
++sleep 30	# Must: Wait some time for lldpad to start up and initialize
++outfile=$(basename $0)
++dirfile=$(dirname $0)
++cd $dirfile
++
++vsi_ok="Invalid parameters"
++reply=$(../../../vdptool -i veth0 -T -V assoc -c vsi=assoc,hello,1,257,001122334-455667788-99aabbccddee,none,22222-a:b:c:0:0:0)
++rc=$?
++if [ "$rc" -eq 1 ]
++then
++	if [ "$reply" != "$vsi_ok" ]
++	then
++		echo "vdptool reply mismatch"
++		echo "expected reply:$vsi_ok"
++		echo "returned reply:$reply"
++	else
++		let rc=0
++	fi
++else
++	echo "vdptool unexpected success"
++	let rc=1
++fi
++
++sleep 5
++exit $rc
+diff --git a/test/qbg22/vdp22/303.vdp b/test/qbg22/vdp22/303.vdp
+new file mode 100644
+index 0000000..0c7e96a
+--- /dev/null
++++ b/test/qbg22/vdp22/303.vdp
+@@ -0,0 +1,55 @@
++#
++# Test case for LLDPAD testing according to IEEE 802.1Qbg ratified standard
++#
++# Copyright (c) International Business Machines Corp., 2014
++#
++# Author(s): Thomas Richter <tmricht at linux.vnet.ibm.com>
++#
++# This program is free software; you can redistribute it and/or modify it
++# under the terms and conditions of the GNU General Public License,
++# version 2, as published by the Free Software Foundation.
++#
++# This program is distributed in the hope it will be useful, but WITHOUT
++# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
++# FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
++# more details.
++#
++# You should have received a copy of the GNU General Public License along with
++# this program; if not, write to the Free Software Foundation, Inc.,
++# 51 Franklin St - Fifth Floor, Boston, MA 02110-1301 USA.
++#
++
++# Configuration file for lldpad bridge mode setup.
++
++dcbx : 
++{
++  version = "1.0";
++  dcbx_version = 2;
++};
++nearest_customer_bridge : 
++{
++  veth2 : 
++  {
++    tlvid00000001 : 
++    {
++      info = "04C68829509676";
++    };
++    tlvid00000002 : 
++    {
++      info = "03C68829509676";
++    };
++    adminStatus = 3;
++    tlvid0080c20d : 
++    {
++      enableTx = true;
++      evbmode = "bridge";
++      evbrrcap = true;
++      evbrrreq = true;
++      evbgpid = false;
++      ecpretries = 3;
++      ecprte = 14;
++      vdprwd = 20;
++      vdprka = 20;
++    };
++  };
++};
+diff --git a/test/qbg22/vdp22/304-lldpad.conf b/test/qbg22/vdp22/304-lldpad.conf
+new file mode 100644
+index 0000000..11ed7a2
+--- /dev/null
++++ b/test/qbg22/vdp22/304-lldpad.conf
+@@ -0,0 +1,55 @@
++#
++# Test case for LLDPAD testing according to IEEE 802.1Qbg ratified standard
++#
++# Copyright (c) International Business Machines Corp., 2014
++#
++# Author(s): Thomas Richter <tmricht at linux.vnet.ibm.com>
++#
++# This program is free software; you can redistribute it and/or modify it
++# under the terms and conditions of the GNU General Public License,
++# version 2, as published by the Free Software Foundation.
++#
++# This program is distributed in the hope it will be useful, but WITHOUT
++# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
++# FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
++# more details.
++#
++# You should have received a copy of the GNU General Public License along with
++# this program; if not, write to the Free Software Foundation, Inc.,
++# 51 Franklin St - Fifth Floor, Boston, MA 02110-1301 USA.
++#
++
++# Configuration file for lldpad station mode setup.
++
++dcbx : 
++{
++  version = "1.0";
++  dcbx_version = 2;
++};
++nearest_customer_bridge : 
++{
++  veth0 : 
++  {
++    tlvid00000001 : 
++    {
++      info = "04C68829509676";
++    };
++    tlvid00000002 : 
++    {
++      info = "03C68829509676";
++    };
++    adminStatus = 3;
++    tlvid0080c20d : 
++    {
++      enableTx = true;
++      evbmode = "station";
++      evbrrcap = false;
++      evbrrreq = true;
++      evbgpid = false;
++      ecpretries = 3;
++      ecprte = 14;
++      vdprwd = 20;
++      vdprka = 20;
++    };
++  };
++};
+diff --git a/test/qbg22/vdp22/304.nlc b/test/qbg22/vdp22/304.nlc
+new file mode 100755
+index 0000000..3bae87e
+--- /dev/null
++++ b/test/qbg22/vdp22/304.nlc
+@@ -0,0 +1,54 @@
++#!/bin/bash
++#
++# Test case for LLDPAD VDP testing according to IEEE 802.1Qbg ratified standard
++#
++# Copyright (c) International Business Machines Corp., 2014
++#
++# Author(s): Thomas Richter <tmricht at linux.vnet.ibm.com>
++#
++# This program is free software; you can redistribute it and/or modify it
++# under the terms and conditions of the GNU General Public License,
++# version 2, as published by the Free Software Foundation.
++#
++# This program is distributed in the hope it will be useful, but WITHOUT
++# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
++# FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
++# more details.
++#
++# You should have received a copy of the GNU General Public License along with
++# this program; if not, write to the Free Software Foundation, Inc.,
++# 51 Franklin St - Fifth Floor, Boston, MA 02110-1301 USA.
++#
++
++# 
++# Thomas Richter, IBM Research & Development, Boeblingen, Germany, 20-Apr-2013
++#
++# Execute a simple assoc with wrong user input using vdptool.
++# Wrong hints
++#
++
++sleep 30	# Must: Wait some time for lldpad to start up and initialize
++outfile=$(basename $0)
++dirfile=$(dirname $0)
++cd $dirfile
++
++vsi_ok="Invalid parameters"
++reply=$(../../../vdptool -i veth0 -T -V assoc -c vsi=assoc,hello,1,255,001122334-455667788-99aabbccddee,nix,22222-a:b:c:0:0:0)
++rc=$?
++if [ "$rc" -eq 1 ]
++then
++	if [ "$reply" != "$vsi_ok" ]
++	then
++		echo "vdptool reply mismatch"
++		echo "expected reply:$vsi_ok"
++		echo "returned reply:$reply"
++	else
++		let rc=0
++	fi
++else
++	echo "vdptool unexpected success"
++	let rc=1
++fi
++
++sleep 5
++exit $rc
+diff --git a/test/qbg22/vdp22/304.vdp b/test/qbg22/vdp22/304.vdp
+new file mode 100644
+index 0000000..0c7e96a
+--- /dev/null
++++ b/test/qbg22/vdp22/304.vdp
+@@ -0,0 +1,55 @@
++#
++# Test case for LLDPAD testing according to IEEE 802.1Qbg ratified standard
++#
++# Copyright (c) International Business Machines Corp., 2014
++#
++# Author(s): Thomas Richter <tmricht at linux.vnet.ibm.com>
++#
++# This program is free software; you can redistribute it and/or modify it
++# under the terms and conditions of the GNU General Public License,
++# version 2, as published by the Free Software Foundation.
++#
++# This program is distributed in the hope it will be useful, but WITHOUT
++# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
++# FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
++# more details.
++#
++# You should have received a copy of the GNU General Public License along with
++# this program; if not, write to the Free Software Foundation, Inc.,
++# 51 Franklin St - Fifth Floor, Boston, MA 02110-1301 USA.
++#
++
++# Configuration file for lldpad bridge mode setup.
++
++dcbx : 
++{
++  version = "1.0";
++  dcbx_version = 2;
++};
++nearest_customer_bridge : 
++{
++  veth2 : 
++  {
++    tlvid00000001 : 
++    {
++      info = "04C68829509676";
++    };
++    tlvid00000002 : 
++    {
++      info = "03C68829509676";
++    };
++    adminStatus = 3;
++    tlvid0080c20d : 
++    {
++      enableTx = true;
++      evbmode = "bridge";
++      evbrrcap = true;
++      evbrrreq = true;
++      evbgpid = false;
++      ecpretries = 3;
++      ecprte = 14;
++      vdprwd = 20;
++      vdprka = 20;
++    };
++  };
++};
+diff --git a/test/qbg22/vdp22/305-lldpad.conf b/test/qbg22/vdp22/305-lldpad.conf
+new file mode 100644
+index 0000000..11ed7a2
+--- /dev/null
++++ b/test/qbg22/vdp22/305-lldpad.conf
+@@ -0,0 +1,55 @@
++#
++# Test case for LLDPAD testing according to IEEE 802.1Qbg ratified standard
++#
++# Copyright (c) International Business Machines Corp., 2014
++#
++# Author(s): Thomas Richter <tmricht at linux.vnet.ibm.com>
++#
++# This program is free software; you can redistribute it and/or modify it
++# under the terms and conditions of the GNU General Public License,
++# version 2, as published by the Free Software Foundation.
++#
++# This program is distributed in the hope it will be useful, but WITHOUT
++# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
++# FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
++# more details.
++#
++# You should have received a copy of the GNU General Public License along with
++# this program; if not, write to the Free Software Foundation, Inc.,
++# 51 Franklin St - Fifth Floor, Boston, MA 02110-1301 USA.
++#
++
++# Configuration file for lldpad station mode setup.
++
++dcbx : 
++{
++  version = "1.0";
++  dcbx_version = 2;
++};
++nearest_customer_bridge : 
++{
++  veth0 : 
++  {
++    tlvid00000001 : 
++    {
++      info = "04C68829509676";
++    };
++    tlvid00000002 : 
++    {
++      info = "03C68829509676";
++    };
++    adminStatus = 3;
++    tlvid0080c20d : 
++    {
++      enableTx = true;
++      evbmode = "station";
++      evbrrcap = false;
++      evbrrreq = true;
++      evbgpid = false;
++      ecpretries = 3;
++      ecprte = 14;
++      vdprwd = 20;
++      vdprka = 20;
++    };
++  };
++};
+diff --git a/test/qbg22/vdp22/305.nlc b/test/qbg22/vdp22/305.nlc
+new file mode 100755
+index 0000000..ae951e1
+--- /dev/null
++++ b/test/qbg22/vdp22/305.nlc
+@@ -0,0 +1,54 @@
++#!/bin/bash
++#
++# Test case for LLDPAD VDP testing according to IEEE 802.1Qbg ratified standard
++#
++# Copyright (c) International Business Machines Corp., 2014
++#
++# Author(s): Thomas Richter <tmricht at linux.vnet.ibm.com>
++#
++# This program is free software; you can redistribute it and/or modify it
++# under the terms and conditions of the GNU General Public License,
++# version 2, as published by the Free Software Foundation.
++#
++# This program is distributed in the hope it will be useful, but WITHOUT
++# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
++# FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
++# more details.
++#
++# You should have received a copy of the GNU General Public License along with
++# this program; if not, write to the Free Software Foundation, Inc.,
++# 51 Franklin St - Fifth Floor, Boston, MA 02110-1301 USA.
++#
++
++# 
++# Thomas Richter, IBM Research & Development, Boeblingen, Germany, 20-Apr-2013
++#
++# Execute a simple assoc with wrong user input using vdptool.
++# FID missing
++#
++
++sleep 30	# Must: Wait some time for lldpad to start up and initialize
++outfile=$(basename $0)
++dirfile=$(dirname $0)
++cd $dirfile
++
++vsi_ok="Unknown status"
++reply=$(../../../vdptool -i veth0 -T -V deassoc -c vsi=deassoc,hello,1,254,001122334-455667788-99aabbccddee,-)
++rc=$?
++if [ "$rc" -eq 1 ]
++then
++	if [ "$reply" != "$vsi_ok" ]
++	then
++		echo "vdptool reply mismatch"
++		echo "expected reply:$vsi_ok"
++		echo "returned reply:$reply"
++	else
++		let rc=0
++	fi
++else
++	echo "vdptool unexpected success"
++	let rc=1
++fi
++
++sleep 5
++exit $rc
+diff --git a/test/qbg22/vdp22/305.vdp b/test/qbg22/vdp22/305.vdp
+new file mode 100644
+index 0000000..0c7e96a
+--- /dev/null
++++ b/test/qbg22/vdp22/305.vdp
+@@ -0,0 +1,55 @@
++#
++# Test case for LLDPAD testing according to IEEE 802.1Qbg ratified standard
++#
++# Copyright (c) International Business Machines Corp., 2014
++#
++# Author(s): Thomas Richter <tmricht at linux.vnet.ibm.com>
++#
++# This program is free software; you can redistribute it and/or modify it
++# under the terms and conditions of the GNU General Public License,
++# version 2, as published by the Free Software Foundation.
++#
++# This program is distributed in the hope it will be useful, but WITHOUT
++# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
++# FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
++# more details.
++#
++# You should have received a copy of the GNU General Public License along with
++# this program; if not, write to the Free Software Foundation, Inc.,
++# 51 Franklin St - Fifth Floor, Boston, MA 02110-1301 USA.
++#
++
++# Configuration file for lldpad bridge mode setup.
++
++dcbx : 
++{
++  version = "1.0";
++  dcbx_version = 2;
++};
++nearest_customer_bridge : 
++{
++  veth2 : 
++  {
++    tlvid00000001 : 
++    {
++      info = "04C68829509676";
++    };
++    tlvid00000002 : 
++    {
++      info = "03C68829509676";
++    };
++    adminStatus = 3;
++    tlvid0080c20d : 
++    {
++      enableTx = true;
++      evbmode = "bridge";
++      evbrrcap = true;
++      evbrrreq = true;
++      evbgpid = false;
++      ecpretries = 3;
++      ecprte = 14;
++      vdprwd = 20;
++      vdprka = 20;
++    };
++  };
++};
+diff --git a/test/qbg22/vdp22/306-lldpad.conf b/test/qbg22/vdp22/306-lldpad.conf
+new file mode 100644
+index 0000000..11ed7a2
+--- /dev/null
++++ b/test/qbg22/vdp22/306-lldpad.conf
+@@ -0,0 +1,55 @@
++#
++# Test case for LLDPAD testing according to IEEE 802.1Qbg ratified standard
++#
++# Copyright (c) International Business Machines Corp., 2014
++#
++# Author(s): Thomas Richter <tmricht at linux.vnet.ibm.com>
++#
++# This program is free software; you can redistribute it and/or modify it
++# under the terms and conditions of the GNU General Public License,
++# version 2, as published by the Free Software Foundation.
++#
++# This program is distributed in the hope it will be useful, but WITHOUT
++# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
++# FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
++# more details.
++#
++# You should have received a copy of the GNU General Public License along with
++# this program; if not, write to the Free Software Foundation, Inc.,
++# 51 Franklin St - Fifth Floor, Boston, MA 02110-1301 USA.
++#
++
++# Configuration file for lldpad station mode setup.
++
++dcbx : 
++{
++  version = "1.0";
++  dcbx_version = 2;
++};
++nearest_customer_bridge : 
++{
++  veth0 : 
++  {
++    tlvid00000001 : 
++    {
++      info = "04C68829509676";
++    };
++    tlvid00000002 : 
++    {
++      info = "03C68829509676";
++    };
++    adminStatus = 3;
++    tlvid0080c20d : 
++    {
++      enableTx = true;
++      evbmode = "station";
++      evbrrcap = false;
++      evbrrreq = true;
++      evbgpid = false;
++      ecpretries = 3;
++      ecprte = 14;
++      vdprwd = 20;
++      vdprka = 20;
++    };
++  };
++};
+diff --git a/test/qbg22/vdp22/306.nlc b/test/qbg22/vdp22/306.nlc
+new file mode 100755
+index 0000000..817a35b
+--- /dev/null
++++ b/test/qbg22/vdp22/306.nlc
+@@ -0,0 +1,54 @@
++#!/bin/bash
++#
++# Test case for LLDPAD VDP testing according to IEEE 802.1Qbg ratified standard
++#
++# Copyright (c) International Business Machines Corp., 2014
++#
++# Author(s): Thomas Richter <tmricht at linux.vnet.ibm.com>
++#
++# This program is free software; you can redistribute it and/or modify it
++# under the terms and conditions of the GNU General Public License,
++# version 2, as published by the Free Software Foundation.
++#
++# This program is distributed in the hope it will be useful, but WITHOUT
++# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
++# FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
++# more details.
++#
++# You should have received a copy of the GNU General Public License along with
++# this program; if not, write to the Free Software Foundation, Inc.,
++# 51 Franklin St - Fifth Floor, Boston, MA 02110-1301 USA.
++#
++
++# 
++# Thomas Richter, IBM Research & Development, Boeblingen, Germany, 20-Apr-2013
++#
++# Execute a simple assoc with wrong user input using vdptool.
++# FID bad vlan
++#
++
++sleep 30	# Must: Wait some time for lldpad to start up and initialize
++outfile=$(basename $0)
++dirfile=$(dirname $0)
++cd $dirfile
++
++vsi_ok="Invalid parameters"
++reply=$(../../../vdptool -i veth0 -T -V deassoc -c vsi=deassoc,hello,1,253,001122334-455667788-99aabbccddee,-,65536)
++rc=$?
++if [ "$rc" -eq 1 ]
++then
++	if [ "$reply" != "$vsi_ok" ]
++	then
++		echo "vdptool reply mismatch"
++		echo "expected reply:$vsi_ok"
++		echo "returned reply:$reply"
++	else
++		let rc=0
++	fi
++else
++	echo "vdptool unexpected success"
++	let rc=1
++fi
++
++sleep 5
++exit $rc
+diff --git a/test/qbg22/vdp22/306.vdp b/test/qbg22/vdp22/306.vdp
+new file mode 100644
+index 0000000..0c7e96a
+--- /dev/null
++++ b/test/qbg22/vdp22/306.vdp
+@@ -0,0 +1,55 @@
++#
++# Test case for LLDPAD testing according to IEEE 802.1Qbg ratified standard
++#
++# Copyright (c) International Business Machines Corp., 2014
++#
++# Author(s): Thomas Richter <tmricht at linux.vnet.ibm.com>
++#
++# This program is free software; you can redistribute it and/or modify it
++# under the terms and conditions of the GNU General Public License,
++# version 2, as published by the Free Software Foundation.
++#
++# This program is distributed in the hope it will be useful, but WITHOUT
++# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
++# FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
++# more details.
++#
++# You should have received a copy of the GNU General Public License along with
++# this program; if not, write to the Free Software Foundation, Inc.,
++# 51 Franklin St - Fifth Floor, Boston, MA 02110-1301 USA.
++#
++
++# Configuration file for lldpad bridge mode setup.
++
++dcbx : 
++{
++  version = "1.0";
++  dcbx_version = 2;
++};
++nearest_customer_bridge : 
++{
++  veth2 : 
++  {
++    tlvid00000001 : 
++    {
++      info = "04C68829509676";
++    };
++    tlvid00000002 : 
++    {
++      info = "03C68829509676";
++    };
++    adminStatus = 3;
++    tlvid0080c20d : 
++    {
++      enableTx = true;
++      evbmode = "bridge";
++      evbrrcap = true;
++      evbrrreq = true;
++      evbgpid = false;
++      ecpretries = 3;
++      ecprte = 14;
++      vdprwd = 20;
++      vdprka = 20;
++    };
++  };
++};
+diff --git a/test/qbg22/vdp22/307-lldpad.conf b/test/qbg22/vdp22/307-lldpad.conf
+new file mode 100644
+index 0000000..11ed7a2
+--- /dev/null
++++ b/test/qbg22/vdp22/307-lldpad.conf
+@@ -0,0 +1,55 @@
++#
++# Test case for LLDPAD testing according to IEEE 802.1Qbg ratified standard
++#
++# Copyright (c) International Business Machines Corp., 2014
++#
++# Author(s): Thomas Richter <tmricht at linux.vnet.ibm.com>
++#
++# This program is free software; you can redistribute it and/or modify it
++# under the terms and conditions of the GNU General Public License,
++# version 2, as published by the Free Software Foundation.
++#
++# This program is distributed in the hope it will be useful, but WITHOUT
++# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
++# FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
++# more details.
++#
++# You should have received a copy of the GNU General Public License along with
++# this program; if not, write to the Free Software Foundation, Inc.,
++# 51 Franklin St - Fifth Floor, Boston, MA 02110-1301 USA.
++#
++
++# Configuration file for lldpad station mode setup.
++
++dcbx : 
++{
++  version = "1.0";
++  dcbx_version = 2;
++};
++nearest_customer_bridge : 
++{
++  veth0 : 
++  {
++    tlvid00000001 : 
++    {
++      info = "04C68829509676";
++    };
++    tlvid00000002 : 
++    {
++      info = "03C68829509676";
++    };
++    adminStatus = 3;
++    tlvid0080c20d : 
++    {
++      enableTx = true;
++      evbmode = "station";
++      evbrrcap = false;
++      evbrrreq = true;
++      evbgpid = false;
++      ecpretries = 3;
++      ecprte = 14;
++      vdprwd = 20;
++      vdprka = 20;
++    };
++  };
++};
+diff --git a/test/qbg22/vdp22/307.nlc b/test/qbg22/vdp22/307.nlc
+new file mode 100755
+index 0000000..d252568
+--- /dev/null
++++ b/test/qbg22/vdp22/307.nlc
+@@ -0,0 +1,54 @@
++#!/bin/bash
++#
++# Test case for LLDPAD VDP testing according to IEEE 802.1Qbg ratified standard
++#
++# Copyright (c) International Business Machines Corp., 2014
++#
++# Author(s): Thomas Richter <tmricht at linux.vnet.ibm.com>
++#
++# This program is free software; you can redistribute it and/or modify it
++# under the terms and conditions of the GNU General Public License,
++# version 2, as published by the Free Software Foundation.
++#
++# This program is distributed in the hope it will be useful, but WITHOUT
++# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
++# FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
++# more details.
++#
++# You should have received a copy of the GNU General Public License along with
++# this program; if not, write to the Free Software Foundation, Inc.,
++# 51 Franklin St - Fifth Floor, Boston, MA 02110-1301 USA.
++#
++
++# 
++# Thomas Richter, IBM Research & Development, Boeblingen, Germany, 20-Apr-2013
++#
++# Execute a simple assoc with wrong user input using vdptool.
++# FID bad mac
++#
++
++sleep 30	# Must: Wait some time for lldpad to start up and initialize
++outfile=$(basename $0)
++dirfile=$(dirname $0)
++cd $dirfile
++
++vsi_ok="Invalid parameters"
++reply=$(../../../vdptool -i veth0 -T -V deassoc -c vsi=deassoc,hello,1,253,001122334-455667788-99aabbccddee,-,3-00:11:cc:ddd:e:f)
++rc=$?
++if [ "$rc" -eq 1 ]
++then
++	if [ "$reply" != "$vsi_ok" ]
++	then
++		echo "vdptool reply mismatch"
++		echo "expected reply:$vsi_ok"
++		echo "returned reply:$reply"
++	else
++		let rc=0
++	fi
++else
++	echo "vdptool unexpected success"
++	let rc=1
++fi
++
++sleep 5
++exit $rc
+diff --git a/test/qbg22/vdp22/307.vdp b/test/qbg22/vdp22/307.vdp
+new file mode 100644
+index 0000000..0c7e96a
+--- /dev/null
++++ b/test/qbg22/vdp22/307.vdp
+@@ -0,0 +1,55 @@
++#
++# Test case for LLDPAD testing according to IEEE 802.1Qbg ratified standard
++#
++# Copyright (c) International Business Machines Corp., 2014
++#
++# Author(s): Thomas Richter <tmricht at linux.vnet.ibm.com>
++#
++# This program is free software; you can redistribute it and/or modify it
++# under the terms and conditions of the GNU General Public License,
++# version 2, as published by the Free Software Foundation.
++#
++# This program is distributed in the hope it will be useful, but WITHOUT
++# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
++# FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
++# more details.
++#
++# You should have received a copy of the GNU General Public License along with
++# this program; if not, write to the Free Software Foundation, Inc.,
++# 51 Franklin St - Fifth Floor, Boston, MA 02110-1301 USA.
++#
++
++# Configuration file for lldpad bridge mode setup.
++
++dcbx : 
++{
++  version = "1.0";
++  dcbx_version = 2;
++};
++nearest_customer_bridge : 
++{
++  veth2 : 
++  {
++    tlvid00000001 : 
++    {
++      info = "04C68829509676";
++    };
++    tlvid00000002 : 
++    {
++      info = "03C68829509676";
++    };
++    adminStatus = 3;
++    tlvid0080c20d : 
++    {
++      enableTx = true;
++      evbmode = "bridge";
++      evbrrcap = true;
++      evbrrreq = true;
++      evbgpid = false;
++      ecpretries = 3;
++      ecprte = 14;
++      vdprwd = 20;
++      vdprka = 20;
++    };
++  };
++};
+diff --git a/test/qbg22/vdp22/308-lldpad.conf b/test/qbg22/vdp22/308-lldpad.conf
+new file mode 100644
+index 0000000..11ed7a2
+--- /dev/null
++++ b/test/qbg22/vdp22/308-lldpad.conf
+@@ -0,0 +1,55 @@
++#
++# Test case for LLDPAD testing according to IEEE 802.1Qbg ratified standard
++#
++# Copyright (c) International Business Machines Corp., 2014
++#
++# Author(s): Thomas Richter <tmricht at linux.vnet.ibm.com>
++#
++# This program is free software; you can redistribute it and/or modify it
++# under the terms and conditions of the GNU General Public License,
++# version 2, as published by the Free Software Foundation.
++#
++# This program is distributed in the hope it will be useful, but WITHOUT
++# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
++# FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
++# more details.
++#
++# You should have received a copy of the GNU General Public License along with
++# this program; if not, write to the Free Software Foundation, Inc.,
++# 51 Franklin St - Fifth Floor, Boston, MA 02110-1301 USA.
++#
++
++# Configuration file for lldpad station mode setup.
++
++dcbx : 
++{
++  version = "1.0";
++  dcbx_version = 2;
++};
++nearest_customer_bridge : 
++{
++  veth0 : 
++  {
++    tlvid00000001 : 
++    {
++      info = "04C68829509676";
++    };
++    tlvid00000002 : 
++    {
++      info = "03C68829509676";
++    };
++    adminStatus = 3;
++    tlvid0080c20d : 
++    {
++      enableTx = true;
++      evbmode = "station";
++      evbrrcap = false;
++      evbrrreq = true;
++      evbgpid = false;
++      ecpretries = 3;
++      ecprte = 14;
++      vdprwd = 20;
++      vdprka = 20;
++    };
++  };
++};
+diff --git a/test/qbg22/vdp22/308.nlc b/test/qbg22/vdp22/308.nlc
+new file mode 100755
+index 0000000..9ab72bc
+--- /dev/null
++++ b/test/qbg22/vdp22/308.nlc
+@@ -0,0 +1,54 @@
++#!/bin/bash
++#
++# Test case for LLDPAD VDP testing according to IEEE 802.1Qbg ratified standard
++#
++# Copyright (c) International Business Machines Corp., 2014
++#
++# Author(s): Thomas Richter <tmricht at linux.vnet.ibm.com>
++#
++# This program is free software; you can redistribute it and/or modify it
++# under the terms and conditions of the GNU General Public License,
++# version 2, as published by the Free Software Foundation.
++#
++# This program is distributed in the hope it will be useful, but WITHOUT
++# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
++# FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
++# more details.
++#
++# You should have received a copy of the GNU General Public License along with
++# this program; if not, write to the Free Software Foundation, Inc.,
++# 51 Franklin St - Fifth Floor, Boston, MA 02110-1301 USA.
++#
++
++# 
++# Thomas Richter, IBM Research & Development, Boeblingen, Germany, 20-Apr-2013
++#
++# Execute a simple assoc with wrong user input using vdptool.
++# FID format vlan-mac and mac
++#
++
++sleep 30	# Must: Wait some time for lldpad to start up and initialize
++outfile=$(basename $0)
++dirfile=$(dirname $0)
++cd $dirfile
++
++vsi_ok="Invalid parameters"
++reply=$(../../../vdptool -i veth0 -T -V preassoc -c vsi=preassoc,hello,1,253,001122334-455667788-99aabbccddee,-,3-00:11:cc:d:e:f,4444)
++rc=$?
++if [ "$rc" -eq 1 ]
++then
++	if [ "$reply" != "$vsi_ok" ]
++	then
++		echo "vdptool reply mismatch"
++		echo "expected reply:$vsi_ok"
++		echo "returned reply:$reply"
++	else
++		let rc=0
++	fi
++else
++	echo "vdptool unexpected success"
++	let rc=1
++fi
++
++sleep 5
++exit $rc
+diff --git a/test/qbg22/vdp22/308.vdp b/test/qbg22/vdp22/308.vdp
+new file mode 100644
+index 0000000..0c7e96a
+--- /dev/null
++++ b/test/qbg22/vdp22/308.vdp
+@@ -0,0 +1,55 @@
++#
++# Test case for LLDPAD testing according to IEEE 802.1Qbg ratified standard
++#
++# Copyright (c) International Business Machines Corp., 2014
++#
++# Author(s): Thomas Richter <tmricht at linux.vnet.ibm.com>
++#
++# This program is free software; you can redistribute it and/or modify it
++# under the terms and conditions of the GNU General Public License,
++# version 2, as published by the Free Software Foundation.
++#
++# This program is distributed in the hope it will be useful, but WITHOUT
++# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
++# FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
++# more details.
++#
++# You should have received a copy of the GNU General Public License along with
++# this program; if not, write to the Free Software Foundation, Inc.,
++# 51 Franklin St - Fifth Floor, Boston, MA 02110-1301 USA.
++#
++
++# Configuration file for lldpad bridge mode setup.
++
++dcbx : 
++{
++  version = "1.0";
++  dcbx_version = 2;
++};
++nearest_customer_bridge : 
++{
++  veth2 : 
++  {
++    tlvid00000001 : 
++    {
++      info = "04C68829509676";
++    };
++    tlvid00000002 : 
++    {
++      info = "03C68829509676";
++    };
++    adminStatus = 3;
++    tlvid0080c20d : 
++    {
++      enableTx = true;
++      evbmode = "bridge";
++      evbrrcap = true;
++      evbrrreq = true;
++      evbgpid = false;
++      ecpretries = 3;
++      ecprte = 14;
++      vdprwd = 20;
++      vdprka = 20;
++    };
++  };
++};
+diff --git a/test/qbg22/vdp22/309-lldpad.conf b/test/qbg22/vdp22/309-lldpad.conf
+new file mode 100644
+index 0000000..11ed7a2
+--- /dev/null
++++ b/test/qbg22/vdp22/309-lldpad.conf
+@@ -0,0 +1,55 @@
++#
++# Test case for LLDPAD testing according to IEEE 802.1Qbg ratified standard
++#
++# Copyright (c) International Business Machines Corp., 2014
++#
++# Author(s): Thomas Richter <tmricht at linux.vnet.ibm.com>
++#
++# This program is free software; you can redistribute it and/or modify it
++# under the terms and conditions of the GNU General Public License,
++# version 2, as published by the Free Software Foundation.
++#
++# This program is distributed in the hope it will be useful, but WITHOUT
++# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
++# FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
++# more details.
++#
++# You should have received a copy of the GNU General Public License along with
++# this program; if not, write to the Free Software Foundation, Inc.,
++# 51 Franklin St - Fifth Floor, Boston, MA 02110-1301 USA.
++#
++
++# Configuration file for lldpad station mode setup.
++
++dcbx : 
++{
++  version = "1.0";
++  dcbx_version = 2;
++};
++nearest_customer_bridge : 
++{
++  veth0 : 
++  {
++    tlvid00000001 : 
++    {
++      info = "04C68829509676";
++    };
++    tlvid00000002 : 
++    {
++      info = "03C68829509676";
++    };
++    adminStatus = 3;
++    tlvid0080c20d : 
++    {
++      enableTx = true;
++      evbmode = "station";
++      evbrrcap = false;
++      evbrrreq = true;
++      evbgpid = false;
++      ecpretries = 3;
++      ecprte = 14;
++      vdprwd = 20;
++      vdprka = 20;
++    };
++  };
++};
+diff --git a/test/qbg22/vdp22/309.nlc b/test/qbg22/vdp22/309.nlc
+new file mode 100755
+index 0000000..8de0f86
+--- /dev/null
++++ b/test/qbg22/vdp22/309.nlc
+@@ -0,0 +1,54 @@
++#!/bin/bash
++#
++# Test case for LLDPAD VDP testing according to IEEE 802.1Qbg ratified standard
++#
++# Copyright (c) International Business Machines Corp., 2014
++#
++# Author(s): Thomas Richter <tmricht at linux.vnet.ibm.com>
++#
++# This program is free software; you can redistribute it and/or modify it
++# under the terms and conditions of the GNU General Public License,
++# version 2, as published by the Free Software Foundation.
++#
++# This program is distributed in the hope it will be useful, but WITHOUT
++# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
++# FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
++# more details.
++#
++# You should have received a copy of the GNU General Public License along with
++# this program; if not, write to the Free Software Foundation, Inc.,
++# 51 Franklin St - Fifth Floor, Boston, MA 02110-1301 USA.
++#
++
++# 
++# Thomas Richter, IBM Research & Development, Boeblingen, Germany, 20-Apr-2013
++#
++# Execute a simple assoc with wrong user input using vdptool.
++# FID bad group
++#
++
++sleep 30	# Must: Wait some time for lldpad to start up and initialize
++outfile=$(basename $0)
++dirfile=$(dirname $0)
++cd $dirfile
++
++vsi_ok="Invalid parameters"
++reply=$(../../../vdptool -i veth0 -T -V preassoc -c vsi=preassoc,hello,1,253,001122334-455667788-99aabbccddee,-,333-00:11:cc:d:e:f-44a44)
++rc=$?
++if [ "$rc" -eq 1 ]
++then
++	if [ "$reply" != "$vsi_ok" ]
++	then
++		echo "vdptool reply mismatch"
++		echo "expected reply:$vsi_ok"
++		echo "returned reply:$reply"
++	else
++		let rc=0
++	fi
++else
++	echo "vdptool unexpected success"
++	let rc=1
++fi
++
++sleep 5
++exit $rc
+diff --git a/test/qbg22/vdp22/309.vdp b/test/qbg22/vdp22/309.vdp
+new file mode 100644
+index 0000000..0c7e96a
+--- /dev/null
++++ b/test/qbg22/vdp22/309.vdp
+@@ -0,0 +1,55 @@
++#
++# Test case for LLDPAD testing according to IEEE 802.1Qbg ratified standard
++#
++# Copyright (c) International Business Machines Corp., 2014
++#
++# Author(s): Thomas Richter <tmricht at linux.vnet.ibm.com>
++#
++# This program is free software; you can redistribute it and/or modify it
++# under the terms and conditions of the GNU General Public License,
++# version 2, as published by the Free Software Foundation.
++#
++# This program is distributed in the hope it will be useful, but WITHOUT
++# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
++# FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
++# more details.
++#
++# You should have received a copy of the GNU General Public License along with
++# this program; if not, write to the Free Software Foundation, Inc.,
++# 51 Franklin St - Fifth Floor, Boston, MA 02110-1301 USA.
++#
++
++# Configuration file for lldpad bridge mode setup.
++
++dcbx : 
++{
++  version = "1.0";
++  dcbx_version = 2;
++};
++nearest_customer_bridge : 
++{
++  veth2 : 
++  {
++    tlvid00000001 : 
++    {
++      info = "04C68829509676";
++    };
++    tlvid00000002 : 
++    {
++      info = "03C68829509676";
++    };
++    adminStatus = 3;
++    tlvid0080c20d : 
++    {
++      enableTx = true;
++      evbmode = "bridge";
++      evbrrcap = true;
++      evbrrreq = true;
++      evbgpid = false;
++      ecpretries = 3;
++      ecprte = 14;
++      vdprwd = 20;
++      vdprka = 20;
++    };
++  };
++};
+diff --git a/test/qbg22/vdp22/310-lldpad.conf b/test/qbg22/vdp22/310-lldpad.conf
+new file mode 100644
+index 0000000..11ed7a2
+--- /dev/null
++++ b/test/qbg22/vdp22/310-lldpad.conf
+@@ -0,0 +1,55 @@
++#
++# Test case for LLDPAD testing according to IEEE 802.1Qbg ratified standard
++#
++# Copyright (c) International Business Machines Corp., 2014
++#
++# Author(s): Thomas Richter <tmricht at linux.vnet.ibm.com>
++#
++# This program is free software; you can redistribute it and/or modify it
++# under the terms and conditions of the GNU General Public License,
++# version 2, as published by the Free Software Foundation.
++#
++# This program is distributed in the hope it will be useful, but WITHOUT
++# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
++# FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
++# more details.
++#
++# You should have received a copy of the GNU General Public License along with
++# this program; if not, write to the Free Software Foundation, Inc.,
++# 51 Franklin St - Fifth Floor, Boston, MA 02110-1301 USA.
++#
++
++# Configuration file for lldpad station mode setup.
++
++dcbx : 
++{
++  version = "1.0";
++  dcbx_version = 2;
++};
++nearest_customer_bridge : 
++{
++  veth0 : 
++  {
++    tlvid00000001 : 
++    {
++      info = "04C68829509676";
++    };
++    tlvid00000002 : 
++    {
++      info = "03C68829509676";
++    };
++    adminStatus = 3;
++    tlvid0080c20d : 
++    {
++      enableTx = true;
++      evbmode = "station";
++      evbrrcap = false;
++      evbrrreq = true;
++      evbgpid = false;
++      ecpretries = 3;
++      ecprte = 14;
++      vdprwd = 20;
++      vdprka = 20;
++    };
++  };
++};
+diff --git a/test/qbg22/vdp22/310.nlc b/test/qbg22/vdp22/310.nlc
+new file mode 100755
+index 0000000..ae90509
+--- /dev/null
++++ b/test/qbg22/vdp22/310.nlc
+@@ -0,0 +1,54 @@
++#!/bin/bash
++#
++# Test case for LLDPAD VDP testing according to IEEE 802.1Qbg ratified standard
++#
++# Copyright (c) International Business Machines Corp., 2014
++#
++# Author(s): Thomas Richter <tmricht at linux.vnet.ibm.com>
++#
++# This program is free software; you can redistribute it and/or modify it
++# under the terms and conditions of the GNU General Public License,
++# version 2, as published by the Free Software Foundation.
++#
++# This program is distributed in the hope it will be useful, but WITHOUT
++# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
++# FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
++# more details.
++#
++# You should have received a copy of the GNU General Public License along with
++# this program; if not, write to the Free Software Foundation, Inc.,
++# 51 Franklin St - Fifth Floor, Boston, MA 02110-1301 USA.
++#
++
++# 
++# Thomas Richter, IBM Research & Development, Boeblingen, Germany, 20-Apr-2013
++#
++# Execute a simple assoc with wrong user input using vdptool.
++# FID same mac several times
++#
++
++sleep 30	# Must: Wait some time for lldpad to start up and initialize
++outfile=$(basename $0)
++dirfile=$(dirname $0)
++cd $dirfile
++
++vsi_ok="Invalid parameters"
++reply=$(../../../vdptool -i veth0 -T -V preassoc -c vsi=preassoc,hello,1,253,001122334-455667788-99aabbccddee,-,333-00:11:cc:d:e:f-44444,222-00:11:cc:d:e:f-44444)
++rc=$?
++if [ "$rc" -eq 1 ]
++then
++	if [ "$reply" != "$vsi_ok" ]
++	then
++		echo "vdptool reply mismatch"
++		echo "expected reply:$vsi_ok"
++		echo "returned reply:$reply"
++	else
++		let rc=0
++	fi
++else
++	echo "vdptool unexpected success"
++	let rc=1
++fi
++
++sleep 5
++exit $rc
+diff --git a/test/qbg22/vdp22/310.vdp b/test/qbg22/vdp22/310.vdp
+new file mode 100644
+index 0000000..0c7e96a
+--- /dev/null
++++ b/test/qbg22/vdp22/310.vdp
+@@ -0,0 +1,55 @@
++#
++# Test case for LLDPAD testing according to IEEE 802.1Qbg ratified standard
++#
++# Copyright (c) International Business Machines Corp., 2014
++#
++# Author(s): Thomas Richter <tmricht at linux.vnet.ibm.com>
++#
++# This program is free software; you can redistribute it and/or modify it
++# under the terms and conditions of the GNU General Public License,
++# version 2, as published by the Free Software Foundation.
++#
++# This program is distributed in the hope it will be useful, but WITHOUT
++# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
++# FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
++# more details.
++#
++# You should have received a copy of the GNU General Public License along with
++# this program; if not, write to the Free Software Foundation, Inc.,
++# 51 Franklin St - Fifth Floor, Boston, MA 02110-1301 USA.
++#
++
++# Configuration file for lldpad bridge mode setup.
++
++dcbx : 
++{
++  version = "1.0";
++  dcbx_version = 2;
++};
++nearest_customer_bridge : 
++{
++  veth2 : 
++  {
++    tlvid00000001 : 
++    {
++      info = "04C68829509676";
++    };
++    tlvid00000002 : 
++    {
++      info = "03C68829509676";
++    };
++    adminStatus = 3;
++    tlvid0080c20d : 
++    {
++      enableTx = true;
++      evbmode = "bridge";
++      evbrrcap = true;
++      evbrrreq = true;
++      evbgpid = false;
++      ecpretries = 3;
++      ecprte = 14;
++      vdprwd = 20;
++      vdprka = 20;
++    };
++  };
++};
+diff --git a/test/qbg22/vdp22/320-lldpad.conf b/test/qbg22/vdp22/320-lldpad.conf
+new file mode 100644
+index 0000000..11ed7a2
+--- /dev/null
++++ b/test/qbg22/vdp22/320-lldpad.conf
+@@ -0,0 +1,55 @@
++#
++# Test case for LLDPAD testing according to IEEE 802.1Qbg ratified standard
++#
++# Copyright (c) International Business Machines Corp., 2014
++#
++# Author(s): Thomas Richter <tmricht at linux.vnet.ibm.com>
++#
++# This program is free software; you can redistribute it and/or modify it
++# under the terms and conditions of the GNU General Public License,
++# version 2, as published by the Free Software Foundation.
++#
++# This program is distributed in the hope it will be useful, but WITHOUT
++# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
++# FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
++# more details.
++#
++# You should have received a copy of the GNU General Public License along with
++# this program; if not, write to the Free Software Foundation, Inc.,
++# 51 Franklin St - Fifth Floor, Boston, MA 02110-1301 USA.
++#
++
++# Configuration file for lldpad station mode setup.
++
++dcbx : 
++{
++  version = "1.0";
++  dcbx_version = 2;
++};
++nearest_customer_bridge : 
++{
++  veth0 : 
++  {
++    tlvid00000001 : 
++    {
++      info = "04C68829509676";
++    };
++    tlvid00000002 : 
++    {
++      info = "03C68829509676";
++    };
++    adminStatus = 3;
++    tlvid0080c20d : 
++    {
++      enableTx = true;
++      evbmode = "station";
++      evbrrcap = false;
++      evbrrreq = true;
++      evbgpid = false;
++      ecpretries = 3;
++      ecprte = 14;
++      vdprwd = 20;
++      vdprka = 20;
++    };
++  };
++};
+diff --git a/test/qbg22/vdp22/320.nlc b/test/qbg22/vdp22/320.nlc
+new file mode 100755
+index 0000000..2dca2c2
+--- /dev/null
++++ b/test/qbg22/vdp22/320.nlc
+@@ -0,0 +1,65 @@
++#!/bin/bash
++#
++# Test case for LLDPAD VDP testing according to IEEE 802.1Qbg ratified standard
++#
++# Copyright (c) International Business Machines Corp., 2014
++#
++# Author(s): Thomas Richter <tmricht at linux.vnet.ibm.com>
++#
++# This program is free software; you can redistribute it and/or modify it
++# under the terms and conditions of the GNU General Public License,
++# version 2, as published by the Free Software Foundation.
++#
++# This program is distributed in the hope it will be useful, but WITHOUT
++# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
++# FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
++# more details.
++#
++# You should have received a copy of the GNU General Public License along with
++# this program; if not, write to the Free Software Foundation, Inc.,
++# 51 Franklin St - Fifth Floor, Boston, MA 02110-1301 USA.
++#
++
++# 
++# Thomas Richter, IBM Research & Development, Boeblingen, Germany, 20-Apr-2013
++#
++# Execute a simple assoc input using vdptool. Expect success.
++#
++
++sleep 30	# Must: Wait some time for lldpad to start up and initialize
++outfile=$(basename $0)
++dirfile=$(dirname $0)
++cd $dirfile
++
++vsi1="assoc,hello,1,2,00112233-4455-6677-8899-aabbccddeeff"
++vsi2="22222-0a:0b:0c:00:00:00"
++vsi_cmd="$vsi1,none,$vsi2"
++vsi_ok="vsi=$vsi1,0,$vsi2;"
++
++../../../vdptool -i veth0 -T -V assoc -c vsi=$vsi_cmd
++rc=$?
++if [ "$rc" -ne 0 ]
++then
++	echo "vdptool failure (step 1)"
++	exit $rc
++fi
++
++sleep 30
++reply="$(../../../vdptool -i veth0 -t -V assoc -c vsi)"
++rc=$?
++if [ "$rc" -ne 0 ]
++then
++	echo "vdptool failure (step 2)"
++	exit $rc
++fi
++
++if [ "$reply" != "$vsi_ok" ]
++then
++	echo "vdptool reply mismatch"
++	echo "expected reply:$vsi_ok"
++	echo "returned reply:$reply"
++	let rc=1
++fi
++
++sleep 5
++exit $rc
+diff --git a/test/qbg22/vdp22/320.vdp b/test/qbg22/vdp22/320.vdp
+new file mode 100644
+index 0000000..0c7e96a
+--- /dev/null
++++ b/test/qbg22/vdp22/320.vdp
+@@ -0,0 +1,55 @@
++#
++# Test case for LLDPAD testing according to IEEE 802.1Qbg ratified standard
++#
++# Copyright (c) International Business Machines Corp., 2014
++#
++# Author(s): Thomas Richter <tmricht at linux.vnet.ibm.com>
++#
++# This program is free software; you can redistribute it and/or modify it
++# under the terms and conditions of the GNU General Public License,
++# version 2, as published by the Free Software Foundation.
++#
++# This program is distributed in the hope it will be useful, but WITHOUT
++# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
++# FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
++# more details.
++#
++# You should have received a copy of the GNU General Public License along with
++# this program; if not, write to the Free Software Foundation, Inc.,
++# 51 Franklin St - Fifth Floor, Boston, MA 02110-1301 USA.
++#
++
++# Configuration file for lldpad bridge mode setup.
++
++dcbx : 
++{
++  version = "1.0";
++  dcbx_version = 2;
++};
++nearest_customer_bridge : 
++{
++  veth2 : 
++  {
++    tlvid00000001 : 
++    {
++      info = "04C68829509676";
++    };
++    tlvid00000002 : 
++    {
++      info = "03C68829509676";
++    };
++    adminStatus = 3;
++    tlvid0080c20d : 
++    {
++      enableTx = true;
++      evbmode = "bridge";
++      evbrrcap = true;
++      evbrrreq = true;
++      evbgpid = false;
++      ecpretries = 3;
++      ecprte = 14;
++      vdprwd = 20;
++      vdprka = 20;
++    };
++  };
++};
+diff --git a/test/qbg22/vdp22/321-lldpad.conf b/test/qbg22/vdp22/321-lldpad.conf
+new file mode 100644
+index 0000000..11ed7a2
+--- /dev/null
++++ b/test/qbg22/vdp22/321-lldpad.conf
+@@ -0,0 +1,55 @@
++#
++# Test case for LLDPAD testing according to IEEE 802.1Qbg ratified standard
++#
++# Copyright (c) International Business Machines Corp., 2014
++#
++# Author(s): Thomas Richter <tmricht at linux.vnet.ibm.com>
++#
++# This program is free software; you can redistribute it and/or modify it
++# under the terms and conditions of the GNU General Public License,
++# version 2, as published by the Free Software Foundation.
++#
++# This program is distributed in the hope it will be useful, but WITHOUT
++# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
++# FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
++# more details.
++#
++# You should have received a copy of the GNU General Public License along with
++# this program; if not, write to the Free Software Foundation, Inc.,
++# 51 Franklin St - Fifth Floor, Boston, MA 02110-1301 USA.
++#
++
++# Configuration file for lldpad station mode setup.
++
++dcbx : 
++{
++  version = "1.0";
++  dcbx_version = 2;
++};
++nearest_customer_bridge : 
++{
++  veth0 : 
++  {
++    tlvid00000001 : 
++    {
++      info = "04C68829509676";
++    };
++    tlvid00000002 : 
++    {
++      info = "03C68829509676";
++    };
++    adminStatus = 3;
++    tlvid0080c20d : 
++    {
++      enableTx = true;
++      evbmode = "station";
++      evbrrcap = false;
++      evbrrreq = true;
++      evbgpid = false;
++      ecpretries = 3;
++      ecprte = 14;
++      vdprwd = 20;
++      vdprka = 20;
++    };
++  };
++};
+diff --git a/test/qbg22/vdp22/321.nlc b/test/qbg22/vdp22/321.nlc
+new file mode 100755
+index 0000000..1d5247a
+--- /dev/null
++++ b/test/qbg22/vdp22/321.nlc
+@@ -0,0 +1,78 @@
++#!/bin/bash
++#
++# Test case for LLDPAD VDP testing according to IEEE 802.1Qbg ratified standard
++#
++# Copyright (c) International Business Machines Corp., 2014
++#
++# Author(s): Thomas Richter <tmricht at linux.vnet.ibm.com>
++#
++# This program is free software; you can redistribute it and/or modify it
++# under the terms and conditions of the GNU General Public License,
++# version 2, as published by the Free Software Foundation.
++#
++# This program is distributed in the hope it will be useful, but WITHOUT
++# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
++# FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
++# more details.
++#
++# You should have received a copy of the GNU General Public License along with
++# this program; if not, write to the Free Software Foundation, Inc.,
++# 51 Franklin St - Fifth Floor, Boston, MA 02110-1301 USA.
++#
++
++# 
++# Thomas Richter, IBM Research & Development, Boeblingen, Germany, 20-Apr-2013
++#
++# Execute two simple assoc input via vdptool. Expect success.
++#
++
++sleep 30	# Must: Wait some time for lldpad to start up and initialize
++outfile=$(basename $0)
++dirfile=$(dirname $0)
++cd $dirfile
++
++vsi1="assoc,hello,1,2,00112233-4455-6677-8899-aabbccddeeff"
++vsi2="22222-0a:0b:0c:00:00:00"
++vsi_cmd="$vsi1,none,$vsi2"
++vsi_ok="$vsi1,0,$vsi2;"
++vsi1b="assoc,world,1,2,00112233-4455-6677-8899-ffeeddccbbaa"
++vsi2b="2-aa:bb:cc:00:00:00"
++vsib_cmd="$vsi1b,none,$vsi2b"
++vsib_ok="$vsi1b,0,$vsi2b;"
++
++../../../vdptool -i veth0 -T -V assoc -c vsi=$vsi_cmd
++rc=$?
++if [ "$rc" -ne 0 ]
++then
++	echo "vdptool failure (step 1)"
++	exit $rc
++fi
++
++sleep 30
++../../../vdptool -i veth0 -T -V assoc -c vsi=$vsib_cmd
++rc=$?
++if [ "$rc" -ne 0 ]
++then
++	echo "vdptool failure (step 2)"
++	exit $rc
++fi
++
++sleep 30
++reply="$(../../../vdptool -i veth0 -t -V assoc -c vsi)"
++rc=$?
++if [ "$rc" -ne 0 ]
++then
++	echo "vdptool failure (step 3)"
++	exit $rc
++fi
++
++if [ "$reply" != "vsi=$vsib_ok$vsi_ok" ]
++then
++	echo "vdptool reply mismatch"
++	echo "expected reply:vsi=$vsib_ok$vsi_ok"
++	echo "returned reply:$reply"
++	let rc=1
++fi
++
++sleep 5
++exit $rc
+diff --git a/test/qbg22/vdp22/321.vdp b/test/qbg22/vdp22/321.vdp
+new file mode 100644
+index 0000000..0c7e96a
+--- /dev/null
++++ b/test/qbg22/vdp22/321.vdp
+@@ -0,0 +1,55 @@
++#
++# Test case for LLDPAD testing according to IEEE 802.1Qbg ratified standard
++#
++# Copyright (c) International Business Machines Corp., 2014
++#
++# Author(s): Thomas Richter <tmricht at linux.vnet.ibm.com>
++#
++# This program is free software; you can redistribute it and/or modify it
++# under the terms and conditions of the GNU General Public License,
++# version 2, as published by the Free Software Foundation.
++#
++# This program is distributed in the hope it will be useful, but WITHOUT
++# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
++# FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
++# more details.
++#
++# You should have received a copy of the GNU General Public License along with
++# this program; if not, write to the Free Software Foundation, Inc.,
++# 51 Franklin St - Fifth Floor, Boston, MA 02110-1301 USA.
++#
++
++# Configuration file for lldpad bridge mode setup.
++
++dcbx : 
++{
++  version = "1.0";
++  dcbx_version = 2;
++};
++nearest_customer_bridge : 
++{
++  veth2 : 
++  {
++    tlvid00000001 : 
++    {
++      info = "04C68829509676";
++    };
++    tlvid00000002 : 
++    {
++      info = "03C68829509676";
++    };
++    adminStatus = 3;
++    tlvid0080c20d : 
++    {
++      enableTx = true;
++      evbmode = "bridge";
++      evbrrcap = true;
++      evbrrreq = true;
++      evbgpid = false;
++      ecpretries = 3;
++      ecprte = 14;
++      vdprwd = 20;
++      vdprka = 20;
++    };
++  };
++};
+diff --git a/test/qbg22/vdp22/322-lldpad.conf b/test/qbg22/vdp22/322-lldpad.conf
+new file mode 100644
+index 0000000..11ed7a2
+--- /dev/null
++++ b/test/qbg22/vdp22/322-lldpad.conf
+@@ -0,0 +1,55 @@
++#
++# Test case for LLDPAD testing according to IEEE 802.1Qbg ratified standard
++#
++# Copyright (c) International Business Machines Corp., 2014
++#
++# Author(s): Thomas Richter <tmricht at linux.vnet.ibm.com>
++#
++# This program is free software; you can redistribute it and/or modify it
++# under the terms and conditions of the GNU General Public License,
++# version 2, as published by the Free Software Foundation.
++#
++# This program is distributed in the hope it will be useful, but WITHOUT
++# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
++# FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
++# more details.
++#
++# You should have received a copy of the GNU General Public License along with
++# this program; if not, write to the Free Software Foundation, Inc.,
++# 51 Franklin St - Fifth Floor, Boston, MA 02110-1301 USA.
++#
++
++# Configuration file for lldpad station mode setup.
++
++dcbx : 
++{
++  version = "1.0";
++  dcbx_version = 2;
++};
++nearest_customer_bridge : 
++{
++  veth0 : 
++  {
++    tlvid00000001 : 
++    {
++      info = "04C68829509676";
++    };
++    tlvid00000002 : 
++    {
++      info = "03C68829509676";
++    };
++    adminStatus = 3;
++    tlvid0080c20d : 
++    {
++      enableTx = true;
++      evbmode = "station";
++      evbrrcap = false;
++      evbrrreq = true;
++      evbgpid = false;
++      ecpretries = 3;
++      ecprte = 14;
++      vdprwd = 20;
++      vdprka = 20;
++    };
++  };
++};
+diff --git a/test/qbg22/vdp22/322.nlc b/test/qbg22/vdp22/322.nlc
+new file mode 100755
+index 0000000..5b5840e
+--- /dev/null
++++ b/test/qbg22/vdp22/322.nlc
+@@ -0,0 +1,95 @@
++#!/bin/bash
++#
++# Test case for LLDPAD VDP testing according to IEEE 802.1Qbg ratified standard
++#
++# Copyright (c) International Business Machines Corp., 2014
++#
++# Author(s): Thomas Richter <tmricht at linux.vnet.ibm.com>
++#
++# This program is free software; you can redistribute it and/or modify it
++# under the terms and conditions of the GNU General Public License,
++# version 2, as published by the Free Software Foundation.
++#
++# This program is distributed in the hope it will be useful, but WITHOUT
++# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
++# FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
++# more details.
++#
++# You should have received a copy of the GNU General Public License along with
++# this program; if not, write to the Free Software Foundation, Inc.,
++# 51 Franklin St - Fifth Floor, Boston, MA 02110-1301 USA.
++#
++
++# 
++# Thomas Richter, IBM Research & Development, Boeblingen, Germany, 20-Apr-2013
++#
++# Execute assoc/preassoc input via vdptool. Expect success.
++#
++
++sleep 30	# Must: Wait some time for lldpad to start up and initialize
++outfile=$(basename $0)
++dirfile=$(dirname $0)
++cd $dirfile
++
++vsi1="assoc,hello,1,2,00112233-4455-6677-8899-aabbccddeeff"
++vsi2="22222-0a:0b:0c:00:00:00"
++vsi_cmd="$vsi1,none,$vsi2"
++vsi_ok="$vsi1,0,$vsi2;"
++vsi1b="preassoc,world,1,2,00112233-4455-6677-8899-ffeeddccbbaa"
++vsi2b="2-aa:bb:cc:00:00:00"
++vsib_cmd="$vsi1b,none,$vsi2b"
++vsib_ok="$vsi1b,0,$vsi2b;"
++
++../../../vdptool -i veth0 -T -V assoc -c vsi=$vsi_cmd
++rc=$?
++if [ "$rc" -ne 0 ]
++then
++	echo "vdptool failure (step 1)"
++	exit $rc
++fi
++
++sleep 30
++../../../vdptool -i veth0 -T -V preassoc -c vsi=$vsib_cmd
++rc=$?
++if [ "$rc" -ne 0 ]
++then
++	echo "vdptool failure (step 2)"
++	exit $rc
++fi
++
++sleep 30
++reply="$(../../../vdptool -i veth0 -t -V assoc -c vsi)"
++rc=$?
++if [ "$rc" -ne 0 ]
++then
++	echo "vdptool failure (step 3)"
++	exit $rc
++fi
++
++if [ "$reply" != "vsi=$vsi_ok" ]
++then
++	echo "vdptool reply mismatch (step 3)"
++	echo "expected reply:vsi=$vsi_ok"
++	echo "returned reply:$reply"
++	exit 6
++fi
++
++sleep 5
++reply="$(../../../vdptool -i veth0 -t -V preassoc -c vsi)"
++rc=$?
++if [ "$rc" -ne 0 ]
++then
++	echo "vdptool failure (step 4)"
++	exit $rc
++fi
++
++if [ "$reply" != "vsi=$vsib_ok" ]
++then
++	echo "vdptool reply mismatch (step 4)"
++	echo "expected reply:vsi=$vsib_ok"
++	echo "returned reply:$reply"
++	let rc=1
++fi
++
++sleep 5
++exit $rc
+diff --git a/test/qbg22/vdp22/322.vdp b/test/qbg22/vdp22/322.vdp
+new file mode 100644
+index 0000000..0c7e96a
+--- /dev/null
++++ b/test/qbg22/vdp22/322.vdp
+@@ -0,0 +1,55 @@
++#
++# Test case for LLDPAD testing according to IEEE 802.1Qbg ratified standard
++#
++# Copyright (c) International Business Machines Corp., 2014
++#
++# Author(s): Thomas Richter <tmricht at linux.vnet.ibm.com>
++#
++# This program is free software; you can redistribute it and/or modify it
++# under the terms and conditions of the GNU General Public License,
++# version 2, as published by the Free Software Foundation.
++#
++# This program is distributed in the hope it will be useful, but WITHOUT
++# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
++# FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
++# more details.
++#
++# You should have received a copy of the GNU General Public License along with
++# this program; if not, write to the Free Software Foundation, Inc.,
++# 51 Franklin St - Fifth Floor, Boston, MA 02110-1301 USA.
++#
++
++# Configuration file for lldpad bridge mode setup.
++
++dcbx : 
++{
++  version = "1.0";
++  dcbx_version = 2;
++};
++nearest_customer_bridge : 
++{
++  veth2 : 
++  {
++    tlvid00000001 : 
++    {
++      info = "04C68829509676";
++    };
++    tlvid00000002 : 
++    {
++      info = "03C68829509676";
++    };
++    adminStatus = 3;
++    tlvid0080c20d : 
++    {
++      enableTx = true;
++      evbmode = "bridge";
++      evbrrcap = true;
++      evbrrreq = true;
++      evbgpid = false;
++      ecpretries = 3;
++      ecprte = 14;
++      vdprwd = 20;
++      vdprka = 20;
++    };
++  };
++};
+-- 
+2.1.0
+
