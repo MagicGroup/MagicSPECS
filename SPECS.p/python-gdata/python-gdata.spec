@@ -4,8 +4,8 @@
 %endif
 
 Name:           python-gdata
-Version:        2.0.14
-Release:        3%{?dist}
+Version:        2.0.18
+Release:        4%{?dist}
 Summary:        A Python module for accessing online Google services
 
 Group:          Development/Languages
@@ -45,6 +45,7 @@ This is a Python module for accessing online Google services such as:
 %setup -q -n gdata-%{version}
 find samples src -type f -print0 | xargs -0 chmod a-x
 find src -type f -print0 |  xargs -0 sed -i -e '/^#!\//, 1d' *.py
+find -type f -print0 |  xargs -0 sed -i 's/\r//'
 
 %build
 %{__python} setup.py build
@@ -60,8 +61,24 @@ find src -type f -print0 |  xargs -0 sed -i -e '/^#!\//, 1d' *.py
 %{python_sitelib}/gdata-%{version}-py*.egg-info
 
 %changelog
-* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 2.0.14-3
-- 为 Magic 3.0 重建
+* Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.0.18-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
+
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.0.18-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Sun Aug 04 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.0.18-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Thu Jun 20 2013 Rahul Sundaram <sundaram@fedoraproject.org> - 2.0.18-1
+- upstream release 2.0.18
+- fix rpmlint warnings about wrong end of file encoding
+
+* Fri Jan 25 2013 Rahul Sundaram <sundaram@fedoraproject.org> - 2.0.17-1
+- upstream release 2.0.17
+
+* Sat Jul 21 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.0.14-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 
 * Sat Jan 14 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.0.14-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
