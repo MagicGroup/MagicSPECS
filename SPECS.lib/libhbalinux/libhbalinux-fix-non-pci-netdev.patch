@@ -1,0 +1,719 @@
+diff --git a/Makefile.am b/Makefile.am
+index 1349e7b..068dc10 100644
+--- a/Makefile.am
++++ b/Makefile.am
+@@ -1,12 +1,12 @@
+-AM_CFLAGS = $(HBAAPI_CFLAGS) $(PCIACCESS_CFLAGS)
+-AM_LDFLAGS= $(PCIACCESS_LIBS)
++AM_CFLAGS = $(HBAAPI_CFLAGS) $(PCIACCESS_CFLAGS) $(LIBUDEV_CFLAGS)
++AM_LDFLAGS= $(PCIACCESS_LIBS) $(LIBUDEV_LIBS)
+ 
+ lib_LTLIBRARIES = libhbalinux.la
+ libhbalinux_la_SOURCES = adapt.c adapt_impl.h api_lib.h bind.c bind_impl.h \
+ fc_scsi.h fc_types.h lib.c lport.c net_types.h pci.c rport.c scsi.c sg.c \
+ utils.c utils.h
+ libhbalinux_la_LDFLAGS = -version-info 2:2:0
+-libhbalinux_la_LIBADD = $(PCIACCESS_LIBS)
++libhbalinux_la_LIBADD = $(PCIACCESS_LIBS) $(LIBUDEV_LIBS)
+ 
+ pkgconfigdir = $(libdir)/pkgconfig
+ pkgconfig_DATA = libhbalinux.pc
+diff --git a/adapt_impl.h b/adapt_impl.h
+index d86c2f8..9d9a347 100644
+--- a/adapt_impl.h
++++ b/adapt_impl.h
+@@ -151,7 +151,7 @@ HBA_STATUS scsi_report_luns_v2(HBA_HANDLE, HBA_WWN, HBA_WWN,
+ HBA_STATUS sg_issue_inquiry(const char *, HBA_UINT8, HBA_UINT8,
+ 		void *, HBA_UINT32 *, HBA_UINT8 *, void *, HBA_UINT32 *);
+ 
+-void adapter_init(void);
++int adapter_init(void);
+ void adapter_shutdown(void);
+ 
+ /* struct port_stats; */
+diff --git a/configure.ac b/configure.ac
+index 8dadf29..758cadb 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -13,6 +13,10 @@ AC_SUBST(PCIACCESS_LIBS)
+ PKG_CHECK_MODULES(HBAAPI, HBAAPI)
+ AC_SUBST(HBAAPI_CFLAGS)
+ 
++PKG_CHECK_MODULES(LIBUDEV, libudev)
++AC_SUBST(LIBUDEV_CFLAGS)
++AC_SUBST(LIBUDEV_LIBS)
++
+ AC_CONFIG_FILES([Makefile libhbalinux.spec libhbalinux.pc])
+ AC_OUTPUT
+ 
+diff --git a/libhbalinux.spec.in b/libhbalinux.spec.in
+index 344c166..4690da9 100644
+--- a/libhbalinux.spec.in
++++ b/libhbalinux.spec.in
+@@ -9,7 +9,7 @@ URL:            http://www.open-fcoe.org
+ Source0:        http://www.open-fcoe.org/openfc/%{name}-%{version}.tar.gz
+ BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+ 
+-BuildRequires:  libHBAAPI-devel libpciaccess-devel
++BuildRequires:  libHBAAPI-devel libpciaccess-devel systemd-devel
+ Requires:       libHBAAPI
+ 
+ %description
+diff --git a/lport.c b/lport.c
+index bc34078..695bdc6 100644
+--- a/lport.c
++++ b/lport.c
+@@ -20,6 +20,8 @@
+ #include "api_lib.h"
+ #include "adapt_impl.h"
+ 
++#include <libudev.h>
++
+ #ifndef HBA_STATUS_ERROR_ILLEGAL_FCID
+ #define HBA_STATUS_ERROR_ILLEGAL_FCID 33	/* defined after HBA-API 2.2 */
+ #endif
+@@ -88,18 +90,16 @@ struct sa_nameval port_speeds_table[] = {
+  * and convert them to bitmasks for the HBA_PORTSPEED supported
+  * Format expected: "1 Gbit[, 10 Gbit]", etc.
+  */
+-static int sys_read_speed(const char *dir, const char *file, char *buf,
+-			  size_t buflen, HBA_PORTSPEED *speeds)
++static int sys_read_speed(const char *speedstr, HBA_PORTSPEED *speeds)
+ {
+ 	int rc = 0;
+ 	u_int32_t val = 0;
+ 	int len = 0;
+-	char *cp;
++	const char *cp;
+ 	struct sa_nameval *tp = port_speeds_table;
+ 
+-	rc = sa_sys_read_line(dir, file, buf, buflen);
+-	if (rc == 0 && strstr(buf, "Unknown") == NULL) {
+-		for (cp = buf; *cp != '\0';) {
++	if (rc == 0 && strstr(speedstr, "Unknown") == NULL) {
++		for (cp = speedstr; *cp != '\0';) {
+ 			for (; tp->nv_name != NULL; tp++) {
+ 				len = strlen(tp->nv_name);
+ 				if (strncasecmp(tp->nv_name, cp, len) == 0) {
+@@ -140,69 +140,189 @@ counting_rports(struct dirent *dp, void *arg)
+ 	return HBA_STATUS_OK;
+ }
+ 
+-static int
+-check_ifindex(struct dirent *dp, void *arg)
++static void 
++sysfs_scan_pci(struct udev_device *pci,
++	struct hba_info *hba_info,
++	HBA_ADAPTERATTRIBUTES *atp
++	)
+ {
+-	char *ifindex = (char *)arg;
+-	char hba_dir[256];
++	const char *attr;
++	const char *hba_dir;
+ 	char buf[256];
+-	int rc;
+-
+-	snprintf(hba_dir, sizeof(hba_dir),
+-		 SYSFS_HBA_DIR "/%s", dp->d_name);
+-	memset(buf, 0, sizeof(buf));
+-	rc = sa_sys_read_line(hba_dir, "ifindex", buf, sizeof(buf) - 1);
+-	if (rc)
+-		return 0;
+-	if (!strncmp(ifindex, buf, sizeof(buf))) {
+-		strcpy(arg, dp->d_name);
+-		return 1;
++	char *saveptr;	/* for strtok_r */
++
++	/* Get vendor_id */
++	attr = udev_device_get_sysattr_value(pci, "vendor");
++	hba_info->vendor_id = strtoul(attr, NULL, 0);
++
++	/* Get device_id */
++	attr = udev_device_get_sysattr_value(pci, "device");
++	hba_info->device_id = strtoul(attr, NULL, 0);
++
++	/* Get subsystem_vendor_id */
++	attr = udev_device_get_sysattr_value(pci, "subsystem_vendor");
++	hba_info->subsystem_vendor_id = strtoul(attr, NULL, 0);
++
++	/* Get subsystem_device_id */
++	attr = udev_device_get_sysattr_value(pci, "subsystem_device");
++	hba_info->subsystem_device_id = strtoul(attr, NULL, 0);
++
++	/* Get device_class */
++	attr = udev_device_get_sysattr_value(pci, "class");
++	hba_info->device_class = strtoul(attr, NULL, 0);
++	hba_info->device_class = hba_info->device_class>>8;
++
++	/*
++	 * Get Hardware Information via PCI Library
++	 */
++
++	sscanf(udev_device_get_sysname(pci), "%x:%x:%x:%x",
++			&hba_info->domain, &hba_info->bus,
++			&hba_info->dev, &hba_info->func);
++	(void) find_pci_device(hba_info);
++
++	/* Get Number of Ports */
++	atp->NumberOfPorts = hba_info->NumberOfPorts;
++
++	/* Get Manufacturer */
++	sa_strncpy_safe(atp->Manufacturer, sizeof(atp->Manufacturer),
++			hba_info->Manufacturer, sizeof(hba_info->Manufacturer));
++
++	/* Get SerialNumber */
++	sa_strncpy_safe(atp->SerialNumber, sizeof(atp->SerialNumber),
++			hba_info->SerialNumber, sizeof(hba_info->SerialNumber));
++
++
++	/* Get ModelDescription */
++	sa_strncpy_safe(atp->ModelDescription, sizeof(atp->ModelDescription),
++			hba_info->ModelDescription,
++			sizeof(hba_info->ModelDescription));
++	if (!strncmp(hba_info->ModelDescription, "Unknown",
++		 sizeof(hba_info->ModelDescription))) {
++		snprintf(atp->ModelDescription, sizeof(atp->ModelDescription),
++			"[%04x:%04x]-[%04x:%04x]-(%04x)",
++			hba_info->vendor_id, hba_info->device_id,
++			hba_info->subsystem_vendor_id,
++			hba_info->subsystem_device_id,
++			hba_info->device_class);
++		/*
++		 * Get Model
++		 *
++		 * If the device is a newly developed product, and
++		 * the model description is not in pci.ids yet, use
++		 * the model description constructed above as the
++		 * model string.
++		 */
++		sa_strncpy_safe(atp->Model, sizeof(atp->Model),
++				atp->ModelDescription,
++				sizeof(atp->ModelDescription));
+ 	}
+-	return 0;
++
++	/*
++	 * Get Model
++	 *
++	 * If the device name has already been added into
++	 * the pci.ids file, use the first word of the model
++	 * description as the model. If the space after the
++	 * first word is not found (new product), use the
++	 * model description as the model.
++	 */
++	sa_strncpy_safe(buf, sizeof(buf), atp->ModelDescription,
++			sizeof(atp->ModelDescription));
++	if (strtok_r(buf, " ", &saveptr))
++		sa_strncpy_safe(atp->Model, sizeof(atp->Model),
++				buf, strnlen(buf, sizeof(buf)));
++	else
++		sa_strncpy_safe(atp->Model, sizeof(atp->Model),
++				atp->ModelDescription,
++				sizeof(atp->ModelDescription));
++
++	/* Get HardwareVersion */
++	sa_strncpy_safe(atp->HardwareVersion, sizeof(atp->HardwareVersion),
++			hba_info->HardwareVersion,
++			sizeof(hba_info->HardwareVersion));
++
++	/* Get OptionROMVersion (TODO) */
++	sa_strncpy_safe(atp->OptionROMVersion, sizeof(atp->OptionROMVersion),
++			HBA_ROM_VERSION, sizeof(HBA_ROM_VERSION));
++
++	/* Get FirmwareVersion (TODO) */
++	sa_strncpy_safe(atp->FirmwareVersion, sizeof(atp->FirmwareVersion),
++			HBA_FW_VERSION, sizeof(HBA_FW_VERSION));
++
++	/* Get VendorSpecificID (TODO) */
++	atp->VendorSpecificID = HBA_VENDOR_SPECIFIC_ID;
++
++	/* Get DriverVersion */
++	hba_dir = udev_device_get_syspath(pci);
++	sa_sys_read_line(hba_dir, SYSFS_MODULE_VER,
++			atp->DriverVersion, sizeof(atp->DriverVersion));
+ }
+ 
+-/*
+- * find_phys_if - find the regular network interface name that
+- *                has the ifindex that matches the specified iflink.
+- *                This ifname will be used to find the PCI info
+- *                of a VLAN interface.
+- * hba_dir: hba_dir of VLAN interface.
+- * buf: returns ifname of regular network interface.
+- */
+-static int
+-find_phys_if(char *hba_dir, char *buf, size_t len)
++struct udev_device *
++find_netdev_by_ifindex(struct udev *udev, const char *ifindex)
+ {
+-	int rc;
++	struct udev_enumerate *ue;
++	struct udev_list_entry *head;
++	struct udev_device *newnet = NULL;
+ 
+-	rc = sa_sys_read_line(hba_dir, "iflink", buf, len);
+-	if (rc)
+-		return 1;
+-	/*
+-	 * Search for the regular network interface and
+-	 * return the interface name in the buf.
+-	 */
+-	sa_dir_read(SYSFS_HBA_DIR, check_ifindex, buf);
+-	return 0;
++	ue = udev_enumerate_new(udev);
++	udev_enumerate_add_match_subsystem(ue, "net");
++	udev_enumerate_add_match_sysattr(ue, "ifindex", ifindex); 
++	udev_enumerate_scan_devices(ue);
++	/* enumerate returns a list, but there should only ever be one device
++	 * with a given ifindex */
++	head = udev_enumerate_get_list_entry(ue);
++	if (head)
++		newnet = udev_device_new_from_syspath(udev, udev_list_entry_get_name(head));
++	udev_enumerate_unref(ue);
++	return newnet;
++}
++
++struct udev_device *
++find_phys_if(struct udev_device *net)
++{
++	const char *ifindex;
++	const char *iflink;
++	struct udev *udev;
++	struct udev_device *lower = NULL;
++
++	ifindex = udev_device_get_sysattr_value(net, "ifindex");
++	iflink = udev_device_get_sysattr_value(net, "iflink");
++	if (strcmp(ifindex, iflink)) {
++		udev = udev_device_get_udev(net);
++		lower = find_netdev_by_ifindex(udev, iflink);
++	}
++	if (lower) {
++		return lower;
++	} else {
++		udev_device_ref(net);
++		return net;
++	}
+ }
+ 
+ static int
+-sysfs_scan(struct dirent *dp, void *arg)
++sysfs_scan(struct udev_device *fc_host)
+ {
+ 	HBA_ADAPTERATTRIBUTES *atp;
+ 	HBA_PORTATTRIBUTES *pap;
+-	HBA_WWN wwnn;
++	uint64_t wwnn;
+ 	struct hba_info hba_info;
+ 	struct adapter_info *ap;
+ 	struct port_info *pp;
+-	char host_dir[80], hba_dir[80], drv_dir[80];
+-	char dev_dir[128];
++	const char *hba_dir;
++	char drv_dir[80];
+ 	char ifname[20], buf[256];
+ 	char *driverName;
+ 	int data[32], rc, i;
+ 	char *cp;
+-	char *saveptr;	/* for strtok_r */
+-	unsigned int ifindex;
+-	unsigned int iflink;
++
++	const char *sysname = udev_device_get_sysname(fc_host);
++	const char *syspath = udev_device_get_syspath(fc_host);
++	struct udev_device *pci;
++	struct udev_device *net;
++	const char *ptr = NULL;
++	const char *attr;
+ 
+ 	memset(&hba_info, 0, sizeof(hba_info));
+ 
+@@ -217,7 +337,7 @@ sysfs_scan(struct dirent *dp, void *arg)
+ 		return HBA_STATUS_ERROR;
+ 	}
+ 	memset(ap, 0, sizeof(*ap));
+-	ap->ad_kern_index = atoi(dp->d_name + sizeof("host") - 1);
++	ap->ad_kern_index = atoi(sysname + sizeof("host") - 1);
+ 	ap->ad_port_count = 1;
+ 
+ 	/* atp points to the HBA attributes structure */
+@@ -239,137 +359,76 @@ sysfs_scan(struct dirent *dp, void *arg)
+ 	memset(pp, 0, sizeof(*pp));
+ 	pp->ap_adapt = ap;
+ 	pp->ap_index = ap->ad_port_count - 1;
+-	pp->ap_kern_hba = atoi(dp->d_name + sizeof("host") - 1);
++	pp->ap_kern_hba = atoi(sysname + sizeof("host") - 1);
+ 
+ 	/* pap points to the local port attributes structure */
+ 	pap = &pp->ap_attr;
+ 
+-	/* Construct the host directory name from the input name */
+-	snprintf(host_dir, sizeof(host_dir),
+-		SYSFS_HOST_DIR "/%s", dp->d_name);
+-
+-	rc = sa_sys_read_line(host_dir, "symbolic_name", buf, sizeof(buf));
+-
+ 	/* Get PortSymbolicName */
++	ptr = udev_device_get_sysattr_value(fc_host, "symbolic_name");
+ 	sa_strncpy_safe(pap->PortSymbolicName, sizeof(pap->PortSymbolicName),
+-			buf, sizeof(buf));
++			ptr, strlen(ptr));
+ 
+ 	/* Skip the HBA if it isn't OpenFC */
+ 	cp = strstr(pap->PortSymbolicName, " over ");
+ 	if (!cp)
+ 		goto skip;
+ 
+-	/*
+-	 * See if <host_dir>/device is a PCI symlink.
+-	 * If not, try it as a net device.
+-	 */
+-	snprintf(dev_dir, sizeof(dev_dir), "%s/device", host_dir);
+-	i = readlink(dev_dir, buf, sizeof(buf) - 1);
+-	if (i < 0)
+-		i = 0;
+-	buf[i] = '\0';
+-
+-	if (strstr(buf, "devices/pci") && !strstr(buf, "/net/")) {
+-		snprintf(hba_dir, sizeof(hba_dir), "%s/device/..", host_dir);
+-	} else {
+-		/* assume a net device */
+-		cp += 6;
+-		sa_strncpy_safe(ifname, sizeof(ifname), cp, strlen(cp));
+-		snprintf(hba_dir, sizeof(hba_dir),
+-			 SYSFS_HBA_DIR "/%s", ifname);
+-		/*
+-		 * Try as VLAN device or other virtual net device.
+-		 * If this is the case, ifindex and iflink will be different.
+-		 * iflink is the ifindex of the physical device.
+-		 */
+-		rc = sa_sys_read_u32(hba_dir, "ifindex", &ifindex);
+-		if (rc < 0)
+-			goto skip;
+-		rc = sa_sys_read_u32(hba_dir, "iflink", &iflink);
+-		if (rc < 0)
+-			goto skip;
+-		if (ifindex != iflink) {
+-			rc = find_phys_if(hba_dir, buf, sizeof(buf));
+-			if (rc)
+-				goto skip;
+-			strncpy(ifname, buf, sizeof(ifname));
+-		}
+-
+-		snprintf(hba_dir, sizeof(hba_dir),
+-			 SYSFS_HBA_DIR "/%s/device", ifname);
+-		i = readlink(hba_dir, buf, sizeof(buf) - 1);
+-		if (i < 0)
+-			goto skip;
+-		buf[i] = '\0';
++	pci = udev_device_get_parent_with_subsystem_devtype(fc_host, "pci", NULL);
++	net = udev_device_get_parent_with_subsystem_devtype(fc_host, "net", NULL);
++	if (!pci && net) {
++		/* check for a vlan device, stacked on a real PCI network device */
++		net = find_phys_if(net);
++		pci = udev_device_get_parent_with_subsystem_devtype(net, "pci", NULL);
+ 	}
+ 
+ 	/*
+-	 * Assume a PCI symlink value is in buf.
+-	 * Back up to the last path component that looks like a PCI element.
+-	 * A sample link value is like:
+-	 *	../../devices/pci*.../0000:03:00.0
+-	 */
+-	rc = 0;
+-	do {
+-		cp = strrchr(buf, '/');
+-		if (!cp)
+-			break;
+-		rc = sscanf(cp + 1, "%x:%x:%x.%x",
+-			    &hba_info.domain, &hba_info.bus,
+-			    &hba_info.dev, &hba_info.func);
+-		if (rc == 4)
+-			break;
+-		*cp = '\0';
+-	} while (cp && cp > buf);
+-
+-	if (rc != 4)
+-		goto skip;
+-
+-	/*
+ 	 * Save the host directory and the hba directory
+ 	 * in local port structure
+ 	 */
+ 	sa_strncpy_safe(pp->host_dir, sizeof(pp->host_dir),
+-			host_dir, sizeof(host_dir));
++			syspath, strlen(syspath));
+ 
+ 	/* Get NodeWWN */
+-	rc = sys_read_wwn(pp->host_dir, "node_name", &wwnn);
+-	memcpy(&pap->NodeWWN, &wwnn, sizeof(wwnn));
++	attr = udev_device_get_sysattr_value(fc_host, "node_name");
++	wwnn = strtoull(attr, NULL, 16);
++	copy_wwn(&pap->NodeWWN, wwnn);
+ 
+ 	/* Get PortWWN */
+-	rc = sys_read_wwn(pp->host_dir, "port_name", &pap->PortWWN);
++	attr = udev_device_get_sysattr_value(fc_host, "port_name");
++	wwnn = strtoull(attr, NULL, 16);
++	copy_wwn(&pap->PortWWN, wwnn);
+ 
+ 	/* Get PortFcId */
+-	rc = sa_sys_read_u32(pp->host_dir, "port_id", &pap->PortFcId);
++	attr = udev_device_get_sysattr_value(fc_host, "port_id");
++	pap->PortFcId = strtoul(attr, NULL, 0);
+ 
+ 	/* Get PortType */
+-	rc = sa_sys_read_line(pp->host_dir, "port_type", buf, sizeof(buf));
+-	rc = sa_enum_encode(port_types_table, buf, &pap->PortType);
++	attr = udev_device_get_sysattr_value(fc_host, "port_type");
++	rc = sa_enum_encode(port_types_table, attr, &pap->PortType);
+ 
+ 	/* Get PortState */
+-	rc = sa_sys_read_line(pp->host_dir, "port_state", buf, sizeof(buf));
+-	rc = sa_enum_encode(port_states_table, buf, &pap->PortState);
++	attr = udev_device_get_sysattr_value(fc_host, "port_state");
++	rc = sa_enum_encode(port_states_table, attr, &pap->PortState);
+ 
+ 	/* Get PortSpeed */
+-	rc = sys_read_speed(pp->host_dir, "speed",
+-				buf, sizeof(buf),
+-				&pap->PortSpeed);
++	attr = udev_device_get_sysattr_value(fc_host, "speed");
++	rc = sys_read_speed(attr, &pap->PortSpeed);
+ 
+ 	/* Get PortSupportedSpeed */
+-	rc = sys_read_speed(pp->host_dir, "supported_speeds",
+-				buf, sizeof(buf),
+-				&pap->PortSupportedSpeed);
++	attr = udev_device_get_sysattr_value(fc_host, "supported_speeds");
++	rc = sys_read_speed(attr, &pap->PortSupportedSpeed);
+ 
+ 	/* Get PortMaxFrameSize */
+-	rc = sa_sys_read_line(pp->host_dir, "maxframe_size", buf, sizeof(buf));
+-	sscanf(buf, "%d", &pap->PortMaxFrameSize);
++	attr = udev_device_get_sysattr_value(fc_host, "maxframe_size");
++	sscanf(attr, "%d", &pap->PortMaxFrameSize);
+ 
+ 	/* Get PortSupportedFc4Types */
+-	rc = sa_sys_read_line(pp->host_dir, "supported_fc4s", buf, sizeof(buf));
+-	sscanf(buf, "0x%x 0x%x 0x%x 0x%x 0x%x 0x%x 0x%x 0x%x "
+-		    "0x%x 0x%x 0x%x 0x%x 0x%x 0x%x 0x%x 0x%x "
+-		    "0x%x 0x%x 0x%x 0x%x 0x%x 0x%x 0x%x 0x%x "
+-		    "0x%x 0x%x 0x%x 0x%x 0x%x 0x%x 0x%x 0x%x",
++	attr = udev_device_get_sysattr_value(fc_host, "supported_fc4s");
++	sscanf(attr, "0x%x 0x%x 0x%x 0x%x 0x%x 0x%x 0x%x 0x%x "
++		     "0x%x 0x%x 0x%x 0x%x 0x%x 0x%x 0x%x 0x%x "
++		     "0x%x 0x%x 0x%x 0x%x 0x%x 0x%x 0x%x 0x%x "
++		     "0x%x 0x%x 0x%x 0x%x 0x%x 0x%x 0x%x 0x%x",
+ 		&data[0], &data[1], &data[2], &data[3], &data[4], &data[5],
+ 		&data[6], &data[7], &data[8], &data[9], &data[10], &data[11],
+ 		&data[12], &data[13], &data[14], &data[15], &data[16],
+@@ -380,11 +439,11 @@ sysfs_scan(struct dirent *dp, void *arg)
+ 		pap->PortSupportedFc4Types.bits[i] = data[i];
+ 
+ 	/* Get PortActiveFc4Types */
+-	rc = sa_sys_read_line(pp->host_dir, "active_fc4s", buf, sizeof(buf));
+-	sscanf(buf, "0x%x 0x%x 0x%x 0x%x 0x%x 0x%x 0x%x 0x%x "
+-		    "0x%x 0x%x 0x%x 0x%x 0x%x 0x%x 0x%x 0x%x "
+-		    "0x%x 0x%x 0x%x 0x%x 0x%x 0x%x 0x%x 0x%x "
+-		    "0x%x 0x%x 0x%x 0x%x 0x%x 0x%x 0x%x 0x%x",
++	attr = udev_device_get_sysattr_value(fc_host, "active_fc4s");
++	sscanf(attr, "0x%x 0x%x 0x%x 0x%x 0x%x 0x%x 0x%x 0x%x "
++		     "0x%x 0x%x 0x%x 0x%x 0x%x 0x%x 0x%x 0x%x "
++		     "0x%x 0x%x 0x%x 0x%x 0x%x 0x%x 0x%x 0x%x "
++		     "0x%x 0x%x 0x%x 0x%x 0x%x 0x%x 0x%x 0x%x",
+ 		&data[0], &data[1], &data[2], &data[3], &data[4], &data[5],
+ 		&data[6], &data[7], &data[8], &data[9], &data[10], &data[11],
+ 		&data[12], &data[13], &data[14], &data[15], &data[16],
+@@ -395,19 +454,19 @@ sysfs_scan(struct dirent *dp, void *arg)
+ 		pap->PortActiveFc4Types.bits[i] = data[i];
+ 
+ 	/* Get FabricName */
+-	rc = sys_read_wwn(pp->host_dir, "fabric_name", &pap->FabricName);
++	attr = udev_device_get_sysattr_value(fc_host, "fabric_name");
++	wwnn = strtoull(attr, NULL, 16);
++	copy_wwn(&pap->FabricName, wwnn);
+ 
+ 	/* Get PortSupportedClassofService */
+-	rc = sa_sys_read_line(pp->host_dir, "supported_classes",
+-				buf, sizeof(buf));
+-
+-	cp = strstr(buf, "Class");
++	attr = udev_device_get_sysattr_value(fc_host, "supported_classes");
++	cp = strstr(attr, "Class");
+ 	if (cp)
+ 		pap->PortSupportedClassofService = *(cp + 6) - '0';
+ 
+ 	/* Get OSDeviceName */
+ 	sa_strncpy_safe(pap->OSDeviceName, sizeof(pap->OSDeviceName),
+-			dp->d_name, sizeof(dp->d_name));
++			sysname, sizeof(sysname));
+ 
+ 	/* Get NumberofDiscoveredPorts */
+ 	snprintf(buf, sizeof(buf), "%s/device", pp->host_dir);
+@@ -428,104 +487,8 @@ sysfs_scan(struct dirent *dp, void *arg)
+ 	snprintf(buf, sizeof(buf), "fcoe:%s", ifname);
+ 	ap->ad_name = strdup(buf);
+ 
+-	/* Get vendor_id */
+-	rc = sa_sys_read_u32(hba_dir, "vendor", &hba_info.vendor_id);
+-
+-	/* Get device_id */
+-	rc = sa_sys_read_u32(hba_dir, "device", &hba_info.device_id);
+-
+-	/* Get subsystem_vendor_id */
+-	rc = sa_sys_read_u32(hba_dir, "subsystem_vendor",
+-				&hba_info.subsystem_vendor_id);
+-
+-	/* Get subsystem_device_id */
+-	rc = sa_sys_read_u32(hba_dir, "subsystem_device",
+-				&hba_info.subsystem_device_id);
+-
+-	/* Get device_class */
+-	rc = sa_sys_read_u32(hba_dir, "class", &hba_info.device_class);
+-	hba_info.device_class = hba_info.device_class>>8;
+-
+-	/*
+-	 * Get Hardware Information via PCI Library
+-	 */
+-	(void) find_pci_device(&hba_info);
+-
+-	/* Get Number of Ports */
+-	atp->NumberOfPorts = hba_info.NumberOfPorts;
+-
+-	/* Get Manufacturer */
+-	sa_strncpy_safe(atp->Manufacturer, sizeof(atp->Manufacturer),
+-			hba_info.Manufacturer, sizeof(hba_info.Manufacturer));
+-
+-	/* Get SerialNumber */
+-	sa_strncpy_safe(atp->SerialNumber, sizeof(atp->SerialNumber),
+-			hba_info.SerialNumber, sizeof(hba_info.SerialNumber));
+-
+-
+-	/* Get ModelDescription */
+-	sa_strncpy_safe(atp->ModelDescription, sizeof(atp->ModelDescription),
+-			hba_info.ModelDescription,
+-			sizeof(hba_info.ModelDescription));
+-	if (!strncmp(hba_info.ModelDescription, "Unknown",
+-		 sizeof(hba_info.ModelDescription))) {
+-		snprintf(atp->ModelDescription, sizeof(atp->ModelDescription),
+-			"[%04x:%04x]-[%04x:%04x]-(%04x)",
+-			hba_info.vendor_id, hba_info.device_id,
+-			hba_info.subsystem_vendor_id,
+-			hba_info.subsystem_device_id,
+-			hba_info.device_class);
+-		/*
+-		 * Get Model
+-		 *
+-		 * If the device is a newly developed product, and
+-		 * the model description is not in pci.ids yet, use
+-		 * the model description constructed above as the
+-		 * model string.
+-		 */
+-		sa_strncpy_safe(atp->Model, sizeof(atp->Model),
+-				atp->ModelDescription,
+-				sizeof(atp->ModelDescription));
+-	}
+-
+-	/*
+-	 * Get Model
+-	 *
+-	 * If the device name has already been added into
+-	 * the pci.ids file, use the first word of the model
+-	 * description as the model. If the space after the
+-	 * first word is not found (new product), use the
+-	 * model description as the model.
+-	 */
+-	sa_strncpy_safe(buf, sizeof(buf), atp->ModelDescription,
+-			sizeof(atp->ModelDescription));
+-	if (strtok_r(buf, " ", &saveptr))
+-		sa_strncpy_safe(atp->Model, sizeof(atp->Model),
+-				buf, strnlen(buf, sizeof(buf)));
+-	else
+-		sa_strncpy_safe(atp->Model, sizeof(atp->Model),
+-				atp->ModelDescription,
+-				sizeof(atp->ModelDescription));
+-
+-	/* Get HardwareVersion */
+-	sa_strncpy_safe(atp->HardwareVersion, sizeof(atp->HardwareVersion),
+-			hba_info.HardwareVersion,
+-			sizeof(hba_info.HardwareVersion));
+-
+-	/* Get OptionROMVersion (TODO) */
+-	sa_strncpy_safe(atp->OptionROMVersion, sizeof(atp->OptionROMVersion),
+-			HBA_ROM_VERSION, sizeof(HBA_ROM_VERSION));
+-
+-	/* Get FirmwareVersion (TODO) */
+-	sa_strncpy_safe(atp->FirmwareVersion, sizeof(atp->FirmwareVersion),
+-			HBA_FW_VERSION, sizeof(HBA_FW_VERSION));
+-
+-	/* Get VendorSpecificID (TODO) */
+-	atp->VendorSpecificID = HBA_VENDOR_SPECIFIC_ID;
+-
+-	/* Get DriverVersion */
+-	rc = sa_sys_read_line(hba_dir, SYSFS_MODULE_VER,
+-			atp->DriverVersion, sizeof(atp->DriverVersion));
++	if (pci)
++		sysfs_scan_pci(pci, &hba_info, atp);
+ 
+ 	/* Get NodeSymbolicName */
+ 	sa_strncpy_safe(atp->NodeSymbolicName, sizeof(atp->NodeSymbolicName),
+@@ -538,6 +501,7 @@ sysfs_scan(struct dirent *dp, void *arg)
+ 		sizeof(pap->NodeWWN));
+ 
+ 	/* Get DriverName */
++	hba_dir = udev_device_get_syspath(pci);
+ 	snprintf(drv_dir, sizeof(drv_dir), "%s" SYSFS_MODULE , hba_dir);
+ 	i = readlink(drv_dir, buf, sizeof(buf));
+ 	if (i < 0)
+@@ -662,10 +626,48 @@ sysfs_get_port_fc4stats(char *dir, HBA_FC4STATISTICS *fc4sp)
+ /*
+  * Open device and read adapter info if available.
+  */
+-void
++int
+ adapter_init(void)
+ {
+-	sa_dir_read(SYSFS_HOST_DIR, sysfs_scan, NULL);
++	struct udev *udev;
++	struct udev_enumerate *ue;
++	struct udev_list_entry *head, *ul;
++	struct udev_device *fc_host;
++	const char *syspath;
++	int re = 0;
++
++	udev = udev_new();
++	if (!udev) {
++		return -ENOMEM;
++	}
++	ue = udev_enumerate_new(udev);
++	if (!ue) {
++		re = -ENOMEM;
++		goto err_enum_new;
++	}
++	re = udev_enumerate_add_match_subsystem(ue, "fc_host");
++	if (re) {
++		goto err_add_match;
++	}
++	re = udev_enumerate_scan_devices(ue);
++	if (re) {
++		goto err_scan_devs;
++	}
++	head = udev_enumerate_get_list_entry(ue);
++	udev_list_entry_foreach(ul, head) {
++		syspath = udev_list_entry_get_name(ul);
++		fc_host = udev_device_new_from_syspath(udev, syspath);
++		if (!fc_host)
++			continue;
++		sysfs_scan(fc_host);
++		udev_device_unref(fc_host);
++	}
++err_scan_devs:
++err_add_match:
++	udev_enumerate_unref(ue);
++err_enum_new:
++	udev_unref(udev);
++	return re;
+ }
+ 
+ void
