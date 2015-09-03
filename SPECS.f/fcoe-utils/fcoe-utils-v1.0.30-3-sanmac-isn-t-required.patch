@@ -1,0 +1,26 @@
+From 8065e01707c3306380c684712e547fcf0e4e55da Mon Sep 17 00:00:00 2001
+From: Chris Leech <cleech@redhat.com>
+Date: Thu, 5 Feb 2015 11:46:31 -0800
+Subject: [PATCH] sanmac isn't required
+
+Signed-off-by: Chris Leech <cleech@redhat.com>
+---
+ lib/fip.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/lib/fip.c b/lib/fip.c
+index 6657b61..5e5b179 100644
+--- a/lib/fip.c
++++ b/lib/fip.c
+@@ -215,7 +215,7 @@ int fip_socket(int ifindex, enum fip_multi multi)
+ 		return s;
+ 
+ 	rc = fip_socket_sanmac(s, ifindex, 1);
+-	if (rc < 0) {
++	if (rc < 0 && rc != -ENXIO) {
+ 		close(s);
+ 		return rc;
+ 	}
+-- 
+2.1.0
+

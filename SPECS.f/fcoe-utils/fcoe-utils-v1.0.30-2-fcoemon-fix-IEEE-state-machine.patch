@@ -1,0 +1,83 @@
+From 91c0c8c0a37af40b3fb4a37df6490a226348d152 Mon Sep 17 00:00:00 2001
+From: Vasu Dev <vasu.dev@intel.com>
+Date: Fri, 5 Jun 2015 14:52:10 -0700
+Subject: [PATCH] fcoemon: fix IEEE state machine
+
+Fix IEEE state machine for these issues:-
+
+ - fcoeadm scan not working
+ - fcoeadm reset not working
+ - periodic fipvlan issuance even after fcoe instance created
+
+These issues are due to current IEEE states are not correctly
+handled. The validate_ieee_info() return either activate or
+wait actions and out of that only activate is really used to
+enable fcoe instance and none other action are applicable in
+IEEE state machine, so reduced to only activate and then
+advance the state machine to new IEEE_ACTIVE state to allow
+processing of scan & reset command once interface activated.
+
+This also fixes fipvlan issuance issue beside fixing scan and
+reset fcoeadm commands.
+
+Signed-off-by: Vasu Dev <vasu.dev@intel.com>
+Tested-By: Jack Morgan<jack.morgan@intel.com>
+---
+ fcoemon.c | 19 +++++++------------
+ fcoemon.h |  1 +
+ 2 files changed, 8 insertions(+), 12 deletions(-)
+
+diff --git a/fcoemon.c b/fcoemon.c
+index c5edd1b..c0af99b 100644
+--- a/fcoemon.c
++++ b/fcoemon.c
+@@ -1341,6 +1341,7 @@ STR_ARR(ieee_states, "Unknown", "Out of range",
+ 	[IEEE_INIT] = "IEEE_INIT",
+ 	[IEEE_GET_STATE] = "IEEE_GET_STATE",
+ 	[IEEE_DONE] = "IEEE_DONE",
++	[IEEE_ACTIVE] = "IEEE_ACTIVE",
+ );
+ 
+ static void
+@@ -3054,20 +3055,14 @@ static void fcm_netif_ieee_advance(struct fcm_netif *ff)
+ 		break;
+ 	case IEEE_DONE:
+ 		action = validate_ieee_info(ff);
+-		switch (action) {
+-		case FCP_DESTROY_IF:
+-		case FCP_ENABLE_IF:
+-		case FCP_ACTIVATE_IF:
++		if (action == FCP_ACTIVATE_IF) {
+ 			fcp_action_set(ff->ifname, action);
+-			break;
+-		case FCP_DISABLE_IF:
+-		case FCP_ERROR:
+-			fcp_action_set(ff->ifname, FCP_DISABLE_IF);
+-			break;
+-		case FCP_WAIT:
+-		default:
+-			break;
++			ieee_state_set(ff, IEEE_ACTIVE);
+ 		}
++		break;
++	case IEEE_ACTIVE:
++		/* TBD enable and disable if needed in IEEE mode */
++		break;
+ 	default:
+ 		break;
+ 	}
+diff --git a/fcoemon.h b/fcoemon.h
+index c2ed7b1..3869bae 100644
+--- a/fcoemon.h
++++ b/fcoemon.h
+@@ -80,6 +80,7 @@ enum ieee_state {
+ 	IEEE_INIT = 0,	/* Starting state */
+ 	IEEE_GET_STATE,	/* Getting IEEE DCB state */
+ 	IEEE_DONE,	/* Received IEEE DCB state */
++	IEEE_ACTIVE,	/* IEEE is in ACTIVE state */
+ 	IEEE_ERROR,	/* Error receiving IEEE DCB state */
+ };
+ 
+-- 
+2.1.0
+

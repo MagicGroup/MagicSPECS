@@ -1,0 +1,78 @@
+From f3af6bad75d7f6c90b9a170cbf9e4748ab4bb24e Mon Sep 17 00:00:00 2001
+From: Johannes Thumshirn <jthumshirn@suse.de>
+Date: Mon, 18 May 2015 17:02:59 +0000
+Subject: [PATCH] fcoemon: Rework daemonizing and error handling
+
+Rework error handling, which leads to daemonizing later in order to get the
+error handling into effect.
+
+Signed-off-by: Johannes Thumshirn <jthumshirn@suse.de>
+Signed-off-by: Vasu Dev <vasu.dev@intel.com>
+---
+ fcoemon.c | 31 ++++++++++++++++++++++---------
+ 1 file changed, 22 insertions(+), 9 deletions(-)
+
+diff --git a/fcoemon.c b/fcoemon.c
+index 3b5210c..c5edd1b 100644
+--- a/fcoemon.c
++++ b/fcoemon.c
+@@ -3719,11 +3719,6 @@ int main(int argc, char **argv)
+ 	if (argc != optind)
+ 		fcm_usage();
+ 
+-	if (!fcm_fg && daemon(0, !fcoe_config.use_syslog)) {
+-		FCM_LOG("Starting daemon failed");
+-		exit(EXIT_FAILURE);
+-	}
+-
+ 	umask(0);
+ 
+ 	/*
+@@ -3770,22 +3765,40 @@ int main(int argc, char **argv)
+ 	}
+ 
+ 	fcm_fcoe_init();
+-	fcm_fc_events_init();
+-	fcm_link_init();	/* NETLINK_ROUTE protocol */
++	rc = fcm_fc_events_init();
++	if (rc != 0)
++		exit(1);
++
++	rc = fcm_link_init();	/* NETLINK_ROUTE protocol */
++	if (rc != 0)
++		goto err_cleanup;
++
+ 	fcm_dcbd_init();
+-	fcm_srv_create(&srv_info);
++	rc = fcm_srv_create(&srv_info);
++	if (rc != 0)
++		goto err_cleanup;
++
++	if (!fcm_fg && daemon(0, !fcoe_config.use_syslog)) {
++		FCM_LOG("Starting daemon failed");
++		goto err_cleanup;
++	}
++
+ 	sa_select_set_callback(fcm_handle_changes);
+ 
+ 	rc = sa_select_loop();
+ 	if (rc < 0) {
+ 		FCM_LOG_ERR(rc, "select error\n");
+-		exit(EXIT_FAILURE);
++		goto err_cleanup;
+ 	}
+ 	fcm_dcbd_shutdown();
+ 	fcm_srv_destroy(&srv_info);
+ 	if (rc == SIGHUP)
+ 		fcm_cleanup();
+ 	return 0;
++
++err_cleanup:
++	fcm_cleanup();
++	exit(1);
+ }
+ 
+ /*******************************************************
+-- 
+2.1.0
+

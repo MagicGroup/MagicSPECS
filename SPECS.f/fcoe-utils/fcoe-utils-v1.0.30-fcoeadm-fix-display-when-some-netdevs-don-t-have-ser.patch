@@ -1,0 +1,29 @@
+From cc0037c0091a2b9baf04a5101ec83a6ec8db448b Mon Sep 17 00:00:00 2001
+From: Chris Leech <cleech@redhat.com>
+Date: Mon, 6 Jul 2015 20:43:56 -0700
+Subject: [PATCH] fcoeadm: fix display when some netdevs don't have serial
+ numbers
+
+---
+ fcoeadm_display.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
+
+diff --git a/fcoeadm_display.c b/fcoeadm_display.c
+index 9b96170..3b7fff9 100644
+--- a/fcoeadm_display.c
++++ b/fcoeadm_display.c
+@@ -1294,9 +1294,8 @@ enum fcoe_status display_adapter_info(const char *ifname)
+ 				continue;
+ 			}
+ 
+-			if (!strncmp(hba_attrs->SerialNumber,
+-				     shba_attrs->SerialNumber,
+-				     strlen(hba_attrs->SerialNumber))) {
++			if (!strcmp(hba_attrs->SerialNumber,
++				     shba_attrs->SerialNumber)) {
+ 				show_port_info(sport_attrs);
+ 				hba_table_list->hba_table[j].displayed = 1;
+ 			}
+-- 
+2.1.0
+
