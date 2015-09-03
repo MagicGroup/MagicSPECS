@@ -1,0 +1,44 @@
+From e135ff849b6538814096401d1b40159091505d14 Mon Sep 17 00:00:00 2001
+From: Chris Leech <cleech@redhat.com>
+Date: Wed, 17 Sep 2014 06:03:14 +0000
+Subject: [PATCH] libhbaapi: Add new HBA_PORTSPEED definitions.
+
+These extend the defined port speed API out to 40 GBit/sec, matching the
+FDMI values from the latest FC-GS-7 draft.
+
+Signed-off-by: Chris Leech <cleech@redhat.com>
+Signed-off-by: Vasu Dev <vasu.dev@intel.com>
+---
+ hbaapi.h | 16 +++++++++++-----
+ 1 file changed, 11 insertions(+), 5 deletions(-)
+
+diff --git a/hbaapi.h b/hbaapi.h
+index 58098e0..b94703b 100644
+--- a/hbaapi.h
++++ b/hbaapi.h
+@@ -229,11 +229,17 @@ typedef HBA_UINT32 HBA_PORTSTATE;
+ 
+ 
+ typedef HBA_UINT32 HBA_PORTSPEED;
+-#define HBA_PORTSPEED_UNKNOWN		0   /* Unknown - transceiver incable
+-					     * of reporting */
+-#define HBA_PORTSPEED_1GBIT		1   /* 1 GBit/sec */
+-#define HBA_PORTSPEED_2GBIT		2   /* 2 GBit/sec */
+-#define HBA_PORTSPEED_10GBIT		4   /* 10 GBit/sec */
++#define HBA_PORTSPEED_UNKNOWN		0x0000  /* Unknown - transceiver incable
++					         * of reporting */
++#define HBA_PORTSPEED_1GBIT		0x0001  /* 1 GBit/sec */
++#define HBA_PORTSPEED_2GBIT		0x0002  /* 2 GBit/sec */
++#define HBA_PORTSPEED_10GBIT		0x0004  /* 10 GBit/sec */
++#define HBA_PORTSPEED_4GBIT		0x0008  /* 4 GBit/sec */
++#define HBA_PORTSPEED_8GBIT		0x0010  /* 8 GBit/sec */
++#define HBA_PORTSPEED_16GBIT		0x0020  /* 16 GBit/sec */
++#define HBA_PORTSPEED_32GBIT		0x0040  /* 32 GBit/sec */
++#define HBA_PORTSPEED_20GBIT		0x0080  /* 20 GBit/sec */
++#define HBA_PORTSPEED_40GBIT		0x0100  /* 40 GBit/sec */
+ #define HBA_PORTSPEED_NOT_NEGOTIATED	(1 << 15) /* Speed not established */
+ 
+ 
+-- 
+1.9.3
+
