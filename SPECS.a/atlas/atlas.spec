@@ -1,11 +1,11 @@
 %define enable_native_atlas 0
 
 Name:           atlas
-Version:        3.10.1
+Version:        3.10.2
 %if "%{?enable_native_atlas}" != "0"
 %define dist .native
 %endif
-Release:        11%{?dist}
+Release:        6%{?dist}
 Summary:        Automatically Tuned Linear Algebra Software
 
 Group:          System Environment/Libraries
@@ -21,7 +21,6 @@ Source3:        README.dist
 #Source7:        IBMz1064.tgz
 #Source8:        IBMz19632.tgz
 #Source9:        IBMz19664.tgz
-Source10: 	 http://www.netlib.org/lapack/lapack-3.5.0.tgz
 #archdefs taken from debian:
 Source11: 	POWER332.tar.bz2
 Source12: 	IBMz932.tar.bz2
@@ -29,7 +28,6 @@ Source13: 	IBMz964.tar.bz2
 #upstream arm uses softfp abi, fedora arm uses hard
 Source14: 	ARMv732NEON.tar.bz2
 
-Patch1:         atlas-s390port.patch
 Patch2:		atlas-fedora-arm.patch
 # Properly pass -melf_* to the linker with -Wl, fixes FTBFS bug 817552
 # https://sourceforge.net/tracker/?func=detail&atid=379484&aid=3555789&group_id=23725
@@ -41,11 +39,20 @@ Patch5:		atlas-shared_libraries.patch
 
 Patch6:		atlas-affinity.patch
 
-Patch7:		atlas-aarch64.patch
+Patch7:		atlas-aarch64port.patch
+Patch8:		atlas-genparse.patch
 
-BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+Patch9:		atlas.3.10.1-unbundle.patch
 
-BuildRequires:  gcc-gfortran
+# ppc64le patches
+Patch95:	initialize_malloc_memory.invtrsm.wms.oct23.patch
+Patch96:	xlf.command.not.found.patch
+Patch98:	getdoublearr.stripwhite.patch
+Patch99:	ppc64le-remove-vsx.patch
+Patch100:	ppc64le-abiv2.patch
+Patch110:	p8-mem-barrier.patch
+
+BuildRequires:  gcc-gfortran, lapack-static
 
 Provides: bundled(lapack)
 
@@ -86,7 +93,7 @@ Group:          Development/Libraries
 Requires:       %{name} = %{version}-%{release}
 Obsoletes:	%name-header <= %version-%release
 Requires(posttrans):	chkconfig
-Requires(preun):	chkconfig
+Requires(postun):	chkconfig
 
 %description devel
 This package contains headers for development with ATLAS
@@ -97,7 +104,7 @@ Summary:        Static libraries for ATLAS
 Group:          Development/Libraries
 Requires:       %{name}-devel = %{version}-%{release}
 Requires(posttrans):	chkconfig
-Requires(preun):	chkconfig
+Requires(postun):	chkconfig
 
 %description static
 This package contains static version of ATLAS (Automatically Tuned
@@ -129,7 +136,7 @@ Linear Algebra Software).
 #Requires:       %{name}-sse3 = %{version}-%{release}
 #Obsoletes:	%name-header <= %version-%release
 #Requires(posttrans):	chkconfig
-#Requires(preun):	chkconfig
+#Requires(postun):	chkconfig
 
 #description sse3-devel
 #This package contains shared and static versions of the ATLAS
@@ -157,7 +164,7 @@ Group:          Development/Libraries
 Requires:       %{name}-sse2 = %{version}-%{release}
 Obsoletes:	%name-header <= %version-%release
 Requires(posttrans):	chkconfig
-Requires(preun):	chkconfig
+Requires(postun):	chkconfig
 
 %description sse2-devel
 This package contains ATLAS (Automatically Tuned Linear Algebra Software)
@@ -169,7 +176,7 @@ Summary:        Static libraries for ATLAS with SSE2 extensions
 Group:          Development/Libraries
 Requires:       %{name}-sse2-devel = %{version}-%{release}
 Requires(posttrans):	chkconfig
-Requires(preun):	chkconfig
+Requires(postun):	chkconfig
 
 %description sse2-static
 This package contains ATLAS (Automatically Tuned Linear Algebra Software)
@@ -191,7 +198,7 @@ Group:          Development/Libraries
 Requires:       %{name}-sse3 = %{version}-%{release}
 Obsoletes:	%name-header <= %version-%release
 Requires(posttrans):	chkconfig
-Requires(preun):	chkconfig
+Requires(postun):	chkconfig
 
 %description sse3-devel
 This package contains ATLAS (Automatically Tuned Linear Algebra Software)
@@ -203,7 +210,7 @@ Summary:        Static libraries for ATLAS with SSE2 extensions
 Group:          Development/Libraries
 Requires:       %{name}-sse2-devel = %{version}-%{release}
 Requires(posttrans):	chkconfig
-Requires(preun):	chkconfig
+Requires(postun):	chkconfig
 
 %description sse3-static
 This package contains ATLAS (Automatically Tuned Linear Algebra Software)
@@ -231,7 +238,7 @@ ix86 architecture.
 #Requires:       %{name}-z196 = %{version}-%{release}
 #Obsoletes:	%name-header <= %version-%release
 #Requires(posttrans):	chkconfig
-#Requires(preun):	chkconfig
+#Requires(postun):	chkconfig
 #
 #%description z196-devel
 #This package contains headers and shared versions of the ATLAS
@@ -243,7 +250,7 @@ ix86 architecture.
 #Group:          Development/Libraries
 #Requires:       %{name}-devel = %{version}-%{release}
 #Requires(posttrans):	chkconfig
-#Requires(preun):	chkconfig
+#Requires(postun):	chkconfig
 
 #%description z196-static
 #This package contains static version of ATLAS (Automatically Tuned
@@ -264,7 +271,7 @@ ix86 architecture.
 #Requires:       %{name}-z10 = %{version}-%{release}
 #Obsoletes:	%name-header <= %version-%release
 #Requires(posttrans):	chkconfig
-#Requires(preun):	chkconfig
+#Requires(postun):	chkconfig
 #
 #%description z10-devel
 #This package contains headers and shared versions of the ATLAS
@@ -276,7 +283,7 @@ ix86 architecture.
 #Group:          Development/Libraries
 #Requires:       %{name}-devel = %{version}-%{release}
 #Requires(posttrans):	chkconfig
-#Requires(preun):	chkconfig
+#Requires(postun):	chkconfig
 #
 #%description z10-static
 #This package contains static version of ATLAS (Automatically Tuned
@@ -286,9 +293,7 @@ ix86 architecture.
 %endif
 %endif
 
-%ifarch %{arm} aarch64
-#beware - arch constant can change between releases
-%define arch_option -A 46 
+%ifarch %{arm}
 %define threads_option -t 2
 %global armflags -DATL_ARM_HARDFP=1
 %global mode %{nil}
@@ -300,14 +305,17 @@ ix86 architecture.
 %endif
 %endif
 
+# disable the archdef for ppc64le
+# do it only one time.
+%ifarch ppc64le
+%define arch_option -Si archdef 0
+%endif
+
 %prep
 #uname -a
 #cat /proc/cpuinfo
 %setup -q -n ATLAS
 #patch0 -p0 -b .shared
-%ifarch s390 s390x
-%patch1 -p1 -b .s390
-%endif
 #arm patch not applicable, probably not needed
 #%ifarch %{arm}
 #%patch2 -p0 -b .arm
@@ -319,9 +327,12 @@ ix86 architecture.
 %if "%{?enable_native_atlas}" == "0"
 %patch6 -p1 -b .affinity
 %endif
-%ifarch %{aarch64}
-%patch7 -p0 -b .aarch64
+%ifarch aarch64
+%patch7 -p1 -b .aarch64
 %endif
+%patch8 -p1 -b .genparse
+
+%patch9 -p1 -b .unbundle
 
 cp %{SOURCE1} CONFIG/ARCHS/
 #cp %{SOURCE2} CONFIG/ARCHS/
@@ -332,6 +343,16 @@ cp %{SOURCE13} CONFIG/ARCHS/
 cp %{SOURCE14} CONFIG/ARCHS/
 #cp %{SOURCE8} CONFIG/ARCHS/
 #cp %{SOURCE9} CONFIG/ARCHS/
+
+%ifarch ppc64le
+%patch99 -p1
+%patch98 -p2
+%patch96 -p2
+%patch95 -p2
+%patch100 -p2
+%patch110 -p1
+%endif
+
 %ifarch %{arm}
 # Set arm flags in atlcomp.txt
 sed -i -e 's,-mfpu=vfpv3,-mfpu=neon,' CONFIG/src/atlcomp.txt
@@ -342,7 +363,19 @@ sed -i -e 's,-mfpu=vfpv3,,' tune/blas/gemm/CASES/*.flg
 # Debug
 #sed -i -e 's,> \(.*\)/ptsanity.out,> \1/ptsanity.out || cat \1/ptsanity.out \&\& exit 1,' makes/Make.*
 
+# Generate lapack library
+mkdir lapacklib
+cd lapacklib
+ar x %{_libdir}/liblapack_pic.a
+# Remove functions that have ATLAS implementations
+rm cgelqf.o cgels.o cgeqlf.o cgeqrf.o cgerqf.o cgesv.o cgetrf.o cgetri.o cgetrs.o clarfb.o clarft.o clauum.o cposv.o cpotrf.o cpotri.o cpotrs.o ctrtri.o dgelqf.o dgels.o dgeqlf.o dgeqrf.o dgerqf.o dgesv.o dgetrf.o dgetri.o dgetrs.o dlamch.o dlarfb.o dlarft.o dlauum.o dposv.o dpotrf.o dpotri.o dpotrs.o dtrtri.o ieeeck.o ilaenv.o lsame.o sgelqf.o sgels.o sgeqlf.o sgeqrf.o sgerqf.o sgesv.o sgetrf.o sgetri.o sgetrs.o slamch.o slarfb.o slarft.o slauum.o sposv.o spotrf.o spotri.o spotrs.o strtri.o xerbla.o zgelqf.o zgels.o zgeqlf.o zgeqrf.o zgerqf.o zgesv.o zgetrf.o zgetri.o zgetrs.o zlarfb.o zlarft.o zlauum.o zposv.o zpotrf.o zpotri.o zpotrs.o ztrtri.o 
+# Create new library
+ar rcs ../liblapack_pic_pruned.a *.o
+cd ..
+
+
 %build
+p=$(pwd)
 for type in %{types}; do
 	if [ "$type" = "base" ]; then
 		libname=atlas
@@ -356,8 +389,11 @@ for type in %{types}; do
 	../configure  %{mode} %{?threads_option} %{?arch_option} -D c -DWALL -Fa alg '%{armflags} -g -Wa,--noexecstack -fPIC'\
 	--prefix=%{buildroot}%{_prefix}			\
 	--incdir=%{buildroot}%{_includedir}		\
-	--libdir=%{buildroot}%{_libdir}/${libname}	\
-	--with-netlib-lapack-tarfile=%{SOURCE10}
+	--libdir=%{buildroot}%{_libdir}/${libname}	
+	#--with-netlib-lapack-tarfile=%{SOURCE10}
+
+	#matches both SLAPACK and SSLAPACK
+	sed -i "s#SLAPACKlib.*#SLAPACKlib = ${p}/liblapack_pic_pruned.a#" Make.inc
 
 %if "%{?enable_native_atlas}" == "0"
 %ifarch x86_64
@@ -467,6 +503,14 @@ for type in %{types}; do
 	sed -i 's#-m64#-m32#g' Make.inc
 %endif
 
+%ifarch ppc64le
+	sed -i 's#-mvsx##g' Make.inc
+	sed -i 's#-DATL_VSX##g' Make.inc
+	sed -i 's#-DATL_AltiVec##g' Make.inc
+	sed -i 's#-maltivec##g' Make.inc
+	sed -i 's#ARCH =.*#ARCH = POWER464#' Make.inc
+%endif
+
 %endif
 	make build
 	cd lib
@@ -483,11 +527,11 @@ for type in %{types}; do
 	if [ "$type" = "base" ]; then
 		cp -pr lib/*.so* %{buildroot}%{_libdir}/atlas/
 		rm -f %{buildroot}%{_libdir}/atlas/*.a
-		cp -pr lib/libatlas.a %{buildroot}%{_libdir}/atlas/
+		cp -pr lib/libcblas.a lib/libatlas.a lib/libf77blas.a lib/liblapack.a %{buildroot}%{_libdir}/atlas/
 	else
 		cp -pr lib/*.so* %{buildroot}%{_libdir}/atlas-${type}/
 		rm -f %{buildroot}%{_libdir}/atlas-${type}/*.a
-		cp -pr lib/libatlas.a %{buildroot}%{_libdir}/atlas-${type}/
+		cp -pr lib/libcblas.a lib/libatlas.a lib/libf77blas.a lib/liblapack.a %{buildroot}%{_libdir}/atlas-${type}/
 	fi
 	popd
 
@@ -500,11 +544,30 @@ for type in %{types}; do
 		> %{buildroot}/etc/ld.so.conf.d/atlas-%{_arch}-${type}.conf
 	fi
 done
+
+#create pkgconfig file
+mkdir -p $RPM_BUILD_ROOT%{_libdir}/pkgconfig/
+cat > $RPM_BUILD_ROOT%{_libdir}/pkgconfig/atlas.pc << DATA
+Name: %{name}
+Version: %{version}
+Description: %{summary}
+Cflags: -I%{_includedir}/atlas/
+Libs: -L%{_libdir}/atlas/ -lsatlas
+DATA
+
+
 mkdir -p %{buildroot}%{_includedir}/atlas
 
 
 %check
-%ifnarch s390
+# Run make check but don't fail the build on these arches
+%ifarch s390 aarch64
+for type in %{types}; do
+	pushd %{_arch}_${type}
+	make check ptcheck  || :
+	popd
+done
+%else
 for type in %{types}; do
 	pushd %{_arch}_${type}
 	make check ptcheck
@@ -517,12 +580,10 @@ done
 %postun -p /sbin/ldconfig
 
 %posttrans devel
-if [ $1 -eq 0 ] ; then
 /usr/sbin/alternatives	--install %{_includedir}/atlas atlas-inc 	\
 		%{_includedir}/atlas-%{_arch}-base %{pr_base}
-fi
 
-%preun devel
+%postun devel
 if [ $1 -ge 0 ] ; then
 /usr/sbin/alternatives --remove atlas-inc %{_includedir}/atlas-%{_arch}-base
 fi
@@ -535,12 +596,10 @@ fi
 #postun -n atlas-sse3 -p /sbin/ldconfig
 
 #posttrans sse3-devel
-#if [ $1 -eq 0 ] ; then
 #/usr/sbin/alternatives	--install %{_includedir}/atlas atlas-inc 	\
 #		%{_includedir}/atlas-%{_arch}-sse3  %{pr_sse3}
-#fi
 
-#preun sse3-devel
+#postun sse3-devel
 #if [ $1 -ge 0 ] ; then
 #/usr/sbin/alternatives --remove atlas-inc %{_includedir}/atlas-%{_arch}-sse3
 #fi
@@ -553,12 +612,10 @@ fi
 #%%postun -n atlas-3dnow -p /sbin/ldconfig
 
 #%%posttrans 3dnow-devel
-#if [ $1 -eq 0 ] ; then
 #/usr/sbin/alternatives	--install %{_includedir}/atlas atlas-inc 	\
 #		%{_includedir}/atlas-%{_arch}-3dnow  %{pr_3dnow}
-#fi
 
-#%%preun 3dnow-devel
+#%%postun 3dnow-devel
 #if [ $1 -ge 0 ] ; then
 #/usr/sbin/alternatives --remove atlas-inc %{_includedir}/atlas-%{_arch}-3dnow
 #fi
@@ -568,12 +625,10 @@ fi
 #%%postun -n atlas-sse -p /sbin/ldconfig
 
 #%%posttrans sse-devel
-#if [ $1 -eq 0 ] ; then
 #/usr/sbin/alternatives	--install %{_includedir}/atlas atlas-inc 	\
 #		%{_includedir}/atlas-%{_arch}-sse  %{pr_sse}
-#fi
 
-#%%preun sse-devel
+#%%postun sse-devel
 #if [ $1 -ge 0 ] ; then
 #/usr/sbin/alternatives --remove atlas-inc %{_includedir}/atlas-%{_arch}-sse
 #fi
@@ -583,12 +638,10 @@ fi
 %postun -n atlas-sse2 -p /sbin/ldconfig
 
 %posttrans sse2-devel
-if [ $1 -eq 0 ] ; then
 /usr/sbin/alternatives	--install %{_includedir}/atlas atlas-inc 	\
 		%{_includedir}/atlas-%{_arch}-sse2  %{pr_sse2}
-fi
 
-%preun sse2-devel
+%postun sse2-devel
 if [ $1 -ge 0 ] ; then
 /usr/sbin/alternatives --remove atlas-inc %{_includedir}/atlas-%{_arch}-sse2
 fi
@@ -598,12 +651,10 @@ fi
 %postun -n atlas-sse3 -p /sbin/ldconfig
 
 %posttrans sse3-devel
-if [ $1 -eq 0 ] ; then
 /usr/sbin/alternatives	--install %{_includedir}/atlas atlas-inc 	\
 		%{_includedir}/atlas-%{_arch}-sse3  %{pr_sse3}
-fi
 
-%preun sse3-devel
+%postun sse3-devel
 if [ $1 -ge 0 ] ; then
 /usr/sbin/alternatives --remove atlas-inc %{_includedir}/atlas-%{_arch}-sse3
 fi
@@ -616,12 +667,10 @@ fi
 #%postun -n atlas-z10 -p /sbin/ldconfig
 
 #%posttrans z10-devel
-#if [ $1 -eq 0 ] ; then
 #/usr/sbin/alternatives	--install %{_includedir}/atlas atlas-inc 	\
 #		%{_includedir}/atlas-%{_arch}-z10  %{pr_z10}
-#fi
 
-#%preun z10-devel
+#%postun z10-devel
 #if [ $1 -ge 0 ] ; then
 #/usr/sbin/alternatives --remove atlas-inc %{_includedir}/atlas-%{_arch}-z10
 #fi
@@ -631,12 +680,10 @@ fi
 #%postun -n atlas-z196 -p /sbin/ldconfig
 
 #%posttrans z196-devel
-#if [ $1 -eq 0 ] ; then
 #/usr/sbin/alternatives	--install %{_includedir}/atlas atlas-inc 	\
 #		%{_includedir}/atlas-%{_arch}-z196  %{pr_z196}
-#fi
 
-#%preun z196-devel
+#%postun z196-devel
 #if [ $1 -ge 0 ] ; then
 #/usr/sbin/alternatives --remove atlas-inc %{_includedir}/atlas-%{_arch}-z196
 #fi
@@ -646,22 +693,20 @@ fi
 %endif
 
 %files
-%defattr(-,root,root,-)
 %doc doc/README.dist
 %dir %{_libdir}/atlas
 %{_libdir}/atlas/*.so.*
 %config(noreplace) /etc/ld.so.conf.d/atlas-%{_arch}.conf
 
 %files devel
-%defattr(-,root,root,-)
 %doc doc
 %{_libdir}/atlas/*.so
 %{_includedir}/atlas-%{_arch}-base/
 %{_includedir}/*.h
 %ghost %{_includedir}/atlas
+%{_libdir}/pkgconfig/atlas.pc
 
 %files static
-%defattr(-,root,root,-)
 %{_libdir}/atlas/*.a
 
 %if "%{?enable_native_atlas}" == "0"
@@ -669,14 +714,12 @@ fi
 #ifarch x86_64
 
 #files sse3
-#defattr(-,root,root,-)
 #doc doc/README.Fedora
 #dir %{_libdir}/atlas-sse3
 #{_libdir}/atlas-sse3/*.so
 #config(noreplace) /etc/ld.so.conf.d/atlas-%{_arch}-sse3.conf
 
 #files sse3-devel
-#defattr(-,root,root,-)
 #doc doc
 #{_libdir}/atlas-sse3/*.so
 #{_includedir}/atlas-%{_arch}-sse3/
@@ -688,14 +731,12 @@ fi
 %ifarch %{ix86}
 
 #%%files 3dnow
-#%%defattr(-,root,root,-)
 #%%doc doc/README.Fedora
 #%%dir %{_libdir}/atlas-3dnow
 #%%{_libdir}/atlas-3dnow/*.so.*
 #%%config(noreplace) /etc/ld.so.conf.d/atlas-%{_arch}-3dnow.conf
 
 #%%files 3dnow-devel
-#%%defattr(-,root,root,-)
 #%%doc doc
 #%%{_libdir}/atlas-3dnow/*.so
 #%%{_includedir}/atlas-%{_arch}-3dnow/
@@ -703,14 +744,12 @@ fi
 #%%ghost %{_includedir}/atlas
 
 #%%files sse
-#%%defattr(-,root,root,-)
 #%%doc doc/README.Fedora
 #%%dir %{_libdir}/atlas-sse
 #%%{_libdir}/atlas-sse/*.so.*
 #%%config(noreplace) /etc/ld.so.conf.d/atlas-%{_arch}-sse.conf
 
 #%%files sse-devel
-#%%defattr(-,root,root,-)
 #%%doc doc
 #%%{_libdir}/atlas-sse/*.so
 #%%{_includedir}/atlas-%{_arch}-sse/
@@ -718,14 +757,12 @@ fi
 #%%ghost %{_includedir}/atlas
 
 %files sse2
-%defattr(-,root,root,-)
 %doc doc/README.dist
 %dir %{_libdir}/atlas-sse2
 %{_libdir}/atlas-sse2/*.so.*
 %config(noreplace) /etc/ld.so.conf.d/atlas-%{_arch}-sse2.conf
 
 %files sse2-devel
-%defattr(-,root,root,-)
 %doc doc
 %{_libdir}/atlas-sse2/*.so
 %{_includedir}/atlas-%{_arch}-sse2/
@@ -733,22 +770,18 @@ fi
 %ghost %{_includedir}/atlas
 
 %files sse2-static
-%defattr(-,root,root,-)
 %{_libdir}/atlas-sse2/*.a
 
 %files sse3
-%defattr(-,root,root,-)
 %doc doc/README.dist
 %dir %{_libdir}/atlas-sse3
 %{_libdir}/atlas-sse3/*.so.*
 %config(noreplace) /etc/ld.so.conf.d/atlas-%{_arch}-sse3.conf
 
 %files sse3-static
-%defattr(-,root,root,-)
 %{_libdir}/atlas-sse3/*.a
 
 %files sse3-devel
-%defattr(-,root,root,-)
 %doc doc
 %{_libdir}/atlas-sse3/*.so
 %{_includedir}/atlas-%{_arch}-sse3/
@@ -759,14 +792,12 @@ fi
 
 #%ifarch s390 s390x
 #%files z10
-#%defattr(-,root,root,-)
 #%doc doc/README.dist
 #%dir %{_libdir}/atlas-z10
 #%{_libdir}/atlas-z10/*.so
 #%config(noreplace) /etc/ld.so.conf.d/atlas-%{_arch}-z10.conf
 #
 #%files z10-devel
-#%defattr(-,root,root,-)
 #%doc doc
 #%{_libdir}/atlas-z10/*.so
 #%{_includedir}/atlas-%{_arch}-z10/
@@ -774,18 +805,15 @@ fi
 #%ghost %{_includedir}/atlas
 #
 #%files z10-static
-#%defattr(-,root,root,-)
 #%{_libdir}/atlas-z10/*.a
 
 #%files z196
-#%defattr(-,root,root,-)
 #%doc doc/README.dist
 #%dir %{_libdir}/atlas-z196
 #%{_libdir}/atlas-z196/*.so
 #%config(noreplace) /etc/ld.so.conf.d/atlas-%{_arch}-z196.conf
 
 #%files z196-devel
-#%defattr(-,root,root,-)
 #%doc doc
 #%{_libdir}/atlas-z196/*.so
 #%{_includedir}/atlas-%{_arch}-z196/
@@ -793,13 +821,72 @@ fi
 #%ghost %{_includedir}/atlas
 
 #%files z196-static
-#%defattr(-,root,root,-)
 #%{_libdir}/atlas-z196/*.a
 
 #%endif
 %endif
 
 %changelog
+* Thu Jul 09 2015 Than Ngo <than@redhat.com> 3.10.2-6
+- fix ppc64le patch
+
+* Wed Jun 17 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.10.2-5
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
+
+* Wed Jun 10 2015 Marcin Juszkiewicz <mjuszkiewicz@redhat.com> - 3.10.2-4
+- Refreshed AArch64 patch
+
+* Fri Jun 05 2015 Dan Horák <dan[at]danny.cz> - 3.10.2-3
+- drop upstreamed s390 patch
+
+* Wed May 20 2015 Frantisek Kluknavsky <fkluknav@redhat.com> - 3.10.2-2
+- include all single-threaded wrapper libraries in -static subpackage
+- bz#1222079
+
+* Thu May 14 2015 Orion Poplawski <orion@cora.nwra.com> - 3.10.2-1
+- Update to 3.10.2 (bug #1118596)
+- Autodetect arm arch
+- Add arch_option for ppc64le
+
+* Thu Mar 05 2015 Frantisek Kluknavsky <fkluknav@redhat.com> - 3.10.1-22
+- lapack bundled again, mark this.
+
+* Sat Feb 07 2015 Susi Lehtola <jussilehtola@fedoraproject.org> - 3.10.1-21
+- Devel packages don't need to require lapack-devel anymore.
+
+* Fri Jan 30 2015 Susi Lehtola <jussilehtola@fedoraproject.org> - 3.10.1-20
+- Link statically to system LAPACK as in earlier versions of Fedora and as
+  in OpenBLAS (BZ #1181369).
+
+* Wed Jan 28 2015 Frantisek Kluknavsky <fkluknav@redhat.com> - 3.10.1-19
+- updated chkconfig and dependencies of atlas-devel after unbundling
+
+* Fri Jan 23 2015 Frantisek Kluknavsky <fkluknav@redhat.com> - 3.10.1-18
+- unbundled lapack (only a few modified routines shipped with atlas sources are supposed to stay)
+
+* Thu Oct 30 2014 Jaromir Capik <jcapik@redhat.com> - 3.10.1-17
+- patching for Power8 to pass performance tunings and tests on P8 builders
+
+* Fri Oct 24 2014 Orion Poplawski <orion@cora.nwra.com> - 3.10.1-16
+- Fix alternatives install
+
+* Thu Oct 23 2014 Frantisek Kluknavsky <fkluknav@redhat.com> - 3.10.1-15
+- added pkgconfig file
+
+* Fri Aug 15 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.10.1-14
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
+
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.10.1-13
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Mon Feb 24 2014 Peter Robinson <pbrobinson@fedoraproject.org> 3.10.1-12
+- Don't fail build on make check on aarch64 due to issues with tests
+
+* Sun Feb 16 2014 Marcin Juszkiewicz <mjuszkiewicz@redhat.com> - 3.10.1-11
+- Unbreak AArch64 build.
+- ARMv8 is different from ARMv7 so should not be treated as such. Otherwise
+  atlas tries to do some crazy ARMv764 build and fail.
+
 * Wed Nov 20 2013 Frantisek Kluknavsky <fkluknav@redhat.com> - 3.10.1-10
 - updated lapack to 3.5.0
 
