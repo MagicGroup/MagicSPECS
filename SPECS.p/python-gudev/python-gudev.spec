@@ -10,14 +10,14 @@ Name:           python-gudev
 URL:            http://github.com/nzjrs/python-gudev
 
 Version:        147.2
-Release:        4%{?dist}
+Release:        8%{?dist}
 
-%global _srcname nzjrs-python-gudev-%{version}-0-ga9f8dd2
+%global srcname nzjrs-python-gudev-%{version}-0-ga9f8dd2
 %global _dirname nzjrs-python-gudev-ee8a644
 
 # Tar.gz can be downloaded from
 # http://github.com/nzjrs/python-gudev/tarball/%{version}
-Source0:        %{_srcname}.tar.gz
+Source0:        %{srcname}.tar.gz
 Group:          Development/Libraries
 License:        LGPLv3+
 Requires:       libgudev1 >= 147
@@ -41,7 +41,6 @@ make %{?_smp_mflags} CFLAGS="%{optflags}"
 %install
 make DESTDIR=$RPM_BUILD_ROOT install
 find $RPM_BUILD_ROOT -name gudev.la | xargs rm
-magic_rpm_clean.sh
 
 %post -p /sbin/ldconfig
 
@@ -57,8 +56,23 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/*
 
 %changelog
-* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 147.2-4
-- 为 Magic 3.0 重建
+* Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 147.2-8
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
+
+* Sun Aug 17 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 147.2-7
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
+
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 147.2-6
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Tue Nov 05 2013 Kyle McMartin <kyle@fedoraproject.org>
+- Fix FTBFS when using dirname macro.
+
+* Sun Aug 04 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 147.2-5
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 147.2-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
 
 * Sat Jul 21 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 147.2-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
