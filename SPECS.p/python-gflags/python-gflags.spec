@@ -2,10 +2,12 @@
 
 Name:           python-%{upstream_name}
 Version:        2.0
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        Commandline flags module for Python
+Summary(zh_CN.UTF-8): Python 的命令行标志模块
 
 Group:          Development/Languages
+Group(zh_CN.UTF-8): 开发/语言
 License:        BSD
 URL:            http://code.google.com/p/python-gflags/
 Source0:        http://python-gflags.googlecode.com/files/python-gflags-%{version}.tar.gz
@@ -27,8 +29,12 @@ flexibility, including built-in support for Python types, and the ability to
 define flags in the source file in which they're used. (This last is its major
 difference from OptParse.)
 
+%description -l zh_CN.UTF-8
+Python 的命令行标志模块。
+
 %package -n python3-%{upstream_name}
 Summary:        Commandline flags module for Python 3
+Summary(zh_CN.UTF-8): Python3 的命令行标志模块
 BuildRequires:  python3-devel
 BuildRequires:  python3-setuptools
 BuildRequires:  python-tools
@@ -45,6 +51,9 @@ processing. As such it's a replacement for getopt(). It has increased
 flexibility, including built-in support for Python types, and the ability to
 define flags in the source file in which they're used. (This last is its major
 difference from OptParse.)
+
+%description -n python3-%{upstream_name} -l zh_CN.UTF-8
+Python 的命令行标志模块。
 
 
 %prep
@@ -78,7 +87,7 @@ pushd python2
 mv %{buildroot}%{_bindir}/gflags2man.py  %{buildroot}%{_bindir}/gflags2man
 chmod +x %{buildroot}%{_bindir}/gflags2man
 popd
-
+magic_rpm_clean.sh
 
 %check
 pushd python2
@@ -109,6 +118,9 @@ popd
 
 
 %changelog
+* Sat Sep 05 2015 Liu Di <liudidi@gmail.com> - 2.0-5
+- 为 Magic 3.0 重建
+
 * Thu Aug 06 2015 Liu Di <liudidi@gmail.com> - 2.0-4
 - 为 Magic 3.0 重建
 

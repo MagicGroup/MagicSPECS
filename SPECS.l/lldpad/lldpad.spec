@@ -7,9 +7,11 @@
 
 Name:               lldpad
 Version:            1.0.1
-Release:            1.git%{checkout}%{?dist}
+Release:            2.git%{checkout}%{?dist}
 Summary:            Intel LLDP Agent
+Summary(zh_CN.UTF-8): Intel LLDP 代理
 Group:              System Environment/Daemons
+Group(zh_CN.UTF-8): 系统环境/服务
 License:            GPLv2
 URL:                http://open-lldp.org/
 Source0:            %{name}-%{version}.tar.gz
@@ -55,9 +57,14 @@ Requires(postun):   systemd
 This package contains the Linux user space daemon and configuration tool for
 Intel LLDP Agent with Enhanced Ethernet support for the Data Center.
 
+%description -l zh_CN.UTF-8
+Intel LLDP 代理。
+
 %package            devel
 Summary:            Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:              Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:           %{name}%{?_isa} = %{version}-%{release}
 Provides:           dcbd-devel = %{version}-%{release}
 Obsoletes:          dcbd-devel < 0.9.26
@@ -65,6 +72,9 @@ Obsoletes:          dcbd-devel < 0.9.26
 %description devel
 The %{name}-devel package contains header files for developing applications
 that use %{name}.
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %autosetup -p1
@@ -80,6 +90,7 @@ make %{?_smp_mflags}
 make install DESTDIR=%{buildroot}
 mkdir -p %{buildroot}%{_sharedstatedir}/%{name}
 rm -f %{buildroot}%{_libdir}/liblldp_clif.la
+magic_rpm_clean.sh
 
 %post
 /sbin/ldconfig
@@ -110,6 +121,9 @@ rm -f %{buildroot}%{_libdir}/liblldp_clif.la
 %{_libdir}/liblldp_clif.so
 
 %changelog
+* Thu Sep 03 2015 Liu Di <liudidi@gmail.com> - 1.0.1-2.git986eb2e
+- 为 Magic 3.0 重建
+
 * Wed Jun 17 2015 Chris Leech <cleech@redhat.com> - 1.0.1-1.git986eb2e
 - rebased to upstream v1.0.1-23-g986eb2e
 

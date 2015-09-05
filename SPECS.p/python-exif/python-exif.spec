@@ -2,11 +2,13 @@
 %global oname   exif-py
 
 Summary:        Python module to extract EXIF information
+Summary(zh_CN.UTF-8): 提取 EXIF 信息的 Python 模块
 Name:           python-exif
 Version:        2.1.1
-Release:        2%{?dist}
+Release:        3%{?dist}
 License:        BSD
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 URL:            https://github.com/ianare/exif-py
 Source0:        https://github.com/ianare/%{oname}/archive/%{version}/%{oname}-%{version}.tar.gz
 BuildArch:      noarch
@@ -20,15 +22,22 @@ BuildRequires:  python3-devel
 %description
 Python Library to extract EXIF information in digital camera image files.
 
+%description -l zh_CN.UTF-8
+提取 EXIF 信息的 Python 模块。
+
 %if 0%{?with_python3}
 %package -n    python3-exif
 Summary:       Python 3 module to extract EXIF information
+Summary(zh_CN.UTF-8): 提取 EXIF 信息的 Python3 模块
 Group:         Development/Tools
+Group(zh_CN.UTF-8): 开发/工具
 
 %description -n python3-exif
 Python Library to extract EXIF information in digital camera image files.
 
 This is the Python 3 version of python-exif.
+%description -n python3-exif -l zh_CN.UTF-8
+提取 EXIF 信息的 Python3 模块。
 %endif
 
 %prep
@@ -56,6 +65,7 @@ popd
 %endif
 %{__python2} setup.py install -O1 --skip-build --root %{buildroot}
 ln -s EXIF.py %{buildroot}%{_bindir}/EXIF
+magic_rpm_clean.sh
 
 %files
 %doc ChangeLog.rst LICENSE.txt README.rst
@@ -74,6 +84,9 @@ ln -s EXIF.py %{buildroot}%{_bindir}/EXIF
 %endif
 
 %changelog
+* Wed Sep 02 2015 Liu Di <liudidi@gmail.com> - 2.1.1-3
+- 为 Magic 3.0 重建
+
 * Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.1.1-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

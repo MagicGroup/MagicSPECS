@@ -1,8 +1,10 @@
 Name:               libhbalinux
 Version:            1.0.17
-Release:            2%{?dist}
+Release:            3%{?dist}
 Summary:            FC-HBAAPI implementation using scsi_transport_fc interfaces
+Summary(zh_CN.UTF-8): 使用 scsi_transport_fc 接口实现的 FC-HBAAPI
 Group:              System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 License:            LGPLv2
 URL:                http://www.open-fcoe.org
 Source0:            %{name}-%{version}.tar.gz
@@ -17,14 +19,22 @@ Requires(postun):   grep
 %description
 SNIA HBAAPI vendor library built on top of the scsi_transport_fc interfaces.
 
+%description -l zh_CN.UTF-8
+使用 scsi_transport_fc 接口实现的 FC-HBAAPI。
+
 %package devel
 Summary:            A file needed for libhbalinux application development
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:              Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:           %{name}%{?_isa} = %{version}-%{release}
 Requires:           pkgconfig
 
 %description devel
 The libhbalinux-devel package contains the library pkgconfig file.
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %autosetup -p1
@@ -37,6 +47,7 @@ make %{?_smp_mflags}
 %install
 make install DESTDIR=%{buildroot}
 find %{buildroot} -name '*.la' -exec rm -f {} ';'
+magic_rpm_clean.sh
 
 %post
 /sbin/ldconfig
@@ -69,6 +80,9 @@ fi
 %{_libdir}/%{name}.so
 
 %changelog
+* Thu Sep 03 2015 Liu Di <liudidi@gmail.com> - 1.0.17-3
+- 为 Magic 3.0 重建
+
 * Mon Jul 06 2015 Chris Leech <cleech@redhat.com> - 1.0.17-2
 - fix for non-PCI netdevs
 

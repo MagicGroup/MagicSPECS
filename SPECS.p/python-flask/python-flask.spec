@@ -1,19 +1,17 @@
-%if 0%{?fedora} > 12
 %global with_python3 1
-%else
-%{!?python_sitelib: %global python_sitelib %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib()")}
-%endif
 
 %global srcname Flask
 %global srcversion 0.10.1
 
 Name:           python-flask
 Version:        0.10.1
-Release:        5%{?dist}
+Release:        6%{?dist}
 Epoch:          1
 Summary:        A micro-framework for Python based on Werkzeug, Jinja 2 and good intentions
+Summary(zh_CN.UTF-8): 基于 Werkzeug, Jinja2 的 Python 微框架
 
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 License:        BSD
 URL:            http://flask.pocoo.org/
 Source0:        http://pypi.python.org/packages/source/F/Flask/%{srcname}-%{srcversion}.tar.gz
@@ -22,18 +20,10 @@ BuildArch:      noarch
 BuildRequires:  python2-devel python-setuptools python-werkzeug python-sphinx
 Requires:       python-werkzeug
 
-# if we're not on rhel, 0%%{?rhel} < 7, so we need to also check for 0%{?rhel}
-%if 0%{?rhel} && 0%{?rhel} < 7
-BuildRequires:  python-jinja2-26
-BuildRequires:  python-itsdangerous
-Requires:       python-jinja2-26
-Requires:       python-itsdangerous
-%else
 BuildRequires:  python-jinja2
 BuildRequires:  python-itsdangerous
 Requires:       python-jinja2
 Requires:       python-itsdangerous
-%endif
 
 %description
 Flask is called a “micro-framework” because the idea to keep the core
@@ -45,18 +35,26 @@ implemented in Flask itself. There are currently extensions for object
 relational mappers, form validation, upload handling, various open
 authentication technologies and more.
 
+%description -l zh_CN.UTF-8
+基于 Werkzeug, Jinja2 的 Python 微框架。
 
 %package doc
 Summary:        Documentation for %{name}
+Summary(zh_CN.UTF-8): %{name} 的文档
 Group:          Documentation
+Group(zh_CN.UTF-8): 文档
 Requires:       %{name} = %{epoch}:%{version}-%{release}
 
 %description doc
 Documentation and examples for %{name}.
 
+%description doc -l zh_CN.UTF-8
+%{name} 的文档。
+
 %if 0%{?with_python3}
 %package -n python3-flask
 Summary:        A micro-framework for Python based on Werkzeug, Jinja 2 and good intentions
+Summary(zh_CN.UTF-8): 基于 Werkzeug, Jinja2 的 Python 微框架
 BuildRequires:  python3-devel
 BuildRequires:  python3-setuptools
 BuildRequires:  python3-jinja2
@@ -77,14 +75,20 @@ implemented in Flask itself. There are currently extensions for object
 relational mappers, form validation, upload handling, various open
 authentication technologies and more.
 
+%description -n python3-flask -l zh_CN.UTF-8
+基于 Werkzeug, Jinja2 的 Python 微框架。
 
 %package -n python3-flask-doc
 Summary:        Documentation for python3-flask
+Summary(zh_CN.UTF-8): python3-flask 的文档
 Group:          Documentation
+Group(zh_CN.UTF-8): 文档
 Requires:       python3-flask = %{epoch}:%{version}-%{release}
 
 %description -n python3-flask-doc
 Documentation and examples for python3-flask.
+%description -n python3-flask-doc -l zh_CN.UTF-8
+python3-flask 的文档。
 %endif
 
 
@@ -146,7 +150,7 @@ rm -rf examples/flaskr/*.pyc
 rm -rf examples/jqueryexample/*.pyc
 popd
 %endif
-
+magic_rpm_clean.sh
 
 %check
 %{__python} setup.py test
@@ -180,6 +184,9 @@ popd
 
 
 %changelog
+* Thu Sep 03 2015 Liu Di <liudidi@gmail.com> - 1:0.10.1-6
+- 为 Magic 3.0 重建
+
 * Sun Aug 10 2014 Liu Di <liudidi@gmail.com> - 1:0.10.1-5
 - 为 Magic 3.0 重建
 

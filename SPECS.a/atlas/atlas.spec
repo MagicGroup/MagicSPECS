@@ -5,7 +5,7 @@ Version:        3.10.2
 %if "%{?enable_native_atlas}" != "0"
 %define dist .native
 %endif
-Release:        6%{?dist}
+Release:        7%{?dist}
 Summary:        Automatically Tuned Linear Algebra Software
 
 Group:          System Environment/Libraries
@@ -827,6 +827,9 @@ fi
 %endif
 
 %changelog
+* Sat Sep 05 2015 Liu Di <liudidi@gmail.com> - 3.10.2-7
+- 为 Magic 3.0 重建
+
 * Thu Jul 09 2015 Than Ngo <than@redhat.com> 3.10.2-6
 - fix ppc64le patch
 

@@ -2,10 +2,11 @@
 
 Name:           python-enchant
 Version:        1.6.6
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Python bindings for Enchant spellchecking library
-
+Summary(zh_CN.UTF-8): Echant 拼写检查库的 Python 绑定
 Group:          Development/Languages
+Group(zh_CN.UTF-8): 开发/语言
 License:        LGPLv2+
 URL:            http://packages.python.org/pyenchant/
 Source0:        http://pypi.python.org/packages/source/p/pyenchant/pyenchant-%{version}.tar.gz
@@ -41,14 +42,21 @@ Provides:       PyEnchant
 PyEnchant is a spellchecking library for Python, based on the Enchant
 library by Dom Lachowicz.
 
+%description -l zh_CN.UTF-8
+Echant 拼写检查库的 Python 绑定。
+
 %if 0%{?with_python3}
 %package -n python3-enchant
 Summary:        Python 3 bindings for Enchant spellchecking library
+Summary(zh_CN.UTF-8): Enchant 拼写检查库的 Python3 绑定
 Group:          Development/Languages
+Group(zh_CN.UTF-8): 开发/语言
 
 %description -n python3-enchant
 PyEnchant is a spellchecking library for Python 3, based on the Enchant
 library by Dom Lachowicz.
+%description -n python3-enchant -l zh_CN.UTF-8
+Enchant 拼写检查库的 Python3 绑定。
 %endif # with_python3
 
 %prep
@@ -87,6 +95,7 @@ rm -rf $RPM_BUILD_ROOT/%{python_sitelib}/*.egg-info
 # Directories used in windows build
 rm -rf $RPM_BUILD_ROOT/%{python_sitelib}/enchant/lib
 rm -rf $RPM_BUILD_ROOT/%{python_sitelib}/enchant/share
+magic_rpm_clean.sh
 
 %check
 pushd $RPM_BUILD_ROOT/%{python_sitelib}
@@ -136,6 +145,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Wed Sep 02 2015 Liu Di <liudidi@gmail.com> - 1.6.6-3
+- 为 Magic 3.0 重建
+
 * Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.6.6-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

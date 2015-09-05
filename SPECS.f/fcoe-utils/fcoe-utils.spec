@@ -5,9 +5,11 @@
 
 Name:               fcoe-utils
 Version:            1.0.30
-Release:            3.git%{checkout}%{?dist}
+Release:            4.git%{checkout}%{?dist}
 Summary:            Fibre Channel over Ethernet utilities
+Summary(zh_CN.UTF-8): FCOE（以太网上的光纤通道）工具
 Group:              Applications/System
+Group(zh_CN.UTF-8): 应用程序/系统
 License:            GPLv2
 URL:                http://www.open-fcoe.org
 # git://open-fcoe.org/fcoe/fcoe-utils.git
@@ -40,6 +42,9 @@ Fibre Channel over Ethernet utilities
 fcoeadm - command line tool for configuring FCoE interfaces
 fcoemon - service to configure DCB Ethernet QOS filters, works with lldpad
 
+%description -l zh_CN.UTF-8
+FCOE（以太网上的光纤通道）工具。
+
 %prep
 %autosetup -p1
 cp -v %{SOURCE1} quickstart.txt
@@ -64,6 +69,7 @@ for file in \
 done
 # We supply our own config for fcoe.service
 rm -f %{buildroot}/%{_sysconfdir}/fcoe/config
+magic_rpm_clean.sh
 
 %post
 %systemd_post fcoe.service
@@ -86,6 +92,9 @@ rm -f %{buildroot}/%{_sysconfdir}/fcoe/config
 %{_libexecdir}/fcoe/
 
 %changelog
+* Thu Sep 03 2015 Liu Di <liudidi@gmail.com> - 1.0.30-4.git91c0c8c
+- 为 Magic 3.0 重建
+
 * Mon Jul 06 2015 Chris Leech <cleech@redhat.com> - 1.0.30-2
 - fix display when libhbalinux includes hosts without a serial number
 

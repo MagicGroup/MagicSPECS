@@ -3,9 +3,9 @@
 
 Name:           python-%{srcname}
 Version:        0.4.2
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        Google Application Utilities for Python
-
+Summary(zh_CN.UTF-8): Python 下的 Google 应用程序工具
 License:        ASL 2.0
 URL:            https://github.com/google/%{srcname}
 Source0:        https://pypi.python.org/packages/source/g/%{srcname}/%{srcname}-%{version}.tar.gz
@@ -40,8 +40,13 @@ Features:
 * google_test setuptools command for running tests.
 * Helper module for creating application stubs.
 
+%description -l zh_CN.UTF-8
+Python 下的 Google 应用程序工具。
+
+
 %package -n python3-%{srcname}
 Summary:        Google Application Utilities for Python 3
+Summary(zh_CN.UTF-8): Python3 下的 Google 应用程序工具
 BuildRequires:  python3-devel
 BuildRequires:  python3-setuptools
 BuildRequires:  python-tools
@@ -74,6 +79,8 @@ Features:
 * google_test setuptools command for running tests.
 * Helper module for creating application stubs.
 
+%description -n python3-%{srcname} -l zh_CN.UTF-8
+Python3 下的 Google 应用程序工具。
 
 %prep
 %setup -qc
@@ -103,7 +110,7 @@ popd
 pushd python2
 %{__python2} setup.py install --skip-build --root %{buildroot}
 popd
-
+magic_rpm_clean.sh
 
 %check
 pushd python2
@@ -127,6 +134,9 @@ popd
 
 
 %changelog
+* Sat Sep 05 2015 Liu Di <liudidi@gmail.com> - 0.4.2-5
+- 为 Magic 3.0 重建
+
 * Tue Aug 04 2015 Liu Di <liudidi@gmail.com> - 0.4.2-4
 - 为 Magic 3.0 重建
 

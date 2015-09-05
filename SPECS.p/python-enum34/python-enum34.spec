@@ -1,20 +1,14 @@
-%if 0%{?rhel} && 0%{?rhel} <= 7
-%{!?__python2: %global __python2 /usr/bin/python2}
-%{!?python2_sitelib: %global python2_sitelib %(%{__python2} -c "from distutils.sysconfig import get_python_lib; print(get_python_lib())")}
-%{!?python2_sitearch: %global python2_sitearch %(%{__python2} -c "from distutils.sysconfig import get_python_lib; print(get_python_lib(1))")}
-%endif
-
-%if 0%{?fedora} > 12 || 0%{?rhel} > 7
 # Should not build for Python 3 for Fedora releases that provide
 # Python 3.4 (Fedora 22 or higher?).
 %global with_python3 1
-%endif
 
 Name:           python-enum34
 Version:        1.0.4
-Release:        3%{?dist}
+Release:        4%{?dist}
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Summary:        Backport of Python 3.4 Enum
+Summary(zh_CN.UTF-8): Pyhton 3.4 Enum 的 Backport
 License:        BSD
 BuildArch:      noarch
 URL:            https://pypi.python.org/pypi/enum34
@@ -38,10 +32,15 @@ unique sets of names and values: Enum and IntEnum. It also defines one
 decorator, unique, that ensures only unique member names are present
 in an enumeration.
 
+%description -l zh_CN.UTF-8
+Pyhton 3.4 Enum 的 Backport。
+
 %if 0%{?with_python3}
 %package -n python3-enum34
 Summary:        Backport of Python 3.4 Enum
+Summary(zh_CN.UTF-8): Pyhton 3.4 Enum 的 Backport
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 
 %description -n python3-enum34
 Python 3.4 introduced official support for enumerations.  This is a
@@ -56,6 +55,8 @@ unique sets of names and values: Enum and IntEnum. It also defines one
 decorator, unique, that ensures only unique member names are present
 in an enumeration.
 
+%description -n python3-enum34 -l zh_CN.UTF-8
+Pyhton 3.4 Enum 的 Backport。
 %endif # with_python3
 
 %prep
@@ -96,6 +97,7 @@ popd
 %{__python2} setup.py install --skip-build --root %{buildroot}
 # remove docs from sitelib, we'll put them in doc dir instead
 rm -rf %{buildroot}%{python2_sitelib}/enum/{LICENSE,README,doc}
+magic_rpm_clean.sh
 
 %files
 %doc PKG-INFO enum/LICENSE enum/README enum/doc/enum.rst
@@ -108,6 +110,9 @@ rm -rf %{buildroot}%{python2_sitelib}/enum/{LICENSE,README,doc}
 %endif # with_python3
 
 %changelog
+* Wed Sep 02 2015 Liu Di <liudidi@gmail.com> - 1.0.4-4
+- 为 Magic 3.0 重建
+
 * Mon Aug 17 2015 Liu Di <liudidi@gmail.com> - 1.0.4-3
 - 为 Magic 3.0 重建
 

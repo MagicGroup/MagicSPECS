@@ -2,10 +2,12 @@
 
 Name:           python-fpconst
 Version:        0.7.3
-Release:        11%{?dist}
+Release:        12%{?dist}
 Summary:        Python module for handling IEEE 754 floating point special values
+Summary(zh_CN.UTF-8): 处理 IEEE 754 浮点值的 Python 模块
 
 Group:          Development/Languages
+Group(zh_CN.UTF-8): 开发/语言
 License:        ASL 2.0
 URL:            http://research.warnes.net/statcomp/projects/RStatServer/fpconst
 Source0:        http://downloads.sourceforge.net/rsoap/fpconst-%{version}.tar.gz
@@ -20,6 +22,8 @@ IEEE754 double-precision special values.  It provides constants for
 Not-a-Number (NaN), Positive Infinity (PosInf), and Negative Infinity
 (NegInf), as well as functions to test for these values.
 
+%description -l zh_CN.UTF-8
+处理 IEEE 754 浮点值的 Python 模块。
 
 %prep
 %setup -qn fpconst-%{version}
@@ -49,6 +53,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Thu Sep 03 2015 Liu Di <liudidi@gmail.com> - 0.7.3-12
+- 为 Magic 3.0 重建
+
 * Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 0.7.3-11
 - 为 Magic 3.0 重建
 

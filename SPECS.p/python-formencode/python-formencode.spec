@@ -4,10 +4,12 @@
 
 Name:           python-formencode
 Version:        1.2.6
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        HTML form validation, generation, and convertion package  
+Summary(zh_CN.UTF-8): HTML 表单校验、生成和转换包
 
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 License:        Python
 URL:            http://formencode.org/
 Source0:        https://pypi.python.org/packages/source/F/%{srcname}/%{srcname}-%{version}.zip
@@ -36,6 +38,9 @@ FormEncode validates and converts nested structures. It allows for a
 declarative form of defining the validation, and decoupled processes 
 for filling and generating forms.
 
+%description -l zh_CN.UTF-8
+HTML 表单校验、生成和转换包。
+
 %prep
 %setup -q -n %{srcname}-%{version}
 
@@ -59,7 +64,7 @@ for file in $RPM_BUILD_ROOT%{python_sitelib}/formencode/i18n/* ; do
     fi
 done
 rm -rf $RPM_BUILD_ROOT%{python_sitelib}/formencode/i18n
-
+magic_rpm_clean.sh
 %find_lang %{srcname}
 
 %clean
@@ -76,6 +81,9 @@ PYTHONPATH=$(pwd) nosetests
 %{python_sitelib}/%{srcname}-%{version}-py%{python_version}.egg-info
 
 %changelog
+* Thu Sep 03 2015 Liu Di <liudidi@gmail.com> - 1.2.6-3
+- 为 Magic 3.0 重建
+
 * Sun Aug 04 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.2.6-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
 

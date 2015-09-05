@@ -1,14 +1,11 @@
-%if ! (0%{?fedora} > 12 || 0%{?rhel} > 5)
-%{!?python_sitelib: %global python_sitelib %(%{__python} -c "from distutils.sysconfig import get_python_lib; print(get_python_lib())")}
-%{!?python_sitearch: %global python_sitearch %(%{__python} -c "from distutils.sysconfig import get_python_lib; print(get_python_lib(1))")}
-%endif
-
 Name:           python-gdata
 Version:        2.0.18
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        A Python module for accessing online Google services
+Summary(zh_CN.UTF-8): 访问在线 Google 服务的 Python 模块
 
 Group:          Development/Languages
+Group(zh_CN.UTF-8): 开发/语言
 License:        ASL 2.0
 URL:            http://code.google.com/p/gdata-python-client/
 Source0:        http://gdata-python-client.googlecode.com/files/gdata-%{version}.tar.gz
@@ -40,6 +37,9 @@ This is a Python module for accessing online Google services such as:
 - Sites Data API
 - Issue Tracker Data API
 
+%description -l zh_CN.UTF-8
+访问在线 Google 服务的 Python 模块。
+
 
 %prep
 %setup -q -n gdata-%{version}
@@ -52,6 +52,7 @@ find -type f -print0 |  xargs -0 sed -i 's/\r//'
 
 %install
 %{__python} setup.py install -O1 --skip-build --root $RPM_BUILD_ROOT
+magic_rpm_clean.sh
 
 %files
 %defattr(-,root,root,-)
@@ -61,6 +62,9 @@ find -type f -print0 |  xargs -0 sed -i 's/\r//'
 %{python_sitelib}/gdata-%{version}-py*.egg-info
 
 %changelog
+* Thu Sep 03 2015 Liu Di <liudidi@gmail.com> - 2.0.18-5
+- 为 Magic 3.0 重建
+
 * Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.0.18-4
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

@@ -1,8 +1,10 @@
 Name:           libhbaapi
 Version:        2.2.9
-Release:        7%{?dist}
+Release:        8%{?dist}
 Summary:        SNIA HBAAPI library
+Summary(zh_CN.UTF-8): SNIA HBAAPI 库
 Group:          System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 License:        SNIA
 URL:            http://open-fcoe.org/
 # This source was cloned from upstream git (libHBAAPI)
@@ -15,15 +17,23 @@ BuildRequires:  automake libtool
 The SNIA HBA API library. C-level project to manage
 Fibre Channel Host Bus Adapters.
 
+%description -l zh_CN.UTF-8
+SNIA HBAAPI 库。
+
 %package        devel
 Summary:        Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       %{name}%{?_isa} = %{version}-%{release}
 Requires:       pkgconfig
 
 %description    devel
 The %{name}-devel package contains libraries and header files for
 developing applications that use %{name}.
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup
@@ -38,6 +48,7 @@ make %{?_smp_mflags}
 %install
 make install DESTDIR=%{buildroot}
 find %{buildroot} -name '*.la' -exec rm -f {} ';'
+magic_rpm_clean.sh
 
 %post -p /sbin/ldconfig
 
@@ -54,6 +65,9 @@ find %{buildroot} -name '*.la' -exec rm -f {} ';'
 %{_libdir}/pkgconfig/*.pc
 
 %changelog
+* Thu Sep 03 2015 Liu Di <liudidi@gmail.com> - 2.2.9-8
+- 为 Magic 3.0 重建
+
 * Wed Jun 17 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.2.9-7
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

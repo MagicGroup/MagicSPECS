@@ -1,11 +1,8 @@
-%if 0%{?fedora} > 12 || 0%{?rhel} > 6
 %global with_python3 1
-%else
-%{!?python_sitearch: %global python_sitelib %(%{__python} -c "from distutils.sysconfig import get_python_lib; print (get_python_lib(1))")}
-%endif
 
 
 Summary:        Python (PyGObject) bindings to the GUDev library
+Summary(zh_CN.UTF-8): GUDev 库的 Python 绑定
 Name:           python-gudev
 URL:            http://github.com/nzjrs/python-gudev
 
@@ -31,6 +28,9 @@ BuildRequires:  pygobject2-devel
 %description
 python-gudev is a Python (PyGObject) binding to the GUDev UDEV library.
 
+%description -l zh_CN.UTF-8
+GUDev 库的 Python 绑定。
+
 %prep
 %setup -q -n %{_dirname}
 
@@ -41,6 +41,7 @@ make %{?_smp_mflags} CFLAGS="%{optflags}"
 %install
 make DESTDIR=$RPM_BUILD_ROOT install
 find $RPM_BUILD_ROOT -name gudev.la | xargs rm
+magic_rpm_clean.sh
 
 %post -p /sbin/ldconfig
 
