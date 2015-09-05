@@ -216,6 +216,7 @@ Summary(zh_CN.UTF-8): Linux 内核
 
 # make 的目标，默认是 bzImage，详情请 Google。
 %define make_target bzImage
+%define image_install_path boot
 
 # 定义内核真正的版本，即 lib/modules 下的目录
 %define KVERREL %{version}-%{release}.%{_target_cpu}
@@ -316,8 +317,8 @@ Summary(zh_CN.UTF-8): Linux 内核
 %ifarch %{all_x86}
 %define asmarch x86
 %define hdrarch i386
+%define pae PAE
 %define all_arch_configs kernel-%{version}-i?86*.config
-%define image_install_path boot
 %define kernel_image arch/x86/boot/bzImage
 %endif
 
@@ -325,7 +326,6 @@ Summary(zh_CN.UTF-8): Linux 内核
 %ifarch x86_64
 %define asmarch x86
 %define all_arch_configs kernel-%{version}-x86_64*.config
-%define image_install_path boot
 %define kernel_image arch/x86/boot/bzImage
 %endif
 
@@ -333,7 +333,6 @@ Summary(zh_CN.UTF-8): Linux 内核
 %ifarch %{power64}
 %define asmarch powerpc
 %define hdrarch powerpc
-%define image_install_path boot
 %define make_target vmlinux
 %define kernel_image vmlinux
 %define kernel_image_elf 1
@@ -350,7 +349,6 @@ Summary(zh_CN.UTF-8): Linux 内核
 %define asmarch s390
 %define hdrarch s390
 %define all_arch_configs kernel-%{version}-s390x.config
-%define image_install_path boot
 %define make_target image
 %define kernel_image arch/s390/boot/image
 %define with_tools 0
@@ -359,7 +357,6 @@ Summary(zh_CN.UTF-8): Linux 内核
 # arm 架构下
 %ifarch %{arm}
 %define all_arch_configs kernel-%{version}-arm*.config
-%define image_install_path boot
 %define asmarch arm
 %define hdrarch arm
 %define pae lpae
@@ -383,7 +380,6 @@ Summary(zh_CN.UTF-8): Linux 内核
 %define hdrarch arm64
 %define make_target Image.gz
 %define kernel_image arch/arm64/boot/Image.gz
-%define image_install_path boot
 %endif
 
 # mips64el 架构下
@@ -392,14 +388,11 @@ Summary(zh_CN.UTF-8): Linux 内核
 %define asmarch mips
 %define hdrarch mips
 %define all_arch_configs kernel-%{version}-mips64el*.config
-%define image_install_path boot
 %define make_target vmlinuz
 %define kernel_image vmlinuz
 # 这个是必须的么？
 %define kernel_image_elf 1
 %define with_headers 1
-# 有问题
-%define with_debuginfo 0
 %endif
 
 
