@@ -1,0 +1,12 @@
+diff -up SDL2-2.0.3/include/begin_code.h.oldgcc SDL2-2.0.3/include/begin_code.h
+--- SDL2-2.0.3/include/begin_code.h.oldgcc	2015-06-02 14:44:27.811507809 -0400
++++ SDL2-2.0.3/include/begin_code.h	2015-06-02 14:44:40.370428419 -0400
+@@ -56,8 +56,6 @@
+ # else
+ #  if defined(__GNUC__) && __GNUC__ >= 4
+ #   define DECLSPEC __attribute__ ((visibility("default")))
+-#  elif defined(__GNUC__) && __GNUC__ >= 2
+-#   define DECLSPEC __declspec(dllexport)
+ #  else
+ #   define DECLSPEC
+ #  endif
