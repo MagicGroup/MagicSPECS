@@ -3,13 +3,15 @@
 %{!?python_sitelib: %define python_sitelib %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib()")}
 
 Name:           python-httplib2
-Version:        0.6.0
-Release:        8%{?dist}
+Version:	0.9.1
+Release:	2%{?dist}
 Summary:        A comprehensive HTTP client library
+Summary(zh_CN.UTF-8): 全面的 HTTP 客户端库
 Group:          System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 License:        MIT
-URL:            http://code.google.com/p/httplib2/
-Source0:        http://httplib2.googlecode.com/files/httplib2-%{version}.tar.gz
+URL:            https://pypi.python.org/pypi/httplib2
+Source0:        https://pypi.python.org/packages/source/h/httplib2/httplib2-%{version}.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  python-setuptools-devel
 BuildRequires:  python-devel
@@ -23,14 +25,21 @@ BuildRequires:  python3-devel
 A comprehensive HTTP client library that supports many features left out of
 other HTTP libraries.
 
+%description -l zh_CN.UTF-8
+全面的 HTTP 客户端库。
+
 %if 0%{?with_python3}
 %package -n python3-httplib2
 Summary:        A comprehensive HTTP client library
+Summary(zh_CN.UTF-8): 全面的 HTTP 客户端库
 Group:          System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 
 %description -n python3-httplib2
 A comprehensive HTTP client library that supports many features left out of
 other HTTP libraries.
+%description -n python3-httplib2 -l zh_CN.UTF-8
+全面的 HTTP 客户端库。
 %endif # with_python3
 
 %prep
@@ -60,23 +69,28 @@ pushd %{py3dir}
 %{__python3} setup.py install --skip-build --root $RPM_BUILD_ROOT
 popd
 %endif # with_python3
+magic_rpm_clean.sh
 
 %clean
 rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(-,root,root,-)
-%doc README
 %{python_sitelib}/*
 
 %if 0%{?with_python3}
 %files -n python3-httplib2
 %defattr(-,root,root,-)
-%doc README
 %{python3_sitelib}/*
 %endif # with_python3
 
 %changelog
+* Sun Sep 06 2015 Liu Di <liudidi@gmail.com> - 0.9.1-2
+- 为 Magic 3.0 重建
+
+* Sun Sep 06 2015 Liu Di <liudidi@gmail.com> - 0.9.1-1
+- 更新到 0.9.1
+
 * Tue Jun 17 2014 Liu Di <liudidi@gmail.com> - 0.6.0-8
 - 为 Magic 3.0 重建
 

@@ -1,14 +1,14 @@
 %global modulename html5lib
-%if 0%{?fedora}
 %global with_python3 1
-%endif
 
 Name:		python-%{modulename}
 Summary:	A python based HTML parser/tokenizer
-Version:	0.999
-Release:	7%{?dist}
+Summary(zh_CN.UTF-8): Python 的 HTML 解析器
+Version:	0.999999
+Release:	1%{?dist}
 Epoch:		1
 Group:		Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 License:	MIT
 URL:		https://pypi.python.org/pypi/%{modulename}
 
@@ -25,10 +25,15 @@ BuildRequires:	python-six
 A python based HTML parser/tokenizer based on the WHATWG HTML5 
 specification for maximum compatibility with major desktop web browsers.
 
+%description -l zh_CN.UTF-8
+Python 的 HTML 解析器。
+
 %if 0%{?with_python3}
 %package -n python3-%{modulename}
 Summary:	A python based HTML parser/tokenizer 
+Summary(zh_CN.UTF-8): Python3 的 HTML 解析器
 Group:		Development/Libraries 
+Group(zh_CN.UTF-8): 开发/库
 
 Requires:	python3-six
 BuildRequires:	python3-devel
@@ -40,6 +45,8 @@ BuildRequires:	python3-setuptools
 %description -n python3-%{modulename}
 A python based HTML parser/tokenizer based on the WHATWG HTML5 
 specification for maximum compatibility with major desktop web browsers.
+%description -n python3-%{modulename} -l zh_CN.UTF-8
+Python3 的 HTML 解析器。
 %endif
 
 
@@ -70,6 +77,7 @@ popd
 %endif
 
 %{__python} setup.py install -O1 --skip-build --root %{buildroot}
+magic_rpm_clean.sh
 
 %check
 nosetests
@@ -94,6 +102,9 @@ popd
 
 
 %changelog
+* Sun Sep 06 2015 Liu Di <liudidi@gmail.com> - 1:0.999999-1
+- 更新到 0.999999
+
 * Wed Aug 19 2015 Liu Di <liudidi@gmail.com> - 1:0.999-7
 - 为 Magic 3.0 重建
 

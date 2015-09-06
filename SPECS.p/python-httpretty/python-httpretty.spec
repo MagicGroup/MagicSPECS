@@ -1,21 +1,12 @@
-%if 0%{?fedora}
-# escaping for EPEL.
 %global with_python3 1
-%endif
-
-%if 0%{?rhel} && 0%{?rhel} <= 6
-%{!?__python2: %global __python2 /usr/bin/python2}
-%{!?python2_sitelib: %global python2_sitelib %(%{__python2} -c "from distutils.sysconfig import get_python_lib; print(get_python_lib())")}
-%{!?python2_sitearch: %global python2_sitearch %(%{__python2} -c "from distutils.sysconfig import get_python_lib; print(get_python_lib(1))")}
-%endif
 
 %global run_tests 0
 
 Name:           python-httpretty
-Version:        0.8.3
-Release:        5%{?dist}
+Version:	0.8.10
+Release:	1%{?dist}
 Summary:        HTTP request mock tool for Python
-
+Summary(zh_CN.UTF-8): Python 下的 HTTP 工具
 License:        MIT
 URL:            http://falcao.it/HTTPretty/
 Source0:        https://pypi.python.org/packages/source/h/httpretty/httpretty-%{version}.tar.gz
@@ -24,10 +15,6 @@ Source0:        https://pypi.python.org/packages/source/h/httpretty/httpretty-%{
 # in a non-unicode environment (like packaging build servers). Remove the
 # unicode characters.
 Patch0:         0001-Replace-unicode-character-with-ASCII.patch
-
-# Part of https://github.com/gabrielfalcao/HTTPretty/pull/180
-# however will likely still be needed for test-requirements in future.
-Patch1:         0002-Un-pin-requirements.patch
 
 BuildArch:      noarch
 
@@ -43,9 +30,14 @@ what if the API server is down? What if its content has changed?
 
 Don't worry, HTTPretty is here for you.
 
+%description -l zh_CN.UTF-8
+Python 下的 HTTP 工具。
+
+
 %if 0%{?with_python3}
 %package -n python3-httpretty
 Summary:        HTTP request mock tool for Python 3
+Summary(zh_CN.UTF-8): Python3 下的 HTTP 工具
 Requires:       python3-urllib3
 
 BuildRequires:  python3-devel
@@ -57,12 +49,13 @@ fine but until the day he needed to test the code that hits the RESTful API:
 what if the API server is down? What if its content has changed?
 
 Don't worry, HTTPretty is here for you.
+%description -n python3-httpretty -l zh_CN.UTF-8
+Python3 下的 HTTP 工具。
 %endif
 
 %prep
 %setup -q -n httpretty-%{version}
 %patch0 -p1
-%patch1 -p1
 
 %if 0%{?with_python3}
 rm -rf %{py3dir}
@@ -87,7 +80,7 @@ pushd %{py3dir}
 %{__python3} setup.py install -O1 --skip-build --root $RPM_BUILD_ROOT
 popd
 %endif
-
+magic_rpm_clean.sh
 
 %check
 # There are a number of problems with the tests upstream.
@@ -118,6 +111,9 @@ popd
 
 
 %changelog
+* Sun Sep 06 2015 Liu Di <liudidi@gmail.com> - 0.8.10-1
+- 更新到 0.8.10
+
 * Wed Aug 19 2015 Liu Di <liudidi@gmail.com> - 0.8.3-5
 - 为 Magic 3.0 重建
 

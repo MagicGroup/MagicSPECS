@@ -5,9 +5,11 @@
 
 Name:           python-iniparse
 Version:        0.4
-Release:        16%{?dist}
+Release:        17%{?dist}
 Summary:        Python Module for Accessing and Modifying Configuration Data in INI files
+Summary(zh_CN.UTF-8): 访问和修改 INI 文件中的配置数据的 Python 模块
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 License:        MIT and Python
 URL:            http://code.google.com/p/iniparse/
 Source0:        http://iniparse.googlecode.com/files/iniparse-%{version}.tar.gz
@@ -40,11 +42,15 @@ with the standard library's ConfigParser, preserves structure of INI
 files (order of sections & options, indentation, comments, and blank
 lines are preserved when data is updated), and is more convenient to
 use.
+%description -l zh_CN.UTF-8
+访问和修改 INI 文件中的配置数据的 Python 模块。
 
 %if 0%{?with_python3}
 %package -n python3-iniparse
 Summary:        Python 3 Module for Accessing and Modifying Configuration Data in INI files
+Summary(zh_CN.UTF-8): 访问和修改 INI 文件中的配置数据的 Python3 模块
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       python3-six
 
 %description -n python3-iniparse
@@ -53,6 +59,8 @@ with the standard library's configparser, preserves structure of INI
 files (order of sections & options, indentation, comments, and blank
 lines are preserved when data is updated), and is more convenient to
 use.
+%description -n python3-iniparse -l zh_CN.UTF-8
+访问和修改 INI 文件中的配置数据的 Python3 模块。
 %endif
 
 %prep
@@ -92,6 +100,7 @@ mv $RPM_BUILD_ROOT/usr/share/doc/iniparse-%{version} $RPM_BUILD_ROOT%{_pkgdocdir
 # Don't dupe the license
 rm -rf $RPM_BUILD_ROOT%{_pkgdocdir}/LICENSE*
 rm -rf $RPM_BUILD_ROOT%{_docdir}/python3-iniparse/LICENSE*
+magic_rpm_clean.sh
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -123,6 +132,9 @@ popd
 
 
 %changelog
+* Sun Sep 06 2015 Liu Di <liudidi@gmail.com> - 0.4-17
+- 为 Magic 3.0 重建
+
 * Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.4-16
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

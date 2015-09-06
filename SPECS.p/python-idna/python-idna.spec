@@ -1,13 +1,12 @@
-%if 0%{?fedora}
 %global with_python3 1
-%endif
 
 %global srcname idna
 
 Name:           python-%{srcname}
 Version:        2.0
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Internationalized Domain Names in Applications (IDNA)
+Summary(zh_CN.UTF-8): 应用程序中的国际域名（IDNA）
 
 License:        BSD and Python and Unicode
 URL:            https://github.com/kjd/idna
@@ -31,9 +30,13 @@ The library is also intended to act as a suitable drop-in replacement for the
 "encodings.idna" module that comes with the Python standard library but
 currently only supports the older 2003 specification.
 
+%description -l zh_CN.UTF-8
+应用程序中的国际域名（IDNA）。
+
 %if 0%{?with_python3}
 %package -n python3-%{srcname}
 Summary:        Internationalized Domain Names in Applications (IDNA)
+Summary(zh_CN.UTF-8): 应用程序中的国际域名（IDNA）
 
 %description -n python3-%{srcname}
 A library to support the Internationalised Domain Names in Applications (IDNA)
@@ -44,6 +47,8 @@ different results from the earlier standard from 2003.
 The library is also intended to act as a suitable drop-in replacement for the
 "encodings.idna" module that comes with the Python standard library but
 currently only supports the older 2003 specification.
+%description -n python3-%{srcname} -l zh_CN.UTF-8
+应用程序中的国际域名（IDNA）。
 %endif # with_python3
 
 %prep
@@ -79,6 +84,7 @@ popd
 %endif # with_python3
 
 %{__python2} setup.py install --skip-build --root %{buildroot}
+magic_rpm_clean.sh
 
 %check
 %{__python2} setup.py test
@@ -105,6 +111,9 @@ popd
 %endif # with_python3
 
 %changelog
+* Sun Sep 06 2015 Liu Di <liudidi@gmail.com> - 2.0-3
+- 为 Magic 3.0 重建
+
 * Mon Aug 17 2015 Liu Di <liudidi@gmail.com> - 2.0-2
 - 为 Magic 3.0 重建
 

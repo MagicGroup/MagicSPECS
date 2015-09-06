@@ -1,8 +1,4 @@
-%if 0%{?fedora} >= 21 || 0%{?rhel} >= 7
 %bcond_without atlas310
-%else
-%bcond_with atlas310
-%endif
 
 %if %{with atlas310}
 %global atlaslibs -lsatlas
@@ -28,7 +24,7 @@ BuildRequires:  atlas-devel >= 3.10
 %else
 BuildRequires:  atlas-devel
 %endif
-%ifnarch s390 s390x
+%ifnarch s390 s390x mipsel mips64el
 BuildRequires:  tbb-devel
 %global with_tbb 1
 %endif
