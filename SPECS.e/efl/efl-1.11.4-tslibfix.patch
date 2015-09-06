@@ -1,0 +1,12 @@
+diff -up efl-1.11.4/configure.ac.tslibfix efl-1.11.4/configure.ac
+--- efl-1.11.4/configure.ac.tslibfix	2014-10-26 21:42:40.831031217 -0400
++++ efl-1.11.4/configure.ac	2014-10-26 21:42:55.458006364 -0400
+@@ -2661,7 +2661,7 @@ EFL_INTERNAL_DEPEND_PKG([ECORE_FB], [eco
+ EFL_INTERNAL_DEPEND_PKG([ECORE_FB], [eo])
+ EFL_INTERNAL_DEPEND_PKG([ECORE_FB], [eina])
+ 
+-EFL_OPTIONAL_DEPEND_PKG([ECORE_FB], [${want_tslib}], [TSLIB], [tslib])
++EFL_OPTIONAL_DEPEND_PKG([ECORE_FB], [${want_tslib}], [TSLIB], [tslib-0.0])
+ EFL_ADD_FEATURE([ECORE_FB], [tslib])
+ 
+ EFL_EVAL_PKGS([ECORE_FB])
