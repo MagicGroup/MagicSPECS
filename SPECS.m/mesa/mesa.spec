@@ -3,45 +3,44 @@
 %define with_wayland 0
 %else
 %define with_private_llvm 0
-%define with_vdpau 1
 %define with_wayland 1
 %endif
 
-# f17 support wayland 0.85, llvm 3.0 means no radeonsi
-%if 0%{?fedora} < 18
-%define min_wayland_version 0.85
-%else
-%define min_wayland_version 1.0
-%ifnarch ppc aarch64
-%define with_radeonsi 1
-%endif
-%endif
-
-%ifarch %{arm}
-%define with_freedreno 1
-%endif
-
 # S390 doesn't have video cards, but we need swrast for xserver's GLX
-# llvm (and thus llvmpipe) doesn't actually work on ppc32 or s390
-
-%ifnarch s390 ppc aarch64
+# llvm (and thus llvmpipe) doesn't actually work on ppc32
+# llvm support for ppc64le is supposed to come in llvm-3.5
+%ifnarch s390 ppc
 %define with_llvm 1
 %endif
 
-%ifarch s390 s390x aarch64
+%define min_wayland_version 1.0
+%if 0%{?with_llvm}
+%define with_radeonsi 1
+%endif
+
+%ifarch s390 s390x ppc
 %define with_hardware 0
-%ifarch s390 aarch64
 %define base_drivers swrast
 %endif
-%else
+%ifnarch s390 s390x ppc
 %define with_hardware 1
-%define base_drivers nouveau,radeon,r200
+%define with_vdpau 1
+%define with_vaapi 1
+%define with_nine 1
+%define base_drivers swrast,nouveau,radeon,r200
 %ifarch %{ix86} x86_64
 %define platform_drivers ,i915,i965
+%define with_ilo    1
 %define with_vmware 1
+%define with_xa     1
+%define with_opencl 1
+%define with_omx    1
 %endif
-%ifarch ppc
-%define platform_drivers ,swrast
+%ifarch %{arm} aarch64
+%define with_vc4       1
+%define with_freedreno 1
+%define with_xa        1
+%define with_omx       1
 %endif
 %endif
 
@@ -49,22 +48,22 @@
 
 %define _default_patch_fuzz 2
 
-%define gitdate 20140110
-#% define snapshot 
+%define gitdate 20150729
+#% define githash 5a55f68
+%define git %{?githash:%{githash}}%{!?githash:%{gitdate}}
 
 Summary: Mesa graphics libraries
 Name: mesa
-Version: 10.0.2
-Release: 2.%{gitdate}%{?dist}
+Version: 10.6.3
+Release: 1.%{git}%{?dist}
 License: MIT
 Group: System Environment/Libraries
 URL: http://www.mesa3d.org
 
-# Source0: MesaLib-%{version}.tar.xz
-Source0: %{name}-%{gitdate}.tar.xz
-Source1: sanitize-tarball.sh
-Source2: make-release-tarball.sh
-Source3: make-git-snapshot.sh
+Source0: %{name}-%{git}.tar.xz
+Source1: Makefile
+Source2: vl_decoder.c
+Source3: vl_mpeg12_decoder.c
 
 # src/gallium/auxiliary/postprocess/pp_mlaa* have an ... interestingly worded license.
 # Source4 contains email correspondence clarifying the license terms.
@@ -75,10 +74,14 @@ Patch1: mesa-10.0-nv50-fix-build.patch
 Patch9: mesa-8.0-llvmpipe-shmget.patch
 Patch12: mesa-8.0.1-fix-16bpp.patch
 Patch15: mesa-9.2-hardware-float.patch
-Patch20: mesa-9.2-evergreen-big-endian.patch
+Patch20: mesa-10.2-evergreen-big-endian.patch
+Patch30: mesa-10.3-bigendian-assert.patch
 
-# backport from upstream to allow cogl use copy_sub_buffer
-Patch30: 0001-swrast-gallium-classic-add-MESA_copy_sub_buffer-supp.patch
+# https://bugs.freedesktop.org/show_bug.cgi?id=73512
+Patch99: 0001-opencl-use-versioned-.so-in-mesa.icd.patch
+
+# To have sha info in glxinfo
+BuildRequires: git
 
 BuildRequires: pkgconfig autoconf automake libtool
 %if %{with_hardware}
@@ -90,11 +93,13 @@ BuildRequires: libXxf86vm-devel
 BuildRequires: expat-devel
 BuildRequires: xorg-x11-proto-devel
 BuildRequires: makedepend
+BuildRequires: libselinux-devel
 BuildRequires: libXext-devel
 BuildRequires: libXfixes-devel
 BuildRequires: libXdamage-devel
 BuildRequires: libXi-devel
 BuildRequires: libXmu-devel
+BuildRequires: libxshmfence-devel
 BuildRequires: elfutils
 BuildRequires: python
 BuildRequires: gettext
@@ -102,7 +107,10 @@ BuildRequires: gettext
 %if 0%{?with_private_llvm}
 BuildRequires: mesa-private-llvm-devel
 %else
-BuildRequires: llvm-devel >= 3.0
+BuildRequires: llvm-devel >= 3.4-7
+%if 0%{?with_opencl}
+BuildRequires: clang-devel >= 3.0
+%endif
 %endif
 %endif
 BuildRequires: elfutils-libelf-devel
@@ -117,7 +125,17 @@ BuildRequires: mesa-libGL-devel
 %if 0%{?with_vdpau}
 BuildRequires: libvdpau-devel
 %endif
+%if 0%{?with_vaapi}
+BuildRequires: libva-devel
+%endif
 BuildRequires: zlib-devel
+%if 0%{?with_omx}
+BuildRequires: libomxil-bellagio-devel
+%endif
+%if 0%{?with_opencl}
+BuildRequires: libclc-devel llvm-static opencl-filesystem
+%endif
+BuildRequires: python-mako
 
 %description
 Mesa
@@ -160,6 +178,16 @@ Obsoletes: mesa-dri-drivers-dri1 < 7.12
 Obsoletes: mesa-dri-llvmcore <= 7.12
 %description dri-drivers
 Mesa-based DRI drivers.
+
+%if 0%{?with_omx}
+%package omx-drivers
+Summary: Mesa-based OMX drivers
+Group: User Interface/X Hardware Support
+Requires: mesa-filesystem%{?_isa}
+Requires: libomxil-bellagio%{?_isa}
+%description omx-drivers
+Mesa-based OMX drivers.
+%endif
 
 %if 0%{?with_vdpau}
 %package vdpau-drivers
@@ -257,14 +285,14 @@ Mesa libwayland-egl development package
 %endif
 
 
-%if 0%{?with_vmware}
+%if 0%{?with_xa}
 %package libxatracker
-Summary: Mesa XA state tracker for vmware
+Summary: Mesa XA state tracker
 Group: System Environment/Libraries
 Provides: libxatracker
 
 %description libxatracker
-Mesa XA state tracker for vmware
+Mesa XA state tracker
 
 %package libxatracker-devel
 Summary: Mesa XA state tracker development package
@@ -283,9 +311,43 @@ Group: System Environment/Libraries
 %description libglapi
 Mesa shared glapi
 
+
+%if 0%{?with_opencl}
+%package libOpenCL
+Summary: Mesa OpenCL runtime library
+Requires: ocl-icd
+Requires: libclc
+Requires: mesa-libgbm = %{version}-%{release}
+
+%description libOpenCL
+Mesa OpenCL runtime library.
+
+%package libOpenCL-devel
+Summary: Mesa OpenCL development package
+Requires: mesa-libOpenCL%{?_isa} = %{version}-%{release}
+
+%description libOpenCL-devel
+Mesa OpenCL development package.
+%endif
+
+%if 0%{?with_nine}
+%package libd3d
+Summary: Mesa Direct3D9 state tracker
+
+%description libd3d
+Mesa Direct3D9 state tracker
+
+%package libd3d-devel
+Summary: Mesa Direct3D9 state tracker development package
+Requires: mesa-libd3d%{?_isa} = %{version}-%{release}
+
+%description libd3d-devel
+Mesa Direct3D9 state tracker development package
+%endif
+
 %prep
 #setup -q -n Mesa-%{version}%{?snapshot}
-%setup -q -n mesa-%{gitdate}
+%setup -q -n mesa-%{git}
 grep -q ^/ src/gallium/auxiliary/vl/vl_decoder.c && exit 1
 %patch1 -p1 -b .nv50rtti
 
@@ -302,26 +364,22 @@ grep -q ^/ src/gallium/auxiliary/vl/vl_decoder.c && exit 1
 
 %patch15 -p1 -b .hwfloat
 %patch20 -p1 -b .egbe
+%patch30 -p1 -b .beassert
 
-%patch30 -p1 -b .copy_sub_buffer
+%if 0%{?with_opencl}
+%patch99 -p1 -b .icd
+%endif
 
 %if 0%{with_private_llvm}
 sed -i 's/llvm-config/mesa-private-llvm-config-%{__isa_bits}/g' configure.ac
 sed -i 's/`$LLVM_CONFIG --version`/&-mesa/' configure.ac
 %endif
 
-# need to use libdrm_nouveau2 on F17
-%if !0%{?rhel}
-%if 0%{?fedora} < 18
-sed -i 's/\<libdrm_nouveau\>/&2/' configure.ac
-%endif
-%endif
-
 cp %{SOURCE4} docs/
 
 %build
 
-autoreconf --install  
+autoreconf --install
 
 export CFLAGS="$RPM_OPT_FLAGS"
 # C++ note: we never say "catch" in the source.  we do say "typeid" once,
@@ -329,7 +387,7 @@ export CFLAGS="$RPM_OPT_FLAGS"
 #
 # We do say 'catch' in the clover and d3d1x state trackers, but we're not
 # building those yet.
-export CXXFLAGS="$RPM_OPT_FLAGS -fno-rtti -fno-exceptions"
+export CXXFLAGS="$RPM_OPT_FLAGS %{?with_opencl:-frtti -fexceptions} %{!?with_opencl:-fno-rtti -fno-exceptions}"
 %ifarch %{ix86}
 # i do not have words for how much the assembly dispatch code infuriates me
 %define asm_flags --disable-asm
@@ -337,29 +395,34 @@ export CXXFLAGS="$RPM_OPT_FLAGS -fno-rtti -fno-exceptions"
 
 %configure \
     %{?asm_flags} \
-    --disable-selinux \
+    --enable-selinux \
     --enable-osmesa \
     --with-dri-driverdir=%{_libdir}/dri \
     --enable-egl \
     --disable-gles1 \
     --enable-gles2 \
-    --disable-gallium-egl \
     --disable-xvmc \
     %{?with_vdpau:--enable-vdpau} \
+    %{?with_vaapi:--enable-va} \
     --with-egl-platforms=x11,drm%{?with_wayland:,wayland} \
     --enable-shared-glapi \
     --enable-gbm \
-    --disable-opencl \
+    %{?with_omx:--enable-omx} \
+    %{?with_opencl:--enable-opencl --enable-opencl-icd --with-clang-libdir=%{_prefix}/lib} %{!?with_opencl:--disable-opencl} \
     --enable-glx-tls \
     --enable-texture-float=yes \
     %{?with_llvm:--enable-gallium-llvm} \
-    %{?with_llvm:--with-llvm-shared-libs} \
+    %{?with_llvm:--enable-llvm-shared-libs} \
     --enable-dri \
 %if %{with_hardware}
-    %{?with_vmware:--enable-xa} \
-    --with-gallium-drivers=%{?with_vmware:svga,}%{?with_radeonsi:radeonsi,}%{?with_llvm:swrast,r600,}%{?with_freedreno:freedreno,}r300,nouveau \
+    %{?with_xa:--enable-xa} \
+    %{?with_nine:--enable-nine} \
+    --with-gallium-drivers=%{?with_vmware:svga,}%{?with_radeonsi:radeonsi,}%{?with_llvm:swrast,r600,}%{?with_freedreno:freedreno,}%{?with_vc4:vc4,}%{?with_ilo:ilo,}r300,nouveau \
 %else
     --with-gallium-drivers=%{?with_llvm:swrast} \
+%endif
+%if 0%{?fedora} < 21
+    --disable-dri3 \
 %endif
     %{?dri_drivers}
 
@@ -419,9 +482,17 @@ rm -rf $RPM_BUILD_ROOT
 %post libwayland-egl -p /sbin/ldconfig
 %postun libwayland-egl -p /sbin/ldconfig
 %endif
-%if 0%{?with_vmware}
+%if 0%{?with_xa}
 %post libxatracker -p /sbin/ldconfig
 %postun libxatracker -p /sbin/ldconfig
+%endif
+%if 0%{?with_opencl}
+%post libOpenCL -p /sbin/ldconfig
+%postun libOpenCL -p /sbin/ldconfig
+%endif
+%if 0%{?with_nine}
+%post libd3d -p /sbin/ldconfig
+%postun libd3d -p /sbin/ldconfig
 %endif
 
 %files libGL
@@ -475,6 +546,12 @@ rm -rf $RPM_BUILD_ROOT
 %ifarch %{ix86} x86_64
 %{_libdir}/dri/i915_dri.so
 %{_libdir}/dri/i965_dri.so
+%if 0%{?with_ilo}
+%{_libdir}/dri/ilo_dri.so
+%endif
+%endif
+%if 0%{?with_vc4}
+%{_libdir}/dri/vc4_dri.so
 %endif
 %if 0%{?with_freedreno}
 %{_libdir}/dri/kgsl_dri.so
@@ -485,16 +562,34 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/dri/vmwgfx_dri.so
 %endif
 %endif
+%if 0%{?with_llvm}
+%ifarch %{ix86} x86_64
+%dir %{_libdir}/gallium-pipe
+%{_libdir}/gallium-pipe/*.so
+%endif
+%{_libdir}/dri/kms_swrast_dri.so
+%endif
 %{_libdir}/dri/swrast_dri.so
+%if 0%{?with_vaapi}
+%{_libdir}/dri/gallium_drv_video.so
+%endif
 
 %if %{with_hardware}
+%if 0%{?with_omx}
+%files omx-drivers
+%defattr(-,root,root,-)
+%{_libdir}/bellagio/libomx_mesa.so
+%endif
 %if 0%{?with_vdpau}
 %files vdpau-drivers
 %defattr(-,root,root,-)
 %{_libdir}/vdpau/libvdpau_nouveau.so.1*
+%{_libdir}/vdpau/libvdpau_r300.so.1*
 %if 0%{?with_llvm}
 %{_libdir}/vdpau/libvdpau_r600.so.1*
+%if 0%{?with_radeonsi}
 %{_libdir}/vdpau/libvdpau_radeonsi.so.1*
+%endif
 %endif
 %endif
 %endif
@@ -507,6 +602,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_includedir}/GL/glx.h
 %{_includedir}/GL/glx_mangle.h
 %{_includedir}/GL/glxext.h
+%{_includedir}/GL/glcorearb.h
 %dir %{_includedir}/GL/internal
 %{_includedir}/GL/internal/dri_interface.h
 %{_libdir}/pkgconfig/dri.pc
@@ -521,6 +617,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_includedir}/EGL/egl.h
 %{_includedir}/EGL/eglmesaext.h
 %{_includedir}/EGL/eglplatform.h
+%{_includedir}/EGL/eglextchromium.h
 %dir %{_includedir}/KHR
 %{_includedir}/KHR/khrplatform.h
 %{_libdir}/pkgconfig/egl.pc
@@ -535,6 +632,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_includedir}/GLES3/gl3platform.h
 %{_includedir}/GLES3/gl3.h
 %{_includedir}/GLES3/gl3ext.h
+%{_includedir}/GLES3/gl31.h
 %{_libdir}/pkgconfig/glesv2.pc
 %{_libdir}/libGLESv2.so
 
@@ -575,7 +673,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/pkgconfig/wayland-egl.pc
 %endif
 
-%if 0%{?with_vmware}
+%if 0%{?with_xa}
 %files libxatracker
 %defattr(-,root,root,-)
 %doc docs/COPYING
@@ -595,29 +693,301 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 %endif
 
+%if 0%{?with_opencl}
+%files libOpenCL
+%{_libdir}/libMesaOpenCL.so.*
+%{_sysconfdir}/OpenCL/vendors/mesa.icd
+
+%files libOpenCL-devel
+%{_libdir}/libMesaOpenCL.so
+%endif
+
+%if 0%{?with_nine}
+%files libd3d
+%dir %{_libdir}/d3d/
+%{_libdir}/d3d/*.so.*
+
+%files libd3d-devel
+%{_libdir}/pkgconfig/d3d.pc
+%{_includedir}/d3dadapter/
+%{_libdir}/d3d/*.so
+%endif
+
 %changelog
-* Thu May 22 2014 Liu Di <liudidi@gmail.com> - 10.0.2-2.20140110
-- 为 Magic 3.0 重建
+* Wed Jul 29 2015 Igor Gnatenko <i.gnatenko.brain@gmail.com> - 10.6.3-1.20150729
+- 10.6.3
 
-* Fri Jan 10 2014 Igor Gnatenko <i.gnatenko.brain@gmail.com> - 10.0.2-1.20140110
-- 10.0.2 upstream release
+* Sat Jul 11 2015 Igor Gnatenko <i.gnatenko.brain@gmail.com> - 10.6.2-1.20150711
+- 10.6.2
 
-* Fri Dec 20 2013 Igor Gnatenko <i.gnatenko.brain@gmail.com> - 10.0.1-1.20131220
-- 10.0.1 upstream release
+* Mon Jun 29 2015 Igor Gnatenko <i.gnatenko.brain@gmail.com> - 10.6.1-1.20150629
+- 10.6.1
 
-* Wed Dec 18 2013 Peter Robinson <pbrobinson@fedoraproject.org> 10.0-4.20131206
-- use with_wayland for all wayland conditionals (instead of rhel)
-- don't build aarch64 with llvm support for now
-- fix aarch64 builds
+* Thu Jun 18 2015 Igor Gnatenko <i.gnatenko.brain@gmail.com> - 10.6.0-1
+- 10.6.0
 
-* Tue Dec 17 2013 Dave Airlie <airlied@redhat.com> 10.0-3.20131206
-- don't build aarch64 with hardware for now
+* Mon Jun 08 2015 Igor Gnatenko <i.gnatenko.brain@gmail.com> - 10.5.7-1.20150608
+- 10.5.7
 
-* Fri Dec 13 2013 Dave Airlie <airlied@redhat.com> 10.0-2.20131206
-- add software driver copy_sub_buffer support from upstream
+* Tue May 05 2015 Igor Gnatenko <i.gnatenko.brain@gmail.com> - 10.5.4-1.20150505
+- 10.5.4
 
-* Sun Dec 01 2013 Igor Gnatenko <i.gnatenko.brain@gmail.com> - 10.0-1.20131206
-- 10.0 upstream (RHBZ 1036361)
+* Mon Apr 20 2015 Igor Gnatenko <i.gnatenko.brain@gmail.com> - 10.5.3-1.20150420
+- 10.5.3
+
+* Sat Mar 14 2015 Igor Gnatenko <i.gnatenko.brain@gmail.com> - 10.5.1-1.20150314
+- 10.5.1
+
+* Sun Mar 08 2015 Kalev Lember <kalevlember@gmail.com> - 10.5.0-2.20150218
+- Backport a patch fixing partially transparent screenshots (fdo#89292)
+
+* Wed Feb 18 2015 Igor Gnatenko <ignatenkobrain@fedoraproject.org> - 10.5.0-1.20150218
+- 10.5.0
+
+* Fri Jan 02 2015 Igor Gnatenko <ignatenkobrain@fedoraproject.org> - 10.5.0-0.devel.32.6171131
+- 6171131
+
+* Fri Jan 02 2015 Igor Gnatenko <ignatenkobrain@fedoraproject.org> - 10.5.0-0.devel.31.c3260f8
+- c3260f8
+
+* Fri Jan 02 2015 Igor Gnatenko <ignatenkobrain@fedoraproject.org> - 10.5.0-0.devel.30.290553b
+- 290553b
+
+* Thu Jan 01 2015 Igor Gnatenko <ignatenkobrain@fedoraproject.org> - 10.5.0-0.devel.28.b77eaaf
+- b77eaaf
+
+* Thu Jan 01 2015 Igor Gnatenko <ignatenkobrain@fedoraproject.org> - 10.5.0-0.devel.26.c633528
+- c633528
+
+* Thu Jan 01 2015 Igor Gnatenko <ignatenkobrain@fedoraproject.org> - 10.5.0-0.devel.25.a6f6d61
+- a6f6d61
+
+* Wed Dec 31 2014 Igor Gnatenko <ignatenkobrain@fedoraproject.org> - 10.5.0-0.devel.23.be0311c
+- be0311c
+
+* Wed Dec 31 2014 Igor Gnatenko <ignatenkobrain@fedoraproject.org> - 10.5.0-0.devel.21.609c3e5
+- 609c3e5
+
+* Wed Dec 31 2014 Igor Gnatenko <ignatenkobrain@fedoraproject.org> - 10.5.0-0.devel.19.3ba57ba
+- 3ba57ba
+
+* Tue Dec 30 2014 Igor Gnatenko <ignatenkobrain@fedoraproject.org> - 10.5.0-0.devel.17.64dcb2b
+- 64dcb2b
+
+* Mon Dec 29 2014 Igor Gnatenko <ignatenkobrain@fedoraproject.org> - 10.5.0-0.devel.15.6c18279
+- 6c18279
+
+* Sat Dec 27 2014 Igor Gnatenko <ignatenkobrain@fedoraproject.org> - 10.5.0-0.devel.13.0c7f895
+- 0c7f895
+
+* Fri Dec 26 2014 Igor Gnatenko <ignatenkobrain@fedoraproject.org> - 10.5.0-0.devel.11.cb5a372
+- cb5a372
+
+* Sun Dec 21 2014 Igor Gnatenko <i.gnatenko.brain@gmail.com> - 10.5.0-0.devel.10.git0d7f4c8
+- enable ilo gallium driver
+
+* Fri Dec 19 2014 Dan Horák <dan[at]danny.cz> 10.5.0-0.devel.9
+- Sync with_{vaapi,vdpau,nine} settings with F21
+
+* Thu Dec 18 2014 Adam Jackson <ajax@redhat.com> 10.5.0-0.devel.8
+- Sync ppc build config with F21
+
+* Wed Dec 17 2014 Igor Gnatenko <i.gnatenko.brain@gmail.com> - 10.5.0-0.devel.7.git0d7f4c8
+- fix requirements for d3d
+
+* Sun Dec 14 2014 Igor Gnatenko <i.gnatenko.brain@gmail.com> - 10.5.0-0.devel.6.git0d7f4c8
+- 0d7f4c8
+
+* Sun Dec 14 2014 Igor Gnatenko <i.gnatenko.brain@gmail.com> - 10.5.0-0.devel.5.git29c7cf2
+- Enable VA state-tracker
+- Enable Nine state-tracker (Direct3D9 API)
+
+* Thu Dec 11 2014 Adam Jackson <ajax@redhat.com> 10.5.0-0.devel.4
+- Restore hardware drivers on ppc64{,le}
+
+* Tue Dec 02 2014 Igor Gnatenko <i.gnatenko.brain@gmail.com> - 10.5.0-0.devel.3.git29c7cf2
+- 29c7cf2
+
+* Sat Nov 22 2014 Igor Gnatenko <i.gnatenko.brain@gmail.com> - 10.5.0-0.devel.2.git3d9c1a9
+- 3d9c1a9
+
+* Wed Nov 19 2014 Igor Gnatenko <i.gnatenko.brain@gmail.com> - 10.5.0-0.devel.1.git9460cd3
+- 9460cd3
+
+* Mon Nov 10 2014 Igor Gnatenko <i.gnatenko.brain@gmail.com> - 10.4-0.devel.8.gitf3b709c
+- f3b709c
+
+* Tue Oct 28 2014  10.4-0.devel.7.git1a17098
+- rebuild for llvm
+
+* Mon Oct 27 2014 Igor Gnatenko <i.gnatenko.brain@gmail.com> - 10.4-0.devel.6.git1a17098
+- 1a17098
+
+* Sat Sep 27 2014 Igor Gnatenko <i.gnatenko.brain@gmail.com> - 10.4-0.devel.5.gitc3f17bb
+- c3f17bb18f597d7f606805ae94363dae7fd51582
+
+* Sat Sep 06 2014 Igor Gnatenko <i.gnatenko.brain@gmail.com> - 10.4-0.devel.4.git1f184bc
+- apply patch for bigendian from karsten
+- fix ppc filelist from karsten
+
+* Sat Sep 06 2014 Igor Gnatenko <i.gnatenko.brain@gmail.com> - 10.4-0.devel.3.git1f184bc
+- 1f184bc114143acbcea373184260da777b6c6be1 commit
+
+* Thu Aug 28 2014 Igor Gnatenko <i.gnatenko.brain@gmail.com> - 10.4-0.devel.2.1.80771e47b6c1e47ab55f17311e1d4e227a9eb3d8
+- add swrast to dri driver list
+
+* Wed Aug 27 2014 Igor Gnatenko <i.gnatenko.brain@gmail.com> - 10.4-0.devel.2.80771e47b6c1e47ab55f17311e1d4e227a9eb3d8
+- 80771e47b6c1e47ab55f17311e1d4e227a9eb3d8 commit
+
+* Sat Aug 23 2014 Igor Gnatenko <i.gnatenko.brain@gmail.com> - 10.4-0.devel.1.c2867f5b3626157379ef0d4d5bcaf5180ca0ec1f
+- 10.4 c2867f5b3626157379ef0d4d5bcaf5180ca0ec1f
+
+* Fri Aug 22 2014 Igor Gnatenko <i.gnatenko.brain@gmail.com> - 10.3-0.rc1.1.e7f2f2dea5acdbd1a12ed88914e64a38a97432f0
+- e7f2f2dea5acdbd1a12ed88914e64a38a97432f0 commit
+
+* Sun Aug 17 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 10.3-0.devel.2.c40d7d6d948912a4d51cbf8f0854cf2ebe916636.1
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
+
+* Wed Aug 06 2014 Igor Gnatenko <i.gnatenko.brain@gmail.com> - 10.3-0.devel.2.c40d7d6d948912a4d51cbf8f0854cf2ebe916636
+- c40d7d6d948912a4d51cbf8f0854cf2ebe916636 commit
+
+* Fri Jul 11 2014 Igor Gnatenko <i.gnatenko.brain@gmail.com> - 10.3-0.devel.1.f381c27c548aa28b003c8e188f5d627ab4105f76
+- Rebase to 'master' branch (f381c27c548aa28b003c8e188f5d627ab4105f76 commit)
+
+* Fri Jul 11 2014 Igor Gnatenko <i.gnatenko.brain@gmail.com> - 10.2.3-1.20140711
+- 10.2.3 upstream release
+
+* Mon Jul  7 2014 Peter Robinson <pbrobinson@fedoraproject.org> 10.2.2-4.20140625
+- Build aarch64 options the same as ARMv7
+- Fix PPC conditionals
+
+* Fri Jul 04 2014 Igor Gnatenko <i.gnatenko.brain@gmail.com> - 10.2.2-3.20140625
+- Fix up intelInitScreen2 for DRI3 (RHBZ #1115323) (patch from drago01)
+
+* Fri Jun 27 2014 Dave Airlie <airlied@redhat.com> 10.2.2-2.20140625
+- add dri3 gnome-shell startup fix from Jasper.
+
+* Wed Jun 25 2014 Igor Gnatenko <i.gnatenko.brain@gmail.com> - 10.2.2-1.20140625
+- 10.2.2 upstream release
+
+* Wed Jun 11 2014 Igor Gnatenko <i.gnatenko.brain@gmail.com> - 10.2.1-2.20140608
+- drop radeonsi llvm hack
+
+* Sun Jun 08 2014 Igor Gnatenko <i.gnatenko.brain@gmail.com> - 10.2.1-1.20140608
+- 10.2.1 upstream release
+
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 10.2-0.11.rc5.20140531
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Wed Jun 04 2014 Dan Horák <dan[at]danny.cz> - 10.2-0.10.rc5.20140531
+- fix build without hardware drivers
+
+* Sat May 31 2014 Igor Gnatenko <i.gnatenko.brain@gmail.com> - 10.2-0.9.rc5.20140531
+- 10.2-rc5 upstream release
+
+* Wed May 28 2014 Brent Baude <baude@us.ibm.com> - 10.2-0.8.rc4.20140524
+- Removing ppc64le arch from with_llvm
+
+* Wed May 28 2014 Igor Gnatenko <i.gnatenko.brain@gmail.com> - 10.2-0.7.rc4.20140524
+- i915: add a missing NULL pointer check (RHBZ #1100967)
+
+* Sat May 24 2014 Igor Gnatenko <i.gnatenko.brain@gmail.com> - 10.2-0.6.rc4.20140524
+- 10.2-rc4 upstream release
+- add back updated radeonsi hack for LLVM
+
+* Sat May 17 2014 Igor Gnatenko <i.gnatenko.brain@gmail.com> - 10.2-0.5.rc3.20140517
+- 10.2-rc3 upstream release
+
+* Sat May 10 2014 Igor Gnatenko <i.gnatenko.brain@gmail.com> - 10.2-0.4.rc2.20140510
+- 10.2-rc2 upstream release
+- drop radeonsi hack for LLVM
+
+* Tue May 06 2014 Igor Gnatenko <i.gnatenko.brain@gmail.com> - 10.2-0.3.rc1.20140505
+- Move gallium-pipe to the correct sub-package (RHBZ #1094588) (kwizart)
+- Move egl_gallium.so to the correct location (RHBZ #1094588) (kwizart)
+- Switch from with to enable for llvm shared libs (kwizart)
+
+* Mon May 05 2014 Igor Gnatenko <i.gnatenko.brain@gmail.com> - 10.2-0.2.rc1.20140505
+- Enable gallium-egl (needed by freedreeno) (RHBZ #1094199) (kwizart)
+
+* Mon May 05 2014 Igor Gnatenko <i.gnatenko.brain@gmail.com> - 10.2-0.1.rc1.20140505
+- Enable omx on x86 and arm (RHBZ #1094199) (kwizart)
+- Split _with_xa from _with_vmware (RHBZ #1094199) (kwizart)
+- Add _with_xa when arch is arm and _with_freedreeno (RHBZ #1094199) (kwizart)
+
+* Mon May 05 2014 Igor Gnatenko <i.gnatenko.brain@gmail.com> - 10.2-0.rc1.20140505
+- 10.2-rc1 upstream release
+
+* Wed Apr 30 2014 Igor Gnatenko <i.gnatenko.brain@gmail.com> - 10.1.1-3.20140430
+- Update to today snapshot
+- apply as downstream patches for reporting GPU max frequency on r600 (FD.o #73511)
+
+* Sat Apr 19 2014 Igor Gnatenko <i.gnatenko.brain@gmail.com> - 10.1.1-2.20140419
+- fix buildrequires llvm 3.4-5 to 3.4-6, because 3.4-5 is not available for F20
+
+* Sat Apr 19 2014 Igor Gnatenko <i.gnatenko.brain@gmail.com> - 10.1.1-1.20140419
+- 10.1.1 upstream release
+
+* Tue Apr 15 2014 Adam Jackson <ajax@redhat.com> 10.1-6.20140305
+- Disable DRI3 in F20, it requires libxcb bits we haven't backported.
+
+* Wed Mar 26 2014 Adam Jackson <ajax@redhat.com> 10.1-5.20140305
+- Initial ppc64le enablement (no hardware drivers or vdpau yet)
+
+* Fri Mar 21 2014 Adam Jackson <ajax@redhat.com> 10.1-4.20140305
+- mesa: Don't optimize out glClear if drawbuffer size is 0x0 (fdo #75797)
+
+* Wed Mar 19 2014 Dave Airlie <airlied@redhat.com> 10.1-3.20140305
+- rebuild against backported llvm 3.4-5 for radeonsi GL 3.3 support.
+
+* Wed Mar 12 2014 Dave Airlie <airlied@redhat.com> 10.1-2.20140305
+- disable r600 llvm compiler (upstream advice)
+
+* Wed Mar 05 2014 Igor Gnatenko <i.gnatenko.brain@gmail.com> - 10.1-1.20140305
+- mesa: Bump version to 10.1 (final) (Ian Romanick)
+- glx/dri2: fix build failure on HURD (Julien Cristau)
+- i965: Validate (and resolve) all the bound textures. (Chris Forbes)
+- i965: Widen sampler key bitfields for 32 samplers (Chris Forbes)
+
+* Sat Mar 01 2014 Igor Gnatenko <i.gnatenko.brain@gmail.com> - 10.1-0.rc3.20140301
+- 10.1-rc3
+
+* Tue Feb 25 2014 Igor Gnatenko <i.gnatenko.brain@gmail.com> - 10.1-0.rc2.20140225
+- really 10.1-rc2
+
+* Sat Feb 22 2014 Igor Gnatenko <i.gnatenko.brain@gmail.com> - 10.1-0.rc2.20140222
+- 10.1-rc2
+
+* Sat Feb 08 2014 Adel Gadllah <adel.gadllah@gmail.com> - 10.1-0.rc1.20140208
+- 10.1rc1
+- Drop upstreamed patches
+
+* Thu Feb 06 2014 Igor Gnatenko <i.gnatenko.brain@gmail.com> - 10.0.3-1.20140206
+- 10.0.3 upstream release
+
+* Tue Feb 04 2014 Kyle McMartin <kyle@redhat.com> - 10.0.2-6.20140118
+- Fix accidentally inverted logic that meant radeonsi_dri.so went missing
+  on all architectures instead of just ppc and s390. Sorry!
+
+* Sun Feb 02 2014 Kyle McMartin <kyle@redhat.com> - 10.0.2-5.20140118
+- Fix a thinko in previous commit wrt libdrm_nouveau2.
+
+* Sun Feb 02 2014 Kyle McMartin <kyle@redhat.com> - 10.0.2-4.20140118
+- Fix up building drivers on AArch64, enable LLVM there.
+- Eliminate some F17 cruft from the spec, since we don't support it anymore.
+- Conditionalize with_radeonsi on with_llvm instead of ppc,s390 && >F-17.
+- Conditionalize libvdpau_radeonsi.so.1* on with_radeonsi instead of simply
+  with_llvm to fix a build failure on AArch64.
+
+* Sun Jan 19 2014 Igor Gnatenko <i.gnatenko.brain@gmail.com> - 10.0.2-3.20140118
+- Enable OpenCL (RHBZ #887628)
+- Enable r600 llvm compiler (RHBZ #1055098)
+
+* Fri Dec 20 2013 Igor Gnatenko <i.gnatenko.brain@gmail.com> - 9.2.5-1.20131220
+- 9.2.5 upstream release
+
+* Fri Dec 13 2013 Dave Airlie <airlied@redhat.com> 9.2.4-2.20131128
+- backport the GLX_MESA_copy_sub_buffer from upstream for cogl
 
 * Thu Nov 28 2013 Igor Gnatenko <i.gnatenko.brain@gmail.com> - 9.2.4-1.20131128
 - 9.2.4 upstream release
