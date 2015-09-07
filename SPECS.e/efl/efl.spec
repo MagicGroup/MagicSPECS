@@ -13,8 +13,9 @@
 
 Name:		efl
 Version:	1.15.1
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:	Collection of Enlightenment libraries
+Summary(zh_CN.UTF-8): Enlightenment 桌面环境的库集合
 License:	BSD and LGPLv2+ and GPLv2 and zlib
 URL:		http://enlightenment.org/
 Source0:	http://download.enlightenment.org/rel/libs/efl/efl-%{version}.tar.xz
@@ -95,8 +96,12 @@ EFL is a collection of libraries for handling many common tasks a
 developer may have such as data structures, communication, rendering,
 widgets and more.
 
+%description -l zh_CN.UTF-8
+Enlightenment 桌面环境的基本库集合。
+
 %package devel
 Summary:	Development files for EFL
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Requires:	efl%{?_isa} = %{version}-%{release}
 Requires:	pkgconfig, libX11-devel
 Requires(post):		systemd
@@ -147,6 +152,9 @@ Obsoletes:	libeina-devel <= 1.7.10
 
 %description devel
 Development files for EFL.
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -200,7 +208,7 @@ make install DESTDIR=%{buildroot}
 chmod -x src/bin/edje/edje_cc_out.c
 
 find %{buildroot} -name '*.la' -exec rm -f {} ';'
-
+magic_rpm_clean.sh
 %find_lang %{name}
 
 %post
@@ -466,6 +474,9 @@ fi
 %{_libdir}/pkgconfig/evas*.pc
 
 %changelog
+* Sun Sep 06 2015 Liu Di <liudidi@gmail.com> - 1.15.1-2
+- 为 Magic 3.0 重建
+
 * Fri Aug 28 2015 Tom Callaway <spot@fedoraproject.org> - 1.15.1-1
 - update to 1.15.1
 

@@ -1,37 +1,34 @@
+%global use_wayland 0
+
 Name:           enlightenment
-Version:	0.17.6
+Version:	0.19.9
 Release:        2%{?dist}
 License:        BSD
 Summary:        Enlightenment window manager
 Summary(zh_CN.UTF-8): Enlightenment 窗口管理器
 Url:            http://enlightenment.org
-Source:         http://download.enlightenment.org/releases/%{name}-%{version}.tar.bz2
+Source:         https://download.enlightenment.org/rel/apps/enlightenment/enlightenment-%{version}.tar.xz
 
 BuildRequires:  alsa-lib-devel
 BuildRequires:  dbus-devel 
 BuildRequires:  desktop-file-utils
 BuildRequires:  doxygen
-BuildRequires:  e_dbus-devel  >= 1.7.9
-BuildRequires:  ecore-devel >= 1.7.9
-BuildRequires:  edje-devel >= 1.7.9
-BuildRequires:  eet-devel >= 1.7.9
-BuildRequires:  eeze-devel >= 1.7.9
-BuildRequires:  efreet-devel >= 1.7.9
-BuildRequires:  eio-devel >= 1.7.9
-BuildRequires:  embryo >= 1.7.9
-BuildRequires:  emotion-devel >= 1.7.9
-BuildRequires:  evas-devel >= 1.7.9
+BuildRequires:  efl-devel  >= 1.15.0
+BuildRequires:	elementary-devel
+%if %{use_wayland}
+BuildRequires:	libwayland-server-devel
+%endif
 BuildRequires:  libXext-devel 
 BuildRequires:  libeina-devel 
 BuildRequires:  pam-devel
 BuildRequires:  xcb-util-keysyms-devel
 Requires:       %{name}-data = %{version}-%{release}
-Requires:       emotion >= 1.7.9
-Requires:       elementary >= 1.7.9
-Requires:       ethumb >= 1.7.9
-Requires:       evas-generic-loaders >= 1.7.9
+Requires:       evas-generic-loaders
 Requires:       magic-menus
 Provides:       firstboot(windowmanager) = enlightenment
+Requires(post):         systemd
+Requires(preun):        systemd
+Requires(postun):       systemd
 
 %description
 Enlightenment window manager is a lean, fast, modular and very extensible window 
@@ -69,7 +66,14 @@ Headers,  test programs and documentation for enlightenment
 %setup -q
 
 %build
-%configure --disable-static --disable-rpath
+%configure \
+ --disable-static \
+ --disable-rpath \
+%if %{use_wayland}
+ --enable-wayland-clients\
+%endif
+ --with-profile=FAST_PC \
+ --with-systemdunitdir=%{_unitdir}
 make %{?_smp_mflags} V=1
 
 %install
@@ -81,9 +85,18 @@ magic_rpm_clean.sh
 %find_lang %{name}
 desktop-file-validate %{buildroot}/%{_datadir}/applications/*.desktop
 
+%post
+%systemd_post enlightenment.service
+
+%postun
+%systemd_postun_with_restart enlightenment.service
+
+%preun
+%systemd_preun enlightenment.service
+
 %files
 %doc AUTHORS COPYING README NEWS
-%{_sysconfdir}/xdg/menus/enlightenment.menu
+%{_sysconfdir}/xdg/menus/e-applications.menu
 %{_sysconfdir}/enlightenment/sysactions.conf
 %{_bindir}/enlightenment
 %{_bindir}/enlightenment_filemanager
@@ -92,6 +105,7 @@ desktop-file-validate %{buildroot}/%{_datadir}/applications/*.desktop
 %{_bindir}/enlightenment_remote
 %{_bindir}/enlightenment_start
 %{_libdir}/enlightenment
+%{_unitdir}/enlightenment.service
 
 %files data -f %{name}.lang
 %{_datadir}/xsessions/enlightenment.desktop
@@ -103,6 +117,12 @@ desktop-file-validate %{buildroot}/%{_datadir}/applications/*.desktop
 %{_includedir}/enlightenment
 
 %changelog
+* Sun Sep 06 2015 Liu Di <liudidi@gmail.com> - 0.19.9-2
+- 为 Magic 3.0 重建
+
+* Sun Sep 06 2015 Liu Di <liudidi@gmail.com> - 0.19.9-2
+- 更新到 0.19.9
+
 * Mon Mar 31 2014 Liu Di <liudidi@gmail.com> - 0.17.6-2
 - 更新到 0.17.6
 

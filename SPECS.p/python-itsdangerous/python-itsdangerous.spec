@@ -1,15 +1,12 @@
 %global upstream_name itsdangerous
 
-%if 0%{?fedora}
 %bcond_without python3
-%else
-%bcond_with python3
-%endif
 
 Name:           python-%{upstream_name}
 Version:        0.24
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        Python library for passing trusted data to untrusted environments
+Summary(zh_CN.UTF-8): 传递可信任数据到不可信任环境的 Python 库
 License:        BSD
 URL:            http://pythonhosted.org/itsdangerous/
 Source0:        http://pypi.python.org/packages/source/i/%{upstream_name}/%{upstream_name}-%{version}.tar.gz
@@ -30,9 +27,13 @@ Internally itsdangerous uses HMAC and SHA1 for signing by default and bases the
 implementation on the Django signing module. It also however supports JSON Web 
 Signatures (JWS).
 
+%description -l zh_CN.UTF-8
+传递可信任数据到不可信任环境的 Python 库。
+
 %if %{with python3}
 %package -n python3-%{upstream_name}
 Summary:        Python 3 library for passing trusted data to untrusted environments
+Summary(zh_CN.UTF-8): 传递可信任数据到不可信任环境的 Python3 库
 
 %description -n python3-%{upstream_name}
 Itsdangerous is a Python 3 library for passing data through untrusted 
@@ -42,6 +43,8 @@ tampered with.
 Internally itsdangerous uses HMAC and SHA1 for signing by default and bases the 
 implementation on the Django signing module. It also however supports JSON Web 
 Signatures (JWS).
+%description -n python3-%{upstream_name} -l zh_CN.UTF-8
+传递可信任数据到不可信任环境的 Python3 库。
 %endif
 
 %prep
@@ -94,6 +97,9 @@ popd
 %endif
 
 %changelog
+* Sun Sep 06 2015 Liu Di <liudidi@gmail.com> - 0.24-5
+- 为 Magic 3.0 重建
+
 * Sun Aug 10 2014 Liu Di <liudidi@gmail.com> - 0.24-4
 - 为 Magic 3.0 重建
 

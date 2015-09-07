@@ -1,20 +1,28 @@
 %global svnrev 2704
 
 Name: bullet
-Version: 2.82
-Release: 6%{?dist}
+Version:	2.83.6
+Release:	4%{?dist}
 Summary: 3D Collision Detection and Rigid Body Dynamics Library
+Summary(zh_CN.UTF-8): 3D碰撞检测和刚体动力学库
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 License: zlib and MIT and BSD
 URL: http://www.bulletphysics.com
 
-Source0: %{name}-%{version}-r%{svnrev}-free.tar.gz
+Source0: https://github.com/bulletphysics/bullet3/archive/%{version}.tar.gz
 # bullet contains non-free code that we cannot ship.  Therefore we use
 # this script to remove the non-free code before shipping it.
 # Download the upstream tarball and invoke this script while in the
 # tarball's directory:
 # ./generate-tarball.sh 2.82-r2704
 Source1: generate-tarball.sh
+
+# 修复一个编译问题
+Patch1: bullet-2.83.6-format-security-fix.patch
+# 修复 bullet.pc 中的包含路径问题
+Patch2: bullet-fix-pkgconfig-includedir.patch
+
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
@@ -27,28 +35,39 @@ BuildRequires: libICE-devel
 Bullet is a 3D Collision Detection and Rigid Body Dynamics Library for games
 and animation.
 
+%description -l zh_CN.UTF-8
+3D碰撞检测和刚体动力学库。
 
 %package devel
 Summary: Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: %{name}%{?_isa} = %{version}-%{release}
 Requires: cmake
 %description devel
 Development headers and libraries for %{name}.
-
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %package extras
 Summary: Extra libraries for %{name}
+Summary(zh_CN.UTF-8): %{name} 的额外库
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 License: zlib and LGPLv2+
 
 %description extras
 Extra libraries for %{name}.
 
+%description extras -l zh_CN.UTF-8
+%{name} 的额外库。
 
 %package extras-devel
 Summary: Development files for %{name} extras
+Summary(zh_CN.UTF-8): %{name}-extras 的开发包
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 License: zlib and LGPLv2+
 Requires: %{name}-extras%{?_isa} = %{version}-%{release}
 Requires: %{name}-devel%{?_isa} = %{version}-%{release}
@@ -56,17 +75,20 @@ Requires: %{name}-devel%{?_isa} = %{version}-%{release}
 %description extras-devel
 Development headers and libraries for %{name} extra libraries.
 
+%description extras-devel -l zh_CN.UTF-8
+%{name}-extras 的开发包。
 
 %prep
-%setup -q -n %{name}-%{version}-r%{svnrev}
-
+%setup -q -n %{name}3-%{version}
+%patch1 -p1
+%patch2 -p1
 # Set these files to right permission
 chmod 644 src/LinearMath/btPoolAllocator.h
 chmod 644 src/BulletDynamics/ConstraintSolver/btSliderConstraint.cpp
 chmod 644 src/BulletDynamics/ConstraintSolver/btSliderConstraint.h
 
-iconv -f ISO-8859-1 -t UTF-8 -o ChangeLog.utf8 ChangeLog
-mv ChangeLog.utf8 ChangeLog
+#iconv -f ISO-8859-1 -t UTF-8 -o ChangeLog.utf8 ChangeLog
+#mv ChangeLog.utf8 ChangeLog
 # Don't build bundled glui
 rm -fr Extras/glui/*
 
@@ -97,7 +119,7 @@ do
   ln -sf $f ${f%\.*}
 done
 popd
-
+magic_rpm_clean.sh
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -112,21 +134,19 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %files
-%doc README AUTHORS COPYING NEWS ChangeLog
 %{_libdir}/libBulletCollision.so.*
 %{_libdir}/libBulletDynamics.so.*
 %{_libdir}/libBulletSoftBody.so.*
 %{_libdir}/libLinearMath.so.*
 
 %files devel
-%doc Bullet_User_Manual.pdf
 %dir %{_includedir}/%{name}
 %{_includedir}/%{name}/*.h
 %{_includedir}/%{name}/BulletCollision
 %{_includedir}/%{name}/BulletDynamics
 %{_includedir}/%{name}/BulletSoftBody
 %{_includedir}/%{name}/LinearMath
-%{_includedir}/%{name}/vectormath
+#%{_includedir}/%{name}/vectormath
 %{_libdir}/libBulletCollision.so
 %{_libdir}/libBulletDynamics.so
 %{_libdir}/libBulletSoftBody.so
@@ -141,6 +161,12 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/libBulletFileLoader.so.*
 %{_libdir}/libBulletWorldImporter.so.*
 %{_libdir}/libBulletXmlWorldImporter.so.*
+%{_libdir}/libBullet2FileLoader.so.*
+%{_libdir}/libBullet3Collision.so.*
+%{_libdir}/libBullet3Common.so.*
+%{_libdir}/libBullet3Dynamics.so.*
+%{_libdir}/libBullet3Geometry.so.*
+%{_libdir}/libBullet3OpenCL_clew.so.*
 
 %files extras-devel
 %{_includedir}/%{name}/ConvexDecomposition
@@ -149,14 +175,39 @@ rm -rf $RPM_BUILD_ROOT
 %{_includedir}/%{name}/BulletFileLoader
 %{_includedir}/%{name}/BulletWorldImporter
 %{_includedir}/%{name}/BulletXmlWorldImporter
+%{_includedir}/%{name}/Bullet2FileLoader/*
+%{_includedir}/%{name}/Bullet3Collision/*
+%{_includedir}/%{name}/Bullet3Common/*
+%{_includedir}/%{name}/Bullet3Dynamics/*
+%{_includedir}/%{name}/Bullet3Geometry/*
+%{_includedir}/%{name}/Bullet3OpenCL/*
 %{_libdir}/libConvexDecomposition.so
 %{_libdir}/libGIMPACTUtils.so
 %{_libdir}/libHACD.so
 %{_libdir}/libBulletFileLoader.so
 %{_libdir}/libBulletWorldImporter.so
 %{_libdir}/libBulletXmlWorldImporter.so
+%{_libdir}/libBullet2FileLoader.so
+%{_libdir}/libBullet3Collision.so
+%{_libdir}/libBullet3Common.so
+%{_libdir}/libBullet3Dynamics.so
+%{_libdir}/libBullet3Geometry.so
+%{_libdir}/libBullet3OpenCL_clew.so
+
 
 %changelog
+* Sun Sep 06 2015 Liu Di <liudidi@gmail.com> - 2.83.6-4
+- 为 Magic 3.0 重建
+
+* Sun Sep 06 2015 Liu Di <liudidi@gmail.com> - 2.83.6-3
+- 为 Magic 3.0 重建
+
+* Sun Sep 06 2015 Liu Di <liudidi@gmail.com> - 2.83.6-2
+- 为 Magic 3.0 重建
+
+* Sun Sep 06 2015 Liu Di <liudidi@gmail.com> - 2.83.6-1
+- 更新到 2.83.6
+
 * Wed Jun 17 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.82-6
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

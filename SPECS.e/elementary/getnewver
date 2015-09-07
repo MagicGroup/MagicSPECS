@@ -1,7 +1,7 @@
 #!/bin/bash
-url="http://download.enlightenment.org/releases/?C=M;O=D"
+url="https://download.enlightenment.org/rel/libs/elementary/?C=M;O=D"
 new1="elementary-"
-new2=".tar.bz2"
+new2=".tar.xz"
 downcommand="wget -q" 
 pushd $(dirname $0) > /dev/null
 rm -f index.html && $downcommand "$url" -O index.html

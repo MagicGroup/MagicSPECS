@@ -1,6 +1,6 @@
 Name:           SDL2
 Version:        2.0.3
-Release:        6%{?dist}
+Release:        7%{?dist}
 Summary:        A cross-platform multimedia library
 Group:          System Environment/Libraries
 URL:            http://www.libsdl.org/
@@ -119,6 +119,9 @@ rm -f %{buildroot}%{_libdir}/*.a
 %{_datadir}/aclocal/*
 
 %changelog
+* Sun Sep 06 2015 Liu Di <liudidi@gmail.com> - 2.0.3-7
+- 为 Magic 3.0 重建
+
 * Tue Jun 16 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.0.3-6
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

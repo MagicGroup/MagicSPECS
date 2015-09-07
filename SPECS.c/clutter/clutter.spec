@@ -5,7 +5,7 @@
 %endif
 
 Name:          clutter
-Version:	1.19.6
+Version:	1.23.6
 Release:       1%{?dist}
 Summary:       Open Source software library for creating rich graphical user interfaces
 Summary(zh_CN.UTF-8): 建立图形用户界面的开源软件库
@@ -152,9 +152,12 @@ find %{buildroot} -name '*.la' -exec rm -f {} ';'
 
 %files doc
 %{_datadir}/gtk-doc/html/clutter
-%{_datadir}/gtk-doc/html/cally
+#%{_datadir}/gtk-doc/html/cally
 
 %changelog
+* Sun Sep 06 2015 Liu Di <liudidi@gmail.com> - 1.23.6-1
+- 更新到 1.23.6
+
 * Sun Aug 10 2014 Liu Di <liudidi@gmail.com> - 1.19.6-1
 - 更新到 1.19.6
 

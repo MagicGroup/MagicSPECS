@@ -1,15 +1,15 @@
 Name:           evas-generic-loaders
-Version:	1.7.10
-Release:        1%{?dist}
+Version:	1.15.0
+Release:        2%{?dist}
 Summary:        Set of generic loaders for Evas
 Summary(zh_CN.UTF-8): Evas 的通用载入器集合
 License:        GPLv2+
 Group:          System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
 Url:            http://enlightenment.org/
-Source:         http://download.enlightenment.org/releases/evas_generic_loaders-%{version}.tar.bz2
+Source:         https://download.enlightenment.org/rel/libs/evas_generic_loaders/evas_generic_loaders-%{version}.tar.xz
 Requires:       evas
-BuildRequires:  libeina-devel >= %version  gstreamer-plugins-base-devel 
+BuildRequires:  efl-devel >= %{version} gstreamer-plugins-base-devel 
 BuildRequires:  poppler-devel LibRaw-devel librsvg2-devel 
 BuildRequires:  libspectre-devel zlib-devel
 
@@ -35,6 +35,12 @@ magic_rpm_clean.sh
 %_libdir/evas/utils
 
 %changelog
+* Sun Sep 06 2015 Liu Di <liudidi@gmail.com> - 1.15.0-2
+- 更新到 1.15.0
+
+* Sun Sep 06 2015 Liu Di <liudidi@gmail.com> - 1.7.10-2
+- 为 Magic 3.0 重建
+
 * Wed Apr 30 2014 Liu Di <liudidi@gmail.com> - 1.7.10-1
 - 更新到 1.7.10
 

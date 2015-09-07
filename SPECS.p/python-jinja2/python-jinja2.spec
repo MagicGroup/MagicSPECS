@@ -1,18 +1,16 @@
-%if 0%{?fedora} > 12
 %global with_python3 1
-%else
-%{!?python_sitelib: %global python_sitelib %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib()")}
-%endif
 
 # Enable building without docs to avoid a circular dependency between this
 # and python-sphinx:
 %global with_docs 0
 
 Name:		python-jinja2
-Version:	2.6
-Release:	7%{?dist}
+Version:	2.8
+Release:	1%{?dist}
 Summary:	General purpose template engine
+Summary(zh_CN.UTF-8): 通用模板引擎
 Group:		Development/Languages
+Group(zh_CN.UTF-8): 开发/语言
 License:	BSD
 URL:		http://jinja.pocoo.org/
 Source0:	http://pypi.python.org/packages/source/J/Jinja2/Jinja2-%{version}.tar.gz
@@ -44,11 +42,15 @@ both designer and developer friendly by sticking to Python's
 principles and adding functionality useful for templating
 environments.
 
+%description -l zh_CN.UTF-8
+通用模板引擎。
 
 %if 0%{?with_python3}
 %package -n python3-jinja2
 Summary:	General purpose template engine
+Summary(zh_CN.UTF-8): 通用模板引擎
 Group:		Development/Languages
+Group(zh_CN.UTF-8): 开发/语言
 Requires:	python3-markupsafe
 # babel isn't py3k ready yet, and is only a weak dependency
 #Requires:	 python3-babel >= 0.8
@@ -64,6 +66,8 @@ as Smarty or Django, you should feel right at home with Jinja2. It's
 both designer and developer friendly by sticking to Python's
 principles and adding functionality useful for templating
 environments.
+%description -n python3-jinja2 -l zh_CN.UTF-8
+通用模板引擎。
 %endif # with_python3
 
 
@@ -155,6 +159,9 @@ popd
 
 
 %changelog
+* Sun Sep 06 2015 Liu Di <liudidi@gmail.com> - 2.8-1
+- 更新到 2.8
+
 * Tue Jun 17 2014 Liu Di <liudidi@gmail.com> - 2.6-7
 - 为 Magic 3.0 重建
 

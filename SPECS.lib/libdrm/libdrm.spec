@@ -3,7 +3,7 @@
 Summary: Direct Rendering Manager runtime library
 Summary(zh_CN.UTF-8): 直接渲染管理运行库
 Name: libdrm
-Version: 2.4.54
+Version: 2.4.64
 Release: 1%{?dist}
 License: MIT
 Group: System Environment/Libraries
@@ -75,7 +75,7 @@ Utility programs for the kernel DRM interface.  Will void your warranty.
 %prep
 %setup -q %{?gitdate:-n %{name}-%{gitdate}}
 %patch3 -p1 -b .forceperms
-%patch4 -p1 -b .no-bc
+#%patch4 -p1 -b .no-bc
 %patch5 -p1 -b .check
 
 %build
@@ -132,6 +132,7 @@ magic_rpm_clean.sh
 %{_libdir}/libdrm_omap.so.1
 %{_libdir}/libdrm_omap.so.1.0.0
 %endif
+%{_libdir}/libdrm_amdgpu.so.*
 %{_libdir}/libdrm_radeon.so.1
 %{_libdir}/libdrm_radeon.so.1.0.1
 %{_libdir}/libdrm_nouveau.so.2
@@ -144,12 +145,6 @@ magic_rpm_clean.sh
 %defattr(-,root,root,-)
 %{_bindir}/dristat
 %{_bindir}/drmstat
-%ifarch %{ix86} x86_64 ia64
-%{_bindir}/gem_basic
-%{_bindir}/gem_flink
-%{_bindir}/gem_mmap
-%{_bindir}/gem_readwrite
-%endif
 %{_bindir}/getclient
 %{_bindir}/getstats
 %{_bindir}/getversion
@@ -157,6 +152,11 @@ magic_rpm_clean.sh
 %{_bindir}/openclose
 %{_bindir}/setversion
 %{_bindir}/updatedraw
+%exclude %{_bindir}/exynos*
+%exclude %{_bindir}/drmsl
+%exclude %{_bindir}/hash
+%exclude %{_bindir}/proptest
+%exclude %{_bindir}/random
 
 %files devel
 %defattr(-,root,root,-)
@@ -180,6 +180,7 @@ magic_rpm_clean.sh
 %{_includedir}/freedreno/
 %{_includedir}/omap/
 %endif
+%{_includedir}/libdrm/amdgpu.h
 %{_includedir}/libdrm/radeon_bo.h
 %{_includedir}/libdrm/radeon_bo_gem.h
 %{_includedir}/libdrm/radeon_bo_int.h
@@ -200,6 +201,7 @@ magic_rpm_clean.sh
 %{_libdir}/libdrm_omap.so
 %{_libdir}/libdrm_freedreno.so
 %endif
+%{_libdir}/libdrm_amdgpu.so
 %{_libdir}/libdrm_radeon.so
 %{_libdir}/libdrm_nouveau.so
 %{_libdir}/libkms.so
@@ -212,6 +214,7 @@ magic_rpm_clean.sh
 %{_libdir}/pkgconfig/libdrm_freedreno.pc
 %{_libdir}/pkgconfig/libdrm_omap.pc
 %endif
+%{_libdir}/pkgconfig/libdrm_amdgpu.pc
 %{_libdir}/pkgconfig/libdrm_radeon.pc
 %{_libdir}/pkgconfig/libdrm_nouveau.pc
 %{_libdir}/pkgconfig/libkms.pc
@@ -219,6 +222,9 @@ magic_rpm_clean.sh
 %{_mandir}/man7/drm*.7*
 
 %changelog
+* Sun Sep 06 2015 Liu Di <liudidi@gmail.com> - 2.4.64-1
+- 更新到 2.4.64
+
 * Tue Jul 15 2014 Liu Di <liudidi@gmail.com> - 2.4.54-1
 - 更新到 2.4.54
 

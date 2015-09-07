@@ -1,5 +1,5 @@
 Name:           libinput
-Version: 0.4.0
+Version: 1.0.1
 Release:        2%{?dist}
 Summary:        Input device library
 Summary(zh_CN.UTF-8): 输入设备库
@@ -57,6 +57,10 @@ find $RPM_BUILD_ROOT -name '*.la' -delete
 %files
 %doc COPYING
 %{_libdir}/libinput.so.*
+%{_bindir}/libinput-debug-events
+%{_bindir}/libinput-list-devices
+%{_libdir}/udev/*
+%{_mandir}/man1/libinput-*.1*
 
 %files devel
 %{_includedir}/libinput.h
@@ -65,6 +69,9 @@ find $RPM_BUILD_ROOT -name '*.la' -delete
 
 
 %changelog
+* Sun Sep 06 2015 Liu Di <liudidi@gmail.com> - 1.0.1-2
+- 更新到 1.0.1
+
 * Fri Jul 18 2014 Liu Di <liudidi@gmail.com> - 0.4.0-2
 - 为 Magic 3.0 重建
 

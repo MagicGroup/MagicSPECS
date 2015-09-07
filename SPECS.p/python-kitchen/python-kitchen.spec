@@ -1,20 +1,13 @@
-%if 0%{?rhel} && 0%{?rhel} <= 6
-%{!?__python2:        %global __python2 /usr/bin/python2}
-%{!?python2_sitelib:  %global python2_sitelib %(%{__python2} -c "from distutils.sysconfig import get_python_lib; print(get_python_lib())")}
-%{!?python2_sitearch: %global python2_sitearch %(%{__python2} -c "from distutils.sysconfig import get_python_lib; print(get_python_lib(1))")}
-%endif
-
-
-%if 0%{?fedora}
 %global with_python3 1
-%endif
 
 Name:           python-kitchen
 Version:        1.2.1
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        Small, useful pieces of code to make python coding easier
+Summary(zh_CN.UTF-8): 使 Python 编程更容易的小巧实用的代码
 
 Group:          Development/Languages
+Group(zh_CN.UTF-8): 开发/语言
 License:        LGPLv2+
 URL:            https://pypi.python.org/pypi/kitchen/
 Source0:        https://fedorahosted.org/releases/k/i/kitchen/kitchen-%{version}.tar.gz
@@ -30,16 +23,12 @@ BuildRequires:  python-nose
 # For the subprocess test
 BuildRequires:  python-test
 
-%if 0%{?fedora} || 0%{?rhel} >=  6
 # sphinx needs to be more recent to build the html docs
 BuildRequires: python-sphinx
-%endif
 
-%if 0%{?fedora} || 0%{?rhel} >  6
 # At present, chardet isn't present in epel but it's a soft dep
 BuildRequires: python-chardet
 Requires: python-chardet
-%endif
 
 %if 0%{?with_python3}
 BuildRequires:  python3-devel
@@ -55,8 +44,12 @@ text easier (conversion with bytes, outputting xml, and calculating how many
 columns a string takes), and compatibility modules for writing code that uses
 python-2.7 modules but needs to run on python-2.3.
 
+%description -l zh_CN.UTF-8
+使 Python 编程更容易的小巧实用的代码。
+
 %package doc
 Summary:        API documentation for the Kitchen python2 module
+Summary(zh_CN.UTF-8): %{name} 的文档
 # Currently discussing guidelines about doc subpackages Requiring the main package:
 # https://lists.fedoraproject.org/pipermail/packaging/2013-June/009191.html
 #Requires: %{name} = %{version}-%{release}
@@ -69,10 +62,16 @@ python-2.7 modules but needs to run on python-2.3.
 This package contains the API documenation for programming with the
 python-2 version of the kitchen library.
 
+%description doc -l zh_CN.UTF-8
+%{name} 的文档。
+
+
 %if 0%{?with_python3}
 %package -n python3-kitchen
 Summary:    Small, useful pieces of code to make python 3 coding easier
+Summary(zh_CN.UTF-8): 使 Python3 编程更容易的小巧实用的代码
 Group:      Development/Languages
+Group(zh_CN.UTF-8): 开发/语言
 
 Requires:   python3
 Requires:   python3-chardet
@@ -84,8 +83,12 @@ columns a string takes).
 
 This is the python3 version of the kitchen module.
 
+%description -n python3-kitchen -l zh_CN.UTF-8
+使 Python3 编程更容易的小巧实用的代码。
+
 %package -n python3-kitchen-doc
 Summary:    API documentation for the Kitchen python3 module
+Summary(zh_CN.UTF-8): python3-kitchen 的文档
 #Requires: %{name} = %{version}-%{release}
 %description -n python3-kitchen-doc
 kitchen includes functions to make gettext easier to use, handling unicode
@@ -94,6 +97,8 @@ columns a string takes).
 
 This package contains the API documenation for programming with the
 python-3 version of the kitchen library.
+%description -n python3-kitchen-doc -l zh_CN.UTF-8
+python3-kitchen 的文档。
 %endif
 
 
@@ -144,6 +149,7 @@ pushd %{py3dir}
 %{__python3} setup.py install --skip-build --root $RPM_BUILD_ROOT
 popd
 %endif
+magic_rpm_clean.sh
 
 %check
 # In current mock, the PATH isn't being reset.  This causes failures in some
@@ -186,6 +192,9 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Sun Sep 06 2015 Liu Di <liudidi@gmail.com> - 1.2.1-4
+- 为 Magic 3.0 重建
+
 * Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.2.1-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

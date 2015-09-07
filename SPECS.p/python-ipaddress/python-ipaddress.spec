@@ -1,13 +1,14 @@
 %global pyname ipaddress
 
 Name:           python-%{pyname}
-Version:        1.0.7
-Release:        5%{?dist}
+Version:	1.0.14
+Release:	1%{?dist}
 Summary:        Port of the python 3.3+ ipaddress module to 2.6+
+Summary(zh_CN.UTF-8): 移植 Python 3.3+ 的 ip 地址模块到 2.6+
 
 License:        Python
 URL:            https://pypi.python.org/pypi/%{pyname}/%{version}
-Source0:        https://pypi.python.org/packages/source/i/%{pyname}/%{pyname}-1.0.7.tar.gz
+Source0:        https://pypi.python.org/packages/source/i/%{pyname}/%{pyname}-%{version}.tar.gz
 
 BuildArch:      noarch
 BuildRequires:  python2-devel
@@ -22,6 +23,9 @@ whether or not two hosts are on the same subnet, iterating over all
 hosts in a particular subnet, checking whether or not a string
 represents a valid IP address or network definition, and so on.
 
+%description -l zh_CN.UTF-8
+移植 Python 3.3+ 的 ip 地址模块到 2.6+。
+
 %prep
 %setup -q -n %{pyname}-%{version}
 
@@ -33,14 +37,16 @@ represents a valid IP address or network definition, and so on.
 %install
 rm -rf $RPM_BUILD_ROOT
 %{__python2} setup.py install -O1 --skip-build --root $RPM_BUILD_ROOT
-
+magic_rpm_clean.sh
 
 %files
-%doc README.txt
 %{python2_sitelib}/*
 
 
 %changelog
+* Sun Sep 06 2015 Liu Di <liudidi@gmail.com> - 1.0.14-1
+- 更新到 1.0.14
+
 * Mon Aug 17 2015 Liu Di <liudidi@gmail.com> - 1.0.7-5
 - 为 Magic 3.0 重建
 

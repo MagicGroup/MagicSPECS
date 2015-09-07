@@ -1,0 +1,12 @@
+diff -ur bullet3-2.83.6.orig/examples/Importers/ImportURDFDemo/ImportURDFSetup.cpp bullet3-2.83.6/examples/Importers/ImportURDFDemo/ImportURDFSetup.cpp
+--- bullet3-2.83.6.orig/examples/Importers/ImportURDFDemo/ImportURDFSetup.cpp	2015-09-06 07:13:28.970129124 +0000
++++ bullet3-2.83.6/examples/Importers/ImportURDFDemo/ImportURDFSetup.cpp	2015-09-06 07:15:27.519126086 +0000
+@@ -140,7 +140,7 @@
+ 		{
+ 			count=0;
+ 		}
+-		sprintf(m_fileName,gFileNameArray[count++].c_str());
++		sprintf("%s",m_fileName,gFileNameArray[count++].c_str());
+ 	}
+ }
+ 

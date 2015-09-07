@@ -1,7 +1,8 @@
 Name:           luajit
 Version:        2.0.4
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        Just-In-Time Compiler for Lua
+Summary(zh_CN.UTF-8): Lua 的即时编译环境
 License:        MIT
 URL:            http://luajit.org/
 Source0:        http://luajit.org/download/LuaJIT-%{version}.tar.gz
@@ -15,12 +16,19 @@ LuaJIT implements the full set of language features defined by Lua 5.1.
 The virtual machine (VM) is API- and ABI-compatible to the standard
 Lua interpreter and can be deployed as a drop-in replacement.
 
+%description -l zh_CN.UTF-8
+Lua 的即时编译环境。
+
 %package devel
 Summary:        Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Requires:       %{name}%{?_isa} = %{version}-%{release}
 
 %description devel
 This package contains development files for %{name}.
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q -n LuaJIT-%{version}
@@ -55,6 +63,7 @@ cp -a doc _tmp_html/html
 
 # Remove static .a
 find %{buildroot} -type f -name *.a -delete
+magic_rpm_clean.sh
 
 %post -p /sbin/ldconfig
 
@@ -76,6 +85,9 @@ find %{buildroot} -type f -name *.a -delete
 %{_libdir}/pkgconfig/*.pc
 
 %changelog
+* Sun Sep 06 2015 Liu Di <liudidi@gmail.com> - 2.0.4-4
+- 为 Magic 3.0 重建
+
 * Fri Aug 07 2015 Oliver Haessler <oliver@redhat.com> - 2.0.4-3
 - only build x86_64 on EPEL as luajit has no support for ppc64
 

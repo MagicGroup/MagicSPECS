@@ -1,20 +1,15 @@
-%if 0%{?fedora}
 %global with_python3 1
-%endif
-
-%if 0%{?rhel} && 0%{?rhel} <= 6
-%{!?__python2: %global __python2 /usr/bin/python2}
-%{!?python2_sitelib: %global python2_sitelib %(%{__python2} -c "from distutils.sysconfig import get_python_lib; print(get_python_lib())")}
-%endif
 
 %global srcname iso8601
 
 Name:           python-%{srcname}
 Version:        0.1.10
-Release:        6%{?dist}
+Release:        7%{?dist}
 Summary:        Simple module to parse ISO 8601 dates
+Summary(zh_CN.UTF-8): 解析 ISO 8601 日期的简单模块
 
 Group:          Development/Languages
+Group(zh_CN.UTF-8): 开发/语言
 License:        MIT
 URL:            http://pypi.python.org/pypi/%{srcname}/
 Source0:        http://pypi.python.org/packages/source/i/%{srcname}/%{srcname}-%{version}.tar.gz
@@ -30,14 +25,22 @@ BuildRequires:  python3-devel python3-setuptools
 This module parses the most common forms of ISO 8601 date strings
 (e.g. 2007-01-14T20:34:22+00:00) into datetime objects.
 
+%description -l zh_CN.UTF-8
+解析 ISO 8601 日期的简单模块。
+
 %if 0%{?with_python3}
 %package -n python3-%{srcname}
 Summary:        Simple module to parse ISO 8601 dates
+Summary(zh_CN.UTF-8): 解析 ISO 8601 日期的简单模块
 Group:          Development/Languages
+Group(zh_CN.UTF-8): 开发/语言
 
 %description -n python3-%{srcname}
 This module parses the most common forms of ISO 8601 date strings
 (e.g. 2007-01-14T20:34:22+00:00) into datetime objects.
+
+%description -n python3-%{srcname} -l zh_CN.UTF-8
+解析 ISO 8601 日期的简单模块。
 %endif
 
 %prep
@@ -65,6 +68,7 @@ pushd %{py3dir}
 %{__python3} setup.py install --skip-build --root %{buildroot}
 popd
 %endif
+magic_rpm_clean.sh
 
 %files
 %defattr(-,root,root,-)
@@ -79,6 +83,9 @@ popd
 %endif
 
 %changelog
+* Sun Sep 06 2015 Liu Di <liudidi@gmail.com> - 0.1.10-7
+- 为 Magic 3.0 重建
+
 * Mon Aug 17 2015 Liu Di <liudidi@gmail.com> - 0.1.10-6
 - 为 Magic 3.0 重建
 

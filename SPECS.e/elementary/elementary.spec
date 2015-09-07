@@ -1,26 +1,16 @@
 Name:           elementary
-Version:	1.7.10
+Version:	1.15.1
 Release:        1%{?dist}
 Summary:        Basic widget set that is easy to use based on EFL
 Summary(zh_CN.UTF-8): 易于使用基于 EFL 系统的基本部件集
 License:        LGPLv2+
 URL:            http://www.enlightenment.org
-Source0:        http://download.enlightenment.org/releases/%{name}-%{version}.tar.bz2
+Source0:        https://download.enlightenment.org/rel/libs/elementary/%{name}-%{version}.tar.xz
 
 BuildRequires: desktop-file-utils
 BuildRequires: doxygen
-BuildRequires: e_dbus-devel
-BuildRequires: ecore-devel
-BuildRequires: edje-devel
-BuildRequires: eet-devel
-BuildRequires: eeze-devel
-BuildRequires: efreet-devel
-BuildRequires: eio-devel
-BuildRequires: embryo
-BuildRequires: ethumb-devel
-BuildRequires: evas-devel
-#BuildRequires: evas-generic-loaders
-BuildRequires: emotion-devel
+BuildRequires: efl-devel
+BuildRequires: evas-generic-loaders
 BuildRequires: gettext
 BuildRequires: libeina-devel
 
@@ -89,19 +79,29 @@ fi
 %{_bindir}/elementary_config
 %{_bindir}/elementary_quicklaunch
 %{_bindir}/elementary_run
+%{_bindir}/elementary_codegen
+%{_bindir}/elm_prefs_cc
 %{_libdir}/libelementary.so.1*
 %{_datadir}/applications/elementary_config.desktop
 %{_datadir}/elementary
 %{_datadir}/icons/elementary.png
 %{_libdir}/edje/modules/elm
 %{_libdir}/elementary
+%{_datadir}/eolian/include/elementary-1/
 
 %files devel
 %{_includedir}/elementary-1
 %{_libdir}/libelementary.so
 %{_libdir}/pkgconfig/elementary.pc
+%{_libdir}/cmake/Elementary/ElementaryConfig.cmake
+%{_libdir}/cmake/Elementary/ElementaryConfigVersion.cmake
+%{_libdir}/pkgconfig/elementary-cxx.pc
+
 
 %changelog
+* Sun Sep 06 2015 Liu Di <liudidi@gmail.com> - 1.15.1-1
+- 更新到 1.15.1
+
 * Sun Mar 30 2014 Liu Di <liudidi@gmail.com> - 1.7.10-1
 - 更新到 1.7.10
 
