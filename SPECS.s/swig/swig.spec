@@ -4,31 +4,42 @@
 %{!?tcl:%global tcl 1}
 %{!?guile:%global guile 1}
 %{!?lualang:%global lualang 1}
-%{!?rubylang:%global rubylang 1}
-%{!?javalang:%global javalang 1}
 
-%ifarch aarch64 %{arm} ppc64le ppc %{power64} s390 s390x mips64el
+# Ruby segfaults in some tests on fc23 and only on armv7-arch.
+#%%ifarch %%{arm} s390
+# Disable Ruby tests for all arches due to BZ#1225140
+%if 0%{?fedora} >= 23
+%{!?rubylang:%global rubylang 0}
+%endif # 0%%{?fedora} >= 23
+#%%endif #arch %%{arm} s390
+%{!?rubylang:%global rubylang 1}
+
+%ifarch aarch64 %{arm} ppc64le ppc %{power64} s390 s390x
 %{!?golang:%global golang 0}
+%{!?Rlang:%global Rlang 0}
+%{!?javalang:%global javalang 0}
+%else
+%if 0%{?rhel}
+%{!?golang:%global golang 0}
+%{!?Rlang:%global Rlang 0}
 %else
 %{!?golang:%global golang 1}
+# R tests failed (since 3.0.4)
+%{!?Rlang:%global Rlang 0}
+%endif
+%{!?javalang:%global javalang 1}
 %endif
 
 %if 0%{?rhel}
 %{!?octave:%global octave 0}
-%{!?Rlang:%global Rlang 0}
 %else
 %{!?octave:%global octave 1}
-%ifnarch aarch64
-%{!?Rlang:%global Rlang 1}
-%else
-%{!?Rlang:%global Rlang 0}
-%endif
 %endif
 
 
 Summary: Connects C/C++/Objective C to some high-level programming languages
 Name:    swig
-Version: 3.0.0
+Version: 3.0.7
 Release: 5%{?dist}
 License: GPLv3+ and BSD
 URL:     http://swig.sourceforge.net/
@@ -36,14 +47,22 @@ Source0: http://downloads.sourceforge.net/project/swig/swig/swig-%{version}/swig
 # Define the part of man page sections
 Source1: description.h2m
 Patch1:  swig207-setools.patch
-# Fix the failure on arch x390 during testing
-Patch2:  swig-2.0.10-Fix-x390-build.patch
 
 BuildRequires: perl, python2-devel, pcre-devel
 BuildRequires: autoconf, automake, gawk, dos2unix
+BuildRequires: gcc-c++
 BuildRequires: help2man
 BuildRequires: perl-devel
+BuildRequires: perl(base)
+BuildRequires: perl(Config)
+BuildRequires: perl(Devel::Peek)
+BuildRequires: perl(ExtUtils::MakeMaker)
+BuildRequires: perl(fields)
+BuildRequires: perl(Math::BigInt)
+BuildRequires: perl(strict)
 BuildRequires: perl(Test::More)
+BuildRequires: perl(vars)
+BuildRequires: perl(warnings)
 BuildRequires: boost-devel
 %if %{tcl}
 BuildRequires: tcl-devel
@@ -92,7 +111,6 @@ This package contains documentation for SWIG and useful examples
 %setup -q -n swig-%{version}
 
 %patch1 -p1 -b .setools
-%patch2 -p1 -b .x390
 
 for all in CHANGES README; do
     iconv -f ISO88591 -t UTF8 < $all > $all.new
@@ -107,6 +125,16 @@ done
 # code produces lots of the warnings demanded by strict ISO C and ISO C++.
 # It causes that log had more then 600M.
 %configure \
+  --without-ocaml \
+%if ! %{javalang}
+  --without-java \
+%endif
+%if ! %{Rlang}
+  --without-r \
+%endif
+%if ! %{golang}
+  --without-go \
+%endif
 %if %{octave}
   --with-octave=/usr/bin/octave \
   --without-maximum-compile-warnings \
@@ -115,11 +143,8 @@ done
 make %{?_smp_mflags}
 
 %if %{with testsuite}
-## ppc* passes most tests but fail some java ones; disable for now
-%ifnarch ppc64le ppc %{power64}
 # Test suite
 make check
-%endif
 %endif
 
 %install
@@ -166,9 +191,14 @@ help2man -N --section 1 ./h2m_helper --include %{SOURCE1} -o %{name}.1
 mkdir -p %{buildroot}%{_mandir}/man1/
 install -p -m 0644 %{name}.1 %{buildroot}%{_mandir}/man1/
 
+# Enable ccache-swig by default, if ccache is installed.
+mkdir -p %{buildroot}%{_libdir}/ccache
+ln -fs ../../bin/ccache-swig %{buildroot}%{_libdir}/ccache/swig
+
 %files
 %{_bindir}/*
 %{_datadir}/swig
+%{_libdir}/ccache
 %{_mandir}/man1/ccache-swig.1*
 %{_mandir}/man1/swig.1*
 %doc ANNOUNCE CHANGES CHANGES.current LICENSE LICENSE-GPL
@@ -178,8 +208,94 @@ install -p -m 0644 %{name}.1 %{buildroot}%{_mandir}/man1/
 %doc Doc Examples LICENSE LICENSE-GPL LICENSE-UNIVERSITIES COPYRIGHT
 
 %changelog
-* Wed Apr 30 2014 Liu Di <liudidi@gmail.com> - 3.0.0-5
-- 为 Magic 3.0 重建
+* Thu Sep 03 2015 Jonathan Wakely <jwakely@redhat.com> - 3.0.7-5
+- Rebuilt for Boost 1.59
+
+* Tue Sep 01 2015 Jitka Plesnikova <jplesnik@redhat.com> - 3.0.7-4
+- Disable Ruby tests
+
+* Thu Aug 27 2015 Jonathan Wakely <jwakely@redhat.com> - 3.0.7-3
+- Rebuilt for Boost 1.59
+
+* Wed Aug 05 2015 Jonathan Wakely <jwakely@redhat.com> 3.0.7-2
+- Rebuilt for Boost 1.58
+
+* Tue Aug 04 2015 Björn Esser <bjoern.esser@gmail.com> - 3.0.7-1
+- Update to 3.0.7 (#1249845)
+- Dropped Patch2, changes applied in upstream tarball
+
+* Wed Jul 29 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.0.6-6
+- Rebuilt for https://fedoraproject.org/wiki/Changes/F23Boost159
+
+* Thu Jul 23 2015 Jitka Plesnikova <jplesnik@redhat.com> - 3.0.6-5
+- rebuild for Boost 1.58
+
+* Thu Jul 23 2015 Jitka Plesnikova <jplesnik@redhat.com> - 3.0.6-4
+- Disable Ruby tests on Fedora 23 and higher when building on armv7
+- Update list of Perl dependencies
+
+* Wed Jul 22 2015 David Tardon <dtardon@redhat.com> - 3.0.6-3
+- rebuild for Boost 1.58
+
+* Fri Jul 10 2015 Orion Poplawski <orion@cora.nwra.com> - 3.0.6-2
+- Add patch for octave 4.0.0 support
+
+* Mon Jul 06 2015 Björn Esser <bjoern.esser@gmail.com> - 3.0.6-1
+- Update to 3.0.6 (#1240107)
+- Dropped Patch2 and Patch3, changes applied in upstream tarball
+
+* Fri Jun 19 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.0.5-8
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
+
+* Tue May 26 2015 Dan Horák <dan[at]danny.cz> - 3.0.5-7
+- skip ruby also on s390 (#1225140)
+
+* Sat Apr 25 2015 Björn Esser <bjoern.esser@gmail.com> - 3.0.5-6
+- Updated Patch3 with a more elaborated approach
+
+* Sat Apr 04 2015 Björn Esser <bjoern.esser@gmail.com> - 3.0.5-5
+- Disable Ruby-testsuite on fc23 when building on armv7.  It currently
+  segfaults for unknown reason.
+- Add a notice about Patch2 got accepted by upstream and can be dropped
+  on next version.
+
+* Fri Apr 03 2015 Björn Esser <bjoern.esser@gmail.com> - 3.0.5-4
+- Add Patch3 to fix segfaults of Python-wrappers when generating
+  code with `-buildin -modern -modernargs`-flags
+
+* Thu Feb 19 2015 Orion Poplawski <orion@cora.nwra.com> - 3.0.5-3
+- Rebuild for gcc 5 C++11 ABI
+
+* Tue Feb 10 2015 Björn Esser <bjoern.esser@gmail.com> - 3.0.5-2
+- Enable ccache-swig by default, if ccache is installed (#1176861)
+
+* Tue Feb 03 2015 Jitka Plesnikova <jplesnik@redhat.com> - 3.0.5-1
+- Update to 3.0.5 (#1178440)
+
+* Tue Jan 27 2015 Petr Machata <pmachata@redhat.com> - 3.0.2-3
+- Rebuild for boost 1.57.0
+
+* Mon Aug 18 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.0.2-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
+
+* Mon Jun 09 2014 Jitka Plesnikova <jplesnik@redhat.com> - 3.0.2-1
+- Update to 3.0.2
+
+* Sun Jun 08 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.0.1-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Thu May 29 2014 Jitka Plesnikova <jplesnik@redhat.com> - 3.0.1-1
+- Update to 3.0.1
+- Updated parameters for configure and conditions for BRs
+
+* Fri May 23 2014 Petr Machata <pmachata@redhat.com> - 3.0.0-7
+- Rebuild for boost 1.55.0
+
+* Thu May 22 2014 Dan Horák <dan[at]danny.cz> 3.0.0-6
+- java unit tests fail on s390(x), too. disable for now
+
+* Mon May 12 2014 Peter Robinson <pbrobinson@fedoraproject.org> 3.0.0-5
+- unit tests fail on aarch64, too. disable for now
 
 * Fri Apr 25 2014 Peter Robinson <pbrobinson@fedoraproject.org> 3.0.0-4
 - No golang or R on aarch64 (currently)
@@ -188,7 +304,7 @@ install -p -m 0644 %{name}.1 %{buildroot}%{_mandir}/man1/
 - golang is exclusivearch %{ix86} x86_64 %{arm}, don't BR it on ppc*, s390*
 - unit tests fail on other ppc archs, too. disable for now
 
-* Fri Mar 28 2014 Jitka Plesnikova <jplesnik@redhat.com> - 3.0.0-1
+* Fri Mar 28 2014 Jitka Plesnikova <jplesnik@redhat.com> - 3.0.0-2
 - Small changes to enable ppc64le (BZ#1081724)
 
 * Thu Mar 20 2014 Jitka Plesnikova <jplesnik@redhat.com> - 3.0.0-1
