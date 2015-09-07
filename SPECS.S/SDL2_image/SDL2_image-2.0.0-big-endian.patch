@@ -1,0 +1,31 @@
+
+# HG changeset patch
+# User Sam Lantinga <slouken@libsdl.org>
+# Date 1379184341 25200
+# Node ID f0b623bb55701868ccef98cee1b7334b49b6cebc
+# Parent  361ab0371a026036cdaff7711a99cb9edfaccb6c
+Fixed big endian compile error
+
+diff -r 361ab0371a02 -r f0b623bb5570 IMG_webp.c
+--- a/IMG_webp.c	Fri Sep 06 23:56:56 2013 -0700
++++ b/IMG_webp.c	Sat Sep 14 11:45:41 2013 -0700
+@@ -242,11 +242,13 @@
+     Bmask = 0x00FF0000;
+     Amask = (features.has_alpha) ? 0xFF000000 : 0;
+ #else
+-    s = (features.has_alpha) ? 0 : 8;
+-    Rmask = 0xFF000000 >> s;
+-    Gmask = 0x00FF0000 >> s;
+-    Bmask = 0x0000FF00 >> s;
+-    Amask = 0x000000FF >> s;
++    {
++        int s = (features.has_alpha) ? 0 : 8;
++        Rmask = 0xFF000000 >> s;
++        Gmask = 0x00FF0000 >> s;
++        Bmask = 0x0000FF00 >> s;
++        Amask = 0x000000FF >> s;
++    }
+ #endif
+ 
+     surface = SDL_CreateRGBSurface(SDL_SWSURFACE,
+
