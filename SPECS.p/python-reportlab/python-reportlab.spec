@@ -1,80 +1,119 @@
-%{!?python_sitearch: %global python_sitearch %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib(1)")}
+%global cmapdir %(echo `rpm -qls ghostscript | grep CMap | awk '{print $2}'`)
 
-Name:       python-reportlab
-Version:    2.5
-Release:    6%{?dist}
-Summary:    Python PDF generation library
-
-Group:      Development/Libraries
-License:    BSD
-URL:        http://www.reportlab.org/
-Source0:    http://www.reportlab.org/ftp/reportlab-%{version}.tar.gz
-Patch0:     reportlab-%{version}-font-locations.patch
-
-BuildRoot:  %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-
-BuildRequires: python-devel, python-imaging, freetype-devel
-Requires:   dejavu-sans-fonts
-
+Name:           python-reportlab
+Version:        3.1.8
+Release:        5%{?dist}
+Summary:        Python 2.x library for generating PDFs and graphics
+License:        BSD
+URL:            http://www.reportlab.org/
+Source0:        https://pypi.python.org/packages/source/r/reportlab/reportlab-%{version}.tar.gz
+Patch0:         reportlab-3.1.8-font-locations.patch
+BuildRequires:  freetype-devel
+# For query the version of gs only.
+BuildRequires:  ghostscript
+BuildRequires:  python2-devel
+BuildRequires:  python-pillow
+Requires:       dejavu-sans-fonts
+Requires:       python-pillow
 
 %description
-Python PDF generation library.
+This is the ReportLab PDF Toolkit. It allows rapid creation of rich PDF 
+documents, and also creation of charts in a variety of bitmap and vector 
+formats.
 
+%package -n     python3-reportlab
+Summary:        Python 3.x library for generating PDFs and graphics
+BuildRequires:  python3-devel
+BuildRequires:  python3-pillow
+Requires:       dejavu-sans-fonts
+Requires:       python3-pillow
 
-%package docs
-Summary:    Documentation files for %{name}
-Group:        Documentation
-Requires:    %{name} = %{version}-%{release}
+%description -n python3-reportlab
+This is the ReportLab PDF Toolkit. It allows rapid creation of rich PDF 
+documents, and also creation of charts in a variety of bitmap and vector 
+formats.
 
+%package        doc
+Summary:        Documentation for %{name}
+BuildArch:      noarch
+Requires:       %{name} = %{version}-%{release}
+Obsoletes:      %{name}-docs < %{version}-%{release}
 
-%description docs
+%description    doc                  
 Contains the documentation for ReportLab.
 
-
 %prep
-%setup -q -n reportlab-%{version}
+%setup -qn reportlab-%{version}
 %patch0 -p1 -b .fonts
 # clean up hashbangs from libraries
 find src -name '*.py' | xargs sed -i -e '/^#!\//d'
-
+# patch the CMap path by adding Fedora ghostscript path before the match
+sed -i '/\~\/\.local\/share\/fonts\/CMap/i''\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ '\'%{cmapdir}\''\,' src/reportlab/rl_settings.py
+rm -rf %{py3dir}
+cp -a . %{py3dir}
 
 %build
-CFLAGS="$RPM_OPT_FLAGS" %{__python} setup.py build
+CFLAGS="%{optflags}" %{__python2} setup.py build
+pushd %{py3dir}
+CFLAGS="%{optflags}" %{__python3} setup.py build
+popd
 # a bit of a horrible hack due to a chicken-and-egg problem. The docs
 # require reportlab, which isn't yet installed, but is at least built.
-PYTHONPATH="`pwd`/`ls -d build/lib*`" %{__python} docs/genAll.py
-
+PYTHONPATH="`pwd`/`ls -d build/lib*`" %{__python2} docs/genAll.py
 
 %install
-rm -rf $RPM_BUILD_ROOT
-%{__python} setup.py install -O1 --skip-build --root $RPM_BUILD_ROOT
+%{__python2} setup.py install --prefix=%{_prefix} -O1 --skip-build --root %{buildroot}
+pushd %{py3dir}
+%{__python3} setup.py install --prefix=%{_prefix} -O1 --skip-build --root=%{buildroot}
+popd
 # Remove bundled fonts
-rm -rf $RPM_BUILD_ROOT%{python_sitearch}/reportlab/fonts
+rm -rf %{buildroot}%{python2_sitearch}/reportlab/fonts
 
-
-%clean
-rm -rf $RPM_BUILD_ROOT
-
+%check
+#%{__python2} setup.py tests
 
 %files
-%defattr(-,root,root,-)
 %doc README.txt CHANGES.txt LICENSE.txt
-%{python_sitearch}/reportlab
-%{python_sitearch}/reportlab*.egg-info
-%{python_sitearch}/*.so
+%{python2_sitearch}/reportlab/
+%{python2_sitearch}/reportlab-%{version}-py%{python2_version}.egg-info
 
+%files -n python3-reportlab
+%doc README.txt CHANGES.txt LICENSE.txt
+%{python3_sitearch}/reportlab/
+%{python3_sitearch}/reportlab-%{version}-py%{python3_version}.egg-info
 
-%files docs
-%defattr(-,root,root,-)
-%doc docs/*.pdf demos tools LICENSE.txt
-
+%files doc
+%doc demos/ tools/
+#%doc docs/*.pdf
 
 %changelog
-* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 2.5-6
-- 为 Magic 3.0 重建
+* Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.1.8-5
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 
-* Wed Jan 25 2012 Liu Di <liudidi@gmail.com> - 2.5-5
-- 为 Magic 3.0 重建
+* Sun Aug 17 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.1.8-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
+
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.1.8-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Wed May 28 2014 Kalev Lember <kalevlember@gmail.com> - 3.1.8-2
+- Rebuilt for https://fedoraproject.org/wiki/Changes/Python_3.4
+
+* Tue Apr 22 2014 Christopher Meng <rpm@cicku.me> - 3.1.8-1
+- Update to 3.1.8
+- Documentation package should be -doc instead of -docs.
+
+* Sun Aug 04 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.5-8
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.5-7
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
+
+* Wed Jan 16 2013 Toshio Kuratomi <toshio@fedoraproject.org> - 2.5-6
+- Add a dep on python-imaging to process images
+
+* Sat Jul 21 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.5-5
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 
 * Sat Jan 14 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.5-4
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
