@@ -1,19 +1,11 @@
 %global pypi_name wheel
-%if 0%{?rhel} > 7 || 0%{?fedora} >= 16
 %bcond_without python3
-%else
-%bcond_with python3
-
-%if 0%{?rhel} < 7
-%global rhel6 1
-%endif
-
-%endif
 
 Name:           python-%{pypi_name}
 Version:        0.24.0
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        A built-package format for Python
+Summary(zh_CN.UTF-8): Python 的包格式
 
 License:        MIT
 URL:            https://bitbucket.org/pypa/wheel
@@ -47,9 +39,14 @@ A wheel is a ZIP-format archive with a specially formatted filename and the
 .whl extension. It is designed to contain all the files for a PEP 376
 compatible install in a way that is very close to the on-disk format.
 
+%description -l zh_CN.UTF-8
+Python 的包格式。
+
+
 %if 0%{with python3}
 %package -n     python3-%{pypi_name}
 Summary:        A built-package format for Python
+Summary(zh_CN.UTF-8): Python 的包格式
 
 %description -n python3-%{pypi_name}
 A built-package format for Python.
@@ -59,6 +56,8 @@ A wheel is a ZIP-format archive with a specially formatted filename and the
 compatible install in a way that is very close to the on-disk format.
 
 This is package contains Python 3 version of the package.
+%description -n python3-%{pypi_name} -l zh_CN.UTF-8
+Python 的包格式。
 %endif # with_python3
 
 
@@ -98,7 +97,7 @@ popd
 %endif # with_python3
 
 %{__python} setup.py install --skip-build --root %{buildroot}
-
+magic_rpm_clean.sh
 
 %check
 # remove setup.cfg that makes pytest require pytest-cov (unnecessary dep)
@@ -129,6 +128,9 @@ popd
 
 
 %changelog
+* Tue Sep 08 2015 Liu Di <liudidi@gmail.com> - 0.24.0-5
+- 为 Magic 3.0 重建
+
 * Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.24.0-4
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

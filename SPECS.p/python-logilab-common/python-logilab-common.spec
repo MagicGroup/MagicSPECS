@@ -1,14 +1,12 @@
-%if 0%{?fedora} > 12
 %global with_python3 1
-%else
-%{!?python_sitelib: %global python_sitelib %(%{__python} -c "from distutils.sysconfig import get_python_lib; print (get_python_lib())")}
-%endif
 
 Name:           python-logilab-common
-Version:        0.63.2
-Release:        4%{?dist}
+Version:	1.0.2
+Release:	1%{?dist}
 Summary:        Common libraries for Logilab projects
+Summary(zh_CN.UTF-8): Logilab 项目的通用库
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 License:        GPLv2+
 URL:            http://www.logilab.org/projects/common
 Source0:        https://pypi.python.org/packages/source/l/logilab-common/logilab-common-%{version}.tar.gz
@@ -26,14 +24,21 @@ BuildRequires:  python3-six
 This package contains several modules providing low level functionality
 shared among some python projects developed by logilab.
 
+%description -l zh_CN.UTF-8
+Logilab 项目的通用库。
+
 %if 0%{?with_python3}
 %package -n python3-logilab-common
 Summary:        Common libraries for Logilab projects
+Summary(zh_CN.UTF-8): Logilab 项目的通用库
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 
 %description -n python3-logilab-common
 This package contains several modules providing low level functionality
 shared among some python projects developed by logilab.
+%description -n python3-logilab-common -l zh_CN.UTF-8
+Logilab 项目的通用库。
 %endif # if with_python3
 
 %prep
@@ -70,6 +75,7 @@ popd
 
 %{__python} setup.py install -O1 --skip-build --root %{buildroot}
 rm -rf %{buildroot}%{python_sitelib}/logilab/common/test
+magic_rpm_clean.sh
 
 %check
 %{__python} setup.py test
@@ -99,6 +105,9 @@ rm -rf %{buildroot}
 %endif # with_python3
 
 %changelog
+* Tue Sep 08 2015 Liu Di <liudidi@gmail.com> - 1.0.2-1
+- 更新到 1.0.2
+
 * Fri Aug 14 2015 Liu Di <liudidi@gmail.com> - 0.63.2-4
 - 为 Magic 3.0 重建
 

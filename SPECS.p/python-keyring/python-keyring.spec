@@ -1,12 +1,13 @@
 %global with_python3 1
 
 Name:           python-keyring
-Version:        5.0
-Release:        2%{?dist}
+Version:	5.4
+Release:	1%{?dist}
 Summary:        Python 2 library to store and access passwords safely
+Summary(zh_CN.UTF-8): 安全地存储和访问密码的 Python2 库
 License:        MIT and Python
 URL:            http://bitbucket.org/kang/python-keyring-lib/
-Source0:        http://pypi.python.org/packages/source/k/keyring/keyring-%{version}.zip
+Source0:        http://pypi.python.org/packages/source/k/keyring/keyring-%{version}.tar.gz
 BuildArch:      noarch
 BuildRequires:  python2-devel
 BuildRequires:  python-setuptools
@@ -33,9 +34,13 @@ Python keyring lib also provides following build-in keyrings.
 * **CryptedFileKeyring**: a command line interface keyring base on PyCrypto.
 * **UncryptedFileKeyring**: a keyring which leaves passwords directly in file.
 
+%description -l zh_CN.UTF-8
+安全地存储和访问密码的 Python2 库。
+
 %if 0%{?with_python3}
 %package -n     python3-keyring
 Summary:        Python 3 library to access the system keyring service
+Summary(zh_CN.UTF-8): 安全地存储和访问密码的 Python3 库
 BuildRequires:  python3-devel
 BuildRequires:  python3-setuptools
 
@@ -58,6 +63,9 @@ Python keyring lib also provides following build-in keyrings.
 * **Win32CryptoKeyring**: for Windows 2k+.
 * **CryptedFileKeyring**: a command line interface keyring base on PyCrypto.
 * **UncryptedFileKeyring**: a keyring which leaves passwords directly in file.
+%description -n python3-keyring -l zh_CN.UTF-8
+安全地存储和访问密码的 Python3 库
+
 %endif
 
 %prep
@@ -90,6 +98,7 @@ cp -a %{buildroot}%{_bindir}/keyring %{buildroot}%{_bindir}/keyring-%{python3_ve
 popd
 %endif
 %{__python2} setup.py install -O1 --skip-build --root %{buildroot}
+magic_rpm_clean.sh
 
 # Failed on Koji due to X environment not available.
 #%check
@@ -117,6 +126,9 @@ popd
 %endif
 
 %changelog
+* Tue Sep 08 2015 Liu Di <liudidi@gmail.com> - 5.4-1
+- 更新到 5.4
+
 * Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 5.0-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

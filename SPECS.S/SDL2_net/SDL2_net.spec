@@ -1,6 +1,6 @@
 Name:		SDL2_net
 Version:	2.0.0
-Release:	3%{?dist}
+Release:	4%{?dist}
 Summary:	SDL portable network library
 License:	zlib
 URL:		http://www.libsdl.org/projects/SDL_net/
@@ -48,6 +48,9 @@ find %{buildroot} -name '*.la' -exec rm -f {} ';'
 %{_libdir}/pkgconfig/*.pc
 
 %changelog
+* Mon Sep 07 2015 Liu Di <liudidi@gmail.com> - 2.0.0-4
+- 为 Magic 3.0 重建
+
 * Tue Jun 16 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.0.0-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

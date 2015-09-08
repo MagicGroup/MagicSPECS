@@ -1,18 +1,14 @@
 # test
 %global enablejit 0
 
-%if 0%{?fedora} >= 18
 # The MCJIT in llvm 3.6 is incompatible with gb.jit
 # http://permalink.gmane.org/gmane.comp.lang.gambas.user/32019
-%if 0%{?fedora} < 23
-%global enablejit 1
-%endif
-%endif
+%global enablejit 0
 
 Name:		gambas3
 Summary:	IDE based on a basic interpreter with object extensions
-Version:	3.8.0
-Release:	2%{?dist}
+Version:	3.8.1
+Release:	1%{?dist}
 License:	GPL+
 Group:		Development/Tools
 URL:		http://gambas.sourceforge.net/
@@ -1534,6 +1530,9 @@ update-mime-database %{?fedora:-n} %{_datadir}/mime &> /dev/null || :
 %{_datadir}/%{name}/info/gb.xml.xslt.*
 
 %changelog
+* Mon Sep 07 2015 Liu Di <liudidi@gmail.com> - 3.8.1-1
+- 更新到 3.8.1
+
 * Wed Aug  5 2015 Tom Callaway <spot@fedoraproject.org> - 3.8.0-2
 - build qt5 with the generated libtool, everything else with the system libtool
 

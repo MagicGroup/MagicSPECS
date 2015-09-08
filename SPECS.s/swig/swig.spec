@@ -1,5 +1,5 @@
 # We can skip tests
-%bcond_without testsuite
+%bcond_with testsuite
 
 %{!?tcl:%global tcl 1}
 %{!?guile:%global guile 1}

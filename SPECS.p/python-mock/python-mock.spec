@@ -1,12 +1,10 @@
-%if 0%{?fedora} > 12 || 0%{?rhel} > 6
 %global with_python3 1
-%endif
 
 %global mod_name mock
 
 Name:           python-mock
-Version:        1.0.1
-Release:        3%{?dist}
+Version:	1.3.0
+Release:	1%{?dist}
 Summary:        A Python Mocking and Patching Library for Testing
 
 Group:          Development/Libraries
@@ -81,23 +79,25 @@ popd
 %endif
 
 %{__python} setup.py install -O1 --skip-build --root $RPM_BUILD_ROOT
-
+magic_rpm_clean.sh
  
 %files
-%doc docs/ README.txt PKG-INFO LICENSE.txt
+%doc docs/ 
 %{python_sitelib}/*.egg-info
-%{python_sitelib}/%{mod_name}.py*
+%{python_sitelib}/%{mod_name}/*
 
 %if 0%{?with_python3}
 %files -n python3-mock
-%doc docs/ README.txt PKG-INFO LICENSE.txt
 %{python3_sitelib}/*.egg-info
-%{python3_sitelib}/%{mod_name}.py*
-%{python3_sitelib}/__pycache__/%{mod_name}*
+%{python3_sitelib}/%{mod_name}/*
+#%{python3_sitelib}/__pycache__/%{mod_name}*
 %endif
 
 
 %changelog
+* Tue Sep 08 2015 Liu Di <liudidi@gmail.com> - 1.3.0-1
+- 更新到 1.3.0
+
 * Tue Jun 17 2014 Liu Di <liudidi@gmail.com> - 1.0.1-3
 - 为 Magic 3.0 重建
 

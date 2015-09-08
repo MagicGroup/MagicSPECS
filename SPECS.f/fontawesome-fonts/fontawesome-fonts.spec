@@ -2,9 +2,10 @@
 %global fontconf 60-%{fontname}.conf
 
 Name:		%{fontname}-fonts
-Version:	4.1.0
-Release:	3%{?dist}
+Version:	4.4.0
+Release:	1%{?dist}
 Summary:	Iconic font set
+Summary(zh_CN.UTF-8): Iconic 字体集
 License:	OFL
 URL:		http://fontawesome.io/
 Source0:	http://fontawesome.io/assets/font-awesome-%{version}.zip
@@ -21,13 +22,19 @@ Font Awesome gives you scalable vector icons that can instantly be
 customized — size, color, drop shadow, and anything that can be done with the
 power of CSS.
 
+%description -l zh_CN.UTF-8
+Iconic 字体集。
+
 %package web
 License:	MIT
 Requires:	%{fontname}-fonts = %{version}-%{release}
 Summary:	Web files for fontawesome
+Summary(zh_CN.UTF-8): %{name} 的网页文件
 
 %description web
 Web files for Font Awesome.
+%description web -l zh_CN.UTF-8
+%{name} 的网页文件。
 
 %prep
 %setup -q -n font-awesome-%{version}
@@ -51,6 +58,7 @@ ln -s %{_fontconfig_templatedir}/%{fontconf} \
 
 mkdir -p %{buildroot}%{_datadir}/font-awesome-web/
 cp -a css less scss %{buildroot}%{_datadir}/font-awesome-web/
+magic_rpm_clean.sh
 
 # files:
 %_font_pkg -f %{fontconf} *.ttf *.otf
@@ -65,6 +73,9 @@ cp -a css less scss %{buildroot}%{_datadir}/font-awesome-web/
 %{_datadir}/fonts/fontawesome/fontawesome-webfont.woff
 
 %changelog
+* Tue Sep 08 2015 Liu Di <liudidi@gmail.com> - 4.4.0-1
+- 更新到 4.4.0
+
 * Wed Jun 17 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 4.1.0-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

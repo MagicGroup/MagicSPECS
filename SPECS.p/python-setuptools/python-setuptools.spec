@@ -1,19 +1,9 @@
-%if 0%{?fedora}
 %global with_python3 1
-%global with_check 1
+%global with_check 0
 
 # This controls whether setuptools is build as a wheel or not,
 # simplifying Python 3.4 bootstraping process
-%if %{fedora} > 20
 %global build_wheel 1
-%endif
-
-%else
-%global with_check 0
-# define some macros for RHEL 6
-%global __python2 %__python
-%global python2_sitelib %python_sitelib
-%endif
 
 %global srcname setuptools
 %if 0%{?build_wheel}
@@ -26,11 +16,13 @@
 %endif
 
 Name:           python-setuptools
-Version:        18.1
-Release:        1%{?dist}
+Version:	18.3.1
+Release:	1%{?dist}
 Summary:        Easily build and distribute Python packages
+Summary(zh_CN.UTF-8): 简便构建和发布 Python 包
 
 Group:          Applications/System
+Group(zh_CN.UTF-8): 应用程序/系统
 License:        Python or ZPLv2.0
 URL:            https://pypi.python.org/pypi/%{srcname}
 Source0:        https://pypi.python.org/packages/source/s/%{srcname}/%{srcname}-%{version}.tar.gz
@@ -77,10 +69,15 @@ have dependencies on other packages.
 This package also contains the runtime components of setuptools, necessary to
 execute the software that requires pkg_resources.py.
 
+%description -l zh_CN.UTF-8
+简便构建和发布 Python 包。
+
 %if 0%{?with_python3}
 %package -n python3-setuptools
 Summary:        Easily build and distribute Python 3 packages
+Summary(zh_CN.UTF-8): 简便构建和发布 Python3 包
 Group:          Applications/System
+Group(zh_CN.UTF-8): 应用程序/系统
 
 # Note: Do not need to Require python3-backports-ssl_match_hostname because it
 # has been present since python3-3.2.  We do not ship python3-3.0 or
@@ -93,6 +90,8 @@ have dependencies on other packages.
 
 This package also contains the runtime components of setuptools, necessary to
 execute the software that requires pkg_resources.py.
+%description -n python3-setuptools -l zh_CN.UTF-8
+简便构建和发布 Python3 包。
 
 %endif # with_python3
 
@@ -181,6 +180,7 @@ sed -i '/^setuptools\/tests\//d' %{buildroot}%{python2_record}
 install -p -m 0644 %{SOURCE1} %{SOURCE2} .
 find %{buildroot}%{python2_sitelib} -name '*.exe' | xargs rm -f
 chmod +x %{buildroot}%{python2_sitelib}/setuptools/command/easy_install.py
+magic_rpm_clean.sh
 
 %if 0%{?with_check}
 %check
@@ -207,6 +207,9 @@ popd
 %endif # with_python3
 
 %changelog
+* Tue Sep 08 2015 Liu Di <liudidi@gmail.com> - 18.3.1-1
+- 更新到 18.3.1
+
 * Wed Aug 05 2015 Kevin Fenzi <kevin@scrye.com> 18.1-1
 - Update to 18.1. Fixes bug #1249436
 

@@ -1,26 +1,22 @@
-%if 0%{?fedora}
 %global with_python3 1
-%endif
 
-%if 0%{?rhel} && 0%{?rhel} < 6
 %{!?python_sitelib: %global python_sitelib %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib()")}
-%endif
 
-%if 0%{?fedora} <= 16
 %{!?python3_version: %global python3_version %(%{__python3} -c 'import sys ; sys.stdout.write("%s.%s" % sys.version_info[:2])')}
-%endif
 
 Name: python-mako
-Version: 0.7.3
-Release: 3%{?dist}
+Version:	1.0.2
+Release:	1%{?dist}
 Summary: Mako template library for Python
+Summary(zh_CN.UTF-8): Python 的 Mako 模板库
 
 Group: Development/Languages
+Group(zh_CN.UTF-8): 开发/语言
 # Mostly MIT, but _ast_util.py is Python licensed.
 # The documentation contains javascript for search licensed BSD or GPLv2
 License: (MIT and Python) and (BSD or GPLv2)
 URL: http://www.makotemplates.org/
-Source0: http://www.makotemplates.org/downloads/Mako-%{version}.tar.gz
+Source0: https://pypi.python.org/packages/source/M/Mako/Mako-%{version}.tar.gz
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch: noarch
 BuildRequires: python2-devel
@@ -51,11 +47,15 @@ Python (i.e. Python Server Page) language, which refines the familiar ideas of
 componentized layout and inheritance to produce one of the most straightforward
 and flexible models available, while also maintaining close ties to Python
 calling and scoping semantics.
+%description -l zh_CN.UTF-8
+Python 的 Mako 模板库。
 
 %if 0%{?with_python3}
 %package -n python3-mako
 Summary: Mako template library for Python 3
+Summary(zh_CN.UTF-8): Python3 的 Mako 模板库
 Group: Development/Languages
+Group(zh_CN.UTF-8): 开发/语言
 Requires: python3-beaker
 Requires: python3-markupsafe
 
@@ -70,6 +70,8 @@ and flexible models available, while also maintaining close ties to Python
 calling and scoping semantics.
 
 This package contains the mako module built for use with python3.
+%description -n python3-mako -l zh_CN.UTF-8
+Python3 的 Mako 模板库。
 %endif # with_python3
 
 %prep
@@ -134,6 +136,9 @@ rm -rf %{buildroot}
 %endif
 
 %changelog
+* Tue Sep 08 2015 Liu Di <liudidi@gmail.com> - 1.0.2-1
+- 更新到 1.0.2
+
 * Tue Jun 17 2014 Liu Di <liudidi@gmail.com> - 0.7.3-3
 - 为 Magic 3.0 重建
 

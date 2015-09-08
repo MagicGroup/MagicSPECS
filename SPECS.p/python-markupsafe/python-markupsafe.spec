@@ -1,15 +1,13 @@
-%if 0%{?fedora} > 12
 %global with_python3 1
-%else
-%{!?python_sitearch: %global python_sitearch %(%{__python} -c "from distutils.sysconfig import get_python_lib; print(get_python_lib(1))")}
-%endif
 
 Name: python-markupsafe
-Version: 0.11
-Release: 9%{?dist}
+Version:	0.23
+Release:	1%{?dist}
 Summary: Implements a XML/HTML/XHTML Markup safe string for Python
+Summary(zh_CN.UTF-8): Python 的 XML/HTML/XHTML 标记安全字符串实现
 
 Group: Development/Languages
+Group(zh_CN.UTF-8): 开发/语言
 License: BSD
 URL: http://pypi.python.org/pypi/MarkupSafe
 Source0: http://pypi.python.org/packages/source/M/MarkupSafe/MarkupSafe-%{version}.tar.gz
@@ -27,13 +25,20 @@ BuildRequires: python-tools
 %description
 A library for safe markup escaping.
 
+%description -l zh_CN.UTF-8
+Python 的 XML/HTML/XHTML 标记安全字符串实现。
+
 %if 0%{?with_python3}
 %package -n python3-markupsafe
 Summary: Implements a XML/HTML/XHTML Markup safe string for Python
+Summary(zh_CN.UTF-8): Python3 的 XML/HTML/XHTML 标记安全字符串实现
 Group: Development/Languages
+Group(zh_CN.UTF-8): 开发/语言
 
 %description -n python3-markupsafe
 A library for safe markup escaping.
+%description -n python3-markupsafe -l zh_CN.UTF-8
+Python3 的 XML/HTML/XHTML 标记安全字符串实现
 %endif #if with_python3
 
 %prep
@@ -67,7 +72,7 @@ pushd %{py3dir}
 rm $RPM_BUILD_ROOT/%{python3_sitearch}/markupsafe/*.c
 popd
 %endif # with_python3
-
+magic_rpm_clean.sh
 
 %check
 %{__python} setup.py test
@@ -96,6 +101,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Tue Sep 08 2015 Liu Di <liudidi@gmail.com> - 0.23-1
+- 更新到 0.23
+
 * Tue Jun 17 2014 Liu Di <liudidi@gmail.com> - 0.11-9
 - 为 Magic 3.0 重建
 

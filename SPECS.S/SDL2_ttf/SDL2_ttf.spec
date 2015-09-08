@@ -1,6 +1,6 @@
 Name:		SDL2_ttf
 Version:	2.0.12
-Release:	5%{?dist}
+Release:	6%{?dist}
 Summary:	TrueType font rendering library for SDL2
 Group:		System Environment/Libraries
 License:	zlib
@@ -53,6 +53,9 @@ find %{buildroot} -name '*.la' -exec rm -f {} ';'
 %{_libdir}/pkgconfig/%{name}.pc
 
 %changelog
+* Mon Sep 07 2015 Liu Di <liudidi@gmail.com> - 2.0.12-6
+- 为 Magic 3.0 重建
+
 * Tue Jun 16 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.0.12-5
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

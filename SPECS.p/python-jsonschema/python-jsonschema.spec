@@ -1,16 +1,13 @@
 # Created by pyp2rpm-0.4.2
 %global pypi_name jsonschema
 
-%if 0%{?fedora} > 12
 %global with_python3 1
-%else
-%{!?python_sitelib: %global python_sitelib %(%{__python} -c "from distutils.sysconfig import get_python_lib; print (get_python_lib())")}
-%endif
 
 Name:           python-%{pypi_name}
-Version:        2.4.0
-Release:        2%{?dist}
+Version:	2.5.1
+Release:	1%{?dist}
 Summary:        An implementation of JSON Schema validation for Python
+Summary(zh_CN.UTF-8): JSON Schema 校验的 Python 实现
 
 License:        MIT
 URL:            http://pypi.python.org/pypi/jsonschema
@@ -35,12 +32,18 @@ BuildRequires:  python3-mock
 jsonschema is JSON Schema validator currently based on
 http://tools.ietf.org/html/draft-zyp-json-schema-03
 
+%description -l zh_CN.UTF-8
+JSON Schema 校验的 Python 实现。
+
 %if 0%{?with_python3}
 %package -n python3-%{pypi_name}
 Summary:        An implementation of JSON Schema validation for Python
+Summary(zh_CN.UTF-8): JSON Schema 校验的 Python 实现
 %description -n python3-%{pypi_name}
 jsonschema is JSON Schema validator currently based on
 http://tools.ietf.org/html/draft-zyp-json-schema-03
+%description -n python3-%{pypi_name} -l zh_CN.UTF-8
+JSON Schema 校验的 Python 实现。
 %endif
 
 %prep
@@ -67,6 +70,7 @@ pushd %{py3dir}
 popd
 %endif
 %{__python} setup.py install -O1 --skip-build --root %{buildroot}
+magic_rpm_clean.sh
 
 %check
 %if 0%{?with_python3}
@@ -91,6 +95,9 @@ popd
 
 
 %changelog
+* Tue Sep 08 2015 Liu Di <liudidi@gmail.com> - 2.5.1-1
+- 更新到 2.5.1
+
 * Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.4.0-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

@@ -1,17 +1,17 @@
-%{!?pyver:%global pyver %(%{__python} -c "import sys ; print sys.version[:3]")}
-%{!?python_sitearch:%global python_sitearch %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib(1)")}
-%{!?python_sitelib:%global python_sitelib %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib()")}
-
+%global github_owner    mwclient
+%global github_name     mwclient
 
 Name:           python-mwclient
-Version:        0.6.5
-Release:        4%{?dist}
+Version:	0.7.2
+Release:	1%{?dist}
 Summary:        Mwclient is a client to the MediaWiki API
+Summary(zh_CN.UTF-8): 这是 MediaWiki 的客户端 API
 
 Group:          System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 License:        MIT
 URL:            http://sourceforge.net/apps/mediawiki/mwclient/index.php?title=Main_Page
-Source0:        http://downloads.sourceforge.net/mwclient/mwclient-%{version}.zip
+Source0:        https://pypi.python.org/packages/source/m/mwclient/mwclient-%{version}.zip 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch: noarch
 
@@ -22,18 +22,25 @@ Requires:  python-simplejson
 Mwclient is a client to the MediaWiki API <http://mediawiki.org/wiki/API>
 and allows access to almost all implemented API functions
 
+%description -l zh_CN.UTF-8
+这是 MediaWiki 的客户端 API。
+
 %prep
-%setup -q -n mwclient
+%setup -q -n %{github_name}-%{version}
 
 
 %build
-# intentionally left blank
+%{__python2} setup.py build
 
 
 %install
 rm -rf $RPM_BUILD_ROOT
-install -d -m755 %{buildroot}%{python_sitelib}/mwclient/
-install -pm 0644 *.py %{buildroot}%{python_sitelib}/mwclient/
+%{__python2} setup.py install --skip-build --root $RPM_BUILD_ROOT
+
+
+# cannot be run yet, need python-responses packaged
+#check
+#%{__python2} setup.py test
 
 
 %clean
@@ -42,11 +49,13 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(-,root,root,-)
-%doc README.txt REFERENCE.txt RELEASE-NOTES.txt
-%{python_sitelib}/mwclient/
-
+%doc README.rst 
+%{python2_sitelib}/%{github_name}*
 
 %changelog
+* Tue Sep 08 2015 Liu Di <liudidi@gmail.com> - 0.7.2-1
+- 更新到 0.7.2
+
 * Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.6.5-4
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
 

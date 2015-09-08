@@ -1,7 +1,8 @@
 Name:           libxshmfence
 Version:        1.2
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        X11 shared memory fences
+Summary(zh_CN.UTF-8): X11 共享内存库
 
 License:        MIT
 URL:            http://www.x.org/
@@ -15,13 +16,20 @@ BuildRequires:  pkgconfig(xproto)
 %description
 Shared memory fences for X11, as used in DRI3.
 
+%description -l zh_CN.UTF-8
+X11 共享内存库。
+
 %package        devel
 Summary:        Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Requires:       %{name}%{?_isa} = %{version}-%{release}
 
 %description    devel
 The %{name}-devel package contains libraries and header files for
 developing applications that use %{name}.
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -34,6 +42,7 @@ make %{?_smp_mflags}
 %install
 %make_install
 find $RPM_BUILD_ROOT -name '*.la' -exec rm -f {} ';'
+magic_rpm_clean.sh
 
 %post -p /sbin/ldconfig
 %postun -p /sbin/ldconfig
@@ -49,6 +58,9 @@ find $RPM_BUILD_ROOT -name '*.la' -exec rm -f {} ';'
 %{_libdir}/*.so
 
 %changelog
+* Mon Sep 07 2015 Liu Di <liudidi@gmail.com> - 1.2-3
+- 为 Magic 3.0 重建
+
 * Wed Jun 17 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.2-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

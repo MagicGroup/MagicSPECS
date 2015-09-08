@@ -1,15 +1,15 @@
-%if 0%{?fedora} > 12
 %global with_python3 1
-%endif
 
 %{!?python_sitearch: %global python_sitearch %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib(1)")}
 
 Name:           python-lxml
-Version:        3.0.1
-Release:        3%{?dist}
+Version:	3.4.4
+Release:	1%{?dist}
 Summary:        ElementTree-like Python bindings for libxml2 and libxslt
+Summary(zh_CN.UTF-8): libxml2 和 libxslt 的 Python 绑定
 
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 License:        BSD
 URL:            http://lxml.de
 Source0:        http://lxml.de/files/lxml-%{version}.tgz
@@ -36,18 +36,27 @@ bindings.  In particular, lxml deals with Python Unicode strings
 rather than encoded UTF-8 and handles memory management automatically,
 unlike the default bindings.
 
+%description -l zh_CN.UTF-8
+libxml2 和 libxslt 的 Python 绑定。
+
 %package docs
 Summary:        Documentation for %{name}
+Summary(zh_CN.UTF-8): %{name} 的文档
 Group:          Documentation
+Group(zh_CN.UTF-8): 文档
 BuildArch:      noarch
 %description docs
 This package provides the documentation for %{name}, e.g. the API as html.
 
+%description docs -l zh_CN.UTF-8
+%{name} 的文档。
 
 %if 0%{?with_python3}
 %package -n python3-lxml
 Summary:        ElementTree-like Python 3 bindings for libxml2 and libxslt
+Summary(zh_CN.UTF-8): libxml2 和 libxslt 的 Python3 绑定
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 
 %description -n python3-lxml
 lxml provides a Python 3 binding to the libxslt and libxml2 libraries.
@@ -56,6 +65,8 @@ a more Pythonic interface to libxml2 and libxslt than the default
 bindings.  In particular, lxml deals with Python 3 Unicode strings
 rather than encoded UTF-8 and handles memory management automatically,
 unlike the default bindings.
+%description -n python3-lxml -l zh_CN.UTF-8
+libxml2 和 libxslt 的 Python3 绑定。
 %endif
 
 %prep
@@ -124,6 +135,9 @@ rm -rf %{buildroot}
 %endif
 
 %changelog
+* Tue Sep 08 2015 Liu Di <liudidi@gmail.com> - 3.4.4-1
+- 更新到 3.4.4
+
 * Tue Jun 17 2014 Liu Di <liudidi@gmail.com> - 3.0.1-3
 - 为 Magic 3.0 重建
 

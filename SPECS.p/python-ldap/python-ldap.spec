@@ -1,18 +1,16 @@
 ### Abstract ###
 
 Name: python-ldap
-Version: 2.4.17
-Release: 2%{?dist}
+Version:	2.4.20
+Release:	1%{?dist}
 Epoch: 0
 License: Python
 Group: System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 Summary: An object-oriented API to access LDAP directory servers
+Summary(zh_CN.UTF-8): 访问 LDAP 目录服务的面对对象的 API
 URL: http://python-ldap.sourceforge.net/
 Source0: http://pypi.python.org/packages/source/p/python-ldap/python-ldap-%{version}.tar.gz
-
-### Patches ###
-# Fedora specific patch
-Patch0: python-ldap-2.4.16-dirs.patch
 
 ### Dependencies ###
 Requires: openldap 
@@ -37,9 +35,11 @@ Python programs.  It allows access to LDAP directory servers by wrapping the
 OpenLDAP 2.x libraries, and contains modules for other LDAP-related tasks 
 (including processing LDIF, LDAPURLs, LDAPv3 schema, etc.).
 
+%description -l zh_CN.UTF-8
+访问 LDAP 目录服务的面对对象的 API。
+
 %prep
 %setup -q -n python-ldap-%{version}
-%patch0 -p1 -b .dirs
 
 # clean up cvs hidden files
 rm -rf Demo/Lib/ldap/.cvsignore Demo/.cvsignore Demo/Lib/ldif/.cvsignore Demo/Lib/ldap/async/.cvsignore \
@@ -53,7 +53,7 @@ sed -i 's|#! python|#!/usr/bin/python|g' Demo/simplebrowse.py
 
 %install
 %{__python} setup.py install --skip-build --root $RPM_BUILD_ROOT
-
+magic_rpm_clean.sh
 
 %files
 %defattr(-,root,root,-)
@@ -66,6 +66,9 @@ sed -i 's|#! python|#!/usr/bin/python|g' Demo/simplebrowse.py
 %{python_sitearch}/python_ldap-%{version}-*.egg-info
 
 %changelog
+* Tue Sep 08 2015 Liu Di <liudidi@gmail.com> - 0:2.4.20-1
+- 更新到 2.4.20
+
 * Fri Feb 13 2015 Liu Di <liudidi@gmail.com> - 0:2.4.17-2
 - 为 Magic 3.0 重建
 

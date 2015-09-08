@@ -1,9 +1,11 @@
 Name:           libomxil-bellagio
 Version:        0.9.3
-Release:        11%{?dist}
+Release:        12%{?dist}
 Summary:        OpenMAX Integration Layer
+Summary(zh_CN.UTF-8): OpenMAX 集成层
 
 Group:          System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 License:        LGPLv2+
 URL:            http://omxil.sourceforge.net
 Source0:        http://downloads.sourceforge.net/omxil/%{name}-%{version}.tar.gz
@@ -30,8 +32,13 @@ Three dynamically loadable components are also included: OMX alsa sink
 component, OMX mp3,aac,ogg decoder component and OMX volume control component.
 
 
+%description -l zh_CN.UTF-8
+OpenMAX 集成层。
+
 %package        devel
 Summary:        Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
+Group(zh_CN.UTF-8): 开发/库
 Group:          Development/Libraries
 Requires:       %{name} = %{version}-%{release}
 
@@ -39,14 +46,21 @@ Requires:       %{name} = %{version}-%{release}
 The %{name}-devel package contains libraries and header files for
 developing applications that use %{name}.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
 %package        test
 Summary:        Test cases for %{name}
+Summary(zh_CN.UTF-8): %{name} 的测试包
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       %{name} = %{version}-%{release}
 
 %description    test
 The %{name}-test package contains binaries for testing %{name}.
 
+%description test -l zh_CN.UTF-8
+%{name} 的测试包。
 
 %prep
 %setup -q
@@ -88,7 +102,7 @@ done
 
 #Avoid docdir
 rm -rf $RPM_BUILD_ROOT%{_datadir}/doc/%{name}
-
+magic_rpm_clean.sh
 
 %post -p /sbin/ldconfig
 
@@ -118,6 +132,9 @@ rm -rf $RPM_BUILD_ROOT%{_datadir}/doc/%{name}
 
 
 %changelog
+* Mon Sep 07 2015 Liu Di <liudidi@gmail.com> - 0.9.3-12
+- 为 Magic 3.0 重建
+
 * Wed Jun 17 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.9.3-11
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

@@ -5,7 +5,7 @@
 
 Name:		ocl-icd
 Version:	2.2.7
-Release:	2%{?gitversion}%{?dist}
+Release:	3%{?gitversion}%{?dist}
 Summary:	OpenCL ICD Bindings
 
 License:	BSD
@@ -67,9 +67,13 @@ make check
 %{_includedir}/*
 %{_libdir}/libOpenCL.so
 %{_libdir}/pkgconfig/*.pc
+%{_mandir}/man7/libOpenCL*
 
 
 %changelog
+* Mon Sep 07 2015 Liu Di <liudidi@gmail.com> - 2.2.7-3.git20150606.ebbc4c1
+- 为 Magic 3.0 重建
+
 * Wed Jun 17 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.2.7-2.git20150606.ebbc4c1
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

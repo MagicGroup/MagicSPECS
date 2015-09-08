@@ -1,6 +1,6 @@
 Name:           SDL2_mixer
 Version:        2.0.0
-Release:        8%{?dist}
+Release:        10%{?dist}
 Summary:        Simple DirectMedia Layer - Sample Mixer Library
 
 Group:          System Environment/Libraries
@@ -74,6 +74,12 @@ find %{buildroot} -name '*.la' -exec rm -f {} ';'
 %{_includedir}/SDL2/*
 
 %changelog
+* Mon Sep 07 2015 Liu Di <liudidi@gmail.com> - 2.0.0-10
+- 为 Magic 3.0 重建
+
+* Mon Sep 07 2015 Liu Di <liudidi@gmail.com> - 2.0.0-9
+- 为 Magic 3.0 重建
+
 * Tue Jun 16 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.0.0-8
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

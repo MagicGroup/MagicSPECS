@@ -4,10 +4,12 @@
 
 Name:           python-%{upstream_name}
 Version:        0.5.3
-Release:        10%{?dist}
+Release:        11%{?dist}
 Summary:        Mock object framework
+Summary(zh_CN.UTF-8): Mock 对象框架
 
 Group:          Development/Languages
+Group(zh_CN.UTF-8): 开发/语言
 License:        ASL 2.0
 URL:            http://code.google.com/p/pymox
 Source0:        http://pypi.python.org/packages/source/m/mox/mox-%{version}.tar.gz
@@ -19,6 +21,9 @@ BuildRequires:  python-devel
 %description
 Mox is a mock object framework for Python based on the Java mock object
 framework EasyMock.
+
+%description -l zh_CN.UTF-8
+Mock 对象框架。
 
 %prep
 %setup -q -n %{upstream_name}-%{version}
@@ -47,6 +52,9 @@ rm -rf %{buildroot}
 %{python_sitelib}/%{upstream_name}-%{version}*.egg-info
 
 %changelog
+* Tue Sep 08 2015 Liu Di <liudidi@gmail.com> - 0.5.3-11
+- 为 Magic 3.0 重建
+
 * Thu Aug 06 2015 Liu Di <liudidi@gmail.com> - 0.5.3-10
 - 为 Magic 3.0 重建
 

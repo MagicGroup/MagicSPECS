@@ -4,7 +4,7 @@
 
 %{?dist: %{expand: %%define %dist mgc30}}
 %define LIBVER 3.3
-%define git 1
+%define git 0
 %define vcsdate 20140228
 
 
@@ -16,7 +16,7 @@ Summary: Debian's Advanced Packaging Tool with RPM support
 Summary(zh_CN.UTF-8): 使用RPM支持的 Debian 高级包工具
 Name: apt
 Version: 0.5.15lorg3.95
-Release: 10%{?dist}
+Release: 12%{?dist}
 License: GPL
 Group: System Environment/Base
 Group(zh_CN.UTF-8): 系统环境/基本
@@ -28,7 +28,7 @@ Vendor: MagicGroup
 #git clone http://apt-rpm.org/scm/apt.git
 Source: %{name}-git%{vcsdate}.tar.xz
 %else
-Source: http://apt-rpm.org/testing/apt-0.5.15lorg3.94a.tar.bz2
+Source: %{name}-git%{vcsdate}.tar.xz
 %endif
 Source201: make_apt_git_package.sh
 
@@ -60,6 +60,8 @@ Patch4: apt-0.5.15lorg3.2-ppc.patch
 Patch1: apt-0.5.15lorg3.x-cache-corruption.patch
 # fix build with lua 5.2
 Patch3: apt-0.5.15lorg3.95-lua-5.2.patch
+# 修复在新 rpm 和 gcc 上的编译问题
+Patch5: apt-fix-compile.patch
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 
@@ -134,15 +136,12 @@ When some transaction is run, it will dump information
 about it in /var/log/apt.log, or in the configured file.
 
 %prep
-%if 0%{git}
 %setup -q -n %{name}-git%{vcsdate}
-%else
-%setup
-%endif
 %patch0 -p1 -b .rpmpriorities
 %patch4 -p1 -b .ppc
 %patch1 -p0 -b .mmap
 %patch3 -p1 -b .lua-52
+%patch5 -p1
 
 %{__perl} -pi.orig -e 's|RPM APT-HTTP/1.3|Dag RPM Repository %{dist}/%{_arch} APT-HTTP/1.3|' methods/http.cc
 

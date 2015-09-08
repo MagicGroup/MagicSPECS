@@ -1,11 +1,13 @@
 %define python_sitelib %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib()")
 
 Summary: Dispatches signals between Python objects in a wide variety of contexts
+Summary(zh_CN.UTF-8): 分派各种 Python 环境之间的信号
 Name: python-louie
 Version: 1.1
-Release: 7%{?dist}
+Release: 8%{?dist}
 License: BSD
 Group: Development/Languages
+Group(zh_CN.UTF-8): 开发/语言
 URL: http://pylouie.org/
 Source: http://cheeseshop.python.org/packages/source/L/Louie/Louie-%{version}.tar.gz
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
@@ -24,6 +26,8 @@ signals between objects in a wide variety of contexts. It is based on
 PyDispatcher, which in turn was based on a highly-rated recipe in the
 Python Cookbook.
 
+%description -l zh_CN.UTF-8
+分派各种 Python 环境之间的信号。
 
 %prep
 %setup -q -n Louie-%{version}
@@ -36,7 +40,7 @@ Python Cookbook.
 %install
 %{__rm} -rf %{buildroot}
 %{__python} setup.py install --skip-build --root %{buildroot}
-
+magic_rpm_clean.sh
 
 %clean
 %{__rm} -rf %{buildroot}
@@ -50,6 +54,9 @@ Python Cookbook.
 
 
 %changelog
+* Tue Sep 08 2015 Liu Di <liudidi@gmail.com> - 1.1-8
+- 为 Magic 3.0 重建
+
 * Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 1.1-7
 - 为 Magic 3.0 重建
 

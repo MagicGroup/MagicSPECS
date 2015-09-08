@@ -1,11 +1,6 @@
-%if (! 0%{?rhel}) || 0%{?rhel} > 7
 %global with_python3 1
 %global build_wheel 1
 %global with_tests 0
-%endif
-%if 0%{?rhel} && 0%{?rhel} < 6
-%{!?python_sitelib: %global python_sitelib %(%{__python} -c "from distutils.sysconfig import get_python_lib; print(get_python_lib())")}
-%endif
 
 %global srcname pip
 %if 0%{?build_wheel}
@@ -21,11 +16,13 @@
 %endif
 
 Name:           python-%{srcname}
-Version:        7.1.0
-Release:        1%{?dist}
+Version:	7.1.2
+Release:	2%{?dist}
 Summary:        A tool for installing and managing Python packages
+Summary(zh_CN.UTF-8): 安装和管理 Python 包的工具
 
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 License:        MIT
 URL:            http://www.pip-installer.org
 Source0:        http://pypi.python.org/packages/source/p/pip/%{srcname}-%{version}.tar.gz
@@ -64,11 +61,15 @@ Pip is a replacement for `easy_install
 same techniques for finding packages, so packages that were made
 easy_installable should be pip-installable as well.
 
+%description -l zh_CN.UTF-8
+安装和管理 Python 包的工具。
 
 %if 0%{?with_python3}
 %package -n python3-pip
 Summary:        A tool for installing and managing Python3 packages
+Summary(zh_CN.UTF-8): 安装和管理 Python3 包的工具
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 
 BuildRequires:  python3-devel
 BuildRequires:  python3-setuptools
@@ -92,6 +93,8 @@ Pip is a replacement for `easy_install
 <http://peak.telecommunity.com/DevCenter/EasyInstall>`_.  It uses mostly the
 same techniques for finding packages, so packages that were made
 easy_installable should be pip-installable as well.
+%description -n python3-pip -l zh_CN.UTF-8
+安装和管理 Python3 包的工具。
 %endif # with_python3
 
 %prep
@@ -147,6 +150,7 @@ pip2 install -I dist/%{python2_wheelname} --root %{buildroot} --strip-file-prefi
 %else
 %{__python} setup.py install -O1 --skip-build --root %{buildroot}
 %endif
+magic_rpm_clean.sh
 
 mkdir -p %{buildroot}%{bashcompdir}
 PYTHONPATH=%{buildroot}%{python_sitelib} \
@@ -232,6 +236,12 @@ popd
 %endif # with_python3
 
 %changelog
+* Tue Sep 08 2015 Liu Di <liudidi@gmail.com> - 7.1.2-2
+- 为 Magic 3.0 重建
+
+* Tue Sep 08 2015 Liu Di <liudidi@gmail.com> - 7.1.2-1
+- 更新到 7.1.2
+
 * Wed Jul 01 2015 Slavek Kabrda <bkabrda@redhat.com> - 7.1.0-1
 - Update to 7.1.0
 

@@ -1,0 +1,33 @@
+diff -ur apt-git20140228.orig/apt-pkg/rpm/rpmhandler.cc apt-git20140228/apt-pkg/rpm/rpmhandler.cc
+--- apt-git20140228.orig/apt-pkg/rpm/rpmhandler.cc	2015-09-07 07:28:18.672891942 +0000
++++ apt-git20140228/apt-pkg/rpm/rpmhandler.cc	2015-09-07 07:28:54.769891016 +0000
+@@ -206,7 +206,7 @@
+ 	 deptype = RPMTAG_PROVIDENAME;
+ 	 break;
+       case pkgCache::Dep::Suggests:
+-	 deptype = RPMTAG_SUGGESTSNAME;
++	 deptype = RPMTAG_SUGGESTNAME;
+ 	 break;
+ #if 0 // Enhances dep type is not even known to apt, sigh..
+       case pkgCache::Dep::Enhances:
+diff -ur apt-git20140228.orig/methods/gpg.cc apt-git20140228/methods/gpg.cc
+--- apt-git20140228.orig/methods/gpg.cc	2015-09-07 07:28:18.664891942 +0000
++++ apt-git20140228/methods/gpg.cc	2015-09-07 07:28:41.166891365 +0000
+@@ -369,7 +369,7 @@
+       if (msg != NULL) 
+       {
+ 	 removeTmpDir(TempDir, SigCount);
+-	 return _error->Error(msg);
++	 return _error->Error("%s",msg);
+       }
+    }
+    else 
+@@ -393,7 +393,7 @@
+ 	 if (msg != NULL)
+ 	 {
+ 	    removeTmpDir(TempDir, SigCount);	       
+-	    return _error->Error(msg);
++	    return _error->Error("%s",msg);
+ 	 }
+ 	 if (KeyList.empty())
+ 	    KeyList = KeyID;

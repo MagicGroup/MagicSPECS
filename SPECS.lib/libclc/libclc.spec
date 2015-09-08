@@ -5,17 +5,20 @@
 
 %global shortname clc
 
+#临时措施
+%define debug_package %{nil}
+
 Name:           libclc
 Version:        0.0.1
-Release:        10.%{checkout}%{?dist}
+Release:        11.%{checkout}%{?dist}
 Summary:        An open source implementation of the OpenCL 1.1 library requirements
+Summary(zh_CN.UTF-8): OpenCL 1.1 库需求的开源实现
 
 License:        BSD
 URL:            http://libclc.llvm.org/
 # created using:
 # $ export PKG=libclc-$(date +%Y%m%d)git$(git describe --always)
 # $ git archive --prefix $PKG/ --format tar HEAD | xz > $PKG.tar.xz
-#Source0:        %{name}-%{checkout}.tar.xz
 Source0:        https://github.com/llvm-mirror/%{name}/archive/%{commit}/%{name}-%{checkout}.tar.xz
 
 # Only builds on x86
@@ -54,15 +57,20 @@ functions.
 libclc currently only supports the PTX target, but support for more
 targets is welcome.
 
+%description -l zh_CN.UTF-8
+OpenCL 1.1 库需求的开源实现。
 
 %package        devel
 Summary:        Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Requires:       %{name}%{?_isa} = %{version}-%{release}
 
 %description    devel
 The %{name}-devel package contains libraries and header files for
 developing applications that use %{name}.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q -n "%{name}-%{commitdate}git%{shortcommit}"
@@ -79,7 +87,7 @@ make %{?_smp_mflags}
 
 %install
 %make_install
-
+magic_rpm_clean.sh
 
 %files
 %doc LICENSE.TXT README.TXT CREDITS.TXT
@@ -92,6 +100,9 @@ make %{?_smp_mflags}
 
 
 %changelog
+* Mon Sep 07 2015 Liu Di <liudidi@gmail.com> - 0.0.1-11.20140901gite822ae3
+- 为 Magic 3.0 重建
+
 * Wed Jun 17 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.0.1-10.20140901gite822ae3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

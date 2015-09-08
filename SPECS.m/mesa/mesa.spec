@@ -55,7 +55,7 @@
 Summary: Mesa graphics libraries
 Name: mesa
 Version: 10.6.3
-Release: 1.%{git}%{?dist}
+Release: 2.%{git}%{?dist}
 License: MIT
 Group: System Environment/Libraries
 URL: http://www.mesa3d.org
@@ -93,7 +93,6 @@ BuildRequires: libXxf86vm-devel
 BuildRequires: expat-devel
 BuildRequires: xorg-x11-proto-devel
 BuildRequires: makedepend
-BuildRequires: libselinux-devel
 BuildRequires: libXext-devel
 BuildRequires: libXfixes-devel
 BuildRequires: libXdamage-devel
@@ -395,7 +394,7 @@ export CXXFLAGS="$RPM_OPT_FLAGS %{?with_opencl:-frtti -fexceptions} %{!?with_ope
 
 %configure \
     %{?asm_flags} \
-    --enable-selinux \
+    --disable-selinux \
     --enable-osmesa \
     --with-dri-driverdir=%{_libdir}/dri \
     --enable-egl \
@@ -714,6 +713,9 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Mon Sep 07 2015 Liu Di <liudidi@gmail.com> - 10.6.3-2.20150729
+- 为 Magic 3.0 重建
+
 * Wed Jul 29 2015 Igor Gnatenko <i.gnatenko.brain@gmail.com> - 10.6.3-1.20150729
 - 10.6.3
 
