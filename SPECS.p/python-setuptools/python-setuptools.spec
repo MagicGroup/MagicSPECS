@@ -1,113 +1,165 @@
-%if 0%{?fedora} > 12
+%if 0%{?fedora}
 %global with_python3 1
-%else
-%{!?python_sitelib: %global python_sitelib %(%{__python} -c "from distutils.sysconfig import get_python_lib; print (get_python_lib())")}
+%global with_check 1
+
+# This controls whether setuptools is build as a wheel or not,
+# simplifying Python 3.4 bootstraping process
+%if %{fedora} > 20
+%global build_wheel 1
 %endif
 
-%global srcname distribute
+%else
+%global with_check 0
+# define some macros for RHEL 6
+%global __python2 %__python
+%global python2_sitelib %python_sitelib
+%endif
+
+%global srcname setuptools
+%if 0%{?build_wheel}
+%global python2_wheelname %{srcname}-%{version}-py2.py3-none-any.whl
+%global python2_record %{python2_sitelib}/%{srcname}-%{version}.dist-info/RECORD
+%if 0%{?with_python3}
+%global python3_wheelname %python2_wheelname
+%global python3_record %{python3_sitelib}/%{srcname}-%{version}.dist-info/RECORD
+%endif
+%endif
 
 Name:           python-setuptools
-Version:        0.6.28
-Release:        5%{?dist}
+Version:        18.1
+Release:        1%{?dist}
 Summary:        Easily build and distribute Python packages
 
 Group:          Applications/System
 License:        Python or ZPLv2.0
-URL:            http://pypi.python.org/pypi/%{srcname}
-Source0:        http://pypi.python.org/packages/source/d/%{srcname}/%{srcname}-%{version}.tar.gz
+URL:            https://pypi.python.org/pypi/%{srcname}
+Source0:        https://pypi.python.org/packages/source/s/%{srcname}/%{srcname}-%{version}.tar.gz
 Source1:        psfl.txt
 Source2:        zpl.txt
-# https://bitbucket.org/tarek/distribute/issue/300/invalid-urls-can-fail-with-other-error
-Patch0: distribute-different-exception-message.patch
-# Sometimes this times out in the build system.  Hanging onto the patch in git
-# for a bit in case that behavior returns
-#Patch1: distribute-timeout-exception.patch
-
-BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildArch:      noarch
 BuildRequires:  python2-devel
+%if 0%{?build_wheel}
+BuildRequires:  python-pip
+BuildRequires:  python-wheel
+%endif
+%if 0%{?with_check}
+BuildRequires:  pytest python-mock
+%endif # with_check
+
 %if 0%{?with_python3}
 BuildRequires:  python3-devel
-%endif # if with_python3
+%if 0%{?with_check}
+BuildRequires:  python3-pytest
+BuildRequires:  python3-mock
+%endif # with_check
+%if 0%{?build_wheel}
+BuildRequires:  python3-pip
+BuildRequires:  python3-wheel
+%endif # build_wheel
+%endif # with_python3
 
-# Legacy: We removed this subpackage once easy_install no longer depended on
-# python-devel
-Provides: python-setuptools-devel = %{version}-%{release}
-Obsoletes: python-setuptools-devel < 0.6.7-1
-
-# Provide this since some people will request distribute by name
+# We're now back to setuptools as the package.
+# Keep the python-distribute name active for a few releases.  Eventually we'll
+# want to get rid of the Provides and just keep the Obsoletes
 Provides: python-distribute = %{version}-%{release}
+Obsoletes: python-distribute < 0.6.36-2
+
+# Declare that we provide the py2 version of setuptools
+Provides:  python2-setuptools
+
 
 %description
 Setuptools is a collection of enhancements to the Python distutils that allow
 you to more easily build and distribute Python packages, especially ones that
 have dependencies on other packages.
 
-This package contains the runtime components of setuptools, necessary to
+This package also contains the runtime components of setuptools, necessary to
 execute the software that requires pkg_resources.py.
 
-This package contains the distribute fork of setuptools.
 %if 0%{?with_python3}
 %package -n python3-setuptools
 Summary:        Easily build and distribute Python 3 packages
 Group:          Applications/System
+
+# Note: Do not need to Require python3-backports-ssl_match_hostname because it
+# has been present since python3-3.2.  We do not ship python3-3.0 or
+# python3-3.1 anywhere
 
 %description -n python3-setuptools
 Setuptools is a collection of enhancements to the Python 3 distutils that allow
 you to more easily build and distribute Python 3 packages, especially ones that
 have dependencies on other packages.
 
-This package contains the runtime components of setuptools, necessary to
+This package also contains the runtime components of setuptools, necessary to
 execute the software that requires pkg_resources.py.
 
-This package contains the distribute fork of setuptools.
 %endif # with_python3
 
 %prep
 %setup -q -n %{srcname}-%{version}
 
-%patch0 -p1 -b .excmsg
-#patch1 -p1 -b .exctype
+# We can't remove .egg-info (but it doesn't matter, since it'll be rebuilt):
+#  The problem is that to properly execute setuptools' setup.py,
+#   it is needed for setuptools to be loaded as a Distribution
+#   (with egg-info or .dist-info dir), it's not sufficient
+#   to just have them on PYTHONPATH
+#  Running "setup.py install" without having setuptools installed
+#   as a distribution gives warnings such as
+#    ... distutils/dist.py:267: UserWarning: Unknown distribution option: 'entry_points'
+#   and doesn't create "easy_install" and .egg-info directory
+# Note: this is only a problem if bootstrapping wheel or building on RHEL,
+#  otherwise setuptools are installed as dependency into buildroot
 
-find -name '*.txt' | xargs chmod -x
-find . -name '*.orig' -exec rm \{\} \;
+# Remove bundled exes
+rm -f setuptools/*.exe
+# These tests require internet connection
+rm setuptools/tests/test_integration.py 
 
 %if 0%{?with_python3}
 rm -rf %{py3dir}
 cp -a . %{py3dir}
-pushd %{py3dir}
-for file in setuptools/command/easy_install.py distribute_setup.py ; do
-    sed -i '1s|^#!python|#!%{__python3}|' $file
-done
-popd
 %endif # with_python3
 
-for file in setuptools/command/easy_install.py distribute_setup.py ; do
-    sed -i '1s|^#!python|#!%{__python}|' $file
-done
-
 %build
-
-CFLAGS="$RPM_OPT_FLAGS" %{__python} setup.py build
+%if 0%{?build_wheel}
+%{__python} setup.py bdist_wheel
+%else
+%{__python} setup.py build
+%endif
 
 %if 0%{?with_python3}
 pushd %{py3dir}
-CFLAGS="$RPM_OPT_FLAGS" %{__python3} setup.py build
+%if 0%{?build_wheel}
+%{__python3} setup.py bdist_wheel
+%else
+%{__python3} setup.py build
+%endif
 popd
 %endif # with_python3
 
 %install
-rm -rf %{buildroot}
-
 # Must do the python3 install first because the scripts in /usr/bin are
 # overwritten with every setup.py install (and we want the python2 version
 # to be the default for now).
 %if 0%{?with_python3}
 pushd %{py3dir}
+%if 0%{?build_wheel}
+pip3 install -I dist/%{python3_wheelname} --root %{buildroot} --strip-file-prefix %{buildroot}
+
+# TODO: we have to remove this by hand now, but it'd be nice if we wouldn't have to
+# (pip install wheel doesn't overwrite)
+rm %{buildroot}%{_bindir}/easy_install
+
+sed -i '/\/usr\/bin\/easy_install,/d' %{buildroot}%{python3_record}
+%else
 %{__python3} setup.py install --skip-build --root %{buildroot}
+%endif
 
 rm -rf %{buildroot}%{python3_sitelib}/setuptools/tests
+%if 0%{?build_wheel}
+sed -i '/^setuptools\/tests\//d' %{buildroot}%{python3_record}
+%endif
 
 install -p -m 0644 %{SOURCE1} %{SOURCE2} %{py3dir}
 find %{buildroot}%{python3_sitelib} -name '*.exe' | xargs rm -f
@@ -115,48 +167,211 @@ chmod +x %{buildroot}%{python3_sitelib}/setuptools/command/easy_install.py
 popd
 %endif # with_python3
 
-%{__python} setup.py install --skip-build --root %{buildroot}
+%if 0%{?build_wheel}
+pip2 install -I dist/%{python2_wheelname} --root %{buildroot} --strip-file-prefix %{buildroot}
+%else
+%{__python2} setup.py install --skip-build --root %{buildroot}
+%endif
 
-rm -rf %{buildroot}%{python_sitelib}/setuptools/tests
+rm -rf %{buildroot}%{python2_sitelib}/setuptools/tests
+%if 0%{?build_wheel}
+sed -i '/^setuptools\/tests\//d' %{buildroot}%{python2_record}
+%endif
 
 install -p -m 0644 %{SOURCE1} %{SOURCE2} .
-find %{buildroot}%{python_sitelib} -name '*.exe' | xargs rm -f
-chmod +x %{buildroot}%{python_sitelib}/setuptools/command/easy_install.py
+find %{buildroot}%{python2_sitelib} -name '*.exe' | xargs rm -f
+chmod +x %{buildroot}%{python2_sitelib}/setuptools/command/easy_install.py
 
+%if 0%{?with_check}
 %check
-%{__python} setup.py test
+LANG=en_US.utf8 PYTHONPATH=$(pwd) py.test
 
 %if 0%{?with_python3}
 pushd %{py3dir}
-%{__python3} setup.py test
+LANG=en_US.utf8 PYTHONPATH=$(pwd) py.test-%{python3_version}
 popd
 %endif # with_python3
-
-%clean
-rm -rf %{buildroot}
-
+%endif # with_check
 
 %files
-%defattr(-,root,root,-)
 %doc *.txt docs
-%{python_sitelib}/*
+%{python2_sitelib}/*
 %{_bindir}/easy_install
 %{_bindir}/easy_install-2.*
 
 %if 0%{?with_python3}
 %files -n python3-setuptools
-%defattr(-,root,root,-)
 %doc psfl.txt zpl.txt docs
 %{python3_sitelib}/*
 %{_bindir}/easy_install-3.*
 %endif # with_python3
 
 %changelog
-* Tue Jun 17 2014 Liu Di <liudidi@gmail.com> - 0.6.28-5
-- 为 Magic 3.0 重建
+* Wed Aug 05 2015 Kevin Fenzi <kevin@scrye.com> 18.1-1
+- Update to 18.1. Fixes bug #1249436
 
-* Wed Jan 16 2013 Liu Di <liudidi@gmail.com> - 0.6.28-4
-- 为 Magic 3.0 重建
+* Mon Jun 29 2015 Pierre-Yves Chibon <pingou@pingoured.fr> - 18.0.1-2
+- Explicitely provide python2-setuptools
+
+* Thu Jun 25 2015 Kevin Fenzi <kevin@scrye.com> 18.0.1-1
+- Update to 18.0.1
+
+* Sat Jun 20 2015 Kevin Fenzi <kevin@scrye.com> 17.1.1-3
+- Drop no longer needed Requires/BuildRequires on python-backports-ssl_match_hostname
+- Fixes bug #1231325
+
+* Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 17.1.1-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
+
+* Wed Jun 10 2015 Kevin Fenzi <kevin@scrye.com> 17.1.1-1
+- Update to 17.1.1. Fixes bug 1229507
+
+* Sun Jun 07 2015 Kevin Fenzi <kevin@scrye.com> 17.1-1
+- Update to 17.1. Fixes bug 1229066
+
+* Sat May 30 2015 Kevin Fenzi <kevin@scrye.com> 17.0-1
+- Update to 17
+
+* Mon May 18 2015 Kevin Fenzi <kevin@scrye.com> 16.0-1
+- Update to 16
+
+* Mon Apr 27 2015 Ralph Bean <rbean@redhat.com> - 15.2-1
+- new version
+
+* Sat Apr 04 2015 Ralph Bean <rbean@redhat.com> - 15.0-1
+- new version
+
+* Sun Mar 22 2015 Ralph Bean <rbean@redhat.com> - 14.3.1-1
+- new version
+
+* Sat Mar 21 2015 Ralph Bean <rbean@redhat.com> - 14.3.1-1
+- new version
+
+* Mon Mar 16 2015 Ralph Bean <rbean@redhat.com> - 14.3-1
+- new version
+
+* Sun Mar 15 2015 Ralph Bean <rbean@redhat.com> - 14.2-1
+- new version
+
+* Sun Mar 15 2015 Ralph Bean <rbean@redhat.com> - 14.1.1-1
+- new version
+
+* Fri Mar 06 2015 Ralph Bean <rbean@redhat.com> - 13.0.2-1
+- new version
+
+* Thu Mar 05 2015 Ralph Bean <rbean@redhat.com> - 12.4-1
+- new version
+
+* Fri Feb 27 2015 Ralph Bean <rbean@redhat.com> - 12.3-1
+- new version
+
+* Tue Jan 20 2015 Kevin Fenzi <kevin@scrye.com> 12.0.3-1
+- Update to 12.0.3
+
+* Fri Jan 09 2015 Slavek Kabrda <bkabrda@redhat.com> - 11.3.1-2
+- Huge spec cleanup
+- Make spec buildable on all Fedoras and RHEL 6 and 7
+- Make tests actually run
+
+* Wed Jan 07 2015 Kevin Fenzi <kevin@scrye.com> 11.3.1-1
+- Update to 11.3.1. Fixes bugs: #1179393 and #1178817
+
+* Sun Jan 04 2015 Kevin Fenzi <kevin@scrye.com> 11.0-1
+- Update to 11.0. Fixes bug #1178421
+
+* Fri Dec 26 2014 Kevin Fenzi <kevin@scrye.com> 8.2.1-1
+- Update to 8.2.1. Fixes bug #1175229
+
+* Thu Oct 23 2014 Ralph Bean <rbean@redhat.com> - 7.0-1
+- Latest upstream.  Fixes bug #1154590.
+
+* Mon Oct 13 2014 Ralph Bean <rbean@redhat.com> - 6.1-1
+- Latest upstream.  Fixes bug #1152130.
+
+* Sat Oct 11 2014 Ralph Bean <rbean@redhat.com> - 6.0.2-2
+- Modernized python2 macros.
+- Inlined locale environment variables in the %%check section.
+- Remove bundled egg-info and .exes.
+
+* Fri Oct 03 2014 Kevin Fenzi <kevin@scrye.com> 6.0.2-1
+- Update to 6.0.2
+
+* Sat Sep 27 2014 Kevin Fenzi <kevin@scrye.com> 6.0.1-1
+- Update to 6.0.1. Fixes bug #1044444
+
+* Mon Jun 30 2014 Toshio Kuratomi <toshio@fedoraproject.org> - 2.0-8
+- Remove the python-setuptools-devel Virtual Provides as per this Fedora 21
+  Change: http://fedoraproject.org/wiki/Changes/Remove_Python-setuptools-devel
+
+* Mon Jun 30 2014 Toshio Kuratomi <toshio@fedoraproject.org> - 2.0-7
+- And another bug in sdist
+
+* Mon Jun 30 2014 Toshio Kuratomi <toshio@fedoraproject.org> - 2.0-6
+- Fix a bug in the sdist command
+
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.0-5
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Fri Apr 25 2014 Matej Stuchlik <mstuchli@redhat.com> - 2.0-4
+- Rebuild as wheel for Python 3.4
+
+* Thu Apr 24 2014 Tomas Radej <tradej@redhat.com> - 2.0-3
+- Rebuilt for tag f21-python
+
+* Wed Apr 23 2014 Matej Stuchlik <mstuchli@redhat.com> - 2.0-2
+- Add a switch to build setuptools as wheel
+
+* Mon Dec  9 2013 Toshio Kuratomi <toshio@fedoraproject.org> - 2.0-1
+- Update to new upstream release with a few things removed from the API:
+  Changelog: https://pypi.python.org/pypi/setuptools#id139
+
+* Mon Nov 18 2013 Toshio Kuratomi <toshio@fedoraproject.org> - 1.4-1
+- Update to 1.4 that gives easy_install pypi credential handling
+
+* Thu Nov  7 2013 Toshio Kuratomi <toshio@fedoraproject.org> - 1.3.1-1
+- Minor upstream update to reign in overzealous warnings
+
+* Mon Nov  4 2013 Toshio Kuratomi <toshio@fedoraproject.org> - 1.3-1
+- Upstream update that pulls in our security patches
+
+* Mon Oct 28 2013 Toshio Kuratomi <toshio@fedoraproject.org> - 1.1.7-1
+- Update to newer upstream release that has our patch to the unittests
+- Fix for http://bugs.python.org/issue17997#msg194950 which affects us since
+  setuptools copies that code. Changed to use
+  python-backports-ssl_match_hostname so that future issues can be fixed in
+  that package.
+
+* Sat Oct 26 2013 Toshio Kuratomi <toshio@fedoraproject.org> - 1.1.6-1
+- Update to newer upstream release.  Some minor incompatibilities listed but
+  they should affect few, if any consumers.
+
+* Sun Aug 04 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.9.6-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Tue Jul 23 2013 Toshio Kuratomi <toshio@fedoraproject.org> - 0.9.6-1
+- Upstream update -- just fixes python-2.4 compat
+
+* Tue Jul 16 2013 Toshio Kuratomi <toshio@fedoraproject.org> - 0.9.5-1
+- Update to 0.9.5
+  - package_index can handle hashes other than md5
+  - Fix security vulnerability in SSL certificate validation
+  - https://bugzilla.redhat.com/show_bug.cgi?id=963260
+
+* Fri Jul  5 2013 Toshio Kuratomi <toshio@fedoraproject.org> - 0.8-1
+- Update to upstream 0.8  release.  Codebase now runs on anything from
+  python-2.4 to python-3.3 without having to be translated by 2to3.
+
+* Wed Jul  3 2013 Toshio Kuratomi <toshio@fedoraproject.org> - 0.7.7-1
+- Update to 0.7.7 upstream release
+
+* Mon Jun 10 2013 Toshio Kuratomi <toshio@fedoraproject.org> - 0.7.2-2
+- Update to the setuptools-0.7 branch that merges distribute and setuptools
+
+* Thu Apr 11 2013 Toshio Kuratomi <toshio@fedoraproject.org> - 0.6.36-1
+- Update to upstream 0.6.36.  Many bugfixes
+
+* Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.6.28-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
 
 * Fri Aug 03 2012 David Malcolm <dmalcolm@redhat.com> - 0.6.28-3
 - rebuild for https://fedoraproject.org/wiki/Features/Python_3.3
@@ -245,10 +460,10 @@ rm -rf %{buildroot}
 * Thu Feb 04 2010 Toshio Kuratomi <toshio@fedoraproject.org> - 0.6.10-3
 - First build with python3 support enabled.
   
-* Thu Jan 29 2010 Toshio Kuratomi <toshio@fedoraproject.org> - 0.6.10-2
+* Fri Jan 29 2010 Toshio Kuratomi <toshio@fedoraproject.org> - 0.6.10-2
 - Really disable the python3 portion
 
-* Thu Jan 29 2010 Toshio Kuratomi <toshio@fedoraproject.org> - 0.6.10-1
+* Fri Jan 29 2010 Toshio Kuratomi <toshio@fedoraproject.org> - 0.6.10-1
 - Update the python3 portions but disable for now.
 - Update to 0.6.10
 - Remove %%pre scriptlet as the file has a different name than the old
@@ -259,7 +474,7 @@ rm -rf %{buildroot}
 - Don't need python3-tools since the library is now in the python3 package
 - Few other changes to cleanup style
 
-* Thu Jan 22 2010 David Malcolm <dmalcolm@redhat.com> - 0.6.9-2
+* Fri Jan 22 2010 David Malcolm <dmalcolm@redhat.com> - 0.6.9-2
 - add python3 subpackage
 
 * Mon Dec 14 2009 Toshio Kuratomi <toshio@fedoraproject.org> - 0.6.9-1
