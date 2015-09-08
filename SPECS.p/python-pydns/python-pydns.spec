@@ -2,7 +2,7 @@
 
 Name:           python-pydns
 Version:        2.3.6
-Release:        1%{?dist}
+Release:        3%{?dist}
 Summary:        Python module for DNS (Domain Name Service)
 
 Group:          Development/Languages
@@ -53,6 +53,12 @@ rm -rf $RPM_BUILD_ROOT
 %{python_sitelib}/pydns-%{version}-py*.egg-info
 
 %changelog
+* Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.3.6-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
+
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.3.6-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
 * Wed Aug 07 2013 Adam Williamson <awilliam@redhat.com> - 2.3.6-1
 - update to latest upstream, modernize spec
 
