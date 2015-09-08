@@ -1,0 +1,40 @@
+From c15e5d73c1394d9745f7a9d2a817cd9ff2026122 Mon Sep 17 00:00:00 2001
+From: Ralph Bean <rbean@redhat.com>
+Date: Mon, 23 Sep 2013 09:58:30 -0400
+Subject: [PATCH] Handle /etc/resolv.conf
+
+---
+ DNS/Base.py | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
+
+diff --git a/DNS/Base.py b/DNS/Base.py
+index 360426c..9c83807 100644
+--- a/DNS/Base.py
++++ b/DNS/Base.py
+@@ -9,7 +9,7 @@ This code is covered by the standard Python License. See LICENSE for details.
+     Base functionality. Request and Response classes, that sort of thing.
+ """
+ 
+-import socket, string, types, time, select
++import socket, string, types, time, select, warnings
+ from . import Type,Class,Opcode
+ import asyncore
+ #
+@@ -48,7 +48,13 @@ defaults= { 'protocol':'udp', 'port':53, 'opcode':Opcode.QUERY,
+ def ParseResolvConf(resolv_path="/etc/resolv.conf"):
+     "parses the /etc/resolv.conf file and sets defaults for name servers"
+     global defaults
+-    lines=open(resolv_path).readlines()
++
++    try:
++        lines=open(resolv_path).readlines()
++    except FileNotFoundError as e:
++        warnings.warn(e)
++        return
++
+     for line in lines:
+         line = line.strip()
+         if not line or line[0]==';' or line[0]=='#':
+-- 
+1.8.3.1
+
