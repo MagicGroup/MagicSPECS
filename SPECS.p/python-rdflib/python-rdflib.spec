@@ -1,49 +1,127 @@
-%define run_tests 0
+%if 0%{?fedora} > 12
+%global with_python3 1
+%endif
+
+%{!?__python2:%global __python2 %{__python}}
+%{!?python2_sitelib:   %global python2_sitelib         %{python_sitelib}}
+%{!?python2_sitearch:  %global python2_sitearch        %{python_sitearch}}
+%{!?python2_version:   %global python2_version         %{python_version}}
+
+%global pypi_name rdflib
+
+%global run_tests 1
 
 Name:           python-rdflib
-Version:        3.2.0
-Release:        6%{?dist}
+Version:        4.1.2
+Release:        4%{?dist}
 Summary:        Python library for working with RDF
 
 Group:          Development/Languages
 License:        BSD
-URL:            http://code.google.com/p/rdflib/
-Source0:        http://rdflib.googlecode.com/files/rdflib-%{version}.tar.gz
-# Upstreamed: http://code.google.com/p/rdflib/issues/detail?id=206
-Patch0:         0001-Skip-test-if-it-can-not-join-the-network.patch
+URL:            https://github.com/RDFLib/rdflib
+Source0:        http://pypi.python.org/packages/source/r/rdflib/rdflib-%{version}.tar.gz
+Patch1:         python-rdflib-SPARQLWrapper-optional.patch
 BuildArch:      noarch
 
-BuildRoot:      %(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
+Requires:       python-html5lib >= 1:
 Requires:       python-isodate
+Requires:       pyparsing
 
+BuildRequires:  python-html5lib >= 1:
 BuildRequires:  python-isodate
-BuildRequires:  python-devel
-BuildRequires: python-setuptools-devel
+BuildRequires:  pyparsing
+BuildRequires:  python2-devel
+BuildRequires:  python-setuptools
 
 %if %{run_tests}
 BuildRequires:  python-nose >= 0.9.2
 %endif
 
+Obsoletes:      python-rdfextras <= 0.1-7
+
+
 %description
 RDFLib is a Python library for working with RDF, a simple yet powerful
 language for representing information.
 
-The library contains parsers and serializers for RDF/XML, N3, NTriples,
-Turtle, TriX and RDFa. The library presents a Graph interface which can
-be backed by any one of a number of store implementations, including
-memory, MySQL, Redland, SQLite, Sleepycat, ZODB and SQLObject.
+The library contains parsers and serializers for RDF/XML, N3,
+NTriples, Turtle, TriX, RDFa and Microdata. The library presents
+a Graph interface which can be backed by any one of a number of
+Store implementations. The core rdflib includes store
+implementations for in memory storage, persistent storage on top
+of the Berkeley DB, and a wrapper for remote SPARQL endpoints.
+
+A SPARQL 1.1 engine is also included.
+
+
+%if %{with_python3}
+%package -n python3-%{pypi_name}
+Summary:        Python library for working with RDF
+
+BuildRequires:  python3-html5lib >= 1:
+BuildRequires:  python3-isodate
+BuildRequires:  python3-pyparsing
+BuildRequires:  python3-devel
+BuildRequires:  python3-setuptools
+
+%if %{run_tests}
+BuildRequires:  python3-nose >= 0.9.2
+%endif
+
+
+%description -n python3-%{pypi_name}
+RDFLib is a Python library for working with RDF, a simple yet powerful
+language for representing information.
+
+The library contains parsers and serializers for RDF/XML, N3,
+NTriples, Turtle, TriX, RDFa and Microdata. The library presents
+a Graph interface which can be backed by any one of a number of
+Store implementations. The core rdflib includes store
+implementations for in memory storage, persistent storage on top
+of the Berkeley DB, and a wrapper for remote SPARQL endpoints.
+
+A SPARQL 1.1 engine is also included.
+%endif
 
 %prep
 %setup -q -n rdflib-%{version}
+%patch1 -p1
 
-%patch0 -p0 -b .test
+# remove bundled egg-info
+rm -rf %{pypi_name}.egg-info
+
+find -name "*.pyc" -delete
+
+sed -i -e 's|_sn_gen=bnode_uuid()|_sn_gen=bnode_uuid|' test/test_bnode_ncname.py
+
+%if 0%{?with_python3}
+rm -rf %{py3dir}
+cp -a . %{py3dir}
+%endif
 
 %build
-%{__python} setup.py build
+%if 0%{?with_python3}
+pushd %{py3dir}
+%{__python3} setup.py build
+popd
+%endif # with_python3
+
+%{__python2} setup.py build
 
 %install
-rm -rf $RPM_BUILD_ROOT
-%{__python} setup.py install -O1 --skip-build --root $RPM_BUILD_ROOT
+%if 0%{?with_python3}
+pushd %{py3dir}
+%{__python3} setup.py install -O1 --skip-build --root %{buildroot}
+popd
+
+# rename binaries
+for i in csv2rdf rdf2dot rdfgraphisomorphism rdfpipe rdfs2dot; do
+    mv %{buildroot}%{_bindir}/$i %{buildroot}%{_bindir}/python3-$i
+done
+
+%endif
+
+%{__python2} setup.py install -O1 --skip-build --root $RPM_BUILD_ROOT
 cp LICENSE $RPM_BUILD_ROOT/%{python_sitelib}/rdflib/LICENSE
 
 # Various .py files within site-packages have a shebang line but aren't
@@ -57,25 +135,91 @@ chmod +x $RPM_BUILD_ROOT/%{python_sitelib}/rdflib/plugins/parsers/ntriples.py
 # __main__ parses the file given on the command line:
 chmod +x $RPM_BUILD_ROOT/%{python_sitelib}/rdflib/plugins/parsers/notation3.py
 
-magic_rpm_clean.sh
+# __main__ parses the file or URI given on the command line:
+chmod +x $RPM_BUILD_ROOT/%{python_sitelib}/rdflib/tools/rdfpipe.py
+
+# __main__ runs a test (well, it's something)
+chmod +x $RPM_BUILD_ROOT/%{python_sitelib}/rdflib/extras/infixowl.py
+
+# sed these headers out as they include no __main__
+for lib in $RPM_BUILD_ROOT/%{python_sitelib}/rdflib/extras/describer.py \
+    $RPM_BUILD_ROOT/%{python_sitelib}/rdflib/plugins/parsers/pyRdfa/extras/httpheader.py \
+    $RPM_BUILD_ROOT/%{python_sitelib}/rdflib/plugins/parsers/structureddata.py; do
+ sed '1{\@^#!/usr/bin/env python@d}' $lib > $lib.new &&
+ touch -r $lib $lib.new &&
+ mv $lib.new $lib
+done
 
 %check
 %if %{run_tests}
 sed -i -e "s|'--with-doctest'|#'--with-doctest'|" run_tests.py
-%{__python} run_tests.py
+sed -i -e "s|'--doctest-tests'|#'--doctest-tests'|" run_tests.py
+sed -i -e "s|with-doctest = 1|#with-doctest = 1|" setup.cfg
+PYTHONPATH=./build/lib %{__python} run_tests.py --verbose
 %endif
 
-%clean
-rm -rf $RPM_BUILD_ROOT
-
 %files
-%defattr(-,root,root,-)
 %doc LICENSE
-%{python_sitelib}/*
+%{python_sitelib}/%{pypi_name}
+%{python2_sitelib}/%{pypi_name}-%{version}-py%{python2_version}.egg-info
+%{_bindir}/csv2rdf
+%{_bindir}/rdf2dot
+%{_bindir}/rdfgraphisomorphism
+%{_bindir}/rdfpipe
+%{_bindir}/rdfs2dot
+
+%if 0%{?with_python3}
+%files -n python3-%{pypi_name}
+%doc LICENSE
+%{python3_sitelib}/%{pypi_name}
+%{python3_sitelib}/%{pypi_name}-%{version}-py%{python3_version}.egg-info
+%{_bindir}/python3-csv2rdf
+%{_bindir}/python3-rdf2dot
+%{_bindir}/python3-rdfgraphisomorphism
+%{_bindir}/python3-rdfpipe
+%{_bindir}/python3-rdfs2dot
+%endif
 
 %changelog
-* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 3.2.0-6
-- 为 Magic 3.0 重建
+* Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 4.1.2-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
+
+* Mon Jan 05 2015 Matthias Runge <mrunge@redhat.com> - 4.1.2-3
+- add python3 subpackage (rhbz#1086844)
+
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 4.1.2-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Fri Apr 18 2014 Dan Scott <dan@coffeecode.net> - 4.1.2-1
+- Update for 4.1.2 release
+- Add PYTHONPATH awareness for running tests
+
+* Tue Mar 04 2014 Dan Scott <dan@coffeecode.net> - 4.1.1-1
+- Update for 4.1.1 release
+- Support for RDF 1.1 and HTML5
+- Support for RDFa, TRiG, microdata parsers, and HTML structured data
+- Patch to make SPARQLWrapper an extras_require until it is packaged
+
+* Thu Dec 12 2013 Toshio Kuratomi <toshio@fedoraproject.org> - 3.2.3-6
+- Remove BR of python-setuptools-devel
+
+* Sun Aug 04 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.2.3-5
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Wed Mar 27 2013 David Malcolm <dmalcolm@redhat.com> - 3.2.3-4
+- disable doctests (rhbz#914414)
+
+* Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.2.3-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
+
+* Wed Oct 10 2012  Pierre-Yves Chibon <pingou@pingoured.fr> - 3.2.3-2
+- Re-enable tests
+- Backport using sed unit-tests fix from upstream
+   (commit 26d25faa90483ed1ba7675d159d10e955dbaf442)
+
+* Wed Oct 10 2012  Pierre-Yves Chibon <pingou@pingoured.fr> - 3.2.3-1
+- Update to 3.2.3
+- One test is failing, so disabling them for now
 
 * Sat Jul 21 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.2.0-5
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
