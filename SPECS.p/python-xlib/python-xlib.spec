@@ -3,10 +3,12 @@
 %define pre_release rc1 
 Name:           python-xlib
 Version:        0.15
-Release:        0.7.%{pre_release}%{?dist}
+Release:        0.8.%{pre_release}%{?dist}
 Summary:        X client library for Python
+Summary(zh_CN.UTF-8): Python 下的 X 客户端库
 
 Group:          Development/Languages
+Group(zh_CN.UTF-8): 开发/语言
 License:        GPLv2+
 URL:            http://python-xlib.sourceforge.net/
 Source0:        http://prdownloads.sourceforge.net/python-xlib/python-xlib-%{version}%{pre_release}.tar.gz
@@ -19,13 +21,18 @@ Patch3:         fix-rhomboid-examples
 Patch4:         python-xlib-0.15rc1-xauthority.patch
 Patch5:         r138-mggr-get-rid-of-annoying-Xlib.protocol.request.Query.patch
 Patch6:         r139-allow-IPv6-addresses-e.g.-d-Xlib.display.Display-fff.patch
+# Fix perl usage
+# https://sourceforge.net/p/python-xlib/bugs/41/
+Patch7:         python-xlib-perl.patch
 BuildArch:      noarch
 BuildRequires:  python-devel
 BuildRequires:  texinfo-tex tetex-dvips
 
 %package doc
 Summary:        Documentation and examples for python-xlib
+Summary(zh_CN.UTF-8): %{name} 的文档
 Group:          Documentation
+Group(zh_CN.UTF-8): 文档
 Requires:       %{name} = %{version}-%{release}
 
 
@@ -34,9 +41,15 @@ The Python X Library is a complete X11R6 client-side implementation,
 written in pure Python. It can be used to write low-levelish X Windows 
 client applications in Python.
 
+%description -l zh_CN.UTF-8
+Python 下的 X 客户端库。
+
 %description doc
 Install this package if you want the developers' documentation and examples
 that tell you how to program with python-xlib.
+
+%description doc -l zh_CN.UTF-8
+%{name} 的文档。
 
 %prep
 %setup -q -n %{name}-%{version}%{pre_release}
@@ -47,6 +60,7 @@ that tell you how to program with python-xlib.
 %patch4 -p0
 %patch5 -p2
 %patch6 -p2
+%patch7 -p1
 
 %build
 %{__python} setup.py build
@@ -77,6 +91,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Wed Sep 09 2015 Liu Di <liudidi@gmail.com> - 0.15-0.8.rc1
+- 为 Magic 3.0 重建
+
 * Sat Jul 21 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.15-0.7.rc1
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 

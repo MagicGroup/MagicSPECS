@@ -1,11 +1,11 @@
 Name:           python-twisted
-Version:        15.2.1
-Release:        1%{?dist}
+Version:	15.4.0
+Release:	1%{?dist}
 Summary:        Twisted is a networking engine written in Python
+Summary(zh_CN.UTF-8): Twisted 是一个 Python 编写的网络引擎
 License:        MIT
 URL:            http://twistedmatrix.com/
 Source0:        https://pypi.python.org/packages/source/T/Twisted/Twisted-%{version}.tar.bz2
-Patch0:         python-twisted-15.2.1-doc-lore-man-fix.patch
 BuildRequires:  python2-devel >= 2.6
 BuildRequires:  python-zope-interface >= 3.6.0
 BuildRequires:  python-crypto >= 2.6.1
@@ -61,10 +61,12 @@ Twisted is a networking engine written in Python, supporting numerous protocols.
 It contains a web server, numerous chat clients, chat servers, mail servers
 and more.
 
+%description -l zh_CN.UTF-8
+Twisted 是一个 Python 编写的网络引擎，支持多种协议。
+它包括一个网页服务器，多种聊天客户端和服务器，邮件服务器等。
 
 %prep
 %setup -q -n Twisted-%{version}
-%patch0 -p1
 
 
 %build
@@ -76,14 +78,14 @@ rm -rf $RPM_BUILD_ROOT
 %{__python2} setup.py install -O1 --skip-build --root $RPM_BUILD_ROOT
 
 # egg-info
-if [ -f %{buildroot}%{python2_sitearch}/Twisted*.egg-info ]; then
-    echo %{buildroot}%{python2_sitearch}/Twisted*.egg-info |
-        sed -e "s|^%{buildroot}||"
-fi > egg-info
+#if [ -f %{buildroot}%{python2_sitearch}/Twisted*.egg-info ]; then
+#    echo %{buildroot}%{python2_sitearch}/Twisted*.egg-info |
+#        sed -e "s|^%{buildroot}||"
+#fi > egg-info
 
 # no-manual-page-for-binary
 %{__mkdir_p} %{buildroot}%{_mandir}/man1/
-for s in conch core lore mail; do
+for s in conch core mail; do
 %{__cp} -a doc/$s/man/*.1 %{buildroot}%{_mandir}/man1/
 done
 
@@ -94,7 +96,6 @@ done
 %{__rm} -v %{buildroot}%{python2_sitearch}/twisted/internet/iocpreactor/iocpsupport/winsock_pointers.c
 %{__rm} -v %{buildroot}%{python2_sitearch}/twisted/internet/iocpreactor/iocpsupport/winsock_pointers.h
 %{__rm} -v %{buildroot}%{python2_sitearch}/twisted/internet/iocpreactor/iocpsupport/iocpsupport.c
-%{__rm} -v %{buildroot}%{python2_sitearch}/twisted/python/sendmsg.c
 
 # pem-certificate
 %{__rm} -v %{buildroot}%{python2_sitearch}/twisted/internet/test/fake_CAs/thing1.pem
@@ -110,9 +111,9 @@ done
 %{__chmod} +x %{buildroot}%{python2_sitearch}/twisted/trial/test/scripttest.py
 
 # non-standard-executable-perm
-%{__chmod} 755 %{buildroot}%{python2_sitearch}/twisted/python/sendmsg.so
 %{__chmod} 755 %{buildroot}%{python2_sitearch}/twisted/runner/portmap.so
 %{__chmod} 755 %{buildroot}%{python2_sitearch}/twisted/test/raiser.so
+magic_rpm_clean.sh
 
 
 %check
@@ -125,12 +126,12 @@ done
 rm -rf $RPM_BUILD_ROOT
 
 
-%files -f egg-info
+%files
 %doc CONTRIBUTING LICENSE NEWS README
 %{_bindir}/cftp
 %{_bindir}/ckeygen
 %{_bindir}/conch
-%{_bindir}/lore
+#%{_bindir}/lore
 %{_bindir}/mailmail
 %{_bindir}/manhole
 %{_bindir}/pyhtmlizer
@@ -142,7 +143,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man1/cftp.1*
 %{_mandir}/man1/ckeygen.1*
 %{_mandir}/man1/conch.1*
-%{_mandir}/man1/lore.1*
+#%{_mandir}/man1/lore.1*
 %{_mandir}/man1/mailmail.1*
 %{_mandir}/man1/manhole.1*
 %{_mandir}/man1/pyhtmlizer.1*
@@ -156,6 +157,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Wed Sep 09 2015 Liu Di <liudidi@gmail.com> - 15.4.0-1
+- 更新到 15.4.0
+
 * Mon Jul 20 2015 Jonathan Steffan <jsteffan@fedoraproject.org> - 15.2.1-1
 - Update to 15.2.1
 

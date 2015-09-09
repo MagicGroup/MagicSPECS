@@ -1,20 +1,20 @@
-%if 0%{?fedora} > 12
 %global with_python3 1
-%else
-%{!?python_sitelib: %global python_sitelib %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib()")}
-%endif
 
-%global srcname Werkzeug
+%global srcname werkzeug
 
 Name:           python-werkzeug
-Version:        0.9.6
-Release:        2%{?dist}
+Version:	0.10.4
+Release:	1%{?dist}
 Summary:        The Swiss Army knife of Python web development 
+Summary(zh_CN.UTF-8): Python 网页开发使用的瑞士军刀
 
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 License:        BSD
 URL:            http://werkzeug.pocoo.org/
-Source0:        http://pypi.python.org/packages/source/W/Werkzeug/%{srcname}-%{version}.tar.gz
+#Source0:        http://pypi.python.org/packages/source/W/Werkzeug/%{srcname}-%{version}.tar.gz
+# pypi 的源码不全。
+Source0:	https://github.com/mitsuhiko/werkzeug/archive/%{version}.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildArch:      noarch
@@ -40,19 +40,26 @@ developer. It's most useful for end user applications which should work
 on as many server environments as possible (such as blogs, wikis,
 bulletin boards, etc.).
 
+%description -l zh_CN.UTF-8
+Python 网页开发使用的瑞士军刀。
 
 %package doc
 Summary:        Documentation for %{name}
+Summary(zh_CN.UTF-8): %{name} 的文档
 Group:          Documentation
+Group(zh_CN.UTF-8): 文档
 Requires:       %{name} = %{version}-%{release}
 
 %description doc
 Documentation and examples for %{name}.
 
+%description doc -l zh_CN.UTF-8
+%{name} 的文档。
 
 %if 0%{?with_python3}
 %package -n python3-werkzeug
 Summary:        The Swiss Army knife of Python web development
+Summary(zh_CN.UTF-8): Python 网页开发使用的瑞士军刀
 BuildRequires:  python3-devel
 BuildRequires:  python3-setuptools
 BuildRequires:  python3-sphinx
@@ -75,21 +82,26 @@ developer. It's most useful for end user applications which should work
 on as many server environments as possible (such as blogs, wikis,
 bulletin boards, etc.).
 
+%description -n python3-werkzeug -l zh_CN.UTF-8
+Python 网页开发使用的瑞士军刀。
 
 %package -n python3-werkzeug-doc
 Summary:        Documentation for python3-werkzeug
+Summary(zh_CN.UTF-8): python3-werkzeug 的文档
 Group:          Documentation
+Group(zh_CN.UTF-8): 文档
 Requires:       python3-werkzeug = %{version}-%{release}
 
 %description -n python3-werkzeug-doc
 Documentation and examples for python3-werkzeug.
+%description -n python3-werkzeug-doc -l zh_CN.UTF-8
+python3-werkzeug 的文档。
 %endif
 
 
 %prep
 %setup -q -n %{srcname}-%{version}
 %{__sed} -i 's/\r//' LICENSE
-%{__sed} -i '1d' werkzeug/testsuite/multipart/collect.py
 
 %if 0%{?with_python3}
 rm -rf %{py3dir}
@@ -131,14 +143,14 @@ pushd %{py3dir}
 %{__rm} -rf examples/cupoftee/db.pyc
 popd
 %endif
-
+magic_rpm_clean.sh
 
 %clean
 %{__rm} -rf %{buildroot}
 
 %files
 %defattr(-,root,root,-)
-%doc AUTHORS LICENSE PKG-INFO CHANGES
+%doc AUTHORS LICENSE 
 %{python_sitelib}/*
 
 %files doc
@@ -148,7 +160,7 @@ popd
 %if 0%{?with_python3}
 %files -n python3-werkzeug
 %defattr(-,root,root,-)
-%doc AUTHORS LICENSE PKG-INFO CHANGES
+%doc AUTHORS LICENSE
 %{python3_sitelib}/*
 
 %files -n python3-werkzeug-doc
@@ -158,6 +170,9 @@ popd
 
 
 %changelog
+* Wed Sep 09 2015 Liu Di <liudidi@gmail.com> - 0.10.4-1
+- 更新到 0.10.4
+
 * Sun Aug 10 2014 Liu Di <liudidi@gmail.com> - 0.9.6-2
 - 为 Magic 3.0 重建
 

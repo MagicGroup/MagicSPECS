@@ -3,10 +3,12 @@
 
 Name:           python-virtkey
 Version:        0.50
-Release:        11%{?dist}
+Release:        12%{?dist}
 Summary:        Python extension for emulating keypresses and getting current keyboard layout
+Summary(zh_CN.UTF-8): 模拟按下键盘和取得当前键盘布局的 Python 扩展
 
 Group:          Development/Languages
+Group(zh_CN.UTF-8): 开发/语言
 #missing copy of GPL, licensing info in source file
 License:        GPLv2+
 URL:            https://launchpad.net/virtkey
@@ -20,6 +22,9 @@ BuildRequires:  python-devel, libXtst-devel, gtk2-devel, glib2-devel
 Python-virtkey is a python extension for emulating keypresses and getting
 current keyboard layout.
 
+%description -l zh_CN.UTF-8
+模拟按下键盘和取得当前键盘布局的 Python 扩展。
+
 %prep
 %setup -q -c %{name}-%{version} -a0
 %patch0 -p1
@@ -31,7 +36,7 @@ CFLAGS="$RPM_OPT_FLAGS" %{__python} setup.py build
 %install
 rm -rf $RPM_BUILD_ROOT
 %{__python} setup.py install --skip-build --root $RPM_BUILD_ROOT
-
+magic_rpm_clean.sh
  
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -44,6 +49,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Wed Sep 09 2015 Liu Di <liudidi@gmail.com> - 0.50-12
+- 为 Magic 3.0 重建
+
 * Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 0.50-11
 - 为 Magic 3.0 重建
 

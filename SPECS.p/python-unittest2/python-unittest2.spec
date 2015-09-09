@@ -3,14 +3,14 @@
 %global with_python3 1
 
 Name:           python-%{pypi_name}
-Version:        0.8.0
-Release:        4%{?dist}
+Version:	1.1.0
+Release:	1%{?dist}
 Summary:        The new features in unittest backported to Python 2.4+
+Summary(zh_CN.UTF-8): 单元测试模块
 
 License:        BSD
 URL:            http://pypi.python.org/pypi/unittest2
 Source0:        https://pypi.python.org/packages/source/u/%{pypi_name}/%{pypi_name}-%{version}.tar.gz
-Patch0:         unittest2-0.8.0-remove-argparse-from-requires.patch
 BuildArch:      noarch
 
 BuildRequires:  python2-devel
@@ -31,9 +31,13 @@ unittest2 is a backport of the new features added to the unittest testing
 framework in Python 2.7 and onwards. It is tested to run on Python 2.6, 2.7,
 3.2, 3.3, 3.4 and pypy.
 
+%description -l zh_CN.UTF-8
+单元测试模块。
+
 %if 0%{?with_python3}
 %package -n     python3-%{pypi_name}
 Summary:        The new features in unittest backported to Python 2.4+
+Summary(zh_CN.UTF-8): 单元测试模块
 Requires:       python3-setuptools
 Requires:       python3-six
 
@@ -41,14 +45,14 @@ Requires:       python3-six
 unittest2 is a backport of the new features added to the unittest testing
 framework in Python 2.7 and onwards. It is tested to run on Python 2.6, 2.7,
 3.2, 3.3, 3.4 and pypy.
+%description -n python3-%{pypi_name} -l zh_CN.UTF-8
+单元测试模块。
 %endif # with_python3
 
 %prep
 %setup -q -n %{pypi_name}-%{version}
 # Remove bundled egg-info
 rm -rf %{pypi_name}.egg-info
-
-%patch0 -p0
 
 %if 0%{?with_python3}
 rm -rf %{py3dir}
@@ -79,7 +83,7 @@ popd
 %endif # with_python3
 
 %{__python2} setup.py install --skip-build --root %{buildroot}
-
+magic_rpm_clean.sh
 
 %check
 %{__python2} -m unittest2
@@ -106,6 +110,9 @@ popd
 %endif # with_python3
 
 %changelog
+* Wed Sep 09 2015 Liu Di <liudidi@gmail.com> - 1.1.0-1
+- 更新到 1.1.0
+
 * Wed Aug 19 2015 Liu Di <liudidi@gmail.com> - 0.8.0-4
 - 为 Magic 3.0 重建
 

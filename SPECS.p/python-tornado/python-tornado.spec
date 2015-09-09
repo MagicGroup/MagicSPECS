@@ -1,17 +1,15 @@
-%if 0%{?fedora} > 12
 %global with_python3 1
-%else
-%{!?python_sitearch: %global python_sitearch %(%{__python} -c "from distutils.sysconfig import get_python_lib; print (get_python_lib())")}
-%endif
 
 %global pkgname tornado
 
 Name:           python-%{pkgname}
-Version:        3.2.1
-Release:        3%{?dist}
+Version:	4.2.1
+Release:	1%{?dist}
 Summary:        Scalable, non-blocking web server and tools
+Summary(zh_CN.UTF-8): 可扩展，无阻塞的网络服务器和工具
 
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 License:        ASL 2.0
 URL:            http://www.tornadoweb.org
 Source0:        https://pypi.python.org/packages/source/t/tornado/tornado-%{version}.tar.gz
@@ -38,18 +36,27 @@ reasonably fast. Because it is non-blocking and uses epoll, it can
 handle thousands of simultaneous standing connections, which means it is
 ideal for real-time web services.
 
+%description -l zh_CN.UTF-8
+可扩展，无阻塞的网络服务器和工具。
+
 %package doc
 Summary:        Examples for python-tornado
+Summary(zh_CN.UTF-8): %{name} 的文档
 Group:          Documentation
+Group(zh_CN.UTF-8): 文档
 Requires:       python-tornado = %{version}-%{release}
 
 %description doc
 Tornado is an open source version of the scalable, non-blocking web
 server and and tools. This package contains some example applications.
 
+%description doc -l zh_CN.UTF-8
+%{name} 的文档。
+
 %if 0%{?with_python3}
 %package -n python3-tornado
 Summary:        Scalable, non-blocking web server and tools
+Summary(zh_CN.UTF-8): 可扩展，无阻塞的网络服务器和工具
 %description -n python3-tornado
 Tornado is an open source version of the scalable, non-blocking web
 server and tools.
@@ -59,15 +66,21 @@ The framework is distinct from most mainstream web server frameworks
 reasonably fast. Because it is non-blocking and uses epoll, it can
 handle thousands of simultaneous standing connections, which means it is
 ideal for real-time web services.
+%description -n python3-tornado -l zh_CN.UTF-8
+可扩展，无阻塞的网络服务器和工具。
 
 %package -n python3-tornado-doc
 Summary:        Examples for python-tornado
+Summary(zh_CN.UTF-8): python3-tornado 的文档
 Group:          Documentation
+Group(zh_CN.UTF-8): 文档
 Requires:       python3-tornado = %{version}-%{release}
 
 %description -n python3-tornado-doc
 Tornado is an open source version of the scalable, non-blocking web
 server and and tools. This package contains some example applications.
+%description -n python3-tornado-doc -l zh_CN.UTF-8
+python3-tornado 的文档。
 
 %endif # with_python3
 
@@ -117,7 +130,7 @@ popd
 
 PATH=$PATH:%{buildroot}%{python_sitearch}/%{pkgname}
 python setup.py install --root=%{buildroot}
-
+magic_rpm_clean.sh
 
 %clean
 rm -rf %{buildroot}
@@ -156,6 +169,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Sep 09 2015 Liu Di <liudidi@gmail.com> - 4.2.1-1
+- 更新到 4.2.1
+
 * Tue Jul 01 2014 Liu Di <liudidi@gmail.com> - 3.2.1-3
 - 为 Magic 3.0 重建
 

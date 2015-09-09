@@ -1,13 +1,12 @@
-%if 0%{?fedora}
 %global with_python3 1
-%endif
 
 %global srcname characteristic
 
 Name:           python-%{srcname}
 Version:        14.3.0
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Python library that eases the chores of implementing attributes
+Summary(zh_CN.UTF-8): 简化实现属性的 Python 库
 
 License:        MIT
 URL:            https://github.com/hynek/characteristic/
@@ -46,10 +45,13 @@ You just specify the attributes to work with and ``characteristic`` gives you:
 So put down that type-less data structures and welcome some class into your
 life!
 
+%description -l zh_CN.UTF-8
+简化实现属性的 Python 库。
 
 %if 0%{?with_python3}
 %package -n python3-%{srcname}
 Summary:        Python library that eases the chores of implementing attributes
+Summary(zh_CN.UTF-8): 简化实现属性的 Python 库
 
 %description -n python3-%{srcname}
 Say 'yes' to types but 'no' to typing!
@@ -67,6 +69,8 @@ You just specify the attributes to work with and ``characteristic`` gives you:
 
 So put down that type-less data structures and welcome some class into your
 life!
+%description -n python3-%{srcname} -l zh_CN.UTF-8
+简化实现属性的 Python 库。
 %endif # with_python3
 
 %prep
@@ -97,8 +101,8 @@ popd
 %endif # with_python3
 
 %{__python2} setup.py install --skip-build --root %{buildroot}
+magic_rpm_clean.sh
 
-%if 0%{?fedora} > 20
 %check
 py.test --pyargs test_characteristic
 
@@ -107,7 +111,6 @@ pushd %{py3dir}
 py.test-%{python3_version} --pyargs test_characteristic
 popd
 %endif # with_python3
-%endif # fedora > 20
 
 
 %files
@@ -129,6 +132,9 @@ popd
 %endif # with_python3
 
 %changelog
+* Wed Sep 09 2015 Liu Di <liudidi@gmail.com> - 14.3.0-3
+- 为 Magic 3.0 重建
+
 * Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 14.3.0-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

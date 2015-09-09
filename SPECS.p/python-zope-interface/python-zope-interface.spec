@@ -1,19 +1,37 @@
 # Filter private shared library provides
-%filter_provides_in %{python_sitearch}/zope/interface/.*\.so$
+%filter_provides_in %{python2_sitearch}/zope/interface/.*\.so$
 %filter_setup
 
+%global with_python3 1
+%{!?py3ver: %global py3ver %(%{?__python3} -c 'import sys; print(sys.version[0:3])' 2>/dev/null)}
+
+
 Name:		python-zope-interface
-Version:	3.7.0
-Release:	2%{?dist}
+Version:	4.1.2
+Release:	3%{?dist}
 Summary:	Zope 3 Interface Infrastructure
+Summary(zh_CN.UTF-8): Zope 3 界面
 Group:		Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 License:	ZPLv2.1
 URL:		http://pypi.python.org/pypi/zope.interface
 Source0:	http://pypi.python.org/packages/source/z/zope.interface/zope.interface-%{version}.tar.gz
 BuildRequires:	python2-devel
 BuildRequires:	python-setuptools
+BuildRequires:	python-nose
+BuildRequires:  python-zope-event
 # since F14
 Obsoletes:	python-zope-filesystem <= 1-8
+
+%if 0%{?with_python3}
+BuildRequires:  python3-devel
+BuildRequires:  python3-setuptools
+BuildRequires:  python3-nose
+BuildRequires:  python3-zope-event
+%endif
+
+Requires:       python-zope-event
+
 
 %description
 Interfaces are a mechanism for labeling objects as conforming to a given API
@@ -21,46 +39,164 @@ or contract.
 
 This is a separate distribution of the zope.interface package used in Zope 3.
 
+%description -l zh_CN.UTF-8
+Zope 3 界面。
+
+%if 0%{?with_python3}
+%package -n python3-zope-interface
+Summary:	Zope 3 Interface Infrastructure
+Summary(zh_CN.UTF-8): Zope 3 界面
+Group:		Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
+
+Requires:       python3-zope-event
+
+%description -n python3-zope-interface
+Interfaces are a mechanism for labeling objects as conforming to a given API
+or contract.
+
+This is a separate distribution of the zope.interface package used in Zope 3.
+%description -n python3-zope-interface -l zh_CN.UTF-8
+Zope 3 界面。
+%endif
+
 %prep
 %setup -n zope.interface-%{version} -q
 
+rm -rf %{modname}.egg-info
+
+%if 0%{?with_python3}
+rm -rf %{py3dir}
+cp -a . %{py3dir}
+%endif
+
 %build
-CFLAGS="%{optflags}" %{__python} setup.py build
+CFLAGS="%{optflags}" %{__python2} setup.py build
+
+%if 0%{?with_python3}
+pushd %{py3dir}
+CFLAGS="%{optflags}" %{__python3} setup.py build
+popd
+%endif
+
 
 %install
-%{__python} setup.py install -O1 --skip-build --root  %{buildroot}
+# python3 block
+%if 0%{?with_python3}
+pushd %{py3dir}
+%{__python3} setup.py install -O1 --skip-build --root %{buildroot}
 
 # Will put docs in %%{_docdir} instead
-%{__rm} -f %{buildroot}%{python_sitearch}/zope/interface/{,tests/}*.txt
+%{__rm} -f %{buildroot}%{python3_sitearch}/zope/interface/{,tests/}*.txt
 
 # C files don't need to be packaged
-%{__rm} -f %{buildroot}%{python_sitearch}/zope/interface/_zope_interface_coptimizations.c
+%{__rm} -f %{buildroot}%{python3_sitearch}/zope/interface/_zope_interface_coptimizations.c
+popd
+%endif
 
-# deal with documentation
-%{__mkdir_p} %{buildroot}%{_docdir}/%{name}-%{version}/
-%{__cp} -p src/zope/interface/*.txt src/zope/interface/tests/*.txt \
-		%{buildroot}%{_docdir}/%{name}-%{version}
-%{__mv} %{buildroot}%{_docdir}/%{name}-%{version}/README{,-development}.txt
-%{__cp} -p CHANGES.txt COPYRIGHT.txt LICENSE.txt README.txt \
-		%{buildroot}%{_docdir}/%{name}-%{version}/
+# do it again for python2
+%{__python2} setup.py install -O1 --skip-build --root  %{buildroot}
 
+# Will put docs in %%{_docdir} instead
+%{__rm} -f %{buildroot}%{python2_sitearch}/zope/interface/{,tests/}*.txt
+
+# C files don't need to be packaged
+%{__rm} -f %{buildroot}%{python2_sitearch}/zope/interface/_zope_interface_coptimizations.c
+magic_rpm_clean.sh
 
 %check
+PYTHONPATH=$(pwd) nosetests
+
+%if 0%{?with_python3}
+pushd %{py3dir}
+PYTHONPATH=$(pwd) nosetests-%{py3ver}
+popd
+%endif
 
 %files
 %defattr(-,root,root,-)
-%{_docdir}/%{name}-%{version}/
-%{python_sitearch}/zope/interface/
-# Co-own %%{python_sitearch}/zope/
-%dir %{python_sitearch}/zope/
-%exclude %{python_sitearch}/zope/interface/tests/
-%exclude %{python_sitearch}/zope/interface/common/tests/
-%{python_sitearch}/zope.interface-*.egg-info
-%{python_sitearch}/zope.interface-*-nspkg.pth
+%doc README.rst LICENSE.txt CHANGES.rst COPYRIGHT.txt docs/
+%{python2_sitearch}/zope/interface/
+# Co-own %%{python2_sitearch}/zope/
+%dir %{python2_sitearch}/zope/
+%exclude %{python2_sitearch}/zope/interface/tests/
+%exclude %{python2_sitearch}/zope/interface/common/tests/
+%{python2_sitearch}/zope.interface-*.egg-info
+%{python2_sitearch}/zope.interface-*-nspkg.pth
+
+%if 0%{?with_python3}
+%files -n python3-zope-interface
+%doc README.rst LICENSE.txt CHANGES.rst COPYRIGHT.txt docs/
+%{python3_sitearch}/zope/interface/
+# Co-own %%{python3_sitearch}/zope/
+%dir %{python3_sitearch}/zope/
+%exclude %{python3_sitearch}/zope/interface/tests/
+%exclude %{python3_sitearch}/zope/interface/common/tests/
+%{python3_sitearch}/zope.interface-*.egg-info
+%{python3_sitearch}/zope.interface-*-nspkg.pth
+%endif
 
 %changelog
-* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 3.7.0-2
+* Wed Sep 09 2015 Liu Di <liudidi@gmail.com> - 4.1.2-3
 - 为 Magic 3.0 重建
+
+* Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 4.1.2-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
+
+* Wed Feb 18 2015 Ralph Bean <rbean@redhat.com> - 4.1.2-1
+- new version
+
+* Wed Aug 20 2014 Ralph Bean <rbean@redhat.com> - 4.1.1-1
+- Latest upstream.
+- Modernized python macros.
+
+* Sun Aug 17 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 4.1.0-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
+
+* Sun Jun 08 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 4.1.0-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Wed May 14 2014 Bohuslav Kabrda <bkabrda@redhat.com> - 4.1.0-2
+- Rebuilt for https://fedoraproject.org/wiki/Changes/Python_3.4
+
+* Wed Feb 12 2014 Ralph Bean <rbean@redhat.com> - 4.1.0-1
+- Latest upstream.
+- Change .zip back to .tar.gz.
+- Drop fedora 12 conditional.
+
+* Sun Aug 04 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 4.0.5-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Thu Apr 11 2013 Luke Macken <lmacken@redhat.com> - 4.0.5-1
+- Update to 4.0.5 (#891046)
+- Run the unit tests with nose
+
+* Tue Mar 26 2013 David Malcolm <dmalcolm@redhat.com> - 4.0.4-2
+- remove rhel clause from python3 guard
+
+* Mon Feb 25 2013 Ralph Bean <rbean@redhat.com> - 4.0.4-1
+- Latest upstream
+- README and CHANGES moved from .txt to .rst.
+
+* Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 4.0.2-5
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
+
+* Thu Dec 06 2012 Ralph Bean <rbean@redhat.com> - 4.0.2-4
+- Wrap files section in a python3 conditional.
+
+* Thu Nov 29 2012 Ralph Bean <rbean@redhat.com> - 4.0.2-3
+- Typofix to python-zope-event requirement.
+
+* Thu Nov 29 2012 Ralph Bean <rbean@redhat.com> - 4.0.2-2
+- Added dependency on python-zope-event.
+
+* Wed Nov 28 2012 Ralph Bean <rbean@redhat.com> - 4.0.2-1
+- Latest upstream release.
+- Python3 subpackage.
+- Rearrange the way we package docs.
+
+* Sat Jul 21 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.7.0-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 
 * Sat Jan  7 2012 Robin Lee <cheeselee@fedoraproject.org> - 3.7.0-1
 - Update to 3.7.0 (ZTK 1.1.3)

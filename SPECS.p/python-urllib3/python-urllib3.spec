@@ -1,26 +1,16 @@
-%if 0%{?fedora}
 %global with_python3 1
-%else
-%{!?python_sitelib: %global python_sitelib %(%{__python} -c "from distutils.sysconfig import get_python_lib; print (get_python_lib())")}
-%endif
 
 %global srcname urllib3
 
 Name:           python-%{srcname}
-Version:        1.8.2
-Release:        4%{?dist}
+Version:	1.12
+Release:	1%{?dist}
 Summary:        Python HTTP library with thread-safe connection pooling and file post
+Summary(zh_CN.UTF-8): 线程安全的连接池和文件上传的 Python HTTP 库
 
 License:        MIT
 URL:            http://urllib3.readthedocs.org/
 Source0:        http://pypi.python.org/packages/source/u/%{srcname}/%{srcname}-%{version}.tar.gz
-
-### TODO: Send this to upstream urllib3
-# make all imports of things in packages try system copies first
-Patch0:         python-urllib3-unbundle.patch
-
-# Remove logging-clear-handlers from setup.cfg because it's not available in RHEL6's nose
-Patch100:       python-urllib3-old-nose-compat.patch
 
 BuildArch:      noarch
 
@@ -28,10 +18,6 @@ Requires:       ca-certificates
 Requires:       python-six
 
 Requires: python-backports-ssl_match_hostname
-%if 0%{?rhel} && 0%{?rhel} <= 6
-BuildRequires:  python-ordereddict
-Requires:       python-ordereddict
-%endif
 
 BuildRequires:  python2-devel
 # For unittests
@@ -53,26 +39,25 @@ BuildRequires:  python3-tornado
 %description
 Python HTTP module with connection pooling and file POST abilities.
 
+%description -l zh_CN.UTF-8
+线程安全的连接池和文件上传的 Python HTTP 库。
+
 %if 0%{?with_python3}
 %package -n python3-%{srcname}
 Requires:       ca-certificates
 Requires:       python3-six
 # Note: Will not run with python3 < 3.2 (unless python3-backports-ssl_match_hostname is created)
 Summary:        Python3 HTTP library with thread-safe connection pooling and file post
+Summary(zh_CN.UTF-8): 线程安全的连接池和文件上传的 Python3 HTTP 库
 %description -n python3-%{srcname}
 Python3 HTTP module with connection pooling and file POST abilities.
+%description -n python3-%{srcname} -l zh_CN.UTF-8
+线程安全的连接池和文件上传的 Python3 HTTP 库。
 %endif # with_python3
 
 
 %prep
 %setup -q -n %{srcname}-%{version}
-
-rm -rf urllib3/packages/
-
-%patch0 -p1
-%if 0%{?rhel} && 0%{?rhel} <= 6
-%patch100 -p1
-%endif
 
 %if 0%{?with_python3}
 rm -rf %{py3dir}
@@ -103,6 +88,7 @@ pushd %{py3dir}
 rm -rf %{buildroot}%{python3_sitelib}/dummyserver
 popd
 %endif # with_python3
+magic_rpm_clean.sh
 
 %check
 nosetests
@@ -126,6 +112,9 @@ popd
 %endif # with_python3
 
 %changelog
+* Wed Sep 09 2015 Liu Di <liudidi@gmail.com> - 1.12-1
+- 更新到 1.12
+
 * Tue Jul 01 2014 Liu Di <liudidi@gmail.com> - 1.8.2-4
 - 为 Magic 3.0 重建
 

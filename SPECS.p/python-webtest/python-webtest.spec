@@ -1,18 +1,18 @@
 %{!?python_sitelib: %global python_sitelib %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib()")}
 
-%if 0%{?fedora}
 %global with_python3 1
-%endif
 
 Name:           python-webtest
-Version:        1.3.4
-Release:        7%{?dist}
+Version:	2.0.18
+Release:	1%{?dist}
 Summary:        Helper to test WSGI applications
+Summary(zh_CN.UTF-8): 测试 WSGI 应用的辅助程序
 
 Group:          Development/Languages
+Group(zh_CN.UTF-8): 开发/语言
 License:        MIT
 URL:            http://pythonpaste.org/webtest/
-Source0:        http://pypi.python.org/packages/source/W/WebTest/WebTest-%{version}.tar.gz
+Source0:        http://pypi.python.org/packages/source/W/WebTest/WebTest-%{version}.zip
 BuildRoot:      %(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
 
 BuildArch:      noarch
@@ -39,10 +39,15 @@ requests to that application, without starting up an HTTP server.
 This provides convenient full-stack testing of applications written
 with any WSGI-compatible framework.
 
+%description -l zh_CN.UTF-8
+测试 WSGI 应用的辅助程序。
+
 %if 0%{?with_python3}
 %package -n python3-webtest
 Summary:        Helper to test WSGI applications
+Summary(zh_CN.UTF-8): 测试 WSGI 应用的辅助程序
 Group:          Development/Languages
+Group(zh_CN.UTF-8): 开发/语言
 
 Requires:       python3-webtest
 
@@ -52,6 +57,8 @@ requests to that application, without starting up an HTTP server.
 
 This provides convenient full-stack testing of applications written
 with any WSGI-compatible framework.
+%description -n python3-webtest -l zh_CN.UTF-8
+测试 WSGI 应用的辅助程序。
 %endif
 
 
@@ -84,6 +91,7 @@ popd
 %endif
 
 %{__python} setup.py install -O1 --skip-build --root %{buildroot}
+magic_rpm_clean.sh
 
 %clean
 %{__rm} -rf %{buildroot}
@@ -110,6 +118,9 @@ popd
 %endif
 
 %changelog
+* Wed Sep 09 2015 Liu Di <liudidi@gmail.com> - 2.0.18-1
+- 更新到 2.0.18
+
 * Tue Jun 17 2014 Liu Di <liudidi@gmail.com> - 1.3.4-7
 - 为 Magic 3.0 重建
 

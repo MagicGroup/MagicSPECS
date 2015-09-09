@@ -1,15 +1,13 @@
-%if 0%{?fedora} > 12
 %global with_python3 1
-%else
-%{!?python_sitelib: %global python_sitelib %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib()")}
-%endif
 
 Name:           python-tempita
 Version:        0.5.1
-Release:        7%{?dist}
+Release:        8%{?dist}
 Summary:        A very small text templating language
+Summary(zh_CN.UTF-8): 一个非常小的文本模板语言
 
 Group:          Development/Languages
+Group(zh_CN.UTF-8): 开发/语言
 License:        MIT
 URL:            http://pythonpaste.org/tempita/
 Source0:        http://pypi.python.org/packages/source/T/Tempita/Tempita-%{version}.tar.gz
@@ -31,10 +29,15 @@ BuildRequires: python3-setuptools
 %description
 Tempita is a small templating language for text substitution.
 
+%description -l zh_CN.UTF-8
+一个非常小的文本模板语言。
+
 %if 0%{?with_python3}
 %package -n python3-tempita
 Summary:        A very small text templating language
+Summary(zh_CN.UTF-8): 一个非常小的文本模板语言
 Group:          Development/Languages
+Group(zh_CN.UTF-8): 开发/语言
 # Without one of these there's no aes implementation which means there's no way to
 # have encrypted cookies.  This is a reduction in features over the python2 version.
 # Currently there's no working python3 port for either:
@@ -48,6 +51,8 @@ Group:          Development/Languages
 
 %description -n python3-tempita
 Tempita is a small templating language for text substitution.
+%description -n python3-tempita -l zh_CN.UTF-8
+一个非常小的文本模板语言。
 %endif # with_python3
 
 
@@ -78,6 +83,7 @@ pushd %{py3dir}
 %{__python3} setup.py install --skip-build --root $RPM_BUILD_ROOT
 popd
 %endif # with_python3
+magic_rpm_clean.sh
 
 %clean
 %{__rm} -rf %{buildroot}
@@ -100,6 +106,9 @@ nosetests
 %endif
 
 %changelog
+* Wed Sep 09 2015 Liu Di <liudidi@gmail.com> - 0.5.1-8
+- 为 Magic 3.0 重建
+
 * Tue Jun 17 2014 Liu Di <liudidi@gmail.com> - 0.5.1-7
 - 为 Magic 3.0 重建
 

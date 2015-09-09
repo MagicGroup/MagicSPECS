@@ -1,12 +1,12 @@
-%if 0%{?fedora}
 %global with_python3 1
-%endif
 
 Name:           python-zope-event
 Version:        4.0.3
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        Zope Event Publication
+Summary(zh_CN.UTF-8): Zope 事件
 Group:          Development/Languages
+Group(zh_CN.UTF-8): 开发/语言
 License:        ZPLv2.1
 URL:            http://pypi.python.org/pypi/zope.event/
 # Upstream accidentally used strange version
@@ -32,9 +32,13 @@ zope.event can be found in zope.component.)
 
 This package contains the version for Python 2.
 
+%description -l zh_CN.UTF-8
+Zope 事件。
+
 %if 0%{?with_python3}
 %package -n python3-zope-event
 Summary:        Zope Event Publication (Python 3)
+Summary(zh_CN.UTF-8): Zope 事件
 
 %description -n python3-zope-event
 The zope.event package provides a simple event system. It provides
@@ -44,6 +48,8 @@ on which more sophisticated event dispatching systems can be built.
 zope.event can be found in zope.component.)
 
 This package contains the version for Python 3.
+%description -n python3-zope-event -l zh_CN.UTF-8
+Zope 事件。
 %endif
 
 %prep
@@ -78,6 +84,7 @@ pushd %{py3dir}
 popd
 %endif
 %{__python} setup.py install -O1 --skip-build --root %{buildroot}
+magic_rpm_clean.sh
 
 %check
 %{__python} setup.py test
@@ -111,6 +118,9 @@ popd
 %endif
 
 %changelog
+* Wed Sep 09 2015 Liu Di <liudidi@gmail.com> - 4.0.3-4
+- 为 Magic 3.0 重建
+
 * Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 4.0.3-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

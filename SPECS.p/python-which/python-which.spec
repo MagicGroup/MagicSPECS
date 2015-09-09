@@ -2,10 +2,12 @@
 
 Name:           python-which
 Version:        1.1.0
-Release:        10%{?dist}
+Release:        11%{?dist}
 Summary:        Small which replacement that can be used as a Python module
+Summary(zh_CN.UTF-8): 可以做为 which 替代的 Python 模块
 
 Group:          Development/Languages
+Group(zh_CN.UTF-8): 开发/语言
 License:        MIT
 URL:            http://trentm.com/projects/which/
 Source0:        http://trentm.com/downloads/which/%{version}/which-%{version}.zip
@@ -22,6 +24,8 @@ which.py is a small which replacement. It has the following features:
    may not, say, have execute permissions); and
  * it can be used as a Python module.
 
+%description -l zh_CN.UTF-8
+可以做为 which 替代的 Python 模块。
 
 %prep
 %setup -q -n which-%{version}
@@ -41,7 +45,7 @@ python -m which $@
 EOF
 mkdir -p $RPM_BUILD_ROOT%{_bindir}
 install -m0755 -p which-python $RPM_BUILD_ROOT%{_bindir}
-
+magic_rpm_clean.sh
  
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -56,6 +60,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Wed Sep 09 2015 Liu Di <liudidi@gmail.com> - 1.1.0-11
+- 为 Magic 3.0 重建
+
 * Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 1.1.0-10
 - 为 Magic 3.0 重建
 

@@ -1,25 +1,19 @@
-%if 0%{?fedora} || 0%{?rhel} > 6
 %global with_python3 1
-%endif
-
-%if ! (0%{?fedora} > 12 || 0%{?rhel} > 5)
-%{!?python_sitelib: %global python_sitelib %(%{__python} -c "from distutils.sysconfig import get_python_lib; print(get_python_lib())")}
-%{!?python_sitearch: %global python_sitearch %(%{__python} -c "from distutils.sysconfig import get_python_lib; print(get_python_lib(1))")}
-%endif
 
 Name:          python-urwid
-Version:       1.0.0
-Release:       5%{?dist}
+Version:	1.3.0
+Release:	1%{?dist}
 Summary:       Console user interface library
+Summary(zh_CN.UTF-8): 控制台用户界面库
 
 Group:         Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 License:       LGPLv2+
 URL:           http://excess.org/urwid/
-Source0:       http://excess.org/urwid/urwid-%{version}.tar.gz
+Source0:       https://pypi.python.org/packages/source/u/urwid/urwid-%{version}.tar.gz
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(id -u -n)
 BuildRequires: python2-devel
-BuildRequires: python-setuptools-devel
 BuildRequires: python-twisted-core
 BuildRequires: pygobject2
 
@@ -37,10 +31,15 @@ setting text attributes, and a powerful, dynamic list box that handles a
 mix of widget types.  It is flexible, modular, and leaves the developer in
 control.
 
+%description -l zh_CN.UTF-8
+控制台用户界面库。
+
 %if 0%{?with_python3}
 %package -n python3-urwid
 Summary: Urwid console user interface library for Python 3
+Summary(zh_CN.UTF-8): 控制台用户界面库
 Group: Development/Languages
+Group(zh_CN.UTF-8): 开发/语言
 
 %description -n python3-urwid
 Urwid is a Python library for making text console applications.  It has
@@ -51,6 +50,8 @@ mix of widget types.  It is flexible, modular, and leaves the developer in
 control.
 
 This package contains the mako module built for use with python3.
+%description -n python3-urwid -l zh_CN.UTF-8
+控制台用户界面库。
 %endif # with_python3
 
 %prep
@@ -84,9 +85,9 @@ popd
 
 %{__python} setup.py install --skip-build --no-compile --root %{buildroot}
 rm -f tmpl_tutorial.html
-mkdir examples
 cp -p *.py examples/
 rm -f examples/test_urwid.py examples/docgen_*.py
+magic_rpm_clean.sh
 
 %check
 python setup.py test
@@ -102,19 +103,20 @@ rm -rf %{buildroot}
 
 %files
 %defattr(-,root,root,-)
-%doc CHANGELOG *.html examples
 %{python_sitearch}/urwid
 %{python_sitearch}/urwid-%{version}*.egg-info
 
 %if 0%{?with_python3}
 %files -n python3-urwid
 %defattr(-,root,root,-)
-%doc CHANGELOG *.html examples
 %{python3_sitearch}/urwid
 %{python3_sitearch}/urwid-%{version}*.egg-info
 %endif
 
 %changelog
+* Wed Sep 09 2015 Liu Di <liudidi@gmail.com> - 1.3.0-1
+- 更新到 1.3.0
+
 * Tue Jun 17 2014 Liu Di <liudidi@gmail.com> - 1.0.0-5
 - 为 Magic 3.0 重建
 

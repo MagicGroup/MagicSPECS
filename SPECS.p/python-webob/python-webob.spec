@@ -1,7 +1,5 @@
-%if 0%{?fedora}
 %global with_python3 1
 %{!?py3ver: %global py3ver %(%{__python3} -c "import sys ; print(sys.version[:3])")}
-%endif
 
 %{!?py2ver: %global py2ver %(%{__python} -c "import sys ; print sys.version[:3]")}
 
@@ -9,17 +7,15 @@
 
 Name:           python-webob
 Summary:        WSGI request and response object
-Version:        1.2.3
-Release:        8%{?dist}
+Summary(zh_CN.UTF-8): WSGI 请求和回应对象
+Version:	1.5.0b0
+Release:	1%{?dist}
 License:        MIT
 Group:          System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 URL:            http://pythonpaste.org/webob/
 Source0:        http://pypi.python.org/packages/source/W/WebOb/WebOb-%{version}.tar.gz
 Source1:        README.Fedora
-
-# https://github.com/Pylons/webob/issues/75
-# Fix build/test issue on python 3
-Patch1:         webob-1.2.3-test-headers2-fix.patch
 
 BuildArch:      noarch
 BuildRequires:  python2-devel
@@ -44,9 +40,13 @@ help create WSGI responses. The objects map much of the specified behavior of
 HTTP, including header parsing and accessors for other standard parts of the 
 environment.
 
+%description -l zh_CN.UTF-8
+WSGI 请求和回应对象。
+
 %if 0%{?with_python3}
 %package -n python3-webob
 Summary:        WSGI request and response object
+Summary(zh_CN.UTF-8): WSGI 请求和回应对象
 Group:          System Environment/Libraries
 
 Requires:       python3
@@ -56,6 +56,8 @@ WebOb provides wrappers around the WSGI request environment, and an object to
 help create WSGI responses. The objects map much of the specified behavior of 
 HTTP, including header parsing and accessors for other standard parts of the 
 environment.
+%description -n python3-webob -l zh_CN.UTF-8
+WSGI 请求和回应对象。
 %endif
 
 %prep
@@ -64,8 +66,6 @@ cp -p %{SOURCE1} .
 # Disable performance_test, which requires repoze.profile, which isn't
 # in Fedora.
 %{__rm} -f tests/performance_test.py
-
-%patch1 -p1 -b .test_headers2
 
 %if 0%{?with_python3}
 rm -rf %{py3dir}
@@ -92,6 +92,7 @@ popd
 %{__mkdir} -p %{buildroot}%{python_sitelib}
 %{__python} setup.py install --skip-build --root %{buildroot}
 #%{__chmod} 0644 %{buildroot}%{python_sitelib}/WebOb-%{version}-*.egg/%{modname}/*.py
+magic_rpm_clean.sh
 
 %check
 %{__python} setup.py test
@@ -115,6 +116,9 @@ popd
 %endif
 
 %changelog
+* Wed Sep 09 2015 Liu Di <liudidi@gmail.com> - 1.5.0b0-1
+- 更新到 1.5.0b0
+
 * Tue Jun 17 2014 Liu Di <liudidi@gmail.com> - 1.2.3-8
 - 为 Magic 3.0 重建
 

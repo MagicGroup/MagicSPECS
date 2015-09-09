@@ -1,44 +1,130 @@
+%global with_python3 1
 Name:		pyxattr
 Summary:	Extended attributes library wrapper for Python
-Version:	0.5.1
-Release:	3%{?dist}
-#license version is precised on a website
+Summary(zh_CN.UTF-8): Python 的扩展属性库
+Version:	0.5.5
+Release:	1%{?dist}
 License:	LGPLv2+
 Group:		Development/Libraries
-URL:		http://pyxattr.sourceforge.net/
-Source:		https://github.com/downloads/iustin/pyxattr/pyxattr-%{version}.tar.gz
-BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-#libattr package is already forced by RPM
-Requires:	python >= 2.2
-#python-setuptools package is required since 0.4.0
-BuildRequires:	python-devel, libattr-devel, python-setuptools
+Group(zh_CN.UTF-8): 开发/库
+URL:		http://pyxattr.k1024.org/
+Source:		https://pypi.python.org/packages/source/p/%{name}/%{name}-%{version}.tar.gz
+BuildRequires:	libattr-devel
+BuildRequires:	python2-devel, python-setuptools
+%if %{?with_python3}
+BuildRequires:	python3-devel, python3-setuptools
+%endif # with_python3
 
 %description
 Python extension module wrapper for libattr. It allows to query, list,
 add and remove extended attributes from files and directories.
 
+%description -l zh_CN.UTF-8
+Python 的扩展属性库，是 libattr 的接口。
+
+%if %{?with_python3}
+%package -n python3-%{name}
+Summary:	Extended attributes library wrapper for Python 3
+Summary(zh_CN.UTF-8): Python3 的扩展属性库
+
+%description -n python3-%{name}
+Python extension module wrapper for libattr. It allows to query, list,
+add and remove extended attributes from files and directories.
+
+Python 3 version.
+%description -n python3-%{name} -l zh_CN.UTF-8
+Python3 的扩展属性库，是 libattr 的接口。
+%endif # with_python3
+
 %prep
 %setup -q
 
+%if 0%{?with_python3}
+rm -rf %{py3dir}
+cp -a . %{py3dir}
+%endif # with_python3
+
 %build
-CFLAGS="%{optflags}" %{__python} setup.py build
+CFLAGS="%{optflags}" %{__python2} setup.py build
+
+%if 0%{?with_python3}
+pushd %{py3dir}
+CFLAGS="%{optflags}" %{__python3} setup.py build
+popd
+%endif # with_python3
 
 %install
-%{__rm} -rf %{buildroot}
-%{__python} setup.py install --root="%{buildroot}" --prefix="%{_prefix}"
+%{__python2} setup.py install --root="%{buildroot}" --prefix="%{_prefix}"
 
-%clean
-%{__rm} -rf %{buildroot}
+%if 0%{?with_python3}
+pushd %{py3dir}
+%{__python3} setup.py install --root="%{buildroot}" --prefix="%{_prefix}"
+popd
+%endif # with_python3
+magic_rpm_clean.sh
+
+%check
+# selinux in koji produces unexpected xattrs for tests
+export TEST_IGNORE_XATTRS=security.selinux
+
+%{__python2} setup.py test
+
+%if 0%{?with_python3}
+pushd %{py3dir}
+%{__python3} setup.py test
+popd
+%endif # with_python3
 
 %files
 %defattr(0644,root,root,0755)
-%{_libdir}/python*/site-packages/xattr.so
-#Python Eggs already in source distribution
-#(without compiled content, can be simple included in RPM package)
-%{_libdir}/python*/site-packages/*egg-info
-%doc COPYING NEWS README
+%{python2_sitearch}/xattr.so
+%{python2_sitearch}/*egg-info
+%{!?_licensedir:%global license %%doc}
+%license COPYING
+%doc NEWS 
+
+%if %{?with_python3}
+%files -n python3-%{name}
+%defattr(0644,root,root,0755)
+%{python3_sitearch}/xattr.cpython-??m.so
+%{python3_sitearch}/*egg-info
+%{!?_licensedir:%global license %%doc}
+%license COPYING
+%doc NEWS
+%endif # with_python3
 
 %changelog
+* Wed Sep 09 2015 Liu Di <liudidi@gmail.com> - 0.5.5-1
+- 更新到 0.5.5
+
+* Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.5.3-5
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
+
+* Sun Aug 17 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.5.3-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
+
+* Thu Aug  7 2014 Marcin Zajaczkowski <mszpak ATT wp DOTT pl> - 0.5.3-3
+- add Mark Hamzy's patch to fix issue with PPC builds (bug 1127310)
+
+* Mon Aug  4 2014 Tom Callaway <spot@fedoraproject.org> - 0.5.3-2
+- fix license handling
+
+* Sat Jun 28 2014 Miro Hrončok <mhroncok@redhat.com> - 0.5.3-1
+- Updated to 0.5.3
+- Updated the website
+- Updated download URL to PyPI
+- Removed useless Require of python >= 2.2
+- Use %%{pythonX_sitearch} macros
+- Removed BuildRoot definition, %%clean section and rm -rf at the beginning of %%install
+- Introduced Python 3 subpackage
+- Introduced %%check and run the test suite
+
+* Sun Jun 08 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.5.1-5
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Sun Aug 04 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.5.1-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
 * Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.5.1-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
 

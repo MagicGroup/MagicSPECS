@@ -1,9 +1,10 @@
 %{!?python_sitelib: %define python_sitelib %(python -c "from distutils.sysconfig import get_python_lib; print get_python_lib()")}
 
 Summary: A high-level cross-protocol url-grabber
+Summary(zh_CN.UTF-8): 高级的跨协议的 url 抓取器
 Name: python-urlgrabber
 Version: 3.10.1
-Release: 7%{?dist}
+Release: 8%{?dist}
 Source0: http://urlgrabber.baseurl.org/download/urlgrabber-%{version}.tar.gz
 Patch1: urlgrabber-HEAD.patch
 Patch2: BZ-1051554-speed-on-404-mirror.patch
@@ -21,6 +22,9 @@ Requires: python-pycurl
 A high-level cross-protocol url-grabber for python supporting HTTP, FTP 
 and file locations.  Features include keepalive, byte ranges, throttling,
 authentication, proxies and more.
+
+%description -l zh_CN.UTF-8
+高级的跨协议的 url 抓取器。
 
 %prep
 %setup -q -n urlgrabber-%{version}
@@ -48,6 +52,9 @@ rm -rf $RPM_BUILD_ROOT
 %attr(0755,root,root) %{_libexecdir}/urlgrabber-ext-down
 
 %changelog
+* Wed Sep 09 2015 Liu Di <liudidi@gmail.com> - 3.10.1-8
+- 为 Magic 3.0 重建
+
 * Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.10.1-7
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

@@ -1,11 +1,10 @@
-%if 0%{?fedora}
 %global with_python3 1
-%endif
 
 Name:           python-service-identity
 Version:        14.0.0
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Service identity verification for pyOpenSSL
+Summary(zh_CN.UTF-8): pyOpenSSL 的服务名称校验
 
 License:        MIT
 URL:            https://github.com/pyca/service_identity
@@ -14,7 +13,6 @@ BuildArch:      noarch
 
 BuildRequires:  python2-devel
 BuildRequires:  python-setuptools
-%if 0%{?fedora} > 20
 # Fedora 20 doesn't have a new enough version of pytest,
 # so skip running the tests there.
 # For tests
@@ -24,12 +22,10 @@ BuildRequires:  python-pyasn1
 BuildRequires:  python-pyasn1-modules
 BuildRequires:  pyOpenSSL >= 0.12
 BuildRequires:  python-idna
-%endif # fedora > 20
 
 %if 0%{?with_python3}
 BuildRequires:  python3-devel
 BuildRequires:  python3-setuptools
-%if 0%{?fedora} > 20
 # For tests
 BuildRequires:  python3-pytest >= 2.5
 BuildRequires:  python3-characteristic
@@ -37,7 +33,6 @@ BuildRequires:  python3-pyasn1
 BuildRequires:  python3-pyasn1-modules
 BuildRequires:  python3-pyOpenSSL >= 0.12
 BuildRequires:  python3-idna
-%endif # fedora > 20
 %endif # with_python3
 
 Requires:       python-characteristic
@@ -49,6 +44,7 @@ Requires:       python-idna
 %if 0%{?with_python3}
 %package -n python3-service-identity
 Summary:        Logging as Storytelling
+Summary(zh_CN.UTF-8):  pyOpenSSL 的服务名称校验
 Requires:       python3-six
 Requires:       python3-characteristic
 Requires:       python3-pyasn1
@@ -69,6 +65,10 @@ In the simplest case, this means host name verification. However,
 service_identity implements RFC 6125 fully and plans to add other relevant RFCs
 too.
 
+%description -l zh_CN.UTF-8
+pyOpenSSL 的服务名称校验。
+
+
 %if 0%{?with_python3}
 %description -n python3-service-identity
 Service Identity Verification for pyOpenSSL
@@ -81,6 +81,9 @@ whether a certificate is valid for the intended purposes.
 In the simplest case, this means host name verification. However,
 service_identity implements RFC 6125 fully and plans to add other relevant RFCs
 too.
+%description -n python3-service-identity -l zh_CN.UTF-8
+pyOpenSSL 的服务名称校验。
+
 %endif # with_python3
 
 %prep
@@ -103,7 +106,6 @@ pushd %{py3dir}
 popd
 %endif # with_python3
 
-%if 0%{?fedora} > 20
 %check
 
 # https://bitbucket.org/hpk42/pytest/issue/539/pytest-doctest-modules-fails-if-python
@@ -117,7 +119,6 @@ echo "collect_ignore = ['build']" >> conftest.py
 py.test --doctest-modules --doctest-glob='*.rst'
 popd
 %endif # with_python3
-%endif # fedora > 20
 
 %install
 %if 0%{?with_python3}
@@ -127,7 +128,7 @@ popd
 %endif # with_python3
 
 %{__python2} setup.py install --skip-build --root %{buildroot}
-
+magic_rpm_clean.sh
 
 
 %files
@@ -143,6 +144,9 @@ popd
 %endif # with_python3
 
 %changelog
+* Wed Sep 09 2015 Liu Di <liudidi@gmail.com> - 14.0.0-3
+- 为 Magic 3.0 重建
+
 * Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 14.0.0-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 
