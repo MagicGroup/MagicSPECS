@@ -1,6 +1,6 @@
 Name:       python-slip
-Version:    0.6.3
-Release:    1%{?dist}
+Version:	0.6.3
+Release:	3%{?dist}
 Summary:    Convenience, extension and workaround code for Python 2.x
 
 Group:      System Environment/Libraries
@@ -14,7 +14,6 @@ BuildRequires:  python-devel
 BuildRequires:  python3
 BuildRequires:  python3-devel
 
-Requires:   libselinux-python
 Requires:   python-six
 
 %description
@@ -26,7 +25,6 @@ This package provides the "slip" and the "slip.util" modules.
 %package -n python3-slip
 Summary:    Convenience, extension and workaround code for Python 3.x
 Group:      System Environment/Libraries
-Requires:   libselinux-python3
 
 %description -n python3-slip
 The Simple Library for Python 3.x packages contain miscellaneous code for
@@ -157,6 +155,12 @@ popd
 %{python2_sitelib}/slip.gtk-%{version}-py%{python2_version}.egg-info
 
 %changelog
+* Tue Sep 08 2015 Liu Di <liudidi@gmail.com> - 0.6.3-3
+- 为 Magic 3.0 重建
+
+* Tue Sep 08 2015 Liu Di <liudidi@gmail.com> - 0.6.3-2
+- 为 Magic 3.0 重建
+
 * Mon Aug 17 2015 Nils Philippsen <nils@redhat.com> - 0.6.3-1
 - wrap up GObject -> GLib change (#1254077)
 - fix URLs

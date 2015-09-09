@@ -1,26 +1,14 @@
-%if 0%{?fedora}
 %global _with_python3 1
-%else
-%{!?python_sitelib: %global python_sitelib %(%{__python} -c "from distutils.sysconfig import get_python_lib; print (get_python_lib())")}
-%endif
 
 Name:           python-requests
-Version:        2.3.0
-Release:        3%{?dist}
+Version:	2.7.0
+Release:	1%{?dist}
 Summary:        HTTP library, written in Python, for human beings
+Summary(zh_CN.UTF-8): Python 编写的 HTTP 库
 
 License:        ASL 2.0
 URL:            http://pypi.python.org/pypi/requests
 Source0:        http://pypi.python.org/packages/source/r/requests/requests-%{version}.tar.gz
-# Explicitly use the system certificates in ca-certificates.
-# https://bugzilla.redhat.com/show_bug.cgi?id=904614
-Patch0:         python-requests-system-cert-bundle.patch
-# Unbundle python-charade (a fork of python-chardet).
-# https://bugzilla.redhat.com/show_bug.cgi?id=904623
-Patch1:         python-requests-system-chardet-not-charade.patch
-# Unbundle python-charade (a fork of python-urllib3).
-# https://bugzilla.redhat.com/show_bug.cgi?id=904623
-Patch2:         python-requests-system-urllib3.patch
 
 BuildArch:      noarch
 BuildRequires:  python2-devel
@@ -42,9 +30,13 @@ cumbersome. Python’s built-in urllib2 module provides most of the HTTP
 capabilities you should need, but the API is thoroughly broken. This library is 
 designed to make HTTP requests easy for developers.
 
+%description -l zh_CN.UTF-8
+Python 编写的 HTTP 库。
+
 %if 0%{?_with_python3}
 %package -n python3-requests
 Summary: HTTP library, written in Python, for human beings
+Summary(zh_CN.UTF-8): Python 编写的 HTTP 库
 BuildRequires:  python3-devel
 BuildRequires:  python3-chardet
 BuildRequires:  python3-urllib3 >= 1.8.2
@@ -56,14 +48,12 @@ Most existing Python modules for sending HTTP requests are extremely verbose and
 cumbersome. Python’s built-in urllib2 module provides most of the HTTP
 capabilities you should need, but the API is thoroughly broken. This library is
 designed to make HTTP requests easy for developers.
+%description -n python3-requests -l zh_CN.UTF-8
+Python 编写的 HTTP 库。
 %endif
 
 %prep
 %setup -q -n requests-%{version}
-
-%patch0 -p1
-%patch1 -p1
-%patch2 -p1
 
 # Unbundle the certificate bundle from mozilla.
 rm -rf requests/cacert.pem
@@ -104,6 +94,7 @@ popd
 %endif
 
 %{__python} setup.py install --skip-build --root $RPM_BUILD_ROOT
+magic_rpm_clean.sh
 
 ## The tests succeed if run locally, but fail in koji.
 ## They require an active network connection to query httpbin.org
@@ -130,6 +121,9 @@ popd
 %endif
 
 %changelog
+* Tue Sep 08 2015 Liu Di <liudidi@gmail.com> - 2.7.0-1
+- 更新到 2.7.0
+
 * Tue Jul 01 2014 Liu Di <liudidi@gmail.com> - 2.3.0-3
 - 为 Magic 3.0 重建
 

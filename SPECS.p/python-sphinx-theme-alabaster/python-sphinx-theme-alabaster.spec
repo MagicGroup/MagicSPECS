@@ -3,8 +3,9 @@
 
 Name:           python-%{srcname}
 Version:        0.7.6
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        Configurable sidebar-enabled Sphinx theme
+Summary(zh_CN.UTF-8): 可配置的启用滚动条的 Sphinx 主题
 
 License:        BSD
 URL:            https://pypi.python.org/pypi/%{pypi_name}
@@ -74,6 +75,9 @@ rm -rf %{pypi_name}.egg-info
 
 
 %changelog
+* Tue Sep 08 2015 Liu Di <liudidi@gmail.com> - 0.7.6-5
+- 为 Magic 3.0 重建
+
 * Fri Jul 31 2015 Julien Enseme <jujens@jujens.eu> - 0.7.6-4
 - Use %%py2_build, %%py3build, %%py2_install and %%py2_install
 - Make a python2 subpackage

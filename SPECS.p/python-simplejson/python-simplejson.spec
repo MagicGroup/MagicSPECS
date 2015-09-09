@@ -1,19 +1,15 @@
-%if 0%{?rhel} && 0%{?rhel} < 6
-%{!?python_sitearch: %global python_sitearch %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib(1)")}
-%endif
-
 # Python3 support is 3.3+ (which was introduced in Fedora 18)
-%if 0%{?fedora} && 0%{?fedora} >= 18
 %global with_python3 1
-%endif
 
 Name:           python-simplejson
 
-Version:        3.2.0
-Release:        2%{?dist}
+Version:	3.8.0
+Release:	1%{?dist}
 Summary:        Simple, fast, extensible JSON encoder/decoder for Python
+Summary(zh_CN.UTF-8): Python 下简单快速可扩展的 JSON 编码/解码器
 
 Group:          System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 # The main code is licensed MIT.
 # The docs include jquery which is licensed MIT or GPLv2
 License: (MIT or AFL) and (MIT or GPLv2)
@@ -53,10 +49,15 @@ included with Python 2.6 and Python 3.0, but maintains backwards compatibility
 with Python 2.5.  It gets updated more regularly than the json module in the
 python stdlib.
 
+%description -l zh_CN.UTF-8
+Python 下简单快速可扩展的 JSON 编码/解码器。
+
 %if 0%{?with_python3}
 %package -n python3-simplejson
 Summary:        Simple, fast, extensible JSON encoder/decoder for Python3
+Summary(zh_CN.UTF-8): Python3 下简单快速可扩展的 JSON 编码/解码器
 Group:          System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 
 %description -n python3-simplejson
 simplejson is a simple, fast, complete, correct and extensible JSON
@@ -76,6 +77,8 @@ included with Python 2.6 and Python 3.0, but maintains backwards compatibility
 with Python 2.5.  It gets updated more regularly than the json module in the
 python stdlib.
 
+%description -n python3-simplejson -l zh_CN.UTF-8
+Python 3 下简单快速可扩展的 JSON 编码/解码器。
 %endif # with_python3
 
 %prep
@@ -108,6 +111,7 @@ pushd %{py3dir}
 %{__python3} setup.py install --skip-build --root=%{buildroot}
 popd
 %endif # with_python3
+magic_rpm_clean.sh
 
 %check
 nosetests -q
@@ -135,6 +139,9 @@ rm -rf %{buildroot}
 %endif # python3
 
 %changelog
+* Tue Sep 08 2015 Liu Di <liudidi@gmail.com> - 3.8.0-1
+- 更新到 3.8.0
+
 * Tue Jun 17 2014 Liu Di <liudidi@gmail.com> - 3.2.0-2
 - 为 Magic 3.0 重建
 

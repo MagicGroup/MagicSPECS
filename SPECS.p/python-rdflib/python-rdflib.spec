@@ -1,6 +1,4 @@
-%if 0%{?fedora} > 12
 %global with_python3 1
-%endif
 
 %{!?__python2:%global __python2 %{__python}}
 %{!?python2_sitelib:   %global python2_sitelib         %{python_sitelib}}
@@ -12,11 +10,13 @@
 %global run_tests 1
 
 Name:           python-rdflib
-Version:        4.1.2
-Release:        4%{?dist}
+Version:	4.2.1
+Release:	1%{?dist}
 Summary:        Python library for working with RDF
+Summary(zh_CN.UTF-8): RDF 的 Python 库
 
 Group:          Development/Languages
+Group(zh_CN.UTF-8): 开发/语言
 License:        BSD
 URL:            https://github.com/RDFLib/rdflib
 Source0:        http://pypi.python.org/packages/source/r/rdflib/rdflib-%{version}.tar.gz
@@ -52,12 +52,13 @@ implementations for in memory storage, persistent storage on top
 of the Berkeley DB, and a wrapper for remote SPARQL endpoints.
 
 A SPARQL 1.1 engine is also included.
-
+%description -l zh_CN.UTF-8
+RDF 的 Python 库。
 
 %if %{with_python3}
 %package -n python3-%{pypi_name}
 Summary:        Python library for working with RDF
-
+Summary(zh_CN.UTF-8): RDF 的 Python 库
 BuildRequires:  python3-html5lib >= 1:
 BuildRequires:  python3-isodate
 BuildRequires:  python3-pyparsing
@@ -81,6 +82,8 @@ implementations for in memory storage, persistent storage on top
 of the Berkeley DB, and a wrapper for remote SPARQL endpoints.
 
 A SPARQL 1.1 engine is also included.
+%description -n python3-%{pypi_name} -l zh_CN.UTF-8
+RDF 的 Python 库。
 %endif
 
 %prep
@@ -149,6 +152,7 @@ for lib in $RPM_BUILD_ROOT/%{python_sitelib}/rdflib/extras/describer.py \
  touch -r $lib $lib.new &&
  mv $lib.new $lib
 done
+magic_rpm_clean.sh
 
 %check
 %if %{run_tests}
@@ -181,6 +185,9 @@ PYTHONPATH=./build/lib %{__python} run_tests.py --verbose
 %endif
 
 %changelog
+* Tue Sep 08 2015 Liu Di <liudidi@gmail.com> - 4.2.1-1
+- 更新到 4.2.1
+
 * Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 4.1.2-4
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

@@ -1,9 +1,10 @@
 %global cmapdir %(echo `rpm -qls ghostscript | grep CMap | awk '{print $2}'`)
 
 Name:           python-reportlab
-Version:        3.1.8
-Release:        5%{?dist}
+Version:	3.2.0
+Release:	2%{?dist}
 Summary:        Python 2.x library for generating PDFs and graphics
+Summary(zh_CN.UTF-8): 生成 PDF 和图像的 Python 2.x 库
 License:        BSD
 URL:            http://www.reportlab.org/
 Source0:        https://pypi.python.org/packages/source/r/reportlab/reportlab-%{version}.tar.gz
@@ -21,8 +22,12 @@ This is the ReportLab PDF Toolkit. It allows rapid creation of rich PDF
 documents, and also creation of charts in a variety of bitmap and vector 
 formats.
 
+%description -l zh_CN.UTF-8
+生成 PDF 和图像的 Python 2.x 库。
+
 %package -n     python3-reportlab
 Summary:        Python 3.x library for generating PDFs and graphics
+Summary(zh_CN.UTF-8): 生成 PDF 和图像的 Python 3.x 库
 BuildRequires:  python3-devel
 BuildRequires:  python3-pillow
 Requires:       dejavu-sans-fonts
@@ -33,14 +38,21 @@ This is the ReportLab PDF Toolkit. It allows rapid creation of rich PDF
 documents, and also creation of charts in a variety of bitmap and vector 
 formats.
 
+%description -n python3-reportlab -l zh_CN.UTF-8
+生成 PDF 和图像的 Python 3.x 库
+
 %package        doc
 Summary:        Documentation for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 BuildArch:      noarch
 Requires:       %{name} = %{version}-%{release}
 Obsoletes:      %{name}-docs < %{version}-%{release}
 
 %description    doc                  
 Contains the documentation for ReportLab.
+
+%description doc -l zh_CN.UTF-8
+%{name} 的文档。
 
 %prep
 %setup -qn reportlab-%{version}
@@ -68,17 +80,18 @@ pushd %{py3dir}
 popd
 # Remove bundled fonts
 rm -rf %{buildroot}%{python2_sitearch}/reportlab/fonts
+magic_rpm_clean.sh
 
 %check
 #%{__python2} setup.py tests
 
 %files
-%doc README.txt CHANGES.txt LICENSE.txt
+%doc README.txt 
 %{python2_sitearch}/reportlab/
 %{python2_sitearch}/reportlab-%{version}-py%{python2_version}.egg-info
 
 %files -n python3-reportlab
-%doc README.txt CHANGES.txt LICENSE.txt
+%doc README.txt
 %{python3_sitearch}/reportlab/
 %{python3_sitearch}/reportlab-%{version}-py%{python3_version}.egg-info
 
@@ -87,6 +100,12 @@ rm -rf %{buildroot}%{python2_sitearch}/reportlab/fonts
 #%doc docs/*.pdf
 
 %changelog
+* Tue Sep 08 2015 Liu Di <liudidi@gmail.com> - 3.2.0-2
+- 为 Magic 3.0 重建
+
+* Tue Sep 08 2015 Liu Di <liudidi@gmail.com> - 3.2.0-1
+- 更新到 3.2.0
+
 * Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.1.8-5
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

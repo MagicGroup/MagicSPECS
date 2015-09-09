@@ -1,15 +1,12 @@
-%global pkgname rsa
-
-%if 0%{?fedora} > 12
 %bcond_without python3
-%else
-%bcond_with python3
-%endif
+
+%define pkgname rsa
 
 Name:           python-rsa
-Version:        3.1.1
-Release:        8%{?dist}
+Version:	3.2
+Release:	1%{?dist}
 Summary:        Pure-Python RSA implementation
+Summary(zh_CN.UTF-8): 纯 Python 的 RSA 实现
 
 License:        ASL 2.0
 URL:            http://stuvel.eu/rsa
@@ -29,11 +26,18 @@ BuildRequires:  python3-pyasn1
 %description
 Pure-Python RSA implementation.
 
+%description -l zh_CN.UTF-8
+纯 Python 的 RSA 实现。
+
 %package -n python3-rsa
 Summary:        Pure-Python RSA implementation
+Summary(zh_CN.UTF-8): 纯 Python 的 RSA 实现
 
 %description -n python3-rsa
 Pure-Python RSA implementation for Python 3.
+
+%description -n python3-rsa -l zh_CN.UTF-8
+纯 Python 的 RSA 实现
 
 %prep
 %setup -q -n %{pkgname}-%{version}
@@ -65,6 +69,7 @@ popd
 %endif
 
 %{__python2} setup.py install -O1 --skip-build --root %{buildroot}
+magic_rpm_clean.sh
 
 %check
 %if %with python3
@@ -90,6 +95,9 @@ popd
 %endif
 
 %changelog
+* Tue Sep 08 2015 Liu Di <liudidi@gmail.com> - 3.2-1
+- 更新到 3.2
+
 * Wed Aug 19 2015 Liu Di <liudidi@gmail.com> - 3.1.1-8
 - 为 Magic 3.0 重建
 

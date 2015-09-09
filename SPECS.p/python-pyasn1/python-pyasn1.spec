@@ -1,18 +1,16 @@
-%if 0%{?fedora} > 12
 %global with_python3 1
-%else
-%{!?python_sitelib: %global python_sitelib %(%{__python} -c "from distutils.sysconfig import get_python_lib; print (get_python_lib())")}
-%endif
 
 %global module pyasn1
 %global modules_version 0.0.6
 
 Name:           python-pyasn1
 Version:        0.1.8
-Release:        2%{?dist}
+Release:        4%{?dist}
 Summary:        ASN.1 tools for Python
+Summary(zh_CN.UTF-8): Python 下的 ASN.1 工具
 License:        BSD
 Group:          System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 Source0:        http://downloads.sourceforge.net/pyasn1/pyasn1-%{version}.tar.gz
 Source1:        http://downloads.sourceforge.net/pyasn1/pyasn1-modules-%{modules_version}.tar.gz
 URL:            http://pyasn1.sourceforge.net/
@@ -29,27 +27,40 @@ BuildRequires:  python3-setuptools
 This is an implementation of ASN.1 types and codecs in the Python programming
 language.
 
+%description -l zh_CN.UTF-8
+Python 下的 ASN.1 工具。
+
 %package modules
 Summary:    Modules for pyasn1
+Summary(zh_CN.UTF-8): %{name} 的模块
 Requires:   python-pyasn1 >= %{version}-%{release}
 
 %description modules
 ASN.1 types modules for python-pyasn1.
 
+%description modules -l zh_CN.UTF-8
+%{name} 的模块。
+
 %package -n python3-pyasn1
 Summary:    ASN.1 tools for Python 3
+Summary(zh_CN.UTF-8): Python3 下的 ASN.1 工具
 
 %description -n python3-pyasn1
 This is an implementation of ASN.1 types and codecs in the Python 3 programming
 language.
+%description -n python3-pyasn1 -l zh_CN.UTF-8
+Python3 下的 ASN.1 工具
 
 %package -n python3-pyasn1-modules
 Summary:    Modules for pyasn1
+Summary(zh_CN.UTF-8): python3-pyasn1 的模块
 Requires:   python3-pyasn1 >= %{version}-%{release}
 
 %description -n python3-pyasn1-modules
 ASN.1 types modules for python3-pyasn1.
 
+%description -n python3-pyasn1-modules -l zh_CN.UTF-8
+python3-pyasn1 的模块。
 
 %prep
 %setup -n %{module}-%{version} -q -b1
@@ -93,7 +104,7 @@ popd
 pushd ../pyasn1-modules-%{modules_version}
 %{__python} setup.py install --skip-build --root $RPM_BUILD_ROOT
 popd
-
+magic_rpm_clean.sh
 
 %check
 # PYTHONPATH is required because the the tests expect python{,3}-pyasn1
@@ -135,6 +146,12 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Tue Sep 08 2015 Liu Di <liudidi@gmail.com> - 0.1.8-4
+- 为 Magic 3.0 重建
+
+* Tue Sep 08 2015 Liu Di <liudidi@gmail.com> - 0.1.8-3
+- 为 Magic 3.0 重建
+
 * Mon Aug 17 2015 Liu Di <liudidi@gmail.com> - 0.1.8-2
 - 为 Magic 3.0 重建
 

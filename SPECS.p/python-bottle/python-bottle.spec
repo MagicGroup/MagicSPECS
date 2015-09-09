@@ -1,11 +1,13 @@
 %global srcname bottle
 
 Name:           python-%{srcname}
-Version:        0.12.6
-Release:        2%{?dist}
+Version:	0.12.8
+Release:	1%{?dist}
 Summary:        Fast and simple WSGI-framework for small web-applications
+Summary(zh_CN.UTF-8): 小网页程序使用的快速简单 WSGI 框架
 
 Group:          Development/Languages
+Group(zh_CN.UTF-8): 开发/语言
 License:        MIT
 URL:            http://bottlepy.org
 Source0:        http://pypi.python.org/packages/source/b/%{srcname}/%{srcname}-%{version}.tar.gz
@@ -24,8 +26,12 @@ a built-in HTTP Server and adapters for many third party WSGI/HTTP-server and
 template engines. All in a single file and with no dependencies other than the 
 Python Standard Library.
 
+%description -l zh_CN.UTF-8
+小网页程序使用的快速简单 WSGI 框架。
+
 %package -n python3-%{srcname}
 Summary:        Fast and simple WSGI-framework for small web-applications
+Summary(zh_CN.UTF-8): 小网页程序使用的快速简单 WSGI 框架
 
 %description -n python3-%{srcname}
 Bottle is a fast and simple micro-framework for small web-applications. 
@@ -33,6 +39,9 @@ It offers request dispatching (Routes) with URL parameter support, Templates,
 a built-in HTTP Server and adapters for many third party WSGI/HTTP-server and 
 template engines. All in a single file and with no dependencies other than the 
 Python Standard Library.
+
+%description -n python3-%{srcname} -l zh_CN.UTF-8
+小网页程序使用的快速简单 WSGI 框架。
 
 %prep
 %setup -q -n %{srcname}-%{version}
@@ -57,6 +66,7 @@ pushd %{py3dir}
 %{__python3} setup.py install --skip-build --root %{buildroot}
 rm %{buildroot}%{_bindir}/bottle.py
 popd
+magic_rpm_clean.sh
 
 %files
 %doc README.rst PKG-INFO
@@ -67,6 +77,9 @@ popd
 %{python3_sitelib}/*
 
 %changelog
+* Tue Sep 08 2015 Liu Di <liudidi@gmail.com> - 0.12.8-1
+- 更新到 0.12.8
+
 * Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.12.6-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

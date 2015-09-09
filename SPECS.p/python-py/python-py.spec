@@ -1,10 +1,5 @@
-%if 0%{?fedora} > 12
 %global with_python3 1
 %global python3_version %(%{__python3} -c "import sys; sys.stdout.write(sys.version[:3])")
-%endif
-%if 0%{?rhel} && 0%{?rhel} < 6
-%{!?python_sitelib: %global python_sitelib %(%{__python} -c "from distutils.sysconfig import get_python_lib; print(get_python_lib())")}
-%endif
 
 # we have a circular (build) dependency with the (new) pytest package
 # when generating the docs or running the testsuite
@@ -14,10 +9,12 @@
 %global pytest_version 2.3.1
 
 Name:           python-py
-Version:        1.4.18
-Release:        2%{?dist}
+Version:	1.4.30
+Release:	1%{?dist}
 Summary:        Library with cross-python path, ini-parsing, io, code, log facilities
+Summary(zh_CN.UTF-8): 交叉 python 路径，INI 解析，代码，日志等的库
 Group:          Development/Languages
+Group(zh_CN.UTF-8): 开发/语言
 License:        MIT and Public Domain
 #               main package: MIT, except: doc/style.css: Public Domain
 URL:            http://pylib.readthedocs.org/
@@ -59,9 +56,13 @@ following tools and modules:
   * py.code: dynamic code generation and introspection
   * py.path: uniform local and svn path objects
 
+%description -l zh_CN.UTF-8
+交叉 python 路径，INI 解析，代码，日志等的库.
+
 %if 0%{?with_python3}
 %package -n python3-py
 Summary:        Library with cross-python path, ini-parsing, io, code, log facilities
+Summary(zh_CN.UTF-8): 交叉 python 路径，INI 解析，代码，日志等的库
 Requires:       python3-setuptools
 
 %description -n python3-py
@@ -74,6 +75,8 @@ following tools and modules:
   * py.code: dynamic code generation and introspection
   * py.path: uniform local and svn path objects
 
+%description -n python3-py -l zh_CN.UTF-8
+交叉 python 路径，INI 解析，代码，日志等的库
 %endif # with_python3
 
 %prep
@@ -119,7 +122,7 @@ popd
 
 # remove hidden file
 rm -rf doc/_build/html/.buildinfo
-
+magic_rpm_clean.sh
 
 %check
 # disable failing Subversion checks for now
@@ -161,6 +164,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Sep 08 2015 Liu Di <liudidi@gmail.com> - 1.4.30-1
+- 更新到 1.4.30
+
 * Tue Jun 17 2014 Liu Di <liudidi@gmail.com> - 1.4.18-2
 - 为 Magic 3.0 重建
 

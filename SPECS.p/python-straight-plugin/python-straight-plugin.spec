@@ -1,13 +1,10 @@
-%if 0%{?fedora} > 12 || 0%{?rhel} > 6
 %global with_python3 1
-%else
-%{!?python_sitelib: %global python_sitelib %(%{__python} -c "from distutils.sysconfig import get_python_lib; print (get_python_lib())")}
-%endif
 
 Name:           python-straight-plugin
 Version:        1.4.0
-Release:        5%{?dist}
+Release:        6%{?dist}
 Summary:        Python plugin loader
+Summary(zh_CN.UTF-8): Python 插件载入器
 
 License:        BSD
 URL:            https://github.com/ironfroggy/straight.plugin/
@@ -24,12 +21,6 @@ BuildRequires:  python-tools
 BuildRequires:  python3-setuptools
 %endif
 
-%if (0%{?rhel} && 0%{?rhel} <= 6)  || ( 0%{?fedora} && 0%{?fedora} <= 13 )
-BuildRequires:  python-importlib
-Requires:       python-importlib
-%endif
-
-
 %description
 straight.plugin is a Python plugin loader inspired by twisted.plugin with two
 important distinctions:
@@ -42,10 +33,13 @@ a namespace package, where other packages will locate and utilize. The plugins
 themselves are modules in a namespace package where the namespace identifies
 the plugins in it for some particular purpose or intent.
 
+%description -l zh_CN.UTF-8
+Python 插件载入器。
 
 %if 0%{?with_python3}
 %package -n     python3-straight-plugin
 Summary:        Python plugin loader
+Summary(zh_CN.UTF-8): Python 插件载入器
 
 %description -n python3-straight-plugin
 straight.plugin is a Python plugin loader inspired by twisted.plugin with two
@@ -58,6 +52,8 @@ The system is used to allow multiple Python packages to provide plugins within
 a namespace package, where other packages will locate and utilize. The plugins
 themselves are modules in a namespace package where the namespace identifies
 the plugins in it for some particular purpose or intent.
+%description -n python3-straight-plugin -l zh_CN.UTF-8
+Python 插件载入器
 %endif
 
 %prep
@@ -90,6 +86,7 @@ pushd py3-straight.plugin-%{version}-post-1
 %{__python3} setup.py install -O1 --skip-build --root $RPM_BUILD_ROOT
 popd
 %endif
+magic_rpm_clean.sh
 
 #%check
 #pushd straight.plugin-%{version}-post-1
@@ -113,6 +110,9 @@ popd
 %endif
 
 %changelog
+* Wed Sep 09 2015 Liu Di <liudidi@gmail.com> - 1.4.0-6
+- 为 Magic 3.0 重建
+
 * Tue Jul 01 2014 Liu Di <liudidi@gmail.com> - 1.4.0-5
 - 为 Magic 3.0 重建
 

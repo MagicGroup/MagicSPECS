@@ -1,6 +1,4 @@
-%if 0%{?fedora} > 12
 %global with_python3 1
-%endif
 
 %{?filter_setup:
 %filter_provides_in %{python_sitearch}/.*\.so$ 
@@ -8,14 +6,15 @@
 }
 
 Summary:       Python bindings for libsmbclient API from Samba
+Summary(zh_CN.UTF-8): Samba 的 libsmbclient 的 Python 绑定
 Name:          python-smbc
-Version:       1.0.13
-Release:       7%{?dist}
+Version:	1.0.15.4
+Release:	1%{?dist}
 URL:           http://cyberelk.net/tim/software/pysmbc/
 Source:        http://pypi.python.org/packages/source/p/pysmbc/pysmbc-%{version}.tar.bz2
-Patch1:        python-smbc-pkg-config.patch
 License:       GPLv2+
 Group:         Development/Languages
+Group(zh_CN.UTF-8): 开发/语言
 BuildRequires: python2-devel
 %if 0%{?with_python3}
 BuildRequires: python3-devel
@@ -28,10 +27,15 @@ This package provides Python bindings for the libsmbclient API
 from Samba, known as pysmbc. It was written for use with
 system-config-printer, but can be put to other uses as well.
 
+%description -l zh_CN.UTF-8
+Samba 的 libsmbclient 的 Python 绑定。
+
 %if 0%{?with_python3}
 %package -n python3-smbc
 Summary:       Python3 bindings for libsmbclient API from Samba
+Summary(zh_CN.UTF-8): Samba 的 libsmbclient 的 Python3 绑定
 Group:         Development/Languages
+Group(zh_CN.UTF-8): 开发/语言
 
 %description -n python3-smbc
 This package provides Python bindings for the libsmbclient API
@@ -39,18 +43,24 @@ from Samba, known as pysmbc. It was written for use with
 system-config-printer, but can be put to other uses as well.
 
 This is a ported release for python 3
+%description -n python3-smbc -l zh_CN.UTF-8
+Samba 的 libsmbclient 的 Python3 绑定。
 %endif
 
 %package doc
 Summary:       Documentation for python-smbc
+Summary(zh_CN.UTF-8): %{name} 的文档
 Group:         Documentation
+Group(zh_CN.UTF-8): 文档
 
 %description doc
 Documentation for python-smbc.
 
+%description doc -l zh_CN.UTF-8
+%{name} 的文档。
+
 %prep
 %setup -q -n pysmbc-%{version}
-%patch1 -p1 -b .pkg-config
 
 %if 0%{?with_python3}
 rm -rf %{py3dir}
@@ -61,7 +71,7 @@ cp -a . %{py3dir}
 %build
 CFLAGS="%{optflags}" %{__python} setup.py build
 rm -rf html
-epydoc -o html --html build/lib*/smbc.so
+#epydoc -o html --html build/lib*/smbc.so
 
 %if 0%{?with_python3}
 pushd %{py3dir}
@@ -74,34 +84,39 @@ popd
 %if 0%{?with_python3}
 pushd %{py3dir}
 %{__python3} setup.py install -O1 --skip-build --root %{buildroot}
-chmod 755 %{buildroot}%{python3_sitearch}/smbc*.so
+#chmod 755 %{buildroot}%{python3_sitearch}/smbc*.so
 popd
 %endif
 
 %{__python} setup.py install -O1 --skip-build --root %{buildroot}
-chmod 755 %{buildroot}%{python_sitearch}/smbc.so
-
+#chmod 755 %{buildroot}%{python_sitearch}/smbc.so
+magic_rpm_clean.sh
 
 %files
 %defattr(-,root,root,-)
 %doc COPYING README NEWS
-%{python_sitearch}/smbc.so
+%{python_sitearch}/_smbc.so
+%{python_sitearch}/smbc/*
 %{python_sitearch}/pysmbc*.egg-info
 
 %files doc
 %defattr(-,root,root,-)
-%doc html
+#%doc html
 
 %if 0%{?with_python3}
 %files -n python3-smbc
 %defattr(-,root,root,-)
 %doc COPYING README NEWS
-%{python3_sitearch}/smbc.cpython-3*.so
+%{python3_sitearch}/_smbc.cpython-3*.so
+%{python3_sitearch}/smbc/*
 %{python3_sitearch}/pysmbc*.egg-info
 %endif
 
 
 %changelog
+* Tue Sep 08 2015 Liu Di <liudidi@gmail.com> - 1.0.15.4-1
+- 更新到 1.0.15.4
+
 * Tue Jun 17 2014 Liu Di <liudidi@gmail.com> - 1.0.13-7
 - 为 Magic 3.0 重建
 

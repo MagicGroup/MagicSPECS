@@ -1,15 +1,13 @@
-%if 0%{?fedora} || 0%{?rhel} > 6
-#global with_python3 1
+%global with_python3 1
 # paste is not python3 compatible at this time
-%else
-%{!?python_sitelib: %global python_sitelib %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib()")}
-%endif
 
 Name:           python-paste
-Version:        1.7.5.1
-Release:        9.20111221hg1498%{?dist}
+Version:	2.0.2
+Release:	1%{?dist}
 Summary:        Tools for using a Web Server Gateway Interface stack
+Summary(zh_CN.UTF-8): 使用网页服务器网关接口的工具
 Group:          System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 # Most of the code is MIT
 # paste/exceptions/collector.py is ZPLv2.0
 # paste/evalexception/mochikit/MochiKit.js AFL or MIT
@@ -25,19 +23,8 @@ URL:            http://pythonpaste.org
 # patch -p1 < ../paste-manifest.patch
 # python setup.py sdist
 # Source is in dist/Paste-1.7.5.1.tar.gz
-Source0:        Paste-%{version}.tar.gz
-#Source0:        http://pypi.python.org/pypi/packages/source/P/Paste/Paste-%{version}.tar.gz
-# In one remaining place, make sure we check for string in the stdlib before we use our copy
-Patch0: paste-unbundle-stdlib.patch
-# Use a system version of python-tempita before our bundled copy
-Patch1: paste-unbundle-tempita.patch
-Patch2: paste-27-lambda.patch
-# Fix parsing of digest key value pairs
-# Submitted upstream pull request
-Patch3: paste-digest-snap.patch
-# Submitted upstream pull request with this change.
-# This patch is needed when creating the tarball, not during rpm build
-Patch100: paste-manifest.patch
+# Source0:        Paste-%{version}.tar.gz
+Source0:        https://pypi.python.org/packages/source/P/Paste/Paste-%{version}.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 
@@ -64,10 +51,15 @@ to build web applications.  Each piece of middleware uses the WSGI (PEP 333)
 interface, and should be compatible with other middleware based on those
 interfaces.
 
+%description -l zh_CN.UTF-8
+使用网页服务器网关接口的工具。
+
 %if 0%{?with_python3}
 %package -n python3-paste
 Summary:        Tools for using a Web Server Gateway Interface stack
+Summary(zh_CN.UTF-8): 使用网页服务器网关接口的工具
 Group:          System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 Requires: python3-tempita
 Requires: python3-setuptools
 # TODO is there a pyOpenSSL for python3
@@ -77,16 +69,13 @@ These provide several pieces of "middleware" (or filters) that can be nested
 to build web applications.  Each piece of middleware uses the WSGI (PEP 333)
 interface, and should be compatible with other middleware based on those
 interfaces.
+%description -n python3-paste -l zh_CN.UTF-8
+使用网页服务器网关接口的工具。
 %endif # with_python3
 
 
 %prep
 %setup -q -n Paste-%{version}
-%patch0 -p1 -b .stdlib
-rm paste/util/subprocess24.py
-%patch1 -p1 -b .tmpta
-%patch2 -p1 -b .27lambda
-%patch3 -p1 -b .digest
 # Strip #! lines that make these seem like scripts
 %{__sed} -i -e '/^#!.*/,1 d' paste/util/scgiserver.py paste/debug/doctest_webapp.py
 
@@ -120,6 +109,7 @@ pushd %{py3dir}
 %{__python3} setup.py install --skip-build --root $RPM_BUILD_ROOT
 popd
 %endif # with_python3
+magic_rpm_clean.sh
 
 %check
 export PYTHONPATH=$(pwd)
@@ -150,6 +140,12 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Sep 08 2015 Liu Di <liudidi@gmail.com> - 2.0.2-1
+- 更新到 2.0.2
+
+* Tue Sep 08 2015 Liu Di <liudidi@gmail.com> - 1.7.5.1-10.20111221hg1498
+- 为 Magic 3.0 重建
+
 * Sun Aug 04 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.7.5.1-9.20111221hg1498
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
 

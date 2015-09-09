@@ -1,9 +1,11 @@
 Name:           python3-cherrypy
 %global         camelname CherryPy
 Version:        3.8.0
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Pythonic, object-oriented web development framework
+Summary(zh_CN.UTF-8): 面向对象的网页开发框架
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 License:        BSD
 URL:            http://www.cherrypy.org/
 Source0:        https://pypi.python.org/packages/source/C/%{camelname}/%{camelname}-%{version}.tar.gz
@@ -23,6 +25,9 @@ BuildRequires:  dos2unix
 they would build any other object-oriented Python program. This usually 
 results in smaller source code developed in less time.
 
+%description -l zh_CN.UTF-8
+面向对象的网页开发框架。
+
 %prep
 %setup -q -n %{camelname}-%{version}
 %patch0 -p1
@@ -37,6 +42,7 @@ dos2unix README.txt cherrypy/LICENSE.txt cherrypy/tutorial/README.txt cherrypy/t
 mv %{buildroot}%{_bindir}/cherryd %{buildroot}%{_bindir}/python3-cherryd
 rm -f %{buildroot}%{python3_sitelib}/cherrypy/LICENSE.txt
 rm -f %{buildroot}%{python3_sitelib}/cherrypy/cherryd
+magic_rpm_clean.sh
 
 %check
 # This is cheating, we skip some tests
@@ -65,6 +71,9 @@ rm -rf cherrypy/tutorial/__pycache__
 %{python3_sitelib}/*
 
 %changelog
+* Tue Sep 08 2015 Liu Di <liudidi@gmail.com> - 3.8.0-2
+- 为 Magic 3.0 重建
+
 * Tue Jul 07 2015 Miro Hrončok <mhroncok@redhat.com> - 3.8.0-1
 - Update to 3.8.0 (#1236248)
 

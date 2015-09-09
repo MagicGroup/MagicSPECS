@@ -2,11 +2,13 @@
 %global distname py3dns
 
 Name:               python3-py3dns
-Version:            3.0.4
-Release:            5%{?dist}
+Version:	3.1.0
+Release:	1%{?dist}
 Summary:            Python3 DNS library
+Summary(zh_CN.UTF-8): Python3 DNS 库
 
 Group:              Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 License:            Python
 URL:                https://launchpad.net/py3dns/
 Source0:            http://pypi.python.org/packages/source/p/%{distname}/%{distname}-%{version}.tar.gz
@@ -25,10 +27,11 @@ This Python 3 module provides a DNS API for looking up DNS entries from
 within Python 3 modules and applications. This module is a simple,
 lightweight implementation.
 
+%description -l zh_CN.UTF-8
+Python3 DNS 库。
 
 %prep
 %setup -q -n %{distname}-%{version}
-%patch0 -p1
 
 # Remove bundled egg-info in case it exists
 rm -rf %{distname}.egg-info
@@ -49,6 +52,7 @@ done
 
 %install
 %{__python3} setup.py install -O1 --skip-build --root=%{buildroot}
+magic_rpm_clean.sh
 
 # We cannot actually run the tests in koji because they require network access.
 #%%check
@@ -65,6 +69,9 @@ done
 %{python3_sitelib}/%{distname}-%{version}*
 
 %changelog
+* Tue Sep 08 2015 Liu Di <liudidi@gmail.com> - 3.1.0-1
+- 更新到 3.1.0
+
 * Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.0.4-5
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

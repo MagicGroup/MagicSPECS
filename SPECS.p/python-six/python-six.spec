@@ -1,20 +1,15 @@
-%if 0%{?rhel} && 0%{?rhel} <= 6
-%{!?__python2:        %global __python2 /usr/bin/python2}
-%{!?python2_sitelib:  %global python2_sitelib %(%{__python2} -c "from distutils.sysconfig import get_python_lib; print(get_python_lib())")}
-%endif
-
-%if 0%{?fedora} > 12 || 0%{?rhel} > 7
 %global with_python3 1
 
 %global __python3 python3
-%endif
 
 Name:           python-six
 Version:        1.9.0
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        Python 2 and 3 compatibility utilities
+Summary(zh_CN.UTF-8): Python 2 和 3 兼容工具
 
 Group:          Development/Languages
+Group(zh_CN.UTF-8): 开发/语言
 License:        MIT
 URL:            http://pypi.python.org/pypi/six/
 Source0:        http://pypi.python.org/packages/source/s/six/six-%{version}.tar.gz
@@ -38,16 +33,23 @@ Python 2 and Python 3.
 
 This is the Python 2 build of the module.
 
+%description -l zh_CN.UTF-8
+Python 2 和 3 兼容工具。
+
 %if 0%{?with_python3}
 %package -n python3-six
 Summary:        Python 2 and 3 compatibility utilities
+Summary(zh_CN.UTF-8): Python 2 和 3 兼容工具
 Group:          Development/Languages
+Group(zh_CN.UTF-8): 开发/语言
 
 %description -n python3-six
 python-six provides simple utilities for wrapping over differences between
 Python 2 and Python 3.
 
 This is the Python 3 build of the module.
+%description -n python3-six -l zh_CN.UTF-8
+Python 2 和 3 兼容工具。
 %endif
 
 %prep
@@ -73,7 +75,7 @@ pushd %{py3dir}
 popd
 %endif
 %{__python2} setup.py install -O1 --skip-build --root $RPM_BUILD_ROOT
-
+magic_rpm_clean.sh
 
 %check
 py.test -rfsxX test_six.py
@@ -100,6 +102,9 @@ popd
 
 
 %changelog
+* Tue Sep 08 2015 Liu Di <liudidi@gmail.com> - 1.9.0-5
+- 为 Magic 3.0 重建
+
 * Thu Aug 06 2015 Liu Di <liudidi@gmail.com> - 1.9.0-4
 - 为 Magic 3.0 重建
 

@@ -1,18 +1,16 @@
-%if 0%{?fedora}
 %global with_python3 1
 %{!?python3_version: %global python3_version %(%{__python3} -c "import sys; sys.stdout.write(sys.version[:3])")}
-%else
-%{!?python_sitelib: %global python_sitelib %(%{__python} -c "from distutils.sysconfig import get_python_lib; print (get_python_lib())")}
-%endif
 
 %global upstream_name Sphinx
 
 Name:       python-sphinx
-Version:    1.2.2
-Release:    6%{?dist}
+Version:	1.3.1
+Release:	1%{?dist}
 Summary:    Python documentation generator
+Summary(zh_CN.UTF-8): Python 文档生成器
 
 Group:      Development/Tools
+Group(zh_CN.UTF-8): 开发/工具
 
 # Unless otherwise noted, the license for code is BSD
 # sphinx/util/stemmer.py Public Domain
@@ -31,6 +29,7 @@ BuildRequires: python-jinja2
 BuildRequires: python-pygments
 BuildRequires: python-nose
 #BuildRequires: texlive-latex
+BuildRequires: python2-sphinx-theme-alabaster
 
 %if 0%{?with_python3}
 BuildRequires: python3-devel
@@ -39,6 +38,7 @@ BuildRequires: python3-docutils
 BuildRequires: python3-jinja2
 BuildRequires: python3-pygments
 BuildRequires: python3-nose
+BuildRequires: python3-sphinx-theme-alabaster
 %endif # with_python3
 
 Requires:      python-docutils
@@ -78,11 +78,16 @@ the Python docs:
     * Various extensions are available, e.g. for automatic testing of
       snippets and inclusion of appropriately formatted docstrings.
 
+%description -l zh_CN.UTF-8
+Python 文档生成器。
+
 
 %if 0%{?with_python3}
 %package -n python3-sphinx
 Summary:    Python documentation generator
+Summary(zh_CN.UTF-8): Python 文档生成器
 Group:      Development/Tools
+Group(zh_CN.UTF-8): 开发/工具
 Requires:      python3-docutils
 Requires:      python3-jinja2
 Requires:      python3-pygments
@@ -119,12 +124,16 @@ the Python docs:
     * Code handling: automatic highlighting using the Pygments highlighter
     * Various extensions are available, e.g. for automatic testing of
       snippets and inclusion of appropriately formatted docstrings.
+%description -n python3-sphinx -l zh_CN.UTF-8
+Python 文档生成器。
 %endif # with_python3
 
 
 %package doc
 Summary:    Documentation for %{name}
+Summary(zh_CN.UTF-8): %{name} 的文档
 Group:      Documentation
+Group(zh_CN.UTF-8): 文档
 License:    BSD
 Requires:   %{name} = %{version}-%{release}
 
@@ -139,6 +148,8 @@ useful to many other projects.
 
 This package contains documentation in reST and HTML formats.
 
+%description doc -l zh_CN.UTF-8
+%{name} 的文档。
 
 %prep
 %setup -q -n %{upstream_name}-%{version}%{?prerel}
@@ -218,6 +229,8 @@ do
   rm -rf sphinx/locale/$lang
 done
 popd
+magic_rpm_clean.sh
+
 %find_lang sphinx
 
 # Language files; Since these are javascript, it's not immediately obvious to
@@ -237,7 +250,7 @@ popd
 
 
 %files -f sphinx.lang
-%doc AUTHORS CHANGES EXAMPLES LICENSE README.rst TODO
+%doc AUTHORS CHANGES EXAMPLES LICENSE README.rst
 %exclude %{_bindir}/sphinx-*-3
 %exclude %{_bindir}/sphinx-*-%{python3_version}
 %{_bindir}/sphinx-*
@@ -250,7 +263,7 @@ popd
 
 %if 0%{?with_python3}
 %files -n python3-sphinx
-%doc AUTHORS CHANGES EXAMPLES LICENSE README.rst TODO
+%doc AUTHORS CHANGES EXAMPLES LICENSE README.rst
 %{_bindir}/sphinx-*-3
 %{_bindir}/sphinx-*-%{python3_version}
 %{python3_sitelib}/*
@@ -265,6 +278,9 @@ popd
 
 
 %changelog
+* Tue Sep 08 2015 Liu Di <liudidi@gmail.com> - 1.3.1-1
+- 更新到 1.3.1
+
 * Sun Aug 10 2014 Liu Di <liudidi@gmail.com> - 1.2.2-6
 - 为 Magic 3.0 重建
 

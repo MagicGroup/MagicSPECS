@@ -1,60 +1,166 @@
-%{!?python_sitelib: %global python_sitelib %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib()")}
-
 %global srcname paramiko
 
-Name:           python-paramiko
-Version:        1.10.1
-Release:        2%{?dist}
-Summary:        SSH2 protocol library for python
+Name:          python-paramiko
+Version:       1.15.2
+Release:       4%{?dist}
+Summary:       SSH2 protocol library for python
+Summary(zh_CN.UTF-8): python 的 SSH2 协议库
 
-Group:          Development/Libraries
+Group:         Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 # No version specified.
-License:        LGPLv2+
-URL:            https://github.com/paramiko/paramiko/
-Source0:        http://pypi.python.org/packages/source/p/paramiko/paramiko-%{version}.tar.gz
-BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+License:       LGPLv2+
+URL:           https://github.com/paramiko/paramiko/
+Source0:       http://pypi.python.org/packages/source/p/paramiko/paramiko-%{version}.tar.gz
 
-BuildArch:      noarch
+BuildArch:     noarch
 
 BuildRequires: python-setuptools
-BuildRequires: python-crypto >= 1.9
-Requires:      python-crypto >= 1.9
+BuildRequires: python-crypto >= 2.1
+BuildRequires: python-ecdsa
+BuildRequires: python-devel
+Requires:      python-crypto >= 2.1
+Requires:      python-ecdsa
+
+%global paramiko_desc \
+Paramiko (a combination of the esperanto words for "paranoid" and "friend") is\
+a module for python 2.3 or greater that implements the SSH2 protocol for secure\
+(encrypted and authenticated) connections to remote machines. Unlike SSL (aka\
+TLS), the SSH2 protocol does not require heirarchical certificates signed by a\
+powerful central authority. You may know SSH2 as the protocol that replaced\
+telnet and rsh for secure access to remote shells, but the protocol also\
+includes the ability to open arbitrary channels to remote services across an\
+encrypted tunnel. (This is how sftp works, for example.)\
 
 %description
-Paramiko (a combination of the esperanto words for "paranoid" and "friend") is
-a module for python 2.3 or greater that implements the SSH2 protocol for secure
-(encrypted and authenticated) connections to remote machines. Unlike SSL (aka
-TLS), the SSH2 protocol does not require heirarchical certificates signed by a
-powerful central authority. You may know SSH2 as the protocol that replaced
-telnet and rsh for secure access to remote shells, but the protocol also
-includes the ability to open arbitrary channels to remote services across an
-encrypted tunnel. (This is how sftp works, for example.)
+%{paramiko_desc}
+
+%description -l zh_CN.UTF-8
+python 的 SSH2 协议库。
+
+%package -n python3-%{srcname}
+Summary:       SSH2 protocol library for python
+Summary(zh_CN.UTF-8): python3 的 SSH2 协议库
+BuildRequires: python3-setuptools
+BuildRequires: python3-crypto >= 2.1
+BuildRequires: python3-ecdsa
+BuildRequires: python3-devel
+Requires:      python3-crypto >= 2.1
+Requires:      python3-ecdsa
+
+%description -n python3-%{srcname}
+%{paramiko_desc}
+
+This is the python3 build.
+
+%description -n python3-%{srcname} -l zh_CN.UTF-8
+python3 的 SSH2 协议库。
+
+%package doc
+Summary:       Docs and demo for SSH2 protocol library for python
+Summary(zh_CN.UTF-8): %{name} 的文档
+Requires:      %{name} = %{version}-%{release}
+
+%description doc
+%{paramiko_desc}
+
+This is the documentation and demos.
+
+%description doc -l zh_CN.UTF-8
+%{name} 的文档。
 
 %prep
 %setup -q -n %{srcname}-%{version}
 
-%{__chmod} a-x demos/*
-%{__sed} -i -e '/^#!/,1d' demos/*
+chmod a-x demos/*
+sed -i -e '/^#!/,1d' demos/*
+rm -rf %{py3dir}
+cp -a . %{py3dir}
 
 %build
-%{__python} setup.py build
+%{__python2} setup.py build
+
+pushd %{py3dir}
+  %{__python3} setup.py build
+popd
 
 %install
-rm -rf %{buildroot}
-%{__python} setup.py install --skip-build --root %{buildroot}
+%{__python2} setup.py install --skip-build --root %{buildroot}
+
+pushd %{py3dir}
+  %{__python3} setup.py install --skip-build --root %{buildroot}
+popd
+magic_rpm_clean.sh
 
 %check
-python ./test.py
+%{__python2} ./test.py --no-sftp --no-big-file
 
-%clean
-rm -rf %{buildroot}
+pushd %{py3dir}
+  %{__python3} ./test.py --no-sftp --no-big-file
+popd
 
 %files
-%defattr(-,root,root,-)
-%doc LICENSE PKG-INFO README docs/ demos/
-%{python_sitelib}/*
+%{!?_licensedir:%global license %%doc}
+%license LICENSE
+%doc PKG-INFO README
+%{python2_sitelib}/*
+
+%files -n python3-%{srcname}
+%{!?_licensedir:%global license %%doc}
+%license LICENSE
+%doc PKG-INFO README
+%{python3_sitelib}/*
+
+%files doc
+%doc docs/ demos/
+
 
 %changelog
+* Tue Sep 08 2015 Liu Di <liudidi@gmail.com> - 1.15.2-4
+- 为 Magic 3.0 重建
+
+* Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.15.2-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
+
+* Sun Mar 22 2015 Peter Robinson <pbrobinson@fedoraproject.org> 1.15.2-2
+- Use %%license
+- Move duplicated docs to single doc sub package
+- Remove old F-15 conditionals
+
+* Tue Dec 23 2014 Athmane Madjoudj <athmane@fedoraproject.org> 1.15.2-1
+- Update to 1.15.2
+
+* Mon Nov 24 2014 Athmane Madjoudj <athmane@fedoraproject.org> 1.15.1-5
+- Add conditional to exclude EL since does not have py3
+
+* Sat Nov 15 2014 Athmane Madjoudj <athmane@fedoraproject.org> 1.15.1-4
+- py3dir creation should be in prep section
+
+* Fri Nov 14 2014 Athmane Madjoudj <athmane@fedoraproject.org> 1.15.1-3
+- Build each pkg in a clean dir
+
+* Fri Nov 14 2014 Athmane Madjoudj <athmane@fedoraproject.org> 1.15.1-2
+- Add support for python3
+- Add BR -devel for python macros.
+
+* Fri Oct 17 2014 Jeffrey C. Ollie <jeff@ocjtech.us> - 1.15.1-1
+- Update to 1.15.1
+
+* Fri Jun 13 2014 Orion Poplawski <orion@cora.nwra.com> - 1.12.4-1
+- Update to 1.12.4
+
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.12.2-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Tue Feb 25 2014 Orion Poplawski <orion@cora.nwra.com> - 1.12.2-1
+- Update to 1.12.2
+
+* Wed Jan 22 2014 Orion Poplawski <orion@cora.nwra.com> - 1.11.3-1
+- Update to 1.11.3
+
+* Mon Oct 21 2013 Orion Poplawski <orion@cora.nwra.com> - 1.11.0-1
+- Update to 1.11.0
+
 * Sun Aug 04 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.10.1-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
 

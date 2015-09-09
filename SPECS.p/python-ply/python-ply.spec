@@ -1,15 +1,13 @@
-%if 0%{?fedora} > 12 || 0%{?rhel} > 6
 %global with_python3 1
-%else
-%{!?python_sitelib: %global python_sitelib %(%{__python} -c "from distutils.sysconfig import get_python_lib; print (get_python_lib())")}
-%endif
 
 Name:			python-ply
 Summary: 		Python Lex-Yacc
+Summary(zh_CN.UTF-8):  	Python Lex-Yacc
 Version:		3.6
-Release:		2%{?dist}
+Release:		3%{?dist}
 License:		BSD
 Group:			System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 URL:			http://www.dabeaz.com/ply/
 Source0:		http://www.dabeaz.com/ply/ply-%{version}.tar.gz
 BuildRoot:		%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -35,10 +33,15 @@ essential features:
   functionality. In other words, it's not a large parsing framework or a 
   component of some larger system. 
 
+%description -l zh_CN.UTF-8
+PLY 是一个 lex/yacc 实现。
+
 %if 0%{?with_python3}
 %package -n python3-ply
 Summary:        Python Lex-Yacc
+Summary(zh_CN.UTF-8): Python Lex-Yacc
 Group:          System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 Requires:       python3-setuptools
 
 %description -n python3-ply
@@ -54,6 +57,8 @@ essential features:
 * PLY doesn't try to do anything more or less than provide the basic lex/yacc 
   functionality. In other words, it's not a large parsing framework or a 
   component of some larger system.
+%description -n python3-ply -l zh_CN.UTF-8
+PLY 是一个 lex/yacc 实现。
 %endif # with_python3
 
 %prep
@@ -96,6 +101,7 @@ pushd %{py3dir}
 %{__python3} setup.py install --skip-build --root $RPM_BUILD_ROOT
 popd
 %endif # with_python3
+magic_rpm_clean.sh
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -115,6 +121,9 @@ rm -rf $RPM_BUILD_ROOT
 %endif # with_python3
 
 %changelog
+* Tue Sep 08 2015 Liu Di <liudidi@gmail.com> - 3.6-3
+- 为 Magic 3.0 重建
+
 * Mon Aug 17 2015 Liu Di <liudidi@gmail.com> - 3.6-2
 - 为 Magic 3.0 重建
 

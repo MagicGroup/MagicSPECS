@@ -1,13 +1,12 @@
-%if 0%{?fedora} || 0%{?rhel} >= 8
 %global with_py3 1
-%endif
 
 %global pkgname sphinx_rtd_theme
 
 Name:           python-%{pkgname}
 Version:        0.1.8
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        Sphinx theme for readthedocs.org
+Summary(zh_CN.UTF-8): readthedocs.org 的 Sphinx 主题
 
 License:        MIT
 URL:            https://github.com/snide/sphinx_rtd_theme
@@ -30,10 +29,13 @@ This is a prototype mobile-friendly sphinx theme for readthedocs.org.
 It's currently in development and includes some rtd variable checks that
 can be ignored if you're just trying to use it on your project outside
 of that site.
+%description -l zh_CN.UTF-8
+readthedocs.org 的 Sphinx 主题。
 
 %if 0%{?with_py3}
 %package -n python3-%{pkgname}
 Summary:        Sphinx theme for readthedocs.org
+Summary(zh_CN.UTF-8): readthedocs.org 的 Sphinx 主题
 Requires:       font(fontawesome)
 Requires:       font(lato)
 
@@ -42,6 +44,8 @@ This is a prototype mobile-friendly sphinx theme for readthedocs.org.
 It's currently in development and includes some rtd variable checks that
 can be ignored if you're just trying to use it on your project outside
 of that site.
+%description -n python3-%{pkgname} -l zh_CN.UTF-8
+readthedocs.org 的 Sphinx 主题
 %endif
 
 %prep
@@ -105,6 +109,7 @@ ln -s %{_datadir}/fonts/lato/Lato-Bold.ttf \
 ln -s %{_datadir}/fonts/lato/Lato-Regular.ttf \
       %{buildroot}/%{python3_sitelib}/%{pkgname}/static/fonts/
 %endif
+magic_rpm_clean.sh
  
 %files
 %doc %{pkgname}-%{version}/README.rst
@@ -119,6 +124,9 @@ ln -s %{_datadir}/fonts/lato/Lato-Regular.ttf \
 %endif
 
 %changelog
+* Wed Sep 09 2015 Liu Di <liudidi@gmail.com> - 0.1.8-4
+- 为 Magic 3.0 重建
+
 * Wed Sep 02 2015 Liu Di <liudidi@gmail.com> - 0.1.8-3
 - 为 Magic 3.0 重建
 

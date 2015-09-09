@@ -1,15 +1,11 @@
-%if !(0%{?fedora} > 12 || 0%{?rhel} > 5)
-%{!?python_sitelib: %global python_sitelib %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib()")}
-%endif
-
 Name:           python-cherrypy
-Version:        3.5.0
-Release:        1%{?dist}
+Version:	3.8.0
+Release:	1%{?dist}
 Summary:        Pythonic, object-oriented web development framework
 Group:          Development/Libraries
 License:        BSD
 URL:            http://www.cherrypy.org/
-Source0:        http://download.cherrypy.org/cherrypy/%{version}/CherryPy-%{version}.tar.gz
+Source0:        https://pypi.python.org/packages/source/C/CherryPy/CherryPy-%{version}.tar.gz
 # Don't ship the tests or tutorials in the python module directroy,
 # tutorial will be shipped as doc instead
 Patch0:         python-cherrypy-tutorial-doc.patch
@@ -58,6 +54,9 @@ rm -rf $RPM_BUILD_ROOT
 %{python_sitelib}/*
 
 %changelog
+* Tue Sep 08 2015 Liu Di <liudidi@gmail.com> - 3.8.0-1
+- 更新到 3.8.0
+
 * Wed Aug 27 2014 Luke Macken <lmacken@redhat.com> - 3.5.0-1
 - Update to 3.5.0 (#1104560)
 

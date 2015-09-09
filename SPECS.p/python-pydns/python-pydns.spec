@@ -2,10 +2,12 @@
 
 Name:           python-pydns
 Version:        2.3.6
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        Python module for DNS (Domain Name Service)
+Summary(zh_CN.UTF-8): DNS 的 Python 模块
 
 Group:          Development/Languages
+Group(zh_CN.UTF-8): 开发/语言
 License:        Python
 URL:            http://pydns.sourceforge.net/
 Source0:        http://download.sourceforge.net/pydns/pydns-%{version}.tar.gz
@@ -21,6 +23,9 @@ top of it by Anthony Baxter <anthony@interlink.com.au>.
 This package contains a module (dnslib) that implements a DNS
 (Domain Name Server) client, plus additional modules that define some
 symbolic constants used by DNS (dnstype, dnsclass, dnsopcode).
+
+%description -l zh_CN.UTF-8
+DNS 的 Python 模块。
 
 %prep
 %setup -q -n %{namewithoutpythonprefix}-%{version}
@@ -43,7 +48,7 @@ done
 %install
 rm -rf $RPM_BUILD_ROOT
 %{__python} setup.py install -O1 --skip-build --root $RPM_BUILD_ROOT
-
+magic_rpm_clean.sh
 
 %files
 %defattr(-,root,root,-)
@@ -53,6 +58,9 @@ rm -rf $RPM_BUILD_ROOT
 %{python_sitelib}/pydns-%{version}-py*.egg-info
 
 %changelog
+* Tue Sep 08 2015 Liu Di <liudidi@gmail.com> - 2.3.6-4
+- 为 Magic 3.0 重建
+
 * Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.3.6-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

@@ -3,13 +3,15 @@
 
 Name:           python-pycurl
 Version:        7.19.5.1
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        A Python interface to libcurl
+Summary(zh_CN.UTF-8): libcurl 的 Python 接口
 
 Group:          Development/Languages
+Group(zh_CN.UTF-8): 开发/语言
 License:        LGPLv2+ or MIT
 URL:            http://pycurl.sourceforge.net/
-Source0:        http://pycurl.sourceforge.net/download/pycurl-%{version}.tar.gz
+Source0:        https://pypi.python.org/packages/source/p/pycurl/pycurl-%{version}.tar.gz
 
 Requires:       keyutils-libs
 BuildRequires:  python-devel
@@ -42,14 +44,21 @@ objects identified by a URL from a Python program, similar to the
 urllib Python module. PycURL is mature, very fast, and supports a lot
 of features.
 
+%description -l zh_CN.UTF-8
+libcurl 的 Python 接口。
+
 %package -n python3-pycurl
 Summary:        A Python interface to libcurl for Python 3
+Summary(zh_CN.UTF-8): libcurl 的 Python3 接口
 
 %description -n python3-pycurl
 PycURL is a Python interface to libcurl. PycURL can be used to fetch
 objects identified by a URL from a Python program, similar to the
 urllib Python module. PycURL is mature, very fast, and supports a lot
 of features.
+
+%description -n python3-pycurl -l zh_CN.UTF-8
+libcurl 的 Python3 接口。
 
 %prep
 %setup0 -q -n pycurl-%{version}
@@ -82,6 +91,7 @@ pushd %{py3dir}
 %{__python3} setup.py install -O1 --skip-build --root %{buildroot}
 popd
 rm -rf %{buildroot}%{_datadir}/doc/pycurl
+magic_rpm_clean.sh
 
 %files
 %{!?_licensedir:%global license %%doc}
@@ -97,6 +107,9 @@ rm -rf %{buildroot}%{_datadir}/doc/pycurl
 %{python3_sitearch}/*
 
 %changelog
+* Tue Sep 08 2015 Liu Di <liudidi@gmail.com> - 7.19.5.1-3
+- 为 Magic 3.0 重建
+
 * Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 7.19.5.1-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

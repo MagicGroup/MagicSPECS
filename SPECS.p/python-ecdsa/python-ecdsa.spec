@@ -1,24 +1,19 @@
-%if 0%{?rhel} && 0%{?rhel} <= 7
-%{!?__python2: %global __python2 /usr/bin/python2}
-%{!?python2_sitelib: %global python2_sitelib %(%{__python2} -c "from distutils.sysconfig import get_python_lib; print(get_python_lib())")}
-%{!?python2_sitearch: %global python2_sitearch %(%{__python2} -c "from distutils.sysconfig import get_python_lib; print(get_python_lib(1))")}
-%else
 %global with_python3 1
-%endif
 
 %global srcname ecdsa
 
 Name:           python-%{srcname}
-Version:        0.11
-Release:        4%{?dist}
+Version:	0.13
+Release:	1%{?dist}
 Summary:        ECDSA cryptographic signature library
+Summary(zh_CN.UTF-8): ECDSA 加密签名库
 
 License:        MIT
 URL:            https://pypi.python.org/pypi/ecdsa
 # Remove the prime192v1 and secp224r1 curves for now
 # https://bugzilla.redhat.com/show_bug.cgi?id=1067697
-Source0:        %{srcname}-%{version}-clean.tar.gz
-#Source0:        https://pypi.python.org/packages/source/e/%{srcname}/%{srcname}-%{version}.tar.gz
+#Source0:        %{srcname}-%{version}-clean.tar.gz
+Source0:        https://pypi.python.org/packages/source/e/%{srcname}/%{srcname}-%{version}.tar.gz
 
 BuildArch:      noarch
 BuildRequires:  python2-devel
@@ -43,9 +38,13 @@ into other protocols.
 
 NOTE: The prime192v1 and secp224r1 curves are currently disabled.
 
+%description -l zh_CN.UTF-8
+ECDSA 加密签名库。
+
 %if 0%{?with_python3}
 %package -n python3-%{srcname}
 Summary:        ECDSA cryptographic signature library
+Summary(zh_CN.UTF-8): ECDSA 加密签名库
 Requires:       python3-six
 
 %description -n python3-%{srcname}
@@ -57,11 +56,13 @@ and signatures are very short, making them easy to handle and incorporate
 into other protocols.
 
 NOTE: The prime192v1 and secp224r1 curves are currently disabled.
+%description -n python3-%{srcname} -l zh_CN.UTF-8
+ECDSA 加密签名库。
 %endif # with_python3
 
 
 %prep
-%setup -q -n %{srcname}-%{version}-clean
+%setup -q -n %{srcname}-%{version}
 rm -rf %{srcname}.egg-info
 # Remove extraneous #!
 find ecdsa -name \*.py | xargs sed -ie '/\/usr\/bin\/env/d'
@@ -94,7 +95,7 @@ popd
 %endif # with_python3
 
 %{__python2} setup.py install --skip-build --root %{buildroot}
-
+magic_rpm_clean.sh
 
 %check
 %{__python2} setup.py test
@@ -118,6 +119,9 @@ popd
 
 
 %changelog
+* Tue Sep 08 2015 Liu Di <liudidi@gmail.com> - 0.13-1
+- 更新到 0.13
+
 * Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.11-4
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

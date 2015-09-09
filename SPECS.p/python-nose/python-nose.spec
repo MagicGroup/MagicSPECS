@@ -1,13 +1,6 @@
-%if 0%{?rhel} && 0%{?rhel} < 5
-%{!?python_sitelib: %global python_sitelib %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib()")}
-%{!?python_version: %global python_version %(%{__python} -c "import sys ; print sys.version[:3]")}
-%endif
-
 %{!?python3_version: %global python3_version %(%{__python3} -c "import sys; sys.stdout.write(sys.version[:3])")}
 
-%if 0%{?fedora}
 %global with_python3 1
-%endif
 
 
 %global upstream_name nose
@@ -16,16 +9,16 @@
 %global with_docs 1
 
 Name:           python-nose
-Version:        1.2.1
-Release:        5%{?dist}
+Version:	1.3.7
+Release:	1%{?dist}
 Summary:        Discovery-based unittest extension for Python
+Summary(zh_CN.UTF-8): Python 的单元测试扩展
 
 Group:          Development/Languages
+Group(zh_CN.UTF-8): 开发/语言
 License:        LGPLv2+ and Public Domain
 URL:            http://somethingaboutorange.com/mrl/projects/nose/
 Source0:        http://pypi.python.org/packages/source/n/nose/nose-%{version}.tar.gz
-# Submitted upstream: http://code.google.com/p/python-nose/issues/detail?id=421
-Patch1: nose-manpage.patch
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildArch:      noarch
@@ -56,19 +49,29 @@ plugins. Plugins included with nose provide support for doctest, code
 coverage and profiling, flexible attribute-based test selection,
 output capture and more.
 
+%description -l zh_CN.UTF-8
+Python 的单元测试扩展。
+
 %package docs
 Summary:        Nose Documentation
+Summary(zh_CN.UTF-8): %{name} 的文档
 Group:          Documentation
+Group(zh_CN.UTF-8): 文档
 BuildRequires:  python-sphinx
 Requires: python-nose
 
 %description docs
 Documentation for Nose
 
+%description docs -l zh_CN.UTF-8
+%{name} 的文档。
+
 %if 0%{?with_python3}
 %package -n python3-%{upstream_name}
 Summary:        Discovery-based unittest extension for Python3
+Summary(zh_CN.UTF-8): Python3 的单元测试扩展
 Group:          Development/Languages
+Group(zh_CN.UTF-8): 开发/语言
 Requires:       python3-setuptools
 
 %description -n python3-%{upstream_name}
@@ -89,11 +92,12 @@ output capture and more.
 
 This package installs the nose module and nosetests3 program that can discover
 python3 unittests.
+%description -n python3-%{upstream_name} -l zh_CN.UTF-8
+Python 的单元测试扩展。
 %endif # with_python3
 
 %prep
 %setup -q -n %{upstream_name}-%{version}
-%patch1 -p1 -b .manp
 
 dos2unix examples/attrib_plugin.py
 
@@ -189,6 +193,9 @@ rm -rf %{buildroot}
 %endif # with_docs
 
 %changelog
+* Tue Sep 08 2015 Liu Di <liudidi@gmail.com> - 1.3.7-1
+- 更新到 1.3.7
+
 * Tue Jun 17 2014 Liu Di <liudidi@gmail.com> - 1.2.1-5
 - 为 Magic 3.0 重建
 

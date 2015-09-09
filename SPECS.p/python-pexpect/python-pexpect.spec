@@ -1,19 +1,17 @@
-%if 0%{?fedora} > 15
 %global with_python3 1
-%else
-%{!?python_sitelib: %global python_sitelib %(%{__python} -c "from distutils.sysconfig import get_python_lib; print (get_python_lib())")}
-%endif
 
 #global relcand rc3
 
 Summary:	Unicode-aware Pure Python Expect-like module
+Summary(zh_CN.UTF-8): 支持 Unicode 的类 Expect 纯 Python 模块
 Name:		python-pexpect
-Version:	3.1
-Release:	4%{?dist}
+Version:	3.3
+Release:	1%{?dist}
 License:	MIT
 Group:		Development/Languages
+Group(zh_CN.UTF-8): 开发/语言
 URL:		https://github.com/pexpect/pexpect
-Source0:	https://github.com/pexpect/pexpect/releases/download/%{version}%{?relcand}/pexpect-%{version}%{?relcand}.tar.gz
+Source0:	https://pypi.python.org/packages/source/p/pexpect/pexpect-%{version}.tar.gz
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildArch:	noarch
@@ -39,10 +37,15 @@ does not require TCL or Expect nor does it require C extensions to be
 compiled.  It should work on any platform that supports the standard Python
 pty module.
 
+%description -l zh_CN.UTF-8
+支持 Unicode 的类 Expect 纯 Python 模块。
+
 %if 0%{?with_python3}
 %package -n python3-pexpect
 Summary:	Unicode-aware Pure Python Expect-like module for Python 3
+Summary(zh_CN.UTF-8): 支持 Unicode 的类 Expect 纯 Python3 模块
 Group:		Development/Languages
+Group(zh_CN.UTF-8): 开发/语言
 
 %description -n python3-pexpect
 Pexpect is a pure Python module for spawning child applications; controlling
@@ -59,6 +62,8 @@ Pexpect is pure Python. Unlike other Expect-like modules for Python, Pexpect
 does not require TCL or Expect nor does it require C extensions to be
 compiled.  It should work on any platform that supports the standard Python
 pty module.
+%description -n python3-pexpect -l zh_CN.UTF-8
+支持 Unicode 的类 Expect 纯 Python 模块。
 %endif # with_python3
 
 %prep
@@ -114,6 +119,7 @@ rm -rf ${buildroot}%{python_sitelib}/setuptools/tests
 
 # Correct some permissions
 find examples -type f -exec chmod a-x \{\} \;
+magic_rpm_clean.sh
 
 %clean
 rm -rf %{buildroot}
@@ -137,6 +143,9 @@ rm -rf %{buildroot}
 %endif # with_python3
 
 %changelog
+* Tue Sep 08 2015 Liu Di <liudidi@gmail.com> - 3.3-1
+- 更新到 3.3
+
 * Sun Aug 10 2014 Liu Di <liudidi@gmail.com> - 3.1-4
 - 为 Magic 3.0 重建
 

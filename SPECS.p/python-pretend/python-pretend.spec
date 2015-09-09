@@ -1,25 +1,15 @@
-# needed for epel6
-%if 0%{?rhel} && 0%{?rhel} <= 6
-%{!?__python2: %global __python2 /usr/bin/python2}
-%{!?python2_sitelib: %global python2_sitelib %(%{__python2} -c "from distutils.sysconfig import get_python_lib; print(get_python_lib())")}
-%{!?python2_sitearch: %global python2_sitearch %(%{__python2} -c "from distutils.sysconfig import get_python_lib; print(get_python_lib(1))")}
-%endif
-
-# enable python3 on fedora
-%if 0%{?fedora}
 %bcond_without python3
-%else
-%bcond_with python3
-%endif
 
 %global srcname pretend
 
 Name:           python-pretend
 Version:        1.0.8
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        A library for stubbing in Python
+Summary(zh_CN.UTF-8): Python 的存根库
 
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 License:        BSD
 URL:            https://github.com/alex/pretend
 Source0:        https://pypi.python.org/packages/source/p/%{srcname}/%{srcname}-%{version}.tar.gz
@@ -37,15 +27,20 @@ BuildRequires:  python3-setuptools
 %description
 Pretend is a library to make stubbing with Python easier.
 
+%description -l zh_CN.UTF-8
+Python 的存根库。
 
 %if %{with python3}
 %package -n python3-pretend
 Summary:        A library for stubbing in Python
+Summary(zh_CN.UTF-8): Python 的存根库
 License:        BSD
 
 
 %description -n python3-pretend
 Pretend is a library to make stubbing with Python easier.
+%description -n python3-pretend -l zh_CN.UTF-8
+Python 的存根库。
 %endif
 
 
@@ -79,7 +74,7 @@ popd
 %endif
 
 %{__python2} setup.py install -O1 --skip-build --root %{buildroot}
-
+magic_rpm_clean.sh
 
 %files
 %doc PKG-INFO README.rst LICENSE.rst
@@ -96,6 +91,9 @@ popd
 
 
 %changelog
+* Tue Sep 08 2015 Liu Di <liudidi@gmail.com> - 1.0.8-5
+- 为 Magic 3.0 重建
+
 * Mon Aug 17 2015 Liu Di <liudidi@gmail.com> - 1.0.8-4
 - 为 Magic 3.0 重建
 

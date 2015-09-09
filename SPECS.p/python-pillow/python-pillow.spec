@@ -8,12 +8,7 @@
 #  required by sphinx; pillow build-requires sphinx)
 %global with_docs 1
 
-# RHEL-7 doesn't have python 3
-%if 0%{?rhel} == 7
-  %global with_python3 0
-%else
-  %global with_python3 1
-%endif
+%global with_python3 1
 
 # Refer to the comment for Source0 below on how to obtain the source tarball
 # The saved file has format python-pillow-Pillow-$version-$ahead-g$shortcommit.tar.gz
@@ -28,8 +23,9 @@
 
 Name:           python-pillow
 Version:        2.9.0
-Release:        3%{?snap}%{?dist}
+Release:        5%{?snap}%{?dist}
 Summary:        Python image processing library
+Summary(zh_CN.UTF-8): Python 图像处理库
 
 # License: see http://www.pythonware.com/products/pil/license.htm
 License:        MIT
@@ -37,7 +33,8 @@ URL:            http://python-pillow.github.io/
 
 # Obtain the tarball for a certain commit via:
 #  wget --content-disposition https://github.com/python-pillow/Pillow/tarball/$commit
-Source0:        https://github.com/python-pillow/Pillow/tarball/%{commit}/python-pillow-Pillow-%{version}-%{ahead}-g%{shortcommit}.tar.gz
+# Source0:        https://github.com/python-pillow/Pillow/tarball/%{commit}/python-pillow-Pillow-%{version}-%{ahead}-g%{shortcommit}.tar.gz
+Source0:	https://pypi.python.org/packages/source/P/Pillow/Pillow-%{version}.tar.gz
 
 BuildRequires:  tk-devel
 BuildRequires:  libjpeg-devel
@@ -92,6 +89,8 @@ internal representation, and powerful image processing capabilities.
 There are four subpackages: tk (tk interface), qt (PIL image wrapper for Qt),
 devel (development) and doc (documentation).
 
+%description -l zh_CN.UTF-8
+Python 图像处理库。
 
 %package devel
 Summary:        Development files for %{name}
@@ -188,7 +187,7 @@ PIL image wrapper for Qt.
 
 
 %prep
-%setup -q -n python-pillow-Pillow-%{shortcommit}
+%setup -q -n Pillow-%{version}
 
 # Strip shebang on non-executable file
 sed -i 1d PIL/OleFileIO.py
@@ -342,6 +341,12 @@ popd
 %endif
 
 %changelog
+* Tue Sep 08 2015 Liu Di <liudidi@gmail.com> - 2.9.0-5
+- 为 Magic 3.0 重建
+
+* Tue Sep 08 2015 Liu Di <liudidi@gmail.com> - 2.9.0-4
+- 为 Magic 3.0 重建
+
 * Wed Sep 02 2015 Liu Di <liudidi@gmail.com> - 2.9.0-3
 - 为 Magic 3.0 重建
 

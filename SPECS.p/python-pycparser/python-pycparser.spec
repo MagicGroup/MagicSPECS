@@ -1,15 +1,13 @@
-%if 0%{?fedora} > 12
 %global with_python3 1
-%else
-%{!?python_sitelib: %global python_sitelib %(%{__python} -c "from distutils.sysconfig import get_python_lib; print (get_python_lib())")}
-%endif
 
 Name:           python-pycparser
 Summary:        C parser and AST generator written in Python
+Summary(zh_CN.UTF-8): Python 编写怕 C 解析器和 AST 生成器
 Version:        2.14
-Release:        4%{?dist}
+Release:        5%{?dist}
 License:        BSD
 Group:          System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 URL:            http://github.com/eliben/pycparser
 Source0:        http://github.com/eliben/pycparser/archive/release_v%{version}.tar.gz
 Source1:        pycparser-0.91.1-remove-relative-sys-path.py
@@ -40,16 +38,23 @@ pycparser is a complete parser for the C language, written in pure Python.
 It is a module designed to be easily integrated into applications that
 need to parse C source code.
 
+%description -l zh_CN.UTF-8
+Python 编写怕 C 解析器和 AST 生成器。
+
 %if 0%{?with_python3}
 %package -n python3-pycparser
 Summary:        C parser and AST generator written in Python
+Summary(zh_CN.UTF-8): Python 编写怕 C 解析器和 AST 生成器
 Group:          System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 Requires:       python3-ply
 
 %description -n python3-pycparser
 pycparser is a complete parser for the C language, written in pure Python.
 It is a module designed to be easily integrated into applications that
 need to parse C source code.
+%description -n python3-pycparser -l zh_CN.UTF-8
+Python 编写怕 C 解析器和 AST 生成器。
 %endif # if with_python3
 
 %prep
@@ -92,6 +97,7 @@ pushd %{py3dir}
 %{__python3} setup.py install --skip-build --root %{buildroot}
 popd
 %endif # with_python3
+magic_rpm_clean.sh
 
 %check
 %{__python} tests/all_tests.py 
@@ -114,6 +120,9 @@ popd
 %endif # with_python3
 
 %changelog
+* Tue Sep 08 2015 Liu Di <liudidi@gmail.com> - 2.14-5
+- 为 Magic 3.0 重建
+
 * Mon Aug 17 2015 Liu Di <liudidi@gmail.com> - 2.14-4
 - 为 Magic 3.0 重建
 

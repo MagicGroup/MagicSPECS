@@ -1,31 +1,15 @@
-%if 0%{?fedora} > 12
 %global with_python3 1
-%else
-%{!?python_sitelib: %global python_sitelib %(%{__python} -c "from distutils.sysconfig import get_python_lib; print (get_python_lib())")}
-%endif
-
-%if 0%{?rhel} == 5
-%global with_python26 1
-%endif
-
-%if 0%{?with_python26}
-%global __python26 %{_bindir}/python2.6
-%global py26dir %{_builddir}/python26-%{name}-%{version}-%{release}
-%{!?python26_sitelib: %global python26_sitelib %(%{__python26} -c "from distutils.sysconfig import get_python_lib; print (get_python_lib())")}
-# Update rpm byte compilation script so that we get the modules compiled by the
-# correct inerpreter
-%global __os_install_post %__multiple_python_os_install_post
-%endif
-
 
 %global upstream_name Pygments
 
 Name:           python-pygments
-Version:        1.4
-Release:        9%{?dist}
+Version:	2.0.2
+Release:	1%{?dist}
 Summary:        Syntax highlighting engine written in Python
+Summary(zh_CN.UTF-8): Python 编写的语法高亮引擎
 
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 License:        BSD
 URL:            http://pygments.org/
 Source0:        http://pypi.python.org/packages/source/P/%{upstream_name}/%{upstream_name}-%{version}.tar.gz
@@ -60,10 +44,15 @@ need to prettify source code. Highlights are:
   * it is usable as a command-line tool and as a library
   * ... and it highlights even Brainf*ck!
 
+%description -l zh_CN.UTF-8
+Python 编写的语法高亮引擎。
+
 %if 0%{?with_python3}
 %package -n python3-pygments
 Summary:        Syntax highlighting engine written in Python 3
+Summary(zh_CN.UTF-8): Python3 编写的语法高亮引擎
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       python3-setuptools
 
 %description -n python3-pygments
@@ -80,6 +69,8 @@ need to prettify source code. Highlights are:
     LaTeX and ANSI sequences
   * it is usable as a command-line tool and as a library
   * ... and it highlights even Brainf*ck!
+%description -n python3-pygments -l zh_CN.UTF-8
+Python 编写的语法高亮引擎。
 %endif # if with_python3
 
 %if 0%{?with_python26}
@@ -150,11 +141,9 @@ popd
 %endif # with_python26
 
 %{__python} setup.py install -O1 --skip-build --root $RPM_BUILD_ROOT
-pushd docs
+pushd doc
 install -d %{buildroot}%{_mandir}/man1
 mv pygmentize.1 $RPM_BUILD_ROOT%{_mandir}/man1/pygmentize.1
-mv build html
-mv src reST
 popd
 magic_rpm_clean.sh
 
@@ -183,7 +172,7 @@ popd
 
 %files
 %defattr(-,root,root,-)
-%doc AUTHORS CHANGES docs/html docs/reST LICENSE TODO
+%doc AUTHORS CHANGES LICENSE TODO
 # For noarch packages: sitelib
 %{python_sitelib}/*
 %{_bindir}/pygmentize
@@ -192,7 +181,7 @@ popd
 %if 0%{?with_python3}
 %files -n python3-pygments
 %defattr(-,root,root,-)
-%doc AUTHORS CHANGES docs/html docs/reST LICENSE TODO
+%doc AUTHORS CHANGES LICENSE TODO
 %{python3_sitelib}/*
 %endif # with_python3
 
@@ -205,6 +194,12 @@ popd
 
 
 %changelog
+* Tue Sep 08 2015 Liu Di <liudidi@gmail.com> - 2.0.2-1
+- 更新到 2.0.2
+
+* Tue Sep 08 2015 Liu Di <liudidi@gmail.com> - 1.4-10
+- 为 Magic 3.0 重建
+
 * Tue Jun 17 2014 Liu Di <liudidi@gmail.com> - 1.4-9
 - 为 Magic 3.0 重建
 
