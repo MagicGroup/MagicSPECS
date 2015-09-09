@@ -1,0 +1,26 @@
+diff -Naur qhull-2003.1-17/src/io.c qhull-2003.1/src/io.c
+--- qhull-2003.1-17/src/io.c	2004-02-29 23:44:43.000000000 +0100
++++ qhull-2003.1/src/io.c	2012-07-08 10:46:03.935558318 +0200
+@@ -66,8 +66,8 @@
+     qh_memstatistics (qh ferr);
+     d_1= sizeof(setT) + (qh hull_dim - 1) * SETelemsize;
+     fprintf(qh ferr, "\
+-    size in bytes: merge %d ridge %d vertex %d facet %d\n\
+-         normal %d ridge vertices %d facet vertices or neighbors %d\n",
++    size in bytes: merge %zd ridge %zd vertex %zd facet %zd\n\
++         normal %d ridge vertices %d facet vertices or neighbors %zd\n",
+ 	    sizeof(mergeT), sizeof(ridgeT),
+ 	    sizeof(vertexT), sizeof(facetT),
+ 	    qh normal_size, d_1, d_1 + SETelemsize);
+diff -Naur qhull-2003.1-17/src/stat.c qhull-2003.1/src/stat.c
+--- qhull-2003.1-17/src/stat.c	2004-01-31 12:00:15.000000000 +0100
++++ qhull-2003.1/src/stat.c	2012-07-08 10:39:41.827320428 +0200
+@@ -460,7 +460,7 @@
+   qh_allstatI();
+   if (qhstat next > sizeof(qhstat id)) {
+     fprintf (qhmem.ferr, "qhull error (qh_initstatistics): increase size of qhstat.id[].\n\
+-      qhstat.next %d should be <= sizeof(qhstat id) %d\n", qhstat next, sizeof(qhstat id));
++      qhstat.next %d should be <= sizeof(qhstat id) %zd\n", qhstat next, sizeof(qhstat id));
+ #if 0 /* for locating error, Znumridges should be duplicated */
+     for (i=0; i < ZEND; i++) {
+       int j;
