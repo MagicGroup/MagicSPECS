@@ -1,15 +1,28 @@
+
+%global snap0 20150318
+%global commit0 d0f62e65f0b79fb7724d8d551dc9ff11d085127b
+#global gittag0 GIT-TAG
+%global shortcommit0 %(c=%{commit0}; echo ${c:0:7})
+
 Name:           qjson
 Version:        0.8.1
-Release:        9%{?dist}
+Release:        11.%{snap0}.%{shortcommit0}git%{?dist}
 Summary:        A qt-based library that maps JSON data to QVariant objects
 
 License:        GPLv2+
 URL:            http://sourceforge.net/projects/qjson/
-Source0:        http://sourceforge.net/projects/%{name}/files/qjson/%{version}/%{name}-%{version}.tar.bz2
+#if 0%{?commit0}
+Source0:        https://github.com/flavio/%{name}/archive/%{commit0}.tar.gz#/%{name}-%{shortcommit0}.tar.gz
+#else
+#Source0:        http://sourceforge.net/projects/%{name}/files/qjson/%{version}/%{name}-%{version}.tar.bz2
+#endif
 
-BuildRequires:  cmake >= 2.6
+BuildRequires:  cmake >= 2.8.8
 BuildRequires:  doxygen
 BuildRequires:  pkgconfig(QtCore)
+
+# %%check
+BuildRequires: xorg-x11-server-Xvfb
 
 %description
 JSON is a lightweight data-interchange format. It can represents integer, real
@@ -24,32 +37,35 @@ Requires: %{name}%{?_isa} = %{version}-%{release}
 The %{name}-devel package contains the libraries and header files required for
 developing applications that use %{name}.
 
+
 %prep
-%setup -qn %{name}-%{version}
+%setup -q %{?commit0:-n %{name}-%{commit0}}
+
 
 %build
-mkdir -p %{_target_platform}
+mkdir %{_target_platform}
 pushd %{_target_platform}
-%{cmake} \
+%{cmake} .. \
   -DQJSON_BUILD_TESTS:BOOL=ON \
-  ..
+  -DQT4_BUILD:BOOL=ON
 popd
-
-make %{?_smp_mflags} -C %{_target_platform}
 
 # build docs
 pushd doc
 doxygen
 popd
 
+
 %install
 make install DESTDIR=%{buildroot} -C %{_target_platform}
+
 
 %check
 export PKG_CONFIG_PATH=%{buildroot}%{_datadir}/pkgconfig:%{buildroot}%{_libdir}/pkgconfig
 test "$(pkg-config --modversion QJson)" = "%{version}"
 export CTEST_OUTPUT_ON_FAILURE=1
-make test -C %{_target_platform}
+xvfb-run -a make test -C %{_target_platform}
+
 
 %post -p /sbin/ldconfig
 %postun -p /sbin/ldconfig
@@ -68,12 +84,19 @@ make test -C %{_target_platform}
 %dir %{_libdir}/cmake
 %{_libdir}/cmake/qjson/
 
-%changelog
-* Thu Oct 30 2014 Liu Di <liudidi@gmail.com> - 0.8.1-9
-- 为 Magic 3.0 重建
 
-* Thu Oct 30 2014 Liu Di <liudidi@gmail.com> - 0.8.1-8
-- 为 Magic 3.0 重建
+%changelog
+* Mon Aug 03 2015 Rex Dieter <rdieter@fedoraproject.org> 0.8.1-11.20150318.d0f62e6git
+- 20150318 snapshot
+
+* Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.8.1-10
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
+
+* Sat May 02 2015 Kalev Lember <kalevlember@gmail.com> - 0.8.1-9
+- Rebuilt for GCC 5 C++11 ABI change
+
+* Thu Feb 19 2015 Rex Dieter <rdieter@fedoraproject.org> - 0.8.1-8
+- rebuild (gcc5)
 
 * Sun Aug 17 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.8.1-7
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
