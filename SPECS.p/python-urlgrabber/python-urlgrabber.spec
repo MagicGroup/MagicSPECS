@@ -2,10 +2,11 @@
 
 Summary: A high-level cross-protocol url-grabber
 Name: python-urlgrabber
-Version: 3.9.1
-Release: 12%{?dist}
-Source0: urlgrabber-%{version}.tar.gz
+Version: 3.10.1
+Release: 7%{?dist}
+Source0: http://urlgrabber.baseurl.org/download/urlgrabber-%{version}.tar.gz
 Patch1: urlgrabber-HEAD.patch
+Patch2: BZ-1051554-speed-on-404-mirror.patch
 
 License: LGPLv2+
 Group: Development/Libraries
@@ -24,6 +25,7 @@ authentication, proxies and more.
 %prep
 %setup -q -n urlgrabber-%{version}
 %patch1 -p1
+%patch2 -p1
 
 %build
 python setup.py build
@@ -38,16 +40,142 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(-,root,root,-)
-%doc ChangeLog LICENSE README TODO
+%{!?_licensedir:%global license %%doc}
+%license LICENSE
+%doc ChangeLog README TODO
 %{python_sitelib}/urlgrabber*
 %{_bindir}/urlgrabber
+%attr(0755,root,root) %{_libexecdir}/urlgrabber-ext-down
 
 %changelog
-* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 3.9.1-12
-- 为 Magic 3.0 重建
+* Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.10.1-7
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 
-* Sun Jan 22 2012 Liu Di <liudidi@gmail.com> - 3.9.1-11
-- 为 Magic 3.0 重建
+* Fri Oct 03 2014 Valentina Mukhamedzhanova <vmukhame@redhat.com> - 3.10.1-6
+- Revert porting to Python 3.
+
+* Tue Sep 09 2014 Tomas Radej <tradej@redhat.com> - 3.10.1-5
+- Really fixed UTF behaviour
+
+* Tue Sep 02 2014 Tomas Radej <tradej@redhat.com> - 3.10.1-4
+- Fixed UTF behaviour (bz #1135632)
+
+* Fri Aug 29 2014 Valentina Mukhamedzhanova <vmukhame@redhat.com> - 3.10.1-3
+- Don't set speed=0 on a new mirror that 404'd. BZ 1051554
+- Support both Python 2 and 3. BZ 985288
+
+* Sun Aug  3 2014 Tom Callaway <spot@fedoraproject.org> - 3.10.1-2
+- fix license handling
+
+* Sun Jun 08 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.10.1-1
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Wed Dec 18 2013 Zdenek Pavlas <zpavlas@redhat.com> - 3.10.1-0
+- Update to latest HEAD.
+- Decrease the default_speed value. BZ 1043177
+- Added client-side range support. BZ 435076
+
+* Mon Dec  9 2013 Zdenek Pavlas <zpavlas@redhat.com> - 3.10-1
+- Process mirror retries before other queued requests.
+- Tell curl to return immediately on ctrl-c. BZ 1017491
+
+* Wed Oct  9 2013 Zdenek Pavlas <zpavlas@redhat.com> - 3.10-0
+- Update to latest HEAD.
+- clamp timestamps from the future.  BZ 894630, 1013733
+- Fix the condition to enter single-connection mode. BZ 853432
+- Fix unit tests
+
+* Fri Sep 27 2013 Zdenek Pavlas <zpavlas@redhat.com> - 3.9.1-32
+- Update to latest HEAD.
+- Switch to max_connections=1 after refused connect. BZ 853432
+- Never display negative downloading speed. BZ 1001767
+
+* Thu Aug 29 2013 Zdenek Pavlas <zpavlas@redhat.com> - 3.9.1-31
+- Update to latest HEAD.
+- add ftp_disable_epsv option. BZ 849177
+- Spelling fixes.
+- docs: throttling is per-connection, suggest max_connections=1. BZ 998263
+- More robust "Content-Length" parsing. BZ 1000841
+
+* Sun Aug 04 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.9.1-30
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Tue Jun 18 2013 Zdenek Pavlas <zpavlas@redhat.com> - 3.9.1-29
+- Update to latest HEAD.
+- Fix parsing of FTP 213 responses
+- Switch to max_connections=1 after timing out.  BZ 853432
+- max_connections=0 should imply the default limit.
+
+* Fri May 17 2013 Zdenek Pavlas <zpavlas@redhat.com> - 3.9.1-28
+- Update to latest HEAD.
+- Add the "minrate" option. BZ 964298
+- Workaround progress "!!!" end for file:// repos.
+- add URLGrabError.code to the external downloader API
+- Disable GSSNEGOTIATE to work around a curl bug.  BZ 960163
+
+* Wed Mar 27 2013 Zdenek Pavlas <zpavlas@redhat.com> - 3.9.1-26
+- Update to latest HEAD.
+- Handle HTTP 200 response to range requests correctly.  BZ 919076
+- Reset curl_obj to clear CURLOPT_RANGE from previous requests.  BZ 923951
+
+* Thu Mar  7 2013 Zdeněk Pavlas <zpavlas@redhat.com> - 3.9.1-25
+- Update to latest HEAD.
+- fix some test cases that were failing.  BZ 918658
+- exit(1) or /bin/urlgrabber failures.  BZ 918613
+- clamp timestamps from the future.  BZ 894630
+- enable GSSNEGOTIATE if implemented correctly.
+- make error messages more verbose.
+
+* Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.9.1-24
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
+
+* Mon Jan  7 2013 Zdeněk Pavlas <zpavlas@redhat.com> - 3.9.1-23
+- Update to latest HEAD.
+- Handle checkfunc unicode exceptions. BZ 672117
+
+* Thu Dec  6 2012 Zdeněk Pavlas <zpavlas@redhat.com> - 3.9.1-22
+- Update to latest HEAD.
+- Improve URLGRABBER_DEBUG, add max_connections.  BZ 853432
+
+* Thu Nov  1 2012 Zdeněk Pavlas <zpavlas@redhat.com> - 3.9.1-21
+- Update to latest HEAD.
+- Get rid of "HTTP 200 OK" errors.  BZ 871835.
+
+* Tue Sep  4 2012 Zdeněk Pavlas <zpavlas@redhat.com> - 3.9.1-20
+- Update to latest HEAD.
+- Fixed BZ 851178, 854075.
+
+* Mon Aug 27 2012 Zdeněk Pavlas <zpavlas@redhat.com> - 3.9.1-19
+- timedhosts: defer 1st update until a 1MB+ download.  BZ 851178
+
+* Wed Aug 22 2012 Zdeněk Pavlas <zpavlas@redhat.com> - 3.9.1-18
+- Update to latest HEAD, lots of enhancements.
+
+* Wed Aug 10 2012 Zdeněk Pavlas <zpavlas@redhat.com> - 3.9.1-17
+- Fix a bug in progress display code. BZ 847105.
+
+* Wed Aug  8 2012 Zdeněk Pavlas <zpavlas@redhat.com> - 3.9.1-16
+- Update to latest head.
+- Improved multi-file progress, small bugfixes.
+
+* Fri Jul 20 2012 Zdeněk Pavlas <zpavlas@redhat.com> - 3.9.1-15
+- Update to latest head, misc bugfixes: BZ 832028, 831904, 831291.
+- Disable Kerberos auth.  BZ 769254
+- copy_local bugfix. BZ 837018
+- send 'tries' counter to mirror failure callback
+
+* Mon May 21 2012 Zdeněk Pavlas <zpavlas@redhat.com> - 3.9.1-14
+- timedhosts: sanity check on dl_time
+
+* Fri May 18 2012 Zdeněk Pavlas <zpavlas@redhat.com> - 3.9.1-13
+- fix file:// profiling.  BZ 822632.
+
+* Mon May 14 2012 Zdeněk Pavlas <zpavlas@redhat.com> - 3.9.1-12
+- Update to latest HEAD
+- Merge multi-downloader patches
+
+* Sat Jan 14 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.9.1-11
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 
 * Wed Feb 09 2011 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.9.1-10
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_15_Mass_Rebuild
