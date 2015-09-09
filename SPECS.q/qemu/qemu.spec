@@ -1,184 +1,54 @@
-# build-time settings that support --with or --without:
-#
-# = kvmonly =
-# Build only KVM-enabled QEMU targets, on KVM-enabled architectures.
-#
-# Disabled by default.
-#
-# = exclusive_x86_64 =
-# ExclusiveArch: x86_64
-#
-# Disabled by default, except on RHEL.  Only makes sense with kvmonly.
-#
-# = rbd =
-# Enable rbd support.
-#
-# Enable by default, except on RHEL.
-#
-# = separate_kvm =
-# Do not build and install stuff that would colide with separately packaged KVM.
-#
-# Disabled by default, except on EPEL.
-
-%if 0%{?rhel}
-# RHEL-specific defaults:
-%bcond_without kvmonly          # enabled
-%bcond_without exclusive_x86_64 # enabled
-%bcond_with    rbd              # disabled
-%bcond_without spice            # enabled
-%bcond_without seccomp          # enabled
-%bcond_with    xfsprogs         # disabled
-%bcond_with    separate_kvm     # disabled - for EPEL
-%bcond_with    gtk              # disabled
-%else
-# General defaults:
-%bcond_with    kvmonly          # disabled
-%bcond_with    exclusive_x86_64 # disabled
-%bcond_without rbd              # enabled
-%bcond_without spice            # enabled
-%bcond_without seccomp          # enabled
-%bcond_without xfsprogs         # enabled
-%bcond_with    separate_kvm     # disabled
-%bcond_without gtk              # enabled
-%endif
-
-%global SLOF_gittagdate 20130430
-
-%if %{without separate_kvm}
-%global kvm_archs %{ix86} x86_64 ppc64 s390x armv7hl aarch64
-%else
-%global kvm_archs %{ix86} ppc64 s390x armv7hl
-%endif
-%if %{with exclusive_x86_64}
-%global kvm_archs x86_64
-%endif
-
-
-%global have_usbredir 1
-
-%ifarch %{ix86} x86_64
-%if %{with seccomp}
-%global have_seccomp 1
-%endif
-%if %{with spice}
-%global have_spice   1
-%endif
-%else
-%if 0%{?rhel}
-%global have_usbredir 0
-%endif
-%endif
-
-%global need_qemu_kvm %{with kvmonly}
-%global need_kvm_modfile 0
-
-# These values for system_xyz are overridden below for non-kvmonly builds.
-# Instead, these values for kvm_package are overridden below for kvmonly builds.
-# Somewhat confusing, but avoids complicated nested conditionals.
-
 %ifarch %{ix86}
-%global system_x86    kvm
 %global kvm_package   system-x86
-%global kvm_target    i386
+# need_qemu_kvm should only ever be used by x86
 %global need_qemu_kvm 1
 %endif
 %ifarch x86_64
-%global system_x86    kvm
 %global kvm_package   system-x86
-%global kvm_target    x86_64
+# need_qemu_kvm should only ever be used by x86
 %global need_qemu_kvm 1
 %endif
-%ifarch ppc64
-%global system_ppc    kvm
+%ifarch ppc64 ppc64le
 %global kvm_package   system-ppc
-%global kvm_target    ppc64
-%global need_kvm_modfile 1
 %endif
 %ifarch s390x
-%global system_s390x  kvm
 %global kvm_package   system-s390x
-%global kvm_target    s390x
-%global need_kvm_modfile 1
 %endif
 %ifarch armv7hl
-%global system_arm    kvm
 %global kvm_package   system-arm
-%global kvm_target    arm
 %endif
 %ifarch aarch64
-%global system_aarch64 kvm
 %global kvm_package   system-aarch64
-%global kvm_target    aarch64
 %endif
 
-%if %{with kvmonly}
-# If kvmonly, put the qemu-kvm binary in the qemu-kvm package
-%global kvm_package   kvm
-%else
-# If not kvmonly, build all packages and give them normal names. qemu-kvm
-# is a simple wrapper package and is only build for archs that support KVM.
-%global user          user
-%global system_alpha  system-alpha
-%global system_arm    system-arm
-%global system_cris   system-cris
-%global system_lm32   system-lm32
-%global system_m68k   system-m68k
-%global system_microblaze   system-microblaze
-%global system_mips   system-mips
-%global system_or32   system-or32
-%global system_ppc    system-ppc
-%global system_s390x  system-s390x
-%global system_sh4    system-sh4
-%global system_sparc  system-sparc
-%global system_x86    system-x86
-%global system_xtensa   system-xtensa
-%global system_unicore32   system-unicore32
-%global system_moxie   system-moxie
-%global system_aarch64   system-aarch64
+%global have_kvm 0
+%if 0%{?kvm_package:1}
+%global have_kvm 1
 %endif
 
-# Only build qemu-system-aarch64 on aarch64 for now
-%ifnarch aarch64
-%undefine system_aarch64
-%endif
-
-# libfdt is only needed to build ARM, Microblaze or PPC emulators
-%if 0%{?system_aarch64:1}%{?system_arm:1}%{?system_microblaze:1}%{?system_ppc:1}
-%global need_fdt      1
+%ifarch %{ix86} x86_64
+%global have_seccomp 1
+%global have_spice   1
 %endif
 
 # Xen is available only on i386 x86_64 (from libvirt spec)
-%ifnarch %{ix86} x86_64
-%define with_xen 0
-%else
-%define with_xen 1
+%ifarch %{ix86} x86_64
+%global have_xen 1
 %endif
 
 
 Summary: QEMU is a FAST! processor emulator
 Name: qemu
-Version: 2.0.0
-Release: 7%{?dist}
+Version: 2.4.0
+Release: 2%{?dist}
 Epoch: 2
 License: GPLv2+ and LGPLv2+ and BSD
 Group: Development/Tools
 URL: http://www.qemu.org/
-# RHEL will build Qemu only on x86_64:
-%if %{with kvmonly}
-ExclusiveArch: %{kvm_archs}
-%endif
-
-# OOM killer breaks builds with parallel make on s390(x)
-%ifarch s390 s390x
-%define _smp_mflags %{nil}
-%endif
 
 Source0: http://wiki.qemu-project.org/download/%{name}-%{version}.tar.bz2
 
 Source1: qemu.binfmt
-
-# Loads kvm kernel modules at boot
-Source2: kvm.modules
 
 # Creates /dev/kvm
 Source3: 80-kvm.rules
@@ -198,58 +68,12 @@ Source12: bridge.conf
 # qemu-kvm back compat wrapper
 Source13: qemu-kvm.sh
 
-# Change gtk quit accelerator to ctrl+shift+q (bz #1062393)
-# Patches queued for 2.1
-Patch0001: 0001-Change-gtk-quit-accelerator-to-ctrl-shift-q-bz-10623.patch
-# Migration CVEs: CVE-2014-0182 etc.
-Patch0002: 0002-vmstate-add-VMS_MUST_EXIST.patch
-Patch0003: 0003-vmstate-add-VMSTATE_VALIDATE.patch
-Patch0004: 0004-virtio-net-fix-buffer-overflow-on-invalid-state-load.patch
-Patch0005: 0005-virtio-net-out-of-bounds-buffer-write-on-invalid-sta.patch
-Patch0006: 0006-virtio-out-of-bounds-buffer-write-on-invalid-state-l.patch
-Patch0007: 0007-ahci-fix-buffer-overrun-on-invalid-state-load.patch
-Patch0008: 0008-hpet-fix-buffer-overrun-on-invalid-state-load.patch
-Patch0009: 0009-hw-pci-pcie_aer.c-fix-buffer-overruns-on-invalid-sta.patch
-Patch0010: 0010-pl022-fix-buffer-overun-on-invalid-state-load.patch
-Patch0011: 0011-vmstate-fix-buffer-overflow-in-target-arm-machine.c.patch
-Patch0012: 0012-virtio-avoid-buffer-overrun-on-incoming-migration.patch
-Patch0013: 0013-virtio-validate-num_sg-when-mapping.patch
-Patch0014: 0014-pxa2xx-avoid-buffer-overrun-on-incoming-migration.patch
-Patch0015: 0015-ssd0323-fix-buffer-overun-on-invalid-state-load.patch
-Patch0016: 0016-tsc210x-fix-buffer-overrun-on-invalid-state-load.patch
-Patch0017: 0017-zaurus-fix-buffer-overrun-on-invalid-state-load.patch
-Patch0018: 0018-virtio-scsi-fix-buffer-overrun-on-invalid-state-load.patch
-Patch0019: 0019-vmstate-s-VMSTATE_INT32_LE-VMSTATE_INT32_POSITIVE_LE.patch
-Patch0020: 0020-usb-sanity-check-setup_index-setup_len-in-post_load.patch
-Patch0021: 0021-ssi-sd-fix-buffer-overrun-on-invalid-state-load.patch
-Patch0022: 0022-openpic-avoid-buffer-overrun-on-incoming-migration.patch
-Patch0023: 0023-virtio-net-out-of-bounds-buffer-write-on-load.patch
-Patch0024: 0024-virtio-validate-config_len-on-load.patch
+# CVE-2015-5255: heap memory corruption in vnc_refresh_server_surface
+# (bz #1255899)
+Patch0001: 0001-vnc-fix-memory-corruption-CVE-2015-5225.patch
 
-# QCOW1 validation CVEs: CVE-2014-0222, CVE-2014-0223 (bz #1097232, bz
-# #1097238, bz #1097222, bz #1097216)
-Patch0101: 0101-qcow1-Make-padding-in-the-header-explicit.patch
-Patch0102: 0102-qcow1-Check-maximum-cluster-size.patch
-Patch0103: 0103-qcow1-Validate-L2-table-size-CVE-2014-0222.patch
-Patch0104: 0104-qcow1-Validate-image-size-CVE-2014-0223.patch
-Patch0105: 0105-qcow1-Stricter-backing-file-length-check.patch
-# CVE-2014-3461: Issues in USB post load checks (bz #1097260, bz
-# #1096821)
-Patch0106: 0106-usb-fix-up-post-load-checks.patch
-# Don't use libtool on dtrace, fixes rawhide build (bz #1106968)
-Patch0107: 0107-trace-add-pid-field-to-simpletrace-record.patch
-Patch0108: 0108-simpletrace-add-support-for-trace-record-pid-field.patch
-Patch0109: 0109-trace-Replace-error-with-warning-if-event-is-not-def.patch
-Patch0110: 0110-do-not-call-g_thread_init-for-glib-2.31.patch
-Patch0111: 0111-glib-move-g_poll-replacement-into-glib-compat.h.patch
-Patch0112: 0112-glib-fix-g_poll-early-timeout-on-windows.patch
-Patch0113: 0113-glib-compat.h-add-new-thread-API-emulation-on-top-of.patch
-Patch0114: 0114-libcacard-replace-pstrcpy-with-memcpy.patch
-Patch0115: 0115-libcacard-g_malloc-cleanups.patch
-Patch0116: 0116-vscclient-use-glib-thread-primitives-not-qemu.patch
-Patch0117: 0117-libcacard-replace-qemu-thread-primitives-with-glib-o.patch
 
-BuildRequires: SDL-devel
+BuildRequires: SDL2-devel
 BuildRequires: zlib-devel
 BuildRequires: which
 BuildRequires: chrpath
@@ -264,14 +88,13 @@ BuildRequires: pulseaudio-libs-devel
 BuildRequires: libiscsi-devel
 BuildRequires: ncurses-devel
 BuildRequires: libattr-devel
-%if 0%{?have_usbredir:1}
 BuildRequires: usbredir-devel >= 0.5.2
+%ifnarch s390 s390x
+BuildRequires: gperftools-devel
 %endif
 BuildRequires: texinfo
-# for /usr/bin/pod2man
-%if 0%{?fedora} > 18
+# For /usr/bin/pod2man
 BuildRequires: perl-podlators
-%endif
 %if 0%{?have_spice:1}
 BuildRequires: spice-protocol >= 0.12.2
 BuildRequires: spice-server-devel >= 0.12.0
@@ -281,19 +104,15 @@ BuildRequires: libseccomp-devel >= 2.1.0
 %endif
 # For network block driver
 BuildRequires: libcurl-devel
-%if %{with rbd}
 # For rbd block driver
 BuildRequires: ceph-devel >= 0.61
-%endif
 # We need both because the 'stap' binary is probed for by configure
 BuildRequires: systemtap
 BuildRequires: systemtap-sdt-devel
 # For smartcard NSS support
 BuildRequires: nss-devel
 # For XFS discard support in raw-posix.c
-%if %{with xfsprogs}
 BuildRequires: xfsprogs-devel
-%endif
 # For VNC JPEG support
 BuildRequires: libjpeg-devel
 # For VNC PNG support
@@ -304,30 +123,22 @@ BuildRequires: libuuid-devel
 BuildRequires: bluez-libs-devel
 # For Braille device support
 BuildRequires: brlapi-devel
-%if 0%{?need_fdt:1}
 # For FDT device tree support
 BuildRequires: libfdt-devel
-%endif
 # For virtfs
 BuildRequires: libcap-devel
 # Hard requirement for version >= 1.3
 BuildRequires: pixman-devel
-%if 0%{?fedora} > 18
 # For gluster support
 BuildRequires: glusterfs-devel >= 3.4.0
 BuildRequires: glusterfs-api-devel >= 3.4.0
-%endif
 # Needed for usb passthrough for qemu >= 1.5
 BuildRequires: libusbx-devel
 # SSH block driver
-%if 0%{?fedora} >= 20
 BuildRequires: libssh2-devel
-%endif
-%if %{with gtk}
 # GTK frontend
 BuildRequires: gtk3-devel
 BuildRequires: vte3-devel
-%endif
 # GTK translations
 BuildRequires: gettext
 # RDMA migration
@@ -335,77 +146,45 @@ BuildRequires: gettext
 BuildRequires: librdmacm-devel
 %endif
 # For sanity test
-%if 0%{?fedora} >= 20
 BuildRequires: qemu-sanity-check-nodeps
 BuildRequires: kernel
-%endif
+# For acpi compilation
 BuildRequires: iasl
-%if %{with_xen}
+# Xen support
+%if 0%{?have_xen:1}
 BuildRequires: xen-devel
 %endif
+# memdev hostmem backend added in 2.1
+%ifarch %{ix86} x86_64 aarch64
+BuildRequires: numactl-devel
+%endif
+# Added in qemu 2.3
+BuildRequires: bzip2-devel
+# Added in qemu 2.4 for opengl bits
+Requires: libepoxy-devel
 
 
-%if 0%{?user:1}
-Requires: %{name}-%{user} = %{epoch}:%{version}-%{release}
-%endif
-%if 0%{?system_alpha:1}
-Requires: %{name}-%{system_alpha} = %{epoch}:%{version}-%{release}
-%endif
-%if 0%{?system_arm:1}
-Requires: %{name}-%{system_arm} = %{epoch}:%{version}-%{release}
-%endif
-%if 0%{?system_cris:1}
-Requires: %{name}-%{system_cris} = %{epoch}:%{version}-%{release}
-%endif
-%if 0%{?system_lm32:1}
-Requires: %{name}-%{system_lm32} = %{epoch}:%{version}-%{release}
-%endif
-%if 0%{?system_m68k:1}
-Requires: %{name}-%{system_m68k} = %{epoch}:%{version}-%{release}
-%endif
-%if 0%{?system_microblaze:1}
-Requires: %{name}-%{system_microblaze} = %{epoch}:%{version}-%{release}
-%endif
-%if 0%{?system_mips:1}
-Requires: %{name}-%{system_mips} = %{epoch}:%{version}-%{release}
-%endif
-%if 0%{?system_or32:1}
-Requires: %{name}-%{system_or32} = %{epoch}:%{version}-%{release}
-%endif
-%if 0%{?system_ppc:1}
-Requires: %{name}-%{system_ppc} = %{epoch}:%{version}-%{release}
-%endif
-%if 0%{?system_s390x:1}
-Requires: %{name}-%{system_s390x} = %{epoch}:%{version}-%{release}
-%endif
-%if 0%{?system_sh4:1}
-Requires: %{name}-%{system_sh4} = %{epoch}:%{version}-%{release}
-%endif
-%if 0%{?system_sparc:1}
-Requires: %{name}-%{system_sparc} = %{epoch}:%{version}-%{release}
-%endif
-%if 0%{?system_unicore32:1}
-Requires: %{name}-%{system_unicore32} = %{epoch}:%{version}-%{release}
-%endif
-%if 0%{?system_x86:1}
-Requires: %{name}-%{system_x86} = %{epoch}:%{version}-%{release}
-%endif
-%if 0%{?system_xtensa:1}
-Requires: %{name}-%{system_xtensa} = %{epoch}:%{version}-%{release}
-%endif
-%if 0%{?system_moxie:1}
-Requires: %{name}-%{system_moxie} = %{epoch}:%{version}-%{release}
-%endif
-%if 0%{?system_aarch64:1}
-Requires: %{name}-%{system_aarch64} = %{epoch}:%{version}-%{release}
-%endif
-%if %{without separate_kvm}
+Requires: %{name}-user = %{epoch}:%{version}-%{release}
+Requires: %{name}-system-alpha = %{epoch}:%{version}-%{release}
+Requires: %{name}-system-arm = %{epoch}:%{version}-%{release}
+Requires: %{name}-system-cris = %{epoch}:%{version}-%{release}
+Requires: %{name}-system-lm32 = %{epoch}:%{version}-%{release}
+Requires: %{name}-system-m68k = %{epoch}:%{version}-%{release}
+Requires: %{name}-system-microblaze = %{epoch}:%{version}-%{release}
+Requires: %{name}-system-mips = %{epoch}:%{version}-%{release}
+Requires: %{name}-system-or32 = %{epoch}:%{version}-%{release}
+Requires: %{name}-system-ppc = %{epoch}:%{version}-%{release}
+Requires: %{name}-system-s390x = %{epoch}:%{version}-%{release}
+Requires: %{name}-system-sh4 = %{epoch}:%{version}-%{release}
+Requires: %{name}-system-sparc = %{epoch}:%{version}-%{release}
+Requires: %{name}-system-unicore32 = %{epoch}:%{version}-%{release}
+Requires: %{name}-system-x86 = %{epoch}:%{version}-%{release}
+Requires: %{name}-system-xtensa = %{epoch}:%{version}-%{release}
+Requires: %{name}-system-moxie = %{epoch}:%{version}-%{release}
+Requires: %{name}-system-aarch64 = %{epoch}:%{version}-%{release}
+Requires: %{name}-system-tricore = %{epoch}:%{version}-%{release}
 Requires: %{name}-img = %{epoch}:%{version}-%{release}
-%else
-Requires: %{name}-img
-%endif
 
-%define qemudocdir %{_docdir}/%{name}
 
 %description
 QEMU is a generic and open source processor emulator which achieves a good
@@ -420,8 +199,8 @@ emulation speed by using dynamic translation. QEMU has two operating modes:
 
 As QEMU requires no host kernel patches to run, it is safe and easy to use.
 
-%if %{without kvmonly}
-%ifarch %{kvm_archs}
+
+%if %{have_kvm}
 %package kvm
 Summary: QEMU metapackage for KVM support
 Group: Development/Tools
@@ -432,7 +211,7 @@ This is a meta-package that provides a qemu-system-<arch> package for native
 architectures where kvm can be enabled. For example, in an x86 system, this
 will install qemu-system-x86
 %endif
-%endif
+
 
 %package  img
 Summary: QEMU command line tool for manipulating disk images
@@ -440,6 +219,7 @@ Group: Development/Tools
 
 %description img
 This package provides a command line tool for manipulating disk images
+
 
 %package  common
 Summary: QEMU common files needed by all QEMU targets
@@ -456,6 +236,7 @@ QEMU is a generic and open source processor emulator which achieves a good
 emulation speed by using dynamic translation.
 
 This package provides the common files needed by all QEMU targets
+
 
 %package guest-agent
 Summary: QEMU guest agent
@@ -496,242 +277,236 @@ that merges anonymous (private) pages (not pagecache ones).
 This package provides service files for disabling and tuning KSM.
 
 
-%if 0%{?user:1}
-%package %{user}
+%package user
 Summary: QEMU user mode emulation of qemu targets
 Group: Development/Tools
 Requires: %{name}-common = %{epoch}:%{version}-%{release}
 Requires(post): systemd-units
 Requires(postun): systemd-units
-%description %{user}
+%description user
 QEMU is a generic and open source processor emulator which achieves a good
 emulation speed by using dynamic translation.
 
 This package provides the user mode emulation of qemu targets
-%endif
 
-%if 0%{?system_x86:1}
-%package %{system_x86}
+
+%package system-x86
 Summary: QEMU system emulator for x86
 Group: Development/Tools
 Requires: %{name}-common = %{epoch}:%{version}-%{release}
 Provides: kvm = 85
 Obsoletes: kvm < 85
 Requires: seavgabios-bin
-# First version that ships bios-256k.bin
-Requires: seabios-bin >= 1.7.4-3
+# virtio-blk booting is broken for Windows guests
+# if you mix seabios 1.7.4 and qemu 2.1.x
+Requires: seabios-bin >= 1.7.5
 Requires: sgabios-bin
-Requires: ipxe-roms-qemu >= 20130517-2.gitc4bce43
+Requires: ipxe-roms-qemu
 %if 0%{?have_seccomp:1}
 Requires: libseccomp >= 1.0.0
 %endif
 
-%description %{system_x86}
+
+%description system-x86
 QEMU is a generic and open source processor emulator which achieves a good
 emulation speed by using dynamic translation.
 
 This package provides the system emulator for x86. When being run in a x86
 machine that supports it, this package also provides the KVM virtualization
 platform.
-%endif
 
-%if 0%{?system_alpha:1}
-%package %{system_alpha}
+
+%package system-alpha
 Summary: QEMU system emulator for Alpha
 Group: Development/Tools
 Requires: %{name}-common = %{epoch}:%{version}-%{release}
-%description %{system_alpha}
+%description system-alpha
 QEMU is a generic and open source processor emulator which achieves a good
 emulation speed by using dynamic translation.
 
 This package provides the system emulator for Alpha systems.
-%endif
 
-%if 0%{?system_arm:1}
-%package %{system_arm}
+
+%package system-arm
 Summary: QEMU system emulator for ARM
 Group: Development/Tools
 Requires: %{name}-common = %{epoch}:%{version}-%{release}
-%description %{system_arm}
+%description system-arm
 QEMU is a generic and open source processor emulator which achieves a good
 emulation speed by using dynamic translation.
 
 This package provides the system emulator for ARM boards.
-%endif
 
-%if 0%{?system_mips:1}
-%package %{system_mips}
+
+%package system-mips
 Summary: QEMU system emulator for MIPS
 Group: Development/Tools
 Requires: %{name}-common = %{epoch}:%{version}-%{release}
-%description %{system_mips}
+%description system-mips
 QEMU is a generic and open source processor emulator which achieves a good
 emulation speed by using dynamic translation.
 
 This package provides the system emulator for MIPS boards.
-%endif
 
-%if 0%{?system_cris:1}
-%package %{system_cris}
+
+%package system-cris
 Summary: QEMU system emulator for CRIS
 Group: Development/Tools
 Requires: %{name}-common = %{epoch}:%{version}-%{release}
-%description %{system_cris}
+%description system-cris
 QEMU is a generic and open source processor emulator which achieves a good
 emulation speed by using dynamic translation.
 
 This package provides the system emulator for CRIS boards.
-%endif
 
-%if 0%{?system_lm32:1}
-%package %{system_lm32}
+
+%package system-lm32
 Summary: QEMU system emulator for LatticeMico32
 Group: Development/Tools
 Requires: %{name}-common = %{epoch}:%{version}-%{release}
-%description %{system_lm32}
+%description system-lm32
 QEMU is a generic and open source processor emulator which achieves a good
 emulation speed by using dynamic translation.
 
 This package provides the system emulator for LatticeMico32 boards.
-%endif
 
-%if 0%{?system_m68k:1}
-%package %{system_m68k}
+
+%package system-m68k
 Summary: QEMU system emulator for ColdFire (m68k)
 Group: Development/Tools
 Requires: %{name}-common = %{epoch}:%{version}-%{release}
-%description %{system_m68k}
+%description system-m68k
 QEMU is a generic and open source processor emulator which achieves a good
 emulation speed by using dynamic translation.
 
 This package provides the system emulator for ColdFire boards.
-%endif
 
-%if 0%{?system_microblaze:1}
-%package %{system_microblaze}
+
+%package system-microblaze
 Summary: QEMU system emulator for Microblaze
 Group: Development/Tools
 Requires: %{name}-common = %{epoch}:%{version}-%{release}
-%description %{system_microblaze}
+%description system-microblaze
 QEMU is a generic and open source processor emulator which achieves a good
 emulation speed by using dynamic translation.
 
 This package provides the system emulator for Microblaze boards.
-%endif
 
-%if 0%{?system_or32:1}
-%package %{system_or32}
+
+%package system-or32
 Summary: QEMU system emulator for OpenRisc32
 Group: Development/Tools
 Requires: %{name}-common = %{epoch}:%{version}-%{release}
-%description %{system_or32}
+%description system-or32
 QEMU is a generic and open source processor emulator which achieves a good
 emulation speed by using dynamic translation.
 
 This package provides the system emulator for OpenRisc32 boards.
-%endif
 
-%if 0%{?system_s390x:1}
-%package %{system_s390x}
+
+%package system-s390x
 Summary: QEMU system emulator for S390
 Group: Development/Tools
 Requires: %{name}-common = %{epoch}:%{version}-%{release}
-%description %{system_s390x}
+%description system-s390x
 QEMU is a generic and open source processor emulator which achieves a good
 emulation speed by using dynamic translation.
 
 This package provides the system emulator for S390 systems.
-%endif
 
-%if 0%{?system_sh4:1}
-%package %{system_sh4}
+
+%package system-sh4
 Summary: QEMU system emulator for SH4
 Group: Development/Tools
 Requires: %{name}-common = %{epoch}:%{version}-%{release}
-%description %{system_sh4}
+%description system-sh4
 QEMU is a generic and open source processor emulator which achieves a good
 emulation speed by using dynamic translation.
 
 This package provides the system emulator for SH4 boards.
-%endif
 
-%if 0%{?system_sparc:1}
-%package %{system_sparc}
+
+%package system-sparc
 Summary: QEMU system emulator for SPARC
 Group: Development/Tools
 Requires: %{name}-common = %{epoch}:%{version}-%{release}
 Requires: openbios
-%description %{system_sparc}
+%description system-sparc
 QEMU is a generic and open source processor emulator which achieves a good
 emulation speed by using dynamic translation.
 
 This package provides the system emulator for SPARC and SPARC64 systems.
-%endif
 
-%if 0%{?system_ppc:1}
-%package %{system_ppc}
+
+%package system-ppc
 Summary: QEMU system emulator for PPC
 Group: Development/Tools
 Requires: %{name}-common = %{epoch}:%{version}-%{release}
 Requires: openbios
-Requires: SLOF >= 0.1.git%{SLOF_gittagdate}
-%description %{system_ppc}
+Requires: SLOF
+%description system-ppc
 QEMU is a generic and open source processor emulator which achieves a good
 emulation speed by using dynamic translation.
 
 This package provides the system emulator for PPC and PPC64 systems.
-%endif
 
-%if 0%{?system_xtensa:1}
-%package %{system_xtensa}
+
+%package system-xtensa
 Summary: QEMU system emulator for Xtensa
 Group: Development/Tools
 Requires: %{name}-common = %{epoch}:%{version}-%{release}
-%description %{system_xtensa}
+%description system-xtensa
 QEMU is a generic and open source processor emulator which achieves a good
 emulation speed by using dynamic translation.
 
 This package provides the system emulator for Xtensa boards.
-%endif
 
-%if 0%{?system_unicore32:1}
-%package %{system_unicore32}
+
+%package system-unicore32
 Summary: QEMU system emulator for Unicore32
 Group: Development/Tools
 Requires: %{name}-common = %{epoch}:%{version}-%{release}
-%description %{system_unicore32}
+%description system-unicore32
 QEMU is a generic and open source processor emulator which achieves a good
 emulation speed by using dynamic translation.
 
 This package provides the system emulator for Unicore32 boards.
-%endif
 
-%if 0%{?system_moxie:1}
-%package %{system_moxie}
+
+%package system-moxie
 Summary: QEMU system emulator for Moxie
 Group: Development/Tools
 Requires: %{name}-common = %{epoch}:%{version}-%{release}
-%description %{system_moxie}
+%description system-moxie
 QEMU is a generic and open source processor emulator which achieves a good
 emulation speed by using dynamic translation.
 
 This package provides the system emulator for Moxie boards.
-%endif
 
-%if 0%{?system_aarch64:1}
-%package %{system_aarch64}
+
+%package system-aarch64
 Summary: QEMU system emulator for AArch64
 Group: Development/Tools
 Requires: %{name}-common = %{epoch}:%{version}-%{release}
-%description %{system_aarch64}
+%description system-aarch64
 QEMU is a generic and open source processor emulator which achieves a good
 emulation speed by using dynamic translation.
 
 This package provides the system emulator for AArch64.
-%endif
 
 
-%ifarch %{kvm_archs}
+%package system-tricore
+Summary: QEMU system emulator for tricore
+Group: Development/Tools
+Requires: %{name}-common = %{epoch}:%{version}-%{release}
+%description system-tricore
+QEMU is a generic and open source processor emulator which achieves a good
+emulation speed by using dynamic translation.
+
+This package provides the system emulator for Tricore.
+
+
+%if %{have_kvm}
 %package kvm-tools
 Summary: KVM debugging and diagnostics tools
 Group: Development/Tools
@@ -741,13 +516,14 @@ This package contains some diagnostics and debugging tools for KVM,
 such as kvm_stat.
 %endif
 
-%if %{without separate_kvm}
+
 %package -n libcacard
 Summary:        Common Access Card (CAC) Emulation
 Group:          Development/Libraries
 
 %description -n libcacard
 Common Access Card (CAC) emulation library.
+
 
 %package -n libcacard-tools
 Summary:        CAC Emulation tools
@@ -757,6 +533,7 @@ Requires:       libcacard = %{epoch}:%{version}-%{release}
 %description -n libcacard-tools
 CAC emulation tools.
 
+
 %package -n libcacard-devel
 Summary:        CAC Emulation devel
 Group:          Development/Libraries
@@ -764,98 +541,66 @@ Requires:       libcacard = %{epoch}:%{version}-%{release}
 
 %description -n libcacard-devel
 CAC emulation development files.
-%endif
 
 
 %prep
-%setup -q
-
-# Change gtk quit accelerator to ctrl+shift+q (bz #1062393)
-# Patches queued for 2.1
-%patch0001 -p1
-# Migration CVEs: CVE-2014-0182 etc.
-%patch0002 -p1
-%patch0003 -p1
-%patch0004 -p1
-%patch0005 -p1
-%patch0006 -p1
-%patch0007 -p1
-%patch0008 -p1
-%patch0009 -p1
-%patch0010 -p1
-%patch0011 -p1
-%patch0012 -p1
-%patch0013 -p1
-%patch0014 -p1
-%patch0015 -p1
-%patch0016 -p1
-%patch0017 -p1
-%patch0018 -p1
-%patch0019 -p1
-%patch0020 -p1
-%patch0021 -p1
-%patch0022 -p1
-%patch0023 -p1
-%patch0024 -p1
-
-# QCOW1 validation CVEs: CVE-2014-0222, CVE-2014-0223 (bz #1097232, bz
-# #1097238, bz #1097222, bz #1097216)
-%patch0101 -p1
-%patch0102 -p1
-%patch0103 -p1
-%patch0104 -p1
-%patch0105 -p1
-# CVE-2014-3461: Issues in USB post load checks (bz #1097260, bz
-# #1096821)
-%patch0106 -p1
-# Don't use libtool on dtrace, fixes rawhide build (bz #1106968)
-%patch0107 -p1
-%patch0108 -p1
-%patch0109 -p1
-%patch0110 -p1
-%patch0111 -p1
-%patch0112 -p1
-%patch0113 -p1
-%patch0114 -p1
-%patch0115 -p1
-%patch0116 -p1
-%patch0117 -p1
+%setup -q -n qemu-%{version}
+%autopatch -p1
 
 
 %build
-%if %{with kvmonly}
-    buildarch="%{kvm_target}-softmmu"
-%else
+
+# QEMU already knows how to set _FORTIFY_SOURCE
+%global optflags %(echo %{optflags} | sed 's/-Wp,-D_FORTIFY_SOURCE=2//')
+
+# drop -g flag to prevent memory exhaustion by linker
+%ifarch s390
+%global optflags %(echo %{optflags} | sed 's/-g//')
+sed -i.debug 's/"-g $CFLAGS"/"$CFLAGS"/g' configure
+%endif
+
+# OOM killer breaks builds with parallel make on s390(x)
+%ifarch s390 s390x
+%define _smp_mflags %{nil}
+%endif
+
+
+# --build-id option is used for giving info to the debug packages.
+extraldflags="-Wl,--build-id";
+buildldflags="VL_LDFLAGS=-Wl,--build-id"
+
+# As of qemu 2.1, --enable-trace-backends supports multiple backends,
+# but there's a performance impact for non-dtrace so we don't use them
+tracebackends="dtrace"
+
     buildarch="i386-softmmu x86_64-softmmu alpha-softmmu arm-softmmu \
 cris-softmmu lm32-softmmu m68k-softmmu microblaze-softmmu \
 microblazeel-softmmu mips-softmmu mipsel-softmmu mips64-softmmu \
 mips64el-softmmu or32-softmmu ppc-softmmu ppcemb-softmmu ppc64-softmmu \
 s390x-softmmu sh4-softmmu sh4eb-softmmu sparc-softmmu sparc64-softmmu \
 xtensa-softmmu xtensaeb-softmmu unicore32-softmmu moxie-softmmu \
+tricore-softmmu \
 i386-linux-user x86_64-linux-user aarch64-linux-user alpha-linux-user \
 arm-linux-user armeb-linux-user cris-linux-user m68k-linux-user \
 microblaze-linux-user microblazeel-linux-user mips-linux-user \
 mipsel-linux-user mips64-linux-user mips64el-linux-user \
 mipsn32-linux-user mipsn32el-linux-user \
-or32-linux-user ppc-linux-user ppc64-linux-user \
+or32-linux-user ppc-linux-user ppc64-linux-user ppc64le-linux-user \
 ppc64abi32-linux-user s390x-linux-user sh4-linux-user sh4eb-linux-user \
 sparc-linux-user sparc64-linux-user sparc32plus-linux-user \
-unicore32-linux-user"
+unicore32-linux-user aarch64-softmmu"
 
-%if 0%{?system_aarch64:1}
-    buildarch="$buildarch aarch64-softmmu"
+# gperftools providing tcmalloc is not ported to s390(x)
+%ifarch s390 s390x
+    %define tcmallocflag --disable-tcmalloc
+%else
+    %define tcmallocflag --enable-tcmalloc
 %endif
 
-%endif
-
-# --build-id option is used for giving info to the debug packages.
-extraldflags="-Wl,--build-id";
-buildldflags="VL_LDFLAGS=-Wl,--build-id"
-
-%ifarch s390
-# drop -g flag to prevent memory exhaustion by linker
-%global optflags %(echo %{optflags} | sed 's/-g//')
-sed -i.debug 's/"-g $CFLAGS"/"$CFLAGS"/g' configure
+%if 0%{?have_spice:1}
+    %define spiceflag --enable-spice
+%else
+    %define spiceflag --disable-spice
 %endif
 
 ./configure \
@@ -865,45 +610,28 @@ sed -i.debug 's/"-g $CFLAGS"/"$CFLAGS"/g' configure
     --interp-prefix=%{_prefix}/qemu-%%M \
     --localstatedir=%{_localstatedir} \
     --libexecdir=%{_libexecdir} \
+    --with-pkgversion=%{name}-%{version}-%{release} \
     --disable-strip \
+%ifnarch aarch64
     --extra-ldflags="$extraldflags -pie -Wl,-z,relro -Wl,-z,now" \
-    --extra-cflags="%{optflags} -fPIE -DPIE" \
+    --extra-cflags="%{optflags}" \
+%endif
+%ifarch aarch64
+    --extra-cflags="%{optflags} -fPIC" \
+%endif
+    --enable-pie \
     --disable-werror \
     --target-list="$buildarch" \
     --audio-drv-list=pa,sdl,alsa,oss \
-    --enable-trace-backend=dtrace \
+    --enable-trace-backend=$tracebackends \
     --enable-kvm \
-    --enable-tpm \
-%if %{with_xen}
-    --enable-xen \
-%else
-    --disable-xen \
-%endif
-%if 0%{?have_spice:1}
-    --enable-spice \
-%else
-    --disable-spice \
-%endif
-%if 0%{?have_seccomp:1}
-    --enable-seccomp \
-%else
-    --disable-seccomp \
-%endif
-%if %{without rbd}
-    --disable-rbd \
-%endif
-%if 0%{?need_fdt:1}
-    --enable-fdt \
-%else
-    --disable-fdt \
-%endif
-%if %{with gtk}
+    %{tcmallocflag} \
+    %{spiceflag} \
+    --with-sdlabi="2.0" \
     --with-gtkabi="3.0" \
-%endif
 %ifarch s390
     --enable-tcg-interpreter \
 %endif
-    --enable-quorum \
     "$@"
 
 echo "config-host.mak contents:"
@@ -911,111 +639,84 @@ echo "==="
 cat config-host.mak
 echo "==="
 
+# These is some problem upstream where libcacard is not built
+# with --extra-cflags the first time, but if you remove some
+# files and rerun make, lo and behold --extra-cflags is used.
+# Hence the following hack:
+make V=1 %{?_smp_mflags} $buildldflags ||:
+rm ./libcacard/vcard_emul_nss.o ./libcacard/.libs/vcard_emul_nss.o
+# End of hack.
+
 make V=1 %{?_smp_mflags} $buildldflags
 
-gcc %{SOURCE6} -O2 -g -o ksmctl
-
-# Check the binary runs (see eg RHBZ#998722).
-%ifarch %{kvm_archs}
-b="./x86_64-softmmu/qemu-system-x86_64"
-if [ -x "$b" ]; then "$b" -help; fi
-%endif
+gcc %{_sourcedir}/ksmctl.c -O2 -g -o ksmctl
 
 
 %install
 
 %define _udevdir /lib/udev/rules.d
+%define qemudocdir %{_docdir}/%{name}
 
-install -D -p -m 0744 %{SOURCE4} $RPM_BUILD_ROOT/lib/systemd/system/ksm.service
-install -D -p -m 0644 %{SOURCE5} $RPM_BUILD_ROOT%{_sysconfdir}/sysconfig/ksm
-install -D -p -m 0755 ksmctl $RPM_BUILD_ROOT/lib/systemd/ksmctl
+mkdir -p %{buildroot}%{_udevdir}
+mkdir -p %{buildroot}%{_unitdir}
+mkdir -p %{buildroot}%{_sysconfdir}/qemu
 
-install -D -p -m 0744 %{SOURCE7} $RPM_BUILD_ROOT/lib/systemd/system/ksmtuned.service
-install -D -p -m 0755 %{SOURCE8} $RPM_BUILD_ROOT%{_sbindir}/ksmtuned
-install -D -p -m 0644 %{SOURCE9} $RPM_BUILD_ROOT%{_sysconfdir}/ksmtuned.conf
+install -D -p -m 0644 %{_sourcedir}/ksm.service %{buildroot}%{_unitdir}
+install -D -p -m 0644 %{_sourcedir}/ksm.sysconfig %{buildroot}%{_sysconfdir}/sysconfig/ksm
+install -D -p -m 0755 ksmctl %{buildroot}%{_libexecdir}/ksmctl
 
-%ifarch %{kvm_archs}
-%if 0%{?need_kvm_modfile}
-mkdir -p $RPM_BUILD_ROOT%{_sysconfdir}/sysconfig/modules
-install -m 0755 %{SOURCE2} $RPM_BUILD_ROOT%{_sysconfdir}/sysconfig/modules/kvm.modules
+install -D -p -m 0644 %{_sourcedir}/ksmtuned.service %{buildroot}%{_unitdir}
+install -D -p -m 0755 %{_sourcedir}/ksmtuned %{buildroot}%{_sbindir}/ksmtuned
+install -D -p -m 0644 %{_sourcedir}/ksmtuned.conf %{buildroot}%{_sysconfdir}/ksmtuned.conf
+
+# Install qemu-guest-agent service and udev rules
+install -m 0644 %{_sourcedir}/qemu-guest-agent.service %{buildroot}%{_unitdir}
+install -m 0644 %{_sourcedir}/99-qemu-guest-agent.rules %{buildroot}%{_udevdir}
+
+# Install kvm specific bits
+%if %{have_kvm}
+mkdir -p %{buildroot}%{_bindir}/
+install -m 0755 scripts/kvm/kvm_stat %{buildroot}%{_bindir}/
+install -m 0644 %{_sourcedir}/80-kvm.rules %{buildroot}%{_udevdir}
 %endif
 
-mkdir -p $RPM_BUILD_ROOT%{_bindir}/
-mkdir -p $RPM_BUILD_ROOT%{_udevdir}
 
-install -m 0755 scripts/kvm/kvm_stat $RPM_BUILD_ROOT%{_bindir}/
-install -m 0644 %{SOURCE3} $RPM_BUILD_ROOT%{_udevdir}
-%endif
-
-make DESTDIR=$RPM_BUILD_ROOT install
+make DESTDIR=%{buildroot} install
 
 %find_lang %{name}
 
-%if 0%{?need_qemu_kvm}
-install -m 0755 %{SOURCE13} $RPM_BUILD_ROOT%{_bindir}/qemu-kvm
-%endif
-
-%if %{with kvmonly}
-rm $RPM_BUILD_ROOT%{_bindir}/qemu-system-%{kvm_target}
-rm $RPM_BUILD_ROOT%{_datadir}/systemtap/tapset/qemu-system-%{kvm_target}.stp
-%endif
-
-chmod -x ${RPM_BUILD_ROOT}%{_mandir}/man1/*
-install -D -p -m 0644 -t ${RPM_BUILD_ROOT}%{qemudocdir} Changelog README COPYING COPYING.LIB LICENSE
-for emu in $RPM_BUILD_ROOT%{_bindir}/qemu-system-*; do
-    ln -sf qemu.1.gz $RPM_BUILD_ROOT%{_mandir}/man1/$(basename $emu).1.gz
+chmod -x %{buildroot}%{_mandir}/man1/*
+install -D -p -m 0644 -t %{buildroot}%{qemudocdir} Changelog README COPYING COPYING.LIB LICENSE
+for emu in %{buildroot}%{_bindir}/qemu-system-*; do
+    ln -sf qemu.1.gz %{buildroot}%{_mandir}/man1/$(basename $emu).1.gz
 done
+
 %if 0%{?need_qemu_kvm}
-ln -sf qemu.1.gz $RPM_BUILD_ROOT%{_mandir}/man1/qemu-kvm.1.gz
+install -m 0755 %{_sourcedir}/qemu-kvm.sh %{buildroot}%{_bindir}/qemu-kvm
+ln -sf qemu.1.gz %{buildroot}%{_mandir}/man1/qemu-kvm.1.gz
 %endif
 
-install -D -p -m 0644 qemu.sasl $RPM_BUILD_ROOT%{_sysconfdir}/sasl2/qemu.conf
+install -D -p -m 0644 qemu.sasl %{buildroot}%{_sysconfdir}/sasl2/qemu.conf
 
 # Provided by package openbios
-rm -rf ${RPM_BUILD_ROOT}%{_datadir}/%{name}/openbios-ppc
-rm -rf ${RPM_BUILD_ROOT}%{_datadir}/%{name}/openbios-sparc32
-rm -rf ${RPM_BUILD_ROOT}%{_datadir}/%{name}/openbios-sparc64
+rm -rf %{buildroot}%{_datadir}/%{name}/openbios-ppc
+rm -rf %{buildroot}%{_datadir}/%{name}/openbios-sparc32
+rm -rf %{buildroot}%{_datadir}/%{name}/openbios-sparc64
 # Provided by package SLOF
-rm -rf ${RPM_BUILD_ROOT}%{_datadir}/%{name}/slof.bin
-
-# Remove possibly unpackaged files.  Unlike others that are removed
-# unconditionally, these firmware files are still distributed as a binary
-# together with the qemu package.  We should try to move at least s390-zipl.rom
-# to a separate package...  Discussed here on the packaging list:
-# https://lists.fedoraproject.org/pipermail/packaging/2012-July/008563.html
-%if 0%{!?system_alpha:1}
-rm -rf ${RPM_BUILD_ROOT}%{_datadir}/%{name}/palcode-clipper
-%endif
-%if 0%{!?system_microblaze:1}
-rm -rf ${RPM_BUILD_ROOT}%{_datadir}/%{name}/petalogix*.dtb
-%endif
-%if 0%{!?system_ppc:1}
-rm -f ${RPM_BUILD_ROOT}%{_datadir}/%{name}/bamboo.dtb
-rm -f ${RPM_BUILD_ROOT}%{_datadir}/%{name}/ppc_rom.bin
-rm -f ${RPM_BUILD_ROOT}%{_datadir}/%{name}/spapr-rtas.bin
-%endif
-%if 0%{!?system_s390x:1}
-rm -rf ${RPM_BUILD_ROOT}%{_datadir}/%{name}/s390-zipl.rom
-rm -rf ${RPM_BUILD_ROOT}%{_datadir}/%{name}/s390-ccw.img
-%endif
-%if 0%{!?system_sparc:1}
-rm -rf ${RPM_BUILD_ROOT}%{_datadir}/%{name}/QEMU,tcx.bin
-%endif
-
+rm -rf %{buildroot}%{_datadir}/%{name}/slof.bin
 # Provided by package ipxe
-rm -rf ${RPM_BUILD_ROOT}%{_datadir}/%{name}/pxe*rom
-rm -rf ${RPM_BUILD_ROOT}%{_datadir}/%{name}/efi*rom
+rm -rf %{buildroot}%{_datadir}/%{name}/pxe*rom
+rm -rf %{buildroot}%{_datadir}/%{name}/efi*rom
 # Provided by package seavgabios
-rm -rf ${RPM_BUILD_ROOT}%{_datadir}/%{name}/vgabios*bin
+rm -rf %{buildroot}%{_datadir}/%{name}/vgabios*bin
 # Provided by package seabios
-rm -rf ${RPM_BUILD_ROOT}%{_datadir}/%{name}/bios.bin
-rm -rf ${RPM_BUILD_ROOT}%{_datadir}/%{name}/bios-256k.bin
-rm -rf ${RPM_BUILD_ROOT}%{_datadir}/%{name}/acpi-dsdt.aml
-rm -rf ${RPM_BUILD_ROOT}%{_datadir}/%{name}/q35-acpi-dsdt.aml
+rm -rf %{buildroot}%{_datadir}/%{name}/bios.bin
+rm -rf %{buildroot}%{_datadir}/%{name}/bios-256k.bin
+rm -rf %{buildroot}%{_datadir}/%{name}/acpi-dsdt.aml
+rm -rf %{buildroot}%{_datadir}/%{name}/q35-acpi-dsdt.aml
 # Provided by package sgabios
-rm -rf ${RPM_BUILD_ROOT}%{_datadir}/%{name}/sgabios.bin
+rm -rf %{buildroot}%{_datadir}/%{name}/sgabios.bin
 
-%if 0%{?system_x86:1}
 # the pxe gpxe images will be symlinks to the images on
 # /usr/share/ipxe, as QEMU doesn't know how to look
 # for other paths, yet.
@@ -1039,15 +740,15 @@ rom_link ../seavgabios/vgabios-cirrus.bin vgabios-cirrus.bin
 rom_link ../seavgabios/vgabios-qxl.bin vgabios-qxl.bin
 rom_link ../seavgabios/vgabios-stdvga.bin vgabios-stdvga.bin
 rom_link ../seavgabios/vgabios-vmware.bin vgabios-vmware.bin
+rom_link ../seavgabios/vgabios-virtio.bin vgabios-virtio.bin
 rom_link ../seabios/bios.bin bios.bin
 rom_link ../seabios/bios-256k.bin bios-256k.bin
 rom_link ../seabios/acpi-dsdt.aml acpi-dsdt.aml
 rom_link ../seabios/q35-acpi-dsdt.aml q35-acpi-dsdt.aml
 rom_link ../sgabios/sgabios.bin sgabios.bin
-%endif
 
-%if 0%{?user:1}
-mkdir -p $RPM_BUILD_ROOT%{_exec_prefix}/lib/binfmt.d
+# Install binfmt
+mkdir -p %{buildroot}%{_exec_prefix}/lib/binfmt.d
 for i in dummy \
 %ifnarch %{ix86} x86_64
     qemu-i386 \
@@ -1070,7 +771,7 @@ for i in dummy \
 %ifnarch m68k
     qemu-m68k \
 %endif
-%ifnarch ppc ppc64
+%ifnarch ppc ppc64 ppc64le
     qemu-ppc qemu-ppc64abi32 qemu-ppc64 \
 %endif
 %ifnarch sparc sparc64
@@ -1085,48 +786,17 @@ for i in dummy \
     qemu-sh4eb \
 ; do
   test $i = dummy && continue
-  grep /$i:\$ %{SOURCE1} > $RPM_BUILD_ROOT%{_exec_prefix}/lib/binfmt.d/$i.conf
-  chmod 644 $RPM_BUILD_ROOT%{_exec_prefix}/lib/binfmt.d/$i.conf
-done < %{SOURCE1}
-%endif
+  grep /$i:\$ %{_sourcedir}/qemu.binfmt > %{buildroot}%{_exec_prefix}/lib/binfmt.d/$i.conf
+  chmod 644 %{buildroot}%{_exec_prefix}/lib/binfmt.d/$i.conf
+done < %{_sourcedir}/qemu.binfmt
 
-# For the qemu-guest-agent subpackage install the systemd
-# service and udev rules.
-mkdir -p $RPM_BUILD_ROOT%{_unitdir}
-mkdir -p $RPM_BUILD_ROOT%{_udevdir}
-install -m 0644 %{SOURCE10} $RPM_BUILD_ROOT%{_unitdir}
-install -m 0644 %{SOURCE11} $RPM_BUILD_ROOT%{_udevdir}
 
 # Install rules to use the bridge helper with libvirt's virbr0
-install -m 0644 %{SOURCE12} $RPM_BUILD_ROOT%{_sysconfdir}/qemu
+install -m 0644 %{_sourcedir}/bridge.conf %{buildroot}%{_sysconfdir}/qemu
 
-find $RPM_BUILD_ROOT -name '*.la' -or -name '*.a' | xargs rm -f
-find $RPM_BUILD_ROOT -name "libcacard.so*" -exec chmod +x \{\} \;
-
-%if %{with separate_kvm}
-rm -f $RPM_BUILD_ROOT%{_bindir}/qemu-kvm
-rm -f $RPM_BUILD_ROOT%{_bindir}/qemu-img
-rm -f $RPM_BUILD_ROOT%{_bindir}/qemu-io
-rm -f $RPM_BUILD_ROOT%{_bindir}/qemu-nbd
-rm -f $RPM_BUILD_ROOT%{_mandir}/man1/qemu-img.1*
-rm -f $RPM_BUILD_ROOT%{_mandir}/man8/qemu-nbd.8*
-
-rm -f $RPM_BUILD_ROOT%{_sbindir}/ksmtuned
-rm -f $RPM_BUILD_ROOT%{_sysconfdir}/ksmtuned.conf
-rm -f $RPM_BUILD_ROOT%{_sysconfdir}/sysconfig/ksm
-rm -f $RPM_BUILD_ROOT/lib/systemd/ksmctl
-rm -f $RPM_BUILD_ROOT/lib/systemd/system/ksm.service
-rm -f $RPM_BUILD_ROOT/lib/systemd/system/ksmtuned.service
-
-rm -f $RPM_BUILD_ROOT%{_bindir}/qemu-ga
-rm -f $RPM_BUILD_ROOT%{_unitdir}/qemu-guest-agent.service
-rm -f $RPM_BUILD_ROOT%{_udevdir}/99-qemu-guest-agent.rules
-
-rm -f $RPM_BUILD_ROOT%{_bindir}/vscclient
-rm -f $RPM_BUILD_ROOT%{_libdir}/libcacard*
-rm -f $RPM_BUILD_ROOT%{_libdir}/pkgconfig/libcacard.pc
-rm -rf $RPM_BUILD_ROOT%{_includedir}/cacard
-%endif
+# Install libcacard.so
+find %{buildroot} -name '*.la' -or -name '*.a' | xargs rm -f
+find %{buildroot} -name "libcacard.so*" -exec chmod +x \{\} \;
 
 # When building using 'rpmbuild' or 'fedpkg local', RPATHs can be left in
 # the binaries and libraries (although this doesn't occur when
@@ -1136,24 +806,40 @@ rm -rf $RPM_BUILD_ROOT%{_includedir}/cacard
 #
 # In any case it should always be safe to remove RPATHs from
 # the final binaries:
-for f in $RPM_BUILD_ROOT%{_bindir}/* $RPM_BUILD_ROOT%{_libdir}/* \
-         $RPM_BUILD_ROOT%{_libexecdir}/*; do
+for f in %{buildroot}%{_bindir}/* %{buildroot}%{_libdir}/* \
+         %{buildroot}%{_libexecdir}/*; do
   if file $f | grep -q ELF; then chrpath --delete $f; fi
 done
 
+
 %check
-# Disabled on aarch64 where it fails with several errors.  Will
-# investigate and fix when we have access to real hardware - RWMJ.
-# 2014-03-24: Suddenly failing on arm32 as well - crobinso
-%ifnarch aarch64
-make check
+
+# 2.3.0-rc2 tests are hanging on s390
+# https://bugzilla.redhat.com/show_bug.cgi?id=1206057
+# Tests seem to be a recurring problem on s390, so I'd suggest just leaving
+# it disabled.
+%global archs_skip_tests s390
+%global archs_ignore_test_failures 0
+
+%ifnarch %{archs_skip_tests}
+
+# Check the binary runs (see eg RHBZ#998722).
+b="./x86_64-softmmu/qemu-system-x86_64"
+if [ -x "$b" ]; then "$b" -help; fi
+
+%ifarch %{archs_ignore_test_failures}
+make check V=1
+%else
+make check V=1 || :
 %endif
 
 # Sanity-check current kernel can boot on this qemu.
 # The results are advisory only.
-%if 0%{?fedora} >= 20
 %ifarch %{arm}
 hostqemu=arm-softmmu/qemu-system-arm
+%endif
+%ifarch aarch64
+hostqemu=arm-softmmu/qemu-system-aarch64
 %endif
 %ifarch %{ix86}
 hostqemu=i386-softmmu/qemu-system-i386
@@ -1162,24 +848,27 @@ hostqemu=i386-softmmu/qemu-system-i386
 hostqemu=x86_64-softmmu/qemu-system-x86_64
 %endif
 if test -f "$hostqemu"; then qemu-sanity-check --qemu=$hostqemu ||: ; fi
-%endif
 
-%ifarch %{kvm_archs}
+%endif  # archs_skip_tests
+
+
+%if %{have_kvm}
 %post %{kvm_package}
-# load kvm modules now, so we can make sure no reboot is needed.
-# If there's already a kvm module installed, we don't mess with it
-sh %{_sysconfdir}/sysconfig/modules/kvm.modules &> /dev/null || :
-setfacl --remove-all /dev/kvm &> /dev/null || :
-udevadm trigger --subsystem-match=misc --sysname-match=kvm --action=add || :
+# Default /dev/kvm permissions are 660, we install a udev rule changing that
+# to 666. However trying to trigger the re-permissioning via udev has been
+# a neverending source of trouble, so we just force it with chmod. For
+# more info see: https://bugzilla.redhat.com/show_bug.cgi?id=950436
+chmod --quiet 666 /dev/kvm || :
 %endif
 
-%if %{without separate_kvm}
+
 %post common
 getent group kvm >/dev/null || groupadd -g 36 -r kvm
 getent group qemu >/dev/null || groupadd -g 107 -r qemu
 getent passwd qemu >/dev/null || \
   useradd -r -u 107 -g qemu -G kvm -d / -s /sbin/nologin \
     -c "qemu user" qemu
+
 
 %post -n ksm
 %systemd_post ksm.service
@@ -1190,43 +879,30 @@ getent passwd qemu >/dev/null || \
 %postun -n ksm
 %systemd_postun_with_restart ksm.service
 %systemd_postun_with_restart ksmtuned.service
-%endif
 
-%if %{without separate_kvm}
+
 %post -n libcacard -p /sbin/ldconfig
 %postun -n libcacard -p /sbin/ldconfig
-%endif
 
-%if 0%{?user:1}
-%post %{user}
+
+%post user
 /bin/systemctl --system try-restart systemd-binfmt.service &>/dev/null || :
 
-%postun %{user}
+%postun user
 /bin/systemctl --system try-restart systemd-binfmt.service &>/dev/null || :
-%endif
+
 
 %global kvm_files \
-%if 0%{?need_kvm_modfile} \
-%{_sysconfdir}/sysconfig/modules/kvm.modules \
-%endif \
 %{_udevdir}/80-kvm.rules
 
-%if 0%{?need_qemu_kvm}
-%global qemu_kvm_files \
-%{_bindir}/qemu-kvm \
-%{_mandir}/man1/qemu-kvm.1*
-%endif
 
 %files
-%defattr(-,root,root)
 
-%ifarch %{kvm_archs}
+%if %{have_kvm}
 %files kvm
-%defattr(-,root,root)
 %endif
 
 %files common -f %{name}.lang
-%defattr(-,root,root)
 %dir %{qemudocdir}
 %doc %{qemudocdir}/Changelog
 %doc %{qemudocdir}/README
@@ -1240,6 +916,7 @@ getent passwd qemu >/dev/null || \
 %{_datadir}/%{name}/qemu-icon.bmp
 %{_datadir}/%{name}/qemu_logo_no_text.svg
 %{_datadir}/%{name}/keymaps/
+%{_datadir}/%{name}/trace-events
 %{_mandir}/man1/qemu.1*
 %{_mandir}/man1/virtfs-proxy-helper.1*
 %{_bindir}/virtfs-proxy-helper
@@ -1248,28 +925,24 @@ getent passwd qemu >/dev/null || \
 %dir %{_sysconfdir}/qemu
 %config(noreplace) %{_sysconfdir}/qemu/bridge.conf
 
-%if %{without separate_kvm}
-%files -n ksm
-/lib/systemd/system/ksm.service
-/lib/systemd/ksmctl
-%config(noreplace) %{_sysconfdir}/sysconfig/ksm
-/lib/systemd/system/ksmtuned.service
-%{_sbindir}/ksmtuned
-%config(noreplace) %{_sysconfdir}/ksmtuned.conf
-%endif
 
-%if %{without separate_kvm}
+%files -n ksm
+%{_libexecdir}/ksmctl
+%{_sbindir}/ksmtuned
+%{_unitdir}/ksmtuned.service
+%{_unitdir}/ksm.service
+%config(noreplace) %{_sysconfdir}/ksmtuned.conf
+%config(noreplace) %{_sysconfdir}/sysconfig/ksm
+
+
 %files guest-agent
-%defattr(-,root,root,-)
 %doc COPYING README
 %{_bindir}/qemu-ga
 %{_unitdir}/qemu-guest-agent.service
 %{_udevdir}/99-qemu-guest-agent.rules
-%endif
 
-%if 0%{?user:1}
-%files %{user}
-%defattr(-,root,root)
+
+%files user
 %{_exec_prefix}/lib/binfmt.d/qemu-*.conf
 %{_bindir}/qemu-i386
 %{_bindir}/qemu-x86_64
@@ -1291,6 +964,7 @@ getent passwd qemu >/dev/null || \
 %{_bindir}/qemu-ppc
 %{_bindir}/qemu-ppc64
 %{_bindir}/qemu-ppc64abi32
+%{_bindir}/qemu-ppc64le
 %{_bindir}/qemu-s390x
 %{_bindir}/qemu-sh4
 %{_bindir}/qemu-sh4eb
@@ -1298,46 +972,36 @@ getent passwd qemu >/dev/null || \
 %{_bindir}/qemu-sparc32plus
 %{_bindir}/qemu-sparc64
 %{_bindir}/qemu-unicore32
-%{_datadir}/systemtap/tapset/qemu-i386.stp
-%{_datadir}/systemtap/tapset/qemu-x86_64.stp
-%{_datadir}/systemtap/tapset/qemu-aarch64.stp
-%{_datadir}/systemtap/tapset/qemu-alpha.stp
-%{_datadir}/systemtap/tapset/qemu-arm.stp
-%{_datadir}/systemtap/tapset/qemu-armeb.stp
-%{_datadir}/systemtap/tapset/qemu-cris.stp
-%{_datadir}/systemtap/tapset/qemu-m68k.stp
-%{_datadir}/systemtap/tapset/qemu-microblaze.stp
-%{_datadir}/systemtap/tapset/qemu-microblazeel.stp
-%{_datadir}/systemtap/tapset/qemu-mips.stp
-%{_datadir}/systemtap/tapset/qemu-mipsel.stp
-%{_datadir}/systemtap/tapset/qemu-mips64.stp
-%{_datadir}/systemtap/tapset/qemu-mips64el.stp
-%{_datadir}/systemtap/tapset/qemu-mipsn32.stp
-%{_datadir}/systemtap/tapset/qemu-mipsn32el.stp
-%{_datadir}/systemtap/tapset/qemu-or32.stp
-%{_datadir}/systemtap/tapset/qemu-ppc.stp
-%{_datadir}/systemtap/tapset/qemu-ppc64.stp
-%{_datadir}/systemtap/tapset/qemu-ppc64abi32.stp
-%{_datadir}/systemtap/tapset/qemu-s390x.stp
-%{_datadir}/systemtap/tapset/qemu-sh4.stp
-%{_datadir}/systemtap/tapset/qemu-sh4eb.stp
-%{_datadir}/systemtap/tapset/qemu-sparc.stp
-%{_datadir}/systemtap/tapset/qemu-sparc32plus.stp
-%{_datadir}/systemtap/tapset/qemu-sparc64.stp
-%{_datadir}/systemtap/tapset/qemu-unicore32.stp
-%endif
+%{_datadir}/systemtap/tapset/qemu-i386*.stp
+%{_datadir}/systemtap/tapset/qemu-x86_64*.stp
+%{_datadir}/systemtap/tapset/qemu-aarch64*.stp
+%{_datadir}/systemtap/tapset/qemu-alpha*.stp
+%{_datadir}/systemtap/tapset/qemu-arm*.stp
+%{_datadir}/systemtap/tapset/qemu-cris*.stp
+%{_datadir}/systemtap/tapset/qemu-m68k*.stp
+%{_datadir}/systemtap/tapset/qemu-microblaze*.stp
+%{_datadir}/systemtap/tapset/qemu-mips*.stp
+%{_datadir}/systemtap/tapset/qemu-or32*.stp
+%{_datadir}/systemtap/tapset/qemu-ppc*.stp
+%{_datadir}/systemtap/tapset/qemu-s390x*.stp
+%{_datadir}/systemtap/tapset/qemu-sh4*.stp
+%{_datadir}/systemtap/tapset/qemu-sparc*.stp
+%{_datadir}/systemtap/tapset/qemu-unicore32*.stp
 
-%if 0%{?system_x86:1}
-%files %{system_x86}
-%defattr(-,root,root)
-%if %{without kvmonly}
+
+%files system-x86
 %{_bindir}/qemu-system-i386
 %{_bindir}/qemu-system-x86_64
-%{_datadir}/systemtap/tapset/qemu-system-i386.stp
-%{_datadir}/systemtap/tapset/qemu-system-x86_64.stp
+%{_datadir}/systemtap/tapset/qemu-system-i386*.stp
+%{_datadir}/systemtap/tapset/qemu-system-x86_64*.stp
 %{_mandir}/man1/qemu-system-i386.1*
 %{_mandir}/man1/qemu-system-x86_64.1*
+
+%if 0%{?need_qemu_kvm}
+%{_bindir}/qemu-kvm
+%{_mandir}/man1/qemu-kvm.1*
 %endif
+
 %{_datadir}/%{name}/acpi-dsdt.aml
 %{_datadir}/%{name}/q35-acpi-dsdt.aml
 %{_datadir}/%{name}/bios.bin
@@ -1351,6 +1015,7 @@ getent passwd qemu >/dev/null || \
 %{_datadir}/%{name}/vgabios-qxl.bin
 %{_datadir}/%{name}/vgabios-stdvga.bin
 %{_datadir}/%{name}/vgabios-vmware.bin
+%{_datadir}/%{name}/vgabios-virtio.bin
 %{_datadir}/%{name}/pxe-e1000.rom
 %{_datadir}/%{name}/efi-e1000.rom
 %{_datadir}/%{name}/pxe-virtio.rom
@@ -1361,209 +1026,162 @@ getent passwd qemu >/dev/null || \
 %{_datadir}/%{name}/efi-rtl8139.rom
 %{_datadir}/%{name}/pxe-ne2k_pci.rom
 %{_datadir}/%{name}/efi-ne2k_pci.rom
-%config(noreplace) %{_sysconfdir}/qemu/target-x86_64.conf
-%if %{without separate_kvm}
 %ifarch %{ix86} x86_64
 %{?kvm_files:}
-%{?qemu_kvm_files:}
-%endif
-%endif
 %endif
 
-%ifarch %{kvm_archs}
+
+%if %{have_kvm}
 %files kvm-tools
-%defattr(-,root,root,-)
 %{_bindir}/kvm_stat
 %endif
 
-%if 0%{?system_alpha:1}
-%files %{system_alpha}
-%defattr(-,root,root)
+
+%files system-alpha
 %{_bindir}/qemu-system-alpha
-%{_datadir}/systemtap/tapset/qemu-system-alpha.stp
+%{_datadir}/systemtap/tapset/qemu-system-alpha*.stp
 %{_mandir}/man1/qemu-system-alpha.1*
 %{_datadir}/%{name}/palcode-clipper
-%endif
 
-%if 0%{?system_arm:1}
-%files %{system_arm}
-%defattr(-,root,root)
+
+%files system-arm
 %{_bindir}/qemu-system-arm
-%{_datadir}/systemtap/tapset/qemu-system-arm.stp
+%{_datadir}/systemtap/tapset/qemu-system-arm*.stp
 %{_mandir}/man1/qemu-system-arm.1*
-%if %{without separate_kvm}
 %ifarch armv7hl
 %{?kvm_files:}
-%{?qemu_kvm_files:}
-%endif
 %endif
 
-%endif
 
-%if 0%{?system_mips:1}
-%files %{system_mips}
-%defattr(-,root,root)
+%files system-mips
 %{_bindir}/qemu-system-mips
 %{_bindir}/qemu-system-mipsel
 %{_bindir}/qemu-system-mips64
 %{_bindir}/qemu-system-mips64el
-%{_datadir}/systemtap/tapset/qemu-system-mips.stp
-%{_datadir}/systemtap/tapset/qemu-system-mipsel.stp
-%{_datadir}/systemtap/tapset/qemu-system-mips64el.stp
-%{_datadir}/systemtap/tapset/qemu-system-mips64.stp
+%{_datadir}/systemtap/tapset/qemu-system-mips*.stp
 %{_mandir}/man1/qemu-system-mips.1*
 %{_mandir}/man1/qemu-system-mipsel.1*
 %{_mandir}/man1/qemu-system-mips64el.1*
 %{_mandir}/man1/qemu-system-mips64.1*
-%endif
 
-%if 0%{?system_cris:1}
-%files %{system_cris}
-%defattr(-,root,root)
+
+%files system-cris
 %{_bindir}/qemu-system-cris
-%{_datadir}/systemtap/tapset/qemu-system-cris.stp
+%{_datadir}/systemtap/tapset/qemu-system-cris*.stp
 %{_mandir}/man1/qemu-system-cris.1*
-%endif
 
-%if 0%{?system_lm32:1}
-%files %{system_lm32}
-%defattr(-,root,root)
+
+%files system-lm32
 %{_bindir}/qemu-system-lm32
-%{_datadir}/systemtap/tapset/qemu-system-lm32.stp
+%{_datadir}/systemtap/tapset/qemu-system-lm32*.stp
 %{_mandir}/man1/qemu-system-lm32.1*
-%endif
 
-%if 0%{?system_m68k:1}
-%files %{system_m68k}
-%defattr(-,root,root)
+
+%files system-m68k
 %{_bindir}/qemu-system-m68k
-%{_datadir}/systemtap/tapset/qemu-system-m68k.stp
+%{_datadir}/systemtap/tapset/qemu-system-m68k*.stp
 %{_mandir}/man1/qemu-system-m68k.1*
-%endif
 
-%if 0%{?system_microblaze:1}
-%files %{system_microblaze}
-%defattr(-,root,root)
+
+%files system-microblaze
 %{_bindir}/qemu-system-microblaze
 %{_bindir}/qemu-system-microblazeel
-%{_datadir}/systemtap/tapset/qemu-system-microblaze.stp
-%{_datadir}/systemtap/tapset/qemu-system-microblazeel.stp
+%{_datadir}/systemtap/tapset/qemu-system-microblaze*.stp
 %{_mandir}/man1/qemu-system-microblaze.1*
 %{_mandir}/man1/qemu-system-microblazeel.1*
 %{_datadir}/%{name}/petalogix*.dtb
-%endif
 
-%if 0%{?system_or32:1}
-%files %{system_or32}
-%defattr(-,root,root)
+
+%files system-or32
 %{_bindir}/qemu-system-or32
-%{_datadir}/systemtap/tapset/qemu-system-or32.stp
+%{_datadir}/systemtap/tapset/qemu-system-or32*.stp
 %{_mandir}/man1/qemu-system-or32.1*
-%endif
 
-%if 0%{?system_s390x:1}
-%files %{system_s390x}
-%defattr(-,root,root)
+
+%files system-s390x
 %{_bindir}/qemu-system-s390x
-%{_datadir}/systemtap/tapset/qemu-system-s390x.stp
+%{_datadir}/systemtap/tapset/qemu-system-s390x*.stp
 %{_mandir}/man1/qemu-system-s390x.1*
 %{_datadir}/%{name}/s390-zipl.rom
 %{_datadir}/%{name}/s390-ccw.img
 %ifarch s390x
 %{?kvm_files:}
-%{?qemu_kvm_files:}
-%endif
 %endif
 
-%if 0%{?system_sh4:1}
-%files %{system_sh4}
-%defattr(-,root,root)
+
+%files system-sh4
 %{_bindir}/qemu-system-sh4
 %{_bindir}/qemu-system-sh4eb
-%{_datadir}/systemtap/tapset/qemu-system-sh4.stp
-%{_datadir}/systemtap/tapset/qemu-system-sh4eb.stp
+%{_datadir}/systemtap/tapset/qemu-system-sh4*.stp
 %{_mandir}/man1/qemu-system-sh4.1*
 %{_mandir}/man1/qemu-system-sh4eb.1*
-%endif
 
-%if 0%{?system_sparc:1}
-%files %{system_sparc}
-%defattr(-,root,root)
+
+%files system-sparc
 %{_bindir}/qemu-system-sparc
 %{_bindir}/qemu-system-sparc64
-%{_datadir}/systemtap/tapset/qemu-system-sparc.stp
-%{_datadir}/systemtap/tapset/qemu-system-sparc64.stp
+%{_datadir}/systemtap/tapset/qemu-system-sparc*.stp
 %{_mandir}/man1/qemu-system-sparc.1*
 %{_mandir}/man1/qemu-system-sparc64.1*
 %{_datadir}/%{name}/QEMU,tcx.bin
 %{_datadir}/%{name}/QEMU,cgthree.bin
-%endif
 
-%if 0%{?system_ppc:1}
-%files %{system_ppc}
-%defattr(-,root,root)
-%if %{without kvmonly}
+
+%files system-ppc
 %{_bindir}/qemu-system-ppc
 %{_bindir}/qemu-system-ppc64
 %{_bindir}/qemu-system-ppcemb
-%{_datadir}/systemtap/tapset/qemu-system-ppc.stp
-%{_datadir}/systemtap/tapset/qemu-system-ppc64.stp
-%{_datadir}/systemtap/tapset/qemu-system-ppcemb.stp
+%{_datadir}/systemtap/tapset/qemu-system-ppc*.stp
+%{_datadir}/systemtap/tapset/qemu-system-ppc64*.stp
+%{_datadir}/systemtap/tapset/qemu-system-ppcemb*.stp
 %{_mandir}/man1/qemu-system-ppc.1*
 %{_mandir}/man1/qemu-system-ppc64.1*
 %{_mandir}/man1/qemu-system-ppcemb.1*
-%endif
 %{_datadir}/%{name}/bamboo.dtb
 %{_datadir}/%{name}/ppc_rom.bin
 %{_datadir}/%{name}/spapr-rtas.bin
-%ifarch ppc64
+%{_datadir}/%{name}/u-boot.e500
+%ifarch ppc64 ppc64le
 %{?kvm_files:}
-%{?qemu_kvm_files:}
-%endif
 %endif
 
-%if 0%{?system_unicore32:1}
-%files %{system_unicore32}
-%defattr(-,root,root)
+
+%files system-unicore32
 %{_bindir}/qemu-system-unicore32
-%{_datadir}/systemtap/tapset/qemu-system-unicore32.stp
+%{_datadir}/systemtap/tapset/qemu-system-unicore32*.stp
 %{_mandir}/man1/qemu-system-unicore32.1*
-%endif
 
-%if 0%{?system_xtensa:1}
-%files %{system_xtensa}
-%defattr(-,root,root)
+
+%files system-xtensa
 %{_bindir}/qemu-system-xtensa
 %{_bindir}/qemu-system-xtensaeb
-%{_datadir}/systemtap/tapset/qemu-system-xtensa.stp
-%{_datadir}/systemtap/tapset/qemu-system-xtensaeb.stp
+%{_datadir}/systemtap/tapset/qemu-system-xtensa*.stp
 %{_mandir}/man1/qemu-system-xtensa.1*
 %{_mandir}/man1/qemu-system-xtensaeb.1*
-%endif
 
-%if 0%{?system_moxie:1}
-%files %{system_moxie}
-%defattr(-,root,root)
+
+%files system-moxie
 %{_bindir}/qemu-system-moxie
-%{_datadir}/systemtap/tapset/qemu-system-moxie.stp
+%{_datadir}/systemtap/tapset/qemu-system-moxie*.stp
 %{_mandir}/man1/qemu-system-moxie.1*
-%endif
 
-%if 0%{?system_aarch64:1}
-%files %{system_aarch64}
-%defattr(-,root,root)
+
+%files system-aarch64
 %{_bindir}/qemu-system-aarch64
-%{_datadir}/systemtap/tapset/qemu-system-aarch64.stp
+%{_datadir}/systemtap/tapset/qemu-system-aarch64*.stp
 %{_mandir}/man1/qemu-system-aarch64.1*
 %ifarch aarch64
 %{?kvm_files:}
-%{?qemu_kvm_files:}
-%endif
 %endif
 
-%if %{without separate_kvm}
+
+%files system-tricore
+%{_bindir}/qemu-system-tricore
+%{_datadir}/systemtap/tapset/qemu-system-tricore*.stp
+%{_mandir}/man1/qemu-system-tricore.1*
+
+
 %files img
-%defattr(-,root,root)
 %{_bindir}/qemu-img
 %{_bindir}/qemu-io
 %{_bindir}/qemu-nbd
@@ -1572,21 +1190,216 @@ getent passwd qemu >/dev/null || \
 
 
 %files -n libcacard
-%defattr(-,root,root,-)
 %{_libdir}/libcacard.so.*
 
+
 %files -n libcacard-tools
-%defattr(-,root,root,-)
 %{_bindir}/vscclient
 
+
 %files -n libcacard-devel
-%defattr(-,root,root,-)
 %{_includedir}/cacard
 %{_libdir}/libcacard.so
 %{_libdir}/pkgconfig/libcacard.pc
-%endif
+
 
 %changelog
+* Mon Aug 31 2015 Cole Robinson <crobinso@redhat.com> - 2:2.4.0-2
+- CVE-2015-5255: heap memory corruption in vnc_refresh_server_surface (bz
+  #1255899)
+
+* Tue Aug 11 2015 Cole Robinson <crobinso@redhat.com> - 2:2.4.0-1
+- Rebased to version 2.4.0
+- Support for virtio-gpu, 2D only
+- Support for virtio-based keyboard/mouse/tablet emulation
+- x86 support for memory hot-unplug
+- ACPI v5.1 table support for 'virt' board
+
+* Sun Aug 09 2015 Cole Robinson <crobinso@redhat.com> - 2:2.4.0-0.2.rc4
+- CVE-2015-3209: pcnet: multi-tmd buffer overflow in the tx path (bz #1230536)
+- CVE-2015-3214: i8254: out-of-bounds memory access (bz #1243728)
+- CVE-2015-5158: scsi stack buffer overflow (bz #1246025)
+- CVE-2015-5154: ide: atapi: heap overflow during I/O buffer memory access (bz
+  #1247141)
+- CVE-2015-5165: rtl8139 uninitialized heap memory information leakage to
+  guest (bz #1249755)
+- CVE-2015-5166: BlockBackend object use after free issue (bz #1249758)
+- CVE-2015-5745: buffer overflow in virtio-serial (bz #1251160)
+
+* Tue Jul 14 2015 Cole Robinson <crobinso@redhat.com> 2:2.4.0-0.1-rc0
+- Rebased to version 2.4.0-rc0
+
+* Fri Jul  3 2015 Richard W.M. Jones <rjones@redhat.com> - 2:2.3.0-15
+- Bump and rebuild.
+
+* Fri Jul  3 2015 Daniel P. Berrange <berrange@redhat.com> - 2:2.3.0-14
+- Use explicit --(enable,disable)-spice args (rhbz #1239102)
+
+* Thu Jul  2 2015 Peter Robinson <pbrobinson@fedoraproject.org> 2:2.3.0-13
+- Build aarch64 with -fPIC (rhbz 1232499)
+
+* Wed Jul 01 2015 Nick Clifton <nickc@redhat.com> - 2:2.3.0-12
+- Disable stack protection for AArch64.  F23's GCC thinks that it is available but F23's glibc does not support it.
+
+* Fri Jun 26 2015 Paolo Bonzini <pbonzini@redhat.com> - 2:2.3.0-10
+- Rebuild for libiscsi soname bump
+
+* Fri Jun 19 2015 Paolo Bonzini <pbonzini@redhat.com> - 2:2.3.0-10
+- Re-enable tcmalloc on arm
+
+* Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2:2.3.0-9
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
+
+* Wed Jun 10 2015 Dan Horák <dan[at]danny.cz> - 2:2.3.0-8
+- gperftools not available on s390(x)
+
+* Fri Jun 05 2015 Cole Robinson <crobinso@redhat.com> - 2:2.3.0-7
+- CVE-2015-4037: insecure temporary file use in /net/slirp.c (bz #1222894)
+
+* Mon Jun  1 2015 Daniel P. Berrange <berrange@redhat.com> - 2:2.3.0-6
+- Disable tcmalloc on arm since it currently hangs (rhbz #1226806)
+- Re-enable tests on arm
+
+* Wed May 13 2015 Cole Robinson <crobinso@redhat.com> - 2:2.3.0-5
+- Backport upstream 2.4 patch to link with tcmalloc, enable it
+- CVE-2015-3456: (VENOM) fdc: out-of-bounds fifo buffer memory access (bz
+  #1221152)
+
+* Sun May 10 2015 Paolo Bonzini <pbonzini@redhat.com> 2:2.3.0-4
+- Backport upstream 2.4 patch to link with tcmalloc, enable it
+- Add -p1 to autopatch
+
+* Wed May 06 2015 Cole Robinson <crobinso@redhat.com> 2:2.3.0-3
+- Fix ksm.service (bz 1218814)
+
+* Tue May  5 2015 Dan Horák <dan[at]danny.cz> - 2:2.3.0-2
+- Require libseccomp only when built with it
+
+* Tue Mar 24 2015 Cole Robinson <crobinso@redhat.com> - 2:2.3.0-1
+- Rebased to version 2.3.0 GA
+- Another attempt at fixing default /dev/kvm permissions (bz 950436)
+
+* Tue Mar 24 2015 Cole Robinson <crobinso@redhat.com> - 2:2.3.0-0.5.rc3
+- Drop unneeded kvm.modules
+- Fix s390/ppc64 FTBFS (bz 1212328)
+
+* Tue Mar 24 2015 Cole Robinson <crobinso@redhat.com> - 2:2.3.0-0.4.rc3
+- Rebased to version 2.3.0-rc3
+
+* Tue Mar 24 2015 Cole Robinson <crobinso@redhat.com> - 2:2.3.0-0.3.rc2
+- Rebased to version 2.3.0-rc2
+- Don't install ksm services as executable (bz #1192720)
+- Skip hanging tests on s390 (bz #1206057)
+- CVE-2015-1779 vnc: insufficient resource limiting in VNC websockets decoder
+  (bz #1205051, bz #1199572)
+
+* Tue Mar 24 2015 Cole Robinson <crobinso@redhat.com> - 2:2.3.0-0.2.rc1
+- Rebased to version 2.3.0-rc1
+
+* Sun Mar 22 2015 Cole Robinson <crobinso@redhat.com> - 2:2.3.0-0.1.rc0
+- Rebased to version 2.3.0-rc0
+
+* Tue Feb 17 2015 Richard W.M. Jones <rjones@redhat.com> - 2:2.2.0-7
+- Add -fPIC flag to build to avoid
+  'relocation R_X86_64_PC32 against undefined symbol' errors.
+- Add a hopefully temporary hack so that -fPIC is used to build
+  NSS files in libcacard.
+
+* Wed Feb  4 2015 Richard W.M. Jones <rjones@redhat.com> - 2:2.2.0-5
+- Add UEFI support for aarch64.
+
+* Tue Feb  3 2015 Daniel P. Berrange <berrange@redhat.com> - 2:2.2.0-4
+- Re-enable SPICE after previous build fixes circular dep
+
+* Tue Feb  3 2015 Daniel P. Berrange <berrange@redhat.com> - 2:2.2.0-3
+- Rebuild for changed xen soname
+- Temporarily disable SPICE to break circular build-dep on libcacard
+- Stop libcacard linking against the entire world
+
+* Wed Jan 28 2015 Daniel P. Berrange <berrange@redhat.com> - 2:2.2.0-2
+- Pass package information to configure
+
+* Tue Dec 09 2014 Cole Robinson <crobinso@redhat.com> - 2:2.2.0-1
+- Rebased to version 2.2.0
+
+* Sun Nov 30 2014 Cole Robinson <crobinso@redhat.com> - 2:2.2.0-0.2.rc3
+- Update to qemu-2.2.0-rc3
+
+* Sat Nov 15 2014 Cole Robinson <crobinso@redhat.com> - 2:2.2.0-0.1.rc1
+- Update to qemu-2.2.0-rc1
+
+* Wed Oct 29 2014 Cole Robinson <crobinso@redhat.com> - 2:2.1.2-6
+- CVE-2014-7815 vnc: insufficient bits_per_pixel from the client sanitization
+  (bz #1157647, bz #1157641)
+- CVE-2014-3689 vmware_vga: insufficient parameter validation in rectangle
+  functions (bz #1153038, bz #1153035)
+
+* Fri Oct 24 2014 Danel P. Berrange <berrange@redhat.com> - 2:2.1.2-5
+- Fix dep on numactl-devel to be build time not install time
+
+* Mon Oct 06 2014 Cole Robinson <crobinso@redhat.com> - 2:2.1.2-4
+- Fix PPC virtio regression (bz #1144490)
+
+* Tue Sep 30 2014 Dan Horák <dan[at]danny.cz> - 2:2.1.2-3
+- Enable KVM on ppc64le
+
+* Fri Sep 26 2014 Richard W.M. Jones <rjones@redhat.com> - 2:2.1.2-2
+- Add Requires seabios >= 1.7.5, otherwise Windows virtio booting does
+  not work.
+
+* Fri Sep 26 2014 Cole Robinson <crobinso@redhat.com> - 2:2.1.2-1
+- Rebased to version 2.1.2
+- CVE-2014-3640 qemu: slirp: NULL pointer (bz #1144821, bz #1144818)
+
+* Sun Sep 21 2014 Cole Robinson <crobinso@redhat.com> - 2:2.1.1-2
+- Fix crash on migration/snapshot (bz #1144490)
+
+* Thu Sep 11 2014 Cole Robinson <crobinso@redhat.com> - 2:2.1.1-1
+- Rebased to version 2.1.1
+- CVE-2014-5388: out of bounds memory access (bz #1132962, bz #1132956)
+- CVE-2014-3615 crash when guest sets high resolution (bz #1139121, bz
+  #1139115)
+
+* Wed Sep  3 2014 Richard W.M. Jones <rjones@redhat.com> 2:2.1.0-6
+- Add upstream patches to:
+  * Fix crash in curl driver.
+  * Add curl timeout option.
+  * Add curl cookie option.
+- Add upstream commit hashes to patches.
+
+* Wed Aug 20 2014 Richard W.M. Jones <rjones@redhat.com> 2:2.1.0-5
+- Add patch for aarch64 which uncompresses -kernel parameter (in arm.next).
+
+* Mon Aug 18 2014 Dan Horák <dan[at]danny.cz> - 2:2.1.0-4
+- Don't fail build due failing tests on s390 (#1100971)
+
+* Sun Aug 17 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2:2.1.0-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
+
+* Sun Aug 03 2014 Richard W.M. Jones <rjones@redhat.com> 2:2.1.0-2
+- Update to qemu 2.1.0 final released version.
+- Drop optimization flags when compiling on aarch64 (see RHBZ#1126199).
+
+* Fri Jul 25 2014 Cole Robinson <crobinso@redhat.com> 2:2.1.0-0.5.rc3
+- Update to qemu-2.1.0-rc3
+
+* Wed Jul 16 2014 Cole Robinson <crobinso@redhat.com> 2:2.1.0-0.4.rc2
+- Update to qemu-2.1.0-rc2
+
+* Mon Jul 14 2014 Peter Robinson <pbrobinson@fedoraproject.org> 2:2.1.0-0.3.rc1
+- Build qemu-system-aarch64 on all arches
+- Run check on ARM arches, just don't fail the build ATM
+
+* Wed Jul 09 2014 Cole Robinson <crobinso@redhat.com> - 2:2.1.0-0.2.rc1
+- Update to qemu-2.1.0-rc1
+- Enable SDL2 frontend, it's improved recently
+- Fix drive-mirror segfaults if source size is not cluster-aligned (bz
+  #1114791)
+- Fix crash with virtio-blk hotunplug (bz #1117181)
+
+* Fri Jul 04 2014 Cole Robinson <crobinso@redhat.com> - 2:2.1.0-0.1.rc0
+- Update to qemu 2.1-rc0
+
 * Sun Jun 15 2014 Cole Robinson <crobinso@redhat.com> - 2:2.0.0-7
 - Don't use libtool on dtrace, fixes rawhide build (bz #1106968)
 
