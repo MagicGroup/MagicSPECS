@@ -1,16 +1,17 @@
+# _hardened_build breaks building the static 'init' binary.
+# https://bugzilla.redhat.com/1204162
+%undefine _hardened_build
+
 %global debug_package %{nil}
 
 Name:            qemu-sanity-check
-Version:         1.1.4
+Version:         1.1.5
 Release:         4%{?dist}
 Summary:         Simple qemu and Linux kernel sanity checker
 License:         GPLv2+
 
 URL:             http://people.redhat.com/~rjones/qemu-sanity-check
 Source0:         http://people.redhat.com/~rjones/qemu-sanity-check/files/%{name}-%{version}.tar.gz
-
-# Upstream patch included in >= 1.1.5.
-Patch1:          0001-Better-search-for-debug-etc.-kernels-RHBZ-1002189.patch
 
 # Non-upstream patch to disable test which fails on broken kernels
 # which don't respond to panic=1 option properly.
@@ -34,6 +35,12 @@ BuildRequires:   qemu-system-x86
 %endif
 
 BuildRequires:   kernel
+
+# For complicated reasons, this is required so that
+# /bin/kernel-install puts the kernel directly into /boot, instead of
+# into a /boot/<machine-id> subdirectory (in Fedora >= 23).  Read the
+# kernel-install script to understand why.
+BuildRequires: grubby
 
 %ifarch %{ix86} x86_64
 Requires:        qemu-system-x86
@@ -73,7 +80,6 @@ as %{name} except that this package does not depend on qemu or kernel.
 %prep
 %setup -q
 
-%patch1 -p1
 %patch4 -p1
 
 # Rerun autotools because the patches touch configure.ac and Makefile.am.
@@ -83,7 +89,10 @@ autoreconf -i
 %build
 # NB: canonical_arch is a variable in the final script, so it
 # has to be escaped here.
-%configure --with-qemu-list="qemu-system-\$canonical_arch"
+%configure --with-qemu-list="qemu-system-\$canonical_arch" || {
+  cat config.log
+  exit 1
+}
 make %{?_smp_mflags}
 
 
@@ -112,8 +121,19 @@ make DESTDIR=$RPM_BUILD_ROOT install
 
 
 %changelog
-* Sun Jun 22 2014 Liu Di <liudidi@gmail.com> - 1.1.4-4
-- 为 Magic 3.0 重建
+* Fri Jun 19 2015 Richard W.M. Jones <rjones@redhat.com> - 1.1.5-4
+- +BR grubby.
+
+* Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.1.5-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
+
+* Sun Aug 17 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.1.5-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
+
+* Wed Jul 02 2014 Richard W.M. Jones <rjones@redhat.com> - 1.1.5-1
+- New upstream version 1.1.5.
+- Adds --accel option to select qemu acceleration mode.
+- Remove upstream patch.
 
 * Sun Jun 08 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.1.4-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
