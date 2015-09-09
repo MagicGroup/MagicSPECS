@@ -1,0 +1,15 @@
+diff -up QScintilla-gpl-2.9/Qt4Qt5/qscintilla.pro.qt5 QScintilla-gpl-2.9/Qt4Qt5/qscintilla.pro
+--- QScintilla-gpl-2.9/Qt4Qt5/qscintilla.pro.qt5	2015-04-20 09:38:24.000000000 -0500
++++ QScintilla-gpl-2.9/Qt4Qt5/qscintilla.pro	2015-04-26 13:34:43.147986472 -0500
+@@ -77,7 +77,11 @@ isEmpty(qsci.path) {
+ INSTALLS += header trans qsci target
+ 
+ greaterThan(QT_MAJOR_VERSION, 3) {
++greaterThan(QT_MAJOR_VERSION, 4) {
++    features.path = $$[QT_HOST_DATA]/mkspecs/features
++} else {
+     features.path = $$[QT_INSTALL_DATA]/mkspecs/features
++}
+     features.files = $$PWD/features/qscintilla2.prf
+     INSTALLS += features
+ }
