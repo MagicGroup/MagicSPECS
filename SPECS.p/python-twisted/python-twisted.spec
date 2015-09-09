@@ -1,59 +1,189 @@
-%{!?python:%define python python}
-
-Name:           %{python}-twisted
-Version:        12.2.0
-Release:        2%{?dist}
-Summary:        Event-based framework for internet applications
+Name:           python-twisted
+Version:        15.2.1
+Release:        1%{?dist}
+Summary:        Twisted is a networking engine written in Python
 License:        MIT
 URL:            http://twistedmatrix.com/
-Source0:        README.fedora
-#Obtained by running python setup.py egg_info in the unitary tarball
-Source1:        PKG-INFO
-BuildArch:      noarch
-BuildRequires:  python
-Requires:       python
-Requires:       %{python}-twisted-core   >= %{version}
-Requires:       %{python}-twisted-conch  >= %{version}
-Requires:       %{python}-twisted-lore   >= %{version}
-Requires:       %{python}-twisted-mail   >= %{version}
-Requires:       %{python}-twisted-names  >= %{version}
-Requires:       %{python}-twisted-news   >= %{version}
-Requires:       %{python}-twisted-runner >= %{version}
-Requires:       %{python}-twisted-web    >= %{version}
-Requires:       %{python}-twisted-words  >= %{version}
+Source0:        https://pypi.python.org/packages/source/T/Twisted/Twisted-%{version}.tar.bz2
+Patch0:         python-twisted-15.2.1-doc-lore-man-fix.patch
+BuildRequires:  python2-devel >= 2.6
+BuildRequires:  python-zope-interface >= 3.6.0
+BuildRequires:  python-crypto >= 2.6.1
+BuildRequires:  pyOpenSSL >= 0.10
+BuildRequires:  python-service-identity
+BuildRequires:  python-setuptools
+
+Requires:       python-zope-interface >= 3.6.0
+Requires:       pyOpenSSL >= 0.10
+Requires:       python-service-identity
+
+# Bring all provided resources back into the main package namespace.
+Obsoletes:      python-twisted-conch < 14
+Provides:       python-twisted-conch = %{version}-%{release}
+Obsoletes:      python-twisted-core < 14
+Provides:       python-twisted-core = %{version}-%{release}
+Obsoletes:      python-twisted-core-doc < 14
+Provides:       python-twisted-core-doc = %{version}-%{release}
+Obsoletes:      python-twisted-lore < 14
+Provides:       python-twisted-lore = %{version}-%{release}
+Obsoletes:      python-twisted-mail < 14
+Provides:       python-twisted-mail = %{version}-%{release}
+Obsoletes:      python-twisted-names < 14
+Provides:       python-twisted-names = %{version}-%{release}
+Obsoletes:      python-twisted-news < 14
+Provides:       python-twisted-news = %{version}-%{release}
+Obsoletes:      python-twisted-runner < 14
+Provides:       python-twisted-runner = %{version}-%{release}
+Obsoletes:      python-twisted-web < 14
+Provides:       python-twisted-web = %{version}-%{release}
+Obsoletes:      python-twisted-web2 < 14
+Provides:       python-twisted-web2 = %{version}-%{release}
+Obsoletes:      python-twisted-words < 14
+Provides:       python-twisted-words = %{version}-%{release}
+
+# Capture previous namespace.
 Obsoletes:      Twisted < 2.4.0-1
 Provides:       Twisted = %{version}-%{release}
 Obsoletes:      twisted < 2.4.0-1
 Provides:       twisted = %{version}-%{release}
 
-%description
-Twisted is an event-based framework for internet applications.  It includes a
-web server, a telnet server, a chat server, a news server, a generic client
-and server for remote object access, and APIs for creating new protocols and
-services. Twisted supports integration of the Tk, GTK+, Qt or wxPython event
-loop with its main event loop. The Win32 event loop is also supported, as is
-basic support for running servers on top of Jython.
+# python-twisted-conch
+Requires:       python-crypto
+Requires:       python-pyasn1
+Requires:       tkinter
 
-Installing this package brings all Twisted sub-packages into your system.
+# python-twisted-core
+Requires:       pyserial
+
+
+%description
+Twisted is a networking engine written in Python, supporting numerous protocols.
+It contains a web server, numerous chat clients, chat servers, mail servers
+and more.
+
 
 %prep
-%setup -c -T
-install -p -m 0644 %{SOURCE0} README
+%setup -q -n Twisted-%{version}
+%patch0 -p1
+
+
+%build
+CFLAGS="$RPM_OPT_FLAGS" %{__python2} setup.py build
 
 
 %install
-install -d $RPM_BUILD_ROOT%{python_sitelib}
-install -p -m 0644 %{SOURCE1} $RPM_BUILD_ROOT%{python_sitelib}/Twisted-%{version}-py2.7.egg-info
-magic_rpm_clean.sh
+rm -rf $RPM_BUILD_ROOT
+%{__python2} setup.py install -O1 --skip-build --root $RPM_BUILD_ROOT
 
-%files
-%doc README
-%{python_sitelib}/Twisted-%{version}-py2.7.egg-info
+# egg-info
+if [ -f %{buildroot}%{python2_sitearch}/Twisted*.egg-info ]; then
+    echo %{buildroot}%{python2_sitearch}/Twisted*.egg-info |
+        sed -e "s|^%{buildroot}||"
+fi > egg-info
+
+# no-manual-page-for-binary
+%{__mkdir_p} %{buildroot}%{_mandir}/man1/
+for s in conch core lore mail; do
+%{__cp} -a doc/$s/man/*.1 %{buildroot}%{_mandir}/man1/
+done
+
+# devel-file-in-non-devel-package
+%{__rm} -v %{buildroot}%{python2_sitearch}/twisted/runner/portmap.c
+%{__rm} -v %{buildroot}%{python2_sitearch}/twisted/python/_initgroups.c
+%{__rm} -v %{buildroot}%{python2_sitearch}/twisted/test/raiser.c
+%{__rm} -v %{buildroot}%{python2_sitearch}/twisted/internet/iocpreactor/iocpsupport/winsock_pointers.c
+%{__rm} -v %{buildroot}%{python2_sitearch}/twisted/internet/iocpreactor/iocpsupport/winsock_pointers.h
+%{__rm} -v %{buildroot}%{python2_sitearch}/twisted/internet/iocpreactor/iocpsupport/iocpsupport.c
+%{__rm} -v %{buildroot}%{python2_sitearch}/twisted/python/sendmsg.c
+
+# pem-certificate
+%{__rm} -v %{buildroot}%{python2_sitearch}/twisted/internet/test/fake_CAs/thing1.pem
+%{__rm} -v %{buildroot}%{python2_sitearch}/twisted/mail/test/server.pem
+%{__rm} -v %{buildroot}%{python2_sitearch}/twisted/test/server.pem
+%{__rm} -v %{buildroot}%{python2_sitearch}/twisted/internet/test/fake_CAs/chain.pem
+%{__rm} -v %{buildroot}%{python2_sitearch}/twisted/internet/test/fake_CAs/thing2.pem
+%{__rm} -v %{buildroot}%{python2_sitearch}/twisted/internet/test/fake_CAs/thing2-duplicate.pem
+
+# non-executable-script
+%{__chmod} +x %{buildroot}%{python2_sitearch}/twisted/mail/test/pop3testserver.py
+%{__chmod} +x %{buildroot}%{python2_sitearch}/twisted/python/test/pullpipe.py
+%{__chmod} +x %{buildroot}%{python2_sitearch}/twisted/trial/test/scripttest.py
+
+# non-standard-executable-perm
+%{__chmod} 755 %{buildroot}%{python2_sitearch}/twisted/python/sendmsg.so
+%{__chmod} 755 %{buildroot}%{python2_sitearch}/twisted/runner/portmap.so
+%{__chmod} 755 %{buildroot}%{python2_sitearch}/twisted/test/raiser.so
+
+
+%check
+# bin/trial twisted
+# can't get this to work within the buildroot yet due to multicast
+# https://twistedmatrix.com/trac/ticket/7494
+
+
+%clean
+rm -rf $RPM_BUILD_ROOT
+
+
+%files -f egg-info
+%doc CONTRIBUTING LICENSE NEWS README
+%{_bindir}/cftp
+%{_bindir}/ckeygen
+%{_bindir}/conch
+%{_bindir}/lore
+%{_bindir}/mailmail
+%{_bindir}/manhole
+%{_bindir}/pyhtmlizer
+%{_bindir}/tap2deb
+%{_bindir}/tap2rpm
+%{_bindir}/tkconch
+%{_bindir}/trial
+%{_bindir}/twistd
+%{_mandir}/man1/cftp.1*
+%{_mandir}/man1/ckeygen.1*
+%{_mandir}/man1/conch.1*
+%{_mandir}/man1/lore.1*
+%{_mandir}/man1/mailmail.1*
+%{_mandir}/man1/manhole.1*
+%{_mandir}/man1/pyhtmlizer.1*
+%{_mandir}/man1/tap2deb.1*
+%{_mandir}/man1/tap2rpm.1*
+%{_mandir}/man1/tkconch.1*
+%{_mandir}/man1/trial.1*
+%{_mandir}/man1/twistd.1*
+%{python2_sitearch}/twisted
+%{python2_sitearch}/Twisted*
 
 
 %changelog
-* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 12.2.0-2
-- 为 Magic 3.0 重建
+* Mon Jul 20 2015 Jonathan Steffan <jsteffan@fedoraproject.org> - 15.2.1-1
+- Update to 15.2.1
+
+* Sat May 09 2015 Jonathan Steffan <jsteffan@fedoraproject.org> - 15.1.0-1
+- Update to 15.1.0 (RHBZ#1187921,RHBZ#1192707)
+- Require python-service-identity (RHBZ#1119067)
+- Obsolete python-twisted-core-doc (RHBZ#1187025)
+
+* Sat Nov 22 2014 Jonathan Steffan <jsteffan@fedoraproject.org> - 14.0.2-1
+- Update to 14.0.2 (RHBZ#1143002)
+
+* Sun Aug 17 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 14.0.0-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
+
+* Sat Jun 07 2014 Jonathan Steffan <jsteffan@fedoraproject.org> - 14.0.0-1
+- Update to 14.0.0
+- Ship Twisted as a fully featured package without subpackages on the advice
+  of upstream and to mirror what pypi provides
+- Explictly build for python2 with new macros
+
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 12.2.0-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Sun Aug 04 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 12.2.0-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 12.2.0-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
 
 * Mon Sep 03 2012 Julian Sikorski <belegdol@fedoraproject.org> - 12.2.0-1
 - Updated to 12.2.0
