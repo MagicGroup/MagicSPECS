@@ -1,0 +1,327 @@
+diff -up Botan-1.10.5/checks/cvc_tests.cpp.eccfix Botan-1.10.5/checks/cvc_tests.cpp
+--- Botan-1.10.5/checks/cvc_tests.cpp.eccfix	2013-10-22 01:24:04.150239344 +0100
++++ Botan-1.10.5/checks/cvc_tests.cpp	2013-10-22 01:24:28.166207414 +0100
+@@ -582,7 +582,7 @@ u32bit do_cvc_tests(Botan::RandomNumberG
+    std::cout << "Testing CVC: " << std::flush;
+ 
+    test_enc_gen_selfsigned(rng);
+-   test_enc_gen_req(rng);
++   // test_enc_gen_req(rng);
+    test_cvc_req_ext(rng);
+    test_cvc_ado_ext(rng);
+    test_cvc_ado_creation(rng);
+diff -up Botan-1.10.5/checks/ecdh.cpp.eccfix Botan-1.10.5/checks/ecdh.cpp
+--- Botan-1.10.5/checks/ecdh.cpp.eccfix	2013-10-22 01:22:58.494326624 +0100
++++ Botan-1.10.5/checks/ecdh.cpp	2013-10-22 01:23:52.580254726 +0100
+@@ -57,8 +57,8 @@ void test_ecdh_some_dp(RandomNumberGener
+    {
+    std::vector<std::string> oids;
+    oids.push_back("1.2.840.10045.3.1.7");
+-   oids.push_back("1.3.132.0.8");
+-   oids.push_back("1.2.840.10045.3.1.1");
++   // oids.push_back("1.3.132.0.8");
++   // oids.push_back("1.2.840.10045.3.1.1");
+ 
+    for(u32bit i = 0; i< oids.size(); i++)
+       {
+@@ -85,8 +85,8 @@ void test_ecdh_der_derivation(RandomNumb
+    {
+    std::vector<std::string> oids;
+    oids.push_back("1.2.840.10045.3.1.7");
+-   oids.push_back("1.3.132.0.8");
+-   oids.push_back("1.2.840.10045.3.1.1");
++   // oids.push_back("1.3.132.0.8");
++   // oids.push_back("1.2.840.10045.3.1.1");
+ 
+    for(u32bit i = 0; i< oids.size(); i++)
+       {
+@@ -116,7 +116,7 @@ u32bit do_ecdh_tests(RandomNumberGenerat
+    {
+    std::cout << "Testing ECDH (InSiTo unit tests): ";
+ 
+-   test_ecdh_normal_derivation(rng);
++   // test_ecdh_normal_derivation(rng);
+    test_ecdh_some_dp(rng);
+    test_ecdh_der_derivation(rng);
+ 
+diff -up Botan-1.10.5/checks/ecdsa.cpp.eccfix Botan-1.10.5/checks/ecdsa.cpp
+--- Botan-1.10.5/checks/ecdsa.cpp.eccfix	2013-03-02 21:19:35.000000000 +0000
++++ Botan-1.10.5/checks/ecdsa.cpp	2013-10-22 01:22:48.882339400 +0100
+@@ -300,6 +300,7 @@ void test_create_and_verify(RandomNumber
+ void test_curve_registry(RandomNumberGenerator& rng)
+    {
+    std::vector<std::string> oids;
++   /* Disabled.
+    oids.push_back("1.3.132.0.8");
+    oids.push_back("1.2.840.10045.3.1.1");
+    oids.push_back("1.2.840.10045.3.1.2");
+@@ -307,7 +308,9 @@ void test_curve_registry(RandomNumberGen
+    oids.push_back("1.2.840.10045.3.1.4");
+    oids.push_back("1.2.840.10045.3.1.5");
+    oids.push_back("1.2.840.10045.3.1.6");
++   */
+    oids.push_back("1.2.840.10045.3.1.7");
++   /* Disabled
+    oids.push_back("1.3.132.0.6");
+    oids.push_back("1.3.132.0.7");
+    oids.push_back("1.3.132.0.28");
+@@ -318,7 +321,9 @@ void test_curve_registry(RandomNumberGen
+    oids.push_back("1.3.132.0.32");
+    oids.push_back("1.3.132.0.33");
+    oids.push_back("1.3.132.0.10");
++   */
+    oids.push_back("1.3.132.0.34");
++   /* Disabled.
+    oids.push_back("1.3.132.0.35");
+    oids.push_back("1.3.6.1.4.1.8301.3.1.2.9.0.38");
+    oids.push_back("1.3.36.3.3.2.8.1.1.1");
+@@ -328,6 +333,7 @@ void test_curve_registry(RandomNumberGen
+    oids.push_back("1.3.36.3.3.2.8.1.1.9");
+    oids.push_back("1.3.36.3.3.2.8.1.1.11");
+    oids.push_back("1.3.36.3.3.2.8.1.1.13");
++   */
+ 
+    unsigned int i;
+    for (i = 0; i < oids.size(); i++)
+@@ -419,16 +425,16 @@ u32bit do_ecdsa_tests(Botan::RandomNumbe
+    {
+    std::cout << "Testing ECDSA (InSiTo unit tests): ";
+ 
+-   test_hash_larger_than_n(rng);
+-   test_decode_ecdsa_X509();
++   // test_hash_larger_than_n(rng);
++   // test_decode_ecdsa_X509();
+    test_decode_ver_link_SHA256();
+    test_decode_ver_link_SHA1();
+-   test_sign_then_ver(rng);
+-   test_ec_sign(rng);
+-   test_create_pkcs8(rng);
+-   test_create_and_verify(rng);
++   // test_sign_then_ver(rng);
++   // test_ec_sign(rng);
++   // test_create_pkcs8(rng);
++   // test_create_and_verify(rng);
+    test_curve_registry(rng);
+-   test_read_pkcs8(rng);
++   // test_read_pkcs8(rng);
+ 
+    std::cout << std::endl;
+ 
+diff -up Botan-1.10.5/checks/pk.cpp.eccfix Botan-1.10.5/checks/pk.cpp
+--- Botan-1.10.5/checks/pk.cpp.eccfix	2013-03-02 21:19:36.000000000 +0000
++++ Botan-1.10.5/checks/pk.cpp	2013-10-22 01:20:13.225546244 +0100
+@@ -760,14 +760,14 @@ void do_pk_keygen_tests(RandomNumberGene
+ #endif
+ 
+ #if defined(BOTAN_HAS_ECDSA)
+-   EC_KEY(ECDSA_PrivateKey, "secp112r1");
+-   EC_KEY(ECDSA_PrivateKey, "secp128r1");
+-   EC_KEY(ECDSA_PrivateKey, "secp160r1");
+-   EC_KEY(ECDSA_PrivateKey, "secp192r1");
+-   EC_KEY(ECDSA_PrivateKey, "secp224r1");
++//   EC_KEY(ECDSA_PrivateKey, "secp112r1");
++//   EC_KEY(ECDSA_PrivateKey, "secp128r1");
++//   EC_KEY(ECDSA_PrivateKey, "secp160r1");
++//   EC_KEY(ECDSA_PrivateKey, "secp192r1");
++//   EC_KEY(ECDSA_PrivateKey, "secp224r1");
+    EC_KEY(ECDSA_PrivateKey, "secp256r1");
+    EC_KEY(ECDSA_PrivateKey, "secp384r1");
+-   EC_KEY(ECDSA_PrivateKey, "secp521r1");
++//   EC_KEY(ECDSA_PrivateKey, "secp521r1");
+ #endif
+ 
+ #if defined(BOTAN_HAS_GOST_34_10_2001)
+@@ -919,7 +919,7 @@ u32bit do_pk_validation_tests(const std:
+ 
+    std::cout << std::endl;
+ 
+-   do_ec_tests(rng);
++   // do_ec_tests(rng);
+    errors += do_ecdsa_tests(rng);
+    errors += do_ecdh_tests(rng);
+    do_pk_keygen_tests(rng);
+diff -up Botan-1.10.5/checks/pk_bench.cpp.eccfix Botan-1.10.5/checks/pk_bench.cpp
+--- Botan-1.10.5/checks/pk_bench.cpp.eccfix	2013-03-02 21:19:36.000000000 +0000
++++ Botan-1.10.5/checks/pk_bench.cpp	2013-10-22 01:20:13.225546244 +0100
+@@ -77,12 +77,12 @@ using namespace Botan;
+ namespace {
+ 
+ const char* ec_domains[] = {
+-   "secp160r2",
+-   "secp192r1",
+-   "secp224r1",
++//   "secp160r2",
++//   "secp192r1",
++//   "secp224r1",
+    "secp256r1",
+    "secp384r1",
+-   "secp521r1",
++//   "secp521r1",
+    0
+ };
+ 
+diff -up Botan-1.10.5/checks/pk_valid.dat.eccfix Botan-1.10.5/checks/pk_valid.dat
+--- Botan-1.10.5/checks/pk_valid.dat.eccfix	2013-03-02 21:19:36.000000000 +0000
++++ Botan-1.10.5/checks/pk_valid.dat	2013-10-22 01:20:13.226546243 +0100
+@@ -4232,45 +4232,6 @@ MIG6AgEAMIGhBgcqhkjOOAQBMIGVAkAA8HR2W1fH
+ 14593FBF63EAC64976987524044D8B11AB9A95B4B75A760FE22C45A3EFD6:
+ 
+ # ECDSA format is group name:private key:message:nonce:signature
+-[ECDSA/EMSA1(SHA-1)]
+-
+-# From ANSI X9.62
+-secp192r1:\
+-1A8D598FC15BF0FD89030B5CB1111AEB92AE8BAF5EA475FB:\
+-616263:\
+-FA6DE29746BBEB7F8BB1E761F85F7DFB2983169D82FA2F4E:\
+-885052380FF147B734C330C43D39B2C4A89F29B0F749FEAD\
+-E9ECC78106DEF82BF1070CF1D4D804C3CB390046951DF686
+-
+-x962_p239v1:\
+-7EF7C6FABEFFFDEA864206E80B0B08A9331ED93E698561B64CA0F7777F3D:\
+-616263:\
+-656C7196BF87DCC5D1F1020906DF2782360D36B2DE7A17ECE37D503784AF:\
+-2CB7F36803EBB9C427C58D8265F11FC5084747133078FC279DE874FBECB0\
+-2EEAE988104E9C2234A3C2BEB1F53BFA5DC11FF36A875D1E3CCB1F7E45CF
+-
+-brainpool160r1:\
+-1CA8A0ACE60292D2813D992C4EC7A4BCDF611C0:\
+-43727970746F2B2B20352E362E312045434453412074657374206D7367:\
+-9CB692B33F02179D1A6F2A0669FD8DAAF17E4FC4:\
+-672EAFD043D30BAE7CA826828333FA70F10A14C7\
+-0F49C076BB26178277D8E490D0C77F7A9649DE31
+-
+-[ECDSA/EMSA1(SHA-224)]
+-secp224r1:\
+-42D126D0E51F3D6AA9B4D60BD1290853AA964A9C8698D5D5BDBAADEB:\
+-45434453412074657374206D657373616765203230313130323135:\
+-E1F6B207B4FC896879A51F65E85DB94CEB633FEC765739E689847D64:\
+-A4C80AAF3D7B61200E66D6F41EC66D3D65E9E38DC06A88FE3B7F6C4C\
+-8A5CEE4E04FE240464EA2DBB52489D3FAC1CDE6DA24A0E4C6598BCD2
+-
+-brainpool224r1:\
+-47B5CCE9EED463CED28666DA57DA9D0A8BDD3F000CCFC0AE6054F1AD:\
+-43727970746F2B2B20352E362E312045434453412074657374206D7367:\
+-9E9D0C9E67FF5785C3AD89195567CD3990D54C628788F26DB926F5B6:\
+-40369F41BD0D15C92DFB855779DBF439376FB6EDC4153E9B99019B79\
+-40FEF076FC8D610EC12AFC9CC43A150BD0190E507622E6623906D6B8
+-
+ [ECDSA/EMSA1(SHA-256)]
+ secp256r1:\
+ 368E89CC30AE7A3B4B4903C30C238C010257FE97DB85AF35982A7960A0DBD2F3:\
+@@ -4286,20 +4247,6 @@ C1DDAA59A4E0B5D95EB873C33BC465C6782EBF7B
+ A8369164EF54A67303760B77AA62C4DE8122396908EA5B06DBCC2BC48264C832\
+ ADB3A8855019D5AFF789EC1F276AD38A03AAF41F88593B74E5CB9DF7E4BD4922
+ 
+-brainpool256r1:\
+-4EC702404A8047A08206721DE33F02E1F06B14E09A5582171EA9BB8AB3C9BC14:\
+-43727970746F2B2B20352E362E312045434453412074657374206D7367:\
+-A9952A1B896FB2C2AEA88EA578E2A5323114978A765E03E397969DC0F282708C:\
+-54F843E89B084EEE1CFFED09F222DF041CD46DB0C48833667BA0790ECD603089\
+-5304039A927714E79E5FCDB1D043E093FD85C8DD98B835CD6C7BB492C05357E5
+-
+-brainpool256r1:\
+-416D7FCEB966DF966CAE7BE2608C5C4D8939A7B5B3CF6D3E441A64886AC5FAD7:\
+-43727970746F2B2B20352E362E312045434453412074657374206D7367:\
+-A07978494C1B301C1E44467853CD367624549E0E9F5092C0100A53F877AD2EF6:\
+-93935B733CCC6A8702191664346135D1D6320D86A2346DFCA41AEDFBC4260435\
+-A4A9C66485C02BC2DCC858364173FAE00EA02529BA21B56BBBB2EAA4B811416D
+-
+ [ECDSA/EMSA1(SHA-384)]
+ secp384r1:\
+ 100CC52F0263DCB12FDB9E50D44A4C84831A98756265DF0CBFD092D27A739821\
+@@ -4321,54 +4268,6 @@ FF83C10E8D84777D17B724957B83E1500F578F10
+ A34F66CA2AF31241FAF85AEE2528438DA6BED934D75ACCF2E41176D8B661AB58\
+ B7B867D802C38B39E8227F9CF0865072D381948FFFF637D8FB9B37BEC6AE0772
+ 
+-brainpool384r1:\
+-19AD48ECFB30F115AEF41CAFD29B265A586399C0F95166017AA7DB894413A2AE\
+-821B7BE4F4E7B6BBC22A4E2EB1CC0865:\
+-43727970746F2B2B20352E362E312045434453412074657374206D7367:\
+-83928FD1219F1C6D5B128C0ECD2E39A83399CE609382D41890D43FD476318E0C\
+-26264E98E0D5A0DBCC28A8C01C2D63D7:\
+-4B800A206ED7807C0F15798509164709E94ED73B5E02B10D65F45B6C2B7FD694\
+-37F3B5D1342DAF0988CA100B8875C739\
+-2CFA819E10B76CFE12B2C6485D8326B66E6256CD2F4A6DFEB9B2B7BDD732EA9E\
+-9D5398DDECCBEAAF3FD53D554AA1FADD
+-
+-[ECDSA/EMSA1(SHA-512)]
+-
+-secp521r1:\
+-1511908E830069DAD59E8BA8F1BD4045612A4844805F61F7ECD92A1DEE1877B7\
+-E62A57860314820C97FFC972732E3C4C0AE837103692E85B3A11B49EB3E20EF1599:\
+-45434453412F53484128353132292074657374206D6573736167652032303131\
+-30323135:\
+-01C352020AAA6D14B6FC2B78FD46209A9EEF6A357CD8B5D53738E3D655FE7A80\
+-8396E1DC5742058D05F2D76C8CBF4832BE0580A6FD7B4C7426656D17680DEAAEEEC2:\
+-0138A515C79EECAAB50139FB5D9EF5A771CC1C0999F2E54B5A1A9370EA8ADCFD\
+-DDD6E9933A39EDA0862F3ECAEBD49EA5ED58D93DA8F72B1CFB11E52A1528AEC8\
+-63870060D717B29AD6D36DE953A4753FAC58629429EF4DD8F98B5A4F5504C5B2\
+-29C23C609905632CD8D839DC472693698D7A149E8F3F17462F86BA0A7A895D80\
+-583A46E9
+-
+-brainpool512r1:\
+-1433AE89858BE7DD9346AF015FEC69F0556982FFEB9CCEF7FB1CE71155F7620C\
+-ED4A6ACD0F35461A17C8370C4E600BECBACC0F7C1D2D1A2C00203A0E6626C21C:\
+-43727970746F2B2B20352E362E312045434453412074657374206D7367:\
+-AA72BC70ABD9E078DDE47F5440E75A93F136F6EAA5267F591E0D3F562DE48BD8\
+-FED21B9E3F6F5560250566A00C7AAE7E57770BFC7D18A3E7750DC6C7083CC5B0:\
+-A058CD406C7F2D87FBBDDDD1870C67D1ACBD222D45A929565101842EDFAEFB89\
+-3CF07AD22CAC0F3350A7D1300741AB5ECE38498F196690CBCEDBF8C866995E5C\
+-17F48EA66EB70ADE68F6C16103BE54DD004230270E1F8CAC2D6BD47F717C0D1B\
+-1E335FA4AAA5212321EE93E55FED129D781912A0D87B78A5B569DA272B3C9469
+-
+-brainpool512r1:\
+-83DBEFECAF8CFF78C575BE9659C1A104767979497AD9B589B1B13705C71F1DEF\
+-AF5CA76C8700236CE2392268E0133CAADE358E3D4F2E64CB4AB8517079E3EFA0:\
+-43727970746F2B2B20352E362E312045434453412074657374206D7367:\
+-A110CC7BEF64F5C0349344025B97B151C735408BD2BC0D0CC4E54642EA0DF33E\
+-829E85916086B51624B830BB2CDF53DAD9003A6D194115051139DBC3E81DF197:\
+-3254388208915E0EEB99DA89AA198C6FDB1A31B21D3B69EF8EFE4848AE78C32A\
+-4C489347510A9DD04125BBE95F847E14A2DF3267A0A6D1B5EC442B130C9B5DD1\
+-924FCD9F365897570329BFEC41FBAF42961210F3FF850DE5736FFBAAB09C5C03\
+-E0058BD51C8A8EF0FF221F31CF93FE59572ADA3CFEC7016085258A45D1E8544C
+-
+ # ECC verification format is group name:public key:message:signature
+ [GOST_3410_VA/EMSA1(GOST-34.11)]
+ gost_256A:\
+diff -up Botan-1.10.5/src/libstate/policy.cpp.eccfix Botan-1.10.5/src/libstate/policy.cpp
+--- Botan-1.10.5/src/libstate/policy.cpp.eccfix	2013-03-02 21:19:37.000000000 +0000
++++ Botan-1.10.5/src/libstate/policy.cpp	2013-10-22 01:20:13.226546243 +0100
+@@ -210,6 +210,7 @@ void set_default_oids(Library_State& con
+ 
+    /* ECC domain parameters */
+ 
++   /* Disabled.
+    add_oid(config, "1.3.132.0.6",  "secp112r1");
+    add_oid(config, "1.3.132.0.7",  "secp112r2");
+    add_oid(config, "1.3.132.0.8",  "secp160r1");
+@@ -221,7 +222,9 @@ void set_default_oids(Library_State& con
+    add_oid(config, "1.3.132.0.31", "secp192k1");
+    add_oid(config, "1.3.132.0.32", "secp224k1");
+    add_oid(config, "1.3.132.0.33", "secp224r1");
++   */
+    add_oid(config, "1.3.132.0.34", "secp384r1");
++   /* Disabled.
+    add_oid(config, "1.3.132.0.35", "secp521r1");
+ 
+    add_oid(config, "1.2.840.10045.3.1.1", "secp192r1");
+@@ -230,8 +233,10 @@ void set_default_oids(Library_State& con
+    add_oid(config, "1.2.840.10045.3.1.4", "x962_p239v1");
+    add_oid(config, "1.2.840.10045.3.1.5", "x962_p239v2");
+    add_oid(config, "1.2.840.10045.3.1.6", "x962_p239v3");
++   */
+    add_oid(config, "1.2.840.10045.3.1.7", "secp256r1");
+ 
++   /* Disabled.
+    add_oid(config, "1.3.36.3.3.2.8.1.1.1",  "brainpool160r1");
+    add_oid(config, "1.3.36.3.3.2.8.1.1.3",  "brainpool192r1");
+    add_oid(config, "1.3.36.3.3.2.8.1.1.5",  "brainpool224r1");
+@@ -242,6 +247,7 @@ void set_default_oids(Library_State& con
+ 
+    add_oid(config, "1.2.643.2.2.35.1", "gost_256A");
+    add_oid(config, "1.2.643.2.2.36.0", "gost_256A");
++   */
+ 
+    /* CVC */
+    add_oid(config, "0.4.0.127.0.7.3.1.2.1",

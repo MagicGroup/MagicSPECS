@@ -1,0 +1,50 @@
+diff -Naur Botan-1.10.8.orig/src/build-data/arch/ppc64le.txt Botan-1.10.8/src/build-data/arch/ppc64le.txt
+--- Botan-1.10.8.orig/src/build-data/arch/ppc64le.txt	1969-12-31 18:00:00.000000000 -0600
++++ Botan-1.10.8/src/build-data/arch/ppc64le.txt	2014-05-25 12:59:22.030001491 -0500
+@@ -0,0 +1,16 @@
++
++endian little
++family ppc64le
++
++<aliases>
++ppc64el # For Debian
++</aliases>
++
++<submodels>
++</submodels>
++
++<submodel_aliases>
++</submodel_aliases>
++
++<isa_extn>
++</isa_extn>
+diff -Naur Botan-1.10.8.orig/src/build-data/cc/gcc.txt Botan-1.10.8/src/build-data/cc/gcc.txt
+--- Botan-1.10.8.orig/src/build-data/cc/gcc.txt	2014-05-25 12:44:19.580001491 -0500
++++ Botan-1.10.8/src/build-data/cc/gcc.txt	2014-05-25 12:55:57.750001491 -0500
+@@ -83,6 +83,7 @@
+ mips64    -> "-mips3 -mcpu=SUBMODEL" mips64-
+ ppc32     -> "-mcpu=SUBMODEL" ppc
+ ppc64     -> "-mcpu=SUBMODEL" ppc
++ppc64le   -> "-mcpu=SUBMODEL" 
+ sparc32   -> "-mcpu=SUBMODEL -Wa,-xarch=v8plus" sparc32-
+ sparc64   -> "-mcpu=v9 -mtune=SUBMODEL"
+ x86_32    -> "-march=SUBMODEL -momit-leaf-frame-pointer"
+@@ -98,6 +99,7 @@
+ sparc32 -> "-m32 -mno-app-regs"
+ sparc64 -> "-m64 -mno-app-regs"
+ ppc64   -> "-m64"
++ppc64le   -> "-m64"
+ 
+ # This should probably be used on most/all targets, but the docs are unclear
+ openbsd   -> "-pthread"
+diff -Naur Botan-1.10.8.orig/src/math/mp/mp_asm64/info.txt Botan-1.10.8/src/math/mp/mp_asm64/info.txt
+--- Botan-1.10.8.orig/src/math/mp/mp_asm64/info.txt	2014-05-25 12:44:19.620001491 -0500
++++ Botan-1.10.8/src/math/mp/mp_asm64/info.txt	2014-05-25 12:45:01.580001491 -0500
+@@ -13,6 +13,7 @@
+ mips64
+ ppc64
+ sparc64
++ppc64le
+ </arch>
+ 
+ # The inline asm only works with gcc, but it looks like (at least on
