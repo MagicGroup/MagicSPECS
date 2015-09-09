@@ -1,0 +1,20 @@
+diff -rupN PyQt-gpl-5.4.1/configure.py PyQt-gpl-5.4.1-new/configure.py
+--- PyQt-gpl-5.4.1/configure.py	2015-02-26 13:17:00.000000000 +0100
++++ PyQt-gpl-5.4.1-new/configure.py	2015-06-05 00:12:06.326506542 +0200
+@@ -25,6 +25,7 @@ import os
+ import shutil
+ import stat
+ import sys
++import sipconfig
+ 
+ 
+ # Initialise the constants.
+@@ -463,7 +464,7 @@ class TargetConfiguration:
+         self.py_version = py_config.version
+         self.pyqt_bin_dir = py_config.bin_dir
+         self.pyqt_module_dir = py_config.module_dir
+-        self.pyqt_sip_dir = os.path.join(py_config.data_dir, 'sip', 'PyQt5')
++        self.pyqt_sip_dir = os.path.join(sipconfig.Configuration().default_sip_dir, 'PyQt5')
+         self.pyuic_interpreter = py_config.pyuic_interpreter
+ 
+         # The qmake spec we want to use.
