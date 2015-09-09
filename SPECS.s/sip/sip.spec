@@ -16,14 +16,15 @@
 
 Summary: SIP - Python/C++ Bindings Generator
 Name: sip
-Version: 4.16.7
-Release: 2%{?dist}
+Version: 4.16.9
+Release: 1%{?dist}
 
 # sipgen/parser.{c.h} is GPLv3+ with exceptions (bison)
 License: GPLv2 or GPLv3 and (GPLv3+ with exceptions)
 Url: http://www.riverbankcomputing.com/software/sip/intro 
 #URL: http://sourceforge.net/projects/pyqt/
-Source0:  http://downloads.sourceforge.net/pyqt/sip-%{version}%{?snap:-snapshot-%{snap}}.tar.gz
+#Source0:  http://downloads.sourceforge.net/pyqt/sip-%{version}%{?snap:-snapshot-%{snap}}.tar.gz
+Source0:  http://www.riverbankcomputing.com/static/Downloads/sip4/sip-%{version}.tar.gz
 
 ## upstreamable patches
 # make install should not strip (by default), kills -debuginfo
@@ -36,7 +37,7 @@ Patch51: sip-4.16.3-no_rpath.patch
 # extracted from sip.h, SIP_API_MAJOR_NR SIP_API_MINOR_NR defines
 Source1: macros.sip
 %global _sip_api_major 11
-%global _sip_api_minor 1
+%global _sip_api_minor 2
 %global _sip_api %{_sip_api_major}.%{_sip_api_minor}
 
 Provides: sip-api(%{_sip_api_major}) = %{_sip_api}
@@ -186,8 +187,20 @@ install -D -p -m644 %{SOURCE1} %{buildroot}%{rpm_macros_dir}/macros.sip
 
 
 %changelog
-* Tue Apr 14 2015 Liu Di <liudidi@gmail.com> - 4.16.7-2
-- 为 Magic 3.0 重建
+* Wed Jul 29 2015 Rex Dieter <rdieter@fedoraproject.org> 4.16.9-1
+- sip-4.16.9
+
+* Fri Jun 19 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 4.16.8-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
+
+* Fri Jun 12 2015 Rex Dieter <rdieter@fedoraproject.org> 4.16.8-1
+- sip-4.16.8, sip-api(11)=11.2
+
+* Sat May 02 2015 Kalev Lember <kalevlember@gmail.com> - 4.16.7-2
+- Rebuilt for GCC 5 C++11 ABI change
+
+* Sat May 02 2015 Kalev Lember <kalevlember@gmail.com> - 4.16.7-1
+- sip-4.16.7
 
 * Wed Feb 25 2015 Rex Dieter <rdieter@fedoraproject.org> 4.16.6-1
 - sip-4.16.6
