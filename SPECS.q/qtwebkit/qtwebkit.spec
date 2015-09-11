@@ -1,9 +1,11 @@
 
+%global _hardened_build 1
+
 Name: qtwebkit
 Summary: Qt WebKit bindings
 
-Version: 2.3.3
-Release: 4%{?dist}
+Version: 2.3.4
+Release: 8%{?dist}
 
 License: LGPLv2 with exceptions or GPLv3 with exceptions
 URL: http://trac.webkit.org/wiki/QtWebKit
@@ -24,7 +26,10 @@ URL: http://trac.webkit.org/wiki/QtWebKit
 # download from
 # https://gitorious.org/webkit/qtwebkit-23/archive-tarball/qtwebkit-%{version}
 # repack as .xz
-Source0:  qtwebkit-%{version}.tar.xz
+#Source0:  qtwebkit-%{version}.tar.xz
+Source0: http://download.kde.org/stable/qtwebkit-2.3/%{version}/src/qtwebkit-%{version}.tar.gz
+# qmake wrapper
+Source1:  qmake.sh
 
 # search /usr/lib{,64}/mozilla/plugins-wrapped for browser plugins too
 Patch1: webkit-qtwebkit-2.2-tp1-pluginpath.patch
@@ -42,30 +47,35 @@ Patch10: qtwebkit-ppc.patch
 # rebased for 2.3.1, not sure if this is still needed?  -- rex
 Patch11: qtwebkit-23-LLInt-C-Loop-backend-ppc.patch
 
-## upstream patches
-Patch102: 0002-Texmap-GTK-The-poster-circle-doesn-t-appear.patch
-Patch103: 0003-Qt-Tiled-backing-store-not-clipped-to-frame-or-visib.patch
-Patch104: 0004-Qt-Images-scaled-poorly-on-composited-canvas.patch
-Patch105: 0005-Port-of-r118587-to-TextBreakIteratorQt.cpp.patch
-patch106: 0006-JSC-ARM-traditional-failing-on-Octane-NavierStokes-t.patch
-Patch107: 0007-Correct-range-used-for-Emoji-checks.patch
-Patch108: 0008-Qt-RepaintRequested-signal-sometimes-not-emitted.patch
-Patch109: 0009-TexMap-Remove-ParentChange-in-TextureMapperLayer.patch
+# truly madly deeply no rpath please, kthxbye
+Patch14: webkit-qtwebkit-23-no_rpath.patch
 
-Patch200: qtwebkit-2.3.3-mips64el-fix.patch
-Patch201: qtwebkit-2.3.3-fix-ANGLE.patch
+## upstream patches
+# backport from qt5-qtwebkit
+# qtwebkit: undefined symbol: g_type_class_adjust_private_offset
+# https://bugzilla.redhat.com/show_bug.cgi?id=1202735
+Patch100: webkit-qtwebkit-23-gcc5.patch
+# backport from qt5-qtwebkit: URLs visited during private browsing show up in WebpageIcons.db
+Patch101: webkit-qtwebkit-23-private_browsing.patch
 
 BuildRequires: bison
-BuildRequires: chrpath
 BuildRequires: flex
 BuildRequires: gperf
 BuildRequires: libicu-devel
 BuildRequires: libjpeg-devel
-BuildRequires: pkgconfig(gio-2.0) pkgconfig(glib-2.0)
+BuildRequires: pkgconfig(gio-2.0)
+BuildRequires: pkgconfig(glib-2.0) >= 2.10
 BuildRequires: pkgconfig(fontconfig)
-BuildRequires: qt4-xmlpatterns-devel
 # gstreamer media support
+%if 0%{?fedora} > 20 || 0%{?rhel} > 7
+%global gstreamer1 1
+BuildRequires: pkgconfig(gstreamer-1.0) pkgconfig(gstreamer-app-1.0)
+%else
+# We don't want to use GStreamer 1 where the rest of the Qt 4 stack doesn't,
+# or we run into symbol conflicts. So build against GStreamer 0.10 on Fedora up
+# to 20 and RHEL up to 7. (Up to RHEL 6, GStreamer 0.10 is the only option.)
 BuildRequires: pkgconfig(gstreamer-0.10) pkgconfig(gstreamer-app-0.10)
+%endif
 BuildRequires: pkgconfig(libpcre)
 BuildRequires: pkgconfig(libpng)
 BuildRequires: pkgconfig(libwebp)
@@ -78,15 +88,21 @@ BuildRequires: perl(version)
 BuildRequires: perl(Digest::MD5)
 BuildRequires: ruby
 %if 0%{?fedora}
-# for QtLocation, QtSensors 
-BuildRequires: qt-mobility-devel >= 1.2
+# qt-mobility bits
+BuildRequires: pkgconfig(QtLocation) >= 1.2
+BuildRequires: pkgconfig(QtSensors) >= 1.2
 %endif
 Obsoletes: qt-webkit < 1:4.9.0
 Provides: qt-webkit = 2:%{version}-%{release}
 Provides: qt4-webkit = 2:%{version}-%{release}
 Provides: qt4-webkit%{?_isa} = 2:%{version}-%{release}
 
+Requires: mozilla-filesystem
 %{?_qt4_version:Requires: qt4%{?_isa} >= %{_qt4_version}}
+%global glib2_version %(pkg-config --modversion glib-2.0 2>/dev/null || echo "2.10")
+## Naughty glib2, adding new symbols without soname bump or symbol versioning... -- rex
+## https://bugzilla.redhat.com/show_bug.cgi?id=1202735
+Requires: glib2%{?_isa} >= %{glib2_version}
 
 %description
 %{summary}
@@ -103,43 +119,49 @@ Provides:  qt4-webkit-devel%{?_isa} = 2:%{version}-%{release}
 
 
 %prep
-%setup -q -n webkit-qtwebkit-23
+%setup -q -c -n webkit-qtwebkit-23
 
 %patch1 -p1 -b .pluginpath
 %patch3 -p1 -b .debuginfo
 %patch4 -p1 -b .save_memory
-# all big-endian arches require the Double2Ints fix
-%ifarch ppc ppc64 s390 s390x
+%ifarch ppc ppc64 ppc64le s390 s390x
 %patch10 -p1 -b .system-malloc
+%endif
+%ifarch ppc ppc64 s390 s390x
+# all big-endian arches require the Double2Ints fix
+# still needed?  -- rex
 %patch11 -p1 -b .Double2Ints
 %endif
-%patch102 -p1 -b .0002
-%patch103 -p1 -b .0003
-%patch104 -p1 -b .0004
-%patch105 -p1 -b .0005
-%patch106 -p1 -b .0006
-%patch107 -p1 -b .0007
-%patch108 -p1 -b .0008
-%patch109 -p1 -b .0009
+%patch14 -p1 -b .no_rpath
 
-%patch200 -p1 -b .mips64el
-%patch201 -p1 -b .angle
+%patch100 -p1 -b .gcc5
+%patch101 -p1 -b .private_browsing
+
+install -m755 -D %{SOURCE1} bin/qmake
+
 
 %build 
 
-PATH=%{_qt4_bindir}:$PATH; export PATH
+CFLAGS="%{optflags}"; export CFLAGS
+CXXFLAGS="%{optflags}"; export CXXFLAGS
+LDFLAGS="%{?__global_ldflags}"; export LDFLAGS
+PATH=`pwd`/bin:%{_qt4_bindir}:$PATH; export PATH
 QMAKEPATH=`pwd`/Tools/qmake; export QMAKEPATH
 QTDIR=%{_qt4_prefix}; export QTDIR
+
+%ifarch aarch64
+%global qtdefines  DEFINES+=ENABLE_JIT=0 DEFINES+=ENABLE_YARR_JIT=0 DEFINES+=ENABLE_ASSEMBLER=0
+%endif
 
 mkdir -p %{_target_platform}
 pushd    %{_target_platform}
 WEBKITOUTPUTDIR=`pwd`; export WEBKITOUTPUTDIR
 ../Tools/Scripts/build-webkit \
-  --qt \
+  --qt %{?qtdefines} \
   --no-webkit2 \
   --release \
   --qmakearg="CONFIG+=production_build DEFINES+=HAVE_LIBWEBP=1" \
-  --makeargs=%{?_smp_mflags} \
+  --makeargs="%{?_smp_mflags}" \
   --system-malloc
 popd
 
@@ -153,7 +175,7 @@ WEBKITOUTPUTDIR=`pwd`; export WEBKITOUTPUTDIR
   --no-webkit2 \
   --release \
   --qmakearg="CONFIG+=production_build DEFINES+=HAVE_LIBWEBP=1" \
-  --makeargs=%{?_smp_mflags} \
+  --makeargs="%{?_smp_mflags}" \
   --system-malloc \
   --no-force-sse2
 popd
@@ -169,19 +191,14 @@ mv %{buildroot}%{_qt4_libdir}/libQtWebKit.so.4* %{buildroot}%{_qt4_libdir}/sse2/
 make install INSTALL_ROOT=%{buildroot} -C %{_target_platform}-no_sse2/Release
 %endif
 
-## HACK alert
-chrpath --list   %{buildroot}%{_qt4_libdir}/libQtWebKit.so.4.10.? ||:
-chrpath --delete %{buildroot}%{_qt4_libdir}/libQtWebKit.so.4.10.? ||:
-
 ## pkgconfig love
 # drop Libs.private, it contains buildroot references, and
 # we don't support static linking libQtWebKit anyway
-pushd %{buildroot}%{_qt4_libdir}/pkgconfig
+pushd %{buildroot}%{_libdir}/pkgconfig
 grep -v "^Libs.private:" QtWebKit.pc > QtWebKit.pc.new && \
 mv QtWebKit.pc.new QtWebKit.pc
 popd
 
-mv %{buildroot}%{_qt4_libdir}/pkgconfig %{buildroot}%{_libdir}
 
 %post -p /sbin/ldconfig
 %postun -p /sbin/ldconfig
@@ -204,6 +221,75 @@ mv %{buildroot}%{_qt4_libdir}/pkgconfig %{buildroot}%{_libdir}
 
 
 %changelog
+* Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.3.4-8
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
+
+* Sat May 02 2015 Kalev Lember <kalevlember@gmail.com> - 2.3.4-7
+- Rebuilt for GCC 5 C++11 ABI change
+
+* Mon Mar 23 2015 Rex Dieter <rdieter@fedoraproject.org> 2.3.4-6
+- QtWebKit logs visited URLs to WebpageIcons.db in private browsing mode (#1204795)
+
+* Mon Mar 23 2015 Rex Dieter <rdieter@fedoraproject.org> 2.3.4-5
+- drop ppc64le patch (that no longer applies or is needed)
+
+* Fri Mar 20 2015 Rex Dieter <rdieter@fedoraproject.org> - 2.3.4-4
+- gcc-5.0.0-0.20.fc23 FTBFS qtwebkit (#1203008)
+- add versioned glib2 dep (#1202735)
+
+* Tue Mar 17 2015 Rex Dieter <rdieter@fedoraproject.org> 2.3.4-3
+- qtwebkit enable jit for ppc64le (#1096330)
+
+* Wed Feb 18 2015 Rex Dieter <rdieter@fedoraproject.org> 2.3.4-2
+- rebuild (gcc5)
+
+* Thu Oct 16 2014 Rex Dieter <rdieter@fedoraproject.org> 2.3.4-1
+- qtwebkit-2.3.4
+
+* Tue Sep 23 2014 Rex Dieter <rdieter@fedoraproject.org> 2.3.3-18
+- enable hardened build (#1051790)
+
+* Sun Aug 17 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.3.3-17
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
+
+* Sun Jul 20 2014 Kevin Kofler <Kevin@tigcc.ticalc.org> 2.3.3-16
+- build against GStreamer1 on F21+ (#1092642, patch from openSUSE)
+
+* Fri Jun 20 2014 Rex Dieter <rdieter@fedoraproject.org> 2.3.3-15
+- use pkgconfig deps for qt-mobility
+
+* Sun Jun 08 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.3.3-14
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Wed May 07 2014 Jaromir Capik <jcapik@redhat.com> - 2.3.3-13
+- ppc64le support
+
+* Mon May 05 2014 Rex Dieter <rdieter@fedoraproject.org> 2.3.3-12
+- Requires: mozilla-filesystem (#1000673)
+
+* Fri May 02 2014 Rex Dieter <rdieter@fedoraproject.org> 2.3.3-11
+- no need to set empty qtdefines macro
+- no rpath for real, drop chrpath hacks
+
+* Sat Mar 08 2014 Kevin Kofler <Kevin@tigcc.ticalc.org> 2.3.3-10
+- rebuild against fixed qt to fix -debuginfo (#1074041)
+
+* Thu Mar 06 2014 Peter Robinson <pbrobinson@fedoraproject.org> 2.3.3-9
+- update aarch64 patchset
+
+* Fri Feb 28 2014 Rex Dieter <rdieter@fedoraproject.org> 2.3.3-8
+- initial backport aarch64 javascriptcore fixes, needswork (#1070446)
+- apply downstream patches *after* upstream ones
+
+* Thu Feb 13 2014 Rex Dieter <rdieter@fedoraproject.org> 2.3.3-7
+- backport more upstream fixes
+
+* Thu Feb 13 2014 Rex Dieter <rdieter@fedoraproject.org> 2.3.3-6
+- ftbfs using bison3
+
+* Wed Feb 12 2014 Rex Dieter <rdieter@fedoraproject.org> 2.3.3-5
+- rebuild (libicu)
+
 * Wed Jan 01 2014 Rex Dieter <rdieter@fedoraproject.org> 2.3.3-4
 - rebuild (libwebp)
 
