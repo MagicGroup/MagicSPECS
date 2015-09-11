@@ -5,7 +5,7 @@
 %define multilib_archs x86_64 %{ix86} ppc64 ppc s390x s390 sparc64 sparcv9 mips64el mipsel
 %define multilib_basearchs x86_64 ppc64 s390x sparc64 mips64el
 
-%define real_version 4.8.6
+%define real_version 4.8.7
 %define release_number 1
 
 # switches: whether to build it or not
@@ -48,10 +48,10 @@ done
 
 
 Version: %{real_version}
-Release: 2%{?dist}
+Release:	1%{?dist}
 %define ver %version
 
-Source0: http://releases.qt-project.org/qt4/source/qt-everywhere-opensource-src-%{version}.tar.gz
+Source0: http://download.qt.io/official_releases/qt/4.8/%{version}/qt-everywhere-opensource-src-%{version}.tar.gz
 #Source0: http://get.qt.nokia.com/qt/source/qt-everywhere-opensource-src-%{version}.tar.gz
 #Source1: Trolltech.conf
 #Source2: Designer.conf
@@ -1259,7 +1259,7 @@ done
 %ifarch mips64el
 	-no-pch \
 %else
-	pch \
+	-pch \
 %endif
 	-accessibility \
 	-reduce-exports \
@@ -2079,6 +2079,9 @@ rm -rf %{buildroot} %{_builddir}/%{buildsubdir}
 %endif
 
 %changelog
+* Thu Sep 10 2015 Liu Di <liudidi@gmail.com> - 4.8.7-1
+- 更新到 4.8.7
+
 * Tue Aug 05 2014 Liu Di <liudidi@gmail.com> - 4.8.6-2
 - 为 Magic 3.0 重建
 
