@@ -1,0 +1,69 @@
+diff -up qwt-6.1.2/designer/designer.pro.qt_install_paths qwt-6.1.2/designer/designer.pro
+diff -up qwt-6.1.2/qwtbuild.pri.qt_install_paths qwt-6.1.2/qwtbuild.pri
+--- qwt-6.1.2/qwtbuild.pri.qt_install_paths	2014-12-11 08:13:13.509186492 -0600
++++ qwt-6.1.2/qwtbuild.pri	2014-12-12 20:41:50.128472485 -0600
+@@ -14,8 +14,7 @@
+ CONFIG           += qt     
+ CONFIG           += warn_on
+ CONFIG           += no_keywords
+-CONFIG           += silent
+-
++#CONFIG           += silent
+ ######################################################################
+ # release/debug mode
+ ######################################################################
+diff -up qwt-6.1.2/qwtconfig.pri.qt_install_paths qwt-6.1.2/qwtconfig.pri
+--- qwt-6.1.2/qwtconfig.pri.qt_install_paths	2014-12-11 08:13:13.513186492 -0600
++++ qwt-6.1.2/qwtconfig.pri	2014-12-12 20:43:02.394738555 -0600
+@@ -19,7 +19,7 @@ QWT_VERSION      = $${QWT_VER_MAJ}.$${QW
+ QWT_INSTALL_PREFIX = $$[QT_INSTALL_PREFIX]
+ 
+ unix {
+-    QWT_INSTALL_PREFIX    = /usr/local/qwt-$$QWT_VERSION
++    # QWT_INSTALL_PREFIX    = /usr/local/qwt-$$QWT_VERSION
+     # QWT_INSTALL_PREFIX = /usr/local/qwt-$$QWT_VERSION-qt-$$QT_VERSION
+ }
+ 
+@@ -28,9 +28,9 @@ win32 {
+     # QWT_INSTALL_PREFIX = C:/Qwt-$$QWT_VERSION-qt-$$QT_VERSION
+ }
+ 
+-QWT_INSTALL_DOCS      = $${QWT_INSTALL_PREFIX}/doc
+-QWT_INSTALL_HEADERS   = $${QWT_INSTALL_PREFIX}/include
+-QWT_INSTALL_LIBS      = $${QWT_INSTALL_PREFIX}/lib
++QWT_INSTALL_DOCS      = $$[QT_INSTALL_DOCS]/html
++QWT_INSTALL_HEADERS   = $$[QT_INSTALL_HEADERS]/qwt
++QWT_INSTALL_LIBS      = $$[QT_INSTALL_LIBS]
+ 
+ ######################################################################
+ # Designer plugin
+@@ -42,7 +42,8 @@ QWT_INSTALL_LIBS      = $${QWT_INSTALL_P
+ # runtime environment of designer/creator.
+ ######################################################################
+ 
+-QWT_INSTALL_PLUGINS   = $${QWT_INSTALL_PREFIX}/plugins/designer
++#QWT_INSTALL_PLUGINS   = $${QWT_INSTALL_PREFIX}/plugins/designer
++QWT_INSTALL_PLUGINS   = $$[QT_INSTALL_PLUGINS]/designer
+ 
+ # linux distributors often organize the Qt installation
+ # their way and QT_INSTALL_PREFIX doesn't offer a good
+@@ -63,8 +64,8 @@ QWT_INSTALL_PLUGINS   = $${QWT_INSTALL_P
+ # with every Qt upgrade. 
+ ######################################################################
+ 
+-QWT_INSTALL_FEATURES  = $${QWT_INSTALL_PREFIX}/features
+-# QWT_INSTALL_FEATURES  = $$[QT_INSTALL_PREFIX]/features
++#QWT_INSTALL_FEATURES  = $${QWT_INSTALL_PREFIX}/features
++QWT_INSTALL_FEATURES  = $$[QMAKE_MKSPECS]/features
+ 
+ ######################################################################
+ # Build the static/shared libraries.
+@@ -110,7 +111,7 @@ QWT_CONFIG     += QwtOpenGL
+ # to your qmake project file.
+ ######################################################################
+ 
+-#QWT_CONFIG     += QwtMathML
++QWT_CONFIG     += QwtMathML
+ 
+ ######################################################################
+ # If you want to build the Qwt designer plugin, 

@@ -1,0 +1,12 @@
+diff -up qwt-6.1.1/textengines/mathml/mathml.pro.pkgconfig qwt-6.1.1/textengines/mathml/mathml.pro
+--- qwt-6.1.1/textengines/mathml/mathml.pro.pkgconfig	2014-09-18 09:59:46.613028743 -0500
++++ qwt-6.1.1/textengines/mathml/mathml.pro	2014-09-20 14:15:54.962624868 -0500
+@@ -60,6 +60,8 @@ contains(QWT_CONFIG, QwtPkgConfig) {
+ 
+     QMAKE_PKGCONFIG_LIBDIR = $${QWT_INSTALL_LIBS}
+     QMAKE_PKGCONFIG_INCDIR = $${QWT_INSTALL_HEADERS}
++    
++    QMAKE_PKGCONFIG_DESTDIR = pkgconfig
+ 
+     # QMAKE_PKGCONFIG_DESTDIR is buggy, in combination
+     # with including pri files: better don't use it
