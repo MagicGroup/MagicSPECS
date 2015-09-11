@@ -1,8 +1,7 @@
 Name:           kf5
-Version:        5.12.0
-Release:        2%{?dist}
+Version:        5.13.0
+Release:        1%{?dist}
 Summary:        Filesystem and RPM macros for KDE Frameworks 5
-Summary(zh_CN.UTF-8): KDE 框架 5 的文件系统和 RPM 宏
 License:        BSD
 URL:            http://www.kde.org
 
@@ -13,24 +12,17 @@ Filesystem and RPM macros for KDE Frameworks 5
 
 %package        filesystem
 Summary:        Filesystem for KDE Frameworks 5
-Summary(zh_CN.UTF-8): KDE 框架 5 的文件系统
 # noarch -> arch transition
 Obsoletes:      kf5-filesystem < 5.10.0-2
 %description    filesystem
 Filesystem for KDE Frameworks 5.
 
-%description filesystem -l zh_CN.UTF-8
-KDE 框架 5 的文件系统。
-
 %package        rpm-macros
 Summary:        RPM macros for KDE Frameworks 5
-Summary(zh_CN.UTF-8): KDE 框架 5 的 RPM 宏
 BuildArch: noarch
 %description    rpm-macros
 RPM macros for building KDE Frameworks 5 packages.
 
-%description rpm-macros -l zh_CN.UTF-8
-KDE 框架 5 的 RPM 宏。
 
 %install
 # See macros.kf5 where the directories are specified
@@ -41,6 +33,9 @@ mkdir -p %{buildroot}%{_libexecdir}/kf5
 mkdir -p %{buildroot}%{_sysconfdir}/xdg/plasma-workspace/{env,shutdown}
 
 install -Dpm644 %{_sourcedir}/macros.kf5 %{buildroot}%{_rpmconfigdir}/macros.d/macros.kf5
+sed -i \
+  -e "s|@@KF5_VERSION@@|%{version}|g" \
+  %{buildroot}%{_rpmconfigdir}/macros.d/macros.kf5
 
 
 %files filesystem
@@ -57,8 +52,14 @@ install -Dpm644 %{_sourcedir}/macros.kf5 %{buildroot}%{_rpmconfigdir}/macros.d/m
 
 
 %changelog
-* Sat Jul 25 2015 Liu Di <liudidi@gmail.com> - 5.12.0-2
-- 为 Magic 3.0 重建
+* Wed Aug 19 2015 Daniel Vrátil <dvratil@redhat.com> - 5.13.0-1
+- KDE Frameworks 5.13.0
+
+* Wed Aug 19 2015 Rex Dieter <rdieter@fedoraproject.org> 5.13.0-0.2
+- macros.kf5: add %%_kf5_version
+
+* Tue Aug 11 2015 Daniel Vrátil <dvratil@redhat.com> - 5.13.0-0.1
+- KDE Frameworks 5.13
 
 * Fri Jul 17 2015 Daniel Vrátil <dvratil@redhat.com> - 5.12.0
 - KDE Frameworks 5.12.0
