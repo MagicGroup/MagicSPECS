@@ -1,0 +1,12 @@
+diff -rupN qt-creator-opensource-src-3.4.0/src/plugins/cmakeprojectmanager/makestep.cpp qt-creator-opensource-src-3.4.0-new/src/plugins/cmakeprojectmanager/makestep.cpp
+--- qt-creator-opensource-src-3.4.0/src/plugins/cmakeprojectmanager/makestep.cpp	2015-04-21 17:56:56.000000000 +0200
++++ qt-creator-opensource-src-3.4.0-new/src/plugins/cmakeprojectmanager/makestep.cpp	2015-04-28 21:53:37.014334401 +0200
+@@ -316,7 +316,7 @@ QString MakeStep::makeCommand(ProjectExp
+     if (!bc)
+         bc = targetsActiveBuildConfiguration();
+     if (bc && bc->useNinja())
+-        return QLatin1String("ninja");
++        return QLatin1String("ninja-build");
+ 
+     if (tc)
+         return tc->makeCommand(env);

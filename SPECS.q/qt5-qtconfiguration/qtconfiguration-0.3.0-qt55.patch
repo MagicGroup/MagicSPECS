@@ -1,0 +1,11 @@
+diff -ur qtconfiguration-0.3.0.orig/src/configuration/qgvariantutils.cpp qtconfiguration-0.3.0/src/configuration/qgvariantutils.cpp
+--- qtconfiguration-0.3.0.orig/src/configuration/qgvariantutils.cpp	2015-09-11 04:00:42.054353676 +0000
++++ qtconfiguration-0.3.0/src/configuration/qgvariantutils.cpp	2015-09-11 04:00:51.898353424 +0000
+@@ -39,6 +39,7 @@
+ #include <QtCore/QDebug>
+ #include <QtCore/QUrl>
+ #include <QtCore/QStringList>
++#include <QDataStream>
+ 
+ #include "qgvariantutils.h"
+ 

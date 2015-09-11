@@ -6,8 +6,9 @@
 
 Name:           qjson
 Version:        0.8.1
-Release:        11.%{snap0}.%{shortcommit0}git%{?dist}
+Release:        12.%{snap0}.%{shortcommit0}git%{?dist}
 Summary:        A qt-based library that maps JSON data to QVariant objects
+Summary(zh_CN.UTF-8): 映射 JSON 数据到 QVariant 对象的 QT 库
 
 License:        GPLv2+
 URL:            http://sourceforge.net/projects/qjson/
@@ -30,12 +31,18 @@ number, string, an ordered sequence of value, and a collection of
 name/value pairs.QJson is a qt-based library that maps JSON data to
 QVariant objects.
 
+%description -l zh_CN.UTF-8
+映射 JSON 数据到 QVariant 对象的 QT 库。
+
 %package devel
 Summary:  Development files for qjson
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Requires: %{name}%{?_isa} = %{version}-%{release}
 %description devel
 The %{name}-devel package contains the libraries and header files required for
 developing applications that use %{name}.
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 
 %prep
@@ -58,7 +65,7 @@ popd
 
 %install
 make install DESTDIR=%{buildroot} -C %{_target_platform}
-
+magic_rpm_clean.sh
 
 %check
 export PKG_CONFIG_PATH=%{buildroot}%{_datadir}/pkgconfig:%{buildroot}%{_libdir}/pkgconfig
@@ -86,6 +93,9 @@ xvfb-run -a make test -C %{_target_platform}
 
 
 %changelog
+* Wed Sep 09 2015 Liu Di <liudidi@gmail.com> - 0.8.1-12.20150318.d0f62e6git
+- 为 Magic 3.0 重建
+
 * Mon Aug 03 2015 Rex Dieter <rdieter@fedoraproject.org> 0.8.1-11.20150318.d0f62e6git
 - 20150318 snapshot
 

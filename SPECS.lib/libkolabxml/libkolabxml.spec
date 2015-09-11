@@ -46,7 +46,7 @@
 
 Name:           libkolabxml
 Version: 1.0.3
-Release:        9%{?dist}
+Release:        10%{?dist}
 Summary:        Kolab XML format collection parser library
 
 Group:          System Environment/Libraries
@@ -64,12 +64,10 @@ BuildRequires:  boost-devel
 BuildRequires:  cmake >= 2.6
 BuildRequires:  e2fsprogs-devel
 BuildRequires:  gcc-c++
-%if 0%{?rhel} > 6 || 0%{?fedora} >= 16
 BuildRequires:  kdelibs4-devel
 BuildRequires:  kdepimlibs4-devel
-%endif
 BuildRequires:  libcurl-devel
-BuildRequires:  qt-devel >= 3
+BuildRequires:  qt4-devel >= 3
 BuildRequires:  swig
 BuildRequires:  uuid-devel
 BuildRequires:  xerces-c-devel
@@ -107,10 +105,8 @@ Requires:       boost-devel
 Requires:       cmake >= 2.6
 Requires:       e2fsprogs-devel
 Requires:       gcc-c++
-%if 0%{?rhel} > 6 || 0%{?fedora} >= 16
 Requires:       kdelibs4-devel
 Requires:       kdepimlibs4-devel
-%endif
 Requires:       libcurl-devel
 %if 0%{?with_php} > 0
 Requires:       php-devel >= 5.3
@@ -150,12 +146,8 @@ Java bindings for libkolabxml
 %package -n php-kolabformat
 Summary:        PHP bindings for libkolabxml
 Requires:       %{name}%{?_isa} = %{version}-%{release}
-%if 0%{?rhel} > 5 || 0%{?fedora} > 15
 Requires:       php(zend-abi) = %{php_zend_api}
 Requires:       php(api) = %{php_core_api}
-%else
-Requires:       php-api = %{php_apiver}
-%endif
 BuildRequires:  php >= 5.3
 BuildRequires:  php-devel >= 5.3
 
@@ -186,11 +178,6 @@ pushd build
     -Wno-fatal-errors -Wno-errors \
     -DCMAKE_SKIP_RPATH=ON \
     -DCMAKE_PREFIX_PATH=%{_libdir} \
-%if 0%{?rhel} < 6 && 0%{?fedora} < 15
-    -DBOOST_LIBRARYDIR=%{_libdir}/boost141 \
-    -DBOOST_INCLUDEDIR=%{_includedir}/boost141 \
-    -DBoost_ADDITIONAL_VERSIONS="1.41;1.41.0" \
-%endif
     -DINCLUDE_INSTALL_DIR=%{_includedir} \
 %if 0%{?with_csharp} > 0
     -DCSHARP_BINDINGS=ON \
@@ -284,6 +271,9 @@ popd
 %endif
 
 %changelog
+* Fri Sep 11 2015 Liu Di <liudidi@gmail.com> - 1.0.3-10
+- 为 Magic 3.0 重建
+
 * Thu Jul 02 2015 Liu Di <liudidi@gmail.com> - 1.0.3-9
 - 为 Magic 3.0 重建
 

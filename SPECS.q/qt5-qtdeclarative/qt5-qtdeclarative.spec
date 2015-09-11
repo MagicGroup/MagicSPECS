@@ -13,8 +13,8 @@
 Summary: Qt5 - QtDeclarative component
 Summary(zh_CN.UTF-8): Qt5 - QtDeclarative 组件
 Name:    qt5-%{qt_module}
-Version: 5.4.1
-Release: 1%{?dist}
+Version: 5.5.0
+Release: 4%{?dist}
 
 # See LICENSE.GPL LICENSE.LGPL LGPL_EXCEPTION.txt, for details
 License: LGPLv2 with exceptions or GPLv3 with exceptions
@@ -28,7 +28,7 @@ Source0: http://download.qt-project.org/official_releases/qt/%{majorver}/%{versi
 
 # support no_sse2 CONFIG (fedora i686 builds cannot assume -march=pentium4 -msse2 -mfpmath=sse flags, or the JIT that needs them)
 # https://codereview.qt-project.org/#change,73710
-Patch1: qtdeclarative-opensource-src-5.2.0-no_sse2.patch
+Patch1: qtdeclarative-opensource-src-5.5.0-no_sse2.patch
 
 Obsoletes: qt5-qtjsbackend < 5.2.0
 
@@ -95,7 +95,7 @@ Requires: %{name}%{?_isa} = %{version}-%{release}
 %prep
 %setup -q -n %{qt_module}-opensource-src-%{version}%{?pre:-%{pre}}
 
-#patch1 -p1 -b .no_sse2
+%patch1 -p1 -b .no_sse2
 
 
 %build
@@ -213,6 +213,15 @@ magic_rpm_clean.sh
 
 
 %changelog
+* Thu Sep 10 2015 Liu Di <liudidi@gmail.com> - 5.5.0-4
+- 为 Magic 3.0 重建
+
+* Thu Sep 10 2015 Liu Di <liudidi@gmail.com> - 5.5.0-3
+- 为 Magic 3.0 重建
+
+* Thu Sep 10 2015 Liu Di <liudidi@gmail.com> - 5.5.0-2
+- 为 Magic 3.0 重建
+
 * Tue Mar 17 2015 Liu Di <liudidi@gmail.com> - 5.4.1-1
 - 更新到 5.4.1
 

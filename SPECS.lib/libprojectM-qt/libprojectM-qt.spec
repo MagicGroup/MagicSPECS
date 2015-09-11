@@ -1,6 +1,6 @@
 Name:		libprojectM-qt
 Version:	2.0.1
-Release:	4%{?dist}
+Release:	5%{?dist}
 Summary:	The Qt frontend to the projectM visualization plugin
 Summary(zh_CN.UTF-8): projectM 音乐可视化插件的 Qt 前端
 Group:		Applications/Multimedia
@@ -24,7 +24,7 @@ Summary:	Development files for %{name}
 Summary(zh_CN.UTF-8): %{name} 的开发文件
 Group:          Development/Libraries
 Group(zh_CN.UTF-8): 开发/库
-Requires:	%{name} = %{version}-%{release}, pkgconfig, libprojectM-devel, qt-devel
+Requires:	%{name} = %{version}-%{release}, pkgconfig, libprojectM-devel, qt4-devel
 
 %description	devel
 projectM-qt is a GUI designed to enhance the projectM user and preset writer
@@ -71,6 +71,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/pkgconfig/*.pc
 
 %changelog
+* Fri Sep 11 2015 Liu Di <liudidi@gmail.com> - 2.0.1-5
+- 为 Magic 3.0 重建
+
 * Mon Jul 28 2014 Liu Di <liudidi@gmail.com> - 2.0.1-4
 - 为 Magic 3.0 重建
 

@@ -1,12 +1,14 @@
 Summary: General dimension convex hull programs
+Summary(zh_CN.UTF-8): 一般维度的凸包程序
 Name: qhull
-Version: 2011.1
-Release: 16%{?dist}
+Version:	2012.1
+Release:	1%{?dist}
 License: Qhull
 Group: System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 Source0: http://www.qhull.org/download/qhull-%{version}-src.tgz
-Patch0: qhull-2003.1-alias.patch
-Patch1: http://www.qhull.org/download/qhull-2003.1-qh_gethash.patch
+
+Patch1:	qhull-2012.1-fix-format-security.patch
 
 URL: http://www.qhull.org
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -21,9 +23,14 @@ the points to stdout.  It also generates Delaunay triangulations, Voronoi
 diagrams, furthest-site Voronoi diagrams, and halfspace intersections
 about a point.
 
+%description -l zh_CN.UTF-8
+一般维度的凸包程序。
+
 %package devel
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Summary: Development files for qhull
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Requires: %{name} = %{version}-%{release}
 
 %description devel
@@ -33,11 +40,12 @@ the points to stdout.  It also generates Delaunay triangulations, Voronoi
 diagrams, furthest-site Voronoi diagrams, and halfspace intersections
 about a point.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
 %prep
 %setup -q -n %{name}-%{version}
-#%patch0 -p1
-#%patch1 -p1
-#sed -i -e "s,\"../html/,\"html/,g" src/*.htm
+%patch1 -p1
 
 %build
 %{cmake} -DMAN_INSTALL_DIR=%{_mandir}/man1 \
@@ -52,6 +60,7 @@ make
 rm -rf $RPM_BUILD_ROOT
 make DESTDIR=$RPM_BUILD_ROOT install
 rm -f ${RPM_BUILD_ROOT}/%{_libdir}/*.{a,la}
+magic_rpm_clean.sh
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -73,6 +82,9 @@ rm -rf $RPM_BUILD_ROOT
 %_includedir/*
 
 %changelog
+* Wed Sep 09 2015 Liu Di <liudidi@gmail.com> - 2012.1-1
+- 更新到 2012.1
+
 * Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 2011.1-16
 - 为 Magic 3.0 重建
 

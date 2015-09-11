@@ -2,10 +2,12 @@
 %global upstreamver 2.3_1-opensource
 
 Summary:	QIODevice that compresses data streams
+Summary(zh_CN.UTF-8): 可以压缩数据流的 QIODevice
 Name:		qtiocompressor
 Version:	2.3.1
-Release:	5%{?dist}
+Release:	6%{?dist}
 Group:		System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 License:	GPLv3 or LGPLv2 with exceptions
 URL:		http://qt.nokia.com/products/appdev/add-on-products/catalog/4/Utilities/qtiocompressor/
 Source0:	http://get.qt.nokia.com/qt/solutions/lgpl/qtiocompressor-%{upstreamver}.tar.gz
@@ -26,15 +28,23 @@ streams, it does not have to see the entire data set before compressing or
 decompressing it. This can reduce the memory requirements when working on large
 data sets.
 
+%description -l zh_CN.UTF-8
+可以压缩数据流的 QIODevic。
+
 %package	devel
 Summary:	Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:		Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:	%{name} = %{version}-%{release}
 Requires:	qt4-devel
 
 %description	devel
 This package contains libraries and header files for developing applications
 that use QtIOCompressor.
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q -n %{name}-%{upstreamver}
@@ -65,6 +75,7 @@ cp -a \
 
 mkdir -p $RPM_BUILD_ROOT%{_qt4_datadir}/mkspecs/features
 cp -a %{SOURCE1} $RPM_BUILD_ROOT%{_qt4_datadir}/mkspecs/features/
+magic_rpm_clean.sh
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -87,6 +98,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_qt4_datadir}/mkspecs/features/%{name}.prf
 
 %changelog
+* Fri Sep 11 2015 Liu Di <liudidi@gmail.com> - 2.3.1-6
+- 为 Magic 3.0 重建
+
 * Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.3.1-5
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
 

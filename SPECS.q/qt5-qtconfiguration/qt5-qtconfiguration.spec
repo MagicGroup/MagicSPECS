@@ -5,12 +5,13 @@ Summary:        Qt5 - QtConfiguration module
 Summary(zh_CN.UTF-8): Qt5 - QtConfiguration 模块
 Name:           qt5-%{qt_module}
 Version:        0.3.0
-Release:        3%{?dist}
+Release:        4%{?dist}
 
 # See LGPL_EXCEPTIONS.txt, LICENSE.GPL3, respectively, for exception details
 License:        LGPLv2 with exceptions or GPLv3 with exceptions
 URL:            https://github.com/mauios/qtconfiguration
 Source0:        http://downloads.sourceforge.net/project/mauios/hawaii/%{qt_module}/%{qt_module}-%{version}.tar.gz
+Patch1:		qtconfiguration-0.3.0-qt55.patch
 BuildRequires:  pkgconfig(Qt5Core)
 BuildRequires:  pkgconfig(Qt5Qml)
 BuildRequires:  pkgconfig(dconf)
@@ -38,7 +39,7 @@ Requires:       qt5-qtbase-devel%{?_isa}
 
 %prep
 %setup -q -n %{qt_module}-%{version}
-
+%patch1 -p1
 
 %build
 %cmake .
@@ -71,6 +72,9 @@ magic_rpm_clean.sh
 
 
 %changelog
+* Fri Sep 11 2015 Liu Di <liudidi@gmail.com> - 0.3.0-4
+- 为 Magic 3.0 重建
+
 * Thu Mar 19 2015 Liu Di <liudidi@gmail.com> - 0.3.0-3
 - 为 Magic 3.0 重建
 

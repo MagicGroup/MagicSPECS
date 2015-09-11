@@ -1,13 +1,12 @@
 Summary: Command-line tools and library for transforming PDF files
+Summary(zh_CN.UTF-8): 转换 PDF 文件的命令行工具和库
 Name:    qpdf
-Version: 5.1.1
-Release: 1%{?dist}
+Version:	5.1.3
+Release:	1%{?dist}
 # MIT: e.g. libqpdf/sha2.c
 License: Artistic 2.0 and MIT
 URL:     http://qpdf.sourceforge.net/
 Source0: http://downloads.sourceforge.net/sourceforge/qpdf/qpdf-%{version}.tar.gz
-
-Patch0:  qpdf-doc.patch
 
 BuildRequires: zlib-devel
 BuildRequires: pcre-devel
@@ -25,16 +24,22 @@ Requires: qpdf-libs%{?_isa} = %{version}-%{release}
 
 %package libs
 Summary: QPDF library for transforming PDF files
+Summary(zh_CN.UTF-8): %{name} 的运行库
 Group:   System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 
 %package devel
 Summary: Development files for QPDF library
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:   Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: qpdf-libs%{?_isa} = %{version}-%{release}
 
 %package doc
 Summary: QPDF Manual
+Summary(zh_CN.UTF-8): %{name} 的文档
 Group:   Documentation
+Group(zh_CN.UTF-8): 文档
 BuildArch: noarch
 Requires: qpdf-libs = %{version}-%{release}
 
@@ -45,23 +50,32 @@ like pdf-to-pdf. It includes support for merging and splitting PDFs
 and to manipulate the list of pages in a PDF file. It is not a PDF viewer
 or a program capable of converting PDF into other formats.
 
+%description -l zh_CN.UTF-8
+转换 PDF 文件的命令行工具和库。
+
 %description libs
 QPDF is a C++ library that inspect and manipulate the structure of PDF files.
 It can encrypt and linearize files, expose the internals of a PDF file,
 and do many other operations useful to PDF developers.
 
+%description libs -l zh_CN.UTF-8
+%{name} 的运行库。
+
 %description devel
 Header files and libraries necessary
 for developing programs using the QPDF library.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
 %description doc
 QPDF Manual
 
+%description doc -l zh_CN.UTF-8
+%{name} 的文档。
+
 %prep
 %setup -q
-
-# fix 'complete manual location' note in man pages
-%patch0 -p1 -b .doc
 
 sed -i -e '1s,^#!/usr/bin/env perl,#!/usr/bin/perl,' qpdf/fix-qdf
 
@@ -83,6 +97,7 @@ mv  %{buildroot}%{_datadir}/doc/qpdf/* __doc
 rm -rf %{buildroot}%{_datadir}/doc/qpdf
 
 rm -f %{buildroot}%{_libdir}/libqpdf.la
+magic_rpm_clean.sh
 
 %check
 make check
@@ -111,6 +126,9 @@ make check
 %doc __doc/*
 
 %changelog
+* Wed Sep 09 2015 Liu Di <liudidi@gmail.com> - 5.1.3-1
+- 更新到 5.1.3
+
 * Wed Jan 15 2014 Jiri Popelka <jpopelka@redhat.com> - 5.1.1-1
 - 5.1.1
 

@@ -2,13 +2,26 @@ Summary:	A C++ port of Lucene
 Summary(zh_CN.UTF-8): Lucene 的 C++ 移植
 Name:		clucene09
 Version:	0.9.21b
-Release:	6%{?dist}
+Release:	8%{?dist}
 License:	LGPLv2+ or ASL 2.0
 Group:		System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
 URL:		http://www.sourceforge.net/projects/clucene/
 Source0:	http://downloads.sourceforge.net/clucene/clucene-core-%{version}.tar.bz2
 Patch0:		clucene-core-0.9.21b-gcc48.patch
+# enable reference counting (LUCENE_ENABLE_REFCOUNT) for Qt Assistant (#1128293)
+Patch2: clucene-core-0.9.21b-enable-refcount.patch
+
+# fix the soname version that ended up at 0.0.0
+# This bumps the soname, but that is actually wanted because of Patch2 above.
+Patch3: clucene-core-0.9.21b-fix-soversion.patch
+
+# make tests always verbose
+Patch4: clucene-core-0.9.21b-verbose-tests.patch
+
+# fix strcpy on overlapping areas and 2 unterminated buffers
+Patch5: clucene-core-0.9.21b-fix-unescaping.patch
+
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 %description
@@ -65,6 +78,12 @@ to work with the newer version and the newer API.
 %prep
 %setup -q -n clucene-core-%{version}
 %patch0 -p1
+%patch2 -p1 -b .enable-refcount
+%patch3 -p1 -b .fix-soversion
+touch src/Makefile.in
+%patch4 -p1 -b .verbose-tests
+%patch5 -p1 -b .fix-unescaping
+
 
 %build
 %configure --disable-static
@@ -79,7 +98,7 @@ mkdir -p $RPM_BUILD_ROOT{%{_includedir},%{_libdir}}/%{name}/
 mv -f $RPM_BUILD_ROOT%{_includedir}/{CLucene,CLucene.h,%{name}}
 mv -f $RPM_BUILD_ROOT%{_libdir}/{CLucene,%{name}}
 rm -f $RPM_BUILD_ROOT%{_libdir}/libclucene.so
-ln -sf ../libclucene.so.0.0.0 $RPM_BUILD_ROOT%{_libdir}/%{name}/libclucene.so
+ln -sf ../libclucene.so.3.0.1 $RPM_BUILD_ROOT%{_libdir}/%{name}/libclucene.so
 
 # Don't install any libtool .la files
 rm -rf $RPM_BUILD_ROOT%{_libdir}/*.la
@@ -119,6 +138,12 @@ rm -rf $RPM_BUILD_ROOT
 %{_includedir}/%{name}/
 
 %changelog
+* Thu Sep 10 2015 Liu Di <liudidi@gmail.com> - 0.9.21b-8
+- 为 Magic 3.0 重建
+
+* Thu Sep 10 2015 Liu Di <liudidi@gmail.com> - 0.9.21b-7
+- 为 Magic 3.0 重建
+
 * Mon May 05 2014 Liu Di <liudidi@gmail.com> - 0.9.21b-6
 - 为 Magic 3.0 重建
 

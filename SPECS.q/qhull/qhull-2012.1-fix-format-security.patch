@@ -1,0 +1,12 @@
+diff -ur qhull-2012.1.orig/src/testqset/testqset.c qhull-2012.1/src/testqset/testqset.c
+--- qhull-2012.1.orig/src/testqset/testqset.c	2015-09-09 12:53:48.095962654 +0000
++++ qhull-2012.1/src/testqset/testqset.c	2015-09-09 12:54:47.209961138 +0000
+@@ -214,7 +214,7 @@
+     char *endp;
+ 
+     if (argc != 2 && argc != 3) {
+-        printf(promptstr);
++        printf("%s",promptstr);
+         exit(0);
+     }
+     numIntsArg= strtol(argv[1], &endp, 10);

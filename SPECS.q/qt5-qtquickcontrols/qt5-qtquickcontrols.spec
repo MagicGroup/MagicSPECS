@@ -8,7 +8,7 @@
 Name:           qt5-%{qt_module}
 Summary:        Qt5 - module with set of QtQuick controls
 Summary(zh_CN.UTF-8): Qt5 - QtQuick 控件集的模块
-Version: 5.4.1
+Version: 5.5.0
 Release: 1%{?dist}
 
 License:        BSD and (LGPLv2 with exceptions or GPLv3 with exceptions) and GFDL
@@ -83,20 +83,20 @@ make install_docs INSTALL_ROOT=%{buildroot}
 magic_rpm_clean.sh
 
 %files
-# better to own this elsewhere? qt5-qtbase? -- rex
-%dir %{_qt5_archdatadir}/qml
 %{_qt5_archdatadir}/qml/QtQuick/
-%doc LGPL_EXCEPTION.txt
-%doc header.BSD
+%doc LICENSE.*
 
 %if 0%{?docs}
 %files doc
+%doc LICENSE.FDL
 %{_qt5_docdir}/qtquickcontrols.qch
 %{_qt5_docdir}/qtquickcontrols/
 %{_qt5_docdir}/qtquicklayouts.qch
 %{_qt5_docdir}/qtquicklayouts/
 %{_qt5_docdir}/qtquickdialogs.qch
 %{_qt5_docdir}/qtquickdialogs/
+%{_qt5_docdir}/qtquickextras.qch
+%{_qt5_docdir}/qtquickextras/
 %endif
 
 %if 0%{?_qt5_examplesdir:1}
@@ -104,8 +104,10 @@ magic_rpm_clean.sh
 %{_qt5_examplesdir}/
 %endif
 
-
 %changelog
+* Fri Sep 11 2015 Liu Di <liudidi@gmail.com> - 5.5.0-1
+- 更新到 5.5.0
+
 * Fri Mar 20 2015 Liu Di <liudidi@gmail.com> - 5.4.1-1
 - 更新到 5.4.1
 

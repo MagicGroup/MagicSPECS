@@ -7,8 +7,9 @@
 
 Name:    qwt
 Summary: Qt Widgets for Technical Applications
+Summary(zh_CN.UTF-8): 技术程序用的 Qt 部件
 Version: 6.1.2
-Release: 4%{?dist}
+Release: 5%{?dist}
 
 License: LGPLv2 with exceptions
 URL:     http://qwt.sourceforge.net
@@ -46,35 +47,50 @@ Besides a 2D plot widget it provides scales, sliders, dials, compasses,
 thermometers, wheels and knobs to control or display values, arrays
 or ranges of type double.
 
+%description -l zh_CN.UTF-8
+技术程序用的 Qt 部件。
+
 %package devel
 Summary:  Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Provides: qwt6-devel = %{version}-%{release}
 Provides: qwt6-devel%{_isa} = %{version}-%{release}
 Requires: %{name}%{?_isa} = %{version}-%{release}
 %description devel
 %{summary}.
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %package doc
 Summary: Developer documentation for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发文档
 BuildArch: noarch
 %description doc
 %{summary}.
+%description doc -l zh_CN.UTF-8
+%{name} 的开发文档。
 
 %if 0%{?qt5}
 %package qt5
 Summary: Qt5 Widgets for Technical Applications
+Summary(zh_CN.UTF-8): 技术程序用的 Qt5 部件
 Provides: qwt6-qt5 = %{version}-%{release}
 Provides: qwt6-qt5%{_isa} = %{version}-%{release}
 %description qt5
 %{summary}.
+%description qt5 -l zh_CN.UTF-8
+技术程序用的 Qt5 部件。
 
 %package qt5-devel
 Summary:  Development files for %{name}-qt5
+Summary(zh_CN.UTF-8): %{name}-qt5 的开发包
 Provides: qwt6-qt5-devel = %{version}-%{release}
 Provides: qwt6-qt5-devel%{_isa} = %{version}-%{release}
 Requires: %{name}-qt5%{?_isa} = %{version}-%{release}
 %description qt5-devel
 %{summary}.
+%description qt5-devel -l zh_CN.UTF-8
+%{name}-qt5 的开发包。
 %endif
 
 
@@ -98,7 +114,7 @@ popd
 
 mkdir %{_target_platform}
 pushd %{_target_platform}
-%{qmake_qt4} QWT_CONFIG+=QwtPkgConfig ..
+%{_qt4_qmake} QWT_CONFIG+=QwtPkgConfig ..
 
 make %{?_smp_mflags}
 popd
@@ -125,7 +141,7 @@ rm -rfv %{buildroot}%{_qt5_docdir}/html/*
 cp -alf %{buildroot}%{_qt4_docdir}/html/qwt/ \
         %{buildroot}%{_qt5_docdir}/html/qwt/
 %endif
-
+magic_rpm_clean.sh
 
 %post -p /sbin/ldconfig
 %postun -p /sbin/ldconfig
@@ -142,7 +158,7 @@ cp -alf %{buildroot}%{_qt4_docdir}/html/qwt/ \
 %{_qt4_headerdir}/qwt/
 %{_qt4_libdir}/libqwt.so
 %{_qt4_libdir}/libqwtmathml.so
-%{_qt4_libdir}/qt4/mkspecs/features/qwt*
+%{_libdir}/qt4/mkspecs/features/qwt*
 %{_qt4_libdir}/pkgconfig/qwt.pc
 %{_qt4_libdir}/pkgconfig/qwtmathml.pc
 
@@ -181,6 +197,9 @@ cp -alf %{buildroot}%{_qt4_docdir}/html/qwt/ \
 
 
 %changelog
+* Fri Sep 11 2015 Liu Di <liudidi@gmail.com> - 6.1.2-5
+- 为 Magic 3.0 重建
+
 * Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 6.1.2-4
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

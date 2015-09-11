@@ -4,9 +4,11 @@
 
 Name:		qoauth
 Version:	1.0.1
-Release:	5%{?posttag}%{?dist}
+Release:	6%{?posttag}%{?dist}
 Summary:	Qt-based C++ library for OAuth authorization scheme
+Summary(zh_CN.UTF-8): OAuth 认证方案的基于 QT 的 C++ 库
 Group:		System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 License:	LGPLv2+
 URL:		http://github.com/ayoy/qoauth
 Source0:	http://files.ayoy.net/qoauth/release/%{version}/src/%{name}-%{version}-src.tar.bz2
@@ -18,9 +20,14 @@ Requires:	qca-ossl%{?_isa}
 QOAuth is a Qt-based C++ implementation of an interface to services using
 OAuth authorization scheme.
 
+%description -l zh_CN.UTF-8
+OAuth 认证方案的基于 QT 的 C++ 库。
+
 %package devel
 Summary:	Development files for the Qt OAuth support library
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:		Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:	%{name}%{?_isa} = %{version}-%{release}
 Requires:	qt4-devel%{?_isa}
 Requires:	qca2-devel%{?_isa}
@@ -28,6 +35,9 @@ Requires:	qca2-devel%{?_isa}
 %description devel
 The %{name}-devel package contains libraries, header files and documentations 
 for developing applications that use QOAuth library. 
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q -n %{name}-%{version}-src
@@ -75,6 +85,9 @@ rm -rf %{buildroot}
 %{_includedir}/*
 
 %changelog
+* Wed Sep 09 2015 Liu Di <liudidi@gmail.com> - 1.0.1-6
+- 为 Magic 3.0 重建
+
 * Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 1.0.1-5
 - 为 Magic 3.0 重建
 

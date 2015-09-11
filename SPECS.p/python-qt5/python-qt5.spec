@@ -1,9 +1,7 @@
 
-%if 0%{?fedora}
 %global with_python3 1
 %global python3_dbus_dir %(%{__python3} -c "import dbus.mainloop; print(dbus.mainloop.__path__[0])")
 #global python3_dbus_dir %(d=%{python3_sitearch}/dbus/mainloop; [ -d $d ] || d=%{python3_sitelib}/dbus/mainloop; echo $d)
-%endif
 %global with_python2 1
 %global python2_dbus_dir %(%{__python2} -c "import dbus.mainloop; print(dbus.mainloop.__path__[0])")
 #global python2_dbus_dir %(d=%{python2_sitearch}/dbus/mainloop; [ -d $d ] || d=%{python2_sitelib}/dbus/mainloop; echo $d)
@@ -11,9 +9,10 @@
 %global rpm_macros_dir %(d=%{_rpmconfigdir}/macros.d; [ -d $d ] || d=%{_sysconfdir}/rpm; echo $d)
 
 Summary: Python bindings for Qt5
+Summary(zh_CN.UTF-8): Qt5 的 Python 绑定
 Name: 	 python-qt5 
 Version: 5.5
-Release: 1%{?dist}
+Release: 2%{?dist}
 
 # all BSD, except for GPLv2+ dbus bindings and examples
 License: BSD and GPLv2+
@@ -22,7 +21,7 @@ Url:     http://www.riverbankcomputing.com/software/pyqt/
 Source0: http://www.riverbankcomputing.com/static/Downloads/PyQt5/PyQt-gpl-%{version}%{?snap:-snapshot-%{snap}}.tar.gz
 %else
 #Source0: http://downloads.sourceforge.net/project/pyqt/PyQt5/PyQt-%{version}/PyQt-gpl-%{version}.tar.gz
-Source0: http://www.riverbankcomputing.com/static/Downloads/PyQt5/PyQt-gpl-%{version}.tar.gz
+Source0: http://sourceforge.net/projects/pyqt/files/PyQt5/PyQt-%{version}/PyQt-gpl-%{version}.tar.gz
 %endif
 Source1: macros.pyqt5
 # wrapper, see https://bugzilla.redhat.com/show_bug.cgi?id=1193107#c9
@@ -81,8 +80,12 @@ Provides: PyQt5%{?_isa} = %{version}-%{release}
 %description
 These are Python bindings for Qt5.
 
+%description -l zh_CN.UTF-8
+Qt5 的 Python 绑定
+
 %package devel
 Summary: Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Requires: %{name}%{?_isa} = %{version}-%{release}
 Requires: qt5-qtbase-devel
 Requires: sip-devel
@@ -90,17 +93,23 @@ Provides: PyQt5-devel = %{version}-%{release}
 %description devel
 Files needed to build other bindings for C++ classes that inherit from any
 of the Qt5 classes (e.g. KDE or your own).
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %package -n python3-qt5
 Summary: Python 3 bindings for Qt5
+Summary(zh_CN.UTF-8): Qt5 的 Python3 绑定
 %{?_sip_api:Requires: python3-sip-api(%{_sip_api_major}) >= %{_sip_api}}
 Provides: python3-PyQt5 = %{version}-%{release}
 Requires: python3-dbus
 %description -n python3-qt5
 %{summary}.
+%description -n python3-qt5 -l zh_CN.UTF-8
+Qt5 的 Python3 绑定。
 
 %package -n python3-qt5-devel
 Summary: Python 3 bindings for Qt5
+Summary(zh_CN.UTF-8): python3-qt5 的开发包
 Requires: python3-qt5%{?_isa} = %{version}-%{release}
 Requires: qt5-qtbase-devel
 Requires: python3-sip-devel
@@ -109,13 +118,18 @@ Provides: python3-PyQt5-devel = %{version}-%{release}
 Files needed to build other bindings for C++ classes that inherit from any
 of the Qt5 classes
 
+%description -n python3-qt5-devel -l zh_CN.UTF-8
+python3-qt5 的开发包。
+
 %package doc
 Summary: Developer documentation for %{name} 
+Summary(zh_CN.UTF-8): %{name} 的开发文档
 Provides: PyQt5-doc = %{version}-%{release}
 BuildArch: noarch
 %description doc
 %{summary}.
-
+%description doc -l zh_CN.UTF-8
+%{name} 的开发文档。
 
 %prep
 %setup -q -n PyQt-gpl-%{version}%{?snap:-snapshot-%{snap}}
@@ -204,6 +218,7 @@ sed -i \
   -e "s|@PYTHON2@|%{__python2}|g" \
   %{buildroot}%{_bindir}/pyuic5
 %endif
+magic_rpm_clean.sh
 
 
 %if 0%{?with_python2}
@@ -322,6 +337,9 @@ sed -i \
 
 
 %changelog
+* Wed Sep 09 2015 Liu Di <liudidi@gmail.com> - 5.5-2
+- 为 Magic 3.0 重建
+
 * Thu Jul 30 2015 Rex Dieter <rdieter@fedoraproject.org> 5.5-1
 - 5.5
 

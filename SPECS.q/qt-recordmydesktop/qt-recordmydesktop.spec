@@ -2,7 +2,7 @@
 
 Name:           qt-recordmydesktop
 Version:        0.3.8
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        KDE Desktop session recorder with audio and video
 Summary(zh_CN.UTF-8): recordmydesktop 的 KDE 前端
 
@@ -63,6 +63,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/pixmaps/*
 
 %changelog
+* Fri Sep 11 2015 Liu Di <liudidi@gmail.com> - 0.3.8-3
+- 为 Magic 3.0 重建
+
 * Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 0.3.8-2
 - 为 Magic 3.0 重建
 

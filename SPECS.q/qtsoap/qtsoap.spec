@@ -1,9 +1,11 @@
 Name:           qtsoap
 Version:        2.7
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        The Simple Object Access Protocol Qt-based client side library
+Summary(zh_CN.UTF-8): 基于 Qt 的简单对象访问协议库
 
 Group:          System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 License:        LGPLv2 with exceptions or GPLv3
 URL:            http://qt.nokia.com/products/appdev/add-on-products/catalog/4/Utilities/qtsoap/
 Source0:        http://get.qt.nokia.com/qt/solutions/lgpl/qtsoap-%{version}_1-opensource.tar.gz
@@ -18,13 +20,21 @@ The SOAP (Simple Object Access Protocol) library uses the XML standard
 for describing how to exchange messages. Its primary usage is to invoke web
 services and get responses from Qt-based applications.
 
+%description -l zh_CN.UTF-8
+基于 Qt 的简单对象访问协议库。
+
 %package        devel
 Summary:        Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       %{name} = %{version}-%{release}
 
 %description    devel
 Development files for %{name}.
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q -n qtsoap-%{version}_1-opensource
@@ -48,7 +58,7 @@ make %{?_smp_mflags}
 %install
 rm -rf %{buildroot}
 make INSTALL_ROOT=%{buildroot} install
-
+magic_rpm_clean.sh
 
 %clean
 rm -rf %{buildroot}
@@ -71,6 +81,9 @@ rm -rf %{buildroot}
 %{_qt4_headerdir}/QtSoap/
 
 %changelog
+* Fri Sep 11 2015 Liu Di <liudidi@gmail.com> - 2.7-5
+- 为 Magic 3.0 重建
+
 * Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 2.7-4
 - 为 Magic 3.0 重建
 

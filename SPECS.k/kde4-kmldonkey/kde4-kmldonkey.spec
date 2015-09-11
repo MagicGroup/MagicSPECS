@@ -1,7 +1,7 @@
 %define real_name kmldonkey
 Name:           kde4-kmldonkey
 Version:        2.0.7
-Release:        2%{?dist}
+Release:        4%{?dist}
 Summary:        Advanced GUI frontend for the MLDonkey P2P core.
 Summary(zh_CN): MLDonkey P2P 核心的高级界面前端。
 Group:          Applications/Internet
@@ -94,6 +94,12 @@ rm -rf %{buildroot} %{_builddir}/%{buildsubdir}
 %{kde4_libdir}/*.so
 
 %changelog
+* Fri Sep 11 2015 Liu Di <liudidi@gmail.com> - 2.0.7-4
+- 为 Magic 3.0 重建
+
+* Fri Sep 11 2015 Liu Di <liudidi@gmail.com> - 2.0.7-3
+- 为 Magic 3.0 重建
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 2.0.7-2
 - 为 Magic 3.0 重建
 

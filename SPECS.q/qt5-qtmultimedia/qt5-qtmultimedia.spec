@@ -6,14 +6,12 @@
 %define docs 1
 
 # openal not currently supported on epel7, https://bugzilla.redhat.com/1069231
-%if 0%{?rhel} != 7
 %global openal 1
-%endif
 
 Summary: Qt5 - Multimedia support
 Summary(zh_CN.UTF-8): Qt5 - 多媒体支持
 Name:    qt5-%{qt_module}
-Version: 5.4.1
+Version: 5.5.0
 Release: 1%{?dist}
 
 # See LGPL_EXCEPTIONS.txt, LICENSE.GPL3, respectively, for exception details
@@ -173,6 +171,9 @@ magic_rpm_clean.sh
 
 
 %changelog
+* Thu Sep 10 2015 Liu Di <liudidi@gmail.com> - 5.5.0-1
+- 更新到 5.5.0
+
 * Thu Mar 19 2015 Liu Di <liudidi@gmail.com> - 5.4.1-1
 - 更新到 5.4.1
 

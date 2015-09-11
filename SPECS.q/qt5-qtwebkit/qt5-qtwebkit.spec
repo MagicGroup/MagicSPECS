@@ -11,8 +11,8 @@
 Summary: Qt5 - QtWebKit components
 Summary(zh_CN.UTF-8): Qt5 - QtWebKit 组件
 Name:    qt5-qtwebkit
-Version: 5.4.1
-Release: 2%{?dist}
+Version: 5.5.0
+Release: 1%{?dist}
 
 # See LICENSE.GPL LICENSE.LGPL LGPL_EXCEPTION.txt, for details
 # See also http://qt-project.org/doc/qt-5.0/qtdoc/licensing.html
@@ -47,9 +47,6 @@ Patch7: 0001-Add-ARM-64-support.patch
 
 # truly madly deeply no rpath please, kthxbye
 Patch8: qtwebkit-opensource-src-5.2.1-no_rpath.patch
-
-# fix GMutexLocker build issue
-Patch9: qtwebkit-opensource-src-5.4.0-mutexlocker.patch
 
 %if 0%{?system_angle}
 BuildRequires: angleproject-devel angleproject-static
@@ -136,7 +133,6 @@ BuildArch: noarch
 %endif
 %patch7 -p1 -b .aarch64
 %patch8 -p1 -b .no_rpath
-%patch9 -p1 -b .MutexLocker
 
 echo "nuke bundled code..."
 # nuke bundled code
@@ -213,6 +209,9 @@ magic_rpm_clean.sh
 
 
 %changelog
+* Thu Sep 10 2015 Liu Di <liudidi@gmail.com> - 5.5.0-1
+- 更新到 5.5.0
+
 * Fri Mar 20 2015 Liu Di <liudidi@gmail.com> - 5.4.1-2
 - 为 Magic 3.0 重建
 

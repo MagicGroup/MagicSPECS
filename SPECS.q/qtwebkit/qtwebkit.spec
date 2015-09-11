@@ -3,9 +3,10 @@
 
 Name: qtwebkit
 Summary: Qt WebKit bindings
+Summary(zh_CN.UTF-8): Webkit 的 Qt 绑定
 
 Version: 2.3.4
-Release: 8%{?dist}
+Release: 9%{?dist}
 
 License: LGPLv2 with exceptions or GPLv3 with exceptions
 URL: http://trac.webkit.org/wiki/QtWebKit
@@ -87,11 +88,7 @@ BuildRequires: pkgconfig(xrender)
 BuildRequires: perl(version)
 BuildRequires: perl(Digest::MD5)
 BuildRequires: ruby
-%if 0%{?fedora}
 # qt-mobility bits
-BuildRequires: pkgconfig(QtLocation) >= 1.2
-BuildRequires: pkgconfig(QtSensors) >= 1.2
-%endif
 Obsoletes: qt-webkit < 1:4.9.0
 Provides: qt-webkit = 2:%{version}-%{release}
 Provides: qt4-webkit = 2:%{version}-%{release}
@@ -107,8 +104,12 @@ Requires: glib2%{?_isa} >= %{glib2_version}
 %description
 %{summary}
 
+%description -l zh_CN.UTF-8
+Webkit 的 Qt 绑定。
+
 %package devel
 Summary: Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Requires: %{name}%{?_isa} = %{version}-%{release}
 Obsoletes: qt-webkit-devel < 1:4.9.0
 Provides:  qt-webkit-devel = 2:%{version}-%{release}
@@ -116,6 +117,8 @@ Provides:  qt4-webkit-devel = 2:%{version}-%{release}
 Provides:  qt4-webkit-devel%{?_isa} = 2:%{version}-%{release}
 %description devel
 %{summary}.
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 
 %prep
@@ -194,11 +197,13 @@ make install INSTALL_ROOT=%{buildroot} -C %{_target_platform}-no_sse2/Release
 ## pkgconfig love
 # drop Libs.private, it contains buildroot references, and
 # we don't support static linking libQtWebKit anyway
+cp -r %{buildroot}%{_qt4_libdir}/pkgconfig %{buildroot}%{_libdir}
+rm -rf %{buildroot}%{_qt4_libdir}/pkgconfig
 pushd %{buildroot}%{_libdir}/pkgconfig
 grep -v "^Libs.private:" QtWebKit.pc > QtWebKit.pc.new && \
 mv QtWebKit.pc.new QtWebKit.pc
 popd
-
+magic_rpm_clean.sh
 
 %post -p /sbin/ldconfig
 %postun -p /sbin/ldconfig
@@ -221,6 +226,9 @@ popd
 
 
 %changelog
+* Fri Sep 11 2015 Liu Di <liudidi@gmail.com> - 2.3.4-9
+- 为 Magic 3.0 重建
+
 * Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.3.4-8
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

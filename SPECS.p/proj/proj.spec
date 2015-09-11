@@ -1,9 +1,11 @@
 Name:           proj
 Version:        4.9.1
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        Cartographic projection software (PROJ.4)
+Summary(zh_CN.UTF-8): 制图投影软件
 
 Group:          Applications/Engineering
+Group(zh_CN.UTF-8): 应用程序/工程
 License:        MIT
 URL:            http://proj.osgeo.org
 Source0:        http://download.osgeo.org/proj/proj-%{version}.tar.gz
@@ -19,41 +21,60 @@ Proj and invproj perform respective forward and inverse transformation of
 cartographic data to or from cartesian data with a wide range of selectable
 projection functions.
 
+%description -l zh_CN.UTF-8
+制图投影软件。
 
 %package devel
 Summary:        Development files for PROJ.4
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       %{name} = %{version}-%{release}
 
 %description devel
 This package contains libproj and the appropriate header files and man pages.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %package static
 Summary:        Development files for PROJ.4
+Summary(zh_CN.UTF-8): %{name} 的静态库
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       %{name}-devel%{?_isa} = %{version}-%{release}
 
 %description static
 This package contains libproj static library.
 
+%description static -l zh_CN.UTF-8
+%{name} 的静态库。
 
 %package nad
 Summary:        US and Canadian datum shift grids for PROJ.4
+Summary(zh_CN.UTF-8): 美国和加拿大的基准移位网格的PROJ.4
 Group:          Applications/Engineering
+Group(zh_CN.UTF-8): 应用程序/工程
 Requires:       %{name} = %{version}-%{release}
 
 %description nad
 This package contains additional US and Canadian datum shift grids.
 
+%description nad -l zh_CN.UTF-8
+美国和加拿大的基准移位网格的PROJ.4。
 
 %package epsg
 Summary:        EPSG dataset for PROJ.4
+Summary(zh_CN.UTF-8): PROJ.4 的 EPSG 数据表
 Group:          Applications/Engineering
+Group(zh_CN.UTF-8): 应用程序/工程
 Requires:       %{name} = %{version}-%{release}
 
 %description epsg
 This package contains additional EPSG dataset.
+
+%description epsg -l zh_CN.UTF-8
+PROJ.4 的 EPSG 数据表。
 
 %prep
 %setup -q
@@ -90,6 +111,7 @@ install -p -m 0644 nad/epsg $RPM_BUILD_ROOT%{_datadir}/%{name}
 
 # Install projects.h manually, per #830496:
 install -p -m 0644 src/projects.h $RPM_BUILD_ROOT%{_includedir}/
+magic_rpm_clean.sh
 
 %check
 pushd nad
@@ -148,6 +170,9 @@ rm -rf $RPM_BUILD_ROOT
 %attr(0644,root,root) %{_datadir}/%{name}/epsg
 
 %changelog
+* Fri Sep 11 2015 Liu Di <liudidi@gmail.com> - 4.9.1-4
+- 为 Magic 3.0 重建
+
 * Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 4.9.1-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

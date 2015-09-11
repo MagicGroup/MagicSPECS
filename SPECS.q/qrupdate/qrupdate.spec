@@ -1,8 +1,10 @@
 Name:		qrupdate
 Version:	1.1.2
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:	A Fortran library for fast updates of QR and Cholesky decompositions
+Summary(zh_CN.UTF-8): 快速更新 QR 和 Cholesky 分解的 Fortran 库
 Group:		Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 License:	GPLv3+
 URL:		http://qrupdate.sourceforge.net/
 Source0:	http://downloads.sourceforge.net/%{name}/%{name}-%{version}.tar.gz
@@ -18,13 +20,21 @@ BuildRequires:	lapack-devel
 qrupdate is a Fortran library for fast updates of QR and Cholesky
 decompositions. 
 
+%description -l zh_CN.UTF-8
+快速更新 QR 和 Cholesky 分解的 Fortran 库。
+
 %package devel
 Summary:	Development libraries for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:		Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:	%{name} = %{version}-%{release}
 
 %description devel
 This package contains the development libraries for %{name}.
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -39,6 +49,7 @@ rm -rf %{buildroot}
 make install-shlib LIBDIR=%{_libdir} PREFIX="%{buildroot}"
 # Verify attributes
 chmod 755 %{buildroot}%{_libdir}/libqrupdate.*
+magic_rpm_clean.sh
 
 %clean
 rm -rf %{buildroot}
@@ -60,6 +71,9 @@ make test FC=gfortran FFLAGS="%{optflags} -fimplicit-none -funroll-loops"
 
 
 %changelog
+* Wed Sep 09 2015 Liu Di <liudidi@gmail.com> - 1.1.2-3
+- 为 Magic 3.0 重建
+
 * Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 1.1.2-2
 - 为 Magic 3.0 重建
 

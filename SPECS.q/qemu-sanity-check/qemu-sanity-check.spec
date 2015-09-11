@@ -6,8 +6,9 @@
 
 Name:            qemu-sanity-check
 Version:         1.1.5
-Release:         4%{?dist}
+Release:         5%{?dist}
 Summary:         Simple qemu and Linux kernel sanity checker
+Summary(zh_CN.UTF-8): 简单的 qemu 和 Linux 内核完整性检查
 License:         GPLv2+
 
 URL:             http://people.redhat.com/~rjones/qemu-sanity-check
@@ -66,9 +67,12 @@ If you are testing qemu or the kernel in those packages and you want
 to avoid a circular dependency on qemu or kernel, you should use
 'BuildRequires: %{name}-nodeps' instead.
 
+%description -l zh_CN.UTF-8
+简单的 qemu 和 Linux 内核完整性检查。
 
 %package nodeps
 Summary:         Simple qemu and Linux kernel sanity checker (no dependencies)
+Summary(zh_CN.UTF-8): 简单的 qemu 和 Linux 内核完整性检查（无依赖）
 License:         GPLv2+
 
 
@@ -76,6 +80,8 @@ License:         GPLv2+
 This is the no-depedencies version of %{name}.  It is exactly the same
 as %{name} except that this package does not depend on qemu or kernel.
 
+%description nodeps -l zh_CN.UTF-8
+简单的 qemu 和 Linux 内核完整性检查（无依赖）
 
 %prep
 %setup -q
@@ -107,7 +113,7 @@ make check || {
 
 %install
 make DESTDIR=$RPM_BUILD_ROOT install
-
+magic_rpm_clean.sh
 
 %files
 %doc COPYING
@@ -121,6 +127,9 @@ make DESTDIR=$RPM_BUILD_ROOT install
 
 
 %changelog
+* Wed Sep 09 2015 Liu Di <liudidi@gmail.com> - 1.1.5-5
+- 为 Magic 3.0 重建
+
 * Fri Jun 19 2015 Richard W.M. Jones <rjones@redhat.com> - 1.1.5-4
 - +BR grubby.
 

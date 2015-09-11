@@ -4,7 +4,7 @@
 Name: quota
 Epoch: 1
 Version: 4.02
-Release: 4%{?dist}
+Release: 5%{?dist}
 Summary: System administration tools for monitoring users' disk usage
 # quota_nld.c, quotaio_xfs.h:       GPLv2
 # bylabel.c copied from util-linux: GPLv2+
@@ -229,6 +229,9 @@ install -p -m644 -D %{SOURCE4} \
 
 
 %changelog
+* Fri Sep 11 2015 Liu Di <liudidi@gmail.com> - 1:4.02-5
+- 为 Magic 3.0 重建
+
 * Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1:4.02-4
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

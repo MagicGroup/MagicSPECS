@@ -1,16 +1,19 @@
 %global major_version 1.10
 
 Name:           botan
-Version:        %{major_version}.9
-Release:        8%{?dist}
+Version:	1.10.10
+Release:	1%{?dist}
 Summary:        Crypto library written in C++
+Summary(zh_CN.UTF-8): C++ 编写的加密库
 
 Group:          System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 License:        BSD
 URL:            http://botan.randombit.net/
 # tarfile is stripped using repack.sh. original tarfile to be found
 # here: http://files.randombit.net/botan/Botan-%%{version}.tbz
-Source0:        Botan-%{version}.stripped.tbz
+#Source0:        Botan-%{version}.stripped.tbz
+Source0:	http://botan.randombit.net/releases/Botan-%{version}.tgz
 Source1:        README.fedora
 Patch0:         botan-aarch64.patch
 Patch1:         botan-1.10-add-ppc64le.patch
@@ -40,10 +43,14 @@ system, and a wide variety of other features, all written in portable
 C++. The API reference, tutorial, and examples may help impart the
 flavor of the library.
 
+%description -l zh_CN.UTF-8
+C++ 编写的加密库。
 
 %package        devel
 Summary:        Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       %{name}%{?_isa} = %{version}-%{release}
 Requires:       pkgconfig
 Requires:       bzip2-devel
@@ -54,10 +61,14 @@ Requires:       openssl-devel
 The %{name}-devel package contains libraries and header files for
 developing applications that use %{name}.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %package        doc
 Summary:        Documentation for %{name}
+Summary(zh_CN.UTF-8): %{name} 的文档
 Group:          Documentation
+Group(zh_CN.UTF-8): 文档
 BuildArch:      noarch
 
 %description    doc
@@ -65,10 +76,14 @@ BuildArch:      noarch
 
 This package contains HTML documentation for %{name}.
 
+%description doc -l zh_CN.UTF-8
+%{name} 的文档。
 
 %package        python
 Summary:        Python bindings for %{name}
+Summary(zh_CN.UTF-8): %{name} 的 Python 绑定
 Group:          System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 
 %description    python
 %{summary}
@@ -78,6 +93,8 @@ This package contains the Python binding for %{name}.
 Note: The Python binding should be considered alpha software, and the
 interfaces may change in the future.
 
+%description python -l zh_CN.UTF-8
+%{name} 的 Python 绑定。
 
 %prep
 %setup -q -n Botan-%{version}
@@ -130,7 +147,7 @@ cp -a doc/{examples,python-examples,license.txt} \
    %{buildroot}%{_pkgdocdir}
 cp -a %{SOURCE1} %{buildroot}%{_pkgdocdir}
 rm -r %{buildroot}%{_pkgdocdir}/manual/{.doctrees,.buildinfo}
-
+magic_rpm_clean.sh
 
 %post -p /sbin/ldconfig
 
@@ -183,6 +200,9 @@ LD_LIBRARY_PATH=%{buildroot}%{_libdir} ./check --validate
 
 
 %changelog
+* Wed Sep 09 2015 Liu Di <liudidi@gmail.com> - 1.10.10-1
+- 更新到 1.10.10
+
 * Thu Aug 27 2015 Jonathan Wakely <jwakely@redhat.com> - 1.10.9-8
 - Rebuilt for Boost 1.59
 

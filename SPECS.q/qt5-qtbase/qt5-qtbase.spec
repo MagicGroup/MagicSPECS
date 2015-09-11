@@ -15,9 +15,7 @@
 
 %global rpm_macros_dir %(d=%{_rpmconfigdir}/macros.d; [ -d $d ] || d=%{_sysconfdir}/rpm; echo $d)
 
-%if 0%{?fedora} > 22
-%global bootstrap 1
-%endif
+%global bootstrap 0
 
 # define to build docs, need to undef this for bootstrapping
 # where qt5-qttools builds are not yet available
@@ -36,8 +34,8 @@
 
 Summary: Qt5 - QtBase components
 Name:    qt5-qtbase
-Version: 5.4.1
-Release: 4%{?dist}
+Version: 5.5.0
+Release: 1%{?dist}
 
 # See LGPL_EXCEPTIONS.txt, for exception details
 License: LGPLv2 with exceptions or GPLv3 with exceptions
@@ -77,32 +75,13 @@ Patch4: qtbase-opensource-src-5.3.2-QTBUG-35459.patch
 # unconditionally enable freetype lcdfilter support
 Patch12: qtbase-opensource-src-5.2.0-enable_ft_lcdfilter.patch
 
-# upstreamable patches
-# support poll
-# https://bugreports.qt-project.org/browse/QTBUG-27195
-# NEEDS REBASE
-Patch50: qt5-poll.patch
-
-# https://bugzilla.redhat.com/show_bug.cgi?id=1083664
-# https://bugreports.qt.io/browse/QTBUG-42985
-Patch51: qtbase-opensource-src-5.4.0-QTBUG-42985.patch
-
 ## upstream patches
 # workaround https://bugreports.qt-project.org/browse/QTBUG-43057
 # 'make docs' crash on el6, use qSort instead of std::sort
 Patch100: qtbase-opensource-src-5.4.0-QTBUG-43057.patch
 
-Patch272: 0072-CMake-Fix-QObject-connect-failing-on-ARM.patch
-Patch294: 0094-Fix-Meta-.-shortcuts-on-XCB.patch
-Patch332: 0132-Call-ofono-nm-Registered-delayed-in-constructor-othe.patch
-Patch336: 0136-Make-sure-there-s-a-scene-before-using-it.patch
-# http://lists.qt-project.org/pipermail/announce/2015-February/000059.html
-# CVE-2015-0295
-Patch349: 0149-Fix-a-division-by-zero-when-processing-malformed-BMP.patch
-
 # mips64el patches
 Patch1000: qt5-mips64el-fix_-m64.patch
-Patch1001: qt5-qtbase-qbasicatomic-invalid_operands_sync_0x11-fix.patch
 
 # macros, be mindful to keep sync'd with macros.qt5
 Source1: macros.qt5
@@ -206,9 +185,7 @@ BuildRequires: pkgconfig(xcb) pkgconfig(xcb-glx) pkgconfig(xcb-icccm) pkgconfig(
 BuildRequires: pkgconfig(zlib)
 
 %if 0%{?qtchooser}
-%if 0%{?fedora}
-Conflicts: qt < 1:4.8.6-10
-%endif
+Conflicts: qt4 < 4.8.6-10
 Requires(post): %{_sbindir}/update-alternatives
 Requires(postun): %{_sbindir}/update-alternatives
 %endif
@@ -254,6 +231,13 @@ BuildArch: noarch
 %description doc
 %{summary}.
 %endif
+
+%package common
+Summary: Common files for Qt5
+Requires: %{name} = %{version}-%{release}
+BuildArch: noarch
+%description common
+%{summary}.
 
 %package examples
 Summary: Programming examples for %{name}
@@ -340,21 +324,11 @@ rm -fv mkspecs/linux-g++*/qmake.conf.multilib-optflags
 %patch4 -p1 -b .QTBUG-35459
 %patch12 -p1 -b .enable_ft_lcdfilter
 
-#patch50 -p1 -b .poll
-%patch51 -p1 -b .QTBUG-42985
-
 %if 0%{?rhel} == 6
 %patch100 -p1 -b .QTBUG-43057
 %endif
 
-%patch272 -p1 -b .0072
-%patch294 -p1 -b .0094
-%patch332 -p1 -b .0132
-%patch336 -p1 -b .0136
-%patch349 -p1 -b .0149
-
 %patch1000 -p1
-%patch1001 -p1
 
 # drop -fexceptions from $RPM_OPT_FLAGS
 RPM_OPT_FLAGS=`echo $RPM_OPT_FLAGS | sed 's|-fexceptions||g'`
@@ -477,7 +451,7 @@ translationdir=%{_qt5_translationdir}
 
 Name: Qt5
 Description: Qt5 Configuration
-Version: %{version}
+Version: 5.5.0
 EOF
 
 # rpm macros
@@ -492,6 +466,7 @@ sed -i \
 
 # create/own dirs
 mkdir -p %{buildroot}{%{_qt5_archdatadir}/mkspecs/modules,%{_qt5_importdir},%{_qt5_libexecdir},%{_qt5_plugindir}/{designer,iconengines,script,styles},%{_qt5_translationdir}}
+mkdir -p %{buildroot}%{_sysconfdir}/xdg/QtProject
 
 # hardlink files to %{_bindir}, add -qt5 postfix to not conflict
 mkdir %{buildroot}%{_bindir}
@@ -598,9 +573,8 @@ if [ $1 -eq 0 ]; then
 fi
 %endif
 
-
 %files
-%doc LICENSE.LGPL* LGPL_EXCEPTION.txt
+%doc LICENSE.LGPL* LGPL_EXCEPTION.txt LICENSE.FDL
 %if 0%{?qtchooser}
 %dir %{_sysconfdir}/xdg/qtchooser
 # not editable config files, so not using %%config here
@@ -608,6 +582,7 @@ fi
 %ghost %{_sysconfdir}/xdg/qtchooser/5.conf
 %{_sysconfdir}/xdg/qtchooser/5-%{__isa_bits}.conf
 %endif
+%dir %{_sysconfdir}/xdg/QtProject/
 %{_qt5_libdir}/libQt5Concurrent.so.5*
 %{_qt5_libdir}/libQt5Core.so.5*
 %{_qt5_libdir}/libQt5DBus.so.5*
@@ -643,7 +618,6 @@ fi
 %{_qt5_libdir}/cmake/Qt5Network/Qt5Network_QConnmanEnginePlugin.cmake
 %{_qt5_libdir}/cmake/Qt5Network/Qt5Network_QGenericEnginePlugin.cmake
 %{_qt5_libdir}/cmake/Qt5Network/Qt5Network_QNetworkManagerEnginePlugin.cmake
-#dir %{_qt5_plugindir}/accessible/
 %dir %{_qt5_plugindir}/designer/
 %dir %{_qt5_plugindir}/generic/
 %dir %{_qt5_plugindir}/iconengines/
@@ -657,10 +631,9 @@ fi
 %dir %{_qt5_plugindir}/styles/
 %{_qt5_plugindir}/sqldrivers/libqsqlite.so
 %{_qt5_libdir}/cmake/Qt5Sql/Qt5Sql_QSQLiteDriverPlugin.cmake
-%{_qt5_libdir}/cmake/Qt5Gui/Qt5Gui_QDirectFbIntegrationPlugin.cmake
-%{_qt5_libdir}/cmake/Qt5Sql/Qt5Sql_QSQLite2DriverPlugin.cmake
-%{_qt5_plugindir}/platforms/libqdirectfb.so
-%{_qt5_plugindir}/sqldrivers/libqsqlite2.so
+
+%files common
+# empty for now, consider: filesystem/dir ownership, licenses
 
 %if 0%{?docs}
 %files doc
@@ -668,6 +641,10 @@ fi
 %doc dist/README dist/changes-5.*
 %{_qt5_docdir}/*.qch
 %{_qt5_docdir}/qdoc/
+%if 0%{?examples}
+# included in -examples instead, see bug #1212750
+%exclude %{_qt5_docdir}/qdoc/examples-manifest.xml
+%endif
 %{_qt5_docdir}/qmake/
 %{_qt5_docdir}/qtconcurrent/
 %{_qt5_docdir}/qtcore/
@@ -742,6 +719,8 @@ fi
 %{_qt5_libdir}/libQt5Test.so
 %{_qt5_libdir}/libQt5Widgets.prl
 %{_qt5_libdir}/libQt5Widgets.so
+%{_qt5_libdir}/libQt5XcbQpa.prl
+%{_qt5_libdir}/libQt5XcbQpa.so
 %{_qt5_libdir}/libQt5Xml.prl
 %{_qt5_libdir}/libQt5Xml.so
 %{_qt5_libdir}/cmake/Qt5/Qt5Config*.cmake
@@ -771,7 +750,14 @@ fi
 %{_qt5_libdir}/pkgconfig/Qt5Sql.pc
 %{_qt5_libdir}/pkgconfig/Qt5Test.pc
 %{_qt5_libdir}/pkgconfig/Qt5Widgets.pc
+%{_qt5_libdir}/pkgconfig/Qt5XcbQpa.pc
 %{_qt5_libdir}/pkgconfig/Qt5Xml.pc
+%if 0%{?egl}
+%{_qt5_libdir}/libQt5EglDeviceIntegration.prl
+%{_qt5_libdir}/libQt5EglDeviceIntegration.so
+%{_qt5_libdir}/pkgconfig/Qt5EglDeviceIntegration.pc
+%endif
+
 
 %files static
 %{_qt5_libdir}/libQt5Bootstrap.*a
@@ -786,9 +772,22 @@ fi
 %{_qt5_libdir}/libQt5PlatformSupport.*a
 %{_qt5_libdir}/libQt5PlatformSupport.prl
 %{_qt5_libdir}/pkgconfig/Qt5PlatformSupport.pc
+%{_qt5_libdir}/cmake/Qt5Gui/Qt5Gui_QDirectFbIntegrationPlugin.cmake
+%{_qt5_libdir}/cmake/Qt5Gui/Qt5Gui_QLibInputPlugin.cmake
+%{_qt5_libdir}/cmake/Qt5Gui/Qt5Gui_QTsLibPlugin.cmake
+%{_qt5_libdir}/cmake/Qt5Sql/Qt5Sql_QSQLite2DriverPlugin.cmake
+%{_qt5_plugindir}/generic/libqlibinputplugin.so
+%{_qt5_plugindir}/generic/libqtslibplugin.so
+%{_qt5_plugindir}/platforms/libqdirectfb.so
+%{_qt5_plugindir}/sqldrivers/libqsqlite2.so
+
 
 %if 0%{?examples}
 %files examples
+%if 0%{?docs}
+%dir %{_qt5_docdir}/qdoc/
+%{_qt5_docdir}/qdoc/examples-manifest.xml
+%endif
 %{_qt5_examplesdir}/
 %endif
 
@@ -827,15 +826,21 @@ fi
 %{_qt5_libdir}/libQt5OpenGL.so.5*
 %{_qt5_libdir}/libQt5PrintSupport.so.5*
 %{_qt5_libdir}/libQt5Widgets.so.5*
-#{_qt5_plugindir}/accessible/libqtaccessiblewidgets.so
+%{_qt5_libdir}/libQt5XcbQpa.so.5*
 %{_qt5_plugindir}/generic/libqevdevkeyboardplugin.so
 %{_qt5_plugindir}/generic/libqevdevmouseplugin.so
 %{_qt5_plugindir}/generic/libqevdevtabletplugin.so
 %{_qt5_plugindir}/generic/libqevdevtouchplugin.so
+%if 0%{?libinput}
+%{_qt5_plugindir}/generic/libqlibinputplugin.so
+%{_qt5_libdir}/cmake/Qt5Gui/Qt5Gui_QLibInputPlugin.cmake
+%endif
+%{_qt5_plugindir}/generic/libqtuiotouchplugin.so
 %{_qt5_libdir}/cmake/Qt5Gui/Qt5Gui_QEvdevKeyboardPlugin.cmake
 %{_qt5_libdir}/cmake/Qt5Gui/Qt5Gui_QEvdevMousePlugin.cmake
 %{_qt5_libdir}/cmake/Qt5Gui/Qt5Gui_QEvdevTabletPlugin.cmake
 %{_qt5_libdir}/cmake/Qt5Gui/Qt5Gui_QEvdevTouchScreenPlugin.cmake
+%{_qt5_libdir}/cmake/Qt5Gui/Qt5Gui_QTuioTouchPlugin.cmake
 %{_qt5_plugindir}/imageformats/libqgif.so
 %{_qt5_plugindir}/imageformats/libqico.so
 %{_qt5_plugindir}/imageformats/libqjpeg.so
@@ -847,12 +852,17 @@ fi
 %{_qt5_libdir}/cmake/Qt5Gui/Qt5Gui_QComposePlatformInputContextPlugin.cmake
 %{_qt5_libdir}/cmake/Qt5Gui/Qt5Gui_QIbusPlatformInputContextPlugin.cmake
 %if 0%{?egl}
+%{_qt5_libdir}/libQt5EglDeviceIntegration.so.5*
 %{_qt5_plugindir}/platforms/libqeglfs.so
-%{_qt5_plugindir}/platforms/libqkms.so
 %{_qt5_plugindir}/platforms/libqminimalegl.so
-%{_qt5_libdir}/cmake/Qt5Gui/Qt5Gui_QKmsIntegrationPlugin.cmake
+%{_qt5_plugindir}/egldeviceintegrations/libqeglfs-kms-integration.so
+%{_qt5_plugindir}/egldeviceintegrations/libqeglfs-x11-integration.so
+%{_qt5_plugindir}/xcbglintegrations/libqxcb-egl-integration.so
 %{_qt5_libdir}/cmake/Qt5Gui/Qt5Gui_QMinimalEglIntegrationPlugin.cmake
 %{_qt5_libdir}/cmake/Qt5Gui/Qt5Gui_QEglFSIntegrationPlugin.cmake
+%{_qt5_libdir}/cmake/Qt5Gui/Qt5Gui_QEglFSKmsIntegrationPlugin.cmake
+%{_qt5_libdir}/cmake/Qt5Gui/Qt5Gui_QEglFSX11IntegrationPlugin.cmake
+%{_qt5_libdir}/cmake/Qt5Gui/Qt5Gui_QXcbEglIntegrationPlugin.cmake
 %endif
 %{_qt5_plugindir}/platforms/libqlinuxfb.so
 %{_qt5_plugindir}/platforms/libqminimal.so
@@ -862,6 +872,8 @@ fi
 %{_qt5_libdir}/cmake/Qt5Gui/Qt5Gui_QMinimalIntegrationPlugin.cmake
 %{_qt5_libdir}/cmake/Qt5Gui/Qt5Gui_QOffscreenIntegrationPlugin.cmake
 %{_qt5_libdir}/cmake/Qt5Gui/Qt5Gui_QXcbIntegrationPlugin.cmake
+%{_qt5_plugindir}/xcbglintegrations/libqxcb-glx-integration.so
+%{_qt5_libdir}/cmake/Qt5Gui/Qt5Gui_QXcbGlxIntegrationPlugin.cmake
 %{_qt5_plugindir}/platformthemes/libqgtk2.so
 %{_qt5_libdir}/cmake/Qt5Gui/Qt5Gui_QGtk2ThemePlugin.cmake
 %{_qt5_plugindir}/printsupport/libcupsprintersupport.so
@@ -869,6 +881,12 @@ fi
 
 
 %changelog
+* Thu Sep 10 2015 Liu Di <liudidi@gmail.com> - 5.5.0-1
+- 为 Magic 3.0 重建
+
+* Wed Sep 09 2015 Liu Di <liudidi@gmail.com> - 5.5.0-1
+- 更新到 5.5.0
+
 * Mon Mar 16 2015 Liu Di <liudidi@gmail.com> - 5.4.1-4
 - 为 Magic 3.0 重建
 

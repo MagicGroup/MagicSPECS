@@ -1,35 +1,37 @@
 
+%global bootstrap 1
+
 %global qt_module qttools
 %global system_clucene 1
 
 # define to build docs, need to undef this for bootstrapping
 # where qt5-qttools builds are not yet available
 # only primary archs (for now), allow secondary to bootstrap
+%if ! 0%{?bootstrap}
 %ifarch %{arm} %{ix86} x86_64
 %define docs 1
 %endif
-
-Summary: Qt5 - QtTool components
-Summary(zh_CN.UTF-8): Qt5 - Qt 工具组件
-Name:    qt5-qttools
-Version: 5.4.1
-Release: 1%{?dist}
-
-# See LGPL_EXCEPTIONS.txt, LICENSE.GPL3, respectively, for exception details
-License: LGPLv2 with exceptions or GPLv3 with exceptions
-Url: http://qt-project.org/
-%define majorver %(echo %{version} | awk -F. '{print $1"."$2}')
-%if 0%{?pre:1}
-Source0: http://download.qt-project.org/development_releases/qt/%{majorver}/%{version}-%{pre}/submodules/%{qt_module}-opensource-src-%{version}-%{pre}.tar.xz
-%else
-Source0: http://download.qt-project.org/official_releases/qt/%{majorver}/%{version}/submodules/%{qt_module}-opensource-src-%{version}.tar.xz
 %endif
 
-Patch1: qttools-opensource-src-5.3.0-system-clucene.patch
+#define prerelease rc
+
+Summary: Qt5 - QtTool components
+Summary(zh_CN.UTF-8): Qt5 - QtTool 组件
+Name:    qt5-qttools
+Version: 5.5.0
+Release: 6%{?dist}
+
+License: LGPLv3 or LGPLv2
+Url:     http://www.qt.io
+
+%define majorver %(echo %{version} | awk -F. '{print $1"."$2}')
+Source0: http://download.qt.io/official_releases/qt/%{majorver}/%{version}%{?prerelease:-%{prerelease}}/submodules/%{qt_module}-opensource-src-%{version}%{?prerelease:-%{prerelease}}.tar.xz
+
+Patch1: qttools-opensource-src-5.3.2-system-clucene.patch
 
 # help lrelease/lupdate use/prefer qmake-qt5
 # https://bugzilla.redhat.com/show_bug.cgi?id=1009893
-Patch2: qttools-opensource-src-5.2.0-qmake-qt5.patch
+Patch2: qttools-opensource-src-5.5.0-qmake-qt5.patch
 
 ## upstream patches
 
@@ -39,39 +41,51 @@ Source22: linguist.desktop
 Source23: qdbusviewer.desktop
 
 # %%check needs cmake (and don't want to mess with cmake28)
-%if 0%{?fedora} || 0%{?rhel} > 6
 BuildRequires: cmake
-%endif
 BuildRequires: desktop-file-utils
 BuildRequires: qt5-qtbase-devel >= %{version}
-BuildRequires: qt5-qtbase-static
-BuildRequires: qt5-qtdeclarative-static
+BuildRequires: qt5-qtbase-static >= %{version}
+BuildRequires: qt5-qtdeclarative-static >= %{version}
 BuildRequires: qt5-qtwebkit-devel
 
 %if 0%{?system_clucene}
-%if 0%{?fedora} || 0%{?rhel} > 6
-BuildRequires: clucene09-core-devel
-%else
-BuildConflicts: clucene-core-devel > 2
-BuildRequires: clucene-core-devel
-%endif
+BuildRequires: clucene09-core-devel >= 0.9.21b-8
 %endif
 
-%{?_qt5_version:Requires: qt5-qtbase%{?_isa} >= %{_qt5_version}}
+Requires: %{name}-common = %{version}-%{release}
+
+%{?_qt5:Requires: %{_qt5}%{?_isa} >= %{_qt5_version}}
+
+# when -libs were split out, for multilib upgrade path
+Obsoletes: qt5-tools < 5.4.0-0.2
 
 %description
 %{summary}.
 
 %description -l zh_CN.UTF-8
-Qt5 - Qt 工具组件。
+Qt5 - QtTool 组件。
+
+%package common
+Summary: Common files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的通用文件
+BuildArch: noarch
+%description common
+%{summary}.
+%description common -l zh_CN.UTF-8
+%{name} 的通用文件。
 
 %package devel
 Summary: Development files for %{name}
 Summary(zh_CN.UTF-8): %{name} 的开发包
-Requires: %{name}%{?_isa} = %{version}-%{release}
+Requires: %{name} = %{version}-%{release}
+Requires: %{name}-libs-clucene%{?_isa} = %{version}-%{release}
+Requires: %{name}-libs-designer%{?_isa} = %{version}-%{release}
+Requires: %{name}-libs-designercomponents%{?_isa} = %{version}-%{release}
+Requires: %{name}-libs-help%{?_isa} = %{version}-%{release}
 Requires: qt5-qtbase-devel%{?_isa}
-Provides: qt5-designer = %{version}-%{release}
-Provides: qt5-linguist = %{version}-%{release}
+Requires: qt5-qhelpgenerator = %{version}-%{release}
+Requires: qt5-designer = %{version}-%{release}
+Requires: qt5-linguist = %{version}-%{release}
 %description devel
 %{summary}.
 %description devel -l zh_CN.UTF-8
@@ -83,61 +97,98 @@ Summary(zh_CN.UTF-8): %{name} 的静态库
 Requires: %{name}-devel%{?_isa} = %{version}-%{release}
 %description static
 %{summary}.
-
 %description static -l zh_CN.UTF-8
-%{name} 的静态库
-。
+%{name} 的静态库.
+
+%package libs-clucene
+Summary: Qt5 CLucene runtime library
+Requires: %{name}-common = %{version}-%{release}
+# when split happened
+Conflicts: qt5-tools < 5.4.0-0.2
+%description libs-clucene
+%{summary}.
+
+%package libs-designer
+Summary: Qt5 Designer runtime library
+Requires: %{name}-common = %{version}-%{release}
+# when split happened
+Conflicts: qt5-tools < 5.4.0-0.2
+%description libs-designer
+%{summary}.
+
+%package libs-designercomponents
+Summary: Qt5 Designer Components runtime library
+Requires: %{name}-common = %{version}-%{release}
+# when split happened
+Conflicts: qt5-tools < 5.4.0-0.2
+%description libs-designercomponents
+%{summary}.
+
+%package libs-help
+Summary: Qt5 Help runtime library
+Requires: %{name}-common = %{version}-%{release}
+# when split happened
+Conflicts: qt5-tools < 5.4.0-0.2
+%description libs-help
+%{summary}.
+
 %package -n qt5-assistant
 Summary: Documentation browser for Qt5
-Requires: %{name}%{?_isa} = %{version}-%{release}
+Requires: %{name}-common = %{version}-%{release}
 %description -n qt5-assistant
+%{summary}.
+
+%package -n qt5-designer
+Summary: Design GUIs for Qt5 applications
+Requires: %{name}-libs-designer%{?_isa} = %{version}-%{release}
+Requires: %{name}-libs-designercomponents%{?_isa} = %{version}-%{release}
+%description -n qt5-designer
 %{summary}.
 
 %package -n qt5-designer-plugin-webkit
 Summary: Qt5 designer plugin for WebKit
-Summary(zh_CN.UTF-8): Webkit 的 Qt5 设计器插件
-Requires: %{name}%{?_isa} = %{version}-%{release}
+Requires: %{name}-libs-designer%{?_isa} = %{version}-%{release}
 %description -n qt5-designer-plugin-webkit
 %{summary}.
 
-%description -n qt5-designer-plugin-webkit -l zh_CN.UTF-8
-Webkit 的 Qt5 设计器插件。
+%package -n qt5-linguist
+Summary: Qt5 Linguist Tools
+Requires: %{name}-common = %{version}-%{release}
+%description -n qt5-linguist
+Tools to add translations to Qt5 applications.
 
 %package -n qt5-qdbusviewer
 Summary: D-Bus debugger and viewer
-Summary(zh_CN.UTF-8): D-Bus 调试器和查看器
-%{?_qt5_version:Requires: qt5-qtbase%{?_isa} >= %{_qt5_version}}
+Requires: %{name}-common = %{version}-%{release}
+%{?_qt5:Requires: %{_qt5}%{?_isa} >= %{_qt5_version}}
 %description -n qt5-qdbusviewer
 QDbusviewer can be used to inspect D-Bus objects of running programs
 and invoke methods on those objects.
-%description -n qt5-qdbusviewer -l zh_CN.UTF-8
-D-Bus 调试器和查看器。
+
+%package -n qt5-qhelpgenerator
+Summary: Qt5 Help generator tool
+Requires: %{name}-libs-help%{?_isa} = %{version}-%{release}
+%{?_qt5:Requires: %{_qt5}%{?_isa} >= %{_qt5_version}}
+%description -n qt5-qhelpgenerator
 
 %if 0%{?docs}
 %package doc
 Summary: API documentation for %{name}
-Summary(zh_CN.UTF-8): %{name} 的开发文档
-Requires: %{name} = %{version}-%{release}
-# for qhelpgenerator
-BuildRequires: qt5-qttools-devel
+BuildRequires: qt5-qhelpgenerator
 BuildArch: noarch
 %description doc
 %{summary}.
-%description doc -l zh_CN.UTF-8
-%{name} 的开发文档。
 %endif
 
 %package examples
 Summary: Programming examples for %{name}
-Summary(zh_CN.UTF-8): %{name} 的样例程序
-Requires: %{name}%{?_isa} = %{version}-%{release}
+Requires: %{name}-common = %{version}-%{release}
 %description examples
 %{summary}.
-%description examples -l zh_CN.UTF-8
-%{name} 的样例程序。
+
 
 %prep
-%setup -q -n qttools-opensource-src-%{version}%{?pre:-%{pre}}
+%setup -q -n %{qt_module}-opensource-src-%{version}%{?prerelease:-%{prerelease}}
 
 %if 0%{?system_clucene}
 %patch1 -p1 -b .system_clucene
@@ -148,20 +199,23 @@ rm -rf src/assistant/3rdparty/clucene
 
 
 %build
-%{_qt5_qmake}
+mkdir %{_target_platform}
+pushd %{_target_platform}
+%{qmake_qt5} ..
 
 make %{?_smp_mflags}
 
 %if 0%{?docs}
 make %{?_smp_mflags} docs
 %endif
+popd
 
 
 %install
-make install INSTALL_ROOT=%{buildroot}
+make install INSTALL_ROOT=%{buildroot} -C %{_target_platform}
 
 %if 0%{?docs}
-make install_docs INSTALL_ROOT=%{buildroot}
+make install_docs INSTALL_ROOT=%{buildroot} -C %{_target_platform}
 %endif
 
 # Add desktop files, --vendor=qt4 helps avoid possible conflicts with qt3/qt4
@@ -179,7 +233,7 @@ install -m644 -p -D src/qdbus/qdbusviewer/images/qdbusviewer-128.png %{buildroot
 # linguist icons
 for icon in src/linguist/linguist/images/icons/linguist-*-32.png ; do
   size=$(echo $(basename ${icon}) | cut -d- -f2)
-  install -p -m644 -D ${icon} %{buildroot}%{_datadir}/icons/hicolor/${size}x${size}/apps/linguist.png
+  install -p -m644 -D ${icon} %{buildroot}%{_datadir}/icons/hicolor/${size}x${size}/apps/linguist-qt5.png
 done
 
 # hardlink files to %{_bindir}, add -qt5 postfix to not conflict
@@ -187,7 +241,7 @@ mkdir %{buildroot}%{_bindir}
 pushd %{buildroot}%{_qt5_bindir}
 for i in * ; do
   case "${i}" in
-   assistant|designer|lconvert|linguist|lrelease|lupdate|pixeltool|qcollectiongenerator|qdbus|qdbusviewer|qhelpconverter|qhelpgenerator)
+   assistant|designer|lconvert|linguist|lrelease|lupdate|pixeltool|qcollectiongenerator|qdbus|qdbusviewer|qhelpconverter|qhelpgenerator|qtplugininfo)
       ln -v  ${i} %{buildroot}%{_bindir}/${i}-qt5
       ln -sv ${i} ${i}-qt5
       ;;
@@ -212,7 +266,6 @@ popd
 magic_rpm_clean.sh
 
 ## work-in-progress... -- rex
-%if 0%{?fedora} || 0%{?rhel} > 6
 %check
 export CMAKE_PREFIX_PATH=%{buildroot}%{_qt5_prefix}:%{buildroot}%{_prefix}
 export PATH=%{buildroot}%{_qt5_bindir}:%{_qt5_bindir}:$PATH
@@ -222,32 +275,38 @@ pushd tests/auto/cmake/%{_target_platform}
 cmake ..
 ctest --output-on-failure ||:
 popd
-%endif
 
-%post
-/sbin/ldconfig
-touch --no-create %{_datadir}/icons/hicolor ||:
-
-%posttrans
-gtk-update-icon-cache -q %{_datadir}/icons/hicolor 2> /dev/null ||:
-
-%postun
-/sbin/ldconfig
-if [ $1 -eq 0 ] ; then
-touch --no-create %{_datadir}/icons/hicolor ||:
-gtk-update-icon-cache -q %{_datadir}/icons/hicolor 2> /dev/null ||:
-fi
 
 %files
 %{_bindir}/qdbus-qt5
 %{_bindir}/qtpaths
-%{_qt5_bindir}/qdbus*
+%{_qt5_bindir}/qdbus
+%{_qt5_bindir}/qdbus-qt5
 %{_qt5_bindir}/qtpaths
+
+%files common
+%doc LICENSE.LGPL*
+
+%post   libs-clucene -p /sbin/ldconfig
+%postun libs-clucene -p /sbin/ldconfig
+%files  libs-clucene
 %{_qt5_libdir}/libQt5CLucene.so.5*
+
+%post   libs-designer -p /sbin/ldconfig
+%postun libs-designer -p /sbin/ldconfig
+%files  libs-designer
 %{_qt5_libdir}/libQt5Designer.so.5*
+%dir %{_qt5_libdir}/cmake/Qt5Designer/
+
+%post   libs-designercomponents -p /sbin/ldconfig
+%postun libs-designercomponents -p /sbin/ldconfig
+%files  libs-designercomponents
 %{_qt5_libdir}/libQt5DesignerComponents.so.5*
+
+%post   libs-help -p /sbin/ldconfig
+%postun libs-help -p /sbin/ldconfig
+%files  libs-help
 %{_qt5_libdir}/libQt5Help.so.5*
-%{_qt5_datadir}/phrasebooks/
 
 %post -n qt5-assistant
 touch --no-create %{_datadir}/icons/hicolor ||:
@@ -267,8 +326,72 @@ fi
 %{_datadir}/applications/*assistant.desktop
 %{_datadir}/icons/hicolor/*/apps/assistant*.*
 
+%post -n qt5-designer
+touch --no-create %{_datadir}/icons/hicolor ||:
+
+%posttrans -n qt5-designer
+gtk-update-icon-cache -q %{_datadir}/icons/hicolor 2> /dev/null ||:
+update-desktop-database -q &> /dev/null ||:
+
+%postun -n qt5-designer
+if [ $1 -eq 0 ] ; then
+touch --no-create %{_datadir}/icons/hicolor ||:
+gtk-update-icon-cache -q %{_datadir}/icons/hicolor 2> /dev/null ||:
+fi
+
+%files -n qt5-designer
+%{_bindir}/designer*
+%{_qt5_bindir}/designer*
+%{_datadir}/applications/*designer.desktop
+%{_datadir}/icons/hicolor/*/apps/designer*.*
+# example designer plugins
+%{_qt5_plugindir}/designer/libcontainerextension.so
+%{_qt5_plugindir}/designer/libcustomwidgetplugin.so
+%{_qt5_plugindir}/designer/libtaskmenuextension.so
+%{_qt5_plugindir}/designer/libworldtimeclockplugin.so
+%{_qt5_plugindir}/designer/libqquickwidget.so
+%dir %{_qt5_libdir}/cmake/Qt5Designer/
+%{_qt5_libdir}/cmake/Qt5Designer/Qt5Designer_AnalogClockPlugin.cmake
+%{_qt5_libdir}/cmake/Qt5Designer/Qt5Designer_MultiPageWidgetPlugin.cmake
+%{_qt5_libdir}/cmake/Qt5Designer/Qt5Designer_QQuickWidgetPlugin.cmake
+%{_qt5_libdir}/cmake/Qt5Designer/Qt5Designer_TicTacToePlugin.cmake
+%{_qt5_libdir}/cmake/Qt5Designer/Qt5Designer_WorldTimeClockPlugin.cmake
+
 %files -n qt5-designer-plugin-webkit
 %{_qt5_plugindir}/designer/libqwebview.so
+%{_qt5_libdir}/cmake/Qt5Designer/Qt5Designer_QWebViewPlugin.cmake
+
+%post -n qt5-linguist
+touch --no-create %{_datadir}/icons/hicolor ||:
+
+%posttrans -n qt5-linguist
+gtk-update-icon-cache -q %{_datadir}/icons/hicolor 2> /dev/null ||:
+update-desktop-database -q &> /dev/null ||:
+
+%postun -n qt5-linguist
+if [ $1 -eq 0 ] ; then
+touch --no-create %{_datadir}/icons/hicolor ||:
+gtk-update-icon-cache -q %{_datadir}/icons/hicolor 2> /dev/null ||:
+fi
+
+%files -n qt5-linguist
+%{_bindir}/linguist*
+%{_qt5_bindir}/linguist*
+# phrasebooks used by linguist
+%{_qt5_datadir}/phrasebooks/
+%{_datadir}/applications/*linguist.desktop
+%{_datadir}/icons/hicolor/*/apps/linguist*.*
+# linguist friends
+%{_bindir}/lconvert*
+%{_bindir}/lrelease*
+%{_bindir}/lupdate*
+%{_qt5_bindir}/lconvert*
+%{_qt5_bindir}/lrelease*
+%{_qt5_bindir}/lupdate*
+# cmake config
+%dir %{_qt5_libdir}/cmake/Qt5LinguistTools/
+%{_qt5_libdir}/cmake/Qt5LinguistTools/Qt5LinguistToolsConfig*.cmake
+%{_qt5_libdir}/cmake/Qt5LinguistTools/Qt5LinguistToolsMacros.cmake
 
 %post -n qt5-qdbusviewer
 touch --no-create %{_datadir}/icons/hicolor ||:
@@ -288,68 +411,41 @@ fi
 %{_datadir}/applications/*qdbusviewer.desktop
 %{_datadir}/icons/hicolor/*/apps/qdbusviewer*.*
 
-%post devel
-touch --no-create %{_datadir}/icons/hicolor ||:
-
-%posttrans devel
-gtk-update-icon-cache -q %{_datadir}/icons/hicolor 2> /dev/null ||:
-update-desktop-database -q &> /dev/null ||:
-
-%postun devel
-if [ $1 -eq 0 ] ; then
-touch --no-create %{_datadir}/icons/hicolor ||:
-gtk-update-icon-cache -q %{_datadir}/icons/hicolor 2> /dev/null ||:
-fi
+%files -n qt5-qhelpgenerator
+%{_bindir}/qhelpgenerator*
+%{_qt5_bindir}/qhelpgenerator*
 
 %files devel
-%{_bindir}/designer*
-%{_bindir}/lconvert*
-%{_bindir}/linguist*
-%{_bindir}/lrelease*
-%{_bindir}/lupdate*
 %{_bindir}/pixeltool*
 %{_bindir}/qcollectiongenerator*
 %{_bindir}/qhelpconverter*
-%{_bindir}/qhelpgenerator*
 %{_bindir}/qtdiag*
-%{_qt5_bindir}/designer*
-%{_qt5_bindir}/lconvert*
-%{_qt5_bindir}/linguist*
-%{_qt5_bindir}/lrelease*
-%{_qt5_bindir}/lupdate*
+%{_bindir}/qtplugininfo*
 %{_qt5_bindir}/pixeltool*
 %{_qt5_bindir}/qtdiag*
 %{_qt5_bindir}/qcollectiongenerator*
 %{_qt5_bindir}/qhelpconverter*
-%{_qt5_bindir}/qhelpgenerator*
+%{_qt5_bindir}/qtplugininfo*
 %{_qt5_headerdir}/QtCLucene/
 %{_qt5_headerdir}/QtDesigner/
 %{_qt5_headerdir}/QtDesignerComponents/
 %{_qt5_headerdir}/QtHelp/
+%{_qt5_headerdir}/QtUiPlugin
 %{_qt5_libdir}/libQt5CLucene.prl
 %{_qt5_libdir}/libQt5CLucene.so
 %{_qt5_libdir}/libQt5Designer*.prl
 %{_qt5_libdir}/libQt5Designer*.so
 %{_qt5_libdir}/libQt5Help.prl
 %{_qt5_libdir}/libQt5Help.so
-%{_qt5_libdir}/cmake/Qt5Designer/
-%{_qt5_libdir}/cmake/Qt5Help/
-%{_qt5_libdir}/cmake/Qt5LinguistTools/
+%{_qt5_libdir}/cmake/Qt5Designer/Qt5DesignerConfig*.cmake
+%dir %{_qt5_libdir}/cmake/Qt5Help/
+%{_qt5_libdir}/cmake/Qt5Help/Qt5HelpConfig*.cmake
+%{_qt5_libdir}/cmake/Qt5UiPlugin/
 %{_qt5_libdir}/pkgconfig/Qt5CLucene.pc
 %{_qt5_libdir}/pkgconfig/Qt5Designer.pc
 %{_qt5_libdir}/pkgconfig/Qt5DesignerComponents.pc
 %{_qt5_libdir}/pkgconfig/Qt5Help.pc
 %{_qt5_archdatadir}/mkspecs/modules/*.pri
-%{_datadir}/applications/*designer.desktop
-%{_datadir}/applications/*linguist.desktop
-%{_datadir}/icons/hicolor/*/apps/designer*.*
-%{_datadir}/icons/hicolor/*/apps/linguist*.*
-# example designer plugins
-%{_qt5_plugindir}/designer/libcontainerextension.so
-%{_qt5_plugindir}/designer/libcustomwidgetplugin.so
-%{_qt5_plugindir}/designer/libtaskmenuextension.so
-%{_qt5_plugindir}/designer/libworldtimeclockplugin.so
-%{_qt5_plugindir}/designer/libqquickwidget.so
 
 %files static
 %{_qt5_headerdir}/QtUiTools/
@@ -360,6 +456,7 @@ fi
 
 %if 0%{?docs}
 %files doc
+%doc LICENSE.FDL
 %{_qt5_docdir}/qtassistant.qch
 %{_qt5_docdir}/qtassistant/
 %{_qt5_docdir}/qtdesigner.qch
@@ -379,11 +476,96 @@ fi
 
 
 %changelog
-* Fri Mar 20 2015 Liu Di <liudidi@gmail.com> - 5.4.1-1
-- 更新到 5.4.1
-
-* Wed Aug 06 2014 Liu Di <liudidi@gmail.com> - 5.3.1-2
+* Thu Sep 10 2015 Liu Di <liudidi@gmail.com> - 5.5.0-6
 - 为 Magic 3.0 重建
+
+* Thu Sep 10 2015 Liu Di <liudidi@gmail.com> - 5.5.0-5
+- 为 Magic 3.0 重建
+
+* Sat Aug 08 2015 Rex Dieter <rdieter@fedoraproject.org> 5.5.0-4
+- qt5-linguist: move lconvert,lrelease,lupdate, cmake Qt5LinguistTools  here
+
+* Wed Jul 29 2015 Rex Dieter <rdieter@fedoraproject.org> 5.5.0-3
+- de-bootstrap
+
+* Thu Jul 16 2015 Rex Dieter <rdieter@fedoraproject.org> 5.5.0-2
+- qt5-designer, qt5-linguist, qt5-qhelpgenerator subpkgs
+
+* Wed Jul 1 2015 Helio Chissini de Castro <helio@kde.org> 5.5.0-1
+- New final upstream release Qt 5.5.0
+
+* Mon Jun 29 2015 Helio Chissini de Castro <helio@kde.org> - 5.5.0-0.4.rc
+- Second round of builds now with bootstrap enabled due new qttools
+
+* Sat Jun 27 2015 Helio Chissini de Castro <helio@kde.org> - 5.5.0-0.3.rc
+- Disable bootstrap
+
+* Thu Jun 25 2015 Helio Chissini de Castro <helio@kde.org> - 5.5.0-0.2.rc
+- Update for official RC1 released packages
+
+* Mon Jun 15 2015 Daniel Vrátil <dvratil@redhat.com> - 5.5.0-0.1.rc
+- Qt 5.5.0 RC1
+
+* Wed Jun 03 2015 Jan Grulich <jgrulich@redhat.com> - 5.4.2-1
+- 5.4.2
+
+* Sat May 02 2015 Rex Dieter <rdieter@fedoraproject.org> 5.4.1-3
+- rebuild (gcc5)
+
+* Fri Feb 27 2015 Rex Dieter <rdieter@fedoraproject.org> - 5.4.1-2
+- rebuild (gcc5)
+
+* Tue Feb 24 2015 Jan Grulich <jgrulich@redhat.com> 5.4.1-1
+- 5.4.1
+
+* Thu Feb 19 2015 Rex Dieter <rdieter@fedoraproject.org> - 5.4.0-2
+- rebuild (gcc5)
+
+* Wed Dec 10 2014 Rex Dieter <rdieter@fedoraproject.org> 5.4.0-1
+- 5.4.0 (final)
+
+* Tue Dec 09 2014 Daniel Vrátil <dvratil@redhat.com> 5.4.0-0.10.rc
+- fix icon name in qdbusviewer-qt5.desktop
+
+* Sun Nov 30 2014 Kevin Kofler <Kevin@tigcc.ticalc.org> 5.4.0-0.9.rc
+- install Linguist icon as linguist-qt5.png, fixes file conflict (#1169127)
+
+* Fri Nov 28 2014 Rex Dieter <rdieter@fedoraproject.org> 5.4.0-0.8.rc
+- 5.4.0-rc
+
+* Mon Nov 03 2014 Rex Dieter <rdieter@fedoraproject.org> 5.4.0-0.7.beta
+- out-of-tree build, use %%qmake_qt5
+
+* Fri Oct 31 2014 Rex Dieter <rdieter@fedoraproject.org> 5.4.0-0.6.beta
+- respin system-clucene.patch
+
+* Sun Oct 26 2014 Kevin Kofler <Kevin@tigcc.ticalc.org> 5.4.0-0.5.beta
+- system-clucene patch: create path recursively in QtCLucene, CLucene can't
+
+* Sun Oct 26 2014 Kevin Kofler <Kevin@tigcc.ticalc.org> 5.4.0-0.4.beta
+- disable bootstrap (reenable -doc)
+- system-clucene patch: drop -fpermissive flag
+- system-clucene patch: use toLocal8Bit instead of toStdString
+- system_clucene: BR clucene09-core-devel >= 0.9.21b-12 (-11 was broken)
+
+* Sat Oct 25 2014 Rex Dieter <rdieter@fedoraproject.org> - 5.4.0-0.3.beta
+- libQt5Designer should be in a subpackage (#1156685)
+- -doc: disable(boostrap for new clucene), drop dep on main pkg
+
+* Sat Oct 25 2014 Kevin Kofler <Kevin@tigcc.ticalc.org> 5.4.0-0.2.beta
+- BR and rebuild against reference-counting-enabled clucene09 (#1128293)
+
+* Sat Oct 18 2014 Rex Dieter <rdieter@fedoraproject.org> 5.4.0-0.1.beta
+- 5.4.0-beta
+
+* Fri Oct 17 2014 Rex Dieter <rdieter@fedoraproject.org> 5.3.2-2
+- -devel: Requires: qt5-designer-plugin-webkit
+
+* Tue Sep 16 2014 Rex Dieter <rdieter@fedoraproject.org> 5.3.2-1
+- 5.3.2
+
+* Sun Aug 17 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 5.3.1-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
 
 * Tue Jun 17 2014 Jan Grulich <jgrulich@redhat.com> - 5.3.1-1
 - 5.3.1

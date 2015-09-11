@@ -2,10 +2,12 @@
 %global upstreamver 2.6_1-opensource
 
 Summary:	Qt library to start applications only once per user
+Summary(zh_CN.UTF-8): 每个用户只运行一次的程序的 Qt 库
 Name:		qtsingleapplication
 Version:	2.6.1
-Release:	11%{?dist}
+Release:	12%{?dist}
 Group:		System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 License:	GPLv3 or LGPLv2 with exceptions
 URL:		http://qt.nokia.com/products/appdev/add-on-products/catalog/4/Utilities/qtsingleapplication
 Source0:	http://get.qt.nokia.com/qt/solutions/lgpl/qtsingleapplication-%{upstreamver}.tar.gz
@@ -38,19 +40,28 @@ actions, e.g. loading a file, in that instance.
 The QtSingleApplication class provides an interface to detect a running
 instance, and to send command strings to that instance.
 
+%description -l zh_CN.UTF-8
+每个用户只运行一次的程序的 Qt 库。
+
 %package	devel
 Summary:	Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:		Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:	%{name} = %{version}-%{release}
 Requires:	qt4-devel
 
 %description	devel
 This package contains libraries and header files for developing applications
 that use QtSingleApplication.
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %package -n qtsinglecoreapplication
 Summary:	Qt library to start applications only once per user
+Summary(zh_CN.UTF-8): 每个用户只运行一次的程序的 Qt 库
 Group:		System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 Obsoletes:	%{name} < 2.6.1-3
 
 %description -n qtsinglecoreapplication
@@ -62,9 +73,15 @@ actions, e.g. loading a file, in that instance.
 For console (non-GUI) applications, the QtSingleCoreApplication variant
 is provided, which avoids dependency on QtGui.
 
+%description -n qtsinglecoreapplication -l zh_CN.UTF-8
+每个用户只运行一次的程序的 Qt 库。
+
+
 %package -n qtsinglecoreapplication-devel
 Summary:	Development files for qtsinglecoreapplication
+Summary(zh_CN.UTF-8): qtsinglecoreapplication 的开发包
 Group:		Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Obsoletes:	%{name}-devel < 2.6.1-3
 Requires:	qtsinglecoreapplication = %{version}-%{release}
 Requires:	qt4-devel
@@ -72,6 +89,9 @@ Requires:	qt4-devel
 %description -n qtsinglecoreapplication-devel
 This package contains libraries and header files for developing applications
 that use QtSingleCoreApplication.
+
+%description  -n qtsinglecoreapplication-devel -l zh_CN.UTF-8
+qtsinglecoreapplication 的开发包。
 
 %prep
 %setup -q -n %{name}-%{upstreamver}
@@ -112,6 +132,7 @@ cp -a \
 
 mkdir -p $RPM_BUILD_ROOT%{_qt4_datadir}/mkspecs/features
 cp -a %{SOURCE1} %{SOURCE2} $RPM_BUILD_ROOT%{_qt4_datadir}/mkspecs/features/
+magic_rpm_clean.sh
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -152,6 +173,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_qt4_datadir}/mkspecs/features/qtsinglecoreapplication.prf
 
 %changelog
+* Fri Sep 11 2015 Liu Di <liudidi@gmail.com> - 2.6.1-12
+- 为 Magic 3.0 重建
+
 * Tue May 27 2014 Liu Di <liudidi@gmail.com> - 2.6.1-11
 - 为 Magic 3.0 重建
 

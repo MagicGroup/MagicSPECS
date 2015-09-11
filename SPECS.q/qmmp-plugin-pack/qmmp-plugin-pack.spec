@@ -1,9 +1,11 @@
 Name:           qmmp-plugin-pack
-Version:        0.7.1
-Release:        1%{?dist}
+Version:	0.9.0
+Release:	1%{?dist}
 Summary:        A set of extra plugins for Qmmp
+Summary(zh_CN.UTF-8): Qmmp 的额外插件集合
 
 Group:          Applications/Multimedia
+Group(zh_CN.UTF-8): 应用程序/多媒体
 License:        GPLv2+
 URL:            http://qmmp.ylsoftware.com/plugins.php
 Source0:        http://qmmp.ylsoftware.com/files/plugins/%{name}-%{version}.tar.bz2
@@ -21,6 +23,9 @@ Plugin pack is a set of extra plugins for Qmmp.
    (24-bit samples and embedded cue support)
  * Simple Ui - simple user interface based on standard widgets set
 
+%description -l zh_CN.UTF-8
+Qmmp 的额外插件集合。
+
 %prep
 %setup -q
 
@@ -34,15 +39,16 @@ make %{?_smp_mflags}
 
 %install
 make install DESTDIR=%{buildroot}
-
+magic_rpm_clean.sh
 
 %files
 %doc AUTHORS COPYING ChangeLog.rus README README.RUS
 %{_libdir}/qmmp/Input/*.so
-%{_libdir}/qmmp/Ui/*.so
-
 
 %changelog
+* Wed Sep 09 2015 Liu Di <liudidi@gmail.com> - 0.9.0-1
+- 更新到 0.9.0
+
 * Thu Jun 20 2013 Karel Volný <kvolny@redhat.com> 0.7.1-1
 - new version
 - see upstream changelog at http://qmmp.ylsoftware.com/

@@ -4,6 +4,7 @@
 
 Name:    qca
 Summary: Qt Cryptographic Architecture
+Summary(zh_CN.UTF-8): Qt 加密算法库
 Version: 2.1.0
 Release: 14%{?dist}
 
@@ -66,8 +67,12 @@ on any particular cryptographic library. This allows one to easily change
 or upgrade crypto implementations without even needing to recompile the
 application!
 
+%description -l zh_CN.UTF-8
+Qt 加密算法库。
+
 %package devel
 Summary: Qt Cryptographic Architecture development files
+Summary(zh_CN.UTF-8): %{name} 的开发包
 # qca2 renamed qca
 Obsoletes: qca2-devel < 2.1.0
 Provides:  qca2-devel = %{version}-%{release}
@@ -75,24 +80,35 @@ Provides:  qca2-devel%{?_isa} = %{version}-%{release}
 Requires:  %{name}%{?_isa} = %{version}-%{release}
 %description devel
 This packages contains the development files for QCA.
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %package doc
 Summary: QCA API documentation
+Summary(zh_CN.UTF-8): %{name} 的文档
 BuildArch: noarch
 %description doc
 This package includes QCA API documentation in HTML
+%description doc -l zh_CN.UTF-8
+%{name} 的文档。
 
 %package botan
 Summary: Botan plugin for the Qt Cryptographic Architecture
+Summary(zh_CN.UTF-8): Qt 加密算法库的 Botan 插件
 Requires: %{name}%{?_isa} = %{version}-%{release}
 %description botan
 %{summary}.
+%description botan -l zh_CN.UTF-8
+ Qt 加密算法库的 Botan 插件。
 
 %package cyrus-sasl
 Summary: Cyrus-SASL plugin for the Qt Cryptographic Architecture
+Summary(zh_CN.UTF-8):  Qt 加密算法库的 Cyrus-SASL 插件
 Requires: %{name}%{?_isa} = %{version}-%{release}
 %description cyrus-sasl
 %{summary}.
+%description cyrus-sasl -l zh_CN.UTF-8
+Qt 加密算法库的 Cyrus-SASL 插件。
 
 %package gcrypt
 Summary: Gcrypt plugin for the Qt Cryptographic Architecture
@@ -206,6 +222,7 @@ Requires: %{name}-qt5%{?_isa} = %{version}-%{release}
 %description qt5-pkcs11
 %{summary}.
 
+t
 %package qt5-softstore
 Summary: Pkcs11 plugin for the Qt5 Cryptographic Architecture
 Requires: %{name}-qt5%{?_isa} = %{version}-%{release}
@@ -264,6 +281,11 @@ mkdir -p %{buildroot}%{_docdir}/qca
 cp -a %{_target_platform}/apidocs/html/ \
       %{buildroot}%{_docdir}/qca/
 
+#修正路径问题
+cp -r %{buildroot}%{_qt4_libdir}/pkgconfig %{buildroot}%{_libdir}
+cp -r %{buildroot}%{_qt4_libdir}/cmake %{buildroot}%{_libdir}
+rm -rf %{buildroot}%{_qt4_libdir}/{pkgconfig,cmake}
+magic_rpm_clean.sh
 
 %check
 export PKG_CONFIG_PATH=%{buildroot}%{_libdir}/pkgconfig

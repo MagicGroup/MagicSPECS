@@ -4,7 +4,7 @@
 Summary: Qt5 - QtTranslations module
 Summary(zh_CN.UTF-8): Qt5 - 翻译模块
 Name:    qt5-%{qt_module}
-Version: 5.4.1
+Version: 5.5.0
 Release: 1%{?dist}
 
 License: LGPLv2 with exceptions or GPLv3 with exceptions and GFDL
@@ -48,6 +48,9 @@ magic_rpm_clean.sh
 
 
 %changelog
+* Fri Sep 11 2015 Liu Di <liudidi@gmail.com> - 5.5.0-1
+- 更新到 5.5.0
+
 * Fri Mar 20 2015 Liu Di <liudidi@gmail.com> - 5.4.1-1
 - 更新到 5.4.1
 

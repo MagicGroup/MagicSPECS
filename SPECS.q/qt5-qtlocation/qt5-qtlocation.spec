@@ -6,7 +6,7 @@
 Summary: Qt5 - Location component
 Summary(zh_CN.UTF-8): Qt5 - 位置组件
 Name:    qt5-%{qt_module}
-Version: 5.4.1
+Version: 5.5.0
 Release: 1%{?dist}
 
 # See LGPL_EXCEPTIONS.txt, LICENSE.GPL3, respectively, for exception details
@@ -150,6 +150,9 @@ magic_rpm_clean.sh
 
 
 %changelog
+* Thu Sep 10 2015 Liu Di <liudidi@gmail.com> - 5.5.0-1
+- 更新到 5.5.0
+
 * Wed Mar 18 2015 Liu Di <liudidi@gmail.com> - 5.4.1-1
 - 更新到 5.4.1
 

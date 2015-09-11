@@ -1,7 +1,8 @@
 Name:           qt-gstreamer
 Version:        1.2.0
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        C++ bindings for GStreamer with a Qt-style API
+Summary(zh_CN.UTF-8): GStreamer 的 Qt 框架的 C++ 绑定
 License:        LGPLv2+
 URL:            http://gstreamer.freedesktop.org/modules/qt-gstreamer.html
 Source0:        http://gstreamer.freedesktop.org/src/%{name}/%{name}-%{version}.tar.xz
@@ -20,30 +21,42 @@ QtGStreamer provides C++ bindings for GStreamer with a Qt-style
 API, plus some helper classes for integrating GStreamer better
 in Qt4 applications.
 
+%description -l zh_CN.UTF-8
+GStreamer 的 Qt 框架的 C++ 绑定。
+
 
 %package devel
 Summary:        Header files and development documentation for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Requires:       %{name}%{?_isa} = %{version}-%{release}
 Requires:       boost-devel%{?_isa}
 %description devel
 This package contains the header files and development documentation
 for %{name}.
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %package -n qt5-gstreamer
 Summary:        C++ bindings for GStreamer with a Qt5-style API
+Summary(zh_CN.UTF-8): GStreamer 的 Qt 框架的 C++ 绑定
 %{?_qt5_version:Requires: qt5-qtbase%{?_isa} >= %{_qt5_version}}
 %description -n qt5-gstreamer
 QtGStreamer provides C++ bindings for GStreamer with a Qt-style
 API, plus some helper classes for integrating GStreamer better
 in Qt5 applications.
+%description -n qt5-gstreamer -l zh_CN.UTF-8
+GStreamer 的 Qt 框架的 C++ 绑定。
 
 %package -n qt5-gstreamer-devel
 Summary:        Header files and development documentation for qt5-gstreamer
+Summary(zh_CN.UTF-8): qt5-gstreamer 的开发包
 Requires:       qt5-gstreamer%{?_isa} = %{version}-%{release}
 Requires:       boost-devel%{?_isa}
 %description -n qt5-gstreamer-devel
 This package contains the header files and development documentation
 for qt5-gstreamer.
+%description -n qt5-gstreamer-devel -l zh_CN.UTF-8
+qt5-gstreamer 的开发包。
 
 %prep
 %setup -q
@@ -67,7 +80,7 @@ make %{?_smp_mflags} -C %{_target_platform}-qt5
 %install
 make install/fast DESTDIR=%{buildroot} -C %{_target_platform}
 make install/fast DESTDIR=%{buildroot} -C %{_target_platform}-qt5
-
+magic_rpm_clean.sh
 
 %post -p /sbin/ldconfig
 %postun -p /sbin/ldconfig
@@ -135,6 +148,9 @@ make install/fast DESTDIR=%{buildroot} -C %{_target_platform}-qt5
 
 
 %changelog
+* Fri Sep 11 2015 Liu Di <liudidi@gmail.com> - 1.2.0-4
+- 为 Magic 3.0 重建
+
 * Fri Oct 31 2014 Liu Di <liudidi@gmail.com> - 1.2.0-3
 - 为 Magic 3.0 重建
 

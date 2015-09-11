@@ -1,8 +1,8 @@
 Name:           qrencode
-Version:        3.3.1
-Release:        5%{?dist}
+Version:	3.4.4
+Release:	1%{?dist}
 Summary:        Generate QR 2D barcodes
-Summary(fr):    Génère les code-barres en 2D QR
+Summary(zh_CN.UTF-8): 生成 QR 2D 条形码
 
 License:        LGPLv2+
 URL:            http://megaui.net/fukuchi/works/qrencode/index.en.html
@@ -15,37 +15,33 @@ BuildRequires:  libpng-devel chrpath
 Qrencode is a utility software using libqrencode to encode string data in
 a QR Code and save as a PNG image.
 
-%description -l fr
-Qrencode est un logiciel utilitaire utilisant libqrencode pour encoder
-les données dans un QR Code et sauvegarde dans une image PNG.
+%description -l zh_CN.UTF-8
+生成 QR 2D 条形码。
 
 
 %package        devel
 Summary:        QR Code encoding library - Development files
-Summary(fr):    Bibliothèque d'encodage QR Code - Fichiers de développement
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Requires:       %{name}-libs%{?_isa} = %{version}-%{release}
 
 %description    devel
 The qrencode-devel package contains libraries and header files for developing
 applications that use qrencode.
 
-%description    devel -l fr
-Le paquet qrencode-devel contient les bibliothèques et les fichiers d'en-tête
-pour le développement d'applications utilisant qrencode.
-
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %package        libs
 Summary:        QR Code encoding library - Shared libraries
+Summary(zh_CN.UTF-8): %{name} 的运行库
 Summary(fr):    Bibliothèque d'encodage QR Code - Bibliothèque partagée
 
 %description    libs
 The qrencode-libs package contains the shared libraries and header files for
 applications that use qrencode.
 
-%description    libs -l fr
-Le paquet qrencode-libs contient les bibliothèques partagées et les fichiers
-d'en-tête pour les applications utilisant qrencode.
-
+%description libs -l zh_CN.UTF-8
+%{name} 的运行库。
 
 %prep
 %setup -q
@@ -60,7 +56,7 @@ make %{?_smp_mflags}
 make install DESTDIR=$RPM_BUILD_ROOT INSTALL="install -p"
 rm -rf $RPM_BUILD_ROOT%{_libdir}/libqrencode.la
 chrpath --delete $RPM_BUILD_ROOT%{_bindir}/qrencode
-
+magic_rpm_clean.sh
 
 %check
 cd ./tests
@@ -87,6 +83,9 @@ sh test_all.sh
 
 
 %changelog
+* Wed Sep 09 2015 Liu Di <liudidi@gmail.com> - 3.4.4-1
+- 更新到 3.4.4
+
 * Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 3.3.1-5
 - 为 Magic 3.0 重建
 

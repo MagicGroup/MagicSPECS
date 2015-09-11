@@ -1,9 +1,10 @@
 %global vertag M3
 
 Summary:        Extract class/interface/method definitions from sources
+Summary(zh_CN.UTF-8): 从源码中提取类/接口/方法定义
 Name:           qdox
 Version:        2.0
-Release:        0.5.%{vertag}%{?dist}
+Release:        0.6.%{vertag}%{?dist}
 Epoch:          0
 License:        ASL 2.0
 URL:            https://github.com/paul-hammant/qdox
@@ -31,12 +32,18 @@ from source files complete with JavaDoc @tags.
 It is designed to be used by active code
 generators or documentation tools.
 
+%description -l zh_CN.UTF-8
+从源码中提取类/接口/方法定义。
+
 %package javadoc
 Summary:        Javadoc for %{name}
+Summary(zh_CN.UTF-8): %{name} 的 javadoc
 
 %description javadoc
 API docs for %{name}.
 
+%description javadoc -l zh_CN.UTF-8
+%{name} 的 javadoc。
 
 %prep
 %setup -q -n %{name}-%{version}-%{vertag}
@@ -70,6 +77,7 @@ zip -u target/%{name}-%{version}.jar META-INF/MANIFEST.MF
 
 %install
 %mvn_install
+magic_rpm_clean.sh
 
 %files -f .mfiles
 %doc LICENSE.txt README.txt
@@ -78,6 +86,9 @@ zip -u target/%{name}-%{version}.jar META-INF/MANIFEST.MF
 %doc LICENSE.txt
 
 %changelog
+* Wed Sep 09 2015 Liu Di <liudidi@gmail.com> - 0:2.0-0.6.M3
+- 为 Magic 3.0 重建
+
 * Fri Jul 24 2015 Liu Di <liudidi@gmail.com> - 0:2.0-0.5.M3
 - 为 Magic 3.0 重建
 

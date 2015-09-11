@@ -1,9 +1,11 @@
 Summary: Graphical effect and filter library
+Summary(zh_CN.UTF-8): 图像效果和过滤器库
 Name:    qimageblitz
 Version: 0.0.6
-Release: 4%{?dist}
+Release: 5%{?dist}
 
 Group:   System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 License: BSD and ImageMagick
 URL:     http://qimageblitz.sourceforge.net/
 Source0: http://download.kde.org/stable/qimageblitz/qimageblitz-%{version}.tar.bz2
@@ -21,20 +23,30 @@ Blitz is a graphical effect and filter library for KDE4 that contains
 improvements over KDE 3.x's kdefx library including bugfixes, memory and
 speed improvements, and MMX/SSE support.
 
+%description -l zh_CN.UTF-8
+图像效果和过滤器库。
+
 %package devel
 Summary: Developer files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:   Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: %{name}%{?_isa} = %{version}-%{release}
 %description devel
 %{summary}.
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %package examples
 Summary: Example programs for %{name}
+Summary(zh_CN.UTF-8): %{name} 的样例程序
 Group:   System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 Requires: %{name}%{?_isa} = %{version}-%{release}
 %description examples
 This package contains the blitztest example program for %{name}.
-
+%description examples -l zh_CN.UTF-8
+%{name} 的样例程序。
 
 %prep
 %setup -q
@@ -53,7 +65,7 @@ make %{?_smp_mflags} -C %{_target_platform}
 %install
 rm -rf $RPM_BUILD_ROOT
 make install/fast  DESTDIR=$RPM_BUILD_ROOT -C %{_target_platform}
-
+magic_rpm_clean.sh
 
 %check
 export PKG_CONFIG_PATH=%{buildroot}%{_datadir}/pkgconfig:%{buildroot}%{_libdir}/pkgconfig
@@ -86,6 +98,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Wed Sep 09 2015 Liu Di <liudidi@gmail.com> - 0.0.6-5
+- 为 Magic 3.0 重建
+
 * Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 0.0.6-4
 - 为 Magic 3.0 重建
 

@@ -7,8 +7,8 @@
 Summary:        Qt5 - Wayland platform support and QtCompositor module
 Summary(zh_CN.UTF-8): Qt5 - Wayland 平台支持和 QtCompositor 模块
 Name:           qt5-%{qt_module}
-Version:        5.4.1
-Release:        2%{?dist}
+Version: 5.5.0
+Release: 1%{?dist}
 License:        LGPLv2 with exceptions or GPLv3 with exceptions
 Url:            http://qt-project.org/wiki/QtWayland
 %define majorver %(echo %{version} | awk -F. '{print $1"."$2}')
@@ -118,7 +118,6 @@ magic_rpm_clean.sh
 
 %files
 %doc README
-%doc LICENSE.LGPL* LICENSE.GPL* LGPL_EXCEPTION.txt
 %{_qt5_libdir}/libQt5Compositor.so.5*
 %{_qt5_libdir}/libQt5WaylandClient.so.5*
 %dir %{_qt5_plugindir}/wayland-decoration-client/
@@ -154,6 +153,9 @@ magic_rpm_clean.sh
 
 
 %changelog
+* Fri Sep 11 2015 Liu Di <liudidi@gmail.com> - 5.5.0-1
+- 更新到 5.5.0
+
 * Fri Mar 20 2015 Liu Di <liudidi@gmail.com> - 5.4.1-2
 - 为 Magic 3.0 重建
 

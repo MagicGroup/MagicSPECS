@@ -138,7 +138,7 @@ PATH=%{_qt4_bindir}:$PATH; export PATH
 
 cp -a Qt4Qt5 Qt4/
 pushd Qt4
-%{qmake_qt4} qscintilla.pro
+%{_qt4_qmake} qscintilla.pro
 make %{?_smp_mflags}
 popd
 
@@ -147,7 +147,7 @@ QMAKEFEATURES=`pwd`/Qt4/features; export QMAKEFEATURES
 
 cp -a designer-Qt4Qt5 designer-Qt4/
 pushd designer-Qt4
-%{qmake_qt4} designer.pro INCLUDEPATH+=../Qt4 LIBS+=-L../Qt4
+%{_qt4_qmake} designer.pro INCLUDEPATH+=../Qt4 LIBS+=-L../Qt4
 make %{?_smp_mflags}
 popd
 
