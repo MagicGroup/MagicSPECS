@@ -1,38 +1,44 @@
-From 500d609f7ed11ed385651d09c2e3f56b092f4ef2 Mon Sep 17 00:00:00 2001
+From b3df689acc31c91dbfbfdc0b03a357e6b0eda2ac Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?Petr=20P=C3=ADsa=C5=99?= <ppisar@redhat.com>
 Date: Tue, 23 Aug 2011 13:45:15 +0200
 Subject: [PATCH] warnquota configuration tunes
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
 Rest of changes (378a64006bb1e818e84a1c77808563b802b028fa) not
 accepted by upstream (we had root@... addresses and more enterprise
 wordings usually there).
+
+Signed-off-by: Petr Písař <ppisar@redhat.com>
 ---
- warnquota.c    |    2 +-
- warnquota.conf |   16 ++++++++--------
- 2 files changed, 9 insertions(+), 9 deletions(-)
+ warnquota.c    |  2 +-
+ warnquota.conf | 17 ++++++++---------
+ 2 files changed, 9 insertions(+), 10 deletions(-)
 
 diff --git a/warnquota.c b/warnquota.c
-index 2ca286f..3b78647 100644
+index 009d9e9..93ed1ff 100644
 --- a/warnquota.c
 +++ b/warnquota.c
-@@ -806,7 +806,7 @@ static int readconfigfile(const char *filename, struct configparams *config)
+@@ -825,7 +825,7 @@ static int readconfigfile(const char *filename, struct configparams *config)
  				verify_format(config->group_signature, "GROUP_SIGNATURE");
  			}
  			else if (!strcmp(var, "LDAP_MAIL")) {
 -				if(strcasecmp(value, "true") == 0) 
-+				if(strncasecmp(value, "true", 4) == 0) 
++				if(strncasecmp(value, "true", 4) == 0)
  					config->use_ldap_mail = 1;
  				else
  					config->use_ldap_mail = 0;
 diff --git a/warnquota.conf b/warnquota.conf
-index 8801a88..77f6a75 100644
+index 59d4f5f..aee2fca 100644
 --- a/warnquota.conf
 +++ b/warnquota.conf
-@@ -4,16 +4,16 @@
+@@ -4,17 +4,16 @@
  # and even blank lines
  
  # values can be quoted:
--MAIL_CMD 	= "/usr/my/sendmail/instead/sendmail -t"
+-#MAIL_CMD 	= "/usr/my/sendmail/instead/sendmail -t"
+-MAIL_CMD 	= "/bin/echo"
 -FROM 		= "bas@example.com"
 +MAIL_CMD 	= "/usr/sbin/sendmail -t"
 +FROM 		= "root@example.com"
@@ -50,7 +56,7 @@ index 8801a88..77f6a75 100644
  PHONE 		= "(123) 456-1111 or (222) 333-4444"
  # Text in the beginning of the mail (if not specified, default text is used)
  # This way text can be split to more lines
-@@ -21,11 +21,11 @@ PHONE 		= "(123) 456-1111 or (222) 333-4444"
+@@ -22,11 +21,11 @@ PHONE 		= "(123) 456-1111 or (222) 333-4444"
  # The expressions %i, %h, %d, and %% are substituted for user/group name,
  # host name, domain name, and '%' respectively. For backward compatibility
  # %s behaves as %i but is deprecated.
@@ -63,8 +69,8 @@ index 8801a88..77f6a75 100644
 -SIGNATURE	= See you!|			Your admin of %h|
 +SIGNATURE	= root@example.com
  # Following text is used for mails about group exceeding quotas
- GROUP_MESSAGE	= Hello, a group '%i' you're member of use too much space at %h.|\
- I chose you to do the cleanup.|Delete group files on the following filesystems:|
+ GROUP_MESSAGE	= Hello,|\
+ your group %i is using too much disk space at %h.|\
 -- 
-1.7.6
+1.9.3
 

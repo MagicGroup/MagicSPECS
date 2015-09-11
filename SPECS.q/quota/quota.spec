@@ -2,37 +2,39 @@
 %{!?rpcsetquota:%define rpcsetquota 1}
 
 Name: quota
-Summary: System administration tools for monitoring users' disk usage
 Epoch: 1
-Version: 4.00
+Version: 4.02
 Release: 4%{?dist}
-License: BSD and GPLv2+
-URL: http://sourceforge.net/projects/linuxquota/
+Summary: System administration tools for monitoring users' disk usage
+# quota_nld.c, quotaio_xfs.h:       GPLv2
+# bylabel.c copied from util-linux: GPLv2+
+# svc_socket.c copied from glibc:   LGPLv2+
+# doc/quotas.ms, quotaops.c, quot.c, quotaon.c, edquota.c, quot.h, quota.c,
+# quotaio_v1.c:                     BSD
+License: BSD and LGPLv2+ and GPLv2 and GPLv2+
 Group: System Environment/Base
-Requires: initscripts >= 6.38 tcp_wrappers
-Requires: quota-nls = %{epoch}:%{version}-%{release}
-Conflicts: kernel < 2.4
-BuildRequires: e2fsprogs-devel gettext tcp_wrappers-devel
-BuildRequires: openldap-devel dbus-devel libnl-devel
-BuildRequires: systemd-units
+URL: http://sourceforge.net/projects/linuxquota/
 Source0: http://downloads.sourceforge.net/linuxquota/%{name}-%{version}.tar.gz
 Source1: quota_nld.service
 Source2: quota_nld.sysconfig
+Source3: rpc-rquotad.service
+Source4: rpc-rquotad.sysconfig
 # Not accepted changes (378a64006bb1e818e84a1c77808563b802b028fa)
 # Some of the lines have been superseded by other commits probably.
-Patch0: quota-4.00-warnquota.patch
-Patch1: quota-3.06-man-page.patch
-Patch2: quota-3.06-pie.patch
-Patch3: quota-3.13-wrong-ports.patch
-# Bug #667757, submitted to upstream (SF#3152423)
-Patch4: quota-4.00_pre1-Make-RPC-block-factor-dynamic.patch
-# Bug #668691, submitted to upstream (SF#3152423)
-Patch5: quota-4.00_pre1-Check-set-limits-fit-into-the-range-supported-by-RPC.patch
-# Bug #634137, submitted to upstream (SF#3171791)
-Patch6: quota-4.00_pre1-Store-PID-of-quota_nld.patch
-# In upstream after 4.00 (SF#3393151), bug #731622
-Patch7: quota-4.00-Do-not-report-missing-utmp-record-to-syslog.patch
-
+Patch0: quota-4.02-warnquota.patch
+Patch1: quota-4.02-Build-rpc.rquotad-as-PIE.patch
+Patch2: quota-3.13-wrong-ports.patch
+BuildRequires: dbus-devel
+BuildRequires: e2fsprogs-devel
+BuildRequires: gettext
+BuildRequires: openldap-devel
+BuildRequires: pkgconfig(libnl-3.0) >= 3.1
+BuildRequires: pkgconfig(libnl-genl-3.0)
+BuildRequires: systemd
+BuildRequires: tcp_wrappers-devel
+Requires: tcp_wrappers
+Requires: quota-nls = %{epoch}:%{version}-%{release}
+Conflicts: kernel < 2.4
 
 %description
 The quota package contains system administration tools for monitoring
@@ -40,12 +42,12 @@ and limiting user and or group disk usage per file system.
 
 
 %package nld
+Group: System Environment/Daemons
 Summary: quota_nld daemon
-Group: System Environment/Base
 Requires: quota-nls = %{epoch}:%{version}-%{release}
-Requires(post): systemd-sysv systemd-units
-Requires(preun): systemd-units
-Requires(postun): systemd-units
+Requires(post): systemd
+Requires(preun): systemd
+Requires(postun): systemd
 
 %description nld
 Daemon that listens on netlink socket and processes received quota warnings.
@@ -55,9 +57,24 @@ warning messages to the system D-Bus (so that desktop manager can display
 a dialog) and writing them to the terminal user has last accessed.
 
 
+%package rpc
+Group: System Environment/Daemons
+Summary: RPC quota daemon
+Requires: quota-nls = %{epoch}:%{version}-%{release}
+Requires(post): systemd
+Requires(preun): systemd
+Requires(postun): systemd
+Conflicts: quota < 1:4.02-3
+
+%description rpc
+The RPC daemon allows to query and set disk quotas over network. If you run
+the deamon on NFS server, you could use quota tools to manage the quotas from
+NFS client.
+
+
 %package warnquota
-Summary: Send e-mail to users over quota
 Group: System Environment/Base
+Summary: Send e-mail to users over quota
 Requires: quota-nls = %{epoch}:%{version}-%{release}
 
 %description warnquota
@@ -67,8 +84,8 @@ via cron(8).
 
 
 %package nls
-Summary: Gettext catalogs for disk quota tools
 Group: System Environment/Base
+Summary: Gettext catalogs for disk quota tools
 BuildArch: noarch
 
 %description nls
@@ -76,8 +93,8 @@ Disk quota tools messages translated into different natural languages.
 
 
 %package devel
+Group: Development/Libraries
 Summary: Development files for quota
-Group: System Environment/Base
 Requires: quota =  %{epoch}:%{version}-%{release}
 
 %description devel
@@ -89,10 +106,11 @@ on remote machines.
 
 
 %package doc
-Summary: Additional documentation for disk quotas
 Group: Documentation
+Summary: Additional documentation for disk quotas
 Requires: quota =  %{epoch}:%{version}-%{release}
 BuildArch: noarch
+AutoReq: 0
 
 %description doc
 This package contains additional documentation for disk quotas concept in
@@ -102,36 +120,19 @@ Linux/UNIX environment.
 %prep
 %setup -q -n quota-tools
 %patch0 -p1
-%patch1 -p1
 %ifnarch ppc ppc64
-%patch2 -p1
+%patch1 -p1
 %endif
-%patch3 -p1
-%patch4 -p1 -b .rpc_block_factor_dynamic
-%patch5 -p1 -b .check_set_limits_rpc
-%patch6 -p1 -b .store_pid
-%patch7 -p1 -b .suppress_missing_utmp
-
-#fix typos/mistakes in localized documentation
-for pofile in $(find ./po/*.p*)
-do
-   sed -i 's/editting/editing/' "$pofile"
-done
-
-# Fix charset
-for F in Changelog; do
-    iconv -f latin1 -t utf-8 <"$F" >"${F}.utf8"
-    touch -r "$F"{,.utf8}
-    mv "$F"{.utf8,}
-done
+%patch2 -p1
 
 
 %build
+%global _hardened_build 1
 %configure \
     --enable-ext2direct=yes \
     --enable-ldapmail=yes \
     --enable-netlink=yes \
-    --enable-rootsbin=yes \
+    --enable-rootsbin=no \
 %if %{rpcsetquota}
     --enable-rpcsetquota=yes \
 %endif
@@ -140,71 +141,55 @@ make
 
 
 %install
-mkdir -p %{buildroot}/sbin
 mkdir -p %{buildroot}%{_sysconfdir}
 mkdir -p %{buildroot}%{_sbindir}
 mkdir -p %{buildroot}%{_bindir}
-mkdir -p %{buildroot}%{_mandir}/{man1,man3,man8}
+mkdir -p %{buildroot}%{_mandir}/{man1,man3,man5,man8}
 make install INSTALL='install -p' ROOTDIR=%{buildroot}
 install -m 644 warnquota.conf %{buildroot}%{_sysconfdir}
-#
-# we don't support XFS yet
-#
-rm -f %{buildroot}%{_sbindir}/quot
-rm -f %{buildroot}%{_sbindir}/xqmstats
-rm -f %{buildroot}%{_mandir}/man8/quot.*
-rm -f %{buildroot}%{_mandir}/man8/xqmstats.*
 ln -s  quotaon.8.gz \
   %{buildroot}%{_mandir}/man8/quotaoff.8
-ln -s rquotad.8.gz \
-   %{buildroot}%{_mandir}/man8/rpc.rquotad.8
 
 install -p -m644 -D %{SOURCE1} $RPM_BUILD_ROOT%{_unitdir}/quota_nld.service
 install -p -m644 -D %{SOURCE2} \
     $RPM_BUILD_ROOT%{_sysconfdir}/sysconfig/quota_nld
+install -p -m644 -D %{SOURCE3} $RPM_BUILD_ROOT%{_unitdir}/rpc-rquotad.service
+install -p -m644 -D %{SOURCE4} \
+    $RPM_BUILD_ROOT%{_sysconfdir}/sysconfig/rpc-rquotad
 
 %find_lang %{name}
 
 
 %post nld
-if [ $1 -eq 1 ] ; then
-    # Initial installation
-    /bin/systemctl daemon-reload >/dev/null 2>&1 || :
-fi
+%systemd_post quota_nld.service
 
 %preun nld
-if [ $1 -eq 0 ] ; then
-    # Package removal, not upgrade
-    /bin/systemctl --no-reload disable quota_nld.service > /dev/null 2>&1 || :
-    /bin/systemctl stop quota_nld.service > /dev/null 2>&1 || :
-fi
+%systemd_preun quota_nld.service
 
 %postun nld
-/bin/systemctl daemon-reload >/dev/null 2>&1 || :
-if [ $1 -ge 1 ] ; then
-    # Package upgrade, not uninstall
-    /bin/systemctl try-restart quota_nld.service >/dev/null 2>&1 || :
-fi
+%systemd_postun_with_restart quota_nld.service
 
-%triggerun -- %{name}-nld < 1:4.00-2
-echo 'quota-nld: User must migrate to systemd target manually by runnig:'
-echo '  systemd-sysv-convert --apply quota_nld'
-# Save the current service runlevel info
-/usr/bin/systemd-sysv-convert --save quota_nld >/dev/null 2>&1 || :
-# Run these because the SysV package being removed won't do them
-/sbin/chkconfig --del quota_nld >/dev/null 2>&1 || :
-/bin/systemctl try-restart quota_nld.service >/dev/null 2>&1 || :
+
+%post rpc
+%systemd_post rpc-rquotad.service
+
+%preun rpc
+%systemd_preun rpc-rquotad.service
+
+%postun rpc
+%systemd_postun_with_restart rpc-rquotad.service
 
 
 %files
-%attr(0755,root,root) /sbin/*
 %attr(0755,root,root) %{_bindir}/*
 %attr(0755,root,root) %{_sbindir}/*
 %exclude %{_sbindir}/quota_nld
+%exclude %{_sbindir}/rpc.rquotad
 %exclude %{_sbindir}/warnquota
 %attr(0644,root,root) %{_mandir}/man1/*
 %attr(0644,root,root) %{_mandir}/man8/*
 %exclude %{_mandir}/man8/quota_nld.8*
+%exclude %{_mandir}/man8/rpc.rquotad.8*
 %exclude %{_mandir}/man8/warnquota.8*
 %doc Changelog
 
@@ -215,11 +200,19 @@ echo '  systemd-sysv-convert --apply quota_nld'
 %attr(0644,root,root) %{_mandir}/man8/quota_nld.8*
 %doc Changelog
 
+%files rpc
+%config(noreplace) %attr(0644,root,root) %{_sysconfdir}/sysconfig/rpc-rquotad
+%{_unitdir}/rpc-rquotad.service
+%{_sbindir}/rpc.rquotad
+%{_mandir}/man8/rpc.rquotad.8*
+%doc Changelog
+
 %files warnquota
 %config(noreplace) %attr(0644,root,root) %{_sysconfdir}/quotagrpadmins
 %config(noreplace) %attr(0644,root,root) %{_sysconfdir}/quotatab
 %config(noreplace) %attr(0644,root,root) %{_sysconfdir}/warnquota.conf
 %attr(0755,root,root) %{_sbindir}/warnquota
+%attr(0644,root,root) %{_mandir}/man5/*
 %attr(0644,root,root) %{_mandir}/man8/warnquota.8*
 %doc Changelog README.ldap-support README.mailserver
 
@@ -232,12 +225,84 @@ echo '  systemd-sysv-convert --apply quota_nld'
 %attr(0644,root,root) %{_mandir}/man3/*
 
 %files doc
-%doc doc/*
+%doc doc/* ldap-scripts
 
 
 %changelog
-* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 1:4.00-4
-- 为 Magic 3.0 重建
+* Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1:4.02-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
+
+* Thu Apr 02 2015 Petr Pisar <ppisar@redhat.com> - 1:4.02-3
+- Move rpc.rquotad daemon into quota-rpc sub-package
+
+* Thu Apr 02 2015 Petr Pisar <ppisar@redhat.com> - 1:4.02-2
+- Add rpc-rquotad.service file which was known as nfs-rquotad.service
+  in nfs-utils (bug #1206260)
+
+* Wed Nov 26 2014 Petr Pisar <ppisar@redhat.com> - 1:4.02-1
+- 4.02 bump
+
+* Sun Aug 17 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1:4.01-14
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
+
+* Sun Jun 08 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1:4.01-13
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Wed Mar 05 2014 Petr Pisar <ppisar@redhat.com> - 1:4.01-12
+- Prevent from grace period overflow in RPC transport (bug #1072769)
+
+* Wed Oct 16 2013 Petr Pisar <ppisar@redhat.com> - 1:4.01-11
+- Move /sbin/* files under /usr (bug #983179)
+- Harden executables due to rpc.rquotad and quota_nld daemons (bug #983179)
+- Document quotagrpadmins(5), quotatab(5), warnquota.conf(5), rcp.rquota(8)
+  (bug #983179)
+
+* Sun Aug 04 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1:4.01-10
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Thu Jun 13 2013 Petr Pisar <ppisar@redhat.com> - 1:4.01-9
+- Close FILE handles on error too
+
+* Wed Jun 12 2013 Petr Pisar <ppisar@redhat.com> - 1:4.01-8
+- Allow to set limits using multiplicative units
+
+* Mon May 27 2013 Petr Pisar <ppisar@redhat.com> - 1:4.01-7
+- Add LGPLv2+ and GPLv2 to license declaration
+- Correct changelog dates
+- Package additional LDAP scripts as a documentation
+- Package XFS-specific tools
+
+* Mon May 20 2013 Petr Pisar <ppisar@redhat.com> - 1:4.01-6
+- Remove code for migration from systemv-style init script
+- Drop useless dependency on initscripts (bug #964440)
+
+* Thu Mar 14 2013 Petr Pisar <ppisar@redhat.com> - 1:4.01-5
+- Add quotasync(1) manual page
+- Fix quota, repquota, and quotasync usage help
+
+* Tue Feb 05 2013 Petr Pisar <ppisar@redhat.com> - 1:4.01-4
+- Do not fiddle with quota files on XFS and GFS (bug #846296)
+- Make sure option -d at quotacheck provides at least as much information as
+  option -v (SF#3602777)
+
+* Mon Dec 03 2012 Petr Pisar <ppisar@redhat.com> - 1:4.01-3
+- Define charset in e-mails sent by warnquota (SF#3571589)
+
+* Tue Sep 25 2012 Petr Pisar <ppisar@redhat.com> - 1:4.01-2
+- Make group warning message more official
+
+* Fri Sep 07 2012 Petr Pisar <ppisar@redhat.com> - 1:4.01-1
+- 4.01 bump
+
+* Wed Aug 22 2012 Petr Pisar <ppisar@redhat.com> - 1:4.00-6
+- Modernize systemd scriptlets (bug #850288)
+
+* Sat Jul 21 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1:4.00-5
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Tue Jul 03 2012 Petr Pisar <ppisar@redhat.com> - 1:4.00-4
+- Fix editting more users with edquota
+- Report all quotas on XFS (bug #837341)
 
 * Sat Jan 14 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1:4.00-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
@@ -340,7 +405,7 @@ echo '  systemd-sysv-convert --apply quota_nld'
 * Tue May 11 2010 Petr Pisar <ppisar@redhat.com> 1:3.17-13
 - Add GFS2 support
 
-* Tue May 10 2010 Petr Pisar <ppisar@redhat.com> 1:3.17-12
+* Mon May 10 2010 Petr Pisar <ppisar@redhat.com> 1:3.17-12
 - Prevent corruptive read/write from/to NULL address in rpc.rquotad
   (Resolves #528581, example in #532342)
 - Fix spelling in summary
@@ -355,7 +420,7 @@ echo '  systemd-sysv-convert --apply quota_nld'
 * Tue Feb 23 2010 Daniel Novotny <dnovotny@redhat.com> 1:3.17-9
 - fix #565124 - FTBFS quota-3.17-8.fc13: ImplicitDSOLinking
 
-* Mon Sep 29 2009 Ondrej Vasik <ovasik@redhat.com> 1:3.17-8
+* Tue Sep 29 2009 Ondrej Vasik <ovasik@redhat.com> 1:3.17-8
 - add buildrequires for quota_nld, enable-netlink to build
   quota_nld (#526047)
 
@@ -445,7 +510,7 @@ echo '  systemd-sysv-convert --apply quota_nld'
     - BuiltPreReq to BuiltReq
     - Removed '.' From Summary
     - Added 'GPLv2+' to License Tag
-	- Condensed the _sysconfdir entries in to one line
+    - Condensed the _sysconfdir entries in to one line
 
 * Thu Jan 24 2008 Steve Dickson <SteveD@RedHat.com> 3.15-1
 - Upgraded to version 3.15 
