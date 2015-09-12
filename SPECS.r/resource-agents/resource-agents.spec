@@ -20,7 +20,7 @@
 #
 
 %global upstream_prefix ClusterLabs-resource-agents
-%global upstream_version 39c1f6e
+%global upstream_version f79322c
 
 # SSLeay (required by ldirectord)
 %if 0%{?suse_version}
@@ -35,8 +35,8 @@
 
 Name:		resource-agents
 Summary:	Open Source HA Reusable Cluster Resource Scripts
-Version:	3.9.5
-Release:	12%{?rcver:%{rcver}}%{?numcomm:.%{numcomm}}%{?alphatag:.%{alphatag}}%{?dirty:.%{dirty}}%{?dist}.2
+Version:	3.9.6
+Release:	2%{?rcver:%{rcver}}%{?numcomm:.%{numcomm}}%{?alphatag:.%{alphatag}}%{?dirty:.%{dirty}}%{?dist}.1
 License:	GPLv2+ and LGPLv2+
 URL:		https://github.com/ClusterLabs/resource-agents
 %if 0%{?fedora} || 0%{?centos_version} || 0%{?rhel}
@@ -242,8 +242,8 @@ rm -rf %{buildroot}
 
 %{_sbindir}/ocf-tester
 %{_sbindir}/ocft
-%{_sbindir}/sfex_init
-%{_sbindir}/sfex_stat
+#%{_sbindir}/sfex_init
+#%{_sbindir}/sfex_stat
 
 %{_includedir}/heartbeat
 
@@ -251,7 +251,7 @@ rm -rf %{buildroot}
 
 %{_mandir}/man7/*.7*
 %{_mandir}/man8/ocf-tester.8*
-%{_mandir}/man8/sfex_init.8*
+#%{_mandir}/man8/sfex_init.8*
 
 # For compatability with pre-existing agents
 %dir %{_sysconfdir}/ha.d
@@ -300,8 +300,17 @@ ccs_update_schema > /dev/null 2>&1 ||:
 %endif
 
 %changelog
-* Fri Jul 04 2014 Liu Di <liudidi@gmail.com> - 3.9.5-12.2
-- 为 Magic 3.0 重建
+* Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.9.6-2.1
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
+
+* Mon Apr 20 2015 David Vossel <dvossel@redhat.com> - 3.9.6-2
+- Rebase to latest upstream code in order to pull in rabbitmq-cluster agent
+
+* Fri Feb 13 2015 David Vossel <dvossel@redhat.com> - 3.9.6-1
+- Rebase to resource-agents 3.9.6 upstream release.
+
+* Sun Aug 17 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.9.5-12.2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
 
 * Sun Jun 08 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.9.5-12.1
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
