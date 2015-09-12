@@ -21,6 +21,11 @@
 %define lsbldso ld-lsb-ppc64.so
 %endif
 
+%ifarch ppc64le
+%define ldso ld64.so.2
+%define lsbldso ld-lsb-ppc64le.so
+%endif
+
 %ifarch s390
 %define ldso ld.so.1
 %define lsbldso ld-lsb-s390.so
@@ -53,7 +58,7 @@
 Summary: Implementation of Linux Standard Base specification
 Name: redhat-lsb
 Version: 4.1
-Release: 24%{?dist}
+Release: 30%{?dist}
 URL: http://www.linuxfoundation.org/collaborate/workgroups/lsb
 Source0: https://fedorahosted.org/releases/r/e/redhat-lsb/%{name}-%{version}-%{srcrelease}.tar.bz2
 Patch0: lsb-release-3.1-update-init-functions.patch
@@ -77,6 +82,9 @@ BuildRequires: glibc-static
 %ifarch ppc64
 %define archname ppc64
 %endif
+%ifarch ppc64le
+%define archname ppc64le
+%endif
 %ifarch s390
 %define archname s390
 %endif
@@ -93,7 +101,7 @@ BuildRequires: glibc-static
 %define archname aarch64
 %endif
 
-ExclusiveArch: %{ix86} ia64 x86_64 ppc ppc64 s390 s390x %{arm} aarch64
+ExclusiveArch: %{ix86} ia64 x86_64 ppc ppc64 s390 s390x %{arm} aarch64 ppc64le
 
 Requires: redhat-lsb-core%{?_isa} = %{version}-%{release}
 Requires: redhat-lsb-cxx%{?_isa} = %{version}-%{release}
@@ -287,6 +295,7 @@ Requires: /usr/sbin/groupmod
 Requires: /usr/sbin/useradd
 Requires: /usr/sbin/userdel
 Requires: /usr/sbin/usermod
+Requires: /usr/sbin/sendmail
 Requires: redhat-lsb-submod-security%{?_isa} = %{version}-%{release}
 
 Provides: lsb-core-%{archname} = %{version}-%{release}
@@ -340,7 +349,7 @@ Requires: libjpeg-turbo%{?_isa}
 %ifarch %{ix86} ppc s390 arm
 Requires: libpng12.so.0
 %endif
-%ifarch x86_64 ppc64 s390x aarch64
+%ifarch x86_64 ppc64 s390x aarch64 ppc64le
 Requires: libpng12.so.0()(64bit)
 %endif
 Requires: libpng%{?_isa}
@@ -353,10 +362,10 @@ Requires: glib2%{?_isa}
 Requires: gtk2%{?_isa}
 Requires: pango%{?_isa}
 # toolkit-qt
-Requires: qt4%{?_isa}
-Requires: qt4-core%{?_isa}
-# toolkit-qt3
 Requires: qt%{?_isa}
+Requires: qt-x11%{?_isa}
+# toolkit-qt3
+Requires: qt3%{?_isa}
 # xml
 Requires: libxml2%{?_isa}
 Requires: redhat-lsb-submod-multimedia%{?_isa} = %{version}-%{release}
@@ -754,6 +763,24 @@ os.remove("%{_datadir}/lsb")
 
 
 %changelog
+* Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 4.1-30
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
+
+* Wed Aug 27 2014 Parag <pnemade AT redhat DOT com> - 4.1-29
+- Resolves:rh#1133536 - redhat-lsb does not requires /usr/sbin/sendmail
+
+* Sun Aug 17 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 4.1-28
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
+
+* Sun Jun 08 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 4.1-27
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Tue May 06 2014 Ondrej Vasik <ovasik@redhat.com> - 4.1-26
+- add support for ppc64le (#1094371)
+
+* Wed Apr 23 2014 Peter Robinson <pbrobinson@fedoraproject.org> 4.1-25
+- Update aarch64 patch
+
 * Mon Nov 25 2013 Ondrej Vasik <ovasik@redhat.com> - 4.1-24
 - remove nsswitch handling - broken and unnecessary
   (#986728, #915147)

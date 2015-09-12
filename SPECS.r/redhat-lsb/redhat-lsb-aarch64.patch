@@ -120,3 +120,12 @@ index 76db260..f76e5a5 100644
        p = NULL;
      }
    INTERNAL_SYSCALL (exit, err, 1, 0);
+@@ -682,7 +682,7 @@ int __libc_start_main (int argc, char **argv, char **ev,
+ 		       void *auxvec, void (*rtld_fini) (void),
+ 		       struct startup_info *stinfo,
+ 		       char **stack_on_entry)
+-#elif defined __arm__
++#elif defined __arm__ || defined __aarch64__
+ 
+ int ___libc_start_main (int (*main) (int argc, char **argv),
+                        int argc, char **argv,
