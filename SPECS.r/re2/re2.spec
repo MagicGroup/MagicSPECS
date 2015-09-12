@@ -1,16 +1,12 @@
 Name:           re2
-Version:        20130115
-Release:        3%{?dist}
-
+Version:        20131024
+Release:        5%{?dist}
 Summary:        C++ fast alternative to backtracking RE engines
-
 Group:          System Environment/Libraries
 License:        BSD
 URL:            http://code.google.com/p/%{name}/
 Source0:        http://re2.googlecode.com/files/%{name}-%{version}.tgz
-# Chromium needs the FilteredRE2 symbols to be global
-Patch0:		re2-global-FilteredRE2-symbols.patch
-BuildRoot:      %(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
+Patch0:		re2-symbols-fix.patch
 
 %description
 RE2 is a C++ library providing a fast, safe, thread-friendly alternative to
@@ -38,7 +34,7 @@ you will need to install %{name}-devel.
 
 %prep
 %setup -q -n %{name}
-%patch0 -p1 -b .global-fix
+%patch0 -p1 -b .fix
 
 %build
 # The -pthread flag issue has been submitted upstream:
@@ -50,7 +46,6 @@ LDFLAGS="${LDFLAGS:-%__global_ldflags} -pthread"
 make %{?_smp_mflags} CXXFLAGS="$CXXFLAGS" LDFLAGS="$LDFLAGS" includedir=%{_includedir} libdir=%{_libdir}
 
 %install
-rm -rf $RPM_BUILD_ROOT
 make install INSTALL="install -p" DESTDIR=$RPM_BUILD_ROOT includedir=%{_includedir} libdir=%{_libdir}
 
 # Suppress the static library
@@ -58,9 +53,6 @@ find $RPM_BUILD_ROOT -name 'lib%{name}.a' -exec rm -f {} \;
 
 %check
 make %{?_smp_mflags} shared-test
-
-%clean
-rm -rf $RPM_BUILD_ROOT
 
 %post -p /sbin/ldconfig
 
@@ -74,10 +66,25 @@ rm -rf $RPM_BUILD_ROOT
 %{_includedir}/%{name}
 %{_libdir}/lib%{name}.so
 
-
 %changelog
-* Sun Jun  2 2013 Tom Callaway <spot@fedoraproject.org> - 20130115-3
-- fix FilteredRE2 symbols to be global in the shared library
+* Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 20131024-5
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
+
+* Wed Apr 15 2015 Petr Pisar <ppisar@redhat.com> - 20131024-4
+- Rebuild owing to C++ ABI change in GCC-5 (bug #1195351)
+
+* Sun Aug 17 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 20131024-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
+
+* Sun Jun 08 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 20131024-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Mon Nov 11 2013 Tom Callaway <spot@fedoraproject.org> - 20131024-1
+- update to 20131024
+- fix symbols export to stop test from failing
+
+* Sun Aug 04 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 20130115-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
 
 * Sun Feb 17 2013 Denis Arnaud <denis.arnaud_fedora@m4x.org> 20130115-2
 - Took into account the feedback from review request (#868578).
