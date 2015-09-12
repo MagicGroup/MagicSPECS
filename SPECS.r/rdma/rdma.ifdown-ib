@@ -1,6 +1,6 @@
 #!/bin/bash
 # Network Interface Configuration System
-# Copyright (c) 1996-2009 Red Hat, Inc. all rights reserved.
+# Copyright (c) 1996-2013 Red Hat, Inc. all rights reserved.
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License, version 2,
@@ -13,7 +13,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
-# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 
 . /etc/init.d/functions
 
@@ -26,10 +26,48 @@ CONFIG=${1}
 
 source_config
 
+# Allow the user to override the detection of our physical device by passing
+# it in.  No checking is done, if the user gives us a bogus dev, it's
+# their problem.
+[ -n "${PHYSDEV}" ] && REALDEVICE="$PHYSDEV"
+
 . /etc/sysconfig/network
 
 # Check to make sure the device is actually up
-check_device_down ${DEVICE} && [ "$BOOTPROTO" != "dhcp" -a "$BOOTPROTO" != "bootp" ] && [ -n "$VLAN" -a "$VLAN" != "yes" ] && exit 0
+check_device_down ${DEVICE} && exit 0
+
+# If we are a P_Key device, we need to munge a few things
+if [ "${PKEY}" = yes ]; then
+	[ -z "${PKEY_ID}" ] && {
+	        net_log $"InfiniBand IPoIB device: PKEY=yes requires a PKEY_ID"
+	        exit 1
+	}
+	[ -z "${PHYSDEV}" ] && {
+	        net_log $"InfiniBand IPoIB device: PKEY=yes requires a PHYSDEV"
+	        exit 1
+	} 
+	# Normalize our PKEY_ID to have the high bit set
+	NEW_PKEY_ID=`printf "0x%04x" $(( 0x8000 | ${PKEY_ID} ))`
+	NEW_PKEY_NAME=`printf "%04x" ${NEW_PKEY_ID}`
+	[ "${DEVICE}" != "${PHYSDEV}.${NEW_PKEY_NAME}" ] && {
+                net_log $"Configured DEVICE name does not match what new device name would be.  This
+is most likely because once the PKEY_ID was normalized, it no longer
+resulted in the expected device naming, and so the DEVICE entry in the
+config file needs to be updated to match. This can also be caused by
+giving PKEY_ID as a hex number but without using the mandatory 0x prefix.
+	Configured DEVICE=$DEVICE
+        Configured PHYSDEV=$PHYSDEV
+        Configured PKEY_ID=$PKEY_ID
+        Calculated PKEY_ID=$NEW_PKEY_ID
+        Calculated name=${PHYSDEV}.${NEW_PKEY_NAME}"
+                exit 1
+        }
+        [ -d "/sys/class/net/${DEVICE}" ] || exit 0
+        # When we get to downing the IP address, we need REALDEVICE to
+        # point to our PKEY device
+        REALDEVICE="${DEVICE}"
+fi
+
 
 if [ "${SLAVE}" != "yes" -o -z "${MASTER}" ]; then
 if [ -n "${HWADDR}" -a -z "${MACADDR}" ]; then
@@ -54,13 +92,13 @@ fi
 fi
 
 if is_bonding_device ${DEVICE} ; then
-    for device in $(LANG=C egrep -l "^[[:space:]]*MASTER=\"?${DEVICE}\"?" /etc/sysconfig/network-scripts/ifcfg-*) ; do
+    for device in $(LANG=C grep -l "^[[:space:]]*MASTER=\"\?${DEVICE}\"\?\([[:space:]#]\|$\)" /etc/sysconfig/network-scripts/ifcfg-*) ; do
 	is_ignored_file "$device" && continue
 	/sbin/ifdown ${device##*/}
     done
     for arg in $BONDING_OPTS ; do
 	key=${arg%%=*};
-	[[ "${key}" != "arp_ip_target" ]] || continue
+	[[ "${key}" != "arp_ip_target" ]] && continue
 	value=${arg##*=};
 	if [ "${value:0:1}" != "" ]; then
             OLDIFS=$IFS;
@@ -87,8 +125,9 @@ retcode=0
    for VER in "" 6 ; do
 	if [ -f "/var/run/dhclient$VER-${DEVICE}.pid" ]; then
 		dhcpid=$(cat /var/run/dhclient$VER-${DEVICE}.pid)
+		generate_lease_file_name $VER
 		if [[ "$DHCPRELEASE" = [yY1]* ]];  then
-			/sbin/dhclient -r -lf /var/lib/dhclient/dhclient$VER-${DEVICE}.leases -pf /var/run/dhclient-${DEVICE}.pid ${DEVICE} >/dev/null 2>&1
+			/sbin/dhclient -r -lf ${LEASEFILE} -pf /var/run/dhclient$VER-${DEVICE}.pid ${DEVICE} >/dev/null 2>&1
 			retcode=$?
 		else
 			kill $dhcpid >/dev/null 2>&1
@@ -108,9 +147,9 @@ retcode=0
 # instance instead.
 if [ -d "/sys/class/net/${REALDEVICE}" ]; then
 	if [ "${REALDEVICE}" = "${DEVICE}" ]; then
-		ip addr flush dev ${REALDEVICE} 2>/dev/null
+		ip addr flush dev ${REALDEVICE} scope global 2>/dev/null
 	else
-		ip addr flush dev ${REALDEVICE} label ${DEVICE} 2>/dev/null
+		ip addr flush dev ${REALDEVICE} label ${DEVICE} scope global 2>/dev/null
 	fi
 	
 	if [ "${SLAVE}" = "yes" -a -n "${MASTER}" ]; then
@@ -123,21 +162,6 @@ if [ -d "/sys/class/net/${REALDEVICE}" ]; then
 fi
 [ "$retcode" = "0" ] && retcode=$?
 
-if [ -n "${BRIDGE}" ] && [ -x /usr/sbin/brctl ]; then
-      /sbin/ip link set dev ${DEVICE} down
-      /usr/sbin/brctl delif ${BRIDGE} ${DEVICE}
-      # Upon removing a device from a bridge,
-      # it's necessary to make radvd reload its config
-      [ -r /var/run/radvd/radvd.pid ] && kill -HUP $(cat /var/run/radvd/radvd.pid)
-      if [ -d /sys/class/net/${BRIDGE}/brif ] && [ $(ls -1 /sys/class/net/${BRIDGE}/brif | wc -l) -eq 0 ]; then
-	  /usr/sbin/brctl delbr ${BRIDGE}
-      fi
-fi
-
-if [ "${TYPE}" = "Tap" ]; then
-	tunctl -d "${DEVICE}" >/dev/null
-fi
-
 # wait up to 5 seconds for device to actually come down...
 waited=0
 while ! check_device_down ${DEVICE} && [ "$waited" -lt 50 ] ; do
@@ -145,25 +169,15 @@ while ! check_device_down ${DEVICE} && [ "$waited" -lt 50 ] ; do
     waited=$(($waited+1))
 done
 
-# don't leave an outdated key sitting around
-if [ -n "${WIRELESS_ENC_KEY}" ] && [ -x /sbin/iwconfig ]; then
-    /sbin/iwconfig ${DEVICE} enc 0 >/dev/null 2>&1
-fi
-
 if [ "$retcode" = 0 ] ; then
     /etc/sysconfig/network-scripts/ifdown-post $CONFIG
     # do NOT use $? because ifdown should return whether or not
     # the interface went down.
 fi
 
-if [ -n "$VLAN" ]; then
-    # 802.1q VLAN
-    if echo ${DEVICE} | LANG=C grep -Ev '(:)' | LANG=C grep -Eq '(eth|bond)[0-9][0-9]*\.[0-9][0-9]?[0-9]?[0-9]?' \
-	|| echo ${DEVICE} | LANG=C grep -Eq 'vlan[0-9][0-9]?[0-9]?[0-9]?' ; then
-	[ -f /proc/net/vlan/${DEVICE} ] && {
-	    ip link delete ${DEVICE} type vlan
-	}
-    fi
+if [ -n "$PKEY" ]; then
+    # PKey PKEY
+    echo "$NEW_PKEY_ID" > /sys/class/net/${PHYSDEV}/delete_child
 fi
 
 exit $retcode
