@@ -1,11 +1,11 @@
-%define with_python %{?_without_python: 0} %{?!_without_python: 1}
-%define with_php %{?_without_php: 0} %{?!_without_php: 1}
-%define with_tcl %{?_without_tcl: 0} %{?!_without_tcl: 1}
-%define with_ruby %{?_without_ruby: 0} %{?!_without_ruby: 1}
-%define with_lua %{?_without_lua: 0} %{?!_without_lua: 1}
-%define php_extdir %(php-config --extension-dir 2>/dev/null || echo %{_libdir}/php4)
-%define svnrev r1190
-#define pretag 1.2.99908020600
+%global with_python %{?_without_python: 0} %{?!_without_python: 1}
+%global with_php %{?_without_php: 0} %{?!_without_php: 1}
+%global with_tcl %{?_without_tcl: 0} %{?!_without_tcl: 1}
+%global with_ruby %{?_without_ruby: 0} %{?!_without_ruby: 1}
+%global with_lua %{?_without_lua: 0} %{?!_without_lua: 1}
+%global php_extdir %(php-config --extension-dir 2>/dev/null || echo %{_libdir}/php4)
+%global svnrev r1190
+#global pretag 1.2.99908020600
 
 %if "%{php_version}" < "5.6"
 %global ini_name     %{name}.ini
@@ -16,33 +16,34 @@
 
 Summary: Round Robin Database Tool to store and display time-series data
 Name: rrdtool
-Version: 1.4.8
-Release: 14%{?dist}
+Version: 1.5.4
+Release: 1%{?dist}
 License: GPLv2+ with exceptions
 Group: Applications/Databases
 URL: http://oss.oetiker.ch/rrdtool/
 Source0: http://oss.oetiker.ch/%{name}/pub/%{name}-%{version}.tar.gz
 Source1: php4-%{svnrev}.tar.gz
 Patch1: rrdtool-1.4.4-php54.patch
-# workaround for rhbz#92165
-Patch2: rrdtool-1.4.7-ruby-2-fix.patch
 # disable logo for php 5.5.
-Patch3: rrdtool-1.4.7-php55.patch
-Patch4: rrdtool-1.4.7-autoconf-fix.patch
-Patch5: rrdtool-1.4.7-lua-5.2.patch
-# patch merged upstream, http://github.com/oetiker/rrdtool-1.x/pull/397
-Patch6: rrdtool-1.4.8-imginfo-check.patch
-# patch sent upstream
-Patch7: rrdtool-1.4.8-doc-fix.patch
+Patch2: rrdtool-1.4.7-php55.patch
+Patch3: rrdtool-1.5.4-ruby-2-fix.patch
+Patch4: rrdtool-1.5.4-lua-5.2.patch
+# enable php bindings on ppc
+Patch5: rrdtool-1.4.8-php-ppc-fix.patch
+Patch6: rrdtool-1.5.3-arm-crash-fix.patch
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 Requires: dejavu-sans-mono-fonts
+Requires(post): systemd
+Requires(preun): systemd
+Requires(postun): systemd
 BuildRequires: gcc-c++, openssl-devel, freetype-devel
 BuildRequires: libpng-devel, zlib-devel, intltool >= 0.35.0
 BuildRequires: cairo-devel >= 1.4.6, pango-devel >= 1.17
-BuildRequires: libtool, groff
-BuildRequires: gettext, libxml2-devel, libdbi-devel
-BuildRequires: perl-ExtUtils-MakeMaker, perl-devel, automake, autoconf
+BuildRequires: libtool, groff, python-setuptools
+BuildRequires: gettext, libxml2-devel, libdbi-devel, systemd
+BuildRequires: perl-ExtUtils-MakeMaker, perl-Pod-Html, perl-devel
+BuildRequires: automake, autoconf
 
 %description
 RRD is the Acronym for Round Robin Database. RRD is a system to store and
@@ -87,7 +88,7 @@ The Perl RRDtool bindings
 %if %{with_python}
 # Make sure the runtime python is newer than the build one;
 # give a default value to handle parsing in cases when python is not present:
-%{!?rrd_python_version: %define rrd_python_version %(%{__python} -c 'import sys; print sys.version.split(" ")[0]' || echo "3.14")}
+%{!?rrd_python_version: %global rrd_python_version %(%{__python} -c 'import sys; print sys.version.split(" ")[0]' || echo "3.14")}
 
 %package python
 Summary: Python RRDtool bindings
@@ -100,11 +101,6 @@ Provides: python-%{name} = %{version}-%{release}
 
 %description python
 Python RRDtool bindings.
-%endif
-
-%ifarch %{power64}
-# php bits busted on ppc64 at the moment
-%define with_php 0
 %endif
 
 %if %{with_php}
@@ -140,6 +136,7 @@ The %{name}-tcl package includes RRDtool bindings for Tcl.
 %endif
 
 %if %{with_ruby}
+%{!?ruby_vendorarchdir: %global ruby_vendorarchdir %(ruby -rrbconfig -e 'puts Config::CONFIG["vendorarchdir"]')}
 
 %package ruby
 Summary: Ruby RRDtool bindings
@@ -152,9 +149,9 @@ The %{name}-ruby package includes RRDtool bindings for Ruby.
 %endif
 
 %if %{with_lua}
-%define luaver 5.2
-%define lualibdir %{_libdir}/lua/%{luaver}
-%define luapkgdir %{_datadir}/lua/%{luaver}
+%{!?luaver: %global luaver %(lua -e "print(string.sub(_VERSION, 5))")}
+%global lualibdir %{_libdir}/lua/%{luaver}
+%global luapkgdir %{_datadir}/lua/%{luaver}
 
 %package lua
 Summary: Lua RRDtool bindings
@@ -171,25 +168,28 @@ The %{name}-lua package includes RRDtool bindings for Lua.
 %setup -q -n %{name}-%{version} %{?with_php: -a 1}
 %if %{with_php}
 %patch1 -p1 -b .php54
-%patch3 -p1 -b .php55
+%patch2 -p1 -b .php55
 %endif
-%patch2 -p1 -b .ruby-2-fix
-%patch4 -p1 -b .autoconf-fix
-%patch5 -p1 -b .lua-52
-%patch6 -p1 -b .imginfo-check
-%patch7 -p1 -b .doc-fix
+# Workaround for rhbz#92165
+# Do not apply on RHEL-6 or lower
+%if %{?rhel} %{?!rhel:7} > 6
+%patch3 -p1 -b .ruby-2-fix
+%endif
+%patch4 -p1 -b .lua-52
+%patch5 -p1 -b .php-ppc-fix
+%patch6 -p1 -b .arm-crash-fix
 
 # Fix to find correct python dir on lib64
-%{__perl} -pi -e 's|get_python_lib\(0,0,prefix|get_python_lib\(1,0,prefix|g' \
+perl -pi -e 's|get_python_lib\(0,0,prefix|get_python_lib\(1,0,prefix|g' \
     configure
 
 # Most edits shouldn't be necessary when using --libdir, but
 # w/o, some introduce hardcoded rpaths where they shouldn't
-%{__perl} -pi.orig -e 's|/lib\b|/%{_lib}|g' \
+perl -pi.orig -e 's|/lib\b|/%{_lib}|g' \
     configure Makefile.in php4/configure php4/ltconfig*
 
 # Perl 5.10 seems to not like long version strings, hack around it
-%{__perl} -pi.orig -e 's|1.299907080300|1.29990708|' \
+perl -pi.orig -e 's|1.299907080300|1.29990708|' \
     bindings/perl-shared/RRDs.pm bindings/perl-piped/RRDp.pm
 
 #
@@ -198,7 +198,7 @@ The %{name}-lua package includes RRDtool bindings for Lua.
 cp -p /usr/lib/rpm/config.{guess,sub} php4/
 
 %build
-./autogen.sh
+./bootstrap
 %configure \
     --with-perl-options='INSTALLDIRS="vendor"' \
     --disable-rpath \
@@ -222,21 +222,21 @@ cp -p /usr/lib/rpm/config.{guess,sub} php4/
     --with-pic
 
 # Fix another rpath issue
-%{__perl} -pi.orig -e 's|-Wl,--rpath -Wl,\$rp||g' \
+perl -pi.orig -e 's|-Wl,--rpath -Wl,\$rp||g' \
     bindings/perl-shared/Makefile.PL
 
 %if %{with_ruby}
 # Remove Rpath from Ruby
-%{__perl} -pi.orig -e 's|-Wl,--rpath -Wl,\$\(EPREFIX\)/lib||g' \
+perl -pi.orig -e 's|-Wl,--rpath -Wl,\$\(EPREFIX\)/lib||g' \
     bindings/ruby/extconf.rb
-sed -i 's| extconf.rb| extconf.rb --vendor |' bindings/Makefile
+sed -i 's|extconf.rb \\|extconf.rb --vendor \\|' bindings/Makefile
 %endif
 
 # Force RRDp bits where we want 'em, not sure yet why the
 # --with-perl-options and --libdir don't take
 pushd bindings/perl-piped/
-%{__perl} Makefile.PL INSTALLDIRS=vendor
-%{__perl} -pi.orig -e 's|/lib/perl|/%{_lib}/perl|g' Makefile
+perl Makefile.PL INSTALLDIRS=vendor
+perl -pi.orig -e 's|/lib/perl|/%{_lib}/perl|g' Makefile
 popd
 
 #{__make} %{?_smp_mflags}
@@ -244,8 +244,8 @@ make
 
 # Build the php module, the tmp install is required
 %if %{with_php}
-%define rrdtmp %{_tmppath}/%{name}-%{version}-tmpinstall
-%{__make} install DESTDIR="%{rrdtmp}"
+%global rrdtmp %{_tmppath}/%{name}-%{version}-tmpinstall
+make install DESTDIR="%{rrdtmp}"
 pushd php4/
 %configure \
     --with-rrdtool="%{rrdtmp}%{_prefix}" \
@@ -253,56 +253,55 @@ pushd php4/
 #{__make} %{?_smp_mflags}
 make
 popd
-%{__rm} -rf %{rrdtmp}
+rm -rf %{rrdtmp}
 %endif
 
 # Fix @perl@ and @PERL@
 find examples/ -type f \
-    -exec %{__perl} -pi -e 's|^#! \@perl\@|#!%{__perl}|gi' {} \;
+    -exec perl -pi -e 's|^#! \@perl\@|#!%{__perl}|gi' {} \;
 find examples/ -name "*.pl" \
-    -exec %{__perl} -pi -e 's|\015||gi' {} \;
+    -exec perl -pi -e 's|\015||gi' {} \;
 
 %install
-rm -rf $RPM_BUILD_ROOT
 make DESTDIR="$RPM_BUILD_ROOT" install
 
 # Install the php module
 %if %{with_php}
-%{__install} -D -m0755 php4/modules/rrdtool.so \
+install -D -m0755 php4/modules/rrdtool.so \
     %{buildroot}%{php_extdir}/rrdtool.so
 # Clean up the examples for inclusion as docs
-%{__rm} -rf php4/examples/.svn
+rm -rf php4/examples/.svn
 # Put the php config bit into place
-%{__mkdir_p} %{buildroot}%{_sysconfdir}/php.d
-%{__cat} << __EOF__ > %{buildroot}%{_sysconfdir}/php.d/%{ini_name}
+mkdir -p %{buildroot}%{_sysconfdir}/php.d
+cat << __EOF__ > %{buildroot}%{_sysconfdir}/php.d/%{ini_name}
 ; Enable rrdtool extension module
 extension=rrdtool.so
 __EOF__
 %endif
 
 # Pesky RRDp.pm...
-%{__mv} $RPM_BUILD_ROOT%{perl_vendorlib}/RRDp.pm $RPM_BUILD_ROOT%{perl_vendorarch}/
+mv $RPM_BUILD_ROOT%{perl_vendorlib}/RRDp.pm $RPM_BUILD_ROOT%{perl_vendorarch}/
 
 # Dunno why this is getting installed here...
-%{__rm} -f $RPM_BUILD_ROOT%{perl_vendorlib}/leaktest.pl
+rm -f $RPM_BUILD_ROOT%{perl_vendorlib}/leaktest.pl
 
 # We only want .txt and .html files for the main documentation
-%{__mkdir_p} doc2/html doc2/txt
-%{__cp} -a doc/*.txt doc2/txt/
-%{__cp} -a doc/*.html doc2/html/
+mkdir -p doc2/html doc2/txt
+cp -a doc/*.txt doc2/txt/
+cp -a doc/*.html doc2/html/
 
 # Put perl docs in perl package
-%{__mkdir_p} doc3/html
-%{__mv} doc2/html/RRD*.html doc3/html/
+mkdir -p doc3/html
+mv doc2/html/RRD*.html doc3/html/
 
 # Clean up the examples
-%{__rm} -f examples/Makefile* examples/*.in
+rm -f examples/Makefile* examples/*.in
 
 # This is so rpm doesn't pick up perl module dependencies automatically
 find examples/ -type f -exec chmod 0644 {} \;
 
 # Clean up the buildroot
-%{__rm} -rf $RPM_BUILD_ROOT%{_docdir}/%{name}-* \
+rm -rf $RPM_BUILD_ROOT%{_docdir}/%{name}-* \
         $RPM_BUILD_ROOT%{perl_vendorarch}/ntmake.pl \
         $RPM_BUILD_ROOT%{perl_archlib}/perllocal.pod \
         $RPM_BUILD_ROOT%{_datadir}/%{name}/examples \
@@ -318,17 +317,24 @@ LD_LIBRARY_PATH=%{buildroot}%{_libdir} php -n \
 %endif
 
 
-%clean
-%{__rm} -rf $RPM_BUILD_ROOT
+%post
+/sbin/ldconfig
+%systemd_post rrdcached.service rrdcached.socket
 
-%post -p /sbin/ldconfig
+%preun
+%systemd_post rrdcached.service rrdcached.socket
 
-%postun -p /sbin/ldconfig
+%postun
+/sbin/ldconfig
+%systemd_post rrdcached.service rrdcached.socket
 
 %files
 %defattr(-,root,root,-)
+%doc LICENSE CONTRIBUTORS COPYRIGHT TODO NEWS CHANGES THREADS
 %{_bindir}/*
 %{_libdir}/*.so.*
+%{_unitdir}/rrdcached.service
+%{_unitdir}/rrdcached.socket
 %{_datadir}/%{name}
 %{_mandir}/man1/*
 
@@ -339,9 +345,9 @@ LD_LIBRARY_PATH=%{buildroot}%{_libdir} php -n \
 %{_libdir}/lib*.so
 %{_libdir}/pkgconfig/*.pc
 
+# License file is missing, upstream was notified
 %files doc
 %defattr(-,root,root,-)
-%doc CONTRIBUTORS COPYING COPYRIGHT README TODO NEWS THREADS
 %doc examples doc2/html doc2/txt
 
 %files perl
@@ -355,7 +361,7 @@ LD_LIBRARY_PATH=%{buildroot}%{_libdir} php -n \
 %files python
 %defattr(-,root,root,-)
 %doc bindings/python/AUTHORS bindings/python/COPYING bindings/python/README
-%{python_sitearch}/rrdtoolmodule.so
+%{python_sitearch}/rrdtool.so
 %{python_sitearch}/py_rrdtool-*.egg-info
 %endif
 
@@ -391,8 +397,73 @@ LD_LIBRARY_PATH=%{buildroot}%{_libdir} php -n \
 %endif
 
 %changelog
-* Mon Jun 30 2014 Liu Di <liudidi@gmail.com> - 1.4.8-14
-- 为 Magic 3.0 重建
+* Mon Aug 10 2015 Jaroslav Škarvada <jskarvad@redhat.com> - 1.5.4-1
+- New version
+  Resolves: rhbz#1251737
+- Defuzzified ruby-2-fix and lua-5.2 patches
+- Used global instead of define
+- Dropped macros for commands (e.g. rm)
+
+* Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.5.3-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
+
+* Sat Jun 06 2015 Jitka Plesnikova <jplesnik@redhat.com> - 1.5.3-3
+- Perl 5.22 rebuild
+
+* Mon May 25 2015 Jaroslav Škarvada <jskarvad@redhat.com> - 1.5.3-2
+- Fixed crash on ARM
+  Resolves: rhbz#1224530
+
+* Mon May  4 2015 Jaroslav Škarvada <jskarvad@redhat.com> - 1.5.3-1
+- New version
+  Resolves: rhbz#1217759
+
+* Sat Apr 25 2015 Jaroslav Škarvada <jskarvad@redhat.com> - 1.5.2-1
+- New version
+  Resolves: rhbz#1215162
+
+* Thu Apr 23 2015 Jaroslav Škarvada <jskarvad@redhat.com> - 1.5.1-1
+- New version
+  Resolves: rhbz#1214750
+- Dropped python-fix (upstreamed)
+
+* Mon Apr 20 2015 Jaroslav Škarvada <jskarvad@redhat.com> - 1.5.0-1
+- New version
+  Resolves: rhbz#1213035
+- Dropped autoconf and doc-fix patches (all upstreamed)
+- Included systemd rrdcached service and socket from upstream
+- General documentation (like NEWS) moved to basic package
+
+* Mon Jan 19 2015 Mamoru TASAKA <mtasaka@fedoraproject.org> - 1.4.9-4
+- Again rebuild for ruby 2.2
+
+* Sun Jan 18 2015 Michel Alexandre Salim <salimma@fedoraproject.org> - 1.4.9-3
+- Rebuilt for Lua 5.3
+
+* Fri Jan 16 2015 Mamoru TASAKA <mtasaka@fedoraproject.org> - 1.4.9-2
+- Rebuild for https://fedoraproject.org/wiki/Changes/Ruby_2.2
+
+* Tue Sep 30 2014 Jaroslav Škarvada <jskarvad@redhat.com> - 1.4.9-1
+- New version
+  Resolves: rhbz#1147901
+- Dropped imginfo-check patch (upstreamed)
+- De-fuzzified patches
+
+* Thu Aug 28 2014 Jitka Plesnikova <jplesnik@redhat.com> - 1.4.8-18
+- Perl 5.20 rebuild
+
+* Mon Aug 18 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.4.8-17
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
+
+* Tue Aug 12 2014 Jaroslav Škarvada <jskarvad@redhat.com> - 1.4.8-16
+- Enabled php bindings on ppc
+
+* Fri Aug  8 2014 Jaroslav Škarvada <jskarvad@redhat.com> - 1.4.8-15
+- Fixed conditionalized patch to be according to Packaging guidelines
+
+* Tue Jun 24 2014 Jaroslav Škarvada <jskarvad@redhat.com> - 1.4.8-14
+- Improved backward compatibility
+  Resolves: rhbz#111633
 
 * Thu Jun 19 2014 Remi Collet <rcollet@redhat.com> - 1.4.8-13
 - rebuild for https://fedoraproject.org/wiki/Changes/Php56
