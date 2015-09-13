@@ -1,4 +1,4 @@
-From 9644657c410326749fd321d9c24944ec25afad2f Mon Sep 17 00:00:00 2001
+From 9644657c4 10326749fd321d9c24944ec25afad2f Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?Petr=20P=C3=ADsa=C5=99?= <ppisar@redhat.com>
 Date: Thu, 20 Jun 2013 15:22:53 +0200
 Subject: [PATCH] Install libperl.so to shrpdir on Linux
@@ -38,12 +38,12 @@ index 2f30261..825496e 100755
 @@ -8294,7 +8295,7 @@ if "$useshrplib"; then
  		xxx="-Wl,-R$shrpdir"
  		;;
- 	bsdos|linux|irix*|dec_osf|gnu*)
+ 	bsdos|linux|irix*|dec_osf|gnu*|haiku)
 -		xxx="-Wl,-rpath,$shrpdir"
 +		# We want standard path
  		;;
- 	next)
- 		# next doesn't like the default...
+ 	hpux*)
+ 		# hpux doesn't like the default, either.
 diff --git a/Makefile.SH b/Makefile.SH
 index 7733a32..a481183 100755
 --- a/Makefile.SH
@@ -59,4 +59,3 @@ index 7733a32..a481183 100755
  man1ext = $man1ext
 -- 
 1.8.1.4
-
