@@ -1,0 +1,26 @@
+From d0a1c478dd161e9020dd956eb1534265a80eaa35 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Petr=20P=C3=ADsa=C5=99?= <ppisar@redhat.com>
+Date: Wed, 17 Jun 2015 07:32:49 +0200
+Subject: [PATCH] Do not auto-install modules from CPAN
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Signed-off-by: Petr Písař <ppisar@redhat.com>
+---
+ Makefile.PL | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/Makefile.PL b/Makefile.PL
+index 76793d0..1a6a1e9 100644
+--- a/Makefile.PL
++++ b/Makefile.PL
+@@ -18,5 +18,4 @@ build_requires('Test::Builder::Tester' => 0.64);
+ 
+ no_index directory => "t-data";
+ 
+-auto_install;
+ WriteAll;
+-- 
+2.1.0
+
