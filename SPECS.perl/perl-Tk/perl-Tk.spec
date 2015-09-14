@@ -1,10 +1,11 @@
 %{!?perl_vendorarch: %define perl_vendorarch %(eval "`%{__perl} -V:installvendorarch`"; echo $installvendorarch)}
 %define perlver %(eval "`%{__perl} -V:version`"; echo $version)
 
+%global use_x11_tests 1
+
 Name:           perl-Tk
-# devel version fix for perl 5.14: 
-Version:        804.031
-Release:        6%{?dist}
+Version:        804.033
+Release:        3%{?dist}
 Summary:        Perl Graphical User Interface ToolKit
 
 Group:          Development/Libraries
@@ -16,11 +17,11 @@ Patch0:         perl-Tk-widget.patch
 Patch1:         perl-Tk-debian.patch.gz
 # fix segfaults as in #235666 because of broken cashing code
 Patch2:         perl-Tk-seg.patch
-# Detect system libpng properly, CPAN RT#86988
-Patch3:         Tk-804.031-Link-PNG-test-to-zlib.patch
+
 
 # Versions before this have Unicode issues
 BuildRequires:  perl-devel >= 3:5.8.3
+BuildRequires:  freetype-devel
 BuildRequires:  libjpeg-devel
 BuildRequires:  libpng-devel
 BuildRequires:  libX11-devel
@@ -28,7 +29,57 @@ BuildRequires:  libXft-devel
 BuildRequires:  perl(Config)
 BuildRequires:  perl(Cwd)
 BuildRequires:  perl(ExtUtils::MakeMaker)
+BuildRequires:  perl(File::Copy)
 BuildRequires:  perl(lib)
+BuildRequires:  perl(open)
+BuildRequires:  perl(strict)
+BuildRequires:  perl(Test)
+
+%if %{use_x11_tests}
+# Run-time:
+BuildRequires:  perl(AutoLoader)
+BuildRequires:  perl(base)
+BuildRequires:  perl(Carp)
+BuildRequires:  perl(DirHandle)
+BuildRequires:  perl(DynaLoader)
+BuildRequires:  perl(Encode)
+BuildRequires:  perl(Exporter)
+BuildRequires:  perl(File::Basename)
+BuildRequires:  perl(File::Spec)
+BuildRequires:  perl(if)
+BuildRequires:  perl(locale)
+# Image::Info is optional
+BuildRequires:  perl(IO::Handle)
+BuildRequires:  perl(overload)
+BuildRequires:  perl(subs)
+BuildRequires:  perl(Symbol)
+BuildRequires:  perl(Text::Tabs)
+BuildRequires:  perl(vars)
+BuildRequires:  perl(warnings)
+BuildRequires:  perl(XSLoader)
+
+# Tests:
+# X11 tests:
+BuildRequires:  xorg-x11-server-Xvfb
+BuildRequires:  xorg-x11-xinit
+BuildRequires:  font(:lang=en)
+# Specific font is needed for tests, bug #1141117, CPAN RT#98831
+BuildRequires:  liberation-sans-fonts
+BuildRequires:  perl(constant)
+BuildRequires:  perl(Data::Dumper)
+BuildRequires:  perl(Devel::Peek)
+BuildRequires:  perl(ExtUtils::Command::MM)
+BuildRequires:  perl(File::Spec::Functions)
+BuildRequires:  perl(File::Temp)
+BuildRequires:  perl(FindBin)
+BuildRequires:  perl(Getopt::Long)
+BuildRequires:  perl(IO::Socket)
+BuildRequires:  perl(POSIX)
+BuildRequires:  perl(Test::More)
+BuildRequires:  perl(utf8)
+# Optional tests:
+BuildRequires:  perl(MIME::Base64)
+%endif
 
 Requires:       perl(:MODULE_COMPAT_%{perlver})
 Provides:       perl(Tk::LabRadio) = 4.004
@@ -75,20 +126,19 @@ chmod -x pod/Popup.pod Tixish/lib/Tk/balArrow.xbm
 %{__perl} -pi -e \
 's,\@demopath\@,%{?_pkgdocdir}%{!?_pkgdocdir:%{_docdir}/%{name}-%{version}}/demos,g' demos/widget
 # debian patch
-%patch1 -p1
+#%%patch1 -p1
 # patch to fix #235666 ... seems like caching code is broken
 %patch2 -p1 -b .seg
-# CPAN RT #86988
-%patch3 -p1
 
 %build
-%{__perl} Makefile.PL INSTALLDIRS=vendor X11LIB=%{_libdir} XFT=1 X11INC=%{_includedir}
+%{__perl} Makefile.PL INSTALLDIRS=vendor X11LIB=%{_libdir} XFT=1
 find . -name Makefile | xargs %{__perl} -pi -e 's/^\tLD_RUN_PATH=[^\s]+\s*/\t/'
 make %{?_smp_mflags}
 
-# disable because they need an x screen
 %check
-# make test
+%if %{use_x11_tests}
+    xvfb-run -a make test
+%endif
 
 %install
 make pure_install DESTDIR=$RPM_BUILD_ROOT
@@ -126,11 +176,40 @@ find __demos/ -type f -exec chmod -x {} \;
 
 
 %changelog
-* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 804.031-6
-- 为 Magic 3.0 重建
+* Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 804.033-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 
-* Tue May 06 2014 Liu Di <liudidi@gmail.com> - 804.031-5
-- 为 Magic 3.0 重建
+* Wed Jun 03 2015 Jitka Plesnikova <jplesnik@redhat.com> - 804.033-2
+- Perl 5.22 rebuild
+
+* Wed May 06 2015 Jitka Plesnikova <jplesnik@redhat.com> - 804.033-1
+- 804.033 bump
+
+* Fri Nov 07 2014 Petr Pisar <ppisar@redhat.com> - 804.032-5
+- Restore compatibility with perl-ExtUtils-MakeMaker-7.00 (bug #1161470)
+
+* Fri Sep 12 2014 Petr Pisar <ppisar@redhat.com> - 804.032-4
+- Fix freetype detection
+- Fix creating a window with perl 5.20 (bug #1141117)
+- Enable X11 tests
+- Specify all dependencies
+- Fix t/fileevent2.t failure with /dev/null on stdin (bug #1141117)
+
+* Tue Aug 26 2014 Jitka Plesnikova <jplesnik@redhat.com> - 804.032-3
+- Perl 5.20 rebuild
+
+* Sun Aug 17 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 804.032-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
+
+* Thu Jul 31 2014 Jitka Plesnikova <jplesnik@redhat.com> - 804.032-1
+- 804.032 bump
+
+* Fri Jun 20 2014 Andreas Bierfert <andreas.bierfert[AT]lowlatency.de>
+- 804.031-6
+- add patch from Yaakov Selkowitz to fix freetype detection (rhbz#1110872)
+
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 804.031-5
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 
 * Sat Aug 10 2013 Ville Skyttä <ville.skytta@iki.fi> - 804.031-4
 - Use %%{_pkgdocdir} where available.
@@ -177,7 +256,7 @@ find __demos/ -type f -exec chmod -x {} \;
 * Thu Nov 10 2011 Iain Arnell <iarnell@gmail.com> 804.029-5
 - Rebuild for libpng 1.5
 
-* Thu Oct 21 2011 Ralf Corsépius <corsepiu@fedoraproject.org> 804.029-4
+* Fri Oct 21 2011 Ralf Corsépius <corsepiu@fedoraproject.org> 804.029-4
 - Split out Tk/MMutil.pm, Tk/install.pm, Tk/MakeDepend.pm into perl-Tk-devel.
   (Avoid dependency on perl-devel - BZ 741777).
 
