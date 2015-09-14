@@ -1,95 +1,112 @@
 Name:           perl-Flickr-API
-Version:        1.04
-Release:        17%{?dist}
+Version:        1.13
+Release:        1%{?dist}
 Summary:        Perl interface to the Flickr API
-License:        Artistic 2.0
+# LICENSE:                              Artistic 2.0
+# examples/flickr_method_test_login.pl: GPL+ or Artistic
+License:        (Artistic 2.0) and (GPL+ or Artistic)
 Group:          Development/Libraries
 URL:            http://search.cpan.org/dist/Flickr-API/
-Source0:        http://www.cpan.org/authors/id/I/IA/IAMCAL/Flickr-API-%{version}.tar.gz
-BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+Source0:        http://www.cpan.org/authors/id/L/LB/LBMOORE/Flickr-API-%{version}.tar.gz
+# Do not install examples as tools into PATH, CPAN RT#105426
+Patch0:         Flickr-API-1.13-Do-not-install-examples-into-PATH.patch
 BuildArch:      noarch
+BuildRequires:  coreutils
+BuildRequires:  findutils
+BuildRequires:  make
+BuildRequires:  perl
 BuildRequires:  perl(ExtUtils::MakeMaker)
+# Run-time:
+BuildRequires:  perl(Carp)
+# Compress::Zlib is optional
+BuildRequires:  perl(Digest::MD5)
+BuildRequires:  perl(Encode)
+# HTTP::Message 1.56 needed because it brings decoded_content()
+BuildRequires:  perl(HTTP::Message) >= 1.56
 BuildRequires:  perl(HTTP::Request)
 BuildRequires:  perl(HTTP::Response)
 BuildRequires:  perl(LWP::UserAgent)
-BuildRequires:  perl(Test::More)
+BuildRequires:  perl(Net::OAuth)
+BuildRequires:  perl(Scalar::Util)
+BuildRequires:  perl(Storable)
+BuildRequires:  perl(strict)
 BuildRequires:  perl(URI) >= 1.18
+BuildRequires:  perl(warnings)
 BuildRequires:  perl(XML::Parser::Lite::Tree) >= 0.06
+# Tests:
+BuildRequires:  perl(Data::Dumper)
+BuildRequires:  perl(File::Temp)
+BuildRequires:  perl(Term::ReadLine)
+BuildRequires:  perl(Test::More)
+BuildRequires:  perl(XML::Simple)
+Requires:       perl(:MODULE_COMPAT_%(eval "`perl -V:version`"; echo $version))
+# HTTP::Message 1.56 needed because it brings decoded_content()
+Requires:       perl(HTTP::Message) >= 1.56
 Requires:       perl(URI) >= 1.18
 Requires:       perl(XML::Parser::Lite::Tree) >= 0.06
-Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
+
+# Filter under-specified dependencies
+%global __requires_exclude %{?__requires_exclude:%__requires_exclude|}^perl\\((URI|XML::Parser::Lite::Tree)\\)$
 
 %description
 A simple interface for using the Flickr API.
 
 %prep
 %setup -q -n Flickr-API-%{version}
+%patch0 -p1
 
 %build
-%{__perl} Makefile.PL INSTALLDIRS=vendor
+perl Makefile.PL INSTALLDIRS=vendor </dev/null
 make %{?_smp_mflags}
 
 %install
-rm -rf $RPM_BUILD_ROOT
-
-make pure_install PERL_INSTALL_ROOT=$RPM_BUILD_ROOT
-
+make pure_install DESTDIR=$RPM_BUILD_ROOT
 find $RPM_BUILD_ROOT -type f -name .packlist -exec rm -f {} \;
-find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
-
 %{_fixperms} $RPM_BUILD_ROOT/*
 
 %check
-
-
-%clean
-rm -rf $RPM_BUILD_ROOT
+make test
 
 %files
-%defattr(-,root,root,-)
-%doc Changes README
+%license LICENSE
+%doc Changes examples README
 %{perl_vendorlib}/*
 %{_mandir}/man3/*
 
 %changelog
-* Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 1.04-17
-- 为 Magic 3.0 重建
+* Tue Jun 23 2015 Petr Pisar <ppisar@redhat.com> - 1.13-1
+- 1.13 bump
+- License corrected to (Artistic 2.0) and (GPL+ or Artistic)
 
-* Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 1.04-16
-- 为 Magic 3.0 重建
+* Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.05-8
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 
-* Sun Jun 15 2014 Liu Di <liudidi@gmail.com> - 1.04-15
-- 为 Magic 3.0 重建
+* Sat Jun 06 2015 Jitka Plesnikova <jplesnik@redhat.com> - 1.05-7
+- Perl 5.22 rebuild
 
-* Sun Jun 15 2014 Liu Di <liudidi@gmail.com> - 1.04-14
-- 为 Magic 3.0 重建
+* Thu Aug 28 2014 Jitka Plesnikova <jplesnik@redhat.com> - 1.05-6
+- Perl 5.20 rebuild
 
-* Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 1.04-13
-- 为 Magic 3.0 重建
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.05-5
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 
-* Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 1.04-12
-- 为 Magic 3.0 重建
+* Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.05-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
 
-* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.04-11
-- 为 Magic 3.0 重建
+* Wed Jul 24 2013 Petr Pisar <ppisar@redhat.com> - 1.05-3
+- Perl 5.18 rebuild
 
-* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.04-10
-- 为 Magic 3.0 重建
+* Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.05-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
 
-* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.04-9
-- 为 Magic 3.0 重建
+* Thu Sep 13 2012 Michal Ingeli <mi@v3.sk> - 1.05-1
+- Update to 1.05 (#856812)
 
-* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.04-8
-- 为 Magic 3.0 重建
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.04-6
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 
-* Thu Jun 12 2014 Liu Di <liudidi@gmail.com> - 1.04-7
-- 为 Magic 3.0 重建
-
-* Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 1.04-6
-- 为 Magic 3.0 重建
-
-* Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 1.04-5
-- 为 Magic 3.0 重建
+* Fri Jun 15 2012 Petr Pisar <ppisar@redhat.com> - 1.04-5
+- Perl 5.16 rebuild
 
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.04-4
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
@@ -112,7 +129,7 @@ rm -rf $RPM_BUILD_ROOT
 * Mon Dec  7 2009 Stepan Kasal <skasal@redhat.com> - 1.02-2
 - rebuild against perl 5.10.1
 
-* Sun Aug 1 2009 Michal Ingeli <mi@v3.sk> - 1.02-1
+* Mon Aug 10 2009 Michal Ingeli <mi@v3.sk> - 1.02-1
 - Update to newer version with fixed license
 - Cleaned up requires
 
