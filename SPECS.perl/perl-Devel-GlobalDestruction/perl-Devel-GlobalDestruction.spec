@@ -1,32 +1,40 @@
-# Package is noarch from perl 5.13.7
-%global noarch_package %(perl -e 'print (($] >= 5.013007) ? 1 : 0);')
+# Want to use Devel::GlobalDestruction::XS with perl < 5.13.7
+%global want_xs %(perl -e 'print (($] >= 5.013007) ? 0 : 1);')
 
 Name:		perl-Devel-GlobalDestruction
-Version:	0.09
+Version:	0.13
 Release:	4%{?dist}
 License:	GPL+ or Artistic
 Group:		Development/Libraries
 Summary:	Expose PL_dirty, the flag that marks global destruction
-Url:		http://search.cpan.org/dist/Devel-GlobalDestruction
-Source:		http://search.cpan.org/CPAN/authors/id/R/RI/RIBASUSHI/Devel-GlobalDestruction-%{version}.tar.gz
+URL:		http://search.cpan.org/dist/Devel-GlobalDestruction
+Source:		http://search.cpan.org/CPAN/authors/id/H/HA/HAARG/Devel-GlobalDestruction-%{version}.tar.gz
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(id -nu)
-%if %{noarch_package}
 BuildArch:	noarch
-%else
+BuildRequires:	perl
+BuildRequires:	perl(B)
+BuildRequires:	perl(Config)
 BuildRequires:	perl(ExtUtils::CBuilder) >= 0.27
-BuildRequires:	perl(XSLoader)
-Requires:	perl(XSLoader)
-%endif
 BuildRequires:	perl(ExtUtils::MakeMaker)
 BuildRequires:	perl(File::Spec)
 BuildRequires:	perl(File::Temp)
-BuildRequires:	perl(Sub::Exporter::Progressive) >= 0.001002
+BuildRequires:	perl(FindBin)
+BuildRequires:	perl(IPC::Open2)
+BuildRequires:	perl(POSIX)
+BuildRequires:	perl(Sub::Exporter::Progressive) >= 0.001011
+BuildRequires:	perl(Text::ParseWords)
+BuildRequires:	perl(strict)
 BuildRequires:	perl(threads)
+BuildRequires:	perl(threads::shared)
+BuildRequires:	perl(warnings)
 Requires:	perl(:MODULE_COMPAT_%(eval "`perl -V:version`"; echo $version))
 Requires:	perl(Carp)
 
-# Don't "provide" private Perl libs
-%{?perl_default_filter}
+# Use Devel::GlobalDestruction::XS on older perls
+%if %{want_xs}
+BuildRequires:	perl(Devel::GlobalDestruction::XS)
+Requires:	perl(Devel::GlobalDestruction::XS)
+%endif
 
 %description
 Perl's global destruction is a little tricky to deal with with respect to
@@ -43,41 +51,77 @@ global destruction is in effect.
 %setup -q -n Devel-GlobalDestruction-%{version}
 
 %build
-perl Makefile.PL INSTALLDIRS=vendor OPTIMIZE="%{optflags}"
+perl Makefile.PL INSTALLDIRS=vendor
 make %{?_smp_mflags}
 
 %install
 rm -rf %{buildroot}
 make pure_install DESTDIR=%{buildroot}
 find %{buildroot} -type f -name .packlist -exec rm -f {} ';'
-find %{buildroot} -type f -name '*.bs' -a -size 0 -exec rm -f {} ';'
 %{_fixperms} %{buildroot}
 
 %check
-
+make test
 
 %clean
 rm -rf %{buildroot}
 
 %files
-%doc Changes t/
-%if %{noarch_package}
+%doc Changes README t/
 %{perl_vendorlib}/Devel/
-%else
-%{perl_vendorarch}/auto/Devel/
-%{perl_vendorarch}/Devel/
-%endif
 %{_mandir}/man3/Devel::GlobalDestruction.3pm*
 
 %changelog
-* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.09-4
-- 为 Magic 3.0 重建
+* Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.13-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 
-* Thu Jun 12 2014 Liu Di <liudidi@gmail.com> - 0.09-3
-- 为 Magic 3.0 重建
+* Fri Jun 05 2015 Jitka Plesnikova <jplesnik@redhat.com> - 0.13-3
+- Perl 5.22 rebuild
 
-* Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 0.09-2
-- 为 Magic 3.0 重建
+* Thu Aug 28 2014 Jitka Plesnikova <jplesnik@redhat.com> - 0.13-2
+- Perl 5.20 rebuild
+
+* Mon Aug 18 2014 Paul Howarth <paul@city-fan.org> - 0.13-1
+- Update to 0.13
+  - Include README
+  - Include minimum perl version 5.6 in metadata
+
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.12-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Fri Nov  1 2013 Paul Howarth <paul@city-fan.org> - 0.12-1
+- Update to 0.12
+  - Fix detection when loaded during global destruction by checking B::main_cv
+    instead of B::main_start
+  - Bump Sub::Exporter::Progressive dependency to fix loading in global
+    destruction
+- Specify all dependencies
+
+* Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.11-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Mon Jul 22 2013 Petr Pisar <ppisar@redhat.com> - 0.11-2
+- Perl 5.18 rebuild
+
+* Wed Apr  3 2013 Paul Howarth <paul@city-fan.org> - 0.11-1
+- Update to 0.11
+  - Fix upgrading from version 0.09 or older
+- This release by HAARG -> update source URL
+
+* Wed Mar 27 2013 Paul Howarth <paul@city-fan.org> - 0.10-1
+- Update to 0.10 (#928262)
+  - Rewrite pure-perl implementation in terms of B::main_start (greatly
+    simplifies code)
+  - Fix pure-perl behavior under $^C (CPAN RT#78619)
+  - Separate XS portion into a compiler-optional dependency
+    Devel::GlobalDestruction::XS
+- Bump perl(Sub::Exporter::Progressive) version requirement to 0.001006
+- Package is always noarch now
+- BR:/R: perl(Devel::GlobalDestruction::XS) with perl < 5.13.7
+- BR: perl(threads::shared) for the test suite
+
+* Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.09-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
 
 * Thu Aug  9 2012 Paul Howarth <paul@city-fan.org> - 0.09-1
 - Update to 0.09
