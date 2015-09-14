@@ -1,0 +1,38 @@
+From a58e3c83d93dae030de7cbba025d69298b93fd64 Mon Sep 17 00:00:00 2001
+From: "Michael G. Schwern" <mschwern@cpan.org>
+Date: Mon, 14 Apr 2014 16:17:37 +0200
+Subject: [PATCH] Don't grab at Test::Builder hash keys
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Test::Aggregate grabs at an internal Test::Builder hash key rather
+than going through an accessor.  $BUILDER->{Test_Results} can be
+gotten through $BUILDER->details.  Since you only want the current
+test number, $BUILDER->current_test is fine.
+
+Undocumented assumptions about Test::Builder will break in 2.0.
+
+<https://rt.cpan.org/Public/Bug/Display.html?id=64604>
+
+Signed-off-by: Petr Písař <ppisar@redhat.com>
+---
+ lib/Test/Aggregate.pm | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/lib/Test/Aggregate.pm b/lib/Test/Aggregate.pm
+index aeb3ea9..f4c1f6c 100644
+--- a/lib/Test/Aggregate.pm
++++ b/lib/Test/Aggregate.pm
+@@ -303,7 +303,7 @@ sub run {
+     # some tests may have been run in BEGIN blocks.  This is deprecated and
+     # now warns
+     my $tab = 'Test::Aggregate::Builder';
+-    $BUILDER->{$tab}{last_test} = @{ $BUILDER->{Test_Results} } || 0;
++    $BUILDER->{$tab}{last_test} = $BUILDER->current_test || 0;
+     $BUILDER->{$tab}{aggregate_program} = $self->{aggregate_program};
+ 
+     my $current_test = 0;
+-- 
+1.9.0
+
