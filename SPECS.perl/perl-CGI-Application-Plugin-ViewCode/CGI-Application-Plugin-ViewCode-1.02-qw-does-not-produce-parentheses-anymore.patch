@@ -1,0 +1,31 @@
+From fcb9896094b4cc4b35789a2c25b8a5554c9ba20e Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Petr=20P=C3=ADsa=C5=99?= <ppisar@redhat.com>
+Date: Tue, 23 Jul 2013 09:12:11 +0200
+Subject: [PATCH] qw does not produce parentheses anymore
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+<https://rt.cpan.org/Public/Bug/Display.html?id=73317>
+
+Signed-off-by: Petr Písař <ppisar@redhat.com>
+---
+ lib/CGI/Application/Plugin/ViewCode.pm | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/lib/CGI/Application/Plugin/ViewCode.pm b/lib/CGI/Application/Plugin/ViewCode.pm
+index 4bc8c04..adc4075 100644
+--- a/lib/CGI/Application/Plugin/ViewCode.pm
++++ b/lib/CGI/Application/Plugin/ViewCode.pm
+@@ -176,7 +176,7 @@ sub _view_code {
+     my $query = $self->query;
+ 
+     my %options;
+-    foreach my $opt qw(highlight line_no pod) {
++    foreach my $opt (qw(highlight line_no pod)) {
+         if( defined $query->param($opt) ) {
+             $options{$opt} = $query->param($opt);
+         } else {
+-- 
+1.8.1.4
+
