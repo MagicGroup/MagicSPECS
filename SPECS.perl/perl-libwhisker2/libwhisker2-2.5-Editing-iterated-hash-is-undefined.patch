@@ -1,0 +1,42 @@
+From b22b4139d769b6f156350d179eaa54e49176b97f Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Petr=20P=C3=ADsa=C5=99?= <ppisar@redhat.com>
+Date: Tue, 23 Jul 2013 08:07:46 +0200
+Subject: [PATCH] Editing iterated hash is undefined
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+utils_lowercase_keys test fails with Perl 5.18 randomly. Interpreter
+complains:
+
+Use of each() on hash after insertion without resetting hash iterator
+results in undefined behavior, Perl interpreter: 0x23b8010 at
+../LW2.pm line 5890.
+
+This patch replaces each with safe keys.
+
+Signed-off-by: Petr Písař <ppisar@redhat.com>
+---
+ src/utils.pl | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/src/utils.pl b/src/utils.pl
+index f08f0fb..08ce2bd 100644
+--- a/src/utils.pl
++++ b/src/utils.pl
+@@ -174,10 +174,10 @@ sub utils_lowercase_keys {
+     return if ( !( defined $href && ref($href) ) );
+ 
+     my $count = 0;
+-    while ( my ( $key, $val ) = each %$href ) {
++    foreach my $key ( keys %$href ) {
+         if ( $key =~ tr/A-Z// ) {
+             $count++;
+-            delete $$href{$key};
++            my $val = delete $$href{$key};
+             $$href{ lc($key) } = $val;
+         }
+     }
+-- 
+1.8.1.4
+

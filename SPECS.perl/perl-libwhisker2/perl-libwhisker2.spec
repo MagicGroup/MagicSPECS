@@ -3,31 +3,35 @@ Name:           perl-%{real_name}
 Obsoletes:      perl-libwhisker <= 1.8
 Provides:       perl-libwhisker = %{version}-%{release}
 Version:        2.5
-Release:        13%{?dist}
+Release:        14%{?dist}
 Summary:        Perl module geared specifically for HTTP testing
-
 Group:          Development/Libraries
 License:        BSD
 URL:            http://www.wiretrip.net/rfp/lw.asp
-Source0:        http://www.wiretrip.net/rfp/libwhisker/%{real_name}-%{version}.tar.gz
+Source0:        http://downloads.sourceforge.net/whisker/%{real_name}-%{version}.tar.gz
 #install to vendorlib, not sitelib
 Patch0:         %{real_name}-2.4-vendorlib.patch
 #include libwhisker1 compatibility bridge
 Patch1:         %{real_name}-2.4-lw1bridge.patch
-BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-
+# Perl 5.18 compatibility
+Patch2:         %{real_name}-2.5-Editing-iterated-hash-is-undefined.patch
 BuildArch:      noarch
-
 BuildRequires:  perl
-BuildRequires:  perl(Digest::MD5)
-BuildRequires:  perl(IO::Socket)
+BuildRequires:  perl(Config)
+BuildRequires:  perl(Cwd)
+BuildRequires:  perl(Pod::Man)
+# Run-time:
 BuildRequires:  perl(MIME::Base64)
-BuildRequires:  perl(Net::SSLeay)
 BuildRequires:  perl(POSIX)
 BuildRequires:  perl(Socket)
+# Tests:
+BuildRequires:  perl(Digest::MD5)
+BuildRequires:  perl(IO::Select)
+BuildRequires:  perl(IO::Socket)
+BuildRequires:  perl(Net::SSLeay)
 BuildRequires:  perl(Test::Simple)
 # All SSL and network related packages are optional at run time.
-Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
+Requires:       perl(:MODULE_COMPAT_%(eval "`perl -V:version`"; echo $version))
 
 %description
 Libwhisker is a Perl library useful for HTTP testing scripts.  It
@@ -53,6 +57,7 @@ Examples how to use LW(2) Perl module.
 %setup -qn %{real_name}-%{version}
 %patch0 -p1
 %patch1 -p1
+%patch2 -p1
 mv compat/{lw,LW}.pm
 # Fix EOLs
 for F in CHANGES KNOWNBUGS LICENSE README docs/* scripts/*; do
@@ -68,13 +73,10 @@ for F in scripts/*.pl; do
     mv "$F"{.new,}
 done
 
-
 %build
 make %{?_smp_mflags}
 
-
 %install
-rm -rf $RPM_BUILD_ROOT
 # Create directories, not created by Makefile.pl
 mkdir -p $RPM_BUILD_ROOT%{perl_vendorlib}
 mkdir -p $RPM_BUILD_ROOT%{_mandir}/man3
@@ -92,45 +94,43 @@ chmod 0644 $RPM_BUILD_ROOT/%{perl_vendorlib}/*
 cd t 
 perl ./test.pl
 
-%clean
-rm -rf $RPM_BUILD_ROOT
-
-
 %files
-%defattr(-,root,root,-)
 %doc CHANGES KNOWNBUGS LICENSE README
 %{perl_vendorlib}/*
 %{_mandir}/man?/*
 
 %files doc
-%defattr(-,root,root,-)
 %{_datadir}/%{name}
 
-
 %changelog
-* Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 2.5-13
-- 为 Magic 3.0 重建
+* Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.5-14
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 
-* Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 2.5-12
-- 为 Magic 3.0 重建
+* Fri Jun 05 2015 Jitka Plesnikova <jplesnik@redhat.com> - 2.5-13
+- Perl 5.22 rebuild
 
-* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 2.5-11
-- 为 Magic 3.0 重建
+* Thu Aug 28 2014 Jitka Plesnikova <jplesnik@redhat.com> - 2.5-12
+- Perl 5.20 rebuild
 
-* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 2.5-10
-- 为 Magic 3.0 重建
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.5-11
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 
-* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 2.5-9
-- 为 Magic 3.0 重建
+* Sun Aug 04 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.5-10
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
 
-* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 2.5-8
-- 为 Magic 3.0 重建
+* Mon Jul 22 2013 Petr Pisar <ppisar@redhat.com> - 2.5-9
+- Perl 5.18 rebuild
+- Perl 5.18 compatibility
 
-* Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 2.5-7
-- 为 Magic 3.0 重建
+* Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.5-8
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
+- Specify all dependencies
 
-* Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 2.5-6
-- 为 Magic 3.0 重建
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.5-7
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Thu Jun 14 2012 Petr Pisar <ppisar@redhat.com> - 2.5-6
+- Perl 5.16 rebuild
 
 * Sat Jan 14 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.5-5
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
