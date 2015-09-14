@@ -1,6 +1,6 @@
 Name:           perl-Net-Server-SS-PreFork
 Version:        0.05
-Release:        11%{?dist}
+Release:        14%{?dist}
 Summary:        Hot-deployable variant of Net::Server::PreFork
 License:        GPL+ or Artistic
 
@@ -49,6 +49,15 @@ make test
 %{_mandir}/man3/Net*
 
 %changelog
+* Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.05-14
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
+
+* Sat Jun 06 2015 Jitka Plesnikova <jplesnik@redhat.com> - 0.05-13
+- Perl 5.22 rebuild
+
+* Fri Aug 29 2014 Jitka Plesnikova <jplesnik@redhat.com> - 0.05-12
+- Perl 5.20 rebuild
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.05-11
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 
