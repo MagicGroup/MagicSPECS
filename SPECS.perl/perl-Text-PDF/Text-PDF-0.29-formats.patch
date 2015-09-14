@@ -1,0 +1,28 @@
+diff --git a/scripts/pdfbklt b/scripts/pdfbklt
+index 57b3db3..ff078cd 100644
+--- a/scripts/pdfbklt
++++ b/scripts/pdfbklt
+@@ -36,7 +36,7 @@ if (!defined $ARGV[0])
+ modifications at the end.
+ 
+   -b num/size    Specifies which page contains the output page size details [1]
+-            or gives the dimensions of the page in pts (x;y) or A4,ltr,lgl,A5
++            or gives the dimensions of the page in pts (x;y) or A0,A1,A2,A3,A4,A5,ltr,lgl
+   -l        Flag to indicate linear scaling
+   -p num    Specifies the number of pages on the output page (1, 2, 4) [2]
+             If 4, can be 4s to flip on short edge
+@@ -56,6 +56,14 @@ EOT
+ }
+ 
+ %sizes=(
++    'a0' => '2384;3371',
++    'a0l' => '3371;2384',
++    'a1' => '1685;2384',
++    'a1l' => '2384;1685',
++    'a2' => '1190;1684',
++    'a2l' => '1684;1190',
++    'a3' => '842;1190',
++    'a3l' => '1190;842',
+     'a4' => '595;842',
+     'a4l' => '842;595',
+     'ltr' => '612;792',
