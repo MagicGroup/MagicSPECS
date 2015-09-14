@@ -1,0 +1,20 @@
+--- Text-SpellChecker-0.11/lib/Text/SpellChecker.pm	2011-06-24 18:33:16.000000000 +0100
++++ Text-SpellChecker-0.11/lib/Text/SpellChecker.pm	2011-06-25 13:08:24.612108338 +0100
+@@ -144,7 +144,7 @@
+ 
+ =item $Text::SpellCheckerDictionaryPath{Hunspell}
+ 
+-Set this to the hunspell dictionary path.  By default /usr/share/hunspell.
++Set this to the hunspell dictionary path.  By default /usr/share/myspell.
+ 
+ This directory should have $lang.dic and $lang.aff files.
+  
+@@ -191,7 +191,7 @@
+     };
+ }
+ our %DictionaryPath = (
+-    Hunspell => q[/usr/share/hunspell]
++    Hunspell => q[/usr/share/myspell]
+ );
+ 
+ #
