@@ -1,6 +1,6 @@
 Name:           perl-Test-TCP
-Version:        2.02
-Release:        3%{?dist}
+Version:        2.13
+Release:        1%{?dist}
 Summary:        Testing TCP program
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -8,11 +8,24 @@ URL:            http://search.cpan.org/dist/Test-TCP/
 Source0:        http://www.cpan.org/authors/id/T/TO/TOKUHIROM/Test-TCP-%{version}.tar.gz
 BuildArch:      noarch
 
-BuildRequires:  perl(Module::Build)
-BuildRequires:  perl(Test::More) >= 0.98
-BuildRequires:  perl(Test::SharedFork) >= 0.19
-BuildRequires:  perl(Time::HiRes)
+BuildRequires:  perl >= 0:5.008001
+BuildRequires:  perl(base)
+BuildRequires:  perl(Carp)
+BuildRequires:  perl(Config)
+BuildRequires:  perl(Exporter)
+BuildRequires:  perl(ExtUtils::MakeMaker) >= 6.64
+BuildRequires:  perl(File::Temp)
 BuildRequires:  perl(File::Which)
+BuildRequires:  perl(IO::Socket::INET)
+BuildRequires:  perl(IO::Socket::IP)
+BuildRequires:  perl(POSIX)
+BuildRequires:  perl(Socket)
+BuildRequires:  perl(strict)
+BuildRequires:  perl(Test::More) >= 0.98
+BuildRequires:  perl(Test::SharedFork) >= 0.29
+BuildRequires:  perl(Time::HiRes)
+BuildRequires:  perl(warnings)
+
 Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
 
 %description
@@ -21,18 +34,22 @@ Test::TCP is test utilities for TCP/IP program.
 %prep
 %setup -q -n Test-TCP-%{version}
 
+# FIXME: Work around to inconsistency in Test-TCP-2.07
+sed -i -e 's,use Test::SharedFork 0.12;,use Test::SharedFork 0.29;,' lib/Test/TCP.pm
+
 %build
-%{__perl} Build.PL installdirs=vendor
-./Build
+%{__perl} Makefile.PL INSTALLDIRS=vendor
+make %{?_smp_mflags}
 
 %install
-./Build install destdir=$RPM_BUILD_ROOT create_packlist=0
-find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
+make pure_install PERL_INSTALL_ROOT=$RPM_BUILD_ROOT
+
+find $RPM_BUILD_ROOT -type f -name .packlist -exec rm -f {} \;
 
 %{_fixperms} $RPM_BUILD_ROOT/*
 
 %check
-./Build test
+make test
 
 %files
 %doc Changes README*
@@ -40,8 +57,50 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_mandir}/man3/*
 
 %changelog
-* Thu Jun 19 2014 Liu Di <liudidi@gmail.com> - 2.02-3
-- 为 Magic 3.0 重建
+* Sat Jul 25 2015 Ralf Corsépius <corsepiu@fedoraproject.org> - 2.13-1
+- Upstream update.
+
+* Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.12-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
+
+* Fri Jun 05 2015 Jitka Plesnikova <jplesnik@redhat.com> - 2.12-2
+- Perl 5.22 rebuild
+
+* Tue May 19 2015 Ralf Corsépius <corsepiu@fedoraproject.org> - 2.12-1
+- Upstream update.
+- Reflect upstream Source0: having changed.
+
+* Tue Apr 07 2015 Ralf Corsépius <corsepiu@fedoraproject.org> - 2.11-1
+- Upstream update.
+
+* Tue Apr 07 2015 Ralf Corsépius <corsepiu@fedoraproject.org> - 2.10-1
+- Upstream update.
+
+* Fri Apr 03 2015 Ralf Corsépius <corsepiu@fedoraproject.org> - 2.09-1
+- Upstream update.
+
+* Thu Apr 02 2015 Ralf Corsépius <corsepiu@fedoraproject.org> - 2.08-1
+- Upstream update.
+- Reflect Source0: having changed.
+
+* Mon Jan 26 2015 Ralf Corsépius <corsepiu@fedoraproject.org> - 2.07-1
+- Upstream update.
+
+* Wed Aug 27 2014 Jitka Plesnikova <jplesnik@redhat.com> - 2.06-2
+- Perl 5.20 rebuild
+
+* Thu Jul 03 2014 Ralf Corsépius <corsepiu@fedoraproject.org> - 2.06-1
+- Upstream update.
+- Remove Test-TCP-2.02-Wait-infinitely-if-max_wait-is-negative.patch
+  (Patch was incorporated by upstream).
+
+* Mon Jun 30 2014 Ralf Corsépius <corsepiu@fedoraproject.org> - 2.05-1
+- Upstream update.
+- Reflect upstream having switched to ExtUtils::MakeMaker.
+- Rework deps.
+
+* Fri Jun 27 2014 Petr Pisar <ppisar@redhat.com> - 2.02-3
+- Fix a race in a test (bug #1113962)
 
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.02-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
