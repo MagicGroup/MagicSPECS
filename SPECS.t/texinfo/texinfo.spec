@@ -2,7 +2,7 @@
 
 Summary: Tools needed to create Texinfo format documentation files
 Name: texinfo
-Version: 5.2
+Version: 6.0
 Release: 2%{?dist}
 License: GPLv3+
 Group: Applications/Publishing
@@ -10,14 +10,21 @@ Url: http://www.gnu.org/software/texinfo/
 Source0: ftp://ftp.gnu.org/gnu/texinfo/texinfo-%{version}.tar.xz
 Source1: ftp://ftp.gnu.org/gnu/texinfo/texinfo-%{version}.tar.xz.sig
 Source2: info-dir
+# Source5: macro definitions
+Source5: macros.info
 Patch0: texinfo-4.12-zlib.patch
-Patch1: texinfo-4.13a-powerpc.patch
+Patch1: texinfo-6.0-disable-failing-info-test.patch
 Requires(post): /sbin/install-info
 Requires(preun): /sbin/install-info
 Requires: perl >= 5.7.3, perl(Text::Unidecode)
-# Review Request for perl-Unicode-EastAsianWidth - bz874743
-#Requires: perl(Unicode::EastAsianWidth)
+Requires: perl(Unicode::EastAsianWidth), perl(Data::Dumper), perl(Locale::Messages)
 BuildRequires: zlib-devel, ncurses-devel, help2man, perl(Data::Dumper)
+BuildRequires: perl(Locale::Messages), perl(Unicode::EastAsianWidth), perl(Text::Unidecode)
+BuildRequires: perl(Storable)
+
+# Texinfo perl packages are not installed in default perl library dirs
+%global __provides_exclude ^perl\\(.*Texinfo.*\\)$
+%global __requires_exclude ^perl\\(.*Texinfo.*\\)$
 
 %description
 Texinfo is a documentation system that can produce both online
@@ -56,13 +63,12 @@ for printing using TeX.
 %prep
 %setup -q
 %patch0 -p1 -b .zlib
-%patch1 -p1 -b .powerpc
+%patch1 -p1 -b .disable-failing-info-test
 
 %build
 %configure --with-external-Text-Unidecode \
            --with-external-libintl-perl \
-# line below - bz874743
-#            --with-external-Unicode-EastAsianWidth
+           --with-external-Unicode-EastAsianWidth
 make %{?_smp_mflags}
 
 %install
@@ -76,8 +82,15 @@ install -p -m644 doc/texinfo.tex doc/txi-??.tex $RPM_BUILD_ROOT%{tex_texinfo}
 install -p -m644 %{SOURCE2} $RPM_BUILD_ROOT%{_infodir}/dir
 mv $RPM_BUILD_ROOT%{_bindir}/install-info $RPM_BUILD_ROOT/sbin
 
+mkdir -p $RPM_BUILD_ROOT%{_rpmconfigdir}/macros.d
+cp %{SOURCE5} $RPM_BUILD_ROOT%{_rpmconfigdir}/macros.d
+
 %find_lang %{name}
 %find_lang %{name}_document
+
+%check
+export ALL_TESTS=yes
+make %{?_smp_mflags} check
 
 %post
 if [ -f %{_infodir}/texinfo.gz ]; then # --excludedocs?
@@ -115,7 +128,9 @@ fi
 
 
 %files -f %{name}.lang -f %{name}_document.lang
-%doc AUTHORS ChangeLog NEWS README TODO COPYING
+%doc AUTHORS ChangeLog NEWS README TODO
+%{!?_licensedir:%global license %%doc}
+%license COPYING
 %{_bindir}/makeinfo
 %{_bindir}/texi2any
 %{_bindir}/pod2texi
@@ -128,16 +143,16 @@ fi
 
 %files -n info
 %config(noreplace) %verify(not md5 size mtime) %{_infodir}/dir
-%doc COPYING
+%{!?_licensedir:%global license %%doc}
+%license COPYING
 %{_bindir}/info
-%{_bindir}/infokey
 %{_infodir}/info.info*
 %{_infodir}/info-stnd.info*
 /sbin/install-info
 %{_mandir}/man1/info.1*
-%{_mandir}/man1/infokey.1*
 %{_mandir}/man1/install-info.1*
 %{_mandir}/man5/info.5*
+%{_rpmconfigdir}/macros.d/macros.info
 
 %files tex
 %{_bindir}/texindex
@@ -151,8 +166,42 @@ fi
 %{_mandir}/man1/pdftexi2dvi.1*
 
 %changelog
-* Wed Apr 29 2015 Liu Di <liudidi@gmail.com> - 5.2-2
-- 为 Magic 3.0 重建
+* Sun Aug 9 2015 Orion Poplawski <orion@cora.nwra.com> - 6.0-2
+- Add BR on perl(Storable), fix perl requires (bug #1251766)
+
+* Tue Jul 14 2015 Vitezslav Crhonek <vcrhonek@redhat.com> - 6.0-1
+- Update to texinfo-6.0
+  Resolves: #1236254
+
+* Fri Jun 19 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 5.2-10
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
+
+* Sat Feb 21 2015 Till Maas <opensource@till.name> - 5.2-9
+- Rebuilt for Fedora 23 Change
+  https://fedoraproject.org/wiki/Changes/Harden_all_packages_with_position-independent_code
+
+* Mon Feb 02 2015 Vitezslav Crhonek <vcrhonek@redhat.com> - 5.2-8
+- Add macros.info
+  Resolves: #948735
+
+* Thu Oct 30 2014 Vitezslav Crhonek <vcrhonek@redhat.com> - 5.2-7
+- Filter bogus perl requires/provides
+- Enable upstream test suite
+
+* Tue Oct 14 2014 Vitezslav Crhonek <vcrhonek@redhat.com> - 5.2-6
+- Use perl-Unicode-EastAsianWidth
+
+* Mon Aug 18 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 5.2-5
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
+
+* Wed Aug  6 2014 Tom Callaway <spot@fedoraproject.org> - 5.2-4
+- fix license handling
+
+* Sun Jun 08 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 5.2-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Thu Jan 16 2014 Vitezslav Crhonek <vcrhonek@redhat.com> - 5.2-2
+- Fix info segfaults on non existing info page when used with -o
 
 * Tue Oct 01 2013 Vitezslav Crhonek <vcrhonek@redhat.com> - 5.2-1
 - Update to texinfo-5.2
