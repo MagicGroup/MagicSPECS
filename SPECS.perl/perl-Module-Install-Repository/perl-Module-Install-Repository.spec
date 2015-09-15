@@ -1,6 +1,6 @@
 Name:           perl-Module-Install-Repository
 Version:        0.06
-Release:        6%{?dist}
+Release:        10%{?dist}
 Summary:        Automatically sets repository URL from Svn/Svk/Git checkout
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -8,11 +8,10 @@ URL:            http://search.cpan.org/dist/Module-Install-Repository/
 Source0:        http://www.cpan.org/authors/id/M/MI/MIYAGAWA/Module-Install-Repository-%{version}.tar.gz
 BuildArch:      noarch
 BuildRequires:  perl >= 0:5.005
-BuildRequires:  perl(inc::Module::Install)
 BuildRequires:  perl(base)
-BuildRequires:  perl(Module::Install::AuthorTests)
-BuildRequires:  perl(Module::Install::Base)
-BuildRequires:  perl(Module::Install::TestBase)
+BuildRequires:  perl(Cwd)
+BuildRequires:  perl(ExtUtils::MakeMaker)
+BuildRequires:  perl(File::Path)
 # Tests
 BuildRequires:  perl(File::Temp)
 BuildRequires:  perl(Path::Class)
@@ -26,14 +25,9 @@ added to resources under META.yml.
 
 %prep
 %setup -q -n Module-Install-Repository-%{version}
-rm -r inc
-sed -i -e '/^inc\// d' MANIFEST
-sed -i -e '/^auto_set_repository/ d' Makefile.PL
 find -type f -exec chmod -x {} +
 
 %build
-%{__perl} Makefile.PL INSTALLDIRS=vendor
-rm -r inc/.author
 %{__perl} Makefile.PL INSTALLDIRS=vendor
 make %{?_smp_mflags}
 
@@ -44,7 +38,7 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_fixperms} $RPM_BUILD_ROOT/*
 
 %check
-
+make test
 
 %files
 %doc Changes README
@@ -52,14 +46,26 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_mandir}/man3/*
 
 %changelog
-* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.06-6
-- 为 Magic 3.0 重建
+* Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.06-10
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 
-* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.06-5
-- 为 Magic 3.0 重建
+* Fri Jun 05 2015 Jitka Plesnikova <jplesnik@redhat.com> - 0.06-9
+- Perl 5.22 rebuild
 
-* Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 0.06-4
-- 为 Magic 3.0 重建
+* Wed Aug 27 2014 Jitka Plesnikova <jplesnik@redhat.com> - 0.06-8
+- Perl 5.20 rebuild
+
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.06-7
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.06-6
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Wed Jul 31 2013 Petr Pisar <ppisar@redhat.com> - 0.06-5
+- Perl 5.18 rebuild
+
+* Tue Feb  5 2013 Paul Howarth <paul@city-fan.org> - 0.06-4
+- Use included Module::Install to avoid build dependency cycles (#906007)
 
 * Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.06-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
