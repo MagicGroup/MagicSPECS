@@ -1,0 +1,40 @@
+From ae5f5addc848a6e80707f625db58cbb9a633aea7 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Petr=20P=C3=ADsa=C5=99?= <ppisar@redhat.com>
+Date: Wed, 6 May 2015 10:10:46 +0200
+Subject: [PATCH] Upgrade to 0.92
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Signed-off-by: Petr Písař <ppisar@redhat.com>
+---
+ lib/Filter/Simple.pm | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/lib/Filter/Simple.pm b/lib/Filter/Simple.pm
+index 4b15e55..8212919 100644
+--- a/lib/Filter/Simple.pm
++++ b/lib/Filter/Simple.pm
+@@ -4,7 +4,7 @@ use Text::Balanced ':ALL';
+ 
+ use vars qw{ $VERSION @EXPORT };
+ 
+-$VERSION = '0.91';
++$VERSION = '0.92';
+ 
+ use Filter::Util::Call;
+ use Carp;
+@@ -119,8 +119,8 @@ sub gen_std_filter_for {
+         }
+         if ($type =~ /^code/) {
+             my $count = 0;
+-            local $placeholder = qr/\Q$;\E(\C{4})\Q$;\E/;
+-            my $extractor =      qr/\Q$;\E(\C{4})\Q$;\E/;
++            local $placeholder = qr/\Q$;\E(.{4})\Q$;\E/s;
++            my $extractor =      qr/\Q$;\E(.{4})\Q$;\E/s;
+             $_ = join "",
+                   map { ref $_ ? $;.pack('N',$count++).$; : $_ }
+                       @components;
+-- 
+2.1.0
+
