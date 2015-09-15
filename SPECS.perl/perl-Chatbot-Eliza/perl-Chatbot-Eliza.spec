@@ -1,15 +1,19 @@
 Name:           perl-Chatbot-Eliza
-Version:        1.04
-Release:        17%{?dist}
+Version:        1.05
+Release:        5%{?dist}
 Summary:        Implementation of the Eliza algorithm
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 URL:            http://search.cpan.org/dist/Chatbot-Eliza/
-Source0:        http://www.cpan.org/authors/id/J/JN/JNOLAN/Chatbot-Eliza-%{version}.tar.gz
+Source0:        http://search.cpan.org/CPAN/authors/id/N/NE/NEILB/Chatbot-Eliza-%{version}.tar.gz
 BuildArch:      noarch
+BuildRequires:  perl
 BuildRequires:  perl(Carp)
 BuildRequires:  perl(ExtUtils::MakeMaker)
-Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
+BuildRequires:  perl(strict)
+BuildRequires:  perl(Test::More)
+BuildRequires:  perl(warnings)
+Requires:       perl(:MODULE_COMPAT_%(eval "$(perl -V:version)"; echo $version))
 
 %description
 This module implements the classic Eliza algorithm. The original Eliza
@@ -21,46 +25,62 @@ The program is designed to give the appearance of understanding.
 
 %prep
 %setup -q -n Chatbot-Eliza-%{version}
-# quiet rpmlint :)
-chmod -x *
-chmod +x Chatbot
-for enc in deutsch.txt norsk.txt; do
-    iconv -f latin1 -t utf8 ${enc} > ${enc}.utf && \
-      mv ${enc}.utf ${enc}
+cd examples
+find . -type f -exec chmod a-x {} +
+for i in *; do
+    iconv -f latin1 -t utf8 $i > $i.utf8 && \
+    touch -r $i $i.utf8 && \
+    mv $i.utf8 $i
 done
+cd ..
 
 %build
-%{__perl} Makefile.PL INSTALLDIRS=vendor
+perl Makefile.PL INSTALLDIRS=vendor
 make %{?_smp_mflags}
 
 %install
-make pure_install PERL_INSTALL_ROOT=%{buildroot}
-find %{buildroot} -type f -name .packlist -exec rm -f {} \;
-find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null \;
+make pure_install DESTDIR=%{buildroot}
+find %{buildroot} -type f -name .packlist -exec rm -f {} +
 %{_fixperms} %{buildroot}/*
 
 %check
-
+make test
 
 %files
-%doc simple.cgi doctor.txt README simple twobots debug.cgi
-%lang(de) %doc deutsch*
-%lang(no) %doc norsk*
+%doc Changes README LICENSE examples
 %{perl_vendorlib}/*
 %{_mandir}/man3/*
 
 %changelog
-* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.04-17
-- 为 Magic 3.0 重建
+* Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.05-5
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 
-* Thu Jun 12 2014 Liu Di <liudidi@gmail.com> - 1.04-16
-- 为 Magic 3.0 重建
+* Wed Jun 03 2015 Jitka Plesnikova <jplesnik@redhat.com> - 1.05-4
+- Perl 5.22 rebuild
 
-* Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 1.04-15
-- 为 Magic 3.0 重建
+* Tue Aug 26 2014 Jitka Plesnikova <jplesnik@redhat.com> - 1.05-3
+- Perl 5.20 rebuild
 
-* Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 1.04-14
-- 为 Magic 3.0 重建
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.05-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Thu Apr 17 2014 Petr Šabata <contyk@redhat.com> - 1.05-1
+- 1.05 bump
+
+* Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.04-18
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Wed Jul 17 2013 Petr Pisar <ppisar@redhat.com> - 1.04-17
+- Perl 5.18 rebuild
+
+* Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.04-16
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
+
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.04-15
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Sun Jun 10 2012 Petr Pisar <ppisar@redhat.com> - 1.04-14
+- Perl 5.16 rebuild
 
 * Mon Jan 16 2012 Petr Šabata <contyk@redhat.com> - 1.04-13
 - A new build with UTF8 German and Norwegian translations
