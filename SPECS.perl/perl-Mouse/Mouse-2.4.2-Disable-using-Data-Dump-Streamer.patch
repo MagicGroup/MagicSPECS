@@ -1,0 +1,15 @@
+diff -up Mouse-2.4.2/t/001_mouse/043-parameterized-type.t.orig Mouse-2.4.2/t/001_mouse/043-parameterized-type.t
+--- Mouse-2.4.2/t/001_mouse/043-parameterized-type.t.orig	2015-05-15 14:49:16.746036154 +0200
++++ Mouse-2.4.2/t/001_mouse/043-parameterized-type.t	2015-05-15 14:54:29.215872213 +0200
+@@ -249,7 +249,10 @@ for my $i(1 .. 2) {
+     ok  $myhashref->check({ a => 43, b => 100, c => 0 });
+     ok !$myhashref->check({}), 'empty hash';
+     ok !$myhashref->check({ foo => 42 });
+-    {
++    SKIP: {
++	skip 'Data::Dump::Streamer; module is not available', 1 unless
++	    eval 'use Data::Dump::Streamer; 1';
++
+         local $TODO = 'See https://rt.cpan.org/Ticket/Display.html?id=71211'
+             if $Config{archname} =~ /\A ia64 /xmsi;
+ 

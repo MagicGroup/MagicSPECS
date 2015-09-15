@@ -1,36 +1,81 @@
 Name:           perl-Mouse
 Summary:        Moose minus the antlers
-Version:        1.11
-Release:        3%{?dist}
+Version:        2.4.5
+Release:        1%{?dist}
 License:        GPL+ or Artistic
 Group:          Development/Libraries
-Source0:        http://search.cpan.org/CPAN/authors/id/G/GF/GFUJI/Mouse-%{version}.tar.gz 
 URL:            http://search.cpan.org/dist/Mouse
-Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
-
-BuildRequires:  perl(Class::Method::Modifiers)
-BuildRequires:  perl(Declare::Constraints::Simple)
+Source0:        http://search.cpan.org/CPAN/authors/id/S/SY/SYOHEX/Mouse-v%{version}.tar.gz 
+# The build of Data::Dump::Streamer fails with 5.21.x and higher
+# Disable the optional test to build Mouse with Perl 5.22
+Patch0:         Mouse-2.4.2-Disable-using-Data-Dump-Streamer.patch
+# Module Build
+BuildRequires:  perl
 BuildRequires:  perl(Devel::PPPort) >= 3.19
-BuildRequires:  perl(ExtUtils::MakeMaker) >= 6.42
+BuildRequires:  perl(ExtUtils::ParseXS)
 BuildRequires:  perl(Fatal)
-BuildRequires:  perl(IO::File)
-BuildRequires:  perl(IO::String)
-BuildRequires:  perl(Locale::US)
-BuildRequires:  perl(Moose)
-BuildRequires:  perl(MRO::Compat)
-BuildRequires:  perl(Path::Class)
-BuildRequires:  perl(Regexp::Common)
+BuildRequires:  perl(File::Basename)
+BuildRequires:  perl(File::Copy)
+BuildRequires:  perl(File::Find)
+BuildRequires:  perl(File::Spec)
+BuildRequires:  perl(Module::Build::XSUtil)
+BuildRequires:  perl(utf8)
+# Module Runtime
+BuildRequires:  perl(B)
+BuildRequires:  perl(base)
+BuildRequires:  perl(Carp)
+BuildRequires:  perl(constant)
+BuildRequires:  perl(Data::Dumper)
+BuildRequires:  perl(Filter::Simple)
+BuildRequires:  perl(mro)
+BuildRequires:  perl(overload)
 BuildRequires:  perl(Scalar::Util) >= 1.14
-BuildRequires:  perl(Test::Deep)
+BuildRequires:  perl(strict)
+BuildRequires:  perl(Test::Builder)
+BuildRequires:  perl(warnings)
+BuildRequires:  perl(XSLoader) >= 0.02
+# Test Suite
+BuildRequires:  perl(Config)
+BuildRequires:  perl(Cwd)
+BuildRequires:  perl(FindBin)
+BuildRequires:  perl(if)
+BuildRequires:  perl(IO::Handle)
+BuildRequires:  perl(IO::String)
+BuildRequires:  perl(lib)
+BuildRequires:  perl(List::Util)
+BuildRequires:  perl(Test::Builder::Tester)
+BuildRequires:  perl(Test::Exception)
+BuildRequires:  perl(Test::Fatal)
 BuildRequires:  perl(Test::LeakTrace) >= 0.10
 BuildRequires:  perl(Test::More) >= 0.88
+BuildRequires:  perl(Test::Requires)
+BuildRequires:  perl(Tie::Array)
+BuildRequires:  perl(Tie::Hash)
+BuildRequires:  perl(Tie::Scalar)
+# Optional Tests
+%if ! 0%(perl -e 'print $] >= 5.022')
+BuildRequires:  perl(Data::Dump::Streamer)
+%endif
+BuildRequires:  perl(Declare::Constraints::Simple)
+BuildRequires:  perl(HTTP::Headers)
+BuildRequires:  perl(Locale::US)
+BuildRequires:  perl(Moose)
+BuildRequires:  perl(Params::Coerce)
+BuildRequires:  perl(Path::Class)
+BuildRequires:  perl(Pod::Coverage::Moose)
+BuildRequires:  perl(Regexp::Common)
+BuildRequires:  perl(Test)
+BuildRequires:  perl(Test::Deep)
 BuildRequires:  perl(Test::Output)
-BuildRequires:  perl(XSLoader) >= 0.02
-
+BuildRequires:  perl(URI)
+# Runtime
+Requires:       perl(:MODULE_COMPAT_%(eval "`perl -V:version`"; echo $version))
 Requires:       perl(Scalar::Util) >= 1.14
+Requires:       perl(Data::Dumper)
+Requires:       perl(mro)
 Requires:       perl(XSLoader) >= 0.02
 
-# virtual provides for perl-Any-Moose
+# Virtual provides for perl-Any-Moose
 Provides:       perl(Any-Moose) = %{version}
 
 %{?perl_default_filter}
@@ -58,42 +103,113 @@ This module provides some useful test functions for Mouse based classes. It is
 an experimental first release, so comments and suggestions are very welcome.
 
 %prep
-%setup -q -n Mouse-%{version}
+%setup -q -n Mouse-v%{version}
+%if 0%(perl -e 'print $] >= 5.022')
+%patch0 -p1
+%endif
 
-find .           -type f -exec chmod -c -x {} +
-find t/ xt/ benchmarks/ example/ tool/ -type f -print0 \
-| xargs -0 sed -i '1s|^#!.*perl|#!%{__perl}|'
+# Fix permissions
+find . -type f -exec chmod -c -x {} ';'
+
+# Fix shellbangs
+find t/ xt/ benchmarks/ example/ tool/ -type f -print0 |
+  xargs -0 sed -i '1s|^#!.*perl|#!%{__perl}|'
 
 %build
-%{__perl} Makefile.PL INSTALLDIRS=vendor
-make %{?_smp_mflags}
+perl Build.PL --installdirs=vendor
+./Build
 
 %install
-make pure_install DESTDIR=%{buildroot}
-find %{buildroot} -type f -name .packlist -exec rm -f {} ';'
+./Build install --destdir=%{buildroot} --create_packlist=0
 find %{buildroot} -type f -name '*.bs' -a -size 0 -exec rm -f {} ';'
-find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null ';'
-
-%{_fixperms} %{buildroot}/*
+%{_fixperms} %{buildroot}
 
 %check
-make test
+./Build test
 
 %files
 %doc Changes benchmarks/ example/ tool/ t/ xt/
-%{perl_vendorarch}/*
-%exclude %dir %{perl_vendorarch}/auto
-%{_mandir}/man3/*.3*
-%exclude %{perl_vendorarch}/Test
-%exclude %{_mandir}/man3/Test::Mouse*
+%{perl_vendorarch}/auto/Mouse/
+%{perl_vendorarch}/Mouse.pm
+%{perl_vendorarch}/Mouse/
+%{perl_vendorarch}/ouse.pm
+%{perl_vendorarch}/Squirrel.pm
+%{perl_vendorarch}/Squirrel/
+%{_mandir}/man3/Mouse.3*
+%{_mandir}/man3/Mouse::Exporter.3*
+%{_mandir}/man3/Mouse::Meta::Attribute.3*
+%{_mandir}/man3/Mouse::Meta::Class.3*
+%{_mandir}/man3/Mouse::Meta::Method.3*
+%{_mandir}/man3/Mouse::Meta::Method::Accessor.3*
+%{_mandir}/man3/Mouse::Meta::Method::Constructor.3*
+%{_mandir}/man3/Mouse::Meta::Method::Delegation.3*
+%{_mandir}/man3/Mouse::Meta::Method::Destructor.3*
+%{_mandir}/man3/Mouse::Meta::Module.3*
+%{_mandir}/man3/Mouse::Meta::Role.3*
+%{_mandir}/man3/Mouse::Meta::Role::Application.3*
+%{_mandir}/man3/Mouse::Meta::Role::Composite.3*
+%{_mandir}/man3/Mouse::Meta::Role::Method.3*
+%{_mandir}/man3/Mouse::Meta::TypeConstraint.3*
+%{_mandir}/man3/Mouse::Object.3*
+%{_mandir}/man3/Mouse::PurePerl.3*
+%{_mandir}/man3/Mouse::Role.3*
+%{_mandir}/man3/Mouse::Spec.3*
+%{_mandir}/man3/Mouse::Tiny.3*
+%{_mandir}/man3/Mouse::TypeRegistry.3*
+%{_mandir}/man3/Mouse::Util.3*
+%{_mandir}/man3/Mouse::Util::MetaRole.3*
+%{_mandir}/man3/Mouse::Util::TypeConstraints.3*
+%{_mandir}/man3/Mouse::XS.3*
+%{_mandir}/man3/ouse.3*
+%{_mandir}/man3/Squirrel.3*
+%{_mandir}/man3/Squirrel::Role.3*
 
 %files -n perl-Test-Mouse
-%{perl_vendorarch}/Test
-%{_mandir}/man3/Test::Mouse*
+%{perl_vendorarch}/Test/
+%{_mandir}/man3/Test::Mouse.3*
 
 %changelog
-* Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 1.11-3
-- 为 Magic 3.0 重建
+* Sun Aug 16 2015 Emmanuel Seyman <emmanuel@seyman.fr> - 2.4.5-1
+- Update to 2.4.5
+- Drop upstreamed patches
+
+* Fri Jun 26 2015 Petr Pisar <ppisar@redhat.com> - 2.4.2-5
+- Fix interaction with threads in perl-5.22 (bug #1235938)
+
+* Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.4.2-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
+
+* Mon Jun 08 2015 Jitka Plesnikova <jplesnik@redhat.com> - 2.4.2-3
+- Perl 5.22 rebuild
+
+* Wed Jun 03 2015 Jitka Plesnikova <jplesnik@redhat.com> - 2.4.2-2
+- Disable using of Data::Dump::Streamer with Perl 5.22
+
+* Sun Apr 12 2015 Emmanuel Seyman <emmanuel@seyman.fr> - 2.4.2-1
+- Update to 2.4.2
+
+* Tue Oct  7 2014 Paul Howarth <paul@city-fan.org> - 2.4.1-1
+- Update to 2.4.1
+  - Merged the pull-request #13, which fixed an issue where the behavior of
+    role method confliction was different from Moose; this change might affect
+    your existing code so the major version has incremented (see
+    t/030_roles/role_conflict_and_inheritance.t for details)
+  - Dropped 5.6.2 support
+  - Migrated to Minilla
+  - Fixed #16 (Inconsistent coercion/validation of Bool type)
+  - Fixed #17 (Memory leak in applying roles to instances)
+- Classify buildreqs by usage
+- Switch to Module::Build flow
+- Make %%files list more explicit
+
+* Mon Sep 01 2014 Jitka Plesnikova <jplesnik@redhat.com> - 1.13-3
+- Perl 5.20 rebuild
+
+* Sun Aug 17 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.13-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
+
+* Wed Aug 06 2014 Jitka Plesnikova <jplesnik@redhat.com> - 1.13-1
+- 1.13 bump
 
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.11-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
