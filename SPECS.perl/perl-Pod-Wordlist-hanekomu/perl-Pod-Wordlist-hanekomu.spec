@@ -3,36 +3,46 @@
 %global older_test_more %(perl -MTest::More -e 'print (($Test::More::VERSION < 0.88) ? 1 : 0);' 2>/dev/null || echo 0)
 %global even_older_test_more %(perl -MTest::More -e 'print (($Test::More::VERSION < 0.82) ? 1 : 0);' 2>/dev/null || echo 0)
 %global old_test_spelling %(perl -MTest::Spelling -e 'print (($Test::Spelling::VERSION < 0.12) ? 1 : 0);' 2>/dev/null || echo 0)
+%global old_pod_wordlist %(perl -MPod::Wordlist -e 'print (($Pod::Wordlist::VERSION < 1.06) ? 1 : 0);' 2>/dev/null || echo 0)
 
 # noarch, but to avoid debug* files interfering with manifest test:
 %global debug_package %{nil}
 
 Name:		perl-Pod-Wordlist-hanekomu
-Version:	1.122840
-Release:	9%{?dist}
+Version:	1.132680
+Release:	7%{?dist}
 Summary:	Add words for spell checking POD
 Group:		Development/Libraries
 License:	GPL+ or Artistic
 URL:		https://metacpan.org/module/Pod::Wordlist::hanekomu/
 Source0:	http://cpan.metacpan.org/authors/id/D/DA/DAGOLDEN/Pod-Wordlist-hanekomu-%{version}.tar.gz
+Patch0:		Pod-Wordlist-hanekomu-1.132680-stopwords.patch
 Patch1:		Pod-Wordlist-hanekomu-1.110090-Test::More-version.patch
-Patch2:		Pod-Wordlist-hanekomu-1.121370-Test::More-done_testing.patch
+Patch2:		Pod-Wordlist-hanekomu-1.132680-Test::More-done_testing.patch
 Patch3:		Pod-Wordlist-hanekomu-1.113620-Test::More-note.patch
-Patch4:		Pod-Wordlist-hanekomu-1.122840-old-Test::Spelling.patch
+Patch4:		Pod-Wordlist-hanekomu-1.132680-old-Test::Spelling.patch
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(id -nu)
 BuildArch:	noarch
 # ===================================================================
+# Module Build requirements
+# ===================================================================
+BuildRequires:	perl(ExtUtils::MakeMaker) >= 6.30
+# ===================================================================
 # Module requirements
 # ===================================================================
-BuildRequires:	perl(Carp)
-BuildRequires:	perl(English)
-BuildRequires:	perl(ExtUtils::MakeMaker)
-BuildRequires:	perl(File::Find)
-BuildRequires:	perl(File::Temp)
-BuildRequires:	perl(Scalar::Util)
-BuildRequires:	perl(Test::More)
+BuildRequires:	perl(strict)
 BuildRequires:	perl(Test::Spelling), aspell-en
 BuildRequires:	perl(utf8)
+BuildRequires:	perl(warnings)
+# ===================================================================
+# Test Suite requirements
+# ===================================================================
+BuildRequires:	perl(Carp)
+BuildRequires:	perl(File::Spec)
+BuildRequires:	perl(IO::Handle)
+BuildRequires:	perl(IPC::Open3)
+BuildRequires:	perl(Scalar::Util)
+BuildRequires:	perl(Test::More)
 # ===================================================================
 # Author/Release test requirements
 #
@@ -41,7 +51,9 @@ BuildRequires:	perl(utf8)
 # their author/release tests.
 # ===================================================================
 %if 0%{!?perl_bootstrap:1}
+BuildRequires:	perl(English)
 BuildRequires:	perl(Pod::Coverage::TrustPod)
+BuildRequires:	perl(Pod::Wordlist)
 BuildRequires:	perl(Test::HasVersion)
 BuildRequires:	perl(Test::CheckChanges)
 BuildRequires:	perl(Test::CPAN::Meta)
@@ -57,7 +69,11 @@ BuildRequires:	perl(Test::Portability::Files)
 BuildRequires:	perl(Test::Synopsis)
 # Test::Vars requires Perl 5.10 and so is not available in EPEL-5
 %if "%{?rhel}" != "5"
+# Disable using of Test::Vars, because it failed with Perl 5.22.0
+# There is not a properly fix for it yet
+%if ! 0%(perl -e 'print $] >= 5.022')
 BuildRequires:	perl(Test::Vars)
+%endif
 %endif
 %endif
 # ===================================================================
@@ -85,11 +101,16 @@ word list (e.g. mixin, munging).
 %endif
 # done_testing requires Test::More ≥ 0.88
 %if %{older_test_more}
-%patch2 -p1
+%patch2
 %endif
 # note() requires Test::More ≥ 0.82
 %if %{even_older_test_more}
 %patch3 -p1
+%endif
+
+# Need to use our own stopwords unless we have Pod::Wordlist ≥ 1.06
+%if %{old_pod_wordlist}
+%patch0
 %endif
 
 # Don't really need Test::Spelling ≥ 0.12
@@ -108,7 +129,7 @@ find %{buildroot} -type f -name .packlist -exec rm -f {} \;
 %{_fixperms} %{buildroot}
 
 %check
- %{!?perl_bootstrap:AUTHOR_TESTING=1 RELEASE_TESTING=1}
+make test %{!?perl_bootstrap:AUTHOR_TESTING=1 RELEASE_TESTING=1}
 
 %clean
 rm -rf %{buildroot}
@@ -119,29 +140,44 @@ rm -rf %{buildroot}
 %{_mandir}/man3/Pod::Wordlist::hanekomu.3pm*
 
 %changelog
-* Sun Jun 15 2014 Liu Di <liudidi@gmail.com> - 1.122840-9
-- 为 Magic 3.0 重建
+* Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.132680-7
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 
-* Sun Jun 15 2014 Liu Di <liudidi@gmail.com> - 1.122840-8
-- 为 Magic 3.0 重建
+* Wed Jun 10 2015 Jitka Plesnikova <jplesnik@redhat.com> - 1.132680-6
+- Perl 5.22 re-rebuild of bootstrapped packages
+- Disable using of Test::Vars with Perl 5.22
 
-* Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 1.122840-7
-- 为 Magic 3.0 重建
+* Sat Jun 06 2015 Jitka Plesnikova <jplesnik@redhat.com> - 1.132680-5
+- Perl 5.22 rebuild
 
-* Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 1.122840-6
-- 为 Magic 3.0 重建
+* Sun Sep 07 2014 Jitka Plesnikova <jplesnik@redhat.com> - 1.132680-4
+- Perl 5.20 re-rebuild of bootstrapped packages
 
-* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.122840-5
-- 为 Magic 3.0 重建
+* Mon Sep 01 2014 Jitka Plesnikova <jplesnik@redhat.com> - 1.132680-3
+- Perl 5.20 rebuild
 
-* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.122840-4
-- 为 Magic 3.0 重建
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.132680-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 
-* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.122840-3
-- 为 Magic 3.0 重建
+* Thu Sep 26 2013 Paul Howarth <paul@city-fan.org> - 1.132680-1
+- Update to 1.132680
+  - Marked as deprecated now that words are merged into Pod::Wordlist
+- Classify buildreqs by usage
+- Update patches as needed
+- Add further patch to support building with Pod::Wordlist < 1.06
 
-* Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 1.122840-2
-- 为 Magic 3.0 重建
+* Wed Aug 14 2013 Jitka Plesnikova <jplesnik@redhat.com> - 1.130240-4
+- Perl 5.18 re-rebuild of bootstrapped packages
+
+* Sun Aug 04 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.130240-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Sun Jul 21 2013 Petr Pisar <ppisar@redhat.com> - 1.130240-2
+- Perl 5.18 rebuild
+
+* Thu Jan 24 2013 Paul Howarth <paul@city-fan.org> - 1.130240-1
+- Update 1.130240
+  - Added "rjbs", "mst", "subclass", "subclasses" and "tuple"
 
 * Wed Oct 10 2012 Paul Howarth <paul@city-fan.org> - 1.122840-1
 - Update to 1.122840
