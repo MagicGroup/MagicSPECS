@@ -1,38 +1,45 @@
-Name:       perl-local-lib
-Version:    1.008010
-Release:    6%{?dist}
-# lib/local/lib.pm -> GPL+ or Artistic
-License:    GPL+ or Artistic
-Group:      Development/Libraries
-Summary:    Create and use a local lib/ for perl modules
-Source:     http://search.cpan.org/CPAN/authors/id/E/ET/ETHER/local-lib-%{version}.tar.gz
-# Allow evaluation in CSH, RHBZ #849609, CPAN RT #60072
-Patch0:     local-lib-1.008009-Append-semicolon-to-setenv.patch
-# Fix setting variables in CSH, RHBZ# 1033018, CPAN RT #85667,
-# upstream is going the refactor the whole code, patch not sent to upstream
-Patch1:     local-lib-1.008010-Fix-setting-undefined-variable-in-CSH.patch
-Url:        http://search.cpan.org/dist/local-lib
-Requires:   perl(:MODULE_COMPAT_%(eval "`perl -V:version`"; echo $version))
-BuildArch:  noarch
-
-Source10:   perl-homedir.sh
-Source11:   perl-homedir.csh
-
-BuildRequires: perl(Carp)
-BuildRequires: perl(Cwd)
-BuildRequires: perl(CPAN) >= 1.82
-BuildRequires: perl(ExtUtils::Install) >= 1.43
-BuildRequires: perl(ExtUtils::MakeMaker) >= 6.42
-BuildRequires: perl(File::Path)
-BuildRequires: perl(File::Spec)
-BuildRequires: perl(inc::Module::Install)
-BuildRequires: perl(Module::Build) >= 0.36
+Name:           perl-local-lib
+Version:        2.000015
+Release:        4%{?dist}
+License:        GPL+ or Artistic
+Group:          Development/Libraries
+Summary:        Create and use a local lib/ for perl modules
+Url:            http://search.cpan.org/dist/local-lib
+Source:         http://search.cpan.org/CPAN/authors/id/H/HA/HAARG/local-lib-%{version}.tar.gz
+Source10:       perl-homedir.sh
+Source11:       perl-homedir.csh
+BuildArch:      noarch
+# Build
+BuildRequires:  perl
+BuildRequires:  perl(CPAN)
+BuildRequires:  perl(CPAN::HandleConfig)
+BuildRequires:  perl(ExtUtils::MakeMaker) >= 7.00
+BuildRequires:  perl(File::HomeDir)
+BuildRequires:  perl(File::Spec)
+BuildRequires:  perl(strict)
+BuildRequires:  perl(warnings)
+# Runtime
+BuildRequires:  perl(Carp)
+BuildRequires:  perl(Carp::Heavy)
+BuildRequires:  perl(Config)
+BuildRequires:  perl(File::Basename)
+BuildRequires:  perl(File::Glob)
 # Tests only
-BuildRequires: perl(Capture::Tiny)
-BuildRequires: perl(File::Temp)
-BuildRequires: perl(Test::More)
-
-%{?perl_default_filter}
+BuildRequires:  perl(base)
+BuildRequires:  perl(Cwd)
+BuildRequires:  perl(Data::Dumper)
+BuildRequires:  perl(Exporter)
+BuildRequires:  perl(File::Path)
+BuildRequires:  perl(File::Temp)
+BuildRequires:  perl(IPC::Open3)
+BuildRequires:  perl(lib)
+BuildRequires:  perl(Test::More) >= 0.81
+Requires:       perl(:MODULE_COMPAT_%(eval "`perl -V:version`"; echo $version))
+Requires:       perl(Carp)
+Requires:       perl(Carp::Heavy)
+Requires:       perl(File::Basename)
+Requires:       perl(File::Glob)
+Requires:       perl(File::Spec)
 
 %description
 This module provides a quick, convenient way of bootstrapping a user-
@@ -54,7 +61,8 @@ License:    GPL+ or Artistic
 Group:      Development/Libraries
 Summary:    Per-user Perl local::lib setup
 Requires:   %{name} = %{version}-%{release}
-Requires:   /usr/bin/cpan
+Requires:   %{_bindir}/cpan
+Requires:   /bin/sed
 
 %description -n perl-homedir
 perl-homedir configures the system to automatically create a ~/perl5
@@ -67,17 +75,13 @@ install this package.
 
 %prep
 %setup -q -n local-lib-%{version}
-%patch0 -p1
-%patch1 -p1
-rm -rf inc
 
 %build
-perl Makefile.PL INSTALLDIRS=vendor
+perl Makefile.PL INSTALLDIRS=vendor NO_PACKLIST=1
 make %{?_smp_mflags}
 
 %install
 make pure_install DESTDIR=%{buildroot}
-find %{buildroot} -type f -name .packlist -exec rm -f {} ';'
 %{_fixperms} %{buildroot}/*
 mkdir -p %{buildroot}%{_sysconfdir}/profile.d
 cp %{SOURCE10} %{buildroot}%{_sysconfdir}/profile.d/
@@ -95,8 +99,30 @@ make test
 %{_sysconfdir}/profile.d/*
 
 %changelog
-* Sun Jun 15 2014 Liu Di <liudidi@gmail.com> - 1.008010-6
-- 为 Magic 3.0 重建
+* Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.000015-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
+
+* Sat Jun 06 2015 Jitka Plesnikova <jplesnik@redhat.com> - 2.000015-3
+- Perl 5.22 rebuild
+
+* Thu Jan 15 2015 Petr Pisar <ppisar@redhat.com> - 2.000015-2
+- Do not hard-code /usr/bin
+
+* Wed Dec 17 2014 Petr Šabata <contyk@redhat.com> - 2.000015-1
+- 2.000015 bump
+
+* Tue Nov 11 2014 Jitka Plesnikova <jplesnik@redhat.com> - 2.000014-1
+- 2.000014 bump
+
+* Thu Aug 28 2014 Jitka Plesnikova <jplesnik@redhat.com> - 1.008010-8
+- Perl 5.20 rebuild
+
+* Mon Jul 28 2014 Petr Pisar <ppisar@redhat.com> - 1.008010-7
+- sed(1) is packaged as /bin/sed
+
+* Fri Jul 25 2014 Petr Pisar <ppisar@redhat.com> - 1.008010-6
+- Parse perl-homedir configuration bash syntax by csh profile script
+  (bug #1122993)
 
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.008010-5
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
