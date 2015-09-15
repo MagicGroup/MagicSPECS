@@ -1,10 +1,10 @@
 Name:           perl-Catalyst-Runtime
 Summary:        Catalyst Framework Runtime
-Version:        5.90019
-Release:        6%{?dist}
+Version:        5.90101
+Release:        1%{?dist}
 License:        GPL+ or Artistic
-Group:          Development/Libraries
-Source0:        http://search.cpan.org/CPAN/authors/id/B/BO/BOBTFISH/Catalyst-Runtime-%{version}.tar.gz
+
+Source0:        http://search.cpan.org/CPAN/authors/id/J/JJ/JJNAPIORK/Catalyst-Runtime-%{version}.tar.gz
 URL:            http://search.cpan.org/dist/Catalyst-Runtime/
 Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
 BuildArch:      noarch
@@ -13,6 +13,7 @@ BuildRequires:  groff
 BuildRequires:  /usr/bin/perldoc
 BuildRequires:  perl(Carp)
 BuildRequires:  perl(CGI::Simple::Cookie) >= 1.109
+BuildRequires:  perl(CGI::Struct)
 BuildRequires:  perl(Class::C3::Adopt::NEXT) >= 0.07
 BuildRequires:  perl(Class::Data::Inheritable)
 BuildRequires:  perl(Class::Load) >= 0.12
@@ -29,6 +30,8 @@ BuildRequires:  perl(HTTP::Request) >= 5.814
 BuildRequires:  perl(HTTP::Request::AsCGI) >= 1.0
 BuildRequires:  perl(HTTP::Request::Common)
 BuildRequires:  perl(HTTP::Response) >= 5.813
+BuildRequires:  perl(IO::Scalar)
+BuildRequires:  perl(JSON::MaybeXS)
 BuildRequires:  perl(List::MoreUtils)
 BuildRequires:  perl(LWP::UserAgent)
 BuildRequires:  perl(Module::Pluggable) >= 3.9
@@ -42,6 +45,9 @@ BuildRequires:  perl(namespace::autoclean) >= 0.09
 BuildRequires:  perl(namespace::clean) >= 0.23
 BuildRequires:  perl(Path::Class) >= 0.09
 BuildRequires:  perl(Plack) >= 0.9991
+BuildRequires:  perl(Plack::Middleware::FixMissingBodyInRedirect) >= 0.09
+BuildRequires:  perl(Plack::Middleware::MethodOverride)
+BuildRequires:  perl(Plack::Middleware::RemoveRedundantBody) >= 0.03
 BuildRequires:  perl(Plack::Middleware::ReverseProxy) >= 0.04
 BuildRequires:  perl(Plack::Test::ExternalServer)
 BuildRequires:  perl(Safe::Isa)
@@ -50,6 +56,7 @@ BuildRequires:  perl(String::RewritePrefix) >= 0.004
 BuildRequires:  perl(Sub::Exporter)
 BuildRequires:  perl(Task::Weaken)
 BuildRequires:  perl(Test::Exception)
+BuildRequires:  perl(Test::Fatal)
 BuildRequires:  perl(Test::More) >= 0.88
 BuildRequires:  perl(Text::Balanced)
 BuildRequires:  perl(Text::SimpleTable) >= 0.03
@@ -57,7 +64,9 @@ BuildRequires:  perl(Time::HiRes)
 BuildRequires:  perl(Tree::Simple) >= 1.15
 BuildRequires:  perl(Tree::Simple::Visitor::FindByPath)
 BuildRequires:  perl(Try::Tiny)
+BuildRequires:  perl(Type::Tiny)
 BuildRequires:  perl(URI) >= 1.35
+BuildRequires:  perl(URI::ws)
 
 BuildRequires:  perl(Class::Accessor::Fast)
 BuildRequires:  perl(Class::C3)
@@ -103,10 +112,9 @@ Requires:       perl(Text::SimpleTable) >= 0.03
 Requires:       perl(Tree::Simple) >= 1.15
 Requires:       perl(URI) >= 1.35
 
-# obolete/provide old tests subpackage
-# can be removed during F19 development cycle
-Obsoletes:      %{name}-tests < 5.90007-2
-Provides:       %{name}-tests = %{version}-%{release}
+# obsolete/provide Unicode encoding plugin (folded into runtime)
+Provides:       perl-Catalyst-Plugin-Unicode-Encoding = 99.0
+Obsoletes:      perl-Catalyst-Plugin-Unicode-Encoding <= 1.9
 
 %{?perl_default_filter}
 
@@ -136,13 +144,11 @@ find .  -type f -exec chmod -c -x {} +
 find t/ -type f -exec perl -pi -e 's|^#!perl|#!%{__perl}|' {} +
 
 %build
-PERL5_CPANPLUS_IS_RUNNING=1 %{__perl} Makefile.PL INSTALLDIRS=vendor
+PERL5_CPANPLUS_IS_RUNNING=1 %{__perl} Makefile.PL INSTALLDIRS=vendor NO_PACKLIST=1
 make %{?_smp_mflags}
 
 %install
 make pure_install DESTDIR=%{buildroot}
-
-find %{buildroot} -type f -name .packlist -exec rm -f {} \;
 
 %{_fixperms} %{buildroot}/*
 
@@ -167,7 +173,7 @@ make test
 make clean
 
 %files
-%doc Changes COPYING* README t/
+%doc Changes
 %{perl_vendorlib}/*
 %{_mandir}/man3/*
 
@@ -176,8 +182,60 @@ make clean
 %{_mandir}/man1/*
 
 %changelog
-* Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 5.90019-6
-- 为 Magic 3.0 重建
+* Wed Sep 09 2015 Emmanuel Seyman <emmanuel@seyman.fr> - 5.90101-1
+- Update to 5.90101
+
+* Sun Aug 30 2015 Emmanuel Seyman <emmanuel@seyman.fr> - 5.90100-1
+- Update to 5.90100
+- Remove tests subpackage
+
+* Thu Jul 30 2015 Emmanuel Seyman <emmanuel@seyman.fr> - 5.90097-1
+- Update to 5.90097
+
+* Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 5.90093-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
+
+* Mon Jun 08 2015 Jitka Plesnikova <jplesnik@redhat.com> - 5.90093-2
+- Perl 5.22 rebuild
+
+* Sun Jun 07 2015 Emmanuel Seyman <emmanuel@seyman.fr> - 5.90093-1
+- Update to 5.90093
+
+* Sun May 24 2015 Emmanuel Seyman <emmanuel@seyman.fr> - 5.90092-1
+- Update to 5.90092
+
+* Thu May 14 2015 Emmanuel Seyman <emmanuel@seyman.fr> - 5.90091-1
+- Update to 5.90091
+
+* Sun Feb 22 2015 Emmanuel Seyman <emmanuel@seyman.fr> - 5.90083-1
+- Update to 5.90083
+
+* Thu Feb 05 2015 Petr Pisar <ppisar@redhat.com> - 5.90082-3
+- Remove unneeded dependency on Test::WWW::Mechanize::Catalyst causing a build
+  cycle
+
+* Thu Feb 05 2015 Petr Pisar <ppisar@redhat.com> - 5.90082-2
+- Remove unneeded dependency on Catalyst::Action::RenderView causing a build
+  cycle
+
+* Sun Jan 11 2015 Emmanuel Seyman <emmanuel@seyman.fr> - 5.90082-1
+- Update to 5.90082
+
+* Sun Jan 04 2015 Emmanuel Seyman <emmanuel@seyman.fr> - 5.90079-1
+- Update to 5.90079
+
+* Thu Jan 01 2015 Emmanuel Seyman <emmanuel@seyman.fr> - 5.90078-1
+- Update to 5.90078
+
+* Sun Dec 14 2014 Emmanuel Seyman <emmanuel@seyman.fr> - 5.90077-2
+- Obsolete/provide Unicode encoding plugin (folded into runtime)
+- Fix upstream URL
+
+* Fri Nov 28 2014 Emmanuel Seyman <emmanuel@seyman.fr> - 5.90077-1
+- Update to 5.90077
+
+* Tue Sep 02 2014 Jitka Plesnikova <jplesnik@redhat.com> - 5.90019-6
+- Perl 5.20 rebuild
 
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 5.90019-5
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
