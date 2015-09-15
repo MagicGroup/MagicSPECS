@@ -1,6 +1,6 @@
 Name:           perl-MooX-HandlesVia
-Version:        0.001005
-Release:        5%{?dist}
+Version:        0.001008
+Release:        3%{?dist}
 Summary:        NativeTrait-like behavior for Moo
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -63,16 +63,28 @@ find $RPM_BUILD_ROOT -type f -name .packlist -exec rm -f {} \;
 make test
 
 %files
-%doc Changes LICENSE README TODO
+%doc Changes LICENSE TODO
 %{perl_vendorlib}/*
 %{_mandir}/man3/*
 
 %changelog
-* Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 0.001005-5
-- 为 Magic 3.0 重建
+* Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.001008-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 
-* Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 0.001005-4
-- 为 Magic 3.0 重建
+* Mon Jun 08 2015 Jitka Plesnikova <jplesnik@redhat.com> - 0.001008-2
+- Perl 5.22 rebuild
+
+* Sat Apr 04 2015 Ralf Corsépius <corsepiu@fedoraproject.org> - 0.001008-1
+- Upstream update.
+
+* Tue Feb 17 2015 Ralf Corsépius <corsepiu@fedoraproject.org> - 0.001007-1
+- Upstream update.
+
+* Mon Jan 26 2015 Ralf Corsépius <corsepiu@fedoraproject.org> - 0.001006-1
+- Upstream update.
+
+* Mon Sep 01 2014 Jitka Plesnikova <jplesnik@redhat.com> - 0.001005-4
+- Perl 5.20 rebuild
 
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.001005-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
