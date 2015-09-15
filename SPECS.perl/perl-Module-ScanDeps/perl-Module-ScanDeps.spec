@@ -1,13 +1,17 @@
 Name:           perl-Module-ScanDeps
 Summary:        Recursively scan Perl code for dependencies
-Version:        1.13
+Version:        1.19
 Release:        4%{?dist}
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 Source0:        http://search.cpan.org/CPAN/authors/id/R/RS/RSCHUPP/Module-ScanDeps-%{version}.tar.gz 
 URL:            http://search.cpan.org/dist/Module-ScanDeps/
 BuildArch:      noarch
-
+BuildRequires:  perl
+BuildRequires:  perl(ExtUtils::MakeMaker) >= 6.76
+BuildRequires:  perl(ExtUtils::MM_Unix)
+BuildRequires:  perl(FindBin)
+BuildRequires:  perl(Fcntl)
 BuildRequires:  perl(strict)
 # Run-time:
 BuildRequires:  perl(B)
@@ -25,8 +29,11 @@ BuildRequires:  perl(File::Path)
 BuildRequires:  perl(File::Spec)
 BuildRequires:  perl(File::Temp)
 BuildRequires:  perl(FileHandle)
-BuildRequires:  perl(Module::Build::ModuleInfo)
+# Getopt::Long not used by tests
+BuildRequires:  perl(Module::Metadata)
 # Storable is optional and not used by tests
+# subs not used by tests
+# Text::ParseWords not used by tests
 BuildRequires:  perl(vars)
 BuildRequires:  perl(version)
 # VMS::Filespec never used
@@ -45,9 +52,10 @@ BuildRequires:  perl(Module::Pluggable)
 BuildRequires:  perl(prefork)
 %endif
 BuildRequires:  perl(Test::Pod) >= 1.00
-Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
+Requires:       perl(:MODULE_COMPAT_%(eval "$(perl -V:version)"; echo $version))
 Requires:       perl(Encode)
 Requires:       perl(File::Find)
+Requires:       perl(Text::ParseWords)
 
 %description
 This module scans potential modules used by perl programs and returns a
@@ -58,12 +66,11 @@ Test/More.pm).  The values are hash references.
 %setup -q -n Module-ScanDeps-%{version}
 
 %build
-%{__perl} Makefile.PL INSTALLDIRS=vendor
+perl Makefile.PL INSTALLDIRS=vendor NO_PACKLIST=1
 make %{?_smp_mflags}
 
 %install
 make pure_install DESTDIR=%{buildroot}
-find %{buildroot} -type f -name .packlist -exec rm -f {} \;
 %{_fixperms} %{buildroot}
 
 %check
@@ -77,8 +84,36 @@ make test
 %{_mandir}/man3/Module::ScanDeps.3pm*
 
 %changelog
-* Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 1.13-4
-- 为 Magic 3.0 重建
+* Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.19-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
+
+* Wed Jun 10 2015 Jitka Plesnikova <jplesnik@redhat.com> - 1.19-3
+- Perl 5.22 re-rebuild of bootstrapped packages
+
+* Fri Jun 05 2015 Jitka Plesnikova <jplesnik@redhat.com> - 1.19-2
+- Perl 5.22 rebuild
+
+* Thu May 28 2015 Petr Šabata <contyk@redhat.com> - 1.19-1
+- 1.19 bump
+
+* Fri Jan 30 2015 Petr Šabata <contyk@redhat.com> - 1.18-1
+- 1.18 bump
+
+* Tue Nov 04 2014 Petr Pisar <ppisar@redhat.com> - 1.17-1
+- 0.17 bump
+
+* Mon Sep 08 2014 Jitka Plesnikova <jplesnik@redhat.com> - 1.15-3
+- Perl 5.20 re-rebuild of bootstrapped packages
+
+* Thu Aug 28 2014 Jitka Plesnikova <jplesnik@redhat.com> - 1.15-2
+- Perl 5.20 rebuild
+
+* Mon Aug 25 2014 Petr Pisar <ppisar@redhat.com> - 1.15-1
+- 1.15 bump
+
+* Mon Aug 11 2014 Petr Šabata <contyk@redhat.com> - 1.14-1
+- 1.14 bump
+- Add the bundled Module::Install dependencies to the BR list
 
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.13-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
