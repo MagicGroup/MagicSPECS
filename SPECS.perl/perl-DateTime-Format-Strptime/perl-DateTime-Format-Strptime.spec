@@ -1,21 +1,41 @@
+# RPM and CPAN versioning don't match
+%global cpanversion 1.56
+
 Name:           perl-DateTime-Format-Strptime
-Version:        1.5000
-Release:        10%{?dist}
-Summary:        Parse and format strp and strf time patterns
+Version:        %{cpanversion}00
+Release:        4%{?dist}
+Summary:        Parse and format strptime and strftime patterns
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 URL:            http://search.cpan.org/dist/DateTime-Format-Strptime/
-Source0:        http://www.cpan.org/authors/id/R/RI/RICKM/DateTime-Format-Strptime-%{version}.tar.gz
-BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+Source0:        http://www.cpan.org/authors/id/D/DR/DROLSKY/DateTime-Format-Strptime-%{cpanversion}.tar.gz
+BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(id -nu)
 BuildArch:      noarch
-BuildRequires:  perl(Class::ISA)
-BuildRequires:  perl(DateTime) >= 0.44
+BuildRequires:  perl
+BuildRequires:  perl(ExtUtils::MakeMaker)
+BuildRequires:  perl(strict)
+BuildRequires:  perl(warnings)
+# Run-time:
+BuildRequires:  perl(Carp)
+BuildRequires:  perl(DateTime) >= 1.00
 BuildRequires:  perl(DateTime::Locale) >= 0.45
 BuildRequires:  perl(DateTime::TimeZone) >= 0.79
-BuildRequires:  perl(ExtUtils::MakeMaker)
+BuildRequires:  perl(Exporter)
 BuildRequires:  perl(Params::Validate) >= 0.64
-BuildRequires:  perl(Test::More)
-Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
+BuildRequires:  perl(vars)
+# Tests:
+BuildRequires:  perl(File::Spec)
+BuildRequires:  perl(IO::Handle)
+BuildRequires:  perl(IPC::Open3)
+# Pod::Coverage::TrustPod not used
+# Pod::Wordlist not used
+BuildRequires:  perl(Test::More) >= 0.88
+# Test::NoTabs not used
+# Test::Pod 1.41 not used
+# Test::Pod::Coverage 1.08 not used
+# Test::Spelling 0.12 not used
+BuildRequires:  perl(utf8)
+Requires:       perl(:MODULE_COMPAT_%(eval "`perl -V:version`"; echo $version))
 
 %description
 This module implements most of strptime(3), the POSIX function that is the
@@ -24,43 +44,81 @@ pattern and returns a string, strptime takes a string and a pattern and
 returns the DateTime object associated.
 
 %prep
-%setup -q -n DateTime-Format-Strptime-%{version}
+%setup -q -n DateTime-Format-Strptime-%{cpanversion}
 
 %build
-%{__perl} Makefile.PL INSTALLDIRS=vendor
+perl Makefile.PL INSTALLDIRS=vendor
 make %{?_smp_mflags}
 
 %install
 rm -rf $RPM_BUILD_ROOT
-
-make pure_install PERL_INSTALL_ROOT=$RPM_BUILD_ROOT
-
+make pure_install DESTDIR=$RPM_BUILD_ROOT
 find $RPM_BUILD_ROOT -type f -name .packlist -exec rm -f {} \;
-find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
-
-%{_fixperms} $RPM_BUILD_ROOT/*
+%{_fixperms} $RPM_BUILD_ROOT
 
 %check
-
+make test
 
 %clean
 rm -rf $RPM_BUILD_ROOT
 
 %files
-%defattr(-,root,root,-)
-%doc Changes LICENSE README
-%{perl_vendorlib}/*
-%{_mandir}/man3/*
+%doc Changes LICENSE README.md
+%{perl_vendorlib}/DateTime/
+%{_mandir}/man3/DateTime::Format::Strptime.3pm*
 
 %changelog
-* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.5000-10
-- 为 Magic 3.0 重建
+* Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.5600-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 
-* Thu Jun 12 2014 Liu Di <liudidi@gmail.com> - 1.5000-9
-- 为 Magic 3.0 重建
+* Sat Jun 06 2015 Jitka Plesnikova <jplesnik@redhat.com> - 1.5600-3
+- Perl 5.22 rebuild
 
-* Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 1.5000-8
-- 为 Magic 3.0 重建
+* Fri Aug 29 2014 Jitka Plesnikova <jplesnik@redhat.com> - 1.5600-2
+- Perl 5.20 rebuild
+
+* Tue Aug 12 2014 Petr Pisar <ppisar@redhat.com> - 1.5600-1
+- 1.56 bump
+
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.5500-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Sun May  4 2014 Paul Howarth <paul@city-fan.org> - 1.5500-1
+- Update to 1.55 (rpm version 1.5500 to maintain upgrade path)
+  - If diagnostic is true for an object, it will now use Test::More::diag()
+    under the test harness rather than printing to STDOUT
+  - The %%z specifier will now parse UTC offsets with a colon like "+01:00"
+    (CPAN RT#91458)
+  - Made the regexes to parse day and months abbreviations and names a little
+    more specificl as it stood, they tended to eat up more non-word characters
+    than they should, so a pattern like '%%a%%m%%d_%%Y' broke on a date like
+    'Fri0215_2013' - the day name would be parsed as 'Fri02' and the month
+    would not be parsed at all (CPAN RT#93863, CPAN RT#93865)
+- Specify all dependencies
+- Use DESTDIR rather than PERL_INSTALL_ROOT
+
+* Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.5400-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Wed Jul 31 2013 Petr Pisar <ppisar@redhat.com> - 1.5400-2
+- Perl 5.18 rebuild
+
+* Wed Apr  3 2013 Paul Howarth <paul@city-fan.org> - 1.5400-1
+- Update to 1.54 (rpm version 1.5400 to maintain upgrade path)
+  - Packaging cleanup, including listing Test::More as a test prereq, not a
+    runtime prereq (CPAN RT#76128)
+  - Shut up "unescaped braces in regex" warning from 5.17.0 (CPAN RT#77514)
+  - A fix in DateTime.pm 1.00 broke a test in this distro (CPAN RT#84371)
+  - Require DateTime.pm 1.00 because without it tests will break
+- Specify all dependencies
+- This release by DROLSKY -> update source URL
+- Drop %%defattr, redundant since rpm 4.4
+- Don't need to remove empty directories from the buildroot
+- Don't use macros for commands
+- Make %%files list more explicit
+
+* Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.5000-8
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
 
 * Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.5000-7
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
@@ -84,7 +142,7 @@ rm -rf $RPM_BUILD_ROOT
 - Update to 1.5000.
 
 * Thu Dec 16 2010 Marcela Maslanova <mmaslano@redhat.com> - 1.2000-3
-- 661697 rebuild for fixing problems with vendorach/lib
+- Rebuild to fix problems with vendorarch/lib (#661697)
 
 * Tue Jun 15 2010 Petr Sabata <psabata@redhat.com> - 1.2000-1
 - Update to the latest upstream release
