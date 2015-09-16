@@ -1,13 +1,12 @@
 Name:           perl-Tie-IxHash
-Version:        1.22
-Release:        12%{?dist}
+Version:        1.23
+Release:        4%{?dist}
 Summary:        Ordered associative arrays for Perl
 
 Group:          Development/Libraries
 License:        GPL+ or Artistic
 URL:            http://search.cpan.org/dist/Tie-IxHash/
 Source0:        http://search.cpan.org/CPAN/authors/id/C/CH/CHORNY/Tie-IxHash-%{version}.tar.gz
-Patch0:         Tie-IxHash-1.22-Makefile.patch
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildArch:      noarch
@@ -28,9 +27,6 @@ familiar perl array operations can also be performed on the IxHash.
 %prep
 %setup -q -n Tie-IxHash-%{version}
 
-# Fix Makefile.PL to work with old ExtUtils::MakeMaker versions
-%patch0 -p1
-
 # Fix line endings
 sed -i -e 's/\r$//' Changes README
 
@@ -49,7 +45,7 @@ chmod -R u+w $RPM_BUILD_ROOT/*
 
 
 %check
-
+make test
 
 
 %clean
@@ -64,11 +60,38 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
-* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.22-12
-- 为 Magic 3.0 重建
+* Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.23-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 
-* Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 1.22-11
-- 为 Magic 3.0 重建
+* Wed Jun 10 2015 Jitka Plesnikova <jplesnik@redhat.com> - 1.23-3
+- Perl 5.22 re-rebuild of bootstrapped packages
+
+* Wed Jun 03 2015 Jitka Plesnikova <jplesnik@redhat.com> - 1.23-2
+- Perl 5.22 rebuild
+
+* Fri Mar 27 2015 Tom Callaway <spot@fedoraproject.org> - 1.23-1
+- update to 1.23
+
+* Sun Sep 07 2014 Jitka Plesnikova <jplesnik@redhat.com> - 1.22-17
+- Perl 5.20 rebuild
+
+* Wed Aug 27 2014 Jitka Plesnikova <jplesnik@redhat.com> - 1.22-16
+- Perl 5.20 rebuild
+
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.22-15
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Wed Aug 14 2013 Jitka Plesnikova <jplesnik@redhat.com> - 1.22-14
+- Perl 5.18 re-rebuild of bootstrapped packages
+
+* Sun Aug 04 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.22-13
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Mon Jul 15 2013 Petr Pisar <ppisar@redhat.com> - 1.22-12
+- Perl 5.18 rebuild
+
+* Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.22-11
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
 
 * Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.22-10
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
@@ -131,7 +154,7 @@ rm -rf $RPM_BUILD_ROOT
 * Thu Dec 29 2005 Jose Pedro Oliveira <jpo at di.uminho.pt> - 1.21-4
 - Dist tag.
 
-* Fri Apr  7 2005 Michael Schwendt <mschwendt[AT]users.sf.net> - 1.21-3
+* Thu Dec 29 2005 Michael Schwendt <mschwendt[AT]users.sf.net> - 1.21-3
 - Rebuilt
 
 * Sun May  9 2004 Jose Pedro Oliveira <jpo at di.uminho.pt> - 0:1.21-0.fdr.2
