@@ -1,12 +1,10 @@
 Name:           perl-Data-JavaScript
 Version:        1.13
-Release:        10%{?dist}
+Release:        16%{?dist}
 Summary:        Dump perl data structures into JavaScript code
 License:        GPL+ or Artistic
-Group:          Development/Libraries
 URL:            http://search.cpan.org/dist/Data-JavaScript/
 Source0:        http://www.cpan.org/authors/id/J/JP/JPIERCE/Data-JavaScript-%{version}.tgz
-BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 BuildRequires:  perl(ExtUtils::MakeMaker)
 Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
@@ -26,8 +24,6 @@ structures created on the server.
 make %{?_smp_mflags}
 
 %install
-rm -rf $RPM_BUILD_ROOT
-
 make pure_install PERL_INSTALL_ROOT=$RPM_BUILD_ROOT
 
 find $RPM_BUILD_ROOT -type f -name .packlist -exec rm -f {} \;
@@ -36,29 +32,43 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_fixperms} $RPM_BUILD_ROOT/*
 
 %check
-
-
-%clean
-rm -rf $RPM_BUILD_ROOT
+make test
 
 %files
-%defattr(-,root,root,-)
 %doc CHANGES README TODO
 %{perl_vendorlib}/*
 %{_mandir}/man3/*
 
 %changelog
-* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.13-10
-- 为 Magic 3.0 重建
+* Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.13-16
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 
-* Thu Jun 12 2014 Liu Di <liudidi@gmail.com> - 1.13-9
-- 为 Magic 3.0 重建
+* Wed Jun 03 2015 Jitka Plesnikova <jplesnik@redhat.com> - 1.13-15
+- Perl 5.22 rebuild
 
-* Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 1.13-8
-- 为 Magic 3.0 重建
+* Wed Aug 27 2014 Jitka Plesnikova <jplesnik@redhat.com> - 1.13-14
+- Perl 5.20 rebuild
 
-* Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 1.13-7
-- 为 Magic 3.0 重建
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.13-13
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.13-12
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Wed Jul 17 2013 Petr Pisar <ppisar@redhat.com> - 1.13-11
+- Perl 5.18 rebuild
+
+* Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.13-10
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
+
+* Sun Jan 06 2013 Emmanuel Seyman <emmanuel@seyman.fr> - 1.13-9
+- Remove no-longer-used macros
+
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.13-8
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Mon Jun 11 2012 Petr Pisar <ppisar@redhat.com> - 1.13-7
+- Perl 5.16 rebuild
 
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.13-6
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
