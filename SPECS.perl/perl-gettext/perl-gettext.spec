@@ -1,6 +1,6 @@
 Name:           perl-gettext
 Version:        1.05
-Release:        27%{?dist}
+Release:        34%{?dist}
 Summary:        Interface to gettext family of functions
 
 Group:          Development/Libraries
@@ -11,6 +11,13 @@ Patch0:         http://patch-tracking.debian.net/patch/series/view/liblocale-get
 
 BuildRequires:	perl(ExtUtils::MakeMaker)
 BuildRequires:	gettext
+# Run-time:
+BuildRequires:  perl(Carp)
+BuildRequires:  perl(Exporter)
+# Encode is optional
+# Tests:
+BuildRequires:  perl(Data::Dumper)
+BuildRequires:  perl(Test)
 Requires:  perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
 
 Obsoletes:	perl-Locale-gettext <= 1.05
@@ -45,7 +52,7 @@ case "$LANG" in
 ''|'C'|'POSIX' ) 
   export LANG=en_US.UTF-8;;
 esac
-
+make test
 
 
 %files
@@ -57,14 +64,36 @@ esac
 
 
 %changelog
-* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.05-27
-- 为 Magic 3.0 重建
+* Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.05-34
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 
-* Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 1.05-26
-- 为 Magic 3.0 重建
+* Wed Jun 03 2015 Jitka Plesnikova <jplesnik@redhat.com> - 1.05-33
+- Perl 5.22 rebuild
 
-* Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 1.05-25
-- 为 Magic 3.0 重建
+* Tue Aug 26 2014 Jitka Plesnikova <jplesnik@redhat.com> - 1.05-32
+- Perl 5.20 rebuild
+
+* Sun Aug 17 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.05-31
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
+
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.05-30
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Sun Aug 04 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.05-29
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Wed Jul 17 2013 Petr Pisar <ppisar@redhat.com> - 1.05-28
+- Perl 5.18 rebuild
+
+* Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.05-27
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
+
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.05-26
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Thu Jun 07 2012 Petr Pisar <ppisar@redhat.com> - 1.05-25
+- Perl 5.16 rebuild
+- Specify all dependencies
 
 * Sun Jan 22 2012 Ralf Corsépius <corsepiu@fedoraproject.org> - 1.05-24
 - Add %%{?perl_default_filter}.
@@ -119,7 +148,7 @@ esac
 - Rebuild.
 
 * Wed Nov 02 2005 Ralf Corsepius <rc040203@freenet.de> - 1.05-7
-- Work-around to "" not supporting LC_MESSAGES=POSIX.
+- Work-around to "make test" not supporting LC_MESSAGES=POSIX.
 
 * Wed Nov 02 2005 Ralf Corsepius <rc040203@freenet.de> - 1.05-6
 - Obsoletes: perl-Locale-gettext <= 1.05.
