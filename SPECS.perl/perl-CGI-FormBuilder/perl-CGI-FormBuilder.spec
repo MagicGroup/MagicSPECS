@@ -1,22 +1,42 @@
 Name:           perl-CGI-FormBuilder
-Version:        3.0501
-Release:        23%{?dist}
+%global         cpanversion 3.09
+Version:        %{cpanversion}00
+Release:        1%{?dist}
 Summary:        Easily generate and process stateful forms
 
-Group:          Development/Libraries
 License:        GPL+ or Artistic
 URL:            http://search.cpan.org/dist/CGI-FormBuilder/
-Source0:        http://search.cpan.org/CPAN/authors/id/N/NW/NWIGER/CGI-FormBuilder-%{version}.tgz
-BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+Source0:        http://search.cpan.org/CPAN/authors/id/N/NW/NWIGER/CGI-FormBuilder-%{cpanversion}.tgz
 
 BuildArch:      noarch
-BuildRequires:  perl(ExtUtils::MakeMaker)
-BuildRequires:  perl(HTML::Template)
-BuildRequires:  perl(Text::Template)
-BuildRequires:  perl(Template)
+BuildRequires:  coreutils
+BuildRequires:  findutils
+BuildRequires:  make
+BuildRequires:  perl
+BuildRequires:  perl(base)
+BuildRequires:  perl(Carp)
 BuildRequires:  perl(CGI::Session)
 BuildRequires:  perl(CGI::FastTemplate)
+BuildRequires:  perl(ExtUtils::MakeMaker)
+BuildRequires:  perl(File::Find)
+BuildRequires:  perl(FindBin)
+BuildRequires:  perl(HTML::Template)
+BuildRequires:  perl(Scalar::Util)
+BuildRequires:  perl(Template)
+BuildRequires:  perl(Test)
+BuildRequires:  perl(Text::Template)
+BuildRequires:  perl(vars)
+BuildRequires:  perl(warnings)
+BuildRequires:  sed
 Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
+
+%if 0%{?el6}
+%filter_from_requires /perl(CGI::SSI)/d
+%filter_setup
+%else
+%?perl_default_filter
+%global __requires_exclude %{?__requires_exclude:%__requires_exclude|}perl\\(CGI::SSI\\)$
+%endif
 
 %description
 The goal of CGI::FormBuilder (FormBuilder) is to provide an easy way
@@ -24,60 +44,72 @@ for you to generate and process entire CGI form-based
 applications.
 
 %prep
-%setup -q -n CGI-FormBuilder-%{version}
+%setup -q -n CGI-FormBuilder-%{cpanversion}
 find . -name \*.orig -delete
 sed -i -e '/\.orig$/d' MANIFEST
+# skip failing tests due to hash randomization
+# see https://rt.cpan.org/Public/Bug/Display.html?id=81650
+rm -f t/2d-template-fast.t
 
 %build
 %{__perl} Makefile.PL INSTALLDIRS=vendor
 make %{?_smp_mflags}
 
 %install
-rm -rf $RPM_BUILD_ROOT
-make pure_install PERL_INSTALL_ROOT=$RPM_BUILD_ROOT
+make pure_install DESTDIR=$RPM_BUILD_ROOT
 find $RPM_BUILD_ROOT -type f -name .packlist -exec rm -f {} ';'
-find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null ';'
-chmod -R u+w $RPM_BUILD_ROOT/*
+%{_fixperms} %{buildroot}/*
 
 %check
-
-
-%clean
-rm -rf $RPM_BUILD_ROOT
+make test
 
 %files
-%defattr(-,root,root,-)
 %doc Changes README
 %{perl_vendorlib}/*
 %{_mandir}/man3/*.3*
 
 %changelog
-* Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 3.0501-23
-- 为 Magic 3.0 重建
+* Fri Aug 28 2015 Jitka Plesnikova <jplesnik@redhat.com> - 3.0900-1
+- 3.09 bump
 
-* Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 3.0501-22
-- 为 Magic 3.0 重建
+* Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.0800-7
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 
-* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 3.0501-21
-- 为 Magic 3.0 重建
+* Sat Jun 06 2015 Jitka Plesnikova <jplesnik@redhat.com> - 3.0800-6
+- Perl 5.22 rebuild
 
-* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 3.0501-20
-- 为 Magic 3.0 重建
+* Fri Aug 29 2014 Jitka Plesnikova <jplesnik@redhat.com> - 3.0800-5
+- Perl 5.20 rebuild
 
-* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 3.0501-19
-- 为 Magic 3.0 重建
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.0800-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 
-* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 3.0501-18
-- 为 Magic 3.0 重建
+* Wed May 28 2014 Ken Dreyer <ktdreyer@ktdreyer.com> - 3.0800-3
+- filter CGI::SSI from requires on EL6
 
-* Thu Jun 12 2014 Liu Di <liudidi@gmail.com> - 3.0501-17
-- 为 Magic 3.0 重建
+* Sat Aug 10 2013 Iain Arnell <iarnell@gmail.com> 3.0800-2
+- filter optional CGI::SSI from requires
 
-* Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 3.0501-16
-- 为 Magic 3.0 重建
+* Sat Aug 10 2013 Iain Arnell <iarnell@gmail.com> 3.0800-1
+- update to latest upstream version
+- skip failing tests due to hash randomization
+- clean up spec for modern rpmbuild
+- use perl_default filter
 
-* Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 3.0501-15
-- 为 Magic 3.0 重建
+* Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.0501-19
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Sat Jul 27 2013 Petr Pisar <ppisar@redhat.com> - 3.0501-18
+- Perl 5.18 rebuild
+
+* Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.0501-17
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
+
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.0501-16
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Thu Jun 21 2012 Petr Pisar <ppisar@redhat.com> - 3.0501-15
+- Perl 5.16 rebuild
 
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.0501-14
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
