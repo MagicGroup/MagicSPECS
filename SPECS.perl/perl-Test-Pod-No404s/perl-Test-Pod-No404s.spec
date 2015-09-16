@@ -1,42 +1,47 @@
-# Remove once apocalypse gets into build root. But keep the BuildRequires
-# conditional blocks to utlize apocalypse during futher package life.
-%define perl_bootstrap 1
-
 Name:           perl-Test-Pod-No404s
-Version:        0.01
-Release:        14%{?dist}
+Version:        0.02
+Release:        4%{?dist}
 Summary:        Checks POD for HTTP 404 links
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 URL:            http://search.cpan.org/dist/Test-Pod-No404s/
 Source0:        http://www.cpan.org/authors/id/A/AP/APOCAL/Test-Pod-No404s-%{version}.tar.gz
 BuildArch:      noarch
-BuildRequires:  perl(Module::Build)
+BuildRequires:  perl
+# ExtUtils::MakeMaker not needed
+BuildRequires:  perl(Module::Build::Tiny) >= 0.039
+BuildRequires:  perl(strict)
+BuildRequires:  perl(warnings)
 # Run-Time:
-BuildRequires:  perl(LWP::UserAgent) >= 5.834
-BuildRequires:  perl(Pod::Simple::Text) >= 3.13
-BuildRequires:  perl(Test::Builder) >= 0.94
-BuildRequires:  perl(Test::Pod) >= 1.40
-BuildRequires:  perl(URI::Find) >= 20090319
+BuildRequires:  perl(Exporter)
+BuildRequires:  perl(LWP::UserAgent)
+BuildRequires:  perl(parent)
+BuildRequires:  perl(Pod::Simple::Text)
+BuildRequires:  perl(Test::Builder)
+BuildRequires:  perl(Test::Pod)
+BuildRequires:  perl(URI::Find)
 # Tests:
-BuildRequires:  perl(Test::More)
+BuildRequires:  perl(File::Spec)
+BuildRequires:  perl(File::Temp)
+BuildRequires:  perl(IO::Handle)
+BuildRequires:  perl(IPC::Open3)
+BuildRequires:  perl(Test::More) >= 0.88
 # Optional tests:
-BuildRequires:  perl(Test::NoWarnings)
 # Break build-time cycle with perl-Test-Apocalypse
 %if %{undefined perl_bootstrap}
-BuildRequires:  perl(Test::Apocalypse)
-BuildRequires:  perl(Test::Pod)
-BuildRequires:  perl(Test::Pod::Coverage)
-%endif
-Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
-Requires:       perl(LWP::UserAgent) >= 5.834
-Requires:       perl(Pod::Simple::Text) >= 3.13
-Requires:       perl(Test::Builder) >= 0.94
-Requires:       perl(Test::Pod) >= 1.40
-Requires:       perl(URI::Find) >= 20090319
 
-# Remove under-specified dependencies
-%global __requires_exclude %{?__requires_exclude:%__requires_exclude|}^perl\\((LWP::UserAgent|Pod::Simple::Text|Test::Builder|Test::Pod|URI::Find)\\)$
+# Disable using of Test::Apocalypse, because it cannot be built with Perl 5.22
+# due to failing perl-Test-Vars
+%if ! 0%(perl -e 'print $] >= 5.022')
+BuildRequires:  perl(Test::Apocalypse) >= 1.000
+%endif
+%endif
+Requires:       perl(:MODULE_COMPAT_%(eval "`perl -V:version`"; echo $version))
+# Inject correct provide, bug #1160263
+Provides:       perl(Test::Pod::No404s) = %{version}
+
+# Filter bogus provide, bug #1160263
+%global __provides_exclude %{?__provides_exclude:%__provides_exclude|}^perl\\(Test::Pod::No404s\\) = 404$
 
 %description
 This module looks for any HTTP(S) links in your POD and verifies that they
@@ -48,52 +53,55 @@ it uses $response->is_error as the "test".
 %setup -q -n Test-Pod-No404s-%{version}
 
 %build
-%{__perl} Build.PL installdirs=vendor
+perl Build.PL --installdirs=vendor
 ./Build
 
 %install
-./Build install destdir=$RPM_BUILD_ROOT create_packlist=0
-find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
+./Build install "--destdir=$RPM_BUILD_ROOT" --create_packlist=0
 %{_fixperms} $RPM_BUILD_ROOT/*
 
 %check
 ./Build test
 
 %files
-%doc Changes examples LICENSE README
+%doc AUTHOR_PLEDGE Changes CommitLog examples LICENSE README
 %{perl_vendorlib}/*
 %{_mandir}/man3/*
 
 %changelog
-* Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 0.01-14
-- 为 Magic 3.0 重建
+* Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.02-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 
-* Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 0.01-13
-- 为 Magic 3.0 重建
+* Wed Jun 10 2015 Jitka Plesnikova <jplesnik@redhat.com> - 0.02-3
+- Perl 5.22 re-rebuild of bootstrapped packages
+- Disable using of Test::Apocalypse with Perl 5.22
 
-* Sun Jun 15 2014 Liu Di <liudidi@gmail.com> - 0.01-12
-- 为 Magic 3.0 重建
+* Sat Jun 06 2015 Jitka Plesnikova <jplesnik@redhat.com> - 0.02-2
+- Perl 5.22 rebuild
 
-* Sun Jun 15 2014 Liu Di <liudidi@gmail.com> - 0.01-11
-- 为 Magic 3.0 重建
+* Tue Nov 04 2014 Petr Pisar <ppisar@redhat.com> - 0.02-1
+- 0.02 bump
 
-* Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 0.01-10
-- 为 Magic 3.0 重建
+* Sun Sep 07 2014 Jitka Plesnikova <jplesnik@redhat.com> - 0.01-11
+- Perl 5.20 re-rebuild of bootstrapped packages
 
-* Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 0.01-9
-- 为 Magic 3.0 重建
+* Thu Aug 28 2014 Jitka Plesnikova <jplesnik@redhat.com> - 0.01-10
+- Perl 5.20 rebuild
 
-* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.01-8
-- 为 Magic 3.0 重建
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.01-9
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 
-* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.01-7
-- 为 Magic 3.0 重建
+* Wed Aug 14 2013 Jitka Plesnikova <jplesnik@redhat.com> - 0.01-8
+- Perl 5.18 re-rebuild of bootstrapped packages
 
-* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.01-6
-- 为 Magic 3.0 重建
+* Sun Aug 04 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.01-7
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
 
-* Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 0.01-5
-- 为 Magic 3.0 重建
+* Wed Jul 24 2013 Petr Pisar <ppisar@redhat.com> - 0.01-6
+- Perl 5.18 rebuild
+
+* Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.01-5
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
 
 * Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.01-4
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
