@@ -1,16 +1,14 @@
 Name:           perl-perlmenu
 Version:        4.0
-Release:        19%{?dist}
+Release:        26%{?dist}
 Summary:        Perl library module for curses-based menus & data-entry templates
 
 Group:          Development/Libraries
 License:        LGPLv2 or Artistic clarified
-URL:            http://search.cpan.org/dist/perlmenu/
-Source0:        http://search.cpan.org/CPAN/authors/id/S/SK/SKUNZ/perlmenu.v%{version}.tar.gz
+URL:            http://www.public.iastate.edu/~skunz/PerlMenu/homepage.html
+Source0:        ftp://ftp.iastate.edu/pub/perl/perlmenu.v%{version}.tar.Z
 Patch0:         getcapforperl5.patch
 BuildArch:      noarch
-BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-
 Requires:  perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
 
 %description
@@ -29,28 +27,43 @@ sed -i -e 's|/usr/local/bin/perl5|%{__perl}|' examples/*
 %{__perl} create_menu.pl 
 
 %install
-rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT%{perl_vendorlib}
 install -p -m 644 perlmenu.pm $RPM_BUILD_ROOT%{perl_vendorlib}
 
-
-%clean
-rm -rf $RPM_BUILD_ROOT
-
 %files
-%defattr(-,root,root,-)
 %doc FAQ MENUUTIL_DOC MENU_DOC README RELEASE_NOTES TO_DO COPYING examples
 %{perl_vendorlib}/*
 
 %changelog
-* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 4.0-19
-- 为 Magic 3.0 重建
+* Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 4.0-26
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 
-* Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 4.0-18
-- 为 Magic 3.0 重建
+* Wed Jun 03 2015 Jitka Plesnikova <jplesnik@redhat.com> - 4.0-25
+- Perl 5.22 rebuild
 
-* Mon Jan 30 2012 Liu Di <liudidi@gmail.com> - 4.0-17
-- 为 Magic 3.0 重建
+* Wed Aug 27 2014 Jitka Plesnikova <jplesnik@redhat.com> - 4.0-24
+- Perl 5.20 rebuild
+
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 4.0-23
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Fri Oct 04 2013 Parag <paragn AT fedoraproject DOT org> - 4.0-22
+- Fix Source url for reported source audit
+
+* Sun Aug 04 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 4.0-21
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Wed Jul 17 2013 Petr Pisar <ppisar@redhat.com> - 4.0-20
+- Perl 5.18 rebuild
+
+* Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 4.0-19
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
+
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 4.0-18
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Sun Jun 10 2012 Petr Pisar <ppisar@redhat.com> - 4.0-17
+- Perl 5.16 rebuild
 
 * Sat Jan 14 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 4.0-16
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
@@ -88,7 +101,7 @@ rm -rf $RPM_BUILD_ROOT
 * Tue Aug 21 2007 Parag Nemade <panemade@gmail.com>- 4.0-5
 - update License tag 
 
-* Mon Jan 26 2007 Parag Nemade <panemade@gmail.com>- 4.0-4
+* Fri Jan 26 2007 Parag Nemade <panemade@gmail.com>- 4.0-4
 - Added pactch to enable getcap for perl5 for bug rh#233541
 
 * Fri Sep 01 2006 Parag Nemade <panemade@gmail.com>- 4.0-4
