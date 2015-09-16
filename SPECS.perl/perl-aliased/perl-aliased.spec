@@ -1,20 +1,28 @@
 Name:		perl-aliased
 Version:	0.34
-Release:	1%{?dist}
+Release:	3%{?dist}
 Summary:	Use shorter versions of class names
-Summary(zh_CN.UTF-8): 使用类名的短版本
 License:	GPL+ or Artistic
-Group:		Development/Libraries
-Group(zh_CN.UTF-8): 开发/库
 URL:		http://search.cpan.org/dist/aliased/
 Source0:	http://search.cpan.org/CPAN/authors/id/E/ET/ETHER/aliased-%{version}.tar.gz
-BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(id -nu)
 BuildArch:	noarch
+# Module Build
+BuildRequires:	perl
+BuildRequires:	perl(Module::Build::Tiny) >= 0.039
+# Module Runtime
+BuildRequires:	perl(Carp)
 BuildRequires:	perl(Exporter)
-BuildRequires:	perl(Module::Build)
-BuildRequires:	perl(Test::Pod)
-BuildRequires:	perl(Test::Pod::Coverage)
+BuildRequires:	perl(strict)
+BuildRequires:	perl(warnings)
+# Test Suite
+BuildRequires:	perl(B)
+BuildRequires:	perl(CPAN::Meta) >= 2.120900
+BuildRequires:	perl(File::Spec)
+BuildRequires:	perl(lib)
+BuildRequires:	perl(Test::More) >= 0.88
+# Runtime
 Requires:	perl(:MODULE_COMPAT_%(eval "`perl -V:version`"; echo $version))
+Requires:	perl(Carp)
 
 %description
 aliased is simple in concept but is a rather handy module. It loads the
@@ -23,62 +31,71 @@ the class name. You can explicitly alias the class to another name or, if
 you prefer, you can do so implicitly. In the latter case, the name of the
 subroutine is the last part of the class name.
 
-%description -l zh_CN.UTF-8
-使用类名的短版本。
-
 %prep
 %setup -q -n aliased-%{version}
 
 %build
-perl Build.PL installdirs=vendor
+perl Build.PL --installdirs=vendor
 ./Build
 
 %install
-rm -rf %{buildroot}
-./Build install destdir=%{buildroot} create_packlist=0
-find %{buildroot} -depth -type d -exec rmdir {} \; 2>/dev/null
+./Build install --destdir=%{buildroot} --create_packlist=0
 %{_fixperms} %{buildroot}
-magic_rpm_clean.sh
 
 %check
 ./Build test
 
-%clean
-rm -rf %{buildroot}
-
 %files
-%defattr(-,root,root,-)
-%doc Changes README
+%license LICENSE
+%doc Changes CONTRIBUTING README
 %{perl_vendorlib}/aliased.pm
-%{_mandir}/man3/aliased.3pm*
+%{_mandir}/man3/aliased.3*
 
 %changelog
-* Fri Apr 17 2015 Liu Di <liudidi@gmail.com> - 0.34-1
-- 更新到 0.34
+* Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.34-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 
-* Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 0.30-18
-- 为 Magic 3.0 重建
+* Fri Jun 05 2015 Jitka Plesnikova <jplesnik@redhat.com> - 0.34-2
+- Perl 5.22 rebuild
 
-* Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 0.30-17
-- 为 Magic 3.0 重建
+* Tue Jan  6 2015 Paul Howarth <paul@city-fan.org> - 0.34-1
+- Update to 0.34
+  - Re-release to fix problematic $VERSION declaration (CPAN RT#101095)
 
-* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.30-16
-- 为 Magic 3.0 重建
+* Mon Dec 22 2014 Paul Howarth <paul@city-fan.org> - 0.33-1
+- Update to 0.33
+  - Don't inherit from Exporter
+  - Fix docs issues
+  - Fix warnings on perl 5.21.6 and up (CPAN RT#100359)
+- This release by ETHER → update source URL
+- Switch to Module::Build::Tiny flow
+- Modernize spec, dropping support for ancient distributions
 
-* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.30-15
-- 为 Magic 3.0 重建
+* Wed Aug 27 2014 Jitka Plesnikova <jplesnik@redhat.com> - 0.31-5
+- Perl 5.20 rebuild
 
-* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.30-14
-- 为 Magic 3.0 重建
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.31-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 
-* Thu Jun 12 2014 Liu Di <liudidi@gmail.com> - 0.30-13
-- 为 Magic 3.0 重建
+* Sun Aug 04 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.31-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
 
-* Thu Jun 12 2014 Liu Di <liudidi@gmail.com> - 0.30-12
-- 为 Magic 3.0 重建
+* Sat Jul 20 2013 Petr Pisar <ppisar@redhat.com> - 0.31-2
+- Perl 5.18 rebuild
 
-* Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 0.30-11
-- 为 Magic 3.0 重建
+* Tue Feb 19 2013 Paul Howarth <paul@city-fan.org> - 0.31-1
+- Update to 0.31
+  - Added prefix() function (CPAN RT#48289)
+  - Moved Test::More to build_requires (CPAN RT#48926)
+  - Moved author tests to xt/author
+- Explicitly run the author tests
+- BR: perl(lib) and perl(Test::More) for the test suite
+- Add patch to support building with Test::More < 0.88
+- Drop %%defattr, redundant since rpm 4.4
+- Don't need to remove empty directories from the buildroot
+
+* Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.30-11
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
 
 * Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.30-10
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
