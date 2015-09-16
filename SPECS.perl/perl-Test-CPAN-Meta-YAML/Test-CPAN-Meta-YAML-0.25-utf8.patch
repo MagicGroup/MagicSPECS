@@ -1,0 +1,21 @@
+--- Changes
++++ Changes
+@@ -2,7 +2,7 @@ Changes log for Test-CPAN-Meta-YAML
+ ===================================
+ 
+ 0.25    2015-05-06
+-        - POD fixes (by Olivier Mengué (DOLMEN)).
++        - POD fixes (by Olivier MenguÃ© (DOLMEN)).
+ 
+ 0.24    2015-01-19
+         - #386b81d - merged document updates from Karen Etheridge (ETHER).
+--- LICENSE
++++ LICENSE
+@@ -1,6 +1,6 @@
+ LICENSE FOR Test-CPAN-Meta-YAML
+ 
+-This software is copyright © 2007-2015 Barbie for Miss Barbell Productions.
++This software is copyright Â© 2007-2015 Barbie for Miss Barbell Productions.
+ 
+ This distribution is free software; you can redistribute it and/or
+ modify it under the Artistic Licence v2.
