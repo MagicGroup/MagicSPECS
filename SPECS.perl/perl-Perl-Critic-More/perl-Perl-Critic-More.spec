@@ -1,33 +1,40 @@
 Name:           perl-Perl-Critic-More
-Version:        1.000
-Release:        14%{?dist}
+Version:        1.003
+Release:        5%{?dist}
 Summary:        Supplemental policies for Perl::Critic
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 URL:            http://search.cpan.org/dist/Perl-Critic-More/
-Source0:        http://www.cpan.org/authors/id/E/EL/ELLIOTJS/Perl-Critic-More-%{version}.tar.gz
-# Add Miscellanea::RequireRcsKeywords removed from Perl::Critic as intended
-# by slow upstream, bug #839815, CPAN RT#69546
-Patch0:         Perl-Critic-More-1.000-Miscellanea::RequireRcsKeywords.patch
+Source0:        http://www.cpan.org/authors/id/T/TH/THALJEF/Perl-Critic-More-%{version}.tar.gz
 BuildArch:      noarch
+BuildRequires:  perl
+BuildRequires:  perl(base)
+BuildRequires:  perl(Carp)
+# Devel::NYTProf not used
+BuildRequires:  perl(English)
+# File::Which not used
 BuildRequires:  perl(Module::Build)
-BuildRequires:  perl(Perl::Critic) >= 1.082
+BuildRequires:  perl(strict)
+BuildRequires:  perl(warnings)
+BuildRequires:  perl(lib)
+# Run-time:
+BuildRequires:  perl(List::MoreUtils)
+BuildRequires:  perl(Perl::Critic) >= 1.098
+BuildRequires:  perl(Perl::Critic::Policy)
+BuildRequires:  perl(Perl::Critic::Utils)
 BuildRequires:  perl(Perl::MinimumVersion) >= 0.14
 BuildRequires:  perl(Readonly) >= 1.03
 # Tests:
-BuildRequires:  perl(base)
-BuildRequires:  perl(Carp)
-BuildRequires:  perl(List::MoreUtils)
 BuildRequires:  perl(Perl::Critic::Config)
-BuildRequires:  perl(Perl::Critic::Policy)
 BuildRequires:  perl(Perl::Critic::TestUtils)
-BuildRequires:  perl(Perl::Critic::Utils)
 BuildRequires:  perl(Perl::Critic::Violation)
 BuildRequires:  perl(Test::More)
+BuildRequires:  perl(utf8)
+# Optional test:
 BuildRequires:  perl(Test::Pod) >= 1.00
 BuildRequires:  perl(Test::Pod::Coverage) >= 1.04
-Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
-Requires:       perl(Perl::Critic) >= 1.082
+Requires:       perl(:MODULE_COMPAT_%(eval "`perl -V:version`"; echo $version))
+Requires:       perl(Perl::Critic) >= 1.098
 Requires:       perl(Perl::MinimumVersion) >= 0.14
 Requires:       perl(Readonly) >= 1.03
 
@@ -39,47 +46,57 @@ Perl::Critic core for a variety of reasons.
 
 %prep
 %setup -q -n Perl-Critic-More-%{version}
-%patch0 -p0
 
 %build
-%{__perl} Build.PL installdirs=vendor
+perl Build.PL installdirs=vendor
 ./Build
 
 %install
 ./Build install destdir=$RPM_BUILD_ROOT create_packlist=0
-find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_fixperms} $RPM_BUILD_ROOT/*
 
 %check
 ./Build test
 
 %files
-%defattr(-,root,root,-)
 %doc Changes LICENSE README TODO.pod
 %{perl_vendorlib}/*
 %{_mandir}/man3/*
 
 %changelog
-* Sun Jun 15 2014 Liu Di <liudidi@gmail.com> - 1.000-14
-- 为 Magic 3.0 重建
+* Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.003-5
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 
-* Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 1.000-13
-- 为 Magic 3.0 重建
+* Sat Jun 06 2015 Jitka Plesnikova <jplesnik@redhat.com> - 1.003-4
+- Perl 5.22 rebuild
 
-* Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 1.000-12
-- 为 Magic 3.0 重建
+* Fri Aug 29 2014 Jitka Plesnikova <jplesnik@redhat.com> - 1.003-3
+- Perl 5.20 rebuild
 
-* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.000-11
-- 为 Magic 3.0 重建
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.003-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 
-* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.000-10
-- 为 Magic 3.0 重建
+* Thu Oct 31 2013 Petr Pisar <ppisar@redhat.com> - 1.003-1
+- 1.003 bump
 
-* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.000-9
-- 为 Magic 3.0 重建
+* Tue Oct 29 2013 Petr Pisar <ppisar@redhat.com> - 1.002-1
+- 1.002 bump
 
-* Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 1.000-8
-- 为 Magic 3.0 重建
+* Tue Oct 29 2013 Petr Pisar <ppisar@redhat.com> - 1.000-12
+- Move Perl::Critic::Policy::Miscellanea::RequireRcsKeywords into
+  perl-Perl-Critic-Deprecated (bug #1023708)
+
+* Sun Aug 04 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.000-11
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Wed Jul 31 2013 Petr Pisar <ppisar@redhat.com> - 1.000-10
+- Perl 5.18 rebuild
+
+* Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.000-9
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
+
+* Wed Oct 24 2012 Petr Pisar <ppisar@redhat.com> - 1.000-8
+- Modernize spec file
 
 * Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.000-7
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
