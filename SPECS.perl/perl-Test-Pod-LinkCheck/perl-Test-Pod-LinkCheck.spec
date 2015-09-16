@@ -1,6 +1,6 @@
 Name:           perl-Test-Pod-LinkCheck
-Version:        0.007
-Release:        13%{?dist}
+Version:        0.008
+Release:        4%{?dist}
 Summary:        Tests POD for invalid links
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -8,7 +8,8 @@ URL:            http://search.cpan.org/dist/Test-Pod-LinkCheck/
 Source0:        http://www.cpan.org/authors/id/A/AP/APOCAL/Test-Pod-LinkCheck-%{version}.tar.gz
 BuildArch:      noarch
 BuildRequires:  perl
-BuildRequires:  perl(Module::Build)
+# ExtUtils::MakeMaker not used
+BuildRequires:  perl(Module::Build::Tiny) >= 0.039
 BuildRequires:  perl(strict)
 BuildRequires:  perl(warnings)
 # Run-time:
@@ -25,19 +26,22 @@ BuildRequires:  perl(Pod::Find)
 BuildRequires:  perl(Test::Builder) >= 0.94
 BuildRequires:  perl(Test::Pod) >= 1.44
 # Tests:
-BuildRequires:  perl(File::Find)
 BuildRequires:  perl(File::Temp)
+BuildRequires:  perl(IO::Handle)
+BuildRequires:  perl(IPC::Open3)
 BuildRequires:  perl(Test::More) >= 0.88
 BuildRequires:  perl(Test::Tester)
 # Optional tests:
 %if %{undefined perl_bootstrap}
 # Break build-time cycle with perl-Test-Apocalypse
+
+# Disable using of Test::Apocalypse, because it cannot be built with Perl 5.22
+# due to failing perl-Test-Vars
+%if ! 0%(perl -e 'print $] >= 5.022')
 BuildRequires:  perl(Test::Apocalypse) >= 1.000
-BuildRequires:  perl(Test::NoWarnings)
-BuildRequires:  perl(Test::Pod::Coverage)
 %endif
-BuildRequires:  perl(Test::Script) >= 1.05
-Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
+%endif
+Requires:       perl(:MODULE_COMPAT_%(eval "`perl -V:version`"; echo $version))
 Requires:       perl(App::PodLinkCheck::ParseSections)
 Requires:       perl(Capture::Tiny)
 Requires:       perl(Config)
@@ -55,34 +59,40 @@ example. Also, manual pages are resolved and checked.
 %setup -q -n Test-Pod-LinkCheck-%{version}
 
 %build
-%{__perl} Build.PL installdirs=vendor
+perl Build.PL --installdirs=vendor
 ./Build
 
 %install
-./Build install destdir=$RPM_BUILD_ROOT create_packlist=0
-find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
+./Build install "--destdir=$RPM_BUILD_ROOT" --create_packlist=0
 %{_fixperms} $RPM_BUILD_ROOT/*
 
 %check
 ./Build test
 
 %files
-%doc Changes CommitLog examples LICENSE README
+%doc AUTHOR_PLEDGE Changes CommitLog examples LICENSE README
 %{perl_vendorlib}/*
 %{_mandir}/man3/*
 
 %changelog
-* Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 0.007-13
-- 为 Magic 3.0 重建
+* Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.008-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 
-* Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 0.007-12
-- 为 Magic 3.0 重建
+* Wed Jun 10 2015 Jitka Plesnikova <jplesnik@redhat.com> - 0.008-3
+- Perl 5.22 re-rebuild of bootstrapped packages
+- Disable using of Test::Apocalypse with Perl 5.22
 
-* Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 0.007-11
-- 为 Magic 3.0 重建
+* Mon Jun 08 2015 Jitka Plesnikova <jplesnik@redhat.com> - 0.008-2
+- Perl 5.22 rebuild
 
-* Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 0.007-10
-- 为 Magic 3.0 重建
+* Tue Nov 04 2014 Petr Pisar <ppisar@redhat.com> - 0.008-1
+- 0.008 bump
+
+* Sun Sep 07 2014 Jitka Plesnikova <jplesnik@redhat.com> - 0.007-11
+- Perl 5.20 re-rebuild of bootstrapped packages
+
+* Mon Sep 01 2014 Jitka Plesnikova <jplesnik@redhat.com> - 0.007-10
+- Perl 5.20 rebuild
 
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.007-9
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
