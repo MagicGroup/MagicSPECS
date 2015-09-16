@@ -1,27 +1,43 @@
 Name:           perl-Perl-MinimumVersion
-Version:        1.28
-Release:        15%{?dist}
+Version:        1.38
+Release:        7%{?dist}
 Summary:        Find a minimum required version of perl for Perl code
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 URL:            http://search.cpan.org/dist/Perl-MinimumVersion/
-Source0:        http://search.cpan.org/CPAN/authors/id/A/AD/ADAMK/Perl-MinimumVersion-%{version}.tar.gz
+Source0:        http://search.cpan.org/CPAN/authors/id/N/NE/NEILB/Perl-MinimumVersion-%{version}.tar.gz
 
 Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
 BuildArch:      noarch
 
+BuildRequires: perl(ExtUtils::MakeMaker) >= 6.30
+# Run-time and tests:
+BuildRequires: perl(Carp)
+BuildRequires: perl(Exporter)
 BuildRequires: perl(List::Util) >= 1.20
-BuildRequires: perl(PPI) >= 1.215
-BuildRequires: perl(version) >= 0.76
-BuildRequires: perl(Perl::Critic::Utils) >= 1.104
 BuildRequires: perl(Params::Util) >= 0.25
+BuildRequires: perl(Perl::Critic::Utils) >= 1.104
+BuildRequires: perl(PPI) >= 1.215
+BuildRequires: perl(PPI::Util)
+BuildRequires: perl(PPIx::Regexp) >= 0.033
+BuildRequires: perl(strict)
+BuildRequires: perl(vars)
+BuildRequires: perl(version) >= 0.76
+BuildRequires: perl(warnings)
 %if !%{defined perl_bootstrap}
-BuildRequires: perl(Test::Script) >= 1.03
 BuildRequires: perl(File::Find::Rule) >= 0.32
 BuildRequires: perl(File::Find::Rule::Perl) >= 1.04
 BuildRequires: perl(File::Spec) >= 0.80
+BuildRequires: perl(Getopt::Long)
 BuildRequires: perl(Test::More) >= 0.47
+BuildRequires: perl(Test::Script) >= 1.03
 %endif
+
+%{?perl_default_filter}
+# Remove under-specified dependencies
+%global __requires_exclude %{?__requires_exclude:%__requires_exclude|}^perl\\(version\\)$
+%global __requires_exclude %{?__requires_exclude:%__requires_exclude|}^perl\\(Params::Util\\)$
+%global __requires_exclude %{?__requires_exclude:%__requires_exclude|}^perl >= 0:5.005$
 
 %description
 Find a minimum required version of perl for Perl code
@@ -36,16 +52,14 @@ make %{?_smp_mflags}
 %install
 make pure_install PERL_INSTALL_ROOT=$RPM_BUILD_ROOT
 find $RPM_BUILD_ROOT -type f -name .packlist -exec rm -f {} ';'
-find $RPM_BUILD_ROOT -type d -depth -exec rmdir {} 2>/dev/null ';'
-chmod -R u+w $RPM_BUILD_ROOT/*
+%{_fixperms} $RPM_BUILD_ROOT/*
 
 %check
 %if !%{defined perl_bootstrap}
-
+make test
 %endif
 
 %files
-%defattr(-,root,root,-)
 %doc Changes LICENSE
 %{_bindir}/*
 %{perl_vendorlib}/Perl
@@ -53,29 +67,58 @@ chmod -R u+w $RPM_BUILD_ROOT/*
 %{_mandir}/man3/*
 
 %changelog
-* Sun Jun 15 2014 Liu Di <liudidi@gmail.com> - 1.28-15
-- 为 Magic 3.0 重建
+* Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.38-7
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 
-* Sun Jun 15 2014 Liu Di <liudidi@gmail.com> - 1.28-14
-- 为 Magic 3.0 重建
+* Wed Jun 10 2015 Jitka Plesnikova <jplesnik@redhat.com> - 1.38-6
+- Perl 5.22 re-rebuild of bootstrapped packages
 
-* Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 1.28-13
-- 为 Magic 3.0 重建
+* Sat Jun 06 2015 Jitka Plesnikova <jplesnik@redhat.com> - 1.38-5
+- Perl 5.22 rebuild
 
-* Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 1.28-12
-- 为 Magic 3.0 重建
+* Sun Sep 07 2014 Jitka Plesnikova <jplesnik@redhat.com> - 1.38-4
+- Perl 5.20 re-rebuild of bootstrapped packages
 
-* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.28-11
-- 为 Magic 3.0 重建
+* Fri Aug 29 2014 Jitka Plesnikova <jplesnik@redhat.com> - 1.38-3
+- Perl 5.20 rebuild
 
-* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.28-10
-- 为 Magic 3.0 重建
+* Thu Aug 28 2014 Ralf Corsépius <corsepiu@fedoraproject.org> - 1.38-2
+- Filter underspecified deps.
 
-* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.28-9
-- 为 Magic 3.0 重建
+* Thu Aug 28 2014 Ralf Corsépius <corsepiu@fedoraproject.org> - 1.38-1
+- Upstream update.
 
-* Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 1.28-8
-- 为 Magic 3.0 重建
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.37-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Mon May 12 2014 Ralf Corsépius <corsepiu@fedoraproject.org> - 1.37-1
+- Upstream update.
+
+* Wed May 07 2014 Ralf Corsépius <corsepiu@fedoraproject.org> - 1.35-1
+- Upstream update.
+- Reflect upstream BR:-changes.
+- Reflect Source0: having changed.
+- Minor spec file modernization.
+
+* Wed Aug 14 2013 Jitka Plesnikova <jplesnik@redhat.com> - 1.32-5
+- Perl 5.18 re-rebuild of bootstrapped packages
+
+* Sun Aug 04 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.32-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Tue Jul 30 2013 Petr Pisar <ppisar@redhat.com> - 1.32-3
+- Perl 5.18 rebuild
+
+* Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.32-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
+
+* Fri Jan 18 2013 Ralf Corsépius - 1.32-1
+- Upstream update.
+- Add BR: perl(PPIx::Regexp).
+- Reflect upstream URL having changed.
+
+* Wed Oct 24 2012 Petr Pisar <ppisar@redhat.com> - 1.28-8
+- Specify all dependencies
 
 * Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.28-7
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
