@@ -1,18 +1,21 @@
 Name:           perl-Log-TraceMessages
 Version:        1.4
-Release:        21%{?dist}
+Release:        20%{?dist}
 Summary:        Perl extension for trace messages used in debugging
 
-Group:          Development/Libraries
 License:        GPL+ or Artistic
 URL:            http://search.cpan.org/dist/Log-TraceMessages/
 Source0:        http://www.cpan.org/modules/by-module/Log/Log-TraceMessages-%{version}.tar.gz
-BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildArch:      noarch
 BuildRequires:  perl(ExtUtils::MakeMaker)
+BuildRequires:  perl(AutoLoader)
+BuildRequires:  perl(Data::Dumper)
+BuildRequires:  perl(Exporter)
 BuildRequires:  perl(HTML::FromText) >= 1.004
 Requires:  perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
+
+%{?perl_default_filter}
 
 %description
 This module is a better way of putting 'hello there' trace messages in
@@ -32,21 +35,15 @@ make %{?_smp_mflags}
 
 
 %install
-rm -rf $RPM_BUILD_ROOT
 make pure_install PERL_INSTALL_ROOT=$RPM_BUILD_ROOT
 find $RPM_BUILD_ROOT -type f -name .packlist -exec rm -f {} ';'
 
 
 %check
-
-
-
-%clean
-rm -rf $RPM_BUILD_ROOT
+make test
 
 
 %files
-%defattr(-,root,root,-)
 %doc Changes README
 %{perl_vendorlib}/Log/
 %{perl_vendorlib}/auto/*
@@ -54,38 +51,37 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
-* Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 1.4-21
-- 为 Magic 3.0 重建
+* Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.4-20
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 
-* Sun Jun 15 2014 Liu Di <liudidi@gmail.com> - 1.4-20
-- 为 Magic 3.0 重建
+* Mon Jun 08 2015 Jitka Plesnikova <jplesnik@redhat.com> - 1.4-19
+- Perl 5.22 rebuild
 
-* Sun Jun 15 2014 Liu Di <liudidi@gmail.com> - 1.4-19
-- 为 Magic 3.0 重建
+* Fri Aug 29 2014 Jitka Plesnikova <jplesnik@redhat.com> - 1.4-18
+- Perl 5.20 rebuild
 
-* Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 1.4-18
-- 为 Magic 3.0 重建
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.4-17
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 
-* Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 1.4-17
-- 为 Magic 3.0 重建
+* Sun Sep 08 2013 Emmanuel Seyman <emmanuel@seyman.fr> - 1.4-16
+- Remove no-longer-needed macros
+- Add perl default filter
 
-* Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 1.4-16
-- 为 Magic 3.0 重建
+* Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.4-15
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
 
-* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.4-15
-- 为 Magic 3.0 重建
+* Wed Jul 24 2013 Petr Pisar <ppisar@redhat.com> - 1.4-14
+- Perl 5.18 rebuild
 
-* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.4-14
-- 为 Magic 3.0 重建
+* Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.4-13
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
 
-* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.4-13
-- 为 Magic 3.0 重建
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.4-12
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 
-* Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 1.4-12
-- 为 Magic 3.0 重建
-
-* Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 1.4-11
-- 为 Magic 3.0 重建
+* Fri Jun 15 2012 Petr Pisar <ppisar@redhat.com> - 1.4-11
+- Perl 5.16 rebuild
+- Specify all dependencies
 
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.4-10
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
