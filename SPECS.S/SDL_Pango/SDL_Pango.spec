@@ -1,16 +1,17 @@
 Summary: Rendering of internationalized text for SDL (Simple DirectMedia Layer)
 Name: SDL_Pango
 Version: 0.1.2
-Release: 13%{?dist}
+Release: 21%{?dist}
 License: LGPLv2+
 Group: System Environment/Libraries
 URL: http://sdlpango.sourceforge.net/
+
 Source0: http://downloads.sf.net/sdlpango/SDL_Pango-%{version}.tar.gz
 Source1: doxygen.png
 Patch0: SDL_Pango-0.1.2-suppress-warning.patch
 Patch1: SDL_Pango-0.1.2-API-adds.patch
 Patch2: SDL_Pango-0.1.2-matrix_declarations.patch
-BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
+
 BuildRequires: pango-devel, SDL-devel, dos2unix
 BuildRequires: autoconf, automake, libtool
 
@@ -35,28 +36,23 @@ Development files for SDL_pango.
 %patch1 -p1 -b .API-adds
 %patch2 -p1 -b .matrix_declarations
 # Clean up, we include the entire "docs/html" content for the devel package
-%{__rm} -rf docs/html/CVS/
+rm -rf docs/html/CVS/
 # Replace the corrupt doxygen.png file with a proper one
-%{__install} -m 0644 -p %{SOURCE1} docs/html/doxygen.png
+install -m 0644 -p %{SOURCE1} docs/html/doxygen.png
 # Fix the (many) DOS encoded files, not *.png since they get corrupt
 find . -not -name \*.png -type f -exec dos2unix -k {} \;
 # For FC-5 x86_64 this is required, or the shared library doesn't get built
-autoreconf -ifv
+autoreconf -i
 libtoolize --copy --force
 
 
 %build
 %configure --disable-static
-%{__make} %{?_smp_mflags}
+make %{?_smp_mflags}
 
 
 %install
-%{__rm} -rf %{buildroot}
-%{__make} install DESTDIR=%{buildroot}
-
-
-%clean
-%{__rm} -rf %{buildroot}
+make install DESTDIR=%{buildroot}
 
 
 %post -p /sbin/ldconfig
@@ -79,8 +75,32 @@ libtoolize --copy --force
 
 
 %changelog
-* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 0.1.2-13
-- 为 Magic 3.0 重建
+* Tue Jun 16 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.1.2-21
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
+
+* Fri Aug 15 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.1.2-20
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
+
+* Fri Jun 06 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.1.2-19
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Fri May 16 2014 Jaromir Capik <jcapik@redhat.com> - 0.1.2-18
+- Fixing FTBFS
+
+* Fri Aug 02 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.1.2-17
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Wed Feb 13 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.1.2-16
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
+
+* Tue Jul 24 2012 Peter Robinson <pbrobinson@fedoraproject.org> - 0.1.2-15
+- Add disttag, cleanup spec
+
+* Wed Jul 18 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.1.2-14
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Thu Jan 12 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.1.2-13
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 
 * Mon Feb 07 2011 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.1.2-12
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_15_Mass_Rebuild
