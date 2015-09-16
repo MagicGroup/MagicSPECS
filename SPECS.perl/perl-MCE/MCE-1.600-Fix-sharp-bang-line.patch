@@ -1,0 +1,26 @@
+From c959e067ee5bb6c4ad5b139058b7e3bb29716c15 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Petr=20P=C3=ADsa=C5=99?= <ppisar@redhat.com>
+Date: Tue, 10 Feb 2015 11:48:32 +0100
+Subject: [PATCH] Fix sharp-bang line
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Signed-off-by: Petr Písař <ppisar@redhat.com>
+---
+ bin/mce_grep | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/bin/mce_grep b/bin/mce_grep
+index 44cfc8a..028bb04 100755
+--- a/bin/mce_grep
++++ b/bin/mce_grep
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env perl
++#!perl
+ ###############################################################################
+ ## ----------------------------------------------------------------------------
+ ## A MCE-driven wrapper script for the following C binaries.
+-- 
+1.9.3
+
