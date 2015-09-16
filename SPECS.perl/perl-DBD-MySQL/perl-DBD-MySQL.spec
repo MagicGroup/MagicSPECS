@@ -1,6 +1,6 @@
 Name:           perl-DBD-MySQL
-Version:        4.022
-Release:        14%{?dist}
+Version:	4.032
+Release:	1%{?dist}
 Summary:        A MySQL interface for perl
 Group:          Development/Libraries
 License:        GPL+ or Artistic
@@ -46,13 +46,15 @@ find %{buildroot} -type d -depth -exec rmdir {} 2>/dev/null ';'
 #
 
 %files
-%doc ChangeLog INSTALL.html README TODO
 %{perl_vendorarch}/Bundle/
 %{perl_vendorarch}/DBD/
 %{perl_vendorarch}/auto/DBD/
 %{_mandir}/man3/*.3*
 
 %changelog
+* Wed Sep 16 2015 Liu Di <liudidi@gmail.com> - 4.032-1
+- 更新到 4.032
+
 * Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 4.022-14
 - 为 Magic 3.0 重建
 

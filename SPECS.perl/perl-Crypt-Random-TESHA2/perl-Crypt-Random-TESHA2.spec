@@ -1,6 +1,6 @@
 Name:           perl-Crypt-Random-TESHA2
 Version:        0.01
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        Random numbers using timer/schedule entropy
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -58,6 +58,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Tue Sep 15 2015 Liu Di <liudidi@gmail.com> - 0.01-4
+- 为 Magic 3.0 重建
+
 * Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.01-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

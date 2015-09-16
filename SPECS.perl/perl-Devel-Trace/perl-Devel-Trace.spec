@@ -1,12 +1,11 @@
 Name:           perl-Devel-Trace
-Version:        0.11
-Release:        7%{?dist}
+Version:	0.12
+Release:	1%{?dist}
 Summary:        Print out each line before it is executed (like sh -x)
 License:        Public Domain
 Group:          Development/Libraries
 URL:            http://search.cpan.org/dist/Devel-Trace/
 Source0:        http://www.cpan.org/authors/id/M/MJ/MJD/Devel-Trace-%{version}.tar.gz
-Patch0:         perl-Devel-Trace-0.11-Uninteractive-tests.patch
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 BuildRequires:  perl(ExtUtils::MakeMaker)
@@ -22,7 +21,6 @@ This is something like the shell's -x option.
 
 %prep
 %setup -q -n Devel-Trace-%{version}
-%patch0 -p1
 
 # doc file must not be executable:
 #   -> http://fedoraproject.org/wiki/Packaging/Guidelines#Documentation
@@ -61,6 +59,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.12-1
+- 更新到 0.12
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.11-7
 - 为 Magic 3.0 重建
 

@@ -1,6 +1,6 @@
 Name:           perl-Math-BigInt-GMP
-Version:        1.36
-Release:        6%{?dist}.1
+Version:	1.41
+Release:	1%{?dist}
 Summary:        Math::BigInt::GMP Perl module
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -51,6 +51,9 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.41-1
+- 更新到 1.41
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.36-6.1
 - 为 Magic 3.0 重建
 

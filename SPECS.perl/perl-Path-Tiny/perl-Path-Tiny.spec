@@ -1,6 +1,6 @@
 Name:		perl-Path-Tiny
-Version:	0.054
-Release:	3%{?dist}
+Version:	0.072
+Release:	1%{?dist}
 Summary:	File path utility
 Group:		Development/Libraries
 License:	ASL 2.0
@@ -95,11 +95,13 @@ find %{buildroot} -type f -name .packlist -exec rm -f {} \;
 make test
 
 %files
-%doc Changes CONTRIBUTING LICENSE README
 %{perl_vendorlib}/Path/
 %{_mandir}/man3/Path::Tiny.3pm*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.072-1
+- 更新到 0.072
+
 * Thu Jun 19 2014 Liu Di <liudidi@gmail.com> - 0.054-3
 - 为 Magic 3.0 重建
 

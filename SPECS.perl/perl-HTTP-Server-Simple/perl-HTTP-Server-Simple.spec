@@ -1,12 +1,12 @@
 Name:           perl-HTTP-Server-Simple
-Version:        0.44
-Release:        6%{?dist}
+Version:	0.50
+Release:	2%{?dist}
 Summary:        Very simple standalone HTTP daemon
 
 Group:          Development/Libraries
 License:        GPL+ or Artistic
 URL:            http://search.cpan.org/dist/HTTP-Server-Simple/
-Source0:        http://www.cpan.org/authors/id/J/JE/JESSE/HTTP-Server-Simple-%{version}.tar.gz
+Source0:        http://search.cpan.org/CPAN/authors/id/F/FA/FALCONE/HTTP-Server-Simple-%{version}.tar.gz
 
 BuildArch:      noarch
 BuildRequires:  perl(CGI)
@@ -52,6 +52,12 @@ chmod -R u+w $RPM_BUILD_ROOT/*
 
 
 %changelog
+* Mon Sep 14 2015 Liu Di <liudidi@gmail.com> - 0.50-2
+- 为 Magic 3.0 重建
+
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.50-1
+- 更新到 0.50
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.44-6
 - 为 Magic 3.0 重建
 

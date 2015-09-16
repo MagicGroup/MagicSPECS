@@ -1,6 +1,6 @@
 Name:           perl-Test-Harness
-Version:        3.32
-Release:        2%{?dist}
+Version:	3.35
+Release:	1%{?dist}
 Summary:        Run Perl standard test scripts with statistics
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -89,6 +89,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 3.35-1
+- 更新到 3.35
+
 * Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 3.32-2
 - 为 Magic 3.0 重建
 

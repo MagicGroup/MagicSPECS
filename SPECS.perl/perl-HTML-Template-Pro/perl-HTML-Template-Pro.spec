@@ -5,13 +5,13 @@
 %global sane_version %(echo %{cpan_version} |sed 's/\\(\\.[0-9][0-9]\\)/\\1./')
 
 Name:           perl-HTML-Template-Pro
-Version:        %{sane_version}
-Release:        5%{?dist}
+Version:	0.9510
+Release:	1%{?dist}
 Summary:        Perl/XS module to use HTML Templates from CGI scripts
 License:        GPL+ or Artistic or LGPLv2+
 Group:          Development/Libraries
 URL:            http://search.cpan.org/dist/HTML-Template-Pro/
-Source0:        http://www.cpan.org/authors/id/V/VI/VIY/HTML-Template-Pro-%{cpan_version}.tar.gz
+Source0:        http://search.cpan.org/CPAN/authors/id/V/VI/VIY/HTML-Template-Pro-%{version}.tar.gz
 BuildRequires:  perl(ExtUtils::MakeMaker)
 Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
 BuildRequires:  pcre-devel
@@ -24,7 +24,7 @@ A fast and lightweight C/Perl+XS HTML Template engine implementation.
 
 
 %prep
-%setup -q -n HTML-Template-Pro-%{cpan_version}
+%setup -q -n HTML-Template-Pro-%{version}
 
 
 %build
@@ -54,6 +54,9 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.9510-1
+- 更新到 0.9510
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.95.05-5
 - 为 Magic 3.0 重建
 

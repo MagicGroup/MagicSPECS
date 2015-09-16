@@ -1,7 +1,7 @@
 Summary: 	Tools to test taintedness
 Name: 		perl-Test-Taint
-Version: 	1.04
-Release: 	20%{?dist}
+Version:	1.06
+Release:	1%{?dist}
 License: 	GPL+ or Artistic
 Group: 		Development/Libraries
 URL: 		http://search.cpan.org/dist/Test-Taint/
@@ -51,6 +51,9 @@ chmod -R u+w $RPM_BUILD_ROOT/*
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.06-1
+- 更新到 1.06
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.04-20
 - 为 Magic 3.0 重建
 

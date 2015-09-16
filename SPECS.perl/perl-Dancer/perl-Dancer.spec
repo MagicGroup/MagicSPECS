@@ -1,11 +1,11 @@
 Name:           perl-Dancer
-Version:        1.3091
-Release:        16%{?dist}
+Version:	1.3140
+Release:	0%{?dist}
 Summary:        Lightweight yet powerful web application framework
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 URL:            http://search.cpan.org/dist/Dancer/
-Source0:        http://www.cpan.org/authors/id/X/XS/XSAWYERX/Dancer-%{version}.tar.gz
+Source0:        http://search.cpan.org/CPAN/authors/id/Y/YA/YANICK/Dancer-%{version}.tar.gz
 BuildArch:      noarch
 BuildRequires:  perl(base)
 BuildRequires:  perl(Carp)
@@ -96,7 +96,6 @@ find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null \;
 
 
 %files
-%doc AUTHORS CHANGES LICENSE README TODO
 %{_bindir}/dancer
 %{perl_vendorlib}/*
 %{_mandir}/man1/dancer.1*

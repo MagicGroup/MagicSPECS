@@ -3,7 +3,7 @@
 
 Name:           perl-%{cpan_name}
 Version:        %(echo '%{cpan_version}' | tr _ .)
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Create a module Makefile
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -178,6 +178,9 @@ make test
 %{_mandir}/man3/ExtUtils::Command.*
 
 %changelog
+* Tue Sep 15 2015 Liu Di <liudidi@gmail.com> - 7.10-2
+- 为 Magic 3.0 重建
+
 * Fri Sep 11 2015 Petr Pisar <ppisar@redhat.com> - 7.10-1
 - 7.10 bump
 

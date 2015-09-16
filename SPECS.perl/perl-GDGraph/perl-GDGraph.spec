@@ -1,13 +1,13 @@
 Name:           perl-GDGraph
-Version:        1.44
-Release:        19%{?dist}
+Version:	1.49
+Release:	1%{?dist}
 Epoch:          1
 Summary:        Graph generation package for Perl
 
 Group:          Development/Libraries
 License:        GPL+ or Artistic
 URL:            http://search.cpan.org/dist/GDGraph/
-Source0:        http://www.cpan.org/authors/id/B/BW/BWARFIELD/GDGraph-%{version}.tar.gz
+Source0:        http://search.cpan.org/CPAN/authors/id/R/RU/RUZ/GDGraph-%{version}.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildArch:      noarch
@@ -70,6 +70,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1:1.49-1
+- 更新到 1.49
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1:1.44-19
 - 为 Magic 3.0 重建
 

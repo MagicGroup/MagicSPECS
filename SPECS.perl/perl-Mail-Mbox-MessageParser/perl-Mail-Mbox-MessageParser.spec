@@ -1,13 +1,12 @@
 Summary:	A fast and simple mbox folder reader
 Name:		perl-Mail-Mbox-MessageParser
-Version:	1.5002
-Release:	14%{?dist}
+Version:	1.5105
+Release:	1%{?dist}
 License:	GPL+
 Group:		Development/Libraries
 Url:		http://search.cpan.org/dist/Mail-Mbox-MessageParser/
 Source0:	http://search.cpan.org/CPAN/authors/id/D/DC/DCOPPIT/Mail-Mbox-MessageParser-%{version}.tar.gz
 Source1:	perl-module-version-filter
-Patch0:		Mail-Mbox-MessageParser-1.5002-warning.patch
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(id -nu)
 BuildArch:	noarch
 BuildRequires:	grep, gzip, bzip2, /usr/bin/diff
@@ -25,9 +24,6 @@ information, GNU grep, or highly optimized Perl.
 
 %prep
 %setup -q -n Mail-Mbox-MessageParser-%{version}
-
-# Fix used-only-once warning that breaks grepmail with perl 5.12.0
-%patch0 -p1
 
 # Auto provides aren't clever enough for what Mail::Mbox::MessageParser does
 %if 0%{?__perllib_provides:1}
@@ -72,6 +68,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/Mail::Mbox::MessageParser::Perl.3pm*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.5105-1
+- 更新到 1.5105
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.5002-14
 - 为 Magic 3.0 重建
 

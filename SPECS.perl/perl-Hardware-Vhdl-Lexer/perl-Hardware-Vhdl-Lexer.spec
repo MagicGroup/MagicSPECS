@@ -1,6 +1,6 @@
 Name:           perl-Hardware-Vhdl-Lexer
 Version:        1.00
-Release:        18%{?dist}
+Release:        19%{?dist}
 Summary:        Split VHDL code into lexical tokens
 License:        GPL+ or Artistic
 
@@ -85,6 +85,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.00-19
+- 为 Magic 3.0 重建
+
 * Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 1.00-18
 - 为 Magic 3.0 重建
 

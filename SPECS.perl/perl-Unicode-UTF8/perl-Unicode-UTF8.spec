@@ -1,7 +1,7 @@
 Summary:	Encoding and decoding of UTF-8 encoding form
 Name:		perl-Unicode-UTF8
 Version:	0.60
-Release:	3%{?dist}
+Release:	5%{?dist}
 License:	GPL+ or Artistic
 Group:		Development/Libraries
 Url:		http://search.cpan.org/dist/Unicode-UTF8/
@@ -81,6 +81,12 @@ make test
 %{_mandir}/man3/Unicode::UTF8.3pm*
 
 %changelog
+* Mon Sep 14 2015 Liu Di <liudidi@gmail.com> - 0.60-5
+- 为 Magic 3.0 重建
+
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.60-4
+- 为 Magic 3.0 重建
+
 * Thu Jun 19 2014 Liu Di <liudidi@gmail.com> - 0.60-3
 - 为 Magic 3.0 重建
 

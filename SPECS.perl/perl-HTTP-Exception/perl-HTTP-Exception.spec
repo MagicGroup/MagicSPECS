@@ -1,6 +1,6 @@
 Name:           perl-HTTP-Exception
-Version:        0.03001
-Release:        14%{?dist}
+Version:	0.04006
+Release:	1%{?dist}
 Summary:        Throw HTTP-Errors as (Exception::Class-) Exceptions
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -27,19 +27,22 @@ exception also has.
 
 %prep
 %setup -q -n HTTP-Exception-%{version}
+find . -type f -exec chmod 644 {} \;
 
 %build
-%{__perl} Build.PL installdirs=vendor
-./Build
+%{__perl} Makefile.PL INSTALLDIRS=vendor
+make %{?_smp_mflags}
 
 %install
-./Build install destdir=$RPM_BUILD_ROOT create_packlist=0
+make pure_install PERL_INSTALL_ROOT=$RPM_BUILD_ROOT
+
+find $RPM_BUILD_ROOT -type f -name .packlist -exec rm -f {} \;
 find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 
 %{_fixperms} $RPM_BUILD_ROOT/*
 
 %check
-./Build test
+make test
 
 %files
 %doc Changes README
@@ -47,6 +50,9 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.04006-1
+- 更新到 0.04006
+
 * Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 0.03001-14
 - 为 Magic 3.0 重建
 

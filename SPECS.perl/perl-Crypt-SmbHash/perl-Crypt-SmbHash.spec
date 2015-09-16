@@ -1,7 +1,7 @@
 Summary:	Pure-perl Lanman and NT MD4 hash functions
 Name:		perl-Crypt-SmbHash
 Version:	0.12
-Release:	29%{?dist}
+Release:	30%{?dist}
 License:	GPLv2+
 Group:		Development/Libraries
 Url:		http://search.cpan.org/dist/Crypt-SmbHash/
@@ -46,6 +46,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/Crypt::SmbHash.3pm*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.12-30
+- 为 Magic 3.0 重建
+
 * Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 0.12-29
 - 为 Magic 3.0 重建
 

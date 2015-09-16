@@ -6,10 +6,18 @@ License:        GPL+ or Artistic
 Group:          Development/Libraries
 URL:            http://www.ossp.org/pkg/tool/eperl/
 Source0:        ftp://ftp.ossp.org/pkg/tool/eperl/eperl-%{version}.tar.gz
-Patch0:         http://ftp.debian.org/pool/main/e/eperl/eperl_2.2.14-15.1.diff.gz
-Patch1:         perl-eperl-5.16compat.patch
-# Fix format-security compiler warnings, bug #1058664
-Patch2:         eperl-2.2.14-Fix-format-security-compiler-warnings.patch
+Patch0: copyright-updates.diff
+Patch1: document-double-shebang.diff
+Patch2: dpkg-buildflags.diff
+Patch3: eperl_2.2.14-15.2.diff
+Patch4: fix-format-string-error-in-perl-stderr.diff
+Patch5: fix-getopt.diff
+Patch6: fix-preprocessor-comments-to-behave-as-documented.diff
+Patch7: fix-spelling-errors.diff
+Patch8: io-redirection.diff
+Patch9: pass-compiler-flags-properly.diff
+Patch10:        redhat-with-thr.diff
+Patch11:	eperl-2.2.14-Fix-format-security-compiler-warnings-2.patch
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  gdbm-devel
 BuildRequires:  libdb-devel
@@ -36,7 +44,15 @@ which is designed for mod_perl 1.x.
 %patch0 -p1
 %patch1 -p1
 %patch2 -p1
-chmod u+x etc/shtool
+%patch3 -p1
+%patch4 -p1
+%patch5 -p1
+%patch6 -p1
+%patch7 -p1
+%patch8 -p1
+%patch9 -p1
+%patch10 -p1
+%patch11 -p1
 find contrib/utils -perm /0100 -type f -exec chmod 644 {} \;
 
 %build

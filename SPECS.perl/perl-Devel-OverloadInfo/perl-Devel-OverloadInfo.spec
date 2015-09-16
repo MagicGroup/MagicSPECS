@@ -1,6 +1,6 @@
 Name:		perl-Devel-OverloadInfo
 Version:	0.004
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:	Introspect overloaded operators
 License:	GPL+ or Artistic
 URL:		http://search.cpan.org/dist/Devel-OverloadInfo/
@@ -60,6 +60,9 @@ make test
 %{_mandir}/man3/Devel::OverloadInfo.3*
 
 %changelog
+* Tue Sep 15 2015 Liu Di <liudidi@gmail.com> - 0.004-2
+- 为 Magic 3.0 重建
+
 * Fri Aug 14 2015 Paul Howarth <paul@city-fan.org> - 0.004-1
 - Update to 0.004
   - Document that existence of undef 'fallback' varies between perl versions

@@ -1,14 +1,12 @@
 Name:           perl-Data-ICal
-Version:        0.18
-Release:        16%{?dist}
+Version:	0.22
+Release:	1%{?dist}
 Summary:        Generates iCalendar (RFC 2445) calendar files
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 URL:            http://search.cpan.org/dist/Data-ICal/
-Source0:        http://www.cpan.org/authors/id/T/TS/TSIBLEY/Data-ICal-%{version}.tar.gz
+Source0:        http://search.cpan.org/CPAN/authors/id/A/AL/ALEXMV/Data-ICal-%{version}.tar.gz
 
-# inc/Module/Install* is broken, replace it with Module-Install-0.91
-Patch0:         Data-ICal-0.16.diff
 BuildArch:      noarch
 
 BuildRequires:  perl(CPAN) perl(YAML::Tiny) perl(File::Remove)
@@ -37,7 +35,6 @@ many popular calendaring programs such as Apple's iCal.
 
 %prep
 %setup -q -n Data-ICal-%{version}
-%patch0 -p1
 
 %build
 %{__perl} Makefile.PL INSTALLDIRS=vendor --skipdeps
@@ -61,6 +58,9 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.22-1
+- 更新到 0.22
+
 * Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 0.18-16
 - 为 Magic 3.0 重建
 

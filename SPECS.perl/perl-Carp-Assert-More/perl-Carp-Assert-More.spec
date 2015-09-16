@@ -1,6 +1,6 @@
 Name:           perl-Carp-Assert-More
 Version:	1.14
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:        Convenience wrappers around Carp::Assert
 Summary(zh_CN.UTF-8): Carp::Assert 的简易接口
 
@@ -56,6 +56,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.14-2
+- 为 Magic 3.0 重建
+
 * Fri Jun 05 2015 Liu Di <liudidi@gmail.com> - 1.14-1
 - 更新到 1.14
 

@@ -1,10 +1,10 @@
 Name:		perl-Module-Metadata
-Version:	1.000024
-Release:	2%{?dist}
+Version:	1.000027
+Release:	1%{?dist}
 Summary:	Gather package and POD information from perl module files
 License:	GPL+ or Artistic
 URL:		http://search.cpan.org/dist/Module-Metadata/
-Source0:	http://search.cpan.org/CPAN/authors/id/E/ET/ETHER/Module-Metadata-%{version}.tar.gz
+Source0:        http://search.cpan.org/CPAN/authors/id/E/ET/ETHER/Module-Metadata-%{version}.tar.gz
 BuildArch:	noarch
 # Build
 BuildRequires:	perl
@@ -56,11 +56,14 @@ find %{buildroot} -type f -name .packlist -exec rm -f {} \;
 make test
 
 %files
-%doc Changes CONTRIBUTING LICENSE README README.md
+%doc Changes CONTRIBUTING LICENSE README
 %{perl_vendorlib}/Module/
 %{_mandir}/man3/Module::Metadata.3pm*
 
 %changelog
+* Mon Sep 14 2015 Liu Di <liudidi@gmail.com> - 1.000027-1
+- 更新到 1.000027
+
 * Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 1.000024-2
 - 为 Magic 3.0 重建
 

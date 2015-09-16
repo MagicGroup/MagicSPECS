@@ -1,11 +1,11 @@
 Name:           perl-Crypt-OpenSSL-RSA
 Version:        0.28
-Release:        7%{?dist}
+Release:        8%{?dist}
 Summary:        Perl interface to OpenSSL for RSA
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 URL:            http://search.cpan.org/dist/Crypt-OpenSSL-RSA/
-Source0:        http://www.cpan.org/authors/id/I/IR/IROBERTS/Crypt-OpenSSL-RSA-%{version}.tar.gz
+Source0:        http://search.cpan.org/CPAN/authors/id/P/PE/PERLER/Crypt-OpenSSL-RSA-%{version}.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  openssl openssl-devel
 BuildRequires:  perl(Crypt::OpenSSL::Random) perl(Crypt::OpenSSL::Bignum)
@@ -50,6 +50,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.28-8
+- 为 Magic 3.0 重建
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.28-7
 - 为 Magic 3.0 重建
 

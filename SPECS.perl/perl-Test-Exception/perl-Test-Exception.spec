@@ -1,11 +1,11 @@
 Name:           perl-Test-Exception
-Version:        0.32
-Release:        5%{?dist}
+Version:	0.40
+Release:	1%{?dist}
 Summary:        Library of test functions for exception based Perl code
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 URL:            http://search.cpan.org/dist/Test-Exception/
-Source0:        http://search.cpan.org/CPAN/authors/id/A/AD/ADIE/Test-Exception-%{version}.tar.gz
+Source0:        http://search.cpan.org/CPAN/authors/id/E/EX/EXODIST/Test-Exception-%{version}.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(id -nu)
 BuildArch:      noarch
 BuildRequires:  perl(base)
@@ -35,26 +35,26 @@ Test::More and friends.
 chmod -c -x Changes
 
 %build
-perl Build.PL installdirs=vendor
-./Build
+perl Makefile.PL INSTALLDIRS=vendor
+make %{?_smp_mflags}
 
 %install
-rm -rf $RPM_BUILD_ROOT
-./Build install destdir=$RPM_BUILD_ROOT create_packlist=0
-%{_fixperms} $RPM_BUILD_ROOT
+make pure_install DESTDIR=%{buildroot}
+find %{buildroot} -type f -name .packlist -exec rm -f {} ';'
+%{_fixperms} %{buildroot}
 
 %check
-./Build test
-
-%clean
-rm -rf $RPM_BUILD_ROOT
+make test
 
 %files
-%doc Changes README
+%doc Changes
 %{perl_vendorlib}/Test/
-%{_mandir}/man3/Test::Exception.3pm*
+%{_mandir}/man3/Test::Exception.3*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.40-1
+- 更新到 0.40
+
 * Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 0.32-5
 - 为 Magic 3.0 重建
 

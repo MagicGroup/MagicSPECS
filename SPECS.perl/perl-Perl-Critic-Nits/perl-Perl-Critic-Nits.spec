@@ -1,11 +1,11 @@
 Name:           perl-Perl-Critic-Nits
-Version:        1.0.0
-Release:        7%{?dist}
+Version:	1.0.0
+Release:	8%{?dist}
 Summary:        Policies of nits I like to pick
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 URL:            http://search.cpan.org/dist/Perl-Critic-Nits/
-Source0:        http://www.cpan.org/authors/id/K/KC/KCOWGILL/Perl-Critic-Nits-v%{version}.tar.gz
+Source0:        http://search.cpan.org/CPAN/authors/id/K/KC/KCOWGILL/Perl-Critic-Nits-v%{version}.tar.gz
 BuildArch:      noarch
 BuildRequires:  perl(ExtUtils::MakeMaker)
 BuildRequires:  perl(Perl::Critic) >= 1.07

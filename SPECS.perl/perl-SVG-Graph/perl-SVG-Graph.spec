@@ -1,11 +1,11 @@
 Name:           perl-SVG-Graph
-Version:        0.02
-Release:        12%{?dist}
+Version:	0.04
+Release:	1%{?dist}
 Summary:        Visualize your data in Scalable Vector Graphics (SVG) format
 License:        Artistic 2.0
 Group:          Development/Libraries
 URL:            http://search.cpan.org/dist/SVG-Graph/
-Source0:        http://www.cpan.org/modules/by-module/SVG/SVG-Graph-%{version}.tar.gz
+Source0:        http://search.cpan.org/CPAN/authors/id/C/CJ/CJFIELDS/SVG-Graph-%{version}.tar.gz
 Source1:        LICENSE.fedora
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
@@ -32,42 +32,33 @@ Requires:       perl(Tree::DAG_Node) >= 1.04
 SVG::Graph is a suite of perl modules for plotting data. SVG::Graph
 currently supports plots of one-, two- and three-dimensional data, as well
 as N-ary rooted trees.
-
 %prep
 %setup -q -n SVG-Graph-%{version}
-cp %{SOURCE1} .
 
 # remove all execute bits from eg subdirectory
 find eg -type f -exec chmod -x {} 2>/dev/null ';'
 
 %build
-%{__perl} Makefile.PL INSTALLDIRS=vendor
-make %{?_smp_mflags}
+%{__perl} Build.PL installdirs=vendor
+./Build
 
 %install
-rm -rf $RPM_BUILD_ROOT
-
-make pure_install PERL_INSTALL_ROOT=$RPM_BUILD_ROOT
-
-find $RPM_BUILD_ROOT -type f -name .packlist -exec rm -f {} \;
-find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
-
+./Build install destdir=$RPM_BUILD_ROOT create_packlist=0
 %{_fixperms} $RPM_BUILD_ROOT/*
 
 %check
-make test
-
-%clean
-rm -rf $RPM_BUILD_ROOT
+./Build test
 
 %files
-%defattr(-,root,root,-)
-%doc Changes README LICENSE.fedora
-%doc eg
+%license LICENSE
+%doc Changes README eg
 %{perl_vendorlib}/*
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.04-1
+- 更新到 0.04
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.02-12
 - 为 Magic 3.0 重建
 

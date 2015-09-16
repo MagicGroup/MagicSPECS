@@ -1,6 +1,6 @@
 Name:           perl-HTML-PrettyPrinter
 Version:        0.03
-Release:        15%{?dist}
+Release:        16%{?dist}
 
 Summary:        Generate nice HTML files from HTML syntax trees
 
@@ -59,6 +59,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.03-16
+- 为 Magic 3.0 重建
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.03-15
 - 为 Magic 3.0 重建
 

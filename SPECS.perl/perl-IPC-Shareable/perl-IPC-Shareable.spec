@@ -1,15 +1,13 @@
 Name:           perl-IPC-Shareable
-Version:        0.60
-Release:        25%{?dist}
+Version:	0.61
+Release:	2%{?dist}
 Summary:        Share Perl variables between processes
 
 Group:          Development/Libraries
 License:        GPLv2+
 URL:            http://search.cpan.org/dist/IPC-Shareable/
-Source0:        http://www.cpan.org/authors/id/B/BS/BSUGARS/IPC-Shareable-%{version}.tar.gz
+Source0:        http://search.cpan.org/CPAN/authors/id/M/MS/MSOUTH/IPC-Shareable-%{version}.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-Patch0:         perl-IPC-Shareable-nostrictrefs.patch
-Patch1:		perl-IPC-Shareable-fixtest38.patch
 
 BuildArch:      noarch
 BuildRequires:  perl(Storable), perl(ExtUtils::MakeMaker)
@@ -25,8 +23,6 @@ arrays, hashes of hashes, etc.
 
 %prep
 %setup -q -n IPC-Shareable-%{version}
-%patch0 -p1
-%patch1 -p1
 find eg -type f | xargs chmod -c 644
 
 
@@ -59,6 +55,12 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.61-2
+- 为 Magic 3.0 重建
+
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.61-1
+- 更新到 0.61
+
 * Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 0.60-25
 - 为 Magic 3.0 重建
 

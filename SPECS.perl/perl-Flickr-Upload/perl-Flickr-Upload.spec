@@ -1,11 +1,12 @@
 Name:           perl-Flickr-Upload
-Version:        1.32
-Release:        21%{?dist}
+%define real_ver 1.5
+Version:	1.50
+Release:	2%{?dist}
 Summary:        Flickr.com upload module and script
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 URL:            http://search.cpan.org/dist/Flickr-Upload/
-Source0:        http://www.cpan.org/authors/id/C/CP/CPB/Flickr-Upload-%{version}.tar.gz
+Source0:        http://search.cpan.org/CPAN/authors/id/S/SS/SSEVERIN/Flickr-Upload-%{real_ver}.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 BuildRequires:  perl(Test::Simple)
@@ -26,7 +27,7 @@ Patch0: 	perl-Flickr-Upload-remotetests.patch
 Module and script for uploading images to flickr.com web gallery.
 
 %prep
-%setup -q -n Flickr-Upload-%{version}
+%setup -q -n Flickr-Upload-%{real_ver}
 %patch0 -p0 -b .remotetests
 
 %build
@@ -59,6 +60,12 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Wed Sep 16 2015 Liu Di <liudidi@gmail.com> - 1.50-2
+- 为 Magic 3.0 重建
+
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.50-1
+- 更新到 1.50
+
 * Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 1.32-21
 - 为 Magic 3.0 重建
 

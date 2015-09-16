@@ -1,7 +1,7 @@
 Name:           perl-DBD-AnyData
 Summary:        DBI access to XML, CSV and other formats 
 Version:        0.110
-Release:        23%{?dist}
+Release:        24%{?dist}
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 Source0:        http://search.cpan.org/CPAN/authors/id/R/RE/REHSACK/DBD-AnyData-%{version}.tar.gz 
@@ -60,6 +60,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.110-24
+- 为 Magic 3.0 重建
+
 * Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 0.110-23
 - 为 Magic 3.0 重建
 

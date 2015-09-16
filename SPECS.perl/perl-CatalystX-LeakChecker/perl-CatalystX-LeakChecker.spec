@@ -1,7 +1,7 @@
 Name:           perl-CatalystX-LeakChecker
 Summary:        Debug memory leaks in Catalyst applications
 Version:        0.06
-Release:        26%{?dist}
+Release:        27%{?dist}
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 Source0:        http://search.cpan.org/CPAN/authors/id/F/FL/FLORA/CatalystX-LeakChecker-%{version}.tar.gz 
@@ -66,6 +66,9 @@ find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null ';'
 %{_mandir}/man3/*.3*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.06-27
+- 为 Magic 3.0 重建
+
 * Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 0.06-26
 - 为 Magic 3.0 重建
 

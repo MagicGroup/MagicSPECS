@@ -1,6 +1,6 @@
 Name:           perl-Sys-MemInfo
-Version:        0.91
-Release:        10%{?dist}
+Version:	0.98
+Release:	1%{?dist}
 Summary:        Memory information as Perl module
 # README:       GPLv1+ or Artistic
 # MemInfo.pm    LGPLv2+
@@ -8,7 +8,7 @@ Summary:        Memory information as Perl module
 License:        (GPLv1+ or Artistic) and LGPLv2+
 Group:          Development/Libraries
 URL:            http://search.cpan.org/dist/Sys-MemInfo/
-Source0:        http://www.cpan.org/modules/by-module/Sys/Sys-MemInfo-%{version}.tar.gz
+Source0:        http://search.cpan.org/CPAN/authors/id/S/SC/SCRESTO/Sys-MemInfo-%{version}.tar.gz
 BuildRequires:  perl(ExtUtils::MakeMaker)
 BuildRequires:  perl(File::Copy)
 # Run-time:
@@ -26,7 +26,7 @@ Sys::MemInfo returns the total amount of free and used physical memory in
 bytes in totalmem and freemem variables.
 
 %prep
-%setup -q -n Sys-MemInfo
+%setup -q -n Sys-MemInfo-%{version}
 
 %build
 %{__perl} Makefile.PL INSTALLDIRS=vendor OPTIMIZE="$RPM_OPT_FLAGS"
@@ -48,6 +48,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.98-1
+- 更新到 0.98
+
 * Thu Jul 03 2014 Liu Di <liudidi@gmail.com> - 0.91-10
 - 为 Magic 3.0 重建
 

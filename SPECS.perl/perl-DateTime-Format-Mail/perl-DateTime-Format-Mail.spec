@@ -1,12 +1,13 @@
 Name:           perl-DateTime-Format-Mail
-Version:        0.3001        
-Release:        21%{?dist}
+Version:	0.4020
+Release:	1%{?dist}
 Summary:        Convert between DateTime and RFC2822/822 formats
 
 Group:          Development/Libraries
 License:        GPL+ or Artistic        
 URL:            http://search.cpan.org/dist/DateTime-Format-Mail            
-Source0: http://search.cpan.org/CPAN/authors/id/D/DR/DROLSKY/DateTime-Format-Mail-%{version}.tar.gz        
+%define cpan_version 0.402
+Source0:        http://search.cpan.org/CPAN/authors/id/B/BO/BOOK/DateTime-Format-Mail-%{cpan_version}.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildArch:      noarch
@@ -38,7 +39,7 @@ people still get it wrong. This module aims to correct that.
 
 
 %prep
-%setup -q -n DateTime-Format-Mail-%{version}
+%setup -q -n DateTime-Format-Mail-%{cpan_version}
 
 # POD doesn't like E<copy> very much...
 perl -pi -e 's/E<copy>/(C)/' `find lib/ -type f`
@@ -47,9 +48,6 @@ perl -pi -e 's/E<copy>/(C)/' `find lib/ -type f`
 %build
 %{__perl} Makefile.PL INSTALLDIRS=vendor
 make %{?_smp_mflags}
-
-# American English, bitte
-mv LICENCE LICENSE
 
 %install
 rm -rf %{buildroot}
@@ -72,13 +70,24 @@ rm -rf %{buildroot}
 
 %files
 %defattr(-,root,root,-)
-%doc Artistic COPYING LICENSE Changes AUTHORS README CREDITS 
 %doc t/sample_dates t/invalid.t
 %{perl_vendorlib}/*
 %{_mandir}/man3/*.3*
 
 
 %changelog
+* Tue Sep 15 2015 Liu Di <liudidi@gmail.com> - 0.4020-1
+- 更新到 0.4020
+
+* Tue Sep 15 2015 Liu Di <liudidi@gmail.com> - 0.402-3
+- 为 Magic 3.0 重建
+
+* Tue Sep 15 2015 Liu Di <liudidi@gmail.com> - 0.402-2
+- 为 Magic 3.0 重建
+
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.402-1
+- 更新到 0.402
+
 * Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 0.3001-21
 - 为 Magic 3.0 重建
 

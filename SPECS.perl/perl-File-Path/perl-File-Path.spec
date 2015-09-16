@@ -1,11 +1,11 @@
 Name:           perl-File-Path
-Version:        2.09
-Release:        298%{?dist}
+Version:	2.11_003
+Release:	2%{?dist}
 Summary:        Create or remove directory trees
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 URL:            http://search.cpan.org/dist/File-Path/
-Source0:        http://www.cpan.org/authors/id/D/DL/DLAND/File-Path-%{version}.tar.gz
+Source0:        http://search.cpan.org/CPAN/authors/id/R/RI/RICHE/File-Path-%{version}.tar.gz
 BuildArch:      noarch
 BuildRequires:  perl
 BuildRequires:  perl(ExtUtils::MakeMaker)
@@ -50,11 +50,16 @@ find $RPM_BUILD_ROOT -type f -name .packlist -exec rm -f {} \;
 make test
 
 %files
-%doc Changes README TODO
 %{perl_vendorlib}/*
 %{_mandir}/man3/*
 
 %changelog
+* Mon Sep 14 2015 Liu Di <liudidi@gmail.com> - 2.11_003-2
+- 为 Magic 3.0 重建
+
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 2.11_003-1
+- 更新到 2.11_003
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 2.09-298
 - 为 Magic 3.0 重建
 

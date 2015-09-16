@@ -1,6 +1,6 @@
 Name: 		perl-File-Find-Rule
 Version: 	0.33
-Release: 	7%{?dist}
+Release: 	8%{?dist}
 Summary: 	Perl module implementing an alternative interface to File::Find
 License: 	GPL+ or Artistic
 Group: 		Development/Libraries
@@ -45,6 +45,9 @@ chmod -R u+w $RPM_BUILD_ROOT/*
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.33-8
+- 为 Magic 3.0 重建
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.33-7
 - 为 Magic 3.0 重建
 

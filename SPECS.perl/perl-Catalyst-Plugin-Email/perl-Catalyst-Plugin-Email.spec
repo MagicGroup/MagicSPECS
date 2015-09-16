@@ -1,11 +1,11 @@
 Name:           perl-Catalyst-Plugin-Email
-Version:        0.08
-Release:        21%{?dist}
+Version:	0.09
+Release:	1%{?dist}
 Summary:        Send emails with Catalyst
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 URL:            http://search.cpan.org/dist/Catalyst-Plugin-Email/
-Source0:        http://www.cpan.org/authors/id/M/MR/MRAMBERG/Catalyst-Plugin-Email-%{version}.tar.gz
+Source0:        http://search.cpan.org/CPAN/authors/id/E/ET/ETHER/Catalyst-Plugin-Email-%{version}.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 BuildRequires:  perl(Catalyst) >= 2.99
@@ -50,6 +50,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.09-1
+- 更新到 0.09
+
 * Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 0.08-21
 - 为 Magic 3.0 重建
 

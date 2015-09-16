@@ -1,6 +1,6 @@
 Name:           perl-Apache-Htpasswd
 Version:	1.9
-Release:	1%{?dist}
+Release:	3%{?dist}
 Summary:        Manage Unix crypt-style password file
 Summary(zh_CN.UTF-8): 管理 Unix 加密类型密码文件
 
@@ -61,6 +61,12 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.9-3
+- 为 Magic 3.0 重建
+
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.9-2
+- 为 Magic 3.0 重建
+
 * Thu Apr 23 2015 Liu Di <liudidi@gmail.com> - 1.9-1
 - 更新到 1.9
 

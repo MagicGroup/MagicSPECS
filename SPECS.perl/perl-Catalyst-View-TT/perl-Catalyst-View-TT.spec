@@ -1,10 +1,10 @@
 Name:           perl-Catalyst-View-TT
 Summary:        Template Toolkit View Class
-Version:        0.37
-Release:        17%{?dist}
+Version:	0.43
+Release:	1%{?dist}
 License:        GPL+ or Artistic
 Group:          Development/Libraries
-Source0:        http://search.cpan.org/CPAN/authors/id/M/MS/MSTROUT/Catalyst-View-TT-%{version}.tar.gz
+Source0:        http://search.cpan.org/CPAN/authors/id/E/ET/ETHER/Catalyst-View-TT-%{version}.tar.gz
 URL:            http://search.cpan.org/dist/Catalyst-View-TT/
 Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
 BuildArch:      noarch
@@ -66,6 +66,9 @@ find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.43-1
+- 更新到 0.43
+
 * Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 0.37-17
 - 为 Magic 3.0 重建
 

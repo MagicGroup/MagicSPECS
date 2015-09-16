@@ -1,6 +1,6 @@
 Name:           perl-Config-IniHash
 Version:        3.01.01
-Release:        7%{?dist}
+Release:        8%{?dist}
 Summary:        Perl extension for reading and writing INI files
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -52,6 +52,9 @@ find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 3.01.01-8
+- 为 Magic 3.0 重建
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 3.01.01-7
 - 为 Magic 3.0 重建
 

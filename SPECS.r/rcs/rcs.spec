@@ -1,13 +1,14 @@
 Summary: Revision Control System (RCS) file version management tools
+Summary(zh_CN.UTF-8): 版本控制系统 (RCS) 文件版本管理工具
 Name: rcs
-Version: 5.8.1
-Release: 4%{?dist}
+Version:	5.9.4
+Release:	1%{?dist}
 License: GPLv3+
 Group: Development/Tools
+Group(zh_CN.UTF-8): 开发/工具
 URL: http://www.gnu.org/software/rcs/
-Source: ftp://ftp.gnu.org/gnu/rcs/%{name}-%{version}.tar.gz
+Source: http://mirrors.ustc.edu.cn/gnu/rcs/%{name}-%{version}.tar.xz
 Patch0: rcs-5.8-build-tweaks.patch
-Patch1: rcs-5.8-sameuserlocks.patch
 Patch2: rcs-5.8-newsvnsyntax.patch
 Provides: bundled(gnulib)
 BuildRequires: autoconf
@@ -29,10 +30,12 @@ documentation, graphics, papers and form letters).
 The rcs package should be installed if you need a system for managing
 different versions of files.
 
+%description -l zh_CN.UTF-8
+版本控制系统 (RCS) 文件版本管理工具。
+
 %prep
 %setup -q
 %patch0 -p1 -b .build-tweaks
-%patch1 -p1 -b .sameuserlocks
 %patch2 -p1 -b .newsvnsyntax
 autoconf
 
@@ -46,6 +49,7 @@ make DESTDIR=$RPM_BUILD_ROOT install
 install -m 755 src/rcsfreeze $RPM_BUILD_ROOT%{_bindir}
 
 rm -f $RPM_BUILD_ROOT/%{_infodir}/dir
+magic_rpm_clean.sh
 
 %check
 make check
@@ -66,6 +70,9 @@ fi
 %{_infodir}/*
 
 %changelog
+* Sat Sep 12 2015 Liu Di <liudidi@gmail.com> - 5.9.4-1
+- 更新到 5.9.4
+
 * Fri Nov 23 2012 Honza Horak <hhorak@redhat.com> - 5.8.1-4
 - Use make DESTDIR=... install instead of %%make_install
 

@@ -1,6 +1,6 @@
 Name:		perl-Archive-Any-Lite
 Version:	0.10
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:	Simple CPAN package extractor 
 Summary(zh_CN.UTF-8): 简单的 CPAN 包解压器
 License:	GPL+ or Artistic
@@ -69,6 +69,9 @@ make test TEST_POD=1
 %{_mandir}/man3/Archive::Any::Lite.3pm*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.10-2
+- 为 Magic 3.0 重建
+
 * Thu Apr 23 2015 Liu Di <liudidi@gmail.com> - 0.10-1
 - 更新到 0.10
 

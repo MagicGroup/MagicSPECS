@@ -1,11 +1,11 @@
 Name:           perl-HTTP-Message
-Version:        6.04
-Release:        3%{?dist}
+Version:	6.11
+Release:	1%{?dist}
 Summary:        HTTP style message
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 URL:            http://search.cpan.org/dist/HTTP-Message/
-Source0:        http://www.cpan.org/authors/id/G/GA/GAAS/HTTP-Message-%{version}.tar.gz
+Source0:        http://search.cpan.org/CPAN/authors/id/E/ET/ETHER/HTTP-Message-%{version}.tar.gz
 BuildArch:      noarch
 BuildRequires:  perl(ExtUtils::MakeMaker)
 # Run-time:
@@ -79,6 +79,9 @@ find $RPM_BUILD_ROOT -type f -name .packlist -exec rm -f {} \;
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 6.11-1
+- 更新到 6.11
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 6.04-3
 - 为 Magic 3.0 重建
 

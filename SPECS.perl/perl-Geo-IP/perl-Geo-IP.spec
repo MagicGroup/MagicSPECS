@@ -1,14 +1,12 @@
 Name:  perl-Geo-IP
-Version: 1.38
-Release: 11%{?dist}
+Version:	1.45
+Release:	2%{?dist}
 Summary: Efficient Perl bindings for the GeoIP location database       
 
 Group: Development/Libraries
 License: GPL+ or Artistic
 URL: http://search.cpan.org/dist/Geo-IP/            
-Source0: http://search.cpan.org/CPAN/authors/id/B/BO/BORISZ/Geo-IP-%{version}.tar.gz   
-Patch0: Geo-IP-1.28-yahoo-namelookuptest.diff
-Patch1:	Geo-IP-1.28-example.diff
+Source0:        http://search.cpan.org/CPAN/authors/id/M/MA/MAXMIND/Geo-IP-%{version}.tar.gz
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: GeoIP-devel perl(ExtUtils::MakeMaker)
 Requires: perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
@@ -22,9 +20,6 @@ similar modules.
 
 %prep
 %setup -q -n Geo-IP-%{version}
-
-%patch0 -p0 -b .namelookup
-%patch1 -p0
 
 %build
 perl Makefile.PL INSTALLDIRS=vendor OPTIMIZE="$RPM_OPT_FLAGS"
@@ -56,6 +51,12 @@ rm -rf %{buildroot}
 %{_mandir}/man3/Geo::Mirror.3*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.45-2
+- 为 Magic 3.0 重建
+
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.45-1
+- 更新到 1.45
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.38-11
 - 为 Magic 3.0 重建
 

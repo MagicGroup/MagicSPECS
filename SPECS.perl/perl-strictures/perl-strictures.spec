@@ -1,11 +1,11 @@
 Name:           perl-strictures
-Version:        1.004002
-Release:        8%{?dist}
+Version:	2.000001
+Release:	1%{?dist}
 Summary:        Turn on strict and make all warnings fatal
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 URL:            http://search.cpan.org/dist/strictures/
-Source0:        http://search.cpan.org/CPAN/authors/id/E/ET/ETHER/strictures-%{version}.tar.gz
+Source0:	http://search.cpan.org/CPAN/authors/id/H/HA/HAARG/strictures-%{version}.tar.gz
 BuildArch:      noarch
 BuildRequires:  perl(ExtUtils::MakeMaker)
 BuildRequires:  perl(strict)
@@ -45,6 +45,9 @@ find $RPM_BUILD_ROOT -type f -name .packlist -exec rm -f {} \;
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 2.000001-1
+- 更新到 2.000001
+
 * Sun Jun 15 2014 Liu Di <liudidi@gmail.com> - 1.004002-8
 - 为 Magic 3.0 重建
 

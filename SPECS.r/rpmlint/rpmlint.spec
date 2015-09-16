@@ -1,12 +1,18 @@
+%bcond_without python3
+%global python %{__python3}
+%global pytest %(ls -1 %{_bindir}/py.test-3* | tail -n 1)
+
 Name:           rpmlint
-Version:        1.4
-Release:        12%{?dist}
+Version:	1.7
+Release:	2%{?dist}
 Summary:        Tool for checking common errors in RPM packages
+Summary(zh_CN.UTF-8): 检查 RPM 包中的一般错误的工具
 
 Group:          Development/Tools
+Group(zh_CN.UTF-8): 开发/工具
 License:        GPLv2
 URL:            http://rpmlint.zarb.org/
-Source0:        http://rpmlint.zarb.org/download/%{name}-%{version}.tar.xz
+Source0:        https://github.com/rpm-software-management/rpmlint/archive/%{name}-%{version}.tar.gz
 Source1:        %{name}.config
 Source2:        %{name}-CHANGES.package.old
 Source3:        %{name}-etc.config
@@ -14,32 +20,21 @@ Source3:        %{name}-etc.config
 Source4:        %{name}.config.el4
 # EL-5 specific config
 Source5:        %{name}.config.el5
-Patch0: rpmlint-1.4-encoding.patch
-# http://sourceforge.net/p/rpmlint/code/ci/671bf6d21c6e878e6ee551ee4e2871df8947ac52/
-Patch1: rpmlint-1.4-py3-magic-number-fix.patch
-# Tighten macro regexp to min 3 chars, starting with a letter or underscore.
-# http://sourceforge.net/p/rpmlint/code/ci/ae8a019e53784a45c59f23a7b09ad47ea7584795/
-Patch2: rpmlint-1.4-tighten-macro-regexp.patch
-# Fix handling of Ruby RI files as text files, they're always binary files.
-# http://rpmlint.zarb.org/cgi-bin/trac.cgi/ticket/569
-Patch3: rpmlint-1.4-ruby-ri-files-are-binary.patch
 BuildArch:      noarch
-BuildRequires:  python >= 2.4
-BuildRequires:  rpm-python >= 4.4
+BuildRequires:  python3-devel
+BuildRequires:  rpm-python3 >= 4.4.2.2
+BuildRequires:  python3-pytest
+Requires:	python3
+Requires:       rpm-python3 >= 4.4.2.2
 BuildRequires:  sed >= 3.95
-%if ! 0%{?rhel}
-# no bash-completion for RHEL
 BuildRequires:  bash-completion
-%endif
-Requires:       rpm-python >= 4.4.2.2
+Requires:       rpm-python3 >= 4.4.2.2
 Requires:       python >= 2.4
-%if ! 0%{?rhel}
 # python-magic and python-enchant are actually optional dependencies, but
 # they bring quite desirable features.  They're not available in RHEL/EPEL 5
 # as of 2010-06-23 though.
-Requires:       python-magic
-Requires:       python-enchant
-%endif
+Requires:       python3-magic
+Requires:       python3-enchant
 Requires:       cpio
 Requires:       binutils
 Requires:       desktop-file-utils
@@ -55,11 +50,7 @@ and source packages as well as spec files can be checked.
 
 
 %prep
-%setup -q
-%patch0 -p1 -b .enc
-%patch1 -p1 -b .py3
-%patch2 -p1 -b .tighten-regexp
-%patch3 -p1 -b .ruby-ri-files
+%setup -q -n %{name}-%{name}-%{version}
 sed -i -e /MenuCheck/d Config.py
 cp -p config config.example
 install -pm 644 %{SOURCE2} CHANGES.package.old
@@ -67,13 +58,12 @@ install -pm 644 %{SOURCE3} config
 
 
 %build
-make COMPILE_PYC=1
-
+make COMPILE_PYC=1 PYTHON=%{python}
 
 %install
 touch rpmlint.pyc rpmlint.pyo # just for the %%exclude to work everywhere
 make install DESTDIR=$RPM_BUILD_ROOT ETCDIR=%{_sysconfdir} MANDIR=%{_mandir} \
-  LIBDIR=%{_datadir}/rpmlint BINDIR=%{_bindir}
+  LIBDIR=%{_datadir}/rpmlint BINDIR=%{_bindir} PYTHON=%{python}
 install -pm 644 %{SOURCE1} $RPM_BUILD_ROOT%{_datadir}/rpmlint/config
 
 install -pm 644 %{SOURCE4} $RPM_BUILD_ROOT%{_datadir}/rpmlint/config.el4
@@ -82,34 +72,31 @@ pushd $RPM_BUILD_ROOT%{_bindir}
 ln -s rpmlint el4-rpmlint
 ln -s rpmlint el5-rpmlint
 popd
-%if 0%{?rhel}
-rm -rf %{buildroot}%{_sysconfdir}/bash_completion.d/
-%endif
-
 
 %check
-make check
+make check PYTHON=%{python} PYTEST=%{pytest}
 
 
 %files
-%doc AUTHORS COPYING ChangeLog CHANGES.package.old README config.example
 %config(noreplace) %{_sysconfdir}/rpmlint/
-%if 0%{?fedora} >= 17
 %{_datadir}/bash-completion/
-%else
-%if ! 0%{?rhel}
-%{_sysconfdir}/bash_completion.d/
-%endif
-%endif
 %{_bindir}/rpmdiff
 %{_bindir}/el*-rpmlint
 %{_bindir}/rpmlint
 %{_datadir}/rpmlint/
-%exclude %{_datadir}/rpmlint/rpmlint.py[co]
+%{_mandir}/man1/rpmdiff.1*
 %{_mandir}/man1/rpmlint.1*
 
-
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.7-2
+- 为 Magic 3.0 重建
+
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.7-1
+- 更新到 1.7
+
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.7-2
+- 为 Magic 3.0 重建
+
 * Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 1.4-12
 - 为 Magic 3.0 重建
 

@@ -1,6 +1,6 @@
 Name:           perl-SGMLSpm
-Version:        1.03ii
-Release:        31%{?dist}
+Version:	1.03ii
+Release:	32%{?dist}
 Summary:        Perl library for parsing the output of nsgmls
 
 Group:          Development/Libraries
@@ -17,7 +17,6 @@ Requires:       openjade
 %description
 Perl programs can use the SGMLSpm module to help convert SGML, HTML or XML
 documents into new formats.
-
 
 %prep
 %setup -q -n SGMLSpm
@@ -41,7 +40,6 @@ rm -rf $RPM_BUILD_ROOT
 %{_bindir}/sgmlspl
 %{perl_vendorlib}/SGMLS*
 %{perl_vendorlib}/skel.pl
-
 
 %changelog
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.03ii-31

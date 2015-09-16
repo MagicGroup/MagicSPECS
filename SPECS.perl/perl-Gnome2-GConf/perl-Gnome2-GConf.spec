@@ -1,6 +1,6 @@
 Name:           perl-Gnome2-GConf
 Version:        1.044
-Release:        21%{?dist}
+Release:        22%{?dist}
 Summary:        Perl wrappers for the GConf configuration engine
 License:        LGPLv2+
 Group:          Development/Libraries
@@ -67,6 +67,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.044-22
+- 为 Magic 3.0 重建
+
 * Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 1.044-21
 - 为 Magic 3.0 重建
 

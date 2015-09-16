@@ -1,6 +1,6 @@
 Name:           perl-HTTP-OAI
-Version:        3.27
-Release:        5%{?dist}
+Version:	4.03
+Release:	1%{?dist}
 Summary:        API for the OAI-PMH
 License:        BSD
 Group:          Development/Libraries
@@ -50,6 +50,9 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_mandir}/man3/*
 %{_mandir}/man1/*
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 4.03-1
+- 更新到 4.03
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 3.27-5
 - 为 Magic 3.0 重建
 

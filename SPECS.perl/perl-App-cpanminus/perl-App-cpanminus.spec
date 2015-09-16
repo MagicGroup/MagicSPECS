@@ -1,6 +1,6 @@
 Name:           perl-App-cpanminus
-Version:	1.7031
-Release:	1%{?dist}
+Version:	1.7039
+Release:	2%{?dist}
 Summary:        Library for get, unpack, build and install CPAN modules
 Summary(zh_CN.UTF-8): 获取、编译和安装 CPAN 模块的库
 License:        GPL+ or Artistic
@@ -72,6 +72,12 @@ magic_rpm_clean.sh
 %{_bindir}/cpanm
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.7039-2
+- 为 Magic 3.0 重建
+
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.7039-1
+- 更新到 1.7039
+
 * Thu Apr 23 2015 Liu Di <liudidi@gmail.com> - 1.7031-1
 - 更新到 1.7031
 

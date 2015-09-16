@@ -1,8 +1,8 @@
 # $Id: perl-Class-MakeMethods.spec,v 1.10 2010/04/30 09:53:24 mmaslano Exp $
 
 Name:           perl-Class-MakeMethods
-Version:        1.01        
-Release:        16%{?dist}
+Version:	1.009
+Release:	1%{?dist}
 Summary:        Generate common types of methods
 
 Group:          Development/Libraries
@@ -56,14 +56,8 @@ find %{buildroot} -type f -name '*.bs' -a -size 0 -exec rm -f {} ';'
 find %{buildroot} -type d -depth -exec rmdir {} 2>/dev/null ';'
 chmod -R u+w %{buildroot}/*
 
-# take the benchmark file and let's stick it in % doc
-mv %{buildroot}%{perl_vendorlib}/Class/benchmark.pl .
-# and clean up the interperter
-perl -pi -e 's|^#!perl$|#!/usr/bin/perl|m' benchmark.pl
-
 
 %check
-
 
 
 %clean
@@ -72,12 +66,15 @@ rm -rf %{buildroot}
 
 %files
 %defattr(-,root,root,-)
-%doc CHANGES README benchmark.pl
+%doc CHANGES README 
 %{perl_vendorlib}/*
 %{_mandir}/man3/*.3*
 
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.009-1
+- 更新到 1.009
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.01-16
 - 为 Magic 3.0 重建
 

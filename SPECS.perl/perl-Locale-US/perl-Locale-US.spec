@@ -1,11 +1,11 @@
 Name:           perl-Locale-US
-Version:        2.112150
-Release:        6%{?dist}
+Version:	3.04
+Release:	1%{?dist}
 Summary:        Two letter codes for state identification in the United States and vice versa
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 URL:            http://search.cpan.org/dist/Locale-US/
-Source0:        http://www.cpan.org/authors/id/T/TB/TBONE/Locale-US-%{version}.tar.gz
+Source0:        http://search.cpan.org/CPAN/authors/id/A/AC/ACCARDO/Locale-US-%{version}.tar.gz
 BuildArch:      noarch
 BuildRequires:  perl(ExtUtils::MakeMaker) >= 6.30
 # Run-time
@@ -48,6 +48,9 @@ find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 3.04-1
+- 更新到 3.04
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 2.112150-6
 - 为 Magic 3.0 重建
 

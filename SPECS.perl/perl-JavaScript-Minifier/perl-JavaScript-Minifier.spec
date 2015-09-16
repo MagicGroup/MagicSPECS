@@ -1,11 +1,11 @@
 Name:           perl-JavaScript-Minifier
-Version:        1.05
-Release:        11%{?dist}
+Version:	1.14
+Release:	1%{?dist}
 Summary:        Perl extension for minifying JavaScript code
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 URL:            http://search.cpan.org/dist/JavaScript-Minifier/
-Source0:        http://www.cpan.org/authors/id/P/PM/PMICHAUX/JavaScript-Minifier-%{version}.tar.gz
+Source0:        http://search.cpan.org/CPAN/authors/id/Z/ZO/ZOFFIX/JavaScript-Minifier-%{version}.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 BuildRequires:  perl(ExtUtils::MakeMaker)
@@ -51,6 +51,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.14-1
+- 更新到 1.14
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.05-11
 - 为 Magic 3.0 重建
 

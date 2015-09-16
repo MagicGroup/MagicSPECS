@@ -1,10 +1,10 @@
 Name:           perl-Catalyst-Plugin-ConfigLoader
 Summary:        Load config files of various types
-Version:        0.30
-Release:        23%{?dist}
+Version:	0.34
+Release:	1%{?dist}
 License:        GPL+ or Artistic
 Group:          Development/Libraries
-Source0:        http://search.cpan.org/CPAN/authors/id/B/BR/BRICAS/Catalyst-Plugin-ConfigLoader-%{version}.tar.gz 
+Source0:        http://search.cpan.org/CPAN/authors/id/B/BO/BOBTFISH/Catalyst-Plugin-ConfigLoader-%{version}.tar.gz
 URL:            http://search.cpan.org/dist/Catalyst-Plugin-ConfigLoader/
 Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
 BuildArch:      noarch
@@ -55,6 +55,9 @@ find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.34-1
+- 更新到 0.34
+
 * Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 0.30-23
 - 为 Magic 3.0 重建
 

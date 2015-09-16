@@ -1,11 +1,11 @@
 Name:           perl-Clone
-Version:        0.31
-Release:        14%{?dist}
+Version:	0.38
+Release:	1%{?dist}
 Summary:        Recursively copy perl datatypes
 Group:          Development/Libraries
 License:        GPL+ or Artistic
 URL:            http://search.cpan.org/dist/Clone
-Source0:        http://search.cpan.org/CPAN/authors/id/R/RD/RDF/Clone-%{version}.tar.gz
+Source0:	http://search.cpan.org/CPAN/authors/id/G/GA/GARU/Clone-%{version}.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildRequires:  perl(ExtUtils::ParseXS)
@@ -65,6 +65,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.38-1
+- 更新到 0.38
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.31-14
 - 为 Magic 3.0 重建
 

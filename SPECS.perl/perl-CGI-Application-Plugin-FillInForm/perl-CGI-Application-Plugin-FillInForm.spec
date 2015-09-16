@@ -1,6 +1,6 @@
 Name:           perl-CGI-Application-Plugin-FillInForm
 Version:        1.15
-Release:        19%{?dist}
+Release:        20%{?dist}
 Summary:        Integrate CGI::Application with HTML::FillInForm
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -49,6 +49,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.15-20
+- 为 Magic 3.0 重建
+
 * Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 1.15-19
 - 为 Magic 3.0 重建
 

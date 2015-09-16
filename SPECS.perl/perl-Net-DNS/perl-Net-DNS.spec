@@ -1,11 +1,11 @@
 Name:          perl-Net-DNS
 Version:       0.68
-Release:       12%{?dist}
+Release:       14%{?dist}
 Summary:       DNS resolver modules for Perl
 License:       GPL+ or Artistic
 Group:         Development/Libraries
 URL:           http://www.net-dns.org/
-Source0:       http://www.cpan.org/authors/id/O/OL/OLAF/Net-DNS-%{version}.tar.gz
+Source0:        http://search.cpan.org/CPAN/authors/id/N/NL/NLNETLABS/Net-DNS-%{version}.tar.gz
 BuildRequires: %{_bindir}/iconv
 BuildRequires: perl(base)
 BuildRequires: perl(constant)
@@ -101,6 +101,12 @@ done
 %{_mandir}/man3/Net::DNS::Nameserver*
 
 %changelog
+* Mon Sep 14 2015 Liu Di <liudidi@gmail.com> - 0.68-14
+- 为 Magic 3.0 重建
+
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.68-13
+- 为 Magic 3.0 重建
+
 * Sun Jun 15 2014 Liu Di <liudidi@gmail.com> - 0.68-12
 - 为 Magic 3.0 重建
 

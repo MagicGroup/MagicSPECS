@@ -1,13 +1,12 @@
 Name:           perl-Compress-LZF
-Version:        3.7
-Release:        4%{?dist}
+Version:	3.8
+Release:	1%{?dist}
 Summary:        Extremely light-weight Lempel-Ziv-Free compression
 License:        GPL+ or Artistic
 # patch to address https://fedoraproject.org/wiki/Common_Rpmlint_issues#incorrect-fsf-address has been sent upstream at https://rt.cpan.org/Ticket/Display.html?id=93643
 Group:          Development/Libraries
 URL:            http://search.cpan.org/dist/Compress-LZF/
 Source0:        http://www.cpan.org/modules/by-module/Compress/Compress-LZF-%{version}.tar.gz
-Patch1:         compress_lzf_unbundle.patch
 BuildRequires:  liblzf-devel
 BuildRequires:  perl
 BuildRequires:  perl(DynaLoader)
@@ -21,8 +20,6 @@ This is Perl binding to the LZF compression library.
 
 %prep
 %setup -q -n Compress-LZF-%{version}
-
-%patch1 -p1
 
 %build
 %{__perl} Makefile.PL INSTALLDIRS=vendor OPTIMIZE="$RPM_OPT_FLAGS"
@@ -46,6 +43,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 3.8-1
+- 更新到 3.8
+
 * Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 3.7-4
 - 为 Magic 3.0 重建
 

@@ -1,6 +1,6 @@
 Name:           perl-Locale-Maketext-Gettext
-Version:        1.27
-Release:        15%{?dist}
+Version:	1.28
+Release:	1%{?dist}
 Summary:        Joins the gettext and Maketext frameworks
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -52,6 +52,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man1/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.28-1
+- 更新到 1.28
+
 * Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 1.27-15
 - 为 Magic 3.0 重建
 

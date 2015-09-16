@@ -1,11 +1,11 @@
 Name:           perl-Test-NoPlan
-Version:        0.0.6
-Release:        10%{?dist}
+Version:	0.0.6
+Release:	11%{?dist}
 Summary:        Check perl test files for no_plan
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 URL:            http://search.cpan.org/dist/Test-NoPlan/
-Source0:        http://www.cpan.org/authors/id/D/DU/DUNCS/Test-NoPlan-v%{version}.tar.gz
+Source0:        http://search.cpan.org/CPAN/authors/id/D/DU/DUNCS/Test-NoPlan-v%{version}.tar.gz
 BuildArch:      noarch
 BuildRequires:  perl(Module::Build)
 # Run-time:

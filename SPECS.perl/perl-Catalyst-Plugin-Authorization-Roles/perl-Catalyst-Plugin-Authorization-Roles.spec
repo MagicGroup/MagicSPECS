@@ -1,6 +1,6 @@
 Name:           perl-Catalyst-Plugin-Authorization-Roles
 Version:        0.09
-Release:        17%{?dist}
+Release:        18%{?dist}
 Summary:        Role based authorization for Catalyst based on Catalyst::Plugin::Authentication
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -52,6 +52,9 @@ TEST_POD=1
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.09-18
+- 为 Magic 3.0 重建
+
 * Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 0.09-17
 - 为 Magic 3.0 重建
 

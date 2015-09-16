@@ -1,6 +1,6 @@
 Name:           perl-Perl-Critic-Itch
 Version:        0.07
-Release:        5%{?dist}
+Release:        6%{?dist}
 Summary:        Collection of Perl::Critic policies to solve some itches
 License:        GPLv3+ or Artistic 2.0
 Group:          Development/Libraries
@@ -57,6 +57,9 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.07-6
+- 为 Magic 3.0 重建
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.07-5
 - 为 Magic 3.0 重建
 

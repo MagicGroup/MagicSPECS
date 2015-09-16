@@ -1,6 +1,6 @@
 Name:           perl-MooX
 Version:        0.101
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        Using Moo and MooX:: packages the most lazy way
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -48,6 +48,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.101-5
+- 为 Magic 3.0 重建
+
 * Thu Jun 19 2014 Liu Di <liudidi@gmail.com> - 0.101-4
 - 为 Magic 3.0 重建
 

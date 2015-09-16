@@ -1,6 +1,6 @@
 Name:           perl-DateTime-TimeZone
-Version:        1.51
-Release:        4%{?dist}
+Version:	1.93
+Release:	1%{?dist}
 Summary:        Time zone object base class and factory
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -70,11 +70,13 @@ find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null \;
 
 
 %files
-%doc Changes LICENSE README
 %{perl_vendorlib}/*
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.93-1
+- 更新到 1.93
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.51-4
 - 为 Magic 3.0 重建
 

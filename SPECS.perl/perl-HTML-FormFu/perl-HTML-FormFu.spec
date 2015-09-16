@@ -1,11 +1,11 @@
 Name:           perl-HTML-FormFu
-Version:        0.09005
-Release:        14%{?dist}
+Version:	2.01
+Release:	1%{?dist}
 Summary:        HTML Form Creation, Rendering and Validation Framework
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 URL:            http://search.cpan.org/dist/HTML-FormFu/
-Source0:        http://search.cpan.org/CPAN/authors/id/P/PE/PERLER/HTML-FormFu-%{version}.tar.gz
+Source0:        http://search.cpan.org/CPAN/authors/id/C/CF/CFRANKS/HTML-FormFu-%{version}.tar.gz
 BuildArch:      noarch
 BuildRequires:  perl(Captcha::reCAPTCHA) >= 0.93
 BuildRequires:  perl(CGI) >= 3.37
@@ -21,7 +21,7 @@ BuildRequires:  perl(Date::Calc)
 BuildRequires:  perl(DateTime) >= 0.38
 BuildRequires:  perl(DateTime::Format::Builder) >= 0.80
 BuildRequires:  perl(DateTime::Format::Natural)
-BuildRequires:  perl(DateTime::Format::Strptime) >= 1.2000
+BuildRequires:  perl(DateTime::Format::Strptime)
 BuildRequires:  perl(DateTime::Locale) >= 0.45
 BuildRequires:  perl(Email::Valid)
 BuildRequires:  perl(ExtUtils::MakeMaker)
@@ -107,6 +107,9 @@ rm -rf $RPM_BUILD_ROOT/blib
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 2.01-1
+- 更新到 2.01
+
 * Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 0.09005-14
 - 为 Magic 3.0 重建
 

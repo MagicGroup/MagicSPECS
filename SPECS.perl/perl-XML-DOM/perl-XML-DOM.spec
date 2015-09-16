@@ -1,6 +1,6 @@
 Name:           perl-XML-DOM
-Version:        1.44
-Release:        18%{?dist}
+Version:	1.45
+Release:	1%{?dist}
 Summary:        DOM extension to XML::Parser
 
 Group:          Development/Libraries
@@ -69,6 +69,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.45-1
+- 更新到 1.45
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.44-18
 - 为 Magic 3.0 重建
 

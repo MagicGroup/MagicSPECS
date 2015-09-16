@@ -1,6 +1,6 @@
 Name:           perl-Email-Address
-Version:        1.896
-Release:        4%{?dist}
+Version:	1.907
+Release:	1%{?dist}
 Summary:        RFC 2822 Address Parsing and Creation
 
 Group:          Development/Libraries
@@ -55,6 +55,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.907-1
+- 更新到 1.907
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.896-4
 - 为 Magic 3.0 重建
 

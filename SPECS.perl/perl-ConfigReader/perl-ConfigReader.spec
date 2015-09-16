@@ -1,6 +1,6 @@
 Name:           perl-ConfigReader
 Version:        0.5
-Release:        14%{?dist}
+Release:        15%{?dist}
 Summary:        Read directives from a configuration file
 License:        LGPLv2+
 Group:          Development/Libraries
@@ -51,6 +51,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.5-15
+- 为 Magic 3.0 重建
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.5-14
 - 为 Magic 3.0 重建
 

@@ -1,6 +1,6 @@
 Name:           perl-Hash-Diff
-Version:        0.005
-Release:        8%{?dist}
+Version:	0.008
+Release:	1%{?dist}
 Summary:        Return difference between two hashes as a hash
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -43,6 +43,9 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_mandir}/man3/Hash::Diff.3pm*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.008-1
+- 更新到 0.008
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.005-8
 - 为 Magic 3.0 重建
 

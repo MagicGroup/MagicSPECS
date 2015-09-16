@@ -1,7 +1,7 @@
 Name:		perl-CPAN-Meta-Check
 Summary:	Verify requirements in a CPAN::Meta object
 Version:	0.008
-Release:	3%{?dist}
+Release:	4%{?dist}
 License:	GPL+ or Artistic
 Group:		Development/Libraries
 URL:		https://metacpan.org/release/CPAN-Meta-Check
@@ -56,6 +56,9 @@ make test RELEASE_TESTING=1
 %{_mandir}/man3/CPAN::Meta::Check.3pm*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.008-4
+- 为 Magic 3.0 重建
+
 * Thu Jun 19 2014 Liu Di <liudidi@gmail.com> - 0.008-3
 - 为 Magic 3.0 重建
 

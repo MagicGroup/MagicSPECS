@@ -1,6 +1,6 @@
 Name:           perl-Class-Iterator
 Version:        0.3
-Release:        8%{?dist}
+Release:        9%{?dist}
 Summary:        Iterator class
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -41,6 +41,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.3-9
+- 为 Magic 3.0 重建
+
 * Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 0.3-8
 - 为 Magic 3.0 重建
 

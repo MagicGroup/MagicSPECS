@@ -1,6 +1,6 @@
 Name:           perl-DBD-CSV
-Version:        0.36
-Release:        13%{?dist}
+Version:	0.48
+Release:	1%{?dist}
 Summary:        DBI driver for CSV files
 Group:          Development/Libraries
 License:        GPL+ or Artistic
@@ -43,7 +43,7 @@ MS Excel data.
 chmod -c a-x ChangeLog README lib/DBD/*.pm lib/Bundle/DBD/*.pm
 
 %build
-perl Makefile.PL INSTALLDIRS=vendor
+perl Makefile.PL INSTALLDIRS=vendor < /dev/null
 make %{?_smp_mflags}
 
 %install
@@ -59,9 +59,13 @@ chmod -R u+w %{buildroot}/*
 %doc ChangeLog README
 %{perl_vendorlib}/Bundle/
 %{perl_vendorlib}/DBD/
+%exclude %{perl_vendorlib}/DBI/Test/
 %{_mandir}/man3/*.3pm*
 
 %changelog
+* Tue Sep 15 2015 Liu Di <liudidi@gmail.com> - 0.48-1
+- 更新到 0.48
+
 * Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 0.36-13
 - 为 Magic 3.0 重建
 

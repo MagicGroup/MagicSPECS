@@ -2,14 +2,13 @@
 %global old_test_more %(perl -MTest::More -e 'print (($Test::More::VERSION < 0.88) ? 1 : 0);' 2>/dev/null || echo 0)
 
 Name:		perl-Package-Stash
-Version:	0.33
-Release:	15%{?dist}
+Version:	0.37
+Release:	2%{?dist}
 Summary:	Routines for manipulating stashes
 Group:		Development/Libraries
 License:	GPL+ or Artistic
 URL:		http://search.cpan.org/dist/Package-Stash/
 Source0:	http://search.cpan.org/CPAN/authors/id/D/DO/DOY/Package-Stash-%{version}.tar.gz
-Patch1:		Package-Stash-0.32-old-Test::More.patch
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(id -nu)
 BuildArch:	noarch
 BuildRequires:	perl(Carp)
@@ -49,11 +48,6 @@ a simple API.
 %prep
 %setup -q -n Package-Stash-%{version}
 
-# Compatibility with old Test::More versions
-%if %{old_test_more}
-%patch1 -p1
-%endif
-
 %build
 perl Makefile.PL INSTALLDIRS=vendor
 make %{?_smp_mflags}
@@ -80,8 +74,15 @@ rm -rf %{buildroot}
 %{perl_vendorlib}/Package/
 %{_mandir}/man3/Package::Stash.3pm*
 %{_mandir}/man3/Package::Stash::PP.3pm*
+%{_mandir}/man1/package-stash-conflicts.1*
 
 %changelog
+* Wed Sep 16 2015 Liu Di <liudidi@gmail.com> - 0.37-2
+- 为 Magic 3.0 重建
+
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.37-1
+- 更新到 0.37
+
 * Sun Jun 15 2014 Liu Di <liudidi@gmail.com> - 0.33-15
 - 为 Magic 3.0 重建
 

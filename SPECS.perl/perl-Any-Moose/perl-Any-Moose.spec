@@ -2,7 +2,7 @@ Name:           perl-Any-Moose
 Summary:        Use Moose or Mouse automagically (DEPRECATED)
 Summary(zh_CN.UTF-8): 自动化使用 Moose 或 Mouse（已过时）
 Version:	0.26
-Release:	1%{?dist}
+Release:	2%{?dist}
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 Group(zh_CN.UTF-8): 开发/库
@@ -68,6 +68,9 @@ make test
 %{_mandir}/man3/*.3*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.26-2
+- 为 Magic 3.0 重建
+
 * Thu Apr 23 2015 Liu Di <liudidi@gmail.com> - 0.26-1
 - 更新到 0.26
 

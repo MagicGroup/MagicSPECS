@@ -1,6 +1,6 @@
 Name:		perl-Cwd-Guard
 Version:	0.04
-Release:	4%{?dist}
+Release:	5%{?dist}
 Summary:	Temporarily change the current directory
 License:	GPL+ or Artistic
 URL:		http://search.cpan.org/dist/Cwd-Guard/
@@ -61,6 +61,9 @@ perl Build.PL --installdirs=vendor
 %{_mandir}/man3/Cwd::Guard.3*
 
 %changelog
+* Tue Sep 15 2015 Liu Di <liudidi@gmail.com> - 0.04-5
+- 为 Magic 3.0 重建
+
 * Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.04-4
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

@@ -1,13 +1,13 @@
 Name:           perl-Time-Duration
 Summary:        Time-Duration - rounded or exact English expression of durations
-Version:        1.06
-Release:        15%{?dist}
+Version:	1.20
+Release:	2%{?dist}
 License:        GPLv2+ or Artistic 2.0
 Group:          Development/Libraries
 Url:            http://search.cpan.org/dist/Time-Duration/
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 Buildarch:      noarch
-Source:         http://search.cpan.org/CPAN/authors/id/A/AV/AVIF/Time-Duration-%{version}.tar.gz
+Source0:        http://search.cpan.org/CPAN/authors/id/N/NE/NEILB/Time-Duration-%{version}.tar.gz
 Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
 
 BuildRequires:  perl(Test::Pod::Coverage) perl(Test::Pod) perl(ExtUtils::MakeMaker)
@@ -46,12 +46,17 @@ rm -rf %{buildroot}
 
 %files
 %defattr(-,root,root,-)
-%doc README ChangeLog
 %{_mandir}/man3/*
 %{perl_vendorlib}/Time
 
 
 %changelog
+* Mon Sep 14 2015 Liu Di <liudidi@gmail.com> - 1.20-2
+- 为 Magic 3.0 重建
+
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.20-1
+- 更新到 1.20
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.06-15
 - 为 Magic 3.0 重建
 

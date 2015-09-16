@@ -1,6 +1,6 @@
 Name:           perl-Catalyst-Engine-Apache
 Version:        1.16
-Release:        20%{?dist}
+Release:        21%{?dist}
 Summary:        Catalyst Apache Engines
 Summary(zh_CN.UTF-8): Catalyst Apache 引擎
 License:        GPL+ or Artistic
@@ -53,6 +53,9 @@ magic_rpm_clean.sh
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.16-21
+- 为 Magic 3.0 重建
+
 * Fri Jun 19 2015 Liu Di <liudidi@gmail.com> - 1.16-20
 - 为 Magic 3.0 重建
 

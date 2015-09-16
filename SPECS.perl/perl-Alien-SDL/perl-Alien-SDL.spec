@@ -1,6 +1,6 @@
 Name:           perl-Alien-SDL
 Version:        1.446
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        Building, finding and using SDL binaries
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -80,6 +80,9 @@ perl Build.PL installdirs=vendor --travis
 %{_bindir}/*
 
 %changelog
+* Wed Sep 16 2015 Liu Di <liudidi@gmail.com> - 1.446-4
+- 为 Magic 3.0 重建
+
 * Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.446-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

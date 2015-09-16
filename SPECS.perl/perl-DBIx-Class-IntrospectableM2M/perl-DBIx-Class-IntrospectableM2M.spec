@@ -1,11 +1,11 @@
 Name:           perl-DBIx-Class-IntrospectableM2M
-Version:        0.001001
-Release:        14%{?dist}
+Version:	0.001002
+Release:	1%{?dist}
 Summary:        Introspect many-to-many shortcuts
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 URL:            http://search.cpan.org/dist/DBIx-Class-IntrospectableM2M/
-Source0:        http://www.cpan.org/authors/id/G/GR/GRODITI/DBIx-Class-IntrospectableM2M-%{version}.tar.gz
+Source0:        http://search.cpan.org/CPAN/authors/id/I/IL/ILMARI/DBIx-Class-IntrospectableM2M-%{version}.tar.gz
 BuildArch:      noarch
 BuildRequires:  perl(DBIx::Class)
 BuildRequires:  perl(ExtUtils::MakeMaker)
@@ -44,6 +44,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.001002-1
+- 更新到 0.001002
+
 * Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 0.001001-14
 - 为 Magic 3.0 重建
 

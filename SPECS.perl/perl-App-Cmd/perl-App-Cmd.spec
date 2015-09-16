@@ -1,8 +1,8 @@
 Name:           perl-App-Cmd
 Summary:        Write command line apps with less suffering
 Summary(zh_CN.UTF-8): 更方便的编写命令行程序
-Version:	0.327
-Release:	1%{?dist}
+Version:	0.328
+Release:	2%{?dist}
 License:        GPL+ or Artistic
 
 Source0:        http://search.cpan.org/CPAN/authors/id/R/RJ/RJBS/App-Cmd-%{version}.tar.gz 
@@ -74,6 +74,12 @@ make test
 %{_mandir}/man3/*.3*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.328-2
+- 为 Magic 3.0 重建
+
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.328-1
+- 更新到 0.328
+
 * Thu Apr 23 2015 Liu Di <liudidi@gmail.com> - 0.327-1
 - 更新到 0.327
 

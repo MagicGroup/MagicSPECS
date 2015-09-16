@@ -1,5 +1,5 @@
 Name:           perl-Archive-Zip
-Version:	1.46
+Version:	1.50
 Release:	1%{?dist}
 Summary:        Perl library for accessing Zip archives
 Summary(zh_CN.UTF-8): 访问 Zip 归档的 Perl 库
@@ -70,6 +70,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.50-1
+- 更新到 1.50
+
 * Thu Apr 23 2015 Liu Di <liudidi@gmail.com> - 1.46-1
 - 更新到 1.46
 

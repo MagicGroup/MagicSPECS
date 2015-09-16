@@ -1,11 +1,11 @@
 Name:           perl-libwww-perl
-Version:        6.04
-Release:        7%{?dist}
+Version:	6.13
+Release:	2%{?dist}
 Summary:        A Perl interface to the World-Wide Web
 Group:          Development/Libraries
 License:        GPL+ or Artistic
 URL:            http://search.cpan.org/dist/libwww-perl/
-Source0:        http://www.cpan.org/authors/id/G/GA/GAAS/libwww-perl-%{version}.tar.gz
+Source0:        http://search.cpan.org/CPAN/authors/id/E/ET/ETHER/libwww-perl-%{version}.tar.gz
 BuildArch:      noarch
 BuildRequires:  perl(Digest::MD5)
 BuildRequires:  perl(Encode) >= 2.12
@@ -109,6 +109,12 @@ magic_rpm_clean.sh
 %{_mandir}/man3/*.3*
 
 %changelog
+* Mon Sep 14 2015 Liu Di <liudidi@gmail.com> - 6.13-2
+- 为 Magic 3.0 重建
+
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 6.13-1
+- 更新到 6.13
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 6.04-7
 - 为 Magic 3.0 重建
 

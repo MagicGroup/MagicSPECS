@@ -1,6 +1,6 @@
 Name:           perl-MooseX-InsideOut
 Version:        0.106
-Release:        14%{?dist}
+Release:        15%{?dist}
 Summary:        Inside-out objects with Moose
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -53,6 +53,9 @@ TEST_POD=1 make test
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.106-15
+- 为 Magic 3.0 重建
+
 * Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 0.106-14
 - 为 Magic 3.0 重建
 

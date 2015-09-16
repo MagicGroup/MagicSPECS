@@ -1,10 +1,10 @@
 Name:           perl-CGI
 Summary:        Handle Common Gateway Interface requests and responses
-Version:        3.51
-Release:        8%{?dist}
+Version:	4.21
+Release:	1%{?dist}
 License:        GPL+ or Artistic
 Group:          Development/Libraries
-Source0:        http://search.cpan.org/CPAN/authors/id/M/MA/MARKSTOS/CGI.pm-%{version}.tar.gz
+Source0:        http://search.cpan.org/CPAN/authors/id/L/LE/LEEJO/CGI-%{version}.tar.gz
 URL:            http://search.cpan.org/dist/CGI
 Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
 BuildArch:      noarch
@@ -29,7 +29,7 @@ CGI.pm performs very well in in a vanilla CGI.pm environment and also comes
 with built-in support for mod_perl and mod_perl2 as well as FastCGI.
 
 %prep
-%setup -q -n CGI.pm-%{version}
+%setup -q -n CGI-%{version}
 
 # RPM 4.8 style
 %{?filter_setup:
@@ -67,11 +67,13 @@ rm -rf %{buildroot}
 
 %files
 %defattr(-,root,root,-)
-%doc README Changes
 %{perl_vendorlib}/*
 %{_mandir}/man3/*.3*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 4.21-1
+- 更新到 4.21
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 3.51-8
 - 为 Magic 3.0 重建
 

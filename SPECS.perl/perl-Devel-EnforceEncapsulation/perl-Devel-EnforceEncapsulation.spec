@@ -1,11 +1,11 @@
 Name:		perl-Devel-EnforceEncapsulation
-Version:	0.50
-Release:	10%{?dist}
+Version:	0.51
+Release:	2%{?dist}
 Summary:	Find access violations to blessed objects
 Group:		Development/Libraries
 License:	GPL+ or Artistic
 URL:		http://search.cpan.org/dist/Devel-EnforceEncapsulation/
-Source0:	http://search.cpan.org/CPAN/authors/id/C/CL/CLOTHO/Devel-EnforceEncapsulation-%{version}.tgz
+Source0:        http://search.cpan.org/CPAN/authors/id/C/CD/CDOLAN/Devel-EnforceEncapsulation-%{version}.tar.gz
 BuildArch:	noarch
 BuildRequires:	perl(Carp)
 BuildRequires:	perl(English)
@@ -61,11 +61,16 @@ find %{buildroot} -depth -type d -exec rmdir {} \; 2>/dev/null
 
 %files
 %defattr(-,root,root,-)
-%doc CHANGES LICENSE README index.html
 %{perl_vendorlib}/Devel/
 %{_mandir}/man3/Devel::EnforceEncapsulation.3pm*
 
 %changelog
+* Mon Sep 14 2015 Liu Di <liudidi@gmail.com> - 0.51-2
+- 为 Magic 3.0 重建
+
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.51-1
+- 更新到 0.51
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.50-10
 - 为 Magic 3.0 重建
 

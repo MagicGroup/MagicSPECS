@@ -1,12 +1,12 @@
 Name:           perl-Test-Pod-Coverage
-Version:        1.08
-Release:        19%{?dist}
+Version:	1.10
+Release:	1%{?dist}
 Summary:        Check for pod coverage in your distribution
 
 Group:          Development/Libraries
 License:        GPL+ or Artistic
 URL:            http://search.cpan.org/dist/Test-Pod-Coverage/
-Source0:        http://www.cpan.org/authors/id/P/PE/PETDANCE/Test-Pod-Coverage-%{version}.tar.gz
+Source0:        http://search.cpan.org/CPAN/authors/id/N/NE/NEILB/Test-Pod-Coverage-%{version}.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildArch:      noarch
@@ -56,6 +56,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.10-1
+- 更新到 1.10
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.08-19
 - 为 Magic 3.0 重建
 

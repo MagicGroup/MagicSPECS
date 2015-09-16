@@ -1,6 +1,6 @@
 Name:           perl-Tie-Simple
 Version:        1.03
-Release:        11%{?dist}
+Release:        12%{?dist}
 Summary:        Variable ties made easier: much, much, much easier
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -46,6 +46,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Wed Sep 16 2015 Liu Di <liudidi@gmail.com> - 1.03-12
+- 为 Magic 3.0 重建
+
 * Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.03-11
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

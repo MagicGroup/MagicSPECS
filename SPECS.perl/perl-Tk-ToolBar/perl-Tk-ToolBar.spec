@@ -1,13 +1,11 @@
 Name:           perl-Tk-ToolBar
-Version:        0.10
-Release:        7%{?dist}
+Version:	0.12
+Release:	2%{?dist}
 Summary:        Toolbar widget for Perl/Tk
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 URL:            http://search.cpan.org/dist/Tk-ToolBar/
-Source0:        http://www.cpan.org/authors/id/C/CH/CHORNY/Tk-ToolBar-%{version}.zip
-# don't install toolbar.pl demo - add to docs instead
-Patch0:         perl-Tk-ToolBar-no-demos.patch
+Source0:        http://search.cpan.org/CPAN/authors/id/A/AS/ASB/Tk-ToolBar-%{version}.tar.gz
 BuildArch:      noarch
 BuildRequires:  perl >= 0:5.005
 BuildRequires:  perl(base)
@@ -36,7 +34,6 @@ shortcut buttons).
 
 %prep
 %setup -q -n Tk-ToolBar-%{version}
-%patch0 -p1
 
 # strip CRLF
 find -type f -print0 | xargs -0 sed -i 's/\r$//'
@@ -58,10 +55,16 @@ find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null \;
 
 %files
 %doc Changes README toolbar.pl
-%{perl_vendorlib}/*
+%{perl_vendorarch}/*
 %{_mandir}/man3/*
 
 %changelog
+* Mon Sep 14 2015 Liu Di <liudidi@gmail.com> - 0.12-2
+- 为 Magic 3.0 重建
+
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.12-1
+- 更新到 0.12
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.10-7
 - 为 Magic 3.0 重建
 

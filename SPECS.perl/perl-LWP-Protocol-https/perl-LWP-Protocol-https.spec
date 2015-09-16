@@ -1,11 +1,11 @@
 Name:           perl-LWP-Protocol-https
-Version:        6.03
-Release:        6%{?dist}
+Version:	6.06
+Release:	1%{?dist}
 Summary:        Provide HTTPS support for LWP::UserAgent
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 URL:            http://search.cpan.org/dist/LWP-Protocol-https/
-Source0:        http://www.cpan.org/authors/id/G/GA/GAAS/LWP-Protocol-https-%{version}.tar.gz
+Source0:        http://search.cpan.org/CPAN/authors/id/M/MS/MSCHILLI/LWP-Protocol-https-%{version}.tar.gz
 BuildArch:      noarch
 BuildRequires:  perl(ExtUtils::MakeMaker)
 # Run-requires
@@ -52,6 +52,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 6.06-1
+- 更新到 6.06
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 6.03-6
 - 为 Magic 3.0 重建
 

@@ -1,0 +1,18 @@
+diff -ur eperl-2.2.14.orig/eperl_main.c eperl-2.2.14/eperl_main.c
+--- eperl-2.2.14.orig/eperl_main.c	2015-09-15 08:46:53.186056069 +0000
++++ eperl-2.2.14/eperl_main.c	2015-09-15 08:47:08.745055670 +0000
+@@ -150,12 +150,12 @@
+ 
+ void give_readme(void)
+ {
+-    fprintf(stdout, ePerl_README);
++    fprintf(stdout,"%s", ePerl_README);
+ }
+ 
+ void give_license(void)
+ {
+-    fprintf(stdout, ePerl_LICENSE);
++    fprintf(stdout,"%s", ePerl_LICENSE);
+ }
+ 
+ void give_img_logo(void)

@@ -1,6 +1,6 @@
 Name:		perl-Text-Hunspell
 Version:	2.11
-Release:	3%{?dist}
+Release:	4%{?dist}
 Summary:	Perl interface to the Hunspell library
 Group:		Development/Libraries
 License:	GPL+ or Artistic
@@ -61,6 +61,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/Text::Hunspell.3*
 
 %changelog
+* Tue Sep 15 2015 Liu Di <liudidi@gmail.com> - 2.11-4
+- 为 Magic 3.0 重建
+
 * Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.11-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

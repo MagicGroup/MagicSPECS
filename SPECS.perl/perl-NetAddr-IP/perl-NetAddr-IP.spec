@@ -1,13 +1,11 @@
 Name:           perl-NetAddr-IP
-Version:        4.066
-Release:        3%{?dist}
+Version:	4.078
+Release:	1%{?dist}
 Summary:        Manages IPv4 and IPv6 addresses and subnets
 License:        GPLv2+
 Group:          Development/Libraries
 URL:            http://search.cpan.org/dist/NetAddr-IP/
 Source0:        http://search.cpan.org/CPAN/authors/id/M/MI/MIKER/NetAddr-IP-%{version}.tar.gz
-# Recode documentation to UTF-8
-Patch0:         NetAddr-IP-4.064-Recode-NetAddr-IP-Lite-POD-to-UTF-8.patch
 BuildRequires:  perl(AutoLoader)
 BuildRequires:  perl(Carp)
 BuildRequires:  perl(Cwd)
@@ -31,9 +29,6 @@ or IP subnets, that allows for easy manipulations.
 
 %prep
 %setup -q -n NetAddr-IP-%{version}
-
-# Recode NetAddr::IP::Lite module and manpage as UTF-8
-%patch0 -p1
 
 %build
 perl Makefile.PL INSTALLDIRS=vendor OPTIMIZE="%{optflags}"
@@ -59,6 +54,9 @@ find %{buildroot} -type f -name '*.bs' -size 0 -exec rm -f {} \;
 %{_mandir}/man3/NetAddr::IP::UtilPP.3pm*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 4.078-1
+- 更新到 4.078
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 4.066-3
 - 为 Magic 3.0 重建
 

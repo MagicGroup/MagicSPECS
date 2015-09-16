@@ -1,6 +1,6 @@
 Name:           perl-Crypt-Twofish
 Version:        2.17
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        Twofish Encryption Algorithm
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -55,6 +55,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 2.17-5
+- 为 Magic 3.0 重建
+
 * Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 2.17-4
 - 为 Magic 3.0 重建
 

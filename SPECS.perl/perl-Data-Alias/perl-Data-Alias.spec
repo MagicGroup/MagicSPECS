@@ -1,11 +1,12 @@
 Name:           perl-Data-Alias
-Version:        1.15
-Release:        8%{?dist}
+Version:	1.18
+Release:	1%{?dist}
 Summary:        Comprehensive set of aliasing operations
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 URL:            http://search.cpan.org/dist/Data-Alias/
 Source0:        http://www.cpan.org/authors/id/Z/ZE/ZEFRAM/Data-Alias-%{version}.tar.gz
+Patch1:		perl-Data-Alias-fix-perl522.patch
 
 BuildRequires:  perl(DynaLoader)
 BuildRequires:  perl(Exporter)
@@ -28,6 +29,7 @@ reference to both, the two values are the same.
 
 %prep
 %setup -q -n Data-Alias-%{version}
+%patch1 -p1
 
 %build
 %{__perl} Makefile.PL INSTALLDIRS=vendor OPTIMIZE="$RPM_OPT_FLAGS"
@@ -52,6 +54,9 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.18-1
+- 更新到 1.18
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.15-8
 - 为 Magic 3.0 重建
 

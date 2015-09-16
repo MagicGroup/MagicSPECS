@@ -1,7 +1,7 @@
 Name:           perl-CGI-Compile
 Summary:        Compile .cgi scripts to a code reference like ModPerl::Registry
-Version:        0.15
-Release:        17%{?dist}
+Version:	0.19
+Release:	1%{?dist}
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 Source0:        http://search.cpan.org/CPAN/authors/id/M/MI/MIYAGAWA/CGI-Compile-%{version}.tar.gz 
@@ -31,20 +31,22 @@ ready to run on a persistent environment.
 
 %prep
 %setup -q -n CGI-Compile-%{version}
+sed -i 's/\r//' t/data_crlf.cgi t/end_crlf.cgi
+sed -i -e '1s,#!.*perl,#!%{__perl},' t/*.t
+
 
 %build
-%{__perl} Makefile.PL INSTALLDIRS=vendor
-make %{?_smp_mflags}
+%{__perl} Build.PL --installdirs vendor
+./Build
 
 %install
-make pure_install DESTDIR=%{buildroot}
-find %{buildroot} -type f -name .packlist -exec rm -f {} ';'
-find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null ';'
+./Build install --destdir $RPM_BUILD_ROOT
+find $RPM_BUILD_ROOT -type f -name .packlist -exec rm -f {} ';'
 
 %{_fixperms} %{buildroot}/*
 
 %check
-
+./Build test
 
 
 %files
@@ -53,6 +55,9 @@ find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null ';'
 %{_mandir}/man3/*.3*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.19-1
+- 更新到 0.19
+
 * Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 0.15-17
 - 为 Magic 3.0 重建
 

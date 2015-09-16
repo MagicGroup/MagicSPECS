@@ -1,8 +1,10 @@
 Name:           rpcbind
-Version:        0.2.0
-Release:        17%{?dist}
+Version:	0.2.3
+Release:	1%{?dist}
 Summary:        Universal Addresses to RPC Program Number Mapper
+Summary(zh_CN.UTF-8): 通用地址到 RPC 程序编号的映射
 Group:          System Environment/Daemons
+Group(zh_CN.UTF-8): 系统环境/服务
 License:        BSD
 URL:            http://nfsv4.bullopensource.org
 
@@ -10,8 +12,6 @@ BuildRoot:      %{_tmppath}/%{name}-%{version}-root-%(%{__id_u} -n)
 Source0:        http://downloads.sourceforge.net/rpcbind/%{name}-%{version}.tar.bz2
 Source1: rpcbind.service
 Source2: rpcbind.socket
-
-Patch001: rpcbind-0_2_1-rc3.patch
 
 Requires: glibc-common setup
 Conflicts: man-pages < 2.43-12
@@ -30,9 +30,11 @@ The rpcbind utility is a server that converts RPC program numbers into
 universal addresses.  It must be running on the host to be able to make
 RPC calls on a server on that machine.
 
+%description -l zh_CN.UTF-8
+通用地址到 RPC 程序编号的映射。
+
 %prep
 %setup -q
-%patch001 -p1
 
 %build
 %ifarch s390 s390x
@@ -132,6 +134,9 @@ fi
 %dir %attr(700,rpc,rpc) /var/lib/rpcbind
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.2.3-1
+- 更新到 0.2.3
+
 * Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 0.2.0-17
 - 为 Magic 3.0 重建
 

@@ -1,6 +1,6 @@
 Name:           perl-XML-Handler-YAWriter
 Version:        0.23
-Release:        17%{?dist}
+Release:        18%{?dist}
 
 Summary:        Yet another Perl SAX XML Writer
 
@@ -59,6 +59,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.23-18
+- 为 Magic 3.0 重建
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.23-17
 - 为 Magic 3.0 重建
 

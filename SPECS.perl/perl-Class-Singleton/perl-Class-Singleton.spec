@@ -1,11 +1,11 @@
 Name:           perl-Class-Singleton
-Version:        1.4
-Release:        16%{?dist}
+Version:	1.5
+Release:	1%{?dist}
 Summary:        Implementation of a "Singleton" class
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 URL:            http://search.cpan.org/dist/Class-Singleton/
-Source0:        http://www.cpan.org/authors/id/A/AB/ABW/Class-Singleton-%{version}.tar.gz
+Source0:        http://search.cpan.org/CPAN/authors/id/S/SH/SHAY/Class-Singleton-%{version}.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 BuildRequires:  perl(ExtUtils::MakeMaker)
@@ -52,6 +52,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.5-1
+- 更新到 1.5
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.4-16
 - 为 Magic 3.0 重建
 

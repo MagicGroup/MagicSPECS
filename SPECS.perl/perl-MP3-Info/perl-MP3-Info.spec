@@ -7,7 +7,7 @@ Summary: Manipulate / fetch info from MP3 audio files
 Summary(zh_CN): 从 MP3 音频文件中控制/获取信息
 Name: perl-MP3-Info
 Version: 1.24
-Release: 8%{?dist}
+Release: 9%{?dist}
 Group: Development/Libraries
 Group(zh_CN): 开发/库
 License: Artistic
@@ -52,6 +52,9 @@ Manipulate / fetch info from MP3 audio files.
 %{perl_vendorlib}
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.24-9
+- 为 Magic 3.0 重建
+
 * Sun Jun 15 2014 Liu Di <liudidi@gmail.com> - 1.24-8
 - 为 Magic 3.0 重建
 

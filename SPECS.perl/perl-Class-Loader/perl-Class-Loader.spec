@@ -1,7 +1,7 @@
 Summary:	Load modules and create objects on demand
 Name:		perl-Class-Loader
 Version:	2.03
-Release:	18%{?dist}
+Release:	19%{?dist}
 License:	GPL+ or Artistic
 Group:		Development/Libraries
 Url:		http://search.cpan.org/dist/Class-Loader/
@@ -53,6 +53,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/Class::Loader.3pm*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 2.03-19
+- 为 Magic 3.0 重建
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 2.03-18
 - 为 Magic 3.0 重建
 

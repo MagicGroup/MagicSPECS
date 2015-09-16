@@ -1,0 +1,78 @@
+diff -up Module-Info-0.35/lib/B/BUtils.pm.orig Module-Info-0.35/lib/B/BUtils.pm
+--- Module-Info-0.35/lib/B/BUtils.pm.orig	2015-05-07 14:06:49.010018343 +0200
++++ Module-Info-0.35/lib/B/BUtils.pm	2015-05-07 15:12:50.820650940 +0200
+@@ -212,8 +212,17 @@ In the future, it may be possible to sea
+ C<next> pointers in place, but it'll take me a while to figure out how to do
+ that.
+ 
++Warning: Since 5.21.2 B comes with it's own version of B::OP::parent
++which returns either B::NULL or the real parent when ccflags contains
++-DPERL_OP_PARENT.
++In this case rather use $op->_parent.
++
+ =cut
+ 
++
++BEGIN {
++  unless ($] >= 5.021002 and exists &B::OP::parent) {
++    eval q[
+ sub B::OP::parent {
+     my $target = shift;
+     printf( "parent %s %s=(0x%07x)\n",
+@@ -254,6 +263,56 @@ sub B::OP::parent {
+    my $start = $target;
+    $result = $search->($start) and return $result while $start = $start->next;
+    return $search->($start);
++}];
++  } else {
++    eval q[
++sub B::OP::_parent {
++    my $target = shift;
++    printf( "parent %s %s=(0x%07x)\n",
++	    B::class( $target),
++	    $target->oldname,
++	    $$target )
++	if $DEBUG;
++
++    die "I'm not sure how to do this yet. I'm sure there is a way. If you know, please email me."
++        if (!$target->seq);
++
++    my (%deadend, $search_kids);
++    $search_kids = sub {
++        my $node = shift || return undef;
++	
++	printf( "Searching from %s %s=(0x%07x)\n",
++		class($node)||'?',
++		$node->oldname,
++		$$node )
++	    if $DEBUG;
++		
++        # Go up a level if we've got stuck, and search (for the same
++        # $target) from a higher vantage point.
++        return $search->($node->parent) if exists $deadend{$node};
++
++        # Test the immediate children
++        return $node if scalar grep {$_ == $target} $node->kids;
++
++        # Recurse
++        my $x;
++        defined($x = $search->($_)) and return $x for $node->kids;
++
++        # Not in this subtree.
++        $deadend{$node}++;
++        return undef;
++   };
++   my $result;
++   my $start = $target;
++   $result = $search->($start) and return $result while $start = $start->next;
++   return $search->($start);
++}];
++  }
++  if ($] >= 5.021002) {
++    eval q[
++sub B::NULL::kids { }
++    ];
++  }
+ }
+ 
+ =item C<< $op->previous >>

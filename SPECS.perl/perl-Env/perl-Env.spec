@@ -1,6 +1,6 @@
 Name:           perl-Env
 Version:        1.04
-Release:        293%{?dist}
+Release:        294%{?dist}
 Summary:        Perl module that imports environment variables as scalars or arrays
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -45,6 +45,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.04-294
+- 为 Magic 3.0 重建
+
 * Tue Jun 17 2014 Liu Di <liudidi@gmail.com> - 1.04-293
 - 为 Magic 3.0 重建
 

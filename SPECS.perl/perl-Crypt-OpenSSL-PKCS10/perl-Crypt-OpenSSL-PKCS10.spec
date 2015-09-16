@@ -1,6 +1,6 @@
 Name:           perl-Crypt-OpenSSL-PKCS10
-Version:        0.06
-Release:        23%{?dist}
+Version:	0.15
+Release:	1%{?dist}
 Summary:        Perl interface to OpenSSL for PKCS10
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -10,8 +10,6 @@ BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  openssl openssl-devel
 BuildRequires:  perl(Test::More) perl(ExtUtils::MakeMaker)
 BuildRequires:  perl(Crypt::OpenSSL::RSA)
-Patch0: 	perl-Crypt-OpenSSL-PKCS10-build-paths.patch
-Patch1:         perl-Crypt-OpenSSL-PKCS10-openssl.patch
 
 Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
 
@@ -22,9 +20,6 @@ Crypt::OpenSSL::PKCS10 - Perl extension to OpenSSL's PKCS10 API.
 %setup -q -n Crypt-OpenSSL-PKCS10-%{version}
 chmod -c a-x Changes
 chmod -c a-x *.xs
-
-%patch0 -p1
-%patch1 -p1
 
 %build
 %{__perl} Makefile.PL INSTALLDIRS=vendor
@@ -58,6 +53,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.15-1
+- 更新到 0.15
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.06-23
 - 为 Magic 3.0 重建
 

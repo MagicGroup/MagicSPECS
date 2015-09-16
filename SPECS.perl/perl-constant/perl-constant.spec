@@ -2,7 +2,7 @@
 
 Name:           perl-constant
 Version:        1.33
-Release:        347%{?dist}
+Release:        348%{?dist}
 Summary:        Perl pragma to declare constants
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -69,6 +69,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Wed Sep 16 2015 Liu Di <liudidi@gmail.com> - 1.33-348
+- 为 Magic 3.0 重建
+
 * Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.33-347
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

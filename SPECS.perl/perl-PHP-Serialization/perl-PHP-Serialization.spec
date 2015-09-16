@@ -1,6 +1,6 @@
 Name:           perl-PHP-Serialization
 Version:        0.34
-Release:        11%{?dist}
+Release:        12%{?dist}
 Summary:        Converts between PHP's serialize() output and the equivalent Perl structure
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -45,6 +45,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.34-12
+- 为 Magic 3.0 重建
+
 * Thu Jun 19 2014 Liu Di <liudidi@gmail.com> - 0.34-11
 - 为 Magic 3.0 重建
 

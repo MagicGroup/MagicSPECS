@@ -3,13 +3,12 @@
 
 Name:		perl-ExtUtils-Helpers
 Version:	0.022
-Release:	3%{?dist}
+Release:	6%{?dist}
 Summary:	Various portability utilities for module builders
 Group:		Development/Libraries
 License:	GPL+ or Artistic
 URL:		https://metacpan.org/release/ExtUtils-Helpers
 Source0:	http://cpan.metacpan.org/authors/id/L/LE/LEONT/ExtUtils-Helpers-%{version}.tar.gz
-Patch3:		ExtUtils-Helpers-0.021-old-Test::More.patch
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(id -nu)
 BuildArch:	noarch
 # Build
@@ -50,11 +49,6 @@ modules.
 %prep
 %setup -q -n ExtUtils-Helpers-%{version}
 
-# Test suite needs patching if we have Test::More < 0.88
-%if %{old_test_more}
-%patch3
-%endif
-
 %build
 perl Makefile.PL INSTALLDIRS=vendor
 make %{?_smp_mflags}
@@ -80,6 +74,15 @@ rm -rf %{buildroot}
 %{_mandir}/man3/ExtUtils::Helpers::Windows.3pm*
 
 %changelog
+* Wed Sep 16 2015 Liu Di <liudidi@gmail.com> - 0.022-6
+- 为 Magic 3.0 重建
+
+* Wed Sep 16 2015 Liu Di <liudidi@gmail.com> - 0.022-5
+- 为 Magic 3.0 重建
+
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.022-4
+- 为 Magic 3.0 重建
+
 * Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 0.022-3
 - 为 Magic 3.0 重建
 

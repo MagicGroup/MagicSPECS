@@ -3,11 +3,13 @@
 
 %define pkg_name Audio-FLAC-Header
 
+%define debug_package %{nil}
+
 Summary: Access to FLAC audio metadata
 Summary(zh_CN): 对于 FLAC 音频元数据的访问
 Name: perl-Audio-FLAC-Header
 Version: 2.4
-Release: 5%{?dist}
+Release: 6%{?dist}
 Group: Development/Libraries
 Group(zh_CN): 开发/库
 License: Artistic
@@ -55,16 +57,7 @@ magic_rpm_clean.sh
 %{perl_archlib}
 
 %changelog
-* Thu Apr 23 2015 Liu Di <liudidi@gmail.com> - 2.4-5
-- 为 Magic 3.0 重建
-
-* Thu Jun 12 2014 Liu Di <liudidi@gmail.com> - 2.4-4
-- 为 Magic 3.0 重建
-
-* Thu Jun 12 2014 Liu Di <liudidi@gmail.com> - 2.4-3
-- 为 Magic 3.0 重建
-
-* Fri Jan 27 2012 Liu Di <liudidi@gmail.com> - 2.4-2
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 2.4-6
 - 为 Magic 3.0 重建
 
 * Sun Oct 14 2007 Ni Hui <shuizhuyuanluo@126.com> - 1.8-0.1mgc

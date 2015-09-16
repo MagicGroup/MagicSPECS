@@ -1,12 +1,12 @@
 Name:           perl-MARC-Record
-Version:        2.0.0
-Release:        14%{?dist}
+Version:	2.0.6
+Release:	1%{?dist}
 Summary:        Object-oriented abstraction of MARC record handling
 
 Group:          Development/Libraries
 License:        GPL+ or Artistic
 URL:            http://search.cpan.org/dist/MARC-Record/
-Source0:        http://search.cpan.org/CPAN/authors/id/M/MI/MIKERY/MARC-Record-%{version}.tar.gz
+Source0:        http://search.cpan.org/CPAN/authors/id/G/GM/GMCHARLT/MARC-Record-%{version}.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildArch:      noarch
@@ -55,6 +55,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 2.0.6-1
+- 更新到 2.0.6
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 2.0.0-14
 - 为 Magic 3.0 重建
 

@@ -1,6 +1,6 @@
 Name:           perl-Class-Accessor-Chained
 Version:        0.01
-Release:        24%{?dist}
+Release:        25%{?dist}
 Summary:        Make chained accessors
 Group:          Development/Libraries
 License:        GPL+ or Artistic
@@ -54,6 +54,9 @@ make test
 %{_mandir}/man3/Class::Accessor::Chained::Fast.3pm*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.01-25
+- 为 Magic 3.0 重建
+
 * Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 0.01-24
 - 为 Magic 3.0 重建
 

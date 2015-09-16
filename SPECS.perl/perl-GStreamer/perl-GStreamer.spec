@@ -1,11 +1,11 @@
 Name:           perl-GStreamer
-Version:        0.16
-Release:        9%{?dist}
+Version:	0.20
+Release:	1%{?dist}
 Summary:        Perl bindings to the GStreamer framework
 License:        LGPLv2+
 Group:          Development/Libraries
 URL:            http://search.cpan.org/dist/GStreamer/
-Source0:        http://www.cpan.org/authors/id/T/TS/TSCH/GStreamer-%{version}.tar.gz
+Source0:        http://search.cpan.org/CPAN/authors/id/X/XA/XAOC/GStreamer-%{version}.tar.gz
 BuildRequires:  gstreamer-devel
 BuildRequires:  perl(ExtUtils::Depends) >= 0.205
 BuildRequires:  perl(ExtUtils::MakeMaker)
@@ -58,6 +58,9 @@ find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.20-1
+- 更新到 0.20
+
 * Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 0.16-9
 - 为 Magic 3.0 重建
 

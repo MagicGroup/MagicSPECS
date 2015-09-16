@@ -1,6 +1,6 @@
 Name:           perl-Getopt-Simple
-Version:        1.49
-Release:        14%{?dist}
+Version:	1.52
+Release:	1%{?dist}
 Summary:        Provide a simple wrapper around Getopt::Long
 License:        Artistic 2.0
 Group:          Development/Libraries
@@ -41,11 +41,13 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(-,root,root,-)
-%doc Changes.txt README
 %{perl_vendorlib}/*
 %{_mandir}/man3/*
 
 %changelog
+* Wed Sep 16 2015 Liu Di <liudidi@gmail.com> - 1.52-1
+- 更新到 1.52
+
 * Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 1.49-14
 - 为 Magic 3.0 重建
 

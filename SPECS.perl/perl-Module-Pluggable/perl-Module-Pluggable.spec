@@ -3,8 +3,8 @@ Name:           perl-Module-Pluggable
 # Epoch to compete with perl.spec
 Epoch:          1
 # Keep two digit decimal part
-Version:        %{cpan_version}0
-Release:        3%{?dist}
+Version:	5.2
+Release:	1%{?dist}
 Summary:        Automatically give your module the ability to have plugins
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -77,6 +77,9 @@ perl Build.PL installdirs=vendor
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1:5.2-1
+- 更新到 5.2
+
 * Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 1:5.10-3
 - 为 Magic 3.0 重建
 

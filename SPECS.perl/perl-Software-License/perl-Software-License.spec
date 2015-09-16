@@ -2,8 +2,8 @@
 %global old_test_more %(perl -MTest::More -e 'print (($Test::More::VERSION < 0.88) ? 1 : 0);' 2>/dev/null || echo 0)
 
 Name:           perl-Software-License
-Version:        0.103004
-Release:        6%{?dist}
+Version:	0.103010
+Release:	2%{?dist}
 Summary:        Package that provides templated software licenses
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -11,7 +11,6 @@ URL:            http://search.cpan.org/dist/Software-License/
 # For unknown reasons this module URL is currently missing
 #Source0:        http://www.cpan.org/modules/by-module/Software/Software-License-%{version}.tar.gz
 Source0:        http://search.cpan.org/CPAN/authors/id/R/RJ/RJBS/Software-License-%{version}.tar.gz
-Patch1:         Software-License-0.103001-old-Test::More.patch
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(id -nu)
 BuildArch:      noarch
 BuildRequires:  perl(base)
@@ -29,11 +28,6 @@ Software-License contains templates for common open source software licenses.
 
 %prep
 %setup -q -n Software-License-%{version}
-
-# Compatibility with old Test::More versions
-%if %{old_test_more}
-%patch1 -p1
-%endif
 
 %build
 perl Makefile.PL INSTALLDIRS=vendor
@@ -59,6 +53,12 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/Software::LicenseUtils.3pm*
 
 %changelog
+* Wed Sep 16 2015 Liu Di <liudidi@gmail.com> - 0.103010-2
+- 为 Magic 3.0 重建
+
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.103010-1
+- 更新到 0.103010
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.103004-6
 - 为 Magic 3.0 重建
 

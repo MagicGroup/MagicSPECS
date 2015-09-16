@@ -1,6 +1,6 @@
 Name:           perl-Math-Vec
 Version:        1.01
-Release:        18%{?dist}
+Release:        19%{?dist}
 Summary:        Perl Math::Vec module
 
 Group:          Development/Libraries
@@ -54,6 +54,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.01-19
+- 为 Magic 3.0 重建
+
 * Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 1.01-18
 - 为 Magic 3.0 重建
 

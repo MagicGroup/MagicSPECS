@@ -1,6 +1,6 @@
 Name:           perl-Log-TraceMessages
 Version:        1.4
-Release:        20%{?dist}
+Release:        22%{?dist}
 Summary:        Perl extension for trace messages used in debugging
 
 License:        GPL+ or Artistic
@@ -51,6 +51,12 @@ make test
 
 
 %changelog
+* Wed Sep 16 2015 Liu Di <liudidi@gmail.com> - 1.4-22
+- 为 Magic 3.0 重建
+
+* Wed Sep 16 2015 Liu Di <liudidi@gmail.com> - 1.4-21
+- 为 Magic 3.0 重建
+
 * Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.4-20
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

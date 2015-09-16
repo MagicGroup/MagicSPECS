@@ -1,6 +1,6 @@
 Name:           perl-JavaScript-Minifier-XS
-Version:        0.09
-Release:        12%{?dist}
+Version:	0.11
+Release:	1%{?dist}
 Summary:        XS based JavaScript minifier
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -51,6 +51,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.11-1
+- 更新到 0.11
+
 * Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 0.09-12
 - 为 Magic 3.0 重建
 

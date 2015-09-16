@@ -1,6 +1,6 @@
 Name:           perl-Unicode-LineBreak
-Version:        2013.11
-Release:        2%{?dist}
+Version:	2015.07.16
+Release:	2%{?dist}
 Summary:        UAX #14 Unicode Line Breaking Algorithm
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -8,9 +8,7 @@ URL:            http://search.cpan.org/dist/Unicode-LineBreak/
 Source0:        http://search.cpan.org/CPAN/authors/id/N/NE/NEZUMI/Unicode-LineBreak-%{version}.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 # libthai is not available (yet) on EL5 and earlier.
-%if 0%{?rhel} > 5 || 0%{?fedora}
 BuildRequires:  libthai-devel
-%endif
 BuildRequires:  perl(ExtUtils::MakeMaker)
 BuildRequires:  pkgconfig
 BuildRequires:  sombok-devel
@@ -30,13 +28,6 @@ Requires:       perl(Encode) >= 1.98
 Requires:       perl(MIME::Charset) >= 1.006.2
 
 
-%if 0%{?rhel} > 5
-%filter_from_provides /^perl(Unicode::LineBreak)$/d
-%filter_from_requires /^perl(Unicode::LineBreak::Constants)$/d
-%{?perl_default_filter}
-%endif
-
-%if 0%{?fedora} > 14
 %{?filter_setup:
 %filter_from_requires /perl(Unicode::LineBreak::Constants)/d
 %filter_from_provides /^perl(Unicode::LineBreak)$/d
@@ -44,7 +35,6 @@ Requires:       perl(MIME::Charset) >= 1.006.2
 %{?perl_default_filter}
 %global __requires_exclude %{?__requires_exclude:%__requires_exclude|}perl\\(Unicode::LineBreak::Constants\\)
 %global __provides_exclude %{?__provides_exclude:%__provides_exclude|}^perl\\(Unicode::LineBreak\\)$
-%endif
 
 
 %description
@@ -57,7 +47,7 @@ positions.
 %prep
 %setup -q -n Unicode-LineBreak-%{version}
 # Remove bundled library
-rm -rf sombok
+#rm -rf sombok
 sed -i -e '/^sombok/d' MANIFEST
 
 
@@ -67,14 +57,14 @@ cat << \EOF > %{name}-prov
 %{__perl_provides} $* |\
   sed -e '/^perl(Unicode::LineBreak)$/d'
 EOF
-%define __perl_provides %{_builddir}/Unicode-LineBreak-%{version}/%{name}-prov
+%define __perl_provides %{_buil%description -l zh_CN.UTF-8ir}/Unicode-LineBreak-%{version}/%{name}-prov
 chmod +x %{__perl_provides}
 cat << \EOF > %{name}-req
 #!/bin/sh
 %{__perl_requires} $* |\
   sed -e '/^perl(Unicode::LineBreak::Constants)$/d'
 EOF
-%define __perl_requires %{_builddir}/Unicode-LineBreak-%{version}/%{name}-req
+%define __perl_requires %{_buil%description -l zh_CN.UTF-8ir}/Unicode-LineBreak-%{version}/%{name}-req
 chmod +x %{__perl_requires}
 %endif
 
@@ -100,7 +90,7 @@ for mod in Text::LineFold Unicode::GCString Unicode::LineBreak; do
 done
 
 %{_fixperms} $RPM_BUILD_ROOT/*
-
+magic_rpm_clean.sh
 
 %check
 make test
@@ -118,10 +108,14 @@ rm -rf $RPM_BUILD_ROOT
 %{perl_vendorarch}/Text
 %{perl_vendorarch}/POD2
 %{_mandir}/man3/*
-%{_mandir}/ja/man3/*
-
 
 %changelog
+* Mon Sep 14 2015 Liu Di <liudidi@gmail.com> - 2015.07.16-2
+- 为 Magic 3.0 重建
+
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 2015.07.16-1
+- 更新到 2015.07.16
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 2013.11-2
 - 为 Magic 3.0 重建
 

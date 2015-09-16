@@ -1,14 +1,11 @@
 Name:           perl-File-MMagic-XS
-Version:        0.09006
-Release:        17%{?dist}
+Version:	0.09008
+Release:	1%{?dist}
 Summary:        Guess file type with XS
 Group:          Development/Libraries
 License:        ASL 2.0 and (GPL+ or Artistic)
 URL:            http://search.cpan.org/dist/File-MMagic-XS
 Source0:        http://search.cpan.org/CPAN/authors/id/D/DM/DMAKI/File-MMagic-XS-%{version}.tar.gz
-# Perl 5.18 compatibility, CPAN RT#63048
-Patch0:         File-MMagic-XS-0.09006-qw-does-not-produce-array-context-anymore.patch
-Patch1:		perl-File-MMagic-XS-format-security.patch
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(id -nu)
 BuildRequires:  gdbm-devel
 BuildRequires:  perl(ExtUtils::MakeMaker)
@@ -30,8 +27,6 @@ an extended amount of time.
 
 %prep
 %setup -q -n File-MMagic-XS-%{version}
-%patch0 -p1
-%patch1 -p1 -b .format-security
 
 %build
 perl Makefile.PL INSTALLDIRS=vendor OPTIMIZE="$RPM_OPT_FLAGS"
@@ -57,6 +52,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/File::MMagic::XS.3pm*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.09008-1
+- 更新到 0.09008
+
 * Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 0.09006-17
 - 为 Magic 3.0 重建
 

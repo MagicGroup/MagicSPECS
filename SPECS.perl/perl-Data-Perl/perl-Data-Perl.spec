@@ -1,6 +1,6 @@
 Name:           perl-Data-Perl
-Version:        0.002007
-Release:        4%{?dist}
+Version:	0.002009
+Release:	1%{?dist}
 Summary:        Base classes wrapping fundamental Perl data types
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -58,6 +58,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.002009-1
+- 更新到 0.002009
+
 * Thu Jun 19 2014 Liu Di <liudidi@gmail.com> - 0.002007-4
 - 为 Magic 3.0 重建
 

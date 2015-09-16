@@ -1,12 +1,11 @@
 Name:		perl-Package-Stash-XS
-Version:	0.25
-Release:	11%{?dist}
+Version:	0.28
+Release:	3%{?dist}
 Summary:	Faster and more correct implementation of the Package::Stash API
 Group:		Development/Libraries
 License:	GPL+ or Artistic
 URL:		http://search.cpan.org/dist/Package-Stash-XS/
 Source0:	http://search.cpan.org/CPAN/authors/id/D/DO/DOY/Package-Stash-XS-%{version}.tar.gz
-Patch1:		Package-Stash-XS-0.24-old-Test::More.patch
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(id -nu)
 BuildRequires:	perl >= 3:5.8.1
 BuildRequires:	perl(constant)
@@ -38,11 +37,6 @@ installed, and should be preferred in all environments with a compiler.
 %prep
 %setup -q -n Package-Stash-XS-%{version}
 
-# Patch test suite to work with old Test::More versions if necessary
-%if "%{?rhel}" == "5"
-%patch1 -p1
-%endif
-
 %build
 perl Makefile.PL INSTALLDIRS=vendor OPTIMIZE="%{optflags}"
 make %{?_smp_mflags}
@@ -71,6 +65,15 @@ rm -rf %{buildroot}
 %{_mandir}/man3/Package::Stash::XS.3pm*
 
 %changelog
+* Tue Sep 15 2015 Liu Di <liudidi@gmail.com> - 0.28-3
+- 为 Magic 3.0 重建
+
+* Tue Sep 15 2015 Liu Di <liudidi@gmail.com> - 0.28-2
+- 为 Magic 3.0 重建
+
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.28-1
+- 更新到 0.28
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.25-11
 - 为 Magic 3.0 重建
 

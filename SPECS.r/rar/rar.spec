@@ -9,8 +9,8 @@
 Summary: RAR archiver to create and manage RAR archives
 Summary(zh_CN.UTF-8): 建立和管理RAR档案
 Name: rar
-Version: 4.2.0
-Release: 2%{?dist}
+Version:	5.2.1
+Release:	2%{?dist}
 License: Shareware
 Group: Applications/Archiving
 Group(zh_CN.UTF-8): 应用程序/归档
@@ -62,6 +62,12 @@ magic_rpm_clean.sh
 
 
 %changelog
+* Sat Sep 12 2015 Liu Di <liudidi@gmail.com> - 5.2.1-2
+- 为 Magic 3.0 重建
+
+* Sat Sep 12 2015 Liu Di <liudidi@gmail.com> - 5.2.1-1
+- 更新到 5.2.1
+
 * Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 4.2.0-2
 - 为 Magic 3.0 重建
 

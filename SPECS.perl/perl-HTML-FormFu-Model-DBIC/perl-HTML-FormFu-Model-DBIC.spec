@@ -1,10 +1,10 @@
 Name:           perl-HTML-FormFu-Model-DBIC
 Summary:        Integrate HTML::FormFu with DBIx::Class
-Version:        0.09002
-Release:        17%{?dist}
+Version:	2.00
+Release:	1%{?dist}
 License:        GPL+ or Artistic
 Group:          Development/Libraries
-Source0:        http://search.cpan.org/CPAN/authors/id/P/PS/PSHANGOV/HTML-FormFu-Model-DBIC-%{version}.tar.gz
+Source0:        http://search.cpan.org/CPAN/authors/id/C/CF/CFRANKS/HTML-FormFu-Model-DBIC-%{version}.tar.gz
 URL:            http://search.cpan.org/dist/HTML-FormFu-Model-DBIC
 Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
 BuildArch:      noarch
@@ -56,6 +56,9 @@ find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null ';'
 %{_mandir}/man3/*.3*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 2.00-1
+- 更新到 2.00
+
 * Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 0.09002-17
 - 为 Magic 3.0 重建
 

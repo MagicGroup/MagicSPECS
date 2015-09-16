@@ -1,13 +1,13 @@
 %{?perl_default_filter}
 
 Name:           perl-CDB_File
-Version:        0.96
-Release:        9%{?dist}
+Version:	0.98
+Release:	1%{?dist}
 Summary:        Perl extension for access to cdb databases
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 URL:            http://search.cpan.org/dist/CDB_File/
-Source0:        http://www.cpan.org/authors/id/M/MS/MSERGEANT/CDB_File-%{version}.tar.gz
+Source0:	http://search.cpan.org/CPAN/authors/id/T/TO/TODDR/CDB_File-%{version}.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  perl(ExtUtils::MakeMaker)
 BuildRequires:  perl(Exporter)
@@ -52,6 +52,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.98-1
+- 更新到 0.98
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.96-9
 - 为 Magic 3.0 重建
 

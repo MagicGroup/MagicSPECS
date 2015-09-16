@@ -1,11 +1,11 @@
 Name:           perl-Inline-Files
-Version:        0.68
-Release:        6%{?dist}
+Version:	0.69
+Release:	1%{?dist}
 Summary:        Allows for multiple inline files in a single perl file
 Group:          Development/Libraries
 License:        GPL+ or Artistic
 URL:            http://search.cpan.org/dist/Inline-Files/
-Source0:        http://search.cpan.org/CPAN/authors/id/A/AM/AMBS/Inline/Inline-Files-%{version}.tar.gz
+Source0:        http://search.cpan.org/CPAN/authors/id/A/AM/AMBS/Inline-Files-%{version}.tar.gz
 BuildArch:      noarch
 BuildRequires:  perl(ExtUtils::MakeMaker)
 # Tests only:
@@ -47,6 +47,9 @@ chmod -R u+w $RPM_BUILD_ROOT/*
 %{_mandir}/man3/*.3*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.69-1
+- 更新到 0.69
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.68-6
 - 为 Magic 3.0 重建
 

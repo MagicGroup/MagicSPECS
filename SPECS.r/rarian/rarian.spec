@@ -2,14 +2,15 @@
 
 Name: rarian
 Version: 0.8.1
-Release: 5%{?dist}
+Release: 6%{?dist}
 License: LGPLv2+
 Group: System Environment/Base
 Group(zh_CN.UTF-8): 系统环境/基本
 Summary: Rarian is a documentation meta-data library
 Summary(zh_CN.UTF-8):	Rarian 是一个文档元数据库
 URL: http://ftp.gnome.org/pub/gnome/sources/rarian
-Source: http://ftp.gnome.org/pub/gnome/sources/rarian/0.5/rarian-%{version}.tar.bz2
+%define majorver %(echo %{version} | awk -F. '{print $1"."$2}')
+Source: http://ftp.gnome.org/pub/gnome/sources/rarian/%{majorver}/rarian-%{version}.tar.bz2
 Source1: scrollkeeper-omf.dtd
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
@@ -139,6 +140,9 @@ fi
 %{_libdir}/pkgconfig/rarian.pc
 
 %changelog
+* Sat Sep 12 2015 Liu Di <liudidi@gmail.com> - 0.8.1-6
+- 为 Magic 3.0 重建
+
 * Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 0.8.1-5
 - 为 Magic 3.0 重建
 

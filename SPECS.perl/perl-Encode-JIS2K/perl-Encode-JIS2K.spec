@@ -1,12 +1,11 @@
 Name:           perl-Encode-JIS2K
-Version:        0.02
-Release:        8%{?dist}
+Version:	0.03
+Release:	1%{?dist}
 Summary:        JIS X 0212 (aka JIS 2000) Encodings
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 URL:            http://search.cpan.org/dist/Encode-JIS2K/
 Source0:        http://www.cpan.org/modules/by-module/Encode/Encode-JIS2K-%{version}.tar.gz
-Patch0:         perl-Encode-JIS2K-0.02-Fix_package_declaration.patch
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  perl(ExtUtils::MakeMaker)
 BuildRequires:  perl(Test::More)
@@ -20,7 +19,6 @@ hence the module name).
 
 %prep
 %setup -q -n Encode-JIS2K-%{version}
-%patch0 -p1
 
 %build
 %{__perl} Makefile.PL INSTALLDIRS=vendor OPTIMIZE="$RPM_OPT_FLAGS"
@@ -48,6 +46,9 @@ rm -rf $RPM_BUILD_ROOT
 %exclude %dir %{perl_vendorarch}/auto/
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.03-1
+- 更新到 0.03
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.02-8
 - 为 Magic 3.0 重建
 

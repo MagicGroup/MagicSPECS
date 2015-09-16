@@ -1,6 +1,6 @@
 Name:       perl-Module-Install-GithubMeta 
-Version:    0.16
-Release:    5%{?dist}
+Version:	0.30
+Release:	1%{?dist}
 # lib/Module/Install/GithubMeta.pm -> GPL+ or Artistic
 License:    GPL+ or Artistic 
 Group:      Development/Libraries
@@ -51,11 +51,13 @@ find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null ';'
 
 
 %files
-%doc Changes LICENSE README 
 %{perl_vendorlib}/*
 %{_mandir}/man3/*.3*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.30-1
+- 更新到 0.30
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.16-5
 - 为 Magic 3.0 重建
 

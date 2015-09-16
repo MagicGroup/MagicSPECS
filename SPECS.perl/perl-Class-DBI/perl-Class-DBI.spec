@@ -1,6 +1,6 @@
 Name:           perl-Class-DBI
-Version:        3.0.17
-Release:        24%{?dist}
+Version:	3.0.17
+Release:	25%{?dist}
 Summary:        Simple Database Abstraction
 Group:          Development/Libraries
 License:        GPL+ or Artistic
@@ -44,6 +44,9 @@ chmod -R u+w $RPM_BUILD_ROOT/*
 %{_mandir}/man3/*.3*
 
 %changelog
+* Tue Sep 15 2015 Liu Di <liudidi@gmail.com> - 3.0.17-25
+- 为 Magic 3.0 重建
+
 * Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 3.0.17-24
 - 为 Magic 3.0 重建
 

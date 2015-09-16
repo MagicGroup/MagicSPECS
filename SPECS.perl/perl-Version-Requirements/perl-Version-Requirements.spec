@@ -1,6 +1,6 @@
 Name:           perl-Version-Requirements
-Version:        0.101022
-Release:        248%{?dist}
+Version:	0.101023
+Release:	1%{?dist}
 Summary:        Set of version requirements for a CPAN dist (DEPRECATED)
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -23,11 +23,11 @@ Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $versi
 %{?perl_default_filter}
 
 %description
-Version::Requirements is now DEPRECATED.
+Version:	0.101023
 
 Use CPAN::Meta::Requirements, which is a drop-in replacement.
 
-A Version::Requirements object models a set of version constraints like
+A Version:	0.101023
 those specified in the META.yml or META.json files in CPAN distributions.
 It can be built up by adding more and more constraints, and it will reduce
 them to the simplest representation.
@@ -62,6 +62,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.101023-1
+- 更新到 0.101023
+
 * Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 0.101022-248
 - 为 Magic 3.0 重建
 
@@ -107,7 +110,7 @@ rm -rf $RPM_BUILD_ROOT
 
 * Fri Feb 03 2012 Iain Arnell <iarnell@gmail.com> 0.101021-1
 - update to latest upstream
-- Version::Requirements is now DEPRECATED
+- Version:	0.101023
   use CPAN::Meta::Requirements, which is a drop-in replacement
 
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.101020-6

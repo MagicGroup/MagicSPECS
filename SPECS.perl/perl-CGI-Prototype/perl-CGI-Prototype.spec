@@ -1,6 +1,6 @@
 Name:           perl-CGI-Prototype
 Version:        0.9054
-Release:        13%{?dist}
+Release:        14%{?dist}
 Summary:        Create a CGI application by subclassing
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -78,6 +78,9 @@ find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.9054-14
+- 为 Magic 3.0 重建
+
 * Sun Jun 15 2014 Liu Di <liudidi@gmail.com> - 0.9054-13
 - 为 Magic 3.0 重建
 

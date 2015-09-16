@@ -1,6 +1,6 @@
 Name:           perl-Perl-Critic-PetPeeves-JTRAMMELL
-Version:        0.02
-Release:        12%{?dist}
+Version:	0.04
+Release:	1%{?dist}
 Summary:        Policies to prohibit/require my pet peeves
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -44,6 +44,9 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.04-1
+- 更新到 0.04
+
 * Sun Jun 15 2014 Liu Di <liudidi@gmail.com> - 0.02-12
 - 为 Magic 3.0 重建
 

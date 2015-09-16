@@ -1,8 +1,8 @@
 Name:           perl-Mozilla-CA
 # You do not need to back-port new version for list of certificates solely.
 # They are taken from ca-certificates package instead per bug #738383.
-Version:        20130114
-Release:        3%{?dist}
+Version:	20150826
+Release:	1%{?dist}
 Summary:        Mozilla's CA cert bundle in PEM format
 License:        MPLv1.1 or LGPLv2+ or GPLv2+
 Group:          Development/Libraries
@@ -50,6 +50,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 20150826-1
+- 更新到 20150826
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 20130114-3
 - 为 Magic 3.0 重建
 

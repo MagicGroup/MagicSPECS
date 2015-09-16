@@ -1,6 +1,6 @@
 Name:           perl-DateTime-Format-IBeat
-Version:        0.161
-Release:        21%{?dist}
+Version:	0.161
+Release:	22%{?dist}
 Summary:        Format times in .beat notation 
 
 Group:          Development/Libraries

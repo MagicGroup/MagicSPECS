@@ -1,35 +1,39 @@
 Name:           perl-Text-Autoformat
-Version:        1.669004
-Release:        7%{?dist}
+# Maintain six-digit version number to ensure clean upgrade path
+%global cpan_version 1.72
+Version:	%{cpan_version}0000
+Release:	2%{?dist}
 Summary:        Automatic text wrapping and reformatting
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 URL:            http://search.cpan.org/dist/Text-Autoformat/
-Source0:        http://www.cpan.org/authors/id/D/DC/DCONWAY/Text-Autoformat-%{version}.tar.gz
-Patch0:         Text-Autoformat-1.669004-provides.patch
-BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(id -nu)
+Source0:        http://www.cpan.org/authors/id/N/NE/NEILB/Text-Autoformat-%{cpan_version}.tar.gz
 BuildArch:      noarch
-# Module Build
-BuildRequires:  perl(Module::Build)
+# Build
+BuildRequires:  coreutils
+BuildRequires:  make
+BuildRequires:  perl
+BuildRequires:  perl(ExtUtils::MakeMaker) >= 6.76
+BuildRequires:  perl(strict)
 BuildRequires:  perl(warnings)
-# Module Runtime
+# Runtime
 BuildRequires:  perl(Carp)
-BuildRequires:  perl(Data::Dumper)
 BuildRequires:  perl(Exporter)
 BuildRequires:  perl(overload)
-BuildRequires:  perl(strict)
 BuildRequires:  perl(Text::Reform) >= 1.11
 BuildRequires:  perl(Text::Tabs)
-BuildRequires:  perl(utf8)
 BuildRequires:  perl(vars)
-# Test Suite
+# Tests only
 BuildRequires:  perl(Test::More)
-# Runtime
-Requires:       perl(:MODULE_COMPAT_%(eval "`perl -V:version`"; echo $version))
+BuildRequires:  perl(utf8)
+Requires:       perl(:MODULE_COMPAT_%(eval "$(perl -V:version)"; echo $version))
+
+# Do not export private modules
+%global __provides_exclude %{?__provides_exclude|%__provides_exclude|}^perl\\((Hang|NullHang)\\)
 
 %description
-Text::Autoformat provides intelligent formatting of plaintext without the
-need for any kind of embedded mark-up. The module recognizes Internet
+Text::Autoformat provides intelligent formatting of plain text without the
+need for any kind of embe%description -l zh_CN.UTF-8ed mark-up. The module recognizes Internet
 quoting conventions, a wide range of bulleting and number schemes, centered
 text, and block quotations, and reformats each appropriately. Other options
 allow the user to adjust inter-word and inter-paragraph spacing, justify
@@ -39,35 +43,36 @@ The module also supplies a re-entrant, highly configurable replacement for
 the built-in Perl format() mechanism.
 
 %prep
-%setup -q -n Text-Autoformat-%{version}
-
-# Drop bogus exec bits
+%setup -q -n Text-Autoformat-%{cpan_version}
 chmod -c -x config.*
 
-# Hide private modules from rpm
-%patch0
-
 %build
-perl Build.PL installdirs=vendor
-./Build
+perl Makefile.PL INSTALLDIRS=vendor NO_PACKLIST=1
+make %{?_smp_mflags}
 
 %install
-rm -rf $RPM_BUILD_ROOT
-./Build install destdir=$RPM_BUILD_ROOT create_packlist=0
-%{_fixperms} $RPM_BUILD_ROOT
+make pure_install DESTDIR=%{buildroot}
+%{_fixperms} %{buildroot}/*
 
 %check
-./Build test
-
-%clean
-rm -rf $RPM_BUILD_ROOT
+make test
 
 %files
+%license LICENSE
 %doc Changes README config.emacs config.vim
 %{perl_vendorlib}/Text/
 %{_mandir}/man3/Text::Autoformat.3pm*
 
 %changelog
+* Wed Sep 16 2015 Liu Di <liudidi@gmail.com> - 1.720000-2
+- 为 Magic 3.0 重建
+
+* Wed Sep 16 2015 Liu Di <liudidi@gmail.com> - 1.72-1
+- 更新到 1.72
+
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.72-1
+- 更新到 1.72
+
 * Sun Jun 15 2014 Liu Di <liudidi@gmail.com> - 1.669004-7
 - 为 Magic 3.0 重建
 

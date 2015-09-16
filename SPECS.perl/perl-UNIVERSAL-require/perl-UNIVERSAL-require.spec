@@ -1,11 +1,11 @@
 Name:           perl-UNIVERSAL-require
-Version:        0.13
-Release:        12%{?dist}
+Version:	0.18
+Release:	1%{?dist}
 Summary:        Require() modules from a variable
 Group:          Development/Libraries
 License:        GPL+ or Artistic
 URL:            http://search.cpan.org/dist/UNIVERSAL-require/
-Source0:        http://search.cpan.org/CPAN/authors/id/M/MS/MSCHWERN/UNIVERSAL-require-%{version}.tar.gz
+Source0:        http://search.cpan.org/CPAN/authors/id/N/NE/NEILB/UNIVERSAL-require-%{version}.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 BuildRequires:  perl(Test::More)
@@ -49,6 +49,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.18-1
+- 更新到 0.18
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.13-12
 - 为 Magic 3.0 重建
 

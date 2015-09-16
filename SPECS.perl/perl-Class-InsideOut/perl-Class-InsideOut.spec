@@ -1,6 +1,6 @@
 Name:           perl-Class-InsideOut
-Version:        1.10
-Release:        10%{?dist}
+Version:	1.13
+Release:	1%{?dist}
 Summary:        A safe, simple inside-out object construction kit 
 
 Group:          Development/Libraries
@@ -84,6 +84,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.13-1
+- 更新到 1.13
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.10-10
 - 为 Magic 3.0 重建
 

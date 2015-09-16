@@ -1,6 +1,6 @@
 Name:           perl-Net-IP-Minimal
-Version:        0.02
-Release:        5%{?dist}
+Version:	0.06
+Release:	1%{?dist}
 Summary:        Minimal functions from Net::IP
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -40,6 +40,9 @@ find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.06-1
+- 更新到 0.06
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.02-5
 - 为 Magic 3.0 重建
 

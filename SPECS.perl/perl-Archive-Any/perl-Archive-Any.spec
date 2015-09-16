@@ -1,6 +1,6 @@
 Name:		perl-Archive-Any
 Version:	0.0942
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:	Single interface to deal with file archives
 Summary(zh_CN.UTF-8): 与归档文件打交道的单一接口
 License:	GPL+ or Artistic
@@ -67,6 +67,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/Archive::Any::Zip.3pm*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.0942-2
+- 为 Magic 3.0 重建
+
 * Thu Apr 23 2015 Liu Di <liudidi@gmail.com> - 0.0942-1
 - 更新到 0.0942
 

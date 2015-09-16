@@ -1,11 +1,11 @@
 Name:           perl-CGI-Ex
-Version:        2.32
-Release:        19%{?dist}
+Version:	2.42
+Release:	1%{?dist}
 Summary:        CGI utility suite - makes powerful application writing fun and easy
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 URL:            http://search.cpan.org/dist/CGI-Ex/
-Source0:        http://www.cpan.org/authors/id/R/RH/RHANDOM/CGI-Ex-%{version}.tar.gz
+Source0:        http://search.cpan.org/CPAN/authors/id/L/LJ/LJEPSON/CGI-Ex-%{version}.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
@@ -71,6 +71,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 2.42-1
+- 更新到 2.42
+
 * Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 2.32-19
 - 为 Magic 3.0 重建
 

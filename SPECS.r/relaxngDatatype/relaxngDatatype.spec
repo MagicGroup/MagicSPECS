@@ -1,6 +1,6 @@
 Name:           relaxngDatatype
 Version:        1.0
-Release:        14.5%{?dist}
+Release:        15.5%{?dist}
 Summary:        RELAX NG Datatype API
 License:        BSD
 URL:            https://sourceforge.net/projects/relaxng
@@ -57,6 +57,9 @@ dummy = posix.readlink(dir) and os.remove(dir)
 %doc %{_javadocdir}/%{name}
 
 %changelog
+* Sat Sep 12 2015 Liu Di <liudidi@gmail.com> - 1.0-15.5
+- 为 Magic 3.0 重建
+
 * Thu Aug 14 2014 Liu Di <liudidi@gmail.com> - 1.0-14.5
 - 为 Magic 3.0 重建
 

@@ -1,6 +1,6 @@
 Name:           perl-Text-Diff-HTML
-Version:        0.06
-Release:        13%{?dist}
+Version:	0.07
+Release:	1%{?dist}
 Summary:        XHTML format for Text::Diff::Unified
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -44,11 +44,13 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(-,root,root,-)
-%doc Changes README
 %{perl_vendorlib}/*
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.07-1
+- 更新到 0.07
+
 * Sun Jun 15 2014 Liu Di <liudidi@gmail.com> - 0.06-13
 - 为 Magic 3.0 重建
 

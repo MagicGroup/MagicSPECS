@@ -1,6 +1,6 @@
 Name:           perl-Mixin-ExtraFields
-Version:        0.100971
-Release:        9%{?dist}
+Version:	0.140002
+Release:	1%{?dist}
 Summary:        Add extra stashes of data to your objects
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -57,6 +57,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.140002-1
+- 更新到 0.140002
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.100971-9
 - 为 Magic 3.0 重建
 

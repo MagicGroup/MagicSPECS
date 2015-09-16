@@ -1,6 +1,6 @@
 Name:           perl-Socket-GetAddrInfo
-Version:        0.19
-Release:        10%{?dist}
+Version:	0.22
+Release:	1%{?dist}
 Summary:        RFC 2553's "getaddrinfo" and "getnameinfo" functions
 
 Group:          Development/Libraries
@@ -59,13 +59,18 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(-,root,root,-)
-%doc Changes examples LICENSE README
 %{perl_vendorarch}/auto/*
 %{perl_vendorarch}/Socket*
 %{_mandir}/man3/*.3*
-
+%{_bindir}/getaddrinfo
+%{_bindir}/getnameinfo
+%{_mandir}/man1/getaddrinfo.1*
+%{_mandir}/man1/getnameinfo.1*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.22-1
+- 更新到 0.22
+
 * Sun Jun 15 2014 Liu Di <liudidi@gmail.com> - 0.19-10
 - 为 Magic 3.0 重建
 

@@ -1,11 +1,11 @@
 Name:           perl-HTML-Mason-PSGIHandler
-Version:        0.52
-Release:        15%{?dist}
+Version:	0.53
+Release:	1%{?dist}
 Summary:        PSGI handler for HTML::Mason
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 URL:            http://search.cpan.org/dist/HTML-Mason-PSGIHandler/
-Source0:        http://www.cpan.org/authors/id/A/AB/ABH/HTML-Mason-PSGIHandler-%{version}.tar.gz
+Source0:        http://search.cpan.org/CPAN/authors/id/R/RU/RUZ/HTML-Mason-PSGIHandler-%{version}.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 BuildRequires:  perl(CGI::PSGI)
@@ -50,6 +50,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.53-1
+- 更新到 0.53
+
 * Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 0.52-15
 - 为 Magic 3.0 重建
 

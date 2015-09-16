@@ -1,6 +1,6 @@
 Name:           perl-Router-Simple
-Version:        0.14
-Release:        8%{?dist}
+Version:	0.17
+Release:	1%{?dist}
 Summary:        Simple HTTP router
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -39,11 +39,13 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 ./Build test
 
 %files
-%doc Changes README
 %{perl_vendorlib}/Router
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.17-1
+- 更新到 0.17
+
 * Sun Jun 15 2014 Liu Di <liudidi@gmail.com> - 0.14-8
 - 为 Magic 3.0 重建
 

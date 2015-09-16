@@ -1,6 +1,6 @@
 Name:           perl-Event-ExecFlow
 Version:        0.64
-Release:        11%{?dist}
+Release:        12%{?dist}
 Summary:        High level API for event-based execution flow control
 
 Group:          Development/Libraries
@@ -69,6 +69,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.64-12
+- 为 Magic 3.0 重建
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.64-11
 - 为 Magic 3.0 重建
 

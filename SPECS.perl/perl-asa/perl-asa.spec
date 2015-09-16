@@ -1,6 +1,6 @@
 Name:       perl-asa 
 Version:    1.03
-Release:    8%{?dist}
+Release:    9%{?dist}
 # see lib/asa.pm
 License:    GPL+ or Artistic
 Group:      Development/Libraries
@@ -60,6 +60,9 @@ magic_rpm_clean.sh
 %{_mandir}/man3/*.3*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.03-9
+- 为 Magic 3.0 重建
+
 * Fri Apr 17 2015 Liu Di <liudidi@gmail.com> - 1.03-8
 - 为 Magic 3.0 重建
 

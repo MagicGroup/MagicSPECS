@@ -1,6 +1,6 @@
 Name:           perl-Catalyst-Model-XMLRPC
 Version:        0.04
-Release:        26%{?dist}
+Release:        27%{?dist}
 Summary:        XMLRPC model class for Catalyst
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -74,6 +74,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.04-27
+- 为 Magic 3.0 重建
+
 * Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 0.04-26
 - 为 Magic 3.0 重建
 

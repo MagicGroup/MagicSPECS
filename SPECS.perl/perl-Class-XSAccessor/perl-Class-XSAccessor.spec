@@ -1,6 +1,6 @@
 Name:           perl-Class-XSAccessor
-Version:        1.14
-Release:        4%{?dist}
+Version:	1.19
+Release:	1%{?dist}
 Summary:        Generate fast XS accessors without run-time compilation
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -50,6 +50,9 @@ find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_mandir}/man3/Class::*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.19-1
+- 更新到 1.19
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.14-4
 - 为 Magic 3.0 重建
 

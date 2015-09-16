@@ -1,6 +1,6 @@
 Name:           perl-Pod-LaTeX
 Version:        0.61
-Release:        294%{?dist}
+Release:        295%{?dist}
 Summary:        Convert POD data to formatted LaTeX
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -59,6 +59,9 @@ perl Build.PL installdirs=vendor
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.61-295
+- 为 Magic 3.0 重建
+
 * Tue Jun 17 2014 Liu Di <liudidi@gmail.com> - 0.61-294
 - 为 Magic 3.0 重建
 

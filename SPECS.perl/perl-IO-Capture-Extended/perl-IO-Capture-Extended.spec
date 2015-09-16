@@ -1,6 +1,6 @@
 Name:           perl-IO-Capture-Extended
-Version:        0.11
-Release:        6%{?dist}
+Version:	0.13
+Release:	1%{?dist}
 Summary:        Extend functionality of IO::Capture
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -46,11 +46,13 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 
 
 %files
-%doc Changes LICENSE README
 %{perl_vendorlib}/*
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.13-1
+- 更新到 0.13
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.11-6
 - 为 Magic 3.0 重建
 

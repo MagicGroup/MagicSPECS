@@ -1,6 +1,6 @@
 Name:           perl-Test-Number-Delta
-Version:        1.03
-Release:        19%{?dist}
+Version:	1.06
+Release:	1%{?dist}
 Summary:        Compare the difference between numbers against a given tolerance
 
 Group:          Development/Libraries
@@ -24,38 +24,37 @@ the absolute value of the difference of the numbers is within a
 desired tolerance, usually called epsilon. This module provides such
 a function for use with Test::Harness.
 
-
 %prep
 %setup -q -n Test-Number-Delta-%{version}
 
 
 %build
-%{__perl} Build.PL installdirs=vendor
-./Build
+%{__perl} Makefile.PL INSTALLDIRS=vendor
+make
 
 
 %install
-rm -rf $RPM_BUILD_ROOT
-./Build install destdir=$RPM_BUILD_ROOT create_packlist=0
+make pure_install PERL_INSTALL_ROOT=$RPM_BUILD_ROOT
+find $RPM_BUILD_ROOT -type f -name .packlist -exec rm -f {} ';'
+find $RPM_BUILD_ROOT -type d -depth -exec rmdir {} 2>/dev/null ';'
 chmod -R u+w $RPM_BUILD_ROOT/*
 
 
 %check
-AUTHOR_TESTING=1 ./Build test
-
-
-%clean
-rm -rf $RPM_BUILD_ROOT
+AUTHOR_TESTING=1 make test
 
 
 %files
-%defattr(-,root,root,-)
-%doc Changes LICENSE Todo
+%doc Changes
+%license LICENSE
 %{perl_vendorlib}/Test/
 %{_mandir}/man3/*.3pm*
 
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.06-1
+- 更新到 1.06
+
 * Sun Jun 15 2014 Liu Di <liudidi@gmail.com> - 1.03-19
 - 为 Magic 3.0 重建
 

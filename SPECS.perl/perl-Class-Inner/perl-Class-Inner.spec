@@ -1,6 +1,6 @@
 Name:           perl-Class-Inner
 Version:        0.200001
-Release:        9%{?dist}
+Release:        10%{?dist}
 Summary:        A perlish implementation of Java like inner classes
 
 Group:          Development/Libraries
@@ -53,6 +53,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.200001-10
+- 为 Magic 3.0 重建
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.200001-9
 - 为 Magic 3.0 重建
 

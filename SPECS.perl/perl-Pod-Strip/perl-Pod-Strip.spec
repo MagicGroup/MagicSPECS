@@ -1,6 +1,6 @@
 Name:           perl-Pod-Strip
 Version:        1.02
-Release:        18%{?dist}
+Release:        19%{?dist}
 Summary:        Remove POD from Perl code
 
 Group:          Development/Libraries
@@ -52,6 +52,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.02-19
+- 为 Magic 3.0 重建
+
 * Thu Jun 19 2014 Liu Di <liudidi@gmail.com> - 1.02-18
 - 为 Magic 3.0 重建
 

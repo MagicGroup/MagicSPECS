@@ -1,6 +1,6 @@
 Name:           perl-Hash-Case
-Version:        1.006
-Release:        12%{?dist}
+Version:	1.02
+Release:	1%{?dist}
 Summary:        Base class for hashes with key-casing requirements
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -50,6 +50,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.02-1
+- 更新到 1.02
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.006-12
 - 为 Magic 3.0 重建
 

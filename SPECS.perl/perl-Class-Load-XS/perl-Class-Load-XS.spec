@@ -2,13 +2,13 @@
 #TODO: BR: Test::Pod::LinkCheck when available
 
 Name:		perl-Class-Load-XS
-Version:	0.06
-Release:	9%{?dist}
+Version:	0.09
+Release:	1%{?dist}
 Summary:	XS implementation of parts of Class::Load
 Group:		Development/Libraries
 License:	Artistic 2.0
 URL:		http://search.cpan.org/dist/Class-Load-XS/
-Source0:	http://search.cpan.org/CPAN/authors/id/D/DR/DROLSKY/Class-Load-XS-%{version}.tar.gz
+Source0:        http://search.cpan.org/CPAN/authors/id/E/ET/ETHER/Class-Load-XS-%{version}.tar.gz
 # ===================================================================
 # Module build requirements
 # ===================================================================
@@ -44,30 +44,33 @@ Requires:	perl(:MODULE_COMPAT_%(eval "`perl -V:version`"; echo $version))
 %description
 This module provides an XS implementation for portions of Class::Load.
 See Class::Load for API details.
-
 %prep
 %setup -q -n Class-Load-XS-%{version}
 
 %build
-perl Build.PL installdirs=vendor optimize="%{optflags}"
-./Build
+perl Makefile.PL INSTALLDIRS=vendor OPTIMIZE="%{optflags}"
+make %{?_smp_mflags}
 
 %install
-./Build install destdir=%{buildroot} create_packlist=0
+make pure_install DESTDIR=%{buildroot}
+find %{buildroot} -type f -name .packlist -exec rm -f {} ';'
 find %{buildroot} -type f -name '*.bs' -a -size 0 -exec rm -f {} ';'
-find %{buildroot} -depth -type d -exec rmdir {} ';' 2>/dev/null
 %{_fixperms} %{buildroot}
 
 %check
-RELEASE_TESTING=1 ./Build test
+make test
 
 %files
-%doc Changes LICENSE README
+%license LICENSE
+%doc Changes CONTRIBUTING README
 %{perl_vendorarch}/auto/Class/
 %{perl_vendorarch}/Class/
 %{_mandir}/man3/Class::Load::XS.3pm*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.09-1
+- 更新到 0.09
+
 * Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 0.06-9
 - 为 Magic 3.0 重建
 

@@ -1,6 +1,6 @@
 Name:           perl-constant-boolean
 Version:        0.02
-Release:        17%{?dist}
+Release:        18%{?dist}
 Summary:        Define TRUE and FALSE constants
 Summary(zh_CN.UTF-8): 定义 TRUE 和 FALSE 常量
 License:        GPL+ or Artistic
@@ -48,6 +48,9 @@ magic_rpm_clean.sh
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.02-18
+- 为 Magic 3.0 重建
+
 * Fri May 08 2015 Liu Di <liudidi@gmail.com> - 0.02-17
 - 为 Magic 3.0 重建
 

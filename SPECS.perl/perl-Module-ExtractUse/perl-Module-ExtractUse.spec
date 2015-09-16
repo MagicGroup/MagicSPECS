@@ -1,6 +1,6 @@
 Name:           perl-Module-ExtractUse
-Version:        0.28
-Release:        8%{?dist}
+Version:	0.32
+Release:	1%{?dist}
 Summary:        Find out what modules are used
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -55,6 +55,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/Module::ExtractUse::Grammar.3pm*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.32-1
+- 更新到 0.32
+
 * Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 0.28-8
 - 为 Magic 3.0 重建
 

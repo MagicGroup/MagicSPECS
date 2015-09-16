@@ -1,6 +1,6 @@
 Name:           perl-Test-WWW-Mechanize-CGIApp
 Version:        0.05
-Release:        18%{?dist}
+Release:        19%{?dist}
 Summary:        Test::WWW::Mechanize for CGI::Application
 License:        GPL+ or Artistic
 
@@ -51,6 +51,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.05-19
+- 为 Magic 3.0 重建
+
 * Sun Jun 15 2014 Liu Di <liudidi@gmail.com> - 0.05-18
 - 为 Magic 3.0 重建
 

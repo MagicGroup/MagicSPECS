@@ -1,14 +1,11 @@
 Name:           perl-Devel-Hide
-Version:        0.0008
-Release:        16%{?dist}
+Version:	0.0009
+Release:	1%{?dist}
 Summary:        Forces the unavailability of specified Perl modules (for testing)
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 URL:            http://search.cpan.org/dist/Devel-Hide/
 Source0:        http://www.cpan.org/authors/id/F/FE/FERREIRA/Devel-Hide-%{version}.tar.gz
-# 'defined(@array)' is deprecated - avoid warnings
-# see https://rt.cpan.org/Public/Bug/Display.html?id=74225
-Patch0:         rt74225.patch
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 BuildRequires:  perl(ExtUtils::MakeMaker)
@@ -24,7 +21,6 @@ installed or not).
 
 %prep
 %setup -q -n Devel-Hide-%{version}
-%patch0 -p1
 
 %build
 %{__perl} Makefile.PL INSTALLDIRS=vendor
@@ -53,6 +49,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.0009-1
+- 更新到 0.0009
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.0008-16
 - 为 Magic 3.0 重建
 

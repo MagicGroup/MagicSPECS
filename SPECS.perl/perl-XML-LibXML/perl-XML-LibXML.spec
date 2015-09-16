@@ -3,8 +3,8 @@ Name:           perl-XML-LibXML
 # https://bugzilla.redhat.com/show_bug.cgi?id=469480
 # it might not be needed anymore
 # this module is maintained, the other is not
-Version:        2.0006
-Release:        5%{?dist}
+Version:	2.0122
+Release:	1%{?dist}
 Epoch:          1
 Summary:        Perl interface to the libxml2 library
 
@@ -102,6 +102,9 @@ fi
 %{_mandir}/man3/*.3*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1:2.0122-1
+- 更新到 2.0122
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1:2.0006-5
 - 为 Magic 3.0 重建
 

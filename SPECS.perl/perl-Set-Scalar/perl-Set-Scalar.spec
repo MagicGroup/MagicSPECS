@@ -1,12 +1,12 @@
 Name:           perl-Set-Scalar
-Version:        1.25
-Release:        10%{?dist}
+Version:	1.29
+Release:	1%{?dist}
 Summary:        Basic set operations
 
 Group:          Development/Libraries
 License:        GPL+ or Artistic
 URL:            http://search.cpan.org/dist/Set-Scalar/
-Source0:        http://www.cpan.org/authors/id/J/JH/JHI/Set-Scalar-%{version}.tar.gz
+Source0:        http://search.cpan.org/CPAN/authors/id/D/DA/DAVIDO/Set-Scalar-%{version}.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildArch:      noarch
@@ -50,6 +50,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.29-1
+- 更新到 1.29
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.25-10
 - 为 Magic 3.0 重建
 

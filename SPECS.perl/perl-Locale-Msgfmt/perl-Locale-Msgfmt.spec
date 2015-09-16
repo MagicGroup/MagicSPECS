@@ -1,11 +1,11 @@
 Name:           perl-Locale-Msgfmt
 Version:        0.15
-Release:        7%{?dist}
+Release:        8%{?dist}
 Summary:        Compile .po files to .mo files
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 URL:            http://search.cpan.org/dist/Locale-Msgfmt/
-Source0:        http://www.cpan.org/authors/id/S/SZ/SZABGAB/Locale-Msgfmt-%{version}.tar.gz
+Source0:        http://search.cpan.org/CPAN/authors/id/A/AZ/AZAWAWI/Locale-Msgfmt-%{version}.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 BuildRequires:  perl(ExtUtils::MakeMaker)
@@ -48,6 +48,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.15-8
+- 为 Magic 3.0 重建
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.15-7
 - 为 Magic 3.0 重建
 

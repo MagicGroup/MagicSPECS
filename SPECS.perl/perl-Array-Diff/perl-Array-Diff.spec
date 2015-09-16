@@ -3,7 +3,7 @@
 
 Name:           perl-Array-Diff
 Version:        0.07
-Release:        13%{?dist}
+Release:        14%{?dist}
 # Because 0.07 compares newer than 0.05002 in Perl world
 # but not in RPM world :-(
 Epoch:          1
@@ -62,6 +62,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/Array::Diff.3pm*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1:0.07-14
+- 为 Magic 3.0 重建
+
 * Thu Apr 23 2015 Liu Di <liudidi@gmail.com> - 1:0.07-13
 - 为 Magic 3.0 重建
 

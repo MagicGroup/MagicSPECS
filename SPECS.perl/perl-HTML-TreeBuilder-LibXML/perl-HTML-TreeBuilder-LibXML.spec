@@ -1,6 +1,6 @@
 Name:           perl-HTML-TreeBuilder-LibXML
-Version:        0.17
-Release:        6%{?dist}
+Version:	0.25
+Release:	1%{?dist}
 Summary:        HTML::TreeBuilder and XPath compatible interface with libxml
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -33,26 +33,26 @@ HTML::TreeBuilder::LibXML is drop-in-replacement for HTML::TreeBuilder::XPath.
 %setup -q -n HTML-TreeBuilder-LibXML-%{version}
 
 %build
-%{__perl} Makefile.PL INSTALLDIRS=vendor
-make %{?_smp_mflags}
+%{__perl} Build.PL installdirs=vendor
+./Build
 
 %install
-make pure_install PERL_INSTALL_ROOT=$RPM_BUILD_ROOT
-
-find $RPM_BUILD_ROOT -type f -name .packlist -exec rm -f {} \;
-find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
+./Build install destdir=$RPM_BUILD_ROOT create_packlist=0
 
 %{_fixperms} $RPM_BUILD_ROOT/*
 
 %check
-
+./Build test
 
 %files
-%doc Changes README
-%{perl_vendorlib}/*
-%{_mandir}/man3/*
+%doc Changes README.md
+%{perl_vendorlib}/HTML*
+%{_mandir}/man3/HTML*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.25-1
+- 更新到 0.25
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.17-6
 - 为 Magic 3.0 重建
 

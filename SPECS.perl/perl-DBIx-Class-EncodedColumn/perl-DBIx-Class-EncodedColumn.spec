@@ -1,6 +1,6 @@
 Name:           perl-DBIx-Class-EncodedColumn
-Version:        0.00011
-Release:        16%{?dist}
+Version:	0.00013
+Release:	1%{?dist}
 Summary:        Automatically encode columns
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -57,6 +57,9 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.00013-1
+- 更新到 0.00013
+
 * Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 0.00011-16
 - 为 Magic 3.0 重建
 

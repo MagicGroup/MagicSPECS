@@ -1,6 +1,6 @@
 Name:           perl-Email-MIME-Attachment-Stripper
-Version:        1.316
-Release:        13%{?dist}
+Version:	1.317
+Release:	1%{?dist}
 Summary:        Strip the attachments from a mail message
 Group:          Development/Libraries
 License:        GPL+ or Artistic
@@ -44,6 +44,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*.3*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.317-1
+- 更新到 1.317
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.316-13
 - 为 Magic 3.0 重建
 

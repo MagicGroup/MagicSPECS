@@ -1,0 +1,11 @@
+diff -up HTTP-Proxy-0.303/t/23connect.t.logging HTTP-Proxy-0.303/t/23connect.t
+--- HTTP-Proxy-0.303/t/23connect.t.logging	2015-06-15 11:56:53.645884338 -0400
++++ HTTP-Proxy-0.303/t/23connect.t	2015-06-15 11:57:37.829615013 -0400
+@@ -42,6 +42,7 @@ plan tests => 4;
+ 
+ {
+     my $proxy = HTTP::Proxy->new( port => 0, max_connections => 1 );
++    $proxy->logmask( HTTP::Proxy::ALL() );
+     $proxy->init;    # required to access the url later
+ 
+     # fork a HTTP proxy

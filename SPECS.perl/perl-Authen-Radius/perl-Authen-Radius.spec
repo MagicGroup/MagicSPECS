@@ -1,6 +1,6 @@
 Name:           perl-Authen-Radius
 Version:	0.22
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:        Perl Authen::Radius modules
 Summary(zh_CN.UTF-8): Perl Authen::Radius 模块
 # See LICENSING.txt
@@ -58,6 +58,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.22-2
+- 为 Magic 3.0 重建
+
 * Fri Apr 24 2015 Liu Di <liudidi@gmail.com> - 0.22-1
 - 更新到 0.22
 

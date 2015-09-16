@@ -1,6 +1,6 @@
 Name:           perl-Log-Dispatch-FileRotate
 Version:        1.19
-Release:        14%{?dist}
+Release:        15%{?dist}
 Summary:        Log to files that archive/rotate themselves
 
 Group:          Development/Libraries
@@ -58,6 +58,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.19-15
+- 为 Magic 3.0 重建
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.19-14
 - 为 Magic 3.0 重建
 

@@ -1,6 +1,6 @@
 Name:           perl-Lingua-EN-Tagger
-Version:        0.23
-Release:        5%{?dist}
+Version:	0.25
+Release:	1%{?dist}
 Summary:        Part-of-speech tagger for English natural language processing
 License:        GPLv3
 Group:          Development/Libraries
@@ -57,6 +57,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.25-1
+- 更新到 0.25
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.23-5
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

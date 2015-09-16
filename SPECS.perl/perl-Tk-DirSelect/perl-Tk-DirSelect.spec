@@ -1,6 +1,6 @@
 Name:           perl-Tk-DirSelect
 Version:        1.12
-Release:        11%{?dist}
+Release:        12%{?dist}
 Summary:        Cross-platform directory selection widget
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -52,6 +52,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.12-12
+- 为 Magic 3.0 重建
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.12-11
 - 为 Magic 3.0 重建
 

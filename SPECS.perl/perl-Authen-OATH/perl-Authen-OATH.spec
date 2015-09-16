@@ -1,6 +1,6 @@
 Name:           perl-Authen-OATH
 Version:	1.0.0
-Release:	14%{?dist}
+Release:	15%{?dist}
 Summary:        OATH One Time Passwords
 Summary(zh_CN.UTF-8): OATH 一次性密码
 License:        GPL+ or Artistic
@@ -58,6 +58,9 @@ magic_rpm_clean.sh
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.0.0-15
+- 为 Magic 3.0 重建
+
 * Fri Apr 24 2015 Liu Di <liudidi@gmail.com> - 1.0.0-14
 - 为 Magic 3.0 重建
 

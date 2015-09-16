@@ -1,7 +1,7 @@
 Name:           perl-UNIVERSAL-ref
 Summary:        Turns ref() into a multimethod
 Version:        0.14
-Release:        14%{?dist}
+Release:        15%{?dist}
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 Source0:        http://search.cpan.org/CPAN/authors/id/J/JJ/JJORE/UNIVERSAL-ref-%{version}.tar.gz 
@@ -48,6 +48,9 @@ make test
 %{_mandir}/man3/*.3*
 
 %changelog
+* Mon Sep 14 2015 Liu Di <liudidi@gmail.com> - 0.14-15
+- 为 Magic 3.0 重建
+
 * Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.14-14
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

@@ -1,11 +1,11 @@
 Name:           perl-ExtUtils-CChecker
-Version:        0.08
-Release:        9%{?dist}
+Version:	0.10
+Release:	1%{?dist}
 Summary:        Configure-time utilities for using C headers, libraries, or OS features
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 URL:            http://search.cpan.org/dist/ExtUtils-CChecker/
-Source0:        http://search.cpan.org/CPAN/authors/id/P/PE/PEVANS/ExtUtils-CChecker-0.08.tar.gz
+Source0:        http://search.cpan.org/CPAN/authors/id/P/PE/PEVANS/ExtUtils-CChecker-%{version}.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 BuildRequires:  perl(ExtUtils::CBuilder)
@@ -50,6 +50,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.10-1
+- 更新到 0.10
+
 * Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 0.08-9
 - 为 Magic 3.0 重建
 

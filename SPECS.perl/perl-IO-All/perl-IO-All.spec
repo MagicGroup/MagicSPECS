@@ -1,6 +1,6 @@
 Name:           perl-IO-All
-Version:        0.63
-Release:        2%{?dist}
+Version:	0.86
+Release:	1%{?dist}
 Summary:        IO::All Perl module
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -96,6 +96,9 @@ make %{?_smp_mflags} test RELEASE_TESTING=1
 %{_mandir}/man3/IO::All::Temp.3pm*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.86-1
+- 更新到 0.86
+
 * Sun Jun 15 2014 Liu Di <liudidi@gmail.com> - 0.63-2
 - 为 Magic 3.0 重建
 

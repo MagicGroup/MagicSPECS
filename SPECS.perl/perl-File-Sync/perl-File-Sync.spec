@@ -1,11 +1,11 @@
 Name:           perl-File-Sync
-Version:        0.09
-Release:        17%{?dist}
+Version:	0.11
+Release:	1%{?dist}
 Summary:        Perl access to fsync() and sync() function calls
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 URL:            http://search.cpan.org/dist/File-Sync/
-Source0:        http://www.cpan.org/authors/id/C/CE/CEVANS/File-Sync-%{version}.tar.gz
+Source0:        http://search.cpan.org/CPAN/authors/id/B/BR/BRIANSKI/File-Sync-%{version}.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  perl(ExtUtils::MakeMaker)
 Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
@@ -47,6 +47,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.11-1
+- 更新到 0.11
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.09-17
 - 为 Magic 3.0 重建
 

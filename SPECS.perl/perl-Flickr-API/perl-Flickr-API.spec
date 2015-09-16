@@ -1,6 +1,6 @@
 Name:           perl-Flickr-API
-Version:        1.13
-Release:        1%{?dist}
+Version:	1.17
+Release:	1%{?dist}
 Summary:        Perl interface to the Flickr API
 # LICENSE:                              Artistic 2.0
 # examples/flickr_method_test_login.pl: GPL+ or Artistic
@@ -8,8 +8,6 @@ License:        (Artistic 2.0) and (GPL+ or Artistic)
 Group:          Development/Libraries
 URL:            http://search.cpan.org/dist/Flickr-API/
 Source0:        http://www.cpan.org/authors/id/L/LB/LBMOORE/Flickr-API-%{version}.tar.gz
-# Do not install examples as tools into PATH, CPAN RT#105426
-Patch0:         Flickr-API-1.13-Do-not-install-examples-into-PATH.patch
 BuildArch:      noarch
 BuildRequires:  coreutils
 BuildRequires:  findutils
@@ -53,7 +51,6 @@ A simple interface for using the Flickr API.
 
 %prep
 %setup -q -n Flickr-API-%{version}
-%patch0 -p1
 
 %build
 perl Makefile.PL INSTALLDIRS=vendor </dev/null
@@ -72,8 +69,13 @@ make test
 %doc Changes examples README
 %{perl_vendorlib}/*
 %{_mandir}/man3/*
+%{_bindir}/flickr_*_stored_config.pl
+%{_mandir}/man1/flickr_*_stored_config.pl.1*
 
 %changelog
+* Mon Sep 14 2015 Liu Di <liudidi@gmail.com> - 1.17-1
+- 更新到 1.17
+
 * Tue Jun 23 2015 Petr Pisar <ppisar@redhat.com> - 1.13-1
 - 1.13 bump
 - License corrected to (Artistic 2.0) and (GPL+ or Artistic)

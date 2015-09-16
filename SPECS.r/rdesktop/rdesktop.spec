@@ -1,8 +1,10 @@
+#临时措施
+#define debug_package %{nil}
 Summary: X client for remote desktop into Windows Terminal Server
 Summary(zh_CN.UTF-8): 在 X 中显示 Windows 终端服务器桌面
 Name: rdesktop
-Version: 1.7.1
-Release: 2%{?dist}
+Version:	1.8.3
+Release:	1%{?dist}
 License: GPL
 Group: User Interface/Desktops
 Group(zh_CN.UTF-8): 用户界面/桌面
@@ -11,10 +13,14 @@ URL: http://www.rdesktop.org/
 Packager: Liu Di <liudidi@gmail.com>
 Vendor: MagicLinux
 
-Source: http://dl.sf.net/rdesktop/rdesktop-%{version}.tar.gz
+Source: https://github.com/rdesktop/rdesktop/releases/download/v%{version}/rdesktop-%{version}.tar.gz
+Patch1: rdesktop-libao.patch
+
+%global credssp --disable-credssp
+
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 
-BuildRequires: openssl-devel, libX11-devel
+BuildRequires: openssl-devel, libX11-devel, libao-devel
 
 %description
 rdesktop is an open source client for Windows NT Terminal Server and
@@ -28,15 +34,19 @@ rdesktop 是 Windows NT 终端服务器和 Windows 2000 终端服务器的开源
 Citrix ICA 不同，它不要求任何服务器扩展。
 
 %prep
-%setup
+%setup -q
+%patch1 -p1
 
 %build
-%configure
-%{__make} %{?_smp_mflags}
+autoreconf -vif
+%configure --with-ipv6 --enable-smartcard --with-sound=libao \
+  %{?credssp}
+
+make %{?_smp_mflags}
 
 %install
 %{__rm} -rf %{buildroot}
-%{__make} install DESTDIR="%{buildroot}"
+make install DESTDIR=$RPM_BUILD_ROOT STRIP=/bin/true
 
 %clean
 %{__rm} -rf %{buildroot}
@@ -49,6 +59,9 @@ Citrix ICA 不同，它不要求任何服务器扩展。
 %{_datadir}/rdesktop/
 
 %changelog
+* Sat Sep 12 2015 Liu Di <liudidi@gmail.com> - 1.8.3-1
+- 更新到 1.8.3
+
 * Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 1.7.1-2
 - 为 Magic 3.0 重建
 

@@ -1,11 +1,11 @@
 Name:		perl-Test-EOL
-Version:	1.5
-Release:	3%{?dist}
+Version:	1.6
+Release:	1%{?dist}
 Summary:	Check the correct line endings in your project
 Group:		Development/Libraries
 License:	GPL+ or Artistic
 URL:		http://search.cpan.org/dist/Test-EOL/
-Source0:	http://search.cpan.org/CPAN/authors/id/B/BO/BOBTFISH/Test-EOL-%{version}.tar.gz
+Source0:        http://search.cpan.org/CPAN/authors/id/F/FR/FREW/Test-EOL-%{version}.tar.gz
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(id -nu)
 BuildArch:	noarch
 BuildRequires:	perl(Cwd)
@@ -50,6 +50,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/Test::EOL.3pm*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.6-1
+- 更新到 1.6
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.5-3
 - 为 Magic 3.0 重建
 

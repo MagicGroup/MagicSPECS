@@ -1,15 +1,18 @@
 Summary: Conversion between character sets and surfaces
+Summary(zh_CN.UTF-8): 字符集和曲面之间的转换
 Name: recode
 Version: 3.6
-Release: 34%{?dist}
+Release: 35%{?dist}
 License: GPLv2+
 Group: Applications/File
+Group(zh_CN.UTF-8): 应用程序/文件
 Source: http://recode.progiciels-bpi.ca/archives/recode-%{version}.tar.gz
 Patch0: recode.patch
 Patch1: recode-3.6-getcwd.patch
 Patch2: recode-bool-bitfield.patch
 Patch3: recode-flex-m4.patch
 Patch4: recode-automake.patch
+Patch5: recode-format-security.patch
 Url: http://recode.progiciels-bpi.ca/
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
@@ -29,9 +32,14 @@ transliteration are not possible, it may get rid of the offending
 characters or fall back on approximations.  Most RFC 1345 character sets
 are supported.
 
+%description -l zh_CN.UTF-8
+字符集和曲面之间的转换。
+
 %package devel
 Summary: Header files for development using recode
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: %{name} = %{version}-%{release}
 
 %description devel
@@ -41,6 +49,9 @@ and is able to transliterate files between almost any pair. When exact
 transliteration are not possible, it may get rid of the offending
 characters or fall back on approximations. Most RFC 1345 character sets
 are supported.
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
 
 %prep
 %setup -q
@@ -49,6 +60,7 @@ are supported.
 %patch2 -p0
 %patch3 -p1
 %patch4 -p1
+%patch5 -p1
 rm m4/libtool.m4
 rm acinclude.m4
 
@@ -64,7 +76,8 @@ make check
 rm -rf $RPM_BUILD_ROOT
 
 %makeinstall
-%find_lang %{name}
+magic_rpm_clean.sh
+%find_lang %{name} || %define nolang 1
 
 # remove unpackaged file from the buildroot
 rm -f $RPM_BUILD_ROOT%{_infodir}/dir
@@ -87,7 +100,11 @@ fi
 %clean
 rm -rf $RPM_BUILD_ROOT
 
+%if 0%{nolang}
+%files
+%else
 %files -f %{name}.lang
+%endif
 %defattr(-,root,root)
 %doc AUTHORS COPYING* ChangeLog NEWS README THANKS TODO
 %{_mandir}/*/*
@@ -101,6 +118,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_includedir}/*
 
 %changelog
+* Sat Sep 12 2015 Liu Di <liudidi@gmail.com> - 3.6-35
+- 为 Magic 3.0 重建
+
 * Mon Jul 23 2012 Zoltan Kota <zoltank[AT]gmail.com> 3.6-34
 - Add patch for fixing build with new automake.
   (Fixes failed Fedora_18_Mass_Rebuild.)

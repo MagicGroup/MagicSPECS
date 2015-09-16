@@ -1,6 +1,6 @@
 Name:           perl-MooseX-StrictConstructor 
 Version:        0.19
-Release:        7%{?dist}
+Release:        8%{?dist}
 # see lib/MooseX/StrictConstructor.pm
 License:        Artistic 2.0
 Group:          Development/Libraries
@@ -54,6 +54,9 @@ make test
 %{_mandir}/man3/*.3*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.19-8
+- 为 Magic 3.0 重建
+
 * Thu Jun 19 2014 Liu Di <liudidi@gmail.com> - 0.19-7
 - 为 Magic 3.0 重建
 

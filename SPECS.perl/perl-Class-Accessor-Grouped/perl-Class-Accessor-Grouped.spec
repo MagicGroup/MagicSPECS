@@ -1,11 +1,11 @@
 Name:           perl-Class-Accessor-Grouped
-Version:        0.10006
-Release:        8%{?dist}
+Version:	0.10012
+Release:	2%{?dist}
 Summary:        Build groups of accessors
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 URL:            http://search.cpan.org/dist/Class-Accessor-Grouped/
-Source0:        http://search.cpan.org/CPAN/authors/id/C/CL/CLACO/Class-Accessor-Grouped-%{version}.tar.gz
+Source0:        http://search.cpan.org/CPAN/authors/id/R/RI/RIBASUSHI/Class-Accessor-Grouped-%{version}.tar.gz
 BuildArch:      noarch
 Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
 
@@ -59,6 +59,12 @@ find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_mandir}/man3/*
 
 %changelog
+* Mon Sep 14 2015 Liu Di <liudidi@gmail.com> - 0.10012-2
+- 为 Magic 3.0 重建
+
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.10012-1
+- 更新到 0.10012
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.10006-8
 - 为 Magic 3.0 重建
 

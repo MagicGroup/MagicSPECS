@@ -1,6 +1,6 @@
 Name:       perl-Test-Strict 
-Version:    0.17
-Release:    10%{?dist}
+Version:	0.27
+Release:	1%{?dist}
 # see lib/Test/Strict.pm
 License:    GPL+ or Artistic
 Group:      Development/Libraries
@@ -44,6 +44,9 @@ make test
 %{_mandir}/man3/*.3*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.27-1
+- 更新到 0.27
+
 * Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 0.17-10
 - 为 Magic 3.0 重建
 

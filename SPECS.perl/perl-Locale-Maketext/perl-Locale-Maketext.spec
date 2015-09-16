@@ -1,13 +1,11 @@
 Name:           perl-Locale-Maketext
-Version:        1.25
-Release:        3%{?dist}
+Version:	1.26
+Release:	1%{?dist}
 Summary:        Framework for localization
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 URL:            http://search.cpan.org/dist/Locale-Maketext/
 Source0:        http://www.cpan.org/authors/id/T/TO/TODDR/Locale-Maketext-%{version}.tar.gz
-# Missing test for RT#120457, RT#121671
-Patch0:         Locale-Maketext-1.25-Commit-1735f6f53ca19f99c6e9e39496c486af323ba6a8-star.patch
 BuildArch:      noarch
 BuildRequires:  perl
 BuildRequires:  perl(ExtUtils::MakeMaker)
@@ -46,7 +44,6 @@ producing localized applications.
 
 %prep
 %setup -q -n Locale-Maketext-%{version}
-%patch0 -p1
 
 %build
 perl Makefile.PL INSTALLDIRS=vendor
@@ -66,6 +63,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.26-1
+- 更新到 1.26
+
 * Tue Jun 17 2014 Liu Di <liudidi@gmail.com> - 1.25-3
 - 为 Magic 3.0 重建
 

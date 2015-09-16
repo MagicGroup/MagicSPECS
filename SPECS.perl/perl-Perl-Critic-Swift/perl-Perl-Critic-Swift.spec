@@ -1,11 +1,11 @@
 Name:           perl-Perl-Critic-Swift
-Version:        1.0.3
-Release:        15%{?dist}
+Version:	1.0.3
+Release:	16%{?dist}
 Summary:        Set of additional policies for Perl::Critic
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 URL:            http://search.cpan.org/dist/Perl-Critic-Swift/
-Source0:        http://www.cpan.org/authors/id/E/EL/ELLIOTJS/Perl-Critic-Swift-v%{version}.tar.gz
+Source0:        http://search.cpan.org/CPAN/authors/id/E/EL/ELLIOTJS/Perl-Critic-Swift-v%{version}.tar.gz
 BuildArch:      noarch
 BuildRequires:  perl(List::MoreUtils) >= 0.21
 BuildRequires:  perl(Module::Build)

@@ -1,6 +1,6 @@
 Name:           perl-CGI-Application-FastCGI
 Version:        0.02
-Release:        17%{?dist}
+Release:        18%{?dist}
 Summary:        For using CGI::Application under FastCGI
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -45,6 +45,9 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.02-18
+- 为 Magic 3.0 重建
+
 * Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 0.02-17
 - 为 Magic 3.0 重建
 

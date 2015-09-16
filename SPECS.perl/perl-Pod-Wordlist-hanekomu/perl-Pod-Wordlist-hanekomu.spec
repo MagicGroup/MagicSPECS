@@ -10,7 +10,7 @@
 
 Name:		perl-Pod-Wordlist-hanekomu
 Version:	1.132680
-Release:	7%{?dist}
+Release:	8%{?dist}
 Summary:	Add words for spell checking POD
 Group:		Development/Libraries
 License:	GPL+ or Artistic
@@ -140,6 +140,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/Pod::Wordlist::hanekomu.3pm*
 
 %changelog
+* Tue Sep 15 2015 Liu Di <liudidi@gmail.com> - 1.132680-8
+- 为 Magic 3.0 重建
+
 * Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.132680-7
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

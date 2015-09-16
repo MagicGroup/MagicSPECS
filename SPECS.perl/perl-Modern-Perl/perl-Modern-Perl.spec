@@ -1,6 +1,6 @@
 Name:           perl-Modern-Perl
-Version:        1.03
-Release:        10%{?dist}
+Version:	1.20150127
+Release:	1%{?dist}
 Summary:        Enable all of the features of Modern Perl with one command
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -45,6 +45,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.20150127-1
+- 更新到 1.20150127
+
 * Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 1.03-10
 - 为 Magic 3.0 重建
 

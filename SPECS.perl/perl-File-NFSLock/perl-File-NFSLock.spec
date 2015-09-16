@@ -1,6 +1,6 @@
 Name:           perl-File-NFSLock
-Version:        1.21
-Release:        8%{?dist}
+Version:	1.27
+Release:	1%{?dist}
 Summary:        Perl module to do NFS (or not) locking
 Group:          Development/Libraries
 License:        GPL+ or Artistic
@@ -50,6 +50,9 @@ chmod a-x examples/lock_test
 %{_mandir}/man3/*.3*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.27-1
+- 更新到 1.27
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.21-8
 - 为 Magic 3.0 重建
 

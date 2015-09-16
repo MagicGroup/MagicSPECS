@@ -1,6 +1,6 @@
 Name:           perl-DateTime-Format-Natural
-Version:        1.01
-Release:        6%{?dist}
+Version:	1.03
+Release:	1%{?dist}
 Summary:        Create machine readable date/time with natural parsing logic
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -77,6 +77,9 @@ done
 
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.03-1
+- 更新到 1.03
+
 * Thu Jun 19 2014 Liu Di <liudidi@gmail.com> - 1.01-6
 - 为 Magic 3.0 重建
 

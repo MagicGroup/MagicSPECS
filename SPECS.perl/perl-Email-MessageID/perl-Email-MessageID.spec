@@ -1,6 +1,6 @@
 Name:           perl-Email-MessageID
-Version:        1.401
-Release:        15%{?dist}
+Version:	1.406
+Release:	1%{?dist}
 Summary:        Generate world unique message-ids
 
 Group:          Development/Libraries
@@ -55,6 +55,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.406-1
+- 更新到 1.406
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.401-15
 - 为 Magic 3.0 重建
 

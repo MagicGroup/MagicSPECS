@@ -2,13 +2,16 @@
 %global rpm49 %(rpm --version | perl -p -e 's/^.* (\\d+)\\.(\\d+).*/sprintf("%d.%03d",$1,$2) ge 4.009 ? 1 : 0/e')
 
 Name:           perl-Module-Info
-Version:        0.35
-Release:        4%{?dist}
+Version:	0.35
+Release:	5%{?dist}
 Summary:        Information about Perl modules
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 URL:            http://search.cpan.org/dist/Module-Info/
-Source0:        http://www.cpan.org/authors/id/M/MB/MBARBON/Module-Info-%{version}.tar.gz
+Source0:         http://www.cpan.org/authors/id/M/MB/MBARBON/Module-Info-%{version}.tar.gz
+# Support native B::OP::parent with 5.21.2 -DPERL_OP_PARENT (CPAN RT#97105)
+# Inspired by B-Utils patches (CPAN RT#100251)
+Patch0:         Module-Info-0.35-Rename-parent-if-native-B-OP-parent-exist.patch
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(id -nu)
 BuildArch:      noarch
 BuildRequires:  perl(Carp)
@@ -35,6 +38,9 @@ code.
 
 %prep
 %setup -q -n Module-Info-%{version}
+%if 0%(perl -e 'print $] >= 5.022')
+%patch0 -p1
+%endif
 
 # We don't really provide perl(B::Utils) [filter for rpm < 4.9]
 %if ! %{rpm49}

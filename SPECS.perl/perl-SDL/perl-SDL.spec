@@ -1,14 +1,13 @@
 Name:           perl-SDL
-Version:        2.2.6
-Release:        9%{?dist}
+Version:	2.546
+Release:	1%{?dist}
 Summary:        SDL bindings for the Perl language
 Group:          Development/Libraries
 License:        LGPLv2+
 URL:            http://sdl.perl.org/
-Source0:        http://search.cpan.org/CPAN/authors/id/K/KT/KTHAKORE/SDL_Perl-v%{version}.tar.gz
+Source0:        http://search.cpan.org/CPAN/authors/id/F/FR/FROGGS/SDL-%{version}.tar.gz
 Source1:        filter-depends.sh
 Source2:        filter-provides.sh
-Patch1:         %{name}-no-mixertest.patch
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  SDL_mixer-devel SDL_image-devel SDL_net-devel SDL_ttf-devel
 BuildRequires:  SDL_gfx-devel libjpeg-devel libpng-devel libGLU-devel perl
@@ -24,42 +23,46 @@ Requires:  perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
 %description
 SDL (Simple DirectMedia Layer) bindings for the perl language.
 
-
 %prep
-%setup -q -n SDL_Perl-v%{version}
-%patch1 -p1 -z .no-mixertest
-
+%setup -q -n SDL-%{version}
+# Move the pod files directly to directory lib to have correctly generated
+# man pages without prefix pods::
+cd lib/pods
+find * -type d -exec mkdir -p ../{} \;
+find * -type f -exec mv {} ../{} \;
+cd ..
+rm -r pods
+cd ..
+sed -i -e 's|lib/pods|lib|' MANIFEST
+# Disable the sdlx_controller_interface.t test, it hangs on arm
+rm t/sdlx_controller_interface.t
 
 %build
-perl Build.PL
+perl Build.PL installdirs=vendor optimize="$RPM_OPT_FLAGS"
 ./Build
-
 
 %check
 ./Build test
 
-
 %install
-rm -rf $RPM_BUILD_ROOT
-./Build install installdirs=vendor destdir=$RPM_BUILD_ROOT
-find $RPM_BUILD_ROOT -type f -name .packlist -exec rm -f {} ';'
-find $RPM_BUILD_ROOT -type f -name '*.bs' -a -size 0 -exec rm -f {} ';'
-chmod -R u+w $RPM_BUILD_ROOT/*
-
-
-%clean
-rm -rf $RPM_BUILD_ROOT
-
+./Build install destdir=$RPM_BUILD_ROOT create_packlist=0
+find $RPM_BUILD_ROOT -type f -name '*.bs' -a -size 0 -exec rm -f {} \;
+find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
+%{_fixperms} $RPM_BUILD_ROOT/*
 
 %files
-%defattr(-,root,root,-)
-%doc BUGS CHANGELOG COPYING README TODO
-%{perl_vendorarch}/auto/SDL*
+%doc CHANGELOG COPYING TODO
+%{perl_vendorarch}/auto/*
 %{perl_vendorarch}/SDL*
-%{_mandir}/man3/SDL*.3*
+%{perl_vendorarch}/Module*
+%{_mandir}/man3/*
+
 
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 2.546-1
+- 更新到 2.546
+
 * Sun Jun 15 2014 Liu Di <liudidi@gmail.com> - 2.2.6-9
 - 为 Magic 3.0 重建
 

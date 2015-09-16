@@ -1,7 +1,7 @@
 Name:           perl-DBIx-Class-DateTime-Epoch
 Summary:        Automatic inflation/deflation of epoch-based DateTime objects for DBIx::Class
-Version:        0.08
-Release:        15%{?dist}
+Version:	0.10
+Release:	1%{?dist}
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 Source0:        http://search.cpan.org/CPAN/authors/id/B/BR/BRICAS/DBIx-Class-DateTime-Epoch-%{version}.tar.gz 
@@ -59,6 +59,9 @@ find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null ';'
 %{_mandir}/man3/*.3*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.10-1
+- 更新到 0.10
+
 * Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 0.08-15
 - 为 Magic 3.0 重建
 

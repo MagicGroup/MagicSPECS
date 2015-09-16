@@ -1,12 +1,12 @@
 Name:           perl-Class-Date
-Version:        1.1.9
-Release:        17%{?dist}
+Version:	1.1.15
+Release:	1%{?dist}
 Summary:        Class for easy date and time manipulation
 
 Group:          Development/Libraries
 License:        GPL+ or Artistic
 URL:            http://search.cpan.org/dist/Class-Date/
-Source0:        http://search.cpan.org/CPAN/authors/id/D/DL/DLUX/Class-Date-%{version}.tar.gz
+Source0:        http://search.cpan.org/CPAN/authors/id/S/SZ/SZABGAB/Class-Date-%{version}.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildRequires:  perl(ExtUtils::MakeMaker)
@@ -23,9 +23,6 @@ date-time, and have a Class::Date::Rel class for relative dates.
 find . -type f -exec chmod a-x {} ';'
 iconv -f ISO8859-1 -t UTF8 --output README.utf8 README
 mv README.utf8 README
-iconv -f ISO8859-1 -t UTF8 --output Date.pod.utf8 Date.pod
-mv Date.pod.utf8 Date.pod
-
 
 %build
 %{__perl} Makefile.PL INSTALLDIRS=vendor OPTIMIZE="$RPM_OPT_FLAGS"
@@ -57,6 +54,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.1.15-1
+- 更新到 1.1.15
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.1.9-17
 - 为 Magic 3.0 重建
 

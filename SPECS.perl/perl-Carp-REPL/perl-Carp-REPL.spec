@@ -1,5 +1,5 @@
 Name:           perl-Carp-REPL
-Version:	0.17
+Version:	0.18
 Release:	1%{?dist}
 Summary:        Read-eval-print-loop on die and/or warn
 Summary(zh_CN.UTF-8): 在程序出错或警告里读取值和循环
@@ -7,7 +7,7 @@ License:        GPL+ or Artistic
 Group:          Development/Libraries
 Group(zh_CN.UTF-8): 开发/库
 URL:            http://search.cpan.org/dist/Carp-REPL/
-Source0:        http://www.cpan.org/authors/id/T/TS/TSIBLEY/Carp-REPL-%{version}.tar.gz
+Source0:        http://search.cpan.org/CPAN/authors/id/E/ET/ETHER/Carp-REPL-%{version}.tar.gz
 BuildArch:      noarch
 BuildRequires:  perl(Data::Dump::Streamer)
 BuildRequires:  perl(Devel::LexAlias)
@@ -66,6 +66,9 @@ grep -lZ 'Test::Expect' t/*.t |xargs -0 rm -f
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.18-1
+- 更新到 0.18
+
 * Fri Jun 05 2015 Liu Di <liudidi@gmail.com> - 0.17-1
 - 更新到 0.17
 

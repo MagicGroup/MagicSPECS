@@ -1,6 +1,6 @@
 Name:           perl-Class-Whitehole
 Version:        0.04
-Release:        17%{?dist}
+Release:        18%{?dist}
 Summary:        Base class to treat unhandled method calls as errors
 Group:          Development/Libraries
 License:        GPL+ or Artistic
@@ -43,6 +43,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Wed Sep 16 2015 Liu Di <liudidi@gmail.com> - 0.04-18
+- 为 Magic 3.0 重建
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.04-17
 - 为 Magic 3.0 重建
 

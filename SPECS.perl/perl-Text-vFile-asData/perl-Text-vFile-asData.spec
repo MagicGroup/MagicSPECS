@@ -1,6 +1,6 @@
 Name:           perl-Text-vFile-asData
 Version:        0.08
-Release:        6%{?dist}
+Release:        7%{?dist}
 Summary:        Parse vFile formatted files into data structures
 License:        GPL+ or Artistic
 URL:            http://search.cpan.org/dist/Text-vFile-asData/
@@ -44,6 +44,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.08-7
+- 为 Magic 3.0 重建
+
 * Thu Jun 19 2014 Liu Di <liudidi@gmail.com> - 0.08-6
 - 为 Magic 3.0 重建
 

@@ -1,6 +1,6 @@
 Name:           perl-HTML-SuperForm
 Version:        1.09
-Release:        10%{?dist}
+Release:        11%{?dist}
 Summary:        HTML form generator
 
 Group:          Development/Libraries
@@ -56,6 +56,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.09-11
+- 为 Magic 3.0 重建
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.09-10
 - 为 Magic 3.0 重建
 

@@ -1,11 +1,11 @@
 Name:           perl-Class-DBI-Loader-Relationship
-Version:        1.3
-Release:        30%{?dist}
+Version:	1.2
+Release:	1%{?dist}
 Summary:        Easier relationship specification in CDBI::L
 Group:          Development/Libraries
 License:        GPL+ or Artistic
 URL:            http://search.cpan.org/dist/Class-DBI-Loader-Relationship/
-Source0:        http://search.cpan.org/CPAN/authors/id/C/CH/CHUNZI/Class-DBI-Loader-Relationship-%{version}.tar.gz
+Source0:        http://search.cpan.org/CPAN/authors/id/S/SI/SIMON/Class-DBI-Loader-Relationship-%{version}.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildArch:      noarch
@@ -54,6 +54,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.2-1
+- 更新到 1.2
+
 * Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 1.3-30
 - 为 Magic 3.0 重建
 

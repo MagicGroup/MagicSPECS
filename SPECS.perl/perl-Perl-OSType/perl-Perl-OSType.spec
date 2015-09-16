@@ -2,8 +2,8 @@
 %global old_test_more %(perl -MTest::More -e 'print (($Test::More::VERSION < 0.88) ? 1 : 0);' 2>/dev/null || echo 0)
 
 Name:		perl-Perl-OSType
-Version:	1.007
-Release:	6%{?dist}
+Version:	1.008
+Release:	1%{?dist}
 Summary:	Map Perl operating system names to generic types
 License:	GPL+ or Artistic
 Group:		Development/Libraries
@@ -90,11 +90,13 @@ LANG=en_US make test TEST_FILES="$(echo $(find xt/ -name '*.t'))"
 rm -rf %{buildroot}
 
 %files
-%doc Changes CONTRIBUTING LICENSE README
 %{perl_vendorlib}/Perl/
 %{_mandir}/man3/Perl::OSType.3pm*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.008-1
+- 更新到 1.008
+
 * Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 1.007-6
 - 为 Magic 3.0 重建
 

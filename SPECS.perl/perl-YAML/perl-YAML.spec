@@ -1,11 +1,11 @@
 Name:           perl-YAML
-Version:        0.84
-Release:        6%{?dist}
+Version:	1.15
+Release:	1%{?dist}
 Summary:        YAML Ain't Markup Language (tm)
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 URL:            http://search.cpan.org/dist/YAML/
-Source0:        http://search.cpan.org/CPAN/authors/id/M/MS/MSTROUT/YAML-%{version}.tar.gz
+Source0:	http://search.cpan.org/CPAN/authors/id/I/IN/INGY/YAML-%{version}.tar.gz
 BuildArch:      noarch
 BuildRequires:  perl(Carp)
 BuildRequires:  perl(constant)
@@ -59,6 +59,9 @@ rm -f %{buildroot}%{perl_vendorlib}/Test/YAML* \
 %{_mandir}/man3/YAML*.3*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.15-1
+- 更新到 1.15
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.84-6
 - 为 Magic 3.0 重建
 

@@ -10,7 +10,7 @@
 Summary: Numerical linear algebra package libraries
 Name: lapack
 Version: %{mediumver}.0
-Release: 1%{?dist}
+Release: 2%{?dist}
 License: BSD
 Group: Development/Libraries
 URL: http://www.netlib.org/lapack/
@@ -445,6 +445,9 @@ ln -sf libblas64.so.%{version} libblas64.so.%{mediumver}
 %endif
 
 %changelog
+* Fri Sep 11 2015 Liu Di <liudidi@gmail.com> - 3.5.0-2
+- 为 Magic 3.0 重建
+
 * Mon Nov 18 2013 Tom Callaway <spot@fedoraproject.org> - 3.5.0-1
 - update to 3.5.0
 

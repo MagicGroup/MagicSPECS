@@ -1,13 +1,15 @@
 Name:		realmd
-Version:	0.15.0
-Release:	3%{?dist}
+Version:	0.16.2
+Release:	1%{?dist}
 Summary:	Kerberos realm enrollment service
+Summary(zh_CN.UTF-8): Kerberos 域注册服务
 License:	LGPLv2+
 URL:		http://cgit.freedesktop.org/realmd/realmd/
 Source0:	http://www.freedesktop.org/software/realmd/releases/realmd-%{version}.tar.gz
 
-# already sent upstream
-Patch0:		0001-service-Use-pk_client_set_interactive-rather-than-th.patch
+Patch1:         install-diagnostic.patch
+Patch2:         computer-ou.patch
+Patch3:         duplicate-test-path.patch
 
 BuildRequires:	intltool pkgconfig
 BuildRequires:	gettext-devel
@@ -27,20 +29,29 @@ realmd is a DBus system service which manages discovery and enrollment in realms
 and domains like Active Directory or IPA. The control center uses realmd as the
 back end to 'join' a domain simply and automatically configure things correctly.
 
+%description -l zh_CN.UTF-8
+Kerberos 域注册服务。
+
 %package devel-docs
 Summary:	Developer documentation files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发文档
 
 %description devel-docs
 The %{name}-devel package contains developer documentation for developing
 applications that use %{name}.
+%description devel-docs -l zh_CN.UTF-8
+%{name} 的开发文档。
 
 %define _hardened_build 1
 
 %prep
 %setup -q
-%patch0 -p1 -b .packagekit-api-change
+%patch1 -p1
+%patch2 -p1
+%patch3 -p1
 
 %build
+autoreconf -fisv
 %configure --disable-silent-rules --with-distro=redhat
 make %{?_smp_mflags}
 
@@ -49,7 +60,7 @@ make check
 
 %install
 make install DESTDIR=%{buildroot}
-
+magic_rpm_clean.sh
 %find_lang realmd
 
 %clean
@@ -57,10 +68,10 @@ make install DESTDIR=%{buildroot}
 %files -f realmd.lang
 %{_sysconfdir}/dbus-1/system.d/org.freedesktop.realmd.conf
 %{_sbindir}/realm
-%dir %{_libdir}/realmd
-%{_libdir}/realmd/realmd
-%{_libdir}/realmd/realmd-defaults.conf
-%{_libdir}/realmd/realmd-distro.conf
+%dir %{_prefix}/lib/realmd
+%{_prefix}/lib/realmd/realmd
+%{_prefix}/lib/realmd/realmd-defaults.conf
+%{_prefix}/lib/realmd/realmd-distro.conf
 %{_unitdir}/realmd.service
 %{_datadir}/dbus-1/system-services/org.freedesktop.realmd.service
 %{_datadir}/polkit-1/actions/org.freedesktop.realmd.policy
@@ -73,6 +84,9 @@ make install DESTDIR=%{buildroot}
 %doc %{_datadir}/doc/realmd/
 
 %changelog
+* Sat Sep 12 2015 Liu Di <liudidi@gmail.com> - 0.16.2-1
+- 更新到 0.16.2
+
 * Wed May 07 2014 Liu Di <liudidi@gmail.com> - 0.15.0-3
 - 为 Magic 3.0 重建
 

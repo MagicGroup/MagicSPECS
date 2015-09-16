@@ -1,12 +1,12 @@
 Name:           perl-GDGraph3d
-Version:        0.63
-Release:        24%{?dist}
+Version:	0.63
+Release:	26%{?dist}
 Summary:        3D graph generation package for Perl
 
 Group:          Development/Libraries
 License:        GPL+ or Artistic
 URL:            http://search.cpan.org/dist/GD-Graph3d/
-Source0:        http://www.cpan.org/authors/id/W/WA/WADG/GD-Graph3d-%{version}.tar.gz
+Source0:        http://search.cpan.org/CPAN/authors/id/W/WA/WADG/GD-Graph3d-%{version}.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildArch:      noarch
@@ -55,6 +55,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Tue Sep 15 2015 Liu Di <liudidi@gmail.com> - 0.63-26
+- 为 Magic 3.0 重建
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.63-24
 - 为 Magic 3.0 重建
 

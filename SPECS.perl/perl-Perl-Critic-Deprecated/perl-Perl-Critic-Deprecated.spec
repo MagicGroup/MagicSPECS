@@ -1,11 +1,11 @@
 Name:           perl-Perl-Critic-Deprecated
-Version:        1.108
-Release:        13%{?dist}
+Version:	1.119
+Release:	1%{?dist}
 Summary:        Perl::Critic policies which have been superseded by others
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 URL:            http://search.cpan.org/dist/Perl-Critic-Deprecated/
-Source0:        http://www.cpan.org/authors/id/E/EL/ELLIOTJS/Perl-Critic-Deprecated-%{version}.tar.gz
+Source0:        http://search.cpan.org/CPAN/authors/id/T/TH/THALJEF/Perl-Critic-Deprecated-%{version}.tar.gz
 BuildArch:      noarch
 BuildRequires:  perl(Exporter)
 BuildRequires:  perl(Module::Build)
@@ -59,6 +59,9 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.119-1
+- 更新到 1.119
+
 * Sun Jun 15 2014 Liu Di <liudidi@gmail.com> - 1.108-13
 - 为 Magic 3.0 重建
 

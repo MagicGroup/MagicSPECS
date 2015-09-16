@@ -1,8 +1,8 @@
 Name:           perl-ExtUtils-ParseXS
 # Epoch to compete with perl.spec
 Epoch:          1
-Version:        3.24
-Release:        4%{?dist}
+Version:	3.30
+Release:	1%{?dist}
 Summary:        Module and a script for converting Perl XS code into C code
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -73,6 +73,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1:3.30-1
+- 更新到 3.30
+
 * Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 1:3.24-4
 - 为 Magic 3.0 重建
 

@@ -1,11 +1,11 @@
 Name:           perl-File-ShareDir
-Version:        1.03
-Release:        9%{?dist}
+Version:	1.102
+Release:	2%{?dist}
 Summary:        Locate per-dist and per-module shared files
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 URL:            http://search.cpan.org/dist/File-ShareDir/
-Source0:        http://www.cpan.org/authors/id/A/AD/ADAMK/File-ShareDir-%{version}.tar.gz
+Source0:        http://search.cpan.org/CPAN/authors/id/R/RE/REHSACK/File-ShareDir-%{version}.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 BuildRequires:  perl(Class::Inspector) >= 1.12
@@ -52,11 +52,16 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(-,root,root,-)
-%doc Changes LICENSE README
 %{perl_vendorlib}/*
 %{_mandir}/man3/*
 
 %changelog
+* Mon Sep 14 2015 Liu Di <liudidi@gmail.com> - 1.102-2
+- 为 Magic 3.0 重建
+
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.102-1
+- 更新到 1.102
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.03-9
 - 为 Magic 3.0 重建
 

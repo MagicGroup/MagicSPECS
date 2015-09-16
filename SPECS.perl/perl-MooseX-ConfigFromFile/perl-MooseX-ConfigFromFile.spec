@@ -1,11 +1,11 @@
 Name:       perl-MooseX-ConfigFromFile 
-Version:    0.04
-Release:    5%{?dist}
+Version:	0.14
+Release:	1%{?dist}
 # see lib/MooseX/ConfigFromFile.pm
 License:    GPL+ or Artistic 
 Group:      Development/Libraries
 Summary:    An abstract Moose role for setting attributes from a configfile 
-Source:     http://search.cpan.org/CPAN/authors/id/B/BO/BOBTFISH/MooseX-ConfigFromFile-%{version}.tar.gz
+Source0:        http://search.cpan.org/CPAN/authors/id/E/ET/ETHER/MooseX-ConfigFromFile-%{version}.tar.gz
 Url:        http://search.cpan.org/dist/MooseX-ConfigFromFile
 Requires:   perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
 BuildArch:  noarch
@@ -51,11 +51,13 @@ find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null ';'
 make test
 
 %files
-%doc ChangeLog README t/
 %{perl_vendorlib}/*
 %{_mandir}/man3/*.3*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.14-1
+- 更新到 0.14
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.04-5
 - 为 Magic 3.0 重建
 

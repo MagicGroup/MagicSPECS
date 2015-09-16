@@ -36,7 +36,7 @@
 Name:		resource-agents
 Summary:	Open Source HA Reusable Cluster Resource Scripts
 Version:	3.9.6
-Release:	2%{?rcver:%{rcver}}%{?numcomm:.%{numcomm}}%{?alphatag:.%{alphatag}}%{?dirty:.%{dirty}}%{?dist}.1
+Release:	2%{?rcver:%{rcver}}%{?numcomm:.%{numcomm}}%{?alphatag:.%{alphatag}}%{?dirty:.%{dirty}}%{?dist}.2
 License:	GPLv2+ and LGPLv2+
 URL:		https://github.com/ClusterLabs/resource-agents
 %if 0%{?fedora} || 0%{?centos_version} || 0%{?rhel}
@@ -295,11 +295,17 @@ ccs_update_schema > /dev/null 2>&1 ||:
 /sbin/rcldirectord
 %endif
 %if 0%{?fedora}
+%{_prefix}/lib/systemd/system/ldirectord.service
+%{_sbindir}/sfex_*
+%{_mandir}/man8/sfex_init.8*
 /usr/lib/ocf/resource.d/heartbeat/ldirectord
 %endif
 %endif
 
 %changelog
+* Sat Sep 12 2015 Liu Di <liudidi@gmail.com> - 3.9.6-2.2
+- 为 Magic 3.0 重建
+
 * Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.9.6-2.1
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

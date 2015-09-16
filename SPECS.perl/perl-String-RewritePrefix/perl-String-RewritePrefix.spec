@@ -1,7 +1,7 @@
 Name:           perl-String-RewritePrefix 
 Summary:        Rewrite strings based on a set of known prefixes 
-Version:        0.006
-Release:        20%{?dist}
+Version:	0.007
+Release:	1%{?dist}
 License:        GPL+ or Artistic 
 Group:          Development/Libraries
 Source0:        http://search.cpan.org/CPAN/authors/id/R/RJ/RJBS/String-RewritePrefix-%{version}.tar.gz 
@@ -46,6 +46,9 @@ make test
 %{_mandir}/man3/*.3*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.007-1
+- 更新到 0.007
+
 * Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 0.006-20
 - 为 Magic 3.0 重建
 

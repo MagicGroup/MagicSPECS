@@ -1,32 +1,53 @@
 Name:           perl-Text-RecordParser
-Version:        1.5.0
-Release:        11%{?dist}
+Version:        1.6.5
+Release:        3%{?dist}
 Summary:        Read record-oriented files
 License:        GPLv2
 Group:          Development/Libraries
 URL:            http://search.cpan.org/dist/Text-RecordParser/
-Source0:        http://search.cpan.org/CPAN/authors/id/K/KC/KCLARK/Text-RecordParser-v%{version}.tar.gz
+Source0:        http://search.cpan.org/CPAN/authors/id/K/KC/KCLARK/Text-RecordParser-%{version}.tar.gz
 BuildArch:      noarch
-Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
-
-# core
-BuildRequires:  perl(List::Util)
-BuildRequires:  perl(Test::More)
-# cpan
-BuildRequires:  perl(Module::Build)
-BuildRequires:  perl(Readonly)
+# Build
+BuildRequires:  perl
+BuildRequires:  perl(Config)
+BuildRequires:  perl(Cwd)
+BuildRequires:  perl(ExtUtils::MakeMaker) >= 6.76
+BuildRequires:  perl(ExtUtils::MM_Unix)
+BuildRequires:  perl(Fcntl)
+BuildRequires:  perl(File::Basename)
+BuildRequires:  perl(File::Find)
+BuildRequires:  perl(File::Path)
+BuildRequires:  perl(strict)
+BuildRequires:  perl(vars)
+# Runtime
+BuildRequires:  perl(base)
+BuildRequires:  perl(Carp)
 BuildRequires:  perl(Class::Accessor)
+BuildRequires:  perl(English)
+BuildRequires:  perl(Getopt::Long)
+BuildRequires:  perl(GraphViz)
+BuildRequires:  perl(IO::Scalar)
 BuildRequires:  perl(List::MoreUtils)
+BuildRequires:  perl(List::Util)
+BuildRequires:  perl(Pod::Usage)
+BuildRequires:  perl(Readonly)
+BuildRequires:  perl(Scalar::Util)
+BuildRequires:  perl(Text::Autoformat)
+BuildRequires:  perl(Text::ParseWords)
 BuildRequires:  perl(Text::TabularDisplay)
 BuildRequires:  perl(version)
-# test
-BuildRequires:  perl(IO::Scalar)
+BuildRequires:  perl(warnings)
+# Tests only
+BuildRequires:  perl(File::Spec::Functions)
+BuildRequires:  perl(File::Temp)
+BuildRequires:  perl(FindBin)
+BuildRequires:  perl(IO::File)
 BuildRequires:  perl(Test::Exception)
-BuildRequires:  perl(Test::Pod)
-BuildRequires:  perl(Test::Pod::Coverage)
-
-# not automagically picked up...
-Requires:       perl(Class::Accessor)
+BuildRequires:  perl(Test::More)
+# Optional tests only
+BuildRequires:  perl(Test::Pod) >= 1.14
+BuildRequires:  perl(Test::Pod::Coverage) >= 1.04
+Requires:       perl(:MODULE_COMPAT_%(eval "$(perl -V:version)"; echo $version))
 
 %description
 This module is for reading record-oriented data in a delimited text file.
@@ -40,30 +61,30 @@ you can still bind your own field names via bind_fields. Either way, you
 can then use many methods to get at the data as arrays or hashes.
 
 %prep
-%setup -q -n Text-RecordParser-v%{version}
-
+%setup -q -n Text-RecordParser-%{version}
 perl -pi -e 's|^#!perl|#!%{__perl}|' t/*.t
 
 %build
-%{__perl} Build.PL installdirs=vendor
-./Build
+perl Makefile.PL INSTALLDIRS=vendor NO_PACKLIST=1
+make %{?_smp_mflags}
 
 %install
-./Build install destdir=%{buildroot} create_packlist=0
-find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null \;
-
+make pure_install DESTDIR=%{buildroot}
 %{_fixperms} %{buildroot}/*
 
 %check
-./Build test
+make test
 
 %files
-%doc Changes README TODO t/
+%doc Changes README TODO
 %{_bindir}/*
 %{perl_vendorlib}/*
 %{_mandir}/man[13]/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.6.5-1
+- 更新到 1.6.5
+
 * Sun Jun 15 2014 Liu Di <liudidi@gmail.com> - 1.5.0-11
 - 为 Magic 3.0 重建
 

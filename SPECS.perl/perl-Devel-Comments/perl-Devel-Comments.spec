@@ -1,11 +1,11 @@
 Name:           perl-Devel-Comments
-Version:        1.1.4
-Release:        11%{?dist}
+Version:	1.1.4
+Release:	12%{?dist}
 Summary:        Debug with executable smart comments to logs
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 URL:            http://search.cpan.org/dist/Devel-Comments/
-Source0:        http://www.cpan.org/authors/id/X/XI/XIONG/developer-tools/Devel-Comments-v%{version}.tar.gz
+Source0:        http://search.cpan.org/CPAN/authors/id/X/XI/XIONG/developer-tools/Devel-Comments-v%{version}.tar.gz
 BuildArch:      noarch
 # Compile-time:
 BuildRequires:  perl(Module::Build)

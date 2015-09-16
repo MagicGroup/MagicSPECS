@@ -1,6 +1,6 @@
 Name:           perl-Geo-Ellipsoids
 Version:        0.16
-Release:        13%{?dist}
+Release:        14%{?dist}
 Summary:        Standard Geo:: ellipsoids
 
 Group:          Development/Libraries
@@ -54,6 +54,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.16-14
+- 为 Magic 3.0 重建
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.16-13
 - 为 Magic 3.0 重建
 

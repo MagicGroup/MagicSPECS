@@ -1,7 +1,7 @@
 Name:		perl-Test-Valgrind
 Summary:	Generate suppressions, analyze and test any command with valgrind
-Version:	1.13
-Release:	8%{?dist}
+Version:	1.14
+Release:	1%{?dist}
 Group:		Development/Libraries
 License:	GPL+ or Artistic
 URL:		http://search.cpan.org/dist/Test-Valgrind/
@@ -131,6 +131,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/Test::Valgrind::Tool::memcheck.3pm*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.14-1
+- 更新到 1.14
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.13-8
 - 为 Magic 3.0 重建
 

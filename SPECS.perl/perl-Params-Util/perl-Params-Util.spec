@@ -1,6 +1,6 @@
 Name:		perl-Params-Util
 Version:	1.07
-Release:	11%{?dist}
+Release:	12%{?dist}
 Summary:	Simple standalone parameter-checking functions
 License:	GPL+ or Artistic
 Group:		Development/Libraries
@@ -49,6 +49,9 @@ chmod -R u+w $RPM_BUILD_ROOT/*
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.07-12
+- 为 Magic 3.0 重建
+
 * Sun Jun 15 2014 Liu Di <liudidi@gmail.com> - 1.07-11
 - 为 Magic 3.0 重建
 

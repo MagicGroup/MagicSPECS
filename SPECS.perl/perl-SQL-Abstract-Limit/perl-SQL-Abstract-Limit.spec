@@ -1,6 +1,6 @@
 Name:           perl-SQL-Abstract-Limit
 Version:        0.141
-Release:        17%{?dist}
+Release:        18%{?dist}
 Summary:        Portable LIMIT Emulation
 Group:          Development/Libraries
 License:        GPL+ or Artistic
@@ -67,6 +67,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/SQL::Abstract::Limit.3pm*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.141-18
+- 为 Magic 3.0 重建
+
 * Thu Jun 19 2014 Liu Di <liudidi@gmail.com> - 0.141-17
 - 为 Magic 3.0 重建
 

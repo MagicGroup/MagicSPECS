@@ -1,12 +1,11 @@
 Summary:        Test case module for Perl
 Name:           perl-Test-Manifest
-Version:        1.23
-Release:        3%{?dist}
+Version:	2.02
+Release:	1%{?dist}
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 URL:            http://search.cpan.org/dist/Test-Manifest/
 Source0:        http://search.cpan.org/CPAN/authors/id/B/BD/BDFOY/Test-Manifest-%{version}.tar.gz
-Patch0:         Test-Manifest-1.23-manpage.patch
 BuildArch:      noarch
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(id -nu)
 BuildRequires:  perl(base)
@@ -39,9 +38,6 @@ right value for MakeMaker to do the right thing.
 %prep
 %setup -q -n Test-Manifest-%{version}
 
-# Reinstate manpage, dropped upstream
-%patch0 -p1 -b .manpage
-
 %build
 perl Makefile.PL INSTALLDIRS=vendor
 make %{?_smp_mflags}
@@ -64,6 +60,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/Test::Manifest.3pm*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 2.02-1
+- 更新到 2.02
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.23-3
 - 为 Magic 3.0 重建
 

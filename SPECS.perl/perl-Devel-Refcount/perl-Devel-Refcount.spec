@@ -1,6 +1,6 @@
 Name:           perl-Devel-Refcount
-Version:        0.09
-Release:        11%{?dist}
+Version:	0.10
+Release:	1%{?dist}
 Summary:        Obtain the REFCNT value of a referent
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -49,6 +49,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.10-1
+- 更新到 0.10
+
 * Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 0.09-11
 - 为 Magic 3.0 重建
 

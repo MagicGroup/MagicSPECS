@@ -1,6 +1,6 @@
 Name:           perl-Digest-JHash
-Version:        0.07
-Release:        7%{?dist}
+Version:	0.09
+Release:	1%{?dist}
 Summary:        Perl extension for 32 bit Jenkins Hashing Algorithm
 License:        Artistic 2.0
 Group:          Development/Libraries
@@ -55,6 +55,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.09-1
+- 更新到 0.09
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.07-7
 - 为 Magic 3.0 重建
 

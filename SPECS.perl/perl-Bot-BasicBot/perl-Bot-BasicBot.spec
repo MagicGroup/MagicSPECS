@@ -1,6 +1,6 @@
 Name:           perl-Bot-BasicBot
 Version:	0.89
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:        Simple irc bot baseclass
 Summary(zh_CN.UTF-8): 简单的 irc 机器人
 License:        GPL+ or Artistic
@@ -62,6 +62,9 @@ magic_rpm_clean.sh
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.89-2
+- 为 Magic 3.0 重建
+
 * Mon Apr 27 2015 Liu Di <liudidi@gmail.com> - 0.89-1
 - 更新到 0.89
 

@@ -1,11 +1,11 @@
 Name:           perl-YAML-Tiny
-Version:        1.51
-Release:        7%{?dist}
+Version:	1.69
+Release:	1%{?dist}
 Summary:        Read/Write YAML files with as little code as possible
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 URL:            http://search.cpan.org/dist/YAML-Tiny/
-Source0:        http://search.cpan.org/CPAN/authors/id/A/AD/ADAMK/YAML-Tiny-%{version}.tar.gz
+Source0:        http://search.cpan.org/CPAN/authors/id/E/ET/ETHER/YAML-Tiny-%{version}.tar.gz
 BuildArch:      noarch
 BuildRequires:  perl(Carp)
 BuildRequires:  perl(Exporter)
@@ -50,6 +50,9 @@ find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.69-1
+- 更新到 1.69
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.51-7
 - 为 Magic 3.0 重建
 

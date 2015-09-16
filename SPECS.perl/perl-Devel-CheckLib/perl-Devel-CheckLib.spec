@@ -1,6 +1,6 @@
 Name:           perl-Devel-CheckLib
-Version:        0.98
-Release:        8%{?dist}
+Version:	1.03
+Release:	1%{?dist}
 Summary:        Check that a library is available
 
 License:        GPL+ or Artistic
@@ -53,6 +53,9 @@ find $RPM_BUILD_ROOT -type f -name .packlist -exec rm -f {} \;
 %{_mandir}/man3/*.3*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.03-1
+- 更新到 1.03
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.98-8
 - 为 Magic 3.0 重建
 

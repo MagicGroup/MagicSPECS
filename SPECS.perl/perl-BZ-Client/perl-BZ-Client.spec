@@ -1,5 +1,5 @@
 Name:           perl-BZ-Client
-Version:	1.061
+Version:	1.072
 Release:	1%{?dist}
 Summary:        A client for the Bugzilla web services API
 Summary(zh_CN.UTF-8): Bugzilla 网页服务 API 的客户端
@@ -52,6 +52,9 @@ magic_rpm_clean.sh
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.072-1
+- 更新到 1.072
+
 * Thu Apr 30 2015 Liu Di <liudidi@gmail.com> - 1.061-1
 - 更新到 1.061
 

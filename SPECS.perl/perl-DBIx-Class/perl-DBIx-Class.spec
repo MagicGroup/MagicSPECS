@@ -1,10 +1,10 @@
 Name:           perl-DBIx-Class
 Summary:        Extensible and flexible object <-> relational mapper
-Version:        0.08203
-Release:        12%{?dist}
+Version:	0.082820
+Release:	1%{?dist}
 License:        GPL+ or Artistic
 Group:          Development/Libraries
-Source0:        http://search.cpan.org/CPAN/authors/id/F/FR/FREW/DBIx-Class-%{version}.tar.gz
+Source0:        http://search.cpan.org/CPAN/authors/id/R/RI/RIBASUSHI/DBIx-Class-%{version}.tar.gz
 URL:            http://search.cpan.org/dist/DBIx-Class/
 Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
 BuildArch:      noarch
@@ -177,6 +177,9 @@ make test
 
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.082820-1
+- 更新到 0.082820
+
 * Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 0.08203-12
 - 为 Magic 3.0 重建
 

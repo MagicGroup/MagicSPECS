@@ -1,11 +1,11 @@
 Name:           perl-JSON-RPC-Common
-Version:        0.06
-Release:        11%{?dist}
+Version:	0.11
+Release:	1%{?dist}
 Summary:        Perl module for handling JSON-RPC objects
 Group:          Development/Libraries
 License:        GPL+ or Artistic
 URL:            http://search.cpan.org/dist/JSON-RPC-Common
-Source0:        http://www.cpan.org/authors/id/N/NU/NUFFIN/JSON-RPC-Common-%{version}.tar.gz
+Source0:        http://search.cpan.org/CPAN/authors/id/D/DM/DMCBRIDE/JSON-RPC-Common-%{version}.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 
@@ -51,6 +51,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*.3pm*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.11-1
+- 更新到 0.11
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.06-11
 - 为 Magic 3.0 重建
 

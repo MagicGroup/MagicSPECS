@@ -1,6 +1,6 @@
 Name:           perl-gettext
 Version:        1.05
-Release:        34%{?dist}
+Release:        35%{?dist}
 Summary:        Interface to gettext family of functions
 
 Group:          Development/Libraries
@@ -64,6 +64,9 @@ make test
 
 
 %changelog
+* Wed Sep 16 2015 Liu Di <liudidi@gmail.com> - 1.05-35
+- 为 Magic 3.0 重建
+
 * Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.05-34
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

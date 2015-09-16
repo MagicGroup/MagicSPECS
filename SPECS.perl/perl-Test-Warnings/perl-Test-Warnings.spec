@@ -1,6 +1,6 @@
 Name:		perl-Test-Warnings
-Version:	0.014
-Release:	7%{?dist}
+Version:	0.021
+Release:	3%{?dist}
 Summary:	Test for warnings and the lack of them
 License:	GPL+ or Artistic
 Group:		Development/Libraries
@@ -8,26 +8,28 @@ URL:		http://search.cpan.org/dist/Test-Warnings
 Source0:	http://search.cpan.org/CPAN/authors/id/E/ET/ETHER/Test-Warnings-%{version}.tar.gz
 BuildArch:	noarch
 # Build
-BuildRequires:	perl(Module::Build::Tiny) >= 0.035
+BuildRequires:	perl
+BuildRequires:	perl(ExtUtils::MakeMaker)
 # Module
+BuildRequires:	perl(Carp)
 BuildRequires:	perl(Exporter)
 BuildRequires:	perl(Test::Builder)
 BuildRequires:	perl(parent)
 BuildRequires:	perl(strict)
 BuildRequires:	perl(warnings)
 # Test Suite
-BuildRequires:	perl(CPAN::Meta)
-BuildRequires:	perl(CPAN::Meta::Requirements) >= 2.120900
+BuildRequires:	perl(CPAN::Meta) >= 2.120900
+BuildRequires:	perl(CPAN::Meta::Check) >= 0.007
+BuildRequires:	perl(CPAN::Meta::Prereqs)
+BuildRequires:	perl(CPAN::Meta::Requirements)
 BuildRequires:	perl(ExtUtils::MakeMaker)
-BuildRequires:	perl(File::Spec::Functions)
+BuildRequires:	perl(File::Spec)
 BuildRequires:	perl(if)
-BuildRequires:	perl(List::Util)
-BuildRequires:	perl(Test::Deep)
 BuildRequires:	perl(Test::More) >= 0.94
 BuildRequires:	perl(Test::Tester) >= 0.108
-BuildRequires:	perl(version)
 # Runtime
 Requires:	perl(:MODULE_COMPAT_%(eval "`perl -V:version`"; echo $version))
+Requires:	perl(Carp)
 
 %description
 If you've ever tried to use Test::NoWarnings to confirm there are no warnings
@@ -38,7 +40,7 @@ warnings test is run, resulting in a TAP error (see examples/test_nowarnings.pl
 in this distribution for a demonstration).
 
 This module is intended to be used as a drop-in replacement for
-Test::NoWarnings: it also adds an extra test, but runs this test before
+Test::NoWarnings: it also a%description -l zh_CN.UTF-8s an extra test, but runs this test before
 done_testing calculates the test count, rather than after. It does this by
 hooking into done_testing as well as via an END block. You can declare a plan,
 or not, and things will still Just Work.
@@ -55,21 +57,27 @@ with use Test::Warnings; whether or not your tests have a plan.
 %setup -q -n Test-Warnings-%{version}
 
 %build
-perl Build.PL --installdirs=vendor
-./Build
+perl Makefile.PL INSTALLDIRS=vendor
+make %{?_smp_mflags}
 
 %install
-./Build install --destdir=%{buildroot} --create_packlist=0
+make pure_install DESTDIR=%{buildroot}
+find %{buildroot} -type f -name .packlist -exec rm -f {} ';'
+%{_fixperms} %{buildroot}
 
 %check
-./Build test
+make test
 
 %files
-%doc Changes CONTRIBUTING LICENSE README README.md examples/
+%license LICENSE
+%doc Changes CONTRIBUTING README examples/
 %{perl_vendorlib}/Test/
-%{_mandir}/man3/Test::Warnings.3pm*
+%{_mandir}/man3/Test::Warnings.3*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.021-1
+- 更新到 0.021
+
 * Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 0.014-7
 - 为 Magic 3.0 重建
 

@@ -1,6 +1,6 @@
 Name:           perl-Net-Daemon
 Version:        0.48
-Release:        5%{?dist}
+Release:        6%{?dist}
 Summary:        Perl extension for portable daemons
 
 Group:          Development/Libraries
@@ -75,6 +75,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.48-6
+- 为 Magic 3.0 重建
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.48-5
 - 为 Magic 3.0 重建
 

@@ -1,6 +1,6 @@
 Name:           perl-GPS
-Version:        0.16
-Release:        12%{?dist}
+Version:	0.17
+Release:	1%{?dist}
 Summary:        Perl interface to a GPS receiver that implements the Garmin protocol
 
 Group:          Development/Libraries
@@ -58,6 +58,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Wed Sep 16 2015 Liu Di <liudidi@gmail.com> - 0.17-1
+- 更新到 0.17
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.16-12
 - 为 Magic 3.0 重建
 

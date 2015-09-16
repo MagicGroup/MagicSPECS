@@ -1,11 +1,11 @@
 Name:           perl-Plack-Test-ExternalServer
-Version:        0.01
-Release:        11%{?dist}
+Version:	0.02
+Release:	1%{?dist}
 Summary:        Run HTTP tests on external live servers
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 URL:            http://search.cpan.org/dist/Plack-Test-ExternalServer/
-Source0:        http://www.cpan.org/authors/id/F/FL/FLORA/Plack-Test-ExternalServer-%{version}.tar.gz
+Source0:        http://search.cpan.org/CPAN/authors/id/E/ET/ETHER/Plack-Test-ExternalServer-%{version}.tar.gz
 BuildArch:      noarch
 BuildRequires:  perl(ExtUtils::MakeMaker)
 BuildRequires:  perl(HTTP::Request::Common)
@@ -56,6 +56,9 @@ RELEASE_TESTING=1 make test
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.02-1
+- 更新到 0.02
+
 * Thu Jun 19 2014 Liu Di <liudidi@gmail.com> - 0.01-11
 - 为 Magic 3.0 重建
 

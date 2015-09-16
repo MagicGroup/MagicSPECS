@@ -305,7 +305,7 @@ function downvcssources()
 	if ! [ x"$VCSDATE" = x"$TODAY" ]; then
 		if [ $AUTOUPDATE = "1" ]; then
 			sed -i 's/%define vcsdate.*/%define vcsdate '"$TODAY"'/g' $SPECNAME
-			rpmdev-bumpspec -n -c "更新到 $TODAY 日期的仓库源码" $SPECNAME
+			rpmdev-bumpspec -c "更新到 $TODAY 日期的仓库源码" $SPECNAME
 			cp -f $SPECNAME $TOPDIR/SOURCES
 			VCSDATE=$TODAY
 		fi

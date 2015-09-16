@@ -1,12 +1,12 @@
 Name:           perl-Test-Cmd
-Version:        1.05
-Release:        14%{?dist}
+Version:	1.08
+Release:	2%{?dist}
 Summary:        Perl module for portable testing of commands and scripts
 
 Group:          Development/Libraries
 License:        GPL+ or Artistic
 URL:            http://search.cpan.org/dist/Test-Cmd/
-Source0:        http://www.cpan.org/authors/id/K/KN/KNIGHT/Test-Cmd-%{version}.tar.gz
+Source0:        http://search.cpan.org/CPAN/authors/id/N/NE/NEILB/Test-Cmd-%{version}.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildArch:      noarch
@@ -54,6 +54,12 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Mon Sep 14 2015 Liu Di <liudidi@gmail.com> - 1.08-2
+- 为 Magic 3.0 重建
+
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.08-1
+- 更新到 1.08
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.05-14
 - 为 Magic 3.0 重建
 

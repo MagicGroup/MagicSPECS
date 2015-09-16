@@ -1,14 +1,14 @@
 %define rgbtxt  %{_datadir}/X11/rgb.txt
 
 Name:           perl-Image-Info
-Version:        1.28
-Release:        15%{?dist}
+Version:	1.38
+Release:	2%{?dist}
 Summary:        Image meta information extraction module for Perl
 
 Group:          Development/Libraries
 License:        GPL+ or Artistic
 URL:            http://search.cpan.org/dist/Image-Info/
-Source0:        http://www.cpan.org/authors/id/T/TE/TELS/image/Image-Info-%{version}.tar.gz
+Source0:        http://search.cpan.org/CPAN/authors/id/S/SR/SREZIC/Image-Info-%{version}.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildArch:      noarch
@@ -54,10 +54,17 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 %doc CHANGES README exifdump imgdump
 %{perl_vendorlib}/Image/
+%{perl_vendorlib}/Bundle/Image/
 %{_mandir}/man3/*.3pm*
 
 
 %changelog
+* Mon Sep 14 2015 Liu Di <liudidi@gmail.com> - 1.38-2
+- 为 Magic 3.0 重建
+
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.38-1
+- 更新到 1.38
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.28-15
 - 为 Magic 3.0 重建
 

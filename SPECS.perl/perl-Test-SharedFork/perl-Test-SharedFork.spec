@@ -1,10 +1,10 @@
 Name:           perl-Test-SharedFork
 Summary:        Fork test
-Version:        0.20
-Release:        10%{?dist}
+Version:	0.33
+Release:	2%{?dist}
 License:        GPL+ or Artistic
 Group:          Development/Libraries
-Source0:        http://search.cpan.org/CPAN/authors/id/T/TO/TOKUHIROM/Test-SharedFork-%{version}.tar.gz 
+Source0:        http://search.cpan.org/CPAN/authors/id/E/EX/EXODIST/Test-SharedFork-%{version}.tar.gz
 URL:            http://search.cpan.org/dist/Test-SharedFork
 
 Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
@@ -43,11 +43,16 @@ find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null ';'
 
 %files
 %defattr(-,root,root,-)
-%doc Changes README
 %{perl_vendorlib}/*
 %{_mandir}/man3/*.3*
 
 %changelog
+* Mon Sep 14 2015 Liu Di <liudidi@gmail.com> - 0.33-2
+- 为 Magic 3.0 重建
+
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.33-1
+- 更新到 0.33
+
 * Sun Jun 15 2014 Liu Di <liudidi@gmail.com> - 0.20-10
 - 为 Magic 3.0 重建
 

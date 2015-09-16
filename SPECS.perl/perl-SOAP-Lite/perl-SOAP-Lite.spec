@@ -1,11 +1,11 @@
 Name:       perl-SOAP-Lite
-Version:    0.715
-Release:    19%{?dist}
+Version:	1.19
+Release:	1%{?dist}
 Summary:    Client and server side SOAP implementation
 License:    GPL+ or Artistic
 Group:      Development/Libraries
 URL:        http://search.cpan.org/dist/SOAP-Lite/
-Source0:    http://search.cpan.org/CPAN/authors/id/M/MK/MKUTTER/SOAP-Lite-%{version}.tar.gz
+Source0:        http://search.cpan.org/CPAN/authors/id/P/PH/PHRED/SOAP-Lite-%{version}.tar.gz
 Patch0:     perl-SOAP-Lite-0.715-IO-modules.patch
 BuildArch:  noarch
 
@@ -83,18 +83,17 @@ chmod -R u+w %{buildroot}/*
 make test
 
 %files
-%doc Changes README ReleaseNotes.txt examples
 %{_bindir}/*pl
 %{perl_vendorlib}/SOAP
 %{perl_vendorlib}/Apache
 %{perl_vendorlib}/IO
-%{perl_vendorlib}/UDDI
-%{perl_vendorlib}/XML
-%{perl_vendorlib}/XMLRPC
 %{_mandir}/man3/*
 %{_mandir}/man1/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.19-1
+- 更新到 1.19
+
 * Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 0.715-19
 - 为 Magic 3.0 重建
 

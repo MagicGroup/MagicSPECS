@@ -7,7 +7,7 @@ Summary: An OOP interface to Musepack file information and APE tag fields
 Summary(zh_CN.UTF-8): Musepack 文件信息和 APE 标记的面向对象的接口
 Name: perl-Audio-Musepack
 Version:	1.0.1
-Release:	8%{?dist}
+Release:	9%{?dist}
 Group: Development/Libraries
 Group(zh_CN): 开发/库
 License: Artistic
@@ -53,6 +53,9 @@ magic_rpm_clean.sh
 %{perl_vendorlib}
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.0.1-9
+- 为 Magic 3.0 重建
+
 * Wed Apr 15 2015 Liu Di <liudidi@gmail.com> - 1.0.1-8
 - 为 Magic 3.0 重建
 

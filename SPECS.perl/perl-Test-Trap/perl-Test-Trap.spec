@@ -1,11 +1,11 @@
 Name:           perl-Test-Trap
-Version:        0.2.2
-Release:        10%{?dist}
+Version:	0.3.2
+Release:	1%{?dist}
 Summary:        Trap exit codes, exceptions, output, etc
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 URL:            http://search.cpan.org/dist/Test-Trap/
-Source0:        http://www.cpan.org/authors/id/E/EB/EBHANSSEN/Test-Trap-v%{version}.tar.gz
+Source0:        http://search.cpan.org/CPAN/authors/id/E/EB/EBHANSSEN/Test-Trap-v%{version}.tar.gz
 BuildArch:      noarch
 BuildRequires:  perl >= 1:v5.6.2
 BuildRequires:  perl(base)
@@ -55,6 +55,9 @@ find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_mandir}/man3/*
 
 %changelog
+* Wed Sep 16 2015 Liu Di <liudidi@gmail.com> - 0.3.2-1
+- 更新到 0.3.2
+
 * Sun Jun 15 2014 Liu Di <liudidi@gmail.com> - 0.2.2-10
 - 为 Magic 3.0 重建
 

@@ -1,23 +1,23 @@
 Name:		perl-Convert-BinHex
-Version:	1.119
-Release:	21%{?dist}
+Version:	1.124
+Release:	2%{?dist}
 Summary:	Convert to/from RFC1741 HQX7 (Mac BinHex)
 Group:		Development/Libraries
 License:	GPL+ or Artistic
 URL:		http://search.cpan.org/dist/Convert-BinHex/
-Source0:	http://search.cpan.org/CPAN/authors/id/E/ER/ERYQ/Convert-BinHex-%{version}.tar.gz
+Source0:        http://search.cpan.org/CPAN/authors/id/S/ST/STEPHEN/Convert-BinHex-%{version}.tar.gz
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(id -nu)
 BuildArch:	noarch
 BuildRequires:	perl(Carp)
 BuildRequires:	perl(ExtUtils::MakeMaker)
 Requires:	perl(:MODULE_COMPAT_%(eval "`perl -V:version`"; echo $version))
+%global __requires_exclude ^perl\\(Mac::Files\\)
 
 %description
 Convert::BinHex extracts data from Macintosh BinHex files.
 
 %prep
 %setup -q -n Convert-BinHex-%{version}
-chmod -c -x bin/*.pl docs/Convert/BinHex/redapple.gif
 cp -a bin examples
 perl -pi -e 's/^use lib .*$//' bin/*.pl
 perl -pi -e 's/^(\@ISA.*)/require Exporter; $1/' t/Checker.pm
@@ -41,11 +41,19 @@ rm -rf %{buildroot}
 
 %files
 %defattr(-,root,root,-)
-%doc COPYING README docs examples
+%doc COPYING README
 %{perl_vendorlib}/Convert/
 %{_mandir}/man3/Convert::BinHex.3pm*
+%{_bindir}/*.pl
+%{_mandir}/man1/*.pl.1*
 
 %changelog
+* Tue Sep 15 2015 Liu Di <liudidi@gmail.com> - 1.124-2
+- 为 Magic 3.0 重建
+
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.124-1
+- 更新到 1.124
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.119-21
 - 为 Magic 3.0 重建
 

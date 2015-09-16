@@ -1,11 +1,11 @@
 Name:           perl-Net-HTTP
-Version:        6.03
-Release:        6%{?dist}
+Version:	6.09
+Release:	1%{?dist}
 Summary:        Low-level HTTP connection (client)
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 URL:            http://search.cpan.org/dist/Net-HTTP/
-Source0:        http://www.cpan.org/authors/id/G/GA/GAAS/Net-HTTP-%{version}.tar.gz
+Source0:        http://search.cpan.org/CPAN/authors/id/E/ET/ETHER/Net-HTTP-%{version}.tar.gz
 BuildArch:      noarch
 BuildRequires:  perl(ExtUtils::MakeMaker)
 BuildRequires:  perl(Getopt::Long)
@@ -57,6 +57,9 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 6.09-1
+- 更新到 6.09
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 6.03-6
 - 为 Magic 3.0 重建
 

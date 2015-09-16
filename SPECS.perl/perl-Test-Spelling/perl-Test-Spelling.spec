@@ -1,12 +1,11 @@
 Name:           perl-Test-Spelling
-Version:        0.15
-Release:        14%{?dist}
+Version:	0.20
+Release:	1%{?dist}
 Summary:        Check for spelling errors in POD files
 Group:          Development/Libraries
 License:        GPL+ or Artistic
 URL:            http://search.cpan.org/dist/Test-Spelling/
 Source0:        http://search.cpan.org/CPAN/authors/id/S/SA/SARTAK/Test-Spelling-%{version}.tar.gz
-Patch0:         Test-Spelling-0.13-hunspell.patch
 BuildArch:      noarch
 BuildRequires:  hunspell-en
 BuildRequires:  perl(IPC::Open3)
@@ -23,9 +22,6 @@ hunspell program.
 
 %prep
 %setup -q -n Test-Spelling-%{version}
-
-# Promote hunspell over spell/aspell to avoid surprises if aspell is installed
-%patch0 -p1
 
 # Force the author test to run too
 mkdir inc/.author
@@ -50,6 +46,9 @@ find %{buildroot} -depth -type d -exec rmdir {} \; 2>/dev/null
 %{_mandir}/man3/Test::Spelling.3pm*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.20-1
+- 更新到 0.20
+
 * Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 0.15-14
 - 为 Magic 3.0 重建
 

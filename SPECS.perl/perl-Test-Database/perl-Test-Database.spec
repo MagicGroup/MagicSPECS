@@ -1,6 +1,6 @@
 Name:           perl-Test-Database
-Version:        1.11
-Release:        15%{?dist}
+Version:	1.113
+Release:	1%{?dist}
 Summary:        Database handles ready for testing
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -30,6 +30,7 @@ BuildRequires:  perl(YAML::Tiny) >= 1.27
 Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
 
 %{?perl_default_filter}
+%global __requires_exclude %{?__requires_exclude:%__requires_exclude|}^perl\\(YAML::Tiny\\)$
 
 %description
 Test::Database provides a simple way for test authors to request a test
@@ -40,25 +41,26 @@ configuration.
 %setup -q -n Test-Database-%{version}
 
 %build
-%{__perl} Build.PL installdirs=vendor
-./Build
+perl Makefile.PL INSTALLDIRS=vendor
+make %{?_smp_mflags}
 
 %install
-./Build install destdir=$RPM_BUILD_ROOT create_packlist=0
-find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
-
-%{_fixperms} $RPM_BUILD_ROOT/*
+make pure_install DESTDIR=%{buildroot}
+find %{buildroot} -type f -name .packlist -exec rm -f {} \;
+%{_fixperms} %{buildroot}/*
 
 %check
-./Build test
+make test
 
 %files
-%defattr(-,root,root,-)
-%doc Changes eg README
+%doc Changes eg LICENSE README
 %{perl_vendorlib}/*
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.113-1
+- 更新到 1.113
+
 * Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 1.11-15
 - 为 Magic 3.0 重建
 

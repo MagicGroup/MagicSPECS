@@ -1,13 +1,12 @@
-%global cpan_version 2.014
 Name:           perl-Socket
 Epoch:          1
-Version:        %(echo '%{cpan_version}' | tr '_' '.')
-Release:        5%{?dist}
+Version:	2.020
+Release:	3%{?dist}
 Summary:        Networking constants and support functions
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 URL:            http://search.cpan.org/dist/Socket/
-Source0:        http://search.cpan.org/CPAN/authors/id/P/PE/PEVANS/Socket-%{cpan_version}.tar.gz
+Source0:        http://search.cpan.org/CPAN/authors/id/P/PE/PEVANS/Socket-%{version}.tar.gz
 BuildRequires:  perl
 BuildRequires:  perl(Config)
 BuildRequires:  perl(ExtUtils::CBuilder)
@@ -38,7 +37,7 @@ functions, mostly for dealing with conversions of network addresses between
 human-readable and native binary forms, and for hostname resolver operations.
 
 %prep
-%setup -q -n Socket-%{cpan_version}
+%setup -q -n Socket-%{version}
 
 %build
 perl Makefile.PL INSTALLDIRS=vendor OPTIMIZE="$RPM_OPT_FLAGS"
@@ -60,6 +59,15 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Mon Sep 14 2015 Liu Di <liudidi@gmail.com> - 1:2.020-3
+- 为 Magic 3.0 重建
+
+* Mon Sep 14 2015 Liu Di <liudidi@gmail.com> - 1:2.020-2
+- 为 Magic 3.0 重建
+
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1:2.020-1
+- 更新到 2.020
+
 * Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 1:2.014-5
 - 为 Magic 3.0 重建
 

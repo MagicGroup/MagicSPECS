@@ -1,6 +1,6 @@
 name:           perl-Barcode-Code128
 Version:	2.21
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:        Generate CODE 128 bar codes
 Summary(zh_CN.UTF-8): 生成 CODE 128 条码
 License:        Public Domain
@@ -49,6 +49,9 @@ magic_rpm_clean.sh
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 2.21-2
+- 为 Magic 3.0 重建
+
 * Fri Apr 24 2015 Liu Di <liudidi@gmail.com> - 2.21-1
 - 更新到 2.21
 

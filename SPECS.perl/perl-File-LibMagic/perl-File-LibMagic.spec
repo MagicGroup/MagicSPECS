@@ -4,8 +4,8 @@
 %define module	File-LibMagic
 
 Name:		perl-%{module}
-Version:	1.00
-Release:	3%{?dist}
+Version:	1.13
+Release:	1%{?dist}
 Summary:	Perl wrapper/interface for libmagic
 License:	GPL+ or Artistic
 Group:		Development/Libraries
@@ -58,12 +58,14 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(-,root,root)
-%doc Changes README
 %{perl_vendorarch}/File/
 %{perl_vendorarch}/auto/File/
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.13-1
+- 更新到 1.13
+
 * Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 1.00-3
 - 为 Magic 3.0 重建
 

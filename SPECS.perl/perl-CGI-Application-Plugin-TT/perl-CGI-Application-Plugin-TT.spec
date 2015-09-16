@@ -1,6 +1,6 @@
 Name:           perl-CGI-Application-Plugin-TT
 Version:        1.05
-Release:        15%{?dist}
+Release:        16%{?dist}
 Summary:        Add Template Toolkit support to CGI::Application
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -49,6 +49,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.05-16
+- 为 Magic 3.0 重建
+
 * Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 1.05-15
 - 为 Magic 3.0 重建
 

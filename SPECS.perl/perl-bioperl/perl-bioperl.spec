@@ -1,6 +1,6 @@
 Name:           perl-bioperl
 Version:	1.6.924
-Release:	3%{?dist}
+Release:	4%{?dist}
 Summary:        Perl tools for computational molecular biology
 Summary(zh_CN.UTF-8): 用于计算分子生物学的 Perl 工具
 
@@ -113,7 +113,7 @@ find $RPM_BUILD_ROOT -type d -depth -exec rmdir {} 2>/dev/null ';'
 # remove errant execute bit from the .pm's
 find $RPM_BUILD_ROOT -type f -name '*.pm' -exec chmod -x {} 2>/dev/null ';'
 # correct all binaries in /usr/bin to be 0755
-find $RPM_BUILD_ROOT/%{_bindir} -type f -name '*.pl' -exec chmod 0755 {} 2>/dev/null ';'
+# find $RPM_BUILD_ROOT/%{_bindir} -type f -name '*.pl' -exec chmod 0755 {} 2>/dev/null ';'
 magic_rpm_clean.sh
 
 %check
@@ -128,12 +128,13 @@ rm -rf $RPM_BUILD_ROOT
 ## don't distribute "doc" subdirectory,  doesn't contain docs
 %doc examples models 
 %doc AUTHORS BUGS Changes DEPRECATED INSTALL LICENSE README
-%{_bindir}/*
 %{perl_vendorlib}/*
-%{_mandir}/man1/*.1*
 %{_mandir}/man3/*.3*    
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.6.924-4
+- 为 Magic 3.0 重建
+
 * Fri Apr 17 2015 Liu Di <liudidi@gmail.com> - 1.6.924-3
 - 为 Magic 3.0 重建
 

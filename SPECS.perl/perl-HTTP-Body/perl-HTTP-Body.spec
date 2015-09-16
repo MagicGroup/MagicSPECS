@@ -1,10 +1,10 @@
 Name:           perl-HTTP-Body
 Summary:        HTTP Body Parser
-Version:        1.07
-Release:        10%{?dist}
+Version:	1.22
+Release:	1%{?dist}
 License:        GPL+ or Artistic
 Group:          Development/Libraries
-Source0:        http://search.cpan.org/CPAN/authors/id/M/MR/MRAMBERG/HTTP-Body-%{version}.tar.gz 
+Source0:        http://search.cpan.org/CPAN/authors/id/G/GE/GETTY/HTTP-Body-%{version}.tar.gz
 URL:            http://search.cpan.org/dist/HTTP-Body
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
@@ -58,6 +58,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.22-1
+- 更新到 1.22
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.07-10
 - 为 Magic 3.0 重建
 

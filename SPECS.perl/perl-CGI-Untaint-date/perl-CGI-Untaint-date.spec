@@ -1,6 +1,6 @@
 Name:           perl-CGI-Untaint-date
 Version:        1.00
-Release:        21%{?dist}
+Release:        22%{?dist}
 Summary:        Validate a date
 Group:          Development/Libraries
 License:        GPL+ or Artistic
@@ -47,6 +47,9 @@ chmod -R u+w $RPM_BUILD_ROOT/*
 %{_mandir}/man3/*.3*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.00-22
+- 为 Magic 3.0 重建
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.00-21
 - 为 Magic 3.0 重建
 

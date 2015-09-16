@@ -1,11 +1,11 @@
 Name:           perl-Moo
-Version:        1.003001
-Release:        5%{?dist}
+Version:	2.000002
+Release:	2%{?dist}
 Summary:        Minimalist Object Orientation (with Moose compatibility)
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 URL:            http://search.cpan.org/dist/Moo/
-Source0:        http://search.cpan.org/CPAN/authors/id/M/MS/MSTROUT/Moo-%{version}.tar.gz
+Source0:        http://search.cpan.org/CPAN/authors/id/H/HA/HAARG/Moo-%{version}.tar.gz
 BuildArch:      noarch
 BuildRequires:  perl
 BuildRequires:  perl(B)
@@ -62,9 +62,14 @@ make test
 %doc Changes README
 %{perl_vendorlib}/*
 %{_mandir}/man3/*
-%{_bindir}/*
 
 %changelog
+* Mon Sep 14 2015 Liu Di <liudidi@gmail.com> - 2.000002-2
+- 为 Magic 3.0 重建
+
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 2.000002-1
+- 更新到 2.000002
+
 * Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 1.003001-5
 - 为 Magic 3.0 重建
 

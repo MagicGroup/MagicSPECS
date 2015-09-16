@@ -1,7 +1,7 @@
 Name:           perl-MooseX-SemiAffordanceAccessor
 Summary:        Name your accessors foo() and set_foo()
-Version:        0.09
-Release:        10%{?dist}
+Version:	0.10
+Release:	1%{?dist}
 License:        Artistic 2.0
 Group:          Development/Libraries
 Source0:        http://search.cpan.org/CPAN/authors/id/D/DR/DROLSKY/MooseX-SemiAffordanceAccessor-%{version}.tar.gz 
@@ -51,11 +51,13 @@ make test
 
 %files
 %defattr(-,root,root,-)
-%doc Changes README LICENSE
 %{perl_vendorlib}/*
 %{_mandir}/man3/*.3*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.10-1
+- 更新到 0.10
+
 * Thu Jun 19 2014 Liu Di <liudidi@gmail.com> - 0.09-10
 - 为 Magic 3.0 重建
 

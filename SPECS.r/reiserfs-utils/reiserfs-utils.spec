@@ -1,7 +1,8 @@
 Name: reiserfs-utils
 Version: 3.6.21
-Release: 6%{?dist}
+Release: 7%{?dist}
 Summary: Tools for creating, repairing, and debugging ReiserFS filesystems
+Summary(zh_CN.UTF-8): 创建，修复和调试 ReiserFS 文件系统的工具
 #URL: http://www.namesys.com/
 URL: http://ftp.kernel.org/pub/linux/utils/fs/reiserfs/
 #Source0: ftp://namesys.com/pub/reiserfsprogs/reiserfsprogs-%{version}.tar.gz
@@ -26,6 +27,9 @@ ReiserFS filesystem utilities.
 You should install the reiserfs-utils package if you want to use
 ReiserFS on any of your partitions.
 
+%description -l zh_CN.UTF-8
+创建，修复和调试 ReiserFS 文件系统的工具。
+
 %prep
 %setup -q -n reiserfsprogs-%{version}
 
@@ -46,6 +50,7 @@ install -m644 mkreiserfs/mkreiserfs.8 $RPM_BUILD_ROOT%{_mandir}/man8
 ( cd $RPM_BUILD_ROOT/sbin
   ln -fs mkreiserfs mkfs.reiserfs
   ln -fs reiserfsck fsck.reiserfs )
+magic_rpm_clean.sh
 
 %files
 %defattr(-,root,root,-)
@@ -63,6 +68,9 @@ install -m644 mkreiserfs/mkreiserfs.8 $RPM_BUILD_ROOT%{_mandir}/man8
 rm -rf $RPM_BUILD_ROOT
 
 %changelog
+* Sat Sep 12 2015 Liu Di <liudidi@gmail.com> - 2:3.6.21-7
+- 为 Magic 3.0 重建
+
 * Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 2:3.6.21-6
 - 为 Magic 3.0 重建
 

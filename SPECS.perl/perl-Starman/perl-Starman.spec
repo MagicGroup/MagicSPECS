@@ -1,6 +1,6 @@
 Name:           perl-Starman
-Version:        0.4009
-Release:        2%{?dist}
+Version:	0.4014
+Release:	1%{?dist}
 Summary:        High-performance preforking PSGI/Plack web server
 License:        GPL+ or Artistic
 
@@ -61,6 +61,9 @@ find $RPM_BUILD_ROOT -type f -name .packlist -exec rm -f {} ';'
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.4014-1
+- 更新到 0.4014
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.4009-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

@@ -1,11 +1,11 @@
 Name:           perl-HTML-FillInForm
-Version:        2.1
-Release:        5%{?dist}
+Version:	2.21
+Release:	1%{?dist}
 Summary:        Populates HTML Forms with data
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 URL:            http://search.cpan.org/dist/HTML-FillInForm/
-Source0:        http://www.cpan.org/authors/id/T/TJ/TJMATHER/HTML-FillInForm-%{version}.tar.gz
+Source0:        http://search.cpan.org/CPAN/authors/id/M/MA/MARKSTOS/HTML-FillInForm-%{version}.tar.gz
 BuildArch:      noarch
 BuildRequires:  perl(CGI)
 BuildRequires:  perl(ExtUtils::MakeMaker)
@@ -44,6 +44,9 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 2.21-1
+- 更新到 2.21
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 2.1-5
 - 为 Magic 3.0 重建
 

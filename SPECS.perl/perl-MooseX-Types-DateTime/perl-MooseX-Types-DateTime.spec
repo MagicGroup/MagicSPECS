@@ -1,11 +1,11 @@
 Name:       perl-MooseX-Types-DateTime
-Version:    0.07
-Release:    6%{?dist}
+Version:	0.11
+Release:	1%{?dist}
 # see, e.g., lib/MooseX/Types/DateTime.pm
 License:    GPL+ or Artistic
 Group:      Development/Libraries
 Summary:    DateTime related constraints and coercions for Moose
-Source:     http://search.cpan.org/CPAN/authors/id/I/IL/ILMARI/MooseX-Types-DateTime-%{version}.tar.gz
+Source0:        http://search.cpan.org/CPAN/authors/id/E/ET/ETHER/MooseX-Types-DateTime-%{version}.tar.gz
 Url:        http://search.cpan.org/dist/MooseX-Types-DateTime
 Requires:   perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
 BuildArch:  noarch
@@ -68,6 +68,9 @@ make test
 %{_mandir}/man3/*.3*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.11-1
+- 更新到 0.11
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.07-6
 - 为 Magic 3.0 重建
 

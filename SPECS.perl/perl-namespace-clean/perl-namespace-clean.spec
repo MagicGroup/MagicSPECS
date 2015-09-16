@@ -6,13 +6,12 @@
 
 Name:		perl-namespace-clean
 Summary:	Keep your namespace tidy
-Version:	0.23
-Release:	5%{?dist}
+Version:	0.25
+Release:	3%{?dist}
 License:	GPL+ or Artistic
 Group:		Development/Libraries
 URL:		http://search.cpan.org/dist/namespace-clean/
 Source0:	http://search.cpan.org/CPAN/authors/id/R/RI/RIBASUSHI/namespace-clean-%{version}.tar.gz
-Patch1:		namespace-clean-0.22-old-Test::More.patch
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(id -nu)
 BuildArch:	noarch
 BuildRequires:	perl(B::Hooks::EndOfScope) >= 0.10
@@ -57,11 +56,6 @@ name, but they won't show up as methods on your class or instances.
 %prep
 %setup -q -n namespace-clean-%{version}
 
-# Patch test suite to work with Test::More < 0.88 if necessary
-%if %{old_test_more}
-%patch1 -p1
-%endif
-
 # The module doesn't try to use Hash::Util::FieldHash with 5.8.x
 %if %(perl -e 'print (($] < 5.009_003_1) ? 1 : 0);')
 %global perl_reqfilt /bin/sh -c "%{__perl_requires} | sed -e '/^perl(Hash::Util::FieldHash)/d'"
@@ -90,6 +84,15 @@ rm -rf %{buildroot}
 %{_mandir}/man3/namespace::clean.3pm*
 
 %changelog
+* Mon Sep 14 2015 Liu Di <liudidi@gmail.com> - 0.25-3
+- 为 Magic 3.0 重建
+
+* Mon Sep 14 2015 Liu Di <liudidi@gmail.com> - 0.25-2
+- 为 Magic 3.0 重建
+
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.25-1
+- 更新到 0.25
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.23-5
 - 为 Magic 3.0 重建
 

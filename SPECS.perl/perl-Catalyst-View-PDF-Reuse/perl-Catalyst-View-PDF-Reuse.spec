@@ -1,13 +1,13 @@
 Name:       perl-Catalyst-View-PDF-Reuse 
-Version:    0.04
-Release:    17%{?dist}
+Version:	0.05
+Release:	1%{?dist}
 # lib/Catalyst/Helper/View/PDF/Reuse.pm -> GPL+ or Artistic
 # lib/Catalyst/View/PDF/Reuse.pm -> GPL+ or Artistic
 # lib/Template/Plugin/Catalyst/View/PDF/Reuse.pm -> GPL+ or Artistic
 License:    GPL+ or Artistic 
 Group:      Development/Libraries
 Summary:    Create PDF files from Catalyst using Template Toolkit templates 
-Source:     http://search.cpan.org/CPAN/authors/id/J/JO/JONALLEN/Catalyst-View-PDF-Reuse-%{version}.tar.gz 
+Source:     http://search.cpan.org/CPAN/authors/id/A/AL/ALTREUS/Catalyst-View-PDF-Reuse-%{version}.tar.gz 
 Url:        http://search.cpan.org/dist/Catalyst-View-PDF-Reuse
 Requires:   perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
 BuildArch:  noarch
@@ -56,6 +56,9 @@ find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null ';'
 %{_mandir}/man3/*.3*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.05-1
+- 更新到 0.05
+
 * Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 0.04-17
 - 为 Magic 3.0 重建
 

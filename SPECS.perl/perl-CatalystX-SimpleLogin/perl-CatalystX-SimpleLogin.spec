@@ -1,6 +1,6 @@
 Name:           perl-CatalystX-SimpleLogin
-Version:        0.15
-Release:        17%{?dist}
+Version:	0.18
+Release:	1%{?dist}
 Summary:        Provide a simple Login controller which can be reused
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -87,6 +87,9 @@ find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.18-1
+- 更新到 0.18
+
 * Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 0.15-17
 - 为 Magic 3.0 重建
 

@@ -1,10 +1,10 @@
 Name:           perl-MooseX-Types-Path-Class 
 Summary:        A Path::Class type library for Moose 
-Version:        0.06
-Release:        4%{?dist}
+Version:	0.08
+Release:	1%{?dist}
 License:        GPL+ or Artistic
 Group:          Development/Libraries
-Source0:        http://search.cpan.org/CPAN/authors/id/T/TH/THEPLER/MooseX-Types-Path-Class-%{version}.tar.gz 
+Source0:        http://search.cpan.org/CPAN/authors/id/E/ET/ETHER/MooseX-Types-Path-Class-%{version}.tar.gz
 URL:            http://search.cpan.org/dist/MooseX-Types-Path-Class
 Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
 BuildArch:      noarch
@@ -62,6 +62,9 @@ make test
 %{_mandir}/man3/*.3*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.08-1
+- 更新到 0.08
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.06-4
 - 为 Magic 3.0 重建
 

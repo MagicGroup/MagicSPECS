@@ -1,6 +1,6 @@
 Name:           perl-Bio-Graphics
 Version:	2.39
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:        Generate GD images of Bio::Seq objects
 Summary(zh_CN.UTF-8): Bio::Seq 对象生成 GD 图像
 License:        GPL+ or Artistic
@@ -66,6 +66,9 @@ magic_rpm_clean.sh
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 2.39-2
+- 为 Magic 3.0 重建
+
 * Fri Apr 24 2015 Liu Di <liudidi@gmail.com> - 2.39-1
 - 更新到 2.39
 

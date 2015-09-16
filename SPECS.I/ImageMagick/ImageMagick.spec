@@ -1,9 +1,9 @@
-%global VER 6.9.0
-%global Patchlevel 9
+%global VER 6.9.2
+%global Patchlevel 1
 
 Name:           ImageMagick
-Version:        %{VER}.%{Patchlevel}
-Release:        4%{?dist}
+Version:        6.9.2.1
+Release:        1%{?dist}
 Summary:        An X application for displaying and manipulating images
 Group:          Applications/Multimedia
 License:        ImageMagick
@@ -306,6 +306,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Tue Sep 15 2015 Liu Di <liudidi@gmail.com> - 6.9.2.1-1
+- 更新到 6.9.2.1
+
 * Sun Mar 01 2015 Liu Di <liudidi@gmail.com> - 6.9.0.9-4
 - 更新到 6.9.0.9
 

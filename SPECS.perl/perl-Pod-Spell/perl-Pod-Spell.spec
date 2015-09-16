@@ -1,12 +1,12 @@
 Name:           perl-Pod-Spell
-Version:        1.01
-Release:        16%{?dist}
+Version:	1.17
+Release:	2%{?dist}
 Summary:        A formatter for spellchecking Pod
 
 Group:          Development/Libraries
 License:        GPL+ or Artistic
 URL:            http://search.cpan.org/dist/Pod-Spell/
-Source0:        http://www.cpan.org/authors/id/S/SB/SBURKE/Pod-Spell-%{version}.tar.gz
+Source0:        http://search.cpan.org/CPAN/authors/id/X/XE/XENO/Pod-Spell-%{version}.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildArch:      noarch
@@ -49,13 +49,19 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(-,root,root,-)
-%doc ChangeLog README
 %{_bindir}/podspell
 %{perl_vendorlib}/Pod/
 %{_mandir}/man3/*.3pm*
-
+%{_mandir}/man1/podspell.1*
+%{perl_vendorlib}/auto/share/dist/Pod-Spell/wordlist
 
 %changelog
+* Mon Sep 14 2015 Liu Di <liudidi@gmail.com> - 1.17-2
+- 为 Magic 3.0 重建
+
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.17-1
+- 更新到 1.17
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.01-16
 - 为 Magic 3.0 重建
 

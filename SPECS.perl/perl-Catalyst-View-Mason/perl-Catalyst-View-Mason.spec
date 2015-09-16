@@ -1,11 +1,11 @@
 Name:           perl-Catalyst-View-Mason
-Version:        0.18
-Release:        22%{?dist}
+Version:	0.19
+Release:	1%{?dist}
 Summary:        Mason View Class
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 URL:            http://search.cpan.org/dist/Catalyst-View-Mason/
-Source0:        http://www.cpan.org/authors/id/F/FL/FLORA/Catalyst-View-Mason-%{version}.tar.gz
+Source0:        http://search.cpan.org/CPAN/authors/id/J/JJ/JJNAPIORK/Catalyst-View-Mason-%{version}.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 BuildRequires:  perl(Catalyst) >= 5.50
@@ -57,6 +57,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.19-1
+- 更新到 0.19
+
 * Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 0.18-22
 - 为 Magic 3.0 重建
 

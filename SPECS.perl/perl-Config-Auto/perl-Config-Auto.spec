@@ -1,6 +1,6 @@
 Name:           perl-Config-Auto
-Version:        0.38
-Release:        13%{?dist}
+Version:	0.44
+Release:	1%{?dist}
 Summary:        Magical config file parser
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -47,6 +47,9 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.44-1
+- 更新到 0.44
+
 * Sun Jun 15 2014 Liu Di <liudidi@gmail.com> - 0.38-13
 - 为 Magic 3.0 重建
 

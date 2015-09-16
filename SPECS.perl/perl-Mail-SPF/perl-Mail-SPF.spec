@@ -1,11 +1,11 @@
 Name:           perl-Mail-SPF
-Version:        2.007
-Release:        14%{?dist}
+Version:	2.9.0
+Release:	1%{?dist}
 Summary:        Object-oriented implementation of Sender Policy Framework
 License:        BSD
 Group:          Development/Libraries
 URL:            http://search.cpan.org/dist/Mail-SPF/
-Source0:        http://www.cpan.org/authors/id/J/JM/JMEHNLE/mail-spf/Mail-SPF-v%{version}.tar.gz
+Source0:        http://search.cpan.org/CPAN/authors/id/J/JM/JMEHNLE/mail-spf/Mail-SPF-v%{version}.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 BuildRequires:  perl(Error)

@@ -1,6 +1,6 @@
 Name:           perl-DBD-XBase
-Version:        1.03
-Release:        12%{?dist}
+Version:	1.05
+Release:	1%{?dist}
 Summary:        Perl module for reading and writing the dbf files
 
 Group:          Development/Libraries
@@ -68,6 +68,12 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Tue Sep 15 2015 Liu Di <liudidi@gmail.com> - 1.05-1
+- 更新到 1.05
+
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.03-13
+- 为 Magic 3.0 重建
+
 * Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 1.03-12
 - 为 Magic 3.0 重建
 

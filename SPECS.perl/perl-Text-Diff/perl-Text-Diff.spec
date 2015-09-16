@@ -1,11 +1,11 @@
 Name:           perl-Text-Diff
-Version:        1.41
-Release:        5%{?dist}
+Version:	1.43
+Release:	1%{?dist}
 Summary:        Perform diffs on files and record sets
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 URL:            http://search.cpan.org/dist/Text-Diff/
-Source0:        http://search.cpan.org/CPAN/authors/id/O/OV/OVID/Text-Diff-%{version}.tar.gz
+Source0:        http://search.cpan.org/CPAN/authors/id/N/NE/NEILB/Text-Diff-%{version}.tar.gz
 BuildArch:      noarch
 BuildRequires:  perl(constant)
 BuildRequires:  perl(Algorithm::Diff)
@@ -49,6 +49,9 @@ find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.43-1
+- 更新到 1.43
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.41-5
 - 为 Magic 3.0 重建
 

@@ -1,10 +1,10 @@
 %global cpan_version_major 0.42
-%global cpan_version_minor 11
+%global cpan_version_minor 14
 %global cpan_version %{cpan_version_major}%{?cpan_version_minor}
 
 Name:           perl-Module-Build
 Epoch:          2
-Version:        %{cpan_version_major}%{?cpan_version_minor:.%cpan_version_minor}
+Version:        %{cpan_version_major}%{?cpan_version_minor}
 Release:	1%{?dist}
 Summary:        Build and install Perl modules
 License:        GPL+ or Artistic
@@ -111,6 +111,9 @@ LANG=C TEST_SIGNATURE=1 MB_TEST_EXPERIMENTAL=1 ./Build test
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com>
+- 更新到 0.42.14
+
 * Fri Apr 24 2015 Liu Di <liudidi@gmail.com> - 2:0.42.11-1
 - 更新到 0.42.11
 

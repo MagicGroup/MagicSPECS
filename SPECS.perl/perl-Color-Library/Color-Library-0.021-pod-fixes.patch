@@ -1,0 +1,49 @@
+Description: various POD fixes
+Origin: vendor
+Author: gregor herrmann <gregoa@debian.org>
+Last-Update: 2013-06-09
+
+--- a/lib/Color/Library/Color.pm
++++ b/lib/Color/Library/Color.pm
+@@ -227,6 +227,8 @@
+ 
+ =cut
+ 
++=back
++
+ # Partly taken from Imager/Color.pm
+ sub parse_rgb_color {
+     return (@_) if @_ == 3 && ! grep /[^\d.+eE-]/, @_;
+--- a/lib/Color/Library/Dictionary.pm
++++ b/lib/Color/Library/Dictionary.pm
+@@ -227,6 +227,8 @@
+ 
+ Returns the description of $dictionary, if any
+ 
++=back
++
+ =cut
+ 
+ sub description {
+--- a/lib/Color/Library/Dictionary/NBS_ISCC/H.pm
++++ b/lib/Color/Library/Dictionary/NBS_ISCC/H.pm
+@@ -11,6 +11,8 @@
+ 
+ =pod
+ 
++=encoding latin1
++
+ =head1 NAME
+ 
+ Color::Library::Dictionary::NBS_ISCC::H - (NBS/ISCC H) Horticultural Colour Charts
+--- a/lib/Color/Library/Dictionary/NBS_ISCC/M.pm
++++ b/lib/Color/Library/Dictionary/NBS_ISCC/M.pm
+@@ -11,6 +11,8 @@
+ 
+ =pod
+ 
++=encoding latin1
++
+ =head1 NAME
+ 
+ Color::Library::Dictionary::NBS_ISCC::M - (NBS/ISCC M) Dictionary of Color

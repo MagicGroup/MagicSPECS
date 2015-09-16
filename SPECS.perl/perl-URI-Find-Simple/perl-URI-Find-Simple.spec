@@ -1,11 +1,11 @@
 Name:           perl-URI-Find-Simple
-Version:        1.03
-Release:        13%{?dist}
+Version:	1.06
+Release:	1%{?dist}
 Summary:        Simple interface to URI::Find
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 URL:            http://search.cpan.org/dist/URI-Find-Simple/
-Source0:        http://www.cpan.org/authors/id/T/TO/TOMI/URI-Find-Simple-%{version}.tar.gz
+Source0:        http://search.cpan.org/CPAN/authors/id/N/NE/NEILB/URI-Find-Simple-%{version}.tar.gz
 BuildArch:      noarch
 BuildRequires:  perl(lib)
 BuildRequires:  perl(Carp)
@@ -45,6 +45,9 @@ find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.06-1
+- 更新到 1.06
+
 * Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 1.03-13
 - 为 Magic 3.0 重建
 

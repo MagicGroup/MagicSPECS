@@ -1,13 +1,13 @@
 Name:           perl-ExtUtils-Depends
-Version:        0.304
-Release:        4%{?dist}
+Version:	0.404
+Release:	1%{?dist}
 Summary:        Easily build XS extensions that depend on XS extensions
 Summary(zh_CN): 基于 XS 扩展简单建立 XS 扩展
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 Group(zh_CN):	开发/库
 URL:            http://search.cpan.org/dist/ExtUtils-Depends/
-Source0:        http://www.cpan.org/authors/id/T/TS/TSCH/ExtUtils-Depends-%{version}.tar.gz
+Source0:        http://search.cpan.org/CPAN/authors/id/X/XA/XAOC/ExtUtils-Depends-%{version}.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 BuildRequires:  perl(ExtUtils::MakeMaker)
@@ -53,6 +53,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.404-1
+- 更新到 0.404
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.304-4
 - 为 Magic 3.0 重建
 

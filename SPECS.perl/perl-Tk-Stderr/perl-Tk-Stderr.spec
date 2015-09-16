@@ -1,6 +1,6 @@
 Name:           perl-Tk-Stderr
 Version:        1.2
-Release:        17%{?dist}
+Release:        18%{?dist}
 Summary:        Capture standard error output, display in separate window for Perl::Tk
 
 Group:          Development/Libraries
@@ -52,6 +52,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.2-18
+- 为 Magic 3.0 重建
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.2-17
 - 为 Magic 3.0 重建
 

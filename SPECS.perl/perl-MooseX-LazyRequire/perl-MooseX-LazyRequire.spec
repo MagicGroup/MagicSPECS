@@ -1,6 +1,6 @@
 Name:           perl-MooseX-LazyRequire
-Version:        0.09
-Release:        5%{?dist}
+Version:	0.11
+Release:	1%{?dist}
 Summary:        Required attributes which fail only when trying to use them
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -52,6 +52,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.11-1
+- 更新到 0.11
+
 * Fri Jun 20 2014 Liu Di <liudidi@gmail.com> - 0.09-5
 - 为 Magic 3.0 重建
 

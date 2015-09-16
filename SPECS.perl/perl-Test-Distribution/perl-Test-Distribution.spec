@@ -1,6 +1,6 @@
 Name:		perl-Test-Distribution
 Version:	2.00
-Release:	20%{?dist}
+Release:	21%{?dist}
 Summary:	Perform tests on all modules of a distribution
 License:	GPL+ or Artistic
 Group:		Development/Libraries
@@ -58,6 +58,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/Test::Distribution.3pm*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 2.00-21
+- 为 Magic 3.0 重建
+
 * Sun Jun 15 2014 Liu Di <liudidi@gmail.com> - 2.00-20
 - 为 Magic 3.0 重建
 

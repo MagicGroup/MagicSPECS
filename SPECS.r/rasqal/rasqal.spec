@@ -1,9 +1,11 @@
 Name:           rasqal
-Version:        0.9.29
-Release:        3%{?dist}
+Version:	0.9.33
+Release:	1%{?dist}
 Summary:        RDF Query Library
+Summary(zh_CN.UTF-8): RDF 查询库
 
 Group:          System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 License:        LGPLv2+ or ASL 2.0
 URL:            http://librdf.org/rasqal/
 Source:         http://download.librdf.org/source/%{name}-%{version}.tar.gz
@@ -23,13 +25,19 @@ Description Framework (RDF) including parsing query syntaxes, constructing
 the queries, executing them and returning result formats.  It currently
 handles the RDF Data Query Language (RDQL) and SPARQL Query language.
 
+%description -l zh_CN.UTF-8
+RDF 查询库。
+
 %package        devel
 Summary:        Development files for the Rasqal RDF libraries
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       %{name}%{?_isa} = %{version}-%{release}
 %description    devel
 Libraries, includes etc to develop with the Rasqal RDF query language library.
-
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -97,6 +105,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sat Sep 12 2015 Liu Di <liudidi@gmail.com> - 0.9.33-1
+- 更新到 0.9.33
+
 * Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 0.9.29-3
 - 为 Magic 3.0 重建
 

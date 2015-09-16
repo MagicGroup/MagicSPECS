@@ -1,6 +1,6 @@
 Name:           perl-Pod-Xhtml
 Version:        1.61
-Release:        16%{?dist}
+Release:        17%{?dist}
 Summary:        Generate well-formed XHTML documents from POD format documentation
 License:        GPLv2+
 URL:            http://search.cpan.org/dist/Pod-Xhtml/
@@ -46,6 +46,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Tue Sep 15 2015 Liu Di <liudidi@gmail.com> - 1.61-17
+- 为 Magic 3.0 重建
+
 * Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.61-16
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

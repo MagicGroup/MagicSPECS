@@ -1,7 +1,7 @@
 Name:           perl-threads
 Epoch:          1
-Version:        1.92
-Release:        4%{?dist}
+Version:	2.02
+Release:	2%{?dist}
 Summary:        Perl interpreter-based threads
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -64,6 +64,12 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1:2.02-2
+- 为 Magic 3.0 重建
+
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1:2.02-1
+- 更新到 2.02
+
 * Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 1:1.92-4
 - 为 Magic 3.0 重建
 

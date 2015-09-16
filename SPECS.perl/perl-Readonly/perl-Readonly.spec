@@ -1,12 +1,12 @@
 Name:		perl-Readonly
-Version:	1.03
-Release:	23%{?dist}
+Version:	2.00
+Release:	1%{?dist}
 Summary:	Facility for creating read-only scalars, arrays, hashes
 Group:		Development/Libraries
 License:	GPL+ or Artistic
 URL:		http://search.cpan.org/dist/Readonly/
-Source0:	http://search.cpan.org/CPAN/authors/id/R/RO/ROODE/Readonly-%{version}.tar.gz
-Patch0:		Readonly-1.03-interpreter.patch
+Source0:        http://search.cpan.org/CPAN/authors/id/S/SA/SANKO/Readonly-%{version}.tar.gz
+Patch0:		Readonly-1.61-interpreter.patch
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(id -nu)
 BuildArch:	noarch
 BuildRequires:	perl(Carp)
@@ -44,31 +44,24 @@ Readonly:
 %patch0
 
 %build
-perl Makefile.PL INSTALLDIRS=vendor
-make %{?_smp_mflags}
+perl Build.PL installdirs=vendor
+./Build
 
 %install
-rm -rf %{buildroot}
-make pure_install DESTDIR=%{buildroot}
-find %{buildroot} -type f -name .packlist -exec rm -f {} ';'
-%{_fixperms} %{buildroot}
-
-# We're having this as %%doc
-mv %{buildroot}%{perl_vendorlib}/benchmark.pl .
+./Build install --destdir=%{buildroot} --create_packlist=0
 
 %check
-
-
-%clean
-rm -rf %{buildroot}
+./Build test
 
 %files
-%defattr(-,root,root,-)
-%doc Changes README benchmark.pl t/
+%doc Changes LICENSE README.md eg/benchmark.pl t/
 %{perl_vendorlib}/Readonly.pm
 %{_mandir}/man3/Readonly.3pm*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 2.00-1
+- 更新到 2.00
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.03-23
 - 为 Magic 3.0 重建
 

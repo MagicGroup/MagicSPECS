@@ -1,6 +1,6 @@
 Name:           perl-File-Next
-Version:        1.06
-Release:        9%{?dist}
+Version:	1.12
+Release:	1%{?dist}
 Summary:        File::Next Perl module
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -44,11 +44,13 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(-,root,root,-)
-%doc Changes perlcriticrc README
 %{perl_vendorlib}/*
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.12-1
+- 更新到 1.12
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.06-9
 - 为 Magic 3.0 重建
 

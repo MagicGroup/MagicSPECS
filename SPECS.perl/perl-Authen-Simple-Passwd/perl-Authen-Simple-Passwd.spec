@@ -1,6 +1,6 @@
 Name:           perl-Authen-Simple-Passwd
 Version:        0.6
-Release:        14%{?dist}
+Release:        15%{?dist}
 Summary:        Simple Passwd authentication
 Summary(zh_CN.UTF-8): 简单密码认证模块
 License:        GPL+ or Artistic
@@ -59,6 +59,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.6-15
+- 为 Magic 3.0 重建
+
 * Fri Apr 24 2015 Liu Di <liudidi@gmail.com> - 0.6-14
 - 为 Magic 3.0 重建
 

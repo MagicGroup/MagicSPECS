@@ -7,8 +7,8 @@
 %endif
 
 Name:           perl-DBI
-Version:        1.622
-Release:        18%{?dist}
+Version:	1.634
+Release:	1%{?dist}
 Summary:        A database access API for perl
 Group:          Development/Libraries
 License:        GPL+ or Artistic
@@ -111,7 +111,6 @@ perl -pi -e 's"#!perl -w"#!/usr/bin/perl -w"' \
 
 %files
 # Changes already packaged as DBI::Changes
-%doc README ex/
 %{_bindir}/dbipro*
 %{_bindir}/dbilogstrip
 %{perl_vendorarch}/*.p*
@@ -123,6 +122,12 @@ perl -pi -e 's"#!perl -w"#!/usr/bin/perl -w"' \
 %{_mandir}/man3/*.3*
 
 %changelog
+* Tue Sep 15 2015 Liu Di <liudidi@gmail.com> - 1.634-1
+- 更新到 1.634
+
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.622-19
+- 为 Magic 3.0 重建
+
 * Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 1.622-18
 - 为 Magic 3.0 重建
 

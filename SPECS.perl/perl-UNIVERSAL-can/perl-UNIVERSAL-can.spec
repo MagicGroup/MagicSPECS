@@ -1,6 +1,6 @@
 Name:           perl-UNIVERSAL-can
-Version:        1.15
-Release:        16%{?dist}
+Version:	1.20140328
+Release:	2%{?dist}
 Summary:        Hack around people calling UNIVERSAL::can() as a function
 
 Group:          Development/Libraries
@@ -30,34 +30,32 @@ their bad code can break your good code.
 %prep
 %setup -q -n UNIVERSAL-can-%{version}
 
-
 %build
-%{__perl} Build.PL installdirs=vendor
-./Build
-
+perl Makefile.PL INSTALLDIRS=vendor
+make %{?_smp_mflags}
 
 %install
-rm -rf $RPM_BUILD_ROOT
-./Build install destdir=$RPM_BUILD_ROOT create_packlist=0
-chmod -R u+w $RPM_BUILD_ROOT/*
-
+make pure_install DESTDIR=%{buildroot}
+find %{buildroot} -type f -name .packlist -exec rm -f {} ';'
+find %{buildroot} -depth -type d -exec rmdir {} ';' 2>/dev/null
+%{_fixperms} %{buildroot}
 
 %check
-PERL_RUN_ALL_TESTS=1 ./Build test
-
-
-%clean
-rm -rf $RPM_BUILD_ROOT
-
+PERL_RUN_ALL_TESTS=1 make test
 
 %files
-%defattr(-,root,root,-)
 %doc Changes README
 %{perl_vendorlib}/UNIVERSAL/
 %{_mandir}/man3/*.3*
 
 
 %changelog
+* Mon Sep 14 2015 Liu Di <liudidi@gmail.com> - 1.20140328-2
+- 为 Magic 3.0 重建
+
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.20140328-1
+- 更新到 1.20140328
+
 * Sun Jun 15 2014 Liu Di <liudidi@gmail.com> - 1.15-16
 - 为 Magic 3.0 重建
 

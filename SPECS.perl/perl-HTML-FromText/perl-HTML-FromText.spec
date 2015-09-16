@@ -1,12 +1,12 @@
 Name:           perl-HTML-FromText
-Version:        2.05
-Release:        22%{?dist}
+Version:	2.07
+Release:	2%{?dist}
 Summary:        Convert plain text to HTML
 
 Group:          Development/Libraries
 License:        GPL+ or Artistic
 URL:            http://search.cpan.org/dist/HTML-FromText/
-Source0:        http://search.cpan.org/CPAN/authors/id/C/CW/CWEST/HTML-FromText-%{version}.tar.gz
+Source0:        http://search.cpan.org/CPAN/authors/id/R/RJ/RJBS/HTML-FromText-%{version}.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildArch:      noarch
@@ -64,6 +64,12 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Mon Sep 14 2015 Liu Di <liudidi@gmail.com> - 2.07-2
+- 为 Magic 3.0 重建
+
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 2.07-1
+- 更新到 2.07
+
 * Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 2.05-22
 - 为 Magic 3.0 重建
 

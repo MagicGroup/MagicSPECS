@@ -1,6 +1,6 @@
 Name:           perl-Math-Round
-Version:        0.06
-Release:        16%{?dist}
+Version:	0.07
+Release:	1%{?dist}
 Summary:        Perl extension for rounding numbers
 Group:          Development/Libraries
 License:        GPL+ or Artistic
@@ -53,6 +53,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/Math::Round.3pm*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.07-1
+- 更新到 0.07
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.06-16
 - 为 Magic 3.0 重建
 

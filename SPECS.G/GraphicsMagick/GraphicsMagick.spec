@@ -4,8 +4,8 @@
 
 Summary: An ImageMagick fork, offering faster image generation and better quality
 Name: GraphicsMagick
-Version:	1.3.19
-Release: 2%{?dist}
+Version:	1.3.21
+Release: 1%{?dist}
 License: MIT
 Group: Applications/Multimedia
 Source0: http://downloads.sourceforge.net/sourceforge/graphicsmagick/GraphicsMagick-%{version}.tar.xz
@@ -234,7 +234,7 @@ rm -rf %{buildroot}
 
 %files c++
 %defattr(-,root,root,-)
-%{_libdir}/libGraphicsMagick++.so.3*
+%{_libdir}/libGraphicsMagick++.so.*
 
 %files c++-devel
 %defattr(-,root,root,-)
@@ -252,6 +252,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Sep 15 2015 Liu Di <liudidi@gmail.com> - 1.3.21-1
+- 更新到 1.3.21
+
 * Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 1.3.19-2
 - 为 Magic 3.0 重建
 

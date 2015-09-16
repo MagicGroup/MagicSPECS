@@ -1,7 +1,7 @@
 Summary:	Typical installation tasks for system administrators
 Name:		perl-Sysadm-Install
-Version:	0.44
-Release:	3%{?dist}
+Version:	0.46
+Release:	1%{?dist}
 License:	GPL+ or Artistic
 Group:		Development/Libraries
 URL:		http://search.cpan.org/dist/Sysadm-Install/
@@ -75,6 +75,9 @@ find %{buildroot} -type f -name .packlist -exec rm -f {} ';'
 %{_mandir}/man3/Sysadm::Install.3pm*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.46-1
+- 更新到 0.46
+
 * Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 0.44-3
 - 为 Magic 3.0 重建
 

@@ -1,6 +1,6 @@
 Name:           perl-Module-CPANfile
 Version:        1.1001
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Parse cpanfile
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -68,6 +68,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Tue Sep 15 2015 Liu Di <liudidi@gmail.com> - 1.1001-2
+- 为 Magic 3.0 重建
+
 * Mon Sep 07 2015 Jitka Plesnikova <jplesnik@redhat.com> - 1.1001-1
 - 1.1001 bump
 

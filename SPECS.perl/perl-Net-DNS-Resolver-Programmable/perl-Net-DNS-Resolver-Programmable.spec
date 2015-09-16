@@ -1,11 +1,11 @@
 Name:           perl-Net-DNS-Resolver-Programmable
-Version:        0.003
-Release:        21%{?dist}
+Version:	0.003
+Release:	23%{?dist}
 Summary:        Programmable DNS resolver class for offline emulation of DNS
 License:        GPLv2+ or Artistic
 Group:          Development/Libraries
 URL:            http://search.cpan.org/dist/Net-DNS-Resolver-Programmable/
-Source0:        http://www.cpan.org/authors/id/J/JM/JMEHNLE/net-dns-resolver-programmable/Net-DNS-Resolver-Programmable-v%{version}.tar.gz
+Source0:        http://search.cpan.org/CPAN/authors/id/J/JM/JMEHNLE/net-dns-resolver-programmable/Net-DNS-Resolver-Programmable-v%{version}.tar.gz
 BuildArch:      noarch
 BuildRequires:  perl(Module::Build)
 Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))

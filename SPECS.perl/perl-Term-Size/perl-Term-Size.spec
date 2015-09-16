@@ -1,6 +1,6 @@
 Name:       perl-Term-Size 
 Version:    0.207
-Release:    4%{?dist}
+Release:    5%{?dist}
 # see Copyright
 License:    GPL+ or Artistic 
 Group:      Development/Libraries
@@ -60,6 +60,9 @@ find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null ';'
 %{_mandir}/man3/*.3*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.207-5
+- 为 Magic 3.0 重建
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.207-4
 - 为 Magic 3.0 重建
 

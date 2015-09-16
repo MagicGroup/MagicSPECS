@@ -1,6 +1,6 @@
 Name:           perl-HTML-FormHandler
-Version:        0.36001
-Release:        12%{?dist}
+Version:	0.40063
+Release:	1%{?dist}
 Summary:        HTML forms using Moose
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -83,6 +83,9 @@ find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.40063-1
+- 更新到 0.40063
+
 * Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 0.36001-12
 - 为 Magic 3.0 重建
 

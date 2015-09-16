@@ -1,6 +1,6 @@
 Name:           perl-XML-Simple
 Version:        2.20
-Release:        11%{?dist}
+Release:        12%{?dist}
 Summary:        Easy API to maintain XML in Perl
 Group:          Development/Libraries
 License:        GPL+ or Artistic
@@ -59,6 +59,9 @@ chmod -R u+w %{buildroot}/*
 %{_mandir}/man3/*.3*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 2.20-12
+- 为 Magic 3.0 重建
+
 * Sun Jun 15 2014 Liu Di <liudidi@gmail.com> - 2.20-11
 - 为 Magic 3.0 重建
 

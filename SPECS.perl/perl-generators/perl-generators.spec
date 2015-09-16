@@ -1,6 +1,6 @@
 Name:           perl-generators
 Version:        1.04
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        RPM Perl dependencies generators
 Group:          Development/Libraries
 License:        GPL+
@@ -48,6 +48,9 @@ make test
 %{_rpmconfigdir}/fileattrs/perl*.attr
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.04-3
+- 为 Magic 3.0 重建
+
 * Fri Aug 14 2015 Liu Di <liudidi@gmail.com> - 1.04-2
 - 为 Magic 3.0 重建
 

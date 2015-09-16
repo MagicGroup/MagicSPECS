@@ -1,7 +1,7 @@
 %global cpan_version 0.999_002
 Name:           perl-Perl-Critic-Moose
-Version:        %(echo %{cpan_version} | tr '_' '.')
-Release:        10%{?dist}
+Version:	1.03
+Release:	1%{?dist}
 Summary:        Policies for Perl::Critic concerned with using Moose
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -61,6 +61,9 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.03-1
+- 更新到 1.03
+
 * Sun Jun 15 2014 Liu Di <liudidi@gmail.com> - 0.999.002-10
 - 为 Magic 3.0 重建
 

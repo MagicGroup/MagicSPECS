@@ -1,6 +1,6 @@
 Name:       perl-Test-Dependencies 
 Version:    0.12
-Release:    11%{?dist}
+Release:    12%{?dist}
 # see lib/Test/Dependencies.pm
 License:    GPL+ or Artistic
 Group:      Development/Libraries
@@ -76,6 +76,9 @@ make test
 %{_mandir}/man3/*.3*
 
 %changelog
+* Mon Sep 14 2015 Liu Di <liudidi@gmail.com> - 0.12-12
+- 为 Magic 3.0 重建
+
 * Wed Jun 17 2015 Petr Pisar <ppisar@redhat.com> - 0.12-11
 - Perl 5.22 rebuild
 - Specify all dependencies

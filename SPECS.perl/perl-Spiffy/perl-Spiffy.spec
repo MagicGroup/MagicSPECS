@@ -1,6 +1,6 @@
 Name:           perl-Spiffy
-Version:        0.30
-Release:        22%{?dist}
+Version:	0.46
+Release:	1%{?dist}
 Summary:        Framework for doing object oriented (OO) programming in Perl
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -61,10 +61,14 @@ rm -rf $RPM_BUILD_ROOT
 %files
 %defattr(-,root,root,-)
 %doc Changes README
-%{perl_vendorlib}/Spiffy.pm
+%{perl_vendorlib}/Spiffy.*
+%{perl_vendorlib}/Spiffy/mixin.pm
 %{_mandir}/man3/Spiffy.3pm*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.46-1
+- 更新到 0.46
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.30-22
 - 为 Magic 3.0 重建
 

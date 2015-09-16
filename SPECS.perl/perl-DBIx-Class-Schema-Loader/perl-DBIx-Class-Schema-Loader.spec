@@ -1,10 +1,10 @@
 Name:           perl-DBIx-Class-Schema-Loader
 Summary:        Dynamic definition of a DBIx::Class::Schema
-Version:        0.07033
-Release:        12%{?dist}
+Version:	0.07043
+Release:	2%{?dist}
 License:        GPL+ or Artistic
 Group:          Development/Libraries
-Source0:        http://search.cpan.org/CPAN/authors/id/R/RK/RKITOVER/DBIx-Class-Schema-Loader-%{version}.tar.gz
+Source0:        http://search.cpan.org/CPAN/authors/id/I/IL/ILMARI/DBIx-Class-Schema-Loader-%{version}.tar.gz
 URL:            http://search.cpan.org/dist/DBIx-Class-Schema-Loader/
 Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
 BuildArch:      noarch
@@ -111,6 +111,12 @@ make test
 %{_bindir}/*
 
 %changelog
+* Mon Sep 14 2015 Liu Di <liudidi@gmail.com> - 0.07043-2
+- 为 Magic 3.0 重建
+
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.07043-1
+- 更新到 0.07043
+
 * Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 0.07033-12
 - 为 Magic 3.0 重建
 

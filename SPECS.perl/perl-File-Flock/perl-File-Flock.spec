@@ -1,6 +1,6 @@
 Name:           perl-File-Flock
-Version:        2008.01
-Release:        12%{?dist}
+Version:	2014.01
+Release:	1%{?dist}
 Summary:        File locking with flock
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -41,11 +41,13 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(-,root,root,-)
-%doc CHANGELOG README
 %{perl_vendorlib}/*
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 2014.01-1
+- 更新到 2014.01
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 2008.01-12
 - 为 Magic 3.0 重建
 

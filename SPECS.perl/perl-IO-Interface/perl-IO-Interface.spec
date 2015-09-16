@@ -1,6 +1,6 @@
 Name:           perl-IO-Interface
-Version:        1.05
-Release:        11%{?dist}
+Version:	1.09
+Release:	1%{?dist}
 Summary:        Perl extension for accessing network card configuration information
 
 Group:          Development/Libraries
@@ -23,38 +23,27 @@ methods, you can use a function-oriented style.
 %prep
 %setup -q -n IO-Interface-%{version}
 
-
 %build
-%{__perl} Makefile.PL INSTALLDIRS=vendor OPTIMIZE="$RPM_OPT_FLAGS"
-make %{?_smp_mflags}
-
+%{__perl} Build.PL installdirs=vendor optimize="$RPM_OPT_FLAGS"
+./Build
 
 %install
-rm -rf $RPM_BUILD_ROOT
-make pure_install PERL_INSTALL_ROOT=$RPM_BUILD_ROOT
-find $RPM_BUILD_ROOT -type f -name .packlist -exec rm -f {} ';'
-find $RPM_BUILD_ROOT -type f -name '*.bs' -empty -exec rm -f {} ';'
-find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null ';'
+./Build install destdir=$RPM_BUILD_ROOT create_packlist=0
 chmod -R u+w $RPM_BUILD_ROOT/*
 
-
 %check
-
-
-
-%clean
-rm -rf $RPM_BUILD_ROOT
-
+./Build test
 
 %files
-%defattr(-,root,root,-)
-%doc Changes README
+%doc Changes README.md
 %{perl_vendorarch}/IO/
 %{perl_vendorarch}/auto/IO/
 %{_mandir}/man3/*.3pm*
 
-
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.09-1
+- 更新到 1.09
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.05-11
 - 为 Magic 3.0 重建
 

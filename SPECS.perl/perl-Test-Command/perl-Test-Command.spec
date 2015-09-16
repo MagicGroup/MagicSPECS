@@ -1,6 +1,6 @@
 Name:           perl-Test-Command
-Version:        0.08
-Release:        12%{?dist}
+Version:	0.11
+Release:	1%{?dist}
 Summary:        Test routines for external commands
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -46,6 +46,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.11-1
+- 更新到 0.11
+
 * Sun Jun 15 2014 Liu Di <liudidi@gmail.com> - 0.08-12
 - 为 Magic 3.0 重建
 

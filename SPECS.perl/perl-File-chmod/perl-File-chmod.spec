@@ -1,11 +1,11 @@
 Name:           perl-File-chmod
-Version:        0.32
-Release:        18%{?dist}
+Version:	0.42
+Release:	1%{?dist}
 Summary:        Implements symbolic and ls chmod modes
 Group:          Development/Libraries
 License:        GPL+ or Artistic
 URL:            http://search.cpan.org/dist/File-chmod/
-Source0:        http://search.cpan.org/CPAN/authors/id/P/PI/PINYAN/File-chmod-%{version}.tar.gz
+Source0:        http://search.cpan.org/CPAN/authors/id/X/XE/XENO/File-chmod-%{version}.tar.gz
 BuildArch:      noarch
 BuildRequires:  perl(Carp)
 BuildRequires:  perl(Exporter)
@@ -38,6 +38,9 @@ chmod -R u+w %{buildroot}/*
 %{_mandir}/man3/*.3*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.42-1
+- 更新到 0.42
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.32-18
 - 为 Magic 3.0 重建
 

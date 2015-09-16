@@ -1,6 +1,6 @@
 Name:           perl-Getopt-GUI-Long
-Version:        0.91
-Release:        11%{?dist}
+Version:	0.93
+Release:	1%{?dist}
 Summary:        A wrapper around Getopt::Long to provide a GUI to applications
 License:        GPL+ or Artistic 
 Group:          Development/Libraries
@@ -73,6 +73,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.93-1
+- 更新到 0.93
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.91-11
 - 为 Magic 3.0 重建
 

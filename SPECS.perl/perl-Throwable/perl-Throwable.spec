@@ -1,6 +1,6 @@
 Name:           perl-Throwable
-Version:        0.102080
-Release:        13%{?dist}
+Version:	0.200013
+Release:	1%{?dist}
 Summary:        Role for classes that can be thrown
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -50,6 +50,9 @@ RELEASE_TESTING=1 make test
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.200013-1
+- 更新到 0.200013
+
 * Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 0.102080-13
 - 为 Magic 3.0 重建
 

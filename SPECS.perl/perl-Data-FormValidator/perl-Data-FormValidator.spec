@@ -1,6 +1,6 @@
 Name:           perl-Data-FormValidator
-Version:        4.80
-Release:        12%{?dist}
+Version:	4.81
+Release:	1%{?dist}
 Summary:        Validates user input (usually from an HTML form) based on input profile
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -59,6 +59,9 @@ simple format.
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 4.81-1
+- 更新到 4.81
+
 * Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 4.80-12
 - 为 Magic 3.0 重建
 

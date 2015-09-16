@@ -1,6 +1,6 @@
 Name:           perl-Class-DBI-Pg
 Version:        0.09
-Release:        21%{?dist}
+Release:        22%{?dist}
 Summary:        Class::DBI extension for PostgreSQL
 Group:          Development/Libraries
 License:        GPL+ or Artistic
@@ -39,6 +39,9 @@ chmod -R u+w $RPM_BUILD_ROOT/*
 %{_mandir}/man3/*.3*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.09-22
+- 为 Magic 3.0 重建
+
 * Thu Jun 19 2014 Liu Di <liudidi@gmail.com> - 0.09-21
 - 为 Magic 3.0 重建
 

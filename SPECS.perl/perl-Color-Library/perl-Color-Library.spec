@@ -1,12 +1,13 @@
 Name:           perl-Color-Library
-Version:        0.02
-Release:        19%{?dist}
+Version:	0.021
+Release:	1%{?dist}
 Summary:        Easy-to-use and comprehensive named-color library
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 URL:            http://search.cpan.org/dist/Color-Library/
-Source0:        http://www.cpan.org/authors/id/R/RK/RKRIMEN/Color-Library-%{version}.tar.gz
-Patch0:         Color-Library-0.02-UTF8.patch
+Source0:        http://search.cpan.org/CPAN/authors/id/R/RO/ROKR/Color-Library-%{version}.tar.gz
+# Fix POD syntax, CPAN RT#86023
+Patch0:         Color-Library-0.021-pod-fixes.patch
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 BuildRequires:  perl(Class::Accessor::Fast)
@@ -30,30 +31,26 @@ x11 colors, and more.
 %patch0 -p1
 
 %build
-%{__perl} Build.PL installdirs=vendor
-./Build
+perl Makefile.PL INSTALLDIRS=vendor
+make %{?_smp_mflags}
 
 %install
-rm -rf $RPM_BUILD_ROOT
-
-./Build install destdir=$RPM_BUILD_ROOT create_packlist=0
-find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
-
+make pure_install DESTDIR=$RPM_BUILD_ROOT
+find $RPM_BUILD_ROOT -type f -name .packlist -exec rm -f {} \;
 %{_fixperms} $RPM_BUILD_ROOT/*
 
 %check
-./Build test
-
-%clean
-rm -rf $RPM_BUILD_ROOT
+make test
 
 %files
-%defattr(-,root,root,-)
 %doc Changes README
 %{perl_vendorlib}/*
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.021-1
+- 更新到 0.021
+
 * Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 0.02-19
 - 为 Magic 3.0 重建
 

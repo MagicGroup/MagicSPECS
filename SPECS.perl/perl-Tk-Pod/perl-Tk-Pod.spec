@@ -6,8 +6,8 @@
 %endif
 
 Name:           perl-Tk-Pod
-Version:        0.9940
-Release:        5%{?dist}
+Version:	0.9942_50
+Release:	1%{?dist}
 Summary:        Pod browser top-level widget
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -84,6 +84,9 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_mandir}/man1/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.9942_50-1
+- 更新到 0.9942_50
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.9940-5
 - 为 Magic 3.0 重建
 

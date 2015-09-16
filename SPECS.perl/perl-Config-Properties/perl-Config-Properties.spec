@@ -1,12 +1,11 @@
 Name:           perl-Config-Properties
-Version:        1.73
-Release:        6%{?dist}
+Version:	1.80
+Release:	1%{?dist}
 Summary:        Read and write property files
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 URL:            http://search.cpan.org/dist/Config-Properties/
 Source0:        http://search.cpan.org/CPAN/authors/id/S/SA/SALVA/Config-Properties-%{version}.tar.gz
-Patch1:         perl-Config-Properties-1.70-always_test_PODs.patch
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 BuildRequires:  perl(ExtUtils::MakeMaker)
@@ -21,7 +20,6 @@ style property files.
 
 %prep
 %setup -q -n Config-Properties-%{version}
-%patch1 -p0
 
 # Fix files encoding
 for i in Changes README; do {
@@ -58,6 +56,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.80-1
+- 更新到 1.80
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.73-6
 - 为 Magic 3.0 重建
 

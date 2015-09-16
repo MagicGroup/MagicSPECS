@@ -1,12 +1,12 @@
 Name:           perl-ExtUtils-PkgConfig
-Version:        1.12
-Release:        16%{?dist}
+Version:	1.15
+Release:	1%{?dist}
 Summary:        Simplistic interface to pkg-config
 
 Group:          Development/Libraries
 License:        LGPLv2+
 URL:            http://search.cpan.org/dist/ExtUtils-PkgConfig/
-Source0:        http://search.cpan.org/CPAN/authors/id/T/TS/TSCH/ExtUtils-PkgConfig-%{version}.tar.gz
+Source0:        http://search.cpan.org/CPAN/authors/id/X/XA/XAOC/ExtUtils-PkgConfig-%{version}.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildArch:      noarch
@@ -59,6 +59,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.15-1
+- 更新到 1.15
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.12-16
 - 为 Magic 3.0 重建
 

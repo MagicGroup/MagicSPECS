@@ -1,6 +1,6 @@
 Name:		perl-OLE-Storage_Lite
 Version:	0.19
-Release:	9%{?dist}
+Release:	10%{?dist}
 Summary:	Simple Class for OLE document interface
 Group:		Development/Libraries
 License:	GPL+ or Artistic
@@ -43,6 +43,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*.3*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.19-10
+- 为 Magic 3.0 重建
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.19-9
 - 为 Magic 3.0 重建
 

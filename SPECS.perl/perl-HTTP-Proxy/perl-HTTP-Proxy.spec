@@ -1,14 +1,15 @@
 Name:           perl-HTTP-Proxy
-Version:        0.23
-Release:        21%{?dist}
+Version:	0.304
+Release:	1%{?dist}
 Summary:        A pure Perl HTTP proxy
 
 Group:          Development/Libraries
 License:        GPL+ or Artistic
 URL:            http://search.cpan.org/dist/HTTP-Proxy/
 Source0:        http://www.cpan.org/authors/id/B/BO/BOOK/HTTP-Proxy-%{version}.tar.gz
-Patch0:         HTTP-Proxy-0.17-save.pm.patch
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+# debugging 23connect
+Patch2:		HTTP-Proxy-0.303-23connect-logging-debug.patch
 
 BuildArch:      noarch
 BuildRequires:  perl
@@ -26,37 +27,30 @@ an origin server.
 
 %prep
 %setup -q -n HTTP-Proxy-%{version}
-%patch0 -p1
-
+%patch2 -p1 -b .logging
 
 %build
-%{__perl} Build.PL installdirs=vendor
-./Build
-
+%{__perl} Makefile.PL INSTALLDIRS=vendor
+make %{?_smp_mflags}
 
 %install
-rm -rf $RPM_BUILD_ROOT
-./Build install destdir=$RPM_BUILD_ROOT create_packlist=0
-chmod -R u+w $RPM_BUILD_ROOT/*
-
+make pure_install DESTDIR=%{buildroot}
+find %{buildroot} -type f -name .packlist -exec rm -f {} ';'
+find %{buildroot} -type f -name '*.bs' -empty -exec rm -f {} ';'
+%{_fixperms} %{buildroot}
 
 %check
-# Tests are pretty broken.
-# ./Build test
-
-
-%clean
-rm -rf $RPM_BUILD_ROOT
-
+make test
 
 %files
-%defattr(-,root,root,-)
 %doc Changes README eg/
 %{perl_vendorlib}/HTTP/
 %{_mandir}/man3/*.3pm*
 
-
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.304-1
+- 更新到 0.304
+
 * Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 0.23-21
 - 为 Magic 3.0 重建
 

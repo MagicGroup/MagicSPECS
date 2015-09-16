@@ -1,22 +1,21 @@
 Summary: A library for editing typed command lines
+Summary(zh_CN.UTF-8): 编辑命令行输入的库
 Name: readline
-Version: 6.2
-Release: 6%{?dist}
+Version:	6.3
+Release:	1%{?dist}
 License: GPLv3+
 Group: System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 URL: http://cnswww.cns.cwru.edu/php/chet/readline/rltop.html
 Source: ftp://ftp.gnu.org/gnu/readline/readline-%{version}.tar.gz
 # upstream patches
-Patch1: ftp://ftp.cwru.edu/pub/bash/readline-6.2-patches/readline62-001
+Patch1: readline6.3-upstream-patches1-6.patch
 # fix file permissions, remove RPATH, use CFLAGS
 Patch20: readline-6.2-shlib.patch
-# add TTY input audit support
-Patch21: readline-6.1-audit.patch
-# isxdigit should not be defined as macro
-Patch22:  readline-6.2-cppmacro.patch
 # add workaround for problem in gdb
 # in new version of readline needs to be deleted
 Patch23:  readline-6.2-gdb.patch
+
 Requires(post): /sbin/install-info
 Requires(preun): /sbin/install-info
 BuildRequires: ncurses-devel
@@ -30,9 +29,14 @@ of previously-entered command lines for recalling or editing those
 lines, and for performing csh-like history expansion on previous
 commands.
 
+%description -l zh_CN.UTF-8
+编辑命令行输入的库。
+
 %package devel
 Summary: Files needed to develop programs which use the readline library
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: %{name} = %{version}-%{release}
 Requires: ncurses-devel
 Requires(post): /sbin/install-info
@@ -44,21 +48,26 @@ edit typed command lines. If you want to develop programs that will
 use the readline library, you need to have the readline-devel package
 installed. You also need to have the readline package installed.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
 %package static
 Summary: Static libraries for the readline library
+Summary(zh_CN.UTF-8): %{name} 的静态库
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: %{name}-devel = %{version}-%{release}
 
 %description static
 The readline-static package contains the static version of the readline
 library.
+%description static -l zh_CN.UTF-8
+%{name} 的静态库。
 
 %prep
 %setup -q
-%patch1 -p0
+%patch1 -p1
 %patch20 -p1 -b .shlib
-%patch21 -p1 -b .audit
-%patch22 -p1 -b .cppmacro
 %patch23 -p1 -b .gdb
 
 pushd examples
@@ -87,6 +96,7 @@ done
 
 rm -rf $RPM_BUILD_ROOT%{_datadir}/readline
 rm -f $RPM_BUILD_ROOT%{_infodir}/dir*
+magic_rpm_clean.sh
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -118,7 +128,7 @@ fi
 
 %files
 %defattr(-,root,root,-)
-%doc CHANGES COPYING NEWS README USAGE
+%doc CHANGES COPYING NEWS README USAGE INSTALL
 /%{_lib}/libreadline*.so.*
 %{_libdir}/libhistory*.so.*
 %{_infodir}/history.info*
@@ -137,6 +147,9 @@ fi
 %{_libdir}/lib*.a
 
 %changelog
+* Sat Sep 12 2015 Liu Di <liudidi@gmail.com> - 6.3-1
+- 更新到 6.3
+
 * Thu Dec 20 2012 Liu Di <liudidi@gmail.com> - 6.2-6
 - 为 Magic 3.0 重建
 

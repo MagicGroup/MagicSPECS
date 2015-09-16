@@ -1,6 +1,6 @@
 Name:           perl-Email-MIME-Encodings
-Version:        1.313
-Release:        13%{?dist}
+Version:	1.315
+Release:	1%{?dist}
 Summary:        Unified interface to MIME encoding and decoding
 
 Group:          Development/Libraries
@@ -55,6 +55,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.315-1
+- 更新到 1.315
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.313-13
 - 为 Magic 3.0 重建
 

@@ -1,6 +1,6 @@
 Name:           perl-Locale-SubCountry
-Version:        1.47
-Release:        4%{?dist}
+Version:	1.64
+Release:	1%{?dist}
 Summary:        ISO 3166-2 two letter subcountry codes
 Group:          Development/Libraries
 License:        GPL+ or Artistic
@@ -57,6 +57,9 @@ find %{buildroot} -type d -depth -exec rmdir {} 2>/dev/null ';'
 
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.64-1
+- 更新到 1.64
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.47-4
 - 为 Magic 3.0 重建
 

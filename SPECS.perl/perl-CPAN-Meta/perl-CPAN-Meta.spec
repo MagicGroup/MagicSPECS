@@ -1,7 +1,7 @@
 Name:           perl-CPAN-Meta
 Summary:        Distribution metadata for a CPAN dist
-Version:        2.140640
-Release:        4%{?dist}
+Version:	2.150005
+Release:	1%{?dist}
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 Source0:        http://search.cpan.org/CPAN/authors/id/D/DA/DAGOLDEN/CPAN-Meta-%{version}.tar.gz
@@ -61,7 +61,6 @@ find $RPM_BUILD_ROOT -type f -name .packlist -exec rm -f {} \;
 make test
 
 %files
-%doc Changes CONTRIBUTING history LICENSE README Todo t/
 %{perl_vendorlib}/CPAN/
 %{_mandir}/man3/CPAN::Meta.3*
 %{_mandir}/man3/CPAN::Meta::Converter.3*
@@ -70,8 +69,14 @@ make test
 %{_mandir}/man3/CPAN::Meta::Prereqs.3*
 %{_mandir}/man3/CPAN::Meta::Spec.3*
 %{_mandir}/man3/CPAN::Meta::Validator.3*
+%{_mandir}/man3/CPAN::Meta::History::Meta_1_*.3pm*
+%{_mandir}/man3/CPAN::Meta::Merge.3pm*
+
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 2.150005-1
+- 更新到 2.150005
+
 * Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 2.140640-4
 - 为 Magic 3.0 重建
 
@@ -158,7 +163,7 @@ make test
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 
 * Tue Jan  3 2012 Marcela Mašláňová <mmaslano@redhat.com> 2.113640-1
-- update to latest version, which deprecated Version::Requirements
+- update to latest version, which deprecated Version:	2.150005
 
 * Fri Sep 23 2011 Iain Arnell <iarnell@gmail.com> 2.112621-1
 - update to latest upstream version

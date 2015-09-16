@@ -1,6 +1,6 @@
 Name:           perl-Pod-Coverage-TrustPod
-Version:        0.100002
-Release:        5%{?dist}
+Version:	0.100003
+Release:	1%{?dist}
 Summary:        Allow a module's pod to contain Pod::Coverage hints
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -47,6 +47,9 @@ RELEASE_TESTING=1
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.100003-1
+- 更新到 0.100003
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.100002-5
 - 为 Magic 3.0 重建
 

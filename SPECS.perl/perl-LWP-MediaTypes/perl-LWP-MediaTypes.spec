@@ -1,6 +1,6 @@
 Name:           perl-LWP-MediaTypes
-Version:        6.01
-Release:        8%{?dist}
+Version:	6.02
+Release:	1%{?dist}
 Summary:        Guess media type for a file or a URL
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -50,6 +50,9 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 6.02-1
+- 更新到 6.02
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 6.01-8
 - 为 Magic 3.0 重建
 

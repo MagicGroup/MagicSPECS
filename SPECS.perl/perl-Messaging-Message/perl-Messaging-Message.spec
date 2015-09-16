@@ -1,6 +1,6 @@
 Name:           perl-Messaging-Message
-Version:        0.7
-Release:        14%{?dist}
+Version:	1.5
+Release:	1%{?dist}
 Summary:        Abstraction of a message
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -60,6 +60,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.5-1
+- 更新到 1.5
+
 * Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 0.7-14
 - 为 Magic 3.0 重建
 

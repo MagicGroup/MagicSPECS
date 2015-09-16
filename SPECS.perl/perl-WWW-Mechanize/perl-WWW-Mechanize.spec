@@ -6,8 +6,8 @@
 %bcond_with livetests
 
 Name:           perl-WWW-Mechanize
-Version:        1.73
-Release:        3%{?dist}
+Version:	1.75
+Release:	1%{?dist}
 Summary:        Automates web page form & link interaction
 Group:          Development/Libraries
 License:        GPL+ or Artistic
@@ -108,6 +108,9 @@ make test
 %{_mandir}/man3/*.3pm*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.75-1
+- 更新到 1.75
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.73-3
 - 为 Magic 3.0 重建
 

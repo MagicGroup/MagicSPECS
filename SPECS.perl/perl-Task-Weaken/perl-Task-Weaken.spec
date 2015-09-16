@@ -1,6 +1,6 @@
 Name:           perl-Task-Weaken
 Version:        1.04
-Release:        7%{?dist}
+Release:        8%{?dist}
 Summary:        Ensure that a platform has weaken support
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -57,6 +57,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.04-8
+- 为 Magic 3.0 重建
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.04-7
 - 为 Magic 3.0 重建
 

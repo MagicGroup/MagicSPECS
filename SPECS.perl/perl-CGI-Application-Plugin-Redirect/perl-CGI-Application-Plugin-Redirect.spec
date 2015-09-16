@@ -1,6 +1,6 @@
 Name:           perl-CGI-Application-Plugin-Redirect
 Version:        1.00
-Release:        17%{?dist}
+Release:        18%{?dist}
 Summary:        Easy external redirects in CGI::Application
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -49,6 +49,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.00-18
+- 为 Magic 3.0 重建
+
 * Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 1.00-17
 - 为 Magic 3.0 重建
 

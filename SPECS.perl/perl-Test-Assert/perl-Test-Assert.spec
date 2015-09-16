@@ -1,6 +1,6 @@
 Name:		perl-Test-Assert
 Version:	0.0504
-Release:	11%{?dist}
+Release:	12%{?dist}
 Summary:	Assertion methods for those who like JUnit
 License:	GPL+ or Artistic
 Group:		Development/Libraries
@@ -104,6 +104,9 @@ cd -
 %{_mandir}/man3/Test::Assert.3pm*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.0504-12
+- 为 Magic 3.0 重建
+
 * Sun Jun 15 2014 Liu Di <liudidi@gmail.com> - 0.0504-11
 - 为 Magic 3.0 重建
 

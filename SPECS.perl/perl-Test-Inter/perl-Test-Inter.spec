@@ -1,6 +1,6 @@
 Name:           perl-Test-Inter
-Version:        1.03
-Release:        12%{?dist}
+Version:	1.06
+Release:	1%{?dist}
 Summary:        Framework for more readable interactive test scripts
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -37,11 +37,13 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 ./Build test
 
 %files
-%doc ChangeLog LICENSE README TODO examples
 %{perl_vendorlib}/*
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.06-1
+- 更新到 1.06
+
 * Sun Jun 15 2014 Liu Di <liudidi@gmail.com> - 1.03-12
 - 为 Magic 3.0 重建
 

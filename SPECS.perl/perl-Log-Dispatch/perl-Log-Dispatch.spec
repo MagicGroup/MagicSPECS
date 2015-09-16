@@ -1,14 +1,12 @@
 Name:           perl-Log-Dispatch
-Version:        2.29
-Release:        13%{?dist}
+Version:	2.50
+Release:	1%{?dist}
 Summary:        Dispatches messages to one or more outputs
 Group:          Development/Libraries
 License:        Artistic 2.0
 URL:            http://search.cpan.org/dist/Log-Dispatch/
 Source0:        http://www.cpan.org/authors/id/D/DR/DROLSKY/Log-Dispatch-%{version}.tar.gz
 
-# Hacks to make spell checking tests work with hunspell
-Patch0:         Log-Dispatch-2.29.diff
 BuildArch:      noarch
 BuildRequires:  perl(Apache2::Log)
 BuildRequires:  perl(Mail::Send), perl(Mail::Sender)
@@ -36,8 +34,6 @@ new dispatcher object and particularly for creating new outputs.
 
 %prep
 %setup -q -n Log-Dispatch-%{version}
-%patch0 -p1
-sed -i -e "s,set_spell_cmd(.*),set_spell_cmd(\'hunspell -l\')," t/release-pod-spell.t
 
 %build
 %{__perl} Makefile.PL installdirs=vendor
@@ -58,11 +54,13 @@ RELEASE_TESTING=1 LOG_DISPATCH_TEST_EMAIL="root@localhost.localdomain" \
 
 %files
 %defattr(-,root,root,-)
-%doc Changes LICENSE README
 %{perl_vendorlib}/Log/
 %{_mandir}/man3/*.3pm*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 2.50-1
+- 更新到 2.50
+
 * Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 2.29-13
 - 为 Magic 3.0 重建
 

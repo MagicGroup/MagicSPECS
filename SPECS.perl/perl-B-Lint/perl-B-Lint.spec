@@ -1,6 +1,6 @@
 Name:           perl-B-Lint
 Version:	1.20
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:        Perl lint
 Summary(zh_CN.UTF-8): Perl 的 B::Lint 模块
 License:        GPL+ or Artistic
@@ -66,6 +66,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.20-2
+- 为 Magic 3.0 重建
+
 * Mon Apr 27 2015 Liu Di <liudidi@gmail.com> - 1.20-1
 - 更新到 1.20
 

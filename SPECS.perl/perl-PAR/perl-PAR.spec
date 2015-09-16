@@ -1,6 +1,6 @@
 Name:           perl-PAR
-Version:        1.007
-Release:        6%{?dist}
+Version:	1.010
+Release:	1%{?dist}
 Summary:        Perl Archive Toolkit
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -37,11 +37,13 @@ find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null \;
 make test
 
 %files
-%doc AUTHORS ChangeLog README TODO
 %{perl_vendorlib}/*
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.010-1
+- 更新到 1.010
+
 * Thu Jun 19 2014 Liu Di <liudidi@gmail.com> - 1.007-6
 - 为 Magic 3.0 重建
 

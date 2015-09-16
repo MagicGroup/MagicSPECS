@@ -1,13 +1,13 @@
 Name:           perl-Pod-Simple
 # Epoch to compete with perl.spec
 Epoch:          1
-Version:        3.28
-Release:        294%{?dist}
+Version:	3.31
+Release:	2%{?dist}
 Summary:        Framework for parsing POD documentation
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 URL:            http://search.cpan.org/dist/Pod-Simple/
-Source0:        http://www.cpan.org/authors/id/D/DW/DWHEELER/Pod-Simple-%{version}.tar.gz
+Source0:        http://search.cpan.org/CPAN/authors/id/M/MA/MARCGREEN/Pod-Simple-%{version}.tar.gz
 BuildArch:      noarch
 BuildRequires:  perl
 BuildRequires:  perl(ExtUtils::MakeMaker)
@@ -66,6 +66,12 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Mon Sep 14 2015 Liu Di <liudidi@gmail.com> - 1:3.31-2
+- 为 Magic 3.0 重建
+
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1:3.31-1
+- 更新到 3.31
+
 * Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 1:3.28-294
 - 为 Magic 3.0 重建
 

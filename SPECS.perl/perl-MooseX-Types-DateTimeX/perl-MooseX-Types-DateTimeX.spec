@@ -1,6 +1,6 @@
 Name:           perl-MooseX-Types-DateTimeX
 Version:        0.10
-Release:        15%{?dist}
+Release:        16%{?dist}
 Summary:        Extensions to MooseX::Types::DateTime::ButMaintained
 Summary(zh_CN.UTF-8): MooseX::Types::DateTime::ButMaintained 的扩展 
 License:        GPL+ or Artistic
@@ -79,6 +79,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.10-16
+- 为 Magic 3.0 重建
+
 * Thu Apr 23 2015 Liu Di <liudidi@gmail.com> - 0.10-15
 - 为 Magic 3.0 重建
 

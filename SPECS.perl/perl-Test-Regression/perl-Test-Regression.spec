@@ -1,6 +1,6 @@
 Name:           perl-Test-Regression
-Version:        0.06
-Release:        13%{?dist}
+Version:	0.07
+Release:	1%{?dist}
 Summary:        Test library that can generate outputs and compare against them
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -52,6 +52,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.07-1
+- 更新到 0.07
+
 * Sun Jun 15 2014 Liu Di <liudidi@gmail.com> - 0.06-13
 - 为 Magic 3.0 重建
 

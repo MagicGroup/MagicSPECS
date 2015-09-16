@@ -1,6 +1,6 @@
 Name: 		perl-Tree-Simple
-Version: 	1.23
-Release: 	3%{?dist}
+Version:	1.25
+Release:	1%{?dist}
 Summary: 	Tree::Simple Perl module
 License: 	GPL+ or Artistic
 Group: 		Development/Libraries
@@ -42,6 +42,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Wed Sep 16 2015 Liu Di <liudidi@gmail.com> - 1.25-1
+- 更新到 1.25
+
 * Thu Jun 19 2014 Liu Di <liudidi@gmail.com> - 1.23-3
 - 为 Magic 3.0 重建
 

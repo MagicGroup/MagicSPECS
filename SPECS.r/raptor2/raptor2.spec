@@ -1,8 +1,9 @@
 
 Summary: RDF Parser Toolkit for Redland
+Summary(zh_CN.UTF-8): Redland 的 RDF 解析器工具箱
 Name:    raptor2
-Version: 2.0.7
-Release: 3%{?dist}
+Version:	2.0.15
+Release:	1%{?dist}
 
 License: GPLv2+ or LGPLv2+ or ASL 2.0
 Source:  http://download.librdf.org/source/raptor2-%{version}.tar.gz
@@ -23,12 +24,17 @@ Raptor is the RDF Parser Toolkit for Redland that provides
 a set of standalone RDF parsers, generating triples from RDF/XML
 or N-Triples.
 
+%description -l zh_CN.UTF-8
+Redland 的 RDF 解析器工具箱。
+
 %package devel
 Summary: Development files for %{name} 
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Requires: %{name}%{?_isa} = %{version}-%{release}
 %description devel
 %{summary}.
-
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -83,6 +89,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sat Sep 12 2015 Liu Di <liudidi@gmail.com> - 2.0.15-1
+- 更新到 2.0.15
+
 * Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 2.0.7-3
 - 为 Magic 3.0 重建
 

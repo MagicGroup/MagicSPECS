@@ -1,6 +1,6 @@
 Name:           perl-Data-ObjectDriver
-Version:        0.09
-Release:        8%{?dist}
+Version:	0.13
+Release:	1%{?dist}
 Summary:        Simple, transparent data interface, with caching
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -25,27 +25,31 @@ oriented design concepts onto a relational database.
 
 %prep
 %setup -q -n Data-ObjectDriver-%{version}
+# Bundled Test::Builder has to match system Test-Simple, CPAN RT#87294
+rm -rf inc/Test/Builder*
+sed -i -e '/^inc\/Test\/Builder[\.\/]/d' MANIFEST
 
 %build
-%{__perl} Makefile.PL INSTALLDIRS=vendor
-make %{?_smp_mflags}
+%{__perl} Build.PL --installdirs=vendor
+./Build
 
 %install
-make pure_install PERL_INSTALL_ROOT=$RPM_BUILD_ROOT
-find $RPM_BUILD_ROOT -type f -name .packlist -exec rm -f {} ';'
-find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null ';'
-chmod -R u+w $RPM_BUILD_ROOT/*
+./Build install --destdir=%{buildroot} --create_packlist=0
+%{_fixperms} %{buildroot}
 
 %check
-
+./Build test
 
 
 %files
-%doc Changes README
+%doc Changes README.md
 %{perl_vendorlib}/*
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.13-1
+- 更新到 0.13
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.09-8
 - 为 Magic 3.0 重建
 

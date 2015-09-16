@@ -1,6 +1,6 @@
 Name:       perl-DBD-Multi 
-Version:    0.16 
-Release:    15%{?dist}
+Version:	0.18
+Release:	1%{?dist}
 # see Makefile.PL
 License:    GPL+ or Artistic 
 Group:      Development/Libraries
@@ -63,6 +63,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/*.3*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.18-1
+- 更新到 0.18
+
 * Sun Jun 15 2014 Liu Di <liudidi@gmail.com> - 0.16-15
 - 为 Magic 3.0 重建
 

@@ -1,14 +1,11 @@
 Summary: 	Params-Validate Perl module
 Name: 		perl-Params-Validate
-Version: 	1.06
-Release: 	12%{?dist}
+Version:	1.21
+Release:	1%{?dist}
 License: 	Artistic2.0
 Group: 		Development/Libraries
 URL: 		http://search.cpan.org/dist/Params-Validate/
 Source0: 	http://search.cpan.org/CPAN/authors/id/D/DR/DROLSKY/Params-Validate-%{version}.tar.gz
-
-# Hacks to make spell checking tests work with hunspell
-Patch0:         Params-Validate-0.99.diff
 
 Requires:  	perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
 
@@ -60,8 +57,6 @@ certain methods, or applying validation callbacks to arguments.
 
 %prep
 %setup -q -n Params-Validate-%{version}
-%patch0 -p1
-sed -i -e "s,set_spell_cmd(.*),set_spell_cmd(\'hunspell -l\')," t/release-pod-spell.t
 
 %build
 %{__perl} Build.PL installdirs=vendor optimize="$RPM_OPT_FLAGS"
@@ -78,13 +73,14 @@ RELEASE_TESTING=1 ./Build test
 
 %files
 %defattr(-,root,root,-)
-%doc Changes LICENSE README TODO
 %{perl_vendorarch}/Params
 %{perl_vendorarch}/auto/Params
-%{perl_vendorarch}/Attribute
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.21-1
+- 更新到 1.21
+
 * Sun Jun 15 2014 Liu Di <liudidi@gmail.com> - 1.06-12
 - 为 Magic 3.0 重建
 

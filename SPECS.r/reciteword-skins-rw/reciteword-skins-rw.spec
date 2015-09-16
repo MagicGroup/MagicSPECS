@@ -6,7 +6,7 @@ Summary: reciteword's rw skin.
 Summary(zh_CN.UTF-8): 轻轻松松背单词的皮肤
 Name: reciteword-skins-rw
 Version: %ver
-Release: %rel.1
+Release: 2%{?dist}
 License: GPL
 Group: Applications/Productivity
 Group(zh_CN.UTF-8): 应用程序/生产力

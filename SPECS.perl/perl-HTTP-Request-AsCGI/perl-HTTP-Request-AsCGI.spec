@@ -1,7 +1,7 @@
 Name:           perl-HTTP-Request-AsCGI
 Summary:        Setup a CGI enviroment from a HTTP::Request
 Version:        1.2
-Release:        24%{?dist}
+Release:        25%{?dist}
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 Source0:        http://search.cpan.org/CPAN/authors/id/F/FL/FLORA/HTTP-Request-AsCGI-%{version}.tar.gz 
@@ -64,6 +64,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.2-25
+- 为 Magic 3.0 重建
+
 * Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 1.2-24
 - 为 Magic 3.0 重建
 

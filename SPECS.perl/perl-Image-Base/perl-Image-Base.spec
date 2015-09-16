@@ -1,12 +1,12 @@
 Name:           perl-Image-Base
-Version:        1.07
-Release:        21%{?dist}
+Version:	1.17
+Release:	1%{?dist}
 Summary:        Base class for loading, manipulating and saving images in Perl
 
 Group:          Development/Libraries
 License:        LGPLv2+
 URL:            http://search.cpan.org/dist/Image-Base/
-Source0:        http://www.cpan.org/authors/id/S/SU/SUMMER/Image-Base-%{version}.tar.gz
+Source0:        http://search.cpan.org/CPAN/authors/id/K/KR/KRYDE/Image-Base-%{version}.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildArch:      noarch
@@ -50,6 +50,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.17-1
+- 更新到 1.17
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.07-21
 - 为 Magic 3.0 重建
 

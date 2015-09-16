@@ -1,6 +1,6 @@
 Name:           perl-App-CLI
 Version:        0.313
-Release:        6%{?dist}
+Release:        7%{?dist}
 Summary:        Dispatcher module for command line interface programs
 Summary(zh_CN.UTF-8): 命令行界面程序调度模块
 License:        GPL+ or Artistic
@@ -50,6 +50,9 @@ magic_rpm_clean.sh
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.313-7
+- 为 Magic 3.0 重建
+
 * Thu Apr 23 2015 Liu Di <liudidi@gmail.com> - 0.313-6
 - 为 Magic 3.0 重建
 

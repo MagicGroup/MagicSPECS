@@ -1,11 +1,11 @@
 Name:           perl-CGI-Simple
-Version:        1.113
-Release:        10%{?dist}
+Version:	1.115
+Release:	1%{?dist}
 Summary:        Simple totally OO CGI interface that is CGI.pm compliant
 Group:          Development/Libraries
 License:        GPL+ or Artistic
 URL:            http://search.cpan.org/dist/CGI-Simple/
-Source0:        http://search.cpan.org/CPAN/authors/id/A/AN/ANDYA/CGI-Simple-%{version}.tar.gz
+Source0:        http://search.cpan.org/CPAN/authors/id/S/SZ/SZABGAB/CGI-Simple-%{version}.tar.gz
 # https://github.com/markstos/CGI--Simple/commit/e811ab874a5e0ac8a99e76b645a0e537d8f714da
 Patch0:		perl-CGI-Simple-CVE-2010-4411.patch
 BuildArch:      noarch
@@ -43,6 +43,9 @@ chmod -R u+w $RPM_BUILD_ROOT/*
 %{_mandir}/man3/*.3*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.115-1
+- 更新到 1.115
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.113-10
 - 为 Magic 3.0 重建
 

@@ -1,11 +1,11 @@
 Name:           perl-HTTP-DAV
-Version:        0.42
-Release:        8%{?dist}
+Version:	0.48
+Release:	1%{?dist}
 Summary:        WebDAV client library for Perl5
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 URL:            http://search.cpan.org/dist/HTTP-DAV/
-Source0:        http://www.cpan.org/authors/id/O/OP/OPERA/HTTP-DAV-%{version}.tar.gz
+Source0:        http://search.cpan.org/CPAN/authors/id/C/CO/COSIMO/HTTP-DAV-%{version}.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 BuildRequires:  perl(ExtUtils::MakeMaker)
@@ -51,6 +51,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man1/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.48-1
+- 更新到 0.48
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.42-8
 - 为 Magic 3.0 重建
 

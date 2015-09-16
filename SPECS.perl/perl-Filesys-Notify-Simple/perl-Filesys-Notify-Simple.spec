@@ -1,7 +1,7 @@
 Name:           perl-Filesys-Notify-Simple
 Summary:        Simple and dumb file system watcher
-Version:        0.08
-Release:        19%{?dist}
+Version:	0.12
+Release:	1%{?dist}
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 Source0:        http://search.cpan.org/CPAN/authors/id/M/MI/MIYAGAWA/Filesys-Notify-Simple-%{version}.tar.gz 
@@ -55,6 +55,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/*.3*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.12-1
+- 更新到 0.12
+
 * Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 0.08-19
 - 为 Magic 3.0 重建
 

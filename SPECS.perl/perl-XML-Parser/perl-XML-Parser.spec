@@ -1,12 +1,12 @@
 Name:           perl-XML-Parser
-Version:        2.41
-Release:        7%{?dist}
+Version:	2.44
+Release:	1%{?dist}
 Summary:        Perl module for parsing XML files
 
 Group:          Development/Libraries
 License:        GPL+ or Artistic
 Url:            http://search.cpan.org/dist/XML-Parser/
-Source0:        http://search.cpan.org/CPAN/authors/id/C/CH/CHORNY/XML-Parser-%{version}.tar.gz
+Source0:        http://search.cpan.org/CPAN/authors/id/T/TO/TODDR/XML-Parser-%{version}.tar.gz
 
 BuildRequires:  perl(ExtUtils::MakeMaker)
 BuildRequires:  expat-devel
@@ -66,6 +66,9 @@ magic_rpm_clean.sh
 
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 2.44-1
+- 更新到 2.44
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 2.41-7
 - 为 Magic 3.0 重建
 

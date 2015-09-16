@@ -2,7 +2,7 @@ Name:           perl-B-Hooks-OP-Check
 Summary:        Wrap OP check callbacks
 Summary(zh_CN.UTF-8): OP 检查回退的接口
 Version:        0.19
-Release:        14%{?dist}
+Release:        15%{?dist}
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 Group(zh_CN.UTF-8): 开发/库
@@ -57,6 +57,9 @@ magic_rpm_clean.sh
 %{_mandir}/man3/*.3*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.19-15
+- 为 Magic 3.0 重建
+
 * Fri Apr 24 2015 Liu Di <liudidi@gmail.com> - 0.19-14
 - 为 Magic 3.0 重建
 

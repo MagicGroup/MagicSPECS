@@ -1,6 +1,6 @@
 Name:           perl-DateTime-Event-Recurrence
 Version:        0.16
-Release:        28%{?dist}
+Release:        29%{?dist}
 Summary:        DateTime::Set extension for create basic recurrence sets
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -51,6 +51,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.16-29
+- 为 Magic 3.0 重建
+
 * Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 0.16-28
 - 为 Magic 3.0 重建
 

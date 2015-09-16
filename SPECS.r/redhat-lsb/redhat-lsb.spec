@@ -41,6 +41,11 @@
 %define lsbldso ld-lsb-x86-64.so
 %endif
 
+%ifarch mips64el
+%define ldso ld-linux.so.2
+%define lsbldso ld-lsb.so
+%endif
+
 %ifarch %{arm}
 %define ldso ld-linux.so.2
 %define lsbldso ld-lsb-arm.so
@@ -56,9 +61,10 @@
 %define srcrelease 1
 
 Summary: Implementation of Linux Standard Base specification
+Summary(zh_CN.UTF-8): Linux 标准基本描述的实现
 Name: redhat-lsb
 Version: 4.1
-Release: 30%{?dist}
+Release: 32%{?dist}
 URL: http://www.linuxfoundation.org/collaborate/workgroups/lsb
 Source0: https://fedorahosted.org/releases/r/e/redhat-lsb/%{name}-%{version}-%{srcrelease}.tar.bz2
 Patch0: lsb-release-3.1-update-init-functions.patch
@@ -99,6 +105,9 @@ BuildRequires: glibc-static
 %endif
 %ifarch aarch64
 %define archname aarch64
+%endif
+%ifarch mips64el
+%define archname mips64
 %endif
 
 ExclusiveArch: %{ix86} ia64 x86_64 ppc ppc64 s390 s390x %{arm} aarch64 ppc64le
@@ -362,8 +371,7 @@ Requires: glib2%{?_isa}
 Requires: gtk2%{?_isa}
 Requires: pango%{?_isa}
 # toolkit-qt
-Requires: qt%{?_isa}
-Requires: qt-x11%{?_isa}
+Requires: qt4%{?_isa}
 # toolkit-qt3
 Requires: qt3%{?_isa}
 # xml
@@ -763,6 +771,12 @@ os.remove("%{_datadir}/lsb")
 
 
 %changelog
+* Sat Sep 12 2015 Liu Di <liudidi@gmail.com> - 4.1-32
+- 为 Magic 3.0 重建
+
+* Sat Sep 12 2015 Liu Di <liudidi@gmail.com> - 4.1-31
+- 为 Magic 3.0 重建
+
 * Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 4.1-30
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

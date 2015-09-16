@@ -1,0 +1,19 @@
+diff -up rdesktop-1.8.0/rdpsnd_libao.c.ao rdesktop-1.8.0/rdpsnd_libao.c
+--- rdesktop-1.8.0/rdpsnd_libao.c.ao	2013-06-20 14:56:16.000000000 +0200
++++ rdesktop-1.8.0/rdpsnd_libao.c	2013-08-12 00:59:55.767287517 +0200
+@@ -77,6 +77,7 @@ libao_open(void)
+ 	format.channels = 2;
+ 	format.rate = 44100;
+ 	format.byte_format = AO_FMT_NATIVE;
++	format.matrix = NULL;
+ 
+ 	o_device = ao_open_live(default_driver, &format, NULL);
+ 	if (o_device == NULL)
+@@ -115,6 +116,7 @@ libao_set_format(RD_WAVEFORMATEX * pwfx)
+ 	format.channels = pwfx->nChannels;
+ 	format.rate = 44100;
+ 	format.byte_format = AO_FMT_NATIVE;
++	format.matrix = NULL;
+ 
+ 	if (o_device != NULL)
+ 		ao_close(o_device);

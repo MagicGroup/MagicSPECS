@@ -1,6 +1,6 @@
 Name:           perl-UNIVERSAL-moniker
 Version:        0.08
-Release:        25%{?dist}
+Release:        26%{?dist}
 Summary:        Real world naming for classes
 Group:          Development/Libraries
 License:        GPL+ or Artistic
@@ -42,6 +42,9 @@ make test
 
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.08-26
+- 为 Magic 3.0 重建
+
 * Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 0.08-25
 - 为 Magic 3.0 重建
 

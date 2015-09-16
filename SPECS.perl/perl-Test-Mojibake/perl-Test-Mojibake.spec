@@ -6,8 +6,8 @@
 %global debug_package %{nil}
 
 Name:		perl-Test-Mojibake
-Version:	1.0
-Release:	7%{?dist}
+Version:	1.1
+Release:	1%{?dist}
 Summary:	Check your source for encoding misbehavior
 Group:		Development/Libraries
 License:	GPL+ or Artistic
@@ -152,6 +152,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/Test::Mojibake.3pm*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.1-1
+- 更新到 1.1
+
 * Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 1.0-7
 - 为 Magic 3.0 重建
 

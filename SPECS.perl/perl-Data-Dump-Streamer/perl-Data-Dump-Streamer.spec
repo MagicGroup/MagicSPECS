@@ -1,11 +1,11 @@
 Name:           perl-Data-Dump-Streamer
-Version:        2.32
-Release:        13%{?dist}
+Version:	2.38
+Release:	2%{?dist}
 Summary:        Accurately serialize a data structure as Perl code
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 URL:            http://search.cpan.org/dist/Data-Dump-Streamer/
-Source0:        http://www.cpan.org/authors/id/J/JJ/JJORE/Data-Dump-Streamer-%{version}.tar.gz
+Source0:        http://search.cpan.org/CPAN/authors/id/Y/YV/YVES/Data-Dump-Streamer-%{version}.tar.gz
 BuildRequires:  perl(Algorithm::Diff)
 BuildRequires:  perl(B::Utils)
 BuildRequires:  perl(Compress::Zlib)
@@ -60,6 +60,12 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_mandir}/man3/*
 
 %changelog
+* Mon Sep 14 2015 Liu Di <liudidi@gmail.com> - 2.38-2
+- 为 Magic 3.0 重建
+
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 2.38-1
+- 更新到 2.38
+
 * Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 2.32-13
 - 为 Magic 3.0 重建
 

@@ -1,6 +1,6 @@
 Name:           perl-B-Debug
 Version:        1.23
-Release:        347%{?dist}
+Release:        348%{?dist}
 Summary:        Walk Perl syntax tree, print debug information about op-codes
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -52,6 +52,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Mon Sep 14 2015 Liu Di <liudidi@gmail.com> - 1.23-348
+- 为 Magic 3.0 重建
+
 * Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.23-347
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

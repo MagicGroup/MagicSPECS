@@ -1,6 +1,6 @@
 Name:		perl-ExtUtils-InstallPaths
 Version:	0.010
-Release:	3%{?dist}
+Release:	4%{?dist}
 Summary:	Build.PL install path logic made easy
 Group:		Development/Libraries
 License:	GPL+ or Artistic
@@ -69,6 +69,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/ExtUtils::InstallPaths.3pm*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.010-4
+- 为 Magic 3.0 重建
+
 * Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 0.010-3
 - 为 Magic 3.0 重建
 

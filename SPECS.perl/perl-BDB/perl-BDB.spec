@@ -3,7 +3,7 @@
 Name:           perl-BDB
 # Extend to 2 digits to get higher RPM package version than 1.88
 Version:	1.91
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:        Asynchronous Berkeley DB access
 Summary(zh_CN.UTF-8): 异步的伯克利 DB 访问
 
@@ -66,6 +66,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.91-3
+- 为 Magic 3.0 重建
+
 * Fri Apr 24 2015 Liu Di <liudidi@gmail.com> - 1.91-2
 - 为 Magic 3.0 重建
 

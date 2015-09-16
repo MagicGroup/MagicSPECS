@@ -1,11 +1,11 @@
 Name:           perl-Crypt-Rijndael
-Version:        1.11
-Release:        4%{?dist}
+Version:	1.13
+Release:	1%{?dist}
 Summary:        Crypt::CBC compliant Rijndael encryption module
 License:        LGPLv3
 Group:          Development/Libraries
 URL:            http://search.cpan.org/dist/Crypt-Rijndael/
-Source0:        http://search.cpan.org/CPAN/authors/id/B/BD/BDFOY/Crypt-Rijndael-%{version}.tar.gz
+Source0:        http://search.cpan.org/CPAN/authors/id/L/LE/LEONT/Crypt-Rijndael-%{version}.tar.gz
 BuildRequires:  perl(Digest::MD5)
 BuildRequires:  perl(ExtUtils::MakeMaker)
 BuildRequires:  perl(Test::Manifest) >= 1.14
@@ -45,6 +45,9 @@ find $RPM_BUILD_ROOT -type f -name '*.bs' -size 0 -exec rm -f {} \;
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.13-1
+- 更新到 1.13
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.11-4
 - 为 Magic 3.0 重建
 

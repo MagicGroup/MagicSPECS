@@ -1,6 +1,6 @@
 Name:           perl-Const-Fast
-Version:        0.006
-Release:        12%{?dist}
+Version:	0.014
+Release:	1%{?dist}
 Summary:        Facility for creating read-only scalars, arrays, and hashes
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -23,21 +23,19 @@ more values depending on the type of the first argument as the value for the
 variable. It will set the variable to that value and subsequently make it
 readonly. Arrays and hashes will be made deeply readonly.
 
-
 %prep
 %setup -q -n Const-Fast-%{version}
 
 
 %build
-%{__perl} Build.PL installdirs=vendor
+%{__perl} Build.PL --installdirs vendor
 ./Build
 
 
 %install
-rm -rf $RPM_BUILD_ROOT
+./Build install --destdir $RPM_BUILD_ROOT
 
-./Build install destdir=$RPM_BUILD_ROOT create_packlist=0
-find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
+find $RPM_BUILD_ROOT -type f -name .packlist -exec rm -f {} ';'
 
 %{_fixperms} $RPM_BUILD_ROOT/*
 
@@ -46,18 +44,16 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 ./Build test
 
 
-%clean
-rm -rf $RPM_BUILD_ROOT
-
-
 %files
-%defattr(-,root,root,-)
 %doc Changes LICENSE README
 %{perl_vendorlib}/*
 %{_mandir}/man3/*
 
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.014-1
+- 更新到 0.014
+
 * Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 0.006-12
 - 为 Magic 3.0 重建
 

@@ -1,11 +1,11 @@
 Name:           perl-File-MimeInfo
-Version:        0.16
-Release:        10%{?dist}
+Version:	0.27
+Release:	2%{?dist}
 Summary:        Determine file type and open application
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 URL:            http://search.cpan.org/dist/File-MimeInfo/
-Source0:        http://www.cpan.org/authors/id/P/PA/PARDUS/File-MimeInfo/File-MimeInfo-%{version}.tar.gz
+Source0:        http://search.cpan.org/CPAN/authors/id/M/MI/MICHIELB/File-MimeInfo-%{version}.tar.gz
 BuildArch:      noarch
 BuildRequires:  perl(Module::Build) perl(Test::More) perl(Test::Pod)
 BuildRequires:  perl(Test::Pod::Coverage)
@@ -41,7 +41,6 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 
 
 %files
-%doc Changes README
 %{_bindir}/mimeopen
 %{_bindir}/mimetype
 %{perl_vendorlib}/*
@@ -49,6 +48,12 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_mandir}/man3/*
 
 %changelog
+* Mon Sep 14 2015 Liu Di <liudidi@gmail.com> - 0.27-2
+- 为 Magic 3.0 重建
+
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.27-1
+- 更新到 0.27
+
 * Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 0.16-10
 - 为 Magic 3.0 重建
 

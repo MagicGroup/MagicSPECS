@@ -1,12 +1,12 @@
 Name:           perl-File-Which
-Version:        1.09
-Release:        19%{?dist}
+Version:	1.19
+Release:	1%{?dist}
 Summary:        Portable implementation of the 'which' utility
 
 Group:          Development/Libraries
 License:        GPL+ or Artistic
 URL:            http://search.cpan.org/dist/File-Which/
-Source0:        http://www.cpan.org/authors/id/A/AD/ADAMK/File-Which-%{version}.tar.gz
+Source0:        http://search.cpan.org/CPAN/authors/id/P/PL/PLICEASE/File-Which-%{version}.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildArch:      noarch
@@ -52,14 +52,16 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(-,root,root,-)
-%doc Changes README
-%{_bindir}/pwhich
+#{_bindir}/pwhich
 %{perl_vendorlib}/File/
-%{_mandir}/man1/*.1*
+#{_mandir}/man1/*.1*
 %{_mandir}/man3/*.3pm*
 
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.19-1
+- 更新到 1.19
+
 * Sun Jun 15 2014 Liu Di <liudidi@gmail.com> - 1.09-19
 - 为 Magic 3.0 重建
 

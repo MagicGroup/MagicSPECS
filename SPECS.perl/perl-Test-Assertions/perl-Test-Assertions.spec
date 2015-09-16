@@ -1,6 +1,6 @@
 Name:           perl-Test-Assertions
 Version:        1.054
-Release:        18%{?dist}
+Release:        19%{?dist}
 Summary:        Simple set of building blocks for both unit and runtime testing
 License:        GPLv2
 Group:          Development/Libraries
@@ -53,6 +53,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Mon Sep 14 2015 Liu Di <liudidi@gmail.com> - 1.054-19
+- 为 Magic 3.0 重建
+
 * Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.054-18
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

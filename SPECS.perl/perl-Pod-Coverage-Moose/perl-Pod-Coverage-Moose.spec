@@ -1,6 +1,6 @@
 Name:           perl-Pod-Coverage-Moose
 Version:        0.06
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Pod::Coverage extension for Moose
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -60,6 +60,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Tue Sep 15 2015 Liu Di <liudidi@gmail.com> - 0.06-2
+- 为 Magic 3.0 重建
+
 * Mon Aug 31 2015 Jitka Plesnikova <jplesnik@redhat.com> - 0.06-1
 - 0.06 bump
 - Modernize spec

@@ -1,6 +1,6 @@
 Name:           perl-Data-AsObject
 Version:        0.07
-Release:        8%{?dist}
+Release:        9%{?dist}
 Summary:        Easy OO access to complex perl data structures
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -53,6 +53,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.07-9
+- 为 Magic 3.0 重建
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.07-8
 - 为 Magic 3.0 重建
 

@@ -5,8 +5,8 @@
 %define module_version 0.59
 
 Name:           perl-Spreadsheet-ParseExcel
-Version:        0.5900
-Release:        5%{?dist}
+Version:	0.65
+Release:	1%{?dist}
 Summary:        Extract information from an Excel file
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -83,6 +83,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/Spreadsheet::ParseExcel::Worksheet.3pm*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.65-1
+- 更新到 0.65
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.5900-5
 - 为 Magic 3.0 重建
 

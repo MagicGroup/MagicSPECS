@@ -7,8 +7,10 @@
 Version: 0.68.5.1
 Name: flow-tools
 Summary: Tool set for working with NetFlow data
-Release: 16%{?dist}
+Summary(zh_CN.UTF-8): 处理 NetFlow 数据的工具集
+Release: 17%{?dist}
 Group: Applications/System
+Group(zh_CN.UTF-8): 应用程序/系统
 License: BSD 
 URL: http://code.google.com/p/%{name}/
 Source0: http://%{name}.googlecode.com/files/%{name}-%{version}.tar.bz2
@@ -37,9 +39,14 @@ of custom applications for NetFlow export versions 1,5,6 and the 14 currently
 defined version 8 subversions. A Perl and Python interface have been 
 contributed and are included in the distribution.
 
+%description -l zh_CN.UTF-8
+处理 NetFlow 数据的工具集。
+
 %package devel
 Summary: Development files for flow-tools
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: %{name} = %{version}-%{release} zlib-devel
 
 %description devel
@@ -54,9 +61,14 @@ contributed and are included in the distribution.
 This package contains header files required to build applications that use
 libft.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
 %package rrdtool
 Summary: Scripts for flow-tools to build rrd graphs
+Summary(zh_CN.UTF-8): flow-tools 用来建立 rrd 图像的脚本
 Group: Applications/System
+Group(zh_CN.UTF-8): 应用程序/系统
 Requires: %{name} = %{version}-%{release} rrdtool-python
 
 %description rrdtool
@@ -71,9 +83,14 @@ contributed and are included in the distribution.
 This package contains scripts that use python-rrdtool to create rrds and graphs
 from flow data.
 
+%description rrdtool -l zh_CN.UTF-8
+flow-tools 用来建立 rrd 图像的脚本。
+
 %package docs
 Summary: HTML and other redundant docs for flow-tools
+Summary(zh_CN.UTF-8): %{name} 的文档
 Group: Applications/System
+Group(zh_CN.UTF-8): 应用程序/系统
 Requires: %{name} = %{version}-%{release}
 
 %description docs
@@ -86,6 +103,9 @@ defined version 8 subversions. A Perl and Python interface have been
 contributed and are included in the distribution.
 
 This package contains additional documentation, such as man pages in html format.
+
+%description docs -l zh_CN.UTF-8
+%{name} 的文档。
 
 %prep
 %setup -q
@@ -211,6 +231,9 @@ exit 0
 %doc docs/*.html ChangeLog.old TODO INSTALL SECURITY
 
 %changelog
+* Tue Sep 15 2015 Liu Di <liudidi@gmail.com> - 0.68.5.1-17
+- 为 Magic 3.0 重建
+
 * Wed Jun 17 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.68.5.1-16
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

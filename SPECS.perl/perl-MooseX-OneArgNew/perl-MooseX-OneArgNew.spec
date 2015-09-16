@@ -1,6 +1,6 @@
 Name:           perl-MooseX-OneArgNew
-Version:        0.002
-Release:        9%{?dist}
+Version:	0.005
+Release:	1%{?dist}
 Summary:        Teach ->new to accept single, non-hashref arguments
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -49,6 +49,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.005-1
+- 更新到 0.005
+
 * Thu Jun 19 2014 Liu Di <liudidi@gmail.com> - 0.002-9
 - 为 Magic 3.0 重建
 

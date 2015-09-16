@@ -6,8 +6,8 @@
 Summary:	Perl interface to the uulib library
 Name:		perl-Convert-UUlib
 Epoch:		2
-Version:	1.4
-Release:	6%{?dist}
+Version:	1.5
+Release:	1%{?dist}
 License:	GPL+ or Artistic
 Group:		Development/Libraries
 URL:		http://search.cpan.org/dist/%{pkgname}/
@@ -23,7 +23,7 @@ A perl interface to the uulib library (a.k.a. uudeview/uuenview).
 %setup -q -n %{pkgname}-%{version}
 
 %build
-perl Makefile.PL INSTALLDIRS=vendor OPTIMIZE="$RPM_OPT_FLAGS"
+perl Makefile.PL INSTALLDIRS=vendor OPTIMIZE="$RPM_OPT_FLAGS" < /dev/null
 make %{?_smp_mflags}
 
 %install
@@ -47,6 +47,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man?/Convert::UUlib*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 2:1.5-1
+- 更新到 1.5
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 2:1.4-6
 - 为 Magic 3.0 重建
 

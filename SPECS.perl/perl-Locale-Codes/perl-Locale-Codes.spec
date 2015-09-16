@@ -1,6 +1,6 @@
 Name:           perl-Locale-Codes
-Version:        3.31
-Release:        4%{?dist}
+Version:	3.36
+Release:	1%{?dist}
 Summary:        Distribution of modules to handle locale codes
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -57,6 +57,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 3.36-1
+- 更新到 3.36
+
 * Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 3.31-4
 - 为 Magic 3.0 重建
 

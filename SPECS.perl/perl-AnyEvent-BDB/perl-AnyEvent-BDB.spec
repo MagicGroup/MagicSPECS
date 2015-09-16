@@ -1,6 +1,6 @@
 Name:           perl-AnyEvent-BDB
 Version:        1.1
-Release:        13%{?dist}
+Release:        15%{?dist}
 Summary:        Truly asynchronous Berkeley DB access
 Summary(zh_CN.UTF-8): 真正的异步伯克利 DB 访问
 
@@ -55,6 +55,12 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.1-15
+- 为 Magic 3.0 重建
+
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.1-14
+- 为 Magic 3.0 重建
+
 * Wed Apr 22 2015 Liu Di <liudidi@gmail.com> - 1.1-13
 - 为 Magic 3.0 重建
 

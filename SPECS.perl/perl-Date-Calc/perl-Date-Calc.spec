@@ -1,6 +1,6 @@
 Name:           perl-Date-Calc
-Version:        6.3
-Release:        14%{?dist}
+Version:	6.4
+Release:	1%{?dist}
 Summary:        Gregorian calendar date calculations
 
 Group:          Development/Libraries
@@ -73,6 +73,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 6.4-1
+- 更新到 6.4
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 6.3-14
 - 为 Magic 3.0 重建
 

@@ -1,6 +1,6 @@
 Name:           perl-Test-MockObject
-Version:        1.09
-Release:        20%{?dist}
+Version:	1.20150527
+Release:	1%{?dist}
 Summary:        Perl extension for emulating troublesome interfaces
 
 Group:          Development/Libraries
@@ -26,39 +26,31 @@ and receives from the mocked object, instead of worrying about faking
 up your own data.  (Another option is not to test difficult things.
 Now you have no excuse.)
 
-
 %prep
 %setup -q -n Test-MockObject-%{version}
 
-
 %build
-%{__perl} Build.PL installdirs=vendor
-./Build
-
+perl Makefile.PL INSTALLDIRS=vendor
+make %{?_smp_mflags}
 
 %install
-rm -rf $RPM_BUILD_ROOT
-./Build install destdir=$RPM_BUILD_ROOT create_packlist=0
-find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null ';'
-%{_fixperms} $RPM_BUILD_ROOT/*
-
+make pure_install DESTDIR=%{buildroot}
+find %{buildroot} -type f -name .packlist -exec rm -f {} ';'
+find %{buildroot} -depth -type d -exec rmdir {} ';' 2>/dev/null
+%{_fixperms} %{buildroot}
 
 %check
-PERL_RUN_ALL_TESTS=1 ./Build test
-
-
-%clean
-rm -rf $RPM_BUILD_ROOT
-
+PERL_RUN_ALL_TESTS=1 make test
 
 %files
-%defattr(-,root,root,-)
 %doc Changes README
 %{perl_vendorlib}/Test/
 %{_mandir}/man3/*.3pm*
 
-
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.20150527-1
+- 更新到 1.20150527
+
 * Sun Jun 15 2014 Liu Di <liudidi@gmail.com> - 1.09-20
 - 为 Magic 3.0 重建
 

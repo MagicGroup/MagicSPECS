@@ -1,17 +1,14 @@
 Name:           perl-GD
-Version:        2.44
-Release:        15%{?dist}
+Version:	2.56
+Release:	1%{?dist}
 Summary:        Perl interface to the GD graphics library
 
 Group:          Development/Libraries
 License:        GPL+ or Artistic
 URL:            http://search.cpan.org/dist/GD/
 Source0:        http://www.cpan.org/authors/id/L/LD/LDS/GD-%{version}.tar.gz
-Patch0:		perl-GD-2.41-Group.patch
-Patch1:		perl-GD-skip-3.patch
-# see http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=628522
-# and https://rt.cpan.org/Public/Bug/Display.html?id=67990
-Patch2:         perl-GD-ccflags.patch
+
+Patch0:         GD-2.56-utf8.patch
 
 BuildRequires:  gd-devel >= 2.0.28
 BuildRequires:  perl(ExtUtils::MakeMaker)
@@ -25,57 +22,56 @@ This is a autoloadable interface module for GD, a popular library
 for creating and manipulating PNG files.  With this library you can
 create PNG images on the fly or modify existing files.
 
-
 %prep
 %setup -q -n GD-%{version}
-%patch0 -p1
-%ifarch %{ix86}
-%patch1 -p1
-%endif
-%patch2 -p1
-%{__perl} -pi -e 's|/usr/local/bin/perl\b|%{__perl}|' \
-  qd.pl demos/{*.{pl,cgi},truetype_test}
-chmod -c 644 bdf_scripts/* demos/*
-chmod -c 755 qd.pl
 
+# Re-code documentation as UTF8
+%patch0
+
+# Fix shellbangs in sample scripts
+perl -pi -e 's|/usr/local/bin/perl\b|%{__perl}|' \
+      demos/{*.{pl,cgi},truetype_test}
 
 %build
-%{__perl} Makefile.PL INSTALLDIRS=vendor OPTIMIZE="$RPM_OPT_FLAGS" 
-make %{?_smp_mflags} OPTIMIZE="$RPM_OPT_FLAGS"
-
+perl Build.PL
+./Build
 
 %install
-make pure_install PERL_INSTALL_ROOT=$RPM_BUILD_ROOT
-find $RPM_BUILD_ROOT -type f -name .packlist -exec rm -f {} ';'
-find $RPM_BUILD_ROOT -type f -name '*.bs' -empty -exec rm -f {} ';'
-find $RPM_BUILD_ROOT -type d -depth -exec rmdir {} 2>/dev/null ';'
-chmod -R u+w $RPM_BUILD_ROOT/*
+./Build install --destdir=%{buildroot} --installdirs=vendor --create_packlist=0
+find %{buildroot} -type f -name '*.bs' -empty -exec rm -f {} ';'
+%{_fixperms} %{buildroot}
 
+# These files should not have been installed
+rm %{buildroot}%{_bindir}/bdf2gdfont.PLS \
+   %{buildroot}%{_bindir}/README \
+   %{buildroot}%{_mandir}/man1/bdf2gdfont.PLS.1*
+
+# This binary is in gd-progs
+rm %{buildroot}%{_bindir}/bdftogd
 
 %check
-%ifarch ppc
-# testsuite fails on ppc
-%else
-
-%endif
-%ifarch %{ix86}
-perl t/GD.t --write
-: This is the file that should contain some blue color:
-base64 t/test.out.3.png_new
-%endif
-
+./Build test
 
 %files
+%license LICENSE
 %doc ChangeLog README README.QUICKDRAW demos/
-%{_bindir}/*
-%{perl_vendorarch}/auto/GD
-%{perl_vendorarch}/GD*
-%{perl_vendorarch}/qd.pl
-%{_mandir}/man1/*.1*
-%{_mandir}/man3/*.3pm*
-
+%{_bindir}/bdf2gdfont.pl
+# %%{_bindir}/bdftogd
+%{_bindir}/cvtbdf.pl
+%{perl_vendorarch}/auto/GD/
+%{perl_vendorarch}/GD.pm
+%{perl_vendorarch}/GD/
+%{_mandir}/man1/bdf2gdfont.pl.1*
+%{_mandir}/man3/GD.3*
+%{_mandir}/man3/GD::Image.3*
+%{_mandir}/man3/GD::Polygon.3*
+%{_mandir}/man3/GD::Polyline.3*
+%{_mandir}/man3/GD::Simple.3*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 2.56-1
+- 更新到 2.56
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 2.44-15
 - 为 Magic 3.0 重建
 

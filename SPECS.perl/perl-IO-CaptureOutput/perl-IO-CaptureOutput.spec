@@ -1,6 +1,6 @@
 Name:           perl-IO-CaptureOutput
-Version:        1.1102
-Release:        10%{?dist}
+Version:	1.1104
+Release:	1%{?dist}
 Summary:        Capture STDOUT/STDERR from sub-processes and XS/C modules
 Group:          Development/Libraries
 License:        GPL+ or Artistic
@@ -53,6 +53,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.1104-1
+- 更新到 1.1104
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.1102-10
 - 为 Magic 3.0 重建
 

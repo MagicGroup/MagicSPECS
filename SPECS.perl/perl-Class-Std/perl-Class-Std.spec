@@ -1,11 +1,11 @@
 Name:           perl-Class-Std
-Version:        0.0.8
-Release:        20%{?dist}
+Version:	0.013
+Release:	1%{?dist}
 Summary:        Support for creating standard "inside-out" classes
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 URL:            http://search.cpan.org/dist/Class-Std/
-Source0:        http://www.cpan.org/modules/by-module/Class/Class-Std-v%{version}.tar.gz
+Source0:        http://search.cpan.org/CPAN/authors/id/C/CH/CHORNY/Class-Std-%{version}.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 BuildRequires:  perl(Module::Build), perl(version), perl(ExtUtils::MakeMaker)
@@ -18,7 +18,7 @@ This module provides tools that help to implement the "inside out object"
 class structure in a convenient and standard way.
 
 %prep
-%setup -q -n Class-Std-v%{version}
+%setup -q -n Class-Std-%{version}
 
 # Fix UTF-8
 iconv -f ISO_8859-1 -t UTF-8 -o tmp.man lib/Class/Std.pm &&
@@ -49,6 +49,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.013-1
+- 更新到 0.013
+
 * Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 0.0.8-20
 - 为 Magic 3.0 重建
 

@@ -1,6 +1,6 @@
 Name:           perl-DateTime-Set
 Version:        0.3400
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Datetime sets and set math
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -71,6 +71,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/Set::Infinite::_recurrence.3pm*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.3400-3
+- 为 Magic 3.0 重建
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.3400-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

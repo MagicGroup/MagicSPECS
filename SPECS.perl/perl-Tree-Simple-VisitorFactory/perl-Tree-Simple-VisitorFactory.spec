@@ -1,11 +1,11 @@
 Name:           perl-Tree-Simple-VisitorFactory
-Version:        0.10
-Release:        18%{?dist}
+Version:	0.12
+Release:	1%{?dist}
 Summary:        Factory object for dispensing Visitor objects
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 URL:            http://search.cpan.org/dist/Tree-Simple-VisitorFactory/
-Source0:        http://www.cpan.org/authors/id/S/ST/STEVAN/Tree-Simple-VisitorFactory-%{version}.tar.gz
+Source0:        http://search.cpan.org/CPAN/authors/id/R/RS/RSAVAGE/Tree-Simple-VisitorFactory-%{version}.tgz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
@@ -56,6 +56,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/*
 
 %changelog
+* Wed Sep 16 2015 Liu Di <liudidi@gmail.com> - 0.12-1
+- 更新到 0.12
+
 * Thu Jun 19 2014 Liu Di <liudidi@gmail.com> - 0.10-18
 - 为 Magic 3.0 重建
 

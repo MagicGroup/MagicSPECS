@@ -1,6 +1,6 @@
 Name:           perl-Child
-Version:        0.009
-Release:        11%{?dist}
+Version:	0.012
+Release:	1%{?dist}
 Summary:        Object oriented simple interface to fork()
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -28,24 +28,42 @@ you just have a pile of things nobody wants to think about.
 %setup -q -n Child-%{version}
 
 %build
-%{__perl} Build.PL installdirs=vendor
-./Build
+perl Makefile.PL INSTALLDIRS=vendor
+make %{?_smp_mflags}
 
 %install
-./Build install destdir=%{buildroot} create_packlist=0
-find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null \;
-
-%{_fixperms} %{buildroot}/*
+rm -rf %{buildroot}
+make pure_install DESTDIR=%{buildroot}
+find %{buildroot} -type f -name .packlist -exec rm -f {} ';'
+%{_fixperms} %{buildroot}
 
 %check
-./Build test
+make test
 
 %files
-%doc README
-%{perl_vendorlib}/*
-%{_mandir}/man3/*
+%if 0%{?_licensedir:1}
+%license LICENSE
+%else
+%doc LICENSE
+%endif
+%doc Changes README
+%{perl_vendorlib}/Child.pm
+%{perl_vendorlib}/Child/
+%{_mandir}/man3/Child.3*
+%{_mandir}/man3/Child::IPC::Pipe.3*
+%{_mandir}/man3/Child::Link.3*
+%{_mandir}/man3/Child::Link::IPC.3*
+%{_mandir}/man3/Child::Link::IPC::Pipe.3*
+%{_mandir}/man3/Child::Link::IPC::Pipe::Parent.3*
+%{_mandir}/man3/Child::Link::IPC::Pipe::Proc.3*
+%{_mandir}/man3/Child::Link::Parent.3*
+%{_mandir}/man3/Child::Link::Proc.3*
+%{_mandir}/man3/Child::Util.3*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.012-1
+- 更新到 0.012
+
 * Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 0.009-11
 - 为 Magic 3.0 重建
 

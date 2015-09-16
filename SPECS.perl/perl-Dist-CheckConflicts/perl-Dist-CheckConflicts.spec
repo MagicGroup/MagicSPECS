@@ -5,15 +5,13 @@
 %global old_eumm %(perl -MExtUtils::MakeMaker -e 'printf "%d\\n", $ExtUtils::MakeMaker::VERSION < 6.31 ? 1 : 0;' 2>/dev/null || echo 0)
 
 Name:		perl-Dist-CheckConflicts
-Version:	0.02
-Release:	10%{?dist}
+Version:	0.11
+Release:	2%{?dist}
 Summary:	Declare version conflicts for your dist
 Group:		Development/Libraries
 License:	GPL+ or Artistic
 URL:		http://search.cpan.org/dist/Dist-CheckConflicts/
 Source0:	http://search.cpan.org/CPAN/authors/id/D/DO/DOY/Dist-CheckConflicts-%{version}.tar.gz
-Patch0:		Dist-CheckConflicts-0.02-old-eumm.patch
-Patch1:		Dist-CheckConflicts-0.02-old-Test::More.patch
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(id -nu)
 BuildArch:	noarch
 BuildRequires:	perl(Carp)
@@ -50,16 +48,6 @@ this manually.
 %prep
 %setup -q -n Dist-CheckConflicts-%{version}
 
-# Don't really need ExtUtils::MakeMaker >= 6.31
-%if %{old_eumm}
-%patch0 -p1
-%endif
-
-# Test suite needs patching if we have Test::More < 0.88
-%if %{old_test_more}
-%patch1 -p1
-%endif
-
 %build
 perl Makefile.PL INSTALLDIRS=vendor
 make %{?_smp_mflags}
@@ -84,6 +72,12 @@ rm -rf %{buildroot}
 %{_mandir}/man3/Dist::CheckConflicts.3pm*
 
 %changelog
+* Wed Sep 16 2015 Liu Di <liudidi@gmail.com> - 0.11-2
+- 为 Magic 3.0 重建
+
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.11-1
+- 更新到 0.11
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.02-10
 - 为 Magic 3.0 重建
 

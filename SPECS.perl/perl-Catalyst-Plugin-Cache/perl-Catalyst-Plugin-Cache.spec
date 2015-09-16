@@ -1,6 +1,6 @@
 Name:           perl-Catalyst-Plugin-Cache
-Version:        0.10
-Release:        19%{?dist}
+Version:	0.12
+Release:	1%{?dist}
 Summary:        Flexible caching support for Catalyst
 License:        (GPL+ or Artistic) or MIT
 Group:          Development/Libraries
@@ -59,6 +59,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.12-1
+- 更新到 0.12
+
 * Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 0.10-19
 - 为 Magic 3.0 重建
 

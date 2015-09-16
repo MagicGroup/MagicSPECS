@@ -1,11 +1,11 @@
 Name:		perl-File-Find-Rule-Perl
-Version:	1.12
-Release:	8%{?dist}
+Version:	1.15
+Release:	2%{?dist}
 Summary:	Common rules for searching for Perl things
 License:	GPL+ or Artistic
 Group:		Development/Libraries
 URL:		http://search.cpan.org/dist/File-Find-Rule-Perl/
-Source0:	http://search.cpan.org/CPAN/authors/id/A/AD/ADAMK/File-Find-Rule-Perl-%{version}.tar.gz
+Source0:        http://search.cpan.org/CPAN/authors/id/E/ET/ETHER/File-Find-Rule-Perl-%{version}.tar.gz
 
 Requires:	perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
 BuildArch:	noarch
@@ -54,11 +54,16 @@ cd ..
 
 %files
 %defattr(-,root,root,-)
-%doc File-Find-Rule-Perl-%{version}/Changes File-Find-Rule-Perl-%{version}/LICENSE
 %{perl_vendorlib}/File
 %{_mandir}/man3/*
 
 %changelog
+* Mon Sep 14 2015 Liu Di <liudidi@gmail.com> - 1.15-2
+- 为 Magic 3.0 重建
+
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.15-1
+- 更新到 1.15
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.12-8
 - 为 Magic 3.0 重建
 

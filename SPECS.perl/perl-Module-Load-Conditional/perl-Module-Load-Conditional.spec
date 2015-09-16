@@ -1,6 +1,6 @@
 Name:           perl-Module-Load-Conditional
-Version:        0.62
-Release:        4%{?dist}
+Version:	0.64
+Release:	1%{?dist}
 Summary:        Looking up module information and loading at run-time
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -63,6 +63,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.64-1
+- 更新到 0.64
+
 * Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 0.62-4
 - 为 Magic 3.0 重建
 

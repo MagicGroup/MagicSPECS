@@ -1,6 +1,6 @@
 Name:           perl-Devel-Leak
 Version:        0.03
-Release:        22%{?dist}
+Release:        23%{?dist}
 Summary:        Utility for looking for perl objects that are not reclaimed
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -51,6 +51,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.03-23
+- 为 Magic 3.0 重建
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.03-22
 - 为 Magic 3.0 重建
 

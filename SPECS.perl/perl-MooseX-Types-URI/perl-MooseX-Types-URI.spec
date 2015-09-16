@@ -1,11 +1,11 @@
 Name:       perl-MooseX-Types-URI
-Version:    0.03
-Release:    8%{?dist}
+Version:	0.08
+Release:	1%{?dist}
 # see lib/MooseX/Types/URI.pm
 License:    GPL+ or Artistic
 Group:      Development/Libraries
 Summary:    URI related types and coercions for Moose
-Source:     http://search.cpan.org/CPAN/authors/id/F/FL/FLORA/MooseX-Types-URI-%{version}.tar.gz
+Source0:        http://search.cpan.org/CPAN/authors/id/E/ET/ETHER/MooseX-Types-URI-%{version}.tar.gz
 Url:        http://search.cpan.org/dist/MooseX-Types-URI
 Requires:   perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
 BuildArch:  noarch
@@ -52,6 +52,9 @@ make test
 %{_mandir}/man3/*.3*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.08-1
+- 更新到 0.08
+
 * Thu Jun 19 2014 Liu Di <liudidi@gmail.com> - 0.03-8
 - 为 Magic 3.0 重建
 

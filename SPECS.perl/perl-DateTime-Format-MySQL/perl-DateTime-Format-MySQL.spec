@@ -11,14 +11,14 @@
 
 
 Name:           perl-DateTime-Format-MySQL
-Version:        0.04        
-Release:        25%{?dist}
+Version:	0.05
+Release:	1%{?dist}
 Summary:        Parse and format MySQL dates and times 
 
 Group:          Development/Libraries
 License:        GPL+ or Artistic
 URL:            http://search.cpan.org/dist/DateTime-Format-MySQL            
-Source0: http://search.cpan.org/CPAN/authors/id/D/DR/DROLSKY/DateTime-Format-MySQL-%{version}.tar.gz        
+Source0:        http://search.cpan.org/CPAN/authors/id/X/XM/XMIKEW/DateTime-Format-MySQL-%{version}.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildArch:      noarch 
@@ -79,6 +79,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.05-1
+- 更新到 0.05
+
 * Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 0.04-25
 - 为 Magic 3.0 重建
 

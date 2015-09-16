@@ -1,12 +1,12 @@
 Name:           perl-URI-Title
-Version:        1.86
-Release:        9%{?dist}
+Version:	1.900
+Release:	2%{?dist}
 Summary:        Get the titles of things on the web in a sensible way
 # Mentioned in URI::Title POD
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 URL:            http://search.cpan.org/dist/URI-Title/
-Source0:        http://www.cpan.org/authors/id/T/TO/TOMI/URI-Title-%{version}.tar.gz
+Source0:        http://search.cpan.org/CPAN/authors/id/B/BO/BOOK/URI-Title-%{version}.tar.gz
 BuildArch:      noarch
 BuildRequires:  perl(base)
 BuildRequires:  perl(lib)
@@ -61,11 +61,16 @@ find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null \;
 make test
 
 %files
-%doc Changes title.pl
 %{perl_vendorlib}/*
 %{_mandir}/man3/*
 
 %changelog
+* Mon Sep 14 2015 Liu Di <liudidi@gmail.com> - 1.900-2
+- 为 Magic 3.0 重建
+
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.900-1
+- 更新到 1.900
+
 * Sun Jun 15 2014 Liu Di <liudidi@gmail.com> - 1.86-9
 - 为 Magic 3.0 重建
 

@@ -1,6 +1,6 @@
 Name:           perl-Template-Alloy
-Version:        1.016
-Release:        6%{?dist}
+Version:	1.020
+Release:	1%{?dist}
 Summary:        Templating tool supporting multiple markup formats 
 # see lib/Template/Alloy.pod
 License:        GPL+ or Artistic
@@ -63,6 +63,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.020-1
+- 更新到 1.020
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.016-6
 - 为 Magic 3.0 重建
 

@@ -1,6 +1,6 @@
 Name:       perl-Text-PDF
 Version:    0.29a
-Release:    18%{?dist}
+Release:    19%{?dist}
 # lib/Text/PDF.pm -> GPL+ or Artistic
 License:    GPL+ or Artistic
 Group:      Development/Libraries
@@ -66,6 +66,9 @@ make test
 %{_bindir}/*
 
 %changelog
+* Mon Sep 14 2015 Liu Di <liudidi@gmail.com> - 0.29a-19
+- 为 Magic 3.0 重建
+
 * Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.29a-18
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

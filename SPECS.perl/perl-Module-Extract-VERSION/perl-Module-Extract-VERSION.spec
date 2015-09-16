@@ -1,6 +1,6 @@
 Name:		perl-Module-Extract-VERSION
-Version:	1.01
-Release:	15%{?dist}
+Version:	1.10_01
+Release:	1%{?dist}
 Summary:	Extract a module version without running code
 License:	GPL+ or Artistic
 Group:		Development/Libraries
@@ -56,6 +56,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/Module::Extract::VERSION.3pm*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.10_01-1
+- 更新到 1.10_01
+
 * Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 1.01-15
 - 为 Magic 3.0 重建
 

@@ -1,6 +1,6 @@
 Name:           perl-Class-DBI-mysql
 Version:        1.00
-Release:        26%{?dist}
+Release:        27%{?dist}
 Summary:        Extensions to Class::DBI for MySQL
 Group:          Development/Libraries
 License:        GPL+ or Artistic
@@ -40,6 +40,9 @@ chmod -R u+w $RPM_BUILD_ROOT/*
 %{_mandir}/man3/*.3*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.00-27
+- 为 Magic 3.0 重建
+
 * Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 1.00-26
 - 为 Magic 3.0 重建
 

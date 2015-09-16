@@ -1,6 +1,6 @@
 Name:       perl-PDF-Reuse 
 Version:    0.36
-Release:    3%{?dist}
+Release:    5%{?dist}
 # Reuse.pm -> GPL+ or Artistic
 License:    GPL+ or Artistic 
 Group:      Development/Libraries
@@ -66,6 +66,12 @@ make test
 %{_mandir}/man3/*.3*
 
 %changelog
+* Mon Sep 14 2015 Liu Di <liudidi@gmail.com> - 0.36-5
+- 为 Magic 3.0 重建
+
+* Mon Sep 14 2015 Liu Di <liudidi@gmail.com> - 0.36-4
+- 为 Magic 3.0 重建
+
 * Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.36-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

@@ -1,6 +1,6 @@
 Name:           perl-Log-Log4perl
-Version:        1.39
-Release:        11%{?dist}
+Version:	1.46
+Release:	1%{?dist}
 Summary:        Log4j implementation for Perl
 Group:          Development/Libraries
 License:        GPL+ or Artistic
@@ -71,6 +71,9 @@ magic_rpm_clean.sh
 %{_bindir}/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.46-1
+- 更新到 1.46
+
 * Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 1.39-11
 - 为 Magic 3.0 重建
 

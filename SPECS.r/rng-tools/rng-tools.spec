@@ -1,19 +1,14 @@
 Summary:        Random number generator related utilities
+Summary(zh_CN.UTF-8): 随机数字生成器相关的工具
 Name:           rng-tools
-Version:        3
-Release:        5%{?dist}
+Version:	5
+Release:	1%{?dist}
 Group:          System Environment/Base
+Group(zh_CN.UTF-8): 系统环境/基本
 License:        GPLv2+
 URL:            http://sourceforge.net/projects/gkernel/
-Source0:        http://downloads.sourceforge.net/project/gkernel/rng-tools/3/rng-tools-%{version}.tar.gz
+Source0:        http://downloads.sourceforge.net/project/gkernel/rng-tools/%{version}/rng-tools-%{version}.tar.gz
 Source1:        rngd.service
-
-# Man pages
-Patch0:         rng-tools-man.patch
-# bz#624530
-Patch1:         rng-tools-failures-disable.patch
-# bz#733452, bz#749629
-Patch2:         rng-tools-ignorefail.patch
 
 BuildRequires:  groff gettext
 BuildRequires:  systemd-units
@@ -24,13 +19,11 @@ Requires(postun): systemd-units
 %description
 Hardware random number generation tools.
 
+%description -l zh_CN.UTF-8
+硬件随机数字生成工具。
+
 %prep
 %setup -q
-
-%patch0 -p1 -b .man
-%patch1 -p1 -b .failures-disable
-%patch2 -p1 -b .ignorefail
-
 
 %build
 %configure
@@ -74,6 +67,9 @@ fi
 %attr(0644,root,root)   %{_unitdir}/rngd.service
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 5-1
+- 更新到 5
+
 * Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 3-5
 - 为 Magic 3.0 重建
 

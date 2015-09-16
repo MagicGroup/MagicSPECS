@@ -2,7 +2,7 @@
 
 Name:           perl-Test-TrailingSpace
 Version:        0.0205
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Test for trailing space in source files
 License:        MIT
 URL:            http://search.cpan.org/dist/Test-TrailingSpace/
@@ -51,6 +51,9 @@ This module is used to test for lack of trailing space.
 %{_mandir}/man3/*
 
 %changelog
+* Tue Sep 15 2015 Liu Di <liudidi@gmail.com> - 0.0205-2
+- 为 Magic 3.0 重建
+
 * Wed Sep 09 2015 Petr Pisar <ppisar@redhat.com> - 0.0205-1
 - 0.0205 bump
 

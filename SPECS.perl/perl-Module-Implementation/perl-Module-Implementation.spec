@@ -8,14 +8,13 @@
 #TODO: BR: Test::Pod::LinkCheck when available
 
 Name:		perl-Module-Implementation
-Version:	0.06
-Release:	8%{?dist}
+Version:	0.09
+Release:	2%{?dist}
 Summary:	Loads one of several alternate underlying implementations for a module
 Group:		Development/Libraries
 License:	Artistic 2.0
 URL:		http://search.cpan.org/dist/perl-Module-Implementation/
 Source0:	http://search.cpan.org/CPAN/authors/id/D/DR/DROLSKY/Module-Implementation-%{version}.tar.gz
-Patch1:		Module-Implementation-0.05-old-Test::More.patch
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(id -nu)
 BuildArch:	noarch
 # ===================================================================
@@ -74,11 +73,6 @@ something like a plugin system, not this module.
 %prep
 %setup -q -n Module-Implementation-%{version}
 
-# We have to patch the test suite if we have an old Test::More
-%if %{old_test_more}
-%patch1 -p1
-%endif
-
 %build
 perl Makefile.PL INSTALLDIRS=vendor
 make %{?_smp_mflags}
@@ -96,11 +90,16 @@ find %{buildroot} -type f -name .packlist -exec rm -f {} \;
 rm -rf %{buildroot}
 
 %files
-%doc Changes LICENSE README
 %{perl_vendorlib}/Module/
 %{_mandir}/man3/Module::Implementation.3pm*
 
 %changelog
+* Wed Sep 16 2015 Liu Di <liudidi@gmail.com> - 0.09-2
+- 为 Magic 3.0 重建
+
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.09-1
+- 更新到 0.09
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.06-8
 - 为 Magic 3.0 重建
 

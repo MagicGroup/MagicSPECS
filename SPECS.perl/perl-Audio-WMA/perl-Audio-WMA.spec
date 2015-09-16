@@ -7,7 +7,7 @@ Summary: Perl extension for reading WMA/ASF Metadata
 Summary(zh_CN): 读取 WMA/ASF 元数据的 Perl 扩展模块
 Name: perl-Audio-WMA
 Version: 1.3
-Release: 5%{?dist}
+Release: 6%{?dist}
 Group: Development/Libraries
 Group(zh_CN): 开发/库
 License: Artistic
@@ -52,6 +52,9 @@ magic_rpm_clean.sh
 %{perl_vendorlib}
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.3-6
+- 为 Magic 3.0 重建
+
 * Thu Apr 23 2015 Liu Di <liudidi@gmail.com> - 1.3-5
 - 为 Magic 3.0 重建
 

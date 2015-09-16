@@ -1,12 +1,12 @@
 Name:		perl-Data-Report
 Version:	0.10
-Release:	19%{?dist}
+Release:	20%{?dist}
 Summary:	A flexible plugin-driven reporting framework
 
 Group:		Development/Libraries
 License:	GPL+ or Artistic
 URL:		http://search.cpan.org/dist/Data-Report/
-Source0:	http://search.cpan.org/CPAN/authors/id/JV/Data-Report-%{version}.tar.gz
+Source0:        http://search.cpan.org/CPAN/authors/id/J/JV/JV/Data-Report-%{version}.tar.gz
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 Requires:	perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
 Requires:	perl(Text::CSV)
@@ -54,6 +54,9 @@ style sheets.
 %{_mandir}/man3/*.3*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.10-20
+- 为 Magic 3.0 重建
+
 * Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 0.10-19
 - 为 Magic 3.0 重建
 

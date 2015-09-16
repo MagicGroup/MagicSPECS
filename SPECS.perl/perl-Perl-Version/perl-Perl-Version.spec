@@ -1,11 +1,11 @@
 Name:           perl-Perl-Version
-Version:        1.011
-Release:        10%{?dist}
+Version:	1.013_02
+Release:	1%{?dist}
 Summary:        Parse and manipulate Perl version strings
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 URL:            http://search.cpan.org/dist/Perl-Version/
-Source0:        http://www.cpan.org/authors/id/A/AN/ANDYA/Perl-Version-%{version}.tar.gz
+Source0:        http://search.cpan.org/CPAN/authors/id/B/BD/BDFOY/Perl-Version-%{version}.tar.gz
 BuildArch:      noarch
 BuildRequires:  perl(ExtUtils::MakeMaker)
 BuildRequires:  perl(Carp)
@@ -54,6 +54,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.013_02-1
+- 更新到 1.013_02
+
 * Thu Jun 19 2014 Liu Di <liudidi@gmail.com> - 1.011-10
 - 为 Magic 3.0 重建
 

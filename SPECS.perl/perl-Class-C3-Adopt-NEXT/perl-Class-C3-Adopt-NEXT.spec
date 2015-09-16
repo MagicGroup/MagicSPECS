@@ -1,11 +1,11 @@
 Name:       perl-Class-C3-Adopt-NEXT
-Version:    0.13
-Release:    9%{?dist}
+Version:	0.14
+Release:	1%{?dist}
 # lib/Class/C3/Adopt/NEXT.pm -> GPL+ or Artistic
 License:    GPL+ or Artistic
 Group:      Development/Libraries
 Summary:    Reduce one's dependency on NEXT
-Source:     http://search.cpan.org/CPAN/authors/id/F/FL/FLORA/Class-C3-Adopt-NEXT-%{version}.tar.gz
+Source:     http://search.cpan.org/CPAN/authors/id/E/ET/ETHER/Class-C3-Adopt-NEXT-%{version}.tar.gz
 Url:        http://search.cpan.org/dist/Class-C3-Adopt-NEXT
 BuildRoot:  %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 Requires:   perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
@@ -62,6 +62,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/*.3*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.14-1
+- 更新到 0.14
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.13-9
 - 为 Magic 3.0 重建
 

@@ -1,11 +1,11 @@
 Name:           perl-Gnome2-VFS
-Version:        1.081
-Release:        18%{?dist}
+Version:	1.082
+Release:	2%{?dist}
 Summary:        Perl interface to the 2.x series of the GNOME VFS library
 License:        LGPLv2+
 Group:          Development/Libraries
 URL:            http://search.cpan.org/dist/Gnome2-VFS/
-Source0:        http://www.cpan.org/authors/id/T/TS/TSCH/Gnome2-VFS-%{version}.tar.gz
+Source0:        http://search.cpan.org/CPAN/authors/id/X/XA/XAOC/Gnome2-VFS-%{version}.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
 
@@ -57,12 +57,17 @@ rm -rf %{buildroot}
 
 %files
 %defattr(-,root,root,-)
-%doc ChangeLog doctypes LICENSE NEWS README examples/ t/
 %{perl_vendorarch}/auto/*
 %{perl_vendorarch}/Gnome2*
 %{_mandir}/man3/*
 
 %changelog
+* Mon Sep 14 2015 Liu Di <liudidi@gmail.com> - 1.082-2
+- 为 Magic 3.0 重建
+
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.082-1
+- 更新到 1.082
+
 * Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 1.081-18
 - 为 Magic 3.0 重建
 

@@ -1,11 +1,11 @@
 Name:		perl-Image-ExifTool
-Version:	8.75
-Release:	4%{?dist}
+Version:	10.00
+Release:	1%{?dist}
 License:	GPL+ or Artistic
 Group:		Applications/Multimedia
 Summary:	Utility for reading and writing image meta info
 URL:		http://www.sno.phy.queensu.ca/%7Ephil/exiftool/
-Source0:	http://www.sno.phy.queensu.ca/%7Ephil/exiftool/Image-ExifTool-%{version}.tar.gz
+Source0:        http://search.cpan.org/CPAN/authors/id/E/EX/EXIFTOOL/Image-ExifTool-%{version}.tar.gz
 BuildArch:	noarch
 BuildRequires:	perl >= 1:5.6.1, perl(ExtUtils::Command::MM)
 Requires:	perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
@@ -51,6 +51,12 @@ rm -rf %{buildroot}%{perl_vendorlib}/*-linux-thread-multi
 %{_mandir}/man3/*.3*
 
 %changelog
+* Mon Sep 14 2015 Liu Di <liudidi@gmail.com> - 10.00-1
+- 更新到 10.00
+
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 8.75-5
+- 为 Magic 3.0 重建
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 8.75-4
 - 为 Magic 3.0 重建
 

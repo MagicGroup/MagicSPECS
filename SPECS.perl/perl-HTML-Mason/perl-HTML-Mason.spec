@@ -1,12 +1,12 @@
 Name:           perl-HTML-Mason
-Version:        1.48
-Release:        12%{?dist}
+Version:	1.56
+Release:	1%{?dist}
 Epoch:          1
 Summary:        Powerful Perl-based web site development and delivery engine
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 URL:            http://www.masonhq.com/
-Source0:        http://www.cpan.org/authors/id/D/DR/DROLSKY/HTML-Mason-%{version}.tar.gz
+Source0:        http://search.cpan.org/CPAN/authors/id/D/DR/DROLSKY/HTML-Mason-%{version}.tar.gz
 Source1:        perl-HTML-Mason.conf
 
 BuildArch:      noarch
@@ -46,13 +46,12 @@ maintaining development and production sites, and more.
 %setup -q -n HTML-Mason-%{version}
 
 %build
-%{__perl} Build.PL installdirs=vendor
-./Build
+perl Makefile.PL INSTALLDIRS=vendor
+make %{?_smp_mflags}
 
 %install
-./Build install destdir=$RPM_BUILD_ROOT create_packlist=0
-find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
-
+make pure_install DESTDIR=$RPM_BUILD_ROOT
+find $RPM_BUILD_ROOT -type f -name .packlist -exec rm -f {} ';'
 %{_fixperms} $RPM_BUILD_ROOT/*
 
 rm -f $RPM_BUILD_ROOT%{_bindir}/*.README
@@ -72,12 +71,11 @@ mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/www/mason
 mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/cache/mason
 
 %check
-./Build test
+make test
 
 %files
-%defattr(-,root,root,-)
-%doc Changes CREDITS LICENSE README UPGRADE
-%doc htdocs/ eg/ samples/
+%doc Changes CREDITS LICENSE README.md UPGRADE
+%doc eg/ samples/
 %{_bindir}/mason*
 %{perl_vendorlib}/*
 %{_mandir}/man3/*
@@ -85,7 +83,14 @@ mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/cache/mason
 %dir %attr(775,root,apache) %{_localstatedir}/cache/mason
 %dir %{_localstatedir}/www/mason
 
+
 %changelog
+* Mon Sep 14 2015 Liu Di <liudidi@gmail.com> - 1:1.56-1
+- 更新到 1.56
+
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1:1.48-13
+- 为 Magic 3.0 重建
+
 * Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 1:1.48-12
 - 为 Magic 3.0 重建
 

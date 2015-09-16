@@ -1,6 +1,6 @@
 Name:           perl-String-CRC32
-Version:        1.4
-Release:        14%{?dist}
+Version:	1.5
+Release:	1%{?dist}
 Summary:        Perl interface for cyclic redundancy check generation
 Group:          Development/Libraries
 License:        Public Domain
@@ -50,6 +50,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*.3*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.5-1
+- 更新到 1.5
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.4-14
 - 为 Magic 3.0 重建
 

@@ -1,11 +1,11 @@
 Name:           perl-Catalyst-Plugin-Session-Store-DBIC
-Version:        0.12
-Release:        16%{?dist}
+Version:	0.14
+Release:	1%{?dist}
 Summary:        Store your sessions via DBIx::Class
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 URL:            http://search.cpan.org/dist/Catalyst-Plugin-Session-Store-DBIC/
-Source0:        http://www.cpan.org/authors/id/F/FL/FLORA/Catalyst-Plugin-Session-Store-DBIC-%{version}.tar.gz
+Source0:        http://search.cpan.org/CPAN/authors/id/B/BO/BOBTFISH/Catalyst-Plugin-Session-Store-DBIC-%{version}.tar.gz
 BuildArch:      noarch
 BuildRequires:  perl(Carp)
 BuildRequires:  perl(Catalyst) >= 5.65000
@@ -63,6 +63,9 @@ TEST_POD=1
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.14-1
+- 更新到 0.14
+
 * Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 0.12-16
 - 为 Magic 3.0 重建
 

@@ -1,11 +1,11 @@
 Name:           perl-Perl-Critic-Dynamic
-Version:        0.05
-Release:        10%{?dist}
+Version:	0.04
+Release:	1%{?dist}
 Summary:        Non-static policies for Perl::Critic
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 URL:            http://search.cpan.org/dist/Perl-Critic-Dynamic/
-Source0:        http://www.cpan.org/authors/id/T/TH/THALJEF/Perl-Critic-Dynamic-%{version}.tar.gz
+Source0:        http://search.cpan.org/CPAN/authors/id/T/TH/THALJEF/dynamic/Perl-Critic-Dynamic-%{version}.tar.gz
 BuildArch:      noarch
 BuildRequires:  perl(Module::Build) >= 0.36
 # Run-time:
@@ -62,6 +62,9 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.04-1
+- 更新到 0.04
+
 * Sun Jun 15 2014 Liu Di <liudidi@gmail.com> - 0.05-10
 - 为 Magic 3.0 重建
 

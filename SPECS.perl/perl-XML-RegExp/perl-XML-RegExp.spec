@@ -1,6 +1,6 @@
 Name:           perl-XML-RegExp
-Version:        0.03
-Release:        16%{?dist}
+Version:	0.04
+Release:	1%{?dist}
 Summary:        Regular expressions for XML tokens
 
 Group:          Development/Libraries
@@ -53,6 +53,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.04-1
+- 更新到 0.04
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.03-16
 - 为 Magic 3.0 重建
 

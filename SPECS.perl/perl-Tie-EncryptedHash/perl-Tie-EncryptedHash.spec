@@ -1,7 +1,7 @@
 Summary:	Hashes (and objects based on hashes) with encrypting fields
 Name:		perl-Tie-EncryptedHash
 Version:	1.24
-Release:	16%{?dist}
+Release:	17%{?dist}
 License:	GPL+ or Artistic
 Group:		Development/Libraries
 Url:		http://search.cpan.org/dist/Tie-EncryptedHash/
@@ -64,6 +64,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/Tie::EncryptedHash.3pm*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.24-17
+- 为 Magic 3.0 重建
+
 * Thu Jun 19 2014 Liu Di <liudidi@gmail.com> - 1.24-16
 - 为 Magic 3.0 重建
 

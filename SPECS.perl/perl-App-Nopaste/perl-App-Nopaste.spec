@@ -1,6 +1,6 @@
 Name:           perl-App-Nopaste
 Version:	1.004
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:        Easy access to any pastebin
 Summary(zh_CN.UTF-8): 简单访问任何 pastebin
 License:        GPL+ or Artistic
@@ -92,6 +92,9 @@ make test
 %{_mandir}/man1/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.004-2
+- 为 Magic 3.0 重建
+
 * Thu Apr 23 2015 Liu Di <liudidi@gmail.com> - 1.004-1
 - 更新到 1.004
 

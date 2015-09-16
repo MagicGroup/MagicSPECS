@@ -5,7 +5,7 @@
 
 Name:           perl-Tk
 Version:        804.033
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        Perl Graphical User Interface ToolKit
 
 Group:          Development/Libraries
@@ -176,6 +176,9 @@ find __demos/ -type f -exec chmod -x {} \;
 
 
 %changelog
+* Mon Sep 14 2015 Liu Di <liudidi@gmail.com> - 804.033-4
+- 为 Magic 3.0 重建
+
 * Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 804.033-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

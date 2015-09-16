@@ -1,13 +1,13 @@
-%global cpan_version 2.12_001
+%global cpan_version 2.14
 
 Summary: XS Blowfish implementation for Perl
 Name: perl-Crypt-Blowfish
-Version: %(echo '%{cpan_version}' | tr _ .)
-Release: 4%{?dist}
+Version:	2.14
+Release:	1%{?dist}
 License: Copyright only
 Group: Development/Libraries
 URL: http://search.cpan.org/dist/Crypt-Blowfish/
-Source0: http://search.cpan.org/CPAN/authors/id/D/DA/DAVIDO/Crypt-Blowfish-%{cpan_version}.tar.gz
+Source0:        http://search.cpan.org/CPAN/authors/id/D/DP/DPARIS/Crypt-Blowfish-%{version}.tar.gz
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 Requires: perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
 # Recommended:
@@ -32,7 +32,7 @@ take full advantage of Crypt::CBC when desired. Blowfish keys may be
 up to 448 bits (56 bytes) long.
 
 %prep
-%setup -q -n Crypt-Blowfish-%{cpan_version}
+%setup -q -n Crypt-Blowfish-%{version}
 
 %build
 %{__perl} Makefile.PL INSTALLDIRS=vendor OPTIMIZE="$RPM_OPT_FLAGS"
@@ -60,6 +60,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*.3*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 2.14-1
+- 更新到 2.14
+
 * Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 2.12.001-4
 - 为 Magic 3.0 重建
 

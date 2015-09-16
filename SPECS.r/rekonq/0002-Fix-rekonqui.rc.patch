@@ -1,0 +1,42 @@
+From 653db7681c0a45cd1807375e1753117438cd1f6f Mon Sep 17 00:00:00 2001
+From: Andrea Diamantini <adjam7@gmail.com>
+Date: Thu, 23 Jan 2014 16:01:17 +0100
+Subject: [PATCH 2/5] Fix rekonqui.rc
+
+---
+ src/webwindow/rekonqui.rc | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/src/webwindow/rekonqui.rc b/src/webwindow/rekonqui.rc
+index cefdb96..604d7c7 100644
+--- a/src/webwindow/rekonqui.rc
++++ b/src/webwindow/rekonqui.rc
+@@ -1,6 +1,6 @@
+ <?xml version="1.0"?>
+ <!DOCTYPE gui SYSTEM "kpartgui.dtd">
+-<gui name="rekonq" version="70">
++<gui name="rekonq" version="71">
+ 
+ <!--- =========== Rekonq Menu ============= -->
+ <Menu name="rekonqMenu" noMerge="1">
+@@ -13,7 +13,7 @@
+         <Action name="file_open" />
+     </Menu>
+     <Separator/>
+-    <Action name="file_save_as" />
++    <Action name="file_save" />
+     <Action name="file_print" />
+     <Action name="edit_find" />
+ 
+@@ -89,7 +89,7 @@
+         <Action name="new_window" />
+         <Action name="private_browsing" />
+         <Separator/>
+-        <Action name="file_save_as" />
++        <Action name="file_save" />
+         <Separator/>
+         <Action name="file_print" />
+         <Separator/>
+-- 
+1.9.0
+

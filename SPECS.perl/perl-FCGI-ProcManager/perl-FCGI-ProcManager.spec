@@ -1,11 +1,11 @@
 Name:       perl-FCGI-ProcManager
-Version:    0.24
-Release:    6%{?dist}
+Version:	0.26_02
+Release:	1%{?dist}
 # ProcManager.pm -> LGPLv2, LGPLv3
 License:    LGPLv2+
 Group:      Development/Libraries
 Summary:    A FastCGI process manager
-Source:     http://search.cpan.org/CPAN/authors/id/B/BO/BOBTFISH/FCGI-ProcManager-%{version}.tar.gz
+Source0:        http://search.cpan.org/CPAN/authors/id/A/AR/ARODLAND/FCGI-ProcManager-%{version}.tar.gz
 Url:        http://search.cpan.org/dist/FCGI-ProcManager
 Requires:   perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
 BuildArch:  noarch
@@ -46,6 +46,9 @@ find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null ';'
 %{_mandir}/man3/*.3*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.26_02-1
+- 更新到 0.26_02
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.24-6
 - 为 Magic 3.0 重建
 

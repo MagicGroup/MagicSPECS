@@ -1,6 +1,6 @@
 Name:           perl-IO-Socket-INET6
-Version:        2.69
-Release:        5%{?dist}
+Version:	2.72
+Release:	1%{?dist}
 Summary:        Perl Object interface for AF_INET|AF_INET6 domain sockets
 Group:          Development/Libraries
 License:        GPL+ or Artistic
@@ -47,6 +47,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/IO::Socket::INET6.3pm*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 2.72-1
+- 更新到 2.72
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 2.69-5
 - 为 Magic 3.0 重建
 

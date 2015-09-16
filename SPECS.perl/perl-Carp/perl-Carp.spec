@@ -1,6 +1,6 @@
 Name:           perl-Carp
 Version:	1.36
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:        Alternative warn and die for modules
 Summary(zh_CN.UTF-8): 用于模块的可替代的警告
 License:        GPL+ or Artistic
@@ -53,6 +53,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.36-2
+- 为 Magic 3.0 重建
+
 * Tue May 26 2015 Liu Di <liudidi@gmail.com> - 1.36-1
 - 更新到 1.36
 

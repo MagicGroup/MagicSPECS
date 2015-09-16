@@ -1,6 +1,6 @@
 Name:           perl-Algorithm-Diff
 Version:	1.1903
-Release:	1%{?dist}
+Release:	4%{?dist}
 Summary:        Algorithm::Diff Perl module
 Summary(zh_CN.UTF-8): Algorithm::Diff Perl 模块
 License:        GPL+ or Artistic
@@ -8,6 +8,7 @@ Group:          Development/Libraries
 Group(zh_CN.UTF-8): 开发/库
 URL:            http://search.cpan.org/dist/Algorithm-Diff/
 Source0:        http://www.cpan.org/authors/id/T/TY/TYEMQ/Algorithm-Diff-%{version}.tar.gz
+Patch0:         Algorithm-Diff-1.1903-provides.patch
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 BuildRequires:  perl(ExtUtils::MakeMaker)
@@ -33,6 +34,7 @@ differences.
 
 %prep
 %setup -q -n Algorithm-Diff-%{version}
+%patch0 
 chmod 644 *.pl
 
 %build
@@ -65,6 +67,15 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Mon Sep 14 2015 Liu Di <liudidi@gmail.com> - 1.1903-4
+- 为 Magic 3.0 重建
+
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.1903-3
+- 为 Magic 3.0 重建
+
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.1903-2
+- 为 Magic 3.0 重建
+
 * Sun Apr 19 2015 Liu Di <liudidi@gmail.com> - 1.1903-1
 - 更新到 1.1903
 

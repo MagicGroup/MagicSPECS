@@ -1,6 +1,6 @@
 Name:           perl-CGI-Application-Server
-Version:        0.062
-Release:        20%{?dist}
+Version:	0.063
+Release:	1%{?dist}
 Summary:        Simple HTTP server for developing with CGI::Application
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -37,30 +37,29 @@ priority).
 %setup -q -n CGI-Application-Server-%{version}
 
 %build
-%{__perl} Build.PL installdirs=vendor
-./Build
+%{__perl} Makefile.PL INSTALLDIRS=vendor
+make %{?_smp_mflags}
 
 %install
-rm -rf $RPM_BUILD_ROOT
+make pure_install PERL_INSTALL_ROOT=$RPM_BUILD_ROOT
 
-./Build install destdir=$RPM_BUILD_ROOT create_packlist=0
+find $RPM_BUILD_ROOT -type f -name .packlist -exec rm -f {} \;
 find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 
 %{_fixperms} $RPM_BUILD_ROOT/*
 
 %check
-./Build test
-
-%clean
-rm -rf $RPM_BUILD_ROOT
+make test
 
 %files
-%defattr(-,root,root,-)
-%doc ChangeLog README
+%doc Changes README
 %{perl_vendorlib}/*
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.063-1
+- 更新到 0.063
+
 * Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 0.062-20
 - 为 Magic 3.0 重建
 

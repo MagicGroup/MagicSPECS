@@ -1,11 +1,11 @@
 Name:       perl-MooseX-Types
-Version:    0.35
-Release:    8%{?dist}
+Version:	0.46
+Release:	1%{?dist}
 # see Makefile.PL, lib/MooseX/Types.pm
 License:    GPL+ or Artistic
 Group:      Development/Libraries
 Summary:    Organize your Moose types in libraries
-Source:     http://search.cpan.org/CPAN/authors/id/D/DR/DROLSKY/MooseX-Types-%{version}.tar.gz
+Source0:        http://search.cpan.org/CPAN/authors/id/E/ET/ETHER/MooseX-Types-%{version}.tar.gz
 Url:        http://search.cpan.org/dist/MooseX-Types
 Requires:   perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
 BuildArch:  noarch
@@ -70,6 +70,9 @@ make test
 %{_mandir}/man3/*.3*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.46-1
+- 更新到 0.46
+
 * Thu Jun 19 2014 Liu Di <liudidi@gmail.com> - 0.35-8
 - 为 Magic 3.0 重建
 

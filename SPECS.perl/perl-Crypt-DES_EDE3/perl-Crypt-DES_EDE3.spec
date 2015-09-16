@@ -1,6 +1,6 @@
 Name:           perl-Crypt-DES_EDE3
 Version:        0.01
-Release:        20%{?dist}
+Release:        21%{?dist}
 Summary:        Triple-DES EDE encryption/decryption module
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -50,6 +50,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.01-21
+- 为 Magic 3.0 重建
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.01-20
 - 为 Magic 3.0 重建
 

@@ -1,8 +1,8 @@
 %global spectool_version 1.0.10
 
 Name:           rpmdevtools
-Version:	8.4
-Release:        3%{?dist}
+Version:	8.6
+Release:        4%{?dist}
 Summary:        RPM Development Tools
 Summary(zh_CN.UTF-8): RPM 开发工具
 
@@ -10,9 +10,6 @@ Summary(zh_CN.UTF-8): RPM 开发工具
 License:        GPLv2+ and GPLv2
 URL:            https://fedorahosted.org/rpmdevtools/
 Source0:        https://fedorahosted.org/released/rpmdevtools/%{name}-%{version}.tar.xz
-
-# 允许不更新 Release 号，以便进行版本更新
-Patch0:		rpmdevtools-8.4-allownobump.patch
 
 BuildArch:      noarch
 # help2man, pod2man, *python for creating man pages
@@ -22,10 +19,8 @@ BuildRequires:  python >= 2.4
 BuildRequires:  rpm-python
 # emacs-common >= 1:22.3-3 for macros.emacs
 BuildRequires:  emacs-common >= 1:22.3-3
-%if 0%{?fedora}
 # xemacs-common >= 21.5.29-8 for macros.xemacs
 BuildRequires:  xemacs-common >= 21.5.29-8
-%endif
 Provides:       spectool = %{spectool_version}
 Requires:       curl
 Requires:       diffutils
@@ -40,9 +35,7 @@ Requires:       rpm-build >= 4.4.2.3
 Requires:       rpm-python
 Requires:       sed
 Requires:       emacs-filesystem
-%if 0%{?fedora}
 Requires:       xemacs-filesystem
-%endif
 
 %description
 This package contains scripts and (X)Emacs support files to aid in
@@ -79,7 +72,6 @@ rpmdev-bumpspec     修改 spec 文件中的版本号
 
 %prep
 %setup -q
-%patch0 -p1
 
 %build
 %configure --libdir=%{_prefix}/lib
@@ -91,11 +83,7 @@ rm -rf $RPM_BUILD_ROOT
 
 make install DESTDIR=$RPM_BUILD_ROOT
 
-%if 0%{?fedora}
 for dir in %{_emacs_sitestartdir} %{_xemacs_sitestartdir} ; do
-%else
-for dir in %{_emacs_sitestartdir} ; do
-%endif
   install -dm 755 $RPM_BUILD_ROOT$dir
   ln -s %{_datadir}/rpmdevtools/rpmdev-init.el $RPM_BUILD_ROOT$dir
   touch $RPM_BUILD_ROOT$dir/rpmdev-init.elc
@@ -105,19 +93,23 @@ done
 %files
 %doc COPYING NEWS
 %config(noreplace) %{_sysconfdir}/rpmdevtools/
-%{_sysconfdir}/bash_completion.d/
+%{_datadir}/bash-completion/completions/
 %{_datadir}/rpmdevtools/
 %{_bindir}/*
 %{_emacs_sitestartdir}/rpmdev-init.el
 %ghost %{_emacs_sitestartdir}/rpmdev-init.elc
-%if 0%{?fedora}
 %{_xemacs_sitestartdir}/rpmdev-init.el
 %ghost %{_xemacs_sitestartdir}/rpmdev-init.elc
-%endif
 %{_mandir}/man[18]/*.[18]*
 
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 8.6-4
+- 为 Magic 3.0 重建
+
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 8.6-3
+- 更新到 8.6
+
 * Thu Jun 12 2014 Liu Di <liudidi@gmail.com> - 8.4-3
 - 为 Magic 3.0 重建
 

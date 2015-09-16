@@ -1,6 +1,6 @@
 Name:           perl-Catalyst-Plugin-Unicode
 Version:        0.93
-Release:        20%{?dist}
+Release:        21%{?dist}
 Summary:        Unicode aware Catalyst
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -55,6 +55,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.93-21
+- 为 Magic 3.0 重建
+
 * Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 0.93-20
 - 为 Magic 3.0 重建
 

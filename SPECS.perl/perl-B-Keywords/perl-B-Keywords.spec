@@ -1,6 +1,6 @@
 Name:           perl-B-Keywords
 Version:	1.14
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:        Lists of reserved barewords and symbol names
 Summary(zh_CN.UTF-8): 保留字和符号名称的列表
 Group:          Development/Libraries
@@ -53,6 +53,9 @@ magic_rpm_clean.sh
 
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.14-2
+- 为 Magic 3.0 重建
+
 * Sat Apr 25 2015 Liu Di <liudidi@gmail.com> - 1.14-1
 - 更新到 1.14
 

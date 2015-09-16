@@ -1,6 +1,6 @@
 Name:           perl-Catalyst-Plugin-I18N
 Version:        0.10
-Release:        19%{?dist}
+Release:        20%{?dist}
 Summary:        I18N for Catalyst
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -56,6 +56,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.10-20
+- 为 Magic 3.0 重建
+
 * Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 0.10-19
 - 为 Magic 3.0 重建
 

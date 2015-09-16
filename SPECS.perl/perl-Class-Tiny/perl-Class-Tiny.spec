@@ -1,6 +1,6 @@
 Name:           perl-Class-Tiny
 Version:        1.001
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        Minimalist class construction
 License:        ASL 2.0
 Group:          Development/Libraries
@@ -83,6 +83,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Wed Sep 16 2015 Liu Di <liudidi@gmail.com> - 1.001-4
+- 为 Magic 3.0 重建
+
 * Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.001-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

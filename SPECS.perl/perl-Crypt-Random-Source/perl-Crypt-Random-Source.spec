@@ -1,11 +1,11 @@
 Name:           perl-Crypt-Random-Source
-Version:        0.07
-Release:        8%{?dist}
+Version:	0.10
+Release:	1%{?dist}
 Summary:        Get weak or strong random data from pluggable sources
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 URL:            http://search.cpan.org/dist/Crypt-Random-Source/
-Source0:        http://www.cpan.org/authors/id/N/NU/NUFFIN/Crypt-Random-Source-%{version}.tar.gz
+Source0:        http://search.cpan.org/CPAN/authors/id/E/ET/ETHER/Crypt-Random-Source-%{version}.tar.gz
 BuildArch:      noarch
 BuildRequires:  perl
 BuildRequires:  perl(Any::Moose)
@@ -52,6 +52,9 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.10-1
+- 更新到 0.10
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.07-8
 - 为 Magic 3.0 重建
 

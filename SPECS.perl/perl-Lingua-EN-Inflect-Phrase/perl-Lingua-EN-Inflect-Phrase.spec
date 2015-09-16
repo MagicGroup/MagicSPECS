@@ -1,6 +1,6 @@
 Name:           perl-Lingua-EN-Inflect-Phrase
-Version:        0.12
-Release:        12%{?dist}
+Version:	0.18
+Release:	1%{?dist}
 Summary:        Inflect short English Phrases
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -44,6 +44,9 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.18-1
+- 更新到 0.18
+
 * Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 0.12-12
 - 为 Magic 3.0 重建
 

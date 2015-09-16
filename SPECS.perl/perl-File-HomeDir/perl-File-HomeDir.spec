@@ -1,6 +1,6 @@
 Name:           perl-File-HomeDir
-Version:        0.99
-Release:        7%{?dist}
+Version:	1.00
+Release:	1%{?dist}
 Summary:        Find your home and other directories on any platform
 
 Group:          Development/Libraries
@@ -67,6 +67,9 @@ chmod -R u+w $RPM_BUILD_ROOT/*
 
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.00-1
+- 更新到 1.00
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.99-7
 - 为 Magic 3.0 重建
 

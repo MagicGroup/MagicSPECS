@@ -1,6 +1,6 @@
 Name:		perl-IO-Compress-Lzma
-Version:	2.045
-Release:	5%{?dist}
+Version:	2.068
+Release:	1%{?dist}
 Summary:	Read and write lzma compressed data
 License:	GPL+ or Artistic
 Group:		Development/Libraries
@@ -46,6 +46,9 @@ find %{buildroot} -depth -type d -exec rmdir {} ';' 2>/dev/null
 %{_mandir}/man3/IO::Uncompress::UnXz.3pm*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 2.068-1
+- 更新到 2.068
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 2.045-5
 - 为 Magic 3.0 重建
 

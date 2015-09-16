@@ -1,6 +1,6 @@
 Name:           perl-DateTime-Format-Pg
-Version:        0.16007
-Release:        6%{?dist}
+Version:	0.16011
+Release:	1%{?dist}
 Summary:        Parse and format PostgreSQL dates and times
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -31,31 +31,27 @@ it in a format accepted by PostgreSQL.
 %prep
 %setup -q -n DateTime-Format-Pg-%{version}
 
-cat README | iconv -f iso8859-1 -t utf8 > foo ; mv foo README
-
-perl -pi -e 's|^#!perl|#!/usr/bin/perl|' t/*.t
-
 %build
-%{__perl} Makefile.PL INSTALLDIRS=vendor
-make %{?_smp_mflags}
+perl Build.PL --installdirs=vendor
+./Build
 
 %install
-make pure_install PERL_INSTALL_ROOT=%{buildroot}
-
-find %{buildroot} -type f -name .packlist -exec rm -f {} \;
-find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null \;
-
+./Build install destdir=%{buildroot} create_packlist=0
 %{_fixperms} %{buildroot}/*
 
 %check
-
+./Build test
 
 %files
-%doc Changes LICENSE t/
+%license LICENSE
+%doc Changes
 %{perl_vendorlib}/*
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.16011-1
+- 更新到 0.16011
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.16007-6
 - 为 Magic 3.0 重建
 

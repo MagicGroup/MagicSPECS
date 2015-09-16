@@ -1,7 +1,7 @@
 Name:           perl-JSON-Any
 Summary:        A meta-module to make working with JSON easier
-Version:        1.34
-Release:        8%{?dist}
+Version:	1.39
+Release:	1%{?dist}
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 Source0:        http://search.cpan.org/CPAN/authors/id/E/ET/ETHER/JSON-Any-%{version}.tar.gz 
@@ -63,6 +63,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.39-1
+- 更新到 1.39
+
 * Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 1.34-8
 - 为 Magic 3.0 重建
 

@@ -1,13 +1,13 @@
 Name:           perl-Algorithm-Permute
 Version:        0.12
-Release:        14%{?dist}
+Release:        15%{?dist}
 Summary:        Handy and fast permutation with object oriented interface
 Summary(zh_CN.UTF-8): 方便快捷面向对象的排列算法接口
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 Group(zh_CN.UTF-8): 开发/库
 URL:            http://search.cpan.org/dist/Algorithm-Permute/
-Source0:        http://archive.cpan.cz//authors/id/E/ED/EDPRATOMO/Algorithm-Permute-%{version}.tar.gz
+Source0:        http://search.cpan.org/CPAN/authors/id/E/ED/EDPRATOMO/Algorithm-Permute-%{version}.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  perl(ExtUtils::MakeMaker)
 Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
@@ -59,6 +59,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.12-15
+- 为 Magic 3.0 重建
+
 * Wed Apr 22 2015 Liu Di <liudidi@gmail.com> - 0.12-14
 - 为 Magic 3.0 重建
 

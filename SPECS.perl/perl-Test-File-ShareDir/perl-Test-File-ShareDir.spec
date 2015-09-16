@@ -1,6 +1,6 @@
 Name:           perl-Test-File-ShareDir
-Version:        0.3.1
-Release:        8%{?dist}
+Version:	1.001001
+Release:	1%{?dist}
 Summary:        Create a Fake ShareDir for your modules for testing
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -33,23 +33,26 @@ Create a fake ShareDir for your modules for testing.
 %setup -q -n Test-File-ShareDir-%{version}
 
 %build
-%{__perl} Build.PL installdirs=vendor
-./Build
+perl Makefile.PL INSTALLDIRS=vendor NO_PACKLIST=true
+make %{?_smp_mflags}
 
 %install
-./Build install destdir=%{buildroot} create_packlist=0
-
+make pure_install DESTDIR=%{buildroot}
 %{_fixperms} %{buildroot}/*
 
 %check
-./Build test
+make test
 
 %files
-%doc Changes LICENSE README
+%license LICENSE
+%doc Changes README
 %{perl_vendorlib}/*
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.001001-1
+- 更新到 1.001001
+
 * Sun Jun 15 2014 Liu Di <liudidi@gmail.com> - 0.3.1-8
 - 为 Magic 3.0 重建
 

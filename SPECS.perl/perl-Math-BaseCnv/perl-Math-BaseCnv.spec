@@ -1,6 +1,6 @@
 Name:           perl-Math-BaseCnv
 Version:        1.8.B59BrZX
-Release:        6%{?dist}
+Release:        7%{?dist}
 Summary:        Fast functions to CoNVert between number Bases
 
 Group:          Development/Libraries
@@ -58,6 +58,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Wed Sep 16 2015 Liu Di <liudidi@gmail.com> - 1.8.B59BrZX-7
+- 为 Magic 3.0 重建
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.8.B59BrZX-6
 - 为 Magic 3.0 重建
 

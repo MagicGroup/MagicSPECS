@@ -1,11 +1,11 @@
 Name:           perl-CPAN-Meta-Requirements
-Version:        2.125
-Release:        10%{?dist}
+Version:	2.133
+Release:	1%{?dist}
 Summary:        Set of version requirements for a CPAN dist
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 URL:            http://search.cpan.org/dist/CPAN-Meta-Requirements/
-Source0:        http://www.cpan.org/authors/id/D/DA/DAGOLDEN/CPAN-Meta-Requirements-%{version}.tar.gz
+Source0:        http://search.cpan.org/CPAN/authors/id/D/DA/DAGOLDEN/CPAN-Meta-Requirements-%{version}.tar.gz
 BuildArch:      noarch
 # Build
 BuildRequires:  perl
@@ -76,11 +76,13 @@ make test TEST_FILES="$(echo $(find xt/ -name '*.t'))"
 %endif
 
 %files
-%doc Changes CONTRIBUTING LICENSE perlcritic.rc README
 %{perl_vendorlib}/CPAN/
 %{_mandir}/man3/CPAN::Meta::Requirements.3pm*
 
 %changelog
+* Mon Sep 14 2015 Liu Di <liudidi@gmail.com> - 2.133-1
+- 更新到 2.133
+
 * Sun Jun 15 2014 Liu Di <liudidi@gmail.com> - 2.125-10
 - 为 Magic 3.0 重建
 

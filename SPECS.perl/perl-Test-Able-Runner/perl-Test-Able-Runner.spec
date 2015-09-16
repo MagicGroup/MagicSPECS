@@ -1,6 +1,6 @@
 Name:           perl-Test-Able-Runner
-Version:        1.001
-Release:        6%{?dist}
+Version:	1.002
+Release:	1%{?dist}
 Summary:        Use Test::Able without a bunch of boilerplate
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -57,6 +57,9 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.002-1
+- 更新到 1.002
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.001-6
 - 为 Magic 3.0 重建
 

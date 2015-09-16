@@ -2,7 +2,7 @@
 Name:           perl-File-Temp
 # Keep 2-digit version to align with future versions
 Version:        %(echo '%{cpan_version}' | sed 's/\(\...\)\(.\)/\1.\2/')
-Release:        346%{?dist}
+Release:        347%{?dist}
 Summary:        Return name and handle of a temporary file safely
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -79,6 +79,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Wed Sep 16 2015 Liu Di <liudidi@gmail.com> - 0.23.04-347
+- 为 Magic 3.0 重建
+
 * Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.23.04-346
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

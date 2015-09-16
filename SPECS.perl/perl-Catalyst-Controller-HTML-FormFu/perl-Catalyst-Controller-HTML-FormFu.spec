@@ -1,6 +1,6 @@
 Name:           perl-Catalyst-Controller-HTML-FormFu
 Version:	1.00
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:        HTML::FormFu controller for Catalyst
 Summary(zh_CN.UTF-8): Catalyst 的 HTML::FormFu 控制器
 License:        GPL+ or Artistic
@@ -64,6 +64,9 @@ magic_rpm_clean.sh
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.00-2
+- 为 Magic 3.0 重建
+
 * Fri Jun 05 2015 Liu Di <liudidi@gmail.com> - 1.00-1
 - 更新到 1.00
 

@@ -1,6 +1,6 @@
 Name:           perl-Type-Tiny
-Version:        0.042
-Release:        3%{?dist}
+Version:	1.001_002
+Release:	1%{?dist}
 Summary:        Tiny, yet Moo(se)-compatible type constraint
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -85,7 +85,6 @@ find $RPM_BUILD_ROOT -type f -name .packlist -exec rm -f {} \;
 make test
 
 %files
-%doc Changes CONTRIBUTING COPYRIGHT CREDITS LICENSE NEWS README
 %{perl_vendorlib}/*
 %{!?with_reply_plugin:%exclude %{perl_vendorlib}/Reply}
 %{_mandir}/man3/*
@@ -97,6 +96,9 @@ make test
 %{_mandir}/man3/Test::TypeTiny.3pm*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.001_002-1
+- 更新到 1.001_002
+
 * Thu Jun 19 2014 Liu Di <liudidi@gmail.com> - 0.042-3
 - 为 Magic 3.0 重建
 

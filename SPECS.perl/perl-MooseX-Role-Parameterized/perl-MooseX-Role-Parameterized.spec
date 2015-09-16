@@ -1,10 +1,10 @@
 Name:           perl-MooseX-Role-Parameterized
 Summary:        Make your roles flexible through parameterization
-Version:        1.00
-Release:        11%{?dist}
+Version:	1.08
+Release:	1%{?dist}
 License:        GPL+ or Artistic
 Group:          Development/Libraries
-Source0:        http://search.cpan.org/CPAN/authors/id/S/SA/SARTAK/MooseX-Role-Parameterized-%{version}.tar.gz 
+Source0:        http://search.cpan.org/CPAN/authors/id/E/ET/ETHER/MooseX-Role-Parameterized-%{version}.tar.gz
 URL:            http://search.cpan.org/dist/MooseX-Role-Parameterized
 Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
 BuildArch:      noarch
@@ -68,6 +68,9 @@ make test
 %{_mandir}/man3/*.3*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.08-1
+- 更新到 1.08
+
 * Sun Jun 15 2014 Liu Di <liudidi@gmail.com> - 1.00-11
 - 为 Magic 3.0 重建
 

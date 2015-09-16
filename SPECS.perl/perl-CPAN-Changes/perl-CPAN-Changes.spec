@@ -1,11 +1,11 @@
 Name:		perl-CPAN-Changes
 Summary:	Read and write Changes files
-Version:	0.19
-Release:	6%{?dist}
+Version:	0.400002
+Release:	2%{?dist}
 License:	GPL+ or Artistic
 Group:		Development/Libraries
 URL:		http://search.cpan.org/dist/CPAN-Changes/
-Source0:	http://search.cpan.org/CPAN/authors/id/B/BR/BRICAS/CPAN-Changes-%{version}.tar.gz 
+Source0:        http://search.cpan.org/CPAN/authors/id/H/HA/HAARG/CPAN-Changes-%{version}.tar.gz
 Requires:	perl(:MODULE_COMPAT_%(eval "`perl -V:version`"; echo $version))
 BuildArch:	noarch
 BuildRequires:	perl >= 4:5.10.0
@@ -52,8 +52,17 @@ find %{buildroot} -type f -name .packlist -exec rm -f {} \;
 %{_mandir}/man3/CPAN::Changes::Release.3pm*
 %{_mandir}/man3/CPAN::Changes::Spec.3pm*
 %{_mandir}/man3/Test::CPAN::Changes.3pm*
+%{_bindir}/tidy_changelog
+%{_mandir}/man1/tidy_changelog.1*
+%{_mandir}/man3/CPAN::Changes::Group.3pm*
 
 %changelog
+* Mon Sep 14 2015 Liu Di <liudidi@gmail.com> - 0.400002-2
+- 为 Magic 3.0 重建
+
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.400002-1
+- 更新到 0.400002
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.19-6
 - 为 Magic 3.0 重建
 

@@ -1,10 +1,10 @@
 Name:           perl-Hash-MultiValue
 Summary:        Store multiple values per key
-Version:        0.10
-Release:        19%{?dist}
+Version:	0.16
+Release:	2%{?dist}
 License:        GPL+ or Artistic
 Group:          Development/Libraries
-Source0:        http://search.cpan.org/CPAN/authors/id/M/MI/MIYAGAWA/Hash-MultiValue-%{version}.tar.gz 
+Source0:        http://search.cpan.org/CPAN/authors/id/A/AR/ARISTOTLE/Hash-MultiValue-%{version}.tar.gz
 URL:            http://search.cpan.org/dist/Hash-MultiValue
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
@@ -53,6 +53,12 @@ rm -rf %{buildroot}
 %{_mandir}/man3/*.3*
 
 %changelog
+* Mon Sep 14 2015 Liu Di <liudidi@gmail.com> - 0.16-2
+- 为 Magic 3.0 重建
+
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.16-1
+- 更新到 0.16
+
 * Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 0.10-19
 - 为 Magic 3.0 重建
 

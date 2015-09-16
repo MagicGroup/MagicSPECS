@@ -1,6 +1,6 @@
 Name:       perl-App-Asciio 
-Version:    1.02.71 
-Release:    21%{?dist}
+Version:	1.51.3
+Release:	1%{?dist}
 # see lib/App/Asciio.pm
 License:    GPL+ or Artistic
 Group:      Development/Libraries
@@ -157,6 +157,9 @@ magic_rpm_clean.sh
 
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.51.3-1
+- 更新到 1.51.3
+
 * Thu Apr 23 2015 Liu Di <liudidi@gmail.com> - 1.02.71-21
 - 为 Magic 3.0 重建
 

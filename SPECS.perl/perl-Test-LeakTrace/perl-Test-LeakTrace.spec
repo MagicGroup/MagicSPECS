@@ -12,8 +12,8 @@
 
 Name:		perl-Test-LeakTrace
 Summary:	Trace memory leaks
-Version:	0.14
-Release:	7%{?dist}
+Version:	0.15
+Release:	1%{?dist}
 License:	GPL+ or Artistic
 Group:		Development/Libraries
 URL:		http://search.cpan.org/dist/Test-LeakTrace/
@@ -99,6 +99,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/Test::LeakTrace::Script.3pm*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.15-1
+- 更新到 0.15
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.14-7
 - 为 Magic 3.0 重建
 

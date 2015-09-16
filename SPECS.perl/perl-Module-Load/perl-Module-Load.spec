@@ -2,7 +2,7 @@ Name:           perl-Module-Load
 # Epoch to compete with perl.spec
 Epoch:          1
 Version:        0.32
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        Run-time require of both modules and files
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -56,6 +56,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1:0.32-4
+- 为 Magic 3.0 重建
+
 * Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 1:0.32-3
 - 为 Magic 3.0 重建
 

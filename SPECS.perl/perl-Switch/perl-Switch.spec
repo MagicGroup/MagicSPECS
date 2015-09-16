@@ -1,13 +1,11 @@
 Name:		perl-Switch
-Version:	2.16
-Release:	9%{?dist}
+Version:	2.17
+Release:	1%{?dist}
 Summary:	A switch statement for Perl
 Group:		Development/Libraries
 License:	GPL+ or Artistic
 URL:		http://search.cpan.org/dist/Switch/
-Source0:	http://search.cpan.org/CPAN/authors/id/R/RG/RGARCIA/Switch-%{version}.tar.gz
-# From OpenSUSE, fix test failures with perl 5.14
-Patch0:		Switch-2.16-perl514.patch
+Source0:        http://search.cpan.org/CPAN/authors/id/C/CH/CHORNY/Switch-%{version}.tar.gz
 BuildRequires:	perl
 %if 0%(perl -e 'print $] > 5.011')
 BuildRequires:	perl(deprecate)
@@ -33,7 +31,6 @@ various cases.
 
 %prep
 %setup -q -n Switch-%{version}
-%patch0 -p1 -b .514
 
 %build
 %{__perl} Makefile.PL INSTALLDIRS=vendor
@@ -54,6 +51,9 @@ make test
 %{_mandir}/man3/*.3*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 2.17-1
+- 更新到 2.17
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 2.16-9
 - 为 Magic 3.0 重建
 

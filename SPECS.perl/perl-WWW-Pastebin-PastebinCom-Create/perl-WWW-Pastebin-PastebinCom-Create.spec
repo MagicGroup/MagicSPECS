@@ -1,6 +1,6 @@
 Name:           perl-WWW-Pastebin-PastebinCom-Create
-Version:        0.004
-Release:        9%{?dist}
+Version:	1.003
+Release:	1%{?dist}
 Summary:        Paste to http://pastebin.com from Perl
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -44,6 +44,9 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.003-1
+- 更新到 1.003
+
 * Sun Jun 15 2014 Liu Di <liudidi@gmail.com> - 0.004-9
 - 为 Magic 3.0 重建
 

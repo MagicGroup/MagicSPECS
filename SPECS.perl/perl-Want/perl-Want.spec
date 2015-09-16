@@ -1,6 +1,6 @@
 Name: 		perl-Want
-Version: 	0.21
-Release: 	5%{?dist}
+Version:	0.26
+Release:	1%{?dist}
 Summary: 	Perl module implementing a generalisation of wantarray
 License: 	GPL+ or Artistic
 Group: 		Development/Libraries
@@ -43,6 +43,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.26-1
+- 更新到 0.26
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.21-5
 - 为 Magic 3.0 重建
 

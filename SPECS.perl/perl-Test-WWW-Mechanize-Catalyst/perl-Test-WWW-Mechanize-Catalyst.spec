@@ -2,10 +2,10 @@ Name:           perl-Test-WWW-Mechanize-Catalyst
 Summary:        Test::WWW::Mechanize for Catalyst
 Summary(zh_CN.UTF-8): Catalyst 的 Test::WWW::Mechanize 模块
 Version:        0.60
-Release:        2%{?dist}
+Release:        3%{?dist}
 License:        GPL+ or Artistic
 
-Source0:        http://search.cpan.org/CPAN/authors/id/I/IL/ILMARI/Test-WWW-Mechanize-Catalyst-%{version}.tar.gz
+Source0:        http://search.cpan.org/CPAN/authors/id/J/JJ/JJNAPIORK/Test-WWW-Mechanize-Catalyst-%{version}.tar.gz
 URL:            http://search.cpan.org/dist/Test-WWW-Mechanize-Catalyst/
 Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
 BuildArch:      noarch
@@ -80,6 +80,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.60-3
+- 为 Magic 3.0 重建
+
 * Fri Jun 05 2015 Liu Di <liudidi@gmail.com> - 0.60-2
 - 为 Magic 3.0 重建
 

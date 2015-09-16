@@ -1,6 +1,6 @@
 Name:           perl-Config-MVP-Reader-INI
-Version:        2.101461
-Release:        18%{?dist}
+Version:	2.101463
+Release:	1%{?dist}
 Summary:        MVP config reader for .ini files
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -54,6 +54,9 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 2.101463-1
+- 更新到 2.101463
+
 * Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 2.101461-18
 - 为 Magic 3.0 重建
 

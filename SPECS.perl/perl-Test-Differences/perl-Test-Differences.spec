@@ -3,8 +3,8 @@
 %global RPM_version %(echo %{module_version} | %{__perl} -pi -e 's/(.*)/sprintf("%.4f", $1)/e')
 
 Name:           perl-Test-Differences
-Version:        %{RPM_version}
-Release:        10%{?dist}
+Version:	0.63
+Release:	1%{?dist}
 Summary:        Test strings and data structures and show differences if not OK
 
 Group:          Development/Libraries
@@ -72,6 +72,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.63-1
+- 更新到 0.63
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.5000-10
 - 为 Magic 3.0 重建
 

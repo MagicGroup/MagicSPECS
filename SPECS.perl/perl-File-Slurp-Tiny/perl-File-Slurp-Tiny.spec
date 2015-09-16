@@ -3,7 +3,7 @@
 
 Name:		perl-File-Slurp-Tiny
 Version:	0.004
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:	A simple, sane and efficient file slurper
 Group:		Development/Libraries
 License:	GPL+ or Artistic
@@ -70,6 +70,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/File::Slurp::Tiny.3*
 
 %changelog
+* Mon Sep 14 2015 Liu Di <liudidi@gmail.com> - 0.004-2
+- 为 Magic 3.0 重建
+
 * Thu Jul 16 2015 Paul Howarth <paul@city-fan.org> - 0.004-1
 - Update to 0.004
   - Add discouragement notice (File::Slurper is a better choice)

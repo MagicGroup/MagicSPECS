@@ -1,6 +1,6 @@
 Name:           perl-Graph-Easy
-Version:        0.71
-Release:        5%{?dist}
+Version:	0.75
+Release:	1%{?dist}
 Summary:        Convert or render graphs as ASCII, HTML, SVG or via Graphviz
 License:        GPLv2+ and ASL 1.1
 Group:          Development/Libraries
@@ -74,6 +74,9 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.75-1
+- 更新到 0.75
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.71-5
 - 为 Magic 3.0 重建
 

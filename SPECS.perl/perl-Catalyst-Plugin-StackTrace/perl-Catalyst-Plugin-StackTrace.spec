@@ -1,11 +1,11 @@
 Name:           perl-Catalyst-Plugin-StackTrace
-Version:        0.10
-Release:        22%{?dist}
+Version:	0.12
+Release:	1%{?dist}
 Summary:        Display a stack trace on the debug screen
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 URL:            http://search.cpan.org/dist/Catalyst-Plugin-StackTrace/
-Source0:        http://search.cpan.org/CPAN/authors/id/M/MR/MRAMBERG/Catalyst-Plugin-StackTrace-%{version}.tar.gz
+Source0:        http://search.cpan.org/CPAN/authors/id/B/BO/BOBTFISH/Catalyst-Plugin-StackTrace-%{version}.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 BuildRequires:  perl(Catalyst) >= 5.70
@@ -55,6 +55,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.12-1
+- 更新到 0.12
+
 * Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 0.10-22
 - 为 Magic 3.0 重建
 

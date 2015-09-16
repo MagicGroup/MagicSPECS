@@ -1,11 +1,11 @@
 Name:           perl-Import-Into
-Version:        1.002002
-Release:        3%{?dist}
+Version:	1.002005
+Release:	1%{?dist}
 Summary:        Import packages into other packages
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 URL:            http://search.cpan.org/dist/Import-Into/
-Source0:        http://search.cpan.org/CPAN/authors/id/E/ET/ETHER/Import-Into-%{version}.tar.gz
+Source0:        http://search.cpan.org/CPAN/authors/id/H/HA/HAARG/Import-Into-%{version}.tar.gz
 BuildArch:      noarch
 # Module Build
 BuildRequires:  perl
@@ -47,6 +47,9 @@ make test
 %{_mandir}/man3/Import::Into.3pm*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.002005-1
+- 更新到 1.002005
+
 * Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 1.002002-3
 - 为 Magic 3.0 重建
 

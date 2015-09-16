@@ -1,6 +1,6 @@
 Name:           perl-JSON-RPC
-Version:        1.01
-Release:        13%{?dist}
+Version:        1.06
+Release:        3%{?dist}
 Summary:        Perl implementation of JSON-RPC 1.1 protocol
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -15,12 +15,15 @@ BuildRequires:  perl(HTTP::Request)
 BuildRequires:  perl(HTTP::Response)
 BuildRequires:  perl(JSON) >= 2
 BuildRequires:  perl(LWP::UserAgent) >= 2.001
+BuildRequires:  perl(Module::Build)
 BuildRequires:  perl(Plack::Request)
 BuildRequires:  perl(Plack::Test)
 BuildRequires:  perl(Test::More)
 BuildRequires:  perl(Test::Pod)
 BuildRequires:  perl(Router::Simple)
 Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
+Obsoletes:      perl-JSON-RPC-legacy < %{version}
+Provides:       perl-JSON-RPC-legacy = %{version}
 
 %{?perl_default_filter}
 
@@ -30,95 +33,124 @@ protocol for inter-networking applications over HTTP. It uses JSON as the
 data format for of all facets of a remote procedure call, including all
 application data carried in parameters.
 
-%package legacy-server
-Summary: The legacy server part of JSON::RPC
+%package Apache2
+Summary:   JSON-RPC server for mod_perl2
+Obsoletes: perl-JSON-RPC-legacy-server < %{version}
+Provides:  perl-JSON-RPC-legacy-server = %{version}
 
-%package legacy
-Summary: The legacy client part of JSON::RPC
+%package CGI
+Summary:   JSON-RPC server for CGI scripts
+Obsoletes: perl-JSON-RPC-legacy-server < %{version}
+Provides:  perl-JSON-RPC-legacy-server = %{version}
 
-%description legacy-server
+%package Daemon
+Summary:   JSON-RPC standalone daemon
+Obsoletes: perl-JSON-RPC-legacy-server < %{version}
+Provides:  perl-JSON-RPC-legacy-server = %{version}
+
+%description Apache2
 JSON-RPC is a stateless and light-weight remote procedure call (RPC)
 protocol for inter-networking applications over HTTP. It uses JSON as the
 data format for of all facets of a remote procedure call, including all
-application data carried in parameters. This is the legacy server-side
-implementation, which exposes the 0.xx version of the API.
+application data carried in parameters. This is the mod_perl2 server
+implementation.
 
-%description legacy
+%description CGI
 JSON-RPC is a stateless and light-weight remote procedure call (RPC)
 protocol for inter-networking applications over HTTP. It uses JSON as the
 data format for of all facets of a remote procedure call, including all
-application data carried in parameters. This is the legacy client-side
-implementation, which allows the use of the 0.xx version of the API.
+application data carried in parameters. This is the CGI server
+implementation.
+
+%description Daemon
+JSON-RPC is a stateless and light-weight remote procedure call (RPC)
+protocol for inter-networking applications over HTTP. It uses JSON as the
+data format for of all facets of a remote procedure call, including all
+application data carried in parameters. This is the standalone daemon
+to serve JSON-RPC requests.
 
 %prep
 %setup -q -n JSON-RPC-%{version}
 
 %build
-%{__perl} Makefile.PL INSTALLDIRS=vendor
-make %{?_smp_mflags}
+%{__perl} Build.PL installdirs=vendor
+./Build
 
 %install
-make pure_install PERL_INSTALL_ROOT=$RPM_BUILD_ROOT
-
-find $RPM_BUILD_ROOT -type f -name .packlist -exec rm -f {} \;
-find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
-
+./Build install destdir=$RPM_BUILD_ROOT create_packlist=0
 %{_fixperms} $RPM_BUILD_ROOT/*
 
 %check
-
+./Build test
 
 %files
-%doc Changes README
+%doc Changes
+%license LICENSE
 %{perl_vendorlib}/JSON/RPC.pm
 %{perl_vendorlib}/JSON/RPC/Constants.pm
 %{perl_vendorlib}/JSON/RPC/Dispatch.pm
-%{perl_vendorlib}/JSON/RPC/Parser.pm
-%{perl_vendorlib}/JSON/RPC/Procedure.pm
-%{_mandir}/man3/*
-
-%files legacy
 %{perl_vendorlib}/JSON/RPC/Legacy.pm
 %{perl_vendorlib}/JSON/RPC/Legacy/Client.pm
 %{perl_vendorlib}/JSON/RPC/Legacy/Procedure.pm
+%{perl_vendorlib}/JSON/RPC/Parser.pm
+%{perl_vendorlib}/JSON/RPC/Procedure.pm
+%{perl_vendorlib}/JSON/RPC/Test.pm
+%{_mandir}/man3/*
 
-%files legacy-server
-%{perl_vendorlib}/JSON/RPC/Legacy/Server
+%files Apache2
 %{perl_vendorlib}/JSON/RPC/Legacy/Server.pm
+%{perl_vendorlib}/JSON/RPC/Legacy/Server/Apache2.pm
+
+%files CGI
+%{perl_vendorlib}/JSON/RPC/Legacy/Server.pm
+%{perl_vendorlib}/JSON/RPC/Legacy/Server/CGI.pm
+
+%files Daemon
+%{perl_vendorlib}/JSON/RPC/Legacy/Server.pm
+%{perl_vendorlib}/JSON/RPC/Legacy/Server/Daemon.pm
 
 %changelog
-* Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 1.01-13
-- 为 Magic 3.0 重建
+* Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.06-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 
-* Sun Jun 15 2014 Liu Di <liudidi@gmail.com> - 1.01-12
-- 为 Magic 3.0 重建
+* Mon Jun 08 2015 Jitka Plesnikova <jplesnik@redhat.com> - 1.06-2
+- Perl 5.22 rebuild
 
-* Sun Jun 15 2014 Liu Di <liudidi@gmail.com> - 1.01-11
-- 为 Magic 3.0 重建
+* Sun Oct 12 2014 Emmanuel Seyman <emmanuel@seyman.fr> - 1.06-1
+- Update to 1.06
+- Use %%license macro
 
-* Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 1.01-10
-- 为 Magic 3.0 重建
+* Mon Sep 01 2014 Jitka Plesnikova <jplesnik@redhat.com> - 1.04-3
+- Perl 5.20 rebuild
 
-* Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 1.01-9
-- 为 Magic 3.0 重建
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.04-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 
-* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.01-8
-- 为 Magic 3.0 重建
+* Sun Jun 01 2014 Emmanuel Seyman <emmanuel@seyman.fr> - 1.04-1
+- Update to 1.04
 
-* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.01-7
-- 为 Magic 3.0 重建
+* Mon Aug 05 2013 Petr Pisar <ppisar@redhat.com> - 1.03-7
+- Perl 5.18 rebuild
 
-* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.01-6
-- 为 Magic 3.0 重建
+* Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.03-6
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
 
-* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.01-5
-- 为 Magic 3.0 重建
+* Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.03-5
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
 
-* Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 1.01-4
-- 为 Magic 3.0 重建
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.03-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 
-* Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 1.01-3
-- 为 Magic 3.0 重建
+* Wed Jul 11 2012 Emmanuel Seyman <emmanuel.seyman@club-internet.fr> - 1.03-3
+- Use the version macro in Obsoletes
+
+* Sat Jun 30 2012 Petr Pisar <ppisar@redhat.com> - 1.03-2
+- Perl 5.16 rebuild
+
+* Sat Jun 23 2012 Emmanuel Seyman <emmanuel.seyman@club-internet.fr> - 1.03-1
+- Update to 1.03
+- Merge back the legacy implementation in the main package
+- Split the different server implementations in their own packages
 
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.01-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild

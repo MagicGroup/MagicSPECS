@@ -1,6 +1,6 @@
 Name:           perl-AnyEvent-DBus
 Version:        0.31
-Release:        13%{?dist}
+Release:        15%{?dist}
 Summary:        Adapt Net::DBus to AnyEvent
 Summary(zh_CN.UTF-8): 适配 Net::DBus 到 AnyEvent
 
@@ -61,6 +61,12 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.31-15
+- 为 Magic 3.0 重建
+
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.31-14
+- 为 Magic 3.0 重建
+
 * Wed Apr 22 2015 Liu Di <liudidi@gmail.com> - 0.31-13
 - 为 Magic 3.0 重建
 

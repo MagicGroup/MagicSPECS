@@ -1,5 +1,5 @@
 Name:		perl-B-Hooks-EndOfScope
-Version:	0.14
+Version:	0.15
 Release:	1%{?dist}
 License:	GPL+ or Artistic
 Group:		Development/Libraries
@@ -54,6 +54,9 @@ magic_rpm_clean.sh
 %{_mandir}/man3/B::Hooks::EndOfScope*.3pm*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.15-1
+- 更新到 0.15
+
 * Fri Apr 24 2015 Liu Di <liudidi@gmail.com> - 0.14-1
 - 更新到 0.14
 

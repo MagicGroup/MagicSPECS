@@ -1,11 +1,11 @@
 Summary:	Manage IO on many file handles
 Name:		perl-IO-Multiplex
-Version:	1.13
-Release:	6%{?dist}
+Version:	1.16
+Release:	1%{?dist}
 License:	GPL+ or Artistic
 Group:		Development/Libraries
 URL:		http://search.cpan.org/dist/IO-Multiplex/
-Source0:	http://search.cpan.org/CPAN/authors/id/M/MA/MARKOV/IO-Multiplex-%{version}.tar.gz
+Source0:        http://search.cpan.org/CPAN/authors/id/B/BB/BBB/IO-Multiplex-%{version}.tar.gz
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(id -nu)
 BuildArch:	noarch
 BuildRequires:	perl(Carp)
@@ -52,6 +52,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/IO::Multiplex.3pm*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.16-1
+- 更新到 1.16
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.13-6
 - 为 Magic 3.0 重建
 

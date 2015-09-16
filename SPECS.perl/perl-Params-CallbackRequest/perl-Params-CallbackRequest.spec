@@ -1,6 +1,6 @@
 Name:           perl-Params-CallbackRequest
 Version:        1.20
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        Functional and object-oriented callback architecture
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -71,6 +71,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/Params::CallbackRequest::Exceptions.3pm*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.20-4
+- 为 Magic 3.0 重建
+
 * Thu Jun 19 2014 Liu Di <liudidi@gmail.com> - 1.20-3
 - 为 Magic 3.0 重建
 

@@ -1,7 +1,7 @@
 Name:           perl-POE-Test-Loops
 Summary:        Reusable tests for POE::Loop authors
-Version:        1.354
-Release:        4%{?dist}
+Version:	1.360
+Release:	1%{?dist}
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 Source0:        http://search.cpan.org/CPAN/authors/id/R/RC/RCAPUTO/POE-Test-Loops-%{version}.tar.gz 
@@ -103,6 +103,9 @@ make test
 %{_mandir}/man1/poe-gen-tests.1.gz
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.360-1
+- 更新到 1.360
+
 * Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 1.354-4
 - 为 Magic 3.0 重建
 

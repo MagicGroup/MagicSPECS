@@ -1,6 +1,6 @@
 Name:           perl-Plack-Middleware-MethodOverride
 Version:        0.15
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Override REST methods to Plack apps via POST
 License:        GPL+ or Artistic
 
@@ -51,6 +51,9 @@ make test
 %{_mandir}/man3/Plack*
 
 %changelog
+* Tue Sep 15 2015 Liu Di <liudidi@gmail.com> - 0.15-2
+- 为 Magic 3.0 重建
+
 * Wed Aug 19 2015 Emmanuel Seyman <emmanuel@seyman.fr> - 0.15-1
 - Update to 0.15
 

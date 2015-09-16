@@ -1,6 +1,6 @@
 Name:           perl-Template-Provider-Encoding
 Version:        0.10
-Release:        20%{?dist}
+Release:        21%{?dist}
 Summary:        Explicitly declare encodings of your templates
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -54,6 +54,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/*
 
 %changelog
+* Tue Sep 15 2015 Liu Di <liudidi@gmail.com> - 0.10-21
+- 为 Magic 3.0 重建
+
 * Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.10-20
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

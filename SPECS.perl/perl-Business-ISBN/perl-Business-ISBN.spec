@@ -1,5 +1,5 @@
 Name:           perl-Business-ISBN
-Version:	2.09
+Version:	2.09_02
 %define module_version 2.05_03
 Release:	1%{?dist}
 Summary:        Perl module to work with International Standard Book Numbers
@@ -62,12 +62,14 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(-,root,root,-)
-%doc Changes README LICENSE examples/
 %{perl_vendorlib}/*
 %{_mandir}/man3/*.3*
 
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 2.09_02-1
+- 更新到 2.09_02
+
 * Thu Apr 30 2015 Liu Di <liudidi@gmail.com> - 2.09-1
 - 更新到 2.09
 

@@ -1,6 +1,6 @@
 Name:           perl-Text-Shellwords
 Version:        1.08
-Release:        16%{?dist}
+Release:        17%{?dist}
 Summary:        A thin wrapper around the shellwords.pl package
 
 Group:          Development/Libraries
@@ -62,6 +62,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.08-17
+- 为 Magic 3.0 重建
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.08-16
 - 为 Magic 3.0 重建
 

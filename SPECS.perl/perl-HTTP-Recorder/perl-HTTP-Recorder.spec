@@ -1,12 +1,12 @@
 Name:           perl-HTTP-Recorder
-Version:        0.05
-Release:        14%{?dist}
+Version:	0.07
+Release:	2%{?dist}
 Summary:        Record interaction with web sites
 
 Group:          Development/Libraries
 License:        GPL+
 URL:            http://search.cpan.org/dist/HTTP-Recorder/
-Source0:        http://www.cpan.org/authors/id/L/LE/LEIRA/HTTP-Recorder-%{version}.tar.gz
+Source0:        http://search.cpan.org/CPAN/authors/id/S/SE/SEMUELF/HTTP-Recorder-%{version}.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildArch:      noarch
@@ -51,9 +51,16 @@ rm -rf $RPM_BUILD_ROOT
 %doc CHANGES README
 %{perl_vendorlib}/HTTP/
 %{_mandir}/man3/*.3pm*
-
+%{_bindir}/httprecorder
+%{_mandir}/man1/httprecorder.1*
 
 %changelog
+* Mon Sep 14 2015 Liu Di <liudidi@gmail.com> - 0.07-2
+- 为 Magic 3.0 重建
+
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.07-1
+- 更新到 0.07
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.05-14
 - 为 Magic 3.0 重建
 

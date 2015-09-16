@@ -1,11 +1,11 @@
 Name:           perl-MooseX-Daemonize
-Version:        0.15
-Release:        8%{?dist}
+Version:	0.20
+Release:	1%{?dist}
 Summary:        Role for daemonizing your Moose based application
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 URL:            http://search.cpan.org/dist/MooseX-Daemonize/
-Source0:        http://search.cpan.org/CPAN/authors/id/M/MI/MICHAELR/MooseX-Daemonize-0.15.tar.gz
+Source0:        http://search.cpan.org/CPAN/authors/id/E/ET/ETHER/MooseX-Daemonize-%{version}.tar.gz
 BuildArch:      noarch
 BuildRequires:  perl(ExtUtils::MakeMaker)
 BuildRequires:  perl(Moose) >= 0.33
@@ -46,6 +46,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.20-1
+- 更新到 0.20
+
 * Thu Jun 19 2014 Liu Di <liudidi@gmail.com> - 0.15-8
 - 为 Magic 3.0 重建
 

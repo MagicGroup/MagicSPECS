@@ -1,19 +1,20 @@
 # Review at https://bugzilla.redhat.com/show_bug.cgi?id=351531
 
-%global majorversion 0.3
 %global xfceversion 4.8.0
 
 
 Name:           ristretto
-Version:        0.3.4
-Release:        2%{?dist}
+Version:	0.8.0
+Release:	1%{?dist}
 Summary:        Image-viewer for the Xfce desktop environment
-Summary(de):    Bildbetrachter für die Xfce Desktop-Umgebung
+Summary(zh_CN.UTF-8): Xfce 桌面环境下的图像查看器
 
 Group:          User Interface/Desktops
+Group(zh_CN.UTF-8): 用户界面/桌面
 License:        GPLv2+
 URL:            http://goodies.xfce.org/projects/applications/ristretto/
-Source0:        http://archive.xfce.org/src/apps/%{name}/%{majorversion}/%{name}-%{version}.tar.bz2
+%define majorver %(echo %{version} | awk -F. '{print $1"."$2}')
+Source0:        http://archive.xfce.org/src/apps/%{name}/%{majorver}/%{name}-%{version}.tar.bz2
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildRequires:  dbus-glib-devel >= 0.34
@@ -30,10 +31,8 @@ Requires:       tumbler
 Ristretto is a fast and lightweight image-viewer for the Xfce desktop 
 environment.
 
-%description -l de
-Ristretto ist ein schneller und leichtgewichtiger Bildbetrachter für die Xfce
-Desktop-Umgebung.
-
+%description -l zh_CN.UTF-8
+Ristretto 是 Xfce 桌面环境下的快速轻量的图像查看器。
 
 %prep
 %setup -q
@@ -47,8 +46,9 @@ make %{?_smp_mflags}
 %install
 rm -rf %{buildroot}
 make install DESTDIR=%{buildroot}
+magic_rpm_clean.sh
 %find_lang %{name}
-desktop-file-install --vendor fedora \
+desktop-file-install --vendor magic \
         --dir %{buildroot}%{_datadir}/applications \
         --add-mime-type=image/x-bmp \
         --add-mime-type=image/x-png \
@@ -84,12 +84,14 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %defattr(-,root,root,-)
 %doc AUTHORS COPYING ChangeLog README
 %{_bindir}/%{name}
-%{_datadir}/applications/fedora-%{name}.desktop
-%{_docdir}/%{name}/
+%{_datadir}/applications/magic-%{name}.desktop
 %{_datadir}/icons/hicolor/*/*/*
-
+%{_datadir}/appdata/ristretto.appdata.xml
 
 %changelog
+* Sat Sep 12 2015 Liu Di <liudidi@gmail.com> - 0.8.0-1
+- 更新到 0.8.0
+
 * Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 0.3.4-2
 - 为 Magic 3.0 重建
 

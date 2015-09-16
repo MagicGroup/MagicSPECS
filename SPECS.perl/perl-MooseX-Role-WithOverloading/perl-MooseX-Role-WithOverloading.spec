@@ -1,6 +1,6 @@
 Name:       perl-MooseX-Role-WithOverloading 
-Version:    0.13
-Release:    4%{?dist}
+Version:	0.16
+Release:	1%{?dist}
 # lib/MooseX/Role/WithOverloading.pm -> GPL+ or Artistic
 License:    GPL+ or Artistic 
 Group:      Development/Libraries
@@ -55,6 +55,9 @@ make test
 %{_mandir}/man3/*.3*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.16-1
+- 更新到 0.16
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.13-4
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

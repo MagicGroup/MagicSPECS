@@ -1,6 +1,6 @@
 Name:           perl-Devel-Caller
-Version:        2.05
-Release:        12%{?dist}
+Version:	2.06
+Release:	1%{?dist}
 Summary:        Meatier versions of caller
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -56,6 +56,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/Devel::Caller.3pm*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 2.06-1
+- 更新到 2.06
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 2.05-12
 - 为 Magic 3.0 重建
 

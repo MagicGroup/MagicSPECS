@@ -1,6 +1,6 @@
 Name:           perl-GraphViz
-Version:        2.09
-Release:        4%{?dist}
+Version:	2.18
+Release:	1%{?dist}
 Summary:        Interface to the GraphViz graphing tool
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -58,11 +58,13 @@ find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null \;
 
 %files
 %defattr(-,root,root,-)
-%doc CHANGES README examples/
 %{perl_vendorlib}/*
 %{_mandir}/man3/*
 
 %changelog
+* Wed Sep 16 2015 Liu Di <liudidi@gmail.com> - 2.18-1
+- 更新到 2.18
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 2.09-4
 - 为 Magic 3.0 重建
 

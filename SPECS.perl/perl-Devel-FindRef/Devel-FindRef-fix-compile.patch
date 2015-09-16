@@ -1,0 +1,18 @@
+diff -ur Devel-FindRef-1.44.orig/FindRef.xs Devel-FindRef-1.44/FindRef.xs
+--- Devel-FindRef-1.44.orig/FindRef.xs	2015-09-15 08:24:54.270089872 +0000
++++ Devel-FindRef-1.44/FindRef.xs	2015-09-15 08:28:12.718084786 +0000
+@@ -103,13 +103,7 @@
+ 
+                     if (SvTYPE (sv) >= SVt_PVMG)
+                       {
+-                        if (SvTYPE (sv) == SVt_PVMG && SvPAD_OUR (sv))
+-                          {
+-                            /* I have no clue what this is */
+-                            /* maybe some placeholder for our variables for eval? */
+-                            /* it doesn't seem to reference anything, so we should be able to ignore it */
+-                          }
+-                        else if (SvMAGICAL (sv)) /* name-pads use SvMAGIC for other purposes */
++                        if (SvMAGICAL (sv)) /* name-pads use SvMAGIC for other purposes */
+                           {
+                             MAGIC *mg = SvMAGIC (sv);
+ 

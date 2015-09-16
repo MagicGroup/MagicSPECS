@@ -1,5 +1,5 @@
 Name:           perl-autovivification
-Version:	0.14
+Version:	0.16
 Release:	1%{?dist}
 Summary:        Lexically disable autovivification
 License:        GPL+ or Artistic
@@ -55,6 +55,9 @@ find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.16-1
+- 更新到 0.16
+
 * Fri Apr 17 2015 Liu Di <liudidi@gmail.com> - 0.14-1
 - 更新到 0.14
 

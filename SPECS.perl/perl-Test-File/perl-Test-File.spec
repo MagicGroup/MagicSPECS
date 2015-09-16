@@ -1,11 +1,11 @@
 Summary:	Test file attributes through Test::Builder
 Name:		perl-Test-File
-Version:	1.34
-Release:	3%{?dist}
+Version:	1.44
+Release:	2%{?dist}
 Group:		Development/Libraries
 License:	GPL+ or Artistic
 URL:		http://search.cpan.org/dist/Test-File/
-Source0:	http://search.cpan.org/CPAN/authors/id/B/BA/BAREFOOT/Test-File-%{version}.tar.gz
+Source0:        http://search.cpan.org/CPAN/authors/id/B/BD/BDFOY/Test-File-%{version}.tar.gz
 BuildArch:	noarch
 BuildRequires:	perl(base)
 BuildRequires:	perl(Exporter)
@@ -41,11 +41,16 @@ find %{buildroot} -type f -name .packlist -exec rm -f {} ';'
 
 
 %files
-%doc Changes LICENSE README
 %{perl_vendorlib}/Test/
 %{_mandir}/man3/Test::File.3*
 
 %changelog
+* Mon Sep 14 2015 Liu Di <liudidi@gmail.com> - 1.44-2
+- 为 Magic 3.0 重建
+
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.44-1
+- 更新到 1.44
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.34-3
 - 为 Magic 3.0 重建
 

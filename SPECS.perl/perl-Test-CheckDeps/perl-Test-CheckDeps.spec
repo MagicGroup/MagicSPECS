@@ -1,7 +1,7 @@
 Name:		perl-Test-CheckDeps
 Summary:	Check for presence of dependencies
 Version:	0.010
-Release:	2%{?dist}
+Release:	3%{?dist}
 License:	GPL+ or Artistic
 Group:		Development/Libraries
 URL:		https://metacpan.org/release/Test-CheckDeps
@@ -55,6 +55,9 @@ make test RELEASE_TESTING=1
 %{_mandir}/man3/Test::CheckDeps.3pm*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.010-3
+- 为 Magic 3.0 重建
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.010-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

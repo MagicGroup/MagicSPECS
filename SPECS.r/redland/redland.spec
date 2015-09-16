@@ -1,9 +1,11 @@
 Name:           redland
-Version:        1.0.15
-Release:        3%{?dist}
+Version:	1.0.17
+Release:	1%{?dist}
 Summary:        RDF Application Framework
+Summary(zh_CN.UTF-8): RDF 应用程序框架
 
 Group:          System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 License:        LGPLv2+ or ASL 2.0
 URL:            http://librdf.org/
 Source0:        http://download.librdf.org/source/%{name}-%{version}.tar.gz
@@ -28,37 +30,55 @@ mechanisms and other elements. Redland is designed for applications
 developers to provide RDF support in their applications as well as
 for RDF developers to experiment with the technology.
 
+%description -l zh_CN.UTF-8
+RDF 应用程序框架。
+
 %package         devel
 Summary:         Libraries and header files for programs that use Redland
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:           Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:        %{name}%{?_isa} = %{version}-%{release}
 %description     devel
 Header files for development with Redland.
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %package         mysql
 Summary:         MySQL storage support for Redland
+Summary(zh_CN.UTF-8): %{name} 的 MySQL 存储支持
 Group:           System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 Requires:        %{name}%{?_isa} = %{version}-%{release}
 %description     mysql
 This package provides Redland's storage support for graphs in memory and
 persistently with MySQL files or URIs.
+%description mysql -l zh_CN.UTF-8
+%{name} 的 MySQL 存储支持。
 
 %package         pgsql
 Summary:         PostgreSQL storage support for Redland
+Summary(zh_CN.UTF-8): %{name} 的 PostgreSQL 存储支持
 Group:           System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 Requires:        %{name}%{?_isa} = %{version}-%{release}
 %description     pgsql
 This package provides Redland's storage support for graphs in memory and
 persistently with PostgreSQL files or URIs.
+%description pgsql -l zh_CN.UTF-8
+%{name} 的 PostgreSQL 存储支持。
 
 %package         virtuoso
 Summary:         Virtuoso storage support for Redland
+Summary(zh_CN.UTF-8): %{name} 的 Virtuoso 存储支持
 Group:           System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 Requires:        %{name}%{?_isa} = %{version}-%{release}
 %description     virtuoso
 This package provides Redland's storage support for graphs in memory and
 persistently with Virtuoso files or URIs.
-
+%description virtuoso -l zh_CN.UTF-8
+%{name} 的 Virtuoso 存储支持。
 
 %prep
 %setup -q
@@ -140,6 +160,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sat Sep 12 2015 Liu Di <liudidi@gmail.com> - 1.0.17-1
+- 更新到 1.0.17
+
 * Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 1.0.15-3
 - 为 Magic 3.0 重建
 

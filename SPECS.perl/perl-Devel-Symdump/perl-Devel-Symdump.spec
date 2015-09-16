@@ -1,6 +1,6 @@
 Name:           perl-Devel-Symdump
-Version:        2.08
-Release:        14%{?dist}
+Version:	2.15
+Release:	1%{?dist}
 Epoch:          1
 Summary:        A Perl module for inspecting Perl's symbol table
 Group:          Development/Libraries
@@ -44,11 +44,13 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(-,root,root,-)
-%doc ChangeLog README
 %{perl_vendorlib}/Devel/
 %{_mandir}/man3/Devel::Symdump.3pm*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1:2.15-1
+- 更新到 2.15
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1:2.08-14
 - 为 Magic 3.0 重建
 

@@ -2,14 +2,13 @@
 %global old_test_more %(perl -MTest::More -e 'print (($Test::More::VERSION < 0.88) ? 1 : 0);' 2>/dev/null || echo 0)
 
 Name:		perl-Data-Section-Simple
-Version:	0.03
-Release:	7%{?dist}
+Version:	0.07
+Release:	2%{?dist}
 Summary:	Read data from __DATA__
 License:	GPL+ or Artistic
 Group:		Development/Libraries
 URL:		http://search.cpan.org/dist/Data-Section-Simple/
 Source0:	http://search.cpan.org/CPAN/authors/id/M/MI/MIYAGAWA/Data-Section-Simple-%{version}.tar.gz
-Patch1:		Data-Section-Simple-0.02-old-Test::More.patch
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(id -nu)
 BuildArch:	noarch
 BuildRequires:	perl(ExtUtils::MakeMaker)
@@ -23,11 +22,6 @@ section of the file.
 
 %prep
 %setup -q -n Data-Section-Simple-%{version}
-
-# Hack for old Test::More versions
-%if %{old_test_more}
-%patch1 -p1
-%endif
 
 %build
 # Note that the Makefile.PL complains about missing Test::Requires
@@ -56,6 +50,12 @@ rm -rf %{buildroot}
 %{_mandir}/man3/Data::Section::Simple.3pm*
 
 %changelog
+* Wed Sep 16 2015 Liu Di <liudidi@gmail.com> - 0.07-2
+- 为 Magic 3.0 重建
+
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.07-1
+- 更新到 0.07
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.03-7
 - 为 Magic 3.0 重建
 

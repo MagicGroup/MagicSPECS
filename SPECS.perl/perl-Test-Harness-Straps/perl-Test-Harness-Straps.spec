@@ -1,6 +1,6 @@
 Name:           perl-Test-Harness-Straps
 Version:        0.30
-Release:        19%{?dist}
+Release:        20%{?dist}
 Summary:        Detailed analysis of test results
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -47,6 +47,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.30-20
+- 为 Magic 3.0 重建
+
 * Sun Jun 15 2014 Liu Di <liudidi@gmail.com> - 0.30-19
 - 为 Magic 3.0 重建
 

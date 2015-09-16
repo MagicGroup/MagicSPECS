@@ -1,13 +1,13 @@
 Name:           perl-LDAP
-Version:        0.40
-Release:        14%{?dist}
+Version:	0.65
+Release:	1%{?dist}
 Epoch:          1
 Summary:        LDAP Perl module
 
 Group:          Development/Libraries
 License:        GPL+ or Artistic
 URL:            http://search.cpan.org/dist/perl-ldap/
-Source0:        http://www.cpan.org/authors/id/G/GB/GBARR/perl-ldap-%{version}.tar.gz
+Source0:        http://search.cpan.org/CPAN/authors/id/M/MA/MARSCHAP/perl-ldap-%{version}.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildArch:      noarch
@@ -68,6 +68,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Wed Sep 16 2015 Liu Di <liudidi@gmail.com> - 1:0.65-1
+- 更新到 0.65
+
 * Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 1:0.40-14
 - 为 Magic 3.0 重建
 

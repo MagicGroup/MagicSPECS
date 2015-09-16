@@ -1,6 +1,6 @@
 Name:		perl-Perl-Critic
-Version:	1.118
-Release:	12%{?dist}
+Version:	1.126
+Release:	3%{?dist}
 Summary:	Critique Perl source code for best-practices
 Group:		Development/Libraries
 License:	GPL+ or Artistic
@@ -148,6 +148,15 @@ LC_ALL=en_US ./Build %{!?perl_bootstrap:author}test
 %{_mandir}/man3/Test::Perl::Critic::Policy.3pm*
 
 %changelog
+* Wed Sep 16 2015 Liu Di <liudidi@gmail.com> - 1.126-3
+- 为 Magic 3.0 重建
+
+* Tue Sep 15 2015 Liu Di <liudidi@gmail.com> - 1.126-2
+- 为 Magic 3.0 重建
+
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.126-1
+- 更新到 1.126
+
 * Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 1.118-12
 - 为 Magic 3.0 重建
 

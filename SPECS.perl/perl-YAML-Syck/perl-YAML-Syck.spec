@@ -1,12 +1,11 @@
 Name:           perl-YAML-Syck
-Version:        1.27
-Release:        5%{?dist}
+Version:	1.29
+Release:	1%{?dist}
 Summary:        Fast, lightweight YAML loader and dumper
 License:        BSD and MIT
 Group:          Development/Libraries
 URL:            http://search.cpan.org/dist/YAML-Syck/
 Source0:        http://www.cpan.org/authors/id/T/TO/TODDR/YAML-Syck-%{version}.tar.gz
-Patch0:         0001-Recognize-all-wide-unicode-characters.patch
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(id -nu)
 # Keep bundled inc::Module::Install to break cycle
 # perl-Module-Install → perl-YAML-Tiny → perl-YAML-Syck
@@ -42,9 +41,6 @@ structures to YAML strings, and the other way around.
 %setup -q -n YAML-Syck-%{version}
 rm -rf inc/parent inc/PerlIO.pm inc/Test
 
-# Work around test failures on PPC and ARM (#919806, CPAN RT#83825)
-%patch0 -p1
-
 %build
 perl Makefile.PL INSTALLDIRS=vendor OPTIMIZE="$RPM_OPT_FLAGS"
 make %{?_smp_mflags}
@@ -71,6 +67,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/YAML::Syck.3pm*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.29-1
+- 更新到 1.29
+
 * Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 1.27-5
 - 为 Magic 3.0 重建
 

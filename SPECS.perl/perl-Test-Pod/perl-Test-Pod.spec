@@ -1,11 +1,11 @@
 Name:           perl-Test-Pod
-Version:        1.45
-Release:        13%{?dist}
+Version:	1.51
+Release:	1%{?dist}
 Summary:        Test POD files for correctness
 Group:          Development/Libraries
 License:        GPL+ or Artistic
 URL:            http://search.cpan.org/dist/Test-Pod/
-Source0:        http://search.cpan.org/CPAN/authors/id/D/DW/DWHEELER/Test-Pod-%{version}.tar.gz
+Source0:        http://search.cpan.org/CPAN/authors/id/E/ET/ETHER/Test-Pod-%{version}.tar.gz
 
 BuildArch:      noarch
 BuildRequires:  perl(File::Spec)
@@ -22,34 +22,32 @@ Requires:       perl(Test::More) >= 0.62
 Check POD files for errors or warnings in a test file, using Pod::Simple to do
 the heavy lifting.
 
-
 %prep
 %setup -q -n Test-Pod-%{version}
 
-
 %build
-%{__perl} Build.PL installdirs=vendor
-./Build
-
+perl Makefile.PL INSTALLDIRS=vendor
+make %{?_smp_mflags}
 
 %install
-./Build install destdir=$RPM_BUILD_ROOT create_packlist=0
-find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} \; 2>/dev/null
-%{_fixperms} $RPM_BUILD_ROOT
-
+make pure_install DESTDIR=%{buildroot}
+find %{buildroot} -type f -name .packlist -exec rm -f {} \;
+find %{buildroot} -type f -name '*.bs' -size 0 -exec rm -f {} \;
+%{_fixperms} %{buildroot}
 
 %check
-LC_ALL=C ./Build test
-
+LC_ALL=C make test
 
 %files
-%defattr(-,root,root,-)
 %doc Changes README
 %{perl_vendorlib}/Test/
 %{_mandir}/man3/Test::Pod.3pm*
 
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.51-1
+- 更新到 1.51
+
 * Sun Jun 15 2014 Liu Di <liudidi@gmail.com> - 1.45-13
 - 为 Magic 3.0 重建
 

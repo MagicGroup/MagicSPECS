@@ -1,8 +1,8 @@
 Name:           perl-Devel-StackTrace
 Summary:        Perl module implementing stack trace and stack trace frame objects
-Version:        1.27
+Version:	2.00
 Epoch:          1
-Release:        9%{?dist}
+Release:	1%{?dist}
 License:        Artistic 2.0
 Group:          Development/Libraries
 URL:            http://search.cpan.org/dist/Devel-StackTrace/
@@ -65,11 +65,13 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(-,root,root,-)
-%doc README LICENSE Changes
 %{perl_vendorlib}/Devel
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1:2.00-1
+- 更新到 2.00
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1:1.27-9
 - 为 Magic 3.0 重建
 

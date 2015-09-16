@@ -1,14 +1,18 @@
 Name:           perl-Devel-FindRef
-Version:        1.42
-Release:        21%{?dist}
+Version:	1.44
+Release:	1%{?dist}
 Summary:        Where is that reference to my variable hiding?
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 URL:            http://search.cpan.org/dist/Devel-FindRef/
-Source0:        http://www.cpan.org/authors/id/M/ML/MLEHMANN/Devel-FindRef-%{version}2.tar.gz
-Patch0:         0001-Fix-compiler-warnings.patch
-Patch1:         0001-Fix-64-bit-warnings.patch
+Source0:        http://search.cpan.org/CPAN/authors/id/M/ML/MLEHMANN/Devel-FindRef-%{version}.tar.gz
+
+# fixing format warnings
+Patch0:         perl-Devel-FindRef-1.44-fix-format-warnings.patch
+Patch1:		Devel-FindRef-fix-compile.patch
+# https://bugzilla.redhat.com/show_bug.cgi?id=786085
 Patch2:         Devel-FindRef-fix.patch
+
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  perl(ExtUtils::MakeMaker)
 BuildRequires:  perl(common::sense)
@@ -21,11 +25,9 @@ very hard. Fortunately, perl keeps track of all its values, so tracking
 references "backwards" is usually possible.
 
 %prep
-%setup -q -n Devel-FindRef-%{version}2
+%setup -q -n Devel-FindRef-%{version}
 %patch0 -p1
-%if %{__isa_bits} == 64
 %patch1 -p1
-%endif
 %patch2 -p1
 
 
@@ -58,6 +60,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/Devel*.3*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.44-1
+- 更新到 1.44
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.42-21
 - 为 Magic 3.0 重建
 

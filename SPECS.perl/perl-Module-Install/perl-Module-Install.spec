@@ -1,13 +1,11 @@
 Name:           perl-Module-Install
-Version:        1.06
-Release:        8%{?dist}
+Version:	1.16
+Release:	1%{?dist}
 Summary:        Standalone, extensible Perl module installer
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 URL:            http://search.cpan.org/dist/Module-Install/
-Source0:        http://www.cpan.org/authors/id/A/AD/ADAMK/Module-Install-%{version}.tar.gz
-# Fix tests with Parse::CPAN::Meta >= 1.4413, in 1.08, CPAN RT#93293
-Patch0:         Module-Install-1.06-Resolve-RT-93293-test-failure.patch
+Source0:        http://search.cpan.org/CPAN/authors/id/E/ET/ETHER/Module-Install-%{version}.tar.gz
 BuildArch:      noarch
 BuildRequires:  perl(Archive::Tar) >= 1.44
 BuildRequires:  perl(Carp)
@@ -54,7 +52,6 @@ version 5.005 or newer.
 
 %prep
 %setup -q -n Module-Install-%{version}
-%patch0 -p1
 
 %build
 perl Makefile.PL INSTALLDIRS=vendor
@@ -70,11 +67,13 @@ rm -rf %{buildroot}/blib/lib/auto/share/dist/Module-Install/dist_file.txt
 make test AUTOMATED_TESTING=1
 
 %files
-%doc Changes LICENSE README
 %{perl_vendorlib}/*
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.16-1
+- 更新到 1.16
+
 * Sun Jun 15 2014 Liu Di <liudidi@gmail.com> - 1.06-8
 - 为 Magic 3.0 重建
 

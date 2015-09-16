@@ -1,6 +1,6 @@
 Name:           perl-bioperl-run
 Version:	1.006900
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:        Modules to provide a Perl interface to various bioinformatics applications
 Summary(zh_CN.UTF-8): 各种生物信息学应用的 Perl 接口模块
 
@@ -71,6 +71,9 @@ rm -rf $RPM_BUILD_ROOT
 #%{_mandir}/man1/*.1*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.006900-2
+- 为 Magic 3.0 重建
+
 * Sat Apr 18 2015 Liu Di <liudidi@gmail.com> - 1.006900-1
 - 更新到 1.006900
 

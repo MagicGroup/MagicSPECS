@@ -2,12 +2,12 @@ Name:           perl-FCGI
 Summary:        FastCGI Perl bindings
 # needed to properly replace/obsolete fcgi-perl
 Epoch:          1
-Version:        0.74
-Release:        12%{?dist}
+Version:	0.77
+Release:	2%{?dist}
 # same as fcgi
 License:        OML
 Group:          Development/Libraries
-Source0:        http://search.cpan.org/CPAN/authors/id/F/FL/FLORA/FCGI-%{version}.tar.gz 
+Source0:        http://search.cpan.org/CPAN/authors/id/E/ET/ETHER/FCGI-%{version}.tar.gz
 URL:            http://search.cpan.org/dist/FCGI
 Requires:       perl(:MODULE_COMPAT_%(eval "`perl -V:version`"; echo $version))
 BuildRequires:  perl(constant)
@@ -46,12 +46,17 @@ find %{buildroot} -type f -name '*.bs' -a -size 0 -exec rm -f {} ';'
 make test
 
 %files
-%doc ChangeLog README LICENSE.TERMS echo.PL remote.PL threaded.PL
 %{perl_vendorarch}/*
 %exclude %dir %{perl_vendorarch}/auto
 %{_mandir}/man3/*.3*
 
 %changelog
+* Mon Sep 14 2015 Liu Di <liudidi@gmail.com> - 1:0.77-2
+- 为 Magic 3.0 重建
+
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1:0.77-1
+- 更新到 0.77
+
 * Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 1:0.74-12
 - 为 Magic 3.0 重建
 

@@ -1,6 +1,6 @@
 Name:           perl-DateTime-Format-ICal
 Version:        0.09
-Release:        19%{?dist}
+Release:        20%{?dist}
 Summary:        Parse and format iCal datetime and duration strings
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -53,6 +53,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Mon Sep 14 2015 Liu Di <liudidi@gmail.com> - 0.09-20
+- 为 Magic 3.0 重建
+
 * Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.09-19
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

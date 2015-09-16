@@ -1,11 +1,11 @@
 Name:           perl-Test-Mock-LWP
-Version:        0.06
-Release:        6%{?dist}
+Version:	0.08
+Release:	1%{?dist}
 Summary:        Easy mocking of LWP packages
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 URL:            http://search.cpan.org/dist/Test-Mock-LWP/
-Source0:        http://archive.cpan.cz//authors/id/L/LU/LUKEC/Test-Mock-LWP-%{version}.tar.gz
+Source0:        http://search.cpan.org/CPAN/authors/id/L/LU/LUKEC/Test-Mock-LWP-%{version}.tar.gz
 BuildArch:      noarch
 BuildRequires:  perl(ExtUtils::MakeMaker)
 BuildRequires:  perl(Test::MockObject) >= 1.08
@@ -58,6 +58,9 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.08-1
+- 更新到 0.08
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.06-6
 - 为 Magic 3.0 重建
 

@@ -1,6 +1,6 @@
 Name:		perl-Compress-Raw-Lzma
-Version:	2.045
-Release:	6%{?dist}
+Version:	2.068
+Release:	1%{?dist}
 Summary:	Low-level interface to lzma compression library
 Group:		Development/Libraries
 License:	GPL+ or Artistic
@@ -43,6 +43,9 @@ find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null ';'
 %{_mandir}/man3/Compress::Raw::Lzma.3pm*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 2.068-1
+- 更新到 2.068
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 2.045-6
 - 为 Magic 3.0 重建
 

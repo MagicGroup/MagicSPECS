@@ -1,6 +1,6 @@
 Name:           perl-Term-Cap
 Version:        1.17
-Release:        1%{?dist}
+Release:        3%{?dist}
 Summary:        Perl termcap interface
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -52,6 +52,12 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Mon Sep 14 2015 Liu Di <liudidi@gmail.com> - 1.17-3
+- 为 Magic 3.0 重建
+
+* Mon Sep 14 2015 Liu Di <liudidi@gmail.com> - 1.17-2
+- 为 Magic 3.0 重建
+
 * Wed Aug 26 2015 Petr Pisar <ppisar@redhat.com> - 1.17-1
 - 1.17 bump
 

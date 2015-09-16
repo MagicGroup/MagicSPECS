@@ -2,12 +2,13 @@ Summary:    A GNU tool for automatically configuring source code
 Summary(zh_CN.UTF-8): 自动配置源代码的 GNU 工具
 Name:       autoconf
 Version:    2.69
-Release:    11%{?dist}
+Release:    12%{?dist}
 License:    GPLv2+ and GFDL
 Group:      Development/Tools
 Group(zh_CN.UTF-8): 开发/工具
 Source0:    http://ftpmirror.gnu.org/autoconf/autoconf-%{version}.tar.xz
 Source1:    config.site
+Patch1:	    autoconf-2.69-perl-5.22-autoscan.patch
 URL:        http://www.gnu.org/software/autoconf/
 BuildArch: noarch
 BuildRoot:  %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -61,6 +62,7 @@ GNU 下的一套源代码自动构建工具，被很多项目所使用，用来�
 
 %prep
 %setup -q
+%patch1 -p1
 
 %build
 %configure
@@ -102,6 +104,9 @@ fi
 %doc AUTHORS COPYING* ChangeLog NEWS README THANKS TODO
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 2.69-12
+- 为 Magic 3.0 重建
+
 * Wed Jul 29 2015 Liu Di <liudidi@gmail.com> - 2.69-11
 - 为 Magic 3.0 重建
 

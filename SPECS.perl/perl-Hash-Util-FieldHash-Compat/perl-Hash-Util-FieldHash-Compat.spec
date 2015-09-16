@@ -1,11 +1,11 @@
 Name:		perl-Hash-Util-FieldHash-Compat
-Version:	0.03
-Release:	23%{?dist}
+Version:	0.09
+Release:	1%{?dist}
 Summary:	Use Hash::Util::FieldHash or ties, depending on availability
 License:	GPL+ or Artistic
 Group:		Development/Libraries
 URL:		http://search.cpan.org/dist/Hash-Util-FieldHash-Compat/
-Source0:	http://search.cpan.org/CPAN/authors/id/N/NU/NUFFIN/Hash-Util-FieldHash-Compat-%{version}.tar.gz
+Source0:        http://search.cpan.org/CPAN/authors/id/E/ET/ETHER/Hash-Util-FieldHash-Compat-%{version}.tar.gz
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(id -nu)
 BuildArch:	noarch
 BuildRequires:	perl(ExtUtils::MakeMaker)
@@ -54,6 +54,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/Hash::Util::FieldHash::Compat::Heavy.3pm*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.09-1
+- 更新到 0.09
+
 * Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 0.03-23
 - 为 Magic 3.0 重建
 

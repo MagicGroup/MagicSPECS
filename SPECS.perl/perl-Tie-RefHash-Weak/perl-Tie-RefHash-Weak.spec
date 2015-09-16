@@ -1,6 +1,6 @@
 Name:		perl-Tie-RefHash-Weak
 Version:	0.09
-Release:	17%{?dist}
+Release:	18%{?dist}
 Summary:	Tie::RefHash subclass with weakened references in the keys
 License:	GPL+ or Artistic
 Group:		Development/Libraries
@@ -47,6 +47,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/Tie::RefHash::Weak.3pm*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.09-18
+- 为 Magic 3.0 重建
+
 * Thu Jun 19 2014 Liu Di <liudidi@gmail.com> - 0.09-17
 - 为 Magic 3.0 重建
 

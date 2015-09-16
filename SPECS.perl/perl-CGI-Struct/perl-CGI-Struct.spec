@@ -1,6 +1,6 @@
 Name:           perl-CGI-Struct
 Version:        1.21
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        Build structures from CGI data
 # BSD License (two clause), according to lib/CGI/Struct.pm
 License:        BSD
@@ -51,6 +51,9 @@ make test
 %{_mandir}/man3/CGI*
 
 %changelog
+* Tue Sep 15 2015 Liu Di <liudidi@gmail.com> - 1.21-5
+- 为 Magic 3.0 重建
+
 * Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.21-4
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

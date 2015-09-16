@@ -1,6 +1,6 @@
 Name:           perl-CGI-Application-Plugin-LogDispatch
 Version:        1.02
-Release:        18%{?dist}
+Release:        19%{?dist}
 Summary:        Add Log::Dispatch support to CGI::Application
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -54,6 +54,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.02-19
+- 为 Magic 3.0 重建
+
 * Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 1.02-18
 - 为 Magic 3.0 重建
 

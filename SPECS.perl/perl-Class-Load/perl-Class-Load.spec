@@ -1,11 +1,11 @@
 Name:		perl-Class-Load
-Version:	0.20
-Release:	14%{?dist}
+Version:	0.23
+Release:	1%{?dist}
 Summary:	A working (require "Class::Name") and more
 Group:		Development/Libraries
 License:	GPL+ or Artistic
 URL:		http://search.cpan.org/dist/Class-Load/
-Source0:	http://search.cpan.org/CPAN/authors/id/D/DR/DROLSKY/Class-Load-%{version}.tar.gz
+Source0:        http://search.cpan.org/CPAN/authors/id/E/ET/ETHER/Class-Load-%{version}.tar.gz
 BuildArch:	noarch
 # ===================================================================
 # Module build requirements
@@ -99,6 +99,9 @@ find %{buildroot} -type f -name .packlist -exec rm -f {} ';'
 %{_mandir}/man3/Class::Load.3pm*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.23-1
+- 更新到 0.23
+
 * Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 0.20-14
 - 为 Magic 3.0 重建
 

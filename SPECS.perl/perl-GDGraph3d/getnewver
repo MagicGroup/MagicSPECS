@@ -1,8 +1,8 @@
 #!/bin/bash
 pushd $(dirname $0) > /dev/null
 NAME=$(basename $(pwd)|sed -e 's/perl-//')
-url="http://search.cpan.org/dist/$NAME/"
-new1="$NAME-"
+url="http://search.cpan.org/dist/GD-Graph3d/"
+new1="GD-Graph3d-"
 new2=".tar.gz"
 downcommand="wget -q" 
 rm -f index.html && $downcommand "$url" -O index.html

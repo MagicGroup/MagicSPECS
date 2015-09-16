@@ -1,6 +1,6 @@
 Name:           perl-Canary-Stability
 Version:        2006
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Canary to check perl compatibility for Schmorp's modules
 # See COPYING file.
 License:        GPL+ or Artistic
@@ -42,6 +42,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Tue Sep 15 2015 Liu Di <liudidi@gmail.com> - 2006-2
+- 为 Magic 3.0 重建
+
 * Mon Jun 29 2015 Petr Pisar <ppisar@redhat.com> - 2006-1
 - 2006 bump
 

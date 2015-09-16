@@ -1,6 +1,6 @@
 Name:           perl-Email-Date-Format
-Version:        1.002
-Release:        21%{?dist}
+Version:	1.005
+Release:	1%{?dist}
 Summary:        Produce RFC 2822 date strings
 Group:          Development/Libraries
 License:        GPL+ or Artistic
@@ -44,6 +44,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*.3*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.005-1
+- 更新到 1.005
+
 * Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 1.002-21
 - 为 Magic 3.0 重建
 

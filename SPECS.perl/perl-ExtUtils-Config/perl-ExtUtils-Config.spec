@@ -3,13 +3,12 @@
 
 Name:		perl-ExtUtils-Config
 Version:	0.007
-Release:	10%{?dist}
+Release:	13%{?dist}
 Summary:	A wrapper for perl's configuration
 Group:		Development/Libraries
 License:	GPL+ or Artistic
 URL:		https://metacpan.org/release/ExtUtils-Config
 Source0:	http://cpan.metacpan.org/authors/id/L/LE/LEONT/ExtUtils-Config-%{version}.tar.gz
-Patch1:		ExtUtils-Config-0.007-old-Test::More.patch
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(id -nu)
 BuildArch:	noarch
 # Build
@@ -41,11 +40,6 @@ ExtUtils::Config is an abstraction around the %%Config hash.
 %prep
 %setup -q -n ExtUtils-Config-%{version}
 
-# Test suite needs patching if we have Test::More < 0.88
-%if %{old_test_more}
-%patch1
-%endif
-
 %build
 perl Makefile.PL INSTALLDIRS=vendor
 make %{?_smp_mflags}
@@ -68,6 +62,15 @@ rm -rf %{buildroot}
 %{_mandir}/man3/ExtUtils::Config.3pm*
 
 %changelog
+* Wed Sep 16 2015 Liu Di <liudidi@gmail.com> - 0.007-13
+- 为 Magic 3.0 重建
+
+* Wed Sep 16 2015 Liu Di <liudidi@gmail.com> - 0.007-12
+- 为 Magic 3.0 重建
+
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.007-11
+- 为 Magic 3.0 重建
+
 * Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 0.007-10
 - 为 Magic 3.0 重建
 

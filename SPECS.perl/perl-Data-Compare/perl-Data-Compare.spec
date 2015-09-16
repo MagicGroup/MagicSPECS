@@ -1,6 +1,6 @@
 Name:           perl-Data-Compare
-Version:        1.22
-Release:        16%{?dist}
+Version:	1.25
+Release:	1%{?dist}
 Summary:        Compare perl data structures
 Group:          Development/Libraries
 License:        GPL+ or Artistic
@@ -40,11 +40,13 @@ chmod -R u+w $RPM_BUILD_ROOT/*
 
 
 %files
-%doc CHANGES MAINTAINERS-NOTE README TODO
 %{perl_vendorlib}/Data/
 %{_mandir}/man3/*.3pm*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.25-1
+- 更新到 1.25
+
 * Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 1.22-16
 - 为 Magic 3.0 重建
 

@@ -1,11 +1,11 @@
 Name:		perl-Expect
-Version:	1.21
-Release:	15%{?dist}
+Version:	1.32
+Release:	2%{?dist}
 Summary:	Expect for Perl
 Group:		Development/Libraries
 License:	GPL+ or Artistic
 URL:		http://search.cpan.org/dist/Expect/
-Source0:	http://search.cpan.org/CPAN/authors/id/R/RG/RGIERSIG/Expect-%{version}.tar.gz
+Source0:        http://search.cpan.org/CPAN/authors/id/S/SZ/SZABGAB/Expect-%{version}.tar.gz
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(id -nu)
 BuildArch:	noarch
 BuildRequires:	perl(Carp)
@@ -49,12 +49,16 @@ rm -rf %{buildroot}
 
 %files
 %defattr(-,root,root,-)
-%doc Changes README examples/ tutorial/
-%doc %{perl_vendorlib}/Expect.pod
 %{perl_vendorlib}/Expect.pm
 %{_mandir}/man3/Expect.3pm*
 
 %changelog
+* Mon Sep 14 2015 Liu Di <liudidi@gmail.com> - 1.32-2
+- 为 Magic 3.0 重建
+
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.32-1
+- 更新到 1.32
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.21-15
 - 为 Magic 3.0 重建
 
@@ -73,7 +77,6 @@ rm -rf %{buildroot}
   - BR: perl(Carp), perl(Errno), perl(Exporter), perl(Fcntl), perl(IO::Handle)
     and perl(POSIX)
   - Make %%files list more explicit
-  - Mark Expect.pod as %%doc
   - Use search.cpan.org source URL
   - Use DESTDIR rather than PERL_INSTALL_ROOT
   - Use %%{_fixperms} macro rather than our own chmod incantation

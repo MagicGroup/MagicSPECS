@@ -1,11 +1,11 @@
 Name:           perl-PAR-Dist
-Version:        0.47
-Release:        8%{?dist}
+Version:	0.49
+Release:	1%{?dist}
 Summary:        Toolkit for creating and manipulating Perl PAR distributions
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 URL:            http://search.cpan.org/dist/PAR-Dist/
-Source0:        http://www.cpan.org/authors/id/S/SM/SMUELLER/PAR-Dist-%{version}.tar.gz
+Source0:        http://search.cpan.org/CPAN/authors/id/R/RS/RSCHUPP/PAR-Dist-%{version}.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 BuildRequires:  perl(Archive::Zip)
@@ -55,6 +55,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.49-1
+- 更新到 0.49
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.47-8
 - 为 Magic 3.0 重建
 

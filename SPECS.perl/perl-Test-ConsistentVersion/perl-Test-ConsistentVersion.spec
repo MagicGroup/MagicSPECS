@@ -1,11 +1,11 @@
 Name:           perl-Test-ConsistentVersion
-Version:        0.2.3
-Release:        13%{?dist}
+Version:	0.3.0
+Release:	1%{?dist}
 Summary:        Ensures a CPAN distribution has consistent versioning
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 URL:            http://search.cpan.org/dist/Test-ConsistentVersion/
-Source0:        http://www.cpan.org/authors/id/C/CE/CEBJYRE/Test-ConsistentVersion-v%{version}.tar.gz
+Source0:        http://search.cpan.org/CPAN/authors/id/C/CE/CEBJYRE/Test-ConsistentVersion-v%{version}.tar.gz
 BuildArch:      noarch
 BuildRequires:  perl(Module::Build)
 BuildRequires:  perl(Test::Builder)
@@ -47,6 +47,9 @@ TEST_AUTHOR=1 ./Build test
 %{_mandir}/man3/*
 
 %changelog
+* Wed Sep 16 2015 Liu Di <liudidi@gmail.com> - 0.3.0-1
+- 更新到 0.3.0
+
 * Sun Jun 15 2014 Liu Di <liudidi@gmail.com> - 0.2.3-13
 - 为 Magic 3.0 重建
 

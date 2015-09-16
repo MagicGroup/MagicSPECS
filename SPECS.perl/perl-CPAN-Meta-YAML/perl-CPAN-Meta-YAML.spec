@@ -1,11 +1,11 @@
 Name:		perl-CPAN-Meta-YAML
-Version:	0.012
-Release:	4%{?dist}
+Version:	0.017
+Release:	0%{?dist}
 Summary:	Read and write a subset of YAML for CPAN Meta files
 License:	GPL+ or Artistic
 Group:		Development/Libraries
 URL:		http://search.cpan.org/dist/CPAN-Meta-YAML/
-Source0:	http://search.cpan.org/CPAN/authors/id/D/DA/DAGOLDEN/CPAN-Meta-YAML-%{version}.tar.gz
+Source0:        http://search.cpan.org/CPAN/authors/id/D/DA/DAGOLDEN/CPAN-Meta-YAML-%{version}.tar.gz
 BuildArch:	noarch
 # Build:
 BuildRequires:	perl(ExtUtils::MakeMaker) >= 6.17

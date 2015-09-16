@@ -1,6 +1,6 @@
 Name:       perl-DateTime-Format-ISO8601 
-Version:    0.07
-Release:    26%{?dist}
+Version:	0.08
+Release:	1%{?dist}
 # LICENSE, lib/DateTime/Format/ISO8601.pod -> GPL+ or Artistic
 License:    GPL+ or Artistic 
 Group:      Development/Libraries
@@ -54,6 +54,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/*.3*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.08-1
+- 更新到 0.08
+
 * Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 0.07-26
 - 为 Magic 3.0 重建
 

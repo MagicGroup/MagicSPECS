@@ -1,11 +1,11 @@
 Name:           perl-Regexp-Assemble
-Version:        0.35
-Release:        10%{?dist}
+Version:	0.36
+Release:	1%{?dist}
 Summary:        Assemble multiple Regular Expressions into a single RE
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 URL:            http://search.cpan.org/dist/Regexp-Assemble/
-Source0:        http://www.cpan.org/authors/id/D/DL/DLAND/Regexp-Assemble-%{version}.tar.gz
+Source0:        http://search.cpan.org/CPAN/authors/id/R/RS/RSAVAGE/Regexp-Assemble-%{version}.tgz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 BuildRequires:  perl(ExtUtils::MakeMaker)
@@ -21,8 +21,6 @@ that the individual REs match.
 %prep
 %setup -q -n Regexp-Assemble-%{version}
 # tidy up the examples
-find eg -type f | xargs chmod -x
-find eg -type f | xargs perl -pi -e 's|^#!\s*/usr/local/bin/perl\S*|%{__perl}|'
 for f in Changes eg/ircwatcher; do
         iconv -f iso8859-1 -t utf-8 $f >$f.conf && mv $f.conf $f
 done
@@ -49,11 +47,13 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(-,root,root,-)
-%doc Changes eg README TODO
 %{perl_vendorlib}/*
 %{_mandir}/man3/*
 
 %changelog
+* Wed Sep 16 2015 Liu Di <liudidi@gmail.com> - 0.36-1
+- 更新到 0.36
+
 * Thu Jun 19 2014 Liu Di <liudidi@gmail.com> - 0.35-10
 - 为 Magic 3.0 重建
 

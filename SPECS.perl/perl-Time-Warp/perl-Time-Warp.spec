@@ -1,6 +1,6 @@
 Name:       perl-Time-Warp 
 Version:    0.52
-Release:    2%{?dist}
+Release:    3%{?dist}
 License:    GPL+ or Artistic 
 Summary:    Control over the flow of time
 Source:     http://search.cpan.org/CPAN/authors/id/S/SZ/SZABGAB/Time-Warp-%{version}.tar.gz
@@ -47,6 +47,9 @@ make test
 %{_mandir}/man3/*.3*
 
 %changelog
+* Mon Sep 14 2015 Liu Di <liudidi@gmail.com> - 0.52-3
+- 为 Magic 3.0 重建
+
 * Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.52-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

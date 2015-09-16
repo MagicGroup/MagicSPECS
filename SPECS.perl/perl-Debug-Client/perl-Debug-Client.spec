@@ -1,6 +1,6 @@
 Name:           perl-Debug-Client
-Version:        0.16
-Release:        5%{?dist}
+Version:	0.29
+Release:	1%{?dist}
 Summary:        Client side code for perl debugger
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -42,6 +42,9 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.29-1
+- 更新到 0.29
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.16-5
 - 为 Magic 3.0 重建
 

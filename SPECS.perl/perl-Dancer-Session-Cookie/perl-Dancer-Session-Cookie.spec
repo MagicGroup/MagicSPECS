@@ -1,11 +1,11 @@
 Name:           perl-Dancer-Session-Cookie
-Version:        0.15
-Release:        15%{?dist}
+Version:	0.26
+Release:	2%{?dist}
 Summary:        Encrypted cookie-based session back-end for Dancer
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 URL:            http://search.cpan.org/dist/Dancer-Session-Cookie/
-Source0:        http://www.cpan.org/authors/id/S/SU/SUKRIA/Dancer-Session-Cookie-%{version}.tar.gz
+Source0:        http://search.cpan.org/CPAN/authors/id/Y/YA/YANICK/Dancer-Session-Cookie-%{version}.tar.gz
 BuildArch:      noarch
 BuildRequires:  perl(ExtUtils::MakeMaker)
 # Run-time:
@@ -62,11 +62,16 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 
 
 %files
-%doc Changes README
 %{perl_vendorlib}/*
 %{_mandir}/man3/*
 
 %changelog
+* Mon Sep 14 2015 Liu Di <liudidi@gmail.com> - 0.26-2
+- 为 Magic 3.0 重建
+
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.26-1
+- 更新到 0.26
+
 * Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 0.15-15
 - 为 Magic 3.0 重建
 

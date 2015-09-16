@@ -1,11 +1,11 @@
 Name:		perl-Config-Tiny
-Version:	2.14
-Release:	9%{?dist}
+Version:	2.22
+Release:	1%{?dist}
 Summary:	Perl module for reading and writing .ini style configuration files
 Group:		Development/Libraries
 License:	GPL+ or Artistic
 URL:		http://search.cpan.org/dist/Config-Tiny/
-Source0:	http://search.cpan.org/CPAN/authors/id/A/AD/ADAMK/Config-Tiny-%{version}.tar.gz
+Source0:	http://search.cpan.org/CPAN/authors/id/R/RS/RSAVAGE/Config-Tiny-%{version}.tgz
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(id -nu)
 BuildArch:	noarch
 BuildRequires:	perl(ExtUtils::MakeMaker)
@@ -15,9 +15,7 @@ BuildRequires:	perl(Test::Pod)
 # Test::MinimumVersion -> Perl::MinimumVersion -> Perl::Critic -> Config::Tiny
 %if 0%{!?perl_bootstrap:1}
 # Test::MinimumVersion not available for EPEL < 6
-%if "%{rhel}" != "4" && "%{rhel}" != "5"
 BuildRequires:	perl(Test::MinimumVersion)
-%endif
 %endif
 Requires:	perl(:MODULE_COMPAT_%(eval "`perl -V:version`"; echo $version))
 
@@ -54,6 +52,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/Config::Tiny.3pm*
 
 %changelog
+* Wed Sep 16 2015 Liu Di <liudidi@gmail.com> - 2.22-1
+- 更新到 2.22
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 2.14-9
 - 为 Magic 3.0 重建
 

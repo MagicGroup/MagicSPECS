@@ -1,10 +1,12 @@
 Summary:    A Router Advertisement daemon
+Summary(zh_CN.UTF-8): 路由器通告信息服务
 Name:       radvd
-Version:    1.12
-Release: 2%{?dist}
+Version:	2.11
+Release:	1%{?dist}
 # The code includes the advertising clause, so it's GPL-incompatible
 License:    BSD with advertising
 Group:      System Environment/Daemons
+Group(zh_CN.UTF-8): 系统环境/服务
 URL:        http://www.litech.org/radvd/
 Source0:    %{url}dist/%{name}-%{version}.tar.gz
 Source1:    radvd-tmpfs.conf
@@ -30,6 +32,9 @@ advertisements.
 
 Install radvd if you are setting up IPv6 network and/or Mobile IPv6
 services.
+
+%description -l zh_CN.UTF-8
+路由器通告信息服务。
 
 %prep
 %setup -q
@@ -58,6 +63,7 @@ install -m 644 redhat/radvd.sysconfig $RPM_BUILD_ROOT%{_sysconfdir}/sysconfig/ra
 install -d -m 755 $RPM_BUILD_ROOT%{_tmpfilesdir}
 install -p -m 644 %{SOURCE1} $RPM_BUILD_ROOT%{_tmpfilesdir}/radvd.conf
 install -m 644 %{SOURCE2} ${RPM_BUILD_ROOT}%{_unitdir}
+magic_rpm_clean.sh
 
 %postun
 %systemd_postun_with_restart radvd.service
@@ -88,6 +94,9 @@ exit 0
 %{_sbindir}/radvdump
 
 %changelog
+* Sat Sep 12 2015 Liu Di <liudidi@gmail.com> - 2.11-1
+- 更新到 2.11
+
 * Fri Jun 20 2014 Liu Di <liudidi@gmail.com> - 1.12-2
 - 为 Magic 3.0 重建
 

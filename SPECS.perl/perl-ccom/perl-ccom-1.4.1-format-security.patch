@@ -1,0 +1,17 @@
+Patch by Robert Scheck <robert@fedoraproject.org> for digitemp >= 3.6.0, which fixes the build
+failures if compiled with "-Werror=format-security". For further information please also have a
+look to https://bugzilla.redhat.com/show_bug.cgi?id=1059199
+
+--- ccom_V1.4.1_20010428/ccomlib/phonet.c			2002-01-18 05:17:38.000000000 +0100
++++ ccom_V1.4.1_20010428/ccomlib/phonet.c.format-security	2014-02-16 00:35:11.000000000 +0100
+@@ -1183,8 +1183,8 @@
+ 
+           if (strchr (phonet_rules[i-n],'^') != NULL)
+             {
+-             sprintf (orig, orig+1);
+-             sprintf (orig2,orig2+1);
++             sprintf (orig,  "%s", orig+1);
++             sprintf (orig2, "%s", orig2+1);
+             }
+           if (strchr (phonet_rules[i-n],'-') != NULL
+           ||  strchr (phonet_rules[i-n],'$') == NULL)

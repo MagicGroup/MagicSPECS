@@ -1,11 +1,12 @@
 Name:           perl-Test-Class
-Version:        0.38
-Release:        7%{?dist}
+Version:	0.50
+Release:	1%{?dist}
 Summary:        Easily create test classes in an xUnit/JUnit style
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 URL:            http://search.cpan.org/dist/Test-Class/
-Source0:        http://www.cpan.org/authors/id/A/AD/ADIE/Test-Class-%{version}.tar.gz
+Source0:        http://search.cpan.org/CPAN/authors/id/E/ET/ETHER/Test-Class-%{version}.tar.gz
+Patch0:         perl-Test-Class-UTF8.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
@@ -49,37 +50,35 @@ your code in an xUnit style.
 %setup -q -n Test-Class-%{version}
 
 # Fix up broken permissions
-find -type f -exec chmod -x {} \;
+find -type f -exec chmod -c -x {} \;
 
-# There's a non-ISO char, iconv isn't able to convert
-%{__perl} -pi -e 's/Mart.*n/Martín/' < Changes > Changes~
-mv Changes~ Changes
+# Fix character encoding in documentation
+%patch0
 
 %build
-%{__perl} Build.PL installdirs=vendor
-./Build
+perl Makefile.PL INSTALLDIRS=vendor
+make %{?_smp_mflags}
 
 %install
-rm -rf $RPM_BUILD_ROOT
-
-./Build install destdir=$RPM_BUILD_ROOT create_packlist=0
-find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
-
-%{_fixperms} $RPM_BUILD_ROOT/*
+rm -rf %{buildroot}
+make pure_install DESTDIR=%{buildroot}
+find %{buildroot} -type f -name .packlist -exec rm -f {} ';'
+%{_fixperms} %{buildroot}
 
 %check
-./Build test
-
-%clean
-rm -rf $RPM_BUILD_ROOT
+make test
 
 %files
-%defattr(-,root,root,-)
-%doc Changes LICENSE README
-%{perl_vendorlib}/*
-%{_mandir}/man3/*
+%doc Changes README
+%{perl_vendorlib}/Test/
+%{_mandir}/man3/Test::Class.3*
+%{_mandir}/man3/Test::Class::Load.3*
+%{_mandir}/man3/Test::Class::MethodInfo.3*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.50-1
+- 更新到 0.50
+
 * Sun Jun 15 2014 Liu Di <liudidi@gmail.com> - 0.38-7
 - 为 Magic 3.0 重建
 

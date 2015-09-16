@@ -1,6 +1,6 @@
 Name:           perl-Statistics-Basic
-Version:        1.6607
-Release:        8%{?dist}
+Version:	1.6611
+Release:	1%{?dist}
 Summary:        A collection of very basic statistics modules
 License:        LGPLv2+
 Group:          Development/Libraries
@@ -57,6 +57,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.6611-1
+- 更新到 1.6611
+
 * Thu Jun 19 2014 Liu Di <liudidi@gmail.com> - 1.6607-8
 - 为 Magic 3.0 重建
 

@@ -1,6 +1,6 @@
 Name:           perl-RPM2
 Version:        1.0
-Release:        14%{?dist}
+Release:        15%{?dist}
 Summary:        Perl bindings for the RPM Package Manager API
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -47,6 +47,9 @@ find %{buildroot} -type f -name '*.bs' -size 0 -exec rm -f {} \;
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.0-15
+- 为 Magic 3.0 重建
+
 * Sat Aug 01 2015 Liu Di <liudidi@gmail.com> - 1.0-14
 - 为 Magic 3.0 重建
 

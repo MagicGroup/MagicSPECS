@@ -1,6 +1,6 @@
 Name:           perl-Module-Manifest-Skip
-Version:        0.17
-Release:        11%{?dist}
+Version:	0.23
+Release:	1%{?dist}
 Summary:        MANIFEST.SKIP Manangement for Modules
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -57,6 +57,9 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.23-1
+- 更新到 0.23
+
 * Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 0.17-11
 - 为 Magic 3.0 重建
 

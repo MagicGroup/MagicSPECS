@@ -1,6 +1,6 @@
 Name:           perl-Tk-EntryCheck
 Version:        0.04
-Release:        5%{?dist}
+Release:        6%{?dist}
 Summary:        Interface to Tk::Entry for controlling its length and content
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -49,6 +49,9 @@ test -e ok
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.04-6
+- 为 Magic 3.0 重建
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.04-5
 - 为 Magic 3.0 重建
 

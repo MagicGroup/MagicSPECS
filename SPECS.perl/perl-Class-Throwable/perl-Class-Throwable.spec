@@ -1,11 +1,11 @@
 Name:           perl-Class-Throwable
-Version:        0.10
-Release:        14%{?dist}
+Version:	0.13
+Release:	1%{?dist}
 Summary:        A minimal lightweight exception class
 Group:          Development/Libraries
 License:        GPL+ or Artistic
 URL:            http://search.cpan.org/dist/Class-Throwable/
-Source0:        http://search.cpan.org/CPAN/authors/id/S/ST/STEVAN/Class-Throwable-%{version}.tar.gz
+Source0:        http://search.cpan.org/CPAN/authors/id/K/KM/KMX/Class-Throwable-%{version}.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
@@ -51,6 +51,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.13-1
+- 更新到 0.13
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.10-14
 - 为 Magic 3.0 重建
 

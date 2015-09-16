@@ -1,0 +1,44 @@
+diff --git a/FindRef.xs b/FindRef.xs
+index ac4c991..662559f 100644
+--- a/FindRef.xs
++++ b/FindRef.xs
+@@ -47,7 +47,7 @@
+ #define res_gv(sigil)						\
+   res_text (form ("the global %c%s::%.*s", sigil,		\
+                   HvNAME (GvSTASH (sv)),			\
+-                  GvNAME_HEK (sv) ? GvNAMELEN (sv) : 11,	\
++                  GvNAME_HEK (sv) ? (int) GvNAMELEN (sv) : 11,	\
+                   GvNAME_HEK (sv) ? GvNAME    (sv) : "<anonymous>"))
+ 
+ MODULE = Devel::FindRef		PACKAGE = Devel::FindRef		
+@@ -151,7 +151,7 @@ find_ (SV *target_ref)
+ 
+                                 while ((he = hv_iternext ((HV *)sv)))
+                                   if (HeVAL (he) == targ)
+-                                    res_pair (form ("the hash member '%.*s' of", HeKLEN (he), HeKEY (he)));
++                                    res_pair (form ("the hash member '%.*s' of", (int) HeKLEN (he), HeKEY (he)));
+                               }
+ 
+                             break;
+@@ -207,7 +207,7 @@ find_ (SV *target_ref)
+                                     && CopLINE ((COP *)CvSTART (sv)))
+                                   res_text (form ("the closure created at %s:%d",
+                                                   CopFILE ((COP *)CvSTART (sv)) ? CopFILE ((COP *)CvSTART (sv)) : "<unknown>",
+-                                                  CopLINE ((COP *)CvSTART (sv))));
++                                                  (int) CopLINE ((COP *)CvSTART (sv))));
+                                 else
+                                   res_text (form ("the closure created somewhere in file %s (PLEASE REPORT!)",
+                                                   CvFILE (sv) ? CvFILE (sv) : "<unknown>"));
+@@ -237,10 +237,10 @@ find_ (SV *target_ref)
+                                       res_pair (form ("the target for the lvalue hash element '%.*s',",
+                                                       (int)SvCUR (mg->mg_obj), SvPV_nolen (mg->mg_obj)));
+                                     else
+-                                      res_pair (form ("the target for the lvalue array element #%d,", LvTARGOFF (sv)));
++                                      res_pair (form ("the target for the lvalue array element #%zu,", LvTARGOFF (sv)));
+                                   }
+                                 else
+-                                  res_pair (form ("an lvalue reference target (type '%c', ofs %d, len %d),",
++                                  res_pair (form ("an lvalue reference target (type '%c', ofs %zu, len %zu),",
+                                                   LvTYPE (sv), LvTARGOFF (sv), LvTARGLEN (sv)));
+                               }
+ 

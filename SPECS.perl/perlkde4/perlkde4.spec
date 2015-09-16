@@ -18,7 +18,7 @@
 
 Name:           perlkde4
 Version: 4.14.3
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Kdebindings Perl-KDE library
 License:        LGPL-2.1+
 Group:          Development/Libraries/KDE
@@ -65,6 +65,9 @@ make DESTDIR=%{buildroot} install
 %{perl_vendorarch}/auto/
 
 %changelog
+* Wed Sep 16 2015 Liu Di <liudidi@gmail.com> - 4.14.3-2
+- 为 Magic 3.0 重建
+
 * Wed Dec 31 2014 Liu Di <liudidi@gmail.com> - 4.14.3-1
 - 更新到 4.14.3
 

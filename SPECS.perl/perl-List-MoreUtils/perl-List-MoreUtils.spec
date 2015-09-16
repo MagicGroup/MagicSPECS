@@ -1,11 +1,11 @@
 Name:		perl-List-MoreUtils
-Version:	0.33
-Release:	14%{?dist}
+Version:	0.413
+Release:	2%{?dist}
 Summary:	Provide the stuff missing in List::Util
 Group:		Development/Libraries
 License:	GPL+ or Artistic
 URL:		http://search.cpan.org/dist/List-MoreUtils/
-Source0:	http://search.cpan.org/CPAN/authors/id/A/AD/ADAMK/List-MoreUtils-%{version}.tar.gz
+Source0:        http://search.cpan.org/CPAN/authors/id/R/RE/REHSACK/List-MoreUtils-%{version}.tar.gz
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(id -nu)
 BuildRequires:	perl(Carp)
 BuildRequires:	perl(constant)
@@ -63,12 +63,17 @@ find %{buildroot} -type f -name '*.bs' -empty -exec rm -f {} ';'
 rm -rf %{buildroot}
 
 %files
-%doc Changes README LICENSE
 %{perl_vendorarch}/List/
 %{perl_vendorarch}/auto/List/
-%{_mandir}/man3/List::MoreUtils.3pm*
+%{_mandir}/man3/List::MoreUtils*.3pm*
 
 %changelog
+* Mon Sep 14 2015 Liu Di <liudidi@gmail.com> - 0.413-2
+- 为 Magic 3.0 重建
+
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.413-1
+- 更新到 0.413
+
 * Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 0.33-14
 - 为 Magic 3.0 重建
 

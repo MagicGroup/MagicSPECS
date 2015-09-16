@@ -1,12 +1,12 @@
 Name:           perl-Image-Xpm
-Version:        1.09
-Release:        20%{?dist}
+Version:	1.12
+Release:	1%{?dist}
 Summary:        Load, create, manipulate and save xpm image files in Perl
 
 Group:          Development/Libraries
 License:        GPL+
 URL:            http://search.cpan.org/dist/Image-Xpm/
-Source0:        http://www.cpan.org/authors/id/S/SU/SUMMER/Image-Xpm-%{version}.tar.gz
+Source0:        http://search.cpan.org/CPAN/authors/id/S/SR/SREZIC/Image-Xpm-%{version}.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildArch:      noarch
@@ -53,6 +53,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.12-1
+- 更新到 1.12
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.09-20
 - 为 Magic 3.0 重建
 

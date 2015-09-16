@@ -1,6 +1,6 @@
 Name:           perl-File-Tail
-Version:        0.99.3
-Release:        23%{?dist}
+Version:	1.3
+Release:	1%{?dist}
 Summary:        Perl extension for reading from continously updated files
 
 Group:          Development/Libraries
@@ -52,6 +52,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.3-1
+- 更新到 1.3
+
 * Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 0.99.3-23
 - 为 Magic 3.0 重建
 

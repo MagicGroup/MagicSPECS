@@ -2,14 +2,13 @@
 %global debug_package %{nil}
 
 Name:		perl-Test-Version
-Version:	1.002004
-Release:	9%{?dist}
+Version:	2.03
+Release:	1%{?dist}
 Summary:	Check to see that versions in modules are sane
 License:	Artistic 2.0
 Group:		Development/Libraries
 URL:		http://search.cpan.org/dist/Test-Version/
-Source0:	http://search.cpan.org/CPAN/authors/id/X/XE/XENO/Test-Version-%{version}.tar.gz
-Patch1:		Test-Version-1.002003-pod-spell.patch
+Source0:        http://search.cpan.org/CPAN/authors/id/P/PL/PLICEASE/Test-Version-%{version}.tar.gz
 BuildArch:	noarch
 # ===================================================================
 # Module build requirements
@@ -77,9 +76,6 @@ versions across your dist are sane.
 %prep
 %setup -q -n Test-Version-%{version}
 
-# Some spell checkers check "doesn" rather than "doesn't"
-%patch1
-
 %build
 perl Makefile.PL INSTALLDIRS=vendor
 make %{?_smp_mflags}
@@ -98,6 +94,9 @@ make test %{!?perl_bootstrap:AUTHOR_TESTING=1 RELEASE_TESTING=1}
 %{_mandir}/man3/Test::Version.3pm*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 2.03-1
+- 更新到 2.03
+
 * Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 1.002004-9
 - 为 Magic 3.0 重建
 

@@ -1,7 +1,7 @@
 Summary:        A Perl interface for making and serving XML-RPC calls
 Name:           perl-Frontier-RPC
 Version:        0.07b4p1
-Release:        18%{?dist}
+Release:        19%{?dist}
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 URL:            http://search.cpan.org/dist/Frontier-RPC/
@@ -87,6 +87,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.07b4p1-19
+- 为 Magic 3.0 重建
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.07b4p1-18
 - 为 Magic 3.0 重建
 

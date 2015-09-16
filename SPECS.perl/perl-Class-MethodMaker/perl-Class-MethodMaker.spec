@@ -1,12 +1,12 @@
 Name:           perl-Class-MethodMaker
-Version:        2.18
-Release:        17%{?dist}
+Version:	2.24
+Release:	1%{?dist}
 Summary:        Perl module for creating generic object-oriented methods
 
 Group:          Development/Libraries
 License:        GPL+ or Artistic
 URL:            http://search.cpan.org/~schwigon/Class-MethodMaker/
-Source0:        http://www.cpan.org/authors/id/S/SC/SCHWIGON/Class-MethodMaker-%{version}.tar.gz
+Source0:        http://search.cpan.org/CPAN/authors/id/S/SC/SCHWIGON/class-methodmaker/Class-MethodMaker-%{version}.tar.gz
 
 BuildRequires:  perl(ExtUtils::MakeMaker)
 # Required by the tests
@@ -52,6 +52,9 @@ cd ..
 %{_mandir}/man3/*.3*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 2.24-1
+- 更新到 2.24
+
 * Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 2.18-17
 - 为 Magic 3.0 重建
 

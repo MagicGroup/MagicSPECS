@@ -1,6 +1,6 @@
 Name:           perl-XML-SAX-Writer
-Version:        0.50
-Release:        17%{?dist}
+Version:	0.56
+Release:	2%{?dist}
 Summary:        SAX2 Writer
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -21,7 +21,7 @@ A new XML Writer to match the SAX2 effort.
 
 %prep
 %setup -q -n XML-SAX-Writer-%{version}
-chmod 644 Changes README Writer.pm lib/XML/SAX/Writer/XML.pm
+chmod 644 Changes README lib/XML/SAX/Writer/XML.pm
 
 # Fix UTF-8
 iconv -f ISO_8859-1 -t UTF-8 -o tmp.man Writer.pm &&
@@ -54,6 +54,12 @@ rm -rf %{buildroot}
 %{_mandir}/man3/*
 
 %changelog
+* Mon Sep 14 2015 Liu Di <liudidi@gmail.com> - 0.56-2
+- 为 Magic 3.0 重建
+
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.56-1
+- 更新到 0.56
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.50-17
 - 为 Magic 3.0 重建
 

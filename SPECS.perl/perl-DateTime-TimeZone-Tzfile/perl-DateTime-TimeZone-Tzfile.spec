@@ -1,6 +1,6 @@
 Name:           perl-DateTime-TimeZone-Tzfile
-Version:        0.006
-Release:        15%{?dist}
+Version:	0.010
+Release:	1%{?dist}
 Summary:        Tzfile (zoneinfo) timezone files
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -58,6 +58,9 @@ find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.010-1
+- 更新到 0.010
+
 * Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 0.006-15
 - 为 Magic 3.0 重建
 

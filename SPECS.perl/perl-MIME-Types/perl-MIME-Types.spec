@@ -1,12 +1,11 @@
 Name:           perl-MIME-Types
-Version:        1.35
-Release:        3%{?dist}
+Version:	2.11
+Release:	1%{?dist}
 Summary:        MIME types module for Perl
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 URL:            http://search.cpan.org/dist/MIME-Types/
 Source0:        http://search.cpan.org/CPAN/authors/id/M/MA/MARKOV/MIME-Types-%{version}.tar.gz
-Patch0:         MIME-Types-1.31-utf8.patch
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(id -nu)
 BuildArch:      noarch
 BuildRequires:  perl(Carp)
@@ -28,9 +27,6 @@ add additional information.
 %prep
 %setup -q -n MIME-Types-%{version}
 
-# Recode ChangeLog as UTF-8
-%patch0 -p1
-
 %build
 perl Makefile.PL INSTALLDIRS=vendor
 make %{?_smp_mflags}
@@ -51,10 +47,15 @@ rm -rf %{buildroot}
 %files
 %doc ChangeLog README
 %{perl_vendorlib}/MIME/
+%{perl_vendorlib}/MojoX/MIME/
 %{_mandir}/man3/MIME::Type.3pm*
 %{_mandir}/man3/MIME::Types.3pm*
+%{_mandir}/man3/MojoX::MIME::Types.3pm*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 2.11-1
+- 更新到 2.11
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.35-3
 - 为 Magic 3.0 重建
 

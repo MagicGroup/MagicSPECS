@@ -1,6 +1,6 @@
 Name:           perl-MooseX-Types-DateTime-ButMaintained
 Version:        0.16
-Release:        10%{?dist}
+Release:        11%{?dist}
 Summary:        DateTime related constraints and coercions for Moose
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -62,6 +62,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.16-11
+- 为 Magic 3.0 重建
+
 * Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 0.16-10
 - 为 Magic 3.0 重建
 

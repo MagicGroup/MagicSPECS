@@ -1,30 +1,48 @@
+# Because encoding sub-package has independent version, version macro gets
+# redefined.
+%global cpan_version 2.76
 Name:           perl-Encode
-Epoch:          1
-Version:        2.62
-Release:        5%{?dist}
+Epoch:          3
+Version:        %{cpan_version}
+# Keep increasing release number even when rebasing version because
+# perl-encoding sub-package has independent version which does not change
+# often and consecutive builds would clash on perl-encoding NEVRA. This is the
+# same case as in perl.spec.
+Release:        3%{?dist}
 Summary:        Character encodings in Perl
-License:        GPL+ or Artistic
+# ucm:          UCD
+# other files:  GPL+ or Artistic
+License:        (GPL+ or Artistic) and UCD
 Group:          Development/Libraries
 URL:            http://search.cpan.org/dist/Encode/
-Source0:        http://www.cpan.org/authors/id/D/DA/DANKOGAI/Encode-%{version}.tar.gz
+Source0:        http://www.cpan.org/authors/id/D/DA/DANKOGAI/Encode-%{cpan_version}.tar.gz
+BuildRequires:  coreutils
+BuildRequires:  findutils
+BuildRequires:  make
 BuildRequires:  perl
 BuildRequires:  perl(ExtUtils::MakeMaker)
 BuildRequires:  perl(File::Spec)
 BuildRequires:  perl(File::Spec::Functions)
 BuildRequires:  perl(strict)
 BuildRequires:  perl(warnings)
+# enc2xs is run at build-time
 # Run-time:
 BuildRequires:  perl(bytes)
 BuildRequires:  perl(Carp)
+BuildRequires:  perl(Config)
 BuildRequires:  perl(constant)
 BuildRequires:  perl(Exporter) >= 5.57
-# Filter::Util::Call is optional
+BuildRequires:  perl(File::Basename)
+BuildRequires:  perl(File::Find)
+BuildRequires:  perl(Filter::Util::Call)
 BuildRequires:  perl(Getopt::Long)
+BuildRequires:  perl(Getopt::Std)
 # I18N::Langinfo is optional
 BuildRequires:  perl(MIME::Base64)
 BuildRequires:  perl(overload)
 BuildRequires:  perl(parent) >= 0.221
 # PerlIO::encoding is optional
+# POSIX is optional
 BuildRequires:  perl(re)
 # Storable is optional
 BuildRequires:  perl(utf8)
@@ -33,8 +51,6 @@ BuildRequires:  perl(XSLoader)
 # Tests:
 # Benchmark not used
 BuildRequires:  perl(charnames)
-BuildRequires:  perl(Config)
-BuildRequires:  perl(File::Basename)
 BuildRequires:  perl(File::Compare)
 BuildRequires:  perl(File::Copy)
 BuildRequires:  perl(FileHandle)
@@ -61,12 +77,41 @@ Requires:       perl(parent) >= 0.221
 The Encode module provides the interface between Perl strings and the rest
 of the system. Perl strings are sequences of characters.
 
+%package -n perl-encoding
+Summary:        Write your Perl script in non-ASCII or non-UTF-8
+Version:        2.16
+License:        GPL+ or Artistic
+Group:          Development/Libraries
+# Keeping this sub-package arch-specific because it installs files into
+# arch-specific directories.
+Requires:       perl(:MODULE_COMPAT_%(eval "`perl -V:version`"; echo $version))
+Requires:       perl(Carp)
+# Config not needed on perl ≥ 5.008
+# Consider Filter::Util::Call as mandatory, bug #1165183, CPAN RT#100427
+Requires:       perl(Filter::Util::Call)
+# I18N::Langinfo is optional
+# PerlIO::encoding is optional
+Requires:       perl(utf8)
+Conflicts:      perl-Encode < 2:2.64-2
+
+%description -n perl-encoding
+With the encoding pragma, you can write your Perl script in any encoding you
+like (so long as the Encode module supports it) and still enjoy Unicode
+support.
+
+However, this encoding module is deprecated under perl 5.18. It uses
+a mechanism provided by perl that is deprecated under 5.18 and higher, and may
+be removed in a future version.
+
+The easiest and the best alternative is to write your script in UTF-8.
+
 # To mirror files from perl-devel (bug #456534)
 # Keep architecture specific because files go into vendorarch
 %package devel
 Summary:        Perl Encode Module Generator
+Version:        %{cpan_version}
 Group:          Development/Libraries
-Requires:       %{name}%{?_isa} = %{epoch}:%{version}-%{release}
+Requires:       %{name}%{?_isa} = %{epoch}:%{cpan_version}-%{release}
 Requires:       perl(:MODULE_COMPAT_%(eval "`perl -V:version`"; echo $version))
 Requires:       perl-devel
 Requires:       perl(Encode)
@@ -78,7 +123,7 @@ your own encoding to perl. No knowledge of XS is necessary.
 
 
 %prep
-%setup -q -n Encode-%{version}
+%setup -q -n Encode-%{cpan_version}
 
 %build
 # Additional scripts can be installed by appending MORE_SCRIPTS, UCM files by
@@ -97,14 +142,21 @@ make test
 
 %files
 %doc AUTHORS Changes README
+%{_bindir}/encguess
 %{_bindir}/piconv
 %{perl_vendorarch}/auto/*
 %{perl_vendorarch}/Encode*
 %exclude %{perl_vendorarch}/Encode/*.e2x
 %exclude %{perl_vendorarch}/Encode/encode.h
-%{perl_vendorarch}/encoding.pm
+%{_mandir}/man1/encguess.*
 %{_mandir}/man1/piconv.*
-%{_mandir}/man3/*
+%{_mandir}/man3/Encode.*
+%{_mandir}/man3/Encode::*
+
+%files -n perl-encoding
+%doc AUTHORS Changes README
+%{perl_vendorarch}/encoding.pm
+%{_mandir}/man3/encoding.*
 
 %files devel
 %{_bindir}/enc2xs
@@ -113,14 +165,70 @@ make test
 %{perl_vendorarch}/Encode/encode.h
 
 %changelog
-* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1:2.62-5
+* Mon Sep 14 2015 Liu Di <liudidi@gmail.com> - 3:2.76-3
 - 为 Magic 3.0 重建
 
-* Thu Jun 12 2014 Liu Di <liudidi@gmail.com> - 1:2.62-4
-- 为 Magic 3.0 重建
+* Fri Jul 31 2015 Petr Pisar <ppisar@redhat.com> - 3:2.76-2
+- Increase release number to have unique perl-encoding NEVRA
 
-* Thu Jun 12 2014 Liu Di <liudidi@gmail.com> - 1:2.62-3
-- 为 Magic 3.0 重建
+* Fri Jul 31 2015 Petr Pisar <ppisar@redhat.com> - 3:2.76-1
+- 2.76 bump
+
+* Wed Jul 01 2015 Petr Pisar <ppisar@redhat.com> - 3:2.75-1
+- 2.75 bump
+
+* Thu Jun 25 2015 Petr Pisar <ppisar@redhat.com> - 3:2.74-1
+- 2.74 bump
+
+* Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3:2.73-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
+
+* Wed Jun 03 2015 Jitka Plesnikova <jplesnik@redhat.com> - 2:2.73-2
+- Perl 5.22 rebuild
+- Increase Epoch to favour standalone package
+
+* Mon Apr 20 2015 Petr Pisar <ppisar@redhat.com> - 2:2.73-1
+- 2.73 bump
+
+* Mon Mar 16 2015 Petr Pisar <ppisar@redhat.com> - 2:2.72-1
+- 2.72 bump
+
+* Thu Mar 12 2015 Petr Pisar <ppisar@redhat.com> - 2:2.71-1
+- 2.71 bump
+
+* Wed Mar 04 2015 Petr Pisar <ppisar@redhat.com> - 2:2.70-2
+- Correct license from (GPL+ or Artistic) to ((GPL+ or Artistic) and UCD)
+
+* Thu Feb 05 2015 Petr Pisar <ppisar@redhat.com> - 2:2.70-1
+- 2.70 bump
+
+* Fri Jan 23 2015 Petr Pisar <ppisar@redhat.com> - 2:2.68-1
+- 2.68 bump
+
+* Fri Dec 05 2014 Petr Pisar <ppisar@redhat.com> - 2:2.67-1
+- 2.67 bump
+
+* Wed Dec 03 2014 Petr Pisar <ppisar@redhat.com> - 2:2.66-1
+- 2.66 bump
+
+* Tue Nov 18 2014 Petr Pisar <ppisar@redhat.com> - 2:2.64-2
+- Consider Filter::Util::Call dependency as mandatory (bug #1165183)
+- Sub-package encoding module
+
+* Mon Nov 03 2014 Petr Pisar <ppisar@redhat.com> - 2:2.64-1
+- 2.64 bump
+
+* Mon Oct 20 2014 Petr Pisar <ppisar@redhat.com> - 2:2.63-1
+- 2.63 bump
+
+* Wed Sep 03 2014 Jitka Plesnikova <jplesnik@redhat.com> - 2:2.62-5
+- Increase Epoch to favour standalone package
+
+* Tue Aug 26 2014 Jitka Plesnikova <jplesnik@redhat.com> - 1:2.62-4
+- Perl 5.20 rebuild
+
+* Sun Aug 17 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1:2.62-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
 
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1:2.62-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild

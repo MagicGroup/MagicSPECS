@@ -1,11 +1,11 @@
 Name:       perl-Sort-Naturally 
 Version:    1.03
-Release:    4%{?dist}
+Release:    5%{?dist}
 # see lib/Sort/Naturally.pm 
 License:    GPL+ or Artistic
 Group:      Development/Libraries
 Summary:    Sort lexically, but sort numeral parts numerically 
-Source:     http://search.cpan.org/CPAN/authors/id/S/SB/SBURKE/Sort-Naturally-%{version}.tar.gz 
+Source0:        http://search.cpan.org/CPAN/authors/id/B/BI/BINGOS/Sort-Naturally-%{version}.tar.gz
 Url:        http://search.cpan.org/dist/Sort-Naturally
 BuildArch:  noarch
 BuildRequires: perl(Carp)
@@ -42,6 +42,9 @@ make test
 %{_mandir}/man3/*.3*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.03-5
+- 为 Magic 3.0 重建
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.03-4
 - 为 Magic 3.0 重建
 

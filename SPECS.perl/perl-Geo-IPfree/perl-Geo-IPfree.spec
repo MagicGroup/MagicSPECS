@@ -1,13 +1,13 @@
 %define cpan_name Geo-IPfree
 %define cpan_version 1.112870
 Name:           perl-%{cpan_name}
-Version:        1.1.1.2.8.7.0
-Release:        5%{?dist}
+Version:	1.151940
+Release:	1%{?dist}
 Summary:        Look up the country of an IPv4 Address
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 URL:            http://search.cpan.org/dist/%{cpan_name}/
-Source0:        http://www.cpan.org/authors/id/B/BR/BRICAS/%{cpan_name}-%{cpan_version}.tar.gz
+Source0:        http://search.cpan.org/CPAN/authors/id/B/BR/BRICAS/Geo-IPfree-%{version}.tar.gz
 BuildArch:      noarch
 BuildRequires:  perl(Carp)
 BuildRequires:  perl(Exporter)
@@ -25,7 +25,7 @@ This package comes with it's own database to look up the IPv4's country, and
 is totally free.
 
 %prep
-%setup -q -n %{cpan_name}-%{cpan_version}
+%setup -q -n %{cpan_name}-%{version}
 
 %build
 %{__perl} Makefile.PL INSTALLDIRS=vendor
@@ -46,6 +46,9 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.151940-1
+- 更新到 1.151940
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.1.1.2.8.7.0-5
 - 为 Magic 3.0 重建
 

@@ -30,7 +30,7 @@
 Name:           perl
 Version:        %{perl_version}
 # release number must be even higher, because dual-lived modules will be broken otherwise
-Release:        350%{?dist}
+Release:        351%{?dist}
 Epoch:          %{perl_epoch}
 Summary:        Practical Extraction and Report Language
 Group:          Development/Languages
@@ -4246,6 +4246,9 @@ popd
 
 # Old changelog entries are preserved in CVS.
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 4:5.22.0-351
+- 为 Magic 3.0 重建
+
 * Fri Aug 07 2015 Petr Pisar <ppisar@redhat.com> - 4:5.22.0-350
 - Sub-package Memoize
 - Sub-package Net-Ping

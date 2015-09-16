@@ -1,11 +1,11 @@
 Name:           perl-Getopt-Euclid
-Version:        0.2.3
-Release:        12%{?dist}
+Version:	0.4.5
+Release:	1%{?dist}
 Summary:        Executable Uniform Command-Line Interface Descriptions
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 URL:            http://search.cpan.org/dist/Getopt-Euclid/
-Source0:        http://search.cpan.org/CPAN/authors/id/K/KG/KGALINSKY/Getopt-Euclid-v%{version}.tar.gz
+Source0:        http://search.cpan.org/CPAN/authors/id/F/FA/FANGLY/Getopt-Euclid-%{version}.tar.gz
 BuildRoot:      %(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
 BuildArch:      noarch
 BuildRequires:  perl(Module::Build)
@@ -22,7 +22,7 @@ line argument parser. This ensures that your program's documented interface
 and its actual interface always agree.
 
 %prep
-%setup -q -n Getopt-Euclid-v%{version}
+%setup -q -n Getopt-Euclid-%{version}
 
 %build
 %{__perl} Build.PL installdirs=vendor
@@ -49,6 +49,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.4.5-1
+- 更新到 0.4.5
+
 * Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 0.2.3-12
 - 为 Magic 3.0 重建
 

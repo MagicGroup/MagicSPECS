@@ -1,12 +1,11 @@
 Name:           perl-YAML-LibYAML
-Version:        0.38
-Release:        6%{?dist}
+Version:	0.59
+Release:	1%{?dist}
 Summary:        Perl YAML Serialization using XS and libyaml
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 URL:            http://search.cpan.org/dist/YAML-LibYAML/
 Source0:        http://search.cpan.org/CPAN/authors/id/I/IN/INGY/YAML-LibYAML-%{version}.tar.gz
-Patch0:         YAML-LibYAML-0.35-format-error.patch
 
 # Install
 BuildRequires:  perl(Cwd)
@@ -47,9 +46,6 @@ bound to Python and was later bound to Ruby.
 %prep
 %setup -q -n YAML-LibYAML-%{version}
 
-# Fix format string vulnerabilities (CVE-2012-1152, CPAN RT#46507)
-%patch0 -p1
-
 %build
 perl Makefile.PL INSTALLDIRS=vendor OPTIMIZE="%{optflags}"
 make %{?_smp_mflags}
@@ -69,8 +65,12 @@ find %{buildroot} -type f -name '*.bs' -size 0 -exec rm -f {} \;
 %{perl_vendorarch}/YAML/
 %{_mandir}/man3/YAML::XS.3pm*
 %{_mandir}/man3/YAML::XS::LibYAML.3pm*
+%{_mandir}/man3/YAML::LibYAML.3pm*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.59-1
+- 更新到 0.59
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.38-6
 - 为 Magic 3.0 重建
 

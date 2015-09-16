@@ -1,6 +1,6 @@
 Name:           perl-MooseX-Types-LoadableClass
-Version:        0.012
-Release:        3%{?dist}
+Version:	0.014
+Release:	1%{?dist}
 Summary:        ClassName type constraint with coercion to load the class
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -57,6 +57,9 @@ ClassName type constraint with coercion to load the class.
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.014-1
+- 更新到 0.014
+
 * Thu Jun 19 2014 Liu Di <liudidi@gmail.com> - 0.012-3
 - 为 Magic 3.0 重建
 

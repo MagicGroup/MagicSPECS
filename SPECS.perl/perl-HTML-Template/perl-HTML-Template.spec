@@ -1,16 +1,13 @@
 Name:           perl-HTML-Template
-Version:        2.10
-Release:        9%{?dist}
+Version:	2.95
+Release:	1%{?dist}
 Summary:        Perl module to use HTML Templates
 
 Group:          Development/Libraries
 License:        GPL+ or Artistic
 URL:            http://search.cpan.org/dist/HTML-Template/
 Source0:        http://www.cpan.org/authors/id/W/WO/WONKO/HTML-Template-%{version}.tar.gz
-Patch0:         perl-HTML-Template-manpages.patch
 
-# https://bugzilla.redhat.com/show_bug.cgi?id=734253
-Patch1:         perl-HTML-Template-2.10-versioning.patch
 %global         __provides_exclude ^perl\\(HTML::Template\\)\\s*=\\s*2\\.91$
 Provides:       perl(HTML::Template) = %{version}
 
@@ -36,9 +33,6 @@ in the Perl script.
 
 %prep
 %setup -q -n HTML-Template-%{version}
-%patch0 -p1 -b .manpages
-%patch1 -p1 -b .versioning
-
 
 %build
 %{__perl} Makefile.PL INSTALLDIRS=vendor
@@ -63,6 +57,9 @@ TEST_SHARED_MEMORY=1
 
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 2.95-1
+- 更新到 2.95
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 2.10-9
 - 为 Magic 3.0 重建
 

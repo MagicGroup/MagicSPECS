@@ -1,11 +1,11 @@
 Name:           perl-CGI-Application-Plugin-Session
-Version:        1.03
-Release:        18%{?dist}
+Version:	1.05
+Release:	1%{?dist}
 Summary:        Add CGI::Session support to CGI::Application
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 URL:            http://search.cpan.org/dist/CGI-Application-Plugin-Session/
-Source0:        http://www.cpan.org/authors/id/C/CE/CEESHEK/CGI-Application-Plugin-Session-%{version}.tar.gz
+Source0:        http://search.cpan.org/CPAN/authors/id/F/FR/FREW/CGI-Application-Plugin-Session-%{version}.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 BuildRequires:  perl(CGI)
@@ -27,30 +27,29 @@ accessible from anywhere in the application.
 %setup -q -n CGI-Application-Plugin-Session-%{version}
 
 %build
-%{__perl} Build.PL installdirs=vendor
-./Build
+%{__perl} Makefile.PL INSTALLDIRS=vendor
+make %{?_smp_mflags}
 
 %install
-rm -rf $RPM_BUILD_ROOT
+make pure_install DESTDIR=%{buildroot}
 
-./Build install destdir=$RPM_BUILD_ROOT create_packlist=0
 find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
+find $RPM_BUILD_ROOT -type f -name .packlist -exec rm -f {} \;
 
 %{_fixperms} $RPM_BUILD_ROOT/*
 
 %check
-./Build test
-
-%clean
-rm -rf $RPM_BUILD_ROOT
+make test
 
 %files
-%defattr(-,root,root,-)
 %doc Changes README
 %{perl_vendorlib}/*
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.05-1
+- 更新到 1.05
+
 * Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 1.03-18
 - 为 Magic 3.0 重建
 

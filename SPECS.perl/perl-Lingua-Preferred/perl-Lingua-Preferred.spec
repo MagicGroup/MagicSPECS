@@ -1,6 +1,6 @@
 Name:           perl-Lingua-Preferred
 Version:        0.2.4
-Release:        14%{?dist}
+Release:        15%{?dist}
 Summary:        Perl extension to choose a language
 
 Group:          Development/Libraries
@@ -52,6 +52,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.2.4-15
+- 为 Magic 3.0 重建
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.2.4-14
 - 为 Magic 3.0 重建
 

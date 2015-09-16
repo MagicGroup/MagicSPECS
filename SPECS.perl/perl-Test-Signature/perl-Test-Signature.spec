@@ -1,6 +1,6 @@
 Name:           perl-Test-Signature
-Version:        1.10
-Release:        15%{?dist}
+Version:	1.11
+Release:	1%{?dist}
 Summary:        Automated SIGNATURE testing
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -49,6 +49,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.11-1
+- 更新到 1.11
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.10-15
 - 为 Magic 3.0 重建
 

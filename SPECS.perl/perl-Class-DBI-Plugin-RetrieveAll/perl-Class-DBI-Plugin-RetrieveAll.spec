@@ -1,6 +1,6 @@
 Name:           perl-Class-DBI-Plugin-RetrieveAll
 Version:        1.04
-Release:        25%{?dist}
+Release:        26%{?dist}
 Summary:        More complex retrieve_all() for Class::DBI
 Group:          Development/Libraries
 License:        GPL+ or Artistic
@@ -39,6 +39,9 @@ chmod -R u+w $RPM_BUILD_ROOT/*
 %{_mandir}/man3/*.3*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.04-26
+- 为 Magic 3.0 重建
+
 * Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 1.04-25
 - 为 Magic 3.0 重建
 

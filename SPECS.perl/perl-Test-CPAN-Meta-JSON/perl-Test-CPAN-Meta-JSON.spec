@@ -1,12 +1,11 @@
 Name:		perl-Test-CPAN-Meta-JSON
-Version:	0.14
-Release:	3%{?dist}
+Version:	0.16
+Release:	1%{?dist}
 Summary:	Validate a META.json file within a CPAN distribution
 Group:		Development/Libraries
 License:	Artistic 2.0
 URL:		http://search.cpan.org/dist/Test-CPAN-Meta-YAML/
 Source0:	http://search.cpan.org/CPAN/authors/id/B/BA/BARBIE/Test-CPAN-Meta-JSON-%{version}.tar.gz
-Patch0:		Test-CPAN-Meta-JSON-0.14-utf8.patch
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(id -nu)
 BuildArch:	noarch
 BuildRequires:	perl(ExtUtils::MakeMaker)
@@ -31,9 +30,6 @@ See CPAN::Meta for further details of the CPAN Meta Specification.
 %prep
 %setup -q -n Test-CPAN-Meta-JSON-%{version}
 
-# Recode LICENSE as UTF-8
-%patch0 -p1
-
 %build
 perl Makefile.PL INSTALLDIRS=vendor
 make %{?_smp_mflags}
@@ -57,6 +53,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/Test::CPAN::Meta::JSON::Version.3pm*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.16-1
+- 更新到 0.16
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.14-3
 - 为 Magic 3.0 重建
 

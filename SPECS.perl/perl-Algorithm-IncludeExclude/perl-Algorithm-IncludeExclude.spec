@@ -1,6 +1,6 @@
 Name:           perl-Algorithm-IncludeExclude
 Version:        0.01
-Release:        13%{?dist}
+Release:        15%{?dist}
 Summary:        Build and evaluate include/exclude lists
 Summary(zh_CN.UTF-8): 构建和计算包含/排除列表
 License:        GPL+ or Artistic
@@ -55,6 +55,12 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.01-15
+- 为 Magic 3.0 重建
+
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.01-14
+- 为 Magic 3.0 重建
+
 * Mon Apr 20 2015 Liu Di <liudidi@gmail.com> - 0.01-13
 - 为 Magic 3.0 重建
 

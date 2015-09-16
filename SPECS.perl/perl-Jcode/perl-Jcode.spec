@@ -1,6 +1,6 @@
 Name:		perl-Jcode
 Version:	2.07
-Release:	10%{?dist}
+Release:	11%{?dist}
 Summary:	Perl extension interface for converting Japanese text
 License:	GPL+ or Artistic
 Group:		Development/Libraries
@@ -53,6 +53,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/Jcode::Nihongo.3pm*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 2.07-11
+- 为 Magic 3.0 重建
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 2.07-10
 - 为 Magic 3.0 重建
 

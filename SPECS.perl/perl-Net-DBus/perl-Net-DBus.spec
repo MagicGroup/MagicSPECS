@@ -1,6 +1,6 @@
 Name:           perl-Net-DBus
-Version:        1.0.0
-Release:        11%{?dist}
+Version:	1.1.0
+Release:	1%{?dist}
 Summary:        Use and provide DBus services
 License:        GPLv2+ or Artistic
 Group:          Development/Libraries
@@ -48,12 +48,14 @@ find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null \;
 make test
 
 %files
-%doc AUTHORS CHANGES README LICENSE examples/
 %{perl_vendorarch}/auto/*
 %{perl_vendorarch}/Net*
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.1.0-1
+- 更新到 1.1.0
+
 * Sun Jun 15 2014 Liu Di <liudidi@gmail.com> - 1.0.0-11
 - 为 Magic 3.0 重建
 

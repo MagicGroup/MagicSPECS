@@ -1,4 +1,4 @@
-%define ver      0.8.4
+%define ver      0.8.5
 %define rel      1%{?dist}
 %define prefix   /usr
 
@@ -6,12 +6,11 @@ Summary: Recite Word Easily.
 Summary(zh_CN.UTF-8): 轻轻松松背单词
 Name: reciteword
 Version: %ver
-Release: %rel.1
+Release: %rel.3
 License: GPL
 Group: Applications/Productivity
 Group(zh_CN.UTF-8): 应用程序/生产力
 Source: reciteword-%{ver}.tar.bz2
-Patch0: reciteword-%{ver}-gcc44.patch
 BuildRoot: /var/tmp/%{name}-%{version}-root
 
 URL: http://reciteword.sourceforge.net/
@@ -27,7 +26,6 @@ ReciteWord is a education software to help people to study English,recite words.
 
 %prep
 %setup
-%patch0 -p1
 
 %build
 if [ ! -f configure ]; then
@@ -60,6 +58,12 @@ rm -rf $RPM_BUILD_ROOT
 %{prefix}/share/pixmaps/rwdict.png
 
 %changelog
+* Sat Sep 12 2015 Liu Di <liudidi@gmail.com> - 0.8.5-1.3
+- 为 Magic 3.0 重建
+
+* Sat Sep 12 2015 Liu Di <liudidi@gmail.com> - 0.8.5-1.2
+- 为 Magic 3.0 重建
+
 * Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 0.8.4-1.1
 - 为 Magic 3.0 重建
 

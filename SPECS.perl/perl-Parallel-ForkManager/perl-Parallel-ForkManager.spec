@@ -1,11 +1,11 @@
 Name:           perl-Parallel-ForkManager
-Version:        1.05
-Release:        4%{?dist}
+Version:	1.15
+Release:	1%{?dist}
 Summary:        Simple parallel processing fork manager
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 URL:            http://search.cpan.org/dist/Parallel-ForkManager/
-Source0:        http://search.cpan.org/CPAN/authors/id/S/SZ/SZABGAB/Parallel-ForkManager-%{version}.tar.gz
+Source0:        http://search.cpan.org/CPAN/authors/id/Y/YA/YANICK/Parallel-ForkManager-%{version}.tar.gz
 BuildArch:      noarch
 BuildRequires:  perl(ExtUtils::MakeMaker) perl(Test::More) perl(utf8::all)
 Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
@@ -48,6 +48,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.15-1
+- 更新到 1.15
+
 * Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 1.05-4
 - 为 Magic 3.0 重建
 

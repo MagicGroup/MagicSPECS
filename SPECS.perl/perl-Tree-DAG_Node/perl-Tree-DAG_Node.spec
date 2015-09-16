@@ -1,12 +1,12 @@
 Name:           perl-Tree-DAG_Node
-Version:        1.06
-Release:        16%{?dist}
+Version:	1.27
+Release:	1%{?dist}
 Summary:        Class for representing nodes in a tree
 
 Group:          Development/Libraries
 License:        GPL+ or Artistic
 URL:            http://search.cpan.org/dist/Tree-DAG_Node/
-Source0:        http://search.cpan.org/CPAN/authors/id/C/CO/COGENT/Tree-DAG_Node-%{version}.tar.gz
+Source0:        http://search.cpan.org/CPAN/authors/id/R/RS/RSAVAGE/Tree-DAG_Node-%{version}.tgz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildArch:      noarch
@@ -50,12 +50,14 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(-,root,root,-)
-%doc ChangeLog README
 %{perl_vendorlib}/Tree/
 %{_mandir}/man3/*.3pm*
 
 
 %changelog
+* Wed Sep 16 2015 Liu Di <liudidi@gmail.com> - 1.27-1
+- 更新到 1.27
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.06-16
 - 为 Magic 3.0 重建
 

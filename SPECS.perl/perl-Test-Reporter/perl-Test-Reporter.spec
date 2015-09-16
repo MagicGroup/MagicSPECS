@@ -1,6 +1,6 @@
 Name:           perl-Test-Reporter
-Version:        1.58
-Release:        11%{?dist}
+Version:	1.62
+Release:	1%{?dist}
 Summary:        Sends test results to cpan-testers@perl.org
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -45,11 +45,13 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 
 
 %files
-%doc Changes COPYING LICENSE README README.PATCHING
 %{perl_vendorlib}/*
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.62-1
+- 更新到 1.62
+
 * Sun Jun 15 2014 Liu Di <liudidi@gmail.com> - 1.58-11
 - 为 Magic 3.0 重建
 

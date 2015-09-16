@@ -1,9 +1,10 @@
 %{!?python_sitearch: %define python_sitearch %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib(1)")}
 
-Version: 1.2.8
+Version:	1.3.3
 Summary: Convenient and transparent local/remote incremental mirror/backup
+Summary(zh_CN.UTF-8): 便捷，透明的本地/远程增量镜像/备份
 Name: rdiff-backup
-Release: 9%{?dist}
+Release:	1%{?dist}
 
 URL: http://www.nongnu.org/rdiff-backup/
 Source: http://savannah.nongnu.org/download/%{name}/%{name}-%{version}.tar.gz
@@ -31,6 +32,9 @@ over a pipe, like rsync. Thus you can use rdiff-backup and ssh to
 securely back a hard drive up to a remote location, and only the
 differences from the previous backup will be transmitted.
 
+%description -l zh_CN.UTF-8
+便捷，透明的本地/远程增量镜像/备份.
+
 %prep
 %setup -q
 
@@ -44,13 +48,13 @@ rm -rf $RPM_BUILD_ROOT
 python setup.py install --root $RPM_BUILD_ROOT
 # Produce .pyo files for %ghost directive later
 python -Oc 'from compileall import *; compile_dir("'$RPM_BUILD_ROOT/%{python_sitearch}/rdiff_backup'")'
+magic_rpm_clean.sh
 
 %clean
 rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(-,root,root)
-%doc CHANGELOG COPYING FAQ.html README
 %{_bindir}/rdiff-backup
 %{_bindir}/rdiff-backup-statistics
 %{_mandir}/man1/rdiff-backup*
@@ -59,11 +63,13 @@ rm -rf $RPM_BUILD_ROOT
 %{python_sitearch}/rdiff_backup/*.pyc
 %{python_sitearch}/rdiff_backup/*.so
 %{python_sitearch}/rdiff_backup/*.pyo
-%if 0%{?fedora} >= 9
 %{python_sitearch}/rdiff_backup-%{version}-py?.?.egg-info
-%endif
+%{_docdir}/*
 
 %changelog
+* Sat Sep 12 2015 Liu Di <liudidi@gmail.com> - 1.3.3-1
+- 更新到 1.3.3
+
 * Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.2.8-9
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
 

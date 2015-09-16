@@ -1,6 +1,6 @@
 Name:           perl-Devel-Size
-Version:        0.79
-Release:        5%{?dist}
+Version:	0.80
+Release:	1%{?dist}
 Summary:        Perl extension for finding the memory usage of Perl variables
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -55,6 +55,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.80-1
+- 更新到 0.80
+
 * Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 0.79-5
 - 为 Magic 3.0 重建
 

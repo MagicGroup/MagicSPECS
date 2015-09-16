@@ -4,12 +4,11 @@
 Name:		perl-Test-CheckChanges
 Summary:	Check that the Changes file matches the distribution
 Version:	0.14
-Release:	13%{?dist}
+Release:	15%{?dist}
 License:	GPL+ or Artistic
 Group:		Development/Libraries
 URL:		http://search.cpan.org/dist/Test-CheckChanges/
 Source0:	http://search.cpan.org/CPAN/authors/id/G/GA/GAM/Test-CheckChanges-%{version}.tar.gz 
-Patch0:		Test-CheckChanges-0.14-old-Test::More.patch
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(id -nu)
 Requires:	perl(:MODULE_COMPAT_%(eval "`perl -V:version`"; echo $version))
 BuildArch:	noarch
@@ -36,11 +35,6 @@ diagnostic messages are printed to help explain the failure.
 %prep
 %setup -q -n Test-CheckChanges-%{version}
 
-# Patch test suite to work with old Test::More versions
-%if %{old_test_more}
-%patch0 -p1
-%endif
-
 %build
 perl Build.PL installdirs=vendor
 ./Build
@@ -63,6 +57,12 @@ rm -rf %{buildroot}
 %{_mandir}/man3/Test::CheckChanges.3pm*
 
 %changelog
+* Wed Sep 16 2015 Liu Di <liudidi@gmail.com> - 0.14-15
+- 为 Magic 3.0 重建
+
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.14-14
+- 为 Magic 3.0 重建
+
 * Sun Jun 15 2014 Liu Di <liudidi@gmail.com> - 0.14-13
 - 为 Magic 3.0 重建
 

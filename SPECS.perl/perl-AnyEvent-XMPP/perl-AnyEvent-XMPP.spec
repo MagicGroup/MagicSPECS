@@ -1,6 +1,6 @@
 Name:           perl-AnyEvent-XMPP
 Version:	0.55
-Release:	1%{?dist}
+Release:	3%{?dist}
 Summary:        Implementation of the XMPP Protocol
 Summary(zh_CN.UTF-8): XMPP 协议的实现
 License:        GPL+ or Artistic
@@ -68,6 +68,12 @@ magic_rpm_clean.sh
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.55-3
+- 为 Magic 3.0 重建
+
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.55-2
+- 为 Magic 3.0 重建
+
 * Thu Apr 23 2015 Liu Di <liudidi@gmail.com> - 0.55-1
 - 更新到 0.55
 

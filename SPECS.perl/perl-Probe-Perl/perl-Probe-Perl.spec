@@ -1,6 +1,6 @@
 Name:           perl-Probe-Perl
-Version:        0.01
-Release:        19%{?dist}
+Version:	0.03
+Release:	1%{?dist}
 Summary:        Information about the currently running perl
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -22,30 +22,26 @@ Module::Build project, but has been externalized here for general use.
 %setup -q -n Probe-Perl-%{version}
 
 %build
-%{__perl} Build.PL installdirs=vendor
-./Build
+perl Makefile.PL INSTALLDIRS=vendor
+make %{?_smp_mflags}
 
 %install
-rm -rf $RPM_BUILD_ROOT
-
-./Build install destdir=$RPM_BUILD_ROOT create_packlist=0
-find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
-
-%{_fixperms} $RPM_BUILD_ROOT/*
+make pure_install DESTDIR=%{buildroot}
+find %{buildroot} -type f -name .packlist -exec rm -f {} +
+%{_fixperms} %{buildroot}/*
 
 %check
-./Build test
-
-%clean
-rm -rf $RPM_BUILD_ROOT
+make test
 
 %files
-%defattr(-,root,root,-)
 %doc Changes README
 %{perl_vendorlib}/*
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.03-1
+- 更新到 0.03
+
 * Sun Jun 15 2014 Liu Di <liudidi@gmail.com> - 0.01-19
 - 为 Magic 3.0 重建
 

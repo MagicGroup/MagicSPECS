@@ -1,14 +1,13 @@
 Summary:	High speed arbitrary size integer math
 Name:		perl-Math-GMP
-Version:	2.06
-Release:	20%{?dist}
+Version:	2.11
+Release:	1%{?dist}
 License:	LGPLv2+
 Group:		Development/Libraries
 Url:		http://search.cpan.org/dist/Math-GMP/
-Source0:	http://search.cpan.org/CPAN/authors/id/T/TU/TURNSTEP/Math-GMP-%{version}.tar.gz
+Source0:        http://search.cpan.org/CPAN/authors/id/S/SH/SHLOMIF/Math-GMP-%{version}.tar.gz
 Source1:	14964AC8.asc
 Source2:	161C06B1.asc
-Patch0:		Math-GMP-2.06-stopwords.patch
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(id -nu)
 BuildRequires:	gmp-devel
 BuildRequires:	perl(AutoLoader)
@@ -44,11 +43,6 @@ This can result in speed improvements.
 # Do the build in a subdirectory so that the debug files list doesn't interfere
 # with the signature test
 %setup -q -c -n Math-GMP
-
-# Additional words for spell checker to ignore
-cd Math-GMP-%{version}
-%patch0 -p2
-cd -
 
 # Link docs back to top level for %%doc
 ln Math-GMP-%{version}/{README,Changes,LICENSE} .
@@ -98,6 +92,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/Math::GMP.3pm*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 2.11-1
+- 更新到 2.11
+
 * Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 2.06-20
 - 为 Magic 3.0 重建
 

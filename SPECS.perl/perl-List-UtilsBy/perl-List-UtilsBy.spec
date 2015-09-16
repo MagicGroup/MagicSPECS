@@ -1,6 +1,6 @@
 Name:           perl-List-UtilsBy
-Version:        0.08
-Release:        10%{?dist}
+Version:	0.10
+Release:	1%{?dist}
 Summary:        Higher-order list utility functions
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -47,6 +47,9 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.10-1
+- 更新到 0.10
+
 * Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 0.08-10
 - 为 Magic 3.0 重建
 

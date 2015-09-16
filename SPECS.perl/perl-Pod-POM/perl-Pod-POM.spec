@@ -1,15 +1,15 @@
 %{!?perl_vendorlib: %define perl_vendorlib %(eval "`%{__perl} -V:installvendorlib`"; echo $installvendorlib)}
 
 Name:           perl-Pod-POM
-Version:        0.27
-Release:        9%{?dist}
+Version:	2.00
+Release:	2%{?dist}
 
 Summary:        Object-oriented interface to Perl POD documents
 
 Group:          Development/Libraries
 License:        GPL+ or Artistic
 URL:            http://search.cpan.org/dist/Pod-POM/
-Source0:        http://search.cpan.org/CPAN/authors/id/A/AN/ANDREWF/Pod-POM-%{version}.tar.gz
+Source0:        http://search.cpan.org/CPAN/authors/id/N/NE/NEILB/Pod-POM-%{version}.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildArch:      noarch
@@ -78,6 +78,12 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Mon Sep 14 2015 Liu Di <liudidi@gmail.com> - 2.00-2
+- 为 Magic 3.0 重建
+
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 2.00-1
+- 更新到 2.00
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.27-9
 - 为 Magic 3.0 重建
 

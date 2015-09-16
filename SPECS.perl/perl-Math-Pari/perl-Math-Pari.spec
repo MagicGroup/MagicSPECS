@@ -4,7 +4,7 @@
 Summary:	Perl interface to PARI
 Name:		perl-Math-Pari
 Version:	2.010808
-Release:	1%{?dist}
+Release:	2%{?dist}
 License:	GPL+ or Artistic
 Group:		Development/Libraries
 Url:		http://search.cpan.org/dist/Math-Pari/
@@ -88,6 +88,9 @@ make test
 %exclude %{_mandir}/man3/Math::libPARI.dumb.3pm*
 
 %changelog
+* Wed Sep 16 2015 Liu Di <liudidi@gmail.com> - 2.010808-2
+- 为 Magic 3.0 重建
+
 * Tue Jun 10 2014 Paul Howarth <paul@city-fan.org> - 2.010808-1
 - Update to 2.010808
   - Fixed problems of parse_of_gp with the operator \ and empty lines (test

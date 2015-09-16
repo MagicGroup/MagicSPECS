@@ -1,6 +1,6 @@
 Name:           perl-Date-Manip
-Version:        6.36
-Release:        10%{?dist}
+Version:	6.51
+Release:	1%{?dist}
 Summary:        Date manipulation routines
 Group:          Development/Libraries
 License:        GPL+ or Artistic
@@ -52,12 +52,14 @@ find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null \;
 ./Build test
 
 %files
-%doc HISTORY LICENSE README README.first
 %{perl_vendorlib}/Date/
 %{_mandir}/man[13]/*.[13]*
 %{_bindir}/dm_*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 6.51-1
+- 更新到 6.51
+
 * Sun Jun 15 2014 Liu Di <liudidi@gmail.com> - 6.36-10
 - 为 Magic 3.0 重建
 
@@ -198,7 +200,6 @@ find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null \;
 * Mon Aug 27 2007 Robin Norwood <rnorwood@redhat.com> - 5.44-4
 - Apply patch to use date +%%z as possible source for timezone data
 - Fix license tag
-- Add TODO and HISTORY to %%doc list
 
 * Tue Mar 20 2007 Robin Norwood <rnorwood@redhat.com> - 5.44-3
 - Fix minor issues in spec file for package review

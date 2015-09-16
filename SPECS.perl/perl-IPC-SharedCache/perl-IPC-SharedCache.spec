@@ -1,6 +1,6 @@
 Name:           perl-IPC-SharedCache
 Version:        1.3
-Release:        21%{?dist}
+Release:        22%{?dist}
 Summary:        Perl module to manage a cache in SysV IPC shared memory
 
 Group:          Development/Libraries
@@ -59,6 +59,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.3-22
+- 为 Magic 3.0 重建
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.3-21
 - 为 Magic 3.0 重建
 

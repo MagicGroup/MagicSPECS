@@ -1,6 +1,6 @@
 Name:           perl-Module-Path
-Version:        0.13
-Release:        4%{?dist}
+Version:	0.19
+Release:	1%{?dist}
 Summary:        Get the full path to a locally installed module
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -52,6 +52,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.19-1
+- 更新到 0.19
+
 * Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 0.13-4
 - 为 Magic 3.0 重建
 

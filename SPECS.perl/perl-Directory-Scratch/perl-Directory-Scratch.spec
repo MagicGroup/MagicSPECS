@@ -1,11 +1,11 @@
 Name:       perl-Directory-Scratch 
-Version:    0.14 
-Release:    15%{?dist}
+Version:	0.18
+Release:	1%{?dist}
 # see lib/Directory/Scratch.pm (perl)
 License:    GPL+ or Artistic
 Group:      Development/Libraries
 Summary:    Self-cleaning scratch space for tests 
-Source:     http://search.cpan.org/CPAN/authors/id/J/JR/JROCKWAY/Directory-Scratch-%{version}.tar.gz 
+Source0:        http://search.cpan.org/CPAN/authors/id/E/ET/ETHER/Directory-Scratch-%{version}.tar.gz
 Url:        http://search.cpan.org/dist/Directory-Scratch
 BuildRoot:  %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n) 
 Requires:   perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
@@ -63,6 +63,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/*.3*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.18-1
+- 更新到 0.18
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.14-15
 - 为 Magic 3.0 重建
 

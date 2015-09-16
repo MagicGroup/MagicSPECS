@@ -1,6 +1,6 @@
 Name:           perl-MCE
 Version:        1.608
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        Many-core Engine for Perl providing parallel processing capabilities
 License:        GPL+ or Artistic
 URL:            http://search.cpan.org/dist/MCE/
@@ -94,6 +94,9 @@ make test
 %{_bindir}/mce_grep
 
 %changelog
+* Wed Sep 16 2015 Liu Di <liudidi@gmail.com> - 1.608-4
+- 为 Magic 3.0 重建
+
 * Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.608-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

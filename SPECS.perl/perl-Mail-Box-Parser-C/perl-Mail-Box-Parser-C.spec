@@ -1,6 +1,6 @@
 Name:           perl-Mail-Box-Parser-C
-Version:        3.006
-Release:        15%{?dist}
+Version:	3.007
+Release:	1%{?dist}
 Summary:        Parsing folders for MailBox with C routines
 Group:          Development/Libraries
 License:        GPL+ or Artistic
@@ -42,6 +42,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*.3*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 3.007-1
+- 更新到 3.007
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 3.006-15
 - 为 Magic 3.0 重建
 

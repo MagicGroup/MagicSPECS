@@ -1,6 +1,6 @@
 Name:           perl-Package-Variant
 Version:        1.003002
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Parameterizable packages
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -53,6 +53,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Mon Sep 14 2015 Liu Di <liudidi@gmail.com> - 1.003002-2
+- 为 Magic 3.0 重建
+
 * Tue Sep 01 2015 Petr Šabata <contyk@redhat.com> - 1.003002-1
 - 1.003002 bump
 - Update upstream URL

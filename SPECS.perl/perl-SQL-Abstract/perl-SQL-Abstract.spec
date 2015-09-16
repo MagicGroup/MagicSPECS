@@ -1,11 +1,11 @@
 Name:           perl-SQL-Abstract
-Version:        1.73
-Release:        3%{?dist}
+Version:	1.81
+Release:	2%{?dist}
 Summary:        Generate SQL from Perl data structures
 Group:          Development/Libraries
 License:        GPL+ or Artistic
 URL:            http://search.cpan.org/dist/SQL-Abstract
-Source0:        http://search.cpan.org/CPAN/authors/id/F/FR/FREW/SQL-Abstract-%{version}.tar.gz
+Source0:        http://search.cpan.org/CPAN/authors/id/R/RI/RIBASUSHI/SQL-Abstract-%{version}.tar.gz
 BuildArch:      noarch
 BuildRequires:  perl(Test::Exception)
 BuildRequires:  perl(Test::Warn)
@@ -53,8 +53,6 @@ find $RPM_BUILD_ROOT -type d -depth -exec rmdir {} 2>/dev/null ';'
 SQLATEST_TESTER=1 make test
 
 %files
-%doc Changes
-%{_bindir}/format-sql
 %{perl_vendorlib}/SQL/
 %{_mandir}/man3/SQL::Abstract.3pm*
 %{_mandir}/man3/SQL::Abstract::Test.3pm*
@@ -65,6 +63,12 @@ SQLATEST_TESTER=1 make test
 %{_mandir}/man3/DBIx::Class::Storage::Debug::PrettyPrint.3pm*
 
 %changelog
+* Mon Sep 14 2015 Liu Di <liudidi@gmail.com> - 1.81-2
+- 为 Magic 3.0 重建
+
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.81-1
+- 更新到 1.81
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.73-3
 - 为 Magic 3.0 重建
 

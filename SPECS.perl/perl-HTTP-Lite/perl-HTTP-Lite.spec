@@ -1,11 +1,11 @@
 Name:           perl-HTTP-Lite
-Version:        2.3
-Release:        8%{?dist}
+Version:	2.44
+Release:	1%{?dist}
 Summary:        Lightweight HTTP implementation
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 URL:            http://search.cpan.org/dist/HTTP-Lite/
-Source0:        http://www.cpan.org/authors/id/A/AD/ADAMK/HTTP-Lite-%{version}.tar.gz
+Source0:        http://search.cpan.org/CPAN/authors/id/N/NE/NEILB/HTTP-Lite-%{version}.tar.gz
 BuildArch:      noarch
 BuildRequires:  perl(ExtUtils::MakeMaker)
 %if !%{defined perl_bootstrap}
@@ -54,6 +54,9 @@ RELEASE_TESTING=1
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 2.44-1
+- 更新到 2.44
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 2.3-8
 - 为 Magic 3.0 重建
 

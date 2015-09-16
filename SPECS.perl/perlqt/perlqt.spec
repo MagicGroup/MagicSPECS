@@ -18,7 +18,7 @@
 
 Name:           perlqt
 Version: 4.14.3
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        PerlQt kdebindings library
 Summary(zh_CN.UTF-8): Perl 的 Qt 绑定
 License:        GPL-2.0+
@@ -93,6 +93,9 @@ magic_rpm_clean.sh
 %{_kde4_includedir}/perlqt/
 
 %changelog
+* Wed Sep 16 2015 Liu Di <liudidi@gmail.com> - 4.14.3-2
+- 为 Magic 3.0 重建
+
 * Wed Dec 31 2014 Liu Di <liudidi@gmail.com> - 4.14.3-1
 - 更新到 4.14.3
 

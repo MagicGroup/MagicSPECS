@@ -1,6 +1,6 @@
 Name:           perl-Test-Warn
-Version:        0.24
-Release:        5%{?dist}
+Version:	0.30
+Release:	1%{?dist}
 Summary:        Perl extension to test methods for warnings
 Group:          Development/Libraries
 License:        GPL+ or Artistic
@@ -47,6 +47,9 @@ find $RPM_BUILD_ROOT -type f -name .packlist -exec rm -f {} ';'
 %{_mandir}/man3/Test::Warn.3pm*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.30-1
+- 更新到 0.30
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.24-5
 - 为 Magic 3.0 重建
 

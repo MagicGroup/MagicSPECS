@@ -3,7 +3,7 @@ Name:           perl-%{real_name}
 Obsoletes:      perl-libwhisker <= 1.8
 Provides:       perl-libwhisker = %{version}-%{release}
 Version:        2.5
-Release:        14%{?dist}
+Release:        15%{?dist}
 Summary:        Perl module geared specifically for HTTP testing
 Group:          Development/Libraries
 License:        BSD
@@ -103,6 +103,9 @@ perl ./test.pl
 %{_datadir}/%{name}
 
 %changelog
+* Mon Sep 14 2015 Liu Di <liudidi@gmail.com> - 2.5-15
+- 为 Magic 3.0 重建
+
 * Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.5-14
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

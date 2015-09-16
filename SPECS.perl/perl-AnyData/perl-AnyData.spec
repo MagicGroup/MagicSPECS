@@ -1,6 +1,6 @@
 Name:           perl-AnyData
 Version:	0.12
-Release:	1%{?dist}
+Release:	3%{?dist}
 Summary:        Easy access to data in many formats
 Summary(zh_CN.UTF-8): 以多种格式方便的访问数据
 Group:          Development/Libraries
@@ -75,6 +75,12 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.12-3
+- 为 Magic 3.0 重建
+
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.12-2
+- 为 Magic 3.0 重建
+
 * Wed Apr 22 2015 Liu Di <liudidi@gmail.com> - 0.12-1
 - 更新到 0.12
 

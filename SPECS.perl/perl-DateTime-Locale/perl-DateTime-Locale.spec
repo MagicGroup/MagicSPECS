@@ -1,6 +1,6 @@
 Name:           perl-DateTime-Locale
-Version:        0.45
-Release:        13%{?dist}
+Version:	0.46
+Release:	1%{?dist}
 Summary:        Localization support for DateTime.pm
 # package itself is 'same terms as Perl'
 # modules under DateTime/Locale/ are generated from data provided by the CLDR project
@@ -34,30 +34,31 @@ available locales.
 
 %prep
 %setup -q -n DateTime-Locale-%{version}
-
 iconv -f iso-8859-1 -t utf-8 Changes >Changes.iconv \
 && touch -r Changes Changes.iconv \
 && mv -f Changes.iconv Changes
 
 %build
-%{__perl} Build.PL installdirs=vendor
-./Build
+perl Makefile.PL INSTALLDIRS=vendor NO_PACKLIST=1
+make %{?_smp_mflags}
 
 %install
-./Build install destdir=%{buildroot} create_packlist=0
-find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null \;
-
+make pure_install DESTDIR=%{buildroot}
 %{_fixperms} %{buildroot}/*
 
 %check
-./Build test
+make test
 
 %files
-%doc Changes LICENSE LICENSE.cldr README
+%license LICENSE LICENSE.cldr
+%doc Changes README
 %{perl_vendorlib}/*
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.46-1
+- 更新到 0.46
+
 * Sun Jun 15 2014 Liu Di <liudidi@gmail.com> - 0.45-13
 - 为 Magic 3.0 重建
 

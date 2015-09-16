@@ -1,6 +1,6 @@
 Name:           perl-Color-Calc
-Version:        1.072
-Release:        13%{?dist}
+Version:	1.074
+Release:	1%{?dist}
 Summary:        Simple calculations with RGB colors
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -49,6 +49,9 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.074-1
+- 更新到 1.074
+
 * Sun Jun 15 2014 Liu Di <liudidi@gmail.com> - 1.072-13
 - 为 Magic 3.0 重建
 

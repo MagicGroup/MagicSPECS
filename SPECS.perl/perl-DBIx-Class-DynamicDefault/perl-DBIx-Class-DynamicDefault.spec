@@ -1,11 +1,11 @@
 Name:       perl-DBIx-Class-DynamicDefault 
-Version:    0.03 
-Release:    23%{?dist}
+Version:	0.04
+Release:	1%{?dist}
 # lib/DBIx/Class/DynamicDefault.pm -> GPL+ or Artistic
 License:    GPL+ or Artistic 
 Group:      Development/Libraries
 Summary:    Automatically set and update fields 
-Source:     http://search.cpan.org/CPAN/authors/id/F/FL/FLORA/DBIx-Class-DynamicDefault-%{version}.tar.gz 
+Source0:        http://search.cpan.org/CPAN/authors/id/M/MS/MSTROUT/DBIx-Class-DynamicDefault-%{version}.tar.gz
 Url:        http://search.cpan.org/dist/DBIx-Class-DynamicDefault
 BuildRoot:  %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n) 
 Requires:   perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
@@ -47,11 +47,13 @@ rm -rf %{buildroot}
 
 %files
 %defattr(-,root,root,-)
-%doc Changes README 
 %{perl_vendorlib}/DBIx/Class/*
 %{_mandir}/man3/*.3*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.04-1
+- 更新到 0.04
+
 * Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 0.03-23
 - 为 Magic 3.0 重建
 

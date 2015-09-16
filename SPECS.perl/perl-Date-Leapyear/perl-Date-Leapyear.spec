@@ -1,6 +1,6 @@
 Name:           perl-Date-Leapyear
 Version:        1.72
-Release:        12%{?dist}
+Release:        13%{?dist}
 Summary:        Is a particular year a leap year?
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -46,6 +46,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.72-13
+- 为 Magic 3.0 重建
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.72-12
 - 为 Magic 3.0 重建
 

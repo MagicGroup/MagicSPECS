@@ -2,7 +2,7 @@ Name:           perl-Catalyst-Controller-ActionRole
 Summary:        Apply roles to action instances
 Summary(zh_CN.UTF-8): 对操作实例应用角色
 Version:	0.17
-Release:	1%{?dist}
+Release:	2%{?dist}
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 Group(zh_CN.UTF-8): 开发/库
@@ -78,6 +78,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.17-2
+- 为 Magic 3.0 重建
+
 * Fri Jun 05 2015 Liu Di <liudidi@gmail.com> - 0.17-1
 - 更新到 0.17
 

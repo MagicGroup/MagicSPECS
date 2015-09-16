@@ -2,7 +2,7 @@
 
 Name:		perl-%{base}
 Version:	0.09
-Release:	22%{?dist}
+Release:	23%{?dist}
 Summary:	Perl interface to the GNU Aspell library
 Group:		Development/Libraries
 License:	GPL+ or Artistic
@@ -52,6 +52,9 @@ make test TEST_POD=t
 %{_mandir}/man3/*.3*
 
 %changelog
+* Tue Sep 15 2015 Liu Di <liudidi@gmail.com> - 0.09-23
+- 为 Magic 3.0 重建
+
 * Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.09-22
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

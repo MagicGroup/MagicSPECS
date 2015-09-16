@@ -1,11 +1,11 @@
 Name:           perl-SVG
-Version:        2.49
-Release:        12%{?dist}
+Version:	2.64
+Release:	1%{?dist}
 Summary:        An extension to generate stand-alone or inline SGV
 Group:          Development/Libraries
 License:        GPL+ or Artistic
 URL:            http://search.cpan.org/dist/SVG/
-Source0:        http://www.cpan.org/authors/id/R/RO/RONAN/SVG-%{version}.tar.gz
+Source0:        http://search.cpan.org/CPAN/authors/id/S/SZ/SZABGAB/SVG-%{version}.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildArch:      noarch
@@ -24,7 +24,7 @@ SVG.pm is a Perl extension to generate stand-alone or inline SVG
 chmod 644 examples/*
 
 # Fix line-endings
-for i in minsvg.pl SVG_02_sample.pl svgtest2.pl sun_text_sample.pl starpath.cgi image_sample.pl inlinesvg.pl yaph5.cgi inline_sample.pl svg.pl; do
+for i in minsvg.pl SVG_02_sample.pl svgtest2.pl sun_text_sample.pl starpath.cgi image_sample.pl inlinesvg.pl yaph5.cgi inline_sample.pl ; do
     %{__sed} -i 's/\r//' examples/$i
 done
 
@@ -43,7 +43,7 @@ chmod +x %{__perl_provides}
 make %{?_smp_mflags}
 # make sure the man page is UTF-8...
 cd blib/man3
-for i in Element.3pm Manual.3pm ; do
+for i in Element.3pm ; do
     iconv --from=ISO-8859-1 --to=UTF-8 SVG::$i > new
     mv new SVG::$i
 done
@@ -72,6 +72,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 2.64-1
+- 更新到 2.64
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 2.49-12
 - 为 Magic 3.0 重建
 

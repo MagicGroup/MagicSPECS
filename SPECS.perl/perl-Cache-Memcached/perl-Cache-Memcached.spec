@@ -1,6 +1,6 @@
 Name:           perl-Cache-Memcached
 Version:	1.30
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:        Perl client for memcached
 Summary(zh_CN.UTF-8): memcached 的 Perl 客户端
 
@@ -59,6 +59,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.30-2
+- 为 Magic 3.0 重建
+
 * Fri May 08 2015 Liu Di <liudidi@gmail.com> - 1.30-1
 - 更新到 1.30
 

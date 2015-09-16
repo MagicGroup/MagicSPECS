@@ -1,6 +1,6 @@
 Name:           perl-Format-Human-Bytes
 Version:        0.06
-Release:        9%{?dist}
+Release:        10%{?dist}
 Summary:        Format a bytecount and make it human readable
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -49,6 +49,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.06-10
+- 为 Magic 3.0 重建
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.06-9
 - 为 Magic 3.0 重建
 

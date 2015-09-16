@@ -1,6 +1,6 @@
 Name:           re2
 Version:        20131024
-Release:        5%{?dist}
+Release:        6%{?dist}
 Summary:        C++ fast alternative to backtracking RE engines
 Group:          System Environment/Libraries
 License:        BSD
@@ -67,6 +67,9 @@ make %{?_smp_mflags} shared-test
 %{_libdir}/lib%{name}.so
 
 %changelog
+* Sat Sep 12 2015 Liu Di <liudidi@gmail.com> - 20131024-6
+- 为 Magic 3.0 重建
+
 * Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 20131024-5
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

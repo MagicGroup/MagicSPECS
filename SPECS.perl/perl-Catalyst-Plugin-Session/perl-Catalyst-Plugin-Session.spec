@@ -1,10 +1,10 @@
 Name:           perl-Catalyst-Plugin-Session
 Summary:        Catalyst generic session plugin
-Version:        0.32
-Release:        16%{?dist}
+Version:	0.40
+Release:	1%{?dist}
 License:        GPL+ or Artistic
 Group:          Development/Libraries
-Source0:        http://search.cpan.org/CPAN/authors/id/B/BO/BOBTFISH/Catalyst-Plugin-Session-%{version}.tar.gz 
+Source0:        http://search.cpan.org/CPAN/authors/id/J/JJ/JJNAPIORK/Catalyst-Plugin-Session-%{version}.tar.gz
 URL:            http://search.cpan.org/dist/Catalyst-Plugin-Session/
 Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
 BuildArch:      noarch
@@ -81,6 +81,9 @@ find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.40-1
+- 更新到 0.40
+
 * Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 0.32-16
 - 为 Magic 3.0 重建
 

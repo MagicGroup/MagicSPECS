@@ -1,6 +1,6 @@
 Name:           perl-Callback
 Version:        1.07
-Release:        20%{?dist}
+Release:        21%{?dist}
 Summary:        Object interface for function callbacks
 Summary(zh_CN.UTF-8): 回调函数的对象接口
 License:        GPL+ or Artistic
@@ -53,6 +53,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.07-21
+- 为 Magic 3.0 重建
+
 * Mon May 11 2015 Liu Di <liudidi@gmail.com> - 1.07-20
 - 为 Magic 3.0 重建
 

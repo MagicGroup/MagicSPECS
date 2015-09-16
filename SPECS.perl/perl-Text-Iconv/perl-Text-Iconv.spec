@@ -1,6 +1,6 @@
 Name:           perl-Text-Iconv
 Version:        1.7
-Release:        16%{?dist}
+Release:        17%{?dist}
 Summary:        Perl interface to iconv() codeset conversion function
 
 Group:          Development/Libraries
@@ -57,6 +57,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.7-17
+- 为 Magic 3.0 重建
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.7-16
 - 为 Magic 3.0 重建
 

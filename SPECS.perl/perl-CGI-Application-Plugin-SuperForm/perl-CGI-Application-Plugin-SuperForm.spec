@@ -1,6 +1,6 @@
 Name:           perl-CGI-Application-Plugin-SuperForm
 Version:        0.5
-Release:        16%{?dist}
+Release:        17%{?dist}
 Summary:        Create sticky forms with HTML::SuperForm
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -49,6 +49,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.5-17
+- 为 Magic 3.0 重建
+
 * Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 0.5-16
 - 为 Magic 3.0 重建
 

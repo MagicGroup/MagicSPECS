@@ -1,6 +1,6 @@
 Name:           perl-Email-MIME
-Version:        1.906
-Release:        9%{?dist}
+Version:	1.936
+Release:	1%{?dist}
 Summary:        Easy MIME message parsing
 
 Group:          Development/Libraries
@@ -66,6 +66,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.936-1
+- 更新到 1.936
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.906-9
 - 为 Magic 3.0 重建
 

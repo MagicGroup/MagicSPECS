@@ -1,6 +1,6 @@
 Name:           perl-CGI-Application-Dispatch
 Version:        3.12
-Release:        12%{?dist}
+Release:        13%{?dist}
 Summary:        Dispatch requests to CGI::Application based objects
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -51,6 +51,9 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 3.12-13
+- 为 Magic 3.0 重建
+
 * Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 3.12-12
 - 为 Magic 3.0 重建
 

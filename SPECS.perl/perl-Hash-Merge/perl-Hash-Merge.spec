@@ -1,11 +1,11 @@
 Name:           perl-Hash-Merge
-Version:        0.12
-Release:        9%{?dist}
+Version:	0.200
+Release:	1%{?dist}
 Summary:        Merges arbitrary deep hashes into a single hash
 Group:          Development/Libraries
 License:        GPL+ or Artistic
 URL:            http://search.cpan.org/dist/Hash-Merge/
-Source0:        http://search.cpan.org/CPAN/authors/id/D/DM/DMUEY/Hash-Merge-%{version}.tar.gz
+Source0:        http://search.cpan.org/CPAN/authors/id/R/RE/REHSACK/Hash-Merge-%{version}.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 
@@ -46,6 +46,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.200-1
+- 更新到 0.200
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.12-9
 - 为 Magic 3.0 重建
 

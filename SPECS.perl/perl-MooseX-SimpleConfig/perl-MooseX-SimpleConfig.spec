@@ -1,11 +1,11 @@
 Name:           perl-MooseX-SimpleConfig
-Version:        0.09
-Release:        14%{?dist}
+Version:	0.11
+Release:	2%{?dist}
 Summary:        Moose role for setting attributes from a simple configfile
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 URL:            http://search.cpan.org/dist/MooseX-SimpleConfig/
-Source0:        http://search.cpan.org/CPAN/authors/id/B/BO/BOBTFISH/MooseX-SimpleConfig-%{version}.tar.gz
+Source0:        http://search.cpan.org/CPAN/authors/id/E/ET/ETHER/MooseX-SimpleConfig-%{version}.tar.gz
 BuildArch:      noarch
 BuildRequires:  perl(Config::Any) >= 0.13
 BuildRequires:  perl(ExtUtils::MakeMaker)
@@ -47,11 +47,16 @@ make test
 
 %files
 %defattr(-,root,root,-)
-%doc ChangeLog README
 %{perl_vendorlib}/*
 %{_mandir}/man3/*
 
 %changelog
+* Mon Sep 14 2015 Liu Di <liudidi@gmail.com> - 0.11-2
+- 为 Magic 3.0 重建
+
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.11-1
+- 更新到 0.11
+
 * Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 0.09-14
 - 为 Magic 3.0 重建
 

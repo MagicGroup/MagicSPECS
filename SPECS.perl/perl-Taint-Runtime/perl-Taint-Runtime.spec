@@ -1,6 +1,6 @@
 Name:           perl-Taint-Runtime
 Version:        0.03
-Release:        18%{?dist}
+Release:        19%{?dist}
 Summary:        Runtime enable taint checking
 Group:          Development/Libraries
 License:        GPL+ or Artistic
@@ -47,6 +47,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*.3*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.03-19
+- 为 Magic 3.0 重建
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.03-18
 - 为 Magic 3.0 重建
 

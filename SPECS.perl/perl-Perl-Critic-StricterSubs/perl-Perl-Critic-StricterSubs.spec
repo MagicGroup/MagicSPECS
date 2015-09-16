@@ -1,11 +1,11 @@
 Name:           perl-Perl-Critic-StricterSubs
-Version:        0.03
-Release:        10%{?dist}
+Version:	0.05
+Release:	1%{?dist}
 Summary:        Perl::Critic plugin for stricter subroutine checks
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 URL:            http://search.cpan.org/dist/Perl-Critic-StricterSubs/
-Source0:        http://www.cpan.org/authors/id/T/TH/THALJEF/strictersubs/Perl-Critic-StricterSubs-%{version}.tar.gz
+Source0:        http://search.cpan.org/CPAN/authors/id/T/TH/THALJEF/Perl-Critic-StricterSubs-%{version}.tar.gz
 BuildArch:      noarch
 BuildRequires:  perl(Exporter)
 BuildRequires:  perl(File::PathList)
@@ -57,6 +57,9 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.05-1
+- 更新到 0.05
+
 * Thu Jun 19 2014 Liu Di <liudidi@gmail.com> - 0.03-10
 - 为 Magic 3.0 重建
 

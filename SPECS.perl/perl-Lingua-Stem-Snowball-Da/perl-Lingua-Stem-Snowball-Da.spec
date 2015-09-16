@@ -1,6 +1,6 @@
 Name:           perl-Lingua-Stem-Snowball-Da
 Version:        1.01
-Release:        8%{?dist}
+Release:        9%{?dist}
 Summary:        Porter's stemming algorithm for Danish
 License:        GPLv2
 Group:          Development/Libraries
@@ -48,6 +48,9 @@ install -D -m 0755 stemmer-da $RPM_BUILD_ROOT/%{_bindir}/stemmer-da
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.01-9
+- 为 Magic 3.0 重建
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.01-8
 - 为 Magic 3.0 重建
 

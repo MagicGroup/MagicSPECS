@@ -1,12 +1,11 @@
 Summary:	Incredibly simple helpers for testing code with exceptions 
 Name:		perl-Test-Fatal
-Version:	0.010
-Release:	6%{?dist}
+Version:	0.014
+Release:	2%{?dist}
 License:	GPL+ or Artistic
 Group:		Development/Libraries
 Url:		http://search.cpan.org/dist/Test-Fatal/
 Source0:	http://search.cpan.org/CPAN/authors/id/R/RJ/RJBS/Test-Fatal-%{version}.tar.gz
-Patch0:		Test-Fatal-0.008-old-EU::MM.patch
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(id -nu)
 BuildArch:	noarch
 BuildRequires:	perl(Carp)
@@ -27,11 +26,6 @@ with about the same amount of typing.
 
 %prep
 %setup -q -n Test-Fatal-%{version}
-
-# We don't really need ExtUtils::MakeMaker ≥ 6.30
-%if "%{?rhel}" == "4"
-%patch0 -p1
-%endif
 
 %build
 perl Makefile.PL INSTALLDIRS=vendor
@@ -57,6 +51,12 @@ rm -rf %{buildroot}
 %{_mandir}/man3/Test::Fatal.3pm*
 
 %changelog
+* Wed Sep 16 2015 Liu Di <liudidi@gmail.com> - 0.014-2
+- 为 Magic 3.0 重建
+
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.014-1
+- 更新到 0.014
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.010-6
 - 为 Magic 3.0 重建
 

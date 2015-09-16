@@ -1,6 +1,6 @@
 Name:           perl-Email-Find
 Version:        0.10
-Release:        24%{?dist}
+Release:        25%{?dist}
 Summary:        Find RFC 822 email addresses in plain text
 
 Group:          Development/Libraries
@@ -53,6 +53,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.10-25
+- 为 Magic 3.0 重建
+
 * Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 0.10-24
 - 为 Magic 3.0 重建
 

@@ -1,11 +1,11 @@
 Name:           perl-Hook-LexWrap
-Version:        0.24
-Release:        3%{?dist}
+Version:	0.25
+Release:	1%{?dist}
 Summary:        Lexically scoped subroutine wrappers
 Group:          Development/Libraries
 License:        GPL+ or Artistic
 URL:            http://search.cpan.org/dist/Hook-LexWrap/
-Source0:        http://search.cpan.org/CPAN/authors/id/C/CH/CHORNY/Hook-LexWrap-%{version}.tar.gz
+Source0:        http://search.cpan.org/CPAN/authors/id/E/ET/ETHER/Hook-LexWrap-%{version}.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(id -nu)
 BuildArch:      noarch
 BuildRequires:  perl(Carp)
@@ -49,6 +49,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/Hook::LexWrap.3pm*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.25-1
+- 更新到 0.25
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.24-3
 - 为 Magic 3.0 重建
 

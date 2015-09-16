@@ -1,6 +1,6 @@
 Name:           perl-Pod-Markdown
-Version:        1.320
-Release:        11%{?dist}
+Version:	3.002
+Release:	1%{?dist}
 Summary:        Convert POD to Markdown
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -47,6 +47,9 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_bindir}/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 3.002-1
+- 更新到 3.002
+
 * Sun Jun 15 2014 Liu Di <liudidi@gmail.com> - 1.320-11
 - 为 Magic 3.0 重建
 

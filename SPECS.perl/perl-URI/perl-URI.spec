@@ -1,11 +1,11 @@
 Name:           perl-URI
-Version:        1.60
-Release:        12%{?dist}
+Version:	1.69
+Release:	2%{?dist}
 Summary:        A Perl module implementing URI parsing and manipulation
 Group:          Development/Libraries
 License:        GPL+ or Artistic
 URL:            http://search.cpan.org/dist/URI/
-Source0:        http://www.cpan.org/authors/id/G/GA/GAAS/URI-%{version}.tar.gz
+Source0:        http://search.cpan.org/CPAN/authors/id/E/ET/ETHER/URI-%{version}.tar.gz
 BuildArch:      noarch
 BuildRequires:  perl(Carp)
 BuildRequires:  perl(constant)
@@ -67,6 +67,12 @@ find %{buildroot} -type f -name .packlist -exec rm -f {} ';'
 %{_mandir}/man3/URI::ldap.3pm*
 
 %changelog
+* Mon Sep 14 2015 Liu Di <liudidi@gmail.com> - 1.69-2
+- 为 Magic 3.0 重建
+
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.69-1
+- 更新到 1.69
+
 * Sun Jun 15 2014 Liu Di <liudidi@gmail.com> - 1.60-12
 - 为 Magic 3.0 重建
 

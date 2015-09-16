@@ -1,6 +1,6 @@
 Name:           perl-Bio-ASN1-EntrezGene
 Version:	1.70
-Release:	2%{?dist}
+Release:	3%{?dist}
 Epoch:		1
 Summary:        Regular expression-based Perl Parser for NCBI Entrez Gene
 Summary(zh_CN.UTF-8): 基于正则表达式的 NCBI Entrez Gene 的 Perl 解析器
@@ -60,6 +60,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1:1.70-3
+- 为 Magic 3.0 重建
+
 * Fri Apr 24 2015 Liu Di <liudidi@gmail.com> - 1:1.70-2
 - 为 Magic 3.0 重建
 

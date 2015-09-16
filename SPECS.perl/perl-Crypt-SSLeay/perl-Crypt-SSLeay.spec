@@ -1,11 +1,10 @@
 Name:           perl-Crypt-SSLeay
 Summary:        Crypt::SSLeay - OpenSSL glue that provides LWP https support
-Version:        0.58
-Release:        21%{?dist}
+Version:	0.73_04
+Release:	1%{?dist}
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 Source0:        http://www.cpan.org/authors/id/N/NA/NANIS/Crypt-SSLeay-%{version}.tar.gz
-Patch1:         perl-Crypt-SSLeay-cryptdef.patch
 URL:            http://search.cpan.org/dist/Crypt-SSLeay/
 
 BuildRequires:  openssl-devel
@@ -37,14 +36,11 @@ The Crypt::SSLeay package contains Net::SSL, which is automatically
 loaded by LWP::Protocol::https on https requests, and provides the
 necessary SSL glue for that module to work.
 
-
 %prep
 %setup -q -n Crypt-SSLeay-%{version} 
-%patch1 -p1 -b .cryptdef
 
-# Fix line endings
-perl -pi -e 's/\r$//' README
-
+# Placate rpmlint
+chmod -c -x lib/Net/SSL.pm
 
 %build
 if pkg-config openssl ; then
@@ -52,37 +48,38 @@ if pkg-config openssl ; then
   export LDFLAGS="$LDFLAGS `pkg-config --libs-only-L openssl`"
 fi
 
-%{__perl} Makefile.PL --default --no-live-tests INC="$INC" \
-          LDFLAGS="$LDFLAGS" INSTALLDIRS=vendor OPTIMIZE="$RPM_OPT_FLAGS"
+perl Makefile.PL --%{!?with_network_tests:no-}live-tests \
+    INC="$INC" LDFLAGS="$LDFLAGS" INSTALLDIRS=vendor OPTIMIZE="%{optflags}" \
+    </dev/null
 make %{?_smp_mflags}
 
-
 %install
-make pure_install DESTDIR=$RPM_BUILD_ROOT
-find $RPM_BUILD_ROOT -type f -name .packlist -exec rm -f {} ';'
-find $RPM_BUILD_ROOT -type f -name '*.bs' -a -size 0 -exec rm -f {} ';'
-find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} ';' 2>/dev/null
-chmod -R u+w $RPM_BUILD_ROOT/*
+make pure_install DESTDIR=%{buildroot}
+find %{buildroot} -type f -name .packlist -exec rm -f {} ';'
+find %{buildroot} -type f -name '*.bs' -a -size 0 -exec rm -f {} ';'
+%{_fixperms} %{buildroot}
+chmod -R u+w %{buildroot}/*
 chmod -R 644 eg/*
 chmod -R 644 certs/*
 rm certs/ca-bundle.crt
 ln -s /etc/pki/tls/certs/ca-bundle.crt certs/ca-bundle.crt
 
 %check
-
-
+make test
 
 %files
-%defattr(-,root,root,-)
-%doc README Changes eg/* certs/*
+%doc Changes eg/* certs/*
 %{perl_vendorarch}/auto/Crypt/
 %{perl_vendorarch}/Crypt/
 %{perl_vendorarch}/Net/
 %{_mandir}/man3/Crypt::SSLeay.3pm*
+%{_mandir}/man3/Crypt::SSLeay::Version.3pm*
 %{_mandir}/man3/Net::SSL.3pm*
 
-
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.73_04-1
+- 更新到 0.73_04
+
 * Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 0.58-21
 - 为 Magic 3.0 重建
 

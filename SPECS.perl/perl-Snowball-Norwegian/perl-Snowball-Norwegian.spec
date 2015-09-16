@@ -1,6 +1,6 @@
 Name:           perl-Snowball-Norwegian
 Version:        1.2
-Release:        12%{?dist}
+Release:        13%{?dist}
 Summary:        Porter's stemming algorithm for Norwegian
 License:        GPLv2 or Artistic
 Group:          Development/Libraries
@@ -44,6 +44,9 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.2-13
+- 为 Magic 3.0 重建
+
 * Thu Jun 19 2014 Liu Di <liudidi@gmail.com> - 1.2-12
 - 为 Magic 3.0 重建
 

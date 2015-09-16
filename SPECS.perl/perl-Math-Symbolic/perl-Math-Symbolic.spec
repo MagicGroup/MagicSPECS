@@ -1,6 +1,6 @@
 Name:           perl-Math-Symbolic
-Version:        0.606
-Release:        14%{?dist}
+Version:	0.612
+Release:	1%{?dist}
 Summary:        Symbolic calculations
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -70,6 +70,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.612-1
+- 更新到 0.612
+
 * Sun Jun 15 2014 Liu Di <liudidi@gmail.com> - 0.606-14
 - 为 Magic 3.0 重建
 

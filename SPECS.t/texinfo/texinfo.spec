@@ -3,7 +3,7 @@
 Summary: Tools needed to create Texinfo format documentation files
 Name: texinfo
 Version: 6.0
-Release: 2%{?dist}
+Release: 3%{?dist}
 License: GPLv3+
 Group: Applications/Publishing
 Url: http://www.gnu.org/software/texinfo/
@@ -166,6 +166,9 @@ fi
 %{_mandir}/man1/pdftexi2dvi.1*
 
 %changelog
+* Tue Sep 15 2015 Liu Di <liudidi@gmail.com> - 6.0-3
+- 为 Magic 3.0 重建
+
 * Sun Aug 9 2015 Orion Poplawski <orion@cora.nwra.com> - 6.0-2
 - Add BR on perl(Storable), fix perl requires (bug #1251766)
 

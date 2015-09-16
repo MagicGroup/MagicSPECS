@@ -1,11 +1,11 @@
 Name:           perl-MooseX-AttributeHelpers
-Version:        0.23
-Release:        9%{?dist}
+Version:	0.24
+Release:	2%{?dist}
 Summary:        Extended Moose attribute interfaces
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 URL:            http://search.cpan.org/dist/MooseX-AttributeHelpers/
-Source0:        http://search.cpan.org/CPAN/authors/id/D/DR/DROLSKY/MooseX-AttributeHelpers-%{version}.tar.gz
+Source0:        http://search.cpan.org/CPAN/authors/id/E/ET/ETHER/MooseX-AttributeHelpers-%{version}.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
@@ -59,11 +59,16 @@ rm -rf %{buildroot}
 
 %files
 %defattr(-,root,root,-)
-%doc ChangeLog README t/
 %{perl_vendorlib}/*
 %{_mandir}/man3/*
 
 %changelog
+* Mon Sep 14 2015 Liu Di <liudidi@gmail.com> - 0.24-2
+- 为 Magic 3.0 重建
+
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.24-1
+- 更新到 0.24
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.23-9
 - 为 Magic 3.0 重建
 

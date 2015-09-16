@@ -1,11 +1,11 @@
 Name:           perl-Catalyst-View-JSON
-Version:        0.30
-Release:        19%{?dist}
+Version:	0.35
+Release:	1%{?dist}
 Summary:        JSON view for your data
 License:        GPL+ or Artistic 2.0
 Group:          Development/Libraries
 URL:            http://search.cpan.org/dist/Catalyst-View-JSON/
-Source0:        http://search.cpan.org/CPAN/authors/id/M/MI/MIYAGAWA/Catalyst-View-JSON-%{version}.tar.gz
+Source0:        http://search.cpan.org/CPAN/authors/id/J/JJ/JJNAPIORK/Catalyst-View-JSON-%{version}.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 BuildRequires:  perl(Catalyst) >= 5.6
@@ -54,6 +54,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.35-1
+- 更新到 0.35
+
 * Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 0.30-19
 - 为 Magic 3.0 重建
 

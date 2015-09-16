@@ -1,6 +1,6 @@
 Name:           perl-Test-AutoLoader
 Version:        0.03
-Release:        6%{?dist}
+Release:        7%{?dist}
 Summary:        Testing utility for autosplit/autoloaded modules
 License:        GPL+
 Group:          Development/Libraries
@@ -57,6 +57,9 @@ LC_ALL=C
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.03-7
+- 为 Magic 3.0 重建
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.03-6
 - 为 Magic 3.0 重建
 

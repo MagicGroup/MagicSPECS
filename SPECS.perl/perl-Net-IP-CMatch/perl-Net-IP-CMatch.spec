@@ -1,6 +1,6 @@
 Name:           perl-Net-IP-CMatch
 Version:        0.02
-Release:        20%{?dist}
+Release:        21%{?dist}
 Summary:        Efficiently match IP addresses against IP ranges with C
 
 Group:          Development/Libraries
@@ -56,6 +56,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.02-21
+- 为 Magic 3.0 重建
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.02-20
 - 为 Magic 3.0 重建
 

@@ -1,6 +1,6 @@
 Name:           perl-XML-Filter-BufferText
 Version:        1.01
-Release:        18%{?dist}
+Release:        19%{?dist}
 Summary:        Filter to put all characters() in one event
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -53,6 +53,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.01-19
+- 为 Magic 3.0 重建
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.01-18
 - 为 Magic 3.0 重建
 

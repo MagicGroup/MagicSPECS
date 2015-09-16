@@ -1,6 +1,6 @@
 Name:           perl-CGI-Application-Plugin-DevPopup
-Version:        1.07
-Release:        12%{?dist}
+Version:	1.08
+Release:	1%{?dist}
 Summary:        Runtime cgiapp info in a popup window
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -47,6 +47,9 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.08-1
+- 更新到 1.08
+
 * Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 1.07-12
 - 为 Magic 3.0 重建
 

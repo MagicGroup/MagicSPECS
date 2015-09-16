@@ -1,8 +1,8 @@
 Name:           perl-Sub-Uplevel
 Summary:        Apparently run a function in a higher stack frame
 Epoch:          1
-Version:        0.24
-Release:        11%{?dist}
+Version:	0.25
+Release:	1%{?dist}
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 Source0:        http://search.cpan.org/CPAN/authors/id/D/DA/DAGOLDEN/Sub-Uplevel-%{version}.tar.gz 
@@ -45,11 +45,13 @@ find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null ';'
 
 
 %files
-%doc Changes LICENSE README README.PATCHING examples/
 %{perl_vendorlib}/*
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1:0.25-1
+- 更新到 0.25
+
 * Sun Jun 15 2014 Liu Di <liudidi@gmail.com> - 1:0.24-11
 - 为 Magic 3.0 重建
 

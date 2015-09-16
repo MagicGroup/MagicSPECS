@@ -1,7 +1,7 @@
 Name:           perl-MooseX-Params-Validate
 Summary:        Extension of Params::Validate using Moose's types
-Version:        0.18
-Release:        5%{?dist}
+Version:	0.21
+Release:	1%{?dist}
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 Source0:        http://search.cpan.org/CPAN/authors/id/D/DR/DROLSKY/MooseX-Params-Validate-%{version}.tar.gz 
@@ -56,11 +56,13 @@ find %{buildroot} -type f -name .packlist -exec rm -f {} \;
 make test
 
 %files
-%doc Changes README LICENSE t
 %{perl_vendorlib}/*
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.21-1
+- 更新到 0.21
+
 * Thu Jun 19 2014 Liu Di <liudidi@gmail.com> - 0.18-5
 - 为 Magic 3.0 重建
 

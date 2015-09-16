@@ -1,6 +1,6 @@
 Name:           perl-Image-Math-Constrain
 Version:        1.02
-Release:        13%{?dist}
+Release:        14%{?dist}
 Summary:        Scaling math used in image size constraining (such as thumbnails)
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -52,6 +52,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.02-14
+- 为 Magic 3.0 重建
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.02-13
 - 为 Magic 3.0 重建
 

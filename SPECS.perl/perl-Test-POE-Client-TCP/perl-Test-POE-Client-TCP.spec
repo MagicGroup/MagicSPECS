@@ -1,6 +1,6 @@
 Name:           perl-Test-POE-Client-TCP
-Version:        1.10
-Release:        7%{?dist}
+Version:	1.12
+Release:	1%{?dist}
 Summary:        POE Component providing TCP client services for test cases
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -61,6 +61,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.12-1
+- 更新到 1.12
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.10-7
 - 为 Magic 3.0 重建
 

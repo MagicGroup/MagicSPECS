@@ -1,12 +1,12 @@
 Name:           perl-HTTP-Request-Params
-Version:        1.01
-Release:        13%{?dist}
+Version:	1.02
+Release:	1%{?dist}
 Summary:        Retrieve GET/POST Parameters from HTTP Requests
 
 Group:          Development/Libraries
 License:        GPL+ or Artistic
 URL:            http://search.cpan.org/dist/HTTP-Request-Params/
-Source0:        http://www.cpan.org/authors/id/C/CW/CWEST/HTTP-Request-Params-%{version}.tar.gz
+Source0:        http://search.cpan.org/CPAN/authors/id/K/KI/KIZ/HTTP-Request-Params-%{version}.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildArch:      noarch
@@ -57,6 +57,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.02-1
+- 更新到 1.02
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.01-13
 - 为 Magic 3.0 重建
 

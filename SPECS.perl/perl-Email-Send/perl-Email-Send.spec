@@ -1,6 +1,6 @@
 Name:           perl-Email-Send
-Version:        2.198
-Release:        18%{?dist}
+Version:	2.201
+Release:	1%{?dist}
 Summary:        Module for sending email
 Group:          Development/Libraries
 License:        GPL+ or Artistic
@@ -48,6 +48,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*.3*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 2.201-1
+- 更新到 2.201
+
 * Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 2.198-18
 - 为 Magic 3.0 重建
 

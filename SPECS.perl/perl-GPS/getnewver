@@ -1,6 +1,7 @@
 #!/bin/bash
 pushd $(dirname $0) > /dev/null
 NAME=$(basename $(pwd)|sed -e 's/perl-//')
+NAME="perl-GPS"
 url="http://search.cpan.org/dist/$NAME/"
 new1="$NAME-"
 new2=".tar.gz"

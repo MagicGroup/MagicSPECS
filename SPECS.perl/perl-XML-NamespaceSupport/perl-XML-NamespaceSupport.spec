@@ -1,6 +1,6 @@
 Name:           perl-XML-NamespaceSupport
 Version:        1.11
-Release:        11%{?dist}
+Release:        12%{?dist}
 Summary:        A simple generic namespace support class
 
 Group:          Development/Libraries
@@ -52,6 +52,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.11-12
+- 为 Magic 3.0 重建
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.11-11
 - 为 Magic 3.0 重建
 

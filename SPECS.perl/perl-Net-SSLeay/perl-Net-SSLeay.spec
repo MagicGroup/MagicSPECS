@@ -1,6 +1,6 @@
 Name:		perl-Net-SSLeay
-Version:	1.49
-Release:	3%{?dist}
+Version:	1.70
+Release:	1%{?dist}
 Summary:	Perl extension for using OpenSSL
 Group:		Development/Libraries
 License:	OpenSSL
@@ -92,6 +92,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/Net::SSLeay::Handle.3pm*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.70-1
+- 更新到 1.70
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.49-3
 - 为 Magic 3.0 重建
 

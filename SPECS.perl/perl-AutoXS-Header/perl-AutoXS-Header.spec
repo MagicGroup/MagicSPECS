@@ -1,6 +1,6 @@
 Name:           perl-AutoXS-Header
 Version:        1.02
-Release:        14%{?dist}
+Release:        15%{?dist}
 Summary:        Container for the AutoXS header files
 Summary(zh_CN.UTF-8): AutoXS 头文件的容器
 License:        GPL+ or Artistic
@@ -52,6 +52,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.02-15
+- 为 Magic 3.0 重建
+
 * Fri Apr 24 2015 Liu Di <liudidi@gmail.com> - 1.02-14
 - 为 Magic 3.0 重建
 

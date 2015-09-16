@@ -1,6 +1,6 @@
 Name:           perl-CGI-Application-PSGI
 Version:        1.00
-Release:        17%{?dist}
+Release:        18%{?dist}
 Summary:        PSGI Adapter for CGI::Application
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -53,6 +53,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.00-18
+- 为 Magic 3.0 重建
+
 * Sun Jun 15 2014 Liu Di <liudidi@gmail.com> - 1.00-17
 - 为 Magic 3.0 重建
 

@@ -3,7 +3,7 @@ Summary:        Catalyst web framework manual
 Summary(zh_CN.UTF-8): Catalyst 网页框架手册
 Epoch:          1
 Version:	5.9009
-Release:	1%{?dist}
+Release:	2%{?dist}
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 Group(zh_CN.UTF-8): 开发/库
@@ -56,6 +56,9 @@ magic_rpm_clean.sh
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1:5.9009-2
+- 为 Magic 3.0 重建
+
 * Fri Jun 19 2015 Liu Di <liudidi@gmail.com> - 1:5.9009-1
 - 更新到 5.9009
 

@@ -1,6 +1,6 @@
 Name:           perl-CHI
-Version:        0.50
-Release:        15%{?dist}
+Version:	0.60
+Release:	1%{?dist}
 Summary:        Unified cache handling interface
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -132,6 +132,9 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 %{perl_vendorlib}/CHI/Test*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.60-1
+- 更新到 0.60
+
 * Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 0.50-15
 - 为 Magic 3.0 重建
 

@@ -1,5 +1,5 @@
 # From src/version.h:#define OCTAVE_API_VERSION
-%global octave_api api-v49+
+%global octave_api api-v50+
 
 # For rc versions, change release manually
 #global rcver %{nil}
@@ -9,8 +9,8 @@
 
 Name:           octave
 Epoch:          6
-Version:	3.8.2
-Release:	2%{?dist}
+Version:	4.0.0
+Release:	1%{?dist}
 Summary:        A high-level language for numerical computations
 Summary(zh_CN.UTF-8): 数值计算的高级语言
 Group:          Applications/Engineering
@@ -19,19 +19,15 @@ License:        GPLv3+
 URL:            http://www.octave.org
 
 %if 0%{!?rcver:1}
-Source0:        ftp://ftp.gnu.org/gnu/octave/octave-%{version}.tar.bz2
+Source0:        ftp://ftp.gnu.org/gnu/octave/octave-%{version}.tar.xz
 %else
-Source0:        ftp://alpha.gnu.org/gnu/octave/octave-%{version}%{rctag}.tar.gz
+Source0:        ftp://alpha.gnu.org/gnu/octave/octave-%{version}%{rctag}.tar.xz
 %endif
 # RPM macros for helping to build Octave packages
 Source1:        macros.octave
 # Fix to allow pkg build to use a directory
 # https://savannah.gnu.org/bugs/?func=detailitem&item_id=32839
 Patch0:         octave-3.8.0-pkgbuilddir.patch
-# Patch to compile with suitesparse 4.3.1
-# https://savannah.gnu.org/bugs/?func=detailitem&item_id=43063
-Patch1:         octave-suitesparse.patch
-
 Patch2:		octave-disable-qt5.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -131,8 +127,6 @@ This package contains documentation for Octave.
 %prep
 %setup -q -n %{name}-%{version}%{?rctag}
 %patch0 -p1 -b .pkgbuilddir
-%patch1 -p1 -b .suite
-%patch2 -p1 -b .noqt5
 find -name \*.h -o -name \*.cc | xargs sed -i -e 's/<config.h>/"config.h"/' -e 's/<base-list.h>/"base-list.h"/'
 
 # Check permissions
@@ -312,6 +306,9 @@ fi
 
 
 %changelog
+* Tue Sep 15 2015 Liu Di <liudidi@gmail.com> - 6:4.0.0-1
+- 更新到 4.0.0
+
 * Wed Apr 29 2015 Liu Di <liudidi@gmail.com> - 6:3.8.2-2
 - 为 Magic 3.0 重建
 

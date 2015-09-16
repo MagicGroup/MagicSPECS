@@ -1,6 +1,6 @@
 Name:		perl-Exporter-Tiny
-Version:	0.038
-Release:	3%{?dist}
+Version:	0.043_01
+Release:	1%{?dist}
 Summary:	An exporter with the features of Sub::Exporter but only core dependencies
 License:	GPL+ or Artistic
 Group:		Development/Libraries
@@ -62,13 +62,15 @@ make test
 rm -rf %{buildroot}
 
 %files
-%doc Changes CONTRIBUTING COPYRIGHT CREDITS LICENSE README
-%doc examples/
 %{perl_vendorlib}/Exporter/
 %{_mandir}/man3/Exporter::Tiny.3pm*
 %{_mandir}/man3/Exporter::Shiny.3pm*
+%{_mandir}/man3/Exporter::Tiny::Manual::*.3pm*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.043_01-1
+- 更新到 0.043_01
+
 * Thu Jun 19 2014 Liu Di <liudidi@gmail.com> - 0.038-3
 - 为 Magic 3.0 重建
 

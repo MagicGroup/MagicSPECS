@@ -1,6 +1,6 @@
 Name:           perl-WWW-Curl
-Version:        4.15
-Release:        10%{?dist}
+Version:	4.17
+Release:	2%{?dist}
 Summary:        Perl extension interface for libcurl
 License:        MPLv1.1 or MIT
 Group:          Development/Libraries
@@ -63,6 +63,12 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_mandir}/man3/*
 
 %changelog
+* Mon Sep 14 2015 Liu Di <liudidi@gmail.com> - 4.17-2
+- 为 Magic 3.0 重建
+
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 4.17-1
+- 更新到 4.17
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 4.15-10
 - 为 Magic 3.0 重建
 

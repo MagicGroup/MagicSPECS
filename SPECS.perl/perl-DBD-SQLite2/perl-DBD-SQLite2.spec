@@ -1,13 +1,12 @@
 Name:           perl-DBD-SQLite2
-Version:        0.33
-Release:        33%{?dist}
+Version:	0.36
+Release:	1%{?dist}
 Summary:        Self Contained RDBMS in a DBI Driver (sqlite 2.x)
 Group:          Development/Libraries
 License:        GPL+ or Artistic
 URL:            http://search.cpan.org/dist/DBD-SQLite2
-Source0:        http://search.cpan.org/CPAN/authors/id/M/MS/MSERGEANT/DBD-SQLite2-%{version}.tar.gz
+Source0:        http://search.cpan.org/CPAN/authors/id/R/RU/RURBAN/DBD-SQLite2-%{version}.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-Patch0:		DBD-SQLite2-systemlibs.patch
 
 BuildRequires:  perl(DBI), perl(Test::More)
 #BuildRequires:	sqlite2-devel
@@ -18,7 +17,6 @@ Requires:  perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
 
 %prep
 %setup -q -n DBD-SQLite2-%{version}
-%patch0 -p1
 
 %build
 CFLAGS="$RPM_OPT_FLAGS" %{__perl} Makefile.PL INSTALLDIRS=vendor
@@ -48,6 +46,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.36-1
+- 更新到 0.36
+
 * Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 0.33-33
 - 为 Magic 3.0 重建
 

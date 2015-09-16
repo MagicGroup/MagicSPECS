@@ -1,6 +1,6 @@
 Name:           perl-threads-shared
-Version:        1.46
-Release:        5%{?dist}
+Version:	1.48
+Release:	1%{?dist}
 Summary:        Perl extension for sharing data structures between threads
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -62,6 +62,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.48-1
+- 更新到 1.48
+
 * Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 1.46-5
 - 为 Magic 3.0 重建
 

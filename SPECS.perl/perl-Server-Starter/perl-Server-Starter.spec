@@ -1,15 +1,11 @@
 Name:           perl-Server-Starter
-Version:        0.17
-Release:        3%{?dist}
+Version:	0.32
+Release:	1%{?dist}
 Summary:        Superdaemon for hot-deploying server programs
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 URL:            http://search.cpan.org/dist/Server-Starter/
 Source0:        http://www.cpan.org/authors/id/K/KA/KAZUHO/Server-Starter-%{version}.tar.gz
-# Fix t/07-envdir.t race, bug #1100158, CPAN RT#73711
-Patch0:         Server-Starter-0.17-Synchronize-to-PID-in-t-07-envdir.t.patch
-# Fix loading the environment directory, bug #1100158, CPAN RT#73711
-Patch1:         Server-Starter-0.17-Fix-loading-envdir.patch
 BuildArch:      noarch
 
 BuildRequires:  perl(ExtUtils::MakeMaker) >= 6.42
@@ -43,19 +39,13 @@ perl-Server-Starter's start_server script.
 
 %prep
 %setup -q -n Server-Starter-%{version}
-%patch0 -p1
-%patch1 -p1
 
 %build
-# --skipdeps causes ExtUtils::AutoInstall not to try auto-installing
-#   missing modules
-%{__perl} Makefile.PL INSTALLDIRS=vendor --skipdeps
-make %{?_smp_mflags} 
+%{__perl} Build.PL --installdirs=vendor
+./Build
 
 %install
-rm -rf $RPM_BUILD_ROOT
-
-make pure_install PERL_INSTALL_ROOT=$RPM_BUILD_ROOT
+./Build install --destdir=$RPM_BUILD_ROOT --create_packlist=0
 
 find $RPM_BUILD_ROOT -type f -name .packlist -exec rm -f {} \;
 find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
@@ -63,10 +53,11 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_fixperms} $RPM_BUILD_ROOT/*
 
 %check
-make test
+./Build test
 
 %files
-%doc Changes README
+%doc Changes README.md
+%license LICENSE
 %{perl_vendorlib}/*
 %{_mandir}/man3/*
 
@@ -75,6 +66,9 @@ make test
 %{_mandir}/man1/start_server.*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.32-1
+- 更新到 0.32
+
 * Tue Jun 17 2014 Petr Pisar <ppisar@redhat.com> - 0.17-3
 - Fix races in t/07-envdir.t test (bug #1100158)
 - Load the environment directory just before restartin a server (bug #1100158)

@@ -6,13 +6,13 @@
 %endif
 
 Name:           perl-PPI
-Version:        1.215
-Release:        16%{?dist}
+Version:	1.220
+Release:	2%{?dist}
 Summary:        Parse, Analyze and Manipulate Perl
 Group:          Development/Libraries
 License:        GPL+ or Artistic
 URL:            http://search.cpan.org/dist/PPI/
-Source0:        http://www.cpan.org/authors/id/A/AD/ADAMK/PPI-%{version}.tar.gz
+Source0:        http://search.cpan.org/CPAN/authors/id/M/MI/MITHALDU/PPI-%{version}.tar.gz
 Patch0:         PPI-1.215-utf8.patch
 BuildArch:      noarch
 # =============== Module Build ======================
@@ -97,12 +97,17 @@ find %{buildroot} -type f -name .packlist -exec rm -f {} ';'
 %endif
 
 %files
-%doc Changes LICENSE README inline2test.conf inline2test.tpl
 %{perl_vendorlib}/PPI/
 %{perl_vendorlib}/PPI.pm
 %{_mandir}/man3/PPI*.3pm*
 
 %changelog
+* Mon Sep 14 2015 Liu Di <liudidi@gmail.com> - 1.220-2
+- 为 Magic 3.0 重建
+
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.220-1
+- 更新到 1.220
+
 * Sun Jun 15 2014 Liu Di <liudidi@gmail.com> - 1.215-16
 - 为 Magic 3.0 重建
 

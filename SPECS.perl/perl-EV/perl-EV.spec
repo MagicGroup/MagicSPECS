@@ -1,6 +1,6 @@
 Name:           perl-EV
-Version:        4.11
-Release:        4%{?dist}
+Version:	4.21
+Release:	1%{?dist}
 Summary:        Wrapper for the libev high-performance event loop library
 
 # Note: The source archive includes a libev/ folder which contents are licensed
@@ -14,7 +14,7 @@ Patch0:         perl-EV-4.03-Don-t-ask-questions-at-build-time.patch
 BuildRequires:  perl(ExtUtils::MakeMaker)
 BuildRequires:  perl(common::sense)
 BuildRequires:  gdbm-devel
-BuildRequires:  libev-source >= %{version}
+BuildRequires:  libev-source >= 4.20
 BuildRequires:  perl(AnyEvent) => 2.6
 
 Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
@@ -46,7 +46,7 @@ cp -r /usr/share/libev-source/* ./libev/
 
 
 %build
-%{__perl} Makefile.PL INSTALLDIRS=vendor OPTIMIZE="$RPM_OPT_FLAGS"
+%{__perl} Makefile.PL INSTALLDIRS=vendor OPTIMIZE="$RPM_OPT_FLAGS" < /dev/null
 make %{?_smp_mflags}
 
 
@@ -73,6 +73,9 @@ find $RPM_BUILD_ROOT -type f -name '*.bs' -a -size 0 -exec rm -f {} ';'
 
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 4.21-1
+- 更新到 4.21
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 4.11-4
 - 为 Magic 3.0 重建
 

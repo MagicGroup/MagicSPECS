@@ -1,6 +1,6 @@
 Name:           perl-Algorithm-Annotate
 Version:        0.10
-Release:        20%{?dist}
+Release:        22%{?dist}
 Summary:        Represent a series of changes in annotate form
 Summary(zh_CN.UTF-8): 注释系列变化的代表
 License:        GPL+ or Artistic
@@ -43,6 +43,12 @@ magic_rpm_clean.sh
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.10-22
+- 为 Magic 3.0 重建
+
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.10-21
+- 为 Magic 3.0 重建
+
 * Sun Apr 19 2015 Liu Di <liudidi@gmail.com> - 0.10-20
 - 为 Magic 3.0 重建
 

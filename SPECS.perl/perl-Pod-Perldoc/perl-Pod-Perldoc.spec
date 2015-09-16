@@ -1,15 +1,13 @@
-%global cpan_version 3.17
+%global cpan_version 3.25
 Name:           perl-Pod-Perldoc
 # let's overwrite the module from perl.srpm
-Version:        3.17.00
-Release:        244%{?dist}
+Version:	3.25
+Release:	1%{?dist}
 Summary:        Look up Perl documentation in Pod format
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 URL:            http://search.cpan.org/dist/Pod-Perldoc/
-Source0:        http://www.cpan.org/authors/id/M/MA/MALLEN/Pod-Perldoc-%{cpan_version}.tar.gz
-# Bug #821632, submitted to upstream as RT#77209
-Patch0:         Pod-Perldoc-3.17-Remove-POD-code-from-perldoc-synopis.patch
+Source0:        http://search.cpan.org/CPAN/authors/id/M/MA/MALLEN/Pod-Perldoc-%{version}.tar.gz
 BuildArch:      noarch
 BuildRequires:  perl(ExtUtils::MakeMaker)
 # Run-time:
@@ -69,8 +67,7 @@ in the perl installation tree or in a perl script, and displays it via
 the perl library modules.
 
 %prep
-%setup -q -n Pod-Perldoc-%{cpan_version}
-%patch0 -p1
+%setup -q -n Pod-Perldoc-%{version}
 
 %build
 %{__perl} Makefile.PL INSTALLDIRS=vendor
@@ -90,8 +87,12 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_bindir}/perldoc
 %{perl_vendorlib}/*
 %{_mandir}/man3/*
+%{_mandir}/man1/perldoc.1*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 3.25-1
+- 更新到 3.25
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 3.17.00-244
 - 为 Magic 3.0 重建
 

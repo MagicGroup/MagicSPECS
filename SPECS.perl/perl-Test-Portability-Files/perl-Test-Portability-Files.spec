@@ -1,11 +1,11 @@
 Name:           perl-Test-Portability-Files
-Version:        0.05
-Release:        18%{?dist}
+Version:	0.06
+Release:	2%{?dist}
 Summary:        Check file names portability
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 URL:            http://search.cpan.org/dist/Test-Portability-Files/
-Source0:        http://www.cpan.org/authors/id/S/SA/SAPER/Test-Portability-Files-%{version}.tar.gz
+Source0:        http://search.cpan.org/CPAN/authors/id/A/AB/ABRAXXA/Test-Portability-Files-%{version}.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 BuildRequires:  perl(ExtUtils::MakeMaker)
@@ -49,11 +49,16 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(-,root,root,-)
-%doc Changes LICENSE LICENSE.Artistic LICENSE.GPL README
 %{perl_vendorlib}/*
 %{_mandir}/man3/*
 
 %changelog
+* Mon Sep 14 2015 Liu Di <liudidi@gmail.com> - 0.06-2
+- 为 Magic 3.0 重建
+
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.06-1
+- 更新到 0.06
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.05-18
 - 为 Magic 3.0 重建
 

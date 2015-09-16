@@ -1,7 +1,7 @@
 Name:           perl-Log-Dispatch-Config
 Summary:        Log4j for Perl        
-Version:        1.03
-Release:        22%{?dist}
+Version:	1.04
+Release:	1%{?dist}
 License:        GPL+ or Artistic        
 Group:          Development/Libraries
 Source0:        http://search.cpan.org/CPAN/authors/id/M/MI/MIYAGAWA/Log-Dispatch-Config-%{version}.tar.gz 
@@ -65,6 +65,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.04-1
+- 更新到 1.04
+
 * Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 1.03-22
 - 为 Magic 3.0 重建
 

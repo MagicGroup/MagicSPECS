@@ -1,6 +1,6 @@
 Name:           perl-Storable
-Version:        2.45
-Release:        4%{?dist}
+Version:	2.51
+Release:	1%{?dist}
 Summary:        Persistence for Perl data structures
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -79,6 +79,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 2.51-1
+- 更新到 2.51
+
 * Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 2.45-4
 - 为 Magic 3.0 重建
 

@@ -1,6 +1,6 @@
 Name:           perl-MLDBM
-Version:        2.04
-Release:        14%{?dist}
+Version:	2.05
+Release:	1%{?dist}
 Summary:        Store multi-level hash structure in single level tied hash
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -47,6 +47,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 2.05-1
+- 更新到 2.05
+
 * Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 2.04-14
 - 为 Magic 3.0 重建
 

@@ -1,11 +1,11 @@
 Name:           perl-Convert-BER
-Version:        1.3101
-Release:        14%{?dist}
+Version:	1.32
+Release:	1%{?dist}
 Summary:        ASN.1 Basic Encoding Rules
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 URL:            http://search.cpan.org/dist/Convert-BER/
-Source0:        http://archive.cpan.cz//authors/id/G/GB/GBARR/Convert-BER-%{version}.tar.gz
+Source0:        http://search.cpan.org/CPAN/authors/id/G/GB/GBARR/Convert-BER-%{version}.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 BuildRequires:  perl(ExtUtils::MakeMaker)
@@ -54,6 +54,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.32-1
+- 更新到 1.32
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.3101-14
 - 为 Magic 3.0 重建
 

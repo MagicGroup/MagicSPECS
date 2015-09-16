@@ -1,11 +1,11 @@
 Name:           perl-CPAN-Inject
-Version:        1.13
-Release:        15%{?dist}
+Version:	1.14
+Release:	2%{?dist}
 Summary:        Base class for injecting distributions into CPAN sources
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 URL:            http://search.cpan.org/dist/CPAN-Inject/
-Source0:        http://www.cpan.org/authors/id/A/AD/ADAMK/CPAN-Inject-%{version}.tar.gz
+Source0:        http://search.cpan.org/CPAN/authors/id/P/PS/PSHANGOV/CPAN-Inject-%{version}.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 BuildRequires:  perl(CPAN) >= 1.36
@@ -52,13 +52,18 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(-,root,root,-)
-%doc Changes LICENSE README
 %{perl_vendorlib}/*
 %{_bindir}/cpaninject
 %{_mandir}/man1/cpaninject.1.gz
 %{_mandir}/man3/*
 
 %changelog
+* Mon Sep 14 2015 Liu Di <liudidi@gmail.com> - 1.14-2
+- 为 Magic 3.0 重建
+
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.14-1
+- 更新到 1.14
+
 * Sun Jun 15 2014 Liu Di <liudidi@gmail.com> - 1.13-15
 - 为 Magic 3.0 重建
 

@@ -1,6 +1,6 @@
 Name:           perl-List-AllUtils
-Version:        0.08
-Release:        3%{?dist}
+Version:	0.09
+Release:	1%{?dist}
 Summary:        Combines List::Util and List::MoreUtils
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -45,11 +45,13 @@ find $RPM_BUILD_ROOT -type f -name .packlist -exec rm -f {} \;
 make test
 
 %files
-%doc Changes LICENSE README
 %{perl_vendorlib}/*
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.09-1
+- 更新到 0.09
+
 * Thu Jun 19 2014 Liu Di <liudidi@gmail.com> - 0.08-3
 - 为 Magic 3.0 重建
 

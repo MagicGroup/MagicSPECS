@@ -1,6 +1,6 @@
 Name:		perl-PPIx-Utilities
 Version:	1.001000
-Release:	8%{?dist}
+Release:	9%{?dist}
 Summary:	Extensions to PPI
 Group:		Development/Libraries
 License:	GPL+ or Artistic
@@ -60,6 +60,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/PPIx::Utilities::Statement.3pm*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.001000-9
+- 为 Magic 3.0 重建
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.001000-8
 - 为 Magic 3.0 重建
 

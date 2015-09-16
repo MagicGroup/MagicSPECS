@@ -2,7 +2,7 @@ Summary: The GNU macro processor
 Summary(zh_CN.UTF-8): GNU 宏处理器
 Name: m4
 Version: 1.4.17
-Release: 1%{?dist}
+Release: 2%{?dist}
 License: GPLv3+
 Group: Applications/Text
 Group(zh_CN.UTF-8): 应用程序/文本
@@ -65,6 +65,9 @@ if [ "$1" = 0 ]; then
 fi
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.4.17-2
+- 为 Magic 3.0 重建
+
 * Fri Aug 08 2014 Liu Di <liudidi@gmail.com> - 1.4.17-1
 - 更新到 1.4.17
 

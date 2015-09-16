@@ -1,7 +1,7 @@
 Name:           perl-IO-Handle-Util
 Summary:        Utilities for working with IO::Handle-like objects
 Version:        0.01
-Release:        21%{?dist}
+Release:        22%{?dist}
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 Source0:        http://search.cpan.org/CPAN/authors/id/N/NU/NUFFIN/IO-Handle-Util-%{version}.tar.gz 
@@ -62,6 +62,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/*.3*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.01-22
+- 为 Magic 3.0 重建
+
 * Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 0.01-21
 - 为 Magic 3.0 重建
 

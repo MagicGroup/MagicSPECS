@@ -1,6 +1,6 @@
 Name:           perl-Plack-Middleware-RemoveRedundantBody
 Version:        0.05
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        Plack::Middleware which sets removes body for HTTP response if it's not required
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -46,6 +46,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Tue Sep 15 2015 Liu Di <liudidi@gmail.com> - 0.05-4
+- 为 Magic 3.0 重建
+
 * Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.05-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

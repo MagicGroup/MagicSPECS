@@ -1,11 +1,11 @@
 Name:           perl-ExtUtils-Manifest
-Version:        1.60
-Release:        4%{?dist}
+Version:	1.70
+Release:	1%{?dist}
 Summary:        Utilities to write and check a MANIFEST file
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 URL:            http://search.cpan.org/dist/ExtUtils-Manifest/
-Source0:        http://www.cpan.org/authors/id/F/FL/FLORA/ExtUtils-Manifest-%{version}.tar.gz
+Source0:        http://search.cpan.org/CPAN/authors/id/E/ET/ETHER/ExtUtils-Manifest-%{version}.tar.gz
 BuildArch:      noarch
 BuildRequires:  perl(ExtUtils::MakeMaker)
 BuildRequires:  perl(File::Spec) >= 0.8
@@ -47,6 +47,9 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.70-1
+- 更新到 1.70
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.60-4
 - 为 Magic 3.0 重建
 

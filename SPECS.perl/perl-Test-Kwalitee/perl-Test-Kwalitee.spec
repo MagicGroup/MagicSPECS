@@ -1,6 +1,6 @@
 Name:		perl-Test-Kwalitee
 Version:	1.22
-Release:	4%{?dist}
+Release:	5%{?dist}
 Summary:	Test the Kwalitee of a distribution before you release it
 License:	GPL+ or Artistic
 Group:		Development/Libraries
@@ -66,6 +66,9 @@ chmod -c 755 %{buildroot}%{_bindir}/kwalitee-metrics
 %{_mandir}/man3/Test::Kwalitee.3pm*
 
 %changelog
+* Wed Sep 16 2015 Liu Di <liudidi@gmail.com> - 1.22-5
+- 为 Magic 3.0 重建
+
 * Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.22-4
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

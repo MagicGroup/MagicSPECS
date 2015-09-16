@@ -1,6 +1,6 @@
 Name:           perl-Module-Compile
-Version:        0.20
-Release:        14%{?dist}
+Version:	0.35
+Release:	1%{?dist}
 Summary:        Perl Module Compilation
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -43,11 +43,13 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(-,root,root,-)
-%doc Changes DESIGN README
 %{perl_vendorlib}/*
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.35-1
+- 更新到 0.35
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.20-14
 - 为 Magic 3.0 重建
 

@@ -1,6 +1,6 @@
 Name:           perl-Image-Size
-Version:        3.2
-Release:        16%{?dist}
+Version:	3.300
+Release:	1%{?dist}
 Summary:        Determine the size of images in several common formats in Perl
 
 Group:          Development/Libraries
@@ -66,12 +66,14 @@ rm -rf $RPM_BUILD_ROOT
 %doc ChangeLog README
 %{_bindir}/imgsize
 %{perl_vendorlib}/Image/
-%{perl_vendorlib}/auto/
 %{_mandir}/man1/*.1*
 %{_mandir}/man3/*.3pm*
 
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 3.300-1
+- 更新到 3.300
+
 * Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 3.2-16
 - 为 Magic 3.0 重建
 

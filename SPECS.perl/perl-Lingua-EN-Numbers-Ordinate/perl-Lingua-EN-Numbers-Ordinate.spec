@@ -1,12 +1,12 @@
 Name:           perl-Lingua-EN-Numbers-Ordinate
-Version:        1.02
-Release:        14%{?dist}
+Version:	1.04
+Release:	2%{?dist}
 Summary:        Perl functions for giving the ordinal form of a number given its cardinal value
 
 Group:          Development/Libraries
 License:        GPL+ or Artistic
 URL:            http://search.cpan.org/dist/Lingua-EN-Numbers-Ordinate/
-Source0:        http://search.cpan.org/CPAN/authors/id/S/SB/SBURKE/Lingua-EN-Numbers-Ordinate-%{version}.tar.gz
+Source0:        http://search.cpan.org/CPAN/authors/id/N/NE/NEILB/Lingua-EN-Numbers-Ordinate-%{version}.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildArch:      noarch
@@ -46,12 +46,17 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(-,root,root,-)
-%doc ChangeLog README
 %{perl_vendorlib}/Lingua/
 %{_mandir}/man3/*.3*
 
 
 %changelog
+* Mon Sep 14 2015 Liu Di <liudidi@gmail.com> - 1.04-2
+- 为 Magic 3.0 重建
+
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.04-1
+- 更新到 1.04
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.02-14
 - 为 Magic 3.0 重建
 

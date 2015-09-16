@@ -1,6 +1,6 @@
 Name:           perl-QWizard
 Version:        3.15
-Release:        17%{?dist}
+Release:        18%{?dist}
 Summary:        A very portable graphical question and answer wizard system
 License:        GPL+ or Artistic 
 Group:          Development/Libraries
@@ -74,6 +74,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 3.15-18
+- 为 Magic 3.0 重建
+
 * Thu Jun 19 2014 Liu Di <liudidi@gmail.com> - 3.15-17
 - 为 Magic 3.0 重建
 

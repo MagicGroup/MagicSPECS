@@ -1,6 +1,6 @@
 Name:           perl-Log-Dispatchouli
-Version:        2.005
-Release:        9%{?dist}
+Version:	2.012
+Release:	1%{?dist}
 Summary:        Simple wrapper around Log::Dispatch
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -66,6 +66,9 @@ RELEASE_TESTING=1 make test
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 2.012-1
+- 更新到 2.012
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.005-9
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

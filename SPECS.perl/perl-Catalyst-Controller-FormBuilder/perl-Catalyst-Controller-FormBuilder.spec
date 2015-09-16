@@ -1,6 +1,6 @@
 Name:           perl-Catalyst-Controller-FormBuilder
 Version:        0.06
-Release:        20%{?dist}
+Release:        21%{?dist}
 Summary:        Catalyst FormBuilder Base Controller
 Summary(zh_CN.UTF-8): 催化表单生成器基本控制程序
 License:        GPL+ or Artistic
@@ -74,6 +74,9 @@ magic_rpm_clean.sh
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.06-21
+- 为 Magic 3.0 重建
+
 * Fri Jun 05 2015 Liu Di <liudidi@gmail.com> - 0.06-20
 - 为 Magic 3.0 重建
 

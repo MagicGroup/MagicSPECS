@@ -1,7 +1,7 @@
 Name:           perl-MooseX-Getopt
 Summary:        Moose role for processing command line options
-Version:        0.47
-Release:        11%{?dist}
+Version:	0.68
+Release:	1%{?dist}
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 Source0:        http://search.cpan.org/CPAN/authors/id/E/ET/ETHER/MooseX-Getopt-%{version}.tar.gz
@@ -65,6 +65,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.68-1
+- 更新到 0.68
+
 * Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 0.47-11
 - 为 Magic 3.0 重建
 

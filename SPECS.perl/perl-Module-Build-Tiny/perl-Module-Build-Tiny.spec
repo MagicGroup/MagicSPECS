@@ -2,7 +2,7 @@ Summary:	A tiny replacement for Module::Build
 Summary(zh_CN.UTF-8): Module::Build 的一个小的替代
 Name:		perl-Module-Build-Tiny
 Version:	0.039
-Release:	1%{?dist}
+Release:	3%{?dist}
 License:	GPL+ or Artistic
 Group:		Development/Libraries
 Group(zh_CN.UTF-8): 开发/库
@@ -82,6 +82,12 @@ AUTHOR_TESTING=1 RELEASE_TESTING=1 ./Build test
 %{_mandir}/man3/Module::Build::Tiny.3pm*
 
 %changelog
+* Tue Sep 15 2015 Liu Di <liudidi@gmail.com> - 0.039-3
+- 为 Magic 3.0 重建
+
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.039-2
+- 为 Magic 3.0 重建
+
 * Fri Jun 19 2015 Liu Di <liudidi@gmail.com> - 0.039-1
 - 更新到 0.039
 

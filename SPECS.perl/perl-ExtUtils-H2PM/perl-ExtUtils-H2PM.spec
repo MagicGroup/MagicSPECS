@@ -1,6 +1,6 @@
 Name:           perl-ExtUtils-H2PM
-Version:        0.08
-Release:        12%{?dist}
+Version:	0.09
+Release:	1%{?dist}
 Summary:        Automatically generate perl modules to wrap C header files
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -58,6 +58,9 @@ find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null \;
 
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.09-1
+- 更新到 0.09
+
 * Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 0.08-12
 - 为 Magic 3.0 重建
 

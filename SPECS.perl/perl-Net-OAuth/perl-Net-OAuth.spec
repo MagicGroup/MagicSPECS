@@ -1,6 +1,6 @@
 Name:           perl-Net-OAuth
 Version:        0.28
-Release:        8%{?dist}
+Release:        9%{?dist}
 Summary:        OAuth protocol support library for Perl
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -55,6 +55,9 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 
 
 %changelog
+* Mon Sep 14 2015 Liu Di <liudidi@gmail.com> - 0.28-9
+- 为 Magic 3.0 重建
+
 * Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.28-8
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

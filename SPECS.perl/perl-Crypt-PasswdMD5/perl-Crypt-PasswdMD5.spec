@@ -1,11 +1,11 @@
 Name: 		perl-Crypt-PasswdMD5
-Version:	1.3
-Release:	16%{?dist}
+Version:	1.40
+Release:	2%{?dist}
 Summary:	Provides interoperable MD5-based crypt() functions 
 License:	GPL+ or Artistic
 Group:		Development/Libraries
 URL: 		http://search.cpan.org/dist/Crypt-PasswdMD5/
-Source0: 	http://search.cpan.org/CPAN/authors/id/L/LU/LUISMUNOZ/Crypt-PasswdMD5-%{version}.tar.gz
+Source0: 	http://search.cpan.org/CPAN/authors/id/R/RS/RSAVAGE/Crypt-PasswdMD5-%{version}.tgz
 Requires:  	perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
 BuildArch: 	noarch
 BuildRequires:  perl(Digest::MD5)
@@ -17,8 +17,6 @@ This package provides MD5-based crypt() functions
 
 %prep
 %setup -q -n Crypt-PasswdMD5-%{version}
-%{_bindir}/iconv -f iso-8859-1 -t utf-8 -o PasswdMD5.pm.new PasswdMD5.pm && mv PasswdMD5.pm.new PasswdMD5.pm
-%{__sed} -i -e 's/ISO-8859-1/UTF-8/' PasswdMD5.pm
 
 %build
 %{__perl} Makefile.PL INSTALLDIRS=vendor
@@ -39,6 +37,12 @@ chmod -R u+w %{buildroot}/*
 %{_mandir}/man3/*
 
 %changelog
+* Wed Sep 16 2015 Liu Di <liudidi@gmail.com> - 1.40-2
+- 为 Magic 3.0 重建
+
+* Wed Sep 16 2015 Liu Di <liudidi@gmail.com> - 1.40-1
+- 更新到 1.40
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.3-16
 - 为 Magic 3.0 重建
 

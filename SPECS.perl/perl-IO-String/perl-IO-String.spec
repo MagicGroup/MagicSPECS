@@ -1,6 +1,6 @@
 Name:           perl-IO-String
 Version:        1.08
-Release:        19%{?dist}
+Release:        20%{?dist}
 Summary:        Emulate file interface for in-core strings
 Group:          Development/Libraries
 License:        GPL+ or Artistic
@@ -59,6 +59,9 @@ chmod -R u+w $RPM_BUILD_ROOT/*
 
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.08-20
+- 为 Magic 3.0 重建
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.08-19
 - 为 Magic 3.0 重建
 

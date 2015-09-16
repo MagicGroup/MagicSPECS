@@ -2,8 +2,8 @@
 %{?perl_default_filter}
 
 Name:           perl-IO-Compress
-Version:        2.064
-Release:        4%{?dist}
+Version:	2.068
+Release:	1%{?dist}
 Summary:        Read and write compressed data
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -108,6 +108,9 @@ make test %{?with_long_tests:COMPRESS_ZLIB_RUN_ALL=1}
 %{_mandir}/man3/IO::Uncompress::*.3pm*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 2.068-1
+- 更新到 2.068
+
 * Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 2.064-4
 - 为 Magic 3.0 重建
 

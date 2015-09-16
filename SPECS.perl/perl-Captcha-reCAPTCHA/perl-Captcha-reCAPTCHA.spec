@@ -1,6 +1,6 @@
 Name:           perl-Captcha-reCAPTCHA
 Version:	0.97
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:        Perl implementation of the reCAPTCHA API
 Summary(zh_CN.UTF-8): reCAPTCHA API 的 Perl 实现
 License:        GPL+ or Artistic
@@ -56,6 +56,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.97-2
+- 为 Magic 3.0 重建
+
 * Mon May 11 2015 Liu Di <liudidi@gmail.com> - 0.97-1
 - 更新到 0.97
 

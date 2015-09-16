@@ -1,6 +1,6 @@
 Name:           perl-Catalyst-ActionRole-ACL
 Version:	0.07
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:        User role-based authorization action class
 Summary(zh_CN.UTF-8): 基于角色的用户认证的类操作
 License:        GPL+ or Artistic
@@ -54,6 +54,9 @@ magic_rpm_clean.sh
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.07-2
+- 为 Magic 3.0 重建
+
 * Fri Jun 05 2015 Liu Di <liudidi@gmail.com> - 0.07-1
 - 更新到 0.07
 

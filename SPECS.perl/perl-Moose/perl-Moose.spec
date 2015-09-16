@@ -1,10 +1,10 @@
 Name:           perl-Moose
 Summary:        Complete modern object system for Perl 5
-Version:        2.0604
-Release:        12%{?dist}
+Version:	2.1603
+Release:	1%{?dist}
 License:        GPL+ or Artistic
 Group:          Development/Libraries
-Source0:        http://search.cpan.org/CPAN/authors/id/D/DO/DOY/Moose-%{version}.tar.gz
+Source0:        http://search.cpan.org/CPAN/authors/id/E/ET/ETHER/Moose-%{version}.tar.gz
 URL:            http://search.cpan.org/dist/
 Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
 
@@ -143,8 +143,6 @@ find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null ';'
 
 
 %files
-%doc Changes Changes.Class-MOP LICENSE README TODO doap.rdf
-%doc t/ benchmarks/
 %{perl_vendorarch}/*
 %exclude %dir %{perl_vendorarch}/auto/
 %{_mandir}/man3/*
@@ -157,6 +155,9 @@ find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null ';'
 %{_mandir}/man3/Test::Moose*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 2.1603-1
+- 更新到 2.1603
+
 * Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 2.0604-12
 - 为 Magic 3.0 重建
 

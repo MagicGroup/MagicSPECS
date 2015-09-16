@@ -1,11 +1,11 @@
 Name:           perl-File-BaseDir
-Version:        0.03
-Release:        20%{?dist}
+Version:	0.07
+Release:	1%{?dist}
 Summary:        Use the freedesktop basedir spec
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 URL:            http://search.cpan.org/dist/File-BaseDir/
-Source0:        http://www.cpan.org/authors/id/P/PA/PARDUS/File-BaseDir-%{version}.tar.gz
+Source0:        http://search.cpan.org/CPAN/authors/id/K/KI/KIMRYAN/File-BaseDir-%{version}.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 #BuildRequires:  perl(File::DesktopEntry)
@@ -50,6 +50,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.07-1
+- 更新到 0.07
+
 * Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 0.03-20
 - 为 Magic 3.0 重建
 

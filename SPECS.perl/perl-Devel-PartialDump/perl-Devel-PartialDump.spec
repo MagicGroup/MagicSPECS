@@ -1,12 +1,12 @@
 Name:           perl-Devel-PartialDump
-Version:        0.15
-Release:        10%{?dist}
+Version:	0.18
+Release:	1%{?dist}
 Summary:        Partial dumping of data structures, optimized for argument printing
 # from PartialDump.pm
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 URL:            http://search.cpan.org/dist/Devel-PartialDump/
-Source0:        http://www.cpan.org/authors/id/F/FL/FLORA/Devel-PartialDump-%{version}.tar.gz
+Source0:        http://search.cpan.org/CPAN/authors/id/E/ET/ETHER/Devel-PartialDump-%{version}.tar.gz
 BuildArch:      noarch
 BuildRequires:  perl(ExtUtils::MakeMaker)
 # Moose has a manual dependency on Devel::PartialDump for enhanced reporting
@@ -54,6 +54,9 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.18-1
+- 更新到 0.18
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.15-10
 - 为 Magic 3.0 重建
 

@@ -1,6 +1,6 @@
 Name:           perl-String-Format
-Version:        1.16
-Release:        11%{?dist}
+Version:	1.17
+Release:	1%{?dist}
 Summary:        Sprintf-like string formatting capabilities with arbitrary format definitions
 
 Group:          Development/Libraries
@@ -54,6 +54,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.17-1
+- 更新到 1.17
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.16-11
 - 为 Magic 3.0 重建
 

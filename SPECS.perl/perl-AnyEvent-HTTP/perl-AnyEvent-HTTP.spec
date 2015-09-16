@@ -1,8 +1,8 @@
 %global perlname AnyEvent-HTTP
 
 Name:      perl-AnyEvent-HTTP
-Version:	2.21
-Release:	1%{?dist}
+Version:	2.22
+Release:	2%{?dist}
 Summary:   Simple but non-blocking HTTP/HTTPS client  
 Summary(zh_CN.UTF-8): 简单的但非阻塞式的 HTTP/HTTPS 客户端
 
@@ -78,6 +78,12 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 2.22-2
+- 为 Magic 3.0 重建
+
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 2.22-1
+- 更新到 2.22
+
 * Wed Apr 22 2015 Liu Di <liudidi@gmail.com> - 2.21-1
 - 更新到 2.21
 

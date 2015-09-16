@@ -1,12 +1,12 @@
 Name:           perl-HTML-Scrubber
-Version:        0.08
-Release:        16%{?dist}
+Version:	0.14
+Release:	1%{?dist}
 Summary:        Library for scrubbing/sanitizing html
 
 Group:          Development/Libraries
 License:        GPL+ or Artistic
 URL:            http://search.cpan.org/dist/HTML-Scrubber/
-Source0:        http://www.cpan.org/authors/id/P/PO/PODMASTER/HTML-Scrubber-%{version}.tar.gz
+Source0:        http://search.cpan.org/CPAN/authors/id/N/NI/NIGELM/HTML-Scrubber-%{version}.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildArch:      noarch
@@ -22,41 +22,33 @@ I wasn't satisfied with HTML::Sanitizer because it is based on
 HTML::TreeBuilder, so I thought I'd write something similar that works
 directly with HTML::Parser.
 
-
 %prep
 %setup -q -n HTML-Scrubber-%{version}
 %{__perl} -pi -e 's/\r\n/\n/' Changes LICENSE README Scrubber.pm
 
-
 %build
-%{__perl} Makefile.PL INSTALLDIRS=vendor
-make %{?_smp_mflags}
-
+%{__perl} Build.PL --installdirs vendor
+./Build
 
 %install
-rm -rf $RPM_BUILD_ROOT
-make pure_install PERL_INSTALL_ROOT=$RPM_BUILD_ROOT
+./Build install --destdir $RPM_BUILD_ROOT
 find $RPM_BUILD_ROOT -type f -name .packlist -exec rm -f {} ';'
 find $RPM_BUILD_ROOT -type d -depth -exec rmdir {} 2>/dev/null ';'
 chmod -R u+w $RPM_BUILD_ROOT/*
 
-
 %check
-
-
-
-%clean
-rm -rf $RPM_BUILD_ROOT
-
+./Build test
 
 %files
-%defattr(-,root,root,-)
 %doc Changes LICENSE README
 %{perl_vendorlib}/HTML/
 %{_mandir}/man3/*.3pm*
 
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.14-1
+- 更新到 0.14
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.08-16
 - 为 Magic 3.0 重建
 

@@ -1,8 +1,8 @@
 %global cpan_version 0.9152
 Name:           perl-CPANPLUS
 # Keep 2-digit major varion to compete with perl.spec for history
-Version:        %(echo '%{cpan_version}' | sed 's/\(\...\)/\1./')
-Release:        5%{?dist}
+Version:	0.9154
+Release:	1%{?dist}
 Summary:        Ameliorated interface to the Comprehensive Perl Archive Network
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -120,6 +120,9 @@ make test %{?_smp_mflags}
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.9154-1
+- 更新到 0.9154
+
 * Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 0.91.52-5
 - 为 Magic 3.0 重建
 

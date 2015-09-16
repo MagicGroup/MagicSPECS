@@ -1,7 +1,7 @@
 Name:		perl-Types-Serialiser
 Summary:	Simple data types for common serialization formats
 Version:	1.0
-Release:	3%{?dist}
+Release:	4%{?dist}
 License:	GPL+ or Artistic
 Group:		Development/Libraries
 URL:		http://search.cpan.org/dist/Types-Serialiser/
@@ -54,6 +54,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/Types::Serialiser::Error.3pm*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.0-4
+- 为 Magic 3.0 重建
+
 * Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 1.0-3
 - 为 Magic 3.0 重建
 

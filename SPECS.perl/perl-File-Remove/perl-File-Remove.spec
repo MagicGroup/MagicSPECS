@@ -1,6 +1,6 @@
 Name:		perl-File-Remove
 Version:	1.52
-Release:	6%{?dist}
+Release:	7%{?dist}
 Summary:	Convenience module for removing files and directories
 License:	GPL+ or Artistic
 Group:		Development/Libraries
@@ -42,6 +42,9 @@ chmod -R u+w $RPM_BUILD_ROOT/*
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.52-7
+- 为 Magic 3.0 重建
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.52-6
 - 为 Magic 3.0 重建
 

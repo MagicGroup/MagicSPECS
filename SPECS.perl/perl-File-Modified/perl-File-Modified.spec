@@ -1,11 +1,11 @@
 Name:           perl-File-Modified
-Version:        0.07
-Release:        22%{?dist}
+Version:	0.09
+Release:	1%{?dist}
 Summary:        Checks intelligently if files have changed
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 URL:            http://search.cpan.org/dist/File-Modified/
-Source0:        http://www.cpan.org/authors/id/C/CO/CORION/File-Modified-%{version}.tar.gz
+Source0:        http://search.cpan.org/CPAN/authors/id/N/NE/NEILB/File-Modified-%{version}.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
@@ -71,6 +71,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.09-1
+- 更新到 0.09
+
 * Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 0.07-22
 - 为 Magic 3.0 重建
 

@@ -1,12 +1,11 @@
 Name:		perl-Path-Class
-Version:	0.26
-Release:	10%{?dist}
+Version:	0.35
+Release:	2%{?dist}
 Summary:	Cross-platform path specification manipulation
 License:	GPL+ or Artistic
 Group:		Development/Libraries
 URL:		http://search.cpan.org/dist/Path-Class/
 Source0:	http://search.cpan.org/CPAN/authors/id/K/KW/KWILLIAMS/Path-Class-%{version}.tar.gz
-Patch0:		Path-Class-0.25-old-M::B.patch
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(id -nu)
 BuildArch:	noarch
 BuildRequires:	perl(base)
@@ -38,9 +37,6 @@ and NetWare.
 %prep
 %setup -q -n Path-Class-%{version}
 
-# Don't really need Module::Build ≥ 0.3601
-%patch0 -p1
-
 %build
 perl Build.PL installdirs=vendor
 ./Build
@@ -65,6 +61,12 @@ rm -rf %{buildroot}
 %{_mandir}/man3/Path::Class::File.3pm*
 
 %changelog
+* Wed Sep 16 2015 Liu Di <liudidi@gmail.com> - 0.35-2
+- 为 Magic 3.0 重建
+
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.35-1
+- 更新到 0.35
+
 * Sun Jun 15 2014 Liu Di <liudidi@gmail.com> - 0.26-10
 - 为 Magic 3.0 重建
 

@@ -2,7 +2,7 @@
 
 Name:           perl-Catalyst-Authentication-Store-DBIx-Class
 Version:        0.1506
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        A storage class for Catalyst Authentication using DBIx::Class
 License:        GPL+ or Artistic
 URL:            http://search.cpan.org/dist/Catalyst-Authentication-Store-DBIx-Class/
@@ -69,6 +69,9 @@ TEST_POD=1 make test
 %{_mandir}/man3/*
 
 %changelog
+* Mon Sep 14 2015 Liu Di <liudidi@gmail.com> - 0.1506-2
+- 为 Magic 3.0 重建
+
 * Mon Aug 31 2015 Jitka Plesnikova <jplesnik@redhat.com> - 0.1506-1
 - 0.1506 bump
 

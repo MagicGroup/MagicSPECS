@@ -1,6 +1,6 @@
 Name:           perl-Exception-Class-TryCatch
-Version:        1.12
-Release:        20%{?dist}
+Version:	1.13
+Release:	1%{?dist}
 Summary:        Syntactic try/catch sugar for use with Exception::Class
 License:        ASL 2.0
 Group:          Development/Libraries
@@ -27,24 +27,29 @@ various Exception::Class methods to process the exception.
 %setup -q -n Exception-Class-TryCatch-%{version}
 
 %build
-%{__perl} Build.PL installdirs=vendor
-./Build
+%{__perl} Makefile.PL INSTALLDIRS=vendor
+make %{?_smp_mflags}
 
 %install
-./Build install destdir=$RPM_BUILD_ROOT create_packlist=0
+make pure_install PERL_INSTALL_ROOT=$RPM_BUILD_ROOT
+
+find $RPM_BUILD_ROOT -type f -name .packlist -exec rm -f {} \;
 find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 
 %{_fixperms} $RPM_BUILD_ROOT/*
 
 %check
-./Build test
+make test
 
 %files
-%doc Changes LICENSE README Todo
+%doc Changes CONTRIBUTING LICENSE README
 %{perl_vendorlib}/*
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.13-1
+- 更新到 1.13
+
 * Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 1.12-20
 - 为 Magic 3.0 重建
 

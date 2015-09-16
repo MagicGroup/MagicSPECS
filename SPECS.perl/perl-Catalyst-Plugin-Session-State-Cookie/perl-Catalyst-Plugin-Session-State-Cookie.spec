@@ -1,7 +1,7 @@
 Name:           perl-Catalyst-Plugin-Session-State-Cookie
 Summary:        Maintain session IDs using cookies
 Version:        0.17
-Release:        27%{?dist}
+Release:        28%{?dist}
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 Source0:        http://search.cpan.org/CPAN/authors/id/M/MS/MSTROUT/Catalyst-Plugin-Session-State-Cookie-%{version}.tar.gz 
@@ -68,6 +68,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.17-28
+- 为 Magic 3.0 重建
+
 * Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 0.17-27
 - 为 Magic 3.0 重建
 

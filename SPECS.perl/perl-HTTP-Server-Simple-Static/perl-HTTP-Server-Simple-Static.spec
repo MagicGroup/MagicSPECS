@@ -1,6 +1,6 @@
 Name:		perl-HTTP-Server-Simple-Static
-Version:	0.07
-Release:	12%{?dist}
+Version:	0.09
+Release:	1%{?dist}
 Summary:	Serve static files with HTTP::Server::Simple
 Group:		Development/Libraries
 License:	GPL+ or Artistic
@@ -42,11 +42,13 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(-,root,root,-)
-%doc Changes README example.pl
 %{perl_vendorlib}/HTTP/
 %{_mandir}/man3/*.3pm*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.09-1
+- 更新到 0.09
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.07-12
 - 为 Magic 3.0 重建
 
@@ -78,7 +80,6 @@ rm -rf $RPM_BUILD_ROOT
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_12_Mass_Rebuild
 
 * Mon Mar 30 2009 Tom "spot" Callaway <tcallawa@redhat.com> - 0.07-2
-- package example.pl as %%doc
 
 * Sat Mar 28 2009 Tom "spot" Callaway <tcallawa@redhat.com> - 0.07-1
 - initial package for Fedora

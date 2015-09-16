@@ -1,6 +1,6 @@
 Name:           perl-Email-Sender
-Version:        0.120002
-Release:        6%{?dist}
+Version:	1.300020
+Release:	1%{?dist}
 Summary:        A library for sending email
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -72,6 +72,9 @@ RELEASE_TESTING=1 make test
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.300020-1
+- 更新到 1.300020
+
 * Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 0.120002-6
 - 为 Magic 3.0 重建
 

@@ -1,11 +1,11 @@
 Name:           perl-Module-Signature
-Version:        0.68
-Release:        16%{?dist}
+Version:	0.79
+Release:	1%{?dist}
 Summary:        CPAN signature management utilities and modules
 Group:          Development/Libraries
 License:        CC0
 URL:            http://search.cpan.org/dist/Module-Signature/
-Source0:        http://search.cpan.org/CPAN/authors/id/F/FL/FLORA/Module-Signature-%{version}.tar.gz
+Source0:        http://search.cpan.org/CPAN/authors/id/A/AU/AUDREYT/Module-Signature-%{version}.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(id -nu)
 BuildArch:      noarch
 BuildRequires:  gnupg
@@ -67,6 +67,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/Module::Signature.3pm*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.79-1
+- 更新到 0.79
+
 * Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 0.68-16
 - 为 Magic 3.0 重建
 

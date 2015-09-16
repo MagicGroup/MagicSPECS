@@ -1,11 +1,11 @@
 Name:           perl-Locale-PO
-Version:        0.21
-Release:        11%{?dist}
+Version:	0.27
+Release:	1%{?dist}
 Summary:        Perl module for manipulating .po entries from GNU gettext
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 URL:            http://search.cpan.org/dist/Locale-PO/
-Source0:        http://www.cpan.org/authors/id/K/KE/KEN/Locale-PO-%{version}.tar.gz
+Source0:        http://search.cpan.org/CPAN/authors/id/C/CO/COSIMO/Locale-PO-%{version}.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 BuildRequires:  perl(ExtUtils::MakeMaker)
@@ -48,6 +48,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.27-1
+- 更新到 0.27
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.21-11
 - 为 Magic 3.0 重建
 

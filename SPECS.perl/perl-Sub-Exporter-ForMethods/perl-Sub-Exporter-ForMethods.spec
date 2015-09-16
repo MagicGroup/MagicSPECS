@@ -1,6 +1,6 @@
 Name:           perl-Sub-Exporter-ForMethods
-Version:        0.100050
-Release:        7%{?dist}
+Version:	0.100052
+Release:	1%{?dist}
 Summary:        Helper routines for using Sub::Exporter to build methods
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -51,6 +51,9 @@ RELEASE_TESTING=1
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.100052-1
+- 更新到 0.100052
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.100050-7
 - 为 Magic 3.0 重建
 

@@ -1,11 +1,11 @@
 Name:           perl-DBD-SQLite
-Version:        1.37
-Release:        16%{?dist}
+Version:	1.49_01
+Release:	1%{?dist}
 Summary:        SQLite DBI Driver
 Group:          Development/Libraries
 License:        GPL+ or Artistic
 URL:            http://search.cpan.org/dist/DBD-SQLite/
-Source0:        http://search.cpan.org/CPAN/authors/id/A/AD/ADAMK/DBD-SQLite-%{version}.tar.gz
+Source0:        http://search.cpan.org/CPAN/authors/id/I/IS/ISHIGAKI/DBD-SQLite-%{version}.tar.gz
 patch0:         perl-DBD-SQLite-bz543982.patch
 # if sqlite >= 3.1.3 then
 #   perl-DBD-SQLite uses the external library
@@ -60,6 +60,9 @@ find %{buildroot} -depth -type d -empty -exec rmdir {} ';'
 %{_mandir}/man3/*.3pm*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.49_01-1
+- 更新到 1.49_01
+
 * Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 1.37-16
 - 为 Magic 3.0 重建
 

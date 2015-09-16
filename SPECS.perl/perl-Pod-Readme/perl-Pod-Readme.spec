@@ -1,8 +1,8 @@
 %define module_version 0.11
 
 Name:           perl-Pod-Readme
-Version:        0.110
-Release:        8%{?dist}
+Version:	v1.1.2
+Release:	1%{?dist}
 Summary:        Convert POD to README file
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -54,6 +54,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - v1.1.2-1
+- 更新到 v1.1.2
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.110-8
 - 为 Magic 3.0 重建
 

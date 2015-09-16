@@ -1,11 +1,11 @@
 Name:           perl-Test-Pod-Content
-Version:        0.0.6
-Release:        11%{?dist}
+Version:	0.0.6
+Release:	12%{?dist}
 Summary:        Test a Pod's content
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 URL:            http://search.cpan.org/dist/Test-Pod-Content/
-Source0:        http://www.cpan.org/authors/id/M/MK/MKUTTER/Test-Pod-Content-v%{version}.tar.gz
+Source0:        http://search.cpan.org/CPAN/authors/id/M/MK/MKUTTER/Test-Pod-Content-v%{version}.tar.gz
 BuildArch:      noarch
 BuildRequires:  perl(Module::Build)
 BuildRequires:  perl(Pod::Simple)

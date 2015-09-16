@@ -1,11 +1,11 @@
 Name:           perl-Devel-Declare
-Version:        0.006008
-Release:        11%{?dist}
+Version:	0.006018
+Release:	1%{?dist}
 Summary:        Adding keywords to perl, in perl
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 URL:            http://search.cpan.org/dist/Devel-Declare/
-Source0:        http://search.cpan.org/CPAN/authors/id/Z/ZE/ZEFRAM/Devel-Declare-%{version}.tar.gz
+Source0:        http://search.cpan.org/CPAN/authors/id/E/ET/ETHER/Devel-Declare-%{version}.tar.gz
 BuildRequires:  perl(B::Compiling)
 BuildRequires:  perl(B::Hooks::EndOfScope) >= 0.05
 BuildRequires:  perl(B::Hooks::OP::Check) >= 0.19
@@ -51,6 +51,9 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.006018-1
+- 更新到 0.006018
+
 * Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 0.006008-11
 - 为 Magic 3.0 重建
 

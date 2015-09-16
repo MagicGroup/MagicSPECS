@@ -1,6 +1,6 @@
 Name:       perl-DateTime-Format-Flexible
-Version:    0.21
-Release:    6%{?dist}
+Version:	0.26
+Release:	1%{?dist}
 # See <https://rt.cpan.org/Public/Bug/Display.html?id=74358>
 License:    GPL+ or Artistic
 Group:      Development/Libraries
@@ -58,6 +58,9 @@ TEST_POD=1
 %{_mandir}/man3/*.3*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.26-1
+- 更新到 0.26
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.21-6
 - 为 Magic 3.0 重建
 

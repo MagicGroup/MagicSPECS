@@ -6,7 +6,7 @@ Summary: reciteword's dict data files
 Summary(zh_CN.UTF-8): 轻轻松松背单词的字典数据文件
 Name: reciteword-dicts
 Version: %ver
-Release: %rel.1
+Release: %rel.2
 License: GPL
 Group: Applications/Productivity
 Group(zh_CN.UTF-8): 应用程序/生产力

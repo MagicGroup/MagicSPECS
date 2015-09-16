@@ -1,6 +1,6 @@
 Name:           perl-Error
-Version:        0.17018
-Release:        12%{?dist}
+Version:	0.17024
+Release:	1%{?dist}
 Epoch:          1
 Summary:        Error/exception handling in an OO-ish way
 License:        GPL+ or Artistic
@@ -61,6 +61,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1:0.17024-1
+- 更新到 0.17024
+
 * Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 1:0.17018-12
 - 为 Magic 3.0 重建
 

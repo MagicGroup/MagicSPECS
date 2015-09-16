@@ -1,6 +1,6 @@
 Name:           perl-XML-DOM-XPath
 Version:        0.14
-Release:        14%{?dist}
+Release:        15%{?dist}
 Summary:        Perl extension to add XPath support to XML::DOM, using XML::XPath engine
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -51,6 +51,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.14-15
+- 为 Magic 3.0 重建
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.14-14
 - 为 Magic 3.0 重建
 

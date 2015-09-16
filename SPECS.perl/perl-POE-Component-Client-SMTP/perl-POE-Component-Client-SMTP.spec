@@ -1,6 +1,6 @@
 Name:           perl-POE-Component-Client-SMTP
 Version:        0.22
-Release:        12%{?dist}
+Release:        13%{?dist}
 Summary:        Asynchronous mail sending with POE
 
 Group:          Development/Libraries
@@ -60,6 +60,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.22-13
+- 为 Magic 3.0 重建
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.22-12
 - 为 Magic 3.0 重建
 

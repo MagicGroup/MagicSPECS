@@ -1,6 +1,6 @@
 Name:           perl-Class-ErrorHandler
-Version:        0.03
-Release:        3%{?dist}
+Version:	0.04
+Release:	1%{?dist}
 Summary:        Class::ErrorHandler Perl module
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -36,27 +36,30 @@ Requires:       perl(:MODULE_COMPAT_%(eval "`perl -V:version`"; echo $version))
 %description
 This is Class::ErrorHandler, a base class for classes that need to do
 error handling (which is, probably, most of them).
-
 %prep
 %setup -q -n Class-ErrorHandler-%{version}
 
 %build
-perl Build.PL installdirs=vendor
-./Build
+perl Makefile.PL INSTALLDIRS=vendor NO_PACKLIST=1
+make %{?_smp_mflags}
 
 %install
-./Build install destdir=%{buildroot} create_packlist=0
+make pure_install DESTDIR=%{buildroot}
 %{_fixperms} %{buildroot}
 
 %check
-./Build test
+make test
 
 %files
-%doc Changes LICENSE README.md
-%{perl_vendorlib}/Class/
-%{_mandir}/man3/Class::ErrorHandler.3pm*
+%license LICENSE
+%doc Changes README.md
+%{perl_vendorlib}/*
+%{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.04-1
+- 更新到 0.04
+
 * Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 0.03-3
 - 为 Magic 3.0 重建
 

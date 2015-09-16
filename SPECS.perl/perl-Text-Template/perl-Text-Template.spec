@@ -1,6 +1,6 @@
 Name:           perl-Text-Template
-Version:        1.45
-Release:        13%{?dist}
+Version:	1.46
+Release:	1%{?dist}
 Summary:        Expand template text with embedded Perl
 
 Group:          Development/Libraries
@@ -54,6 +54,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.46-1
+- 更新到 1.46
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.45-13
 - 为 Magic 3.0 重建
 

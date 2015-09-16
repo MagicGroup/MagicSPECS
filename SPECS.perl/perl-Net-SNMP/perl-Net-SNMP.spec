@@ -1,6 +1,6 @@
 Name:           perl-Net-SNMP
-Version:        6.0.1
-Release:        7%{?dist}
+Version:	6.0.1
+Release:	8%{?dist}
 Summary:        Object oriented interface to SNMP
 
 Group:          Development/Libraries

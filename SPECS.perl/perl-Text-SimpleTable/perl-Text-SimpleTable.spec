@@ -1,7 +1,7 @@
 Name:           perl-Text-SimpleTable
 Summary:        Simple Eyecandy ASCII Tables
 Version:        2.03
-Release:        13%{?dist}
+Release:        14%{?dist}
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 Source0:        http://search.cpan.org/CPAN/authors/id/M/MR/MRAMBERG/Text-SimpleTable-%{version}.tar.gz 
@@ -50,6 +50,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 2.03-14
+- 为 Magic 3.0 重建
+
 * Thu Jun 19 2014 Liu Di <liudidi@gmail.com> - 2.03-13
 - 为 Magic 3.0 重建
 

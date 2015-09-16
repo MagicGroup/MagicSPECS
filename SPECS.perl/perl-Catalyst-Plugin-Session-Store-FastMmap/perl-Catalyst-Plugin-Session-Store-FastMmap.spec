@@ -1,11 +1,11 @@
 Name:           perl-Catalyst-Plugin-Session-Store-FastMmap
-Version:        0.14
-Release:        18%{?dist}
+Version:	0.16
+Release:	1%{?dist}
 Summary:        FastMmap session storage backend
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 URL:            http://search.cpan.org/dist/Catalyst-Plugin-Session-Store-FastMmap/
-Source0:        http://search.cpan.org/CPAN/authors/id/S/SS/SSCAFFIDI/Catalyst-Plugin-Session-Store-FastMmap-%{version}.tar.gz
+Source0:        http://search.cpan.org/CPAN/authors/id/B/BO/BOBTFISH/Catalyst-Plugin-Session-Store-FastMmap-%{version}.tar.gz
 BuildArch:      noarch
 BuildRequires:  perl(Cache::FastMmap) >= 1.29
 BuildRequires:  perl(Catalyst::Plugin::Session) >= 0.27
@@ -53,6 +53,9 @@ TEST_POD=1
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.16-1
+- 更新到 0.16
+
 * Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 0.14-18
 - 为 Magic 3.0 重建
 

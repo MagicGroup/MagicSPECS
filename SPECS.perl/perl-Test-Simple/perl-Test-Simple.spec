@@ -1,39 +1,62 @@
+# For versioned provides
+%global T_T_Version 0.114
+%global T_u_o_Version 0.16
+
 Name:           perl-Test-Simple
 Summary:        Basic utilities for writing tests
-Version:        1.001003
-Release:        3%{?dist}
-License:        GPL+ or Artistic
-Group:          Development/Libraries
+Version:        1.001014
+Release:        347%{?dist}
+# CC0: lib/ok.pm
+# Public Domain: lib/Test/Tutorial.pod
+# GPL+ or Artistic: the rest of the distribution
+License:        (GPL+ or Artistic) and CC0 and Public Domain
 URL:            http://search.cpan.org/dist/Test-Simple
 Source0:        http://search.cpan.org/CPAN/authors/id/E/EX/EXODIST/Test-Simple-%{version}.tar.gz
 BuildArch:      noarch
+# Module Build
 BuildRequires:  perl
-BuildRequires:  perl(base)
-BuildRequires:  perl(Carp)
+BuildRequires:  perl(ExtUtils::MakeMaker) >= 6.75
+# Module Runtime
 BuildRequires:  perl(Config)
-BuildRequires:  perl(Cwd)
 BuildRequires:  perl(Data::Dumper)
 BuildRequires:  perl(Exporter)
-BuildRequires:  perl(ExtUtils::MakeMaker)
-BuildRequires:  perl(File::Spec)
 BuildRequires:  perl(IO::Handle)
-BuildRequires:  perl(IO::Pipe)
-BuildRequires:  perl(lib)
 BuildRequires:  perl(overload)
+BuildRequires:  perl(PerlIO)
 BuildRequires:  perl(Scalar::Util) >= 1.13
 BuildRequires:  perl(strict)
 BuildRequires:  perl(Symbol)
+BuildRequires:  perl(Term::ANSIColor)
 BuildRequires:  perl(Test::Harness) >= 2.03
+BuildRequires:  perl(threads::shared)
+BuildRequires:  perl(vars)
 BuildRequires:  perl(warnings)
+# Test Suite
+BuildRequires:  perl(base)
+BuildRequires:  perl(Carp)
+BuildRequires:  perl(Cwd)
+BuildRequires:  perl(File::Basename)
+BuildRequires:  perl(File::Spec)
+BuildRequires:  perl(IO::Pipe)
+BuildRequires:  perl(lib)
+BuildRequires:  perl(List::Util)
+BuildRequires:  perl(POSIX)
+BuildRequires:  perl(threads)
+# Runtime
 Requires:       perl(:MODULE_COMPAT_%(eval "`perl -V:version`"; echo $version))
 Requires:       perl(Data::Dumper)
 Requires:       perl(overload)
+Requires:       perl(PerlIO)
 Requires:       perl(Scalar::Util) >= 1.13
+Requires:       perl(Term::ANSIColor)
 Requires:       perl(Test::Harness) >= 2.03
+Requires:       perl(threads::shared)
 
-## testing
-#Requires:       perl-tests
-#Requires:       /usr/bin/prove
+# Test-Tester and Test-use-ok integrated at version 1.001010
+Obsoletes:      perl-Test-Tester < 0.109-7
+Provides:       perl-Test-Tester = %{T_T_Version}-1%{?dist}
+Obsoletes:      perl-Test-use-ok < 0.11-7
+Provides:       perl-Test-use-ok = %{T_u_o_Version}-1%{?dist}
 
 %{?perl_default_filter}
 
@@ -46,41 +69,102 @@ This package is the CPAN component of the dual-lifed core package Test-Simple.
 %prep
 %setup -q -n Test-Simple-%{version}
 
+# Ensure version consistency for provides
+perl -Ilib -MTest::Tester -MTest::use::ok -e '
+  die "Inconsistent Test::Tester version: expected %{T_T_Version} / got $Test::Tester::VERSION\n"
+    unless $Test::Tester::VERSION == %{T_T_Version};
+  die "Inconsistent Test::use::ok version: expected %{T_u_o_Version} / got $Test::use::ok::VERSION\n"
+    unless $Test::use::ok::VERSION == %{T_u_o_Version};'
+
 %build
-perl Makefile.PL INSTALLDIRS=vendor
+perl Makefile.PL INSTALLDIRS=vendor NO_PERLLOCAL=1 NO_PACKLIST=1
 make %{?_smp_mflags}
 
 %install
-make pure_install DESTDIR=%{buildroot}
-find %{buildroot} -type f -name .packlist -exec rm -f {} ';'
+make install DESTDIR=%{buildroot}
 %{_fixperms} %{buildroot}
 
 %check
-make test
-
-#cd %%{_libexecdir}/perl5-tests/perl-tests/
-#prove -I %%{buildroot}/blib -r t/
+make test AUTHOR_TESTING=1
 
 %files
 %doc Changes README examples/ t/
 %dir %{perl_vendorlib}/Test/
+%{perl_vendorlib}/ok.pm
 %{perl_vendorlib}/Test/Builder.pm
 %{perl_vendorlib}/Test/Builder/
 %{perl_vendorlib}/Test/More.pm
 %{perl_vendorlib}/Test/Simple.pm
+%{perl_vendorlib}/Test/Tester.pm
+%{perl_vendorlib}/Test/Tester/
 %doc %{perl_vendorlib}/Test/Tutorial.pod
-%{_mandir}/man3/Test::Builder.3pm*
-%{_mandir}/man3/Test::Builder::IO::Scalar.3pm*
-%{_mandir}/man3/Test::Builder::Module.3pm*
-%{_mandir}/man3/Test::Builder::Tester.3pm*
-%{_mandir}/man3/Test::Builder::Tester::Color.3pm*
-%{_mandir}/man3/Test::More.3pm*
-%{_mandir}/man3/Test::Simple.3pm*
-%{_mandir}/man3/Test::Tutorial.3pm*
+%{perl_vendorlib}/Test/use/
+%{_mandir}/man3/ok.3*
+%{_mandir}/man3/Test::Builder.3*
+%{_mandir}/man3/Test::Builder::IO::Scalar.3*
+%{_mandir}/man3/Test::Builder::Module.3*
+%{_mandir}/man3/Test::Builder::Tester.3*
+%{_mandir}/man3/Test::Builder::Tester::Color.3*
+%{_mandir}/man3/Test::More.3*
+%{_mandir}/man3/Test::Simple.3*
+%{_mandir}/man3/Test::Tester.3*
+%{_mandir}/man3/Test::Tester::Capture.3*
+%{_mandir}/man3/Test::Tester::CaptureRunner.3*
+%{_mandir}/man3/Test::Tutorial.3*
+%{_mandir}/man3/Test::use::ok.3*
 
 %changelog
-* Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 1.001003-3
+* Mon Sep 14 2015 Liu Di <liudidi@gmail.com> - 1.001014-347
 - 为 Magic 3.0 重建
+
+* Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.001014-346
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
+
+* Thu Jun 04 2015 Jitka Plesnikova <jplesnik@redhat.com> - 1.001014-345
+- Increase release to favour standalone package
+
+* Wed Jun 03 2015 Jitka Plesnikova <jplesnik@redhat.com> - 1.001014-3
+- Perl 5.22 rebuild
+
+* Wed Mar 04 2015 Petr Šabata <contyk@redhat.com> - 1.001014-2
+- Correct the license tag
+
+* Wed Jan  7 2015 Paul Howarth <paul@city-fan.org> - 1.001014-1
+- Update to 1.001014
+  - Fix a unit test that broke on some platforms with spaces in the $^X path
+  - Add a test to ensure that the Changes file is updated
+
+* Wed Dec 24 2014 Paul Howarth <paul@city-fan.org> - 1.001012-1
+- Update to 1.001012
+  - Move test that was dropped in the wrong directory
+
+* Tue Dec 23 2014 Paul Howarth <paul@city-fan.org> - 1.001011-1
+- Update to 1.001011
+  - Fix windows test bug (GH#491)
+  - Integrate Test::Tester and Test::use::ok for easier downgrade from trial
+  - Remove POD Coverage test
+- Obsolete/Provide perl-Test-Tester and perl-Test-use-ok
+- Classify buildreqs by usage
+- Use features from recent ExtUtils::MakeMaker to simplify spec
+- Run tests with AUTHOR_TESTING=1 so we do the threads test too
+
+* Tue Nov  4 2014 Paul Howarth <paul@city-fan.org> - 1.001009-1
+- Update to 1.001009
+  - Backport cmp_ok fix from alphas (GH#478)
+
+* Thu Oct 16 2014 Paul Howarth <paul@city-fan.org> - 1.001008-1
+- Update to 1.001008
+  - Fix subtest name when skip_all is used
+
+* Tue Sep  9 2014 Paul Howarth <paul@city-fan.org> - 1.001006-1
+- Update to 1.001006
+  - Documentation updates
+  - Subtests accept args
+  - Outdent subtest diag
+  - Changed install path for perl 5.12 or higher
+
+* Tue Aug 26 2014 Jitka Plesnikova <jplesnik@redhat.com> - 1.001003-3
+- Perl 5.20 rebuild
 
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.001003-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild

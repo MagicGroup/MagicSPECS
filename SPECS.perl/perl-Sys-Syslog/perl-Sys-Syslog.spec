@@ -1,6 +1,6 @@
 Name:           perl-Sys-Syslog
 Version:        0.33
-Release:        7%{?dist}
+Release:        8%{?dist}
 Summary:        Perl interface to the UNIX syslog(3) calls
 # Unused sources fallback/* are covered with BSD license.
 License:        GPL+ or Artistic
@@ -83,6 +83,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.33-8
+- 为 Magic 3.0 重建
+
 * Sun Jun 15 2014 Liu Di <liudidi@gmail.com> - 0.33-7
 - 为 Magic 3.0 重建
 

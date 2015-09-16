@@ -1,5 +1,5 @@
 Name:           perl-autodie
-Version:	2.26
+Version:	2.29
 Release:	1%{?dist}
 Summary:        Replace functions with ones that succeed or die
 Summary(zh_CN.UTF-8): 把函数替换成执行成功或失败
@@ -7,7 +7,7 @@ License:        GPL+ or Artistic
 Group:          Development/Libraries
 Group(zh_CN.UTF-8): 开发/库
 URL:            http://search.cpan.org/dist/autodie/
-Source0:        http://search.cpan.org/CPAN/authors/id/N/NT/NTHYKIER/autodie-%{version}.tar.gz
+Source0:        http://search.cpan.org/CPAN/authors/id/P/PJ/PJF/autodie-%{version}.tar.gz
 BuildArch:      noarch
 BuildRequires:  perl
 BuildRequires:  perl(ExtUtils::MakeMaker) >= 6.30
@@ -88,6 +88,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 2.29-1
+- 更新到 2.29
+
 * Fri Apr 17 2015 Liu Di <liudidi@gmail.com> - 2.26-1
 - 更新到 2.26
 

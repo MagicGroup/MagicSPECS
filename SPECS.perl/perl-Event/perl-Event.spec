@@ -1,12 +1,11 @@
 Name:		perl-Event
-Version:	1.21
-Release:	6%{?dist}
+Version:	1.24
+Release:	2%{?dist}
 Summary:	Event loop processing
 Group:		Development/Libraries
 License:	GPL+ or Artistic
 URL:		http://search.cpan.org/dist/Event/
-Source0:	http://search.cpan.org/CPAN/authors/id/J/JP/JPRIT/Event-%{version}.tar.gz
-Patch0:		Event-1.19-UTF8.patch
+Source0:        http://search.cpan.org/CPAN/authors/id/E/ET/ETJ/Event-%{version}.tar.gz
 BuildRequires:	perl(Carp)
 BuildRequires:	perl(Config)
 BuildRequires:	perl(Exporter)
@@ -31,9 +30,6 @@ safe for callbacks to execute.
 find ./ -type f -exec chmod -c -x {} \;
 perl -pi -e 's|#!./perl|#!/usr/bin/perl|' demo/*.t t/*.t util/bench.pl
 %{_fixperms} demo/ util/
-
-# Fix character encoding
-%patch0 -p1
 
 %build
 perl Makefile.PL INSTALLDIRS=vendor OPTIMIZE="%{optflags}"
@@ -61,6 +57,12 @@ make test
 %{_mandir}/man3/Event::generic.3pm*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.24-2
+- 为 Magic 3.0 重建
+
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.24-1
+- 更新到 1.24
+
 * Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 1.21-6
 - 为 Magic 3.0 重建
 

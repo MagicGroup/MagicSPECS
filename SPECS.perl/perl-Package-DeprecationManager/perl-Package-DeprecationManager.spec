@@ -5,15 +5,13 @@
 %global cpan_changes_available %(expr 0%{?fedora} + 0%{?rhel} '>' 6)
 
 Name:		perl-Package-DeprecationManager
-Version:	0.13
-Release:	9%{?dist}
+Version:	0.14
+Release:	3%{?dist}
 Summary:	Manage deprecation warnings for your distribution
 Group:		Development/Libraries
 License:	Artistic 2.0
 URL:		http://search.cpan.org/dist/Package-DeprecationManager/
 Source0:	http://search.cpan.org/CPAN/authors/id/D/DR/DROLSKY/Package-DeprecationManager-%{version}.tar.gz
-Patch1:		Package-DeprecationManager-0.12-old-Test::More.patch
-Patch3:		Package-DeprecationManager-0.12-stopwords.patch
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(id -nu)
 BuildArch:	noarch
 BuildRequires:	perl(Carp)
@@ -52,13 +50,6 @@ the version when that feature was deprecated.
 %prep
 %setup -q -n Package-DeprecationManager-%{version}
 
-# Fix tests for Test::More prior to 0.88
-%if %{old_test_more}
-%patch1
-%endif
-
-# "deprecations" not a common dictionary word
-%patch3
 
 %build
 perl Makefile.PL INSTALLDIRS=vendor
@@ -77,11 +68,19 @@ find %{buildroot} -type f -name .packlist -exec rm -f {} \;
 rm -rf %{buildroot}
 
 %files
-%doc Changes LICENSE README
 %{perl_vendorlib}/Package/
 %{_mandir}/man3/Package::DeprecationManager.3pm*
 
 %changelog
+* Wed Sep 16 2015 Liu Di <liudidi@gmail.com> - 0.14-3
+- 为 Magic 3.0 重建
+
+* Wed Sep 16 2015 Liu Di <liudidi@gmail.com> - 0.14-2
+- 为 Magic 3.0 重建
+
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.14-1
+- 更新到 0.14
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.13-9
 - 为 Magic 3.0 重建
 

@@ -1,0 +1,17 @@
+Description: Fix segfault on "eperl --="
+Author: Axel Beckert <abe@debian.org>
+
+Index: eperl/eperl_main.c
+===================================================================
+--- eperl.orig/eperl_main.c	2013-06-27 02:03:40.375798287 +0200
++++ eperl/eperl_main.c	2013-06-27 02:05:03.789251727 +0200
+@@ -286,7 +286,8 @@
+     { "license",        0, NULL, 'l' },
+     { "version",        0, NULL, 'v' },
+     { "ingredients",    0, NULL, 'V' },
+-    { "help",           0, NULL, 'h' }
++    { "help",           0, NULL, 'h' },
++    { NULL,             0, NULL, NULL}
+ };
+ 
+ /*

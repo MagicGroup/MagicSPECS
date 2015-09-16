@@ -1,8 +1,8 @@
 %global cpan_name RPC-XML
 
 Name:    perl-%{cpan_name}
-Version: 0.78
-Release: 3%{?dist}
+Version:	0.79
+Release:	1%{?dist}
 Summary: Set of classes for core data, message and XML handling
 Group:   Development/Libraries
 License: Artistic 2.0 or LGPLv2
@@ -118,6 +118,9 @@ make test
 %{perl_vendorlib}/Apache
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.79-1
+- 更新到 0.79
+
 * Thu Jun 19 2014 Liu Di <liudidi@gmail.com> - 0.78-3
 - 为 Magic 3.0 重建
 

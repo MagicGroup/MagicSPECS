@@ -2,13 +2,13 @@
 %global mro_in_core %(perl -e 'print $] > 5.009005 ? 1 : 0;')
 
 Name:		perl-MRO-Compat
-Version:	0.11
-Release:	13%{?dist}
+Version:	0.12
+Release:	1%{?dist}
 Summary:	Mro::* interface compatibility for Perls < 5.9.5
 License:	GPL+ or Artistic
 Group:		Development/Libraries
 URL:		http://search.cpan.org/dist/MRO-Compat/
-Source0:	http://search.cpan.org/CPAN/authors/id/F/FL/FLORA/MRO-Compat-%{version}.tar.gz
+Source0:        http://search.cpan.org/CPAN/authors/id/B/BO/BOBTFISH/MRO-Compat-%{version}.tar.gz
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(id -nu)
 BuildArch:	noarch
 # Build
@@ -73,6 +73,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/MRO::Compat.3pm*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.12-1
+- 更新到 0.12
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.11-13
 - 为 Magic 3.0 重建
 

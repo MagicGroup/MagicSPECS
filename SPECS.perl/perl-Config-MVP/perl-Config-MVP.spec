@@ -1,6 +1,6 @@
 Name:           perl-Config-MVP
-Version:        2.200003
-Release:        5%{?dist}
+Version:	2.200010
+Release:	1%{?dist}
 Summary:        Multivalue-property package-oriented configuration
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -67,6 +67,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 2.200010-1
+- 更新到 2.200010
+
 * Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 2.200003-5
 - 为 Magic 3.0 重建
 

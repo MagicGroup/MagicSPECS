@@ -1,6 +1,6 @@
 Name:		perl-Shell
-Version:	0.72
-Release:	2%{?dist}
+Version:	0.72_01
+Release:	1%{?dist}
 Summary:	Run shell commands transparently within perl
 
 Group:		Development/Libraries
@@ -52,6 +52,9 @@ make test
 
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.72_01-1
+- 更新到 0.72_01
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.72-2
 - 为 Magic 3.0 重建
 

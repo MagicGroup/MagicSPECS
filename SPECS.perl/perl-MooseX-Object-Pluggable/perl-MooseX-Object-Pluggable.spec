@@ -1,11 +1,11 @@
 Name:           perl-MooseX-Object-Pluggable
-Version:        0.0011
-Release:        15%{?dist}
+Version:	0.0014
+Release:	1%{?dist}
 Summary:        Make your Moose classes pluggable
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 URL:            http://search.cpan.org/dist/MooseX-Object-Pluggable/
-Source0:        http://search.cpan.org/CPAN/authors/id/G/GR/GRODITI/MooseX-Object-Pluggable-%{version}.tar.gz
+Source0:        http://search.cpan.org/CPAN/authors/id/E/ET/ETHER/MooseX-Object-Pluggable-%{version}.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 
@@ -65,6 +65,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.0014-1
+- 更新到 0.0014
+
 * Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 0.0011-15
 - 为 Magic 3.0 重建
 

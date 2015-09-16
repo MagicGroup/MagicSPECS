@@ -1,6 +1,6 @@
 Name:           perl-bareword-filehandles
 Version:        0.003
-Release:        12%{?dist}
+Release:        13%{?dist}
 Summary:        Disables bareword filehandles
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -51,6 +51,9 @@ RELEASE_TESTING=1 make test
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.003-13
+- 为 Magic 3.0 重建
+
 * Fri Apr 17 2015 Liu Di <liudidi@gmail.com> - 0.003-12
 - 为 Magic 3.0 重建
 

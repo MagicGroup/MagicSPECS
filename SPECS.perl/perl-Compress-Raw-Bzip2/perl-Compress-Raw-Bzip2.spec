@@ -1,7 +1,7 @@
 Name:           perl-Compress-Raw-Bzip2
 Summary:        Low-level interface to bzip2 compression library
-Version:        2.064
-Release:        3%{?dist}
+Version:	2.068
+Release:	1%{?dist}
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 URL:            http://search.cpan.org/dist/Compress-Raw-Bzip2/
@@ -57,6 +57,9 @@ make test
 %{_mandir}/man3/Compress::Raw::Bzip2.3pm*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 2.068-1
+- 更新到 2.068
+
 * Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 2.064-3
 - 为 Magic 3.0 重建
 

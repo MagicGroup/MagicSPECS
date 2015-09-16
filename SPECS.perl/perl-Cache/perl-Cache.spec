@@ -1,6 +1,6 @@
 Name:           perl-Cache
 Version:	2.11
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:        The Cache interface
 Summary(zh_CN.UTF-8): 缓存接口
 
@@ -78,6 +78,9 @@ chmod -R u+w $RPM_BUILD_ROOT/*
 
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 2.11-2
+- 为 Magic 3.0 重建
+
 * Wed May 06 2015 Liu Di <liudidi@gmail.com> - 2.11-1
 - 更新到 2.11
 

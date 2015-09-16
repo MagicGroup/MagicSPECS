@@ -1,11 +1,11 @@
 Name:           perl-Lingua-EN-Inflect-Number
-Version:        1.1
-Release:        21%{?dist}
+Version:	1.12
+Release:	1%{?dist}
 Summary:        Force number of words to singular or plural
 Group:          Development/Libraries
 License:        GPL+ or Artistic
 URL:            http://search.cpan.org/dist/Lingua-EN-Inflect-Number/
-Source0:        http://search.cpan.org/CPAN/authors/id/S/SI/SIMON/Lingua-EN-Inflect-Number-%{version}.tar.gz
+Source0:        http://search.cpan.org/CPAN/authors/id/N/NE/NEILB/Lingua-EN-Inflect-Number-%{version}.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildArch:      noarch
@@ -44,6 +44,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.12-1
+- 更新到 1.12
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.1-21
 - 为 Magic 3.0 重建
 

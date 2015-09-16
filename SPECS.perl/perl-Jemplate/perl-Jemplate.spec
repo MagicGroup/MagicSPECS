@@ -1,6 +1,6 @@
 Name:       perl-Jemplate 
-Version:    0.261
-Release:    14%{?dist}
+Version:	0.30
+Release:	1%{?dist}
 # lib/Jemplate.pm -> GPL+ or Artistic
 # lib/Jemplate/Directive.pm -> GPL+ or Artistic
 # lib/Jemplate/Parser.pm -> GPL+ or Artistic
@@ -9,7 +9,7 @@ Release:    14%{?dist}
 License:    GPL+ or Artistic 
 Group:      Development/Libraries
 Summary:    JavaScript Templating with Template Toolkit 
-Source:     http://search.cpan.org/CPAN/authors/id/R/RK/RKRIMEN/Jemplate-%{version}.tar.gz 
+Source0:        http://search.cpan.org/CPAN/authors/id/I/IN/INGY/Jemplate-%{version}.tar.gz
 #Patch0:     Jemplate.pm-0.23_1.patch 
 #Patch0:     Jemplate-0.261-fix-quoted-test.patch
 # http://rt.cpan.org/Public/Bug/Display.html?id=48564
@@ -48,8 +48,6 @@ have full featured JavaScript templating language!
 
 %prep
 %setup -q -n Jemplate-%{version}
-#%patch0 -p1
-%patch1 -p1
 
 cat doc/text/Jemplate.text | iconv -f iso-8859-1 -t utf-8 > foo
 cat foo > doc/text/Jemplate.text
@@ -83,6 +81,9 @@ rm -rf %{buildroot}
 %{_mandir}/man1/jemplate.1.gz
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.30-1
+- 更新到 0.30
+
 * Sun Jun 15 2014 Liu Di <liudidi@gmail.com> - 0.261-14
 - 为 Magic 3.0 重建
 

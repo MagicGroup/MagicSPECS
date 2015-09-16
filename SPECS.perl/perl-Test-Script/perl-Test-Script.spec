@@ -1,11 +1,11 @@
 Name:           perl-Test-Script
-Version:        1.07
-Release:        17%{?dist}
+Version:	1.10
+Release:	1%{?dist}
 Summary:        Cross-platform basic tests for scripts
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 URL:            http://search.cpan.org/dist/Test-Script/
-Source0:        http://search.cpan.org/CPAN/authors/id/A/AD/ADAMK/Test-Script-%{version}.tar.gz
+Source0:        http://search.cpan.org/CPAN/authors/id/P/PL/PLICEASE/Test-Script-%{version}.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 
@@ -59,6 +59,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.10-1
+- 更新到 1.10
+
 * Sun Jun 15 2014 Liu Di <liudidi@gmail.com> - 1.07-17
 - 为 Magic 3.0 重建
 

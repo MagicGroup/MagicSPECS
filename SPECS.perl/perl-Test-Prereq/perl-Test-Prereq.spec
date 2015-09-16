@@ -1,6 +1,6 @@
 Name:           perl-Test-Prereq
-Version:        1.037
-Release:        19%{?dist}
+Version:	1.039
+Release:	1%{?dist}
 Summary:        Check if Makefile.PL has the right pre-requisites
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -54,11 +54,13 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(-,root,root,-)
-%doc Changes LICENSE README
 %{perl_vendorlib}/*
 %{_mandir}/man3/*
 
 %changelog
+* Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.039-1
+- 更新到 1.039
+
 * Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 1.037-19
 - 为 Magic 3.0 重建
 

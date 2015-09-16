@@ -1,6 +1,6 @@
 Name:           perl-latest
 Version:        0.03
-Release:        15%{?dist}
+Release:        16%{?dist}
 Summary:        Use the latest Perl features
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -45,6 +45,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Wed Sep 16 2015 Liu Di <liudidi@gmail.com> - 0.03-16
+- 为 Magic 3.0 重建
+
 * Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 0.03-15
 - 为 Magic 3.0 重建
 
