@@ -1,24 +1,29 @@
 Name:           perl-Pod-Spell-CommonMistakes
-Version:        1.000
-Release:        11%{?dist}
+Version:        1.002
+Release:        3%{?dist}
 Summary:        Catches common typos in POD
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 URL:            http://search.cpan.org/dist/Pod-Spell-CommonMistakes/
 Source0:        http://www.cpan.org/authors/id/A/AP/APOCAL/Pod-Spell-CommonMistakes-%{version}.tar.gz
 BuildArch:      noarch
-BuildRequires:  perl(Module::Build)
+BuildRequires:  perl
+BuildRequires:  perl(Module::Build::Tiny) >= 0.039
+BuildRequires:  perl(strict)
+BuildRequires:  perl(warnings)
 # Run-Time:
-BuildRequires:  perl(base)
 BuildRequires:  perl(Exporter)
 BuildRequires:  perl(IO::Scalar) >= 2.110
+BuildRequires:  perl(parent)
 BuildRequires:  perl(Pod::Spell) >= 1.01
 # Tests:
+BuildRequires:  perl(ExtUtils::MakeMaker)
+BuildRequires:  perl(File::Spec)
 BuildRequires:  perl(File::Temp)
-BuildRequires:  perl(Test::More) >= 0.88
-# Optional test:
-BuildRequires:  perl(Test::Script) >= 1.05
-Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
+BuildRequires:  perl(IO::Handle)
+BuildRequires:  perl(IPC::Open3)
+BuildRequires:  perl(Test::More)
+Requires:       perl(:MODULE_COMPAT_%(eval "`perl -V:version`"; echo $version))
 
 %description
 This module looks for any typos in your POD. It differs from Pod::Spell or
@@ -30,12 +35,11 @@ spellchecker. The idea for this came from the
 %setup -q -n Pod-Spell-CommonMistakes-%{version}
 
 %build
-%{__perl} Build.PL installdirs=vendor
+perl Build.PL --installdirs=vendor
 ./Build
 
 %install
-./Build install destdir=$RPM_BUILD_ROOT create_packlist=0
-find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
+./Build install "--destdir=$RPM_BUILD_ROOT" --create_packlist=0
 %{_fixperms} $RPM_BUILD_ROOT/*
 
 %check
@@ -47,29 +51,34 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_mandir}/man3/*
 
 %changelog
-* Sun Jun 15 2014 Liu Di <liudidi@gmail.com> - 1.000-11
-- 为 Magic 3.0 重建
+* Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.002-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 
-* Sun Jun 15 2014 Liu Di <liudidi@gmail.com> - 1.000-10
-- 为 Magic 3.0 重建
+* Sat Jun 06 2015 Jitka Plesnikova <jplesnik@redhat.com> - 1.002-2
+- Perl 5.22 rebuild
 
-* Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 1.000-9
-- 为 Magic 3.0 重建
+* Wed Nov 05 2014 Petr Pisar <ppisar@redhat.com> - 1.002-1
+- 1.002 bump
 
-* Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 1.000-8
-- 为 Magic 3.0 重建
+* Mon Nov 03 2014 Petr Pisar <ppisar@redhat.com> - 1.001-1
+- 1.001 bump
+- Remove Pod::Spelling::CommonMistakes module because Pod::Spelling is broken
+  (bug #1159518)
 
-* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.000-7
-- 为 Magic 3.0 重建
+* Fri Aug 29 2014 Jitka Plesnikova <jplesnik@redhat.com> - 1.000-8
+- Perl 5.20 rebuild
 
-* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.000-6
-- 为 Magic 3.0 重建
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.000-7
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 
-* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.000-5
-- 为 Magic 3.0 重建
+* Sun Aug 04 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.000-6
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
 
-* Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 1.000-4
-- 为 Magic 3.0 重建
+* Sun Jul 21 2013 Petr Pisar <ppisar@redhat.com> - 1.000-5
+- Perl 5.18 rebuild
+
+* Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.000-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
 
 * Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.000-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
