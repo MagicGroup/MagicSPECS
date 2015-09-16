@@ -1,6 +1,6 @@
 Name:		perl-Test-Kwalitee
-Version:	1.18
-Release:	7%{?dist}
+Version:	1.22
+Release:	4%{?dist}
 Summary:	Test the Kwalitee of a distribution before you release it
 License:	GPL+ or Artistic
 Group:		Development/Libraries
@@ -8,30 +8,31 @@ URL:		http://metacpan.org/module/Test::Kwalitee
 Source0:	http://cpan.metacpan.org/authors/id/E/ET/ETHER/Test-Kwalitee-%{version}.tar.gz
 BuildArch:	noarch
 # Build
-BuildRequires:	perl(Module::Build::Tiny) >= 0.034
+BuildRequires:	perl
+BuildRequires:	perl(Module::Build::Tiny) >= 0.037
 # Module
 BuildRequires:	perl(Cwd)
-BuildRequires:	perl(Dist::CheckConflicts) >= 0.02
+BuildRequires:	perl(Exporter)
 BuildRequires:	perl(Module::CPANTS::Analyse) >= 0.92
 BuildRequires:	perl(namespace::clean)
+BuildRequires:	perl(parent)
 BuildRequires:	perl(strict)
 BuildRequires:	perl(Test::Builder) >= 0.88
 BuildRequires:	perl(warnings)
 # Test Suite
-BuildRequires:	perl(CPAN::Meta)
-BuildRequires:	perl(CPAN::Meta::Requirements)
-BuildRequires:	perl(ExtUtils::MakeMaker) >= 6.30
-BuildRequires:	perl(File::Spec::Functions)
+BuildRequires:	perl(CPAN::Meta) >= 2.120900
+BuildRequires:	perl(CPAN::Meta::Check) >= 0.007
+BuildRequires:	perl(ExtUtils::MakeMaker)
+BuildRequires:	perl(File::Spec)
 BuildRequires:	perl(File::Temp)
 BuildRequires:	perl(lib)
-BuildRequires:	perl(List::Util)
+BuildRequires:	perl(Scalar::Util)
 BuildRequires:	perl(Test::Deep)
 BuildRequires:	perl(Test::More) >= 0.94
 BuildRequires:	perl(Test::Tester) >= 0.108
-BuildRequires:	perl(Test::Warnings) >= 0.005
+BuildRequires:	perl(Test::Warnings) >= 0.009
 # Runtime
 Requires:	perl(:MODULE_COMPAT_%(eval "`perl -V:version`"; echo $version))
-Requires:	perl(Dist::CheckConflicts) >= 0.02
 
 %description
 Kwalitee is an automatically-measurable gauge of how good your software
@@ -53,29 +54,45 @@ chmod -c 755 %{buildroot}%{_bindir}/kwalitee-metrics
 %check
 ./Build test
 
+# Support use of %%license for old distributions
+%{!?_licensedir:%global license %%doc}
+
 %files
-%doc Changes CONTRIBUTING LICENSE README README.md
+%license LICENSE
+%doc Changes CONTRIBUTING README
 %{_bindir}/kwalitee-metrics
 %{perl_vendorlib}/Test/
 %{_mandir}/man1/kwalitee-metrics.1*
 %{_mandir}/man3/Test::Kwalitee.3pm*
-%{_mandir}/man3/Test::Kwalitee::Conflicts.3pm*
 
 %changelog
-* Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 1.18-7
-- 为 Magic 3.0 重建
+* Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.22-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 
-* Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 1.18-6
-- 为 Magic 3.0 重建
+* Mon Jun 08 2015 Jitka Plesnikova <jplesnik@redhat.com> - 1.22-3
+- Perl 5.22 rebuild
 
-* Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 1.18-5
-- 为 Magic 3.0 重建
+* Fri Sep 05 2014 Jitka Plesnikova <jplesnik@redhat.com> - 1.22-2
+- Perl 5.20 rebuild
 
-* Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 1.18-4
-- 为 Magic 3.0 重建
+* Thu Sep  4 2014 Paul Howarth <paul@city-fan.org> - 1.22-1
+- Update to 1.22
+  - Running the tests via the import method directly has been deprecated; the
+    new kwalitee_ok() function is added to provide a more sane and logical
+    layout to your tests
+  - Document metrics added in Module::CPANTS::Analyse 0.93_03
 
-* Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 1.18-3
-- 为 Magic 3.0 重建
+* Fri Aug 29 2014 Jitka Plesnikova <jplesnik@redhat.com> - 1.19-2
+- Perl 5.20 rebuild
+
+* Mon Jul 21 2014 Paul Howarth <paul@city-fan.org> - 1.19-1
+- Update to 1.19
+  - kwalitee-metrics script now includes the module version as well as the
+    name, for each metric provided
+  - Remove test that is rendered invalid with upcoming changes to Test::Builder
+    (1.005+)
+  - Document new metrics added in Module::CPANTS::Analyse 0.93_01
+- Use %%license where possible
 
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.18-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
