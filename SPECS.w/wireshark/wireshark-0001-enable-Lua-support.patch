@@ -4,7 +4,7 @@ Subject: [PATCH] enable Lua support
 
 
 diff --git a/epan/wslua/template-init.lua b/epan/wslua/template-init.lua
-index e6ec4ae..2538c4c 100644
+index 3fe2aca..2b48f9b 100644
 --- a/epan/wslua/template-init.lua
 +++ b/epan/wslua/template-init.lua
 @@ -43,7 +43,7 @@ if running_superuser then

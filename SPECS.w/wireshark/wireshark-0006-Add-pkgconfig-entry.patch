@@ -1,0 +1,59 @@
+From: =?UTF-8?q?Radek=20Vok=C3=A1l?= <rvokal@fedoraproject.org>
+Date: Thu, 17 Dec 2009 09:17:07 +0000
+Subject: [PATCH] Add pkgconfig entry
+
+
+diff --git a/Makefile.am b/Makefile.am
+index c60d873..40a6e4d 100644
+--- a/Makefile.am
++++ b/Makefile.am
+@@ -53,6 +53,9 @@ EXTRA_PROGRAMS = wireshark wireshark-qt tshark tfshark capinfos captype editcap
+ 	mergecap dftest randpkt text2pcap dumpcap reordercap rawshark \
+ 	wireshark_cxx echld_test
+ 
++pkgconfigdir = $(libdir)/pkgconfig
++pkgconfig_DATA = wireshark.pc
++
+ #
+ # Wireshark configuration files are put in $(pkgdatadir).
+ #
+diff --git a/configure.ac b/configure.ac
+index 20eb3b3..8c9b79c 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -2779,6 +2779,7 @@ AC_CONFIG_HEADERS(config.h)
+ AC_OUTPUT(
+   Makefile
+   doxygen.cfg
++  wireshark.pc
+   asn1/Makefile
+   _CUSTOM_ASN1_AC_OUTPUT_
+   asn1/acp133/Makefile
+diff --git a/wireshark.pc.in b/wireshark.pc.in
+index 91bf28b..2e2fcdc 100644
+--- a/wireshark.pc.in
++++ b/wireshark.pc.in
+@@ -1,14 +1,11 @@
+-prefix=@CMAKE_INSTALL_PREFIX@
+-exec_prefix=${prefix}
+-libdir=${prefix}/@CMAKE_INSTALL_LIBDIR@
+-sharedlibdir=${libdir}
+-includedir=${prefix}/include/wireshark
+-plugindir=@PLUGIN_INSTALL_DIR@
++prefix=@prefix@
++exec_prefix=@exec_prefix@
++libdir=@libdir@
++includedir=@includedir@
+ 
+ Name: wireshark
+-Description: wireshark network packet dissection library
+-Version: @PROJECT_VERSION@
+-
+-Requires:
+-Libs: -L${libdir} -L${sharedlibdir} -lwireshark
+-Cflags: -I${includedir}
++Description: Network Traffic Analyzer
++Version: @PACKAGE_VERSION@
++Requires: glib-2.0 gmodule-2.0
++Libs: -L@libdir@ -lwireshark -lwiretap
++Cflags: -DWS_VAR_IMPORT=extern -DHAVE_STDARG_H -DWS_MSVC_NORETURN= -I@includedir@/wireshark -I@includedir@/wireshark/epan

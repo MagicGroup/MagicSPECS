@@ -1,0 +1,226 @@
+From: Peter Hatina <phatina@redhat.com>
+Date: Tue, 24 Sep 2013 10:55:09 +0200
+Subject: [PATCH] move default temporary directory to /var/tmp
+
+Conflicts:
+	wsutil/Makefile.common
+	wsutil/filesystem.c
+	wsutil/tempfile.c
+
+Change-Id: I881c17e1fa3cb292dabe7612bc06748cccfcfcda
+
+diff --git a/ui/gtk/proto_help.c b/ui/gtk/proto_help.c
+index 6de7daa..a644615 100644
+--- a/ui/gtk/proto_help.c
++++ b/ui/gtk/proto_help.c
+@@ -42,6 +42,8 @@
+ #include <epan/strutil.h>
+ #include <epan/proto.h>
+ 
++#include <wsutil/wstmpdir.h> /* for get_tmp_dir() */
++
+ #include "ui/gtk/proto_help.h"
+ 
+ /*
+@@ -160,7 +162,7 @@ void proto_help_init(void)
+ 	/* Start loop */
+ 
+ #ifdef PH_DEBUG_LOG
+-	ph_log_path = g_strdup_printf("%s" G_DIR_SEPARATOR_S "%s", g_get_tmp_dir(), PH_FILE_LOG);
++	ph_log_path = g_strdup_printf("%s" G_DIR_SEPARATOR_S "%s", get_tmp_dir(), PH_FILE_LOG);
+ #endif
+ 
+ 	for (i = 0; i < PH_CONF_DIRS; i++) {
+diff --git a/wsutil/Makefile.common b/wsutil/Makefile.common
+index 75c31bd..81648a7 100644
+--- a/wsutil/Makefile.common
++++ b/wsutil/Makefile.common
+@@ -62,7 +62,8 @@ LIBWSUTIL_SRC = 	\
+ 	time_util.c	\
+ 	type_util.c	\
+ 	u3.c		\
+-	unicode-utils.c
++	unicode-utils.c \
++	wstmpdir.c
+ 
+ # Header files that are not generated from other files
+ LIBWSUTIL_INCLUDES = 	\
+@@ -104,7 +105,8 @@ LIBWSUTIL_INCLUDES = 	\
+ 	time_util.h	\
+ 	type_util.h	\
+ 	u3.h		\
+-	unicode-utils.h
++	unicode-utils.h \
++	wstmpdir.h
+ 
+ #
+ # Editor modelines  -  https://www.wireshark.org/tools/modelines.html
+diff --git a/wsutil/tempfile.c b/wsutil/tempfile.c
+index ccefe30..ac40319 100644
+--- a/wsutil/tempfile.c
++++ b/wsutil/tempfile.c
+@@ -48,6 +48,7 @@
+ 
+ #include "tempfile.h"
+ #include <wsutil/file_util.h>
++#include <wsutil/wstmpdir.h>    /* For get_tmp_dir() */
+ 
+ #ifndef __set_errno
+ #define __set_errno(x) errno=(x)
+@@ -150,7 +151,7 @@ mkdtemp (char *template)
+  */
+ char *get_tempfile_path(const char *filename)
+ {
+-    return g_strdup_printf("%s" G_DIR_SEPARATOR_S "%s", g_get_tmp_dir(), filename);
++    return g_strdup_printf("%s" G_DIR_SEPARATOR_S "%s", get_tmp_dir(), filename);
+ }
+ 
+ #define MAX_TEMPFILES   3
+@@ -207,7 +208,7 @@ create_tempfile(char **namebuf, const char *pfx)
+ 		tf[idx].path = (char *)g_malloc(tf[idx].len);
+ 	}
+ 
+-	tmp_dir = g_get_tmp_dir();
++	tmp_dir = get_tmp_dir();
+ 
+ #ifdef _WIN32
+ 	_tzset();
+@@ -241,7 +242,7 @@ create_tempfile(char **namebuf, const char *pfx)
+ 
+ /**
+  * Create a directory with the given prefix (e.g. "wireshark"). The path
+- * is created using g_get_tmp_dir and mkdtemp.
++ * is created using get_tmp_dir and mkdtemp.
+  *
+  * @param namebuf
+  * @param pfx A prefix for the temporary directory.
+@@ -269,7 +270,7 @@ create_tempdir(char **namebuf, const char *pfx)
+ 	/*
+ 	 * We can't use get_tempfile_path here because we're called from dumpcap.c.
+ 	 */
+-	tmp_dir = g_get_tmp_dir();
++	tmp_dir = get_tmp_dir();
+ 
+ 	while (g_snprintf(td_path[idx], td_path_len[idx], "%s%c%s" TMP_FILE_SUFFIX, tmp_dir, G_DIR_SEPARATOR, pfx) > td_path_len[idx]) {
+ 		td_path_len[idx] *= 2;
+diff --git a/wsutil/wstmpdir.c b/wsutil/wstmpdir.c
+new file mode 100644
+index 0000000..d8b733b
+--- /dev/null
++++ b/wsutil/wstmpdir.c
+@@ -0,0 +1,70 @@
++/* wstmpdir.c
++ *
++ * Copyright (C) 2013 Red Hat, Inc. All right reserved.
++ *
++ * Temporary directory routine
++ *
++ * This program is free software; you can redistribute it and/or
++ * modify it under the terms of the GNU General Public License
++ * as published by the Free Software Foundation; either version 2
++ * of the License, or (at your option) any later version.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ *
++ * You should have received a copy of the GNU General Public License
++ * along with this program; if not, write to the Free Software
++ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
++ *
++ * Author: Peter Hatina <phatina@redhat.com>
++ */
++
++#include "config.h"
++
++#include <glib.h>
++#include "wstmpdir.h"
++
++/**
++ * Gets the directory to use for temporary files.
++ *
++ * Inspired by glib-2.0. If no TMP, TEMP or TMPDIR is set,
++ * /var/tmp is returned (Fedora specific).
++ *
++ * Returns: the directory to use for temporary files.
++ */
++const char *get_tmp_dir(void)
++{
++    static gchar *tmp_dir;
++
++    if (g_once_init_enter(&tmp_dir)) {
++        gchar *tmp;
++
++        tmp = g_strdup(g_getenv("TEMP"));
++        if (tmp == NULL || *tmp == '\0') {
++            g_free(tmp);
++            tmp = g_strdup(g_getenv("TMPDIR"));
++        }
++
++#ifdef P_tmpdir
++        if (tmp == NULL || *tmp == '\0') {
++            gsize k;
++            g_free(tmp);
++            tmp = g_strdup(P_tmpdir);
++            k = strlen(tmp);
++            if (k > 1 && G_IS_DIR_SEPARATOR(tmp[k - 1]))
++                tmp[k - 1] = '\0';
++        }
++#endif /* P_tmpdir */
++
++        if (tmp == NULL || *tmp == '\0') {
++            g_free(tmp);
++            tmp = g_strdup("/var/tmp");
++        }
++
++        g_once_init_leave(&tmp_dir, tmp);
++    }
++
++    return tmp_dir;
++}
+diff --git a/wsutil/wstmpdir.h b/wsutil/wstmpdir.h
+new file mode 100644
+index 0000000..021b615
+--- /dev/null
++++ b/wsutil/wstmpdir.h
+@@ -0,0 +1,39 @@
++/* wstmpdir.c
++ *
++ * Copyright (C) 2013 Red Hat, Inc. All right reserved.
++ *
++ * Temporary directory routine
++ *
++ * This program is free software; you can redistribute it and/or
++ * modify it under the terms of the GNU General Public License
++ * as published by the Free Software Foundation; either version 2
++ * of the License, or (at your option) any later version.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ *
++ * You should have received a copy of the GNU General Public License
++ * along with this program; if not, write to the Free Software
++ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
++ *
++ * Author: Peter Hatina <phatina@redhat.com>
++ */
++
++#ifndef __WS_TMP_DIR_H__
++#define __WS_TMP_DIR_H__
++
++#include "ws_symbol_export.h"
++
++#ifdef __cplusplus
++extern "C" {
++#endif // __cplusplus
++
++WS_DLL_PUBLIC const char *get_tmp_dir(void);
++
++#ifdef __cplusplus
++}
++#endif // __cplusplus
++
++#endif // __WS_TMP_DIR_H__
