@@ -1,0 +1,40 @@
+From 4eddce7fa1d61c5f7e02132ae7a5d04101eb6a1c Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Petr=20P=C3=ADsa=C5=99?= <ppisar@redhat.com>
+Date: Wed, 6 May 2015 14:22:13 +0200
+Subject: [PATCH] Upgrade to 2.11
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+perl sources are missing a lof CPAN tests. I did not removed them by
+this patch.
+
+Signed-off-by: Petr Písař <ppisar@redhat.com>
+---
+ lib/CPAN.pm | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
+
+diff --git a/lib/CPAN.pm b/lib/CPAN.pm
+index 93ad482..6096916 100644
+--- a/lib/CPAN.pm
++++ b/lib/CPAN.pm
+@@ -2,7 +2,7 @@
+ # vim: ts=4 sts=4 sw=4:
+ use strict;
+ package CPAN;
+-$CPAN::VERSION = '2.10';
++$CPAN::VERSION = '2.11';
+ $CPAN::VERSION =~ s/_//;
+ 
+ # we need to run chdir all over and we would get at wrong libraries
+@@ -318,7 +318,6 @@ Enter 'h' for help.
+ 
+ },
+                                  $CPAN::VERSION,
+-                                 $rl_avail
+                                 )
+     }
+     my($continuation) = "";
+-- 
+2.1.0
+
