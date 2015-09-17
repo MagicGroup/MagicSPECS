@@ -70,7 +70,7 @@ Summary(zh_CN.UTF-8): Linux 内核
 
 # 是否有 -stable 的更新需要应用，一般是内核版本的第 3 个数字，
 # 如果没有，就是 %{nil}
-%define stable_update 20
+%define stable_update 21
 # 是否是 -stable 的 RC 版本，Magic 一般不使用。
 %define stable_rc 0
 # 设置 rpm 包的版本号
@@ -447,8 +447,9 @@ Group: System Environment/Kernel
 Group(zh_CN.UTF-8): 系统环境/内核
 License: GPLv2 and Redistributable, no modification permitted
 URL: http://www.kernel.org/
-Version: %{rpmversion}
-Release: %{pkg_release}
+Version: 3.18.21
+#Release: %{pkg_release}
+Release: 1%{?dist}
 # DO NOT CHANGE THE 'ExclusiveArch' LINE TO TEMPORARILY EXCLUDE AN ARCHITECTURE BUILD.
 # SET %%nobuildarches (ABOVE) INSTEAD
 # 不要更改下面一行，通过设置 %%nobuildarches (在上面) 来代替
@@ -562,7 +563,7 @@ Source2001: cpupower.config
 %if 0%{?stable_update}
 %if 0%{?stable_base}
 %define    stable_patch_00  patch-3.%{base_sublevel}.%{stable_base}.xz
-Patch00: %{stable_patch_00}
+Patch00: https://www.kernel.org/pub/linux/kernel/v3.x/%{stable_patch_00}
 %endif
 %if 0%{?stable_rc}
 %define    stable_patch_01  patch-3.%{base_sublevel}.%{stable_update}-rc%{stable_rc}.xz
@@ -2452,6 +2453,9 @@ fi
 # and build.
 
 %changelog
+* Thu Sep 17 2015 Liu Di <liudidi@gmail.com> - 3.18.21-1
+- 更新到 3.18.21
+
 * Thu Aug 27 2015 Liu Di <liudidi@gmail.com> - 3.18.20-5
 - 更新到 3.18.20
 - 更改中文补丁为 cjktty
