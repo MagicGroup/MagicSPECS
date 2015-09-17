@@ -1,0 +1,35 @@
+From fd6a4a7bd85e4d9448701ea2a64c2526dce6a23d Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Petr=20P=C3=ADsa=C5=99?= <ppisar@redhat.com>
+Date: Wed, 10 Dec 2014 14:58:38 +0100
+Subject: [PATCH 2/2] Make Test::Deep tests optional
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Signed-off-by: Petr Písař <ppisar@redhat.com>
+---
+ t/003_env_pollution.t | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
+
+diff --git a/t/003_env_pollution.t b/t/003_env_pollution.t
+index 74b4b10..c3c3dde 100644
+--- a/t/003_env_pollution.t
++++ b/t/003_env_pollution.t
+@@ -3,8 +3,12 @@
+ use strict;
+ use warnings;
+ 
+-use Test::More tests => 5;
+-use Test::Deep;
++use Test::More;
++BEGIN {
++    eval "use Test::Deep 0.11; 1" or
++        plan skip_all => 'Test::Deep not available';
++}
++plan tests => 5;
+ 
+ use CGI::Fast socket_path => ":7070";
+ 
+-- 
+1.9.3
+
