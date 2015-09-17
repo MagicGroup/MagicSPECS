@@ -1,5 +1,5 @@
 Name:           debconf
-Version:	1.5.53
+Version:	1.5.57
 Release:        1%{?dist}
 Summary:        Debian configuration management system
 Summary(zh_CN.UTF-8): Debina 的配置管理系统
@@ -100,7 +100,7 @@ This package contains some small utilities for debconf developers.
 这个包包含了 debconf 开发人员使用的一些小工具。
 
 %prep
-%setup -q -n debconf
+%setup -q -n debconf-%{version}
 %patch1 -p1
 
 
@@ -248,6 +248,9 @@ done
 
 
 %changelog
+* Wed Sep 16 2015 Liu Di <liudidi@gmail.com> - 1.5.57-1
+- 更新到 1.5.57
+
 * Thu Jun 26 2014 Liu Di <liudidi@gmail.com> - 1.5.53-1
 - 更新到 1.5.53
 

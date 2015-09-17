@@ -1,6 +1,6 @@
 Name:           docbook2X
 Version:        0.8.8
-Release:        21%{?dist}
+Release:        22%{?dist}
 Summary:        Convert docbook into man and Texinfo
 Summary(zh_CN.UTF-8): 转换 docbook 到手册页和 Texinfo 格式
 
@@ -89,6 +89,9 @@ fi
 
 
 %changelog
+* Thu Sep 17 2015 Liu Di <liudidi@gmail.com> - 0.8.8-22
+- 为 Magic 3.0 重建
+
 * Thu Apr 16 2015 Liu Di <liudidi@gmail.com> - 0.8.8-21
 - 为 Magic 3.0 重建
 

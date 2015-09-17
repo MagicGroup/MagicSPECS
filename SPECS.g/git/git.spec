@@ -43,8 +43,8 @@
 %endif
 
 Name:           git
-Version:        2.0.0
-Release:        5%{?dist}
+Version:	2.5.2
+Release:        2%{?dist}
 Summary:        Fast Version Control System
 License:        GPLv2
 Group:          Development/Tools
@@ -64,7 +64,6 @@ Patch0:         git-1.8-gitweb-home-link.patch
 Patch1:         git-cvsimport-Ignore-cvsps-2.2b1-Branches-output.patch
 # https://bugzilla.redhat.com/600411
 Patch3:         git-1.7-el5-emacs-support.patch
-Patch5:         0001-git-subtree-Use-gitexecdir-instead-of-libexecdir.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
@@ -308,7 +307,6 @@ Requires:       emacs-git = %{version}-%{release}
 %if %{emacs_old}
 %patch3 -p1
 %endif
-%patch5 -p1
 
 %if %{use_prebuilt_docs}
 mkdir -p prebuilt_docs/{html,man}
@@ -529,6 +527,7 @@ rm -rf %{buildroot}
 %{!?_without_docs: %doc Documentation/*.html Documentation/docbook-xsl.css}
 %{!?_without_docs: %doc Documentation/howto Documentation/technical}
 %{_sysconfdir}/bash_completion.d
+%{_docdir}/%{name}-%{version}/git-subtree.html
 
 %files bzr
 %defattr(-,root,root)
@@ -633,6 +632,12 @@ rm -rf %{buildroot}
 # No files for you!
 
 %changelog
+* Thu Sep 17 2015 Liu Di <liudidi@gmail.com> - 2.5.2-2
+- 为 Magic 3.0 重建
+
+* Thu Sep 17 2015 Liu Di <liudidi@gmail.com> - 2.5.2-1
+- 更新到 2.5.2
+
 * Thu Jun 19 2014 Liu Di <liudidi@gmail.com> - 2.0.0-5
 - 为 Magic 3.0 重建
 

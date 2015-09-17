@@ -1,6 +1,6 @@
 Name:           inkscape
 Version:	0.91
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Vector-based drawing program using SVG
 
 Group:          Applications/Productivity
@@ -224,6 +224,9 @@ fi
 
 
 %changelog
+* Thu Sep 17 2015 Liu Di <liudidi@gmail.com> - 0.91-3
+- 为 Magic 3.0 重建
+
 * Tue Jul 28 2015 Liu Di <liudidi@gmail.com> - 0.91-2
 - 为 Magic 3.0 重建
 

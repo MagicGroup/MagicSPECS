@@ -1,14 +1,14 @@
 
 %define name alien
-%define version 8.91
+%define version 8.94
 %define release 1%{?dist}
 
 
 Summary:	Install Debian and Slackware Packages with RPM
 Summary(zh_CN.UTF-8):	用 RPM 安装 Debian 和 Slackware 的包
 Name:		%{name}
-Version:	%{version}
-Release:	%{release}
+Version:	8.94
+Release:	1%{?dist}
 URL:		http://joeyh.name/code/alien/
 Source:		http://ftp.debian.org/debian/pool/main/a/alien/alien_%version.tar.gz
 License:	GPL
@@ -34,7 +34,7 @@ it to your preferred package format and install it.
 Alien 是一个可以在 rpm, dpkg, slp 和 tgz 包之间互相转换的程序。
 
 %prep
-%setup -n %{name}
+%setup -n %{name}-%{version}
 
 %build
 %{__perl} Makefile.PL INSTALLDIRS=vendor
@@ -56,14 +56,15 @@ magic_rpm_clean.sh
 rm -rf $RPM_BUILD_ROOT
 
 %files
-%doc GPL README debian/changelog
 %{_bindir}/*
-%{_datadir}/%{name}
 %{perl_vendorlib}/*
 %{_mandir}/man?/*
 %{_localstatedir}/lib/alien
 
 %changelog
+* Wed Sep 16 2015 Liu Di <liudidi@gmail.com> - 8.94-1
+- 更新到 8.94
+
 * Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 8.91-1
 - 更新到 8.91
 

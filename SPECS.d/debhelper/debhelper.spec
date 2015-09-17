@@ -7,7 +7,7 @@
 }
 
 Name:           debhelper
-Version:	9.20140613
+Version:	9.20150101
 Release:        1%{?dist}
 Summary:        Helper programs for Debian rules
 Summary(zh_CN.UTF-8): Debian 打包用的辅助程序
@@ -64,23 +64,12 @@ make %{?_smp_mflags} build
 # single man-page -- we have many
 magic_rpm_clean.sh
 rm -f debhelper-mans.lang
-for lang in de es fr; do
-    for level in 1 7; do
-        # Append to .lang file
-        # Replace buildroot with the lang prefix, append '*' (for gzip, etc.)
-        find %{buildroot}%{_mandir}/$lang/man$level -type f -o -type l | sed "
-                s:^%{buildroot}:%%lang($lang) :
-                s:\$:*:
-                " >> debhelper-mans.lang
-    done
-done
-
 
 %check
 make test
 
 
-%files -f debhelper-mans.lang
+%files
 %doc examples/ doc/
 %{_mandir}/man1/*
 %{_mandir}/man7/*
@@ -91,6 +80,9 @@ make test
 %{perl_vendorlib}/Debian/Debhelper
 
 %changelog
+* Wed Sep 16 2015 Liu Di <liudidi@gmail.com> - 9.20150101-1
+- 更新到 9.20150101
+
 * Thu Jun 26 2014 Liu Di <liudidi@gmail.com> - 9.20140613-1
 - 更新到 9.20140613
 

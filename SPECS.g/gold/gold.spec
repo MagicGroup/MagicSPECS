@@ -3,7 +3,7 @@
 
 Name:		gold
 Version:	2.1.12.2
-Release:	13%{?dist}
+Release:	14%{?dist}
 Summary:	Tracks and manages resource usage on High Performance Computers
 Vendor:		Cluster Resources
 Group:		Applications/Internet
@@ -188,6 +188,9 @@ fi
 %{goldcgidir}/*
 
 %changelog
+* Thu Sep 17 2015 Liu Di <liudidi@gmail.com> - 2.1.12.2-14
+- 为 Magic 3.0 重建
+
 * Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 2.1.12.2-13
 - 为 Magic 3.0 重建
 
