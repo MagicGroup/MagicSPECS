@@ -21,7 +21,7 @@
 Summary:	Network traffic analyzer
 Name:		wireshark
 Version:	1.12.7
-Release:	2%{?dist}
+Release:	3%{?dist}
 License:	GPL+
 Group:		Applications/Internet
 Source0:	http://wireshark.org/download/src/%{name}-%{version}.tar.bz2
@@ -55,7 +55,7 @@ BuildRequires:	zlib-devel, bzip2-devel
 BuildRequires:	openssl-devel
 BuildRequires:	glib2-devel
 BuildRequires:	elfutils-devel, krb5-devel
-BuildRequires:	pcre-devel, libselinux
+BuildRequires:	pcre-devel
 BuildRequires:	gnutls-devel
 BuildRequires:	desktop-file-utils
 BuildRequires:	xdg-utils
@@ -411,6 +411,9 @@ update-mime-database %{?fedora:-n} %{_datadir}/mime &> /dev/null || :
 %{_datadir}/aclocal/*
 
 %changelog
+* Thu Sep 17 2015 Liu Di <liudidi@gmail.com> - 1.12.7-3
+- 为 Magic 3.0 重建
+
 * Fri Aug 21 2015 Peter Lemenkov <lemenkov@gmail.com> - 1.12.7-2
 - Enable libnl3 (see rhbz#1207386, rhbz#1247566)
 - Remove airpcap switch (doesn't have any effect on Linux)

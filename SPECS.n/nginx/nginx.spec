@@ -27,7 +27,7 @@
 Name:              nginx
 Epoch:             1
 Version:           1.6.2
-Release:           5%{?dist}
+Release:           6%{?dist}
 
 Summary:           A high performance web server and reverse proxy server
 Summary(zh_CN.UTF-8): 高性能的 Web 服务器和反向代理服务器
@@ -317,6 +317,9 @@ fi
 
 
 %changelog
+* Thu Sep 17 2015 Liu Di <liudidi@gmail.com> - 1:1.6.2-6
+- 为 Magic 3.0 重建
+
 * Sun Feb 15 2015 Liu Di <liudidi@gmail.com> - 1:1.6.2-5
 - 为 Magic 3.0 重建
 

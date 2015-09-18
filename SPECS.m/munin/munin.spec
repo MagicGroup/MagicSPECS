@@ -1,6 +1,6 @@
 Name:           munin
 Version:        2.0.25
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Network-wide graphing framework (grapher/gatherer)
 
 Group:          System Environment/Daemons
@@ -824,6 +824,9 @@ exit 0
 
 
 %changelog
+* Thu Sep 17 2015 Liu Di <liudidi@gmail.com> - 2.0.25-3
+- 为 Magic 3.0 重建
+
 * Thu Jan 01 2015 Liu Di <liudidi@gmail.com> - 2.0.25-2
 - 为 Magic 3.0 重建
 

@@ -6,7 +6,7 @@
 
 Name:           pcsc-perl
 Version:	1.4.13
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:        Perl interface to the PC/SC smart card library
 Summary(zh_CN.UTF-8): PC/SC 智能卡库的 Perl 接口
 
@@ -71,6 +71,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Thu Sep 17 2015 Liu Di <liudidi@gmail.com> - 1.4.13-3
+- 为 Magic 3.0 重建
+
 * Thu Apr 16 2015 Liu Di <liudidi@gmail.com> - 1.4.13-2
 - 为 Magic 3.0 重建
 

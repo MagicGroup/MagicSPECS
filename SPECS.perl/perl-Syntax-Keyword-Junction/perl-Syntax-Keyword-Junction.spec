@@ -1,6 +1,6 @@
 Name:           perl-Syntax-Keyword-Junction
 Version:        0.003008
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        Perl6 style Junction operators in Perl5
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -56,6 +56,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Thu Sep 17 2015 Liu Di <liudidi@gmail.com> - 0.003008-5
+- 为 Magic 3.0 重建
+
 * Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.003008-4
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

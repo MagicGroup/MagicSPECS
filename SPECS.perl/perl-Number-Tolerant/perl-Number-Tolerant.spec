@@ -1,6 +1,6 @@
 Name:           perl-Number-Tolerant
 Version:        1.707
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Tolerance ranges for inexact numbers
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -81,6 +81,9 @@ make test
 %{_mandir}/man3/Test::*
 
 %changelog
+* Thu Sep 17 2015 Liu Di <liudidi@gmail.com> - 1.707-2
+- 为 Magic 3.0 重建
+
 * Mon Jul 20 2015 Petr Pisar <ppisar@redhat.com> - 1.707-1
 - 1.707 bump
 

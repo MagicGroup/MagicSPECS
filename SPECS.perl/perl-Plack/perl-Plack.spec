@@ -1,6 +1,6 @@
 Name:           perl-Plack
 Version:	1.0037
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:        Perl Superglue for Web frameworks and Web Servers (PSGI toolkit)
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -8,45 +8,53 @@ URL:            http://search.cpan.org/dist/Plack/
 Source0:        http://www.cpan.org/authors/id/M/MI/MIYAGAWA/Plack-%{version}.tar.gz
 BuildArch:      noarch
 
-# Building with apache2 tests enabled works in local mocks, 
-# but fails in Fedora's koji.
+# Building with apache2 tests enabled
+# - works in local mocks, but fails in Fedora's koji.
+# - requires customize apache setup with apache >= 2.4.
 # Default to not testing apache2.
 %bcond_with apache
 
+BuildRequires:  perl(Apache::LogFormat::Compiler) >= 0.12
 BuildRequires:  perl(Devel::StackTrace) >= 1.23
 BuildRequires:  perl(Devel::StackTrace::AsHTML) >= 0.11
 BuildRequires:  perl(Devel::StackTrace::WithLexicals) >= 0.8
-BuildRequires:  perl(ExtUtils::MakeMaker)
+BuildRequires:  perl(ExtUtils::MakeMaker) >= 6.30
 BuildRequires:  perl(File::ShareDir) >= 1.00
+BuildRequires:  perl(File::ShareDir::Install) >= 0.06
 BuildRequires:  perl(Filesys::Notify::Simple)
 BuildRequires:  perl(Hash::MultiValue) >= 0.05
 BuildRequires:  perl(HTTP::Body) >= 1.06
-BuildRequires:  perl(LWP) >= 5.814
-BuildRequires:  perl(LWP::Protocol::http10)
+BuildRequires:  perl(HTTP::Message) >= 5.814
+BuildRequires:  perl(HTTP::Tiny) >= 0.03
 BuildRequires:  perl(parent)
-BuildRequires:  perl(Test::More) >= 0.88
-BuildRequires:  perl(Test::Requires)
-BuildRequires:  perl(Test::TCP) >= 0.11
+BuildRequires:  perl(Pod::Usage) >= 1.36
+BuildRequires:  perl(Stream::Buffered) >= 0.02
+BuildRequires:  perl(Test::TCP) >= 2.00
 BuildRequires:  perl(Try::Tiny)
 BuildRequires:  perl(URI) >= 1.59
 
-# for improved tests
+# tests
 BuildRequires:  perl(Authen::Simple::Adapter)
 BuildRequires:  perl(Authen::Simple::Passwd)
 BuildRequires:  perl(CGI)
-BuildRequires:  perl(CGI::Compile)
-BuildRequires:  perl(CGI::Emulate::PSGI)
+BuildRequires:  perl(CGI::Compile) >= 0.03
+BuildRequires:  perl(CGI::Emulate::PSGI) >= 0.10
 BuildRequires:  perl(Class::Data::Inheritable)
 BuildRequires:  perl(FCGI)
 BuildRequires:  perl(FCGI::Client)
 BuildRequires:  perl(FCGI::ProcManager)
+BuildRequires:  perl(FindBin)
 BuildRequires:  perl(HTTP::Request::AsCGI)
 BuildRequires:  perl(HTTP::Server::Simple::PSGI)
 BuildRequires:  perl(IO::Handle::Util)
-BuildRequires:  perl(Log::Dispatch::Array)
+BuildRequires:  perl(Log::Dispatch::Array) >= 1.001
 BuildRequires:  perl(Log::Log4perl)
+BuildRequires:  perl(LWP::UserAgent) >= 5.814
+BuildRequires:  perl(LWP::Protocol::http10)
 BuildRequires:  perl(MIME::Types)
 BuildRequires:  perl(Module::Refresh)
+BuildRequires:  perl(Test::More) >= 0.88
+BuildRequires:  perl(Test::Requires)
 
 # For mod_perl.so
 BuildRequires:  mod_perl >= 2
@@ -67,6 +75,13 @@ Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $versi
 Plack is a set of tools for using the PSGI stack. It contains middleware
 components, a reference server and utilities for Web application
 frameworks. Plack is like Ruby's Rack or Python's Paste for WSGI.
+
+%package Test
+Summary: Test-modules for perl-Plack
+Requires: perl-Plack = %{version}-%{release}
+
+%description Test
+%{summary}.
 
 %prep
 %setup -q -n Plack-%{version}
@@ -93,23 +108,37 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 make test %{?_with_apache:TEST_APACHE2=1 TEST_FCGI_CLIENT=1}
 
 %files
-%defattr(-,root,root,-)
 %doc Changes README
 %{_bindir}/plackup
 %{_mandir}/man1/plackup.*
 %{perl_vendorlib}/Plack
 %{perl_vendorlib}/Plack.pm
 %{perl_vendorlib}/HTTP
-# Used by Plack/Test
-%{perl_vendorlib}/auto/*
-%exclude %{perl_vendorlib}/auto/share/dist/Plack/#foo
 # Abandoned/Unsupported in Fedora: Apache1
 %exclude %{perl_vendorlib}/Plack/Server/Apache1.pm
 %exclude %{perl_vendorlib}/Plack/Handler/Apache1.pm
+# Packaged separately in perl-Plack-Test
+%exclude %{perl_vendorlib}/Plack/Test
+%exclude %{perl_vendorlib}/Plack/Test.pm
+%exclude %{perl_vendorlib}/auto/*
+%exclude %{_mandir}/man3/Plack::Test*
 
 %{_mandir}/man3/*
 
+%files Test
+%{_mandir}/man3/Plack::Test*
+%dir %{perl_vendorlib}/Plack
+%{perl_vendorlib}/Plack/Test
+%{perl_vendorlib}/Plack/Test.pm
+# Used by Plack/Test/Suite.pm
+%{perl_vendorlib}/auto/*
+# Don't package
+%exclude %{perl_vendorlib}/auto/share/dist/Plack/#foo
+
 %changelog
+* Fri Sep 18 2015 Liu Di <liudidi@gmail.com> - 1.0037-2
+- 为 Magic 3.0 重建
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.0037-1
 - 更新到 1.0037
 

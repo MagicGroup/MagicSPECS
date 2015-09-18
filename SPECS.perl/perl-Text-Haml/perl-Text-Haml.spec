@@ -1,6 +1,6 @@
 Name:           perl-Text-Haml
 Version:        0.990116
-Release:        5%{?dist}
+Release:        6%{?dist}
 Summary:        Haml Perl implementation
 License:        Artistic 2.0
 Group:          Development/Libraries
@@ -61,6 +61,9 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_mandir}/man3/*
 
 %changelog
+* Thu Sep 17 2015 Liu Di <liudidi@gmail.com> - 0.990116-6
+- 为 Magic 3.0 重建
+
 * Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.990116-5
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

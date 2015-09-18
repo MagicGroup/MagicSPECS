@@ -24,7 +24,7 @@
 Summary: Low-level DNS(SEC) library with API
 Name: ldns
 Version: 1.6.17
-Release: 6%{?dist}
+Release: 7%{?dist}
 
 License: BSD
 Url: http://www.nlnetlabs.nl/%{name}/
@@ -32,6 +32,10 @@ Source0: http://www.nlnetlabs.nl/downloads/%{name}/%{name}-%{version}.tar.gz
 Patch1: ldns-1.6.17-multilib.patch
 Patch2: ldns-1.6.16-dsa-key-failures.patch
 Patch3: ldns-1.6.17-keygen.patch
+
+# https://www.nlnetlabs.nl/bugs-script/show_bug.cgi?id=685
+# https://bugzilla.redhat.com/show_bug.cgi?id=1230140
+Patch4: ldns-1.6.17-doxyparse-perl-5-22-fix.patch
 
 Group: System Environment/Libraries
 # Only needed for builds from svn snapshot
@@ -122,6 +126,7 @@ This package contains documentation for the ldns library
 %patch1 -p1
 %patch2 -p1 -b .dsa
 %patch3 -p1 -b .keygen
+%patch4 -p1
 # To built svn snapshots
 # rm config.guess config.sub ltmain.sh
 # aclocal
@@ -257,6 +262,9 @@ rm -rf %{buildroot}
 %doc doc
 
 %changelog
+* Thu Sep 17 2015 Liu Di <liudidi@gmail.com> - 1.6.17-7
+- 为 Magic 3.0 重建
+
 * Thu Jun 19 2014 Liu Di <liudidi@gmail.com> - 1.6.17-6
 - 为 Magic 3.0 重建
 

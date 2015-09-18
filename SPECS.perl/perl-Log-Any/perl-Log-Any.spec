@@ -1,6 +1,6 @@
 Name:           perl-Log-Any
 Version:	1.032
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:        Bringing loggers and listeners together
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -12,7 +12,9 @@ BuildRequires:  perl(ExtUtils::MakeMaker)
 BuildRequires:  perl(Test::Simple)
 Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
 
-# Log/Any/Test.pm is not the real Log::Any::Adapter
+# Log::Any::Adapter* merged into Log::Any in 1.00
+Obsoletes:      perl-Log-Any-Adapter < 0.11-7
+Provides:       perl-Log-Any-Adapter = %{version}-%{release}%{?dist}
 
 %{?perl_default_filter:
 %filter_from_provides /perl(Log::Any::Adapter)\s*$/d
@@ -55,6 +57,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Thu Sep 17 2015 Liu Di <liudidi@gmail.com> - 1.032-2
+- 为 Magic 3.0 重建
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.032-1
 - 更新到 1.032
 

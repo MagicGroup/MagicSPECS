@@ -16,7 +16,7 @@ BuildRequires:  perl-devel pkgconfig openssl-devel
 #BuildRequires: java-1.8.0-openjdk-devel
 BuildRequires:  cmake
 BuildRequires:  systemd-units
-Version: 2.4.14
+Version: 2.6.1
 Release: 1%{?dist}
 Url:            http://www.openwsman.org/
 License:        BSD
@@ -363,6 +363,9 @@ rm -f /var/log/wsmand.log
 
 
 %changelog
+* Thu Sep 17 2015 Liu Di <liudidi@gmail.com> - 2.6.1-1
+- 更新到 2.6.1
+
 * Fri Apr 03 2015 Liu Di <liudidi@gmail.com> - 2.4.14-1
 - 更新到 2.4.14
 

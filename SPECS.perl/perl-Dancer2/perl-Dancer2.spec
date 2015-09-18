@@ -1,6 +1,6 @@
 Name:           perl-Dancer2
 Version:        0.161000
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Lightweight yet powerful web application framework
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -164,6 +164,9 @@ provides nice, easily-extendable CLI interface for it.
 %{_bindir}/*
 
 %changelog
+* Thu Sep 17 2015 Liu Di <liudidi@gmail.com> - 0.161000-2
+- 为 Magic 3.0 重建
+
 * Thu Aug 06 2015 Petr Pisar <ppisar@redhat.com> - 0.161000-1
 - 0.161000 bump
 

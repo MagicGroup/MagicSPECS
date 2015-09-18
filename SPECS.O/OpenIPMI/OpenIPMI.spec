@@ -4,7 +4,7 @@
 Summary: IPMI (Intelligent Platform Management Interface) library and tools
 Name: OpenIPMI
 Version: 2.0.21
-Release: 3%{?dist}
+Release: 4%{?dist}
 License: LGPLv2+ and GPLv2+ or BSD
 Group: System Environment/Base
 URL: http://sourceforge.net/projects/openipmi/
@@ -242,6 +242,9 @@ fi
 %{_localstatedir}/run/%{name}
 
 %changelog
+* Thu Sep 17 2015 Liu Di <liudidi@gmail.com> - 2.0.21-4
+- 为 Magic 3.0 重建
+
 * Mon Mar 02 2015 Liu Di <liudidi@gmail.com> - 2.0.21-3
 - 为 Magic 3.0 重建
 

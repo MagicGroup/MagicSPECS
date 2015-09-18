@@ -1,6 +1,6 @@
 Name:           perl-Unicode-Normalize
 Version:        1.19
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Unicode Normalization Forms
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -50,6 +50,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Thu Sep 17 2015 Liu Di <liudidi@gmail.com> - 1.19-2
+- 为 Magic 3.0 重建
+
 * Mon Jul 13 2015 Petr Pisar <ppisar@redhat.com> - 1.19-1
 - 1.19 bump
 

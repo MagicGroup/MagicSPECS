@@ -1,6 +1,6 @@
 Name:           perl-CGI-Deurl-XS
 Version:        0.08
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        Fast decoder for URL parameter strings
 License:        (GPL+ or Artistic) and ASL 2.0
 Group:          Development/Libraries
@@ -52,6 +52,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Thu Sep 17 2015 Liu Di <liudidi@gmail.com> - 0.08-4
+- 为 Magic 3.0 重建
+
 * Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.08-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

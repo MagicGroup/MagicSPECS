@@ -2,7 +2,7 @@
 
 Name:           perl-CPAN
 Version:        2.11
-Release:        347%{?dist}
+Release:        348%{?dist}
 Summary:        Query, download and build perl modules from CPAN sites
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -207,6 +207,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Thu Sep 17 2015 Liu Di <liudidi@gmail.com> - 2.11-348
+- 为 Magic 3.0 重建
+
 * Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.11-347
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

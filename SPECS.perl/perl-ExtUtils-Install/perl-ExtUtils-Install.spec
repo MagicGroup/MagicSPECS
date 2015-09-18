@@ -1,6 +1,6 @@
 Name:           perl-ExtUtils-Install
 Version:        2.04
-Release:        347%{?dist}
+Release:        348%{?dist}
 Summary:        Install Perl files from here to there
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -74,6 +74,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Thu Sep 17 2015 Liu Di <liudidi@gmail.com> - 2.04-348
+- 为 Magic 3.0 重建
+
 * Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.04-347
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

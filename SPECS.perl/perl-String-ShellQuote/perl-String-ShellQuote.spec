@@ -1,6 +1,6 @@
 Name:           perl-String-ShellQuote
 Version:        1.04
-Release:        16%{?dist}
+Release:        17%{?dist}
 Summary:        Perl module for quoting strings for passing through the shell
 # shell-quote:  GPLv2+
 # rest:         GPL+ or Artistic
@@ -59,6 +59,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/String::ShellQuote.3*
 
 %changelog
+* Thu Sep 17 2015 Liu Di <liudidi@gmail.com> - 1.04-17
+- 为 Magic 3.0 重建
+
 * Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.04-16
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

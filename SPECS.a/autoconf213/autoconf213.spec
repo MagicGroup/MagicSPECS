@@ -2,7 +2,7 @@ Summary:	A GNU tool for automatically configuring source code.
 Summary(zh_CN.UTF-8): 一套自动配置源代码的GNU工具。
 Name:		autoconf213
 Version:	2.13
-Release:   	14%{?dist}
+Release:   	15%{?dist}
 License:	GPL
 Group:		Development/Tools
 Group(zh_CN.UTF-8):   开发/工具
@@ -18,6 +18,9 @@ Patch6:		autoconf-2.13-exit.patch
 Patch7:		autoconf-2.13-wait3test.patch
 Patch8:		autoconf-2.13-make-defs-62361.patch
 Patch9:		autoconf-2.13-versioning.patch
+Patch10:    autoconf213-destdir.patch
+Patch11:    autoconf213-info.patch
+Patch12:    autoconf213-testsuite.patch
 Requires:	gawk, m4 >= 1.1, mktemp, perl, textutils
 Buildrequires:	texinfo, m4 >= 1.1
 BuildArchitectures: noarch
@@ -60,6 +63,11 @@ autoconf 产生的配置脚本在运行时独立于autoconf ，
 %patch7 -p1
 %patch8 -p1
 %patch9 -p1 -b .version
+%patch10 -p1
+%patch11 -p1
+%patch12 -p1
+mv autoconf.texi autoconf213.texi
+rm -f autoconf.info
 
 %build
 %configure --program-suffix=-%{version}
@@ -69,16 +77,22 @@ make
 rm -rf ${RPM_BUILD_ROOT}
 %makeinstall
 
-mv ${RPM_BUILD_ROOT}%{_infodir}/autoconf.info ${RPM_BUILD_ROOT}%{_infodir}/%{name}.info
-
 # We don't want to include the standards.info stuff in the package,
 # because it comes from binutils...
 rm -f ${RPM_BUILD_ROOT}%{_infodir}/standards*
 
-gzip -9nf ${RPM_BUILD_ROOT}%{_infodir}/*
+rm ${RPM_BUILD_ROOT}/%{_bindir}/autoscan-%{version}
 
 %clean
 rm -rf %{buildroot} %{_builddir}/%{buildsubdir} 
+
+%post
+/sbin/install-info %{_infodir}/%{name}.info %{_infodir}/dir || :
+
+%preun
+if [ "$1" = 0 ]; then
+    /sbin/install-info --delete %{_infodir}/%{name}.info %{_infodir}/dir || :
+fi
 
 %files
 %defattr(-,root,root)
@@ -88,6 +102,9 @@ rm -rf %{buildroot} %{_builddir}/%{buildsubdir}
 %doc AUTHORS COPYING NEWS README TODO
 
 %changelog
+* Thu Sep 17 2015 Liu Di <liudidi@gmail.com> - 2.13-15
+- 为 Magic 3.0 重建
+
 * Wed Dec 05 2012 Liu Di <liudidi@gmail.com> - 2.13-13
 - 为 Magic 3.0 重建
 

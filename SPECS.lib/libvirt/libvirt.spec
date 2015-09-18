@@ -382,8 +382,8 @@
 
 Summary: Library providing a simple virtualization API
 Name: libvirt
-Version: 1.2.7
-Release: 1%{?dist}%{?extra_release}
+Version: 1.2.19
+Release: 1%{?dist}
 License: LGPLv2+
 Group: Development/Libraries
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
@@ -1563,10 +1563,6 @@ mv $RPM_BUILD_ROOT%{_datadir}/systemtap/tapset/libvirt_qemu_probes.stp \
     %endif
 %endif
 
-%if 0%{?fedora} < 14 && 0%{?rhel} < 6
-rm -f $RPM_BUILD_ROOT%{_prefix}/lib/sysctl.d/libvirtd.conf
-%endif
-
 %clean
 rm -fr %{buildroot}
 
@@ -1853,9 +1849,6 @@ exit 0
 %config(noreplace) %{_sysconfdir}/sysconfig/virtlockd
 %config(noreplace) %{_sysconfdir}/libvirt/libvirtd.conf
 %config(noreplace) %{_sysconfdir}/libvirt/virtlockd.conf
-    %if 0%{?fedora} >= 14 || 0%{?rhel} >= 6
-%config(noreplace) %{_prefix}/lib/sysctl.d/libvirtd.conf
-    %endif
 
 %config(noreplace) %{_sysconfdir}/logrotate.d/libvirtd
 %dir %{_datadir}/libvirt/
@@ -1930,8 +1923,8 @@ exit 0
 %dir %attr(0700, root, root) %{_localstatedir}/log/libvirt/qemu/
 %ghost %dir %attr(0700, root, root) %{_localstatedir}/run/libvirt/qemu/
 %dir %attr(0750, %{qemu_user}, %{qemu_group}) %{_localstatedir}/lib/libvirt/qemu/
-%dir %attr(0750, %{qemu_user}, %{qemu_group}) %{_localstatedir}/lib/libvirt/qemu/channel/
-%dir %attr(0750, %{qemu_user}, %{qemu_group}) %{_localstatedir}/lib/libvirt/qemu/channel/target/
+#dir %attr(0750, %{qemu_user}, %{qemu_group}) %{_localstatedir}/lib/libvirt/qemu/channel/
+#dir %attr(0750, %{qemu_user}, %{qemu_group}) %{_localstatedir}/lib/libvirt/qemu/channel/target/
 %dir %attr(0750, %{qemu_user}, %{qemu_group}) %{_localstatedir}/cache/libvirt/qemu/
 %{_datadir}/augeas/lenses/libvirtd_qemu.aug
 %{_datadir}/augeas/lenses/tests/test_libvirtd_qemu.aug
@@ -2032,8 +2025,8 @@ exit 0
 %config(noreplace) %{_sysconfdir}/logrotate.d/libvirtd.qemu
 %ghost %dir %attr(0700, root, root) %{_localstatedir}/run/libvirt/qemu/
 %dir %attr(0750, %{qemu_user}, %{qemu_group}) %{_localstatedir}/lib/libvirt/qemu/
-%dir %attr(0750, %{qemu_user}, %{qemu_group}) %{_localstatedir}/lib/libvirt/qemu/channel/
-%dir %attr(0750, %{qemu_user}, %{qemu_group}) %{_localstatedir}/lib/libvirt/qemu/channel/target/
+#dir %attr(0750, %{qemu_user}, %{qemu_group}) %{_localstatedir}/lib/libvirt/qemu/channel/
+#dir %attr(0750, %{qemu_user}, %{qemu_group}) %{_localstatedir}/lib/libvirt/qemu/channel/target/
 %dir %attr(0750, %{qemu_user}, %{qemu_group}) %{_localstatedir}/cache/libvirt/qemu/
 %{_datadir}/augeas/lenses/libvirtd_qemu.aug
 %{_datadir}/augeas/lenses/tests/test_libvirtd_qemu.aug
@@ -2235,6 +2228,9 @@ exit 0
 %doc examples/systemtap
 
 %changelog
+* Thu Sep 17 2015 Liu Di <liudidi@gmail.com> - 1.2.19-1
+- 更新到 1.2.19
+
 * Wed Aug 06 2014 Liu Di <liudidi@gmail.com> - 1.2.7-1
 - 更新到 1.2.7
 

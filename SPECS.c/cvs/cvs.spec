@@ -5,7 +5,7 @@
 
 Name: cvs
 Version: 1.11.23
-Release: 31%{?dist}
+Release: 32%{?dist}
 Summary: Concurrent Versions System
 Summary(zh_CN.UTF-8): 版本控制系统
 Group: Development/Tools
@@ -305,6 +305,9 @@ exit 0
 %doc COPYING
 
 %changelog
+* Thu Sep 17 2015 Liu Di <liudidi@gmail.com> - 1.11.23-32
+- 为 Magic 3.0 重建
+
 * Sat Apr 20 2013 Liu Di <liudidi@gmail.com> - 1.11.23-30
 - 为 Magic 3.0 重建
 

@@ -1,7 +1,7 @@
 
 Name:           xfconf
-Version:        4.10.0
-Release:        5%{?dist}
+Version:	4.12.0
+Release:        1%{?dist}
 Summary:        Hierarchical configuration system for Xfce
 
 Group:          System Environment/Base
@@ -114,6 +114,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*.3*
 
 %changelog
+* Thu Sep 17 2015 Liu Di <liudidi@gmail.com> - 4.12.0-1
+- 更新到 4.12.0
+
 * Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 4.10.0-5
 - 为 Magic 3.0 重建
 

@@ -2,7 +2,7 @@ Name:           perl-Package-Constants
 # Epoch to compete with perl.spec
 Epoch:          1
 Version:        0.06
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        List all constants declared in a package
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -54,6 +54,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Thu Sep 17 2015 Liu Di <liudidi@gmail.com> - 1:0.06-4
+- 为 Magic 3.0 重建
+
 * Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1:0.06-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

@@ -1,7 +1,7 @@
 Name:		nkf
 Epoch:		1
 Version: 2.1.3
-Release: 1%{?dist}
+Release: 2%{?dist}
 License:	BSD
 URL:		http://nkf.sourceforge.jp/
 Source0:	http://osdn.dl.sourceforge.jp/nkf/59912/%{name}-%{version}.tar.gz
@@ -85,6 +85,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/NKF.3pm.gz
 
 %changelog
+* Thu Sep 17 2015 Liu Di <liudidi@gmail.com> - 1:2.1.3-2
+- 为 Magic 3.0 重建
+
 * Mon Feb 16 2015 Liu Di <liudidi@gmail.com> - 1:2.1.3-1
 - 更新到 2.1.3
 

@@ -1,6 +1,6 @@
 Name:           perl-Future
 Version:        0.33
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Perl object system to represent an operation awaiting completion
 License:        GPL+ or Artistic
 
@@ -64,6 +64,9 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_mandir}/man3/*
 
 %changelog
+* Thu Sep 17 2015 Liu Di <liudidi@gmail.com> - 0.33-3
+- 为 Magic 3.0 重建
+
 * Tue Aug 11 2015 Petr Šabata <contyk@redhat.com> - 0.33-2
 - Prevent FTBFS by correcting the build tim dependency list
 

@@ -131,7 +131,7 @@
 
 Name:           pidgin
 Version:        2.10.11
-Release:        16%{?dist}
+Release:        17%{?dist}
 License:        GPLv2+ and GPLv2 and MIT
 # GPLv2+ - libpurple, gnt, finch, pidgin, most prpls
 # GPLv2 - silc & novell prpls
@@ -845,6 +845,9 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Thu Sep 17 2015 Liu Di <liudidi@gmail.com> - 2.10.11-17
+- 为 Magic 3.0 重建
+
 * Tue Jul 14 2015 Liu Di <liudidi@gmail.com> - 2.10.11-16
 - 为 Magic 3.0 重建
 

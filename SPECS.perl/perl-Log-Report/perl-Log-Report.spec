@@ -1,6 +1,6 @@
 Name:           perl-Log-Report
 Version:        1.07
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Report a problem with exceptions and translation support
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -213,6 +213,9 @@ make test
 %{_mandir}/man3/MojoX::Log::Report.*
 
 %changelog
+* Thu Sep 17 2015 Liu Di <liudidi@gmail.com> - 1.07-2
+- 为 Magic 3.0 重建
+
 * Wed Jul 22 2015 Petr Pisar <ppisar@redhat.com> - 1.07-1
 - 1.07 bump
 

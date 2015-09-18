@@ -71,7 +71,7 @@ Summary: PostgreSQL client programs
 Name: postgresql
 %global majorversion 9.4
 Version: 9.4.4
-Release: 4%{?dist}
+Release: 5%{?dist}
 
 # The PostgreSQL license is very similar to other MIT licenses, but the OSI
 # recognizes it as an independent license, so we do as well.
@@ -1204,6 +1204,9 @@ fi
 %endif
 
 %changelog
+* Thu Sep 17 2015 Liu Di <liudidi@gmail.com> - 9.4.4-5
+- 为 Magic 3.0 重建
+
 * Wed Jul 29 2015 Liu Di <liudidi@gmail.com> - 9.4.4-4
 - 为 Magic 3.0 重建
 

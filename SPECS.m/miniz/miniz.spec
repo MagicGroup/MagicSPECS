@@ -2,9 +2,11 @@
 
 Name:       miniz
 Version:    1.15
-Release:    2.%{miniz_revision}%{?dist}
+Release:    3.%{miniz_revision}%{?dist}
 Summary:    Compression library implementing the zlib and Deflate
+Summary(zh_CN.UTF-8): 实现 zlib 的压缩库
 Group:      System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 License:    Unlicense
 URL:        https://code.google.com/p/%{name}/
 Source0:    https://%{name}.googlecode.com/files/%{name}_v%(echo '%{version}' | tr -d .)_%{miniz_revision}.7z
@@ -21,15 +23,22 @@ reading/writing/appending ZIP format archives. Miniz's compression speed has
 been tuned to be comparable to zlib's, and it also has a specialized real-time
 compressor function designed to compare well against fastlz/minilzo.
 
+%description -l zh_CN.UTF-8
+实现 zlib 的压缩库。
+
 %package devel
 Group:      Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Summary:    Development files for the %{name} library
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Requires:   %{name}%{?_isa} = %{version}-%{release}
 Requires:   glibc-headers%{?_isa}
 
 %description devel
 Header files for developing applications that use the %{name} library.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -c -T -n %{name}-%{version}_%{miniz_revision}
@@ -67,6 +76,7 @@ install %{soname} '%{buildroot}/%{_libdir}'
 ln -s %{soname} '%{buildroot}/%{_libdir}/lib%{name}.so'
 install -d '%{buildroot}/%{_includedir}'
 install -m 0644 %{name}.h '%{buildroot}/%{_includedir}'
+magic_rpm_clean.sh
 
 %post -p /sbin/ldconfig
 
@@ -81,6 +91,9 @@ install -m 0644 %{name}.h '%{buildroot}/%{_includedir}'
 
 
 %changelog
+* Thu Sep 17 2015 Liu Di <liudidi@gmail.com> - 1.15-3.r4
+- 为 Magic 3.0 重建
+
 * Wed Jun 17 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.15-2.r4
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

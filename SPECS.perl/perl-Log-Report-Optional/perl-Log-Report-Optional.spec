@@ -1,6 +1,6 @@
 Name:           perl-Log-Report-Optional
 Version:        1.01
-Release:        5%{?dist}
+Release:        6%{?dist}
 Summary:        Base class for large Log::Report and simple Log::Report::Minimal
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -55,6 +55,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Thu Sep 17 2015 Liu Di <liudidi@gmail.com> - 1.01-6
+- 为 Magic 3.0 重建
+
 * Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.01-5
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

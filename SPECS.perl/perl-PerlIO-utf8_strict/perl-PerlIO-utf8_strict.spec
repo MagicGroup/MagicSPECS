@@ -1,6 +1,6 @@
 Name:           perl-PerlIO-utf8_strict
 Version:        0.006
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        Fast and correct UTF-8 I/O
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -53,6 +53,9 @@ make test
 %{_mandir}/man3/PerlIO::utf8_strict.3*
 
 %changelog
+* Thu Sep 17 2015 Liu Di <liudidi@gmail.com> - 0.006-4
+- 为 Magic 3.0 重建
+
 * Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.006-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

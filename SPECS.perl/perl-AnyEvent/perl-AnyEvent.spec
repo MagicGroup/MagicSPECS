@@ -5,7 +5,7 @@
 
 Name:           perl-AnyEvent
 Version:	7.11
-Release:	1%{?dist}
+Release:	3%{?dist}
 Summary:        Framework for multiple event loops
 Summary(zh_CN.UTF-8): 多种事件循环的框架
 Group:          Development/Libraries
@@ -75,6 +75,7 @@ Requires:       perl(Task::Weaken)
 %global optional_deps %{optional_deps}|Qt::isa
 %global optional_deps %{optional_deps}|Qt::slots
 %global optional_deps %{optional_deps}|Tk
+%global optional_deps %{optional_deps}|UV
 
 # Don't include optional dependencies
 %global __requires_exclude ^perl[(](%{optional_deps})[)]
@@ -99,6 +100,7 @@ time).
 
 
 %build
+export PERL_CANARY_STABILITY_NOPROMPT=1
 perl Makefile.PL INSTALLDIRS=vendor
 make %{?_smp_mflags}
 
@@ -151,6 +153,12 @@ export PERL_ANYEVENT_LOOP_TESTS=1
 %{_mandir}/man3/AnyEvent::Impl::UV.3pm*
 
 %changelog
+* Thu Sep 17 2015 Liu Di <liudidi@gmail.com> - 7.11-3
+- 为 Magic 3.0 重建
+
+* Thu Sep 17 2015 Liu Di <liudidi@gmail.com> - 7.11-2
+- 为 Magic 3.0 重建
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 7.11-1
 - 更新到 7.11
 

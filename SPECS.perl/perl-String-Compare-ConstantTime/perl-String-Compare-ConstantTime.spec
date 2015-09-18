@@ -1,6 +1,6 @@
 Name:           perl-String-Compare-ConstantTime
 Version:        0.310
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        Timing side-channel protected string compare
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -46,6 +46,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Thu Sep 17 2015 Liu Di <liudidi@gmail.com> - 0.310-4
+- 为 Magic 3.0 重建
+
 * Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.310-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

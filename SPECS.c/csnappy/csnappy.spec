@@ -8,9 +8,11 @@
 
 Name:       csnappy 
 Version:    0
-Release:    4.20150729git%{shortcommit}%{?dist}
+Release:    5.20150729git%{shortcommit}%{?dist}
 Summary:    Snappy compression library ported to C 
+Summary(zh_CN.UTF-8): Snappy 压缩库的 C 移植
 Group:      System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 License:    BSD
 URL:        https://github.com/zeevt/%{name}
 Source0:    %{url}/archive/%{commit}/%{name}-%{commit}.tar.gz
@@ -29,15 +31,22 @@ BuildRequires:  valgrind
 This is an ANSI C port of Google's Snappy library. Snappy is a compression
 library designed for speed rather than compression ratios.
 
+%description -l zh_CN.UTF-8
+Snappy 压缩库的 C 移植。
+
 %package devel
 Group:      Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Summary:    Development files for the %{name} library
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Requires:   %{name}%{?_isa} = %{version}-%{release}
 Requires:   glibc-headers%{?_isa}
 
 %description devel
 Header files for developing applications that use the %{name} library.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -qn %{name}-%{commit}
@@ -60,6 +69,7 @@ make %{?_smp_mflags} 'OPT_FLAGS=%{optflags}' 'LDFLAGS=%{?__global_ldflags}' lib%
 
 %install
 make install 'DESTDIR=%{buildroot}' 'LIBDIR=%{_libdir}'
+magic_rpm_clean.sh
 
 %post -p /sbin/ldconfig
 
@@ -76,6 +86,9 @@ make install 'DESTDIR=%{buildroot}' 'LIBDIR=%{_libdir}'
 
 
 %changelog
+* Thu Sep 17 2015 Liu Di <liudidi@gmail.com> - 0-5.20150729gitd7bc683
+- 为 Magic 3.0 重建
+
 * Thu Jul 30 2015 Petr Pisar <ppisar@redhat.com> - 0-4.20150729gitd7bc683
 - Rebase to d7bc683b6eaba225f483621485035a8044634376
 

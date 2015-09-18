@@ -4,14 +4,14 @@
 %{!?python_sitearch: %define python_sitearch %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib(1)")}
 %define ruby_sitearch %(ruby -rrbconfig -e 'puts Config::CONFIG["sitearchdir"]')
 %define git 1
-%define vcsdate 20150325
+%define vcsdate 20150917
 
 Name: openbabel
 Version: 2.3.90
 %if 0%{?git}
-Release: 0.git%{vcsdate}%{?dist}.1
+Release: 0.git%{vcsdate}%{?dist}.3
 %else
-Release: 5%{?dist}
+Release: 7%{?dist}
 %endif
 Summary: Chemistry software file format converter
 Summary(zh_CN.UTF-8): 化学软件文件格式转换器
@@ -305,6 +305,12 @@ make test
 
 
 %changelog
+* Thu Sep 17 2015 Liu Di <liudidi@gmail.com> - 2.3.90-0.git20150917.3
+- 更新到 20150917 日期的仓库源码
+
+* Thu Sep 17 2015 Liu Di <liudidi@gmail.com> - 2.3.90-0.git20150325.2
+- 为 Magic 3.0 重建
+
 * Wed Mar 25 2015 Liu Di <liudidi@gmail.com> - 2.3.90-0.git20150325.1
 - 更新到 20150325 日期的仓库源码
 

@@ -4,8 +4,8 @@
 %global check_password_version 1.1
 
 Name: openldap
-Version: 2.4.40
-Release: 12%{?dist}
+Version: 2.4.42
+Release: 1%{?dist}
 Summary: LDAP support libraries
 Summary(zh_CN.UTF-8): LDAP 支持库
 Group: System Environment/Daemons
@@ -45,8 +45,6 @@ Patch19: openldap-switch-to-lt_dlopenadvise-to-get-RTLD_GLOBAL-set.patch
 Patch20: openldap-ldapi-sasl.patch
 # TLSv1 support, already included upstream
 Patch21: openldap-support-tlsv1-and-later.patch
-# CVE-2015-1545, already upstream
-Patch22: openldap-require-non-empty-attributelist.patch
 
 # check-password module specific patches
 Patch90: check-password-makefile.patch
@@ -54,8 +52,6 @@ Patch91: check-password.patch
 
 # Fedora specific patches
 Patch100: openldap-autoconf-pkgconfig-nss.patch
-# GCC 5 cpp patch, pending upstream inclusion (ITS #8056)
-Patch101: openldap-gcc-5.patch
 
 BuildRequires: cyrus-sasl-devel, nss-devel, krb5-devel, tcp_wrappers-devel, unixODBC-devel
 BuildRequires: glibc-devel, libtool, libtool-ltdl-devel, groff, perl, perl-devel, perl(ExtUtils::Embed)
@@ -148,7 +144,6 @@ pushd openldap-%{version}
 # use pkg-config for Mozilla NSS library
 %patch100 -p1
 
-%patch101 -p1
 # alternative include paths for Mozilla NSS
 ln -s %{_includedir}/nss3 include/nss
 ln -s %{_includedir}/nspr4 include/nspr
@@ -170,7 +165,6 @@ AUTOMAKE=%{_bindir}/true autoreconf -fi
 %patch19 -p1
 %patch20 -p1
 %patch21 -p1
-%patch22 -p1
 
 # build smbk5pwd with other overlays
 ln -s ../../../contrib/slapd-modules/smbk5pwd/smbk5pwd.c servers/slapd/overlays
@@ -557,6 +551,9 @@ exit 0
 %{_mandir}/man3/*
 
 %changelog
+* Thu Sep 17 2015 Liu Di <liudidi@gmail.com> - 2.4.42-1
+- 更新到 2.4.42
+
 * Wed Apr 01 2015 Liu Di <liudidi@gmail.com> - 2.4.40-12
 - 为 Magic 3.0 重建
 

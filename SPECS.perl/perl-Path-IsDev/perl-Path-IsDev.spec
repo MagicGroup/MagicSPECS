@@ -1,6 +1,6 @@
 Name:           perl-Path-IsDev
 Version:        1.001002
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        Determine if a given Path resembles a development source tree
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -67,6 +67,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Thu Sep 17 2015 Liu Di <liudidi@gmail.com> - 1.001002-5
+- 为 Magic 3.0 重建
+
 * Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.001002-4
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

@@ -9,7 +9,7 @@
 
 Name:           mod_perl
 Version:        2.0.8
-Release:        10.20140624svn1602105%{?dist}
+Release:        11.20140624svn1602105%{?dist}
 Summary:        An embedded Perl interpreter for the Apache HTTP Server
 
 Group:          System Environment/Daemons
@@ -186,6 +186,9 @@ find "$RPM_BUILD_ROOT" -type f -name *.orig -exec rm -f {} \;
 %{_mandir}/man3/Apache::Test*.3pm*
 
 %changelog
+* Thu Sep 17 2015 Liu Di <liudidi@gmail.com> - 2.0.8-11.20140624svn1602105
+- 为 Magic 3.0 重建
+
 * Wed Aug 27 2014 Jitka Plesnikova <jplesnik@redhat.com> - 2.0.8-10.20140624svn1602105
 - Perl 5.20 rebuild
 

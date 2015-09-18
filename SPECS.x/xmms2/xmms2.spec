@@ -7,7 +7,7 @@ Summary: 		A modular audio framework and plugin architecture
 Summary(zh_CN.UTF-8): 	一个模块化的音频框架和插件架构
 
 Version:		0.8
-Release:		20%{?dist}
+Release:		21%{?dist}
 License:		LGPLv2+ and GPLv2+ and BSD
 Group:			Applications/Multimedia
 Group(zh_CN.UTF-8): 	应用程序/多媒体
@@ -259,6 +259,9 @@ rm -rf %{buildroot}
 %{_bindir}/nyxmms2
 
 %changelog
+* Thu Sep 17 2015 Liu Di <liudidi@gmail.com> - 0.8-21
+- 为 Magic 3.0 重建
+
 * Fri Jul 04 2014 Liu Di <liudidi@gmail.com> - 0.8-20
 - 为 Magic 3.0 重建
 

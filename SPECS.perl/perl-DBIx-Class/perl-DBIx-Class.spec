@@ -1,7 +1,7 @@
 Name:           perl-DBIx-Class
 Summary:        Extensible and flexible object <-> relational mapper
 Version:	0.082820
-Release:	1%{?dist}
+Release:	2%{?dist}
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 Source0:        http://search.cpan.org/CPAN/authors/id/R/RI/RIBASUSHI/DBIx-Class-%{version}.tar.gz
@@ -98,26 +98,99 @@ Obsoletes:      %{name}-tests < 0.08196-2
 Provides:       %{name}-tests = %{version}-%{release}
 
 # hidden from PAUSE
+Provides:       perl(DBIx::Class::Admin::Descriptive) = %{version}
+Provides:       perl(DBIx::Class::Admin::Types) = %{version}
+Provides:       perl(DBIx::Class::Admin::Usage) = %{version}
+Provides:       perl(DBIx::Class::Carp) = %{version}
+Provides:       perl(DBIx::Class::CDBICompat::AbstractSearch) = %{version}
+Provides:       perl(DBIx::Class::CDBICompat::AccessorMapping) = %{version}
+Provides:       perl(DBIx::Class::CDBICompat::AttributeAPI) = %{version}
+Provides:       perl(DBIx::Class::CDBICompat::AutoUpdate) = %{version}
+Provides:       perl(DBIx::Class::CDBICompat::ColumnCase) = %{version}
+Provides:       perl(DBIx::Class::CDBICompat::ColumnGroups) = %{version}
+Provides:       perl(DBIx::Class::CDBICompat::ColumnGroups::GrouperShim) = %{version}
+Provides:       perl(DBIx::Class::CDBICompat::ColumnsAsHash) = %{version}
+Provides:       perl(DBIx::Class::CDBICompat::Constraints) = %{version}
+Provides:       perl(DBIx::Class::CDBICompat::Constructor) = %{version}
+Provides:       perl(DBIx::Class::CDBICompat::Copy) = %{version}
+Provides:       perl(DBIx::Class::CDBICompat::DestroyWarning) = %{version}
+Provides:       perl(DBIx::Class::CDBICompat::GetSet) = %{version}
+Provides:       perl(DBIx::Class::CDBICompat::ImaDBI) = %{version}
+Provides:       perl(DBIx::Class::CDBICompat::Iterator::ResultSet) = %{version}
+Provides:       perl(DBIx::Class::CDBICompat::LazyLoading) = %{version}
+Provides:       perl(DBIx::Class::CDBICompat::LiveObjectIndex) = %{version}
+Provides:       perl(DBIx::Class::CDBICompat::NoObjectIndex) = %{version}
+Provides:       perl(DBIx::Class::CDBICompat::Pager) = %{version}
+Provides:       perl(DBIx::Class::CDBICompat::ReadOnly) = %{version}
+Provides:       perl(DBIx::Class::CDBICompat::Relationship) = %{version}
+Provides:       perl(DBIx::Class::CDBICompat::Relationships) = %{version}
+Provides:       perl(DBIx::Class::CDBICompat::Retrieve) = %{version}
+Provides:       perl(DBIx::Class::CDBICompat::Stringify) = %{version}
+Provides:       perl(DBIx::Class::CDBICompat::TempColumns) = %{version}
+Provides:       perl(DBIx::Class::CDBICompat::Triggers) = %{version}
+Provides:       perl(DBIx::Class::ClassResolver::PassThrough) = %{version}
+Provides:       perl(DBIx::Class::Componentised) = %{version}
+Provides:       perl(DBIx::Class::_ENV_) = %{version}
+Provides:       perl(DBIx::Class::PK::Auto::DB2) = %{version}
+Provides:       perl(DBIx::Class::PK::Auto::MSSQL) = %{version}
+Provides:       perl(DBIx::Class::PK::Auto::MySQL) = %{version}
+Provides:       perl(DBIx::Class::PK::Auto::Oracle) = %{version}
+Provides:       perl(DBIx::Class::PK::Auto::Pg) = %{version}
+Provides:       perl(DBIx::Class::PK::Auto::SQLite) = %{version}
+Provides:       perl(DBIx::Class::Relationship::Accessor) = %{version}
+Provides:       perl(DBIx::Class::Relationship::BelongsTo) = %{version}
+Provides:       perl(DBIx::Class::Relationship::CascadeActions) = %{version}
+Provides:       perl(DBIx::Class::Relationship::HasMany) = %{version}
+Provides:       perl(DBIx::Class::Relationship::HasOne) = %{version}
+Provides:       perl(DBIx::Class::Relationship::Helpers) = %{version}
+Provides:       perl(DBIx::Class::Relationship::ManyToMany) = %{version}
+Provides:       perl(DBIx::Class::Relationship::ProxyMethods) = %{version}
+Provides:       perl(DBIx::Class::ResultSet::Pager) = %{version}
+Provides:       perl(DBIx::Class::ResultSetProxy) = %{version}
+Provides:       perl(DBIx::Class::ResultSourceProxy) = %{version}
+Provides:       perl(DBIx::Class::ResultSource::RowParser::Util) = %{version}
 Provides:       perl(DBIx::Class::ResultSource::RowParser) = %{version}
+Provides:       perl(DBIx::Class::SQLAHacks::MSSQL) = %{version}
+Provides:       perl(DBIx::Class::SQLAHacks::MySQL) = %{version}
+Provides:       perl(DBIx::Class::SQLAHacks::OracleJoins) = %{version}
+Provides:       perl(DBIx::Class::SQLAHacks::Oracle) = %{version}
+Provides:       perl(DBIx::Class::SQLAHacks::SQLite) = %{version}
+Provides:       perl(DBIx::Class::SQLAHacks) = %{version}
+Provides:       perl(DBIx::Class::SQLMaker::ACCESS) = %{version}
+Provides:       perl(DBIx::Class::SQLMaker::MSSQL) = %{version}
+Provides:       perl(DBIx::Class::SQLMaker::MySQL) = %{version}
+Provides:       perl(DBIx::Class::SQLMaker::Oracle) = %{version}
+Provides:       perl(DBIx::Class::SQLMaker::SQLite) = %{version}
+Provides:       perl(DBIx::Class::Storage::BlockRunner) = %{version}
+Provides:       perl(DBIx::Class::Storage::DBI::ADO::CursorUtils) = %{version}
+Provides:       perl(DBIx::Class::Storage::DBI::ADO::Microsoft_SQL_Server::DateTime::Format) = %{version}
+Provides:       perl(DBIx::Class::Storage::DBI::ADO::MS_Jet::DateTime::Format) = %{version}
+Provides:       perl(DBIx::Class::Storage::DBIHacks) = %{version}
+Provides:       perl(DBIx::Class::Storage::DBI::Informix::DateTime::Format) = %{version}
+Provides:       perl(DBIx::Class::Storage::DBI::InterBase::DateTime::Format) = %{version}
+Provides:       perl(DBIx::Class::Storage::DBI::MSSQL::DateTime::Format) = %{version}
+Provides:       perl(DBIx::Class::Storage::DBI::ODBC::ACCESS::DateTime::Format) = %{version}
+Provides:       perl(DBIx::Class::Storage::DBI::Replicated::Types) = %{version}
+Provides:       perl(DBIx::Class::Storage::DBI::Sybase::ASE::DateTime::Format) = %{version}
+Provides:       perl(DBIx::Class::Storage::DBI::Sybase::Microsoft_SQL_Server::DateTime::Format) = %{version}
+Provides:       perl(DBIx::Class::Storage::NESTED_ROLLBACK_EXCEPTION) = %{version}
+Provides:       perl(DBIx::Class::_Util) = %{version}
+Provides:       perl(DBIx::Class::VersionCompat) = %{version}
+Provides:       perl(DBIx::Class::Version::TableCompat) = %{version}
+Provides:       perl(DBIx::Class::Version::Table) = %{version}
+Provides:       perl(DBIx::Class::Version) = %{version}
+Provides:       perl(DBIx::ContextualFetch::st) = %{version}
+
 
 %?perl_default_filter
-%global __provides_exclude %{?__provides_exclude:%__provides_exclude|}perl\\(DBD::Pg\\)$
-%global __requires_exclude %{?__requires_exclude:%__requires_exclude|}perl\\(DBD::Pg\\)$
-%global __requires_exclude %__requires_exclude|perl\\(DBIx::Class::(Admin|CDBICompat|ClassResolver|Storage|Componentised|ResultSourceProxy)
-%global __provides_exclude_from %{?__provides_exclude_from:%__provides_exclude_from|}%{perl_vendorlib}/DBIx/Class/Admin
-%global __requires_exclude_from %{?__requires_exclude_from:%__requires_exclude_from|}%{perl_vendorlib}/DBIx/Class/Admin
-%global __provides_exclude_from %__provides_exclude_from|%{perl_vendorlib}/DBIx/Class/CDBICompat
-%global __requires_exclude_from %__provides_exclude_from|%{perl_vendorlib}/DBIx/Class/CDBICompat
-%global __provides_exclude_from %__provides_exclude_from|%{perl_vendorlib}/DBIx/Class/PK/Auto
-%global __requires_exclude_from %__provides_exclude_from|%{perl_vendorlib}/DBIx/Class/PK/Auto
-%global __provides_exclude_from %__provides_exclude_from|%{perl_vendorlib}/DBIx/Class/SQLAHacks
-%global __requires_exclude_from %__provides_exclude_from|%{perl_vendorlib}/DBIx/Class/SQLAHacks
-%global __provides_exclude %__provides_exclude|perl\\(DBIx::Class::SQLAHacks\\)
-%global __requires_exclude %__requires_exclude|perl\\(DBIx::Class::SQLAHacks\\)
-%global __provides_exclude %__provides_exclude|perl\\(DBIx::Class::Storage::DBIHacks\\)
-%global __requires_exclude %__requires_exclude|perl\\(DBIx::Class::Storage::DBIHacks\\)
-%global __provides_exclude %__provides_exclude|perl\\(DBIx::Class::SQLMaker::
-%global __requires_exclude %__requires_exclude|perl\\(DBIx::Class::SQLMaker::
+%?perl_default_filter
+%global __requires_exclude %{?__requires_exclude:%__requires_exclude|}^perl\\(Getopt::Long::Descriptive\\)$
+%global __requires_exclude %{?__requires_exclude:%__requires_exclude|}^perl\\(JSON::Any\\)$
+%global __requires_exclude %{?__requires_exclude:%__requires_exclude|}^perl\\(Moose\\)$
+%global __requires_exclude %{?__requires_exclude:%__requires_exclude|}^perl\\(MooseX::Types\\)$
+%global __requires_exclude %{?__requires_exclude:%__requires_exclude|}^perl\\(MooseX::Types::JSON\\)$
+%global __requires_exclude %{?__requires_exclude:%__requires_exclude|}^perl\\(MooseX::Types::LoadableClass\\)$
+%global __requires_exclude %{?__requires_exclude:%__requires_exclude|}^perl\\(MooseX::Types::Path::Class\\)$
 
 %description
 This is an SQL to OO mapper with an object API inspired by Class::DBI
@@ -177,6 +250,9 @@ make test
 
 
 %changelog
+* Thu Sep 17 2015 Liu Di <liudidi@gmail.com> - 0.082820-2
+- 为 Magic 3.0 重建
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.082820-1
 - 更新到 0.082820
 

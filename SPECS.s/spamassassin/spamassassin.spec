@@ -69,7 +69,7 @@ Summary: Spam filter for email which can be invoked from mail delivery agents
 Name: spamassassin
 Version: 3.4.0
 #Release: 0.8.%{prerev}%{?dist}
-Release: 6%{?dist}
+Release: 7%{?dist}
 License: ASL 2.0
 Group: Applications/Internet
 URL: http://spamassassin.apache.org/
@@ -370,6 +370,9 @@ fi
 %endif
 
 %changelog
+* Thu Sep 17 2015 Liu Di <liudidi@gmail.com> - 3.4.0-7
+- 为 Magic 3.0 重建
+
 * Tue Jun 17 2014 Liu Di <liudidi@gmail.com> - 3.4.0-6
 - 为 Magic 3.0 重建
 

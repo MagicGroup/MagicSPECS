@@ -1,6 +1,6 @@
 Name:       perl-App-Asciio 
 Version:	1.51.3
-Release:	1%{?dist}
+Release:	3%{?dist}
 # see lib/App/Asciio.pm
 License:    GPL+ or Artistic
 Group:      Development/Libraries
@@ -58,6 +58,11 @@ Provides: perl(App::Asciio::Ascii)       = %{version}
 Provides: perl(App::Asciio::Connections) = %{version}
 Provides: perl(App::Asciio::Dialogs)     = %{version}
 Provides: perl(App::Asciio::Elements)    = %{version}
+Provides: perl(App::Asciio::GTK::Asciio::Dialogs)   = %{version}
+Provides: perl(App::Asciio::GTK::Asciio::Menues)    = %{version}
+Provides: perl(App::Asciio::GTK::Asciio::stripes::editable_arrow2)  = %{version}
+Provides: perl(App::Asciio::GTK::Asciio::stripes::editable_box2)    = %{version}
+Provides: perl(App::Asciio::GTK::Asciio::stripes::wirl_arrow)       = %{version}
 Provides: perl(App::Asciio::Io)          = %{version}
 Provides: perl(App::Asciio::Menues)      = %{version}
 Provides: perl(App::Asciio::Options)     = %{version}
@@ -92,7 +97,7 @@ that allows you to modify them later.
 
 Think: Visio for ASCII :-)
 
-%description -l zh_CN.UTF-8
+%description -n asciio -l zh_CN.UTF-8
 简单快速的描画 ascii 艺术图。
 
 %prep
@@ -157,6 +162,12 @@ magic_rpm_clean.sh
 
 
 %changelog
+* Thu Sep 17 2015 Liu Di <liudidi@gmail.com> - 1.51.3-3
+- 为 Magic 3.0 重建
+
+* Thu Sep 17 2015 Liu Di <liudidi@gmail.com> - 1.51.3-2
+- 为 Magic 3.0 重建
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.51.3-1
 - 更新到 1.51.3
 

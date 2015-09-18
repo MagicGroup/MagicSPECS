@@ -1,6 +1,6 @@
 Name:           perl-String-Random
 Version:        0.28
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        Perl module to generate random strings based on a pattern
 License:        GPL+ or Artistic
 URL:            http://search.cpan.org/dist/String-Random/
@@ -43,6 +43,9 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 
 
 %changelog
+* Thu Sep 17 2015 Liu Di <liudidi@gmail.com> - 0.28-4
+- 为 Magic 3.0 重建
+
 * Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.28-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

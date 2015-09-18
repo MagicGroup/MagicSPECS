@@ -3,7 +3,7 @@ Name:           perl-ExtUtils-CBuilder
 Epoch:          1
 # Mimic perl.spec
 Version:        0.280223
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        Compile and link C code for Perl modules
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -76,6 +76,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Thu Sep 17 2015 Liu Di <liudidi@gmail.com> - 1:0.280223-4
+- 为 Magic 3.0 重建
+
 * Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1:0.280223-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 
