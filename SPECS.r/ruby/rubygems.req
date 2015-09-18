@@ -1,0 +1,81 @@
+#!/usr/bin/ruby
+
+require 'rubygems/package'
+
+module RubyGemsReq
+  module Helpers
+    # Expands '~>' and '!=' gem requirements.
+    def self.expand_requirement(requirements)
+      requirements.inject([]) do |output, r|
+        output.concat case r.first
+        when '~>'
+          expand_pessimistic_requirement(r)
+        when '!='
+          expand_not_equal_requirement(r)
+        else
+          [r]
+        end
+      end
+    end
+
+    # Expands the pessimistic version operator '~>' into equivalent '>=' and
+    # '<' pair.
+    def self.expand_pessimistic_requirement(requirement)
+      next_version = Gem::Version.create(requirement.last).bump
+      return ['>=', requirement.last], ['<', next_version]
+    end
+
+    # Expands the not equal version operator '!=' into equivalent '<' and
+    # '>' pair.
+    def self.expand_not_equal_requirement(requirement)
+      return ['<', requirement.last], ['>', requirement.last]
+    end
+
+    # Converts Gem::Requirement into array of requirements strings compatible
+    # with RPM .spec file.
+    def self.requirement_versions_to_rpm(requirement)
+      self.expand_requirement(requirement.requirements).map do |op, version|
+        version == Gem::Version.new(0) ? "" : "#{op} #{version}"
+      end
+    end
+  end
+
+  # Report RubyGems dependency, versioned if required.
+  def self.rubygems_dependency(specification)
+    Helpers::requirement_versions_to_rpm(specification.required_rubygems_version).each do |requirement|
+      dependency_string = "ruby(rubygems)"
+      dependency_string += " #{specification.required_rubygems_version}" if requirement && requirement.length > 0
+      puts dependency_string
+    end
+  end
+
+  # Report all gem dependencies including their version.
+  def self.gem_depenencies(specification)
+    specification.runtime_dependencies.each do |dependency|
+      Helpers::requirement_versions_to_rpm(dependency.requirement).each do |requirement|
+        dependency_string = "rubygem(#{dependency.name})"
+        dependency_string += " #{requirement}" if requirement && requirement.length > 0
+        puts dependency_string
+      end
+    end
+  end
+
+  # Reports all requirements specified by all provided .gemspec files.
+  def self.requires
+    while filename = gets
+      filename.strip!
+      begin
+        specification = Gem::Specification.load filename
+
+        rubygems_dependency(specification)
+        gem_depenencies(specification)
+      rescue => e
+        # Ignore all errors.
+      end
+    end
+  end
+end
+
+if __FILE__ == $0
+  RubyGemsReq::requires
+end

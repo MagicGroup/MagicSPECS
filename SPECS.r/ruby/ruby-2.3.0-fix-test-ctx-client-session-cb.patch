@@ -1,0 +1,13 @@
+Index: test/openssl/test_ssl_session.rb
+===================================================================
+--- test/openssl/test_ssl_session.rb	(revision 49098)
++++ test/openssl/test_ssl_session.rb	(revision 49099)
+@@ -278,7 +278,7 @@
+ 
+   def test_ctx_client_session_cb
+     called = {}
+-    ctx = OpenSSL::SSL::SSLContext.new("SSLv3")
++    ctx = OpenSSL::SSL::SSLContext.new
+     ctx.session_cache_mode = OpenSSL::SSL::SSLContext::SESSION_CACHE_CLIENT
+ 
+     ctx.session_new_cb = lambda { |ary|

@@ -1,0 +1,25 @@
+From b9fa5fc9a14e6c889c9a0fa9c9386b2018f2314c Mon Sep 17 00:00:00 2001
+From: Jeremy Evans <code@jeremyevans.net>
+Date: Fri, 17 Jul 2015 11:25:09 -0600
+Subject: [PATCH 4/8] Don't force SSLv3 in test, as it is insecure and may not
+ be supported
+
+LibreSSL disables SSLv3 by default, and there's no reason this code
+should require SSLv3.
+
+diff --git test/openssl/test_ssl_session.rb test/openssl/test_ssl_session.rb
+index 0c384c7..d4713d9 100644
+--- test/openssl/test_ssl_session.rb
++++ test/openssl/test_ssl_session.rb
+@@ -355,7 +355,7 @@ __EOS__
+       3.times do
+         sock = TCPSocket.new("127.0.0.1", port)
+         begin
+-          ssl = OpenSSL::SSL::SSLSocket.new(sock, OpenSSL::SSL::SSLContext.new("SSLv3"))
++          ssl = OpenSSL::SSL::SSLSocket.new(sock, OpenSSL::SSL::SSLContext.new)
+           ssl.sync_close = true
+           ssl.session = last_client_session if last_client_session
+           ssl.connect
+-- 
+2.4.5
+
