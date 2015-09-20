@@ -1,0 +1,11 @@
+--- xmonad-contrib-0.11.2/XMonad/Config/Xfce.hs~	2013-07-16 11:52:10.000000000 +0900
++++ xmonad-contrib-0.11.2/XMonad/Config/Xfce.hs	2013-11-26 13:16:20.023315724 +0900
+@@ -35,7 +35,7 @@
+ -- For examples of how to further customize @xfceConfig@ see "XMonad.Config.Desktop".
+ 
+ xfceConfig = desktopConfig
+-    { terminal = "Terminal"
++    { terminal = "xfce4-terminal"
+     , keys     = xfceKeys <+> keys desktopConfig }
+ 
+ xfceKeys (XConfig {modMask = modm}) = M.fromList $

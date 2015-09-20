@@ -1,0 +1,37 @@
+diff -rN -u old-XMonadContrib/XMonad/Util/PositionStore.hs new-XMonadContrib/XMonad/Util/PositionStore.hs
+--- old-XMonadContrib/XMonad/Util/PositionStore.hs	2012-05-13 20:21:34.785720303 +0900
++++ new-XMonadContrib/XMonad/Util/PositionStore.hs	2012-05-13 20:21:34.814720213 +0900
+@@ -36,7 +36,7 @@
+ 
+ data PositionStore = PS (M.Map Window PosStoreRectangle)
+                             deriving (Read,Show,Typeable)
+-data PosStoreRectangle = PSRectangle Double Double Double Double
++data PosStoreRectangle = PSRectangle Double Double Dimension Dimension
+                             deriving (Read,Show,Typeable)
+ 
+ instance ExtensionClass PositionStore where
+@@ -55,8 +55,7 @@
+         offsetY = y - srY
+     in PS $ M.insert w (PSRectangle (fromIntegral offsetX / fromIntegral srWh)
+                                                (fromIntegral offsetY / fromIntegral srHt)
+-                                               (fromIntegral wh / fromIntegral srWh)
+-                                               (fromIntegral ht / fromIntegral srHt)) posStoreMap
++                                               (min wh srWh) (min ht srHt)) posStoreMap
+ 
+ posStoreRemove :: PositionStore -> Window -> PositionStore
+ posStoreRemove (PS posStoreMap) w = PS $ M.delete w posStoreMap
+@@ -64,12 +63,9 @@
+ posStoreQuery :: PositionStore -> Window -> Rectangle -> Maybe Rectangle
+ posStoreQuery (PS posStoreMap) w (Rectangle srX srY srWh srHt) = do
+     (PSRectangle x y wh ht) <- M.lookup w posStoreMap
+-    let realWh = fromIntegral srWh * wh
+-        realHt = fromIntegral srHt * ht
+-        realOffsetX = fromIntegral srWh * x
++    let realOffsetX = fromIntegral srWh * x
+         realOffsetY = fromIntegral srHt * y
+-    return (Rectangle (srX + round realOffsetX) (srY + round realOffsetY)
+-                        (round realWh) (round realHt))
++    return (Rectangle (srX + round realOffsetX) (srY + round realOffsetY) wh ht)
+ 
+ posStoreMove :: PositionStore -> Window -> Position -> Position -> Rectangle -> Rectangle -> PositionStore
+ posStoreMove posStore w x y oldSr newSr =

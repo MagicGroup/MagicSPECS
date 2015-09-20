@@ -1,0 +1,11 @@
+diff -u xmonad-contrib-0.10/XMonad/Hooks/EwmhDesktops.hs\~ xmonad-contrib-0.10/XMonad/Hooks/EwmhDesktops.hs
+--- xmonad-contrib-0.10/XMonad/Hooks/EwmhDesktops.hs~	2011-11-19 08:26:06.000000000 +0900
++++ xmonad-contrib-0.10/XMonad/Hooks/EwmhDesktops.hs	2012-03-09 16:59:48.115503713 +0900
+@@ -252,3 +252,7 @@
+     a <- getAtom "_NET_ACTIVE_WINDOW"
+     c <- getAtom "WINDOW"
+     io $ changeProperty32 dpy r a c propModeReplace [fromIntegral w]
++    -- init _NET_WM_STATE to prevent gtk3 making apps look unfocused
++    a' <- getAtom "_NET_WM_STATE"
++    c' <- getAtom "ATOM"
++    io $ changeProperty32 dpy w a' c' propModeAppend []

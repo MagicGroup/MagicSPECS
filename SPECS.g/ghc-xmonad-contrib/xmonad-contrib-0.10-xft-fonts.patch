@@ -1,0 +1,36 @@
+diff -u xmonad-contrib-0.10/XMonad/Layout/Decoration.hs\~ xmonad-contrib-0.10/XMonad/Layout/Decoration.hs
+--- xmonad-contrib-0.10/XMonad/Layout/Decoration.hs~	2011-11-19 08:26:06.000000000 +0900
++++ xmonad-contrib-0.10/XMonad/Layout/Decoration.hs	2012-02-20 19:32:05.807316616 +0900
+@@ -98,7 +98,7 @@
+           , activeTextColor     = "#FFFFFF"
+           , inactiveTextColor   = "#BFBFBF"
+           , urgentTextColor     = "#FF0000"
+-          , fontName            = "-misc-fixed-*-*-*-*-10-*-*-*-*-*-*-*"
++          , fontName            = "xft:Sans:size=10"
+           , decoWidth           = 200
+           , decoHeight          = 20
+           , windowTitleAddons   = []
+diff -up xmonad-contrib-0.10/XMonad/Layout/ShowWName.hs~ xmonad-contrib-0.10/XMonad/Layout/ShowWName.hs
+--- xmonad-contrib-0.10/XMonad/Layout/ShowWName.hs~	2011-11-19 08:26:06.000000000 +0900
++++ xmonad-contrib-0.10/XMonad/Layout/ShowWName.hs	2012-02-21 18:50:48.586243032 +0900
+@@ -62,7 +62,7 @@ data SWNConfig =
+ 
+ defaultSWNConfig :: SWNConfig
+ defaultSWNConfig =
+-    SWNC { swn_font    = "-misc-fixed-*-*-*-*-20-*-*-*-*-*-*-*"
++    SWNC { swn_font    = "xft:Sans:size=20"
+          , swn_bgcolor = "black"
+          , swn_color   = "white"
+          , swn_fade    = 1
+diff -up xmonad-contrib-0.10/XMonad/Prompt.hs~ xmonad-contrib-0.10/XMonad/Prompt.hs
+--- xmonad-contrib-0.10/XMonad/Prompt.hs~	2011-11-19 08:26:06.000000000 +0900
++++ xmonad-contrib-0.10/XMonad/Prompt.hs	2012-02-21 18:54:03.643078084 +0900
+@@ -203,7 +203,7 @@ data XPPosition = Top
+ amberXPConfig, defaultXPConfig, greenXPConfig :: XPConfig
+ 
+ defaultXPConfig =
+-    XPC { font              = "-misc-fixed-*-*-*-*-12-*-*-*-*-*-*-*"
++    XPC { font              = "xft:Monospace:size=12"
+         , bgColor           = "grey22"
+         , fgColor           = "grey80"
+         , fgHLight          = "black"

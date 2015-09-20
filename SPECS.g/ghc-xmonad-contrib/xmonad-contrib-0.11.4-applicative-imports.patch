@@ -1,0 +1,31 @@
+diff -u -r -U5 --no-dereference xmonad-contrib-0.11.4/XMonad/Hooks/DebugEvents.hs xmonad-contrib-0.11.4.applicative/XMonad/Hooks/DebugEvents.hs
+--- xmonad-contrib-0.11.4/XMonad/Hooks/DebugEvents.hs	2015-03-27 14:00:21.000000000 -0400
++++ xmonad-contrib-0.11.4.applicative/XMonad/Hooks/DebugEvents.hs	2015-07-19 19:30:24.855769466 -0400
+@@ -45,10 +45,11 @@
+ import           Foreign.C.Types
+ import           Numeric                                     (showHex)
+ import           System.Exit
+ import           System.IO
+ import           System.Process
++import           Control.Applicative
+ 
+ -- | Event hook to dump all received events.  You should probably not use this
+ --   unconditionally; it will produce massive amounts of output.
+ debugEventsHook   :: Event -> X All
+ debugEventsHook e =  debugEventsHook' e >> return (All True)
+diff -u -r -U5 --no-dereference xmonad-contrib-0.11.4/XMonad/Util/Invisible.hs xmonad-contrib-0.11.4.applicative/XMonad/Util/Invisible.hs
+--- xmonad-contrib-0.11.4/XMonad/Util/Invisible.hs	2015-03-27 14:00:21.000000000 -0400
++++ xmonad-contrib-0.11.4.applicative/XMonad/Util/Invisible.hs	2015-07-19 19:31:04.061816912 -0400
+@@ -20,10 +20,12 @@
+                              Invisible (..)
+                             , whenIJust
+                             , fromIMaybe
+                             ) where
+ 
++import Control.Applicative
++
+ -- $usage
+ -- A wrapper data type to store layout state that shouldn't be persisted across
+ -- restarts. A common wrapped type to use is @Maybe a@.
+ -- Invisible derives trivial definitions for Read and Show, so the wrapped data
+ -- type need not do so.

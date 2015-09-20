@@ -1,0 +1,10 @@
+--- xmonad-contrib-0.10/xmonad-contrib.cabal~	2012-06-11 10:59:49.665575897 +0900
++++ xmonad-contrib-0.10/xmonad-contrib.cabal	2012-11-17 13:14:21.302802620 +0900
+@@ -38,6 +38,7 @@
+ 
+ flag use_xft
+   description: Use Xft to render text
++  default: True
+ 
+ flag testing
+   description: Testing mode
