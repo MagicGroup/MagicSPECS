@@ -5,8 +5,8 @@
 
 Name:           folks
 Epoch:          1
-Version:	0.9.7.1
-Release:        4%{?dist}
+Version:	0.11.1
+Release:        1%{?dist}
 Summary:        GObject contact aggregation library
 Summary(zh_CN.UTF-8): GObject 联系人聚合库
 
@@ -130,6 +130,9 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 
 
 %changelog
+* Sat Sep 19 2015 Liu Di <liudidi@gmail.com> - 1:0.11.1-1
+- 更新到 0.11.1
+
 * Fri Jul 18 2014 Liu Di <liudidi@gmail.com> - 1:0.9.7.1-4
 - 更新到 0.9.7.1
 

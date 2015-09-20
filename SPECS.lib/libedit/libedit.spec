@@ -1,7 +1,7 @@
 Summary:	The NetBSD Editline library
 Summary(zh_CN.UTF-8): NetBSD 行编辑库
 Name:		libedit
-Version: 3.1.20140620
+Version: 3.1.20150325
 Release:	1%{?dist}
 License:	BSD
 Group:		System Environment/Libraries
@@ -85,6 +85,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_includedir}/editline/readline.h
 
 %changelog
+* Sun Sep 20 2015 Liu Di <liudidi@gmail.com> - 3.1.20150325-1
+- 更新到 3.1.20150325
+
 * Tue Jul 15 2014 Liu Di <liudidi@gmail.com> - 3.1.20140620-1
 - 更新到 3.1.20140620
 

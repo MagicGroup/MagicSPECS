@@ -1,29 +1,35 @@
---- netkit-rsh-0.17/rshd/rshd.c.pam_env	2006-12-12 12:32:31.000000000 +0100
-+++ netkit-rsh-0.17/rshd/rshd.c	2006-12-12 12:48:21.000000000 +0100
-@@ -375,6 +375,10 @@
+diff -up netkit-rsh-0.17/rshd/rshd.c.pam_env netkit-rsh-0.17/rshd/rshd.c
+--- netkit-rsh-0.17/rshd/rshd.c.pam_env	2009-03-30 13:20:36.730136943 +0200
++++ netkit-rsh-0.17/rshd/rshd.c	2009-03-30 13:26:17.202136832 +0200
+@@ -107,6 +107,9 @@ char	remotehost[50] = "REMOTEHOST=";
+ char	*envinit[] =
+ 	    {homedir, shell, path, username, remoteuser, remotehost, 0};
+ extern	char	**environ;
++#ifdef USE_PAM
++static char** env;
++#endif
+ 
+ static void error(const char *fmt, ...);
+ static void doit(struct sockaddr_storage *fromp, socklen_t fromlen);
+@@ -371,6 +374,9 @@ doit(struct sockaddr_storage *fromp, soc
  	const char *hostname;
  	u_short port;
  	int pv[2], pid, ifd;
 +#ifdef USE_PAM
-+        char** env;
 +        int i;
 +#endif
  
  	signal(SIGINT, SIG_DFL);
  	signal(SIGQUIT, SIG_DFL);
-@@ -522,6 +526,16 @@
+@@ -518,6 +524,12 @@ doit(struct sockaddr_storage *fromp, soc
  	shellname = strrchr(theshell, '/');
  	if (shellname) shellname++;
  	else shellname = theshell;
 +#ifdef USE_PAM
-+        env = pam_getenvlist(pamh);
-+        if (NULL != env) {
-+            for(i = 0; env[i]; i++) {
-+                putenv(env[i]);
-+                free(env[i]);
-+            }
-+            free(env);
-+          }
++	env = pam_getenvlist(pamh);
++	if (NULL != env)
++		for(i = 0; env[i]; i++)
++			putenv(env[i]);
 +#endif
  
  	endpwent();

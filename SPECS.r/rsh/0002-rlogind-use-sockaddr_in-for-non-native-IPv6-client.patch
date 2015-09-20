@@ -1,0 +1,45 @@
+From 6e0abc319fa8d1f17c4cd1bfa633b9aa10ef5370 Mon Sep 17 00:00:00 2001
+From: Michal Sekletar <msekleta@redhat.com>
+Date: Fri, 14 Jun 2013 16:34:58 +0200
+Subject: [PATCH 2/2] rlogind: use sockaddr_in for non-native IPv6 client
+
+---
+ rlogind/network.c | 22 ++++++++++++++++++++++
+ 1 file changed, 22 insertions(+)
+
+diff --git a/rlogind/network.c b/rlogind/network.c
+index 8c2a975..db272fd 100644
+--- a/rlogind/network.c
++++ b/rlogind/network.c
+@@ -204,6 +204,28 @@ network_init(int f, int *hostokp)
+ #endif
+ 	fromp = &from;
+ 
++	if (((struct sockaddr_in *) fromp)->sin_family == AF_INET6 &&
++		IN6_IS_ADDR_V4MAPPED(&((struct sockaddr_in6 *) fromp)->sin6_addr)) {
++
++		struct addrinfo *res, hints = {};
++		char client_addr[INET6_ADDRSTRLEN] = {};
++		char client_port[6] = {};
++
++		inet_ntop(AF_INET6, &((struct sockaddr_in6 *) fromp)->sin6_addr,
++			client_addr, sizeof(client_addr));
++
++		sprintf(client_port, "%d", ntohs(((struct sockaddr_in6 *) fromp)->sin6_port));
++
++		hints.ai_family = AF_INET;
++		hints.ai_socktype = SOCK_STREAM;
++		hints.ai_flags = AI_NUMERICHOST | AI_NUMERICSERV;
++
++		getaddrinfo(client_addr, client_port, &hints, &res);
++
++		memcpy(fromp, res->ai_addr, sizeof(struct sockaddr_in6));
++		freeaddrinfo(res);
++	}
++
+ 	alarm(60);
+ 	read(f, &c, 1);
+ 
+-- 
+1.8.1.4
+

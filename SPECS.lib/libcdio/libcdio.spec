@@ -1,6 +1,6 @@
 Name: libcdio
-Version: 0.92
-Release: 2%{?dist}
+Version: 0.93
+Release: 1%{?dist}
 Summary: CD-ROM input and control library
 Summary(zh_CN.UTF-8): CD-ROM 输入和控制库
 Group: System Environment/Libraries
@@ -150,6 +150,9 @@ fi
 
 
 %changelog
+* Sat Sep 19 2015 Liu Di <liudidi@gmail.com> - 0.93-1
+- 更新到 0.93
+
 * Fri Jul 11 2014 Liu Di <liudidi@gmail.com> - 0.92-2
 - 为 Magic 3.0 重建
 

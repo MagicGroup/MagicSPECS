@@ -2,7 +2,7 @@
 
 Name:           lua
 Version:        %{major_version}.2
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        Powerful light-weight programming language
 Summary(zh_CN.UTF-8): 强大的轻量级编程语言
 Group:          Development/Languages
@@ -120,6 +120,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/*.a
 
 %changelog
+* Sat Sep 19 2015 Liu Di <liudidi@gmail.com> - 5.2.2-4
+- 为 Magic 3.0 重建
+
 * Thu Jul 03 2014 Liu Di <liudidi@gmail.com> - 5.2.2-3
 - 为 Magic 3.0 重建
 

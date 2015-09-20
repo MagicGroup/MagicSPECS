@@ -1,5 +1,5 @@
 Name:          ceph
-Version:	0.90
+Version:	0.94.3
 Release:       2%{?dist}
 Summary:       User space components of the Ceph file system
 License:       LGPLv2
@@ -162,12 +162,15 @@ fi
 %{_bindir}/ceph-coverage
 %{_bindir}/ceph-dencoder
 %{_bindir}/ceph-brag
-%{_bindir}/ceph_objectstore_tool
+%{_bindir}/ceph-objectstore-tool
+%{_bindir}/cephfs-table-tool
+%{_mandir}/man8/ceph-create-keys.8*
+%{_mandir}/man8/ceph-deploy.8*
 %{_bindir}/cephfs-journal-tool
 %{_bindir}/rbd-replay
 %{_bindir}/rbd-replay-many
 #%{_bindir}/ceph_filestore_dump
-%{_bindir}/ceph_mon_store_converter
+#{_bindir}/ceph_mon_store_converter
 %{_bindir}/ceph-post-file
 %{_bindir}/ceph-rest-api
 %{_initrddir}/ceph
@@ -301,6 +304,12 @@ fi
 %{_sysconfdir}/bash_completion.d/radosgw-admin
 
 %changelog
+* Fri Sep 18 2015 Liu Di <liudidi@gmail.com> - 0.94.3-2
+- 为 Magic 3.0 重建
+
+* Fri Sep 18 2015 Liu Di <liudidi@gmail.com> - 0.94.3-1
+- 更新到 0.94.3
+
 * Fri Dec 26 2014 Liu Di <liudidi@gmail.com> - 0.90-2
 - 更新到 0.90
 

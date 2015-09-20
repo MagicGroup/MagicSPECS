@@ -1,0 +1,22 @@
+--- rshd/rshd.c.orig	2013-01-17 14:33:14.694727753 +0000
++++ rshd/rshd.c	2013-01-17 14:43:53.302906217 +0000
+@@ -531,6 +531,19 @@
+ 		close(pv[0]);
+ 		dup2(pv[1], 2);
+ 		close(pv[1]);
++	} else {
++		pid = fork();
++		if (pid == -1)  {
++			error("Can't fork; try again.\n");
++			exit(1);
++		}
++		if (pid) {
++			waitpid(pid, NULL, 0);
++			pam_close_session(pamh, 0);
++			pam_end(pamh, PAM_SUCCESS);
++			exit(0);
++		}
++		setpgrp();
+ 	}
+ 	theshell = pwd->pw_shell;
+ 	if (!theshell || !*theshell) {

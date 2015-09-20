@@ -1,0 +1,19 @@
+diff -up netkit-rsh-0.17/rshd/rshd.c.rh710987 netkit-rsh-0.17/rshd/rshd.c
+--- netkit-rsh-0.17/rshd/rshd.c.rh710987	2011-10-26 17:49:22.559772285 +0200
++++ netkit-rsh-0.17/rshd/rshd.c	2011-10-26 17:49:29.229771822 +0200
+@@ -487,7 +487,6 @@ doit(struct sockaddr_storage *fromp, soc
+ 	hostname = findhostname((struct sockaddr *)fromp, fromlen,
+ 		remuser, locuser, cmdbuf);
+ 
+-	setpwent();
+ 	pwd = doauth(remuser, hostname, locuser);
+ 	if (pwd == NULL) {
+ 		if (log_audit(remuser, -1, hostname, 0) > 0) {
+@@ -600,7 +599,6 @@ doit(struct sockaddr_storage *fromp, soc
+ 			putenv(env[i]);
+ #endif
+ 
+-	endpwent();
+ 	if (paranoid) {
+ 	    syslog(LOG_INFO|LOG_AUTH, "%s@%s as %s: cmd='%s'",
+ 		   remuser, hostname, locuser, cmdbuf);

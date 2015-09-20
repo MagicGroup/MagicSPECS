@@ -1,28 +1,37 @@
 Name:    liblogging
 Version: 1.0.4
-Release: 5%{?dist}
+Release: 6%{?dist}
 Summary: An easy to use logging library
+Summary(zh_CN.UTF-8): 简便使用 logging 库
 License: BSD
 Group:   System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 URL:     http://www.liblogging.org/
 Source0: http://download.rsyslog.com/liblogging/liblogging-%{version}.tar.gz
 
 %package stdlog
 Summary: An easy to use logging library - stdlog component
+Summary(zh_CN.UTF-8): 简便使用 logging 库 - stdlog 组件
 Group:   System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 Requires(post): /sbin/ldconfig
 Requires(postun): /sbin/ldconfig
 BuildRequires: dos2unix
 
 %package stdlog-devel
 Summary: An easy to use logging library - stdlog development files
+Summary(zh_CN.UTF-8): %{name}-stdlog 的开发包
 Group:   Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: %{name}-stdlog%{_isa} = %{version}-%{release}
 Requires: pkgconfig
 
 %description
 liblogging (the upstream project) is a collection of several components.
 Namely: stdlog, journalemu, rfc3195.
+
+%description -l zh_CN.UTF-8
+简便使用 logging 库。
 
 %description stdlog
 liblogging (the upstream project) is a collection of several components.
@@ -33,8 +42,14 @@ sophisticated "behind the scenes" with better support for multiple threads
 and flexibility for different log destinations (e.g. syslog and systemd
 journal).
 
+%description stdlog -l zh_CN.UTF-8
+简便使用 logging 库 - stdlog 组件。
+
 %description stdlog-devel
 This package contains development files for the %{name}-stdlog package.
+
+%description stdlog-devel -l zh_CN.UTF-8
+%{name}-stdlog 的开发包。
 
 %prep
 %setup -q
@@ -56,6 +71,7 @@ rm -f \
   %{buildroot}%{_bindir}/stdlogctl \
   %{buildroot}%{_libdir}/liblogging-stdlog.la \
   %{buildroot}%{_mandir}/man1/stdlogctl.1 \
+magic_rpm_clean.sh
 
 %post stdlog -p /sbin/ldconfig
 
@@ -76,6 +92,9 @@ rm -f \
 %{_mandir}/man3/stdlog.3.gz
 
 %changelog
+* Fri Sep 18 2015 Liu Di <liudidi@gmail.com> - 1.0.4-6
+- 为 Magic 3.0 重建
+
 * Wed Jun 17 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.0.4-5
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

@@ -1,7 +1,7 @@
 Summary: A software wavetable MIDI synthesizer
 Name: timidity++
 Version: 2.13.2
-Release: 25%{?dist}
+Release: 26%{?dist}
 Group: Applications/Multimedia
 Source: http://downloads.sourceforge.net/timidity/TiMidity++-%{version}.tar.bz2
 Source1: fedora-timidity.desktop
@@ -115,6 +115,9 @@ fi
 
 
 %changelog
+* Sat Sep 19 2015 Liu Di <liudidi@gmail.com> - 2.13.2-26
+- 为 Magic 3.0 重建
+
 * Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 2.13.2-25
 - 为 Magic 3.0 重建
 

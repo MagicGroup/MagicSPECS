@@ -1,8 +1,10 @@
 Name:             rtkit
-Version:          0.10
-Release:          3%{?dist}
+Version:	0.11
+Release:	2%{?dist}
 Summary:          Realtime Policy and Watchdog Daemon
+Summary(zh_CN.UTF-8): 实时策略和看门狗服务
 Group:            System Environment/Base
+Group(zh_CN.UTF-8): 系统环境/基本
 # The daemon itself is GPLv3+, the reference implementation for the client BSD
 License:          GPLv3+ and BSD
 URL:              http://git.0pointer.de/?p=rtkit.git
@@ -16,7 +18,10 @@ Requires(postun): systemd-units
 BuildRequires:    dbus-devel >= 1.2
 BuildRequires:    libcap-devel
 BuildRequires:    polkit-devel
-Source0:          http://0pointer.de/public/%{name}-%{version}.tar.gz
+Source0:          http://0pointer.de/public/%{name}-%{version}.tar.xz
+Patch1:           rtkit-mq_getattr.patch
+Patch2:           0001-SECURITY-Pass-uid-of-caller-to-polkit.patch
+Patch3:           rtkit-controlgroup.patch
 
 %description
 RealtimeKit is a D-Bus system service that changes the
@@ -25,8 +30,14 @@ scheduling mode) on request. It is intended to be used as a secure
 mechanism to allow real-time scheduling to be used by normal user
 processes.
 
+%description -l zh_CN.UTF-8
+实时策略和看门狗服务。
+
 %prep
 %setup -q
+%patch1 -p1
+%patch2 -p1
+%patch3 -p1
 
 %build
 %configure --with-systemdsystemunitdir=/lib/systemd/system
@@ -84,6 +95,12 @@ fi
 %{_mandir}/man8/*
 
 %changelog
+* Fri Sep 18 2015 Liu Di <liudidi@gmail.com> - 0.11-2
+- 为 Magic 3.0 重建
+
+* Fri Sep 18 2015 Liu Di <liudidi@gmail.com> - 0.11-1
+- 更新到 0.11
+
 * Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 0.10-3
 - 为 Magic 3.0 重建
 

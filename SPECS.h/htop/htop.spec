@@ -1,6 +1,6 @@
 Name:           htop
-Version:	1.0.2
-Release:        2%{?dist}
+Version:	1.0.3
+Release:        1%{?dist}
 Summary:        Interactive process viewer
 Summary(zh_CN.UTF-8): 交互式进程查看器
 
@@ -61,6 +61,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sun Sep 20 2015 Liu Di <liudidi@gmail.com> - 1.0.3-1
+- 更新到 1.0.3
+
 * Tue Apr 15 2014 Liu Di <liudidi@gmail.com> - 1.0.2-2
 - 更新到 1.0.2
 

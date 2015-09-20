@@ -1,0 +1,64 @@
+diff -up netkit-rsh-0.17/rexec/rexec.c.patch netkit-rsh-0.17/rexec/rexec.c
+--- netkit-rsh-0.17/rexec/rexec.c.patch	2010-01-05 15:24:44.000000000 +0100
++++ netkit-rsh-0.17/rexec/rexec.c	2010-01-05 16:06:55.927098704 +0100
+@@ -300,14 +300,29 @@ void parse_options(char *argv[], int arg
+     {
+     case 'l':
+       if (optarg != NULL)
+-	*user_name=strcpy((char *)malloc((strlen(optarg)+1)*sizeof(char)),optarg);
++      {
++        *user_name = malloc((strlen(optarg)+1)*sizeof(char));
++        if(*user_name == NULL)
++        {
++          fprintf(stderr, "%s: can't allocate memory!\n", argv[0]);
++          exit(1);
++        }
++        strcpy(*user_name,optarg);
++      }
+       break;
+     case 'p':
+       if ( optarg!= NULL )
+       {
+         int passlen = strlen(optarg);
+ 
+-	*passwd=strcpy((char *)malloc((passlen+1)*sizeof(char)),optarg);
++	*passwd = malloc((char *)malloc((passlen+1)*sizeof(char)));
++        if(*passwd == NULL)
++        {
++          fprintf(stderr, "%s: can't allocate memory!\n", argv[0]);
++          exit(1);
++        }
++        strcpy(*passwd,optarg);
++	
+         for (ind = 0; ind < passlen; ++ind)
+           optarg[ind] = '\0';
+       }
+@@ -356,6 +371,12 @@ void parse_options(char *argv[], int arg
+   for ( ind = optind; ind < argc; ++ind)
+     len += strlen(argv[ind])+1;
+   *command = (char *) malloc((len+1)*sizeof(char));
++  if ( *command == NULL )
++  {
++    fprintf(stderr, "%s: can't allocate memory!\n", argv[0]);
++    exit(1);
++  }
++  
+   **command = '\0';
+   for ( ind = optind; ind < argc; ++ind) {
+     if ( ind > optind ) {
+diff -up netkit-rsh-0.17/rshd/rshd.c.patch netkit-rsh-0.17/rshd/rshd.c
+--- netkit-rsh-0.17/rshd/rshd.c.patch	2010-01-05 15:24:44.000000000 +0100
++++ netkit-rsh-0.17/rshd/rshd.c	2010-01-05 15:46:39.718973390 +0100
+@@ -562,7 +562,11 @@ doit(struct sockaddr_storage *fromp, soc
+ 	environ = envinit;
+ 
+ 	if (chdir(pwd->pw_dir) < 0) {
+-		chdir("/");
++		if(chdir("/") < 0)
++		{
++			error("No remote directory and can't chdir to root.\n");
++			exit(1);
++		}
+ 		/*
+ 		 * error("No remote directory.\n");
+ 		 * exit(1);

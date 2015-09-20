@@ -1,0 +1,12 @@
+diff -up netkit-rsh-0.17/rexec/rexec.c.rh650119 netkit-rsh-0.17/rexec/rexec.c
+--- netkit-rsh-0.17/rexec/rexec.c.rh650119	2010-11-08 13:14:20.946845218 +0100
++++ netkit-rsh-0.17/rexec/rexec.c	2010-11-08 13:14:36.126838888 +0100
+@@ -315,7 +315,7 @@ void parse_options(char *argv[], int arg
+       {
+         int passlen = strlen(optarg);
+ 
+-	*passwd = malloc((char *)malloc((passlen+1)*sizeof(char)));
++	*passwd = (char *)malloc((passlen+1)*sizeof(char));
+         if(*passwd == NULL)
+         {
+           fprintf(stderr, "%s: can't allocate memory!\n", argv[0]);

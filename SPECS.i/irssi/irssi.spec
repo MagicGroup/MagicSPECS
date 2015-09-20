@@ -3,7 +3,7 @@
 Summary:	Modular text mode IRC client with Perl scripting
 Name:		irssi
 Version:	0.8.16
-Release:	2%{?dist}
+Release:	3%{?dist}
 
 License:	GPLv2+
 Group:		Applications/Communications
@@ -90,6 +90,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sat Sep 19 2015 Liu Di <liudidi@gmail.com> - 0.8.16-3
+- 为 Magic 3.0 重建
+
 * Thu Sep 17 2015 Liu Di <liudidi@gmail.com> - 0.8.16-2
 - 为 Magic 3.0 重建
 

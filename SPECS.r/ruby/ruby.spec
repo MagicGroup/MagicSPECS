@@ -21,7 +21,7 @@
 %endif
 
 
-%global release 44
+%global release 46
 %{!?release_string:%global release_string %{?development_release:0.}%{release}%{?development_release:.%{development_release}}%{?dist}}
 
 %global rubygems_version 2.4.5
@@ -893,6 +893,12 @@ make check TESTS="-v $DISABLE_TESTS"
 %{ruby_libdir}/tkextlib
 
 %changelog
+* Sat Sep 19 2015 Liu Di <liudidi@gmail.com> - 2.2.3-46
+- 为 Magic 3.0 重建
+
+* Fri Sep 18 2015 Liu Di <liudidi@gmail.com> - 2.2.3-45
+- 为 Magic 3.0 重建
+
 * Tue Sep 01 2015 Vít Ondruch <vondruch@redhat.com> - 2.2.3-44
 - Update to Ruby 2.2.3.
 

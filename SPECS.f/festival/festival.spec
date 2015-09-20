@@ -6,7 +6,7 @@
 Name: festival
 Summary: Speech synthesis and text-to-speech system
 Version: %{festivalversion}
-Release: 24%{?dist}
+Release: 25%{?dist}
 
 URL: http://www.cstr.ed.ac.uk/projects/festival/
 Group: Applications/Multimedia
@@ -117,6 +117,9 @@ Patch20: festival-1.96-speechtools-1.2.96-beta+awb.patch
 # but that's something to take up with upstream.
 Patch31: festival-1.96-kludge-etcpath-into-libarch.patch
 
+# Fixing format-security flaws
+Patch60: festival-1.96-format-security.patch
+
 # For some reason, the Nitech voices (and the previous CMU versions) fail to
 # define proclaim_voice, which makes them not show up in the voice
 # descriptions, which makes gnome-speech not show them.
@@ -141,6 +144,9 @@ Patch96: festival.gcc47.patch
 
 # Bring back old patch since gcc 4.7 no longer ignores unknown options
 Patch97: no-shared-data.patch
+
+# There is a typo in the festival_server script
+Patch98: festival-1.96-server-script-typo.patch
 
 BuildRequires: pulseaudio-libs-devel
 BuildRequires: tetex
@@ -519,6 +525,8 @@ for f in speech_tools/main/siod_main.cc src/arch/festival/festival.cc; do
   sed -i -e 's,{{HORRIBLELIBARCHKLUDGE}},"%{_libdir}",' $f
 done
 
+%patch60 -p1
+
 # no backups for these patches because
 # the voice directories are copied wholesale
 %patch90 -p1
@@ -529,6 +537,7 @@ done
 %patch95 -p1 -b .gcc44
 %patch96 -p0 -b .gcc47
 %patch97 -p1 -b .no-share
+%patch98 
 
 # zero length
 rm festdoc-%{docversion}/speech_tools/doc/index_html.jade
@@ -903,6 +912,9 @@ fi
 
 
 %changelog
+* Sat Sep 19 2015 Liu Di <liudidi@gmail.com> - 1.96-25
+- 为 Magic 3.0 重建
+
 * Thu Feb 07 2013 Jon Ciesla <limburgher@gmail.com> - 1.96-24
 - Minor Merge review fixes, BZ 225748.
 

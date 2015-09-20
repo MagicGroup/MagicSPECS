@@ -1,0 +1,12 @@
+diff -ur bochs-2.6.8.orig/iodev/network/slirp/slirp.cc bochs-2.6.8/iodev/network/slirp/slirp.cc
+--- bochs-2.6.8.orig/iodev/network/slirp/slirp.cc	2015-09-18 13:50:02.984189723 +0000
++++ bochs-2.6.8/iodev/network/slirp/slirp.cc	2015-09-18 13:50:17.924189340 +0000
+@@ -928,7 +928,7 @@
+ 
+ void slirp_warning(Slirp *slirp, const char *msg)
+ {
+-    BX_ERROR((msg));
++    BX_ERROR(("%s",msg));
+ }
+ 
+ #endif

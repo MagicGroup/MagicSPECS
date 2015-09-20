@@ -5,9 +5,9 @@ auth       required     pam_nologin.so
 auth       required     pam_securetty.so
 auth       required     pam_env.so
 auth       sufficient   pam_rhosts.so
-auth       include      system-auth
-account    include      system-auth
-password   include      system-auth
+auth       include      password-auth
+account    include      password-auth
+password   include      password-auth
 session	   optional     pam_keyinit.so    force revoke
-session    include      system-auth
 session    required     pam_loginuid.so
+session    include      password-auth

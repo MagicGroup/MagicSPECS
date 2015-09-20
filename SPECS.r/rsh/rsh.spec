@@ -1,8 +1,10 @@
+%global _hardened_build 1
+
 Summary: Clients for remote access commands (rsh, rlogin, rcp).
 Summary(zh_CN.UTF-8): 远程访问 (rsh, rlogin, rcp) 的客户端
 Name: rsh
 Version: 0.17
-Release: 54%{?dist}
+Release: 55%{?dist}
 License: BSD
 Group: Applications/Internet
 Group(zh_CN.UTF-8): 应用程序/互联网
@@ -17,46 +19,82 @@ Source: ftp://ftp.uk.linux.org/pub/linux/Networking/netkit/netkit-rsh-%{version}
 Source1: rexec.pam
 Source2: rlogin.pam
 Source3: rsh.pam
-Source4: http://www.tc.cornell.edu/~sadd/rexec-1.5.tar.gz
-Source5: rsh-xinetd
-Source6: rlogin-xinetd
-Source7: rexec-xinetd
-
+# Source is no longer publicly available.
+Source4: rexec-1.5.tar.gz
+Source5: rsh@.service
+Source6: rsh.socket
+Source7: rlogin@.service
+Source8: rlogin.socket
+Source9: rexec@.service
+Source10: rexec.socket
 Patch1: netkit-rsh-0.17-sectty.patch
+# Make rexec installation process working
 Patch2: netkit-rsh-0.17-rexec.patch
 Patch3: netkit-rsh-0.10-stdarg.patch
+# Improve installation process
 Patch4: netkit-rsh-0.16-jbj.patch
-Patch5: netkit-rsh-0.16-pamfix.patch
-Patch6: netkit-rsh-0.16-jbj2.patch
-Patch7: netkit-rsh-0.16-jbj3.patch
+# Link rshd against libpam
 Patch8: netkit-rsh-0.16-jbj4.patch
 Patch9: netkit-rsh-0.16-prompt.patch
 Patch10: netkit-rsh-0.16-rlogin=rsh.patch
+# Improve documentation
 Patch11: netkit-rsh-0.16-nokrb.patch
+# Remove spurious double-reporting of errors
 Patch12: netkit-rsh-0.17-pre20000412-jbj5.patch
+# RH #42880
 Patch13: netkit-rsh-0.17-userandhost.patch
+# Don't strip binaries during installation
 Patch14: netkit-rsh-0.17-strip.patch
+# RH #67362
 Patch15: netkit-rsh-0.17-lfs.patch
+# RH #57392
 Patch16: netkit-rsh-0.17-chdir.patch
+# RH #63806
 Patch17: netkit-rsh-0.17-pam-nologin.patch
+# RH #135643
 Patch19: netkit-rsh-0.17-rexec-netrc.patch
+# RH #68590
 Patch20: netkit-rsh-0.17-pam-sess.patch
+# RH #67361
 Patch21: netkit-rsh-0.17-errno.patch
+# RH #118630
 Patch22: netkit-rsh-0.17-rexec-sig.patch
+# RH #135827
 Patch23: netkit-rsh-0.17-nohost.patch
+# RH #122315
 Patch24: netkit-rsh-0.17-ignchld.patch
+# RH #146464
 Patch25: netkit-rsh-0.17-checkdir.patch
 Patch26: netkit-rsh-0.17-pam-conv.patch
+# RH #174045
 Patch27: netkit-rsh-0.17-rcp-largefile.patch
+# RH #174146
 Patch28: netkit-rsh-0.17-pam-rhost.patch
+# RH #178916
 Patch29: netkit-rsh-0.17-rlogin-linefeed.patch
 Patch30: netkit-rsh-0.17-ipv6.patch
 Patch31: netkit-rsh-0.17-pam_env.patch
 Patch33: netkit-rsh-0.17-dns.patch
 Patch34: netkit-rsh-0.17-nohostcheck-compat.patch
+# RH #448904
+Patch35: netkit-rsh-0.17-audit.patch
 Patch36: netkit-rsh-0.17-longname.patch
+# RH #440867
 Patch37: netkit-rsh-0.17-arg_max.patch
 Patch38: netkit-rsh-0.17-rh448904.patch
+Patch39: netkit-rsh-0.17-rh461903.patch
+Patch40: netkit-rsh-0.17-rh473492.patch
+Patch41: netkit-rsh-0.17-rh650119.patch
+Patch42: netkit-rsh-0.17-rh710987.patch
+Patch43: netkit-rsh-0.17-rh784467.patch
+Patch44: netkit-rsh-0.17-rh896583.patch
+Patch45: netkit-rsh-0.17-rh947213.patch
+Patch46: 0001-rshd-use-sockaddr_in-for-non-native-IPv6-clients.patch
+Patch47: 0002-rlogind-use-sockaddr_in-for-non-native-IPv6-client.patch
+Patch48: netkit-rsh-0.17-ipv6-rexec.patch
+Patch49: 0001-rshd-include-missing-header-file.patch
+Patch50: 0001-rshd-use-upper-bound-for-cmdbuflen.patch   
+Patch51: 0001-rcp-don-t-advance-pointer-returned-from-rcp_basename.patch
 
 %description
 The rsh package contains a set of programs which allow users to run
@@ -105,10 +143,6 @@ rsh 软件包包括一组允许用户在远程机器上运行命令(rsh)，登�
 %patch2 -p1 -b .rexec
 %patch3 -p1 -b .stdarg
 %patch4 -p1 -b .jbj
-# XXX patches {6,7,8} not applied
-#%patch5 -p1 -b .pamfix
-#%patch6 -p1 -b .jbj2
-#%patch7 -p1 -b .jbj3
 %patch8 -p1 -b .jbj4
 %patch9 -p1 -b .prompt
 %patch10 -p1 -b .rsh
@@ -134,19 +168,35 @@ rsh 软件包包括一组允许用户在远程机器上运行命令(rsh)，登�
 %patch31 -p1 -b .pam_env
 %patch33 -p1 -b .dns
 %patch34 -p1 -b .compat
+%patch35 -p1 -b .audit
 %patch36 -p1 -b .longname
 %patch37 -p1 -b .arg_max
+%patch38 -p1 -b .rh448904
+%patch39 -p1 -b .rh461903
+%patch40 -p1 -b .rh473492
+%patch41 -p1 -b .rh650119
+%patch42 -p1 -b .rh710987
+%patch43 -p1 -b .rh784467
+%patch44 -b .rh896583
+%patch45 -p1 -b .rh947213
+%patch46 -p1
+%patch47 -p1
+%patch48 -p1 -b .ipv6-rexec
+%patch49 -p1 -b .waitpid
+%patch50 -p1
+%patch51 -p1
 
 # No, I don't know what this is doing in the tarball.
 rm -f rexec/rexec
 
 %build
 sh configure --with-c-compiler=gcc
+export RPM_OPT_FLAGS="$RPM_OPT_FLAGS -fno-strict-aliasing"
 %ifarch s390 s390x
 %{__perl} -pi -e '
     s,^CC=.*$,CC=cc,;
     s,-O2,\$(RPM_OPT_FLAGS) -fPIC -D_LARGEFILE_SOURCE -D_LARGEFILE64_SOURCE -D_FILE_OFFSET_BITS=64 -D_GNU_SOURCE,;
-    s,^LDFLAGS=,LDFLAGS=-pie,;
+    s,^LDFLAGS=,LDFLAGS=-z now -pie,;
     s,^BINDIR=.*$,BINDIR=%{_bindir},;
     s,^MANDIR=.*$,MANDIR=%{_mandir},;
     s,^SBINDIR=.*$,SBINDIR=%{_sbindir},;
@@ -155,7 +205,7 @@ sh configure --with-c-compiler=gcc
 %{__perl} -pi -e '
     s,^CC=.*$,CC=cc,;
     s,-O2,\$(RPM_OPT_FLAGS) -fpic -D_LARGEFILE_SOURCE -D_LARGEFILE64_SOURCE -D_FILE_OFFSET_BITS=64 -D_GNU_SOURCE,;
-    s,^LDFLAGS=,LDFLAGS=-pie,;
+    s,^LDFLAGS=,LDFLAGS=-z now -pie,;
     s,^BINDIR=.*$,BINDIR=%{_bindir},;
     s,^MANDIR=.*$,MANDIR=%{_mandir},;
     s,^SBINDIR=.*$,SBINDIR=%{_sbindir},;
@@ -164,46 +214,64 @@ sh configure --with-c-compiler=gcc
 make %{?_smp_mflags}
 
 %install
-rm -rf ${RPM_BUILD_ROOT}
-mkdir -p ${RPM_BUILD_ROOT}%{_bindir}
-mkdir -p ${RPM_BUILD_ROOT}%{_sbindir}
-mkdir -p ${RPM_BUILD_ROOT}%{_mandir}/man{1,5,8}
-mkdir -p ${RPM_BUILD_ROOT}/etc/pam.d
+mkdir -p %{buildroot}%{_bindir}
+mkdir -p %{buildroot}%{_sbindir}
+mkdir -p %{buildroot}%{_mandir}/man{1,5,8}
+mkdir -p %{buildroot}%{_sysconfdir}/pam.d
 
-make INSTALLROOT=${RPM_BUILD_ROOT} BINDIR=%{_bindir} MANDIR=%{_mandir} install
+make INSTALLROOT=%{buildroot} BINDIR=%{_bindir} MANDIR=%{_mandir} install
 
-install -m 644 $RPM_SOURCE_DIR/rexec.pam ${RPM_BUILD_ROOT}/etc/pam.d/rexec
-install -m 644 $RPM_SOURCE_DIR/rlogin.pam ${RPM_BUILD_ROOT}/etc/pam.d/rlogin
-install -m 644 $RPM_SOURCE_DIR/rsh.pam ${RPM_BUILD_ROOT}/etc/pam.d/rsh
+install -m 644 %SOURCE1 %{buildroot}%{_sysconfdir}/pam.d/rexec
+install -m 644 %SOURCE2 %{buildroot}%{_sysconfdir}/pam.d/rlogin
+install -m 644 %SOURCE3 %{buildroot}%{_sysconfdir}/pam.d/rsh
 
-mkdir -p ${RPM_BUILD_ROOT}/etc/xinetd.d/
-install -m644 %SOURCE5 ${RPM_BUILD_ROOT}/etc/xinetd.d/rsh
-install -m644 %SOURCE6 ${RPM_BUILD_ROOT}/etc/xinetd.d/rlogin
-install -m644 %SOURCE7 ${RPM_BUILD_ROOT}/etc/xinetd.d/rexec
+mkdir -p %{buildroot}%{_unitdir}
+install -m644 %SOURCE5 %{buildroot}%{_unitdir}/rsh@.service
+install -m644 %SOURCE6 %{buildroot}%{_unitdir}/rsh.socket
+install -m644 %SOURCE7 %{buildroot}%{_unitdir}/rlogin@.service
+install -m644 %SOURCE8 %{buildroot}%{_unitdir}/rlogin.socket
+install -m644 %SOURCE9 %{buildroot}%{_unitdir}/rexec@.service
+install -m644 %SOURCE10 %{buildroot}%{_unitdir}/rexec.socket
 
-%clean
-rm -rf ${RPM_BUILD_ROOT}
+%post server
+%systemd_post rsh.socket
+%systemd_post rlogin.socket
+%systemd_post rexec.socket
+
+%preun server
+%systemd_preun rsh.socket
+%systemd_preun rlogin.socket
+%systemd_preun rexec.socket
+
+%postun server
+%systemd_postun_with_restart rsh.socket
+%systemd_postun_with_restart rlogin.socket
+%systemd_postun_with_restart rexec.socket
 
 %files
-%defattr(-,root,root)
-%attr(4755,root,root)	%{_bindir}/rcp
+%defattr(-,root,root,-)
+%doc README BUGS
+%attr(0755,root,root) %caps(cap_net_bind_service=pe) %{_bindir}/rcp
 %{_bindir}/rexec
-%attr(4755,root,root)	%{_bindir}/rlogin
-%attr(4755,root,root)	%{_bindir}/rsh
+%attr(0755,root,root) %caps(cap_net_bind_service=pe) %{_bindir}/rlogin
+%attr(0755,root,root) %caps(cap_net_bind_service=pe) %{_bindir}/rsh
 %{_mandir}/man1/*.1*
 
 %files server
-%defattr(-,root,root)
-%config	/etc/pam.d/rsh
-%config	/etc/pam.d/rlogin
-%config	/etc/pam.d/rexec
+%defattr(-,root,root,-)
+%config(noreplace) %{_sysconfdir}/pam.d/rsh
+%config(noreplace) %{_sysconfdir}/pam.d/rlogin
+%config(noreplace) %{_sysconfdir}/pam.d/rexec
 %{_sbindir}/in.rexecd
 %{_sbindir}/in.rlogind
 %{_sbindir}/in.rshd
-%config(noreplace) /etc/xinetd.d/*
+%{_unitdir}/*
 %{_mandir}/man8/*.8*
 
 %changelog
+* Fri Sep 18 2015 Liu Di <liudidi@gmail.com> - 0.17-55
+- 为 Magic 3.0 重建
+
 * Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 0.17-54
 - 为 Magic 3.0 重建
 

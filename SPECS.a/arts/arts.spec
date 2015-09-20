@@ -12,7 +12,7 @@ Group:   System Environment/Daemons
 Group(zh_CN.UTF-8): 系统环境/服务
 Epoch:   8
 Version: 1.5.10
-Release: 20%{?dist}
+Release: 21%{?dist}
 
 License: LGPLv2+
 Url: http://www.kde.org
@@ -50,7 +50,7 @@ Patch302: kde3-automake-add-missing.patch
 # used in artsdsp
 Requires: which
 
-BuildRequires: qt-devel >= 3.3.8
+BuildRequires: qt3-devel >= 3.3.8
 BuildRequires: alsa-lib-devel
 BuildRequires: audiofile-devel
 %if %{make_cvs}
@@ -83,7 +83,7 @@ Group(zh_CN.UTF-8): 开发/库
 Summary: Development files for the aRts sound server
 Summary(zh_CN.UTF-8): %{name} 的开发包
 Requires: %{name}%{?_isa} = %{epoch}:%{version}-%{release}
-Requires: qt-devel
+Requires: qt3-devel
 Requires: pkgconfig
 Requires: glib2-devel
 %description devel
@@ -119,7 +119,7 @@ Install %{name}-devel if you intend to write applications using aRts.
 %endif
 
 
-unset QTDIR && . /etc/profile.d/qt3.sh
+unset QTDIR && . /etc/profile.d/qt.sh
 
 %configure \
   --includedir=%{_includedir}/kde \
@@ -213,6 +213,9 @@ rm -rf  %{buildroot}
 
 
 %changelog
+* Fri Sep 18 2015 Liu Di <liudidi@gmail.com> - 8:1.5.10-21
+- 为 Magic 3.0 重建
+
 * Wed Dec 05 2012 Liu Di <liudidi@gmail.com> - 8:1.5.10-19
 - 为 Magic 3.0 重建
 

@@ -4,7 +4,7 @@ Summary: Music module player
 Summary(zh_CN.UTF-8): 音乐模块播放器
 Name: mikmod
 Version: 3.2.6
-Release: 2%{?dist}
+Release: 3%{?dist}
 License: GPLv2 and LGPLv2+
 Group: Applications/Multimedia
 Group(zh_CN.UTF-8): 应用程序/多媒体
@@ -56,6 +56,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sat Sep 19 2015 Liu Di <liudidi@gmail.com> - 3.2.6-3
+- 为 Magic 3.0 重建
+
 * Mon Sep 08 2014 Liu Di <liudidi@gmail.com> - 3.2.6-2
 - 为 Magic 3.0 重建
 

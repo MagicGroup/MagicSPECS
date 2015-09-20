@@ -4,13 +4,9 @@
 %bcond_without		fedora
 %bcond_with		upstart
 %bcond_without		systemd
-%if 0%{?fedora} < 23
-%bcond_without		sysv
-%else
 %bcond_with		sysv
-%endif
 %bcond_without		tmpfiles
-%bcond_with		unrar
+%bcond_without		unrar
 %bcond_without		noarch
 %bcond_without		bytecode
 ##
@@ -58,13 +54,12 @@ Requires(postun):	 /bin/systemctl\
 Summary:	End-user tools for the Clam Antivirus scanner
 Name:		clamav
 Version:	0.98.7
-Release:	3%{?dist}
+Release:	4%{?dist}
 License:	%{?with_unrar:proprietary}%{!?with_unrar:GPLv2}
 Group:		Applications/File
 URL:		http://www.clamav.net
 %if 0%{?with_unrar:1}
 Source0:	http://download.sourceforge.net/sourceforge/clamav/%name-%version%{?prerelease}.tar.gz
-Source999:	http://download.sourceforge.net/sourceforge/clamav/%name-%version%{?prerelease}.tar.gz.sig
 %else
 # Unfortunately, clamav includes support for RAR v3, derived from GPL
 # incompatible unrar from RARlabs. We have to pull this code out.
@@ -891,6 +886,9 @@ test "$1" != "0" || /sbin/initctl -q stop clamav-milter || :
 
 
 %changelog
+* Fri Sep 18 2015 Liu Di <liudidi@gmail.com> - 0.98.7-4
+- 为 Magic 3.0 重建
+
 * Tue Jun 30 2015 Robert Scheck <robert@fedoraproject.org> - 0.98.7-3
 - Move /etc/tmpfiles.d/ to /usr/lib/tmpfiles.d/ (#1126595)
 

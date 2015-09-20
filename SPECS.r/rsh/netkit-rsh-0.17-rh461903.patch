@@ -1,0 +1,17 @@
+diff -up netkit-rsh-0.17/rcp/rcp.c.closeerr netkit-rsh-0.17/rcp/rcp.c
+--- netkit-rsh-0.17/rcp/rcp.c.closeerr	2008-09-10 12:07:43.000000000 +0200
++++ netkit-rsh-0.17/rcp/rcp.c	2008-09-10 12:30:57.000000000 +0200
+@@ -810,7 +810,11 @@ bad:			error("rcp: %s: %s\n", np, strerr
+ 			    strerror(errno));
+ 			wrerr = DISPLAYED;
+ 		}
+-		(void)close(ofd);
++		if (close(ofd) != 0) {
++			error("rcp: error closing %s: %s\n", np,
++				strerror(errno));
++			wrerr = DISPLAYED;
++		}
+ 		(void)response();
+ 		if (setimes && wrerr == NO) {
+ 			setimes = 0;
+

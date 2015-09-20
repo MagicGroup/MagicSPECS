@@ -1,9 +1,9 @@
-%global revision 20140906
+%global revision 20150810
 Summary: Ncurses support utilities
 Summary(zh_CN.UTF-8): Ncuerses 支持工具
 Name: ncurses
-Version: 5.9
-Release: 18.%{revision}%{?dist}
+Version: 6.0
+Release: 2.%{revision}%{?dist}
 License: MIT
 Group: System Environment/Base
 Group(zh_CN.UTF-8): 系统环境/基本
@@ -275,6 +275,12 @@ bzip2 NEWS
 %{_libdir}/lib*.a
 
 %changelog
+* Fri Sep 18 2015 Liu Di <liudidi@gmail.com> - 6.0-2.20150810
+- 为 Magic 3.0 重建
+
+* Fri Sep 18 2015 Liu Di <liudidi@gmail.com> - 6.0-1.20150810
+- 更新到 6.0
+
 * Mon Jan 26 2015 Liu Di <liudidi@gmail.com> - 5.9-18.20140906
 - 为 Magic 3.0 重建
 

@@ -1,8 +1,10 @@
 Name:           ruby-augeas
 Version:        0.5.0
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Ruby bindings for Augeas
+Summary(zh_CN.UTF-8): Augeas 的 Ruby 绑定
 Group:          Development/Languages
+Group(zh_CN.UTF-8): 开发/语言
 
 License:        LGPLv2+
 URL:            http://augeas.net
@@ -20,6 +22,9 @@ Provides:       ruby(augeas) = %{version}
 %description
 Ruby bindings for augeas.
 
+%description -l zh_CN.UTF-8
+Augeas 的 Ruby 绑定。
+
 %prep
 %setup -q
 
@@ -34,6 +39,7 @@ install -d -m0755 %{buildroot}%{ruby_vendorlibdir}
 install -d -m0755 %{buildroot}%{ruby_vendorarchdir}
 install -p -m0644 lib/augeas.rb %{buildroot}%{ruby_vendorlibdir}
 install -p -m0755 ext/augeas/_augeas.so %{buildroot}%{ruby_vendorarchdir}
+magic_rpm_clean.sh
 
 %check
 testrb tests/tc_augeas.rb
@@ -50,6 +56,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Fri Sep 18 2015 Liu Di <liudidi@gmail.com> - 0.5.0-3
+- 为 Magic 3.0 重建
+
 * Sun Jun 22 2014 Liu Di <liudidi@gmail.com> - 0.5.0-2
 - 为 Magic 3.0 重建
 

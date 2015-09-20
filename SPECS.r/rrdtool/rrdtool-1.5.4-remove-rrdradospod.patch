@@ -1,0 +1,25 @@
+diff -ur rrdtool-1.5.4.orig/doc/Makefile.am rrdtool-1.5.4/doc/Makefile.am
+--- rrdtool-1.5.4.orig/doc/Makefile.am	2015-09-18 06:47:17.197839833 +0000
++++ rrdtool-1.5.4/doc/Makefile.am	2015-09-18 06:47:33.455839416 +0000
+@@ -17,10 +17,6 @@
+   POD += rrdgraph_libdbi.pod
+ endif
+ 
+-if BUILD_LIBRADOS
+-  POD += rrdrados.pod
+-endif
+-
+ if BUILD_LUA
+   POD += rrdlua.pod
+ endif
+diff -ur rrdtool-1.5.4.orig/doc/Makefile.in rrdtool-1.5.4/doc/Makefile.in
+--- rrdtool-1.5.4.orig/doc/Makefile.in	2015-09-18 06:47:17.199839833 +0000
++++ rrdtool-1.5.4/doc/Makefile.in	2015-09-18 06:47:40.576839234 +0000
+@@ -80,7 +80,6 @@
+ host_triplet = @host@
+ target_triplet = @target@
+ @BUILD_LIBDBI_TRUE@am__append_1 = rrdgraph_libdbi.pod
+-@BUILD_LIBRADOS_TRUE@am__append_2 = rrdrados.pod
+ @BUILD_LUA_TRUE@am__append_3 = rrdlua.pod
+ subdir = doc
+ DIST_COMMON = $(srcdir)/Makefile.in $(srcdir)/Makefile.am

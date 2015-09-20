@@ -1,8 +1,8 @@
 %global apiver 2.91
 
 Name:           vte291
-Version:        0.37.0
-Release:        3%{?dist}
+Version:	0.41.90
+Release:        1%{?dist}
 Summary:        Terminal emulator library
 
 License:        LGPLv2+
@@ -99,6 +99,9 @@ rm -f $RPM_BUILD_ROOT%{_libdir}/*.la
 %{_sysconfdir}/profile.d/vte.sh
 
 %changelog
+* Sat Sep 19 2015 Liu Di <liudidi@gmail.com> - 0.41.90-1
+- 更新到 0.41.90
+
 * Mon May 19 2014 Liu Di <liudidi@gmail.com> - 0.37.0-3
 - 为 Magic 3.0 重建
 

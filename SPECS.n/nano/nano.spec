@@ -2,7 +2,7 @@ Summary:         A small text editor
 Summary(zh_CN.UTF-8): 一个小的文本编辑器
 Name:            nano
 Version:         2.3.6
-Release:         2%{?dist}
+Release:         3%{?dist}
 License:         GPLv3+
 Group:           Applications/Editors
 Group(zh_CN.UTF-8): 应用程序/编辑器
@@ -83,6 +83,9 @@ exit 0
 %{_datadir}/nano
 
 %changelog
+* Sun Sep 20 2015 Liu Di <liudidi@gmail.com> - 2.3.6-3
+- 为 Magic 3.0 重建
+
 * Tue Jan 20 2015 Liu Di <liudidi@gmail.com> - 2.3.6-2
 - 为 Magic 3.0 重建
 

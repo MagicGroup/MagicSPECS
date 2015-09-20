@@ -1,6 +1,6 @@
 Name: vte3
-Version:	0.36.2
-Release: 1%{?dist}
+Version:	0.36.4
+Release: 2%{?dist}
 Summary: A terminal emulator
 Summary(zh_CN.UTF-8): 终端模拟器
 License: LGPLv2+
@@ -96,6 +96,12 @@ magic_rpm_clean.sh
 
 
 %changelog
+* Sat Sep 19 2015 Liu Di <liudidi@gmail.com> - 0.36.4-2
+- 为 Magic 3.0 重建
+
+* Sat Sep 19 2015 Liu Di <liudidi@gmail.com> - 0.36.4-1
+- 更新到 0.36.4
+
 * Mon May 19 2014 Liu Di <liudidi@gmail.com> - 0.36.2-1
 - 更新到 0.36.2
 

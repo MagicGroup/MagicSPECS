@@ -1,9 +1,11 @@
 Summary: A toolkit for RTMP streams
+Summary(zh_CN.UTF-8): RTMP 流使用的工具
 Name: rtmpdump
 Version: 2.3
-Release: 3%{?dist}
+Release: 4%{?dist}
 License: GPLv2
 Group: System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 URL: http://rtmpdump.mplayerhq.hu/
 Source0: http://rtmpdump.mplayerhq.hu/download/rtmpdump-%{version}.tgz
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
@@ -13,6 +15,9 @@ BuildRequires: openssl-devel
 rtmpdump is a toolkit for RTMP streams. All forms of RTMP are
 supported, including rtmp://, rtmpt://, rtmpe://, rtmpte://, and
 rtmps://.
+
+%description -l zh_CN.UTF-8
+RTMP 流使用的工具。
 
 %package libs
 Summary: Shared libs for %{name}
@@ -68,6 +73,7 @@ make install \
   incdir=%{_includedir}/librtmp \
   libdir=%{_libdir} \
   DESTDIR=%{buildroot}
+magic_rpm_clean.sh
 
 %clean
 rm -rf %{buildroot}
@@ -98,6 +104,9 @@ rm -rf %{buildroot}
 %{_libdir}/pkgconfig/*.pc
 
 %changelog
+* Fri Sep 18 2015 Liu Di <liudidi@gmail.com> - 2.3-4
+- 为 Magic 3.0 重建
+
 * Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 2.3-3
 - 为 Magic 3.0 重建
 

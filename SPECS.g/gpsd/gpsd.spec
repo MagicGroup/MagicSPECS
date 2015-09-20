@@ -1,10 +1,10 @@
 %global _hardened_build 1
 %define git 1
-%define vcsdate 20140411
+%define vcsdate 20150920
 
 Name: gpsd
 Version: 3.10
-Release: 5.git%{vcsdate}%{?dist}
+Release: 8.git%{vcsdate}%{?dist}
 Summary: Service daemon for mediating access to a GPS
 
 Group: System Environment/Daemons
@@ -231,6 +231,15 @@ rm %{buildroot}%{_libdir}/{libgpsd.so,pkgconfig/libgpsd.pc}
 
 
 %changelog
+* Sun Sep 20 2015 Liu Di <liudidi@gmail.com> - 3.10-8.git20150920
+- 更新到 20150920 日期的仓库源码
+
+* Sat Sep 19 2015 Liu Di <liudidi@gmail.com> - 3.10-7.git20150919
+- 更新到 20150919 日期的仓库源码
+
+* Sat Sep 19 2015 Liu Di <liudidi@gmail.com> - 3.10-6.git20140411
+- 为 Magic 3.0 重建
+
 * Fri Apr 11 2014 Liu Di <liudidi@gmail.com> - 3.10-5.git20140411
 - 更新到 20140411 日期的仓库源码
 

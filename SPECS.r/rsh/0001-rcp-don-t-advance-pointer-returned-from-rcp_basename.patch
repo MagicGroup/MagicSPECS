@@ -1,0 +1,45 @@
+From b86a7a6af20330dbf87264da768a9d317e210dbb Mon Sep 17 00:00:00 2001
+From: Michal Sekletar <msekleta@redhat.com>
+Date: Thu, 26 Mar 2015 14:10:51 +0100
+Subject: [PATCH] rcp: don't advance pointer returned from rcp_basename
+
+---
+ rcp/rcp.c | 9 ++++-----
+ 1 file changed, 4 insertions(+), 5 deletions(-)
+
+diff -up netkit-rsh-0.17/rcp/rcp.c.basename netkit-rsh-0.17/rcp/rcp.c
+--- netkit-rsh-0.17/rcp/rcp.c.basename	2015-03-26 14:19:25.771159388 +0100
++++ netkit-rsh-0.17/rcp/rcp.c	2015-03-26 14:28:23.233938529 +0100
+@@ -98,6 +98,7 @@ static void usage(void);
+ static void toremote(const char *targ, int argc, char *argv[]);
+ static void tolocal(int argc, char *argv[]);
+ static void error(const char *fmt, ...);
++static char *rcp_basename(char *path);
+ 
+ int
+ main(int argc, char *argv[])
+@@ -464,11 +465,11 @@ notreg:			(void)close(f);
+ 			error("rcp: %s: not a plain file\n", name);
+ 			continue;
+ 		}
+-		last = strrchr(name, '/');
++
++		last = rcp_basename(name);
+ 		if (last == 0)
+ 			last = name;
+-		else
+-			last++;
++
+ 		if (pflag) {
+ 			/*
+ 			 * Make it compatible with possible future
+@@ -556,8 +557,7 @@ rsource(char *name, struct stat *statp)
+ 	last = rcp_basename(name);
+ 	if (last == 0)
+ 		last = name;
+-	else
+-		last++;
++
+ 	if (pflag) {
+ 		(void)snprintf(path, sizeof(path),
+ 		    "T%ld 0 %ld 0\n", statp->st_mtime, statp->st_atime);

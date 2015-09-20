@@ -4,7 +4,7 @@
 Summary: System and process monitoring utilities
 Summary(zh_CN.UTF-8): 系统和进程监视工具
 Name: procps-ng
-Version:	3.3.10
+Version:	3.3.11
 Release:	1%{?dist}
 License: GPL+ and GPLv2 and GPLv2+ and GPLv3+ and LGPLv2+
 Group: Applications/System
@@ -163,6 +163,9 @@ ln -s %{_bindir}/pidof %{buildroot}%{_sbindir}/pidof
 %{_includedir}/proc
 
 %changelog
+* Sat Sep 19 2015 Liu Di <liudidi@gmail.com> - 3.3.11-1
+- 更新到 3.3.11
+
 * Tue Aug 04 2015 Liu Di <liudidi@gmail.com> - 3.3.10-1
 - 更新到 3.3.10
 

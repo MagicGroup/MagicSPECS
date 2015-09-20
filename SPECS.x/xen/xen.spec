@@ -53,7 +53,7 @@
 Summary: Xen is a virtual machine monitor
 Name:    xen
 Version: 4.4.0
-Release: 8%{?dist}
+Release: 9%{?dist}
 Group:   Development/Libraries
 License: GPLv2+ and LGPLv2+ and BSD
 URL:     http://xen.org/
@@ -898,6 +898,9 @@ rm -rf %{buildroot}
 %endif
 
 %changelog
+* Sat Sep 19 2015 Liu Di <liudidi@gmail.com> - 4.4.0-9
+- 为 Magic 3.0 重建
+
 * Fri Jun 20 2014 Liu Di <liudidi@gmail.com> - 4.4.0-8
 - 为 Magic 3.0 重建
 

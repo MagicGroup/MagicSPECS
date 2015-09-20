@@ -2,7 +2,7 @@
 %global pkgdatadir      %{_datadir}/dpkg
 
 Name:           dpkg
-Version:	1.17.6
+Version:	1.18.2
 Release:        1%{?dist}
 Summary:        Package maintenance system for Debian Linux
 Group:          System Environment/Base
@@ -22,11 +22,7 @@ BuildRequires:  zlib-devel bzip2-devel gettext ncurses-devel
 BuildRequires:  autoconf automake gettext-devel
 BuildRequires:  doxygen flex xz-devel po4a dotconf-devel
 # for /usr/bin/pod2man
-%if 0%{?fedora} > 18
 BuildRequires: perl-podlators
-%else 
-BuildRequires: perl
-%endif
 
 %description 
 
@@ -93,7 +89,7 @@ there are the following modules:
   - Dpkg::IPC: spawn sub-processes and feed/retrieve data
   - Dpkg::Substvars: substitute variables in strings
   - Dpkg::Vendor: identify current distribution vendor
-  - Dpkg::Version:	1.17.6
+  - Dpkg::Version:	1.18.2
 
 %package -n dselect
 Summary:  Debian package management front-end
@@ -139,14 +135,12 @@ mkdir -p %{buildroot}/%{pkgconfdir}/dselect.cfg.d
 mkdir -p %{buildroot}/%{pkgconfdir}/origins
 
 # Prepare "vendor" files for dpkg-vendor
-cat <<EOF > %{buildroot}/%{pkgconfdir}/origins/fedora
-Vendor: Fedora
-Vendor-URL: http://www.fedoraproject.org/
-Bugs: https://bugzilla.redhat.com
+cat <<EOF > %{buildroot}/%{pkgconfdir}/origins/magic
+Vendor: Magic
+Vendor-URL: http://www.magiclinux.org/
+Bugs: https://bugzs.magiclinux.org
 EOF
-%if 0%{?fedora}
-ln -sf fedora %{buildroot}/%{pkgconfdir}/origins/default
-%endif
+ln -sf magic %{buildroot}/%{pkgconfdir}/origins/default
 
 # from debian/dpkg.install
 #install -pm0644 debian/archtable %{buildroot}/%{pkgdatadir}/archtable
@@ -159,9 +153,9 @@ mkdir -p %{buildroot}/%{_sysconfdir}/logrotate.d
 install -pm0644 debian/dpkg.logrotate %{buildroot}/%{_sysconfdir}/logrotate.d/%{name}
 
 magic_rpm_clean.sh
-%find_lang dpkg
-%find_lang dpkg-dev
-%find_lang dselect
+%find_lang dpkg || %define dpkg_no_lang 1
+%find_lang dpkg-dev || %define dpkg-dev_no_lang 1
+%find_lang dselect || %define dselect_no_lang 1
 
 # fedora has its own implementation
 rm %{buildroot}%{_bindir}/update-alternatives
@@ -201,8 +195,11 @@ create_logfile() {
 create_database
 create_logfile
 
-
+%if 0%{?dpkg_no_lang}
+%files
+%else
 %files   -f dpkg.lang
+%endif
 %defattr(-,root,root,-)
 %doc debian/changelog README AUTHORS THANKS TODO
 %doc debian/copyright debian/usertags
@@ -299,7 +296,11 @@ create_logfile
 %{_mandir}/man5/deb-version.5.gz
 %{_mandir}/man5/deb.5.gz
 
+%if 0%{?dpkg-dev_no_lang}
+%files
+%else
 %files perl -f dpkg-dev.lang
+%endif
 %defattr(-,root,root,-)
 %{_libexecdir}/dpkg/parsechangelog
 
@@ -307,7 +308,11 @@ create_logfile
 %{_mandir}/man3/Dpkg*.3*
 
 
+%if 0%{?dselect_no_lang}
+%files
+%else
 %files -n dselect -f dselect.lang
+%endif
 %defattr(-,root,root,-)
 %doc dselect/methods/multicd/README.multicd dselect/methods/ftp/README.mirrors.txt
 %{_bindir}/dselect
@@ -320,6 +325,9 @@ create_logfile
 
 
 %changelog
+* Sun Sep 20 2015 Liu Di <liudidi@gmail.com> - 1.18.2-1
+- 更新到 1.18.2
+
 * Mon Mar 24 2014 Liu Di <liudidi@gmail.com> - 1.17.6-1
 - 更新到 1.17.6
 

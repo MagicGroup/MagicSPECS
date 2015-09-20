@@ -1,0 +1,50 @@
+From dfc2da58520df75fc1a2506ebc4142085ed2ba1c Mon Sep 17 00:00:00 2001
+From: Michal Sekletar <msekleta@redhat.com>
+Date: Fri, 14 Jun 2013 15:38:02 +0200
+Subject: [PATCH 1/2] rshd: use sockaddr_in for non-native IPv6 clients
+
+When client has IPv4 address but connection was made via AF_INET6
+socket, then convert socket structure representing client back
+to sockaddr_in so we don't confuse pam_rhosts authentication with
+IPv4-mapped IPv6 address.
+---
+ rshd/rshd.c | 23 +++++++++++++++++++++++
+ 1 file changed, 23 insertions(+)
+
+diff --git a/rshd/rshd.c b/rshd/rshd.c
+index d1ea0e9..e8cdfe2 100644
+--- a/rshd/rshd.c
++++ b/rshd/rshd.c
+@@ -644,6 +644,29 @@ static void network_init(int fd,
+ 		syslog(LOG_ERR, "getpeername: %m");
+ 		_exit(1);
+ 	}
++
++	if (((struct sockaddr_in *) fromp)->sin_family == AF_INET6 &&
++		IN6_IS_ADDR_V4MAPPED(&((struct sockaddr_in6 *) fromp)->sin6_addr)) {
++
++		struct addrinfo *res, hints = {};
++		char client_addr[INET6_ADDRSTRLEN] = {};
++		char client_port[6] = {};
++
++		inet_ntop(AF_INET6, &((struct sockaddr_in6 *) fromp)->sin6_addr,
++			client_addr, sizeof(client_addr));
++
++		sprintf(client_port, "%d", ntohs(((struct sockaddr_in6 *) fromp)->sin6_port));
++
++		hints.ai_family = AF_INET;
++		hints.ai_socktype = SOCK_STREAM;
++		hints.ai_flags = AI_NUMERICHOST | AI_NUMERICSERV;
++
++		getaddrinfo(client_addr, client_port, &hints, &res);
++
++		memcpy(fromp, res->ai_addr, sizeof(struct sockaddr_in6));
++		freeaddrinfo(res);
++	}
++
+ 	if (keepalive &&
+ 	    setsockopt(fd, SOL_SOCKET, SO_KEEPALIVE, (char *)&on,
+ 	    sizeof(on)) < 0)
+-- 
+1.8.1.4
+

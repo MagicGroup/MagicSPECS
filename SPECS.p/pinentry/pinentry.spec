@@ -1,7 +1,7 @@
 
 Name:    pinentry
-Version: 0.9.5
-Release: 2%{?dist}
+Version:	0.9.6
+Release:	1%{?dist}
 Summary: Collection of simple PIN or passphrase entry dialogs
 
 # qt & qt4 subpackage have different license, see subpackage definitions
@@ -138,6 +138,9 @@ fi
 %{_bindir}/pinentry-emacs
 
 %changelog
+* Sun Sep 20 2015 Liu Di <liudidi@gmail.com> - 0.9.6-1
+- 更新到 0.9.6
+
 * Thu Jul 23 2015 Liu Di <liudidi@gmail.com> - 0.9.5-2
 - 为 Magic 3.0 重建
 

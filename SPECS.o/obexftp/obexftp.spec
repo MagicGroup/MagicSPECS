@@ -1,3 +1,5 @@
+# python2 和 python3 同时存在的情况下编译有问题
+%define with_python 0
 Name:           obexftp
 Version:        0.24
 Release:        5%{?dist}
@@ -13,6 +15,7 @@ Patch1:         %{name}-0.24-fuse.patch
 Patch2:         %{name}-pkgconfig_requires.patch
 # From OpenSUSE, thanks: fix python install path
 Patch3:         %{name}-0.24-fix-absurd-install-path.patch
+Patch4:		obexftp-0.24-python_sitedir.patch
 BuildRequires:  asciidoc
 BuildRequires:  bluez-libs-devel
 BuildRequires:  cmake
@@ -87,13 +90,18 @@ developing applications that use %{name}.
 
 %prep
 %setup -qn %{name}-%{version}-Source
+%patch4 -p1
 %patch0 -p1 -b .norpath
 %patch1 -p1 -b .fuse
 %patch2 -p1 -b .pkgconfig
-%patch3 -p1 -b .pythonpath
+#patch3 -p1 -b .pythonpath
 
 %build
-%cmake -DPythonLibs=%{_libdir}/libpython2.7.so
+%if ! 0%{?with_python}
+%cmake -DENABLE_PYTHON=OFF
+%else
+%cmake
+%endif
 # 'all' doesn't include doc, it seems - thanks, SUSE.
 make %{?_smp_mflags} all doc
 
@@ -123,9 +131,11 @@ make DESTDIR=%{buildroot} RUBYARCHDIR=%{buildroot}%{ruby_vendorarchdir} install
 %{_libdir}/*.so
 %{_libdir}/pkgconfig/obexftp.pc
 
+%if 0%{?with_python}
 %files -n python-%{name}
 %{python_sitearch}/_obexftp.so*
 %{python_sitearch}/obexftp.py*
+%endif
 
 %files -n perl-%{name}
 %{perl_vendorarch}/OBEXFTP.pm

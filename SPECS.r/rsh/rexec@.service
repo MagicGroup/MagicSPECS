@@ -1,0 +1,7 @@
+[Unit]
+Description=Remote Execution Facilities Server
+After=local-fs.target
+
+[Service]
+ExecStart=-/usr/sbin/in.rexecd
+StandardInput=socket

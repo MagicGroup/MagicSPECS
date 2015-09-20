@@ -1,13 +1,13 @@
-%global pkgname Firebird-2.5.2.26540-0
+%global pkgname Firebird-2.5.4.26856-0
 %global fbroot %{_libdir}/%{name}
-%global major 2.5.2
+%global major 2.5.4
 
 
 Summary: SQL relational database management system
 Summary(zh_CN.UTF-8): SQL 关系数据库管理系统
 Name:  firebird
-Version: 2.5.2.26540.0
-Release: 3%{?dist}
+Version: 2.5.4.26856.0
+Release: 1%{?dist}
 
 Group:  Applications/Databases
 Group(zh_CN.UTF-8): 应用程序/数据库
@@ -25,7 +25,7 @@ Source6: firebird-superclassic.service
 Source7: firebird-superserver.service
 
 # from upstream
-Patch0: firebird-2.5.2-svn-CORE-3946.patch
+Patch2: firebird-btyacc-fpie.patch
 
 BuildRequires: autoconf
 BuildRequires: automake
@@ -160,7 +160,7 @@ Multi-process, local client libraries for Firebird SQL RDBMS
 
 %prep
 %setup -q -n %{pkgname}
-%patch0
+%patch2
 # convert intl character to UTF-8
 iconv -f ISO-8859-1 -t utf-8 -c ./doc/README.intl     -o ./doc/README.intl
 
@@ -518,6 +518,9 @@ fi
 
 
 %changelog
+* Sat Sep 19 2015 Liu Di <liudidi@gmail.com> - 2.5.4.26850.0-1
+- 升级到 2.5.4
+
 * Fri Apr 18 2014 Liu Di <liudidi@gmail.com> - 2.5.2.26540.0-3
 - 为 Magic 3.0 重建
 

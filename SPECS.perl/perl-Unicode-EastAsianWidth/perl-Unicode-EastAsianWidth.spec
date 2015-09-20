@@ -1,6 +1,6 @@
 Name:		perl-Unicode-EastAsianWidth
 Version:	1.33
-Release:	6%{?dist}
+Release:	7%{?dist}
 Summary:	East Asian Width properties
 Group:		Development/Libraries
 License:	CC0
@@ -49,6 +49,9 @@ make test
 %{_mandir}/man3/Unicode::EastAsianWidth.3pm*
 
 %changelog
+* Fri Sep 18 2015 Liu Di <liudidi@gmail.com> - 1.33-7
+- 为 Magic 3.0 重建
+
 * Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.33-6
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

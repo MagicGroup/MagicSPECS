@@ -1,8 +1,10 @@
 Name:		rt73usb-firmware
 Version:	1.8
-Release:	10%{?dist}
+Release:	12%{?dist}
 Summary:	Firmware for Ralink® RT2571W/RT2671 A/B/G network adaptors
+Summary(zh_CN.UTF-8): Ralink® RT2571W/RT2671 A/B/G 无线网卡的固件
 Group:		System Environment/Kernel
+Group(zh_CN.UTF-8): 系统环境/内核
 License:	Redistributable, no modification permitted
 URL:		http://www.ralinktech.com
 Source0:	http://www.ralinktech.com.tw/data/RT71W_Firmware_V%{version}.zip
@@ -19,6 +21,8 @@ Usage of the firmware is subject to the terms and conditions contained
 inside the provided LICENSE.ralink-firmware.txt file.
 Please read it carefully.
 
+%description -l zh_CN.UTF-8
+Ralink® RT2571W/RT2671 A/B/G 无线网卡的固件。
 
 %prep
 %setup -q -n RT71W_Firmware_V%{version}
@@ -31,6 +35,7 @@ sed -i 's/\r//' LICENSE.ralink-firmware.txt
 rm -rf $RPM_BUILD_ROOT
 mkdir -p $RPM_BUILD_ROOT/lib/firmware
 install -pm 0644 *.bin $RPM_BUILD_ROOT/lib/firmware
+magic_rpm_clean.sh
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -42,6 +47,12 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Fri Sep 18 2015 Liu Di <liudidi@gmail.com> - 1.8-12
+- 为 Magic 3.0 重建
+
+* Fri Sep 18 2015 Liu Di <liudidi@gmail.com> - 1.8-11
+- 为 Magic 3.0 重建
+
 * Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 1.8-10
 - 为 Magic 3.0 重建
 

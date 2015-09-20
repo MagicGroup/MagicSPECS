@@ -1,6 +1,6 @@
 Name:		perl-Module-Package-Au
 Version:	2
-Release:	4%{?dist}
+Release:	5%{?dist}
 Summary:	Reusable Module::Install bits
 Group:		Development/Libraries
 License:	CC0
@@ -53,6 +53,9 @@ make test
 %{_mandir}/man3/Module::Package::Au.3pm*
 
 %changelog
+* Fri Sep 18 2015 Liu Di <liudidi@gmail.com> - 2-5
+- 为 Magic 3.0 重建
+
 * Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2-4
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

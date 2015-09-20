@@ -1,0 +1,30 @@
+From 4f543ec56d023905ec22e4b6325f834bce4a624a Mon Sep 17 00:00:00 2001
+From: Adam Tkac <atkac@redhat.com>
+Date: Mon, 5 May 2014 12:01:41 +0200
+Subject: [PATCH] rshd: use upper bound for cmdbuflen
+
+---
+ rshd/rshd.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
+
+diff --git a/rshd/rshd.c b/rshd/rshd.c
+index 66c5703..487c969 100644
+--- a/rshd/rshd.c
++++ b/rshd/rshd.c
+@@ -430,7 +430,12 @@ doit(struct sockaddr_storage *fromp, socklen_t fromlen)
+ 		exit (1);
+ 	}
+ 
+-	cmdbuf = malloc (++cmdbuflen);
++	cmdbuflen++;
++	/* Decrease cmdbuflen to reasonable number if it's too high */
++	if ((size_t) cmdbuflen > 131072)
++		cmdbuflen = 131072;
++
++	cmdbuf = malloc (cmdbuflen);
+ 	if (cmdbuf == NULL) {
+ 		syslog (LOG_ERR, "Could not allocate space for cmdbuf");
+ 		exit (1);
+-- 
+1.8.3.1
+

@@ -7,7 +7,7 @@ Summary: Library for Colour AsCii Art, text mode graphics
 Summary(zh_CN.UTF-8): 彩色 AsCii 艺术字，文本界面图形库
 Name: libcaca
 Version: 0.99
-Release: 0.19.%{beta}%{?dist}
+Release: 0.20.%{beta}%{?dist}
 License: WTFPL
 Group: System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
@@ -201,6 +201,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Sep 20 2015 Liu Di <liudidi@gmail.com> - 0.99-0.20.beta19
+- 为 Magic 3.0 重建
+
 * Thu Jul 10 2014 Liu Di <liudidi@gmail.com> - 0.99-0.17.beta19
 - 升级到 0.99.beta19
 - 添加 python-caca 包

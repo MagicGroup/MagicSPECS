@@ -1,7 +1,7 @@
 Summary: Terminal emulator for the X Window System
 Name: xterm
 Version: 278
-Release: 2%{?dist}
+Release: 3%{?dist}
 URL: http://dickey.his.com/xterm
 License: MIT
 Group: User Interface/X
@@ -85,6 +85,9 @@ rm -rf $RPM_BUILD_ROOT
 %{x11_app_defaults_dir}/XTerm*
 
 %changelog
+* Sat Sep 19 2015 Liu Di <liudidi@gmail.com> - 278-3
+- 为 Magic 3.0 重建
+
 * Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 278-2
 - 为 Magic 3.0 重建
 

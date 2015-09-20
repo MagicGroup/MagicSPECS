@@ -1,6 +1,6 @@
 Name:		samtools
 Version:	0.1.18
-Release:	4%{?dist}
+Release:	5%{?dist}
 Summary:	Tools for nucleotide sequence alignments in the SAM format
 
 Group:		Applications/Engineering
@@ -118,6 +118,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sat Sep 19 2015 Liu Di <liudidi@gmail.com> - 0.1.18-5
+- 为 Magic 3.0 重建
+
 * Sat Jul 21 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.1.18-4
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 

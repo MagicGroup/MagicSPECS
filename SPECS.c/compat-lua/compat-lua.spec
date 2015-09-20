@@ -1,6 +1,6 @@
 Name:           compat-lua
 Version:        5.1.4
-Release:        6%{?dist}
+Release:        7%{?dist}
 Summary:        Powerful light-weight programming language (compat version)
 Summary(zh_CN.UTF-8): 强力的轻量级程序语言（兼容版本）
 Group:          Development/Languages
@@ -113,6 +113,9 @@ magic_rpm_clean.sh
 
 
 %changelog
+* Sat Sep 19 2015 Liu Di <liudidi@gmail.com> - 5.1.4-7
+- 为 Magic 3.0 重建
+
 * Sun Jun 08 2014 Liu Di <liudidi@gmail.com> - 5.1.4-6
 - 为 Magic 3.0 重建
 

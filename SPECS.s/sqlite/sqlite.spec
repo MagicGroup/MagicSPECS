@@ -10,7 +10,7 @@
 Summary: Library that implements an embeddable SQL database engine
 Name: sqlite
 Version: %{rpmver}
-Release: 4%{?dist}
+Release: 5%{?dist}
 License: Public Domain
 Group: Applications/Databases
 URL: http://www.sqlite.org/
@@ -184,6 +184,9 @@ make test
 %endif
 
 %changelog
+* Sat Sep 19 2015 Liu Di <liudidi@gmail.com> - 3.8.3-5
+- 为 Magic 3.0 重建
+
 * Tue Jun 17 2014 Liu Di <liudidi@gmail.com> - 3.8.3-4
 - 为 Magic 3.0 重建
 

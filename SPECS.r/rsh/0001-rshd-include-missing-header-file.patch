@@ -1,0 +1,25 @@
+From f228f70d41f511a3e7554f28542b44cd47faaa6a Mon Sep 17 00:00:00 2001
+From: Michal Sekletar <msekleta@redhat.com>
+Date: Mon, 26 May 2014 12:36:40 +0200
+Subject: [PATCH] rshd: include missing header file
+
+waitpid() is declared in sys/waitpid.h
+---
+ rshd/rshd.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/rshd/rshd.c b/rshd/rshd.c
+index e8cdfe2..e4a59e9 100644
+--- a/rshd/rshd.c
++++ b/rshd/rshd.c
+@@ -58,6 +58,7 @@ char rcsid[] =
+ #include <sys/param.h>
+ #include <sys/ioctl.h>
+ #include <sys/time.h>
++#include <sys/wait.h>
+ #include <fcntl.h>
+ #include <signal.h>
+ 
+-- 
+1.8.3.1
+

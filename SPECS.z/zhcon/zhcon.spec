@@ -1,7 +1,7 @@
 Name: zhcon
 Summary: A Fast Console CJK System Using FrameBuffer
 Version: 0.2.6
-Release: 14%{?dist}
+Release: 15%{?dist}
 Group: Applications/System
 Group(zh_CN): 应用程序/系统
 License: GPLv2+
@@ -85,6 +85,9 @@ rm -rf ${RPM_BUILD_ROOT}
 %{_datadir}/%{name}/
 
 %changelog
+* Sat Sep 19 2015 Liu Di <liudidi@gmail.com> - 0.2.6-15
+- 为 Magic 3.0 重建
+
 * Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 0.2.6-14
 - 为 Magic 3.0 重建
 

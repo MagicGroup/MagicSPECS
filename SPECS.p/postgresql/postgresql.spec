@@ -660,6 +660,7 @@ cd ..
 #   error: create archive failed on file
 #   /builddir/.../...-9.4.1/README.rpm-dist: cpio: Bad magic
 cp $RPM_BUILD_ROOT/%{_pkgdocdir}/README.rpm-dist ./
+rm -f $RPM_BUILD_ROOT/%{_pkgdocdir}/README.rpm-dist
 
 cat > $RPM_BUILD_ROOT%{_sysconfdir}/postgresql-setup/upgrade/postgresql.conf <<EOF
 id              postgresql

@@ -1,7 +1,10 @@
+%define htmldir %{_docdir}/liblognorm/html
+
 Name:		liblognorm
-Version:	1.0.1
-Release:	2%{?dist}
+Version:	1.1.2
+Release:	1%{?dist}
 Summary:	Fast samples-based log normalization library
+Summary(zh_CN.UTF-8): 基于快速样本的日志归一库
 
 License:	LGPLv2+
 URL:		http://www.liblognorm.com
@@ -20,8 +23,12 @@ liblognorm comes into the game. With this tool you can normalize all your logs.
 All you need is liblognorm and its dependencies and a sample database that fits
 the logs you want to normalize.
 
+%description -l zh_CN.UTF-8
+基于快速样本的日志归一库。
+
 %package devel
 Summary:	Development tools for programs using liblognorm library
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Requires:	%{name}%{?_isa} = %{version}-%{release}
 Requires:	libee-devel%{?_isa} libestr-devel%{?_isa}
 
@@ -29,26 +36,50 @@ Requires:	libee-devel%{?_isa} libestr-devel%{?_isa}
 The liblognorm-devel package includes header files, libraries necessary for
 developing programs which use liblognorm library.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
+%package doc
+Summary: HTML documentation for liblognorm
+Summary(zh_CN.UTF-8): %{name} 的文档
+Group: Documentation
+Group(zh_CN.UTF-8): 文档
+BuildRequires: python-sphinx
+
+%description doc
+This sub-package contains documentation for liblognorm in a HTML form.
+
+%description doc -l zh_CN.UTF-8
+%{name} 的文档。
+
 %package utils
 Summary:	Lognormalizer utility for normalizing log files
+Summary(zh_CN.UTF-8): %{name} 的工具
 Requires:	%{name}%{?_isa} = %{version}-%{release}
 
 %description utils
 The lognormalizer is the core of liblognorm, it is a utility for normalizing
 log files.
 
+%description utils -l zh_CN.UTF-8
+%{name} 的工具。
+
 %prep
 %setup -q
 
 %build
-%configure
+%configure \
+	--docdir=%{htmldir} \
+	--enable-docs \
+	--enable-regexp \
 V=1 make
 
 %install
 make install INSTALL="install -p" DESTDIR=%{buildroot}
 rm -f %{buildroot}/%{_libdir}/*.{a,la}
-chrpath -d %{buildroot}/%{_bindir}/lognormalizer
-chrpath -d %{buildroot}/%{_libdir}/liblognorm.so.1.0.0
+chrpath -d %{buildroot}%{_bindir}/lognormalizer
+chrpath -d %{buildroot}%{_libdir}/liblognorm.so
+magic_rpm_clean.sh
 
 %post -p /sbin/ldconfig
 
@@ -63,11 +94,17 @@ chrpath -d %{buildroot}/%{_libdir}/liblognorm.so.1.0.0
 %{_includedir}/*.h
 %{_libdir}/pkgconfig/*.pc
 
+%files doc
+%doc %{htmldir}
+
 %files utils
 %{_bindir}/lognormalizer
 
 
 %changelog
+* Fri Sep 18 2015 Liu Di <liudidi@gmail.com> - 1.1.2-1
+- 更新到 1.1.2
+
 * Fri Jul 18 2014 Liu Di <liudidi@gmail.com> - 1.0.1-2
 - 为 Magic 3.0 重建
 

@@ -1,3 +1,5 @@
+%global _hardened_build 1
+
 %define isprerelease 0
 
 %if %isprerelease
@@ -5,19 +7,25 @@
 %endif
 
 Summary: A program for synchronizing files over a network
+Summary(zh_CN.UTF-8): 通过网络同步文件的程序
 Name: rsync
-Version: 3.0.9
-Release: 3%{?prerelease}%{?dist}
+Version:	3.1.1
+Release:	1%{?dist}
 Group: Applications/Internet
+Group(zh_CN.UTF-8): 应用程序/互联网
 URL: http://rsync.samba.org/
 
-Source0: ftp://rsync.samba.org/pub/rsync/rsync-%{version}%{?prerelease}.tar.gz
-Source1: ftp://rsync.samba.org/pub/rsync/rsync-patches-%{version}%{?prerelease}.tar.gz
-Source2: rsync.xinetd
+Source0: https://download.samba.org/pub/rsync/src/rsync-%{version}%{?prerelease}.tar.gz
+Source1: https://download.samba.org/pub/rsync/src/rsync-patches-%{version}%{?prerelease}.tar.gz
+Source2: rsyncd.socket
+Source3: rsyncd.service
+Source4: rsyncd.conf
+Source5: rsyncd.sysconfig
+Source6: rsyncd@.service
 BuildRequires: libacl-devel, libattr-devel, autoconf, popt-devel
 License: GPLv3+
 
-Patch0: rsync-3.0.8-no-symlink-user-xattrs.patch
+Patch0: rsync-man.patch
 
 %description
 Rsync uses a reliable algorithm to bring remote and host files into
@@ -27,6 +35,23 @@ files. Rsync is often used as a very powerful mirroring process or
 just as a more capable replacement for the rcp command. A technical
 report which describes the rsync algorithm is included in this
 package.
+
+%description -l zh_CN.UTF-8
+通过网络同步文件的程序
+
+%package daemon
+Summary: Service for anonymous access to rsync
+Summary(zh_CN.UTF-8): 匿名访问的 rsync 服务
+BuildArch: noarch
+Requires: %{name} = %{version}-%{release}
+Requires(post): systemd-units
+Requires(preun): systemd-units
+Requires(postun): systemd-units
+%description daemon
+Rsync can be used to offer read only access to anonymous clients. This
+package provides the anonymous rsync service.
+%description daemon -l zh_CN.UTF-8
+匿名访问的 rsync 服务。
 
 %prep
 # TAG: for pre versions use
@@ -48,35 +73,58 @@ patch -p1 -i patches/xattrs.diff
 #Enable --copy-devices parameter
 patch -p1 -i patches/copy-devices.diff
 
-#%patch0 -p1 -b .no-symlink-user-xattrs
+%patch0 -p1 -b .man
 
 %build
-rm -fr autom4te.cache
-autoconf
-autoheader
+
 %configure
-make proto
-make %{?_smp_mflags} CFLAGS="$RPM_OPT_FLAGS"
+# --with-included-zlib=no temporary disabled because of #1043965
+
+make %{?_smp_mflags}
 
 %install
 rm -rf $RPM_BUILD_ROOT
 
 %makeinstall INSTALLCMD='install -p' INSTALLMAN='install -p'
-mkdir -p $RPM_BUILD_ROOT%{_sysconfdir}/xinetd.d
-install -p -m 644 %{SOURCE2} $RPM_BUILD_ROOT%{_sysconfdir}/xinetd.d/%{name}
+
+install -D -m644 %{SOURCE3} $RPM_BUILD_ROOT/%{_unitdir}/rsyncd.service
+install -D -m644 %{SOURCE2} $RPM_BUILD_ROOT/%{_unitdir}/rsyncd.socket
+install -D -m644 %{SOURCE4} $RPM_BUILD_ROOT/%{_sysconfdir}/rsyncd.conf
+install -D -m644 %{SOURCE5} $RPM_BUILD_ROOT/%{_sysconfdir}/sysconfig/rsyncd
+install -D -m644 %{SOURCE6} $RPM_BUILD_ROOT/%{_unitdir}/rsyncd@.service
 
 %clean
 rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(-,root,root)
-%doc COPYING NEWS OLDNEWS README support/ tech_report.tex
-%config(noreplace) %{_sysconfdir}/xinetd.d/%{name}
+%{!?_licensedir:%global license %%doc}
+%license COPYING
+%doc NEWS OLDNEWS README support/ tech_report.tex
 %{_bindir}/%{name}
 %{_mandir}/man1/%{name}.1*
+
+%files daemon
 %{_mandir}/man5/rsyncd.conf.5*
+%config(noreplace) %{_sysconfdir}/rsyncd.conf
+%config(noreplace) %{_sysconfdir}/sysconfig/rsyncd
+%{_unitdir}/rsyncd.socket
+%{_unitdir}/rsyncd.service
+%{_unitdir}/rsyncd@.service
+
+%post
+%systemd_post rsyncd.service
+
+%preun
+%systemd_preun rsyncd.service
+
+%postun
+%systemd_postun_with_restart rsyncd.service
 
 %changelog
+* Fri Sep 18 2015 Liu Di <liudidi@gmail.com> - 3.1.1-1
+- 更新到 3.1.1
+
 * Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 3.0.9-3
 - 为 Magic 3.0 重建
 

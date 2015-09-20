@@ -1,5 +1,5 @@
 
-%global bootstrap 1
+%global bootstrap 0
 
 %global qt_module qttools
 %global system_clucene 1
@@ -19,7 +19,7 @@ Summary: Qt5 - QtTool components
 Summary(zh_CN.UTF-8): Qt5 - QtTool 组件
 Name:    qt5-qttools
 Version: 5.5.0
-Release: 6%{?dist}
+Release: 7%{?dist}
 
 License: LGPLv3 or LGPLv2
 Url:     http://www.qt.io
@@ -476,6 +476,9 @@ fi
 
 
 %changelog
+* Fri Sep 18 2015 Liu Di <liudidi@gmail.com> - 5.5.0-7
+- 为 Magic 3.0 重建
+
 * Thu Sep 10 2015 Liu Di <liudidi@gmail.com> - 5.5.0-6
 - 为 Magic 3.0 重建
 

@@ -54,7 +54,7 @@
 
 Name:           samba
 Version:        %{samba_version}
-Release:        %{samba_release}.4
+Release:        %{samba_release}.5
 
 %if 0%{?rhel}
 Epoch:          0
@@ -1579,6 +1579,9 @@ rm -rf %{buildroot}
 %{_mandir}/man8/pam_winbind.8*
 
 %changelog
+* Sat Sep 19 2015 Liu Di <liudidi@gmail.com> - 2:4.1.6-3.5
+- 为 Magic 3.0 重建
+
 * Thu Sep 17 2015 Liu Di <liudidi@gmail.com> - 2:4.1.6-3.4
 - 为 Magic 3.0 重建
 

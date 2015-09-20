@@ -1,6 +1,6 @@
-%define major 4
-%define minor 6
-%define patchlevel 5
+%define major 5
+%define minor 0
+%define patchlevel 1
 
 %define x11_app_defaults_dir %{_datadir}/X11/app-defaults
 
@@ -8,7 +8,7 @@ Summary: A program for plotting mathematical expressions and data
 Summary(zh_CN.UTF-8): 一种绘制数学表达式和数据的程序
 Name: gnuplot
 Version: %{major}.%{minor}.%{patchlevel}
-Release: 2%{?dist}
+Release: 1%{?dist}
 # Modifications are to be distributed as patches to the released version.
 # aglfn.txt has license: MIT
 License: gnuplot and MIT
@@ -17,9 +17,16 @@ Group(zh_CN.UTF-8): 应用程序/工程
 URL: http://www.gnuplot.info/
 Source: http://downloads.sourceforge.net/%{name}/%{name}-%{version}.tar.gz
 Source2: gnuplot-init.el
-Patch1: gnuplot-4.2.0-refers_to.patch
-Patch2: gnuplot-4.2.0-fonts.patch
-Patch3: gnuplot-4.4.1-mp.patch
+
+
+Patch0: gnuplot-4.2.0-refers_to.patch
+Patch1: gnuplot-4.2.0-fonts.patch
+# resolves: #812225
+# submitted upstream: http://sourceforge.net/tracker/?func=detail&aid=3558973&group_id=2055&atid=302055
+Patch3: gnuplot-4.6.1-plot-sigsegv.patch
+Patch4: gnuplot-4.6.4-singlethread.patch
+Patch5: gnuplot-5.0.0-lua_checkint.patch
+
 BuildRequires: libpng-devel, tex(latex), zlib-devel, libX11-devel, emacs
 BuildRequires: texinfo, readline-devel, libXt-devel, gd-devel, wx-gtk2-unicode-devel
 BuildRequires: latex2html, librsvg2, giflib-devel, libotf
@@ -119,9 +126,12 @@ plotting tool.
 
 %prep
 %setup -q
-%patch1 -p1 -b .refto
-%patch2 -p1 -b .font
-#%patch3 -p1 -b .mp
+%patch0 -p1 -b .refto
+%patch1 -p1 -b .font
+%patch3 -p1 -b .plot-sigsegv
+%patch4 -p1 -b .isinglethread
+%patch5 -p1 -b .checkint
+
 sed -i -e 's:"/usr/lib/X11/app-defaults":"%{x11_app_defaults_dir}":' src/gplt_x11.c
 iconv -f windows-1252 -t utf-8 ChangeLog > ChangeLog.aux
 mv ChangeLog.aux ChangeLog
@@ -131,50 +141,82 @@ chmod 644 demo/html/webify_svg.pl
 chmod 644 demo/html/webify_canvas.pl
 
 %build
-# at first create minimal version of gnuplot for server SIG purposes
-%configure --with-readline=gnu --with-png --without-linux-vga \
- --enable-history-file --disable-wxwidgets \
- --without-cairo 
-make %{?_smp_mflags}
-mv src/gnuplot src/gnuplot-minimal
+#remove binaries from source tarball
+rm -rf demo/plugin/*.so demo/plugin/*.o
 
-# clean all settings
-make clean
-# create full version of gnuplot
-%configure --with-readline=gnu --with-png --without-linux-vga \
+%global configure_opts --with-readline=builtin --with-png --without-linux-vga \\\
  --enable-history-file
+# at first create minimal version of gnuplot for server SIG purposes
+mkdir minimal
+cd minimal
+ln -s ../configure .
+%configure %{configure_opts} --disable-wxwidgets --without-cairo --without-qt
 make %{?_smp_mflags}
+cd -
 
-cd docs
-make html
-cd psdoc
+# create full version of gnuplot
+# Fedora only - wx
+mkdir wx
+cd wx
+ln -s ../configure .
+%configure %{configure_opts} --without-qt
+make %{?_smp_mflags}
+cd -
+mkdir qt
+cd qt
+ln -s ../configure .
+%configure %{configure_opts} --disable-wxwidgets --enable-qt
+make %{?_smp_mflags}
+cd -
+
+
+# Docs don't build properly out of tree
+%configure  %{configure_opts} --with-tutorial
+ln -s ../minimal/src/gnuplot src/
+make -C docs html info
 export GNUPLOT_PS_DIR=../../term/PostScript
-make ps_symbols.ps ps_fontfile_doc.pdf
-cd ../..
+make -C docs/psdoc ps_symbols.ps ps_fontfile_doc.pdf
 rm -rf docs/htmldocs/images.idx
+make -C tutorial
 
 %install
-rm -rf $RPM_BUILD_ROOT
-make install DESTDIR=$RPM_BUILD_ROOT INSTALL='install -p'
-install -d ${RPM_BUILD_ROOT}/%{_emacs_sitestartdir}/
-install -p -m 644 %SOURCE2 ${RPM_BUILD_ROOT}/%{_emacs_sitestartdir}//gnuplot-init.el
+# install wx
+make -C wx install DESTDIR=$RPM_BUILD_ROOT INSTALL='install -p'
+# rename binary
+mv $RPM_BUILD_ROOT%{_bindir}/gnuplot $RPM_BUILD_ROOT%{_bindir}/gnuplot-wx
+# install qt
+make -C qt install DESTDIR=$RPM_BUILD_ROOT INSTALL='install -p'
+# rename binary
+mv $RPM_BUILD_ROOT%{_bindir}/gnuplot $RPM_BUILD_ROOT%{_bindir}/gnuplot-qt
+# install minimal binary
+install -p -m 755 minimal/src/gnuplot $RPM_BUILD_ROOT%{_bindir}/gnuplot-minimal
+
+# install info
+make -C docs install-info DESTDIR=$RPM_BUILD_ROOT INSTALL='install -p'
+
+# install emacs files
+#install -d ${RPM_BUILD_ROOT}/%{_emacs_sitestartdir}/
+#install -p -m 644 %SOURCE1 ${RPM_BUILD_ROOT}/%{_emacs_sitestartdir}/gnuplot-init.el
+#rm -f $RPM_BUILD_ROOT%{_datadir}/emacs/site-lisp/info-look*.el*
+#install -d ${RPM_BUILD_ROOT}/%{_emacs_sitelispdir}/%{name}
+#mv $RPM_BUILD_ROOT%{_datadir}/emacs/site-lisp/gnuplot.el{,c} $RPM_BUILD_ROOT/%{_emacs_sitelispdir}/%{name}
+#mv $RPM_BUILD_ROOT%{_datadir}/emacs/site-lisp/gnuplot-gui.el{,c} $RPM_BUILD_ROOT/%{_emacs_sitelispdir}/%{name}
+
+#packaged by info package, updated by post-installation script, do not package here
 rm -f $RPM_BUILD_ROOT%{_infodir}/dir
-rm -f $RPM_BUILD_ROOT%{_datadir}/emacs/site-lisp/info-look*.el*
-install -d ${RPM_BUILD_ROOT}/%{_emacs_sitelispdir}/%{name}
-mv $RPM_BUILD_ROOT%{_datadir}/emacs/site-lisp/gnuplot.el{,c} $RPM_BUILD_ROOT/%{_emacs_sitelispdir}/%{name}
-mv $RPM_BUILD_ROOT%{_datadir}/emacs/site-lisp/gnuplot-gui.el{,c} $RPM_BUILD_ROOT/%{_emacs_sitelispdir}/%{name}
 
 mkdir -p $RPM_BUILD_ROOT%{x11_app_defaults_dir}
 mv $RPM_BUILD_ROOT%{_datadir}/gnuplot/%{major}.%{minor}/app-defaults/Gnuplot $RPM_BUILD_ROOT%{x11_app_defaults_dir}/Gnuplot
 rm -rf $RPM_BUILD_ROOT%{_libdir}/
 
-# rename binary
-mv $RPM_BUILD_ROOT%{_bindir}/gnuplot $RPM_BUILD_ROOT%{_bindir}/gnuplot-wx
-# install minimal binary
-install -p -m 755 ./src/gnuplot-minimal $RPM_BUILD_ROOT%{_bindir}/gnuplot-minimal
+mkdir -p $RPM_BUILD_ROOT/%{_mandir}/ja/man1
+mv $RPM_BUILD_ROOT%{_mandir}/man1/gnuplot-ja.1 $RPM_BUILD_ROOT/%{_mandir}/ja/man1/
+
+#ghost provide /usr/bin/gnuplot
+touch $RPM_BUILD_ROOT%{_bindir}/gnuplot 
 
 %posttrans
-%{_sbindir}/alternatives --install %{_bindir}/gnuplot gnuplot %{_bindir}/gnuplot-wx 60
+%{_sbindir}/alternatives --install %{_bindir}/gnuplot gnuplot %{_bindir}/gnuplot-qt 61
 
 %post common
 if [ -f %{_infodir}/gnuplot.info* ]; then
@@ -184,9 +226,12 @@ fi
 %posttrans minimal
 %{_sbindir}/alternatives --install %{_bindir}/gnuplot gnuplot %{_bindir}/gnuplot-minimal 40
 
+%posttrans wx
+%{_sbindir}/alternatives --install %{_bindir}/gnuplot gnuplot %{_bindir}/gnuplot-wx 50
+
 %preun
 if [ $1 = 0 ]; then
-    %{_sbindir}/alternatives --remove gnuplot %{_bindir}/gnuplot-wx || :
+    %{_sbindir}/alternatives --remove gnuplot %{_bindir}/gnuplot-qt || :
 fi
 
 %preun common
@@ -201,23 +246,28 @@ if [ $1 = 0 ]; then
     %{_sbindir}/alternatives --remove gnuplot %{_bindir}/gnuplot-minimal || :
 fi
 
-%clean
-rm -rf $RPM_BUILD_ROOT
+%preun wx
+if [ $1 = 0 ]; then
+    %{_sbindir}/alternatives --remove gnuplot %{_bindir}/gnuplot-wx || :
+fi
+
+%post latex
+[ -e %{_bindir}/texhash ] && %{_bindir}/texhash 2> /dev/null;
 
 %files
-%defattr(-,root,root,-)
+%ghost %attr(0755,-,-) %{_bindir}/gnuplot
 %doc ChangeLog Copyright
-%{_bindir}/gnuplot-wx
+%{_bindir}/gnuplot-qt
+%{_libexecdir}/gnuplot/%{major}.%{minor}/gnuplot_qt
+%{_datadir}/gnuplot/%{major}.%{minor}/qt/
 
 %files doc
-%defattr(-,root,root,-)
 %doc ChangeLog Copyright
-%doc docs/psdoc/ps_guide.ps docs/psdoc/ps_symbols.ps demo docs/psdoc/ps_file.doc
-%doc docs/psdoc/ps_fontfile_doc.pdf docs/htmldocs
+%doc docs/psdoc/ps_guide.ps docs/psdoc/ps_symbols.ps tutorial/tutorial.dvi docs/psdoc/ps_file.doc demo
+%doc docs/psdoc/ps_fontfile_doc.pdf docs/htmldocs tutorial/eg7.eps
 
 %files common
-%defattr(-,root,root,-)
-%doc BUGS ChangeLog Copyright NEWS README 
+%doc BUGS ChangeLog Copyright NEWS README
 %{_mandir}/man1/gnuplot.1.gz
 %dir %{_datadir}/gnuplot
 %dir %{_datadir}/gnuplot/%{major}.%{minor}
@@ -228,41 +278,46 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/gnuplot/%{major}.%{minor}/js/*
 %dir %{_datadir}/gnuplot/%{major}.%{minor}/lua/
 %{_datadir}/gnuplot/%{major}.%{minor}/lua/gnuplot-tikz.lua
+%{_datadir}/gnuplot/%{major}.%{minor}/colors_*
 %{_datadir}/gnuplot/%{major}.%{minor}/gnuplot.gih
+%{_datadir}/gnuplot/%{major}.%{minor}/gnuplotrc
 %dir %{_libexecdir}/gnuplot
 %dir %{_libexecdir}/gnuplot/%{major}.%{minor}
 %{_libexecdir}/gnuplot/%{major}.%{minor}/gnuplot_x11
 %{x11_app_defaults_dir}/Gnuplot
-#%{_infodir}/gnuplot.info.gz
-%{_datadir}/gnuplot/%{major}.%{minor}/*.gp
-%{_datadir}/gnuplot/%{major}.%{minor}//gnuplotrc
-%{_datadir}/texmf/tex/latex/gnuplot/*.tex
+%{_infodir}/gnuplot.info.gz
+%{_mandir}/ja/man1/gnuplot-ja.1.gz
 
 %files minimal
-%defattr(-,root,root,-)
+%ghost %attr(0755,-,-) %{_bindir}/gnuplot
 %doc ChangeLog Copyright
 %{_bindir}/gnuplot-minimal
 
-%files -n emacs-%{name}
-%defattr(-,root,root,-)
+%files wx
+%ghost %attr(0755,-,-) %{_bindir}/gnuplot
 %doc ChangeLog Copyright
-%dir %{_emacs_sitelispdir}/%{name}
-%{_emacs_sitelispdir}/%{name}/*.elc
-%{_emacs_sitestartdir}/*.el
+%{_bindir}/gnuplot-wx
 
-%files -n emacs-%{name}-el
-%defattr(-,root,root,-)
-%doc ChangeLog Copyright
-%{_emacs_sitelispdir}/%{name}/*.el
+#%files -n emacs-%{name}
+#%doc ChangeLog Copyright
+#%dir %{_emacs_sitelispdir}/%{name}
+#%{_emacs_sitelispdir}/*.elc
+#%{_emacs_sitelispdir}/%{name}/*.elc
+#%{_emacs_sitestartdir}/*.el
+
+#%files -n emacs-%{name}-el
+#%doc ChangeLog Copyright
+#%{_emacs_sitelispdir}/%{name}/*.el
+#%{_emacs_sitelispdir}/*.el
 
 %files latex
-%defattr(-,root,root,-)
 %doc ChangeLog Copyright
-%dir %{_datadir}/texmf/tex/latex/gnuplot
-%{_datadir}/texmf/tex/latex/gnuplot/gnuplot.cfg
-%{_datadir}/texmf/tex/latex/gnuplot/gnuplot-lua-tikz.sty
+%{_datadir}/texmf/tex/latex/gnuplot/
 
 %changelog
+* Sat Sep 19 2015 Liu Di <liudidi@gmail.com> - 5.0.1-1
+- 更新到 5.0.1
+
 * Mon Apr 14 2014 Liu Di <liudidi@gmail.com> - 4.6.5-2
 - 更新到 4.6.5
 

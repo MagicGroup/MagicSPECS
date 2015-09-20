@@ -1,6 +1,6 @@
 Name:           gnugo
 Version:        3.8
-Release:        4%{?dist}
+Release:        5%{?dist}
 
 Summary:        Text based go program
 Summary(zh_CN.UTF-8): 基于文本的围棋程序
@@ -10,6 +10,8 @@ Group(zh_CN.UTF-8): 娱乐/游戏
 License:        GPLv3+
 URL:            http://www.gnu.org/software/gnugo/gnugo.html
 Source0:        http://ftp.gnu.org/gnu/gnugo/gnugo-%{version}.tar.gz
+Patch0:         gnugo-3.8-format-security.patch
+
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildRequires:  ncurses-devel readline-devel
@@ -28,6 +30,7 @@ on the Legend Go Server in Taiwan and the WING server in Japan.
 %prep
 rm -rf ${RPM_BUILD_ROOT}
 %setup -q
+%patch0 -p1
 # convert docs to UTF-8
 for f in AUTHORS THANKS; do
   iconv -f iso8859-1 -t utf-8 $f > $f.conv
@@ -63,6 +66,9 @@ fi
 %{_infodir}/gnugo.*
 
 %changelog
+* Sat Sep 19 2015 Liu Di <liudidi@gmail.com> - 3.8-5
+- 为 Magic 3.0 重建
+
 * Fri Apr 11 2014 Liu Di <liudidi@gmail.com> - 3.8-4
 - 为 Magic 3.0 重建
 

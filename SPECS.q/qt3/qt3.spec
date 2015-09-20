@@ -6,7 +6,7 @@
 Name: qt3
 Summary: The shared library for the Qt 3 GUI toolkit
 Version: 3.3.8b
-Release: 65%{?dist}
+Release: 66%{?dist}
 License: QPL or GPLv2 or GPLv3
 Group: System Environment/Libraries
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -67,7 +67,7 @@ Patch47: qt-x11-free-3.3.8b-#1037297.patch
 Patch48: qt-x11-free-3.3.8b-freetype251.patch
 
 # immodule patches
-Patch50: qt-x11-immodule-unified-qt3.3.8-20071116.diff.bz2
+Patch50: qt-x11-immodule-unified-qt3.3.8-20071116.diff
 Patch51: qt-x11-immodule-unified-qt3.3.5-20051012-quiet.patch
 Patch52: qt-x11-free-3.3.8b-fix-key-release-event-with-imm.diff
 Patch53: qt-x11-free-3.3.6-qt-x11-immodule-unified-qt3.3.5-20060318-resetinputcontext.patch
@@ -645,6 +645,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Sep 18 2015 Liu Di <liudidi@gmail.com> - 3.3.8d-66
+- 为 Magic 3.0 重建
+
 * Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.3.8b-65
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

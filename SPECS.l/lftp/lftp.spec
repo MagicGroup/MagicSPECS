@@ -1,7 +1,7 @@
 Summary:	A sophisticated file transfer program
 Summary(zh_CN.UTF-8): 文件传输程序
 Name:		lftp
-Version:	4.5.1
+Version:	4.6.4
 Release:	1%{?dist}
 License:	GPLv3+
 Group:		Applications/Internet
@@ -107,6 +107,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sun Sep 20 2015 Liu Di <liudidi@gmail.com> - 4.6.4-1
+- 更新到 4.6.4
+
 * Sun Jun 08 2014 Liu Di <liudidi@gmail.com> - 4.5.1-1
 - 更新到 4.5.1
 

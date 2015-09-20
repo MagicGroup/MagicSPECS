@@ -6,7 +6,7 @@
 Summary:        A skinned xlib-based gui for xine-lib
 Summary(zh_CN.UTF-8): xine-lib 可换肤的基于 xlib 的图形界面
 Name:           xine-ui
-Version:	0.99.8
+Version:	0.99.9
 Release:        1%{?dist}
 License:        GPLv2+
 Group:          Applications/Multimedia
@@ -284,6 +284,9 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %{_bindir}/aaxine
 
 %changelog
+* Sat Sep 19 2015 Liu Di <liudidi@gmail.com> - 0.99.9-1
+- 更新到 0.99.9
+
 * Tue Jun 10 2014 Liu Di <liudidi@gmail.com> - 0.99.8-1
 - 更新到 0.99.8
 

@@ -3,7 +3,7 @@
 
 Name:           gnokii
 Version:        0.6.31
-Release:        7%{?dist}
+Release:        8%{?dist}
 Summary:        Linux/Unix tool suite for various mobile phones
 
 Group:          Applications/Communications
@@ -268,6 +268,9 @@ fi
 %{_libdir}/pkgconfig/xgnokii.pc
 
 %changelog
+* Sat Sep 19 2015 Liu Di <liudidi@gmail.com> - 0.6.31-8
+- 为 Magic 3.0 重建
+
 * Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.6.31-7
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
 

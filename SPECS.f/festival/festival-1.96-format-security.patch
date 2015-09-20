@@ -1,0 +1,24 @@
+diff -Naur festival.orig/speech_tools/siod/siodeditline.c festival/speech_tools/siod/siodeditline.c
+--- festival.orig/speech_tools/siod/siodeditline.c	2004-04-30 18:56:51.000000000 +0200
++++ festival/speech_tools/siod/siodeditline.c	2014-05-12 19:00:37.491000000 +0200
+@@ -151,7 +151,7 @@
+     symbol = el_current_sym();
+     infostring = siod_manual_sym(symbol);
+     putc('\n',stderr);
+-    fprintf(stderr,infostring);
++    fprintf(stderr,"%s",infostring);
+     fflush(stderr);
+     putc('\n',stderr);
+     fflush(stderr);
+diff -Naur festival.orig/speech_tools/utils/cmd_line.cc festival/speech_tools/utils/cmd_line.cc
+--- festival.orig/speech_tools/utils/cmd_line.cc	2004-09-30 14:53:37.000000000 +0200
++++ festival/speech_tools/utils/cmd_line.cc	2014-05-12 19:08:57.577000000 +0200
+@@ -460,7 +460,7 @@
+     fprintf(stdout,"<cmdsynopsis><command>%s</command>", 
+ 	    (const char *)full.filename());
+ 
+-    fprintf(stdout, (const char *)ts.get_upto_eoln().string());
++    fprintf(stdout, "%s", (const char *)ts.get_upto_eoln().string());
+ 
+     while (!ts.eof())
+     {

@@ -1,7 +1,7 @@
 Name:         ipmitool
 Summary:      Utility for IPMI control
 Version:      1.8.13
-Release:      7%{?dist}
+Release:      8%{?dist}
 License:      BSD
 Group:        System Environment/Base
 URL:          http://ipmitool.sourceforge.net/
@@ -185,6 +185,9 @@ install -Dm 755 contrib/bmc-snmp-proxy         %{buildroot}%{_libexecdir}/bmc-sn
 %{_libexecdir}/bmc-snmp-proxy
 
 %changelog
+* Sat Sep 19 2015 Liu Di <liudidi@gmail.com> - 1.8.13-8
+- 为 Magic 3.0 重建
+
 * Mon Sep 15 2014 Liu Di <liudidi@gmail.com> - 1.8.13-7
 - 为 Magic 3.0 重建
 

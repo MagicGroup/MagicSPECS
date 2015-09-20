@@ -1,0 +1,258 @@
+diff -up netkit-rsh-0.17/rshd/Makefile.audit netkit-rsh-0.17/rshd/Makefile
+--- netkit-rsh-0.17/rshd/Makefile.audit	2008-03-25 12:33:26.000000000 +0100
++++ netkit-rsh-0.17/rshd/Makefile	2008-03-25 12:33:26.000000000 +0100
+@@ -9,6 +9,10 @@ ifeq ($(USE_PAM),1)
+ CFLAGS += -DUSE_PAM
+ LIBS += -ldl -lpam -lpam_misc
+ endif
++ifeq ($(USE_AUDIT),1)
++CFLAGS += -DUSE_AUDIT
++LIBS += -ldl -laudit
++endif
+ 
+ rshd: $(OBJS)
+ 	$(CC) $(LDFLAGS) $^ $(LIBS) -o $@
+diff -up netkit-rsh-0.17/rshd/rshd.c.audit netkit-rsh-0.17/rshd/rshd.c
+--- netkit-rsh-0.17/rshd/rshd.c.audit	2008-03-25 12:33:26.000000000 +0100
++++ netkit-rsh-0.17/rshd/rshd.c	2008-03-25 12:35:37.000000000 +0100
+@@ -90,6 +90,10 @@ char rcsid[] = 
+ static pam_handle_t *pamh;
+ #endif /* USE_PAM */
+ 
++#ifdef USE_AUDIT
++#include <libaudit.h>
++#endif /* USE_AUDIT */
++
+ #define	OPTIONS	"aDhlLn"
+ 
+ static int keepalive = 1;
+@@ -224,6 +228,14 @@ static void stderr_parent(int sock, int 
+     exit(0);
+ }
+ 
++#define PAM_SET_ITEM(item,val) \
++    do { \
++	retcode = pam_set_item(pamh, (item), (val)); \
++	if (retcode != PAM_SUCCESS) { \
++	    syslog(LOG_ERR, "pam_set_item: %s\n", pam_strerror(pamh, retcode)); \
++	    exit (1); \
++	} \
++    } while (0)
+ 
+ static struct passwd *doauth(const char *remuser, 
+ 			     const char *hostname, 
+@@ -243,9 +255,10 @@ static struct passwd *doauth(const char 
+ 	syslog(LOG_ERR, "pam_start: %s\n", pam_strerror(pamh, retcode));
+ 	exit (1);
+     }
+-    pam_set_item (pamh, PAM_RUSER, remuser);
+-    pam_set_item (pamh, PAM_RHOST, hostname);
+-    pam_set_item (pamh, PAM_TTY, "rsh");  /* we don't use a tty, so punt */
++
++    PAM_SET_ITEM(PAM_RUSER, remuser);
++    PAM_SET_ITEM(PAM_RHOST, hostname);
++    PAM_SET_ITEM(PAM_TTY, "rsh");  /* we don't use a tty, so punt */
+     
+     retcode = pam_authenticate(pamh, 0);
+     if (retcode == PAM_SUCCESS) {
+@@ -365,6 +378,27 @@ static const char *findhostname(struct s
+ 	return NULL; /* not reachable */
+ }
+ 
++static int log_audit(const char *username, int uid, const char *hostname,
++			int success)
++{
++#ifdef USE_AUDIT
++	int audit_fd = audit_open();
++	if (audit_fd < 0) {
++		if (errno != EINVAL && errno != EPROTONOSUPPORT &&
++					errno != EAFNOSUPPORT) 
++			return 1;
++	} else {
++		int rc = audit_log_acct_message(audit_fd, AUDIT_USER_LOGIN,
++				NULL, "login", username, uid, hostname, NULL,
++				"rsh", success);
++		close(audit_fd);
++		if (rc <= 0) 
++			return 1;
++	}
++#endif
++	return 0;
++}
++
+ static void
+ doit(struct sockaddr_storage *fromp, socklen_t fromlen)
+ {
+@@ -435,14 +469,21 @@ doit(struct sockaddr_storage *fromp, soc
+ 	setpwent();
+ 	pwd = doauth(remuser, hostname, locuser);
+ 	if (pwd == NULL) {
++		if (log_audit(remuser, -1, hostname, 0) > 0) {
++			fail("Error sending audit event.\n", 
++			     remuser, hostname, locuser, cmdbuf);
++		}
+ 		fail("Permission denied.\n", 
+ 		     remuser, hostname, locuser, cmdbuf);
+ 	}
+-
+ 	if (pwd->pw_uid != 0 && !access(_PATH_NOLOGIN, F_OK)) {
+ 		error("Logins currently disabled.\n");
+ 		exit(1);
+ 	}
++	if (log_audit(NULL, pwd->pw_uid, hostname, 1) > 0) {
++		fail("Error sending audit event.\n", 
++		     remuser, hostname, locuser, cmdbuf);
++	}
+ 
+ 	(void) write(2, "\0", 1);
+ 	sent_null = 1;
+diff -up netkit-rsh-0.17/rexecd/rexecd.c.audit netkit-rsh-0.17/rexecd/rexecd.c
+--- netkit-rsh-0.17/rexecd/rexecd.c.audit	2008-03-25 12:33:26.000000000 +0100
++++ netkit-rsh-0.17/rexecd/rexecd.c	2008-03-25 12:33:26.000000000 +0100
+@@ -312,9 +312,12 @@ doit(struct sockaddr_in *fromp)
+        PAM_password = pass;
+        pam_error = pam_start("rexec", PAM_username, &PAM_conversation,&pamh);
+        PAM_BAIL;
+-       pam_set_item (pamh, PAM_RUSER, user);
+-       pam_set_item (pamh, PAM_RHOST, remote);	       
+-       pam_set_item (pamh, PAM_TTY, "rexec");   /* we don't have a tty yet! */
++       pam_error = pam_set_item (pamh, PAM_RUSER, user);
++       PAM_BAIL;
++       pam_error = pam_set_item (pamh, PAM_RHOST, remote);	       
++       PAM_BAIL;
++       pam_error = pam_set_item (pamh, PAM_TTY, "rexec");   /* we don't have a tty yet! */
++       PAM_BAIL;
+        pam_error = pam_authenticate(pamh, 0);
+        PAM_BAIL;
+        pam_error = pam_acct_mgmt(pamh, 0);
+diff -up netkit-rsh-0.17/rlogind/auth.c.audit netkit-rsh-0.17/rlogind/auth.c
+--- netkit-rsh-0.17/rlogind/auth.c.audit	2008-03-25 12:33:26.000000000 +0100
++++ netkit-rsh-0.17/rlogind/auth.c	2008-03-25 12:33:26.000000000 +0100
+@@ -102,6 +102,16 @@ static int attempt_auth(void) {
+     return retval;
+ }
+ 
++#define PAM_SET_ITEM(item,val) \
++    do { \
++	retval = pam_set_item(pamh, (item), (val)); \
++	if (retval != PAM_SUCCESS) { \
++	    syslog(LOG_ERR, "pam_set_item: %s\n", pam_strerror(pamh, retval)); \
++	    pam_end(pamh, retval); \
++	    fatal(STDERR_FILENO, "initialization failed", 0); \
++	} \
++    } while (0)
++
+ /*
+  * This function must either die, return -1 on authentication failure,
+  * or return 0 on authentication success. Dying is discouraged.
+@@ -117,17 +127,19 @@ int auth_checkauth(const char *remoteuse
+     retval = pam_start("rlogin", localuser, &conv, &pamh);
+     if (retval != PAM_SUCCESS) {
+ 	syslog(LOG_ERR, "pam_start: %s\n", pam_strerror(pamh, retval));
++        pam_end(pamh, retval);
+ 	fatal(STDERR_FILENO, "initialization failed", 0);
+     }
+ 	
+-    pam_set_item(pamh, PAM_USER, localuser);
+-    pam_set_item(pamh, PAM_RUSER, remoteuser);
+-    pam_set_item(pamh, PAM_RHOST, host);
+-    pam_set_item(pamh, PAM_TTY, "rlogin");   /* we don't have a tty yet! */
+-	
++    PAM_SET_ITEM(PAM_USER, localuser);
++    PAM_SET_ITEM(PAM_RUSER, remoteuser);
++    PAM_SET_ITEM(PAM_RHOST, host);
++    PAM_SET_ITEM(PAM_TTY, "rlogin");   /* we don't have a tty yet! */
++
+     network_confirm();
+     retval = attempt_auth();
+     if ((retval == PAM_ACCT_EXPIRED) || (retval == PAM_PERM_DENIED)) {
++	pam_end(pamh, retval);
+ 	syslog(LOG_ERR, "PAM authentication denied for in.rlogind");
+ 	exit(1);
+     } else if (retval != PAM_SUCCESS) {
+diff -up netkit-rsh-0.17/rlogind/rlogind.c.audit netkit-rsh-0.17/rlogind/rlogind.c
+--- netkit-rsh-0.17/rlogind/rlogind.c.audit	2008-03-25 12:33:26.000000000 +0100
++++ netkit-rsh-0.17/rlogind/rlogind.c	2008-03-25 12:33:26.000000000 +0100
+@@ -357,9 +357,9 @@ static void child(const char *hname, con
+     }
+     termenv[3] = NULL;
+ 
++    auth_finish();
++    closeall();
+     if (authenticated) {
+-	auth_finish();
+-	closeall();
+ 	execle(_PATH_LOGIN, "login", "-p",
+ 	       "-h", hname, "-f", localuser, NULL, termenv);
+     } 
+@@ -368,8 +368,6 @@ static void child(const char *hname, con
+ 	    syslog(LOG_AUTH|LOG_INFO, "rlogin with an option as a name!");
+ 	    exit(1);
+ 	}
+-	auth_finish();
+-	closeall();
+ 	execle(_PATH_LOGIN, "login", "-p",
+ 	       "-h", hname, localuser, NULL, termenv);
+     }
+diff -up netkit-rsh-0.17/configure.audit netkit-rsh-0.17/configure
+--- netkit-rsh-0.17/configure.audit	2000-07-29 20:00:29.000000000 +0200
++++ netkit-rsh-0.17/configure	2008-03-25 12:33:26.000000000 +0100
+@@ -19,8 +19,9 @@ while [ x$1 != x ]; do case $1 in
+ Usage: configure [options]
+     --help                Show this message
+     --with-debug          Enable debugging
+-    --without-pam      Disable PAM support
++    --without-pam         Disable PAM support
+     --without-shadow      Disable shadow password support
++    --without-audit       Disable audit support
+     --prefix=path         Prefix for location of files [/usr]
+     --exec-prefix=path    Location for arch-depedent files [prefix]
+     --installroot=root    Top of filesystem tree to install in [/]
+@@ -47,6 +48,7 @@ EOF
+ 	--with-c-compiler=*) CC=`echo $1 | sed 's/^[^=]*=//'` ;;
+ 	--without-pam|--disable-pam) WITHOUT_PAM=1;;
+ 	--without-shadow|--disable-shadow) WITHOUT_SHADOW=1;;
++	--without-audit|--disable-audit) WITHOUT_AUDIT=1;;
+ 	*) echo "Unrecognized option: $1"; exit 1;;
+ esac 
+ shift
+@@ -342,6 +344,32 @@ rm -f __conftest*
+ 
+ ##################################################
+ 
++echo -n 'Checking for AUDIT... '
++if [ x$WITHOUT_AUDIT != x ]; then
++    echo disabled
++else
++cat <<EOF >__conftest.c
++#include <stdio.h>
++#include <libaudit.h>
++int main() {
++    audit_log_acct_message(1, AUDIT_USER_LOGIN, NULL, NULL, NULL, 0, NULL, NULL, NULL, 0);
++    return 0;
++}
++
++EOF
++if (
++      $CC $CFLAGS  __conftest.c -laudit -o __conftest || exit 1
++   ) >/dev/null 2>&1; then
++        echo 'yes'
++        USE_AUDIT=1
++    else
++        echo 'no'
++    fi
++fi
++rm -f __conftest*
++
++##################################################
++
+ echo -n 'Checking for crypt... '
+ cat <<EOF >__conftest.c
+ int main() { crypt("aa", "bb"); }
+@@ -593,5 +621,6 @@ echo 'Generating MCONFIG...'
+     echo "USE_PAM=$USE_PAM"
+     echo "USE_SHADOW=$USE_SHADOW"
+     echo "LIBSHADOW=$LIBSHADOW"
++    echo "USE_AUDIT=$USE_AUDIT"
+ ) > MCONFIG
+ 

@@ -1,5 +1,6 @@
 #% define beta_tag rc2
-%define patchleveltag .0
+%global _hardened_build 1
+%define patchleveltag .42
 %define baseversion 4.3
 %bcond_without tests
 %{!?_pkgdocdir: %global _pkgdocdir %{_docdir}/%{name}-%{version}}
@@ -8,7 +9,7 @@ Version: %{baseversion}%{patchleveltag}
 Name: bash
 Summary: The GNU Bourne Again shell
 Summary(zh_CN.UTF-8): GNU Bash
-Release: 1%{?dist}
+Release: 3%{?dist}
 Group: System Environment/Shells
 Group(zh_CN.UTF-8): 系统环境/外壳
 License: GPLv3+
@@ -23,6 +24,57 @@ Source2: dot-bash_profile
 Source3: dot-bash_logout
 
 # Official upstream patches
+Patch001: ftp://ftp.gnu.org/gnu/bash/bash-4.3-patches/bash43-001
+Patch002: ftp://ftp.gnu.org/gnu/bash/bash-4.3-patches/bash43-002
+Patch003: ftp://ftp.gnu.org/gnu/bash/bash-4.3-patches/bash43-003
+Patch004: ftp://ftp.gnu.org/gnu/bash/bash-4.3-patches/bash43-004
+Patch005: ftp://ftp.gnu.org/gnu/bash/bash-4.3-patches/bash43-005
+Patch006: ftp://ftp.gnu.org/gnu/bash/bash-4.3-patches/bash43-006
+Patch007: ftp://ftp.gnu.org/gnu/bash/bash-4.3-patches/bash43-007
+Patch008: ftp://ftp.gnu.org/gnu/bash/bash-4.3-patches/bash43-008
+Patch009: ftp://ftp.gnu.org/gnu/bash/bash-4.3-patches/bash43-009
+Patch010: ftp://ftp.gnu.org/gnu/bash/bash-4.3-patches/bash43-010
+Patch011: ftp://ftp.gnu.org/gnu/bash/bash-4.3-patches/bash43-011
+Patch012: ftp://ftp.gnu.org/gnu/bash/bash-4.3-patches/bash43-012
+Patch013: ftp://ftp.gnu.org/gnu/bash/bash-4.3-patches/bash43-013
+Patch014: ftp://ftp.gnu.org/gnu/bash/bash-4.3-patches/bash43-014
+Patch015: ftp://ftp.gnu.org/gnu/bash/bash-4.3-patches/bash43-015
+Patch016: ftp://ftp.gnu.org/gnu/bash/bash-4.3-patches/bash43-016
+Patch017: ftp://ftp.gnu.org/gnu/bash/bash-4.3-patches/bash43-017
+Patch018: ftp://ftp.gnu.org/gnu/bash/bash-4.3-patches/bash43-018
+Patch019: ftp://ftp.gnu.org/gnu/bash/bash-4.3-patches/bash43-019
+Patch020: ftp://ftp.gnu.org/gnu/bash/bash-4.3-patches/bash43-020
+Patch021: ftp://ftp.gnu.org/gnu/bash/bash-4.3-patches/bash43-021
+Patch022: ftp://ftp.gnu.org/gnu/bash/bash-4.3-patches/bash43-022
+Patch023: ftp://ftp.gnu.org/gnu/bash/bash-4.3-patches/bash43-023
+Patch024: ftp://ftp.gnu.org/gnu/bash/bash-4.3-patches/bash43-024
+Patch025: ftp://ftp.gnu.org/gnu/bash/bash-4.3-patches/bash43-025
+Patch026: ftp://ftp.gnu.org/gnu/bash/bash-4.3-patches/bash43-026
+
+# 1146326 - cve-2014-7169
+# we want to keep these patches from Florian Weimer
+# instead of the official ones, to match the ()/%%
+# detail we already have applied across RHELs and not to
+# create incompatibilities in the future
+#patchlevel 27
+Patch027: bash-4.2-cve-2014-7169-1.patch
+#patchlevel 28
+Patch028: bash-4.2-cve-2014-7169-2.patch
+
+Patch029: ftp://ftp.gnu.org/gnu/bash/bash-4.3-patches/bash43-029
+Patch030: ftp://ftp.gnu.org/gnu/bash/bash-4.3-patches/bash43-030
+Patch031: ftp://ftp.gnu.org/gnu/bash/bash-4.3-patches/bash43-031
+Patch032: ftp://ftp.gnu.org/gnu/bash/bash-4.3-patches/bash43-032
+Patch033: ftp://ftp.gnu.org/gnu/bash/bash-4.3-patches/bash43-033
+Patch034: ftp://ftp.gnu.org/gnu/bash/bash-4.3-patches/bash43-034
+Patch035: ftp://ftp.gnu.org/gnu/bash/bash-4.3-patches/bash43-035
+Patch036: ftp://ftp.gnu.org/gnu/bash/bash-4.3-patches/bash43-036
+Patch037: ftp://ftp.gnu.org/gnu/bash/bash-4.3-patches/bash43-037
+Patch038: ftp://ftp.gnu.org/gnu/bash/bash-4.3-patches/bash43-038
+Patch039: ftp://ftp.gnu.org/gnu/bash/bash-4.3-patches/bash43-039
+Patch040: ftp://ftp.gnu.org/gnu/bash/bash-4.3-patches/bash43-040
+Patch041: ftp://ftp.gnu.org/gnu/bash/bash-4.3-patches/bash43-041
+Patch042: ftp://ftp.gnu.org/gnu/bash/bash-4.3-patches/bash43-042
 
 # Other patches
 Patch101: bash-2.02-security.patch
@@ -70,6 +122,25 @@ Patch125: bash-4.2-size_type.patch
 # fix deadlock in trap, backported from devel branch
 Patch127: bash-4.2-trap.patch
 
+# 1112710 - mention ulimit -c and -f POSIX block size
+Patch128: bash-4.3-man-ulimit.patch
+
+# A series of patches emitted by upstream since 4.3-18
+#Patch131: bash-4.3-parse-time-keyword.patch
+Patch134: bash-4.3-pathexp-globignore-delim.patch
+
+# 1102815 - fix double echoes in vi visual mode
+Patch135: bash-4.3-noecho.patch
+
+# 1182278 - bash crashes on `select' if REPLY is readonly
+Patch137: bash-4.3-select-readonly.patch
+
+#1241533,1224855 - bash leaks memory when LC_ALL set
+Patch138: bash-4.3-memleak-lc_all.patch
+
+#1245233 - old memleak reappeared, taken from upstream
+Patch139: bash-4.3-old-memleak.patch
+
 BuildRequires: texinfo bison
 BuildRequires: ncurses-devel
 BuildRequires: autoconf, gettext
@@ -108,6 +179,50 @@ This package contains documentation files for %{name}.
 #%setup -q -a 2
 %setup -q -n %{name}-%{baseversion}
 
+# Official upstream patches
+%patch001 -p0 -b .001
+%patch002 -p0 -b .002
+%patch003 -p0 -b .003
+%patch004 -p0 -b .004
+%patch005 -p0 -b .005
+%patch006 -p0 -b .006
+%patch007 -p0 -b .007
+%patch008 -p0 -b .008
+%patch009 -p0 -b .009
+%patch010 -p0 -b .010
+%patch011 -p0 -b .011
+%patch012 -p0 -b .012
+%patch013 -p0 -b .013
+%patch014 -p0 -b .014
+%patch015 -p0 -b .015
+%patch016 -p0 -b .016
+%patch017 -p0 -b .017
+%patch018 -p0 -b .018
+%patch019 -p0 -b .019
+%patch020 -p0 -b .020
+%patch021 -p0 -b .021
+%patch022 -p0 -b .022
+%patch023 -p0 -b .023
+%patch024 -p0 -b .024
+%patch025 -p0 -b .025
+%patch026 -p0 -b .026
+%patch027 -p0 -b .7169-1
+%patch028 -p0 -b .7169-2
+%patch029 -p0 -b .029
+%patch030 -p0 -b .030
+%patch031 -p0 -b .031
+%patch032 -p0 -b .032
+%patch033 -p0 -b .033
+%patch034 -p0 -b .034
+%patch035 -p0 -b .035
+%patch036 -p0 -b .036
+%patch037 -p0 -b .037
+%patch038 -p0 -b .038
+%patch039 -p0 -b .039
+%patch040 -p0 -b .040
+%patch041 -p0 -b .041
+%patch042 -p0 -b .042
+
 # Other patches
 %patch101 -p1 -b .security
 %patch102 -p1 -b .paths
@@ -133,9 +248,19 @@ This package contains documentation files for %{name}.
 %patch122 -p1 -b .defer_sigchld_trap
 %patch123 -p1
 %patch125 -p1 -b .size_type
+%patch128 -p1 -b .ulimit
+#%patch131 -p0 -b .keyword
+%patch134 -p0 -b .delim
+%patch135 -p1 -b .noecho
+%patch137 -p1 -b .readonly
+%patch138 -p1 -b .lc_all
+%patch139 -p1 -b .oldleak
 
 echo %{version} > _distribution
 echo %{release} > _patchlevel
+
+# force refreshing the generated files
+rm y.tab.*
 
 %build
 autoconf
@@ -316,11 +441,10 @@ end
 %doc %{_pkgdocdir}/COPYING
 %attr(0755,root,root) %{_bindir}/bashbug[-.]*
 %{_bindir}/bashbug
-%{_infodir}/bash.info*
+#{_infodir}/bash.info*
 %{_mandir}/*/*
 %{_mandir}/*/..1*
 %doc RBASH README
-%doc doc/{FAQ,INTRO,README,bash{,ref}.html}
 
 %files doc -f %{name}-doc.files
 %defattr(-, root, root)
@@ -328,6 +452,12 @@ end
 %{_docdir}/bash
 
 %changelog
+* Fri Sep 18 2015 Liu Di <liudidi@gmail.com> - 4.3.42-3
+- 为 Magic 3.0 重建
+
+* Fri Sep 18 2015 Liu Di <liudidi@gmail.com> - 4.3.42-2
+- 为 Magic 3.0 重建
+
 * Tue Mar 04 2014 Liu Di <liudidi@gmail.com> - 4.3.0-1
 - 更新到 4.3
 

@@ -1,6 +1,6 @@
 Name:		physfs
 Version:	2.0.3
-Release:	4%{?dist}
+Release:	5%{?dist}
 License:	zlib
 Group:		System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
@@ -102,6 +102,9 @@ magic_rpm_clean.sh
 %{_mandir}/man3/*
 
 %changelog
+* Sat Sep 19 2015 Liu Di <liudidi@gmail.com> - 2.0.3-5
+- 为 Magic 3.0 重建
+
 * Sun Aug 17 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.0.3-4
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
 

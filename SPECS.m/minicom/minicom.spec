@@ -3,7 +3,7 @@ Summary: A text-based modem control and terminal emulation program
 Summary(zh_CN.UTF-8): 基于文本的调制解调器控制和虚拟终端程序
 Name: minicom
 Version: 2.7
-Release: 4%{?dist}
+Release: 5%{?dist}
 URL: http://alioth.debian.org/projects/minicom/
 License: GPL+ and GPLv2+ and GPLv2 and LGPLv2+ Public Domain and Copyright only
 Group: Applications/Communications
@@ -57,6 +57,9 @@ magic_rpm_clean.sh
 
 
 %changelog
+* Sun Sep 20 2015 Liu Di <liudidi@gmail.com> - 2.7-5
+- 为 Magic 3.0 重建
+
 * Wed Oct 15 2014 Liu Di <liudidi@gmail.com> - 2.7-4
 - 为 Magic 3.0 重建
 

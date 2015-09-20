@@ -1,6 +1,6 @@
 Name:           ocaml-omake
 Version:        0.9.8.6
-Release:        0.rc1%{?dist}.11
+Release:        0.rc1%{?dist}.12
 Summary:        Build system with automated dependency analysis
 Summary(zh_CN.UTF-8): 自动分析依赖的编译系统
 License:        LGPLv2+ with exceptions and GPLv2+ and BSD
@@ -79,6 +79,9 @@ magic_rpm_clean.sh
 
 
 %changelog
+* Sat Sep 19 2015 Liu Di <liudidi@gmail.com> - 0.9.8.6-0.rc1.12
+- 为 Magic 3.0 重建
+
 * Tue Mar 10 2015 Liu Di <liudidi@gmail.com> - 0.9.8.6-0.rc1.11
 - 为 Magic 3.0 重建
 

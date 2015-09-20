@@ -10,7 +10,7 @@ Summary(zh_CN.UTF-8): MPlayer, Linux 下的媒体播放器
 Name: mplayer
 Version: 1.0svn%{svndate}
 License: GPL
-Release: 1%{?dist}
+Release: 2%{?dist}
 Group: Applications/Multimedia
 Group(zh_CN.UTF-8): 应用程序/多媒体
 Url: http://www.mplayerhq.hu
@@ -200,6 +200,9 @@ rm -rf %{buildroot} %{_builddir}/%{buildsubdir}
 %endif
 
 %changelog
+* Sat Sep 19 2015 Liu Di <liudidi@gmail.com> - 1.0svn20150327-2
+- 为 Magic 3.0 重建
+
 * Fri Mar 27 2015 Liu Di <liudidi@gmail.com> - 1.0svn20150326-1
 - 更新到 1.0svn20150327
 

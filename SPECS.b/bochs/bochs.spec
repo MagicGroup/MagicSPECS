@@ -1,7 +1,7 @@
 %define _hardened_build 1
 Name:           bochs
-Version:        2.6.2
-Release:        5%{?dist}
+Version:        2.6.8
+Release:        6%{?dist}
 Summary:        Portable x86 PC emulator
 Summary(zh_CN.UTF-8): 可移植的 X86 PC 仿真器
 Group:          Applications/Emulators
@@ -22,6 +22,7 @@ Patch4: %{name}-0009_qemu-bios-pci-hotplug-support.patch
 Patch7: %{name}-nonet-build.patch
 # Update configure for aarch64 (bz #925112)
 Patch8: bochs-aarch64.patch
+Patch9: bochs-2.6.8-fix-formatsec.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  libXt-devel libXpm-devel SDL-devel readline-devel byacc
@@ -122,6 +123,7 @@ Header and source files from bochs source.
 %patch7 -p0 -z .nonet
 # Update configure for aarch64 (bz #925112)
 %patch8 -p1
+%patch9 -p1
 
 # Fix up some man page paths.
 sed -i -e 's|/usr/local/share/|%{_datadir}/|' doc/man/*.*
@@ -211,12 +213,12 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 %doc _installed-docs/* README-*
 %{_bindir}/bochs
-%{_bindir}/bxcommit
+#{_bindir}/bxcommit
 %{_bindir}/bximage
 # Note: must include *.la in %{_libdir}/bochs/plugins/
 %{_libdir}/bochs/
 %{_mandir}/man1/bochs.1*
-%{_mandir}/man1/bxcommit.1*
+#{_mandir}/man1/bxcommit.1*
 %{_mandir}/man1/bximage.1*
 %{_mandir}/man5/bochsrc.5*
 %dir %{_datadir}/bochs/
@@ -227,6 +229,8 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 %{_datadir}/bochs/BIOS*
 %{_datadir}/bochs/vgabios*
+%{_datadir}/bochs/SeaBIOS-README
+%{_datadir}/bochs/bios.bin-*
 %endif
 
 
@@ -243,6 +247,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_prefix}/include/bochs/
 
 %changelog
+* Fri Sep 18 2015 Liu Di <liudidi@gmail.com> - 2.6.8-6
+- 为 Magic 3.0 重建
+
 * Wed Aug 14 2013 Jon Ciesla <limburgher@gmail.com> - 2.6.2-5
 - Add back one of the man page munging lines.
 

@@ -5,7 +5,7 @@
 
 Name:           afpfs-ng
 Version:        0.8.1
-Release:        14%{?dist}
+Release:        15%{?dist}
 Summary:        Apple Filing Protocol client
 Summary(zh_CN.UTF-8): 苹果文件协议的客户端
 Group:          System Environment/Base
@@ -16,6 +16,7 @@ Source0:        http://downloads.sourceforge.net/afpfs-ng/%{name}-%{version}.tar
 Patch0:         afpfs-ng-0.8.1-overflows.patch
 Patch1:         afpfs-ng-0.8.1-pointer.patch
 Patch2:		afpfs-ng-0.8.1-headers.patch
+Patch3:		afpfs-ng-0.8.1-formatsec.patch
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 %{?!_without_fuse:BuildRequires: fuse-devel}
@@ -67,6 +68,7 @@ Library for dynamic linking and header files of afpfs-ng.
 %patch0 -p1 -b .overflows
 %patch1 -p1 -b .pointer
 %patch2 -p1
+%patch3 -p1
 
 %build
 # make would rebuild the autoconf infrastructure due to the following:
@@ -128,6 +130,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Fri Sep 18 2015 Liu Di <liudidi@gmail.com> - 0.8.1-15
+- 为 Magic 3.0 重建
+
 * Fri Apr 11 2014 Liu Di <liudidi@gmail.com> - 0.8.1-14
 - 更新到
 

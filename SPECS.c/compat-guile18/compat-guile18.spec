@@ -5,7 +5,7 @@ Summary: A GNU implementation of Scheme for application extensibility
 Summary(zh_CN.UTF-8): Guile 的 1.8 版本
 Name: compat-guile18
 Version: %{mver}.8
-Release: 7%{?dist}
+Release: 8%{?dist}
 Source: ftp://ftp.gnu.org/pub/gnu/guile/guile-%{version}.tar.gz
 URL: http://www.gnu.org/software/guile/
 Patch1: guile-1.8.7-multilib.patch
@@ -187,6 +187,9 @@ fi
 %{_includedir}/libguile.h
 
 %changelog
+* Sat Sep 19 2015 Liu Di <liudidi@gmail.com> - 1.8.8-8
+- 为 Magic 3.0 重建
+
 * Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.8.8-7
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
 

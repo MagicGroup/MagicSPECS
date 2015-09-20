@@ -2,7 +2,7 @@ Summary:	Multi-purpose calculator library
 Summary(zh_CN.UTF-8): 多用途的计算库
 Name:		libqalculate
 Version: 0.9.7
-Release: 4%{?dist}
+Release: 5%{?dist}
 License:	GPLv2+
 Group:		System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
@@ -106,6 +106,9 @@ rm -rf %{buildroot}
 %{_bindir}/qalc
 
 %changelog
+* Sat Sep 19 2015 Liu Di <liudidi@gmail.com> - 0.9.7-5
+- 为 Magic 3.0 重建
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 0.9.7-4
 - 为 Magic 3.0 重建
 

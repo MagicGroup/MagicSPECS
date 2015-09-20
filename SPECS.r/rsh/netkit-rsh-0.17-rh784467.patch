@@ -1,0 +1,50 @@
+diff -up netkit-rsh-0.17/rcp/rcp.c.rh784467 netkit-rsh-0.17/rcp/rcp.c
+--- netkit-rsh-0.17/rcp/rcp.c.rh784467	2012-01-31 15:47:57.996697245 +0100
++++ netkit-rsh-0.17/rcp/rcp.c	2012-01-31 17:11:23.489578305 +0100
+@@ -511,6 +511,37 @@ notreg:			(void)close(f);
+ 	}
+ }
+ 
++static char *
++rcp_basename(char *path)
++{
++	char *bname;
++
++	if (path == NULL || *path == '\0')
++		return NULL;
++
++retry:
++	/* Note this is GNU basename */
++	bname = basename(path);
++	if (*bname == '\0') {
++		/* path ends with '/', strip them all */
++		char *end = path + strlen(path) - 1;
++		while (path <= end && *end == '/') {
++			*end = '\0';
++			end--;
++		}
++
++		if (end < path) {
++			/* The path consists only from '/' chars */
++			*path = '/';
++			return path;
++		} else {
++			/* We removed all trailing '/' characters */
++			goto retry;
++		}
++	} else
++		return bname;
++}
++
+ static void
+ rsource(char *name, struct stat *statp)
+ {
+@@ -522,7 +553,7 @@ rsource(char *name, struct stat *statp)
+ 		error("rcp: %s: %s\n", name, strerror(errno));
+ 		return;
+ 	}
+-	last = strrchr(name, '/');
++	last = rcp_basename(name);
+ 	if (last == 0)
+ 		last = name;
+ 	else

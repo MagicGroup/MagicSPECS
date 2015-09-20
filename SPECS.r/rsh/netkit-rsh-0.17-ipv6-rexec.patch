@@ -1,0 +1,148 @@
+diff -up netkit-rsh-0.17/rexecd/rexecd.c.ipv6-rexec netkit-rsh-0.17/rexecd/rexecd.c
+--- netkit-rsh-0.17/rexecd/rexecd.c.ipv6-rexec	2013-07-15 17:31:07.678365071 +0200
++++ netkit-rsh-0.17/rexecd/rexecd.c	2013-07-15 17:32:17.010346615 +0200
+@@ -114,7 +114,7 @@ int deny_severity = LOG_WARNING;
+  */
+ 
+ static void fatal(const char *);
+-static void doit(struct sockaddr_in *fromp);
++static void doit(struct sockaddr_storage *fromp);
+ static void getstr(char *buf, int cnt, const char *err);
+ 
+ static const char *remote = NULL;
+@@ -122,7 +122,7 @@ static const char *remote = NULL;
+ int
+ main(int argc, char **argv)
+ {
+-	struct sockaddr_in from;
++	struct sockaddr_storage from;
+ 	socklen_t fromlen;
+ 
+ 	(void)argc;
+@@ -136,6 +136,29 @@ main(int argc, char **argv)
+ 
+ 	openlog(argv[0], LOG_PID, LOG_DAEMON);
+ 
++        /* handle situation when connected peer *doesn't have* native IPv6 address but systemd/xinetd
++         * is listening on AF_INET6 socket on our behalf and fds we are given corresponds to AF_INET6 socket
++         */
++	if (from.ss_family == AF_INET6 && IN6_IS_ADDR_V4MAPPED(&((struct sockaddr_in6 *) &from)->sin6_addr)) {
++		struct addrinfo *res, hints = {};
++		char client_addr[INET6_ADDRSTRLEN] = {};
++		char client_port[6] = {};
++
++		inet_ntop(AF_INET6, &((struct sockaddr_in6 *) &from)->sin6_addr,
++			client_addr, sizeof(client_addr));
++
++		sprintf(client_port, "%d", ntohs(((struct sockaddr_in6 *) &from)->sin6_port));
++
++		hints.ai_family = AF_INET;
++		hints.ai_socktype = SOCK_STREAM;
++		hints.ai_flags = AI_NUMERICHOST | AI_NUMERICSERV;
++
++		getaddrinfo(client_addr, client_port, &hints, &res);
++
++		memcpy(&from, res->ai_addr, sizeof(struct sockaddr_in));
++		freeaddrinfo(res);
++	}
++
+ #ifdef	TCP_WRAPPER
+ 	/* Find out and report the remote host name. */
+ 	/* I don't think this works. -- dholland */
+@@ -146,19 +169,42 @@ main(int argc, char **argv)
+ 	if (argc > 1 && argv[1] && strcmp(argv[1], "-D")==0)
+ 	{
+ 		/* use IP in logs -- this is workaround */
+-		remote = strdup(inet_ntoa(from.sin_addr));
++		char remote_addr[INET6_ADDRSTRLEN] = {};
++
++		if (from.ss_family == AF_INET)
++			remote = inet_ntop(AF_INET, &from, remote_addr, INET_ADDRSTRLEN);
++		else
++			remote = inet_ntop(AF_INET6, &from, remote_addr, INET6_ADDRSTRLEN);
++
++		if (remote) {
++			remote = strdup(remote);
++			if (!remote) {
++				fprintf(stderr, "rexecd: strdup: %s\n", strerror(errno));
++				return 1;
++			}
++		} else {
++			fprintf(stderr, "rexecd: inet_ntop: %s\n", strerror(errno));
++			return 1;
++		}
+ 	}
+ 	else
+ 	{
+-		struct hostent *h = gethostbyaddr((const char *)&from.sin_addr,
+-				  sizeof(struct in_addr),
+-				  AF_INET);
+-		if (!h || !h->h_name) {
+-			write(0, "\1Where are you?\n", 16);
++		int r;
++		char remote_hostname[NI_MAXHOST] = {};
++
++		r = getnameinfo((struct sockaddr *) &from, sizeof(struct sockaddr_storage), remote_hostname, NI_MAXHOST, NULL, NULL, 0);
++
++		if (r) {
++			fprintf(stderr, "rexecd: getnameinfo: %s\n", gai_strerror(r));
++			return 1;
++		}
++
++		remote = strdup(remote_hostname);
++		if (!remote) {
++			fprintf(stderr, "rexecd: strdup: %s\n", strerror(errno));
+ 			return 1;
+ 		}
+-		/* Be advised that this may be utter nonsense. */
+-		remote = strdup(h->h_name);
++
+ 	}
+ #endif
+ 	syslog(allow_severity, "connect from %.128s", remote);
+@@ -233,7 +279,7 @@ static struct pam_conv PAM_conversation
+ 
+ 
+ static void
+-doit(struct sockaddr_in *fromp)
++doit(struct sockaddr_storage *fromp)
+ {
+ 	char *cmdbuf;
+ 	long cmdbuflen;
+@@ -298,7 +344,7 @@ doit(struct sockaddr_in *fromp)
+  We must connect back to the client here if a port was provided. KRH
+ */
+ 	if (port != 0) {
+-		s = socket(AF_INET, SOCK_STREAM, 0);
++		s = socket(fromp->ss_family, SOCK_STREAM, 0);
+ 		if (s < 0)
+ 			exit(1);
+ 
+@@ -308,7 +354,12 @@ doit(struct sockaddr_in *fromp)
+ 			exit(1);
+ #endif
+ 		alarm(60);
+-		fromp->sin_port = htons(port);
++
++		if (fromp->ss_family == AF_INET)
++			((struct sockaddr_in *) fromp)->sin_port = htons(port);
++		else
++			((struct sockaddr_in6 *) fromp)->sin6_port = htons(port);
++
+ 		if (connect(s, (struct sockaddr *)fromp, sizeof (*fromp)) < 0)
+ 			exit(1);
+ 		alarm(0);
+diff -up netkit-rsh-0.17/rexec/rexec.c.ipv6-rexec netkit-rsh-0.17/rexec/rexec.c
+--- netkit-rsh-0.17/rexec/rexec.c.ipv6-rexec	2013-07-15 17:31:07.686365068 +0200
++++ netkit-rsh-0.17/rexec/rexec.c	2013-07-15 17:31:07.698365065 +0200
+@@ -194,8 +194,8 @@ int main(int argc, char *argv[])
+     exit(1);
+   }
+ 
+-  if ( (sock = rexec(&host, port_exec, user_name, passwd, command, 
+-		     p_to_aux_sock)) < 0 )
++  if ( (sock = rexec_af(&host, port_exec, user_name, passwd, command, 
++		     p_to_aux_sock, AF_UNSPEC)) < 0 )
+   {
+     fprintf(stderr,"%s: Error in rexec system call,\n",argv[0]);
+     fprintf(stderr,"%s: (The following system error may itself be in error)\n",argv[0]);

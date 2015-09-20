@@ -1,7 +1,7 @@
 Summary: A utility for creating TTY dialog boxes
 SUmmary(zh_Cn.UTF-8): 在控制台界面下显示对话框的工具
 Name: dialog
-Version: 1.2.20140219
+Version: 1.2.20150528
 Release: 1%{?dist}
 License: LGPLv2
 Group: Applications/System
@@ -97,6 +97,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/dialog.*
 
 %changelog
+* Sun Sep 20 2015 Liu Di <liudidi@gmail.com> - 1.2.20150528-1
+- 更新到 1.2.20150528
+
 * Thu Mar 20 2014 Liu Di <liudidi@gmail.com> - 1.2.20140219-1
 - 更新到 1.2.20140219
 

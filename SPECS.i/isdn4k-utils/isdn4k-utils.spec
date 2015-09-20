@@ -6,7 +6,7 @@
 Summary: Utilities for configuring an ISDN subsystem
 Name: isdn4k-utils
 Version: 3.2
-Release: 98%{?dist}
+Release: 99%{?dist}
 License: GPLv2+ and GPL+ and MIT and BSD and zlib
 Group: Applications/System
 Url: http://www.isdn4linux.de/
@@ -400,6 +400,9 @@ echo "# config files" >> %{buildroot}/etc/ppp/ioptions
 
 
 %changelog
+* Sat Sep 19 2015 Liu Di <liudidi@gmail.com> - 3.2-99
+- 为 Magic 3.0 重建
+
 * Sun Jun 22 2014 Liu Di <liudidi@gmail.com> - 3.2-98
 - 为 Magic 3.0 重建
 

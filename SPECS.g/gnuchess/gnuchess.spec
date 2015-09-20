@@ -1,8 +1,8 @@
 Summary: The GNU chess program
 Summary(zh_CN): GNU 国际象棋程序
 Name: gnuchess
-Version:	6.1.1
-Release: 2%{?dist}
+Version:	6.2.1
+Release: 1%{?dist}
 License: GPLv2+
 Group: Amusements/Games
 Group(zh_CN): 娱乐/游戏
@@ -55,6 +55,9 @@ rm -rf $RPM_BUILD_ROOT
 %doc doc/* COPYING AUTHORS NEWS TODO 
 
 %changelog
+* Sat Sep 19 2015 Liu Di <liudidi@gmail.com> - 6.2.1-1
+- 更新到 6.2.1
+
 * Fri Apr 11 2014 Liu Di <liudidi@gmail.com> - 6.1.1-2
 - 更新到 6.1.1
 

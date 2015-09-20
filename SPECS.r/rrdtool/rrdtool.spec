@@ -32,6 +32,9 @@ Patch4: rrdtool-1.5.4-lua-5.2.patch
 Patch5: rrdtool-1.4.8-php-ppc-fix.patch
 Patch6: rrdtool-1.5.3-arm-crash-fix.patch
 
+#找不到，临时禁止
+Patch7:	rrdtool-1.5.4-remove-rrdradospod.patch
+
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 Requires: dejavu-sans-mono-fonts
 Requires(post): systemd
@@ -178,6 +181,7 @@ The %{name}-lua package includes RRDtool bindings for Lua.
 %patch4 -p1 -b .lua-52
 %patch5 -p1 -b .php-ppc-fix
 %patch6 -p1 -b .arm-crash-fix
+%patch7 -p1
 
 # Fix to find correct python dir on lib64
 perl -pi -e 's|get_python_lib\(0,0,prefix|get_python_lib\(1,0,prefix|g' \

@@ -6,7 +6,7 @@
 Summary: GNU libraries and utilities for producing multi-lingual messages
 Summary(zh_CN.UTF-8): 用于生成多语言信息的 GNU 库和工具
 Name: gettext
-Version:	0.19.5.1
+Version:	0.19.6
 Release: 1%{?dist}
 License: GPLv3+ and LGPLv2+
 Group: Development/Tools
@@ -353,6 +353,9 @@ fi
 %{_emacs_sitelispdir}/%{name}/*.el
 
 %changelog
+* Sat Sep 19 2015 Liu Di <liudidi@gmail.com> - 0.19.6-1
+- 更新到 0.19.6
+
 * Thu Jul 23 2015 Liu Di <liudidi@gmail.com> - 0.19.5.1-1
 - 更新到 0.19.5.1
 

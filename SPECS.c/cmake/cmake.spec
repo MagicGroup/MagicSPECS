@@ -6,14 +6,11 @@
 # Set to RC version if building RC, else %{nil}
 #define rcver -rc4
 
-%define rpm_macros_dir %{_sysconfdir}/rpm
-%if 0%{?fedora} > 18
 %define rpm_macros_dir %{_rpmconfigdir}/macros.d
-%endif
 
 Name:           cmake
-Version:	3.0.1
-Release:        0.6.rc1%{?dist}
+Version:	3.3.2
+Release:        1%{?dist}
 Summary:        Cross-platform make system
 Summary(zh_CN.UTF-8): 跨平台的 make 系统
 
@@ -25,41 +22,29 @@ Group(zh_CN.UTF-8): 开发/工具
 # some GPL-licensed bison-generated files, these all include an exception granting redistribution under terms of your choice
 License:        BSD and MIT and zlib
 URL:            http://www.cmake.org
-Source0:        http://www.cmake.org/files/v3.0/cmake-%{version}%{?rcver}.tar.gz
+%define majorver %(echo %{version} | awk -F. '{print $1"."$2}')
+Source0:        http://www.cmake.org/files/v%{majorver}/cmake-%{version}%{?rcver}.tar.gz
 Source1:        cmake-init.el
 Source2:        macros.cmake
+# See https://bugzilla.redhat.com/show_bug.cgi?id=1202899
+Source3:        cmake.attr
+Source4:        cmake.prov
 
 # Patch to find DCMTK in Fedora (bug #720140)
 Patch0:         cmake-dcmtk.patch
 # Patch to fix RindRuby vendor settings
 # http://public.kitware.com/Bug/view.php?id=12965
 # https://bugzilla.redhat.com/show_bug.cgi?id=822796
-# Patch to use ninja-build instead of ninja (renamed in Fedora)
-# https://bugzilla.redhat.com/show_bug.cgi?id=886184
-Patch1:         cmake-ninja.patch
 Patch2:         cmake-findruby.patch
-# Patch to fix FindPostgreSQL
-# https://bugzilla.redhat.com/show_bug.cgi?id=828467
-# http://public.kitware.com/Bug/view.php?id=13378
-Patch3:         cmake-FindPostgreSQL.patch
-# Fix issue with finding consistent python versions
-# http://public.kitware.com/Bug/view.php?id=13794
-# https://bugzilla.redhat.com/show_bug.cgi?id=876118
-Patch4:         cmake-FindPythonLibs.patch
-# Add FindLua52.cmake
-Patch5:         cmake-2.8.11-rc4-lua-5.2.patch
-# Add -fno-strict-aliasing when compiling cm_sha2.c
-# http://www.cmake.org/Bug/view.php?id=14314
-Patch6:         cmake-strict_aliasing.patch
-# Remove automatic Qt module dep adding
-# http://public.kitware.com/Bug/view.php?id=14750
-Patch8:         cmake-qtdeps.patch
-# Additiona python fixes from upstream
-Patch9:         cmake-FindPythonLibs2.patch
-# Fix FindwxWiGroup(zh_CN.UTF-8):ets when cross-compiling for Windows
-# https://bugzilla.redhat.com/show_bug.cgi?id=1081207
-# http://public.kitware.com/Bug/view.php?id=11296
-Patch10:         cmake-FindwxWidgets.patch
+# Fix issue with redhat-hardened-ld
+# http://www.cmake.org/Bug/view.php?id=15737
+# https://bugzilla.redhat.com/show_bug.cgi?id=1260490
+Patch3:         cmake.git-97ffbcd8.patch
+
+## upstream patches
+# some post v3.3.1 tag commits
+Patch624:       0624-FindBoost-Add-support-for-Boost-1.59.patch
+Patch640:       0640-FindPkgConfig-remove-variable-dereference.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
@@ -132,25 +117,10 @@ This package contains documentation for CMake.
 
 # We cannot use backups with patches to Modules as they end up being installed
 %patch0 -p1
-%patch1 -p1
 %patch2 -p1
 %patch3 -p1
-%patch4 -p1
-%patch5 -p1
-%patch6 -p1
-%patch8 -p1
-%patch9 -p1
-%patch10 -p1
-
-# Setup copyright docs for main package
-mkdir _doc
-find Source Utilities -type f -iname copy\* | while read f
-do
-  fname=$(basename $f)
-  dir=$(dirname $f)
-  dname=$(basename $dir)
-  cp -p $f _doc/${fname}_${dname}
-done
+%patch624 -p1
+%patch640 -p1
 
 %build
 export CFLAGS="$RPM_OPT_FLAGS"
@@ -161,14 +131,17 @@ pushd build
              --docdir=/share/doc/%{name} --mandir=/share/man \
              --%{?with_bootstrap:no-}system-libs \
              --parallel=`/usr/bin/getconf _NPROCESSORS_ONLN` \
+             --sphinx-man \
              %{?qt_gui}
 make VERBOSE=1 %{?_smp_mflags}
-
 
 %install
 pushd build
 make install DESTDIR=%{buildroot}
 find %{buildroot}/%{_datadir}/%{name}/Modules -type f | xargs chmod -x
+[ -n "$(find %{buildroot}/%{_datadir}/%{name}/Modules -name \*.orig)" ] &&
+  echo "Found .orig files in %{_datadir}/%{name}/Modules, rebase patches" &&
+  exit 1
 popd
 # Install bash completion symlinks
 mkdir -p %{buildroot}%{_datadir}/bash-completion/completions
@@ -186,42 +159,105 @@ install -p -m 0644 %SOURCE1 %{buildroot}%{_emacs_sitestartdir}/
 install -p -m0644 -D %{SOURCE2} %{buildroot}%{rpm_macros_dir}/macros.cmake
 sed -i -e "s|@@CMAKE_VERSION@@|%{version}|" %{buildroot}%{rpm_macros_dir}/macros.cmake
 touch -r %{SOURCE2} %{buildroot}%{rpm_macros_dir}/macros.cmake
+%if 0%{?_rpmconfigdir:1}
+# RPM auto provides
+install -p -m0644 -D %{SOURCE3} %{buildroot}%{_prefix}/lib/rpm/fileattrs/cmake.attr
+install -p -m0755 -D %{SOURCE4} %{buildroot}%{_prefix}/lib/rpm/cmake.prov
+%endif
 mkdir -p %{buildroot}%{_libdir}/%{name}
+# Install copyright files for main package
+cp -p Copyright.txt %{buildroot}/%{_docdir}/%{name}/
+find Source Utilities -type f -iname copy\* | while read f
+do
+  fname=$(basename $f)
+  dir=$(dirname $f)
+  dname=$(basename $dir)
+  cp -p $f %{buildroot}/%{_docdir}/%{name}/${fname}_${dname}
+done
 
 %if %{with gui}
 # Desktop file
 desktop-file-install --delete-original \
   --dir=%{buildroot}%{_datadir}/applications \
   %{buildroot}/%{_datadir}/applications/CMake.desktop
-%endif
-magic_rpm_clean.sh
 
-%if 0%{?with_test}
+# Register as an application to be visible in the software center
+#
+# NOTE: It would be *awesome* if this file was maintained by the upstream
+# project, translated and installed into the right place during `make install`.
+#
+# See http://www.freedesktop.org/software/appstream/docs/ for more details.
+#
+mkdir -p %{buildroot}%{_datadir}/appdata
+cat > %{buildroot}%{_datadir}/appdata/CMake.appdata.xml <<EOF
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Copyright 2014 Ryan Lerch <rlerch@redhat.com> -->
+<!--
+EmailAddress: kitware@kitware.com
+SentUpstream: 2014-09-17
+-->
+<application>
+  <id type="desktop">CMake.desktop</id>
+  <metadata_license>CC0-1.0</metadata_license>
+  <name>CMake GUI</name>
+  <summary>Create new CMake projects</summary>
+  <description>
+    <p>
+      CMake is an open source, cross platform build system that can build, test,
+      and package software. CMake GUI is a graphical user interface that can
+      create and edit CMake projects.
+    </p>
+  </description>
+  <url type="homepage">http://www.cmake.org</url>
+  <screenshots>
+    <screenshot type="default">https://raw.githubusercontent.com/hughsie/fedora-appstream/master/screenshots-extra/CMake/a.png</screenshot>
+  </screenshots>
+  <!-- FIXME: change this to an upstream email address for spec updates
+  <updatecontact>someone_who_cares@upstream_project.org</updatecontact>
+   -->
+</application>
+EOF
+
+%endif
+
+
 %check
 unset DISPLAY
 pushd build
-#ModuleNotices fails for some unknown reason, and we don't care
-#CMake.HTML currently requires internet access
-#CTestTestUpload requires internet access
-bin/ctest -V -E ModuleNotices -E CMake.HTML -E CTestTestUpload %{?_smp_mflags}
+#CMake.FileDownload, and CTestTestUpload require internet access
+bin/ctest -V -E 'CMake.FileDownload|CTestTestUpload' %{?_smp_mflags}
 popd
-%endif
+
 
 %if %{with gui}
 %post gui
 update-desktop-database &> /dev/null || :
-update-mime-database %{_datadir}/mime &> /dev/null || :
+/bin/touch --no-create %{_datadir}/mime || :
+/bin/touch --no-create %{_datadir}/icons/hicolor &>/dev/null || :
 
 %postun gui
 update-desktop-database &> /dev/null || :
-update-mime-database %{_datadir}/mime &> /dev/null || :
+if [ $1 -eq 0 ] ; then
+    /bin/touch --no-create %{_datadir}/mime || :
+    update-mime-database %{?fedora:-n} %{_datadir}/mime &> /dev/null || :
+    /bin/touch --no-create %{_datadir}/icons/hicolor &>/dev/null || :
+    /usr/bin/gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
+fi
+
+%posttrans gui
+update-mime-database %{?fedora:-n} %{_datadir}/mime &> /dev/null || :
+/usr/bin/gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %endif
 
+
 %files
-%doc Copyright.txt _doc/*
+%dir %{_docdir}/%{name}
+%{_docdir}/%{name}/Copyright.txt*
+%{_docdir}/%{name}/COPYING*
 %{rpm_macros_dir}/macros.cmake
-%if %{with gui}
-%exclude %{_docdir}/%{name}/cmake-gui.*
+%if 0%{?_rpmconfigdir:1}
+%{_prefix}/lib/rpm/fileattrs/cmake.attr
+%{_prefix}/lib/rpm/cmake.prov
 %endif
 %{_bindir}/ccmake
 %{_bindir}/cmake
@@ -230,22 +266,32 @@ update-mime-database %{_datadir}/mime &> /dev/null || :
 %{_datadir}/aclocal/cmake.m4
 %{_datadir}/bash-completion/
 %{_datadir}/%{name}/
+%{_mandir}/man1/ccmake.1.gz
+%{_mandir}/man1/cmake.1.gz
+%{_mandir}/man1/cpack.1.gz
+%{_mandir}/man1/ctest.1.gz
+%{_mandir}/man7/*.7.gz
 %{_emacs_sitelispdir}/%{name}
 %{_emacs_sitestartdir}/%{name}-init.el
 %{_libdir}/%{name}/
 
 %files doc
-%{_docdir}/cmake/*
+%{_docdir}/%{name}/
 
 %if %{with gui}
 %files gui
 %{_bindir}/cmake-gui
+%{_datadir}/appdata/*.appdata.xml
 %{_datadir}/applications/CMake.desktop
 %{_datadir}/mime/packages/cmakecache.xml
-%{_datadir}/pixmaps/CMakeSetup32.png
+%{_datadir}/icons/hicolor/*/apps/CMakeSetup.png
+%{_mandir}/man1/cmake-gui.1.gz
 %endif
 
 %changelog
+* Sat Sep 19 2015 Liu Di <liudidi@gmail.com> - 3.3.2-1
+- 更新到 3.3.2
+
 * Thu Aug 14 2014 Liu Di <liudidi@gmail.com> - 3.0.1-0.6.rc1
 - 更新到 3.0.1
 

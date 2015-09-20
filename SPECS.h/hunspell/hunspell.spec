@@ -3,7 +3,7 @@
 Name:      hunspell
 Summary:   A spell checker and morphological analyzer library
 Version:   1.3.2
-Release:   4%{?dist}
+Release:   5%{?dist}
 Source:    http://downloads.sourceforge.net/%{name}/hunspell-%{version}.tar.gz
 Group:     System Environment/Libraries
 URL:       http://hunspell.sourceforge.net/
@@ -123,6 +123,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/hunspell.3.gz
 
 %changelog
+* Sat Sep 19 2015 Liu Di <liudidi@gmail.com> - 1.3.2-5
+- 为 Magic 3.0 重建
+
 * Tue Apr 15 2014 Liu Di <liudidi@gmail.com> - 1.3.2-4
 - 为 Magic 3.0 重建
 
