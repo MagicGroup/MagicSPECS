@@ -1,0 +1,11 @@
+--- hslua-0.3.10/hslua.cabal~	2014-01-22 10:24:05.704696822 +0900
++++ hslua-0.3.10/hslua.cabal	2014-01-22 16:57:10.384860068 +0900
+@@ -30,7 +30,7 @@
+   Exposed-modules:      Scripting.Lua, Scripting.Lua.ConfigFile
+   Hs-source-dirs:       src
+   if flag(system-lua)
+-    Pkgconfig-depends:  lua
++    Pkgconfig-depends:  lua-5.1
+     C-sources:          cbits/ntrljmp.c
+     Include-dirs:       cbits
+   else
