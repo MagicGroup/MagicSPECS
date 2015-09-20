@@ -1,0 +1,16 @@
+diff -up optparse-applicative-0.11.0.1/Options/Applicative.hs~ optparse-applicative-0.11.0.1/Options/Applicative.hs
+--- optparse-applicative-0.11.0.1/Options/Applicative.hs~	2014-10-06 02:01:26.000000000 +0900
++++ optparse-applicative-0.11.0.1/Options/Applicative.hs	2014-11-05 10:42:59.741567059 +0900
+@@ -35,4 +35,3 @@ import Options.Applicative.Builder
+ import Options.Applicative.Builder.Completer
+ import Options.Applicative.Extra
+ 
+-{-# ANN module "HLint: ignore Use import/export shortcut" #-}
+diff -up optparse-applicative-0.11.0.1/Options/Applicative/Help/Core.hs~ optparse-applicative-0.11.0.1/Options/Applicative/Help/Core.hs
+--- optparse-applicative-0.11.0.1/Options/Applicative/Help/Core.hs~	2014-10-06 02:01:26.000000000 +0900
++++ optparse-applicative-0.11.0.1/Options/Applicative/Help/Core.hs	2014-11-05 10:43:34.110704025 +0900
+@@ -140,4 +140,3 @@ parserUsage pprefs p progn = hsep
+   , string progn
+   , align (extractChunk (briefDesc pprefs p)) ]
+ 
+-{-# ANN footerHelp "HLint: ignore Eta reduce" #-}
