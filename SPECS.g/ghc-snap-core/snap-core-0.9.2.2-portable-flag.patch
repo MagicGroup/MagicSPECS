@@ -1,0 +1,11 @@
+--- snap-core-0.9.2.2/snap-core.cabal~	2012-10-09 02:24:54.000000000 +0900
++++ snap-core-0.9.2.2/snap-core.cabal	2012-10-29 18:00:48.906120240 +0900
+@@ -72,7 +72,7 @@
+ Flag portable
+   Description: Compile in cross-platform mode. No platform-specific code or
+                optimizations such as C routines will be used.
+-  Default: False
++  Default: True
+ 
+ 
+ Flag debug
