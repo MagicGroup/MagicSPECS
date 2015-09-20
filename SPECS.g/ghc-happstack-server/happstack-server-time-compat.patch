@@ -1,0 +1,31 @@
+--- happstack-server-7.3.9/happstack-server.cabal.orig	2015-03-04 00:22:58.607285588 +0900
++++ happstack-server-7.3.9/happstack-server.cabal	2015-03-04 00:23:29.666225638 +0900
+@@ -93,7 +93,6 @@
+                        syb,
+                        text >= 0.10 && < 1.3,
+                        time,
+-                       time-compat,
+                        threads >= 0.5,
+                        transformers >= 0.1.3 && < 0.5,
+                        transformers-base >= 0.4 && < 0.5,
+--- happstack-server-7.3.4/src/Happstack/Server/FileServe/BuildingBlocks.hs~	2014-03-11 05:29:33.000000000 +0900
++++ happstack-server-7.3.4/src/Happstack/Server/FileServe/BuildingBlocks.hs	2014-04-02 10:26:17.195355663 +0900
+@@ -66,7 +66,6 @@
+ import           Data.Map           (Map)
+ import qualified Data.Map           as Map
+ import Data.Time                    (UTCTime, formatTime)
+-import Data.Time.Compat             (toUTCTime)
+ import Filesystem.Path.CurrentOS    (commonPrefix, encodeString, decodeString, collapse, append)
+ import Happstack.Server.Monads      (ServerMonad(askRq), FilterMonad, WebMonad)
+ import Happstack.Server.Response    (ToMessage(toResponse), ifModifiedSince, forbidden, ok, seeOther)
+@@ -80,6 +79,10 @@
+ import qualified Text.Blaze.Html5            as H
+ import qualified Text.Blaze.Html5.Attributes as A
+ 
++-- Fedora change to avoid packaging time-compat:
++--import Data.Time.Compat             (toUTCTime)
++toUTCTime = id
++
+ -- * Mime-Type / Content-Type
+ 
+ -- |a 'Map' from file extensions to content-types
