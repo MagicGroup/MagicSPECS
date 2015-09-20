@@ -6,18 +6,6 @@
 #                 workload gets run it decreases the general performance now.
 # --define 'scl somepkgname': Independent packages by scl-utils-build.
 
-# RHEL-5 was the last not providing `/etc/rpm/macros.dist'.
-%if 0%{!?dist:1}
-%global rhel 5
-%global dist .el5
-%global el5 1
-%endif
-# RHEL-5 Brew does not set %{el5}, BZ 1002198 tps-srpmtest does not set %{rhel}.
-%if "%{?dist}" == ".el5"
-%global rhel 5
-%global el5 1
-%endif
-
 %{?scl:%scl_package gdb}
 %{!?scl:
  %global pkg_name %{name}
@@ -29,23 +17,22 @@
 Summary: A GNU source-level debugger for C, C++, Fortran, Go and other languages
 Name: %{?scl_prefix}gdb
 
-# 6e5c95e6cf1e3c37bd3a822ca9e6721caab97a85
-#global snap       20140127
 # Freeze it when GDB gets branched
-%global snapsrc    20140108
+%global snapsrc    20150706
 # See timestamp of source gnulib installed into gdb/gnulib/ .
 %global snapgnulib 20121213
-Version: 7.7
+%global tarname gdb-%{version}
+Version: 7.10
 
 # The release always contains a leading reserved number, start it at 1.
 # `upstream' is not a part of `name' to stay fully rpm dependencies compatible for the testing.
-Release: 4%{?dist}
+Release: 22%{?dist}
 
-License: GPLv3+ and GPLv3+ with exceptions and GPLv2+ and GPLv2+ with exceptions and GPL+ and LGPLv2+ and BSD and Public Domain
+License: GPLv3+ and GPLv3+ with exceptions and GPLv2+ and GPLv2+ with exceptions and GPL+ and LGPLv2+ and BSD and Public Domain and GFDL
 Group: Development/Debuggers
 # Do not provide URL for snapshots as the file lasts there only for 2 days.
-# ftp://sourceware.org/pub/gdb/releases/gdb-%{version}.tar.bz2
-Source: gdb-%{version}.tar.bz2
+# ftp://sourceware.org/pub/gdb/releases/FIXME{tarname}.tar.xz
+Source: ftp://sourceware.org/pub/gdb/releases/%{tarname}.tar.xz
 Buildroot: %(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
 URL: http://gnu.org/software/gdb/
 
@@ -54,7 +41,7 @@ Obsoletes: devtoolset-1.0-%{pkg_name}
 %endif
 
 # For our convenience
-%global gdb_src %{pkg_name}-%{version}
+%global gdb_src %{tarname}
 %global gdb_build build-%{_target_platform}
 
 # Make sure we get rid of the old package gdb64, now that we have unified
@@ -65,11 +52,7 @@ Obsoletes: gdb64 < 5.3.91
 
 %global have_inproctrace 0
 %ifarch %{ix86} x86_64
-# RHEL-5.i386: [int foo, bar; bar = __sync_val_compare_and_swap(&foo, 0, 1);]
-#              undefined reference to `__sync_val_compare_and_swap_4'
-%if 0%{!?el5:1}
 %global have_inproctrace 1
-%endif # 0%{!?el5:1}
 %endif # %{ix86} x86_64
 
 # gdb-add-index cannot be run even for SCL package on RHEL<=6.
@@ -84,6 +67,33 @@ Provides: bundled(gnulib) = %{snapgnulib}
 Provides: bundled(binutils) = %{snapsrc}
 # https://fedorahosted.org/fpc/ticket/130
 Provides: bundled(md5-gcc) = %{snapsrc}
+
+%if 0%{!?rhel:1} || 0%{?rhel} > 7
+Recommends: gcc-gdb-plugin%{?_isa}
+Recommends: dnf-command(debuginfo-install)
+# https://bugzilla.redhat.com/show_bug.cgi?id=1209492
+Recommends: default-yama-scope
+%endif
+
+%if 0%{?el6:1}
+%global librpmver 1
+%else
+# FIXME: %elif does not work.
+%if 0%{?el7:1}
+%global librpmver 3
+%else
+%global librpmver 7
+%endif
+%endif
+%if 0%{?__isa_bits} == 64
+%global librpmname librpm.so.%{librpmver}()(64bit)
+%else
+%global librpmname librpm.so.%{librpmver}
+%endif
+BuildRequires: %{librpmname}
+%if 0%{!?rhel:1} || 0%{?rhel} > 7
+Recommends: %{librpmname}
+%endif
 
 # GDB patches have the format `gdb-<version>-bz<red-hat-bz-#>-<desc>.patch'.
 # They should be created using patch level 1: diff -up ./gdb (or gdb-6.3/gdb).
@@ -108,9 +118,9 @@ Source3: gdb-gstack.man
 #=fedora
 Source4: gdbinit
 
-# libstdc++ pretty printers from GCC SVN HEAD (4.5 experimental).
-%global libstdcxxpython gdb-libstdc++-v3-python-r155978
-Source5: %{libstdcxxpython}.tar.bz2
+# libstdc++ pretty printers from GCC SVN.
+%global libstdcxxpython gdb-libstdc++-v3-python-r225521
+Source5: %{libstdcxxpython}.tar.xz
 
 # Provide gdbtui for RHEL-5 and RHEL-6 as it is removed upstream (BZ 797664).
 Source6: gdbtui
@@ -132,9 +142,6 @@ Patch105: gdb-6.3-ppc64syscall-20040622.patch
 #=maybepush: Write new testcase.
 Patch111: gdb-6.3-ppc64displaysymbol-20041124.patch
 
-# Fix upstream `set scheduler-locking step' vs. upstream PPC atomic seqs.
-#=push+work: It is a bit difficult patch, a part is ppc specific.
-Patch112: gdb-6.6-scheduler_locking-step-sw-watchpoints2.patch
 # Make upstream `set scheduler-locking step' as default.
 #=push+work: How much is scheduler-locking relevant after non-stop?
 Patch260: gdb-6.6-scheduler_locking-step-is-default.patch
@@ -193,11 +200,6 @@ Patch194: gdb-6.5-bz185337-resolve-tls-without-debuginfo-v2.patch
 #=fedoratest+work: One should recheck if it is really fixed upstream.
 Patch196: gdb-6.5-sharedlibrary-path.patch
 
-# Suggest fixing your target architecture for gdbserver(1) (BZ 190810).
-# FIXME: It could be autodetected.
-#=push+work: There are more such error cases that can happen.
-Patch199: gdb-6.5-bz190810-gdbserver-arch-advice.patch
-
 # Testcase for deadlocking on last address space byte; for corrupted backtraces.
 #=fedoratest
 Patch211: gdb-6.5-last-address-space-byte-test.patch
@@ -236,7 +238,7 @@ Patch231: gdb-6.3-bz202689-exec-from-pthread-test.patch
 
 # Backported fixups post the source tarball.
 #Xdrop: Just backports.
-Patch232: gdb-upstream.patch
+#Patch232: gdb-upstream.patch
 
 # Testcase for PPC Power6/DFP instructions disassembly (BZ 230000).
 #=fedoratest+ppc
@@ -285,10 +287,9 @@ Patch415: gdb-6.6-buildid-locate-core-as-arg.patch
 Patch519: gdb-6.6-buildid-locate-rpm-librpm-workaround.patch
 # [SCL] Skip deprecated .gdb_index warning for Red Hat built files (BZ 953585).
 Patch833: gdb-6.6-buildid-locate-rpm-scl.patch
-
-# Add kernel vDSO workaround (`no loadable ...') on RHEL-5 (kernel BZ 765875).
-#=push
-Patch276: gdb-6.6-bfd-vdso8k.patch
+# Fix 'gdb gives highly misleading error when debuginfo pkg is present,
+# but not corresponding binary pkg' (RH BZ 981154).
+Patch863: gdb-6.6-buildid-locate-misleading-warning-missing-debuginfo-rhbz981154.patch
 
 # Fix displaying of numeric char arrays as strings (BZ 224128).
 #=fedoratest: But it is failing anyway, one should check the behavior more.
@@ -368,11 +369,6 @@ Patch348: gdb-6.8-bz466901-backtrace-full-prelinked.patch
 #=push+work
 Patch349: gdb-archer.patch
 
-# Fix parsing elf64-i386 files for kdump PAE vmcore dumps (BZ 457187).
-# - Turn on 64-bit BFD support, globally enable AC_SYS_LARGEFILE.
-#=fedoratest
-Patch360: gdb-6.8-bz457187-largefile-test.patch
-
 # New test for step-resume breakpoint placed in multiple threads at once.
 #=fedoratest
 Patch381: gdb-simultaneous-step-resume-breakpoint-test.patch
@@ -389,10 +385,6 @@ Patch391: gdb-x86_64-i386-syscall-restart.patch
 # Fix stepping with OMP parallel Fortran sections (BZ 533176).
 #=push+work: It requires some better DWARF annotations.
 Patch392: gdb-bz533176-fortran-omp-step.patch
-
-# Use gfortran44 when running the testsuite on RHEL-5.
-#=fedoratest
-Patch393: gdb-rhel5-gcc44.patch
 
 # Fix regression by python on ia64 due to stale current frame.
 #=push
@@ -518,25 +510,38 @@ Patch818: gdb-rhbz795424-bitpos-lazyvalue.patch
 #=fedoratest
 Patch832: gdb-rhbz947564-findvar-assertion-frame-failed-testcase.patch
 
-# Fix crash on 'enable count' (Simon Marchi, BZ 993118).
-Patch843: gdb-enable-count-crash.patch
-
-# Fix testsuite "ERROR: no fileid for".
-Patch846: gdb-testsuite-nohostid.patch
-
-# Fix Python stack corruption.
-Patch847: gdb-python-stacksmash.patch
-
 # [rhel6] DTS backward Python compatibility API (BZ 1020004, Phil Muldoon).
 Patch848: gdb-dts-rhel6-python-compat.patch
 
-# Fix gdb-7.7 auto-load from /usr/share/gdb/auto-load/ regression.
-Patch849: gdb-auto-load-lost-path-7.7.patch
-
 # Fix crash of -readnow /usr/lib/debug/usr/bin/gnatbind.debug (BZ 1069211).
-Patch850: gdb-gnat-dwarf-crash-1of3.patch
-Patch851: gdb-gnat-dwarf-crash-2of3.patch
 Patch852: gdb-gnat-dwarf-crash-3of3.patch
+
+# VLA (Fortran dynamic arrays) from Intel + archer-jankratochvil-vla tests.
+Patch888: gdb-vla-intel.patch
+Patch983: gdb-vla-intel-logical-not.patch
+Patch889: gdb-vla-intel-stringbt-fix.patch
+Patch912: gdb-vla-intel-04of23-fix.patch
+Patch887: gdb-archer-vla-tests.patch
+
+# Continue backtrace even if a frame filter throws an exception (Phil Muldoon).
+Patch918: gdb-btrobust.patch
+
+# Display Fortran strings in backtraces.
+Patch925: gdb-fortran-frame-string.patch
+
+# Fix Python GIL with gdb.execute("continue") (Phil Muldoon, BZ 1116957).
+Patch927: gdb-python-gil.patch
+
+# Fix jit-reader.h for multi-lib.
+Patch978: gdb-jit-reader-multilib.patch
+
+# Fix 'Make the probes-based dynamic linker interface more robust to
+# errors' (Sergio Durigan Junior, RH BZ 1259132).
+Patch1029: gdb-probes-based-interface-robust-1of2.patch
+Patch1030: gdb-probes-based-interface-robust-2of2.patch
+
+# [ppc64le] Use skip_entrypoint for skip_trampoline_code (RH BZ 1260558).
+Patch1031: gdb-rhbz1260558-ppc64le-skip_trampoline_code.patch
 
 %if 0%{!?rhel:1} || 0%{?rhel} > 6
 # RL_STATE_FEDORA_GDB would not be found for:
@@ -550,18 +555,16 @@ BuildRequires: expat-devel%{?_isa}
 %if 0%{!?rhel:1} || 0%{?rhel} > 6
 BuildRequires: xz-devel%{?_isa}
 %endif
-%if 0%{!?el5:1}
-# dlopen() no longer makes rpm-libs%{?_isa} (it's .so) a mandatory dependency.
+# dlopen() no longer makes rpm-libsFIXME{?_isa} (it's .so) a mandatory dependency.
 BuildRequires: rpm-devel%{?_isa}
-%endif # 0%{!?el5:1}
-BuildRequires: zlib-devel%{?_isa}
+BuildRequires: zlib-devel%{?_isa} libselinux-devel%{?_isa}
 %if 0%{!?_without_python:1}
-%if 0%{?el5:1}
-# This RHEL-5.6 python version got split out python-libs for ppc64.
-# RHEL-5 rpm does not support .%{_arch} dependencies.
-Requires: python-libs-%{_arch} >= 2.4.3-32.el5
-%endif
+%if 0%{?rhel:1} && 0%{?rhel} <= 7
 BuildRequires: python-devel%{?_isa}
+%else
+%global __python %{__python3}
+BuildRequires: python3-devel%{?_isa}
+%endif
 %if 0%{?rhel:1} && 0%{?rhel} <= 6
 # Temporarily before python files get moved to libstdc++.rpm
 # libstdc++%{bits_other} is not present in Koji, the .spec script generating
@@ -576,18 +579,23 @@ BuildRequires: texlive-collection-latexrecommended
 %endif
 # Permit rebuilding *.[0-9] files even if they are distributed in gdb-*.tar:
 BuildRequires: /usr/bin/pod2man
-
-# BuildArch would break RHEL-5 by overriding arch and not building noarch.
-%if 0%{?el5:1}
-ExclusiveArch: noarch i386 x86_64 ppc ppc64 s390 s390x
-%endif # 0%{?el5:1}
+%if 0%{!?rhel:1}
+BuildRequires: libbabeltrace-devel%{?_isa}
+BuildRequires: guile-devel%{?_isa}
+%endif
+%global have_libipt 0
+%if 0%{!?rhel:1} || 0%{?rhel} > 7
+%ifarch %{ix86} x86_64
+%global have_libipt 1
+BuildRequires: libipt-devel%{?_isa}
+%endif
+%endif
 
 %if 0%{?_with_testsuite:1}
 
 # Ensure the devel libraries are installed for both multilib arches.
 %global bits_local %{?_isa}
 %global bits_other %{?_isa}
-%if 0%{!?el5:1}
 %ifarch s390x
 %global bits_other (%{__isa_name}-32)
 %else #!s390x
@@ -599,34 +607,41 @@ ExclusiveArch: noarch i386 x86_64 ppc ppc64 s390 s390x
 %endif #sparc64 ppc64 s390x x86_64
 %endif #!ppc
 %endif #!s390x
-%endif #!el5
 
 BuildRequires: sharutils dejagnu
 # gcc-objc++ is not covered by the GDB testsuite.
 BuildRequires: gcc gcc-c++ gcc-gfortran gcc-objc
-%if 0%{!?rhel:1} || 0%{?rhel} < 7
+%if 0%{!?rhel:1} || 0%{?rhel} > 7
+BuildRequires: gcc-gdb-plugin%{?_isa}
+%endif
+%if 0%{?rhel:1} && 0%{?rhel} < 7
 BuildRequires: gcc-java libgcj%{bits_local} libgcj%{bits_other}
+# for gcc-java linkage:
+BuildRequires: zlib-devel%{bits_local} zlib-devel%{bits_other}
 %endif
 %if 0%{!?rhel:1} || 0%{?rhel} > 6
+# These Fedoras do not yet have gcc-go built.
+%ifnarch ppc64le aarch64
 BuildRequires: gcc-go
+%endif
 %endif
 # archer-sergiodj-stap-patch-split
 BuildRequires: systemtap-sdt-devel
+%if 0%{?rhel:1} && 0%{?rhel} <= 7
 # Copied from prelink-0.4.2-3.fc13.
+# Prelink is not yet ported to ppc64le.
 %ifarch %{ix86} alpha sparc sparcv9 sparc64 s390 s390x x86_64 ppc ppc64
 # Prelink is broken on sparcv9/sparc64.
 %ifnarch sparc sparcv9 sparc64
 BuildRequires: prelink
 %endif
 %endif
+%endif
 %if 0%{!?rhel:1}
-# Fedora arm does not yet have fpc built.
-%ifnarch %{arm}
+# Fedora arm+ppc64le do not yet have fpc built.
+%ifnarch %{arm} ppc64le
 BuildRequires: fpc
 %endif
-%endif
-%if 0%{?el5:1}
-BuildRequires: gcc44 gcc44-gfortran
 %endif
 # Copied from gcc-4.1.2-32.
 %ifarch %{ix86} x86_64 ppc alpha
@@ -638,16 +653,16 @@ BuildRequires: libgcc%{bits_local} libgcc%{bits_other}
 # libstdc++-devel of matching bits is required only for g++ -static.
 BuildRequires: libstdc++%{bits_local} libstdc++%{bits_other}
 %if 0%{!?rhel:1} || 0%{?rhel} > 6
+# These Fedoras do not yet have gcc-go built.
+%ifnarch ppc64le aarch64
 BuildRequires: libgo-devel%{bits_local} libgo-devel%{bits_other}
 %endif
-%if 0%{!?el5:1}
-BuildRequires: glibc-static%{bits_local}
 %endif
+BuildRequires: glibc-static%{bits_local}
 # multilib glibc-static is open Bug 488472:
 #BuildRequires: glibc-static%{bits_other}
-# for gcc-java linkage:
-BuildRequires: zlib-devel%{bits_local} zlib-devel%{bits_other}
 # Copied from valgrind-3.5.0-1.
+# Valgrind is not yet ported to ppc64le.
 %ifarch %{ix86} x86_64 ppc ppc64
 BuildRequires: valgrind%{bits_local} valgrind%{bits_other}
 %endif
@@ -663,9 +678,6 @@ BuildRequires: xz
 GDB, the GNU debugger, allows you to debug programs written in C, C++,
 Java, and other languages, by executing them in a controlled fashion
 and printing their data.
-
-# It would break RHEL-5 by leaving excessive files for the doc subpackage.
-%ifnarch noarch
 
 %package gdbserver
 Summary: A standalone server for GDB (the GNU source-level debugger)
@@ -683,18 +695,13 @@ and printing their data.
 This package provides a program that allows you to run GDB on a different
 machine than the one which is running the program being debugged.
 
-# It would break RHEL-5 by leaving excessive files for the doc subpackage.
-%endif # !noarch
-%if 0%{!?el5:1} || "%{_target_cpu}" == "noarch"
-
 %package doc
 Summary: Documentation for GDB (the GNU source-level debugger)
 License: GFDL
 Group: Documentation
-# It would break RHEL-5 by overriding arch and not building noarch separately.
-%if 0%{!?el5:1}
 BuildArch: noarch
-%endif # 0%{!?el5:1}
+Requires(post): /sbin/install-info
+Requires(preun): /sbin/install-info
 
 %if "%{scl}" == "devtoolset-1.1"
 Obsoletes: devtoolset-1.0-%{pkg_name}-doc
@@ -707,22 +714,16 @@ and printing their data.
 
 This package provides INFO, HTML and PDF user manual for GDB.
 
-Requires(post): /sbin/install-info
-Requires(preun): /sbin/install-info
-
-%endif # 0%{!?el5:1} || "%{_target_cpu}" == "noarch"
-
 %prep
 %setup -q -n %{gdb_src}
 
 %if 0%{?rhel:1} && 0%{?rhel} <= 6
 # libstdc++ pretty printers.
-tar xjf %{SOURCE5}
+tar xJf %{SOURCE5}
 %endif # 0%{?rhel:1} && 0%{?rhel} <= 6
 
 # Files have `# <number> <file>' statements breaking VPATH / find-debuginfo.sh .
-rm -f gdb/ada-exp.c gdb/ada-lex.c gdb/c-exp.c gdb/cp-name-parser.c gdb/f-exp.c
-rm -f gdb/jv-exp.c gdb/m2-exp.c gdb/objc-exp.c gdb/p-exp.c gdb/go-exp.c
+(cd gdb;rm -fv $(perl -pe 's/\\\n/ /' <Makefile.in|sed -n 's/^YYFILES = //p'))
 
 # *.info* is needlessly split in the distro tar; also it would not get used as
 # we build in %{gdb_build}, just to be sure.
@@ -733,13 +734,16 @@ find -name "*.info*"|xargs rm -f
 # Match the Fedora's version info.
 %patch2 -p1
 
+#patch232 -p1
 %patch349 -p1
-%patch232 -p1
+%patch888 -p1
+%patch983 -p1
+%patch889 -p1
+%patch912 -p1
 %patch1 -p1
 
 %patch105 -p1
 %patch111 -p1
-%patch112 -p1
 %patch118 -p1
 %patch122 -p1
 %patch125 -p1
@@ -752,7 +756,6 @@ find -name "*.info*"|xargs rm -f
 %patch188 -p1
 %patch194 -p1
 %patch196 -p1
-%patch199 -p1
 %patch208 -p1
 %patch211 -p1
 %patch213 -p1
@@ -774,7 +777,6 @@ find -name "*.info*"|xargs rm -f
 %patch274 -p1
 %patch659 -p1
 %patch353 -p1
-%patch276 -p1
 %patch282 -p1
 %patch284 -p1
 %patch289 -p1
@@ -790,7 +792,6 @@ find -name "*.info*"|xargs rm -f
 %patch330 -p1
 %patch343 -p1
 %patch348 -p1
-%patch360 -p1
 %patch381 -p1
 %patch382 -p1
 %patch391 -p1
@@ -830,21 +831,20 @@ find -name "*.info*"|xargs rm -f
 %patch817 -p1
 %patch818 -p1
 %patch832 -p1
-%patch843 -p1
-%patch846 -p1
-%patch847 -p1
-%patch849 -p1
-%patch850 -p1
-%patch851 -p1
 %patch852 -p1
+%patch863 -p1
+%patch887 -p1
+%patch918 -p1
+%patch925 -p1
+%patch927 -p1
+%patch978 -p1
+%patch1029 -p1
+%patch1030 -p1
+%patch1031 -p1
 
 %patch848 -p1
 %if 0%{!?el6:1}
 %patch848 -p1 -R
-%endif
-%patch393 -p1
-%if 0%{!?el5:1} || 0%{?scl:1}
-%patch393 -p1 -R
 %endif
 %patch833 -p1
 %if 0%{!?el6:1} || 0%{!?scl:1}
@@ -892,6 +892,8 @@ rm -rf readline/*
 mv -f readline-doc readline/doc
 %endif # 0%{!?rhel:1} || 0%{?rhel} > 6
 
+rm -rf zlib
+
 %build
 rm -rf %{buildroot}
 
@@ -909,6 +911,10 @@ cd %{gdb_build}$fprofile
 export CFLAGS="$RPM_OPT_FLAGS %{?_with_asan:-fsanitize=address}"
 export LDFLAGS="%{?__global_ldflags} %{?_with_asan:-fsanitize=address}"
 
+%if 0%{!?rhel:1} || 0%{?rhel} > 7
+CFLAGS="$CFLAGS -DDNF_DEBUGINFO_INSTALL"
+%endif
+
 # --htmldir and --pdfdir are not used as they are used from %{gdb_build}.
 ../configure							\
 	--prefix=%{_prefix}					\
@@ -919,7 +925,7 @@ export LDFLAGS="%{?__global_ldflags} %{?_with_asan:-fsanitize=address}"
 	--with-system-gdbinit=%{_sysconfdir}/gdbinit		\
 	--with-gdb-datadir=%{_datadir}/gdb			\
 	--enable-gdb-build-warnings=,-Wno-unused		\
-%ifnarch %{ix86} alpha ppc s390 s390x x86_64 ppc64 sparc sparcv9 sparc64
+%ifnarch %{ix86} alpha ppc s390 s390x x86_64 ppc64 ppc64le sparc sparcv9 sparc64 %{arm} aarch64
 	--disable-werror					\
 %else
 	--enable-werror						\
@@ -927,6 +933,13 @@ export LDFLAGS="%{?__global_ldflags} %{?_with_asan:-fsanitize=address}"
 	--with-separate-debug-dir=/usr/lib/debug		\
 	--disable-sim						\
 	--disable-rpath						\
+%if 0%{!?rhel:1}
+	--with-babeltrace					\
+	--with-guile						\
+%else
+	--without-babeltrace					\
+	--without-guile						\
+%endif
 %if 0%{!?rhel:1} || 0%{?rhel} > 6
 	--with-system-readline					\
 %else
@@ -937,21 +950,11 @@ $(: ppc64 host build crashes on ppc variant of libexpat.so )	\
 	--without-libexpat-prefix				\
 	--enable-tui						\
 %if 0%{!?_without_python:1}
-	--with-python						\
+	--with-python=%{__python}				\
 %else
 	--without-python					\
 %endif
-$(: Workaround rpm.org#76, BZ 508193 on recent OSes. )		\
-$(: RHEL-5 librpm has incompatible API. )			\
-%if 0%{?el5:1}
-	--without-rpm						\
-%else
-%if 0%{?el6:1}
-	--with-rpm=librpm.so.1					\
-%else
-	--with-rpm=librpm.so.3					\
-%endif
-%endif
+	--with-rpm=librpm.so.%{librpmver}			\
 %if 0%{!?rhel:1} || 0%{?rhel} > 6
 	--with-lzma						\
 %else
@@ -967,19 +970,19 @@ $(: RHEL-5 librpm has incompatible API. )			\
 %else
 	--disable-inprocess-agent				\
 %endif
-$(: %{_bindir}/mono-gdb.py is workaround for mono BZ 815501. )										\
-	      --with-auto-load-dir='$debugdir:$datadir/auto-load%{?scl::%{_root_datadir}/gdb/auto-load}'				\
-	--with-auto-load-safe-path='$debugdir:$datadir/auto-load%{?scl::%{_root_datadir}/gdb/auto-load}:%{_root_bindir}/mono-gdb.py'	\
+	--with-system-zlib					\
+%if %{have_libipt}
+	--with-intel-pt						\
+%else
+	--without-intel-pt					\
+%endif
+	      --with-auto-load-dir='$debugdir:$datadir/auto-load%{?scl::%{_root_datadir}/gdb/auto-load}'	\
+	--with-auto-load-safe-path='$debugdir:$datadir/auto-load%{?scl::%{_root_datadir}/gdb/auto-load}'	\
 %ifarch sparc sparcv9
 	sparc-%{_vendor}-%{_target_os}%{?_gnu}
 %else
-$(: It breaks RHEL-5 by %{_target_platform} being noarch-redhat-linux-gnu ) \
-%ifarch noarch
-	$(:)
-%else
 	--enable-targets=s390-linux-gnu,powerpc-linux-gnu,arm-linux-gnu,aarch64-linux-gnu	\
 	%{_target_platform}
-%endif
 %endif
 
 if [ -z "%{!?_with_profile:no}" ]
@@ -1021,6 +1024,8 @@ perl -i.relocatable -pe 's/^(D\[".*_RELOCATABLE"\]=" )1(")$/${1}0$2/' gdb/config
 make %{?_smp_mflags} CFLAGS="$CFLAGS $FPROFILE_CFLAGS" LDFLAGS="$LDFLAGS $FPROFILE_CFLAGS"
 
 ! grep '_RELOCATABLE.*1' gdb/config.h
+grep '^#define HAVE_LIBSELINUX 1$' gdb/config.h
+grep '^#define HAVE_SELINUX_SELINUX_H 1$' gdb/config.h
 
 if [ "$fprofile" = "-fprofile" ]
 then
@@ -1038,17 +1043,8 @@ done	# fprofile
 
 cd %{gdb_build}
 
-make \
-$(: There was a race on RHEL-5: ) \
-$(: fmtutil: format directory '/builddir/.texmf-var/web2c' does not exist. ) \
-%if 0%{?el5:1}
-     -j1 \
-%else
-     %{?_smp_mflags} \
-%endif
+make %{?_smp_mflags} \
      -C gdb/doc {gdb,annotate}{.info,/index.html,.pdf} MAKEHTMLFLAGS=--no-split MAKEINFOFLAGS=--no-split
-
-grep '#define HAVE_ZLIB_H 1' gdb/config.h
 
 # Copy the <sourcetree>/gdb/NEWS file to the directory above it.
 cp $RPM_BUILD_DIR/%{gdb_src}/gdb/NEWS $RPM_BUILD_DIR/%{gdb_src}
@@ -1115,7 +1111,7 @@ gcc -o ./orphanripper %{SOURCE2} -Wall -lutil -ggdb2
 
   # Run all the scheduled testsuite runs also in the PIE mode.
   # See also: gdb-runtest-pie-override.exp
-  CHECK="$(echo $CHECK|sed 's#check//unix/[^ ]*#& &/-fPIC/-pie#g')"
+  ###CHECK="$(echo $CHECK|sed 's#check//unix/[^ ]*#& &/-fPIC/-pie#g')"
 
   ./orphanripper make %{?_smp_mflags} -k $CHECK || :
 )
@@ -1139,9 +1135,6 @@ echo ====================TESTING END=====================
 # Initially we're in the %{gdb_src} directory.
 cd %{gdb_build}
 rm -rf $RPM_BUILD_ROOT
-
-# It would break RHEL-5 by leaving excessive files for the doc subpackage.
-%ifnarch noarch
 
 make %{?_smp_mflags} install DESTDIR=$RPM_BUILD_ROOT
 
@@ -1190,20 +1183,19 @@ done
 test ! -e $RPM_BUILD_ROOT%{_datadir}/gdb/python/libstdcxx
 cp -a $RPM_BUILD_DIR/%{gdb_src}/%{libstdcxxpython}/libstdcxx	\
       $RPM_BUILD_ROOT%{_datadir}/gdb/python/libstdcxx
-for i in `find $RPM_BUILD_ROOT%{_datadir}/gdb/python -name "*.py"` \
-         `find $RPM_BUILD_ROOT%{_datadir}/gdb/auto-load%{_prefix} -name "*.py"` \
-; do
-  # Files come from gdb-archer.patch and can be also further patched.
-  touch -r $RPM_BUILD_DIR/%{gdb_src}/gdb/ChangeLog $i
-done
 %else # 0%{!?rhel:1} || 0%{?rhel} > 6
 # BZ 999645: /usr/share/gdb/auto-load/ needs filesystem symlinks
-mkdir -p $RPM_BUILD_ROOT%{_datadir}/gdb/auto-load
 for i in $(echo bin lib $(basename %{_libdir}) sbin|tr ' ' '\n'|sort -u);do
+  # mkdir to satisfy dangling symlinks build check.
+  mkdir -p $RPM_BUILD_ROOT%{_datadir}/gdb/auto-load/%{_root_prefix}/$i
   ln -s $(echo %{_root_prefix}|sed 's#^/*##')/$i \
         $RPM_BUILD_ROOT%{_datadir}/gdb/auto-load/$i
 done
 %endif # 0%{!?rhel:1} || 0%{?rhel} > 6
+for i in `find $RPM_BUILD_ROOT%{_datadir}/gdb -name "*.py"`; do
+  # Files are installed by install(1) not preserving the timestamps.
+  touch -r $RPM_BUILD_DIR/%{gdb_src}/gdb/ChangeLog $i
+done
 %endif # 0%{!?_without_python:1}
 
 # gdb-add-index cannot be run even for SCL package on RHEL<=6.
@@ -1220,7 +1212,9 @@ rm -rf $RPM_BUILD_ROOT%{_datadir}/locale/
 rm -f $RPM_BUILD_ROOT%{_infodir}/bfd*
 rm -f $RPM_BUILD_ROOT%{_infodir}/standard*
 rm -f $RPM_BUILD_ROOT%{_infodir}/configure*
-rm -rf $RPM_BUILD_ROOT%{_includedir}
+# Just exclude the header files in the top directory, and don't exclude
+# the gdb/ directory, as it contains jit-reader.h.
+rm -rf $RPM_BUILD_ROOT%{_includedir}/*.h
 rm -rf $RPM_BUILD_ROOT/%{_libdir}/lib{bfd*,opcodes*,iberty*}
 
 # pstack obsoletion
@@ -1241,24 +1235,9 @@ ln -s gstack $RPM_BUILD_ROOT%{_bindir}/pstack
 %ifnarch %{ix86} x86_64
  rm -f i386-linux.xml
 %endif
-%ifnarch ppc ppc64
- rm -f ppc{,64}-linux.xml
-%endif
 )
 
-# It would break RHEL-5 by leaving excessive files for the doc subpackage.
-%if 0%{?el5:1}
-rm -f $RPM_BUILD_ROOT%{_infodir}/annotate.info*
-rm -f $RPM_BUILD_ROOT%{_infodir}/gdb.info*
-%endif # 0%{?el5:1} 
-%else # noarch
-# -j1: There is some race resulting in:
-# /usr/bin/texi2dvi: texinfo.tex appears to be broken, quitting.
-make -j1 -C gdb/doc install DESTDIR=$RPM_BUILD_ROOT
-rm -rf $RPM_BUILD_ROOT%{_mandir}
-%endif # noarch
-
-# Documentation only for development; keep 'rm's here after "noarch" above.
+# Documentation only for development.
 rm -f $RPM_BUILD_ROOT%{_infodir}/gdbint*
 rm -f $RPM_BUILD_ROOT%{_infodir}/stabs*
 
@@ -1267,11 +1246,19 @@ rm -f $RPM_BUILD_ROOT%{_infodir}/stabs*
 
 rm -f $RPM_BUILD_ROOT%{_infodir}/dir
 
+%if 0%{?rhel:1}
+# /usr/share/gdb/guile/ gets installed even --without-guile
+# https://sourceware.org/bugzilla/show_bug.cgi?id=17105
+rm -rf $RPM_BUILD_ROOT%{_datadir}/gdb/guile
+%endif
+
+# These files are unrelated to Fedora Linux.
+rm -f $RPM_BUILD_ROOT%{_datadir}/gdb/system-gdbinit/elinos.py
+rm -f $RPM_BUILD_ROOT%{_datadir}/gdb/system-gdbinit/wrs-linux.py
+rmdir $RPM_BUILD_ROOT%{_datadir}/gdb/system-gdbinit
+
 %clean
 rm -rf $RPM_BUILD_ROOT
-
-# It would break RHEL-5 by leaving excessive files for the doc subpackage.
-%ifnarch noarch
 
 %files
 %defattr(-,root,root)
@@ -1301,6 +1288,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_bindir}/pstack
 %{_mandir}/*/pstack.1*
 %{_datadir}/gdb
+# Provide gdb/jit-reader.h so that users are able to write their own GDB JIT
+# plugins.
+%{_includedir}/gdb
 
 # don't include the files in include, they are part of binutils
 
@@ -1331,10 +1321,6 @@ done
 %endif # 0%{!?rhel:1}
 %endif # 0%{!?_without_python:1}
 
-# It would break RHEL-5 by leaving excessive files for the doc subpackage.
-%endif # !noarch
-%if 0%{!?el5:1} || "%{_target_cpu}" == "noarch"
-
 %files doc
 %doc %{gdb_build}/gdb/doc/{gdb,annotate}.{html,pdf}
 %defattr(-,root,root)
@@ -1363,9 +1349,303 @@ then
   fi
 fi
 
-%endif # 0%{!?el5:1} || "%{_target_cpu}" == "noarch"
-
 %changelog
+* Sun Sep 13 2015 Jan Kratochvil <jan.kratochvil@redhat.com> - 7.10-22.fc23
+- Fix gstack to use gdb from $PATH (bugreport by Frank Hirtz, RH BZ 1262589).
+
+* Fri Sep 11 2015 Jan Kratochvil <jan.kratochvil@redhat.com> - 7.10-21.fc23
+- [testsuite] Fix gcc-gdb-plugin and gcc-go BuildRequires for --with testsuite.
+
+* Thu Sep 10 2015 Jan Kratochvil <jan.kratochvil@redhat.com> - 7.10-20.fc23
+- [ppc64le] Use skip_entrypoint for skip_trampoline_code (RH BZ 1260558).
+
+* Thu Sep 10 2015 Jan Kratochvil <jan.kratochvil@redhat.com> - 7.10-19.fc23
+- Add changelog entry and fix librpm dependency broken by Peter Robinson.
+
+* Thu Sep  3 2015 Jan Kratochvil <jan.kratochvil@redhat.com> - 7.10-18.fc23
+- Enable libipt (Intel Processor Trace Decoder Library).
+
+* Wed Sep  2 2015 Sergio Durigan Junior <sergiodj@redhat.com> - 7.10-17.fc23
+- Fix 'Make the probes-based dynamic linker interface more robust to
+  errors' (Sergio Durigan Junior, RH BZ 1259132).
+
+* Tue Sep  1 2015 Jan Kratochvil <jan.kratochvil@redhat.com> - 7.10-16.fc23
+- [RHEL] Fix librpm Recommends compatibility.
+
+* Sat Aug 29 2015 Jan Kratochvil <jan.kratochvil@redhat.com> - 7.10-15.fc23
+- Rebase to FSF GDB 7.10 final.
+
+* Sat Aug 22 2015 Jan Kratochvil <jan.kratochvil@redhat.com> - 7.10-14.fc23
+- Re-enable --with testsuite BuildRequires: prelink for RHELs.
+
+* Sat Aug 22 2015 Jan Kratochvil <jan.kratochvil@redhat.com> - 7.10-13.fc23
+- Rebase to FSF GDB 7.9.90.20150822 (7.10 branch snapshot).
+- Remove --with testsuite BuildRequires: prelink (prelink is orphaned in F-23+).
+
+* Thu Aug  6 2015 Sergio Durigan Junior <sergiodj@redhat.com> - 7.9.90.20150717-12.fc23
+- Add "Recommends: default-yama-scope" (for RH BZ 1209492).
+
+* Thu Aug  6 2015 Jan Kratochvil <jan.kratochvil@redhat.com> - 7.9.90.20150717-11.fc23
+- Fix librpm version for f23.
+
+* Sun Aug  2 2015 Jan Kratochvil <jan.kratochvil@redhat.com> - 7.9.90.20150717-10.fc23
+- Fix unpackaged d-exp.c source for the debuginfo rpm.
+- Fix librpm version dependency Koji build failure (for RH BZ 1249325).
+
+* Sun Aug  2 2015 Jan Kratochvil <jan.kratochvil@redhat.com> - 7.9.90.20150717-9.fc23
+- Fix librpm version dependency (for RH BZ 1249325, from Igor Gnatenko).
+
+* Sat Aug  1 2015 Jan Kratochvil <jan.kratochvil@redhat.com> - 7.9.90.20150717-8.fc23
+- Fix librpm version 3->7 for Rawhide
+  (RH BZ 1249325, bugreport by Zbigniew Jędrzejewski-Szmek).
+- Fix yum vs. dnf message suggestion for Rawhide
+  (RH BZ 1249326, bugreport by Zbigniew Jędrzejewski-Szmek).
+
+* Fri Jul 17 2015 Jan Kratochvil <jan.kratochvil@redhat.com> - 7.9.90.20150717-7.fc23
+- Rebase to FSF GDB 7.9.90.20150717 (7.10 branch snapshot).
+
+* Fri Jul 10 2015 Jan Kratochvil <jan.kratochvil@redhat.com> - 7.9.90.20150709-6.fc23
+- Rebase to FSF GDB 7.9.90.20150709 (7.10 branch snapshot).
+
+* Tue Jul  7 2015 Jan Kratochvil <jan.kratochvil@redhat.com> - 7.9.50.20150531-5.fc23
+- Upgrade libstdc++-v3-python to r225521 (RH BZ 1239290).
+
+* Thu Jul  2 2015 Jan Kratochvil <jan.kratochvil@redhat.com> - 7.9.50.20150531-4.fc23
+- [RHEL] Use Python2, disable Guile.
+
+* Fri Jun 26 2015 Jan Kratochvil <jan.kratochvil@redhat.com> - 7.9.50.20150531-3.fc23
+- Fix 'info type-printers' Python error (Clem Dickey, RH BZ 1085576).
+
+* Tue Jun 16 2015 Jan Kratochvil <jan.kratochvil@redhat.com> - 7.9.50.20150531-2.fc23
+- Fix enum e e 'Attempt to use a type name as an expr.' (Keith Seitz, PR 16253).
+
+* Sun May 31 2015 Jan Kratochvil <jan.kratochvil@redhat.com> - 7.9.50.20150531-1.fc23
+- Rebase to FSF GDB 7.9.50.20150531 (pre-7.10 trunk snapshot).
+
+* Fri May 15 2015 Jan Kratochvil <jan.kratochvil@redhat.com> - 7.9.1-14.fc22
+- Fix ignored Requires for gdb-doc (RH BZ 1221814).
+
+* Thu May 14 2015 Jan Kratochvil <jan.kratochvil@redhat.com> - 7.9.1-13.fc22
+- Change 'Recommends: dnf-plugins-core' to 'dnf-command(debuginfo-install)'.
+
+* Wed May 13 2015 Jan Kratochvil <jan.kratochvil@redhat.com> - 7.9.1-12.fc22
+- Rebase to FSF GDB 7.9.1 (7.9 stable branch).
+- Add 'Recommends: dnf-plugins-core' for 'dnf debuginfo-install'.
+
+* Thu Apr  2 2015 Jan Kratochvil <jan.kratochvil@redhat.com> - 7.9-11.fc22
+- Suggest s/debuginfo-install/dnf debuginfo-install/ (BZ 1208650, Omair Majid).
+
+* Sun Feb 22 2015 Jan Kratochvil <jan.kratochvil@redhat.com> - 7.9-10.fc22
+- Rebase to the final 7.9 release.
+
+* Sun Feb 22 2015 Jan Kratochvil <jan.kratochvil@redhat.com> - 7.8.90.20150202-9.fc22
+- Change Require->Recommends for gcc-gdb-plugin (RH BZ 1195005).
+
+* Sat Feb 21 2015 Till Maas <opensource@till.name> - 7.8.90.20150214-8
+- Rebuilt for Fedora 23 Change
+  https://fedoraproject.org/wiki/Changes/Harden_all_packages_with_position-independent_code
+
+* Mon Feb 16 2015 Jan Kratochvil <jan.kratochvil@redhat.com> - 7.8.90.20150214-7.fc22
+- Switch Python 2->3 (RH BZ 1014549).
+
+* Sat Feb 14 2015 Jan Kratochvil <jan.kratochvil@redhat.com> - 7.8.90.20150214-6.fc22
+- Rebase to 7.9-branch snapshot 7.8.90.20150214.
+
+* Wed Feb 11 2015 Jan Kratochvil <jan.kratochvil@redhat.com> - 7.8.90.20150202-5.fc22
+- Enable guile support.
+
+* Wed Feb 11 2015 Jan Kratochvil <jan.kratochvil@redhat.com> - 7.8.90.20150202-4.fc22
+- Fix gcc5 compilation errors (RH BZ 1190649).
+
+* Mon Feb  9 2015 Jan Kratochvil <jan.kratochvil@redhat.com> - 7.8.90.20150202-3.fc22
+- Require gcc-gdb-plugin.
+
+* Mon Feb  2 2015 Jan Kratochvil <jan.kratochvil@redhat.com> - 7.8.90.20150202-2.fc22
+- Rebase to 7.9-branch snapshot 7.8.90.20150202.
+- Temporarily disable dg-extract-results.py to fix gdb.sum sorting.
+
+* Thu Jan  8 2015 Jan Kratochvil <jan.kratochvil@redhat.com> - 7.8.50.20150108-1.fc22
+- Rebase to pre-7.9 snapshot 7.8.50.20150108.
+- Fix jit-reader.h for multi-lib.
+
+* Sun Dec 28 2014 Jan Kratochvil <jan.kratochvil@redhat.com> - 7.8.1-36.fc21
+- Rebase to 7.8.1.20141228 for a performance fix (PR binutils/17677).
+
+* Sat Dec 13 2014 Jan Kratochvil <jan.kratochvil@redhat.com> - 7.8.1-35.fc21
+- Fix resolve_dynamic_struct: Assertion `TYPE_NFIELDS (type) > 0' (PR 17642).
+
+* Sat Nov 22 2014 Jan Kratochvil <jan.kratochvil@redhat.com> - 7.8.1-34.fc21
+- [ppc64] Fix compatibility of Fedora errno workaround (for RH BZ 1166549).
+
+* Fri Nov 21 2014 Jan Kratochvil <jan.kratochvil@redhat.com> - 7.8.1-33.fc21
+- Fix regression accessing errno from a core file (RH BZ 1166549).
+
+* Thu Nov 20 2014 Sergio Durigan Junior <sergiodj@redhat.com> - 7.8.1-32.fc21
+- Fix 'Unowned dir /usr/include/gdb/' (RH BZ 1164991).
+
+* Sat Nov 15 2014 Jan Kratochvil <jan.kratochvil@redhat.com> - 7.8.1-31.fc21
+- Fix '[RFE] please add add-auto-load-scripts-directory command' (RH
+  BZ 1163339, Jan Kratochvil).
+
+* Thu Oct 30 2014 Jan Kratochvil <jan.kratochvil@redhat.com> - 7.8.1-30.fc21
+- Rebase to FSF GDB 7.8.1.
+
+* Mon Oct 27 2014 Jan Kratochvil <jan.kratochvil@redhat.com> - 7.8-29.fc21
+- Backport vDSO regression.
+- Revert the makeinfo workaround from 7.8-27.fc21.
+- Further 1.75x improvement of the interactive symbols lookup (Doug Evans).
+
+* Mon Oct 20 2014 Jan Kratochvil <jan.kratochvil@redhat.com> - 7.8-28.fc21
+- Accelerate interactive symbols lookup 15x.
+
+* Sun Oct 19 2014 Jan Kratochvil <jan.kratochvil@redhat.com> - 7.8-27.fc21
+- Workaround makeinfo F-22 Bug 1154436.
+
+* Sun Oct 19 2014 Jan Kratochvil <jan.kratochvil@redhat.com> - 7.8-26.fc21
+- Import 5 upstream gdb-7.8 branch fixes (async fix by Pedro Alves).
+
+* Fri Oct 03 2014 Sergio Durigan Junior <sergiodj@redhat.com> - 7.8-25.fc21
+- Fix 'Slow gstack performance' (RH BZ 1103894, Jan Kratochvil).
+
+* Fri Oct  3 2014 Jan Kratochvil <jan.kratochvil@redhat.com> - 7.8-24.fc21
+- Fix "save breakpoints" for signal catchpoints and disabled breakpoints
+  (BZ 1146170, Miroslav Franc).
+
+* Mon Sep 15 2014 Sergio Durigan Junior <sergiodj@redhat.com> - 7.8-23.fc21
+- Install gdb/jit-reader.h on include directory (BZ 1141968).
+
+* Sun Sep 14 2014 Jan Kratochvil <jan.kratochvil@redhat.com> - 7.8-22.fc21
+- [testsuite] Fix runaway gdb.base/attach processes.
+
+* Sun Sep  7 2014 Jan Kratochvil <jan.kratochvil@redhat.com> - 7.8-21.fc21
+- Fix GDB SIGTT* Stopped when using the PID argument (BZ 1136704, Pedro Alves).
+
+* Wed Aug 20 2014 Jan Kratochvil <jan.kratochvil@redhat.com> - 7.8-20.fc21
+- Fix babeltrace errors (Yao Qi).
+- Fix crash on Python frame filters with unreadable arg (BZ 1126177).
+
+* Sat Aug 16 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 7.8-19
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
+
+* Thu Aug 14 2014 Jan Kratochvil <jan.kratochvil@redhat.com> - 7.8-18.fc21
+- [rhel] Adjust the previous patch for compilation on older GCCs.
+
+* Wed Aug 13 2014 Jan Kratochvil <jan.kratochvil@redhat.com> - 7.8-17.fc21
+- Fix Python GIL with gdb.execute("continue") (Phil Muldoon, BZ 1116957).
+
+* Mon Aug  4 2014 Jan Kratochvil <jan.kratochvil@redhat.com> - 7.8-16.fc21
+- Enable babeltrace compile-time feature.
+
+* Sat Aug  2 2014 Jan Kratochvil <jan.kratochvil@redhat.com> - 7.8-15.fc21
+- Rebase to FSF GDB 7.8.
+- Display Fortran strings in backtraces.
+
+* Thu Jul 24 2014 Jan Kratochvil <jan.kratochvil@redhat.com> - 7.8-14.fc21
+- Rebase to FSF GDB 7.7.91.20140724 (pre-7.8 snapshot).
+- Import TUI regression fix (Pedro Alves, BZ 1123003).
+
+* Tue Jul 22 2014 Jan Kratochvil <jan.kratochvil@redhat.com> - 7.8-13.fc21
+- Bump the package version number to final 7.8; still using 7.7.91.20140721.tar.
+
+* Tue Jul 22 2014 Jan Kratochvil <jan.kratochvil@redhat.com> - 7.7.91.20140721-12.fc21
+- Rebase to FSF GDB 7.7.91.20140721 (pre-7.8 snapshot).
+- Rebase the Intel VLA patchset.
+- New fix of the optimized-out entry data values crash (BZ 1111910).
+- [testsuite] Fix paginate-*.exp race for "read1".
+
+* Fri Jul 11 2014 Jan Kratochvil <jan.kratochvil@redhat.com> - 7.7.90.20140711-11.fc21
+- Fix regression#2 of the optimized-out entry data values fix (of BZ 1111910).
+- Rebase to FSF GDB 7.7.90.20140711 (pre-7.8 snapshot).
+- [testsuite] Disable --with testsuite PIE testing, it has too many false FAILs.
+
+* Wed Jul  9 2014 Jan Kratochvil <jan.kratochvil@redhat.com> - 7.7.90.20140627-10.fc21
+- Fix regression of the optimized-out entry data values fix (of BZ 1111910).
+
+* Tue Jul  8 2014 Jan Kratochvil <jan.kratochvil@redhat.com> - 7.7.90.20140627-9.fc21
+- Rebase the Intel VLA patchset.
+- Python completion w/overriden completer (Sergio Durigan Junior, BZ 1075199).
+- Remove %{_bindir}/mono-gdb.py workaround of mono BZ 815501.
+
+* Tue Jul  1 2014 Jan Kratochvil <jan.kratochvil@redhat.com> - 7.7.90.20140627-8.fc21
+- Do not remove %{_datadir}/gdb/syscalls/ppc*.xml as it is secondary target.
+- Remove: %{_datadir}/gdb/guile
+- Remove: %{_datadir}/gdb/system-gdbinit
+
+* Mon Jun 30 2014 Jan Kratochvil <jan.kratochvil@redhat.com> - 7.7.90.20140627-7.fc21
+- Fix crash on optimized-out entry data values (BZ 1111910).
+
+* Fri Jun 27 2014 Jan Kratochvil <jan.kratochvil@redhat.com> - 7.7.90.20140627-6.fc21
+- Rebase to FSF GDB 7.7.90.20140627 (pre-7.8 snapshot).
+
+* Fri Jun 27 2014 Jan Kratochvil <jan.kratochvil@redhat.com> - 7.7.90.20140613-5.fc21
+- Continue backtrace even if a frame filter throws an exception (Phil Muldoon).
+
+* Tue Jun 24 2014 Jan Kratochvil <jan.kratochvil@redhat.com> - 7.7.90.20140613-4.fc21
+- [aarch64] Fix compilation error.
+
+* Fri Jun 20 2014 Jan Kratochvil <jan.kratochvil@redhat.com> - 7.7.90.20140613-3.fc21
+- Fix --with-system-readline with readline-6.3 patch 5.
+  - Use --enable-werror again.
+
+* Thu Jun 19 2014 Jan Kratochvil <jan.kratochvil@redhat.com> - 7.7.90.20140613-2.fc21
+- Temporarily use --disable-werror for readline-6.3's deprecated 'VFunction'.
+
+* Thu Jun 19 2014 Jan Kratochvil <jan.kratochvil@redhat.com> - 7.7.90.20140613-1.fc21
+- Rebase to FSF GDB 7.7.90.20140613 (pre-7.8 snapshot).
+
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 7.7.1-21
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Tue Jun  3 2014 Jan Kratochvil <jan.kratochvil@redhat.com> - 7.7.1-20.fc21
+- Fix#2 /usr/share/gdb/system-gdbinit/ timestamps causing non-matching *.py[oc].
+
+* Tue Jun  3 2014 Jan Kratochvil <jan.kratochvil@redhat.com> - 7.7.1-19.fc21
+- Fix /usr/share/gdb/auto-load/ (safely) dangling symlinks.
+- Fix /usr/share/gdb/system-gdbinit/ timestamps causing non-matching *.py[oc].
+
+* Tue Jun  3 2014 Jan Kratochvil <jan.kratochvil@redhat.com> - 7.7.1-18.fc21
+- [ppc64le testsuite] Add comments about prelink+valgrind not yet ported.
+
+* Fri May 30 2014 Jan Kratochvil <jan.kratochvil@redhat.com> - 7.7.1-17.fc21
+- [arm*,aarch64] Turn on --enable-werror, fix aarch64 for it.
+
+* Fri May 30 2014 Jan Kratochvil <jan.kratochvil@redhat.com> - 7.7.1-16.fc21
+- [aarch64] Fix signal frame unwinding (BZ 1086894, upstream).
+
+* Mon May 26 2014 Jan Kratochvil <jan.kratochvil@redhat.com> - 7.7.1-15.fc21
+- [testsuite] Drop BuildRequires: gcc-java+libgcj on Fedora (no longer in F21+).
+
+* Fri May 16 2014 Jan Kratochvil <jan.kratochvil@redhat.com> - 7.7.1-14.fc21
+- [rhel5] Drop the RHEL-5 support - simplify this .spec file.
+
+* Wed May 14 2014 Jan Kratochvil <jan.kratochvil@redhat.com> - 7.7.1-13.fc21
+- [s390*] Import upstream fix for 64->32 debugging.
+
+* Mon May 12 2014 Jan Kratochvil <jan.kratochvil@redhat.com> - 7.7.1-12.fc21
+- [s390*] Fix compilation error.
+
+* Fri May  9 2014 Jan Kratochvil <jan.kratochvil@redhat.com> - 7.7.1-11.fc21
+- [ppc*] Import ppc64le support (BZ 1096303, Ulrich Weigand).
+
+* Tue May  6 2014 Jan Kratochvil <jan.kratochvil@redhat.com> - 7.7.1-10.fc21
+- Rebase to FSF GDB 7.7.1.
+
+* Mon May  5 2014 Sergio Durigan Junior <sergiodj@redhat.com> - 7.7-9.fc21
+- Improve testcase message for RH BZ 981154.
+
+* Mon May  5 2014 Jan Kratochvil <jan.kratochvil@redhat.com> - 7.7-8.fc21
+- Fix TLS access for -static -pthread (BZ 1080660).
+
+* Mon May  5 2014 Jan Kratochvil <jan.kratochvil@redhat.com> - 7.7-7.fc21
+- Add GFDL License to the main package (man pages are generated from .texinfo).
+
+* Thu Apr 24 2014 Sergio Durigan Junior <sergiodj@redhat.com> - 7.7-6.fc21
+- Fix build failures for GCC 4.9 (Nick Clifton).
+
+* Thu Apr 24 2014 Sergio Durigan Junior <sergiodj@redhat.com> - 7.7-5.fc21
+- Fix 'gdb gives highly misleading error when debuginfo pkg is present,
+  but not corresponding binary pkg' (RH BZ 981154).
+
 * Mon Feb 24 2014 Jan Kratochvil <jan.kratochvil@redhat.com> - 7.7-4.fc21
 - Fix crash of -readnow /usr/lib/debug/usr/bin/gnatbind.debug (BZ 1069211).
 

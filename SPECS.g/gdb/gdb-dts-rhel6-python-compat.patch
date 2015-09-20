@@ -1,9 +1,10 @@
 https://bugzilla.redhat.com/show_bug.cgi?id=1020004
 
-diff -dup -ruNp gdb-7.7-orig/gdb/data-directory/Makefile.in gdb-7.7/gdb/data-directory/Makefile.in
---- gdb-7.7-orig/gdb/data-directory/Makefile.in	2014-02-23 18:12:51.338866391 +0100
-+++ gdb-7.7/gdb/data-directory/Makefile.in	2014-02-23 18:14:31.187756983 +0100
-@@ -58,9 +58,12 @@ PYTHON_FILES = \
+Index: gdb-7.9.50.20150520/gdb/data-directory/Makefile.in
+===================================================================
+--- gdb-7.9.50.20150520.orig/gdb/data-directory/Makefile.in	2015-05-31 18:05:43.046746351 +0200
++++ gdb-7.9.50.20150520/gdb/data-directory/Makefile.in	2015-05-31 18:05:58.483841655 +0200
+@@ -60,6 +60,8 @@ PYTHON_FILE_LIST = \
  	gdb/frames.py \
  	gdb/FrameIterator.py \
  	gdb/FrameDecorator.py \
@@ -11,14 +12,19 @@ diff -dup -ruNp gdb-7.7-orig/gdb/data-directory/Makefile.in gdb-7.7/gdb/data-dir
 +	gdb/backtrace.py \
  	gdb/types.py \
  	gdb/printing.py \
- 	gdb/prompt.py \
+ 	gdb/unwinder.py \
+@@ -76,6 +78,7 @@ PYTHON_FILE_LIST = \
+ 	gdb/command/pretty_printers.py \
+ 	gdb/command/prompt.py \
+ 	gdb/command/explore.py \
 +	gdb/command/backtrace.py \
- 	gdb/command/bound_registers.py \
- 	gdb/command/__init__.py \
- 	gdb/command/ignore_errors.py \
-diff -dup -ruNp gdb-7.7-orig/gdb/python/lib/gdb/FrameWrapper.py gdb-7.7/gdb/python/lib/gdb/FrameWrapper.py
---- gdb-7.7-orig/gdb/python/lib/gdb/FrameWrapper.py	1970-01-01 01:00:00.000000000 +0100
-+++ gdb-7.7/gdb/python/lib/gdb/FrameWrapper.py	2014-02-23 18:14:31.188756981 +0100
+ 	gdb/function/__init__.py \
+ 	gdb/function/caller_is.py \
+ 	gdb/function/strfns.py \
+Index: gdb-7.9.50.20150520/gdb/python/lib/gdb/FrameWrapper.py
+===================================================================
+--- /dev/null	1970-01-01 00:00:00.000000000 +0000
++++ gdb-7.9.50.20150520/gdb/python/lib/gdb/FrameWrapper.py	2015-05-31 18:05:58.484841661 +0200
 @@ -0,0 +1,122 @@
 +# Wrapper API for frames.
 +
@@ -142,9 +148,10 @@ diff -dup -ruNp gdb-7.7-orig/gdb/python/lib/gdb/FrameWrapper.py gdb-7.7/gdb/pyth
 +
 +    def __getattr__ (self, name):
 +        return getattr (self.frame, name)
-diff -dup -ruNp gdb-7.7-orig/gdb/python/lib/gdb/backtrace.py gdb-7.7/gdb/python/lib/gdb/backtrace.py
---- gdb-7.7-orig/gdb/python/lib/gdb/backtrace.py	1970-01-01 01:00:00.000000000 +0100
-+++ gdb-7.7/gdb/python/lib/gdb/backtrace.py	2014-02-23 18:14:31.188756981 +0100
+Index: gdb-7.9.50.20150520/gdb/python/lib/gdb/backtrace.py
+===================================================================
+--- /dev/null	1970-01-01 00:00:00.000000000 +0000
++++ gdb-7.9.50.20150520/gdb/python/lib/gdb/backtrace.py	2015-05-31 18:05:58.484841661 +0200
 @@ -0,0 +1,42 @@
 +# Filtering backtrace.
 +
@@ -188,9 +195,10 @@ diff -dup -ruNp gdb-7.7-orig/gdb/python/lib/gdb/backtrace.py gdb-7.7/gdb/python/
 +        return iter
 +    return old_frame_filter (iter)
 +
-diff -dup -ruNp gdb-7.7-orig/gdb/python/lib/gdb/command/backtrace.py gdb-7.7/gdb/python/lib/gdb/command/backtrace.py
---- gdb-7.7-orig/gdb/python/lib/gdb/command/backtrace.py	1970-01-01 01:00:00.000000000 +0100
-+++ gdb-7.7/gdb/python/lib/gdb/command/backtrace.py	2014-02-23 18:14:31.188756981 +0100
+Index: gdb-7.9.50.20150520/gdb/python/lib/gdb/command/backtrace.py
+===================================================================
+--- /dev/null	1970-01-01 00:00:00.000000000 +0000
++++ gdb-7.9.50.20150520/gdb/python/lib/gdb/command/backtrace.py	2015-05-31 18:05:58.484841661 +0200
 @@ -0,0 +1,106 @@
 +# New backtrace command.
 +

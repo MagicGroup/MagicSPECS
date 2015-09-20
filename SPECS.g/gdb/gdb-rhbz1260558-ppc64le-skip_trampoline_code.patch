@@ -1,0 +1,257 @@
+http://sourceware.org/ml/gdb-patches/2015-09/msg00183.html
+Subject: [ppc64le patch v3] Use skip_entrypoint for skip_trampoline_code
+
+
+--mYCpIKhGyMATD0i+
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+An update to PASS the testcase on non-ppc64le archs.
+
+--mYCpIKhGyMATD0i+
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline; filename=4
+
+gdb/ChangeLog
+2015-09-07  Jan Kratochvil  <jan.kratochvil@redhat.com>
+
+	* linespec.c (minsym_found): Call gdbarch_skip_entrypoint.
+	* ppc64-tdep.c (ppc64_skip_trampoline_code): Rename to ...
+	(ppc64_skip_trampoline_code_1): ... here.
+	(ppc64_skip_trampoline_code): New wrapper function.
+	* symtab.c (find_function_start_sal): Call gdbarch_skip_entrypoint.
+
+gdb/testsuite/ChangeLog
+2015-09-07  Jan Kratochvil  <jan.kratochvil@redhat.com>
+
+	* gdb.opt/solib-intra-step-lib.c: New file.
+	* gdb.opt/solib-intra-step-main.c: New file.
+	* gdb.opt/solib-intra-step.exp: New file.
+
+diff --git a/gdb/linespec.c b/gdb/linespec.c
+index 8f102fa..4c29c12 100644
+--- a/gdb/linespec.c
++++ b/gdb/linespec.c
+@@ -3570,6 +3570,8 @@ minsym_found (struct linespec_state *self, struct objfile *objfile,
+ 	  sal.pc = MSYMBOL_VALUE_ADDRESS (objfile, msymbol);
+ 	  sal.pc = gdbarch_convert_from_func_ptr_addr (gdbarch, sal.pc,
+ 						       &current_target);
++	  if (gdbarch_skip_entrypoint_p (gdbarch))
++	    sal.pc = gdbarch_skip_entrypoint (gdbarch, sal.pc);
+ 	}
+       else
+ 	skip_prologue_sal (&sal);
+diff --git a/gdb/ppc64-tdep.c b/gdb/ppc64-tdep.c
+index bb23b6a..4a0b93a 100644
+--- a/gdb/ppc64-tdep.c
++++ b/gdb/ppc64-tdep.c
+@@ -454,8 +454,8 @@ ppc64_standard_linkage4_target (struct frame_info *frame,
+    When the execution direction is EXEC_REVERSE, scan backward to
+    check whether we are in the middle of a PLT stub.  */
+ 
+-CORE_ADDR
+-ppc64_skip_trampoline_code (struct frame_info *frame, CORE_ADDR pc)
++static CORE_ADDR
++ppc64_skip_trampoline_code_1 (struct frame_info *frame, CORE_ADDR pc)
+ {
+ #define MAX(a,b) ((a) > (b) ? (a) : (b))
+   unsigned int insns[MAX (MAX (MAX (ARRAY_SIZE (ppc64_standard_linkage1),
+@@ -530,6 +530,20 @@ ppc64_skip_trampoline_code (struct frame_info *frame, CORE_ADDR pc)
+   return 0;
+ }
+ 
++/* Wrapper of ppc64_skip_trampoline_code_1 checking also
++   ppc_elfv2_skip_entrypoint.  */
++
++CORE_ADDR
++ppc64_skip_trampoline_code (struct frame_info *frame, CORE_ADDR pc)
++{
++  struct gdbarch *gdbarch = get_frame_arch (frame);
++
++  pc = ppc64_skip_trampoline_code_1 (frame, pc);
++  if (pc != 0 && gdbarch_skip_entrypoint_p (gdbarch))
++    pc = gdbarch_skip_entrypoint (gdbarch, pc);
++  return pc;
++}
++
+ /* Support for convert_from_func_ptr_addr (ARCH, ADDR, TARG) on PPC64
+    GNU/Linux.
+ 
+diff --git a/gdb/symtab.c b/gdb/symtab.c
+index 1ba691e..f65e809 100644
+--- a/gdb/symtab.c
++++ b/gdb/symtab.c
+@@ -3629,7 +3629,11 @@ find_function_start_sal (struct symbol *sym, int funfirstline)
+       && (COMPUNIT_LOCATIONS_VALID (SYMTAB_COMPUNIT (sal.symtab))
+ 	  || SYMTAB_LANGUAGE (sal.symtab) == language_asm))
+     {
++      struct gdbarch *gdbarch = symbol_arch (sym);
++
+       sal.pc = BLOCK_START (SYMBOL_BLOCK_VALUE (sym));
++      if (gdbarch_skip_entrypoint_p (gdbarch))
++	sal.pc = gdbarch_skip_entrypoint (gdbarch, sal.pc);
+       return sal;
+     }
+ 
+diff --git a/gdb/testsuite/gdb.opt/solib-intra-step-lib.c b/gdb/testsuite/gdb.opt/solib-intra-step-lib.c
+new file mode 100644
+index 0000000..9ab1211
+--- /dev/null
++++ b/gdb/testsuite/gdb.opt/solib-intra-step-lib.c
+@@ -0,0 +1,30 @@
++/* This testcase is part of GDB, the GNU debugger.
++
++   Copyright 2015 Free Software Foundation, Inc.
++
++   This program is free software; you can redistribute it and/or modify
++   it under the terms of the GNU General Public License as published by
++   the Free Software Foundation; either version 3 of the License, or
++   (at your option) any later version.
++
++   This program is distributed in the hope that it will be useful,
++   but WITHOUT ANY WARRANTY; without even the implied warranty of
++   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++   GNU General Public License for more details.
++
++   You should have received a copy of the GNU General Public License
++   along with this program.  If not, see <http://www.gnu.org/licenses/>.  */
++
++#include <stdlib.h>
++
++void
++shlib_second (int dummy)
++{ /* second-retry */
++  abort (); /* second-hit */
++}
++
++void
++shlib_first (void)
++{ /* first-retry */
++  shlib_second (0); /* first-hit */
++}
+diff --git a/gdb/testsuite/gdb.opt/solib-intra-step-main.c b/gdb/testsuite/gdb.opt/solib-intra-step-main.c
+new file mode 100644
+index 0000000..186bd5f
+--- /dev/null
++++ b/gdb/testsuite/gdb.opt/solib-intra-step-main.c
+@@ -0,0 +1,25 @@
++/* This testcase is part of GDB, the GNU debugger.
++
++   Copyright 2015 Free Software Foundation, Inc.
++
++   This program is free software; you can redistribute it and/or modify
++   it under the terms of the GNU General Public License as published by
++   the Free Software Foundation; either version 3 of the License, or
++   (at your option) any later version.
++
++   This program is distributed in the hope that it will be useful,
++   but WITHOUT ANY WARRANTY; without even the implied warranty of
++   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++   GNU General Public License for more details.
++
++   You should have received a copy of the GNU General Public License
++   along with this program.  If not, see <http://www.gnu.org/licenses/>.  */
++
++extern void shlib_first (void);
++
++int
++main (void)
++{
++  shlib_first ();
++  return 0;
++}
+diff --git a/gdb/testsuite/gdb.opt/solib-intra-step.exp b/gdb/testsuite/gdb.opt/solib-intra-step.exp
+new file mode 100644
+index 0000000..044c4bd
+--- /dev/null
++++ b/gdb/testsuite/gdb.opt/solib-intra-step.exp
+@@ -0,0 +1,86 @@
++# Copyright 2015 Free Software Foundation, Inc.
++
++# This program is free software; you can redistribute it and/or modify
++# it under the terms of the GNU General Public License as published by
++# the Free Software Foundation; either version 3 of the License, or
++# (at your option) any later version.
++#
++# This program is distributed in the hope that it will be useful,
++# but WITHOUT ANY WARRANTY; without even the implied warranty of
++# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++# GNU General Public License for more details.
++#
++# You should have received a copy of the GNU General Public License
++# along with this program.  If not, see <http://www.gnu.org/licenses/>.
++
++standard_testfile
++
++if {[skip_shlib_tests]} {
++    return 0
++}
++
++# Library file.
++set libname "${testfile}-lib"
++set srcfile_lib ${srcdir}/${subdir}/${libname}.c
++set binfile_lib [standard_output_file ${libname}.so]
++set lib_flags [list debug optimize=-O2]
++# Binary file.
++set testfile "${testfile}-main"
++set srcfile ${srcdir}/${subdir}/${testfile}.c
++set binfile [standard_output_file ${testfile}]
++set bin_flags [list debug shlib=${binfile_lib}]
++
++if [get_compiler_info] {
++    return -1
++}
++
++if { [gdb_compile_shlib ${srcfile_lib} ${binfile_lib} $lib_flags] != ""
++     || [gdb_compile ${srcfile} ${binfile} executable $bin_flags] != "" } {
++  untested "Could not compile $binfile_lib or $binfile."
++  return -1
++}
++
++clean_restart ${binfile}
++gdb_load_shlibs $binfile_lib
++
++if ![runto_main] then {
++  return 0
++}
++
++set test "first-hit"
++gdb_test_multiple "step" $test {
++    -re " first-hit .*\r\n$gdb_prompt $" {
++	pass $test
++    }
++    -re " first-retry .*\r\n$gdb_prompt $" {
++	gdb_test "step" " first-hit .*" "first-hit (optimized)"
++    }
++}
++
++set test "second-hit"
++gdb_test_multiple "step" $test {
++    -re " second-hit .*\r\n$gdb_prompt $" {
++	pass $test
++    }
++    -re " first-retry .*\r\n$gdb_prompt $" {
++	set test "second-hit (optimized 1)"
++	gdb_test_multiple "step" $test {
++	    -re " second-hit .*\r\n$gdb_prompt $" {
++		pass $test
++	    }
++	    -re " first-hit .*\r\n$gdb_prompt $" {
++		gdb_test "step" " second-hit .*" "second-hit (optimized 2)"
++	    }
++	}
++    }
++    -re " second-retry .*\r\n$gdb_prompt $" {
++	gdb_test "step" " second-hit .*" "second-hit (optimized 3)"
++    }
++}
++
++if ![runto_main] then {
++  return 0
++}
++
++gdb_breakpoint "shlib_second"
++gdb_continue_to_breakpoint "second-hit" ".* (second-hit|second-retry) .*"
+
+--mYCpIKhGyMATD0i+--
+

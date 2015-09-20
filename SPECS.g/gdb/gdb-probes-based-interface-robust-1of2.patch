@@ -1,0 +1,193 @@
+From f469e8ce11672e26feb5ba6f9a134275fcfd5b4f Mon Sep 17 00:00:00 2001
+From: Sergio Durigan Junior <sergiodj@redhat.com>
+Date: Fri, 21 Aug 2015 18:13:46 -0400
+Subject: [PATCH 1/4] Improve error reporting when handling SystemTap SDT
+ probes
+
+This patch improves the error reporting when handling SystemTap SDT
+probes.  "Handling", in this case, mostly means "parsing".
+
+On gdb/probe.h, only trivial changes on functions' comments in order
+to explicitly mention that some of them can throw exceptions.  This is
+just to make the API a bit more clear.
+
+On gdb/stap-probe.c, I have s/internal_error/error/ on two functions
+that are responsible for parsing specific bits of the probes'
+arguments: stap_get_opcode and stap_get_expected_argument_type.  It is
+not correct to call internal_error on such situations because it is
+not really GDB's fault if the probes have malformed arguments.  I also
+improved the error reported on stap_get_expected_argument_type by also
+including the probe name on it.
+
+Aside from that, and perhaps most importantly, I added a check on
+stap_get_arg to make sure that we don't try to extract an argument
+from a probe that has no arguments.  This check issues an
+internal_error, because it really means that GDB is doing something it
+shouldn't.
+
+Although it can be considered almost trivial, and despite the fact
+that I am the maintainer for this part of the code, I am posting this
+patch for review.  I will wait a few days, and if nobody has anything
+to say, I will go ahead and push it.
+
+gdb/ChangeLog:
+2015-09-01  Sergio Durigan Junior  <sergiodj@redhat.com>
+
+	* probe.h (struct probe_ops) <get_probe_argument_count,
+	evaluate_probe_argument, enable_probe, disable_probe>: Mention in
+	the comment that the function can throw an exception.
+	(get_probe_argument_count): Likewise.
+	(evaluate_probe_argument): Likewise.
+	* stap-probe.c (stap_get_opcode): Call error instead of
+	internal_error.
+	(stap_get_expected_argument_type): Likewise.  Add argument
+	'probe'.  Improve error message by mentioning the probe's name.
+	(stap_parse_probe_arguments): Adjust call to
+	stap_get_expected_argument_type.
+	(stap_get_arg): Add comment.  Assert that 'probe->args_parsed' is
+	not zero.  Call internal_error if GDB requests an argument but the
+	probe has no arguments.
+---
+ gdb/ChangeLog    | 17 +++++++++++++++++
+ gdb/probe.h      | 20 ++++++++++++++------
+ gdb/stap-probe.c | 29 ++++++++++++++++++++++-------
+ 3 files changed, 53 insertions(+), 13 deletions(-)
+
+Index: gdb-7.10/gdb/probe.h
+===================================================================
+--- gdb-7.10.orig/gdb/probe.h
++++ gdb-7.10/gdb/probe.h
+@@ -70,7 +70,8 @@ struct probe_ops
+     CORE_ADDR (*get_probe_address) (struct probe *probe,
+ 				    struct objfile *objfile);
+ 
+-    /* Return the number of arguments of PROBE.  */
++    /* Return the number of arguments of PROBE.  This function can
++       throw an exception.  */
+ 
+     unsigned (*get_probe_argument_count) (struct probe *probe,
+ 					  struct frame_info *frame);
+@@ -82,7 +83,8 @@ struct probe_ops
+     int (*can_evaluate_probe_arguments) (struct probe *probe);
+ 
+     /* Evaluate the Nth argument from the PROBE, returning a value
+-       corresponding to it.  The argument number is represented N.  */
++       corresponding to it.  The argument number is represented N.
++       This function can throw an exception.  */
+ 
+     struct value *(*evaluate_probe_argument) (struct probe *probe,
+ 					      unsigned n,
+@@ -141,13 +143,15 @@ struct probe_ops
+ 
+     /* Enable a probe.  The semantics of "enabling" a probe depend on
+        the specific backend and the field can be NULL in case enabling
+-       probes is not supported.  */
++       probes is not supported.  This function can throw an
++       exception.  */
+ 
+     void (*enable_probe) (struct probe *probe);
+ 
+     /* Disable a probe.  The semantics of "disabling" a probe depend
+        on the specific backend and the field can be NULL in case
+-       disabling probes is not supported.  */
++       disabling probes is not supported.  This function can throw an
++       exception.  */
+ 
+     void (*disable_probe) (struct probe *probe);
+   };
+@@ -264,7 +268,9 @@ extern struct cmd_list_element **info_pr
+ extern CORE_ADDR get_probe_address (struct probe *probe,
+ 				    struct objfile *objfile);
+ 
+-/* Return the argument count of the specified probe.  */
++/* Return the argument count of the specified probe.
++
++   This function can throw an exception.  */
+ 
+ extern unsigned get_probe_argument_count (struct probe *probe,
+ 					  struct frame_info *frame);
+@@ -276,7 +282,9 @@ extern unsigned get_probe_argument_count
+ extern int can_evaluate_probe_arguments (struct probe *probe);
+ 
+ /* Evaluate argument N of the specified probe.  N must be between 0
+-   inclusive and get_probe_argument_count exclusive.  */
++   inclusive and get_probe_argument_count exclusive.
++
++   This function can throw an exception.  */
+ 
+ extern struct value *evaluate_probe_argument (struct probe *probe,
+ 					      unsigned n,
+Index: gdb-7.10/gdb/stap-probe.c
+===================================================================
+--- gdb-7.10.orig/gdb/stap-probe.c
++++ gdb-7.10/gdb/stap-probe.c
+@@ -313,9 +313,8 @@ stap_get_opcode (const char **s)
+       break;
+ 
+     default:
+-      internal_error (__FILE__, __LINE__,
+-		      _("Invalid opcode in expression `%s' for SystemTap"
+-			"probe"), *s);
++      error (_("Invalid opcode in expression `%s' for SystemTap"
++	       "probe"), *s);
+     }
+ 
+   return op;
+@@ -326,7 +325,8 @@ stap_get_opcode (const char **s)
+ 
+ static struct type *
+ stap_get_expected_argument_type (struct gdbarch *gdbarch,
+-				 enum stap_arg_bitness b)
++				 enum stap_arg_bitness b,
++				 const struct stap_probe *probe)
+ {
+   switch (b)
+     {
+@@ -361,8 +361,8 @@ stap_get_expected_argument_type (struct
+       return builtin_type (gdbarch)->builtin_uint64;
+ 
+     default:
+-      internal_error (__FILE__, __LINE__,
+-		      _("Undefined bitness for probe."));
++      error (_("Undefined bitness for probe '%s'."),
++	     probe->p.name);
+       break;
+     }
+ }
+@@ -1172,7 +1172,8 @@ stap_parse_probe_arguments (struct stap_
+       else
+ 	arg.bitness = STAP_ARG_BITNESS_UNDEFINED;
+ 
+-      arg.atype = stap_get_expected_argument_type (gdbarch, arg.bitness);
++      arg.atype = stap_get_expected_argument_type (gdbarch, arg.bitness,
++						   probe);
+ 
+       expr = stap_parse_argument (&cur, arg.atype, gdbarch);
+ 
+@@ -1278,12 +1279,26 @@ stap_is_operator (const char *op)
+   return ret;
+ }
+ 
++/* Return argument N of probe PROBE.
++
++   If the probe's arguments have not been parsed yet, parse them.  If
++   there are no arguments, throw an exception (error).  Otherwise,
++   return the requested argument.  */
++
+ static struct stap_probe_arg *
+ stap_get_arg (struct stap_probe *probe, unsigned n, struct gdbarch *gdbarch)
+ {
+   if (!probe->args_parsed)
+     stap_parse_probe_arguments (probe, gdbarch);
+ 
++  gdb_assert (probe->args_parsed);
++  if (probe->args_u.vec == NULL)
++    internal_error (__FILE__, __LINE__,
++		    _("Probe '%s' apparently does not have arguments, but \n"
++		      "GDB is requesting its argument number %u anyway.  "
++		      "This should not happen.  Please report this bug."),
++		    probe->p.name, n);
++
+   return VEC_index (stap_probe_arg_s, probe->args_u.vec, n);
+ }
+ 

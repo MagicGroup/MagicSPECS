@@ -1,8 +1,8 @@
-Index: gdb-7.7/gdb/linux-nat.c
+Index: gdb-7.9.50.20150531/gdb/linux-nat.c
 ===================================================================
---- gdb-7.7.orig/gdb/linux-nat.c	2014-02-09 19:13:32.998214571 +0100
-+++ gdb-7.7/gdb/linux-nat.c	2014-02-09 19:17:37.561499606 +0100
-@@ -176,6 +176,9 @@ blocked.  */
+--- gdb-7.9.50.20150531.orig/gdb/linux-nat.c	2015-05-31 18:23:56.147494790 +0200
++++ gdb-7.9.50.20150531/gdb/linux-nat.c	2015-05-31 18:24:01.935530759 +0200
+@@ -168,6 +168,9 @@ blocked.  */
  static struct target_ops *linux_ops;
  static struct target_ops linux_ops_saved;
  
@@ -12,23 +12,7 @@ Index: gdb-7.7/gdb/linux-nat.c
  /* The method to call, if any, when a new thread is attached.  */
  static void (*linux_nat_new_thread) (struct lwp_info *);
  
-@@ -652,7 +655,14 @@ holding the child stopped.  Try \"set de
- 	  parent_inf->waiting_for_vfork_done = 0;
- 	}
-       else if (detach_fork)
--	target_detach (NULL, 0);
-+	{
-+	  /* We should check PID_WAS_STOPPED and detach it stopped accordingly.
-+	     In this point of code it cannot be 1 as we would not get FORK
-+	     executed without CONTINUE first which resets PID_WAS_STOPPED.
-+	     We would have to first TARGET_STOP and WAITPID it as with running
-+	     inferior PTRACE_DETACH, SIGSTOP will ignore the signal.  */
-+	  target_detach (NULL, 0);
-+	}
- 
-       /* Note that the detach above makes PARENT_INF dangling.  */
- 
-@@ -1099,6 +1109,7 @@ linux_nat_post_attach_wait (ptid_t ptid,
+@@ -981,6 +984,7 @@ linux_nat_post_attach_wait (ptid_t ptid,
        if (debug_linux_nat)
  	fprintf_unfiltered (gdb_stdlog,
  			    "LNPAW: Attaching to a stopped process\n");
@@ -36,7 +20,7 @@ Index: gdb-7.7/gdb/linux-nat.c
  
        /* The process is definitely stopped.  It is in a job control
  	 stop, unless the kernel predates the TASK_STOPPED /
-@@ -1518,6 +1529,9 @@ get_pending_status (struct lwp_info *lp,
+@@ -1468,6 +1472,9 @@ get_pending_status (struct lwp_info *lp,
  			    gdb_signal_to_string (signo));
      }
  
@@ -46,7 +30,7 @@ Index: gdb-7.7/gdb/linux-nat.c
    return 0;
  }
  
-@@ -1631,6 +1645,8 @@ linux_nat_detach (struct target_ops *ops
+@@ -1581,6 +1588,8 @@ linux_nat_detach (struct target_ops *ops
      }
    else
      linux_ops->to_detach (ops, args, from_tty);
@@ -54,10 +38,10 @@ Index: gdb-7.7/gdb/linux-nat.c
 +  pid_was_stopped = 0;
  }
  
- /* Resume LP.  */
-@@ -1813,6 +1829,14 @@ linux_nat_resume (struct target_ops *ops
-      linux_nat_resume_callback.  */
-   lp->stopped = 0;
+ /* Resume execution of the inferior process.  If STEP is nonzero,
+@@ -1839,6 +1848,14 @@ linux_nat_resume (struct target_ops *ops
+       return;
+     }
  
 +  /* At this point, we are going to resume the inferior and if we
 +     have attached to a stopped process, we no longer should leave
@@ -68,9 +52,9 @@ Index: gdb-7.7/gdb/linux-nat.c
 +    pid_was_stopped = 0;
 +
    if (resume_many)
-     iterate_over_lwps (ptid, linux_nat_resume_callback, NULL);
+     iterate_over_lwps (ptid, linux_nat_resume_callback, lp);
  
-@@ -3864,6 +3888,8 @@ linux_nat_mourn_inferior (struct target_
+@@ -3935,6 +3952,8 @@ linux_nat_mourn_inferior (struct target_
  
    /* Let the arch-specific native code know this process is gone.  */
    linux_nat_forget_process (pid);
@@ -79,10 +63,10 @@ Index: gdb-7.7/gdb/linux-nat.c
  }
  
  /* Convert a native/host siginfo object, into/from the siginfo in the
-Index: gdb-7.7/gdb/testsuite/gdb.threads/attach-stopped.exp
+Index: gdb-7.9.50.20150531/gdb/testsuite/gdb.threads/attach-stopped.exp
 ===================================================================
---- gdb-7.7.orig/gdb/testsuite/gdb.threads/attach-stopped.exp	2014-01-08 10:23:36.000000000 +0100
-+++ gdb-7.7/gdb/testsuite/gdb.threads/attach-stopped.exp	2014-02-09 19:13:33.321214945 +0100
+--- gdb-7.9.50.20150531.orig/gdb/testsuite/gdb.threads/attach-stopped.exp	2015-05-31 18:23:56.148494796 +0200
++++ gdb-7.9.50.20150531/gdb/testsuite/gdb.threads/attach-stopped.exp	2015-05-31 18:24:01.935530759 +0200
 @@ -61,7 +61,65 @@ proc corefunc { threadtype } {
      gdb_reinitialize_dir $srcdir/$subdir
      gdb_load ${binfile}
@@ -150,3 +134,19 @@ Index: gdb-7.7/gdb/testsuite/gdb.threads/attach-stopped.exp
         
      set test "$threadtype: attach2 to stopped, after setting file"
      gdb_test_multiple "attach $testpid" "$test" {
+Index: gdb-7.9.50.20150531/gdb/infrun.c
+===================================================================
+--- gdb-7.9.50.20150531.orig/gdb/infrun.c	2015-05-31 18:23:56.150494809 +0200
++++ gdb-7.9.50.20150531/gdb/infrun.c	2015-05-31 18:24:01.938530778 +0200
+@@ -591,6 +591,11 @@ holding the child stopped.  Try \"set de
+ 				target_pid_to_str (process_ptid));
+ 	    }
+ 
++	  /* We should check PID_WAS_STOPPED and detach it stopped accordingly.
++	     In this point of code it cannot be 1 as we would not get FORK
++	     executed without CONTINUE first which resets PID_WAS_STOPPED.
++	     We would have to first TARGET_STOP and WAITPID it as with running
++	     inferior PTRACE_DETACH, SIGSTOP will ignore the signal.  */
+ 	  target_detach (NULL, 0);
+ 	}
+ 
