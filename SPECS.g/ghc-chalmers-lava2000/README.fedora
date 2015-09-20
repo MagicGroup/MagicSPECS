@@ -1,0 +1,15 @@
+README.fedora
+=============
+
+chalmers-lava2000 packaged for Fedora does not include the
+verification modules that use third-party non-free binaries.
+
+You will be able to write, simulate, test, and create VHDL files using
+this package.
+
+The lava.vhd has the entity declarations, and is required if you need
+to verify the created VHDL file.
+
+--
+Shakthi Kannan
+shakthimaan@gmail.com
