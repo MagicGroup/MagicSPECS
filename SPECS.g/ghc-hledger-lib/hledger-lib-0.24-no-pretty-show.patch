@@ -1,0 +1,64 @@
+diff -u -r -U5 hledger-lib-0.24/Hledger/Utils/Debug.hs hledger-lib-0.24.no-pretty-show/Hledger/Utils/Debug.hs
+--- hledger-lib-0.24/Hledger/Utils/Debug.hs	2014-12-25 14:40:57.000000000 -0500
++++ hledger-lib-0.24.no-pretty-show/Hledger/Utils/Debug.hs	2015-03-01 21:45:01.934290509 -0500
+@@ -8,13 +8,10 @@
+ -- http://hackage.haskell.org/packages/archive/traced/2009.7.20/doc/html/Debug-Traced.html
+ 
+ module Hledger.Utils.Debug (
+   module Hledger.Utils.Debug
+   ,module Debug.Trace
+-#if __GLASGOW_HASKELL__ >= 704
+-  ,ppShow
+-#endif
+ )
+ where
+ 
+ import Control.Monad (when)
+ import Data.List
+@@ -24,17 +21,12 @@
+ import System.Exit
+ import System.IO.Unsafe (unsafePerformIO)
+ import Text.Parsec
+ import Text.Printf
+ 
+-#if __GLASGOW_HASKELL__ >= 704
+-import Text.Show.Pretty (ppShow)
+-#else
+--- the required pretty-show version requires GHC >= 7.4
+ ppShow :: Show a => a -> String
+ ppShow = show
+-#endif
+ 
+ 
+ -- | Trace (print on stdout at runtime) a showable value.
+ -- (for easily tracing in the middle of a complex expression)
+ strace :: Show a => a -> a
+diff -u -r -U5 hledger-lib-0.24/hledger-lib.cabal hledger-lib-0.24.no-pretty-show/hledger-lib.cabal
+--- hledger-lib-0.24/hledger-lib.cabal	2014-12-25 14:40:57.000000000 -0500
++++ hledger-lib-0.24.no-pretty-show/hledger-lib.cabal	2015-03-01 21:39:31.437549354 -0500
+@@ -102,12 +102,10 @@
+                  ,split >= 0.1 && < 0.3
+                  ,time
+                  ,transformers >= 0.2 && < 0.5
+                  ,utf8-string >= 0.3.5 && < 0.4
+                  ,HUnit
+-  if impl(ghc >= 7.4)
+-    build-depends: pretty-show >= 1.6.4
+ 
+ 
+ test-suite tests
+   type:     exitcode-stdio-1.0
+   main-is:  suite.hs
+@@ -137,12 +135,10 @@
+                , split
+                , test-framework
+                , test-framework-hunit
+                , time
+                , transformers
+-  if impl(ghc >= 7.4)
+-    build-depends: pretty-show >= 1.6.4
+ 
+ -- cf http://www.haskell.org/cabal/release/cabal-latest/doc/users-guide/authors.html
+ 
+ -- Additional dependencies:
+ -- required for make test: test-framework, test-framework-hunit
