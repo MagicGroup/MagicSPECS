@@ -1,0 +1,12 @@
+diff -up show-0.4.1.2/LICENSE.fix show-0.4.1.2/LICENSE
+--- show-0.4.1.2/LICENSE.fix	2012-09-04 12:21:08.037634382 +0530
++++ show-0.4.1.2/LICENSE	2012-09-04 12:22:15.684635913 +0530
+@@ -2,7 +2,7 @@
+ 		       Version 2, June 1991
+ 
+  Copyright (C) 1989, 1991 Free Software Foundation, Inc.
+-     59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
++     51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
+  Everyone is permitted to copy and distribute verbatim copies
+  of this license document, but changing it is not allowed.
+ 
