@@ -1,0 +1,42 @@
+armv7 by nomeata: https://ghc.haskell.org/trac/ghc/ticket/8976#comment:12
+arm64 backport of https://ghc.haskell.org/trac/ghc/ticket/9673#comment:28 (erikd)
+
+--- ghc-7.8.4/aclocal.m4.24~	2015-04-01 04:48:39.961193022 -0400
++++ ghc-7.8.4/aclocal.m4	2015-04-01 04:50:19.708203082 -0400
+@@ -553,6 +553,14 @@
+         $3="$$3 -D_HPUX_SOURCE"
+         $5="$$5 -D_HPUX_SOURCE"
+         ;;
++    arm*)
++        # On arm, link using gold
++        $3="$$3 -fuse-ld=gold"
++        ;;
++    aarch64*)
++        # On arm, link using gold
++        $3="$$3 -fuse-ld=gold"
++        ;;
+     esac
+ 
+     # If gcc knows about the stack protector, turn it off.
+--- ghc-7.8.4/configure.ac~	2014-12-22 14:08:24.000000000 -0500
++++ ghc-7.8.4/configure.ac	2015-04-22 00:08:54.646110535 -0400
+@@ -587,7 +587,18 @@
+ dnl ** Which ld to use?
+ dnl --------------------------------------------------------------
+ FP_ARG_WITH_PATH_GNU_PROG([LD], [ld], [ld])
+-LdCmd="$LD"
++case $target in
++arm*linux* | aarch64*linux*)
++	# Arm requires use of the binutils ld.gold linker.
++	# This case should catch at least arm-unknown-linux-gnueabihf and
++	# arm-linux-androideabi.
++	FP_ARG_WITH_PATH_GNU_PROG([LD_GOLD], [ld.gold], [ld.gold])
++	LdCmd="$LD_GOLD"
++	;;
++*)
++	LdCmd="$LD"
++	;;
++esac
+ AC_SUBST([LdCmd])
+ 
+ dnl ** Which nm to use?
