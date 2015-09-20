@@ -1,0 +1,20 @@
+diff -up sized-types-0.3.4.0/Data/Sized/Sparse/Matrix.hs.fix sized-types-0.3.4.0/Data/Sized/Sparse/Matrix.hs
+--- sized-types-0.3.4.0/Data/Sized/Sparse/Matrix.hs.fix	2012-06-02 15:00:30.688853704 +0530
++++ sized-types-0.3.4.0/Data/Sized/Sparse/Matrix.hs	2012-06-02 15:03:05.782857244 +0530
+@@ -47,7 +47,7 @@ prune d sm@(Matrix d' m) | d == d'   = M
+ sparse :: (Size ix, Eq a) => a -> M.Matrix ix a -> Matrix ix a
+ sparse d other = Matrix d (Map.fromList [ (i,v) | (i,v) <- M.assocs other, v /= d ])
+ 
+-mm :: (Size m, Size n, Size m', Size n', n ~ m', Num a) => Matrix (m,n) a -> Matrix (m',n') a -> Matrix (m,n') a
++mm :: (Size m, Size n, Size m', Size n', n ~ m', Num a, Eq a) => Matrix (m,n) a -> Matrix (m',n') a -> Matrix (m,n') a
+ mm s1 s2 = Matrix 0 mp
+   where
+ 	mp = Map.fromList [ ((x,y),v)
+@@ -91,5 +91,4 @@ transpose (Matrix d m) = Matrix d (Map.f
+ 
+ zipWith :: (Size x) => (a -> b -> c) -> Matrix x a -> Matrix x b -> Matrix x c
+ zipWith f m1 m2 = pure f <*> m1 <*> m2 
+-	
+-	
+\ No newline at end of file
++
