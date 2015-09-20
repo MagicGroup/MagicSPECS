@@ -4,15 +4,15 @@
 %ghc_lib_subpackage(c:l:x)\
 %define pkgname %{?1}%{!?1:%{pkg_name}}\
 %define pkgver %{?2}%{!?2:%{version}}\
-%define pkgnamever %{pkgname}-%{pkgver}\
-%{!-x:%{?1:%global ghc_packages_list %{?ghc_packages_list} %{pkgnamever}}}\
-%define basepkg ghc-%{pkgname}\
+%{!-x:%{?1:%global ghc_packages_list %{?ghc_packages_list} %{pkgname}-%{pkgver}}}\
+%define ghc_prefix %{?ghc_name}%{!?ghc_name:ghc}\
+%define basepkg %{ghc_prefix}-%{pkgname}\
 %package -n %{basepkg}\
 Summary:        Haskell %{pkgname} library\
 %{?1:Version:        %{pkgver}}\
 %{-l:License:        %{-l*}}\
 Url:            http://hackage.haskell.org/package/%{pkgname}\
-%{?ghc_pkg_obsoletes:Obsoletes:      %(echo "%{ghc_pkg_obsoletes}" | sed -e "s/\\(ghc-[^, ]*\\)-devel/\\1/g")}\
+%{?ghc_pkg_obsoletes:Obsoletes:      %(echo "%{ghc_pkg_obsoletes}" | sed -e "s/\\(%{ghc_prefix}-[^, ]*\\)-devel/\\1/g")}\
 \
 %description -n %{basepkg}\
 This package provides the Haskell %{pkgname} library.\
@@ -21,9 +21,9 @@ This package provides the Haskell %{pkgname} library.\
 Summary:        Haskell %{pkgname} library development files\
 %{?1:Version:        %{pkgver}}\
 %{-l:License:        %{-l*}}\
-Requires(post): ghc-compiler = %{ghc_version}\
-Requires(postun): ghc-compiler = %{ghc_version}\
-Requires:       ghc-%{pkgname}%{?_isa} = %{pkgver}-%{release}\
+Requires(post): %{ghc_prefix}-compiler = %{ghc_version}\
+Requires(postun): %{ghc_prefix}-compiler = %{ghc_version}\
+Requires:       %{ghc_prefix}-%{pkgname}%{?_isa} = %{pkgver}-%{release}\
 %{?ghc_pkg_c_deps:Requires:       %{ghc_pkg_c_deps}}\
 %{-c:Requires:       %{-c*}}\
 %{?ghc_pkg_obsoletes:Obsoletes:      %{ghc_pkg_obsoletes}}\

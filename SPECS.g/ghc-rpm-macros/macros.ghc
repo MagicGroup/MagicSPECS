@@ -3,6 +3,7 @@
 
 # "cabal"
 %cabal [ -x Setup ] || ghc --make %{!?ghc_user_conf:-no-user-package-db} %{!?ghc_without_dynamic:-dynamic} Setup\
+LANG=en_US.utf8\
 ./Setup
 
 # check ghc version was rebuilt against self
@@ -21,17 +22,38 @@ fi
 # configure
 %cabal_configure\
 %ghc_check_bootstrap\
-%cabal configure --prefix=%{_prefix} --libdir=%{_libdir} --docdir=%{?_pkgdocdir}%{!?_pkgdocdir:%{_docdir}/%{name}-%{version}} --libsubdir='$compiler/$pkgid' --datasubdir='$pkgid' --ghc %{!?ghc_without_dynamic:--enable-executable-dynamic} --ghc-option=-O2 %{?with_tests:--enable-tests} %{?cabal_configure_options} $cabal_configure_extra_options
+%global _hardened_ldflags %{nil}\
+CFLAGS="${CFLAGS:-%optflags}"; export CFLAGS\
+LDFLAGS="${LDFLAGS:-%__global_ldflags}"; export LDFLAGS\
+%cabal configure --prefix=%{_prefix} --libdir=%{_libdir} --docdir=%{ghc_pkgdocdir} --libsubdir='$compiler/$pkgid' --datasubdir='$pkgid' --ghc %{!?ghc_without_dynamic:--enable-executable-dynamic} %{?with_tests:--enable-tests} --ghc-options="$(echo ' '$CFLAGS | sed -e 's/ / -optc/g') $(echo ' '$LDFLAGS | sed -e 's/ / -optl/g')" %{?cabal_configure_options} $cabal_configure_extra_options
 
 # install
 %cabal_install %cabal copy --destdir=%{buildroot} -v
 
-# root dir for ghc docs
+tests
+%cabal_test\
+%if %{with tests}\
+%cabal test\
+%endif
+
+# no _pkgdocdir in EPEL <= 7
+%ghc_pkgdocdir %{?_pkgdocdir}%{!?_pkgdocdir:%{_docdir}/%{name}-%{version}}
+
+# root dir for ghc docs (used by ghc.spec)
+%ghc_html_dir %{_docdir}/ghc/html
+# deprecates
 %ghcdocbasedir %{_docdir}/ghc/html
-# libraries doc dir
+
+# libraries doc dir (internal)
+%ghc_html_libraries_dir %{ghc_html_dir}/libraries
+# deprecates
 %ghclibdocdir %{ghcdocbasedir}/libraries
+
 # pkg doc dir
-%ghcpkgdocdir %{ghcdocbasedir}/libraries/%{pkg_name}
+%ghc_html_pkg_dir %{ghc_html_libraries_dir}/%{pkg_name}-%{version}
+# deprecates
+%ghcpkgdocdir %{ghclibdocdir}/%{pkg_name}-%{version}
+
 # top library dir
 %ghclibdir %{_libdir}/ghc-%{ghc_version}
 
@@ -40,10 +62,11 @@ fi
 %define pkgname %{?1}%{!?1:%{pkg_name}}\
 %define pkgver %{?2}%{!?2:%{version}}\
 %define pkgnamever %{pkgname}-%{pkgver}\
-%define basepkg ghc-%{pkgname}\
+%define basepkg %{?ghc_name}%{!?ghc_name:ghc}-%{pkgname}\
 %define pkgdir %{ghclibdir}/%{pkgnamever}\
-%define docdir %{ghclibdocdir}/%{pkgname}\
+%define docdir %{ghclibdocdir}/%{pkgnamever}\
 rm -f %{basepkg}.files %{basepkg}-devel.files\
+touch %{basepkg}.files %{basepkg}-devel.files\
 if [ -d "%{buildroot}%{pkgdir}" ]; then\
 echo "%dir %{pkgdir}" >> %{basepkg}.files\
 %if %{undefined ghc_without_shared}\
@@ -87,7 +110,7 @@ install -D --mode=0644 %{pkgnamever}.conf %{buildroot}%{ghclibdir}/package.conf.
 # ghc_lib_build_without_haddock [name] [version]
 %ghc_lib_build_without_haddock()\
 %global debug_package %{nil}\
-%cabal_configure %{!?without_prof:-p} %{!?ghc_without_shared:--enable-shared} %{?pkg_name:--htmldir=%{ghclibdocdir}/%{pkg_name}} %{?1:--docdir=%{_docdir}/ghc-%1%{!?fedora:-%2} --htmldir=%{ghclibdocdir}/%1} %{!?1:--global} %{?ghc_with_lib_for_ghci:--enable-library-for-ghci}\
+%cabal_configure %{!?without_prof:-p} %{!?ghc_without_shared:--enable-shared} %{?ghc_without_shared:--disable-shared} %{?pkg_name:--htmldir=%{ghclibdocdir}/%{pkg_name}-%{version}} %{?1:--docdir=%{_docdir}/ghc-%1%{!?fedora:-%2} --htmldir=%{ghclibdocdir}/%1-%2} %{!?1:--global} %{?ghc_with_lib_for_ghci:--enable-library-for-ghci}\
 %cabal build\
 %{nil}
 
@@ -95,7 +118,11 @@ install -D --mode=0644 %{pkgnamever}.conf %{buildroot}%{ghclibdir}/package.conf.
 %ghc_lib_build()\
 %ghc_lib_build_without_haddock\
 %if %{undefined without_haddock}\
+%define pkgname %{?1}%{!?1:%{pkg_name}}\
+%define pkgver %{?2}%{!?2:%{version}}\
+if [ -f dist/build/libHS%{pkgname}-%{pkgver}.a ]; then\
 %cabal haddock --html %{!?without_hscolour:%(if [ -x %{_bindir}/HsColour ]; then echo --hyperlink-source; fi)} --hoogle\
+fi\
 %endif\
 %{nil}
 
@@ -105,46 +132,35 @@ install -D --mode=0644 %{pkgnamever}.conf %{buildroot}%{ghclibdir}/package.conf.
 find %{buildroot} -type f -exec sh -c "file {} | grep -q 'dynamically linked'" \\; -exec strip "{}" \\;\
 %endif
 
-# ghc_clear_execstack
-%ghc_clear_execstack\
-if [ -d "%{buildroot}%{_bindir}" -a -x "%{_bindir}/execstack" ]; then\
-find %{buildroot}%{_bindir} -type f -exec sh -c "file {} | grep -q ' ELF '" \\; -exec %{_bindir}/execstack -c "{}" \\;\
-fi
-
 # install bin package
 %ghc_bin_install()\
-%global _use_internal_dependency_generator 0\
-%global __find_requires %{_rpmconfigdir}/ghc-deps.sh --requires %{buildroot}%{ghclibdir}\
 %cabal_install\
 %{!?1:%ghc_strip_dynlinked}\
-%{!?1:%ghc_clear_execstack}\
 %{nil}
 
 # ghc_lib_install [name] [version]
 %ghc_lib_install()\
-%global _use_internal_dependency_generator 0\
-%global __find_provides %{_rpmconfigdir}/ghc-deps.sh --provides %{buildroot}%{ghclibdir}\
-%global __find_requires %{_rpmconfigdir}/ghc-deps.sh --requires %{buildroot}%{ghclibdir}\
 %cabal_install\
 %cabal_pkg_conf\
 %ghc_gen_filelists\
 %{!?1:%ghc_strip_dynlinked}\
-%{!?1:%ghc_clear_execstack}\
 %{nil}
 
 # ghc_fix_dynamic_rpath prog ...
-# (assumes cwd = pkg_name!)
 %ghc_fix_dynamic_rpath()\
 %if %{undefined ghc_without_dynamic}\
 if ! type chrpath > /dev/null; then exit 1; fi\
-PDIR=$(cd ..; pwd)\
+PDIR=$(pwd)\
 for i in %*; do\
-  PROG=%{buildroot}%{_bindir}/$i\
+  case $i in\
+    /*) PROG=%{buildroot}$i ;;\
+    *) PROG=%{buildroot}%{_bindir}/$i ;;\
+  esac\
   if [ -x "$PROG" ]; then\
-    RPATH=$(chrpath $PROG | sed -e "s@^$PROG: RPATH=@@")\
+    RPATH=$(chrpath $PROG | sed -e "s@^$PROG: R.*PATH=@@")\
     case $RPATH in\
          *$PDIR*)\
-         NEWRPATH=$(echo $RPATH | sed -e "s@$PDIR@%{ghclibdir}@g" -e "s@/dist/build@@g")\
+         NEWRPATH=$(echo $RPATH | sed -e "s@$PDIR/dist/build@%{ghclibdir}/%{pkg_name}-%{version}@g")\
          chrpath -r $NEWRPATH $PROG\
          ;;\
     esac\
@@ -156,19 +172,13 @@ done\
 %endif\
 %{nil}
 
-%ghc_pkg_recache %{_bindir}/ghc-pkg recache --no-user-package-db || :
+%ghc_pkg_recache %{_bindir}/ghc-pkg-%{ghc_version} recache --no-user-package-db || :
 
 # - without_hscolour, without_testsuite, and ghc_bootstrapping
 #   need to be set locally in the spec file
 
-# skip prof libs, and documentation
-%ghc_test\
+# skip prof libs and documentation
+%ghc_bootstrap\
 %global without_prof 1\
 %global without_haddock 1\
 %global without_manual 1
-
-# skip shared and prof libs, documentation, and testsuite
-%ghc_bootstrap\
-%global ghc_without_shared 1\
-%global ghc_without_dynamic 1\
-%ghc_test

@@ -1,0 +1,3 @@
+%__ghc_bin_requires	%{_rpmconfigdir}/ghc-deps.sh --requires %{buildroot}%{ghclibdir}
+%__ghc_bin_magic	executable, .* dynamically linked
+%__ghc_bin_flags	exeonly

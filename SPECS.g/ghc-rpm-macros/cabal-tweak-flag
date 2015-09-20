@@ -29,7 +29,7 @@ if [ $(echo $CABALFILE | wc -w) -ne 1 ]; then
 fi
 
 if ! grep -q -i "^flag *$FLAG" $CABALFILE; then
-   echo "$CABALFILE does have flag $FLAG"
+   echo "$CABALFILE does not have flag $FLAG"
    exit 1
 fi
 
