@@ -1,0 +1,10 @@
+--- aeson-0.8.0.2/aeson.cabal~	2015-01-26 14:40:59.738569354 +0900
++++ aeson-0.8.0.2/aeson.cabal	2015-01-26 14:44:24.394504016 +0900
+@@ -87,7 +87,6 @@
+     Data.Aeson.Generic
+     Data.Aeson.Parser
+     Data.Aeson.Types
+-    Data.Aeson.TH
+ 
+   other-modules:
+     Data.Aeson.Encode.ByteString
