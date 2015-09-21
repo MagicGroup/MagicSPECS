@@ -5,7 +5,7 @@
 Name:           ghc-%{pkg_name}
 # part of haskell-platform
 Version:        0.95.2
-Release:        33%{?dist}
+Release:        34%{?dist}
 Summary:        Haskell posix regex library
 
 License:        BSD
@@ -68,6 +68,9 @@ rm -r cbits
 
 
 %changelog
+* Sun Sep 20 2015 Liu Di <liudidi@gmail.com> - 0.95.2-34
+- 为 Magic 3.0 重建
+
 * Wed Jun 17 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.95.2-33
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

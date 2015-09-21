@@ -1,5 +1,4 @@
 Name: zhcon
-Summary: A Fast Console CJK System Using FrameBuffer
 Version: 0.2.6
 Release: 15%{?dist}
 Group: Applications/System
@@ -15,8 +14,7 @@ Patch4: %{name}-%{version}-locale.patch
 Patch5: %{name}-%{version}-keyswitch.patch
 Patch6: %{name}-%{version}-xf86int10.patch
 Summary: A fast Linux Console Chinese System that supports framebuffer
-Summary(zh_CN.UTF-8): Zhcon 是一个支持 Framebuffer 的 Linux 中日韩文控制台
-Summary(zh_TW.UTF-8): Zhcon 是一個支援 Framebuffer 及多內碼 Linux 中日韓文主控台
+Summary(zh_CN.UTF-8): Zhcon 是一個支援 Framebuffer 及多內碼 Linux 中日韓文主控台
 
 %define ncurse_libs_postfix -libs
 
@@ -37,12 +35,6 @@ zhcon 是一个支持 Framebuffer 的 Linux 中日韩文控制台。
 它能够控制台上显示简体中文、繁体中文、日文、韩文
 等双字节字符。支持多种输入法。
 现支持的有： UTF8, GB2312, GBK, BIG5, JIS 及 KSC。
-
-%description -l zh_TW.UTF-8
-zhcon 是一個支援 Framebuffer 與多内碼的 Linux 中日韓文主控台。
-它能够在控制台上顯示簡體中文、繁體中文、日文、韓文
-等雙位元組字元。支援多种输入法。
-現支援的內碼有： UTF8, GB2312, GBK, BIG5, JIS 及 KSC。
 
 %prep
 %setup -q

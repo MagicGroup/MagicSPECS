@@ -7,7 +7,7 @@
 
 Name:           ghc-%{pkg_name}
 Version:        0.3.3
-Release:        2%{?dist}
+Release:        4%{?dist}
 Summary:        Pass input from an enumerator to an Attoparsec parser
 
 License:        MIT
@@ -70,6 +70,12 @@ files.
 
 
 %changelog
+* Sun Sep 20 2015 Liu Di <liudidi@gmail.com> - 0.3.3-4
+- 为 Magic 3.0 重建
+
+* Sun Sep 20 2015 Liu Di <liudidi@gmail.com> - 0.3.3-3
+- 为 Magic 3.0 重建
+
 * Wed Jun 17 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.3.3-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

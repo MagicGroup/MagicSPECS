@@ -4,7 +4,7 @@
 
 Name:           ghc-%{pkg_name}
 Version:        0.2.1.1
-Release:        11%{?dist}
+Release:        12%{?dist}
 Summary:        Bindings to the libedit library
 
 License:        BSD
@@ -63,12 +63,16 @@ cabal-tweak-dep-ver base '< 4.7' '< 4.8'
 
 %files -f %{name}.files
 %doc LICENSE
+%{_docdir}/%{name}-%{version}/LICENSE
 
 
 %files devel -f %{name}-devel.files
 
 
 %Changelog
+* Sun Sep 20 2015 Liu Di <liudidi@gmail.com> - 0.2.1.1-12
+- 为 Magic 3.0 重建
+
 * Wed Jun 17 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.2.1.1-11
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

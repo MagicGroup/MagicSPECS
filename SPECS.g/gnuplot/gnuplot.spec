@@ -76,6 +76,23 @@ dimensions and in many different formats.
 Install gnuplot-minimal if you need a minimal version of graphics package 
 for scientific data representation.
 
+%package wx
+Group: Applications/Engineering
+Summary: Qt interface for gnuplot
+Requires: %{name}-common = %{version}-%{release}
+Requires(post): %{_sbindir}/alternatives
+Requires(preun): %{_sbindir}/alternatives
+Provides: gnuplot
+Obsoletes: gnuplot < 5.0.0-4
+
+%description wx
+Gnuplot is a command-line driven, interactive function plotting
+program especially suited for scientific data representation.  Gnuplot
+can be used to plot functions and data points in both two and three
+dimensions and in many different formats.
+
+This package provides a wxGTK based terminal version of gnuplot
+
 %package -n emacs-%{name}
 Group: Applications/Engineering
 Summary: Emacs bindings for the gnuplot main application

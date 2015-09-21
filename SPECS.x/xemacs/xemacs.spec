@@ -20,7 +20,7 @@
 
 Name:           xemacs
 Version:        21.5.34
-Release:        7%{?snap:.%{snap}}%{?dist}
+Release:        8%{?snap:.%{snap}}%{?dist}
 Summary:        Different version of Emacs
 
 %global majver %(cut -d. -f1-2 <<<%{version})
@@ -658,6 +658,9 @@ fi
 %dir %{_datadir}/xemacs/site-packages/pkginfo
 
 %changelog
+* Sun Sep 20 2015 Liu Di <liudidi@gmail.com> - 21.5.34-8.20140605hgacf1c26e3019
+- 为 Magic 3.0 重建
+
 * Sun Jun 08 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 21.5.34-7.20140605hgacf1c26e3019
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

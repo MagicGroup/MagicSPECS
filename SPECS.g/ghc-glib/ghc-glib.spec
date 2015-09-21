@@ -4,7 +4,7 @@
 
 Name:           ghc-%{pkg_name}
 Version:        0.13.1.1
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Binding to the GLIB library for Gtk2Hs
 
 License:        LGPLv2+
@@ -78,6 +78,9 @@ rm %{buildroot}%{ghc_pkgdocdir}/COPYING
 
 
 %changelog
+* Sun Sep 20 2015 Liu Di <liudidi@gmail.com> - 0.13.1.1-2
+- 为 Magic 3.0 重建
+
 * Wed Jul 22 2015 Jens Petersen <petersen@redhat.com> - 0.13.1.1-1
 - update to 0.13.1.1
 

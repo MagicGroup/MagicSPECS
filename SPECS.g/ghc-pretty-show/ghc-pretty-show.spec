@@ -4,7 +4,7 @@
 
 Name:           ghc-%{pkg_name}
 Version:        1.6.8.2
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Tools for working with derived Show instances and generic inspection of values
 
 License:        MIT
@@ -90,6 +90,9 @@ ln -s %{_webassetdir}/jquery/1/jquery.min.js %{_style_dir}/jquery.js
 
 
 %changelog
+* Sun Sep 20 2015 Liu Di <liudidi@gmail.com> - 1.6.8.2-3
+- 为 Magic 3.0 重建
+
 * Mon Sep 14 2015 Ben Boeckel <mathstuf@gmail.com> - 1.6.8.2-2
 - initial import
 

@@ -1,17 +1,17 @@
 %global _hardened_build 1
-%define git 1
+%define git 0
 %define vcsdate 20150920
 
 Name: gpsd
-Version: 3.10
-Release: 8.git%{vcsdate}%{?dist}
+Version: 3.15
+Release: 1%{?dist}
 Summary: Service daemon for mediating access to a GPS
 
 Group: System Environment/Daemons
 License: BSD
 URL: http://catb.org/gpsd/
-#Source0: http://download.savannah.gnu.org/releases/gpsd/%{name}-%{version}.tar.gz
-Source0: %{name}-git%{vcsdate}.tar.xz
+Source0: http://download.savannah.gnu.org/releases/gpsd/%{name}-%{version}.tar.gz
+#Source0: %{name}-git%{vcsdate}.tar.xz
 Source1: make_gpsd_git_package.sh
 Source10: gpsd.service
 Source11: gpsd.sysconfig
@@ -74,12 +74,18 @@ to dump the package version and exit. Additionally, it accepts -rv
 cgps resembles xgps, but without the pictorial satellite display.  It
 can run on a serial terminal or terminal emulator.
 
-
 %prep
-%setup -q -n %{name}-git%{vcsdate}
+%setup -q
 
-# fix RPATH
-sed -i 's|sysrpath =.*|sysrpath = ["%{_libdir}"]|' SConstruct
+# set gpsd revision string to include package revision
+sed -i 's|^revision=.*REVISION.*$|revision='\'\
+'#define REVISION "%{version}-%{release}'\"\'\| SConstruct
+
+# fix systemd path
+sed -i 's|systemd_dir =.*|systemd_dir = '\'%{_unitdir}\''|' SConstruct
+
+# don't set RPATH
+sed -i 's|env.Prepend.*RPATH.*|pass #\0|' SConstruct
 
 %build
 export CCFLAGS="%{optflags}"
@@ -100,6 +106,7 @@ scons \
 	mandir=%{_mandir} \
 	docdir=%{_docdir} \
 	pkgconfigdir=%{_libdir}/pkgconfig \
+	udevdir=$(dirname %{_udevrulesdir}) \
 	build
 
 
@@ -107,29 +114,14 @@ scons \
 # avoid rebuilding
 export CCFLAGS="%{optflags}"
 export LINKFLAGS="%{__global_ldflags}"
-DESTDIR=%{buildroot} scons install
+DESTDIR=%{buildroot} scons install systemd_install udev-install
 
-# service files
-%{__install} -d -m 0755 %{buildroot}%{_unitdir}
-%{__install} -p -m 0644 %{SOURCE10} \
-	%{buildroot}%{_unitdir}/gpsd.service
-%{__install} -p -m 0644 %{SOURCE12} \
-	%{buildroot}%{_unitdir}/gpsdctl@.service
-%{__install} -p -m 0644 systemd/gpsd.socket \
-	%{buildroot}%{_unitdir}/gpsd.socket
+# use the old name for udev rules
+mv %{buildroot}%{_udevrulesdir}/{25,99}-gpsd.rules
 
 %{__install} -d -m 0755 %{buildroot}%{_sysconfdir}/sysconfig
 %{__install} -p -m 0644 %{SOURCE11} \
 	%{buildroot}%{_sysconfdir}/sysconfig/gpsd
-
-# udev rules
-%{__install} -d -m 0755 %{buildroot}%{_udevrulesdir}
-%{__install} -p -m 0644 gpsd.rules \
-	%{buildroot}%{_udevrulesdir}/99-gpsd.rules
-
-# Use gpsdctl service instead of hotplug script
-sed -i 's|RUN+="/lib/udev/gpsd.hotplug"|TAG+="systemd", ENV{SYSTEMD_WANTS}="gpsdctl@%k.service"|' \
-	%{buildroot}%{_udevrulesdir}/99-gpsd.rules
 
 # Install the .desktop files
 desktop-file-install \
@@ -147,7 +139,7 @@ desktop-file-install \
 %{__install} -p -m 0755 gpsinit %{buildroot}%{_sbindir}
 
 # Not needed since gpsd.h is not installed
-rm %{buildroot}%{_libdir}/{libgpsd.so,pkgconfig/libgpsd.pc}
+rm %{buildroot}%{_libdir}/pkgconfig/libgpsd.pc
 
 %post
 %systemd_post gpsd.service gpsd.socket
@@ -172,6 +164,7 @@ rm %{buildroot}%{_libdir}/{libgpsd.so,pkgconfig/libgpsd.pc}
 %{_bindir}/gpsprof
 %{_bindir}/gpsmon
 %{_bindir}/gpsctl
+%{_bindir}/ntpshmmon
 %{_unitdir}/gpsd.service
 %{_unitdir}/gpsd.socket
 %{_unitdir}/gpsdctl@.service
@@ -182,17 +175,22 @@ rm %{buildroot}%{_libdir}/{libgpsd.so,pkgconfig/libgpsd.pc}
 %{_mandir}/man1/gpsprof.1*
 %{_mandir}/man1/gpsmon.1*
 %{_mandir}/man1/gpsctl.1*
+%{_mandir}/man1/ntpshmmon.1*
 
 %files libs
-%{_libdir}/libgps*.so.*
+%{_libdir}/libgps.so.22*
+%{_libdir}/libQgpsmm.so.22*
 %{python_sitearch}/gps*
 %exclude %{python_sitearch}/gps/fake*
 
 %files devel
 %doc TODO
 %{_bindir}/gpsfake
-%{_libdir}/libgps*.so
-%{_libdir}/pkgconfig/*.pc
+%{_libdir}/libgps.so
+%{_libdir}/libQgpsmm.prl
+%{_libdir}/libQgpsmm.so
+%{_libdir}/pkgconfig/Qgpsmm.pc
+%{_libdir}/pkgconfig/libgps.pc
 %{python_sitearch}/gps/fake*
 %{_includedir}/gps.h
 %{_includedir}/libgpsmm.h
@@ -200,7 +198,6 @@ rm %{buildroot}%{_libdir}/{libgpsd.so,pkgconfig/libgpsd.pc}
 %{_mandir}/man3/libgps.3*
 %{_mandir}/man3/libQgpsmm.3*
 %{_mandir}/man3/libgpsmm.3*
-%{_mandir}/man3/libgpsd.3*
 %{_mandir}/man5/gpsd_json.5*
 %{_mandir}/man5/srec.5*
 
@@ -229,10 +226,9 @@ rm %{buildroot}%{_libdir}/{libgpsd.so,pkgconfig/libgpsd.pc}
 %dir %{_datadir}/gpsd
 %{_datadir}/gpsd/gpsd-logo.png
 
-
 %changelog
-* Sun Sep 20 2015 Liu Di <liudidi@gmail.com> - 3.10-8.git20150920
-- 更新到 20150920 日期的仓库源码
+* Sun Sep 20 2015 Liu Di <liudidi@gmail.com> - 3.15-1
+- 更新到 3.15
 
 * Sat Sep 19 2015 Liu Di <liudidi@gmail.com> - 3.10-7.git20150919
 - 更新到 20150919 日期的仓库源码

@@ -7,7 +7,7 @@
 
 Name:           ghc-%{pkg_name}
 Version:        0.3.1.0
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Monad-transformer for Control.Exception
 
 License:        BSD
@@ -69,6 +69,9 @@ cabal-tweak-dep-ver MonadCatchIO-transformers '=0.3.1.0' '=0.3.1.*'
 
 
 %changelog
+* Sun Sep 20 2015 Liu Di <liudidi@gmail.com> - 0.3.1.0-3
+- 为 Magic 3.0 重建
+
 * Wed Jun 17 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.3.1.0-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

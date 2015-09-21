@@ -4,7 +4,7 @@
 
 Name:           ghc-%{pkg_name}
 Version:        4.2.2
-Release:        9%{?dist}
+Release:        10%{?dist}
 Summary:        Utility libraries for the IRC bot Lambdabot
 
 License:        GPLv2
@@ -79,6 +79,9 @@ files.
 
 
 %changelog
+* Sun Sep 20 2015 Liu Di <liudidi@gmail.com> - 4.2.2-10
+- 为 Magic 3.0 重建
+
 * Wed Jun 17 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 4.2.2-9
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

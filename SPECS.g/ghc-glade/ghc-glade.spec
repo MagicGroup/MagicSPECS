@@ -4,7 +4,7 @@
 
 Name:           ghc-%{pkg_name}
 Version:        0.12.5.0
-Release:        6%{?dist}
+Release:        7%{?dist}
 Summary:        Binding to the glade library
 
 License:        LGPLv2+
@@ -78,6 +78,9 @@ rm -r %{buildroot}%{_datadir}/%{pkg_name}-%{version}
 
 
 %changelog
+* Sun Sep 20 2015 Liu Di <liudidi@gmail.com> - 0.12.5.0-7
+- 为 Magic 3.0 重建
+
 * Wed Jul 22 2015 Jens Petersen <petersen@redhat.com> - 0.12.5.0-6
 - refresh and use license macro
 

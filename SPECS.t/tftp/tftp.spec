@@ -1,7 +1,7 @@
 Summary: The client for the Trivial File Transfer Protocol (TFTP)
 Name: tftp
 Version: 5.2
-Release: 3%{?dist}
+Release: 4%{?dist}
 License: BSD
 Group: Applications/Internet
 Source0: http://www.kernel.org/pub/software/network/tftp/tftp-hpa-%{version}.tar.bz2
@@ -96,6 +96,9 @@ rm -rf ${RPM_BUILD_ROOT}
 %{_mandir}/man8/*
 
 %changelog
+* Sun Sep 20 2015 Liu Di <liudidi@gmail.com> - 5.2-4
+- 为 Magic 3.0 重建
+
 * Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 5.2-3
 - 为 Magic 3.0 重建
 

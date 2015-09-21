@@ -4,7 +4,7 @@
 
 Name:           ghc-%{pkg_name}
 Version:        0.1.30
-Release:        9%{?dist}
+Release:        10%{?dist}
 Summary:        Haskell binding to libintl
 
 License:        BSD
@@ -68,6 +68,9 @@ This package provides the Haskell %{pkg_name} library development files.
 
 
 %changelog
+* Sun Sep 20 2015 Liu Di <liudidi@gmail.com> - 0.1.30-10
+- 为 Magic 3.0 重建
+
 * Fri Jul  3 2015 Philip Withnall <philip@tecnocode.co.uk> - 0.1.30-9
 - Rebuilt for ghc-setlocale 1.0.0.3
 

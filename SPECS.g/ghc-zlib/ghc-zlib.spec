@@ -8,7 +8,7 @@
 Name:           ghc-%{pkg_name}
 # part of haskell-platform
 Version:        0.5.4.1
-Release:        31%{?dist}
+Release:        32%{?dist}
 Summary:        Compression and decompression in the gzip and zlib formats
 
 License:        BSD
@@ -73,6 +73,7 @@ rm -r cbits
 
 %files -f %{name}.files
 %doc LICENSE
+%{_docdir}/%{name}-%{version}/LICENSE
 
 
 %files devel -f %{name}-devel.files
@@ -80,6 +81,9 @@ rm -r cbits
 
 
 %changelog
+* Sun Sep 20 2015 Liu Di <liudidi@gmail.com> - 0.5.4.1-32
+- 为 Magic 3.0 重建
+
 * Wed Jun 17 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.5.4.1-31
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

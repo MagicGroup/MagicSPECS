@@ -4,7 +4,7 @@
 
 Name:           ghc-%{pkg_name}
 Version:        0.3.9
-Release:        7%{?dist}
+Release:        8%{?dist}
 Summary:        Citation Style Language library
 
 License:        BSD
@@ -84,6 +84,9 @@ rm %{buildroot}%{ghc_pkgdocdir}/LICENSE
 
 
 %changelog
+* Sun Sep 20 2015 Liu Di <liudidi@gmail.com> - 0.3.9-8
+- 为 Magic 3.0 重建
+
 * Tue Sep  1 2015 Jens Petersen <petersen@redhat.com> - 0.3.9-7
 - use license macro
 

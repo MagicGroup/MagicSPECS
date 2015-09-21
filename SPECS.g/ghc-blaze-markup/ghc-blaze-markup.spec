@@ -9,7 +9,7 @@
 
 Name:           ghc-%{pkg_name}
 Version:        0.6.2.0
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        A blazingly fast markup combinator library for Haskell
 
 License:        BSD
@@ -84,6 +84,9 @@ This package provides the Haskell %{pkg_name} library development files.
 
 
 %changelog
+* Sun Sep 20 2015 Liu Di <liudidi@gmail.com> - 0.6.2.0-3
+- 为 Magic 3.0 重建
+
 * Wed Jun 17 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.6.2.0-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

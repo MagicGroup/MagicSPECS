@@ -35,7 +35,7 @@ Version: 7.8.4
 #   (sometimes after a major release)
 # - minor release numbers for a branch should be incremented monotonically
 # xhtml moved from haskell-platform to ghc-7.8.3
-Release: 46%{?dist}
+Release: 47%{?dist}
 Summary: Glasgow Haskell Compiler
 
 License: %BSDHaskellReport
@@ -569,6 +569,9 @@ fi
 %{ghcdocbasedir}/libraries/prologue.txt
 %{ghcdocbasedir}/libraries/synopsis.png
 %{ghcdocbasedir}/index.html
+%{ghcdocbasedir}/*
+%{_docdir}/ghc/haddock.*
+%{_docdir}/ghc/users_guide.*
 %ghost %{ghcdocbasedir}/libraries/doc-index*.html
 %ghost %{ghcdocbasedir}/libraries/haddock-util.js
 %ghost %{ghcdocbasedir}/libraries/index*.html
@@ -586,6 +589,9 @@ fi
 
 
 %changelog
+* Sun Sep 20 2015 Liu Di <liudidi@gmail.com> - 7.8.4-47
+- 为 Magic 3.0 重建
+
 * Tue Jun 16 2015 Jens Petersen <petersen@redhat.com> - 7.8.4-46
 - rebuild
 

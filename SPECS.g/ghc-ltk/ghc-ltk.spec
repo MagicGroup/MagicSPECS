@@ -4,7 +4,7 @@
 
 Name:           ghc-%{pkg_name}
 Version:        0.14.3.0
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        Leksah IDE's UI toolkit library
 
 #The cabal file states license as GPLv2 while sources specify license
@@ -77,6 +77,9 @@ rm %{buildroot}%{ghc_pkgdocdir}/LICENSE
 
 
 %changelog
+* Sun Sep 20 2015 Liu Di <liudidi@gmail.com> - 0.14.3.0-4
+- 为 Magic 3.0 重建
+
 * Thu Jul 23 2015 Jens Petersen <petersen@redhat.com> - 0.14.3.0-3
 - use license macro
 

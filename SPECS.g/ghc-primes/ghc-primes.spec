@@ -4,7 +4,7 @@
 
 Name:           ghc-%{pkg_name}
 Version:        0.2.1.0
-Release:        9%{?dist}
+Release:        10%{?dist}
 Summary:        Efficient, purely functional generation of prime numbers
 
 License:        BSD
@@ -53,10 +53,15 @@ rm -f ${RPM_BUILD_ROOT}%{_docdir}/%{name}-%{version}/LICENSE
 
 %files -f %{name}.files
 # %doc LICENSE
+%{_docdir}/%{name}-%{version}/LICENSE
+
 
 %files devel -f %{name}-devel.files
 
 %changelog
+* Sun Sep 20 2015 Liu Di <liudidi@gmail.com> - 0.2.1.0-10
+- 为 Magic 3.0 重建
+
 * Wed Jun 17 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.2.1.0-9
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

@@ -15,8 +15,8 @@
 
 %define rpmhome /usr/lib/rpm
 
-%define rpmver 4.12.90
-#define snapver rc1
+%define rpmver 4.13.0
+%define snapver rc1
 %define srcver %{rpmver}%{?snapver:-%{snapver}}
 %define eggver %{rpmver}%{?snapver:_%{snapver}}
 
@@ -50,6 +50,7 @@ Patch4: rpm-4.8.1-use-gpg2.patch
 Patch5: rpm-4.12.0-rpm2cpio-hack.patch
 
 # Patches already upstream:
+Patch100: rpm-4.13.0-rc1-Fix-new-richdep-syntax.patch
 
 # These are not yet upstream
 Patch302: rpm-4.7.1-geode-i686.patch
@@ -63,7 +64,7 @@ Patch306: rpm-4.10.0-minidebuginfo.patch
 Patch307: rpm-4.11.1-sepdebugcrcfix.patch
 # Fix race condidition where unchecked data is exposed in the file system
 Patch308: rpm-4.12.0.x-CVE-2013-6435.patch
-# Add check against malicious CPIO file name size
+# A%description -l zh_CN.UTF-8 check against malicious CPIO file name size
 Patch309: rpm-4.12.0.x-CVE-2014-8118.patch
 
 # Partially GPL/LGPL dual-licensed and some bits with BSD

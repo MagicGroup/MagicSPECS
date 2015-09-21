@@ -7,7 +7,7 @@
 Name:           ghc-%{pkg_name}
 # part of haskell-platform
 Version:        1.2.5.2
-Release:        35%{?dist}
+Release:        36%{?dist}
 Summary:        Unit testing framework for Haskell
 
 License:        BSD
@@ -76,6 +76,7 @@ mv HUnit.cabal.orig HUnit.cabal
 
 %files -f %{name}.files
 %doc LICENSE
+%{_docdir}/%{name}-%{version}/LICENSE
 
 
 %files devel -f %{name}-devel.files
@@ -83,6 +84,9 @@ mv HUnit.cabal.orig HUnit.cabal
 
 
 %changelog
+* Sun Sep 20 2015 Liu Di <liudidi@gmail.com> - 1.2.5.2-36
+- 为 Magic 3.0 重建
+
 * Wed Jun 17 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.2.5.2-35
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

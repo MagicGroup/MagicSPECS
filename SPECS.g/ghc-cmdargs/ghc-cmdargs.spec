@@ -4,7 +4,7 @@
 
 Name:           ghc-%{pkg_name}
 Version:        0.10.12
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Command line argument processing
 
 License:        BSD
@@ -62,6 +62,7 @@ cabal-tweak-flag quotation False
 
 %files -f %{name}.files
 %doc LICENSE
+%{_docdir}/%{name}-%{version}/LICENSE
 
 
 %files devel -f %{name}-devel.files
@@ -69,6 +70,9 @@ cabal-tweak-flag quotation False
 
 
 %changelog
+* Sun Sep 20 2015 Liu Di <liudidi@gmail.com> - 0.10.12-3
+- 为 Magic 3.0 重建
+
 * Wed Jun 17 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.10.12-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

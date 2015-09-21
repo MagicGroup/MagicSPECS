@@ -6,7 +6,7 @@
 
 Name:           ghc-%{pkg_name}
 Version:        0.5.11.1
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Sourcecode syntax highlighting
 
 License:        GPLv2+
@@ -96,6 +96,9 @@ LANG=en_US.utf8
 
 
 %changelog
+* Sun Sep 20 2015 Liu Di <liudidi@gmail.com> - 0.5.11.1-2
+- 为 Magic 3.0 重建
+
 * Mon Jan 19 2015 Jens Petersen <petersen@redhat.com> - 0.5.11.1-1
 - update to 0.5.11.1
 

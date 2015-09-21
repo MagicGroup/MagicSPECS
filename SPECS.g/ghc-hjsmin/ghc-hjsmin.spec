@@ -6,7 +6,7 @@
 
 Name:           ghc-%{pkg_name}
 Version:        0.1.4.7
-Release:        8%{?dist}
+Release:        9%{?dist}
 Summary:        Haskell implementation of a javascript minifier
 
 License:        BSD
@@ -85,6 +85,9 @@ rm %{buildroot}%{ghc_pkgdocdir}/LICENSE
 
 
 %changelog
+* Sun Sep 20 2015 Liu Di <liudidi@gmail.com> - 0.1.4.7-9
+- 为 Magic 3.0 重建
+
 * Wed Aug  5 2015 Jens Petersen <petersen@redhat.com> - 0.1.4.7-8
 - use license macro
 - move bindir/hjsmin to devel subpackage

@@ -6,7 +6,7 @@
 
 Name:           ghc-%{pkg_name}
 Version:        0.8.10
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        Support for parsing and rendering YAML documents
 
 License:        BSD
@@ -105,6 +105,9 @@ rm -r libyaml
 
 
 %changelog
+* Sun Sep 20 2015 Liu Di <liudidi@gmail.com> - 0.8.10-4
+- 为 Magic 3.0 重建
+
 * Mon Aug 31 2015 Peter Robinson <pbrobinson@fedoraproject.org> 0.8.10-3
 - Rebuild (aarch64 vector hashes)
 

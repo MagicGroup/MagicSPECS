@@ -6,7 +6,7 @@
 
 Name:           ghc-%{pkg_name}
 Version:        4.5.4.0
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        Static website compiler library
 
 License:        BSD
@@ -115,6 +115,9 @@ rm -r %{buildroot}%{_datadir}/%{pkg_name}-%{version}/example
 
 
 %changelog
+* Sun Sep 20 2015 Liu Di <liudidi@gmail.com> - 4.5.4.0-5
+- 为 Magic 3.0 重建
+
 * Mon Sep  7 2015 Jens Petersen <petersen@redhat.com> - 4.5.4.0-4
 - rebuild
 

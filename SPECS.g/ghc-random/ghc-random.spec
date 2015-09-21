@@ -5,7 +5,7 @@
 Name:           ghc-%{pkg_name}
 # part of haskell-platform
 Version:        1.0.1.1
-Release:        30%{?dist}
+Release:        31%{?dist}
 Summary:        Random number library
 
 License:        BSD
@@ -57,12 +57,16 @@ This package provides the Haskell %{pkg_name} library development files.
 
 %files -f %{name}.files
 %doc LICENSE
+%{_docdir}/%{name}-%{version}/LICENSE
 
 
 %files devel -f %{name}-devel.files
 
 
 %changelog
+* Sun Sep 20 2015 Liu Di <liudidi@gmail.com> - 1.0.1.1-31
+- 为 Magic 3.0 重建
+
 * Wed Jun 17 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.0.1.1-30
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

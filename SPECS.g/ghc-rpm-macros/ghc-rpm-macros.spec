@@ -7,7 +7,7 @@
 
 Name:           ghc-rpm-macros
 Version:        1.4.15
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        RPM macros for building packages for GHC
 
 License:        GPLv3+
@@ -113,6 +113,9 @@ install -p -D -m 0755 %{SOURCE5} %{buildroot}/%{_bindir}/cabal-tweak-flag
 
 
 %changelog
+* Sun Sep 20 2015 Liu Di <liudidi@gmail.com> - 1.4.15-4
+- 为 Magic 3.0 重建
+
 * Wed Jun 17 2015 Jens Petersen <petersen@redhat.com> - 1.4.15-3
 - reenable dynamic linking for aarch64 (#1195231)
 

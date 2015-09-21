@@ -4,7 +4,7 @@
 
 Name:           ghc-%{pkg_name}
 Version:        0.8.3
-Release:        6%{?dist}
+Release:        7%{?dist}
 Summary:        Haskell library for sharing binary elements
 
 # GPL version is not stated
@@ -59,12 +59,15 @@ This package provides the Haskell %{pkg_name} library development files.
 
 %files -f %{name}.files
 %doc LICENSE
-
+%{_docdir}/%{name}-%{version}/LICENSE
 
 %files devel -f %{name}-devel.files
 
 
 %changelog
+* Sun Sep 20 2015 Liu Di <liudidi@gmail.com> - 0.8.3-7
+- 为 Magic 3.0 重建
+
 * Wed Jun 17 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.8.3-6
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

@@ -9,7 +9,7 @@
 
 Name:           ghc-%{pkg_name}
 Version:        2.0.1.1
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        Toolkit for compile-time interpolated templates
 
 License:        MIT
@@ -110,6 +110,9 @@ This package provides the Haskell %{pkg_name} library development files.
 
 
 %changelog
+* Sun Sep 20 2015 Liu Di <liudidi@gmail.com> - 2.0.1.1-5
+- 为 Magic 3.0 重建
+
 * Tue Sep  8 2015 Peter Robinson <pbrobinson@fedoraproject.org> 2.0.1.1-4
 - Rebuild (aarch64 hashes)
 

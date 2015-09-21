@@ -4,7 +4,7 @@
 
 Name:           ghc-%{pkg_name}
 Version:        0.13.1.3
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Binding to the Webkit library
 
 License:        LGPLv2+
@@ -82,6 +82,9 @@ rm %{buildroot}%{_datadir}/%{pkg_name}-%{version}/{Makefile,Webkit.hs}
 
 
 %changelog
+* Sun Sep 20 2015 Liu Di <liudidi@gmail.com> - 0.13.1.3-2
+- 为 Magic 3.0 重建
+
 * Wed Jul 22 2015 Jens Petersen <petersen@redhat.com> - 0.13.1.3-1
 - update to 0.13.1.3
 

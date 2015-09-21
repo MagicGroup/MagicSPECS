@@ -7,7 +7,7 @@
 Name:           ghc-%{pkg_name}
 # part of haskell-platform
 Version:        0.2.4.0
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Efficient hashing-based container types
 
 License:        BSD
@@ -88,6 +88,9 @@ files.
 
 
 %changelog
+* Sun Sep 20 2015 Liu Di <liudidi@gmail.com> - 0.2.4.0-3
+- 为 Magic 3.0 重建
+
 * Wed Jun 17 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.2.4.0-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

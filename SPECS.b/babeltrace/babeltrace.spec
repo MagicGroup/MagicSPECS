@@ -1,6 +1,6 @@
 Name:           babeltrace
 Version:        1.2.4
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Trace Viewer and Converter, mainly for the Common Trace Format
 License:        MIT and GPLv2
 URL:            http://www.efficios.com/babeltrace
@@ -91,6 +91,11 @@ rm -f %{buildroot}/%{_pkgdocdir}/std-ext-lib.txt
 %files
 %doc ChangeLog
 %doc doc/lttng-live.txt
+%{_docdir}/babeltrace/API.txt
+%{_docdir}/babeltrace/LICENSE
+%{_docdir}/babeltrace/gpl-2.0.txt
+%{_docdir}/babeltrace/mit-license.txt
+%{_docdir}/babeltrace/std-ext-lib.txt
 %{_bindir}/%{name}*
 %{_mandir}/man1/*.1*
 
@@ -114,6 +119,9 @@ rm -f %{buildroot}/%{_pkgdocdir}/std-ext-lib.txt
 
 
 %changelog
+* Sun Sep 20 2015 Liu Di <liudidi@gmail.com> - 1.2.4-3
+- 为 Magic 3.0 重建
+
 * Tue Jul 28 2015 Michael Jeanson <mjeanson@gmail.com> - 1.2.4-2
 - Added python3 bindings module
 

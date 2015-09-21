@@ -4,7 +4,7 @@
 
 Name:           ghc-%{pkg_name}
 Version:        0.14.1
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Binding to the Gtk+ 3 graphical user interface library
 
 License:        LGPLv2+
@@ -86,6 +86,9 @@ rm -r %{buildroot}%{_datadir}/%{pkg_name}-%{version}
 
 
 %changelog
+* Sun Sep 20 2015 Liu Di <liudidi@gmail.com> - 0.14.1-2
+- 为 Magic 3.0 重建
+
 * Thu Sep  3 2015 Jens Petersen <petersen@fedoraproject.org> - 0.14.1-1
 - update to 0.14.1
 

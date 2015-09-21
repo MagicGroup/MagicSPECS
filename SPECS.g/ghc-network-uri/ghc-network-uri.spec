@@ -6,7 +6,7 @@
 
 Name:           ghc-%{pkg_name}
 Version:        2.6.0.3
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        URI manipulation
 
 License:        BSD
@@ -78,6 +78,9 @@ rmdir -v %{buildroot}%{_docdir}/%{name}
 
 
 %changelog
+* Sun Sep 20 2015 Liu Di <liudidi@gmail.com> - 2.6.0.3-3
+- 为 Magic 3.0 重建
+
 * Wed Sep 09 2015 Ben Boeckel <mathstuf@gmail.com> - 2.6.0.3-2
 - fedora import
 

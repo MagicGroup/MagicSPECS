@@ -157,9 +157,10 @@ magic_rpm_clean.sh
 %find_lang dpkg-dev || %define dpkg-dev_no_lang 1
 %find_lang dselect || %define dselect_no_lang 1
 
-# fedora has its own implementation
-rm %{buildroot}%{_bindir}/update-alternatives
-rm %{buildroot}%{_mandir}/man8/update-alternatives.8
+# magic has its own implementation
+rm -f %{buildroot}%{_bindir}/update-alternatives
+rm -f %{buildroot}%{_libdir}/libdpkg.la
+rm -f %{buildroot}%{_mandir}/man1/update-alternatives.1*
 rm -rf %{buildroot}%{_mandir}/*/man8/update-alternatives.8
 rm -rf %{buildroot}%{_sysconfdir}/alternatives/
 
@@ -195,11 +196,7 @@ create_logfile() {
 create_database
 create_logfile
 
-%if 0%{?dpkg_no_lang}
-%files
-%else
 %files   -f dpkg.lang
-%endif
 %defattr(-,root,root,-)
 %doc debian/changelog README AUTHORS THANKS TODO
 %doc debian/copyright debian/usertags
@@ -235,8 +232,9 @@ create_logfile
 %{_mandir}/man1/dpkg-split.1.gz
 %{_mandir}/man1/dpkg-trigger.1.gz
 %{_mandir}/man5/dpkg.cfg.5.gz
-%{_mandir}/man8/dpkg-divert.8.gz
-%{_mandir}/man8/dpkg-statoverride.8.gz
+%{_mandir}/man1/dpkg-divert.1*
+%{_mandir}/man1/dpkg-statoverride.1*
+%exclude %{_bindir}/update-alternatives
 
 %files devel
 %defattr(-,root,root,-)
@@ -244,7 +242,7 @@ create_logfile
 %{_libdir}/pkgconfig/libdpkg.pc
 %{_includedir}/dpkg/*.h
 
-%files dev
+%files dev 
 %defattr(-,root,root,-)
 %doc doc/README.api doc/coding-style.txt doc/frontend.txt
 %config(noreplace) %{pkgconfdir}/shlibs.default
@@ -296,11 +294,7 @@ create_logfile
 %{_mandir}/man5/deb-version.5.gz
 %{_mandir}/man5/deb.5.gz
 
-%if 0%{?dpkg-dev_no_lang}
-%files
-%else
-%files perl -f dpkg-dev.lang
-%endif
+%files perl
 %defattr(-,root,root,-)
 %{_libexecdir}/dpkg/parsechangelog
 
@@ -308,13 +302,9 @@ create_logfile
 %{_mandir}/man3/Dpkg*.3*
 
 
-%if 0%{?dselect_no_lang}
-%files
-%else
-%files -n dselect -f dselect.lang
-%endif
+%files -n dselect
 %defattr(-,root,root,-)
-%doc dselect/methods/multicd/README.multicd dselect/methods/ftp/README.mirrors.txt
+%doc dselect/methods/multicd/README.multicd 
 %{_bindir}/dselect
 %{perl_vendorlib}/Dselect/Ftp.pm
 %{_libdir}/dpkg/methods
@@ -322,7 +312,7 @@ create_logfile
 %{_mandir}/man5/dselect.cfg.5.gz
 %dir %{pkgconfdir}/dselect.cfg.d
 /var/lib/dpkg/methods
-
+%{_datadir}/locale/*
 
 %changelog
 * Sun Sep 20 2015 Liu Di <liudidi@gmail.com> - 1.18.2-1

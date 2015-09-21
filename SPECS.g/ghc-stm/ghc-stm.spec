@@ -5,7 +5,7 @@
 Name:           ghc-%{pkg_name}
 # part of haskell-platform
 Version:        2.4.2
-Release:        29%{?dist}
+Release:        30%{?dist}
 Summary:        Software Transactional Memory
 
 License:        BSD
@@ -56,12 +56,16 @@ This package provides the Haskell %{pkg_name} library development files.
 
 %files -f %{name}.files
 %doc LICENSE
+%{_docdir}/%{name}-%{version}/LICENSE
 
 
 %files devel -f %{name}-devel.files
 
 
 %changelog
+* Sun Sep 20 2015 Liu Di <liudidi@gmail.com> - 2.4.2-30
+- 为 Magic 3.0 重建
+
 * Wed Jun 17 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.4.2-29
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

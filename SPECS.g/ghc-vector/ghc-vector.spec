@@ -5,7 +5,7 @@
 Name:           ghc-%{pkg_name}
 # part of haskell-platform
 Version:        0.10.9.1
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        Efficient Arrays
 
 License:        BSD
@@ -63,13 +63,16 @@ This package provides the Haskell %{pkg_name} library development files.
 
 %files -f %{name}.files
 %doc LICENSE
-
+%{_docdir}/%{name}-%{version}/LICENSE
 
 %files devel -f %{name}-devel.files
 %doc README.md
 
 
 %changelog
+* Sun Sep 20 2015 Liu Di <liudidi@gmail.com> - 0.10.9.1-4
+- 为 Magic 3.0 重建
+
 * Thu Aug 20 2015 Peter Robinson <pbrobinson@fedoraproject.org> 0.10.9.1-3
 - rebuild for aarch64 hash issue
 

@@ -35,9 +35,9 @@ Summary:	The cross-platform open-source multimedia framework, player and server
 Name:		vlc
 Version:	2.2.0
 %if 0%{?gitv}
-Release:	0.%{gitdate}.%{?dist}.7
+Release:	0.%{gitdate}.%{?dist}.8
 %else
-Release:	8%{?dist}
+Release:	9%{?dist}
 %endif
 License:	GPLv2+
 Group:		Applications/Multimedia
@@ -526,6 +526,9 @@ fi || :
 
 
 %changelog
+* Sun Sep 20 2015 Liu Di <liudidi@gmail.com>
+- 为 Magic 3.0 重建
+
 * Sun May 04 2014 Liu Di <liudidi@gmail.com>
 - 为 Magic 3.0 重建
 

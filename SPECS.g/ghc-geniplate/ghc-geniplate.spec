@@ -7,7 +7,7 @@
 
 Name:           ghc-%{pkg_name}
 Version:        0.6.0.5
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Template Haskell to generate Uniplate-like functions
 
 License:        BSD
@@ -60,13 +60,16 @@ This package provides the Haskell %{pkg_name} library development files.
 
 %files -f %{name}.files
 %doc LICENSE
-
+%{_docdir}/%{name}-%{version}/LICENSE
 
 %files devel -f %{name}-devel.files
 %doc examples
 
 
 %changelog
+* Sun Sep 20 2015 Liu Di <liudidi@gmail.com> - 0.6.0.5-3
+- 为 Magic 3.0 重建
+
 * Wed Jun 17 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.6.0.5-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

@@ -4,7 +4,7 @@
 
 Name:           ghc-%{pkg_name}
 Version:        0.94.4
-Release:        11%{?dist}
+Release:        12%{?dist}
 Summary:        Haskell PCRE binding
 
 License:        BSD
@@ -68,6 +68,9 @@ This package provides the Haskell %{pkg_name} library development files.
 
 
 %changelog
+* Sun Sep 20 2015 Liu Di <liudidi@gmail.com> - 0.94.4-12
+- 为 Magic 3.0 重建
+
 * Wed Jun 17 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.94.4-11
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

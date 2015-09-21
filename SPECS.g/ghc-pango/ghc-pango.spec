@@ -4,7 +4,7 @@
 
 Name:           ghc-%{pkg_name}
 Version:        0.13.1.0
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Binding to the Pango text rendering engine
 
 License:        LGPLv2+
@@ -87,6 +87,9 @@ rm -r %{buildroot}%{_datadir}/%{pkg_name}-%{version}
 
 
 %changelog
+* Sun Sep 20 2015 Liu Di <liudidi@gmail.com> - 0.13.1.0-2
+- 为 Magic 3.0 重建
+
 * Wed Jul 22 2015 Jens Petersen <petersen@redhat.com> - 0.13.1.0-1
 - update to 0.13.1.0
 

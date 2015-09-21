@@ -4,7 +4,7 @@
 
 Name:           ghc-%{pkg_name}
 Version:        1.1.2.1
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        Mutable hash tables in the ST monad
 
 License:        BSD
@@ -79,6 +79,9 @@ This package provides the Haskell %{pkg_name} library development files.
 
 
 %changelog
+* Sun Sep 20 2015 Liu Di <liudidi@gmail.com> - 1.1.2.1-4
+- 为 Magic 3.0 重建
+
 * Mon Aug 31 2015 Peter Robinson <pbrobinson@fedoraproject.org> 1.1.2.1-3
 - Rebuild (aarch64 vector hashes)
 

@@ -2,7 +2,7 @@ Summary: A mouse server for the Linux console
 Summary(zh_CN.UTF-8): Linux 控制台的鼠标服务
 Name: gpm
 Version: 1.20.7
-Release: 6%{?dist}
+Release: 7%{?dist}
 License: GPLv2 and GPLv2+ with exceptions and GPLv3+ and Verbatim and Copyright only
 Group: System Environment/Daemons
 Group(zh_CN.UTF-8): 系统环境/服务
@@ -141,7 +141,6 @@ rm -rf %{buildroot}%{_bindir}
 rm -rf %{buildroot}%{_mandir}
 %endif
 magic_rpm_clean.sh
-
 %post
 %ifnarch s390 s390x
 %systemd_post gpm.service
@@ -149,11 +148,6 @@ magic_rpm_clean.sh
 if [ -e %{_infodir}/gpm.info.gz ]; then
   /sbin/install-info %{_infodir}/gpm.info.gz %{_infodir}/dir || :
 fi
-
-%ifnarch s390 s390x
-%triggerun -- gpm < 1.20.6-15
-/bin/systemctl enable gpm.service >/dev/null 2>&1 || :
-%endif
 
 %preun
 %ifnarch s390 s390x
@@ -167,11 +161,6 @@ fi
 %ifnarch s390 s390x
 %systemd_postun_with_restart gpm.service
 %endif
-
-%triggerun -- gpm < 1.20.6-17
-%{_bindir}/systemd-sysv-convert --save gpm >/dev/null 2>&1 ||:
-/bin/systemctl enable gpm.service >/dev/null 2>&1
-/bin/systemctl try-restart gpm.service >/dev/null 2>&1 || :
 
 %post libs -p /sbin/ldconfig
 
@@ -200,6 +189,9 @@ fi
 %{_libdir}/libgpm.a
 
 %changelog
+* Sun Sep 20 2015 Liu Di <liudidi@gmail.com> - 1.20.7-7
+- 为 Magic 3.0 重建
+
 * Mon Apr 14 2014 Liu Di <liudidi@gmail.com> - 1.20.7-6
 - 为 Magic 3.0 重建
 

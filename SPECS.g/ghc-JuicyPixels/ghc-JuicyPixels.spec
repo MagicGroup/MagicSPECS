@@ -4,7 +4,7 @@
 
 Name:           ghc-%{pkg_name}
 Version:        3.2.2
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        Picture loading and serialization
 
 License:        BSD
@@ -73,6 +73,9 @@ install -p -m 0644 docimages/* %{buildroot}%{ghcpkgdocdir}
 
 
 %changelog
+* Sun Sep 20 2015 Liu Di <liudidi@gmail.com> - 3.2.2-4
+- 为 Magic 3.0 重建
+
 * Mon Aug 31 2015 Peter Robinson <pbrobinson@fedoraproject.org> 3.2.2-3
 - Rebuild (aarch64 vector hashes)
 

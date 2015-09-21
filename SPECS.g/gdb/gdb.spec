@@ -26,7 +26,7 @@ Version: 7.10
 
 # The release always contains a leading reserved number, start it at 1.
 # `upstream' is not a part of `name' to stay fully rpm dependencies compatible for the testing.
-Release: 22%{?dist}
+Release: 23%{?dist}
 
 License: GPLv3+ and GPLv3+ with exceptions and GPLv2+ and GPLv2+ with exceptions and GPL+ and LGPLv2+ and BSD and Public Domain and GFDL
 Group: Development/Debuggers
@@ -557,7 +557,7 @@ BuildRequires: xz-devel%{?_isa}
 %endif
 # dlopen() no longer makes rpm-libsFIXME{?_isa} (it's .so) a mandatory dependency.
 BuildRequires: rpm-devel%{?_isa}
-BuildRequires: zlib-devel%{?_isa} libselinux-devel%{?_isa}
+BuildRequires: zlib-devel%{?_isa}
 %if 0%{!?_without_python:1}
 %if 0%{?rhel:1} && 0%{?rhel} <= 7
 BuildRequires: python-devel%{?_isa}
@@ -1024,8 +1024,8 @@ perl -i.relocatable -pe 's/^(D\[".*_RELOCATABLE"\]=" )1(")$/${1}0$2/' gdb/config
 make %{?_smp_mflags} CFLAGS="$CFLAGS $FPROFILE_CFLAGS" LDFLAGS="$LDFLAGS $FPROFILE_CFLAGS"
 
 ! grep '_RELOCATABLE.*1' gdb/config.h
-grep '^#define HAVE_LIBSELINUX 1$' gdb/config.h
-grep '^#define HAVE_SELINUX_SELINUX_H 1$' gdb/config.h
+#grep '^#define HAVE_LIBSELINUX 1$' gdb/config.h
+#grep '^#define HAVE_SELINUX_SELINUX_H 1$' gdb/config.h
 
 if [ "$fprofile" = "-fprofile" ]
 then
@@ -1350,6 +1350,9 @@ then
 fi
 
 %changelog
+* Sun Sep 20 2015 Liu Di <liudidi@gmail.com> - 7.10-23
+- 为 Magic 3.0 重建
+
 * Sun Sep 13 2015 Jan Kratochvil <jan.kratochvil@redhat.com> - 7.10-22.fc23
 - Fix gstack to use gdb from $PATH (bugreport by Frank Hirtz, RH BZ 1262589).
 

@@ -6,7 +6,7 @@
 
 Name:           ghc-%{pkg_name}
 Version:        0.3.5.6
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Sanitize untrusted HTML to prevent XSS attacks
 
 License:        BSD
@@ -83,6 +83,9 @@ cabal-tweak-flag network-uri False
 
 
 %changelog
+* Sun Sep 20 2015 Liu Di <liudidi@gmail.com> - 0.3.5.6-2
+- 为 Magic 3.0 重建
+
 * Sat Aug 08 2015 Ben Boeckel <mathstuf@gmail.com> - 0.3.5.6-1
 - update to 0.3.5.6
 

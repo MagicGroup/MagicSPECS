@@ -6,7 +6,7 @@
 
 Name:           ghc-%{pkg_name}
 Version:        3.0.4.5
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        Basic WAI handlers and middleware
 
 License:        MIT
@@ -147,6 +147,9 @@ This package provides the Haskell %{pkg_name} library development files.
 
 
 %changelog
+* Sun Sep 20 2015 Liu Di <liudidi@gmail.com> - 3.0.4.5-4
+- 为 Magic 3.0 重建
+
 * Mon Aug 24 2015 Ben Boeckel <mathstuf@gmail.com> - 3.0.4.5-3
 - rebuild for ghc-stringsearch bump
 

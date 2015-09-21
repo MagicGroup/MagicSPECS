@@ -4,7 +4,7 @@
 
 Name:           ghc-%{pkg_name}
 Version:        0.11.4
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Third party extensions for xmonad
 
 License:        BSD
@@ -95,6 +95,9 @@ This package provides the Haskell %{pkg_name} library development files.
 
 
 %changelog
+* Sun Sep 20 2015 Liu Di <liudidi@gmail.com> - 0.11.4-2
+- 为 Magic 3.0 重建
+
 * Sun Jul 19 2015 Ben Boeckel <mathstuf@gmail.com> - 0.11.4-1
 - Update to 0.11.4
 

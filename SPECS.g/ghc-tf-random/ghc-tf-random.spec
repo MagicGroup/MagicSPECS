@@ -4,7 +4,7 @@
 
 Name:           ghc-%{pkg_name}
 Version:        0.5
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        High-quality splittable pseudorandom number generator
 
 # main license is BSD
@@ -100,6 +100,9 @@ rm %{buildroot}/%{_pkgdocdir}/LICENSE
 
 
 %changelog
+* Sun Sep 20 2015 Liu Di <liudidi@gmail.com> - 0.5-4
+- 为 Magic 3.0 重建
+
 * Wed Jun 17 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.5-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

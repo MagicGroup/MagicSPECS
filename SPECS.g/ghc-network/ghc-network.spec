@@ -7,7 +7,7 @@
 Name:           ghc-%{pkg_name}
 # part of haskell-platform
 Version:        2.4.2.3
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Low-level networking interface
 
 License:        BSD
@@ -80,6 +80,9 @@ cp -f /usr/lib/rpm/config.{guess,sub} .
 
 
 %changelog
+* Sun Sep 20 2015 Liu Di <liudidi@gmail.com> - 2.4.2.3-3
+- 为 Magic 3.0 重建
+
 * Wed Jun 17 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.4.2.3-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

@@ -4,7 +4,7 @@
 
 Name:           ghc-%{pkg_name}
 Version:        0.3.6.6
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Fast searching, splitting and replacing of ByteStrings
 
 License:        BSD
@@ -61,12 +61,16 @@ This package provides the Haskell %{pkg_name} library development files.
 
 %files -f %{name}.files
 %doc LICENCE
+%{_docdir}/%{name}-%{version}/LICENSE
 
 
 %files devel -f %{name}-devel.files
 
 
 %changelog
+* Sun Sep 20 2015 Liu Di <liudidi@gmail.com> - 0.3.6.6-2
+- 为 Magic 3.0 重建
+
 * Fri Aug 07 2015 Ben Boeckel <mathstuf@gmail.com> - 0.3.6.6-1
 - update to 0.3.6.6
 - cblrpm refresh

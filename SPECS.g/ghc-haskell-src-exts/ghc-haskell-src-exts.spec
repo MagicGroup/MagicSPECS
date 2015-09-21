@@ -9,7 +9,7 @@
 
 Name:           ghc-%{pkg_name}
 Version:        1.16.0.1
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Library for manipulating Haskell source
 
 License:        BSD
@@ -100,6 +100,9 @@ files.
 
 
 %changelog
+* Sun Sep 20 2015 Liu Di <liudidi@gmail.com> - 1.16.0.1-3
+- 为 Magic 3.0 重建
+
 * Wed Jun 17 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.16.0.1-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

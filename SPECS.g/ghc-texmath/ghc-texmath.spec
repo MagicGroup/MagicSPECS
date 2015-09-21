@@ -8,7 +8,7 @@
 
 Name:           ghc-%{pkg_name}
 Version:        0.8.0.1
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        Conversion between formats used to represent mathematics
 
 License:        GPLv2+
@@ -96,6 +96,9 @@ LANG=en_US.utf8
 
 
 %changelog
+* Sun Sep 20 2015 Liu Di <liudidi@gmail.com> - 0.8.0.1-5
+- 为 Magic 3.0 重建
+
 * Mon Aug 31 2015 Peter Robinson <pbrobinson@fedoraproject.org> 0.8.0.1-4
 - Rebuild (aarch64 vector hashes)
 

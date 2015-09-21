@@ -6,7 +6,7 @@
 
 Name:           ghc-%{pkg_name}
 Version:        0.9.0
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        Haskell web framework inspired by Ruby's Sinatra
 
 License:        BSD
@@ -102,6 +102,9 @@ rm %{buildroot}%{ghc_pkgdocdir}/LICENSE
 
 
 %changelog
+* Sun Sep 20 2015 Liu Di <liudidi@gmail.com> - 0.9.0-5
+- 为 Magic 3.0 重建
+
 * Mon Sep  7 2015 Jens Petersen <petersen@redhat.com> - 0.9.0-4
 - use license macro
 
