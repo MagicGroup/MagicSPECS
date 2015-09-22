@@ -89,7 +89,7 @@ This package provides the Haskell %{pkg_name} library development files.
 
 %files -f %{name}.files
 %doc LICENSE 3rd-party-licenses
-
+%{_docdir}/%{name}-%{version}/LICENSE
 
 %files devel -f %{name}-devel.files
 %doc announcements TODO

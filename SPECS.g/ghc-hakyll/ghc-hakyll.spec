@@ -107,6 +107,7 @@ rm -r %{buildroot}%{_datadir}/%{pkg_name}-%{version}/example
 %files -f %{name}.files
 %doc LICENSE
 %{_datadir}/%{pkg_name}-%{version}
+%{_docdir}/%{name}-%{version}/LICENSE
 
 
 %files devel -f %{name}-devel.files

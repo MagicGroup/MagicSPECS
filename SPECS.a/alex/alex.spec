@@ -9,7 +9,7 @@
 Name:           alex
 # part of haskell-platform
 Version:        3.1.4
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Tool for generating lexical analysers in Haskell
 
 License:        BSD
@@ -164,6 +164,9 @@ fi
 
 
 %changelog
+* Mon Sep 21 2015 Liu Di <liudidi@gmail.com> - 3.1.4-3
+- 为 Magic 3.0 重建
+
 * Tue Jun 16 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.1.4-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

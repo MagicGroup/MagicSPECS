@@ -35,7 +35,7 @@ Version: 7.8.4
 #   (sometimes after a major release)
 # - minor release numbers for a branch should be incremented monotonically
 # xhtml moved from haskell-platform to ghc-7.8.3
-Release: 47%{?dist}
+Release: 49%{?dist}
 Summary: Glasgow Haskell Compiler
 
 License: %BSDHaskellReport
@@ -92,7 +92,7 @@ Patch26: ghc-config.mk.in-Enable-SMP-and-GHCi-support-for-Aarch64.patch
 # fedora ghc has been bootstrapped on
 # %{ix86} x86_64 ppc ppc64 armv7hl s390 s390x ppc64le aarch64
 # and retired arches: alpha sparcv9 armv5tel
-# see ghc_arches defined in /etc/rpm/macros.ghc-srpm by redhat-rpm-macros
+# see ghc_arches defined in /etc/rpm/macros.ghc-srpm by magic-rpm-macros
 ExcludeArch: sparc64
 Obsoletes: ghc-dph-base < 0.5, ghc-dph-base-devel < 0.5, ghc-dph-base-prof < 0.5
 Obsoletes: ghc-dph-par < 0.5, ghc-dph-par-devel < 0.5, ghc-dph-par-prof < 0.5
@@ -104,11 +104,7 @@ Obsoletes: ghc-feldspar-language < 0.4, ghc-feldspar-language-devel < 0.4, ghc-f
 %if %{undefined ghc_bootstrapping}
 BuildRequires: ghc-compiler = %{version}
 %endif
-%if 0%{?fedora} >= 20 || 0%{?rhel} >= 7
 BuildRequires: ghc-rpm-macros-extra
-%else
-BuildRequires: ghc-rpm-macros
-%endif
 BuildRequires: ghc-binary-devel
 BuildRequires: ghc-bytestring-devel
 BuildRequires: ghc-containers-devel
@@ -194,14 +190,6 @@ documention.
 
 # ghclibdir also needs ghc_version_override for bootstrapping (ghc-deps.sh)
 %global ghc_version_override %{version}
-
-# currently only F21+ ghc-rpm-macros has ghc.attr
-%if 0%{?fedora} < 21
-# needs ghc_version_override for bootstrapping
-%global _use_internal_dependency_generator 0
-%global __find_provides %{_rpmconfigdir}/ghc-deps.sh --provides %{buildroot}%{ghclibdir}
-%global __find_requires %{_rpmconfigdir}/ghc-deps.sh --requires %{buildroot}%{ghclibdir}
-%endif
 
 %global ghc_pkg_c_deps ghc-compiler = %{ghc_version_override}-%{release}
 
@@ -329,7 +317,7 @@ EOF
 
 %ifarch aarch64
 for i in $(find . -name config.guess -o -name config.sub) ; do
-    [ -f /usr/lib/rpm/redhat/$(basename $i) ] && %{__rm} -f $i && %{__cp} -fv /usr/lib/rpm/redhat/$(basename $i) $i
+    [ -f /usr/lib/rpm/magic/$(basename $i) ] && %{__rm} -f $i && %{__cp} -fv /usr/lib/rpm/magic/$(basename $i) $i
 done
 %endif
 %ifarch aarch64 armv7hl
@@ -589,6 +577,12 @@ fi
 
 
 %changelog
+* Tue Sep 22 2015 Liu Di <liudidi@gmail.com> - 7.8.4-49
+- 为 Magic 3.0 重建
+
+* Tue Sep 22 2015 Liu Di <liudidi@gmail.com> - 7.8.4-48
+- 为 Magic 3.0 重建
+
 * Sun Sep 20 2015 Liu Di <liudidi@gmail.com> - 7.8.4-47
 - 为 Magic 3.0 重建
 

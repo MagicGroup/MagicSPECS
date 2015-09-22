@@ -8,7 +8,7 @@
 
 Name:           %{pkg_name}
 Version:        1.13.2
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        Conversion between markup formats
 
 License:        GPLv2+
@@ -283,6 +283,9 @@ fi
 
 
 %changelog
+* Mon Sep 21 2015 Liu Di <liudidi@gmail.com> - 1.13.2-5
+- 为 Magic 3.0 重建
+
 * Mon Aug 31 2015 Peter Robinson <pbrobinson@fedoraproject.org> 1.13.2-4
 - Rebuild (aarch64 vector hashes)
 

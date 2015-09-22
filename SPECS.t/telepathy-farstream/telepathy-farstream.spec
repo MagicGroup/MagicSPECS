@@ -1,6 +1,6 @@
 Name:           telepathy-farstream
 Version:        0.6.0
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        Telepathy client library to handle Call channels
 
 Group:          System Environment/Libraries
@@ -89,6 +89,9 @@ make check
 
 
 %changelog
+* Tue Sep 22 2015 Liu Di <liudidi@gmail.com> - 0.6.0-5
+- 为 Magic 3.0 重建
+
 * Fri Feb 14 2014 Debarshi Ray <rishi@fedoraproject.org> - 0.6.0-4
 - Add %%check to run the upstream test suite on each build
 

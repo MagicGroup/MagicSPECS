@@ -53,7 +53,7 @@ This package provides the Haskell %{pkg_name} library development files.
 %install
 %ghc_lib_install
 rm -vf %{buildroot}%{_docdir}/%{name}/LICENSE
-rmdir -v %{buildroot}%{_docdir}/%{name}
+#rm -rfv %{buildroot}%{_docdir}/%{name}
 
 
 %check
@@ -72,7 +72,7 @@ rmdir -v %{buildroot}%{_docdir}/%{name}
 
 %files -f %{name}.files
 %license LICENSE
-
+%{_docdir}/%{name}-%{version}/LICENSE
 
 %files devel -f %{name}-devel.files
 

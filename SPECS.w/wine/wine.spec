@@ -4,7 +4,7 @@
 #%global _default_patch_fuzz 2
 
 Name:           wine
-Version:	1.7.11
+Version:	1.7.51
 Release:        1%{?dist}
 Summary:        A compatibility layer for windows applications
 
@@ -1568,6 +1568,9 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %endif
 
 %changelog
+* Tue Sep 22 2015 Liu Di <liudidi@gmail.com> - 1.7.51-1
+- 更新到 1.7.51
+
 * Sun Jan 26 2014 Andreas Bierfert <andreas.bierfert[AT]lowlatency.de>
 - 1.7.11-1
 - version upgrade

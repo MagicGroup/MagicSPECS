@@ -1,6 +1,6 @@
 Name:           javapackages-tools
 Version:        4.1.0
-Release:        4%{?dist}
+Release:        5%{?dist}
 
 Summary:        Macros and scripts for Java packaging support
 
@@ -178,6 +178,9 @@ rm -rf %{buildroot}%{_datadir}/fedora-review
 %doc LICENSE
 
 %changelog
+* Tue Sep 22 2015 Liu Di <liudidi@gmail.com> - 4.1.0-5
+- 为 Magic 3.0 重建
+
 * Tue Aug 12 2014 Liu Di <liudidi@gmail.com> - 4.1.0-4
 - 为 Magic 3.0 重建
 

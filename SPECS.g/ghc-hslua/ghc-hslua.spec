@@ -64,7 +64,7 @@ rm src/*.c src/*.h
 
 %files -f %{name}.files
 %doc COPYRIGHT
-%{_docdir}/%{name}-%{version}/LICENSE
+%{_docdir}/%{name}-%{version}/COPYRIGHT
 
 %files devel -f %{name}-devel.files
 

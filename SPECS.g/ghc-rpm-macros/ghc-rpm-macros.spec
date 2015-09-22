@@ -7,7 +7,7 @@
 
 Name:           ghc-rpm-macros
 Version:        1.4.15
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        RPM macros for building packages for GHC
 
 License:        GPLv3+
@@ -28,7 +28,7 @@ Source7:        ghc_bin.attr
 Source8:        ghc_lib.attr
 Requires:       ghc-srpm-macros
 # macros.ghc-srpm moved out from redhat-rpm-config-21
-Requires:       redhat-rpm-config > 20-1.fc21
+Requires:       magic-rpm-config > 3
 # for ghc_version
 Requires:       ghc-compiler
 %if %{undefined without_hscolour}
@@ -107,12 +107,13 @@ install -p -D -m 0755 %{SOURCE5} %{buildroot}/%{_bindir}/cabal-tweak-flag
 %{macros_dir}/macros.ghc-extra
 
 
-%if 0%{?fedora} >= 22
 %files -n ghc-obsoletes
-%endif
 
 
 %changelog
+* Tue Sep 22 2015 Liu Di <liudidi@gmail.com> - 1.4.15-5
+- 为 Magic 3.0 重建
+
 * Sun Sep 20 2015 Liu Di <liudidi@gmail.com> - 1.4.15-4
 - 为 Magic 3.0 重建
 

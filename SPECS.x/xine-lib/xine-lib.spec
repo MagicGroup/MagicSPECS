@@ -22,7 +22,7 @@
 Summary:        A multimedia engine
 Summary(zh_CN.UTF-8): 多媒体引擎
 Name:           xine-lib
-Version:	1.2.5
+Version:	1.2.6
 Release:        1%{?dist}
 License:        GPLv2+
 Group:          System Environment/Libraries
@@ -425,6 +425,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Tue Sep 22 2015 Liu Di <liudidi@gmail.com> - 1.2.6-1
+- 更新到 1.2.6
+
 * Mon Jun 09 2014 Liu Di <liudidi@gmail.com> - 1.2.5-1
 - 更新到 1.2.5
 

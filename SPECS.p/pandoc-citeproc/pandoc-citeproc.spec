@@ -7,7 +7,7 @@
 
 Name:           %{pkg_name}
 Version:        0.5
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        Citeproc support for pandoc
 
 License:        BSD
@@ -128,6 +128,9 @@ rm %{buildroot}%{ghc_pkgdocdir}/LICENSE
 
 
 %changelog
+* Mon Sep 21 2015 Liu Di <liudidi@gmail.com> - 0.5-5
+- 为 Magic 3.0 重建
+
 * Fri Sep 18 2015 Jens Petersen <petersen@redhat.com> - 0.5-4
 - use license macro
 

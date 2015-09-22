@@ -17,7 +17,7 @@ BuildRequires:  perl-devel pkgconfig openssl-devel
 BuildRequires:  cmake
 BuildRequires:  systemd-units
 Version: 2.6.1
-Release: 1%{?dist}
+Release: 2%{?dist}
 Url:            http://www.openwsman.org/
 License:        BSD
 Group:          Applications/System
@@ -363,6 +363,9 @@ rm -f /var/log/wsmand.log
 
 
 %changelog
+* Tue Sep 22 2015 Liu Di <liudidi@gmail.com> - 2.6.1-2
+- 为 Magic 3.0 重建
+
 * Thu Sep 17 2015 Liu Di <liudidi@gmail.com> - 2.6.1-1
 - 更新到 2.6.1
 

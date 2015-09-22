@@ -45,7 +45,7 @@ Version:        %{upstream_version}.2
 # - release can only be reset if all library versions get bumped simultaneously
 #   (eg for a major release)
 # - minor release numbers should be incremented monotonically
-Release:        5%{?dist}
+Release:        6%{?dist}
 Summary:        Standard Haskell distribution
 
 Group:          Development/Tools
@@ -264,6 +264,9 @@ rm %{buildroot}/%{_docdir}/ghc-%{name}*/LICENSE
 
 
 %changelog
+* Tue Sep 22 2015 Liu Di <liudidi@gmail.com> - 2014.2.0.0.2-6
+- 为 Magic 3.0 重建
+
 * Wed Jun 17 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2014.2.0.0.2-5
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

@@ -92,6 +92,7 @@ mv README.md{.new,}
 
 %files -f %{name}.files
 %doc LICENSE
+%{_docdir}/%{name}-%{version}/LICENSE
 
 
 %files devel -f %{name}-devel.files

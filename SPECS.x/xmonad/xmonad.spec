@@ -4,7 +4,7 @@
 
 Name:           %{pkg_name}
 Version:        0.11.1
-Release:        2%{?dist}
+Release:        5%{?dist}
 Summary:        A tiling window manager
 
 License:        BSD
@@ -206,6 +206,15 @@ rm %{buildroot}%{_docdir}/%{name}*/LICENSE
 
 
 %changelog
+* Tue Sep 22 2015 Liu Di <liudidi@gmail.com> - 0.11.1-5
+- 为 Magic 3.0 重建
+
+* Tue Sep 22 2015 Liu Di <liudidi@gmail.com> - 0.11.1-4
+- 为 Magic 3.0 重建
+
+* Tue Sep 22 2015 Liu Di <liudidi@gmail.com> - 0.11.1-3
+- 为 Magic 3.0 重建
+
 * Wed Aug  5 2015 Jens Petersen <petersen@redhat.com> - 0.11.1-2
 - use _JAVA_AWT_WM_NONREPARENTING=1 to handle Java apps correctly
   (#1061568, thanks to Erik Streb del Toro)

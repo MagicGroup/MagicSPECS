@@ -2,8 +2,8 @@
 Summary: GNU Emacs text editor
 Name: emacs
 Epoch: 1
-Version: 24.3
-Release: 14%{?dist}
+Version: 24.5
+Release: 1%{?dist}
 License: GPLv3+
 URL: http://www.gnu.org/software/emacs/
 Group: Applications/Editors
@@ -258,7 +258,7 @@ sitestartdir=%{site_start_d}
 
 Name: emacs
 Description: GNU Emacs text editor
-Version: %{epoch}:%{version}
+Version: 24.5
 EOF
 
 # Create macros.emacs RPM macro file
@@ -462,6 +462,12 @@ update-desktop-database &> /dev/null || :
 %dir %{_datadir}/emacs/site-lisp/site-start.d
 
 %changelog
+* Tue Sep 22 2015 Liu Di <liudidi@gmail.com> - 1:24.5-1
+- 更新到 24.5
+
+* Tue Sep 22 2015 Liu Di <liudidi@gmail.com> - 1:24.3-15
+- 为 Magic 3.0 重建
+
 * Mon Feb 03 2014 Petr Hracek <phracek@redhat.com> - 1:24.3-14
 - replace sysconfdir/rpm with rpmconfigdir/macros.d
 

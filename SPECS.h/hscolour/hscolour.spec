@@ -12,7 +12,7 @@
 
 Name:           %{pkg_name}
 Version:        1.20.3
-Release:        12%{?dist}
+Release:        13%{?dist}
 Summary:        Colorize Haskell code
 
 # the source does not state intended GPL version
@@ -76,7 +76,7 @@ This package provides the Haskell %{name} library development files.
 %doc LICENCE-GPL
 %{_bindir}/HsColour
 %{_datadir}/%{name}-%{version}
-
+%{_docdir}/%{name}-%{version}/LICENCE-GPL
 
 %files -n ghc-%{name} -f ghc-%{name}.files
 %doc LICENCE-GPL
@@ -86,6 +86,9 @@ This package provides the Haskell %{name} library development files.
 
 
 %changelog
+* Tue Sep 22 2015 Liu Di <liudidi@gmail.com> - 1.20.3-13
+- 为 Magic 3.0 重建
+
 * Wed Jun 17 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.20.3-12
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

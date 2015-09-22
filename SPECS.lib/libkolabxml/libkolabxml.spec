@@ -46,7 +46,7 @@
 
 Name:           libkolabxml
 Version: 1.0.3
-Release:        10%{?dist}
+Release:        11%{?dist}
 Summary:        Kolab XML format collection parser library
 
 Group:          System Environment/Libraries
@@ -271,6 +271,9 @@ popd
 %endif
 
 %changelog
+* Tue Sep 22 2015 Liu Di <liudidi@gmail.com> - 1.0.3-11
+- 为 Magic 3.0 重建
+
 * Fri Sep 11 2015 Liu Di <liudidi@gmail.com> - 1.0.3-10
 - 为 Magic 3.0 重建
 

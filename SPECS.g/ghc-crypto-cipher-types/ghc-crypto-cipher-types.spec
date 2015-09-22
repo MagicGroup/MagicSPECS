@@ -60,6 +60,7 @@ rm $RPM_BUILD_ROOT%{_datadir}/%{pkg_name}-%{version}/README.md
 
 %files -f %{name}.files
 %doc LICENSE
+%{_docdir}/%{name}-%{version}/LICENSE
 
 
 %files devel -f %{name}-devel.files

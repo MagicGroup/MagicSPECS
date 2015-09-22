@@ -4,7 +4,7 @@
 
 Name:           ghc-%{pkg_name}
 Version:        1.6.8.2
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        Tools for working with derived Show instances and generic inspection of values
 
 License:        MIT
@@ -57,8 +57,8 @@ This package provides the Haskell %{pkg_name} library development files.
 
 %install
 %ghc_lib_install
-rm -v %{buildroot}%{_docdir}/%{name}/LICENSE
-rmdir -v %{buildroot}%{_docdir}/%{name}
+rm -fv %{buildroot}%{_docdir}/%{name}/LICENSE
+rm -rfv %{buildroot}%{_docdir}/%{name}
 
 %global _style_dir %{buildroot}%{_datadir}/%{pkg_name}-%{version}/style
 
@@ -83,13 +83,16 @@ ln -s %{_webassetdir}/jquery/1/jquery.min.js %{_style_dir}/jquery.js
 %files -f %{name}.files
 %license LICENSE
 %{_datadir}/%{pkg_name}-%{version}/
-
+%{_docdir}/%{name}-%{version}/LICENSE
 
 %files devel -f %{name}-devel.files
 %{_bindir}/ppsh
 
 
 %changelog
+* Tue Sep 22 2015 Liu Di <liudidi@gmail.com> - 1.6.8.2-4
+- 为 Magic 3.0 重建
+
 * Sun Sep 20 2015 Liu Di <liudidi@gmail.com> - 1.6.8.2-3
 - 为 Magic 3.0 重建
 

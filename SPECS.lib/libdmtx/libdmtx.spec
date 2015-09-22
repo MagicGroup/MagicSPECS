@@ -3,7 +3,7 @@
 
 Name:           libdmtx
 Version:        0.7.2
-Release:        12%{?dist}
+Release:        13%{?dist}
 Summary:        Library for working with Data Matrix 2D bar-codes
 Summary(zh_CN.UTF-8): 处理数据矩阵 2D 条形码的库
 
@@ -240,6 +240,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Tue Sep 22 2015 Liu Di <liudidi@gmail.com> - 0.7.2-13
+- 为 Magic 3.0 重建
+
 * Tue Jul 15 2014 Liu Di <liudidi@gmail.com> - 0.7.2-12
 - 为 Magic 3.0 重建
 

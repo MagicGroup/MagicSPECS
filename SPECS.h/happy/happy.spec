@@ -6,7 +6,7 @@
 Name:           happy
 # part of haskell-platform
 Version:        1.19.5
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        Parser Generator for Haskell
 
 License:        BSD
@@ -167,6 +167,9 @@ fi
 
 
 %changelog
+* Mon Sep 21 2015 Liu Di <liudidi@gmail.com> - 1.19.5-4
+- 为 Magic 3.0 重建
+
 * Wed Jun 17 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.19.5-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

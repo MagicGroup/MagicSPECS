@@ -62,6 +62,7 @@ rm -r cbits
 
 %files -f %{name}.files
 %doc LICENSE
+%{_docdir}/%{name}-%{version}/LICENSE
 
 
 %files devel -f %{name}-devel.files

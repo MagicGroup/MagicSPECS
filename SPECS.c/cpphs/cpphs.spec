@@ -4,7 +4,7 @@
 
 Name:           %{pkg_name}
 Version:        1.18.9
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        A liberalised C pre-processor for Haskell
 
 License:        GPL+ and LGPLv2+ or BSD
@@ -91,6 +91,9 @@ install -D -p -m 0644 docs/cpphs.1 %{buildroot}%{_mandir}/man1/%{name}.1
 
 
 %changelog
+* Mon Sep 21 2015 Liu Di <liudidi@gmail.com> - 1.18.9-3
+- 为 Magic 3.0 重建
+
 * Wed Jun 17 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.18.9-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

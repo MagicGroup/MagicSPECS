@@ -67,7 +67,7 @@ This package provides the Haskell %{pkg_name} library development files.
 
 %files -f %{name}.files
 %doc LICENSE
-
+%{_docdir}/%{name}-%{version}/LICENSE
 
 %files devel -f %{name}-devel.files
 %doc CHANGES README.md

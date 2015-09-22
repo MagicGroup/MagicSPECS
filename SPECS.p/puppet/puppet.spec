@@ -18,8 +18,8 @@
 %global pending_upgrade_file %{pending_upgrade_path}/upgrade_pending
 
 Name:           puppet
-Version:        4.2.1
-Release:        3%{?dist}
+Version:	4.2.2
+Release:	1%{?dist}
 Summary:        A network tool for managing many disparate systems
 License:        ASL 2.0
 URL:            http://puppetlabs.com
@@ -389,6 +389,9 @@ exit 0
 rm -rf %{buildroot}
 
 %changelog
+* Tue Sep 22 2015 Liu Di <liudidi@gmail.com> - 4.2.2-1
+- 更新到 4.2.2
+
 * Sun Aug 09 2015 Liu Di <liudidi@gmail.com> - 4.2.1-3
 - 为 Magic 3.0 重建
 

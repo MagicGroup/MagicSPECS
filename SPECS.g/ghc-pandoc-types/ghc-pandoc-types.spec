@@ -64,7 +64,7 @@ This package provides the Haskell %{pkg_name} library development files.
 
 %files -f %{name}.files
 %doc COPYING
-
+%{_docdir}/%{name}-%{version}/COPYING
 
 %files devel -f %{name}-devel.files
 

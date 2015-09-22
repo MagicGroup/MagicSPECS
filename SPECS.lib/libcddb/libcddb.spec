@@ -2,7 +2,7 @@ Summary:	Library (C API) for accessing CDDB servers
 Summary(zh_CN.UTF-8): 访问 CDDB 服务的库 (C API)
 Name:		libcddb
 Version:	1.3.2
-Release:	9%{?dist}
+Release:	10%{?dist}
 License: 	LGPLv2+
 Group: 		System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
@@ -84,6 +84,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Tue Sep 22 2015 Liu Di <liudidi@gmail.com> - 1.3.2-10
+- 为 Magic 3.0 重建
+
 * Fri Jul 11 2014 Liu Di <liudidi@gmail.com> - 1.3.2-9
 - 为 Magic 3.0 重建
 

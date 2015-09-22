@@ -67,6 +67,7 @@ install -p -m 0644 docimages/* %{buildroot}%{ghcpkgdocdir}
 
 %files -f %{name}.files
 %doc LICENSE
+%{_docdir}/%{name}-%{version}/LICENSE
 
 
 %files devel -f %{name}-devel.files

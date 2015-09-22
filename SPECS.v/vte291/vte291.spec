@@ -1,7 +1,7 @@
 %global apiver 2.91
 
 Name:           vte291
-Version:	0.41.90
+Version:	0.42.0
 Release:        1%{?dist}
 Summary:        Terminal emulator library
 
@@ -99,6 +99,9 @@ rm -f $RPM_BUILD_ROOT%{_libdir}/*.la
 %{_sysconfdir}/profile.d/vte.sh
 
 %changelog
+* Tue Sep 22 2015 Liu Di <liudidi@gmail.com> - 0.42.0-1
+- 更新到 0.42.0
+
 * Sat Sep 19 2015 Liu Di <liudidi@gmail.com> - 0.41.90-1
 - 更新到 0.41.90
 

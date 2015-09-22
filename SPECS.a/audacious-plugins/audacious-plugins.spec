@@ -1,6 +1,6 @@
 %define name audacious-plugins
 %define summary Audacious-Plugins
-%define version 3.6
+%define version 3.6.2
 %define testver %{nil}
 %if 0%{testver}
 %define release 0.%{testver}.1%{?dist}.3
@@ -13,8 +13,8 @@
 Name:		%{name}
 Summary:	%{summary}
 Summary(zh_CN.UTF-8):	Audacious 的插件
-Version:	%{version}
-Release:	%{release}
+Version:	3.6.2
+Release:	1%{?dist}
 %if 0%{testver}
 Source:		http://distfiles.atheme.org/%{name}-%{version}-%{testver}.tar.bz2
 %else
@@ -63,6 +63,9 @@ rm -rf %{buildroot} %{_builddir}/%{buildsubdir}
 %{_datadir}/locale/*
 
 %changelog
+* Tue Sep 22 2015 Liu Di <liudidi@gmail.com> - 3.6.2-1
+- 更新到 3.6.2
+
 * Sun Mar 29 2015 Liu Di <liudidi@gmail.com> - 3.6-1
 - 更新到 3.6
 

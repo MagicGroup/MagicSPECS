@@ -1,7 +1,7 @@
  
 Name: xvidcap
 Version: 1.1.7
-Release: 5%{?dist}
+Release: 6%{?dist}
 Summary: xvidcap is a screen videos capture
 Summary(zh_CN.UTF-8): 屏幕录像软件 
 License: GPL 
@@ -68,6 +68,9 @@ rm -rf %{buildroot} %{_builddir}/%{buildsubdir}
 %{_docdir}/*
 
 %changelog
+* Tue Sep 22 2015 Liu Di <liudidi@gmail.com> - 1.1.7-6
+- 为 Magic 3.0 重建
+
 * Fri Jul 05 2013 Liu Di <liudidi@gmail.com> - 1.1.7-5
 - 为 Magic 3.0 重建
 

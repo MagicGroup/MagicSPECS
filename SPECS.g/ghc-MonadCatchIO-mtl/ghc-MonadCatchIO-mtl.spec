@@ -63,7 +63,7 @@ cabal-tweak-dep-ver MonadCatchIO-transformers '=0.3.1.0' '=0.3.1.*'
 
 %files -f %{name}.files
 %doc LICENSE
-
+%{_docdir}/%{name}-%{version}/LICENSE
 
 %files devel -f %{name}-devel.files
 

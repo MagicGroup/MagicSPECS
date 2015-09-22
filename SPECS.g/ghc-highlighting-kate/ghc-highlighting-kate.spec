@@ -88,7 +88,7 @@ LANG=en_US.utf8
 
 %files -f %{name}.files
 %doc LICENSE
-
+%{_docdir}/%{name}-%{version}/LICENSE
 
 %files devel -f %{name}-devel.files
 %doc README.md

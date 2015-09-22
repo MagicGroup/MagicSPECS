@@ -71,7 +71,7 @@ This package provides the Haskell %{pkg_name} library development files.
 
 %files -f %{name}.files
 %doc COPYRIGHT LGPL-2.1
-
+%{_docdir}/%{name}-%{version}/COPYRIGHT
 
 %files devel -f %{name}-devel.files
 %doc README

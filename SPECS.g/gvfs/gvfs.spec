@@ -1,7 +1,7 @@
 Summary: Backends for the gio framework in GLib
 Name: gvfs
-Version:	1.21.4
-Release: 5%{?dist}
+Version:	1.26.0
+Release: 1%{?dist}
 License: GPLv3 and LGPLv2+
 Group: System Environment/Libraries
 URL: http://www.gtk.org
@@ -355,6 +355,9 @@ killall -USR1 gvfsd >&/dev/null || :
 
 
 %changelog
+* Tue Sep 22 2015 Liu Di <liudidi@gmail.com> - 1.26.0-1
+- 更新到 1.26.0
+
 * Mon Jul 21 2014 Liu Di <liudidi@gmail.com> - 1.21.4-5
 - 更新到 1.21.4
 

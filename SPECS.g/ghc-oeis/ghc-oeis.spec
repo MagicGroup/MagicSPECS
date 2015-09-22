@@ -59,7 +59,7 @@ rm -r %{buildroot}%{_datadir}/%{pkg_name}-%{version}
 
 %files -f %{name}.files
 %doc LICENSE
-
+%{_docdir}/%{name}-%{version}/LICENSE
 
 %files devel -f %{name}-devel.files
 %doc README example
