@@ -1,0 +1,19 @@
+--- cabal-install-1.18.0.4/Distribution/Client/Update.hs~	2014-05-24 15:16:45.000000000 +0900
++++ cabal-install-1.18.0.4/Distribution/Client/Update.hs	2014-06-01 23:29:38.688667487 +0900
+@@ -31,7 +31,7 @@
+ import Distribution.Version
+          ( anyVersion, withinRange )
+ import Distribution.Simple.Utils
+-         ( writeFileAtomic, warn, notice )
++         ( writeFileAtomic, warn, notice, info )
+ import Distribution.Verbosity
+          ( Verbosity )
+ 
+@@ -80,6 +80,6 @@
+         , version `withinRange` preferredVersionRange ]
+ 
+   unless (null laterPreferredVersions) $
+-    notice verbosity $
++    info verbosity $
+          "Note: there is a new version of cabal-install available.\n"
+       ++ "To upgrade, run: cabal install cabal-install"
