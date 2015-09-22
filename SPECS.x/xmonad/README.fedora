@@ -1,0 +1,34 @@
+= Packaging =
+xmonad in Fedora is provided by 3 subpackages:
+
+- xmonad-basic: just the base window manager and X session files
+- xmonad: additionally installs the devel library files needed to configure and customize xmonad
+- xmonad-mate: additionally includes a mate session file and requires mate-session-manager and terminal
+
+= Starting from GDM =
+xmonad can be started from GDM by selecting "xmonad" in the session menu.
+
+For MATE support please install xmonad-mate
+and select "xmonad MATE" in GDM's session menu.
+
+= xmonad-start =
+Fedora's xmonad-start script starts up xmonad and
+displays a welcome dialog when initially run.
+
+With the xmonad, xmonad-config, or xmonad packages installed,
+xmonad-start will create a basic "~/.xmonad/xmonad.hs" file
+configured for desktops, and pre-compile it if necessary.
+
+= Configuration references =
+- xmonad man-page
+- /usr/share/doc/xmonad-$version/xmonad.hs (default upstream configuration)
+- /usr/share/doc/ghc/html/libraries/xmonad-contrib-$version/index.html
+and online:
+- XMonad wiki: http://www.haskell.org/haskellwiki/Xmonad
+- http://hackage.haskell.org/packages/archive/xmonad-contrib/latest/doc/html/XMonad-Doc.html
+  (detailed configuration information and examples)
+- http://xmonad.org/ website
+
+= Bluetile =
+New users may find the Bluetile window manager built on top of
+xmonad-contrib a gentler introduction to xmonad and tiling.

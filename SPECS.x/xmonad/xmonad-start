@@ -1,0 +1,46 @@
+#!/bin/sh
+
+XMONAD_DIR=$HOME/.xmonad
+
+#  if no user configuration
+if [ ! -d $XMONAD_DIR ]; then
+    # add a desktop friendly config if possible
+    if [ -r /usr/share/xmonad/xmonad.hs ]; then
+	mkdir $XMONAD_DIR
+	cp -p /usr/share/xmonad/xmonad.hs $XMONAD_DIR
+    else
+	INFO="Install xmonad, xmonad-mate, or xmonad-config to customize xmonad."
+	echo "xmonad-start: $INFO"
+    fi
+else
+    XMONAD_CUSTOM=$XMONAD_DIR/xmonad-$(uname -i)-linux
+    # recompile if broken shared libs after an upgrade
+    if [ -r $XMONAD_DIR/xmonad.hs -a -x $XMONAD_CUSTOM ]; then
+	if ldd $XMONAD_CUSTOM | grep -q "not found"; then
+	    xmonad --recompile
+	fi
+    fi
+fi
+
+XMONADSTART_CACHEDIR=$HOME/.cache/xmonad-start
+NO_DIALOG_FILE=$HOME/.cache/xmonad-start/no-startup-dialog
+if [ -x "/usr/bin/zenity" -a ! -r "$NO_DIALOG_FILE" ]; then
+    if ! zenity --question --text="To open an terminal press: Alt-Shift-Return\n\nFor more keybindings and info see manpage: man xmonad\n\n${INFO:+$INFO\n\n}\nShow this dialog next time?"; then
+	mkdir -p $XMONADSTART_CACHEDIR
+	touch $NO_DIALOG_FILE
+    fi
+fi
+
+if [ -r $XMONAD_DIR/session ]; then
+    sh $XMONAD_DIR/session
+fi
+
+if [ -n "$*" ]; then
+    if [ -d $XMONAD_DIR -a "$(ls -t $XMONAD_DIR | head -1)" = "xmonad.hs" ]; then
+	xmonad --recompile
+    fi
+    xmonad &
+    $*
+else
+    xmonad
+fi
