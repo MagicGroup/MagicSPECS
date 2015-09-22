@@ -449,7 +449,7 @@ License: GPLv2 and Redistributable, no modification permitted
 URL: http://www.kernel.org/
 Version: 3.18.21
 #Release: %{pkg_release}
-Release: 1%{?dist}
+Release: 2%{?dist}
 # DO NOT CHANGE THE 'ExclusiveArch' LINE TO TEMPORARILY EXCLUDE AN ARCHITECTURE BUILD.
 # SET %%nobuildarches (ABOVE) INSTEAD
 # 不要更改下面一行，通过设置 %%nobuildarches (在上面) 来代替
