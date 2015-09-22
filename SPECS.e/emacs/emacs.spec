@@ -35,8 +35,6 @@ Patch15: emacs-pdf-default.patch
 Patch100: emacs-24.3-hunspell.patch
 # Fix for emacs bug #827033
 Patch101: emacs-24.3-hunspell.2.patch
-# Fix for mips64el use 64bit cert.o with mutillib.
-Patch200: emacs-mips64-fix-CRT_DIR.patch
 
 BuildRequires: atk-devel cairo-devel freetype-devel fontconfig-devel dbus-devel giflib-devel glibc-devel libpng-devel
 BuildRequires: libjpeg-devel libtiff-devel libX11-devel libXau-devel libXdmcp-devel libXrender-devel libXt-devel
@@ -182,7 +180,6 @@ packages that add functionality to Emacs.
 
 %patch100 -p1 -b .hunspell
 %patch101 -p1 -b .hunspell.2
-%patch200 -p1 -b .mips64
 
 # We prefer our emacs.desktop file
 cp %SOURCE1 etc/emacs.desktop
