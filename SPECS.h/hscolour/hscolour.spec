@@ -5,15 +5,20 @@
 # link statically to Haskell libs for easier ghc version bootstrapping
 %global ghc_without_dynamic 1
 
+# use following to bootstrap for a new arch:
+#%%{?ghc_bootstrap}
+#%%global ghc_bootstrapping 1
+#%%global without_hscolour 1
+
 Name:           %{pkg_name}
 Version:        1.20.3
-Release:        10%{?dist}
+Release:        12%{?dist}
 Summary:        Colorize Haskell code
 
 # the source does not state intended GPL version
 License:        GPL+
-URL:            http://hackage.haskell.org/package/%{name}
-Source0:        http://hackage.haskell.org/packages/archive/%{name}/%{version}/%{name}-%{version}.tar.gz
+Url:            https://hackage.haskell.org/package/%{name}
+Source0:        https://hackage.haskell.org/package/%{name}-%{version}/%{name}-%{version}.tar.gz
 
 BuildRequires:  ghc-Cabal-devel
 BuildRequires:  ghc-rpm-macros
@@ -22,10 +27,10 @@ BuildRequires:  ghc-containers-devel
 # End cabal-rpm deps
 
 %description
-HsColour is a tool to colorize Haskell code.  It has following output formats:
-ANSI terminal codes (optionally XTerm-256colour codes), HTML 3.2 with
-<font> tags, HTML 4.01 with CSS (optionally  mouseover annotations),
-XHTML 1.0 with inline CSS styling, LaTeX, and mIRC chat codes.
+Hscolour is a Haskell tool to colourize Haskell code. It currently has
+six output formats: ANSI terminal codes (optionally XTerm-256colour codes),
+HTML 3.2 with <font> tags, HTML 4.01 with CSS, HTML 4.01 with CSS and mouseover
+annotations, XHTML 1.0 with inline CSS styling, LaTeX, and mIRC chat codes.
 
 
 %package -n ghc-%{name}
@@ -37,10 +42,11 @@ This package provides the Haskell %{name} shared library.
 
 %package -n ghc-%{name}-devel
 Summary:        Haskell %{name} library development files
+Provides:       ghc-%{name}-static = %{version}-%{release}
 Requires:       ghc-compiler = %{ghc_version}
 Requires(post): ghc-compiler = %{ghc_version}
 Requires(postun): ghc-compiler = %{ghc_version}
-Requires:       ghc-%{name} = %{version}-%{release}
+Requires:       ghc-%{name}%{?_isa} = %{version}-%{release}
 
 %description -n ghc-%{name}-devel
 This package provides the Haskell %{name} library development files.
@@ -68,7 +74,7 @@ This package provides the Haskell %{name} library development files.
 
 %files
 %doc LICENCE-GPL
-%attr(755,root,root) %{_bindir}/HsColour
+%{_bindir}/HsColour
 %{_datadir}/%{name}-%{version}
 
 
@@ -77,11 +83,17 @@ This package provides the Haskell %{name} library development files.
 
 
 %files -n ghc-%{name}-devel -f ghc-%{name}-devel.files
-%{_datadir}/doc/hscolour-%{version}/LICENCE-GPL
+
 
 %changelog
-* Wed Jun 18 2014 Liu Di <liudidi@gmail.com> - 1.20.3-10
-- 为 Magic 3.0 重建
+* Wed Jun 17 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.20.3-12
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
+
+* Mon Jan 26 2015 Jens Petersen <petersen@fedoraproject.org> - 1.20.3-11
+- cblrpm refresh
+
+* Sat Aug 16 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.20.3-10
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
 
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.20.3-9
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
