@@ -1,0 +1,54 @@
+--- haskell-platform-2014.2.0.0/haskell-platform.cabal.orig	2014-08-01 04:03:34.000000000 +0900
++++ haskell-platform-2014.2.0.0/haskell-platform.cabal	2015-04-03 19:11:23.516593508 +0900
+@@ -1,5 +1,5 @@
+ name:                haskell-platform
+-version:             2014.2.0.0
++version:             2014.2.0.0.2
+ homepage:            http://haskell.org/platform
+ license:             BSD3
+ license-file:        LICENSE
+@@ -32,7 +32,7 @@
+ library
+   if flag(include-ghc-depends)
+     build-depends:
+-      ghc ==7.8.3,
++      ghc ==7.8.4,
+ 
+       -- Core libraries: provided by every ghc installation
+       -- We don't include "non-API" packages here.
+@@ -65,7 +65,7 @@
+     -- Libraries in addition to what GHC provides:
+     -- Note: newer versions of cgi need monad-catchio.
+       async                          ==2.0.1.5,
+-      attoparsec                     ==0.10.4.0,
++      attoparsec                     ==0.11.3.4,
+       case-insensitive               ==1.1.0.3,
+       fgl                            ==5.5.0.1,
+       GLUT                           ==2.5.1.1,
+@@ -82,7 +82,7 @@
+       parallel                       ==3.2.0.4,
+       parsec                         ==3.1.5,
+       primitive                      ==0.5.2.1,
+-      QuickCheck                     ==2.6,
++      QuickCheck                     ==2.7.6,
+       random                         ==1.0.1.1,
+       regex-base                     ==0.93.2,
+       regex-compat                   ==0.95.1,
+@@ -90,7 +90,7 @@
+       split                          ==0.2.2,
+       stm                            ==2.4.2,
+       syb                            ==0.4.1,
+-      text                           ==1.1.0.0,
++      text                           ==1.1.1.3,
+       unordered-containers           ==0.2.4.0,
+       vector                         ==0.10.9.1,
+       xhtml                          ==3000.2.1,
+@@ -103,7 +103,7 @@
+   -- Depending on programs does not work, they are not registered
+   -- We list them to help distro packaging.
+   build-tools:
+-      cabal-install                  ==1.18.0.5,
++--      cabal-install                  ==1.18.0.5,
+       alex                           ==3.1.3,
+       happy                          ==1.19.4,
+       hscolour                       ==1.20.3
