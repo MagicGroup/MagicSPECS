@@ -43,7 +43,6 @@ source/libs/libpaper* \
 source/libs/icu* \
 source/libs/graphite2* \
 source/libs/potrace* \
-source/libs/luajit* \
 source/libs/freetype/* \
 source/texk/texlive/w32_wrapper \
 source/utils/t1utils* \

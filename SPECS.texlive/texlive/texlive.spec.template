@@ -1,6 +1,6 @@
-%global source_date 20140525_r34255
-%global tl_version 2014
-%global tl_rel 12
+%global source_date 20150728_r37987
+%global tl_version 2015
+%global tl_rel 7
 %global tl_release %{tl_rel}.%{source_date}%{?dist}
 %global tl_noarch_release %{tl_rel}%{?dist}
 %global source_name texlive-%{source_date}-source
@@ -25,7 +25,7 @@
 Name: texlive
 Version: %{tl_version}
 Release: %{tl_release}
-Epoch: 4
+Epoch: 5
 Summary: TeX formatting system
 Group: Applications/Publishing
 License: Artistic 2.0 and GPLv2 and GPLv2+ and LGPLv2+ and LPPL and MIT and Public Domain and UCD and Utopia
@@ -33,7 +33,7 @@ URL: http://tug.org/texlive/
 BuildRequires: xz libXaw-devel libXi-devel ncurses-devel bison flex file perl(Digest::MD5) texinfo gcc-c++
 BuildRequires: gd-devel teckit-devel freetype-devel libpng-devel t1lib-devel zlib-devel poppler-devel t1utils
 BuildRequires: zziplib-devel libicu-devel cairo-devel harfbuzz-devel pixman-devel graphite2-devel ghostscript-devel
-BuildRequires: libpaper-devel potrace-devel
+BuildRequires: libpaper-devel potrace-devel autoconf automake libtool
 Requires: texlive-scheme-basic
 Requires: texlive-collection-latexrecommended
 Requires: tex-kpathsea, tex-tetex
@@ -53,8 +53,10 @@ Obsoletes: texlive-texmf-errata-latex < %{tl_version}, texlive-texmf-errata-xete
 Conflicts: texlive-dvips = 2007
 Patch1: tl-kpfix.patch
 Patch2: tl-format.patch
-Patch3: texlive-20140525-selinux-context.patch
+Patch3: texlive-20150728-selinux-context.patch
+Patch4: texlive-fix-system-teckit.patch
 Patch100:  texlive-bz979176.patch
+Patch101: etex-addlanguage-fix-bz1215257.patch
 Source0: %{source_name}.tar.xz
 Source1: tl2rpm.c
 Source2: texlive.tlpdb
@@ -65,6 +67,7 @@ Source6: texlive.spec.template
 Source7: co_source
 Source8: co_archive
 Source9: b_one_srpm
+Source10: macros.texlive
 %include _sources.spec
 
 %description
@@ -86,27 +89,27 @@ Requires(pre): coreutils
 %description base
 TeX Live licenses shipped in text form.
 
-%package kpathsea-lib
-Summary: Path searching library for TeX-related files
+%package lib
+Summary: Shared libraries for TeX-related files
+Provides: texlive-kpathsea-lib = %{epoch}:%{version}-%{release}
+Provides: texlive-kpathsea-lib%{_isa} = %{epoch}:%{version}-%{release}
+Obsoletes: texlive-kpathsea-lib < %{version}
 %include _obsoletes.spec
 
-%description kpathsea-lib
-The library is at the centre of pretty much all Unix-based TeX
-executable. It is no longer distributed separately, but rather
-consititutes a central part of the sources of the TeX-live
-distribution.
+%description lib
+TeX specific shared libraries.
 
-%package kpathsea-lib-devel
-Summary: Path searching library for TeX-related files
-Requires: %{name}-kpathsea-lib%{?_isa}
-Provides: kpathsea-devel = %{version}
+%package lib-devel
+Summary: Development files for TeX specific shared libraries
+Requires: %{name}-lib%{?_isa}
+Provides: kpathsea-devel = %{epoch}:%{version}
 Obsoletes: kpathsea-devel < %{version}
+Provides: texlive-kpathsea-lib-devel = %{epoch}:%{version}-%{release}
+Provides: texlive-kpathsea-lib-devel%{_isa} = %{epoch}:%{version}-%{release}
+Obsoletes: texlive-kpathsea-lib-devel < %{version}
 
-%description kpathsea-lib-devel
-The library is at the centre of pretty much all Unix-based TeX
-executable. It is no longer distributed separately, but rather
-consititutes a central part of the sources of the TeX-live
-distribution.
+%description lib-devel
+Development files for TeX specific shared libraries.
 
 %include _packages.spec
 
@@ -117,11 +120,15 @@ xz -dc %{SOURCE0} | tar x
 %patch1 -p0
 %patch2 -p0
 %patch3 -p0
+%patch4 -p0
 # security fix for bz#979176
 %patch100 -p0
 for l in `unxz -c %{SOURCE3} | tar t`; do
 	ln -s %{_texdir}/licenses/$l $l
 done
+pushd source
+./reautoconf
+popd
 
 %build
 export CFLAGS="$RPM_OPT_FLAGS -fno-strict-aliasing -Werror=format-security"
@@ -148,6 +155,9 @@ cd work
 --with-system-harfbuzz \
 --with-system-graphite2 \
 --with-system-libgs \
+--with-system-pixman \
+--with-system-libpaper \
+--with-system-potrace \
 --with-pic \
 --with-xdvi-x-toolkit=xaw \
 --disable-xindy --disable-xindy-docs --disable-xindy-make-rules \
@@ -160,8 +170,10 @@ cd work
 --disable-biber \
 --disable-ptexenc \
 --disable-largefile \
---disable-rpath \
---disable-luajittex
+%ifarch ppc %{power64} s390 s390x aarch64
+--disable-luajittex --disable-mfluajit \
+%endif
+--disable-rpath
 
 # disable rpath
 for i in `find . -name libtool`; do
@@ -224,10 +236,11 @@ for i in *; do
 done
 popd
 
-# install kpathsea shared libs, nuke static ones
+# install shared libs, nuke static ones
 rm -rf %{buildroot}%{_libdir}
 mkdir -p %{buildroot}%{_libdir}
-cp -d source/inst/lib/* %{buildroot}%{_libdir}
+cp -d source/inst/lib/*.so* %{buildroot}%{_libdir}
+cp -a source/inst/lib/pkgconfig %{buildroot}%{_libdir}
 rm -f %{buildroot}%{_libdir}/*.a
 rm -f %{buildroot}%{_libdir}/*.la
 
@@ -254,8 +267,8 @@ rm -f man
 [ ! -e texlua ] && ln -s luatex texlua
 [ ! -e texluac ] && ln -s luatex texluac
 # remove binaries we don't ship
-for i in physe phyzzx installfont-tl pdfthumb ppower4 tcdialog latexmk texdiff songidx wofm2opl wopl2ofm wovf2ovp \
-paperconf luajittex texluajit texluajitc lollipop lualollipop mkpic xelollipop contextjit mtxrunjit; do
+for i in physe phyzzx installfont-tl pdfthumb ppower4 tcdialog latexmk texdiff songidx inimflua inimfluajit mflua mflua-nowin mfluajit mfluajit-nowin \
+paperconf; do
 	rm -f $i
 	rm -f %{buildroot}%{_datadir}/texlive/texmf-dist/doc/man/man1/$i.*
 done
@@ -272,10 +285,13 @@ for i in updmap e2pall; do
 	rm -f $i
 	ln -s /usr/share/texlive/texmf-dist/scripts/texlive/$i.pl $i
 done
-for i in fmtutil fmtutil-sys texconfig texconfig-sys texconfig-dialog texlinks; do
+for i in fmtutil-sys texconfig texconfig-sys texconfig-dialog texlinks; do
 	rm -f $i
 	ln -s /usr/share/texlive/texmf-dist/scripts/texlive/$i.sh $i
 done
+
+rm -f fmtutil
+ln -s /usr/share/texlive/texmf-dist/scripts/texlive/fmtutil.pl fmtutil
 rm -f texmfstart
 ln -s /usr/share/texlive/texmf-dist/scripts/context/ruby/texmfstart.rb texmfstart
 rm -f texdoctk
@@ -333,16 +349,7 @@ sed -i -e 's|^TEXMFLOCAL.*|TEXMFLOCAL\ =\ \$TEXMFROOT/texmf-local//|' %{buildroo
 
 # create macro file for building texlive
 mkdir -p %{buildroot}%{macrosdir}
-cat << EOF > %{buildroot}%{macrosdir}/macros.texlive
-# macros to keep trees in texlive consistent
-%_texmf_main     /usr/share/texlive/texmf
-%_texmf_vendor   /usr/share/texlive/texmf
-%_texmf_var      /var/lib/texmf
-%_texmf_conf     /usr/share/texlive/texmf-config
-EOF
-
-# install correct fmtutil.sh which has selinux fix
-install -m 755 source/inst/share/texmf-dist/scripts/texlive/fmtutil.sh %{buildroot}/%{_texdir}/texmf-dist/scripts/texlive/fmtutil.sh
+cp -a %{SOURCE9} %{buildroot}%{macrosdir}/macros.texlive
 
 %clean
 rm -rf %{buildroot}
@@ -357,6 +364,9 @@ if [ -x /usr/sbin/selinuxenabled ] && /usr/sbin/selinuxenabled; then
   [ -x /sbin/restorecon ] && /sbin/restorecon -R %{_texmf_var}/
 fi
 :
+
+%post lib -p /sbin/ldconfig
+%postun lib -p /sbin/ldconfig
 
 %files
 %defattr(-,root,root)
@@ -378,7 +388,7 @@ fi
 
 %include _files.spec
 
-%files kpathsea-lib
+%files lib
 %defattr(-,root,root)
 %{_libdir}/*.so.*
 %dir %{_texdir}/texmf-config
@@ -386,13 +396,29 @@ fi
 %{_texdir}/texmf-config/web2c/updmap.cfg
 %attr(0644, root, root) %verify(not md5 size mtime) %ghost %{_texdir}/texmf-config/ls-R
 
-%files kpathsea-lib-devel
+%files lib-devel
 %defattr(-,root,root)
 %dir %{_includedir}/kpathsea
 %{_includedir}/kpathsea/*
+%{_includedir}/synctex/
+%{_includedir}/texlua52/
+%{_includedir}/texluajit/
 %{_libdir}/*.so
+%{_libdir}/pkgconfig/*.pc
 
 %changelog
+* Wed Aug 26 2015 Than Ngo <than@redhat.com> - 4:2015-4.20150724
+- disable luajittex on secondary arch
+
+* Thu Aug 20 2015 Than Ngo <than@redhat.com> - 4:2015-3.20150724
+- rebuilt to fix some broken dependencies
+
+* Wed Aug  5 2015 Tom Callaway <spot@fedoraproject.org> 4:2015-2.20150724
+- fix fmtutil.pl symlink, for you know, working fmtutil
+
+* Fri Jul 24 2015 Tom Callaway <spot@fedoraproject.org> 4:2015-1.20150724
+- Update to TL2015
+
 * Wed Jul 22 2015 Marek Kasik <mkasik@redhat.com> - 4:2014-12.20140525_r34255
 - Rebuild (poppler-0.34.0)
 

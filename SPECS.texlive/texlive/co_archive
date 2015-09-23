@@ -68,7 +68,7 @@ rm -f /tmp/rsynclogCTAN
 
 echo "Creating symlinks..."
 for i in `ls texlive/archive`; do
-  rm -f ~/rpm/SOURCES/$i
+  rm -f ~/rpmbuild/SOURCES/$i
 done
 RPMBUILDDIR=`rpm --eval "%_topdir"`
 ACTDIR=`pwd`
@@ -78,7 +78,11 @@ done
 
 echo "Expanding..."
 rm -rf texlive.expanded.old
-mv texlive.expanded texlive.expanded.old
+if [ -d texlive.expanded ]; then
+  mv texlive.expanded texlive.expanded.old
+else
+  mkdir -p texlive.expanded.old
+fi
 mkdir texlive.expanded
 for i in texlive/archive/*.tar.xz; do
   tar xf $i -C texlive.expanded '*.sty' '*.tex' '*.cls' '*.ldf' '*.bbx' '*.cbx' '*.def' '*.tlpobj' '*.clo' '*.bug' '*.bg2' '*i386-linux*' '*texmf/scripts*' '*texmf-dist/scripts*' > /dev/null 2>&1

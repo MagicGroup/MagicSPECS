@@ -30,7 +30,8 @@
 #define REQ_POSTTRANS "Requires: "
 #define REQ_POST_POSTUN "Requires(post,postun): "
 #ifndef TL2010
-#  define CTAN_URL "ftp://ftp.ctex.org/mirrors/CTAN/systems/texlive/tlnet/archive/"
+//#  define CTAN_URL "ftp://ftp.ctex.org/mirrors/CTAN/systems/texlive/tlnet/archive/"
+#  define CTAN_URL "http://ctan.sharelatex.com/tex-archive/systems/texlive/tlnet/archive/"
 #else
 #  define CTAN_URL ""
 #endif
@@ -219,15 +220,17 @@ char *pkg_blacklist[] = {
 	"t1utils",
 	"texworks",
 	"xindy",	// dependency on clisp
-	"asymptote",	// special build procedure
+	"asymptote",	// special build procedure, packaged separately
 	"asymptote.i386-linux",
 	"asymptote-by-example-zh-cn",
 	"asymptote-faq-zh-cn",
 	"asymptote-manual-zh-cn",
 	"latex-tds",	// only source
-	"biber",	// no sources
+	"biber",	// packaged separately
 	"euro-ce",	// nonfree license
 	"latexmk",	// packaged separately
+        "uwmslide",	// artistic (non-free)
+	"texdiff",	// artistic (non-free)
 	NULL,
 };
 
@@ -337,7 +340,11 @@ void parse() {
 			if ( pkg[p-1].reloc ) {
 				char *rel = strstr(l, "RELOC");
 				char *new_l = NULL;
-				asprintf(&new_l, "texmf-dist%s", rel+5);
+				int ret;
+				ret = asprintf(&new_l, "texmf-dist%s", rel+5);
+				if (ret == -1) {
+					fprintf(stderr, "asprintf failed?");
+				}
 				l = new_l;
 			}
 			if (!strncmp(l, "texmf-dist/doc/man/man", 22)) {  /* does package have any man pages? */
@@ -603,7 +610,8 @@ next_name:
 		     !strncmp(l,"doccontainermd5 ", 16) ||
 		     !strncmp(l,"srccontainersize ", 17) ||
 		     !strncmp(l,"srccontainermd5 ", 16) ||
-		     !strncmp(l,"catalogue ", 10)
+		     !strncmp(l,"catalogue ", 10) ||
+                     !strncmp(l,"postaction ", 11)
 		) {
 			continue;
 		}
@@ -766,6 +774,8 @@ next:
 	fprintf(ffile, "\n");
 }
 
+#if 0
+
 static void provide_file(package *p, char *suf) {
 	int n;
 	for (n=0; n<p->runfs; n++) {
@@ -783,6 +793,8 @@ static void fill_provide_file(package *p, char *suf) {
 		   }
 	}
 }
+
+#endif
 
 static void fill_file_reqprov() {
 	int i, j, n, k;
@@ -1263,6 +1275,16 @@ void solve(char *name) {
 					fprintf(fpack, "Provides: tex(context) = %%{tl_version}\n");
 					fprintf(fpack, "Obsoletes: texlive-texmf-context < %%{tl_version}\n");
 				}
+				if ( !strcmp(name, "ps2pk") ) {
+					fprintf(fpack, "Provides: texlive-ps2pkm = %%{tl_version}\n");
+					fprintf(fpack, "Obsoletes: texlive-ps2pkm < %%{tl_version}\n");
+				}
+				if ( !strcmp(name, "ps2pk-bin") ) {
+					fprintf(fpack, "Provides: texlive-ps2pkm-bin%%{_isa} = %%{tl_version}\n");
+					fprintf(fpack, "Provides: texlive-ps2pkm-bin = %%{tl_version}\n");
+					fprintf(fpack, "Obsoletes: texlive-ps2pkm-bin < %%{tl_version}\n");
+				}
+
 				/* description */
 				fprintf(fpack, "\n%%description %s\n", name);
 				for (n=0; n<pkg[i].longdesc_lines; n++) {
@@ -1935,6 +1957,28 @@ void solve(char *name) {
 				}
 				fprintf(fpack, "Documentation for %s\n\n", name);
 
+#ifndef SRPMS
+                                fprintf(fpack, "%%post %s-doc\n", name);
+#else
+                                fprintf(fpack, "%%post\n");
+#endif
+                                fprintf(fpack, "mkdir -p /var/run/texlive\ntouch /var/run/texlive/run-texhash\n");
+                                fprintf(fpack, ":\n");
+#ifndef SRPMS
+                                fprintf(fpack, "\n%%postun %s-doc\n", name);
+#else
+                                fprintf(fpack, "\n%%postun\n");
+#endif
+                                fprintf(fpack, "if [ $1 == 1 ]; then\n  mkdir -p /var/run/texlive\n  touch /var/run/run-texhash\nelse\n  %%{_bindir}/texhash 2> /dev/null\nfi\n");
+                                fprintf(fpack, ":\n\n");
+#ifndef SRPMS
+                                fprintf(fpack, "%%posttrans %s-doc\n", name);
+#else
+                                fprintf(fpack, "%%posttrans\n");
+#endif
+                                fprintf(fpack, "if [ -e /var/run/texlive/run-texhash ] && [ -e %%{_bindir}/texhash ]; then %%{_bindir}/texhash 2> /dev/null; rm -f /var/run/texlive/run-texhash; fi\n");
+                                fprintf(fpack, ":\n\n");
+
 				/* ... and doc files */
 #ifdef SRPMS
 				mainpkg = 1;
@@ -2163,7 +2207,7 @@ void solve(char *name) {
 					if ( noarch ) {
 						fprintf(fpack, "BuildArch: noarch\n");
 					} else {
-						fprintf(fpack, "Requires: texlive-kpathsea-lib%{?_isa} = %%{epoch}:%%{tl_version}\n");
+						fprintf(fpack, "Requires: texlive-kpathsea-lib%%{?_isa} = %%{epoch}:%%{tl_version}\n");
 					}
 				}
 				fprintf(fpack, "\n%%description %s-bin\n", name);
