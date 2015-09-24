@@ -1,0 +1,33 @@
+From ae75e3ef0a252ef3560f117d07fd9196a901db0a Mon Sep 17 00:00:00 2001
+From: Lubomir Rintel <lkundrak@v3.sk>
+Date: Mon, 12 May 2014 15:49:27 +0200
+Subject: [PATCH 1/4] Make it work with Minitest 5
+
+Deal with stuff that got deprecated with Minitest 4:
+
+NOTE: MiniTest::Unit::TestCase#assert_block is deprecated, use assert.
+  It will be removed on 2013-01-01. Called from
+  src/comp_tree/test/exception_test.rb:50:in `block (3 levels) in test_exception'
+---
+ test/exception_test.rb | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/test/exception_test.rb b/test/exception_test.rb
+index ccc73a5..5d30bd1 100644
+--- a/test/exception_test.rb
++++ b/test/exception_test.rb
+@@ -47,9 +47,9 @@ class ExceptionTest < CompTreeTest
+           )
+     
+           if define_all
+-            assert_block { error.is_a? test_error }
++            assert ( error.is_a? test_error )
+           else
+-            assert_block { error.is_a? CompTree::NoFunctionError }
++            assert ( error.is_a? CompTree::NoFunctionError )
+             assert_equal(
+               "no function was defined for node `:border'",
+               error.message
+-- 
+1.8.3.1
+

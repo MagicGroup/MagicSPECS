@@ -1,0 +1,34 @@
+From d4e8a4727c305b61e20ea2ee3f137be2245f7744 Mon Sep 17 00:00:00 2001
+From: Lubomir Rintel <lkundrak@v3.sk>
+Date: Mon, 12 May 2014 15:49:55 +0200
+Subject: [PATCH 3/4] Fix throw_test test
+
+Make no assumption about initial Thread.list size.
+---
+ test/throw_test.rb | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/test/throw_test.rb b/test/throw_test.rb
+index e8192f7..c6198ec 100644
+--- a/test/throw_test.rb
++++ b/test/throw_test.rb
+@@ -4,7 +4,7 @@ class ThrowTest < CompTreeTest
+   EXPECTED = RUBY_VERSION >= "1.9.0" ? ArgumentError : ThreadError
+ 
+   def test_throw
+-    assert_equal 1, Thread.list.size
++    init_size = Thread.list.size
+     exception = assert_raises(EXPECTED) {
+       CompTree.build do |driver|
+         driver.define(:root, :a) {
+@@ -17,6 +17,6 @@ class ThrowTest < CompTreeTest
+       end
+     }
+     assert_match "uncaught", exception.message
+-    assert_equal 1, Thread.list.size
++    assert_equal init_size, Thread.list.size
+   end
+ end
+-- 
+1.8.3.1
+

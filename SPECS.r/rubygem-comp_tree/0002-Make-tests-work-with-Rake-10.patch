@@ -1,0 +1,30 @@
+From 7dadbfa8bfc9b4d99b4272d0e0a9777a5fb0b768 Mon Sep 17 00:00:00 2001
+From: Lubomir Rintel <lkundrak@v3.sk>
+Date: Mon, 12 May 2014 15:49:27 +0200
+Subject: [PATCH 2/4] Make tests work with Rake 10
+
+Deal with stuff that got deprecated with Rake 9:
+
+WARNING: Global access to Rake DSL methods is deprecated.  Please include
+    ...  Rake::DSL into classes and modules which use the Rake DSL methods.
+WARNING: DSL method Levitate#task called at src/comp_tree/devel/levitate.rb:507:in `define_changes'
+WARNING: DSL method Levitate#desc called at src/comp_tree/devel/levitate.rb:389:in `define_doc'
+---
+ devel/levitate.rb | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/devel/levitate.rb b/devel/levitate.rb
+index 38712df..745b6e6 100644
+--- a/devel/levitate.rb
++++ b/devel/levitate.rb
+@@ -1,5 +1,7 @@
+ 
+ class Levitate
++  include Rake::DSL
++
+   def initialize(gem_name)
+     @gem_name = gem_name
+ 
+-- 
+1.8.3.1
+
