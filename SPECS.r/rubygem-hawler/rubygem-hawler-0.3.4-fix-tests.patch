@@ -1,0 +1,22 @@
+--- lib/hawlerhelper.rb.debug	1970-01-01 09:00:00.000000000 +0900
++++ lib/hawlerhelper.rb	2009-10-26 00:42:05.000000000 +0900
+@@ -30,6 +30,7 @@
+ #
+ # Jon Hart <jhart@spoofed.org>
+ 
++require 'set'
+ require 'hpricot'
+ 
+ module HawlerHelper
+--- test/ts_hawlerhelper.rb.debug	1970-01-01 09:00:00.000000000 +0900
++++ test/ts_hawlerhelper.rb	2009-10-26 00:43:30.000000000 +0900
+@@ -5,7 +5,7 @@
+ require 'hawlerhelper'
+ require 'test/unit'
+ require 'test/unit/assertions'
+-
++require 'net/http'
+ 
+ class TestHawlerHelper < Test::Unit::TestCase
+ 
+
