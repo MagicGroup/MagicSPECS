@@ -1,0 +1,27 @@
+From 683b1abff5785a7fe2140ddf502ab82dbb968656 Mon Sep 17 00:00:00 2001
+From: Ken Dreyer <ktdreyer@ktdreyer.com>
+Date: Tue, 9 Dec 2014 20:44:02 -0700
+Subject: [PATCH] spec: rm stray reference to OpenStruct
+
+OpenStruct was removed in 91d412c044f174a2c50d1583a3f34c1f0f795e7d, but
+a stray reference remained in the test suite. Remove it here.
+---
+ spec/hooks_spec.rb | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/spec/hooks_spec.rb b/spec/hooks_spec.rb
+index 8248f03..fa5bf05 100644
+--- a/spec/hooks_spec.rb
++++ b/spec/hooks_spec.rb
+@@ -368,7 +368,7 @@ describe Pry::Hooks do
+ 
+     describe "after_session hook" do
+       it 'should always run, even if uncaught exception bubbles out of repl' do
+-        o = OpenStruct.new
++        o = Pry::Config.new
+         o.great_escape = Class.new(StandardError)
+ 
+         old_ew = Pry.config.exception_whitelist
+-- 
+1.9.3
+
