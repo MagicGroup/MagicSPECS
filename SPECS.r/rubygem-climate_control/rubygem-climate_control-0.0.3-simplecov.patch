@@ -1,0 +1,25 @@
+commit 2163815879b67a90d5fb1c332c12a7edc2f38a18
+Author: Ken Dreyer <ktdreyer@ktdreyer.com>
+Date:   Wed Jun 11 16:27:30 2014 -0600
+
+    tests: make SimpleCov optional
+    
+    Skip loading SimpleCov if it is not present. This allows the tests to
+    run outside of Bundler if SimpleCov is not installed.
+
+diff --git a/spec/spec_helper.rb b/spec/spec_helper.rb
+index f1f92f8..ecd3970 100644
+--- a/spec/spec_helper.rb
++++ b/spec/spec_helper.rb
+@@ -1,5 +1,9 @@
+-require 'simplecov'
+-SimpleCov.start
++begin
++  require 'simplecov'
++  SimpleCov.start
++rescue LoadError
++  warn "warning: simplecov gem not found; skipping coverage"
++end
+ 
+ $LOAD_PATH << File.join(File.dirname(__FILE__), '..', 'lib')
+ $LOAD_PATH << File.join(File.dirname(__FILE__))
