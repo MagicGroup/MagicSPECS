@@ -3,23 +3,22 @@
 
 Summary:        Mocking and stubbing library
 Name:           rubygem-%{gem_name}
-Version:        0.13.1
-Release:        4%{?dist}
+Version:        1.1.0
+Release:        2%{?dist}
 Group:          Development/Languages
-License:        MIT and Ruby
-URL:            http://mocha.rubyforge.org
-Source0:	http://rubygems.org/gems/%{gem_name}-%{version}.gem
-Requires:	ruby(release)
-Requires:	ruby(rubygems)
-Requires:	rubygem(metaclass)
-BuildRequires:	ruby(release)
+License:        MIT or Ruby or BSD
+URL:            http://gofreerange.com/mocha/docs
+Source0:        http://rubygems.org/gems/%{gem_name}-%{version}.gem
+# Fix Ruby 2.2 test suite compatibility.
+# https://github.com/freerange/mocha/commit/a65ea1ed3dce43cbc2cc16b3660afd2cce3db33e
+Patch0:         rubygem-mocha-1.1.0-As-of-Ruby-v2.2-nil-is-frozen-so-these-tests-are-irrelevant.patch
+BuildRequires:  ruby(release)
 BuildRequires:  rubygems-devel
-BuildRequires:	ruby
-BuildRequires:	rubygem(metaclass)
-BuildRequires:	rubygem(introspection)
-BuildRequires:	rubygem(minitest)
+BuildRequires:  ruby
+BuildRequires:  rubygem(metaclass)
+BuildRequires:  rubygem(introspection)
+BuildRequires:  rubygem(minitest)
 BuildArch:      noarch
-Provides:       rubygem(%{gem_name}) = %{version}
 
 %description
 Mocking and stubbing library with JMock/SchMock syntax, which allows mocking
@@ -39,6 +38,10 @@ This package contains documentation for %{name}.
 %setup -q -c -T
 %gem_install -n %{SOURCE0}
 
+pushd .%{gem_instdir}
+%patch0 -p1
+popd
+
 %build
 
 %install
@@ -47,11 +50,10 @@ cp -pa .%{gem_dir}/* \
         %{buildroot}%{gem_dir}/
 
 %check 
-pushd %{buildroot}%{gem_instdir}
+pushd .%{gem_instdir}
 # Each part of test suite must be run separately, otherwise the test suite fails.
 # https://github.com/freerange/mocha/issues/121
-ruby -e "Dir.glob('./test/unit/**/*_test.rb').each {|t| require t}"
-ruby -e "Dir.glob('./test/acceptance/**/*_test.rb').each {|t| require t}"
+ruby -e "Dir.glob('./test/{unit,acceptance}/**/*_test.rb').each {|t| require t}"
 ruby -e "Dir.glob('./test/integration/**/*_test.rb').each {|t| require t}"
 popd
 
@@ -63,23 +65,39 @@ popd
 %doc %{gem_instdir}/MIT-LICENSE.md
 %doc %{gem_instdir}/RELEASE.md
 %dir %{gem_instdir}
+%{gem_instdir}/bin
 %{gem_libdir}
-%{gem_cache}
+%exclude %{gem_cache}
 %{gem_spec}
 
 %files doc
 %{gem_instdir}/Gemfile*
 %doc %{gem_docdir}
+%doc %{gem_instdir}/CONTRIBUTING.md
 %{gem_instdir}/Rakefile
-%{gem_instdir}/build-matrix.rb
 %{gem_instdir}/mocha.gemspec
 %{gem_instdir}/gemfiles/
 %{gem_instdir}/test/
+%{gem_instdir}/yard-templates/
 
 
 %changelog
-* Sun Jun 22 2014 Liu Di <liudidi@gmail.com> - 0.13.1-4
-- 为 Magic 3.0 重建
+* Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.1.0-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
+
+* Mon Jul 07 2014 Vít Ondruch <vondruch@redhat.com> - 1.1.0-1
+- Update to Mocha 1.1.0.
+
+* Sun Jun 08 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.14.0-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Thu Aug 15 2013 Ken Dreyer <ktdreyer@ktdreyer.com> - 0.14.0-1
+- Update to 0.14.0
+- Run unit and acceptance tests in a single process
+- Patch test suite to work outside rake/bundler
+
+* Sun Aug 04 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.13.1-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
 
 * Mon Feb 25 2013 Vít Ondruch <vondruch@redhat.com> - 0.13.1-3
 - Rebuild for https://fedoraproject.org/wiki/Features/Ruby_2.0.0
