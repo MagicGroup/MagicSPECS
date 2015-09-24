@@ -1,0 +1,15 @@
+--- a/test_rubypants.rb	2014-07-02 16:53:43.404930638 -0600
++++ b/test_rubypants.rb	2014-07-02 16:54:03.586897041 -0600
+@@ -1,10 +1,10 @@
+-require 'test/unit'
++require 'minitest/autorun'
+ require 'rubypants'
+ 
+ # Test EVERYTHING against SmartyPants.pl output!
+ 
+ 
+-class TestRubyPants < Test::Unit::TestCase
++class TestRubyPants < Minitest::Test
+   def assert_rp_equal(str, orig, options=[2])
+     assert_equal orig, RubyPants.new(str, options).to_html
+   end
