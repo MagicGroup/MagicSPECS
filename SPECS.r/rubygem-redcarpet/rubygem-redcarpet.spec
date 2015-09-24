@@ -2,7 +2,7 @@
 
 Name: rubygem-%{gem_name}
 Version: 3.3.2
-Release: 2%{?dist}
+Release: 1%{?dist}
 Summary: A fast, safe and extensible Markdown to (X)HTML parser
 Group: Development/Languages
 # https://github.com/vmg/redcarpet/issues/502
@@ -75,9 +75,6 @@ popd
 
 
 %changelog
-* Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 3.3.2-2
-- 为 Magic 3.0 重建
-
 * Wed Jul 08 2015 Vít Ondruch <vondruch@redhat.com> - 3.3.2-1
 - Update to Redcarpet 3.3.2.
 
