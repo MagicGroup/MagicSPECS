@@ -1,0 +1,1381 @@
+From e7539d1a946a504dd9ed8bdd46a5a8e5ead33ccd Mon Sep 17 00:00:00 2001
+From: Ken Dreyer <ktdreyer@ktdreyer.com>
+Date: Sun, 8 Jun 2014 23:57:46 -0600
+Subject: [PATCH] Fedora: tests: switch to minitest
+
+Ruby 1.9+ uses Minitest as the backend for Test::Unit. As of Minitest 5,
+the shim has broken some compatibility with Test::Unit::TestCase in some
+scenarios.
+
+Adjust the test suite to support Minitest 5's syntax.
+
+Note that minitest/autorun does not really play well with forked
+processes in test/fork_safety_test.rb. Specifically, when examining a
+child process' exit code with waitpid2, the child process' exit code
+always appears to be "1", because minitest/autorun modifies the at_exit
+handler. See https://github.com/seattlerb/minitest/pull/429 for a
+discussion about this.
+
+To work around this issue in we must explicitly call "exit!" instead of
+calling "exit" or even implicitly allowing the child to exit.
+
+This is a cherry-pick for Minitest 5 in Fedora that omits the gemspec
+change (since we dynamically regenerate the gemspec during the Fedora
+package build). The upstream submission was
+https://github.com/redis/redis-rb/pull/445
+---
+ test/bitpos_test.rb                                |  2 +-
+ test/blocking_commands_test.rb                     |  2 +-
+ test/command_map_test.rb                           |  4 +-
+ test/commands_on_hashes_test.rb                    |  2 +-
+ test/commands_on_hyper_log_log_test.rb             |  2 +-
+ test/commands_on_lists_test.rb                     |  2 +-
+ test/commands_on_sets_test.rb                      |  2 +-
+ test/commands_on_sorted_sets_test.rb               |  2 +-
+ test/commands_on_strings_test.rb                   |  2 +-
+ test/commands_on_value_types_test.rb               |  6 +--
+ test/connection_handling_test.rb                   |  6 +--
+ test/distributed_blocking_commands_test.rb         |  2 +-
+ test/distributed_commands_on_hashes_test.rb        |  2 +-
+ test/distributed_commands_on_hyper_log_log_test.rb |  4 +-
+ test/distributed_commands_on_lists_test.rb         |  6 +--
+ test/distributed_commands_on_sets_test.rb          | 16 +++----
+ test/distributed_commands_on_sorted_sets_test.rb   |  2 +-
+ test/distributed_commands_on_strings_test.rb       | 16 +++----
+ test/distributed_commands_on_value_types_test.rb   | 10 ++---
+ ...stributed_commands_requiring_clustering_test.rb |  2 +-
+ test/distributed_connection_handling_test.rb       |  2 +-
+ test/distributed_internals_test.rb                 |  6 +--
+ test/distributed_key_tags_test.rb                  |  2 +-
+ ...istributed_persistence_control_commands_test.rb |  2 +-
+ test/distributed_publish_subscribe_test.rb         | 10 ++---
+ ...tributed_remote_server_control_commands_test.rb |  2 +-
+ test/distributed_scripting_test.rb                 |  2 +-
+ test/distributed_sorting_test.rb                   |  4 +-
+ test/distributed_test.rb                           |  6 +--
+ test/distributed_transactions_test.rb              | 10 ++---
+ test/encoding_test.rb                              |  2 +-
+ test/error_replies_test.rb                         |  2 +-
+ test/fork_safety_test.rb                           |  8 ++--
+ test/helper.rb                                     |  2 +-
+ test/helper_test.rb                                |  2 +-
+ test/internals_test.rb                             | 49 ++++++++++------------
+ test/lint/hashes.rb                                |  2 +-
+ test/lint/lists.rb                                 |  4 +-
+ test/lint/sorted_sets.rb                           |  4 +-
+ test/persistence_control_commands_test.rb          |  2 +-
+ test/pipelining_commands_test.rb                   | 17 ++++----
+ test/publish_subscribe_test.rb                     | 10 ++---
+ test/remote_server_control_commands_test.rb        |  2 +-
+ test/scanning_test.rb                              |  2 +-
+ test/scripting_test.rb                             |  2 +-
+ test/sentinel_test.rb                              |  2 +-
+ test/sorting_test.rb                               |  2 +-
+ test/thread_safety_test.rb                         |  2 +-
+ test/transactions_test.rb                          | 20 ++++-----
+ test/unknown_commands_test.rb                      |  4 +-
+ test/url_param_test.rb                             |  2 +-
+ 51 files changed, 138 insertions(+), 142 deletions(-)
+
+diff --git a/test/bitpos_test.rb b/test/bitpos_test.rb
+index 118294d..77c3c19 100644
+--- a/test/bitpos_test.rb
++++ b/test/bitpos_test.rb
+@@ -6,7 +6,7 @@ unless defined?(Enumerator)
+   Enumerator = Enumerable::Enumerator
+ end
+ 
+-class TestBitpos < Test::Unit::TestCase
++class TestBitpos < Minitest::Test
+ 
+   include Helper::Client
+ 
+diff --git a/test/blocking_commands_test.rb b/test/blocking_commands_test.rb
+index 4a2a965..5bcfe00 100644
+--- a/test/blocking_commands_test.rb
++++ b/test/blocking_commands_test.rb
+@@ -3,7 +3,7 @@
+ require File.expand_path("helper", File.dirname(__FILE__))
+ require "lint/blocking_commands"
+ 
+-class TestBlockingCommands < Test::Unit::TestCase
++class TestBlockingCommands < Minitest::Test
+ 
+   include Helper::Client
+   include Lint::BlockingCommands
+diff --git a/test/command_map_test.rb b/test/command_map_test.rb
+index cb401db..56af4e1 100644
+--- a/test/command_map_test.rb
++++ b/test/command_map_test.rb
+@@ -2,7 +2,7 @@
+ 
+ require File.expand_path("helper", File.dirname(__FILE__))
+ 
+-class TestCommandMap < Test::Unit::TestCase
++class TestCommandMap < Minitest::Test
+ 
+   include Helper::Client
+ 
+@@ -19,7 +19,7 @@ class TestCommandMap < Test::Unit::TestCase
+   def test_override_non_existing_commands
+     r.set("key", "value")
+ 
+-    assert_raise Redis::CommandError do
++    assert_raises Redis::CommandError do
+       r.idontexist("key")
+     end
+ 
+diff --git a/test/commands_on_hashes_test.rb b/test/commands_on_hashes_test.rb
+index f3bbfa5..dc22382 100644
+--- a/test/commands_on_hashes_test.rb
++++ b/test/commands_on_hashes_test.rb
+@@ -3,7 +3,7 @@
+ require File.expand_path("helper", File.dirname(__FILE__))
+ require "lint/hashes"
+ 
+-class TestCommandsOnHashes < Test::Unit::TestCase
++class TestCommandsOnHashes < Minitest::Test
+ 
+   include Helper::Client
+   include Lint::Hashes
+diff --git a/test/commands_on_hyper_log_log_test.rb b/test/commands_on_hyper_log_log_test.rb
+index a2fc95b..e7d0d38 100644
+--- a/test/commands_on_hyper_log_log_test.rb
++++ b/test/commands_on_hyper_log_log_test.rb
+@@ -3,7 +3,7 @@
+ require File.expand_path("helper", File.dirname(__FILE__))
+ require "lint/hyper_log_log"
+ 
+-class TestCommandsOnHyperLogLog < Test::Unit::TestCase
++class TestCommandsOnHyperLogLog < Minitest::Test
+ 
+   include Helper::Client
+   include Lint::HyperLogLog
+diff --git a/test/commands_on_lists_test.rb b/test/commands_on_lists_test.rb
+index 2916c28..bc8f49a 100644
+--- a/test/commands_on_lists_test.rb
++++ b/test/commands_on_lists_test.rb
+@@ -3,7 +3,7 @@
+ require File.expand_path("helper", File.dirname(__FILE__))
+ require "lint/lists"
+ 
+-class TestCommandsOnLists < Test::Unit::TestCase
++class TestCommandsOnLists < Minitest::Test
+ 
+   include Helper::Client
+   include Lint::Lists
+diff --git a/test/commands_on_sets_test.rb b/test/commands_on_sets_test.rb
+index 7ac2f4e..7ec6205 100644
+--- a/test/commands_on_sets_test.rb
++++ b/test/commands_on_sets_test.rb
+@@ -3,7 +3,7 @@
+ require File.expand_path("helper", File.dirname(__FILE__))
+ require "lint/sets"
+ 
+-class TestCommandsOnSets < Test::Unit::TestCase
++class TestCommandsOnSets < Minitest::Test
+ 
+   include Helper::Client
+   include Lint::Sets
+diff --git a/test/commands_on_sorted_sets_test.rb b/test/commands_on_sorted_sets_test.rb
+index 0a424be..f7afc93 100644
+--- a/test/commands_on_sorted_sets_test.rb
++++ b/test/commands_on_sorted_sets_test.rb
+@@ -3,7 +3,7 @@
+ require File.expand_path("helper", File.dirname(__FILE__))
+ require "lint/sorted_sets"
+ 
+-class TestCommandsOnSortedSets < Test::Unit::TestCase
++class TestCommandsOnSortedSets < Minitest::Test
+ 
+   include Helper::Client
+   include Lint::SortedSets
+diff --git a/test/commands_on_strings_test.rb b/test/commands_on_strings_test.rb
+index 9172aac..476f49a 100644
+--- a/test/commands_on_strings_test.rb
++++ b/test/commands_on_strings_test.rb
+@@ -3,7 +3,7 @@
+ require File.expand_path("helper", File.dirname(__FILE__))
+ require "lint/strings"
+ 
+-class TestCommandsOnStrings < Test::Unit::TestCase
++class TestCommandsOnStrings < Minitest::Test
+ 
+   include Helper::Client
+   include Lint::Strings
+diff --git a/test/commands_on_value_types_test.rb b/test/commands_on_value_types_test.rb
+index 6b2f211..d93ef65 100644
+--- a/test/commands_on_value_types_test.rb
++++ b/test/commands_on_value_types_test.rb
+@@ -3,7 +3,7 @@
+ require File.expand_path("helper", File.dirname(__FILE__))
+ require "lint/value_types"
+ 
+-class TestCommandsOnValueTypes < Test::Unit::TestCase
++class TestCommandsOnValueTypes < Minitest::Test
+ 
+   include Helper::Client
+   include Lint::ValueTypes
+@@ -101,12 +101,12 @@ class TestCommandsOnValueTypes < Test::Unit::TestCase
+     redis_mock(:migrate => lambda { |*args| args }) do |redis|
+       options = { :host => "127.0.0.1", :port => 1234 }
+ 
+-      ex = assert_raise(RuntimeError) do
++      ex = assert_raises(RuntimeError) do
+         redis.migrate("foo", options.reject { |key, _| key == :host })
+       end
+       assert ex.message =~ /host not specified/
+ 
+-      ex = assert_raise(RuntimeError) do
++      ex = assert_raises(RuntimeError) do
+         redis.migrate("foo", options.reject { |key, _| key == :port })
+       end
+       assert ex.message =~ /port not specified/
+diff --git a/test/connection_handling_test.rb b/test/connection_handling_test.rb
+index cbffa61..82677d0 100644
+--- a/test/connection_handling_test.rb
++++ b/test/connection_handling_test.rb
+@@ -2,7 +2,7 @@
+ 
+ require File.expand_path("helper", File.dirname(__FILE__))
+ 
+-class TestConnectionHandling < Test::Unit::TestCase
++class TestConnectionHandling < Minitest::Test
+ 
+   include Helper::Client
+ 
+@@ -88,7 +88,7 @@ class TestConnectionHandling < Test::Unit::TestCase
+       connections = redis.connections
+ 
+       # SHUTDOWN replies with an error: test that it gets raised
+-      assert_raise Redis::CommandError do
++      assert_raises Redis::CommandError do
+         redis.shutdown
+       end
+ 
+@@ -124,7 +124,7 @@ class TestConnectionHandling < Test::Unit::TestCase
+       connections = redis.connections
+ 
+       # SHUTDOWN replies with an error: test that it gets raised
+-      assert_raise Redis::CommandError do
++      assert_raises Redis::CommandError do
+         redis.pipelined do
+           redis.shutdown
+         end
+diff --git a/test/distributed_blocking_commands_test.rb b/test/distributed_blocking_commands_test.rb
+index b28cf27..bcba7e0 100644
+--- a/test/distributed_blocking_commands_test.rb
++++ b/test/distributed_blocking_commands_test.rb
+@@ -3,7 +3,7 @@
+ require File.expand_path("helper", File.dirname(__FILE__))
+ require "lint/blocking_commands"
+ 
+-class TestDistributedBlockingCommands < Test::Unit::TestCase
++class TestDistributedBlockingCommands < Minitest::Test
+ 
+   include Helper::Distributed
+   include Lint::BlockingCommands
+diff --git a/test/distributed_commands_on_hashes_test.rb b/test/distributed_commands_on_hashes_test.rb
+index ffd14f5..d1275ad 100644
+--- a/test/distributed_commands_on_hashes_test.rb
++++ b/test/distributed_commands_on_hashes_test.rb
+@@ -3,7 +3,7 @@
+ require File.expand_path("helper", File.dirname(__FILE__))
+ require "lint/hashes"
+ 
+-class TestDistributedCommandsOnHashes < Test::Unit::TestCase
++class TestDistributedCommandsOnHashes < Minitest::Test
+ 
+   include Helper::Distributed
+   include Lint::Hashes
+diff --git a/test/distributed_commands_on_hyper_log_log_test.rb b/test/distributed_commands_on_hyper_log_log_test.rb
+index c118b95..bc0735f 100644
+--- a/test/distributed_commands_on_hyper_log_log_test.rb
++++ b/test/distributed_commands_on_hyper_log_log_test.rb
+@@ -3,14 +3,14 @@
+ require File.expand_path("helper", File.dirname(__FILE__))
+ require "lint/hyper_log_log"
+ 
+-class TestDistributedCommandsOnHyperLogLog < Test::Unit::TestCase
++class TestDistributedCommandsOnHyperLogLog < Minitest::Test
+ 
+   include Helper::Distributed
+   include Lint::HyperLogLog
+ 
+   def test_pfmerge
+     target_version "2.8.9" do
+-      assert_raise Redis::Distributed::CannotDistribute do
++      assert_raises Redis::Distributed::CannotDistribute do
+         r.pfadd "foo", "s1"
+         r.pfadd "bar", "s2"
+ 
+diff --git a/test/distributed_commands_on_lists_test.rb b/test/distributed_commands_on_lists_test.rb
+index d22f3be..28411fa 100644
+--- a/test/distributed_commands_on_lists_test.rb
++++ b/test/distributed_commands_on_lists_test.rb
+@@ -3,19 +3,19 @@
+ require File.expand_path("helper", File.dirname(__FILE__))
+ require "lint/lists"
+ 
+-class TestDistributedCommandsOnLists < Test::Unit::TestCase
++class TestDistributedCommandsOnLists < Minitest::Test
+ 
+   include Helper::Distributed
+   include Lint::Lists
+ 
+   def test_rpoplpush
+-    assert_raise Redis::Distributed::CannotDistribute do
++    assert_raises Redis::Distributed::CannotDistribute do
+       r.rpoplpush("foo", "bar")
+     end
+   end
+ 
+   def test_brpoplpush
+-    assert_raise Redis::Distributed::CannotDistribute do
++    assert_raises Redis::Distributed::CannotDistribute do
+       r.brpoplpush("foo", "bar", :timeout => 1)
+     end
+   end
+diff --git a/test/distributed_commands_on_sets_test.rb b/test/distributed_commands_on_sets_test.rb
+index 43a070c..74a0b1b 100644
+--- a/test/distributed_commands_on_sets_test.rb
++++ b/test/distributed_commands_on_sets_test.rb
+@@ -3,13 +3,13 @@
+ require File.expand_path("helper", File.dirname(__FILE__))
+ require "lint/sets"
+ 
+-class TestDistributedCommandsOnSets < Test::Unit::TestCase
++class TestDistributedCommandsOnSets < Minitest::Test
+ 
+   include Helper::Distributed
+   include Lint::Sets
+ 
+   def test_smove
+-    assert_raise Redis::Distributed::CannotDistribute do
++    assert_raises Redis::Distributed::CannotDistribute do
+       r.sadd "foo", "s1"
+       r.sadd "bar", "s2"
+ 
+@@ -18,7 +18,7 @@ class TestDistributedCommandsOnSets < Test::Unit::TestCase
+   end
+ 
+   def test_sinter
+-    assert_raise Redis::Distributed::CannotDistribute do
++    assert_raises Redis::Distributed::CannotDistribute do
+       r.sadd "foo", "s1"
+       r.sadd "foo", "s2"
+       r.sadd "bar", "s2"
+@@ -28,7 +28,7 @@ class TestDistributedCommandsOnSets < Test::Unit::TestCase
+   end
+ 
+   def test_sinterstore
+-    assert_raise Redis::Distributed::CannotDistribute do
++    assert_raises Redis::Distributed::CannotDistribute do
+       r.sadd "foo", "s1"
+       r.sadd "foo", "s2"
+       r.sadd "bar", "s2"
+@@ -38,7 +38,7 @@ class TestDistributedCommandsOnSets < Test::Unit::TestCase
+   end
+ 
+   def test_sunion
+-    assert_raise Redis::Distributed::CannotDistribute do
++    assert_raises Redis::Distributed::CannotDistribute do
+       r.sadd "foo", "s1"
+       r.sadd "foo", "s2"
+       r.sadd "bar", "s2"
+@@ -49,7 +49,7 @@ class TestDistributedCommandsOnSets < Test::Unit::TestCase
+   end
+ 
+   def test_sunionstore
+-    assert_raise Redis::Distributed::CannotDistribute do
++    assert_raises Redis::Distributed::CannotDistribute do
+       r.sadd "foo", "s1"
+       r.sadd "foo", "s2"
+       r.sadd "bar", "s2"
+@@ -60,7 +60,7 @@ class TestDistributedCommandsOnSets < Test::Unit::TestCase
+   end
+ 
+   def test_sdiff
+-    assert_raise Redis::Distributed::CannotDistribute do
++    assert_raises Redis::Distributed::CannotDistribute do
+       r.sadd "foo", "s1"
+       r.sadd "foo", "s2"
+       r.sadd "bar", "s2"
+@@ -71,7 +71,7 @@ class TestDistributedCommandsOnSets < Test::Unit::TestCase
+   end
+ 
+   def test_sdiffstore
+-    assert_raise Redis::Distributed::CannotDistribute do
++    assert_raises Redis::Distributed::CannotDistribute do
+       r.sadd "foo", "s1"
+       r.sadd "foo", "s2"
+       r.sadd "bar", "s2"
+diff --git a/test/distributed_commands_on_sorted_sets_test.rb b/test/distributed_commands_on_sorted_sets_test.rb
+index a4150b8..53a3e4b 100644
+--- a/test/distributed_commands_on_sorted_sets_test.rb
++++ b/test/distributed_commands_on_sorted_sets_test.rb
+@@ -3,7 +3,7 @@
+ require File.expand_path("helper", File.dirname(__FILE__))
+ require "lint/sorted_sets"
+ 
+-class TestDistributedCommandsOnSortedSets < Test::Unit::TestCase
++class TestDistributedCommandsOnSortedSets < Minitest::Test
+ 
+   include Helper::Distributed
+   include Lint::SortedSets
+diff --git a/test/distributed_commands_on_strings_test.rb b/test/distributed_commands_on_strings_test.rb
+index ad83c12..e4ce6ce 100644
+--- a/test/distributed_commands_on_strings_test.rb
++++ b/test/distributed_commands_on_strings_test.rb
+@@ -3,44 +3,44 @@
+ require File.expand_path("helper", File.dirname(__FILE__))
+ require "lint/strings"
+ 
+-class TestDistributedCommandsOnStrings < Test::Unit::TestCase
++class TestDistributedCommandsOnStrings < Minitest::Test
+ 
+   include Helper::Distributed
+   include Lint::Strings
+ 
+   def test_mget
+-    assert_raise Redis::Distributed::CannotDistribute do
++    assert_raises Redis::Distributed::CannotDistribute do
+       r.mget("foo", "bar")
+     end
+   end
+ 
+   def test_mget_mapped
+-    assert_raise Redis::Distributed::CannotDistribute do
++    assert_raises Redis::Distributed::CannotDistribute do
+       r.mapped_mget("foo", "bar")
+     end
+   end
+ 
+   def test_mset
+-    assert_raise Redis::Distributed::CannotDistribute do
++    assert_raises Redis::Distributed::CannotDistribute do
+       r.mset(:foo, "s1", :bar, "s2")
+     end
+   end
+ 
+   def test_mset_mapped
+-    assert_raise Redis::Distributed::CannotDistribute do
++    assert_raises Redis::Distributed::CannotDistribute do
+       r.mapped_mset(:foo => "s1", :bar => "s2")
+     end
+   end
+ 
+   def test_msetnx
+-    assert_raise Redis::Distributed::CannotDistribute do
++    assert_raises Redis::Distributed::CannotDistribute do
+       r.set("foo", "s1")
+       r.msetnx(:foo, "s2", :bar, "s3")
+     end
+   end
+ 
+   def test_msetnx_mapped
+-    assert_raise Redis::Distributed::CannotDistribute do
++    assert_raises Redis::Distributed::CannotDistribute do
+       r.set("foo", "s1")
+       r.mapped_msetnx(:foo => "s2", :bar => "s3")
+     end
+@@ -48,7 +48,7 @@ class TestDistributedCommandsOnStrings < Test::Unit::TestCase
+ 
+   def test_bitop
+     target_version "2.5.10" do
+-      assert_raise Redis::Distributed::CannotDistribute do
++      assert_raises Redis::Distributed::CannotDistribute do
+         r.set("foo", "a")
+         r.set("bar", "b")
+ 
+diff --git a/test/distributed_commands_on_value_types_test.rb b/test/distributed_commands_on_value_types_test.rb
+index 0be9ce2..fbc086e 100644
+--- a/test/distributed_commands_on_value_types_test.rb
++++ b/test/distributed_commands_on_value_types_test.rb
+@@ -3,7 +3,7 @@
+ require File.expand_path("helper", File.dirname(__FILE__))
+ require "lint/value_types"
+ 
+-class TestDistributedCommandsOnValueTypes < Test::Unit::TestCase
++class TestDistributedCommandsOnValueTypes < Minitest::Test
+ 
+   include Helper::Distributed
+   include Lint::ValueTypes
+@@ -41,13 +41,13 @@ class TestDistributedCommandsOnValueTypes < Test::Unit::TestCase
+   end
+ 
+   def test_randomkey
+-    assert_raise Redis::Distributed::CannotDistribute do
++    assert_raises Redis::Distributed::CannotDistribute do
+       r.randomkey
+     end
+   end
+ 
+   def test_rename
+-    assert_raise Redis::Distributed::CannotDistribute do
++    assert_raises Redis::Distributed::CannotDistribute do
+       r.set("foo", "s1")
+       r.rename "foo", "bar"
+     end
+@@ -57,7 +57,7 @@ class TestDistributedCommandsOnValueTypes < Test::Unit::TestCase
+   end
+ 
+   def test_renamenx
+-    assert_raise Redis::Distributed::CannotDistribute do
++    assert_raises Redis::Distributed::CannotDistribute do
+       r.set("foo", "s1")
+       r.rename "foo", "bar"
+     end
+@@ -88,7 +88,7 @@ class TestDistributedCommandsOnValueTypes < Test::Unit::TestCase
+   def test_migrate
+     r.set("foo", "s1")
+ 
+-    assert_raise Redis::Distributed::CannotDistribute do
++    assert_raises Redis::Distributed::CannotDistribute do
+       r.migrate("foo", {})
+     end
+   end
+diff --git a/test/distributed_commands_requiring_clustering_test.rb b/test/distributed_commands_requiring_clustering_test.rb
+index da8063c..a50e80c 100644
+--- a/test/distributed_commands_requiring_clustering_test.rb
++++ b/test/distributed_commands_requiring_clustering_test.rb
+@@ -2,7 +2,7 @@
+ 
+ require File.expand_path("helper", File.dirname(__FILE__))
+ 
+-class TestDistributedCommandsRequiringClustering < Test::Unit::TestCase
++class TestDistributedCommandsRequiringClustering < Minitest::Test
+ 
+   include Helper::Distributed
+ 
+diff --git a/test/distributed_connection_handling_test.rb b/test/distributed_connection_handling_test.rb
+index 3308860..df29ecd 100644
+--- a/test/distributed_connection_handling_test.rb
++++ b/test/distributed_connection_handling_test.rb
+@@ -2,7 +2,7 @@
+ 
+ require File.expand_path("helper", File.dirname(__FILE__))
+ 
+-class TestDistributedConnectionHandling < Test::Unit::TestCase
++class TestDistributedConnectionHandling < Minitest::Test
+ 
+   include Helper::Distributed
+ 
+diff --git a/test/distributed_internals_test.rb b/test/distributed_internals_test.rb
+index d2c421b..a977bed 100644
+--- a/test/distributed_internals_test.rb
++++ b/test/distributed_internals_test.rb
+@@ -2,7 +2,7 @@
+ 
+ require File.expand_path("helper", File.dirname(__FILE__))
+ 
+-class TestDistributedInternals < Test::Unit::TestCase
++class TestDistributedInternals < Minitest::Test
+ 
+   include Helper::Distributed
+ 
+@@ -53,7 +53,7 @@ class TestDistributedInternals < Test::Unit::TestCase
+   def test_keeps_options_after_dup
+     r1 = Redis::Distributed.new(NODES, :tag => /^(\w+):/)
+ 
+-    assert_raise(Redis::Distributed::CannotDistribute) do
++    assert_raises(Redis::Distributed::CannotDistribute) do
+       r1.sinter("foo", "bar")
+     end
+ 
+@@ -61,7 +61,7 @@ class TestDistributedInternals < Test::Unit::TestCase
+ 
+     r2 = r1.dup
+ 
+-    assert_raise(Redis::Distributed::CannotDistribute) do
++    assert_raises(Redis::Distributed::CannotDistribute) do
+       r2.sinter("foo", "bar")
+     end
+ 
+diff --git a/test/distributed_key_tags_test.rb b/test/distributed_key_tags_test.rb
+index 5378cea..de8c90d 100644
+--- a/test/distributed_key_tags_test.rb
++++ b/test/distributed_key_tags_test.rb
+@@ -2,7 +2,7 @@
+ 
+ require File.expand_path("helper", File.dirname(__FILE__))
+ 
+-class TestDistributedKeyTags < Test::Unit::TestCase
++class TestDistributedKeyTags < Minitest::Test
+ 
+   include Helper
+   include Helper::Distributed
+diff --git a/test/distributed_persistence_control_commands_test.rb b/test/distributed_persistence_control_commands_test.rb
+index c243601..ce89df6 100644
+--- a/test/distributed_persistence_control_commands_test.rb
++++ b/test/distributed_persistence_control_commands_test.rb
+@@ -2,7 +2,7 @@
+ 
+ require File.expand_path("helper", File.dirname(__FILE__))
+ 
+-class TestDistributedPersistenceControlCommands < Test::Unit::TestCase
++class TestDistributedPersistenceControlCommands < Minitest::Test
+ 
+   include Helper::Distributed
+ 
+diff --git a/test/distributed_publish_subscribe_test.rb b/test/distributed_publish_subscribe_test.rb
+index df36506..f6456c1 100644
+--- a/test/distributed_publish_subscribe_test.rb
++++ b/test/distributed_publish_subscribe_test.rb
+@@ -2,16 +2,16 @@
+ 
+ require File.expand_path("helper", File.dirname(__FILE__))
+ 
+-class TestDistributedPublishSubscribe < Test::Unit::TestCase
++class TestDistributedPublishSubscribe < Minitest::Test
+ 
+   include Helper::Distributed
+ 
+   def test_subscribe_and_unsubscribe
+-    assert_raise Redis::Distributed::CannotDistribute do
++    assert_raises Redis::Distributed::CannotDistribute do
+       r.subscribe("foo", "bar") { }
+     end
+ 
+-    assert_raise Redis::Distributed::CannotDistribute do
++    assert_raises Redis::Distributed::CannotDistribute do
+       r.subscribe("{qux}foo", "bar") { }
+     end
+   end
+@@ -75,7 +75,7 @@ class TestDistributedPublishSubscribe < Test::Unit::TestCase
+   end
+ 
+   def test_other_commands_within_a_subscribe
+-    assert_raise Redis::CommandError do
++    assert_raises Redis::CommandError do
+       r.subscribe("foo") do |on|
+         on.subscribe do |channel, total|
+           r.set("bar", "s2")
+@@ -85,7 +85,7 @@ class TestDistributedPublishSubscribe < Test::Unit::TestCase
+   end
+ 
+   def test_subscribe_without_a_block
+-    assert_raise LocalJumpError do
++    assert_raises LocalJumpError do
+       r.subscribe("foo")
+     end
+   end
+diff --git a/test/distributed_remote_server_control_commands_test.rb b/test/distributed_remote_server_control_commands_test.rb
+index 7799d4f..bafdf5f 100644
+--- a/test/distributed_remote_server_control_commands_test.rb
++++ b/test/distributed_remote_server_control_commands_test.rb
+@@ -2,7 +2,7 @@
+ 
+ require File.expand_path("helper", File.dirname(__FILE__))
+ 
+-class TestDistributedRemoteServerControlCommands < Test::Unit::TestCase
++class TestDistributedRemoteServerControlCommands < Minitest::Test
+ 
+   include Helper::Distributed
+ 
+diff --git a/test/distributed_scripting_test.rb b/test/distributed_scripting_test.rb
+index 00bdaa6..c11f015 100644
+--- a/test/distributed_scripting_test.rb
++++ b/test/distributed_scripting_test.rb
+@@ -2,7 +2,7 @@
+ 
+ require File.expand_path("helper", File.dirname(__FILE__))
+ 
+-class TestDistributedScripting < Test::Unit::TestCase
++class TestDistributedScripting < Minitest::Test
+ 
+   include Helper::Distributed
+ 
+diff --git a/test/distributed_sorting_test.rb b/test/distributed_sorting_test.rb
+index 4ae3cf5..8abf915 100644
+--- a/test/distributed_sorting_test.rb
++++ b/test/distributed_sorting_test.rb
+@@ -2,12 +2,12 @@
+ 
+ require File.expand_path("helper", File.dirname(__FILE__))
+ 
+-class TestDistributedSorting < Test::Unit::TestCase
++class TestDistributedSorting < Minitest::Test
+ 
+   include Helper::Distributed
+ 
+   def test_sort
+-    assert_raise(Redis::Distributed::CannotDistribute) do
++    assert_raises(Redis::Distributed::CannotDistribute) do
+       r.set("foo:1", "s1")
+       r.set("foo:2", "s2")
+ 
+diff --git a/test/distributed_test.rb b/test/distributed_test.rb
+index da7b653..3bacc62 100644
+--- a/test/distributed_test.rb
++++ b/test/distributed_test.rb
+@@ -2,7 +2,7 @@
+ 
+ require File.expand_path("helper", File.dirname(__FILE__))
+ 
+-class TestDistributed < Test::Unit::TestCase
++class TestDistributed < Minitest::Test
+ 
+   include Helper::Distributed
+ 
+@@ -42,7 +42,7 @@ class TestDistributed < Test::Unit::TestCase
+   end
+ 
+   def test_pipelining_commands_cannot_be_distributed
+-    assert_raise Redis::Distributed::CannotDistribute do
++    assert_raises Redis::Distributed::CannotDistribute do
+       r.pipelined do
+         r.lpush "foo", "s1"
+         r.lpush "foo", "s2"
+@@ -51,7 +51,7 @@ class TestDistributed < Test::Unit::TestCase
+   end
+ 
+   def test_unknown_commands_does_not_work_by_default
+-    assert_raise NoMethodError do
++    assert_raises NoMethodError do
+       r.not_yet_implemented_command
+     end
+   end
+diff --git a/test/distributed_transactions_test.rb b/test/distributed_transactions_test.rb
+index abfb8aa..25b734e 100644
+--- a/test/distributed_transactions_test.rb
++++ b/test/distributed_transactions_test.rb
+@@ -2,30 +2,30 @@
+ 
+ require File.expand_path("helper", File.dirname(__FILE__))
+ 
+-class TestDistributedTransactions < Test::Unit::TestCase
++class TestDistributedTransactions < Minitest::Test
+ 
+   include Helper::Distributed
+ 
+   def test_multi_discard
+     @foo = nil
+ 
+-    assert_raise Redis::Distributed::CannotDistribute do
++    assert_raises Redis::Distributed::CannotDistribute do
+       r.multi { @foo = 1 }
+     end
+ 
+     assert_equal nil, @foo
+ 
+-    assert_raise Redis::Distributed::CannotDistribute do
++    assert_raises Redis::Distributed::CannotDistribute do
+       r.discard
+     end
+   end
+ 
+   def test_watch_unwatch
+-    assert_raise Redis::Distributed::CannotDistribute do
++    assert_raises Redis::Distributed::CannotDistribute do
+       r.watch("foo")
+     end
+ 
+-    assert_raise Redis::Distributed::CannotDistribute do
++    assert_raises Redis::Distributed::CannotDistribute do
+       r.unwatch
+     end
+   end
+diff --git a/test/encoding_test.rb b/test/encoding_test.rb
+index cb54bcb..078424d 100644
+--- a/test/encoding_test.rb
++++ b/test/encoding_test.rb
+@@ -2,7 +2,7 @@
+ 
+ require File.expand_path("helper", File.dirname(__FILE__))
+ 
+-class TestEncoding < Test::Unit::TestCase
++class TestEncoding < Minitest::Test
+ 
+   include Helper::Client
+ 
+diff --git a/test/error_replies_test.rb b/test/error_replies_test.rb
+index 08ec81e..7fbce90 100644
+--- a/test/error_replies_test.rb
++++ b/test/error_replies_test.rb
+@@ -2,7 +2,7 @@
+ 
+ require File.expand_path("helper", File.dirname(__FILE__))
+ 
+-class TestErrorReplies < Test::Unit::TestCase
++class TestErrorReplies < Minitest::Test
+ 
+   include Helper::Client
+ 
+diff --git a/test/fork_safety_test.rb b/test/fork_safety_test.rb
+index a49d5b4..ad5c861 100644
+--- a/test/fork_safety_test.rb
++++ b/test/fork_safety_test.rb
+@@ -2,7 +2,7 @@
+ 
+ require File.expand_path("helper", File.dirname(__FILE__))
+ 
+-class TestForkSafety < Test::Unit::TestCase
++class TestForkSafety < Minitest::Test
+ 
+   include Helper::Client
+   include Helper::Skipable
+@@ -21,8 +21,9 @@ class TestForkSafety < Test::Unit::TestCase
+             redis.set "foo", 2
+           end
+         rescue Redis::InheritedError
+-          exit 127
++          exit! 127
+         end
++        exit! 0
+       end
+ 
+       _, status = Process.wait2(child_pid)
+@@ -48,8 +49,9 @@ class TestForkSafety < Test::Unit::TestCase
+             redis.set "foo", 2
+           end
+         rescue Redis::InheritedError
+-          exit 127
++          exit! 127
+         end
++        exit! 0
+       end
+ 
+       _, status = Process.wait2(child_pid)
+diff --git a/test/helper.rb b/test/helper.rb
+index 1694407..97180cf 100644
+--- a/test/helper.rb
++++ b/test/helper.rb
+@@ -1,7 +1,7 @@
+ $:.unshift File.expand_path("../lib", File.dirname(__FILE__))
+ $:.unshift File.expand_path(File.dirname(__FILE__))
+ 
+-require "test/unit"
++require "minitest/autorun"
+ require "logger"
+ require "stringio"
+ 
+diff --git a/test/helper_test.rb b/test/helper_test.rb
+index 23da68d..a061184 100644
+--- a/test/helper_test.rb
++++ b/test/helper_test.rb
+@@ -2,7 +2,7 @@
+ 
+ require File.expand_path("helper", File.dirname(__FILE__))
+ 
+-class TestHelper < Test::Unit::TestCase
++class TestHelper < Minitest::Test
+ 
+   include Helper
+ 
+diff --git a/test/internals_test.rb b/test/internals_test.rb
+index 865c600..1373630 100644
+--- a/test/internals_test.rb
++++ b/test/internals_test.rb
+@@ -2,7 +2,7 @@
+ 
+ require File.expand_path("helper", File.dirname(__FILE__))
+ 
+-class TestInternals < Test::Unit::TestCase
++class TestInternals < Minitest::Test
+ 
+   include Helper::Client
+ 
+@@ -26,18 +26,17 @@ class TestInternals < Test::Unit::TestCase
+   def test_recovers_from_failed_commands
+     # See https://github.com/redis/redis-rb/issues#issue/28
+ 
+-    assert_raise(Redis::CommandError) do
++    assert_raises(Redis::CommandError) do
+       r.command_that_doesnt_exist
+     end
+ 
+-    assert_nothing_raised do
+-      r.info
+-    end
++    # Should raise nothing:
++    r.info
+   end
+ 
+   def test_raises_on_protocol_errors
+     redis_mock(:ping => lambda { |*_| "foo" }) do |redis|
+-      assert_raise(Redis::ProtocolError) do
++      assert_raises(Redis::ProtocolError) do
+         redis.ping
+       end
+     end
+@@ -104,9 +103,8 @@ class TestInternals < Test::Unit::TestCase
+   end
+ 
+   def test_timeout
+-    assert_nothing_raised do
+-      Redis.new(OPTIONS.merge(:timeout => 0))
+-    end
++    # Should raise nothing:
++    Redis.new(OPTIONS.merge(:timeout => 0))
+   end
+ 
+   def test_id_inside_multi
+@@ -154,7 +152,7 @@ class TestInternals < Test::Unit::TestCase
+   def test_connection_timeout
+     opts = OPTIONS.merge(:host => "10.255.255.254", :connect_timeout => 0.1, :timeout => 5.0)
+     start_time = Time.now
+-    assert_raise Redis::CannotConnectError do
++    assert_raises Redis::CannotConnectError do
+       Redis.new(opts).ping
+     end
+     assert (Time.now - start_time) <= opts[:timeout]
+@@ -193,7 +191,7 @@ class TestInternals < Test::Unit::TestCase
+ 
+   def test_dont_retry_when_wrapped_in_with_reconnect_false
+     close_on_ping([0]) do |redis|
+-      assert_raise Redis::ConnectionError do
++      assert_raises Redis::ConnectionError do
+         redis.with_reconnect(false) do
+           redis.ping
+         end
+@@ -203,7 +201,7 @@ class TestInternals < Test::Unit::TestCase
+ 
+   def test_dont_retry_when_wrapped_in_without_reconnect
+     close_on_ping([0]) do |redis|
+-      assert_raise Redis::ConnectionError do
++      assert_raises Redis::ConnectionError do
+         redis.without_reconnect do
+           redis.ping
+         end
+@@ -213,7 +211,7 @@ class TestInternals < Test::Unit::TestCase
+ 
+   def test_retry_only_once_when_read_raises_econnreset
+     close_on_ping([0, 1]) do |redis|
+-      assert_raise Redis::ConnectionError do
++      assert_raises Redis::ConnectionError do
+         redis.ping
+       end
+ 
+@@ -229,7 +227,7 @@ class TestInternals < Test::Unit::TestCase
+ 
+   def test_retry_with_custom_reconnect_attempts_can_still_fail
+     close_on_ping([0, 1, 2], :reconnect_attempts => 2) do |redis|
+-      assert_raise Redis::ConnectionError do
++      assert_raises Redis::ConnectionError do
+         redis.ping
+       end
+ 
+@@ -239,7 +237,7 @@ class TestInternals < Test::Unit::TestCase
+ 
+   def test_don_t_retry_when_second_read_in_pipeline_raises_econnreset
+     close_on_ping([1]) do |redis|
+-      assert_raise Redis::ConnectionError do
++      assert_raises Redis::ConnectionError do
+         redis.pipelined do
+           redis.ping
+           redis.ping # Second #read times out
+@@ -301,7 +299,7 @@ class TestInternals < Test::Unit::TestCase
+ 
+   def test_dont_retry_on_write_error_when_wrapped_in_with_reconnect_false
+     close_on_connection([0]) do |redis|
+-      assert_raise Redis::ConnectionError do
++      assert_raises Redis::ConnectionError do
+         redis.with_reconnect(false) do
+           redis.client.call(["x" * 128 * 1024])
+         end
+@@ -311,7 +309,7 @@ class TestInternals < Test::Unit::TestCase
+ 
+   def test_dont_retry_on_write_error_when_wrapped_in_without_reconnect
+     close_on_connection([0]) do |redis|
+-      assert_raise Redis::ConnectionError do
++      assert_raises Redis::ConnectionError do
+         redis.without_reconnect do
+           redis.client.call(["x" * 128 * 1024])
+         end
+@@ -320,9 +318,8 @@ class TestInternals < Test::Unit::TestCase
+   end
+ 
+   def test_connecting_to_unix_domain_socket
+-    assert_nothing_raised do
+-      Redis.new(OPTIONS.merge(:path => "./test/db/redis.sock")).ping
+-    end
++    # Should raise nothing:
++    Redis.new(OPTIONS.merge(:path => "./test/db/redis.sock")).ping
+   end
+ 
+   driver(:ruby, :hiredis) do
+@@ -331,7 +328,7 @@ class TestInternals < Test::Unit::TestCase
+ 
+       redis = Redis.new(:port => 6380, :timeout => 0.1)
+ 
+-      assert_raise(Redis::TimeoutError) do
++      assert_raises(Redis::TimeoutError) do
+         redis.ping
+       end
+ 
+@@ -363,9 +360,8 @@ class TestInternals < Test::Unit::TestCase
+   end
+ 
+   def test_resolves_localhost
+-    assert_nothing_raised do
+-      Redis.new(OPTIONS.merge(:host => 'localhost')).ping
+-    end
++    # Should raise nothing:
++    Redis.new(OPTIONS.merge(:host => 'localhost')).ping
+   end
+ 
+   class << self
+@@ -404,9 +400,8 @@ class TestInternals < Test::Unit::TestCase
+     }
+ 
+     redis_mock(commands, :host => host) do |redis|
+-      assert_nothing_raised do
+-        redis.ping
+-      end
++      # Should raise nothing:
++      redis.ping
+     end
+   end
+ 
+diff --git a/test/lint/hashes.rb b/test/lint/hashes.rb
+index 649e667..5dc7cae 100644
+--- a/test/lint/hashes.rb
++++ b/test/lint/hashes.rb
+@@ -100,7 +100,7 @@ module Lint
+     end
+ 
+     def test_hmset_with_invalid_arguments
+-      assert_raise(Redis::CommandError) do
++      assert_raises(Redis::CommandError) do
+         r.hmset("hash", "foo1", "bar1", "foo2", "bar2", "foo3")
+       end
+     end
+diff --git a/test/lint/lists.rb b/test/lint/lists.rb
+index 3a230f6..209f522 100644
+--- a/test/lint/lists.rb
++++ b/test/lint/lists.rb
+@@ -97,7 +97,7 @@ module Lint
+       assert r.lset("foo", 1, "s3")
+       assert_equal "s3", r.lindex("foo", 1)
+ 
+-      assert_raise Redis::CommandError do
++      assert_raises Redis::CommandError do
+         r.lset("foo", 4, "s3")
+       end
+     end
+@@ -135,7 +135,7 @@ module Lint
+ 
+       assert_equal ["s1", "s2", "s3"], r.lrange("foo", 0, -1)
+ 
+-      assert_raise(Redis::CommandError) do
++      assert_raises(Redis::CommandError) do
+         r.linsert "foo", :anywhere, "s3", "s2"
+       end
+     end
+diff --git a/test/lint/sorted_sets.rb b/test/lint/sorted_sets.rb
+index 4700910..744e007 100644
+--- a/test/lint/sorted_sets.rb
++++ b/test/lint/sorted_sets.rb
+@@ -28,8 +28,8 @@ module Lint
+         r.del "foo"
+ 
+         # Wrong number of arguments
+-        assert_raise(Redis::CommandError) { r.zadd("foo", ["bar"]) }
+-        assert_raise(Redis::CommandError) { r.zadd("foo", ["bar", "qux", "zap"]) }
++        assert_raises(Redis::CommandError) { r.zadd("foo", ["bar"]) }
++        assert_raises(Redis::CommandError) { r.zadd("foo", ["bar", "qux", "zap"]) }
+       end
+     end
+ 
+diff --git a/test/persistence_control_commands_test.rb b/test/persistence_control_commands_test.rb
+index 2816571..b521908 100644
+--- a/test/persistence_control_commands_test.rb
++++ b/test/persistence_control_commands_test.rb
+@@ -2,7 +2,7 @@
+ 
+ require File.expand_path("helper", File.dirname(__FILE__))
+ 
+-class TestPersistenceControlCommands < Test::Unit::TestCase
++class TestPersistenceControlCommands < Minitest::Test
+ 
+   include Helper::Client
+ 
+diff --git a/test/pipelining_commands_test.rb b/test/pipelining_commands_test.rb
+index 82cd92f..c6f8420 100644
+--- a/test/pipelining_commands_test.rb
++++ b/test/pipelining_commands_test.rb
+@@ -2,7 +2,7 @@
+ 
+ require File.expand_path("helper", File.dirname(__FILE__))
+ 
+-class TestPipeliningCommands < Test::Unit::TestCase
++class TestPipeliningCommands < Minitest::Test
+ 
+   include Helper::Client
+ 
+@@ -58,9 +58,8 @@ class TestPipeliningCommands < Test::Unit::TestCase
+   end
+ 
+   def test_pipelined_with_an_empty_block
+-    assert_nothing_raised do
+-      r.pipelined do
+-      end
++    # Should raise nothing:
++    r.pipelined do
+     end
+ 
+     assert_equal 0, r.dbsize
+@@ -89,7 +88,7 @@ class TestPipeliningCommands < Test::Unit::TestCase
+   # Although we could support accessing the values in these futures,
+   # it doesn't make a lot of sense.
+   def test_assignment_of_results_inside_the_block_with_errors
+-    assert_raise(Redis::CommandError) do
++    assert_raises(Redis::CommandError) do
+       r.pipelined do
+         r.doesnt_exist
+         @first = r.sadd("foo", 1)
+@@ -97,8 +96,8 @@ class TestPipeliningCommands < Test::Unit::TestCase
+       end
+     end
+ 
+-    assert_raise(Redis::FutureNotReady) { @first.value }
+-    assert_raise(Redis::FutureNotReady) { @second.value }
++    assert_raises(Redis::FutureNotReady) { @first.value }
++    assert_raises(Redis::FutureNotReady) { @second.value }
+   end
+ 
+   def test_assignment_of_results_inside_a_nested_block
+@@ -119,12 +118,12 @@ class TestPipeliningCommands < Test::Unit::TestCase
+       @result = r.sadd("foo", 1)
+     end
+ 
+-    assert_raise(NoMethodError) { @result.to_s }
++    assert_raises(NoMethodError) { @result.to_s }
+   end
+ 
+   def test_futures_raise_when_trying_to_access_their_values_too_early
+     r.pipelined do
+-      assert_raise(Redis::FutureNotReady) do
++      assert_raises(Redis::FutureNotReady) do
+         r.sadd("foo", 1).value
+       end
+     end
+diff --git a/test/publish_subscribe_test.rb b/test/publish_subscribe_test.rb
+index b111c4f..6a336e0 100644
+--- a/test/publish_subscribe_test.rb
++++ b/test/publish_subscribe_test.rb
+@@ -2,7 +2,7 @@
+ 
+ require File.expand_path("helper", File.dirname(__FILE__))
+ 
+-class TestPublishSubscribe < Test::Unit::TestCase
++class TestPublishSubscribe < Minitest::Test
+ 
+   include Helper::Client
+ 
+@@ -207,7 +207,7 @@ class TestPublishSubscribe < Test::Unit::TestCase
+   end
+ 
+   def test_other_commands_within_a_subscribe
+-    assert_raise Redis::CommandError do
++    assert_raises Redis::CommandError do
+       r.subscribe("foo") do |on|
+         on.subscribe do |channel, total|
+           r.set("bar", "s2")
+@@ -217,17 +217,17 @@ class TestPublishSubscribe < Test::Unit::TestCase
+   end
+ 
+   def test_subscribe_without_a_block
+-    assert_raise LocalJumpError do
++    assert_raises LocalJumpError do
+       r.subscribe("foo")
+     end
+   end
+ 
+   def test_unsubscribe_without_a_subscribe
+-    assert_raise RuntimeError do
++    assert_raises RuntimeError do
+       r.unsubscribe
+     end
+ 
+-    assert_raise RuntimeError do
++    assert_raises RuntimeError do
+       r.punsubscribe
+     end
+   end
+diff --git a/test/remote_server_control_commands_test.rb b/test/remote_server_control_commands_test.rb
+index b5cbd45..d4ff0a6 100644
+--- a/test/remote_server_control_commands_test.rb
++++ b/test/remote_server_control_commands_test.rb
+@@ -2,7 +2,7 @@
+ 
+ require File.expand_path("helper", File.dirname(__FILE__))
+ 
+-class TestRemoteServerControlCommands < Test::Unit::TestCase
++class TestRemoteServerControlCommands < Minitest::Test
+ 
+   include Helper::Client
+ 
+diff --git a/test/scanning_test.rb b/test/scanning_test.rb
+index 9a4cf7d..2bc0822 100644
+--- a/test/scanning_test.rb
++++ b/test/scanning_test.rb
+@@ -6,7 +6,7 @@ unless defined?(Enumerator)
+   Enumerator = Enumerable::Enumerator
+ end
+ 
+-class TestScanning < Test::Unit::TestCase
++class TestScanning < Minitest::Test
+ 
+   include Helper::Client
+ 
+diff --git a/test/scripting_test.rb b/test/scripting_test.rb
+index 82d0d89..044c272 100644
+--- a/test/scripting_test.rb
++++ b/test/scripting_test.rb
+@@ -2,7 +2,7 @@
+ 
+ require File.expand_path("helper", File.dirname(__FILE__))
+ 
+-class TestScripting < Test::Unit::TestCase
++class TestScripting < Minitest::Test
+ 
+   include Helper::Client
+ 
+diff --git a/test/sentinel_test.rb b/test/sentinel_test.rb
+index bd66aa3..1db5894 100644
+--- a/test/sentinel_test.rb
++++ b/test/sentinel_test.rb
+@@ -2,7 +2,7 @@
+ 
+ require File.expand_path("helper", File.dirname(__FILE__))
+ 
+-class SentinalTest < Test::Unit::TestCase
++class SentinalTest < Minitest::Test
+ 
+   include Helper::Client
+ 
+diff --git a/test/sorting_test.rb b/test/sorting_test.rb
+index e8aec56..d40baa3 100644
+--- a/test/sorting_test.rb
++++ b/test/sorting_test.rb
+@@ -2,7 +2,7 @@
+ 
+ require File.expand_path("helper", File.dirname(__FILE__))
+ 
+-class TestSorting < Test::Unit::TestCase
++class TestSorting < Minitest::Test
+ 
+   include Helper::Client
+ 
+diff --git a/test/thread_safety_test.rb b/test/thread_safety_test.rb
+index 817f823..e58af0d 100644
+--- a/test/thread_safety_test.rb
++++ b/test/thread_safety_test.rb
+@@ -2,7 +2,7 @@
+ 
+ require File.expand_path("helper", File.dirname(__FILE__))
+ 
+-class TestThreadSafety < Test::Unit::TestCase
++class TestThreadSafety < Minitest::Test
+ 
+   include Helper::Client
+ 
+diff --git a/test/transactions_test.rb b/test/transactions_test.rb
+index 3f588b2..c953207 100644
+--- a/test/transactions_test.rb
++++ b/test/transactions_test.rb
+@@ -2,7 +2,7 @@
+ 
+ require File.expand_path("helper", File.dirname(__FILE__))
+ 
+-class TestTransactions < Test::Unit::TestCase
++class TestTransactions < Minitest::Test
+ 
+   include Helper::Client
+ 
+@@ -49,7 +49,7 @@ class TestTransactions < Test::Unit::TestCase
+   # Although we could support accessing the values in these futures,
+   # it doesn't make a lot of sense.
+   def test_assignment_inside_multi_exec_block_with_delayed_command_errors
+-    assert_raise(Redis::CommandError) do
++    assert_raises(Redis::CommandError) do
+       r.multi do |m|
+         @first = m.set("foo", "s1")
+         @second = m.incr("foo") # not an integer
+@@ -58,12 +58,12 @@ class TestTransactions < Test::Unit::TestCase
+     end
+ 
+     assert_equal "OK", @first.value
+-    assert_raise(Redis::CommandError) { @second.value }
+-    assert_raise(Redis::FutureNotReady) { @third.value }
++    assert_raises(Redis::CommandError) { @second.value }
++    assert_raises(Redis::FutureNotReady) { @third.value }
+   end
+ 
+   def test_assignment_inside_multi_exec_block_with_immediate_command_errors
+-    assert_raise(Redis::CommandError) do
++    assert_raises(Redis::CommandError) do
+       r.multi do |m|
+         m.doesnt_exist
+         @first = m.sadd("foo", 1)
+@@ -71,12 +71,12 @@ class TestTransactions < Test::Unit::TestCase
+       end
+     end
+ 
+-    assert_raise(Redis::FutureNotReady) { @first.value }
+-    assert_raise(Redis::FutureNotReady) { @second.value }
++    assert_raises(Redis::FutureNotReady) { @first.value }
++    assert_raises(Redis::FutureNotReady) { @second.value }
+   end
+ 
+   def test_raise_immediate_errors_in_multi_exec
+-    assert_raise(RuntimeError) do
++    assert_raises(RuntimeError) do
+       r.multi do |multi|
+         multi.set "bar", "s2"
+         raise "Some error"
+@@ -105,7 +105,7 @@ class TestTransactions < Test::Unit::TestCase
+   end
+ 
+   def test_raise_command_errors_in_multi_exec
+-    assert_raise(Redis::CommandError) do
++    assert_raises(Redis::CommandError) do
+       r.multi do |m|
+         m.set("foo", "s1")
+         m.incr("foo") # not an integer
+@@ -147,7 +147,7 @@ class TestTransactions < Test::Unit::TestCase
+ 
+   def test_raise_command_error_when_exec_fails
+     redis_mock(:exec => lambda { |*_| "-ERROR" }) do |redis|
+-      assert_raise(Redis::CommandError) do
++      assert_raises(Redis::CommandError) do
+         redis.multi do |m|
+           m.set "foo", "s1"
+         end
+diff --git a/test/unknown_commands_test.rb b/test/unknown_commands_test.rb
+index 0d1ca58..199c936 100644
+--- a/test/unknown_commands_test.rb
++++ b/test/unknown_commands_test.rb
+@@ -2,12 +2,12 @@
+ 
+ require File.expand_path("helper", File.dirname(__FILE__))
+ 
+-class TestUnknownCommands < Test::Unit::TestCase
++class TestUnknownCommands < Minitest::Test
+ 
+   include Helper::Client
+ 
+   def test_should_try_to_work
+-    assert_raise Redis::CommandError do
++    assert_raises Redis::CommandError do
+       r.not_yet_implemented_command
+     end
+   end
+diff --git a/test/url_param_test.rb b/test/url_param_test.rb
+index b9686a4..2fc0e29 100644
+--- a/test/url_param_test.rb
++++ b/test/url_param_test.rb
+@@ -2,7 +2,7 @@
+ 
+ require File.expand_path("helper", File.dirname(__FILE__))
+ 
+-class TestUrlParam < Test::Unit::TestCase
++class TestUrlParam < Minitest::Test
+ 
+   include Helper::Client
+ 
+-- 
+1.9.3
+
