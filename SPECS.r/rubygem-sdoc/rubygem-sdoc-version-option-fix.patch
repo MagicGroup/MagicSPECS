@@ -1,0 +1,19 @@
+diff --git a/bin/sdoc b/bin/sdoc
+index 78640fe..0ba391d 100755
+--- a/bin/sdoc
++++ b/bin/sdoc
+@@ -1,6 +1,11 @@
+ #!/usr/bin/env ruby -KU
+ require 'sdoc'
+ 
++if ARGV.include? '--version'
++  puts "sdoc #{SDoc::VERSION}"
++  exit 0
++end
++
+ begin
+   ARGV.unshift('--format=sdoc') if ARGV.grep(/\A(-f|--fmt|--format|-r|-R|--ri|--ri-site)\b/).empty?
+   r = RDoc::RDoc.new
+
+
+
