@@ -1,11 +1,13 @@
 Summary: Stub to allow choosing Ruby runtime
 Name: rubypick
-Version: 1.1.0
-Release: 1%{?dist}
+Version: 1.1.1
+Release: 4%{?dist}
 License: MIT
 URL: https://github.com/bkabrda/rubypick
 Source0: https://github.com/bkabrda/%{name}/archive/v%{version}.tar.gz#/%{name}-%{version}.tar.gz
 Requires: ruby(runtime_executable)
+# Hint DNF that MRI is preferred interpreter.
+Suggests: ruby
 BuildArch: noarch
 
 %description
@@ -31,6 +33,21 @@ cp -a ruby %{buildroot}%{_bindir}
 
 
 %changelog
+* Wed Jul 22 2015 Vít Ondruch <vondruch@redhat.com> - 1.1.1-4
+- Use MRI by default.
+
+* Fri Jun 19 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.1.1-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
+
+* Sun Jun 08 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.1.1-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Mon Jan 20 2014 Vít Ondruch <vondruch@redhat.com> - 1.1.1-1
+- Update to rubypick 1.1.1.
+
+* Sun Aug 04 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.1.0-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
 * Wed Feb 20 2013 Vít Ondruch <vondruch@redhat.com> - 1.1.0-1
 - Update to rubypick 1.1.0.
 
