@@ -1,0 +1,309 @@
+diff -Nur ipaddress-0.8.0/test/ipaddress/ipv4_test.rb ipaddress-0.8.0-minitest/test/ipaddress/ipv4_test.rb
+--- ipaddress-0.8.0/test/ipaddress/ipv4_test.rb	2014-06-12 22:42:58.000000000 -0400
++++ ipaddress-0.8.0-minitest/test/ipaddress/ipv4_test.rb	2014-06-12 23:37:35.000000000 -0400
+@@ -1,6 +1,6 @@
+ require 'test_helper'
+  
+-class IPv4Test < Test::Unit::TestCase
++class IPv4Test < Minitest::Test
+ 
+   def setup
+     @klass = IPAddress::IPv4
+@@ -67,25 +67,19 @@
+       assert_instance_of @klass, ip
+     end
+     assert_instance_of IPAddress::Prefix32, @ip.prefix
+-    assert_raise (ArgumentError) do
++    assert_raises (ArgumentError) do
+       @klass.new 
+     end
+-    assert_nothing_raised do
+-      @klass.new "10.0.0.0/8"
+-    end
+   end
+ 
+   def test_initialize_format_error
+     @invalid_ipv4.each do |i|
+-      assert_raise(ArgumentError) {@klass.new(i)}
++      assert_raises(ArgumentError) {@klass.new(i)}
+     end
+-    assert_raise (ArgumentError) {@klass.new("10.0.0.0/asd")}
++    assert_raises (ArgumentError) {@klass.new("10.0.0.0/asd")}
+   end
+ 
+   def test_initialize_without_prefix
+-    assert_nothing_raised do
+-      @klass.new("10.10.0.0")
+-    end
+     ip = @klass.new("10.10.0.0")
+     assert_instance_of IPAddress::Prefix32, ip.prefix
+     assert_equal 32, ip.prefix.to_i
+@@ -105,7 +99,7 @@
+   end
+   
+   def test_initialize_should_require_ip
+-    assert_raise(ArgumentError) { @klass.new }
++    assert_raises(ArgumentError) { @klass.new }
+   end
+ 
+   def test_method_data
+@@ -378,8 +372,8 @@
+   end
+ 
+   def test_method_split
+-    assert_raise(ArgumentError) {@ip.split(0)}
+-    assert_raise(ArgumentError) {@ip.split(257)}
++    assert_raises(ArgumentError) {@ip.split(0)}
++    assert_raises(ArgumentError) {@ip.split(257)}
+     
+     assert_equal @ip.network, @ip.split(1).first
+     
+@@ -409,9 +403,8 @@
+   end
+ 
+   def test_method_subnet
+-    assert_raise(ArgumentError) {@network.subnet(23)}
+-    assert_raise(ArgumentError) {@network.subnet(33)}
+-    assert_nothing_raised {@ip.subnet(30)}
++    assert_raises(ArgumentError) {@network.subnet(23)}
++    assert_raises(ArgumentError) {@network.subnet(33)}
+     arr = ["172.16.10.0/26", "172.16.10.64/26", "172.16.10.128/26", 
+            "172.16.10.192/26"]
+     assert_equal arr, @network.subnet(26).map {|s| s.to_string}
+@@ -422,7 +415,7 @@
+   end
+   
+   def test_method_supernet
+-    assert_raise(ArgumentError) {@ip.supernet(24)}     
++    assert_raises(ArgumentError) {@ip.supernet(24)}     
+     assert_equal "0.0.0.0/0", @ip.supernet(0).to_string
+     assert_equal "0.0.0.0/0", @ip.supernet(-2).to_string
+     assert_equal "172.16.10.0/23", @ip.supernet(23).to_string
+@@ -524,7 +517,7 @@
+       assert_equal prefix, res.prefix
+       assert_equal "#{ip}/#{prefix}", res.to_string
+     end
+-    assert_raise(ArgumentError){ @klass.parse_classful("192.168.256.257") }
++    assert_raises(ArgumentError){ @klass.parse_classful("192.168.256.257") }
+   end
+   
+ end # class IPv4Test
+diff -Nur ipaddress-0.8.0/test/ipaddress/ipv6_test.rb ipaddress-0.8.0-minitest/test/ipaddress/ipv6_test.rb
+--- ipaddress-0.8.0/test/ipaddress/ipv6_test.rb	2014-06-12 22:42:58.000000000 -0400
++++ ipaddress-0.8.0-minitest/test/ipaddress/ipv6_test.rb	2014-06-12 23:38:59.000000000 -0400
+@@ -1,6 +1,6 @@
+ require 'test_helper'
+  
+-class IPv6Test < Test::Unit::TestCase
++class IPv6Test < Minitest::Test
+   
+   def setup
+     @klass = IPAddress::IPv6
+@@ -51,15 +51,12 @@
+ 
+   def test_initialize
+     assert_instance_of @klass, @ip
+-    @valid_ipv6.keys.each do |ip|
+-      assert_nothing_raised {@klass.new ip}
+-    end
+     @invalid_ipv6.each do |ip|
+-      assert_raise(ArgumentError) {@klass.new ip}
++      assert_raises(ArgumentError) {@klass.new ip}
+     end
+     assert_equal 64, @ip.prefix
+ 
+-    assert_raise(ArgumentError) {
++    assert_raises(ArgumentError) {
+       @klass.new "::10.1.1.1"
+     }
+   end
+@@ -257,18 +254,18 @@
+     compressed = "2001:db8:0:cd30::"
+     expanded = "2001:0db8:0000:cd30:0000:0000:0000:0000"
+     assert_equal expanded, @klass.expand(compressed)
+-    assert_not_equal expanded, @klass.expand("2001:0db8:0:cd3")
+-    assert_not_equal expanded, @klass.expand("2001:0db8::cd30")
+-    assert_not_equal expanded, @klass.expand("2001:0db8::cd3")
++    refute_equal expanded, @klass.expand("2001:0db8:0:cd3")
++    refute_equal expanded, @klass.expand("2001:0db8::cd30")
++    refute_equal expanded, @klass.expand("2001:0db8::cd3")
+   end
+   
+   def test_classmethod_compress
+     compressed = "2001:db8:0:cd30::"
+     expanded = "2001:0db8:0000:cd30:0000:0000:0000:0000"
+     assert_equal compressed, @klass.compress(expanded)
+-    assert_not_equal compressed, @klass.compress("2001:0db8:0:cd3")
+-    assert_not_equal compressed, @klass.compress("2001:0db8::cd30")
+-    assert_not_equal compressed, @klass.compress("2001:0db8::cd3")
++    refute_equal compressed, @klass.compress("2001:0db8:0:cd3")
++    refute_equal compressed, @klass.compress("2001:0db8::cd30")
++    refute_equal compressed, @klass.compress("2001:0db8::cd3")
+   end
+ 
+   def test_classmethod_parse_data
+@@ -291,7 +288,7 @@
+ 
+ end # class IPv6Test
+ 
+-class IPv6UnspecifiedTest < Test::Unit::TestCase
++class IPv6UnspecifiedTest < Minitest::Test
+   
+   def setup
+     @klass = IPAddress::IPv6::Unspecified
+@@ -304,7 +301,6 @@
+   end
+ 
+   def test_initialize
+-    assert_nothing_raised {@klass.new}
+     assert_instance_of @klass, @ip
+   end
+ 
+@@ -325,7 +321,7 @@
+ end # class IPv6UnspecifiedTest
+ 
+ 
+-class IPv6LoopbackTest < Test::Unit::TestCase
++class IPv6LoopbackTest < Minitest::Test
+   
+   def setup
+     @klass = IPAddress::IPv6::Loopback
+@@ -338,7 +334,6 @@
+   end
+ 
+   def test_initialize
+-    assert_nothing_raised {@klass.new}
+     assert_instance_of @klass, @ip
+   end
+ 
+@@ -358,7 +353,7 @@
+   
+ end # class IPv6LoopbackTest
+ 
+-class IPv6MappedTest < Test::Unit::TestCase
++class IPv6MappedTest < Minitest::Test
+   
+   def setup
+     @klass = IPAddress::IPv6::Mapped
+@@ -384,14 +379,11 @@
+   end
+ 
+   def test_initialize
+-    assert_nothing_raised {@klass.new("::172.16.10.1")}
+     assert_instance_of @klass, @ip
+     @valid_mapped.each do |ip, u128|
+-      assert_nothing_raised {@klass.new ip}
+       assert_equal u128, @klass.new(ip).to_u128
+     end
+     @valid_mapped_ipv6.each do |ip, u128|
+-      assert_nothing_raised {@klass.new ip}
+       assert_equal u128, @klass.new(ip).to_u128
+     end
+   end
+diff -Nur ipaddress-0.8.0/test/ipaddress/prefix_test.rb ipaddress-0.8.0-minitest/test/ipaddress/prefix_test.rb
+--- ipaddress-0.8.0/test/ipaddress/prefix_test.rb	2014-06-12 22:42:58.000000000 -0400
++++ ipaddress-0.8.0-minitest/test/ipaddress/prefix_test.rb	2014-06-12 23:45:00.000000000 -0400
+@@ -1,6 +1,6 @@
+ require 'test_helper'
+  
+-class Prefix32Test < Test::Unit::TestCase
++class Prefix32Test < Minitest::Test
+ 
+   def setup
+     @netmask0  = "0.0.0.0"
+@@ -89,12 +89,9 @@
+   end
+ 
+   def test_initialize
+-    assert_raise (ArgumentError) do
++    assert_raises (ArgumentError) do
+       @klass.new 33
+     end
+-    assert_nothing_raised do
+-      @klass.new 8
+-    end
+     assert_instance_of @klass, @klass.new(8)
+   end
+ 
+@@ -122,7 +119,7 @@
+ end # class Prefix32Test
+ 
+   
+-class Prefix128Test < Test::Unit::TestCase
++class Prefix128Test < Minitest::Test
+   
+   def setup
+     @u128_hash = {
+@@ -135,12 +132,9 @@
+   end
+ 
+   def test_initialize
+-    assert_raise (ArgumentError) do
++    assert_raises (ArgumentError) do
+       @klass.new 129
+     end
+-    assert_nothing_raised do
+-      @klass.new 64
+-    end
+     assert_instance_of @klass, @klass.new(64)
+   end
+ 
+diff -Nur ipaddress-0.8.0/test/ipaddress_test.rb ipaddress-0.8.0-minitest/test/ipaddress_test.rb
+--- ipaddress-0.8.0/test/ipaddress_test.rb	2014-06-12 22:42:58.000000000 -0400
++++ ipaddress-0.8.0-minitest/test/ipaddress_test.rb	2014-06-12 23:40:56.000000000 -0400
+@@ -1,6 +1,6 @@
+ require 'test_helper'
+ 
+-class IPAddressTest < Test::Unit::TestCase
++class IPAddressTest < Minitest::Test
+ 
+   def setup
+     @valid_ipv4   = "172.16.10.1/24"
+@@ -19,17 +19,14 @@
+   end
+ 
+   def test_method_IPAddress
+-    assert_nothing_raised {@method.call(@valid_ipv4)}
+-    assert_nothing_raised {@method.call(@valid_ipv6)} 
+-    assert_nothing_raised {@method.call(@valid_mapped)}
+ 
+     assert_instance_of @ipv4class, @method.call(@valid_ipv4) 
+     assert_instance_of @ipv6class, @method.call(@valid_ipv6) 
+     assert_instance_of @mappedclass, @method.call(@valid_mapped)
+ 
+-    assert_raise(ArgumentError) {@method.call(@invalid_ipv4)}
+-    assert_raise(ArgumentError) {@method.call(@invalid_ipv6)}
+-    assert_raise(ArgumentError) {@method.call(@invalid_mapped)}
++    assert_raises(ArgumentError) {@method.call(@invalid_ipv4)}
++    assert_raises(ArgumentError) {@method.call(@invalid_ipv6)}
++    assert_raises(ArgumentError) {@method.call(@invalid_mapped)}
+ 
+   end
+ 
+diff -Nur ipaddress-0.8.0/test/test_helper.rb ipaddress-0.8.0-minitest/test/test_helper.rb
+--- ipaddress-0.8.0/test/test_helper.rb	2014-06-12 22:42:58.000000000 -0400
++++ ipaddress-0.8.0-minitest/test/test_helper.rb	2014-06-12 23:42:15.000000000 -0400
+@@ -1,13 +1,20 @@
+ require 'rubygems'
+-require 'test/unit'
++require 'minitest/autorun'
+ 
+ $LOAD_PATH.unshift(File.dirname(__FILE__))
+ $LOAD_PATH.unshift(File.join(File.dirname(__FILE__), '..', 'lib'))
+ require 'ipaddress'
+ 
+-module Test::Unit
++if Minitest.const_defined?('Test')
++  # We're on Minitest 5+. Nothing to do here.
++else
++  # Minitest 4 doesn't have Minitest::Test yet.
++  Minitest::Test = MiniTest::Unit::TestCase
++end
++
++module Minitest
+   
+-  class TestCase
++  class Test
+     
+     def self.must(name, &block)
+       test_name = "test_#{name.gsub(/\s+/,'_')}".to_sym
