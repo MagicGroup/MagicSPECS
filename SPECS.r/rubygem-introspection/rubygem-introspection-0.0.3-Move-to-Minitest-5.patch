@@ -1,0 +1,133 @@
+From b11609ece486c5558e06b4c18d916a21ad0c518a Mon Sep 17 00:00:00 2001
+From: Josef Stribny <jstribny@redhat.com>
+Date: Mon, 19 Jan 2015 14:41:37 +0100
+Subject: [PATCH] Move to Minitest 5
+
+---
+ introspection.gemspec          | 1 +
+ test/class_snapshot_test.rb    | 4 ++--
+ test/instance_snapshot_test.rb | 4 ++--
+ test/module_snapshot_test.rb   | 4 ++--
+ test/snapshot_test.rb          | 7 ++++---
+ test/test_helper.rb            | 6 +++---
+ 6 files changed, 14 insertions(+), 12 deletions(-)
+
+diff --git a/introspection.gemspec b/introspection.gemspec
+index 7f1593e..ddd9d51 100644
+--- a/introspection.gemspec
++++ b/introspection.gemspec
+@@ -26,6 +26,7 @@ Gem::Specification.new do |s|
+   s.add_dependency "metaclass", "~> 0.0.1"
+   s.add_dependency "instantiator", "~> 0.0.3"
+ 
++  s.add_development_dependency "minitest", "~> 5.0"
+   s.add_development_dependency "rake"
+   s.add_development_dependency "blankslate"
+ end
+diff --git a/test/class_snapshot_test.rb b/test/class_snapshot_test.rb
+index 8659822..2537cfa 100644
+--- a/test/class_snapshot_test.rb
++++ b/test/class_snapshot_test.rb
+@@ -1,6 +1,6 @@
+ require "test_helper"
+ 
+-class ClassSnapshotTest < Test::Unit::TestCase
++class ClassSnapshotTest < Minitest::Test
+ 
+   def test_detect_class_method_on_class
+     for_all_method_visibilities do |visibility|
+@@ -84,4 +84,4 @@ def test_detect_method_on_module_included_into_module_included_as_class_method_i
+     end
+   end
+ 
+-end
+\ No newline at end of file
++end
+diff --git a/test/instance_snapshot_test.rb b/test/instance_snapshot_test.rb
+index 3b50283..53ca561 100644
+--- a/test/instance_snapshot_test.rb
++++ b/test/instance_snapshot_test.rb
+@@ -1,6 +1,6 @@
+ require "test_helper"
+ 
+-class InstanceSnapshotTest < Test::Unit::TestCase
++class InstanceSnapshotTest < Minitest::Test
+ 
+   def test_detect_instance_method_on_singleton_class
+     for_all_method_visibilities do |visibility|
+@@ -119,4 +119,4 @@ def test_detect_instance_method_on_module_included_into_module_included_into_cla
+     end
+   end
+ 
+-end
+\ No newline at end of file
++end
+diff --git a/test/module_snapshot_test.rb b/test/module_snapshot_test.rb
+index d6a3498..27bea65 100644
+--- a/test/module_snapshot_test.rb
++++ b/test/module_snapshot_test.rb
+@@ -1,6 +1,6 @@
+ require "test_helper"
+ 
+-class ModuleSnapshotTest < Test::Unit::TestCase
++class ModuleSnapshotTest < Minitest::Test
+ 
+   def test_detect_module_method_on_module
+     for_all_method_visibilities do |visibility|
+@@ -37,4 +37,4 @@ def test_detect_method_on_module_included_into_module_included_as_module_method_
+       assert_method_exists(mod, superdupermod, :foo, visibility)
+     end
+   end
+-end
+\ No newline at end of file
++end
+diff --git a/test/snapshot_test.rb b/test/snapshot_test.rb
+index c81f379..a5885dc 100644
+--- a/test/snapshot_test.rb
++++ b/test/snapshot_test.rb
+@@ -1,7 +1,7 @@
+ require "test_helper"
+ require "blankslate"
+ 
+-class SnapshotTest < Test::Unit::TestCase
++class SnapshotTest < Minitest::Test
+ 
+   include Introspection
+ 
+@@ -49,7 +49,8 @@ def test_should_indicate_snapshot_has_not_changed_when_method_no_methods_are_add
+   end
+ 
+   def test_should_cope_with_blankslate_object
+-    assert_nothing_raised { Snapshot.new(BlankSlate.new) }
++    # Should not raise anything
++    Snapshot.new(BlankSlate.new)
+   end
+ 
+-end
+\ No newline at end of file
++end
+diff --git a/test/test_helper.rb b/test/test_helper.rb
+index a4c1df8..400a743 100644
+--- a/test/test_helper.rb
++++ b/test/test_helper.rb
+@@ -2,7 +2,7 @@
+ require "bundler/setup"
+ 
+ require "introspection"
+-require "test/unit"
++require "minitest/autorun"
+ 
+ module Introspection
+   module TestHelper
+@@ -23,8 +23,8 @@ def assert_method_exists(object, owner, method_name, visibility)
+   end
+ end
+ 
+-class Test::Unit::TestCase
++class Minitest::Test
+   include Introspection::TestHelper
+   include Introspection::LocalAssertions
+   include Introspection::Assertions
+-end
+\ No newline at end of file
++end

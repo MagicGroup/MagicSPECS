@@ -1,28 +1,21 @@
 # Generated from introspection-0.0.2.gem by gem2rpm -*- rpm-spec -*-
 %global gem_name introspection
 
-
-Summary: Dynamic inspection of the hierarchy of method definitions on a Ruby object
 Name: rubygem-%{gem_name}
 Version: 0.0.3
-Release: 3%{?dist}
+Release: 4%{?dist}
+Summary: Dynamic inspection of the hierarchy of method definitions on a Ruby object
 Group: Development/Languages
 # https://github.com/floehopper/introspection/issues/1
 License: MIT
 URL: http://jamesmead.org
-Source0: http://rubygems.org/gems/%{gem_name}-%{version}.gem
+Source0: https://rubygems.org/gems/%{gem_name}-%{version}.gem
 # Remove instantiator dependency.
 # https://github.com/floehopper/introspection/issues/2
 Patch0: %{name}-%{version}-update-dep.patch
-Requires: ruby(release)
-Requires: ruby(rubygems) >= 1.3.6
-Requires: ruby
-Requires: rubygem(metaclass) => 0.0.1
-Requires: rubygem(metaclass) < 0.1
-# Seems to be useless ATM.
-# https://github.com/floehopper/introspection/issues/2
-# Requires: rubygem(instantiator) => 0.0.3
-# Requires: rubygem(instantiator) < 0.1
+# Fix MiniTest 5.x compatibility.
+# https://github.com/floehopper/introspection/commit/b11609ece486c5558e06b4c18d916a21ad0c518a
+Patch1: rubygem-introspection-0.0.3-Move-to-Minitest-5.patch
 BuildRequires: ruby(release)
 BuildRequires: rubygems-devel
 BuildRequires: ruby
@@ -32,12 +25,11 @@ BuildRequires: rubygem(metaclass) < 0.1
 # by rubygem(blankslate) when available in Fedora.
 BuildRequires: rubygem(builder)
 # There is no #assert_nothing_raised in minitest 5.x
-BuildRequires: rubygem(minitest) < 5
+BuildRequires: rubygem(minitest)
 BuildArch: noarch
-Provides: rubygem(%{gem_name}) = %{version}
 
 %description
-Dynamic inspection of the hierarchy of method definitions on a Ruby object
+Dynamic inspection of the hierarchy of method definitions on a Ruby object.
 
 
 %package doc
@@ -47,8 +39,7 @@ Requires: %{name} = %{version}-%{release}
 BuildArch: noarch
 
 %description doc
-Documentation for %{name}
-
+Documentation for %{name}.
 
 %prep
 %setup -q -c -T
@@ -56,6 +47,10 @@ Documentation for %{name}
 
 pushd .%{gem_dir}
 %patch0 -p0
+popd
+
+pushd .%{gem_instdir}
+%patch1 -p1
 popd
 
 %build
@@ -70,25 +65,17 @@ pushd .%{gem_instdir}
 # Disable Bundler.
 sed -i '/bundler\/setup/ d' test/test_helper.rb
 
-# Possible conversion to minitest 5.x. Unfortunately, one test fails.
-# sed -i \
-#   -e 's|Test::Unit::TestCase|Minitest::Test|' \
-#   -e 's|test/unit|minitest/autorun|' \
-#   test/test_helper.rb \
-#   test/*_test.rb
-
 ruby -Ilib:test -e 'Dir.glob "./test/**/*_test.rb", &method(:require)'
 popd
 
 
 %files
-%doc %{gem_instdir}/COPYING.txt
+%license %{gem_instdir}/COPYING.txt
 %dir %{gem_instdir}
 %exclude %{gem_instdir}/.gitignore
 %exclude %{gem_instdir}/.travis.yml
 %exclude %{gem_instdir}/introspection.gemspec
 %{gem_libdir}
-%{gem_instdir}/test
 %exclude %{gem_cache}
 %{gem_spec}
 
@@ -97,10 +84,13 @@ popd
 %{gem_instdir}/Gemfile
 %{gem_instdir}/Rakefile
 %{gem_instdir}/samples
+%{gem_instdir}/test
 %doc %{gem_docdir}
 
-
 %changelog
+* Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.0.3-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
+
 * Thu Jun 19 2014 Vít Ondruch <vondruch@redhat.com> - 0.0.3-3
 - Fix FTBFS in Rawhide (rhbz#1107144).
 
