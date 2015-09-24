@@ -4,7 +4,7 @@
 Summary:       Default HTML formatter for SimpleCov
 Name:          rubygem-%{gem_name}
 Version:       0.10.0
-Release:       2%{?dist}
+Release:       1%{?dist}
 Group:         Development/Languages
 License:       MIT
 URL:           https://github.com/colszowka/simplecov-html
@@ -85,9 +85,6 @@ rm -f %{buildroot}%{gem_instdir}/simplecov-html.gemspec
 %{gem_instdir}/test
 
 %changelog
-* Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 0.10.0-2
-- 为 Magic 3.0 重建
-
 * Tue Jul 21 2015 Troy Dawson <tdawson@redhat.com> - 0.10.0-1
 - Updated to version 0.10.0
 
