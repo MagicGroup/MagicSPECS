@@ -1,0 +1,29 @@
+diff --git a/test/import_once_test.rb b/test/import_once_test.rb
+index bf8f1ab..2702606 100644
+--- a/test/import_once_test.rb
++++ b/test/import_once_test.rb
+@@ -23,7 +23,7 @@ module Sass::Script::Functions
+   end
+ end
+ 
+-class ImportOnceTest < Test::Unit::TestCase
++class ImportOnceTest < Minitest::Test
+   FIXTURES_DIR = File.join(File.expand_path(File.dirname(__FILE__)), "fixtures")
+   Dir.glob(File.join(FIXTURES_DIR, "**", "*.scss")).each do |scss_file|
+     if ENV["FIXTURE"]
+diff --git a/test/test_helper.rb b/test/test_helper.rb
+index 307a7be..5ad6696 100644
+--- a/test/test_helper.rb
++++ b/test/test_helper.rb
+@@ -1,9 +1,9 @@
+ require 'sass'
+ require 'compass/import-once/activate'
+ require 'sass-globbing'
+-require 'test/unit'
++require 'minitest/autorun'
+ require 'diff_as_string'
+ 
+-class Test::Unit::TestCase
++class Minitest::Test
+   include DiffAsString
+ end
