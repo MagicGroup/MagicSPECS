@@ -1,0 +1,21 @@
+From: Jan Vcelak <jvcelak@fedoraproject.org>
+Date: Wed, 11 Sep 2013 20:37:00 +0200
+Subject: [PATCH] bin: use system instance of ruby
+
+---
+ bin/git-up | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/bin/git-up b/bin/git-up
+index c4ee65f..9b8ffff 100755
+--- a/bin/git-up
++++ b/bin/git-up
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env ruby
++#!/usr/bin/ruby
+ 
+ require 'git-up'
+ 
+-- 
+1.8.3.1
+
