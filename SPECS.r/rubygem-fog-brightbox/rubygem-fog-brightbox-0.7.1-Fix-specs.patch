@@ -1,0 +1,65 @@
+From 3f17dc371acd0fb9cdeeea50c9c89b2efe8ccc2c Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?V=C3=ADt=20Ondruch?= <vondruch@redhat.com>
+Date: Thu, 25 Jun 2015 09:21:11 +0200
+Subject: [PATCH 1/2] Require spec_helper.
+
+This fixes possible "uninitialized constant StockStorageResponses
+(NameError)" issues.
+---
+ spec/fog/brightbox/storage/authentication_request_spec.rb | 4 +---
+ spec/fog/storage/brightbox_spec.rb                        | 4 +---
+ 2 files changed, 2 insertions(+), 6 deletions(-)
+
+diff --git a/spec/fog/brightbox/storage/authentication_request_spec.rb b/spec/fog/brightbox/storage/authentication_request_spec.rb
+index 7638dfd..69773cc 100644
+--- a/spec/fog/brightbox/storage/authentication_request_spec.rb
++++ b/spec/fog/brightbox/storage/authentication_request_spec.rb
+@@ -1,6 +1,4 @@
+-require "minitest/autorun"
+-require "webmock/minitest"
+-require "fog/brightbox"
++require "spec_helper"
+ 
+ describe Fog::Brightbox::Storage::AuthenticationRequest do
+   include StockStorageResponses
+diff --git a/spec/fog/storage/brightbox_spec.rb b/spec/fog/storage/brightbox_spec.rb
+index ade5031..fbdb74e 100644
+--- a/spec/fog/storage/brightbox_spec.rb
++++ b/spec/fog/storage/brightbox_spec.rb
+@@ -1,6 +1,4 @@
+-require "minitest/autorun"
+-require "webmock/minitest"
+-require "fog/brightbox"
++require "spec_helper"
+ 
+ describe Fog::Storage::Brightbox do
+   include StockStorageResponses
+-- 
+2.4.3
+
+
+From c109b229129f91404cd8158a55f0bfe745be24ac Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?V=C3=ADt=20Ondruch?= <vondruch@redhat.com>
+Date: Thu, 25 Jun 2015 09:24:54 +0200
+Subject: [PATCH 2/2] Require 'model_helper'.
+
+This fixes possible "uninitialized constant Fog::Brightbox::ModelHelper
+(NameError)" issue.
+---
+ lib/fog/brightbox/models/compute/server.rb | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/lib/fog/brightbox/models/compute/server.rb b/lib/fog/brightbox/models/compute/server.rb
+index a8406fa..5279281 100644
+--- a/lib/fog/brightbox/models/compute/server.rb
++++ b/lib/fog/brightbox/models/compute/server.rb
+@@ -1,5 +1,6 @@
+ require "fog/compute/models/server"
+ require "fog/brightbox/compute/resource_locking"
++require "fog/brightbox/model_helper"
+ 
+ module Fog
+   module Compute
+-- 
+2.4.3
+
