@@ -5,7 +5,7 @@
 Summary: Return the MIME Content-Type for a given filename
 Name: rubygem-%{gem_name}
 Version: 1.25.1
-Release: 3%{?dist}
+Release: 2%{?dist}
 Group: Development/Languages
 License: GPL+ or Ruby or Artistic
 URL: http://mime-types.rubyforge.org/
@@ -76,9 +76,6 @@ popd
 %{gem_docdir}
 
 %changelog
-* Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 1.25.1-3
-- 为 Magic 3.0 重建
-
 * Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.25.1-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 
