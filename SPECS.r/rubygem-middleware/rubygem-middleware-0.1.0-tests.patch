@@ -1,0 +1,21 @@
+commit 05e8697b0f23bbf3302a8b8feca7a2f5869a3861
+Author: Craig Little <craiglttl@gmail.com>
+Date:   Sat Sep 29 19:58:35 2012 -0700
+
+    Tweak test syntax to fix the build
+    
+    (cherry picked from commit b8148a2a04a90fe177f464a1e0e45a391a3687a2)
+
+diff --git a/spec/middleware/runner_spec.rb b/spec/middleware/runner_spec.rb
+index 12e34e7..8633292 100644
+--- a/spec/middleware/runner_spec.rb
++++ b/spec/middleware/runner_spec.rb
+@@ -88,7 +88,6 @@ describe Middleware::Runner do
+   end
+ 
+   it "should raise an error if an invalid middleware is given" do
+-    expect { described_class.new([27]) }.to
+-      raise_error
++    expect { described_class.new([27]) }.to raise_error
+   end
+ end
