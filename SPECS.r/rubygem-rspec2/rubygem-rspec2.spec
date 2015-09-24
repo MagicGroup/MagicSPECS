@@ -8,7 +8,7 @@
 Summary:	Behaviour driven development (BDD) framework for Ruby
 Name:		rubygem-%{rpmgem_name}
 Version:	2.14.1
-Release:	5%{?dist}
+Release:	4%{?dist}
 
 Group:		Development/Languages
 License:	MIT
@@ -68,9 +68,6 @@ cp -a .%{gem_dir}/* \
 
 
 %changelog
-* Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 2.14.1-5
-- 为 Magic 3.0 重建
-
 * Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.14.1-4
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 
