@@ -1,0 +1,15 @@
+--- poppler-0.90.5/test/poppler-test-utils.rb.net	2010-12-07 18:23:49.000000000 +0900
++++ poppler-0.90.5/test/poppler-test-utils.rb	2010-12-07 18:33:57.000000000 +0900
+@@ -22,7 +22,11 @@
+   def form_pdf
+     file = File.join(fixtures_dir, "form.pdf")
+     return file if File.exist?(file)
+-    pdf = open("http://www.irs.gov/pub/irs-pdf/fw9.pdf").read
++    begin
++        pdf = open("http://www.irs.gov/pub/irs-pdf/fw9.pdf").read
++    rescue SocketError, Errno::ETIMEDOUT
++        omit("Seems no net available")
++    end
+     File.open(file, "wb") do |output|
+       output.print(pdf)
+     end
