@@ -4,22 +4,21 @@
 
 Summary: Adds a metaclass method to all Ruby objects
 Name: rubygem-%{gem_name}
-Version: 0.0.1
-Release: 9%{?dist}
+Version: 0.0.4
+Release: 2%{?dist}
 Group: Development/Languages
 # https://github.com/floehopper/metaclass/issues/1
 License: MIT
 URL: http://github.com/floehopper/metaclass
 Source0: http://rubygems.org/gems/%{gem_name}-%{version}.gem
-Requires: ruby(release)
-Requires: ruby(rubygems)
-Requires: ruby
+# Make the test suite support MiniTest 5.x.
+# https://github.com/floehopper/metaclass/commit/cff40cbace639d3b66d7913d99e74e56f91905b8
+Patch0: rubygem-metaclass-0.0.4-Move-to-Minitest-5.patch
 BuildRequires: ruby(release)
 BuildRequires: rubygems-devel
 BuildRequires: ruby
 BuildRequires: rubygem(minitest)
 BuildArch: noarch
-Provides: rubygem(%{gem_name}) = %{version}
 
 %description
 Adds a metaclass method to all Ruby objects
@@ -39,6 +38,10 @@ Documentation for %{name}
 %setup -q -c -T
 %gem_install -n %{SOURCE0}
 
+pushd .%{gem_instdir}
+%patch0 -p1
+popd
+
 %build
 
 %install
@@ -50,30 +53,41 @@ cp -a .%{gem_dir}/* \
 pushd .%{gem_instdir}
 # test_helper.rb currently references bundler, so it is easier to avoid
 # its usage at all.
-sed -i '1,1d' test/object_methods_test.rb
-RUBYOPT="-Ilib -rmetaclass" testrb test/object_methods_test.rb
+sed -i '/require "bundler\/setup"/ d' test/test_helper.rb
+
+ruby -Ilib:test -e 'Dir.glob "./test/**/*_test.rb", &method(:require)'
 popd
 
 
 %files
 %dir %{gem_instdir}
+%license %{gem_instdir}/COPYING.txt
 %exclude %{gem_instdir}/.gitignore
 %exclude %{gem_instdir}/metaclass.gemspec
 %{gem_libdir}
-%{gem_instdir}/test
 %exclude %{gem_cache}
 %{gem_spec}
 
 %files doc
+%doc %{gem_docdir}
 %doc %{gem_instdir}/README.md
 %{gem_instdir}/Gemfile
 %{gem_instdir}/Rakefile
-%doc %{gem_docdir}
+%{gem_instdir}/test
 
 
 %changelog
-* Sun Jun 22 2014 Liu Di <liudidi@gmail.com> - 0.0.1-9
-- 为 Magic 3.0 重建
+* Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.0.4-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
+
+* Mon Jun 16 2014 Vít Ondruch <vondruch@redhat.com> - 0.0.1-1
+- Update to metaclass 0.0.4.
+
+* Sun Jun 08 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.0.1-10
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Sun Aug 04 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.0.1-9
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
 
 * Mon Feb 25 2013 Vít Ondruch <vondruch@redhat.com> - 0.0.1-8
 - Rebuild for https://fedoraproject.org/wiki/Features/Ruby_2.0.0
