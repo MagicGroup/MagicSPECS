@@ -6,7 +6,7 @@ Summary: Web-application framework
 Name: rubygem-%{gem_name}
 Epoch: 1
 Version: 4.2.4
-Release: 2%{?dist}
+Release: 1%{?dist}
 Group: Development/Languages
 License: MIT
 URL: http://www.rubyonrails.org
@@ -54,9 +54,6 @@ cp -a ./%{gem_dir}/* %{buildroot}%{gem_dir}/
 %doc %{gem_instdir}/guides
 
 %changelog
-* Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 1:4.2.4-2
-- 为 Magic 3.0 重建
-
 * Wed Aug 26 2015 Josef Stribny <jstribny@redhat.com> - 1:4.2.4-1
 - Update to rails 4.2.4
 
