@@ -1,0 +1,409 @@
+From 81a56bce3a41896310bd1bed733b894b0c094979 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?V=C3=ADt=20Ondruch?= <vondruch@redhat.com>
+Date: Tue, 5 Mar 2013 10:02:31 +0100
+Subject: [PATCH 1/5] Fix embedded YAML to be compatible with Psych.
+
+---
+ test/test-engines.rb | 32 +++++++++++++++++++++-----------
+ 1 file changed, 21 insertions(+), 11 deletions(-)
+
+diff --git a/test/test-engines.rb b/test/test-engines.rb
+index 8f0705a..a183231 100644
+--- a/test/test-engines.rb
++++ b/test/test-engines.rb
+@@ -71,7 +71,8 @@ __END__
+ - name:  ruby2_options
+   lang:  ruby
+   class: Eruby
+-  options: { :bufvar: '@_out_buf' }
++  options:
++    :bufvar: '@_out_buf'
+   input: |
+       <table>
+         <% for item in @items %>
+@@ -137,7 +138,9 @@ __END__
+ - name:  c1
+   lang:  c
+   class: Ec
+-  options: { :filename: foo.html, :indent: '  ' }
++  options:
++    :filename: foo.html
++    :indent: '  '
+   input: |4
+       <table>
+        <tbody>
+@@ -167,7 +170,9 @@ __END__
+ - name:  cpp1
+   lang:  cpp
+   class: Ecpp
+-  options: { :filename: foo.html, :indent: '  ' }
++  options:
++    :filename: foo.html
++    :indent: '  '
+   input: |4
+       <table>
+        <tbody>
+@@ -197,7 +202,10 @@ __END__
+ - name:  java1
+   lang:  java
+   class: Ejava
+-  options: { :buf: _buf, :bufclass: StringBuilder, :indent: '    ' }
++  options:
++    :buf: _buf,
++    :bufclass: StringBuilder
++    :indent: '    '
+   input: |
+       <table>
+        <tbody>
+@@ -220,19 +228,19 @@ __END__
+   expected: |4
+           StringBuilder _buf = new StringBuilder(); _buf.append("<table>\n"
+                     + " <tbody>\n");
+-           
++      
+           int i = 0;
+           for (Iterator it = list.iterator(); it.hasNext(); ) {
+               String s = (String)it.next();
+               i++;
+-             
++      
+           _buf.append("  <tr class=\""); _buf.append(i%2==0 ? "even" : "odd"); _buf.append("\">\n"
+                     + "   <td>"); _buf.append(i); _buf.append("</td>\n"
+                     + "   <td>"); _buf.append(escape(s)); _buf.append("</td>\n"
+                     + "  </tr>\n");
+-           
++      
+           }
+-          
++      
+           _buf.append(" <tbody>\n"
+                     + "</table>\n");
+            System.err.println("*** debug: i="+(i)); _buf.append("\n");
+@@ -242,7 +250,7 @@ __END__
+   lang:  scheme
+   class: Escheme
+   options:
+-  input: &scheme1_input|
++  input: &scheme1_input |
+       <% (let ((i 0)) %>
+       <table>
+        <tbody>
+@@ -290,7 +298,8 @@ __END__
+ - name:  scheme2
+   lang:  scheme
+   class: Escheme
+-  options: { :func: 'display' }
++  options:
++    :func: 'display'
+   input: *scheme1_input
+   expected: |4
+        (let ((i 0)) 
+@@ -401,7 +410,8 @@ __END__
+ - name:  javascript2
+   lang:  javascript
+   class: Ejavascript
+-  options: { :docwrite: false }
++  options:
++    :docwrite: false
+   input: *javascript_input
+   expected: |4
+       var _buf = [];
+-- 
+1.8.1.4
+
+
+From bbf33e57251d353ffe4789c7f4e445305b707d12 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?V=C3=ADt=20Ondruch?= <vondruch@redhat.com>
+Date: Tue, 5 Mar 2013 10:03:23 +0100
+Subject: [PATCH 2/5] Fix embedded YAML to be compatible with Psych.
+
+---
+ test/test-erubis.rb | 34 ++++++++++++++++++++--------------
+ 1 file changed, 20 insertions(+), 14 deletions(-)
+
+diff --git a/test/test-erubis.rb b/test/test-erubis.rb
+index ad00e5e..89e94f7 100644
+--- a/test/test-erubis.rb
++++ b/test/test-erubis.rb
+@@ -220,13 +220,13 @@ y = 20
+ 
+ __END__
+ - name:  basic1
+-  input: &basic1_input|
++  input: &basic1_input |
+       <ul>
+        <% for item in list %>
+         <li><%= item %></li>
+        <% end %>
+       </ul>
+-  src: &basic1_src|
++  src: &basic1_src |
+       _buf = ''; _buf << '<ul>
+       ';  for item in list 
+        _buf << '  <li>'; _buf << ( item ).to_s; _buf << '</li>
+@@ -234,7 +234,7 @@ __END__
+        _buf << '</ul>
+       ';
+       _buf.to_s
+-  output: &basic1_output|
++  output: &basic1_output |
+       <ul>
+         <li><aaa></li>
+         <li>b&b</li>
+@@ -344,7 +344,7 @@ __END__
+ - name:  quotation1
+   desc:  single quotation and backslash
+   class: Eruby
+-  input: &quotation1_input|
++  input: &quotation1_input |
+       a = "'"
+       b = "\""
+       c = '\''
+@@ -451,7 +451,9 @@ __END__
+ ##
+ - name:  bodyonly1
+   testopt:  skip_output
+-  options: { :preamble: no, :postamble: no }
++  options:
++   :preamble: no
++   :postamble: no
+   input: *basic1_input
+   src: |4
+        _buf << '<ul>
+@@ -496,7 +498,7 @@ __END__
+ ##
+ - name:  nomatch1
+   desc:  bug
+-  input: &nomatch1|
++  input: &nomatch1 |
+       <ul>
+         <li>foo</li>
+       </ul>
+@@ -510,7 +512,8 @@ __END__
+ 
+ ##
+ - name:  escape1
+-  options: { :escape: true }
++  options:
++   :escape: true
+   input: |
+       <% str = '<>&"' %>
+       <%= str %>
+@@ -570,7 +573,7 @@ __END__
+ ##
+ - name:  optimized1
+   class: OptimizedEruby
+-  input: &optimized1_input|
++  input: &optimized1_input |
+       <table>
+        <% for item in list %>
+         <tr>
+@@ -677,7 +680,7 @@ __END__
+ - name:  optimized4
+   desc:  single quotation and backslash
+   class: OptimizedEruby
+-  input: &optimized4_input|
++  input: &optimized4_input |
+       a = "'"
+       b = "\""
+       c = '\''
+@@ -751,14 +754,14 @@ __END__
+ - name:  pi1
+   class:  PI::Eruby
+   testopt:  evaluate
+-  input: &input_pi1|
++  input: &input_pi1 |
+       <ul>
+        <?rb for item in @list ?>
+         <li>@{item}@ / @!{item}@</li>
+         <li><%= item %> / <%== item %></li>
+        <?rb end ?>
+       </ul>
+-  src: &src_pi1|
++  src: &src_pi1 |
+       _buf = ''; _buf << '<ul>
+       ';  for item in @list 
+        _buf << '  <li>'; _buf << Erubis::XmlHelper.escape_xml(item); _buf << ' / '; _buf << (item).to_s; _buf << '</li>
+@@ -767,7 +770,7 @@ __END__
+        _buf << '</ul>
+       ';
+       _buf.to_s
+-  output: &output_pi1|
++  output: &output_pi1 |
+       <ul>
+         <li>&lt;aaa&gt; / <aaa></li>
+         <li><aaa> / &lt;aaa&gt;</li>
+@@ -780,7 +783,8 @@ __END__
+ ##
+ - name:  pi2
+   class:  PI::Eruby
+-  options: { :escape: false }
++  options:
++   :escape: false
+   testopt:  evaluate
+   input: *input_pi1
+   src: |
+@@ -805,7 +809,9 @@ __END__
+ ##
+ - name:  pi3
+   class:  PI::Eruby
+-  options: { :pi: hoge, :embchar: '$' }
++  options:
++   :pi: hoge
++   :embchar: '$'
+   testopt:  evaluate
+   input: |
+       <ul>
+-- 
+1.8.1.4
+
+
+From 8c847c79dc4a6a6886d51d01178b7e6bff6e9ad7 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?V=C3=ADt=20Ondruch?= <vondruch@redhat.com>
+Date: Tue, 5 Mar 2013 10:04:36 +0100
+Subject: [PATCH 3/5] Fix embedded YAML to be compatible with Psych.
+
+---
+ test/test-enhancers.rb | 14 ++++++++------
+ 1 file changed, 8 insertions(+), 6 deletions(-)
+
+diff --git a/test/test-enhancers.rb b/test/test-enhancers.rb
+index 3b46721..0ad9f65 100644
+--- a/test/test-enhancers.rb
++++ b/test/test-enhancers.rb
+@@ -106,13 +106,13 @@ __END__
+ ##
+ - name:  basic1
+   class: Eruby
+-  input: &basic1_input|
++  input: &basic1_input |
+       <ul>
+        <% for item in list %>
+         <li><%= item %></li>
+        <% end %>
+       </ul>
+-  src: &basic1_src|
++  src: &basic1_src |
+       _buf = ''; _buf << '<ul>
+       ';  for item in list 
+        _buf << '  <li>'; _buf << ( item ).to_s; _buf << '</li>
+@@ -120,7 +120,7 @@ __END__
+        _buf << '</ul>
+       ';
+       _buf.to_s
+-  output: &basic1_output|
++  output: &basic1_output |
+       <ul>
+         <li><aaa></li>
+         <li>b&b</li>
+@@ -193,7 +193,7 @@ __END__
+ ##
+ - name:  printenabled1
+   class: PrintEnabledEruby
+-  input: &printenabled1_input|
++  input: &printenabled1_input |
+       <ul>
+        <% for item in list %>
+         <li><% print item %></li>
+@@ -425,7 +425,8 @@ __END__
+ ##
+ - name:  bipattern2
+   class: BiPatternEruby
+-  options:  { :bipattern: '\$\{ \}' }
++  options:
++    :bipattern: '\$\{ \}'
+   input: |
+       <% for item in list %>
+         <%=item%> % <%==item%>
+@@ -500,7 +501,8 @@ __END__
+ ##
+ - name:  prefixedline1
+   class: PrefixedLineEruby
+-  options: { :prefixchar: '!' }
++  options:
++   :prefixchar: '!'
+   input: |
+       <table>
+         ! for item in list
+-- 
+1.8.1.4
+
+
+From f993710234852a713a351fcd06ca027b1b46d809 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?V=C3=ADt=20Ondruch?= <vondruch@redhat.com>
+Date: Tue, 5 Mar 2013 10:06:30 +0100
+Subject: [PATCH 4/5] Add support for Ruby 2.0.0 error messages.
+
+---
+ test/test-main.rb | 13 +++++++++++++
+ test/testutil.rb  |  4 ++++
+ 2 files changed, 17 insertions(+)
+
+diff --git a/test/test-main.rb b/test/test-main.rb
+index 0e63229..e4d6c2a 100644
+--- a/test/test-main.rb
++++ b/test/test-main.rb
+@@ -273,6 +273,19 @@ END
+       errmsgs << <<'END'
+ 7: syntax error, unexpected $end, expecting keyword_end
+ END
++    elsif ruby20?
++      errmsgs << <<'END'
++3: syntax error, unexpected ']', expecting ')'
++ _buf << '  <li>'; _buf << ( item[:name]] ).to_s; _buf << '</li>
++                                         ^
++-:4: syntax error, unexpected keyword_end, expecting ')'
++'; end 
++      ^
++-:7: syntax error, unexpected end-of-input, expecting ')'
++END
++      errmsgs << <<'END'
++7: syntax error, unexpected end-of-input, expecting keyword_end
++END
+     elsif rubinius?
+       errmsgs << <<'END'
+ 3: expecting ')'
+diff --git a/test/testutil.rb b/test/testutil.rb
+index e5293a5..59c3779 100644
+--- a/test/testutil.rb
++++ b/test/testutil.rb
+@@ -17,6 +17,10 @@ def ruby19?  # :nodoc:
+   RUBY_VERSION =~ /\A1.9/
+ end
+ 
++def ruby20?  # :nodoc:
++  RUBY_VERSION =~ /\A2.0/
++end
++
+ def rubinius?  # :nodoc:
+   defined?(RUBY_ENGINE) && RUBY_ENGINE == "rbx"
+ end
+-- 
+1.8.1.4
+
+
+From 99d0db2f38d7a4b9cf782e2e4a73bde0d73277e9 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?V=C3=ADt=20Ondruch?= <vondruch@redhat.com>
+Date: Tue, 5 Mar 2013 10:07:02 +0100
+Subject: [PATCH 5/5] Add support for Ruby 2.0.0.
+
+---
+ test/test-users-guide.rb | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/test/test-users-guide.rb b/test/test-users-guide.rb
+index 2687a83..b89706b 100644
+--- a/test/test-users-guide.rb
++++ b/test/test-users-guide.rb
+@@ -28,7 +28,7 @@ class KwarkUsersGuideTest < Test::Unit::TestCase
+     s =~ /\A\$ (.*?)\n/
+     command = $1
+     expected = $'
+-    if ruby19?
++    if ruby19? || ruby20?
+       case @name
+       when 'test_main_program1_result'
+         expected.sub!('["eruby", "items", "x", "_buf"]', '[:_buf, :eruby, :items, :x]')
+-- 
+1.8.1.4
+

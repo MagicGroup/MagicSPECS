@@ -1,0 +1,55 @@
+From 4a986d3a8f3cc4bfeacf1c1def3c6375c4866dfe Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?V=C3=ADt=20Ondruch?= <vondruch@redhat.com>
+Date: Mon, 23 Jun 2014 14:25:16 +0200
+Subject: [PATCH] Add support for Ruby 2.1.
+
+---
+ test/test-main.rb        | 2 +-
+ test/test-users-guide.rb | 2 +-
+ test/testutil.rb         | 4 ++++
+ 3 files changed, 6 insertions(+), 2 deletions(-)
+
+diff --git a/test/test-main.rb b/test/test-main.rb
+index e4d6c2a..9dbe12e 100644
+--- a/test/test-main.rb
++++ b/test/test-main.rb
+@@ -273,7 +273,7 @@ END
+       errmsgs << <<'END'
+ 7: syntax error, unexpected $end, expecting keyword_end
+ END
+-    elsif ruby20?
++    elsif ruby20? || ruby21?
+       errmsgs << <<'END'
+ 3: syntax error, unexpected ']', expecting ')'
+  _buf << '  <li>'; _buf << ( item[:name]] ).to_s; _buf << '</li>
+diff --git a/test/test-users-guide.rb b/test/test-users-guide.rb
+index b89706b..fee5435 100644
+--- a/test/test-users-guide.rb
++++ b/test/test-users-guide.rb
+@@ -28,7 +28,7 @@ class KwarkUsersGuideTest < Test::Unit::TestCase
+     s =~ /\A\$ (.*?)\n/
+     command = $1
+     expected = $'
+-    if ruby19? || ruby20?
++    if ruby19? || ruby20? || ruby21?
+       case @name
+       when 'test_main_program1_result'
+         expected.sub!('["eruby", "items", "x", "_buf"]', '[:_buf, :eruby, :items, :x]')
+diff --git a/test/testutil.rb b/test/testutil.rb
+index 59c3779..1b841c3 100644
+--- a/test/testutil.rb
++++ b/test/testutil.rb
+@@ -21,6 +21,10 @@ def ruby20?  # :nodoc:
+   RUBY_VERSION =~ /\A2.0/
+ end
+ 
++def ruby21?  # :nodoc:
++  RUBY_VERSION =~ /\A2.1/
++end
++
+ def rubinius?  # :nodoc:
+   defined?(RUBY_ENGINE) && RUBY_ENGINE == "rbx"
+ end
+-- 
+1.9.0
+
