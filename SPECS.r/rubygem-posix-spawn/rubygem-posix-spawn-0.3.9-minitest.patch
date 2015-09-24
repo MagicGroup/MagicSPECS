@@ -1,0 +1,238 @@
+From 64a96526893c9dc0b6a150240e4c85aa30b4cce1 Mon Sep 17 00:00:00 2001
+From: Ken Dreyer <ktdreyer@ktdreyer.com>
+Date: Fri, 11 Apr 2014 10:40:52 -0600
+Subject: [PATCH 2/2] Fedora: tests: switch to minitest
+
+Ruby 1.9+ uses Minitest as the backend for Test::Unit. As of Minitest 5,
+the shim no longer supports Test::Unit::TestCase.
+
+Adjust the posix-spawn test suite to support Minitest 5's syntax.
+
+Move the duplicated "requires" lines into a test_helper script.
+
+Minitest versions 4 and below do not support the newer Minitest::Test
+class that arrived in version 5. For that case, use the
+MiniTest::Unit::TestCase class as a fallback.
+
+(This is a squashed patchset for Fedora, rebased onto v0.3.9. It does
+not have the gemspec adjustment since the gemspec is dynamically
+regenerated during a Fedora RPM build, nor the Rakefile adjustment,
+since that is not necessary to ship in the RPM. The upstream fix is
+available at https://github.com/rtomayko/posix-spawn/pull/65)
+---
+ test/test_backtick.rb |  5 ++---
+ test/test_child.rb    | 21 ++++++++++-----------
+ test/test_helper.rb   |  9 +++++++++
+ test/test_popen.rb    |  5 ++---
+ test/test_spawn.rb    | 15 +++++++--------
+ test/test_system.rb   |  5 ++---
+ 6 files changed, 32 insertions(+), 28 deletions(-)
+ create mode 100644 test/test_helper.rb
+
+diff --git a/test/test_backtick.rb b/test/test_backtick.rb
+index 708b73d..015f359 100644
+--- a/test/test_backtick.rb
++++ b/test/test_backtick.rb
+@@ -1,7 +1,6 @@
+-require 'test/unit'
+-require 'posix-spawn'
++require 'test_helper'
+ 
+-class BacktickTest < Test::Unit::TestCase
++class BacktickTest < Minitest::Test
+   include POSIX::Spawn
+ 
+   def test_backtick_simple
+diff --git a/test/test_child.rb b/test/test_child.rb
+index f96b1a4..1f4a3c5 100644
+--- a/test/test_child.rb
++++ b/test/test_child.rb
+@@ -1,9 +1,8 @@
+ # coding: UTF-8
+ 
+-require 'test/unit'
+-require 'posix-spawn'
++require 'test_helper'
+ 
+-class ChildTest < Test::Unit::TestCase
++class ChildTest < Minitest::Test
+   include POSIX::Spawn
+ 
+   def test_sanity
+@@ -57,19 +56,19 @@ class ChildTest < Test::Unit::TestCase
+   end
+ 
+   def test_max
+-    assert_raise MaximumOutputExceeded do
++    assert_raises MaximumOutputExceeded do
+       Child.new('yes', :max => 100_000)
+     end
+   end
+ 
+   def test_max_with_child_hierarchy
+-    assert_raise MaximumOutputExceeded do
++    assert_raises MaximumOutputExceeded do
+       Child.new('/bin/sh', '-c', 'yes', :max => 100_000)
+     end
+   end
+ 
+   def test_max_with_stubborn_child
+-    assert_raise MaximumOutputExceeded do
++    assert_raises MaximumOutputExceeded do
+       Child.new("trap '' TERM; yes", :max => 100_000)
+     end
+   end
+@@ -77,7 +76,7 @@ class ChildTest < Test::Unit::TestCase
+   def test_max_with_partial_output
+     p = Child.build('yes', :max => 100_000)
+     assert_nil p.out
+-    assert_raise MaximumOutputExceeded do
++    assert_raises MaximumOutputExceeded do
+       p.exec!
+     end
+     assert_output_exceeds_repeated_string("y\n", 100_000, p.out)
+@@ -85,7 +84,7 @@ class ChildTest < Test::Unit::TestCase
+ 
+   def test_max_with_partial_output_long_lines
+     p = Child.build('yes', "nice to meet you", :max => 10_000)
+-    assert_raise MaximumOutputExceeded do
++    assert_raises MaximumOutputExceeded do
+       p.exec!
+     end
+     assert_output_exceeds_repeated_string("nice to meet you\n", 10_000, p.out)
+@@ -93,14 +92,14 @@ class ChildTest < Test::Unit::TestCase
+ 
+   def test_timeout
+     start = Time.now
+-    assert_raise TimeoutExceeded do
++    assert_raises TimeoutExceeded do
+       Child.new('sleep', '1', :timeout => 0.05)
+     end
+     assert (Time.now-start) <= 0.2
+   end
+ 
+   def test_timeout_with_child_hierarchy
+-    assert_raise TimeoutExceeded do
++    assert_raises TimeoutExceeded do
+       Child.new('/bin/sh', '-c', 'sleep 1', :timeout => 0.05)
+     end
+   end
+@@ -108,7 +107,7 @@ class ChildTest < Test::Unit::TestCase
+   def test_timeout_with_partial_output
+     start = Time.now
+     p = Child.build('echo Hello; sleep 1', :timeout => 0.05)
+-    assert_raise TimeoutExceeded do
++    assert_raises TimeoutExceeded do
+       p.exec!
+     end
+     assert (Time.now-start) <= 0.2
+diff --git a/test/test_helper.rb b/test/test_helper.rb
+new file mode 100644
+index 0000000..158ddab
+--- /dev/null
++++ b/test/test_helper.rb
+@@ -0,0 +1,9 @@
++require 'minitest/autorun'
++require 'posix-spawn'
++
++if Minitest.const_defined?('Test')
++  # We're on Minitest 5+. Nothing to do here.
++else
++  # Minitest 4 doesn't have Minitest::Test yet.
++  Minitest::Test = MiniTest::Unit::TestCase
++end
+diff --git a/test/test_popen.rb b/test/test_popen.rb
+index 5970550..8c7f85e 100644
+--- a/test/test_popen.rb
++++ b/test/test_popen.rb
+@@ -1,7 +1,6 @@
+-require 'test/unit'
+-require 'posix-spawn'
++require 'test_helper'
+ 
+-class PopenTest < Test::Unit::TestCase
++class PopenTest < Minitest::Test
+   include POSIX::Spawn
+ 
+   def test_popen4
+diff --git a/test/test_spawn.rb b/test/test_spawn.rb
+index 43a6ea8..4623da5 100644
+--- a/test/test_spawn.rb
++++ b/test/test_spawn.rb
+@@ -1,5 +1,4 @@
+-require 'test/unit'
+-require 'posix-spawn'
++require 'test_helper'
+ 
+ module SpawnImplementationTests
+   def test_spawn_simple
+@@ -23,7 +22,7 @@ module SpawnImplementationTests
+   end
+ 
+   def test_spawn_with_invalid_argv
+-    assert_raise ArgumentError do
++    assert_raises ArgumentError do
+       _spawn(['echo','b','c','d'])
+     end
+   end
+@@ -317,7 +316,7 @@ module SpawnImplementationTests
+   def test_spawn_raises_exception_on_unsupported_options
+     exception = nil
+ 
+-    assert_raise ArgumentError do
++    assert_raises ArgumentError do
+       begin
+         _spawn('echo howdy', :out => '/dev/null', :oops => 'blaahh')
+       rescue Exception => e
+@@ -344,7 +343,7 @@ module SpawnImplementationTests
+   end
+ end
+ 
+-class SpawnTest < Test::Unit::TestCase
++class SpawnTest < Minitest::Test
+   include POSIX::Spawn
+ 
+   def test_spawn_methods_exposed_at_module_level
+@@ -378,14 +377,14 @@ class SpawnTest < Test::Unit::TestCase
+   end
+ end
+ 
+-class PosixSpawnTest < Test::Unit::TestCase
++class PosixSpawnTest < Minitest::Test
+   include SpawnImplementationTests
+   def _spawn(*argv)
+     POSIX::Spawn.pspawn(*argv)
+   end
+ end
+ 
+-class ForkSpawnTest < Test::Unit::TestCase
++class ForkSpawnTest < Minitest::Test
+   include SpawnImplementationTests
+   def _spawn(*argv)
+     POSIX::Spawn.fspawn(*argv)
+@@ -393,7 +392,7 @@ class ForkSpawnTest < Test::Unit::TestCase
+ end
+ 
+ if ::Process::respond_to?(:spawn)
+-  class NativeSpawnTest < Test::Unit::TestCase
++  class NativeSpawnTest < Minitest::Test
+     include SpawnImplementationTests
+     def _spawn(*argv)
+       ::Process.spawn(*argv)
+diff --git a/test/test_system.rb b/test/test_system.rb
+index 7d28474..9bbefaa 100644
+--- a/test/test_system.rb
++++ b/test/test_system.rb
+@@ -1,7 +1,6 @@
+-require 'test/unit'
+-require 'posix-spawn'
++require 'test_helper'
+ 
+-class SystemTest < Test::Unit::TestCase
++class SystemTest < Minitest::Test
+   include POSIX::Spawn
+ 
+   def test_system
+-- 
+1.9.3
+
