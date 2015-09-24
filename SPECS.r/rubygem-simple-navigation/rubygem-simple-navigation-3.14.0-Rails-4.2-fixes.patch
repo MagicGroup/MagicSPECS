@@ -1,0 +1,74 @@
+diff --git a/spec/initializers/have_css_matcher.rb b/spec/initializers/have_css_matcher.rb
+index 3e9181d..b0ef90a 100644
+--- a/spec/initializers/have_css_matcher.rb
++++ b/spec/initializers/have_css_matcher.rb
+@@ -1,6 +1,6 @@
+ RSpec::Matchers.define :have_css do |expected, times|
+   match do |actual|
+-    HTML::Selector.new(expected).select(actual).should have_at_least(times || 1).entry
++    HTMLSelector.new(Array(expected), actual).select.should have_at_least(times || 1).entry
+   end
+ 
+   failure_message_for_should do |actual|
+diff --git a/spec/lib/simple_navigation/rendering/renderer/breadcrumbs_spec.rb b/spec/lib/simple_navigation/rendering/renderer/breadcrumbs_spec.rb
+index e644eaa..ca8392a 100644
+--- a/spec/lib/simple_navigation/rendering/renderer/breadcrumbs_spec.rb
++++ b/spec/lib/simple_navigation/rendering/renderer/breadcrumbs_spec.rb
+@@ -7,7 +7,7 @@ module SimpleNavigation
+ 
+       let(:item) { nil }
+       let(:options) {{ level: :all }}
+-      let(:output) { HTML::Document.new(raw_output).root }
++      let(:output) { Loofah.document(raw_output) }
+       let(:raw_output) { renderer.render(navigation) }
+       let(:renderer) { setup_renderer(Breadcrumbs, options) }
+ 
+diff --git a/spec/lib/simple_navigation/rendering/renderer/links_spec.rb b/spec/lib/simple_navigation/rendering/renderer/links_spec.rb
+index 3b420dc..a2eee54 100644
+--- a/spec/lib/simple_navigation/rendering/renderer/links_spec.rb
++++ b/spec/lib/simple_navigation/rendering/renderer/links_spec.rb
+@@ -8,7 +8,7 @@ module SimpleNavigation
+ 
+         let(:item) { nil }
+         let(:options) {{ level: :all }}
+-        let(:output) { HTML::Document.new(raw_output).root }
++        let(:output) { Loofah.document(raw_output) }
+         let(:raw_output) { renderer.render(navigation) }
+         let(:renderer) { setup_renderer(Links, options) }
+ 
+@@ -31,7 +31,7 @@ module SimpleNavigation
+         end
+ 
+         it "renders the 'a' tags with the corresponding item's :html_options" do
+-          expect(output).to have_css('a[style=float:right]')
++          expect(output).to have_css('a[style="float:right"]')
+         end
+ 
+         context 'when an item has a specified id' do
+diff --git a/spec/lib/simple_navigation/rendering/renderer/list_spec.rb b/spec/lib/simple_navigation/rendering/renderer/list_spec.rb
+index 0aedd61..2489b70 100644
+--- a/spec/lib/simple_navigation/rendering/renderer/list_spec.rb
++++ b/spec/lib/simple_navigation/rendering/renderer/list_spec.rb
+@@ -7,7 +7,7 @@ module SimpleNavigation
+ 
+       let(:item) { nil }
+       let(:options) {{ level: :all }}
+-      let(:output) { HTML::Document.new(raw_output).root }
++      let(:output) { Loofah.document(raw_output) }
+       let(:raw_output) { renderer.render(navigation) }
+       let(:renderer) { setup_renderer(List, options) }
+ 
+diff --git a/spec/spec_helper.rb b/spec/spec_helper.rb
+index d59938a..fd7ad54 100644
+--- a/spec/spec_helper.rb
++++ b/spec/spec_helper.rb
+@@ -1,7 +1,8 @@
+ require 'initializers/have_css_matcher'
++require 'rails'
+ require 'action_controller'
++require 'rails-dom-testing'
+ require 'coveralls'
+-require 'html/document'
+ 
+ Coveralls.wear!
+ 
