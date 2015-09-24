@@ -6,7 +6,7 @@
 
 Name:           ruby-shadow
 Version:        1.4.1
-Release:        25%{?dist}
+Release:        27%{?dist}
 Summary:        Ruby bindings for shadow password access
 Group:          System Environment/Libraries
 License:        Public Domain
@@ -51,8 +51,14 @@ rm -rf %{buildroot}
 %{ruby_archdir}/shadow.so
 
 %changelog
-* Tue Sep 22 2015 Liu Di <liudidi@gmail.com> - 1.4.1-25
-- 为 Magic 3.0 重建
+* Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.4.1-27
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
+
+* Sat Jan 17 2015 Mamoru TASAKA <mtasaka@fedoraproject.org> - 1.4.1-26
+- Rebuild for https://fedoraproject.org/wiki/Changes/Ruby_2.2
+
+* Mon Aug 18 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.4.1-25
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
 
 * Sun Jun 08 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.4.1-24
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
