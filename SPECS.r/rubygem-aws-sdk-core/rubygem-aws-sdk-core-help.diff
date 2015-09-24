@@ -1,0 +1,18 @@
+Author: František Dvořák <valtri@civ.zcu.cz>
+Date:   Thu Feb 5 21:39:51 2015 +0100
+
+    Update help usage message.
+
+diff --git a/aws-sdk-core/bin/aws.rb b/aws-sdk-core/bin/aws.rb
+index ed43837..00814c5 100755
+--- a/aws-sdk-core/bin/aws.rb
++++ b/aws-sdk-core/bin/aws.rb
+@@ -28,7 +28,7 @@ options = {
+ 
+ OptionParser.new do |opts|
+ 
+-  opts.banner = "Usage: aws-rb [options]"
++  opts.banner = "Usage: awsv2.rb [options]"
+ 
+   opts.on("--region NAME", "specify the AWS region, e.g. us-west-2") do |value|
+     options[:region] = value

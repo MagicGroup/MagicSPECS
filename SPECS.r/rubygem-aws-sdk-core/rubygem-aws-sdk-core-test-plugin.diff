@@ -1,0 +1,13 @@
+diff --git a/aws-sdk-core/spec/seahorse/client/plugin_list_spec.rb b/aws-sdk-core/spec/seahorse/client/plugin_list_spec.rb
+index 50e0f72..3f3e7ef 100644
+--- a/aws-sdk-core/spec/seahorse/client/plugin_list_spec.rb
++++ b/aws-sdk-core/spec/seahorse/client/plugin_list_spec.rb
+@@ -85,7 +85,7 @@ module Seahorse
+         it 'requires prefixes from plugin names when loading' do
+           expect(Kernel.const_defined?(:SeahorseFixtures)).to eq(false)
+           prefix = File.dirname(File.dirname(File.dirname(__FILE__)))
+-          plugins.add("#{prefix}/fixtures/plugin.SeahorseFixtures::Plugin")
++          plugins.add("fixtures/plugin.SeahorseFixtures::Plugin")
+           expect(plugins.to_a).to eq([SeahorseFixtures::Plugin])
+         end
+ 
