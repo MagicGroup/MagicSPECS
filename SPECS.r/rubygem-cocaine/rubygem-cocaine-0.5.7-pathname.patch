@@ -1,0 +1,37 @@
+From 5e744ec7d0e00372bc1591cac23ff1dd1c8b294e Mon Sep 17 00:00:00 2001
+From: Ken Dreyer <ktdreyer@ktdreyer.com>
+Date: Wed, 27 May 2015 07:56:25 -0600
+Subject: [PATCH] require pathname during tests
+
+Commit ba7630ab83945a4eb11d3e0a30fe3664bd3d9a84 introduced a dependency
+on the pathname library. When running the tests outside of Bundler on
+Fedora 23, Ruby cannot find this library:
+
+  $ rspec -Ilib spec
+
+  ... snip ...
+
+     NameError:
+       uninitialized constant Pathname
+
+Add the gem to the spec_helper to ensure that Ruby loads it in all
+cases.
+---
+ spec/spec_helper.rb | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/spec/spec_helper.rb b/spec/spec_helper.rb
+index 7cc8aeb..f0b39bb 100644
+--- a/spec/spec_helper.rb
++++ b/spec/spec_helper.rb
+@@ -6,6 +6,7 @@ require 'timeout'
+ require 'tempfile'
+ require 'pry'
+ require 'thread'
++require 'pathname'
+ 
+ begin; require 'active_support/logger'; rescue LoadError; end
+ begin; require 'active_support/buffered_logger'; rescue LoadError; end
+-- 
+2.3.6
+
