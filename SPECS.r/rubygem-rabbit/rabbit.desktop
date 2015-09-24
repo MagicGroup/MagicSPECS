@@ -1,0 +1,10 @@
+[Desktop Entry]
+Version=1.0
+Name=Rabbit
+Exec=rabbit %f
+Icon=rabbit_icon
+Terminal=false
+Type=Application
+StartupNotify=true
+Categories=Office;Presentation;
+MimeType=application/x-rabbit-rab;application/x-rabbit-rd;

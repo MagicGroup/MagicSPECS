@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mime-info xmlns="http://www.freedesktop.org/standards/shared-mime-info">
+    <mime-type type="application/x-rabbit-rab">
+        <sub-class-of type="text/plain"/>
+        <comment xml:lang="en">Rabbit files</comment>
+        <glob pattern="*.rab"/>
+    </mime-type>
+    <mime-type type="application/x-rabbit-rd">
+        <sub-class-of type="text/plain"/>
+        <comment xml:lang="en">RD files</comment>
+        <glob pattern="*.rd"/> 
+    </mime-type>
+</mime-info>
+
