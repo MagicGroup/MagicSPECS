@@ -2,23 +2,15 @@
 
 Summary:        Tool to execute plain-text documents as functional tests
 Name:           rubygem-%{gem_name}
-Version: 1.2.1
-Release: 4%{?dist}
+Version:        1.3.18
+Release:        2%{?dist}
 Group:          Development/Languages
 License:        MIT
 URL:            http://cukes.info
 Source0:        http://gems.rubyforge.org/gems/%{gem_name}-%{version}.gem
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-Requires:       ruby(release)
-Requires:       ruby(rubygems)
-Requires:       rubygem(term-ansicolor) >= 1.0.5
-Requires:       rubygem(diff-lcs) >= 1.1.2
-Requires:       rubygem(builder) >= 2.1.2
-Requires:       rubygem(gherkin) >= 2.4.5
-Requires:       rubygem(json) >= 1.4.6
 BuildRequires:  rubygems-devel
 BuildArch:      noarch
-Provides:       rubygem(%{gem_name}) = %{version}
 
 %description
 Cucumber lets software development teams describe how software should behave
@@ -45,7 +37,9 @@ cp -pa .%{_bindir}/* \
 
 find %{buildroot}%{gem_instdir}/bin -type f | xargs chmod a+x
 
-rm -f $RPM_BUILD_ROOT%{gem_instdir}/.rvmrc
+rm -f $RPM_BUILD_ROOT%{gem_instdir}/.ruby-gemset
+rm -f $RPM_BUILD_ROOT%{gem_instdir}/.ruby-version
+rm -f $RPM_BUILD_ROOT%{gem_instdir}/.yardopts
 rm -f $RPM_BUILD_ROOT%{gem_instdir}/.gitattributes
 rm -f $RPM_BUILD_ROOT%{gem_instdir}/.gitmodules
 rm -f $RPM_BUILD_ROOT%{gem_instdir}/.yardopts
@@ -56,8 +50,6 @@ find $RPM_BUILD_ROOT%{gem_instdir} -type f | grep '.gitignore' | xargs rm -f
 
 # Remove zero-length documentation files
 find $RPM_BUILD_ROOT%{gem_docdir} -empty -delete
-
-
 
 %files
 %defattr(-,root,root,-)
@@ -77,6 +69,7 @@ find $RPM_BUILD_ROOT%{gem_docdir} -empty -delete
 %doc %{gem_instdir}/LICENSE
 %doc %{gem_instdir}/History.md
 %doc %{gem_instdir}/README.md
+%doc %{gem_instdir}/CONTRIBUTING.md
 %doc %{gem_instdir}/Gemfile
 %doc %{gem_instdir}/legacy_features
 %{gem_cache}
@@ -84,8 +77,21 @@ find $RPM_BUILD_ROOT%{gem_docdir} -empty -delete
 
 
 %changelog
-* Sun Jun 22 2014 Liu Di <liudidi@gmail.com> - 1.2.1-4
-- 为 Magic 3.0 重建
+* Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.3.18-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
+
+* Fri Jan 16 2015 Mamoru TASAKA <mtasaka@fedoraproject.org> - 1.3.18-1
+- 1.3.18
+  ref: https://github.com/cucumber/cucumber/issues/781
+
+* Wed Jun 18 2014 Josef Stribny <jstribny@redhat.com> - 1.3.15-1
+- Update to cucumber 1.3.15
+
+* Sun Jun 08 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.2.1-5
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Sun Aug 04 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.2.1-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
 
 * Sat Feb 23 2013 Vít Ondruch <vondruch@redhat.com> - 1.2.1-3
 - Rebuild for https://fedoraproject.org/wiki/Features/Ruby_2.0.0
