@@ -1,0 +1,28 @@
+From 592b0e934d216e726ae5bf739448793bbc9b9c35 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?V=C3=ADt=20Ondruch?= <vondruch@redhat.com>
+Date: Wed, 24 Jun 2015 18:25:58 +0200
+Subject: [PATCH] Fix "MoFile.new has already been invoked and cannot be
+ modified further"
+
+---
+ spec/fast_gettext/translation_repository/mo_spec.rb | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/spec/fast_gettext/translation_repository/mo_spec.rb b/spec/fast_gettext/translation_repository/mo_spec.rb
+index baca690..7a88628 100644
+--- a/spec/fast_gettext/translation_repository/mo_spec.rb
++++ b/spec/fast_gettext/translation_repository/mo_spec.rb
+@@ -23,8 +23,9 @@ describe 'FastGettext::TranslationRepository::Mo' do
+   describe :reload do
+     before do
+       mo_file = FastGettext::MoFile.new('spec/locale/de/LC_MESSAGES/test2.mo')
++      empty_mo_file = FastGettext::MoFile.empty
+ 
+-      FastGettext::MoFile.stub(:new).and_return(FastGettext::MoFile.empty)
++      FastGettext::MoFile.stub(:new).and_return(empty_mo_file)
+       FastGettext::MoFile.stub(:new).with('spec/locale/de/LC_MESSAGES/test.mo').and_return(mo_file)
+     end
+ 
+-- 
+2.4.3
+
