@@ -1,0 +1,168 @@
+From f4a097743ca975476b3766c65c5d58e21e8ec47a Mon Sep 17 00:00:00 2001
+From: Lee Jarvis <ljjarvis@gmail.com>
+Date: Mon, 13 May 2013 22:05:05 +0100
+Subject: [PATCH] Support Minitest 5
+
+Most of the Minitest 5 changes can be found in this commit:
+https://github.com/seattlerb/minitest/commit/9a57c520ceac76abfe6105866f8548a94eb357b6
+
+Mechanize taps into __name__ which has been changed to @NAME
+
+MiniTest::Unit::TestCase is now Minitest::Test
+---
+ Rakefile                          |  2 +-
+ lib/mechanize/test_case.rb        |  4 ++--
+ test/test_mechanize_download.rb   |  2 +-
+ test/test_mechanize_form.rb       |  8 ++++----
+ test/test_mechanize_http_agent.rb | 12 ++++++------
+ 5 files changed, 14 insertions(+), 14 deletions(-)
+
+diff --git a/Rakefile b/Rakefile
+index 7313e62..ffa2a91 100644
+--- a/Rakefile
++++ b/Rakefile
+@@ -27,7 +27,7 @@ hoe = Hoe.spec 'mechanize' do
+   self.extra_deps << ['webrobots',            '<  0.2', '>= 0.0.9']
+   self.extra_deps << ['domain_name',          '~> 0.5', '>= 0.5.1']
+ 
+-  self.extra_dev_deps << ['minitest', '< 5.0']
++  self.extra_dev_deps << ['minitest', '~> 5.0']
+ 
+   self.spec_extras[:required_ruby_version] = '>= 1.8.7'
+ end
+diff --git a/lib/mechanize/test_case.rb b/lib/mechanize/test_case.rb
+index 39c958c..86aaaae 100644
+--- a/lib/mechanize/test_case.rb
++++ b/lib/mechanize/test_case.rb
+@@ -29,7 +29,7 @@
+ #
+ # Which will launch a test server at http://localhost:8000
+ 
+-class Mechanize::TestCase < MiniTest::Unit::TestCase
++class Mechanize::TestCase < Minitest::Test
+ 
+   TEST_DIR = File.expand_path '../../../test', __FILE__
+   REQUESTS = []
+@@ -168,7 +168,7 @@ def ssl_certificate
+   # Creates a Tempfile with +content+ that is immediately unlinked
+ 
+   def tempfile content
+-    body_io = Tempfile.new @__name__
++    body_io = Tempfile.new @NAME
+     body_io.unlink
+     body_io.write content
+     body_io.flush
+diff --git a/test/test_mechanize_download.rb b/test/test_mechanize_download.rb
+index 32ed1d7..b68c7ad 100644
+--- a/test/test_mechanize_download.rb
++++ b/test/test_mechanize_download.rb
+@@ -33,7 +33,7 @@ def test_save_string_io
+ 
+   def test_save_tempfile
+     uri = URI.parse 'http://example/foo.html'
+-    Tempfile.open __name__ do |body_io|
++    Tempfile.open @NAME do |body_io|
+       body_io.unlink
+       body_io.write '0123456789'
+ 
+diff --git a/test/test_mechanize_form.rb b/test/test_mechanize_form.rb
+index c723734..cc6e1fd 100644
+--- a/test/test_mechanize_form.rb
++++ b/test/test_mechanize_form.rb
+@@ -8,7 +8,7 @@ def setup
+     @uri = URI 'http://example'
+     @page = page @uri
+ 
+-    @form = Mechanize::Form.new node('form', 'name' => __name__), @mech, @page
++    @form = Mechanize::Form.new node('form', 'name' => @NAME), @mech, @page
+   end
+ 
+   def test_action
+@@ -25,7 +25,7 @@ def test_add_button_to_query
+     end
+ 
+     assert_equal "#{button.inspect} does not belong to the same page " \
+-                 "as the form \"#{@__name__}\" in #{@uri}",
++                 "as the form \"#{@NAME}\" in #{@uri}",
+                  e.message
+   end
+ 
+@@ -312,7 +312,7 @@ def test_set_fields_position_crappily
+     page = html_page '<form><input name="a" value="b"><input name="a"></form>'
+     form = page.forms.first
+ 
+-    form.set_fields :a => ['c', 1] 
++    form.set_fields :a => ['c', 1]
+ 
+     assert_equal 'b', form.fields.first.value
+     assert_equal 'c', form.fields.last.value
+@@ -952,7 +952,7 @@ def test_form_built_from_array_post
+   def test_form_built_from_hashes_submit
+     uri = URI 'http://example/form_post'
+     page = page uri
+-    form = Mechanize::Form.new node('form', 'name' => __name__, 'method' => 'POST'), @mech, page
++    form = Mechanize::Form.new node('form', 'name' => @NAME, 'method' => 'POST'), @mech, page
+     form.fields << Mechanize::Form::Field.new({'name' => 'order_matters'}, '0')
+     form.fields << Mechanize::Form::Field.new({'name' => 'order_matters'}, '1')
+     form.fields << Mechanize::Form::Field.new({'name' => 'order_matters'}, '2')
+diff --git a/test/test_mechanize_http_agent.rb b/test/test_mechanize_http_agent.rb
+index 7be8917..d08afd5 100644
+--- a/test/test_mechanize_http_agent.rb
++++ b/test/test_mechanize_http_agent.rb
+@@ -39,7 +39,7 @@ def test_auto_io
+       input_io.write '12345'
+       input_io.rewind
+ 
+-      out_io = @agent.auto_io __name__, 1024, input_io
++      out_io = @agent.auto_io @NAME, 1024, input_io
+ 
+       assert_equal '12345', out_io.string
+ 
+@@ -56,7 +56,7 @@ def test_auto_io_chunk
+       input_io.write '12345'
+       input_io.rewind
+ 
+-      @agent.auto_io __name__, 1, input_io do |chunk|
++      @agent.auto_io @NAME, 1, input_io do |chunk|
+         chunks << chunk
+       end
+ 
+@@ -72,7 +72,7 @@ def test_auto_io_tempfile
+       input_io.write '12345'
+       input_io.rewind
+ 
+-      out_io = @agent.auto_io __name__, 1, input_io
++      out_io = @agent.auto_io @NAME, 1, input_io
+ 
+       result = out_io.read
+       assert_equal '12345', result
+@@ -88,7 +88,7 @@ def test_auto_io_yield
+       input_io.write '12345'
+       input_io.rewind
+ 
+-      out_io = @agent.auto_io __name__, 1024, input_io do |chunk|
++      out_io = @agent.auto_io @NAME, 1024, input_io do |chunk|
+         "x#{chunk}"
+       end
+ 
+@@ -1030,7 +1030,7 @@ def test_response_content_encoding_tempfile_7_bit
+     refute body_io.closed?
+   ensure
+     begin
+-      body_io.close! unless body_io.closed?
++      body_io.close! if body_io and not body_io.closed?
+     rescue IOError
+       # HACK for ruby 1.8
+     end
+@@ -1045,7 +1045,7 @@ def test_response_content_encoding_tempfile_gzip
+     assert_equal 'part', body.read
+     assert body_io.closed?
+   ensure
+-    body_io.close! unless body_io.closed?
++    body_io.close! if body_io and not body_io.closed?
+   end
+ 
+   def test_response_content_encoding_unknown
+-- 
+1.8.4
+

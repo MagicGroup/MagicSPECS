@@ -1,0 +1,39 @@
+From c8e32fe30dbda011ef78d0a68752f3a707c5e773 Mon Sep 17 00:00:00 2001
+From: Jeff Nyman <jeffnyman@gmail.com>
+Date: Mon, 11 Nov 2013 17:45:36 -0600
+Subject: [PATCH] Updated for mime-type 2.0.
+
+---
+ Rakefile                           | 2 +-
+ lib/mechanize/pluggable_parsers.rb | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/Rakefile b/Rakefile
+index ffa2a91..72ea161 100644
+--- a/Rakefile
++++ b/Rakefile
+@@ -20,7 +20,7 @@ hoe = Hoe.spec 'mechanize' do
+ 
+   self.extra_deps << ['net-http-digest_auth', '~> 1.1', '>= 1.1.1']
+   self.extra_deps << ['net-http-persistent',  '~> 2.5', '>= 2.5.2']
+-  self.extra_deps << ['mime-types',           '~> 1.17', '>= 1.17.2']
++  self.extra_deps << ['mime-types',           '~> 2.0']
+   self.extra_deps << ['http-cookie',          '~> 1.0']
+   self.extra_deps << ['nokogiri',             '~> 1.4']
+   self.extra_deps << ['ntlm-http',            '~> 0.1', '>= 0.1.1']
+diff --git a/lib/mechanize/pluggable_parsers.rb b/lib/mechanize/pluggable_parsers.rb
+index 7994e5b..4c4fc3b 100644
+--- a/lib/mechanize/pluggable_parsers.rb
++++ b/lib/mechanize/pluggable_parsers.rb
+@@ -99,7 +99,7 @@ def parser content_type
+              @parsers[mime_type.simplified] ||
+              @parsers[mime_type.media_type] ||
+              default
+-  rescue MIME::InvalidContentType
++  rescue MIME::Type::InvalidContentType
+     default
+   end
+ 
+-- 
+1.8.4
+
