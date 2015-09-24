@@ -3,20 +3,17 @@
 
 Summary: Automated test scaffolding for Ruby
 Name: rubygem-%{gem_name}
-Version: 4.9.0
-Release: 3%{?dist}
+Version: 4.10.0
+Release: 2%{?dist}
 Group: Development/Languages
 License: MIT
-URL: http://www.zenspider.com/ZSS/Products/ZenTest/
+URL: https://github.com/seattlerb/zentest
 Source0: http://rubygems.org/gems/%{gem_name}-%{version}.gem
 
-Requires: ruby(rubygems)
-Requires: ruby(release)
 BuildRequires: rubygems-devel
 BuildRequires: ruby(release)
 BuildRequires: rubygem(minitest)
 BuildArch: noarch
-Provides: rubygem(%{gem_name}) = %{version}
 
 %description
 ZenTest is an automated test scaffolding for Ruby that provides 4 different
@@ -66,10 +63,7 @@ find %{buildroot}%{gem_instdir}/bin -type f | \
 
 %check
 pushd .%{gem_instdir}
-# Workarounds "NoMethodError: undefined method `maglev?'".
-# https://github.com/seattlerb/zentest/issues/34
-sed -i '559 s|^|#|' test/test_zentest.rb
-testrb -Ilib test/test_*.rb
+ruby -Ilib -e 'Dir.glob "./test/test_*.rb", &method(:require)'
 popd
 
 %files
@@ -85,7 +79,7 @@ popd
 %dir %{gem_instdir}
 %{gem_instdir}/bin
 %{gem_instdir}/lib
-%exclude %{gem_instdir}/.gemtest
+%exclude %{gem_instdir}/.*
 %exclude %{gem_cache}
 %{gem_spec}
 
@@ -93,14 +87,22 @@ popd
 %doc %{gem_docdir}
 %doc %{gem_instdir}/Rakefile
 %doc %{gem_instdir}/test
-%doc %{gem_instdir}/.autotest
 %doc %{gem_instdir}/articles
 %doc %{gem_instdir}/example*.rb
 %doc %{gem_instdir}/example.txt
 
 %changelog
-* Sun Jun 22 2014 Liu Di <liudidi@gmail.com> - 4.9.0-3
-- 为 Magic 3.0 重建
+* Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 4.10.0-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
+
+* Tue Jun 10 2014 Vít Ondruch <vondruch@redhat.com> - 4.10.0-1
+- Update to ZenTest 4.10.0.
+
+* Sun Jun 08 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 4.9.0-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Sun Aug 04 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 4.9.0-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
 
 * Fri Feb 22 2013 Vít Ondruch <vondruch@redhat.com> - 4.9.0-2
 - Rebuid due to error in RubyGems stub shebang.
@@ -121,7 +123,7 @@ popd
 * Mon May 07 2012 Vít Ondruch <vondruch@redhat.com> - 4.6.2-2
 - Remove Rake dependency.
 
-* Sun Jan 21 2012 Mamoru Tasaka <mtasaka@fedoraproject.org> - 4.6.2-1
+* Sun Jan 22 2012 Mamoru Tasaka <mtasaka@fedoraproject.org> - 4.6.2-1
 - 4.6.2
 
 * Sat Jan 14 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 4.6.0-2
