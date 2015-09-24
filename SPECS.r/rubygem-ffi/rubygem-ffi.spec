@@ -2,18 +2,23 @@
 
 Name:           rubygem-%{gem_name}
 Version:        1.9.3
-Release:        1%{?dist}
+Release:        6%{?dist}
 Summary:        FFI Extensions for Ruby
 Group:          Development/Languages
 
 License:        BSD
 URL:            http://wiki.github.com/ffi/ffi
 Source0:	http://rubygems.org/gems/%{gem_name}-%{version}.gem
+Patch0: 	ffi-aarch64.patch
 
 BuildRequires:  ruby-devel
 BuildRequires:  rubygems-devel
 BuildRequires:	libffi-devel
+%if 0%{?fedora} >= 22
+BuildRequires:	rubygem(rspec2)
+%else
 BuildRequires:	rubygem(rspec)
+%endif
 Requires:       ruby(rubygems)
 Requires:       ruby(release)
 Provides:       rubygem(%{gem_name}) = %{version}
@@ -30,6 +35,7 @@ gem unpack %{SOURCE0}
 %setup -q -D -T -n  %{gem_name}-%{version}
 
 gem spec %{SOURCE0} -l --ruby > %{gem_name}.gemspec
+%patch0 -p1
 
 %build
 
@@ -64,7 +70,11 @@ make -f libtest/GNUmakefile
 %if 0%{?fedora} >= 21
 ruby -Ilib:ext/ffi_c -S \
 %endif
+%if 0%{?fedora} >= 22
+	rspec2 spec \
+%else
 	rspec spec \
+%endif
 %ifarch %{arm}
 		|| echo "Please investigate this"
 %endif
@@ -90,6 +100,22 @@ popd
 
 
 %changelog
+* Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.9.3-6
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
+
+* Fri Jan 23 2015 Marcin Juszkiewicz <mjuszkiewicz@redhat.com> - 1.9.3-5
+- fixed to build on aarch64
+
+* Fri Jan 16 2015 Mamoru TASAKA <mtasaka@fedoraproject.org> - 1.9.3-4
+- Rebuild for ruby 2.2 again
+
+* Thu Jan 15 2015 Mamoru TASAKA <mtasaka@fedoraproject.org> - 1.9.3-3
+- Rebuild for ruby 2.2
+- Use rspec2 for now
+
+* Mon Aug 18 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.9.3-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
+
 * Thu Jun 05 2014 Dominic Cleal <dcleal@redhat.com> - 1.9.3-1
 - Update to FFI 1.9.3
 
