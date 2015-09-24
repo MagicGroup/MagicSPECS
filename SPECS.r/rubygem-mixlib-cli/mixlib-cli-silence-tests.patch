@@ -1,0 +1,11 @@
+--- mixlib-cli-1.3.0/spec/mixlib/cli_spec.rb.old	2013-01-20 17:31:49.000000000 -0500
++++ mixlib-cli-1.3.0/spec/mixlib/cli_spec.rb	2013-01-20 17:32:19.000000000 -0500
+@@ -18,6 +18,8 @@
+ 
+ require File.expand_path(File.join(File.dirname(__FILE__), "..", "spec_helper"))
+ 
++module Kernel; def puts(*args) end end
++
+ describe Mixlib::CLI do
+   after(:each) do
+     TestCLI.options = {}
