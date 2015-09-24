@@ -3,7 +3,7 @@
 Summary: A thin and fast web server
 Name: rubygem-%{gem_name}
 Version: 1.6.2
-Release: 6%{?dist}
+Release: 5%{?dist}
 Group: Development/Languages
 License: (GPLv2 or Ruby) and MIT
 URL: http://code.macournoyer.com/thin/
@@ -124,9 +124,6 @@ popd
 %{gem_instdir}/Rakefile
 
 %changelog
-* Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 1.6.2-6
-- 为 Magic 3.0 重建
-
 * Fri Jun 19 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.6.2-5
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 
