@@ -1,0 +1,87 @@
+diff --git a/core/test/integrations/projects_test.rb b/core/test/integrations/projects_test.rb
+index 43d6b86..a94ddb8 100755
+--- a/core/test/integrations/projects_test.rb
++++ b/core/test/integrations/projects_test.rb
+@@ -9,7 +9,7 @@ require 'pathname'
+ require 'true'
+ require 'timecop'
+ 
+-class ProjectsTest < Test::Unit::TestCase
++class ProjectsTest < Minitest::Test
+   def setup
+     Compass.reset_configuration!
+   end
+diff --git a/core/test/integrations/test_helper.rb b/core/test/integrations/test_helper.rb
+index 01d72f5..a2f67a8 100644
+--- a/core/test/integrations/test_helper.rb
++++ b/core/test/integrations/test_helper.rb
+@@ -1,4 +1,4 @@
+-require "test/unit"
++require "minitest/autorun"
+ require File.join(File.dirname(__FILE__), "..", "helpers", "diff")
+ 
+ include Compass::Diff
+diff --git a/core/test/units/configuration_test.rb b/core/test/units/configuration_test.rb
+index 12d780b..443d12f 100644
+--- a/core/test/units/configuration_test.rb
++++ b/core/test/units/configuration_test.rb
+@@ -4,7 +4,7 @@ $: << test_directory unless $:.include? test_directory
+ require 'test_helper'
+ require 'compass-core'
+ 
+-class ConfigurationTest < Test::Unit::TestCase
++class ConfigurationTest < Minitest::Test
+ 
+   def test_sass_engine_options
+     result = Compass.configuration.to_sass_engine_options
+diff --git a/core/test/units/frameworks_test.rb b/core/test/units/frameworks_test.rb
+index 596543b..2965eef 100644
+--- a/core/test/units/frameworks_test.rb
++++ b/core/test/units/frameworks_test.rb
+@@ -3,7 +3,7 @@ test_directory = File.expand_path(File.dirname(__FILE__))
+ $: << test_directory unless $:.include? test_directory
+ require 'test_helper'
+ 
+-class FrameworksTest < Test::Unit::TestCase
++class FrameworksTest < Minitest::Test
+ 
+   def test_compass_has_the_compass_framework
+     names = []
+diff --git a/core/test/units/shared_extension_paths_test.rb b/core/test/units/shared_extension_paths_test.rb
+index 34f13b8..36ea253 100644
+--- a/core/test/units/shared_extension_paths_test.rb
++++ b/core/test/units/shared_extension_paths_test.rb
+@@ -1,6 +1,6 @@
+ require 'test_helper'
+ 
+-class SharedExtensionsTest < Test::Unit::TestCase
++class SharedExtensionsTest < Minitest::Test
+ 
+   def setup
+     Compass.reset_configuration!
+diff --git a/core/test/units/test_helper.rb b/core/test/units/test_helper.rb
+index 2aa0865..fa3b7de 100644
+--- a/core/test/units/test_helper.rb
++++ b/core/test/units/test_helper.rb
+@@ -1,7 +1,7 @@
+ require 'fileutils'
+ require 'compass/core'
+ 
+-require "test/unit"
++require "minitest/autorun"
+ require File.expand_path(File.join(File.dirname(__FILE__), "..", "helpers", "diff"))
+ 
+ include Compass::Diff
+diff --git a/core/test/units/urls_test.rb b/core/test/units/urls_test.rb
+index 4e3d92f..44a486e 100644
+--- a/core/test/units/urls_test.rb
++++ b/core/test/units/urls_test.rb
+@@ -3,7 +3,7 @@ test_directory = File.expand_path(File.dirname(__FILE__))
+ $: << test_directory unless $:.include? test_directory
+ require 'test_helper'
+ 
+-class UrlsTest < Test::Unit::TestCase
++class UrlsTest < Minitest::Test
+   include Compass::Core::SassExtensions::Functions::Urls
+ 
+   def test_compute_relative_path
