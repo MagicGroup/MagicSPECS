@@ -1,0 +1,68 @@
+From cfd0933a6b784ac6bdca867777600137ff49ba5e Mon Sep 17 00:00:00 2001
+From: Ken Dreyer <ktdreyer@ktdreyer.com>
+Date: Tue, 24 Mar 2015 16:38:37 -0600
+Subject: [PATCH] tests: make simplecov/coveralls optional
+
+If we do not have SimpleCov or Coveralls installed, we should be able to
+continue with the rest of the test suite.
+
+This allows the tests to run outside of Bundler if SimpleCov or
+Coveralls are not installed.
+---
+ test/test_helper.rb | 42 +++++++++++++++++++++++-------------------
+ 1 file changed, 23 insertions(+), 19 deletions(-)
+
+diff --git a/test/test_helper.rb b/test/test_helper.rb
+index 443aaae..3ddfce7 100644
+--- a/test/test_helper.rb
++++ b/test/test_helper.rb
+@@ -1,23 +1,27 @@
+ unless defined?(JRUBY_VERSION)
+-  require 'simplecov'
+-  require 'coveralls'
+-
+-  SimpleCov.formatter = SimpleCov::Formatter::MultiFormatter[
+-    SimpleCov::Formatter::HTMLFormatter,
+-    Coveralls::SimpleCov::Formatter
+-  ]
+-
+-  SimpleCov.start do
+-    project_name 'thread_safe'
+-
+-    add_filter '/examples/'
+-    add_filter '/pkg/'
+-    add_filter '/test/'
+-    add_filter '/tasks/'
+-    add_filter '/yard-template/'
+-    add_filter '/yardoc/'
+-
+-    command_name 'Mintest'
++  begin
++    require 'simplecov'
++    require 'coveralls'
++
++    SimpleCov.formatter = SimpleCov::Formatter::MultiFormatter[
++      SimpleCov::Formatter::HTMLFormatter,
++      Coveralls::SimpleCov::Formatter
++    ]
++
++    SimpleCov.start do
++      project_name 'thread_safe'
++
++      add_filter '/examples/'
++      add_filter '/pkg/'
++      add_filter '/test/'
++      add_filter '/tasks/'
++      add_filter '/yard-template/'
++      add_filter '/yardoc/'
++
++      command_name 'Mintest'
++    end
++  rescue LoadError
++    warn "warning: simplecov/coveralls gems not found; skipping coverage"
+   end
+ end
+ 
+-- 
+1.9.3
+
