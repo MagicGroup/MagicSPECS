@@ -1,0 +1,25 @@
+From c5a5014c0035a905e064525b10805a55ff624ac4 Mon Sep 17 00:00:00 2001
+From: Ken Dreyer <ktdreyer@ktdreyer.com>
+Date: Wed, 9 Jul 2014 11:41:06 -0600
+Subject: [PATCH] tests: fix mocha invocation
+
+---
+ test/test_literati.rb | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/test/test_literati.rb b/test/test_literati.rb
+index 8035f2d..b8a03a9 100644
+--- a/test/test_literati.rb
++++ b/test/test_literati.rb
+@@ -1,7 +1,7 @@
+ require 'rubygems'
+ require 'fileutils'
+ require 'minitest/autorun'
+-require 'mocha'
++require 'mocha/mini_test'
+ 
+ require "#{File.expand_path(File.dirname(__FILE__))}/../lib/literati.rb"
+ 
+-- 
+1.9.0
+

@@ -1,0 +1,99 @@
+From ec076d8c55bafb8e0f8f71ff9ae584ff05bfb4ef Mon Sep 17 00:00:00 2001
+From: Ken Dreyer <ktdreyer@ktdreyer.com>
+Date: Sat, 28 Dec 2013 12:11:41 -0700
+Subject: [PATCH] remove contest gem dependency
+
+This gem is deprecated upstream. Remove it, and replace it with ordinary
+Minitest::Spec functions.
+
+(cherry picked from commit 6b3301e6f31c643297850925cad9789519d42c95)
+---
+ test/test_literati.rb | 33 ++++++++++++++++-----------------
+ 1 file changed, 16 insertions(+), 17 deletions(-)
+
+diff --git a/test/test_literati.rb b/test/test_literati.rb
+index d508f19..8035f2d 100644
+--- a/test/test_literati.rb
++++ b/test/test_literati.rb
+@@ -1,7 +1,6 @@
+ require 'rubygems'
+ require 'fileutils'
+-require 'contest'
+-require 'test/unit'
++require 'minitest/autorun'
+ require 'mocha'
+ 
+ require "#{File.expand_path(File.dirname(__FILE__))}/../lib/literati.rb"
+@@ -31,54 +30,54 @@ class DummyRenderer
+   end
+ end
+ 
+-class LiteratiTest < Test::Unit::TestCase
+-  context "Markdown rendering" do
+-    setup do 
++class LiteratiTest < Minitest::Spec
++  describe "Markdown rendering" do
++    before do
+       @renderer = Literati::Renderer.new(TEST_CONTENT)
+     end
+ 
+-    test "renders to Markdown string" do
++    it "renders to Markdown string" do
+       assert_match /\`\`\`haskell/m, @renderer.to_markdown
+     end
+ 
+-    test "removes bird tracks" do
++    it "removes bird tracks" do
+       assert_equal "more haskell codes", @renderer.remove_bird_tracks("> more haskell codes")
+     end
+ 
+-    test "slurps remaining block properly" do
++    it "slurps remaining block properly" do
+       assert_equal "\nline one\nline two\nline three", @renderer.slurp_remaining_bird_tracks(["> line one", "> line two", "> line three", ""])
+     end
+   end
+ 
+-  context "Markdown rendering with comments" do 
+-    setup do 
++  describe "Markdown rendering with comments" do
++    before do
+       @renderer = Literati::Renderer.new(TEST_CONTENT_WITH_COMMENT)
+     end
+ 
+-    test "renders to Markdown string" do
++    it "renders to Markdown string" do
+       assert_match /\`\`\`haskell/m, @renderer.to_markdown
+     end
+ 
+-    test "removes bird tracks" do
++    it "removes bird tracks" do
+       assert_equal "-- a wild comment appears!", @renderer.remove_bird_tracks(">-- a wild comment appears!")
+     end
+ 
+-    test "slurps remaining block properly" do
++    it "slurps remaining block properly" do
+       assert_equal "\n-- line one\nline two\nline three", @renderer.slurp_remaining_bird_tracks([">-- line one", "> line two", "> line three", ""])
+     end
+ 
+-    test "slurps remaining block properly with multiple comment lines" do
++    it "slurps remaining block properly with multiple comment lines" do
+       assert_equal "\n-- line one\n--line two\nline three\n-- more commenting...", @renderer.slurp_remaining_bird_tracks([">-- line one", ">--line two", "> line three", ">-- more commenting...", ""])
+     end
+   end
+ 
+-  context "HTML rendering" do
+-    test "renders to HTML using our Smart Renderer(tm) by default" do
++  describe "HTML rendering" do
++    it "renders to HTML using our Smart Renderer(tm) by default" do
+       Literati::MarkdownRenderer.any_instance.expects(:to_html)
+       Literati.render("markdown\n\n> codes\n\nmoar markdown")
+     end
+     
+-    test "can use other Markdown class" do
++    it "can use other Markdown class" do
+       DummyRenderer.any_instance.expects(:to_html)
+ 
+       renderer = Literati::Renderer.new("markdown\n\n> codes\n\nmoar markdown", DummyRenderer)
+-- 
+1.8.3.1
+
