@@ -2,22 +2,28 @@
 
 Summary:        Ruby library that colors strings using ANSI escape sequences
 Name:           rubygem-%{gem_name}
-Version:        1.0.7
-Release:        7%{?dist}
+Version:        1.3.0
+Release:        4%{?dist}
 Group:          Development/Languages
 License:        GPLv2
-URL:            http://term-ansicolor.rubyforge.org
-Source0:        http://gems.rubyforge.org/gems/%{gem_name}-%{version}.gem
-BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-Requires:       ruby(release)
-Requires:       ruby(rubygems)
+URL:            http://flori.github.com/term-ansicolor
+Source0:        https://rubygems.org/gems/%{gem_name}-%{version}.gem
 BuildRequires:  rubygems-devel
-BuildRequires:  rubygem(minitest)
+BuildRequires:  rubygem(minitest) > 5
 BuildArch:      noarch
-Provides:       rubygem(%{gem_name}) = %{version}
 
 %description
-Small Ruby library that colors strings using ANSI escape sequences.
+This library uses ANSI escape sequences to control the attributes of terminal
+output
+
+%package doc
+Summary: Documentation for %{name}
+Group: Documentation
+Requires: %{name} = %{version}-%{release}
+BuildArch: noarch
+
+%description doc
+Documentation for %{name}
 
 
 %prep
@@ -39,52 +45,81 @@ cp -pa .%{gem_dir}/* \
 #         %{buildroot}%{_bindir}/
 
 find %{buildroot}%{gem_instdir}/bin -type f | xargs chmod a+x
+rm -f %{buildroot}%{gem_instdir}/bin/cdiff
 
-# We strip bad shebangs (/usr/bin/env) instead of fixing them
-# since these files are not executable anyways
-find $RPM_BUILD_ROOT%{gem_dir} \( -name '*.rb' -o -name 'Rakefile' \) \
-        -exec grep -q '^#!' '{}' \; -print |while read F
-do
-        awk '/^#!/ {if (FNR == 1) next;} {print}' $F >chopped
-        touch -r $F chopped
-        mv chopped $F
-done
+# Fix permissions.
+# https://github.com/flori/term-ansicolor/pull/19
+chmod a-x %{buildroot}%{gem_instdir}/{CHANGES,VERSION,Rakefile,./examples/example.rb,README.rdoc,COPYING}
 
+# Remove empty hidden file.
+rm %{buildroot}%{gem_libdir}/term/ansicolor/.keep
 
-%clean
-rm -rf $RPM_BUILD_ROOT
 
 %check
 pushd %{buildroot}%{gem_instdir}
-testrb -Ilib tests/*
+# To run the tests using minitest 5
+ruby -Ilib:tests -rminitest/autorun - << \EOF
+  module Kernel
+    alias orig_require require
+    remove_method :require
+
+    def require path
+      orig_require path unless path == 'test/unit'
+    end
+
+  end
+
+  Test = Minitest
+
+  module Minitest::Assertions
+    alias :assert_raise :assert_raises
+    alias :assert_not_equal :refute_equal
+  end
+
+  Dir.glob "./tests/**/*_test.rb", &method(:require)
+EOF
 popd
 
 %files
-%defattr(-,root,root,-)
 %dir %{gem_instdir}
-%doc %{gem_instdir}/CHANGES
-%doc %{gem_instdir}/VERSION
 %doc %{gem_instdir}/COPYING
-%doc %{gem_instdir}/examples
-%doc %{gem_instdir}/tests
-%doc %{gem_instdir}/README.rdoc
-%doc %{gem_instdir}/doc-main.txt
-%doc %{gem_instdir}/term-ansicolor.gemspec
-%doc %{gem_instdir}/Gemfile
-%doc %{gem_instdir}/.gitignore
-%{gem_instdir}/Rakefile
-%{gem_instdir}/*.rb
+%exclude %{gem_instdir}/.gitignore
 %{gem_libdir}/
 %{gem_instdir}/bin/
-%{gem_instdir}/.travis.yml
+%exclude %{gem_instdir}/.travis.yml
 %doc %{gem_docdir}
-%{gem_cache}
+%exclude %{gem_cache}
 %{gem_spec}
+
+%files doc
+%doc %{gem_instdir}/CHANGES
+%doc %{gem_instdir}/VERSION
+%{gem_instdir}/examples
+%{gem_instdir}/tests
+%doc %{gem_instdir}/README.rdoc
+%{gem_instdir}/term-ansicolor.gemspec
+%{gem_instdir}/Gemfile
+%{gem_instdir}/Rakefile
 
 
 %changelog
-* Sun Jun 22 2014 Liu Di <liudidi@gmail.com> - 1.0.7-7
-- 为 Magic 3.0 重建
+* Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.3.0-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
+
+* Mon Jul 07 2014 Vít Ondruch <vondruch@redhat.com> - 1.3.0-3
+- Fix FTBFS in Rawhide (rhbz#1107255).
+
+* Sun Jun 08 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.3.0-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Mon Mar 03 2014 Vít Ondruch <vondruch@redhat.com> - 1.3.0-1
+- Update to term-ansicolor 1.3.0.
+
+* Fri Aug 23 2013 Vít Ondruch <vondruch@redhat.com> - 1.2.2-3
+- Add rubygem-tins dependency (rhbz#972544).
+
+* Sun Aug 04 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.2.2-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
 
 * Sat Feb 23 2013 Vít Ondruch <vondruch@redhat.com> - 1.0.7-6
 - Rebuild for https://fedoraproject.org/wiki/Features/Ruby_2.0.0
