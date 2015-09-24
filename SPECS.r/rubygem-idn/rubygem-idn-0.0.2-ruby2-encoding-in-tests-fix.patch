@@ -1,0 +1,22 @@
+diff --git a/test/tc_Stringprep.rb b/test/tc_Stringprep.rb
+index c7f15cb..bcdd401 100644
+--- a/test/tc_Stringprep.rb
++++ b/test/tc_Stringprep.rb
+@@ -60,7 +60,7 @@ class Test_Stringprep < Test::Unit::TestCase
+   def test_with_profile_STRINGPREP
+     TESTCASES_STRINGPREP.each do |key, val|
+       rc = Stringprep.with_profile(val[1], val[0])
+-      assert_equal(val[2], rc, "TestCase #{key} failed")
++      assert_equal(val[2].force_encoding('ASCII-8BIT'), rc, "TestCase #{key} failed")
+     end
+   end
+ 
+@@ -75,7 +75,7 @@ class Test_Stringprep < Test::Unit::TestCase
+   def test_nfkc_normalize_NFKC
+     TESTCASES_NFKC.each do |key, val|
+       rc = Stringprep.nfkc_normalize(val[0])
+-      assert_equal(val[1], rc, "TestCase #{key} failed")
++      assert_equal(val[1].force_encoding('ASCII-8BIT'), rc, "TestCase #{key} failed")
+     end
+   end
+ end
