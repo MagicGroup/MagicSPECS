@@ -3,7 +3,7 @@
 
 Summary: CLI Steps for Cucumber, hand-crafted for you in Aruba
 Name: rubygem-%{gem_name}
-Version: 0.5.2
+Version: 0.6.2
 Release: 2%{?dist}
 Group: Development/Languages
 # aruba itself is MIT
@@ -13,20 +13,16 @@ Group: Development/Languages
 License: MIT and CC-BY and (MIT or GPLv2) and (MIT or BSD or GPLv2)
 URL: http://github.com/cucumber/aruba
 Source0: http://rubygems.org/gems/%{gem_name}-%{version}.gem
-Requires: ruby(release)
-Requires: ruby(rubygems) 
-Requires: rubygem(cucumber) >= 1.1.1
-Requires: rubygem(childprocess) >= 0.2.0
-# Doesn't work with ffi 1.0.10, see https://github.com/cucumber/aruba/issues/114
-Conflicts: rubygem(ffi) = 1.0.10
-Requires: rubygem(rspec) >= 2.7.0
 BuildRequires: ruby(release)
 BuildRequires: rubygems-devel
 BuildRequires: ruby
 BuildRequires: rubygem(cucumber) >= 1.1.1
 BuildRequires: rubygem(childprocess) >= 0.2.0
-BuildConflicts: rubygem(ffi) = 1.0.10
-BuildRequires: rubygem(rspec) >= 2.7.0
+%if 0%{?fedora} >= 22
+BuildRequires: rubygem(rspec) >= 3
+%else
+BuildRequires: rubygem(rspec)
+%endif
 # used in one of the features
 BuildRequires: bc
 BuildArch: noarch
@@ -50,6 +46,13 @@ Documentation for %{name}
 %setup -q -c -T
 %gem_install -n %{SOURCE0}
 
+%if 0%{?fedora} < 23
+pushd .%{gem_instdir}/
+sed -i -e 's|:example|:each|' \
+	spec/aruba/api_spec.rb
+popd
+%endif
+
 %build
 
 %install
@@ -67,6 +70,7 @@ popd
 %files
 %dir %{gem_instdir}
 %doc %{gem_instdir}/LICENSE
+%doc %{gem_instdir}/CONTRIBUTING.md
 %{gem_libdir}
 %exclude %{gem_instdir}/.*
 %exclude %{gem_instdir}/config
@@ -86,8 +90,26 @@ popd
 %{gem_instdir}/templates
 
 %changelog
-* Sun Jun 22 2014 Liu Di <liudidi@gmail.com> - 0.5.2-2
-- 为 Magic 3.0 重建
+* Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.6.2-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
+
+* Thu Jan 15 2015 Mamoru TASAKA <mtasaka@fedoraproject.org> - 0.6.2-1
+- 0.6.2
+
+* Mon Sep  1 2014 Mamoru TASAKA <mtasaka@fedoraproject.org> - 0.6.1-1
+- 0.6.1
+
+* Wed Aug 13 2014 Mamoru TASAKA <mtasaka@fedoraproject.org> - 0.6.0-1
+- 0.6.0
+
+* Sun Jun 08 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.5.4-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Wed May 14 2014 Mamoru TASAKA <mtasaka@fedoraproject.org> - 0.5.4-1
+- 0.5.4
+
+* Sun Aug 04 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.5.2-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
 
 * Mon Apr 22 2013 Josef Stribny <jstribny@redhat.com> - 0.5.2-1
 - Update to aruba 0.5.2
