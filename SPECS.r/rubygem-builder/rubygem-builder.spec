@@ -2,14 +2,12 @@
 
 Summary: Builders for MarkUp
 Name: rubygem-%{gem_name}
-Version: 3.1.4
+Version: 3.2.2
 Release: 4%{?dist}
 Group: Development/Languages
 License: MIT
 URL: http://onestepback.org
 Source0: http://rubygems.org/gems/%{gem_name}-%{version}.gem
-Requires: ruby(release)
-Requires: ruby(rubygems)
 # Builder carries copy of Blankslate, which was in the meantime extracted into
 # independent gem.
 # https://github.com/jimweirich/builder/issues/24
@@ -21,9 +19,8 @@ Requires: ruby(rubygems)
 BuildRequires: ruby(release)
 BuildRequires: rubygems-devel
 BuildRequires: ruby
-BuildRequires: rubygem(minitest)
+BuildRequires: rubygem(minitest) < 5
 BuildArch: noarch
-Provides: rubygem(%{gem_name}) = %{version}
 
 %description
 Builder provides a number of builder objects that make creating structured
@@ -61,11 +58,34 @@ chmod -x %{buildroot}%{gem_instdir}/doc/releases/builder-2.1.1.rdoc
 
 %check
 pushd .%{gem_instdir}
-# Test suite is throwing error due to change in default encoding of files
-# in Ruby 2.0.0.
-# https://github.com/jimweirich/builder/issues/37
-sed -i '2 i # encoding: us-ascii' test/test_xchar.rb
-testrb -I.:lib test
+
+ruby -rminitest/autorun -I.:lib:test - << \EOF
+  module Kernel
+    alias orig_require require
+    remove_method :require
+
+    def require path
+      orig_require path unless path == 'test/unit'
+    end
+  end
+  Test = Minitest
+  module Test
+    class Unit
+      class TestCase
+        alias :assert_raise :assert_raises
+        def assert_nothing_raised
+          yield
+        end
+
+        def assert_not_nil exp, msg=nil
+          msg = message(msg) { "<#{mu_pp(exp)}> expected to not be nil" }
+          assert(!exp.nil?, msg)
+        end
+      end
+    end
+  end
+  Dir.glob "./test/test_*.rb", &method(:require)
+EOF
 popd
 
 %files
@@ -78,15 +98,28 @@ popd
 %files doc
 %doc %{gem_docdir}
 %doc %{gem_instdir}/CHANGES
-%doc %{gem_instdir}/README.rdoc
+%doc %{gem_instdir}/README.md
 %doc %{gem_instdir}/Rakefile
 %doc %{gem_instdir}/doc/
+%doc %{gem_instdir}/rakelib/
 %{gem_instdir}/test/
 
 
 %changelog
-* Sun Jun 22 2014 Liu Di <liudidi@gmail.com> - 3.1.4-4
-- 为 Magic 3.0 重建
+* Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.2.2-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
+
+* Tue May 26 2015 Josef Stribny <jstribny@redhat.com> - 3.2.2-3
+- Fix tests to run with Minitest
+
+* Sun Jun 08 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.2.2-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Tue May 20 2014 Vít Ondruch <vondruch@redhat.com> - 3.2.2-1
+- Update to Builder 3.2.2.
+
+* Sun Aug 04 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.1.4-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
 
 * Sat Feb 23 2013 Vít Ondruch <vondruch@redhat.com> - 3.1.4-3
 - Rebuild for https://fedoraproject.org/wiki/Features/Ruby_2.0.0
