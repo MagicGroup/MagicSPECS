@@ -1,0 +1,11 @@
+--- test/test-repository.rb.introspe224	2015-04-24 22:13:53.000000000 +0900
++++ test/test-repository.rb	2015-04-29 14:36:42.040411400 +0900
+@@ -34,7 +34,7 @@
+ 
+   def test_get_dependencies
+     require_version(1, 36, 0)
+-    assert_equal(["GObject-2.0"].sort,
++    assert_equal(["GLib-2.0", "GObject-2.0"].sort,
+                  @repository.get_dependencies("Gio").sort)
+   end
+ 
