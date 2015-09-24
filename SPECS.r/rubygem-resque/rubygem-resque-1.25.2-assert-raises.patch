@@ -1,0 +1,29 @@
+From bd633803d3cf346f87468e5489cfc33518a876c5 Mon Sep 17 00:00:00 2001
+From: Ken Dreyer <ktdreyer@ktdreyer.com>
+Date: Mon, 7 Apr 2014 21:58:25 -0500
+Subject: [PATCH] tests: use assert_raises
+
+"assert_raise" was a Test::Unit function that is not available in
+Minitest. Switch to the newer Minitest syntax, "assert_raises".
+
+This matches all the other "assert_raises" calls within the test suite.
+---
+ test/worker_test.rb | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/test/worker_test.rb b/test/worker_test.rb
+index d38bf22..a4c30e2 100644
+--- a/test/worker_test.rb
++++ b/test/worker_test.rb
+@@ -316,7 +316,7 @@ context "Resque::Worker" do
+   end
+ 
+   test "complains if no queues are given" do
+-    assert_raise Resque::NoQueueError do
++    assert_raises Resque::NoQueueError do
+       Resque::Worker.new
+     end
+   end
+-- 
+1.8.5.3
+
