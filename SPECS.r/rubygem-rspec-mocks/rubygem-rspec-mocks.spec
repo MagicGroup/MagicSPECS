@@ -1,37 +1,34 @@
-%global	majorver	2.13.1
+%global	majorver	3.3.2
 #%%global	preminorver	.rc6
 %global	rpmminorver	.%(echo %preminorver | sed -e 's|^\\.\\.*||')
 %global	fullver	%{majorver}%{?preminorver}
 
-%global	fedorarel	1
+%global	fedorarel	3
 
 %global	gem_name	rspec-mocks
 
-
-# %%check section needs rspec-core, however rspec-core depends on rspec-mocks
-# runtime part of rspec-mocks does not depend on rspec-core
 %global	need_bootstrap_set	0
-
-%{!?need_bootstrap:	%global	need_bootstrap	%{need_bootstrap_set}}
 
 Summary:	Rspec-2 doubles (mocks and stubs)
 Name:		rubygem-%{gem_name}
 Version:	%{majorver}
-Release:	%{?preminorver:0.}%{fedorarel}%{?preminorver:%{rpmminorver}}%{?dist}.1
+Release:	%{?preminorver:0.}%{fedorarel}%{?preminorver:%{rpmminorver}}%{?dist}
 
 Group:		Development/Languages
 License:	MIT
 URL:		http://github.com/rspec/rspec-mocks
-Source0:	http://rubygems.org/gems/%{gem_name}-%{fullver}.gem
+Source0:	https://rubygems.org/gems/%{gem_name}-%{fullver}.gem
+# %%{SOURCE2} %%{name} %%{version} 
+Source1:	rubygem-%{gem_name}-%{version}-full.tar.gz
+Source2:	rspec-related-create-full-tarball.sh
 
 BuildRequires:	ruby(release)
 BuildRequires:	rubygems-devel
-%if 0%{?need_bootstrap} < 1
+%if 0%{?need_bootstrap_set} < 1
 BuildRequires:	rubygem(rspec)
+BuildRequires:	rubygem(thread_order)
+BuildRequires:	git
 %endif
-Requires:	ruby(release)
-Requires:	rubygems
-Provides:	rubygem(%{gem_name}) = %{version}-%{release}
 BuildArch:	noarch
 
 %description
@@ -48,44 +45,39 @@ This package contains documentation for %{name}.
 
 
 %prep
-%setup -q -c -T
-
-TOPDIR=$(pwd)
-mkdir tmpunpackdir
-pushd tmpunpackdir
-
 gem unpack %{SOURCE0}
-cd %{gem_name}-%{version}
-gem specification -l --ruby %{SOURCE0} > %{gem_name}.gemspec
-gem build %{gem_name}.gemspec
-mv %{gem_name}-%{version}.gem $TOPDIR
 
-popd
-rm -rf tmpunpackdir
+%setup -q -D -T -n  %{gem_name}-%{version} -a 1
+
+gem specification %{SOURCE0} -l --ruby > %{gem_name}.gemspec
 
 %build
+gem build %{gem_name}.gemspec
 %gem_install
-
-#chmod 0644 ./%{gem_cache}
 
 %install
 mkdir -p %{buildroot}%{gem_dir}
-cp -a .%{gem_dir}/* %{buildroot}%{gem_dir}/
+cp -a .%{gem_dir}/* \
+	%{buildroot}%{gem_dir}/
 
 # cleanups
-rm -f %{buildroot}%{gem_instdir}/{.document,.gitignore,.travis.yml,.yardopts}
+rm -f %{buildroot}%{gem_instdir}/{.document,.yardopts}
 
-%if 0%{?need_bootstrap} < 1
+%if 0%{?need_bootstrap_set} < 1
 %check
-pushd .%{gem_instdir}
+pushd  %{gem_name}-%{version}
+
+# library_wide_checks.rb needs UTF-8
+LANG=en_US.utf8
 ruby -rubygems -Ilib/ -S rspec spec/
+
+popd
 %endif
 
 %files
-%defattr(-,root,root,-)
 %dir	%{gem_instdir}
 
-%doc	%{gem_instdir}/License.txt
+%license	%{gem_instdir}/License.txt
 %doc	%{gem_instdir}/*.md
 %{gem_instdir}/lib/
 
@@ -93,14 +85,65 @@ ruby -rubygems -Ilib/ -S rspec spec/
 %{gem_spec}
 
 %files	doc
-%defattr(-,root,root,-)
 %{gem_docdir}
-%{gem_instdir}/features/
-%exclude	%{gem_instdir}/spec/
 
 %changelog
-* Sun Jun 22 2014 Liu Di <liudidi@gmail.com> - 2.13.1-1.1
-- 为 Magic 3.0 重建
+* Wed Aug 12 2015 Mamoru TASAKA <mtasaka@fedoraproject.org> - 3.3.2-3
+- Enable thread_order dependent tests
+
+* Sun Aug  2 2015 Mamoru TASAKA <mtasaka@fedoraproject.org> - 3.3.2-2
+- Enable tests again
+
+* Sun Aug  2 2015 Mamoru TASAKA <mtasaka@fedoraproject.org> - 3.3.2-1
+- 3.3.2
+- Once disable tests
+
+* Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.2.1-1.1
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
+
+* Wed Feb 25 2015 Mamoru TASAKA <mtasaka@fedoraproject.org> - 3.2.1-1
+- 3.2.1
+
+* Mon Feb  9 2015 Mamoru TASAKA <mtasaka@fedoraproject.org> - 3.2.0-2
+- Enable tests again
+
+* Mon Feb  9 2015 Mamoru TASAKA <mtasaka@fedoraproject.org> - 3.2.0-1
+- 3.2.0
+- Once disable tests
+
+* Mon Nov 10 2014 Mamoru TASAKA <mtasaka@fedoraproject.org> - 3.1.3-2
+- Enable tests
+
+* Mon Nov 10 2014 Mamoru TASAKA <mtasaka@fedoraproject.org> - 3.1.3-1
+- 3.1.3
+- Once disable tests
+
+* Fri Aug 15 2014 Mamoru TASAKA <mtasaka@fedoraproject.org> - 3.0.4-1
+- 3.0.4
+
+* Thu Aug 14 2014 Mamoru TASAKA <mtasaka@fedoraproject.org> - 3.0.3-1
+- 3.0.3
+
+* Sun Jun 08 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.14.6-1.1
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Thu Feb 27 2014 Mamoru TASAKA <mtasaka@fedoraproject.org> - 2.14.6-1
+- 2.14.6
+
+* Tue Feb  4 2014 Mamoru TASAKA <mtasaka@fedoraproject.org> - 2.14.5-1
+- 2.14.5
+
+* Thu Oct 24 2013 Mamoru TASAKA <mtasaka@fedoraproject.org> - 2.14.4-1
+- 2.14.4
+
+* Fri Aug 16 2013 Mamoru TASAKA <mtasaka@fedoraproject.org> - 2.14.3-2
+- Enable test suite again
+
+* Fri Aug 16 2013 Mamoru TASAKA <mtasaka@fedoraproject.org> - 2.14.3-1
+- 2.14.3
+
+* Sun Aug 04 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.13.1-1.1
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
 
 * Fri Apr 12 2013 Mamoru TASAKA <mtasaka@fedoraproject.org> - 2.13.1-1
 - 2.13.1
@@ -129,7 +172,7 @@ ruby -rubygems -Ilib/ -S rspec spec/
 * Sat Jul 21 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.8.0-1.1
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 
-* Sun Jan 21 2012 Mamoru Tasaka <mtasaka@fedoraproject.org> - 2.8.0-1
+* Sun Jan 22 2012 Mamoru Tasaka <mtasaka@fedoraproject.org> - 2.8.0-1
 - 2.8.0
 
 * Sat Jan 14 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.6.0-1.1
