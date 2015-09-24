@@ -6,7 +6,7 @@
 Summary: Fast Gherkin lexer/parser
 Name: rubygem-%{gem_name}
 Version: 2.12.2
-Release: 1%{?dist}
+Release: 4%{?dist}
 Group: Development/Languages
 License: MIT
 URL: http://github.com/cucumber/gherkin
@@ -54,7 +54,7 @@ cp -a .%{gem_dir}/* \
         %{buildroot}%{gem_dir}/
 
 mkdir -p %{buildroot}%{gem_extdir_mri}
-#cp -a .%{gem_extdir_mri}/* %{buildroot}%{gem_extdir_mri}/
+cp -a .%{gem_extdir_mri}/* %{buildroot}%{gem_extdir_mri}/
 
 rm -rf %{buildroot}%{gem_instdir}/ext
 
@@ -81,9 +81,9 @@ ln -s %{gem_dir}/gems/cucumber-`cucumber --version`/ ../cucumber
 # 2 failed on arm because they test fallback ruby lexers
 # but these are not installed by default (even if using normal gem install)
 LANG=en_US.utf8 cucumber || LANG=en_US.utf8 cucumber | grep '2 failed' || exit 1
-# 4 failed (15 on arm) because they test fallback ruby lexers
+# 4 failed (11 on arm) because they test fallback ruby lexers
 LANG=en_US.utf8 rspec spec | grep '286 examples, 4 failures' || \
-LANG=en_US.utf8 rspec spec | grep '286 examples, 15 failures' || LANG=en_US.utf8 rspec spec
+LANG=en_US.utf8 rspec spec | grep '286 examples, 11 failures' || LANG=en_US.utf8 rspec spec
 popd
 %endif
 
@@ -104,8 +104,6 @@ popd
 %{gem_instdir}/%{gem_name}.gemspec
 %{gem_cache}
 %{gem_spec}
-#有问题
-%{_datadir}/gems/extensions/x86_64-linux/gherkin-2.12.2/*
 
 %files doc
 %doc %{gem_instdir}/History.md
@@ -114,10 +112,18 @@ popd
 %{gem_instdir}/Rakefile
 %{gem_instdir}/examples
 %{gem_instdir}/tasks
-#有问题
-%{_datadir}/gems/doc/extensions/x86_64-linux/gherkin-2.12.2/*
 
 %changelog
+* Fri Jan 16 2015 Mamoru TASAKA <mtasaka@fedoraproject.org> - 2.12.2-4
+- Enable test suite again
+
+* Thu Jan 15 2015 Mamoru TASAKA <mtasaka@fedoraproject.org> - 2.12.2-3
+- Rebuild for ruby 2.2
+- Bootstrap, once disable test
+
+* Mon Aug 18 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.12.2-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
+
 * Thu Jun 19 2014 Josef Stribny <jstribny@redhat.com> - 2.12.2-1
 - Update to gherkin 2.12.2
 
