@@ -1,0 +1,29 @@
+From 9c0b8770470c3a5f623f0727f9552834f4ae8abb Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?V=C3=ADt=20Ondruch?= <v.ondruch@tiscali.cz>
+Date: Wed, 16 May 2012 10:55:16 +0300
+Subject: [PATCH] Block variables has local scopes.
+
+Fix to be compatible with Ruby 1.9.
+---
+ ruby/bin/ferret-browser |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/ruby/bin/ferret-browser b/ruby/bin/ferret-browser
+index add19c5..790ec0d 100755
+--- a/ruby/bin/ferret-browser
++++ b/ruby/bin/ferret-browser
+@@ -16,9 +16,9 @@ opts = OptionParser.new do |opts|
+   opts.separator "Specific Options:"
+ 
+   opts.on("-h", "--host HOSTNAME",
+-          "Host for web server to bind to (default is all IPs)") { |conf.host| }
++          "Host for web server to bind to (default is all IPs)") { |host| conf.host = host }
+   opts.on("-p", "--port NUM",
+-          "Port for web server (defaults to #{conf.port})") { |conf.port| }
++          "Port for web server (defaults to #{conf.port})") { |port| conf.port = port }
+   opts.on("-s", "--server NAME",
+           "Server to force (#{SERVER_OPTIONS.join(', ')}).") { |s| conf.server = s.to_sym }
+ 
+-- 
+1.7.10.1
+

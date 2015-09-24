@@ -1,0 +1,14 @@
+--- ferret-0.11.8.4/ext/r_analysis.c.ruby22hash	2015-01-18 02:41:02.096371434 +0900
++++ ferret-0.11.8.4/ext/r_analysis.c	2015-01-18 02:46:51.435722105 +0900
+@@ -65,7 +65,11 @@
+ frb_rb_hash_size(VALUE hash)
+ {
+ #ifdef FRT_RUBY_VERSION_1_9
++#ifdef RHASH_SIZE
++    return RHASH_SIZE(hash);
++#else
+     return RHASH(hash)->ntbl->num_entries;
++#endif
+ #else
+     return RHASH(hash)->tbl->num_entries;
+ #endif
