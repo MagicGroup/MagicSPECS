@@ -3,23 +3,16 @@
 
 Summary: A simple and reliable gem for controlling external programs
 Name: rubygem-%{gem_name}
-Version: 0.3.6
-Release: 4%{?dist}
+Version: 0.5.3
+Release: 3%{?dist}
 Group: Development/Languages
 License: MIT
 URL: http://github.com/jarib/childprocess
 Source0: http://rubygems.org/gems/%{gem_name}-%{version}.gem
-Requires: ruby(release)
-Requires: ruby(rubygems)
-Requires: ruby
-Requires: rubygem(ffi) => 1.0.6
-Requires: rubygem(ffi) < 2
-BuildRequires: ruby(release)
 BuildRequires: rubygems-devel
-BuildRequires: ruby
-BuildRequires: rubygem(rspec)
+BuildRequires: rubygem(rspec) >= 2.0.0
+#BuildRequires: rubygem(coveralls)
 BuildArch: noarch
-Provides: rubygem(%{gem_name}) = %{version}
 
 %description
 This gem aims at being a simple and reliable solution for controlling external
@@ -56,26 +49,44 @@ chmod 644 %{buildroot}%{gem_instdir}/spec/*.rb
 
 %check
 pushd .%{gem_instdir}
-rspec spec
+# Get rid of coverall dependency
+sed -i -e '5,6d' spec/spec_helper.rb
+rspec2 spec
 popd
 
 
 %files
-%dir %{gem_instdir}
 %doc %{gem_instdir}/LICENSE
-%doc %{gem_instdir}/README.md
 %{gem_libdir}
+%dir %{gem_instdir}
 %{gem_cache}
 %{gem_spec}
 
+
 %files doc
-%doc %{gem_docdir}
-%doc %{gem_instdir}/spec
+%doc %{gem_instdir}/README.md
+%{gem_instdir}/spec
+%doc %doc %{gem_docdir}
 
 
 %changelog
-* Sun Jun 22 2014 Liu Di <liudidi@gmail.com> - 0.3.6-4
-- 为 Magic 3.0 重建
+* Thu Aug 06 2015 Josef Stribny <jstribny@redhat.com> - 0.5.3-3
+- Fix FTBFS: Run tests with RSpec2 bin
+
+* Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.5.3-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
+
+* Thu Aug 28 2014 Josef Stribny <jstribny@redhat.com> - 0.5.3-1
+- Update childprocess to version 0.5.3
+
+* Sun Jun 08 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.3.9-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Tue Sep 23 2013 Mo Morsi <mmorsi@redhat.com> - 0.3.9-1
+- Update to childprocess 0.3.9
+
+* Sun Aug 04 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.3.6-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
 
 * Wed Feb 20 2013 Vít Ondruch <vondruch@redhat.com> - 0.3.6-3
 - Rebuild for https://fedoraproject.org/wiki/Features/Ruby_2.0.0
