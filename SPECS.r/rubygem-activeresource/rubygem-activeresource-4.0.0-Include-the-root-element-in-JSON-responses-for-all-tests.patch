@@ -1,0 +1,37 @@
+From bbb60aede4930068d8cb6870032543bcc34c6b55 Mon Sep 17 00:00:00 2001
+From: Jeffrey Hardy <packagethief@gmail.com>
+Date: Tue, 5 May 2015 13:57:22 -0400
+Subject: [PATCH] Include the root element in JSON responses for all tests
+
+All test fixtures assume the presence of a root element, so make it the
+default. Fixes that tests expecting a root would fail unless `BaseTest`,
+which turns the setting on, ran first.
+---
+ test/abstract_unit.rb   | 1 +
+ test/cases/base_test.rb | 1 -
+ 2 files changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/test/abstract_unit.rb b/test/abstract_unit.rb
+index ee20b2b..a9ba8f0 100644
+--- a/test/abstract_unit.rb
++++ b/test/abstract_unit.rb
+@@ -13,6 +13,7 @@
+ 
+ ActiveSupport::TestCase.test_order = :random if ActiveSupport::TestCase.respond_to?(:test_order=)
+ ActiveResource::Base.logger = ActiveSupport::Logger.new("#{File.dirname(__FILE__)}/debug.log")
++ActiveResource::Base.include_root_in_json = true
+ 
+ def setup_response
+   matz_hash = { 'person' => { :id => 1, :name => 'Matz' } }
+diff --git a/test/cases/base_test.rb b/test/cases/base_test.rb
+index 6441153..c30aff6 100644
+--- a/test/cases/base_test.rb
++++ b/test/cases/base_test.rb
+@@ -17,7 +17,6 @@
+ 
+ class BaseTest < ActiveSupport::TestCase
+   def setup
+-    ActiveResource::Base.include_root_in_json = true
+     setup_response # find me in abstract_unit
+     @original_person_site = Person.site
+   end
