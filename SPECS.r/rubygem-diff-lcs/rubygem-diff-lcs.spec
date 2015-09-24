@@ -2,25 +2,28 @@
 
 # %%check section needs rspec-expectations, however rspec-expectations depends
 # on diff-lcs.
-%{!?need_bootstrap:	%global	need_bootstrap	1}
+%{!?need_bootstrap:	%global	need_bootstrap	0}
 
 Summary: Provide a list of changes between two sequenced collections
 Name: rubygem-%{gem_name}
-Version: 1.1.3
-Release: 3.2%{?dist}
+Version: 1.2.5
+Release: 4%{?dist}
 Group: Development/Languages
-License: GPLv2+ or Ruby or Artistic
-URL: http://rubyforge.org/projects/ruwiki/
-Source0: http://gems.rubyforge.org/gems/%{gem_name}-%{version}.gem
-Requires: ruby(release)
-Requires: rubygems
+#lib/diff/lcs.rb is Artistic or Ruby or BSD
+#lib/diff/lcs/*.rb is GPLv2+ or Artistic or Ruby or BSD
+#License.rdoc states GPLv2+ or Artistic or MIT
+License: (GPLv2+ or Artistic or MIT) and (GPLv2+ or Artistic or Ruby or BSD) and (Artistic or Ruby or BSD)
+URL: https://github.com/halostatue/diff-lcs
+Source0: https://rubygems.org/gems/%{gem_name}-%{version}.gem
+# Make test suite RSpec 3.x compatible.
+# https://github.com/halostatue/diff-lcs/pull/32
+Patch0: rubygem-diff-lcs-1.2.5-Fix-RSpec-3.x-compatibility.patch
 BuildRequires: rubygems-devel
 %if 0%{?need_bootstrap} < 1
 BuildRequires: rubygem(rspec)
 %endif
 BuildRequires: ruby(release)
 BuildArch: noarch
-Provides: rubygem(%{gem_name}) = %{version}
 
 %description
 Diff::LCS is a port of Algorithm::Diff that uses the McIlroy-Hunt longest
@@ -42,6 +45,10 @@ This package contains documentation for %{name}.
 %setup -q -c  -T
 %gem_install -n %{SOURCE0}
 
+pushd .%{gem_instdir}
+%patch0 -p1
+popd
+
 
 %build
 
@@ -55,26 +62,17 @@ cp -a .%{_bindir}/* %{buildroot}/%{_bindir}
 
 find %{buildroot}%{gem_instdir}/bin -type f |xargs chmod a+x
 
-# Remove the bad shebangs.
-# https://github.com/halostatue/diff-lcs/pull/9
-
-# We strip bad shebangs (/usr/bin/env) instead of fixing them
-# since these files are not executable anyways
-find %{buildroot}%{gem_dir} \( -name '*.rb' -o -name 'Rakefile' \) \
-        -exec grep -q '^#!' '{}' \; -print |while read F
-do
-        awk '/^#!/ {if (FNR == 1) next;} {print}' $F >chopped
-        touch -r $F chopped
-        mv chopped $F
-done
-
 # Fix shebangs.
 sed -i 's|^#!.*|#!/usr/bin/ruby|' %{buildroot}%{gem_instdir}/bin/{htmldiff,ldiff}
 
 %if 0%{?need_bootstrap} < 1
 %check
 pushd .%{gem_instdir}
-rspec spec
+# https://github.com/halostatue/diff-lcs/issues/1
+sed -i '/Diff::LCS.patch(s1, diff_s1_s2).should == s2/ s/^/#/' spec/issues_spec.rb
+
+# https://github.com/halostatue/diff-lcs/issues/33
+rspec -rdiff/lcs -rdiff/lcs/hunk spec
 popd
 %endif
 
@@ -92,17 +90,37 @@ popd
 
 %files doc
 %doc %{gem_docdir}
+%doc %{gem_instdir}/Contributing.rdoc
 %doc %{gem_instdir}/History.rdoc
 %doc %{gem_instdir}/Manifest.txt
+%{gem_instdir}/Gemfile
 %{gem_instdir}/Rakefile
-%{gem_instdir}/diff-lcs.gemspec
 %doc %{gem_instdir}/README.rdoc
+%{gem_instdir}/autotest
 %{gem_instdir}/spec
 
 
 %changelog
-* Sun Jun 22 2014 Liu Di <liudidi@gmail.com> - 1.1.3-3.2
-- 为 Magic 3.0 重建
+* Fri Aug 28 2015 Josef Stribny <jstribny@redhat.com> - 1.2.5-4
+- Fix FTBFS: change the way the specs are run
+
+* Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.2.5-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
+
+* Thu Feb 19 2015 Vít Ondruch <vondruch@redhat.com> - 1.2.5-2
+- Fix test suite for RSpec 3.x comaptibility.
+
+* Tue Jul 01 2014 Julian Dunn <jdunn@aquezada.com> - 1.2.5-1
+- Update to 1.2.5 (bz#902240)
+
+* Sun Jun 08 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.1.3-5
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Thu Feb 06 2014 Josef Stribny <jstribny@redhat.com> - 1.1.3-4
+- Fix licensing
+
+* Sun Aug 04 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.1.3-3.2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
 
 * Wed Feb 20 2013 Vít Ondruch <vondruch@redhat.com> - 1.1.3-3
 - Rebuild for https://fedoraproject.org/wiki/Features/Ruby_2.0.0
