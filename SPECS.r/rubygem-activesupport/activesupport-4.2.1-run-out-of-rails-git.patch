@@ -1,0 +1,34 @@
+From c0bd31bca02b7e0cd984683c2826fadd2fb55d29 Mon Sep 17 00:00:00 2001
+From: Josef Stribny <jstribny@redhat.com>
+Date: Thu, 2 Apr 2015 15:41:46 +0200
+Subject: [PATCH] Do not depend on Rails git repo layout
+
+---
+ activesupport/test/dependencies_test.rb | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/activesupport/test/dependencies_test.rb b/activesupport/test/dependencies_test.rb
+index 96e9bd1..8e59d10 100644
+--- a/activesupport/test/dependencies_test.rb
++++ b/activesupport/test/dependencies_test.rb
+@@ -162,7 +162,7 @@ class DependenciesTest < ActiveSupport::TestCase
+   def test_ensures_the_expected_constant_is_defined
+     with_autoloading_fixtures do
+       e = assert_raise(LoadError) { Typo }
+-      assert_match %r{Unable to autoload constant Typo, expected .*activesupport/test/autoloading_fixtures/typo.rb to define it}, e.message
++      assert_match %r{Unable to autoload constant Typo, expected .*/test/autoloading_fixtures/typo.rb to define it}, e.message
+     end
+   end
+ 
+@@ -180,7 +180,7 @@ class DependenciesTest < ActiveSupport::TestCase
+       assert_equal 1, TypO
+ 
+       e = assert_raise(LoadError) { Typo }
+-      assert_match %r{Unable to autoload constant Typo, expected .*activesupport/test/autoloading_fixtures/typo.rb to define it}, e.message
++      assert_match %r{Unable to autoload constant Typo, expected .*/test/autoloading_fixtures/typo.rb to define it}, e.message
+     end
+   end
+ 
+-- 
+2.1.0
+
