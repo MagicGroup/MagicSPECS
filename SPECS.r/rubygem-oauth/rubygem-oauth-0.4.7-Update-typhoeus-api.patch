@@ -1,0 +1,42 @@
+From aed1ee8d3a53524fa4e8e38af3750fc020a47532 Mon Sep 17 00:00:00 2001
+From: raeno <just.raeno@gmail.com>
+Date: Wed, 3 Dec 2014 21:37:16 +0300
+Subject: [PATCH] Typhoeus supposes that request method is GET by default when
+ it's not specified in options. We have to handle this in request proxy.
+
+---
+ lib/oauth/request_proxy/typhoeus_request.rb | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
+
+diff --git a/lib/oauth/request_proxy/typhoeus_request.rb b/lib/oauth/request_proxy/typhoeus_request.rb
+index 7581677..ebcb354 100644
+--- a/lib/oauth/request_proxy/typhoeus_request.rb
++++ b/lib/oauth/request_proxy/typhoeus_request.rb
+@@ -11,7 +11,7 @@ class Request < OAuth::RequestProxy::Base
+     # oauth_params = {:consumer => oauth_consumer, :token => access_token}
+     # req = Typhoeus::Request.new(uri, options)
+     # oauth_helper = OAuth::Client::Helper.new(req, oauth_params.merge(:request_uri => uri))
+-    # req.headers.merge!({"Authorization" => oauth_helper.header})
++    # req.options[:headers].merge!({"Authorization" => oauth_helper.header})
+     # hydra = Typhoeus::Hydra.new()
+     # hydra.queue(req)
+     # hydra.run
+@@ -19,7 +19,8 @@ class Request < OAuth::RequestProxy::Base
+     proxies Typhoeus::Request
+ 
+     def method
+-      request.method.to_s.upcase
++      request_method = request.options[:method].to_s.upcase
++      request_method.empty? ? 'GET' : request_method
+     end
+ 
+     def uri
+@@ -44,7 +45,7 @@ def query_parameters
+     def post_parameters
+       # Post params are only used if posting form data
+       if method == 'POST'
+-        OAuth::Helper.stringify_keys(request.params || {})
++        OAuth::Helper.stringify_keys(request.options[:params] || {})
+       else
+         {}
+       end
