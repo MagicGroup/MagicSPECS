@@ -1,0 +1,13 @@
+--- glib2-1.2.1/test/test_spawn.rb.env	2013-02-28 13:32:06.205560101 +0900
++++ glib2-1.2.1/test/test_spawn.rb	2013-02-28 14:03:14.029586308 +0900
+@@ -19,7 +19,9 @@
+   end
+ 
+   def test_async_clear_environment
+-    if RbConfig.respond_to?(:ruby)
++    if File.exist?('/usr/bin/ruby-mri')
++      ruby = '/usr/bin/ruby-mri'
++    elsif RbConfig.respond_to?(:ruby)
+       ruby = RbConfig.ruby
+     else
+       ruby = File.join(RbConfig::CONFIG['bindir'],
