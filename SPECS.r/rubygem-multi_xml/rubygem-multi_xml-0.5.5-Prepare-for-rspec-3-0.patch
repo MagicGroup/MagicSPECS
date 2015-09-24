@@ -1,0 +1,58 @@
+From a4ae6aa9810ab44634df977f9d0d37efb785c45c Mon Sep 17 00:00:00 2001
+From: Erik Michaels-Ober <sferik@gmail.com>
+Date: Sat, 9 Nov 2013 07:29:35 -0500
+Subject: [PATCH] Prepare for rspec 3.0
+
+---
+ spec/parser_shared_example.rb | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
+
+diff --git a/spec/parser_shared_example.rb b/spec/parser_shared_example.rb
+index 82d1645..f3dbd00 100644
+--- a/spec/parser_shared_example.rb
++++ b/spec/parser_shared_example.rb
+@@ -145,7 +145,7 @@
+           context "when #{boolean}" do
+             it "returns #{boolean}" do
+               xml = "<tag type=\"boolean\">#{boolean}</tag>"
+-              expect(MultiXml.parse(xml)['tag']).to instance_eval("be_#{boolean}")
++              expect(MultiXml.parse(xml)['tag']).to be instance_eval(boolean)
+             end
+           end
+         end
+@@ -156,7 +156,7 @@
+           end
+ 
+           it "returns true" do
+-            expect(MultiXml.parse(@xml)['tag']).to be_true
++            expect(MultiXml.parse(@xml)['tag']).to be true
+           end
+         end
+ 
+@@ -166,7 +166,7 @@
+           end
+ 
+           it "returns false" do
+-            expect(MultiXml.parse(@xml)['tag']).to be_false
++            expect(MultiXml.parse(@xml)['tag']).to be false
+           end
+         end
+       end
+@@ -428,7 +428,7 @@
+           end
+ 
+           it "returns nil" do
+-            expect(MultiXml.parse(@xml)['tag']).to be_nil
++            expect(MultiXml.parse(@xml)['tag']).to be nil
+           end
+         end
+       end
+@@ -444,7 +444,7 @@
+           end
+ 
+           it "returns nil when the type is allowed" do
+-            expect(MultiXml.parse(@xml, :disallowed_types => [])['tag']).to be_nil
++            expect(MultiXml.parse(@xml, :disallowed_types => [])['tag']).to be nil
+           end
+         end
+       end
