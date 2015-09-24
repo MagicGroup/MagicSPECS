@@ -1,13 +1,14 @@
 Summary:         A small text editor
 Summary(zh_CN.UTF-8): 一个小的文本编辑器
 Name:            nano
-Version:         2.3.6
-Release:         3%{?dist}
+Version:	2.4.2
+Release:	1%{?dist}
 License:         GPLv3+
 Group:           Applications/Editors
 Group(zh_CN.UTF-8): 应用程序/编辑器
 URL:             http://www.nano-editor.org
-Source:          http://www.nano-editor.org/dist/v2.3/%{name}-%{version}.tar.gz
+%define majorver %(echo %{version} | awk -F. '{print $1"."$2}')
+Source:          http://www.nano-editor.org/dist/v%{majorver}/%{name}-%{version}.tar.gz
 Source2:         nanorc
 
 BuildRoot:       %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -55,6 +56,7 @@ sed -e 's/# set nowrap/set nowrap/' \
     doc/nanorc.sample >> ./nanorc
 mkdir -p %{buildroot}%{_sysconfdir}
 install -m 644 ./nanorc %{buildroot}%{_sysconfdir}/nanorc
+rm -rf %{buildroot}%{_docdir}/nano/fr
 magic_rpm_clean.sh
 %find_lang %{name}
 
@@ -76,6 +78,7 @@ exit 0
 %doc AUTHORS COPYING ChangeLog INSTALL NEWS README THANKS TODO
 %doc doc/nanorc.sample
 %doc doc/faq.html
+%{_docdir}/nano/*.html
 %{_bindir}/*
 %config(noreplace) %{_sysconfdir}/nanorc
 %{_mandir}/man*/*
@@ -83,6 +86,9 @@ exit 0
 %{_datadir}/nano
 
 %changelog
+* Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 2.4.2-1
+- 更新到 2.4.2
+
 * Sun Sep 20 2015 Liu Di <liudidi@gmail.com> - 2.3.6-3
 - 为 Magic 3.0 重建
 

@@ -1,9 +1,9 @@
-%define with_java 1
+%define with_java 0
 %define separate_xpce 1
 
 Name:       pl
 Version:    7.2.3
-Release:    1%{?dist}
+Release:    2%{?dist}
 Summary:    SWI-Prolog - Edinburgh compatible Prolog compiler
 Group:      Development/Languages
 #library/dialect/iso/iso_predicates.pl  GPLv2+ with SWI-Prolog extra clause
@@ -92,7 +92,7 @@ BuildRequires:  readline-devel
 # archive
 BuildRequires:  libarchive-devel
 # http
-BuildRequires:  js-jquery1
+# BuildRequires:  js-jquery1
 # XPCE
 BuildRequires:  libICE-devel
 BuildRequires:  libjpeg-devel
@@ -414,6 +414,9 @@ find packages/jpl/examples -name ".cvsignore" | xargs rm -f
 
 
 %changelog
+* Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 7.2.3-2
+- 为 Magic 3.0 重建
+
 * Thu Aug 27 2015 Petr Pisar <ppisar@redhat.com> - 7.2.3-1
 - 7.2.3 bump
 

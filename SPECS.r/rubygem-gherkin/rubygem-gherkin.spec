@@ -6,7 +6,7 @@
 Summary: Fast Gherkin lexer/parser
 Name: rubygem-%{gem_name}
 Version: 2.12.2
-Release: 4%{?dist}
+Release: 5%{?dist}
 Group: Development/Languages
 License: MIT
 URL: http://github.com/cucumber/gherkin
@@ -114,6 +114,9 @@ popd
 %{gem_instdir}/tasks
 
 %changelog
+* Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 2.12.2-5
+- 为 Magic 3.0 重建
+
 * Fri Jan 16 2015 Mamoru TASAKA <mtasaka@fedoraproject.org> - 2.12.2-4
 - Enable test suite again
 

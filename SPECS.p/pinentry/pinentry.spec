@@ -92,7 +92,7 @@ make install DESTDIR=$RPM_BUILD_ROOT
 
 # Backwards compatibility
 ln -s pinentry-gtk-2 $RPM_BUILD_ROOT%{_bindir}/pinentry-gtk
-ln -s pinentry-qt4 $RPM_BUILD_ROOT%{_bindir}/pinentry-qt
+#ln -s pinentry-qt4 $RPM_BUILD_ROOT%{_bindir}/pinentry-qt
 
 install -p -m755 -D %{SOURCE10} $RPM_BUILD_ROOT%{_bindir}/pinentry
 
@@ -132,10 +132,10 @@ fi
 
 %files qt
 %{_bindir}/pinentry-qt
-%{_bindir}/pinentry-qt4
+#{_bindir}/pinentry-qt4
 
 %files emacs
-%{_bindir}/pinentry-emacs
+#{_bindir}/pinentry-emacs
 
 %changelog
 * Sun Sep 20 2015 Liu Di <liudidi@gmail.com> - 0.9.6-1

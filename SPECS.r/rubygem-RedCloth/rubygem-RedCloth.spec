@@ -5,7 +5,7 @@
 Summary:       Textile parser for Ruby
 Name:          rubygem-%{gem_name}
 Version:       4.2.9
-Release:       11%{?dist}
+Release:       12%{?dist}
 Group:         Development/Languages
 License:       MIT
 URL:           http://redcloth.org
@@ -84,6 +84,9 @@ popd
 
 
 %changelog
+* Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 4.2.9-12
+- 为 Magic 3.0 重建
+
 * Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 4.2.9-11
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

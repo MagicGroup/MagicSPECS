@@ -1,12 +1,16 @@
+%define libver 2.6
 Name:          rygel
-Version:       0.21.5
-Release:       1%{?dist}
+Version:	0.28.0
+Release:	1%{?dist}
 Summary:       A collection of UPnP/DLNA services
+Summary(zh_CN.UTF-8): UPnP/DLNA 服务的集合
 
 Group:         Applications/Multimedia
+Group(zh_CN.UTF-8): 应用程序/多媒体
 License:       LGPLv2+
 URL:           http://live.gnome.org/Rygel
-Source0:       ftp://ftp.gnome.org/pub/GNOME/sources/%{name}/0.20/%{name}-%{version}.tar.xz
+%define majorver %(echo %{version} | awk -F. '{print $1"."$2}')
+Source0:       ftp://ftp.gnome.org/pub/GNOME/sources/%{name}/%{majorver}/%{name}-%{version}.tar.xz
 
 BuildRequires: dbus-glib-devel
 BuildRequires: desktop-file-utils
@@ -33,23 +37,36 @@ mechanism. Interoperability with other devices in the market is achieved by
 conformance to very strict requirements of DLNA and on the fly conversion of
 media to format that client devices are capable of handling.
 
+%description -l zh_CN.UTF-8
+UPnP/DLNA 服务的集合。
+
 %package devel
 Summary: Development package for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: %{name} = %{version}-%{release}
 Requires: pkgconfig
 
 %description devel
 Files for development with %{name}.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
 %package tracker
 Summary: Tracker plugin for %{name}
+Summary(zh_CN.UTF-8): %{name} 的 Tracker 插件
 Group: Applications/Multimedia
+Group(zh_CN.UTF-8): 应用程序/多媒体
 Requires: %{name} = %{version}-%{release}
 Requires: tracker
 
 %description tracker
 A plugin for rygel to use tracker to locate media on the local machine.
+
+%description tracker -l zh_CN.UTF-8
+%{name} 的 Tracker 插件。
 
 %prep
 %setup -q
@@ -65,8 +82,8 @@ make install DESTDIR=%{buildroot} INSTALL='install -p'
 
 #Remove libtool archives.
 find %{buildroot} -name '*.la' -exec rm -f {} ';'
-
-%find_lang %{name}
+magic_rpm_clean.sh
+%find_lang %{name} 
 
 # Verify the desktop files
 desktop-file-validate %{buildroot}/%{_datadir}/applications/rygel.desktop
@@ -92,41 +109,50 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %{_bindir}/rygel
 %{_bindir}/rygel-preferences
 %{_libdir}/librygel*.so.*
-%{_libdir}/rygel-2.2/engines/librygel-media-engine-gst.so
-%{_libdir}/rygel-2.2/engines/librygel-media-engine-simple.so
-%{_libdir}/rygel-2.2/engines/media-engine-gst.plugin
-%{_libdir}/rygel-2.2/engines/media-engine-simple.plugin
-%{_libdir}/rygel-2.2/plugins/librygel-external.so
-%{_libdir}/rygel-2.2/plugins/external.plugin
-%{_libdir}/rygel-2.2/plugins/librygel-gst-launch.so
-%{_libdir}/rygel-2.2/plugins/gst-launch.plugin
-%{_libdir}/rygel-2.2/plugins/librygel-media-export.so
-%{_libdir}/rygel-2.2/plugins/media-export.plugin
-%{_libdir}/rygel-2.2/plugins/librygel-mediathek.so
-%{_libdir}/rygel-2.2/plugins/mediathek.plugin
-%{_libdir}/rygel-2.2/plugins/librygel-mpris.so
-%{_libdir}/rygel-2.2/plugins/mpris.plugin
-%{_libdir}/rygel-2.2/plugins/librygel-playbin.so
-%{_libdir}/rygel-2.2/plugins/playbin.plugin
+%{_libdir}/rygel-%{libver}/engines/librygel-media-engine-gst.so
+%{_libdir}/rygel-%{libver}/engines/librygel-media-engine-simple.so
+%{_libdir}/rygel-%{libver}/engines/media-engine-gst.plugin
+%{_libdir}/rygel-%{libver}/engines/media-engine-simple.plugin
+%{_libdir}/rygel-%{libver}/plugins/librygel-external.so
+%{_libdir}/rygel-%{libver}/plugins/external.plugin
+%{_libdir}/rygel-%{libver}/plugins/librygel-gst-launch.so
+%{_libdir}/rygel-%{libver}/plugins/gst-launch.plugin
+%{_libdir}/rygel-%{libver}/plugins/librygel-media-export.so
+%{_libdir}/rygel-%{libver}/plugins/media-export.plugin
+%{_libdir}/rygel-%{libver}/plugins/librygel-mediathek.so
+%{_libdir}/rygel-%{libver}/plugins/mediathek.plugin
+%{_libdir}/rygel-%{libver}/plugins/librygel-mpris.so
+%{_libdir}/rygel-%{libver}/plugins/mpris.plugin
+%{_libdir}/rygel-%{libver}/plugins/librygel-playbin.so
+%{_libdir}/rygel-%{libver}/plugins/playbin.plugin
 %{_datadir}/rygel/
 %{_datadir}/applications/rygel*
 %{_datadir}/dbus-1/services/org.gnome.Rygel1.service
 %{_datadir}/icons/hicolor/*/apps/rygel*
 %{_datadir}/man/man?/rygel*
+%{_libdir}/girepository-1.0/*.typelib
+%{_libdir}/rygel-%{libver}/plugins/librygel-ruih.so
+%{_libdir}/rygel-%{libver}/plugins/ruih.plugin
+/%{_prefix}/libexec/rygel/mx-extract
+%{_datadir}/gir-1.0/Rygel*-%{libver}.gir
+
 
 %files tracker
-%{_libdir}/rygel-2.2/plugins/librygel-tracker.so
-%{_libdir}/rygel-2.2/plugins/tracker.plugin
+%{_libdir}/rygel-%{libver}/plugins/librygel-tracker.so
+%{_libdir}/rygel-%{libver}/plugins/tracker.plugin
 
 %files devel
 %doc %{_datadir}/gtk-doc/html/librygel*
 %{_libdir}/librygel-*.so
-%{_includedir}/rygel-2.2
+%{_includedir}/rygel-%{libver}
 %{_libdir}/pkgconfig/rygel*.pc
 %{_datadir}/vala/vapi/rygel*.deps
 %{_datadir}/vala/vapi/rygel*.vapi
 
 %changelog
+* Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 0.28.0-1
+- 更新到 0.28.0
+
 * Tue Feb 04 2014 Richard Hughes <rhughes@redhat.com> - 0.21.4-1
 - Update to 0.21.4
 

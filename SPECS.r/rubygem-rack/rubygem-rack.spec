@@ -1,7 +1,7 @@
 %global gem_name rack
 
 # There is circular dependency between thin and rack.
-%global bootstrap_thin 0
+%global bootstrap_thin 1
 
 # rubygem-bacon missing for epel7
 #  https://bugzilla.redhat.com/show_bug.cgi?id=1138661

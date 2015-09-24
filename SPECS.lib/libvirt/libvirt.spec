@@ -2131,6 +2131,16 @@ exit 0
 %doc COPYING COPYING.LESSER
 
 %config(noreplace) %{_sysconfdir}/libvirt/libvirt.conf
+%config(noreplace) %{_sysconfdir}/libvirt/libxl-lockd.conf
+%config(noreplace) %{_sysconfdir}/libvirt/libxl-sanlock.conf
+%config(noreplace) %{_sysconfdir}/libvirt/libxl.conf
+%{_sysconfdir}/logrotate.d/libvirtd.libxl
+/usr/lib/sysctl.d/60-libvirtd.conf
+/usr/lib/systemd/system/libvirtd.socket
+%{_libdir}/libvirt-admin.so.*
+%{_datadir}/augeas/lenses/libvirtd_libxl.aug
+%{_datadir}/augeas/lenses/tests/test_libvirtd_libxl.aug
+%{_datadir}/polkit-1/rules.d/50-libvirt.rules
 %{_mandir}/man1/virsh.1*
 %{_mandir}/man1/virt-xml-validate.1*
 %{_mandir}/man1/virt-pki-validate.1*
@@ -2203,10 +2213,8 @@ exit 0
 %{_libdir}/libvirt-qemu.so
 %{_libdir}/libvirt-lxc.so
 %dir %{_includedir}/libvirt
-%{_includedir}/libvirt/virterror.h
-%{_includedir}/libvirt/libvirt.h
-%{_includedir}/libvirt/libvirt-qemu.h
-%{_includedir}/libvirt/libvirt-lxc.h
+%{_includedir}/libvirt/*.h
+%{_libdir}/libvirt-admin.so
 %{_libdir}/pkgconfig/libvirt.pc
 %{_libdir}/pkgconfig/libvirt-qemu.pc
 %{_libdir}/pkgconfig/libvirt-lxc.pc

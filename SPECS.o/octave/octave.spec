@@ -25,10 +25,13 @@ Source0:        ftp://alpha.gnu.org/gnu/octave/octave-%{version}%{rctag}.tar.xz
 %endif
 # RPM macros for helping to build Octave packages
 Source1:        macros.octave
+
 # Fix to allow pkg build to use a directory
 # https://savannah.gnu.org/bugs/?func=detailitem&item_id=32839
-Patch0:         octave-3.8.0-pkgbuilddir.patch
-Patch2:		octave-disable-qt5.patch
+Patch0:         octave-pkgbuilddir.patch
+# Upstream patch to fix texinfo6 doc builds
+# http://hg.savannah.gnu.org/hgweb/octave/rev/2ec049e50ed8
+Patch1:         octave-texinfo6-2ec049e50ed8.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
@@ -127,6 +130,7 @@ This package contains documentation for Octave.
 %prep
 %setup -q -n %{name}-%{version}%{?rctag}
 %patch0 -p1 -b .pkgbuilddir
+%patch1 -p1
 find -name \*.h -o -name \*.cc | xargs sed -i -e 's/<config.h>/"config.h"/' -e 's/<base-list.h>/"base-list.h"/'
 
 # Check permissions

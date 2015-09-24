@@ -3,7 +3,7 @@
 Summary:	Behaviour driven development (BDD) framework for Ruby
 Name:		rubygem-%{gem_name}
 Version:	3.3.0
-Release:	1%{?dist}
+Release:	3%{?dist}
 
 Group:		Development/Languages
 License:	MIT
@@ -56,6 +56,12 @@ cp -a .%{gem_dir}/* \
 
 
 %changelog
+* Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 3.3.0-3
+- 为 Magic 3.0 重建
+
+* Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 3.3.0-2
+- 为 Magic 3.0 重建
+
 * Sun Aug  2 2015 Mamoru TASAKA <mtasaka@fedoraproject.org> - 3.3.0-1
 - 3.3.0
 

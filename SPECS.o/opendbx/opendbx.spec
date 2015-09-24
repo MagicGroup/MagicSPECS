@@ -1,6 +1,6 @@
 Name:           opendbx
 Version:        1.4.6
-Release:        7%{?dist}
+Release:        8%{?dist}
 Group:          Development/Libraries
 Group(zh_CN.UTF-8): 开发/库
 Summary:        Lightweight but extensible database access library written in C
@@ -184,6 +184,9 @@ find $RPM_BUILD_ROOT -name '*.la' -exec rm -f {} ';'
 %{_mandir}/man1/odbx-sql.1.gz
 
 %changelog
+* Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 1.4.6-8
+- 为 Magic 3.0 重建
+
 * Thu Apr 16 2015 Liu Di <liudidi@gmail.com> - 1.4.6-7
 - 为 Magic 3.0 重建
 

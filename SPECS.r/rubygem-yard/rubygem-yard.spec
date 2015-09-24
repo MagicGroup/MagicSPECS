@@ -2,7 +2,7 @@
 
 Name: rubygem-%{gem_name}
 Version: 0.8.7.6
-Release: 1%{?dist}
+Release: 2%{?dist}
 Summary: Documentation tool for consistent and usable documentation in Ruby
 Group: Development/Languages
 License: MIT and (BSD or Ruby)
@@ -88,6 +88,9 @@ popd
 
 
 %changelog
+* Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 0.8.7.6-2
+- 为 Magic 3.0 重建
+
 * Wed Jul 08 2015 Vít Ondruch <vondruch@redhat.com> - 0.8.7.6-1
 - Update to YARD 0.8.7.6.
 

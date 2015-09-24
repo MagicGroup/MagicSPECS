@@ -1,6 +1,6 @@
 Name:           ruby-augeas
 Version:        0.5.0
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        Ruby bindings for Augeas
 Summary(zh_CN.UTF-8): Augeas 的 Ruby 绑定
 Group:          Development/Languages
@@ -56,6 +56,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 0.5.0-4
+- 为 Magic 3.0 重建
+
 * Fri Sep 18 2015 Liu Di <liudidi@gmail.com> - 0.5.0-3
 - 为 Magic 3.0 重建
 

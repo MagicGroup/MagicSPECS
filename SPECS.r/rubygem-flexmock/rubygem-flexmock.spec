@@ -11,7 +11,7 @@
 Summary:	Mock object library for ruby
 Name:		rubygem-%{gem_name}
 Version:	1.3.3
-Release:	5%{?dist}
+Release:	6%{?dist}
 Group:		Development/Languages
 License:	Copyright only
 URL:		http://flexmock.rubyforge.org
@@ -115,6 +115,9 @@ popd
 %endif
 
 %changelog
+* Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 1.3.3-6
+- 为 Magic 3.0 重建
+
 * Fri Aug 14 2015 Mamoru TASAKA <mtasaka@fedoraproject.org> - 1.3.3-5
 - Fix two failing tests, and omit one test currently
 

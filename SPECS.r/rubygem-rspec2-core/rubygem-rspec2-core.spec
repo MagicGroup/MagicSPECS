@@ -16,7 +16,7 @@
 Summary:	Rspec 2 runner and formatters
 Name:		rubygem-%{rpmgem_name}
 Version:	%{majorver}
-Release:	%{?preminorver:0.}%{fedorarel}%{?preminorver:%{rpmminorver}}%{?dist}
+Release:	%{?preminorver:0.}%{fedorarel}%{?preminorver:%{rpmminorver}}%{?dist}.1
 
 Group:		Development/Languages
 License:	MIT
@@ -134,6 +134,9 @@ popd
 %exclude	%{gem_instdir}/spec/
 
 %changelog
+* Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 2.14.8-6.1
+- 为 Magic 3.0 重建
+
 * Wed Jul  1 2015 Mamoru TASAKA <mtasaka@fedoraproject.org> - 2.14.8-6
 - Also try to load rspec
 

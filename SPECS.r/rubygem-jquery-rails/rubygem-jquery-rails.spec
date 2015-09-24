@@ -3,7 +3,7 @@
 
 Name: rubygem-%{gem_name}
 Version: 4.0.4
-Release: 1%{?dist}
+Release: 2%{?dist}
 Summary: Use jQuery with Rails 4+
 Group: Development/Languages
 License: MIT
@@ -85,6 +85,9 @@ popd
 %{gem_instdir}/jquery-rails.gemspec
 
 %changelog
+* Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 4.0.4-2
+- 为 Magic 3.0 重建
+
 * Fri Jun 19 2015 Vít Ondruch <vondruch@redhat.com> - 4.0.4-1
 - Update to jquery-rails 4.0.4.
 

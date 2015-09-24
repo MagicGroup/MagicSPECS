@@ -3,7 +3,7 @@
 ### Abstract ###
 
 Name: libsoup
-Version:	2.47.4
+Version:	2.52.0
 Release: 1%{?dist}
 License: LGPLv2
 Group: Development/Libraries
@@ -90,8 +90,12 @@ magic_rpm_clean.sh
 %{_libdir}/pkgconfig/*.pc
 %{_datadir}/gir-1.0/Soup*2.4.gir
 %{_datadir}/gtk-doc/html/%{name}-2.4
+%{_datadir}/vala/vapi/libsoup-2.4.vapi
 
 %changelog
+* Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 2.52.0-1
+- 更新到 2.52.0
+
 * Thu Jul 31 2014 Liu Di <liudidi@gmail.com> - 2.47.4-1
 - 更新到 2.47.4
 

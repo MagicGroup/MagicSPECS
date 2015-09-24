@@ -134,7 +134,7 @@ rm -f %{buildroot}%{_mandir}/{de,fr,uk}/man1/kill.1
 
 magic_rpm_clean.sh
 
-%find_lang %{name}
+%find_lang %{name} || %define no_lang 1
 
 ln -s %{_bindir}/pidof %{buildroot}%{_sbindir}/pidof
 
@@ -143,8 +143,6 @@ ln -s %{_bindir}/pidof %{buildroot}%{_sbindir}/pidof
 %postun -p /sbin/ldconfig
 
 %files
-%doc AUTHORS Documentation/BUGS COPYING COPYING.LIB Documentation/FAQ NEWS README top/README.top Documentation/TODO
-
 %{_libdir}/libprocps.so.*
 %{_bindir}/*
 %{_sbindir}/*
@@ -157,7 +155,6 @@ ln -s %{_bindir}/pidof %{buildroot}%{_sbindir}/pidof
 %exclude /unwanted/*
 
 %files devel
-%doc COPYING COPYING.LIB
 %{_libdir}/libprocps.so
 %{_libdir}/pkgconfig/libprocps.pc
 %{_includedir}/proc

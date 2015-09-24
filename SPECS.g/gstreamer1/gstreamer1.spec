@@ -5,8 +5,8 @@
 %global         _gobject_introspection  1.31.1
 
 Name:           gstreamer1
-Version:	1.4.5
-Release:        2%{?dist}
+Version:	1.5.91
+Release:        1%{?dist}
 Summary:        GStreamer streaming media framework runtime
 Summary(zh_CN.UTF-8): GStreamer 流媒体框架运行库
 
@@ -207,6 +207,9 @@ install -m0644 -D %{SOURCE2} $RPM_BUILD_ROOT%{_rpmconfigdir}/fileattrs/gstreamer
 
 
 %changelog
+* Wed Sep 23 2015 Liu Di <liudidi@gmail.com> - 1.5.91-1
+- 更新到 1.5.91
+
 * Sun Mar 01 2015 Liu Di <liudidi@gmail.com> - 1.4.5-2
 - 更新到 1.4.5
 

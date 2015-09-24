@@ -46,7 +46,7 @@
 
 Name:           libkolabxml
 Version: 1.0.3
-Release:        11%{?dist}
+Release:        12%{?dist}
 Summary:        Kolab XML format collection parser library
 
 Group:          System Environment/Libraries
@@ -114,7 +114,7 @@ Requires:       php-devel >= 5.3
 %if 0%{?with_python} > 0
 Requires:       python-devel
 %endif
-Requires:       qt-devel >= 3
+Requires:       qt4-devel >= 4
 Requires:       swig
 Requires:       uuid-devel
 Requires:       xerces-c-devel
@@ -271,6 +271,9 @@ popd
 %endif
 
 %changelog
+* Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 1.0.3-12
+- 为 Magic 3.0 重建
+
 * Tue Sep 22 2015 Liu Di <liudidi@gmail.com> - 1.0.3-11
 - 为 Magic 3.0 重建
 

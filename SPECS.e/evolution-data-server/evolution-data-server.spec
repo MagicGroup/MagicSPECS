@@ -1,3 +1,6 @@
+#temp
+%define debug_package %{nil}
+
 %define ldap_support 1
 %define static_ldap 0
 %define krb5_support 1
@@ -7,8 +10,8 @@
 # Coverity scan can override this to 0, to skip checking in gtk-doc generated code
 %{!?with_docs: %define with_docs 1}
 
-%define glib2_version 2.36.0
-%define gtk3_version 3.2.0
+%define glib2_version 2.40.0
+%define gtk3_version 3.6.0
 %define gcr_version 3.4
 %define gtk_doc_version 1.9
 %define goa_version 3.8
@@ -17,12 +20,13 @@
 %define libgdata_version 0.10.0
 %define libgweather_version 3.5.0
 %define libical_version 0.46
-%define libsoup_version 2.40.3
+%define libsoup_version 2.42
 %define sqlite_version 3.5
 %define nss_version 3.14
 
-%define eds_base_version 3.14
+%define eds_base_version 3.18
 
+%define credential_modules_dir %{_libdir}/evolution-data-server/credential-modules
 %define camel_provider_dir %{_libdir}/evolution-data-server/camel-providers
 %define ebook_backends_dir %{_libdir}/evolution-data-server/addressbook-backends
 %define ecal_backends_dir %{_libdir}/evolution-data-server/calendar-backends
@@ -31,7 +35,7 @@
 ### Abstract ###
 
 Name: evolution-data-server
-Version:	3.13.3
+Version:	3.18.0
 Release: 1%{?dist}
 Group: System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
@@ -143,6 +147,20 @@ This package contains developer documentation for %{name}.
 # %{with_docs}
 %endif
 
+%package tests
+Summary: Tests for the %{name} package
+Summary(zh_CN.UTF-8): %{name} 的测试包
+Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
+Requires: %{name}%{?_isa} = %{version}-%{release}
+
+%description tests
+The %{name}-tests package contains tests that can be used to verify
+the functionality of the installed %{name} package.
+
+%description tests -l zh_CN.UTF-8
+%{name} 的测试包。
+
 %prep
 %setup -q
 
@@ -228,16 +246,12 @@ autoconf
 	--enable-dot-locking=no \
 	--enable-introspection=yes \
 	--enable-vala-bindings \
+	--enable-installed-tests \
 	%ldap_flags %krb5_flags %nntp_flags %ssl_flags \
 	%largefile_flags %gtkdoc_flags
 export tagname=CC
 
-# Do not build in parallel. The libedata-book and libedata-cal directories
-# each produce a shared library and an executable binary that links to the
-# shared library. If the executable binary finishes first the build fails.
-# There may be other similar cases in the source tree.
-#make %{?_smp_mflags} LIBTOOL=/usr/bin/libtool
-make LIBTOOL=/usr/bin/libtool
+make %{?_smp_mflags} LIBTOOL=/usr/bin/libtool
 
 %install
 rm -rf $RPM_BUILD_ROOT
@@ -247,15 +261,17 @@ make DESTDIR=$RPM_BUILD_ROOT LIBTOOL=/usr/bin/libtool install
 # remove libtool archives for importers and the like
 find $RPM_BUILD_ROOT/%{_libdir} -name '*.la' -exec rm {} \;
 rm -f $RPM_BUILD_ROOT/%{_libdir}/*.a
-rm -f $RPM_BUILD_ROOT/%{_libdir}/evolution-data-server/camel-providers/*.a
-rm -f $RPM_BUILD_ROOT/%{_libdir}/evolution-data-server/addressbook-backends/*.a
-rm -f $RPM_BUILD_ROOT/%{_libdir}/evolution-data-server/calendar-backends/*.a
-rm -f $RPM_BUILD_ROOT/%{_libdir}/evolution-data-server/registry-modules/*.a
+rm -f $RPM_BUILD_ROOT/%{_libdir}/evolution-data-server/*.a
+rm -f $RPM_BUILD_ROOT/%{credential_modules_dir}/*.a
+rm -f $RPM_BUILD_ROOT/%{camel_provider_dir}/*.a
+rm -f $RPM_BUILD_ROOT/%{ebook_backends_dir}/*.a
+rm -f $RPM_BUILD_ROOT/%{ecal_backends_dir}/*.a
+rm -f $RPM_BUILD_ROOT/%{modules_dir}/*.a
 
 # give the libraries some executable bits 
 find $RPM_BUILD_ROOT -name '*.so.*' -exec chmod +x {} \;
 magic_rpm_clean.sh
-%find_lang %{name}-%{eds_base_version}
+%find_lang %{name}-%{eds_base_version} || %define no_lang 1
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -271,7 +287,11 @@ fi
 %posttrans
 glib-compile-schemas %{_datadir}/glib-2.0/schemas &>/dev/null || :
 
+%if 0%{?no_lang}
+%files
+%else
 %files -f %{name}-%{eds_base_version}.lang
+%endif
 %defattr(-,root,root,-)
 %doc README COPYING ChangeLog NEWS
 %{_libdir}/libcamel-1.2.so.*
@@ -282,6 +302,7 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &>/dev/null || :
 %{_libdir}/libedata-book-1.2.so.*
 %{_libdir}/libedata-cal-1.2.so.*
 %{_libdir}/libedataserver-1.2.so.*
+%{_libdir}/libedataserverui-1.2.so.*
 
 %{_libdir}/girepository-1.0/EBook-1.2.typelib
 %{_libdir}/girepository-1.0/EBookContacts-1.2.typelib
@@ -290,7 +311,9 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &>/dev/null || :
 %{_libexecdir}/camel-index-control-1.2
 %{_libexecdir}/camel-lock-helper-1.2
 %{_libexecdir}/evolution-addressbook-factory
+%{_libexecdir}/evolution-addressbook-factory-subprocess
 %{_libexecdir}/evolution-calendar-factory
+%{_libexecdir}/evolution-calendar-factory-subprocess
 %{_libexecdir}/evolution-scan-gconf-tree-xml
 %{_libexecdir}/evolution-source-registry
 %{_libexecdir}/evolution-user-prompter
@@ -298,6 +321,7 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &>/dev/null || :
 # GSettings schemas:
 %{_datadir}/GConf/gsettings/evolution-data-server.convert
 %{_datadir}/glib-2.0/schemas/org.gnome.Evolution.DefaultSources.gschema.xml
+%{_datadir}/glib-2.0/schemas/org.gnome.evolution-data-server.gschema.xml
 %{_datadir}/glib-2.0/schemas/org.gnome.evolution-data-server.addressbook.gschema.xml
 %{_datadir}/glib-2.0/schemas/org.gnome.evolution-data-server.calendar.gschema.xml
 %{_datadir}/glib-2.0/schemas/org.gnome.evolution.eds-shell.gschema.xml
@@ -311,10 +335,13 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &>/dev/null || :
 %{_datadir}/pixmaps/evolution-data-server
 
 %dir %{_libdir}/evolution-data-server
+%dir %{credential_modules_dir}
 %dir %{camel_provider_dir}
 %dir %{ebook_backends_dir}
 %dir %{ecal_backends_dir}
 %dir %{modules_dir}
+
+%{_libdir}/evolution-data-server/libedbus-private.so
 
 # Camel providers:
 %{camel_provider_dir}/libcamelimapx.so
@@ -336,6 +363,7 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &>/dev/null || :
 %{camel_provider_dir}/libcamelsmtp.urls
 
 # e-d-s extensions:
+%{credential_modules_dir}/module-credentials-goa.so
 %{ebook_backends_dir}/libebookbackendfile.so
 %{ebook_backends_dir}/libebookbackendgoogle.so
 %{ebook_backends_dir}/libebookbackendldap.so
@@ -343,9 +371,9 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &>/dev/null || :
 %{ecal_backends_dir}/libecalbackendcaldav.so
 %{ecal_backends_dir}/libecalbackendcontacts.so
 %{ecal_backends_dir}/libecalbackendfile.so
+%{ecal_backends_dir}/libecalbackendgtasks.so
 %{ecal_backends_dir}/libecalbackendhttp.so
 %{ecal_backends_dir}/libecalbackendweather.so
-%{ecal_backends_dir}/libecalbackendgtasks.so
 %{modules_dir}/module-cache-reaper.so
 %{modules_dir}/module-google-backend.so
 %{modules_dir}/module-gnome-online-accounts.so
@@ -366,6 +394,7 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &>/dev/null || :
 %{_libdir}/libedata-book-1.2.so
 %{_libdir}/libedata-cal-1.2.so
 %{_libdir}/libedataserver-1.2.so
+%{_libdir}/libedataserverui-1.2.so
 %{_libdir}/pkgconfig/camel-1.2.pc
 %{_libdir}/pkgconfig/evolution-data-server-1.2.pc
 %{_libdir}/pkgconfig/libebackend-1.2.pc
@@ -375,6 +404,7 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &>/dev/null || :
 %{_libdir}/pkgconfig/libedata-book-1.2.pc
 %{_libdir}/pkgconfig/libedata-cal-1.2.pc
 %{_libdir}/pkgconfig/libedataserver-1.2.pc
+%{_libdir}/pkgconfig/libedataserverui-1.2.pc
 %{_datadir}/gir-1.0/EBook-1.2.gir
 %{_datadir}/gir-1.0/EBookContacts-1.2.gir
 %{_datadir}/gir-1.0/EDataServer-1.2.gir
@@ -393,7 +423,16 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &>/dev/null || :
 
 %endif
 
+%files tests
+%{_libdir}/libetestserverutils.so
+%{_libdir}/libetestserverutils.so.*
+%{_libexecdir}/%{name}/installed-tests
+%{_datadir}/installed-tests
+
 %changelog
+* Wed Sep 23 2015 Liu Di <liudidi@gmail.com> - 3.18.0-1
+- 更新到 3.18.0
+
 * Wed Jul 16 2014 Liu Di <liudidi@gmail.com> - 3.13.3-1
 - 更新到 3.13.3
 

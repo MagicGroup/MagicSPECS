@@ -1,0 +1,25 @@
+diff --git a/plugin/visio/VisioGraphic.cpp b/plugin/visio/VisioGraphic.cpp
+index d1df091..b22ec86 100644
+--- a/plugin/visio/VisioGraphic.cpp
++++ b/plugin/visio/VisioGraphic.cpp
+@@ -31,6 +31,8 @@
+ #define isfinite(x) finite(x)
+ #endif
+ 
++#include <cstdlib>
++
+ #include "VisioGraphic.h"
+ 
+ #include "gvcjob.h"
+diff --git a/plugin/visio/VisioText.cpp b/plugin/visio/VisioText.cpp
+index fad75fc..2b7db1a 100644
+--- a/plugin/visio/VisioText.cpp
++++ b/plugin/visio/VisioText.cpp
+@@ -19,6 +19,7 @@
+ 
+ #include "gvcjob.h"
+ #include "gvio.h"
++#include <cstdlib>
+ #include <string.h>
+ 
+ extern "C" char *xml_string(char* str);

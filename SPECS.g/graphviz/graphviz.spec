@@ -69,6 +69,8 @@ Patch5:			graphviz-2.38.0-rbconfig.patch
 # 修正 mips64el 编译错误
 Patch6:			graphviz-2.38.0-mips64-lib64-fix.patch
 
+Patch7:			graphviz-2.38.0-visio.patch
+
 BuildRoot:		%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:		zlib-devel, libpng-devel, libjpeg-devel, expat-devel, freetype-devel >= 2
 BuildRequires:		ksh, bison, m4, flex, tk-devel, tcl-devel >= 8.3, swig
@@ -282,6 +284,7 @@ Various tcl packages (extensions) for the graphviz tools.
 %patch4 -p1 -b .vimdot-vi
 %patch5 -p1 -b .rbconfig
 %patch6 -p1 -b .mips64el
+%patch7 -p1
 
 # Attempt to fix rpmlint warnings about executable sources
 find -type f -regex '.*\.\(c\|h\)$' -exec chmod a-x {} ';'
@@ -293,8 +296,8 @@ autoreconf -if
 sed -i '/JavaVM.framework/!s/JAVA_INCLUDES=/JAVA_INCLUDES=\"_MY_JAVA_INCLUDES_\"/g' configure
 sed -i 's|_MY_JAVA_INCLUDES_|-I%{java_home}/include/ -I%{java_home}/include/linux/|g' configure
 %endif
-# Rewrite config_ruby.rb to work with Ruby 1.9
-sed -i 's|expand(|expand(Config::|' config/config_ruby.rb
+# Rewrite config_ruby.rb to work with Ruby 2.2
+sed -i 's|expand(|expand(RbConfig::|' config/config_ruby.rb
 sed -i 's|sitearchdir|vendorarchdir|' config/config_ruby.rb
 
 # get the path to search for ruby/config.h to CPPFLAGS, so that configure can find it

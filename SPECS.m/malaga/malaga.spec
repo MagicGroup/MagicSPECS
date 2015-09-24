@@ -1,6 +1,6 @@
 Name:           malaga
 Version:        7.12 
-Release:        12%{?dist}
+Release:        13%{?dist}
 Summary:        A programming language for automatic language analysis
 Summary(zh_CN.UTF-8): 自动语言分析的程序语言
 
@@ -131,6 +131,9 @@ fi
 
 
 %changelog
+* Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 7.12-13
+- 为 Magic 3.0 重建
+
 * Sat Aug 09 2014 Liu Di <liudidi@gmail.com> - 7.12-12
 - 为 Magic 3.0 重建
 

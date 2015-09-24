@@ -65,9 +65,9 @@ Openwsman library for packages dependent on openwsman
 %package -n libwsman-devel
 License:        BSD
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Summary(zh_CN.UTF-8): %{name} 的开发包
 Summary:        Open source Implementation of WS-Management
-Summary(zh_CN.UTF-8): %{name} 的开发包
 Provides:       %{name}-devel = %{version}-%{release}
 Obsoletes:      %{name}-devel < %{version}-%{release}
 Requires:       libwsman1 = %{version}-%{release}
