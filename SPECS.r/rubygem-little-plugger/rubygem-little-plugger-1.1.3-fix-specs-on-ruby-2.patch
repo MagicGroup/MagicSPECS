@@ -1,0 +1,13 @@
+diff --git a/spec/little-plugger_spec.rb b/spec/little-plugger_spec.rb
+index 0f5f109..05d1918 100644
+--- a/spec/little-plugger_spec.rb
++++ b/spec/little-plugger_spec.rb
+@@ -18,7 +18,7 @@ describe LittlePlugger do
+   it "generates a default plugin module" do
+     LittlePlugger.default_plugin_module('little_plugger').should be == LittlePlugger
+     lambda {LittlePlugger.default_plugin_module('little_plugger/plugins')}.
+-        should raise_error(NameError, 'uninitialized constant LittlePlugger::Plugins')
++        should raise_error(NameError, /uninitialized constant (LittlePlugger::)?Plugins/)
+     LittlePlugger.default_plugin_module('process/status').should be == Process::Status
+   end
+ end
