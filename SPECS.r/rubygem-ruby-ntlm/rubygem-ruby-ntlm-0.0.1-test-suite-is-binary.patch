@@ -1,0 +1,7 @@
+--- ruby-ntlm-0.0.1/test/function_test.rb.binary	2013-03-10 16:22:59.000000000 +0900
++++ ruby-ntlm-0.0.1/test/function_test.rb	2013-03-10 16:25:16.000000000 +0900
+@@ -1,3 +1,4 @@
++#encoding: binary
+ # vim: set et sw=2 sts=2:
+ 
+ require File.dirname(__FILE__) + '/test_helper'
