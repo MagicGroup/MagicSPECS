@@ -1,0 +1,20 @@
+--- scruffy-0.3.0.beta1.gemspec.orig	2012-07-17 15:16:59.496905405 -0400
++++ scruffy-0.3.0.beta1.gemspec	2012-07-17 15:17:14.872961826 -0400
+@@ -19,14 +19,14 @@ Gem::Specification.new do |s|
+     s.specification_version = 3
+ 
+     if Gem::Version.new(Gem::VERSION) >= Gem::Version.new('1.2.0') then
+-      s.add_runtime_dependency(%q<builder>, ["~> 2.0"])
++      s.add_runtime_dependency(%q<builder>, [">= 2.0"])
+       s.add_development_dependency(%q<rspec>, ["~> 2.3"])
+     else
+-      s.add_dependency(%q<builder>, ["~> 2.0"])
++      s.add_dependency(%q<builder>, [">= 2.0"])
+       s.add_dependency(%q<rspec>, ["~> 2.3"])
+     end
+   else
+-    s.add_dependency(%q<builder>, ["~> 2.0"])
++    s.add_dependency(%q<builder>, [">= 2.0"])
+     s.add_dependency(%q<rspec>, ["~> 2.3"])
+   end
+ end
