@@ -1,0 +1,44 @@
+diff --git a/test/core_ext_test.rb b/test/core_ext_test.rb
+index 11023e8..f2fc0f7 100644
+--- a/test/core_ext_test.rb
++++ b/test/core_ext_test.rb
+@@ -1,6 +1,6 @@
+ require 'test_helper'
+ 
+-class CoreExtTest < Test::Unit::TestCase
++class CoreExtTest < Minitest::Test
+   test 'Hash#deep_symbolize_keys walks arrays, too' do
+     hash     = { 'foo' => [{ 'bar' => 'bar', 'baz' => { 'buz' => 'buz' } }] }
+     expected = { :foo  => [{ :bar  => 'bar', :baz  => { :buz  => 'buz' } }] }
+diff --git a/test/hashr_test.rb b/test/hashr_test.rb
+index 4a172c2..ff03bad 100644
+--- a/test/hashr_test.rb
++++ b/test/hashr_test.rb
+@@ -1,12 +1,12 @@
+ require 'test_helper'
+ 
+-class HashrTest < Test::Unit::TestCase
++class HashrTest < Minitest::Test
+   def teardown
+     Hashr.raise_missing_keys = false
+   end
+ 
+   test 'initialize takes nil' do
+-    assert_nothing_raised { Hashr.new(nil) }
++    Hashr.new(nil)
+   end
+ 
+   test 'method access on an existing key returns the value' do
+diff --git a/test/test_helper.rb b/test/test_helper.rb
+index 67dd321..ceddc1d 100644
+--- a/test/test_helper.rb
++++ b/test/test_helper.rb
+@@ -1,4 +1,4 @@
+ require 'bundler/setup'
+-require 'test/unit'
++require 'minitest/autorun'
+ require 'test_declarative'
+ require 'hashr'
+-- 
+1.8.3.1
+
