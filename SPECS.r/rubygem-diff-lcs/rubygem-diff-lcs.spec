@@ -7,7 +7,7 @@
 Summary: Provide a list of changes between two sequenced collections
 Name: rubygem-%{gem_name}
 Version: 1.2.5
-Release: 5%{?dist}
+Release: 4%{?dist}
 Group: Development/Languages
 #lib/diff/lcs.rb is Artistic or Ruby or BSD
 #lib/diff/lcs/*.rb is GPLv2+ or Artistic or Ruby or BSD
@@ -101,9 +101,6 @@ popd
 
 
 %changelog
-* Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 1.2.5-5
-- 为 Magic 3.0 重建
-
 * Fri Aug 28 2015 Josef Stribny <jstribny@redhat.com> - 1.2.5-4
 - Fix FTBFS: change the way the specs are run
 
