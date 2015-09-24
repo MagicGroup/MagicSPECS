@@ -1,0 +1,30 @@
+commit 422dc5781126f91f6dacffdc0642dbf8c903426e
+Author: Shadab Ahmed <shadab.ansari@gmail.com>
+Date:   Sun Mar 15 17:31:58 2015 +0530
+
+    Using test time stamp variable
+    
+    Makes up for differences in time representation of Rails 3 vs Rails 4 and fixes the specs
+
+diff --git a/spec/lib/logstasher_spec.rb b/spec/lib/logstasher_spec.rb
+index 81d8b03..7dd9d01 100644
+--- a/spec/lib/logstasher_spec.rb
++++ b/spec/lib/logstasher_spec.rb
+@@ -200,7 +200,7 @@ describe LogStasher do
+     end
+     it 'adds to log with specified level' do
+       expect(logger).to receive(:send).with('warn?').and_return(true)
+-      expect(logger).to receive(:<<).with("{\"@source\":\"unknown\",\"@fields\":{\"message\":\"WARNING\",\"level\":\"warn\"},\"@tags\":[\"log\"],\"@timestamp\":\"1970-01-01T00:00:00Z\",\"@version\":\"1\"}\n")
++      expect(logger).to receive(:<<).with("{\"@source\":\"unknown\",\"@fields\":{\"message\":\"WARNING\",\"level\":\"warn\"},\"@tags\":[\"log\"],\"@timestamp\":\"#{$test_timestamp}\",\"@version\":\"1\"}\n")
+       LogStasher.log('warn', 'WARNING')
+     end
+     context 'with a source specified' do
+@@ -209,7 +209,7 @@ describe LogStasher do
+       end
+       it 'sets the correct source' do
+         expect(logger).to receive(:send).with('warn?').and_return(true)
+-        expect(logger).to receive(:<<).with("{\"@source\":\"foo\",\"@fields\":{\"message\":\"WARNING\",\"level\":\"warn\"},\"@tags\":[\"log\"],\"@timestamp\":\"1970-01-01T00:00:00Z\",\"@version\":\"1\"}\n")
++        expect(logger).to receive(:<<).with("{\"@source\":\"foo\",\"@fields\":{\"message\":\"WARNING\",\"level\":\"warn\"},\"@tags\":[\"log\"],\"@timestamp\":\"#{$test_timestamp}\",\"@version\":\"1\"}\n")
+         LogStasher.log('warn', 'WARNING')
+       end
+     end

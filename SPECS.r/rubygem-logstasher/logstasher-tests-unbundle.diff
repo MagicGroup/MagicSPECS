@@ -1,0 +1,33 @@
+commit bd516837518c9c584486c2ef650920ce730acf64
+Author: František Dvořák <valtri@civ.zcu.cz>
+Date:   Tue Aug 26 02:52:57 2014 +0200
+
+    Not using bundler in tests, add missing requires.
+
+diff --git a/spec/spec_helper.rb b/spec/spec_helper.rb
+index bcffa52..304c779 100644
+--- a/spec/spec_helper.rb
++++ b/spec/spec_helper.rb
+@@ -14,14 +14,6 @@ end
+ $LOAD_PATH.unshift(File.expand_path('../../lib', __FILE__))
+ 
+ require 'rubygems'
+-# Loads bundler setup tasks. Now if I run spec without installing gems then it would say gem not installed and
+-# do bundle install instead of ugly load error on require.
+-require 'bundler/setup'
+-
+-# This will require me all the gems automatically for the groups. If I do only .setup then I will have to require gems
+-# manually. Note that you have still have to require some gems if they are part of bigger gem like ActiveRecord which is
+-# part of Rails. You can say :require => false in gemfile to always use explicit requiring
+-Bundler.require(:default, :test)
+ 
+ Dir[File.join("./spec/support/**/*.rb")].each { |f| require f }
+ 
+@@ -43,6 +35,7 @@ require 'active_support/core_ext/string'
+ require 'active_support/core_ext/time/zones'
+ require 'abstract_controller/base'
+ require 'action_mailer'
++require 'rails'
+ require 'logger'
+ require 'logstash-event'
+ 
