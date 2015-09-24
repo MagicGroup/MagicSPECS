@@ -1,0 +1,75 @@
+diff --git a/lib/rmail/address.rb b/lib/rmail/address.rb
+index 8227841..8b4aa48 100644
+--- a/lib/rmail/address.rb
++++ b/lib/rmail/address.rb
+@@ -691,7 +691,7 @@ module RMail
+ 	    @sym = SYM_DOMAIN_LITERAL
+ 	    @lexeme = $1.gsub(/(^|[^\\])[\r\n\t ]+/, '\1').gsub(/\\(.)/, '\1')
+ 	    break
+-          when /\A[\200-\377\w!$%&\'*+\/=?^_\`{\}|~#-]+/m
++          when /\A[\200-\377\w!$%&\'*+\/=?^_\`{\}|~#-]+/nm
+             # This is just like SYM_ATOM, but includes all characters
+             # with high bits.  This is so we can allow such tokens in
+             # the display name portion of an address even though it
+diff --git a/lib/rmail/header.rb b/lib/rmail/header.rb
+index 9102f28..ca4d0b6 100644
+--- a/lib/rmail/header.rb
++++ b/lib/rmail/header.rb
+@@ -73,7 +73,7 @@ module RMail
+ 
+     class Field                 # :nodoc:
+       # fixme, document methadology for this (RFC2822)
+-      EXTRACT_FIELD_NAME_RE = /\A([^\x00-\x1f\x7f-\xff :]+):\s*/o
++      EXTRACT_FIELD_NAME_RE = /\A([^\x00-\x1f\x7f-\xff :]+):\s*/no
+ 
+       class << self
+         def parse(field)
+diff --git a/test/testaddress.rb b/test/testaddress.rb
+index 71026d0..dfbe885 100644
+--- a/test/testaddress.rb
++++ b/test/testaddress.rb
+@@ -797,14 +797,14 @@ class TestRMailAddress < TestBase
+   def test_invalid_addresses()
+     # The display name isn't encoded -- bad, but we parse it.
+     validate_case\
+-    ["\322\315\322 \312\353\363\341 <bar@foo.invalid>",
+-      [ { :name => "\322\315\322 \312\353\363\341",
+-	  :display_name => "\322\315\322 \312\353\363\341",
++    ["\322\315\322 \312\353\363\341 <bar@foo.invalid>".force_encoding('ASCII-8BIT'),
++      [ { :name => "\322\315\322 \312\353\363\341".force_encoding('ASCII-8BIT'),
++	  :display_name => "\322\315\322 \312\353\363\341".force_encoding('ASCII-8BIT'),
+ 	  :address => 'bar@foo.invalid',
+ 	  :comments => nil,
+ 	  :domain => 'foo.invalid',
+ 	  :local => 'bar',
+-	  :format => "\"\322\315\322 \312\353\363\341\" <bar@foo.invalid>",
++	  :format => "\"\322\315\322 \312\353\363\341\" <bar@foo.invalid>".force_encoding('ASCII-8BIT'),
+ 	} ] ]
+   end
+ 
+diff --git a/test/testbase.rb b/test/testbase.rb
+index 0dfb8af..8d9995d 100644
+--- a/test/testbase.rb
++++ b/test/testbase.rb
+@@ -39,7 +39,7 @@ rescue LoadError
+ end
+ 
+ class TestBase < Test::Unit::TestCase
+-  include Config
++  include RbConfig
+ 
+   attr_reader :scratch_dir
+ 
+diff --git a/test/testmessage.rb b/test/testmessage.rb
+index 9ba7347..2ed6cc2 100644
+--- a/test/testmessage.rb
++++ b/test/testmessage.rb
+@@ -141,7 +141,7 @@ Second body line
+   def test_decode
+     message = RMail::Message.new
+ 
+-    all_bytes = ''
++    all_bytes = ''.force_encoding('ASCII-8BIT')
+     0.upto(255) do |i|
+       all_bytes << i
+     end
