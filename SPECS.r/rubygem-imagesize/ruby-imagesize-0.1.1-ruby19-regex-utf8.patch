@@ -1,0 +1,23 @@
+--- imagesize-0.1.1/lib/image_size.rb.ruby19	2012-05-06 02:01:28.000000000 +0900
++++ imagesize-0.1.1/lib/image_size.rb	2012-05-06 01:04:41.000000000 +0900
+@@ -120,15 +120,16 @@
+   end
+ 
+   def check_type(img_top)
+-    if img_top =~ /^GIF8[7,9]a/                      then Type::GIF
++    if img_top.force_encoding(Encoding::ASCII_8BIT) =~ /^GIF8[7,9]a/n 
++      then Type::GIF
+     elsif img_top[0, 8] == "\x89PNG\x0d\x0a\x1a\x0a" then Type::PNG
+     elsif img_top[0, 2] == "\xFF\xD8"                then Type::JPEG
+     elsif img_top[0, 2] == 'BM'                      then Type::BMP
+-    elsif img_top =~ /^P[1-7]/                       then Type::PPM
+-    elsif img_top =~ /\#define\s+\S+\s+\d+/          then Type::XBM
++    elsif img_top =~ /^P[1-7]/n                       then Type::PPM
++    elsif img_top =~ /\#define\s+\S+\s+\d+/n          then Type::XBM
+     elsif img_top[0, 4] == "MM\x00\x2a"              then Type::TIFF
+     elsif img_top[0, 4] == "II\x2a\x00"              then Type::TIFF
+-    elsif img_top =~ /\/\* XPM \*\//                 then Type::XPM
++    elsif img_top =~ /\/\* XPM \*\//n                 then Type::XPM
+     elsif img_top[0, 4] == "8BPS"                    then Type::PSD
+     elsif img_top[1, 2] == "WS"                      then Type::SWF
+     elsif img_top[0] == 10                           then Type::PCX
