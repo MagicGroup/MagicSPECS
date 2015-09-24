@@ -1,0 +1,27 @@
+From 563c6cbba22c9e58ad6186c18d04033237ea961b Mon Sep 17 00:00:00 2001
+From: Martin Sereinig <martin.sereinig@lomography.com>
+Date: Tue, 8 Jul 2014 11:47:20 +0200
+Subject: [PATCH] as of rails 4.0.4, touch fires after_commit callback - fixed
+ test.
+
+Fixes #143
+---
+ test/paranoia_test.rb | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/test/paranoia_test.rb b/test/paranoia_test.rb
+index 5fed2a4..81d175f 100644
+--- a/test/paranoia_test.rb
++++ b/test/paranoia_test.rb
+@@ -99,7 +99,7 @@ def test_delete_behavior_for_plain_models_callbacks
+     assert_equal nil, model.instance_variable_get(:@validate_called)
+     assert_equal nil, model.instance_variable_get(:@destroy_callback_called)
+     assert_equal nil, model.instance_variable_get(:@after_destroy_callback_called)
+-    assert_equal nil, model.instance_variable_get(:@after_commit_callback_called)
++    assert model.instance_variable_get(:@after_commit_callback_called)
+   end
+ 
+   def test_destroy_behavior_for_paranoid_models
+-- 
+2.0.3
+
