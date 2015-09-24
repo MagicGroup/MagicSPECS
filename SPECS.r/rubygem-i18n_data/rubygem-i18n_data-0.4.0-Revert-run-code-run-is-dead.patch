@@ -1,0 +1,28 @@
+From 2ded020b5cee41524e4db24fdb4374ce378482b6 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?V=C3=ADt=20Ondruch?= <vondruch@redhat.com>
+Date: Thu, 15 Aug 2013 14:46:00 +0200
+Subject: [PATCH] Revert "run-code-run is dead"
+
+This reverts commit 1be35a3a782975052133efc5c574f79dc01cf8dd.
+---
+ spec/i18n_data_spec.rb | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/spec/i18n_data_spec.rb b/spec/i18n_data_spec.rb
+index 30b003b..546e689 100644
+--- a/spec/i18n_data_spec.rb
++++ b/spec/i18n_data_spec.rb
+@@ -12,7 +12,9 @@ describe I18nData do
+     hash.detect{|k,v| k.to_s.empty? or v.to_s.empty?}
+   end
+ 
+-  [I18nData::FileDataProvider, I18nData::LiveDataProvider].each do |provider|
++  providers =   [I18nData::FileDataProvider]
++  providers << I18nData::LiveDataProvider unless ENV['RUN_CODE_RUN']
++  providers.each do |provider|
+     describe "using #{provider}" do
+       before :all do
+         I18nData.data_provider = provider
+-- 
+1.8.3.1
+
