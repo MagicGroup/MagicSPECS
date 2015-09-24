@@ -2,7 +2,7 @@
 
 Name: rubygem-%{gem_name}
 Version: 1.2.1
-Release: 3%{?dist}
+Release: 2%{?dist}
 Summary: Context framework extracted from Shoulda
 Group: Development/Languages
 License: MIT
@@ -129,9 +129,6 @@ popd
 %{gem_instdir}/test
 
 %changelog
-* Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 1.2.1-3
-- 为 Magic 3.0 重建
-
 * Fri Jun 26 2015 Vít Ondruch <vondruch@redhat.com> - 1.2.1-2
 - Fix test suite compatibility with latest Mocha and RoR.
 
