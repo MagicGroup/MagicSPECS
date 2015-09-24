@@ -1,0 +1,169 @@
+diff --git a/test/engine_test.rb b/test/engine_test.rb
+index 3b47217..5049340 100644
+--- a/test/engine_test.rb
++++ b/test/engine_test.rb
+@@ -1,7 +1,7 @@
+ # -*- coding: utf-8 -*-
+ require 'test_helper'
+ 
+-class EngineTest < MiniTest::Unit::TestCase
++class EngineTest < Haml::TestCase
+   # A map of erroneous Haml documents to the error messages they should produce.
+   # The error messages may be arrays;
+   # if so, the second element should be the line number that should be reported for the error.
+diff --git a/test/filters_test.rb b/test/filters_test.rb
+index 5f16d2e..ca767ed 100644
+--- a/test/filters_test.rb
++++ b/test/filters_test.rb
+@@ -1,6 +1,6 @@
+ require 'test_helper'
+ 
+-class FiltersTest < MiniTest::Unit::TestCase
++class FiltersTest < Haml::TestCase
+   test "should be registered as filters when including Haml::Filters::Base" do
+     begin
+       refute Haml::Filters.defined.has_key? "bar"
+@@ -116,7 +116,7 @@ class FiltersTest < MiniTest::Unit::TestCase
+ 
+ end
+ 
+-class ErbFilterTest < MiniTest::Unit::TestCase
++class ErbFilterTest < Haml::TestCase
+   test "multiline expressions should work" do
+     html = "foobarbaz\n"
+     haml = %Q{:erb\n  <%= "foo" +\n      "bar" +\n      "baz" %>}
+@@ -137,7 +137,7 @@ class ErbFilterTest < MiniTest::Unit::TestCase
+ 
+ end
+ 
+-class JavascriptFilterTest < MiniTest::Unit::TestCase
++class JavascriptFilterTest < Haml::TestCase
+   test "should interpolate" do
+     scope = Object.new.instance_eval {foo = "bar"; nil if foo; binding}
+     haml  = ":javascript\n  \#{foo}"
+@@ -183,7 +183,7 @@ class JavascriptFilterTest < MiniTest::Unit::TestCase
+   end
+ end
+ 
+-class CSSFilterTest < MiniTest::Unit::TestCase
++class CSSFilterTest < Haml::TestCase
+   test "should wrap output in CDATA and a CSS tag when output is XHTML" do
+     html = "<style type='text/css'>\n  /*<![CDATA[*/\n    foo\n  /*]]>*/\n</style>\n"
+     haml = ":css\n  foo"
+@@ -222,7 +222,7 @@ class CSSFilterTest < MiniTest::Unit::TestCase
+   end
+ end
+ 
+-class CDATAFilterTest < MiniTest::Unit::TestCase
++class CDATAFilterTest < Haml::TestCase
+   test "should wrap output in CDATA tag" do
+     html = "<![CDATA[\n    foo\n]]>\n"
+     haml = ":cdata\n  foo"
+@@ -230,7 +230,7 @@ class CDATAFilterTest < MiniTest::Unit::TestCase
+   end
+ end
+ 
+-class EscapedFilterTest < MiniTest::Unit::TestCase
++class EscapedFilterTest < Haml::TestCase
+   test "should escape ampersands" do
+     html = "&amp;\n"
+     haml = ":escaped\n  &"
+@@ -238,7 +238,7 @@ class EscapedFilterTest < MiniTest::Unit::TestCase
+   end
+ end
+ 
+-class RubyFilterTest < MiniTest::Unit::TestCase
++class RubyFilterTest < Haml::TestCase
+   test "can write to haml_io" do
+     haml = ":ruby\n  haml_io.puts 'hello'\n"
+     html = "hello\n"
+@@ -256,4 +256,4 @@ class RubyFilterTest < MiniTest::Unit::TestCase
+     html = "7\n"
+     assert_equal(html, render(haml))
+   end
+-end
+\ No newline at end of file
++end
+diff --git a/test/helper_test.rb b/test/helper_test.rb
+index bf6b718..c845436 100644
+--- a/test/helper_test.rb
++++ b/test/helper_test.rb
+@@ -27,6 +27,6 @@ class FormModel
+ end
+ 
+-class HelperTest < MiniTest::Unit::TestCase
++class HelperTest < Haml::TestCase
+   Post = Struct.new('Post', :body, :error_field, :errors)
+   class PostErrors
+     def on(name)
+diff --git a/test/parser_test.rb b/test/parser_test.rb
+index 3435562..b11c075 100644
+--- a/test/parser_test.rb
++++ b/test/parser_test.rb
+@@ -1,7 +1,7 @@
+ require 'test_helper'
+ 
+ module Haml
+-  class ParserTest < MiniTest::Unit::TestCase
++  class ParserTest < Haml::TestCase
+ 
+     test "should raise error for 'else' at wrong indent level" do
+       begin
+@@ -124,4 +124,4 @@ module Haml
+       parser.parse
+     end
+   end
+-end
+\ No newline at end of file
++end
+diff --git a/test/template_test.rb b/test/template_test.rb
+index 59ccd75..0c8e636 100644
+--- a/test/template_test.rb
++++ b/test/template_test.rb
+@@ -38,7 +38,7 @@ class DummyController
+   end
+ end
+ 
+-class TemplateTest < MiniTest::Unit::TestCase
++class TemplateTest < Haml::TestCase
+   TEMPLATE_PATH = File.join(File.dirname(__FILE__), "templates")
+   TEMPLATES = %w{          very_basic        standard    helpers
+     whitespace_handling    original_engine   list        helpful
+diff --git a/test/test_helper.rb b/test/test_helper.rb
+index 5119945..394e7eb 100644
+--- a/test/test_helper.rb
++++ b/test/test_helper.rb
+@@ -41,14 +41,19 @@ require 'haml/template'
+ Haml::Template.options[:ugly]   = false
+ Haml::Template.options[:format] = :xhtml
+ 
++BASE_TEST_CLASS = if defined?(Minitest::Test)
++                    Minitest::Test
++                  else
++                    MiniTest::Unit::TestCase
++                  end
++
+ module Declarative
+   def test(name, &block)
+     define_method("test #{name}", &block)
+   end
+ end
+ 
+-class MiniTest::Unit::TestCase
+-
++class Haml::TestCase < BASE_TEST_CLASS
+   extend Declarative
+ 
+   def render(text, options = {}, base = nil, &block)
+diff --git a/test/util_test.rb b/test/util_test.rb
+index 5c9222a..481decf 100644
+--- a/test/util_test.rb
++++ b/test/util_test.rb
+@@ -1,6 +1,6 @@
+ require 'test_helper'
+ 
+-class UtilTest < MiniTest::Unit::TestCase
++class UtilTest < Haml::TestCase
+   include Haml::Util
+ 
+   def test_powerset
