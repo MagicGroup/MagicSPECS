@@ -6,7 +6,7 @@
 
 Name: rubygem-%{gem_name}
 Version: 3.3.3
-Release: 2%{?dist}
+Release: 1%{?dist}
 Summary: RSpec for Rails
 Group: Development/Languages
 License: MIT
@@ -91,9 +91,6 @@ popd
 
 
 %changelog
-* Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 3.3.3-2
-- 为 Magic 3.0 重建
-
 * Tue Aug 04 2015 Vít Ondruch <vondruch@redhat.com> - 3.3.3-1
 - Update to rspec-rails 3.3.3.
 
