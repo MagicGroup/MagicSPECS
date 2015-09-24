@@ -1,0 +1,32 @@
+From 571433c010c073202ace58f7619c0f54f48879e6 Mon Sep 17 00:00:00 2001
+From: Jacob Evans <jacob@dekz.net>
+Date: Fri, 31 Jan 2014 10:56:06 +1000
+Subject: [PATCH] nokogiri attributes workaround support for 1.6.x
+
+---
+ lib/rbvmomi/deserialization.rb | 9 +++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
+
+diff --git a/lib/rbvmomi/deserialization.rb b/lib/rbvmomi/deserialization.rb
+index a245bf2..c5649a4 100644
+--- a/lib/rbvmomi/deserialization.rb
++++ b/lib/rbvmomi/deserialization.rb
+@@ -42,7 +42,14 @@ def initialize conn
+   end
+ 
+   def deserialize node, type=nil
+-    type_attr = node['type']
++    type_attr = node['type']
++
++    # Work around for 1.5.x which doesn't populate node['type']
++    # XXX what changed
++    if node.attributes['type'] and not type_attr
++      type_attr = node.attributes['type'].value
++    end
++
+     type = type_attr if type_attr
+ 
+     if action = BUILTIN_TYPE_ACTIONS[type]
+-- 
+1.9.3
+
