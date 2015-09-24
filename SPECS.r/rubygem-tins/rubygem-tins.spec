@@ -3,7 +3,7 @@
 
 Name: rubygem-%{gem_name}
 Version: 1.0.0
-Release: 6%{?dist}
+Release: 5%{?dist}
 Summary: Useful tools library in Ruby
 Group: Development/Languages
 License: MIT
@@ -80,9 +80,6 @@ popd
 %{gem_instdir}/examples
 
 %changelog
-* Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 1.0.0-6
-- 为 Magic 3.0 重建
-
 * Mon Jun 22 2015 Yaakov Selkowitz <yselkowi@redhat.com> - 1.0.0-5
 - Fix test-unit usage for F22+
 
