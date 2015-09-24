@@ -1,7 +1,7 @@
 %global	gem_name	json
 
 Name:           rubygem-%{gem_name}
-Version:        1.7.7
+Version:        1.8.2
 Release:        101%{?dist}
 
 Summary:        A JSON implementation in Ruby
@@ -16,11 +16,9 @@ BuildRequires:	ruby(release)
 BuildRequires:	ruby-devel
 BuildRequires:  rubygems-devel
 BuildRequires:  rubygem(rake)
-BuildRequires:	rubygem(minitest)
+BuildRequires:	rubygem(minitest4)
 BuildRequires:	rubygem(bigdecimal)
-Requires:       ruby(release)
-Requires:       rubygems
-Provides:       rubygem(json) = %{version}
+BuildRequires:	rubygem(test-unit)
 
 Obsoletes:	rubygem-%{gem_name}-gui < %{version}
 Obsoletes:	ruby-%{gem_name}-gui < %{version}
@@ -80,13 +78,10 @@ rm -fr .%{gem_instdir}/lib/json/pure*
 
 %install
 mkdir -p $RPM_BUILD_ROOT%{gem_dir}
+mkdir -p $RPM_BUILD_ROOT%{gem_extdir_mri}
  
 cp -a .%{gem_dir}/* %{buildroot}/%{gem_dir}
-
-# Let's move arch dependent files to arch specific directory
-mkdir -p $RPM_BUILD_ROOT%{gem_extdir_mri}/lib/json/ext
-install -cpm 0755 ./%{gem_instdir}/lib/json/ext/*.so \
-	$RPM_BUILD_ROOT%{gem_extdir_mri}/lib/json/ext/
+cp -a .%{gem_extdir_mri}/{gem.build_complete,json} %{buildroot}/%{gem_extdir_mri}/
 
 find $RPM_BUILD_ROOT%{gem_instdir} -name \*.rb -print0 | \
 	xargs --null chmod 0644
@@ -104,7 +99,8 @@ rm -rf $RPM_BUILD_ROOT%{gem_instdir}/java/
 
 %check
 pushd .%{gem_instdir}
-ruby -S testrb -Ilib:ext/%{gem_name}/ext $(ls -1 tests/test_*.rb | sort)
+ruby -Ilib:$RPM_BUILD_ROOT%{gem_extdir_mri}:. \
+	-e "gem 'minitest', '~> 4' ; Dir.glob('tests/test_*.rb').sort.each {|f| require f}"
 popd
 
 
@@ -134,6 +130,21 @@ popd
 
 
 %changelog
+* Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.8.2-101
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
+
+* Fri Jan 16 2015 Mamoru TASAKA <mtasaka@fedoraproject.org> - 1.8.2-100
+- Update to 1.8.2
+
+* Mon Aug 18 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.7.7-104
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
+
+* Wed Jun 25 2014 Yaakov Selkowitz <yselkowi@redhat.com> - 1.7.7-103
+- Fixes for Ruby 2.1 packaging guidelines (#1107150)
+
+* Sun Jun 08 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.7.7-102
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
 * Sun Aug 04 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.7.7-101
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
 
