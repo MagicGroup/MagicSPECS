@@ -1,0 +1,253 @@
+From c30897f67ad90f0582c0ed0d7b78f46a7142f113 Mon Sep 17 00:00:00 2001
+From: Travis Jeffery <tj@travisjeffery.com>
+Date: Sat, 10 May 2014 01:16:30 -0500
+Subject: [PATCH] Use minitest
+
+---
+ test/test_helper.rb                             |  6 ++--
+ test/time_stack_item_test.rb                    | 10 ++-----
+ test/timecop_test.rb                            | 40 +++++++++++--------------
+ test/timecop_without_date_but_with_time_test.rb | 10 ++---
+ test/timecop_without_date_test.rb               |  8 ++---
+ 5 files changed, 32 insertions(+), 42 deletions(-)
+
+diff --git a/test/test_helper.rb b/test/test_helper.rb
+index 2d7852e..e2b059a 100644
+--- a/test/test_helper.rb
++++ b/test/test_helper.rb
+@@ -1,14 +1,14 @@
+ require 'rubygems'
+ require 'bundler/setup'
+-require 'test/unit'
++require 'minitest/autorun'
++
+ begin
+   require 'mocha/setup'
+ rescue LoadError
+   require 'mocha'
+ end
+ 
+-class Test::Unit::TestCase
+-
++class MiniTest::Unit::TestCase
+   private
+     # Tests to see that two times are within the given distance,
+     # in seconds, from each other.
+diff --git a/test/time_stack_item_test.rb b/test/time_stack_item_test.rb
+index f654fa1..3658127 100644
+--- a/test/time_stack_item_test.rb
++++ b/test/time_stack_item_test.rb
+@@ -4,7 +4,7 @@
+ 
+ require 'active_support/all'
+ 
+-class TestTimeStackItem < Test::Unit::TestCase
++class TestTimeStackItem < MiniTest::Unit::TestCase
+   def teardown
+     Timecop.return
+     Time.zone = nil
+@@ -204,16 +204,12 @@ def test_parse_only_string_with_active_support
+   end
+ 
+   def test_parse_date
+-    assert_nothing_raised do
+-      Timecop.freeze(Date.new(2012, 6, 9))
+-    end
++    Timecop.freeze(Date.new(2012, 6, 9))
+   end
+ 
+   def test_time_zone_returns_nil
+     Time.zone = nil
+-    assert_nothing_raised do
+-      Timecop.freeze
+-    end
++    Timecop.freeze
+   end
+ 
+   def test_nsecs_are_set
+diff --git a/test/timecop_test.rb b/test/timecop_test.rb
+index e954329..e5f7d79 100644
+--- a/test/timecop_test.rb
++++ b/test/timecop_test.rb
+@@ -2,7 +2,7 @@
+ require File.join(File.dirname(__FILE__), "test_helper")
+ require File.join(File.dirname(__FILE__), '..', 'lib', 'timecop')
+ 
+-class TestTimecop < Test::Unit::TestCase
++class TestTimecop < MiniTest::Unit::TestCase
+   def teardown
+     Timecop.return
+   end
+@@ -60,7 +60,7 @@ def test_travel_does_not_reduce_precision_of_datetime
+     # requires to_r on Float (>= 1.9)
+     if Float.method_defined?(:to_r)
+       Timecop.travel(1)
+-      assert_not_equal DateTime.now, DateTime.now
++      assert DateTime.now != DateTime.now
+     end
+   end
+ 
+@@ -113,7 +113,7 @@ def test_recursive_freeze
+       end
+       assert_equal t, Time.now
+     end
+-    assert_not_equal t, Time.now
++    assert t != Time.now
+   end
+ 
+   def test_freeze_with_time_instance_works_as_expected
+@@ -124,9 +124,9 @@ def test_freeze_with_time_instance_works_as_expected
+       assert_equal Date.new(2008, 10, 10), Date.today
+     end
+ 
+-    assert_not_equal t, Time.now
+-    assert_not_equal DateTime.new(2008, 10, 10, 10, 10, 10, local_offset), DateTime.now
+-    assert_not_equal Date.new(2008, 10, 10), Date.today
++    assert t != Time.now
++    assert DateTime.new(2008, 10, 10, 10, 10, 10, local_offset) != DateTime.now
++    assert Date.new(2008, 10, 10) != Date.today
+   end
+ 
+   def test_freeze_with_datetime_on_specific_timezone_during_dst
+@@ -185,9 +185,9 @@ def test_freeze_with_date_instance_works_as_expected
+       assert_equal Time.local(2008, 10, 10, 0, 0, 0), Time.now
+       assert_date_times_equal DateTime.new(2008, 10, 10, 0, 0, 0, local_offset), DateTime.now
+     end
+-    assert_not_equal d, Date.today
+-    assert_not_equal Time.local(2008, 10, 10, 0, 0, 0), Time.now
+-    assert_not_equal DateTime.new(2008, 10, 10, 0, 0, 0, local_offset), DateTime.now
++    assert d != Date.today
++    assert Time.local(2008, 10, 10, 0, 0, 0) != Time.now
++    assert DateTime.new(2008, 10, 10, 0, 0, 0, local_offset) != DateTime.now
+   end
+ 
+   def test_freeze_with_integer_instance_works_as_expected
+@@ -202,9 +202,9 @@ def test_freeze_with_integer_instance_works_as_expected
+         assert_equal Date.new(2008, 10, 10), Date.today
+       end
+     end
+-    assert_not_equal t, Time.now
+-    assert_not_equal DateTime.new(2008, 10, 10, 10, 10, 10), DateTime.now
+-    assert_not_equal Date.new(2008, 10, 10), Date.today
++    assert t != Time.now
++    assert DateTime.new(2008, 10, 10, 10, 10, 10) != DateTime.now
++    assert Date.new(2008, 10, 10) != Date.today
+   end
+ 
+   def test_exception_thrown_in_freeze_block_properly_resets_time
+@@ -215,7 +215,7 @@ def test_exception_thrown_in_freeze_block_properly_resets_time
+         raise "blah exception"
+       end
+     rescue
+-      assert_not_equal t, Time.now
++      assert t != Time.now
+       assert_nil Time.send(:mock_time)
+     end
+   end
+@@ -252,7 +252,7 @@ def test_mocked_date_time_now_is_local
+         if ENV['TZ'] == 'UTC'
+           assert_equal(local_offset, 0, "Local offset not be zero for #{ENV['TZ']}")
+         else
+-          assert_not_equal(local_offset, 0, "Local offset should not be zero for #{ENV['TZ']}")
++          assert(local_offset, 0 != "Local offset should not be zero for #{ENV['TZ']}")
+         end
+         assert_equal local_offset, DateTime.now.offset, "Failed for timezone: #{ENV['TZ']}"
+       end
+@@ -442,7 +442,7 @@ def test_mock_time_new_same_as_now
+   end
+ 
+   def test_not_callable_send_travel
+-    assert_raise NoMethodError do
++    assert_raises NoMethodError do
+       Timecop.send_travel(:travel, Time.now - 100)
+     end
+   end
+@@ -466,7 +466,7 @@ def test_datetime_to_time_for_dst_to_non_dst
+ 
+   def test_raises_when_safe_mode_and_no_block
+     with_safe_mode do
+-      assert_raise Timecop::SafeModeException do
++      assert_raises Timecop::SafeModeException do
+         Timecop.freeze
+       end
+     end
+@@ -474,17 +474,13 @@ def test_raises_when_safe_mode_and_no_block
+ 
+   def test_no_raise_when_safe_mode_and_block_used
+     with_safe_mode do
+-      assert_nothing_raised do
+-        Timecop.freeze {}
+-      end
++      Timecop.freeze {}
+     end
+   end
+ 
+   def test_no_raise_when_not_safe_mode_and_no_block
+     with_safe_mode(false) do
+-      assert_nothing_raised do
+-        Timecop.freeze
+-      end
++      Timecop.freeze
+     end
+   end
+ 
+diff --git a/test/timecop_without_date_but_with_time_test.rb b/test/timecop_without_date_but_with_time_test.rb
+index 9531afd..5f47a31 100644
+--- a/test/timecop_without_date_but_with_time_test.rb
++++ b/test/timecop_without_date_but_with_time_test.rb
+@@ -1,12 +1,10 @@
+-require "test/unit"
++require File.join(File.dirname(__FILE__), "test_helper")
+ 
+-class TestTimecopWithoutDateButWithTime < Test::Unit::TestCase
++class TestTimecopWithoutDateButWithTime < MiniTest::Unit::TestCase
+   TIMECOP_LIB = File.join(File.dirname(__FILE__), '..', 'lib', 'timecop')
+ 
+   def test_loads_properly_when_time_is_required_instead_of_date
+-    assert_nothing_raised do
+-      require "time"
+-      require TIMECOP_LIB
+-    end
++    require "time"
++    require TIMECOP_LIB
+   end
+ end
+diff --git a/test/timecop_without_date_test.rb b/test/timecop_without_date_test.rb
+index 018a2ff..a6f9a0e 100644
+--- a/test/timecop_without_date_test.rb
++++ b/test/timecop_without_date_test.rb
+@@ -2,7 +2,7 @@
+ require File.join(File.dirname(__FILE__), "test_helper")
+ require File.join(File.dirname(__FILE__), '..', 'lib', 'timecop')
+ 
+-class TestTimecopWithoutDate < Test::Unit::TestCase
++class TestTimecopWithoutDate < MiniTest::Unit::TestCase
+   
+   def setup
+     Object.send(:remove_const, :Date) if Object.const_defined?(:Date)
+@@ -19,11 +19,11 @@ def test_freeze_changes_and_resets_time
+     assert !Time.respond_to?(:zone) || Time.zone.nil?
+     
+     t = Time.local(2008, 10, 10, 10, 10, 10)
+-    assert_not_equal t, Time.now
++    assert t != Time.now
+     Timecop.freeze(2008, 10, 10, 10, 10, 10) do
+       assert_equal t, Time.now
+     end
+-    assert_not_equal t, Time.now
++    assert t != Time.now
+   end
+   
+   def test_recursive_freeze
+@@ -47,7 +47,7 @@ def test_exception_thrown_in_freeze_block_properly_resets_time
+         raise "blah exception"
+       end
+     rescue
+-      assert_not_equal t, Time.now
++      assert t != Time.now
+       assert_nil Time.send(:mock_time)
+     end
+   end
+-- 
+1.9.3
+
