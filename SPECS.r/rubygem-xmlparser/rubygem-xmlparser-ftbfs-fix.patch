@@ -1,0 +1,22 @@
+diff --git a/ext/xmlparser.c b/ext/xmlparser.c
+index aa32d11..65a6540 100644
+--- a/ext/xmlparser.c
++++ b/ext/xmlparser.c
+@@ -1780,7 +1780,7 @@ XMLParser_parse(int argc, VALUE* argv, VALUE obj)
+       if (!ret) {
+ 	int err = XML_GetErrorCode(parser->parser);
+ 	const char* errStr = XML_ErrorString(err);
+-	rb_raise(eXMLParserError, (char*)errStr);
++	rb_raise(eXMLParserError, "%s", errStr);
+       }
+     } while (!NIL_P(buf));
+     return Qnil;
+@@ -1829,7 +1829,7 @@ XMLParser_parse(int argc, VALUE* argv, VALUE obj)
+   if (!ret) {
+     int err = XML_GetErrorCode(parser->parser);
+     const char* errStr = XML_ErrorString(err);
+-    rb_raise(eXMLParserError, (char*)errStr);
++    rb_raise(eXMLParserError, "%s", errStr);
+   }
+ 
+   return Qnil;
