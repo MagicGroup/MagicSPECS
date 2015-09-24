@@ -1,0 +1,51 @@
+diff --git a/lib/xmpp4r/test/listener_mocker.rb b/lib/xmpp4r/test/listener_mocker.rb
+index 21e1706..b37fcdd 100644
+--- a/lib/xmpp4r/test/listener_mocker.rb
++++ b/lib/xmpp4r/test/listener_mocker.rb
+@@ -17,9 +17,7 @@ module Jabber
+         yield
+       ensure
+         TCPSocket.class_eval do
+-          if method_defined?(:initialize_old)
+-            alias_method :initialize, :initialize_old
+-          end
++          alias_method :initialize, :initialize_old
+         end
+       end
+       
+diff --git a/test/muc/tc_muc_mucclient.rb b/test/muc/tc_muc_mucclient.rb
+index 1035239..bed2a6b 100755
+--- a/test/muc/tc_muc_mucclient.rb
++++ b/test/muc/tc_muc_mucclient.rb
+@@ -87,10 +87,7 @@ class MUCClientTest < Test::Unit::TestCase
+          "<x xmlns='http://jabber.org/protocol/muc#user'><item affiliation='none' jid='hag66@shakespeare.lit/pda' role='participant'/></x>" +
+          "</presence>")
+     n = 0
+-    while m.roster.size != 3 and n < 1000
+-      Thread::pass
+-      n += 1
+-    end
++    sleep 1
+     assert_equal(3, m.roster.size)
+     assert_equal(:none, m.roster['thirdwitch'].x.items[0].affiliation)
+     assert_equal(:participant, m.roster['thirdwitch'].x.items[0].role)
+diff --git a/test/tc_stream.rb b/test/tc_stream.rb
+index 092ca45..60d75bb 100755
+--- a/test/tc_stream.rb
++++ b/test/tc_stream.rb
+@@ -18,10 +18,11 @@
+ 
+   def busywait(&block)
+     n = 0
+-    while not block.yield and n < 1000
++    while not block.call and n < 1000
+       Thread::pass
+       n += 1
+     end
++     sleep 1
+   end
+ 
+   ##
+
+1.5.5.6
+

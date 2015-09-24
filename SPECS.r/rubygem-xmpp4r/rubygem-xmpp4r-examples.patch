@@ -1,0 +1,45 @@
+diff -rau examples.orig/advanced/adventure/adventuremuc.rb examples/advanced/adventure/adventuremuc.rb
+--- examples.orig/advanced/adventure/adventuremuc.rb	2010-01-26 13:48:13.000000000 +0000
++++ examples/advanced/adventure/adventuremuc.rb	2010-01-26 13:49:18.000000000 +0000
+@@ -1,3 +1,5 @@
++#!/usr/bin/env ruby
++
+ require 'world'
+ 
+ class AdventureMUC
+diff -rau examples.orig/advanced/adventure/world.rb examples/advanced/adventure/world.rb
+--- examples.orig/advanced/adventure/world.rb	2010-01-26 13:48:13.000000000 +0000
++++ examples/advanced/adventure/world.rb	2010-01-26 13:48:52.000000000 +0000
+@@ -1,3 +1,5 @@
++#!/usr/bin/env ruby
++
+ require 'rexml/document'
+ 
+ class World < REXML::Element
+diff -rau examples.orig/advanced/sendfile.rb examples/advanced/sendfile.rb
+--- examples.orig/advanced/sendfile.rb	2010-01-26 13:48:13.000000000 +0000
++++ examples/advanced/sendfile.rb	2010-01-26 13:48:58.000000000 +0000
+@@ -1,3 +1,5 @@
++#!/usr/bin/env ruby
++
+ require 'xmpp4r'
+ require 'xmpp4r/bytestreams'
+ require 'yaml'
+diff -rau examples.orig/advanced/shellmgr/shellmgr.rb examples/advanced/shellmgr/shellmgr.rb
+--- examples.orig/advanced/shellmgr/shellmgr.rb	2010-01-26 13:48:13.000000000 +0000
++++ examples/advanced/shellmgr/shellmgr.rb	2010-01-26 13:49:04.000000000 +0000
+@@ -1,3 +1,5 @@
++#!/usr/bin/env ruby
++
+ require 'thread'
+ 
+ class Shell
+diff -rau examples.orig/basic/muc_owner_config.rb examples/basic/muc_owner_config.rb
+--- examples.orig/basic/muc_owner_config.rb	2010-01-26 13:48:13.000000000 +0000
++++ examples/basic/muc_owner_config.rb	2010-01-26 13:49:12.000000000 +0000
+@@ -1,3 +1,5 @@
++#!/usr/bin/env ruby
++
+ require 'xmpp4r'
+ require 'xmpp4r/muc'
+ 
