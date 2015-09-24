@@ -1,0 +1,47 @@
+diff --git a/lib/rerun/runner.rb b/lib/rerun/runner.rb
+index 6c61084..dcb041f 100644
+--- a/lib/rerun/runner.rb
++++ b/lib/rerun/runner.rb
+@@ -193,8 +193,7 @@ module Rerun
+         watcher.start
+         @watcher = watcher
+         say "Watching #{dir.join(', ')} for #{pattern}" +
+-                (ignore.empty? ? "" : " (ignoring #{ignore.join(',')})") +
+-                " using #{watcher.adapter.class.name.split('::').last} adapter"
++                (ignore.empty? ? "" : " (ignoring #{ignore.join(',')})")
+       end
+     end
+ 
+diff --git a/lib/rerun/watcher.rb b/lib/rerun/watcher.rb
+index 23a1ecd..402bcc6 100644
+--- a/lib/rerun/watcher.rb
++++ b/lib/rerun/watcher.rb
+@@ -85,13 +85,6 @@ module Rerun
+       [dotfiles] + @ignore.map { |x| Rerun::Glob.new(x).to_regexp }
+     end
+ 
+-    def adapter
+-      @listener.registry[:adapter] || (timeout(4) do
+-        sleep 1 until adapter = @listener.registry[:adapter]
+-        adapter
+-      end)
+-    end
+-
+     # kill the file watcher thread
+     def stop
+       @thread.wakeup rescue ThreadError
+@@ -115,11 +108,11 @@ module Rerun
+     end
+ 
+     def unpause
+-      @listener.unpause if @listener
++      @listener.start if @listener
+     end
+ 
+     def running?
+-      @listener && @listener.instance_variable_get(:@adapter)
++      @listener && @listener.processing?
+     end
+ 
+   end
+
