@@ -1,0 +1,45 @@
+--- test/test.rb.orig	2014-06-16 12:46:38.416531306 -0400
++++ test/test.rb	2014-06-16 12:47:22.070717084 -0400
+@@ -9,7 +9,7 @@ libdir  = File.dirname(testdir) + "/lib"
+ $: << libdir
+ 
+ 
+-require 'test/unit'
++require 'minitest/autorun'
+ require 'abstract'
+ 
+ 
+@@ -26,11 +26,11 @@ end
+ 
+ 
+ 
+-class AbstractTest < Test::Unit::TestCase
++class AbstractTest < MiniTest::Test
+ 
+ 
+   def _test(obj)
+-    assert_raise(NotImplementedError) do
++    assert_raises(NotImplementedError) do
+       begin
+         obj = Foo.new
+         obj.m1 'a'
+@@ -44,8 +44,8 @@ class AbstractTest < Test::Unit::TestCas
+ 
+   def test_abstract_method1
+     obj = Foo.new
+-    assert_raise(NotImplementedError) { obj.m1 'a' }
+-    assert_raise(NotImplementedError) { obj.m2 'a', 'b' }
++    assert_raises(NotImplementedError) { obj.m1 'a' }
++    assert_raises(NotImplementedError) { obj.m2 'a', 'b' }
+   end
+ 
+ 
+@@ -62,7 +62,7 @@ class AbstractTest < Test::Unit::TestCas
+ 
+   def test_not_implemented1
+     obj = Bar.new
+-    assert_raise(NotImplementedError) { obj.m1 123 }
++    assert_raises(NotImplementedError) { obj.m1 123 }
+   end
+ 
+ 
