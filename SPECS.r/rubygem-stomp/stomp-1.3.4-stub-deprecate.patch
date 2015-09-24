@@ -1,0 +1,68 @@
+diff -uNr stomp-1.3.4.ORIG/spec/client_shared_examples.rb stomp-1.3.4/spec/client_shared_examples.rb
+--- stomp-1.3.4.ORIG/spec/client_shared_examples.rb	2015-03-23 12:38:22.149103790 +0100
++++ stomp-1.3.4/spec/client_shared_examples.rb	2015-03-23 12:45:18.782626166 +0100
+@@ -11,24 +11,24 @@
+ 
+   describe "the closed? method" do
+     it "should be false when the connection is open" do
+-      @mock_connection.stub!(:closed?).and_return(false)
++      @mock_connection.stub(:closed?).and_return(false)
+       @client.closed?.should == false
+     end
+ 
+     it "should be true when the connection is closed" do
+-      @mock_connection.stub!(:closed?).and_return(true)
++      @mock_connection.stub(:closed?).and_return(true)
+       @client.closed?.should == true
+     end
+   end
+ 
+   describe "the open? method" do
+     it "should be true when the connection is open" do
+-      @mock_connection.stub!(:open?).and_return(true)
++      @mock_connection.stub(:open?).and_return(true)
+       @client.open?.should == true
+     end
+ 
+     it "should be false when the connection is closed" do
+-      @mock_connection.stub!(:open?).and_return(false)
++      @mock_connection.stub(:open?).and_return(false)
+       @client.open?.should == false
+     end
+   end
+@@ -36,7 +36,7 @@
+   describe "the subscribe method" do
+ 
+     before(:each) do
+-      @mock_connection.stub!(:subscribe).and_return(true)
++      @mock_connection.stub(:subscribe).and_return(true)
+     end
+ 
+     it "should raise RuntimeError if not passed a block" do
+diff -uNr stomp-1.3.4.ORIG/spec/connection_spec.rb stomp-1.3.4/spec/connection_spec.rb
+--- stomp-1.3.4.ORIG/spec/connection_spec.rb	2015-03-23 12:38:22.149103790 +0100
++++ stomp-1.3.4/spec/connection_spec.rb	2015-03-23 12:44:09.637536123 +0100
+@@ -43,8 +43,8 @@
+     # clone() does a shallow copy, we want a deep one so we can garantee the hosts order
+     normal_parameters = Marshal::load(Marshal::dump(@parameters))
+ 
+-    @tcp_socket = mock(:tcp_socket, :close => nil, :puts => nil, :write => nil, :setsockopt => nil, :flush => true)
+-    TCPSocket.stub!(:open).and_return @tcp_socket
++    @tcp_socket = double(:tcp_socket, :close => nil, :puts => nil, :write => nil, :setsockopt => nil, :flush => true)
++    TCPSocket.stub(:open).and_return @tcp_socket
+     @connection = Stomp::Connection.new(normal_parameters)
+   end
+ 
+@@ -284,9 +284,9 @@
+       
+       before(:each) do
+         ssl_parameters = {:hosts => [{:login => "login2", :passcode => "passcode2", :host => "remotehost", :ssl => true}]}
+-        @ssl_socket = mock(:ssl_socket, :puts => nil, :write => nil, 
++        @ssl_socket = double(:ssl_socket, :puts => nil, :write => nil, 
+           :setsockopt => nil, :flush => true)
+-        @ssl_socket.stub!(:sync_close=)
++        @ssl_socket.stub(:sync_close=)
+         
+         TCPSocket.should_receive(:open).and_return @tcp_socket
+         OpenSSL::SSL::SSLSocket.should_receive(:new).and_return(@ssl_socket)
+
