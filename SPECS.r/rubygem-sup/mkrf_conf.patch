@@ -1,0 +1,12 @@
+diff -uNr sup-0.21.0/ext/mkrf_conf_xapian.rb sup-0.21.0p/ext/mkrf_conf_xapian.rb
+--- sup-0.21.0/ext/mkrf_conf_xapian.rb	2015-05-01 11:33:02.331805203 +0530
++++ sup-0.21.0p/ext/mkrf_conf_xapian.rb	2015-05-01 11:40:07.496788064 +0530
+@@ -13,7 +13,7 @@
+ inst = Gem::DependencyInstaller.new
+ begin
+ 
+-  if !RbConfig::CONFIG['arch'].include?('openbsd')
++  if RbConfig::CONFIG['arch'].include?('openbsd')
+     # update version in Gemfile as well
+     name    = "xapian-ruby"
+     version = "~> 1.2.15"

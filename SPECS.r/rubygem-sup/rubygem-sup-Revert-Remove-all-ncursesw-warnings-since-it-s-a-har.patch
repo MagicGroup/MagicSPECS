@@ -1,0 +1,107 @@
+From 0672ae4e9933f9c4837d7b58caffb7d2a2616976 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?V=C3=ADt=20Ondruch?= <vondruch@redhat.com>
+Date: Wed, 2 Sep 2015 17:22:55 +0200
+Subject: [PATCH] Revert "Remove all ncursesw warnings since it's a hard
+ dependency"
+
+This reverts commit c52016368e0456baf1ee97d25304b703da542cec.
+---
+ bin/sup                | 12 +++++++++++-
+ contrib/colorpicker.rb |  6 +++++-
+ lib/sup/buffer.rb      |  7 ++++++-
+ 3 files changed, 22 insertions(+), 3 deletions(-)
+
+diff --git a/bin/sup b/bin/sup
+index 2aa6906..9d23409 100755
+--- a/bin/sup
++++ b/bin/sup
+@@ -4,7 +4,13 @@
+ $:.unshift File.join(File.dirname(__FILE__), *%w[.. lib])
+ 
+ require 'rubygems'
+-require 'ncursesw'
++no_ncursesw = false
++begin
++  require 'ncursesw'
++rescue LoadError
++  require 'ncurses'
++  no_ncursesw = true
++end
+ 
+ require 'sup/util/ncurses'
+ require 'sup/util/locale_fiddler'
+@@ -25,6 +31,10 @@ if ENV['SUP_PROFILE']
+   RubyProf.start
+ end
+ 
++if no_ncursesw
++  info "No 'ncursesw' gem detected. Install it for wide character support."
++end
++
+ if no_gpgme
+   info "No 'gpgme' gem detected. Install it for email encryption, decryption and signatures."
+ end
+diff --git a/contrib/colorpicker.rb b/contrib/colorpicker.rb
+index 947b3d5..c981a23 100644
+--- a/contrib/colorpicker.rb
++++ b/contrib/colorpicker.rb
+@@ -1,6 +1,10 @@
+ require 'rubygems'
+ 
+-require 'ncursesw'
++begin
++  require 'ncursesw'
++rescue LoadError
++  require 'ncurses'
++end
+ 
+ Ncurses.initscr
+ Ncurses.noecho
+diff --git a/lib/sup/buffer.rb b/lib/sup/buffer.rb
+index 603a1f8..503df59 100644
+--- a/lib/sup/buffer.rb
++++ b/lib/sup/buffer.rb
+@@ -2,7 +2,12 @@
+ 
+ require 'etc'
+ require 'thread'
+-require 'ncursesw'
++
++begin
++  require 'ncursesw'
++rescue LoadError
++  require 'ncurses'
++end
+ 
+ require 'sup/util/ncurses'
+ 
+--- a/lib/sup/util/ncurses.rb
++++ b/lib/sup/util/ncurses.rb
+@@ -1,4 +1,8 @@
+-require 'ncursesw'
++begin
++  require 'ncursesw'
++rescue LoadError
++  require 'ncurses'
++end
+ require 'sup/util'
+ 
+ if defined? Ncurses
+--- a/lib/sup.rb
++++ b/lib/sup.rb
+@@ -6,7 +6,11 @@
+ require 'thread'
+ require 'fileutils'
+ require 'locale'
+-require 'ncursesw'
++begin
++  require 'ncursesw'
++rescue LoadError
++  require 'ncurses'
++end
+ require 'rmail'
+ require 'uri'
+ begin
+-- 
+2.4.3
+
