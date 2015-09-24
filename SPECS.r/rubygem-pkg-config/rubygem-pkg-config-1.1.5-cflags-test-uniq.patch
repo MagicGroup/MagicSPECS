@@ -1,0 +1,13 @@
+--- pkg-config-1.1.5/test/test_pkg_config.rb.uniq	2014-06-26 12:15:00.095955268 +0900
++++ pkg-config-1.1.5/test/test_pkg_config.rb	2014-06-26 12:44:55.995998845 +0900
+@@ -112,8 +112,8 @@
+     begin
+       assert_equal(result, actual)
+     rescue
+-      puts "Did not match, retry with sorting"
+-      assert_equal(result.split(" ").sort.join(" "), actual.split(" ").sort.join(" "))
++      puts "Did not match, retry with sorting and execting uniq"
++      assert_equal(result.split(" ").sort.uniq.join(" "), actual.split(" ").sort.uniq.join(" "))
+     end
+   end
+ 
