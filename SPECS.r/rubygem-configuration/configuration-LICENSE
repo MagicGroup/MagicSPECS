@@ -1,0 +1,37 @@
+From ara.t.howard@gmail.com Sun Jun  7 05:33:01 2009
+From: "ara.t.howard" <ara.t.howard@gmail.com>
+Date: Sat, 6 Jun 2009 21:26:38 -0600
+Message-ID: <2524b8cc0906062026m5bba7c68u4dbbade964f174bd@mail.gmail.com>
+Subject: Re: configuration licensing
+To: Lubomir Rintel <lkundrak@v3.sk>
+
+On Sat, Jun 6, 2009 at 5:15 PM, Lubomir Rintel<lkundrak@v3.sk> wrote:
+> Hi,
+>
+> I have packaged your configuration rubygem (as dependency of launchy for
+> Fedora [1] operating system. Unfortunatelly, I can't submit it for
+> review for inclusion since we could not determine what license is it
+> distributed under and therefore can't tell whether we can distribute it
+> at all.
+>
+> I'll be very thankful if you could clarify the licensing conditions,
+> ideally by shipping the file with full text of license and referring to
+> it from comments in the source files.
+>
+> [1] http://fedoraproject.org/
+>
+> Thanks,
+> Lubomir Rintel
+>
+
+
+i'll try to get that into my stuff - but, fyi, it's all under ruby's license.
+
+http://rubyforge.org/projects/codeforpeople/
+
+cheers!
+
+-- 
+-a
+--
+be kind whenever possible... it is always possible - h.h. the 14th dalai lama
