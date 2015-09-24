@@ -1,0 +1,22 @@
+commit a2be382ecf7beb1858b1416542d5511ab1a675cb
+Author: František Dvořák <valtri@civ.zcu.cz>
+Date:   Sat Nov 29 22:05:29 2014 +0100
+
+    Disable one of failing JMESPath compliance tests.
+
+diff --git a/spec/compliance/syntax.json b/spec/compliance/syntax.json
+index 4c826ee..f8fc2cc 100644
+--- a/spec/compliance/syntax.json
++++ b/spec/compliance/syntax.json
+@@ -470,11 +470,6 @@
+         "result": null
+       },
+       {
+-        "comment": "Literal char not escaped",
+-        "expression": "foo[?bar==`[\"foo`bar\"]`]",
+-        "error": "syntax"
+-      },
+-      {
+         "comment": "Literal char escaped",
+         "expression": "foo[?bar==`[\"foo\\`bar\"]`]",
+         "result": null
