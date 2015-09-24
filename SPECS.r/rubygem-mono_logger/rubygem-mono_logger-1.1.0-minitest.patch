@@ -1,0 +1,77 @@
+commit efe352d3aca49353ac785440d3f731d5aea2fb8a
+Author: Ken Dreyer <ktdreyer@ktdreyer.com>
+Date:   Thu Jul 10 18:15:01 2014 -0600
+
+    Fedora: tests: switch to Minitest 5
+    
+    Update the test suite to use the new Minitest 5 framework API. Remove
+    the last references to Test::Unit and standardize on "Minitest"
+    everywhere.
+    
+    This is a Fedora-specific cherry-pick from the upstream submission at
+    https://github.com/steveklabnik/mono_logger/pull/3
+
+diff --git a/test/mri_logger_test.rb b/test/mri_logger_test.rb
+index d46b6b4..55212b7 100644
+--- a/test/mri_logger_test.rb
++++ b/test/mri_logger_test.rb
+@@ -1,12 +1,19 @@
+ # coding: US-ASCII
+-require 'test/unit'
++require 'minitest/autorun'
+ require 'mono_logger'
+ require 'tempfile'
+ 
++if defined? Minitest::Test
++  # We're on Minitest 5+. Nothing to do here.
++else
++  # Minitest 4 doesn't have Minitest::Test yet.
++  Minitest::Test = MiniTest::Unit::TestCase
++end
++
+ Logger = MonoLogger
+ 
+ 
+-class TestLoggerSeverity < Test::Unit::TestCase
++class TestLoggerSeverity < Minitest::Test
+   def test_enum
+     logger_levels = Logger.constants
+     levels = ["WARN", "UNKNOWN", "INFO", "FATAL", "DEBUG", "ERROR"]
+@@ -19,7 +26,7 @@ class TestLoggerSeverity < Test::Unit::TestCase
+ end
+ 
+ 
+-class TestLogger < Test::Unit::TestCase
++class TestLogger < Minitest::Test
+   include Logger::Severity
+ 
+   def setup
+@@ -260,7 +267,7 @@ class TestLogger < Test::Unit::TestCase
+   end
+ end
+ 
+-class TestLogDevice < Test::Unit::TestCase
++class TestLogDevice < Minitest::Test
+   class LogExcnRaiser
+     def write(*arg)
+       raise 'disk is full'
+@@ -334,9 +341,7 @@ class TestLogDevice < Test::Unit::TestCase
+     end
+     $stderr, stderr = stderr, $stderr
+     begin
+-      assert_nothing_raised do
+-        logdev.write('hello')
+-      end
++      logdev.write('hello')
+     ensure
+       logdev.close
+       $stderr, stderr = stderr, $stderr
+@@ -481,7 +486,7 @@ class TestLogDevice < Test::Unit::TestCase
+ end
+ 
+ 
+-class TestLoggerApplication < Test::Unit::TestCase
++class TestLoggerApplication < Minitest::Test
+   def setup
+     @app = Logger::Application.new('appname')
+     @tempfile = Tempfile.new("logger")
