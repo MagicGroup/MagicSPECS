@@ -1,0 +1,25 @@
+diff --git a/listen-3.0.3.gemspec b/listen-3.0.3.gemspec
+index 93d3c61..e29ee73 100644
+--- a/specifications/listen-3.0.3.gemspec
++++ b/specifications/listen-3.0.3.gemspec
+@@ -25,17 +25,11 @@ Gem::Specification.new do |s|
+     s.specification_version = 4
+ 
+     if Gem::Version.new(Gem::VERSION) >= Gem::Version.new('1.2.0') then
+-      s.add_runtime_dependency(%q<rb-fsevent>, [">= 0.9.3"])
+-      s.add_runtime_dependency(%q<rb-inotify>, [">= 0.9"])
+       s.add_development_dependency(%q<bundler>, [">= 1.3.5"])
+     else
+-      s.add_dependency(%q<rb-fsevent>, [">= 0.9.3"])
+-      s.add_dependency(%q<rb-inotify>, [">= 0.9"])
+       s.add_dependency(%q<bundler>, [">= 1.3.5"])
+     end
+   else
+-    s.add_dependency(%q<rb-fsevent>, [">= 0.9.3"])
+-    s.add_dependency(%q<rb-inotify>, [">= 0.9"])
+     s.add_dependency(%q<bundler>, [">= 1.3.5"])
+   end
+ end
+-- 
+2.5.0
+
