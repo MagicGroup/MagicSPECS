@@ -1,0 +1,427 @@
+From 7361957b0cab1df95f7522d2af282e9083bf9e30 Mon Sep 17 00:00:00 2001
+From: Josef Stribny <jstribny@redhat.com>
+Date: Thu, 12 Jun 2014 09:27:00 +0200
+Subject: [PATCH 1/3] Update test suite to use Minitest 5
+
+---
+ test/test_allow_net_connect.rb        | 30 +++++++++++++++---------------
+ test/test_deprecations.rb             |  2 +-
+ test/test_fake_authentication.rb      |  2 +-
+ test/test_fake_web.rb                 | 12 ++++++------
+ test/test_fake_web_open_uri.rb        |  2 +-
+ test/test_helper.rb                   |  6 +++---
+ test/test_last_request.rb             |  2 +-
+ test/test_missing_open_uri.rb         |  2 +-
+ test/test_missing_pathname.rb         |  4 ++--
+ test/test_other_net_http_libraries.rb |  2 +-
+ test/test_precedence.rb               |  2 +-
+ test/test_query_string.rb             |  2 +-
+ test/test_regexes.rb                  |  4 ++--
+ test/test_response_headers.rb         |  2 +-
+ test/test_trailing_slashes.rb         |  6 +++---
+ test/test_utility.rb                  |  2 +-
+ 16 files changed, 41 insertions(+), 41 deletions(-)
+
+diff --git a/test/test_allow_net_connect.rb b/test/test_allow_net_connect.rb
+index 25f4d3d..b907f9b 100644
+--- a/test/test_allow_net_connect.rb
++++ b/test/test_allow_net_connect.rb
+@@ -1,6 +1,6 @@
+ require 'test_helper'
+ 
+-class TestFakeWebAllowNetConnect < Test::Unit::TestCase
++class TestFakeWebAllowNetConnect < Minitest::Test
+   def test_unregistered_requests_are_passed_through_when_allow_net_connect_is_true
+     FakeWeb.allow_net_connect = true
+     setup_expectations_for_real_apple_hot_news_request
+@@ -9,7 +9,7 @@ class TestFakeWebAllowNetConnect < Test::Unit::TestCase
+ 
+   def test_raises_for_unregistered_requests_when_allow_net_connect_is_false
+     FakeWeb.allow_net_connect = false
+-    assert_raise FakeWeb::NetConnectNotAllowedError do
++    assert_raises FakeWeb::NetConnectNotAllowedError do
+       Net::HTTP.get(URI.parse("http://example.com/"))
+     end
+   end
+@@ -40,21 +40,21 @@ class TestFakeWebAllowNetConnect < Test::Unit::TestCase
+ 
+   def test_raises_for_unregistered_requests_when_allow_net_connect_is_a_different_string
+     FakeWeb.allow_net_connect = "http://example.com"
+-    assert_raise FakeWeb::NetConnectNotAllowedError do
++    assert_raises FakeWeb::NetConnectNotAllowedError do
+       Net::HTTP.get(URI.parse("http://example.com/path"))
+     end
+   end
+ 
+   def test_raises_for_unregistered_requests_when_allow_net_connect_is_a_different_uri
+     FakeWeb.allow_net_connect = URI.parse("http://example.com")
+-    assert_raise FakeWeb::NetConnectNotAllowedError do
++    assert_raises FakeWeb::NetConnectNotAllowedError do
+       Net::HTTP.get(URI.parse("http://example.com/path"))
+     end
+   end
+ 
+   def test_raises_for_unregistered_requests_when_allow_net_connect_is_a_non_matching_regexp
+     FakeWeb.allow_net_connect = %r[example\.net]
+-    assert_raise FakeWeb::NetConnectNotAllowedError do
++    assert_raises FakeWeb::NetConnectNotAllowedError do
+       Net::HTTP.get(URI.parse("http://example.com"))
+     end
+   end
+@@ -62,7 +62,7 @@ class TestFakeWebAllowNetConnect < Test::Unit::TestCase
+   def test_changing_allow_net_connect_from_string_to_false_corretly_removes_whitelist
+     FakeWeb.allow_net_connect = "http://example.com"
+     FakeWeb.allow_net_connect = false
+-    assert_raise FakeWeb::NetConnectNotAllowedError do
++    assert_raises FakeWeb::NetConnectNotAllowedError do
+       Net::HTTP.get(URI.parse("http://example.com"))
+     end
+   end
+@@ -70,19 +70,19 @@ class TestFakeWebAllowNetConnect < Test::Unit::TestCase
+   def test_changing_allow_net_connect_from_true_to_string_corretly_limits_connections
+     FakeWeb.allow_net_connect = true
+     FakeWeb.allow_net_connect = "http://example.com"
+-    assert_raise FakeWeb::NetConnectNotAllowedError do
++    assert_raises FakeWeb::NetConnectNotAllowedError do
+       Net::HTTP.get(URI.parse("http://example.net"))
+     end
+   end
+ 
+   def test_exception_message_includes_unregistered_request_method_and_uri_but_no_default_port
+     FakeWeb.allow_net_connect = false
+-    exception = assert_raise FakeWeb::NetConnectNotAllowedError do
++    exception = assert_raises FakeWeb::NetConnectNotAllowedError do
+       Net::HTTP.get(URI.parse("http://example.com/"))
+     end
+     assert exception.message.include?("GET http://example.com/")
+ 
+-    exception = assert_raise FakeWeb::NetConnectNotAllowedError do
++    exception = assert_raises FakeWeb::NetConnectNotAllowedError do
+       http = Net::HTTP.new("example.com", 443)
+       http.use_ssl = true
+       http.get("/")
+@@ -92,12 +92,12 @@ class TestFakeWebAllowNetConnect < Test::Unit::TestCase
+ 
+   def test_exception_message_includes_unregistered_request_port_when_not_default
+     FakeWeb.allow_net_connect = false
+-    exception = assert_raise FakeWeb::NetConnectNotAllowedError do
++    exception = assert_raises FakeWeb::NetConnectNotAllowedError do
+       Net::HTTP.start("example.com", 8000) { |http| http.get("/") }
+     end
+     assert exception.message.include?("GET http://example.com:8000/")
+ 
+-    exception = assert_raise FakeWeb::NetConnectNotAllowedError do
++    exception = assert_raises FakeWeb::NetConnectNotAllowedError do
+       http = Net::HTTP.new("example.com", 4433)
+       http.use_ssl = true
+       http.get("/")
+@@ -107,12 +107,12 @@ class TestFakeWebAllowNetConnect < Test::Unit::TestCase
+ 
+   def test_exception_message_includes_unregistered_request_port_when_not_default_with_path
+     FakeWeb.allow_net_connect = false
+-    exception = assert_raise FakeWeb::NetConnectNotAllowedError do
++    exception = assert_raises FakeWeb::NetConnectNotAllowedError do
+       Net::HTTP.start("example.com", 8000) { |http| http.get("/test") }
+     end
+     assert exception.message.include?("GET http://example.com:8000/test")
+ 
+-    exception = assert_raise FakeWeb::NetConnectNotAllowedError do
++    exception = assert_raises FakeWeb::NetConnectNotAllowedError do
+       http = Net::HTTP.new("example.com", 4433)
+       http.use_ssl = true
+       http.get("/test")
+@@ -132,7 +132,7 @@ class TestFakeWebAllowNetConnect < Test::Unit::TestCase
+ 
+   def test_question_mark_method_raises_with_no_argument_when_allow_net_connect_is_a_whitelist
+     FakeWeb.allow_net_connect = "http://example.com"
+-    exception = assert_raise ArgumentError do
++    exception = assert_raises ArgumentError do
+       FakeWeb.allow_net_connect?
+     end
+     assert_equal "You must supply a URI to test", exception.message
+@@ -156,7 +156,7 @@ class TestFakeWebAllowNetConnect < Test::Unit::TestCase
+ end
+ 
+ 
+-class TestFakeWebAllowNetConnectWithCleanState < Test::Unit::TestCase
++class TestFakeWebAllowNetConnectWithCleanState < Minitest::Test
+   # Our test_helper.rb sets allow_net_connect = false in an inherited #setup
+   # method. Disable that here to test the default setting.
+   def setup; end
+diff --git a/test/test_deprecations.rb b/test/test_deprecations.rb
+index e5b8953..d54b1b3 100644
+--- a/test/test_deprecations.rb
++++ b/test/test_deprecations.rb
+@@ -1,6 +1,6 @@
+ require 'test_helper'
+ 
+-class TestDeprecations < Test::Unit::TestCase
++class TestDeprecations < Minitest::Test
+ 
+   def test_register_uri_without_method_argument_prints_deprecation_warning
+     warning = capture_stderr do
+diff --git a/test/test_fake_authentication.rb b/test/test_fake_authentication.rb
+index cff2764..d717be1 100644
+--- a/test/test_fake_authentication.rb
++++ b/test/test_fake_authentication.rb
+@@ -1,6 +1,6 @@
+ require 'test_helper'
+ 
+-class TestFakeAuthentication < Test::Unit::TestCase
++class TestFakeAuthentication < Minitest::Test
+ 
+   def test_register_uri_with_authentication
+     FakeWeb.register_uri(:get, 'http://user:pass@mock/test_example.txt', :body => "example")
+diff --git a/test/test_fake_web.rb b/test/test_fake_web.rb
+index c6e6b59..421941e 100644
+--- a/test/test_fake_web.rb
++++ b/test/test_fake_web.rb
+@@ -1,6 +1,6 @@
+ require 'test_helper'
+ 
+-class TestFakeWeb < Test::Unit::TestCase
++class TestFakeWeb < Minitest::Test
+ 
+   def test_register_uri
+     FakeWeb.register_uri(:get, 'http://mock/test_example.txt', :body => "example")
+@@ -116,7 +116,7 @@ class TestFakeWeb < Test::Unit::TestCase
+     response = Net::HTTP.start("example.com") { |query| query.get("/") }
+     assert_equal "registered", response.body
+     FakeWeb.clean_registry
+-    assert_raise FakeWeb::NetConnectNotAllowedError do
++    assert_raises FakeWeb::NetConnectNotAllowedError do
+       Net::HTTP.start("example.com") { |query| query.get("/") }
+     end
+   end
+@@ -501,7 +501,7 @@ class TestFakeWeb < Test::Unit::TestCase
+   def test_mock_request_using_response_with_transfer_encoding_header_has_valid_transfer_encoding_header
+     FakeWeb.register_uri(:get, 'http://www.google.com/', :response => fixture_path("google_response_with_transfer_encoding"))
+     response = Net::HTTP.start('www.google.com') { |query| query.get('/') }
+-    assert_not_nil response['transfer-encoding']
++    assert !response['transfer-encoding'].nil?
+     assert response['transfer-encoding'] == 'chunked'
+   end
+ 
+@@ -515,7 +515,7 @@ class TestFakeWeb < Test::Unit::TestCase
+   def test_mock_request_using_response_from_curl_has_original_transfer_encoding_header
+     FakeWeb.register_uri(:get, 'http://www.google.com/', :response => fixture_path("google_response_from_curl"))
+     response = Net::HTTP.start('www.google.com') { |query| query.get('/') }
+-    assert_not_nil response['transfer-encoding']
++    assert !response['transfer-encoding'].nil?
+     assert response['transfer-encoding'] == 'chunked'
+   end
+ 
+@@ -535,7 +535,7 @@ class TestFakeWeb < Test::Unit::TestCase
+     # The string should be treated as a response body, instead, and an
+     # EOFError is raised when the byte is encountered.
+     FakeWeb.register_uri(:get, "http://example.com", :response => "test\0test")
+-    assert_raise EOFError do
++    assert_raises EOFError do
+       Net::HTTP.get(URI.parse("http://example.com"))
+     end
+ 
+@@ -548,7 +548,7 @@ class TestFakeWeb < Test::Unit::TestCase
+     # Similar to above, but for Errno::EISDIR being raised since File.exists?
+     # returns true for directories
+     FakeWeb.register_uri(:get, "http://example.com", :response => File.dirname(__FILE__))
+-    assert_raise EOFError do
++    assert_raises EOFError do
+       body = Net::HTTP.get(URI.parse("http://example.com"))
+     end
+ 
+diff --git a/test/test_fake_web_open_uri.rb b/test/test_fake_web_open_uri.rb
+index 699a647..db0ec19 100644
+--- a/test/test_fake_web_open_uri.rb
++++ b/test/test_fake_web_open_uri.rb
+@@ -1,6 +1,6 @@
+ require 'test_helper'
+ 
+-class TestFakeWebOpenURI < Test::Unit::TestCase
++class TestFakeWebOpenURI < Minitest::Test
+ 
+   def test_content_for_registered_uri
+     FakeWeb.register_uri(:get, 'http://mock/test_example.txt', :body => fixture_path("test_example.txt"))
+diff --git a/test/test_helper.rb b/test/test_helper.rb
+index b181391..24137e6 100644
+--- a/test/test_helper.rb
++++ b/test/test_helper.rb
+@@ -1,4 +1,4 @@
+-require 'test/unit'
++require 'minitest/autorun'
+ require 'open-uri'
+ require 'pathname'
+ require 'fake_web'
+@@ -8,7 +8,7 @@ require 'mocha'
+ 
+ 
+ # Give all tests a common setup and teardown that prevents shared state
+-class Test::Unit::TestCase
++class Minitest::Test
+   alias setup_without_fakeweb setup
+   def setup
+     FakeWeb.clean_registry
+@@ -87,4 +87,4 @@ module FakeWebTestHelper
+ 
+ end
+ 
+-Test::Unit::TestCase.send(:include, FakeWebTestHelper)
++Minitest::Test.send(:include, FakeWebTestHelper)
+diff --git a/test/test_last_request.rb b/test/test_last_request.rb
+index 7868c83..88356ff 100644
+--- a/test/test_last_request.rb
++++ b/test/test_last_request.rb
+@@ -1,6 +1,6 @@
+ require 'test_helper'
+ 
+-class TestLastRequest < Test::Unit::TestCase
++class TestLastRequest < Minitest::Test
+ 
+   def test_last_request_returns_correct_net_http_request_class
+     FakeWeb.register_uri(:get, "http://example.com", :status => [200, "OK"])
+diff --git a/test/test_missing_open_uri.rb b/test/test_missing_open_uri.rb
+index 029ba1c..93f33e4 100644
+--- a/test/test_missing_open_uri.rb
++++ b/test/test_missing_open_uri.rb
+@@ -1,6 +1,6 @@
+ require 'test_helper'
+ 
+-class TestMissingOpenURI < Test::Unit::TestCase
++class TestMissingOpenURI < Minitest::Test
+ 
+   def setup
+     super
+diff --git a/test/test_missing_pathname.rb b/test/test_missing_pathname.rb
+index ee16a0d..3f01d24 100644
+--- a/test/test_missing_pathname.rb
++++ b/test/test_missing_pathname.rb
+@@ -1,6 +1,6 @@
+ require 'test_helper'
+ 
+-class TestMissingPathname < Test::Unit::TestCase
++class TestMissingPathname < Minitest::Test
+ 
+   def setup
+     super
+@@ -29,7 +29,7 @@ class TestMissingPathname < Test::Unit::TestCase
+ 
+   def test_register_using_unsupported_response_without_pathname
+     FakeWeb.register_uri(:get, "http://example.com/", :response => 1)
+-    assert_raise StandardError do
++    assert_raises StandardError do
+       Net::HTTP.start("example.com") { |http| http.get("/") }
+     end
+   end
+diff --git a/test/test_other_net_http_libraries.rb b/test/test_other_net_http_libraries.rb
+index af7e5e2..ef4bc2f 100644
+--- a/test/test_other_net_http_libraries.rb
++++ b/test/test_other_net_http_libraries.rb
+@@ -1,6 +1,6 @@
+ require 'test_helper'
+ 
+-class TestOtherNetHttpLibraries < Test::Unit::TestCase
++class TestOtherNetHttpLibraries < Minitest::Test
+ 
+   def capture_output_from_requiring(libs, additional_code = "")
+     requires = libs.map { |lib| "require '#{lib}'" }.join("; ")
+diff --git a/test/test_precedence.rb b/test/test_precedence.rb
+index 388b9f8..c9f4702 100644
+--- a/test/test_precedence.rb
++++ b/test/test_precedence.rb
+@@ -1,6 +1,6 @@
+ require 'test_helper'
+ 
+-class TestPrecedence < Test::Unit::TestCase
++class TestPrecedence < Minitest::Test
+ 
+   def test_matching_get_strings_have_precedence_over_matching_get_regexes
+     FakeWeb.register_uri(:get, "http://example.com/test", :body => "string")
+diff --git a/test/test_query_string.rb b/test/test_query_string.rb
+index 11a2118..7c6d710 100644
+--- a/test/test_query_string.rb
++++ b/test/test_query_string.rb
+@@ -1,6 +1,6 @@
+ require 'test_helper'
+ 
+-class TestFakeWebQueryString < Test::Unit::TestCase
++class TestFakeWebQueryString < Minitest::Test
+ 
+   def test_register_uri_string_with_query_params
+     FakeWeb.register_uri(:get, 'http://example.com/?a=1&b=1', :body => 'foo')
+diff --git a/test/test_regexes.rb b/test/test_regexes.rb
+index e2eba1d..558b5ff 100644
+--- a/test/test_regexes.rb
++++ b/test/test_regexes.rb
+@@ -1,6 +1,6 @@
+ require 'test_helper'
+ 
+-class TestRegexes < Test::Unit::TestCase
++class TestRegexes < Minitest::Test
+ 
+   def test_registered_uri_with_pattern
+     FakeWeb.register_uri(:get, %r|http://example.com/test_example/\d+|, :body => "example")
+@@ -39,7 +39,7 @@ class TestRegexes < Test::Unit::TestCase
+   def test_requesting_a_uri_that_matches_two_registered_regexes_raises_an_error
+     FakeWeb.register_uri(:get, %r|http://example\.com/|, :body => "first")
+     FakeWeb.register_uri(:get, %r|http://example\.com/a|, :body => "second")
+-    assert_raise FakeWeb::MultipleMatchingURIsError do
++    assert_raises FakeWeb::MultipleMatchingURIsError do
+       Net::HTTP.start("example.com") { |query| query.get('/a') }
+     end
+   end
+diff --git a/test/test_response_headers.rb b/test/test_response_headers.rb
+index 45f3f5a..96d19d4 100644
+--- a/test/test_response_headers.rb
++++ b/test/test_response_headers.rb
+@@ -1,6 +1,6 @@
+ require 'test_helper'
+ 
+-class TestResponseHeaders < Test::Unit::TestCase
++class TestResponseHeaders < Minitest::Test
+   def test_content_type_when_registering_with_string_and_content_type_header_as_symbol_option
+     FakeWeb.register_uri(:get, "http://example.com/users.json", :body => '[{"username": "chrisk"}]', :content_type => "application/json")
+     response = Net::HTTP.start("example.com") { |query| query.get("/users.json") }
+diff --git a/test/test_trailing_slashes.rb b/test/test_trailing_slashes.rb
+index 564d807..fbffe7d 100644
+--- a/test/test_trailing_slashes.rb
++++ b/test/test_trailing_slashes.rb
+@@ -1,6 +1,6 @@
+ require 'test_helper'
+ 
+-class TestFakeWebTrailingSlashes < Test::Unit::TestCase
++class TestFakeWebTrailingSlashes < Minitest::Test
+ 
+   def test_registering_root_without_slash_and_ask_predicate_method_with_slash
+     FakeWeb.register_uri(:get, "http://www.example.com", :body => "root")
+@@ -32,7 +32,7 @@ class TestFakeWebTrailingSlashes < Test::Unit::TestCase
+   def test_registering_path_without_slash_and_request_with_slash
+     FakeWeb.allow_net_connect = false
+     FakeWeb.register_uri(:get, "http://www.example.com/users", :body => "User list")
+-    assert_raise FakeWeb::NetConnectNotAllowedError do
++    assert_raises FakeWeb::NetConnectNotAllowedError do
+       response = Net::HTTP.start("www.example.com") { |query| query.get('/users/') }
+     end
+   end
+@@ -45,7 +45,7 @@ class TestFakeWebTrailingSlashes < Test::Unit::TestCase
+   def test_registering_path_with_slash_and_request_without_slash
+     FakeWeb.allow_net_connect = false
+     FakeWeb.register_uri(:get, "http://www.example.com/users/", :body => "User list")
+-    assert_raise FakeWeb::NetConnectNotAllowedError do
++    assert_raises FakeWeb::NetConnectNotAllowedError do
+       response = Net::HTTP.start("www.example.com") { |query| query.get('/users') }
+     end
+   end
+diff --git a/test/test_utility.rb b/test/test_utility.rb
+index 891de87..f82bfc8 100644
+--- a/test/test_utility.rb
++++ b/test/test_utility.rb
+@@ -1,6 +1,6 @@
+ require 'test_helper'
+ 
+-class TestUtility < Test::Unit::TestCase
++class TestUtility < Minitest::Test
+ 
+   def test_decode_userinfo_from_header_handles_basic_auth
+     authorization_header = "Basic dXNlcm5hbWU6c2VjcmV0"
+-- 
+1.8.3.1
+

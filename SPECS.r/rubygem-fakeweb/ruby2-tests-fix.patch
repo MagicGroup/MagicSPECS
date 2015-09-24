@@ -1,0 +1,37 @@
+From ac856c369445631118f4a51f73793af1ea5c5e1a Mon Sep 17 00:00:00 2001
+From: Josef Stribny <jstribny@redhat.com>
+Date: Thu, 28 Feb 2013 13:10:58 +0100
+Subject: [PATCH] Update test suite for Ruby 2
+
+---
+ test/test_helper.rb |    8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
+
+diff --git a/test/test_helper.rb b/test/test_helper.rb
+index ca91827..f434fee 100644
+--- a/test/test_helper.rb
++++ b/test/test_helper.rb
+@@ -57,12 +57,19 @@ def setup_expectations_for_real_request(options = {})
+       OpenSSL::SSL::SSLSocket.expects(:new).with(socket, instance_of(OpenSSL::SSL::SSLContext)).returns(socket).at_least_once
+       socket.stubs(:sync_close=).returns(true)
+       socket.expects(:connect).with().at_least_once
++      socket.expects(:session).with().at_least_once if RUBY_VERSION >= "2.0.0"
+     else
+       socket = mock("TCPSocket")
+       Socket.expects(:===).with(socket).at_least_once.returns(true)
+     end
+
++    socket.expects(:setsockopt).with(any_parameters).at_least_once if RUBY_VERSION >= "2.1.0"
+-    TCPSocket.expects(:open).with(options[:host], options[:port]).returns(socket).at_least_once
++    if RUBY_VERSION >= "2.0.0"
++      TCPSocket.expects(:open).with(options[:host], options[:port], nil, nil).returns(socket).at_least_once
++    else
++      TCPSocket.expects(:open).with(options[:host], options[:port]).returns(socket).at_least_once
++    end
++
+     socket.stubs(:closed?).returns(false)
+     socket.stubs(:close).returns(true)
+ 
+-- 
+1.7.10
+
