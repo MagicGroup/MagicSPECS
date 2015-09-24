@@ -2,23 +2,20 @@
 %global gem_name multi_json
 
 Name: rubygem-%{gem_name}
-Version: 1.8.4
-Release: 3%{?dist}
+Version: 1.10.1
+Release: 2%{?dist}
 Summary: A common interface to multiple JSON libraries
 Group: Development/Languages
 License: MIT
 URL: http://github.com/intridea/multi_json
 Source0: https://rubygems.org/gems/%{gem_name}-%{version}.gem
-Requires: ruby(release)
-Requires: ruby(rubygems) >= 1.3.6
 BuildRequires: ruby(release)
 BuildRequires: rubygems-devel >= 1.3.6
-#BuildRequires: ruby
+BuildRequires: ruby
 BuildRequires: rubygem(rspec)
 #BuildRequires: rubygem(json)
 BuildRequires: rubygem(json_pure)
 BuildArch: noarch
-Provides: rubygem(%{gem_name}) = %{version}
 # OkJson is allowed to be bundled:
 # https://fedorahosted.org/fpc/ticket/113
 Provides: bundled(okjson) = 43
@@ -36,7 +33,7 @@ Requires: %{name} = %{version}-%{release}
 BuildArch: noarch
 
 %description doc
-Documentation for %{name}
+Documentation for %{name}.
 
 
 %prep
@@ -52,11 +49,8 @@ cp -pa .%{gem_dir}/* \
 
 %check
 pushd .%{gem_instdir}
-# We don't care about coverage.
-sed -i "/require 'simplecov'/,/end$/{s/^/#/}" spec/spec_helper.rb
-
-## oj is not available on Fedora.
-sed -i '131,158 s/^/#/' spec/multi_json_spec.rb
+# oj is not available on Fedora.
+sed -i '139,164 s/^/#/' spec/multi_json_spec.rb
 sed -i "/expect(MultiJson.adapter.to_s).to eq('MultiJson::Adapters::Oj')/ s/Oj/JsonGem/" spec/multi_json_spec.rb
 
 # Execute main test suite.
@@ -68,9 +62,7 @@ rm spec/{gson,jr_jackson,nsjsonserialization,oj,yajl}_adapter_spec.rb
 
 # Adapters have to be tested separately.
 for adapter in spec/*_adapter_spec.rb; do
-  # Prevents "dump encoding" testsuite error.
-  # https://github.com/intridea/multi_json/issues/126
-  LANG=en_US.utf8 rspec $adapter || exit
+  rspec $adapter
 done
 
 popd
@@ -95,8 +87,11 @@ popd
 
 
 %changelog
-* Sun Jun 22 2014 Liu Di <liudidi@gmail.com> - 1.8.4-3
-- 为 Magic 3.0 重建
+* Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.10.1-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
+
+* Mon Mar 02 2015 Vít Ondruch <vondruch@redhat.com> - 1.10.1-1
+- Update to MultiJSON 1.10.1.
 
 * Sun Jun 08 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.8.4-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
