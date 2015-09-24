@@ -1,0 +1,40 @@
+--- flexmock-1.3.3/test/based_partials_test.rb.regex	2015-08-13 11:31:55.254160727 +0900
++++ flexmock-1.3.3/test/based_partials_test.rb	2015-08-14 16:13:11.475229271 +0900
+@@ -37,9 +37,10 @@
+ 
+   def test_based_partials_disallow_stubbing_undefined_methods
+     dog = Dog.new
+-    assert_raise(NoMethodError, /cannot stub.*wag.*explicitly/) do
++    e = assert_raise NoMethodError do
+       flexmock(dog).should_receive(:wag => :mock_value)
+     end
++    assert_match(/cannot stub.*wag.*explicitly/i, e.message.delete("\n")) 
+   end
+ 
+   def test_based_partials_allow_explicitly_stubbing_undefined_methods
+--- flexmock-1.3.3/test/partial_mock_test.rb.regex	2015-08-13 11:31:55.258160751 +0900
++++ flexmock-1.3.3/test/partial_mock_test.rb	2015-08-14 16:14:28.983671985 +0900
+@@ -44,9 +44,10 @@
+     obj = Object.new
+     flexmock(obj)
+     obj.instance_eval { @flexmock_proxy = nil }
+-    assert_raises(RuntimeError, /missing.*proxy/i) do
++    e = assert_raise RuntimeError do
+       obj.should_receive(:hi).and_return(:stub_hi)
+     end
++    assert_match(/missing.*proxy/i, e.message.delete("\n")) 
+   end
+ 
+   def test_stub_command_add_behavior_to_arbitrary_objects_via_flexmock
+@@ -426,9 +427,10 @@
+   def test_partial_mocks_disallow_stubbing_undefined_methods_when_using_on
+     dog = Dog.new
+     flexmock(dog, :on, Dog)
+-    assert_raise(NoMethodError, /meow.*explicitly/) do
++    e = assert_raise NoMethodError do
+       dog.should_receive(:meow).and_return(:something)
+     end
++    assert_match(/meow.*explicitly/i, e.message.delete("\n")) 
+   end
+ 
+   # The following test was suggested by Pat Maddox for the RSpec
