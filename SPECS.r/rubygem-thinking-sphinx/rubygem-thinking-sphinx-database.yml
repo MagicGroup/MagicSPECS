@@ -1,0 +1,5 @@
+# Temporary MySQL configuration for testing in mock / Koji
+username: root
+password: 
+host: localhost
+socket: /tmp/mysql/mysql.sock
