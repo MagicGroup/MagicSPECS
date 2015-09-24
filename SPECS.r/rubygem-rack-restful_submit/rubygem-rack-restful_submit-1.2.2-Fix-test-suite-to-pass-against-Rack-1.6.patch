@@ -1,0 +1,26 @@
+From 3b52661e31308a9c11a6fb79e3d40640f79d2d85 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?V=C3=ADt=20Ondruch?= <vondruch@redhat.com>
+Date: Fri, 26 Jun 2015 14:51:59 +0200
+Subject: [PATCH] Fix test suite to pass against Rack 1.6+.
+
+---
+ spec/rack-restful_submit_spec.rb | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
+
+diff --git a/spec/rack-restful_submit_spec.rb b/spec/rack-restful_submit_spec.rb
+index 5ecc995..95316ff 100644
+--- a/spec/rack-restful_submit_spec.rb
++++ b/spec/rack-restful_submit_spec.rb
+@@ -18,8 +18,7 @@ describe Rack::RestfulSubmit do
+   describe "a post request" do
+     before do
+       in_env['REQUEST_METHOD'] = 'POST'
+-      in_env['rack.input'] = in_env['form_input'] = ''
+-      in_env['rack.request.form_input'] = ''
++      in_env['rack.request.form_input'] = in_env['rack.input'] = in_env['form_input'] = StringIO.new('')
+       in_env["rack.request.form_hash"] = {}
+     end
+ 
+-- 
+2.4.3
+
