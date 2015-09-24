@@ -1,0 +1,92 @@
+diff --git a/features/rails_integration.feature b/features/rails_integration.feature
+index 900066a..e4c46be 100644
+--- a/features/rails_integration.feature
++++ b/features/rails_integration.feature
+@@ -13,7 +13,7 @@ Feature: integrate with Rails
+         end
+       end
+       """
+-    When I successfully run `bundle exec rake db:migrate --trace`
++    When I successfully run `bundle exec rake db:migrate --trace RAILS_ENV=test`
+     And I write to "app/models/user.rb" with:
+       """
+       class User < ActiveRecord::Base
+@@ -51,14 +51,13 @@ Feature: integrate with Rails
+         end
+ 
+         should respond_with(:success)
+-        should assign_to(:example)
++        should_not render_with_layout
+       end
+       """
+     When I successfully run `bundle exec rake test TESTOPTS='-v' --trace`
+-    Then the output should contain "1 tests, 1 assertions, 0 failures, 0 errors"
+-    And the output should contain "2 tests, 2 assertions, 0 failures, 0 errors"
++    Then the output should contain "3 runs, 3 assertions, 0 failures, 0 errors, 0 skips"
+     And the output should contain "User should require name to be set"
+-    And the output should contain "ExamplesController should assign @example"
++    And the output should contain "ExamplesController should not render with a layout"
+ 
+   Scenario: generate a rails application and use matchers in Rspec
+     When I configure the application to use rspec-rails
+@@ -78,10 +77,12 @@ Feature: integrate with Rails
+ 
+       describe ExamplesController, "show" do
+         before { get :show }
+-        it { should assign_to(:example) }
++        it { should respond_with(:success) }
++        it { should_not render_with_layout }
+       end
+       """
+     When I successfully run `bundle exec rake spec SPEC_OPTS=-fs --trace`
+-    Then the output should contain "2 examples, 0 failures"
++    Then the output should contain "3 examples, 0 failures"
+     And the output should contain "should require name to be set"
+-    And the output should contain "should assign @example"
++    And the output should contain "should respond with 200"
++    And the output should contain "should not render with a layout"
+diff --git a/features/step_definitions/rails_steps.rb b/features/step_definitions/rails_steps.rb
+index f1cf4c3..bc910bf 100644
+--- a/features/step_definitions/rails_steps.rb
++++ b/features/step_definitions/rails_steps.rb
+@@ -3,12 +3,12 @@ APP_NAME     = 'testapp'.freeze
+ 
+ When /^I generate a new rails application$/ do
+   steps %{
+-    When I run `bundle exec rails new #{APP_NAME}`
++    When I run `rails new #{APP_NAME} -B`
+     And I cd to "#{APP_NAME}"
+     And I write to "Gemfile" with:
+       """
+       source "http://rubygems.org"
+-      gem 'rails', '3.0.12'
++      gem 'rails'
+       gem 'sqlite3'
+       """
+     And I successfully run `bundle install --local`
+@@ -37,14 +37,14 @@ When /^I configure the application to use shoulda-context$/ do
+ end
+ 
+ When /^I configure the application to use shoulda$/ do
+-  append_to_gemfile "gem 'shoulda-matchers', '~> 1.0', :require => false"
++  append_to_gemfile "gem 'shoulda-matchers', :require => false"
+   append_to_gemfile "gem 'shoulda-context', '~> 1.0', :require => false"
+   append_to_gemfile "gem 'shoulda', :path => '../../..'"
+   steps %{And I run `bundle install --local`}
+ end
+ 
+ When /^I configure the application to use shoulda-matchers$/ do
+-  append_to_gemfile "gem 'shoulda-matchers', '~> 1.0'"
++  append_to_gemfile "gem 'shoulda-matchers'"
+   steps %{And I run `bundle install --local`}
+ end
+ 
+@@ -53,7 +53,7 @@ When /^I configure a wildcard route$/ do
+     When I write to "config/routes.rb" with:
+     """
+     Rails.application.routes.draw do
+-      match ':controller(/:action(/:id(.:format)))'
++      get ':controller(/:action(/:id(.:format)))'
+     end
+     """
+   }
