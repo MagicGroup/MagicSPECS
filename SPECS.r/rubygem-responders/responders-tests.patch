@@ -1,0 +1,49 @@
+commit e4da9c86255e5e085b9ac683e1253c451a3163e2
+Author: Carlos Antonio da Silva <carlosantoniodasilva@gmail.com>
+Date:   Tue Mar 24 08:54:50 2015 -0300
+
+    Update dependencies to Rails 4.1 and fix failures
+    
+    The change on our tests was necessary due to a bug in Rails.
+    More background on c3e2d049e596bc0a76cbc0d1ef298de4926bed16.
+
+diff --git a/test/action_controller/respond_with_test.rb b/test/action_controller/respond_with_test.rb
+index 94ae293..9596380 100644
+--- a/test/action_controller/respond_with_test.rb
++++ b/test/action_controller/respond_with_test.rb
+@@ -410,7 +410,7 @@ class RespondWithControllerTest < ActionController::TestCase
+     put :using_resource
+     assert_equal "application/xml", @response.content_type
+     assert_equal 204, @response.status
+-    assert_equal " ", @response.body
++    assert_equal "", @response.body
+   end
+ 
+   def test_using_resource_for_put_with_json_yields_no_content_on_success
+@@ -418,7 +418,7 @@ class RespondWithControllerTest < ActionController::TestCase
+     put :using_resource_with_json
+     assert_equal "application/json", @response.content_type
+     assert_equal 204, @response.status
+-    assert_equal " ", @response.body
++    assert_equal "", @response.body
+   end
+ 
+   def test_using_resource_for_put_with_xml_yields_unprocessable_entity_on_failure
+@@ -460,7 +460,7 @@ class RespondWithControllerTest < ActionController::TestCase
+     delete :using_resource
+     assert_equal "application/xml", @response.content_type
+     assert_equal 204, @response.status
+-    assert_equal " ", @response.body
++    assert_equal "", @response.body
+   end
+ 
+   def test_using_resource_for_delete_with_json_yields_no_content_on_success
+@@ -469,7 +469,7 @@ class RespondWithControllerTest < ActionController::TestCase
+     delete :using_resource_with_json
+     assert_equal "application/json", @response.content_type
+     assert_equal 204, @response.status
+-    assert_equal " ", @response.body
++    assert_equal "", @response.body
+   end
+ 
+   def test_using_resource_for_delete_with_html_redirects_on_failure
