@@ -1,0 +1,22 @@
+From c0e63da5f1bf5932b57ea508be07ee21a5b88523 Mon Sep 17 00:00:00 2001
+From: Josef Stribny <jstribny@redhat.com>
+Date: Mon, 29 Jun 2015 14:07:19 +0200
+Subject: [PATCH] Fix: Properly require ostruct
+
+---
+ lib/jbuilder.rb | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/lib/jbuilder.rb b/lib/jbuilder.rb
+index 6b58157..e1c1dec 100644
+--- a/lib/jbuilder.rb
++++ b/lib/jbuilder.rb
+@@ -3,6 +3,7 @@
+ require 'jbuilder/key_formatter'
+ require 'jbuilder/errors'
+ require 'multi_json'
++require 'ostruct'
+ 
+ class Jbuilder
+   @@key_formatter = nil
+
