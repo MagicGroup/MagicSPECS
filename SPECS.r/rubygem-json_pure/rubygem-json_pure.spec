@@ -2,19 +2,18 @@
 
 Summary: JSON Implementation for Ruby
 Name: rubygem-%{gem_name}
-Version: 1.6.3
-Release: 9%{?dist}
+Version: 1.8.1
+Release: 2%{?dist}
 Group: Development/Languages
+# TODO: License should be probably updated.
+# https://github.com/flori/json/issues/213
 License: GPLv2 or Ruby
 URL: http://flori.github.com/json
 Source0: http://rubygems.org/gems/%{gem_name}-%{version}.gem
-Requires: ruby(rubygems)
-Requires: ruby(release)
 BuildRequires: ruby(release)
 BuildRequires: rubygems-devel
-BuildRequires: rubygem(minitest)
+BuildRequires: rubygem(test-unit)
 BuildArch: noarch
-Provides: rubygem(%{gem_name}) = %{version}
 
 %package doc
 Summary: Documentation for %{name}
@@ -28,46 +27,37 @@ Documentation for %{name}
 This is a JSON implementation in pure Ruby.
 
 %prep
+%setup -q -c -T
+%gem_install -n %{SOURCE0}
 
 %build
 
 %install
-rm -rf %{buildroot}
 mkdir -p %{buildroot}%{gem_dir}
-%gem_install -n %{SOURCE0} -d %{buildroot}%{gem_dir}
+cp -pa .%{gem_dir}/* \
+        %{buildroot}%{gem_dir}/
+
 for file in `find %{buildroot}/%{gem_instdir} -type f -perm /a+x`; do
     [ -z "`head -n 1 $file | grep \"^#!/\"`" ] && chmod -v 644 $file
 done
-for file in `find %{buildroot}/%{gem_instdir} -type f ! -perm /a+x -name "*.rb"`; do
+for file in `find %{buildroot}/%{gem_instdir} -type f ! -perm /a+x`; do
     [ ! -z "`head -n 1 $file | grep \"^#!/\"`" ] && chmod -v 755 $file
 done
-find %{buildroot}/%{gem_instdir} -type f -perm /g+wx -exec chmod -v g-w {} \;
-rm -rf %{buildroot}/%{gem_instdir}/ext
-rm -rf %{buildroot}/%{gem_instdir}/java
-rm -f %{buildroot}/%{gem_instdir}/json_pure.gemspec
-rm -f %{buildroot}/%{gem_instdir}/json.gemspec
-rm -f %{buildroot}/%{gem_instdir}/json-java.gemspec
-rm -f %{buildroot}/%{gem_instdir}/Gemfile
-rm -f %{buildroot}/%{gem_instdir}/diagrams/.keep
-rm -f %{buildroot}/%{gem_instdir}/.travis.yml
-rm -f %{buildroot}/%{gem_instdir}/.gitignore
-# Fix for Fedora 14:
-rm -rf %{buildroot}/%{gem_instdir}/tests/test_json_rails.rb
-
 
 %check
-pushd %{buildroot}%{gem_instdir}
-JSON=pure testrb tests
+pushd .%{gem_instdir}
+JSON=pure ruby -e 'Dir.glob "./tests/**/test_*.rb", &method(:require)'
 popd
 
-%clean
-rm -rf %{buildroot}
-
 %files
-%defattr(-, root, root, -)
 %dir %{gem_instdir}
 %{gem_libdir}
-%{gem_cache}
+%exclude %{gem_libdir}/json/ext/.*
+%exclude %{gem_instdir}/.*
+%exclude %{gem_instdir}/diagrams
+%exclude %{gem_instdir}/ext
+%exclude %{gem_instdir}/java
+%exclude %{gem_cache}
 %{gem_spec}
 %doc %{gem_instdir}/README-json-jruby.markdown
 %doc %{gem_instdir}/README.rdoc
@@ -80,18 +70,24 @@ rm -rf %{buildroot}
 
 
 %files doc
-%defattr(-, root, root, -)
 %{gem_instdir}/tests
 %{gem_instdir}/data
 %{gem_instdir}/tools
-%{gem_instdir}/benchmarks
+%{gem_instdir}/Gemfile
 %{gem_instdir}/Rakefile
-%{gem_docdir}
+%doc %{gem_docdir}
 %{gem_instdir}/install.rb
+%{gem_instdir}/json*.gemspec
 
 %changelog
-* Sun Jun 22 2014 Liu Di <liudidi@gmail.com> - 1.6.3-9
-- 为 Magic 3.0 重建
+* Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.8.1-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
+
+* Tue Jul 22 2014 Vít Ondruch <vondruch@redhat.com> - 1.8.1-1
+- Update to json_pure 1.8.1.
+
+* Sun Jun 08 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.6.3-9
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 
 * Sun Aug 04 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.6.3-8
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
@@ -111,7 +107,7 @@ rm -rf %{buildroot}
 * Sat Jan 14 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.6.3-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 
-* Thu Dec 12 2011 Michal Fojtik <mfojtik@redhat.com> - 1.6.3-2
+* Mon Dec 12 2011 Michal Fojtik <mfojtik@redhat.com> - 1.6.3-2
 - Rebuild after Koji outage
 
 * Thu Dec 8 2011 Michal Fojtik <mfojtik@redhat.com> - 1.6.3-1
