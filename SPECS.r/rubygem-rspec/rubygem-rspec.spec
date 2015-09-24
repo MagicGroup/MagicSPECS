@@ -1,63 +1,84 @@
-%global gem_name rspec
+%global	gem_name	rspec
 
-Summary: Behaviour driven development (BDD) framework for Ruby
-Name: rubygem-%{gem_name}
-Version: 2.13.0
-Release: 2%{?dist}
-Group: Development/Languages
-License: MIT
-URL: http://rspec.info
-Source0: http://rubygems.org/downloads/%{gem_name}-%{version}.gem
-BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-Requires: rubygems
-Requires: rubygem(rspec-core) >= %{version}
-Requires: rubygem(rspec-mocks) >= %{version}
-Requires: rubygem(rspec-expectations) >= %{version}
-Requires: ruby(release)
-BuildRequires: rubygems-devel
-BuildRequires: ruby(release)
-BuildArch: noarch
-Provides: rubygem(%{gem_name}) = %{version}
+Summary:	Behaviour driven development (BDD) framework for Ruby
+Name:		rubygem-%{gem_name}
+Version:	3.3.0
+Release:	1%{?dist}
+
+Group:		Development/Languages
+License:	MIT
+URL:		http://rspec.info
+Source0:	http://rubygems.org/gems/%{gem_name}-%{version}.gem
+
+BuildRequires:	rubygems-devel
+BuildRequires:	ruby(release)
+
+BuildArch:	noarch
 
 %description
 RSpec is a behaviour driven development (BDD) framework for Ruby.  
 
+%package	doc
+Summary:	Documentation for %{name}
+Group:		Documentation
+Requires:	%{name} = %{version}-%{release}
+
+%description	doc
+This package contains documentation for %{name}.
+
+
 %prep
-%setup -q -c -T
-
-TOPDIR=$(pwd)
-mkdir tmpunpackdir
-pushd tmpunpackdir
-
 gem unpack %{SOURCE0}
-cd %{gem_name}-%{version}
-gem specification -l --ruby %{SOURCE0} > %{gem_name}.gemspec
-gem build %{gem_name}.gemspec
-mv %{gem_name}-%{version}.gem $TOPDIR
 
-popd
-rm -rf tmpunpackdir
+%setup -q -D -T -n  %{gem_name}-%{version}
+
+gem specification %{SOURCE0} -l --ruby > %{gem_name}.gemspec
 
 %build
+gem build %{gem_name}.gemspec
 %gem_install
 
 %install
-rm -rf %{buildroot}
 mkdir -p %{buildroot}%{gem_dir}
-cp -a .%{gem_dir}/* %{buildroot}%{gem_dir}
+cp -a .%{gem_dir}/* \
+	%{buildroot}%{gem_dir}/
 
 %files
-%doc %{gem_docdir}
-%dir %{gem_instdir}
+%dir	%{gem_instdir}
 %{gem_instdir}/lib
-%{gem_instdir}/License.txt
-%{gem_instdir}/README.md
+%license	%{gem_instdir}/License.txt
+%doc	%{gem_instdir}/README.md
 %exclude %{gem_cache}
 %{gem_spec}
 
+%files	doc
+%doc	%{gem_docdir}
+
+
 %changelog
-* Sun Jun 22 2014 Liu Di <liudidi@gmail.com> - 2.13.0-2
-- 为 Magic 3.0 重建
+* Sun Aug  2 2015 Mamoru TASAKA <mtasaka@fedoraproject.org> - 3.3.0-1
+- 3.3.0
+
+* Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.2.0-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
+
+* Mon Feb  9 2015 Mamoru TASAKA <mtasaka@fedoraproject.org> - 3.2.0-1
+- 3.2.0
+
+* Mon Nov 10 2014 Mamoru TASAKA <mtasaka@fedoraproject.org> - 3.1.0-1
+- 3.1.0
+
+* Fri Aug 15 2014 Mamoru TASAKA <mtasaka@fedoraproject.org> - 3.0.0-1
+- 3.0.0
+
+* Sun Jun 08 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.14.1-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Fri Aug 16 2013 Mamoru TASAKA <mtasaka@fedoraproject.og> - 2.14.1-1
+- 2.14.1
+
+* Sun Aug 04 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.13.0-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
 
 * Thu Mar 28 2013 Mamoru TASAKA <mtasaka@fedoraproject.org> - 2.13.0-1
 - 2.13.0
@@ -83,7 +104,7 @@ cp -a .%{gem_dir}/* %{buildroot}%{gem_dir}
 * Sat Jan 14 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.3.1-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 
-* Mon Mar 09 2011 Mamoru Tasaka <mtasaka@fedoraproject.org> - 1.3.1-1
+* Mon Mar 07 2011 Mamoru Tasaka <mtasaka@fedoraproject.org> - 1.3.1-1
 - Update from Marek Goldmann <mgoldman@redhat.com>
   - Updated to 1.3.1
   - Patch to make it work with Rake >= 0.9.0.beta.0
