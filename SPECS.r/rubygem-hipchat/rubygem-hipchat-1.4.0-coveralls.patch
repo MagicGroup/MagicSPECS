@@ -1,0 +1,37 @@
+From 8031ab3e6d7a28377ee88a5a04f44d1ceccf10a1 Mon Sep 17 00:00:00 2001
+From: Ken Dreyer <ktdreyer@ktdreyer.com>
+Date: Thu, 20 Nov 2014 17:38:03 -0700
+Subject: [PATCH] tests: make coveralls optional
+
+If we do not have Coveralls installed, we should be able to continue
+with the rest of the test suite.
+
+This allows the tests to run outside of Bundler if Coveralls is not
+installed.
+---
+ spec/spec_helper.rb | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
+
+diff --git a/spec/spec_helper.rb b/spec/spec_helper.rb
+index 4e07fbb..e6f4b4b 100644
+--- a/spec/spec_helper.rb
++++ b/spec/spec_helper.rb
+@@ -5,9 +5,13 @@ require 'rspec'
+ require 'rspec/autorun'
+ require 'json'
+ require 'webmock/rspec'
+-require 'coveralls'
+ 
+-Coveralls.wear!
++begin
++  require 'coveralls'
++  Coveralls.wear!
++rescue LoadError
++  warn 'warning: coveralls gem not found; skipping coverage'
++end
+ 
+ Dir["./spec/support/**/*.rb"].each {|f| require f}
+ 
+-- 
+1.9.3
+
