@@ -1,0 +1,437 @@
+commit d8f7899b8ebd270f06f15e70a5213d8f38146da5
+Author: Ken Dreyer <ktdreyer@ktdreyer.com>
+Date:   Mon Jun 9 18:10:30 2014 -0600
+
+    tests: switch to minitest
+    
+    Ruby 1.9+ uses Minitest as the backend for Test::Unit. As of Minitest 5,
+    the shim has broken some compatibility with Test::Unit::TestCase in some
+    scenarios.
+    
+    Adjust the test suite to support Minitest 5's syntax.
+    
+    The performance tests do not easily port over, so remove them.
+
+diff --git a/Rakefile b/Rakefile
+index f7c5c77..7dc47c6 100644
+--- a/Rakefile
++++ b/Rakefile
+@@ -3,7 +3,7 @@ require 'bundler/gem_tasks'
+ require 'rake/testtask'
+ 
+ desc "Run all tests"
+-task 'default' => ['test:units', 'test:acceptance', 'test:performance']
++task 'default' => ['test:units', 'test:acceptance']
+ 
+ namespace 'test' do
+   unit_tests       = FileList['test/unit/**/*_test.rb']
+@@ -21,34 +21,4 @@ namespace 'test' do
+     t.test_files = acceptance_tests
+   end
+ 
+-  desc "Run performance tests"
+-  task 'performance' do
+-    require File.join(File.dirname(__FILE__), 'test', 'acceptance', 'stubba_example_test')
+-    require File.join(File.dirname(__FILE__), 'test', 'acceptance', 'mocha_example_test')
+-    iterations = 1000
+-    puts "\nBenchmarking with #{iterations} iterations..."
+-    [MochaExampleTest, StubbaExampleTest].each do |test_case|
+-      puts "#{test_case}: #{benchmark_test_case(test_case, iterations)} seconds."
+-    end
+-  end
+-end
+-
+-def benchmark_test_case(klass, iterations)
+-  require 'benchmark'
+-
+-  if defined?(MiniTest)
+-    MiniTest::Unit.output = StringIO.new
+-    Benchmark.realtime { iterations.times { |i| MiniTest::Unit.new.run([klass]) } }
+-  else
+-    load 'test/unit/ui/console/testrunner.rb' unless defined?(Test::Unit::UI::Console::TestRunner)
+-    unless $silent_option
+-      begin
+-        load 'test/unit/ui/console/outputlevel.rb' unless defined?(Test::Unit::UI::Console::OutputLevel::SILENT)
+-        $silent_option = { :output_level => Test::Unit::UI::Console::OutputLevel::SILENT }
+-      rescue LoadError
+-        $silent_option = Test::Unit::UI::SILENT
+-      end
+-    end
+-    Benchmark.realtime { iterations.times { Test::Unit::UI::Console::TestRunner.run(klass, $silent_option) } }
+-  end
+ end
+diff --git a/test/acceptance/mocha_example_test.rb b/test/acceptance/mocha_example_test.rb
+index a6ea4e9..b32e9e5 100644
+--- a/test/acceptance/mocha_example_test.rb
++++ b/test/acceptance/mocha_example_test.rb
+@@ -1,7 +1,7 @@
+ require File.expand_path('../../test_helper', __FILE__)
+ require 'mocha/setup'
+ 
+-class MochaExampleTest < Test::Unit::TestCase
++class MochaExampleTest < Minitest::Test
+ 
+   class Rover
+ 
+diff --git a/test/acceptance/spy_test.rb b/test/acceptance/spy_test.rb
+index 0ca06e6..d91ec2c 100644
+--- a/test/acceptance/spy_test.rb
++++ b/test/acceptance/spy_test.rb
+@@ -122,7 +122,7 @@ module SpyTestMethods
+   def assert_fails(message=/not yet invoked/)
+     begin
+       yield
+-    rescue FailedAssertion => exception
++    rescue Minitest::Assertion => exception
+       assert_match message, exception.message, "Test failed, but with the wrong message"
+       return
+     end
+@@ -131,7 +131,7 @@ module SpyTestMethods
+ 
+ end
+ 
+-class PartialSpyTest < Test::Unit::TestCase
++class PartialSpyTest < Minitest::Test
+   include AcceptanceTest
+   include SpyTestMethods
+ 
+@@ -140,7 +140,7 @@ class PartialSpyTest < Test::Unit::TestCase
+   end
+ end
+ 
+-class PureSpyTest < Test::Unit::TestCase
++class PureSpyTest < Minitest::Test
+   include AcceptanceTest
+   include SpyTestMethods
+ 
+@@ -149,7 +149,7 @@ class PureSpyTest < Test::Unit::TestCase
+   end
+ end
+ 
+-class StubEverythingSpyTest < Test::Unit::TestCase
++class StubEverythingSpyTest < Minitest::Test
+   include AcceptanceTest
+   def setup
+     setup_acceptance_test
+diff --git a/test/acceptance/stubba_example_test.rb b/test/acceptance/stubba_example_test.rb
+index 157e931..50acbad 100644
+--- a/test/acceptance/stubba_example_test.rb
++++ b/test/acceptance/stubba_example_test.rb
+@@ -29,7 +29,7 @@ module Thingy
+ 
+ end
+ 
+-class StubbaExampleTest < Test::Unit::TestCase
++class StubbaExampleTest < Minitest::Test
+ 
+   def test_should_stub_instance_method
+     widget = Widget.new
+diff --git a/test/matcher_helpers.rb b/test/matcher_helpers.rb
+index b9b12a0..1dd1c98 100644
+--- a/test/matcher_helpers.rb
++++ b/test/matcher_helpers.rb
+@@ -1,4 +1,4 @@
+-class Test::Unit::TestCase
++class Minitest::Test
+   def assert_matcher_accepts(matcher, instance)
+     assert matcher.matches?(instance), matcher.failure_message
+   end
+diff --git a/test/mini_test_result.rb b/test/mini_test_result.rb
+index 4ee50e2..2b3e3b0 100644
+--- a/test/mini_test_result.rb
++++ b/test/mini_test_result.rb
+@@ -1,8 +1,7 @@
+ require 'stringio'
+-require 'test/unit/testcase'
+-require 'minitest/unit'
++require 'minitest'
+ 
+-class MiniTestResult
++class MinitestResult
+ 
+   FAILURE_PATTERN = %r{(Failure)\:\n([^\(]+)\(([^\)]+)\) \[([^\]]+)\]\:\n(.*)\n}m
+   ERROR_PATTERN   = %r{(Error)\:\n([^\(]+)\(([^\)]+)\)\:\n(.+?)\n}m
+@@ -62,11 +61,11 @@ class MiniTestResult
+   end
+ 
+   def failures
+-    @runner.report.map { |puked| MiniTestResult.parse_failure(puked) }.compact
++    @runner.report.map { |puked| MinitestResult.parse_failure(puked) }.compact
+   end
+ 
+   def errors
+-    @runner.report.map { |puked| MiniTestResult.parse_error(puked) }.compact
++    @runner.report.map { |puked| MinitestResult.parse_error(puked) }.compact
+   end
+ 
+   def failure_messages
+diff --git a/test/test_helper.rb b/test/test_helper.rb
+index ab357d8..e61f0a4 100644
+--- a/test/test_helper.rb
++++ b/test/test_helper.rb
+@@ -13,11 +13,5 @@ if ENV['MOCHA_OPTIONS'] == 'use_test_unit_gem'
+   gem 'test-unit'
+ end
+ 
+-require 'test/unit'
++require 'minitest/autorun'
+ require 'mocha/setup'
+-
+-if defined?(MiniTest)
+-  FailedAssertion = MiniTest::Assertion
+-else
+-  FailedAssertion = Test::Unit::AssertionFailedError
+-end
+diff --git a/test/test_runner.rb b/test/test_runner.rb
+index fe12708..09d66c9 100644
+--- a/test/test_runner.rb
++++ b/test/test_runner.rb
+@@ -1,39 +1,18 @@
+-require 'test/unit/testcase'
++require 'minitest'
+ 
+-if defined?(MiniTest)
+-  require 'mocha/integration/mini_test'
+-  require File.expand_path('../mini_test_result', __FILE__)
+-else
+-  require 'test/unit/testresult'
+-end
++require 'mocha/integration/mini_test'
++require File.expand_path('../mini_test_result', __FILE__)
+ 
+ module TestRunner
+   def run_as_test(test_result = nil, &block)
+-    test_class = Class.new(Test::Unit::TestCase) do
++    test_class = Class.new(Minitest::Test) do
+       define_method(:test_me, &block)
+     end
+     test = test_class.new(:test_me)
+ 
+-    if defined?(Test::Unit::TestResult)
+-      test_result ||= Test::Unit::TestResult.new
+-      test.run(test_result) {}
+-      class << test_result
+-        attr_reader :failures, :errors
+-        def failure_messages
+-          failures.map { |failure| failure.message }
+-        end
+-        def failure_message_lines
+-          failure_messages.map { |message| message.split("\n") }.flatten
+-        end
+-        def error_messages
+-          errors.map { |error| error.message }
+-        end
+-      end
+-    else
+-      runner = MiniTest::Unit.new
+-      test.run(runner)
+-      test_result = MiniTestResult.new(runner, test)
+-    end
++    runner = Minitest::Test.new
++    test.run(runner)
++    test_result = MinitestResult.new(runner, test)
+ 
+     test_result
+   end
+diff --git a/test/unit/assert_received_test.rb b/test/unit/assert_received_test.rb
+index a95f26f..9fd14a8 100644
+--- a/test/unit/assert_received_test.rb
++++ b/test/unit/assert_received_test.rb
+@@ -4,7 +4,7 @@ require 'bourne/api'
+ require 'bourne/mockery'
+ require 'mocha/api'
+ 
+-class AssertReceivedTest < Test::Unit::TestCase
++class AssertReceivedTest < Minitest::Test
+ 
+   include Mocha
+   include TestRunner
+@@ -137,7 +137,7 @@ class AssertReceivedTest < Test::Unit::TestCase
+     begin
+       yield
+       false
+-    rescue FailedAssertion
++    rescue Minitest::Assertion
+       true
+     end
+   end
+diff --git a/test/unit/have_received_test.rb b/test/unit/have_received_test.rb
+index de5e4be..d8d0cd3 100644
+--- a/test/unit/have_received_test.rb
++++ b/test/unit/have_received_test.rb
+@@ -131,14 +131,14 @@ module HaveReceivedTestMethods
+     begin
+       yield
+       false
+-    rescue FailedAssertion
++    rescue Minitest::Assertion
+       true
+     end
+   end
+ 
+ end
+ 
+-class PartialHaveReceivedTest < Test::Unit::TestCase
++class PartialHaveReceivedTest < Minitest::Test
+ 
+   include TestRunner
+   include Mocha::API
+@@ -165,7 +165,7 @@ class PartialHaveReceivedTest < Test::Unit::TestCase
+ end
+ 
+ 
+-class PureHaveReceivedTest < Test::Unit::TestCase
++class PureHaveReceivedTest < Minitest::Test
+ 
+   include TestRunner
+   include Mocha::API
+diff --git a/test/unit/invocation_test.rb b/test/unit/invocation_test.rb
+index f97f443..0d17648 100644
+--- a/test/unit/invocation_test.rb
++++ b/test/unit/invocation_test.rb
+@@ -1,7 +1,7 @@
+ require File.join(File.dirname(__FILE__), "..", "test_helper")
+ require 'bourne/invocation'
+ 
+-class InvocationTest < Test::Unit::TestCase
++class InvocationTest < Minitest::Test
+ 
+   include Mocha
+ 
+diff --git a/test/unit/mock_test.rb b/test/unit/mock_test.rb
+index e384c34..2d21732 100644
+--- a/test/unit/mock_test.rb
++++ b/test/unit/mock_test.rb
+@@ -8,22 +8,20 @@ require 'mocha/expectation_error_factory'
+ require 'set'
+ require 'simple_counter'
+ 
+-class MockTest < Test::Unit::TestCase
++class MockTest < Minitest::Test
+ 
+   include Mocha
+ 
+   def test_should_set_single_expectation
+    mock = build_mock
+    mock.expects(:method1).returns(1)
+-   assert_nothing_raised(ExpectationErrorFactory.exception_class) do
+-     assert_equal 1, mock.method1
+-   end
++   assert_equal 1, mock.method1
+   end
+ 
+   def test_should_build_and_store_expectations
+    mock = build_mock
+    expectation = mock.expects(:method1)
+-   assert_not_nil expectation
++   refute_nil expectation
+    assert_equal [expectation], mock.__expectations__.to_a
+   end
+ 
+@@ -40,7 +38,7 @@ class MockTest < Test::Unit::TestCase
+ 
+   def test_should_be_able_to_extend_mock_object_with_module
+     mock = build_mock
+-    assert_nothing_raised(ExpectationErrorFactory.exception_class) { mock.extend(Module.new) }
++    mock.extend(Module.new)
+   end
+ 
+   def test_should_be_equal
+@@ -106,15 +104,13 @@ class MockTest < Test::Unit::TestCase
+     mock = build_mock
+     mock.stub_everything
+     result = nil
+-    assert_nothing_raised(ExpectationErrorFactory.exception_class) do
+-      result = mock.unexpected_method
+-    end
++    result = mock.unexpected_method
+     assert_nil result
+   end
+ 
+   def test_should_raise_assertion_error_for_unexpected_method_call
+     mock = build_mock
+-    error = assert_raise(ExpectationErrorFactory.exception_class) do
++    error = assert_raises(ExpectationErrorFactory.exception_class) do
+       mock.unexpected_method_called(:my_method, :argument1, :argument2)
+     end
+     assert_match(/unexpected invocation/, error.message)
+@@ -278,7 +274,7 @@ class MockTest < Test::Unit::TestCase
+   def test_should_not_raise_no_method_error_if_mock_is_not_restricted_to_respond_like_a_responder
+     mock = build_mock
+     mock.stubs(:invoked_method)
+-    assert_nothing_raised(NoMethodError) { mock.invoked_method }
++    mock.invoked_method
+   end
+ 
+   def test_should_not_raise_no_method_error_if_responder_does_respond_to_invoked_method
+@@ -288,7 +284,7 @@ class MockTest < Test::Unit::TestCase
+     mock = build_mock
+     mock.responds_like(instance)
+     mock.stubs(:invoked_method)
+-    assert_nothing_raised(NoMethodError) { mock.invoked_method }
++    mock.invoked_method
+   end
+ 
+   def test_should_raise_no_method_error_if_responder_does_not_respond_to_invoked_method
+@@ -319,7 +315,7 @@ class MockTest < Test::Unit::TestCase
+ 
+   def test_should_handle_respond_to_with_private_methods_param_without_error
+     mock = build_mock
+-    assert_nothing_raised { mock.respond_to?(:object_id, false) }
++    mock.respond_to?(:object_id, false)
+   end
+ 
+   def test_should_respond_to_any_method_if_stubbing_everything
+diff --git a/test/unit/mockery_test.rb b/test/unit/mockery_test.rb
+index 1e52e21..98c9fa3 100644
+--- a/test/unit/mockery_test.rb
++++ b/test/unit/mockery_test.rb
+@@ -3,13 +3,13 @@ require 'bourne/mockery'
+ require 'mocha/state_machine'
+ require 'bourne/invocation'
+ 
+-class MockeryTest < Test::Unit::TestCase
++class MockeryTest < Minitest::Test
+ 
+   include Mocha
+ 
+   def test_should_build_instance_of_mockery
+     mockery = Mockery.instance
+-    assert_not_nil mockery
++    refute_nil mockery
+     assert_kind_of Mockery, mockery
+   end
+ 
+@@ -23,7 +23,7 @@ class MockeryTest < Test::Unit::TestCase
+     mockery_1 = Mockery.instance
+     Mockery.reset_instance
+     mockery_2 = Mockery.instance
+-    assert_not_same mockery_1, mockery_2
++    refute_same mockery_1, mockery_2
+   end
+ 
+   def test_should_raise_expectation_error_because_not_all_expectations_are_satisfied
+@@ -39,12 +39,12 @@ class MockeryTest < Test::Unit::TestCase
+     mockery = Mockery.new
+     mock = mockery.unnamed_mock { expects(:my_method) }
+     mockery.teardown
+-    assert_nothing_raised(ExpectationErrorFactory.exception_class) { mockery.verify }
++    mockery.verify
+   end
+ 
+   def test_should_build_instance_of_stubba_on_instantiation
+     mockery = Mockery.new
+-    assert_not_nil mockery.stubba
++    refute_nil mockery.stubba
+     assert_kind_of Central, mockery.stubba
+   end
+ 
+@@ -53,7 +53,7 @@ class MockeryTest < Test::Unit::TestCase
+     stubba_1 = mockery.stubba
+     mockery.teardown
+     stubba_2 = mockery.stubba
+-    assert_not_same stubba_1, stubba_2
++    refute_same stubba_1, stubba_2
+   end
+ 
+   def test_should_build_and_store_new_state_machine
