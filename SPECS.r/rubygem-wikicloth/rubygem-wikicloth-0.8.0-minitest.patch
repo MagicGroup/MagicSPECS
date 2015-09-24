@@ -1,0 +1,27 @@
+From 68aecc6c01addbb03086c55c6e35c7baaca678f6 Mon Sep 17 00:00:00 2001
+From: Ken Dreyer <ktdreyer@ktdreyer.com>
+Date: Thu, 10 Jul 2014 17:17:34 -0600
+Subject: [PATCH] tests: switch to minitest
+
+Switch from Test::Unit to Minitest.
+---
+ test/test_helper.rb | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
+
+diff --git a/test/test_helper.rb b/test/test_helper.rb
+index 17e95cc..e096773 100644
+--- a/test/test_helper.rb
++++ b/test/test_helper.rb
+@@ -1,8 +1,7 @@
+ 
+ require 'rubygems'
+-gem "test-unit", ">= 2.0.5"
++require 'minitest/autorun'
+ require 'active_support'
+ require 'active_support/test_case'
+-require 'test/unit'
+ I18n.load_path << File.join(File.dirname(__FILE__),'locales.yml')
+ require File.join(File.dirname(__FILE__),'../init')
+-- 
+1.9.0
+
