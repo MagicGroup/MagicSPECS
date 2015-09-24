@@ -1,0 +1,11 @@
+--- a/ext/v8/context.cc
++++ b/ext/v8/context.cc
+@@ -78,7 +78,7 @@
+ }
+ 
+ VALUE Context::SetData(VALUE self, VALUE data) {
+-  Void(Context(self)->SetData(String(data)));
++  Void(Context(self)->SetData(Value(data)));
+ }
+ 
+ VALUE Context::GetData(VALUE self) {
