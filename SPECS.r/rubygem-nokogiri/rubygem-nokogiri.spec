@@ -3,7 +3,7 @@
 %global        ruby_sitearch           %(ruby -rrbconfig -e "puts Config::CONFIG['sitearchdir']")
 %endif
 
-%global	mainver		1.6.2.1
+%global	mainver		1.6.6.2
 #%%global	prever			.beta.4
 
 %global	mainrel		1
@@ -189,6 +189,7 @@ done
 rm -rf %{buildroot}%{geminstdir}/ext/%{gemname}/
 rm -rf %{buildroot}%{geminstdir}/tmp/
 rm -f %{buildroot}%{geminstdir}/{.autotest,.require_paths,.gemtest,.travis.yml}
+rm -f %{buildroot}%{geminstdir}/.cross_rubies
 rm -f %{buildroot}%{geminstdir}/{build_all,dependencies.yml,test_all}
 rm -f %{buildroot}%{geminstdir}/.editorconfig
 rm -rf %{buildroot}%{geminstdir}/suppressions/
@@ -256,6 +257,30 @@ popd
 %{gemdir}/doc/%{gemname}-%{mainver}%{?prever}/
 
 %changelog
+* Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.6.6.2-1.1
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
+
+* Sun Jan 25 2015 Mamoru TASAKA <mtasaka@fedoraproject.org> - 1.6.6.2-1
+- 1.6.6.2
+
+* Fri Jan 23 2015 Mamoru TASAKA <mtasaka@fedoraproject.org> - 1.6.6.1-1
+- 1.6.6.1
+
+* Thu Jan 15 2015 Mamoru TASAKA <mtasaka@fedoraproject.org> - 1.6.5-2
+- Rebuild for ruby 2.2
+
+* Mon Dec  1 2014 Mamoru TASAKA <mtasaka@fedoraproject.org> - 1.6.5-1
+- 1.6.5
+
+* Fri Nov  7 2014 Mamoru TASAKA <mtasaka@fedoraproject.org> - 1.6.4.1-1
+- 1.6.4.1
+
+* Mon Aug 18 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.6.3.1-1.2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
+
+* Tue Aug 12 2014 Mamoru TASAKA <mtasaka@fedoraproject.org> - 1.6.3.1-1
+- 1.6.3.1
+
 * Sun Jun 08 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.6.2.1-1.1
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 
