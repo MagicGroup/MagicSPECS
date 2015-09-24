@@ -1,0 +1,12 @@
+diff -urp mizuho-0.9.20.orig/lib/mizuho.rb mizuho-0.9.20/lib/mizuho.rb
+--- mizuho-0.9.20.orig/lib/mizuho.rb	2014-03-05 15:42:40.061305747 -0600
++++ mizuho-0.9.20/lib/mizuho.rb	2014-03-05 15:43:20.579353231 -0600
+@@ -23,7 +23,7 @@ module Mizuho
+ 	NATIVELY_PACKAGED = true
+ 
+ 	if NATIVELY_PACKAGED
+-		TEMPLATES_DIR    = "/usr/share/mizuho/templates"
++		TEMPLATES_DIR    = "/usr/share/gems/gems/mizuho-%s/templates" % (VERSION_STRING)
+ 		if File.exist?("/usr/share/mizuho/asciidoc")
+ 			ASCIIDOC = ["/usr/bin/python", "/usr/share/mizuho/asciidoc/asciidoc.py"]
+ 		else
