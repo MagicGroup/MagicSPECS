@@ -21,12 +21,12 @@ if echo "$CLASSPATH" | grep xml-commons-resolver >/dev/null 2>&1 ; then
   # Tune options to use resolver.
   r=org.apache.xml.resolver.tools.ResolvingXMLReader
   for opt in -x -y ; do
-    if ! echo $@ | grep "\\$opt " >/dev/null 2>&1 ; then
+    if ! echo $@ | grep "\\$opt:" >/dev/null 2>&1 ; then
       args="$args $opt:$r"
     fi
   done
   r=org.apache.xml.resolver.tools.CatalogResolver
-  if ! echo $@ | grep "\\-r " >/dev/null 2>&1 ; then
+  if ! echo $@ | grep "\\-r:" >/dev/null 2>&1 ; then
     args="$args -r:$r"
   fi
 fi

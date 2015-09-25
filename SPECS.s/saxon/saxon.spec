@@ -31,7 +31,7 @@
 Summary:        Java XPath, XSLT 2.0 and XQuery implementation
 Name:           saxon
 Version:        9.3.0.4
-Release:        15%{?dist}
+Release:        16%{?dist}
 # net.sf.saxon.om.XMLChar is from ASL-licensed Xerces
 # net/sf/saxon/option/jdom/ is MPLv1.1
 # net/sf/saxon/serialize/codenorm/ is UCD
@@ -115,7 +115,7 @@ unzip -q %{SOURCE6}
 cp -p %{SOURCE3} ./build.xml
 
 # deadNET
-rm -rf net/sf/saxon/dotnet
+rm -rf net/sf/saxon/dotnet samples/cs
 
 # Depends on XQJ (javax.xml.xquery)
 rm -rf net/sf/saxon/xqj
@@ -200,11 +200,15 @@ update-alternatives --install %{_javadir}/jaxp_transform_impl.jar \
 
 
 %changelog
-* Tue Sep 22 2015 Liu Di <liudidi@gmail.com> - 9.3.0.4-15
-- 为 Magic 3.0 重建
+* Fri Jun 19 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 9.3.0.4-16
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 
-* Thu Aug 14 2014 Liu Di <liudidi@gmail.com> - 9.3.0.4-14
-- 为 Magic 3.0 重建
+* Thu Jan 15 2015 Mikolaj Izdebski <mizdebsk@redhat.com> - 9.3.0.4-15
+- Remove C# samples
+
+* Mon Jan 12 2015 Mat Booth <mat.booth@redhat.com> - 9.3.0.4-14
+- Resolves: rhbz#1023753 - Fix script param handling.
+- Update man pages.
 
 * Thu Jun 12 2014 Mikolaj Izdebski <mizdebsk@redhat.com> - 9.3.0.4-13
 - Restore removed Maven alias for net.sf.saxon:saxon::dom:
