@@ -4,7 +4,7 @@
 Summary: Text::Format formats fixed-width text nicely
 Name: rubygem-%{gem_name}
 Version: 1.0.0
-Release: 13%{?dist}
+Release: 14%{?dist}
 Group: Development/Languages
 License: Ruby
 URL: https://github.com/halostatue/text-format
@@ -68,9 +68,13 @@ popd
 %doc %{gem_instdir}/tests
 %exclude %{gem_cache}
 %{gem_spec}
+/usr/share/gems/specifications/text-format-1.0.0.gemspec.orig
 
 
 %changelog
+* Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 1.0.0-14
+- 为 Magic 3.0 重建
+
 * Thu Jul 31 2014 Vít Ondruch <vondruch@redhat.com> - 1.0.0-13
 - Fix FTBFS in Rawhide (rhbz#1107258).
 

@@ -2,7 +2,7 @@
 
 Name:           rubygem-%{gem_name}
 Version:        1.0.5
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        A module that helps implement the facade pattern
 
 Group:          Development/Languages
@@ -48,6 +48,9 @@ popd
 %{gem_spec}
 
 %changelog
+* Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 1.0.5-4
+- 为 Magic 3.0 重建
+
 * Tue Jul 29 2014 Vít Ondruch <vondruch@redhat.com> - 1.0.5-3
 - Fix FTBFS in Rawhide (rhbz#1107107).
 

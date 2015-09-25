@@ -4,7 +4,7 @@
 Name: rubygem-%{gem_name}
 Epoch: 1
 Version: 4.0.0
-Release: 7%{?dist}
+Release: 8%{?dist}
 Summary: REST modeling framework (part of Rails)
 Group: Development/Languages
 License: MIT
@@ -107,6 +107,9 @@ popd
 %doc %{gem_instdir}/README.rdoc
 
 %changelog
+* Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 1:4.0.0-8
+- 为 Magic 3.0 重建
+
 * Tue Jul 14 2015 Vít Ondruch <vondruch@redhat.com> - 1:4.0.0-7
 - Return back the missing epoch from require.
 

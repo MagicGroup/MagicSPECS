@@ -1,7 +1,7 @@
 Name:           jemalloc
 Version:        4.0.0
 
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        General-purpose scalable concurrent malloc implementation
 
 Group:          System Environment/Libraries
@@ -103,6 +103,9 @@ rm -rf %{buildroot}
 %postun -p /sbin/ldconfig
 
 %changelog
+* Fri Sep 25 2015 Liu Di <liudidi@gmail.com> - 4.0.0-2
+- 为 Magic 3.0 重建
+
 * Wed Aug 19 2015 Ingvar Hagelund <ingvar@redpill-linpro.com> - 4.0.0-1
 - New upstream release
 - Removed the no-pprof patch, as jemalloc now comes with its own prof variant

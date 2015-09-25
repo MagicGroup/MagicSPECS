@@ -2,7 +2,7 @@
 
 Name:           rubygem-%{gem_name}
 Version:        1.8.2
-Release:        101%{?dist}
+Release:        102%{?dist}
 
 Summary:        A JSON implementation in Ruby
 
@@ -130,6 +130,9 @@ popd
 
 
 %changelog
+* Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 1.8.2-102
+- 为 Magic 3.0 重建
+
 * Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.8.2-101
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

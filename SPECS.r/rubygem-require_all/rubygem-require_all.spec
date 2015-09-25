@@ -2,7 +2,7 @@
 
 Name:          rubygem-%{gem_name}
 Version:       1.3.2
-Release:       4%{?dist}
+Release:       5%{?dist}
 Summary:       A wonderfully simple way to load your code
 Group:         Development/Languages
 License:       MIT
@@ -85,6 +85,9 @@ popd
 %{gem_instdir}/spec
 
 %changelog
+* Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 1.3.2-5
+- 为 Magic 3.0 重建
+
 * Wed Jul 09 2014 Troy Dawson <tdawson@redhat.com> - 1.3.2-4
 - Minor spec tweaks
 

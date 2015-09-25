@@ -7,7 +7,7 @@
 Summary:    Ruby/EventMachine library
 Name:       rubygem-%{gem_name}
 Version:    1.0.6
-Release:    3%{?dist}
+Release:    4%{?dist}
 Group:      Development/Languages
 License:    GPLv2 or Ruby
 URL:        http://rubyeventmachine.com
@@ -119,6 +119,9 @@ popd
 %{gem_instdir}/tests
 
 %changelog
+* Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 1.0.6-4
+- 为 Magic 3.0 重建
+
 * Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.0.6-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

@@ -12,7 +12,7 @@
 
 Name:           rubygem-%{gem_name}
 Version:        2.6.4
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Universal capture of stdout and stderr and handling of child process pid
 Group:		Development/Libraries
 
@@ -60,6 +60,9 @@ rm -rf %{buildroot}
 %{gem_spec}
 
 %changelog
+* Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 2.6.4-3
+- 为 Magic 3.0 重建
+
 * Sun Jun 08 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.6.4-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

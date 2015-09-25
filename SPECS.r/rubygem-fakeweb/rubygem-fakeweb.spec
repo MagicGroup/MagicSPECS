@@ -4,7 +4,7 @@
 Summary: A tool for faking responses to HTTP requests
 Name: rubygem-%{gem_name}
 Version: 1.3.0
-Release: 15%{?dist}
+Release: 16%{?dist}
 Group: Development/Languages
 License: MIT
 URL: http://github.com/chrisk/fakeweb
@@ -102,6 +102,9 @@ popd
 %{gem_instdir}/Rakefile
 
 %changelog
+* Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 1.3.0-16
+- 为 Magic 3.0 重建
+
 * Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.3.0-15
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

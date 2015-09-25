@@ -5,7 +5,7 @@
 
 Name:          qpid-cpp
 Version:       0.34
-Release:       4%{?dist}
+Release:       5%{?dist}
 Summary:       Libraries for Qpid C++ client applications
 License:       ASL 2.0
 URL:           http://qpid.apache.org
@@ -487,6 +487,9 @@ rm -rf %{buildroot}/usr/local/%{_lib}/ruby/site_ruby
 
 
 %changelog
+* Fri Sep 25 2015 Liu Di <liudidi@gmail.com> - 0.34-5
+- 为 Magic 3.0 重建
+
 * Thu Sep 03 2015 Jonathan Wakely <jwakely@redhat.com> - 0.34-4
 - Rebuilt for Boost 1.59
 

@@ -3,7 +3,7 @@
 Summary: Ruby Acceptance Testing for Web applications
 Name: rubygem-%{gem_name}
 Version: 0.7.3
-Release: 9%{?dist}
+Release: 10%{?dist}
 Group: Development/Languages
 License: MIT
 URL: http://github.com/brynary/webrat
@@ -97,6 +97,9 @@ rm -rf .gemrebuild
 
 
 %changelog
+* Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 0.7.3-10
+- 为 Magic 3.0 重建
+
 * Fri Jun 19 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.7.3-9
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

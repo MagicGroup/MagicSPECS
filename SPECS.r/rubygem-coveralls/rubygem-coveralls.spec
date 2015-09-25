@@ -3,7 +3,7 @@
 Summary:       A Ruby implementation of the Coveralls API
 Name:          rubygem-%{gem_name}
 Version:       0.8.2
-Release:       1%{?dist}
+Release:       2%{?dist}
 Group:         Development/Languages
 License:       MIT
 URL:           https://coveralls.io
@@ -103,6 +103,9 @@ popd
 %{gem_instdir}/spec
 
 %changelog
+* Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 0.8.2-2
+- 为 Magic 3.0 重建
+
 * Mon Jul 27 2015 Troy Dawson <tdawson@redhat.com> - 0.8.2-1
 - Update to 0.8.2
 

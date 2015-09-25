@@ -5,7 +5,7 @@
 Summary:        HTTP Client interface for ruby
 Name:           rubygem-%{gem_name}
 Version:        2.5.1
-Release:        4%{?dist}
+Release:        5%{?dist}
 Group:          Development/Languages
 License:        (Ruby or BSD) and Public Domain
 URL:            https://github.com/nahi/httpclient
@@ -98,6 +98,9 @@ popd
 
 
 %changelog
+* Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 2.5.1-5
+- 为 Magic 3.0 重建
+
 * Tue Jul 21 2015 Troy Dawson <tdawson@redhat.com> - 2.5.1-4
 - Changed check from testrb2 to ruby
 

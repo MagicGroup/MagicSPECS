@@ -9,7 +9,7 @@
 
 Name:           rubygem-%{gem_name}
 Version:        2.1.13
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        AWS SDK for Ruby - Core
 
 Group:          Development/Languages
@@ -132,6 +132,9 @@ popd
 
 
 %changelog
+* Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 2.1.13-2
+- 为 Magic 3.0 重建
+
 * Mon Aug 10 2015 František Dvořák <valtri@civ.zcu.cz> - 2.1.13-1
 - Update to 2.1.13
 - Add NOTICE.txt file

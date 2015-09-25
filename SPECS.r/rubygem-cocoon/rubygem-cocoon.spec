@@ -3,7 +3,7 @@
 
 Name: rubygem-%{gem_name}
 Version: 1.2.6
-Release: 4%{?dist}
+Release: 5%{?dist}
 Summary: Easier nested forms with standard forms, formtastic and simple-form
 Group: Development/Languages
 License: MIT
@@ -103,6 +103,9 @@ sed -i -e '1d' %{buildroot}/%{gem_instdir}/spec/dummy/script/rails
 %{gem_instdir}/%{gem_name}.gemspec
 
 %changelog
+* Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 1.2.6-5
+- 为 Magic 3.0 重建
+
 * Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.2.6-4
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

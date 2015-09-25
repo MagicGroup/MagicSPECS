@@ -3,7 +3,7 @@
 Summary:       OpenShift Express Client Tools
 Name:          rubygem-%{gem_name}
 Version:       1.37.1
-Release:       1%{?dist}
+Release:       2%{?dist}
 Group:         Development/Tools
 License:       MIT
 URL:           https://openshift.redhat.com/app/express
@@ -111,6 +111,9 @@ rm -rf %{buildroot}
 %doc %{gem_docdir}
 
 %changelog
+* Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 1.37.1-2
+- 为 Magic 3.0 重建
+
 * Wed Jul 08 2015 Troy Dawson <tdawson@redhat.com> - 1.37.1-1
 - Updated to version 1.37.1
 

@@ -9,7 +9,7 @@
 Summary:	Ruby binding of GooCanvas
 Name:		rubygem-%{gem_name}
 Version:	2.2.0
-Release:	6%{?dist}
+Release:	7%{?dist}
 Group:		Development/Languages
 # from README
 License:	LGPLv2
@@ -157,6 +157,9 @@ done
 %{gem_instdir}/sample/
 
 %changelog
+* Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 2.2.0-7
+- 为 Magic 3.0 重建
+
 * Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.2.0-6
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

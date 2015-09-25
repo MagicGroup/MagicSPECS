@@ -3,7 +3,7 @@
 Name: 		rubygem-%{gem_name}
 Summary: 	Arrayfields RubyGem
 Version: 	4.7.4
-Release: 	10%{?dist}
+Release: 	11%{?dist}
 Group:		Development/Languages
 License: 	GPLv2+ or Ruby
 URL: 		http://codeforpeople.com/lib/ruby/%{gem_name}/
@@ -61,6 +61,9 @@ rm -rf %{buildroot}
 %{gem_spec}
 
 %changelog
+* Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 4.7.4-11
+- 为 Magic 3.0 重建
+
 * Sun Jun 08 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 4.7.4-10
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

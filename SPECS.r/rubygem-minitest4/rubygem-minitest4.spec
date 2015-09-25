@@ -7,7 +7,7 @@ Summary:	Small and fast replacement for ruby's huge and slow test/unit
 Name:		rubygem-%{gem_name}4
 # With 4.7.5, some test fails, so for now use 4.7.0
 Version:	4.7.0
-Release:	5%{?dist}
+Release:	6%{?dist}
 
 License:	MIT
 URL:		https://github.com/seattlerb/minitest
@@ -91,6 +91,9 @@ done
 %doc	%{gem_docdir}/
 
 %changelog
+* Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 4.7.0-6
+- 为 Magic 3.0 重建
+
 * Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 4.7.0-5
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

@@ -2,7 +2,7 @@
 
 Name: rubygem-%{gem_name}
 Version: 3.2.1
-Release: 2%{?dist}
+Release: 3%{?dist}
 Summary: A Ruby client library for Redis
 Group: Development/Languages
 License: MIT
@@ -114,6 +114,9 @@ cp -a .%{gem_dir}/* \
 %{gem_instdir}/test/
 
 %changelog
+* Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 3.2.1-3
+- 为 Magic 3.0 重建
+
 * Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.2.1-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

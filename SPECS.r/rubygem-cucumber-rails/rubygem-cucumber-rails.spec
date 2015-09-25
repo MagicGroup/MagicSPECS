@@ -2,7 +2,7 @@
 
 Name: rubygem-%{gem_name}
 Version: 1.4.2
-Release: 1%{?dist}
+Release: 2%{?dist}
 Summary: Cucumber Generators and Runtime for Rails
 Group: Development/Languages
 License: MIT
@@ -78,6 +78,9 @@ popd
 %{gem_instdir}/spec
 
 %changelog
+* Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 1.4.2-2
+- 为 Magic 3.0 重建
+
 * Wed Sep 16 2015 Vít Ondruch <vondruch@redhat.com> - 1.4.2-1
 - Update to cucumber-rails 1.4.2.
 

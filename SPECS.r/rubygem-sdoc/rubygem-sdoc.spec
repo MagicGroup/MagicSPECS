@@ -3,7 +3,7 @@
 
 Name: rubygem-%{gem_name}
 Version: 0.4.1
-Release: 3%{?dist}
+Release: 4%{?dist}
 Summary: RDoc generator to build searchable HTML documentation for Ruby code
 Group: Development/Languages
 # License needs to take RDoc and Darkfish into account apparantly
@@ -62,8 +62,8 @@ cp -pa .%{_bindir}/* \
 
 # Install man pages into appropriate place.
 mkdir -p %{buildroot}%{_mandir}/man1
-mv %{SOURCE1} %{buildroot}%{_mandir}/man1
-mv %{SOURCE2} %{buildroot}%{_mandir}/man1
+cp %{SOURCE1} %{buildroot}%{_mandir}/man1
+cp %{SOURCE2} %{buildroot}%{_mandir}/man1
 
 find %{buildroot}%{gem_instdir}/bin -type f | xargs chmod a+x
 find %{buildroot}%{gem_instdir}/lib/rdoc/generator/template -type f | xargs chmod a-x
@@ -102,6 +102,9 @@ popd
 %{gem_instdir}/spec
 
 %changelog
+* Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 0.4.1-4
+- 为 Magic 3.0 重建
+
 * Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.4.1-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

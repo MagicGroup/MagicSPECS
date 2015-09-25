@@ -2,7 +2,7 @@
 
 Name:           rubygem-%{gem_name}
 Version:        2.3.7
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        UUID generator based on RFC 4122
 
 Group:          Development/Languages
@@ -101,6 +101,9 @@ popd
 
 
 %changelog
+* Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 2.3.7-3
+- 为 Magic 3.0 重建
+
 * Fri Jun 19 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.3.7-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

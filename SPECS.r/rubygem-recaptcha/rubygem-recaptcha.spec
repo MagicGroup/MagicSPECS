@@ -2,7 +2,7 @@
 
 Name: rubygem-%{gem_name}
 Version: 0.4.0
-Release: 1%{?dist}
+Release: 2%{?dist}
 Summary: Helpers for the reCAPTCHA API
 Group: Development/Languages
 License: MIT
@@ -75,6 +75,9 @@ popd
 %{gem_instdir}/test
 
 %changelog
+* Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 0.4.0-2
+- 为 Magic 3.0 重建
+
 * Fri Jun 26 2015 Vít Ondruch <vondruch@redhat.com> - 0.4.0-1
 - Update to reCAPTCHA 0.4.0.
 

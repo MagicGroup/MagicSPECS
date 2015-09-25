@@ -3,7 +3,7 @@
 
 Name: rubygem-%{gem_name}
 Version: 0.4.0
-Release: 1%{?dist}
+Release: 2%{?dist}
 Summary: A simple, fast Mysql library for Ruby, binding to libmysql
 Group: Development/Languages
 License: MIT
@@ -89,6 +89,9 @@ rm -rf %{buildroot}%{gem_instdir}/spec
 
 
 %changelog
+* Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 0.4.0-2
+- 为 Magic 3.0 重建
+
 * Tue Sep  8 2015 Miroslav Suchý <msuchy@redhat.com> 0.4.0-1
 - rebase to mysql2-0.4.0
 

@@ -2,7 +2,7 @@
 
 Name: rubygem-%{gem_name}
 Version: 0.1.1
-Release: 4%{?dist}
+Release: 5%{?dist}
 Summary: Abstract types for logic programming
 Group: Development/Languages
 License: MIT
@@ -105,6 +105,9 @@ popd
 %exclude %{gem_instdir}/spec
 
 %changelog
+* Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 0.1.1-5
+- 为 Magic 3.0 重建
+
 * Mon Jul 06 2015 Ken Dreyer <ktdreyer@ktdreyer.com> - 0.1.1-4
 - require rspec-its during tests (rhbz#1239892)
 

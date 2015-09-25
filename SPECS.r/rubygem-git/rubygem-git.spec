@@ -3,7 +3,7 @@
 Summary:        A package for using Git in Ruby code
 Name:           rubygem-%{gem_name}
 Version:        1.2.5
-Release:        9%{?dist}
+Release:        10%{?dist}
 Group:          Development/Languages
 License:        MIT
 URL:            http://rubyforge.org/projects/git/
@@ -41,6 +41,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 1.2.5-10
+- 为 Magic 3.0 重建
+
 * Sun Jun 08 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.2.5-9
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

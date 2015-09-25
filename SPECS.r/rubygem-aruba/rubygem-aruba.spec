@@ -4,7 +4,7 @@
 Summary: CLI Steps for Cucumber, hand-crafted for you in Aruba
 Name: rubygem-%{gem_name}
 Version: 0.6.2
-Release: 2%{?dist}
+Release: 3%{?dist}
 Group: Development/Languages
 # aruba itself is MIT
 # icons in templates/images are CC-BY
@@ -90,6 +90,9 @@ popd
 %{gem_instdir}/templates
 
 %changelog
+* Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 0.6.2-3
+- 为 Magic 3.0 重建
+
 * Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.6.2-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

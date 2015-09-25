@@ -2,7 +2,7 @@
 
 Name:		rubygem-%{gem_name}
 Version:	2.2.5
-Release:	2%{?dist}
+Release:	3%{?dist}
 
 Summary:	Ruby binding of WebKitGTK+ using GTK3
 License:	LGPLv2+
@@ -87,6 +87,9 @@ popd
 %doc	%{gem_instdir}/sample/
 
 %changelog
+* Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 2.2.5-3
+- 为 Magic 3.0 重建
+
 * Fri Jun 19 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.2.5-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

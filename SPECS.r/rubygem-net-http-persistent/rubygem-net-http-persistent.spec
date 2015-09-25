@@ -3,7 +3,7 @@
 Summary:	Persistent connections using Net::HTTP plus a speed fix
 Name:		rubygem-%{gem_name}
 Version:	2.9.4
-Release:	5%{?dist}
+Release:	6%{?dist}
 Group:		Development/Languages
 License:	MIT
 
@@ -94,6 +94,9 @@ popd
 %{gem_docdir}/
 
 %changelog
+* Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 2.9.4-6
+- 为 Magic 3.0 重建
+
 * Tue Jun 30 2015 Mamoru TASAKA <mtasaka@fedoraproject.org> - 2.9.4-5
 - Don't use SSLv3 for test
 

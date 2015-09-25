@@ -3,7 +3,7 @@
 
 Name: rubygem-%{gem_name}
 Version: 0.6.7
-Release: 1%{?dist}
+Release: 2%{?dist}
 Summary: A fake filesystem. Use it in your tests
 Group: Development/Languages
 License: MIT
@@ -73,6 +73,9 @@ popd
 %{gem_instdir}/test
 
 %changelog
+* Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 0.6.7-2
+- 为 Magic 3.0 重建
+
 * Wed Jun 24 2015 Vít Ondruch <vondruch@redhat.com> - 0.6.7-1
 - Update to FakeFS 0.6.7.
 

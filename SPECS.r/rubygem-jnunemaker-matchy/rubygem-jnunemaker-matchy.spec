@@ -3,7 +3,7 @@
 Summary: RSpec-esque matchers for use in Test::Unit
 Name: rubygem-%{gem_name}
 Version: 0.4.0
-Release: 10%{?dist}
+Release: 11%{?dist}
 Group: Development/Languages
 License: MIT
 URL: http://matchy.rubyforge.org
@@ -64,6 +64,9 @@ popd
 
 
 %changelog
+* Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 0.4.0-11
+- 为 Magic 3.0 重建
+
 * Sun Jun 08 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.4.0-10
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

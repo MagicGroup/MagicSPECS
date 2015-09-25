@@ -3,7 +3,7 @@
 
 Name: rubygem-%{gem_name}
 Version: 0.11.2
-Release: 1%{?dist}
+Release: 2%{?dist}
 Summary: Generate rpm specfiles from gems
 Group: Development/Languages
 License: GPLv2+
@@ -78,6 +78,9 @@ popd
 %doc %{gem_instdir}/README.md
 
 %changelog
+* Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 0.11.2-2
+- 为 Magic 3.0 重建
+
 * Mon Aug 17 2015 Vít Ondruch <vondruch@redhat.com> - 0.11.2-1
 - Update to gem2rpm 0.11.2.
 

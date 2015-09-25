@@ -2,7 +2,7 @@
 
 Name: rubygem-%{gem_name}
 Version: 1.0.0
-Release: 3%{?dist}
+Release: 4%{?dist}
 Summary: Powerful, flexible and configurable coercion library
 Group: Development/Languages
 License: MIT
@@ -82,6 +82,9 @@ popd
 %exclude %{gem_instdir}/config
 
 %changelog
+* Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 1.0.0-4
+- 为 Magic 3.0 重建
+
 * Sun Jun 08 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.0.0-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

@@ -2,7 +2,7 @@
 
 Name:           rubygem-%{gem_name}
 Version:        1.4.1
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Utility class for parsing, storing, and comparing versions
 
 License:        MIT
@@ -59,6 +59,9 @@ rspec -Ilib spec
 
 
 %changelog
+* Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 1.4.1-3
+- 为 Magic 3.0 重建
+
 * Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.4.1-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

@@ -2,7 +2,7 @@
 
 Name: rubygem-%{gem_name}
 Version: 0.0.3
-Release: 5%{?dist}
+Release: 6%{?dist}
 Summary: Modify your ENV easily
 Group: Development/Languages
 License: MIT
@@ -89,6 +89,9 @@ popd
 %exclude %{gem_instdir}/spec
 
 %changelog
+* Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 0.0.3-6
+- 为 Magic 3.0 重建
+
 * Wed Jun 11 2014 Ken Dreyer <ktdreyer@ktdreyer.com> - 0.0.3-5
 - Do not BR: simplecov (RHBZ #1083715)
 - Patch tests to make SimpleCov optional

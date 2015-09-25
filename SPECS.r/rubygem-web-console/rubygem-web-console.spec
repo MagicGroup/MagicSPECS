@@ -3,7 +3,7 @@
 
 Name: rubygem-%{gem_name}
 Version: 2.1.3
-Release: 1%{?dist}
+Release: 2%{?dist}
 Summary: A debugging tool for your Ruby on Rails applications
 Group: Development/Languages
 License: MIT
@@ -87,6 +87,9 @@ popd
 %{gem_instdir}/Rakefile
 
 %changelog
+* Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 2.1.3-2
+- 为 Magic 3.0 重建
+
 * Fri Jun 19 2015 Vít Ondruch <vondruch@redhat.com> - 2.1.3-1
 - Update to web-console 2.1.3.
 

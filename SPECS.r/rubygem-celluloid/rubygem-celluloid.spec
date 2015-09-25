@@ -3,7 +3,7 @@
 
 Name: rubygem-%{gem_name}
 Version: 0.16.0
-Release: 1%{?dist}
+Release: 2%{?dist}
 Summary: Actor-based concurrent object framework for Ruby
 Group: Development/Languages
 License: MIT
@@ -77,6 +77,9 @@ popd
 %{gem_instdir}/spec
 
 %changelog
+* Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 0.16.0-2
+- 为 Magic 3.0 重建
+
 * Mon Jun 22 2015 Vít Ondruch <vondruch@redhat.com> - 0.16.0-1
 - Update to Celluloid 0.16.0.
 * Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.15.2-3

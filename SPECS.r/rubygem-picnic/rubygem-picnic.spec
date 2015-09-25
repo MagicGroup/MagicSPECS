@@ -3,7 +3,7 @@
 Summary:	Easier distribution of Camping-based applications
 Name:		rubygem-%{gem_name}
 Version:	0.8.1
-Release:	10%{?dist}
+Release:	11%{?dist}
 Group:		Development/Languages
 License:	LGPLv3
 URL:		http://rubyforge.org/projects/picnic/
@@ -62,6 +62,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 0.8.1-11
+- 为 Magic 3.0 重建
+
 * Sun Jun 08 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.8.1-10
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

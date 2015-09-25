@@ -35,7 +35,7 @@
 Summary:	An HTML, XML, SAX, and Reader parser
 Name:		rubygem-%{gemname}
 Version:	%{mainver}
-Release:	%{?prever:0.}%{mainrel}%{?prever:.%{prerpmver}}%{?dist}.1
+Release:	%{?prever:0.}%{mainrel}%{?prever:.%{prerpmver}}%{?dist}.2
 Group:		Development/Languages
 License:	MIT
 URL:		http://nokogiri.rubyforge.org/nokogiri/
@@ -257,6 +257,9 @@ popd
 %{gemdir}/doc/%{gemname}-%{mainver}%{?prever}/
 
 %changelog
+* Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 1.6.6.2-1.2
+- 为 Magic 3.0 重建
+
 * Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.6.6.2-1.1
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

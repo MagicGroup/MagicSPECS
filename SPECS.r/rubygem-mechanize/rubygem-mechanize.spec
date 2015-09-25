@@ -20,7 +20,7 @@
 Summary:	A handy web browsing ruby object
 Name:		rubygem-%{gem_name}
 Version:	%{majorver}
-Release:	%{?preminorver:0.}%{fedorarel}%{?preminorver:%{rpmminorver}}%{?dist}.1
+Release:	%{?preminorver:0.}%{fedorarel}%{?preminorver:%{rpmminorver}}%{?dist}.2
 Group:		Development/Languages
 License:	MIT
 URL:		http://mechanize.rubyforge.org/
@@ -160,6 +160,9 @@ popd
 %exclude	%{gem_instdir}/test/
 
 %changelog
+* Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 2.7.3-3.2
+- 为 Magic 3.0 重建
+
 * Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.7.3-3.1
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

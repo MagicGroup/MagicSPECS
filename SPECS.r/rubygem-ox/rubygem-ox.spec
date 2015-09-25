@@ -9,7 +9,7 @@
 
 Name:           rubygem-%{gem_name}
 Version:        2.1.8
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        Fast XML parser and object serializer
 
 Group:          Development/Languages
@@ -109,6 +109,9 @@ popd
 
 
 %changelog
+* Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 2.1.8-4
+- 为 Magic 3.0 重建
+
 * Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.1.8-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

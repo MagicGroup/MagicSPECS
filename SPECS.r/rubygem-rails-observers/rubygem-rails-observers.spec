@@ -3,7 +3,7 @@
 
 Name: rubygem-%{gem_name}
 Version: 0.1.2
-Release: 6%{?dist}
+Release: 7%{?dist}
 Summary: Rails observer (removed from core in Rails 4.0)
 Group: Development/Languages
 License: MIT
@@ -90,6 +90,9 @@ popd
 %{gem_instdir}/test
 
 %changelog
+* Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 0.1.2-7
+- 为 Magic 3.0 重建
+
 * Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.1.2-6
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

@@ -3,7 +3,7 @@
 Summary: Deltacloud REST Client
 Name: rubygem-%{gem_name}
 Version: 1.1.2
-Release: 6%{?dist}
+Release: 7%{?dist}
 Group: Development/Languages
 License: ASL 2.0
 URL: http://www.deltacloud.org
@@ -66,6 +66,9 @@ cp -a ./%{gem_dir}/* %{buildroot}%{gem_dir}/
 %{gem_instdir}/NOTICE
 
 %changelog
+* Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 1.1.2-7
+- 为 Magic 3.0 重建
+
 * Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.1.2-6
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

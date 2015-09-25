@@ -2,7 +2,7 @@
 
 Name: rubygem-%{gem_name}
 Version: 1.1.0
-Release: 3%{?dist}
+Release: 4%{?dist}
 Summary: A lock-free logger compatible with Ruby 2.0
 Group: Development/Languages
 License: MIT
@@ -84,6 +84,9 @@ popd
 %exclude %{gem_instdir}/test
 
 %changelog
+* Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 1.1.0-4
+- 为 Magic 3.0 重建
+
 * Fri Jul 11 2014 Ken Dreyer <ktdreyer@ktdreyer.com> - 1.1.0-3
 - Patch for Minitest 5 support (RHBZ #1107169)
 

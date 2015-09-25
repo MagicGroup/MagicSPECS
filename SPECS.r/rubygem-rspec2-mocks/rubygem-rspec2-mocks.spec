@@ -16,7 +16,7 @@
 Summary:	Rspec 2 doubles (mocks and stubs)
 Name:		rubygem-%{rpmgem_name}
 Version:	%{majorver}
-Release:	%{?preminorver:0.}%{fedorarel}%{?preminorver:%{rpmminorver}}%{?dist}
+Release:	%{?preminorver:0.}%{fedorarel}%{?preminorver:%{rpmminorver}}%{?dist}.1
 
 Group:		Development/Languages
 License:	MIT
@@ -89,6 +89,9 @@ ruby -rubygems -Ilib/ -S rspec2 spec/
 %exclude	%{gem_instdir}/spec/
 
 %changelog
+* Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 2.14.6-5.1
+- 为 Magic 3.0 重建
+
 * Tue Jun 30 2015 Mamoru TASAKA <mtasaka@fedoraproject.org> - 2.14.6-5
 - Only test Psych, ::YAML::ENGINE.yamler is no longer supported
 

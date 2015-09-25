@@ -5,7 +5,7 @@ Summary:       A MongoDB driver for Ruby
 Name:          rubygem-%{gem_name}
 Epoch:         1
 Version:       1.5.3
-Release:       1%{?dist}
+Release:       2%{?dist}
 Group:         Development/Languages
 License:       MIT
 URL:           http://mongoid.org/en/moped
@@ -64,6 +64,9 @@ rm -rf %{buildroot}%{gem_instdir}/.yard*
 %doc %{gem_instdir}/README.md
 
 %changelog
+* Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 1:1.5.3-2
+- 为 Magic 3.0 重建
+
 * Wed Jul 01 2015 Troy Dawson <tdawson@redhat.com> - 1.5.3-1
 - Updated to version 1.5.3
 - Security fix for CVE-2015-4411 (#1229708)

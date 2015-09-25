@@ -3,7 +3,7 @@
 Summary: Ruby library for building easy-to-use commandline tools
 Name: rubygem-%{gem_name}
 Version: 1.0.1
-Release: 11%{?dist}
+Release: 12%{?dist}
 Group: Development/Languages
 License: MIT
 URL: http://rubygems.org/gems/cri
@@ -56,6 +56,9 @@ rm -rf %{buildroot}
 %{gem_docdir}
 
 %changelog
+* Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 1.0.1-12
+- 为 Magic 3.0 重建
+
 * Sun Jun 08 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.0.1-11
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

@@ -5,7 +5,7 @@
 Summary: RDoc produces HTML and command-line documentation for Ruby projects
 Name: rubygem-%{gem_name}
 Version: 4.1.1
-Release: 2%{?dist}
+Release: 3%{?dist}
 Group: Development/Languages
 License: GPLv2 and Ruby and MIT
 URL: http://docs.seattlerb.org/rdoc/
@@ -106,6 +106,9 @@ popd
 
 
 %changelog
+* Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 4.1.1-3
+- 为 Magic 3.0 重建
+
 * Tue Jul 08 2014 Vít Ondruch <vondruch@redhat.com> - 4.1.1-2
 - Add missing IRB dependency.
 

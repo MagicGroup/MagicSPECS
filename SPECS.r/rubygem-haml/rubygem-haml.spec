@@ -4,7 +4,7 @@
 Summary: An elegant, structured XHTML/XML templating engine
 Name: rubygem-%{gem_name}
 Version: 4.0.5
-Release: 4%{?dist}
+Release: 5%{?dist}
 Group: Development/Languages
 License: MIT and WTFPL
 URL: http://haml-lang.com/
@@ -99,6 +99,9 @@ find %{buildroot}%{gem_instdir}/bin -type f | xargs chmod a+x
 %{gem_instdir}/test
 
 %changelog
+* Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 4.0.5-5
+- 为 Magic 3.0 重建
+
 * Tue Jun 17 2014 Mo Morsi <mmorsi@redhat.com> - 4.0.5-4
 - Remove old hpricot/ruby_parser (html2haml extracted to seperate gem)
 

@@ -6,7 +6,7 @@
 Summary:	Ruby/GTK3 is a Ruby binding of GTK+-3.x
 Name:		rubygem-%{gem_name}
 Version:	2.2.5
-Release:	1%{?dist}
+Release:	2%{?dist}
 
 Group:		Development/Languages
 # Various files in gem
@@ -168,6 +168,9 @@ popd
 %exclude	%{gem_instdir}/test/
 
 %changelog
+* Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 2.2.5-2
+- 为 Magic 3.0 重建
+
 * Wed Apr 29 2015 Mamoru TASAKA <mtasaka@fedoraproject.org> - 2.2.5-1
 - 2.2.5
 

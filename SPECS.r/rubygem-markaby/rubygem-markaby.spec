@@ -3,7 +3,7 @@
 Summary:        Markup as Ruby, write HTML in your native Ruby tongue
 Name:           rubygem-%{gem_name}
 Version:        0.5
-Release:        12%{?dist}
+Release:        13%{?dist}
 Group:          Development/Languages
 License:        GPLv2+ or Ruby
 URL:            http://markaby.github.com/markaby/
@@ -41,6 +41,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 0.5-13
+- 为 Magic 3.0 重建
+
 * Sun Jun 08 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.5-12
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

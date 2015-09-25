@@ -2,7 +2,7 @@
 
 Name: rubygem-%{gem_name}
 Version: 3.0.1
-Release: 2%{?dist}
+Release: 3%{?dist}
 Summary: A secure, non-evaling end user template engine with aesthetic markup
 Group: Development/Languages
 License: MIT and Ruby
@@ -89,6 +89,9 @@ popd
 %exclude %{gem_instdir}/test
 
 %changelog
+* Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 3.0.1-3
+- 为 Magic 3.0 重建
+
 * Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.0.1-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

@@ -2,7 +2,7 @@
 
 Name:		rubygem-%{gem_name}
 Version:	8.2.1
-Release:	4%{?dist}
+Release:	5%{?dist}
 
 Summary:	Glut bindings for the OpenGL gem
 License:	MIT
@@ -75,6 +75,9 @@ popd
 %doc	%{gem_docdir}
 
 %changelog
+* Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 8.2.1-5
+- 为 Magic 3.0 重建
+
 * Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 8.2.1-4
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

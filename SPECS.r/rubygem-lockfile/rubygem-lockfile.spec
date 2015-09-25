@@ -4,7 +4,7 @@
 Summary: Ruby library for creating NFS safe lockfiles
 Name: rubygem-%{gem_name}
 Version: 1.4.3
-Release: 13%{?dist}
+Release: 14%{?dist}
 Group: Development/Languages
 License: GPLv2 or Ruby
 URL: http://codeforpeople.com/lib/ruby/lockfile/
@@ -74,6 +74,9 @@ rm -f %{buildroot}/%{gem_instdir}/rlock
 %{gem_instdir}/doc
 
 %changelog
+* Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 1.4.3-14
+- 为 Magic 3.0 重建
+
 * Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.4.3-13
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

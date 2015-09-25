@@ -2,7 +2,7 @@
 
 Name: rubygem-%{gem_name}
 Version: 0.2.3
-Release: 3%{?dist}
+Release: 4%{?dist}
 Summary: Provides device type detection based on HTTP request headers
 Group: Development/Languages
 License: ASL 2.0 
@@ -82,6 +82,9 @@ popd
 %{gem_instdir}/%{gem_name}.gemspec
 
 %changelog
+* Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 0.2.3-4
+- 为 Magic 3.0 重建
+
 * Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.2.3-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

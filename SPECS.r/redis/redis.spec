@@ -11,9 +11,10 @@
 %global with_tests   %{?_with_tests:1}%{!?_with_tests:0}
 
 Name:              redis
-Version:           3.0.4
-Release:           1%{?dist}
+Version:	3.0.4
+Release:	1%{?dist}
 Summary:           A persistent key-value database
+Summary(zh_CN.UTF-8): 键-值 数据库
 License:           BSD
 URL:               http://redis.io
 Source0:           http://download.redis.io/releases/%{name}-%{version}.tar.gz
@@ -92,6 +93,9 @@ limited time-to-live, and configuration settings to make Redis behave like
 a cache.
 
 You can use Redis from most programming languages also.
+
+%description -l zh_CN.UTF-8
+这是一个键-值数据库。
 
 %prep
 %setup -q

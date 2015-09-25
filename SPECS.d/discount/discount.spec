@@ -1,10 +1,11 @@
 Name:           discount
-Version:        2.1.8
-Release:        2%{?dist}
+Version:	2.1.8a
+Release:	1%{?dist}
 Summary:        A command-line utility for converting Markdown files into HTML
+Summary(zh_CN.UTF-8): 转换 Markdown 文件到 HTML 的命令行工具
 License:        BSD
 URL:            http://www.pell.portland.or.us/~orc/Code/%{name}
-Source0:        %{url}/%{name}-%{version}.tar.gz
+Source0:        %{url}/%{name}-%{version}.tar.bz2
 Patch0:         discount-ldconfig.patch
 Requires:       libmarkdown%{?_isa} = %{version}-%{release}
 
@@ -13,22 +14,31 @@ DISCOUNT is an implementation of John Gruber's Markdown language in C.
 It includes all of the original Markdown features, along with a few
 extensions, and passes the Markdown test suite.
 
+%description -l zh_CN.UTF-8
+转换 Markdown 文件到 HTML 的命令行工具.
 
 %package -n libmarkdown
 Summary: A fast implementation of the Markdown language in C
+Summary(zh_CN.UTF-8): C 实现的 Markdown 语言
 
 %description -n libmarkdown
 libmarkdown is the library portion of discount, a fast Markdown language
 implementation, written in C.
+%description -n libmarkdown -l zh_CN.UTF-8
+C 实现的 Markdown 语言。
+
 
 
 %package -n libmarkdown-devel
 Summary: Development headers for the libmarkdown library
+Summary(zh_CN.UTF-8): libmarkdown 的开发包
 Requires: libmarkdown%{?_isa} = %{version}-%{release}
 
 %description -n libmarkdown-devel
 This package contains development headers and developer-oriented man pages for
 libmarkdown.
+%description -n libmarkdown-devel -l zh_CN.UTF-8
+libmarkdown 的开发包。
 
 
 %prep
@@ -60,7 +70,7 @@ mv %{buildroot}%{_mandir}/man1/mkd2html.1 \
    %{buildroot}%{_mandir}/man1/discount-mkd2html.1
 mv %{buildroot}%{_mandir}/man1/theme.1 \
    %{buildroot}%{_mandir}/man1/discount-theme.1
-
+magic_rpm_clean.sh
 
 %post -n libmarkdown -p /sbin/ldconfig
 %postun -n libmarkdown -p /sbin/ldconfig
@@ -95,6 +105,9 @@ make test
 
 
 %changelog
+* Fri Sep 25 2015 Liu Di <liudidi@gmail.com> - 2.1.8a-1
+- 更新到 2.1.8a
+
 * Wed Jun 17 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.1.8-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

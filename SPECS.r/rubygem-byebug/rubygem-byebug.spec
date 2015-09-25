@@ -2,7 +2,7 @@
 
 Name:		rubygem-%{gem_name}
 Version:	6.0.2
-Release:	1%{?dist}
+Release:	2%{?dist}
 
 Summary:	Ruby 2.0 fast debugger - base + CLI
 License:	BSD
@@ -121,6 +121,9 @@ popd
 %doc	%{gem_docdir}
 
 %changelog
+* Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 6.0.2-2
+- 为 Magic 3.0 重建
+
 * Sun Sep 13 2015 Mamoru TASAKA <mtasaka@fedoraproject.org> - 6.0.2-1
 - 6.0.2
 

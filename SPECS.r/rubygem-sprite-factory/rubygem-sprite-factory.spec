@@ -3,7 +3,7 @@
 
 Name: rubygem-%{gem_name}
 Version: 1.7
-Release: 1%{?dist}
+Release: 2%{?dist}
 Summary: Automatic CSS sprite generator
 Group: Development/Languages
 License: MIT
@@ -82,6 +82,9 @@ popd
 %{gem_instdir}/sprite_factory.gemspec
 
 %changelog
+* Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 1.7-2
+- 为 Magic 3.0 重建
+
 * Mon Aug 17 2015 Josef Stribny <jstribny@redhat.com> - 1.7-1
 - Update to 1.7
 

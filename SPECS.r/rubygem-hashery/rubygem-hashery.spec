@@ -3,7 +3,7 @@
 Summary: Facets bread collection of Hash-like classes
 Name: rubygem-%{gem_name}
 Version: 2.1.0
-Release: 5%{?dist}
+Release: 6%{?dist}
 Group: Development/Languages
 License: MIT
 URL: http://rubyworks.github.com/hashery
@@ -57,6 +57,9 @@ Documentation for %{name}
 %doc %{gem_instdir}/NOTICE.txt
 
 %changelog
+* Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 2.1.0-6
+- 为 Magic 3.0 重建
+
 * Sun Jun 08 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.1.0-5
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

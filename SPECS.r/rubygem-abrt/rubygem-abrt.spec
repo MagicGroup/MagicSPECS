@@ -6,7 +6,7 @@
 
 Name: rubygem-%{gem_name}
 Version: 0.1.1
-Release: 1%{?dist}
+Release: 2%{?dist}
 Summary: ABRT support for Ruby
 Group: Development/Languages
 License: MIT
@@ -79,6 +79,9 @@ popd
 %{gem_instdir}/Rakefile
 
 %changelog
+* Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 0.1.1-2
+- 为 Magic 3.0 重建
+
 * Tue Sep 01 2015 Vít Ondruch <vondruch@redhat.com> - 0.1.1-1
 - Update to abrt 1.1.0.
 

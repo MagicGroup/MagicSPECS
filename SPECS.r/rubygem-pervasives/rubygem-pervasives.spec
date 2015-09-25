@@ -3,7 +3,7 @@
 Summary:        Access to pristine object state
 Name:           rubygem-%{gem_name}
 Version:        1.1.0
-Release:        13%{?dist}
+Release:        14%{?dist}
 Group:          Development/Languages
 License:        Ruby
 URL:            http://codeforpeople.com/lib/ruby/pervasives/
@@ -46,6 +46,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 1.1.0-14
+- 为 Magic 3.0 重建
+
 * Sun Jun 08 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.1.0-13
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

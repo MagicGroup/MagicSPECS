@@ -3,7 +3,7 @@
 
 Name: rubygem-%{gem_name}
 Version: 0.3.4
-Release: 1%{?dist}
+Release: 2%{?dist}
 Summary: Rails REST API documentation tool
 Group: Development/Languages
 # The project itself is MIT
@@ -111,6 +111,9 @@ popd
 %{gem_instdir}/spec
 
 %changelog
+* Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 0.3.4-2
+- 为 Magic 3.0 重建
+
 * Wed Jul 01 2015 Vít Ondruch <vondruch@redhat.com> - 0.3.4-1
 - Update to apipie-rails 0.3.4.
 

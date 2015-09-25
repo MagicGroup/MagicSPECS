@@ -8,7 +8,7 @@
 Summary:	Ruby binding of poppler-glib
 Name:		rubygem-%{gem_name}
 Version:	2.2.5
-Release:	2%{?dist}
+Release:	3%{?dist}
 Group:		Development/Languages
 # from README
 License:	LGPLv2
@@ -161,6 +161,9 @@ mv test/run-test.rb{.skip_make,}
 %{gem_instdir}/test/
 
 %changelog
+* Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 2.2.5-3
+- 为 Magic 3.0 重建
+
 * Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.2.5-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

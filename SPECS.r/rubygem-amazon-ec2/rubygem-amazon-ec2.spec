@@ -3,7 +3,7 @@
 Summary: Amazon EC2 Ruby Gem
 Name: rubygem-%{gem_name}
 Version: 0.9.15
-Release: 11%{?dist}
+Release: 12%{?dist}
 Group: Development/Languages
 License: GPLv2 or Ruby
 URL: http://github.com/grempe/amazon-ec2
@@ -83,6 +83,9 @@ rm -rf %{buildroot}
 %{gem_docdir}
 
 %changelog
+* Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 0.9.15-12
+- 为 Magic 3.0 重建
+
 * Sun Jun 08 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.9.15-11
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

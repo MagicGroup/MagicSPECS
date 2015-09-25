@@ -3,7 +3,7 @@
 
 Name: rubygem-%{gem_name}
 Version: 0.3.4
-Release: 3%{?dist}
+Release: 4%{?dist}
 Summary: WebSocket protocol handler with pluggable I/O
 Group: Development/Languages
 License: MIT
@@ -91,6 +91,9 @@ popd
 %{gem_instdir}/examples
 
 %changelog
+* Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 0.3.4-4
+- 为 Magic 3.0 重建
+
 * Fri Jun 19 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.3.4-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

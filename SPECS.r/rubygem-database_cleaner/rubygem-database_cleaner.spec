@@ -3,7 +3,7 @@
 
 Name: rubygem-%{gem_name}
 Version: 1.4.1
-Release: 1%{?dist}
+Release: 2%{?dist}
 Summary: Strategies for cleaning databases
 Group: Development/Languages
 License: MIT
@@ -129,6 +129,9 @@ popd
 %{gem_instdir}/spec
 
 %changelog
+* Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 1.4.1-2
+- 为 Magic 3.0 重建
+
 * Mon Jun 22 2015 Vít Ondruch <vondruch@redhat.com> - 1.4.1-1
 - Update to database_cleaner 1.4.1.
 

@@ -6,7 +6,7 @@
 Summary:	Ruby binding of GDK-3.x
 Name:		rubygem-%{gem_name}
 Version:	2.2.5
-Release:	2%{?dist}
+Release:	3%{?dist}
 
 Group:		Development/Languages
 # Various files in gem
@@ -177,6 +177,9 @@ popd
 %exclude	%{gem_instdir}/test/
 
 %changelog
+* Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 2.2.5-3
+- 为 Magic 3.0 重建
+
 * Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.2.5-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

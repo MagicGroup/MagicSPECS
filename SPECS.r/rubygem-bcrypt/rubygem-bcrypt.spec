@@ -3,7 +3,7 @@
 Summary: Wrapper around bcrypt() password hashing algorithm
 Name: rubygem-%{gem_name}
 Version: 3.1.10
-Release: 2%{?dist}
+Release: 3%{?dist}
 Group: Development/Languages
 # ext/* - Public Domain
 # spec/TestBCrypt.java - ISC
@@ -72,6 +72,9 @@ popd
 %{gem_instdir}/spec
 
 %changelog
+* Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 3.1.10-3
+- 为 Magic 3.0 重建
+
 * Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.1.10-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

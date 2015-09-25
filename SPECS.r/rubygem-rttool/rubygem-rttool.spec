@@ -9,7 +9,7 @@
 
 Name:		rubygem-%{gem_name}
 Version:	1.0.3.0
-Release:	5%{?dist}
+Release:	6%{?dist}
 
 Summary:	Converter from RT into various formats
 # See rttool.en.rd
@@ -109,6 +109,9 @@ popd
 %exclude	%{gem_instdir}/test/
 
 %changelog
+* Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 1.0.3.0-6
+- 为 Magic 3.0 重建
+
 * Tue Jun 23 2015 Mamoru TASAKA <mtasaka@fedoraproject.org> - 1.0.3.0-5
 - BR: rubygem(test-unit)
 

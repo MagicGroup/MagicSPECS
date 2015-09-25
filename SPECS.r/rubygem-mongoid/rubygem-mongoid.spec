@@ -3,7 +3,7 @@
 Summary:       Elegant Persistance in Ruby for MongoDB
 Name:          rubygem-%{gem_name}
 Version:       4.0.0
-Release:       3%{?dist}
+Release:       4%{?dist}
 Group:         Development/Languages
 License:       MIT
 URL:           http://mongoid.org
@@ -68,6 +68,9 @@ rm -rf %{buildroot}%{gem_instdir}/.yard*
 %{gem_instdir}/spec
 
 %changelog
+* Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 4.0.0-4
+- 为 Magic 3.0 重建
+
 * Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 4.0.0-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

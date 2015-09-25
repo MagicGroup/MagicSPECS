@@ -2,7 +2,7 @@
 
 Name: rubygem-%{gem_name}
 Version: 0.3.9
-Release: 2%{?dist}
+Release: 3%{?dist}
 Summary: posix_spawnp(2) for Ruby
 Group: Development/Languages
 License: MIT and LGPLv2+
@@ -128,6 +128,9 @@ popd
 %exclude %{gem_instdir}/test
 
 %changelog
+* Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 0.3.9-3
+- 为 Magic 3.0 重建
+
 * Fri Jan 16 2015 Vít Ondruch <vondruch@redhat.com> - 0.3.9-2
 - Rebuilt for https://fedoraproject.org/wiki/Changes/Ruby_2.2
 

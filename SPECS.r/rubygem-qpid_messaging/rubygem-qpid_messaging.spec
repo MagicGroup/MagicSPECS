@@ -4,7 +4,7 @@
 Summary:       Ruby bindings for the Qpid messaging framework
 Name:          rubygem-%{gem_name}
 Version:       %{qpid_version}.1
-Release:       1%{?dist}
+Release:       2%{?dist}
 License:       ASL 2.0
 
 URL:           http://qpid.apache.org
@@ -88,6 +88,9 @@ rm -rf %{buildroot}%{gem_instdir}/ext
 
 
 %changelog
+* Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 0.34.1-2
+- 为 Magic 3.0 重建
+
 * Thu Sep 10 2015 Irina Boverman <iboverma@redhat.com> - 0.34.1-1
 - Rebased to qpid_messaging 0.34
 

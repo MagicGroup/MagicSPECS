@@ -2,7 +2,7 @@
 
 Name: rubygem-%{gem_name}
 Version: 1.2.3
-Release: 1%{?dist}
+Release: 2%{?dist}
 Summary: Simple FastGettext Rails integration
 Group: Development/Languages
 License: MIT
@@ -70,6 +70,9 @@ popd
 %doc %{gem_docdir}
 
 %changelog
+* Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 1.2.3-2
+- 为 Magic 3.0 重建
+
 * Thu Jun 25 2015 Vít Ondruch <vondruch@redhat.com> - 1.2.3-1
 - Update to gettext_i18n_rails 1.2.3.
 

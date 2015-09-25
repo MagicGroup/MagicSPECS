@@ -5,7 +5,7 @@
 Summary: HTTP Caching for Rack
 Name: rubygem-%{gem_name}
 Version: 1.2
-Release: 7%{?dist}
+Release: 8%{?dist}
 Group: Development/Languages
 License: MIT
 # The URL doesn't work.
@@ -76,6 +76,9 @@ popd
 
 
 %changelog
+* Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 1.2-8
+- 为 Magic 3.0 重建
+
 * Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.2-7
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

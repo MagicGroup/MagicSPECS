@@ -3,7 +3,7 @@
 Name:          rubygem-%{gem_name}
 Summary:       A Sass-based CSS Meta-Framework
 Version:       1.0.1
-Release:       3%{?dist}
+Release:       4%{?dist}
 Group:         Development/Languages
 License:       MIT
 URL:           http://compass-style.org
@@ -99,6 +99,9 @@ popd
 
 
 %changelog
+* Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 1.0.1-4
+- 为 Magic 3.0 重建
+
 * Wed Aug 19 2015 Vít Ondruch <vondruch@redhat.com> - 1.0.1-3
 - Drop OSX specific dependency on rb-fsevent (rhbz#1204090).
 

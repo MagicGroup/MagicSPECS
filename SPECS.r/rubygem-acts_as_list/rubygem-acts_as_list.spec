@@ -3,7 +3,7 @@
 
 Name: rubygem-%{gem_name}
 Version: 0.4.0
-Release: 1%{?dist}
+Release: 2%{?dist}
 Summary: A gem allowing a active_record model to act_as_list
 Group: Development/Languages
 License: MIT
@@ -81,5 +81,8 @@ popd
 %{gem_instdir}/%{gem_name}.gemspec
 
 %changelog
+* Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 0.4.0-2
+- 为 Magic 3.0 重建
+
 * Thu Sep 18 2014 Josef Stribny <jstribny@redhat.com> - 0.4.0-1
 - Initial package

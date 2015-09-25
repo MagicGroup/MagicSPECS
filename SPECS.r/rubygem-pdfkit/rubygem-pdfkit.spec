@@ -2,7 +2,7 @@
 
 Name:		rubygem-%{gem_name}
 Version:	0.8.2
-Release:	1%{?dist}
+Release:	2%{?dist}
 
 Summary:	HTML+CSS to PDF using wkhtmltopdf
 License:	MIT
@@ -106,6 +106,9 @@ popd
 %doc	%{gem_docdir}
 
 %changelog
+* Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 0.8.2-2
+- 为 Magic 3.0 重建
+
 * Sun Aug 30 2015 Mamoru TASAKA <mtasaka@fedoraproject.org> - 0.8.2-1
 - 0.8.2
 

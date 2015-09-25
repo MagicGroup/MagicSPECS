@@ -4,7 +4,7 @@
 Summary:       Integrate Compass into Rails 2.3 and up
 Name:          rubygem-%{gem_name}
 Version:       2.0.4
-Release:       1%{?dist}
+Release:       2%{?dist}
 Group:         Development/Languages
 License:       MIT
 URL:           https://github.com/Compass/compass-rails
@@ -92,6 +92,9 @@ chmod 0755 %{buildroot}%{gem_instdir}/Rakefile
 %{gem_instdir}/gemfiles
 
 %changelog
+* Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 2.0.4-2
+- 为 Magic 3.0 重建
+
 * Mon Jul 27 2015 Troy Dawson <tdawson@redhat.com> - 2.0.4-1
 - Update to 2.0.4
 

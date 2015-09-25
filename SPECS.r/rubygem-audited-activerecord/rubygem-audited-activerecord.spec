@@ -3,7 +3,7 @@
 
 Name: rubygem-%{gem_name}
 Version: 4.2.0
-Release: 1%{?dist}
+Release: 2%{?dist}
 Summary: Log all changes to your ActiveRecord models
 Group: Development/Languages
 License: MIT
@@ -70,6 +70,9 @@ popd
 %doc %{gem_docdir}
 
 %changelog
+* Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 4.2.0-2
+- 为 Magic 3.0 重建
+
 * Mon Jun 22 2015 Vít Ondruch <vondruch@redhat.com> - 4.2.0-1
 - Update to audited-activerecord 4.2.0.
 

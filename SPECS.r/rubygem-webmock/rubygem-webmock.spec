@@ -3,7 +3,7 @@
 
 Name: rubygem-%{gem_name}
 Version: 1.21.0
-Release: 1%{?dist}
+Release: 2%{?dist}
 Summary: Library for stubbing HTTP requests in Ruby
 Group: Development/Languages
 License: MIT
@@ -91,6 +91,9 @@ popd
 %{gem_instdir}/webmock.gemspec
 
 %changelog
+* Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 1.21.0-2
+- 为 Magic 3.0 重建
+
 * Tue Sep 01 2015 Vít Ondruch <vondruch@redhat.com> - 1.21.0-1
 - Updated to webmock 1.21.0.
 

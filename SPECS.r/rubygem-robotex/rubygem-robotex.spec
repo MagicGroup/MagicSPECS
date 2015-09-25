@@ -17,7 +17,7 @@
 Summary:    Ruby library to obey robots.txt 
 Name:       rubygem-%{gem_name}
 Version:    1.0.0
-Release:    14%{?dist}
+Release:    15%{?dist}
 License:    MIT 
 Group:      Development/Languages
 URL:        http://www.github.com/chriskite/robotex
@@ -96,6 +96,9 @@ popd
 %{gem_instdir}/spec/
 
 %changelog
+* Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 1.0.0-15
+- 为 Magic 3.0 重建
+
 * Sun Jun 08 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.0.0-14
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

@@ -12,7 +12,7 @@
 Summary:	Rspec-2 expectations (should and matchers) 
 Name:		rubygem-%{gem_name}
 Version:	%{majorver}
-Release:	%{?preminorver:0.}%{fedorarel}%{?preminorver:%{rpmminorver}}%{?dist}
+Release:	%{?preminorver:0.}%{fedorarel}%{?preminorver:%{rpmminorver}}%{?dist}.1
 
 Group:		Development/Languages
 License:	MIT
@@ -85,6 +85,9 @@ popd
 %{gem_docdir}
 
 %changelog
+* Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 3.3.1-2.1
+- 为 Magic 3.0 重建
+
 * Sun Aug  2 2015 Mamoru TASAKA <mtasaka@fedoraproject.org> - 3.3.1-2
 - Enable tests again
 

@@ -3,7 +3,7 @@
 Summary: Fast Implementation of Gruber's Markdown in C
 Name: rubygem-%{gem_name}
 Version: 2.1.7.1
-Release: 8%{?dist}
+Release: 9%{?dist}
 Group: Development/Languages
 License: ASL 1.1
 URL: http://github.com/rtomayko/rdiscount
@@ -163,6 +163,9 @@ popd
 
 
 %changelog
+* Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 2.1.7.1-9
+- 为 Magic 3.0 重建
+
 * Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.1.7.1-8
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

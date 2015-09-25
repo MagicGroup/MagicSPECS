@@ -3,7 +3,7 @@
 
 Name: rubygem-%{gem_name}
 Version: 1.2.2
-Release: 4%{?dist}
+Release: 5%{?dist}
 Summary: Universal Ruby library to handle WebSocket protocol
 Group: Development/Languages
 License: MIT
@@ -74,6 +74,9 @@ popd
 %{gem_instdir}/websocket.gemspec
 
 %changelog
+* Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 1.2.2-5
+- 为 Magic 3.0 重建
+
 * Fri Jun 19 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.2.2-4
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

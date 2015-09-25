@@ -3,7 +3,7 @@
 
 Name: rubygem-%{gem_name}
 Version: 0.9.2
-Release: 1%{?dist}
+Release: 2%{?dist}
 Summary: A simple, fast, memory-efficient and threadsafe implementation of GetText
 Group: Development/Languages
 # fast_gettext is MIT. However the files in lib/vendor directory
@@ -82,6 +82,9 @@ popd
 %doc %{gem_instdir}/CHANGELOG
 
 %changelog
+* Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 0.9.2-2
+- 为 Magic 3.0 重建
+
 * Wed Jun 24 2015 Vít Ondruch <vondruch@redhat.com> - 0.9.2-1
 - Update to fast_gettext 0.9.2.
 

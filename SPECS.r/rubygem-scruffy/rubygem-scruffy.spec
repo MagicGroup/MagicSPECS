@@ -4,7 +4,7 @@
 Summary: A powerful, clean graphing library for Ruby
 Name: rubygem-%{gem_name}
 Version: 0.3.0
-Release: 8.beta1%{?dist}
+Release: 9.beta1%{?dist}
 Group: Development/Languages
 License: MIT
 URL: https://github.com/brasten/scruffy
@@ -70,6 +70,9 @@ popd
 %doc %{gem_dir}/doc/%{gem_name}-%{version}.beta1
 
 %changelog
+* Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 0.3.0-9.beta1
+- 为 Magic 3.0 重建
+
 * Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.3.0-8.beta1
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

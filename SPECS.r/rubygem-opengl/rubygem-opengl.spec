@@ -11,7 +11,7 @@
 
 Name:		rubygem-%{gem_name}
 Version:	0.9.2
-Release:	6%{?dist}
+Release:	7%{?dist}
 
 Summary:	An OpenGL wrapper for Ruby
 Group:	Development/Languages
@@ -179,6 +179,9 @@ popd
 %doc	%{gem_instdir}/utils/
 
 %changelog
+* Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 0.9.2-7
+- 为 Magic 3.0 重建
+
 * Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.9.2-6
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

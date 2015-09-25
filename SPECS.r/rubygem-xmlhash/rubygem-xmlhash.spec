@@ -2,7 +2,7 @@
 
 Name: rubygem-%{gem_name}
 Version: 1.3.6
-Release: 6%{?dist}
+Release: 7%{?dist}
 Summary: A small C module to parse a XML string into a ruby hash
 Group: Development/Languages
 License: MIT
@@ -86,6 +86,9 @@ popd
 %{gem_instdir}/test
 
 %changelog
+* Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 1.3.6-7
+- 为 Magic 3.0 重建
+
 * Fri Jun 19 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.3.6-6
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

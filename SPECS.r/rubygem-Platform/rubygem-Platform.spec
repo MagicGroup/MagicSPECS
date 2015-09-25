@@ -4,7 +4,7 @@
 Summary: Hopefully robust platform sensing
 Name: rubygem-%{gem_name}
 Version: 0.4.0
-Release: 9%{?dist}
+Release: 10%{?dist}
 Group: Development/Languages
 License: LGPLv2+
 URL: http://rubyforge.org/projects/platform/
@@ -55,6 +55,9 @@ cp -a .%{gem_dir}/* \
 
 
 %changelog
+* Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 0.4.0-10
+- 为 Magic 3.0 重建
+
 * Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.4.0-9
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

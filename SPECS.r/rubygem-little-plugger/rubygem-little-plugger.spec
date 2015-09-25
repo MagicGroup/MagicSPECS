@@ -5,7 +5,7 @@
 Summary: LittlePlugger is a module that provides Gem based plugin management
 Name: rubygem-%{gem_name}
 Version: 1.1.3
-Release: 10%{?dist}
+Release: 11%{?dist}
 Group: Development/Languages
 License: MIT
 URL: http://rubygems.org/gems/little-plugger
@@ -69,6 +69,9 @@ popd
 %doc %{gem_instdir}/History.txt
 
 %changelog
+* Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 1.1.3-11
+- 为 Magic 3.0 重建
+
 * Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.1.3-10
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

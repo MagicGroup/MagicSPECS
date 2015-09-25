@@ -4,7 +4,7 @@
 Summary: Ruby String class extension enabling coloring text on ANSI terminals
 Name: rubygem-%{gem_name}
 Version: 2.0.0
-Release: 3%{?dist}
+Release: 4%{?dist}
 Group: Development/Languages
 License: MIT
 URL: http://ku1ik.com/
@@ -76,6 +76,9 @@ popd
 %{gem_instdir}/spec
 
 %changelog
+* Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 2.0.0-4
+- 为 Magic 3.0 重建
+
 * Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.0.0-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

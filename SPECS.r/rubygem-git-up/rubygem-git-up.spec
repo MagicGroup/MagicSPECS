@@ -3,7 +3,7 @@
 
 Name: rubygem-%{gem_name}
 Version: 0.5.12
-Release: 5%{?dist}
+Release: 6%{?dist}
 Summary: git command to fetch and rebase all branches
 
 Group: Development/Languages
@@ -88,6 +88,9 @@ rm -f %{buildroot}%{gem_cache}
 
 
 %changelog
+* Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 0.5.12-6
+- 为 Magic 3.0 重建
+
 * Thu Jul 23 2015 Till Maas <opensource@till.name> - 0.5.12-5
 - Rebuilt for https://fedoraproject.org/wiki/Deprecate_FTBFS_packages
 

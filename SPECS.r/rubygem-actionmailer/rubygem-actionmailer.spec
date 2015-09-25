@@ -5,7 +5,7 @@ Summary: Service layer for easy email delivery and testing
 Name: rubygem-%{gem_name}
 Epoch: 1
 Version: 4.2.4
-Release: 1%{?dist}
+Release: 2%{?dist}
 Group: Development/Languages
 License: MIT
 URL: http://www.rubyonrails.org
@@ -94,6 +94,9 @@ popd
 %{gem_instdir}/test
 
 %changelog
+* Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 1:4.2.4-2
+- 为 Magic 3.0 重建
+
 * Wed Aug 26 2015 Josef Stribny <jstribny@redhat.com> - 1:4.2.4-1
 - Update to actionmailer 4.2.4
 

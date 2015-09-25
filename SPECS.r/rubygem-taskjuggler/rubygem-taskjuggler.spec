@@ -4,7 +4,7 @@
 Summary: A Project Management Software
 Name: rubygem-%{gem_name}
 Version: 3.5.0
-Release: 1%{?dist}
+Release: 2%{?dist}
 Group: Development/Languages
 License: GPLv2
 URL: http://www.taskjuggler.org
@@ -130,6 +130,9 @@ find %{buildroot}%{gem_instdir}/{lib,test,spec} -type f | \
 
 
 %changelog
+* Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 3.5.0-2
+- 为 Magic 3.0 重建
+
 * Tue Jul 29 2014 Vít Ondruch <vondruch@redhat.com> - 3.5.0-1
 - Update to TaskJuggler 3.5.0.
 

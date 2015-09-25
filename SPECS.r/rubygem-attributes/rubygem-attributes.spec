@@ -3,7 +3,7 @@
 Name:		rubygem-%{gem_name}
 Summary: 	Attributes RubyGem
 Version: 	5.0.1
-Release: 	14%{?dist}
+Release: 	15%{?dist}
 Group: 		Development/Languages
 License:	GPLv2+ or Ruby
 URL: 		http://codeforpeople.com/lib/ruby/%{gem_name}/
@@ -44,6 +44,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 5.0.1-15
+- 为 Magic 3.0 重建
+
 * Sun Jun 08 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 5.0.1-14
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

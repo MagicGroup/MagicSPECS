@@ -20,7 +20,7 @@
 Summary: Simple per-request authentication
 Name: rubygem-%{gem_name}
 Version: 1.3.0
-Release: 6%{?dist}
+Release: 7%{?dist}
 Group: Development/Languages
 License: ASL 2.0
 URL: http://github.com/opscode/mixlib-authentication
@@ -100,6 +100,9 @@ popd
 %doc %{gem_docdir}
 
 %changelog
+* Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 1.3.0-7
+- 为 Magic 3.0 重建
+
 * Sun Jun 08 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.3.0-6
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

@@ -3,7 +3,7 @@
 Summary: A parser, schema validator, and data-binding tool for YAML and JSON
 Name: rubygem-%{gem_name}
 Version: 0.7.2
-Release: 10%{?dist}
+Release: 11%{?dist}
 Group: Development/Languages
 License: MIT
 URL: http://www.kuwata-lab.com/kwalify
@@ -60,6 +60,9 @@ gem install --bindir %{buildroot}/%{_bindir} --local --install-dir %{buildroot}%
 %{gem_docdir}
 
 %changelog
+* Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 0.7.2-11
+- 为 Magic 3.0 重建
+
 * Sun Jun 08 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.7.2-10
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

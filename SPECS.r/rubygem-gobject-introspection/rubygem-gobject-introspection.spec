@@ -8,7 +8,7 @@
 Summary:	Ruby binding of GObjectIntrospection
 Name:		rubygem-%{gem_name}
 Version:	2.2.5
-Release:	3%{?dist}
+Release:	4%{?dist}
 
 Group:		Development/Languages
 # lib/gobject-introspection.rb and so on
@@ -152,6 +152,9 @@ popd
 %exclude	%{gem_instdir}/test/
 
 %changelog
+* Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 2.2.5-4
+- 为 Magic 3.0 重建
+
 * Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.2.5-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

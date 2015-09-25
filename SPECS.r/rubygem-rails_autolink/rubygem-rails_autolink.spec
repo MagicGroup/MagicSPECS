@@ -2,7 +2,7 @@
 
 Name: rubygem-%{gem_name}
 Version: 1.1.6
-Release: 1%{?dist}
+Release: 2%{?dist}
 Summary: Automatic generation of HTML links in texts
 Group: Development/Languages
 License: MIT
@@ -84,6 +84,9 @@ popd
 
 
 %changelog
+* Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 1.1.6-2
+- 为 Magic 3.0 重建
+
 * Wed Jun 11 2014 Ken Dreyer <ktdreyer@ktdreyer.com> - 1.1.6-1
 - Drop upstreamed timeout patch
 - Update to 1.1.6 (RHBZ #1106463)

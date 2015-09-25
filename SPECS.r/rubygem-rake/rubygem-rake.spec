@@ -19,7 +19,7 @@ Summary:	Ruby based make-like utility
 Name:		rubygem-%{gem_name}
 
 Version:	%{majorver}
-Release:	%{?preminorver:0.}%{fedorarel}%{?preminorver:%{rpmminorver}}%{?dist}.2
+Release:	%{?preminorver:0.}%{fedorarel}%{?preminorver:%{rpmminorver}}%{?dist}.3
 Group:		Development/Languages
 License:	MIT
 URL:		http://rake.rubyforge.org
@@ -102,6 +102,9 @@ popd
 
 
 %changelog
+* Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 10.0.4-1.3
+- 为 Magic 3.0 重建
+
 * Sun Jun 08 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 10.0.4-1.2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

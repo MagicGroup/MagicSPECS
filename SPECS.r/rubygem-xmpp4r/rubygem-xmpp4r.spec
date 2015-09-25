@@ -3,7 +3,7 @@
 Summary: An XMPP/Jabber library for Ruby
 Name: rubygem-%{gem_name}
 Version: 0.5
-Release: 11%{?dist}
+Release: 12%{?dist}
 Group: Development/Languages
 License: GPL+ or Ruby
 URL: http://home.gna.org/xmpp4r/
@@ -102,6 +102,9 @@ popd
 %{gem_docdir}
 
 %changelog
+* Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 0.5-12
+- 为 Magic 3.0 重建
+
 * Sun Jun 08 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.5-11
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

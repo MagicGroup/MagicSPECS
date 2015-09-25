@@ -6,7 +6,7 @@
 Summary:	Measure image size(GIF, PNG, JPEG ,,, etc)
 Name:		rubygem-%{gem_name}
 Version:	0.1.1
-Release:	15%{?dist}
+Release:	16%{?dist}
 Group:		Development/Languages
 License:	GPLv2 or Ruby
 
@@ -114,6 +114,9 @@ ruby -Ilib -rtest/unit ./test/test_image_size.rb || echo "rescue for now"
 %exclude	%{gem_instdir}/test/
 
 %changelog
+* Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 0.1.1-16
+- 为 Magic 3.0 重建
+
 * Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.1.1-15
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

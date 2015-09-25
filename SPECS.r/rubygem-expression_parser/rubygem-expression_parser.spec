@@ -2,7 +2,7 @@
 
 Name: rubygem-%{gem_name}
 Version: 0.9.0
-Release: 5%{?dist}
+Release: 6%{?dist}
 Summary: A math parser
 Group: Development/Languages
 License: MIT
@@ -73,6 +73,9 @@ popd
 %exclude %{gem_instdir}/parser_spec.rb
 
 %changelog
+* Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 0.9.0-6
+- 为 Magic 3.0 重建
+
 * Sun Jun 08 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.9.0-5
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

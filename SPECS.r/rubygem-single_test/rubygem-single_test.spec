@@ -12,7 +12,7 @@
 
 Name: %{?scl_prefix}rubygem-%{gem_name}
 Version: 0.6.0
-Release: 7%{?dist}
+Release: 8%{?dist}
 Summary: Rake tasks to invoke single tests/specs with rakish syntax
 Group: Development/Languages
 License: MIT
@@ -99,6 +99,9 @@ done
 %doc %{gem_docdir}
 
 %changelog
+* Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 0.6.0-8
+- 为 Magic 3.0 重建
+
 * Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.6.0-7
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

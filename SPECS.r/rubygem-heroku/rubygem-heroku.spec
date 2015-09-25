@@ -3,7 +3,7 @@
 
 Name: rubygem-%{gem_name}
 Version: 3.41.3
-Release: 1%{?dist}
+Release: 2%{?dist}
 Summary: Client library and CLI to deploy apps on Heroku
 Group: Development/Languages
 License: MIT
@@ -99,6 +99,9 @@ popd
 %{gem_instdir}/spec
 
 %changelog
+* Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 3.41.3-2
+- 为 Magic 3.0 重建
+
 * Thu Aug 20 2015 Vít Ondruch <vondruch@redhat.com> - 3.41.3-1
 - Update to heroku 3.41.3.
 

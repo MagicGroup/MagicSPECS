@@ -2,7 +2,7 @@
 
 Name: rubygem-%{gem_name}
 Version: 0.5.0
-Release: 5%{?dist}
+Release: 6%{?dist}
 Summary: Lightweight markup language
 Group: Development/Languages
 # README.creole says "the same license as Ruby" and "Copyright (c) 2008", so we
@@ -85,6 +85,9 @@ popd
 %exclude %{gem_instdir}/test
 
 %changelog
+* Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 0.5.0-6
+- 为 Magic 3.0 重建
+
 * Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.5.0-5
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

@@ -6,7 +6,7 @@
 
 Name: rubygem-%{gem_name}
 Version: 2.0.1
-Release: 1%{?dist}
+Release: 2%{?dist}
 Summary: Generic interface to multiple Ruby template engines
 Group: Development/Languages
 License: MIT
@@ -108,6 +108,9 @@ popd
 
 
 %changelog
+* Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 2.0.1-2
+- 为 Magic 3.0 重建
+
 * Tue Sep 15 2015 Vít Ondruch <vondruch@redhat.com> - 2.0.1-1
 - Update to tilt 2.0.1.
 

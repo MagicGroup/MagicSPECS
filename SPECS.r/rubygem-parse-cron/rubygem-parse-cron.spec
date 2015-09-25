@@ -2,7 +2,7 @@
 
 Name: rubygem-%{gem_name}
 Version: 0.1.4
-Release: 3%{?dist}
+Release: 4%{?dist}
 Summary: Parses cron expressions and calculates the next occurrence
 Group: Development/Languages
 License: MIT
@@ -72,6 +72,9 @@ popd
 %{gem_instdir}/spec
 
 %changelog
+* Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 0.1.4-4
+- 为 Magic 3.0 重建
+
 * Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.1.4-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

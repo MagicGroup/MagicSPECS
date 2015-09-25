@@ -2,7 +2,7 @@
 
 Name: rubygem-%{gem_name}
 Version: 0.8.0
-Release: 4%{?dist}
+Release: 5%{?dist}
 Summary: Mediawiki parser
 Group: Development/Languages
 License: MIT
@@ -91,6 +91,9 @@ popd
 %{gem_instdir}/sample_documents
 
 %changelog
+* Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 0.8.0-5
+- 为 Magic 3.0 重建
+
 * Fri Jun 19 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.8.0-4
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

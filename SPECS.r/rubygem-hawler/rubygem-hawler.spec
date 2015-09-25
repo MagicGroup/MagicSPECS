@@ -3,7 +3,7 @@
 Summary:        Hawler, the ruby HTTP crawler
 Name:           rubygem-%{gem_name}
 Version:        0.3
-Release:        13%{?dist}
+Release:        14%{?dist}
 Group:          Development/Languages
 License:        BSD
 URL:            http://spoofed.org/files
@@ -85,6 +85,9 @@ rm -rf %{buildroot}
 %{gem_instdir}/test/
 
 %changelog
+* Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 0.3-14
+- 为 Magic 3.0 重建
+
 * Sun Jun 08 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.3-13
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

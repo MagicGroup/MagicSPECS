@@ -2,7 +2,7 @@
 
 Name: rubygem-%{gem_name}
 Version: 2.4.11
-Release: 7%{?dist}
+Release: 8%{?dist}
 Summary: Send your application errors to our hosted service and reclaim your inbox
 Group: Development/Languages
 License: MIT 
@@ -77,6 +77,9 @@ cp -pa .%{gem_dir}/* \
 %{gem_instdir}/Rakefile
 
 %changelog
+* Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 2.4.11-8
+- 为 Magic 3.0 重建
+
 * Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.4.11-7
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

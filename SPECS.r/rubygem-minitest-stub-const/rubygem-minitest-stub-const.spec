@@ -3,7 +3,7 @@
 
 Name: rubygem-%{gem_name}
 Version: 0.1
-Release: 3%{?dist}
+Release: 4%{?dist}
 Summary: Stub constants for the duration of a block in MiniTest
 Group: Development/Languages
 License: MIT
@@ -65,6 +65,9 @@ popd
 %{gem_instdir}/test
 
 %changelog
+* Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 0.1-4
+- 为 Magic 3.0 重建
+
 * Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.1-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

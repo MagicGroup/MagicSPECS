@@ -22,7 +22,7 @@
 Summary:	Rspec 2 expectations (should and matchers) 
 Name:		rubygem-%{rpmgem_name}
 Version:	%{majorver}
-Release:	%{?preminorver:0.}%{fedorarel}%{?preminorver:%{rpmminorver}}%{?dist}
+Release:	%{?preminorver:0.}%{fedorarel}%{?preminorver:%{rpmminorver}}%{?dist}.1
 
 Group:		Development/Languages
 License:	MIT
@@ -102,6 +102,9 @@ popd
 %exclude	%{gem_instdir}/spec/
 
 %changelog
+* Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 2.14.5-8.1
+- 为 Magic 3.0 重建
+
 * Tue Jun 23 2015 Mamoru TASAKA <mtasaka@fedoraproject.org> - 2.14.5-8
 - BR: rubygem(test-unit)
 

@@ -3,7 +3,7 @@
 
 Name:           rubygem-%{gem_name}
 Version:        1.3.3
-Release:        6%{?dist}
+Release:        7%{?dist}
 Summary:        Query JSON structure with a matching language
 
 Group:          Development/Tools
@@ -80,6 +80,9 @@ rspec -Ilib spec
 
 
 %changelog
+* Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 1.3.3-7
+- 为 Magic 3.0 重建
+
 * Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.3.3-6
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

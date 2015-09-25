@@ -4,7 +4,7 @@
 
 Name:		rubygem-%{gem_name}
 Version:	8.2.1
-Release:	6%{?dist}
+Release:	7%{?dist}
 
 Summary:	Glu bindings for the opengl gem
 License:	MIT
@@ -100,6 +100,9 @@ popd
 %doc	%{gem_docdir}
 
 %changelog
+* Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 8.2.1-7
+- 为 Magic 3.0 重建
+
 * Tue Jul  7 2015 Mamoru TASAKA <mtasaka@fedoraproject.org> - 8.2.1-6
 - Disable test on arm for now
 

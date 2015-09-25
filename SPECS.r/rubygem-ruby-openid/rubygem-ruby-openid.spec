@@ -2,7 +2,7 @@
 
 Name: rubygem-%{gem_name}
 Version: 2.7.0
-Release: 2%{?dist}
+Release: 3%{?dist}
 Summary: A library for consuming and serving OpenID identities
 Group: Development/Languages
 # License breakdown:
@@ -110,6 +110,9 @@ popd
 
 
 %changelog
+* Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 2.7.0-3
+- 为 Magic 3.0 重建
+
 * Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.7.0-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

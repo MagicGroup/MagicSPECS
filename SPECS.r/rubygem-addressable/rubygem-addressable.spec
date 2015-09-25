@@ -4,7 +4,7 @@
 Summary: Improved URI/URL Implementation
 Name: rubygem-%{gem_name}
 Version: 2.3.8
-Release: 2%{?dist}
+Release: 3%{?dist}
 Group: Development/Languages
 License: ASL 2.0
 URL: http://addressable.rubyforge.org/
@@ -90,6 +90,9 @@ popd
 %{gem_docdir}
 
 %changelog
+* Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 2.3.8-3
+- 为 Magic 3.0 重建
+
 * Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.3.8-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

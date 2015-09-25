@@ -2,7 +2,7 @@
 
 Name: rubygem-%{gem_name}
 Version: 1.25.2
-Release: 4%{?dist}
+Release: 5%{?dist}
 Summary: A Redis-backed queueing system
 Group: Development/Languages
 License: MIT
@@ -149,6 +149,9 @@ popd
 %exclude %{gem_instdir}/test
 
 %changelog
+* Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 1.25.2-5
+- 为 Magic 3.0 重建
+
 * Sun Jun 08 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.25.2-4
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

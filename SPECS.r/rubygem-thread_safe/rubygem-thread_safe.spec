@@ -3,7 +3,7 @@
 
 Name: rubygem-%{gem_name}
 Version: 0.3.5
-Release: 2%{?dist}
+Release: 3%{?dist}
 Summary: Thread-safe collections and utilities for Ruby
 Group: Development/Languages
 # jsr166e.LondAdder, jsr166e.Striped64, jsr166e.ConcurrentHashMapV8
@@ -96,6 +96,9 @@ ruby -Ilib -e \
 
 
 %changelog
+* Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 0.3.5-3
+- 为 Magic 3.0 重建
+
 * Fri Jun 19 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.3.5-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

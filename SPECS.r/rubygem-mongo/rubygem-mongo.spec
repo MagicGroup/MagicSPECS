@@ -3,7 +3,7 @@
 Summary:       Ruby driver for the MongoDB
 Name:          rubygem-%{gem_name}
 Version:       1.10.2
-Release:       3%{?dist}
+Release:       4%{?dist}
 License:       ASL 2.0
 URL:           http://www.mongodb.org
 Source0:       http://rubygems.org/gems/%{gem_name}-%{version}.gem
@@ -98,6 +98,9 @@ popd
 %{gem_instdir}/Rakefile
 
 %changelog
+* Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 1.10.2-4
+- 为 Magic 3.0 重建
+
 * Mon Jul 27 2015 Troy Dawson <tdawson@redhat.com> - 1.10.2-2
 - Fix tests
 

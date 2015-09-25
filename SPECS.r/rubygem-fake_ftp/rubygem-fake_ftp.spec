@@ -3,7 +3,7 @@
 
 Name: rubygem-%{gem_name}
 Version: 0.1.1
-Release: 3%{?dist}
+Release: 4%{?dist}
 Summary: Creates a fake FTP server for use in testing
 Group: Development/Languages
 License: MIT
@@ -85,6 +85,9 @@ popd
 %doc %{gem_instdir}/CONTRIBUTORS.md
 
 %changelog
+* Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 0.1.1-4
+- 为 Magic 3.0 重建
+
 * Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.1.1-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

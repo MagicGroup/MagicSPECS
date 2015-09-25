@@ -23,7 +23,7 @@
 Summary:       A script which automates a limited set of rubyforge operations
 Name:          rubygem-%{gemname}
 Version:       2.0.4
-Release:       14%{?dist}
+Release:       15%{?dist}
 Group:         Development/Languages
 License:       MIT
 URL:           http://rubyforge.org/projects/codeforpeople
@@ -130,6 +130,9 @@ popd
 
 
 %changelog
+* Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 2.0.4-15
+- 为 Magic 3.0 重建
+
 * Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.0.4-14
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

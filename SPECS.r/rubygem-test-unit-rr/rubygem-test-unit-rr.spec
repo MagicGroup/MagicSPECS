@@ -6,7 +6,7 @@
 Summary:	Test::Unit::RR - RR adapter for Test::Unit
 Name:		rubygem-%{gem_name}
 Version:	1.0.3
-Release:	3%{?dist}
+Release:	4%{?dist}
 Group:		Development/Languages
 # https://github.com/test-unit/test-unit-rr/issues/1
 License:	LGPLv2+
@@ -106,6 +106,9 @@ ruby -Ilib test/run-test.rb
 %exclude	%{gem_instdir}/test/
 
 %changelog
+* Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 1.0.3-4
+- 为 Magic 3.0 重建
+
 * Fri Jun 19 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.0.3-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

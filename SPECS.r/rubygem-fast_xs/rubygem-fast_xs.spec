@@ -2,7 +2,7 @@
 
 Name: rubygem-%{gem_name}
 Version: 0.8.0
-Release: 8%{?dist}
+Release: 9%{?dist}
 Summary: Provides C extensions for escaping text
 Group: Development/Languages
 License: MIT 
@@ -85,6 +85,9 @@ rm -rf %{buildroot}%{gem_instdir}/ext
 %{gem_instdir}/test
 
 %changelog
+* Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 0.8.0-9
+- 为 Magic 3.0 重建
+
 * Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.8.0-8
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

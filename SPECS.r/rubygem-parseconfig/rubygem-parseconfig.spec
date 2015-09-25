@@ -3,7 +3,7 @@
 Summary:        Ruby Configuration File Parser 
 Name:           rubygem-%{gem_name}
 Version:       	1.0.4 
-Release:        2%{?dist}
+Release:        3%{?dist}
 Group:          Development/Languages
 License:        MIT 
 URL:            http://github.com/derks/ruby-parseconfig
@@ -45,6 +45,9 @@ rm -rf %{buildroot}
 %doc %{gem_instdir}/README.md
 
 %changelog
+* Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 1.0.4-3
+- 为 Magic 3.0 重建
+
 * Sun Jun 08 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.0.4-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

@@ -1,7 +1,7 @@
 %global gem_name therubyracer
 
 %global majorver 0.11.0
-%global release 11
+%global release 12
 #%%global preminorver beta5
 %global fullver %{majorver}%{?preminorver}
 
@@ -118,6 +118,9 @@ popd
 %{gem_instdir}/therubyracer.gemspec
 
 %changelog
+* Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 0.11.0-12
+- 为 Magic 3.0 重建
+
 * Fri Jun 19 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.11.0-11
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

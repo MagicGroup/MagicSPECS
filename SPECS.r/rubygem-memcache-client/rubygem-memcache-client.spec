@@ -5,7 +5,7 @@
 Summary: A Ruby library for accessing memcached
 Name: rubygem-%{gem_name}
 Version: 1.8.5
-Release: 10%{?dist}
+Release: 11%{?dist}
 Group: Development/Languages
 License: BSD
 URL: http://github.com/mperham/memcache-client
@@ -60,6 +60,9 @@ popd
 
 
 %changelog
+* Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 1.8.5-11
+- 为 Magic 3.0 重建
+
 * Mon Aug 04 2014 Vít Ondruch <vondruch@redhat.com> - 1.8.5-10
 - Fix FTBFS in Rawhide (rhbz#1107162).
 

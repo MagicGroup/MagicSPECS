@@ -4,7 +4,7 @@
 Summary: Cleaner re-implementation of acts_as_paranoid (ActiveRecord soft-delete plugin)
 Name: rubygem-%{gem_name}
 Version: 2.0.2
-Release: 3%{?dist}
+Release: 4%{?dist}
 Group: Development/Languages
 License: MIT
 URL: http://rubygems.org/gems/paranoia
@@ -81,6 +81,9 @@ popd
 %{gem_instdir}/Gemfile
 
 %changelog
+* Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 2.0.2-4
+- 为 Magic 3.0 重建
+
 * Tue Jul 29 2014 Vít Ondruch <vondruch@redhat.com> - 2.0.2-3
 - Fix FTBFS in Rawhide (hrbz#1107191).
 

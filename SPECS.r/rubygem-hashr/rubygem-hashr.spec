@@ -10,7 +10,7 @@
 Summary: Simple Hash extension to make working with nested hashes
 Name: rubygem-%{gem_name}
 Version: 0.0.22
-Release: 7%{?dist}
+Release: 8%{?dist}
 Group: Development/Languages
 License: MIT
 URL: http://github.com/svenfuchs/hashr
@@ -84,6 +84,9 @@ ruby -Ilib:test -e "Dir.glob './test/*_test.rb', &method(:require)"
 %endif
 
 %changelog
+* Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 0.0.22-8
+- 为 Magic 3.0 重建
+
 * Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.0.22-7
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

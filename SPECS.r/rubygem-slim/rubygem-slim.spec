@@ -4,7 +4,7 @@
 Summary: Slim is a template language
 Name: rubygem-%{gem_name}
 Version: 2.0.2
-Release: 1%{?dist}
+Release: 2%{?dist}
 Group: Development/Languages
 License: MIT
 URL: http://slim-lang.com/
@@ -93,6 +93,9 @@ popd
 %{gem_instdir}/benchmarks/
 
 %changelog
+* Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 2.0.2-2
+- 为 Magic 3.0 重建
+
 * Fri Jun 20 2014 Vít Ondruch <vondruch@redhat.com> - 2.0.2-1
 - Update to Slim 2.0.2.
 

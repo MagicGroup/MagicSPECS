@@ -3,7 +3,7 @@
 Summary:        Allows you to create, list, and modify local hostnames
 Name:           rubygem-%{gem_name}
 Version:        0.3.0
-Release:        8%{?dist}
+Release:        9%{?dist}
 Group:          Development/Languages
 License:        MIT
 URL:            http://github.com/bjeanes/ghost
@@ -77,6 +77,9 @@ find $RPM_BUILD_ROOT%{gem_instdir} -maxdepth 1 -empty -delete
 
 
 %changelog
+* Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 0.3.0-9
+- 为 Magic 3.0 重建
+
 * Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.3.0-8
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

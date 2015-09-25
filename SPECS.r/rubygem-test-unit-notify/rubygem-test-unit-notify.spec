@@ -6,7 +6,7 @@
 Summary:	Test::Unit::Notify - A test result notify extension for Test::Unit
 Name:		rubygem-%{gem_name}
 Version:	1.0.4
-Release:	2%{?dist}
+Release:	3%{?dist}
 Group:		Development/Languages
 # https://github.com/test-unit/test-unit-notify/issues/2
 License:	LGPLv2+ and (LGPLv2+ or GFDL or CC-BY-SA)
@@ -88,6 +88,9 @@ rm -f %{buildroot}%{gem_instdir}/{Gemfile,Rakefile,.yardopts}
 %doc	%{gem_instdir}/screenshot/
 
 %changelog
+* Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 1.0.4-3
+- 为 Magic 3.0 重建
+
 * Fri Jun 19 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.0.4-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

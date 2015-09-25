@@ -4,7 +4,7 @@
 Summary: Makes HTTP fun! Also, makes consuming restful web services dead easy
 Name: rubygem-%{gem_name}
 Version: 0.13.1
-Release: 1%{?dist}
+Release: 2%{?dist}
 Group: Development/Languages
 License: MIT
 URL: http://jnunemaker.github.com/httparty
@@ -89,6 +89,9 @@ popd
 %{gem_instdir}/*.yml
 
 %changelog
+* Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 0.13.1-2
+- 为 Magic 3.0 重建
+
 * Thu Jul 10 2014 Vít Ondruch <vondruch@redhat.com> - 0.13.1-1
 - Update to httparty 0.13.1.
 

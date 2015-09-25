@@ -3,7 +3,7 @@
 Summary:	A command-line issue tracker
 Name:		rubygem-%{gem_name}
 Version:	0.5
-Release:	14%{?dist}
+Release:	15%{?dist}
 Group:		Applications/Productivity
 License:	GPLv3+ with exceptions
 URL:		http://ditz.rubyforge.org/
@@ -84,6 +84,9 @@ rm -rf %{buildroot}
 %{_mandir}/man1/*
 
 %changelog
+* Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 0.5-15
+- 为 Magic 3.0 重建
+
 * Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.5-14
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

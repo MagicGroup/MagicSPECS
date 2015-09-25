@@ -4,7 +4,7 @@
 
 Name:           rubygem-%{gem_name}
 Version:        0.4.3
-Release:        6%{?dist}
+Release:        7%{?dist}
 Summary:        Dynect REST API library
 
 Group:          Development/Languages
@@ -14,13 +14,8 @@ URL:            http://github.com/adamhjk/dynect_rest
 Source0:        http://rubygems.org/gems/%{gem_name}-%{version}.gem
 
 BuildArch:      noarch
-%if 0%{?fedora} >= 19
 Requires: ruby(release)
 BuildRequires: ruby(release)
-%else
-Requires: ruby(abi) >= %{rubyabi}
-BuildRequires: ruby(abi) >= %{rubyabi}
-%endif
 BuildRequires:  rubygems-devel
 BuildRequires:  ruby
 Requires:       ruby(rubygems)
@@ -91,6 +86,9 @@ rm -f %{buildroot}%{gem_instdir}/.rspec
 %doc %{gem_instdir}/VERSION
 
 %changelog
+* Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 0.4.3-7
+- 为 Magic 3.0 重建
+
 * Sun Aug 04 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.4.3-6
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
 

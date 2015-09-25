@@ -3,7 +3,7 @@
 Summary: Framework and DSL for defining and using model instance factories
 Name: rubygem-%{gem_name}
 Version: 2.3.2
-Release: 9%{?dist}
+Release: 10%{?dist}
 Group: Development/Languages
 License: MIT
 URL: http://thoughtbot.com/projects/factory_girl
@@ -77,6 +77,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 2.3.2-10
+- 为 Magic 3.0 重建
+
 * Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.3.2-9
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

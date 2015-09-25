@@ -4,7 +4,7 @@
 Summary:       Most awesome pagination solution for Rails
 Name:          rubygem-%{gem_name}
 Version:       3.0.7
-Release:       1%{?dist}
+Release:       2%{?dist}
 Group:         Development/Languages
 License:       MIT
 URL:           http://github.com/mislav/will_paginate
@@ -59,6 +59,9 @@ popd
 
 
 %changelog
+* Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 3.0.7-2
+- 为 Magic 3.0 重建
+
 * Mon Jul 07 2014 Vít Ondruch <vondruch@redhat.com> - 3.0.7-1
 - Update to will_paginate 3.0.7.
 

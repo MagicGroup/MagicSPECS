@@ -2,7 +2,7 @@
 
 Name:           rubygem-%{gem_name}
 Version:        4.3.2
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        OCCI toolkit
 
 Group:          Development/Languages
@@ -100,6 +100,9 @@ popd
 
 
 %changelog
+* Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 4.3.2-3
+- 为 Magic 3.0 重建
+
 * Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 4.3.2-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

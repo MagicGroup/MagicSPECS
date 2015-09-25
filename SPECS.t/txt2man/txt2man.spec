@@ -1,6 +1,6 @@
 Name:           txt2man
 Version:        1.5.6
-Release:        5%{?dist}
+Release:        6%{?dist}
 Summary:        Convert flat ASCII text to man page format
 
 Group:          Applications/Text
@@ -56,6 +56,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 1.5.6-6
+- 为 Magic 3.0 重建
+
 * Fri Jun 19 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.5.6-5
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

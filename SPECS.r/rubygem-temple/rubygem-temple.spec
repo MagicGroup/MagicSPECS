@@ -4,7 +4,7 @@
 Summary: Template compilation framework in Ruby
 Name: rubygem-%{gem_name}
 Version: 0.6.7
-Release: 2%{?dist}
+Release: 3%{?dist}
 Group: Development/Languages
 License: MIT
 URL: https://github.com/judofyr/temple
@@ -68,6 +68,9 @@ popd
 %{gem_instdir}/test
 
 %changelog
+* Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 0.6.7-3
+- 为 Magic 3.0 重建
+
 * Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.6.7-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

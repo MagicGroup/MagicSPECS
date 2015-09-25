@@ -4,7 +4,7 @@
 Summary: Library that implements weak, soft, and strong references in Ruby
 Name: rubygem-%{gem_name}
 Version: 1.0.5
-Release: 2%{?dist}
+Release: 3%{?dist}
 Group: Development/Languages
 License: MIT
 URL: http://github.com/bdurand/ref
@@ -80,6 +80,9 @@ popd
 %exclude %{gem_instdir}/test/*.rbc
 
 %changelog
+* Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 1.0.5-3
+- 为 Magic 3.0 重建
+
 * Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.0.5-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

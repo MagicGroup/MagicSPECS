@@ -4,7 +4,7 @@
 Summary: Pretty print Ruby objects with proper indentation and colors
 Name: rubygem-%{gem_name}
 Version: 1.0.2
-Release: 11%{?dist}
+Release: 12%{?dist}
 Group: Development/Languages
 License: MIT
 URL: http://github.com/michaeldv/awesome_print
@@ -81,6 +81,9 @@ chmod -x %{buildroot}%{gem_dir}/gems/%{gem_name}-%{version}/lib/awesome_print.rb
 %{gem_instdir}/Rakefile
 
 %changelog
+* Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 1.0.2-12
+- 为 Magic 3.0 重建
+
 * Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.0.2-11
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

@@ -3,7 +3,7 @@
 Summary:        Helper class for cross-platform launching of applications
 Name:           rubygem-%{gem_name}
 Version:        0.4.0
-Release:        8%{?dist}
+Release:        9%{?dist}
 Group:          Development/Languages
 License:        BSD
 URL:            http://copiousfreetime.rubyforge.org/launchy/
@@ -64,6 +64,9 @@ popd
 
 
 %changelog
+* Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 0.4.0-9
+- 为 Magic 3.0 重建
+
 * Sun Jun 08 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.4.0-8
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

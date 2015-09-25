@@ -3,7 +3,7 @@
 
 Name: rubygem-%{gem_name}
 Version: 4.0.1
-Release: 1%{?dist}
+Release: 2%{?dist}
 Summary: Pure Ruby one-shot and periodic timers
 Group: Development/Languages
 License: MIT
@@ -84,6 +84,9 @@ popd
 %{gem_instdir}/timers.gemspec
 
 %changelog
+* Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 4.0.1-2
+- 为 Magic 3.0 重建
+
 * Mon Jun 22 2015 Vít Ondruch <vondruch@redhat.com> - 4.0.1-1
 - Update to timers 4.0.1.
 

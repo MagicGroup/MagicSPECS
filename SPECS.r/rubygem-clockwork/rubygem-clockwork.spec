@@ -3,7 +3,7 @@
 
 Name: rubygem-%{gem_name}
 Version: 0.7.7
-Release: 4%{?dist}
+Release: 5%{?dist}
 Summary: A scheduler process to replace cron
 Group: Development/Languages
 License: MIT
@@ -97,6 +97,9 @@ install -m 0644 %{SOURCE2} %{buildroot}%{gem_instdir}/
 %{gem_instdir}/example.rb
 
 %changelog
+* Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 0.7.7-5
+- 为 Magic 3.0 重建
+
 * Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.7.7-4
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

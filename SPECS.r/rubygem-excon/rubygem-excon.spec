@@ -2,7 +2,7 @@
 
 Name: rubygem-%{gem_name}
 Version: 0.45.1
-Release: 2%{?dist}
+Release: 3%{?dist}
 Summary: Speed, persistence, http(s)
 Group: Development/Languages
 License: MIT
@@ -81,6 +81,9 @@ popd
 
 
 %changelog
+* Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 0.45.1-3
+- 为 Magic 3.0 重建
+
 * Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.45.1-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

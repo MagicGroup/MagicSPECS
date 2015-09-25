@@ -2,7 +2,7 @@
 
 Name: rubygem-%{gem_name}
 Version: 1.6.0
-Release: 2%{?dist}
+Release: 3%{?dist}
 Summary: Adds test spies to mocha
 Group: Development/Languages
 License: MIT
@@ -98,6 +98,9 @@ popd
 %exclude %{gem_instdir}/test
 
 %changelog
+* Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 1.6.0-3
+- 为 Magic 3.0 重建
+
 * Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.6.0-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

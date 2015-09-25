@@ -2,7 +2,7 @@
 
 Name: rubygem-%{gem_name}
 Version: 0.3.2
-Release: 5%{?dist}
+Release: 6%{?dist}
 Summary: Parsing and returning cookies in Ruby
 Group: Development/Languages
 License: BSD	
@@ -73,6 +73,9 @@ cp -pa .%{gem_dir}/* \
 %{gem_instdir}/Rakefile
 
 %changelog
+* Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 0.3.2-6
+- 为 Magic 3.0 重建
+
 
 * Tue Jun 24 2014 Nitesh Narayan Lal <niteshnarayan@fedoraproject.org> - 0.3.2-5
 - Updated to latest upstream release

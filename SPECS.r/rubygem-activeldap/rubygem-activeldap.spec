@@ -8,7 +8,7 @@
 Summary:        Ruby/ActiveLdap is a object-oriented API to LDAP
 Name:           rubygem-%{gem_name}
 Version:        4.0.4
-Release:        2%{?dist}
+Release:        3%{?dist}
 Group:          Development/Languages
 # Overall license: GPLv2+ or Ruby
 # test-unit/: GPLv2 or Ruby
@@ -113,6 +113,9 @@ exit 0
 %{gem_dir}/doc/%{gem_name}-%{version}/
 
 %changelog
+* Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 4.0.4-3
+- 为 Magic 3.0 重建
+
 * Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 4.0.4-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

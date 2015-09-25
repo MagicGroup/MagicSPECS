@@ -3,13 +3,17 @@
 
 Name:           goocanvas2
 Version:        2.0.2
-Release:        5%{?dist}
+Release:        6%{?dist}
 Summary:        A new canvas widget for GTK+ that uses cairo for drawing
+Summary(zh_CN.UTF-8): 使用 cario 绘画的新 canvas 控件
 
 Group:          System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 License:        LGPLv2+
 URL:            http://live.gnome.org/GooCanvas
-Source0:        https://download.gnome.org/sources/goocanvas/2.0/goocanvas-%{version}.tar.xz
+%define majorver %(echo %{version} | awk -F. '{print $1"."$2}')
+
+Source0:        https://download.gnome.org/sources/goocanvas/%{majorver}/goocanvas-%{version}.tar.xz
 
 BuildRequires:  gettext, pkgconfig
 BuildRequires:  gtk3-devel >= 2.91.3
@@ -23,10 +27,14 @@ GooCanvas is a new canvas widget for GTK+ that uses the cairo 2D library for
 drawing. It has a model/view split, and uses interfaces for canvas items and
 views, so you can easily turn any application object into canvas items.
 
+%description -l zh_CN.UTF-8
+使用 cario 绘画的新 canvas 控件。
 
 %package        devel
 Summary:        Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       %{name}%{?isa} = %{version}-%{release}
 Requires:       gobject-introspection-devel
 
@@ -34,6 +42,8 @@ Requires:       gobject-introspection-devel
 The %{name}-devel package contains libraries and header files for
 developing applications that use %{name}.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 %prep
 %setup -q -n goocanvas-%{version}
 
@@ -48,7 +58,8 @@ make %{?_smp_mflags}
 %install
 make install DESTDIR=%buildroot
 find %buildroot -name '*.la' -exec rm -f {} ';'
-%find_lang %{name}
+magic_rpm_clean.sh
+%find_lang %{name} || :
 
 
 %post -p /sbin/ldconfig
@@ -56,7 +67,7 @@ find %buildroot -name '*.la' -exec rm -f {} ';'
 %postun -p /sbin/ldconfig
 
 
-%files  -f %{name}.lang
+%files 
 %doc COPYING README ChangeLog AUTHORS NEWS TODO
 %{_libdir}/*.so.*
 %{_libdir}/girepository-1.0/GooCanvas-2.0.typelib
@@ -69,6 +80,9 @@ find %buildroot -name '*.la' -exec rm -f {} ';'
 %{_datadir}/gir-1.0/GooCanvas-2.0.gir
 
 %changelog
+* Fri Sep 25 2015 Liu Di <liudidi@gmail.com> - 2.0.2-6
+- 为 Magic 3.0 重建
+
 * Wed Jun 17 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.0.2-5
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

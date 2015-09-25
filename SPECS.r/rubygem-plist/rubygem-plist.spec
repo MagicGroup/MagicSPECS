@@ -4,7 +4,7 @@
 
 Name: rubygem-%{gem_name}
 Version: 3.1.0
-Release: 17%{?dist}
+Release: 18%{?dist}
 Summary: All-purpose Property List manipulation library
 Group: Development/Languages
 License: MIT
@@ -74,6 +74,9 @@ popd
 %{gem_instdir}/test
 
 %changelog
+* Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 3.1.0-18
+- 为 Magic 3.0 重建
+
 * Thu Jul 02 2015 Gerd Pokorra <gp@zimt.uni-siegen.de> - 3.1.0-17
 - Regenerate the .spec with up2date version of gem2rpm
 - Cutting off old changelog entries

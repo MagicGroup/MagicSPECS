@@ -20,7 +20,7 @@
 Summary: Ruby mix-in for log functionality
 Name: rubygem-%{gem_name}
 Version: 1.6.0
-Release: 3%{?dist}
+Release: 4%{?dist}
 Group: Development/Languages
 License: ASL 2.0
 URL: http://github.com/opscode/mixlib-log
@@ -98,6 +98,9 @@ popd
 %{gem_instdir}/Rakefile
 
 %changelog
+* Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 1.6.0-4
+- 为 Magic 3.0 重建
+
 * Sun Jun 08 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.6.0-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

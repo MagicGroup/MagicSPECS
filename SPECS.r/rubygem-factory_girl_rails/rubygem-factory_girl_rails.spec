@@ -5,7 +5,7 @@
 Summary: Provides integration between factory_girl and rails 3
 Name: rubygem-%{gem_name}
 Version: 1.4.0
-Release: 9%{?dist}
+Release: 10%{?dist}
 Group: Development/Languages
 License: MIT
 URL: http://github.com/thoughtbot/factory_girl_rails
@@ -80,6 +80,9 @@ rm -rf CONTRIBUTING.md %{gem_name}.gemspec .gitignore .bundle
 
 
 %changelog
+* Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 1.4.0-10
+- 为 Magic 3.0 重建
+
 * Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.4.0-9
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

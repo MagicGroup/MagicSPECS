@@ -2,7 +2,7 @@
 
 Name:		rubygem-%{gem_name}
 Version:	1.0.1
-Release:	3%{?dist}
+Release:	4%{?dist}
 Summary:	Pure-ruby polyfill of MRI 2.1 String#scrub
 
 License:	MIT
@@ -93,6 +93,9 @@ popd
 %doc	%{gem_docdir}
 
 %changelog
+* Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 1.0.1-4
+- 为 Magic 3.0 重建
+
 * Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.0.1-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

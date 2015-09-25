@@ -2,7 +2,7 @@
 
 Name:           rubygem-%{gem_name}
 Version:        2.1.0
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        Set of Rails responders to dry up your application
 
 Group:          Development/Languages
@@ -83,6 +83,9 @@ popd
 
 
 %changelog
+* Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 2.1.0-4
+- 为 Magic 3.0 重建
+
 * Fri Jun 19 2015 František Dvořák <valtri@civ.zcu.cz> - 2.1.0-3
 - Patch to update tests with rails 4.2.1
 - Workaround jruby

@@ -3,7 +3,7 @@
 Summary: Font Metrics Parser for Prawn
 Name: rubygem-%{gem_name}
 Version: 1.4.0
-Release: 1%{?dist}
+Release: 2%{?dist}
 Group: Development/Languages
 License: GPLv2 or GPLv3 or Ruby
 URL: https://github.com/prawnpdf/ttfunk
@@ -60,6 +60,9 @@ mv %{buildroot}%{gem_instdir}/{CHANGELOG,COPYING,GPLv2,GPLv3,LICENSE,README.rdoc
 
 
 %changelog
+* Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 1.4.0-2
+- 为 Magic 3.0 重建
+
 * Thu Jun 18 2015 Miroslav Suchý 1.4.0-1
 - rebase to ttfunk-1.4.0
 

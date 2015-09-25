@@ -2,7 +2,7 @@
 
 Name:           xqc
 Version:        1.0
-Release:        0.9.%{snapshot}%{?dist}
+Release:        0.10.%{snapshot}%{?dist}
 Summary:        C/C++ API for interfacing with XQuery processors
 
 Group:          Development/Libraries
@@ -54,6 +54,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Sep 25 2015 Liu Di <liudidi@gmail.com> - 1.0-0.10.20101120svn7
+- 为 Magic 3.0 重建
+
 * Fri Jun 19 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.0-0.9.20101120svn7
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

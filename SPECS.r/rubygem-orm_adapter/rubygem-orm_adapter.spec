@@ -3,7 +3,7 @@
 
 Name: rubygem-%{gem_name}
 Version: 0.5.0
-Release: 2%{?dist}
+Release: 3%{?dist}
 Summary: Provides a single point of entry for using basic features of ruby ORMs
 Group: Development/Languages
 License: MIT
@@ -78,6 +78,9 @@ popd
 %{gem_instdir}/spec/
 
 %changelog
+* Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 0.5.0-3
+- 为 Magic 3.0 重建
+
 * Sun Jun 08 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.5.0-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

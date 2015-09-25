@@ -4,7 +4,7 @@
 Summary: Extends ruby string class in order to colorize terminal output
 Name: rubygem-%{gem_name}
 Version: 1.2
-Release: 10%{?dist}
+Release: 11%{?dist}
 Group: Development/Languages
 License: MIT
 URL: http://github.com/defunkt/colored
@@ -73,6 +73,9 @@ popd
 %{gem_instdir}/test/
 
 %changelog
+* Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 1.2-11
+- 为 Magic 3.0 重建
+
 * Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.2-10
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

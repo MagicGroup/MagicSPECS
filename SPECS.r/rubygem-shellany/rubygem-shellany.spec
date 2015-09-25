@@ -9,7 +9,7 @@
 
 Name:           rubygem-%{gem_name}
 Version:        0.0.1
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Simple, somewhat portable command capturing
 
 Group:          Development/Languages
@@ -90,5 +90,8 @@ popd
 
 
 %changelog
+* Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 0.0.1-2
+- 为 Magic 3.0 重建
+
 * Tue Aug 11 2015 František Dvořák <valtri@civ.zcu.cz> - 0.0.1-1
 - Initial package

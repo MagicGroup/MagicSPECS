@@ -6,7 +6,7 @@
 Summary:	Wrapper library to bring Unicode Normalization Form support to Ruby/JRuby
 Name:		rubygem-%{gem_name}
 Version:	0.1.4
-Release:	6%{?dist}
+Release:	7%{?dist}
 
 Group:		Development/Languages
 License:	BSD
@@ -113,6 +113,9 @@ popd
 %exclude	%{gem_instdir}/test/
 
 %changelog
+* Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 0.1.4-7
+- 为 Magic 3.0 重建
+
 * Fri Jun 19 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.1.4-6
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

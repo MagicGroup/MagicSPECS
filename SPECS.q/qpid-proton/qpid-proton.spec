@@ -14,23 +14,16 @@
 
 Name:           qpid-proton
 Version:        0.10
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        A high performance, lightweight messaging library
 
 License:        ASL 2.0
 URL:            http://qpid.apache.org/proton/
 
-Source0:        qpid-proton-%{version}/%{name}-%{version}.tar.gz
+Source0:        %{name}-%{version}.tar.gz
 
-%if (0%{?fedora} || 0%{?rhel} == 7)
 BuildRequires:  cmake >= 2.6
 %global cmake_exe %{cmake}
-%endif
-
-%if 0%{?rhel} == 6
-BuildRequires: cmake28
-%global cmake_exe %{cmake28}
-%endif
 
 BuildRequires:  swig
 BuildRequires:  pkgconfig
@@ -115,8 +108,7 @@ BuildArch: noarch
 %files c-devel-doc
 %defattr(-,root,root,-)
 %doc %{proton_datadir}/docs/api-c
-
-
+%{_datadir}/proton-%{version}/docs/tutorial-py/
 
 %package -n python-qpid-proton
 Summary:  Python language bindings for the Qpid Proton messaging framework
@@ -216,6 +208,9 @@ make test
 popd
 
 %changelog
+* Fri Sep 25 2015 Liu Di <liudidi@gmail.com> - 0.10-3
+- 为 Magic 3.0 重建
+
 * Tue Sep  8 2015 Irina Boverman <iboverma@redhat.com> - 0.10-2
 - Added dependency on cyrus-sasl-devel and cyrus-sasl-lib
 - Added 0001-PROTON-974-Accept-a-single-symbol-in-SASL-mechs-fram.patch

@@ -8,7 +8,7 @@
 
 Name: rubygem-%{gem_name}
 Version: 1.8.0
-Release: 1%{?dist}
+Release: 2%{?dist}
 Summary: Fast, pure-Ruby Markdown-superset converter
 
 License:	MIT
@@ -102,6 +102,9 @@ popd
 %doc	%{gem_instdir}/doc/
 
 %changelog
+* Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 1.8.0-2
+- 为 Magic 3.0 重建
+
 * Mon Jul  6 2015 Mamoru TASAKA <mtasaka@fedoraproject.org> - 1.8.0-1
 - 1.8.0
 

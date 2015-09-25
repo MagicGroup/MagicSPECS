@@ -4,7 +4,7 @@
 Summary: Add multipart (file upload) support to Net::HTTP::Post
 Name: rubygem-%{gem_name}
 Version: 0.2.1
-Release: 10%{?dist}
+Release: 11%{?dist}
 Group: Development/Languages
 License: Public Domain
 URL: http://rubyforge.org/projects/multipart
@@ -64,6 +64,9 @@ popd
 
 
 %changelog
+* Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 0.2.1-11
+- 为 Magic 3.0 重建
+
 * Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.2.1-10
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

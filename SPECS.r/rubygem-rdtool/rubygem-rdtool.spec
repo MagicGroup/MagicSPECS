@@ -8,7 +8,7 @@
 
 Name:		rubygem-%{gem_name}
 Version:	0.6.38
-Release:	6%{?dist}
+Release:	7%{?dist}
 
 Summary:	Formatter for RD
 # From README.rd
@@ -113,6 +113,9 @@ popd
 %{gem_instdir}/utils/
 
 %changelog
+* Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 0.6.38-7
+- 为 Magic 3.0 重建
+
 * Tue Jun 23 2015 Mamoru TASAKA <mtasaka@fedoraproject.org> - 0.6.38-6
 - BR: rubygem(test-unit)
 

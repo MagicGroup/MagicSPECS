@@ -4,7 +4,7 @@
 Summary:	Domain Name manipulation library for Ruby
 Name:		rubygem-%{gem_name}
 Version:	0.5.24
-Release:	2%{?dist}
+Release:	3%{?dist}
 
 Group:		Development/Languages
 # See LICENSE.txt
@@ -112,6 +112,9 @@ popd
 %exclude	%{gem_instdir}/data/
 
 %changelog
+* Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 0.5.24-3
+- 为 Magic 3.0 重建
+
 * Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.5.24-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

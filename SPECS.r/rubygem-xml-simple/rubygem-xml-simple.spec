@@ -4,7 +4,7 @@
 Summary: A simple API for XML processing
 Name: rubygem-%{gem_name}
 Version: 1.1.2
-Release: 5%{?dist}
+Release: 6%{?dist}
 Group: Development/Languages
 License: BSD or Ruby
 URL: http://xml-simple.rubyforge.org
@@ -38,6 +38,9 @@ chmod -x %{buildroot}/%{gem_libdir}/xmlsimple.rb
 %{gem_spec}
 
 %changelog
+* Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 1.1.2-6
+- 为 Magic 3.0 重建
+
 * Fri Jun 19 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.1.2-5
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

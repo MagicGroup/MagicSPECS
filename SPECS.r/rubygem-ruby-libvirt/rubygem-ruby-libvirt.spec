@@ -4,7 +4,7 @@
 Summary: Ruby bindings for LIBVIRT
 Name: rubygem-%{gem_name}
 Version: 0.5.2
-Release: 4%{?dist}
+Release: 5%{?dist}
 Group: Development/Languages
 License: LGPLv2+
 URL: http://libvirt.org/ruby/
@@ -79,6 +79,9 @@ popd
 %{gem_instdir}/tests
 
 %changelog
+* Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 0.5.2-5
+- 为 Magic 3.0 重建
+
 * Mon Sep 14 2015 Josef Stribny <jstribny@redhat.com> - 0.5.2-4
 - Add requirement on libvirt-daemon-kvm
 

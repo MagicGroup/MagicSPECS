@@ -6,7 +6,7 @@
 Summary:	Improved version of Test::Unit bundled in Ruby 1.8.x
 Name:		rubygem-%{gem_name}
 Version:	3.1.3
-Release:	100%{?dist}
+Release:	101%{?dist}
 Group:		Development/Languages
 # lib/test/unit/diff.rb is under GPLv2 or Ruby or Python
 # lib/test-unit.rb is under LGPLv2+ or Ruby
@@ -112,6 +112,9 @@ popd
 %{gem_docdir}/
 
 %changelog
+* Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 3.1.3-101
+- 为 Magic 3.0 重建
+
 * Mon Jul 27 2015 Mamoru TASAKA <mtasaka@fedoraproject.org> - 3.1.3-100
 - 3.1.3
 

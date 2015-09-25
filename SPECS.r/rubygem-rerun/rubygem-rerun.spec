@@ -4,7 +4,7 @@
 Summary: Restarts your app when a file changes
 Name: rubygem-%{gem_name}
 Version: 0.10.0
-Release: 3%{?dist}
+Release: 4%{?dist}
 Group: Development/Languages
 License: MIT
 URL: http://github.com/alexch/rerun/
@@ -88,6 +88,9 @@ popd
 
 
 %changelog
+* Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 0.10.0-4
+- 为 Magic 3.0 重建
+
 * Wed Aug 19 2015 Josef Stribny <jstribny@redhat.com> - 0.10.0-3
 - Fix: work with rubygem-listen 3.x
 

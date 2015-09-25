@@ -3,7 +3,7 @@
 
 Name: rubygem-%{gem_name}
 Version: 1.8.0
-Release: 1%{?dist}
+Release: 2%{?dist}
 Summary: Simple HTTP and REST client for Ruby
 Group: Development/Languages
 License: MIT
@@ -84,6 +84,9 @@ popd
 %{gem_instdir}/spec
 
 %changelog
+* Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 1.8.0-2
+- 为 Magic 3.0 重建
+
 * Wed Aug 19 2015 Vít Ondruch <vondruch@redhat.com> - 1.8.0-1
 - Update to rest-client 1.8.0.
 

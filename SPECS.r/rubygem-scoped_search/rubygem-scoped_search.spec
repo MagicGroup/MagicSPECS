@@ -4,7 +4,7 @@ Summary: Easily search your ActiveRecord models
 Name: rubygem-%{gem_name}
 
 Version: 3.2.2
-Release: 1%{?dist}
+Release: 2%{?dist}
 Group: Development/Languages
 License: MIT
 URL: http://github.com/wvanbergen/scoped_search/wiki
@@ -100,6 +100,9 @@ popd
 %{gem_instdir}/%{gem_name}.gemspec
 
 %changelog
+* Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 3.2.2-2
+- 为 Magic 3.0 重建
+
 * Tue Jul 28 2015 Dominic Cleal <dcleal@redhat.com> - 3.2.2-1
 - rebase to scoped_search 3.2.2
 

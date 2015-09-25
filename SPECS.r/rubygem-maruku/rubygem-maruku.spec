@@ -2,7 +2,7 @@
 
 Name: rubygem-%{gem_name}
 Version: 0.7.2
-Release: 1%{?dist}
+Release: 2%{?dist}
 Summary: Maruku is a Markdown-superset interpreter written in Ruby
 Group: Development/Languages
 # lib/maruku/ext/fenced_code.rb - BSD
@@ -76,6 +76,9 @@ popd
 %{gem_instdir}/spec
 
 %changelog
+* Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 0.7.2-2
+- 为 Magic 3.0 重建
+
 * Tue Sep 15 2015 Vít Ondruch <vondruch@redhat.com> - 0.7.2-1
 - Update to Maruku 0.7.2.
 

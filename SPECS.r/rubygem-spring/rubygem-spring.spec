@@ -2,7 +2,7 @@
 
 Name: rubygem-%{gem_name}
 Version: 1.3.6
-Release: 2%{?dist}
+Release: 3%{?dist}
 Summary: Rails application preloader
 Group: Development/Languages
 License: MIT
@@ -86,6 +86,9 @@ popd
 %doc %{gem_instdir}/README.md
 
 %changelog
+* Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 1.3.6-3
+- 为 Magic 3.0 重建
+
 * Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.3.6-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

@@ -3,7 +3,7 @@
 Summary: A simple, flexible, extensible, and liberal RSS and Atom reader for Ruby
 Name: rubygem-%{gem_name}
 Version: 1.2.3
-Release: 9%{?dist}
+Release: 10%{?dist}
 Group: Development/Languages
 License: LGPLv2+
 URL: http://rubyforge.org/projects/simple-rss
@@ -48,6 +48,9 @@ cd %{buildroot}%{gem_instdir}
 
 
 %changelog
+* Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 1.2.3-10
+- 为 Magic 3.0 重建
+
 * Sun Jun 08 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.2.3-9
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

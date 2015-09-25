@@ -3,7 +3,7 @@
 Name:           rubygem-%{gem_name}
 Summary:        The single most extensive additions and extensions library available for Ruby
 Version:        2.8.0
-Release:        9%{?dist}
+Release:        10%{?dist}
 Group:          Development/Languages
 License:        Ruby
 URL:            http://rubyforge.org/projects/facets/
@@ -76,6 +76,9 @@ popd
 %{gem_spec}
 
 %changelog
+* Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 2.8.0-10
+- 为 Magic 3.0 重建
+
 * Sun Jun 08 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.8.0-9
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

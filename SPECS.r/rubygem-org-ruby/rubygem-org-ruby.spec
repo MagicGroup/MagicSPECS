@@ -2,7 +2,7 @@
 
 Name: rubygem-%{gem_name}
 Version: 0.9.12
-Release: 1%{?dist}
+Release: 2%{?dist}
 Summary: Ruby routines for parsing org-mode files
 Group: Development/Languages
 License: MIT
@@ -108,6 +108,9 @@ popd
 %doc %{gem_instdir}/History.org
 
 %changelog
+* Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 0.9.12-2
+- 为 Magic 3.0 重建
+
 * Fri Jan 02 2015 Ken Dreyer <ktdreyer@ktdreyer.com> - 0.9.12-1
 - Update to org-mode 0.9.12 (RHBZ #1176963)
 - rm superfluous "-p" flags to cp during %%install

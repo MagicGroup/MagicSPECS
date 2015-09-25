@@ -10,7 +10,7 @@
 
 Name:		rubygem-%{gem_name}
 Version:	%{mainver}
-Release:	%{?prever:0.}%{mainrel}%{?prever:.%{prerpmver}}%{?dist}
+Release:	%{?prever:0.}%{mainrel}%{?prever:.%{prerpmver}}%{?dist}.1
 
 Summary:	Common functionality to Rspec series
 Group:		Development/Languages
@@ -94,6 +94,9 @@ popd
 %doc	%{gem_docdir}
 
 %changelog
+* Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 3.3.0-2.1
+- 为 Magic 3.0 重建
+
 * Sun Aug  2 2015 Mamoru TASAKA <mtasaka@fedoraproject.org> - 3.3.0-2
 - Enable tests again
 
