@@ -1,42 +1,109 @@
+#if !0%{?fedora}%{?rhel} || 0%{?fedora} >= 17 || 0%{?rhel} >= 7
+#global needs_multilib_quirk 0
+#else
+# let -devel require drivers to make them available as multilib
+%global needs_multilib_quirk 1
+#endif
+
+%if !0%{?fedora}%{?rhel} || 0%{?fedora} >= 16 || 0%{?rhel} >= 7
+%global _hardened_build 1
+%endif
+
+%if !0%{?fedora}%{?rhel} || 0%{?fedora} >= 17 || 0%{?rhel} >= 7
+%global udevdir %{_prefix}/lib/udev
+%else
+%global udevdir /lib/udev
+%endif
+%global udevrulesdir %{udevdir}/rules.d
+%global udevhwdbdir %{udevdir}/hwdb.d
+
+%if !0%{?fedora}%{?rhel} || 0%{?fedora} >= 18 || 0%{?rhel} >= 7
+%global libusb1 1
+%else
+%global libusb1 0
+%endif
+
+%define __provides_exclude_from ^%{_libdir}/sane/.*\.so.*$
+%define __requires_exclude ^libsane-.*\.so\.[0-9]*(\(\).*)?+$
+
+%if ! 0%{?fedora}%{?rhel} || 0%{?fedora} >= 20 || 0%{?rhel} >= 8
+%define _maindocdir %{_docdir}/%{name}
+%define _docdocdir %{_docdir}/%{name}-doc
+%else
+%define _maindocdir %{_docdir}/%{name}-%{version}
+%define _docdocdir %{_docdir}/%{name}-doc-%{version}
+%endif
+
 Summary: Scanner access software
 Name: sane-backends
-Version: 1.0.22
-Release: 8%{?dist}
+Version: 1.0.24
+Release: 15%{?dist}
 # lib/ is LGPLv2+, backends are GPLv2+ with exceptions
 # Tools are GPLv2+, docs are public domain
 # see LICENSE for details
 License: GPLv2+ and GPLv2+ with exceptions and Public Domain
 Group: System Environment/Libraries
-Source0: ftp://ftp.sane-project.org/pub/sane/%{name}-%{version}/%{name}-%{version}.tar.gz
+# Alioth Download URLs are amazing.
+Source0: https://alioth.debian.org/frs/download.php/latestfile/176/sane-backends-%{version}.tar.gz
 Source1: sane.png
-# Upstreamed at: https://alioth.debian.org/tracker/index.php?func=detail&aid=313038
-Patch0: sane-backends-1.0.22-pkgconfig.patch
+
 # Fedora-specific, not generally applicable:
-Patch1: sane-backends-1.0.22-udev.patch
-# Upstreamed at: https://alioth.debian.org/tracker/index.php?func=detail&aid=313039
-Patch2: sane-backends-1.0.22-man-encoding.patch
-# Upstreamed at: https://alioth.debian.org/tracker/index.php?func=detail&aid=313040
-Patch3: sane-backends-1.0.21-epson-expression800.patch
-# Upstreamed at: https://alioth.debian.org/tracker/index.php?func=detail&aid=313042
-Patch4: sane-backends-1.0.22-docs-utf8.patch
-# Upstreamed at: https://alioth.debian.org/tracker/index.php?func=detail&aid=313043
-Patch5: sane-backends-1.0.21-SCX4500W.patch
-# backported from upstream c5ca46c2d1be78c651afb843cc834cf2b5b24953
-Patch6: sane-backends-1.0.22-v4l.patch
-# backported from upstream 5ea227caeacd504b64eef301e83fa63e0a25b3f7
-Patch7: sane-backends-1.0.22-xerox_mfp-fix-usb-devices.patch
+Patch0: sane-backends-1.0.24-udev.patch
+# Upstream commit b491261f0c0f6df47d1e4859cde88448f98718dd
+Patch1: sane-backends-1.0.21-epson-expression800.patch
+# Fedora-specific (for now): don't use the same SONAME for backend libs and
+# main lib
+Patch2: sane-backends-1.0.23-soname.patch
+# Fedora-specific (for now): make installed sane-config multi-lib aware again
+Patch3: sane-backends-1.0.23-sane-config-multilib.patch
+# Upstream commit 3b96baef65ea6c315937f5cd2253c6b6c62636d8
+Patch4: sane-backends-1.0.24-hwdb.patch
+# Upstream commit d35d6326cb00fcbb19b41599bdff7faf5d79225e
+Patch5: sane-backends-1.0.24-pixma_bjnp-crash.patch
+# Upstream commit 252ccdd926bb28bd6064da7b652e646664226572
+# Upstream commit 66cb9b55c2e60503d537d7ed927f5a5aef3658d2
+# Upstream commit cf9129d62fe7e84479e8daf6018cd2495d53bcc9
+# Upstream commit 575f40a0790bb5e20ffd7ccae1c9272e481bbe51
+# Upstream commit b53a58c4b534b9e6897c1b0a6301d2bf76dc3499
+# Upstream commit 101f76c516cd42cafe9e142aefe751094a125e73
+# Upstream commit 2d89e37f365cb8e54ee44aa686a62320e2837b50
+# Upstream commit a3fe2c1ea5b4f6b1e55435f6abc44f402ff32b4d
+# Upstream commit 602d6ecdfe5f3146867799fabf3ac87582c26461
+# Upstream commit 5d7f7ffefb22e7e64789e97af0356b7859d61814
+# Upstream commit dc76e7cce464f04e46aab2bb0c269b4742161c59
+# Upstream commit d835d9d565118d52c2339c2e79890f57d0616077
+Patch6: sane-backends-1.0.24-static-code-check.patch
+# Upstream commit 758731489d0d58bab6e4b70db9556038c9f4bb67
+Patch7: sane-backends-1.0.24-scsi-permissions.patch
+# Upstream commit 8082a42ec4f3b3cf2cffc30a45dda5fc41d55576
+Patch8: sane-backends-1.0.24-format-security.patch
+# Update lib/snprintf.c to latest from LPRng to resolve
+# license issue (#1102520)
+Patch9: sane-backends-1.0.24-snprintf-cleanroom.patch
+# Upstream commit 73cb422f860a84aca7a19114936ead1794d77890
+Patch10: sane-backends-1.0.24-usb3-xhci.patch
+
 URL: http://www.sane-project.org
-BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%__id_u -n)
-BuildRequires: tetex-latex
+
+BuildRequires: %{_bindir}/latex
+%if %libusb1
+BuildRequires: libusbx-devel
+%else
 BuildRequires: libusb-devel
+%endif
 BuildRequires: libieee1284-devel
 BuildRequires: libjpeg-devel
 BuildRequires: libtiff-devel
 BuildRequires: libv4l-devel
 BuildRequires: gettext
 BuildRequires: gphoto2-devel
-Requires: udev >= 143
+Requires: systemd >= 196
 Requires: sane-backends-libs%{?_isa} = %{?epoch:%{epoch}:}%{version}-%{release}
+# Don't drag around obsoletes forever
+%if 0%{?fedora}%{?rhel} && (0%{?fedora} < 25 || 0%{?rhel} < 8)
+Obsoletes: sane-backends < 1.0.23-10
+Conflicts: sane-backends < 1.0.23-10
+%endif
 
 %description
 Scanner Access Now Easy (SANE) is a universal scanner interface.  The
@@ -44,71 +111,124 @@ SANE application programming interface (API) provides standardized
 access to any raster image scanner hardware (flatbed scanner,
 hand-held scanner, video and still cameras, frame-grabbers, etc.).
 
-%package devel
-Summary: SANE development toolkit
-Group: Development/Libraries
-Requires: sane-backends = %{version}-%{release}
-Requires: libusb-devel
-Requires: libieee1284-devel
-Requires: libjpeg-devel
-Requires: libtiff-devel
-Requires: pkgconfig
-Requires: gphoto2-devel
-Requires: sane-backends-libs%{?_isa} = %{?epoch:%{epoch}:}%{version}-%{release}
-Requires: sane-backends-libs-gphoto2%{?_isa} = %{?epoch:%{epoch}:}%{version}-%{release}
+%package doc
+Summary: SANE backends documentation
+Group: Documentation
+BuildArch: noarch
+# Don't drag around obsoletes forever
+%if 0%{?fedora}%{?rhel} && (0%{?fedora} < 25 || 0%{?rhel} <= 8)
+Obsoletes: sane-backends < 1.0.23-10
+Conflicts: sane-backends < 1.0.23-10
+%endif
 
-%description devel
-This package contains libraries and header files for writing Scanner Access Now
-Easy (SANE) modules.
+%description doc
+This package contains documentation for SANE backends.
 
 %package libs
 Summary: SANE libraries
 Group: System Environment/Libraries
-Requires: sane-backends = %{?epoch:%{epoch}:}%{version}-%{release}
-Obsoletes: sane-backends <= 1.0.17-12
-Obsoletes: sane-backends-docs <= 1.0.17-12
-Provides: sane-backends-docs = %{?epoch:%{epoch}:}%{version}-%{release}
 
 %description libs
 This package contains the SANE libraries which are needed by applications that
 want to access scanners.
 
-%package libs-gphoto2
-Summary: SANE libraries for gphoto2
-Group: System Environment/Libraries
+%package devel
+Summary: SANE development toolkit
+Group: Development/Libraries
+Requires: sane-backends = %{?epoch:%{epoch}:}%{version}-%{release}
 Requires: sane-backends-libs%{?_isa} = %{?epoch:%{epoch}:}%{version}-%{release}
+%if %needs_multilib_quirk
+Requires: sane-backends-drivers-scanners%{?_isa} = %{?epoch:%{epoch}:}%{version}-%{release}
+Requires: sane-backends-drivers-cameras%{?_isa} = %{?epoch:%{epoch}:}%{version}-%{release}
+%endif
+%if %libusb1
+Requires: libusbx-devel
+%else
+Requires: libusb-devel
+%endif
+Requires: libieee1284-devel
+Requires: libjpeg-devel
+Requires: libtiff-devel
+Requires: pkgconfig
 
-%description libs-gphoto2
-This package contains the SANE libraries which are needed by applications that
-want to access digital cameras.
+%description devel
+This package contains libraries and header files for writing Scanner Access Now
+Easy (SANE) modules.
+
+%package drivers-scanners
+Summary: SANE backend drivers for scanners
+Group: System Environment/Libraries
+Requires: sane-backends = %{?epoch:%{epoch}:}%{version}-%{release}
+Requires: sane-backends-libs%{?_isa} = %{?epoch:%{epoch}:}%{version}-%{release}
+# Don't drag around obsoletes forever
+%if 0%{?rhel} && 0%{?rhel} < 8
+Obsoletes: sane-backends < 1.0.22-4
+Obsoletes: sane-backends-libs < 1.0.22-4
+Conflicts: sane-backends < 1.0.22-4
+Conflicts: sane-backends-libs < 1.0.22-4
+%endif
+
+%description drivers-scanners
+This package contains backend drivers to access scanner hardware through SANE.
+
+%package drivers-cameras
+Summary: Scanner backend drivers for digital cameras
+Group: System Environment/Libraries
+Requires: sane-backends = %{?epoch:%{epoch}:}%{version}-%{release}
+Requires: sane-backends-libs%{?_isa} = %{?epoch:%{epoch}:}%{version}-%{release}
+# Don't drag around obsoletes forever
+%if 0%{?rhel} && 0%{?rhel} < 8
+Obsoletes: sane-backends-libs-gphoto2 < 1.0.22-4
+Conflicts: sane-backends-libs-gphoto2 < 1.0.22-4
+Provides: sane-libs-gphoto2 = %{?epoch:%{epoch}:}%{version}-%{release}
+Provides: sane-libs-gphoto2%{?_isa} = %{?epoch:%{epoch}:}%{version}-%{release}
+%endif
+
+%description drivers-cameras
+This package contains backend drivers to access digital cameras through SANE.
 
 %prep
 %setup -q
 
-%patch0 -p1 -b .pkgconfig
-%patch1 -p1 -b .udev
-%patch2 -p1 -b .man-encoding
-%patch3 -p1 -b .epson-expression800
-%patch4 -p1 -b .docs-utf8
-%patch5 -p1 -b .SCX4500W
-%patch6 -p1 -b .v4l
-%patch7 -p1 -b .xerox_mfp-fix-usb-devices
+%patch0 -p1 -b .udev
+%patch1 -p1 -b .epson-expression800
+%patch2 -p1 -b .soname
+%patch3 -p1 -b .sane-config-multilib
+%patch4 -p1 -b .hwdb
+%patch5 -p1 -b .pixma_bjnp-crash
+%patch6 -p1 -b .static-code-check
+%patch7 -p1 -b .scsi-permissions
+%patch8 -p1 -b .format-security
+%patch9 -p1 -b .snprintf-cleanroom
+%patch10 -p1 -b .usb3-xhci
 
 %build
+CFLAGS="%optflags -fno-strict-aliasing"
+%if ! 0%{?_hardened_build}
 # use PIC/PIE because SANE-enabled software is likely to deal with data coming
 # from untrusted sources (client <-> saned via network)
-CFLAGS="-fPIC %optflags -fno-strict-aliasing"
+CFLAGS="$CFLAGS -fPIC"
 LDFLAGS="-pie"
+%endif
 %configure \
     --with-gphoto2=%{_prefix} \
-    --with-docdir=%{_docdir}/%{name}-%{version} \
+    --with-docdir=%{_maindocdir} \
     --disable-locking --disable-rpath \
+%if %libusb1
+    --enable-libusb_1_0 \
+%endif
     --enable-pthread
 make %{?_smp_mflags}
 
+# Write udev/hwdb files
+_topdir="$PWD"
+pushd tools
+./sane-desc -m udev+hwdb -s "${_topdir}/doc/descriptions:${_topdir}/doc/descriptions-external" -d0 > udev/sane-backends.rules
+./sane-desc -m hwdb -s "${_topdir}/doc/descriptions:${_topdir}/doc/descriptions-external" -d0 > udev/sane-backends.hwdb
+
+popd
 
 %install
-rm -rf %{buildroot}
 make DESTDIR="%{buildroot}" install
 
 mkdir -p %{buildroot}%{_datadir}/pixmaps
@@ -118,50 +238,71 @@ rm -f %{buildroot}%{_mandir}/man1/gamma4scanimage.1*
 rm -f %{buildroot}%{_libdir}/sane/*.a %{buildroot}%{_libdir}/*.a
 rm -f %{buildroot}%{_libdir}/libsane*.la %{buildroot}%{_libdir}/sane/*.la
 
-mkdir -p %{buildroot}%{_prefix}/lib/udev/rules.d
-install -m 0644 tools/udev/libsane.rules %{buildroot}%{_prefix}/lib/udev/rules.d/65-libsane.rules
+mkdir -p %{buildroot}%{udevrulesdir}
+mkdir -p %{buildroot}%{udevhwdbdir}
+install -m 0644 tools/udev/sane-backends.rules %{buildroot}%{udevrulesdir}/65-sane-backends.rules
+install -m 0644 tools/udev/sane-backends.hwdb %{buildroot}%{udevhwdbdir}/20-sane-backends.hwdb
 
 mkdir -p %{buildroot}%{_libdir}/pkgconfig
 install -m 0644 tools/sane-backends.pc %{buildroot}%{_libdir}/pkgconfig/
 
-magic_rpm_clean.sh
-%find_lang %name || touch %name.lang
+mkdir %{buildroot}%{_docdocdir}
+pushd %{buildroot}%{_maindocdir}
+for f in *; do
+    if [ -d "$f" ]; then
+        mv "$f" "%{buildroot}%{_docdocdir}/${f}"
+    else
+        case "$f" in
+        AUTHORS|ChangeLog|COPYING|LICENSE|NEWS|PROBLEMS|README|README.linux)
+            ;;
+        backend-writing.txt|PROJECTS|sane-*.html)
+            mv "$f" "%{buildroot}%{_docdocdir}/${f}"
+            ;;
+        *)
+            rm -rf "$f"
+            ;;
+        esac
+    fi
+done
+popd
 
+%find_lang %name
 
-%clean
-rm -rf %{buildroot}
+%post
+udevadm hwdb --update >/dev/null 2>&1 || :
+
+%postun
+udevadm hwdb --update >/dev/null 2>&1 || :
 
 %post libs -p /sbin/ldconfig
 %postun libs -p /sbin/ldconfig
 
 %files -f %{name}.lang
 %defattr(-,root,root)
+%doc %{_maindocdir}
 %dir /etc/sane.d
 %dir /etc/sane.d/dll.d
 %config(noreplace) /etc/sane.d/*.conf
-%{_prefix}/lib/udev/rules.d/65-libsane.rules
+%{udevrulesdir}/65-sane-backends.rules
+%{udevhwdbdir}/20-sane-backends.hwdb
 %{_datadir}/pixmaps/sane.png
 
 %{_bindir}/sane-find-scanner
 %{_bindir}/scanimage
 %{_sbindir}/*
 
-%doc %{_docdir}/*
 %exclude %{_mandir}/man1/sane-config.1*
-
 %{_mandir}/*/*
+
+%dir %{_libdir}/sane
+
+%files doc
+%defattr(-, root, root)
+%doc %{_docdocdir}
 
 %files libs
 %defattr(-, root, root)
 %{_libdir}/libsane*.so.*
-%dir %{_libdir}/sane
-%{_libdir}/sane/*.so*
-
-%exclude %{_libdir}/sane/*gphoto2.so*
-
-%files libs-gphoto2
-%defattr(-, root, root)
-%{_libdir}/sane/*gphoto2.so.*
 
 %files devel
 %defattr(-,root,root)
@@ -171,21 +312,170 @@ rm -rf %{buildroot}
 %{_libdir}/libsane*.so
 %{_libdir}/pkgconfig/sane-backends.pc
 
+%files drivers-scanners
+%defattr(-, root, root)
+%{_libdir}/sane/*.so*
+%exclude %{_libdir}/sane/*gphoto2.so*
+
+%files drivers-cameras
+%defattr(-, root, root)
+%{_libdir}/sane/*gphoto2.so*
+
 %changelog
-* Tue Sep 22 2015 Liu Di <liudidi@gmail.com> - 1.0.22-8
-- 为 Magic 3.0 重建
+* Fri Jun 19 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.0.24-15
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 
-* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 1.0.22-7
-- 为 Magic 3.0 重建
+* Tue Jun 09 2015 Nils Philippsen <nils@redhat.com> - 1.0.24-14
+- reformat and rename snprintf-cleanroom patch
+- backport USB3 xhci patch from upstream master (#1228954)
 
-* Sun Apr 22 2012 Liu Di <liudidi@gmail.com> - 1.0.22-6
-- 为 Magic 3.0 重建
+* Mon Jun 08 2015 Nils Philippsen <nils@redhat.com> - 1.0.24-14
+- apply format-security patch, drop format-security2 patch
 
-* Wed Mar 28 2012 Liu Di <liudidi@gmail.com> - 1.0.22-5
-- 为 Magic 3.0 重建
+* Tue Jan 20 2015 Peter Robinson <pbrobinson@fedoraproject.org> 1.0.24-13
+- Rebuild (libgphoto2)
 
-* Mon Feb 06 2012 Liu Di <liudidi@gmail.com> - 1.0.22-4
-- 为 Magic 3.0 重建
+* Mon Aug 18 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.0.24-12
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
+
+* Sun Jun 08 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.0.24-11
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Thu May 29 2014 Tom Callaway <spot@fedoraproject.org> - 1.0.24-10
+- update lib/snprintf.c to resolve license issue (#1102520)
+
+* Mon Apr 14 2014 Jaromir Capik <jcapik@redhat.com> - 1.0.24-9
+- Fixing format-security flaws
+
+* Wed Dec 04 2013 Nils Philippsen <nils@redhat.com> - 1.0.24-8
+- use string literals as format strings (#1037316)
+
+* Wed Nov 20 2013 Nils Philippsen <nils@redhat.com> - 1.0.24-7
+- set correct permissions for SCSI devices (#1028549)
+
+* Thu Nov 07 2013 Nils Philippsen <nils@redhat.com> - 1.0.24-6
+- epson: don't leak memory if realloc() fails
+
+* Thu Nov 07 2013 Nils Philippsen <nils@redhat.com> - 1.0.24-5
+- fix issues found during static code check
+
+* Tue Oct 29 2013 Nils Philippsen <nils@redhat.com> - 1.0.24-4
+- fix crash in pixma driver (#1021653)
+
+* Thu Oct 24 2013 Nils Philippsen <nils@redhat.com> - 1.0.24-3
+- generate hwdb files correctly (#1018565)
+
+* Wed Oct 16 2013 Nils Philippsen <nils@redhat.com> - 1.0.24-2
+- update udev hwdb on installation/removal
+
+* Wed Oct 09 2013 Nils Philippsen <nils@redhat.com> - 1.0.24-1
+- version 1.0.24
+- use (hopefully stable) Alioth download URL
+- update udev patch, remove obsolete patches
+- use udev hwdb instead of huge rulesets
+
+* Mon Sep 09 2013 Nils Philippsen <nils@redhat.com> - 1.0.23-18
+- build against libusb-1.0 on Fedora >= 18 (#1003193)
+- require libusbx-devel instead of libusb1-devel which is obsolete
+
+* Wed Sep 04 2013 Hans de Goede <hdegoede@redhat.com> - 1.0.23-17
+- Really build against libusb-1.0 on Fedora >= 19 (#1003193)
+
+* Wed Sep 04 2013 Nils Philippsen <nils@redhat.com> - 1.0.23-16
+- don't drag around obsoletes forever (#1002141)
+
+* Wed Aug 07 2013 Nils Philippsen <nils@redhat.com> - 1.0.23-15
+- use unversioned docdir from Fedora 20 on (#994067)
+
+* Sun Aug 04 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.0.23-14
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Fri Jul 12 2013 Nils Philippsen <nils@redhat.com> - 1.0.23-13
+- fix crash in genesys (gl646) backend (#983694)
+
+* Mon Jul 08 2013 Nils Philippsen <nils@redhat.com> - 1.0.23-12
+- describe missing flag "-b" in scanimage man page
+- add short help message to saned
+- fix bogus changelog dates
+
+* Tue Jun 25 2013 Nils Philippsen <nils@redhat.com> - 1.0.23-11
+- move documentation into separate doc subpackage (#977653)
+- remove ancient, unneeded obsoletes and conflicts
+
+* Mon Jun 24 2013 Nils Philippsen <nils@redhat.com> - 1.0.23-10
+- move some documentation to devel subpackage (#977103)
+
+* Thu Jun 13 2013 Nils Philippsen <nils@redhat.com> - 1.0.23-10
+- don't ignore libsane-gphoto2.so
+
+* Fri Apr 19 2013 Nils Philippsen <nils@redhat.com> - 1.0.23-9
+- use libusb1 instead of libusb from F-19 on
+
+* Thu Apr 18 2013 Nils Philippsen <nils@redhat.com> - 1.0.23-8
+- fix building with -fno-strict-aliasing
+
+* Fri Feb 01 2013 Nils Philippsen <nils@redhat.com> - 1.0.23-7
+- filter out backend driver provides/requires
+- update latex build dep
+- umax: initialize reader_pid early in sane_start() (#853667)
+- coolscan2/3: support multi-scan option of some devices
+
+* Mon Jan 21 2013 Adam Tkac <atkac redhat com> - 1.0.23-6
+- rebuild due to "jpeg8-ABI" feature drop
+
+* Fri Dec 21 2012 Adam Tkac <atkac redhat com> - 1.0.23-5
+- rebuild against new libjpeg
+
+* Mon Sep 10 2012 Nils Philippsen <nils@redhat.com> - 1.0.23-3
+- udev: set up for generic user access rules, improve paths and dependencies
+
+* Tue Sep 04 2012 Nils Philippsen <nils@redhat.com> - 1.0.23-2
+- make installed sane-config multi-lib aware again
+
+* Fri Aug 31 2012 Nils Philippsen <nils@redhat.com> - 1.0.23-1
+- version 1.0.23
+- update udev patch, remove obsolete patches
+- use %%_hardened_build macro from F-16 on instead of tweaking flags manually
+- don't use the same SONAME for backend libs and main lib
+
+* Sat Jul 21 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.0.22-13
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Wed Jul 11 2012 Rex Dieter <rdieter@fedoraproject.org> 1.0.22-12
+- rebuild (gphoto2)
+
+* Wed Jun 06 2012 Nils Philippsen <nils@redhat.com> - 1.0.22-11
+- multilib: enable -devel quirk regardless of version until a fixed mash gets
+  into production (#829268)
+
+* Tue Apr 17 2012 Nils Philippsen <nils@redhat.com> - 1.0.22-10
+- fix avision device initialization (#706877)
+
+* Tue Jan 10 2012 Nils Philippsen <nils@redhat.com> - 1.0.22-9
+- rebuild for gcc 4.7
+
+* Wed Jan 04 2012 Nils Philippsen <nils@redhat.com> - 1.0.22-8
+- fix Lexmark X1100 (#753489)
+
+* Mon Nov 28 2011 Peter Robinson <pbrobinson@fedoraproject.org> - 1.0.22-7
+- libs shouldn't depends on base package. Properly fix #736310
+- base package should obsolete -docs as it provides them not -libs
+- update spec to current standard
+
+* Fri Nov 18 2011 Nils Philippsen <nils@redhat.com> - 1.0.22-6
+- avision: reenable grayscale and lineart modes for AV220 (#700725)
+
+* Mon Oct 10 2011 Nils Philippsen <nils@redhat.com> - 1.0.22-5
+- multilib: let -devel depend on -drivers-* on F-16 and earlier (#740992)
+- multilib: make -drivers-scanners obsolete old -libs as well
+
+* Fri Sep 16 2011 Nils Philippsen <nils@redhat.com> - 1.0.22-4
+- multilib: always use pkg-config in sane-config (#707910)
+- add USB id for Epson Stylus SX125 (#703529)
+
+* Thu Sep 15 2011 Nils Philippsen <nils@redhat.com> - 1.0.22-4
+- allow installing the libraries without the drivers (#736310): split off
+  drivers into -drivers-scanners, rename -libs-gphoto2 to -drivers-cameras
 
 * Tue May 10 2011 Nils Philippsen <nils@redhat.com> - 1.0.22-3
 - fix detection/handling of USB devices in xerox_mfp (#702983)
@@ -260,7 +550,7 @@ rm -rf %{buildroot}
 - ship adapted udev rules from F-12 on (#512516)
 - don't require pam anymore
 
-* Fri Aug 31 2009 Nils Philippsen <nils@redhat.com> - 1.0.20-7
+* Mon Aug 31 2009 Nils Philippsen <nils@redhat.com> - 1.0.20-7
 - fix --enable-rpath
 
 * Mon Aug 03 2009 Nils Philippsen <nils@redhat.com> - 1.0.20-6
@@ -465,7 +755,7 @@ rm -rf %{buildroot}
 - buildrequire automake, autoconf, libtool (#178596)
 - don't require /sbin/ldconfig, /bin/mktemp, /bin/grep, /bin/cat, /bin/rm
 
-* Thu Feb 22 2006 Nils Philippsen <nphilipp@redhat.com> - 1.0.17-4
+* Wed Feb 22 2006 Nils Philippsen <nphilipp@redhat.com> - 1.0.17-4
 - split off generated documentation into separate subpackage to avoid conflicts
   on multilib systems
 
@@ -673,7 +963,7 @@ rm -rf %{buildroot}
 * Mon Mar  4 2002 Tim Powers <timp@redhat.com> 1.0.7-5
 - bump release number, wasn't bumped last time
 
-* Mon Mar  3 2002 Tim Waugh <twaugh@redhat.com> 1.0.7-4
+* Mon Mar  4 2002 Tim Waugh <twaugh@redhat.com> 1.0.7-4
 - Update sparc patch (Tom "spot" Callaway).
 
 * Thu Feb 21 2002 Tim Waugh <twaugh@redhat.com> 1.0.7-3
@@ -758,7 +1048,7 @@ rm -rf %{buildroot}
 * Thu Oct 26 2000 Bill Nottingham <notting@redhat.com>
 - fix provides for ia64/sparc64
 
-* Thu Aug 29 2000 Trond Eivind Glomsrød <teg@redhat.com>
+* Tue Aug 29 2000 Trond Eivind Glomsrød <teg@redhat.com>
 - don't include xscanimage desktop entry - it's a gimp
   plugin. Doh. (part of #17076)
 - add tetex-latex as a build requirement
