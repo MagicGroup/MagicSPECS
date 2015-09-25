@@ -1,0 +1,11 @@
+--- qpid-cpp-0.34/src/tests/exception_test.cpp~	2015-08-30 03:17:50.546935672 +0100
++++ qpid-cpp-0.34/src/tests/exception_test.cpp	2015-08-30 03:18:01.970986855 +0100
+@@ -63,7 +63,7 @@
+         }
+         catch(const Ex& e) {
+             caught=true;
+-            BOOST_MESSAGE(string("Caught expected exception: ")+e.what()+"["+typeid(e).name()+"]");
++            BOOST_TEST_MESSAGE(string("Caught expected exception: ")+e.what()+"["+typeid(e).name()+"]");
+         }
+         catch(const std::exception& e) {
+             BOOST_ERROR(string("Bad exception: ")+e.what()+"["+typeid(e).name()+"] expected: "+typeid(Ex).name());

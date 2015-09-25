@@ -1,0 +1,64 @@
+From fc0b4f44e9f1b7f3646e6210bf695d2b5f80d9ed Mon Sep 17 00:00:00 2001
+From: "Darryl L. Pierce" <dpierce@redhat.com>
+Date: Wed, 11 Mar 2015 15:10:47 -0400
+Subject: [PATCH 3/3] NO-JIRA: Allow overriding the Ruby install location.
+
+---
+ qpid/cpp/bindings/CMakeLists.txt           | 14 ++++++++------
+ qpid/cpp/bindings/qpid/ruby/CMakeLists.txt | 13 +++++++++----
+ 2 files changed, 17 insertions(+), 10 deletions(-)
+
+diff --git a/qpid/cpp/bindings/CMakeLists.txt b/qpid/cpp/bindings/CMakeLists.txt
+index 8f0bdf4..a90a126 100644
+--- a/qpid/cpp/bindings/CMakeLists.txt
++++ b/qpid/cpp/bindings/CMakeLists.txt
+@@ -122,14 +122,16 @@ if (SWIG_FOUND)
+   endif (BUILD_BINDING_PYTHON)
+ 
+   if (BUILD_BINDING_RUBY)
+-      message(STATUS "Building Ruby bindings")
++    message(STATUS "Building Ruby bindings")
++    if (NOT RUBY_PFX_ARCH_DIR)
+       execute_process(COMMAND ${RUBY_EXECUTABLE} -r rbconfig -e "puts RbConfig::CONFIG['prefix']"
+-                      OUTPUT_VARIABLE RUBY_PREFIX
+-                      OUTPUT_STRIP_TRAILING_WHITESPACE)
++        OUTPUT_VARIABLE RUBY_PREFIX
++        OUTPUT_STRIP_TRAILING_WHITESPACE)
+       string(REPLACE ${RUBY_PREFIX} ${CMAKE_INSTALL_PREFIX} RUBY_PFX_ARCH_DIR ${RUBY_SITEARCH_DIR})
+-#     string(REPLACE ${RUBY_PREFIX} ${CMAKE_INSTALL_PREFIX} RUBY_PFX_ARCH_DIR ${RUBY_ARCH_DIR})
+-      add_subdirectory(qpid/ruby)
+-      add_subdirectory(qmf2/ruby)
++    endif (NOT RUBY_PFX_ARCH_DIR)
++
++    add_subdirectory(qpid/ruby)
++    add_subdirectory(qmf2/ruby)
+   endif (BUILD_BINDING_RUBY)
+ 
+   if (BUILD_BINDING_PERL)
+diff --git a/qpid/cpp/bindings/qpid/ruby/CMakeLists.txt b/qpid/cpp/bindings/qpid/ruby/CMakeLists.txt
+index c31b4d4..78e21d6 100644
+--- a/qpid/cpp/bindings/qpid/ruby/CMakeLists.txt
++++ b/qpid/cpp/bindings/qpid/ruby/CMakeLists.txt
+@@ -54,10 +54,15 @@ set_source_files_properties(${swig_generated_file_fullname} PROPERTIES COMPILE_F
+ ## Install the complete Ruby binding
+ ##----------------------------------
+ install(TARGETS ${SWIG_MODULE_cqpid_ruby_REAL_NAME}
+-      RENAME cqpid.so
+-      DESTINATION ${RUBY_PFX_ARCH_DIR}
+-      COMPONENT ${QPID_COMPONENT_CLIENT}
+-)
++  RENAME cqpid.so
++  DESTINATION ${RUBY_PFX_ARCH_DIR}
++  COMPONENT ${QPID_COMPONENT_CLIENT}
++  )
++
++install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/lib
++  DESTINATION ${RUBY_PFX_ARCH_DIR}
++  COMPONENT ${QPID_COMPONENT_CLIENT}
++  )
+ 
+ add_custom_command(OUTPUT ${GEM_BINDINGS_SOURCE_FILE}
+                    COMMAND cp ${swig_generated_file_fullname} ${GEM_BINDINGS_SOURCE_FILE}
+-- 
+2.1.0
+

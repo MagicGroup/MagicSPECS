@@ -1,0 +1,67 @@
+From baf68f10eefc06799eddb4f7f4fb68263d248d50 Mon Sep 17 00:00:00 2001
+From: "Darryl L. Pierce" <dpierce@redhat.com>
+Date: Wed, 11 Mar 2015 10:50:13 -0400
+Subject: [PATCH 2/3] NO-JIRA: Allow overriding the Perl install location.
+
+---
+ qpid/cpp/bindings/CMakeLists.txt           | 14 +++++++++-----
+ qpid/cpp/bindings/qpid/perl/CMakeLists.txt | 17 +++++++++++------
+ 2 files changed, 20 insertions(+), 11 deletions(-)
+
+diff --git a/qpid/cpp/bindings/CMakeLists.txt b/qpid/cpp/bindings/CMakeLists.txt
+index 3c55871..8f0bdf4 100644
+--- a/qpid/cpp/bindings/CMakeLists.txt
++++ b/qpid/cpp/bindings/CMakeLists.txt
+@@ -134,11 +134,15 @@ if (SWIG_FOUND)
+ 
+   if (BUILD_BINDING_PERL)
+       message(STATUS "Building Perl bindings")
+-      execute_process(COMMAND ${PERL_EXECUTABLE} "-V::prefix:"
+-                      OUTPUT_VARIABLE QPERL_PREFIX
+-                      OUTPUT_STRIP_TRAILING_WHITESPACE)
+-      string(REGEX REPLACE "'(.*)'" "\\1" PERL_PREFIX ${QPERL_PREFIX})
+-      string(REPLACE ${PERL_PREFIX} ${CMAKE_INSTALL_PREFIX} PERL_PFX_ARCHLIB ${PERL_ARCHLIB})
++      if (NOT PERL_PFX_ARCHLIB)
++        execute_process(COMMAND ${PERL_EXECUTABLE} "-V::prefix:"
++                        OUTPUT_VARIABLE QPERL_PREFIX
++                        OUTPUT_STRIP_TRAILING_WHITESPACE)
++        string(REGEX REPLACE "'(.*)'" "\\1" PERL_PREFIX ${QPERL_PREFIX})
++        string(REPLACE ${PERL_PREFIX} ${CMAKE_INSTALL_PREFIX} PERL_PFX_ARCHLIB ${PERL_ARCHLIB})
++      else (NOT PERL_PFX_ARCHLIB)
++        message(STATUS "*** Using Perl language directory: ${PERL_PFX_ARCHLIB}")
++      endif (NOT PERL_PFX_ARCHLIB)
+ 
+       add_subdirectory(qpid/perl)
+   endif (BUILD_BINDING_PERL)
+diff --git a/qpid/cpp/bindings/qpid/perl/CMakeLists.txt b/qpid/cpp/bindings/qpid/perl/CMakeLists.txt
+index 3c859d6..e270562 100644
+--- a/qpid/cpp/bindings/qpid/perl/CMakeLists.txt
++++ b/qpid/cpp/bindings/qpid/perl/CMakeLists.txt
+@@ -43,13 +43,18 @@ include_directories(${PERL_INCLUDE_PATH}
+ # it's coming from a version of Cmake < 2.8
+ install(TARGETS ${SWIG_MODULE_cqpid_perl_REAL_NAME}
+         RENAME cqpid_perl.so
+-        DESTINATION ${PERL_PFX_ARCHLIB}
++        DESTINATION ${PERL_PFX_ARCHLIB}/auto/cqpid_perl
+         COMPONENT ${QPID_COMPONENT_CLIENT}
+ )
+ 
+ install(FILES ${CMAKE_CURRENT_BINARY_DIR}/cqpid_perl.pm
+-              ${CMAKE_CURRENT_SOURCE_DIR}/LICENSE
+-              ${CMAKE_CURRENT_SOURCE_DIR}/Makefile.PL
+-        DESTINATION ${PERL_PFX_ARCHLIB}
+-        COMPONENT ${QPID_COMPONENT_CLIENT}
+-        )
++              ${CMAKE_CURRENT_SOURCE_DIR}/lib/qpid_messaging.pm
++              ${CMAKE_CURRENT_SOURCE_DIR}/lib/qpid.pm
++  DESTINATION ${PERL_PFX_ARCHLIB}
++  COMPONENT ${QPID_COMPONENT_CLIENT}
++  )
++
++install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/lib/qpid
++  DESTINATION ${PERL_PFX_ARCHLIB}
++  COMPONENT ${QPID_COMPONENT_CLIENT}
++  )
+-- 
+2.1.0
+
