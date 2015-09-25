@@ -1,0 +1,22 @@
+diff --git a/include/Makefile.am b/include/Makefile.am
+index 6461800..19c1cc2 100644
+--- a/include/Makefile.am
++++ b/include/Makefile.am
+@@ -1,5 +1,4 @@
+ nobase_include_HEADERS = \
+-xqc.h \
+ xqilla/xqilla-dom3.hpp \
+ xqilla/xqilla-simple.hpp \
+ xqilla/xqilla-xqc.h \
+diff --git a/include/Makefile.in b/include/Makefile.in
+index ccf0fb8..800fa16 100644
+--- a/include/Makefile.in
++++ b/include/Makefile.in
+@@ -216,7 +216,6 @@ xerces_include = @xerces_include@
+ xerces_include_dir = @xerces_include_dir@
+ xerces_lib = @xerces_lib@
+ nobase_include_HEADERS = \
+-xqc.h \
+ xqilla/xqilla-dom3.hpp \
+ xqilla/xqilla-simple.hpp \
+ xqilla/xqilla-xqc.h \
