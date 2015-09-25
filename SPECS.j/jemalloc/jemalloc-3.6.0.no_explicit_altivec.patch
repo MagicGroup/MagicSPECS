@@ -1,0 +1,13 @@
+--- configure.old	2014-03-31 18:38:51.000000000 +0200
++++ configure	2014-04-01 12:20:37.723062342 +0200
+@@ -4694,10 +4694,6 @@
+ 	fi
+ 	;;
+   powerpc)
+-	cat >>confdefs.h <<_ACEOF
+-#define HAVE_ALTIVEC
+-_ACEOF
+-
+ 	;;
+   *)
+ 	;;
