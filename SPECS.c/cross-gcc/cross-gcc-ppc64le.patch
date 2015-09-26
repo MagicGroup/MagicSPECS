@@ -1,0 +1,69 @@
+From: Alam Modra <amodra@gmail.com>
+
+bugzilla.redhat.com/show_bug_cgi?id=1255946 shows that gcc built with
+both powerpc64-linux and powerpc64le-linux support passes wrong linker
+options when trying to link in the non-default endian.  A --oformat
+option coming from LINK_TARGET_SPEC is only correct for 32-bit.
+
+It turns out that GNU ld -m options select a particular ld emulation
+(e*.c file in ld build dir) which provides compiled-in scripts or
+selects a script from ldscripts/.  Each of these has an OUTPUT_FORMAT
+statement, which does the same thing as --oformat.  --oformat is
+therefore redundant when using GNU ld built this century, except
+possibly when a user overrides the default ld script with -Wl,-T and
+their script neglects OUTPUT_FORMAT, and it isn't the default output.
+I don't think it's worth fixing this possible use case.
+
+Bootstrap and testing in progress.  OK for mainline assuming all is
+OK?
+
+	* config/rs6000/sysv4le.h (LINK_TARGET_SPEC): Don't define.
+	* config/rs6000/sysv4.h (LINK_TARGET_SPEC): Likewise.
+	(LINK_SPEC, SUBTARGET_EXTRA_SPECS): Delete link_target.
+
+diff --git a/gcc/config/rs6000/sysv4.h b/gcc/config/rs6000/sysv4.h
+index 24618e3..f48af43 100644
+--- a/gcc/config/rs6000/sysv4.h
++++ b/gcc/config/rs6000/sysv4.h
+@@ -574,7 +574,6 @@ ENDIAN_SELECT(" -mbig", " -mlittle", DEFAULT_ASM_ENDIAN)
+ %{R*} \
+ %(link_shlib) \
+ %{!T*: %(link_start) } \
+-%(link_target) \
+ %(link_os)"
+ 
+ /* Shared libraries are not default.  */
+@@ -584,10 +583,6 @@ ENDIAN_SELECT(" -mbig", " -mlittle", DEFAULT_ASM_ENDIAN)
+ %{shared:-G -dy -z text } \
+ %{symbolic:-Bsymbolic -G -dy -z text }"
+ 
+-/* Override the default target of the linker.  */
+-#define	LINK_TARGET_SPEC \
+-  ENDIAN_SELECT("", " --oformat elf32-powerpcle", "")
+-
+ /* Any specific OS flags.  */
+ #define LINK_OS_SPEC "\
+ %{mads         : %(link_os_ads)         ; \
+@@ -873,7 +868,6 @@ ncrtn.o%s"
+   { "endfile_openbsd",		ENDFILE_OPENBSD_SPEC },			\
+   { "endfile_default",		ENDFILE_DEFAULT_SPEC },			\
+   { "link_shlib",		LINK_SHLIB_SPEC },			\
+-  { "link_target",		LINK_TARGET_SPEC },			\
+   { "link_start",		LINK_START_SPEC },			\
+   { "link_start_ads",		LINK_START_ADS_SPEC },			\
+   { "link_start_yellowknife",	LINK_START_YELLOWKNIFE_SPEC },		\
+diff --git a/gcc/config/rs6000/sysv4le.h b/gcc/config/rs6000/sysv4le.h
+index 7b1d6a1..66ee7ca 100644
+--- a/gcc/config/rs6000/sysv4le.h
++++ b/gcc/config/rs6000/sysv4le.h
+@@ -25,10 +25,6 @@
+ #undef	DEFAULT_ASM_ENDIAN
+ #define	DEFAULT_ASM_ENDIAN " -mlittle"
+ 
+-#undef	LINK_TARGET_SPEC
+-#define	LINK_TARGET_SPEC \
+-  ENDIAN_SELECT(" --oformat elf32-powerpc", "", "")
+-
+ #undef	MULTILIB_DEFAULTS
+ #define	MULTILIB_DEFAULTS { "mlittle", "mcall-sysv" }
+ 

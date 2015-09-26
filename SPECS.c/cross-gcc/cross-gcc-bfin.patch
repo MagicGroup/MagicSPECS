@@ -1,0 +1,15 @@
+Index: gcc/config/bfin/bfin.c
+===================================================================
+--- gcc/config/bfin/bfin.c      (revision 211729)
++++ gcc/config/bfin/bfin.c      (working copy)
+@@ -4629,10 +4629,6 @@
+ 
+   df_analyze ();
+ 
+-  /* Doloop optimization */
+-  if (cfun->machine->has_hardware_loops)
+-    bfin_reorg_loops ();
+-
+   workaround_speculation ();
+ 
+   if (flag_var_tracking)

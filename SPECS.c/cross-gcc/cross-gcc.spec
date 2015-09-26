@@ -8,6 +8,7 @@
 %define build_avr32		%{build_all}
 %define build_blackfin		%{build_all}
 %define build_c6x		%{build_all}
+%define build_cris		%{build_all}
 %define build_frv		%{build_all}
 %define build_h8300		%{build_all}
 %define build_hppa		%{build_all}
@@ -15,8 +16,10 @@
 %define build_ia64		%{build_all}
 %define build_m32r		%{build_all}
 %define build_m68k		%{build_all}
+%define build_microblaze	%{build_all}
 %define build_mips64		%{build_all}
 %define build_mn10300		%{build_all}
+%define build_nios2		%{build_all}
 %define build_powerpc64		%{build_all}
 %define build_s390x		%{build_all}
 %define build_sh		%{build_all}
@@ -27,13 +30,13 @@
 %define build_xtensa		%{build_all}
 
 # built compiler generates lots of ICEs
-%define build_cris		0
+# - none at this time
 
 # gcc considers obsolete
 %define build_score		0
 
 # gcc doesn't build
-%define build_microblaze	0
+# - none at this time
 
 # 32-bit packages we don't build as we can use the 64-bit package instead
 %define build_i386		0
@@ -44,39 +47,45 @@
 %define build_sparc		0
 
 # gcc doesn't support
+%define build_metag		0
 %define build_openrisc		0
 
 # not available in binutils-2.22
 %define build_unicore32		0
 
-%global build_cloog 1
 %global multilib_64_archs sparc64 ppc64 s390x x86_64
 
 # we won't build libgcc for these as it depends on C library or kernel headers
-%define no_libgcc_targets	cris*|s390*|sh*|tile-*
+%define no_libgcc_targets	nios2*|tile-*
 
 ###############################################################################
 #
 # The gcc versioning information.  In a sed command below, the specfile winds
 # pre-release version numbers in BASE-VER back to the last actually-released
 # number.
-%global DATE 20130717
-%global SVNREV 201013
-%global gcc_version 4.8.1
+%global DATE 20150716
+%global SVNREV 225895
+%global gcc_version 5.2.1
 
-# Note, gcc_release must be integer, if you want to add suffixes to
-# %{release}, append them after %{gcc_release} on Release: line.
-%global gcc_release 5
+# Note, cross_gcc_release must be integer, if you want to add suffixes
+# to %{release}, append them after %{cross_gcc_release} on Release:
+# line.  gcc_release is the Fedora gcc release that the patches were
+# taken from.
+%global gcc_release 1
+%global cross_gcc_release 3
+%global cross_binutils_version 2.25.1-1
+%global isl_version 0.14
 
 Summary: Cross C compiler
 Name: %{cross}-gcc
 Version: %{gcc_version}
-Release: %{gcc_release}.2%{?dist}
+Release: %{cross_gcc_release}%{?dist}
 # libgcc, libgfortran, libmudflap, libgomp, libstdc++ and crtstuff have
 # GCC Runtime Exception.
 License: GPLv3+ and GPLv3+ with exceptions and GPLv2+ with exceptions and LGPLv2+ and BSD
 Group: Development/Languages
 URL: http://gcc.gnu.org
+BuildRequires: isl-devel >= %{isl_version}
 
 # The source for this package was pulled from upstream's vcs.  Use the
 # following commands to generate the tarball:
@@ -84,54 +93,46 @@ URL: http://gcc.gnu.org
 # tar cf - gcc-%{version}-%{DATE} | bzip2 -9 > gcc-%{version}-%{DATE}.tar.bz2
 %define srcdir gcc-%{version}-%{DATE}
 Source0: %{srcdir}.tar.bz2
-%global isl_version 0.11.1
-Source1: ftp://gcc.gnu.org/pub/gcc/infrastructure/isl-%{isl_version}.tar.bz2
-%global cloog_version 0.18.0
-Source2: ftp://gcc.gnu.org/pub/gcc/infrastructure/cloog-%{cloog_version}.tar.gz
 
-Patch0: gcc48-hack.patch
-Patch1: gcc48-java-nomulti.patch
-Patch2: gcc48-ppc32-retaddr.patch
-Patch3: gcc48-rh330771.patch
-Patch4: gcc48-i386-libgomp.patch
-Patch5: gcc48-sparc-config-detection.patch
-Patch6: gcc48-libgomp-omp_h-multilib.patch
-Patch7: gcc48-libtool-no-rpath.patch
-Patch8: gcc48-cloog-dl.patch
-Patch9: gcc48-cloog-dl2.patch
-Patch10: gcc48-pr38757.patch
-Patch11: gcc48-libstdc++-docs.patch
-Patch12: gcc48-no-add-needed.patch
-Patch13: gcc48-pr56564.patch
-Patch14: gcc48-pr56493.patch
+Patch0: gcc5-hack.patch
+Patch1: gcc5-java-nomulti.patch
+Patch2: gcc5-ppc32-retaddr.patch
+Patch3: gcc5-rh330771.patch
+Patch4: gcc5-i386-libgomp.patch
+Patch5: gcc5-sparc-config-detection.patch
+Patch6: gcc5-libgomp-omp_h-multilib.patch
+Patch7: gcc5-libtool-no-rpath.patch
+Patch8: gcc5-isl-dl.patch
+Patch10: gcc5-libstdc++-docs.patch
+Patch11: gcc5-no-add-needed.patch
+Patch12: gcc5-libgo-p224.patch
+Patch13: gcc5-aarch64-async-unw-tables.patch
+Patch14: gcc5-libsanitize-aarch64-va42.patch
+Patch15: gcc5-pr65689.patch
 
-Patch100: cross-intl-filename.patch
+Patch900: cross-intl-filename.patch
 # ia64 - http://gcc.gnu.org/bugzilla/show_bug.cgi?id=44553
 # m68k - http://gcc.gnu.org/bugzilla/show_bug.cgi?id=53557
 # alpha - http://gcc.gnu.org/bugzilla/show_bug.cgi?id=55344
-Patch101: cross-gcc-with-libgcc.patch
-Patch102: cross-gcc-sh-libgcc.patch
-Patch103: cross-gcc-4.8.1-fix-varasm.patch
-Patch104: gcc48-tmake_in_config.patch
-
-Patch1100: isl-%{isl_version}-aarch64-config.patch
+Patch901: cross-gcc-with-libgcc.patch
+Patch902: cross-gcc-bfin.patch
+Patch903: cross-gcc-format-config.patch
+Patch904: cross-gcc-microblaze.patch
+Patch905: cross-gcc-sh64.patch
+Patch906: cross-gcc-ppc64le.patch
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-BuildRequires: binutils >= 2.20.51.0.2-12
+BuildRequires: binutils >= 2.24
 BuildRequires: zlib-devel, gettext, dejagnu, bison, flex, texinfo, sharutils
-BuildRequires: %{cross}-binutils-common >= 2.23.88
+BuildRequires: %{cross}-binutils-common >= %{cross_binutils_version}
 
 # Make sure pthread.h doesn't contain __thread tokens
 # Make sure glibc supports stack protector
 # Make sure glibc supports DT_GNU_HASH
 BuildRequires: glibc-devel >= 2.4.90-13
-%ifarch %{multilib_64_archs} sparcv9 ppc
-# Ensure glibc{,-devel} is installed for both multilib arches
-BuildRequires: /lib/libc.so.6 /usr/lib/libc.so /lib64/libc.so.6 /usr/lib64/libc.so
-%endif
 BuildRequires: elfutils-devel >= 0.147
 BuildRequires: elfutils-libelf-devel >= 0.147
-BuildRequires: gmp-devel >= 4.2, mpfr-devel >= 2.3.1, libmpc-devel >= 0.8.1
+BuildRequires: gmp-devel >= 4.1.2-8, mpfr-devel >= 2.2.1, libmpc-devel >= 0.8.1
 Provides: bundled(libiberty)
 
 %description
@@ -151,18 +152,65 @@ building kernels for other architectures.  No support for cross-building
 user space programs is currently supplied as that would massively multiply the
 number of packages.
 
+###############################################################################
+#
+# Debuginfo
+#
+###############################################################################
+%if 0%{?_enable_debug_packages}
+
+%define debug_package %{nil}
+%global __debug_package 1
+%global __debug_install_post \
+   %{_rpmconfigdir}/find-debuginfo.sh %{?_missing_build_ids_terminate_build:--strict-build-id} %{?_find_debuginfo_opts} "%{_builddir}/gcc-%{version}-%{DATE}"\
+    %{_builddir}/gcc-%{version}-%{DATE}/split-debuginfo.sh\
+%{nil}
+
+%package debuginfo
+Summary: Debug information for package %{name}
+Group: Development/Debug
+AutoReqProv: 0
+Requires: gcc-base-debuginfo = %{version}-%{release}
+
+%description debuginfo
+This package provides debug information for package %{name}.
+Debug information is useful when developing applications that use this
+package or when debugging this package.
+
+%files debuginfo -f debugfiles.list
+%defattr(-,root,root)
+
+%endif
+
+###############################################################################
+#
+# Conditional arch package definition
+#
+###############################################################################
 %define do_package() \
 %if %2 \
 %package -n %{rpmprefix}gcc-%1 \
 Summary: Cross-build binary utilities for %1 \
-Group: Development/Tools \
+Group: Development/Languages \
 Requires: %{cross}-gcc-common == %{version}-%{release} \
-BuildRequires: %{rpmprefix}binutils-%1 >= 2.23.88 \
-Requires: %{rpmprefix}binutils-%1 >= 2.23.88 \
+BuildRequires: %{rpmprefix}binutils-%1 >= %{cross_binutils_version} \
+Requires: %{rpmprefix}binutils-%1 >= %{cross_binutils_version} \
+Requires: isl >= %{isl_version} \
 %description -n %{rpmprefix}gcc-%1 \
 Cross-build GNU C compiler. \
 \
 Only building kernels is currently supported.  Support for cross-building \
+user space programs is not currently provided as that would massively multiply \
+the number of packages. \
+\
+%package -n %{rpmprefix}gcc-c++-%1 \
+Summary: Cross-build binary utilities for %1 \
+Group: Development/Languages \
+Requires: %{rpmprefix}gcc-%1 == %{version}-%{release} \
+%description -n %{rpmprefix}gcc-c++-%1 \
+Cross-build GNU C++ compiler. \
+\
+Only the compiler is provided; not libstdc++.  Support for cross-building \
 user space programs is not currently provided as that would massively multiply \
 the number of packages. \
 %endif
@@ -171,12 +219,24 @@ the number of packages. \
 %if %2 \
 %package -n gcc-%1 \
 Summary: Cross-build binary utilities for %1 \
-Group: Development/Tools \
+Group: Development/Languages \
 Requires: gcc-%3 == %{version}-%{release} \
 %description -n gcc-%1 \
-Cross-build GNU C compiler. \
+Cross-build GNU C++ compiler. \
 \
 Only building kernels is currently supported.  Support for cross-building \
+user space programs is not currently provided as that would massively multiply \
+the number of packages. \
+\
+%package -n gcc-c++-%1 \
+Summary: Cross-build binary utilities for %1 \
+Group: Development/Languages \
+Requires: gcc-%1 == %{version}-%{release} \
+Requires: gcc-c++-%3 == %{version}-%{release} \
+%description -n gcc-c++-%1 \
+Cross-build GNU C++ compiler. \
+\
+Only the compiler is provided; not libstdc++.  Support for cross-building \
 user space programs is not currently provided as that would massively multiply \
 the number of packages. \
 %endif
@@ -196,10 +256,12 @@ the number of packages. \
 %do_package ia64-linux-gnu	%{build_ia64}
 %do_package m32r-linux-gnu	%{build_m32r}
 %do_package m68k-linux-gnu	%{build_m68k}
+%do_package metag-linux-gnu	%{build_metag}
 %do_package microblaze-linux-gnu %{build_microblaze}
 %do_package mips-linux-gnu	%{build_mips}
 %do_package mips64-linux-gnu	%{build_mips64}
 %do_package mn10300-linux-gnu	%{build_mn10300}
+%do_package nios2-linux-gnu	%{build_nios2}
 %do_package openrisc-linux-gnu	%{build_openrisc}
 %do_package powerpc-linux-gnu	%{build_powerpc}
 %do_package powerpc64-linux-gnu	%{build_powerpc64}
@@ -225,7 +287,7 @@ the number of packages. \
 ###############################################################################
 %prep
 
-%setup -q -n %{srcdir} -c -a 1 -a 2
+%setup -q -n %{srcdir} -c
 cd %{srcdir}
 %patch0 -p0 -b .hack~
 %patch1 -p0 -b .java-nomulti~
@@ -235,47 +297,38 @@ cd %{srcdir}
 %patch5 -p0 -b .sparc-config-detection~
 %patch6 -p0 -b .libgomp-omp_h-multilib~
 %patch7 -p0 -b .libtool-no-rpath~
-%if %{build_cloog}
-%patch8 -p0 -b .cloog-dl~
-%patch9 -p0 -b .cloog-dl2~
-%endif
-%patch10 -p0 -b .pr38757~
-%patch12 -p0 -b .no-add-needed~
-%patch13 -p0 -b .pr56564~
-%patch14 -p0 -b .pr56493~
+# % if %{build_isl}
+%patch8 -p0 -b .isl-dl~
+# % endif
+# % if %{build_libstdcxx_docs}
+# % patch10 -p0 -b .libstdc++-docs~
+# % endif
+%patch11 -p0 -b .no-add-needed~
+%patch12 -p0 -b .libgo-p224~
+rm -f libgo/go/crypto/elliptic/p224{,_test}.go
+%patch13 -p0 -b .aarch64-async-unw-tables~
+%patch14 -p0 -b .libsanitize-aarch64-va42~
+%patch15 -p0 -b .pr65689~
+sed -i -e 's/ -Wl,-z,nodlopen//g' gcc/ada/gcc-interface/Makefile.in
 
-%patch100 -p0 -b .cross-intl~
-%patch101 -p1 -b .with-libgcc~
-%patch102 -p0 -b .sh-libgcc~
-%patch103 -p1 -b .varasm~
-%patch104 -p0 -b .tmake~
+%patch900 -p0 -b .cross-intl~
+%patch901 -p1 -b .with-libgcc~
+%patch902 -p0 -b .bfin~
+%patch903 -p0 -b .format-config~
+%patch904 -p0 -b .microblaze~
+%patch905 -p1 -b .sh64~
+%patch906 -p1 -b .ppc64le~
 
-cd ..
-%patch1100 -p0 -b .isl-aarch64~
-cd -
-
-# Move the version number back to 4.7.2
-sed -i -e 's/4\.8\.2/4.8.1/' gcc/BASE-VER
-echo 'Red Hat %{version}-%{gcc_release}' > gcc/DEV-PHASE
-
-%if 0%{?fedora} >= 16 || 0%{?rhel} >= 7
-# Default to -gdwarf-4 -fno-debug-types-section rather than -gdwarf-2
-sed -i '/UInteger Var(dwarf_version)/s/Init(2)/Init(4)/' gcc/common.opt
-sed -i '/flag_debug_types_section/s/Init(1)/Init(0)/' gcc/common.opt
-sed -i '/dwarf_record_gcc_switches/s/Init(0)/Init(1)/' gcc/common.opt
-sed -i 's/\(may be either 2, 3 or 4; the default version is \)2\./\14./' gcc/doc/invoke.texi
-%else
-# Default to -gdwarf-3 rather than -gdwarf-2
-sed -i '/UInteger Var(dwarf_version)/s/Init(2)/Init(3)/' gcc/common.opt
-sed -i 's/\(may be either 2, 3 or 4; the default version is \)2\./\13./' gcc/doc/invoke.texi
-sed -i 's/#define[[:blank:]]*EMIT_ENTRY_VALUE[[:blank:]].*$/#define EMIT_ENTRY_VALUE 0/' gcc/{var-tracking,dwarf2out}.c
-sed -i 's/#define[[:blank:]]*EMIT_TYPED_DWARF_STACK[[:blank:]].*$/#define EMIT_TYPED_DWARF_STACK 0/' gcc/dwarf2out.c
-sed -i 's/#define[[:blank:]]*EMIT_DEBUG_MACRO[[:blank:]].*$/#define EMIT_DEBUG_MACRO 0/' gcc/dwarf2out.c
-%endif
+echo 'Red Hat Cross %{version}-%{cross_gcc_release}' > gcc/DEV-PHASE
 
 ./contrib/gcc_update --touch
 
 LC_ALL=C sed -i -e 's/\xa0/ /' gcc/doc/options.texi
+
+sed -i -e 's/Common Driver Var(flag_report_bug)/& Init(1)/' gcc/common.opt
+
+# This test causes fork failures, because it spawns way too many threads
+rm -f gcc/testsuite/go.test/test/chan/goroutines.go
 
 function prep_target () {
     target=$1
@@ -288,6 +341,55 @@ function prep_target () {
 }
 
 cd ..
+
+%if 0%{?_enable_debug_packages}
+# We don't need the dwz-wrapper script here
+cat > split-debuginfo.sh <<\EOF
+#!/bin/sh
+BUILDDIR="%{_builddir}/gcc-%{version}-%{DATE}"
+if [ -f "${BUILDDIR}"/debugfiles.list \
+     -a -f "${BUILDDIR}"/debuglinks.list ]; then
+  > "${BUILDDIR}"/debugsources-base.list
+  > "${BUILDDIR}"/debugfiles-base.list
+  cd "${RPM_BUILD_ROOT}"
+  for f in `find usr/lib/debug -name \*.debug \
+	    | egrep 'lib[0-9]*/lib(gcc[_.]|gomp|stdc|quadmath|itm)'`; do
+    echo "/$f" >> "${BUILDDIR}"/debugfiles-base.list
+    if [ -f "$f" -a ! -L "$f" ]; then
+      cp -a "$f" "${BUILDDIR}"/test.debug
+      /usr/lib/rpm/debugedit -b "${RPM_BUILD_DIR}" -d /usr/src/debug \
+			     -l "${BUILDDIR}"/debugsources-base.list \
+			     "${BUILDDIR}"/test.debug
+      rm -f "${BUILDDIR}"/test.debug
+    fi
+  done
+  for f in `find usr/lib/debug/.build-id -type l`; do
+    ls -l "$f" | egrep -q -- '->.*lib[0-9]*/lib(gcc[_.]|gomp|stdc|quadmath|itm)' \
+      && echo "/$f" >> "${BUILDDIR}"/debugfiles-base.list
+  done
+  grep -v -f "${BUILDDIR}"/debugfiles-base.list \
+    "${BUILDDIR}"/debugfiles.list > "${BUILDDIR}"/debugfiles.list.new
+  mv -f "${BUILDDIR}"/debugfiles.list.new "${BUILDDIR}"/debugfiles.list
+  for f in `LC_ALL=C sort -z -u "${BUILDDIR}"/debugsources-base.list \
+	    | grep -E -v -z '(<internal>|<built-in>)$' \
+	    | xargs --no-run-if-empty -n 1 -0 echo \
+	    | sed 's,^,usr/src/debug/,'`; do
+    if [ -f "$f" ]; then
+      echo "/$f" >> "${BUILDDIR}"/debugfiles-base.list
+      echo "%%exclude /$f" >> "${BUILDDIR}"/debugfiles.list
+    fi
+  done
+  mv -f "${BUILDDIR}"/debugfiles-base.list{,.old}
+  echo "%%dir /usr/lib/debug" > "${BUILDDIR}"/debugfiles-base.list
+  awk 'BEGIN{FS="/"}(NF>4&&$NF){d="%%dir /"$2"/"$3"/"$4;for(i=5;i<NF;i++){d=d"/"$i;if(!v[d]){v[d]=1;print d}}}' \
+    "${BUILDDIR}"/debugfiles-base.list.old >> "${BUILDDIR}"/debugfiles-base.list
+  cat "${BUILDDIR}"/debugfiles-base.list.old >> "${BUILDDIR}"/debugfiles-base.list
+  rm -f "${BUILDDIR}"/debugfiles-base.list.old
+fi
+EOF
+chmod 755 split-debuginfo.sh
+%endif
+
 (
     prep_target alpha-linux-gnu		%{build_alpha}
     prep_target arm-linux-gnu		%{build_arm}
@@ -304,10 +406,12 @@ cd ..
     prep_target ia64-linux-gnu		%{build_ia64}
     prep_target m32r-linux-gnu		%{build_m32r}
     prep_target m68k-linux-gnu		%{build_m68k}
+    prep_target metag-linux-gnu		%{build_metag}
     prep_target microblaze-linux-gnu	%{build_microblaze}
     prep_target mips-linux-gnu		%{build_mips}
     prep_target mips64-linux-gnu	%{build_mips64}
     prep_target mn10300-linux-gnu	%{build_mn10300}
+    prep_target nios2-linux-gnu		%{build_nios2}
     prep_target openrisc-linux-gnu	%{build_openrisc}
     prep_target powerpc-linux-gnu	%{build_powerpc}
     prep_target powerpc64-linux-gnu	%{build_powerpc64}
@@ -349,65 +453,26 @@ fi
 # Undo the broken autoconf change in recent Fedora versions
 export CONFIG_SITE=NONE
 
-#
-# Configure and build the ISL and CLooG libraries
-#
-%if %{build_cloog}
-
-%define isl_source %{builddir}/isl-%{isl_version}
-%define isl_build %{builddir}/isl-build
-%define isl_install %{builddir}/isl-install
-
-mkdir %{isl_build} %{isl_install}
-%ifarch s390 s390x
-ISL_FLAG_PIC=-fPIC
-%else
-ISL_FLAG_PIC=-fpic
+CC=gcc
+CXX=g++
+OPT_FLAGS=`echo %{optflags}|sed -e 's/\(-Wp,\)\?-D_FORTIFY_SOURCE=[12]//g'`
+OPT_FLAGS=`echo $OPT_FLAGS|sed -e 's/-m64//g;s/-m32//g;s/-m31//g'`
+OPT_FLAGS=`echo $OPT_FLAGS|sed -e 's/-mfpmath=sse/-mfpmath=sse -msse2/g'`
+OPT_FLAGS=`echo $OPT_FLAGS|sed -e 's/ -pipe / /g'`
+%ifarch sparc
+OPT_FLAGS=`echo $OPT_FLAGS|sed -e 's/-mcpu=ultrasparc/-mtune=ultrasparc/g;s/-mcpu=v[78]//g'`
 %endif
-cd %{isl_build}
-%{isl_source}/configure \
-    --disable-shared \
-    CC=/usr/bin/gcc \
-    CXX=/usr/bin/g++ \
-    CFLAGS="${CFLAGS:-%optflags} $ISL_FLAG_PIC" \
-    --prefix=%{isl_install}
-make %{?_smp_mflags}
-make install
-cd ..
-
-%define cloog_source %{builddir}/cloog-%{cloog_version}
-%define cloog_build %{builddir}/cloog-build
-%define cloog_install %{builddir}/cloog-install
-
-mkdir %{cloog_build} %{builddir}/cloog-install
-cd %{cloog_build}
-cat >> %{cloog_source}/source/isl/constraints.c << \EOF
-#include <isl/flow.h>
-static void __attribute__((used)) *s1 = (void *) isl_union_map_compute_flow;
-static void __attribute__((used)) *s2 = (void *) isl_map_dump;
-EOF
-sed -i 's|libcloog|libgcc48privatecloog|g' \
-    %{cloog_source}/{,test/}Makefile.{am,in}
-
-%{cloog_source}/configure \
-    --with-isl=system \
-    --with-isl-prefix=%{isl_install} \
-    CC=/usr/bin/gcc \
-    CXX=/usr/bin/g++ \
-    CFLAGS="${CFLAGS:-%optflags}" \
-    CXXFLAGS="${CXXFLAGS:-%optflags}" \
-    --prefix=%{cloog_install}
-sed -i 's|^hardcode_libdir_flag_spec=.*|hardcode_libdir_flag_spec=""|g' libtool
-sed -i 's|^runpath_var=LD_RUN_PATH|runpath_var=DIE_RPATH_DIE|g' libtool
-make %{?_smp_mflags}
-make %{?_smp_mflags} install
-cd %{cloog_install}/lib
-rm libgcc48privatecloog-isl.so{,.4}
-mv libgcc48privatecloog-isl.so.4.0.0 libcloog-isl.so.4
-ln -sf libcloog-isl.so.4 libcloog-isl.so
-ln -sf libcloog-isl.so.4 libcloog.so
-
+%ifarch %{ix86}
+OPT_FLAGS=`echo $OPT_FLAGS|sed -e 's/-march=i.86//g'`
 %endif
+OPT_FLAGS=`echo $OPT_FLAGS|sed -e 's/-Werror=format-security/-Wformat-security/g'`
+OPT_FLAGS=`echo "$OPT_FLAGS" | sed -e 's/[[:blank:]]\+/ /g'`
+case "$OPT_FLAGS" in
+  *-fasynchronous-unwind-tables*)
+    sed -i -e 's/-fno-exceptions /-fno-exceptions -fno-asynchronous-unwind-tables /' \
+      %{srcdir}/libgcc/Makefile.in
+    ;;
+esac
 
 #
 # Configure the compiler
@@ -422,15 +487,17 @@ function config_target () {
 
     case $arch in
 	arm-*)		target=arm-linux-gnueabi;;
+	aarch64-*)	target=aarch64-linux-gnu;;
 	avr32-*)	target=avr-linux;;
 	bfin-*)		target=bfin-uclinux;;
 	c6x-*)		target=c6x-uclinux;;
 	h8300-*)	target=h8300-elf;;
 	mn10300-*)	target=am33_2.0-linux;;
-	openrisc-*)	target=or32-linux;;
+	m68knommu-*)	target=m68k-linux;;
+	openrisc-*)	target=or1k-linux;;
 	parisc-*)	target=hppa-linux;;
 	score-*)	target=score-elf;;
-	sh64-*)		target=sh64-linux;;
+	sh64-*)		target=sh64-linux-elf;;
 	tile-*)		target=tilegx-linux;;
 	v850-*)		target=v850e-linux;;
 	x86-*)		target=x86_64-linux;;
@@ -442,35 +509,38 @@ function config_target () {
 
     CONFIG_FLAGS=
     case $arch in
-	arm)
-	    CONFIG_FLAGS="--with-cpu=cortex-a8 --with-tune=cortex-a8 --with-arch=armv7-a \
+	arm-*)
+	    CONFIG_FLAGS="--with-tune=cortex-a8 --with-arch=armv7-a \
 		--with-float=hard --with-fpu=vfpv3-d16 --with-abi=aapcs-linux"
 	    ;;
-	powerpc-*|powerpc64-*)
-	    CONFIG_FLAGS="--with-cpu-32=power4 --with-tune-32=power6 --with-cpu-64=power4 --with-tune-64=power6 --enable-secureplt"
+	powerpc-*|powerpc64-*|ppc-*|ppc64-*)
+	    CONFIG_FLAGS="--with-cpu-32=power7 --with-tune-32=power8 --with-cpu-64=power7 --with-tune-64=power8 --enable-secureplt --enable-targets=all"
 	    ;;
 	s390*-*)
 	    CONFIG_FLAGS="--with-arch=z9-109 --with-tune=z10 --enable-decimal-float"
 	    ;;
 	sh-*)
-	    CONFIG_FLAGS=--with-multilib-list=m1,m2,m2e,m4,m4-single,m4-single-only,m2a,m2a-single,!m2a,!m2a-single
+	    CONFIG_FLAGS=--with-multilib-list=m1,m2,m2e,m4,m4-single,m4-single-only,m2a,m2a-single
 	    ;;
 	sh64-*)
 	    CONFIG_FLAGS=--with-multilib-list=m5-32media,m5-32media-nofpu,m5-compact,m5-compact-nofpu,m5-64media,m5-64media-nofpu
 	    ;;
 	sparc-*)
-	    CONFIG_FLAGS="--disable-linux-futex"
+	    CONFIG_FLAGS="--disable-linux-futex --with-cpu=v7"
+	    ;;
+	sparc64-*)
+	    CONFIG_FLAGS="--disable-linux-futex --with-cpu=ultrasparc"
 	    ;;
 	tile-*)
 	    #CONFIG_FLAGS="--with-arch_32=tilepro"
 	    ;;
-	x86-*)
-	    CONFIG_FLAGS="--with-arch_32=i686"
+	x86_64-*)
+	    CONFIG_FLAGS="--with-arch_32=i686 --with-tune=generic"
 	    ;;
     esac
 
     case $arch in
-	alpha|powerpc*|s390*|sparc*)
+	alpha|powerpc*|ppc*|s390*|sparc*)
 	    CONFIG_FLAGS="$CONFIG_FLAGS --with-long-double-128" ;;
     esac
 
@@ -479,6 +549,12 @@ function config_target () {
 
     # We could optimize the cross builds size by --enable-shared but the produced
     # binaries may be less convenient in the embedded environment.
+    CC="$CC" \
+    CXX="$CXX" \
+    CFLAGS="$OPT_FLAGS" \
+    CXXFLAGS="`echo " $OPT_FLAGS " | sed 's/ -Wall / /g;s/ -fexceptions / /g' \
+    		  | sed 's/ -Werror=format-security / -Wformat -Werror=format-security /'`" \
+    CFLAGS_FOR_TARGET="-g -O2 -Wall -fexceptions" \
     AR_FOR_TARGET=%{_bindir}/$arch-ar \
     AS_FOR_TARGET=%{_bindir}/$arch-as \
     DLLTOOL_FOR_TARGET=%{_bindir}/$arch-dlltool \
@@ -486,6 +562,7 @@ function config_target () {
     NM_FOR_TARGET=%{_bindir}/$arch-nm \
     OBJDUMP_FOR_TARGET=%{_bindir}/$arch-objdump \
     RANLIB_FOR_TARGET=%{_bindir}/$arch-ranlib \
+    READELF_FOR_TARGET=%{_bindir}/$arch-readelf \
     STRIP_FOR_TARGET=%{_bindir}/$arch-strip \
     WINDRES_FOR_TARGET=%{_bindir}/$arch-windres \
     WINDMC_FOR_TARGET=%{_bindir}/$arch-windmc \
@@ -497,23 +574,36 @@ function config_target () {
 	--disable-decimal-float \
 	--disable-dependency-tracking \
 	--disable-gold \
+	--disable-libgcj \
 	--disable-libgomp \
 	--disable-libmudflap \
 	--disable-libquadmath \
 	--disable-libssp \
+	--disable-libunwind-exceptions \
 	--disable-nls \
 	--disable-plugin \
 	--disable-shared \
 	--disable-silent-rules \
 	--disable-sjlj-exceptions \
 	--disable-threads \
-	--enable-checking=$checking \
+	--with-ld=/usr/bin/$arch-ld \
+	--enable-__cxa_atexit \
+	--enable-checking=release \
+%if 0%{?fedora} >= 21 || 0%{?rhel} >= 7
+%ifarch %{ix86} x86_64 ppc ppc64 ppc64le ppc64p7 s390 s390x %{arm} aarch64
+	--enable-gnu-indirect-function \
+%endif
+%endif
 	--enable-gnu-unique-object \
 	--enable-initfini-array \
-	--enable-languages=c \
+	--enable-languages=c,c++ \
 	--enable-linker-build-id \
 	--enable-nls \
 	--enable-obsolete \
+	--enable-plugin \
+%ifarch ppc ppc64 ppc64le ppc64p7
+	--enable-secureplt \
+%endif
 	--enable-targets=all \
 	--exec-prefix=%{_exec_prefix} \
 	--host=%{_target_platform} \
@@ -529,21 +619,29 @@ function config_target () {
 	--sysconfdir=%{_sysconfdir} \
 	--target=$target \
 	--with-bugurl=http://bugzilla.redhat.com/bugzilla/ \
+%if 0%{fedora} >= 21 && 0%{fedora} <= 22
+	--with-default-libstdcxx-abi=gcc4-compatible \
+%endif
+	--with-isl \
 	--with-linker-hash-style=gnu \
 	--with-newlib \
+	--with-sysroot=%{_prefix}/$arch/sys-root \
 	--with-system-libunwind \
 	--with-system-zlib \
 	--without-headers \
-%if %{build_cloog}
-	--with-isl=%{isl_install} --with-cloog=%{cloog_install} \
-%else
-	--without-isl --without-cloog \
-%endif
 	$CONFIG_FLAGS
 %if 0
 	--libdir=%{_libdir} # we want stuff in /usr/lib/gcc/ not /usr/lib64/gcc
-	--with-sysroot=%{_prefix}/$target/sys-root
 %endif
+
+    # Fix the ARM build for PR65956
+    case $arch in
+	arm-*)
+	    mkdir gcc
+	    sed -e 's/align != TYPE_ALIGN/align < TYPE_ALIGN/' \
+		<../%{srcdir}/gcc/tree-sra.c >gcc/tree-sra.c
+	    ;;
+    esac
     cd ..
 }
 
@@ -558,6 +656,13 @@ function build_target () {
     arch=$1
     build_dir=$1
 
+    BUILD_FLAGS=
+    case $arch in
+	x86_64-*)
+	    BUILD_FLAGS="gcc_cv_libc_provides_ssp=yes gcc_cv_as_ix86_tlsldm=yes"
+	    ;;
+    esac
+
     AR_FOR_TARGET=%{_bindir}/$arch-ar \
     AS_FOR_TARGET=%{_bindir}/$arch-as \
     DLLTOOL_FOR_TARGET=%{_bindir}/$arch-dlltool \
@@ -565,11 +670,13 @@ function build_target () {
     NM_FOR_TARGET=%{_bindir}/$arch-nm \
     OBJDUMP_FOR_TARGET=%{_bindir}/$arch-objdump \
     RANLIB_FOR_TARGET=%{_bindir}/$arch-ranlib \
+    READELF_FOR_TARGET=%{_bindir}/$arch-readelf \
     STRIP_FOR_TARGET=%{_bindir}/$arch-strip \
     WINDRES_FOR_TARGET=%{_bindir}/$arch-windres \
     WINDMC_FOR_TARGET=%{_bindir}/$arch-windmc \
-    make -C $build_dir %{_smp_mflags} tooldir=%{_prefix} all-gcc
+    make -C $build_dir %{_smp_mflags} tooldir=%{_prefix} $BUILD_FLAGS all-gcc
 
+    echo "=== BUILDING LIBGCC $1"
     case $arch in
 	%{no_libgcc_targets})
 	    ;;
@@ -621,18 +728,11 @@ function install_bin () {
 
 for target in `cat target.list`
 do
+    mkdir -p %{buildroot}%{_prefix}/$target/sys-root
     install_bin $target
 done
 
 grep ^powerpc target.list | sed -e s/powerpc/ppc/ >symlink-target.list
-
-# We have to copy cloog somewhere graphite can dlopen it from
-%if %{build_cloog}
-for i in %{buildroot}%{_prefix}/lib/gcc/*/%{gcc_version}
-do
-    cp -a %{cloog_install}/lib/libcloog-isl.so.4 $i
-done
-%endif
 
 # For cross-gcc we drop the documentation.
 rm -rf %{buildroot}%{_infodir}
@@ -663,7 +763,7 @@ rmdir %{buildroot}%{_mandir}/man7
 # All the installed manual pages and translation files for each program are the
 # same, so symlink them to the common package
 cd %{buildroot}%{_mandir}/man1
-for i in %{cross}-cpp.1.gz %{cross}-gcc.1.gz %{cross}-gcov.1.gz
+for i in %{cross}-cpp.1.gz %{cross}-gcc.1.gz %{cross}-g++.1.gz %{cross}-gcov.1.gz
 do
     j=${i#%{cross}-}
 
@@ -691,33 +791,51 @@ function install_lang () {
     arch=$1
     cpu=${arch%%%%-*}
 
-    (
-	echo '%%defattr(-,root,root,-)'
-	echo '%{_bindir}/'$arch'-*'
-	echo '%{_mandir}/man1/'$arch'-*'
+    case $cpu in
+	avr32)		target_cpu=avr;;
+	bfin)		target_cpu=bfin;;
+	h8300)		target_cpu=h8300;;
+	mn10300)	target_cpu=am33_2.0;;
+	openrisc)	target_cpu=or1k;;
+	parisc)		target_cpu=hppa;;
+	score)		target_cpu=score;;
+	tile)		target_cpu=tilegx;;
+	v850)		target_cpu=v850e;;
+	x86)		target_cpu=x86_64;;
+	*)		target_cpu=$cpu;;
+    esac
 
-	case $cpu in
-	    avr32)		target_cpu=avr;;
-	    bfin)		target_cpu=bfin;;
-	    h8300)		target_cpu=h8300;;
-	    mn10300)		target_cpu=am33_2.0;;
-	    openrisc)		target_cpu=openrisc;;
-	    parisc)		target_cpu=hppa;;
-	    score)		target_cpu=score;;
-	    tile)		target_cpu=tilegx;;
-	    v850)		target_cpu=v850e;;
-	    x86)		target_cpu=x86_64;;
-	    *)			target_cpu=$cpu;;
-	esac
+    (
+	echo '%{_bindir}/'$arch'*-cpp'
+	echo '%{_bindir}/'$arch'*-gcc'
+	echo '%{_bindir}/'$arch'*-gcov*'
+	echo '%{_mandir}/man1/'$arch'*-cpp*'
+	echo '%{_mandir}/man1/'$arch'*-gcc*'
+	echo '%{_mandir}/man1/'$arch'*-gcov*'
 	case $cpu in
 	    ppc*|ppc64*)
 		;;
 	    *)
 		echo '/usr/lib/gcc/'$target_cpu'-*/'
-		echo '%{_libexecdir}/gcc/'$target_cpu'-*/'
+		echo '%{_libexecdir}/gcc/'$target_cpu'*/*/cc1'
+		echo '%{_libexecdir}/gcc/'$target_cpu'*/*/collect2'
+		echo '%{_libexecdir}/gcc/'$target_cpu'*/*/[abd-z]*'
+		echo '%%attr(0755,root,root)' %{_prefix}/$arch/sys-root
 	esac
 
     ) >files.$arch
+
+    (
+	echo '%{_bindir}/'$arch'*-c++'
+	echo '%{_bindir}/'$arch'*-g++'
+	echo '%{_mandir}/man1/'$arch'*-g++*'
+	case $cpu in
+	    ppc*|ppc64*)
+		;;
+	    *)
+		echo '%{_libexecdir}/gcc/'$target_cpu'*/*/cc1plus'
+	esac
+    ) >files-c++.$arch
 }
 
 for target in `cat target.list symlink-target.list`
@@ -761,6 +879,7 @@ rm -rf %{buildroot}
 %define do_files() \
 %if %2 \
 %files -n %{rpmprefix}gcc-%1 -f files.%1 \
+%files -n %{rpmprefix}gcc-c++-%1 -f files-c++.%1 \
 %endif
 
 %do_files alpha-linux-gnu	%{build_alpha}
@@ -778,10 +897,12 @@ rm -rf %{buildroot}
 %do_files ia64-linux-gnu	%{build_ia64}
 %do_files m32r-linux-gnu	%{build_m32r}
 %do_files m68k-linux-gnu	%{build_m68k}
+%do_files metag-linux-gnu	%{build_metag}
 %do_files microblaze-linux-gnu	%{build_microblaze}
 %do_files mips-linux-gnu	%{build_mips}
 %do_files mips64-linux-gnu	%{build_mips64}
 %do_files mn10300-linux-gnu	%{build_mn10300}
+%do_files nios2-linux-gnu	%{build_nios2}
 %do_files openrisc-linux-gnu	%{build_openrisc}
 %do_files powerpc-linux-gnu	%{build_powerpc}
 %do_files powerpc64-linux-gnu	%{build_powerpc64}
@@ -801,56 +922,18 @@ rm -rf %{buildroot}
 %do_files xtensa-linux-gnu	%{build_xtensa}
 
 %changelog
-* Tue Aug 13 2013 David Howells <dhowells@redhat.com> - 4.8.1-5.2
-- Require binutils 2.23.88 or greater for 32-bit HPPA binutils.
+* Tue Aug 25 2015 David Howells <dhowells@redhat.com> - 5.2.1-1
+- Rebase on gcc-5.2.1-1
+- Build ppcle & ppc64le with new binutils [BZ 1255946]
+- Fix sh64 compilation [gcc BZ 67049]
+- Fix ppc64le compilation
 
-* Mon Aug 12 2013 David Howells <dhowells@redhat.com> - 4.8.1-5.1
-- Move to gcc-4.8.1.
-- Enable cloog support.
+* Thu Jul 2 2015 David Howells <dhowells@redhat.com> - 5.1.1-3
+- Manually force x86_64 stack protector settings [BZ 1228800]
+- Rebase on gcc-5.1.1-4
 
-* Wed Jun 5 2013 David Howells <dhowells@redhat.com> - 4.7.2-2.aa.20121114svn.2
-- Use CONFIG_FLAGS and ditch COPT to avoid confusion.
-- Backport cleanups from the RHEL-6.4 cross-compiler.
-- Backport some macroisation from the RHEL-6.4 cross-compiler.
-- Remove documentation build config as it we do not use it for gcc.
-- The hppa64 target cannot actually build hppa, so provide hppa [BZ 892220].
-- Provide ppc- and ppc64- rpms with symlinks to powerpc- and powerpc64- rpms.
+* Fri May 15 2015 David Howells <dhowells@redhat.com> - 5.1.1-2
+- Fix ICE in alpha cross-compiler [BZ 1219345 / gcc BZ 66140]
 
-* Wed Feb 13 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 4.7.2-2.aa.20121114svn.1
-- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
-
-* Tue Nov 20 2012 David Howells <dhowells@redhat.com> - 4.7.2-2.aa.20121114
-- Fixed the sh64 libgcc compilation.
-
-* Thu Nov 15 2012 David Howells <dhowells@redhat.com> - 4.7.2-1.aa.20121114
-- Move to the gcc-4.7-aarch64 SVN branch and add a compiler for the aarch64 arch.
-- Disable sjlj exception support.
-- Compile libgcc for certain platforms.
-- Fix fuzz in sparc-config-detection patch.
-
-* Mon Oct 15 2012 Jon Ciesla <limburgher@gmail.com> - 4.7.1-0.1.20120606.2
-- Provides: bundled(libiberty)
-
-* Wed Jul 18 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 4.7.1-0.1.20120606.1
-- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
-
-* Mon Jun 11 2012 David Howells <dhowells@redhat.com> - 4.7.1-0.1.20120606
-- Update to gcc-4.7.1-RC-20120606 to fix an ICE in the MIPS compiler.
-- The SH64 compilation patches are now redundant.
-
-* Wed May 30 2012 David Howells <dhowells@redhat.com> - 4.7.0-1
-- Update to gcc-4.7.0.
-- Add patches to fix SH64 compilation.
-- Build separate SH and SH64 compilers.
-
-* Thu Mar 22 2012 David Howells <dhowells@redhat.com> - 4.7.0-0.11.4
-- Add missing BuildRequires
-
-* Thu Mar 22 2012 David Howells <dhowells@redhat.com> - 4.7.0-0.11.3
-- Fix gcc47-ppl-0.10.patch fuzz.
-
-* Thu Mar 22 2012 David Howells <dhowells@redhat.com> - 4.7.0-0.11.2
-- Initial import of cross-binutils [BZ 766166].
-
-* Mon Oct 31 2011 Rex Dieter <rdieter@fedoraproject.org> 4.6.2-1.fc17.1
-- rebuild (gmp)
+* Thu Apr 23 2015 David Howells <dhowells@redhat.com> - 5.1.1-1
+- Switch to gcc-5.1

@@ -1,17 +1,17 @@
 --- gcc/config.gcc.jj	2008-04-24 15:42:46.000000000 -0500
 +++ gcc/config.gcc	2008-04-24 15:44:51.000000000 -0500
-@@ -2421,7 +2421,7 @@ sparc-*-rtems*)
+@@ -2656,7 +2656,7 @@ sparc-*-rtems*)
  	tm_file="${tm_file} dbxelf.h elfos.h sparc/sysv4.h sparc/sp-elf.h sparc/rtemself.h rtems.h newlib-stdint.h"
- 	tmake_file="sparc/t-sparc sparc/t-elf sparc/t-rtems t-rtems"
+ 	tmake_file="${tmake_file} sparc/t-sparc sparc/t-rtems"
  	;;
 -sparc-*-linux*)
 +sparc-*-linux* | sparcv9-*-linux*)
  	tm_file="${tm_file} dbxelf.h elfos.h sparc/sysv4.h gnu-user.h linux.h glibc-stdint.h sparc/tso.h"
  	extra_options="${extra_options} sparc/long-double-switch.opt"
  	case ${target} in
-@@ -2474,7 +2474,7 @@ sparc64-*-rtems*)
+@@ -2710,7 +2710,7 @@ sparc64-*-rtems*)
  	extra_options="${extra_options}"
- 	tmake_file="${tmake_file} sparc/t-sparc sparc/t-rtems-64 t-rtems"
+ 	tmake_file="${tmake_file} sparc/t-sparc sparc/t-rtems-64"
  	;;
 -sparc64-*-linux*)
 +sparc64*-*-linux*)

@@ -1,0 +1,17 @@
+Fix SH64 compilation
+
+PR target/67049
+* config/sh/sh.md (GOTaddr2picreg): Fix typo added with the last change.
+---
+diff --git a/gcc/config/sh/sh.md b/gcc/config/sh/sh.md
+index a86eaad..387ffe3 100644
+--- a/gcc/config/sh/sh.md
++++ b/gcc/config/sh/sh.md
+@@ -10597,7 +10597,7 @@ label:
+   if (TARGET_SHMEDIA)
+     {
+       rtx tr = gen_rtx_REG (Pmode, TR0_REG);
+-      rtx pic = operands[0];
++      rtx pic = operands[1];
+       rtx lab = PATTERN (gen_call_site ());
+       rtx insn, equiv;
