@@ -1,0 +1,13 @@
+--- binutils-2.24/bfd/elf64-sh64.c.old
++++ binutils-2.24/bfd/elf64-sh64.c
+@@ -2894,6 +2894,10 @@ static void
+ sh64_elf64_final_write_processing (bfd *abfd,
+ 				   bfd_boolean linker ATTRIBUTE_UNUSED)
+ {
++  /* PR 17288: Make sure that the SH5 flag is set.  */
++  if (elf_elfheader (abfd)->e_flags == 0)
++    elf_elfheader (abfd)->e_flags |= EF_SH5;
++
+   /* FIXME: Perhaps we shouldn't do this if the entry address was supplied
+      numerically, but we currently lack the infrastructure to recognize
+      that: The entry symbol, and info whether it is numeric or a symbol

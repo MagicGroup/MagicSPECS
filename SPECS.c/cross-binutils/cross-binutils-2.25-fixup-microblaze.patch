@@ -1,0 +1,75 @@
+commit 03e080386e266243b2af667af026b992822085cd
+Author: Nick Clifton <nickc@redhat.com>
+Date:   Thu Apr 2 16:10:06 2015 +0100
+
+    Fixes a bug in the microblaze assembler where it would not complain about constants larger than 32-bits.
+    
+    	PR gas/18189
+    	* config/tc-microblaze.c (parse_imm): Use offsetT as the type for
+    	min and max parameters.
+
+diff --git a/gas/config/tc-microblaze.c b/gas/config/tc-microblaze.c
+index bdf25c2..6f0e795 100644
+--- a/gas/config/tc-microblaze.c
++++ b/gas/config/tc-microblaze.c
+@@ -685,7 +685,7 @@ static symbolS * GOT_symbol;
+ #define GOT_SYMBOL_NAME "_GLOBAL_OFFSET_TABLE_"
+ 
+ static char *
+-parse_imm (char * s, expressionS * e, int min, int max)
++parse_imm (char * s, expressionS * e, offsetT min, offsetT max)
+ {
+   char *new_pointer;
+   char *atp;
+@@ -736,11 +736,11 @@ parse_imm (char * s, expressionS * e, int min, int max)
+     ; /* An error message has already been emitted.  */
+   else if ((e->X_op != O_constant && e->X_op != O_symbol) )
+     as_fatal (_("operand must be a constant or a label"));
+-  else if ((e->X_op == O_constant) && ((int) e->X_add_number < min
+-				       || (int) e->X_add_number > max))
++  else if ((e->X_op == O_constant) && (e->X_add_number < min
++				       || e->X_add_number > max))
+     {
+-      as_fatal (_("operand must be absolute in range %d..%d, not %d"),
+-                min, max, (int) e->X_add_number);
++      as_fatal (_("operand must be absolute in range %lx..%lx, not %lx"),
++                (long) min, (long) max, (long) e->X_add_number);
+     }
+ 
+   if (atp)
+commit f66adc4eada1884cef90aa978561b9b2008cdaf2
+Author: Nick Clifton <nickc@redhat.com>
+Date:   Thu Apr 2 17:13:12 2015 +0100
+
+    Second fix for microblaze gas port's ability to parse constants.
+    
+    	PR gas/18189
+    	* config/tc-microblaze.c (parse_imm): Use offsetT as the type for
+    	min and max parameters.  Sign extend values before testing.
+
+diff --git a/gas/config/tc-microblaze.c b/gas/config/tc-microblaze.c
+index 6f0e795..3309e59 100644
+--- a/gas/config/tc-microblaze.c
++++ b/gas/config/tc-microblaze.c
+@@ -736,11 +736,17 @@ parse_imm (char * s, expressionS * e, offsetT min, offsetT max)
+     ; /* An error message has already been emitted.  */
+   else if ((e->X_op != O_constant && e->X_op != O_symbol) )
+     as_fatal (_("operand must be a constant or a label"));
+-  else if ((e->X_op == O_constant) && (e->X_add_number < min
+-				       || e->X_add_number > max))
++  else if (e->X_op == O_constant)
+     {
+-      as_fatal (_("operand must be absolute in range %lx..%lx, not %lx"),
+-                (long) min, (long) max, (long) e->X_add_number);
++      /* Special case: sign extend negative 32-bit values to 64-bits.  */
++      if ((e->X_add_number >> 31) == 1)
++	e->X_add_number |= (-1 << 31);
++
++      if (e->X_add_number < min || e->X_add_number > max)
++	{
++	  as_fatal (_("operand must be absolute in range %lx..%lx, not %lx"),
++		    (long) min, (long) max, (long) e->X_add_number);
++	}
+     }
+ 
+   if (atp)

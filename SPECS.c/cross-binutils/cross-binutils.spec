@@ -17,9 +17,11 @@
 %define build_ia64		%{build_all}
 %define build_m32r		%{build_all}
 %define build_m68k		%{build_all}
+%define build_metag		%{build_all}
 %define build_microblaze	%{build_all}
 %define build_mips64		%{build_all}
 %define build_mn10300		%{build_all}
+%define build_nios2		%{build_all}
 %define build_openrisc		%{build_all}
 %define build_powerpc64		%{build_all}
 %define build_s390x		%{build_all}
@@ -39,45 +41,36 @@
 %define build_sparc		0
 %define build_sh4		0
 
-# not available in binutils-2.22
+# not available in binutils-2.24
 %define build_hexagon		0
 %define build_unicore32		0
 
+# BZ 1124342: Enable deterministic archives by default.
+%define enable_deterministic_archives 1
+
 Summary: A GNU collection of cross-compilation binary utilities
-Summary(zh_CN.UTF-8): 交叉编译用的二进制工具集合
 Name: %{cross}-binutils
-# Note - this version number is a lie.  It should actually be 2.23.2 since
-# that is the version of the base sources.  But we have decided to switch
-# from tracking the Linux Kernel binutils releases to tracking the FSF
-# binutils releases half way through the FSF binutils release cycle.  The
-# version prior to this change was 2.23.52.0.1, but if we just set the new
-# version definition to be 2.23.2 then we would have a regression in the
-# binutils rpm numbers, which would break the rpm update mechanism.  So
-# instead we create a bogus, higher, version number here.  Once the next
-# official binutils release happens (2.24.0) we will be able to restore
-# Version to an honest value and everything will be good again.
-Version: 2.23.88.0.1
-%define srcdir binutils-2.23.2
-Release: 2%{?dist}
+Version: 2.25.1
+Release: 1%{?dist}
 License: GPLv3+
 Group: Development/Tools
-Group(zh_CN.UTF-8): 开发/工具
 URL: http://sources.redhat.com/binutils
 
-# Note - see comment about the definition of Version above.  Once Version is
-# restored to a proper value the definition of Source below should be changed
-# to use %{version} instead of 2.23.2
-#
 # Note - the Linux Kernel binutils releases are too unstable and contain too
 # many controversial patches so we stick with the official FSF version
 # instead.
-Source: http://ftp.gnu.org/gnu/binutils/binutils-2.23.2.tar.bz2
+Source: http://ftp.gnu.org/gnu/binutils/binutils-%{version}.tar.bz2
+
 Source2: binutils-2.19.50.0.1-output-format.sed
+
+# Bring up to date with what's in the git release branch
+#Patch00: binutils-2.24-cde98f8566e14f52b896abc92c357cdd14717505.patch
+
 Patch01: binutils-2.20.51.0.2-libtool-lib64.patch
 Patch02: binutils-2.20.51.0.10-ppc64-pie.patch
 Patch03: binutils-2.20.51.0.2-ia64-lib64.patch
-Patch04: binutils-2.20.51.0.2-version.patch
-Patch05: binutils-2.20.51.0.2-set-long-long.patch
+Patch04: binutils-2.25-version.patch
+Patch05: binutils-2.25-set-long-long.patch
 Patch06: binutils-2.20.51.0.10-copy-osabi.patch
 Patch07: binutils-2.20.51.0.10-sec-merge-emit.patch
 # Enable -zrelro by default: BZ #621983
@@ -86,27 +79,23 @@ Patch08: binutils-2.22.52.0.1-relro-on-by-default.patch
 Patch09: binutils-2.22.52.0.1-export-demangle.h.patch
 # Disable checks that config.h has been included before system headers.  BZ #845084
 Patch10: binutils-2.22.52.0.4-no-config-h-check.patch
-# Fix the creation of the index table in 64-bit thin archives.
-Patch11: binutils-2.23.52.0.1-64-bit-thin-archives.patch
-# Fix errors reported by version 5.0 of texinfo in gas documentation
-Patch12: binutils-2.23.52.0.1-as-doc-texinfo-fixes.patch
 # Fix addr2line to use the dynamic symbol table if it could not find any ordinary symbols.
-Patch13: binutils-2.23.52.0.1-addr2line-dynsymtab.patch
-# Check regular references without non-GOT references when building shared libraries.
-Patch14: binutils-2.23.52.0.1-check-regular-ifunc-refs.patch
-# Fix errors reported by version 5.0 of texinfo in ld documentation
-Patch15: binutils-2.23.2-ld-texinfo-fixes.patch
-Patch16: binutils-2.23.2-kernel-ld-r.patch
-Patch17: binutils-2.23.2-bfd-texinfo-fixes.patch
-# Add support for the alternate debug info files created by the DWZ program.
-Patch18: binutils-2.23.2-dwz-alt-debuginfo.patch
-# Correct bug introduced by patch 16
-Patch19: binutils-2.23.2-aarch64-em.patch
-# Add support for the .machinemode pseudo-op to the S/390 assembler.
-patch20: binutils-2.23.2-s390-gas-machinemode.patch
+Patch11: binutils-2.23.52.0.1-addr2line-dynsymtab.patch
+# Patch12: binutils-2.23.2-kernel-ld-r.patch
+Patch12: binutils-2.25-kernel-ld-r.patch
+# Correct bug introduced by patch 12
+Patch13: binutils-2.23.2-aarch64-em.patch
+# Fix detections little endian PPC shared libraries
+Patch14: binutils-2.24-ldforcele.patch
+# Fix parsing of corupt iHex binaries
+Patch15: binutils-2.25.1-ihex-parsing.patch
+# backport https://sourceware.org/git/gitweb.cgi?p=binutils-gdb.git;h=e9c1bdad269c0c3352eebcc9481ed65144001b0b
+# Qt linked with gold crash on startup, BZ #1193044
+Patch16: binutils-2.25.1-dynamic_list.patch
 
-# Fix for xtensa memset length
-Patch100: cross-binutils-2.23.2-xtensa-memset.patch
+# Fix formatless sprintfs in Score-specific code.
+Patch100: cross-binutils-2.25-fixup-for-sh64.patch
+Patch101: cross-binutils-2.25-fixup-microblaze.patch
 
 Buildroot: %(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
 BuildRequires: texinfo >= 4.0, gettext, flex, bison, zlib-devel
@@ -133,48 +122,32 @@ of an object or archive file), strings (for listing printable strings
 from files), strip (for discarding symbols), and addr2line (for
 converting addresses to file and line).
 
-%description -l zh_CN.UTF-8
-交叉编译用的二进制文件处理工具集合。
-
 %package -n %{cross}-binutils-common
 Summary: Cross-build binary utility documentation and translation files
-Summary(zh_CN.UTF-8): %{name} 的各平台共用文件
 Group: Development/Tools
-Group(zh_CN.UTF-8): 开发/工具
 BuildArch: noarch
 %description -n %{cross}-binutils-common
 Documentation, manual pages and translation files for cross-build binary image
 generation, manipulation and query tools.
 
-%description -n %{cross}-binutils-common -l zh_CN.UTF-8
-%{name} 的各平台共用文件，包括文档和语言文件。
-
 %define do_package() \
 %if %2 \
 %package -n %{rpmprefix}binutils-%1 \
 Summary: Cross-build binary utilities for %1 \
-Summary(zh_CN.UTF-8): %1 用的交叉编译用二进制工具 \
 Group: Development/Tools \
-Group(zh_CN.UTF-8): 开发/工具 \
 Requires: %{cross}-binutils-common == %{version}-%{release} \
 %description -n %{rpmprefix}binutils-%1 \
 Cross-build binary image generation, manipulation and query tools. \
-%description -n %{rpmprefix}binutils-%1 -l zh_CN.UTF-8 \
-交叉编译时处理二进制程序的工具。\
 %endif
 
 %define do_symlink() \
 %if %2 \
 %package -n %{rpmprefix}binutils-%1 \
 Summary: Cross-build binary utilities for %1 \
-Summary(zh_CN.UTF-8): %1 用的交叉编译用二进制工具 \
 Group: Development/Tools \
-Group(zh_CN.UTF-8): 开发/工具 \
 Requires: binutils-%3 == %{version}-%{release} \
 %description -n %{rpmprefix}binutils-%1 \
 Cross-build binary image generation, manipulation and query tools. \
-%description -n %{rpmprefix}binutils-%1 -l zh_CN.UTF-8 \
-交叉编译时处理二进制程序的工具。\
 %endif
 
 %do_package alpha-linux-gnu	%{build_alpha}
@@ -193,11 +166,13 @@ Cross-build binary image generation, manipulation and query tools. \
 %do_package ia64-linux-gnu	%{build_ia64}
 %do_package m32r-linux-gnu	%{build_m32r}
 %do_package m68k-linux-gnu	%{build_m68k}
+%do_package metag-linux-gnu	%{build_metag}
 %do_package microblaze-linux-gnu %{build_microblaze}
 %do_package mips-linux-gnu	%{build_mips}
 %do_package mips64-linux-gnu	%{build_mips64}
 %do_package mn10300-linux-gnu	%{build_mn10300}
-%do_package openrisc-linux-gnu	%{build_openrisc}
+%do_package nios2-linux-gnu	%{build_nios2}
+%do_package openrisc-linux-gnu	%{build_openrisc}	or1k-linux-gnu
 %do_package powerpc-linux-gnu	%{build_powerpc}
 %do_package powerpc64-linux-gnu	%{build_powerpc64}
 %do_symlink ppc-linux-gnu	%{build_powerpc}	powerpc-linux-gnu
@@ -225,41 +200,45 @@ Cross-build binary image generation, manipulation and query tools. \
 ###############################################################################
 %prep
 
+%define srcdir binutils-%{version}
 %setup -q -n %{srcdir} -c
 cd %{srcdir}
-%patch01 -p0 -b .libtool-lib64~
-%patch02 -p0 -b .ppc64-pie~
+%if 1
+#%patch00 -p1 -b .latest-git~
+%patch01 -p1 -b .libtool-lib64~
+%patch02 -p1 -b .ppc64-pie~
 %ifarch ia64
 %if "%{_lib}" == "lib64"
-%patch03 -p0 -b .ia64-lib64~
+%patch03 -p1 -b .ia64-lib64~
 %endif
 %endif
-%patch04 -p0 -b .version~
-%patch05 -p0 -b .set-long-long~
-%patch06 -p0 -b .copy-osabi~
-%patch07 -p0 -b .sec-merge-emit~
+%patch04 -p1 -b .version~
+%patch05 -p1 -b .set-long-long~
+%patch06 -p1 -b .copy-osabi~
+%patch07 -p1 -b .sec-merge-emit~
 %if 0%{?fedora} >= 18 || 0%{?rhel} >= 7
-%patch08 -p0 -b .relro~
+%patch08 -p1 -b .relro~
 %endif
-%patch09 -p0 -b .export-demangle-h~
-%patch10 -p0 -b .no-config-h-check~
-%patch11 -p0 -b .64bit-thin-archives~
-%patch12 -p0 -b .gas-texinfo~
-%patch13 -p0 -b .addr2line~
-%patch14 -p0 -b .check-ifunc~
-%patch15 -p0 -b .ld-texinfo~
-%patch16 -p0 -b .kernel-ld-r~
-%patch17 -p0 -b .bfd-texinfo~
-%patch18 -p0 -b .dwz~
-%patch19 -p0 -b .aarch64~
-%patch20 -p0 -b .machinemode~
+%patch09 -p1 -b .export-demangle-h~
+%patch10 -p1 -b .no-config-h-check~
+%patch11 -p1 -b .addr2line~
+%patch12 -p1 -b .kernel-ld-r~
+%patch13 -p1 -b .aarch64~
+%patch14 -p1 -b .ldforcele~
+%patch15 -p1 -b .ihex~
+%patch16 -p1 -b .dynamic_list~
+%endif
 
-%patch100 -p1 -b .xtensa~
+%patch100 -p1 -b .sh64-fixup~
+%patch101 -p1 -b .microblaze-fixup~
 
 # We cannot run autotools as there is an exact requirement of autoconf-2.59.
 
-# On ppc64 we might use 64KiB pages
+# On ppc64 and aarch64, we might use 64KiB pages
 sed -i -e '/#define.*ELF_COMMONPAGESIZE/s/0x1000$/0x10000/' bfd/elf*ppc.c
+sed -i -e '/#define.*ELF_COMMONPAGESIZE/s/0x1000$/0x10000/' bfd/elf*aarch64.c
+sed -i -e '/common_pagesize/s/4 /64 /' gold/powerpc.cc
+sed -i -e '/pagesize/s/0x1000,/0x10000,/' gold/aarch64.cc
 # LTP sucks
 perl -pi -e 's/i\[3-7\]86/i[34567]86/g' */conf*
 sed -i -e 's/%''{release}/%{release}/g' bfd/Makefile{.am,.in}
@@ -307,10 +286,12 @@ cd ..
     prep_target ia64-linux-gnu		%{build_ia64}
     prep_target m32r-linux-gnu		%{build_m32r}
     prep_target m68k-linux-gnu		%{build_m68k}
+    prep_target metag-linux-gnu		%{build_metag}
     prep_target microblaze-linux-gnu	%{build_microblaze}
     prep_target mips-linux-gnu		%{build_mips}
     prep_target mips64-linux-gnu	%{build_mips64}
     prep_target mn10300-linux-gnu	%{build_mn10300}
+    prep_target nios2-linux-gnu		%{build_nios2}
     prep_target openrisc-linux-gnu	%{build_openrisc}
     prep_target powerpc-linux-gnu	%{build_powerpc}
     prep_target powerpc64-linux-gnu	%{build_powerpc64}
@@ -359,13 +340,16 @@ function config_target () {
 	bfin-*)		target=bfin-uclinux;;
 	c6x-*)		target=c6x-uclinux;;
 	h8300-*)	target=h8300-elf;;
+	m32r-*)		target=m32r-elf;;
 	mn10300-*)	target=am33_2.0-linux;;
 	m68knommu-*)	target=m68k-linux;;
-	openrisc-*)	target=openrisc-elf;;
+	openrisc-*)	target=or1k-linux-gnu;;
+	parisc-*)	target=hppa-linux;;
 	score-*)	target=score-elf;;
-	sh64-*)		target=sh64-linux;;
+	sh64-*)		target=sh64-linux-elf;;
 	tile-*)		target=tilegx-linux;;
 	v850-*)		target=v850e-linux;;
+	x86-*)		target=x86_64-linux;;
 	*)		target=$arch;;
     esac
 
@@ -373,7 +357,7 @@ function config_target () {
     export CFLAGS="$RPM_OPT_FLAGS"
     CARGS=
 
-    case $target in i?86*|sparc*|ppc*|s390*|sh*|arm*)
+    case $target in i?86*|sparc*|ppc*|powerpc*|s390*|sh*|arm*)
 	    CARGS="$CARGS --enable-64-bit-bfd"
 	    ;;
     esac
@@ -383,18 +367,13 @@ function config_target () {
 	    ;;
     esac
 
-    case $target in ppc*|ppc64*)
-	    CARGS="$CARGS --enable-targets=spu"
+    case $target in ppc*|powerpc*)
+	    CARGS="$CARGS --enable-targets=spu,powerpc-linux,ppc64le-linux-gnu,ppcle-linux-gnu"
 	    ;;
     esac
 
     case $target in sh-*)
-	    CARGS="$CARGS --enable-targets=sh4-linux"
-	    ;;
-    esac
-
-    case $target in sh64*)
-	    CARGS="$CARGS --enable-targets=sh64-linux,sh-elf,sh-linux,sh4-linux"
+	    CARGS="$CARGS --enable-targets=sh4-linux,sh-elf,sh-linux"
 	    ;;
     esac
 
@@ -427,6 +406,7 @@ function config_target () {
 	--program-prefix=$prefix \
 	--disable-shared \
 	--disable-install_libbfd \
+	--with-sysroot=%{_prefix}/$arch/sys-root \
 	$CARGS \
 	--with-bugurl=http://bugzilla.redhat.com/bugzilla/
     cd ..
@@ -513,6 +493,7 @@ function install_bin () {
 for target in `cat target.list`
 do
     echo "=== INSTALL target $target ==="
+    mkdir -p %{buildroot}%{_prefix}/$target/sys-root
     install_bin $target
 
 #    if [ $target = sh64-linux-gnu ]
@@ -559,7 +540,7 @@ function build_file_list () {
 	bfin)		target_cpu=bfin;;
 	h8300)		target_cpu=h8300;;
 	mn10300)	target_cpu=am33_2.0;;
-	openrisc)	target_cpu=openrisc;;
+	openrisc)	target_cpu=or1k;;
 	score)		target_cpu=score;;
 	tile)		target_cpu=tilegx;;
 	v850)		target_cpu=v850e;;
@@ -567,7 +548,6 @@ function build_file_list () {
     esac
 
     (
-	echo '%%defattr(-,root,root,-)'
 	echo %{_bindir}/$arch-[!l]\*
 	echo %{_bindir}/$arch-ld\*
 	if [ -L %{buildroot}%{auxbin_prefix}/$target_cpu-* ]
@@ -577,6 +557,7 @@ function build_file_list () {
 	    echo %{auxbin_prefix}/$target_cpu-*/bin/\*
 	fi
 	echo %{_mandir}/man1/$arch-\*
+	echo '%%attr(0755,root,root)' %{_prefix}/$arch/sys-root
     ) >files.$arch
 }
 
@@ -670,10 +651,12 @@ rm -rf %{buildroot}
 %do_files ia64-linux-gnu	%{build_ia64}
 %do_files m32r-linux-gnu	%{build_m32r}
 %do_files m68k-linux-gnu	%{build_m68k}
+%do_files metag-linux-gnu	%{build_metag}
 %do_files microblaze-linux-gnu	%{build_microblaze}
 %do_files mips-linux-gnu	%{build_mips}
 %do_files mips64-linux-gnu	%{build_mips64}
 %do_files mn10300-linux-gnu	%{build_mn10300}
+%do_files nios2-linux-gnu	%{build_nios2}
 %do_files openrisc-linux-gnu	%{build_openrisc}
 %do_files powerpc-linux-gnu	%{build_powerpc}
 %do_files powerpc64-linux-gnu	%{build_powerpc64}
@@ -693,6 +676,53 @@ rm -rf %{buildroot}
 %do_files xtensa-linux-gnu	%{build_xtensa}
 
 %changelog
+* Mon Aug 24 2015 David Howells <dhowells@redhat.com> - 2.25.1-1
+- Sync with binutils-2.25.1-4.
+- Set --enable-targets if the target is powerpc* not just ppc*.
+- Provide LE ppc and ppc64 emulations [BZ 1255947].
+
+* Mon Apr 6 2015 David Howells <dhowells@redhat.com> - 2.25-4
+- Microblaze: Fix extra-large constant handling [binutils bz 18189].
+
+* Wed Jan 7 2015 David Howells <dhowells@redhat.com> - 2.25-3
+- Fix up the target for SH64 and cease mixing 32-bit SH targets with SH64.
+- SH64: Work around flags not getting set on incremental link of .a into .o [binutils bz 17288].
+
+* Mon Jan 5 2015 David Howells <dhowells@redhat.com> - 2.25-1
+- Sync with binutils-2.25 to pick up fixes.
+  Resolves: BZ #1162577, #1162601, #1162611, #1162625
+
+* Thu Nov 13 2014 David Howells <dhowells@redhat.com> - 2.24-7
+- Fix problems with the ar program reported in FSF PR 17533.
+  Resolves: BZ #1162672, #1162659
+
+* Wed Nov 12 2014 David Howells <dhowells@redhat.com> - 2.24-6
+- Sync with binutils to pick up fixes.
+- Backport binutils 2.4 upstream branch to pick up more fixes.
+
+* Sat Aug 16 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.24-6
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
+
+* Fri Jul 18 2014 David Howells <dhowells@redhat.com> - 2.24-5
+- Add NIOS2 arch support.
+
+* Mon Jun 16 2014 David Howells <dhowells@redhat.com> - 2.24-4
+- Fix gcc-4.9 new compile error in m68k handler in gas.
+
+* Wed Jun 11 2014 David Howells <dhowells@redhat.com> - 2.24-4
+- Sync with binutils-2.24-15 fixing the bfd_set_section_alignment() error [BZ 1106093]
+- Apply the changes on binutils-2_24-branch in git to cab6c3ee9785f072a373afe31253df0451db93cf.
+
+* Fri Mar 28 2014 David Howells <dhowells@redhat.com> - 2.24-2
+- A sysroot of / is bad, so make it /usr/<program-prefix>/sys-root/.
+
+* Thu Mar 27 2014 David Howells <dhowells@redhat.com> - 2.24-1
+- Fix formatless sprintfs in Score.
+
+* Wed Mar 26 2014 David Howells <dhowells@redhat.com> - 2.24-1
+- Update to binutils-2.24-1.
+- Add metag arch support.
+
 * Fri Aug 9 2013 David Howells <dhowells@redhat.com> - 2.23.88.0.1-2
 - Fix a build error in xtensa
 
