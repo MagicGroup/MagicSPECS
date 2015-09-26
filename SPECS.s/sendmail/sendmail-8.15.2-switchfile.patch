@@ -1,6 +1,8 @@
---- sendmail-8.14.4/sendmail/conf.c		2009-12-18 18:25:12.000000000 +0100
-+++ sendmail-8.14.4/sendmail/conf.c.switchfile	2010-01-03 23:08:27.000000000 +0100
-@@ -972,7 +972,7 @@
+diff --git a/sendmail/conf.c b/sendmail/conf.c
+index c73334e..cbb9c76 100644
+--- a/sendmail/conf.c
++++ b/sendmail/conf.c
+@@ -986,7 +986,7 @@ switch_map_find(service, maptype, mapreturn)
  				if (p != NULL)
  					*p = '\0';
  #ifndef SM_NSSWITCH_DELIMS

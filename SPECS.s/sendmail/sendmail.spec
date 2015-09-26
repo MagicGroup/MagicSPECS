@@ -11,19 +11,13 @@
 %global spooldir %{_localstatedir}/spool
 %global maildir %{_sysconfdir}/mail
 
-%global sysv2systemdnvr 8.14.5-3
-
-# hardened build if not overrided
+# hardened build if not overridden
 %{!?_hardened_build:%global _hardened_build 1}
-
-%if %{?_hardened_build:%{_hardened_build}}%{!?_hardened_build:0}
-%global relro -Xlinker -z -Xlinker relro -Xlinker -z -Xlinker now
-%endif
 
 Summary: A widely used Mail Transport Agent (MTA)
 Name: sendmail
-Version: 8.14.5
-Release: 17%{?dist}
+Version: 8.15.2
+Release: 4%{?dist}
 License: Sendmail
 Group: System Environment/Daemons
 URL: http://www.sendmail.org/
@@ -65,40 +59,31 @@ Patch3: sendmail-8.14.4-makemapman.patch
 # fix smrsh paths
 Patch4: sendmail-8.14.3-smrsh_paths.patch
 # fix sm-client.pid path
-Patch7: sendmail-8.13.7-pid.patch
-# do not reject all numeric login names if hesiod support is compiled in, #80060
-Patch9: sendmail-8.12.7-hesiod.patch
+Patch7: sendmail-8.14.9-pid.patch
 # fix sendmail man page
-Patch10: sendmail-8.12.7-manpage.patch
+Patch10: sendmail-8.15.1-manpage.patch
 # compile with -fpie
-Patch11: sendmail-8.14.4-dynamic.patch
+Patch11: sendmail-8.15.1-dynamic.patch
 # fix cyrus path
 Patch12: sendmail-8.13.0-cyrus.patch
 # fix aliases.db path
-Patch13: sendmail-8.14.4-aliases_dir.patch
+Patch13: sendmail-8.15.1-aliases_dir.patch
 # fix vacation Makefile
-Patch14: sendmail-8.13.7-vacation.patch
+Patch14: sendmail-8.14.9-vacation.patch
 # remove version information from sendmail helpfile
-Patch15: sendmail-8.14.1-noversion.patch
+Patch15: sendmail-8.14.9-noversion.patch
 # do not accept localhost.localdomain as valid address from SMTP
-Patch16: sendmail-8.13.1-localdomain.patch
+Patch16: sendmail-8.15.2-localdomain.patch
 # build libmilter as DSO
 Patch17: sendmail-8.14.3-sharedmilter.patch
 # skip colon separator when parsing service name in ServiceSwitchFile
-Patch18: sendmail-8.14.4-switchfile.patch
-# fix milter file descriptors leaks, #485426
-Patch20: sendmail-8.14.3-milterfdleaks.patch
-# handle IPv6:::1 in block_bad_helo.m4 like 127.0.0.1, #549217
-Patch21: sendmail-8.14.3-ipv6-bad-helo.patch
-# fix compilation with libdb5
-Patch22: sendmail-8.14.4-libdb5.patch
+Patch18: sendmail-8.15.2-switchfile.patch
 # silence warning about missing sasl2 config in /usr/lib*, now in /etc/sasl2
-Patch23: sendmail-8.14.4-sasl2-in-etc.patch
+Patch23: sendmail-8.14.8-sasl2-in-etc.patch
 # add QoS support, patch from Philip Prindeville <philipp@fedoraproject.org>
 # upstream reserved option ID 0xe7 for testing of this new feature, #576643
-Patch25: sendmail-8.14.5-qos.patch
-# fix SMTP AUTH over TLS in case of two AUTH lines, #716628
-Patch26: sendmail-8.14.5-auth2.patch
+Patch25: sendmail-8.15.2-qos.patch
+Patch26: sendmail-8.15.2-libmilter-socket-activation.patch
 Buildroot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: tcp_wrappers-devel
 BuildRequires: libdb-devel
@@ -106,13 +91,15 @@ BuildRequires: hesiod-devel
 BuildRequires: groff
 BuildRequires: ghostscript
 BuildRequires: m4
-BuildRequires: systemd-units
+BuildRequires: systemd
 Provides: MTA smtpdaemon server(smtp)
-Requires(post): systemd-units systemd-sysv coreutils %{_sbindir}/alternatives
-Requires(preun): systemd-units %{_sbindir}/alternatives
-Requires(postun): systemd-units coreutils %{_sbindir}/alternatives
+Requires(post): systemd systemd-sysv coreutils %{_sbindir}/alternatives
+Requires(preun): systemd %{_sbindir}/alternatives
+Requires(postun): systemd coreutils %{_sbindir}/alternatives
 Requires(pre): shadow-utils
+%if 0%{?fedora} < 23
 Requires: initscripts
+%endif
 Requires: procmail
 Requires: bash >= 2.0
 Requires: setup >= 2.5.31-1
@@ -140,6 +127,7 @@ If you ever need to reconfigure Sendmail, you will also need to have
 the sendmail-cf package installed. If you need documentation on
 Sendmail, you can install the sendmail-doc package.
 
+%if 0%{?fedora} < 23
 %package sysvinit
 Summary: SysV initscript for sendmail
 Group: System Environment/Daemons
@@ -150,6 +138,7 @@ Requires(post): chkconfig
 
 %description sysvinit
 This package contains the SysV initscript.
+%endif
 
 %package doc
 Summary: Documentation about the Sendmail Mail Transport Agent program
@@ -202,7 +191,6 @@ This package includes the milter shared library.
 %patch3 -p1 -b .makemapman
 %patch4 -p1 -b .smrsh_paths
 %patch7 -p1 -b .pid
-%patch9 -p1 -b .hesiod
 %patch10 -p1 -b .manpage
 %patch11 -p1 -b .dynamic
 %patch12 -p1 -b .cyrus
@@ -215,12 +203,9 @@ cp devtools/M4/UNIX/{,shared}library.m4
 %patch17 -p1 -b .sharedmilter
 
 %patch18 -p1 -b .switchfile
-%patch20 -p1 -b .milterfdleaks
-%patch21 -p1 -b .ipv6-bad-helo
-%patch22 -p1 -b .libdb5
 %patch23 -p1 -b .sasl2-in-etc
 %patch25 -p1 -b .qos
-%patch26 -p1 -b .auth2
+%patch26 -p1 -b .libmilter-socket-activation
 
 for f in RELEASE_NOTES contrib/etrn.0; do
 	iconv -f iso8859-1 -t utf8 -o ${f}{_,} &&
@@ -234,9 +219,10 @@ sed -i 's|/usr/local/bin/perl|%{_bindir}/perl|' contrib/*.pl
 cat > redhat.config.m4 << EOF
 define(\`confMAPDEF', \`-DNEWDB -DNIS -DHESIOD -DMAP_REGEX -DSOCKETMAP -DNAMED_BIND=1')
 define(\`confOPTIMIZE', \`\`\`\`${RPM_OPT_FLAGS}'''')
-define(\`confENVDEF', \`-I%{_includedir}/libdb -I/usr/kerberos/include -Wall -DXDEBUG=0 -DTCPWRAPPERS -DNETINET6 -DHES_GETMAILHOST -DUSE_VENDOR_CF_PATH=1 -D_FFR_TLS_1 -D_FFR_LINUX_MHNL -D_FFR_QOS')
+define(\`confENVDEF', \`-I%{_includedir}/libdb -I/usr/kerberos/include -Wall -DXDEBUG=0 -DTCPWRAPPERS -DNETINET6 -DHES_GETMAILHOST -DUSE_VENDOR_CF_PATH=1 -D_FFR_TLS_1 -D_FFR_LINUX_MHNL -D_FFR_QOS -D_FFR_TLS_EC -D_FILE_OFFSET_BITS=64 -DHESIOD_ALLOW_NUMERIC_LOGIN')
 define(\`confLIBDIRS', \`-L/usr/kerberos/%{_lib}')
-define(\`confLIBS', \`-lnsl -lwrap -lhesiod -lcrypt -ldb -lresolv %{?relro:%{relro}}')
+define(\`confLIBS', \`-lnsl -lwrap -lhesiod -lcrypt -ldb -lresolv')
+%{?_hardened_build:define(\`confLDOPTS', \`-Xlinker -z -Xlinker relro -Xlinker -z -Xlinker now')}
 define(\`confMANOWN', \`root')
 define(\`confMANGRP', \`root')
 define(\`confMANMODE', \`644')
@@ -250,7 +236,7 @@ EOF
 #'
 
 cat >> redhat.config.m4 << EOF
-%ifarch ppc ppc64 s390x
+%ifarch ppc %{power64} s390x
 APPENDDEF(\`confOPTIMIZE', \`-DSM_CONF_SHM=0')
 %else
 APPENDDEF(\`confOPTIMIZE', \`')
@@ -317,9 +303,9 @@ rm -rf %{buildroot}
 # create directories
 for d in %{_bindir} %{_sbindir} %{_includedir}/libmilter \
 	%{_libdir} %{_mandir}/man{1,5,8} %{maildir} %{stdir} %{spooldir} \
-	%{_docdir}/sendmail-%{version} %{sendmailcf} %{_sysconfdir}/smrsh\
+	%{_docdir}/sendmail %{sendmailcf} %{_sysconfdir}/smrsh\
 	%{spooldir}/clientmqueue %{_sysconfdir}/sysconfig %{_initrddir} \
-	%{_sysconfdir}/pam.d %{_docdir}/sendmail-%{version}/contrib \
+	%{_sysconfdir}/pam.d %{_docdir}/sendmail/contrib \
 	%{_sysconfdir}/NetworkManager/dispatcher.d
 do
 	install -m 755 -d %{buildroot}$d
@@ -370,21 +356,21 @@ done
 ln -sf ../sbin/sendmail.sendmail %{buildroot}/usr/lib/sendmail.sendmail
 
 # install docs for sendmail
-install -p -m 644 FAQ %{buildroot}%{_docdir}/sendmail-%{version}
-install -p -m 644 KNOWNBUGS %{buildroot}%{_docdir}/sendmail-%{version}
-install -p -m 644 LICENSE %{buildroot}%{_docdir}/sendmail-%{version}
-install -p -m 644 README %{buildroot}%{_docdir}/sendmail-%{version}
-install -p -m 644 RELEASE_NOTES %{buildroot}%{_docdir}/sendmail-%{version}
-gzip -9 %{buildroot}%{_docdir}/sendmail-%{version}/RELEASE_NOTES
+install -p -m 644 FAQ %{buildroot}%{_docdir}/sendmail
+install -p -m 644 KNOWNBUGS %{buildroot}%{_docdir}/sendmail
+install -p -m 644 LICENSE %{buildroot}%{_docdir}/sendmail
+install -p -m 644 README %{buildroot}%{_docdir}/sendmail
+install -p -m 644 RELEASE_NOTES %{buildroot}%{_docdir}/sendmail
+gzip -9 %{buildroot}%{_docdir}/sendmail/RELEASE_NOTES
 
 # install docs for sendmail-doc
-install -m 644 doc/op/op.pdf %{buildroot}%{_docdir}/sendmail-%{version}
-install -p -m 644 sendmail/README %{buildroot}%{_docdir}/sendmail-%{version}/README.sendmail
-install -p -m 644 sendmail/SECURITY %{buildroot}%{_docdir}/sendmail-%{version}
-install -p -m 644 smrsh/README %{buildroot}%{_docdir}/sendmail-%{version}/README.smrsh
-install -p -m 644 libmilter/README %{buildroot}%{_docdir}/sendmail-%{version}/README.libmilter
-install -p -m 644 cf/README %{buildroot}%{_docdir}/sendmail-%{version}/README.cf
-install -p -m 644 contrib/* %{buildroot}%{_docdir}/sendmail-%{version}/contrib
+install -m 644 doc/op/op.pdf %{buildroot}%{_docdir}/sendmail
+install -p -m 644 sendmail/README %{buildroot}%{_docdir}/sendmail/README.sendmail
+install -p -m 644 sendmail/SECURITY %{buildroot}%{_docdir}/sendmail
+install -p -m 644 smrsh/README %{buildroot}%{_docdir}/sendmail/README.smrsh
+install -p -m 644 libmilter/README %{buildroot}%{_docdir}/sendmail/README.libmilter
+install -p -m 644 cf/README %{buildroot}%{_docdir}/sendmail/README.cf
+install -p -m 644 contrib/* %{buildroot}%{_docdir}/sendmail/contrib
 
 # install the cf files for the sendmail-cf package.
 cp -ar cf/* %{buildroot}%{sendmailcf}
@@ -430,7 +416,9 @@ done
 touch %{buildroot}%{maildir}/aliasesdb-stamp
 
 install -p -m 644 %{SOURCE4} %{buildroot}%{_sysconfdir}/sysconfig/sendmail
+%if 0%{?fedora} < 23
 install -p -m 755 %{SOURCE9} %{buildroot}%{_initrddir}/sendmail
+%endif
 install -p -m 755 %{SOURCE2} %{buildroot}%{_sysconfdir}/NetworkManager/dispatcher.d/10-sendmail
 install -p -m 755 %{SOURCE3} %{buildroot}%{maildir}/make
 install -p -m 644 %{SOURCE5} %{buildroot}%{maildir}/Makefile
@@ -460,6 +448,8 @@ sed -i -e 's:%{maildir}/statistics:%{stdir}/statistics:' %{buildroot}%{_mandir}/
 # rename files for alternative usage
 mv %{buildroot}%{_sbindir}/sendmail %{buildroot}%{_sbindir}/sendmail.sendmail
 touch %{buildroot}%{_sbindir}/sendmail
+mv %{buildroot}%{_sbindir}/makemap %{buildroot}%{_sbindir}/makemap.sendmail
+touch %{buildroot}%{_sbindir}/makemap
 for i in mailq newaliases rmail; do
 	mv %{buildroot}%{_bindir}/$i %{buildroot}%{_bindir}/$i.sendmail
 	touch %{buildroot}%{_bindir}/$i
@@ -474,6 +464,8 @@ mv %{buildroot}%{_mandir}/man8/sendmail.8 %{buildroot}%{_mandir}/man8/sendmail.s
 touch %{buildroot}%{_mandir}/man8/sendmail.8
 mv %{buildroot}%{_mandir}/man8/rmail.8 %{buildroot}%{_mandir}/man8/rmail.sendmail.8
 touch %{buildroot}%{_mandir}/man8/rmail.8
+mv %{buildroot}%{_mandir}/man8/makemap.8 %{buildroot}%{_mandir}/man8/makemap.sendmail.8
+touch %{buildroot}%{_mandir}/man8/makemap.8
 touch %{buildroot}/usr/lib/sendmail
 touch %{buildroot}%{_sysconfdir}/pam.d/smtp
 
@@ -482,8 +474,6 @@ for m in man8/hoststat.8 man8/purgestat.8; do
 	[ -f %{buildroot}%{_mandir}/$m ] || 
 		echo ".so man8/sendmail.8" > %{buildroot}%{_mandir}/$m
 done
-
-magic_rpm_clean.sh
 
 %clean
 rm -rf %{buildroot}
@@ -499,13 +489,17 @@ getent group smmsp >/dev/null || \
 getent passwd smmsp >/dev/null || \
   %{_sbindir}/useradd -u 51 -g smmsp -d %{spooldir}/mqueue -r \
   -s %{smshell} smmsp >/dev/null 2>&1
+
+# hack to turn sbin/makemap and man8/makemap.8.gz into alternatives symlink
+# (part of the rhbz#1219178 fix), this could be probably dropped in f25+
+[ -h %{_sbindir}/makemap ] || rm -f %{_sbindir}/makemap || :
+[ -h %{_mandir}/man8/makemap.8.gz ] || rm -f %{_mandir}/man8/makemap.8.gz || :
+
 exit 0
 
 %postun
-/usr/bin/systemctl daemon-reload >/dev/null 2>&1 || :
+%systemd_postun_with_restart sendmail.service sm-client.service
 if [ $1 -ge 1 ] ; then
-    /usr/bin/systemctl try-restart sendmail.service >/dev/null 2>&1 || :
-    /usr/bin/systemctl try-restart sm-client.service >/dev/null 2>&1 || :
 	mta=`readlink %{_sysconfdir}/alternatives/mta`
 	if [ "$mta" == "%{_sbindir}/sendmail.sendmail" ]; then
 		%{_sbindir}/alternatives --set mta %{_sbindir}/sendmail.sendmail
@@ -514,15 +508,11 @@ fi
 exit 0
 
 %post
-if [ $1 -eq 1 ] ; then
-# Initial installation
-	/usr/bin/systemctl enable sendmail.service >/dev/null 2>&1 || :
-	/usr/bin/systemctl enable sm-client.service >/dev/null 2>&1 || :
-	/usr/bin/systemctl daemon-reload >/dev/null 2>&1 || :
-fi
+%systemd_post sendmail.service sm-client.service
 
 # Set up the alternatives files for MTAs.
 %{_sbindir}/alternatives --install %{_sbindir}/sendmail mta %{_sbindir}/sendmail.sendmail 90 \
+	--slave %{_sbindir}/makemap mta-makemap %{_sbindir}/makemap.sendmail \
 	--slave %{_bindir}/mailq mta-mailq %{_bindir}/mailq.sendmail \
 	--slave %{_bindir}/newaliases mta-newaliases %{_bindir}/newaliases.sendmail \
 	--slave %{_bindir}/rmail mta-rmail %{_bindir}/rmail.sendmail \
@@ -533,6 +523,7 @@ fi
 	--slave %{_mandir}/man1/newaliases.1.gz mta-newaliasesman %{_mandir}/man1/newaliases.sendmail.1.gz \
 	--slave %{_mandir}/man5/aliases.5.gz mta-aliasesman %{_mandir}/man5/aliases.sendmail.5.gz \
 	--slave %{_mandir}/man8/rmail.8.gz mta-rmailman %{_mandir}/man8/rmail.sendmail.8.gz \
+	--slave %{_mandir}/man8/makemap.8.gz mta-makemapman %{_mandir}/man8/makemap.sendmail.8.gz \
 	--initscript sendmail > /dev/null 2>&1
 
 # Rebuild maps.
@@ -553,11 +544,8 @@ fi
 exit 0
 
 %preun
+%systemd_preun sendmail.service sm-client.service
 if [ $1 = 0 ]; then
-	/usr/bin/systemctl --no-reload disable sendmail.service > /dev/null 2>&1 || :
-	/usr/bin/systemctl stop sendmail.service > /dev/null 2>&1 || :
-	/usr/bin/systemctl --no-reload disable sm-client.service > /dev/null 2>&1 || :
-	/usr/bin/systemctl stop sm-client.service > /dev/null 2>&1 || :
 	%{_sbindir}/alternatives --remove mta %{_sbindir}/sendmail.sendmail
 fi
 exit 0
@@ -566,46 +554,33 @@ exit 0
 
 %postun milter -p /sbin/ldconfig
 
+%if 0%{?fedora} < 23
 %post sysvinit
-/usr/sbin/chkconfig --add sendmail >/dev/null 2>&1 ||:
+/sbin/chkconfig --add sendmail >/dev/null 2>&1 ||:
 
 %preun sysvinit
 if [ "$1" = 0 ]; then
 	%{_initrddir}/sendmail stop >/dev/null 2>&1 ||:
-	/usr/sbin/chkconfig --del sendmail >/dev/null 2>&1 ||:
+	/sbin/chkconfig --del sendmail >/dev/null 2>&1 ||:
 fi
 
 %postun sysvinit
 [ "$1" -ge "1" ] && %{_initrddir}/sendmail condrestart >/dev/null 2>&1 ||:
-
-%triggerun -- sendmail < %{sysv2systemdnvr}
-%{_bindir}/systemd-sysv-convert --save sendmail >/dev/null 2>&1 ||:
-/usr/bin/systemctl enable sendmail.service >/dev/null 2>&1
-/usr/bin/systemctl enable sm-client.service >/dev/null 2>&1
-/usr/sbin/chkconfig --del sendmail >/dev/null 2>&1 || :
-/usr/bin/systemctl try-restart sendmail.service >/dev/null 2>&1 || :
-/usr/bin/systemctl try-restart sm-client.service >/dev/null 2>&1 || :
-# workaround for systemd rhbz#738022
-/usr/bin/systemctl is-active sendmail.service >/dev/null 2>&1 && \
-	! /usr/bin/systemctl is-active sm-client.service >/dev/null 2>&1 && \
-	/usr/bin/systemctl start sm-client.service >/dev/null 2>&1 || :
-
-%triggerpostun -n sendmail-sysvinit -- sendmail < %{sysv2systemdnvr}
-/usr/sbin/chkconfig --add sendmail >/dev/null 2>&1 || :
+%endif
 
 %files
 %defattr(-,root,root,-)
-%dir %{_docdir}/sendmail-%{version}
-%doc %{_docdir}/sendmail-%{version}/FAQ
-%doc %{_docdir}/sendmail-%{version}/KNOWNBUGS
-%doc %{_docdir}/sendmail-%{version}/LICENSE
-%doc %{_docdir}/sendmail-%{version}/README
-%doc %{_docdir}/sendmail-%{version}/RELEASE_NOTES.gz
+%dir %{_docdir}/sendmail
+%doc %{_docdir}/sendmail/FAQ
+%doc %{_docdir}/sendmail/KNOWNBUGS
+%doc %{_docdir}/sendmail/LICENSE
+%doc %{_docdir}/sendmail/README
+%doc %{_docdir}/sendmail/RELEASE_NOTES.gz
 %{_bindir}/hoststat
 %{_bindir}/makemap
 %{_bindir}/purgestat
 %{_sbindir}/mailstats
-%{_sbindir}/makemap
+%{_sbindir}/makemap.sendmail
 %{_sbindir}/praliases
 %attr(2755,root,smmsp) %{_sbindir}/sendmail.sendmail
 %{_bindir}/rmail.sendmail
@@ -617,7 +592,7 @@ fi
 %{_mandir}/man8/rmail.sendmail.8.gz
 %{_mandir}/man8/praliases.8.gz
 %{_mandir}/man8/mailstats.8.gz
-%{_mandir}/man8/makemap.8.gz
+%{_mandir}/man8/makemap.sendmail.8.gz
 %{_mandir}/man8/sendmail.sendmail.8.gz
 %{_mandir}/man8/smrsh.8.gz
 %{_mandir}/man8/hoststat.8.gz
@@ -628,6 +603,7 @@ fi
 
 # dummy attributes for rpmlint
 %ghost %attr(0755,-,-) %{_sbindir}/sendmail
+%ghost %attr(0755,-,-) %{_sbindir}/makemap
 %ghost %attr(0755,-,-) %{_bindir}/mailq
 %ghost %attr(0755,-,-) %{_bindir}/newaliases
 %ghost %attr(0755,-,-) %{_bindir}/rmail
@@ -639,6 +615,7 @@ fi
 %ghost %{_mandir}/man1/newaliases.1.gz
 %ghost %{_mandir}/man5/aliases.5.gz
 %ghost %{_mandir}/man8/rmail.8.gz
+%ghost %{_mandir}/man8/makemap.8.gz
 
 %dir %{stdir}
 %dir %{_sysconfdir}/smrsh
@@ -702,39 +679,131 @@ fi
 %files milter
 %defattr(-,root,root,-)
 %doc LICENSE
-%doc %{_docdir}/sendmail-%{version}/README.libmilter
+%doc %{_docdir}/sendmail/README.libmilter
 %{_libdir}/libmilter.so.[0-9].[0-9]
 %{_libdir}/libmilter.so.[0-9].[0-9].[0-9]
 
 %files doc
 %defattr(-,root,root,-)
-%{_docdir}/sendmail-%{version}/README.cf
-%{_docdir}/sendmail-%{version}/README.sendmail
-%{_docdir}/sendmail-%{version}/README.smrsh
-%{_docdir}/sendmail-%{version}/SECURITY
-%{_docdir}/sendmail-%{version}/op.pdf
-%dir %{_docdir}/sendmail-%{version}/contrib
-%attr(0644,root,root) %{_docdir}/sendmail-%{version}/contrib/*
+%{_docdir}/sendmail/README.cf
+%{_docdir}/sendmail/README.sendmail
+%{_docdir}/sendmail/README.smrsh
+%{_docdir}/sendmail/SECURITY
+%{_docdir}/sendmail/op.pdf
+%dir %{_docdir}/sendmail/contrib
+%attr(0644,root,root) %{_docdir}/sendmail/contrib/*
 
+%if 0%{?fedora} < 23
 %files sysvinit
 %defattr(-,root,root,-)
 %{_initrddir}/sendmail
+%endif
 
 %changelog
-* Sat May 03 2014 Liu Di <liudidi@gmail.com> - 8.14.5-17
-- 为 Magic 3.0 重建
+* Wed Sep 23 2015 Jaroslav Škarvada <jskarvad@redhat.com> - 8.15.2-4
+- Compiled all with full RELRO, including libmilter
+  Resolves: rhbz#1264035
 
-* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 8.14.5-16
-- 为 Magic 3.0 重建
+* Wed Sep 23 2015 Jaroslav Škarvada <jskarvad@redhat.com> - 8.15.2-3
+- Added support for socket activation to libmilter
+  Resolves: rhbz#1262535
 
-* Thu Oct 18 2012 Liu Di <liudidi@gmail.com> - 8.14.5-15
-- 为 Magic 3.0 重建
+* Wed Jul 22 2015 Lubomir Rintel <lkundrak@v3.sk> - 8.15.2-2
+- nm-dispacher: don't block the connection activation
+  Resolves: rhbz#1237070
 
-* Sun Apr 22 2012 Liu Di <liudidi@gmail.com> - 8.14.5-14
-- 为 Magic 3.0 重建
+* Tue Jul  7 2015 Jaroslav Škarvada <jskarvad@redhat.com> - 8.15.2-1
+- New version
+  Resolves: rhbz#1239185
+- Dropped ipv6-bad-helo patch (upstreamed)
+- Updated/defuzzified patches
 
-* Sun Apr 22 2012 Liu Di <liudidi@gmail.com> - 8.14.5-13
-- 为 Magic 3.0 重建
+* Fri Jun 19 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 8.15.1-6
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
+
+* Wed May 27 2015 Jaroslav Škarvada <jskarvad@redhat.com> - 8.15.1-5
+- Added makemap and its manual page into alternatives
+  Resolves: rhbz#1219178
+
+* Fri Mar 20 2015 Robert Scheck <robert@fedoraproject.org> - 8.15.1-4
+- Use uncompressed (new) IPv6 address format in block_bad_helo.m4
+
+* Tue Mar 10 2015 Adam Jackson <ajax@redhat.com> 8.15.1-3
+- Drop sysvinit subpackage from F23+
+
+* Thu Feb 26 2015 Jaroslav Škarvada <jskarvad@redhat.com> - 8.15.1-2
+- Removed code for transition from sysv init to systemd (deprecated)
+
+* Mon Dec  8 2014 Jaroslav Škarvada <jskarvad@redhat.com> - 8.15.1-1
+- New version
+- Dropped hesiod patch (not needed)
+- Dropped libdb5 patch (upstreamed)
+- Rebased patches
+
+* Thu Aug 21 2014 Kevin Fenzi <kevin@scrye.com> - 8.14.9-5
+- Rebuild for rpm bug 1131960
+
+* Mon Aug 18 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 8.14.9-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
+
+* Sun Jun 08 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 8.14.9-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Mon Jun  2 2014 Jaroslav Škarvada <jskarvad@redhat.com> - 8.14.9-2
+- Dropped milterfdleaks patch (not needed)
+
+* Wed May 21 2014 Robert Scheck <robert@fedoraproject.org> - 8.14.9-1
+- Upgrade to 8.14.9
+
+* Sun Apr 13 2014 Robert Scheck <robert@fedoraproject.org> - 8.14.8-2
+- Enable ECDHE support
+
+* Tue Feb 11 2014 Jaroslav Škarvada <jskarvad@redhat.com> - 8.14.8-1
+- New version
+  Resolves: rhbz#1059665
+- Updated/defuzzified patches
+
+* Tue Aug  6 2013 Jaroslav Škarvada <jskarvad@redhat.com> - 8.14.7-5
+- Used unversioned doc directory
+  Resolves: rhbz#994090
+
+* Sat Aug 03 2013 Petr Pisar <ppisar@redhat.com> - 8.14.7-4
+- Perl 5.18 rebuild
+
+* Fri Aug  2 2013 Jaroslav Škarvada <jskarvad@redhat.com> - 8.14.7-3
+- Rebuilt with -D_FILE_OFFSET_BITS=64
+  Related: rhbz#912785
+
+* Wed Jul 17 2013 Petr Pisar <ppisar@redhat.com> - 8.14.7-2
+- Perl 5.18 rebuild
+
+* Sun Apr 21 2013 Robert Scheck <robert@fedoraproject.org> - 8.14.7-1
+- Upgrade to 8.14.7
+
+* Mon Feb 25 2013 Jaroslav Škarvada <jskarvad@redhat.com> - 8.14.6-4
+- Switched to systemd-rpm macros
+  Resolves: rhbz#850310
+
+* Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 8.14.6-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
+
+* Wed Jan 16 2013 Jaroslav Škarvada <jskarvad@redhat.com> - 8.14.6-2
+- Fixed milter_helo regression (milter-helo-fix patch)
+  Resolves: rhbz#895552
+- Fixed bogus dates in changelog
+
+* Mon Dec 24 2012 Robert Scheck <robert@fedoraproject.org> - 8.14.6-1
+- Upgrade to 8.14.6
+
+* Sat Jul 21 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 8.14.5-15
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Mon Jun 25 2012 Jaroslav Škarvada <jskarvad@redhat.com> - 8.14.5-14
+- Used power64 macro to support more subarchitectures like ppc64p7
+  Resolves: rhbz#834626
+
+* Fri Apr  6 2012 Jaroslav Škarvada <jskarvad@redhat.com> - 8.14.5-13
+- Rebuilt with libdb-5.2
 
 * Sat Jan 14 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 8.14.5-12
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
@@ -1069,7 +1138,7 @@ fi
 - dropped direct support for bind: no bind in confLIBSEARCH anymore,
   using libresolv again
 
-* Wed Mar 10 2005 Jason Vas Dias <jvdias@redhat.com> 8.13.3-1.2
+* Thu Mar 10 2005 Jason Vas Dias <jvdias@redhat.com> 8.13.3-1.2
 - fix libbind include path - use /usr/include/bind/netdb.h, no
 - /usr/include/netdb.h - bug: 150339
 
@@ -1638,7 +1707,7 @@ fi
 * Wed Jun 21 2000 Preston Brown <pbrown@redhat.com>
 - turn off daemon behaviour by default
 
-* Mon Jun 18 2000 Bill Nottingham <notting@redhat.com>
+* Sun Jun 18 2000 Bill Nottingham <notting@redhat.com>
 - rebuild, fix dependencies
 
 * Sat Jun 10 2000 Bill Nottingham <notting@redhat.com>

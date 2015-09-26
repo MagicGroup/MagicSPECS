@@ -1,10 +1,10 @@
---- sendmail-8.13.7/cf/cf/submit.mc.pid	2006-04-05 07:54:41.000000000 +0200
-+++ sendmail-8.13.7/cf/cf/submit.mc	2006-06-19 18:07:11.000000000 +0200
+--- sendmail-8.14.9/cf/cf/submit.mc	2014-03-06 18:31:28.000000000 +0100
++++ sendmail-8.14.9/cf/cf/submit.mc.pid	2014-05-21 17:20:14.000000000 +0200
 @@ -15,12 +15,16 @@
  #
  
  divert(0)dnl
--VERSIONID(`$Id: submit.mc,v 8.14 2006/04/05 05:54:41 ca Exp $')
+-VERSIONID(`$Id: submit.mc,v 8.15 2013-11-22 20:51:08 ca Exp $')
 +sinclude(`/usr/share/sendmail-cf/m4/cf.m4')dnl
 +VERSIONID(`linux setup')dnl
  define(`confCF_VERSION', `Submit')dnl
@@ -16,5 +16,5 @@
 +dnl define(`confDIRECT_SUBMISSION_MODIFIERS',`C')dnl
 +FEATURE(`use_ct_file')dnl
  dnl
- dnl If you use IPv6 only, change [127.0.0.1] to [IPv6:::1]
+ dnl If you use IPv6 only, change [127.0.0.1] to [IPv6:0:0:0:0:0:0:0:1]
  FEATURE(`msp', `[127.0.0.1]')dnl

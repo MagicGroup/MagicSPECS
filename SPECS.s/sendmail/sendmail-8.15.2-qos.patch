@@ -1,6 +1,21 @@
---- sendmail-8.14.4/cf/m4/proto.m4.orig	2011-01-11 20:02:14.000000000 -0700
-+++ sendmail-8.14.4/cf/m4/proto.m4	2011-01-11 20:02:14.000000000 -0700
-@@ -251,6 +251,9 @@ _OPTION(SevenBitInput, `confSEVEN_BIT_IN
+diff --git a/cf/cf/submit.mc b/cf/cf/submit.mc
+index b9dfb16..cb325cc 100644
+--- a/cf/cf/submit.mc
++++ b/cf/cf/submit.mc
+@@ -22,6 +22,8 @@ define(`__OSTYPE__',`')dnl dirty hack to keep proto.m4 from complaining
+ define(`_USE_DECNET_SYNTAX_', `1')dnl support DECnet
+ define(`confTIME_ZONE', `USE_TZ')dnl
+ define(`confDONT_INIT_GROUPS', `True')dnl
++dnl # If you're operating in a DSCP/RFC-4594 environment with QoS
++dnl define(`confINET_QOS', `AF11')dnl
+ define(`confPID_FILE', `/run/sm-client.pid')dnl
+ dnl define(`confDIRECT_SUBMISSION_MODIFIERS',`C')dnl
+ FEATURE(`use_ct_file')dnl
+diff --git a/cf/m4/proto.m4 b/cf/m4/proto.m4
+index 5a5963b..0df3416 100644
+--- a/cf/m4/proto.m4
++++ b/cf/m4/proto.m4
+@@ -251,6 +251,9 @@ _OPTION(SevenBitInput, `confSEVEN_BIT_INPUT', `False')
  # 8-bit data handling
  _OPTION(EightBitMode, `confEIGHT_BIT_HANDLING', `pass8')
  
@@ -10,51 +25,26 @@
  # wait for alias file rebuild (default units: minutes)
  _OPTION(AliasWait, `confALIAS_WAIT', `5m')
  
---- sendmail-8.14.4/cf/cf/submit.mc.orig	2011-01-11 20:02:14.000000000 -0700
-+++ sendmail-8.14.4/cf/cf/submit.mc	2011-01-11 20:02:14.000000000 -0700
-@@ -22,6 +22,8 @@ define(`__OSTYPE__',`')dnl dirty hack to
- define(`_USE_DECNET_SYNTAX_', `1')dnl support DECnet
- define(`confTIME_ZONE', `USE_TZ')dnl
- define(`confDONT_INIT_GROUPS', `True')dnl
-+dnl # If you're operating in a DSCP/RFC-4594 environment with QoS
-+dnl define(`confINET_QOS', `AF11')dnl
- define(`confPID_FILE', `/run/sm-client.pid')dnl
- dnl define(`confDIRECT_SUBMISSION_MODIFIERS',`C')dnl
- FEATURE(`use_ct_file')dnl
---- sendmail-8.14.4/sendmail/sendmail.h.orig	2009-12-18 10:08:01.000000000 -0700
-+++ sendmail-8.14.4/sendmail/sendmail.h	2011-01-11 20:39:35.000000000 -0700
-@@ -2387,7 +2387,14 @@ EXTERN struct termescape	TermEscape;	/* 
- EXTERN SOCKADDR	ConnectOnlyTo;	/* override connection address (for testing) */
- EXTERN SOCKADDR RealHostAddr;	/* address of host we are talking to */
- extern const SM_EXC_TYPE_T EtypeQuickAbort; /* type of a QuickAbort exception */
--
-+#if _FFR_QOS
-+# if !defined(SOL_IP) && defined(IPPROTO_IP)
-+#  define SOL_IP IPPROTO_IP
-+# endif
-+# if defined(SOL_IP) && defined(IP_TOS)
-+EXTERN int	InetQoS;	/* QoS mapping */
-+# endif
-+#endif
- 
- EXTERN int ConnectionRateWindowSize;
- #if STARTTLS && USE_OPENSSL_ENGINE
---- sendmail-8.14.4/sendmail/conf.c.orig	2011-01-11 20:02:14.000000000 -0700
-+++ sendmail-8.14.4/sendmail/conf.c	2011-01-11 20:24:29.000000000 -0700
-@@ -6298,6 +6298,10 @@ char	*FFRCompileOptions[] =
+diff --git a/sendmail/conf.c b/sendmail/conf.c
+index cbb9c76..1b55533 100644
+--- a/sendmail/conf.c
++++ b/sendmail/conf.c
+@@ -6430,6 +6430,10 @@ char	*FFRCompileOptions[] =
  #if _FFR_QF_PARANOIA
  	"_FFR_QF_PARANOIA",
- #endif /* _FFR_QF_PARANOIA */
+ #endif
 +#if _FFR_QOS && defined(SOL_IP) && defined(IP_TOS)
 +	/* QoS */
 +	"_FFR_QOS",
 +#endif /* _FFR_QOS && defined(SOL_IP) && defined(IP_TOS) */
- #if _FFR_QUEUEDELAY
- 	/* Exponential queue delay; disabled in 8.13 since it isn't used. */
- 	"_FFR_QUEUEDELAY",
---- sendmail-8.14.4/sendmail/daemon.c.orig	2009-12-17 18:12:40.000000000 -0700
-+++ sendmail-8.14.4/sendmail/daemon.c	2011-01-11 20:46:37.000000000 -0700
-@@ -104,6 +104,10 @@ static int	NDaemons = 0;			/* actual num
+ #if _FFR_QUEUE_GROUP_SORTORDER
+ 	/* Allow QueueSortOrder per queue group. */
+ /* XXX: Still need to actually use qgrp->qg_sortorder */
+diff --git a/sendmail/daemon.c b/sendmail/daemon.c
+index 4288365..86fe319 100644
+--- a/sendmail/daemon.c
++++ b/sendmail/daemon.c
+@@ -104,6 +104,10 @@ static int	NDaemons = 0;			/* actual number of daemons */
  
  static time_t	NextDiskSpaceCheck = 0;
  
@@ -65,7 +55,7 @@
  /*
  **  GETREQUESTS -- open mail IPC port and get requests.
  **
-@@ -1131,6 +1135,16 @@ opendaemonsocket(d, firsttime)
+@@ -1139,6 +1143,16 @@ opendaemonsocket(d, firsttime)
  			(void) setsockopt(d->d_socket, SOL_SOCKET,
  					  SO_KEEPALIVE, (char *)&on, sizeof(on));
  
@@ -82,7 +72,7 @@
  #ifdef SO_RCVBUF
  			if (d->d_tcprcvbufsize > 0)
  			{
-@@ -2565,6 +2579,16 @@ gothostent:
+@@ -2571,6 +2585,16 @@ gothostent:
  			return EX_TEMPFAIL;
  		}
  
@@ -99,9 +89,11 @@
  #ifdef SO_SNDBUF
  		if (ClientSettings[family].d_tcpsndbufsize > 0)
  		{
---- sendmail-8.14.4/sendmail/readcf.c.orig	2009-10-26 11:47:00.000000000 -0600
-+++ sendmail-8.14.4/sendmail/readcf.c	2011-01-11 20:37:35.000000000 -0700
-@@ -18,6 +18,7 @@
+diff --git a/sendmail/readcf.c b/sendmail/readcf.c
+index 2b0fbf7..86892f5 100644
+--- a/sendmail/readcf.c
++++ b/sendmail/readcf.c
+@@ -18,6 +18,7 @@ SM_RCSID("@(#)$Id: readcf.c,v 8.692 2013-11-22 20:51:56 ca Exp $")
  
  #if NETINET || NETINET6
  # include <arpa/inet.h>
@@ -109,7 +101,7 @@
  #endif /* NETINET || NETINET6 */
  
  
-@@ -2271,8 +2271,8 @@ static struct optioninfo
+@@ -2888,8 +2889,8 @@ static struct optioninfo
  # define O_RCPTTHROTDELAY	0xe6
  	{ "BadRcptThrottleDelay",	O_RCPTTHROTDELAY,	OI_SAFE	},
  #endif /* _FFR_RCPTTHROTDELAY */
@@ -119,10 +111,10 @@
 +# define O_INETQOS		0xe7
  	{ "InetQoS",			O_INETQOS,	OI_NONE },
  #endif
- 
-@@ -2351,6 +2355,77 @@ static struct ssl_options
+ #if STARTTLS && _FFR_FIPSMODE
+@@ -2914,6 +2915,77 @@ static struct optioninfo
+ 	{ NULL,				'\0',		OI_NONE	}
  };
- #endif /* STARTTLS && _FFR_TLS_1 */
  
 +#ifdef O_INETQOS
 +static struct qosmap
@@ -195,12 +187,12 @@
 +};
 +#endif
 +
- 
  # define CANONIFY(val)
  
-@@ -3985,6 +4060,33 @@ setoption(opt, val, safe, sticky, e)
+ # define SET_OPT_DEFAULT(opt, val)	opt = val
+@@ -4540,6 +4612,33 @@ setoption(opt, val, safe, sticky, e)
+ 		UseCompressedIPv6Addresses = atobool(val);
  		break;
- #endif /* _FFR_BADRCPT_SHUTDOWN */
  
 +#ifdef O_INETQOS
 +	  case O_INETQOS:
@@ -217,8 +209,8 @@
 +
 +			/*
 +			** we could allow writing it as a hex value, but
-+ 			** we don't at this time.
-+ 			**/
++			** we don't at this time.
++			**/
 +			if (qmp->name == NULL) {
 +				(void) sm_io_fprintf(smioout, SM_TIME_DEFAULT,
 +						     "Warning: Option: %s unknown parameter '%s'\n",
@@ -232,3 +224,23 @@
  	  default:
  		if (tTd(37, 1))
  		{
+diff --git a/sendmail/sendmail.h b/sendmail/sendmail.h
+index b2d0211..3bcc2e2 100644
+--- a/sendmail/sendmail.h
++++ b/sendmail/sendmail.h
+@@ -2537,7 +2537,14 @@ EXTERN struct termescape	TermEscape;	/* terminal escape codes */
+ EXTERN SOCKADDR	ConnectOnlyTo;	/* override connection address (for testing) */
+ EXTERN SOCKADDR RealHostAddr;	/* address of host we are talking to */
+ extern const SM_EXC_TYPE_T EtypeQuickAbort; /* type of a QuickAbort exception */
+-
++#if _FFR_QOS
++# if !defined(SOL_IP) && defined(IPPROTO_IP)
++#  define SOL_IP IPPROTO_IP
++# endif
++# if defined(SOL_IP) && defined(IP_TOS)
++EXTERN int	InetQoS;	/* QoS mapping */
++# endif
++#endif
+ 
+ EXTERN int ConnectionRateWindowSize;
+ #if STARTTLS && USE_OPENSSL_ENGINE

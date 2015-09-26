@@ -2,6 +2,6 @@
 
 case "$2" in
 	up|down|vpn-up|vpn-down)
-		/bin/systemctl try-restart sendmail.service || :
+		/bin/systemctl --no-block try-restart sendmail.service || :
 		;;
 esac
