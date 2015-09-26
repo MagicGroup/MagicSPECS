@@ -1,6 +1,6 @@
 Name:      scim
-Version:   1.4.14
-Release:   10%{?dist}
+Version:   1.4.15
+Release:   5%{?dist}
 Summary:   Smart Common Input Method platform
 
 License:   LGPLv2+
@@ -60,6 +60,7 @@ Obsoletes:  scim-python-xingma-wubi
 Obsoletes:  scim-python-xingma-zhengma
 Patch1:    scim-add-restart.patch
 Patch7:    scim_panel_gtk-emacs-cc-style.patch
+Patch9:    scim-1.4.15-fixes-gtk3-im-module.patch
 
 %description
 SCIM is a user friendly and full featured input method user interface and
@@ -91,12 +92,6 @@ Requires(postun): gtk2 >= 2.9.1-2
 %description gtk
 This package provides a GTK input method module for SCIM.
 
-%package qt
-Summary:    Smart Common Input Method Qt IM module
-Group:      System Environment/Libraries
-
-%description qt
-This package provides a QT input method module for SCIM.
 
 %package libs
 Summary:    Smart Common Input Method libraries
@@ -135,6 +130,7 @@ mv configs/global{,.orig}
 cp -p %{SOURCE4} configs/global
 
 %patch7 -p1 -b .7-emacs-ccmode~
+%patch9 -p1 -b .gtk3
 
 # patch17 touches configure.ac and Makefile.am
 ./bootstrap
@@ -163,7 +159,7 @@ rm -f docs/html/FreeSans.ttf
 # install xinput config file
 mkdir -pm 755 ${RPM_BUILD_ROOT}/%{_sysconfdir}/X11/xinit/xinput.d
 install -pm 644 %{SOURCE1} ${RPM_BUILD_ROOT}/%{_xinputconf}
-magic_rpm_clean.sh
+
 %find_lang %{name}
 
 
@@ -241,10 +237,6 @@ fi
 %{_libdir}/gtk-2.0/*/immodules/im-scim.so
 %{_libdir}/gtk-3.0/*/immodules/im-scim.so
 
-%files qt
-%defattr(-,root,root,-)
-%{_libdir}/qt-3.3/lib/qt3/plugins/inputmethods/im-scim.so
-%{_libdir}/qt4/lib/qt4/plugins/inputmethods/im-scim.so
 
 %files libs
 %defattr(-,root,root,-)
@@ -262,11 +254,23 @@ fi
 
 
 %changelog
-* Thu Jun 12 2014 Liu Di <liudidi@gmail.com> - 1.4.14-10
-- 为 Magic 3.0 重建
+* Thu Jul 30 2015 Peng Wu <pwu@redhat.com> - 1.4.15-5
+- Fixes gtk3 input method module dependency
 
-* Thu Jun 12 2014 Liu Di <liudidi@gmail.com> - 1.4.14-9
-- 为 Magic 3.0 重建
+* Fri Jun 19 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.4.15-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
+
+* Fri Apr 24 2015 Rex Dieter <rdieter@fedoraproject.org> 1.4.15-3
+- rebuild (gcc)
+
+* Tue Feb 24 2015 Than Ngo <than@redhat.com> - 1.4.15-2
+- rebuilt against new gcc5
+
+* Wed Oct 29 2014 Peng Wu <pwu@redhat.com> - 1.4.15-1
+- Update to 1.4.15
+
+* Mon Aug 18 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.4.14-9
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
 
 * Sun Jun 08 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.4.14-8
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
