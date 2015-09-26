@@ -1,6 +1,6 @@
 Summary: A set of system configuration and setup files
 Name: setup
-Version: 2.8.47
+Version: 2.9.8
 Release: 2%{?dist}
 License: Public Domain
 Group: System Environment/Base
@@ -8,6 +8,9 @@ URL: https://fedorahosted.org/setup/
 Source0: https://fedorahosted.org/releases/s/e/%{name}/%{name}-%{version}.tar.bz2
 BuildArch: noarch
 BuildRequires: bash tcsh perl
+#require system release for saner dependency order
+Requires: system-release
+Conflicts: filesystem < 3
 Conflicts: initscripts < 4.26, bash <= 2.0.4-21
 
 %description
@@ -80,7 +83,6 @@ end
 %config(noreplace) /etc/bashrc
 %config(noreplace) /etc/profile
 %config(noreplace) /etc/protocols
-%attr(0600,root,root) %config(noreplace,missingok) /etc/securetty
 %config(noreplace) /etc/csh.login
 %config(noreplace) /etc/csh.cshrc
 %dir /etc/profile.d
@@ -89,8 +91,151 @@ end
 %ghost %verify(not md5 size mtime) %config(noreplace,missingok) /etc/fstab
 
 %changelog
-* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 2.8.47-2
-- 为 Magic 3.0 重建
+* Fri Jun 19 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.9.8-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
+
+* Wed May 13 2015 Ondrej Vasik <ovasik@redhat.com> - 2.9.8-1
+- assign uidgid for ceph(167:167) - FPC 524,bz#1220846
+
+* Fri Apr 10 2015 Ondrej Vasik <ovasik@redhat.com> - 2.9.7-1
+- services: update services from latest IANA lists
+
+* Mon Feb 23 2015 Ondrej Vasik <ovasik@redhat.com> - 2.9.6-1
+- bashrc: reflect new bash-4.3 behaviour to retain matching output (#1180283)
+
+* Fri Jan 30 2015 Ondrej Vasik <ovasik@redhat.com> - 2.9.5-1
+- assign uidgid for systemd-network(192:192) - FPC 481,bz#1102002
+- assign uidgid for systemd-resolve(193:193) - FPC 481,bz#1102002 
+
+* Wed Jan 07 2015 Ondrej Vasik <ovasik@redhat.com> - 2.9.4-1
+- group tape should use 33 and not 30 (#1179585)
+
+* Thu Dec 18 2014 Ondrej Vasik <ovasik@redhat.com> - 2.9.3-1
+- remove uidgid reservation for systemd-journal-gateway (#1174304)
+
+* Thu Aug 21 2014 Ondrej Vasik <ovasik@redhat.com> - 2.9.2-1
+- update services and protocols to latest IANA (#1132221)
+
+* Thu Jul 24 2014 Ondrej Vasik <ovasik@redhat.com> - 2.9.1-1
+- add asterisk to /etc/filesystems (to honor /proc/filesystems)
+
+* Wed Apr 23 2014 Ondrej Vasik <ovasik@redhat.com> - 2.9.0-1
+- drop /etc/securetty (#1090639)
+
+* Wed Mar 12 2014 Ondrej Vasik <ovasik@redhat.com> - 2.8.76-1
+- require system-release for saner dependency order (#1075578)
+
+* Thu Feb 27 2014 Ondrej Vasik <ovasik@redhat.com> 2.8.75-1
+- reserve uidgid pair 142:142 for activemq (#1070881)
+
+* Tue Feb 25 2014 Ondrej Vasik <ovasik@redhat.com> 2.8.74-1
+- add more securetty required for mainframes (#1067347)
+- set SHELL envvar to /bin/bash in bashrc (#1063552)
+- adjust the homedir for oprofile uid (#1068902)
+
+* Fri Oct 25 2013 Ondrej Vasik <ovasik@redhat.com> 2.8.73-1
+- sync services with latest IANA
+
+* Tue Sep 03 2013 Ondrej Vasik <ovasik@redhat.com> 2.8.72-1
+- change the allocation of 185:185 to wildfly (former jboss-as)
+
+* Fri Jun 07 2013 Ondrej Vasik <ovasik@redhat.com> 2.8.71-1
+- fix escape codes for screen (#969429)
+- handle vte terminals in bashrc (#924275)
+
+* Tue May 14 2013 Ondrej Vasik <ovasik@redhat.com> 2.8.70-1
+- fix typo in cdrom default group (#962486)
+
+* Thu Apr 18 2013 Ondrej Vasik <ovasik@redhat.com> 2.8.69-1
+- remove the rpmlib(X-CheckUnifiedSystemdir) requirement
+  hack - no longer required
+
+* Sun Apr 14 2013 Ondrej Vasik <ovasik@redhat.com> 2.8.68-1
+- assign gid :135 for mock (#928063)
+- update /etc/services to latest IANA reservations
+
+* Wed Mar 20 2013 Ondrej Vasik <ovasik@redhat.com> 2.8.67-1
+- assign 166:166 uidgid pair for ceilometer (#923891)
+- change 187:187 reservation from openstack-heat
+  to just heat(#923858)
+- longer shell names support caused by UsrMove to
+  the /etc/shells (#922527)
+- drop gopher (uid 13, gid 30) from groups created by default
+  -> dropped completely - no gopher server in Fedora (#918206)
+- drop dip (gid 40) from groups created by default
+  -> moved to ppp (#918206)
+- drop uucp (uidgid 14) from groups created by default
+  -> moved to uucp (#918206)
+- create cdrom, tape, dialout, floppy groups in setup(#919285)
+
+* Tue Mar 05 2013 Ondrej Vasik <ovasik@redhat.com> 2.8.66-1
+- assign :190 gid for systemd-journal (#918120)
+- assign 191:191 uidgid pair for systemd-journal-gateway (#918120)
+
+* Wed Jan 23 2013 Ondrej Vasik <ovasik@redhat.com> 2.8.65-1
+- assign 165:165 uidgid pair for cinder (#902987)
+
+* Wed Jan 16 2013 Ondrej Vasik <ovasik@redhat.com> 2.8.64-1
+- correct handling of 256 color terminals in bashrc
+
+* Mon Dec 02 2012 Ondrej Vasik <ovasik@redhat.com> 2.8.63-1
+- ovirtagent created by ovirt-guest-agent
+
+* Mon Dec 02 2012 Ondrej Vasik <ovasik@redhat.com> 2.8.62-1
+- rename rhevagent uidgid reservation to ovirtagent
+
+* Fri Nov 02 2012 Ondrej Vasik <ovasik@redhat.com> 2.8.61-1
+- reserve uid 189 for hacluster (#872208)
+- reserve gid 189 for haclient (#872208)
+
+* Tue Oct 02 2012 Ondrej Vasik <ovasik@redhat.com> 2.8.60-1
+- reserve 188:188 for haproxy (#860221)
+
+* Wed Sep 19 2012 Ondrej Vasik <ovasik@redhat.com> 2.8.59-1
+- update /etc/services to match with latest IANA
+  assignments
+
+* Mon Aug 21 2012 Ondrej Vasik <ovasik@redhat.com> 2.8.58-1
+- reserve 110:110 for jetty (#849927)
+
+* Mon Aug 06 2012 Ondrej Vasik <ovasik@redhat.com> 2.8.57-1
+- reserve 187:187 for openstack-heat (#845078)
+
+* Sat Jul 21 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.8.56-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Fri Jul 13 2012 Ondrej Vasik <ovasik@redhat.com> 2.8.56-1
+- Turn on parallel history in bash (#815810)
+
+* Thu Jul 12 2012 Ondrej Vasik <ovasik@redhat.com> 2.8.55-1
+- reserve 186 uid for jbosson-agent user, reserve 186 gid
+  for jbosson group (#839410)
+
+* Fri May 11 2012 Ondrej Vasik <ovasik@redhat.com> 2.8.54-1
+- use unset -f pathmunge in /etc/profile to work more nicely
+  with ksh (#791140)
+
+* Wed Apr 11 2012 Ondrej Vasik <ovasik@redhat.com> 2.8.53-1
+- reserve 185:185 for jboss-as (#809398)
+
+* Fri Mar 23 2012 Ondrej Vasik <ovasik@redhat.com> 2.8.52-1
+- reserve 184:184 for mongodb (#806052)
+
+* Thu Mar 22 2012 Ondrej Vasik <ovasik@redhat.com> 2.8.51-1
+- do not throw away the stderr output of profile.d scripts
+  in noninteractive bash/ksh sessions(#805507)
+
+* Mon Mar 19 2012 Ondrej Vasik <ovasik@redhat.com> 2.8.50-1
+- reserve 182:182 for katello (#804204)
+- reserve 183:183 for elasticsearch (#804205)
+
+* Tue Feb 21 2012 Ondrej Vasik <ovasik@redhat.com> 2.8.49-1
+- conflict with filesystems before usrmove change
+
+* Sun Feb 12 2012 Ondrej Vasik <ovasik@redhat.com> 2.8.48-1
+- remove /bin and /sbin from /etc/profile(#789616)
+- require usrmove
+- add sbin paths in csh.login consistently with bash(#773268)
 
 * Tue Jan 10 2012 Ondrej Vasik <ovasik@redhat.com> 2.8.47-1
 - reserve 181:181 uidgid pair for wallaby (#772747)
