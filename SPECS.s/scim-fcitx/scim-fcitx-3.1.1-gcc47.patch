@@ -1,0 +1,24 @@
+Index: fcitx/src/tools.cpp
+===================================================================
+--- fcitx.orig/src/tools.cpp
++++ fcitx/src/tools.cpp
+@@ -14,6 +14,7 @@ using namespace scim;
+ #include <sys/stat.h>
+ #include <limits.h>
+ #include <string.h>
++#include <unistd.h>
+ 
+ #include "version.h"
+ #include "PYFA.h"
+Index: fcitx/src/sp.cpp
+===================================================================
+--- fcitx.orig/src/sp.cpp
++++ fcitx/src/sp.cpp
+@@ -12,6 +12,7 @@ using namespace scim;
+ #include <limits.h>
+ #include <ctype.h>
+ #include <cstring>
++#include <unistd.h>
+ 
+ #include "main.h"
+ #include "sp.h"

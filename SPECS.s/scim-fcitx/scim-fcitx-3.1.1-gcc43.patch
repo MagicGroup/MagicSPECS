@@ -1,0 +1,33 @@
+diff -up fcitx/src/scim_fcitx_imengine.cpp.gcc43 fcitx/src/scim_fcitx_imengine.cpp
+--- fcitx/src/scim_fcitx_imengine.cpp.gcc43	2008-02-29 10:55:21.000000000 +0800
++++ fcitx/src/scim_fcitx_imengine.cpp	2008-02-29 10:55:38.000000000 +0800
+@@ -36,6 +36,7 @@
+ #define Uses_SCIM_CONFIG_PATH
+ 
+ #include <scim.h>
++#include <cstring>
+ #include "scim_fcitx_imengine.h"
+ #include "main.h"
+ #include "ime.h"
+diff -up fcitx/src/sp.cpp.gcc43 fcitx/src/sp.cpp
+--- fcitx/src/sp.cpp.gcc43	2008-02-29 10:56:32.000000000 +0800
++++ fcitx/src/sp.cpp	2008-02-29 10:56:46.000000000 +0800
+@@ -11,6 +11,7 @@ using namespace scim;
+ #include <sys/stat.h>
+ #include <limits.h>
+ #include <ctype.h>
++#include <cstring>
+ 
+ #include "main.h"
+ #include "sp.h"
+diff -up fcitx/src/ime.cpp.gcc43 fcitx/src/ime.cpp
+--- fcitx/src/ime.cpp.gcc43	2008-02-29 10:55:50.000000000 +0800
++++ fcitx/src/ime.cpp	2008-02-29 10:56:03.000000000 +0800
+@@ -5,6 +5,7 @@
+ #include <ctype.h>
+ 
+ #include <scim.h>
++#include <cstring>
+ #include "scim_fcitx_imengine.h"
+ using namespace scim;
+ 
