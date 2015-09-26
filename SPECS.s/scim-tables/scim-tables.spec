@@ -5,8 +5,8 @@
 %define indic_tables 0
 
 Name:           scim-tables
-Version:        0.5.9
-Release:        7%{?dist}
+Version:        0.5.12
+Release:        6%{?dist}
 Summary:        SCIM Generic Table IMEngine
 
 License:        GPLv2+
@@ -22,10 +22,10 @@ BuildRoot:      %{_tmppath}/%{name}-%{version}-root-%(%{__id_u} -n)
 
 BuildRequires:  scim-devel, gtk2-devel
 # if autotools scripts modified
-#BuildRequires:  gettext-devel automake libtool
+BuildRequires:  gettext-devel automake libtool intltool
 Requires:       scim
 Patch1:         scim-tables-0.5.7-2.bz217639.patch
-Patch2:		scim-tables-0.5.7-5.bz232860.patch
+Patch2:	        scim-tables-0.5.7-5.bz232860.patch
 
 %description
 This package contains the Generic Table IMEngine for SCIM.
@@ -130,6 +130,17 @@ Requires:       scim-tables = %{version}
 This package contains scim-tables files for Malayalam languages.
 %endif
 
+%if %{indic_tables}
+%package marathi
+Summary:        SCIM tables for Marathi
+Group:          System Environment/Libraries
+Requires:       scim-tables = %{version}
+
+%description marathi
+This package contains scim-tables files for Marathi input.
+%endif
+
+
 %package nepali
 Summary:        SCIM tables for Nepali
 Group:          System Environment/Libraries
@@ -217,8 +228,10 @@ This package contains some miscellaneous scim-tables.
 %patch1 -p1 -b .1-217639
 %patch2 -p1 -b .2-232860
 
-
 %build
+autoreconf -ivf
+intltoolize --force
+autoreconf
 %configure --disable-static
 make  %{?_smp_mflags}
 
@@ -234,7 +247,7 @@ rm -f ${RPM_BUILD_ROOT}/%{_libdir}/scim-1.0/*/*/*.la
 %{__cp} %{SOURCE5} ${RPM_BUILD_ROOT}/%{_datadir}/scim/icons/
 
 %if !%{indic_tables}
-rm ${RPM_BUILD_ROOT}/%{_datadir}/scim/{icons,tables}/{Bengali,Gujarati,Hindi,Kannada,Malayalam,Punjabi,Tamil,Telugu}-*
+rm ${RPM_BUILD_ROOT}/%{_datadir}/scim/{icons,tables}/{Bengali,Gujarati,Hindi,Kannada,Malayalam,Marathi,Punjabi,Tamil,Telugu}-*
 %endif
 
 %if !%{jk_tables}
@@ -325,6 +338,8 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/scim/icons/Jyutping.png
 %{_datadir}/scim/tables/Simplex.bin
 %{_datadir}/scim/icons/Simplex.png
+%{_datadir}/scim/tables/SmartCangJie6.bin
+%{_datadir}/scim/icons/SmartCangJie6.png
 %{_datadir}/scim/tables/Stroke5.bin
 %{_datadir}/scim/icons/Stroke5.png
 %{_datadir}/scim/tables/Wu.bin
@@ -391,6 +406,13 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/scim/icons/Malayalam-inscript.png
 %endif
 
+%if %{indic_tables}
+%files marathi
+%defattr(-, root, root, -)
+%{_datadir}/scim/tables/Marathi-remington.bin
+%{_datadir}/scim/icons/Marathi-remington.png
+%endif
+
 %files nepali
 %defattr(-, root, root, -)
 %{_datadir}/scim/tables/Nepali_*.bin
@@ -416,6 +438,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/scim/tables/Translit.bin
 %{_datadir}/scim/icons/RussianTraditional.png
 %{_datadir}/scim/icons/Yawerty.png
+%{_datadir}/scim/icons/Translit.png
 
 
 %if %{indic_tables}
@@ -445,6 +468,7 @@ rm -rf $RPM_BUILD_ROOT
 %files ukrainian
 %defattr(-, root, root, -)
 %{_datadir}/scim/tables/Ukrainian-Translit.bin
+%{_datadir}/scim/icons/Ukrainian-Translit.png
 
 
 %files vietnamese
@@ -455,13 +479,40 @@ rm -rf $RPM_BUILD_ROOT
 
 %files additional
 %defattr(-, root, root, -)
+%{_datadir}/scim/tables/classicalhebrew.bin
+%{_datadir}/scim/tables/greekpoly.bin
 %{_datadir}/scim/tables/IPA-X-SAMPA.bin
+%{_datadir}/scim/tables/IPA-Kirshenbaum.bin
 %{_datadir}/scim/tables/LaTeX.bin
+%{_datadir}/scim/tables/Uyghur-Romanized.bin
+%{_datadir}/scim/tables/Uyghur-Standard.bin
 %{_datadir}/scim/icons/IPA-X-SAMPA.png
 %{_datadir}/scim/icons/LaTeX.png
-
+%{_datadir}/scim/icons/Uyghur.png
 
 %changelog
+* Fri Jun 19 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.5.12-6
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
+
+* Sat May 02 2015 Kalev Lember <kalevlember@gmail.com> - 0.5.12-5
+- Rebuilt for GCC 5 C++11 ABI change
+
+* Mon Aug 18 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.5.12-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
+
+* Sun Jun 08 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.5.12-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Sun Aug 04 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.5.12-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Thu Feb 14 2013 Ding-Yi Chen <dchen@redhat.com> - 0.5.12-1
+- Upstream Update to 0.5.12
+- Fixed 926498
+
+* Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.5.9-8
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
+
 * Sat Jul 21 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.5.9-7
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 
@@ -488,14 +539,14 @@ rm -rf $RPM_BUILD_ROOT
 * Wed Feb 25 2009 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.5.8-8
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_11_Mass_Rebuild
 
-* Thu Sep 04 2008 Caius Chance <cchance@redhat.com> - 0.5.8-7.fc10
+* Thu Sep 04 2008 Caius Chance <cchance@redhat.com> - 0.5.8-7
 - Resolves: rhbz#461092 (Create specific CangJie 5 icon.)
 
-* Wed Aug 28 2008 Caius Chance <cchance@redhat.com> - 0.5.8-6.fc10
+* Thu Aug 28 2008 Caius Chance <cchance@redhat.com> - 0.5.8-6
 - Resolves: rhbz#459772 (Update CangJie 5 table.)
 - Turned on dynamic candidate order (frequency).
 
-* Wed Aug 28 2008 Caius Chance <cchance@redhat.com> - 0.5.8-5.fc10
+* Thu Aug 28 2008 Caius Chance <cchance@redhat.com> - 0.5.8-5
 - Resolves: rhbz#460505 (Update Cantonese table.)
 
 * Wed Aug 27 2008 Jens Petersen <petersen@redhat.com> - 0.5.8-4.fc10
