@@ -1,6 +1,6 @@
 Name:		scim-hangul
 Version:	0.3.2
-Release:	12%{?dist}
+Release:	13%{?dist}
 
 License:	GPLv3
 URL:		http://www.scim-im.org/
@@ -10,12 +10,15 @@ Patch0:		scim-hangul-0.3.2.gcc43.patch
 Patch1:         scim-hangul-0.3.2.gcc47.patch
 
 Summary:	Hangul Input Method Engine for SCIM
+Summary(zh_CN.UTF-8): 韩语输入法的 SCIM 引擎
 Group:		System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 Requires:	scim
 
 %description
 Scim-hangul is a SCIM IMEngine module for Korean (Hangul) input support.
-
+%description -l zh_CN.UTF-8
+韩语输入法的 SCIM 引擎。
 
 %prep
 %setup -q -n %{name}-%{version}
@@ -32,7 +35,7 @@ make %{?_smp_mflags}
 make DESTDIR=${RPM_BUILD_ROOT} install
 
 rm $RPM_BUILD_ROOT%{_libdir}/scim-1.0/*/{IMEngine,SetupUI}/hangul*.la
-
+magic_rpm_clean.sh
 %find_lang %{name}
 
 
@@ -45,6 +48,9 @@ rm $RPM_BUILD_ROOT%{_libdir}/scim-1.0/*/{IMEngine,SetupUI}/hangul*.la
 
 
 %changelog
+* Sat Sep 26 2015 Liu Di <liudidi@gmail.com> - 0.3.2-13
+- 为 Magic 3.0 重建
+
 * Sat Aug 04 2012 Parag Nemade <paragn AT fedoraproject DOT org> - 0.3.2-12
 - Fix FTBFS for gcc-4.7
 

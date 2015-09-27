@@ -1,11 +1,13 @@
 %bcond_with multiuser
 
 Summary: A screen manager that supports multiple logins on one terminal
+Summary(zh_CN.UTF-8): 在一个终端支持多重登录的屏幕管理器
 Name: screen
-Version: 4.1.0
-Release: 0.9.20110819git450e8f%{?dist}
+Version:	4.3.1
+Release:	1%{?dist}
 License: GPLv2+
 Group: Applications/System
+Group(zh_CN.UTF-8): 系统环境/库
 URL: http://www.gnu.org/software/screen
 Requires(pre): /usr/sbin/groupadd
 Requires(preun): /sbin/install-info
@@ -14,17 +16,15 @@ BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: ncurses-devel pam-devel libutempter-devel autoconf texinfo
 BuildRequires: automake
 
-#Source0: ftp://ftp.uni-erlangen.de/pub/utilities/screen/screen-%{version}.tar.gz
+Source0: http://ftp.gnu.org/gnu/screen/screen-%{version}.tar.gz
 # snapshot from git://git.savannah.gnu.org/screen.git
-Source0: screen-20110819git450e8f.tar.bz2
 Source1: screen.pam
 
-Patch1: screen-4.0.3-libs.patch
-Patch2: screen-4.0.3-screenrc.patch
-Patch3: screen-ipv6.patch
-Patch4: screen-cc.patch
-Patch5: screen-E3.patch
-Patch6: screen-4.1.0-suppress_remap.patch
+Patch1:         screen-4.3.1-libs.patch
+Patch2:         screen-4.3.1-screenrc.patch
+Patch3:         screen-E3.patch
+Patch4:         screen-4.3.1-suppress_remap.patch
+Patch5:         screen-4.3.1-crypt.patch
 
 %description
 The screen utility allows you to have multiple logins on just one
@@ -35,15 +35,13 @@ login.
 Install the screen package if you need a screen manager that can
 support multiple logins on one terminal.
 
-
 %prep
-%setup -q -n screen/src
+%setup -q -n %{name}-%{version}
 %patch1 -p1 -b .libs
 %patch2 -p1 -b .screenrc
-%patch3 -p2 -b .ipv6
-%patch4 -p2 -b .cc
-%patch5 -p2 -b .E3
-%patch6 -p1 -b .suppress_remap
+%patch3 -p1 -b .E3
+%patch4 -p1 -b .suppress_remap
+%patch5 -p1 -b .crypto
 
 
 %build
@@ -92,8 +90,8 @@ install -p -m 0644 %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/pam.d/screen
 mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/run/screen
 
 # And tell systemd to recreate it on start with tmpfs
-mkdir -p $RPM_BUILD_ROOT%{_sysconfdir}/tmpfiles.d
-cat <<EOF > $RPM_BUILD_ROOT%{_sysconfdir}/tmpfiles.d/screen.conf
+mkdir -p $RPM_BUILD_ROOT%{_tmpfilesdir}
+cat <<EOF > $RPM_BUILD_ROOT%{_tmpfilesdir}/screen.conf
 # screen needs directory in /var/run
 %if %{with multiuser}
 d %{_localstatedir}/run/screen 0755 root root
@@ -124,13 +122,14 @@ fi
 
 %files
 %defattr(-,root,root,-)
-%doc NEWS README doc/FAQ doc/README.DOTSCREEN COPYING
+%doc README doc/FAQ doc/README.DOTSCREEN ChangeLog
+%license COPYING
 %{_mandir}/man1/screen.*
 %{_infodir}/screen.info*
 %{_datadir}/screen
 %config(noreplace) %{_sysconfdir}/screenrc
 %config(noreplace) %{_sysconfdir}/pam.d/screen
-%{_sysconfdir}/tmpfiles.d/screen.conf
+%{_tmpfilesdir}/screen.conf
 %if %{with multiuser}
 %attr(4755,root,root) %{_bindir}/screen
 %attr(755,root,root) %{_localstatedir}/run/screen
@@ -139,7 +138,11 @@ fi
 %attr(775,root,screen) %{_localstatedir}/run/screen
 %endif
 
+
 %changelog
+* Sat Sep 26 2015 Liu Di <liudidi@gmail.com> - 4.3.1-1
+- 更新到 4.3.1
+
 * Sun Sep 20 2015 Liu Di <liudidi@gmail.com> - 4.1.0-0.9.20110819git450e8f
 - 为 Magic 3.0 重建
 

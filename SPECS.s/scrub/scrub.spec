@@ -1,9 +1,11 @@
 Name:		scrub
 Version:	2.5.2
-Release:	6%{?dist}
+Release:	7%{?dist}
 Summary:	Disk scrubbing program
+Summary(zh_CN.UTF-8): 磁盘清理程序
 License:	GPLv2+
 Group:		System Environment/Base
+Group(zh_CN.UTF-8): 系统环境/基本
 URL:		http://code.google.com/p/diskscrub/
 Source0:	http://diskscrub.googlecode.com/files/%{name}-%{version}.tar.bz2
 
@@ -15,6 +17,8 @@ and all data on it is destroyed;  2) a regular file is scrubbed and
 only the data in the file (and optionally its name in the directory
 entry) is destroyed; or 3) a regular file is created, expanded until
 the file system is full, then scrubbed as in 2).
+%description -l zh_CN.UTF-8
+磁盘清理程序。
 
 %prep
 %setup -q
@@ -25,6 +29,7 @@ make %{?_smp_mflags}
 
 %install
 make DESTDIR=%{buildroot} install
+magic_rpm_clean.sh
 
 %files
 %doc DISCLAIMER COPYING
@@ -33,6 +38,9 @@ make DESTDIR=%{buildroot} install
 %{_mandir}/man1/scrub.1*
 
 %changelog
+* Sat Sep 26 2015 Liu Di <liudidi@gmail.com> - 2.5.2-7
+- 为 Magic 3.0 重建
+
 * Thu Aug 07 2014 Liu Di <liudidi@gmail.com> - 2.5.2-6
 - 为 Magic 3.0 重建
 

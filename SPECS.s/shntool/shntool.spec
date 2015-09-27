@@ -1,9 +1,11 @@
 Name:           shntool
 Version:        3.0.10
-Release:        5%{?dist}
+Release:        6%{?dist}
 Summary:        A multi-purpose WAVE data processing and reporting utility
+Summary(zh_CN.UTF-8): 多用途音频数据处理和报告工具
 
 Group:          Applications/Multimedia
+Group(zh_CN.UTF-8): 应用程序/多媒体
 License:        GPLv2+
 URL:            http://etree.org/shnutils/shntool
 Source0:        http://etree.org/shnutils/shntool/dist/src/%{name}-%{version}.tar.gz
@@ -14,6 +16,9 @@ A multi-purpose WAVE data processing and reporting utility. File
 formats are abstracted from its core, so it can process any file that contains
 WAVE data, compressed or not - provided there exists a format module to handle
 that particular file type. 
+
+%description -l zh_CN.UTF-8
+多用途音频数据处理和报告工具。
 
 %prep
 %setup -q
@@ -27,7 +32,7 @@ make %{?_smp_mflags}
 %install
 rm -rf $RPM_BUILD_ROOT
 make install DESTDIR=$RPM_BUILD_ROOT
-
+magic_rpm_clean.sh
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -42,6 +47,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sun Sep 27 2015 Liu Di <liudidi@gmail.com> - 3.0.10-6
+- 为 Magic 3.0 重建
+
 * Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 3.0.10-5
 - 为 Magic 3.0 重建
 

@@ -1,9 +1,11 @@
 Name:           scim-fcitx
 Version:        3.1.1
-Release:        21%{?dist}
+Release:        22%{?dist}
 Summary:        FCITX Input Method Engine for SCIM
+Summary(zh_CN.UTF-8): SCIM 下的 FCITX 输入法引擎
 
 Group:          System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 License:        GPLv2+
 URL:            http://www.scim-im.org/projects/imengines/
 Source0:        http://dl.sourceforge.net/scim/%{name}.%{version}.tar.bz2
@@ -17,15 +19,19 @@ Patch1:         scim-fcitx-3.1.1-gcc47.patch
 %description
 scim-fcitx is a port of the fcitx Chinese input method for the SCIM input
 method platform.  It provides Wubi, Erbi, Cangjie, and Pinyin styles of input.
-
+%description -l zh_CN.UTF-8
+SCIM 下的 FCITX 输入法引擎。
 
 %package tools
 Summary:    Fcitx tables tools
+Summary(zh_CN.UTF-8): Fcitx 码表工具
 Group:      Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 
 %description tools
 This package contains input table tools from fcitx.
-
+%description tools -l zh_CN.UTF-8
+Fcitx 码表工具。
 
 %prep
 %setup -q -n fcitx
@@ -49,6 +55,7 @@ pushd ${RPM_BUILD_ROOT}/%{_bindir}/
   mv mb2txt mb2txt3
   mv txt2mb txt2mb3
 popd
+magic_rpm_clean.sh
 
 %files
 %defattr(-, root, root, -)
@@ -64,6 +71,9 @@ popd
 
 
 %changelog
+* Sat Sep 26 2015 Liu Di <liudidi@gmail.com> - 3.1.1-22
+- 为 Magic 3.0 重建
+
 * Fri Jun 19 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.1.1-21
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

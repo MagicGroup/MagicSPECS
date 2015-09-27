@@ -1,6 +1,6 @@
 Name:           scim-anthy
 Version:        1.2.7
-Release:        8%{?dist}
+Release:        9%{?dist}
 
 License:        GPLv2+
 URL:            http://scim-imengine.sourceforge.jp/
@@ -10,7 +10,9 @@ BuildRequires:  anthy-devel >= 6700b-1 gettext-devel automake autoconf libtool
 Source0:        http://osdn.dl.sourceforge.jp/scim-imengine/37309/%{name}-%{version}.tar.gz
 
 Summary:        SCIM IMEngine for anthy for Japanese input
+Summary(zh_CN.UTF-8): 日语输入法的 SCIM 引擎
 Group:          System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 Requires:       scim, kasumi
 # This was necessary for the upgrade path from IIIMF
 # and ensure the installation of future version of IIIMF.
@@ -20,6 +22,8 @@ Requires:       scim, kasumi
 Obsoletes:      iiimf-le-canna <= 1:12.2
 %description
 Scim-anthy is a SCIM IMEngine module for anthy to support Japanese input.
+%description -l zh_CN.UTF-8
+日语输入法的 SCIM 引擎。
 
 
 %prep
@@ -36,15 +40,15 @@ rm -rf $RPM_BUILD_ROOT
 make install DESTDIR=$RPM_BUILD_ROOT INSTALL="%{__install} -p"
 
 rm $RPM_BUILD_ROOT%{_libdir}/scim-1.0/*/*/*.la
-
-%find_lang %{name}
+magic_rpm_clean.sh
+#find_lang %{name}
 
 
 %clean
 rm -rf $RPM_BUILD_ROOT
 
 
-%files -f %{name}.lang
+%files
 %defattr(-,root,root,-)
 %doc AUTHORS COPYING NEWS README
 %{_libdir}/scim-1.0/*/Helper/anthy-imengine-helper.so
@@ -55,6 +59,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sat Sep 26 2015 Liu Di <liudidi@gmail.com> - 1.2.7-9
+- 为 Magic 3.0 重建
+
 * Sat Jul 21 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.2.7-8
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 

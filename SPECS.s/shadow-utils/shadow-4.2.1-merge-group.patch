@@ -1,0 +1,13 @@
+diff -up shadow-4.2.1/lib/groupio.c.merge-group shadow-4.2.1/lib/groupio.c
+--- shadow-4.2.1/lib/groupio.c.merge-group	2014-11-26 14:33:54.039581662 +0100
++++ shadow-4.2.1/lib/groupio.c	2014-11-26 14:46:02.841852886 +0100
+@@ -335,8 +335,7 @@ static /*@null@*/struct commonio_entry *
+ 		errno = ENOMEM;
+ 		return NULL;
+ 	}
+-	snprintf(new_line, new_line_len, "%s\n%s", gr1->line, gr2->line);
+-	new_line[new_line_len] = '\0';
++	snprintf(new_line, new_line_len + 1, "%s\n%s", gr1->line, gr2->line);
+ 
+ 	/* Concatenate the 2 list of members */
+ 	for (i=0; NULL != gptr1->gr_mem[i]; i++);

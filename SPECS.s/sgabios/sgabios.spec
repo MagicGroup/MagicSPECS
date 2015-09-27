@@ -1,9 +1,11 @@
 Name:           sgabios
 Version:        0
-Release:        0.20110624SVN%{?dist}
+Release:        0.20110625SVN%{?dist}
 Summary:        Open-source serial graphics BIOS option rom
+Summary(zh_CN.UTF-8): 开源的串口图形 BIOS 
 
 Group:          Applications/Emulators
+Group(zh_CN.UTF-8): 应用程序/模拟器
 License:        ASL 2.0
 URL:            http://code.google.com/p/sgabios/
 # Tarball created from SVN archive using the following commands:
@@ -27,9 +29,13 @@ a serial port the display and input capabilities normally handled by a VGA
 adapter and a keyboard, and additionally provide hooks for logging displayed
 characters for later collection after an operating system boots.
 
+%description -l zh_CN.UTF-8
+开源的串口图形 BIOS。
+
 %ifarch %{ix86} x86_64 
 %package bin
 Summary: Sgabios for x86
+Summary(zh_CN.UTF-8): x86 的 Sgabios
 Buildarch: noarch
 
 %description bin
@@ -37,6 +43,8 @@ SGABIOS is designed to be inserted into a BIOS as an option rom to provide over
 a serial port the display and input capabilities normally handled by a VGA
 adapter and a keyboard, and additionally provide hooks for logging displayed
 characters for later collection after an operating system boots.
+%description bin -l zh_CN.UTF-8
+x86 的 Sgabios。
 %endif
 
 %prep
@@ -55,7 +63,7 @@ mkdir -p $RPM_BUILD_ROOT%{_datadir}/sgabios
 %ifarch %{ix86} x86_64 
 install -m 0644 sgabios.bin $RPM_BUILD_ROOT%{_datadir}/sgabios
 %endif
-
+magic_rpm_clean.sh
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -74,6 +82,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sat Sep 26 2015 Liu Di <liudidi@gmail.com> - 0-0.20110625SVN
+- 为 Magic 3.0 重建
+
 * Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 0-0.20110624SVN
 - 为 Magic 3.0 重建
 

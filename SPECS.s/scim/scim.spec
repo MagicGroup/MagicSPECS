@@ -1,10 +1,12 @@
 Name:      scim
 Version:   1.4.15
-Release:   5%{?dist}
+Release:   6%{?dist}
 Summary:   Smart Common Input Method platform
+Summary(zh_CN.UTF-8): 智能输入法框架
 
 License:   LGPLv2+
 Group:     System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 URL:       http://www.scim-im.org/
 Source0:   http://downloads.sourceforge.net/%{name}/%{name}-%{version}.tar.gz
 Source1:   xinput-scim
@@ -66,10 +68,14 @@ Patch9:    scim-1.4.15-fixes-gtk3-im-module.patch
 SCIM is a user friendly and full featured input method user interface and
 also a development platform to make life easier for Input Method developers.
 
+%description -l zh_CN.UTF-8
+智能输入法框架。
 
 %package devel
 Summary:    Smart Common Input Method platform
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:      Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:   %{name}-libs = %{version}-%{release}
 Requires:   gtk2-devel
 Requires:   pkgconfig
@@ -79,10 +85,14 @@ Obsoletes:  iiimf-libs-devel <= 1:12.2
 The scim-devel package includes the header files for the scim package.
 Install scim-devel if you want to develop programs which will use scim.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %package gtk
 Summary:    Smart Common Input Method Gtk IM module
+Summary(zh_CN.UTF-8): %{name} 的 Gtk 模块
 Group:      System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 # for %{_libdir}/gtk-2.0/immodules
 Requires: gtk2 >= 2.11.6-7.fc8
 # for update-gtk-immodules
@@ -91,26 +101,48 @@ Requires(postun): gtk2 >= 2.9.1-2
 
 %description gtk
 This package provides a GTK input method module for SCIM.
+%description gtk -l zh_CN.UTF-8
+%{name} 的 Gtk 模块。
 
+%package qt
+Summary:    Smart Common Input Method Qt IM module
+Summary(zh_CN.UTF-8): %{name} 的 Qt 模块
+Group:      System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
+# for %{_libdir}/gtk-2.0/immodules
+Requires: qt3 >= 3.3.8b
+Requires: qt4 >= 4.8.7
+
+%description qt
+This package provides a Qt input method module for SCIM.
+%description qt -l zh_CN.UTF-8
+%{name} 的 Qt 模块。
 
 %package libs
 Summary:    Smart Common Input Method libraries
+Summary(zh_CN.UTF-8): %{name} 的运行库
 Group:      System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 Obsoletes:  iiimf-libs <= 1:12.2, iiimf-csconv <= 1:12.2
 
 %description libs
 This package provides the libraries for SCIM.
-
+%description libs -l zh_CN.UTF-8
+%{name} 的运行库。
 
 %package rawcode
 Summary:    SCIM Unicode Input Method Engine
+Summary(zh_CN.UTF-8): SCIM Unicode 输入法引擎
 Group:      System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 Requires:   %{name} = %{version}-%{release}
 
 %description rawcode
 This package provides an Input Method Engine for inputting unicode characters
 but their unicode codepoints.
 
+%description rawcode -l zh_CN.UTF-8
+SCIM Unicode 输入法引擎。
 
 %define scim_api 1.4.0
 
@@ -159,7 +191,7 @@ rm -f docs/html/FreeSans.ttf
 # install xinput config file
 mkdir -pm 755 ${RPM_BUILD_ROOT}/%{_sysconfdir}/X11/xinit/xinput.d
 install -pm 644 %{SOURCE1} ${RPM_BUILD_ROOT}/%{_xinputconf}
-
+magic_rpm_clean.sh
 %find_lang %{name}
 
 
@@ -237,6 +269,10 @@ fi
 %{_libdir}/gtk-2.0/*/immodules/im-scim.so
 %{_libdir}/gtk-3.0/*/immodules/im-scim.so
 
+%files qt
+%defattr(-,root,root,-)
+%{_libdir}/qt-3.3/lib/qt3/plugins/inputmethods/im-scim.so
+%{_libdir}/qt4/lib/qt4/plugins/inputmethods/im-scim.so
 
 %files libs
 %defattr(-,root,root,-)
@@ -254,6 +290,9 @@ fi
 
 
 %changelog
+* Sat Sep 26 2015 Liu Di <liudidi@gmail.com> - 1.4.15-6
+- 为 Magic 3.0 重建
+
 * Thu Jul 30 2015 Peng Wu <pwu@redhat.com> - 1.4.15-5
 - Fixes gtk3 input method module dependency
 

@@ -2,13 +2,11 @@
 %{!?__python2: %global __python2 /usr/bin/python2}
 %{!?python2_sitelib: %global python2_sitelib %(%{__python2} -c "from distutils.sysconfig import get_python_lib; print get_python_lib()")}
 %{!?python2_version: %global python2_version %(%{__python2} -c "import sys; sys.stdout.write(sys.version[:3])")}
-%if 0%{?fedora}
 %global with_python3 1
-%endif
 
 Name:           python-virtualenv
 Version:        13.1.2
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Tool to create isolated Python environments
 
 Group:          Development/Languages
@@ -19,17 +17,12 @@ Source0:        http://pypi.python.org/packages/source/v/virtualenv/virtualenv-%
 BuildArch:      noarch
 BuildRequires:  python2-devel
 
-%if 0%{?fedora}
 BuildRequires:  python-sphinx
-%endif
 
 %if 0%{?with_python3}
 BuildRequires:  python3-devel
 
-%if 0%{?fedora}
 BuildRequires:  python3-sphinx
-%endif
-
 %endif # with_python3
 
 Requires:       python-setuptools
@@ -80,10 +73,8 @@ pushd %{py3dir}
 %{__python3} setup.py build
 
 # Build docs on Fedora
-%if 0%{?fedora} > 0
 %{__python3} setup.py build_sphinx
 rm -f build/sphinx/html/.buildinfo
-%endif
 
 popd
 %endif # with_python3
@@ -102,9 +93,7 @@ popd
 %files
 %doc docs/*rst PKG-INFO AUTHORS.txt LICENSE.txt
 # Include sphinx docs on Fedora
-%if 0%{?fedora} > 0
 %doc build/sphinx/*
-%endif
 
 %{python2_sitelib}/*
 %{_bindir}/virtualenv
@@ -114,9 +103,7 @@ popd
 %files -n python3-virtualenv
 %doc docs/*rst PKG-INFO AUTHORS.txt LICENSE.txt
 # Include sphinx docs on Fedora
-%if 0%{?fedora} > 0
 %doc build/sphinx/*
-%endif
 %{_bindir}/py3-virtualenv
 %{_bindir}/virtualenv-%{python3_version}
 %{python3_sitelib}/*
@@ -125,6 +112,9 @@ popd
 
 
 %changelog
+* Fri Sep 25 2015 Liu Di <liudidi@gmail.com> - 13.1.2-2
+- 为 Magic 3.0 重建
+
 * Mon Aug 24 2015 Steve Milner <smilner@redhat.com> - 13.1.2-1
 - Update for upstream release.
 

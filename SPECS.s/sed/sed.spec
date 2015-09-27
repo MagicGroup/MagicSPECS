@@ -1,18 +1,21 @@
 # -*- coding: utf-8 -*-
 %define WITH_SELINUX 0
+%ifos linux
+%define _bindir /bin
+%endif
 
 Summary: A GNU stream text editor
+Summary(zh_CN.UTF-8): GNU 流式文本编辑器
 Name: sed
-Version: 4.2.1
-Release: 10%{?dist}
+Version:	4.2.2
+Release:	1%{?dist}
 License: GPLv3+
 Group: Applications/Text
+Group(zh_CN.UTF-8): 应用程序/文本
 URL: http://sed.sourceforge.net/
 Source0: ftp://ftp.gnu.org/pub/gnu/sed/sed-%{version}.tar.bz2
 Source1: http://sed.sourceforge.net/sedfaq.txt
-Patch0: sed-4.2.1-copy.patch
-Patch1: sed-4.2.1-makecheck.patch
-Patch2: sed-4.2.1-data-loss.patch
+Patch0: sed-4.2.2-binary_copy_args.patch
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: glibc-devel
 %if %{WITH_SELINUX}
@@ -30,11 +33,12 @@ operations on the text and outputs the modified text.  The operations
 that sed performs (substitutions, deletions, insertions, etc.) can be
 specified in a script file or from the command line.
 
+%description -l zh_CN.UTF-8
+GNU 流式文本编辑器。
+
 %prep
 %setup -q
 %patch0 -p1
-%patch1 -p1
-%patch2 -p1
 
 %build
 %configure --without-included-regex
@@ -53,7 +57,7 @@ make DESTDIR=$RPM_BUILD_ROOT install
 rm -f ${RPM_BUILD_ROOT}/%{_infodir}/dir
 
 magic_rpm_clean.sh
-%find_lang %{name} || touch %{name}.lang
+%find_lang %{name} || :
 
 %post
 /usr/sbin/install-info %{_infodir}/sed.info.gz %{_infodir}/dir || &> /dev/null
@@ -76,6 +80,9 @@ rm -rf ${RPM_BUILD_ROOT}
 %{_mandir}/man*/*
 
 %changelog
+* Sat Sep 26 2015 Liu Di <liudidi@gmail.com> - 4.2.2-1
+- 更新到 4.2.2
+
 * Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 4.2.1-10
 - 为 Magic 3.0 重建
 

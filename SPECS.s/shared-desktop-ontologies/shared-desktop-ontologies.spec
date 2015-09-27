@@ -1,9 +1,11 @@
 Name:           shared-desktop-ontologies
 Version:        0.11.0
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Shared ontologies needed for semantic environments
+Summary(zh_CN.UTF-8): 语义环境的共享本体
 
 Group:          User Interface/Desktops
+Group(zh_CN.UTF-8): 用户界面/桌面
 # see LICENSE.README
 License:        (BSD or CC-BY) and CC-BY and W3C
 URL:            http://oscaf.sourceforge.net/
@@ -35,18 +37,22 @@ semantic desktops. Although initially designed to fulfill requirements
 for the Nepomuk project, these ontologies are useful for the semantic
 web community in general.
 
-
+%description -l zh_CN.UTF-8
+语义环境的共享本体。
 
 %package        devel
 Summary:        Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       cmake
 Requires:       %{name} = %{version}-%{release}
 %description    devel
 The %{name}-devel package contains libraries
 and header files for developing applications
 that use %{name}.
-
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -64,7 +70,7 @@ make %{?_smp_mflags} -C %{_target_platform}
 %install
 rm -rf %{buildroot}
 make install/fast DESTDIR=%{buildroot} -C %{_target_platform}
-
+magic_rpm_clean.sh
 
 %check
 # verify pkg-config version (notoriously wrong in recent releases)
@@ -90,6 +96,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Sep 27 2015 Liu Di <liudidi@gmail.com> - 0.11.0-3
+- 为 Magic 3.0 重建
+
 * Sun Aug 04 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.11.0-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
 

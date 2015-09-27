@@ -2,13 +2,16 @@
 
 Name:           seed
 Version:        3.8.1
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        GNOME JavaScript interpreter
+Summary(zh_CN.UTF-8): GNOME JavaScript 解析器
 
 Group:          Development/Languages
+Group(zh_CN.UTF-8): 开发/语言
 License:        LGPLv3+
 URL:            http://live.gnome.org/Seed
-Source0:        http://ftp.gnome.org/pub/gnome/sources/seed/3.8/seed-%{version}.tar.xz
+%define majorver %(echo %{version} | awk -F. '{print $1"."$2}')
+Source0:        http://ftp.gnome.org/pub/gnome/sources/seed/%{majorver}/seed-%{version}.tar.xz
 # Seed.js multilib fix
 Patch0:         seed-3.0.0-multilib.patch
 
@@ -32,26 +35,35 @@ platform. Seed serves as something which enables you to write
 standalone applications in JavaScript, or easily enable your
 application to be extensible in JavaScript.
 
+%description -l zh_CN.UTF-8
+GNOME JavaScript 解析器。
 
 %package        devel
 Summary:        Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       %{name} = %{version}-%{release}
 
 %description    devel
 The %{name}-devel package contains libraries and header files for
 developing applications that use %{name}.
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %package        doc
 Summary:        Documentation files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的文档
 Group:          Documentation
+Group(zh_CN.UTF-8): 文档
 BuildArch:      noarch
 Requires:       %{name} = %{version}-%{release}
 
 %description    doc
 The %{name}-doc package contains documentation for
 developing applications that use %{name}.
-
+%description doc -l zh_CN.UTF-8
+%{name} 的文档。
 
 %prep
 %setup -q
@@ -93,7 +105,7 @@ find $RPM_BUILD_ROOT -name '*.a' -exec rm -f {} ';'
 mv $RPM_BUILD_ROOT%{_docdir}/seed devdocs
 # remove files already bundled with main package
 rm devdocs/{AUTHORS,COPYING,INSTALL,README}
-
+magic_rpm_clean.sh
 
 %check
 # currently tests the installed version of seed, and requires X
@@ -129,6 +141,9 @@ rm devdocs/{AUTHORS,COPYING,INSTALL,README}
 
 
 %changelog
+* Sat Sep 26 2015 Liu Di <liudidi@gmail.com> - 3.8.1-3
+- 为 Magic 3.0 重建
+
 * Sun Aug 04 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.8.1-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
 

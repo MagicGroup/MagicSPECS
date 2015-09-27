@@ -5,26 +5,34 @@
 #
 
 Summary: Small Footprint CIM Client Library
+Summary(zh_CN.UTF-8): 轻量级 CIM 客户端
 Name: sblim-sfcc
-Version: 2.2.7
-Release: 3%{?dist}
+Version: 2.2.8
+Release: 2%{?dist}
 Group: Applications/System
+Group(zh_CN.UTF-8): 应用程序/系统
 License: EPL
 URL: http://www.sblim.org
 Source0: http://downloads.sourceforge.net/project/sblim/%{name}/%{name}-%{version}.tar.bz2
 BuildRequires: curl-devel chrpath
 
-%Description
+%description
 Small Footprint CIM Client Library Runtime Libraries
+
+%description -l zh_CN.UTF-8
+轻量级 CIM 客户端。
 
 %package devel
 Summary: Small Footprint CIM Client Library
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: Applications/System
+Group(zh_CN.UTF-8): 应用程序/系统
 Requires: %{name} = %{version}-%{release}
 
 %Description devel
 Small Footprint CIM Client Library Header Files and Link Libraries
-
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 
@@ -42,6 +50,7 @@ make DESTDIR=%{buildroot} install
 rm -rf %{buildroot}/%{_libdir}/*a
 # remove rpath
 chrpath --delete $RPM_BUILD_ROOT%{_libdir}/libcmpisfcc.so.1.0.0
+magic_rpm_clean.sh
 
 %post -p /sbin/ldconfig
 
@@ -61,6 +70,9 @@ chrpath --delete $RPM_BUILD_ROOT%{_libdir}/libcmpisfcc.so.1.0.0
 %{_libdir}/libcmpisfcc.so
 
 %changelog
+* Fri Sep 25 2015 Liu Di <liudidi@gmail.com> - 2.2.8-2
+- 为 Magic 3.0 重建
+
 * Fri Jun 20 2014 Liu Di <liudidi@gmail.com> - 2.2.7-3
 - 为 Magic 3.0 重建
 

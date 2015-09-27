@@ -1,5 +1,5 @@
 #!/bin/bash
-url="http://www.samba.org/ftp/talloc/?C=M;O=D"
+url="http://www.samba.org/ftp/talloc/?C=M&O=D"
 new1="talloc-"
 new2=".tar.gz"
 downcommand="wget -q" 

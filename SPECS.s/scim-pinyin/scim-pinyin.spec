@@ -1,10 +1,12 @@
 Name:       scim-pinyin
 Version:    0.5.92
-Release:    1%{?dist}
+Release:    2%{?dist}
 Summary:    Smart Pinyin IMEngine for Smart Common Input Method platform
+Summary(zh_CN.UTF-8): SCIM 支持的拼音输入法
 
 License:    GPLv2
 Group:      System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 URL:        http://www.scim-im.org/projects/imengines/
 Source0:    http://dl.sourceforge.net/scim/%{name}-%{version}.tar.gz
 BuildRoot:  %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -23,7 +25,8 @@ Patch8:         scim-pinyin-0.5.91-fix-ms-shuangpin.patch
 
 %description
 Simplified Chinese Smart Pinyin IMEngine for SCIM.
-
+%description -l zh_CN.UTF-8
+SCIM 支持的简体中文拼音输入法。
 
 %prep
 %setup -q
@@ -49,7 +52,7 @@ make DESTDIR=${RPM_BUILD_ROOT} install
 
 rm $RPM_BUILD_ROOT%{_libdir}/scim-1.0/*/{IMEngine,SetupUI}/*.la
 rm -f $RPM_BUILD_ROOT%{_libdir}/scim-1.0/*/Helper/*.la
-
+magic_rpm_clean.sh
 %find_lang %{name}
 
 
@@ -68,6 +71,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sat Sep 26 2015 Liu Di <liudidi@gmail.com> - 0.5.92-2
+- 为 Magic 3.0 重建
+
 * Wed Jul 18 2012  Peng Wu <pwu@redhat.com> - 0.5.92-1
 - Update to 0.5.92
 

@@ -1,0 +1,12 @@
+diff -up ceph-0.94.1/src/rocksdb/configure.ac.tcmalloc ceph-0.94.1/src/rocksdb/configure.ac
+--- ceph-0.94.1/src/rocksdb/configure.ac.tcmalloc	2015-06-08 14:03:27.000000000 +0200
++++ ceph-0.94.1/src/rocksdb/configure.ac	2015-06-08 14:03:41.000000000 +0200
+@@ -19,7 +19,7 @@ AC_CHECK_LIB([snappy], [snappy_compress]
+ AC_CHECK_LIB([z], [gzread], [HAVE_LIBZ=yes], [AC_MSG_FAILURE([libz not found])])
+ AC_CHECK_LIB([bz2], [BZ2_bzCompressInit], [HAVE_LIBBZ2=yes], [AC_MSG_FAILURE([libbz2 not found])])
+ AC_CHECK_LIB([rt], [clock_gettime], [HAVE_LIBRT=yes], [AC_MSG_FAILURE([librt not found])])
+-AC_CHECK_LIB([tcmalloc], [malloc],  [HAVE_LIBTCMALLOC=yes],[AC_MSG_FAILURE([no tcmalloc found ])])
++AC_CHECK_LIB([tcmalloc], [malloc],  [HAVE_LIBTCMALLOC=yes],[AC_MSG_RESULT([no tcmalloc found ])])
+ 
+ OLD_CXXFLAGS="$CXXFLAGS"
+ CXXFLAGS="$CXXFLAGS -std=c++11"

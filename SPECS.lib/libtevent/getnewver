@@ -1,5 +1,5 @@
 #!/bin/bash
-url="http://www.samba.org/ftp/tevent/?C=M;O=D"
+url="http://www.samba.org/ftp/tevent/?C=M&O=D"
 new1="tevent-"
 new2=".tar.gz"
 downcommand="wget -q" 

@@ -1,21 +1,22 @@
 Summary: Integer point manipulation library
 Summary(zh_CN.UTF-8): 整点数处理库
 Name: isl
-Version:	0.15
+Epoch:		1
+Version:	0.14
 License: MIT
 Group: System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
 URL: http://isl.gforge.inria.fr/
 
-%global libmajor 15
-%global libversion %{libmajor}.0.0
+%global libmajor 13
+%global libversion %{libmajor}.1.0
 
 # Please set buildid below when building a private version of this rpm to
 # differentiate it from the stock rpm.
 #
 # % global buildid .local
 
-Release:	1%{?dist}
+Release:	2%{?dist}
 
 BuildRequires: gmp-devel
 BuildRequires: pkgconfig
@@ -93,6 +94,9 @@ make check
 
 
 %changelog
+* Sat Sep 26 2015 Liu Di <liudidi@gmail.com> - 1:0.14-1
+- 回退到 0.14
+
 * Sun Aug 02 2015 Liu Di <liudidi@gmail.com> - 0.15-1
 - 更新到 0.15
 

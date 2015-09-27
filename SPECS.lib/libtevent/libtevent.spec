@@ -5,7 +5,7 @@
 %{!?python_version: %global python_version %(%{__python} -c "from distutils.sysconfig import get_python_version; print(get_python_version())")}
 
 Name: libtevent
-Version: 0.9.21
+Version: 0.9.25
 Release: 1%{?dist}
 Group: System Environment/Daemons
 Group(zh_CN.UTF-8): 系统环境/服务
@@ -134,6 +134,9 @@ rm -rf $RPM_BUILD_ROOT
 %postun -p /sbin/ldconfig
 
 %changelog
+* Fri Sep 25 2015 Liu Di <liudidi@gmail.com> - 0.9.25-1
+- 更新到 0.9.25
+
 * Fri Aug 01 2014 Liu Di <liudidi@gmail.com> - 0.9.21-1
 - 更新到 0.9.21
 

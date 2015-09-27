@@ -5,28 +5,40 @@
 Summary: Utilities for managing accounts and shadow password files
 Summary(zh_CN.UTF-8): 用来管理帐号和屏蔽口令文件的工具
 Name: shadow-utils
-Version: 4.1.4.3
+Version: 4.2.1
 Release: 2%{?dist}
 Epoch: 2
 URL: http://pkg-shadow.alioth.debian.org/
-Source0: ftp://pkg-shadow.alioth.debian.org/pub/pkg-shadow/shadow-%{version}.tar.bz2
+Source0: http://pkg-shadow.alioth.debian.org/releases/shadow-%{version}.tar.xz
+Source3: http://pkg-shadow.alioth.debian.org/releases/shadow-%{version}.tar.xz.sig
 Source1: shadow-utils.login.defs
 Source2: shadow-utils.useradd
-Patch0: shadow-4.1.4.2-redhat.patch
-Patch1: shadow-4.1.4.3-goodname.patch
-Patch2: shadow-4.1.4.2-leak.patch
-Patch3: shadow-4.1.4.2-fixes.patch
-Patch4: shadow-4.1.4.2-infoParentDir.patch
-Patch5: shadow-4.1.4.3-semange.patch
-Patch6: shadow-4.1.4.2-acl.patch
-Patch7: shadow-4.1.4.2-underflow.patch
-Patch8: shadow-4.1.4.3-uflg.patch
-Patch9: shadow-4.1.4.2-gshadow.patch
-Patch10: shadow-4.1.4.3-nopam.patch
-Patch11: shadow-4.1.4.3-IDs.patch
-#696213 #674878 #739147
-Patch12: shadow-4.1.4.3-man.patch
-#749205
+Source4: shadow-bsd.txt
+Source5: https://www.gnu.org/licenses/old-licenses/gpl-2.0.txt
+Patch0: shadow-4.1.5-redhat.patch
+Patch1: shadow-4.1.5.1-goodname.patch
+Patch2: shadow-4.1.5.1-info-parent-dir.patch
+Patch3: shadow-4.1.5-uflg.patch
+Patch6: shadow-4.1.5.1-selinux.patch
+Patch7: shadow-4.1.5-2ndskip.patch
+Patch8: shadow-4.1.5.1-backup-mode.patch
+Patch9: shadow-4.2.1-merge-group.patch
+Patch10: shadow-4.1.5.1-orig-context.patch
+Patch11: shadow-4.1.5.1-logmsg.patch
+Patch12: shadow-4.1.5.1-errmsg.patch
+Patch13: shadow-4.1.5.1-audit-owner.patch
+Patch14: shadow-4.1.5.1-default-range.patch
+Patch15: shadow-4.2.1-manfix.patch
+Patch17: shadow-4.1.5.1-userdel-helpfix.patch
+Patch18: shadow-4.1.5.1-id-alloc.patch
+Patch19: shadow-4.2.1-date-parsing.patch
+Patch20: shadow-4.1.5.1-ingroup.patch
+Patch21: shadow-4.1.5.1-move-home.patch
+Patch22: shadow-4.2.1-audit-update.patch
+Patch23: shadow-4.2.1-usermod-unlock.patch
+Patch24: shadow-4.2.1-no-lock-dos.patch
+Patch25: shadow-4.2.1-defs-chroot.patch
+
 
 License: BSD
 Group: System Environment/Base
@@ -56,36 +68,66 @@ groupmod 命令用来管理组群帐号。
 
 %prep
 %setup -q -n shadow-%{version}
-
 %patch0 -p1 -b .redhat
 %patch1 -p1 -b .goodname
-%patch2 -p1 -b .leak
-%patch3 -p1 -b .fixes
-%patch4 -p1 -b .infoParentDir
-%patch5 -p1 -b .semange
-#%patch6 -p1 -b .acl
-%patch7 -p1 -b .underflow
-%patch8 -p1 -b .uflg
-%patch9 -p1 -b .gshadow
-%patch10 -p1 -b .nopam
-%patch11 -p1 -b .IDs
-%patch12 -p1 -b .man
+%patch2 -p1 -b .info-parent-dir
+%patch3 -p1 -b .uflg
+#patch6 -p1 -b .selinux
+%patch7 -p1 -b .2ndskip
+%patch8 -p1 -b .backup-mode
+%patch9 -p1 -b .merge-group
+%patch10 -p1 -b .orig-context
+%patch11 -p1 -b .logmsg
+%patch12 -p1 -b .errmsg
+#patch13 -p1 -b .audit-owner
+%patch14 -p1 -b .default-range
+%patch15 -p1 -b .manfix
+%patch17 -p1 -b .userdel
+%patch18 -p1 -b .id-alloc
+%patch19 -p1 -b .date-parsing
+%patch20 -p1 -b .ingroup
+%patch21 -p1 -b .move-home
+#patch22 -p1 -b .audit-update
+%patch23 -p1 -b .unlock
+%patch24 -p1 -b .no-lock-dos
+%patch25 -p1 -b .defs-chroot
 
 iconv -f ISO88591 -t utf-8  doc/HOWTO > doc/HOWTO.utf8
 cp -f doc/HOWTO.utf8 doc/HOWTO
 
+cp -a %{SOURCE4} %{SOURCE5} .
+
+rm libmisc/getdate.c
+
+#rm po/*.gmo
+#rm po/stamp-po
+#aclocal
+#libtoolize --force
+#automake -a
+#autoconf
+
 %build
-%configure \
-	--enable-shadowgrp \
-	--without-audit \
-	--with-sha-crypt \
-%if %{WITH_SELINUX}
-	--with-selinux \
+
+%ifarch sparc64
+#sparc64 need big PIE
+export CFLAGS="$RPM_OPT_FLAGS -fPIE"
+export LDFLAGS="-pie -Wl,-z,relro -Wl,-z,now"
+%else
+export CFLAGS="$RPM_OPT_FLAGS -fpie"
+export LDFLAGS="-pie -Wl,-z,relro -Wl,-z,now"
 %endif
-	--without-libcrack \
-	--without-libpam \
-	--disable-shared
-make 
+
+%configure \
+        --enable-shadowgrp \
+        --enable-man \
+        --without-audit \
+        --with-sha-crypt \
+        --without-selinux \
+        --without-libcrack \
+        --without-libpam \
+        --disable-shared \
+        --with-group-name-max-length=32
+make
 
 %install
 rm -rf $RPM_BUILD_ROOT
@@ -99,7 +141,7 @@ ln -s useradd $RPM_BUILD_ROOT%{_sbindir}/adduser
 #ln -s %{_mandir}/man8/useradd.8 $RPM_BUILD_ROOT/%{_mandir}/man8/adduser.8
 ln -s useradd.8 $RPM_BUILD_ROOT/%{_mandir}/man8/adduser.8
 for subdir in $RPM_BUILD_ROOT/%{_mandir}/{??,??_??,??_??.*}/man* ; do
-	test -d $subdir && test -e $subdir/useradd.8 && echo ".so man8/useradd.8" > $subdir/adduser.8
+        test -d $subdir && test -e $subdir/useradd.8 && echo ".so man8/useradd.8" > $subdir/adduser.8
 done
 
 # Remove binaries we don't use.
@@ -110,6 +152,7 @@ rm $RPM_BUILD_ROOT/%{_bindir}/groups
 rm $RPM_BUILD_ROOT/%{_bindir}/login
 rm $RPM_BUILD_ROOT/%{_bindir}/passwd
 rm $RPM_BUILD_ROOT/%{_bindir}/su
+rm $RPM_BUILD_ROOT/%{_bindir}/faillog
 rm $RPM_BUILD_ROOT/%{_sysconfdir}/login.access
 rm $RPM_BUILD_ROOT/%{_sysconfdir}/limits
 rm $RPM_BUILD_ROOT/%{_sbindir}/logoutd
@@ -147,13 +190,18 @@ rm $RPM_BUILD_ROOT/%{_mandir}/man8/chgpasswd.*
 rm $RPM_BUILD_ROOT/%{_mandir}/*/man8/chgpasswd.*
 rm $RPM_BUILD_ROOT/%{_mandir}/man3/getspnam.*
 rm $RPM_BUILD_ROOT/%{_mandir}/*/man3/getspnam.*
+rm $RPM_BUILD_ROOT/%{_mandir}/man5/faillog.*
+rm $RPM_BUILD_ROOT/%{_mandir}/*/man5/faillog.*
+rm $RPM_BUILD_ROOT/%{_mandir}/man8/faillog.*
+rm $RPM_BUILD_ROOT/%{_mandir}/*/man8/faillog.*
 
-magic_rpm_clean.sh
-%find_lang shadow
 find $RPM_BUILD_ROOT%{_mandir} -depth -type d -empty -delete
+%find_lang shadow
 for dir in $(ls -1d $RPM_BUILD_ROOT%{_mandir}/{??,??_??}) ; do
     dir=$(echo $dir | sed -e "s|^$RPM_BUILD_ROOT||")
     lang=$(basename $dir)
+#   echo "%%lang($lang) $dir" >> shadow.lang
+#   echo "%%lang($lang) $dir/man*" >> shadow.lang
     echo "%%lang($lang) $dir/man*/*" >> shadow.lang
 done
 
@@ -163,18 +211,20 @@ rm -rf $RPM_BUILD_ROOT
 %files -f shadow.lang
 %defattr(-,root,root)
 %doc NEWS doc/HOWTO README
-%dir %{_sysconfdir}/default
-%attr(0644,root,root)	%config(noreplace) %{_sysconfdir}/login.defs
-%attr(0600,root,root)	%config(noreplace) %{_sysconfdir}/default/useradd
+%{!?_licensedir:%global license %%doc}
+%license gpl-2.0.txt shadow-bsd.txt
+%attr(0644,root,root)   %config(noreplace) %{_sysconfdir}/login.defs
+%attr(0644,root,root)   %config(noreplace) %{_sysconfdir}/default/useradd
 %{_bindir}/sg
-%{_bindir}/chage
-%{_bindir}/faillog
-%{_bindir}/gpasswd
+%attr(4755,root,root) %{_bindir}/chage
+%attr(4755,root,root) %{_bindir}/gpasswd
 %{_bindir}/lastlog
-%{_bindir}/newgrp
+%attr(4755,root,root) %{_bindir}/newgrp
+%attr(4755,root,root) %{_bindir}/newgidmap
+%attr(4755,root,root) %{_bindir}/newuidmap
 %{_sbindir}/adduser
-%attr(0750,root,root)	%{_sbindir}/user*
-%attr(0750,root,root)	%{_sbindir}/group*
+%attr(0750,root,root)   %{_sbindir}/user*
+%attr(0750,root,root)   %{_sbindir}/group*
 %{_sbindir}/grpck
 %{_sbindir}/pwck
 %{_sbindir}/*conv
@@ -186,11 +236,14 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man1/gpasswd.1*
 %{_mandir}/man1/sg.1*
 %{_mandir}/man1/newgrp.1*
+%{_mandir}/man1/newgidmap.1*
+%{_mandir}/man1/newuidmap.1*
 %{_mandir}/man3/shadow.3*
 %{_mandir}/man5/shadow.5*
 %{_mandir}/man5/login.defs.5*
 %{_mandir}/man5/gshadow.5*
-%{_mandir}/man5/faillog.5*
+%{_mandir}/man5/subuid.5*
+%{_mandir}/man5/subgid.5*
 %{_mandir}/man8/adduser.8*
 %{_mandir}/man8/group*.8*
 %{_mandir}/man8/user*.8*
@@ -200,11 +253,13 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man8/newusers.8*
 %{_mandir}/man8/*conv.8*
 %{_mandir}/man8/lastlog.8*
-%{_mandir}/man8/faillog.8*
 %{_mandir}/man8/vipw.8*
 %{_mandir}/man8/vigr.8*
 
 %changelog
+* Sun Sep 27 2015 Liu Di <liudidi@gmail.com> - 2:4.2.1-2
+- 为 Magic 3.0 重建
+
 * Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 2:4.1.4.3-2
 - 为 Magic 3.0 重建
 

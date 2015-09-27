@@ -1,9 +1,10 @@
 %define	_bindir	/bin
 
 Summary: A utility for configuring serial ports
+Summary(zh_CN.UTF-8): 配置串口的工具
 Name: setserial
 Version: 2.17
-Release: 29%{?dist}
+Release: 30%{?dist}
 Source: http://dl.sourceforge.net/sourceforge/%{name}/%{name}-%{version}.tar.gz
 Patch0: setserial-2.17-fhs.patch
 Patch1: setserial-2.17-rc.patch
@@ -12,6 +13,7 @@ Patch3: setserial-2.17-spelling.patch
 Patch4: setserial-hayesesp.patch
 License: GPL+
 Group: Applications/System
+Group(zh_CN.UTF-8): 应用程序/系统
 URL: http://setserial.sourceforge.net/
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 ExcludeArch: s390 s390x
@@ -22,6 +24,8 @@ BuildRequires: groff
 Setserial is a basic system utility for displaying or setting serial
 port information. Setserial can reveal and allow you to alter the I/O
 port and IRQ that a particular serial device is using, and more.
+%description -l zh_CN.UTF-8
+配置串口的工具。
 
 %prep
 %setup -q
@@ -50,6 +54,7 @@ rm -rf ${RPM_BUILD_ROOT}
 mkdir -p ${RPM_BUILD_ROOT}/%{_bindir}
 mkdir -p ${RPM_BUILD_ROOT}/%{_mandir}/man8
 make install DESTDIR=${RPM_BUILD_ROOT}
+magic_rpm_clean.sh
 
 %clean
 rm -rf ${RPM_BUILD_ROOT}
@@ -61,6 +66,9 @@ rm -rf ${RPM_BUILD_ROOT}
 %{_mandir}/man*/*
 
 %changelog
+* Sat Sep 26 2015 Liu Di <liudidi@gmail.com> - 2.17-30
+- 为 Magic 3.0 重建
+
 * Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 2.17-29
 - 为 Magic 3.0 重建
 

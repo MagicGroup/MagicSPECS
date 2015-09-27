@@ -5,7 +5,7 @@
 %{!?python_version: %global python_version %(%{__python} -c "from distutils.sysconfig import get_python_version; print(get_python_version())")}
 
 Name: libtalloc
-Version: 2.1.1
+Version: 2.1.3
 Release: 1%{?dist}
 Group: System Environment/Daemons
 Group(zh_CN.UTF-8): 系统环境/服务
@@ -117,6 +117,9 @@ rm -rf $RPM_BUILD_ROOT
 %postun -n pytalloc -p /sbin/ldconfig
 
 %changelog
+* Fri Sep 25 2015 Liu Di <liudidi@gmail.com> - 2.1.3-1
+- 更新到 2.1.3
+
 * Thu Jul 31 2014 Liu Di <liudidi@gmail.com> - 2.1.1-1
 - 更新到 2.1.1
 

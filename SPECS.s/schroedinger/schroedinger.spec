@@ -2,10 +2,11 @@
 
 Name:           schroedinger
 Version:        1.0.11
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        Portable libraries for the high quality Dirac video codec
-
+Summary(zh_CN.UTF-8): 高质量 Dirac 视频编码的可移植库
 Group:          System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 # No version is given for the GPL or the LGPL
 License:        GPL+ or LGPLv2+ or MIT or MPLv1.1
 URL:            http://www.diracvideo.org/
@@ -27,16 +28,22 @@ The Schrödinger project is a project done by BBC R&D and Fluendo in
 order to create a set of high quality decoder and encoder libraries
 for the Dirac video codec.
 
+%description -l zh_CN.UTF-8
+高质量 Dirac 视频编码的可移植库。
+
 %package devel
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Summary:        Development files for schroedinger
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Requires:       %{name} = %{version}-%{release}
 Requires:       pkgconfig
 Requires:       orc-devel >= 0.4.10
 
 %description devel
 Development files for schroedinger
-
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -56,7 +63,7 @@ make %{?_smp_mflags}
 rm -rf %{buildroot}
 make install DESTDIR=%{buildroot}
 find %{buildroot} -name \*.la -delete
-
+magic_rpm_clean.sh
 
 %clean
 rm -rf %{buildroot}
@@ -83,6 +90,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Sep 25 2015 Liu Di <liudidi@gmail.com> - 1.0.11-4
+- 为 Magic 3.0 重建
+
 * Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 1.0.11-3
 - 为 Magic 3.0 重建
 

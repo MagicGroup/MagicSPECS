@@ -1,18 +1,12 @@
 %define with_systemd 0%{!?_without_systemd:0}
 
-%if 0%{?fedora} >= 17 || 0%{?rhel} >= 7
 %define with_systemd 1
-%endif
 
-%if 0%{?fedora} >= 18 || 0%{?rhel} >= 7
 %define with_systemd_macros 1
-%else
-%define with_systemd_macros 0
-%endif
 
 Name:           sanlock
-Version:        3.1.0
-Release:        3%{?dist}
+Version:        3.2.4
+Release:        2%{?dist}
 Summary:        A shared storage lock manager
 
 Group:          System Environment/Base
@@ -22,9 +16,6 @@ BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  libblkid-devel libaio-devel python python-devel
 %if %{with_systemd}
 BuildRequires:  systemd-units
-%endif
-%if 0%{?rhel} >= 6
-ExclusiveArch:  x86_64
 %endif
 Requires:       %{name}-lib = %{version}-%{release}
 Requires(pre):  /usr/sbin/groupadd
@@ -219,7 +210,7 @@ supplied by the sanlock library.
 
 %files          python
 %defattr(-,root,root,-)
-%{python_sitearch}/Sanlock-1.0-py*.egg-info
+%{python_sitearch}/sanlock_python-*-py*.egg-info
 %{python_sitearch}/sanlock.so
 
 %package        devel
@@ -237,11 +228,14 @@ developing applications that use %{name}.
 %{_includedir}/wdmd.h
 %{_libdir}/libsanlock.so
 %{_libdir}/libsanlock_client.so
+%{_libdir}/pkgconfig/libsanlock.pc
+%{_libdir}/pkgconfig/libsanlock_client.pc
 %{_includedir}/sanlock.h
 %{_includedir}/sanlock_rv.h
 %{_includedir}/sanlock_admin.h
 %{_includedir}/sanlock_resource.h
 %{_includedir}/sanlock_direct.h
+
 
 %package -n     fence-sanlock
 Summary:        Fence agent using sanlock and wdmd
@@ -296,6 +290,9 @@ if [ $1 -ge 1 ] ; then
 fi
 
 %changelog
+* Fri Sep 25 2015 Liu Di <liudidi@gmail.com> - 3.2.4-2
+- 为 Magic 3.0 重建
+
 * Fri Jun 20 2014 Liu Di <liudidi@gmail.com> - 3.1.0-3
 - 为 Magic 3.0 重建
 

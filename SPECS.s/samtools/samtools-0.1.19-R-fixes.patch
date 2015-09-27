@@ -1,0 +1,186 @@
+diff -up samtools-0.1.19/faidx.c.Rfixes samtools-0.1.19/faidx.c
+--- samtools-0.1.19/faidx.c.Rfixes	2015-05-29 23:25:42.646798526 -0400
++++ samtools-0.1.19/faidx.c	2015-05-29 23:28:55.628504008 -0400
+@@ -94,6 +94,11 @@ faidx_t *fai_build_core(RAZF *rz)
+ 				}
+ 				name[l_name++] = c;
+ 			}
++			if (m_name < l_name + 2) { /* MTM: 0-length id */
++				m_name = l_name + 2;
++				kroundup32(m_name);
++				name = (char*)realloc(name, m_name);
++			}
+ 			name[l_name] = '\0';
+ 			if (ret == 0) {
+ 				fprintf(stderr, "[fai_build_core] the last entry has no sequence\n");
+@@ -127,11 +132,24 @@ faidx_t *fai_build_core(RAZF *rz)
+ 			}
+ 		}
+ 	}
+-	fai_insert_index(idx, name, len, line_len, line_blen, offset);
++	if (len < 0) {               /* MTM; should also check state */
++        fprintf(stderr, "[fai_build_core] no entries in file\n");
++        free(name); fai_destroy(idx);
++        return 0;
++    }
++    fai_insert_index(idx, name, len, line_len, line_blen, offset);
+ 	free(name);
+ 	return idx;
+ }
+ 
++// HP - Jan 13, 2014: I've no idea why the original authors of the fai_save()
++// and fai_read() functions below decided to use the (long) type instead of
++// (long long) for the sequence offsets on Windows. Problem with this is that
++// these functions then break if the FASTA file contains sequences with offsets
++// > LONG_MAX which turns out to be 2^31-1 on Windows, hence not big enough if
++// the FASTA file contains the full genome sequences for Human and other
++// mammals. So I modified fai_save() and fai_read() to always use (long long).
++
+ void fai_save(const faidx_t *fai, FILE *fp)
+ {
+ 	khint_t k;
+@@ -140,11 +158,12 @@ void fai_save(const faidx_t *fai, FILE *
+ 		faidx1_t x;
+ 		k = kh_get(s, fai->hash, fai->name[i]);
+ 		x = kh_value(fai->hash, k);
+-#ifdef _WIN32
+-		fprintf(fp, "%s\t%d\t%ld\t%d\t%d\n", fai->name[i], (int)x.len, (long)x.offset, (int)x.line_blen, (int)x.line_len);
+-#else
++// HP - Jan 13, 2014: See above note.
++//#ifdef _WIN32
++//		fprintf(fp, "%s\t%d\t%ld\t%d\t%d\n", fai->name[i], (int)x.len, (long)x.offset, (int)x.line_blen, (int)x.line_len);
++//#else
+ 		fprintf(fp, "%s\t%d\t%lld\t%d\t%d\n", fai->name[i], (int)x.len, (long long)x.offset, (int)x.line_blen, (int)x.line_len);
+-#endif
++//#endif
+ 	}
+ }
+ 
+@@ -153,22 +172,24 @@ faidx_t *fai_read(FILE *fp)
+ 	faidx_t *fai;
+ 	char *buf, *p;
+ 	int len, line_len, line_blen;
+-#ifdef _WIN32
+-	long offset;
+-#else
++// HP - Jan 13, 2014: See above note.
++//#ifdef _WIN32
++//	long offset;
++//#else
+ 	long long offset;
+-#endif
++//#endif
+ 	fai = (faidx_t*)calloc(1, sizeof(faidx_t));
+ 	fai->hash = kh_init(s);
+ 	buf = (char*)calloc(0x10000, 1);
+ 	while (!feof(fp) && fgets(buf, 0x10000, fp)) {
+ 		for (p = buf; *p && isgraph(*p); ++p);
+ 		*p = 0; ++p;
+-#ifdef _WIN32
+-		sscanf(p, "%d%ld%d%d", &len, &offset, &line_blen, &line_len);
+-#else
++// HP - Jan 13, 2014: See above note.
++//#ifdef _WIN32
++//		sscanf(p, "%d%ld%d%d", &len, &offset, &line_blen, &line_len);
++//#else
+ 		sscanf(p, "%d%lld%d%d", &len, &offset, &line_blen, &line_len);
+-#endif
++//#endif
+ 		fai_insert_index(fai, buf, len, line_len, line_blen, offset);
+ 	}
+ 	free(buf);
+@@ -200,6 +221,10 @@ int fai_build(const char *fn)
+ 		return -1;
+ 	}
+ 	fai = fai_build_core(rz);
++    if (fai == NULL) {          /* MTM */
++        free(str);
++        return -1;
++    }
+ 	razf_close(rz);
+ 	fp = fopen(str, "wb");
+ 	if (fp == 0) {
+@@ -258,10 +283,18 @@ FILE *download_and_open(const char *fn)
+ faidx_t *fai_load(const char *fn)
+ {
+ 	char *str;
+-	FILE *fp;
+ 	faidx_t *fai;
+ 	str = (char*)calloc(strlen(fn) + 5, 1);
+ 	sprintf(str, "%s.fai", fn);
++	fai = fai_load0(fn, str);
++	free(str);
++	return fai;
++}
++
++faidx_t *fai_load0(const char *fn, const char *str)
++{
++	FILE *fp;
++	faidx_t *fai;
+ 
+ #ifdef _USE_KNETFILE
+     if (strstr(fn, "ftp://") == fn || strstr(fn, "http://") == fn)
+@@ -270,7 +303,6 @@ faidx_t *fai_load(const char *fn)
+         if ( !fp )
+         {
+             fprintf(stderr, "[fai_load] failed to open remote FASTA index %s\n", str);
+-            free(str);
+             return 0;
+         }
+     }
+@@ -283,7 +315,6 @@ faidx_t *fai_load(const char *fn)
+ 		fp = fopen(str, "rb");
+ 		if (fp == 0) {
+ 			fprintf(stderr, "[fai_load] fail to open FASTA index.\n");
+-			free(str);
+ 			return 0;
+ 		}
+ 	}
+@@ -292,7 +323,6 @@ faidx_t *fai_load(const char *fn)
+ 	fclose(fp);
+ 
+ 	fai->rz = razf_open(fn, "rb");
+-	free(str);
+ 	if (fai->rz == 0) {
+ 		fprintf(stderr, "[fai_load] fail to open FASTA file.\n");
+ 		return 0;
+diff -up samtools-0.1.19/faidx.h.Rfixes samtools-0.1.19/faidx.h
+--- samtools-0.1.19/faidx.h.Rfixes	2013-03-19 03:48:09.000000000 -0400
++++ samtools-0.1.19/faidx.h	2015-05-29 23:29:33.916247174 -0400
+@@ -64,6 +64,13 @@ extern "C" {
+ 	faidx_t *fai_load(const char *fn);
+ 
+ 	/*!
++	  @abstract   Load index from "fn.fai".
++	  @param  fn  File name of the FASTA file
++          @param  index File name of the FASTA index
++	 */
++	faidx_t *fai_load0(const char *fn, const char *index);
++
++	/*!
+ 	  @abstract    Fetch the sequence in a region.
+ 	  @param  fai  Pointer to the faidx_t struct
+ 	  @param  reg  Region in the format "chr2:20,000-30,000"
+@@ -96,6 +103,22 @@ extern "C" {
+ 	 */
+ 	char *faidx_fetch_seq(const faidx_t *fai, char *c_name, int p_beg_i, int p_end_i, int *len);
+ 
++	/*!
++	  @abstract    Alternative to faidx_fetch_seq().
++	  @param  fai  Pointer to the faidx_t struct
++	  @param  c_name Region name
++	  @param  p_beg_i  Beginning position number (zero-based)
++	  @param  p_end_i  End position number (zero-based)
++	  @param  out  User-supplied output buffer
++	  @return      Number of bytes written; -1 on failure
++
++	  @discussion Differences with faidx_fetch_seq(): (1) writes the
++	  incoming sequence to user-supplied output buffer, (2) doesn't write
++	  the terminating null byte ('\0'), (3) properly handles 0-length
++	  sequences, (4) returns the number of bytes written; -1 on failure.
++	 */
++	int faidx_fetch_seq2(const faidx_t *fai, const char *c_name, int p_beg_i, int p_end_i, char *out);
++
+ #ifdef __cplusplus
+ }
+ #endif

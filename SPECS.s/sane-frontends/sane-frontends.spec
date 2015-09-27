@@ -1,13 +1,26 @@
 Name: sane-frontends
 Version: 1.0.14
-Release: 14%{?dist}
+Release: 17%{?dist}
 Summary: Graphical frontend to SANE
+Summary(zh_CN.UTF-8): SANE 的图形前端
 URL: http://www.sane-project.org
 Source0: ftp://ftp.sane-project.org/pub/sane/%{name}-%{version}/%{name}-%{version}.tar.gz
+# Fix array subscript out of bounds errors (#133121).
+# Upstream commit 5113e3de39846a8226909088ad5c1aa4969f3030 and commit
+# 7336b064653026171a715dfaf803693b638c67a5 (partial)
 Patch0: sane-frontends-1.0.14-array-out-of-bounds.patch
+# Fix building with sane-backends >= 1.0.20.
+# Upstream commit 5e96223e497538d06e18d8e84b774c4a35f654b4 (partial) and commit
+# c554cfce37e37a33f94a9051afe2062c4759072b
 Patch1: sane-frontends-1.0.14-sane-backends-1.0.20.patch
+# Describe correct option names in xcam man page.
+# Upstream commit 7e079e377174826453a1041719fb347d69d3ba5f
+Patch2: sane-frontends-1.0.14-xcam-man.patch
+# Update lib/snprintf.c to current version from LPRng to resolve license issue (#1102522)
+Patch3: sane-frontends-1.0.14-update-to-current-lprng-plp_snprintf.patch
 License: GPLv2+
 Group: Applications/System
+Group(zh_CN.UTF-8): 应用程序/系统
 BuildRequires: gtk2-devel gimp-devel
 BuildRequires: sane-backends-devel >= 1.0.19-15
 Requires:  sane-backends
@@ -18,10 +31,15 @@ Provides: sane = %{?epoch:%{epoch}:}%{version}-%{release}
 %description
 This packages includes the scanadf and xcam programs.
 
+%description -l zh_CN.UTF-8
+SANE 的图形前端。
+
 %prep
 %setup -q
 %patch0 -p1 -b .array-out-of-bounds
 %patch1 -p1 -b .sane-backends-1.0.20
+%patch2 -p1 -b .xcam-man
+%patch3 -p1 -b .snprintf
 
 %build
 %configure --with-gnu-ld --prefix=%{_prefix} --sysconfdir=%{_sysconfdir} --mandir=%{_mandir}
@@ -35,6 +53,7 @@ rm -rf %buildroot
 rm -f %{buildroot}%{_bindir}/xscanimage
 rm -f %{buildroot}%{_mandir}/man1/xscanimage*
 rm -f %{buildroot}%{_datadir}/sane/sane-style.rc
+magic_rpm_clean.sh
 
 %clean
 rm -rf %buildroot
@@ -48,6 +67,15 @@ rm -rf %buildroot
 # intended to be used from the command line
 
 %changelog
+* Fri Sep 25 2015 Liu Di <liudidi@gmail.com> - 1.0.14-17
+- 为 Magic 3.0 重建
+
+* Fri Sep 25 2015 Liu Di <liudidi@gmail.com> - 1.0.14-16
+- 为 Magic 3.0 重建
+
+* Fri Sep 25 2015 Liu Di <liudidi@gmail.com> - 1.0.14-15
+- 为 Magic 3.0 重建
+
 * Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 1.0.14-14
 - 为 Magic 3.0 重建
 

@@ -1,15 +1,17 @@
-%define rescan_version 1.56
 %define rescan_script rescan-scsi-bus.sh
 
 Summary: Utilities for devices that use SCSI command sets
+Summary(zh_CN.UTF-8): 使用 SCSI 命令集设备的工具 
 Name: sg3_utils
-Version: 1.34
-Release: 2%{?dist}
+Version:	1.41
+Release:	1%{?dist}
 License: GPLv2+ and BSD
 Group: Applications/System
+Group(zh_CN.UTF-8): 应用程序/系统
 Source0: http://sg.danny.cz/sg/p/sg3_utils-%{version}.tgz
-Source1: http://www.garloff.de/kurt/linux/%{rescan_script}-%{rescan_version}
-Patch0: rescan-scsi-bus-fixes.patch
+Source2: scsi-rescan.8
+# https://bugzilla.redhat.com/show_bug.cgi?id=920687
+Patch0: sg3_utils-1.37-dont-open-dev-snapshot.patch
 URL: http://sg.danny.cz/sg/sg3_utils.html
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 Requires: %{name}-libs = %{version}-%{release}
@@ -29,28 +31,37 @@ well (e.g. /dev/sda).
 Warning: Some of these tools access the internals of your system
 and the incorrect usage of them may render your system inoperable.
 
+%description -l zh_CN.UTF-8
+使用 SCSI 命令集设备的工具。
+
 %package libs
 Summary: Shared library for %{name}
+Summary(zh_CN.UTF-8): %{name} 的运行库
 Group: System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 
 %description libs
 This package contains the shared library for %{name}.
+%description libs -l zh_CN.UTF-8
+%{name} 的运行库。
 
 %package devel
 Summary: Development library and header files for the sg3_utils library
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: %{name}-libs = %{version}-%{release}
 Requires: glibc-headers
 
 %description devel
 This package contains the %{name} library and its header files for
 developing applications.
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
 
-# rescan-scsi-bus.sh
-cp -p %{SOURCE1} %{rescan_script}
 # apply fixes
 %patch0 -p1
 
@@ -69,8 +80,11 @@ make %{?_smp_mflags}
 make install DESTDIR=$RPM_BUILD_ROOT
 rm -rf $RPM_BUILD_ROOT/%{_libdir}/*.la
 
-install -p -m 755 %{rescan_script} $RPM_BUILD_ROOT%{_bindir}
+install -p -m 755 scripts/%{rescan_script} $RPM_BUILD_ROOT%{_bindir}
 ( cd $RPM_BUILD_ROOT%{_bindir}; ln -sf %{rescan_script} scsi-rescan )
+
+install -p -m 644 %{SOURCE2} $RPM_BUILD_ROOT%{_mandir}/man8
+
 magic_rpm_clean.sh
 
 %clean
@@ -100,6 +114,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sat Sep 26 2015 Liu Di <liudidi@gmail.com> - 1.41-1
+- 更新到 1.41
+
 * Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 1.34-2
 - 为 Magic 3.0 重建
 

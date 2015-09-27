@@ -1,13 +1,18 @@
 Name:		samtools
-Version:	0.1.18
-Release:	5%{?dist}
+Version:	0.1.19
+Release:	2%{?dist}
 Summary:	Tools for nucleotide sequence alignments in the SAM format
+Summary(zh_CN.UTF-8): 以 SAM 格式进行核苷酸序列比对的工具 
 
 Group:		Applications/Engineering
+Group(zh_CN.UTF-8): 应用程序/工程
 License:	MIT
 URL:		http://samtools.sourceforge.net/
 Source0:	http://downloads.sourceforge.net/%{name}/%{name}-%{version}.tar.bz2
 Patch0:		samtools-0.1.14-soname.patch
+Patch1:		samtools-0.1.19-faidx_fetch_seq2.patch
+# The Rsamtools upstream is fixing issues in the samtools 0.1.19 codebase
+Patch2:		samtools-0.1.19-R-fixes.patch
 BuildRoot:	%(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
 
 BuildRequires:	zlib-devel >= 1.2.3
@@ -20,27 +25,39 @@ SAM Tools provide various utilities for manipulating alignments in the
 SAM format, including sorting, merging, indexing and generating
 alignments in a per-position format.
 
+%description -l zh_CN.UTF-8
+以 SAM 格式进行核苷酸序列比对的工具。
 
 %package devel
 Summary:	Header files and libraries for compiling against %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:		Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:	%{name}-libs = %{version}-%{release}
 
 %description devel
 Header files and libraries for compiling against %{name}
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %package libs
 Summary:	Libraries for applications using %{name}
+Summary(zh_CN.UTF-8): %{name} 的运行库
 Group:		System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 
 %description libs
 Libraries for applications using %name
 
+%description libs -l zh_CN.UTF-8
+%{name} 的运行库。
 
 %prep
 %setup -q
 %patch0 -p1 -b .soname
+%patch1 -p1 -b .seq2
+%patch2 -p1 -b .Rfixes
 
 # fix wrong interpreter
 perl -pi -e "s[/software/bin/python][%{__python}]" misc/varfilter.py
@@ -81,13 +98,13 @@ cd misc/
 install -p blast2sam.pl bowtie2sam.pl export2sam.pl interpolate_sam.pl	\
     maq2sam-long maq2sam-short md5fa md5sum-lite novo2sam.pl psl2sam.pl	\
     sam2vcf.pl samtools.pl soap2sam.pl varfilter.py wgsim wgsim_eval.pl	\
-    zoom2sam.pl seqtk	   	       		    			\
+    zoom2sam.pl 	   	       		    			\
     %{buildroot}%{_bindir}
 
 cd ../bcftools/
 install -p bcftools vcfutils.pl %{buildroot}%{_bindir}
 mv README README.bcftools
-
+magic_rpm_clean.sh
 
 %clean
 rm -rf %{buildroot}
@@ -101,7 +118,7 @@ rm -rf %{buildroot}
 
 %files
 %defattr(-,root,root,-)
-%doc AUTHORS ChangeLog COPYING INSTALL NEWS examples/ bcftools/README.bcftools bcftools/bcf.tex
+%doc AUTHORS ChangeLog.old COPYING INSTALL NEWS examples/ bcftools/README.bcftools bcftools/bcf.tex
 %{_bindir}/*
 %{_mandir}/man1/*
 
@@ -118,6 +135,12 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Sep 25 2015 Liu Di <liudidi@gmail.com> - 0.1.19-2
+- 为 Magic 3.0 重建
+
+* Fri Sep 25 2015 Liu Di <liudidi@gmail.com> - 0.1.19-1
+- 更新到 0.1.19
+
 * Sat Sep 19 2015 Liu Di <liudidi@gmail.com> - 0.1.18-5
 - 为 Magic 3.0 重建
 

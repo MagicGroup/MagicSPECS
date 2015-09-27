@@ -1,21 +1,26 @@
 Summary: A set of system configuration and setup files
+Summary(zh_CN.UTF-8): 系统设置文件的集合
 Name: setup
 Version: 2.9.8
-Release: 2%{?dist}
+Release: 3%{?dist}
 License: Public Domain
 Group: System Environment/Base
+Group(zh_CN.UTF-8): 系统环境/基本
 URL: https://fedorahosted.org/setup/
 Source0: https://fedorahosted.org/releases/s/e/%{name}/%{name}-%{version}.tar.bz2
 BuildArch: noarch
 BuildRequires: bash tcsh perl
 #require system release for saner dependency order
-Requires: system-release
+Requires: magic-release
 Conflicts: filesystem < 3
 Conflicts: initscripts < 4.26, bash <= 2.0.4-21
 
 %description
 The setup package contains a set of important system configuration and
 setup files, such as passwd, group, and profile.
+
+%description -l zh_CN.UTF-8
+系统设置文件的集合，如 passwd, group, profile 等.
 
 %prep
 %setup -q
@@ -47,6 +52,7 @@ rm -f %{buildroot}/etc/serviceslint
 rm -f %{buildroot}/etc/uidgidlint
 rm -f %{buildroot}/etc/shadowconvert.sh
 rm -f %{buildroot}/etc/setup.spec
+magic_rpm_clean.sh
 
 %clean
 rm -rf %{buildroot}
@@ -91,6 +97,9 @@ end
 %ghost %verify(not md5 size mtime) %config(noreplace,missingok) /etc/fstab
 
 %changelog
+* Sat Sep 26 2015 Liu Di <liudidi@gmail.com> - 2.9.8-3
+- 为 Magic 3.0 重建
+
 * Fri Jun 19 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.9.8-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

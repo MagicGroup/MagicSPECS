@@ -1,0 +1,35 @@
+diff -up shadow-4.1.5.1/lib/semanage.c.default-range shadow-4.1.5.1/lib/semanage.c
+--- shadow-4.1.5.1/lib/semanage.c.default-range	2012-01-08 17:35:44.000000000 +0100
++++ shadow-4.1.5.1/lib/semanage.c	2013-06-14 15:14:51.970237594 +0200
+@@ -143,6 +143,7 @@ static int semanage_user_mod (semanage_h
+ 		goto done;
+ 	}
+ 
++#if 0
+ 	ret = semanage_seuser_set_mlsrange (handle, seuser, DEFAULT_SERANGE);
+ 	if (ret != 0) {
+ 		fprintf (stderr,
+@@ -150,6 +151,7 @@ static int semanage_user_mod (semanage_h
+ 		ret = 1;
+ 		goto done;
+ 	}
++#endif
+ 
+ 	ret = semanage_seuser_set_sename (handle, seuser, seuser_name);
+ 	if (ret != 0) {
+@@ -200,6 +202,7 @@ static int semanage_user_add (semanage_h
+ 		goto done;
+ 	}
+ 
++#if 0
+ 	ret = semanage_seuser_set_mlsrange (handle, seuser, DEFAULT_SERANGE);
+ 	if (ret != 0) {
+ 		fprintf (stderr,
+@@ -208,6 +211,7 @@ static int semanage_user_add (semanage_h
+ 		ret = 1;
+ 		goto done;
+ 	}
++#endif
+ 
+ 	ret = semanage_seuser_set_sename (handle, seuser, seuser_name);
+ 	if (ret != 0) {

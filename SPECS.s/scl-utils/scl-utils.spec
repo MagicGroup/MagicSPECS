@@ -1,75 +1,97 @@
+%global macrosdir %(d=%{_rpmconfigdir}/macros.d; [ -d $d ] || d=%{_sysconfdir}/rpm; echo $d)
+
 Summary:	Utilities for alternative packaging
+Summary(zh_CN.UTF-8): 多重包的工具
 Name:		scl-utils
-Version:	20140127
-Release:	2%{?dist}
+Epoch:		1
+Version:	2.0.1
+Release:	1%{?dist}
 License:	GPLv2+
 Group:		Applications/File
+Group(zh_CN.UTF-8): 应用程序/文件
 URL:		https://fedorahosted.org/SoftwareCollections/
-Source0:	https://fedorahosted.org/released/scl-utils/%{name}-%{version}.tar.gz
+Source0:	https://fedorahosted.org/released/scl-utils/%{name}-%{version}.tar.bz2
 Source1:	macros.scl-filesystem
+
+Patch1:     0001-Honor-CFLAGS-passed-to-cmake.patch
+Patch2:     0002-Fix-core-dumps-with-large-input-on-stdin-rhbz-125727.patch
+
 Buildroot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+
+Buildrequires:  cmake
+Buildrequires:  rpm-devel
+Requires:   environment-modules
 
 %description
 Run-time utility for alternative packaging.
+%description -l zh_CN.UTF-8
+多重包的工具。
 
 %package build
 Summary:	RPM build macros for alternative packaging
+Summary(zh_CN.UTF-8): 多重包的 RPM 构建宏
 Group:		Applications/File
+Group(zh_CN.UTF-8): 应用程序/文件
 Requires:	iso-codes
 Requires:	magic-rpm-config
 
 %description build
 Essential RPM build macros for alternative packaging.
+%description build -l zh_CN.UTF-8
+多重包的 RPM 构建宏。
 
 %prep
-%setup -q
+%autosetup -p1
 
 %build
+%cmake
 make %{?_smp_mflags} CFLAGS="$RPM_OPT_FLAGS" LDFLAGS="$RPM_LD_FLAGS"
 
-%install
-rm -rf %buildroot
-mkdir -p %buildroot%{_sysconfdir}/rpm
-mkdir -p %buildroot%{_sysconfdir}/scl/prefixes
-pushd %buildroot%{_sysconfdir}/scl
-ln -s prefixes conf
-popd
-mkdir -p %buildroot/opt/rh
-install -d -m 755 %buildroot%{_mandir}/man1
-make install DESTDIR=%buildroot
-cat %SOURCE1 >> %buildroot%{_sysconfdir}/rpm/macros.scl
 
-# remove brp-python-hardlink invocation as it is not present in RHEL5
-%if 0%{?rhel} == 5
-  sed -i -e '/^.*brp-python-hardlink.*/d' %buildroot%{_sysconfdir}/rpm/macros.scl
-%endif
+%install
+rm -rf %{buildroot}
+make install DESTDIR=%{buildroot}
+if [ %{macrosdir} != %{_sysconfdir}/rpm ]; then
+    mkdir -p %{buildroot}%{macrosdir}
+    mv %{buildroot}%{_sysconfdir}/rpm/macros.scl %{buildroot}%{macrosdir}
+    rmdir %{buildroot}%{_sysconfdir}/rpm
+fi
+cat %SOURCE1 >> %{buildroot}%{macrosdir}/macros.scl
+mkdir -p %{buildroot}%{_sysconfdir}/scl
+cd %{buildroot}%{_sysconfdir}/scl
+mkdir modulefiles
+mkdir prefixes
+ln -s prefixes conf
 
 %clean
 rm -rf %buildroot
 
 %files
 %defattr(-,root,root,-)
-%dir /opt/rh
-%{_sysconfdir}/scl/conf
+%dir %{_sysconfdir}/scl/modulefiles
 %dir %{_sysconfdir}/scl/prefixes
+%{_sysconfdir}/scl/conf
+%config %{_sysconfdir}/bash_completion.d/scl-completion.bash
+%config %{_sysconfdir}/profile.d/scl-init.sh
 %{_bindir}/scl
 %{_bindir}/scl_enabled
 %{_bindir}/scl_source
-%{_mandir}/man1/*
-%{_sysconfdir}/bash_completion.d/scl.bash
+%{_mandir}/man1/scl.1.gz
 %doc LICENSE
 
-%{!?_rpmconfigdir:%global _rpmconfigdir /usr/lib/rpm}
 %files build
 %defattr(-,root,root,-)
-%{_bindir}/sclbuild
-%{_sysconfdir}/rpm/macros.scl
+%{macrosdir}/macros.scl
 %{_rpmconfigdir}/scldeps.sh
 %{_rpmconfigdir}/fileattrs/scl.attr
+%{_rpmconfigdir}/fileattrs/sclbuild.attr
 %{_rpmconfigdir}/brp-scl-compress
 %{_rpmconfigdir}/brp-scl-python-bytecompile
 
 %changelog
+* Sat Sep 26 2015 Liu Di <liudidi@gmail.com> - 1:2.0.1-1
+- 更新到 2.0.1
+
 * Sat May 03 2014 Liu Di <liudidi@gmail.com> - 20140127-2
 - 为 Magic 3.0 重建
 

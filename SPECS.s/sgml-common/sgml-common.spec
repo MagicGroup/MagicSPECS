@@ -1,9 +1,10 @@
 Name: sgml-common
 Version: 0.6.3
-Release: 37%{?dist}
+Release: 38%{?dist}
 Group: Applications/Text
-
+Group(zh_CN.UTF-8): 应用程序/文本
 Summary: Common SGML catalog and DTD files
+Summary(zh_CN.UTF-8): 通用的 SGML 分类和 DTD 文件
 
 License: GPL+
 
@@ -35,16 +36,22 @@ The sgml-common package contains a collection of entities and DTDs
 that are useful for processing SGML, but that don't need to be
 included in multiple packages.  Sgml-common also includes an
 up-to-date Open Catalog file.
+%description -l zh_CN.UTF-8
+通用的 SGML 分类和 DTD 文件。
 
 %package -n xml-common
 Group: Applications/Text
+Group(zh_CN.UTF-8): 应用程序/文本
 Summary: Common XML catalog and DTD files
+Summary(zh_CN.UTF-8): 通用的 XML 分类和 DTD 文件
 License: GPL+
 
 %description -n xml-common
 The xml-common is a subpackage of sgml-common which contains
 a collection XML catalogs that are useful for processing XML,
 but that don't need to be included in main package.
+%description -n xml-common -l zh_CN.UTF-8
+通用的 XML 分类和 DTD 文件。
 
 %prep
 %setup -q
@@ -104,7 +111,7 @@ rm $RPM_BUILD_ROOT%{_datadir}/doc/*.html
 rm -rf __dist_doc/html/
 mkdir -p __dist_doc/html/
 cp -p doc/HTML/*.html __dist_doc/html/
-
+magic_rpm_clean.sh
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -139,6 +146,9 @@ rm -rf $RPM_BUILD_ROOT
 %dir %{_datadir}/xml
 
 %changelog
+* Sun Sep 27 2015 Liu Di <liudidi@gmail.com> - 0.6.3-38
+- 为 Magic 3.0 重建
+
 * Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 0.6.3-37
 - 为 Magic 3.0 重建
 

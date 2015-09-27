@@ -1,9 +1,11 @@
 Name: setuptool
 Version: 1.19.11
-Release: 5%{?dist}
+Release: 6%{?dist}
 Summary: A text mode system configuration tool
+Summary(zh_CN.UTF-8): 文本模式的系统配置工具
 License: GPLv2+
 Group: Applications/System
+Group(zh_CN.UTF-8): 应用程序/系统
 Url: http://git.fedorahosted.org/git/?p=setuptool.git
 Source: setuptool-%{version}.tar.gz
 BuildRoot: %(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
@@ -15,6 +17,9 @@ Setuptool is a user-friendly text mode menu utility which allows you
 to access all of the text mode configuration programs included in the
 operating system distribution.
 
+%description -l zh_CN.UTF-8
+文本模式的系统配置工具。
+
 %prep
 %setup -q 
 
@@ -25,7 +30,7 @@ make %{?_smp_mflags}
 %install
 rm -rf $RPM_BUILD_ROOT
 make install DESTDIR=$RPM_BUILD_ROOT
-
+magic_rpm_clean.sh
 %find_lang setup
 
 %clean
@@ -45,6 +50,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man1/setup.1.gz
 
 %changelog
+* Sat Sep 26 2015 Liu Di <liudidi@gmail.com> - 1.19.11-6
+- 为 Magic 3.0 重建
+
 * Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 1.19.11-5
 - 为 Magic 3.0 重建
 

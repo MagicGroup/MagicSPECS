@@ -1,0 +1,23 @@
+diff -up shadow-4.1.5.1/src/useradd.c.logmsg shadow-4.1.5.1/src/useradd.c
+--- shadow-4.1.5.1/src/useradd.c.logmsg	2013-02-20 15:41:44.000000000 +0100
++++ shadow-4.1.5.1/src/useradd.c	2013-06-14 14:22:59.529661095 +0200
+@@ -1760,6 +1760,9 @@ static void create_home (void)
+ 	if (access (user_home, F_OK) != 0) {
+ #ifdef WITH_SELINUX
+ 		if (set_selinux_file_context (user_home, NULL) != 0) {
++			fprintf (stderr,
++			         _("%s: cannot set SELinux context for home directory %s\n"),
++			         Prog, user_home);
+ 			fail_exit (E_HOMEDIR);
+ 		}
+ #endif
+@@ -1789,6 +1792,9 @@ static void create_home (void)
+ #ifdef WITH_SELINUX
+ 		/* Reset SELinux to create files with default contexts */
+ 		if (reset_selinux_file_context () != 0) {
++			fprintf (stderr,
++			         _("%s: cannot reset SELinux file creation context\n"),
++			         Prog);
+ 			fail_exit (E_HOMEDIR);
+ 		}
+ #endif

@@ -1,0 +1,99 @@
+diff -up shadow-4.1.5.1/lib/semanage.c.selinux shadow-4.1.5.1/lib/semanage.c
+--- shadow-4.1.5.1/lib/semanage.c.selinux	2012-01-08 17:35:44.000000000 +0100
++++ shadow-4.1.5.1/lib/semanage.c	2014-09-10 10:11:55.417506128 +0200
+@@ -294,6 +294,9 @@ int set_seuser (const char *login_name,
+ 
+ 	ret = 0;
+ 
++        /* drop obsolete matchpathcon cache */
++        matchpathcon_fini();
++
+ done:
+ 	semanage_seuser_key_free (key);
+ 	semanage_handle_destroy (handle);
+@@ -369,6 +372,10 @@ int del_seuser (const char *login_name)
+ 	}
+ 
+ 	ret = 0;
++
++        /* drop obsolete matchpathcon cache */
++        matchpathcon_fini();
++
+ done:
+ 	semanage_handle_destroy (handle);
+ 	return ret;
+diff -up shadow-4.1.5.1/src/useradd.c.selinux shadow-4.1.5.1/src/useradd.c
+--- shadow-4.1.5.1/src/useradd.c.selinux	2014-09-10 10:10:18.791280619 +0200
++++ shadow-4.1.5.1/src/useradd.c	2014-09-10 10:10:18.798280781 +0200
+@@ -1850,6 +1850,7 @@ static void create_mail (void)
+  */
+ int main (int argc, char **argv)
+ {
++	int rv = E_SUCCESS;
+ #ifdef ACCT_TOOLS_SETUID
+ #ifdef USE_PAM
+ 	pam_handle_t *pamh = NULL;
+@@ -2037,10 +2038,33 @@ int main (int argc, char **argv)
+ 
+ 	usr_update ();
+ 
++	close_files ();
++
++	nscd_flush_cache ("passwd");
++	nscd_flush_cache ("group");
++
++#ifdef WITH_SELINUX
++	if (Zflg && *user_selinux) {
++		if (is_selinux_enabled () > 0) {
++		    if (set_seuser (user_name, user_selinux) != 0) {
++			fprintf (stderr,
++			         _("%s: warning: the user name %s to %s SELinux user mapping failed.\n"),
++			         Prog, user_name, user_selinux);
++#ifdef WITH_AUDIT
++			audit_logger (AUDIT_ADD_USER, Prog,
++			              "adding SELinux user mapping",
++			              user_name, (unsigned int) user_id, 0);
++#endif				/* WITH_AUDIT */
++			rv = E_SE_UPDATE;
++		    }
++		}
++	}
++#endif
++
+ 	if (mflg) {
+ 		create_home ();
+ 		if (home_added) {
+-			copy_tree (def_template, user_home, false, false,
++			copy_tree (def_template, user_home, false, true,
+ 			           (uid_t)-1, user_id, (gid_t)-1, user_gid);
+ 		} else {
+ 			fprintf (stderr,
+@@ -2056,27 +2080,6 @@ int main (int argc, char **argv)
+ 		create_mail ();
+ 	}
+ 
+-	close_files ();
+-
+-#ifdef WITH_SELINUX
+-	if (Zflg) {
+-		if (set_seuser (user_name, user_selinux) != 0) {
+-			fprintf (stderr,
+-			         _("%s: warning: the user name %s to %s SELinux user mapping failed.\n"),
+-			         Prog, user_name, user_selinux);
+-#ifdef WITH_AUDIT
+-			audit_logger (AUDIT_ADD_USER, Prog,
+-			              "adding SELinux user mapping",
+-			              user_name, (unsigned int) user_id, 0);
+-#endif				/* WITH_AUDIT */
+-			fail_exit (E_SE_UPDATE);
+-		}
+-	}
+-#endif				/* WITH_SELINUX */
+-
+-	nscd_flush_cache ("passwd");
+-	nscd_flush_cache ("group");
+-
+-	return E_SUCCESS;
++	return rv;
+ }
+ 

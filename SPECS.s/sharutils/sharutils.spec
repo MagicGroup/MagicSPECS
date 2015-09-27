@@ -1,12 +1,14 @@
 Summary: The GNU shar utilities for packaging and unpackaging shell archives
+Summary(zh_CN.UTF-8): 包装和解包 shell 归档的 GNU shar 工具
 Name: sharutils
-Version: 4.13.1
-Release: 2%{?dist}
+Version:	4.15.2
+Release:	1%{?dist}
 License: GPLv3+ and LGPLv2+ and Public Domain
 Group: Applications/Archiving
-Source: ftp://ftp.gnu.org/gnu/%{name}/%{name}-%{version}.tar.bz2
-# Regression in 4.13.1, reporterd to <bug-gnu-utils@gnu.org>
-Patch0: sharutils-4.13.1-Fix-swapping-on-big-endian-machines.patch
+Group(zh_CN.UTF-8): 应用程序/归档
+Source: ftp://ftp.gnu.org/gnu/%{name}/%{name}-%{version}.tar.xz
+# Pass compilation with -Werror=format-security, bug #1037323
+Patch0:     %{name}-4.14.2-Pass-compilation-with-Werror-format-security.patch
 URL: http://www.gnu.org/software/%{name}/
 BuildRequires: gettext
 Requires(post): info
@@ -26,9 +28,13 @@ scans mail messages looking for shar files.  Unshar automatically
 strips off mail headers and introductory text and then unpacks the
 shar files.
 
+%description -l zh_CN.UTF-8
+包装和解包 shell 归档的 GNU shar 工具。
+
+
 %prep
 %setup -q
-%patch0 -p1 -b .bigendian
+%patch0 -p1
 
 # convert TODO, THANKS to UTF-8
 for i in TODO THANKS; do
@@ -69,6 +75,9 @@ fi
 %{_mandir}/man5/*
 
 %changelog
+* Sun Sep 27 2015 Liu Di <liudidi@gmail.com> - 4.15.2-1
+- 更新到 4.15.2
+
 * Thu Jan 03 2013 Petr Pisar <ppisar@redhat.com> - 4.13.1-2
 - Fix MD5 checksum generation on big-endian machines
 

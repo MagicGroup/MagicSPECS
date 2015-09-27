@@ -4,19 +4,21 @@
 %dir %attr(555,root,root) %{_scl_root}
 %dir %attr(555,root,root) %{_scl_scripts}
 %{_scl_scripts}/enable
+%{_scl_scripts}/%{scl}
+%{_root_sysconfdir}/scl/modulefiles/%{scl}
 %{_root_sysconfdir}/scl/prefixes/%scl
 %{_scl_root}/bin
 %attr(555,root,root) %{_scl_root}/boot
 %{_scl_root}/dev
-%dir %{_scl_root}/etc
-%{_scl_root}/etc/X11
-%{_scl_root}/etc/xdg
-%{_scl_root}/etc/opt
-%{_scl_root}/etc/pm
-%{_scl_root}/etc/xinetd.d
-%{_scl_root}/etc/skel
-%{_scl_root}/etc/sysconfig
-%{_scl_root}/etc/pki
+%dir %{_sysconfdir}
+%{_sysconfdir}/X11
+%{_sysconfdir}/xdg
+%{_sysconfdir}/opt
+%{_sysconfdir}/pm
+%{_sysconfdir}/xinetd.d
+%{_sysconfdir}/skel
+%{_sysconfdir}/sysconfig
+%{_sysconfdir}/pki
 %{_scl_root}/home
 %{_scl_root}/lib
 %ifarch x86_64 ppc ppc64 sparc sparc64 s390 s390x
@@ -37,7 +39,7 @@
 %{_scl_root}/usr/etc
 %{_scl_root}/usr/games
 %{_scl_root}/usr/include
-%attr(555,root,root) %{_scl_root}/usr/lib
+%dir %attr(555,root,root) %{_scl_root}/usr/lib
 %ifarch x86_64 ppc ppc64 sparc sparc64 s390 s390x
 %attr(555,root,root) %{_scl_root}/usr/%{_lib}
 %endif
@@ -71,42 +73,43 @@
 %{_scl_root}/usr/share/X11
 %{_scl_root}/usr/src
 %{_scl_root}/usr/tmp
-%dir %{_scl_root}/var
-%{_scl_root}/var/adm
-%{_scl_root}/var/cache
-%{_scl_root}/var/db
-%{_scl_root}/var/empty
-%{_scl_root}/var/games
-%{_scl_root}/var/gopher
-%{_scl_root}/var/lib
-%{_scl_root}/var/local
-%ghost %dir %attr(755,root,root) %{_scl_root}/var/lock
-%ghost %{_scl_root}/var/lock/subsys
-%{_scl_root}/var/log
-%{_scl_root}/var/mail
-%{_scl_root}/var/nis
-%{_scl_root}/var/opt
-%{_scl_root}/var/preserve
-%ghost %attr(755,root,root) %{_scl_root}/var/run
-%dir %{_scl_root}/var/spool
-%attr(755,root,root) %{_scl_root}/var/spool/lpd
-%attr(775,root,mail) %{_scl_root}/var/spool/mail
-%attr(755,uucp,uucp) %{_scl_root}/var/spool/uucp
-%attr(1777,root,root) %{_scl_root}/var/tmp
-%{_scl_root}/var/yp
+%dir %{_localstatedir}
+%{_localstatedir}/adm
+%{_localstatedir}/cache
+%{_localstatedir}/db
+%{_localstatedir}/empty
+%{_localstatedir}/games
+%{_localstatedir}/gopher
+%{_localstatedir}/lib
+%{_localstatedir}/local
+%ghost %dir %attr(755,root,root) %{_localstatedir}/lock
+%ghost %{_localstatedir}/lock/subsys
+%{_localstatedir}/log
+%{_localstatedir}/mail
+%{_localstatedir}/nis
+%{_localstatedir}/opt
+%{_localstatedir}/preserve
+%ghost %attr(755,root,root) %{_localstatedir}/run
+%dir %{_localstatedir}/spool
+%attr(755,root,root) %{_localstatedir}/spool/lpd
+%attr(775,root,mail) %{_localstatedir}/spool/mail
+%attr(1777,root,root) %{_localstatedir}/tmp
+%{_localstatedir}/yp
 }
 
 %scl_install %{expand:
 # scl specific stuff
-mkdir -p %{buildroot}%{_root_sysconfdir}/{rpm,scl/prefixes}
-echo -n '%' > %{buildroot}%{_root_sysconfdir}/rpm/macros.%{scl}-config
+mkdir -p %{buildroot}%{_root_sysconfdir}/{rpm,scl/{prefixes,modulefiles}}
 cat >> %{buildroot}%{_root_sysconfdir}/rpm/macros.%{scl}-config << EOF
-scl %scl
+%%%%scl %scl
+%{?nfsmountable:%%%%nfsmountable %{nfsmountable}}
+%{!?nfsmountable:%%%%undefine nfsmountable}
 EOF
 cat >> %{buildroot}%{_root_sysconfdir}/scl/prefixes/%{scl} << EOF
 %_scl_prefix
 EOF
-# filesystem
+ln -s %{_scl_scripts}/%{scl} %{buildroot}%{_root_sysconfdir}/scl/modulefiles/%{scl}
+# filelist
 set +x
 cat >> %{buildroot}/lang-exceptions << EOF
 af_ZA
@@ -262,19 +265,26 @@ cat >> %{buildroot}/iso_3166.sed << EOF
 }
 H
 EOF
+mkdir -p %{buildroot}%{_localstatedir}
+pushd  %{buildroot}%{_localstatedir}
+mkdir -p {adm,empty,gopher,lib/{games,misc,rpm-state},local,lock/subsys,log,nis,preserve,run,spool/{mail,lpd,uucp},tmp,db,cache,opt,games,yp}
+popd
+mkdir -p %{buildroot}%{_sysconfdir}
+pushd %{buildroot}%{_sysconfdir}
+mkdir -p {X11/{applnk,fontpath.d},xdg/autostart,opt,pm/{config.d,power.d,sleep.d},xinetd.d,skel,sysconfig,pki}
+popd
 mkdir -p %{buildroot}%{_scl_root}
+rm -f $RPM_BUILD_DIR/%{buildsubdir}/filelist
 rm -f $RPM_BUILD_DIR/%{buildsubdir}/filesystem
 pushd %{buildroot}%{_scl_root}
 mkdir -p boot dev \\
-        etc/{X11/{applnk,fontpath.d},xdg/autostart,opt,pm/{config.d,power.d,sleep.d},xinetd.d,skel,sysconfig,pki} \\
         home media mnt opt proc root run/lock srv sys tmp \\
-        usr/{bin,etc,games,include,lib/{games,locale,modules,sse2},libexec,local/{bin,etc,games,lib,sbin,src,share/{applications,man/man{1,2,3,4,5,6,7,8,9,n,1x,2x,3x,4x,5x,6x,7x,8x,9x},info},libexec,include,},sbin,share/{aclocal,applications,augeas/lenses,backgrounds,desktop-directories,dict,doc,empty,games,ghostscript/conf.d,gnome,icons,idl,info,man/man{1,2,3,4,5,6,7,8,9,n,1x,2x,3x,4x,5x,6x,7x,8x,9x,0p,1p,3p},mime-info,misc,omf,pixmaps,sounds,themes,xsessions,X11},src,src/kernels,src/debug} \\
-        var/{adm,empty,gopher,lib/{games,misc,rpm-state},local,lock/subsys,log,nis,preserve,run,spool/{mail,lpd,uucp},tmp,db,cache,opt,games,yp}
+        usr/{bin,etc,games,include,lib/{games,locale,modules,sse2},libexec,local/{bin,etc,games,lib,sbin,src,share/{applications,man/man{1,2,3,4,5,6,7,8,9,n,1x,2x,3x,4x,5x,6x,7x,8x,9x},info},libexec,include,},sbin,share/{aclocal,applications,augeas/lenses,backgrounds,desktop-directories,dict,doc,empty,games,ghostscript/conf.d,gnome,icons,idl,info,man/man{1,2,3,4,5,6,7,8,9,n,1x,2x,3x,4x,5x,6x,7x,8x,9x,0p,1p,3p},mime-info,misc,omf,pixmaps,sounds,themes,xsessions,X11},src,src/kernels,src/debug}
 %ifarch x86_64 ppc ppc64 sparc sparc64 s390 s390x
 mkdir -p usr/{%{_lib}/{games,sse2,tls,X11,pm-utils/{module.d,power.d,sleep.d}},local/%{_lib}}
 %endif
-ln -snf ../var/tmp usr/tmp
-ln -snf spool/mail var/mail
+ln -snf %{_localstatedir}/tmp usr/tmp
+ln -snf spool/mail %{buildroot}%{_localstatedir}/mail
 ln -snf usr/bin bin
 ln -snf usr/sbin sbin
 ln -snf usr/lib lib
@@ -290,8 +300,8 @@ grep -v "^$" %{buildroot}/iso_639.tab | grep -v "^#" | while read a b c d ; do
     if [ "$locale" = "XX" ]; then
         locale=$b
     fi
-    echo "%lang(${locale})      %{_scl_root}/usr/share/locale/${locale}" >> $RPM_BUILD_DIR/%{buildsubdir}/filesystem
-    echo "%lang(${locale}) %ghost %config(missingok) %{_scl_root}/usr/share/man/${locale}" >> $RPM_BUILD_DIR/%{buildsubdir}/filesystem
+    echo "%lang(${locale})      %{_scl_root}/usr/share/locale/${locale}" >> $RPM_BUILD_DIR/%{buildsubdir}/filelist
+    echo "%lang(${locale}) %ghost %config(missingok) %{_scl_root}/usr/share/man/${locale}" >> $RPM_BUILD_DIR/%{buildsubdir}/filelist
 done
 cat %{buildroot}/lang-exceptions | grep -v "^#" | grep -v "^$" | while read loc ; do
     locale=$loc
@@ -310,23 +320,24 @@ cat %{buildroot}/lang-exceptions | grep -v "^#" | grep -v "^$" | while read loc 
         egrep -q "[[:space:]]${locale%%_*}[[:space:]]" \\
            %{buildroot}/iso_639.tab || continue
     fi
-    echo "%lang(${locale})      %{_scl_root}/usr/share/locale/${loc}" >> $RPM_BUILD_DIR/%{buildsubdir}/filesystem
-    echo "%lang(${locale})  %ghost %config(missingok) %{_scl_root}/usr/share/man/${loc}" >> $RPM_BUILD_DIR/%{buildsubdir}/filesystem
+    echo "%lang(${locale})      %{_scl_root}/usr/share/locale/${loc}" >> $RPM_BUILD_DIR/%{buildsubdir}/filelist
+    echo "%lang(${locale})  %ghost %config(missingok) %{_scl_root}/usr/share/man/${loc}" >> $RPM_BUILD_DIR/%{buildsubdir}/filelist
 done
 rm -f %{buildroot}/iso_639.tab
 rm -f %{buildroot}/iso_639.sed
 rm -f %{buildroot}/iso_3166.tab
 rm -f %{buildroot}/iso_3166.sed
 rm -f %{buildroot}/lang-exceptions
-cat $RPM_BUILD_DIR/%{buildsubdir}/filesystem | grep "locale" | while read a b ; do
+cat $RPM_BUILD_DIR/%{buildsubdir}/filelist | grep "locale" | while read a b ; do
     mkdir -p -m 755 %{buildroot}/$b/LC_MESSAGES
 done
-cat $RPM_BUILD_DIR/%{buildsubdir}/filesystem | grep "/share/man" | while read a b c d; do
+cat $RPM_BUILD_DIR/%{buildsubdir}/filelist | grep "/share/man" | while read a b c d; do
     mkdir -p -m 755 %{buildroot}/$d/man{1,2,3,4,5,6,7,8,9,n,1x,2x,3x,4x,5x,6x,7x,8x,9x,0p,1p,3p}
 done
 for i in man{1,2,3,4,5,6,7,8,9,n,1x,2x,3x,4x,5x,6x,7x,8x,9x,0p,1p,3p}; do
-   echo "%{_scl_root}/usr/share/man/$i" >> $RPM_BUILD_DIR/%{buildsubdir}/filesystem
+   echo "%{_scl_root}/usr/share/man/$i" >> $RPM_BUILD_DIR/%{buildsubdir}/filelist
 done
+ln -s $RPM_BUILD_DIR/%{buildsubdir}/filelist $RPM_BUILD_DIR/%{buildsubdir}/filesystem
 set -x
 popd
 }

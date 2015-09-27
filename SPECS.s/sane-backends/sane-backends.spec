@@ -35,14 +35,16 @@
 %endif
 
 Summary: Scanner access software
+Summary(zh_CN.UTF-8): 扫描仪访问软件
 Name: sane-backends
 Version: 1.0.24
-Release: 15%{?dist}
+Release: 16%{?dist}
 # lib/ is LGPLv2+, backends are GPLv2+ with exceptions
 # Tools are GPLv2+, docs are public domain
 # see LICENSE for details
 License: GPLv2+ and GPLv2+ with exceptions and Public Domain
 Group: System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 # Alioth Download URLs are amazing.
 Source0: https://alioth.debian.org/frs/download.php/latestfile/176/sane-backends-%{version}.tar.gz
 Source1: sane.png
@@ -111,9 +113,14 @@ SANE application programming interface (API) provides standardized
 access to any raster image scanner hardware (flatbed scanner,
 hand-held scanner, video and still cameras, frame-grabbers, etc.).
 
+%description -l zh_CN.UTF-8
+扫描仪访问软件。
+
 %package doc
 Summary: SANE backends documentation
+Summary(zh_CN.UTF-8): %{name} 的文档
 Group: Documentation
+Group(zh_CN.UTF-8): 文档
 BuildArch: noarch
 # Don't drag around obsoletes forever
 %if 0%{?fedora}%{?rhel} && (0%{?fedora} < 25 || 0%{?rhel} <= 8)
@@ -123,18 +130,26 @@ Conflicts: sane-backends < 1.0.23-10
 
 %description doc
 This package contains documentation for SANE backends.
+%description doc -l zh_CN.UTF-8
+%{name} 的文档。
 
 %package libs
 Summary: SANE libraries
+Summary(zh_CN.UTF-8): %{name} 的运行库
 Group: System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 
 %description libs
 This package contains the SANE libraries which are needed by applications that
 want to access scanners.
+%description libs -l zh_CN.UTF-8
+%{name} 的运行库。
 
 %package devel
 Summary: SANE development toolkit
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: sane-backends = %{?epoch:%{epoch}:}%{version}-%{release}
 Requires: sane-backends-libs%{?_isa} = %{?epoch:%{epoch}:}%{version}-%{release}
 %if %needs_multilib_quirk
@@ -154,10 +169,14 @@ Requires: pkgconfig
 %description devel
 This package contains libraries and header files for writing Scanner Access Now
 Easy (SANE) modules.
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %package drivers-scanners
 Summary: SANE backend drivers for scanners
+Summary(zh_CN.UTF-8): 扫描仪的驱动
 Group: System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 Requires: sane-backends = %{?epoch:%{epoch}:}%{version}-%{release}
 Requires: sane-backends-libs%{?_isa} = %{?epoch:%{epoch}:}%{version}-%{release}
 # Don't drag around obsoletes forever
@@ -171,9 +190,14 @@ Conflicts: sane-backends-libs < 1.0.22-4
 %description drivers-scanners
 This package contains backend drivers to access scanner hardware through SANE.
 
+%description drivers-scanners -l zh_CN.UTF-8
+扫描仪的驱动。
+
 %package drivers-cameras
 Summary: Scanner backend drivers for digital cameras
+Summary(zh_CN.UTF-8): 数码相机的驱动
 Group: System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 Requires: sane-backends = %{?epoch:%{epoch}:}%{version}-%{release}
 Requires: sane-backends-libs%{?_isa} = %{?epoch:%{epoch}:}%{version}-%{release}
 # Don't drag around obsoletes forever
@@ -186,6 +210,8 @@ Provides: sane-libs-gphoto2%{?_isa} = %{?epoch:%{epoch}:}%{version}-%{release}
 
 %description drivers-cameras
 This package contains backend drivers to access digital cameras through SANE.
+%description drivers-cameras -l zh_CN.UTF-8
+数码相机的驱动。
 
 %prep
 %setup -q
@@ -265,8 +291,8 @@ for f in *; do
     fi
 done
 popd
-
-%find_lang %name
+magic_rpm_clean.sh
+#find_lang %%name
 
 %post
 udevadm hwdb --update >/dev/null 2>&1 || :
@@ -277,7 +303,7 @@ udevadm hwdb --update >/dev/null 2>&1 || :
 %post libs -p /sbin/ldconfig
 %postun libs -p /sbin/ldconfig
 
-%files -f %{name}.lang
+%files 
 %defattr(-,root,root)
 %doc %{_maindocdir}
 %dir /etc/sane.d
@@ -322,6 +348,9 @@ udevadm hwdb --update >/dev/null 2>&1 || :
 %{_libdir}/sane/*gphoto2.so*
 
 %changelog
+* Fri Sep 25 2015 Liu Di <liudidi@gmail.com> - 1.0.24-16
+- 为 Magic 3.0 重建
+
 * Fri Jun 19 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.0.24-15
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

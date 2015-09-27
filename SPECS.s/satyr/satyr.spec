@@ -1,27 +1,21 @@
 %{!?python_sitearch: %global python_sitearch %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib(1)")}
 
 # rhel6's python-sphinx cannot build manual pages
-%if 0%{?rhel} && 0%{?rhel} <= 6
-  %define enable_python_manpage 0
-%else
-  %define enable_python_manpage 1
-%endif
+%define enable_python_manpage 1
 
-%if 0%{?suse_version}
-  %define python2_devel python-devel
-  %define libdw_devel libdw-devel
-  %define libelf_devel libelf-devel
-%else
-  %define python2_devel python2-devel
-  %define libdw_devel elfutils-devel
-  %define libelf_devel elfutils-libelf-devel
-%endif
+%define python2_devel python2-devel
+%define libdw_devel elfutils-devel
+%define libelf_devel elfutils-libelf-devel
+
+%define with_python3 1
 
 Name: satyr
-Version: 0.13
-Release: 5%{?dist}
+Version:	0.20
+Release:	1%{?dist}
 Summary: Tools to create anonymous, machine-friendly problem reports
+Summary(zh_CN.UTF-8): 创建匿名，机器友好的问题报告
 Group: System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 License: GPLv2+
 URL: https://github.com/abrt/satyr
 Source0: https://fedorahosted.org/released/abrt/satyr-%{version}.tar.xz
@@ -38,8 +32,6 @@ BuildRequires: gcc-c++
 BuildRequires: python-sphinx
 %endif
 
-Patch0: satyr-0.13-elfutils-0.158.patch
-
 %description
 Satyr is a library that can be used to create and process microreports.
 Microreports consist of structured data suitable to be analyzed in a fully
@@ -49,25 +41,50 @@ potentially sensitive data to eliminate the need for review before submission.
 Included is a tool that can create microreports and perform some basic
 operations on them.
 
+%description -l zh_CN.UTF-8
+创建匿名，机器友好的问题报告。
+
 %package devel
 Summary: Development libraries for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: %{name}%{?_isa} = %{version}-%{release}
 
 %description devel
 Development libraries and headers for %{name}.
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %package python
 Summary: Python bindings for %{name}
+Summary(zh_CN.UTF-8): %{name} 的 Python 绑定
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: %{name}%{?_isa} = %{version}-%{release}
 
 %description python
 Python bindings for %{name}.
 
+%description python -l zh_CN.UTF-8
+%{name} 的 Python 绑定。
+
+%if 0%{?with_python3}
+%package python3
+Summary: Python 3 bindings for %{name}
+Summary(zh_CN.UTF-8): %{name} 的 Python3 绑定
+Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
+Requires: %{name}%{?_isa} = %{version}-%{release}
+
+%description python3
+Python 3 bindings for %{name}.
+%description python3 -l zh_CN.UTF-8
+%{name} 的 Python3 绑定。
+%endif # if with_python3
+
 %prep
 %setup -q
-%patch0 -p1
 
 %build
 %configure \
@@ -83,6 +100,7 @@ make install DESTDIR=%{buildroot}
 
 # Remove all libtool archives (*.la) from modules directory.
 find %{buildroot} -name "*.la" | xargs rm --
+magic_rpm_clean.sh
 
 %check
 make check
@@ -109,7 +127,16 @@ make check
 %{_mandir}/man3/satyr-python.3*
 %endif
 
+%if 0%{?with_python3}
+%files python3
+%dir %{python3_sitearch}/%{name}
+%{python3_sitearch}/%{name}/*
+%endif
+
 %changelog
+* Fri Sep 25 2015 Liu Di <liudidi@gmail.com> - 0.20-1
+- 更新到 0.20
+
 * Sat Aug 01 2015 Liu Di <liudidi@gmail.com> - 0.13-5
 - 为 Magic 3.0 重建
 

@@ -1,12 +1,14 @@
 Summary:   List or change SCSI/SATA disk parameters
+Summary(zh_CN.UTF-8): 列出或更改 SCSI/SATA 磁盘参数
 Name:      sdparm
-Version:   1.07
-Release:   2%{?dist}
+Version:	1.09
+Release:	1%{?dist}
 License:   BSD
 Group:     Applications/System
+Group(zh_CN.UTF-8): 应用程序/系统
 URL:       http://sg.danny.cz/sg/sdparm.html
-Source0:   http://sg.danny.cz/sg/p/sdparm-%{version}.tgz
-BuildRequires: sg3_utils-devel
+Source0:   http://sg.danny.cz/sg/p/sdparm-%{version}.tar.xz
+BuildRequires: sg3_utils-devel >= 1.41
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 %description 
@@ -24,6 +26,9 @@ the media and load or unload removable media.
 Warning: It is possible (but unlikely) to change SCSI disk settings
 such that the disk stops operating or is slowed down. Use with care.
 
+%description -l zh_CN.UTF-8
+列出或更改 SCSI/SATA 磁盘参数。
+
 %prep
 %setup -q
 
@@ -35,6 +40,7 @@ such that the disk stops operating or is slowed down. Use with care.
 %{__rm} -rf %{buildroot}
 
 %{__make} install DESTDIR=%{buildroot} INSTALL="%{__install} -p"
+magic_rpm_clean.sh
 
 %clean
 %{__rm} -rf %{buildroot}
@@ -43,11 +49,15 @@ such that the disk stops operating or is slowed down. Use with care.
 %defattr(-, root, root, -)
 %doc ChangeLog README CREDITS AUTHORS COPYING notes.txt
 %{_bindir}/%{name}
+%{_bindir}/sas_disk_blink
+%{_bindir}/scsi_ch_swp
+%{_mandir}/man8/sas_disk_blink.8*
+%{_mandir}/man8/scsi_ch_swp.8*
 %{_mandir}/man8/%{name}*
 
 %changelog
-* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 1.07-2
-- 为 Magic 3.0 重建
+* Sat Sep 26 2015 Liu Di <liudidi@gmail.com> - 1.09-1
+- 更新到 1.09
 
 * Sun Jan 29 2012 Terje Rosten <terje.rosten@ntnu.no> - 1.07-1
 - 1.07

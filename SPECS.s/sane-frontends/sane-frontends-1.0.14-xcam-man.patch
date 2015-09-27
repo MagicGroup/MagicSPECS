@@ -1,0 +1,43 @@
+From 3ec2c43dc3ef177cc2be266881892ec7d23753fe Mon Sep 17 00:00:00 2001
+From: Nils Philippsen <nils@redhat.com>
+Date: Mon, 8 Jul 2013 16:35:03 +0200
+Subject: [PATCH] patch: xcam-man
+
+Squashed commit of the following:
+
+commit 6b21756dac4f6ddce5beb0aaf0b135ab882b9cfa
+Author: Nils Philippsen <nils@redhat.com>
+Date:   Mon Jul 8 16:28:30 2013 +0200
+
+    describe correct option names in xcam man page
+
+    (cherry picked from commit 7e079e377174826453a1041719fb347d69d3ba5f)
+---
+ doc/xcam.man | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/doc/xcam.man b/doc/xcam.man
+index 036bcb3..020445e 100644
+--- a/doc/xcam.man
++++ b/doc/xcam.man
+@@ -4,7 +4,7 @@
+ xcam - a graphical camera frontend for SANE
+ .SH SYNOPSIS
+ .B xcam
+-.RB [ --buffer | -B  ]
++.RB [ --buffersize | -B  ]
+ .RB [ --version | -V ]
+ .RB [ --help | -h ]
+ 
+@@ -30,7 +30,7 @@ presents a menu listing of all known and available devices.
+ .SH OPTIONS
+ .PP
+ If the
+-.B --Buffer (-B)
++.B --buffersize (-B)
+ option is given,
+ .B xcam 
+ will use a 1024 kByte input buffer instead of the default 32 kByte.
+-- 
+1.8.3.1
+

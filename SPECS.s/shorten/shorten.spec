@@ -1,16 +1,14 @@
-%define version 3.6.0
-%define release 3%{dist}
-
 Name: shorten
 Summary: Audio file lossless compress/uncompress utility
 Summary(zh_CN.UTF-8): 音频文件无损压缩/解压缩工具
-Version: %{version}
-Release: %{release}
+Version:	3.6.1
+Release:	1%{?dist}
 License: shorten license
 Group: Applications/Multimedia
 Group(zh_CN.UTF-8): 应用程序/多媒体
 Url: http://www.hornig.net/shorten.html
-Source0: %{name}-%{version}.tar.gz
+Source0: http://www.etree.org/shnutils/shorten/dist/src/%{name}-%{version}.tar.gz
+Patch0: shorten-tests.patch
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-buildroot-%(%{__id_u} -n)
 Packager: kde <athena_star@163.com>
 #Requires: 
@@ -25,14 +23,16 @@ Shorten 文件（扩展名 .shn）可获得无损的保真度。Shorten 可以�
 
 %prep
 %setup -q
+%patch0 -p1
 
 %build
 %configure
-%{__make} %{?_smp_mflags} CFLAGS="-O3  -pipe"
+%{__make} %{?_smp_mflags} CFLAGS="-O3  -pipe -fPIC"
 
 %install
 %{__rm} -rf %{buildroot}
 %{__make} install DESTDIR="%{buildroot}"
+magic_rpm_clean.sh
 
 %clean
 rm -rf %{buildroot} %{_builddir}/%{buildsubdir}
@@ -41,10 +41,16 @@ rm -rf %{buildroot} %{_builddir}/%{buildsubdir}
 %files
 %defattr(-,root,root)
 %doc AUTHORS ChangeLog COPYING doc/LICENSE doc/TODO doc/tr156.ps NEWS README
-%{_bindir}
-%{_mandir}
+%{_bindir}/*
+%{_mandir}/*
 
 %changelog
+* Sun Sep 27 2015 Liu Di <liudidi@gmail.com> - 3.6.1-1
+- 更新到 3.6.1
+
+* Sun Sep 27 2015 Liu Di <liudidi@gmail.com> - 3.6.0-4
+- 为 Magic 3.0 重建
+
 * Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 3.6.0-3
 - 为 Magic 3.0 重建
 

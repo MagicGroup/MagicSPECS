@@ -1,9 +1,11 @@
 Name:           seabios
-Version:        1.7.5
-Release:        3%{?dist}
+Version:        1.8.2
+Release:        2%{?dist}
 Summary:        Open-source legacy BIOS implementation
+Summary(zh_CN.UTF-8): 开源的老旧 BIOS 实现 
 
 Group:          Applications/Emulators
+Group(zh_CN.UTF-8): 应用程序/模拟器
 License:        LGPLv3
 URL:            http://www.coreboot.org/SeaBIOS
 
@@ -18,6 +20,7 @@ Source15:       config.csm
 Source16:       config.coreboot
 Source17:       config.seabios-128k
 Source18:       config.seabios-256k
+Source19:       config.vga.virtio
 
 BuildRequires: python iasl
 BuildRequires: binutils-x86_64-linux-gnu gcc-x86_64-linux-gnu
@@ -47,9 +50,12 @@ SeaBIOS is an open-source legacy BIOS implementation which can be used as
 a coreboot payload. It implements the standard BIOS calling interfaces
 that a typical x86 proprietary BIOS implements.
 
+%description -l zh_CN.UTF-8
+开源的老旧 BIOS 实现。
 
 %package bin
 Summary: Seabios for x86
+Summary(zh_CN.UTF-8): x86 下的 Seabios
 Buildarch: noarch
 
 
@@ -57,16 +63,19 @@ Buildarch: noarch
 SeaBIOS is an open-source legacy BIOS implementation which can be used as
 a coreboot payload. It implements the standard BIOS calling interfaces
 that a typical x86 proprietary BIOS implements.
-
+%description bin -l zh_CN.UTF-8
+x86 下的 Seabios。
 
 %package -n seavgabios-bin
 Summary: Seavgabios for x86
+Summary(zh_CN.UTF-8): x86 下的 seavgabios
 Buildarch: noarch
 Obsoletes: vgabios
 
 %description -n seavgabios-bin
 SeaVGABIOS is an open-source VGABIOS implementation.
-
+%description -n seavgabios-bin -l zh_CN.UTF-8
+x86 下的 seavgabios。
 
 %prep
 %setup -q
@@ -98,16 +107,16 @@ build_bios() {
 }
 
 # seabios
-build_bios %{SOURCE15} Csm16.bin bios-csm.bin
-build_bios %{SOURCE16} bios.bin.elf bios-coreboot.bin
-build_bios %{SOURCE17} bios.bin bios.bin
-build_bios %{SOURCE18} bios.bin bios-256k.bin
+build_bios %{_sourcedir}/config.csm Csm16.bin bios-csm.bin
+build_bios %{_sourcedir}/config.coreboot bios.bin.elf bios-coreboot.bin
+build_bios %{_sourcedir}/config.seabios-128k bios.bin bios.bin
+build_bios %{_sourcedir}/config.seabios-256k bios.bin bios-256k.bin
 cp out/src/fw/*dsdt*.aml binaries
 
 # seavgabios
-for config in %{SOURCE10} %{SOURCE11} %{SOURCE12} %{SOURCE13} %{SOURCE14}; do
+for config in config.vga.cirrus config.vga.isavga config.vga.qxl config.vga.stdvga config.vga.cirrus config.vga.vmware config.vga.virtio; do
     name=${config#*config.vga.}
-    build_bios ${config} vgabios.bin vgabios-${name}.bin out/vgabios.bin
+    build_bios %{_sourcedir}/${config} vgabios.bin vgabios-${name}.bin out/vgabios.bin
 done
 
 
@@ -120,10 +129,10 @@ install -m 0644 binaries/bios-csm.bin $RPM_BUILD_ROOT%{_datadir}/seabios/bios-cs
 install -m 0644 binaries/bios-coreboot.bin $RPM_BUILD_ROOT%{_datadir}/seabios/bios-coreboot.bin
 install -m 0644 binaries/*.aml $RPM_BUILD_ROOT%{_datadir}/seabios
 install -m 0644 binaries/vgabios*.bin $RPM_BUILD_ROOT%{_datadir}/seavgabios
-
+magic_rpm_clean.sh
 
 %files
-%doc COPYING COPYING.LESSER README TODO
+%doc COPYING COPYING.LESSER README
 
 
 %files bin
@@ -137,8 +146,31 @@ install -m 0644 binaries/vgabios*.bin $RPM_BUILD_ROOT%{_datadir}/seavgabios
 
 
 %changelog
-* Sun Jun 22 2014 Liu Di <liudidi@gmail.com> - 1.7.5-3
+* Sat Sep 26 2015 Liu Di <liudidi@gmail.com> - 1.8.2-2
 - 为 Magic 3.0 重建
+
+* Tue Jul 14 2015 Cole Robinson <crobinso@redhat.com> 1.8.2-1
+- Rebased to version 1.8.2
+
+* Fri Jun 19 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.8.1-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
+
+* Wed Mar 18 2015 Cole Robinson <crobinso@redhat.com> - 1.8.1-1
+- Rebased to version 1.8.1
+
+* Sat Feb 21 2015 Cole Robinson <crobinso@redhat.com> - 1.8.0-1
+- Rebased to version 1.8.0
+- Initial support for USB3 hubs
+- Initial support for SD cards (on QEMU only)
+- Initial support for transitioning to 32bit mode using SMIs (on QEMU TCG
+  only)
+- SeaVGABIOS improvements
+
+* Sat Nov 15 2014 Cole Robinson <crobinso@redhat.com> - 1.7.5.1-1
+- Update to seabios-1.7.5.1
+
+* Wed Jul 09 2014 Cole Robinson <crobinso@redhat.com> - 1.7.5-3
+- Fix PCI-e hotplug (bz #1115598)
 
 * Sun Jun 08 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.7.5-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild

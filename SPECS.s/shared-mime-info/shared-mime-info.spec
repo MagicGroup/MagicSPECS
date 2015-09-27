@@ -1,9 +1,11 @@
 Summary: Shared MIME information database
+Summary(zh_CN.UTF-8): 共享的 MIME 信息数据库
 Name: shared-mime-info
-Version: 1.0
-Release: 3%{?dist}
+Version:	1.5
+Release:	1%{?dist}
 License: GPLv2+
 Group: System Environment/Base
+Group(zh_CN.UTF-8): 系统环境/基本
 URL: http://freedesktop.org/Software/shared-mime-info
 Source0: http://people.freedesktop.org/~hadess/%{name}-%{version}.tar.xz
 Source1: defaults.list
@@ -37,6 +39,9 @@ Many programs and desktops use the MIME system to represent the types of
 files. Frequently, it is necessary to work out the correct MIME type for
 a file. This is generally done by examining the file's name or contents,
 and looking up the correct MIME type in a database.
+
+%description -l zh_CN.UTF-8
+共享的 MIME 信息数据库。
 
 %prep
 %setup -q
@@ -87,6 +92,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man*/*
 
 %changelog
+* Sun Sep 27 2015 Liu Di <liudidi@gmail.com> - 1.5-1
+- 更新到 1.5
+
 * Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 1.0-3
 - 为 Magic 3.0 重建
 

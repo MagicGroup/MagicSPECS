@@ -1,7 +1,8 @@
 Name:           shtool
 Version:        2.0.8
-Release:        17%{?dist}
+Release:        18%{?dist}
 Summary:        A portable shell tool
+Summary(zh_CN.UTF-8): 可移植的 Shell 工具
 
 License:        GPLv2+
 URL:            http://www.gnu.org/software/shtool/
@@ -19,6 +20,8 @@ tree of other free software packages. There it can overtake various
 (usually non-portable) tasks related to the building and installation
 of such a package. It especially can replace the old mkdir.sh,
 install.sh and related scripts. 
+%description -l zh_CN.UTF-8
+可移植的 Shell 工具。
 
 %prep
 %setup -q
@@ -29,6 +32,7 @@ make %{?_smp_mflags}
 
 %install
 make install DESTDIR=%{buildroot} INSTALL="install -p"
+magic_rpm_clean.sh
 
 %check
 make check
@@ -42,6 +46,9 @@ make check
 %{_datadir}/aclocal/%{name}.m4
 
 %changelog
+* Sun Sep 27 2015 Liu Di <liudidi@gmail.com> - 2.0.8-18
+- 为 Magic 3.0 重建
+
 * Tue Sep 15 2015 Liu Di <liudidi@gmail.com> - 2.0.8-17
 - 为 Magic 3.0 重建
 

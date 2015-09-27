@@ -1,10 +1,12 @@
 #global posttag .final.0
 
 Name:		    scons
-Version:	    2.3.1
-Release:	    3%{?posttag}%{?dist}
+Version:	2.4.0
+Release:	1%{?dist}
 Summary:	    An Open Source software construction tool
+Summary(zh_CN.UTF-8): 开源软件的构建工具
 Group:		    Development/Tools
+Group(zh_CN.UTF-8): 开发/工具
 License:	    MIT
 URL:		    http://www.scons.org
 Source:		    http://downloads.sourceforge.net/scons/scons-%{version}%{?posttag}.tar.gz
@@ -28,7 +30,11 @@ really changed, not just when the timestamp has been touched.  SCons
 supports side-by-side variant builds, and is easily extended with user-
 defined Builder and/or Scanner objects.
 
+%description -l zh_CN.UTF-8
+开源软件的构建工具，
+
 %prep
+
 %setup -q -n %{name}-%{version}%{?posttag}
 sed -i 's|/usr/bin/env python|/usr/bin/python|' script/*
 # Convert to utf-8
@@ -61,6 +67,9 @@ rm -rf %{buildroot}
 %{_mandir}/man?/*
 
 %changelog
+* Sat Sep 26 2015 Liu Di <liudidi@gmail.com> - 2.4.0-1
+- 更新到 2.4.0
+
 * Tue Jun 17 2014 Liu Di <liudidi@gmail.com> - 2.3.1-3
 - 为 Magic 3.0 重建
 

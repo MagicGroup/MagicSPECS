@@ -51,7 +51,7 @@
 Summary: A GNU collection of cross-compilation binary utilities
 Name: %{cross}-binutils
 Version: 2.25.1
-Release: 1%{?dist}
+Release: 2%{?dist}
 License: GPLv3+
 Group: Development/Tools
 URL: http://sources.redhat.com/binutils
@@ -676,6 +676,9 @@ rm -rf %{buildroot}
 %do_files xtensa-linux-gnu	%{build_xtensa}
 
 %changelog
+* Sat Sep 26 2015 Liu Di <liudidi@gmail.com> - 2.25.1-2
+- 为 Magic 3.0 重建
+
 * Mon Aug 24 2015 David Howells <dhowells@redhat.com> - 2.25.1-1
 - Sync with binutils-2.25.1-4.
 - Set --enable-targets if the target is powerpc* not just ppc*.

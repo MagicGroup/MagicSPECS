@@ -6,10 +6,12 @@
 Name:           scim-bridge
 
 Version:        0.4.16
-Release:        12%{?dist}
+Release:        13%{?dist}
 Summary:        SCIM Bridge Gtk IM module
+Summary(zh_CN.UTF-8): SCIM 桥椄 Gtk 输入法模块
 
 Group:          System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 License:        GPLv2+ or LGPLv2+
 URL:            http://www.scim-im.org/projects/scim_bridge
 Source0:        http://dl.sourceforge.net/sourceforge/scim/%{name}-%{version}%{?snapdate:-%{snapdate}}.tar.gz
@@ -17,7 +19,7 @@ BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  scim-devel >= 1.4.6
 %if %{build_qt}
 BuildRequires:  qt4-devel
-BuildRequires:  qt-devel
+BuildRequires:  qt3-devel
 %endif
 %if %{snapshot}
 Buildrequires:  autoconf, automake, libtool
@@ -33,11 +35,14 @@ Patch6:         scim-bridge-0.4.16-fixes-unistd-compile.patch
 
 %description
 SCIM Bridge is a C implementation of a Gtk IM module for SCIM.
-
+%description -l zh_CN.UTF-8
+SCIM 桥椄 Gtk 输入法模块。
 
 %package gtk
 Summary:    SCIM Bridge Gtk IM module
+Summary(zh_CN.UTF-8): %{name} 的 Gtk 输入法模块
 Group:      System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 # for update-gtk-immodules
 Requires(post): gtk2 >= 2.9.1-2
 Requires(postun): gtk2 >= 2.9.1-2
@@ -47,12 +52,15 @@ Obsoletes:  scim-bridge-gtkimm < 0.4.2
 
 %description gtk
 This package provides the SCIM Bridge GTK input method module.
-
+%description gtk -l zh_CN.UTF-8
+%{name} 的 Gtk 输入法模块。
 
 %if %{build_qt}
 %package qt
 Summary:    SCIM Bridge Qt IM module
+Summary(zh_CN.UTF-8): %{name} 的 Qt 输入法模块
 Group:      System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 # need %{_bindir}/scim-bridge
 Requires:   %{name} = %{version}-%{release}
 
@@ -62,9 +70,14 @@ Obsoletes:  scim-bridge-qt4 < 0.4.15-3
 %description qt
 This package provides the SCIM Bridge Qt input method module.
 
+%description qt -l zh_CN.UTF-8
+%{name} 的 Qt 输入法模块。
+
 %package qt3
 Summary:    SCIM Bridge Qt3 IM module
+Summary(zh_CN.UTF-8): %{name} 的 Qt3 输入法模块
 Group:      System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 Requires:   %{name} = %{version}-%{release}
 
 Obsoletes:  scim-bridge-qtimm < 0.4.2
@@ -74,8 +87,8 @@ Obsoletes:  scim-qtimm
 
 %description qt3
 This package provides the SCIM Bridge Qt3 input method module.
-
-
+%description qt3 -l zh_CN.UTF-8
+%{name} 的 Qt3 输入法模块
 %endif
 
 
@@ -122,7 +135,7 @@ rm $RPM_BUILD_ROOT/%{_libdir}/qt4/plugins/inputmethods/im-scim-bridge.*a
 
 # remove unnecessary doc files
 rm doc/{Makefile.*,doxygen.conf}
-
+magic_rpm_clean.sh
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -160,6 +173,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sat Sep 26 2015 Liu Di <liudidi@gmail.com> - 0.4.16-13
+- 为 Magic 3.0 重建
+
 * Fri Dec 21 2012 Adam Tkac <atkac redhat com> - 0.4.16-12
 - rebuild against new libjpeg
 

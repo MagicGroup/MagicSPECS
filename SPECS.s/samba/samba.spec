@@ -76,7 +76,7 @@
 
 Name:           samba
 Version:        %{samba_version}
-Release:        %{samba_release}
+Release:        %{samba_release}.1
 
 %if 0%{?rhel}
 Epoch:          0
@@ -1977,6 +1977,9 @@ rm -rf %{buildroot}
 %endif # with_clustering_support
 
 %changelog
+* Fri Sep 25 2015 Liu Di <liudidi@gmail.com> - 2:4.3.0-1.1
+- 为 Magic 3.0 重建
+
 * Tue Sep 08 2015 Guenther Deschner <gdeschner@redhat.com> - 4.3.0-1
 - resolves: #1088911 - Update to Samba 4.3.0
 

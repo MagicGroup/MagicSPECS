@@ -1,9 +1,11 @@
 Name: sheepdog
 Summary: The Sheepdog Distributed Storage System for KVM/QEMU
+Summary(zh_CN.UTF-8): KVM/QEMU 使用的 sheepdog 分布式存储系统
 Version: 0.3.0
-Release: 8%{?dist}
+Release: 9%{?dist}
 License: GPLv2 and GPLv2+
 Group: System Environment/Base
+Group(zh_CN.UTF-8): 系统环境/基本
 URL: http://www.osrg.net/sheepdog
 Source0: collie-sheepdog-v0.3.0-0-gbb41896.tar.gz
 #get source from github here https://github.com/collie/sheepdog/tarball/v0.3.0
@@ -26,16 +28,12 @@ BuildRequires: corosync corosynclib corosynclib-devel
 
 BuildRoot: %(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
 
-%if 0%{?rhel} >= 6
-Excludearch: ppc 
-Excludearch: ppc64
-%endif
-
-
-
 %description
 This package contains the Sheepdog server, and command line tool which offer
 a distributed object storage system for KVM.
+
+%description -l zh_CN.UTF-8
+KVM/QEMU 使用的 sheepdog 分布式存储系统。
 
 %prep
 %setup -qn collie-sheepdog-bb41896
@@ -56,6 +54,8 @@ cp -a %{SOURCE1} %{buildroot}/%{_unitdir}/
 # drop static libs
 rm -f %{buildroot}%{_libdir}/*.a
 rm -f %{buildroot}%{_initddir}/sheepdog
+magic_rpm_clean.sh
+
 %clean
 rm -rf %{buildroot}
 
@@ -93,6 +93,9 @@ fi
 %{_mandir}/man8/sheep.8*
 
 %changelog
+* Sun Sep 27 2015 Liu Di <liudidi@gmail.com> - 0.3.0-9
+- 为 Magic 3.0 重建
+
 * Thu Aug 07 2014 Liu Di <liudidi@gmail.com> - 0.3.0-8
 - 为 Magic 3.0 重建
 

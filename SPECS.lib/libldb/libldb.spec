@@ -8,7 +8,7 @@
 %define tevent_version 0.9.17
 
 Name: libldb
-Version: 1.1.16
+Version: 1.1.21
 Release: 1%{?dist}
 Group: Development/Libraries
 Summary: A schema-less, ldap like, API and database
@@ -177,6 +177,9 @@ rm -rf %{buildroot}
 %postun -n pyldb -p /sbin/ldconfig
 
 %changelog
+* Fri Sep 25 2015 Liu Di <liudidi@gmail.com> - 1.1.21-1
+- 更新到 1.1.21
+
 * Fri Jul 18 2014 Liu Di <liudidi@gmail.com> - 1.1.16-1
 - 更新到 1.1.17
 
