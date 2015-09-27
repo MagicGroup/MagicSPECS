@@ -1,10 +1,10 @@
-%global	cvsDATE	20131114
-%global	cvsTIME	1121
+%global	cvsDATE	20150508
+%global	cvsTIME	1030
 
 Summary:	Dictionaries for SKK (Simple Kana-Kanji conversion program)
 Name:		skkdic
 Version:	%{cvsDATE}
-Release:	7.T%{cvsTIME}%{?dist}
+Release:	2.T%{cvsTIME}%{?dist}
 License:	GPLv2+
 Group:		System Environment/Libraries
 # To create source tarball, use Source10
@@ -57,6 +57,18 @@ gzip -9 ChangeLog
 
 
 %changelog
+* Fri Jun 19 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 20150508-2.T1030
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
+
+* Fri May  8 2015 Mamoru TASAKA <mtasaka@fedoraproject.org> - 20150508-1.T1030
+- Update to the latest data
+
+* Tue Nov 18 2014 Mamoru TASAKA <mtasaka@fedoraproject.org> - 20141118-1.T0000
+- Update to the latest data
+
+* Sun Jun 08 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 20131114-8.T1121
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
 * Thu Nov 14 2013 Mamoru TASAKA <mtasaka@fedoraproject.org> - 20131114-7.T1121
 - Update to the latest data
 
