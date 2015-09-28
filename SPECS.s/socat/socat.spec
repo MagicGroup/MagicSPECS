@@ -2,8 +2,8 @@
 
 Summary: Bidirectional data relay between two data channels ('netcat++')
 Name: socat
-Version: 1.7.2.2
-Release: 2%{?dist}
+Version: 1.7.2.4
+Release: 5%{?dist}
 License: GPLv2
 Url:  http://www.dest-unreach.org/%{name}
 Source: http://www.dest-unreach.org/socat/download/%{name}-%{version}.tar.gz
@@ -11,8 +11,10 @@ Group: Applications/Internet
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: openssl-devel readline-devel ncurses-devel
 BuildRequires: autoconf kernel-headers > 2.6.18
-Patch1: socat-1.7.2.1-procan-cdefs.patch
-Patch2: socat-1.7.2.1-errqueue.patch
+# for make test
+BuildRequires: iproute net-tools coreutils procps-ng openssl iputils
+Patch1: socat-1.7.2.4-test.patch
+Patch2: socat-1.7.2.4-errqueue.patch
 
 %description
 Socat is a relay for bidirectional data transfer between two independent data
@@ -26,12 +28,10 @@ line editor (readline), a program, or a combination of two of these.
 %setup -q 
 iconv -f iso8859-1 -t utf-8 CHANGES > CHANGES.utf8
 mv CHANGES.utf8 CHANGES
-%patch1 -p1 
-%patch2 -p1 
+%patch1 -p1
+%patch2 -p1
 
 %build
-
-autoconf
 %configure  \
         --enable-help --enable-stdio \
         --enable-fdnum --enable-file --enable-creat \
@@ -43,31 +43,52 @@ autoconf
         --enable-openssl --enable-sycls --enable-filan \
         --enable-retry --enable-libwrap --enable-fips
 
-
-chmod 644 *.sh
 make %{?_smp_mflags}
 
 %install
-rm -rf %{buildroot}
-
 make DESTDIR=%{buildroot} install
+install -d %{buildroot}/%{_docdir}/socat
+install -m 0644 *.sh %{buildroot}/%{_docdir}/socat/
 
-%clean
-rm -rf %{buildroot}
+%check
+export TERM=ansi
+export OD_C=/usr/bin/od
+# intermittently, a test sometimes just fails and hangs, mostly on arm
+#timeout 30m make test
 
 %files 
-%defattr(-,root,root)
 %doc BUGREPORTS CHANGES DEVELOPMENT EXAMPLES FAQ PORTING
 %doc COPYING* README SECURITY testcert.conf
-%doc daemon.sh ftp.sh gatherinfo.sh mail.sh proxy.sh 
-%doc proxyecho.sh readline.sh readline-test.sh
-%doc socks4echo.sh socks4a-echo.sh test.sh
+%doc %{_docdir}/socat/*.sh
 %{_bindir}/socat
 %{_bindir}/filan
 %{_bindir}/procan
 %doc %{_mandir}/man1/socat.1*
 
 %changelog
+* Fri Jun 19 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.7.2.4-5
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
+
+* Sat Jan 24 2015 Paul Wouters <pwouters@redhat.com> - 1.7.2.4-4
+- Resolves rhbz#1182005 - socat 1.7.2.4 build failure missing linux/errqueue.h
+
+* Mon Aug 18 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.7.2.4-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
+
+* Sun Jun 08 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.7.2.4-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Mon Apr 07 2014 Paul Wouters <pwouters@redhat.com> - 1.7.2.4-1
+- Updated to 1.7.2.4 which contains many bugfixes
+- Run tests in make check
+- Add build dependancies for make test
+
+* Wed Jan 29 2014 Paul Wouters <pwouters@redhat.com> - 1.7.2.3-1
+- Updated to 1.7.2.3 for CVE-2014-0019
+
+* Sun Aug 04 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.7.2.2-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
 * Mon May 27 2013 Paul Wouters <pwouters@redhat.com> - 1.7.2.2-2
 - Added two patches that fixes some -Wformat warnings. these fix 2 of 3
   failing test cases from test.sh

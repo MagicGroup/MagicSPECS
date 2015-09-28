@@ -1,0 +1,67 @@
+--- a/config.h.in	
++++ a/config.h.in	
+@@ -308,6 +308,9 @@ 
+ /* define if your struct sigaction has sa_sigaction */
+ #undef HAVE_STRUCT_SIGACTION_SA_SIGACTION
+ 
++/* define if you have struct sock_extended_err */
++#undef HAVE_STRUCT_SOCK_EXTENDED_ERR
++
+ /* Define if your struct termios has component c_ispeed */
+ #undef HAVE_TERMIOS_ISPEED
+ 
+--- a/configure.in	
++++ a/configure.in	
+@@ -80,7 +80,8 @@ AC_HEADER_RESOLV()
+ AC_CHECK_HEADERS(termios.h linux/if_tun.h)
+ AC_CHECK_HEADERS(net/if_dl.h)
+ AC_CHECK_HEADERS(linux/types.h)
+-AC_CHECK_HEADER(linux/errqueue.h, AC_DEFINE(HAVE_LINUX_ERRQUEUE_H), [], [#include <linux/types.h>])
++AC_CHECK_HEADER(linux/errqueue.h, AC_DEFINE(HAVE_LINUX_ERRQUEUE_H), [], [#include <sys/time.h>
++#include <linux/types.h>])
+ AC_CHECK_HEADERS(sys/utsname.h sys/select.h sys/file.h)
+ AC_CHECK_HEADERS(util.h bsd/libutil.h libutil.h sys/stropts.h regex.h)
+ AC_CHECK_HEADERS(linux/fs.h linux/ext2_fs.h)
+@@ -915,6 +916,22 @@ if test $sc_cv_type_sa_family_t = yes; then
+ fi
+ AC_MSG_RESULT($sc_cv_type_sa_family_t)
+ 
++AC_MSG_CHECKING(for struct sock_extended_err)
++AC_CACHE_VAL(sc_cv_struct_sock_extended_err,
++[AC_TRY_COMPILE([#include <linux/types.h>
++#if TIME_WITH_SYS_TIME
++#include <sys/time.h>
++#endif
++#if HAVE_LINUX_ERRQUEUE_H
++#include <linux/errqueue.h>
++#endif],[struct sock_extended_err s;],
++[sc_cv_struct_sock_extended_err=yes],
++[sc_cv_struct_sock_extended_err=no])])
++if test $sc_cv_struct_sock_extended_err = yes; then
++   AC_DEFINE(HAVE_STRUCT_SOCK_EXTENDED_ERR)
++fi
++AC_MSG_RESULT($sc_cv_struct_sock_extended_err)
++
+ AC_MSG_CHECKING(for struct sigaction.sa_sigaction)
+ AC_CACHE_VAL(sc_cv_struct_sigaction_sa_sigaction,
+ [AC_TRY_COMPILE([#include <signal.h>],[struct sigaction s;s.sa_sigaction=0;],
+--- a/xio-ip.c	
++++ a/xio-ip.c	
+@@ -503,7 +503,7 @@ int xiolog_ancillary_ip(struct cmsghdr *cmsg, int *num,
+       return STAT_OK;
+ #endif /* defined(IP_PKTINFO) && HAVE_STRUCT_IN_PKTINFO */
+ #endif /* WITH_IP4 */
+-#ifdef IP_RECVERR
++#if defined(IP_RECVERR) && HAVE_STRUCT_SOCK_EXTENDED_ERR
+    case IP_RECVERR: {
+       struct sock_extended_err *err =
+ 	 (struct sock_extended_err *)CMSG_DATA(cmsg);
+@@ -521,7 +521,7 @@ int xiolog_ancillary_ip(struct cmsghdr *cmsg, int *num,
+ 	       err->ee_code, '\0', err->ee_info, '\0', err->ee_data);
+       return STAT_OK;
+    }
+-#endif /* IP_RECVERR */
++#endif /* defined(IP_RECVERR) && HAVE_STRUCT_SOCK_EXTENDED_ERR */
+ #ifdef IP_RECVIF
+    case IP_RECVIF: {
+       /* spec in FreeBSD: /usr/include/net/if_dl.h */
