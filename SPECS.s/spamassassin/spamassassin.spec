@@ -44,12 +44,6 @@
 %define require_encode_detect 1
 %endif
 
-%if 0%{?fedora} >= 10
-# We use portreserve to prevent our TCP port being stolen.
-# Require the package here so that we know /etc/portreserve/ exists.
-Requires: portreserve
-%endif
-
 # Mail::DKIM by default (F11+)
 %if 0%{?fedora} >= 11
 %define dkim_deps 1
@@ -62,20 +56,20 @@ Requires: portreserve
 %define real_name Mail-SpamAssassin
 %{!?perl_vendorlib: %define perl_vendorlib %(eval "`%{__perl} -V:installvendorlib`"; echo $installvendorlib)}
 
-%global saversion 3.004000
+%global saversion 3.004001
 #%global prerev rc2
 
 Summary: Spam filter for email which can be invoked from mail delivery agents
 Name: spamassassin
-Version: 3.4.0
+Version: 3.4.1
 #Release: 0.8.%{prerev}%{?dist}
-Release: 7%{?dist}
+Release: 6%{?dist}
 License: ASL 2.0
 Group: Applications/Internet
 URL: http://spamassassin.apache.org/
-Source0: http://www.apache.org/dist/%{name}/%{real_name}-%{version}.tar.bz2
+Source0: http://www.apache.org/dist/%{name}/source/%{real_name}-%{version}.tar.bz2
 #Source0: %{real_name}-%{version}-%{prerev}.tar.bz2
-Source1: http://www.apache.org/dist/%{name}/%{real_name}-rules-%{version}.r1565117.tgz
+Source1: http://www.apache.org/dist/%{name}/source/%{real_name}-rules-%{version}.r1675274.tgz
 #Source1: %{real_name}-rules-%{version}.%{prerev}.tgz
 Source2: redhat_local.cf
 Source3: spamassassin-default.rc
@@ -93,6 +87,9 @@ Source13: README.RHEL.Fedora
 Source14: spamassassin.service
 %endif
 Source15: spamassassin.sysconfig.el
+Source16: sa-update.service
+Source17: sa-update.timer
+
 # Patches 0-99 are RH specific
 # https://bugzilla.redhat.com/show_bug.cgi?id=1055593
 # Switch to using gnupg2 instead of gnupg1
@@ -202,7 +199,6 @@ install -m 0755 spamd/redhat-rc-script.sh %buildroot/%{_initrddir}/spamassassin
 mkdir -p $RPM_BUILD_ROOT%{_sysconfdir}/mail/spamassassin
 mkdir -p $RPM_BUILD_ROOT%{_sysconfdir}/sysconfig
 mkdir -p $RPM_BUILD_ROOT%{_sysconfdir}/logrotate.d
-mkdir -p $RPM_BUILD_ROOT%{_sysconfdir}/cron.d
 install -m 0644 %{SOURCE2} $RPM_BUILD_ROOT%{_sysconfdir}/mail/spamassassin/local.cf
 %if %{use_systemd}
 install -m644 %{SOURCE5} $RPM_BUILD_ROOT%{_sysconfdir}/sysconfig/spamassassin
@@ -215,13 +211,20 @@ install -m 0644 %{SOURCE4} %buildroot/etc/mail/spamassassin
 # installed mode 755 as it's executed by users. 
 install -m 0755 %{SOURCE10} %buildroot/etc/mail/spamassassin
 install -m 0644 %{SOURCE6} %buildroot/etc/logrotate.d/sa-update
+
+
+%if %{use_systemd} == 0
+mkdir -p $RPM_BUILD_ROOT%{_sysconfdir}/cron.d
 install -m 0644 %{SOURCE7} %buildroot/etc/cron.d/sa-update
+%endif
 install -m 0644 %{SOURCE9} %buildroot%{_sysconfdir}/sysconfig/sa-update
 # installed mode 744 as non root users can't run it, but can read it.
 install -m 0744 %{SOURCE8} %buildroot%{_datadir}/spamassassin/sa-update.cron
 %if %{use_systemd}
 mkdir -p %buildroot%{_unitdir}
 install -m 0644 %{SOURCE14} %buildroot%{_unitdir}/spamassassin.service
+install -m 0644 %{SOURCE16} %buildroot%{_unitdir}/sa-update.service
+install -m 0644 %{SOURCE17} %buildroot%{_unitdir}/sa-update.timer
 %endif
 
 [ -x /usr/lib/rpm/brp-compress ] && /usr/lib/rpm/brp-compress
@@ -233,6 +236,8 @@ find $RPM_BUILD_ROOT -type d -depth -exec rmdir {} 2>/dev/null ';'
 cd $RPM_BUILD_ROOT%{_datadir}/spamassassin/
 tar xfvz %{SOURCE1}
 sed -i -e 's|\@\@VERSION\@\@|%{saversion}|' *.cf
+# Disable AHBL score as they no longer exist. See https://bugzilla.redhat.com/show_bug.cgi?id=1180338
+sed -i -e 's|score DNS_FROM_AHBL_RHSBL 0 2.438 0 2.699 # n=0 n=2||' 50_scores.cf
 cd -
 
 find $RPM_BUILD_ROOT/usr -type f -print |
@@ -246,7 +251,6 @@ fi
 find $RPM_BUILD_ROOT%{perl_vendorlib}/* -type d -print |
         sed "s@^$RPM_BUILD_ROOT@%dir @g" >> %{name}-%{version}-filelist
 
-mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/run/spamassassin
 mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/lib/spamassassin
 
 # sa-update channels and keyring directory
@@ -254,10 +258,6 @@ mkdir   -m 0700             $RPM_BUILD_ROOT%{_sysconfdir}/mail/spamassassin/sa-u
 mkdir   -m 0755             $RPM_BUILD_ROOT%{_sysconfdir}/mail/spamassassin/channel.d/
 install -m 0644 %{SOURCE11} $RPM_BUILD_ROOT%{_sysconfdir}/mail/spamassassin/channel.d/
 install -m 0644 %{SOURCE12} $RPM_BUILD_ROOT%{_sysconfdir}/mail/spamassassin/channel.d/
-
-# Tell portreserve which port we want it to protect.
-mkdir -p $RPM_BUILD_ROOT%{_sysconfdir}/portreserve
-echo 783 > $RPM_BUILD_ROOT%{_sysconfdir}/portreserve/spamd
 
 install -m 0644 %{SOURCE13} $RPM_BUILD_DIR/Mail-SpamAssassin-%{version}/
 
@@ -268,19 +268,19 @@ install -m 0644 %{SOURCE13} $RPM_BUILD_DIR/Mail-SpamAssassin-%{version}/
 %doc README.RHEL.Fedora
 %if %{use_systemd} == 0
 %{_initrddir}/spamassassin
+%{_sysconfdir}/cron.d/sa-update
 %endif
 %dir %{_sysconfdir}/mail
 %config(noreplace) %{_sysconfdir}/mail/spamassassin
 %config(noreplace) %{_sysconfdir}/sysconfig/spamassassin
 %config(noreplace) %{_sysconfdir}/sysconfig/sa-update
-%{_sysconfdir}/cron.d/sa-update
 %dir %{_datadir}/spamassassin
-%dir %{_localstatedir}/run/spamassassin
 %dir %{_localstatedir}/lib/spamassassin
 %config(noreplace) %{_sysconfdir}/logrotate.d/sa-update
-%config(noreplace) %{_sysconfdir}/portreserve/spamd
 %if %{use_systemd}
 %{_unitdir}/spamassassin.service
+%{_unitdir}/sa-update.service
+%{_unitdir}/sa-update.timer
 %endif
 
 %clean
@@ -292,14 +292,8 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %if %{use_systemd}
-%if 0%{?fedora} > 17
-        %systemd_post spamassassin.service
-%else
-if [ $1 -eq 1 ] ; then 
-    # Initial installation 
-    /bin/systemctl daemon-reload >/dev/null 2>&1 || :
-fi
-%endif
+%systemd_post spamassassin.service
+%systemd_post sa-update.timer
 %endif
 
 # -a and --auto-whitelist options were removed from 3.0.0
@@ -328,15 +322,8 @@ exit 0
 %endif
 
 %if %{use_systemd}
-%if 0%{?fedora} > 17
-        %systemd_postun spamassassin.service
-%else
-/bin/systemctl daemon-reload >/dev/null 2>&1 || :
-if [ $1 -ge 1 ] ; then
-    # Package upgrade, not uninstall
-    /bin/systemctl try-restart spamassassin.service >/dev/null 2>&1 || :
-fi
-%endif
+%systemd_postun spamassassin.service
+%systemd_postun sa-update.timer
 %endif
 
 %preun
@@ -349,15 +336,8 @@ exit 0
 %endif
 
 %if %{use_systemd}
-%if 0%{?fedora} > 17
-        %systemd_preun spamassassin.service
-%else
-if [ $1 -eq 0 ] ; then
-    # Package removal, not upgrade
-    /bin/systemctl --no-reload disable spamassassin.service > /dev/null 2>&1 || :
-    /bin/systemctl stop spamassassin.service > /dev/null 2>&1 || :
-fi
-%endif
+%systemd_preun spamassassin.service
+%systemd_preun sa-update.timer
 %endif
 
 %if %{use_systemd}
@@ -370,11 +350,54 @@ fi
 %endif
 
 %changelog
-* Thu Sep 17 2015 Liu Di <liudidi@gmail.com> - 3.4.0-7
-- 为 Magic 3.0 重建
+* Fri Jun 19 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.4.1-6
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 
-* Tue Jun 17 2014 Liu Di <liudidi@gmail.com> - 3.4.0-6
-- 为 Magic 3.0 重建
+* Tue Jun 09 2015 Jitka Plesnikova <jplesnik@redhat.com> - 3.4.1-5
+- Perl 5.22 rebuild
+
+* Sun Jun 07 2015 Kevin Fenzi <kevin@scrye.com> 3.4.1-4
+- Fix sa-update to handle systemctl or service as the case may be.
+
+* Sat Jun 06 2015 Jitka Plesnikova <jplesnik@redhat.com> - 3.4.1-3
+- Perl 5.22 rebuild
+
+* Sun May 03 2015 Kevin Fenzi <kevin@scrye.com> 3.4.1-2
+- Fix base rules version issue. Bug #1217990
+- Drop run dir we don't use it.
+
+* Wed Apr 29 2015 Kevin Fenzi <kevin@scrye.com> 3.4.1-1
+- Update to 3.4.1
+
+* Fri Apr 03 2015 Kevin Fenzi <kevin@scrye.com> 3.4.0-14
+- Switch to systemd timer unit from cron for rules updates. Fixes bug #1064537
+
+* Fri Apr 03 2015 Kevin Fenzi <kevin@scrye.com> 3.4.0-13
+- Remove last parts of portreserve. Fixes bug #1175798
+- Fix typo in Razor2 plugin. Fixes bug #1208776
+- Disabled the AHBL blacklist thats no longer in service in base rules. Fixes bug #1180338
+
+* Thu Sep 25 2014 Kevin Fenzi <kevin@scrye.com> 3.4.0-12
+- Apply fix for amavisd and spampd reloading after rules updates. Fixes bug #1145654
+
+* Thu Aug 28 2014 Jitka Plesnikova <jplesnik@redhat.com> - 3.4.0-11
+- Perl 5.20 rebuild
+
+* Tue Aug 26 2014 Kevin Fenzi <kevin@scrye.com> 3.4.0-10
+- CLean up portreserve conditionals. Fixes bug #1128708
+
+* Thu Aug 21 2014 Kevin Fenzi <kevin@scrye.com> - 3.4.0-9
+- Rebuild for rpm bug 1131960
+
+* Mon Aug 18 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.4.0-8.el6
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
+
+* Fri Jun 20 2014 Kevin Fenzi <kevin@scrye.com> 3.4.0-7
+- Add patch to work with newer perl-Net-DNS. Fixes bug #1111586
+
+* Wed Jun 18 2014 Kevin Fenzi <kevin@scrye.com> 3.4.0-6
+- Adjust systemd unit to not log to syslog since spamd does it already. 
+- Fixes bug #1107541
 
 * Sun Jun 08 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.4.0-5
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild

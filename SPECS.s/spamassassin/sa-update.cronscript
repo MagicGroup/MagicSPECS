@@ -9,11 +9,10 @@
 unset SAUPDATE OPTIONS DEBUG NOTIFY_UPD
 [ -f /etc/sysconfig/sa-update ] && . /etc/sysconfig/sa-update
 [ "$SAUPDATE" = "no" ] && exit 0
-for daemon in spamd amavisd spampd; do
+for daemon in mimedefang spamd amavisd spampd; do
     /usr/bin/pgrep -f $daemon >& /dev/null
     [ $? -eq 0 ] && SAUPDATE=yes
 done
-[ -f /var/run/mimedefang.pid ] && SAUPDATE=yes
 
 # Skip sa-update if daemon not detected
 [ -z "$SAUPDATE" ] && exit 0
@@ -68,10 +67,18 @@ if [ $status -eq 0 ]; then
 	else
             echo "$now: SpamAssassin: Update processed successfully" >>/var/log/sa-update.log
 	fi
-	 /sbin/service spamassassin condrestart >& /dev/null
-	 [ -f /etc/init.d/amavisd ] && /sbin/service amavisd condrestart >& /dev/null
-	 [ -f /var/run/mimedefang.pid ] && /sbin/service mimedefang reload >& /dev/null
-	 /sbin/service spampd condrestart >& /dev/null
+	if [ -f /usr/bin/systemctl ]; then
+		systemctl condrestart spamassassin.service >& /dev/null
+		[ -f /usr/lib/systemd/system/amavisd.service ] && systemctl condrestart amavisd.service >& /dev/null
+		systemctl --quiet is-active mimedefang.service; [ $? -eq 0 ] && systemctl reload mimedefang.service >& /dev/null
+		[ -f /usr/lib/systemd/system/spampd.service ] && systemctl condrestart spampd.service >& /dev/null
+	else
+		service spamassassin condrestart >& /dev/null
+		[ -f /etc/rc.d/init.d/amavisd ] && service amavisd-new condrestart >& /dev/null
+		[ -f /etc/rc.d/init.d/mimedefang ]  && service mimedefang condrestart >& /dev/null
+		[ -f /etc/rc.d/init.d/spampd ] && service spampd condrestart >& /dev/null
+	fi
+	
         exit $status
 fi
 if [ $status -eq 1 ]; then
