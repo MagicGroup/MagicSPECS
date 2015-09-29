@@ -7,8 +7,8 @@
 
 Summary: Apache HTTP Server
 Name: httpd
-Version: 2.4.12
-Release: 2%{?dist}
+Version: 2.4.16
+Release: 1%{?dist}
 URL: http://httpd.apache.org/
 Source0: http://www.apache.org/dist/httpd/httpd-%{version}.tar.bz2
 Source1: index.html
@@ -49,7 +49,6 @@ Patch2: httpd-2.4.9-apxs.patch
 Patch3: httpd-2.4.1-deplibs.patch
 Patch5: httpd-2.4.3-layout.patch
 Patch6: httpd-2.4.3-apctl-systemd.patch
-Patch7: httpd-2.4.10-lua53.patch
 # Needed for socket activation and mod_systemd patch
 Patch19: httpd-2.4.10-detect-systemd.patch
 # Features/functional changes
@@ -72,7 +71,7 @@ License: ASL 2.0
 Group: System Environment/Daemons
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: autoconf, perl, pkgconfig, findutils, xmlto
-BuildRequires: zlib-devel, lua-devel
+BuildRequires: zlib-devel, libselinux-devel, lua-devel
 BuildRequires: apr-devel >= 1.5.0, apr-util-devel >= 1.5.0, pcre-devel >= 5.0
 BuildRequires: systemd-devel
 Requires: /etc/mime.types, system-logos-httpd
@@ -194,13 +193,12 @@ interface for storing and accessing per-user session data.
 %patch3 -p1 -b .deplibs
 %patch5 -p1 -b .layout
 %patch6 -p1 -b .apctlsystemd
-%patch7 -p0 -b .lua53
 
 %patch19 -p1 -b .detectsystemd
 
 %patch23 -p1 -b .export
 %patch24 -p1 -b .corelimit
-#%patch25 -p1 -b .selinux
+%patch25 -p1 -b .selinux
 %patch26 -p1 -b .r1337344+
 %patch27 -p1 -b .icons
 %patch29 -p1 -b .systemd
@@ -508,7 +506,8 @@ fi
 %{_bindir}/openssl genrsa -rand /proc/apm:/proc/cpuinfo:/proc/dma:/proc/filesystems:/proc/interrupts:/proc/ioports:/proc/pci:/proc/rtc:/proc/uptime 2048 > %{sslkey} 2> /dev/null
 
 FQDN=`hostname`
-if [ "x${FQDN}" = "x" ]; then
+# A >59 char FQDN means "root@FQDN" exceeds 64-char max length for emailAddress
+if [ "x${FQDN}" = "x" -o ${#FQDN} -gt 59 ]; then
    FQDN=localhost.localdomain
 fi
 
@@ -666,8 +665,14 @@ rm -rf $RPM_BUILD_ROOT
 %{_rpmconfigdir}/macros.d/macros.httpd
 
 %changelog
-* Wed Jul 01 2015 Liu Di <liudidi@gmail.com> - 2.4.12-2
-- 为 Magic 3.0 重建
+* Wed Jul 15 2015 Jan Kaluza <jkaluza@redhat.com> - 2.4.12-4
+- update to 2.4.16
+
+* Tue Jul  7 2015 Joe Orton <jorton@redhat.com> - 2.4.12-3
+- mod_ssl: use "localhost" in the dummy SSL cert if len(FQDN) > 59 chars
+
+* Wed Jun 17 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.4.12-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 
 * Fri Mar 27 2015 Jan Kaluza <jkaluza@redhat.com> - 2.4.12-1
 - update to 2.4.12
