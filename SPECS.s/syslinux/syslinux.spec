@@ -1,26 +1,34 @@
 Summary: Simple kernel loader which boots from a FAT filesystem
 Name: syslinux
-Version: 4.05
-%define tarball_version 4.05
-Release: 4%{?dist}
+Version: 6.03
+%define tarball_version 6.03
+Release: 5%{?dist}
 License: GPLv2+
 Group: Applications/System
 URL: http://syslinux.zytor.com/wiki/index.php/The_Syslinux_Project
-Source0: http://www.kernel.org/pub/linux/utils/boot/syslinux/%{name}-%{tarball_version}.tar.bz2
+Source0: http://www.kernel.org/pub/linux/utils/boot/syslinux/%{name}-%{tarball_version}.tar.xz
+Patch0001: 0001-Add-install-all-target-to-top-side-of-HAVE_FIRMWARE.patch
+# Backport from upstream git master to fix RHBZ #1234653
+Patch0002: 0035-SYSAPPEND-Fix-space-stripping.patch
+
+# this is to keep rpmbuild from thinking the .c32 / .com / .0 / memdisk files
+# in noarch packages are a reason to stop the build.
+%define _binaries_in_noarch_packages_terminate_build 0
+
 ExclusiveArch: %{ix86} x86_64
 Buildroot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-BuildRequires: nasm >= 0.98.38-1, perl, netpbm-progs
+BuildRequires: nasm >= 0.98.38-1, perl, netpbm-progs, git
 BuildRequires: /usr/include/gnu/stubs-32.h
 BuildRequires: libuuid-devel
+Requires: syslinux-nonlinux = %{version}-%{release}
 %ifarch %{ix86}
 Requires: mtools, libc.so.6
+BuildRequires: mingw32-gcc
 %endif
 %ifarch x86_64
 Requires: mtools, libc.so.6()(64bit)
+BuildRequires: mingw64-gcc
 %endif
-
-Patch1: syslinux-isohybrid-fix-mbr.patch
-Patch2: syslinux-4.05-avoid-ext2_fs.h.patch
 
 # NOTE: extlinux belongs in /sbin, not in /usr/sbin, since it is typically
 # a system bootloader, and may be necessary for system recovery.
@@ -42,6 +50,7 @@ Syslinux tools written in perl
 %package devel
 Summary: Headers and libraries for syslinux development.
 Group: Development/Libraries
+Provides: %{name}-static = %{version}-%{release}
 
 %description devel
 Headers and libraries for syslinux development.
@@ -50,33 +59,71 @@ Headers and libraries for syslinux development.
 Summary: The EXTLINUX bootloader, for booting the local system.
 Group: System/Boot
 Requires: syslinux
+Requires: syslinux-extlinux-nonlinux = %{version}-%{release}
 
 %description extlinux
 The EXTLINUX bootloader, for booting the local system, as well as all
 the SYSLINUX/PXELINUX modules in /boot.
 
+%ifarch %{ix86}
 %package tftpboot
 Summary: SYSLINUX modules in /tftpboot, available for network booting
 Group: Applications/Internet
+BuildArch: noarch
+ExclusiveArch: %{ix86} x86_64
 Requires: syslinux
 
 %description tftpboot
 All the SYSLINUX/PXELINUX modules directly available for network
 booting in the /tftpboot directory.
 
+%package extlinux-nonlinux
+Summary: The parts of the EXTLINUX bootloader which aren't run from linux.
+Group: System/Boot
+Requires: syslinux
+BuildArch: noarch
+ExclusiveArch: %{ix86} x86_64
+
+%description extlinux-nonlinux
+All the EXTLINUX binaries that run from the firmware rather than
+from a linux host.
+
+%package nonlinux
+Summary: SYSLINUX modules which aren't run from linux.
+Group: System/Boot
+Requires: syslinux
+BuildArch: noarch
+ExclusiveArch: %{ix86} x86_64
+
+%description nonlinux
+All the SYSLINUX binaries that run from the firmware rather than from a
+linux host. It also includes a tool, MEMDISK, which loads legacy operating
+systems from media.
+%endif
+
+%ifarch %{x86_64}
+%package efi64
+Summary: SYSLINUX binaries and modules for 64-bit UEFI systems
+Group: System/Boot
+
+%description efi64
+SYSLINUX binaries and modules for 64-bit UEFI systems
+%endif
+
 %prep
 %setup -q -n syslinux-%{tarball_version}
-
-%patch1 -p1 -b .isohyb
-%patch2 -p1 -b .ext2
+git init
+git config user.email "%{name}-owner@fedoraproject.org"
+git config user.name "Fedora Ninjas"
+git add .
+git commit -a -q -m "%{version} baseline."
+git am %{patches} </dev/null
 
 %build
-CFLAGS="-Werror -Wno-unused -finline-limit=2000"
-export CFLAGS
-# If you make clean here, we lose the provided syslinux.exe
-#make clean
-make installer
-make -C sample tidy
+make bios clean all
+%ifarch %{x86_64}
+make efi64 clean all
+%endif
 
 %install
 rm -rf %{buildroot}
@@ -85,14 +132,23 @@ mkdir -p %{buildroot}%{_bindir}
 mkdir -p %{buildroot}%{_sbindir}
 mkdir -p %{buildroot}%{_prefix}/lib/syslinux
 mkdir -p %{buildroot}%{_includedir}
-make install-all \
+make bios install-all \
 	INSTALLROOT=%{buildroot} BINDIR=%{_bindir} SBINDIR=%{_sbindir} \
-       	LIBDIR=%{_prefix}/lib DATADIR=%{_datadir} \
+	LIBDIR=%{_prefix}/lib DATADIR=%{_datadir} \
 	MANDIR=%{_mandir} INCDIR=%{_includedir} \
-	TFTPBOOT=/tftpboot EXTLINUXDIR=/boot/extlinux
+	TFTPBOOT=/tftpboot EXTLINUXDIR=/boot/extlinux \
+	LDLINUX=ldlinux.c32
+%ifarch %{x86_64}
+make efi64 install netinstall \
+	INSTALLROOT=%{buildroot} BINDIR=%{_bindir} SBINDIR=%{_sbindir} \
+	LIBDIR=%{_prefix}/lib DATADIR=%{_datadir} \
+	MANDIR=%{_mandir} INCDIR=%{_includedir} \
+	TFTPBOOT=/tftpboot EXTLINUXDIR=/boot/extlinux \
+	LDLINUX=ldlinux.c32
+%endif
 
-mkdir -p %{buildroot}/%{_docdir}/%{name}-%{version}/sample
-install -m 644 sample/sample.* %{buildroot}/%{_docdir}/%{name}-%{version}/sample/
+mkdir -p %{buildroot}/%{_docdir}/%{name}/sample
+install -m 644 sample/sample.* %{buildroot}/%{_docdir}/%{name}/sample/
 mkdir -p %{buildroot}/etc
 ( cd %{buildroot}/etc && ln -s ../boot/extlinux/extlinux.conf . )
 
@@ -105,29 +161,34 @@ rm -rf %{buildroot}
 
 %files
 %defattr(-,root,root)
-%doc NEWS README* COPYING 
+%{!?_licensedir:%global license %%doc}
+%license COPYING
+%doc NEWS README*
 %doc doc/* 
 %doc sample
 %{_mandir}/man1/gethostip*
 %{_mandir}/man1/syslinux*
 %{_mandir}/man1/extlinux*
+%{_mandir}/man1/isohybrid*
+%{_mandir}/man1/memdiskfind*
 %{_bindir}/gethostip
 %{_bindir}/isohybrid
 %{_bindir}/memdiskfind
 %{_bindir}/syslinux
 %dir %{_datadir}/syslinux
-%{_datadir}/syslinux/*.com
-%{_datadir}/syslinux/*.exe
-%{_datadir}/syslinux/*.c32
-%{_datadir}/syslinux/*.bin
-%{_datadir}/syslinux/*.0
-%{_datadir}/syslinux/memdisk
 %dir %{_datadir}/syslinux/dosutil
 %{_datadir}/syslinux/dosutil/*
 %{_datadir}/syslinux/diag/*
+%ifarch %{ix86}
+%{_datadir}/syslinux/syslinux.exe
+%else
+%{_datadir}/syslinux/syslinux64.exe
+%endif
 
 %files perl
 %defattr(-,root,root)
+%{!?_licensedir:%global license %%doc}
+%license COPYING
 %{_mandir}/man1/lss16toppm*
 %{_mandir}/man1/ppmtolss16*
 %{_mandir}/man1/syslinux2ansi*
@@ -143,16 +204,48 @@ rm -rf %{buildroot}
 
 %files devel
 %defattr(-,root,root)
+%{!?_licensedir:%global license %%doc}
+%license COPYING
 %dir %{_datadir}/syslinux/com32
 %{_datadir}/syslinux/com32
 
 %files extlinux
 %{_sbindir}/extlinux
-/boot/extlinux
 %config /etc/extlinux.conf
 
+%ifarch %{ix86}
 %files tftpboot
 /tftpboot
+
+%files nonlinux
+%{_datadir}/syslinux/*.com
+%{_datadir}/syslinux/*.exe
+%{_datadir}/syslinux/*.c32
+%{_datadir}/syslinux/*.bin
+%{_datadir}/syslinux/*.0
+%{_datadir}/syslinux/memdisk
+
+%files extlinux-nonlinux
+/boot/extlinux
+
+%else
+%exclude %{_datadir}/syslinux/memdisk
+%exclude %{_datadir}/syslinux/*.com
+%exclude %{_datadir}/syslinux/*.exe
+%exclude %{_datadir}/syslinux/*.c32
+%exclude %{_datadir}/syslinux/*.bin
+%exclude %{_datadir}/syslinux/*.0
+%exclude /boot/extlinux
+%exclude /tftpboot
+%endif
+
+%ifarch %{x86_64}
+%files efi64
+%{!?_licensedir:%global license %%doc}
+%license COPYING
+%dir %{_datadir}/syslinux/efi64
+%{_datadir}/syslinux/efi64
+%endif
 
 %post extlinux
 # If we have a /boot/extlinux.conf file, assume extlinux is our bootloader
@@ -166,6 +259,57 @@ elif [ -f /boot/extlinux.conf ]; then \
 fi
 
 %changelog
+* Fri Jul 03 2015 Adam Williamson <awilliam@redhat.com> - 6.03-5
+- backport a commit from git master which appears to fix RHBZ #1234653
+
+* Fri Jun 19 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 6.03-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
+
+* Sat Feb 21 2015 Till Maas <opensource@till.name> - 6.03-3
+- Rebuilt for Fedora 23 Change
+  https://fedoraproject.org/wiki/Changes/Harden_all_packages_with_position-independent_code
+
+* Sat Jan 10 2015 Michael Schwendt <mschwendt@fedoraproject.org> - 6.03-2
+- Add -static Provides to -devel package to meet Fedora's
+  Packaging Static Libraries guidelines (rhbz #609617)
+
+* Wed Oct 08 2014 Peter Jones <pjones@redhat.com> - 6.03-1
+- Update to 6.03
+
+* Mon Aug 18 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 6.02-7
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
+
+* Tue Aug  5 2014 Tom Callaway <spot@fedoraproject.org> - 6.02-6
+- fix license handling
+
+* Sun Jun 08 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 6.02-5
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Tue Apr 15 2014 Peter Jones <pjones@redhat.com> - 6.02-4
+- Do our firmware/nonlinux packages as .noarch + ExclusiveArch
+  Related: rhbz#1086446
+
+* Tue Apr 15 2014 Peter Jones <pjones@redhat.com> - 6.02-3
+- -2 was entirely the wrong thing to do.
+
+* Tue Apr 15 2014 Kevin Kofler <Kevin@tigcc.ticalc.org> - 6.02-2
+- Undo packaging changes that break live image composes (#1086446)
+
+* Tue Apr 08 2014 Peter Jones <pjones@redhat.com> - 6.02-1
+- Update this to 6.02
+
+* Mon Aug 05 2013 Peter Jones <pjones@redhat.com> - 4.05-7
+- Fixing %%doc path.
+
+* Sun Aug 04 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 4.05-7
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Wed Jul 17 2013 Petr Pisar <ppisar@redhat.com> - 4.05-6
+- Perl 5.18 rebuild
+
+* Fri Feb 15 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 4.05-5
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
+
 * Mon Aug 06 2012 Peter Jones <pjones@redhat.com> - 4.05-4
 - Fix build problem from kernel-headers' removeal of ext2_fs.h
   (fix backported from as-yet-unreleased upstream version.)
@@ -240,7 +384,7 @@ fi
 - Remove 16bpp patch, hpa says that's there to cover a bug that's fixed.
 - Remove x86_64 patch; building without it works now.
 
-* Tue Feb 21 2008 Peter Jones <pjones@redhat.com> - 3.61-1
+* Thu Feb 21 2008 Peter Jones <pjones@redhat.com> - 3.61-1
 - Update to 3.61 .
 
 * Tue Feb 19 2008 Fedora Release Engineering <rel-eng@fedoraproject.org> - 3.36-9
