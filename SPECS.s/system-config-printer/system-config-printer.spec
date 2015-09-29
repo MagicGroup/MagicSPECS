@@ -1,37 +1,41 @@
+# Turn off the brp-python-bytecompile script
+%global __os_install_post %(echo '%{__os_install_post}' | sed -e 's!/usr/lib[^[:space:]]*/brp-python-bytecompile[[:space:]].*$!!g')
+
+# Enable hardened build, as the udev part runs with privilege.
+%define _hardened_build 1
+
 Summary: A printer administration tool
 Name: system-config-printer
-Version: 1.3.12
-Release: 7%{?dist}
+Version: 1.5.7
+Release: 5%{?dist}
 License: GPLv2+
 URL: http://cyberelk.net/tim/software/system-config-printer/
 Group: System Environment/Base
-Source0: http://cyberelk.net/tim/data/system-config-printer/1.3/%{name}-%{version}.tar.xz
-Patch1: system-config-printer-no-applet-in-gnome.patch
-Patch2: system-config-printer-FirewallD.patch
-Patch3: system-config-printer-systemd.patch
-Patch4: system-config-printer-dnssd-crash.patch
+Source0: http://cyberelk.net/tim/data/system-config-printer/1.5/%{name}-%{version}.tar.xz
+Patch1: system-config-printer-shbang.patch
+Patch2: system-config-printer-device-sorting.patch
 
 BuildRequires: cups-devel >= 1.2
 BuildRequires: desktop-file-utils >= 0.2.92
 BuildRequires: gettext-devel
 BuildRequires: intltool
-BuildRequires: libusb1-devel, glib2-devel
+BuildRequires: libusb1-devel
+BuildRequires: pkgconfig(glib-2.0)
 BuildRequires: xmlto
 BuildRequires: systemd-units, systemd-devel
+BuildRequires: python3-devel
 
-Requires: pygtk2%{?_isa} >= 2.12
-Requires: pygobject2%{?_isa}
+Requires: python3-gobject%{?_isa}
+Requires: gtk3%{?_isa}
 Requires: desktop-file-utils >= 0.2.92
 Requires: dbus-x11
-Requires: dbus-python%{?_isa}
+Requires: python3-dbus%{?_isa}
 Requires: system-config-printer-libs = %{version}-%{release}
-Requires: gnome-icon-theme
 Requires: desktop-notification-daemon
-Requires: notify-python%{?_isa}
-Requires: gnome-python2-gnomekeyring%{?_isa}
-Requires: libxml2-python%{?_isa}
-Requires: python-smbc%{?_isa}
-Requires: python-slip-gtk
+Requires: libnotify%{?_isa}
+Requires: libgnome-keyring%{?_isa}
+Requires: python3-cairo%{?_isa}
+Requires: python3-firewall
 Requires(post): systemd-units
 Requires(preun): systemd-units
 Requires(postun): systemd-units
@@ -43,12 +47,28 @@ the user to configure a CUPS print server.
 %package libs
 Summary: Libraries and shared code for printer administration tool
 Group: System Environment/Base
-Requires: python
-Requires: python-cups >= 1.9.60
+Requires: python3-cups >= 1.9.60
+Requires: python3-pycurl
+Requires: gobject-introspection
+Requires: python3-gobject
+Requires: gtk3
+Requires: python3-dbus
+Requires: python3-requests
+Suggests: python-smbc
+BuildArch: noarch
+Obsoletes: %{name}-libs < 1.3.12-10
 
 %description libs
 The common code used by both the graphical and non-graphical parts of
 the configuration tool.
+
+%package applet
+Summary: Print job notification applet
+Group: System Environment/Base
+Requires: %{name}-libs
+
+%description applet
+Print job notification applet.
 
 %package udev
 Summary: Rules for udev for automatic configuration of USB printers
@@ -64,31 +84,26 @@ printers.
 %prep
 %setup -q
 
-# Don't start the applet in GNOME.
-%patch1 -p1 -b .no-applet-in-gnome
-%if 0%{?rhel}
-sed -i.kde -e 's,NotShowIn=\(.*;\)KDE;,NotShowIn=\1,' print-applet.desktop.in
-%endif
+# Fixed shbang line in udev-add-printer (trac #244).
+%patch1 -p1 -b .shbang
 
-# FirewallD support
-%patch2 -p1 -b .FirewallD
-
-# Fixed systemd config file (bug #862186).
-%patch3 -p1 -b .systemd
-
-# Avoid crash with certain types of dnssd device URI (bug #870000).
-%patch4 -p1 -b .dnssd-crash
+# Fixed device sorting (bug #1210733).
+%patch2 -p1 -b .device-sorting
 
 %build
 %configure --with-udev-rules
+make %{?_smp_mflags}
 
 %install
-make DESTDIR=%buildroot install \
-	udevrulesdir=%{_prefix}/lib/udev/rules.d \
-	udevhelperdir=%{_prefix}/lib/udev
+make DESTDIR=%buildroot install
 
 %{__mkdir_p} %buildroot%{_localstatedir}/run/udev-configure-printer
 touch %buildroot%{_localstatedir}/run/udev-configure-printer/usb-uris
+
+# Manually invoke the python byte compile macro for each path that
+# needs byte compilation
+%py_byte_compile %{__python3} %%{buildroot}%{python3_sitelib}/cupshelpers
+%py_byte_compile %{__python3} %%{buildroot}%{datadir}/system-config-printer
 
 %find_lang system-config-printer
 
@@ -111,15 +126,15 @@ touch %buildroot%{_localstatedir}/run/udev-configure-printer/usb-uris
 %{_datadir}/%{name}/errordialogs.py*
 %{_datadir}/%{name}/firewallsettings.py*
 %{_datadir}/%{name}/gtkinklevel.py*
-%{_datadir}/%{name}/gtk_label_autowrap.py*
-%{_datadir}/%{name}/gtkspinner.py*
 %{_datadir}/%{name}/gui.py*
 %{_datadir}/%{name}/installpackage.py*
 %{_datadir}/%{name}/jobviewer.py*
+%{_datadir}/%{name}/killtimer.py*
 %{_datadir}/%{name}/monitor.py*
 %{_datadir}/%{name}/newprinter.py*
 %{_datadir}/%{name}/options.py*
 %{_datadir}/%{name}/optionwidgets.py*
+%{_datadir}/%{name}/OpenPrintingRequest.py*
 %{_datadir}/%{name}/PhysicalDevice.py*
 %{_datadir}/%{name}/ppdcache.py*
 %{_datadir}/%{name}/ppdippstr.py*
@@ -133,15 +148,14 @@ touch %buildroot%{_localstatedir}/run/udev-configure-printer/usb-uris
 %{_datadir}/%{name}/timedops.py*
 %dir %{_sysconfdir}/cupshelpers
 %config(noreplace) %{_sysconfdir}/cupshelpers/preferreddrivers.xml
-%dir %{python_sitelib}/cupshelpers
-%{python_sitelib}/cupshelpers/__init__.py*
-%{python_sitelib}/cupshelpers/config.py*
-%{python_sitelib}/cupshelpers/cupshelpers.py*
-%{python_sitelib}/cupshelpers/installdriver.py*
-%{python_sitelib}/cupshelpers/openprinting.py*
-%{python_sitelib}/cupshelpers/ppds.py*
-%{python_sitelib}/cupshelpers/xmldriverprefs.py*
-%{python_sitelib}/*.egg-info
+%{python3_sitelib}/cupshelpers
+%{python3_sitelib}/*.egg-info
+
+%files applet
+%{_bindir}/%{name}-applet
+%{_datadir}/%{name}/applet.py*
+%{_sysconfdir}/xdg/autostart/print-applet.desktop
+%{_mandir}/man1/%{name}-applet.1*
 
 %files udev
 %{_prefix}/lib/udev/rules.d/*.rules
@@ -153,7 +167,7 @@ touch %buildroot%{_localstatedir}/run/udev-configure-printer/usb-uris
 %files
 %doc ChangeLog README
 %{_bindir}/%{name}
-%{_bindir}/%{name}-applet
+%{_bindir}/install-printerdriver
 %{_datadir}/%{name}/check-device-ids.py*
 %{_datadir}/%{name}/HIG.py*
 %{_datadir}/%{name}/SearchCriterion.py*
@@ -161,23 +175,265 @@ touch %buildroot%{_localstatedir}/run/udev-configure-printer/usb-uris
 %{_datadir}/%{name}/system-config-printer.py*
 %{_datadir}/%{name}/ToolbarSearchEntry.py*
 %{_datadir}/%{name}/userdefault.py*
-%{_datadir}/%{name}/applet.py*
 %{_datadir}/%{name}/troubleshoot
 %{_datadir}/%{name}/icons
+%{_datadir}/%{name}/install-printerdriver.py*
 %dir %{_datadir}/%{name}/xml
 %{_datadir}/%{name}/xml/*.rng
 %{_datadir}/%{name}/xml/validate.py*
 %dir %{_datadir}/%{name}/ui
 %{_datadir}/%{name}/ui/*.ui
 %{_datadir}/applications/system-config-printer.desktop
-%{_sysconfdir}/xdg/autostart/print-applet.desktop
-%{_mandir}/man1/*
+%{_datadir}/appdata/*.appdata.xml
+%{_mandir}/man1/%{name}.1*
 
 %post
 /bin/rm -f /var/cache/foomatic/foomatic.pickle
 exit 0
 
 %changelog
+* Tue Jul 21 2015 Jiri Popelka <jpopelka@redhat.com> - 1.5.7-5
+- libs subpackage Suggests: python-smbc
+
+* Fri Jun 19 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.5.7-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
+
+* Tue May 26 2015 Tim Waugh <twaugh@redhat.com> - 1.5.7-3
+- Fixed device sorting (bug #1210733).
+
+* Tue May 26 2015 Tim Waugh <twaugh@redhat.com> - 1.5.7-2
+- Fixed shbang line in udev-add-printer (trac #244).
+
+* Wed Apr 29 2015 Tim Waugh <twaugh@redhat.com> - 1.5.7-1
+- 1.5.7:
+  - Increase bus settle time for usb_modeswitch devices (bug #1206808).
+  - Set use_underline=True for previously-stock buttons (bug #1210859).
+  - Fixed traceback (bug #1213136).
+  - Fixes for appdata file.
+
+* Tue Mar 17 2015 Tim Waugh <twaugh@redhat.com> - 1.5.6-1
+- 1.5.6:
+  - Don't show traceback messages for missing probe helpers (bug #1194101).
+  - Don't try writing bytecache when running udev-add-printer
+    (bug #1196183).
+  - Don't try decoding already-decoded Unicode (bug #1195974).
+  - Fixes for CMD matching (bug #1177978, bug #1171874).
+  - Fixed 'Apply' sensitivity when downloading driver (trac #238).
+  - Avoid deprecated things.
+  - Handle missing 'functionality' field in returned data for driver.
+  - Some fixes for the New Printer dialog.
+  - Don't install an OpenPrinting driver if the license is not
+    accepted (trac #240).
+
+* Sat Feb  7 2015 Tim Waugh <twaugh@redhat.com> - 1.5.5-2
+- Requires python3-firewall.
+
+* Fri Feb  6 2015 Tim Waugh <twaugh@redhat.com> - 1.5.5-1
+- 1.5.5:
+  - No longer requires gnome-icon-theme (bug #1163928).
+  - Fixed race condition when fetching devices (bug #1176443).
+  - Fixed typo preventing retrieve/reprint from working.
+  - Driver installation fixes.
+  - Various other fixes.
+
+* Tue Nov  4 2014 Tim Waugh <twaugh@redhat.com> - 1.5.4-1
+- 1.5.4:
+  - Extract hostname from hp:/net/...?hostname= URIs when grouping by
+    physical device (bug #1154686).
+  - Tell user how to retrieve journal entries as root in
+    troubleshooter (bug #1157253).
+  - Codec fix for AuthDialog.get_auth_info (bug #1060453).
+  - Catch IPPError when writing server settings (bug #1159584).
+  - Several other fixes.
+
+* Fri Oct 17 2014 Tim Waugh <twaugh@redhat.com> - 1.5.3-1
+- 1.5.3.
+
+* Fri Oct 10 2014 Tim Waugh <twaugh@redhat.com> - 1.5.2-2
+- Use items() instead of iteritems() with Python 3 dicts (bug #1151457).
+
+* Fri Oct 10 2014 Tim Waugh <twaugh@redhat.com> - 1.5.2-1
+- 1.5.2.
+
+* Thu Sep 11 2014 Tim Waugh <twaugh@redhat.com> - 1.5.1-3
+- Python3 fixes from upstream.
+
+* Sat Sep  6 2014 Tim Waugh <twaugh@redhat.com> - 1.5.1-2
+- Take the gdk lock before entering gtk_main() (bug #1052203 comment #24).
+
+* Tue Sep  2 2014 Tim Waugh <twaugh@redhat.com> - 1.5.1-1
+- 1.5.1, with some Python3 fixes (bug #1136470),
+  udev-configure-printer fixes, and a fix for a D-Bus service
+  hang (bug #1116756).
+
+* Mon Aug 18 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.5.0-8
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
+
+* Fri Aug 15 2014 Tim Waugh <twaugh@redhat.com> 1.5.0-7
+- Enable hardened build, as the udev part runs with privilege.
+
+* Sun Aug  3 2014 Tim Waugh <twaugh@redhat.com> 1.5.0-6
+- Explicitly use /usr/bin/python3 in udev-add-printer (bug #1126149).
+
+* Fri Jul 25 2014 Tim Waugh <twaugh@redhat.com> 1.5.0-5
+- More python3 dependency changes:
+  - pygobject3-base -> python3-gobject
+  - pycairo -> python3-cairo
+
+* Thu Jul 24 2014 Tim Waugh <twaugh@redhat.com> 1.5.0-4
+- The applet is now in its own sub-package.
+
+* Sun Jul 20 2014 Tim Waugh <twaugh@redhat.com> 1.5.0-3
+- Also require python3 bindings for pycurl (bug #1121177).
+
+* Sat Jul 19 2014 Tim Waugh <twaugh@redhat.com> 1.5.0-2
+- Require python3 bindings for cups and dbus (bug #1121177).
+
+* Thu Jul 17 2014 Tim Waugh <twaugh@redhat.com> 1.5.0-1
+- 1.5.0 (now Python3).
+
+* Mon Jul 14 2014 Tim Waugh <twaugh@redhat.com> 1.4.5-3
+- Fix job retrieval (bug #1119222).
+
+* Fri Jul 11 2014 Tim Waugh <twaugh@redhat.com> 1.4.5-2
+- Handle failure when cups-pk-helper not installed (bug #1118836).
+
+* Fri Jul  4 2014 Tim Waugh <twaugh@redhat.com> 1.4.5-1
+- 1.4.5:
+  - Some codec fixes (bug #968142, bug #1023968, bug #1094037).
+  - Traceback fixes (bug #982071, bug #1090479, bug #1105229).
+  - IPv6 address entry fix (bug #1074245).
+  - Auth info saving improvement (bug #1089029).
+  - Use LockButton for fewer auth dialogs (bug #714820).
+
+* Sun Jun 08 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.4.4-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Thu May 22 2014 Jiri Popelka <jpopelka@redhat.com> - 1.4.4-3
+- 1.4.x requires gtk3 instead of gtk2 (#1099611)
+
+* Thu May  1 2014 Tim Waugh <twaugh@redhat.com> 1.4.4-2
+- Prevent the D-Bus service from freezing by disabling openprinting
+  driver downloads in that service (bug #1052203).
+
+* Wed Mar 12 2014 Jaromír Končický <jkoncick@redhat.com> - 1.4.4-1
+- 1.4.4.
+
+* Mon Mar 10 2014 Jiri Popelka <jpopelka@redhat.com> - 1.4.3-9
+- BuildRequires: pkgconfig(glib-2.0) instead of glib2-devel
+
+* Fri Feb 28 2014 Tim Waugh <twaugh@redhat.com> 1.4.3-8
+- Don't override CFLAGS in Makefile.am.
+
+* Fri Dec  6 2013 Tim Waugh <twaugh@redhat.com> 1.4.3-7
+- Include upstream Makefile fixes for udev directories.
+
+* Fri Dec  6 2013 Tim Waugh <twaugh@redhat.com> 1.4.3-6
+- Use _smp_mflags for consistency's sake (patch from upstream needed).
+
+* Thu Dec  5 2013 Tim Waugh <twaugh@redhat.com> 1.4.3-5
+- Actually run make in the %%build section.
+
+* Fri Nov  8 2013 Tim Waugh <twaugh@redhat.com> 1.4.3-4
+- Requires pycairo (bug #1028180).
+- Reverted last change as it did not fix the problem.
+
+* Wed Oct 30 2013 Tim Waugh <twaugh@redhat.com> 1.4.3-3
+- Fixed encoding issue (bug #1023968).
+
+* Fri Oct 25 2013 Tim Waugh <twaugh@redhat.com> 1.4.3-2
+- Fixed typo in D-Bus signature decorator (bug #1023449).
+
+* Tue Oct 22 2013 Tim Waugh <twaugh@redhat.com> 1.4.3-1
+- 1.4.3.
+
+* Tue Aug 20 2013 Tim Waugh <twaugh@redhat.com> 1.4.2-1
+- 1.4.2.
+
+* Sun Aug 04 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.4.1-10
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Thu Jul  4 2013 Tim Waugh <twaugh@redhat.com> 1.4.1-9
+- Fixed source URL.
+
+* Tue Jul  2 2013 Tim Waugh <twaugh@redhat.com> 1.4.1-8
+- Fixed misplaced parenthesis (bug #979119).
+- Fixed another codec issue (bug #978970).
+- Avoid race when renaming printer (bug #975705).
+- Don't check for missing drivers in remote printers (bug #975058)
+- Another fix from the move to gi.repository (bug #973662).
+- Fixed another codec issue (bug #971973).
+
+* Thu Jun 20 2013 Jiri Popelka <jpopelka@redhat.com> - 1.4.1-7
+- Fix Notify.Notification creation (bug #974845).
+- Really apply patch for bug #971404.
+
+* Fri Jun  7 2013 Tim Waugh <twaugh@redhat.com> 1.4.1-6
+- Use the right signal for spotting when editing is done when renaming
+  a printer (bug #971404).
+- More fixes for UTF-8 encoding issues (bug #968142).
+- Fixed new printer dialog traceback (bug #969916).
+
+* Fri Jun  7 2013 Tim Waugh <twaugh@redhat.com> 1.4.1-5
+- More fixes for UTF-8 encoding issues (bug #971548).
+
+* Thu Jun  6 2013 Tim Waugh <twaugh@redhat.com> 1.4.1-4
+- Removed old pointer/keyboard grabbing code as it no longer
+  works (bug #971459).
+- Notify urgencies have new names with gi.repository (bug #970646).
+- More fixes for UTF-8 encoding issues (bug #969846, bug #971417).
+
+* Wed May 22 2013 Tim Waugh <twaugh@redhat.com> 1.4.1-3
+- Fixed typo introduced in previous change (for bug #962207), and
+  fixed another UTF-8 encoding issue (bug #965771).
+
+* Tue May 21 2013 Tim Waugh <twaugh@redhat.com> 1.4.1-2
+- Fixed typo which could cause a traceback (bug #965678).
+- Fixes for UTF-8 encoding issues (bug #957444, bug #961882,
+  bug #962207, bug #964673, bug #965578).
+
+* Thu May  9 2013 Tim Waugh <twaugh@redhat.com> 1.4.1-1
+- 1.4.1:
+  - Don't call into Gtk directly from scp-dbus-service (bug #951710).
+  - Handle errors from Gdk.color_parse() correctly.
+  - Fix creating of empty pixbuf.
+  - Make man page and --help output consistent.
+  - Some codec fixes (bug #957343, bug #957444, bug #960567).
+  - Updated translations (bug #951647).
+  - Use xxx-supported values for number-up and sides options
+    (bug #923841).
+
+* Mon Apr 15 2013 Tim Waugh <twaugh@redhat.com> 1.4.0-4
+- Don't call into Gtk directly from scp-dbus-service (bug #951710).
+- Adjusted dependencies now we use GObject introspection.
+
+* Fri Apr 12 2013 Tim Waugh <twaugh@redhat.com> 1.4.0-3
+- Don't delete mainlist too early when quitting (bug #915483).
+
+* Thu Apr 11 2013 Tim Waugh <twaugh@redhat.com> 1.4.0-2
+- Fixed changelog date.
+- Fixed some printer name encoding issues (bug #950162).
+- Better behaviour when trying to run without valid DISPLAY (bug # #948240).
+
+* Wed Mar 27 2013 Tim Waugh <twaugh@redhat.com> 1.4.0-1
+- 1.4.0.
+
+* Wed Mar 27 2013 Tim Waugh <twaugh@redhat.com> 1.3.13-1
+- 1.3.13.
+
+* Tue Mar 19 2013 Tim Waugh <twaugh@redhat.com> 1.3.12-11
+- The libs sub-package is now noarch (bug #921514).
+
+* Fri Mar 15 2013 Tim Waugh <twaugh@redhat.com> 1.3.12-10
+- Removed python-smbc as a dependency as it is not required in all
+  situations (bug #921132).
+
+* Wed Feb 27 2013 Tim Waugh <twaugh@redhat.com> 1.3.12-9
+- Disable the print applet in KDE again.
+
+* Fri Feb 15 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.3.12-8
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
+
 * Mon Nov 26 2012 Tim Waugh <twaugh@redhat.com> 1.3.12-7
 - Enable the print applet in KDE (only on Red Hat Enterprise Linux).
 
@@ -1974,7 +2230,7 @@ exit 0
 * Fri Jun 23 2006 Tim Waugh <twaugh@redhat.com> 0.7.16-1
 - 0.7.16, now with SMB browser.
 
-* Wed Jun 22 2006 Tim Waugh <twaugh@redhat.com> 0.7.15-1
+* Thu Jun 22 2006 Tim Waugh <twaugh@redhat.com> 0.7.15-1
 - 0.7.15.
 - Build requires gettext-devel.
 - Ship translations.
