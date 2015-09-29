@@ -1,0 +1,10 @@
+diff -urNp strongswan-5.2.2/init/systemd-swanctl/strongswan-swanctl.service.in strongswan-5.2.2-patched/init/systemd-swanctl/strongswan-swanctl.service.in
+--- strongswan-5.2.2/init/systemd-swanctl/strongswan-swanctl.service.in	2014-09-26 09:04:24.000000000 -0400
++++ strongswan-5.2.2-patched/init/systemd-swanctl/strongswan-swanctl.service.in	2015-02-20 09:42:17.822480297 -0500
+@@ -7,3 +7,6 @@ Type=notify
+ ExecStart=@SBINDIR@/charon-systemd
+ ExecStartPost=@SBINDIR@/swanctl --load-all --noprompt
+ ExecReload=@SBINDIR@/swanctl --reload
++
++[Install]
++WantedBy=multi-user.target
