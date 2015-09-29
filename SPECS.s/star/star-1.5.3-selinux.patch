@@ -1,9 +1,9 @@
 diff --git a/autoconf/configure.in b/autoconf/configure.in
-index 1465ce1..3046a62 100644
+index fc9f880..30383e4 100644
 --- a/autoconf/configure.in
 +++ b/autoconf/configure.in
-@@ -817,6 +817,15 @@ AC_CHECK_FUNCS(sched_yield)
- AC_CHECK_FUNCS(nanosleep)
+@@ -906,6 +906,15 @@ LIBS="$LIBS $lib_cap"
+ AC_CHECK_FUNCS(cap_get_proc cap_set_proc cap_set_flag cap_clear_flag)
  LIBS="$ac_save_LIBS"
  
 +AC_CHECK_HEADERS(selinux/selinux.h)
@@ -18,27 +18,28 @@ index 1465ce1..3046a62 100644
  dnl Misc OS checks.
  AC_CHECK_FILES(/dev/tty /dev/null /dev/zero)
  AC_CHECK_FILES(/dev/stdin /dev/stdout /dev/stderr)
-@@ -894,6 +903,7 @@ AC_SUBST(lib_secdb)
+@@ -992,6 +1001,7 @@ AC_SUBST(lib_secdb)
  AC_SUBST(lib_gen)
  AC_SUBST(lib_pthread)
  AC_SUBST(lib_rt)
 +AC_SUBST(lib_selinux)
  AC_SUBST(lib_dl)
  AC_SUBST(lib_dir)
- 
+ AC_SUBST(lib_cap)
 diff --git a/autoconf/rules.cnf.in b/autoconf/rules.cnf.in
-index 6de994c..31b1575 100644
+index affcb5c..2b7bff2 100644
 --- a/autoconf/rules.cnf.in
 +++ b/autoconf/rules.cnf.in
-@@ -30,5 +30,6 @@ LIB_SECDB = @lib_secdb@
+@@ -34,6 +34,7 @@ LIB_SECDB = @lib_secdb@
  LIB_GEN = @lib_gen@
  LIB_PTHREAD = @lib_pthread@
  LIB_RT = @lib_rt@
 +LIB_SELINUX = @lib_selinux@
  LIB_DL= @lib_dl@
  LIB_DIR= @lib_dir@
+ LIB_CAP= @lib_cap@
 diff --git a/star/cpio.mk b/star/cpio.mk
-index ec48a95..8a2c7a0 100644
+index 37a6dd2..8bfc3bd 100644
 --- a/star/cpio.mk
 +++ b/star/cpio.mk
 @@ -19,6 +19,7 @@ CPPOPTS +=	-DUSE_FIND
@@ -52,17 +53,17 @@ index ec48a95..8a2c7a0 100644
 @@ -34,7 +35,7 @@ CFILES=		cpio.c header.c cpiohdr.c xheader.c xattr.c \
  HFILES=		star.h starsubs.h dirtime.h xtab.h xutimes.h \
  		movearch.h table.h props.h fifo.h diff.h \
- 		checkerr.h dumpdate.h bitstring.h
--LIBS=		-ldeflt -lrmt -lfind -lschily $(LIB_ACL) $(LIB_ATTR) $(LIB_SOCKET) $(LIB_INTL)
-+LIBS=		-ldeflt -lrmt -lfind -lschily $(LIB_ACL) $(LIB_ATTR) $(LIB_SOCKET) $(LIB_INTL) $(LIB_SELINUX)
+ 		checkerr.h dumpdate.h bitstring.h pathname.h
+-LIBS=		-ldeflt -lrmt -lfind -lschily $(LIB_ACL) $(LIB_ATTR) $(LIB_SOCKET) $(LIB_INTL) $(LIB_CAP)
++LIBS=		-ldeflt -lrmt -lfind -lschily $(LIB_ACL) $(LIB_ATTR) $(LIB_SOCKET) $(LIB_INTL) $(LIB_CAP) $(LIB_SELINUX)
  XMK_FILE=	scpioman.mk
  
  ###########################################################################
 diff --git a/star/extract.c b/star/extract.c
-index 9a83bf4..3d68c43 100644
+index cf60154..98842e1 100644
 --- a/star/extract.c
 +++ b/star/extract.c
-@@ -253,6 +253,17 @@ extern	struct WALK walkstate;
+@@ -256,6 +256,17 @@ extern	struct WALK walkstate;
  			continue;
  		}
  #endif
@@ -81,7 +82,7 @@ index 9a83bf4..3d68c43 100644
  			if (!void_bad(&finfo))
  				break;
 diff --git a/star/gnutar.mk b/star/gnutar.mk
-index d0da54b..9c5de30 100644
+index 1a296e1..6595aa2 100644
 --- a/star/gnutar.mk
 +++ b/star/gnutar.mk
 @@ -19,6 +19,7 @@ CPPOPTS +=	-DUSE_FIND
@@ -95,14 +96,14 @@ index d0da54b..9c5de30 100644
 @@ -34,7 +35,7 @@ CFILES=		gnutar.c header.c cpiohdr.c xheader.c xattr.c \
  HFILES=		star.h starsubs.h dirtime.h xtab.h xutimes.h \
  		movearch.h table.h props.h fifo.h diff.h \
- 		checkerr.h dumpdate.h bitstring.h
--LIBS=		-ldeflt -lrmt -lfind -lschily $(LIB_ACL) $(LIB_ATTR) $(LIB_SOCKET) $(LIB_INTL)
-+LIBS=		-ldeflt -lrmt -lfind -lschily $(LIB_ACL) $(LIB_ATTR) $(LIB_SOCKET) $(LIB_INTL) $(LIB_SELINUX)
+ 		checkerr.h dumpdate.h bitstring.h pathname.h
+-LIBS=		-ldeflt -lrmt -lfind -lschily $(LIB_ACL) $(LIB_ATTR) $(LIB_SOCKET) $(LIB_INTL) $(LIB_CAP)
++LIBS=		-ldeflt -lrmt -lfind -lschily $(LIB_ACL) $(LIB_ATTR) $(LIB_SOCKET) $(LIB_INTL) $(LIB_CAP) $(LIB_SELINUX)
  XMK_FILE=	gnutarman.mk
  
  ###########################################################################
 diff --git a/star/pax.mk b/star/pax.mk
-index 0254e77..15c8ea0 100644
+index 73c6bc1..d2a52a9 100644
 --- a/star/pax.mk
 +++ b/star/pax.mk
 @@ -19,6 +19,7 @@ CPPOPTS +=	-DUSE_FIND
@@ -116,17 +117,17 @@ index 0254e77..15c8ea0 100644
 @@ -35,7 +36,7 @@ CFILES=		pax.c header.c cpiohdr.c xheader.c xattr.c \
  HFILES=		star.h starsubs.h dirtime.h xtab.h xutimes.h \
  		movearch.h table.h props.h fifo.h diff.h \
- 		checkerr.h dumpdate.h bitstring.h
--LIBS=		-ldeflt -lrmt -lfind -lschily $(LIB_ACL) $(LIB_ATTR) $(LIB_SOCKET) $(LIB_INTL)
-+LIBS=		-ldeflt -lrmt -lfind -lschily $(LIB_ACL) $(LIB_ATTR) $(LIB_SOCKET) $(LIB_INTL) $(LIB_SELINUX)
+ 		checkerr.h dumpdate.h bitstring.h pathname.h
+-LIBS=		-ldeflt -lrmt -lfind -lschily $(LIB_ACL) $(LIB_ATTR) $(LIB_SOCKET) $(LIB_INTL) $(LIB_CAP)
++LIBS=		-ldeflt -lrmt -lfind -lschily $(LIB_ACL) $(LIB_ATTR) $(LIB_SOCKET) $(LIB_INTL) $(LIB_CAP) $(LIB_SELINUX)
  XMK_FILE=	spaxman.mk
  
  ###########################################################################
 diff --git a/star/star.c b/star/star.c
-index 7b58964..fe9d984 100644
+index 9dfcef7..464c751 100644
 --- a/star/star.c
 +++ b/star/star.c
-@@ -46,6 +46,10 @@ static	UConst char sccsid[] =
+@@ -48,6 +48,10 @@ static	UConst char sccsid[] =
  #include "starsubs.h"
  #include "checkerr.h"
  
@@ -137,7 +138,7 @@ index 7b58964..fe9d984 100644
  EXPORT	int	main		__PR((int ac, char **av));
  LOCAL	void	star_create	__PR((int ac, char *const *av));
  LOCAL	void	checkdumptype	__PR((GINFO *gp));
-@@ -399,6 +403,10 @@ main(ac, av)
+@@ -402,6 +406,10 @@ main(ac, av)
  			comerr("Panic cannot set back effective uid.\n");
  	}
  	my_uid = geteuid();
@@ -207,7 +208,7 @@ index a914ade..1e2a233 100644
  
  /*
 diff --git a/star/suntar.mk b/star/suntar.mk
-index 5690c9f..f781f63 100644
+index 9b76a23..1842917 100644
 --- a/star/suntar.mk
 +++ b/star/suntar.mk
 @@ -19,6 +19,7 @@ CPPOPTS +=	-DUSE_FIND
@@ -221,17 +222,17 @@ index 5690c9f..f781f63 100644
 @@ -34,7 +35,7 @@ CFILES=		suntar.c header.c cpiohdr.c xheader.c xattr.c \
  HFILES=		star.h starsubs.h dirtime.h xtab.h xutimes.h \
  		movearch.h table.h props.h fifo.h diff.h \
- 		checkerr.h dumpdate.h bitstring.h
--LIBS=		-ldeflt -lrmt -lfind -lschily $(LIB_ACL) $(LIB_ATTR) $(LIB_SOCKET) $(LIB_INTL)
-+LIBS=		-ldeflt -lrmt -lfind -lschily $(LIB_ACL) $(LIB_ATTR) $(LIB_SOCKET) $(LIB_INTL) $(LIB_SELINUX)
+ 		checkerr.h dumpdate.h bitstring.h pathname.h
+-LIBS=		-ldeflt -lrmt -lfind -lschily $(LIB_ACL) $(LIB_ATTR) $(LIB_SOCKET) $(LIB_INTL) $(LIB_CAP)
++LIBS=		-ldeflt -lrmt -lfind -lschily $(LIB_ACL) $(LIB_ATTR) $(LIB_SOCKET) $(LIB_INTL) $(LIB_CAP) $(LIB_SELINUX)
  XMK_FILE=	suntarman.mk
  
  ###########################################################################
 diff --git a/star/xattr.c b/star/xattr.c
-index 1462950..6493447 100644
+index 2e262ef..08fc42e 100644
 --- a/star/xattr.c
 +++ b/star/xattr.c
-@@ -196,6 +196,27 @@ fail:
+@@ -198,6 +198,27 @@ fail:
  #endif  /* USE_XATTR */
  }
  
@@ -259,7 +260,7 @@ index 1462950..6493447 100644
  /* ARGSUSED */
  EXPORT BOOL
  set_xattr(info)
-@@ -209,6 +230,10 @@ set_xattr(info)
+@@ -211,6 +232,10 @@ set_xattr(info)
  		return (TRUE);
  
  	for (xap = info->f_xattr; xap->name != NULL; xap++) {

@@ -1,0 +1,26 @@
+From 68f6e16d7d2c8a6c91cd430b12a1a0c7b15672b4 Mon Sep 17 00:00:00 2001
+From: Pavel Raiskup <praiskup@redhat.com>
+Date: Wed, 17 Dec 2014 12:57:37 +0100
+Subject: [PATCH] pax: don't segfault with -X option
+
+Pass a valid address of nomount variable into getallargs().
+---
+ star/pax.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/star/pax.c b/star/pax.c
+index 9abe3f8..c627a46 100644
+--- a/star/pax.c
++++ b/star/pax.c
+@@ -166,7 +166,7 @@ gargs(ac, av)
+ 				gethdr, &chdrtype,	/* -x */
+ 				gethdr, &chdrtype,	/* artype= */
+ #endif /* __old__lint */
+-				nomount) < 0) {
++				&nomount) < 0) {
+ 		errmsgno(EX_BAD, "Bad Option: %s.\n", av[0]);
+ 		susage(EX_BAD);
+ 	}
+-- 
+2.1.0
+

@@ -1,84 +1,72 @@
 %if %{?WITH_SELINUX:0}%{!?WITH_SELINUX:1}
-%global WITH_SELINUX 0
+%global WITH_SELINUX 1
 %endif
 
 %global ALTERNATIVES %{_sbindir}/alternatives
 
 Summary:  An archiving tool with ACL support
 Name: star
-Version: 1.5.2
-Release: 9%{?dist}
+Version: 1.5.3
+Release: 5%{?dist}
 License: CDDL
 Group: Applications/Archiving
-URL: http://cdrecord.berlios.de/old/private/star.html
-Source: ftp://ftp.berlios.de/pub/star/%{name}-%{version}.tar.bz2
+URL: http://freecode.com/projects/star
+Source: http://downloads.sourceforge.net/s-tar/%{name}-%{version}.tar.bz2
 
-#use gcc for compilation, change defaults for Linux
-Patch1: star-1.5-newMake.patch
-#add SELinux support to star(#)
-Patch2: star-1.5.2-selinux.patch
-#do not segfault with data-change-warn option (#255261)
-Patch3: star-1.5-changewarnSegv.patch
-#Prevent buffer overflow for filenames with length of 100 characters (#556664)
-Patch4: star-1.5.2-bufferoverflow.patch
-#Fix some invalid manpage references (#624612)
-Patch5: star-1.5.1-manpagereferences.patch
+# add SELinux support to star(#)
+Patch1: star-1.5.3-selinux.patch
+
+# do not segfault with data-change-warn option (#255261)
+Patch2: star-1.5-changewarnSegv.patch
+
+# Prevent buffer overflow for filenames with length of 100 characters (#556664)
+Patch3: star-1.5.2-bufferoverflow.patch
+
+# Fix some invalid manpage references (#624612)
+Patch4: star-1.5.1-manpagereferences.patch
+
 # do not crash when xattrs are not set on all files (#861848)
-Patch6: star-1.5.1-selinux-segfault.patch
+Patch5: star-1.5.1-selinux-segfault.patch
+
 # note that the H=crc format uses Sum32 algorithm, not CRC
-Patch7: star-1.5.1-crc.patch
-
-# fix man-page-day objections
-# ~> proposed upstream:
-#    https://lists.berlios.de/pipermail/star-developers/2013-April/000027.html
-# ~> #948866
-Patch8: star-1.5.2-man-page-day.patch
-
-# Disable profiling on aarch64 as it's not currently supported upstream
-Patch9: star-aarch64.patch
+Patch6: star-1.5.1-crc.patch
 
 # Allow rmt to access all files.
 # ~> downstream
 # ~> #968980
-Patch10: star-1.5.2-rmt-rh-access.patch
+Patch8: star-1.5.2-rmt-rh-access.patch
 
 # Use ssh rather than rsh by default
 # ~> downstream
 # ~> related to #968980
-Patch11: star-1.5.2-use-ssh-by-default.patch
+Patch9: star-1.5.2-use-ssh-by-default.patch
 
-BuildRequires: libattr-devel libacl-devel libtool
+# Fix broken star.mk in 1.5.3 (included from all.mk)
+Patch10: star-1.5.3-star-mk.patch
+
+# Fix segfault for 'pax -X' (rhbz#1175009)
+# ~> downstream
+Patch11: star-1.5.3-pax-X-option.patch
+
+BuildRequires: libattr-devel libacl-devel libtool libselinux-devel
 BuildRequires: e2fsprogs-devel
-
-Requires(post):  %{ALTERNATIVES}
-Requires(preun): %{ALTERNATIVES}
-
-# Historically, star installed /usr/bin/spax binary also so we don't want to
-# break the compatibility.  We don't care about scpio because scpio binary was
-# not installed.
-Requires: spax
 
 %description
 Star saves many files together into a single tape or disk archive,
 and can restore individual files from the archive. Star supports ACL.
 
 %package -n     spax
-# Temporary!  Remove once no problem may occur.  We really need to force update
-# of older star and pax, when any of them is installed.  Its file list
-# collisions with 'spax'.
-Conflicts:      star < 1.5.2-5
-Conflicts:      pax < 3.4-16
 Summary:        Portable archive exchange
 Group:          Applications/Archiving
+Requires(post):  %{ALTERNATIVES}
+Requires(preun): %{ALTERNATIVES}
+
 
 %description -n spax
 The pax utility shall read and write archives, write lists of the members of
 archive files and copy directory hierarchies as is defined in IEEE Std 1003.1.
 
 %package -n     scpio
-# Temporary!  Remove once _no problem_ may occur.  We really need to force
-# update of older star if it installed — its files overlaps with scpio.
-Conflicts:      star < 1.5.2-5
 Summary:        Copy file archives in and out (LEGACY)
 Group:          Applications/Archiving
 
@@ -110,20 +98,20 @@ restoring files from a backup), and tar (an archiving program).
 
 %prep
 %setup -q
-%patch1 -p1 -b .newMake
 %if %{WITH_SELINUX}
-%patch2 -p1 -b .selinux
+%patch1 -p1 -b .selinux
 %endif
-%patch3 -p1 -b .changewarnSegv
-%patch4 -p1 -b .namesoverflow
-%patch5 -p1 -b .references
-#%patch6 -p1 -b .selinux-segfault
-%patch7 -p1 -b .crc
-%patch8 -p1 -b .man-page-day
-%patch9 -p1 -b .aarch64
-%patch10 -p1 -b .rmt-access-rules
-%patch11 -p1 -b .ssh-by-default
+%patch2 -p1 -b .changewarnSegv
+%patch3 -p1 -b .namesoverflow
+%patch4 -p1 -b .references
+%patch5 -p1 -b .selinux-segfault
+%patch6 -p1 -b .crc
+%patch8 -p1 -b .rmt-access-rules
+%patch9 -p1 -b .ssh-by-default
+%patch10 -p1 -b .bug-config-1.5.3
+%patch11 -p1 -b .pax-X
 
+# disable single "fat" binary
 cp -a star/all.mk star/Makefile
 
 star_recode()
@@ -136,9 +124,7 @@ star_recode()
 
 star_recode AN-1.5 AN-1.5.2 star/star.4
 
-cp -a READMEs/README.linux .
-
-for PLAT in %{arm} aarch64 x86_64 ppc64 s390 s390x sh3 sh4 sh4a sparcv9; do
+for PLAT in %{arm} %{power64} aarch64 x86_64 s390 s390x sh3 sh4 sh4a sparcv9; do
     for AFILE in gcc cc; do
             [ ! -e RULES/${PLAT}-linux-${AFILE}.rul ] \
             && ln -s i586-linux-${AFILE}.rul RULES/${PLAT}-linux-${AFILE}.rul
@@ -146,31 +132,32 @@ for PLAT in %{arm} aarch64 x86_64 ppc64 s390 s390x sh3 sh4 sh4a sparcv9; do
 done
 
 %build
-export MAKEPROG=gmake
-# Autoconfiscate
-(cd autoconf; AC_MACRODIR=. AWK=gawk ./autoconf)
+# This is config/work-around for atypical build system.  Variables used are
+# docummented makefiles.5.  GMAKE_NOWARN silences irritating warnings in
+# GNU/Linux ecosystem.
+%global make_flags GMAKE_NOWARN=true                                    \\\
+    RUNPATH=                                                            \\\
+    LDPATH=                                                             \\\
+    PARCH=%{_target_cpu}                                                \\\
+    K_ARCH=%{_target_cpu}                                               \\\
+    INS_BASE=$RPM_BUILD_ROOT%{_prefix}                                  \\\
+    INS_RBASE=$RPM_BUILD_ROOT                                           \\\
+    INSTALL='sh $(SRCROOT)/conf/install-sh -c -m $(INSMODEINS)'         \\\
+    COPTX="$RPM_OPT_FLAGS -DTRY_EXT2_FS"                                \\\
+    DEFCCOM=gcc
 
-#make %%{?_smp_mflags} PARCH=%%{_target_cpu} CPPOPTX="-DNO_FSYNC" \
-# ~~> enable debug by COPTX='-g3 -O0' LDOPTX='-g3 -O0'
-make %{?_smp_mflags} PARCH=%{_target_cpu} \
-COPTX="$RPM_OPT_FLAGS -DTRY_EXT2_FS" CC="%{__cc}" \
-K_ARCH=%{_target_cpu} \
-CONFFLAGS="%{_target_platform} --prefix=%{_prefix} \
-    --exec-prefix=%{_exec_prefix} --bindir=%{_bindir} \
-    --sbindir=%{_sbindir} --sysconfdir=%{_sysconfdir} \
-    --datadir=%{_datadir} --includedir=%{_includedir} \
-    --libdir=%{_libdir} --libexec=%{_libexecdir} \
-    --localstatedir=%{_localstatedir} --sharedstatedir=%{_sharedstatedir} \
-    --mandir=%{_mandir} --infodir=%{_infodir}" < /dev/null
+# Note: disable optimalisation by COPTX='-g3 -O0' LDOPTX='-g3 -O0'
+make %{?_smp_mflags} %make_flags
 
 %install
-export MAKEPROG=gmake
-mkdir -p ${RPM_BUILD_ROOT}%{_mandir}/man4
-
-make install RPM_INSTALLDIR=${RPM_BUILD_ROOT} PARCH=%{_target_cpu} K_ARCH=%{_target_cpu} < /dev/null
+make install -s %make_flags
 
 ln -s star.1.gz ${RPM_BUILD_ROOT}%{_mandir}/man1/ustar.1
+mkdir -p ${RPM_BUILD_ROOT}%{_sysconfdir}
+mkdir -p ${RPM_BUILD_ROOT}%{_pkgdocdir}
 ln -s %{_sbindir}/rmt ${RPM_BUILD_ROOT}%{_sysconfdir}/rmt
+install -p -m 644 COPYING star/README  CDDL.Schily.txt AN-* \
+    ${RPM_BUILD_ROOT}%{_pkgdocdir}
 
 # XXX Nuke unpackaged files.
 ( cd ${RPM_BUILD_ROOT}
@@ -182,18 +169,24 @@ ln -s %{_sbindir}/rmt ${RPM_BUILD_ROOT}%{_sysconfdir}/rmt
   rm -f .%{_bindir}/star_fat
   rm -f .%{_bindir}/star_sym
   rm -f .%{_bindir}/suntar
-  rm -rf .%{_docdir}/rmt
+  rm -f .%{_sysconfdir}/default/star
   rm -rf .%{_prefix}%{_sysconfdir}
   rm -rf .%{_prefix}/include
   rm -rf .%{_prefix}/lib # hard-wired intently
   rm -rf .%{_mandir}/man3
   rm -rf .%{_mandir}/man5/{makefiles,makerules}.5*
   rm -rf .%{_mandir}/man1/{tartest,gnutar,smt,mt,suntar,match}.1*
+  rm -rf .%{_docdir}/star/testscripts
+  rm -rf .%{_docdir}/star/TODO
+  rm -rf .%{_docdir}/rmt
 )
 
 %clean
 
-%global general_docs README AN* COPYING CDDL.Schily.txt TODO README.linux
+%global general_docs \
+%dir %{_pkgdocdir} \
+%doc %{_pkgdocdir}/COPYING \
+%doc %{_pkgdocdir}/CDDL.Schily.txt \
 
 %post -n spax
 %{ALTERNATIVES} \
@@ -207,7 +200,7 @@ if [ $1 -eq 0 ]; then
 fi
 
 %files
-%doc %{general_docs}
+%doc %{_pkgdocdir}
 %{_bindir}/star
 %{_bindir}/ustar
 %{_mandir}/man1/star.1*
@@ -215,19 +208,19 @@ fi
 %{_mandir}/man5/star.5*
 
 %files -n scpio
-%doc %{general_docs}
+%general_docs
 %doc %{_mandir}/man1/scpio.1*
 %{_bindir}/scpio
 
 %files -n spax
-%doc %{general_docs}
+%general_docs
 %doc %{_mandir}/man1/spax.1*
 %{_bindir}/spax
 %ghost %verify(not md5 size mode mtime) %{ALT_LINK}
 %ghost %verify(not md5 size mode mtime) %{ALT_SL1_LINK}
 
 %files -n rmt
-%doc %{general_docs}
+%general_docs
 %{_sbindir}/rmt
 %{_mandir}/man1/rmt.1*
 %config %{_sysconfdir}/default/rmt
@@ -239,6 +232,27 @@ fi
 %{_sysconfdir}/rmt
 
 %changelog
+* Fri Jun 19 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.5.3-5
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
+
+* Wed Dec 17 2014 Pavel Raiskup <praiskup@redhat.com> - 1.5.3-4
+- fix segfault for pax -X (#1175009)
+
+* Tue Sep 16 2014 Peter Robinson <pbrobinson@fedoraproject.org> 1.5.3-3
+- Re-enable profiling on aarch64
+
+* Mon Aug 18 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.5.3-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
+
+* Fri Jun 27 2014 Pavel Raiskup <praiskup@redhat.com> - 1.5.3-1
+- rebase to 1.5.3
+
+* Sun Jun 08 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.5.2-11
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Fri Jan 17 2014 Pavel Raiskup <praiskup@redhat.com> - 1.5.2-10
+- enable build for ppc64le (#1054401)
+
 * Mon Jan 13 2014 Peter Robinson <pbrobinson@fedoraproject.org> 1.5.2-9
 - Temporarily disable profiling on aarch64
 
