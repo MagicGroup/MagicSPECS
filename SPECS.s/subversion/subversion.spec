@@ -19,8 +19,8 @@
 
 Summary: A Modern Concurrent Version Control System
 Name: subversion
-Version: 1.8.9
-Release: 8%{?dist}
+Version: 1.9.2
+Release: 1%{?dist}
 License: ASL 2.0
 Group: Development/Tools
 URL: http://subversion.apache.org/
@@ -32,23 +32,26 @@ Source5: psvn-init.el
 Source6: svnserve.service
 Source7: svnserve.tmpfiles
 Source8: svnserve.sysconf
-Patch1: subversion-1.8.0-rpath.patch
-Patch2: subversion-1.8.0-pie.patch
-Patch3: subversion-1.8.0-kwallet.patch
+Patch1: subversion-1.9.0-rpath.patch
+Patch2: subversion-1.9.0-pie.patch
+Patch3: subversion-1.9.0-kwallet.patch
 Patch4: subversion-1.8.0-rubybind.patch
-Patch5: subversion-1.8.0-aarch64.patch
 Patch8: subversion-1.8.5-swigplWall.patch
+Patch10: subversion-1.8.13-swigpython.patch
+Patch11: subversion-1.8.11-ruby22-fixes.rb
 BuildRequires: autoconf, libtool, python, python-devel, texinfo, which
 BuildRequires: libdb-devel >= 4.1.25, swig >= 1.3.24, gettext
 BuildRequires: apr-devel >= 1.3.0, apr-util-devel >= 1.3.0
-BuildRequires: libserf-devel >= 1.2.1, cyrus-sasl-devel
+BuildRequires: libserf-devel >= 1.3.0, cyrus-sasl-devel
 BuildRequires: sqlite-devel >= 3.4.0, file-devel, systemd-units
 # Any apr-util crypto backend needed
 BuildRequires: apr-util-openssl
-BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+# For systemctl scriptlets
+Requires(post): systemd
+Requires(preun): systemd
+Requires(postun): systemd
 Provides: svn = %{version}-%{release}
 Requires: subversion-libs%{?_isa} = %{version}-%{release}
-Requires(post): systemd-sysv, /sbin/chkconfig
 
 %define __perl_requires %{SOURCE3}
 
@@ -68,6 +71,8 @@ Group: Development/Tools
 Summary: Libraries for Subversion Version Control system
 # APR 1.3.x interfaces are required
 Conflicts: apr%{?_isa} < 1.3.0
+# Enforced at run-time by ra_serf
+Conflicts: libserf%{?_isa} < 1.3.0
 
 %description libs
 The subversion-libs package includes the essential shared libraries
@@ -106,7 +111,7 @@ passwords in the GNOME Keyring.
 Group: Development/Tools
 Summary: KDE Wallet support for Subversion
 Requires: subversion%{?_isa} = %{version}-%{release}
-BuildRequires: kdelibs4-devel >= 4.0.0
+BuildRequires: kdelibs-devel >= 4.0.0
 
 %description kde
 The subversion-kde package adds support for storing Subversion
@@ -154,8 +159,7 @@ This package includes the JNI bindings to the Subversion libraries.
 Group: Development/Libraries
 Summary: Ruby bindings to the Subversion libraries
 BuildRequires: ruby-devel >= 1.9.1, ruby >= 1.9.1
-# Test suite is broken with minitest 5
-BuildRequires: rubygem(minitest) < 5
+BuildRequires: rubygem(test-unit)
 Requires: subversion%{?_isa} = %{version}-%{release}
 Conflicts: ruby-libs%{?_isa} < 1.8.2
 
@@ -176,8 +180,9 @@ This package includes supplementary tools for use with Subversion.
 %patch2 -p1 -b .pie
 %patch3 -p1 -b .kwallet
 %patch4 -p1 -b .rubybind
-%patch5 -p1 -b .aarch64
 %patch8 -p1 -b .swigplWall
+%patch10 -p1 -b .swigpython
+%patch11 -p0 -b .ruby22-fixes
 
 %build
 # Regenerate the buildsystem, so that:
@@ -186,6 +191,7 @@ This package includes supplementary tools for use with Subversion.
 # (2) is not ideal since typically upstream test with a different
 # swig version
 # This PATH order makes the fugly test for libtoolize work...
+mv build-outputs.mk build-outputs.mk.old
 PATH=/usr/bin:$PATH ./autogen.sh --release
 
 # fix shebang lines, #111498
@@ -196,15 +202,12 @@ export svn_cv_ruby_link="%{__cc} -shared"
 export svn_cv_ruby_sitedir_libsuffix=""
 export svn_cv_ruby_sitedir_archsuffix=""
 
-%ifarch sparc64
-sed -i 's/-fpie/-fPIE/' Makefile.in
-%endif
-
-export CFLAGS="$RPM_OPT_FLAGS -DSVN_SQLITE_MIN_VERSION_NUMBER=3007012 \
+export EXTRA_CFLAGS="$RPM_OPT_FLAGS -DSVN_SQLITE_MIN_VERSION_NUMBER=3007012 \
        -DSVN_SQLITE_MIN_VERSION=\\\"3.7.12\\\""
 export APACHE_LDFLAGS="-Wl,-z,relro,-z,now"
 export CC=gcc CXX=g++ JAVA_HOME=%{jdk_path}
 %configure --with-apr=%{_prefix} --with-apr-util=%{_prefix} \
+        --disable-debug \
         --with-swig --with-serf=%{_prefix} \
         --with-ruby-sitedir=%{ruby_vendorarchdir} \
         --with-ruby-test-verbose=verbose \
@@ -231,7 +234,6 @@ make javahl
 %endif
 
 %install
-rm -rf ${RPM_BUILD_ROOT}
 make install install-swig-py install-swig-pl-lib install-swig-rb \
         DESTDIR=$RPM_BUILD_ROOT %{swigdirs}
 %if %{with_java}
@@ -323,12 +325,20 @@ install -p -m 644 $RPM_SOURCE_DIR/svnserve.tmpfiles \
 install -p -m 644 $RPM_SOURCE_DIR/svnserve.sysconf \
         %{buildroot}%{_sysconfdir}/sysconfig/svnserve
 
-# Install tools ex diff*
+# Install tools ex diff*, x509-parser
 make install-tools DESTDIR=$RPM_BUILD_ROOT toolsdir=%{_bindir}
-rm -f $RPM_BUILD_ROOT%{_bindir}/diff*
+rm -f $RPM_BUILD_ROOT%{_bindir}/diff* $RPM_BUILD_ROOT%{_bindir}/x509-parser
 
-for f in svn-populate-node-origins-index svn-rep-sharing-stats svnauthz-validate svnmucc svnraisetreeconflict; do
+# Make svnauthz-validate a symlink
+rm $RPM_BUILD_ROOT%{_bindir}/svnauthz-validate
+ln -s svnauthz $RPM_BUILD_ROOT%{_bindir}/svnauthz-validate
+
+for f in svn-populate-node-origins-index fsfs-access-map \
+    svnauthz svnauthz-validate svnmucc svnraisetreeconflict svnbench; do
     echo %{_bindir}/$f
+    if test -f %{_mandir}/man?/${f}.*; then
+       echo %{_mandir}/man?/${f}.*
+    fi
 done | tee tools.files | sed 's/^/%%exclude /' > exclude.tools.files
 
 %find_lang %{name}
@@ -352,9 +362,6 @@ make check-javahl
 %endif
 %endif
 
-%clean
-rm -rf ${RPM_BUILD_ROOT}
-
 %post
 %systemd_post svnserve.service
 
@@ -363,11 +370,6 @@ rm -rf ${RPM_BUILD_ROOT}
 
 %postun
 %systemd_postun_with_restart svnserve.service
-
-%triggerun -- subversion < 1.7.3-2
-/usr/bin/systemd-sysv-convert --save svnserve >/dev/null 2>&1 ||:
-/sbin/chkconfig --del svnserve >/dev/null 2>&1 || :
-/bin/systemctl try-restart svnserve.service >/dev/null 2>&1 || :
 
 %post libs -p /sbin/ldconfig
 
@@ -388,15 +390,16 @@ rm -rf ${RPM_BUILD_ROOT}
 %endif
 
 %files -f %{name}.files
-%defattr(-,root,root)
-%doc BUGS COMMITTERS LICENSE NOTICE INSTALL README CHANGES
+%{!?_licensedir:%global license %%doc}
+%license LICENSE NOTICE
+%doc BUGS COMMITTERS INSTALL README CHANGES
 %doc tools/hook-scripts tools/backup tools/bdb tools/examples tools/xslt
 %doc mod_authz_svn-INSTALL
 %{_bindir}/*
 %{_mandir}/man*/*
 %{_datadir}/emacs/site-lisp/*.el
 %{_datadir}/xemacs/site-packages/lisp/*.el
-%{_datadir}/bash-completion/completions/*
+%{_datadir}/bash-completion/
 %config(noreplace) %{_sysconfdir}/sysconfig/svnserve
 %dir %{_sysconfdir}/subversion
 %exclude %{_mandir}/man*/*::*
@@ -405,11 +408,10 @@ rm -rf ${RPM_BUILD_ROOT}
 %{_prefix}/lib/tmpfiles.d/svnserve.conf
 
 %files tools -f tools.files
-%defattr(-,root,root)
 
 %files libs
-%defattr(-,root,root)
-%doc LICENSE NOTICE
+%{!?_licensedir:%global license %%doc}
+%license LICENSE NOTICE
 %{_libdir}/libsvn_*.so.*
 %exclude %{_libdir}/libsvn_swig_perl*
 %exclude %{_libdir}/libsvn_swig_ruby*
@@ -419,32 +421,28 @@ rm -rf ${RPM_BUILD_ROOT}
 %exclude %{_libdir}/libsvn_auth_gnome*
 
 %files python
-%defattr(-,root,root)
 %{python_sitearch}/svn
 %{python_sitearch}/libsvn
 
 %files gnome
-%defattr(-,root,root)
 %{_libdir}/libsvn_auth_gnome_keyring-*.so.*
 
 %if %{with_kwallet}
 %files kde
-%defattr(-,root,root)
 %{_libdir}/libsvn_auth_kwallet-*.so.*
 %endif
 
 %files devel
-%defattr(-,root,root)
 %{_includedir}/subversion-1
 %{_libdir}/libsvn*.*a
 %{_libdir}/libsvn*.so
+%{_datadir}/pkgconfig/*.pc
 %exclude %{_libdir}/libsvn_swig_perl*
 %if %{with_java}
 %exclude %{_libdir}/libsvnjavahl-1.*
 %endif
 
 %files -n mod_dav_svn
-%defattr(-,root,root)
 %config(noreplace) %{_httpd_modconfdir}/*.conf
 %{_libdir}/httpd/modules/mod_*.so
 %if "%{_httpd_modconfdir}" != "%{_httpd_confdir}"
@@ -452,42 +450,83 @@ rm -rf ${RPM_BUILD_ROOT}
 %endif
 
 %files perl
-%defattr(-,root,root,-)
 %{perl_vendorarch}/auto/SVN
 %{perl_vendorarch}/SVN
 %{_libdir}/libsvn_swig_perl*
 %{_mandir}/man*/*::*
 
 %files ruby
-%defattr(-,root,root,-)
 %{_libdir}/libsvn_swig_ruby*
 %{ruby_vendorarchdir}/svn
 
 %if %{with_java}
 %files javahl
-%defattr(-,root,root,-)
 %{_libdir}/libsvnjavahl-1.*
 %{_javadir}/svn-javahl.jar
 %endif
 
 %changelog
-* Tue Sep 22 2015 Liu Di <liudidi@gmail.com> - 1.8.9-8
-- 为 Magic 3.0 重建
+* Thu Sep 24 2015 Joe Orton <jorton@redhat.com> - 1.9.2-1
+- update to 1.9.2 (#1265447)
 
-* Thu Sep 17 2015 Liu Di <liudidi@gmail.com> - 1.8.9-7
-- 为 Magic 3.0 重建
+* Mon Sep 14 2015 Joe Orton <jorton@redhat.com> - 1.9.1-1
+- update to 1.9.1 (#1259099)
 
-* Mon Jun 30 2014 Liu Di <liudidi@gmail.com> - 1.8.9-6
-- 为 Magic 3.0 重建
+* Mon Aug 24 2015 Joe Orton <jorton@redhat.com> - 1.9.0-1
+- update to 1.9.0 (#1207835)
+- package pkgconfig files
 
-* Tue Jun 17 2014 Liu Di <liudidi@gmail.com> - 1.8.9-5
-- 为 Magic 3.0 重建
+* Tue Jul 14 2015 Joe Orton <jorton@redhat.com> - 1.8.13-7
+- move svnauthz to -tools; make svnauthz-validate a symlink
+- move svnmucc man page to -tools
+- restore dep on systemd (#1183873)
 
-* Tue Jun 17 2014 Liu Di <liudidi@gmail.com> - 1.8.9-4
-- 为 Magic 3.0 重建
+* Fri Jul 10 2015 Joe Orton <jorton@redhat.com> - 1.8.13-6
+- rebuild with tests enabled
 
-* Tue Jun 17 2014 Liu Di <liudidi@gmail.com> - 1.8.9-3
-- 为 Magic 3.0 重建
+* Fri Jun 19 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.8.13-5
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
+
+* Mon Jun 15 2015 Ville Skyttä <ville.skytta@iki.fi> - 1.8.13-4
+- Own bash-completion dirs not owned by anything in dep chain
+
+* Sat Jun 06 2015 Jitka Plesnikova <jplesnik@redhat.com> - 1.8.13-3
+- Perl 5.22 rebuild
+
+* Tue Apr 21 2015 Peter Robinson <pbrobinson@fedoraproject.org> 1.8.13-2
+- Disable tests to fix swig test issues
+
+* Wed Apr 08 2015 <vondruch@redhat.com> - 1.8.13-1
+- Fix Ruby's test suite.
+
+* Tue Apr  7 2015 Joe Orton <jorton@redhat.com> - 1.8.13-1
+- update to 1.8.13 (#1207835)
+- attempt to patch around SWIG issues
+
+* Tue Dec 16 2014 Joe Orton <jorton@redhat.com> - 1.8.11-1
+- update to 1.8.11 (#1174521)
+- require newer libserf (#1155670)
+
+* Tue Sep 23 2014 Joe Orton <jorton@redhat.com> - 1.8.10-6
+- prevents assert()ions in library code (#1058693)
+
+* Tue Sep 23 2014 Joe Orton <jorton@redhat.com> - 1.8.10-5
+- drop sysv conversion trigger (#1133786)
+
+* Tue Sep 23 2014 Joe Orton <jorton@redhat.com> - 1.8.10-4
+- move svn-bench, fsfs-* to -tools
+
+* Tue Aug 26 2014 Jitka Plesnikova <jplesnik@redhat.com> - 1.8.10-3
+- Perl 5.20 rebuild
+
+* Thu Aug 21 2014 Kevin Fenzi <kevin@scrye.com> - 1.8.10-2
+- Rebuild for rpm bug 1131960
+
+* Mon Aug 18 2014 Joe Orton <jorton@redhat.com> - 1.8.10-1
+- update to 1.8.10 (#1129100, #1128884, #1125800)
+
+* Mon Aug 18 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.8.9-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
 
 * Sun Jun 08 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.8.9-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
