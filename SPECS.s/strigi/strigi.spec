@@ -1,39 +1,42 @@
 
-%define snap 20120626
+## include clucene support (not used since fedora 15)
+#global clucene 1
 
 Name:		strigi
-Version:	0.7.7
-Release:	9.20120626%{?dist}
-Summary:	A desktop search program
-Group:		Applications/Productivity
+Summary:        A desktop search program
+Version:	0.7.8
+Release:	11%{?dist}
+
 License:	LGPLv2+
-#URL:           http://strigi.sf.net/
+#URL:            https://projects.kde.org/projects/kdesupport/strigi
 URL:            http://www.vandenoever.info/software/strigi/
-#Source0:	http://www.vandenoever.info/software/strigi/strigi-%{version}%{?pre:-%{pre}}.tar.bz2
-Source0:	http://rdieter.fedorapeople.org/strigi/strigi-%{version}%{?pre:-%{pre}}.tar.xz
+Source0:	http://www.vandenoever.info/software/strigi/strigi-%{version}%{?pre:-%{pre}}.tar.bz2
+#Source0:	http://rdieter.fedorapeople.org/strigi/strigi-%{version}%{?pre:-%{pre}}.tar.xz
 Source1:	strigiclient.desktop
 Source2:	strigi-daemon.desktop
-BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 ## upstream patches
-# strigidaemon
-Patch101: 0001-Minor.-Fix-grammar-typo-in-cmake-output.patch
-Patch102: 0002-gcc47-fix-unistd.h-header-required-unconditionally-f.patch
-Patch103: 0003-Fix-return-value-wrong-type.patch
-# libstreamanalizer
-Patch201: 0001-Fix-xpm-and-xbm-index.patch
-Patch202: 0002-Extract-tracknumber-and-track-count-from-a-value-lik.patch
-Patch203: 0003-Fixed-indexing-of-m3u-files.patch
-Patch204: 0004-Fix-FLAC-Files-Remove-addtional-db-in-replaygain.patch
-Patch205: 0005-Fix-flac-analizer-was-importing-only-one-artist-tag.patch
-Patch206: 0006-Fix-non-numeric-genres-in-id3-v2-mp3-are-ignored.patch
-Patch207: 0007-Opps-Rmoving-a-wrong-commited-file-id3endanalyzer.cp.patch
-Patch208: 0008-fix-parsing-of-genre-field-in-id3v2-tags-and-clean-c.patch
+Patch11: libstreamanalyzer-0001-Fix-for-non-valid-values-in-Exif-field-ISOSpeedRatin.patch
+Patch12: libstreamanalyzer-0002-order-matters-for-systems-that-have-things-already-i.patch
+Patch13: libstreamanalyzer-0003-Fix-Krazy-issues.patch
+Patch14: libstreamanalyzer-0004-ffmpeg-Rename-mutex-to-g_mutex.patch
+Patch15: libstreamanalyzer-0005-use-rpath-only-when-needed.patch
+Patch21: libstreams-0001-Generate-config.h-after-looking-for-dependencies.patch
+Patch22: libstreams-0002-Reduce-noise-in-analysis-tools-complain-about-resour.patch
+Patch23: libstreams-0003-Build-fix-for-gcc-4.8.patch
+Patch24: libstreams-0004-Fix-Krazy-issues.patch
+Patch25: libstreams-0005-use-rpath-only-when-needed.patch
+Patch31: strigiclient-0001-use-rpath-only-when-needed.patch
+Patch41: strigidaemon-0001-Fix-Krazy-issues.patch
+Patch42: strigidaemon-0002-use-rpath-only-when-needed.patch
+Patch51: strigiutils-0001-use-rpath-only-when-needed.patch
 
 BuildRequires:  bison
-BuildRequires:  boost-devel
 BuildRequires:  bzip2-devel
 BuildRequires:	cmake >= 2.4.5
+%if 0%{?clucene:1}
+BuildRequires:	clucene-core-devel
+%endif
 BuildRequires:  desktop-file-utils
 BuildRequires:  expat-devel
 BuildRequires:  pkgconfig(cppunit)
@@ -61,14 +64,12 @@ daemon can.
 
 %package	devel
 Summary:	Development files for the strigi desktop search engine
-Group:		Development/Libraries
 Requires:	%{name}-libs%{?_isa} = %{version}-%{release}
 %description	devel
 Development files for the strigi desktop search engine
 
 %package	libs
 Summary:	Strigi libraries
-Group:		Development/Libraries
 %description	libs
 Strigi search engine libraries
 
@@ -76,20 +77,29 @@ Strigi search engine libraries
 %prep
 %setup -q -n %{name}-%{version}%{?pre:-%{pre}}
 
-pushd strigidaemon
-%patch101 -p1
-%patch102 -p1
-%patch103 -p1
-popd
 pushd libstreamanalyzer
-%patch201 -p1
-%patch202 -p1
-%patch203 -p1
-%patch204 -p1
-%patch205 -p1
-%patch206 -p1
-%patch207 -p1
-%patch208 -p1
+%patch11 -p1 -b .11
+%patch12 -p1 -b .12
+%patch13 -p1 -b .13
+%patch14 -p1 -b .14
+%patch15 -p1 -b .15
+popd
+pushd libstreams
+%patch21 -p1 -b .21
+%patch22 -p1 -b .22
+%patch23 -p1 -b .23
+%patch24 -p1 -b .24
+%patch25 -p1 -b .25
+popd
+pushd strigiclient
+%patch31 -p1 -b .31
+popd
+pushd strigidaemon
+%patch41 -p1 -b .41
+%patch42 -p1 -b .42
+popd
+pushd strigiutils
+%patch51 -p1 -b .51
 popd
 
 
@@ -97,12 +107,13 @@ popd
 mkdir -p %{_target_platform}
 pushd %{_target_platform}
 %{cmake} \
+%if ! 0%{?clucene:1}
   -DENABLE_CLUCENE:BOOL=OFF \
   -DENABLE_CLUCENE_NG:BOOL=OFF \
+%endif
   -DENABLE_DBUS:BOOL=ON \
   -DENABLE_FAM:BOOL=ON \
   -DENABLE_FFMPEG:BOOL=OFF \
-  %{?_cmake_skip_rpath} \
   ..
 popd
 
@@ -110,28 +121,27 @@ make %{?_smp_mflags} -C %{_target_platform}
 
 
 %install
-rm -rf %{buildroot}
 make install/fast -C %{_target_platform}  DESTDIR=%{buildroot}
 
 desktop-file-install \
+  --vendor="%{?dt_vendor}" \
   --dir=%{buildroot}%{_datadir}/applications \
   %{SOURCE1}
 
 # Add an autostart desktop file for the strigi daemon
 install -p -m644 -D %{SOURCE2} %{buildroot}%{_sysconfdir}/xdg/autostart/strigi-daemon.desktop
-magic_rpm_clean.sh
 
-%clean
-rm -rf %{buildroot}
+
+%check
+export CTEST_OUTPUT_ON_FAILURE=1
+# make non-fatal, some failures on big-endian archs
+make test -C %{_target_platform} ||:
 
 
 %post libs -p /sbin/ldconfig
-
 %postun libs -p /sbin/ldconfig
 
-
 %files
-%defattr(-,root,root,-)
 %doc AUTHORS COPYING ChangeLog
 %{_bindir}/*
 %{_datadir}/applications/*strigiclient.desktop
@@ -142,18 +152,17 @@ rm -rf %{buildroot}
 %endif
 
 %files devel
-%defattr(-,root,root,-)
 %{_libdir}/lib*.so
 %{_libdir}/pkgconfig/libstreamanalyzer.pc
 %{_libdir}/pkgconfig/libstreams.pc
-%{_libdir}/strigi/StrigiConfig.cmake
-%{_libdir}/libsearchclient/
-%{_libdir}/libstreamanalyzer/
-%{_libdir}/libstreams/
+%dir %{_libdir}/cmake/
+%{_libdir}/cmake/Strigi/
+%{_libdir}/cmake/LibSearchClient/
+%{_libdir}/cmake/LibStreamAnalyzer/
+%{_libdir}/cmake/LibStreams/
 %{_includedir}/strigi/
 
 %files libs
-%defattr(-,root,root,-)
 %{_datadir}/strigi/
 %{_libdir}/libsearchclient.so.0*
 %{_libdir}/libstreamanalyzer.so.0*
@@ -167,11 +176,47 @@ rm -rf %{buildroot}
 
 
 %changelog
-* Sun May 04 2014 Liu Di <liudidi@gmail.com> - 0.7.7-9.20120626
-- 为 Magic 3.0 重建
+* Wed Jun 24 2015 Rex Dieter <rdieter@fedoraproject.org> - 0.7.8-11
+- rebuild (exiv2)
 
-* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 0.7.7-8.20120626
-- 为 Magic 3.0 重建
+* Fri Jun 19 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.7.8-10
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
+
+* Fri Apr 17 2015 Rex Dieter <rdieter@fedoraproject.org> 0.7.8-9
+- rebuild (gcc5)
+
+* Wed Feb 18 2015 Rex Dieter <rdieter@fedoraproject.org> 0.7.8-8
+- rebuild (gcc5)
+
+* Mon Aug 18 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.7.8-7
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
+
+* Sun Jun 08 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.7.8-6
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Tue Mar 04 2014 Rex Dieter <rdieter@fedoraproject.org> 0.7.8-5
+- tests failing on big endians (#1071527)
+
+* Wed Jan 01 2014 Rex Dieter <rdieter@fedoraproject.org> - 0.7.8-4
+- cleanup, drop deprecated bits
+- -devel: drop dep on cmake
+- pull in some upstream patches (particular rpath fixes)
+- %%check: +make test
+
+* Tue Dec 03 2013 Rex Dieter <rdieter@fedoraproject.org> 0.7.8-3
+- rebuild (exiv2)
+
+* Sun Aug 04 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.7.8-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Sat Jul 06 2013 Kevin Kofler <Kevin@tigcc.ticalc.org> - 0.7.8-1
+- update to 0.7.8 (#981869)
+- drop backported patches (already included in 0.7.8)
+- no longer BuildRequires boost-devel
+- -devel: Requires: cmake for directory ownership
+
+* Fri Feb 15 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.7.7-8.20120626
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
 
 * Mon Jul 30 2012 Rex Dieter <rdieter@fedoraproject.org> 0.7.7-7.20120626
 - rebuild (boost)
@@ -259,7 +304,7 @@ rm -rf %{buildroot}
 * Mon Jan 11 2010 Rex Dieter <rdieter@fedoraproject.org> - 0.7.1-1
 - strigi-0.7.1
 
-* Mon Jan 03 2010 Rex Dieter <rdieter@fedoraproject.org> - 0.7.0-2 
+* Mon Jan 04 2010 Rex Dieter <rdieter@fedoraproject.org> - 0.7.0-2
 - rebuild (exiv2)
 
 * Tue Aug 04 2009 Rex Dieter <rdieter@fedoraproject.org> - 0.7.0-1
