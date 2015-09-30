@@ -5,73 +5,55 @@
 %global noarch_subpkgs 0%{?fedora} > 9 || 0%{?rhel} > 5
 
 Name:		GeoIP
-Version:	1.5.1
-Release:	5%{?dist}
+Version:	1.6.6
+Release:	1%{?dist}
 Summary:	Library for country/city/organization to IP address or hostname mapping
 Group:		Development/Libraries
-License:	LGPLv2+ and GPLv2+ and CC-BY-SA
+License:	LGPLv2+
 URL:		http://www.maxmind.com/app/c
-Source0:	http://www.maxmind.com/download/geoip/api/c/GeoIP-%{version}.tar.gz
-Source2:	fetch-geoipdata-city.pl
-Source3:	fetch-geoipdata.pl
-Source5:	geoipupdate.cron
-Source6:	geoipupdate6.cron
-Source7:	lastmod.pl
-# Data sources indexed at http://dev.maxmind.com/geoip/legacy/geolite
-Source10:	http://geolite.maxmind.com/download/geoip/database/GeoLiteCountry/GeoIP.dat.gz
-Source11:	http://geolite.maxmind.com/download/geoip/database/GeoIPv6.dat.gz
-Source12:	http://geolite.maxmind.com/download/geoip/database/GeoLiteCity.dat.gz
-Source13:	http://geolite.maxmind.com/download/geoip/database/GeoLiteCityv6-beta/GeoLiteCityv6.dat.gz
-Source14:	http://download.maxmind.com/download/geoip/database/asnum/GeoIPASNum.dat.gz
-Source15:	http://download.maxmind.com/download/geoip/database/asnum/GeoIPASNumv6.dat.gz
-Patch1:		GeoIP-1.5.0-exitcode.patch
-Patch10:	GeoIP-1.5.1-UTF8.patch
+Source0:	https://github.com/maxmind/geoip-api-c/releases/download/v%{version}/GeoIP-%{version}.tar.gz
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(id -nu)
+BuildRequires:	coreutils
+BuildRequires:	gcc
+BuildRequires:	make
+BuildRequires:	sed
 BuildRequires:	zlib-devel
+
+# CentOS Extras for EL-5 has GeoIP-data-20090201-1.el5.centos
+# and even an epoch bump in the GeoIP-data provide in GeoIP-GeoLite-data is
+# insufficient to persuade EL-5's yum to install it in preference to that old
+# package, so for EL-5 only, explicitly require GeoIP-GeoLite-data rather
+# than GeoIP-data (http://bugs.centos.org/view.php?id=8488)
+%if "%{?rhel}" == "5"
+Requires:	GeoIP-GeoLite-data
+%else
+Requires:	GeoIP-data
+%endif
+
+# For compatibility with original release of GeoIP in old distributions
+%if 0%{?fedora} < 22 && 0%{?rhel} < 8
+Requires:	geoipupdate
+%endif
+
+# Old name of GeoIP library package
 Obsoletes:	geoip < %{version}-%{release}
 Provides:	geoip = %{version}-%{release}
-Obsoletes:	geoip-geolite < 2013.04-2
-Provides:	geoip-geolite = 2013.04-2
 
 %description
 GeoIP is a C library that enables the user to find the country that any IP
 address or hostname originates from.
 
 It uses file based databases that can optionally be updated on a weekly basis
-by installing the GeoIP-update (IPv4) and/or GeoIP-update6 (IPv6) packages.
-
-This package includes GeoLite data created by MaxMind, available from
-http://www.maxmind.com/
-
-%package update
-Summary:	Crontab entry to facilitate automatic updates of IPv4 GeoIP databases
-Group:		Applications/Databases
-Requires:	crontabs
-Requires:	%{name} = %{version}-%{release}
-%if %{noarch_subpkgs}
-BuildArch:	noarch
-%endif
-
-%description update
-Crontab entry to provide weekly updates of the GeoIP free IPv4 databases.
-
-%package update6
-Summary:	Crontab entry to facilitate automatic updates of IPv6 GeoIP databases
-Group:		Applications/Databases
-Requires:	crontabs
-Requires:	wget
-Requires:	%{name} = %{version}-%{release}
-%if %{noarch_subpkgs}
-BuildArch:	noarch
-%endif
-
-%description update6
-Crontab entry to provide weekly updates of the GeoIP free IPv6 databases.
+by installing the geoipupdate-cron (IPv4) and/or geoipupdate-cron6 (IPv6)
+packages.
 
 %package devel
 Summary:	Development headers and libraries for GeoIP
 Group:		Development/Libraries
 Requires:	%{name} = %{version}-%{release}
+%if 0%{?fedora} < 11 || 0%{?rhel} < 6
+Requires:	pkgconfig
+%endif
 Provides:	geoip-devel = %{version}-%{release}
 Obsoletes:	geoip-devel < %{version}-%{release}
 
@@ -81,36 +63,7 @@ Development headers and static libraries for building GeoIP-based applications.
 %prep
 %setup -q
 
-# Scripts and license files
-install -p -m 644 %{SOURCE2} fetch-geoipdata-city.pl
-install -p -m 644 %{SOURCE3} fetch-geoipdata.pl
-install -p -m 755 %{SOURCE5} geoipupdate.cron
-install -p -m 755 %{SOURCE6} geoipupdate6.cron
-install -p -m 755 %{SOURCE7} lastmod.pl
-
-# Data
-install -p -m 644 %{SOURCE10} data/GeoLiteCountry.dat.gz;	gunzip data/GeoLiteCountry.dat
-install -p -m 644 %{SOURCE11} data/GeoIPv6.dat.gz;		gunzip data/GeoIPv6.dat
-install -p -m 644 %{SOURCE12} data/GeoLiteCity.dat.gz;		gunzip data/GeoLiteCity.dat
-install -p -m 644 %{SOURCE13} data/GeoLiteCityv6.dat.gz;	gunzip data/GeoLiteCityv6.dat
-install -p -m 644 %{SOURCE14} data/GeoLiteASNum.dat.gz;		gunzip data/GeoLiteASNum.dat
-install -p -m 644 %{SOURCE15} data/GeoIPASNumv6.dat.gz;		gunzip data/GeoIPASNumv6.dat
-
-# Fix exit codes for various cases (MaxMind support #129155)
-%patch1 -p1 -b .exitcode
-
-# Recode docs as UTF-8
-%patch10 -p1 -b .utf8
-
 %build
-# Fix timestamp order to avoid trying to re-run autotools and configure,
-# thus clobbering our hacked libtool later on
-touch aclocal.m4
-touch configure
-touch config.h.in
-touch config.status
-find . -name Makefile.in -exec touch {} \;
-
 %configure --disable-static --disable-dependency-tracking
 
 # Kill bogus rpaths
@@ -126,41 +79,6 @@ make DESTDIR=%{buildroot} INSTALL="install -p" install
 # nix the stuff we don't need like .la files.
 rm -f %{buildroot}%{_libdir}/*.la
 
-# fix up the config file to have geoipupdate fetch the free products by default
-sed -i \
-	-e 's/YOUR_LICENSE_KEY_HERE$/000000000000/' \
-	-e 's/YOUR_USER_ID_HERE$/999999/' \
-	-e 's/106$/506 533 517/' \
-	%{buildroot}%{_sysconfdir}/GeoIP.conf
-
-# install GeoLite databases
-for db in \
-	GeoLiteCountry.dat \
-	GeoIPv6.dat \
-	GeoLiteCity.dat \
-	GeoLiteCityv6.dat \
-	GeoLiteASNum.dat \
-	GeoIPASNumv6.dat
-do
-	install -p -m 644 data/$db %{buildroot}%{_datadir}/GeoIP/
-done
-
-%{__mkdir_p} %{buildroot}%{_libexecdir}
-
-install -p -m 755 lastmod.pl %{buildroot}%{_libexecdir}/
-
-# make the default GeoIP.dat a symlink to GeoLiteCountry.dat,
-# since it's actually an old snapshot of that database
-ln -sf GeoLiteCountry.dat %{buildroot}%{_datadir}/GeoIP/GeoIP.dat
-
-# add compat symlinks for GeoIPASNum.dat and GeoLiteASNumv6.dat
-ln -sf GeoLiteASNum.dat %{buildroot}%{_datadir}/GeoIP/GeoIPASNum.dat
-ln -sf GeoIPASNumv6.dat %{buildroot}%{_datadir}/GeoIP/GeoLiteASNumv6.dat
-
-# fetch database updates weekly
-install -D -m 755 geoipupdate.cron %{buildroot}%{_sysconfdir}/cron.weekly/geoipupdate
-install -D -m 755 geoipupdate6.cron %{buildroot}%{_sysconfdir}/cron.weekly/geoipupdate6
-
 %check
 # Tests require network access so fail in koji; build using --with tests to run them yourself
 %{?with_tests:LD_LIBRARY_PATH=%{buildroot}%{_libdir} make check}
@@ -173,57 +91,81 @@ rm -rf %{buildroot}
 %postun -p /sbin/ldconfig
 
 %files
-# LGPLv2+
-%doc AUTHORS COPYING ChangeLog README TODO fetch-*
-%config(noreplace) %{_sysconfdir}/GeoIP.conf
-%config(noreplace) %{_sysconfdir}/GeoIP.conf.default
+%if 0%{?_licensedir:1}
+%license COPYING
+%else
+%doc COPYING
+%endif
+%doc AUTHORS ChangeLog NEWS.md README.md
 %{_bindir}/geoiplookup
 %{_bindir}/geoiplookup6
 %{_libdir}/libGeoIP.so.1
 %{_libdir}/libGeoIP.so.1.*
 %{_mandir}/man1/geoiplookup.1*
 %{_mandir}/man1/geoiplookup6.1*
-# GPLv2+
-%{_bindir}/geoipupdate
-%{_libdir}/libGeoIPUpdate.so.0
-%{_libdir}/libGeoIPUpdate.so.0.*
-%{_mandir}/man1/geoipupdate.1*
-# CC-BY-SA
-%dir %{_datadir}/GeoIP/
-# This is %%config(noreplace) so that it can be replaced by a commercial database if desired by the end user
-%config(noreplace) %{_datadir}/GeoIP/GeoIP.dat
-# The other databases are %%verify(not md5 size mtime) so that they can be updated via the cron scripts
-# and rpm will not moan about the files having changed
-%verify(not md5 size mtime) %{_datadir}/GeoIP/GeoLiteCountry.dat
-%verify(not md5 size mtime) %{_datadir}/GeoIP/GeoIPv6.dat
-%verify(not md5 size mtime) %{_datadir}/GeoIP/GeoLiteCity.dat
-%verify(not md5 size mtime) %{_datadir}/GeoIP/GeoLiteCityv6.dat
-%verify(not md5 size mtime) %{_datadir}/GeoIP/GeoLiteASNum.dat
-%verify(not md5 size mtime) %{_datadir}/GeoIP/GeoIPASNumv6.dat
-# The compat symlinks are just regular files as they should never need to be changed
-%{_datadir}/GeoIP/GeoIPASNum.dat
-%{_datadir}/GeoIP/GeoLiteASNumv6.dat
-
-%files update
-%{_sysconfdir}/cron.weekly/geoipupdate
-
-%files update6
-%{_sysconfdir}/cron.weekly/geoipupdate6
-%{_libexecdir}/lastmod.pl
 
 %files devel
-# LGPLv2+
 %{_includedir}/GeoIP.h
 %{_includedir}/GeoIPCity.h
-%{_includedir}/GeoIPUpdate.h
 %{_libdir}/libGeoIP.so
 %{_libdir}/pkgconfig/geoip.pc
-# GPLv2+
-%{_libdir}/libGeoIPUpdate.so
 
 %changelog
-* Tue Apr 15 2014 Liu Di <liudidi@gmail.com> - 1.5.1-5
-- 为 Magic 3.0 重建
+* Thu Jul 30 2015 Paul Howarth <paul@city-fan.org> - 1.6.6-1
+- Update to 1.6.6
+  - Replaced usage of deprecated fileno, read, and lseek on Visual Studio 2005+
+    with their ISO C++ conformant replacements (GH#55)
+  - A warning about using a double as a float was fixed (GH#56)
+  - Fixed segfault when doing a lookup on an empty database (GH#62)
+  - Fixed a memcheck error from valgrind in the '_check_mtime' function (GH#60)
+  - Fixed '_check_mtime' to check the return value of 'gettimeofday' rather
+    than just assuming it worked
+
+* Tue Jun 16 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.6.5-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
+
+* Thu Apr 23 2015 Paul Howarth <paul@city-fan.org> - 1.6.5-2
+- Work around problems with old GeoIP-data package in CentOS 5 Extras
+  repo (http://bugs.centos.org/view.php?id=8488) by requiring
+  GeoIP-GeoLite-data rather than the virtual GeoIP-data for EL-5 builds only
+
+* Mon Mar  2 2015 Paul Howarth <paul@city-fan.org> - 1.6.5-1
+- Update to 1.6.5
+  - Fixed a segmentation fault in geoiplookup when the utility was passed an
+    invalid database (#1180874)
+  - Additional validation was added for the size used in the creation of the
+    index cache (#832913)
+  - Changed the code to only look up country codes by using functions that
+    ensure that we do not try to look past the end of an array (GitHub #53)
+
+* Fri Feb 20 2015 Paul Howarth <paul@city-fan.org> - 1.6.4-4
+- Databases now unbundled to the GeoIP-GeoLite-data package
+- Drop long-unused perl helper scripts
+- Add explicit pkgconfig dependency for EL-5 build
+- Drop timestamp hack for configure, no longer needed
+
+* Tue Feb 10 2015 Paul Howarth <paul@city-fan.org> - 1.6.4-3
+- Sub-package the data; going forward, this would be better as a separate
+  package, since it has separate upstream releases than the library
+
+* Fri Feb  6 2015 Paul Howarth <paul@city-fan.org> - 1.6.4-2
+- Only require geoipupdate prior to F-22, for back-compatibility
+- Use %%license where possible
+- GeoIP-devel provides geoip-devel as well as obsoleting it
+- Update bundled databases
+
+* Thu Jan 29 2015 Philip Prindeville <philipp@fedoraproject.org> - 1.6.4-1
+- Require geoipupdate per Paul
+
+* Tue Jan 20 2015 Philip Prindeville <philipp@fedoraproject.org> - 1.6.4-0
+- Version bump to 1.6.4 per bz #1158667 (okay, that bug was for 1.6.3)
+- Remove geoipupdate as it will be moving into its own package
+
+* Fri Aug 15 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.5.1-6
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
+
+* Fri Jun 06 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.5.1-5
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 
 * Tue Feb 25 2014 Paul Howarth <paul@city-fan.org> - 1.5.1-4
 - Add %%check, so we can run tests by building using --with tests
