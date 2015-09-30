@@ -1,0 +1,12 @@
+diff -up telepathy-qt-0.9.6.1/TelepathyQt/Farstream/CMakeLists.txt.gst1.5 telepathy-qt-0.9.6.1/TelepathyQt/Farstream/CMakeLists.txt
+--- telepathy-qt-0.9.6.1/TelepathyQt/Farstream/CMakeLists.txt.gst1.5	2015-05-24 14:33:18.000000000 -0500
++++ telepathy-qt-0.9.6.1/TelepathyQt/Farstream/CMakeLists.txt	2015-06-20 13:08:44.901960385 -0500
+@@ -2,7 +2,7 @@ if(FARSTREAM_COMPONENTS_FOUND)
+     include_directories(${TELEPATHY_FARSTREAM_INCLUDE_DIR}
+                         ${TELEPATHY_GLIB_INCLUDE_DIR}
+                         ${FARSTREAM_INCLUDE_DIR}
+-                        ${GSTREAMER_INCLUDE_DIR}
++                        ${GSTREAMER_INCLUDE_DIRS}
+                         ${GLIB2_INCLUDE_DIR}
+                         ${LIBXML2_INCLUDE_DIR}
+                         ${DBUS_INCLUDE_DIR})
