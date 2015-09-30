@@ -1,24 +1,28 @@
 Name:    telepathy-logger-qt
-Version: 0.5.1
-Release: 3%{?dist}
-Summary: Telepathy Logging for Qt 
+Version: 15.04.0
+Release: 2%{?dist}
+Summary: Telepathy Logging for Qt 5
 
 License: LGPLv2+
 URL:     https://projects.kde.org/projects/extragear/network/telepathy/%{name}
-Source0: http://download.kde.org/unstable/kde-telepathy/%{version}/src/%{name}-%{version}.tar.bz2
 
-## upstreamable patches
-# pkgconfig Requires.private: +QtGLib 
-Patch50: telepathy-logger-qt-0.4.0-pkgconfig_QtGLib.patch
+%global versiondir %(echo %{version} | cut -d. -f1-2)
+%global revision %(echo %{version} | cut -d. -f3)
+%if %{revision} >= 50
+%global stable unstable
+%else
+%global stable stable
+%endif
+Source0: http://download.kde.org/%{stable}/%{name}/%{versiondir}/src/%{name}-%{version}.tar.xz
 
+BuildRequires: extra-cmake-modules
 BuildRequires: bison
 BuildRequires: cmake
 BuildRequires: dbus-python python2-devel
 BuildRequires: flex
 BuildRequires: pkgconfig(dbus-1)
-BuildRequires: pkgconfig(QtGLib-2.0)
 BuildRequires: pkgconfig(telepathy-logger-0.2)
-BuildRequires: pkgconfig(TelepathyQt4) >= 0.9
+BuildRequires: pkgconfig(TelepathyQt5)
 BuildRequires: pkgconfig(libxml-2.0)
 
 %description
@@ -34,10 +38,7 @@ Requires: telepathy-logger-devel%{?_isa}
 
 
 %prep
-%setup -q -n telepathy-logger-qt-%{version}
-
-%patch50 -p1 -b pkgconfig_QtGLib
-
+%setup -q -n %{name}-%{version}
 
 %build
 mkdir -p %{_target_platform}
@@ -51,23 +52,61 @@ make %{?_smp_mflags} -C %{_target_platform}
 %install
 make install/fast DESTDIR=%{buildroot} -C %{_target_platform}
 
+%check
+
 
 %post -p /sbin/ldconfig
 %postun -p /sbin/ldconfig
 
 %files
 %doc AUTHORS ChangeLog COPYING
-%{_libdir}/libtelepathy-logger-qt4.so.1*
+%{_libdir}/libtelepathy-logger-qt.so.*
 
 %files devel
-%{_includedir}/telepathy-logger-0.2/TelepathyLoggerQt4/
-%{_libdir}/libtelepathy-logger-qt4.so
-%{_libdir}/pkgconfig/TelepathyLoggerQt4.pc
+%{_includedir}/TelepathyLoggerQt/
+%{_libdir}/libtelepathy-logger-qt.so
+%{_libdir}/cmake/TelepathyLoggerQt/
 
 
 %changelog
-* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 0.5.1-3
-- 为 Magic 3.0 重建
+* Fri Jun 19 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 15.04.0-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
+
+* Mon Apr 27 2015 Daniel Vrátil <dvratil@redhat.com> - 15.04.0-1
+- Update to 15.04.0 (Qt 5 release)
+
+* Mon Aug 18 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.8.0-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
+
+* Sun Jun 08 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.8.0-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Sun Aug 04 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.8.0-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Tue May 28 2013 Jan Grulich <jgrulich@redhat.com> - 0.8.0-1
+- 0.8.0
+
+* Mon May 20 2013 Jan Grulich <jgrulich@redhat.com> - 0.6.2-1
+- 0.6.2 (set version according to KTp)
+
+* Wed Apr 17 2013 Jan Grulich <jgrulich@redhat.com> - 0.6.1-1
+- 0.6.1
+
+* Tue Apr 02 2013 Jan Grulich <jgrulich@redhat.com> - 0.6.0-1
+- 0.6.0
+
+* Thu Mar 07 2013 Rex Dieter <rdieter@fedoraproject.org> - 0.5.80-1
+- 0.5.80
+
+* Sun Feb 17 2013 Jan Grulich <jgrulich@redhat.com> - 0.5.3-1
+- 0.5.3
+
+* Fri Feb 15 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.5.2-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
+
+* Mon Dec 17 2012 Jan Grulich <jgrulich@redhat.com> 0.5.2-1
+- 0.5.2
 
 * Wed Oct 31 2012 Rex Dieter <rdieter@fedoraproject.org> 0.5.1-2
 - rebuild (telepathy-logger)
