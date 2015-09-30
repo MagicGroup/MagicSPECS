@@ -1,7 +1,7 @@
-%global minorversion 1.4
+%global minorversion 1.6
 
 Name:           Thunar
-Version:        1.4.0
+Version:        1.6.10
 Release:        3%{?dist}
 Summary:        Thunar File Manager
 
@@ -10,14 +10,13 @@ License:        GPLv2+
 URL:            http://thunar.xfce.org/
 #VCS git:git://git.xfce.org/xfce/thunar
 Source0:        http://archive.xfce.org/src/xfce/thunar/%{minorversion}/%{name}-%{version}.tar.bz2
-Source1:        thunar-sendto-bluetooth.desktop
+Source1:        thunar-sendto-gnome-bluetooth.desktop
 Source2:        thunar-sendto-audacious-playlist.desktop
 Source3:        thunar-sendto-quodlibet-playlist.desktop
-Patch1:         Thunar-1.3.1-desktop-fix.patch
-Buildroot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+Source4:        thunar-sendto-blueman.desktop
 
 BuildRequires:  pkgconfig(dbus-glib-1) >= 0.34
-BuildRequires:  pkgconfig(exo-1) >= 0.6.0
+BuildRequires:  pkgconfig(exo-1) >= 0.8.0
 BuildRequires:  pkgconfig(gudev-1.0) >= 145
 BuildRequires:  pkgconfig(libexif) >= 0.6.0
 BuildRequires:  pkgconfig(libpcre) >= 6.0
@@ -31,7 +30,6 @@ BuildRequires:  libICE-devel
 BuildRequires:  pkgconfig
 BuildRequires:  intltool gettext
 BuildRequires:  desktop-file-utils >= 0.7
-BuildRequires:  gtk-doc
 Requires:       shared-mime-info
 Requires:       dbus-x11
 
@@ -65,28 +63,24 @@ libraries and header files for the Thunar file manager.
 %prep
 %setup -q
 
-%patch1 -p1
-
 # fix icon in thunar-sendto-email.desktop
 sed -i 's!internet-mail!mail-message-new!' \
         plugins/thunar-sendto-email/thunar-sendto-email.desktop.in.in
 
 %build
-%configure --enable-dbus --enable-gtk-doc
+%configure --enable-dbus
 # Remove rpaths
 sed -i 's|^hardcode_libdir_flag_spec=.*|hardcode_libdir_flag_spec=""|g' libtool
 sed -i 's|^runpath_var=LD_RUN_PATH|runpath_var=DIE_RPATH_DIE|g' libtool
-
-# The LD_LIBRARY_PATH hack is needed for --enable-gtk-doc
-# because lt-thunarx-scan is linked against libthunarx
-export LD_LIBRARY_PATH=$( pwd )/thunarx/.libs
 
 make %{?_smp_mflags} V=1
 
 
 %install
-rm -rf $RPM_BUILD_ROOT
-make install DESTDIR=$RPM_BUILD_ROOT mandir=%{_mandir}
+make install DESTDIR=$RPM_BUILD_ROOT mandir=%{_mandir} INSTALL='install -p'
+
+# fixes wrong library permissions
+chmod 755 $RPM_BUILD_ROOT/%{_libdir}/*.so
 
 make -C examples distclean
 
@@ -96,43 +90,46 @@ chmod 644 examples/thunar-file-manager.py
 chmod 644 examples/xfce-file-manager.py
 
 find $RPM_BUILD_ROOT -name '*.la' -exec rm -f {} ';'
-magic_rpm_clean.sh
+
 %find_lang Thunar
 
-desktop-file-install --vendor magic --delete-original          \
+desktop-file-install --delete-original          \
+%if (0%{?fedora} && 0%{?fedora} < 19) || (0%{?rhel} && 0%{?rhel} < 7)
+        --vendor fedora \
+%endif
         --dir ${RPM_BUILD_ROOT}%{_datadir}/applications         \
         ${RPM_BUILD_ROOT}%{_datadir}/applications/thunar-settings.desktop
 
-desktop-file-install --vendor magic --delete-original          \
+desktop-file-install --delete-original          \
+%if (0%{?fedora} && 0%{?fedora} < 19) || (0%{?rhel} && 0%{?rhel} < 7)
+        --vendor fedora \
+%endif
         --dir ${RPM_BUILD_ROOT}%{_datadir}/applications         \
         --delete-original                                       \
         ${RPM_BUILD_ROOT}%{_datadir}/applications/Thunar-bulk-rename.desktop
 
-desktop-file-install --vendor magic --delete-original          \
+desktop-file-install --delete-original          \
+%if (0%{?fedora} && 0%{?fedora} < 19) || (0%{?rhel} && 0%{?rhel} < 7)
+        --vendor fedora \
+%endif
         --dir ${RPM_BUILD_ROOT}%{_datadir}/applications         \
         --remove-mime-type x-directory/gnome-default-handler    \
         --remove-mime-type x-directory/normal                   \
         ${RPM_BUILD_ROOT}%{_datadir}/applications/Thunar-folder-handler.desktop
 
-desktop-file-install --vendor magic --delete-original          \
+desktop-file-install --delete-original          \
+%if (0%{?fedora} && 0%{?fedora} < 19) || (0%{?rhel} && 0%{?rhel} < 7)
+        --vendor fedora \
+%endif
         --dir ${RPM_BUILD_ROOT}%{_datadir}/applications         \
         ${RPM_BUILD_ROOT}%{_datadir}/applications/Thunar.desktop
 
 # install additional sendto helpers
-desktop-file-install --vendor ""                                \
-        --dir ${RPM_BUILD_ROOT}%{_datadir}/Thunar/sendto        \
-        %{SOURCE1}
-
-desktop-file-install --vendor ""                                \
-        --dir ${RPM_BUILD_ROOT}%{_datadir}/Thunar/sendto        \
-        %{SOURCE2}
-
-desktop-file-install --vendor ""                                \
-        --dir ${RPM_BUILD_ROOT}%{_datadir}/Thunar/sendto        \
-        %{SOURCE3}
-
-%clean
-rm -rf $RPM_BUILD_ROOT
+for source in %{SOURCE1} %{SOURCE2} %{SOURCE3} %{SOURCE4} ; do
+    desktop-file-install --vendor "" \
+            --dir ${RPM_BUILD_ROOT}%{_datadir}/Thunar/sendto \
+            $source
+done
 
 %pre
 for target in %{_defaultdocdir}/Thunar/html/*/images
@@ -144,13 +141,13 @@ do
 done
 
 %post
-/usr/sbin/ldconfig
+/sbin/ldconfig
 update-desktop-database &> /dev/null ||:
 touch --no-create %{_datadir}/icons/hicolor &>/dev/null || :
 
 
 %postun
-/usr/sbin/ldconfig
+/sbin/ldconfig
 update-desktop-database &> /dev/null ||:
 if [ $1 -eq 0 ] ; then
     touch --no-create %{_datadir}/icons/hicolor &>/dev/null
@@ -163,13 +160,11 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 
 
 %files -f Thunar.lang
-%defattr(-,root,root,-)
-%doc README TODO ChangeLog NEWS INSTALL COPYING AUTHORS HACKING THANKS
+%license COPYING
+%doc README TODO ChangeLog NEWS INSTALL AUTHORS HACKING THANKS
 %doc docs/README.gtkrc
-%doc docs/README.thunarrc
 # exclude docs that we have moved to the above
 %exclude %{_datadir}/doc/Thunar/README.gtkrc
-%exclude %{_datadir}/doc/Thunar/README.thunarrc
 %{_bindir}/Thunar
 %{_bindir}/thunar
 %{_bindir}/thunar-settings
@@ -182,30 +177,100 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %dir %{_datadir}/Thunar/
 %dir %{_datadir}/Thunar/sendto/
 %{_datadir}/Thunar/sendto/*.desktop
+%{_datadir}/polkit-1/actions/org.xfce.thunar.policy
 %{_datadir}/applications/*.desktop
 %{_datadir}/dbus-1/services/org.xfce.FileManager.service
 %{_datadir}/dbus-1/services/org.xfce.Thunar.service
-%{_datadir}/doc/%{name}/
 %{_datadir}/icons/hicolor/*/*/*
 %{_datadir}/pixmaps/Thunar/
-%{_datadir}/xfce4/panel-plugins/thunar-tpa.desktop
+%{_datadir}/xfce4/panel/plugins/thunar-tpa.desktop
+%{_datadir}/appdata/thunar.appdata.xml
 %{_libdir}/xfce4/panel/plugins/libthunar-tpa.so
 %{_mandir}/man1/Thunar.1*
 %dir %{_sysconfdir}/xdg/Thunar
 %config(noreplace) %{_sysconfdir}/xdg/Thunar/uca.xml
 
 %files devel
-%defattr(-,root,root,-)
 %doc examples
 %{_includedir}/thunarx-*/
 %{_libdir}/libthunar*.so
 %{_libdir}/pkgconfig/thunarx-*.pc
-%doc %{_datadir}/gtk-doc/html/*
-
 
 %changelog
-* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 1.4.0-3
-- 为 Magic 3.0 重建
+* Fri Sep 18 2015 Richard Hughes <rhughes@redhat.com> - 1.6.10-3
+- Remove no longer required AppData file
+
+* Tue Jun 16 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.6.10-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
+
+* Fri May 22 2015 Mukundan Ragavan <nonamedotc@fedoraproject.org> - 1.6.10-1
+- Update to 1.6.10 - bugfix update
+
+* Sun May 17 2015 Kevin Fenzi <kevin@scrye.com> 1.6.9-1
+- Update to 1.6.9. Drop gtk-docs they are no longer supported upstream.
+
+* Tue May 05 2015 Kevin Fenzi <kevin@scrye.com> 1.6.8-1
+- Update to 1.6.8.
+
+* Mon Apr 20 2015 Kevin Fenzi <kevin@scrye.com> 1.6.7-1
+- Update to 1.6.7. Fixes bug #1183644
+
+* Thu Mar 26 2015 Richard Hughes <rhughes@redhat.com> - 1.6.6-2
+- Add an AppData file for the software center
+
+* Sat Feb 28 2015 Mukundan Ragavan <nonamedotc@fedoraproject.org> - 1.6.6-1
+- Update to 1.6.6
+
+* Sat Feb 21 2015 Till Maas <opensource@till.name> - 1.6.5-2
+- Rebuilt for Fedora 23 Change
+  https://fedoraproject.org/wiki/Changes/Harden_all_packages_with_position-independent_code
+
+* Thu Feb 19 2015 Mukundan Ragavan <nonamedotc@fedoraproject.org> - 1.6.5-1
+- Update to 1.6.5
+- Moved COPYING file to license directory
+- Thunar-tpa desktop file moved to ..xfce4/panel/plugins/..
+
+* Sun Jan 04 2015 Kevin Fenzi <kevin@scrye.com> 1.6.4-1
+- Update to 1.6.4
+
+* Sun Dec 21 2014 Kevin Fenzi <kevin@scrye.com> 1.6.3-6
+- Add patch for glib2 open with ordering. Fixes bug #1175867
+
+* Tue Nov 11 2014 Kevin Fenzi <kevin@scrye.com> 1.6.3-5
+- Add appdata. Fixes bug #1161931
+
+* Fri Aug 15 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.6.3-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
+
+* Fri Jun 06 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.6.3-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Fri Aug 02 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.6.3-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Sun May 05 2013 Kevin Fenzi <kevin@scrye.com> 1.6.3-1
+- Update to 1.6.3
+
+* Fri Feb 22 2013 Toshio Kuratomi <toshio@fedoraproject.org> - 1.6.2-3
+- Remove --vendor from desktop-file-install https://fedorahosted.org/fesco/ticket/1077
+
+* Wed Feb 13 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.6.2-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
+
+* Thu Dec 27 2012 Kevin Fenzi <kevin@scrye.com> 1.6.2-1
+- Update to 1.6.2
+- Clean up changelog
+
+* Sun Dec 09 2012 Kevin Fenzi <kevin@scrye.com> 1.6.1-1
+- Update to 1.6.1
+
+* Tue Dec 04 2012 Kevin Fenzi <kevin@scrye.com> 1.6.0-1
+- Update to 1.6.0. 
+- See http://git.xfce.org/xfce/thunar/tree/NEWS?id=781395f339e13f4da7c69ac63caefeec451b6dea
+
+* Sat Oct 13 2012 Christoph Wickert <cwickert@fedoraproject.org> - 1.4.0-3
+- Show 'Send to' menu entries based on filetypes
+- Add blueman-sendto to the 'Sent to' menu
 
 * Wed Jul 18 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.4.0-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
@@ -230,7 +295,7 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 * Mon Oct 10 2011 Christoph Wickert <cwickert@fedoraproject.org> - 1.3.0-5
 - Own %%{_libdir}/Thunar/
 
-* Wed Apr 21 2011 Christoph Wickert <cwickert@fedoraproject.org> - 1.3.0-4
+* Thu Apr 21 2011 Christoph Wickert <cwickert@fedoraproject.org> - 1.3.0-4
 - Fix format string flaw CVE-2011-1588 (#698290)
 
 * Tue Mar 15 2011 Christoph Wickert <cwickert@fedoraproject.org> - 1.3.0-3
