@@ -1,6 +1,5 @@
 mk_add_options MOZ_CO_PROJECT=mail
 ac_add_options --enable-application=mail
-mk_add_options MOZ_OBJDIR=@TOPSRCDIR@/objdir
 mk_add_options AUTOCONF=autoconf-2.13
 
 #ac_add_options --with-system-png
@@ -24,12 +23,17 @@ ac_add_options --enable-pango
 ac_add_options --enable-svg
 ac_add_options --enable-canvas
 ac_add_options --enable-system-hunspell
-ac_add_options --disable-crashreporter
 ac_add_options --disable-necko-wifi
 ac_add_options --disable-updater
 ac_add_options --enable-startup-notification
 ac_add_options --enable-gio
 ac_add_options --disable-gnomevfs
+ac_add_options --disable-gstreamer
+ac_add_options --enable-pie
+
+# lightning related
+ac_add_options --enable-calendar
+ac_add_options --with-l10n-base=../../l10n
 
 export BUILD_OFFICIAL=1
 export MOZILLA_OFFICIAL=1

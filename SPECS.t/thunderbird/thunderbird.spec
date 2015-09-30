@@ -1,21 +1,24 @@
 # Use system nspr/nss?
+
 %define system_nss        1
 
 # Build as a debug package?
 %define debug_build       0
 
-%if 0%{?fedora} <= 17
+%if 0%{?fedora} < 20
 %define system_sqlite 0
+%define system_ffi    0
 %else
 %define system_sqlite 1
+%define system_ffi    1
 %endif
 
 %define build_langpacks 1
 
 %if %{?system_nss}
-%global nspr_version 4.9.2
+%global nspr_version 4.10.6
 %global nspr_build_version %(pkg-config --silence-errors --modversion nspr 2>/dev/null || echo 65536)
-%global nss_version 3.13.5
+%global nss_version 3.16.2.3
 %global nss_build_version %(pkg-config --silence-errors --modversion nss 2>/dev/null || echo 65536)
 %endif
 
@@ -23,66 +26,80 @@
 %define freetype_version 2.1.9
 
 %if %{?system_sqlite}
-%define sqlite_version 3.7.13
+%define sqlite_version 3.8.4.2
 # The actual sqlite version (see #480989):
 %global sqlite_build_version %(pkg-config --silence-errors --modversion sqlite3 2>/dev/null || echo 65536)
 %endif
 
 %define libnotify_version 0.4
-%global libvpx_version 1.0.0
+%global libvpx_version 1.3.0
 %define _default_patch_fuzz 2
 
 %define thunderbird_app_id \{3550f703-e582-4d05-9a08-453d09bdfdc6\} 
+# Bump one with each minor lightning release
+%define gdata_version 1.9
+%define gdata_version_internal 0.2
+%global gdata_extname %{_libdir}/mozilla/extensions/{3550f703-e582-4d05-9a08-453d09bdfdc6}/{a62ef8ec-5fdc-40c2-873c-223b8a6925cc}
 
 # The tarball is pretty inconsistent with directory structure.
 # Sometimes there is a top level directory.  That goes here.
 #
 # IMPORTANT: If there is no top level directory, this should be 
 # set to the cwd, ie: '.'
-%define tarballdir comm-release
+%define tarballdir   comm-esr38
+%define objdir       objdir
+%define mozappdir    %{_libdir}/%{name}
 
 %define official_branding 1
 # enable crash reporter only for iX86
 %ifarch %{ix86} x86_64
-%define enable_mozilla_crashreporter 0
+%define enable_mozilla_crashreporter 1
 %else
 %define enable_mozilla_crashreporter 0
 %endif
 
-%define mozappdir         %{_libdir}/%{name}
 
 Summary:        Mozilla Thunderbird mail/newsgroup client
 Name:           thunderbird
-Version:        17.0
-Release:        1%{?dist}
+Version:        38.2.0
+Release:        2%{?dist}
 URL:            http://www.mozilla.org/projects/thunderbird/
 License:        MPLv1.1 or GPLv2+ or LGPLv2+
 Group:          Applications/Internet
 Source0:        ftp://ftp.mozilla.org/pub/thunderbird/releases/%{version}%{?pre_version}/source/thunderbird-%{version}%{?pre_version}.source.tar.bz2
 %if %{build_langpacks}
-Source1:        thunderbird-langpacks-%{version}-20121119.tar.xz
+Source1:        thunderbird-langpacks-%{version}-20150819.tar.xz
 %endif
+# Locales for lightning
+Source2:        l10n-lightning-%{version}.tar.xz
+Source3:        mklangsource.sh
+
 Source10:       thunderbird-mozconfig
 Source11:       thunderbird-mozconfig-branded
 Source12:       thunderbird-redhat-default-prefs.js
-Source13:       thunderbird-mozconfig-debuginfo
 Source20:       thunderbird.desktop
 Source21:       thunderbird.sh.in
-Source100:      find-external-requires
 
 # Mozilla (XULRunner) patches
 Patch0:         thunderbird-install-dir.patch
-Patch8:         xulrunner-10.0-secondary-ipc.patch
+Patch9:         mozilla-build-arm.patch
 
 # Build patches
-Patch104:       xulrunner-10.0-gcc47.patch
+Patch100:       thunderbird-objdir.patch
+Patch101:        build-nspr-prbool.patch
+Patch102:        build-werror.patch
+Patch103:       rhbz-1219542-s390-build.patch
 
 # Linux specific
-Patch200:       thunderbird-8.0-enable-addons.patch
+Patch200:       thunderbird-enable-addons.patch
 
 # PPC fixes
-Patch300:       xulrunner-16.0-jemalloc-ppc.patch
-Patch301:       rhbz-855923.patch
+Patch300:       xulrunner-24.0-jemalloc-ppc.patch
+
+# Fedora specific patches
+Patch400:       rhbz-966424.patch
+Patch402:       rhbz-1014858.patch
+# libvpx no longer has compat defines, use the current ones
 
 %if %{official_branding}
 # Required by Mozilla Corporation
@@ -96,6 +113,8 @@ Patch301:       rhbz-855923.patch
 BuildRequires:  nss-static >= %{nss_version}
 BuildRequires:  nspr-devel >= %{nspr_version}
 BuildRequires:  nss-devel >= %{nss_version}
+Requires:       nspr >= %{nspr_build_version}
+Requires:       nss >= %{nss_build_version}
 %endif
 BuildRequires:  cairo-devel >= %{cairo_version}
 BuildRequires:  libnotify-devel >= %{libnotify_version}
@@ -106,9 +125,6 @@ BuildRequires:  bzip2-devel
 BuildRequires:  zlib-devel
 BuildRequires:  libIDL-devel
 BuildRequires:  gtk2-devel
-BuildRequires:  gnome-vfs2-devel
-BuildRequires:  libgnome-devel
-BuildRequires:  libgnomeui-devel
 BuildRequires:  krb5-devel
 BuildRequires:  pango-devel
 BuildRequires:  freetype-devel >= %{freetype_version}
@@ -117,6 +133,10 @@ BuildRequires:  libXrender-devel
 BuildRequires:  hunspell-devel
 %if %{?system_sqlite}
 BuildRequires:  sqlite-devel >= %{sqlite_version}
+Requires:       sqlite >= %{sqlite_build_version}
+%endif
+%if %{?system_ffi}
+BuildRequires:  libffi-devel
 %endif
 BuildRequires:  startup-notification-devel
 BuildRequires:  alsa-lib-devel
@@ -125,19 +145,13 @@ BuildRequires:  desktop-file-utils
 BuildRequires:  libcurl-devel
 BuildRequires:  mesa-libGL-devel
 BuildRequires:  libvpx-devel >= %{libvpx_version}
-Requires:       mozilla-filesystem
-%if %{?system_nss}
-Requires:       nspr >= %{nspr_build_version}
-Requires:       nss >= %{nss_build_version}
-%endif
-%if %{?system_sqlite}
-Requires:       sqlite >= %{sqlite_build_version}
-%endif
 Requires:       libvpx >= %{libvpx_version}
+BuildRequires:  pulseaudio-libs-devel
+BuildRequires:  libicu-devel
+Requires:       mozilla-filesystem
+Obsoletes:      thunderbird-lightning
+Provides:       thunderbird-lightning
 
-AutoProv: 0
-%define _use_internal_dependency_generator 0
-%define __find_requires %{SOURCE100}
 
 %description
 Mozilla Thunderbird is a standalone mail and newsgroup client.
@@ -161,21 +175,42 @@ debug %{name}, you want to install %{name}-debuginfo instead.
 %defattr(-,root,root)
 %endif
 
+%global tb_version %{version}
+
+%package lightning-gdata
+Summary:        Lightning data provider for Google Calendar
+Version:        %{gdata_version}.%{gdata_version_internal}
+Requires:       %{name}%{?_isa} = %{tb_version}-%{release}
+
+%description lightning-gdata
+This extension allows Lightning to read and write events to a Google Calendar.
+
+Please read http://wiki.mozilla.org/Calendar:GDATA_Provider for more details
+and before filing a bug. Also, be sure to visit the dicussion forums, maybe
+your bug already has a solution!
+
 
 %prep
 %setup -q -c
 cd %{tarballdir}
 
-%patch0  -p1 -b .dir
+%patch0   -p1 -b .dir
+%patch100 -p2 -b .objdir
+
 # Mozilla (XULRunner) patches
 cd mozilla
-%patch8 -p3 -b .secondary-ipc
-%patch104 -p1 -b .gcc47
-cd ..
+%patch9   -p2 -b .arm
+%patch300 -p2 -b .852698
+%patch102 -p2 -b .build-werror
+%patch101 -p1 -b .nspr-prbool
+%ifarch s390
+%patch103 -p1 -b .rhbz-1219542-s390-build
+%endif
+%patch400 -p1 -b .966424
+%patch402 -p1 -b .rhbz-1014858
 
+cd ..
 %patch200 -p1 -b .addons
-%patch300 -p1 -b .852698
-%patch301 -p1 -b .855923
 
 %if %{official_branding}
 # Required by Mozilla Corporation
@@ -189,9 +224,6 @@ cd ..
 %{__cp} %{SOURCE10} .mozconfig
 %if %{official_branding}
 %{__cat} %{SOURCE11} >> .mozconfig
-%endif
-%if %{enable_mozilla_crashreporter}
-%{__cat} %{SOURCE13} >> .mozconfig
 %endif
 
 %if %{?system_nss}
@@ -213,6 +245,10 @@ echo "ac_add_options --enable-system-sqlite"  >> .mozconfig
 echo "ac_add_options --disable-system-sqlite" >> .mozconfig
 %endif
 
+%if %{?system_ffi}
+echo "ac_add_options --enable-system-ffi" >> .mozconfig
+%endif
+
 %if %{?debug_build}
 echo "ac_add_options --enable-debug" >> .mozconfig
 echo "ac_add_options --disable-optimize" >> .mozconfig
@@ -225,6 +261,36 @@ echo "ac_add_options --enable-optimize" >> .mozconfig
 echo "ac_add_options --disable-elf-hack" >> .mozconfig
 %endif
 
+%ifnarch %{ix86} x86_64
+echo "ac_add_options --disable-webrtc" >> .mozconfig
+%endif
+
+%ifarch armv7hl
+echo "ac_add_options --with-arch=armv7-a" >> .mozconfig
+echo "ac_add_options --with-float-abi=hard" >> .mozconfig
+echo "ac_add_options --with-fpu=vfpv3-d16" >> .mozconfig
+echo "ac_add_options --disable-elf-hack" >> .mozconfig
+%endif
+%ifarch armv7hnl
+echo "ac_add_options --with-arch=armv7-a" >> .mozconfig
+echo "ac_add_options --with-float-abi=hard" >> .mozconfig
+echo "ac_add_options --with-fpu=neon" >> .mozconfig
+echo "ac_add_options --disable-elf-hack" >> .mozconfig
+echo "ac_add_options --disable-ion" >> .mozconfig
+echo "ac_add_options --disable-yarr-jit" >> .mozconfig
+%endif
+%ifarch armv5tel
+echo "ac_add_options --with-arch=armv5te" >> .mozconfig
+echo "ac_add_options --with-float-abi=soft" >> .mozconfig
+echo "ac_add_options --disable-elf-hack" >> .mozconfig
+echo "ac_add_options --disable-ion" >> .mozconfig
+echo "ac_add_options --disable-yarr-jit" >> .mozconfig
+%endif
+
+# install lightning langpacks
+cd ..
+%{__tar} xf %{SOURCE2}
+cd -
 #===============================================================================
 
 %build
@@ -241,6 +307,9 @@ esac
 
 cd %{tarballdir}
 
+# Update the various config.guess to upstream release for aarch64 support
+find ./ -name config.guess -exec cp /usr/lib/rpm/config.guess {} ';'
+
 # -fpermissive is needed to build with gcc 4.6+ which has become stricter
 #
 # Mozilla builds with -Wall with exception of a few warnings which show up
@@ -250,17 +319,23 @@ cd %{tarballdir}
 # 
 MOZ_OPT_FLAGS=$(echo "$RPM_OPT_FLAGS -fpermissive" | \
                       %{__sed} -e 's/-Wall//')
+#rhbz#1037353
+MOZ_OPT_FLAGS="$MOZ_OPT_FLAGS -Wformat-security -Wformat -Werror=format-security"
 %if %{?debug_build}
 MOZ_OPT_FLAGS=$(echo "$MOZ_OPT_FLAGS" | %{__sed} -e 's/-O2//')
 %endif
 %ifarch s390
-MOZ_OPT_FLAGS=$(echo "$RPM_OPT_FLAGS" | %{__sed} -e 's/-g/-g1/')
+MOZ_OPT_FLAGS=$(echo "$MOZ_OPT_FLAGS" | %{__sed} -e 's/-g/-g1/')
+# If MOZ_DEBUG_FLAGS is empty, firefox's build will default it to "-g" which
+# overrides the -g1 from line above and breaks building on s390
+# (OOM when linking, rhbz#1238225)
+export MOZ_DEBUG_FLAGS=" "
 %endif
-%ifarch s390 %{arm} ppc
+%ifarch s390 %{arm} ppc aarch64 i686
 MOZ_LINK_FLAGS="-Wl,--no-keep-memory -Wl,--reduce-memory-overheads"
 %endif
 
-export CFLAGS=$MOZ_OPT_FLAGS
+export CFLAGS=`echo $MOZ_OPT_FLAGS |sed -e 's/-fpermissive//g'`
 export CXXFLAGS=$MOZ_OPT_FLAGS
 export LDFLAGS=$MOZ_LINK_FLAGS
 
@@ -270,7 +345,7 @@ export LIBDIR='%{_libdir}'
 MOZ_SMP_FLAGS=-j1
 # On x86 architectures, Mozilla can build up to 4 jobs at once in parallel,
 # however builds tend to fail on other arches when building in parallel.
-%ifarch %{ix86} x86_64
+%ifarch %{ix86} x86_64 ppc %{power64} aarch64
 [ -z "$RPM_BUILD_NCPUS" ] && \
      RPM_BUILD_NCPUS="`/usr/bin/getconf _NPROCESSORS_ONLN`"
 [ "$RPM_BUILD_NCPUS" -ge 2 ] && MOZ_SMP_FLAGS=-j2
@@ -280,15 +355,25 @@ MOZ_SMP_FLAGS=-j1
 
 make -f client.mk build STRIP="/bin/true" MOZ_MAKE_FLAGS="$MOZ_SMP_FLAGS"
 
+# Package l10n files
+cd %{objdir}/calendar/lightning
+grep -v 'osx' ../../../calendar/locales/shipped-locales | while read lang x
+do
+   make AB_CD=en-US L10N_XPI_NAME=lightning libs-$lang
+done
+# install l10n files
+make tools
+cd -
+
 # create debuginfo for crash-stats.mozilla.com
 %if %{enable_mozilla_crashreporter}
-make -C objdir buildsymbols
+make -C %{objdir} buildsymbols
 %endif
 
 #===============================================================================
 
 %install
-cd %{tarballdir}/objdir
+cd %{tarballdir}/%{objdir}
 
 DESTDIR=$RPM_BUILD_ROOT make install
 
@@ -313,7 +398,7 @@ rm -f $RPM_BUILD_ROOT/%{_bindir}/thunderbird
 %{__chmod} 755 $RPM_BUILD_ROOT/%{_bindir}/thunderbird
 
 # set up our default preferences
-%{__cat} %{SOURCE12} | %{__sed} -e 's,THUNDERBIRD_RPM_VR,%{version}-%{release},g' > \
+%{__cat} %{SOURCE12} | %{__sed} -e 's,THUNDERBIRD_RPM_VR,%{tb_version}-%{release},g' > \
         $RPM_BUILD_ROOT/rh-default-prefs
 %{__install} -D $RPM_BUILD_ROOT/rh-default-prefs $RPM_BUILD_ROOT/%{mozappdir}/greprefs/all-redhat.js
 %{__install} -D $RPM_BUILD_ROOT/rh-default-prefs $RPM_BUILD_ROOT/%{mozappdir}/defaults/pref/all-redhat.js
@@ -337,7 +422,7 @@ touch %{name}.lang
 for langpack in `ls thunderbird-langpacks/*.xpi`; do
   language=`basename $langpack .xpi`
   extensionID=langpack-$language@thunderbird.mozilla.org
-  
+
   language=`echo $language | sed -e 's/-/_/g'`
   %{__install} -m 644 ${langpack} $RPM_BUILD_ROOT%{mozappdir}/langpacks/${extensionID}.xpi
   echo "%%lang($language) %{mozappdir}/langpacks/${extensionID}.xpi" >> %{name}.lang
@@ -346,7 +431,7 @@ done
 %endif # build_langpacks
 
 # Get rid of devel package and its debugsymbols
-%{__rm} -rf $RPM_BUILD_ROOT%{_libdir}/%{name}-devel-%{version}
+%{__rm} -rf $RPM_BUILD_ROOT%{_libdir}/%{name}-devel-%{tb_version}
 
 # Copy over the LICENSE
 cd mozilla
@@ -365,8 +450,61 @@ touch $RPM_BUILD_ROOT%{mozappdir}/components/xpti.dat
 # Add debuginfo for crash-stats.mozilla.com 
 %if %{enable_mozilla_crashreporter}
 %{__mkdir_p} $RPM_BUILD_ROOT/%{moz_debug_dir}
-%{__cp} objdir/mozilla/dist/%{symbols_file_name} $RPM_BUILD_ROOT/%{moz_debug_dir}
+%{__cp} %{objdir}/dist/%{symbols_file_name} $RPM_BUILD_ROOT/%{moz_debug_dir}
 %endif
+
+# Register as an application to be visible in the software center
+#
+# NOTE: It would be *awesome* if this file was maintained by the upstream
+# project, translated and installed into the right place during `make install`.
+#
+# See http://www.freedesktop.org/software/appstream/docs/ for more details.
+#
+mkdir -p $RPM_BUILD_ROOT%{_datadir}/appdata
+cat > $RPM_BUILD_ROOT%{_datadir}/appdata/mozilla-thunderbird.appdata.xml <<EOF
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Copyright 2014 Richard Hughes <richard@hughsie.com> -->
+<!--
+BugReportURL: https://bugzilla.mozilla.org/show_bug.cgi?id=1071065
+SentUpstream: 2014-09-22
+-->
+<application>
+  <id type="desktop">mozilla-thunderbird.desktop</id>
+  <metadata_license>CC0-1.0</metadata_license>
+  <description>
+    <p>
+      Thunderbird is an email client that allows you to read, write and organise all
+      of your email messages. It is compatible with most email accounts, including the
+      most popular webmail services.
+    </p>
+    <p>
+      Thunderbird is designed by Mozilla, a global community working together to make
+      the Internet better. Mozilla believe that the Internet should be open, public,
+      and accessible to everyone without any restrictions.
+    </p>
+    <ul>
+      <li>Easier than ever to set up a new e-mail account</li>
+      <li>Awesome search allows you to find your messages fast</li>
+      <li>Thousands of add-ons give you the freedom to make Thunderbird your own</li>
+    </ul>
+  </description>
+  <url type="homepage">http://www.mozilla.org/thunderbird/</url>
+  <!--
+  <screenshots>
+    <screenshot type="default">https://raw.githubusercontent.com/hughsie/fedora-appstream/master/screenshots-extra/mozilla-thunderbird/a.png</screenshot>
+  </screenshots>
+  -->
+  <!-- FIXME: change this to an upstream email address for spec updates
+  <updatecontact>someone_who_cares@upstream_project.org</updatecontact>
+   -->
+</application>
+EOF
+
+# lightning-gdata
+mkdir -p $RPM_BUILD_ROOT%{gdata_extname}
+touch $RPM_BUILD_ROOT%{gdata_extname}/chrome.manifest
+
+unzip -qod $RPM_BUILD_ROOT%{gdata_extname} %{objdir}/dist/xpi-stage/gdata-provider-%{gdata_version}.en-US.linux-*.xpi
 
 #===============================================================================
 
@@ -384,11 +522,15 @@ fi
 %posttrans
 gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 
+# lightning-gdata files=========================================================
+%files lightning-gdata
+%doc %{tarballdir}/mozilla/LEGAL %{tarballdir}/mozilla/LICENSE %{tarballdir}/mozilla/README.txt
+%{gdata_extname}
 #===============================================================================
-
 %files -f %{tarballdir}/%{name}.lang
 %defattr(-,root,root,-)
 %attr(755,root,root) %{_bindir}/thunderbird
+%{_datadir}/appdata/*.appdata.xml
 %attr(644,root,root) %{_datadir}/applications/mozilla-thunderbird.desktop
 %dir %{_datadir}/mozilla/extensions/%{thunderbird_app_id}
 %dir %{_libdir}/mozilla/extensions/%{thunderbird_app_id}
@@ -398,7 +540,7 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %dir %{mozappdir}/components
 %ghost %{mozappdir}/components/compreg.dat
 %ghost %{mozappdir}/components/xpti.dat
-%{mozappdir}/components/binary.manifest
+%{mozappdir}/components/components.manifest
 %{mozappdir}/components/libdbusservice.so
 %{mozappdir}/components/libmozgnome.so
 %{mozappdir}/omni.ja
@@ -410,7 +552,6 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %dir %{mozappdir}/langpacks
 %{mozappdir}/greprefs
 %{mozappdir}/isp
-%{mozappdir}/mozilla-xremote-client
 %{mozappdir}/run-mozilla.sh
 %{mozappdir}/thunderbird-bin
 %{mozappdir}/thunderbird
@@ -433,16 +574,185 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %if !%{?system_nss}
 %{mozappdir}/*.chk
 %endif
-%exclude %{_datadir}/idl/%{name}-%{version}
-%exclude %{_includedir}/%{name}-%{version}
+%exclude %{_datadir}/idl/%{name}-%{tb_version}
+%exclude %{_includedir}/%{name}-%{tb_version}
 %{mozappdir}/chrome.manifest
 %{mozappdir}/searchplugins
-%{mozappdir}/distribution/extensions
 %{mozappdir}/dependentlibs.list
+%{mozappdir}/distribution
 
 #===============================================================================
 
 %changelog
+* Thu Aug 20 2015 Jan Horak <jhorak@redhat.com> - 38.2.0-2
+- Thunderbird provides thunderbird-lightning now
+
+* Wed Aug 19 2015 Jan Horak <jhorak@redhat.com> - 38.2.0-1
+- Update to 38.2.0
+
+* Thu Jul  9 2015 Jan Horak <jhorak@redhat.com> - 38.1.0-1
+- Update to 38.1.0
+
+* Thu Jun 18 2015 Jan Horak <jhorak@redhat.com> - 38.0.1-3
+- Bundling calendar extension
+
+* Tue Jun  9 2015 Jan Horak <jhorak@redhat.com> - 38.0.1-1
+- Update to 38.0.1
+
+* Tue May 12 2015 Martin Stransky <stransky@redhat.com> - 31.7.0-1
+- Update to 31.7.0
+
+* Mon Apr  6 2015 Tom Callaway <spot@fedoraproject.org> - 31.6.0-2
+- rebuild for libvpx 1.4.0
+- stop using compat defines, they went away in libvpx 1.4.0
+
+* Tue Mar 31 2015 Jan Horak <jhorak@redhat.com> - 31.6.0-1
+- Update to 31.6.0
+
+* Thu Mar 26 2015 Richard Hughes <rhughes@redhat.com> - 31.5.0-3
+- Add an AppData file for the software center
+
+* Thu Mar 19 2015 Jan Horak <jhorak@redhat.com> - 31.5.0-2
+- Fixed build flags for s390(x)
+
+* Tue Feb 24 2015 Jan Horak <jhorak@redhat.com> - 31.5.0-1
+- Update to 31.5.0
+
+* Fri Feb 20 2015 Martin Stransky <stransky@redhat.com> - 31.4.0-2
+- Fixed rhbz#1187746 - GLib allocation error
+  when starting thunderbird
+
+* Wed Jan 14 2015 Jan Horak <jhorak@redhat.com> - 31.4.0-1
+- Update to 31.4.0
+
+* Mon Jan  5 2015 Jan Horak <jhorak@redhat.com> - 31.3.0-2
+- Exclude ppc64 arch for epel7
+
+* Mon Dec  1 2014 Jan Horak <jhorak@redhat.com> - 31.3.0-1
+- Update to 31.3.0
+
+* Tue Oct 14 2014 Jan Horak <jhorak@redhat.com> - 31.2.0-1
+- Update to 31.2.0
+
+* Wed Oct 1 2014 Martin Stransky <stransky@redhat.com> - 31.1.1-2
+- Sync prefs with Firefox
+
+* Thu Sep 11 2014 Jan Horak <jhorak@redhat.com> - 31.1.1-1
+- Update to 31.1.1
+
+* Mon Sep  1 2014 Jan Horak <jhorak@redhat.com> - 31.1.0-1
+- Update to 31.1.0
+
+* Tue Aug 26 2014 Karsten Hopp <karsten@redhat.com> 31.0-5
+- ppc64 patch 304 got removed and isn't required anymore (mozbz#973977)
+
+* Mon Aug 18 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 31.0-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
+
+* Mon Aug  4 2014 Peter Robinson <pbrobinson@fedoraproject.org> 31.0-3
+- Build with system FFI as per firefox/xulrunner (fixes aarch64)
+
+* Wed Jul 30 2014 Martin Stransky <stransky@redhat.com> - 31.0-2
+- Added patch for mozbz#858919
+
+* Tue Jul 29 2014 Martin Stransky <stransky@redhat.com> - 31.0-1
+- Update to 31.0
+
+* Tue Jul 22 2014 Jan Horak <jhorak@redhat.com> - 24.7.0-1
+- Update to 24.7.0
+
+* Mon Jun  9 2014 Jan Horak <jhorak@redhat.com> - 24.6.0-1
+- Update to 24.6.0
+
+* Sun Jun 08 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 24.5.0-6
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Fri May 23 2014 Brent Baude <baude@us.ibm.com> - 24.5.0-5
+- Moving the ppc64 conditional up before the cd so it will
+- apply cleanly
+
+* Fri May 23 2014 Martin Stransky <stransky@redhat.com> - 24.5.0-4
+- Added a build fix for ppc64 - rhbz#1100495
+
+* Mon May  5 2014 Jan Horak <jhorak@redhat.com> - 24.5.0-3
+- Fixed find requires
+
+* Mon Apr 28 2014 Jan Horak <jhorak@redhat.com> - 24.5.0-1
+- Update to 24.5.0
+
+* Tue Apr 22 2014 Jan Horak <jhorak@redhat.com> - 24.4.0-2
+- Added support for ppc64le
+
+* Tue Mar 18 2014 Jan Horak <jhorak@redhat.com> - 24.4.0-1
+- Update to 24.4.0
+
+* Mon Feb  3 2014 Jan Horak <jhorak@redhat.com> - 24.3.0-1
+- Update to 24.3.0
+
+* Mon Dec 16 2013 Martin Stransky <stransky@redhat.com> - 24.2.0-4
+- Fixed rhbz#1024232 - thunderbird: squiggly lines used 
+  for spelling correction disappear randomly
+
+* Fri Dec 13 2013 Martin Stransky <stransky@redhat.com> - 24.2.0-3
+- Build with -Werror=format-security (rhbz#1037353)
+
+* Wed Dec 11 2013 Martin Stransky <stransky@redhat.com> - 24.2.0-2
+- rhbz#1001998 - added a workaround for system notifications
+
+* Mon Dec  9 2013 Jan Horak <jhorak@redhat.com> - 24.2.0-1
+- Update to 24.2.0
+
+* Sat Nov 02 2013 Dennis Gilmore <dennis@ausil.us> - 24.1.0-2
+- remove ExcludeArch: armv7hl
+
+* Wed Oct 30 2013 Jan Horak <jhorak@redhat.com> - 24.1.0-1
+- Update to 24.1.0
+
+* Thu Oct 17 2013 Martin Stransky <stransky@redhat.com> - 24.0-4
+- Fixed rhbz#1005611 - BEAST workaround not enabled in Firefox
+
+* Wed Sep 25 2013 Jan Horak <jhorak@redhat.com> - 24.0-3
+- Update to 24.0
+
+* Mon Sep 23 2013 Jan Horak <jhorak@redhat.com> - 17.0.9-1
+- Update to 17.0.9 ESR
+
+* Mon Aug  5 2013 Jan Horak <jhorak@redhat.com> - 17.0.8-1
+- Update to 17.0.8
+
+* Sun Aug 04 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 17.0.7-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Tue Jun 25 2013 Jan Horak <jhorak@redhat.com> - 17.0.7-1
+- Update to 17.0.7
+
+* Wed Jun 12 2013 Jan Horak <jhorak@redhat.com> - 17.0.6-2
+- Fixed rhbz#973371 - unable to install addons
+
+* Tue May 14 2013 Jan Horak <jhorak@redhat.com> - 17.0.6-1
+- Update to 17.0.6
+
+* Tue Apr  2 2013 Jan Horak <jhorak@redhat.com> - 17.0.5-1
+- Update to 17.0.5
+
+* Mon Mar 11 2013 Jan Horak <jhorak@redhat.com> - 17.0.4-1
+- Update to 17.0.4
+
+* Tue Feb 19 2013 Jan Horak <jhorak@redhat.com> - 17.0.3-1
+- Update to 17.0.3
+
+* Fri Feb 15 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 17.0.2-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
+
+* Tue Jan 15 2013 Martin Stransky <stransky@redhat.com> - 17.0.2-3
+- Added fix for NM regression (mozbz#791626)
+
+* Tue Jan 15 2013 Jan Horak <jhorak@redhat.com> - 17.0.2-2
+- Added mozilla-746112 patch to fix crash on ppc(64)
+
+* Thu Jan 10 2013 Jan Horak <jhorak@redhat.com> - 17.0.2-1
+- Update to 17.0.2
+
 * Mon Nov 19 2012 Jan Horak <jhorak@redhat.com> - 17.0-1
 - Update to 17.0
 
@@ -585,7 +895,7 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 * Tue Aug 16 2011 Jan Horak <jhorak@redhat.com> - 6.0-1
 - Update to 6.0
 
-* Sun Aug 16 2011 Remi Collet <remi@fedoraproject.org> 5.0-4
+* Tue Aug 16 2011 Remi Collet <remi@fedoraproject.org> 5.0-4
 - Don't unzip the langpacks
 
 * Mon Aug 15 2011 Jan Horak <jhorak@redhat.com> - 5.0-3

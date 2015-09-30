@@ -55,6 +55,11 @@ GNOME_DISABLE_CRASH_DIALOG=1
 export GNOME_DISABLE_CRASH_DIALOG
 
 ##
+## Disable the SLICE allocator (rhbz#1014858)
+##
+export G_SLICE=always-malloc
+
+##
 ## To disable the use of Firefox localization, set MOZ_DISABLE_LANGPACKS=1
 ## in your environment before launching Firefox.
 ##
@@ -72,11 +77,8 @@ FEDORA_LANGPACK_CONFIG="$MOZ_EXTENSIONS_PROFILE_DIR/.fedora-langpack-install"
 # MOZ_DISABLE_LANGPACKS disables language packs completelly
 MOZILLA_DOWN=0
 if ! [ $MOZ_DISABLE_LANGPACKS ] || [ $MOZ_DISABLE_LANGPACKS -eq 0 ]; then
-    if [ -x $MOZ_DIST_BIN/mozilla-xremote-client ]; then
-        # Is thunderbird running?
-        $MOZ_DIST_BIN/mozilla-xremote-client -a thunderbird 'ping()' > /dev/null 2>&1
-        MOZILLA_DOWN=$?
-    fi
+    pidof thunderbird > /dev/null 2>&1
+    MOZILLA_DOWN=$?
 fi
 
 # Modify language pack configuration only when thunderbird is not running 
@@ -117,6 +119,10 @@ if [ $MOZILLA_DOWN -ne 0 ]; then
 
     create_langpack_link $SHORTMOZLOCALE || create_langpack_link $MOZLOCALE || true
 fi
+
+# BEAST fix (rhbz#1005611)
+NSS_SSL_CBC_RANDOM_IV=${NSS_SSL_CBC_RANDOM_IV-1}
+export NSS_SSL_CBC_RANDOM_IV
 
 # Prepare command line arguments
 script_args=""
