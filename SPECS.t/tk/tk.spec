@@ -1,10 +1,10 @@
 %define majorver 8.6
-%define vers %{majorver}.1
+%define vers %{majorver}.4
 
 Summary: The graphical toolkit for the Tcl scripting language
 Name: tk
 Version: %{vers}
-Release: 3%{?dist}
+Release: 2%{?dist}
 Epoch:   1
 License: TCL
 Group: Development/Languages
@@ -22,9 +22,10 @@ Conflicts: itcl <= 3.2
 Obsoletes: tile <= 0.8.2
 Provides: tile = 0.8.2
 Patch1: tk-8.6.1-make.patch
-Patch2: tk-8.6.1-conf.patch
+Patch2: tk-8.6.3-conf.patch
 # fix implicit linkage of freetype that breaks xft detection (#677692)
 Patch3: tk-8.6.1-fix-xft.patch
+Patch4: tk-8.6.4-no-fonts-fix.patch
 
 %description
 When paired with the Tcl scripting language, Tk provides a fast and powerful
@@ -49,6 +50,7 @@ The package contains the development files and man pages for tk.
 %patch1 -p1 -b .make
 %patch2 -p1 -b .conf
 %patch3 -p1 -b .fix-xft
+%patch4 -p1 -b .no-fonts-fix
 
 %build
 cd unix
@@ -113,8 +115,24 @@ sed -i -e "s|$PWD/unix|%{_libdir}|; s|$PWD|%{_includedir}/%{name}-private|" %{bu
 %{_datadir}/%{name}%{majorver}/tkAppInit.c
 
 %changelog
-* Tue Jun 17 2014 Liu Di <liudidi@gmail.com> - 1:8.6.1-3
-- 为 Magic 3.0 重建
+* Thu Jul  2 2015 Jaroslav Škarvada <jskarvad@redhat.com> - 1:8.6.4-2
+- Fixed crash if there is no font installed (by no-fonts-fix patch)
+  Resolves: rhbz#1229991
+
+* Fri Mar 13 2015 Jaroslav Škarvada <jskarvad@redhat.com> - 1:8.6.4-1
+- New version
+
+* Fri Nov 14 2014 Jaroslav Škarvada <jskarvad@redhat.com> - 1:8.6.3-1
+- New version
+  Resolves: rhbz#1163350
+- Defuzzified conf patch
+
+* Wed Aug 27 2014 Jaroslav Škarvada <jskarvad@redhat.com> - 1:8.6.2-1
+- New version
+  Resolves: rhbz#1134023
+
+* Mon Aug 18 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1:8.6.1-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
 
 * Fri Jun 13 2014 Jaroslav Škarvada <jskarvad@redhat.com> - 1:8.6.1-2
 - Re-enabled threads (previously reported bugs are no more reproducible)
