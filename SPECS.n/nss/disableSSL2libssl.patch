@@ -10,8 +10,8 @@ diff --git a/lib/ssl/config.mk b/lib/ssl/config.mk
  DEFINES += -DNISCC_TEST
  endif
  
-+ifdef NSS_NO_SSL2
-+DEFINES += -DNSS_NO_SSL2
++ifdef NSS_NO_SSL2_NO_EXPORT
++DEFINES += -DNSS_NO_SSL2_NO_EXPORT
 +endif
 +
  # Allow build-time configuration of TLS 1.3 (Experimental)
@@ -25,7 +25,7 @@ diff --git a/lib/ssl/config.mk b/lib/ssl/config.mk
 diff --git a/lib/ssl/sslsock.c b/lib/ssl/sslsock.c
 --- a/lib/ssl/sslsock.c
 +++ b/lib/ssl/sslsock.c
-@@ -650,16 +650,22 @@ SSL_OptionSet(PRFileDesc *fd, PRInt32 wh
+@@ -674,16 +674,22 @@ SSL_OptionSet(PRFileDesc *fd, PRInt32 wh
          if (ss->cipherSpecs) {
              PORT_Free(ss->cipherSpecs);
              ss->cipherSpecs     = NULL;
@@ -34,7 +34,7 @@ diff --git a/lib/ssl/sslsock.c b/lib/ssl/sslsock.c
          break;
  
        case SSL_ENABLE_SSL2:
-+#ifdef NSS_NO_SSL2
++#ifdef NSS_NO_SSL2_NO_EXPORT
 +        if (on) {
 +            PORT_SetError(SSL_ERROR_SSL2_DISABLED);
 +            rv = SECFailure; /* not allowed */
@@ -48,7 +48,7 @@ diff --git a/lib/ssl/sslsock.c b/lib/ssl/sslsock.c
              break;
          }
          ss->opt.enableSSL2       = on;
-@@ -667,42 +673,50 @@ SSL_OptionSet(PRFileDesc *fd, PRInt32 wh
+@@ -691,52 +697,67 @@ SSL_OptionSet(PRFileDesc *fd, PRInt32 wh
              ss->opt.v2CompatibleHello = on;
          }
          ss->preferredCipher     = NULL;
@@ -57,7 +57,7 @@ diff --git a/lib/ssl/sslsock.c b/lib/ssl/sslsock.c
              ss->cipherSpecs     = NULL;
              ss->sizeCipherSpecs = 0;
          }
-+#endif /* NSS_NO_SSL2 */
++#endif /* NSS_NO_SSL2_NO_EXPORT */
          break;
  
        case SSL_NO_CACHE:
@@ -73,7 +73,7 @@ diff --git a/lib/ssl/sslsock.c b/lib/ssl/sslsock.c
          break;
  
        case SSL_V2_COMPATIBLE_HELLO:
-+#ifdef NSS_NO_SSL2
++#ifdef NSS_NO_SSL2_NO_EXPORT
 +        if (on) {
 +            PORT_SetError(SSL_ERROR_SSL2_DISABLED);
 +            rv = SECFailure; /* not allowed */
@@ -90,7 +90,7 @@ diff --git a/lib/ssl/sslsock.c b/lib/ssl/sslsock.c
          if (!on) {
              ss->opt.enableSSL2    = on;
          }
-+#endif /* NSS_NO_SSL2 */
++#endif /* NSS_NO_SSL2_NO_EXPORT */
          break;
  
        case SSL_ROLLBACK_DETECTION:
@@ -98,26 +98,54 @@ diff --git a/lib/ssl/sslsock.c b/lib/ssl/sslsock.c
          break;
  
        case SSL_NO_STEP_DOWN:
-         ss->opt.noStepDown     = on;
-@@ -1168,17 +1182,21 @@ SSL_CipherPolicySet(PRInt32 which, PRInt
- 
-     if (rv != SECSuccess) {
-         return rv;
-     }
- 
-     if (ssl_IsRemovedCipherSuite(which)) {
-         rv = SECSuccess;
-     } else if (SSL_IS_SSL2_CIPHER(which)) {
-+#ifdef NSS_NO_SSL2
-+        rv = SSL_ERROR_SSL2_DISABLED;
++#ifdef NSS_NO_SSL2_NO_EXPORT
++        if (!on) {
++            PORT_SetError(SSL_ERROR_SSL2_DISABLED);
++            rv = SECFailure; /* not allowed */
++        }
 +#else
-         rv = ssl2_SetPolicy(which, policy);
-+#endif /* NSS_NO_SSL2 */
-     } else {
-         rv = ssl3_SetPolicy((ssl3CipherSuite)which, policy);
+         ss->opt.noStepDown     = on;
+         if (on)
+             SSL_DisableExportCipherSuites(fd);
++#endif /* NSS_NO_SSL2_NO_EXPORT */
+         break;
+ 
+       case SSL_BYPASS_PKCS11:
+         if (ss->handshakeBegun) {
+             PORT_SetError(PR_INVALID_STATE_ERROR);
+             rv = SECFailure;
+         } else {
+             if (PR_FALSE != on) {
+@@ -1163,16 +1184,32 @@ SSL_OptionSetDefault(PRInt32 which, PRBo
      }
-     return rv;
+     return SECSuccess;
  }
  
- SECStatus
- SSL_CipherPolicyGet(PRInt32 which, PRInt32 *oPolicy)
+ /* function tells us if the cipher suite is one that we no longer support. */
+ static PRBool
+ ssl_IsRemovedCipherSuite(PRInt32 suite)
+ {
++#ifdef NSS_NO_SSL2_NO_EXPORT
++    /* both ssl2 and export cipher suites disabled */
++    if (SSL_IS_SSL2_CIPHER(suite))
++        return PR_TRUE;
++    if (SSL_IsExportCipherSuite(suite)) {
++        SSLCipherSuiteInfo csdef;
++        if (SSL_GetCipherSuiteInfo(suite, &csdef, sizeof(csdef)) != SECSuccess) {
++            /* failure to retrieve info, disable */
++            return PR_TRUE;
++        }
++        if (csdef.symCipher != ssl_calg_null) {
++            /* disable all except NULL ciphersuites */
++            return PR_TRUE;
++        }
++    }
++#endif /* NSS_NO_SSL2_NO_EXPORT */
+     switch (suite) {
+     case SSL_FORTEZZA_DMS_WITH_NULL_SHA:
+     case SSL_FORTEZZA_DMS_WITH_FORTEZZA_CBC_SHA:
+     case SSL_FORTEZZA_DMS_WITH_RC4_128_SHA:
+         return PR_TRUE;
+     default:
+         return PR_FALSE;
+     }

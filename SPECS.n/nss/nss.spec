@@ -1,6 +1,6 @@
-%global nspr_version 4.10.7
-%global nss_util_version 3.17.4
-%global nss_softokn_version 3.17.4
+%global nspr_version 4.10.8
+%global nss_util_version 3.20.0
+%global nss_softokn_version 3.20.0
 %global unsupported_tools_directory %{_libdir}/nss/unsupported-tools
 %global allTools "certutil cmsutil crlutil derdump modutil pk12util signtool signver ssltap vfychain vfyserv"
 
@@ -18,7 +18,9 @@
 
 Summary:          Network Security Services
 Name:             nss
-Version:          3.17.4
+Version:          3.20.0
+# for Rawhide, please always use release >= 2
+# for Fedora release branches, please use release < 2 (1.0, 1.1, ...)
 Release:          5%{?dist}
 License:          MPLv2.0
 URL:              http://www.mozilla.org/projects/security/pki/nss/
@@ -56,11 +58,7 @@ Source6:          blank-cert9.db
 Source7:          blank-key4.db
 Source8:          system-pkcs11.txt
 Source9:          setup-nsssysinit.sh
-Source10:         PayPalEE.cert
 Source12:         %{name}-pem-20140125.tar.bz2
-Source17:         TestCA.ca.cert
-Source18:         TestUser50.cert
-Source19:         TestUser51.cert
 Source20:         nss-config.xml
 Source21:         setup-nsssysinit.xml
 Source22:         pkcs11.txt.xml
@@ -90,13 +88,16 @@ Patch49:          nss-skip-bltest-and-fipstest.patch
 # headers are older. Such is the case when starting an update with API changes or even private export changes.
 # Once the buildroot aha been bootstrapped the patch may be removed but it doesn't hurt to keep it.
 Patch50:          iquote.patch
-# Upstream: https://bugzilla.mozilla.org/show_bug.cgi?id=1083900
-Patch51:          tls12.patch
-# SSL2 support has been disabled downstream in RHEL since RHEL-7.0
 Patch52:          disableSSL2libssl.patch
 Patch53:          disableSSL2tests.patch
-# Upstream: https://bugzilla.mozilla.org/show_bug.cgi?id=1128367
-Patch92:          scripts-syntax-errors.patch
+Patch54:          tstclnt-ssl2-off-by-default.patch
+Patch55:          skip_stress_TLS_RC4_128_with_MD5.patch
+# Upstream: https://bugzilla.mozilla.org/show_bug.cgi?id=923089
+# Upstream: https://bugzilla.mozilla.org/show_bug.cgi?id=1009429
+# See https://hg.mozilla.org/projects/nss/raw-rev/dc7bb2f8cc50
+Patch56: ocsp_stapling_sslauth_sni_tests_client_side_fixes.patch
+# TODO: File a bug usptream
+Patch57: rhbz1185708-enable-ecc-ciphers-by-default.patch
 
 %description
 Network Security Services (NSS) is a set of libraries designed to
@@ -167,10 +168,6 @@ low level services.
 
 %prep
 %setup -q
-%{__cp} %{SOURCE10} -f ./nss/tests/libpkix/certs
-%{__cp} %{SOURCE17} -f ./nss/tests/libpkix/certs
-%{__cp} %{SOURCE18} -f ./nss/tests/libpkix/certs
-%{__cp} %{SOURCE19} -f ./nss/tests/libpkix/certs
 %setup -q -T -D -n %{name}-%{version} -a 12
 
 %patch2 -p0 -b .relro
@@ -184,10 +181,14 @@ low level services.
 %patch49 -p0 -b .skipthem
 %patch50 -p0 -b .iquote
 pushd nss
-%patch51 -p1 -b .994599
 %patch52 -p1 -b .disableSSL2libssl
 %patch53 -p1 -b .disableSSL2tests
-%patch92 -p1 -b .syntax
+popd
+%patch54 -p0 -b .ssl2_off
+%patch55 -p1 -b .skip_stress_tls_rc4_128_with_md5
+%patch56 -p1 -b .ocsp_sni
+pushd nss
+%patch57 -p1 -b .1185708
 popd
 
 #########################################################
@@ -201,7 +202,7 @@ for file in ${pemNeedsFromSoftoken}; do
     %{__cp} ./nss/lib/softoken/${file}.h ./nss/lib/ckfw/pem/
 done
 
-# Copying these header util the upstream bug is accepted
+# Copying these header until the upstream bug is accepted
 # Upstream https://bugzilla.mozilla.org/show_bug.cgi?id=820207
 %{__cp} ./nss/lib/softoken/lowkeyi.h ./nss/cmd/rsaperf
 %{__cp} ./nss/lib/softoken/lowkeyti.h ./nss/cmd/rsaperf
@@ -217,10 +218,16 @@ done
 %{__rm} -rf ./nss/cmd/fipstest
 %{__rm} -rf ./nss/cmd/rsaperf_low
 
+pushd nss/tests/ssl
+# Create versions of sslcov.txt and sslstress.txt that disable tests
+# for SSL2 and EXPORT ciphers.
+cat sslcov.txt| sed -r "s/^([^#].*EXPORT|^[^#].*SSL2)/#disabled \1/" > sslcov.noSSL2orExport.txt
+cat sslstress.txt| sed -r "s/^([^#].*EXPORT|^[^#].*SSL2)/#disabled \1/" > sslstress.noSSL2orExport.txt
+popd
+
 %build
 
-# uncomment this line when the work is ready
-#export NSS_NO_SSL2=1
+export NSS_NO_SSL2_NO_EXPORT=1
 
 NSS_NO_PKCS11_BYPASS=1
 export NSS_NO_PKCS11_BYPASS
@@ -371,8 +378,7 @@ fi
 # Begin -- copied from the build section
 
 # inform the ssl test scripts that SSL2 is disabled
-# uncomment this line when the work is ready
-#export NSS_NO_SSL2=1
+export NSS_NO_SSL2_NO_EXPORT=1
 
 FREEBL_NO_DEPEND=1
 export FREEBL_NO_DEPEND
@@ -528,7 +534,7 @@ done
 %{__install} -p -m 644 %{SOURCE6} $RPM_BUILD_ROOT/%{_sysconfdir}/pki/nssdb/cert9.db
 %{__install} -p -m 644 %{SOURCE7} $RPM_BUILD_ROOT/%{_sysconfdir}/pki/nssdb/key4.db
 %{__install} -p -m 644 %{SOURCE8} $RPM_BUILD_ROOT/%{_sysconfdir}/pki/nssdb/pkcs11.txt
-     
+
 # Copy the development libraries we want
 for file in libcrmf.a libnssb.a libnssckfw.a
 do
@@ -574,7 +580,7 @@ for f in nss-config setup-nsssysinit; do
 done
 # Copy the man pages for the nss tools
 for f in "%{allTools}"; do 
-   install -c -m 644 ./dist/docs/nroff/${f}.1 $RPM_BUILD_ROOT%{_mandir}/man1/${f}.1
+  install -c -m 644 ./dist/docs/nroff/${f}.1 $RPM_BUILD_ROOT%{_mandir}/man1/${f}.1
 done
 %if %{defined rhel}
 install -c -m 644 ./dist/docs/nroff/pp.1 $RPM_BUILD_ROOT%{_mandir}/man1/pp.1
@@ -797,8 +803,49 @@ fi
 
 
 %changelog
-* Thu Feb 26 2015 Liu Di <liudidi@gmail.com> - 3.17.4-5
-- 为 Magic 3.0 重建
+* Wed Sep 16 2015 Elio Maldonado <emaldona@redhat.com> - 3.20.0-5
+- Enable ECC cipher-suites by default [hrbz#1185708]
+- Implement corrections requested in code review
+
+* Tue Sep 15 2015 Elio Maldonado <emaldona@redhat.com> - 3.20.0-4
+- Enable ECC cipher-suites by default [hrbz#1185708]
+
+* Mon Sep 14 2015 Elio Maldonado <emaldona@redhat.com> - 3.20.0-3
+- Fix patches that disable ssl2 and export cipher suites support
+- Fix libssl patch that disable ssl2 & export cipher suites to not disable RSA_WITH_NULL ciphers
+- Fix syntax errors in patch to skip ssl2 and export cipher suite tests
+- Turn ssl2 off by default in the tstclnt tool
+- Disable ssl stress tests containing TLS RC4 128 with MD5
+
+* Thu Aug 20 2015 Elio Maldonado <emaldona@redhat.com> - 3.20.0-2
+- Update to NSS 3.20
+
+* Sat Aug 08 2015 Elio Maldonado <emaldona@redhat.com> - 3.19.3-2
+- Update to NSS 3.19.3
+
+* Fri Jun 26 2015 Elio Maldonado <emaldona@redhat.com> - 3.19.2-3
+- Create on the fly versions of sslcov.txt and sslstress.txt that disable tests for SSL2 and EXPORT ciphers
+
+* Wed Jun 17 2015 Kai Engert <kaie@redhat.com> - 3.19.2-2
+- Update to NSS 3.19.2
+
+* Thu May 28 2015 Kai Engert <kaie@redhat.com> - 3.19.1-2
+- Update to NSS 3.19.1
+
+* Tue May 19 2015 Kai Engert <kaie@redhat.com> - 3.19.0-2
+- Update to NSS 3.19
+
+* Fri May 15 2015 Kai Engert <kaie@redhat.com> - 3.18.0-2
+- Replace expired test certificates, upstream bug 1151037
+
+* Thu Mar 19 2015 Elio Maldonado <emaldona@redhat.com> - 3.18.0-1
+- Update to nss-3.18.0
+- Resolves: Bug 1203689 - nss-3.18 is available
+
+* Tue Mar 03 2015 Elio Maldonado <emaldona@redhat.com> - 3.17.4-5
+- Disable export suites and SSL2 support at build time
+- Fix syntax errors in various shell scripts
+- Resolves: Bug 1189952 - Disable SSL2 and the export cipher suites
 
 * Sat Feb 21 2015 Till Maas <opensource@till.name> - 3.17.4-4
 - Rebuilt for Fedora 23 Change
