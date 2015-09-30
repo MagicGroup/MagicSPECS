@@ -7,11 +7,13 @@
 %bcond_without qt4
 
 Summary: Next generation package handling tool
+Summary(zh_CN.UTF-8): 下一代包处理工具
 Name: smart
 Version: 1.4.1
-Release: 1%{?dist}
+Release: 2%{?dist}
 License: GPLv2+
 Group: Applications/System
+Group(zh_CN.UTF-8): 应用程序/系统
 URL: http://labix.org/smart/
 Source0: http://labix.org/download/smart/%{name}-%{version}.tar.bz2
 Source1: smart.console
@@ -41,19 +43,29 @@ Requires: smart-config
 %description
 Smart Package Manager is a next generation package handling tool.
 
+%description -l zh_CN.UTF-8
+下一代包处理工具。
+
 %package update
 Summary: Allows execution of 'smart update' by normal users (suid)
+Summary(zh_CN.UTF-8): 允许普通用户执行 'smart update'
 Group: Applications/System
+Group(zh_CN.UTF-8): 应用程序/系统
 Requires: smart = %{version}-%{release}
 
 %description update
 Allows execution of 'smart update' by normal users through a
 special suid command.
 
+%description update -l zh_CN.UTF-8
+允许普通用户执行 'smart update'。
+
 %if %{with pygtk}
 %package gui
 Summary: Graphical user interface for the smart package manager
+Summary(zh_CN.UTF-8): smart 包管理器的图形用户界面
 Group: Applications/System
+Group(zh_CN.UTF-8): 应用程序/系统
 Requires: smart = %{version}-%{release}
 Requires: pygtk2 >= 2.4
 Requires: usermode
@@ -67,18 +79,24 @@ Requires: PyQt4
 
 %description gui
 Graphical user interface for the smart package manager.
+%description gui -l zh_CN.UTF-8
+smart 包管理器的图形用户界面。
 %endif
 
 %if %{with ksmarttray}
 %package -n ksmarttray
 Summary: KDE tray program for watching updates with Smart Package Manager
+Summary(zh_CN.UTF-8): smart 包管理器用来监视更新的 KDE 系统栏程序 
 Group: Applications/System
+Group(zh_CN.UTF-8): 应用程序/系统
 Requires: %{_bindir}/kdesu
 Requires: smart-update = %{version}-%{release}
 Requires: smart-gui = %{version}-%{release}
 
 %description -n ksmarttray
 KDE tray program for watching updates with Smart Package Manager.
+%description -n ksmarttray -l zh_CN.UTF-8
+smart 包管理器用来监视更新的 KDE 系统栏程序。
 %endif
 
 %prep
@@ -234,6 +252,9 @@ rm -rf %{buildroot}
 %endif
 
 %changelog
+* Mon Sep 28 2015 Liu Di <liudidi@gmail.com> - 1.4.1-2
+- 为 Magic 3.0 重建
+
 * Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 1.3.1-69
 - 为 Magic 3.0 重建
 

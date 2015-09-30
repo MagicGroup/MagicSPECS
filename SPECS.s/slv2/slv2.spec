@@ -1,9 +1,11 @@
 Name:			slv2
 Summary:		LV2 host library
+Summary(zh_CN.UTF-8): 	LV2 主机库
 Version:		0.6.6
-Release:		9%{?dist}
+Release:		10%{?dist}
 License:		GPLv2+
 Group:			System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 Source0:		http://download.drobilla.net/%{name}-%{version}.tar.bz2
 # Remove dates from html doc files RHBZ#566345
 Patch0:			%{name}-no-date-on-docs.patch
@@ -26,10 +28,14 @@ Data (RDF) and code (shared library) functionality in SLV2 is strictly
 separated so it is simple to control where each is used (e.g. it is possible
 to discover/investigate plugins and related data without loading any shared 
 libraries, avoiding the associated risks).
+%description -l zh_CN.UTF-8
+LV2 主机库。
 
 %package devel
 Summary:	Development libraries and headers for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:		Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:	lv2core-devel 
 Requires:	redland-devel
 Requires:	pkgconfig
@@ -44,6 +50,9 @@ to discover/investigate plugins and related data without loading any shared
 libraries, avoiding the associated risks).
 
 This package contains the headers and development libraries for SLV2.
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q 
@@ -71,6 +80,7 @@ export CXXFLAGS="%{optflags}"
 rm -rf %{buildroot}
 DESTDIR=%{buildroot} ./waf install
 chmod +x %{buildroot}%{_libdir}/lib%{name}.so*
+magic_rpm_clean.sh
 
 %clean
 rm -rf %{buildroot}
@@ -95,6 +105,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/*%{name}*
 
 %changelog
+* Sun Sep 27 2015 Liu Di <liudidi@gmail.com> - 0.6.6-10
+- 为 Magic 3.0 重建
+
 * Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 0.6.6-9
 - 为 Magic 3.0 重建
 

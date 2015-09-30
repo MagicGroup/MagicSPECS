@@ -1,0 +1,17 @@
+#!/bin/bash
+if [ -z "$1" ] ; then
+        echo "使用方法：$0 新版本号"
+        exit 1
+fi
+pushd $(dirname $0)
+NAME=$(basename $(pwd))
+M1=`echo $1|cut -d"." -f1`
+M2=`echo $1|cut -d"." -f2|awk '{printf("%02d\n",$0)}'`
+M3=`echo $1|cut -d"." -f3|awk '{printf("%02d\n",$0)}'`
+M4=`echo $1|cut -d"." -f4|awk '{printf("%02d\n",$0)}'`
+REALVER=$M1$M2$M3$M4
+sed -i "s/Release:.*/Release:\t1%{?dist}/g" $NAME.spec
+sed -i "s/%define realver.*/%define realver $REALVER/g" $NAME.spec
+sed -i "s/%define docver.*/%define docver $REALVER/g" $NAME.spec
+sed -i "s/%define rpmver.*/%define rpmver  $1/g" $NAME.spec
+popd

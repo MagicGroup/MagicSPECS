@@ -7,7 +7,7 @@ Summary: smart's config file
 Summary(zh_CN.UTF-8): smart 的配置文件
 Name: smart-config
 Version: 1.2
-Release: 11%{?dist}
+Release: 12%{?dist}
 License: GPL
 Group: Applications/System
 Group(zh_CN.UTF-8): 应用程序/系统
@@ -78,6 +78,9 @@ mkdir -p %{buildroot}%{_sysconfdir}/smart/channels/
 %config(noreplace) %{_sysconfdir}/smart/channels/
 
 %changelog
+* Mon Sep 28 2015 Liu Di <liudidi@gmail.com> - 1.2-12
+- 为 Magic 3.0 重建
+
 * Thu Apr 10 2014 Liu Di <liudidi@gmail.com> - 1.2-11
 - 针对不同架构增加设置
 

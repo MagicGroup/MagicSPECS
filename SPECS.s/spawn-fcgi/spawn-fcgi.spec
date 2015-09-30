@@ -1,9 +1,11 @@
 Summary: Simple program for spawning FastCGI processes
+Summary(zh_CN.UTF-8): 处理 FastCGI 进程的简单程序
 Name: spawn-fcgi
 Version: 1.6.3
-Release: 3%{?dist}
+Release: 4%{?dist}
 License: BSD
 Group: System Environment/Daemons
+Group(zh_CN.UTF-8): 系统环境/服务
 URL: http://redmine.lighttpd.net/projects/spawn-fcgi/
 Source0: http://www.lighttpd.net/download/spawn-fcgi-%{version}.tar.bz2
 Source1: spawn-fcgi.init
@@ -17,6 +19,8 @@ Requires(preun): /sbin/service, /sbin/chkconfig
 This package contains the spawn-fcgi program used for spawning FastCGI
 processes, which can be local or remote.
 
+%description -l zh_CN.UTF-8
+处理 FastCGI 进程的简单程序。
 
 %prep
 %setup -q
@@ -34,7 +38,7 @@ processes, which can be local or remote.
     %{buildroot}%{_sysconfdir}/init.d/spawn-fcgi
 %{__install} -D -p -m 0600 %{SOURCE2} \
     %{buildroot}%{_sysconfdir}/sysconfig/spawn-fcgi
-
+magic_rpm_clean.sh
 
 %clean
 %{__rm} -rf %{buildroot}
@@ -60,6 +64,9 @@ fi
 
 
 %changelog
+* Mon Sep 28 2015 Liu Di <liudidi@gmail.com> - 1.6.3-4
+- 为 Magic 3.0 重建
+
 * Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 1.6.3-3
 - 为 Magic 3.0 重建
 

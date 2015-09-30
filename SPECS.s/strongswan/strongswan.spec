@@ -7,10 +7,12 @@
 #%%define prerelease dr1
 
 Name:           strongswan
-Release:        3%{?prerelease:.%{prerelease}}%{?dist}
-Version:        5.3.2
+Release:	1%{?dist}
+Version:	5.3.3
 Summary:        An OpenSource IPsec-based VPN and TNC solution
+Summary(zh_CN.UTF-8): 开源的基于 IPsec 的 VPN 和 TNC 解决方案
 Group:          System Environment/Daemons
+Group(zh_CN.UTF-8): 系统环境/服务
 License:        GPLv2+
 URL:            http://www.strongswan.org/
 Source0:        http://download.strongswan.org/%{name}-%{version}%{?prerelease}.tar.bz2
@@ -73,6 +75,9 @@ The strongSwan IPsec implementation supports both the IKEv1 and IKEv2 key
 exchange protocols in conjunction with the native NETKEY IPsec stack of the
 Linux kernel.
 
+%description -l zh_CN.UTF-8
+开源的基于 IPsec 的 VPN 和 TNC 解决方案。
+
 %package libipsec
 Summary: Strongswan's libipsec backend
 Group: System Environment/Daemons
@@ -80,14 +85,12 @@ Group: System Environment/Daemons
 The kernel-libipsec plugin provides an IPsec backend that works entirely
 in userland, using TUN devices and its own IPsec implementation libipsec.
 
-%if 0%{?fedora} >= 19 || 0%{?rhel} >= 7
 %package charon-nm
 Summary:        NetworkManager plugin for Strongswan
 Group:          System Environment/Daemons
 %description charon-nm
 NetworkManager plugin integrates a subset of Strongswan capabilities
 to NetworkManager.
-%endif
 
 %package tnc-imcvs
 Summary: Trusted network connect (TNC)'s IMC/IMV functionality
@@ -194,48 +197,26 @@ for i in aacerts acerts certs cacerts crls ocspcerts private reqs; do
     install -d -m 700 %{buildroot}%{_sysconfdir}/%{name}/ipsec.d/${i}
 done
 
-%if 0%{?fedora} >= 19 || 0%{?rhel} >= 7
-%else
-install -D -m 755 %{SOURCE1} %{buildroot}/%{_initddir}/%{name}
-%endif
+magic_rpm_clean.sh
 
 %post
 /sbin/ldconfig
-%if 0%{?fedora} >= 19 || 0%{?rhel} >= 7
 %systemd_post %{name}.service
-%else
-/sbin/chkconfig --add %{name}
-%endif
 
 %preun
-%if 0%{?fedora} >= 19 || 0%{?rhel} >= 7
 %systemd_preun %{name}.service
-%else
-if [ $1 -eq 0 ] ; then
-    # Package removal, not upgrade
-    /sbin/service %{name} stop >/dev/null 2>&1
-    /sbin/chkconfig --del %{name}
-fi
-%endif
 
 %postun
 /sbin/ldconfig
-%if 0%{?fedora} >= 19 || 0%{?rhel} >= 7
 %systemd_postun_with_restart %{name}.service
-%else
-%endif
 
 %files
 %doc README README.Fedora COPYING NEWS TODO
 %config(noreplace) %{_sysconfdir}/%{name}
 %{_sysconfdir}/%{name}/ipsec.d/
-%if 0%{?fedora} >= 19 || 0%{?rhel} >= 7
 %{_unitdir}/%{name}.service
 %{_unitdir}/%{name}-swanctl.service
 %{_sbindir}/charon-systemd
-%else
-%{_initddir}/%{name}
-%endif
 %dir %{_libdir}/%{name}
 %{_libdir}/%{name}/libcharon.so.0
 %{_libdir}/%{name}/libcharon.so.0.0.0
@@ -372,13 +353,14 @@ fi
 %{_libdir}/%{name}/libipsec.so.0.0.0
 %{_libdir}/%{name}/plugins/libstrongswan-kernel-libipsec.so
 
-%if 0%{?fedora} >= 19 || 0%{?rhel} >= 7
 %files charon-nm
 %doc COPYING
 %{_libexecdir}/%{name}/charon-nm
-%endif
 
 %changelog
+* Tue Sep 29 2015 Liu Di <liudidi@gmail.com> - 5.3.3-1
+- 更新到 5.3.3
+
 * Thu Sep 24 2015 Pavel Šimerda <psimerda@redhat.com> - 5.3.2-3
 - Resolves: #1264598 - strongswan: many configuration files are not protected
 

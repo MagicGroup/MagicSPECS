@@ -1,3 +1,7 @@
+%global  _hardened_build        0
+%define _hardened_cflags       %{nil}
+%define _hardened_ldflags      %{nil}
+
 Summary:			Splashutils - fbsplash utils and miscellaneous framebuffer utilities
 Summary(zh_CN.UTF-8):			Splashutils - fbsplash 的相关程序以及一些帧缓冲工具
 Name:				splashutils
@@ -17,10 +21,13 @@ Source12:			freetype-2.3.12.tar.bz2
 Source13:			zlib-1.2.3.tar.bz2
 
 
-Patch:				splashutils-progress.patch
+Patch0:				splashutils-progress.patch
 Patch1:				splashutils-bootmsg.diff
 Patch2:				splashutils-1.5.4.4-bzip2.patch
 Patch3:				splashutils-1.5.4.4-freetype-bz2.patch
+Patch4:				splashutils-1.5.4.4-format-security.patch
+Patch5:				splashutils-1.5.4.4-freetype2.patch 
+Patch6:				miscsplashutils-0.1.8-freetype2.patch
 
 URL:				http://dev.gentoo.org/~spock/projects/gensplash/
 
@@ -62,9 +69,11 @@ cd %{name}-%{version}
 
 ln -s ./ core
 
-%patch -p1
+%patch0 -p1
 %patch1 -p1
 %patch2 -p1
+%patch4 -p1
+%patch5 -p1
 
 cd libs
 tar xf %{SOURCE10}
@@ -76,16 +85,16 @@ cd ..
 rm libs/zlib-1.2.3/Makefile
 echo > libs/klibc_compat.h
 
+%build
+cd %{name}-%{version}
 autoreconf -fisv
 %configure --with-mng --with-jpeg-src=libs/jpeg-8a --with-lpng-src=libs/libpng-1.4.3 --with-zlib-src=libs/zlib-1.2.3 --with-freetype2-src=libs/freetype-2.3.12
-
-%build
-
-cd %{name}-%{version}
 make -j1
+
 cd ../miscsplashutils-0.1.8
 patch -p0 -i %{PATCH3}
-CFLAGS="$RPM_OPT_FLAGS" make %{?_smp_mflags}
+patch -p1 -i %{PATCH6}
+make %{?_smp_mflags}
 
 %install
 %{__rm} -rf "%{buildroot}"
@@ -114,31 +123,24 @@ cp splashutils-gentoo-1.0.17/initrd.splash $RPM_BUILD_ROOT/usr/share/splashutils
 magic_rpm_clean.sh
 
 %clean
-%{__rm} -rf %{buildroot} %{_builddir}/%{buildsubdir}
 %{__rm} -rf %{name}-%{version}
 %{__rm} -rf miscsplashutils-0.1.8
 %{__rm} -rf splashutils-gentoo-1.0.17
 
 %files
 %defattr(-,root,root)
-%attr(0644,root,root) %doc %{name}-%{version}/AUTHORS %{name}-%{version}/ChangeLog %{name}-%{version}/COPYING %{name}-%{version}/NEWS %{name}-%{version}/README %{name}-%{version}/INSTALL %{name}-%{version}/TODO
-/etc/init.d/splashrcfunction.sh
-/etc/splash/*
-/lib/splash/bin/*
+%{_sysconfdir}/init.d/splashrcfunction.sh
+%{_sysconfdir}/splash/*
 /sbin/*
-/usr/bin/*
-/usr/include/fbsplash.h
-/usr/lib/libfbsplash.a
-/usr/lib/libfbsplash.la
-/usr/lib/libfbsplash.so*
-/usr/lib/libfbsplashrender.a
-/usr/lib/libfbsplashrender.la
-/usr/lib/libfbsplashrender.so*
-/usr/lib/pkgconfig/*
+%{_bindir}/*
+%{_includedir}/fbsplash.h
+%{_libdir}/libfbsplash.*
+%{_libdir}/libfbsplashrender.*
+%{_libdir}/pkgconfig/*
 /lib/splash/*
-/usr/sbin/*
-/usr/share/doc/splashutils/*
-/usr/share/splashutils/initrd.splash
+%{_sbindir}/*
+%{_docdir}/splashutils/*
+%{_datadir}/splashutils/initrd.splash
 
 %changelog
 * Thu Jun 14 2012 JiangTao <jiangtao9999@163.com> - 1.5.4.4-2

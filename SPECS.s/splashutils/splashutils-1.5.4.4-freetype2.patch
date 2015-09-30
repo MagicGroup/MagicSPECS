@@ -1,0 +1,28 @@
+diff -ur splashutils-1.5.4.4.orig/src/ttf.c splashutils-1.5.4.4/src/ttf.c
+--- splashutils-1.5.4.4.orig/src/ttf.c	2015-09-28 09:53:15.251076373 +0000
++++ splashutils-1.5.4.4/src/ttf.c	2015-09-28 09:58:10.231068813 +0000
+@@ -25,8 +25,8 @@
+ #include <assert.h>
+ 
+ #include <ft2build.h>
+-#include <freetype/ftoutln.h>
+-#include <freetype/ttnameid.h>
++#include "libs/freetype-2.3.12/include/freetype/ftoutln.h"
++#include "libs/freetype-2.3.12/include/freetype/ttnameid.h"
+ 
+ #include "common.h"
+ #include "render.h"
+diff -ur splashutils-1.5.4.4.orig/src/ttf.h splashutils-1.5.4.4/src/ttf.h
+--- splashutils-1.5.4.4.orig/src/ttf.h	2015-09-28 09:53:15.250076374 +0000
++++ splashutils-1.5.4.4/src/ttf.h	2015-09-28 09:57:29.773069850 +0000
+@@ -1,8 +1,8 @@
+ #ifndef _TTF_H
+ #define _TTF_H
+ #include <ft2build.h>
+-#include <freetype/ftoutln.h>
+-#include <freetype/ttnameid.h>
++#include "libs/freetype-2.3.12/include/freetype/ftoutln.h"
++#include "libs/freetype-2.3.12/include/freetype/ttnameid.h"
+ 
+ #define CACHED_METRICS  0x10
+ #define CACHED_BITMAP   0x01

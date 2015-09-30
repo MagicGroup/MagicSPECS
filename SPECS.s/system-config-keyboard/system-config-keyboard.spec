@@ -2,14 +2,16 @@
 %{!?python_sitelib: %global python_sitelib %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib()")}
 
 Name:           system-config-keyboard
-Version:        1.3.1
-Release:        9%{?dist}
+Version:        1.4.0
+Release:        2%{?dist}
 Summary:        A graphical interface for modifying the keyboard
+Summary(zh_CN.UTF-8): 修改键盘布局的图形界面
 
 Group:          System Environment/Base
+Group(zh_CN.UTF-8): 系统环境/基本
 License:        GPLv2+
 URL:            https://fedorahosted.org/system-config-keyboard/
-Source0:        https://fedorahosted.org/releases/s/y/system-config-keyboard/%{name}-%{version}.tar.gz
+Source0:        https://fedorahosted.org/releases/s/y/system-config-keyboard/%{name}-%{version}.tar.bz2
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildRequires:  desktop-file-utils
@@ -21,38 +23,41 @@ Requires:       usermode >= 1.36
 
 Obsoletes:      kbdconfig
 Obsoletes:      redhat-config-keyboard
-Patch0:         s-c-keyboard-do_not_remove_the_OK_button.patch
-Patch1:		sck-1.3.1-no-pyxf86config.patch
 
 
 %description
 system-config-keyboard is a graphical user interface that allows 
 the user to change the default keyboard of the system.
 
+%description -l zh_CN.UTF-8
+修改键盘布局的图形界面。
 
 %package base
 Summary:        system-config-keyboard base components
+Summary(zh_CN.UTF-8): %{name} 的基本组件
 Group:          System Environment/Base
+Group(zh_CN.UTF-8): 系统环境/基本
 License:        GPLv2+
 Requires:       python
 Requires:       dbus-python
 
 %description base
 Base components of system-config-keyboard.
-
+%description base -l zh_CN.UTF-8
+%{name} 的基本组件。
 
 %prep
 %setup -q
-%patch0 -p1
-%patch1 -p1
+
+# rhbz (#1185860)
+sed -i -e 's,Terminal=false,Terminal=true,g' system-config-keyboard.desktop.in
 
 %build
-make
-
+make %{?_smp_mflags}
 
 %install
 rm -rf $RPM_BUILD_ROOT
-make INSTROOT=$RPM_BUILD_ROOT install
+%{make_install} PYTHON=python2
 desktop-file-install --vendor system --delete-original      \
   --dir $RPM_BUILD_ROOT%{_datadir}/applications             \
    $RPM_BUILD_ROOT%{_datadir}/applications/system-config-keyboard.desktop
@@ -65,39 +70,43 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %post
-touch --no-create %{_datadir}/icons/hicolor
-if [ -x /usr/bin/gtk-update-icon-cache ]; then
-  gtk-update-icon-cache -q %{_datadir}/icons/hicolor
-fi
+/bin/touch --no-create %{_datadir}/icons/hicolor &>/dev/null || :
 
 
 %postun
-touch --no-create %{_datadir}/icons/hicolor
-if [ -x /usr/bin/gtk-update-icon-cache ]; then
-  gtk-update-icon-cache -q %{_datadir}/icons/hicolor
+if [ $1 -eq 0 ] ; then
+    /bin/touch --no-create %{_datadir}/icons/hicolor &>/dev/null
+    /usr/bin/gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 fi
 
 
+%posttrans
+/usr/bin/gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
+
+
 %files
-%defattr(-,root,root)
 %{_sbindir}/system-config-keyboard
 %{_bindir}/system-config-keyboard
 %{_datadir}/system-config-keyboard
 %attr(0755,root,root) %dir %{_datadir}/firstboot/modules
 %{_datadir}/firstboot/modules/*
 %attr(0644,root,root) %{_datadir}/applications/system-config-keyboard.desktop
-%attr(0644,root,root) %config %{_sysconfdir}/security/console.apps/system-config-keyboard
-%attr(0644,root,root) %config %{_sysconfdir}/pam.d/system-config-keyboard
+%attr(0644,root,root) %{_datadir}/polkit-1/actions/org.fedoraproject.config.keyboard.policy
 %attr(0644,root,root) %{_datadir}/icons/hicolor/48x48/apps/system-config-keyboard.png
+%{_datadir}/man/man*/system-config-keyboard.*
 
 
 %files base -f %{name}.lang
-%defattr(-,root,root)
 %doc COPYING
-%{python_sitelib}/system_config_keyboard
-
+%{python2_sitelib}/system_config_keyboard
 
 %changelog
+* Tue Sep 29 2015 Liu Di <liudidi@gmail.com> - 1.4.0-2
+- 为 Magic 3.0 重建
+
+* Tue Sep 29 2015 Liu Di <liudidi@gmail.com> - 1.4.0-1
+- 更新到 1.4.0
+
 * Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 1.3.1-9
 - 为 Magic 3.0 重建
 

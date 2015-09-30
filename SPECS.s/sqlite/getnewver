@@ -1,0 +1,24 @@
+#!/bin/bash
+url="http://www.sqlite.org/download.html"
+new1="sqlite-src-"
+new2=".zip"
+downcommand="wget -q" 
+pushd $(dirname $0) > /dev/null
+rm -f index.html && $downcommand $url -O index.html
+if [ -f index.html ];then
+	newver=`grep "$new1.*$new2" index.html|head -n 1| sed "s/.*$new1//" | sed "s/$new2.*//" | sed 's/^[ ]\{1,\}//;s/[ ]\{1,\}$//g'`
+	M1=${newver:0:1}
+	M2=${newver:1:2}
+	M3=${newver:3:2}
+	M4=${newver:5:2}
+	if [ $M4 == "00" ]; then
+		echo $M1.${M2/"0"/}.${M3/"0"/}
+	else
+		echo $M1.${M2/"0"/}.${M3/"0"/}.${M4/"0"/}
+	fi
+else
+	echo "不能正常取得新版本号"
+	exit 1
+fi
+rm -f index.html
+popd > /dev/null

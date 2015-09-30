@@ -1,9 +1,11 @@
 Name:          opusfile
 Version:       0.6
-Release:       3%{?dist}
+Release:       4%{?dist}
 Summary:       A high-level API for decoding and seeking within .opus files
+Summary(zh_CN.UTF-8): 解码和定位 .opus 文件的高级 API
 
 Group:         System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 License:       BSD
 URL:           http://www.opus-codec.org/
 Source0:       http://downloads.xiph.org/releases/opus/%{name}-%{version}.tar.gz
@@ -24,14 +26,21 @@ decoded with a single output format, even if the channel count changes).
 (including seeking).
 * Support for both random access and streaming data sources.
 
+%description -l zh_CN.UTF-8
+解码和定位 .opus 文件的高级 API。
+
 %package devel
 Summary: Development package for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: %{name}%{?_isa} = %{version}-%{release}
 Requires: pkgconfig
 
 %description devel
 Files for development with %{name}.
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -46,6 +55,7 @@ make install DESTDIR=%{buildroot} INSTALL='install -p'
 
 #Remove libtool archives.
 find %{buildroot} -type f -name "*.la" -delete
+magic_rpm_clean.sh
 
 %post -p /sbin/ldconfig
 
@@ -65,6 +75,9 @@ find %{buildroot} -type f -name "*.la" -delete
 %{_libdir}/libopusurl.so
 
 %changelog
+* Mon Sep 28 2015 Liu Di <liudidi@gmail.com> - 0.6-4
+- 为 Magic 3.0 重建
+
 * Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.6-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

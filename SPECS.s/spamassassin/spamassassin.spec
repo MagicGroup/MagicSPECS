@@ -5,23 +5,6 @@
 %{?!rhel:%define rhel 0}
 %{?!fedora:%define fedora 0}
 
-# Map RHEL to Fedora version
-%if 0%{?rhel} == 4
-%define fedora 3
-%define dist .el4
-%endif
-%if 0%{?rhel} == 5
-%define fedora 6
-%define dist .el5
-%endif
-%if 0%{?rhel} == 6
-%define fedora 12
-%define dist .el6
-%endif
-%if 0%{?rhel} == 7
-%define fedora 16
-%endif
-
 # Define variables to use in conditionals
 %define option_ssl 0
 %define perl_devel 0
@@ -30,28 +13,18 @@
 %define use_systemd 0
 
 # SSL and IPv6 (FC6+, RHEL5+)
-%if 0%{?fedora} > 5
 %define option_ssl 1
-%endif
 
 # Split perl-devel (FC7+)
-%if 0%{?fedora} > 6
 %define perl_devel 1
-%endif
 
 # Encode::Detect, not strictly required but helpful if you enable language detection (FC7+)
-%if 0%{?fedora} > 6
 %define require_encode_detect 1
-%endif
 
 # Mail::DKIM by default (F11+)
-%if 0%{?fedora} >= 11
 %define dkim_deps 1
-%endif
 
-%if 0%{?fedora} >= 16
 %define use_systemd 1
-%endif
 
 %define real_name Mail-SpamAssassin
 %{!?perl_vendorlib: %define perl_vendorlib %(eval "`%{__perl} -V:installvendorlib`"; echo $installvendorlib)}
@@ -60,12 +33,14 @@
 #%global prerev rc2
 
 Summary: Spam filter for email which can be invoked from mail delivery agents
+Summary(zh_CN.UTF-8): 电子邮件的垃圾过滤器
 Name: spamassassin
 Version: 3.4.1
 #Release: 0.8.%{prerev}%{?dist}
-Release: 6%{?dist}
+Release: 7%{?dist}
 License: ASL 2.0
 Group: Applications/Internet
+Group(zh_CN.UTF-8): 应用程序/互联网
 URL: http://spamassassin.apache.org/
 Source0: http://www.apache.org/dist/%{name}/source/%{real_name}-%{version}.tar.bz2
 #Source0: %{real_name}-%{version}-%{prerev}.tar.bz2
@@ -168,6 +143,9 @@ INCLUDERC=/etc/mail/spamassassin/spamassassin-default.rc
 
 To filter spam for all users, add that line to /etc/procmailrc
 (creating if necessary).
+
+%description -l zh_CN.UTF-8
+电子邮件的垃圾过滤器。
 
 %prep
 %setup -q -n Mail-SpamAssassin-%{version}
@@ -350,6 +328,9 @@ exit 0
 %endif
 
 %changelog
+* Mon Sep 28 2015 Liu Di <liudidi@gmail.com> - 3.4.1-7
+- 为 Magic 3.0 重建
+
 * Fri Jun 19 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.4.1-6
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

@@ -1,0 +1,45 @@
+diff -ur synaptic-0.57.2.orig/common/rpackagelister.cc synaptic-0.57.2/common/rpackagelister.cc
+--- synaptic-0.57.2.orig/common/rpackagelister.cc	2015-09-29 11:46:27.551687911 +0000
++++ synaptic-0.57.2/common/rpackagelister.cc	2015-09-29 11:47:54.983685670 +0000
+@@ -1381,7 +1381,7 @@
+ 
+          serverError = getServerErrorMessage(errm);
+ 
+-         _error->Warning(tmp.str().c_str());
++         _error->Warning("%s",tmp.str().c_str());
+          Failed = true;
+       }
+ 
+diff -ur synaptic-0.57.2.orig/gtk/gsynaptic.cc synaptic-0.57.2/gtk/gsynaptic.cc
+--- synaptic-0.57.2.orig/gtk/gsynaptic.cc	2015-09-29 11:46:27.543687911 +0000
++++ synaptic-0.57.2/gtk/gsynaptic.cc	2015-09-29 11:47:13.245686739 +0000
+@@ -338,7 +338,7 @@
+       if(msg != NULL) {
+ 	 dia = gtk_message_dialog_new_with_markup(NULL, GTK_DIALOG_MODAL,
+ 						  GTK_MESSAGE_ERROR, 
+-						  GTK_BUTTONS_CLOSE, msg);
++						  GTK_BUTTONS_CLOSE, "%s", msg);
+ 	 gtk_dialog_run(GTK_DIALOG(dia));
+ 	 gtk_widget_destroy(dia);
+ 	 g_free(msg);
+@@ -362,7 +362,7 @@
+ 			      "application first."));
+       dia = gtk_message_dialog_new_with_markup(NULL, GTK_DIALOG_MODAL,
+ 					       GTK_MESSAGE_ERROR, 
+-					       GTK_BUTTONS_CLOSE, msg);
++					       GTK_BUTTONS_CLOSE, "%s", msg);
+       gtk_dialog_run(GTK_DIALOG(dia));
+       g_free(msg);
+       exit(0);
+diff -ur synaptic-0.57.2.orig/gtk/rgmainwindow.cc synaptic-0.57.2/gtk/rgmainwindow.cc
+--- synaptic-0.57.2.orig/gtk/rgmainwindow.cc	2015-09-29 11:46:27.539687911 +0000
++++ synaptic-0.57.2/gtk/rgmainwindow.cc	2015-09-29 11:46:43.733687496 +0000
+@@ -2185,7 +2185,7 @@
+ 			"take effect");
+ #if GTK_CHECK_VERSION(2,6,0)
+       gtk_message_dialog_format_secondary_text(GTK_MESSAGE_DIALOG(dialog),
+-					       msgstr);
++					       "%s", msgstr);
+ #else
+       gtk_message_dialog_set_markup(GTK_MESSAGE_DIALOG(dialog), msgstr);
+ #endif

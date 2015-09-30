@@ -1,10 +1,12 @@
 Summary: Simple kernel loader which boots from a FAT filesystem
+Summary(zh_CN.UTF-8): 从 FAT 文件系统启动内核的简单载入器
 Name: syslinux
 Version: 6.03
 %define tarball_version 6.03
-Release: 5%{?dist}
+Release: 6%{?dist}
 License: GPLv2+
 Group: Applications/System
+Group(zh_CN.UTF-8): 应用程序/系统
 URL: http://syslinux.zytor.com/wiki/index.php/The_Syslinux_Project
 Source0: http://www.kernel.org/pub/linux/utils/boot/syslinux/%{name}-%{tarball_version}.tar.xz
 Patch0001: 0001-Add-install-all-target-to-top-side-of-HAVE_FIRMWARE.patch
@@ -259,6 +261,9 @@ elif [ -f /boot/extlinux.conf ]; then \
 fi
 
 %changelog
+* Tue Sep 29 2015 Liu Di <liudidi@gmail.com> - 6.03-6
+- 为 Magic 3.0 重建
+
 * Fri Jul 03 2015 Adam Williamson <awilliam@redhat.com> - 6.03-5
 - backport a commit from git master which appears to fix RHBZ #1234653
 

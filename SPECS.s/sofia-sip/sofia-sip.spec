@@ -1,9 +1,11 @@
 Name:           sofia-sip
 Version:        1.12.11
-Release:        5%{?dist}
+Release:        6%{?dist}
 Summary:        Sofia SIP User-Agent library
+Summary(zh_CN.UTF-8): Sofia SIP 用户代理库
 
 Group:          System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 License:        LGPLv2+
 URL:            http://sofia-sip.sourceforge.net/
 Source0:        http://dl.sourceforge.net/sofia-sip/%{name}-%{version}.tar.gz
@@ -22,26 +24,41 @@ modifying, and terminating sessions with one or more
 participants. These sessions include Internet telephone calls,
 multimedia distribution, and multimedia conferences.
 
+%description -l zh_CN.UTF-8
+Sofia SIP 用户代理库。
+
 %package devel
 Summary:        Sofia-SIP Development Package
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       sofia-sip = %{version}-%{release}
 Requires:       pkgconfig
 
 %description devel
 Development package for Sofia SIP UA library.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
 %package glib
 Summary:        Glib bindings for Sofia-SIP 
+Summary(zh_CN.UTF-8): %{name} 的 glibc 绑定
 Group:          System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 Requires:       sofia-sip = %{version}-%{release}
 
 %description glib
 GLib interface to Sofia SIP User Agent library.
 
+%description glib -l zh_CN.UTF-8
+%{name} 的 glib 绑定。
+
 %package glib-devel
 Summary:        Glib bindings for Sofia SIP development files
+Summary(zh_CN.UTF-8): %{name}-glib 的开发包
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       sofia-sip-glib = %{version}-%{release}
 Requires:       sofia-sip-devel = %{version}-%{release}
 Requires:       pkgconfig
@@ -50,14 +67,21 @@ Requires:       pkgconfig
 Development package for Sofia SIP UA Glib library. This package
 includes libraries and include files for developing glib programs
 using Sofia SIP.
+%description glib-devel -l zh_CN.UTF-8
+%{name}-glib 的开发包。
 
 %package utils
 Summary:        Sofia-SIP Command Line Utilities
+Summary(zh_CN.UTF-8): Sofia-SIP 命令行工具
 Group:          Applications/Internet
+Group(zh_CN.UTF-8): 应用程序/互联网
 Requires:       sofia-sip = %{version}-%{release}
 
 %description utils
 Command line utilities for the Sofia SIP UA library.
+
+%description utils -l zh_CN.UTF-8
+Sofia-SIP 命令行工具。
 
 %prep
 %setup0 -q -n sofia-sip-%{version}%{?work:work%{work}}
@@ -120,6 +144,9 @@ magic_rpm_clean.sh
 %{_mandir}/man1/*.1*
 
 %changelog
+* Mon Sep 28 2015 Liu Di <liudidi@gmail.com> - 1.12.11-6
+- 为 Magic 3.0 重建
+
 * Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 1.12.11-5
 - 为 Magic 3.0 重建
 

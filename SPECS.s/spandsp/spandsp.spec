@@ -1,11 +1,13 @@
-%global pre 18
+%global pre 21
 
 Summary: A DSP library for telephony
+Summary(zh_CN.UTF-8): 通信用的 DSP 库
 Name: spandsp
 Version: 0.0.6
-Release: 0.6%{?pre:.pre%{pre}}%{?dist}
+Release: 0.7%{?pre:.pre%{pre}}%{?dist}
 License: LGPLv2 and GPLv2
 Group: System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 URL: http://www.soft-switch.org/
 Source: http://www.soft-switch.org/downloads/spandsp/spandsp-%{version}%{?pre:pre%{pre}}.tgz
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -33,21 +35,33 @@ avoid intellectual property issues, using mature techniques where all
 relevant patents have expired. See the file DueDiligence for important
 information about these intellectual property issues.
 
+%description -l zh_CN.UTF-8
+通信用的 DSP 库。
+
 %package devel
 Summary: SpanDSP development files
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: spandsp%{?_isa} = %{version}-%{release}
 Requires: libtiff-devel
 
 %description devel
 SpanDSP development files.
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %package apidoc
 Summary: SpanDSP API documentation
+Summary(zh_CN.UTF-8): %{name} 的开发文档
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 
 %description apidoc
 SpanDSP API documentation.
+
+%description apidoc -l zh_CN.UTF-8
+%{name} 的开发文档。
 
 %prep
 %setup -q
@@ -97,6 +111,9 @@ rm -rf %{buildroot}
 %postun -p /sbin/ldconfig
 
 %changelog
+* Mon Sep 28 2015 Liu Di <liudidi@gmail.com> - 0.0.6-0.7.pre21
+- 为 Magic 3.0 重建
+
 * Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 0.0.6-0.6.pre18
 - 为 Magic 3.0 重建
 

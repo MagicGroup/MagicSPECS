@@ -1,0 +1,14 @@
+diff -ur miscsplashutils-0.1.8.orig/fbtruetype/ttf.c miscsplashutils-0.1.8/fbtruetype/ttf.c
+--- miscsplashutils-0.1.8.orig/fbtruetype/ttf.c	2015-09-28 10:19:07.495036590 +0000
++++ miscsplashutils-0.1.8/fbtruetype/ttf.c	2015-09-28 10:19:25.423036131 +0000
+@@ -13,8 +13,8 @@
+ #include <ft2build.h>
+ #include FT_FREETYPE_H
+ /* #include <freetype/freetype.h> */
+-#include <freetype/ftoutln.h>
+-#include <freetype/ttnameid.h>
++#include "../../splashutils-1.5.4.4/libs/freetype-2.3.12/include/freetype/ftoutln.h"
++#include "../../splashutils-1.5.4.4/libs/freetype-2.3.12/include/freetype/ttnameid.h"
+ 
+ #include "ttf.h"
+ 

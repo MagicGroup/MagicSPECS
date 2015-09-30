@@ -1,8 +1,10 @@
 Name: sound-theme-freedesktop
-Version: 0.7
-Release: 5%{?dist}
+Version: 0.8
+Release: 2%{?dist}
 Summary: freedesktop.org sound theme
+Summary(zh_CN.UTF-8): freedesktop.org 的声音主题
 Group: User Interface/Desktops
+Group(zh_CN.UTF-8): 用户界面/桌面
 Source0: http://people.freedesktop.org/~mccann/dist/sound-theme-freedesktop-%{version}.tar.bz2
 # For details on the licenses used, see CREDITS
 License: GPLv2+ and LGPLv2+ and CC-BY-SA and CC-BY
@@ -21,6 +23,9 @@ Obsoletes: gnome-audio-extra <= 2.22.2
 The default freedesktop.org sound theme following the XDG theming
 specification.  (http://0pointer.de/public/sound-theme-spec.html).
 
+%description -l zh_CN.UTF-8
+freedesktop.org 的声音主题。
+
 %prep
 %setup -q
 
@@ -30,6 +35,7 @@ specification.  (http://0pointer.de/public/sound-theme-spec.html).
 %install
 rm -rf $RPM_BUILD_ROOT
 make install DESTDIR=$RPM_BUILD_ROOT
+magic_rpm_clean.sh
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -49,6 +55,12 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/sounds/freedesktop/stereo/*.oga
 
 %changelog
+* Mon Sep 28 2015 Liu Di <liudidi@gmail.com> - 0.8-2
+- 为 Magic 3.0 重建
+
+* Mon Sep 28 2015 Liu Di <liudidi@gmail.com> - 0.8-1
+- 更新到 0.8
+
 * Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 0.7-5
 - 为 Magic 3.0 重建
 

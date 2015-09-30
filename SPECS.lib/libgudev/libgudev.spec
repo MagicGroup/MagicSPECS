@@ -1,6 +1,6 @@
 Name:           libgudev
 Version:        230
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        GObject-based wrapper library for libudev
 
 License:        LGPLv2+
@@ -65,6 +65,9 @@ rm %{buildroot}%{_libdir}/*.la
 
 
 %changelog
+* Wed Sep 30 2015 Liu Di <liudidi@gmail.com> - 230-3
+- 为 Magic 3.0 重建
+
 * Wed Jun 17 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 230-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

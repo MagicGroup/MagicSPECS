@@ -4,19 +4,18 @@
 %filter_setup
 }
 
-%define with_gtk3 0
-%if 0%{?fedora} >= 15 || 0%{?rhel} >= 7
 %define with_gtk3 1
-%endif
 
 #define _version_suffix -f256
 
 Name:           spice-gtk
-Version:        0.15
-Release:        1%{?dist}
+Version:	0.30
+Release:	1%{?dist}
 Summary:        A GTK+ widget for SPICE clients
+Summary(zh_CN.UTF-8): SPICE 客户端的 GTK+ 部件
 
 Group:          System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 License:        LGPLv2+
 URL:            http://spice-space.org/page/Spice-Gtk
 #VCS:           git:git://anongit.freedesktop.org/spice/spice-gtk
@@ -45,7 +44,7 @@ BuildRequires: gtk3-devel
 # FIXME: should ship the generated files..
 BuildRequires: pyparsing
 # keep me to get gendeps magic happen
-BuildRequires: spice-protocol
+BuildRequires: spice-protocol >= 0.12.10
 # Hack because of bz #613466
 BuildRequires: libtool
 Requires: spice-glib%{?_isa} = %{version}-%{release}
@@ -53,9 +52,14 @@ Requires: spice-glib%{?_isa} = %{version}-%{release}
 %description
 Client libraries for SPICE desktop servers.
 
+%description -l zh_CN.UTF-8
+SPICE 客户端的 GTK+ 部件。
+
 %package devel
 Summary: Development files to build GTK2 applications with spice-gtk-2.0
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: %{name}%{?_isa} = %{version}-%{release}
 Requires: spice-glib-devel%{?_isa} = %{version}-%{release}
 Requires: pkgconfig
@@ -65,6 +69,9 @@ Requires: gtk2-devel
 spice-client-gtk-2.0 provides a SPICE viewer widget for GTK2.
 
 Libraries, includes, etc. to compile with the spice-gtk2 libraries
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %package -n spice-glib
 Summary: A GObject for communicating with Spice servers
@@ -261,11 +268,16 @@ rm -rf %{buildroot}%{_datadir}/pkgconfig/spice-protocol.pc
 %{_libdir}/python*/site-packages/SpiceClientGtk.so
 
 %files tools
-%{_bindir}/snappy
+#{_bindir}/snappy
 %{_bindir}/spicy
 %{_bindir}/spicy-stats
+%{_bindir}/spicy-screenshot
+%{_mandir}/man1/spice-client.1*
 
 %changelog
+* Mon Sep 28 2015 Liu Di <liudidi@gmail.com> - 0.30-1
+- 更新到 0.30
+
 * Fri Dec 21 2012 Christophe Fergeau <cfergeau@redhat.com> - 0.15-2
 - Update to spice-gtk 0.15
 

@@ -4,7 +4,7 @@ Summary: Graphical frontend for APT package manager.
 Summary(zh_CN.UTF-8): APT 包管理器的图形界面
 Name: synaptic
 Version: 0.57.2
-Release: 4%{?dist}
+Release: 5%{?dist}
 
 License: GPLv2+
 Group: Applications/System
@@ -21,6 +21,7 @@ Patch5: http://apt-rpm.org/patches/synaptic-0.57.2-progressapi-hack.patch
 Patch6: synaptic-0.57.2-gcc43.patch
 Patch7: synaptic-0.57.2-libx11.patch
 Patch8: synaptic-0.57.2-gcc45.patch
+Patch9: synaptic-0.57.2-format-security.patch
 URL: http://www.nongnu.org/synaptic/
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 Requires: usermode-gtk
@@ -52,6 +53,7 @@ Synaptic 是一个 apt 的图形化包管理程序。
 %patch6 -p1 -b .gcc43
 %patch7 -p1
 %patch8 -p1
+%patch9 -p1
 
 %build
 %configure --disable-dependency-tracking
@@ -124,6 +126,9 @@ scrollkeeper-update -q ||:
 %{_mandir}/man8/%{name}.8*
 
 %changelog
+* Tue Sep 29 2015 Liu Di <liudidi@gmail.com> - 0.57.2-5
+- 为 Magic 3.0 重建
+
 * Sun Jan 06 2013 Liu Di <liudidi@gmail.com> - 0.57.2-4
 - 为 Magic 3.0 重建
 

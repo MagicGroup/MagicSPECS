@@ -11,7 +11,7 @@
 
 Name: dracut
 Version: 043
-Release: 60.git20150811%{?dist}
+Release: 61.git20150811%{?dist}
 
 Summary: Initramfs generator using udev
 %if 0%{?fedora} || 0%{?rhel}
@@ -548,6 +548,9 @@ rm -rf -- $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Wed Sep 30 2015 Liu Di <liudidi@gmail.com> - 043-61.git20150811
+- 为 Magic 3.0 重建
+
 * Tue Aug 11 2015 Harald Hoyer <harald@redhat.com> 043-60.git20150811
 - fixed checkiso timeout
 - fixed log output although quiet is set

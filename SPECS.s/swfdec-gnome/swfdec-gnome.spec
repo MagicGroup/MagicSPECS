@@ -1,6 +1,6 @@
 Name:           swfdec-gnome
-Version:        2.28.0
-Release:        2%{?dist}
+Version:        2.30.1
+Release:        4%{?dist}
 Summary:        Programs to integrate Flash into the GNOME desktop
 Summary(zh_CN): 集成 Flash 到 GNOME 桌面的程序
 
@@ -8,7 +8,7 @@ Group:          Applications/Internet
 Group(zh_CN):	应用程序/互联网
 License:        GPLv2+
 URL:            http://swfdec.freedesktop.org/
-Source0:        http://swfdec.freedesktop.org/download/%{name}/2.28/%{name}-%{version}.tar.bz2
+Source0:        https://download.gnome.org/sources/%{name}/2.30/%{name}-%{version}.tar.bz2
 Patch0:		%{name}-2.24.0-build.patch
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
@@ -104,6 +104,12 @@ fi
 %{_datadir}/icons/hicolor/scalable/apps/%{name}.svg
 
 %changelog
+* Tue Sep 29 2015 Liu Di <liudidi@gmail.com> - 2.30.1-4
+- 为 Magic 3.0 重建
+
+* Tue Sep 29 2015 Liu Di <liudidi@gmail.com> - 2.28.0-3
+- 为 Magic 3.0 重建
+
 * Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 2.28.0-2
 - 为 Magic 3.0 重建
 

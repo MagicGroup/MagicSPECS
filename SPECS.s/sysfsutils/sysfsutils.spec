@@ -4,7 +4,7 @@ License:        GPLv2
 Group:          Development/Tools
 Group(zh_CN.UTF-8):	开发/工具
 Version:        2.1.0
-Release:        7%{?dist}
+Release:        8%{?dist}
 
 Summary:        Utilities for interfacing with sysfs
 Summary(zh_CN.UTF-8): sysfs 的接口工具
@@ -99,6 +99,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Tue Sep 29 2015 Liu Di <liudidi@gmail.com> - 2.1.0-8
+- 为 Magic 3.0 重建
+
 * Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 2.1.0-7
 - 为 Magic 3.0 重建
 

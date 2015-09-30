@@ -1,9 +1,11 @@
 Summary: An SSL-encrypting socket wrapper
+Summary(zh_CN.UTF-8): SSL 加密的 socket wrapper
 Name: stunnel
-Version: 4.52
-Release: 2%{?dist}
+Version:	5.23
+Release:	1%{?dist}
 License: GPLv2
 Group: Applications/Internet
+Group(zh_CN.UTF-8): 应用程序/互联网
 URL: http://stunnel.mirt.net/
 Source0: ftp://stunnel.mirt.net/stunnel/stunnel-%{version}.tar.gz
 Source1: ftp://stunnel.mirt.net/stunnel/stunnel-%{version}.tar.gz.asc
@@ -12,8 +14,9 @@ Source3: sfinger.xinetd
 Source4: stunnel-sfinger.conf
 Source5: pop3-redirect.xinetd
 Source6: stunnel-pop3s-client.conf
-Patch0: stunnel-4-authpriv.patch
-Patch1: stunnel-4-sample.patch
+Patch0: stunnel-5-authpriv.patch
+Patch1: stunnel-systemd-service.patch
+Patch2: stunnel-configure-ac.patch
 Buildroot: %{_tmppath}/stunnel-root
 # util-linux is needed for rename
 BuildRequires: openssl-devel, pkgconfig, tcp_wrappers-devel, util-linux
@@ -23,13 +26,14 @@ Stunnel is a socket wrapper which can provide SSL (Secure Sockets
 Layer) support to ordinary applications. For example, it can be used
 in conjunction with imapd to create an SSL secure IMAP server.
 
+%description -l zh_CN.UTF-8
+这个包可以给原始程序添加 SSL 的 socket wrapper。
+
 %prep
 %setup -q
-%patch0 -p1 -b .authpriv
-%patch1 -p1 -b .sample
-
-iconv -f iso-8859-1 -t utf-8 < doc/stunnel.fr.8 > doc/stunnel.fr.8_
-mv doc/stunnel.fr.8_ doc/stunnel.fr.8
+#patch0 -p1 -b .authpriv
+%patch1 -p1
+%patch2 -p1
 
 %build
 CFLAGS="$RPM_OPT_FLAGS -fPIC"; export CFLAGS
@@ -46,13 +50,8 @@ rm -rf $RPM_BUILD_ROOT
 mkdir -p $RPM_BUILD_ROOT%{_sysconfdir}/stunnel
 touch $RPM_BUILD_ROOT%{_sysconfdir}/stunnel/stunnel.pem
 make install DESTDIR=$RPM_BUILD_ROOT
-# Move the translated man pages to the right subdirectories, and strip off the
-# language suffixes.
-for lang in fr pl ; do
-	mkdir -p $RPM_BUILD_ROOT/%{_mandir}/${lang}/man8
-	mv $RPM_BUILD_ROOT/%{_mandir}/man8/*.${lang}.8* $RPM_BUILD_ROOT/%{_mandir}/${lang}/man8/
-	rename ".${lang}" "" $RPM_BUILD_ROOT/%{_mandir}/${lang}/man8/*
-done
+
+rm -f %{buildroot}%{_mandir}/man8/stunnel.pl.*
 
 mkdir srpm-docs
 cp %{SOURCE2} %{SOURCE3} %{SOURCE4} %{SOURCE5} %{SOURCE6} srpm-docs
@@ -78,6 +77,9 @@ rm -rf $RPM_BUILD_ROOT
 %exclude %{_sysconfdir}/stunnel/*
 
 %changelog
+* Tue Sep 29 2015 Liu Di <liudidi@gmail.com> - 5.23-1
+- 更新到 5.23
+
 * Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 4.52-2
 - 为 Magic 3.0 重建
 

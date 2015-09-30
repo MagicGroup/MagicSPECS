@@ -5,9 +5,10 @@
 %global tests 1
 
 Summary: Qt wrapper API to different RDF storage solutions
+Summary(zh_CN.UTF-8): 不同的 RDF 存储解决绑定的 Qt API
 Name:    soprano
 Version: 2.9.4
-Release: 2%{?dist}
+Release: 3%{?dist}
 
 License: LGPLv2+
 URL:     http://sourceforge.net/projects/soprano
@@ -58,21 +59,31 @@ Provides: soprano-backend-virtuoso = %{version}-%{release}
 %description
 %{summary}.
 
+%description -l zh_CN.UTF-8
+不同的 RDF 存储解决绑定的 Qt API。
+
 %package devel
 Summary: Developer files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Requires: %{name}%{?_isa} = %{version}-%{release}
 %description devel
 %{summary}.
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %package backend-redland 
 Summary: Redland backend for %{name}
+Summary(zh_CN.UTF-8): %{name} 的 Redland 后端
 Provides: %{name}-backend = %{version}-%{release}
 Requires: %{name}%{?_isa} = %{version}-%{release}
 %description backend-redland 
 %{summary}.
+%description backend-redland -l zh_CN.UTF-8
+%{name} 的 Redlang 后端。
 
 %package backend-virtuoso
 Summary: Virtuoso backend for %{name}
+Summary(zh_CN.UTF-8): %{name} 的 Virtuoso 后端
 Provides: %{name}-backend = %{version}-%{release}
 Requires: %{name}%{?_isa} = %{version}-%{release}
 ## not sure if  this is really needed -- rex
@@ -81,15 +92,19 @@ Requires: redland-virtuoso
 #Requires: virtuoso-opensource
 %description backend-virtuoso 
 %{summary}.
+%description backend-virtuoso -l zh_CN.UTF-8
+%{name} 的 Virtuoso 后端。
 
 %package apidocs
 Summary: Soprano API documentation
+Summary(zh_CN.UTF-8): %{name} 的 API 文档
 Requires: kde4-filesystem
 BuildArch: noarch
 %description apidocs
 This package includes the Soprano API documentation in HTML
 format for easy browsing.
-
+%description apidocs -l zh_CN.UTF-8
+%{name} 的 API 文档。
 
 %prep
 %setup -q -n soprano-%{version}%{?pre:-%{pre}}
@@ -119,7 +134,7 @@ cp -a %{_target_platform}/docs/html %{buildroot}%{_kde4_docdir}/HTML/en/soprano-
 # spurious executables, pull in perl dep(s)
 find %{buildroot}%{_kde4_docdir}/HTML/en/ -name 'installdox' -exec rm -fv {} ';'
 %endif
-
+magic_rpm_clean.sh
 
 %check
 # verify pkg-config version (notoriously wrong in recent soprano releases)
@@ -178,6 +193,9 @@ time make -C %{_target_platform} test ARGS="--timeout 300 --verbose -R virtuosob
 
 
 %changelog
+* Mon Sep 28 2015 Liu Di <liudidi@gmail.com> - 2.9.4-3
+- 为 Magic 3.0 重建
+
 * Thu Oct 10 2013 Rex Dieter <rdieter@fedoraproject.org> 2.9.4-2
 - %%check: make verbose (again)
 

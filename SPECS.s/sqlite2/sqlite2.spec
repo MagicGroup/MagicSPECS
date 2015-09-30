@@ -3,10 +3,12 @@
 
 Name:           sqlite2
 Version:        2.8.17
-Release:        15%{?dist}
+Release:        16%{?dist}
 
 Summary:        Embeddable SQL engine in a C library
+Summary(zh_CN.UTF-8): 嵌入式 SQL 引擎的 C 库
 Group:          System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 License:        Public Domain
 URL:            http://www.sqlite.org/
 Source0:        http://www.sqlite.org/sqlite-%{version}.tar.gz
@@ -33,9 +35,14 @@ is stored in a single cross-platform disk file. The native C/C++ API
 is simple and easy to use. Bindings for other languages are also
 available.
 
+%description -l zh_CN.UTF-8
+嵌入式 SQL 引擎的 C 库。
+
 %package        devel
 Summary:        Development files for SQLite
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       %{name}%{?_isa} = %{version}-%{release}, pkgconfig
 Obsoletes:      sqlite-devel < 3, sqlite-devel%{?_isa} < 3
 
@@ -46,14 +53,14 @@ subqueries, compound queries, triggers, and views.
 This package contains static library and header files for developing
 applications using sqlite.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 %package        tcl
 Summary:        Tcl bindings for sqlite
+Summary(zh_CN.UTF-8): %{name} 的 Tcl 绑定
 Group:          System Environment/Libraries
-%if 0%{?rhel}%{?fedora} > 5
+Group(zh_CN.UTF-8): 系统环境/库
 Requires:       tcl(abi) = %{tcl_version}
-%else
-Requires:       tcl%{?_isa} >= %{tcl_version}
-%endif
 Requires:       %{name}%{?_isa} = %{version}-%{release}
 Obsoletes:      sqlite-tcl < 3, sqlite-tcl%{?_isa} < 3
 
@@ -62,6 +69,9 @@ SQLite is a small, fast, embeddable SQL database engine that supports
 most of SQL92, including transactions with atomic commit and rollback,
 subqueries, compound queries, triggers, and views.
 This package contains tcl bindings for sqlite.
+
+%description tcl -l zh_CN.UTF-8
+%{name} 的 Tcl 绑定。
 
 %prep
 %setup -q -n sqlite-%{version}
@@ -103,6 +113,7 @@ mv -f $DIRECTORY $RPM_BUILD_ROOT%{tcl_sitearch}/sqlite2
 
 find $RPM_BUILD_ROOT -type f -name "*.la" -exec rm -f {} ';'
 rm -f $RPM_BUILD_ROOT%{_bindir}/tclsqlite
+magic_rpm_clean.sh
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -129,6 +140,9 @@ rm -rf $RPM_BUILD_ROOT
 %{tcl_sitearch}/sqlite2/
 
 %changelog
+* Tue Sep 29 2015 Liu Di <liudidi@gmail.com> - 2.8.17-16
+- 为 Magic 3.0 重建
+
 * Sat Sep 19 2015 Liu Di <liudidi@gmail.com> - 2.8.17-15
 - 为 Magic 3.0 重建
 

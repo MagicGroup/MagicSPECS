@@ -1,0 +1,24 @@
+diff -up ./plugins/sudoers/sudoers.c.extra_while ./plugins/sudoers/sudoers.c
+--- ./plugins/sudoers/sudoers.c.extra_while	2015-08-24 10:06:01.262987605 +0200
++++ ./plugins/sudoers/sudoers.c	2015-08-24 10:07:16.557919240 +0200
+@@ -1214,7 +1214,7 @@ find_editor(int nfiles, char **files, in
+ 		files, argc_out, argv_out, NULL);
+ 	    if (editor_path == NULL && errno != ENOENT)
+ 		debug_return_str(NULL);
+-	} while (ep != NULL && editor_path == NULL);
++	}
+     }
+     if (!editor_path) {
+ 	audit_failure(NewArgc, NewArgv, N_("%s: command not found"),
+diff -up ./plugins/sudoers/visudo.c.extra_while ./plugins/sudoers/visudo.c
+--- ./plugins/sudoers/visudo.c.extra_while	2015-08-24 10:07:34.602902856 +0200
++++ ./plugins/sudoers/visudo.c	2015-08-24 10:08:27.750854600 +0200
+@@ -332,7 +332,7 @@ get_editor(int *editor_argc, char ***edi
+ 		editor_argc, editor_argv, whitelist);
+ 	    if (editor_path == NULL && errno != ENOENT)
+ 		debug_return_str(NULL);
+-	} while (ep != NULL && editor_path == NULL);
++    	}
+     }
+     if (editor_path == NULL)
+ 	sudo_fatalx(U_("no editor found (editor path = %s)"), def_editor);

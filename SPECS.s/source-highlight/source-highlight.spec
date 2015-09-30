@@ -1,11 +1,13 @@
 Summary: Produces a document with syntax highlighting
+Summary(zh_CN.UTF-8): 生成语法高亮的文档
 Name: source-highlight
-Version: 3.1.6
-Release: 9%{?dist}
+Version:	3.1.8
+Release:	1%{?dist}
 Group: Development/Tools
+Group(zh_CN.UTF-8): 开发/工具
 License: GPLv3+
-Source0: ftp://ftp.gnu.org/gnu/src-highlite/%{name}-%{version}.tar.gz
-Source1: ftp://ftp.gnu.org/gnu/src-highlite/%{name}-%{version}.tar.gz.sig
+Source0: http://ftp.gnu.org/gnu/src-highlite/%{name}-%{version}.tar.gz
+Source1: http://ftp.gnu.org/gnu/src-highlite/%{name}-%{version}.tar.gz.sig
 URL: http://www.gnu.org/software/src-highlite/
 BuildRequires: bison, flex, boost-devel
 BuildRequires: help2man, ctags, chrpath
@@ -19,16 +21,21 @@ highlighting. At the moment this package can handle :
 Java, Javascript, C/C++, Prolog, Perl, Php3, Python, Flex, ChangeLog, Ruby, 
 Lua, Caml, Sml and Log as source languages, and HTML, XHTML and ANSI color 
 escape sequences as output format.
-
+%description -l zh_CN.UTF-8
+生成语法高亮的文档。
 
 %package devel
 Summary: Development files for source-highlight
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: %{name} = %{version}-%{release}
 Requires: pkgconfig
 
 %description devel
 Development files for source-highlight
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -76,6 +83,7 @@ fi
 %{_bindir}/check-regexp
 %{_bindir}/source-highlight-settings
 %{_bindir}/src-hilite-lesspipe.sh
+%{_bindir}/source-highlight-esc.sh
 %dir %{_sysconfdir}/bash_completion.d
 %{_sysconfdir}/bash_completion.d/source-highlight
 %{_libdir}/libsource-highlight.so.*
@@ -92,6 +100,9 @@ fi
 %{_includedir}/srchilite/*.h
 
 %changelog
+* Mon Sep 28 2015 Liu Di <liudidi@gmail.com> - 3.1.8-1
+- 更新到 3.1.8
+
 * Mon Dec 29 2014 Liu Di <liudidi@gmail.com> - 3.1.6-9
 - 为 Magic 3.0 重建
 

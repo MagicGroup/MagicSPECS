@@ -5,8 +5,9 @@
 
 Name:           %{fontname}-fonts
 Version:        1.200
-Release:        6%{?dist}
+Release:        7%{?dist}
 Summary:        SIL Abyssinica fonts
+Summary(zh_CN.UTF-8): SIL Abyssinica 字体
 
 License:        OFL
 URL:            http://scripts.sil.org/AbyssinicaSIL
@@ -35,6 +36,8 @@ characters supported by Abyssinica SIL).
 Abyssinica SIL is based on Ethiopic calligraphic traditions. This release is
 a regular typeface, with no bold or italic version available or planned.
 
+%description -l zh_CN.UTF-8
+SIL Abyssinica 字体。
 
 %prep
 %setup -q -n %{archive_name}-%{version}
@@ -55,7 +58,7 @@ install -d -m 0755 %{buildroot}%{_fontconfig_templatedir} \
 install -m 0644 -p %{SOURCE1} %{buildroot}%{_fontconfig_templatedir}/%{fontconf}
 ln -s %{_fontconfig_templatedir}/%{fontconf} \
       %{buildroot}%{_fontconfig_confdir}/%{fontconf}
-
+magic_rpm_clean.sh
 
 %_font_pkg -f %{fontconf} *.ttf
 
@@ -64,6 +67,9 @@ ln -s %{_fontconfig_templatedir}/%{fontconf} \
 
 
 %changelog
+* Sun Sep 27 2015 Liu Di <liudidi@gmail.com> - 1.200-7
+- 为 Magic 3.0 重建
+
 * Sun Aug 04 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.200-6
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
 

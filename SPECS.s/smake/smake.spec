@@ -1,3 +1,4 @@
+%define debug_package %{nil}
 %define	name	smake
 %define	serial	7
 %define	prefix	/usr
@@ -7,7 +8,7 @@
 Summary:	The Schily smake program.
 Summary(zh_CN.UTF-8): Schily smake 程序
 Name:		%{name}
-Version:	1.2a49
+Version:	1.2.5
 Release:	1%{?dist}
 Epoch:		%{serial}
 Prefix:		%{prefix}
@@ -16,7 +17,7 @@ Group:		Developement/Tools
 Group(zh_CN.UTF-8): 开发/工具
 Vendor:		Joerg Schilling <schilling@fokus.gmd.de>
 URL:		http://www.fokus.gmd.de/research/cc/glone/employees/joerg.schilling/private/smake.html
-Source:		%{name}-%{version}.tar.bz2
+Source:		http://downloads.sourceforge.net/project/s-make/%{name}-%{version}.tar.bz2
 BuildRoot:	%{_tmppath}/%{name}-%{version}
 
 %description
@@ -47,61 +48,57 @@ allow to implement portable, layered, object oriented makefiles.
 %description -l zh_CN.UTF-8
 Schily smake 程序。
 
+%package devel
+Summary: Development package for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
+Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
+Requires: %{name}%{?_isa} = %{epoch}:%{version}-%{release}
+
+%description devel
+Files for development with %{name}.
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
 %prep
-%setup -q -n %{name}-%{major}
+%setup -q -n %{name}-%{version}
 
 %build
-if [ ! -z "`which smake 2>/dev/null`" ]; then
-    export MAKEPROG='smake';
-elif [ ! -z "`which gmake 2>/dev/null`" ]; then
-    export MAKEPROG='gmake';
-else
-    export MAKEPROG='make';
-fi
-
-${MAKEPROG};
+make INS_BASE=/usr INS_RBASE=/ DESTDIR=$RPM_BUILD_ROOT MANDIR=man DEFAULTS_DIR=/usr/share/smake STRIPFLAGS=-s RUNPATH=
 
 %install
-[ -d ${RPM_BUILD_ROOT} ] && rm -rf ${RPM_BUILD_ROOT};
-
-if [ ! -z "`which smake 2>/dev/null`" ]; then
-    export MAKEPROG='smake';
-elif [ ! -z "`which gmake 2>/dev/null`" ]; then
-    export MAKEPROG='gmake';
-else
-    export MAKEPROG='make';
+make INS_BASE=/usr INS_RBASE=/ DESTDIR=$RPM_BUILD_ROOT MANDIR=man DEFAULTS_DIR=/usr/share/smake STRIPFLAGS=-s install RUNPATH=
+chmod 644 $RPM_BUILD_ROOT/usr/lib/lib*.a
+if [ "%_lib" != "lib" ] ; then
+  mkdir -p $RPM_BUILD_ROOT/usr/%_lib
+  mv $RPM_BUILD_ROOT/usr/lib/lib*.a $RPM_BUILD_ROOT/usr/%_lib
 fi
+rm -Rf $RPM_BUILD_ROOT/usr/lib/profiled
 
-${MAKEPROG} "INS_BASE=${RPM_BUILD_ROOT}%{prefix}" install
-
-# libschily.a installed by cdrtools, no need for it here...
-[ -f "${RPM_BUILD_ROOT}%{prefix}/lib/libschily.a" ] && \
-    rm -f "${RPM_BUILD_ROOT}%{prefix}/lib/libschily.a";
-
-mkdir smake-rpmdocs
-cp AN-%{version} PORTING README* smake/defaults.smk smake-rpmdocs
-chmod 644 smake-rpmdocs/*
-
-rm -rf %{buildroot}%{_includedir}
-rm -f  %{buildroot}%{_prefix}/lib/profiled/libschily.a
+mkdir $RPM_BUILD_ROOT/usr/share/smake
+mv $RPM_BUILD_ROOT/usr/lib/defaults.smk $RPM_BUILD_ROOT/usr/share/smake/defaults.smk
 magic_rpm_clean.sh
 
 %clean
 [ -d ${RPM_BUILD_ROOT} ] && rm -rf ${RPM_BUILD_ROOT};
 
 %files
-%defattr(-,root,root)
-%doc smake-rpmdocs/*
+%defattr(-, root, root)
+%{_mandir}/man1/*
+%attr(544,root,root) %{_bindir}/smake
+%dir %{_datadir}/smake
+%{_datadir}/smake/defaults.smk
 
-%config(noreplace) %{prefix}/lib/defaults.smk
-
-%{prefix}/bin/smake
-#{prefix}/include/align.h
-#{prefix}/include/avoffset.h
-
-%{prefix}/man/man1/smake.1*
-%{prefix}/man/man5/makerules.5*
-%{prefix}/man/man5/makefiles.5*
+%files devel
+%defattr(-, root, root)
+%{_mandir}/man5/*
+%dir %{_includedir}/schily
+%{_includedir}/schily/*
+%{_libdir}/lib*.a
 
 %changelog
+* Mon Sep 28 2015 Liu Di <liudidi@gmail.com> - 7:1.2.5-1
+- 更新到 1.2.5
+
 

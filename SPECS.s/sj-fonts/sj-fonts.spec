@@ -5,7 +5,7 @@
 
 Name:          %{fontname}-fonts
 Version:       2.0.2
-Release:       8%{?dist}
+Release:       9%{?dist}
 Summary:       Two fonts by Steve Jordi released under the GPL
 
 Group:         User Interface/X
@@ -99,6 +99,9 @@ rm -rf $RPM_BUILD_ROOT
 %dir %{_fontdir}
 
 %changelog
+* Sun Sep 27 2015 Liu Di <liudidi@gmail.com> - 2.0.2-9
+- 为 Magic 3.0 重建
+
 * Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 2.0.2-8
 - 为 Magic 3.0 重建
 

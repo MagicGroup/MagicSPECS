@@ -1,5 +1,5 @@
 %define name	stardict
-%define version	3.0.4
+%define version	3.0.6
 %define enable_gnome 0
 %define enable_plugins 0
 
@@ -7,7 +7,7 @@ Name:		%{name}
 Summary: 	A powerful dictionary platform written in GTK+2
 Summary(zh_CN.UTF-8): GTK2 写成的强大的词典平台
 Version:	%{version}
-Release:	1%{?dist}
+Release:	2%{?dist}
 Group: 		Applications/System
 Group(zh_CN.UTF-8):	应用程序/系统
 License: 	GPL
@@ -56,7 +56,7 @@ It has powerful features such as "Glob-style pattern matching,"
 #%patch5 -p1 -b .orig
 #%patch6 -p1 -b .orig
 #%patch7 -p1
-%patch4 -p1
+#patch4 -p1
 
 # Remove unneeded sigc++ header files to make it sure
 # that we are using system-wide libsigc++
@@ -114,6 +114,9 @@ if which scrollkeeper-update>/dev/null 2>&1; then scrollkeeper-update; fi
 
 
 %changelog
+* Tue Sep 29 2015 Liu Di <liudidi@gmail.com> - 3.0.6-2
+- 为 Magic 3.0 重建
+
 * Fri Nov 23 2007 Liu Di <liudidi@gmail.com>  - 3.0.1-1mgc
 - update to 3.0.1
 

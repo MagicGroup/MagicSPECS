@@ -1,13 +1,15 @@
 %global _hardened_build 1
 
 Summary: Bidirectional data relay between two data channels ('netcat++')
+Summary(zh_CN.UTF-8): 两个数据信道间的双向数据中继 ('netcat++')
 Name: socat
 Version: 1.7.2.4
-Release: 5%{?dist}
+Release: 6%{?dist}
 License: GPLv2
 Url:  http://www.dest-unreach.org/%{name}
 Source: http://www.dest-unreach.org/socat/download/%{name}-%{version}.tar.gz
 Group: Applications/Internet
+Group(zh_CN.UTF-8): 应用程序/互联网
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: openssl-devel readline-devel ncurses-devel
 BuildRequires: autoconf kernel-headers > 2.6.18
@@ -22,7 +24,8 @@ channels. Each of these data channels may be a file, pipe, device (serial line
 etc. or a pseudo terminal), a socket (UNIX, IP4, IP6 - raw, UDP, TCP), an
 SSL socket, proxy CONNECT connection, a file descriptor (stdin etc.), the GNU
 line editor (readline), a program, or a combination of two of these. 
-
+%description -l zh_CN.UTF-8
+两个数据信道间的双向数据中继 ('netcat++')。
 
 %prep
 %setup -q 
@@ -49,6 +52,7 @@ make %{?_smp_mflags}
 make DESTDIR=%{buildroot} install
 install -d %{buildroot}/%{_docdir}/socat
 install -m 0644 *.sh %{buildroot}/%{_docdir}/socat/
+magic_rpm_clean.sh
 
 %check
 export TERM=ansi
@@ -66,6 +70,9 @@ export OD_C=/usr/bin/od
 %doc %{_mandir}/man1/socat.1*
 
 %changelog
+* Mon Sep 28 2015 Liu Di <liudidi@gmail.com> - 1.7.2.4-6
+- 为 Magic 3.0 重建
+
 * Fri Jun 19 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.7.2.4-5
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

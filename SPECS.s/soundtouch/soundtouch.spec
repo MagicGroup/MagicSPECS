@@ -1,9 +1,11 @@
 Name:           soundtouch
-Version:        1.4.0
-Release:        7%{?dist}
+Version:	1.4.0
+Release:	8%{?dist}
 Summary:        Audio Processing library for changing Tempo, Pitch and Playback Rates
+Summary(zh_CN.UTF-8): 改变节奏、音高和回放采样率的音频处理库
 License:        LGPLv2+
 Group:          System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 URL:            http://www.surina.net/soundtouch/
 Source0:        http://www.surina.net/soundtouch/%{name}-%{version}.tar.gz
 Patch0:         soundtouch-1.4.0-x86_64-asm-broken.patch
@@ -22,16 +24,21 @@ The SoundTouch library source kit includes an example utility
 SoundStretch which allows processing .wav audio files from a
 command-line interface.
 
+%description -l zh_CN.UTF-8
+改变节奏、音高和回放采样率的音频处理库。
 
 %package devel
 Summary:  Libraries, includes, etc to develop soundtouch applications
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:    Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: soundtouch = %{version}-%{release}
 Requires: pkgconfig
 
 %description devel
 Libraries, include files, etc you can use to develop soundtouch applications.
-
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q -n %{name}

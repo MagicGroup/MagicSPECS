@@ -4,7 +4,7 @@ Name:		sopcast
 Group:		Applications/Internet
 Group(zh_CN.UTF-8):   应用程序/互联网
 Version:	3.2.6
-Release:	2%{?dist}
+Release:	3%{?dist}
 License:	GPL
 Summary:	A P2P Stream program
 Summary(zh_CN.UTF-8): P2P流媒体程序
@@ -13,6 +13,7 @@ Source0:	http://download.easetuner.com/download/sp-auth.tgz
 Source1:	sp-so-auth
 Autoreq:	no
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+BuildArch:	i686
 
 %description
 A P2P Stream program
@@ -54,6 +55,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_bindir}/*
 
 %changelog
+* Mon Sep 28 2015 Liu Di <liudidi@gmail.com> - 3.2.6-3
+- 为 Magic 3.0 重建
+
 * Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 3.2.6-2
 - 为 Magic 3.0 重建
 

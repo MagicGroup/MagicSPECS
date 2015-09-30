@@ -1,8 +1,8 @@
 Summary:	Macros for aclocal to install configuration files
-Summary(pl):	Makra dla aclocal do instalacji plików konfiguracyjnych
+Summary(zh_CN.UTF-8): 安装配置文件的 aclocal 宏
 Name:		sysconftool
 Version:	0.17
-Release:	1%{?dist}
+Release:	2%{?dist}
 License:	GPLv3 with exceptions
 Source0:	http://downloads.sourceforge.net/project/courier/sysconftool/%{version}/%{name}-%{version}.tar.bz2
 URL:		http://www.courier-mta.org/sysconftool/
@@ -15,11 +15,8 @@ sysconftool is a development utility that helps to install application
 configuration files. sysconftool allows an existing application to be
 upgraded without losing the older version's configuration settings.
 
-%description -l pl
-sysconftool jest narzędziem, które pomaga instalować pliki
-konfiguracyjne aplikacji. sysconftool pozwala na wymienienie
-istniejących aplikacji na nowsze wersje bez straty starszych wersji
-plików konfiguracyjnych.
+%description -l zh_CN.UTF-8
+安装配置文件的 aclocal 宏。
 
 %prep
 %setup -q
@@ -36,6 +33,7 @@ make install DESTDIR=$RPM_BUILD_ROOT
 # make the symlinks relative
 ln -sf ../share/sysconftool/sysconftoolcheck $RPM_BUILD_ROOT%{_bindir}/
 ln -sf ../share/sysconftool/sysconftoolize.pl $RPM_BUILD_ROOT%{_bindir}/sysconftoolize
+magic_rpm_clean.sh
 
 %check
 make check
@@ -51,6 +49,9 @@ make check
 %{_datadir}/aclocal/sysconftool.m4
 
 %changelog
+* Tue Sep 29 2015 Liu Di <liudidi@gmail.com> - 0.17-2
+- 为 Magic 3.0 重建
+
 * Sun Oct 13 2013 Dominik Mierzejewski <rpm@greysector.net> 0.17-1
 - updated to 0.17
 - drop obsolete spec constructs and unnecessary macros

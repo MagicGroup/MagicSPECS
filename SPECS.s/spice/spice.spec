@@ -2,26 +2,21 @@
 # If you want to build both client and server change value to 1
 # If you want to only build the server change value to 0
 %define build_client        1
-%if 0%{?rhel}
-%define build_client        0
-%endif
 
 Name:           spice
-Version:        0.12.2
-Release:        3%{?dist}
+Version:	0.12.5
+Release:	1%{?dist}
 Summary:        Implements the SPICE protocol
+Summary(zh_CN.UTF-8): SPICE 协议的实现
 Group:          User Interface/Desktops
+Group(zh_CN.UTF-8): 用户界面/桌面
 License:        LGPLv2+
 URL:            http://www.spice-space.org/
 Source0:        http://www.spice-space.org/download/releases/%{name}-%{version}.tar.bz2
 Source1:        spice-xpi-client-spicec
 
 # https://bugzilla.redhat.com/show_bug.cgi?id=613529
-%if 0%{?rhel}
-ExclusiveArch:  x86_64
-%else
 ExclusiveArch:  i686 x86_64 armv6l armv7l armv7hl
-%endif
 
 BuildRequires:  pkgconfig
 BuildRequires:  glib2-devel >= 2.22
@@ -41,11 +36,15 @@ you to view a computing 'desktop' environment not only on the machine
 where it is running, but from anywhere on the Internet and from a wide
 variety of machine architectures.
 
+%description -l zh_CN.UTF-8
+SPICE 协议的实现。
 
 %if %{build_client}
 %package client
 Summary:          Implements the client side of the SPICE protocol
+Summary(zh_CN.UTF-8): SPICE 协议的客户端实现
 Group:            User Interface/Desktops
+Group(zh_CN.UTF-8): 用户界面/桌面
 Requires(post):   %{_sbindir}/update-alternatives
 Requires(postun): %{_sbindir}/update-alternatives
 
@@ -57,12 +56,16 @@ where it is running, but from anywhere on the Internet and from a wide
 variety of machine architectures.
 
 This package contains the SPICE client application.
+%description client -l zh_CN.UTF-8
+SPICE 协议的客户端实现。
 %endif
 
 
 %package server
 Summary:        Implements the server side of the SPICE protocol
+Summary(zh_CN.UTF-8): SPICE 协议的服务器端实现
 Group:          System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 
 %description server
 The Simple Protocol for Independent Computing Environments (SPICE) is
@@ -73,11 +76,14 @@ variety of machine architectures.
 
 This package contains the run-time libraries for any application that wishes
 to be a SPICE server.
-
+%description server -l zh_CN.UTF-8
+SPICE 协议的服务器端实现。
 
 %package server-devel
 Summary:        Header files, libraries and development documentation for spice-server
+Summary(zh_CN.UTF-8): %{name}-server 的开发包
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       %{name}-server = %{version}-%{release}
 Requires:       pkgconfig
 
@@ -85,7 +91,8 @@ Requires:       pkgconfig
 This package contains the header files, static libraries and development
 documentation for spice-server. If you like to develop programs
 using spice-server, you will need to install spice-server-devel.
-
+%description server-devel -l zh_CN.UTF-8
+%{name}-server 的开发包。
 
 %prep
 %setup -q
@@ -111,7 +118,7 @@ mkdir -p %{buildroot}%{_libexecdir}
 touch %{buildroot}%{_libexecdir}/spice-xpi-client
 install -m 0755 %{_sourcedir}/spice-xpi-client-spicec %{buildroot}%{_libexecdir}/
 %endif
-
+magic_rpm_clean.sh
 
 %post server -p /sbin/ldconfig
 
@@ -148,6 +155,9 @@ fi
 
 
 %changelog
+* Mon Sep 28 2015 Liu Di <liudidi@gmail.com> - 0.12.5-1
+- 更新到 0.12.5
+
 * Sun May 04 2014 Liu Di <liudidi@gmail.com> - 0.12.2-3
 - 为 Magic 3.0 重建
 
@@ -186,101 +196,4 @@ fi
 * Sun May 13 2012 Alon Levy <alevy@redhat.com>
 - Add double free fix. (#808936)
 
-%changelog
-* Tue Apr 24 2012 Alon Levy <alevy@redhat.com>
-- Add 32 bit fixes from git master. (#815717)
-
-* Tue Feb 28 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.10.1-2
-- Rebuilt for c++ ABI breakage
-
-* Mon Jan 23 2012 Hans de Goede <hdegoede@redhat.com> - 0.10.1-1
-- New upstream release 0.10.1
-
-* Sat Jan 14 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.10.0-2
-- Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
-
-* Thu Nov 10 2011 Alon Levy <alevy@redhat.com> - 0.10.0-1
-- New upstream release 0.10.0
-- support spice-server.i686
-
-* Wed Sep 28 2011 Marc-André Lureau <marcandre.lureau@redhat.com> - 0.9.1-2
-- Provides spice-xpi-client alternative in spice-client
-
-* Thu Aug 25 2011 Hans de Goede <hdegoede@redhat.com> - 0.9.1-1
-- New upstream release 0.9.1
-
-* Mon Jul 25 2011 Marc-André Lureau <marcandre.lureau@redhat.com> - 0.9.0-1
-- New upstream release 0.9.0
-
-* Wed Apr 20 2011 Hans de Goede <hdegoede@redhat.com> - 0.8.1-1
-- New upstream release 0.8.1
-
-* Fri Mar 11 2011 Hans de Goede <hdegoede@redhat.com> - 0.8.0-2
-- Fix being unable to send ctrl+alt+key when release mouse is bound to
-  ctrl+alt (which can happen when used from RHEV-M)
-
-* Tue Mar  1 2011 Hans de Goede <hdegoede@redhat.com> - 0.8.0-1
-- New upstream release 0.8.0
-
-* Fri Feb 11 2011 Hans de Goede <hdegoede@redhat.com> - 0.7.3-1
-- New upstream release 0.7.3
-
-* Wed Feb 09 2011 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.7.2-2
-- Rebuilt for https://fedoraproject.org/wiki/Fedora_15_Mass_Rebuild
-
-* Wed Jan 19 2011 Hans de Goede <hdegoede@redhat.com> - 0.7.2-1
-- New upstream release 0.7.2
-
-* Fri Dec 17 2010 Hans de Goede <hdegoede@redhat.com> - 0.7.1-1
-- New upstream release 0.7.1
-- Drop all patches (all upstreamed)
-- Enable smartcard (CAC) support
-
-* Wed Nov 17 2010 Hans de Goede <hdegoede@redhat.com> - 0.6.3-4
-- Fix the info layer not showing when used through the XPI
-- Do not let the connection gui flash by when a hostname has been specified
-  on the cmdline
-- Fix spice client locking up when dealing with XIM input (#654265)
-- Fix modifier keys getting stuck (#655048)
-- Fix spice client crashing when dealing with XIM ibus input (#655836)
-- Fix spice client only showing a white screen in full screen mode
-
-* Sat Nov  6 2010 Hans de Goede <hdegoede@redhat.com> - 0.6.3-3
-- Log to ~/.spicec/cegui.log rather then to CEGUI.log in the cwd, this
-  fixes spicec from aborting when run in a non writable dir (#650253)
-
-* Fri Nov  5 2010 Hans de Goede <hdegoede@redhat.com> - 0.6.3-2
-- Various bugfixes from upstream git:
-  - Make spicec work together with the Firefox XPI for RHEV-M
-  - Make sure the spicec window gets properly raised when first shown
-
-* Mon Oct 18 2010 Hans de Goede <hdegoede@redhat.com> - 0.6.3-1
-- Update to 0.6.3
-- Enable GUI
-
-* Thu Sep 30 2010 Gerd Hoffmann <kraxel@redhat.com> - 0.6.1-1
-- Update to 0.6.1.
-
-* Tue Aug 31 2010 Alexander Larsson <alexl@redhat.com> - 0.6.0-1
-- Update to 0.6.0 (stable release)
-
-* Tue Jul 20 2010 Alexander Larsson <alexl@redhat.com> - 0.5.3-1
-- Update to 0.5.3
-
-* Tue Jul 13 2010 Gerd Hoffmann <kraxel@redhat.com> - 0.5.2-4
-- Quote %% in changelog to avoid macro expansion.
-
-* Mon Jul 12 2010 Gerd Hoffmann <kraxel@redhat.com> - 0.5.2-3
-- %%configure handles CFLAGS automatically, no need to fiddle
-  with %%{optflags} manually.
-
-* Mon Jul 12 2010 Gerd Hoffmann <kraxel@redhat.com> - 0.5.2-2
-- Fix license: LGPL.
-- Cleanup specfile, drop bits not needed any more with
-  recent rpm versions (F13+).
-- Use optflags as-is.
--
-
-* Fri Jul 9 2010 Gerd Hoffmann <kraxel@redhat.com> - 0.5.2-1
-- initial package.
 

@@ -5,7 +5,7 @@
 
 Name:		swfdec
 Version:	%{major_version}.2
-Release:	4%{?dist}
+Release:	5%{?dist}
 Summary:	Flash animation rendering library
 Summary(zh_CN): Flash 动画渲染库
 
@@ -156,6 +156,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Tue Sep 29 2015 Liu Di <liudidi@gmail.com> - 0.9.2-5
+- 为 Magic 3.0 重建
+
 * Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 0.9.2-4
 - 为 Magic 3.0 重建
 

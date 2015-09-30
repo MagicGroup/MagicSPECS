@@ -1,6 +1,6 @@
 Name:		svgalib
 Version:	1.9.25
-Release:	8%{?dist}
+Release:	10%{?dist}
 Summary:	Low-level fullscreen SVGA graphics library
 Summary(zh_CN.UTF-8): 低级全屏 SVGA 图形库
 Group:		System Environment/Libraries
@@ -15,6 +15,8 @@ Patch2:		svgalib-1.9.21-demos.patch
 Patch3:		svgalib-1.9.21-cfg.patch
 Patch4:		svgalib-1.9.25-kernel-2.6.26.patch
 Patch5:		svgalib-1.9.25-round.patch 
+Patch6:		svgalib-1.9.25-vga_getmodenumber.patch
+Patch7:		svgalib-1.9.25-quickmath-h-redefinitions.patch
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 Exclusivearch:	%{ix86} x86_64
 
@@ -52,6 +54,8 @@ library.
 %patch3 -p1 -b .defaultcfg
 %patch4 -p1
 %patch5 -p1
+%patch6 -p1
+%patch7 -p1
 
 #the testlinear demo needs svgalib's internal libvga header, so copy it to the
 #demo dir
@@ -142,6 +146,12 @@ rm -fr $RPM_BUILD_ROOT
 
 
 %changelog
+* Tue Sep 29 2015 Liu Di <liudidi@gmail.com> - 1.9.25-10
+- 为 Magic 3.0 重建
+
+* Tue Sep 29 2015 Liu Di <liudidi@gmail.com> - 1.9.25-9
+- 为 Magic 3.0 重建
+
 * Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 1.9.25-8
 - 为 Magic 3.0 重建
 

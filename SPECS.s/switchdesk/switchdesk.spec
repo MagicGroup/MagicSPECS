@@ -1,11 +1,13 @@
 Name: switchdesk
 Summary: A desktop environment switcher
+Summary(zh_CN.UTF-8): 桌面环境切换工具
 Version: 4.0.10
-Release: 3%{?dist}
+Release: 4%{?dist}
 Url: http://than.fedorapeople.org/
 Source: http://than.fedorapeople.org/%{name}-%{version}.tar.bz2
 License: GPLv2+
 Group: User Interface/Desktops
+Group(zh_CN.UTF-8): 用户界面/桌面
 Buildroot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch: noarch
 BuildRequires: intltool
@@ -22,10 +24,14 @@ well as support for setting a global default environment.
 
 Install switchdesk if you need a tool for switching between desktop
 environments.
+%description -l zh_CN.UTF-8
+桌面环境切换工具。
 
 %package gui
 Group: User Interface/Desktops
+Group(zh_CN.UTF-8): 用户界面/桌面
 Summary: A graphical interface for the Desktop Switcher
+Summary(zh_CN.UTF-8): 图形界面的桌面切换工具
 Requires: %{name} = %{version}-%{release}
 Requires: python
 Requires: pygtk2
@@ -33,6 +39,8 @@ Requires: pygtk2
 %description gui
 The switchdesk-gui package provides the graphical user interface for
 the Desktop Switcher.
+%description gui -l zh_CN.UTF-8
+图形界面的桌面切换工具。
 
 %prep
 
@@ -49,7 +57,7 @@ make install DESTDIR=%{buildroot}
 mkdir -p %{buildroot}%{_datadir}/applications
 desktop-file-validate %{buildroot}%{_datadir}/applications/%{name}.desktop
 install -p -m 644 %{name}.desktop %{buildroot}%{_datadir}/applications/
-
+magic_rpm_clean.sh
 %find_lang %{name}
 
 %clean
@@ -62,7 +70,6 @@ rm -rf %{buildroot}
 %{_bindir}/%{name}*
 %{_datadir}/%{name}/Xclients*
 %{_mandir}/man1/%{name}*
-%lang(fr)%{_mandir}/fr/man1/%{name}*
 
 %files gui -f %{name}.lang
 %defattr(-,root,root)
@@ -72,6 +79,9 @@ rm -rf %{buildroot}
 %{_datadir}/applications/*
 
 %changelog
+* Tue Sep 29 2015 Liu Di <liudidi@gmail.com> - 4.0.10-4
+- 为 Magic 3.0 重建
+
 * Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 4.0.10-3
 - 为 Magic 3.0 重建
 

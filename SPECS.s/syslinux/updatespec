@@ -1,0 +1,11 @@
+#!/bin/bash
+if [ -z "$1" ] ; then
+        echo "使用方法：$0 新版本号"
+        exit 1
+fi
+pushd $(dirname $0)
+NAME=$(basename $(pwd))
+sed -i "s/Version:.*/Version:\t$1/g" $NAME.spec
+sed -i "s/Release:.*/Release:\t1%{?dist}/g" $NAME.spec
+sed -i "s/%define tarball_version.*/%define tarball_version $1/g" $NAME.spec
+popd

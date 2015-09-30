@@ -1,9 +1,11 @@
 Summary: Allows restricted root access for specified users
+Summary(zh_CN.UTF-8): 允许指定的用户使用 root 权限
 Name: sudo
-Version: 1.8.3p1
-Release: 5%{?dist}
+Version:	1.8.14p3
+Release:	1%{?dist}
 License: ISC
 Group: Applications/System
+Group(zh_CN.UTF-8): 应用程序/系统
 URL: http://www.courtesan.com/sudo/
 Source0: http://www.courtesan.com/sudo/dist/sudo-%{version}.tar.gz
 Source1: sudo-1.7.4p4-sudoers
@@ -22,16 +24,15 @@ BuildRequires: gettext
 
 # don't strip
 Patch1: sudo-1.6.7p5-strip.patch
-# configure.in fix
-Patch2: sudo-1.7.2p1-envdebug.patch
-# add m4/ to paths in aclocal.m4
-Patch3: sudo-1.7.4p3-m4path.patch
-# disable word wrapping if the ouput is piped
-Patch4: sudo-1.8.3-pipelist.patch
-# CVE-2012-0809
-Patch5: sudo-1.8.3p1-CVE-2012-0809.patch
-# SSSD support
-Patch6: sudo-1.8.3p1-sssd-support.patch
+# Patch to read ldap.conf more closely to nss_ldap
+Patch2: sudo-1.8.14p1-ldapconfpatch.patch
+# Patch makes changes in documentation bz:1162070
+Patch3: sudo-1.8.14p1-docpassexpire.patch
+# Patch initialize variable before executing sudo_strsplit
+Patch4: sudo-1.8.14p3-initialization.patch
+# Patch resolves deadcode in visudo.c from coverity scan.
+Patch5: sudo-1.8.14p3-deadcode_visudo_c.patch
+Patch6: sudo-1.8.14p3-extra_while.patch
 
 %description
 Sudo (superuser do) allows a system administrator to give certain
@@ -44,14 +45,22 @@ audit trail of who did what), a configurable timeout of the sudo
 command, and the ability to use the same configuration file (sudoers)
 on many different machines.
 
+%description -l zh_CN.UTF-8
+允许指定的用户使用 root 权限运行一些（或全部）命令。
+
 %package        devel
 Summary:        Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       %{name} = %{version}-%{release}
 
 %description    devel
 The %{name}-devel package contains header files developing sudo
 plugins that use %{name}.
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -109,6 +118,13 @@ install -p -d -m 700 $RPM_BUILD_ROOT/var/db/sudo
 install -p -d -m 750 $RPM_BUILD_ROOT/etc/sudoers.d
 install -p -c -m 0440 %{SOURCE1} $RPM_BUILD_ROOT/etc/sudoers
 
+# Remove examples; Examples can be found in man pages too.
+rm -rf $RPM_BUILD_ROOT%{_datadir}/examples/sudo
+
+#Remove all .la files
+find $RPM_BUILD_ROOT -name '*.la' -exec rm -f {} ';'
+
+magic_rpm_clean.sh
 %find_lang sudo
 %find_lang sudoers
 
@@ -140,27 +156,35 @@ rm -rf $RPM_BUILD_ROOT
 
 %files -f sudo_all.lang
 %defattr(-,root,root)
-%doc ChangeLog NEWS README* MANIFEST
-%doc doc/HISTORY doc/LICENSE doc/TROUBLESHOOTING doc/UPGRADE
-%doc doc/schema.* plugins/sudoers/sudoers2ldif doc/sample.*
 %attr(0440,root,root) %config(noreplace) /etc/sudoers
 %attr(0750,root,root) %dir /etc/sudoers.d/
 %config(noreplace) /etc/pam.d/sudo
 %config(noreplace) /etc/pam.d/sudo-i
+%attr(0644,root,root) %{_tmpfilesdir}/sudo.conf
 %dir /var/db/sudo
 %attr(4111,root,root) %{_bindir}/sudo
-%attr(4111,root,root) %{_bindir}/sudoedit
+%{_bindir}/sudoedit
 %attr(0111,root,root) %{_bindir}/sudoreplay
 %attr(0755,root,root) %{_sbindir}/visudo
-#%attr(0755,root,root) %{_libexecdir}/sesh
-%{_libexecdir}/sudo_noexec.*
-%{_libexecdir}/sudoers.*
+%dir %{_libexecdir}/sudo
+%attr(0644,root,root) %{_libexecdir}/sudo/sudo_noexec.so
+%attr(0644,root,root) %{_libexecdir}/sudo/sudoers.so
+%attr(0644,root,root) %{_libexecdir}/sudo/group_file.so
+%attr(0644,root,root) %{_libexecdir}/sudo/system_group.so
+%attr(0644,root,root) %{_libexecdir}/sudo/libsudo_util.so.?.?.?
+%{_libexecdir}/sudo/libsudo_util.so.?
 %{_mandir}/man5/sudoers.5*
 %{_mandir}/man5/sudoers.ldap.5*
+%{_mandir}/man5/sudo.conf.5*
 %{_mandir}/man8/sudo.8*
 %{_mandir}/man8/sudoedit.8*
 %{_mandir}/man8/sudoreplay.8*
 %{_mandir}/man8/visudo.8*
+%dir %{_pkgdocdir}/
+%{_pkgdocdir}/*
+%{!?_licensedir:%global license %%doc}
+%license doc/LICENSE
+%exclude %{_pkgdocdir}/ChangeLog
 
 
 # Make sure permissions are ok even if we're updating
@@ -169,11 +193,15 @@ rm -rf $RPM_BUILD_ROOT
 
 %files devel
 %defattr(-,root,root,-)
-#%doc plugins/{sample,sample_group}
+%doc plugins/sample/sample_plugin.c
 %{_includedir}/sudo_plugin.h
 %{_mandir}/man8/sudo_plugin.8*
+%{_libexecdir}/sudo/libsudo_util.so
 
 %changelog
+* Tue Sep 29 2015 Liu Di <liudidi@gmail.com> - 1.8.14p3-1
+- 更新到 1.8.14p3
+
 * Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 1.8.3p1-5
 - 为 Magic 3.0 重建
 

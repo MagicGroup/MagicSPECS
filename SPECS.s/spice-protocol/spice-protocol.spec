@@ -1,8 +1,10 @@
 Name:           spice-protocol
-Version:        0.12.3
-Release:        1%{?dist}
+Version:	0.12.10
+Release:	1%{?dist}
 Summary:        Spice protocol header files
+Summary(zh_CN.UTF-8): Spice 协议的头文件
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 # Main headers are BSD, controller / foreign menu are LGPL
 License:        BSD and LGPLv2+
 URL:            http://www.spice-space.org/
@@ -13,6 +15,8 @@ BuildArch:      noarch
 Header files describing the spice protocol
 and the para-virtual graphics card QXL.
 
+%description -l zh_CN.UTF-8
+Spice 协议的头文件。
 
 %prep
 %setup -q
@@ -31,9 +35,12 @@ make DESTDIR=%{buildroot} install
 %doc COPYING NEWS
 %{_includedir}/spice-1
 %{_datadir}/pkgconfig/spice-protocol.pc
-
+%{_libdir}/spice-protocol/*
 
 %changelog
+* Mon Sep 28 2015 Liu Di <liudidi@gmail.com> - 0.12.10-1
+- 更新到 0.12.10
+
 * Thu Dec 20 2012 Hans de Goede <hdegoede@redhat.com> - 0.12.3-1
 - Update to 0.12.3
 

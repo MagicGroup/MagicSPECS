@@ -38,9 +38,10 @@
 
 
 Summary: Connects C/C++/Objective C to some high-level programming languages
+Summary(zh_CN.UTF-8): 帮助使用C或者C++编写的软件能与其它各种高级编程语言进行嵌入联接的开发工具
 Name:    swig
 Version: 3.0.7
-Release: 5%{?dist}
+Release: 6%{?dist}
 License: GPLv3+ and BSD
 URL:     http://swig.sourceforge.net/
 Source0: http://downloads.sourceforge.net/project/swig/swig/swig-%{version}/swig-%{version}.tar.gz
@@ -98,15 +99,29 @@ Eiffel and Guile. SWIG is normally used to create high-level
 interpreted programming environments, systems integration, and as a
 tool for building user interfaces
 
+%description -l zh_CN.UTF-8
+SWIG是个帮助使用C或者C++编写的软件能与其它各种高级编程语言进行嵌入
+联接的开发工具。SWIG能应用于各种不同类型的语言包括常用脚本编译语言
+例如Perl, PHP, Python, Tcl, Ruby and PHP。支持语言列表中也包括非脚
+本编译语言，例如C#, Common Lisp (CLISP, Allegro CL, CFFI, UFFI), 
+Java, Modula-3, OCAML以及R，甚至是编译器或者汇编的计划应用（Guile, 
+MzScheme, Chicken）。SWIG普遍应用于创建高级语言解析或汇编程序环境，
+用户接口，作为一种用来测试C/C++或进行原型设计的工具。SWIG还能够导
+出XML或Lisp s-expressions格式的解析树。SWIG可以被自由使用，发布，
+修改用于商业或非商业中。
+
 %package doc
 Summary:   Documentation files for SWIG
+Summary(zh_CN.UTF-8): %{name} 的文档
 License:   BSD
 Group:     Development/Tools
+Group(zh_CN.UTF-8): 开发/工具
 BuildArch: noarch
 
 %description doc
 This package contains documentation for SWIG and useful examples
-
+%description doc -l zh_CN.UTF-8
+%{name} 的文档。
 %prep
 %setup -q -n swig-%{version}
 
@@ -208,6 +223,9 @@ ln -fs ../../bin/ccache-swig %{buildroot}%{_libdir}/ccache/swig
 %doc Doc Examples LICENSE LICENSE-GPL LICENSE-UNIVERSITIES COPYRIGHT
 
 %changelog
+* Tue Sep 29 2015 Liu Di <liudidi@gmail.com> - 3.0.7-6
+- 为 Magic 3.0 重建
+
 * Thu Sep 03 2015 Jonathan Wakely <jwakely@redhat.com> - 3.0.7-5
 - Rebuilt for Boost 1.59
 

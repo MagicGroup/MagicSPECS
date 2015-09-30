@@ -8,7 +8,7 @@
 Summary: Apache HTTP Server
 Name: httpd
 Version: 2.4.16
-Release: 1%{?dist}
+Release: 2%{?dist}
 URL: http://httpd.apache.org/
 Source0: http://www.apache.org/dist/httpd/httpd-%{version}.tar.bz2
 Source1: index.html
@@ -71,7 +71,7 @@ License: ASL 2.0
 Group: System Environment/Daemons
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: autoconf, perl, pkgconfig, findutils, xmlto
-BuildRequires: zlib-devel, libselinux-devel, lua-devel
+BuildRequires: zlib-devel, lua-devel
 BuildRequires: apr-devel >= 1.5.0, apr-util-devel >= 1.5.0, pcre-devel >= 5.0
 BuildRequires: systemd-devel
 Requires: /etc/mime.types, system-logos-httpd
@@ -198,7 +198,7 @@ interface for storing and accessing per-user session data.
 
 %patch23 -p1 -b .export
 %patch24 -p1 -b .corelimit
-%patch25 -p1 -b .selinux
+#patch25 -p1 -b .selinux
 %patch26 -p1 -b .r1337344+
 %patch27 -p1 -b .icons
 %patch29 -p1 -b .systemd
@@ -665,6 +665,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_rpmconfigdir}/macros.d/macros.httpd
 
 %changelog
+* Tue Sep 29 2015 Liu Di <liudidi@gmail.com> - 2.4.16-2
+- 为 Magic 3.0 重建
+
 * Wed Jul 15 2015 Jan Kaluza <jkaluza@redhat.com> - 2.4.12-4
 - update to 2.4.16
 

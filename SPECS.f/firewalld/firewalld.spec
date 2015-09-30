@@ -1,24 +1,17 @@
-%if (0%{?fedora} >= 13 || 0%{?rhel} > 7)
 %global with_python3 1
-%if (0%{?fedora} >= 23 || 0%{?rhel} >= 8)
 %global use_python3 1
-%endif
-%endif
 
 Summary: A firewall daemon with D-Bus interface providing a dynamic firewall
+Summary(zh_CN.UTF-8): 使用 D-Bus 接口提供动态防火墙的防火墙服务
 Name: firewalld
 Version: 0.3.14.2
-Release: 4%{?dist}
+Release: 5%{?dist}
 URL:     http://www.firewalld.org
 License: GPLv2+
 Source0: https://fedorahosted.org/released/firewalld/%{name}-%{version}.tar.bz2
-%if 0%{?fedora}
 Source1: FedoraServer.xml
 Source2: FedoraWorkstation.xml
-%endif
-%if 0%{?fedora}
 Patch0: firewalld-0.2.6-MDNS-default.patch
-%endif
 Patch1: firewalld-0.3.14.2-pid_file_RHBZ#1233232.patch
 BuildArch: noarch
 BuildRequires: desktop-file-utils
@@ -42,11 +35,6 @@ Requires: python3-firewall  = %{version}-%{release}
 %else #0%{?use_python3}
 Requires: python-firewall  = %{version}-%{release}
 %endif #0%{?use_python3}
-%if 0%{?fedora} == 21
-Requires: firewalld-config
-%endif
-
-%if 0%{?fedora} > 21
 Provides: variant_config(Server)
 Provides: variant_config(Workstation)
 
@@ -55,7 +43,6 @@ Obsoletes: firewalld-config-standard <= 0.3.15
 Obsoletes: firewalld-config-cloud <= 0.3.15
 Obsoletes: firewalld-config-server <= 0.3.15
 Obsoletes: firewalld-config-workstation <= 0.3.15
-%endif
 
 %description
 firewalld is a firewall service daemon that provides a dynamic customizable 
@@ -480,6 +467,9 @@ fi
 %endif
 
 %changelog
+* Tue Sep 29 2015 Liu Di <liudidi@gmail.com> - 0.3.14.2-5
+- 为 Magic 3.0 重建
+
 * Wed Jul 22 2015 Adam Williamson <awilliam@redhat.com> - 0.3.14.2-4
 - bump versions on old config package obsoletes (f21 is on 0.3.14 now)
 

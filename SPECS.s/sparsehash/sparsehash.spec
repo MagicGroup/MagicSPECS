@@ -1,35 +1,43 @@
+%{!?_pkgdocdir: %global _pkgdocdir %{_docdir}/%{name}-%{version}}
 # disable -debuginfo subpackage
 %global debug_package %{nil}
 
 Name:           sparsehash
-Version:        1.12
-Release:        3%{?dist}
+Version:	2.0.2
+Release:	1%{?dist}
 Summary:        Extremely memory-efficient C++ hash_map implementation
+Summary(zh_CN.UTF-8): 极节省内存的 hash_map C++ 实现
 
 Group:          Development/Libraries
 License:        BSD
 URL:            http://code.google.com/p/sparsehash
-Source0:        http://sparsehash.googlecode.com/files/sparsehash-%{version}.tar.gz
+Source0:        https://github.com/sparsehash/sparsehash/archive/sparsehash-%{version}.tar.gz
 
 %description
 The Google SparseHash project contains several C++ template hash-map
 implementations with different performance characteristics, including
 an implementation that optimizes for space and one that optimizes for
 speed.
+%description -l zh_CN.UTF-8
+极节省内存的 hash_map C++ 实现。
 
 # all files are in -devel package
 %package        devel
 Summary:        Extremely memory-efficient C++ hash_map implementation
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 
 %description    devel
 The Google SparseHash project contains several C++ template hash-map
 implementations with different performance characteristics, including
 an implementation that optimizes for space and one that optimizes for
 speed.
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
-%setup -q
+%setup -q -n %{name}-%{name}-%{version}
 
 %build
 %configure
@@ -49,9 +57,13 @@ make check
 %files devel
 %doc %{_defaultdocdir}/sparsehash-%{version}/
 %{_includedir}/google/
+%{_includedir}/sparsehash/
 %{_libdir}/pkgconfig/libsparsehash.pc
 
 %changelog
+* Mon Sep 28 2015 Liu Di <liudidi@gmail.com> - 2.0.2-1
+- 更新到 2.0.2
+
 * Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 1.12-3
 - 为 Magic 3.0 重建
 

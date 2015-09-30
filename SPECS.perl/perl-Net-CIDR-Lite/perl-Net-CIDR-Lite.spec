@@ -1,6 +1,6 @@
 Name:           perl-Net-CIDR-Lite
 Version:        0.21
-Release:        13%{?dist}
+Release:        14%{?dist}
 Summary:        Perl extension for merging IPv4 or IPv6 CIDR addresses
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -48,6 +48,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Mon Sep 28 2015 Liu Di <liudidi@gmail.com> - 0.21-14
+- 为 Magic 3.0 重建
+
 * Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.21-13
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

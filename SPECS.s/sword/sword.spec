@@ -1,12 +1,16 @@
+%define         soversion 1.7
+
 Name:           sword           
-Version:        1.6.2
-Release:        10%{?dist}
+Version:	1.7.4
+Release:	1%{?dist}
 Summary:        Free Bible Software Project
+Summary(zh_CN.UTF-8): 免费圣经软件项目
 
 Group:          System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 License:        GPLv2
 URL:            http://www.crosswire.org/sword/
-Source0:        http://www.crosswire.org/ftpmirror/pub/sword/source/v1.6/sword-%{version}.tar.gz
+Source0:        http://www.crosswire.org/ftpmirror/pub/sword/source/v1.7/sword-%{version}.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  openssl-devel
 BuildRequires:  curl-devel
@@ -16,10 +20,6 @@ BuildRequires:  libicu-devel icu
 BuildRequires:  clucene-core-devel
 BuildRequires:  cppunit-devel
 
-Patch0:         sword-no-curl-types.patch
-Patch1:         sword-1.6.2-clucene2.patch
-Patch2:		sword-gcc47-fix.patch
-
 %description
 The SWORD Project is the CrossWire Bible Society's free Bible software
 project. Its purpose is to create cross-platform open-source tools--
@@ -28,10 +28,14 @@ Bible societies to write new Bible software more quickly and easily. We
 also create Bible study software for all readers, students, scholars,
 and translators of the Bible, and have a growing collection of over 200
 texts in over 50 languages.
+%description -l zh_CN.UTF-8
+免费圣经软件项目。
 
 %package devel
 Summary:  Development files for the sword project
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:    Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: %{name} = %{version}
 Requires: pkgconfig
 Requires: curl-devel clucene-core-devel libicu-devel
@@ -40,27 +44,62 @@ Requires: curl-devel clucene-core-devel libicu-devel
 This package contains the development headers and libraries for the
 sword API. You need this package if you plan on compiling software
 that uses the sword API, such as Gnomesword or Bibletime.
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
+%package utils
+Summary:  Utilities for the sword project
+Summary(zh_CN.UTF-8): %{name} 的工具
+Group:    System Enivonment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
+Requires: %{name}%{?_isa} = %{version}-%{release}
+
+%description utils
+This package contains the pre-built utilities for use with the SWORD
+Project. The SWORD Project developers encourage you to use the latest
+development version of the utilities rather than those released with
+a packaged release as updates to the utilities do not affect the
+release schedule of the library. However, these utilities were the
+latest at the time of the current library release.
+
+%description utils -l zh_CN.UTF-8
+%{name} 的工具。
+
+%package python
+Summary:  Python bindings for Sword
+Summary(zh_CN.UTF-8): %{name} 的 Python 绑定
+Requires: %{name}%{?_isa} = %{version}-%{release}
+Requires: python
+
+%description python
+Python bindings for The SWORD Library.
+%description python -l zh_CN.UTF-8
+%{name} 的 python 绑定。
 
 %prep
 %setup -q
-%patch0 -p1 -b .no-curl-types
-%patch1 -p1 -b .clucene2
-%patch2 -p0 -b .gcc47
 
 %build
-%configure --disable-static --with-icu --with-clucene=%{_prefix}
-sed -i 's|^hardcode_libdir_flag_spec=.*|hardcode_libdir_flag_spec=""|g' libtool
-sed -i 's|^runpath_var=LD_RUN_PATH|runpath_var=DIE_RPATH_DIE|g' libtool
+mkdir build
+pushd build
+%cmake -DLIBSWORD_LIBRARY_TYPE=Shared \
+       -DSWORD_BINDINGS="Python" \
+       -DBUILD_UTILITIES="Yes" \
+       -DLIBSWORD_SOVERSION=%{soversion} \
+       -DLIBDIR=%{_libdir} \
+       ..
 make %{?_smp_mflags}
-
 
 %install
 rm -rf %{buildroot}
-make install DESTDIR=%{buildroot}
+pushd build
+%make_install
+popd
 mkdir -p %{buildroot}%{_datadir}/sword/modules
 
-find %{buildroot} -type f -name "*.la" -exec rm -f {} ';'
+find %{buildroot} -type f -name "*.la" -delete -print
+
+magic_rpm_clean.sh
 
 %clean
 rm -rf %{buildroot}
@@ -70,25 +109,52 @@ rm -rf %{buildroot}
 
 %postun -p /sbin/ldconfig
 
-
 %files
-%defattr(-,root,root,-)
 %doc AUTHORS COPYING ChangeLog INSTALL LICENSE NEWS README
 %doc samples doc
+# Re-enable after upstream includes it with CMake builds
 %config(noreplace) %{_sysconfdir}/sword.conf
-%{_bindir}/*
-%{_libdir}/sword/
-%{_libdir}/libsword-%{version}.so
+%{_libdir}/libsword.so.%{soversion}
 %{_datadir}/sword
 
 %files devel
-%defattr(-,root,root,-)
 %doc CODINGSTYLE
-%{_includedir}/sword
-%{_libdir}/pkgconfig/sword.pc
+%{_includedir}/sword/
 %{_libdir}/libsword.so
+%{_libdir}/pkgconfig/sword.pc
+
+%files utils
+%{_bindir}/vs2osisref
+%{_bindir}/vs2osisreftxt
+%{_bindir}/mod2vpl
+%{_bindir}/imp2ld
+%{_bindir}/diatheke
+%{_bindir}/mkfastmod
+%{_bindir}/mod2zmod
+%{_bindir}/xml2gbs
+%{_bindir}/imp2vs
+%{_bindir}/installmgr
+%{_bindir}/osis2mod
+%{_bindir}/tei2mod
+%{_bindir}/vpl2mod
+%{_bindir}/mod2imp
+%{_bindir}/addld
+%{_bindir}/imp2gbs
+%{_bindir}/mod2osis
+%{_bindir}/emptyvss
+
+%files python
+%{python2_sitearch}/Sword.py
+%{python2_sitearch}/Sword.pyc
+%{python2_sitearch}/Sword.pyo
+%{python2_sitearch}/_Sword.so
+%{python2_sitearch}/sword-%{version}-py2.7.egg-info
+
 
 %changelog
+* Tue Sep 29 2015 Liu Di <liudidi@gmail.com> - 1.7.4-1
+- 更新到 1.7.4
+
 * Fri Feb 01 2013 Parag Nemade <paragn AT fedoraproject DOT org> - 1.6.2-10
 - Rebuild for icu 50
 

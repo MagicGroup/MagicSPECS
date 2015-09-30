@@ -2,11 +2,13 @@
 %global	cvsTIME	1030
 
 Summary:	Dictionaries for SKK (Simple Kana-Kanji conversion program)
+Summary(zh_CN.UTF-8): SKK (简单假名汉字转换) 字典
 Name:		skkdic
 Version:	%{cvsDATE}
-Release:	2.T%{cvsTIME}%{?dist}
+Release:	3.T%{cvsTIME}%{?dist}
 License:	GPLv2+
 Group:		System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 # To create source tarball, use Source10
 Source0:	skkdic-%{cvsDATE}T%{cvsTIME}.tar.bz2
 Source1:	http://openlab.ring.gr.jp/skk/skk/tools/unannotation.awk
@@ -18,6 +20,9 @@ BuildArch:	noarch
 %description
 This package includes the SKK dictionaries, including the large dictionary
 SKK-JISYO.L and pubdic+ dictionary.
+
+%description -l zh_CN.UTF-8
+SKK (简单假名汉字转换) 字典。
 
 %prep
 %setup -q
@@ -44,6 +49,7 @@ do
 	install -p -m 644 $f $RPM_BUILD_ROOT%{_datadir}/skk
 done
 gzip -9 ChangeLog
+magic_rpm_clean.sh
 
 %files
 %defattr(-,root,root,-)
@@ -57,6 +63,9 @@ gzip -9 ChangeLog
 
 
 %changelog
+* Sun Sep 27 2015 Liu Di <liudidi@gmail.com> - 20150508-3.T1030
+- 为 Magic 3.0 重建
+
 * Fri Jun 19 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 20150508-2.T1030
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

@@ -1,6 +1,4 @@
-%if 0%{?fedora} > 12
 %global with_python3 1
-%endif
 
 %if 0%{?with_python3}
 %{!?python3_inc:%global python3_inc %(%{__python3} -c "from distutils.sysconfig import get_python_inc; print(get_python_inc(1))")}
@@ -15,9 +13,10 @@
 %global _changelog_trimtime %(date +%s -d "1 year ago")
 
 Summary: SIP - Python/C++ Bindings Generator
+Summary(zh_CN.UTF-8): SIP - Python/C++ 绑定生成器
 Name: sip
 Version: 4.16.9
-Release: 2%{?dist}
+Release: 3%{?dist}
 
 # sipgen/parser.{c.h} is GPLv3+ with exceptions (bison)
 License: GPLv2 or GPLv3 and (GPLv3+ with exceptions)
@@ -187,6 +186,9 @@ install -D -p -m644 %{SOURCE1} %{buildroot}%{rpm_macros_dir}/macros.sip
 
 
 %changelog
+* Sun Sep 27 2015 Liu Di <liudidi@gmail.com> - 4.16.9-3
+- 为 Magic 3.0 重建
+
 * Wed Sep 09 2015 Liu Di <liudidi@gmail.com> - 4.16.9-2
 - 为 Magic 3.0 重建
 

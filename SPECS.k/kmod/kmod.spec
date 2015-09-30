@@ -1,6 +1,6 @@
 Name:		kmod
 Version:	21
-Release:	3%{?dist}
+Release:	4%{?dist}
 Summary:	Linux kernel module management utilities
 
 Group:		System Environment/Kernel
@@ -111,6 +111,9 @@ install -m 755 %{SOURCE1} $RPM_BUILD_ROOT%{_sbindir}/weak-modules
 %{_libdir}/libkmod.so
 
 %changelog
+* Wed Sep 30 2015 Liu Di <liudidi@gmail.com> - 21-4
+- 为 Magic 3.0 重建
+
 * Wed Jun 17 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 21-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

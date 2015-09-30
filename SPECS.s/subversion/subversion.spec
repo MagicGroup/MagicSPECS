@@ -20,7 +20,7 @@
 Summary: A Modern Concurrent Version Control System
 Name: subversion
 Version: 1.9.2
-Release: 1%{?dist}
+Release: 2%{?dist}
 License: ASL 2.0
 Group: Development/Tools
 URL: http://subversion.apache.org/
@@ -111,7 +111,7 @@ passwords in the GNOME Keyring.
 Group: Development/Tools
 Summary: KDE Wallet support for Subversion
 Requires: subversion%{?_isa} = %{version}-%{release}
-BuildRequires: kdelibs-devel >= 4.0.0
+BuildRequires: kdelibs4-devel >= 4.0.0
 
 %description kde
 The subversion-kde package adds support for storing Subversion
@@ -466,6 +466,9 @@ make check-javahl
 %endif
 
 %changelog
+* Tue Sep 29 2015 Liu Di <liudidi@gmail.com> - 1.9.2-2
+- 为 Magic 3.0 重建
+
 * Thu Sep 24 2015 Joe Orton <jorton@redhat.com> - 1.9.2-1
 - update to 1.9.2 (#1265447)
 

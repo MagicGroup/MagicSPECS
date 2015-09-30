@@ -7,16 +7,16 @@
 %endif
 
 Name:           suitesparse
-Version:        4.3.1
-Release:        5%{?dist}
+Version:	4.4.5
+Release:	1%{?dist}
 Summary:        A collection of sparse matrix libraries
+Summary(zh_CN.UTF-8): 稀疏矩阵库的集合
 
 Group:          System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 License:        LGPLv2+ and GPLv2+
-URL:            http://www.cise.ufl.edu/research/sparse/SuiteSparse
-Source0:        http://www.cise.ufl.edu/research/sparse/SuiteSparse/SuiteSparse-%{version}.tar.gz
-# Move #include <math.h> out of StuiteSparse_config.h and into SuiteSparse_config.c
-Patch0:         suitesparse-math.patch
+URL:            http://faculty.cse.tamu.edu/davis/SuiteSparse
+Source0:        http://faculty.cse.tamu.edu/davis/SuiteSparse/SuiteSparse-%{version}.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 %if %{with atlas310}
@@ -54,10 +54,14 @@ matrices.  The package includes the following libraries:
   SuiteSparse_config  configuration file for all the above packages.
   RBio                read/write files in Rutherford/Boeing format
 
+%description -l zh_CN.UTF-8
+稀疏矩阵库的集合。
 
 %package devel
 Summary:        Development headers for SuiteSparse
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       %{name} = %{version}-%{release}
 Obsoletes:      umfpack-devel <= 5.0.1
 Obsoletes:      ufsparse-devel <= 2.1.1
@@ -67,10 +71,14 @@ Provides:       ufsparse-devel = %{version}-%{release}
 The suitesparse-devel package contains files needed for developing
 applications which use the suitesparse libraries.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %package static
 Summary:        Static version of SuiteSparse libraries
+Summary(zh_CN.UTF-8): %{name} 的静态库
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       %{name}-devel = %{version}-%{release}
 Provides:       ufsparse-static = %{version}-%{release}
 
@@ -78,20 +86,25 @@ Provides:       ufsparse-static = %{version}-%{release}
 The suitesparse-static package contains the statically linkable
 version of the suitesparse libraries.
 
+%description static -l zh_CN.UTF-8
+%{name} 的静态库。
+
 %package doc
 Summary:        Documentation files for SuiteSparse
+Summary(zh_CN.UTF-8): %{name} 的文档
 Group:          Documentation
+Group(zh_CN.UTF-8): 文档
 BuildArch:      noarch
 
 Requires:       %{name} = %{version}-%{release}
 
 %description doc
 This package contains documentation files for %{name}.
-
+%description doc -l zh_CN.UTF-8
+%{name} 的文档。
 
 %prep
 %setup -q -n SuiteSparse
-%patch0 -p1 -b .math
 
 %build
 %define amd_version 2.4.0
@@ -161,7 +174,7 @@ pushd AMD
     cp -p ../AMD/Lib/*.a ./
   popd
   cp -p Include/*.h ../Include
-  cp -p README.txt Doc/License Doc/ChangeLog Doc/*.pdf ../Doc/AMD
+  cp -p README.txt Doc/ChangeLog Doc/*.pdf ../Doc/AMD
 popd
 
 pushd BTF
@@ -409,6 +422,7 @@ find */ -iname lesser.txt -o -iname license.txt -o -iname gpl.txt -o \
 
 # hardlink duplicate documentation files
 hardlink -cv Docs/ Licenses/
+magic_rpm_clean.sh
 
 %clean
 rm -rf ${RPM_BUILD_ROOT}
@@ -437,6 +451,9 @@ rm -rf ${RPM_BUILD_ROOT}
 %doc Doc/*
 
 %changelog
+* Tue Sep 29 2015 Liu Di <liudidi@gmail.com> - 4.4.5-1
+- 更新到 4.4.5
+
 * Sat Mar 14 2015 Liu Di <liudidi@gmail.com> - 4.3.1-5
 - 为 Magic 3.0 重建
 

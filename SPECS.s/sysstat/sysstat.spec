@@ -1,13 +1,13 @@
 Summary: Collection of performance monitoring tools for Linux
+Summary(zh_CN.UTF-8): Linux 下的性能监视工具集合
 Name: sysstat
-Version: 10.1.3
-Release: 1%{?dist}
+Version:	11.1.7
+Release:	1%{?dist}
 License: GPLv2+
 Group: Applications/System
+Group(zh_CN.UTF-8): 应用程序/系统
 URL: http://sebastien.godard.pagesperso-orange.fr/
 Source: http://pagesperso-orange.fr/sebastien.godard/%{name}-%{version}.tar.bz2
-
-Patch0: sysstat-10.0.0-makefile.patch
 
 Requires: /etc/cron.d, fileutils, grep, sh-utils, textutils
 Requires(post): systemd, systemd-sysv
@@ -33,69 +33,50 @@ The pidstat command reports statistics for Linux tasks (processes).
 The nfsiostat command reports I/O statistics for network file systems.
 The cifsiostat command reports I/O statistics for CIFS file systems.
 
+%description -l zh_CN.UTF-8
+Linux 下的性能监视工具集合。
+
 %prep
 %setup -q
-%patch0 -p1 -b .ls
-iconv -f windows-1252 -t utf8 CREDITS > CREDITS.aux
-mv CREDITS.aux CREDITS
 
 %build
-%configure sa_lib_dir=%{_libdir}/sa history=28 compressafter=31 \
-    --disable-man-group \
-    --enable-collect-all
-CFLAGS="$RPM_OPT_FLAGS -DSADC_PATH=\\\"%{_libdir}/sa/sadc\\\""
-make CFLAGS="$CFLAGS" LFLAGS="" %{?_smp_mflags}
+%configure --enable-install-cron --enable-copy-only --disable-file-attr \
+    --disable-stripping --docdir=%{_pkgdocdir} sadc_options='-S DISK' \
+    history=28 compressafter=31
+make %{?_smp_mflags}
 
 %install
-make install DESTDIR=%{buildroot}
-
-# Install cron file
-mkdir -p %{buildroot}/%{_sysconfdir}/cron.d
-install -m 0644 cron/sysstat.crond %{buildroot}/%{_sysconfdir}/cron.d/sysstat
-
-# Install service file
-mkdir -p %{buildroot}%{_unitdir}
-install -m 0644 sysstat.service %{buildroot}%{_unitdir}/
-
+%make_install
+magic_rpm_clean.sh
 %find_lang %{name}
 
 %post
-%systemd_post sysstat.service
+%systemd_post sysstat.service sysstat-collect.timer sysstat-summary.timer
 
 %preun
-%systemd_preun sysstat.service
+%systemd_preun sysstat.service sysstat-collect.timer sysstat-summary.timer
 if [[ $1 -eq 0 ]]; then
-  # Remove sa logs if removing sysstat completely
-  rm -f %{_localstatedir}/log/sa/*
+    # Remove sa logs if removing sysstat completely
+    rm -rf %{_localstatedir}/log/sa/*
 fi
 
 %postun
-%systemd_postun sysstat.service
-
-%triggerun -- sysstat < 10.0.2-1
-# Save the current service runlevel info
-# User must manually run systemd-sysv-convert --apply sysstat
-# to migrate them to systemd targets
-/usr/bin/systemd-sysv-convert --save sysstat >/dev/null 2>&1 ||:
-
-# Run these because the SysV package being removed won't do them
-/sbin/chkconfig --del sysstat >/dev/null 2>&1 || :
-/bin/systemctl try-restart sysstat.service >/dev/null 2>&1 || :
+%systemd_postun sysstat.service sysstat-collect.timer sysstat-summary.timer
 
 %files -f %{name}.lang
-%doc CHANGES COPYING CREDITS README FAQ
-%config(noreplace) %{_sysconfdir}/cron.d/sysstat
 %config(noreplace) %{_sysconfdir}/sysconfig/sysstat
 %config(noreplace) %{_sysconfdir}/sysconfig/sysstat.ioconf
-%{_unitdir}/sysstat.service
 %{_bindir}/*
 %{_libdir}/sa
-%{_mandir}/man1/*
-%{_mandir}/man5/*
-%{_mandir}/man8/*
+%{_unitdir}/sysstat*
+%{_mandir}/man*/*
 %{_localstatedir}/log/sa
+%{_docdir}/%{name}-%{version}/*
 
 %changelog
+* Tue Sep 29 2015 Liu Di <liudidi@gmail.com> - 11.1.7-1
+- 更新到 11.1.7
+
 * Wed Jan  2 2013 Peter Schiffer <pschiffe@redhat.com> - 10.1.3-1
 - resolves: #890425
   updated to 10.1.3

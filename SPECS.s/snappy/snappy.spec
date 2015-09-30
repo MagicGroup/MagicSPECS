@@ -1,12 +1,14 @@
 Name:           snappy
-Version:        1.0.5
-Release:        3%{?dist}
+Version:	1.1.3
+Release:	1%{?dist}
 Summary:        Fast compression and decompression library
+Summary(zh_CN.UTF-8): 快速压缩和解压库
 
 Group:          System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 License:        BSD
 URL:            http://code.google.com/p/snappy/
-Source0:        http://snappy.googlecode.com/files/%{name}-%{version}.tar.gz
+Source0:        https://github.com/google/snappy/releases/download/%{version}/%{name}-%{version}.tar.gz
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
@@ -19,17 +21,22 @@ aims for very high speeds and reasonable compression. For instance, compared to
 the fastest mode of zlib, Snappy is an order of magnitude faster for most 
 inputs, but the resulting compressed files are anywhere from 20% to 100% 
 bigger. 
+%description -l zh_CN.UTF-8
+快速压缩和解压库。
 
 
 %package        devel
 Summary:        Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       %{name}%{?_isa} = %{version}-%{release}
 
 %description    devel
 The %{name}-devel package contains libraries and header files for
 developing applications that use %{name}.
-
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -72,6 +79,9 @@ make check
 
 
 %changelog
+* Mon Sep 28 2015 Liu Di <liudidi@gmail.com> - 1.1.3-1
+- 更新到 1.1.3
+
 * Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 1.0.5-3
 - 为 Magic 3.0 重建
 

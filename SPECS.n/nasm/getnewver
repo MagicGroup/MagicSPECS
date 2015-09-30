@@ -1,12 +1,12 @@
 #!/bin/bash
-url="http://www.nasm.us/pub/nasm/releasebuilds/?C=M;O=D"
+url="http://www.nasm.us/pub/nasm/releasebuilds/?C=M&O=D"
 new1='a href="'
 new2='\/"'
 downcommand="wget -q" 
 pushd $(dirname $0) > /dev/null
 rm -f index.html && $downcommand "$url" -O index.html
 if [ -f index.html ];then
-	newver=`grep "$new1.*$new2" index.html|grep -v pub|head -n 1| sed "s/.*$new1//" | sed "s/$new2.*//" | sed 's/^[ ]\{1,\}//;s/[ ]\{1,\}$//g'`
+	newver=`html2text index.html |grep DIR|grep -v rc|grep -v Parent|head -n 1|sed -e "s/^.*]//"|sed -e "s/\/.*$//g"`
 	echo $newver
 else
 	echo "不能正常取得新版本号"

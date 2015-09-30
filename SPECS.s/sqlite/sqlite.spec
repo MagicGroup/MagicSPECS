@@ -3,34 +3,35 @@
 %bcond_with static
 %bcond_without check
 
-%define realver 3080300
-%define docver 3080300
-%define rpmver 3.8.3
+%define realver 3081101
+%define docver 3081101
+%define rpmver  3.8.11.1
 
 Summary: Library that implements an embeddable SQL database engine
+Summary(zh_CN.UTF-8): 实现嵌入式 SQL 数据库引擎的库
 Name: sqlite
-Version: %{rpmver}
-Release: 5%{?dist}
+Version: 3.8.11.1
+Release:	1%{?dist}
 License: Public Domain
 Group: Applications/Databases
+Group(zh_CN.UTF-8): 应用程序/数据库
 URL: http://www.sqlite.org/
 
-Source0: http://www.sqlite.org/2013/sqlite-src-%{realver}.zip
-Source1: http://www.sqlite.org/2013/sqlite-doc-%{docver}.zip
+Source0: http://www.sqlite.org/2015/sqlite-src-%{realver}.zip
+Source1: http://www.sqlite.org/2015/sqlite-doc-%{docver}.zip
 # Support a system-wide lemon template
 Patch1: sqlite-3.6.23-lemon-system-template.patch
 # Shut up stupid tests depending on system settings of allowed open fd's
 Patch2: sqlite-3.7.7.1-stupid-openfiles-test.patch
-# Shut up pagecache overflow test whose expected result depends on compile
-# options and whatnot. Dunno why this started failing in 3.7.10 but
-# doesn't seem particularly critical...
-Patch3: sqlite-3.7.10-pagecache-overflow-test.patch
 # sqlite >= 3.7.10 is buggy if malloc_usable_size() is detected, disable it:
 # https://bugzilla.redhat.com/show_bug.cgi?id=801981
 # http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=665363
-Patch4: sqlite-3.7.15-no-malloc-usable-size.patch
+Patch3: sqlite-3.7.15-no-malloc-usable-size.patch
 # Temporary workaround for failed percentile test, see patch for details
-Patch5: sqlite-3.8.0-percentile-test.patch
+Patch4: sqlite-3.8.0-percentile-test.patch
+# Disable test failing due to tcl regression. Details in patch file.
+Patch5: sqlite-3.8.10.1-tcl-regress-tests.patch
+
 
 BuildRequires: ncurses-devel readline-devel glibc-devel
 BuildRequires: autoconf
@@ -50,9 +51,14 @@ flexibility of an SQL database without the administrative hassles of
 supporting a separate database server.  Version 2 and version 3 binaries
 are named to permit each to be installed on a single host
 
+%description -l zh_CN.UTF-8
+实现嵌入式 SQL 数据库引擎的库。
+
 %package devel
 Summary: Development tools for the sqlite3 embeddable SQL database engine
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: %{name} = %{version}-%{release}
 Requires: pkgconfig
 
@@ -61,9 +67,14 @@ This package contains the header files and development documentation
 for %{name}. If you like to develop programs using %{name}, you will need 
 to install %{name}-devel.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
 %package doc
 Summary: Documentation for sqlite
+Summary(zh_CN.UTF-8): %{name} 的文档
 Group: Documentation
+Group(zh_CN.UTF-8): 文档
 BuildArch: noarch
 
 %description doc
@@ -71,9 +82,14 @@ This package contains most of the static HTML files that comprise the
 www.sqlite.org website, including all of the SQL Syntax and the 
 C/C++ interface specs and other miscellaneous documentation.
 
+%description doc -l zh_CN.UTF-8
+%{name} 的文档。
+
 %package -n lemon
 Summary: A parser generator
+Summary(zh_CN.UTF-8): 解析生成器
 Group: Development/Tools
+Group(zh_CN.UTF-8): 开发/工具
 
 %description -n lemon
 Lemon is an LALR(1) parser generator for C or C++. It does the same
@@ -86,15 +102,22 @@ that can be used to eliminate resource leaks, making is suitable for
 use in long-running programs such as graphical user interfaces or
 embedded controllers.
 
+%description -n lemon -l zh_CN.UTF-8
+解析生成器。
+
 %if %{with tcl}
 %package tcl
 Summary: Tcl module for the sqlite3 embeddable SQL database engine
+Summary(zh_CN.UTF-8): %{name} 的 Tcl 模块
 Group: Development/Languages
+Group(zh_CN.UTF-8): 开发/语言
 Requires: %{name} = %{version}-%{release}
 Requires: tcl(abi) = %{tcl_version}
 
 %description tcl
 This package contains the tcl modules for %{name}.
+%description tcl -l zh_CN.UTF-8
+%{name} 的 Tcl 模块。
 %endif
 
 %prep
@@ -140,6 +163,8 @@ chmod 0755 ${RPM_BUILD_ROOT}/%{tcl_sitearch}/sqlite3/*.so
 rm -f $RPM_BUILD_ROOT/%{_libdir}/*.{la,a}
 %endif
 
+magic_rpm_clean.sh
+
 %if %{with check}
 %check
 # XXX shell tests are broken due to loading system libsqlite3, work around...
@@ -157,7 +182,6 @@ make test
 %postun -p /sbin/ldconfig
 
 %files
-%doc README
 %{_bindir}/sqlite3
 %{_libdir}/*.so.*
 %{_mandir}/man?/*
@@ -184,6 +208,9 @@ make test
 %endif
 
 %changelog
+* Tue Sep 29 2015 Liu Di <liudidi@gmail.com> - 3.8.11.1-1
+- 更新到 3.8.11.1
+
 * Sat Sep 19 2015 Liu Di <liudidi@gmail.com> - 3.8.3-5
 - 为 Magic 3.0 重建
 

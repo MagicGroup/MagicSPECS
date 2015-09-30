@@ -1,10 +1,12 @@
 Name:           speexdsp
 Version:        1.2
 %global rc_ver  rc3
-Release:        0.6.%{rc_ver}%{?dist}
+Release:        0.7.%{rc_ver}%{?dist}
 Summary:        A voice compression format (DSP)
+Summary(zh_CN.UTF-8): 声音压缩格式 (DSP)
 
 Group:          System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 License:        BSD
 URL:            http://www.speex.org/
 Source0:        http://downloads.xiph.org/releases/speex/%{name}-%{version}%{rc_ver}.tar.gz
@@ -16,7 +18,7 @@ Patch0:         speexdsp-fixbuilds-774c87d.patch
 BuildRequires: libtool autoconf automake
 # speexdsp was split from speex in 1.2rc2. As speexdsp does not depend on
 # speex, a versioned conflict is required.
-Conflicts: speex <= 1.2-0.21.rc1
+Conflicts: speex <= 1.2-0.rc1
 
 %description
 Speex is a patent-free compression format designed especially for
@@ -27,20 +29,26 @@ data (e.g. voice mail).
 
 This is the DSP package, see the speex package for the codec part.
 
+%description -l zh_CN.UTF-8
+声音压缩格式 (DSP)。
+
 %package devel
 Summary: 	Development package for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: 		Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: 	%{name}%{?_isa} = %{version}-%{release}
 # speexdsp was split from speex in 1.2rc2. As speexdsp does not depend on
 # speex, a versioned conflict is required.
-Conflicts: speex-devel <= 1.2-0.21.rc1
+Conflicts: speex-devel <= 1.2-0.rc1
 
 %description devel
 Speex is a patent-free compression format designed especially for
 speech. This package contains development files for %{name}
 
 This is the DSP package, see the speex package for the codec part.
-
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q -n %{name}-%{version}%{rc_ver}
@@ -61,6 +69,7 @@ make DESTDIR=$RPM_BUILD_ROOT INSTALL="install -p" install
 
 # Remove libtool archives
 find %{buildroot} -type f -name "*.la" -delete
+magic_rpm_clean.sh
 
 %post -p /sbin/ldconfig
 %postun -p /sbin/ldconfig
@@ -74,8 +83,12 @@ find %{buildroot} -type f -name "*.la" -delete
 %{_includedir}/speex
 %{_libdir}/pkgconfig/speexdsp.pc
 %{_libdir}/libspeexdsp.so
+%{_docdir}/speexdsp/manual.pdf
 
 %changelog
+* Mon Sep 28 2015 Liu Di <liudidi@gmail.com> - 1.2-0.7.rc3
+- 为 Magic 3.0 重建
+
 * Fri Jun 19 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.2-0.6.rc3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

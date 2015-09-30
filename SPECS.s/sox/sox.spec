@@ -1,16 +1,18 @@
 Summary: A general purpose sound file conversion tool
+Summary(zh_CN.UTF-8): 音频文件转换工具
 Name: sox
-Version: 14.4.0
-Release: 4%{?dist}
+Version:	14.4.2
+Release:	2%{?dist}
 License: GPLv2+ and LGPLv2+
 Group: Applications/Multimedia
+Group(zh_CN.UTF-8): 应用程序/多媒体
 Source: http://downloads.sourceforge.net/%{name}/%{name}-%{version}.tar.gz
 URL: http://sox.sourceforge.net/
 BuildRequires: libvorbis-devel
 BuildRequires: alsa-lib-devel, libtool-ltdl-devel, libsamplerate-devel
 BuildRequires: gsm-devel, wavpack-devel, ladspa-devel, libpng-devel
 BuildRequires: flac-devel, libao-devel, libsndfile-devel, libid3tag-devel
-BuildRequires: pulseaudio-libs-devel
+BuildRequires: pulseaudio-libs-devel, opusfile-devel
 BuildRequires: libtool
 
 %description
@@ -18,9 +20,14 @@ SoX (Sound eXchange) is a sound file format converter SoX can convert
 between many different digitized sound formats and perform simple
 sound manipulation functions, including sound effects.
 
+%description -l zh_CN.UTF-8
+音频文件转换工具。
+
 %package -n  sox-devel
 Summary: The SoX sound file format converter libraries
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: %{name} = %{version}-%{release}
 Requires: pkgconfig
 
@@ -28,11 +35,35 @@ Requires: pkgconfig
 This package contains the library needed for compiling applications
 which will use the SoX sound file format converter.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
 %prep
 %setup -q
 
 %build
-CFLAGS="$RPM_OPT_FLAGS -D_FILE_OFFSET_BITS=64" %configure --with-dyn-default --with-gsm --includedir=%{_includedir}/sox --disable-static --with-distro=Magic
+CFLAGS="$RPM_OPT_FLAGS -D_FILE_OFFSET_BITS=64" 
+%configure --with-gsm --includedir=%{_includedir}/sox --disable-static --with-distro=Magic \
+--with-alsa=dyn \
+--with-ao=dyn \
+--with-caf=dyn \
+--with-fap=dyn \
+--with-mat4=dyn \
+--with-mat5=dyn \
+--with-opus=dyn \
+--with-paf=dyn \
+--with-pulseaudio=dyn \
+--with-pvf=dyn \
+--with-sd2=dyn \
+--with-sndfile=dyn \
+--with-vorbis=dyn \
+--with-w64=dyn \
+--with-wavpack=dyn \
+--with-xi=dyn
+#--with-dyn-default is broken (flac and oss dont link), therefore plugins enumerated explicitly
+#--with-flac=dyn \
+#--with-oss=dyn \
+
 make %{?_smp_mflags}
 
 %install
@@ -40,7 +71,7 @@ make install DESTDIR=$RPM_BUILD_ROOT
 rm -f $RPM_BUILD_ROOT/%{_libdir}/libsox.la
 rm -f $RPM_BUILD_ROOT/%{_libdir}/sox/*.la
 rm -f $RPM_BUILD_ROOT/%{_libdir}/sox/*.a
-
+magic_rpm_clean.sh
 
 %post -p /sbin/ldconfig
 
@@ -66,6 +97,12 @@ rm -f $RPM_BUILD_ROOT/%{_libdir}/sox/*.a
 
 
 %changelog
+* Mon Sep 28 2015 Liu Di <liudidi@gmail.com> - 14.4.2-2
+- 为 Magic 3.0 重建
+
+* Mon Sep 28 2015 Liu Di <liudidi@gmail.com> - 14.4.2-1
+- 更新到 14.4.2
+
 * Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 14.4.0-4
 - 为 Magic 3.0 重建
 

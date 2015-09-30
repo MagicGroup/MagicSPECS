@@ -13,7 +13,7 @@
 Name:           systemd
 Url:            http://www.freedesktop.org/wiki/Software/systemd
 Version:        226
-Release:        3%{?gitcommit:.git%{gitcommitshort}}%{?dist}
+Release:        4%{?gitcommit:.git%{gitcommitshort}}%{?dist}
 # For a breakdown of the licensing, see README
 License:        LGPLv2+ and MIT and GPLv2+
 Summary:        A System and Service Manager
@@ -45,8 +45,6 @@ Patch1000:      kernel-install-grubby.patch
 BuildRequires:  libcap-devel
 BuildRequires:  libmount-devel
 BuildRequires:  pam-devel
-BuildRequires:  libselinux-devel
-BuildRequires:  audit-libs-devel
 BuildRequires:  cryptsetup-devel
 BuildRequires:  dbus-devel
 BuildRequires:  libacl-devel
@@ -231,8 +229,7 @@ sed -r -i 's/\blibsystemd-(login|journal|id128|daemon).c \\/\\/' Makefile.am
 %build
 ./autogen.sh
 
-%{?fedora: %global ntpvendor fedora}
-%{?rhel:   %global ntpvendor rhel}
+%global ntpvendor fedora
 %{!?ntpvendor: echo 'NTP vendor zone is not set!'; exit 1}
 
 CONFIGURE_OPTS=(
@@ -334,11 +331,11 @@ install -Dm0644 %{SOURCE8} %{buildroot}/usr/lib/firewalld/services/
 
 # Install additional docs
 # https://bugzilla.redhat.com/show_bug.cgi?id=1234951
-install -Dm0644 %{SOURCE9} %{buildroot}%{_pkgdocdir}/
+# install -Dm0644 %{SOURCE9} %{buildroot}%{_pkgdocdir}/
 
 # Fix until upstream version is available
 install -Dm0644 %{SOURCE100} %{buildroot}%{_sysconfdir}/pam.d/
-
+magic_rpm_clean.sh
 %find_lang %{name}
 
 %check
@@ -518,9 +515,9 @@ getent passwd systemd-journal-upload >/dev/null 2>&1 || useradd -r -l -g systemd
 %firewalld_reload
 
 %files -f %{name}.lang
-%doc %{_pkgdocdir}
-%{_pkgdocdir}/20-yama-ptrace.conf
-%exclude %{_pkgdocdir}/LICENSE.*
+%{_docdir}/*
+#{_pkgdocdir}/20-yama-ptrace.conf
+#exclude %%{_pkgdocdir}/LICENSE.*
 %license LICENSE.GPL2 LICENSE.LGPL2.1
 %dir %{_sysconfdir}/systemd
 %dir %{_sysconfdir}/systemd/system
@@ -777,6 +774,9 @@ getent passwd systemd-journal-upload >/dev/null 2>&1 || useradd -r -l -g systemd
 /usr/lib/firewalld/services/*
 
 %changelog
+* Tue Sep 29 2015 Liu Di <liudidi@gmail.com> - 226-4
+- 为 Magic 3.0 重建
+
 * Fri Sep 18 2015 Jan Synáček <jsynacek@redhat.com> - 226-3
 - user systemd-journal-upload should be in systemd-journal group (#1262743)
 

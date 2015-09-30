@@ -6,7 +6,7 @@
 
 Name:		GeoIP
 Version:	1.6.6
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:	Library for country/city/organization to IP address or hostname mapping
 Group:		Development/Libraries
 License:	LGPLv2+
@@ -111,6 +111,9 @@ rm -rf %{buildroot}
 %{_libdir}/pkgconfig/geoip.pc
 
 %changelog
+* Wed Sep 30 2015 Liu Di <liudidi@gmail.com> - 1.6.6-2
+- 为 Magic 3.0 重建
+
 * Thu Jul 30 2015 Paul Howarth <paul@city-fan.org> - 1.6.6-1
 - Update to 1.6.6
   - Replaced usage of deprecated fileno, read, and lseek on Visual Studio 2005+

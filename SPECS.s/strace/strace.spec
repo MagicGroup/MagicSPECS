@@ -1,9 +1,11 @@
 Summary: Tracks and displays system calls associated with a running process
+Summary(zh_CN.UTF-8): 跟踪和显示正在运行程序相关的系统调用
 Name: strace
-Version: 4.6
-Release: 3%{?dist}
+Version:	4.10
+Release:	1%{?dist}
 License: BSD
 Group: Development/Debuggers
+Group(zh_CN.UTF-8): 开发/调试器
 URL: http://sourceforge.net/projects/strace/
 Source: http://downloads.sourceforge.net/strace/%{name}-%{version}.tar.xz
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -22,10 +24,15 @@ purposes.
 Install strace if you need a tool to track the system calls made and
 received by a process.
 
+%description -l zh_CN.UTF-8
+跟踪和显示正在运行程序相关的系统调用。
+
 %ifarch %{strace64_arches}
 %package -n strace64
 Summary: Tracks and displays system calls associated with a running process.
+Summary(zh_CN.UTF-8): 跟踪和显示正在运行程序相关的系统调用
 Group: Development/Debuggers
+Group(zh_CN.UTF-8): 开发/调试器
 
 %description -n strace64
 The strace program intercepts and records the system calls called and
@@ -39,6 +46,8 @@ received by a process.
 
 This package provides the `strace64' program to trace 64-bit processes.
 The `strace' program in the `strace' package is for 32-bit processes.
+%description -n strace64 -l zh_CN.UTF-8
+跟踪和显示正在运行程序相关的系统调用，这是 64 位版本。
 %endif
 
 %prep
@@ -56,11 +65,6 @@ make DESTDIR=%{buildroot} install
 rm -f %{buildroot}%{_bindir}/strace-graph
 
 %define copy64 ln
-%if 0%{?rhel}
-%if 0%{?rhel} < 6
-%endif
-%define copy64 cp -p
-%endif
 
 %ifarch %{strace64_arches}
 %{copy64} %{buildroot}%{_bindir}/strace %{buildroot}%{_bindir}/strace64
@@ -74,8 +78,8 @@ rm -rf %{buildroot}
 
 %files
 %defattr(-,root,root)
-%doc CREDITS ChangeLog ChangeLog-CVS COPYRIGHT NEWS PORTING README
 %{_bindir}/strace
+%{_bindir}/strace-log-merge
 %{_mandir}/man1/*
 
 %ifarch %{strace64_arches}
@@ -85,6 +89,9 @@ rm -rf %{buildroot}
 %endif
 
 %changelog
+* Tue Sep 29 2015 Liu Di <liudidi@gmail.com> - 4.10-1
+- 更新到 4.10
+
 * Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 4.6-3
 - 为 Magic 3.0 重建
 

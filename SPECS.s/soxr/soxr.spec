@@ -1,7 +1,8 @@
 Name:           soxr
-Version:        0.1.1
-Release:        2%{?dist}
+Version:	0.1.2
+Release:	1%{?dist}
 Summary:        The SoX Resampler library
+Summary(zh_CN.UTF-8): SoX 重采样库
 
 License:        LGPLv2+
 URL:            https://sourceforge.net/p/soxr/wiki/Home/ 
@@ -12,16 +13,19 @@ BuildRequires:  cmake
 %description
 The SoX Resampler library `libsoxr' performs one-dimensional sample-rate
 conversion -- it may be used, for example, to resample PCM-encoded audio.
-
+%description -l zh_CN.UTF-8
+SoX 重采样库。
 
 %package        devel
 Summary:        Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Requires:       %{name}%{?_isa} = %{version}-%{release}
 
 %description    devel
 The %{name}-devel package contains libraries and header files for
 developing applications that use %{name}.
-
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q -n %{name}-%{version}-Source
@@ -41,7 +45,7 @@ pushd build
 
 # Remove docs and use the rpmbuild macro instead
 rm -rf %{buildroot}%{_docdir}/*
-
+magic_rpm_clean.sh
 
 %check
 pushd build
@@ -66,6 +70,9 @@ make test
 
 
 %changelog
+* Mon Sep 28 2015 Liu Di <liudidi@gmail.com> - 0.1.2-1
+- 更新到 0.1.2
+
 * Sun Aug 04 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.1.1-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
 

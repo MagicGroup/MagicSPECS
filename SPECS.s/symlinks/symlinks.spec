@@ -1,9 +1,11 @@
 Summary: A utility which maintains a system's symbolic links
+Summary(zh_CN.UTF-8): 维护系统符号链接的工具 
 Name: symlinks
 URL: ftp://metalab.unc.edu/pub/Linux/utils/file/
 Version: 1.4
-Release: 6%{?dist}
+Release: 7%{?dist}
 Group: Applications/System
+Group(zh_CN.UTF-8): 应用程序/系统
 License: Copyright only
 Source0: http://ibiblio.org/pub/Linux/utils/file/%{name}-%{version}.tar.gz
 # Taken from http://packages.debian.org/changelogs/pool/main/s/symlinks/symlinks_1.2-4.2/symlinks.copyright
@@ -20,6 +22,9 @@ absolute symlinks to relative symlinks.
 
 Install the symlinks package if you need a program for maintaining
 symlinks on your system.
+
+%description -l zh_CN.UTF-8
+维护系统符号链接的工具。
 
 %prep
 %setup -q
@@ -51,6 +56,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man8/symlinks.8*
 
 %changelog
+* Tue Sep 29 2015 Liu Di <liudidi@gmail.com> - 1.4-7
+- 为 Magic 3.0 重建
+
 * Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 1.4-6
 - 为 Magic 3.0 重建
 

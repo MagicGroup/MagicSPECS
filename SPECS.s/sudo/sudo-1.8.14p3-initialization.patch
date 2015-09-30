@@ -1,0 +1,122 @@
+diff -up ./lib/util/strsplit.c.initialization ./lib/util/strsplit.c
+--- ./lib/util/strsplit.c.initialization	2015-07-22 14:22:49.000000000 +0200
++++ ./lib/util/strsplit.c	2015-08-18 13:28:28.141319501 +0200
+@@ -37,6 +37,10 @@ sudo_strsplit_v1(const char *str, const
+     const char *cp, *s;
+     debug_decl(sudo_strsplit, SUDO_DEBUG_UTIL)
+ 
++    /* exclusion of two NULLs at the same time */
++    if (str == NULL && *last == NULL)
++	debug_return_ptr(NULL);	
++
+     /* If no str specified, use last ptr (if any). */
+     if (str == NULL)
+ 	str = *last;
+diff -up ./lib/util/sudo_conf.c.initialization ./lib/util/sudo_conf.c
+--- ./lib/util/sudo_conf.c.initialization	2015-07-22 14:22:49.000000000 +0200
++++ ./lib/util/sudo_conf.c	2015-08-18 13:28:28.142319494 +0200
+@@ -161,7 +161,7 @@ static int
+ parse_path(const char *entry, const char *conf_file, unsigned int lineno)
+ {
+     const char *entry_end = entry + strlen(entry);
+-    const char *ep, *name, *path;
++    const char *ep = NULL, *name, *path;
+     struct sudo_conf_path_table *cur;
+     size_t namelen;
+     debug_decl(parse_path, SUDO_DEBUG_UTIL)
+@@ -208,7 +208,7 @@ parse_debug(const char *entry, const cha
+ {
+     struct sudo_conf_debug *debug_spec;
+     struct sudo_debug_file *debug_file = NULL;
+-    const char *ep, *path, *progname, *flags;
++    const char *ep = NULL, *path, *progname, *flags;
+     const char *entry_end = entry + strlen(entry);
+     size_t pathlen, prognamelen;
+     debug_decl(parse_debug, SUDO_DEBUG_UTIL)
+@@ -278,7 +278,7 @@ static int
+ parse_plugin(const char *entry, const char *conf_file, unsigned int lineno)
+ {
+     struct plugin_info *info = NULL;
+-    const char *ep, *path, *symbol;
++    const char *ep = NULL, *path, *symbol;
+     const char *entry_end = entry + strlen(entry);
+     char **options = NULL;
+     size_t pathlen, symlen;
+diff -up ./plugins/sudoers/editor.c.initialization ./plugins/sudoers/editor.c
+--- ./plugins/sudoers/editor.c.initialization	2015-07-22 14:22:49.000000000 +0200
++++ ./plugins/sudoers/editor.c	2015-08-18 13:28:28.142319494 +0200
+@@ -45,7 +45,7 @@ resolve_editor(const char *ed, size_t ed
+     int *argc_out, char ***argv_out, char * const *whitelist)
+ {
+     char **nargv, *editor, *editor_path = NULL;
+-    const char *cp, *ep, *tmp;
++    const char *cp, *ep = NULL, *tmp;
+     const char *edend = ed + edlen;
+     struct stat user_editor_sb;
+     int nargc;
+diff -up ./plugins/sudoers/interfaces.c.initialization ./plugins/sudoers/interfaces.c
+--- ./plugins/sudoers/interfaces.c.initialization	2015-07-22 14:22:50.000000000 +0200
++++ ./plugins/sudoers/interfaces.c	2015-08-18 13:28:28.142319494 +0200
+@@ -109,7 +109,7 @@ get_interfaces(void)
+ void
+ dump_interfaces(const char *ai)
+ {
+-    const char *cp, *ep;
++    const char *cp, *ep = NULL;
+     const char *ai_end = ai + strlen(ai);
+     debug_decl(set_interfaces, SUDOERS_DEBUG_NETIF)
+ 
+diff -up ./plugins/sudoers/sudoers.c.initialization ./plugins/sudoers/sudoers.c
+--- ./plugins/sudoers/sudoers.c.initialization	2015-07-22 14:22:50.000000000 +0200
++++ ./plugins/sudoers/sudoers.c	2015-08-18 13:28:28.142319494 +0200
+@@ -1186,7 +1186,7 @@ sudoers_cleanup(void)
+ static char *
+ find_editor(int nfiles, char **files, int *argc_out, char ***argv_out)
+ {
+-    const char *cp, *ep, *editor = NULL;
++    const char *cp, *ep = NULL, *editor = NULL;
+     char *editor_path = NULL, **ev, *ev0[4];
+     debug_decl(find_editor, SUDOERS_DEBUG_PLUGIN)
+ 
+diff -up ./plugins/sudoers/sudoreplay.c.initialization ./plugins/sudoers/sudoreplay.c
+--- ./plugins/sudoers/sudoreplay.c.initialization	2015-07-22 14:22:49.000000000 +0200
++++ ./plugins/sudoers/sudoreplay.c	2015-08-18 13:39:53.776411920 +0200
+@@ -189,7 +189,7 @@ main(int argc, char *argv[])
+     int ch, idx, plen, exitcode = 0, rows = 0, cols = 0;
+     bool def_filter = true, listonly = false;
+     const char *decimal, *id, *user = NULL, *pattern = NULL, *tty = NULL;
+-    char *cp, *ep, path[PATH_MAX];
++    char *cp, *ep = NULL, path[PATH_MAX];
+     struct log_info *li;
+     double max_wait = 0;
+     debug_decl(main, SUDO_DEBUG_MAIN)
+@@ -225,6 +225,8 @@ main(int argc, char *argv[])
+ 	    /* Set the replay filter. */
+ 	    def_filter = false;
+ 	    for (cp = strtok_r(optarg, ",", &ep); cp; cp = strtok_r(NULL, ",", &ep)) {
++		if (ep == NULL)
++		    sudo_fatalx(U_("invalid filter option: %s"), optarg);
+ 		if (strcmp(cp, "stdout") == 0)
+ 		    io_log_files[IOFD_STDOUT].enabled = true;
+ 		else if (strcmp(cp, "stderr") == 0)
+diff -up ./plugins/sudoers/visudo.c.initialization ./plugins/sudoers/visudo.c
+--- ./plugins/sudoers/visudo.c.initialization	2015-07-22 14:22:50.000000000 +0200
++++ ./plugins/sudoers/visudo.c	2015-08-18 13:28:28.142319494 +0200
+@@ -287,7 +287,7 @@ get_editor(int *editor_argc, char ***edi
+ 
+     /* Build up editor whitelist from def_editor unless env_editor is set. */
+     if (!def_env_editor) {
+-	const char *cp, *ep;
++	const char *cp, *ep =  NULL;
+ 	const char *def_editor_end = def_editor + strlen(def_editor);
+ 
+ 	/* Count number of entries in whitelist and split into a list. */
+@@ -325,7 +325,7 @@ get_editor(int *editor_argc, char ***edi
+     if (editor_path == NULL) {
+ 	/* def_editor could be a path, split it up, avoiding strtok() */
+ 	const char *def_editor_end = def_editor + strlen(def_editor);
+-	const char *cp, *ep;
++	const char *cp, *ep = NULL;
+ 	for (cp = sudo_strsplit(def_editor, def_editor_end, ":", &ep);
+ 	    cp != NULL; cp = sudo_strsplit(NULL, def_editor_end, ":", &ep)) {
+ 	    editor_path = resolve_editor(cp, (size_t)(ep - cp), 2, files,

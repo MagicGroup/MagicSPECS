@@ -1,8 +1,10 @@
 Name:          speech-dispatcher
-Version:       0.8
-Release:       6%{?dist}
+Version:	0.8.3
+Release:	1%{?dist}
 Summary:       To provide a high-level device independent layer for speech synthesis
+Summary(zh_CN.UTF-8): 语音合成用的高级设备无关层
 Group:         System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 
 # Almost all files are under GPLv2+, however 
 # src/c/clients/spdsend/spdsend.h is licensed under GPLv2,
@@ -55,10 +57,14 @@ Obsoletes: speech-dispatcher-python
 * Common sound output handling – audio playback is handled by
   Speech Dispatcher rather than the TTS engine, since most engines
   have limited sound output capabilities.
+%description -l zh_CN.UTF-8
+语音合成用的高级设备无关层。
 
 %package        devel
 Summary:        Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       speech-dispatcher = %{version}-%{release}
 License:        GPLv2+
 
@@ -66,10 +72,15 @@ License:        GPLv2+
 The %{name}-devel package contains libraries and header files for
 developing applications that use %{name}.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
 %package doc
 Summary:        Documentation for speech-dispatcher
+Summary(zh_CN.UTF-8): %{name} 的文档
 License:        GPLv2+
 Group:          Documentation
+Group(zh_CN.UTF-8): 文档
 Requires:       speech-dispatcher = %{version}-%{release}
 Requires(post): /sbin/install-info
 Requires(preun):/sbin/install-info
@@ -78,14 +89,21 @@ BuildArch: noarch
 %description doc
 speechd documentation
 
+%description doc -l zh_CN.UTF-8
+%{name} 的文档。
+
 %package -n python3-speechd
 Summary:        Python 3 Client API for speech-dispatcher
+Summary(zh_CN.UTF-8): %{name} 的 Python3 客户端 API
 License:        GPLv2+
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       speech-dispatcher = %{version}-%{release}
 
 %description -n python3-speechd
 Python 3 module for speech-dispatcher
+%description -n python3-speechd -l zh_CN.UTF-8
+%{name} 的 Python3 客户端 API。
 
 %prep
 %setup -q
@@ -128,6 +146,7 @@ mkdir -p -m 0700 %{buildroot}%{_localstatedir}/log/speech-dispatcher/
 
 # enable pulseaudio as default with a fallback to alsa
 sed 's/# AudioOutputMethod "pulse,alsa"/AudioOutputMethod "pulse,alsa"/' %{buildroot}%{_sysconfdir}/speech-dispatcher/speechd.conf
+magic_rpm_clean.sh
 
 %post 
 /sbin/ldconfig
@@ -171,12 +190,12 @@ fi
 %config(noreplace) %{_sysconfdir}/speech-dispatcher/clients/*.conf
 %config(noreplace) %{_sysconfdir}/speech-dispatcher/modules/*.conf
 %{_bindir}/*
-%{_libdir}/libspeechd.so.2
-%{_libdir}/libspeechd.so.2.4.0
+%{_libdir}/libspeechd.so.*
 %{_libdir}/speech-dispatcher-modules/
 %dir %{_libdir}/speech-dispatcher
 %{_libdir}/speech-dispatcher/spd*.so
 %{_datadir}/sounds/speech-dispatcher
+%{_datadir}/speech-dispatcher/conf/desktop/speechd.desktop
 
 %dir %attr(0700, root, root) %{_localstatedir}/log/speech-dispatcher/
 
@@ -205,6 +224,9 @@ fi
 %{python3_sitearch}/speechd*
 
 %changelog
+* Mon Sep 28 2015 Liu Di <liudidi@gmail.com> - 0.8.3-1
+- 更新到 0.8.3
+
 * Wed Jun 18 2014 Liu Di <liudidi@gmail.com> - 0.8-6
 - 为 Magic 3.0 重建
 

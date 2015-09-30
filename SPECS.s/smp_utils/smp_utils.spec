@@ -1,9 +1,11 @@
 Summary:        Utilities for SAS management protocol (SMP)
+Summary(zh_CN.UTF-8): SAS 管理协议 (SMP) 的工具
 Name:           smp_utils
 Version:        0.98
-Release:        2%{?dist}
+Release:        3%{?dist}
 License:        BSD
 Group:          Applications/System
+Group(zh_CN.UTF-8): 应用程序/系统
 URL:            http://sg.danny.cz/sg/smp_utils.html
 Source0:        http://sg.danny.cz/sg/p/%{name}-%{version}.tgz
 Requires:       %{name}-libs%{?_isa} = %{version}-%{release}
@@ -22,18 +24,25 @@ systems.
 Warning: Some of these tools access the internals of your system
 and the incorrect usage of them may render your system inoperable.
 
+%description -l zh_CN.UTF-8
+SAS 管理协议 (SMP) 的工具。
 
 %package libs
 Summary: Shared library for %{name}
+Summary(zh_CN.UTF-8): %{name} 的运行库
 Group: System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 
 %description libs
 This package contains the shared library for %{name}.
-
+%description libs -l zh_CN.UTF-8
+%{name} 的运行库。
 
 %package devel
 Summary: Development library and header files for the sg3_utils library
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: %{name}-libs%{?_isa} = %{version}-%{release}
 Requires: glibc-headers
 
@@ -41,6 +50,8 @@ Requires: glibc-headers
 This package contains the %{name} library and its header files for
 developing applications.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -61,7 +72,7 @@ make install \
         DESTDIR=%{buildroot}
 
 rm -rf %{buildroot}%{_libdir}/*.la
-
+magic_rpm_clean.sh
 
 %post libs -p /sbin/ldconfig
 
@@ -83,6 +94,9 @@ rm -rf %{buildroot}%{_libdir}/*.la
 
 
 %changelog
+* Mon Sep 28 2015 Liu Di <liudidi@gmail.com> - 0.98-3
+- 为 Magic 3.0 重建
+
 * Tue Jun 10 2014 Liu Di <liudidi@gmail.com> - 0.98-2
 - 为 Magic 3.0 重建
 

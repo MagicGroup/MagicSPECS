@@ -5,12 +5,14 @@
 %define _hardened_build 1
 
 Summary: A printer administration tool
+Summary(zh_CN.UTF-8): 打印机管理工具
 Name: system-config-printer
 Version: 1.5.7
-Release: 5%{?dist}
+Release: 6%{?dist}
 License: GPLv2+
 URL: http://cyberelk.net/tim/software/system-config-printer/
 Group: System Environment/Base
+Group(zh_CN.UTF-8): 系统环境/基本
 Source0: http://cyberelk.net/tim/data/system-config-printer/1.5/%{name}-%{version}.tar.xz
 Patch1: system-config-printer-shbang.patch
 Patch2: system-config-printer-device-sorting.patch
@@ -44,9 +46,14 @@ Requires(postun): systemd-units
 system-config-printer is a graphical user interface that allows
 the user to configure a CUPS print server.
 
+%description -l zh_CN.UTF-8
+打印机管理工具。
+
 %package libs
 Summary: Libraries and shared code for printer administration tool
+Summary(zh_CN.UTF-8): %{name} 的运行库
 Group: System Environment/Base
+Group(zh_CN.UTF-8): 系统环境/基本
 Requires: python3-cups >= 1.9.60
 Requires: python3-pycurl
 Requires: gobject-introspection
@@ -62,17 +69,27 @@ Obsoletes: %{name}-libs < 1.3.12-10
 The common code used by both the graphical and non-graphical parts of
 the configuration tool.
 
+%description libs -l zh_CN.UTF-8
+%{name} 的运行库。
+
 %package applet
 Summary: Print job notification applet
+Summary(zh_CN.UTF-8): 打印任务通知小程序
 Group: System Environment/Base
+Group(zh_CN.UTF-8): 系统环境/基本
 Requires: %{name}-libs
 
 %description applet
 Print job notification applet.
 
+%description applet -l zh_CN.UTF-8
+打印任务通知小程序。
+
 %package udev
 Summary: Rules for udev for automatic configuration of USB printers
+Summary(zh_CN.UTF-8): 自动配置 USB 打印机的 udev 规则
 Group: System Environment/Base
+Group(zh_CN.UTF-8): 系统环境/基本
 Requires: system-config-printer-libs = %{version}-%{release}
 Obsoletes: hal-cups-utils < 0.6.20
 Provides: hal-cups-utils = 0.6.20
@@ -80,6 +97,9 @@ Provides: hal-cups-utils = 0.6.20
 %description udev
 The udev rules and helper programs for automatically configuring USB
 printers.
+
+%description udev -l zh_CN.UTF-8
+自动配置 USB 打印机的 udev 规则。
 
 %prep
 %setup -q
@@ -104,7 +124,7 @@ touch %buildroot%{_localstatedir}/run/udev-configure-printer/usb-uris
 # needs byte compilation
 %py_byte_compile %{__python3} %%{buildroot}%{python3_sitelib}/cupshelpers
 %py_byte_compile %{__python3} %%{buildroot}%{datadir}/system-config-printer
-
+magic_rpm_clean.sh
 %find_lang system-config-printer
 
 %files libs -f system-config-printer.lang
@@ -192,6 +212,9 @@ touch %buildroot%{_localstatedir}/run/udev-configure-printer/usb-uris
 exit 0
 
 %changelog
+* Tue Sep 29 2015 Liu Di <liudidi@gmail.com> - 1.5.7-6
+- 为 Magic 3.0 重建
+
 * Tue Jul 21 2015 Jiri Popelka <jpopelka@redhat.com> - 1.5.7-5
 - libs subpackage Suggests: python-smbc
 

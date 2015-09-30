@@ -1,0 +1,12 @@
+diff -ur splashutils-1.5.4.4.orig/src/libfbsplash.c splashutils-1.5.4.4/src/libfbsplash.c
+--- splashutils-1.5.4.4.orig/src/libfbsplash.c	2015-09-28 09:53:15.251076373 +0000
++++ splashutils-1.5.4.4/src/libfbsplash.c	2015-09-28 09:53:29.004076021 +0000
+@@ -693,7 +693,7 @@
+ 	vsnprintf(cmd, 256, fmt, ap);
+ 	va_end(ap);
+ 
+-	fprintf(fp_fifo, cmd);
++	fprintf(fp_fifo,"%s",cmd);
+ 	fbsplash_profile("comm %s", cmd);
+ 	return 0;
+ }

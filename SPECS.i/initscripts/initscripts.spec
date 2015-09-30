@@ -3,7 +3,7 @@ Name: initscripts
 Version: 9.64
 License: GPLv2
 Group: System Environment/Base
-Release: 1%{?dist}
+Release: 2%{?dist}
 URL: http://fedorahosted.org/releases/i/n/initscripts/
 Source: http://fedorahosted.org/releases/i/n/initscripts/initscripts-%{version}.tar.bz2
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
@@ -176,6 +176,9 @@ fi
 %{_sysconfdir}/profile.d/debug*
 
 %changelog
+* Wed Sep 30 2015 Liu Di <liudidi@gmail.com> - 9.64-2
+- 为 Magic 3.0 重建
+
 * Thu Aug 06 2015 Lukáš Nykrýn <lnykryn@redhat.com> - 9.64-1
 - network-functions: fix wireless detection
 - fedora-readonly: use --make-slave with --bind mounts

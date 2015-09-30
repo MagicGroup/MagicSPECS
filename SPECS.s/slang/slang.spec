@@ -1,12 +1,18 @@
 Summary: The shared library for the S-Lang extension language
+Summary(zh_CN.UTF-8): S-Lang 扩展语言的共享库
 Name: slang
-Version: 2.2.4
-Release: 3%{?dist}
+Version:	2.3.0
+Release:	3%{?dist}
 License: GPLv2+
 Group: System Environment/Libraries
-Source: ftp://space.mit.edu/pub/davis/slang/v2.2/%{name}-%{version}.tar.bz2
+Group(zh_CN.UTF-8): 系统环境/库
+Source: http://www.jedsoft.org/releases/slang/%{name}-%{version}.tar.bz2
 # fix file permissions
 Patch1: slang-2.2.4-perms.patch
+# disable test that fails with SIGHUP ignored (e.g. in koji)
+Patch2: slang-sighuptest.patch
+# remove duplicate declaration in slang.h
+Patch3: slang-dupdeclaration.patch
 URL: http://www.jedsoft.org/slang/
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: libpng-devel oniguruma-devel pcre-devel zlib-devel
@@ -19,9 +25,14 @@ The S-Lang library, provided in this package, provides the S-Lang
 extension language.  S-Lang's syntax resembles C, which makes it easy
 to recode S-Lang procedures in C if you need to.
 
+%description -l zh_CN.UTF-8
+S-Lang 扩展语言的共享库。
+
 %package slsh
 Summary: Interpreter for S-Lang scripts
+Summary(zh_CN.UTF-8): S-Lang 脚本的解释器
 Group: Development/Languages
+Group(zh_CN.UTF-8): 开发/语言
 Requires: %{name} = %{version}-%{release}
 
 %description slsh
@@ -32,9 +43,14 @@ interface for interactive use.
 This package also includes S-Lang modules that are distributed with
 the S-Lang distribution.
 
+%description slsh -l zh_CN.UTF-8
+S-Lang 脚本的解释器。
+
 %package devel
 Summary: Development files for the S-Lang extension language
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: %{name} = %{version}-%{release}
 Requires: pkgconfig
 
@@ -46,18 +62,28 @@ you write S-Lang based applications is also included.
 Install the slang-devel package if you want to develop applications
 based on the S-Lang extension language.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
 %package static
 Summary: The static library for the S-Lang extension language
+Summary(zh_CN.UTF-8): %{name} 的静态库
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: %{name}-devel = %{version}-%{release}
 
 %description static
 This package includes static library for the S-Lang extension
 language.
 
+%description static -l zh_CN.UTF-8
+%{name} 的静态库。
+
 %prep
 %setup -q
 %patch1 -p1 -b .perms
+%patch2 -p1 -b .sighuptest
+%patch3 -p1 -b .dupdeclaration
 
 head -n -1800 < changes.txt > changes.txt_ && tail -n 1800 < changes.txt | \
 	iconv -f iso8859-1 -t utf8 >> changes.txt_ && \
@@ -82,6 +108,7 @@ mkdir $RPM_BUILD_ROOT%{_includedir}/slang
 for h in slang.h slcurses.h; do
 	ln -s ../$h $RPM_BUILD_ROOT%{_includedir}/slang/$h
 done
+magic_rpm_clean.sh
 
 %clean
 rm -rf ${RPM_BUILD_ROOT}
@@ -117,6 +144,15 @@ rm -rf ${RPM_BUILD_ROOT}
 %{_libdir}/libslang*.a
 
 %changelog
+* Sun Sep 27 2015 Liu Di <liudidi@gmail.com> - 2.3.0-3
+- 为 Magic 3.0 重建
+
+* Sun Sep 27 2015 Liu Di <liudidi@gmail.com> - 2.3.0-2
+- 为 Magic 3.0 重建
+
+* Sun Sep 27 2015 Liu Di <liudidi@gmail.com> - 2.3.0-1
+- 更新到 2.3.0
+
 * Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 2.2.4-3
 - 为 Magic 3.0 重建
 

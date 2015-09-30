@@ -4,10 +4,12 @@
 %define realname smplayer
 
 %define _prefix %{kde4_prefix}
+%define themes_ver 15.6.0
+%define skins_ver 15.2.0
 
 Name:           smplayer
-Version:        0.8.5
-Release:        1%{?dist}
+Version:	14.9.0.6994
+Release:	4%{?dist}
 Summary:        A graphical frontend for mplayer
 Summary(zh_CN.UTF-8):	mplayer 的图形化前端
 
@@ -16,15 +18,16 @@ Group(zh_CN.UTF-8):	应用程序/多媒体
 License:        GPLv2+
 URL:            http://smplayer.sourceforge.net/linux/
 Source0:        http://downloads.sourceforge.net/sourceforge/smplayer/smplayer-%{version}.tar.bz2
+Source1:	http://downloads.sourceforge.net/smplayer/smplayer-themes-%{themes_ver}.tar.bz2
+Source2:	http://downloads.sourceforge.net/smplayer/smplayer-skins-%{skins_ver}.tar.bz2
 # Add a servicemenu to enqeue files in smplayer's playlist. 
 # The first one is for KDE4, the second one for KDE3.
 # see also: 
 # https://sourceforge.net/tracker/?func=detail&atid=913576&aid=2052905&group_id=185512
-Source1:        smplayer_enqueue_kde4.desktop
-Source2:        smplayer_enqueue_kde3.desktop
+Source3:        smplayer_enqueue_kde4.desktop
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 # 用以创建 svn 代码 tar 包的脚本,此处仅作备份用。
-Source3:        create_tar.sh
+Source4:        create_tar.sh
 BuildRequires:  desktop-file-utils
 BuildRequires:  qt4-devel
 # smplayer without mplayer is quite useless
@@ -46,7 +49,7 @@ DVD，和 VCD 到更多高级特性，像对 MPlayer 过滤器的支持还有更
 跨平台的。
 
 %prep
-%setup -qn %{realname}-%{version}
+%setup -qn %{realname}-%{version} -a1 -a2
 
 # correction for wrong-file-end-of-line-encoding
 %{__sed} -i 's/\r//' *.txt
@@ -71,9 +74,31 @@ echo "NotShowIn=KDE;" >> smplayer_enqueue.desktop
 %build
 make QMAKE=%{_qt4_qmake} PREFIX=%{_prefix}
 
+#themes
+pushd smplayer-themes-%{themes_ver}
+make QMAKE=%{_qt4_qmake} PREFIX=%{_prefix}
+popd
+
+#skins
+pushd smplayer-skins-%{skins_ver}
+make QMAKE=%{_qt4_qmake} PREFIX=%{_prefix}
+popd
+
+
 %install
 rm -rf %{buildroot}
 make QMAKE=%{_qt4_qmake} PREFIX=%{_prefix} DESTDIR=%{buildroot}/ install
+
+#themes
+pushd smplayer-themes-%{themes_ver}
+make QMAKE=%{_qt4_qmake} PREFIX=%{_prefix} DESTDIR=%{buildroot}/ install
+popd
+
+#skins
+pushd smplayer-skins-%{skins_ver}
+make QMAKE=%{_qt4_qmake} PREFIX=%{_prefix} DESTDIR=%{buildroot}/ install
+popd
+
 
 desktop-file-install --delete-original                   \
         --vendor "magic"                             \
@@ -88,7 +113,7 @@ desktop-file-install --delete-original                   \
 
 # Add servicemenus dependend on the version of KDE:
 # https://sourceforge.net/tracker/index.php?func=detail&aid=2052905&group_id=185512&atid=913576
-install -Dpm 0644 %{SOURCE1} %{buildroot}%{_datadir}/kde4/services/ServiceMenus/smplayer_enqueue.desktop
+install -Dpm 0644 %{SOURCE3} %{buildroot}%{_datadir}/kde4/services/ServiceMenus/smplayer_enqueue.desktop
 
 # 删除非中文化文件
 rm -rf `ls %{buildroot}%{_prefix}/share/doc/smplayer-%{version}/*|egrep -v zh_CN`
@@ -123,6 +148,18 @@ update-desktop-database &> /dev/null || :
 %{_datadir}/kde4/services/ServiceMenus/smplayer_enqueue.desktop
 
 %changelog
+* Mon Sep 28 2015 Liu Di <liudidi@gmail.com> - 14.9.0.6994-4
+- 为 Magic 3.0 重建
+
+* Mon Sep 28 2015 Liu Di <liudidi@gmail.com> - 14.9.0.6994-3
+- 为 Magic 3.0 重建
+
+* Mon Sep 28 2015 Liu Di <liudidi@gmail.com> - 14.9.0.6994-2
+- 为 Magic 3.0 重建
+
+* Mon Sep 28 2015 Liu Di <liudidi@gmail.com> - 14.9.0.6994-1
+- 更新到 14.9.0.6994
+
 * Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 0.7.0-2
 - 为 Magic 3.0 重建
 

@@ -1,7 +1,8 @@
 Name: ipcalc
 Version: 0.1.2
-Release: 3%{?dist}
+Release: 4%{?dist}
 Summary: IP network address calculator
+Summary(zh_CN.UTF-8): IP 网络地址计算器
 
 # This is an updated version of ipcalc originally found
 # in Fedora's initscripts at:
@@ -24,6 +25,9 @@ The various options specify what information ipcalc should display
 on standard out. Multiple options may be specified.  An IP address to
 operate on must always be specified.  Most operations also require a
 netmask or a CIDR prefix as well.
+
+%description -l zh_CN.UTF-8
+IP 网络地址计算器。
 
 %prep
 %setup -q
@@ -48,6 +52,9 @@ make check
 %{_mandir}/man1/ipcalc.1*
 
 %changelog
+* Wed Sep 30 2015 Liu Di <liudidi@gmail.com> - 0.1.2-4
+- 为 Magic 3.0 重建
+
 * Mon Sep 21 2015 Nikos Mavrogiannopoulos <nmav@redhat.com> - 0.1.2-3
 - This package obsoletes ipcalculator
 
