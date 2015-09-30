@@ -1,6 +1,6 @@
 Name:		kmod
-Version:	17
-Release:	2%{?dist}
+Version:	21
+Release:	3%{?dist}
 Summary:	Linux kernel module management utilities
 
 Group:		System Environment/Kernel
@@ -95,12 +95,14 @@ install -m 755 %{SOURCE1} $RPM_BUILD_ROOT%{_sbindir}/weak-modules
 %{_sbindir}/lsmod
 %{_sbindir}/depmod
 %{_sbindir}/weak-modules
-%{_datadir}/bash-completion/completions/kmod
+%{_datadir}/bash-completion/
 %attr(0644,root,root) %{_mandir}/man5/*.5*
 %attr(0644,root,root) %{_mandir}/man8/*.8*
-%doc NEWS README TODO COPYING
+%doc NEWS README TODO
 
 %files libs
+%{!?_licensedir:%global license %%doc}
+%license COPYING
 %{_libdir}/libkmod.so.*
 
 %files devel
@@ -109,8 +111,39 @@ install -m 755 %{SOURCE1} $RPM_BUILD_ROOT%{_sbindir}/weak-modules
 %{_libdir}/libkmod.so
 
 %changelog
-* Fri Jun 06 2014 Liu Di <liudidi@gmail.com> - 17-2
-- 为 Magic 3.0 重建
+* Wed Jun 17 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 21-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
+
+* Mon Jun 15 2015 Ville Skyttä <ville.skytta@iki.fi> - 21-2
+- Own bash completion dirs not owned by anything in dep chain
+
+* Tue Jun 09 2015 Josh Boyer <jwboyer@fedoraproject.org> - 21-1
+- Update to verion 21
+
+* Mon Mar 02 2015 Josh Boyer <jwboyer@fedoraproject.org> - 20.1
+- Update to version 20
+
+* Sat Feb 21 2015 Till Maas <opensource@till.name> - 19-2
+- Rebuilt for Fedora 23 Change
+  https://fedoraproject.org/wiki/Changes/Harden_all_packages_with_position-independent_code
+
+* Sun Nov 16 2014 Josh Boyer <jwboyer@fedoraproject.org> - 19-1
+- Update to version 19
+
+* Wed Oct 29 2014 Josh Boyer <jwboyer@fedoraproject.org> - 18-4
+- Backport patch to fix device node permissions (rhbz 1147248)
+
+* Sun Aug 17 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 18-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
+
+* Sat Jul 12 2014 Tom Callaway <spot@fedoraproject.org> - 18-2
+- fix license handling
+
+* Tue Jun 24 2014 Josh Boyer <jwboyer@fedoraproject.org> - 18-1
+- Update to version 18
+
+* Sun Jun 08 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 17-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 
 * Wed Apr 09 2014 Josh Boyer <jwboyer@fedoraproject.org> - 17-1
 - Update to version 17
