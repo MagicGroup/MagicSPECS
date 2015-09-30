@@ -1,14 +1,14 @@
-%global nspr_version 4.10.7
+%global nspr_version 4.10.8
 
 Summary:          Network Security Services Utilities Library
-Summary(zh_CN.UTF-8): 网络安全层工具库
 Name:             nss-util
-Version:          3.17.4
+Version:          3.20.0
+# for Rawhide, please always use release >= 2
+# for Fedora release branches, please use release < 2 (1.0, 1.1, ...)
 Release:          2%{?dist}
 License:          MPLv2.0
 URL:              http://www.mozilla.org/projects/security/pki/nss/
 Group:            System Environment/Libraries
-Group(zh_CN.UTF-8): 系统环境/库
 Requires:         nspr >= %{nspr_version}
 BuildRoot:        %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:    nspr-devel >= %{nspr_version}
@@ -36,21 +36,17 @@ Source3:          nss-util-config.in
 Patch1: build-nss-util-only.patch
 Patch2: hasht-dont-include-prtypes.patch
 Patch3: pkcs1sig-include-prtypes.patch
+Patch4: nss-util-3.19.3-ldflags.patch
 
 %description
 Utilities for Network Security Services and the Softoken module
-
-%description -l zh_CN.UTF-8
-网络安全层工具库。
 
 # We shouln't need to have a devel subpackage as util will be used in the
 # context of nss or nss-softoken. keeping to please rpmlint.
 # 
 %package devel
 Summary:          Development libraries for Network Security Services Utilities
-Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:            Development/Libraries
-Group(zh_CN.UTF-8): 开发/库
 Requires:         nss-util = %{version}-%{release}
 Requires:         nspr-devel >= %{nspr_version}
 Requires:         pkgconfig
@@ -58,14 +54,13 @@ Requires:         pkgconfig
 %description devel
 Header and library files for doing development with Network Security Services.
 
-%description devel -l zh_CN.UTF-8
-%{name} 的开发包。
 
 %prep
 %setup -q
 %patch1 -p0 -b .utilonly
 %patch2 -p0 -b .prtypes
 %patch3 -p0 -b .include_prtypes
+%patch4 -p1 -b .ldflags
 
 
 %build
@@ -173,7 +168,6 @@ done
 # Copy the package configuration files
 %{__install} -p -m 644 ./dist/pkgconfig/nss-util.pc $RPM_BUILD_ROOT/%{_libdir}/pkgconfig/nss-util.pc
 %{__install} -p -m 755 ./dist/pkgconfig/nss-util-config $RPM_BUILD_ROOT/%{_bindir}/nss-util-config
-magic_rpm_clean.sh
 
 %clean
 %{__rm} -rf $RPM_BUILD_ROOT
@@ -235,8 +229,26 @@ magic_rpm_clean.sh
 %{_includedir}/nss3/templates/templates.c
 
 %changelog
-* Thu Feb 26 2015 Liu Di <liudidi@gmail.com> - 3.17.4-2
-- 为 Magic 3.0 重建
+* Thu Aug 20 2015 Elio Maldonado <emaldona@redhat.com> - 3.20.0-2
+- Update to NSS 3.20
+
+* Mon Aug 17 2015 Adam Jackson <ajax@redhat.com> 3.19.3-3
+- Link with -z now
+
+* Sat Aug 08 2015 Elio Maldonado <emaldona@redhat.com> - 3.19.3-2
+- Update to NSS 3.19.3
+
+* Wed Jun 17 2015 Kai Engert <kaie@redhat.com> - 3.19.2-2
+- Update to NSS 3.19.2
+
+* Thu May 28 2015 Kai Engert <kaie@redhat.com> - 3.19.1-2
+- Update to NSS 3.19.1
+
+* Tue May 19 2015 Kai Engert <kaie@redhat.com> - 3.19.0-2
+- Update to NSS 3.19
+
+* Thu Mar 19 2015 Elio Maldonado <emaldona@redhat.com> - 3.18.0-1
+- Update to nss-3.18.0
 
 * Wed Jan 28 2015 Elio Maldonado <emaldona@redhat.com> - 3.17.4-1
 - Update to nss-3.17.4

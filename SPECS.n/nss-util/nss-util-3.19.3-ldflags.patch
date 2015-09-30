@@ -1,0 +1,12 @@
+diff -up nss-util-3.19.3/nss/coreconf/Linux.mk.jx nss-util-3.19.3/nss/coreconf/Linux.mk
+--- nss-util-3.19.3/nss/coreconf/Linux.mk.jx	2015-08-04 15:05:22.000000000 -0400
++++ nss-util-3.19.3/nss/coreconf/Linux.mk	2015-08-17 13:12:15.805804938 -0400
+@@ -140,7 +140,7 @@ endif
+ ARCH			= linux
+ 
+ DSO_CFLAGS		= -fPIC
+-DSO_LDOPTS		= -shared $(ARCHFLAG) -Wl,--gc-sections
++DSO_LDOPTS		= -shared $(ARCHFLAG) -Wl,--gc-sections -Wl,-z,now
+ # The linker on Red Hat Linux 7.2 and RHEL 2.1 (GNU ld version 2.11.90.0.8)
+ # incorrectly reports undefined references in the libraries we link with, so
+ # we don't use -z defs there.
