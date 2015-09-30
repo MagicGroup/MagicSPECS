@@ -1,41 +1,41 @@
-%define releasedate 20110809
+%define releasedate 20141204
 %define major 4
-%define minor 0
+%define minor 3
+%define update 2
 %define dotver %{major}.%{minor}
 %define sourcebasename tbb%{major}%{minor}_%{releasedate}oss
+
 %define sourcefilename %{sourcebasename}_src.tgz
 
+Name:    tbb
 Summary: The Threading Building Blocks library abstracts low-level threading details
-Name: tbb
 Version: %{dotver}
 Release: 3.%{releasedate}%{?dist}
 License: GPLv2 with exceptions
-Group: Development/Tools
-URL: http://threadingbuildingblocks.org/
-Source0: http://threadingbuildingblocks.org/uploads/77/175/4.0/tbb40_20110809oss_src.tgz
+Group:   Development/Tools
+URL:     http://threadingbuildingblocks.org/
 
-# Upstream regularly replaces the "Latest" documentation with what's
-# actually Latest at that point.  These sources may no longer match
-# what's uploaded anymore.
-%define docurl http://threadingbuildingblocks.org/uploads/81/91/Latest%%20Open%%20Source%%20Documentation/
-%define source_1 CHANGES.txt
-%define source_2 Getting_Started.pdf
-%define source_3 Reference.pdf
-%define source_4 Tutorial.pdf
-%define source_5 Design_Patterns.pdf
-Source1: %{docurl}/%{source_1}
-Source2: %{docurl}/%{source_2}
-Source3: %{docurl}/%{source_3}
-Source4: %{docurl}/%{source_4}
-Source5: %{docurl}/%{source_5}
+Source0: http://threadingbuildingblocks.org/sites/default/files/software_releases/source/%{sourcebasename}_src.tgz
+# These two are downstream sources.
+Source6: tbb.pc
+Source7: tbbmalloc.pc
+Source8: tbbmalloc_proxy.pc
 
+# Propagate CXXFLAGS variable into flags used when compiling C++.
+# This so that RPM_OPT_FLAGS are respected.
 Patch1: tbb-3.0-cxxflags.patch
+
+# Replace mfence with xchg (for 32-bit builds only) so that TBB
+# compiles and works supported hardware.  mfence was added with SSE2,
+# which we still don't assume.
 Patch2: tbb-4.0-mfence.patch
-BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+
+# Don't snip -Wall from C++ flags.  Add -fno-strict-aliasing, as that
+# uncovers some static-aliasing warnings.
+# Related: https://bugzilla.redhat.com/show_bug.cgi?id=1037347
+Patch3: tbb-4.3-dont-snip-Wall.patch
+
 BuildRequires: libstdc++-devel
-# We need "arch" and "hostname" binaries:
-BuildRequires: util-linux net-tools
-ExclusiveArch: %{ix86} x86_64 ia64
 
 %description
 Threading Building Blocks (TBB) is a C++ runtime library that
@@ -72,58 +72,119 @@ C++ library.
 %setup -q -n %{sourcebasename}
 %patch1 -p1
 %patch2 -p1
+%patch3 -p1
 
 %build
 make %{?_smp_mflags} CXXFLAGS="$RPM_OPT_FLAGS" tbb_build_prefix=obj
+for file in %{SOURCE6} %{SOURCE7} %{SOURCE8}; do
+    sed 's/_FEDORA_VERSION/%{major}.%{minor}.%{update}/' ${file} \
+        > $(basename ${file})
+done
 
-cp -p "%{SOURCE1}" "%{SOURCE2}" "%{SOURCE3}" "%{SOURCE4}" "%{SOURCE5}" .
+%check
+%ifarch ppc64le
+make test
+%endif
 
 %install
-rm -rf $RPM_BUILD_ROOT
 mkdir -p $RPM_BUILD_ROOT/%{_libdir}
 mkdir -p $RPM_BUILD_ROOT/%{_includedir}
 
 pushd build/obj_release
-    for file in libtbb{,malloc}; do
+    for file in libtbb{,malloc{,_proxy}}; do
         install -p -D -m 755 ${file}.so.2 $RPM_BUILD_ROOT/%{_libdir}
         ln -s $file.so.2 $RPM_BUILD_ROOT/%{_libdir}/$file.so
     done
 popd
 
 pushd include
-    find tbb -type f -name \*.h -exec \
+    find tbb -type f ! -name \*.htm\* -exec \
         install -p -D -m 644 {} $RPM_BUILD_ROOT/%{_includedir}/{} \
     \;
 popd
+
+for file in %{SOURCE6} %{SOURCE7} %{SOURCE8}; do
+    install -p -D -m 644 $(basename ${file}) \
+	$RPM_BUILD_ROOT/%{_libdir}/pkgconfig/$(basename ${file})
+done
 
 %post -p /sbin/ldconfig
 
 %postun -p /sbin/ldconfig
 
-%clean
-rm -rf ${RPM_BUILD_ROOT}
-
 %files
-%defattr(-,root,root,-)
 %doc COPYING doc/Release_Notes.txt
 %{_libdir}/*.so.2
 
 %files devel
-%defattr(-,root,root,-)
-%doc %{source_1}
+%doc CHANGES
 %{_includedir}/tbb
 %{_libdir}/*.so
+%{_libdir}/pkgconfig/*.pc
 
 %files doc
-%defattr(-,root,root,-)
-%doc %{source_2}
-%doc %{source_3}
-%doc %{source_4}
-%doc %{source_5}
+%doc doc/Release_Notes.txt
+%doc doc/html
 
 %changelog
-* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 4.0-3.20110809
-- 为 Magic 3.0 重建
+* Fri Jun 19 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 4.3-3.20141204
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
+
+* Sat May 02 2015 Kalev Lember <kalevlember@gmail.com> - 4.3-2.20141204
+- Rebuilt for GCC 5 C++11 ABI change
+
+* Mon Jan 19 2015 Petr Machata <pmachata@redhat.com> - 4.3-1.20141204
+- Rebase to 4.3u2
+- Drop ExclusiveArch
+
+* Thu Sep 25 2014 Karsten Hopp <karsten@redhat.com> 4.1-9.20130314
+- enable ppc64le and run 'make test' on that new arch
+
+* Mon Aug 18 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 4.1-8.20130314
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
+
+* Sun Jun 08 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 4.1-7.20130314
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Sun Jan 12 2014 Peter Robinson <pbrobinson@fedoraproject.org> 4.1-6.20130314
+- Build on aarch64, minor spec cleanups
+
+* Tue Dec  3 2013 Petr Machata <pmachata@redhat.com> - 4.1-5.20130314
+- Fix building with -Werror=format-security (tbb-4.1-dont-snip-Wall.patch)
+
+* Thu Oct  3 2013 Petr Machata <pmachata@redhat.com> - 4.1-4.20130314
+- Fix %%install to also install include files that are not named *.h
+
+* Sun Aug 04 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 4.1-3.20130314
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Tue May 28 2013 Petr Machata <pmachata@redhat.com> - 4.1-3.20130314
+- Enable ARM arches
+
+* Wed May 22 2013 Petr Machata <pmachata@redhat.com> - 4.1-2.20130314
+- Fix mfence patch.  Since the __TBB_full_memory_fence macro was
+  function-call-like, it stole () intended for function invocation.
+
+* Wed May 22 2013 Petr Machata <pmachata@redhat.com> - 4.1-1.20130314
+- Rebase to 4.1 update 3
+
+* Fri Feb 15 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 4.0-7.20120408
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
+
+* Tue Aug 28 2012 Petr Machata <pmachata@redhat.com> - 4.0-6.20120408
+- Fix build on PowerPC
+
+* Sat Jul 21 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 4.0-5.20120408
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Thu Jun  7 2012 Petr Machata <pmachata@redhat.com> - 4.0-4.20120408
+- Rebase to 4.0 update 4
+- Refresh Getting_Started.pdf, Reference.pdf, Tutorial.pdf
+- Provide pkg-config files
+- Resolves: #825402
+
+* Thu Apr 05 2012 Karsten Hopp <karsten@redhat.com> 4.0-3.20110809
+- tbb builds now on PPC(64)
 
 * Sat Jan 14 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 4.0-2.20110809
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
