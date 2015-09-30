@@ -1,6 +1,6 @@
-diff -up nss/cmd/manifest.mn.crypto nss/cmd/manifest.mn
---- nss/cmd/manifest.mn.crypto	2013-05-28 14:43:24.000000000 -0700
-+++ nss/cmd/manifest.mn	2013-05-29 20:04:30.060145083 -0700
+diff -up nss/cmd/manifest.mn.minimal-deps nss/cmd/manifest.mn
+--- nss/cmd/manifest.mn.minimal-deps	2015-04-30 22:00:23.000000000 +0200
++++ nss/cmd/manifest.mn	2015-05-19 20:20:09.105423573 +0200
 @@ -9,54 +9,10 @@ DEPTH	= ..
  REQUIRES = nss nspr libdbm
  
@@ -56,9 +56,9 @@ diff -up nss/cmd/manifest.mn.crypto nss/cmd/manifest.mn
   $(NULL)
  
  TEMPORARILY_DONT_BUILD = \
-diff -up nss/cmd/platlibs.mk.crypto nss/cmd/platlibs.mk
---- nss/cmd/platlibs.mk.crypto	2013-05-28 14:43:24.000000000 -0700
-+++ nss/cmd/platlibs.mk	2013-05-29 20:04:30.061145091 -0700
+diff -up nss/cmd/platlibs.mk.minimal-deps nss/cmd/platlibs.mk
+--- nss/cmd/platlibs.mk.minimal-deps	2015-04-30 22:00:23.000000000 +0200
++++ nss/cmd/platlibs.mk	2015-05-19 20:21:49.438299883 +0200
 @@ -51,42 +51,13 @@ EXTRA_SHARED_LIBS += \
  	$(NULL)
  endif
@@ -99,8 +99,8 @@ diff -up nss/cmd/platlibs.mk.crypto nss/cmd/platlibs.mk
 -	$(DIST)/lib/$(LIB_PREFIX)nssb.$(LIB_SUFFIX) \
 -	$(PKIXLIB) \
 -	$(DBMLIB) \
- 	$(DIST)/lib/$(LIB_PREFIX)$(SQLITE_LIB_NAME).$(LIB_SUFFIX) \
- 	$(DIST)/lib/$(LIB_PREFIX)nssutil3.$(LIB_SUFFIX) \
+ 	$(SQLITE_LIB_DIR)/$(LIB_PREFIX)$(SQLITE_LIB_NAME).$(LIB_SUFFIX) \
+ 	$(NSSUTIL_LIB_DIR)/$(LIB_PREFIX)nssutil3.$(LIB_SUFFIX) \
  	$(NSPR_LIB_DIR)/$(NSPR31_LIB_PREFIX)plc4.$(LIB_SUFFIX) \
 @@ -102,30 +73,9 @@ EXTRA_LIBS += \
  else
@@ -133,17 +133,17 @@ diff -up nss/cmd/platlibs.mk.crypto nss/cmd/platlibs.mk
  	$(NULL)
  
  ifeq ($(OS_ARCH), AIX) 
-@@ -158,9 +108,6 @@ ifeq ($(OS_ARCH), WINNT)
+@@ -154,9 +104,6 @@ ifeq ($(OS_ARCH), WINNT)
  EXTRA_LIBS += \
  	$(DIST)/lib/$(LIB_PREFIX)sectool.$(LIB_SUFFIX) \
- 	$(DIST)/lib/$(IMPORT_LIB_PREFIX)nssutil3$(IMPORT_LIB_SUFFIX) \
+ 	$(NSSUTIL_LIB_DIR)/$(IMPORT_LIB_PREFIX)nssutil3$(IMPORT_LIB_SUFFIX) \
 -	$(DIST)/lib/$(IMPORT_LIB_PREFIX)smime3$(IMPORT_LIB_SUFFIX) \
 -	$(DIST)/lib/$(IMPORT_LIB_PREFIX)ssl3$(IMPORT_LIB_SUFFIX) \
 -	$(DIST)/lib/$(IMPORT_LIB_PREFIX)nss3$(IMPORT_LIB_SUFFIX) \
  	$(NSPR_LIB_DIR)/$(NSPR31_LIB_PREFIX)plc4$(IMPORT_LIB_SUFFIX) \
  	$(NSPR_LIB_DIR)/$(NSPR31_LIB_PREFIX)plds4$(IMPORT_LIB_SUFFIX) \
  	$(NSPR_LIB_DIR)/$(NSPR31_LIB_PREFIX)nspr4$(IMPORT_LIB_SUFFIX) \
-@@ -186,9 +133,6 @@ endif
+@@ -182,9 +129,6 @@ endif
  # $(EXTRA_SHARED_LIBS) come before $(OS_LIBS), except on AIX.
  EXTRA_SHARED_LIBS += \
  	-L$(DIST)/lib \
