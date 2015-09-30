@@ -1,49 +1,34 @@
 Summary: An enhanced version of csh, the C shell
 Name: tcsh
-Version: 6.17
-Release: 19%{?dist}
+Version: 6.19.00
+Release: 3%{?dist}
 License: BSD
 Group: System Environment/Shells
-Source: ftp://ftp.astron.com/pub/tcsh/%{name}-%{version}.00.tar.gz
-Patch1: tcsh-6.15.00-closem.patch
-Patch2: tcsh-6.14.00-tinfo.patch
-Patch3: tcsh-6.14.00-unprintable.patch
-Patch4: tcsh-6.15.00-hist-sub.patch
-Patch6: tcsh-6.15.00-ca-color.patch
-Patch7: tcsh-6.14.00-set.patch
-Patch8: tcsh-6.14.00-syntax.patch
-Patch9: tcsh-6.13.00-memoryuse.patch
+Source: ftp://ftp.astron.com/pub/tcsh/%{name}-%{version}.tar.gz
+
+# Those patches should be given in git format-patch (no need to comment here)
+
+Patch1:  tcsh-6.15.00-closem.patch
+Patch3:  tcsh-6.14.00-unprintable.patch
+Patch4:  tcsh-6.15.00-hist-sub.patch
+Patch8:  tcsh-6.14.00-syntax.patch
+Patch9:  tcsh-6.13.00-memoryuse.patch
 Patch11: tcsh-6.14.00-order.patch
-Patch12: tcsh-6.15.00-rs-color.patch
-Patch13: tcsh-6.17.00-mh-color.patch
-# The idea is good, but the patch must be rewritten to be accepted by upstream
-# (see tcsh mailing list for more information):
-Patch14: tcsh-6.17.00-glob-automount.patch
-# Accepted by upstream:
-Patch15: tcsh-6.17.00-history.patch
-# Accepted by upstream:
-Patch16: tcsh-6.17.00-printexitvalue.patch
-Patch17: tcsh-6.17.00-testsuite.patch
-# Accepted by upstream:
-Patch18: tcsh-6.17.00-extrafork.patch
-# Accepted by upstream (tcsh-6.17.03b http://bugs.gw.com/view.php?id=109):
-Patch19: tcsh-6.17.00-wait-intr.patch
-# Accepted by upstream (tcsh-6.17.03b http://bugs.gw.com/view.php?id=112):
-Patch21: tcsh-6.17.00-dont-set-empty-remotehost.patch
-# Patch by upstream (tcsh-6.17.01b http://mx.gw.com/pipermail/tcsh-bugs/2010-May/000673.html):
-Patch22: tcsh-6.17.00-dont-print-history-on-verbose.patch
-# Accepted by upstream (tcsh-6.17.03b http://bugs.gw.com/view.php?id=113):
-Patch23: tcsh-6.17.00-variable-names.patch
-# Accepted by upstream (tcsh-6.17.05b http://mx.gw.com/pipermail/tcsh-bugs/2011-March/000727.html):
-Patch24: tcsh-6.17.00-avoid-infinite-loop-pendjob-xprintf.patch
+# Proposed upstream - http://mx.gw.com/pipermail/tcsh-bugs/2013-April/000833.html
+Patch35: tcsh-6.18.01-elf-interpreter.patch
+Patch36: tcsh-6.18.01-introduce-tcsh_posix_status.patch
+Patch38: tcsh-6.18.01-skip-tty-tests.patch
+# Proposed upstream - http://mx.gw.com/pipermail/tcsh-bugs/2015-May/000944.html
+Patch39: tcsh-6.19.00-gcc5-calloc.patch
+
 Provides: csh = %{version}
+Provides: /bin/tcsh, /bin/csh
 Requires(post): grep
 Requires(postun): coreutils, grep
 URL: http://www.tcsh.org/
 Buildroot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-BuildRequires: autoconf, automake, ncurses-devel, gettext-devel
+BuildRequires: autoconf, automake, ncurses-devel, gettext-devel, git
 
-Provides: /bin/csh, /bin/tcsh
 
 %description
 Tcsh is an enhanced but completely compatible version of csh, the C
@@ -53,42 +38,22 @@ Tcsh includes a command line editor, programmable word completion,
 spelling correction, a history mechanism, job control and a C language
 like syntax.
 
-%prep
-%setup -q -n %{name}-%{version}.00
-%patch1 -p1 -b .closem
-%patch2 -p1 -b .tinfo
-%patch3 -p1 -b .unprintable
-%patch4 -p1 -b .hist-sub
-%patch6 -p1 -b .ca-color
-%patch7 -p1 -b .set
-%patch8 -p1 -b .syntax
-%patch9 -p1 -b .memoryuse
-%patch11 -p1 -b .order
-%patch12 -p1 -b .rs-color
-%patch13 -p1 -b .mh-color
-%patch14 -p1 -b .glob-automount
-%patch15 -p1 -b .history
-%patch16 -p1 -b .printexitvalue
-%patch17 -p1 -b .testsuite
-%patch18 -p1 -b .extrafork
-%patch19 -p1 -b .wait-intr
-%patch21 -p1 -b .dont-set-empty-remotehost
-%patch22 -p1 -b .dont-print-history-on-verbose
-%patch23 -p1 -b .variable-names
-%patch24 -p1 -b .avoid-infinite-loop-pendjob-xprintf
 
+%prep
 for i in Fixes WishList; do
  iconv -f iso-8859-1 -t utf-8 "$i" > "${i}_" && \
  touch -r "$i" "${i}_" && \
  mv "${i}_" "$i"
 done
 
+%autosetup -p1 -S git
+
+
 %build
-# For tcsh-6.14.00-tinfo.patch
-autoreconf
 %configure --without-hesiod
 make %{?_smp_mflags} all
 make %{?_smp_mflags} -C nls catalogs
+
 
 %install
 rm -rf $RPM_BUILD_ROOT
@@ -98,8 +63,6 @@ install -p -m 644 tcsh.man ${RPM_BUILD_ROOT}%{_mandir}/man1/tcsh.1
 ln -sf tcsh ${RPM_BUILD_ROOT}%{_bindir}/csh
 ln -sf tcsh.1 ${RPM_BUILD_ROOT}%{_mandir}/man1/csh.1
 
-magic_rpm_clean.sh
-
 while read lang language ; do
 	dest=${RPM_BUILD_ROOT}%{_datadir}/locale/$lang/LC_MESSAGES
 	if test -f tcsh.$language.cat ; then
@@ -108,49 +71,203 @@ while read lang language ; do
 		echo "%lang($lang) %{_datadir}/locale/$lang/LC_MESSAGES/tcsh"
 	fi
 done > tcsh.lang << _EOF
+de german
+el greek
 en C
+es spanish
+et et
+fi finnish
+fr french
+it italian
+ja ja
+pl pl
+ru russian
+uk ukrainian
 _EOF
+
+
+%check
+make check
+
 
 %clean
 rm -rf $RPM_BUILD_ROOT
 
+
 %post
 if [ ! -f /etc/shells ]; then
  echo "%{_bindir}/tcsh" >> /etc/shells
+ echo "/bin/tcsh" >> /etc/shells
  echo "%{_bindir}/csh"	>> /etc/shells
+ echo "/bin/csh"	>> /etc/shells
 else
  grep -q '^%{_bindir}/tcsh$' /etc/shells || \
  echo "%{_bindir}/tcsh" >> /etc/shells
+ grep -q '^/bin/tcsh$' /etc/shells || \
+ echo "/bin/tcsh" >> /etc/shells
  grep -q '^%{_bindir}/csh$'  /etc/shells || \
  echo "%{_bindir}/csh"	>> /etc/shells
+ grep -q '^/bin/csh$'  /etc/shells || \
+ echo "/bin/csh"	>> /etc/shells
 fi
+
 
 %postun
 if [ ! -x %{_bindir}/tcsh ]; then
  grep -v '^%{_bindir}/tcsh$'  /etc/shells | \
  grep -v '^%{_bindir}/csh$' > /etc/shells.rpm && \
+ grep -v '^/bin/tcsh$'  /etc/shells | \
+ grep -v '^%{_bindir}/csh$' | \
+ grep -v '^/bin/csh$' > /etc/shells.rpm && \
  mv /etc/shells.rpm /etc/shells
 fi
 
+
 %files -f tcsh.lang
 %defattr(-,root,root,-)
-%doc BUGS FAQ Fixes NewThings WishList complete.tcsh README
+%doc Copyright BUGS FAQ Fixes NewThings WishList complete.tcsh README
 %{_bindir}/tcsh
 %{_bindir}/csh
 %{_mandir}/man1/*.1*
 
+
 %changelog
-* Sun Sep 20 2015 Liu Di <liudidi@gmail.com> - 6.17-19
-- 为 Magic 3.0 重建
+* Tue Jun 16 2015 Fridolin Pokorny <fpokorny@redhat.com> - 6.19.00-03
+- Add /bin/tcsh and /bin/csh to /etc/shells (#1229032)
 
-* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 6.17-18
-- 为 Magic 3.0 重建
+* Thu May 28 2015 Fridolin Pokorny <fpokorny@redhat.com> - 6.19.00-02
+- Add tcsh-6.19.00-gcc5-calloc.patch to avoid crashes and infinite loops due to
+  gcc-5 malloc+memset optimization.
 
-* Sun Apr 22 2012 Liu Di <liudidi@gmail.com> - 6.17-17
-- 为 Magic 3.0 重建
+* Wed May 27 2015 Fridolin Pokorny <fpokorny@redhat.com> - 6.19.00-01
+- Update to tcsh-6.19.00
+- Drop tcsh-6.14.00-tinfo.patch, not used anymore
+- Drop tcsh-6.17.00-manpage-spelling.patch, accepted by upstream
+- Drop tcsh-6.18.00-history-file-locking.patch, upstream introduced own history
+  file locking
+- Drop tcsh-6.18.00-history-merge.patch to respect upstream history handling
+- Drop tcsh-6.18.01-repeated-words-man.patch, accepted by upstream
+- Adjust tcsh-6.15.00-hist-sub.patch to merge new release
+- Adjust tcsh-6.18.01-elf-interpreter.patch to merge new release
+- Adjust tcsh-6.18.01-introduce-tcsh_posix_status.patch to merge new release
+- Remove tcsh-6.18.01-reverse-history-handling-in-loops.patch, issue does not
+  occur anymore
+- Adjust tcsh-6.18.01-skip-tty-tests.patch to merge new release
+- Remove tcsh-6.18.01-wait-hang.patch, accepted by upstream
 
-* Mon Feb 13 2012 Liu Di <liudidi@gmail.com> - 6.17-16
-- 为 Magic 3.0 重建
+* Tue Jan 27 2015 Pavel Raiskup <praiskup@redhat.com> - 6.18.01-13
+- fix 'wait' built-in hang (#1181685)
+- call %%autosetup after iconv, this avoids having uncommitted changes in
+  srcdir after patches are applied
+
+* Wed Aug 27 2014 Pavel Raiskup <praiskup@redhat.com> - 6.18.01-12
+- use the %%autosetup macro
+- enable testsuite in %%check
+- skip tests which are not able to be run without tty
+- support both $anyerror & $tcsh_posix_status (#1129703)
+
+* Mon Aug 18 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 6.18.01-11
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
+
+* Sun Jun 08 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 6.18.01-10
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Thu Dec 19 2013 Pavel Raiskup <praiskup@redhat.com> - 6.18.01-9
+- provide binaries in /bin for compatibility
+
+* Thu Dec 19 2013 Jaromír Končický <jkoncick@redhat.com> - 6.18.01-8
+- Move binaries from /bin to /usr/bin
+
+* Thu Dec 19 2013 Jaromír Končický <jkoncick@redhat.com> - 6.18.01-7
+- Revert history handling in loops
+  (Backported resolution of RHEL bug #814069)
+
+* Wed Dec 18 2013 Jaromír Končický <jkoncick@redhat.com> - 6.18.01-6
+- Changed 'anyerror' variable to 'tcsh_posix_status' with opposite meaning
+  (Backported resolution of RHEL bug #759132)
+
+* Sun Aug 04 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 6.18.01-5
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Fri Jul 26 2013 Pavel Raiskup <praiskup@redhat.com> - 6.18.01-4
+- fix rpmlint warnings
+
+* Wed May 22 2013 Fridolin Pokorny <fpokorny@redhat.com> 6.18.01-3
+- Added tcsh-6.18.01-elf-interpreter.patch to report missing ELF interpreter
+  Resolves: #711066
+
+* Mon Apr 08 2013 Fridolin Pokorny <fpokorny@redhat.com> 6.18.01-2
+- Removed repeated words in man
+  Resolves: #948884
+
+* Fri Apr 05 2013 Fridolin Pokorny <fpokorny@redhat.com> 6.18.01-1
+- Update to tcsh-6.18.01
+- Removed tcsh-6.18.00-history-savehist.patch, not accepted by upstream
+  http://mx.gw.com/pipermail/tcsh-bugs/2013-March/000824.html
+
+* Thu Mar 28 2013 Fridolin Pokorny <fpokorny@redhat.com> 6.18.00-7
+- File locking patch modified to reflect HIST_MERGE flag (#879371)
+- Drop tcsh-6.18.00-sigint-while-waiting-for-child.patch, accepted by upstream
+- Add tcsh-6.18.00-history-merge.patch to merge histlist properly (#919452)
+- Add tcsh-6.18.00-history-savehist.patch to store history with length
+  $savehist, not only $history.
+
+* Fri Feb 15 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 6.18.00-6
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
+
+* Wed Dec 12 2012 Roman Kollar <rkollar@redhat.com> 6.18.00-5
+- Fix tcsh being interruptible while waiting for child process (#884937)
+
+* Mon Oct 29 2012 Roman Kollar <rkollar@redhat.com> - 6.18.00-4
+- Add Copyright file in %%doc
+- Readd tcsh-6.18.00-history-file-locking.patch
+- Fix casting in lseek calls in the history file locking patch (#821796)
+- Fix dosource calls in the history file locking patch (#847102)
+  Resolves: #842851
+- Fix upstream source tarball location
+
+* Fri Aug 3 2012 Orion Poplawski <orion@nwra.com> - 6.18.00-3
+- Drop tcsh-6.18.00-history-file-locking.patch for now (bug 842851)
+
+* Sat Jul 21 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 6.18.00-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Thu Mar 15 2012 Vojtech Vitek (V-Teq) <vvitek@redhat.com> - 6.18.00-1
+- Update to tcsh-6.18.00
+- Remove obsolete patches: tcsh-6.15.00-ca-color.patch,
+  tcsh-6.17.00-tc-color.patch, tcsh-6.17.00-mh-color.patch,
+  tcsh-6.17.00-history.patch, tcsh-6.17.00-printexitvalue.patch,
+  tcsh-6.17.00-testsuite.patch, tcsh-6.17.00-negative_jobs.patch,
+  tcsh-6.17.00-wait-intr.patch, tcsh-6.17.00-dont-set-empty-remotehost.patch,
+  tcsh-6.17.00-dont-print-history-on-verbose.patch, tcsh-6.14.00-set.patch,
+  tcsh-6.17.00-extrafork.patch, tcsh-6.17.00-avoid-null-cwd.patch,
+  tcsh-6.17.00-avoid-infinite-loop-pendjob-xprintf.patch,
+  tcsh-6.17.00-variable-names.patch,
+  tcsh-6.17.00-handle-signals-before-flush.patch
+  tcsh-6.17.00-status-pipeline-backquote-list-of-cmds.patch (reverted!)
+- Modify and adapt the existing patches to the new source code:
+  tcsh-6.13.00-memoryuse.patch, tcsh-6.14.00-tinfo.patch,
+  tcsh-6.18.00-history-file-locking.patch
+
+* Thu Feb 16 2012 Vojtech Vitek (V-Teq) <vvitek@redhat.com> - 6.17-19
+- Handle pending signals before flush so that the the .history file
+  does not get truncated (#653054)
+- Implement file locking using shared readers, exclusive writer
+  to prevent any .history file data corruption (#653054)
+
+* Sat Jan 14 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 6.17-18
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
+
+* Mon Oct 31 2011 Vojtech Vitek (V-Teq) <vvitek@redhat.com> - 6.17-17
+- Fix minor man page spelling mistakes (#675137)
+
+* Thu Oct 27 2011 Vojtech Vitek (V-Teq) <vvitek@redhat.com> - 6.17-16
+- Fix status of pipelined/backquoted/list of commands (RHEL-6 #658190)
+- Do not dereference null pointer in cwd (RHEL-6 #700309)
+- Fix negative number of jobs with %%j formatting parameter in prompt
+- Clean-up patches numbers & order (prepare space for missing RHEL-6 patches)
+- Disable obsolete glob-automount.patch; The issue should have been
+  (and is now) fixed in glibc (posix/glob.c)
 
 * Thu Mar 24 2011 Vojtech Vitek (V-Teq) <vvitek@redhat.com> - 6.17-15
 - Avoid infinite loop pendjob()-xprintf() when stdout is closed
@@ -426,7 +543,7 @@ fi
 * Thu Nov 30 2000 Nalin Dahyabhai <nalin@redhat.com>
 - update to 6.10.00 to fix here-script vulnerability
 
-* Wed Sep 18 2000 Adrian Havill <havill@redhat.com>
+* Mon Sep 18 2000 Adrian Havill <havill@redhat.com>
 - fix catalog locale dirname for Japanese
 
 * Thu Jun 15 2000 Jeff Johnson <jbj@redhat.com>
@@ -470,7 +587,7 @@ fi
 * Mon Apr 27 1998 Prospector System <bugs@redhat.com>
 - translations modified for de, fr, tr
 
-* Thu Oct 21 1997 Cristian Gafton <gafton@redhat.com>
+* Tue Oct 21 1997 Cristian Gafton <gafton@redhat.com>
 - updated to 6.07; added BuildRoot
 - cleaned up the spec file; fixed source url
 

@@ -1,0 +1,148 @@
+From 5f012d155159b96f2a458ba047085cb1b348befc Mon Sep 17 00:00:00 2001
+From: Pavel Raiskup <praiskup@redhat.com>
+Date: Mon, 28 Jul 2014 14:47:33 +0200
+Subject: [PATCH 13/15] downstream: implement variable tcsh_posix_status
+
+This patch partially reverts the dist-git commit e0b2d458fda4
+because we _don't_ really want drop upstream-supported 'anyerror'
+variable.  And we can not drop tcsh_posix_status neither, as we
+already support that in RHEL5+ downstream.
+
+So from now, if "!defined(anyerror) ||
+defined(tcsh_posix_status)", tcsh behaves, with regards to
+pipelines, same way as POSIX-like shells.
+
+Note: This feature is left undocumented intentionaly, just to push people use
+the upstream supported $anyerror.
+
+Resolves: #1129703
+Related: #759132
+
+Adjusted for tcsh-6.19.00 by Fridolin Pokorny <fpokorny@redhat.com>
+
+---
+ sh.c               |  2 ++
+ sh.h               |  1 +
+ sh.proc.c          |  2 +-
+ sh.set.c           |  5 +++++
+ tc.const.c         |  2 ++
+ tests/variables.at | 28 ++++++++++++++++++++++++++++
+ 6 files changed, 39 insertions(+), 1 deletion(-)
+
+diff --git a/sh.c b/sh.c
+index b760f04..242556a 100644
+--- a/sh.c
++++ b/sh.c
+@@ -355,6 +355,8 @@ main(int argc, char **argv)
+     anyerror = 1;		/* for compatibility */
+     setcopy(STRanyerror, STRNULL, VAR_READWRITE);
+ 
++    tcsh_posix_status = 0;
++
+     /* Default history size to 100 */
+     setcopy(STRhistory, str2short("100"), VAR_READWRITE);
+     sethistory(100);
+ 
+diff --git a/sh.h b/sh.h
+index 4e3f13c..74b7719 100644
+--- a/sh.h
++++ b/sh.h
+@@ -597,6 +597,7 @@ EXTERN int    editing IZERO;	/* doing filename expansion and line editing */
+ EXTERN int    noediting IZERO;	/* initial $term defaulted to noedit */
+ EXTERN int    bslash_quote IZERO;/* PWP: tcsh-style quoting?  (in sh.c) */
+ EXTERN int    anyerror IZERO;	/* propagate errors from pipelines/backq */
++EXTERN int    tcsh_posix_status	IZERO;	/* negation for anyerror */
+ EXTERN int    compat_expr IZERO;/* csh-style expressions? */
+ EXTERN int    isoutatty IZERO;	/* is SHOUT a tty */
+ EXTERN int    isdiagatty IZERO;/* is SHDIAG a tty */
+diff --git a/sh.proc.c b/sh.proc.c
+index f2356d1..e32ebda 100644
+--- a/sh.proc.c
++++ b/sh.proc.c
+@@ -560,7 +560,7 @@ pjwait(struct process *pp)
+     do {
+ 	/* In case of pipelines only the result of the last
+ 	 * command should be taken in account */
+-	if (!anyerror && !(fp->p_flags & PBRACE)
++	if ((!anyerror || tcsh_posix_status) && !(fp->p_flags & PBRACE)
+ 		&& ((fp->p_flags & PPOU) || (fp->p_flags & PBACKQ)))
+ 	    continue;
+ 	if (fp->p_reason)
+diff --git a/sh.set.c b/sh.set.c
+index 0f98a2b..8d660e0 100644
+--- a/sh.set.c
++++ b/sh.set.c
+@@ -109,6 +109,9 @@ update_vars(Char *vp)
+     else if (eq(vp, STRanyerror)) {
+ 	anyerror = 1;
+     }
++    else if (eq(vp, STRtcsh_posix_status)) {
++	tcsh_posix_status = 1;
++    }
+     else if (eq(vp, STRsymlinks)) {
+ 	Char *pn = varval(vp);
+ 
+@@ -768,6 +771,8 @@ unset(Char **v, struct command *c)
+ 	loginsh = 0;
+     if (adrof(STRanyerror) == 0)
+ 	anyerror = 0;
++    if (adrof(STRtcsh_posix_status) == 0)
++	tcsh_posix_status = 0;
+     if (adrof(STRwordchars) == 0)
+ 	word_chars = STR_WORD_CHARS;
+     if (adrof(STRedit) == 0)
+diff --git a/tc.const.c b/tc.const.c
+index 641e234..d942542 100644
+--- a/tc.const.c
++++ b/tc.const.c
+@@ -44,6 +44,8 @@ Char STRrootdefautologout[] = { '1', '5', '\0' };
+ Char STRautomatic[]	= { 'a', 'u', 't', 'o', 'm', 'a', 't', 'i', 'c',
+ 			    '\0' };
+ Char STRanyerror[]	= { 'a', 'n', 'y', 'e', 'r', 'r', 'o', 'r', '\0' };
++Char STRtcsh_posix_status[] = {'t', 'c', 's', 'h', '_', 'p', 'o', 's', 'i', 'x',
++			       '_', 's', 't', 'a', 't', 'u', 's', '\0' };
+ Char STRhangup[]	= { 'h', 'a', 'n', 'g', 'u', 'p', '\0' };
+ Char STRaout[]		= { 'a', '.', 'o', 'u', 't', '\0' };
+ Char STRtty[]		= { 't', 't', 'y', '\0' };
+diff --git a/tests/variables.at b/tests/variables.at
+index 424e4da..f270e59 100644
+--- a/tests/variables.at
++++ b/tests/variables.at
+@@ -937,6 +937,34 @@ AT_CHECK([tcsh -f -c 'echo $?tcsh'], ,
+ AT_CLEANUP
+ 
+ 
++AT_SETUP([$ tcsh_posix_status])
++
++AT_DATA([exit_status.csh],
++[[echo $?tcsh_posix_status
++false | true ; echo $?
++set tcsh_posix_status = 1 ; echo $?tcsh_posix_status $tcsh_posix_status
++false | true ; echo $?
++set tcsh_posix_status = 0 ; echo $?tcsh_posix_status $tcsh_posix_status
++# Note it is still set!
++false | true ; echo $?
++unset tcsh_posix_status ; echo $?tcsh_posix_status
++false | true ; echo $?
++]])
++
++AT_CHECK([tcsh -f exit_status.csh],,
++[0
++1
++1 1
++0
++1 0
++0
++0
++1
++])
++
++AT_CLEANUP
++
++
+ AT_SETUP([$ term])
+ 
+ AT_DATA([term.csh],
+-- 
+1.9.3
+

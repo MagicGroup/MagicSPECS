@@ -1,14 +1,30 @@
-diff -up tcsh-6.15.00/tcsh.man.order tcsh-6.15.00/tcsh.man
---- tcsh-6.15.00/tcsh.man.order	2008-09-03 12:30:44.000000000 +0200
-+++ tcsh-6.15.00/tcsh.man	2008-09-03 12:30:44.000000000 +0200
-@@ -1614,7 +1614,9 @@ They include
+From 9e02166f3c3cde73244b9c38516dee178e91edf8 Mon Sep 17 00:00:00 2001
+From: vcrhonek <vcrhonek@fedoraproject.org>
+Date: Wed, 27 Aug 2014 13:49:17 +0200
+Subject: [PATCH 07/14] Fix calculation order of operators description in tcsh
+ manpage
+
+Original dist-git commit: 1bcd8ea59128666448
+
+---
+ tcsh.man | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/tcsh.man b/tcsh.man
+index 75f2075..322ee98 100644
+--- a/tcsh.man
++++ b/tcsh.man
+@@ -1644,7 +1644,9 @@ They include
  .PP
  Here the precedence increases to the right, `==' `!=' `=~' and `!~', `<='
  `>=' `<' and `>', `<<' and `>>', `+' and `\-', `*' `/' and `%' being, in
 -groups, at the same level.  The `==' `!=' `=~' and `!~' operators compare
-+groups, at the same level.  When multiple operators which have same precedence 
-+are used in one expression, calculation must be done from operator of right 
++groups, at the same level.  When multiple operators which have same precedence
++are used in one expression, calculation must be done from operator of right
 +side.  The `==' `!=' `=~' and `!~' operators compare
  their arguments as strings; all others operate on numbers.  The operators
  `=~' and `!~' are like `!=' and `==' except that the right hand side is a
  glob-pattern (see \fBFilename substitution\fR) against which the left hand
+-- 
+1.9.3
+

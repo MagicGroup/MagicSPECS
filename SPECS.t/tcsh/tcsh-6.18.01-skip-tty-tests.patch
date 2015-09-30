@@ -1,0 +1,58 @@
+From f16c91f01e75975fcc00d40cce0383e4fdbce3c2 Mon Sep 17 00:00:00 2001
+From: Pavel Raiskup <praiskup@redhat.com>
+Date: Wed, 27 Aug 2014 16:19:51 +0200
+Subject: [PATCH 15/15] Skip tests unable to run without tty
+
+Upstream thread:
+http://mx.gw.com/pipermail/tcsh-bugs/2014-August/000896.html
+
+Adjusted for tcsh-6.19.00 by Fridolin Pokorny <fpokorny@redhat.com>
+
+---
+ tests/commands.at  | 2 +-
+ tests/lexical.at   | 2 +-
+ tests/variables.at | 2 +-
+ 3 files changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/tests/commands.at b/tests/commands.at
+index 4ca5a0e..cdadb92 100644
+--- a/tests/commands.at
++++ b/tests/commands.at
+@@ -1205,7 +1205,7 @@ AT_SETUP([source])
+ AT_DATA([script.csh],
+ [[set var=$1
+ ]])
+-AT_CHECK([[tcsh -i -f -c 'source -h script.csh foo; history' \
++AT_CHECK([[test -t 0 || exit 77 ; tcsh -f -c 'source -h script.csh foo; history' \
+ 	   | sed 's/	[^	]*	/ TIME /']], ,
+ [     1 TIME source -h script.csh foo ; history
+      2 TIME set var=$1
+diff --git a/tests/lexical.at b/tests/lexical.at
+index 885a940..e618578 100644
+--- a/tests/lexical.at
++++ b/tests/lexical.at
+@@ -35,7 +35,7 @@ AT_CHECK([if [ ! -t 0 ]; then exit 77; fi],, [Skipping comment tests])
+ AT_CHECK([echo 'echo OK@%:@comment' | tcsh -f], , [OK
+ ])
+ 
+-AT_CHECK([tcsh -f -c 'echo @%:@no comment'], ,
++AT_CHECK([test -t 0 || exit 77 ; tcsh -f -c 'echo @%:@no comment'], ,
+ [@%:@no comment
+ ])
+ 
+diff --git a/tests/variables.at b/tests/variables.at
+index b20dfac..3354061 100644
+--- a/tests/variables.at
++++ b/tests/variables.at
+@@ -343,7 +343,7 @@ AT_SETUP([$ edit])
+ 
+ AT_CHECK([if [ ! -t 0 ]; then exit 77; fi],, [Skipping $edit tests])
+ 
+-AT_CHECK([TERM=something tcsh -f -c 'echo $?edit'], ,
++AT_CHECK([test -t 0 || exit 77 ; TERM=something tcsh -f -c 'echo $?edit'], ,
+ [1
+ ])
+ 
+-- 
+1.9.3
+

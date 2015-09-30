@@ -1,7 +1,20 @@
-diff -up tcsh-6.15.00/tw.parse.c.unprintable tcsh-6.15.00/tw.parse.c
---- tcsh-6.15.00/tw.parse.c.unprintable	2007-03-01 22:21:42.000000000 +0100
-+++ tcsh-6.15.00/tw.parse.c	2008-08-29 12:28:56.000000000 +0200
-@@ -2119,7 +2119,8 @@ print_by_column(Char *dir, Char *items[]
+From 73c378eee326ea117c7acc4655e89529a4171f92 Mon Sep 17 00:00:00 2001
+From: vcrhonek <vcrhonek@fedoraproject.org>
+Date: Wed, 27 Aug 2014 13:36:26 +0200
+Subject: [PATCH 03/14] fix unprintable
+
+original dist-git commit: cd7e072c
+Resolves: #233525
+
+---
+ tw.parse.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/tw.parse.c b/tw.parse.c
+index dc32dba..d05ceb8 100644
+--- a/tw.parse.c
++++ b/tw.parse.c
+@@ -2169,7 +2169,8 @@ print_by_column(Char *dir, Char *items[], int count, int no_file_suffix)
  	     (Strchr(val, 'x') != NULL);
  
      for (i = 0; i < count; i++)	{ /* find widest string */
@@ -11,3 +24,6 @@ diff -up tcsh-6.15.00/tw.parse.c.unprintable tcsh-6.15.00/tw.parse.c
      }
  
      maxwidth += no_file_suffix ? 1 : 2;	/* for the file tag and space */
+-- 
+1.9.3
+

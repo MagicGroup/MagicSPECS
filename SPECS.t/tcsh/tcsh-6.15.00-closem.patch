@@ -1,7 +1,18 @@
-diff -up tcsh-6.15.00/sh.misc.c.closem tcsh-6.15.00/sh.misc.c
---- tcsh-6.15.00/sh.misc.c.closem	2006-10-14 19:57:21.000000000 +0200
-+++ tcsh-6.15.00/sh.misc.c	2008-08-29 12:26:41.000000000 +0200
-@@ -255,6 +255,7 @@ void
+From fbf64f9d9addb60153732298ec7e9bf592831bf2 Mon Sep 17 00:00:00 2001
+From: Miloslav Trmac <mitr@fedoraproject.org>
+Date: Wed, 27 Aug 2014 13:29:02 +0200
+Subject: [PATCH 01/14] Do not close sockets
+
+orig dist-git commit: f02674e96a7888a7322611b45f6b63a1f5db0fef
+---
+ sh.misc.c | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
+
+diff --git a/sh.misc.c b/sh.misc.c
+index 08ec30d..08d110f 100644
+--- a/sh.misc.c
++++ b/sh.misc.c
+@@ -257,6 +257,7 @@ void
  closem(void)
  {
      int f, num_files;
@@ -9,7 +20,7 @@ diff -up tcsh-6.15.00/sh.misc.c.closem tcsh-6.15.00/sh.misc.c
  
  #ifdef NLS_BUGS
  #ifdef NLS_CATALOGS
-@@ -272,6 +273,16 @@ closem(void)
+@@ -274,6 +275,16 @@ closem(void)
  #ifdef MALLOC_TRACE
  	    && f != 25
  #endif /* MALLOC_TRACE */
@@ -26,3 +37,6 @@ diff -up tcsh-6.15.00/sh.misc.c.closem tcsh-6.15.00/sh.misc.c
  	    )
  	  {
  	    xclose(f);
+-- 
+1.9.3
+
