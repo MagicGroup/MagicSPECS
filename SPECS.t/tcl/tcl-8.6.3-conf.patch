@@ -1,8 +1,8 @@
 diff --git a/unix/tcl.m4 b/unix/tcl.m4
-index 194cf90..76773f3 100644
+index 277fe0b..afa0134 100644
 --- a/unix/tcl.m4
 +++ b/unix/tcl.m4
-@@ -1415,12 +1415,12 @@ AC_DEFUN([SC_CONFIG_CFLAGS], [
+@@ -1403,12 +1403,12 @@ AC_DEFUN([SC_CONFIG_CFLAGS], [
  	    # get rid of the warnings.
  	    #CFLAGS_OPTIMIZE="${CFLAGS_OPTIMIZE} -D__NO_STRING_INLINES -D__NO_MATH_INLINES"
  

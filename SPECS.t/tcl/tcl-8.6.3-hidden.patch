@@ -1,8 +1,8 @@
 diff --git a/generic/tclInt.h b/generic/tclInt.h
-index 380284f..7bb5eb9 100644
+index 860c2a3..2ae2056 100644
 --- a/generic/tclInt.h
 +++ b/generic/tclInt.h
-@@ -3160,7 +3160,7 @@ MODULE_SCOPE void	TclClockInit(Tcl_Interp *interp);
+@@ -3205,7 +3205,7 @@ MODULE_SCOPE void	TclClockInit(Tcl_Interp *interp);
  MODULE_SCOPE int	TclClockOldscanObjCmd(
  			    ClientData clientData, Tcl_Interp *interp,
  			    int objc, Tcl_Obj *const objv[]);
@@ -11,7 +11,7 @@ index 380284f..7bb5eb9 100644
  			    Tcl_Interp *interp, int objc,
  			    Tcl_Obj *const objv[]);
  MODULE_SCOPE int	Tcl_ConcatObjCmd(ClientData clientData,
-@@ -3343,7 +3343,7 @@ MODULE_SCOPE int	Tcl_RenameObjCmd(ClientData clientData,
+@@ -3388,7 +3388,7 @@ MODULE_SCOPE int	Tcl_RenameObjCmd(ClientData clientData,
  MODULE_SCOPE int	Tcl_RepresentationCmd(ClientData clientData,
  			    Tcl_Interp *interp, int objc,
  			    Tcl_Obj *const objv[]);

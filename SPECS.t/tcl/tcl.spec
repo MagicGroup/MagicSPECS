@@ -1,11 +1,11 @@
 %define majorver 8.6
-%define	vers %{majorver}.1
+%define	vers %{majorver}.4
 %{!?sdt:%define sdt 1}
 
 Summary: Tool Command Language, pronounced tickle
 Name: tcl
 Version: %{vers}
-Release: 6%{?dist}
+Release: 1%{?dist}
 Epoch: 1
 License: TCL
 Group: Development/Languages
@@ -16,9 +16,9 @@ BuildRequires: zlib-devel
 Provides: tcl(abi) = %{majorver}
 Obsoletes: tcl-tcldict <= %{vers}
 Provides: tcl-tcldict = %{vers}
-Patch0: tcl-8.6.1-autopath.patch
-Patch1: tcl-8.6.1-conf.patch
-Patch2: tcl-8.6.1-hidden.patch
+Patch0: tcl-8.6.3-autopath.patch
+Patch1: tcl-8.6.3-conf.patch
+Patch2: tcl-8.6.3-hidden.patch
 
 %if %sdt
 BuildRequires: systemtap-sdt-devel
@@ -136,8 +136,20 @@ rm -rf %{buildroot}/%{_datadir}/%{name}%{majorver}/ldAix
 %{_datadir}/%{name}%{majorver}/tclAppInit.c
 
 %changelog
-* Tue Jun 17 2014 Liu Di <liudidi@gmail.com> - 1:8.6.1-6
-- 为 Magic 3.0 重建
+* Fri Mar 13 2015 Jaroslav Škarvada <jskarvad@redhat.com> - 1:8.6.4-1
+- New version
+
+* Fri Nov 14 2014 Jaroslav Škarvada <jskarvad@redhat.com> - 1:8.6.3-1
+- New version
+  Resolves: rhbz#1163350
+- Defuzzified patches
+
+* Wed Aug 27 2014 Jaroslav Škarvada <jskarvad@redhat.com> - 1:8.6.2-1
+- New version
+  Resolves: rhbz#1134023
+
+* Mon Aug 18 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1:8.6.1-6
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
 
 * Fri Jun 13 2014 Jaroslav Škarvada <jskarvad@redhat.com> - 1:8.6.1.1-5
 - Re-enabled threads (previously reported bugs are no more reproducible)
