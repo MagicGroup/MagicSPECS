@@ -1,9 +1,11 @@
 Name:           SDL2_image
 Version:        2.0.0
-Release:        9%{?dist}
+Release:        10%{?dist}
 Summary:        Image loading library for SDL
+Summary(zh_CN.UTF-8): SDL 的图像载入库
 
 Group:          System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 License:        LGPLv2+
 URL:            http://www.libsdl.org/projects/SDL_image/
 Source0:        http://www.libsdl.org/projects/SDL_image/release/%{name}-%{version}.tar.gz
@@ -23,9 +25,14 @@ designed to provide fast access to the graphics frame buffer and audio
 device.  This package contains a simple library for loading images of
 various formats (BMP, PPM, PCX, GIF, JPEG, PNG) as SDL surfaces.
 
+%description -l zh_CN.UTF-8
+SDL 的图像载入库，支持多种图像格式（BMP, PPM, PCX, GIF, JPEG, PNG）。
+
 %package devel
 Summary:        Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       %{name}%{?_isa} = %{version}-%{release}
 Requires:       SDL2-devel
 Requires:       pkgconfig
@@ -33,6 +40,8 @@ Requires:       pkgconfig
 %description devel
 The %{name}-devel package contains libraries and header files for
 developing applications that use %{name}.
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -57,6 +66,7 @@ mkdir -p %{buildroot}%{_bindir}
 chrpath -d %{buildroot}%{_bindir}/showimage2
 
 rm -f %{buildroot}%{_libdir}/*.la
+magic_rpm_clean.sh
 
 %post -p /sbin/ldconfig
 
@@ -74,6 +84,9 @@ rm -f %{buildroot}%{_libdir}/*.la
 %{_libdir}/pkgconfig/%{name}.pc
 
 %changelog
+* Wed Sep 30 2015 Liu Di <liudidi@gmail.com> - 2.0.0-10
+- 为 Magic 3.0 重建
+
 * Mon Sep 07 2015 Liu Di <liudidi@gmail.com> - 2.0.0-9
 - 为 Magic 3.0 重建
 

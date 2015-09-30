@@ -2,10 +2,12 @@
 
 Name:           Thunar
 Version:        1.6.10
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        Thunar File Manager
+Summary(zh_CN.UTF-8): Thunar 文件管理器
 
 Group:          User Interface/Desktops
+Group(zh_CN.UTF-8): 用户界面/桌面
 License:        GPLv2+
 URL:            http://thunar.xfce.org/
 #VCS git:git://git.xfce.org/xfce/thunar
@@ -50,15 +52,22 @@ been designed from the ground up to be fast and easy-to-use. Its user interface
 is clean and intuitive, and does not include any confusing or useless options. 
 Thunar is fast and responsive with a good start up time and directory load time.
 
+%description -l zh_CN.UTF-8
+Thunar 文件管理器。
+
 %package devel
 Summary: Development tools for Thunar file manager
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: %{name} = %{version}-%{release}
 Requires: pkgconfig
 Requires: exo-devel >= %{exoversion}
 
 %description devel
 libraries and header files for the Thunar file manager.
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -90,7 +99,7 @@ chmod 644 examples/thunar-file-manager.py
 chmod 644 examples/xfce-file-manager.py
 
 find $RPM_BUILD_ROOT -name '*.la' -exec rm -f {} ';'
-
+magic_rpm_clean.sh
 %find_lang Thunar
 
 desktop-file-install --delete-original          \
@@ -197,6 +206,9 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %{_libdir}/pkgconfig/thunarx-*.pc
 
 %changelog
+* Wed Sep 30 2015 Liu Di <liudidi@gmail.com> - 1.6.10-4
+- 为 Magic 3.0 重建
+
 * Fri Sep 18 2015 Richard Hughes <rhughes@redhat.com> - 1.6.10-3
 - Remove no longer required AppData file
 

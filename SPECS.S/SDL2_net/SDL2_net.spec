@@ -1,7 +1,8 @@
 Name:		SDL2_net
 Version:	2.0.0
-Release:	4%{?dist}
+Release:	6%{?dist}
 Summary:	SDL portable network library
+Summary(zh_CN.UTF-8): SDL 可移植网络库
 License:	zlib
 URL:		http://www.libsdl.org/projects/SDL_net/
 Source0:	http://www.libsdl.org/projects/SDL_net/release/%{name}-%{version}.tar.gz
@@ -9,9 +10,12 @@ BuildRequires:	SDL2-devel >= 2.0
 
 %description
 This is a portable network library for use with SDL.
+%description -l zh_CN.UTF-8
+SDL 可移植网络库。
 
 %package	devel
 Summary:	Libraries and includes to develop SDL networked applications
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Requires:	%{name}%{?_isa} = %{version}-%{release}
 Requires:	SDL2-devel%{?_isa} >= 2.0
 
@@ -20,6 +24,8 @@ This is a portable network library for use with SDL.
 
 This is the libraries and include files you can use to develop SDL
 networked applications.
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -33,6 +39,7 @@ make %{?_smp_mflags}
 %install
 make DESTDIR=%{buildroot} install
 find %{buildroot} -name '*.la' -exec rm -f {} ';'
+magic_rpm_clean.sh
 
 %post -p /sbin/ldconfig
 
@@ -48,6 +55,12 @@ find %{buildroot} -name '*.la' -exec rm -f {} ';'
 %{_libdir}/pkgconfig/*.pc
 
 %changelog
+* Wed Sep 30 2015 Liu Di <liudidi@gmail.com> - 2.0.0-6
+- 为 Magic 3.0 重建
+
+* Wed Sep 30 2015 Liu Di <liudidi@gmail.com> - 2.0.0-5
+- 为 Magic 3.0 重建
+
 * Mon Sep 07 2015 Liu Di <liudidi@gmail.com> - 2.0.0-4
 - 为 Magic 3.0 重建
 

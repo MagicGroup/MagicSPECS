@@ -1,8 +1,10 @@
 Name:		SDL2_ttf
 Version:	2.0.12
-Release:	6%{?dist}
+Release:	7%{?dist}
 Summary:	TrueType font rendering library for SDL2
+Summary(zh_CN.UTF-8): SDL2 的 TrueType 字体渲染库
 Group:		System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 License:	zlib
 URL:		http://www.libsdl.org/projects/SDL_ttf/
 Source0:	http://www.libsdl.org/projects/SDL_ttf/release/%{name}-%{version}.tar.gz
@@ -13,16 +15,22 @@ BuildRequires:	zlib-devel
 %description
 This library allows you to use TrueType fonts to render text in SDL2
 applications.
+%description -l zh_CN.UTF-8
+SDL2 的 TrueType 字体渲染库。
 
 %package devel
 Summary:	Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:		Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:	%{name}%{?_isa} = %{version}-%{release}
 Requires:	SDL2-devel%{?_isa} >= 2.0
 
 %description devel
 The %{name}-devel package contains libraries and header files for
 developing applications that use %{name}.
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -38,6 +46,7 @@ make %{?_smp_mflags}
 %install
 make DESTDIR=%{buildroot} install
 find %{buildroot} -name '*.la' -exec rm -f {} ';'
+magic_rpm_clean.sh
 
 %post -p /sbin/ldconfig
 
@@ -53,6 +62,9 @@ find %{buildroot} -name '*.la' -exec rm -f {} ';'
 %{_libdir}/pkgconfig/%{name}.pc
 
 %changelog
+* Wed Sep 30 2015 Liu Di <liudidi@gmail.com> - 2.0.12-7
+- 为 Magic 3.0 重建
+
 * Mon Sep 07 2015 Liu Di <liudidi@gmail.com> - 2.0.12-6
 - 为 Magic 3.0 重建
 

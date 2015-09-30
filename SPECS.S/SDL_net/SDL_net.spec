@@ -1,9 +1,11 @@
 Name:		SDL_net
 Version:	1.2.8
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:	SDL portable network library
+Summary(zh_CN.UTF-8): SDL 可移植网络库
 
 Group:		System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 License:	LGPLv2+
 URL:		http://www.libsdl.org/projects/SDL_net/
 Source0:	http://www.libsdl.org/projects/%{name}/release/%{name}-%{version}.tar.gz
@@ -14,11 +16,14 @@ BuildRequires:	SDL-devel >= 1.2.4-1
 
 %description
 This is a portable network library for use with SDL.
-
+%description -l zh_CN.UTF-8
+SDL 可移植网络库。
 
 %package devel
 Summary:	Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:		Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:	%{name} = %{version}-%{release}
 Requires:	SDL-devel >= 1.2.4-1
 Requires:	pkgconfig
@@ -26,7 +31,8 @@ Requires:	pkgconfig
 %description devel
 The %{name}-devel package contains libraries and header files for
 developing applications that use %{name}.
-
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -42,7 +48,7 @@ rm -rf $RPM_BUILD_ROOT
 make install DESTDIR=$RPM_BUILD_ROOT
 
 find $RPM_BUILD_ROOT -name '*.la' -exec rm -f {} ';'
-
+magic_rpm_clean.sh
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -67,6 +73,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/pkgconfig/%{name}.pc
 
 %changelog
+* Wed Sep 30 2015 Liu Di <liudidi@gmail.com> - 1.2.8-3
+- 为 Magic 3.0 重建
+
 * Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 1.2.8-2
 - 为 Magic 3.0 重建
 

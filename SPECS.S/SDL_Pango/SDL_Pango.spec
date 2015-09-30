@@ -1,9 +1,11 @@
 Summary: Rendering of internationalized text for SDL (Simple DirectMedia Layer)
+Summary(zh_CN.UTF-8): SDL 渲染国际化文本的库
 Name: SDL_Pango
 Version: 0.1.2
-Release: 21%{?dist}
+Release: 22%{?dist}
 License: LGPLv2+
 Group: System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 URL: http://sdlpango.sourceforge.net/
 
 Source0: http://downloads.sf.net/sdlpango/SDL_Pango-%{version}.tar.gz
@@ -18,17 +20,21 @@ BuildRequires: autoconf, automake, libtool
 %description
 Pango is the text rendering engine of GNOME 2. SDL_Pango connects that engine
 to SDL, the Simple DirectMedia Layer.
-
+%description -l zh_CN.UTF-8
+SDL 渲染国际化文本的库。
 
 %package devel
 Summary: Development files for SDL_pango
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: %{name} = %{version}-%{release}
 Requires: pango-devel, SDL-devel, pkgconfig
 
 %description devel
 Development files for SDL_pango.
-
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -53,7 +59,7 @@ make %{?_smp_mflags}
 
 %install
 make install DESTDIR=%{buildroot}
-
+magic_rpm_clean.sh
 
 %post -p /sbin/ldconfig
 
@@ -75,6 +81,9 @@ make install DESTDIR=%{buildroot}
 
 
 %changelog
+* Wed Sep 30 2015 Liu Di <liudidi@gmail.com> - 0.1.2-22
+- 为 Magic 3.0 重建
+
 * Tue Jun 16 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.1.2-21
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

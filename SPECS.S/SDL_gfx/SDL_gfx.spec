@@ -1,9 +1,11 @@
 Summary: SDL graphics drawing primitives and other support functions
+Summary(zh_CN.UTF-8): SDL 图形绘制和其它功能的支持
 Name: SDL_gfx
 Version: 2.0.22
-Release: 3%{?dist}
+Release: 4%{?dist}
 License: LGPLv2
 Group: System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 URL: http://www.ferzkopp.net/Software/SDL_gfx-2.0/
 Source: http://www.ferzkopp.net/Software/SDL_gfx-2.0/SDL_gfx-%{version}.tar.gz
 Patch0: SDL_gfx-2.0.13-ppc.patch
@@ -15,18 +17,23 @@ BuildRequires: libXt-devel
 Library providing SDL graphics drawing primitives and other support functions
 wrapped up in an addon library for the Simple Direct Media (SDL) cross-platform
 API layer.
+%description -l zh_CN.UTF-8
+SDL 图形绘制和其它功能的支持。
 
 
 %package devel
 Summary: Development files for SDL_gfx
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: %{name} = %{version}-%{release}
 Requires: pkgconfig
 Requires: SDL-devel
 
 %description devel
 This package contains the files required to develop programs which use SDL_gfx.
-
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -45,7 +52,7 @@ make %{?_smp_mflags}
 %install
 rm -rf %{buildroot}
 make install DESTDIR=%{buildroot}
-
+magic_rpm_clean.sh
 
 %clean
 rm -rf %{buildroot}
@@ -70,6 +77,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Sep 30 2015 Liu Di <liudidi@gmail.com> - 2.0.22-4
+- 为 Magic 3.0 重建
+
 * Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 2.0.22-3
 - 为 Magic 3.0 重建
 

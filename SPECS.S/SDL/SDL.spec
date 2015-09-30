@@ -1,8 +1,10 @@
 Name:       SDL
 Version:    1.2.15
-Release:    2%{?dist}
+Release:    3%{?dist}
 Summary:    A cross-platform multimedia library
+Summary(zh_CN.UTF-8): 跨平台的多媒体库
 Group:      System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 URL:        http://www.libsdl.org/
 # The license of the file src/video/fbcon/riva_mmio.h is bad, but the contents
 # of the file has been relicensed to MIT in 2008 by Nvidia for the 
@@ -40,9 +42,14 @@ BuildRequires:  libtool
 Simple DirectMedia Layer (SDL) is a cross-platform multimedia library designed
 to provide fast access to the graphics frame buffer and audio device.
 
+%description -l zh_CN.UTF-8
+跨平台的多媒体库。
+
 %package devel
 Summary:    Files needed to develop Simple DirectMedia Layer applications
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:      Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:   SDL%{?_isa} = %{version}-%{release}
 Requires:   alsa-lib-devel
 Requires:   libGL-devel
@@ -58,9 +65,14 @@ to provide fast access to the graphics frame buffer and audio device. This
 package provides the libraries, include files, and other resources needed for
 developing SDL applications.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
 %package static
 Summary:    Files needed to develop static Simple DirectMedia Layer applications
+Summary(zh_CN.UTF-8): %{name} 的静态库
 Group:      Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:   SDL-devel%{?_isa} = %{version}-%{release}
 
 %description static
@@ -68,6 +80,9 @@ Simple DirectMedia Layer (SDL) is a cross-platform multimedia library designed
 to provide fast access to the graphics frame buffer and audio device. This
 package provides the static libraries needed for developing static SDL
 applications.
+
+%description static -l zh_CN.UTF-8
+%{name} 的静态库。
 
 %prep
 %setup -q -b0
@@ -107,6 +122,7 @@ install -m644 %{SOURCE1} %{buildroot}/%{_includedir}/SDL/SDL_config.h
 
 # remove libtool .la file
 rm -f %{buildroot}%{_libdir}/*.la
+magic_rpm_clean.sh
 
 %post -p /sbin/ldconfig
 
@@ -129,6 +145,9 @@ rm -f %{buildroot}%{_libdir}/*.la
 %{_libdir}/lib*.a
 
 %changelog
+* Wed Sep 30 2015 Liu Di <liudidi@gmail.com> - 1.2.15-3
+- 为 Magic 3.0 重建
+
 * Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 1.2.15-2
 - 为 Magic 3.0 重建
 

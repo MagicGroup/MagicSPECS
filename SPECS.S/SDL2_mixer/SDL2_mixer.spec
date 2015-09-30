@@ -1,9 +1,11 @@
 Name:           SDL2_mixer
 Version:        2.0.0
-Release:        10%{?dist}
+Release:        11%{?dist}
 Summary:        Simple DirectMedia Layer - Sample Mixer Library
+Summary(zh_CN.UTF-8): SDL 的混音库
 
 Group:          System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 License:        zlib
 URL:            http://www.libsdl.org/projects/SDL_mixer/
 Source0:        http://www.libsdl.org/projects/SDL_mixer/release/%{name}-%{version}.tar.gz
@@ -23,9 +25,14 @@ It supports any number of simultaneously playing channels of 16 bit stereo
 audio, plus a single channel of music, mixed by the popular FLAC,
 MikMod MOD, Timidity MIDI, Ogg Vorbis, and SMPEG MP3 libraries. 
 
+%description -l zh_CN.UTF-8
+SDL 的混音库。
+
 %package devel
 Summary:        Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       %{name}%{?_isa} = %{version}-%{release}
 Requires:       SDL2-devel
 Requires:       libvorbis-devel
@@ -33,6 +40,8 @@ Requires:       libvorbis-devel
 %description devel
 The %{name}-devel package contains libraries and header files for
 developing applications that use %{name}.
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -56,6 +65,7 @@ do
 done
 
 find %{buildroot} -name '*.la' -exec rm -f {} ';'
+magic_rpm_clean.sh
 
 %post -p /sbin/ldconfig
 
@@ -74,6 +84,9 @@ find %{buildroot} -name '*.la' -exec rm -f {} ';'
 %{_includedir}/SDL2/*
 
 %changelog
+* Wed Sep 30 2015 Liu Di <liudidi@gmail.com> - 2.0.0-11
+- 为 Magic 3.0 重建
+
 * Mon Sep 07 2015 Liu Di <liudidi@gmail.com> - 2.0.0-10
 - 为 Magic 3.0 重建
 

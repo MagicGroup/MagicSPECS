@@ -1,8 +1,10 @@
 Name:           SDL2
 Version:        2.0.3
-Release:        7%{?dist}
+Release:        8%{?dist}
 Summary:        A cross-platform multimedia library
+Summary(zh_CN.UTF-8): 跨平台的多媒体库
 Group:          System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 URL:            http://www.libsdl.org/
 License:        zlib and MIT
 Source0:        http://www.libsdl.org/release/%{name}-%{version}.tar.gz
@@ -39,9 +41,14 @@ BuildRequires:  libxkbcommon-devel
 Simple DirectMedia Layer (SDL) is a cross-platform multimedia library designed
 to provide fast access to the graphics frame buffer and audio device.
 
+%description -l zh_CN.UTF-8
+跨平台的多媒体库。
+
 %package devel
 Summary:    Files needed to develop Simple DirectMedia Layer applications
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:      Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:   %{name}%{?_isa} = %{version}-%{release}
 Requires:   alsa-lib-devel
 Requires:   mesa-libGL-devel
@@ -68,6 +75,9 @@ Simple DirectMedia Layer (SDL) is a cross-platform multimedia library designed
 to provide fast access to the graphics frame buffer and audio device. This
 package provides the libraries, include files, and other resources needed for
 developing SDL applications.
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -101,6 +111,7 @@ install -p -m 644 %{SOURCE1} %{buildroot}%{_includedir}/SDL2/SDL_config.h
 rm -f %{buildroot}%{_libdir}/*.la
 # remove static .a file
 rm -f %{buildroot}%{_libdir}/*.a
+magic_rpm_clean.sh
 
 %post -p /sbin/ldconfig
 
@@ -119,6 +130,9 @@ rm -f %{buildroot}%{_libdir}/*.a
 %{_datadir}/aclocal/*
 
 %changelog
+* Wed Sep 30 2015 Liu Di <liudidi@gmail.com> - 2.0.3-8
+- 为 Magic 3.0 重建
+
 * Sun Sep 06 2015 Liu Di <liudidi@gmail.com> - 2.0.3-7
 - 为 Magic 3.0 重建
 

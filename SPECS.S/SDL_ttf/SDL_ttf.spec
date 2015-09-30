@@ -1,9 +1,11 @@
 Name:		SDL_ttf
 Version:	2.0.11
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:	Simple DirectMedia Layer TrueType Font library
+Summary(zh_CN.UTF-8): SDL TrueType 字体库
 
 Group:		System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 License:	LGPLv2+
 URL:		http://www.libsdl.org/projects/SDL_ttf/
 Source0:	http://www.libsdl.org/projects/%{name}/release/%{name}-%{version}.tar.gz
@@ -17,11 +19,14 @@ BuildRequires:	zlib-devel
 %description
 This library allows you to use TrueType fonts to render text in SDL
 applications.
-
+%description -l zh_CN.UTF-8
+SDL TrueType 字体库。
 
 %package devel
 Summary:	Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:		Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:	%{name} = %{version}-%{release}
 Requires:	SDL-devel >= 1.2.4
 
@@ -29,7 +34,8 @@ Requires:	SDL-devel >= 1.2.4
 %description devel
 The %{name}-devel package contains libraries and header files for
 developing applications that use %{name}.
-
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -44,7 +50,7 @@ make %{?_smp_mflags}
 rm -rf $RPM_BUILD_ROOT
 make install DESTDIR=$RPM_BUILD_ROOT
 find $RPM_BUILD_ROOT -name '*.la' -exec rm -f {} ';'
-
+magic_rpm_clean.sh
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -69,6 +75,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/pkgconfig/SDL_ttf.pc
 
 %changelog
+* Wed Sep 30 2015 Liu Di <liudidi@gmail.com> - 2.0.11-3
+- 为 Magic 3.0 重建
+
 * Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 2.0.11-2
 - 为 Magic 3.0 重建
 

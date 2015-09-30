@@ -2,7 +2,9 @@ Name:           SDL_sound
 Version:        1.0.3
 Release:        8%{?dist}
 Summary:        Library handling decoding of several popular sound file formats
+Summary(zh_CN.UTF-8): 解码几种流行声音文件格式的库
 Group:          System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 License:        LGPLv2+
 URL:            http://www.icculus.org/SDL_sound
 # This is:
@@ -27,10 +29,14 @@ file and hand back a single pointer to the whole waveform. SDL_sound can
 also handle sample rate, audio format, and channel conversion on-the-fly 
 and behind-the-scenes, if the programmer desires.
 
+%description -l zh_CN.UTF-8
+解码几种流行声音文件格式的库
 
 %package        devel
 Summary:        %{summary}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       %{name} = %{version}-%{release}
 Requires:       SDL-devel
 
@@ -38,7 +44,8 @@ Requires:       SDL-devel
 %{description}
 
 This package contains the headers and libraries for SDL_sound development.
-
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -85,7 +92,7 @@ mkdir -p $RPM_BUILD_ROOT/%{_mandir}
 mv man3 $RPM_BUILD_ROOT/%{_mandir}
 
 find $RPM_BUILD_ROOT -type f -name "*.la" -exec rm -f {} ';'
-
+magic_rpm_clean.sh
 
 %clean
 rm -rf $RPM_BUILD_ROOT

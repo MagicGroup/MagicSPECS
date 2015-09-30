@@ -1,9 +1,11 @@
 Name:		SDL_image
 Version:	1.2.12
-Release:	4%{?dist}
+Release:	5%{?dist}
 Summary:	Image loading library for SDL
+Summary(zh_CN.UTF-8): SDL 的图像载入库
 
 Group:		System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 License:	LGPLv2+
 URL:		http://www.libsdl.org/projects/SDL_image/
 Source0:	http://www.libsdl.org/projects/%{name}/release/%{name}-%{version}.tar.gz
@@ -22,10 +24,14 @@ designed to provide fast access to the graphics frame buffer and audio
 device.  This package contains a simple library for loading images of
 various formats (BMP, PPM, PCX, GIF, JPEG, PNG) as SDL surfaces.
 
+%description -l zh_CN.UTF-8
+SDL 的图像载入库。
 
 %package devel
 Summary:	Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:		Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:	%{name} = %{version}-%{release}
 Requires:	SDL-devel >= 1.2.10
 Requires:	pkgconfig
@@ -34,7 +40,8 @@ Requires:	pkgconfig
 %description devel
 The %{name}-devel package contains libraries and header files for
 developing applications that use %{name}.
-
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -59,7 +66,7 @@ mkdir -p $RPM_BUILD_ROOT%{_bindir}
 ./libtool --mode=install /usr/bin/install showimage $RPM_BUILD_ROOT%{_bindir}
 
 find $RPM_BUILD_ROOT -name '*.la' -exec rm -f {} ';'
-
+magic_rpm_clean.sh
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -86,6 +93,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Wed Sep 30 2015 Liu Di <liudidi@gmail.com> - 1.2.12-5
+- 为 Magic 3.0 重建
+
 * Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 1.2.12-4
 - 为 Magic 3.0 重建
 
