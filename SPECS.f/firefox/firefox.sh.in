@@ -143,12 +143,9 @@ GNOME_DISABLE_CRASH_DIALOG=1
 export GNOME_DISABLE_CRASH_DIALOG
 
 ##
-## Use $TMPDIR if set. Otherwise use /var/tmp instead of /tmp
-## because of 1GB /tmp limit in Fedora 18 and later.
-## See: https://bugzilla.redhat.com/show_bug.cgi?id=867073
+## Disable the SLICE allocator (rhbz#1014858)
 ##
-TMPDIR="${TMPDIR:-/var/tmp}"
-export TMPDIR
+export G_SLICE=always-malloc
 
 # OK, here's where all the real work gets done
 
@@ -171,9 +168,9 @@ FEDORA_LANGPACK_CONFIG="$MOZ_EXTENSIONS_PROFILE_DIR/.fedora-langpack-install"
 # MOZ_DISABLE_LANGPACKS disables language packs completely
 MOZILLA_DOWN=0
 if ! [ $MOZ_DISABLE_LANGPACKS ] || [ $MOZ_DISABLE_LANGPACKS -eq 0 ]; then
-    if [ -x $MOZ_DIST_BIN/mozilla-xremote-client ]; then
+    if [ -x $MOZ_DIST_BIN/$MOZ_FIREFOX_FILE ]; then
         # Is firefox running?
-        $MOZ_DIST_BIN/mozilla-xremote-client -a firefox 'ping()' > /dev/null 2>&1
+        /usr/bin/pidof firefox > /dev/null 2>&1
         MOZILLA_DOWN=$?
     fi
 fi

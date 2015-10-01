@@ -1,0 +1,128 @@
+# HG changeset patch
+# Parent b7eb1ce0237d6125b75bc8ff1cb3afc328d6e78c
+# User Steve Singer <steve@ssinger.info>
+Bug 1005535 - Get skia GPU building on big endian.
+
+Index: mozilla-release/configure.in
+===================================================================
+--- mozilla-release.orig/configure.in
++++ mozilla-release/configure.in
+@@ -8243,11 +8243,11 @@ if test "$MOZ_ENABLE_SKIA"; then
+     AC_DEFINE(SK_BUILD_FOR_ANDROID_NDK)
+   fi
+ 
+-  if test "${CPU_ARCH}" != "ppc" -a "${CPU_ARCH}" != "ppc64" -a "${CPU_ARCH}" != "sparc" -a -z "$MOZ_DISABLE_SKIA_GPU" ; then
++#  if test "${CPU_ARCH}" != "ppc" -a "${CPU_ARCH}" != "ppc64" -a "${CPU_ARCH}" != "sparc" -a -z "$MOZ_DISABLE_SKIA_GPU" ; then
+     MOZ_ENABLE_SKIA_GPU=1
+     AC_DEFINE(USE_SKIA_GPU)
+     AC_SUBST(MOZ_ENABLE_SKIA_GPU)
+-  fi
++#  fi
+ fi
+ AC_SUBST(MOZ_ENABLE_SKIA)
+ 
+Index: mozilla-release/gfx/skia/generate_mozbuild.py
+===================================================================
+--- mozilla-release.orig/gfx/skia/generate_mozbuild.py
++++ mozilla-release/gfx/skia/generate_mozbuild.py
+@@ -242,7 +242,6 @@ def generate_separated_sources(platform_
+     'common': {
+       #'trunk/src/effects/gradients/SkGradientTileProc.cpp',
+       'trunk/src/gpu/gl/GrGLCreateNativeInterface_none.cpp',
+-      'trunk/src/ports/SkDiscardableMemory_none.cpp',
+       'trunk/src/ports/SkImageDecoder_empty.cpp',
+       'trunk/src/ports/SkMemory_mozalloc.cpp',
+       # 'trunk/src/images/SkImages.cpp',
+Index: mozilla-release/gfx/skia/moz.build
+===================================================================
+--- mozilla-release.orig/gfx/skia/moz.build
++++ mozilla-release/gfx/skia/moz.build
+@@ -663,7 +663,6 @@ UNIFIED_SOURCES += [
+     'trunk/src/pathops/SkReduceOrder.cpp',
+     'trunk/src/pipe/SkGPipeRead.cpp',
+     'trunk/src/pipe/SkGPipeWrite.cpp',
+-    'trunk/src/ports/SkDiscardableMemory_none.cpp',
+     'trunk/src/ports/SkGlobalInitialization_default.cpp',
+     'trunk/src/ports/SkImageDecoder_empty.cpp',
+     'trunk/src/ports/SkMemory_mozalloc.cpp',
+Index: mozilla-release/gfx/skia/trunk/include/config/SkUserConfig.h
+===================================================================
+--- mozilla-release.orig/gfx/skia/trunk/include/config/SkUserConfig.h
++++ mozilla-release/gfx/skia/trunk/include/config/SkUserConfig.h
+@@ -197,6 +197,7 @@
+ #endif
+ 
+ // On all platforms we have this byte order
++
+ #define SK_A32_SHIFT 24
+ #define SK_R32_SHIFT 16
+ #define SK_G32_SHIFT 8
+Index: mozilla-release/gfx/skia/trunk/include/core/SkColorPriv.h
+===================================================================
+--- mozilla-release.orig/gfx/skia/trunk/include/core/SkColorPriv.h
++++ mozilla-release/gfx/skia/trunk/include/core/SkColorPriv.h
+@@ -32,17 +32,7 @@
+  *  Here we enforce this constraint.
+  */
+ 
+-#ifdef SK_CPU_BENDIAN
+-    #define SK_RGBA_R32_SHIFT   24
+-    #define SK_RGBA_G32_SHIFT   16
+-    #define SK_RGBA_B32_SHIFT   8
+-    #define SK_RGBA_A32_SHIFT   0
+ 
+-    #define SK_BGRA_B32_SHIFT   24
+-    #define SK_BGRA_G32_SHIFT   16
+-    #define SK_BGRA_R32_SHIFT   8
+-    #define SK_BGRA_A32_SHIFT   0
+-#else
+     #define SK_RGBA_R32_SHIFT   0
+     #define SK_RGBA_G32_SHIFT   8
+     #define SK_RGBA_B32_SHIFT   16
+@@ -52,7 +42,7 @@
+     #define SK_BGRA_G32_SHIFT   8
+     #define SK_BGRA_R32_SHIFT   16
+     #define SK_BGRA_A32_SHIFT   24
+-#endif
++
+ 
+ #if defined(SK_PMCOLOR_IS_RGBA) && defined(SK_PMCOLOR_IS_BGRA)
+     #error "can't define PMCOLOR to be RGBA and BGRA"
+Index: mozilla-release/gfx/skia/trunk/include/core/SkImageInfo.h
+===================================================================
+--- mozilla-release.orig/gfx/skia/trunk/include/core/SkImageInfo.h
++++ mozilla-release/gfx/skia/trunk/include/core/SkImageInfo.h
+@@ -88,9 +88,10 @@ enum SkColorType {
+ #elif SK_PMCOLOR_BYTE_ORDER(R,G,B,A)
+     kN32_SkColorType = kRGBA_8888_SkColorType,
+ #else
+-#error "SK_*32_SHFIT values must correspond to BGRA or RGBA byte order"
++     kN32_SkColorType = kBGRA_8888_SkColorType
+ #endif
+ 
++
+ #ifdef SK_SUPPORT_LEGACY_N32_NAME
+     kPMColor_SkColorType = kN32_SkColorType
+ #endif
+Index: mozilla-release/gfx/skia/trunk/include/gpu/GrTypes.h
+===================================================================
+--- mozilla-release.orig/gfx/skia/trunk/include/gpu/GrTypes.h
++++ mozilla-release/gfx/skia/trunk/include/gpu/GrTypes.h
+@@ -309,15 +309,13 @@ enum GrPixelConfig {
+ static const int kGrPixelConfigCnt = kLast_GrPixelConfig + 1;
+ 
+ // Aliases for pixel configs that match skia's byte order.
+-#ifndef SK_CPU_LENDIAN
+-    #error "Skia gpu currently assumes little endian"
+-#endif
++
+ #if SK_PMCOLOR_BYTE_ORDER(B,G,R,A)
+     static const GrPixelConfig kSkia8888_GrPixelConfig = kBGRA_8888_GrPixelConfig;
+ #elif SK_PMCOLOR_BYTE_ORDER(R,G,B,A)
+     static const GrPixelConfig kSkia8888_GrPixelConfig = kRGBA_8888_GrPixelConfig;
+ #else
+-    #error "SK_*32_SHIFT values must correspond to GL_BGRA or GL_RGBA format."
++    static const GrPixelConfig kSkia8888_GrPixelConfig = kBGRA_8888_GrPixelConfig;
+ #endif
+ 
+ // Returns true if the pixel config is a GPU-specific compressed format

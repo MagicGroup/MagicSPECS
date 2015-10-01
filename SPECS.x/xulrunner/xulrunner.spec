@@ -2,7 +2,7 @@
 %define system_nss        1
 
 # Use system sqlite?
-%if 0%{?fedora} < 19
+%if 0%{?fedora} < 20
 %define system_sqlite     0
 %define system_ffi        0
 %else
@@ -77,8 +77,8 @@
 
 Summary:        XUL Runtime for Gecko Applications
 Name:           xulrunner
-Version:        27.0
-Release:        1%{?pre_tag}%{?dist}
+Version:        40.0
+Release:        2%{?pre_tag}%{?dist}
 URL:            http://developer.mozilla.org/En/XULRunner
 License:        MPLv1.1 or GPLv2+ or LGPLv2+
 Group:          Applications/Internet
@@ -89,15 +89,16 @@ Source21:       %{name}.sh.in
 
 # build patches
 Patch1:         xulrunner-install-dir.patch
-Patch2:         mozilla-build.patch
+Patch2:         firefox-build.patch
 Patch3:         mozilla-build-arm.patch
-Patch14:        xulrunner-2.0-chromium-types.patch
-Patch17:        xulrunner-24.0-gcc47.patch
 # https://bugzilla.redhat.com/show_bug.cgi?id=814879#c3
 Patch18:        xulrunner-24.0-jemalloc-ppc.patch
 # workaround linking issue on s390 (JSContext::updateMallocCounter(size_t) not found)
 Patch19:        xulrunner-24.0-s390-inlines.patch
-Patch20:        mozilla-885002.patch
+Patch20:        firefox-build-prbool.patch
+Patch21:        aarch64-fix-skia.patch
+Patch22:        mozilla-1005535.patch
+Patch24:        rhbz-1219542-s390-build.patch
 
 # Fedora specific patches
 Patch200:        mozilla-193-pkgconfig.patch
@@ -105,8 +106,6 @@ Patch200:        mozilla-193-pkgconfig.patch
 Patch204:        rhbz-966424.patch
 
 # Upstream patches
-Patch300:        mozilla-837563.patch
-Patch301:        mozilla-938730.patch
 
 # ---------------------------------------------------
 
@@ -235,19 +234,22 @@ debug %{name}, you want to install %{name}-debuginfo instead.
 cd %{tarballdir}
 
 %patch1  -p1
-%patch2  -p2 -b .bld
+%patch2  -p2 -b .build
 %patch3  -p2 -b .arm
-%patch14 -p2 -b .chromium-types
-%patch17 -p1 -b .gcc47
 %patch18 -p2 -b .jemalloc-ppc
 %patch19 -p2 -b .s390-inlines
-%patch20 -p1 -b .885002
+%patch20 -p1 -b .prbool
+%patch21 -p1 -b .aarch64-fix-skia
+%patch22 -p1 -b .mozilla-1005535
+%ifarch s390
+%patch24 -p1 -b .rhbz-1219542-s390
+%endif
 
 %patch200 -p2 -b .pk
-%patch204 -p1 -b .966424
+%patch204 -p2 -b .966424
 
-%patch300 -p1 -b .837563
-%patch301 -p1 -b .938730
+# Upstream patches
+
 
 %{__rm} -f .mozconfig
 %{__cp} %{SOURCE10} .mozconfig
@@ -280,7 +282,6 @@ echo "ac_add_options --enable-system-ffi" >> .mozconfig
 %if %{?debug_build}
 echo "ac_add_options --enable-debug" >> .mozconfig
 echo "ac_add_options --disable-optimize" >> .mozconfig
-echo "ac_add_options --enable-dtrace" >> .mozconfig
 %else
 echo "ac_add_options --disable-debug" >> .mozconfig
 echo "ac_add_options --enable-optimize" >> .mozconfig
@@ -307,16 +308,11 @@ echo "ac_add_options --disable-elf-hack" >> .mozconfig
 echo "ac_add_options --with-arch=armv5te" >> .mozconfig
 echo "ac_add_options --with-float-abi=soft" >> .mozconfig
 echo "ac_add_options --disable-elf-hack" >> .mozconfig
+echo "ac_add_options --disable-ion" >> .mozconfig
+echo "ac_add_options --disable-yarr-jit" >> .mozconfig
 %endif
 
-%ifnarch %{ix86} x86_64 armv7hl armv7hnl
-echo "ac_add_options --disable-methodjit" >> .mozconfig
-echo "ac_add_options --disable-monoic" >> .mozconfig
-echo "ac_add_options --disable-polyic" >> .mozconfig
-echo "ac_add_options --disable-tracejit" >> .mozconfig
-%endif
-
-%ifnarch %{ix86} x86_64 armv7hl armv7hnl
+%ifnarch %{ix86} x86_64
 echo "ac_add_options --disable-webrtc" >> .mozconfig
 %endif
 
@@ -336,6 +332,9 @@ esac
 
 cd %{tarballdir}
 
+# Update the various config.guess to upstream release for aarch64 support
+find ./ -name config.guess -exec cp /usr/lib/rpm/config.guess {} ';'
+
 # -fpermissive is needed to build with gcc 4.6+ which has become stricter
 # 
 # Mozilla builds with -Wall with exception of a few warnings which show up
@@ -349,13 +348,20 @@ MOZ_OPT_FLAGS=$(echo "$MOZ_OPT_FLAGS" | %{__sed} -e 's/-O2//')
 %endif
 %ifarch s390
 MOZ_OPT_FLAGS=$(echo "$MOZ_OPT_FLAGS" | %{__sed} -e 's/-g/-g1/')
+# If MOZ_DEBUG_FLAGS is empty, firefox's build will default it to "-g" which
+# overrides the -g1 from line above and breaks building on s390
+# (OOM when linking, rhbz#1238225)
+export MOZ_DEBUG_FLAGS=" "
 %endif
-%ifarch s390 %{arm} ppc
+%ifarch s390 %{arm} ppc aarch64
 MOZ_LINK_FLAGS="-Wl,--no-keep-memory -Wl,--reduce-memory-overheads"
 %endif
 
-export CFLAGS="$MOZ_OPT_FLAGS -Wformat-security -Wformat -Werror=format-security"
-export CXXFLAGS="$MOZ_OPT_FLAGS -fpermissive -Wformat-security -Wformat -Werror=format-security"
+#rhbz#1037063
+MOZ_OPT_FLAGS="$MOZ_OPT_FLAGS -Wformat-security -Wformat -Werror=format-security"
+
+export CFLAGS="$MOZ_OPT_FLAGS"
+export CXXFLAGS="$MOZ_OPT_FLAGS -fpermissive"
 export LDFLAGS=$MOZ_LINK_FLAGS
 
 export PREFIX='%{_prefix}'
@@ -364,7 +370,7 @@ export LIBDIR='%{_libdir}'
 MOZ_SMP_FLAGS=-j1
 # On x86 architectures, Mozilla can build up to 4 jobs at once in parallel,
 # however builds tend to fail on other arches when building in parallel.
-%ifarch %{ix86} x86_64 ppc ppc64
+%ifarch %{ix86} x86_64 ppc ppc64 ppc64le aarch64 %{arm}
 [ -z "$RPM_BUILD_NCPUS" ] && \
      RPM_BUILD_NCPUS="`/usr/bin/getconf _NPROCESSORS_ONLN`"
 [ "$RPM_BUILD_NCPUS" -ge 2 ] && MOZ_SMP_FLAGS=-j2
@@ -398,6 +404,9 @@ DESTDIR=$RPM_BUILD_ROOT make -C objdir install
 
 %{__rm} -f $RPM_BUILD_ROOT%{mozappdir}/%{name}-config
 
+# install install_app.py
+%{__cp} objdir/dist/bin/install_app.py $RPM_BUILD_ROOT%{mozappdir}
+
 # Copy pc files (for compatibility with 1.9.1)
 %{__cp} $RPM_BUILD_ROOT/%{_libdir}/pkgconfig/libxul.pc \
         $RPM_BUILD_ROOT/%{_libdir}/pkgconfig/libxul-unstable.pc
@@ -410,7 +419,7 @@ genheader=$*
 mv ${genheader}.h ${genheader}%{__isa_bits}.h
 cat > ${genheader}.h << EOF
 /* This file exists to fix multilib conflicts */
-#if defined(__x86_64__) || defined(__ia64__) || defined(__s390x__) || defined(__powerpc64__) || (defined(__sparc__) && defined(__arch64__))
+#if defined(__x86_64__) || defined(__ia64__) || defined(__s390x__) || defined(__powerpc64__) || (defined(__sparc__) && defined(__arch64__)) || defined(__aarch64__)
 #include "${genheader}64.h"
 #else
 #include "${genheader}32.h"
@@ -432,6 +441,12 @@ for i in *.so; do
      ln -s %{mozappdir}/$i $i
 done
 popd
+
+# Move sdk/bin to xulrunner libdir
+pushd $RPM_BUILD_ROOT%{_libdir}/%{name}-devel-%{gecko_dir_ver}/sdk/bin
+mv ply *.py $RPM_BUILD_ROOT%{mozappdir}
+popd
+rm -rf $RPM_BUILD_ROOT%{_libdir}/%{name}-devel-%{gecko_dir_ver}/sdk/bin
 
 # Library path
 LD_SO_CONF_D=%{_sysconfdir}/ld.so.conf.d
@@ -497,7 +512,6 @@ fi
 %{mozappdir}/components/*.manifest
 %{mozappdir}/omni.ja
 %{mozappdir}/*.so
-%{mozappdir}/mozilla-xremote-client
 %{mozappdir}/run-mozilla.sh
 %{mozappdir}/xulrunner
 %{mozappdir}/xulrunner-stub
@@ -505,6 +519,7 @@ fi
 %{mozappdir}/dependentlibs.list
 %{_sysconfdir}/ld.so.conf.d/xulrunner*.conf
 %{mozappdir}/plugin-container
+%{mozappdir}/gmp-clearkey
 %if !%{?system_nss}
 %{mozappdir}/*.chk
 %endif
@@ -513,6 +528,10 @@ fi
 %{mozappdir}/crashreporter.ini
 %{mozappdir}/Throbber-small.gif
 %endif
+%{mozappdir}/install_app.py
+%ghost %{mozappdir}/install_app.pyc
+%ghost %{mozappdir}/install_app.pyo
+%{mozappdir}/gmp-fake*/*
 
 %files devel
 %defattr(-,root,root,-)
@@ -522,13 +541,103 @@ fi
 %{_libdir}/%{name}-devel-*/*
 %{_libdir}/pkgconfig/*.pc
 %{mozappdir}/xpcshell
-%{mozappdir}/js-gdb.py
-%ghost %{mozappdir}/js-gdb.pyc
-%ghost %{mozappdir}/js-gdb.pyo
+%{mozappdir}/*.py
+%ghost %{mozappdir}/*.pyc
+%ghost %{mozappdir}/*.pyo
+%dir %{mozappdir}/ply
+%{mozappdir}/ply/*.py
+%ghost %{mozappdir}/ply/*.pyc
+%ghost %{mozappdir}/ply/*.pyo
 
 #---------------------------------------------------------------------
 
 %changelog
+* Wed Sep 2 2015 Martin Stransky <stransky@redhat.com> - 40.0-2
+- Disable Skia to build on second arches
+
+* Tue Aug 25 2015 Petr Jasicek <pjasicek@redhat.com> - 40.0-1
+- Update to 40.0
+
+* Wed Jul 22 2015 Petr Jasicek <pjasicek@redhat.com> - 39.0-3
+- Removed unneeded patch files
+
+* Tue Jul 14 2015 Marcin Juszkiewicz <mjuszkiewicz@redhat.com> - 39.0-2
+- fixed build
+  - dropped firefox-nss-3.18.0.patch as we have 3.19.2 available
+  - refreshed mozilla-1005535.patch patch to apply
+
+* Fri Jul 10 2015 Martin Stransky <stransky@redhat.com> - 39.0-1
+- Update to 39.0
+
+* Fri Jun 19 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 38.0-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
+
+* Thu May 7 2015 Martin Stransky <stransky@redhat.com> - 38.0-1
+- Update to 38.0 Build 2
+
+* Mon Apr 27 2015 Jan Horak <jhorak@redhat.com> - 37.0.2-2
+- Added patch for big endian arches
+
+* Thu Apr 16 2015 Jan Horak <jhorak@redhat.com> - 37.0.2-1
+- Update to 37.0.2
+
+* Wed Apr 15 2015 Martin Stransky <stransky@redhat.com> - 37.0.1-1
+- Update to 37.0.1
+
+* Mon Apr  6 2015 Tom Callaway <spot@fedoraproject.org> - 33.0-3
+- rebuild for libvpx 1.4.0
+
+* Wed Oct 22 2014 Dan Horák <dan[at]danny.cz> - 33.0-2
+- Fix filelist for secondary arches
+
+* Thu Oct 16 2014 Martin Stransky <stransky@redhat.com> - 33.0-1
+- Update to 33.0
+
+* Sat Sep 20 2014 Peter Robinson <pbrobinson@fedoraproject.org> 32.0.2-1
+- Update to 32.0.2
+- sync fixes to the same as firefox
+
+* Tue Sep 9 2014 Martin Stransky <stransky@redhat.com> - 32.0-2
+- move /sdk/bin to xulrunner libdir
+
+* Tue Aug 26 2014 Martin Stransky <stransky@redhat.com> - 32.0-1
+- Update to 32.0 build 1
+
+* Mon Aug 18 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 31.0-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
+
+* Fri Jul 25 2014 Martin Stransky <stransky@redhat.com> - 31.0-1
+- Update to 31.0 build 2
+
+* Fri Jul 25 2014 Yaakov Selkowitz <yselkowi@redhat.com> - 30.0-3
+- Fix mozilla-config.h wrapper on aarch64
+
+* Sun Jun 08 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 30.0-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Thu Jun 5 2014 Martin Stransky <stransky@redhat.com> - 30.0-1
+- Update to 30.0 build 1
+- Disabled shared js
+
+* Fri May 23 2014 Martin Stransky <stransky@redhat.com> - 29.0-5
+- Added a build fix for ppc64 - rhbz#1100495
+
+* Thu May 15 2014 Peter Robinson <pbrobinson@fedoraproject.org> 29.0-4
+- Update aarch64 bits
+
+* Thu May 15 2014 Peter Robinson <pbrobinson@fedoraproject.org> 29.0-3
+- Add upstream patches for aarch64 support
+
+* Mon Apr 28 2014 Martin Stransky <stransky@redhat.com> - 29.0-2
+- An updated ppc64le patch (rhbz#1091054)
+
+* Mon Apr 28 2014 Martin Stransky <stransky@redhat.com> - 29.0-1
+- Update to 29.0
+
+* Tue Mar 18 2014 Martin Stransky <stransky@redhat.com> - 28.0-1
+- Update to 28.0
+- Fixed arm patch
+
 * Mon Feb 3 2014 Martin Stransky <stransky@redhat.com> - 27.0-1
 - Update to 27.0
 

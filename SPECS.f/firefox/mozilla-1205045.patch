@@ -1,0 +1,587 @@
+diff -up mozilla-release/gfx/layers/basic/BasicCompositor.cpp.1205045 mozilla-release/gfx/layers/basic/BasicCompositor.cpp
+--- mozilla-release/gfx/layers/basic/BasicCompositor.cpp.1205045	2015-09-18 00:13:31.000000000 +0200
++++ mozilla-release/gfx/layers/basic/BasicCompositor.cpp	2015-09-22 12:57:51.047938671 +0200
+@@ -509,11 +509,11 @@ BasicCompositor::BeginFrame(const nsIntR
+   }
+ 
+   if (mTarget) {
+-    // If we have a copy target, then we don't have a widget-provided mDrawTarget (currently). Create a dummy
++    // If we have a copy target, then we don't have a widget-provided mDrawTarget (currently). Use a dummy
+     // placeholder so that CreateRenderTarget() works.
+-    mDrawTarget = gfxPlatform::GetPlatform()->CreateOffscreenContentDrawTarget(IntSize(1,1), SurfaceFormat::B8G8R8A8);
++    mDrawTarget = gfxPlatform::GetPlatform()->ScreenReferenceDrawTarget();
+   } else {
+-    mDrawTarget = mWidget->StartRemoteDrawing();
++    mDrawTarget = mWidget->StartRemoteDrawingInRegion(mInvalidRegion);
+   }
+   if (!mDrawTarget) {
+     return;
+diff -up mozilla-release/widget/gtk/nsWindow.cpp.1205045 mozilla-release/widget/gtk/nsWindow.cpp
+--- mozilla-release/widget/gtk/nsWindow.cpp.1205045	2015-09-22 12:57:51.043938667 +0200
++++ mozilla-release/widget/gtk/nsWindow.cpp	2015-09-22 12:57:51.049938673 +0200
+@@ -351,6 +351,11 @@ nsWindow::nsWindow()
+ 
+ #ifdef MOZ_X11
+     mOldFocusWindow      = 0;
++
++    mXDisplay = nullptr;
++    mXWindow  = None;
++    mXVisual  = nullptr;
++    mXDepth   = 0;
+ #endif /* MOZ_X11 */
+     mPluginType          = PluginType_NONE;
+ 
+@@ -649,10 +654,6 @@ nsWindow::Destroy(void)
+         gPluginFocusWindow->LoseNonXEmbedPluginFocus();
+     }
+ #endif /* MOZ_X11 && MOZ_WIDGET_GTK2 */
+-  
+-    // Destroy thebes surface now. Badness can happen if we destroy
+-    // the surface after its X Window.
+-    mThebesSurface = nullptr;
+ 
+     GtkWidget *owningWidget = GetMozContainerWidget();
+     if (mShell) {
+@@ -2069,7 +2070,13 @@ ExtractExposeRegion(nsIntRegion& aRegion
+ 
+ #if (MOZ_WIDGET_GTK == 2)
+ gboolean
+-nsWindow::OnExposeEvent(GdkEventExpose *aEvent)
++nsWindow::
++
++
++
++
++
++Event(GdkEventExpose *aEvent)
+ #else
+ gboolean
+ nsWindow::OnExposeEvent(cairo_t *cr)
+@@ -2191,7 +2198,7 @@ nsWindow::OnExposeEvent(cairo_t *cr)
+         return TRUE;
+     }
+ 
+-    RefPtr<DrawTarget> dt = StartRemoteDrawing();
++    RefPtr<DrawTarget> dt = GetDrawTarget(region);
+     if(!dt) {
+         return FALSE;
+     }
+@@ -2269,8 +2276,8 @@ nsWindow::OnExposeEvent(cairo_t *cr)
+         }
+     }
+ #  ifdef MOZ_HAVE_SHMIMAGE
+-    if (mShmImage && MOZ_LIKELY(!mIsDestroyed)) {
+-        mShmImage->Put(mGdkWindow, region);
++    if (mShmImage && MOZ_LIKELY(!mIsDestroyed)) {        
++        mShmImage->Put(mXDisplay, mXWindow, region);
+     }
+ #  endif  // MOZ_HAVE_SHMIMAGE
+ #endif // MOZ_X11
+@@ -3818,9 +3825,12 @@ nsWindow::Create(nsIWidget        *aPare
+ 
+ #ifdef MOZ_X11
+     if (mGdkWindow) {
+-      // force creation of native window via internal call to gdk_window_ensure_native
+-      // in case it was not created already
+-      gdk_x11_window_get_xid(mGdkWindow);
++      mXDisplay = GDK_WINDOW_XDISPLAY(mGdkWindow);
++      mXWindow = gdk_x11_window_get_xid(mGdkWindow);
++
++      GdkVisual* gdkVisual = gdk_window_get_visual(mGdkWindow);
++      mXVisual = gdk_x11_visual_get_xvisual(gdkVisual);
++      mXDepth = gdk_visual_get_depth(gdkVisual);
+     }
+ #endif
+ 
+@@ -6155,31 +6165,42 @@ nsWindow::GetSurfaceForGdkDrawable(GdkDr
+ #endif
+ 
+ TemporaryRef<DrawTarget>
+-nsWindow::StartRemoteDrawing()
++nsWindow::GetDrawTarget(const nsIntRegion& aRegion)
+ {
+-  gfxASurface *surf = GetThebesSurface();
+-  if (!surf) {
++  if (!mGdkWindow) {
+     return nullptr;
+   }
+ 
+-  nsIntSize size = surf->GetSize();
++  nsIntRect bounds = aRegion.GetBounds();
++  IntSize size(bounds.XMost(), bounds.YMost());
+   if (size.width <= 0 || size.height <= 0) {
+     return nullptr;
+   }
+ 
+-  gfxPlatform *platform = gfxPlatform::GetPlatform();
+-  if (platform->SupportsAzureContentForType(BackendType::CAIRO) ||
+-      surf->GetType() == gfxSurfaceType::Xlib) {
+-    return platform->CreateDrawTargetForSurface(surf, size);
+-  } else if (platform->SupportsAzureContentForType(BackendType::SKIA) &&
+-             surf->GetType() == gfxSurfaceType::Image) {
+-    gfxImageSurface* imgSurf = static_cast<gfxImageSurface*>(surf);
+-    SurfaceFormat format = ImageFormatToSurfaceFormat(imgSurf->Format());
+-    return platform->CreateDrawTargetForData(
+-                     imgSurf->Data(), size, imgSurf->Stride(), format);
+-  } else {
+-    return nullptr;
++  RefPtr<DrawTarget> dt;
++#ifdef MOZ_X11
++#  ifdef MOZ_HAVE_SHMIMAGE
++  if (nsShmImage::UseShm()) {
++    dt = nsShmImage::EnsureShmImage(size,
++                                    mXDisplay, mXVisual, mXDepth,
++                                    mShmImage);
+   }
++#  endif  // MOZ_HAVE_SHMIMAGE
++  if (!dt) {
++    RefPtr<gfxXlibSurface> surf = new gfxXlibSurface(mXDisplay, mXWindow, mXVisual, size);
++    if (!surf->CairoStatus()) {
++      dt = gfxPlatform::GetPlatform()->CreateDrawTargetForSurface(surf.get(), surf->GetSize());
++    }
++  }
++#endif // MOZ_X11
++
++  return dt.forget();
++}
++
++TemporaryRef<DrawTarget>
++nsWindow::StartRemoteDrawingInRegion(nsIntRegion& aInvalidRegion)
++{
++  return GetDrawTarget(aInvalidRegion);
+ }
+ 
+ void
+@@ -6191,73 +6212,11 @@ nsWindow::EndRemoteDrawingInRegion(DrawT
+     return;
+   }
+ 
+-  if (mThebesSurface) {
+-    aInvalidRegion.AndWith(nsIntRect(nsIntPoint(0, 0), mThebesSurface->GetSize()));
+-  }
+-
+-  mShmImage->Put(mGdkWindow, aInvalidRegion);
+-
++  mShmImage->Put(mXDisplay, mXWindow, aInvalidRegion);
+ #  endif // MOZ_HAVE_SHMIMAGE
+ #endif // MOZ_X11
+ }
+ 
+-// return the gfxASurface for rendering to this widget
+-gfxASurface*
+-nsWindow::GetThebesSurface()
+-{
+-    if (!mGdkWindow)
+-        return nullptr;
+-
+-#ifdef MOZ_X11
+-    gint width, height;
+-
+-#if (MOZ_WIDGET_GTK == 2)
+-    gdk_drawable_get_size(GDK_DRAWABLE(mGdkWindow), &width, &height);
+-#else
+-    width = GdkCoordToDevicePixels(gdk_window_get_width(mGdkWindow));
+-    height = GdkCoordToDevicePixels(gdk_window_get_height(mGdkWindow));
+-#endif
+-
+-    // Owen Taylor says this is the right thing to do!
+-    width = std::min(32767, width);
+-    height = std::min(32767, height);
+-    gfxIntSize size(width, height);
+-
+-    GdkVisual *gdkVisual = gdk_window_get_visual(mGdkWindow);
+-    Visual* visual = gdk_x11_visual_get_xvisual(gdkVisual);
+-
+-#  ifdef MOZ_HAVE_SHMIMAGE
+-    bool usingShm = false;
+-    if (nsShmImage::UseShm()) {
+-        // EnsureShmImage() is a dangerous interface, but we guarantee
+-        // that the thebes surface and the shmimage have the same
+-        // lifetime
+-        mThebesSurface =
+-            nsShmImage::EnsureShmImage(size,
+-                                       visual, gdk_visual_get_depth(gdkVisual),
+-                                       mShmImage);
+-        usingShm = mThebesSurface != nullptr;
+-    }
+-    if (!usingShm)
+-#  endif  // MOZ_HAVE_SHMIMAGE
+-    {
+-        mThebesSurface = new gfxXlibSurface
+-            (GDK_WINDOW_XDISPLAY(mGdkWindow),
+-             gdk_x11_window_get_xid(mGdkWindow),
+-             visual,
+-             size);
+-    }
+-#endif // MOZ_X11
+-
+-    // if the surface creation is reporting an error, then
+-    // we don't have a surface to give back
+-    if (mThebesSurface && mThebesSurface->CairoStatus() != 0) {
+-        mThebesSurface = nullptr;
+-    }
+-
+-    return mThebesSurface;
+-}
+-
+ // Code shared begin BeginMoveDrag and BeginResizeDrag
+ bool
+ nsWindow::GetDragInfo(WidgetMouseEvent* aMouseEvent,
+diff -up mozilla-release/widget/gtk/nsWindow.h.1205045 mozilla-release/widget/gtk/nsWindow.h
+--- mozilla-release/widget/gtk/nsWindow.h.1205045	2015-09-18 00:13:31.000000000 +0200
++++ mozilla-release/widget/gtk/nsWindow.h	2015-09-22 12:57:51.049938673 +0200
+@@ -195,7 +195,7 @@ public:
+                                                gpointer         aData);
+ 
+     virtual mozilla::TemporaryRef<mozilla::gfx::DrawTarget>
+-                       StartRemoteDrawing() override;
++                       StartRemoteDrawingInRegion(nsIntRegion& aInvalidRegion) override;
+     virtual void       EndRemoteDrawingInRegion(mozilla::gfx::DrawTarget* aDrawTarget,
+                                                 nsIntRegion& aInvalidRegion) override;
+ 
+@@ -292,7 +292,7 @@ public:
+    virtual nsresult    ConfigureChildren(const nsTArray<Configuration>& aConfigurations) override;
+    nsresult            UpdateTranslucentWindowAlphaInternal(const nsIntRect& aRect,
+                                                             uint8_t* aAlphas, int32_t aStride);
+-    virtual gfxASurface *GetThebesSurface();
++    virtual mozilla::TemporaryRef<mozilla::gfx::DrawTarget> GetDrawTarget(const nsIntRegion& aRegion);
+ 
+ #if (MOZ_WIDGET_GTK == 2)
+     static already_AddRefed<gfxASurface> GetSurfaceForGdkDrawable(GdkDrawable* aDrawable,
+@@ -393,11 +393,17 @@ private:
+     guint32             mLastScrollEventTime;
+ #endif
+ 
++#ifdef MOZ_X11
++    Display*            mXDisplay;
++    Drawable            mXWindow;
++    Visual*             mXVisual;
++    int                 mXDepth;
++#endif
++
+ #ifdef MOZ_HAVE_SHMIMAGE
+-    // If we're using xshm rendering, mThebesSurface wraps mShmImage
++    // If we're using xshm rendering
+     nsRefPtr<nsShmImage>  mShmImage;
+ #endif
+-    nsRefPtr<gfxASurface> mThebesSurface;
+ 
+ #ifdef ACCESSIBILITY
+     nsRefPtr<mozilla::a11y::Accessible> mRootAccessible;
+diff -up mozilla-release/widget/nsIWidget.h.1205045 mozilla-release/widget/nsIWidget.h
+--- mozilla-release/widget/nsIWidget.h.1205045	2015-09-18 00:13:31.000000000 +0200
++++ mozilla-release/widget/nsIWidget.h	2015-09-22 13:24:51.542447323 +0200
+@@ -1706,6 +1706,9 @@ class nsIWidget : public nsISupports {
+      * before each composition.
+      */
+     virtual mozilla::TemporaryRef<mozilla::gfx::DrawTarget> StartRemoteDrawing() = 0;
++    virtual mozilla::TemporaryRef<mozilla::gfx::DrawTarget> StartRemoteDrawingInRegion(nsIntRegion& aInvalidRegion) {
++       return StartRemoteDrawing();
++    }
+ 
+     /**
+      * Ensure that what was painted into the DrawTarget returned from
+diff -up mozilla-release/widget/nsShmImage.cpp.1205045 mozilla-release/widget/nsShmImage.cpp
+--- mozilla-release/widget/nsShmImage.cpp.1205045	2015-09-18 00:13:31.000000000 +0200
++++ mozilla-release/widget/nsShmImage.cpp	2015-09-22 12:57:51.050938674 +0200
+@@ -15,11 +15,11 @@
+ #ifdef MOZ_WIDGET_GTK
+ #include "gfxPlatformGtk.h"
+ #endif
+-#include "gfxImageSurface.h"
+ 
+ #ifdef MOZ_HAVE_SHMIMAGE
+ 
+ using namespace mozilla::ipc;
++using namespace mozilla::gfx;
+ 
+ // If XShm isn't available to our client, we'll try XShm once, fail,
+ // set this to false and then never try again.
+@@ -33,14 +33,25 @@ bool nsShmImage::UseShm()
+ #endif
+ }
+ 
++#ifdef MOZ_WIDGET_GTK
++static int gShmError = 0;
++
++static int
++TrapShmError(Display* aDisplay, XErrorEvent* aEvent)
++{
++    // store the error code and ignore the error
++    gShmError = aEvent->error_code;
++    return 0;
++}
++#endif
++
+ already_AddRefed<nsShmImage>
+ nsShmImage::Create(const gfxIntSize& aSize,
+-                   Visual* aVisual, unsigned int aDepth)
++                   Display* aDisplay, Visual* aVisual, unsigned int aDepth)
+ {
+-    Display* dpy = DISPLAY();
+-
+     nsRefPtr<nsShmImage> shm = new nsShmImage();
+-    shm->mImage = XShmCreateImage(dpy, aVisual, aDepth,
++    shm->mDisplay = aDisplay;
++    shm->mImage = XShmCreateImage(aDisplay, aVisual, aDepth,
+                                   ZPixmap, nullptr,
+                                   &(shm->mInfo),
+                                   aSize.width, aSize.height);
+@@ -60,17 +71,20 @@ nsShmImage::Create(const gfxIntSize& aSi
+         shm->mImage->data = static_cast<char*>(shm->mSegment->memory());
+     shm->mInfo.readOnly = False;
+ 
+-    int xerror = 0;
+ #if defined(MOZ_WIDGET_GTK)
+-    gdk_error_trap_push();
+-    Status attachOk = XShmAttach(dpy, &shm->mInfo);
+-    XSync(dpy, False);
+-    xerror = gdk_error_trap_pop();
++    gShmError = 0;
++    XErrorHandler previousHandler = XSetErrorHandler(TrapShmError);
++    Status attachOk = XShmAttach(aDisplay, &shm->mInfo);
++    XSync(aDisplay, False);
++    XSetErrorHandler(previousHandler);
++    if (gShmError) {
++      attachOk = 0;
++    }
+ #elif defined(MOZ_WIDGET_QT)
+-    Status attachOk = XShmAttach(dpy, &shm->mInfo);
++    Status attachOk = XShmAttach(aDisplay, &shm->mInfo);
+ #endif
+ 
+-    if (!attachOk || xerror) {
++    if (!attachOk) {
+         // Assume XShm isn't available, and don't attempt to use it
+         // again.
+         gShmAvailable = false;
+@@ -84,7 +98,7 @@ nsShmImage::Create(const gfxIntSize& aSi
+         if ((shm->mImage->red_mask == 0xff0000) &&
+             (shm->mImage->green_mask == 0xff00) &&
+             (shm->mImage->blue_mask == 0xff)) {
+-            shm->mFormat = gfxImageFormat::ARGB32;
++            shm->mFormat = SurfaceFormat::B8G8R8A8;
+             break;
+         }
+         goto unsupported;
+@@ -93,12 +107,13 @@ nsShmImage::Create(const gfxIntSize& aSi
+         if ((shm->mImage->red_mask == 0xff0000) &&
+             (shm->mImage->green_mask == 0xff00) &&
+             (shm->mImage->blue_mask == 0xff)) {
+-            shm->mFormat = gfxImageFormat::RGB24;
++            shm->mFormat = SurfaceFormat::B8G8R8X8;
+             break;
+         }
+         goto unsupported;
+     case 16:
+-        shm->mFormat = gfxImageFormat::RGB16_565; break;
++        shm->mFormat = SurfaceFormat::R5G6B5;
++        break;
+     unsupported:
+     default:
+         NS_WARNING("Unsupported XShm Image format!");
+@@ -108,20 +123,19 @@ nsShmImage::Create(const gfxIntSize& aSi
+     return shm.forget();
+ }
+ 
+-already_AddRefed<gfxASurface>
+-nsShmImage::AsSurface()
++already_AddRefed<DrawTarget>
++nsShmImage::CreateDrawTarget()
+ {
+-    return nsRefPtr<gfxASurface>(
+-        new gfxImageSurface(static_cast<unsigned char*>(mSegment->memory()),
+-                            mSize,
+-                            mImage->bytes_per_line,
+-                            mFormat)
+-        ).forget();
++  return gfxPlatform::GetPlatform()->CreateDrawTargetForData(
++    static_cast<unsigned char*>(mSegment->memory()),
++    mSize,
++    mImage->bytes_per_line,
++    mFormat);
+ }
+ 
+-#if (MOZ_WIDGET_GTK == 2)
++#ifdef MOZ_WIDGET_GTK
+ void
+-nsShmImage::Put(GdkWindow* aWindow, const nsIntRegion& aRegion)
++nsShmImage::Put(Display* aDisplay, Drawable aWindow, const nsIntRegion& aRegion)
+ {
+     GdkDrawable* gd;
+     gint dx, dy;
+@@ -130,45 +144,16 @@ nsShmImage::Put(GdkWindow* aWindow, cons
+     Display* dpy = gdk_x11_get_default_xdisplay();
+     Drawable d = GDK_DRAWABLE_XID(gd);
+ 
+-    GC gc = XCreateGC(dpy, d, 0, nullptr);
++    GC gc = XCreateGC(aDisplay, aWindow, 0, nullptr);
+     nsIntRegionRectIterator iter(aRegion);
+     for (const nsIntRect *r = iter.Next(); r; r = iter.Next()) {
+-        XShmPutImage(dpy, d, gc, mImage,
++        XShmPutImage(aDisplay, aWindow, gc, mImage,
+                      r->x, r->y,
+-                     r->x - dx, r->y - dy,
+-                     r->width, r->height,
+-                     False);
+-    }
+-    XFreeGC(dpy, gc);
+-
+-    // FIXME/bug 597336: we need to ensure that the shm image isn't
+-    // scribbled over before all its pending XShmPutImage()s complete.
+-    // However, XSync() is an unnecessarily heavyweight
+-    // synchronization mechanism; other options are possible.  If this
+-    // XSync is shown to hurt responsiveness, we need to explore the
+-    // other options.
+-    XSync(dpy, False);
+-}
+-
+-#elif (MOZ_WIDGET_GTK == 3)
+-void
+-nsShmImage::Put(GdkWindow* aWindow, const nsIntRegion& aRegion)
+-{
+-    Display* dpy = gdk_x11_get_default_xdisplay();
+-    Drawable d = GDK_WINDOW_XID(aWindow);
+-    int dx = 0, dy = 0;
+-
+-    GC gc = XCreateGC(dpy, d, 0, nullptr);
+-    nsIntRegionRectIterator iter(aRegion);
+-    for (const nsIntRect *r = iter.Next(); r; r = iter.Next()) {
+-        XShmPutImage(dpy, d, gc, mImage,
+                      r->x, r->y,
+-                     r->x - dx, r->y - dy,
+                      r->width, r->height,
+                      False);
+     }
+-
+-    XFreeGC(dpy, gc);
++    XFreeGC(aDisplay, gc);
+ 
+     // FIXME/bug 597336: we need to ensure that the shm image isn't
+     // scribbled over before all its pending XShmPutImage()s complete.
+@@ -176,7 +161,7 @@ nsShmImage::Put(GdkWindow* aWindow, cons
+     // synchronization mechanism; other options are possible.  If this
+     // XSync is shown to hurt responsiveness, we need to explore the
+     // other options.
+-    XSync(dpy, False);
++    XSync(aDisplay, False);
+ }
+ 
+ #elif defined(MOZ_WIDGET_QT)
+@@ -198,9 +183,10 @@ nsShmImage::Put(QWindow* aWindow, QRect&
+ }
+ #endif
+ 
+-already_AddRefed<gfxASurface>
+-nsShmImage::EnsureShmImage(const gfxIntSize& aSize, Visual* aVisual, unsigned int aDepth,
+-               nsRefPtr<nsShmImage>& aImage)
++already_AddRefed<DrawTarget>
++nsShmImage::EnsureShmImage(const gfxIntSize& aSize,
++                           Display* aDisplay, Visual* aVisual, unsigned int aDepth,
++                           nsRefPtr<nsShmImage>& aImage)
+ {
+     if (!aImage || aImage->Size() != aSize) {
+         // Because we XSync() after XShmAttach() to trap errors, we
+@@ -208,9 +194,9 @@ nsShmImage::EnsureShmImage(const gfxIntS
+         // into its address space, so it's OK to destroy the old image
+         // here even if there are outstanding Puts.  The Detach is
+         // ordered after the Puts.
+-        aImage = nsShmImage::Create(aSize, aVisual, aDepth);
++        aImage = nsShmImage::Create(aSize, aDisplay, aVisual, aDepth);
+     }
+-    return !aImage ? nullptr : aImage->AsSurface();
++    return !aImage ? nullptr : aImage->CreateDrawTarget();
+ }
+ 
+ #endif  // defined(MOZ_X11) && defined(MOZ_HAVE_SHAREDMEMORYSYSV)
+diff -up mozilla-release/widget/nsShmImage.h.1205045 mozilla-release/widget/nsShmImage.h
+--- mozilla-release/widget/nsShmImage.h.1205045	2015-09-18 00:13:31.000000000 +0200
++++ mozilla-release/widget/nsShmImage.h	2015-09-22 12:57:51.051938675 +0200
+@@ -15,8 +15,8 @@
+ 
+ #ifdef MOZ_HAVE_SHMIMAGE
+ 
++#include "mozilla/gfx/2D.h"
+ #include "nsIWidget.h"
+-#include "gfxTypes.h"
+ #include "nsAutoPtr.h"
+ 
+ #include "mozilla/X11Util.h"
+@@ -24,15 +24,10 @@
+ #include <X11/Xutil.h>
+ #include <X11/extensions/XShm.h>
+ 
+-#if defined(MOZ_WIDGET_GTK)
+-#define DISPLAY gdk_x11_get_default_xdisplay
+-#elif defined(MOZ_WIDGET_QT)
+-#define DISPLAY mozilla::DefaultXDisplay
+-#endif
+-
++#ifdef MOZ_WIDGET_QT
+ class QRect;
+ class QWindow;
+-class gfxASurface;
++#endif
+ 
+ class nsShmImage {
+     // bug 1168843, compositor thread may create shared memory instances that are destroyed by main thread on shutdown, so this must use thread-safe RC to avoid hitting assertion
+@@ -41,31 +36,31 @@ class nsShmImage {
+     typedef mozilla::ipc::SharedMemorySysV SharedMemorySysV;
+ 
+ public:
+-    typedef gfxImageFormat Format;
+-
+     static bool UseShm();
+     static already_AddRefed<nsShmImage>
+-        Create(const gfxIntSize& aSize, Visual* aVisual, unsigned int aDepth);
+-    static already_AddRefed<gfxASurface>
+-        EnsureShmImage(const gfxIntSize& aSize, Visual* aVisual, unsigned int aDepth,
++        Create(const gfxIntSize& aSize,
++               Display* aDisplay, Visual* aVisual, unsigned int aDepth);
++    static already_AddRefed<mozilla::gfx::DrawTarget>
++        EnsureShmImage(const gfxIntSize& aSize,
++                       Display* aDisplay, Visual* aVisual, unsigned int aDepth,
+                        nsRefPtr<nsShmImage>& aImage);
+ 
+ private:
+     ~nsShmImage() {
+         if (mImage) {
+-            mozilla::FinishX(DISPLAY());
++            mozilla::FinishX(mDisplay);
+             if (mXAttached) {
+-                XShmDetach(DISPLAY(), &mInfo);
++                XShmDetach(mDisplay, &mInfo);
+             }
+             XDestroyImage(mImage);
+         }
+     }
+ 
+ public:
+-    already_AddRefed<gfxASurface> AsSurface();
++    already_AddRefed<mozilla::gfx::DrawTarget> CreateDrawTarget();
+ 
+ #ifdef MOZ_WIDGET_GTK
+-    void Put(GdkWindow* aWindow, const nsIntRegion& aRegion);
++    void Put(Display* aDisplay, Drawable aWindow, const nsIntRegion& aRegion);
+ #elif defined(MOZ_WIDGET_QT)
+     void Put(QWindow* aWindow, QRect& aRect);
+ #endif
+@@ -75,14 +70,17 @@ public:
+ private:
+     nsShmImage()
+         : mImage(nullptr)
++        , mDisplay(nullptr)
++        , mFormat(mozilla::gfx::SurfaceFormat::UNKNOWN)
+         , mXAttached(false)
+     { mInfo.shmid = SharedMemorySysV::NULLHandle(); }
+ 
+     nsRefPtr<SharedMemorySysV>   mSegment;
+     XImage*                      mImage;
++    Display*                     mDisplay;
+     XShmSegmentInfo              mInfo;
+     gfxIntSize                   mSize;
+-    Format                       mFormat;
++    mozilla::gfx::SurfaceFormat  mFormat;
+     bool                         mXAttached;
+ };
+ 
