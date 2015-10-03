@@ -8,8 +8,8 @@
 
 Summary:	C++ user interface toolkit
 Name:		fltk
-Version:	1.3.2
-Release:	3%{?dist}
+Version:	1.3.3
+Release:	5%{?dist}
 
 # see COPYING (or http://www.fltk.org/COPYING.php ) for exceptions details
 License:	LGPLv2+ with exceptions	
@@ -25,36 +25,13 @@ BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 Source1: fltk-config.sh
 
 ## FIXME/TODO: upstream these asap -- Rex
-Patch1:        	fltk-1.1.9-fltk_config.patch 
-# libfltk_gl.so had undefined symbols
-Patch3: 	fltk-1.1.x-r5750-undefined.patch
+# add lib64 support, drop extraneous libs (bug #708185) and ldflags (#1112930)
+Patch1:        	fltk-1.3.2-fltk_config.patch
 Patch5: 	fltk-1.1.8-fluid_desktop.patch
-Patch8:         fltk-1.3.0-rh708185.patch
 
-# http://www.fltk.org/str.php?L2599
-Patch9:         fltk-1_v4.3.x-keyboard-x11.patch
-
-# http://www.fltk.org/str.php?L2636
-Patch10:        fltk-1.3.x-r9671-clipboard.patch
-Patch11:        fltk-1.3.x-r9671-clipboard-x11.patch
-Patch12:        fltk-1.3.x-r9671-clipboard-xfixes.patch
-
-# http://www.fltk.org/str.php?L2660
-Patch13:        fltk-1.3.x-r9671-cursor.patch
-Patch20:        fltk-1_v4.3.x-cursor-abi.patch
-
-# http://www.fltk.org/str.php?L2659
-Patch15:        http://www.fltk.org/strfiles/2659/pixmap_v2.patch
-
-# http://www.fltk.org/str.php?L2802
-Patch16:        fltk-1.3.x-r9671-modal.patch
-
-# http://www.fltk.org/str.php?L2816
-Patch17:        http://www.fltk.org/strfiles/2816/fltk-1_v3.3.0-icons.patch
-
-# http://www.fltk.org/str.php?L2860
-Patch18:        fltk-1.3.x-screen_num.patch
-Patch19:        http://www.fltk.org/strfiles/2860/fltk-1_v3.3.x-multihead.patch
+## upstream patches
+Patch100: fltk-1.3.3-no_undefined.patch
+Patch101: fltk-1.3-L3156.patch
 
 BuildRequires: desktop-file-utils
 BuildRequires: libjpeg-devel
@@ -106,32 +83,21 @@ Requires: %{name}-devel
 %endif
 
 %patch1 -p1 -b .fltk_config
-%patch3 -p1 -b .undefined
 %patch5 -p1 -b .fluid_desktop
-%patch8 -p1 -b .rh708185
-%patch9 -p1 -b .deadkeys
-%patch10 -p1 -b .clipboard
-%patch11 -p1 -b .clipboard-x11
-%patch12 -p1 -b .clipboard-xfixes
-%patch13 -p1 -b .cursor
-%patch20 -p1 -b .cursor-abi
-%patch15 -p1 -b .pixmap_v2
-%patch16 -p1 -b .modal
-%patch17 -p1 -b .icons
-%patch18 -p1 -b .screen_num
-%patch19 -p1 -b .multihead
+%patch100 -p1 -b .no_undefined
+%patch101 -p0 -b .L3156
+
 
 # verbose build output
 sed -i.silent '\,^.SILENT:,d' makeinclude.in
-
 autoconf
 
 
 %build
 
 # using --with-optim, so unset CFLAGS/CXXFLAGS
-export CFLAGS=" "
-export CXXFLAGS=" "
+export CFLAGS=""
+export CXXFLAGS=""
 
 %configure \
   --with-links \
@@ -143,7 +109,7 @@ export CXXFLAGS=" "
   --enable-xinerama \
   --enable-xft
 
-make %{?_smp_mflags}
+make %{?_smp_mflags} DSOFLAGS="$LDFLAGS"
 
 
 %install
@@ -232,6 +198,34 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &> /dev/null || :
 
 
 %changelog
+* Mon Aug 17 2015 Adam Jackson <ajax@redhat.com> 1.3.3-5
+- For whatever reason fltk thinks it's spelled DSOFLAGS not LDFLAGS, so set
+  that when building so hardening takes effect
+
+* Wed Jun 17 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.3.3-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
+
+* Wed May 06 2015 Rex Dieter <rdieter@fedoraproject.org> 1.3.3-3
+- rebuild (gcc5)
+
+* Wed Feb 18 2015 Rex Dieter <rdieter@fedoraproject.org> 1.3.3-2
+- pull in upstream fixes for undefined symbols
+
+* Fri Feb 13 2015 Rex Dieter <rdieter@fedoraproject.org> 1.3.3-1
+- 1.3.3
+
+* Sat Aug 16 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.3.2-7
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
+
+* Wed Jun 25 2014 Rex Dieter <rdieter@fedoraproject.org> 1.3.2-6
+- fltk-config transmits wrong ldflags (#1112930)
+
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.3.2-5
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Mon Feb 24 2014 Rex Dieter <rdieter@fedoraproject.org> 1.3.2-4
+- refresh clipboard patch (#920573)
+
 * Thu Jan 23 2014 jchaloup <jchaloup@redhat.com> - 1.3.2-3
 - autoconfig moved from build to prep section
 

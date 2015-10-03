@@ -1,0 +1,95 @@
+diff -up fltk-1.3.2/fltk-config.cmake.in.fltk_config fltk-1.3.2/fltk-config.cmake.in
+--- fltk-1.3.2/fltk-config.cmake.in.fltk_config	2011-07-18 23:49:30.000000000 -0500
++++ fltk-1.3.2/fltk-config.cmake.in	2014-06-25 07:37:23.149452668 -0500
+@@ -223,7 +223,7 @@ else
+     includes=
+ fi
+ 
+-if test "$libdir" != /usr/lib -a "$libdir" != /usr/lib32; then
++if test "$libdir" != /usr/lib -a "$libdir" != /usr/lib32 -a "$libdir" != /usr/lib64; then
+     libs=-L$libdir
+ else
+     libs=
+@@ -231,28 +231,28 @@ fi
+ 
+ # Calculate needed libraries
+ LDSTATIC="$libdir/libfltk.a $LDLIBS"
+-LDLIBS="-lfltk$SHAREDSUFFIX $LDLIBS"
++LDLIBS="-lfltk$SHAREDSUFFIX"
+ 
+ if test x$use_forms = xyes; then
+-    LDLIBS="-lfltk_forms$SHAREDSUFFIX $LDLIBS"
++    LDLIBS="-lfltk_forms$SHAREDSUFFIX"
+     LDSTATIC="$libdir/libfltk_forms.a $LDSTATIC"
+ fi
+ if test x$use_gl = xyes; then
+-    LDLIBS="-lfltk_gl$SHAREDSUFFIX @GLLIB@ $LDLIBS"
++    LDLIBS="-lfltk_gl$SHAREDSUFFIX"
+     LDSTATIC="$libdir/libfltk_gl.a @GLLIB@ $LDSTATIC"
+ fi
+ if test x$use_images = xyes; then
+-    LDLIBS="-lfltk_images$SHAREDSUFFIX $IMAGELIBS $LDLIBS"
++    LDLIBS="-lfltk_images$SHAREDSUFFIX"
+     LDSTATIC="$libdir/libfltk_images.a $STATICIMAGELIBS $LDSTATIC"
+ fi
+ 
+ if test x$use_cairo = xyes; then
+-    LDLIBS="-lfltk_cairo$SHAREDSUFFIX $CAIROLIBS $LDLIBS"
++    LDLIBS="-lfltk_cairo$SHAREDSUFFIX"
+     LDSTATIC="$libdir/libfltk_cairo.a $CAIROLIBS $LDSTATIC"
+ fi
+ 
+-LDLIBS="$DSOLINK $LDFLAGS $libs $LDLIBS"
+-LDSTATIC="$LDFLAGS $LDSTATIC"
++LDLIBS="$libs $LDLIBS"
++#LDSTATIC="$LDFLAGS $LDSTATIC"
+ 
+ # Answer to user requests
+ if test -n "$echo_help"; then
+diff -up fltk-1.3.2/fltk-config.in.fltk_config fltk-1.3.2/fltk-config.in
+--- fltk-1.3.2/fltk-config.in.fltk_config	2011-07-18 23:49:30.000000000 -0500
++++ fltk-1.3.2/fltk-config.in	2014-06-25 07:37:05.886296078 -0500
+@@ -223,7 +223,7 @@ else
+     includes=
+ fi
+ 
+-if test "$libdir" != /usr/lib -a "$libdir" != /usr/lib32; then
++if test "$libdir" != /usr/lib -a "$libdir" != /usr/lib32 -a "$libdir" != /usr/lib64; then
+     libs=-L$libdir
+ else
+     libs=
+@@ -231,28 +231,28 @@ fi
+ 
+ # Calculate needed libraries
+ LDSTATIC="$libdir/libfltk.a $LDLIBS"
+-LDLIBS="-lfltk$SHAREDSUFFIX $LDLIBS"
++LDLIBS="-lfltk$SHAREDSUFFIX"
+ 
+ if test x$use_forms = xyes; then
+     LDLIBS="-lfltk_forms$SHAREDSUFFIX $LDLIBS"
+     LDSTATIC="$libdir/libfltk_forms.a $LDSTATIC"
+ fi
+ if test x$use_gl = xyes; then
+-    LDLIBS="-lfltk_gl$SHAREDSUFFIX @GLLIB@ $LDLIBS"
++    LDLIBS="-lfltk_gl$SHAREDSUFFIX $LDLIBS"
+     LDSTATIC="$libdir/libfltk_gl.a @GLLIB@ $LDSTATIC"
+ fi
+ if test x$use_images = xyes; then
+-    LDLIBS="-lfltk_images$SHAREDSUFFIX $IMAGELIBS $LDLIBS"
++    LDLIBS="-lfltk_images$SHAREDSUFFIX $LDLIBS"
+     LDSTATIC="$libdir/libfltk_images.a $STATICIMAGELIBS $LDSTATIC"
+ fi
+ 
+ if test x$use_cairo = xyes; then
+-    LDLIBS="-lfltk_cairo$SHAREDSUFFIX $CAIROLIBS $LDLIBS"
++    LDLIBS="-lfltk_cairo$SHAREDSUFFIX $LDLIBS"
+     LDSTATIC="$libdir/libfltk_cairo.a $CAIROLIBS $LDSTATIC"
+ fi
+ 
+-LDLIBS="$DSOLINK $LDFLAGS $libs $LDLIBS"
+-LDSTATIC="$LDFLAGS $LDSTATIC"
++LDLIBS="$libs $LDLIBS"
++#LDSTATIC="$LDFLAGS $LDSTATIC"
+ 
+ # Answer to user requests
+ if test -n "$echo_help"; then
