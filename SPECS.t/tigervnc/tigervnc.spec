@@ -1,13 +1,15 @@
 Name:		tigervnc
-Version:	1.3.0
-Release:	12%{?dist}
+Version:	1.5.0
+Release:	3%{?dist}
 Summary:	A TigerVNC remote display system
+
+%global _hardened_build 1
 
 Group:		User Interface/Desktops
 License:	GPLv2+
 URL:		http://www.tigervnc.com
 
-Source0:	%{name}-%{version}.tar.bz2
+Source0:	%{name}-%{version}.tar.gz
 Source1:	vncserver.service
 Source2:	vncserver.sysconfig
 Source3:	10-libvnc.conf
@@ -23,7 +25,13 @@ BuildRequires:	mesa-libGL-devel, libXinerama-devel, ImageMagick
 BuildRequires:  freetype-devel, libXdmcp-devel
 BuildRequires:	desktop-file-utils, java-devel, jpackage-utils
 BuildRequires:	libjpeg-turbo-devel, gnutls-devel, pam-devel
-BuildRequires:	systemd, cmake, fltk-devel
+BuildRequires:	systemd, cmake
+# TigerVNC 1.4.x requires fltk 1.3.3 for keyboard handling support
+# See https://github.com/TigerVNC/tigervnc/issues/8, also bug #1208814
+BuildRequires:	fltk-devel >= 1.3.3
+%ifnarch s390 s390x
+BuildRequires:  xorg-x11-server-devel
+%endif
 
 Requires(post):	coreutils
 Requires(postun):coreutils
@@ -38,18 +46,19 @@ Provides:	tightvnc = 1.5.0-0.15.20090204svn3586
 Obsoletes:	tightvnc < 1.5.0-0.15.20090204svn3586
 
 Patch1:		tigervnc-cookie.patch
-Patch2:		tigervnc11-ldnow.patch
-Patch3:		tigervnc11-gethomedir.patch
+Patch2:		tigervnc-fix-reversed-logic.patch
+Patch3:		tigervnc-libvnc-os.patch
 Patch4:		tigervnc11-rh692048.patch
 Patch5:		tigervnc-inetd-nowait.patch
-Patch6:		tigervnc-setcursor-crash.patch
 Patch7:		tigervnc-manpages.patch
 Patch8:		tigervnc-getmaster.patch
 Patch9:		tigervnc-shebang.patch
-Patch10:	tigervnc-1.3.0-xserver-1.15.patch
-Patch11:	tigervnc-format-security.patch
-Patch12:	tigervnc-zrle-crash.patch
-Patch13:	tigervnc-cursor.patch
+Patch14:	tigervnc-xstartup.patch
+Patch15:	tigervnc-xserver118.patch
+Patch17:	tigervnc-xorg118-QueueKeyboardEvents.patch
+
+# This is tigervnc-%%{version}/unix/xserver116.patch rebased on the latest xorg
+Patch100:       tigervnc-xserver116-rebased.patch
 
 %description
 Virtual Network Computing (VNC) is a remote display system which
@@ -107,7 +116,7 @@ Provides:	vnc-server = 4.1.3-2, vnc-libs = 4.1.3-2
 Obsoletes:	vnc-server < 4.1.3-2, vnc-libs < 4.1.3-2
 Provides:	tightvnc-server-module = 1.5.0-0.15.20090204svn3586
 Obsoletes:	tightvnc-server-module < 1.5.0-0.15.20090204svn3586
-Requires:	xorg-x11-server-Xorg
+Requires:	xorg-x11-server-Xorg %(xserver-sdk-abi-requires ansic) %(xserver-sdk-abi-requires videodrv)
 Requires:	tigervnc-license
 
 %description server-module
@@ -145,8 +154,8 @@ This package contains icons for TigerVNC viewer
 %setup -q
 
 %patch1 -p1 -b .cookie
-%patch2 -p1 -b .ldnow
-%patch3 -p1 -b .gethomedir
+%patch2 -p1 -b .fix-reversed-logic
+%patch3 -p1 -b .libvnc-os
 %patch4 -p1 -b .rh692048
 
 cp -r /usr/share/xorg-x11-server-source/* unix/xserver
@@ -154,14 +163,12 @@ pushd unix/xserver
 for all in `find . -type f -perm -001`; do
 	chmod -x "$all"
 done
-patch -p1 -b --suffix .vnc < ../xserver114.patch
+%patch100 -p1 -b .xserver116-rebased
 popd
 
 # Applied Debian patch to fix busy loop when run from inetd in nowait
 # mode (bug #920373).
 %patch5 -p1 -b .inetd-nowait
-
-%patch6 -p1 -b .setcursor-crash
 
 # Synchronise manpages and --help output (bug #980870).
 %patch7 -p1 -b .manpages
@@ -172,16 +179,15 @@ popd
 # Don't use shebang in vncserver script.
 %patch9 -p1 -b .shebang
 
-#%patch10 -p1 -b .115
+# Clearer xstartup file (bug #923655).
+%patch14 -p1 -b .xstartup
 
-# Fixed build failure with -Werror=format-security (bug #1037358).
-%patch11 -p1 -b .format-security
+# Allow build against xorg-x11-server-1.18.
+%patch15 -p1 -b .xserver118
 
-# Avoid invalid read when ZRLE connection closed (upstream bug #133).
-%patch12 -p1 -b .zrle-crash
-
-# Fixed viewer crash when cursor has not been set (bug #1038701).
-%patch13 -p1 -b .cursor
+%if 0%{?fedora} > 23
+%patch17 -p1 -b .xorg118-QueueKeyboardEvents
+%endif
 
 %build
 %ifarch sparcv9 sparc64 s390 s390x
@@ -194,27 +200,22 @@ export CXXFLAGS="$CFLAGS"
 %{cmake} .
 make %{?_smp_mflags}
 
-# XXX revisit --disable-present
 pushd unix/xserver
 autoreconf -fiv
 %configure \
 	--disable-xorg --disable-xnest --disable-xvfb --disable-dmx \
-	--disable-xwin --disable-xephyr --disable-kdrive --with-pic \
-	--disable-static --disable-xinerama \
+	--disable-xwin --disable-xephyr --disable-kdrive --disable-xwayland \
+	--with-pic --disable-static \
 	--with-default-font-path="catalogue:%{_sysconfdir}/X11/fontpath.d,built-ins" \
 	--with-fontdir=%{_datadir}/X11/fonts \
 	--with-xkb-output=%{_localstatedir}/lib/xkb \
 	--enable-install-libxf86config \
-	--enable-glx --disable-dri --enable-dri2 \
-	--disable-wayland \
-	--disable-present \
+	--enable-glx --disable-dri --enable-dri2 --enable-dri3 \
 	--disable-unit-tests \
-	--disable-config-dbus \
 	--disable-config-hal \
 	--disable-config-udev \
 	--with-dri-driver-path=%{_libdir}/dri \
 	--without-dtrace \
-	--disable-unit-tests \
 	--disable-devel-docs \
 	--disable-selective-werror
 
@@ -355,6 +356,106 @@ fi
 %{_datadir}/icons/hicolor/*/apps/*
 
 %changelog
+* Tue Sep 22 2015 Kalev Lember <klember@redhat.com> - 1.5.0-3
+- xorg server 1.18 ABI rebuild
+
+* Fri Aug 21 2015 Jan Grulich <jgrulich@redhat.com> - 1.5.0-2
+- Do not fail with -inetd option
+
+* Wed Aug 19 2015 Jan Grulich <jgrulich@redhat.com> - 1.5.0-1
+- 1.5.0
+
+* Tue Aug 04 2015 Kevin Fenzi <kevin@scrye.com> - 1.4.3-12
+- Rebuild to fix broken deps and build against xorg 1.18 prerelease
+
+* Thu Jun 25 2015 Tim Waugh <twaugh@redhat.com> - 1.4.3-11
+- Rebuilt (bug #1235603).
+
+* Fri Jun 19 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.4.3-10
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
+
+* Mon May 04 2015 Kalev Lember <kalevlember@gmail.com> - 1.4.3-8
+- Rebuilt for nettle soname bump
+
+* Wed Apr 22 2015 Tim Waugh <twaugh@redhat.com> - 1.4.3-7
+- Removed incorrect parameters from vncviewer manpage (bug #1213199).
+
+* Tue Apr 21 2015 Tim Waugh <twaugh@redhat.com> - 1.4.3-6
+- Use full git hash for GitHub tarball release.
+
+* Fri Apr 10 2015 Tim Waugh <twaugh@redhat.com> - 1.4.3-5
+- Explicit version build dependency for fltk (bug #1208814).
+
+* Thu Apr  9 2015 Tim Waugh <twaugh@redhat.com> - 1.4.3-4
+- Drop upstream xorg-x11-server patch as it is now built (bug #1210407).
+
+* Thu Apr  9 2015 Tim Waugh <twaugh@redhat.com> - 1.4.3-3
+- Apply upstream patch to fix byte order (bug #1206060).
+
+* Fri Mar  6 2015 Tim Waugh <twaugh@redhat.com> - 1.4.3-2
+- Don't disable Xinerama extension (upstream #147).
+
+* Mon Mar  2 2015 Tim Waugh <twaugh@redhat.com> - 1.4.3-1
+- 1.4.3.
+
+* Tue Feb 24 2015 Tim Waugh <twaugh@redhat.com> - 1.4.2-3
+- Use calloc instead of xmalloc.
+- Removed unnecessary configure flags.
+
+* Wed Feb 18 2015 Rex Dieter <rdieter@fedoraproject.org> 1.4.2-2
+- rebuild (fltk)
+
+* Fri Feb 13 2015 Tim Waugh <twaugh@redhat.com> - 1.4.2-1
+- Rebased xserver116.patch against xorg-x11-server-1.17.1.
+- Allow build against xorg-x11-server-1.17.
+- 1.4.2.
+
+* Tue Sep  9 2014 Tim Waugh <twaugh@redhat.com> - 1.3.1-11
+- Added missing part of xserver114.patch (bug #1137023).
+
+* Wed Sep  3 2014 Tim Waugh <twaugh@redhat.com> - 1.3.1-10
+- Fix build against xorg-x11-server-1.16.0 (bug #1136532).
+
+* Mon Aug 18 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.3.1-9
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
+
+* Tue Jul 15 2014 Tim Waugh <twaugh@redhat.com> - 1.3.1-8
+- Input reset fixes from upstream (bug #1116956).
+- No longer need ppc64le patch as it's now in xorg-x11-server.
+- Rebased xserver114.patch again.
+
+* Fri Jun 20 2014 Hans de Goede <hdegoede@redhat.com> - 1.3.1-7
+- xserver 1.15.99.903 ABI rebuild
+
+* Sun Jun 08 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.3.1-6
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Thu May 22 2014 Tim Waugh <twaugh@redhat.com> 1.3.1-5
+- Keep pointer in sync when using module (upstream bug #152).
+
+* Mon Apr 28 2014 Adam Jackson <ajax@redhat.com> 1.3.1-4
+- Add version interlocks for -server-module
+
+* Mon Apr 28 2014 Hans de Goede <hdegoede@redhat.com> - 1.3.1-3
+- xserver 1.15.99-20140428 git snapshot ABI rebuild
+
+* Mon Apr  7 2014 Tim Waugh <twaugh@redhat.com> 1.3.1-2
+- Allow build with dri3 and present extensions (bug #1063392).
+
+* Thu Mar 27 2014 Tim Waugh <twaugh@redhat.com> 1.3.1-1
+- 1.3.1 (bug #1078806).
+- Add ppc64le support (bug #1078495).
+
+* Wed Mar 19 2014 Tim Waugh <twaugh@redhat.com> 1.3.0-15
+- Disable dri3 to enable building (bug #1063392).
+- Fixed heap-based buffer overflow (CVE-2014-0011, bug #1050928).
+
+* Fri Feb 21 2014 Tim Waugh <twaugh@redhat.com> 1.3.0-14
+- Enabled hardened build (bug #955206).
+
+* Mon Feb 10 2014 Tim Waugh <twaugh@redhat.com> 1.3.0-13
+- Clearer xstartup file (bug #923655).
+
 * Tue Jan 14 2014 Tim Waugh <twaugh@redhat.com> 1.3.0-12
 - Fixed instructions in systemd unit file.
 
