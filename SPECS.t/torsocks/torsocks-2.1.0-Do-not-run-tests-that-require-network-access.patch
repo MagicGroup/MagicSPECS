@@ -1,0 +1,25 @@
+From b4a4af2c15a909b01115fbe3807f943fc4172701 Mon Sep 17 00:00:00 2001
+From: Jamie Nguyen <j@jamielinux.com>
+Date: Thu, 28 May 2015 07:59:11 +0100
+Subject: [PATCH] Do not run tests that require network access
+
+---
+ tests/test_list | 3 ---
+ 1 file changed, 3 deletions(-)
+
+diff --git a/tests/test_list b/tests/test_list
+index e66a239..51b1167 100644
+--- a/tests/test_list
++++ b/tests/test_list
+@@ -1,8 +1,5 @@
+ ./test_connect
+-./test_dns
+-./test_fd_passing
+ ./test_socket
+-./test_getpeername
+ ./unit/test_onion
+ ./unit/test_connection
+ ./unit/test_utils
+-- 
+2.1.0
+
