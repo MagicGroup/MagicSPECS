@@ -1,95 +1,61 @@
-## This package understands the following switches:
-%bcond_without		fedora
-%bcond_without		noarch
-%bcond_with		upstart
+%global _hardened_build 1
 
-%global _hardened_build	1
+%global toruser     toranon
+%global torgroup    toranon
+%global homedir     %{_localstatedir}/lib/%{name}
+%global logdir      %{_localstatedir}/log/%{name}
 
-%global username		toranon
-%global uid			19
-%global homedir			%_var/lib/%name
-%global logdir			%_var/log/%name
+%if 0%{?fedora} || 0%{?rhel} >= 8
+%bcond_without libsystemd
+%else
+%bcond_with libsystemd
+%endif
 
-%{!?_unitdir:%global _unitdir /lib/systemd/system}
-%{?with_noarch:%global noarch	BuildArch:	noarch}
-%{!?release_func:%global release_func() %%{?prerelease:0.}%1%%{?prerelease:.%%prerelease}%%{?dist}}
-%{!?systemd_reqs:%global systemd_reqs \
-Requires(post):		 /bin/systemctl\
-Requires(preun):	 /bin/systemctl\
-Requires(postun):	 /bin/systemctl\
-%nil}
-%{!?systemd_install:%global systemd_install()\
-%post %1\
-%systemd_post %2 \
-%preun %1\
-%systemd_preun %2 \
-%postun %1\
-%systemd_postun_with_restart %2 \
-%nil}
+%ifarch %{ix86} x86_64
+%bcond_without libseccomp
+%else
+%bcond_with libseccomp
+%endif
 
+Name:       tor
+Version:    0.2.6.10
+Release:    3%{?dist}
+Group:      System Environment/Daemons
+License:    BSD
+Summary:    Anonymizing overlay network for TCP (The onion router)
+URL:        https://www.torproject.org
 
-Name:		tor
-Version:	0.2.3.25
-Release:	%release_func 1900
-Group:		System Environment/Daemons
-License:	BSD
-Summary:	Anonymizing overlay network for TCP (The onion router)
-URL:		http://www.torproject.org
-Requires:	%name-core = %version-%release
-Requires:	%name-systemd  = %version-%release
+Source0:    https://www.torproject.org/dist/%{name}-%{version}.tar.gz
+Source1:    https://www.torproject.org/dist/%{name}-%{version}.tar.gz.asc
+# Upstream ship their own logrotate file. Ours only has 2 modifications:
+# use 'toranon' user, and use systemctl to reload.
+Source2:    tor.logrotate
+# This makes sure tor runs as 'toranon', logs to syslog at 'notice' level,
+# and writes to /var/lib/tor instead of /root/.tor directory.
+Source3:    tor.defaults-torrc
+Source10:   tor.service
 
+BuildRequires:    asciidoc
+BuildRequires:    libevent-devel
+BuildRequires:    openssl-devel
 
-%package core
-Summary:	Core programs for tor
-Group:		System Environment/Daemons
-Source0:	https://www.torproject.org/dist/%name-%version.tar.gz
-Source1:	https://www.torproject.org/dist/%name-%version.tar.gz.asc
-Source2:	tor.logrotate
-BuildRoot:	%_tmppath/%name-%version-%release-root
+%if 0%{with libseccomp}
+# Only available on certain architectures.
+BuildRequires:    libseccomp-devel
+%endif
 
-# tor-design.pdf is not shipped anymore with tor
-Obsoletes:	tor-doc < 0.2.2
+%if 0%{with libsystemd}
+# Requires systemd >= 209. RHEL 7 has systemd 208.
+BuildRequires:    systemd-devel
+%endif
 
-BuildRequires:	libevent-devel openssl-devel asciidoc
-BuildRequires:	fedora-usermgmt-devel
-Provides:		user(%username)  = %uid
-Provides:		group(%username) = %uid
-Requires:		init(%name)
-Requires(pre):		/etc/logrotate.d
-Requires(postun):	/etc/logrotate.d
-%{?FE_USERADD_REQ}
-
-
-%package -n torify
-Summary:	The torify wrapper script
-Group:		System Environment/Daemons
-Requires:	tsocks
-# Prevent version mix
-Conflicts:	%name-core < %version-%release
-Conflicts:	%name-core > %version-%release
-%{?noarch}
-
-
-%package systemd
-Summary:	Systemd initscripts for tor
-Group:		System Environment/Daemons
-Source10:	tor.systemd.service
-Provides:	init(%name) = systemd
-Requires:	%name-core = %version-%release
-%{?systemd_reqs}
-%{?noarch}
-
-
-%package upstart
-Summary:		upstart initscripts for %name
-Group:			System Environment/Base
-Source20:		%name.upstart
-Provides:		init(%name) = upstart
-Requires:		%name-core = %version-%release
-Requires(pre):		/etc/init
-Requires(post):		/usr/bin/killall
-Requires(postun):	/sbin/initctl
-%{?noarch}
+# /usr/bin/torify is now just a wrapper for torsocks and is only there for
+# backwards compatibility.
+Requires:         torsocks
+Requires(pre):    shadow-utils
+Requires(post):   systemd
+Requires(preun):  systemd
+Requires(postun): systemd
 
 
 %description
@@ -111,135 +77,312 @@ strength of the anonymity provided. Tor is not presently suitable for
 high-stakes anonymity.
 
 
-%description core
-Tor is a connection-based low-latency anonymous communication system.
-
-This package provides the "tor" program, which serves as both a client
-and a relay node.
-
-
-%description -n torify
-Tor is a connection-based low-latency anonymous communication system.
-
-This package contains the "torify" wrapper script.
-
-
-%description systemd
-Tor is a connection-based low-latency anonymous communication system.
-
-This package contains the systemd initscripts to start the "tor"
-daemon.
-
-
-%description upstart
-Tor is a connection-based low-latency anonymous communication system.
-
-This package contains the upstart compliant initscripts to start the "tor"
-daemon.
-
-
 %prep
 %setup -q
 
-sed -i -e 's!^\(\# *\)\?DataDirectory .*!DataDirectory %homedir/.tor!' src/config/torrc.sample.in
-cat <<EOF >>src/config/torrc.sample.in
-Log notice syslog
-User  %username
-EOF
-
 
 %build
-export LDFLAGS='-Wl,--as-needed'
-%configure
+%configure --with-tor-user=%{toruser} --with-tor-group=%{torgroup}
 make %{?_smp_mflags}
 
 
 %install
-rm -rf $RPM_BUILD_ROOT _doc _doc-torify
-
 make install DESTDIR=$RPM_BUILD_ROOT
-mv $RPM_BUILD_ROOT%_sysconfdir/tor/torrc{.sample,}
+mv $RPM_BUILD_ROOT%{_sysconfdir}/tor/torrc.sample \
+    $RPM_BUILD_ROOT%{_sysconfdir}/tor/torrc
 
-mkdir -p $RPM_BUILD_ROOT{%logdir,%homedir,%_var/run/%name}
+mkdir -p $RPM_BUILD_ROOT%{logdir}
+mkdir -p $RPM_BUILD_ROOT%{homedir}
 
-install -D -p -m 0644 %SOURCE10 $RPM_BUILD_ROOT%_unitdir/%name.service
-install -D -p -m 0644 %SOURCE2  $RPM_BUILD_ROOT%_sysconfdir/logrotate.d/tor
+install -D -p -m 0644 %{SOURCE10} $RPM_BUILD_ROOT%_unitdir/%{name}.service
+install -D -p -m 0644 %{SOURCE2}  $RPM_BUILD_ROOT%{_sysconfdir}/logrotate.d/tor
+install -D -p -m 0644 %{SOURCE3}  $RPM_BUILD_ROOT%{_datadir}/%{name}/defaults-torrc
 
-install -D -p -m 0644 %SOURCE20 $RPM_BUILD_ROOT%_sysconfdir/init/tor.conf
+%if 0%{without libsystemd}
+# Some features are not available for systemd 208 on RHEL 7.
+sed -i $RPM_BUILD_ROOT%_unitdir/%{name}.service \
+    -e 's/^Type=.*/Type=simple/g' \
+    -e '/^NotifyAccess=.*/d' \
+    -e '/^WatchdogSec=.*/d' \
+    -e 's#^PrivateDevices=.*#DeviceAllow=/dev/null rw\nDeviceAllow=/dev/urandom r#g' \
+    -e 's#^ProtectHome=.*#InaccessibleDirectories=/home#g' \
+    -e '/^ProtectSystem=.*/d'
+%endif
 
-mv $RPM_BUILD_ROOT%_datadir/doc/tor _doc
-mkdir _doc-torify
-mv _doc/torify.html _doc-torify
+sed -e 's#/etc/tor/torrc#/etc/tor/%%i.torrc#g' \
+    $RPM_BUILD_ROOT%_unitdir/%{name}.service \
+    > $RPM_BUILD_ROOT%_unitdir/%{name}@.service
 
-%{!?with_upstart:  rm -rf $RPM_BUILD_ROOT%_sysconfdir/init}
-
-
-%pre core
-%__fe_groupadd %uid -r %username &>/dev/null || :
-%__fe_useradd  %uid -r -s /sbin/nologin -d %homedir -M          \
-                    -c 'TOR anonymizing user' -g %username %username &>/dev/null || :
-
-%postun core
-%__fe_userdel  %username &>/dev/null || :
-%__fe_groupdel %username &>/dev/null || :
-
-
-%systemd_install systemd %name.service
-
-
-%postun upstart
-/usr/bin/killall -u %username -s INT tor 2>/dev/null || :
-
-%preun upstart
-test "$1" != "0" || /sbin/initctl -q stop tor || :
+# Install docs manually.
+rm -rf %{buildroot}%{_datadir}/doc
 
 
-%clean
-rm -rf $RPM_BUILD_ROOT
+%pre
+getent group %{torgroup} >/dev/null || groupadd -r %{torgroup}
+getent passwd %{toruser} >/dev/null || \
+    useradd -r -s /sbin/nologin -d %{homedir} -M \
+    -c 'Tor anonymizing user' -g %{torgroup} %{toruser}
+exit 0
+
+%post
+%systemd_post %{name}.service
+
+%preun
+%systemd_preun %{name}.service
+
+%postun
+%systemd_postun_with_restart %{name}.service
 
 
 %files
+%doc LICENSE README ChangeLog ReleaseNotes doc/HACKING doc/*.html
+%{_bindir}/tor
+%{_bindir}/tor-gencert
+%{_bindir}/tor-resolve
+%{_bindir}/torify
+%{_mandir}/man1/tor.1*
+%{_mandir}/man1/tor-gencert.1*
+%{_mandir}/man1/tor-resolve.1*
+%{_mandir}/man1/torify.1*
+%dir %{_datadir}/tor
+%{_datadir}/tor/defaults-torrc
+%{_datadir}/tor/geoip
+%{_datadir}/tor/geoip6
+%{_unitdir}/%{name}.service
+%{_unitdir}/%{name}@.service
 
+%dir %{_sysconfdir}/tor
+%attr(0644,root,root) %config(noreplace) %{_sysconfdir}/tor/torrc
+%config(noreplace) %{_sysconfdir}/logrotate.d/tor
 
-%files core
-%defattr(-,root,root,-)
-%doc LICENSE README ChangeLog
-%doc ReleaseNotes
-%doc _doc/*
-%dir               %_sysconfdir/tor
-%config(noreplace) %_sysconfdir/logrotate.d/tor
-%attr(0700,%username,%username) %dir %homedir
-%attr(0730,root,%username)      %dir %logdir
-%attr(0640,root,%username) %config(noreplace) %_sysconfdir/tor/torrc
-%_bindir/*
-%_mandir/man1/*
-%_datadir/tor
+%attr(0700,%{toruser},%{torgroup}) %dir %{homedir}
+%attr(0700,%{toruser},%{torgroup}) %dir %{logdir}
 
-%exclude %_mandir/man1/torify*
-%exclude %_bindir/torify
-
-
-%files -n torify
-%defattr(-,root,root,-)
-%doc _doc-torify/*
-%_bindir/torify
-%_mandir/man1/torify*
-%dir               %_sysconfdir/tor
-%config(noreplace) %_sysconfdir/tor/tor-tsocks.conf
-
-
-%files systemd
-%defattr(-,root,root,-)
-%_unitdir/%name.service
-
-
-%if 0%{?with_upstart:1}
-%files upstart
-  %defattr(-,root,root,-)
-  %config(noreplace) /etc/init/*
-%endif
 
 %changelog
+* Tue Sep 29 2015 Jamie Nguyen <jamielinux@fedoraproject.org> - 0.2.6.10-3
+- only build with libseccomp support on ix86, x86_64
+
+* Tue Sep 29 2015 Jamie Nguyen <jamielinux@fedoraproject.org> - 0.2.6.10-2
+- improve systemd integration
+- add BR: libseccomp-devel
+
+* Mon Jul 13 2015 Jamie Nguyen <jamielinux@fedoraproject.org> - 0.2.6.10-1
+- update to upstream release 0.2.6.10
+
+* Sun Jul 12 2015 Jamie Nguyen <jamielinux@fedoraproject.org> - 0.2.6.9-5
+- also fix ExecStartPre in tor@.service
+
+* Sun Jul 12 2015 Jamie Nguyen <jamielinux@fedoraproject.org> - 0.2.6.9-4
+- rebuild
+
+* Sun Jul 12 2015 Jamie Nguyen <jamielinux@fedoraproject.org> - 0.2.6.9-3
+- add missing arguments to config checks executed in ExecStartPre
+
+* Fri Jul 03 2015 Jamie Nguyen <jamielinux@fedoraproject.org> - 0.2.6.9-2
+- remove leading '-' from ReadWriteDirectories
+
+* Fri Jun 12 2015 Jamie Nguyen <jamielinux@fedoraproject.org> - 0.2.6.9-1
+- update to upstream release 0.2.6.9
+
+* Thu May 21 2015 Jamie Nguyen <jamielinux@fedoraproject.org> - 0.2.6.8-1
+- update to upstream release 0.2.6.8
+- improve/harden systemd service file
+- add multi-instance systemd service file (#1210837)
+
+* Tue Apr 07 2015 Jamie Nguyen <jamielinux@fedoraproject.org> - 0.2.5.12-1
+- update to upstream release 0.2.5.12
+
+* Mon Mar 23 2015 Jamie Nguyen <jamielinux@fedoraproject.org> - 0.2.5.11-1
+- update to upstream release 0.2.5.11
+
+* Mon Oct 27 2014 Jamie Nguyen <jamielinux@fedoraproject.org> - 0.2.5.10-1
+- update to upstream release 0.2.5.10
+
+* Wed Oct 22 2014 Jamie Nguyen <jamielinux@fedoraproject.org> - 0.2.4.25-1
+- update to upstream release 0.2.4.25
+
+* Tue Sep 23 2014 Jamie Nguyen <jamielinux@fedoraproject.org> - 0.2.4.24-1
+- update to upstream release 0.2.4.24
+
+* Mon Aug 18 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.2.4.23-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
+
+* Thu Jul 31 2014 Jamie Nguyen <jamielinux@fedoraproject.org> - 0.2.4.23-1
+- update to upstream release 0.2.4.23
+- CVE-2014-5117: potential for traffic-confirmation attacks
+
+* Sun Jun 08 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.2.4.22-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Mon May 19 2014 Jamie Nguyen <jamielinux@fedoraproject.org> - 0.2.4.22-1
+- update to upstream release 0.2.4.22
+
+* Wed Mar 26 2014 Jamie Nguyen <jamielinux@fedoraproject.org> - 0.2.4.21-2
+- remove `--quiet` from default systemd service file
+
+* Tue Mar 25 2014 Jamie Nguyen <jamielinux@fedoraproject.org> - 0.2.4.21-1
+- update to upstream release 0.2.4.21
+- remove crazy Release numbering
+- remove Obsoletes/Provides that were introduced in F19
+- remove tor-tsocks.conf which has been removed completely upstream
+- include new file: _datadir/tor/geoip6
+
+* Sun Aug 04 2013 Jamie Nguyen <jamielinux@fedoraproject.org> - 0.2.3.25-1931
+- add fix for new unversioned docdir
+
+* Sun Aug 04 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.2.3.25-1930
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Sat Mar 02 2013 Jamie Nguyen <jamielinux@fedoraproject.org> 0.2.3.25-1929
+- add "Log notice syslog" back to tor.defaults-torrc as recommended by
+  upstream: https://bugzilla.redhat.com/show_bug.cgi?id=532373#c19
+- remove unused files in git (verinfo and lastver)
+- change URL to HTTPS
+- disallow group read for /var/log/tor
+- remove TODO as it doesn't contain any useful information
+
+* Fri Mar 01 2013 Jamie Nguyen <jamielinux@fedoraproject.org> 0.2.3.25-1928
+- increase LimitNOFILE in tor.service from 4096 to 32768, as advised by
+  upstream: https://trac.torproject.org/projects/tor/ticket/8368#comment:4
+
+* Thu Feb 28 2013 Jamie Nguyen <jamielinux@fedoraproject.org> 0.2.3.25-1927
+- package should own the %%{_datadir}/tor directory
+
+* Thu Feb 28 2013 Jamie Nguyen <jamielinux@fedoraproject.org> 0.2.3.25-1926
+- remove unnecessary custom LDFLAGS
+
+* Thu Feb 28 2013 Jamie Nguyen <jamielinux@fedoraproject.org> 0.2.3.25-1925
+- remove Obsoletes/Provides for tor-doc, which was introduced in Fedora 16
+- add some useful comments about the Obsoletes/Provides/Requires
+- add comments about tor.logrotate, tor.defaults-torrc and tor.systemd.service
+
+* Wed Feb 27 2013 Jamie Nguyen <jamielinux@fedoraproject.org> 0.2.3.25-1924
+- whitespace changes and reorganization in the interests of readability
+  and clarity
+
+* Wed Feb 27 2013 Jamie Nguyen <jamielinux@fedoraproject.org> 0.2.3.25-1923
+- mix of tabs and spaces, so remove all tabs
+
+* Wed Feb 27 2013 Jamie Nguyen <jamielinux@fedoraproject.org> 0.2.3.25-1922
+- the /var/run/tor directory is not needed so remove it, which also fixes
+  bug #656707
+- use %%_localstatedir instead of %%_var
+
+* Wed Feb 27 2013 Jamie Nguyen <jamielinux@fedoraproject.org> 0.2.3.25-1921
+- take a more cautious approach in the %%files section and specify filenames
+  more explicitly rather than using wildcards, which also makes it easier to
+  see the contents of the package
+
+* Wed Feb 27 2013 Jamie Nguyen <jamielinux@fedoraproject.org> 0.2.3.25-1920
+- remove all modifications to the default tor configuration file so that we
+  can stick more closely to upstream defaults
+- add /usr/share/tor/defaults-torrc file, which only contains two options:
+    DataDirectory /var/lib/tor
+    User toranon
+- when starting the tor service, use the following options as recommended by
+  upstream: --defaults-torrc /usr/share/tor/defaults-torrc -f /etc/tor/torrc
+
+* Wed Feb 27 2013 Jamie Nguyen <jamielinux@fedoraproject.org> 0.2.3.25-1919
+- split username global variable into separate toruser and torgroup global
+  variables to improve spec flexibility and ease of comprehension, as well
+  as matching how upstream have written their spec
+- use --with-tor-user=%%toruser and --with-tor-group=%%torgroup options when
+  running %%configure, as recommended by upstream
+
+* Wed Feb 27 2013 Jamie Nguyen <jamielinux@fedoraproject.org> 0.2.3.25-1918
+- after moving the tor-systemd and torify subpackages back into the main tor
+  package, the %%with_noarch macro and the associated conditionals are no
+  longer used so remove them
+
+* Wed Feb 27 2013 Jamie Nguyen <jamielinux@fedoraproject.org> 0.2.3.25-1917
+- add missing Provides for the obsoleted tor-doc subpackage
+
+* Wed Feb 27 2013 Jamie Nguyen <jamielinux@fedoraproject.org> 0.2.3.25-1916
+- move the torify subpackage back into the main tor package to match upstream
+  expectations and user expectations (ie, yum install tor)
+- remove the logic separating the documentation files for tor and torify,
+  which is now no longer needed
+- use --docdir option when running %%configure
+
+* Wed Feb 27 2013 Jamie Nguyen <jamielinux@fedoraproject.org> 0.2.3.25-1915
+- move the tor-systemd subpackage back into the main tor package:
+  the main tor package has a hard requirement on tor-systemd, so there is no
+  purpose for keeping tor-systemd separate from the main package
+- remove "Requires: tor-systemd"
+
+* Wed Feb 27 2013 Jamie Nguyen <jamielinux@fedoraproject.org> 0.2.3.25-1914
+- move the tor-core subpackage back into the main tor package to match upstream
+  expectations and user expectations (ie, yum install tor)
+
+* Wed Feb 27 2013 Jamie Nguyen <jamielinux@fedoraproject.org> 0.2.3.25-1913
+- the tor-systemd subpackage is a hard requirement, so remove the conditional
+  that decides whether it is built
+
+* Wed Feb 27 2013 Jamie Nguyen <jamielinux@fedoraproject.org> 0.2.3.25-1912
+- amend logrotate file to match closer with upstream defaults, and removing
+  references to several obsolete init systems
+
+* Wed Feb 27 2013 Jamie Nguyen <jamielinux@fedoraproject.org> 0.2.3.25-1911
+- remove tor-upstart subpackage as upstart is no longer installable within
+  Fedora and renders the the subpackage obsolete
+
+* Wed Feb 27 2013 Jamie Nguyen <jamielinux@fedoraproject.org> 0.2.3.25-1910
+- remove dependency on fedora-usermgmt as it has been queued for obsoletion
+  from Fedora
+- add users and groups without forcing use of uid=19 as it is not necessarily
+  available, nor is it required or expected by upstream
+- do not remove users/groups in %%postun as the guidelines state:
+  https://fedoraproject.org/wiki/Packaging:UsersAndGroups
+
+* Wed Feb 27 2013 Jamie Nguyen <jamielinux@fedoraproject.org> 0.2.3.25-1909
+- change permissions of the following files/directories to match upstream:
+  /var/log/tor should be owned by toranon:toranon with 0750 permissions;
+  /var/lib/tor should be owned by toranon:toranon with 0700 permissions;
+  /etc/tor/torrc should be owned by root:root with 0644 permissions;
+
+* Wed Feb 27 2013 Jamie Nguyen <jamielinux@fedoraproject.org> 0.2.3.25-1908
+- remove unnecessary Requires on logrotate directory
+
+* Wed Feb 27 2013 Jamie Nguyen <jamielinux@fedoraproject.org> 0.2.3.25-1907
+- remove unnecessary BuildRoot tag
+- remove unnecessary rm -rf RPM_BUILD_ROOT
+- remove unnecessary %%clean
+- remove unnecessary defattr's
+
+* Wed Feb 27 2013 Jamie Nguyen <jamielinux@fedoraproject.org> 0.2.3.25-1906
+- remove unnecessary %%_unitdir macro
+- remove %%systemd_reqs and %%systemd_install macros, moving the parts to
+  the appropriate sections to improve readability and consistency with other
+  SPECS
+
+* Wed Feb 27 2013 Jamie Nguyen <jamielinux@fedoraproject.org> 0.2.3.25-1905
+- remove %%release_func macro to improve readability and consistency with
+  other SPECS
+
+* Wed Feb 13 2013 Enrico Scholz <enrico.scholz@informatik.tu-chemnitz.de> - 0.2.3.25-1904
+- fixed torsocks requirement
+- conditionalized systemd builds
+
+* Sun Feb 10 2013 Enrico Scholz <enrico.scholz@informatik.tu-chemnitz.de> - 0.2.3.25-1903
+- reverted "Package cleanup and various fixes"; too invasive and
+  non-auditable changes which are breaking things
+
+* Thu Feb 07 2013 Jamie Nguyen <jamielinux@fedoraproject.org> - 0.2.3.25-1902
+- torify subpackage should depend on torsocks not tsocks (#908569)
+
+* Wed Feb 06 2013 Jamie Nguyen <jamielinux@fedoraproject.org> - 0.2.3.25-1901
+- add additional %%configure options for user and group
+- add --defaults-torrc to systemd service to make sure sane defaults are set
+  unless explicitly overridden
+- remove unnecessary BuildRoot tag
+- remove unnecessary rm -rf RPM_BUILD_ROOT
+- remove unnecessary %%clean section
+- remove unnecessary defattr's
+- fix Requires for torify subpackage
+- update scriptlets to latest systemd guidelines
+- aesthetic changes to the SPEC for clarity and readability
+
 * Sun Dec  9 2012 Enrico Scholz <enrico.scholz@informatik.tu-chemnitz.de> - 0.2.3.25-1900
 - updated to 0.2.3.25
 
@@ -363,220 +506,3 @@ rm -rf $RPM_BUILD_ROOT
 
 * Thu Jan 21 2010 Enrico Scholz <enrico.scholz@informatik.tu-chemnitz.de> - 0.2.1.22-1300
 - updated to 0.2.1.22
-
-* Thu Dec 31 2009 Enrico Scholz <enrico.scholz@informatik.tu-chemnitz.de> - 0.2.1.21-1300
-- updated to 0.2.1.21
-
-* Sun Dec  6 2009 Enrico Scholz <enrico.scholz@informatik.tu-chemnitz.de> - 0.2.1.20-1301
-- updated -upstart to upstart 0.6.3
-
-* Sat Nov 14 2009 Enrico Scholz <enrico.scholz@informatik.tu-chemnitz.de> - 0.2.1.20-1300
-- updated URLs (#532373)
-- removed (inactive) update mechanism for GeoIP data; this might
-  reduce anonimity  (#532373)
-- use the pidfile at various places in the LSB initscript to operate
-  on the correct process (#532373)
-- set a higher 'nofile' limit in the upstart initscript to allow fast
-  relays; LSB users will have to add a 'ulimit -n' into /etc/sysconfig/tor
-  to get a similar effect (#532373)
-- let the LSB initscript wait until process exits within a certain
-  time; this fixes shutdown/restart problems when working as a server
-  (#532373)
-- fixed initng related typo in logrotate script (#532373)
-- removed <linux/netfilter_ipv4.h> hack; it is fixed upstream and/or
-  in the kernel sources
-- use %%postun, not %%post as a -upstart scriptlet and send INT, not
-  TERM signal to stop/restart daemon
-
-* Sun Oct 25 2009 Enrico Scholz <enrico.scholz@informatik.tu-chemnitz.de> - 0.2.1.20-1
-- updated to 0.2.1.20
-
-* Sat Sep 12 2009 Enrico Scholz <enrico.scholz@informatik.tu-chemnitz.de> - 0.2.1.19-2
-- workaround bug in redhat-lsb (#522053)
-
-* Fri Aug 21 2009 Tomas Mraz <tmraz@redhat.com> - 0.2.1.19-1
-- rebuilt with new openssl
-
-* Sun Aug  9 2009 Enrico Scholz <enrico.scholz@informatik.tu-chemnitz.de> - 0.2.1.19-0
-- updated to 0.2.1.19
-- rediffed patches
-
-* Sun Jul 26 2009 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.2.0.35-2
-- Rebuilt for https://fedoraproject.org/wiki/Fedora_12_Mass_Rebuild
-
-* Fri Jun 26 2009 Enrico Scholz <enrico.scholz@informatik.tu-chemnitz.de> - 0.2.0.35-1
-- updated to 0.2.0.35
-- added '--quiet' to startup options (bug #495987)
-- updated %%doc entries
-
-* Wed May  6 2009 Enrico Scholz <enrico.scholz@informatik.tu-chemnitz.de> - 0.2.0.34-4
-- made it easy to rebuild package in RHEL by adding a 'noarch'
-  conditional to enable/disable noarch subpackages
-
-* Sat Mar  7 2009 Enrico Scholz <enrico.scholz@informatik.tu-chemnitz.de> - 0.2.0.34-3
-- added -upstart subpackage (-lsb still wins by default as there exists
-  no end-user friendly solution for managing upstart initscripts)
-
-* Wed Feb 25 2009 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.2.0.34-2
-- Rebuilt for https://fedoraproject.org/wiki/Fedora_11_Mass_Rebuild
-
-* Tue Feb 10 2009 Enrico Scholz <enrico.scholz@informatik.tu-chemnitz.de> - 0.2.0.34-1
-- updated to 0.2.0.34 (SECURITY: fixes DoS vulnerabilities)
-
-* Thu Jan 22 2009 Enrico Scholz <enrico.scholz@informatik.tu-chemnitz.de> - 0.2.0.33-1
-- updated to 0.2.0.33 (SECURITY: fixed heap-corruption bug)
-
-* Sun Jan 18 2009 Tomas Mraz <tmraz@redhat.com> - 0.2.0.32-2
-- rebuild with new openssl
-
-* Sun Dec  7 2008 Enrico Scholz <enrico.scholz@informatik.tu-chemnitz.de> - 0.2.0.32-1
-- updated to 0.2.0.32
-- removed -setgroups patch; supplementary groups are now set upstream
-
-* Sun Jul 20 2008 Enrico Scholz <enrico.scholz@informatik.tu-chemnitz.de> - 0.2.0.30-1
-- updated to 0.2.0.30; rediffed patches
-- (re)enabled transparent proxy support by workarounding broken
-  <linux/netfilter_ipv4.h> header
-- moved the 'geoip' database to /var/lib/tor-data where it can be
-  updated periodically
-- built with -Wl,--as-needed
-
-* Thu Jul 10 2008 Nikolay Vladimirov <nikolay@vladimiroff.com> - 0.1.2.19-3
-- rebuild for new libevent
-
-* Wed Feb 13 2008 Enrico Scholz <enrico.scholz@informatik.tu-chemnitz.de> - 0.1.2.19-2
-- added 'missingok' to logrotate script (#429402)
-
-* Tue Feb 12 2008 Enrico Scholz <enrico.scholz@informatik.tu-chemnitz.de> - 0.1.2.19-1
-- updated to 0.1.2.19
-- use file based BR for latex
-- improved 'status' method of initscript to return rc of 'pidofproc'
-  instead of doing further manual tests.  Calling 'pidofproc' directly
-  instead of within a subshell should workaround #432254 too.
-
-* Sat Jan 26 2008 Alex Lancaster <alexlan[AT]fedoraproject org> - 0.1.2.18-4
-- Update BuildRequires: tex(latex),
-- BR: texlive-texmf-fonts seems also to be necessary
-
-* Sat Jan 26 2008 Alex Lancaster <alexlan[AT]fedoraproject org> - 0.1.2.18-3
-- Rebuild for new libevent.
-
-* Thu Dec 06 2007 Release Engineering <rel-eng at fedoraproject dot org> - 0.1.2.18-2
-- Rebuild for deps
-
-* Tue Oct 30 2007 Enrico Scholz <enrico.scholz@informatik.tu-chemnitz.de> - 0.1.2.18-1
-- updated to 0.1.2.18
-
-* Fri Aug 31 2007 Enrico Scholz <enrico.scholz@informatik.tu-chemnitz.de> - 0.1.2.17-1
-- updated to 0.1.2.17
-
-* Sat Aug 25 2007 Enrico Scholz <enrico.scholz@informatik.tu-chemnitz.de> - 0.1.2.16-2
-- fixed open(2) issue
-
-* Fri Aug  3 2007 Enrico Scholz <enrico.scholz@informatik.tu-chemnitz.de> - 0.1.2.16-1
-- updated to 0.1.2.16 (SECURITY)
-
-* Sat Jul 28 2007 Enrico Scholz <enrico.scholz@informatik.tu-chemnitz.de> - 0.1.2.15-1
-- updated to 0.1.2.15
-
-* Sat May 26 2007 Enrico Scholz <enrico.scholz@informatik.tu-chemnitz.de> - 0.1.2.14-1
-- updated to 0.1.2.14
-
-* Wed Apr 25 2007 Enrico Scholz <enrico.scholz@informatik.tu-chemnitz.de> - 0.1.2.13-1
-- updated to 0.1.2.13
-- minor cleanups; especially in the %%doc section
-
-* Sun Apr  8 2007 Enrico Scholz <enrico.scholz@informatik.tu-chemnitz.de> - 0.1.1.26-4
-- rebuilt for (yet another) new libevent
-
-* Mon Feb 26 2007 Enrico Scholz <enrico.scholz@informatik.tu-chemnitz.de> - 0.1.1.26-3
-- rebuilt for new libevent
-
-* Wed Jan 24 2007 Enrico Scholz <enrico.scholz@informatik.tu-chemnitz.de> - 0.1.1.26-2
-- updated -setgroups patch (#224090, thx to Sami Farin)
-
-* Sun Dec 17 2006 Enrico Scholz <enrico.scholz@informatik.tu-chemnitz.de> - 0.1.1.26-1
-- updated to 0.1.1.26 (SECURITY)
-- do not turn on logging by default; it's easier to say "we do not log
-  anything" to the police instead of enumerating the logged event
-  classes and trying to explain that they do not contain any valuable
-  information
-
-* Sun Nov 12 2006 Enrico Scholz <enrico.scholz@informatik.tu-chemnitz.de> - 0.1.1.25-1
-- updated to 0.1.1.25
-
-* Thu Oct  5 2006 Enrico Scholz <enrico.scholz@informatik.tu-chemnitz.de> - 0.1.1.24-1
-- updated to 0.1.1.24
-
-* Sat Sep 30 2006 Enrico Scholz <enrico.scholz@informatik.tu-chemnitz.de> - 0.1.1.23-5
-- updated to recent fedora-usermgmt
-- minor cleanups
-- require only 'lsb-core-noarch' instead of whole 'lsb'
-
-* Tue Sep 26 2006 Enrico Scholz <enrico.scholz@informatik.tu-chemnitz.de> - 0.1.1.23-4
-- first FE release (review #175433)
-
-* Mon Sep 25 2006 Enrico Scholz <enrico.scholz@informatik.tu-chemnitz.de> - 0.1.1.23-3
-- removed '.have-lsb' and related logic in logrotate script; check for
-  existence of the corresponding initscript instead of
-- fixed bare '%%' in changelog section
-
-* Thu Sep 21 2006 Enrico Scholz <enrico.scholz@informatik.tu-chemnitz.de> - 0.1.1.23-2
-- simplified things yet more and removed tsocks/torify too
-- build -lsb unconditionally
-
-* Thu Sep 21 2006 Enrico Scholz <enrico.scholz@informatik.tu-chemnitz.de> - 0.1.1.23-1
-- simplified spec file and removed -initng and -minit stuff
-
-* Sun Aug 13 2006 Enrico Scholz <enrico.scholz@informatik.tu-chemnitz.de> - 0.1.1.23-0
-- updated to 0.1.1.23
-
-* Sat Jul  8 2006 Enrico Scholz <enrico.scholz@informatik.tu-chemnitz.de> - 0.1.1.22-0
-- updated to 0.1.1.22
-
-* Tue Jun 13 2006 Enrico Scholz <enrico.scholz@informatik.tu-chemnitz.de> - 0.1.1.21-0
-- updated to 0.1.1.21
-
-* Wed May 24 2006 Enrico Scholz <enrico.scholz@informatik.tu-chemnitz.de> - 0.1.1.20-0
-- updated to 0.1.1.20; adjusted %%doc file-list
-- added (optional) -tsocks subpackage
-- use the more modern %%bcond_with* for specifying optional features
-
-* Sun Feb 19 2006 Enrico Scholz <enrico.scholz@informatik.tu-chemnitz.de> - 0.1.0.17-0
-- updated to 0.1.0.17
-
-* Mon Jan 30 2006 Enrico Scholz <enrico.scholz@informatik.tu-chemnitz.de> - 0.1.0.16-0.1
-- renamed the current main-package into a '-core' subpackage and
-  created a new main-package which requires both the 'tor-core'
-  subpackage and this with the current default init-method. This
-  allows 'yum install tor' to work better; because yum is not very
-  smart, the old packaging might install unwanted packages else.
-
-* Wed Jan  4 2006 Enrico Scholz <enrico.scholz@informatik.tu-chemnitz.de> - 0.1.0.16-0
-- updated to 0.1.0.16
-
-* Fri Dec 23 2005 Enrico Scholz <enrico.scholz@informatik.tu-chemnitz.de> - 0.1.0.15-1.11
-- reworked the 'setgroups' patch so that 'tor' survives a SIGHUP
-- (re)added the 'reload' functionality to the lsb initscript and use
-  it in logrotate
-
-* Fri Dec 23 2005 Enrico Scholz <enrico.scholz@informatik.tu-chemnitz.de> - 0.1.0.15-1.8
-- added ChangeLog to %%doc
-- made torrc not world-readable
-- added logrotate script
-
-* Thu Dec 22 2005 Enrico Scholz <enrico.scholz@informatik.tu-chemnitz.de> - 0.1.0.15-1.4
-- updated initng scripts to initng-0.4.8 syntax
-- tweaked some Requires(...):
-- added ghostscript BuildRequires:
-- install initng scripts into the correct dir
-
-* Thu Dec 15 2005 Enrico Scholz <enrico.scholz@informatik.tu-chemnitz.de> - 0.1.0.15-1.2
-- use relative UID of 19 instead of 18 due to conflicts with the
-  'munin' package
-
-* Wed Dec 14 2005 Enrico Scholz <enrico.scholz@informatik.tu-chemnitz.de> - 0.1.0.15-1.1
-- added -minit subpackage
-
-* Sat Dec 10 2005 Enrico Scholz <enrico.scholz@informatik.tu-chemnitz.de> - 0.1.0.15-1
-- initial build

@@ -1,13 +1,13 @@
 /var/log/tor/*.log {
-	su toranon toranon
-	delaycompress
-	notifempty
-	sharedscripts
-	missingok
-	postrotate
-		test ! -f /etc/init.d/tor          || /etc/init.d/tor reload         >/dev/null 2>/dev/null || :
-		test ! -f /etc/initng/daemon/tor.i || /sbin/ngc --restart daemon/tor >/dev/null 2>/dev/null || :
-		test ! -d /etc/minit/services/tor  || /bin/msvc -h services/tor      >/dev/null 2>/dev/null || :
-		test ! -f /lib/systemd/system/tor.service || /bin/systemctl reload tor.service >/dev/null 2>/dev/null || :
-        endscript
+    daily
+    rotate 5
+    compress
+    delaycompress
+    missingok
+    notifempty
+    create 0640 toranon toranon
+    sharedscripts
+    postrotate
+        /bin/systemctl reload tor.service >/dev/null 2>/dev/null || :
+    endscript
 }
