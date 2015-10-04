@@ -1,21 +1,11 @@
 Summary: A high quality TV viewer
 Name: tvtime
-Version: 1.0.2
-Release: 18%{?dist}
+Version: 1.0.6
+Release: 3%{?dist}
 License: GPLv2+ and LGPLv2+
 Group: Applications/Multimedia
 URL: http://tvtime.sourceforge.net
-Source0: http://downloads.sourceforge.net/%{name}/%{name}-%{version}.tar.gz
-# Upstream is dead since 2005...
-Patch0: tvtime-1.0.1-gcc4.1.patch
-Patch1: tvtime-1.0.1-header.patch
-Patch2: tvtime-1.0.1-fsbadval.patch
-Patch3: tvtime-1.0.2-alsamixer.patch
-Patch4: tvtime-1.0.2-localedef.patch
-Patch5: tvtime-1.0.2-alsamixer2.patch
-Patch6: tvtime-1.0.2-xss.patch
-Patch7: tvtime-1.0.2-videoinput.patch
-Patch8:	tvtime-1.0.2-libpng15.patch
+Source0: http://linuxtv.org/downloads/%{name}/%{name}-%{version}.tar.gz
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
@@ -39,7 +29,7 @@ BuildRequires: libXxf86vm-devel
 BuildRequires: libXt-devel
 BuildRequires: libXi-devel
 BuildRequires: libXScrnSaver-devel
-BuildRequires: libtool
+BuildRequires: libtool gettext-devel
 BuildRequires: desktop-file-utils
 
 ExcludeArch: s390 s390x
@@ -53,15 +43,6 @@ videophiles.
 
 %prep
 %setup -q
-%patch0 -p1 -b .gcc
-%patch1 -p1 -b .header
-%patch2 -p1 -b .fsbadval
-%patch3 -p1 -b .alsamixer
-%patch4 -p1 -b .localedef
-%patch5 -p1 -b .alsamixer2
-%patch6 -p1 -b .xss
-%patch7 -p1 -b .vidioc
-%patch8 -p1 -b .libpng15
 
 for i in AUTHORS docs/man/{de,es}/*.?; do
 	iconv -f iso-8859-1 -t utf-8 "$i" > "${i}_" && \
@@ -70,13 +51,13 @@ for i in AUTHORS docs/man/{de,es}/*.?; do
 done
 # Remove .png extension from desktop file as it causes a warning
 # in desktop-file-install
-sed -i "s|tvtime.png|tvtime|g" docs/net-tvtime.desktop
+sed -i "s|tvtime.png|tvtime|g" docs/tvtime.desktop
 
 
 
 %build
 libtoolize --force
-autoreconf
+autoreconf -ifv
 %configure --disable-dependency-tracking --disable-rpath
 
 make CXXFLAGS="%{optflags}" %{?_smp_mflags} \
@@ -88,7 +69,7 @@ rm -rf %{buildroot}
 make DESTDIR=%{buildroot} INSTALL="/usr/bin/install -p" install
 desktop-file-install --remove-category="Application" --add-category="Video" \
 	--delete-original --dir=%{buildroot}%{_datadir}/applications \
-	docs/net-tvtime.desktop
+	docs/tvtime.desktop
 
 %find_lang %{name}
 
@@ -127,8 +108,53 @@ rm -rf %{buildroot}
 %{_bindir}/tvtime
 
 %changelog
-* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 1.0.2-18
-- 为 Magic 3.0 重建
+* Fri Jun 19 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.0.6-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
+
+* Sat May 02 2015 Kalev Lember <kalevlember@gmail.com> - 1.0.6-2
+- Rebuilt for GCC 5 C++11 ABI change
+
+* Wed Jan  7 2015 Mauro Carvalho Chehab <mchehab@osg.samsung.com> - 1.0.6-1
+- Update to version 1.0.6, fixing default ALSA mixer
+
+* Tue Dec 23 2014 Mauro Carvalho Chehab <mchehab@osg.samsung.com> - 1.0.5-1
+- Update to version 1.0.5, with several fixes
+
+* Mon Sep 08 2014 Tomas Smetana <tsmetana@redhat.com> - 1.0.2-29
+- Fix tvtime-scanner crash with home unset (#1000210)
+
+* Mon Aug 18 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.0.2-28
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
+
+* Tue Jun 10 2014 Tomas Smetana <tsmetana@redhat.com> - 1.0.2-27
+- Fix build error with -Werror=format-security (#1037367, #1107467)
+
+* Sun Jun 08 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.0.2-26
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Sun Aug 04 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.0.2-25
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Tue Mar 26 2013 Tomas Smetana <tsmetana@redhat.com> - 1.0.2-24
+- fix #926664 call autoreconf -ivf during build to add support for aarch64
+
+* Fri Feb 15 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.0.2-23
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
+
+* Mon Aug 06 2012 Tomas Smetana <tsmetana@redhat.com> - 1.0.2-22
+- fix #829901: errors in setting of the _NET_WM_ICON property
+
+* Sun Jul 22 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.0.2-21
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Mon Mar  5 2012 Tom Callaway <spot@fedoraproject.org> - 1.0.2-20
+- fix code to build properly against libpng 1.5
+
+* Sat Jan 14 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.0.2-19
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
+
+* Tue Dec 06 2011 Adam Jackson <ajax@redhat.com> - 1.0.2-18
+- Rebuild for new libpng
 
 * Wed Feb 09 2011 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.0.2-17
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_15_Mass_Rebuild
