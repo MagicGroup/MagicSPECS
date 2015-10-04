@@ -1,7 +1,10 @@
 Summary: Utility to create fonts.scale files for truetype fonts
 Name: ttmkfdir
 Version: 3.0.9
-Release: 36%{?dist}
+Release: 46%{?dist}
+# Only licensing attribution is in README, no version.
+License: LGPLv2+
+Group: Applications/System
 # This is a Red Hat maintained package which is specific to
 # our distribution.  Thus the source is only available from
 # within this srpm.
@@ -16,18 +19,13 @@ Patch6: ttmkfdir-3.0.9-segfaults.patch
 Patch7: ttmkfdir-3.0.9-encoding-dir.patch
 Patch8: ttmkfdir-3.0.9-font-scale.patch
 Patch9: ttmkfdir-3.0.9-bug434301.patch
-Patch10: ttmkfdir-3.0.9-freetype-fix.patch
-# Only licensing attribution is in README, no version.
-License: LGPLv2+
-Group: Applications/System
-BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-BuildRequires: freetype-devel >= 2.0
-BuildRequires: zlib-devel flex
-BuildRequires: libtool
+Patch10:ttmkfdir-3.0.9-freetype-header-fix.patch
+Source10: ttmkfdir.1
 
-# ttmkfdir used to be in the following packages at one point
-Conflicts: XFree86-font-utils < 4.2.99.2-0.20021126.3
-Conflicts: freetype < 2.0.6-3
+BuildRequires: freetype-devel >= 2.0
+BuildRequires: flex libtool
+BuildRequires: bzip2-devel
+BuildRequires: zlib-devel
 
 %description
 ttmkfdir is a utility used to create fonts.scale files in
@@ -49,23 +47,53 @@ by the font server.
 %patch10 -p1
 
 %build
-make OPTFLAGS="$RPM_OPT_FLAGS"
+make %{?_smp_mflags} OPTFLAGS="$RPM_OPT_FLAGS"
 
 %install
-rm -rf $RPM_BUILD_ROOT
-make DESTDIR=$RPM_BUILD_ROOT install
-magic_rpm_clean.sh
-%clean
-rm -rf $RPM_BUILD_ROOT
+make DESTDIR=$RPM_BUILD_ROOT install INSTALL="install -p"
+mkdir -p %{buildroot}%{_mandir}/man1/
+cp -p %{SOURCE10} %{buildroot}%{_mandir}/man1/
 
 %files
-%defattr(-,root,root,-)
 %doc README
 %{_bindir}/ttmkfdir
+%{_mandir}/man1/ttmkfdir.1.gz
 
 %changelog
-* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 3.0.9-36
-- 为 Magic 3.0 重建
+* Fri Jun 19 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.0.9-46
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
+
+* Sat May 02 2015 Kalev Lember <kalevlember@gmail.com> - 3.0.9-45
+- Rebuilt for GCC 5 C++11 ABI change
+
+* Mon Aug 18 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.0.9-44
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
+
+* Sat Aug  2 2014 Peter Robinson <pbrobinson@fedoraproject.org> 3.0.9-43
+- Add bzip2-devel as explicit build dep
+- Drop ancient Obsoletes
+
+* Sun Jun 08 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.0.9-42
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Wed Mar 26 2014 Parag Nemade <pnemade AT redhat DOT com> - 3.0.9-41
+- Resolves:rh#1080516 - ttmkfdir ftbfs in rawhide due to freetype header move
+- Thanks baude for your patch
+
+* Sun Aug 04 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.0.9-40
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Thu Mar 28 2013 Pravin Satpute <psatpute@redhat.com> - 3.0.9-39
+- added manpage (#928684)
+
+* Fri Feb 15 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.0.9-38
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
+
+* Tue Nov 20 2012 Pravin Satpute <psatpute@redhat.com> - 3.0.9-37
+- Spec cleanup (#878321)
+
+* Sun Jul 22 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.0.9-36
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 
 * Tue Feb 28 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.0.9-35
 - Rebuilt for c++ ABI breakage
@@ -176,7 +204,7 @@ rm -rf $RPM_BUILD_ROOT
 * Fri Feb 13 2004 Elliot Lee <sopwith@redhat.com>
 - rebuilt
 
-* Wed Feb 12 2004 Yu Shao <yshao@redhat.com> 3.0.9-8
+* Thu Feb 12 2004 Yu Shao <yshao@redhat.com> 3.0.9-8
 - patch for building package against freetype-2.1.7
 - from kanagawa jigorou (jigorou3@mail.goo.ne.jp) #114682
 

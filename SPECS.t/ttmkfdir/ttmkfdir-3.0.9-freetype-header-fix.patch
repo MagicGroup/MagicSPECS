@@ -1,0 +1,12 @@
+diff -Nau ttmkfdir-3.0.9.orig/ttf.cpp ttmkfdir-3.0.9/ttf.cpp
+--- ttmkfdir-3.0.9.orig/ttf.cpp	2014-03-25 10:12:53.350009854 -0500
++++ ttmkfdir-3.0.9/ttf.cpp	2014-03-25 10:14:43.790009861 -0500
+@@ -3,7 +3,7 @@
+ #include <cctype>
+ #include <cstring>
+ 
+-#include "freetype/tttables.h"
++#include "freetype2/tttables.h"
+ #include "ttmkfdir.h"
+ #include "ttf.h"
+ #include "ttos2val.h"
