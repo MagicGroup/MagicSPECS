@@ -70,16 +70,20 @@
 %global server_nameflags --with-default-server=%{server_name}
 
 Name:        torque
-Version:     4.2.6.1
-Release:     5%{?dist}
+Version:     4.2.10
+Release:     7%{?dist}
 Summary:     Tera-scale Open-source Resource and QUEue manager
-Source0:     http://www.clusterresources.com/downloads/%{name}/%{name}-%{version}.tar.gz
+Source0:     http://www.adaptivecomputing.com/download/%{name}/%{name}-%{version}.tar.gz
 Source2:     xpbs.desktop
 Source3:     xpbsmon.desktop
 Source4:     xpbs.png
 Source5:     xpbsmon.png
 Source6:     README.Fedora
 Source8:     config
+Source20:    pbs_mom.service
+Source21:    pbs_sched.service
+Source22:    pbs_server.service
+Source23:    trqauthd.service
 # Feb 3rd 2011, I've sent a mail upstream to request the re-inclusion
 # of the OpenPBS license file in distribution.
 # I'll announce to fedora-devel once this is resolved either way.
@@ -91,7 +95,7 @@ Patch1:      torque-munge-size.patch
 
 License:     OpenPBS and TORQUEv1.1
 Group:       System Environment/Daemons
-URL:         http://www.clusterresources.com/products/torque/
+URL:         http://www.adaptivecomputing.com/products/open-source/torque/
 %if 0%{?el4}%{?el5}
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 %endif
@@ -102,7 +106,9 @@ BuildRequires: readline-devel
 BuildRequires: ncurses-devel
 BuildRequires: gperf
 BuildRequires: openssl-devel
+BuildRequires: hwloc-devel
 BuildRequires: libxml2-devel
+BuildRequires: munge-devel
 %if %{use_tcl}
 BuildRequires: tcl-devel
 %endif
@@ -110,7 +116,12 @@ BuildRequires: tcl-devel
 BuildRequires: tk-devel
 %endif
 
-
+%if 0%{?rhel} >= 7 || 0%{?fedora} > 0
+BuildRequires: systemd
+Requires(post): systemd
+Requires(preun): systemd
+Requires(postun): systemd
+%endif
 
 %if 0%{?doxydoc}
 BuildRequires:  graphviz
@@ -118,12 +129,15 @@ BuildRequires:  doxygen
 %if "%{?rhel}" == "5"
 BuildRequires: graphviz-gd
 %endif
-%if %{?fedora}%{!?fedora:0} >= 9
+%if %{?fedora}%{!?fedora:0} >= 9 || %{?rhel}%{!?rhel:0} >= 7
 BuildRequires:  tex(latex)
 BuildRequires:  tex-xtab
 BuildRequires:  tex-sectsty
 BuildRequires:  tex-tocloft
 BuildRequires:  tex-multirow
+%if %{?fedora}%{!?fedora:0}
+BuildRequires:  tex-adjustbox
+%endif
 %else
 %if %{?rhel}%{!?rhel:0} >= 6
 BuildRequires:  tex(latex)
@@ -132,6 +146,9 @@ BuildRequires:  tetex-latex
 %endif
 %endif
 %endif
+
+Requires:        munge
+Requires(post): /bin/grep /etc/services /bin/cat
 
 %description
 TORQUE (Tera-scale Open-source Resource and QUEue manager) is a resource 
@@ -147,7 +164,6 @@ This package holds just a few shared files and directories.
 Group:           Applications/System
 Summary:         Client part of TORQUE
 Requires:        %{name}-libs = %{version}-%{release}
-Requires:        munge
 Requires(posttrans):  chkconfig
 Requires(preun):      chkconfig
 
@@ -201,6 +217,7 @@ Requires:     torque = %{version}-%{release}
 Requires:     munge
 Obsoletes:    libtorque  < 2.4.8-2
 Provides:     libtorque = %{version}-%{release}
+Requires:     munge
 
 %description libs
 TORQUE (Tera-scale Open-source Resource and QUEue manager) is a resource 
@@ -242,6 +259,7 @@ Requires:       openssh-clients
 Requires(post):  chkconfig
 Requires(preun): chkconfig
 Requires(preun): initscripts
+
 
 
 %description mom
@@ -353,17 +371,18 @@ install -pm 644 %{SOURCE2} %{SOURCE3} %{SOURCE4} %{SOURCE5} \
 chmod 644 torque.setup
 
 %build
-CFLAGS="%{optflags} -Wno-overlength-strings  -DUSE_INTERP_RESULT -DUSE_INTERP_ERRORLINE"
+CFLAGS="%{optflags} -DUSE_INTERP_RESULT -DUSE_INTERP_ERRORLINE"
 %configure --includedir=%{_includedir}/torque \
   --with-server-home=%{torquehomedir} --with-pam=/%{_lib}/security \
   --with-sendmail=%{_sbindir}/sendmail --disable-static \
-  --with-tcp-retry-limit=2 \
-  --enable-drmaa --enable-munge-auth \
+  --with-tcp-retry-limit=2 --without-debug \
+  --enable-drmaa --enable-munge-auth --with-munge \
+  --enable-cpuset --enable-numa-support \
   %{server_nameflags} %{guiflags} %{tclflags} %{rcpflags}
 
 make %{?_smp_mflags}
 
-for daemon in pbs_mom pbs_sched pbs_server
+for daemon in pbs_mom pbs_sched pbs_server trqauthd
 do
 sed -i -e 's|^PBS_HOME=.*|PBS_HOME=%{torquehomedir}|' \
        -e 's|^PBS_DAEMON=.*|PBS_DAEMON=%{_sbindir}/'$daemon'|' \
@@ -380,18 +399,28 @@ rm -f %{buildroot}%{_libdir}/*/buildindex
 rm -f %{buildroot}/%{_lib}/security/pam_pbssimpleauth.{a,la}
 mkdir -p %{buildroot}%{_bindir}
 
+%if 0%{?rhel} >= 7 || 0%{?fedora} > 0
+# install systemd scripts
+mkdir -p %{buildroot}%{_unitdir}
+install -p -m 644 %{SOURCE20} %{buildroot}%{_unitdir}/
+install -p -m 644 %{SOURCE21} %{buildroot}%{_unitdir}/
+install -p -m 644 %{SOURCE22} %{buildroot}%{_unitdir}/
+install -p -m 644 %{SOURCE23} %{buildroot}%{_unitdir}/
+%else
 # install initscripts
 mkdir -p %{buildroot}%{_initrddir}
 install -p -m 755 contrib/init.d/pbs_mom   %{buildroot}%{_initrddir}/pbs_mom
 install -p -m 755 contrib/init.d/pbs_sched %{buildroot}%{_initrddir}/pbs_sched
 install -p -m 755 contrib/init.d/pbs_server   %{buildroot}%{_initrddir}/pbs_server
+install -p -m 755 contrib/init.d/trqauthd   %{buildroot}%{_initrddir}/trqauthd
+%endif
 
 %if %{build_gui}
 # This is really trivial, but cleans up an rpmlint warning
 sed -i -e 's|%{_lib}/../||' %{buildroot}%{_bindir}/xpbs
 
-desktop-file-install --dir %{buildroot}%{_datadir}/applications xpbs.desktop
-desktop-file-install --dir %{buildroot}%{_datadir}/applications xpbsmon.desktop
+desktop-file-install --dir %{buildroot}%{_datadir}/applications --vendor=adaptivecomputing.com xpbs.desktop
+desktop-file-install --dir %{buildroot}%{_datadir}/applications --vendor=adaptivecomputing.com xpbsmon.desktop
 install -d %{buildroot}%{_datadir}/pixmaps
 install -p -m0644 xpbs.png xpbsmon.png %{buildroot}%{_datadir}/pixmaps
 %endif
@@ -457,7 +486,7 @@ popd
 # and delete the three copies of the same documentation.
 
 %if 0%{?doxydoc}
-rm %{buildroot}%{_defaultdocdir}/torque-drmaa/man/man3/*_src_drmaa_src_.3
+rm -f %{buildroot}%{_defaultdocdir}/torque-drmaa/man/man3/*_src_drmaa_src_.3
 mv %{buildroot}%{_defaultdocdir}/torque-drmaa/man/man3/* %{buildroot}%{_mandir}/man3/.
 rm -rf %{buildroot}%{_defaultdocdir}/torque-drmaa/html/*
 rm -rf %{buildroot}%{_defaultdocdir}/torque-drmaa/latex/*
@@ -475,21 +504,32 @@ chmod 755 `find %{buildroot}/var/lib/torque -type d`
 rm -rf %{buildroot}
 
 %post
-if grep -q "PBS services" /etc/services;then
-   : PBS services already installed
-else
-   cat<<__EOF__>>/etc/services
-# Standard PBS services
-pbs           15001/tcp           # pbs server (pbs_server)
-pbs           15001/udp           # pbs server (pbs_server)
-pbs_mom       15002/tcp           # mom to/from server
-pbs_mom       15002/udp           # mom to/from server
-pbs_resmom    15003/tcp           # mom resource management requests
-pbs_resmom    15003/udp           # mom resource management requests
-pbs_sched     15004/tcp           # scheduler
-pbs_sched     15004/udp           # scheduler
+for srvs in pbs:15001 pbs_mon:15002 pbs_resmom:15003 pbs_sched:15004 ; do
+  port=${srvs/*:/}
+  srvs=${srvs/:*/}
+  for proto in tcp udp ; do
+    if ! grep -q $srvs'\W\W*'$port'/'$proto /etc/services;then
+      cat<<__EOF__>>/etc/services
+$srvs        $port/$proto
 __EOF__
+    fi
+  done
+done
+%if 0%{?rhel} >= 7 || 0%{?fedora} > 0
+%systemd_post trqauthd.service
+%else
+/sbin/chkconfig --add trqauthd
+%endif
+
+%preun
+%if 0%{?rhel} >= 7 || 0%{?fedora} > 0
+%systemd_preun trqauthd.service
+%else
+if [ $1 -eq 0 ]; then
+   /sbin/service trqauthd stop >/dev/null 2>&1
+   /sbin/chkconfig --del trqauthd
 fi
+%endif
 
 %posttrans client
 /usr/sbin/alternatives --install %{_bindir}/qsub qsub %{_bindir}/qsub-torque 10 \
@@ -526,31 +566,55 @@ fi
 
 
 %post mom
+%if 0%{?rhel} >= 7 || 0%{?fedora} > 0
+%systemd_post pbs_mom.service
+%else
 /sbin/chkconfig --add pbs_mom
+%endif
 
 %preun mom
+%if 0%{?rhel} >= 7 || 0%{?fedora} > 0
+%systemd_preun pbs_mom.service
+%else
 if [ $1 -eq 0 ]; then
    /sbin/service pbs_mom stop >/dev/null 2>&1
    /sbin/chkconfig --del pbs_mom
 fi
+%endif
 
 %post scheduler
+%if 0%{?rhel} >= 7 || 0%{?fedora} > 0
+%systemd_post pbs_sched.service
+%else
 /sbin/chkconfig --add pbs_sched
+%endif
 
 %preun scheduler
+%if 0%{?rhel} >= 7 || 0%{?fedora} > 0
+%systemd_preun pbs_sched.service
+%else
 if [ $1 -eq 0 ]; then
    /sbin/service pbs_sched stop >/dev/null 2>&1
    /sbin/chkconfig --del pbs_sched
 fi
+%endif
 
 %post server
+%if 0%{?rhel} >= 7 || 0%{?fedora} > 0
+%systemd_post pbs_server.service
+%else
 /sbin/chkconfig --add pbs_server
+%endif
 
 %preun server
+%if 0%{?rhel} >= 7 || 0%{?fedora} > 0
+%systemd_preun pbs_server.service
+%else
 if [ $1 -eq 0 ]; then
    /sbin/service pbs_server stop >/dev/null 2>&1
    /sbin/chkconfig --del pbs_server
 fi
+%endif
 
 %files
 %defattr(-, root, root, -)
@@ -558,6 +622,9 @@ fi
 %doc               CHANGELOG PBS_License.txt README.Fedora contrib/PBS_License_2.3.txt
 %dir %{torquehomedir} 
 %dir %{torquehomedir}/aux
+%attr (1777,root,root) %{torquehomedir}/spool
+%attr (1777,root,root) %{torquehomedir}/undelivered
+%attr (1777,root,root) %{torquehomedir}/checkpoint
 %dir %{torquehomedir}/spool
 %dir %{torquehomedir}/undelivered
 %{torquehomedir}/checkpoint
@@ -566,6 +633,12 @@ fi
 %config(noreplace) %{_sysconfdir}/torque/pbs_environment
 %config(noreplace) %{_sysconfdir}/torque/server_name
 %{_mandir}/man1/pbs.1.*
+%attr(0755, root, root) %{_sbindir}/trqauthd
+%if 0%{?rhel} >= 7 || 0%{?fedora} > 0
+%{_unitdir}/trqauthd.service
+%else
+%{_initrddir}/trqauthd
+%endif
 
 %files client
 %defattr(-, root, root, -)
@@ -664,14 +737,8 @@ fi
 %files devel
 %defattr(-, root, root, -)
 %{_libdir}/libtorque.so
-%{_includedir}/torque/pbs_error.h
-%{_includedir}/torque/pbs_error_db.h
-%{_includedir}/torque/pbs_ifl.h
-%{_includedir}/torque/rm.h
-%{_includedir}/torque/rpp.h
-%{_includedir}/torque/tm.h
-%{_includedir}/torque/tm_.h
-%{_includedir}/torque/*.h
+%{_includedir}/torque
+%exclude %{_includedir}/torque/drmaa.h
 %{_bindir}/pbs-config
 %{_mandir}/man3/pbs_alterjob.3.*
 %{_mandir}/man3/pbs_connect.3.*
@@ -707,20 +774,22 @@ fi
 %{_mandir}/man3/pbs_gpureset.3.gz
 %{_mandir}/man3/tm.3.*
 
-
 %files mom
 %defattr(-, root, root, -)
 %{_sbindir}/pbs_mom
 %{_sbindir}/qnoded
 %{_sbindir}/pbs_demux
 %{_bindir}/pbs_track
+%if 0%{?rhel} >= 7 || 0%{?fedora} > 0
+%{_unitdir}/pbs_mom.service
+%else
 %{_initrddir}/pbs_mom
+%endif
 %if %{use_rcp}
 %attr(4755, root, root) %{_sbindir}/pbs_rcp
 %endif
 %{torquehomedir}/mom_priv
 %{torquehomedir}/mom_logs
-%{torquehomedir}/undelivered
 %dir %{_var}/log/torque
 %dir %{_var}/log/torque/mom_logs
 %dir %{_sysconfdir}/torque/mom
@@ -736,7 +805,11 @@ fi
 %defattr(-, root, root, -)
 %attr(0755, root, root) %{_sbindir}/pbs_sched
 %{_sbindir}/qschedd
+%if 0%{?rhel} >= 7 || 0%{?fedora} > 0
+%{_unitdir}/pbs_sched.service
+%else
 %{_initrddir}/pbs_sched
+%endif
 %dir %{torquehomedir}/sched_priv
 %config(noreplace) %{torquehomedir}/sched_priv/*
 %{torquehomedir}/sched_logs
@@ -755,9 +828,12 @@ fi
 %defattr(-, root, root, -)
 %attr(0755, root, root) %{_sbindir}/pbs_server
 %attr(0755, root, root) %{_sbindir}/momctl
-%attr(0755, root, root) %{_sbindir}/trqauthd
 %{_sbindir}/qserverd
+%if 0%{?rhel} >= 7 || 0%{?fedora} > 0
+%{_unitdir}/pbs_server.service
+%else
 %{_initrddir}/pbs_server
+%endif
 %dir %{_var}/log/torque/server_logs
 %{torquehomedir}/server_logs
 %{torquehomedir}/server_priv
@@ -775,39 +851,96 @@ fi
 %{_mandir}/man3/compat.h.3.*
 %{_mandir}/man3/drmaa.3.*
 %{_mandir}/man3/drmaa.h.3.*
+%if 0%{?rhel}%{?fedora} >= 6
 %{_mandir}/man3/drmaa_attr_names_s.3.*
 %{_mandir}/man3/drmaa_attr_values_s.3.*
 %{_mandir}/man3/drmaa_attrib.3.*
 %{_mandir}/man3/drmaa_attrib_info_s.3.*
-%{_mandir}/man3/drmaa_def_attr_s.3.*
+%{_mandir}/man3/drmaa_submission_context_s.3.*
 %{_mandir}/man3/drmaa_job_ids_s.3.*
+%{_mandir}/man3/drmaa_def_attr_s.3.*
+%{_mandir}/man3/pbs_attrib.3.*
+%endif
+%{_mandir}/man3/drmaa_viter.3.*
 %{_mandir}/man3/drmaa_job_iter_s.3.*
 %{_mandir}/man3/drmaa_job_s.3.*
 %{_mandir}/man3/drmaa_job_template_s.3.*
 %{_mandir}/man3/drmaa_jobt.3.*
 %{_mandir}/man3/drmaa_session.3.*
 %{_mandir}/man3/drmaa_session_s.3.*
-%{_mandir}/man3/drmaa_submission_context_s.3.*
-%{_mandir}/man3/drmaa_viter.3.*
 %{_mandir}/man3/error.h.3.*
 %{_mandir}/man3/jobs.3.*
 %{_mandir}/man3/jobs.h.3.*
 %{_mandir}/man3/lookup3.h.3.*
-%{_mandir}/man3/pbs_attrib.3.*
 %endif
 
 %changelog
-* Sat Sep 19 2015 Liu Di <liudidi@gmail.com> - 4.2.6.1-5
-- 为 Magic 3.0 重建
+* Fri Sep 18 2015 Richard Hughes <rhughes@redhat.com> - 4.2.10-7
+- Remove AppStream metadata file as it's no longer used.
 
-* Tue Jun 17 2014 Liu Di <liudidi@gmail.com> - 4.2.6.1-4
-- 为 Magic 3.0 重建
+* Mon Aug 17 2015 Fedora Release Engineering <david.brown@pnnl.gov> - 4.2.10-6
+- enable numa support bug #1231148
 
-* Tue Jun 17 2014 Liu Di <liudidi@gmail.com> - 4.2.6.1-3
-- 为 Magic 3.0 重建
+* Fri Jun 19 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 4.2.10-5
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 
-* Tue Jun 17 2014 Liu Di <liudidi@gmail.com> - 4.2.6.1-2
-- 为 Magic 3.0 重建
+* Sat Jun 6 2015 David Brown <david.brown@pnnl.gov> - 4.2.10-4
+- Bugfix - #1227003 test system in cluster environment
+- Bugfix - #1216049 add --enable-cpuset and hwloc
+- Bugfix - #1176080 this maybe a duplicate of #1216037
+
+* Tue May 19 2015 David Brown <david.brown@pnnl.gov> - 4.2.10-3
+- Bugfix - #1215207 create/install service files for these
+- Bugfix - #1117263 qmgr aborts in some instances
+- Bugfix - #1144396 Hey! Version Bump!
+- Bugfix - #1215992 more service scripts
+- Bugfix - #1216037 fixed permissions on directories
+- Bugfix - #1149045 hopefully these are all fixed now
+- Bugfix - #965513 calling this one fixed...
+
+* Fri Apr 24 2015 David Brown <david.brown@pnnl.gov> - 4.2.10-2
+- Bugfix - #1154413 make manipulating services better.
+
+* Mon Apr 6 2015 David Brown <david.brown@pnnl.gov> - 4.2.10-1
+- Updated upstream version
+
+* Thu Apr 2 2015 David Brown <david.brown@pnnl.gov> - 4.2.8-3
+- Version bump to merge from previous version
+
+* Thu Mar 26 2015 Richard Hughes <rhughes@redhat.com> - 4.2.8-2
+- Add an AppData file for the software center
+
+* Tue Oct 14 2014 David Brown <david.brown@pnnl.gov> - 4.2.8-2
+- merged fedora latest into epel
+- This breaks old configs and should be treated carefully
+
+* Wed Oct 01 2014 Haïkel Guémar <hguemar@fedoraproject.org> - 3.0.4-6
+- Fix CVE-2013-4319 (RHBZ #1005918, #1005919)
+
+* Fri Sep 05 2014 Haïkel Guémar <hguemar@fedoraproject.org> - 3.0.4-5
+- Fix CVE-2013-4495 (RHBZ #1029752)
+
+* Mon Sep 01 2014 Haïkel Guémar <hguemar@fedoraproject.org> - 4.2.8-1
+- upstream 4.2.8
+
+* Mon Aug 18 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 4.2.6.1-6
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
+
+* Thu Jul 17 2014 Ralf Corsépius <corsepiu@fedoraproject.org> - 4.2.6.1-5
+- Reflect upstream URL and Source0 having changed.
+
+* Thu Jul 17 2014 Ralf Corsépius <corsepiu@fedoraproject.org> - 4.2.6.1-4
+- Append -DUSE_INTERP_RESULT -DUSE_INTERP_ERRORLINE to CFLAGS to work-around
+  Tcl/Tk-8.6 incompatibilities (FTFFS RHBZ#1107455).
+- Pass --without-debug to %%configure to let configure pass through
+  %%optflags (RHBZ#1074571).
+- Fix twice listed files in *-devel.
+
+* Sun Jun 08 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 4.2.6.1-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Wed May 21 2014 Jaroslav Škarvada <jskarvad@redhat.com> - 4.2.6.1-2
+- Rebuilt for https://fedoraproject.org/wiki/Changes/f21tcl86
 
 * Sun Jan 12 2014 Haïkel Guémar <hguemar@fedoraproject.org> - 4.2.6.1-1
 - upstream 4.2.6.1
@@ -833,21 +966,53 @@ fi
 * Sat Jan 14 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.0.3-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 
+* Sat Dec 3 2011 Steve Traylen <steve.traylen@cern.ch> - 2.5.7-9
+- Add torque-2.5.7-rhbz#759141-r5167-pbs_server-crash.patch
+
+* Mon Nov 21 2011 Steve Traylen <steve.traylen@cern.ch> - 2.5.7-8
+- Add torque-rhbz#758740-r5258-dis-close.patch and
+  torque-rhbz#758740-r5270-dis-array.patch
+
+* Mon Nov 21 2011 Steve Traylen <steve.traylen@cern.ch> - 2.5.7-7
+- Add torque-fix-munge-rhbz#752079-PTII.patch
+
 * Thu Nov 17 2011 Steve Traylen <steve.traylen@cern.ch> - 3.0.3-2
 - Empty release for release mistake.
 
 * Thu Nov 17 2011 Steve Traylen <steve.traylen@cern.ch> - 3.0.3-1
 - New upstream.
 
+* Thu Nov 17 2011 Steve Traylen <steve.traylen@cern.ch> - 2.5.7-6
+- Empty release for release mistake.
+
+* Thu Nov 17 2011 Steve Traylen <steve.traylen@cern.ch> - 2.5.7-5
+- Add patch torque-fix-munge-rhbz#752079.patch
+
 * Sun Oct  9 2011 Steve Traylen <steve.traylen@cern.ch> - 3.0.2-4
+- Add patch torque-initd-hangs-rhbz-744138.patch
+
+* Sun Oct  9 2011 Steve Traylen <steve.traylen@cern.ch> - 2.5.7-4
 - Add patch torque-initd-hangs-rhbz-744138.patch
 
 * Mon Sep 19 2011 Steve Traylen <steve.traylen@cern.ch> - 3.0.2-3
 - Add --with-tcp-retry-limit=2 to build, rhbz#738576.
 
+* Mon Sep 19 2011 Steve Traylen <steve.traylen@cern.ch> - 2.5.7-3
+- Add --with-tcp-retry-limit=2 to build, rhbz#738576.
+
+* Wed Aug 31 2011 Steve Traylen <steve.traylen@cern.ch> - 2.5.7-2
+- Move checkpoint directory from torque-mom to torque package.
+  rhbz#734878.
+
 * Tue Aug 30 2011 Steve Traylen <steve.traylen@cern.ch> - 3.0.2-2
 - Move checkpoint directory from torque-mom to torque package.
   rhbz#734878.
+
+* Tue Jul 26 2011 Steve Traylen <steve.traylen@cern.ch> - 2.5.7-1
+- Update to 2.5.7, drop torque-buffer-overrun-2.5.5.patch,
+  Add man pages for: qgpumod, qgpureset, pbs_gpumode and 
+  pbs_gpureset.
+- Add or rather force munge support, Add torque-munge-size.patch.
 
 * Mon Jun 27 2011 Steve Traylen <steve.traylen@cern.ch> - 3.0.2-1
 - Update to 3.0.2.
@@ -856,8 +1021,14 @@ fi
 * Sun Jun 26 2011 Steve Traylen <steve.traylen@cern.ch> - 3.0.1-4
 - Removes nodes database file from package rhbz#716659
 
+* Sun Jun 26 2011 Steve Traylen <steve.traylen@cern.ch> - 2.5.5-3
+- Removes nodes database file from package rhbz#716659
+
 * Fri Jun 17 2011 Steve Traylen <steve.traylen@cern.ch> - 3.0.1-3
 - Add torque-munge-size.patch, rhbz#713996, Alex Chernyakhovsky
+
+* Wed Jun 8 2011 Steve Traylen <steve.traylen@cern.ch> - 2.5.5-2
+- Add torque-buffer-overrun.patch rhbz#711463
 
 * Wed Jun 8 2011 Steve Traylen <steve.traylen@cern.ch> - 3.0.1-2
 - Add torque-buffer-overrun.patch patch, rhbz#711463
@@ -867,8 +1038,21 @@ fi
   License file name change.
 - Renable doxygen documentation for drmaa.
 
+* Tue Mar 8 2011 Steve Traylen <steve.traylen@cern.ch> - 2.5.5-1
+- New upstream 2.5.5
+  Drop torque-create-request.patch since fixed upstream.
+- Torque License change, 
+    PBS_License.txt now contrib/PBS_License2.3.txt 
+    New additional license file PBS_License_2.5.txt
+  License field changed from OpenPBS to "OpenPBS and TORQUEv1.1"
+
 * Wed Feb 09 2011 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.0.0_snap.201102011355-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_15_Mass_Rebuild
+
+* Sun Jan 9 2011 Steve Traylen <steve.traylen@cern.ch> - 2.5.4-1
+- New upstream 2.5.4
+  Drop patches: torque-cond-touch.patch rhbz#528060 and
+  torque-start-start.patch rhbz#643194 since both upstream.
 
 * Fri Dec 10 2010 Steve Traylen <steve.traylen@cern.ch> - 3.0.0-snap.201102011355-1
 - Update to 3.0.0-snap.201102011355-1.
