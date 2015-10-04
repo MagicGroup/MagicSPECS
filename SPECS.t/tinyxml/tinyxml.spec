@@ -2,9 +2,11 @@
 
 Name:           tinyxml
 Version:        2.6.2
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        A simple, small, C++ XML parser
+Summary(zh_CN.UTF-8): C++ 编写的简单小巧的 XML 解析器
 Group:          System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 License:        zlib
 URL:            http://www.grinninglizard.com/tinyxml/
 Source0:        http://downloads.sourceforge.net/%{name}/%{name}_%{underscore_version}.tar.gz
@@ -17,17 +19,21 @@ into other programs. Have you ever found yourself writing a text file parser
 every time you needed to save human readable data or serialize objects?
 TinyXML solves the text I/O file once and for all.
 (Or, as a friend said, ends the Just Another Text File Parser problem.)
-
+%description -l zh_CN.UTF-8
+C++ 编写的简单小巧的 XML 解析器。
 
 %package        devel
 Summary:        Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       %{name} = %{version}-%{release}
 
 %description    devel
 The %{name}-devel package contains libraries and header files for
 developing applications that use %{name}.
-
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q -n %{name}
@@ -53,7 +59,7 @@ install -m 755 lib%{name}.so.0.%{version} $RPM_BUILD_ROOT%{_libdir}
 ln -s lib%{name}.so.0.%{version} $RPM_BUILD_ROOT%{_libdir}/lib%{name}.so.0
 ln -s lib%{name}.so.0.%{version} $RPM_BUILD_ROOT%{_libdir}/lib%{name}.so
 install -p -m 644 %{name}.h $RPM_BUILD_ROOT%{_includedir}
-
+magic_rpm_clean.sh
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -77,6 +83,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sat Oct 03 2015 Liu Di <liudidi@gmail.com> - 2.6.2-3
+- 为 Magic 3.0 重建
+
 * Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 2.6.2-2
 - 为 Magic 3.0 重建
 

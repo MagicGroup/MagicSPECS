@@ -1,15 +1,13 @@
-%if 0%{?rhel}
-%global run_tests 0
-%else
 %global run_tests 1
-%endif
 
 Name:           telepathy-idle
 Version:        0.2.0
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        IRC connection manager for Telepathy
+Summary(zh_CN.UTF-8): Telepathy 的 IRC 连接管理器
 
 Group:          Applications/Communications
+Group(zh_CN.UTF-8): 应用程序/通信
 License:        LGPLv2+
 URL:            http://telepathy.freedesktop.org/wiki/FrontPage
 Source0:        http://telepathy.freedesktop.org/releases/%{name}/%{name}-%{version}.tar.gz
@@ -32,7 +30,8 @@ Requires:	telepathy-filesystem
 
 %description
 A full-featured IRC connection manager for the Telepathy project.
-
+%description -l zh_CN.UTF-8
+Telepathy 的 IRC 连接管理器。
 
 %prep
 %setup -q
@@ -52,7 +51,7 @@ make %{?_smp_mflags}
 %install
 rm -rf $RPM_BUILD_ROOT
 make install DESTDIR=$RPM_BUILD_ROOT
-
+magic_rpm_clean.sh
 
 %files
 %doc AUTHORS COPYING NEWS
@@ -63,6 +62,9 @@ make install DESTDIR=$RPM_BUILD_ROOT
 
 
 %changelog
+* Wed Sep 30 2015 Liu Di <liudidi@gmail.com> - 0.2.0-3
+- 为 Magic 3.0 重建
+
 * Wed May 07 2014 Liu Di <liudidi@gmail.com> - 0.2.0-2
 - 为 Magic 3.0 重建
 

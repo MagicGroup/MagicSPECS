@@ -1,11 +1,13 @@
 Summary: Utility for converting FIG files (made by xfig) to other formats
+Summary(zh_CN.UTF-8): 转换 FIG 文件（由 xfig 生成）到其它格式的工具
 Name: transfig
 Version: 3.2.5d
-Release: 5%{?dist}
+Release: 6%{?dist}
 Epoch: 1
 License: MIT
 URL: http://www.xfig.org/
 Group: Applications/Multimedia
+Group(zh_CN.UTF-8): 应用程序/多媒体
 Source0: http://downloads.sourceforge.net/mcj/%{name}.%{version}.tar.gz
 
 Patch0: transfig-3.2.5-optflags.patch
@@ -13,6 +15,8 @@ Patch1: transfig-3.2.5-modularX.patch
 Patch2: transfig-3.2.5-bitmap.patch
 Patch3: transfig-3.2.5d-bz728825.patch
 Patch4: transfig-3.2.5-libpng.patch
+Patch5: transfig-3.2.5d-CVE-2009-4227.patch
+Patch6: transfig-3.2.5d-bz1037365.patch
 
 Requires:	ghostscript
 Requires:	bc
@@ -34,6 +38,9 @@ environments).
 Install transfig if you need a utility for translating FIG or PIC
 figures into certain graphics languages.
 
+%description -l zh_CN.UTF-8
+转换 FIG 文件（由 xfig 生成）到其它格式的工具。
+
 %prep
 %setup -q -n %{name}.%{version}
 
@@ -42,6 +49,8 @@ figures into certain graphics languages.
 %patch2 -p1
 %patch3 -p1
 %patch4 -p1
+%patch5 -p1
+%patch6 -p1
 
 # fix source permissions
 find -type f -exec chmod -x {} \;
@@ -80,6 +89,9 @@ rm -rf %{buildroot}
 %{_datadir}/fig2dev
 
 %changelog
+* Sun Oct 04 2015 Liu Di <liudidi@gmail.com> - 1:3.2.5d-6
+- 为 Magic 3.0 重建
+
 * Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 1:3.2.5d-5
 - 为 Magic 3.0 重建
 

@@ -1,10 +1,12 @@
 Name:		t1utils
-Version:	1.37
-Release:	3%{?dist}
+Version:	1.39
+Release:	1%{?dist}
 
 Summary:	Collection of Type 1 and 2 font manipulation utilities
+Summary(zh_CN.UTF-8): Type 1 和 2 字体处理工具的集合
 
 Group:		Applications/Publishing
+Group(zh_CN.UTF-8): 应用程序/出版
 # The Click license is an MIT variant.
 License:	MIT
 URL:		http://www.lcdf.org/~eddietwo/type/
@@ -17,6 +19,8 @@ and type 2 fonts containing programs to convert between PFA (ASCII)
 format, PFB (binary) format, a human-readable and editable ASCII
 format, and Macintosh resource forks.
 
+%description -l zh_CN.UTF-8
+Type 1 和 2 字体处理工具的集合.
 
 %prep
 %setup -q
@@ -31,7 +35,7 @@ make  %{?_smp_mflags}
 %install
 rm -rf $RPM_BUILD_ROOT
 make DESTDIR=$RPM_BUILD_ROOT install
-
+magic_rpm_clean.sh
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -45,6 +49,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Wed Sep 30 2015 Liu Di <liudidi@gmail.com> - 1.39-1
+- 更新到 1.39
+
 * Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 1.37-3
 - 为 Magic 3.0 重建
 

@@ -16,7 +16,7 @@
 
 Summary: The GIMP ToolKit (GTK+), a library for creating GUIs for X
 Name: gtk3
-Version:	3.15.9
+Version:	3.18.1
 Release: 1%{?dist}
 License: LGPLv2+
 Group: System Environment/Libraries
@@ -242,6 +242,7 @@ gtk-query-immodules-3.0-%{__isa_bits} --update-cache
 %{_bindir}/gtk-launch
 %{_bindir}/gtk3-icon-browser
 %{_bindir}/gtk-encode-symbolic-svg
+%{_bindir}/gtk-builder-tool
 %{_libdir}/libgtk-3.so.*
 %{_libdir}/libgdk-3.so.*
 %{_libdir}/libgailutil-3.so.*
@@ -258,8 +259,9 @@ gtk-query-immodules-3.0-%{__isa_bits} --update-cache
 %{_libdir}/girepository-1.0
 %ghost %{_libdir}/gtk-3.0/%{bin_version}/immodules.cache
 %{_mandir}/man1/gtk-query-immodules-3.0*
-%{_mandir}/man1/gtk-launch.1.gz
-%{_mandir}/man1/gtk-encode-symbolic-svg.1.gz
+%{_mandir}/man1/gtk-launch.1*
+%{_mandir}/man1/gtk-encode-symbolic-svg.1*
+%{_mandir}/man1/gtk-builder-tool.1*
 %{_datadir}/glib-2.0/schemas/org.gtk.Settings.FileChooser.gschema.xml
 %{_datadir}/glib-2.0/schemas/org.gtk.Settings.ColorChooser.gschema.xml
 %{_datadir}/glib-2.0/schemas/org.gtk.exampleapp.gschema.xml
@@ -326,6 +328,9 @@ gtk-query-immodules-3.0-%{__isa_bits} --update-cache
 %{_datadir}/installed-tests
 
 %changelog
+* Sun Oct 04 2015 Liu Di <liudidi@gmail.com> - 3.18.1-1
+- 更新到 3.18.1
+
 * Wed Feb 25 2015 Liu Di <liudidi@gmail.com> - 3.15.9-1
 - 更新到 3.15.9
 

@@ -1,16 +1,11 @@
 %global         majorminor 1.0
 %global         _gobject_introspection  1.31.1
 
-# Turn of extras package on RHEL.
-%if ! 0%{?rhel}
 %bcond_without extras
-%else
-%bcond_with extras
-%endif
 
 Name:           gstreamer1-plugins-bad
-Version:	1.4.5
-Release:        4%{?dist}
+Version:	1.6.0
+Release:        1%{?dist}
 Summary:        GStreamer streaming media framework "bad" plugins
 
 License:        LGPLv2+ and LGPLv2
@@ -139,9 +134,7 @@ autoreconf -fisv
     --with-package-origin="http://download.fedoraproject.org" \
     %{!?with_extras:--disable-fbdev --disable-decklink --disable-linsys} \
     --enable-debug --disable-static --enable-experimental \
-    --disable-dts --disable-faac --disable-faad --disable-nas \
-    --disable-mimic --disable-libmms --disable-mpeg2enc --disable-mplex \
-    --disable-neon --disable-openal --disable-rtmp --disable-xvid CFLAGS="-Wno-error=redundant-decls"
+    CFLAGS="-Wno-error=redundant-decls -fPIC"
 make %{?_smp_mflags}
 
 
@@ -172,6 +165,8 @@ chrpath --delete $RPM_BUILD_ROOT%{_libdir}/gstreamer-%{majorminor}/libgstcamerab
 %{_libdir}/libgstmpegts-%{majorminor}.so.*
 %{_libdir}/libgstphotography-%{majorminor}.so.*
 %{_libdir}/libgsturidownloader-%{majorminor}.so.*
+%{_libdir}/libgstadaptivedemux-1.0.so.*
+%{_datadir}/gstreamer-%{majorminor}/presets/GstFreeverb.prs
 
 %{_libdir}/libgstbadbase-%{majorminor}.so.*
 %{_libdir}/libgstbadvideo-%{majorminor}.so.*
@@ -295,6 +290,24 @@ chrpath --delete $RPM_BUILD_ROOT%{_libdir}/gstreamer-%{majorminor}/libgstcamerab
 
 %{_libdir}/gstreamer-%{majorminor}/libgstmpg123.so
 
+%{_libdir}/gstreamer-%{majorminor}/libgstbluez.so
+%{_libdir}/gstreamer-%{majorminor}/libgstdtls.so
+%{_libdir}/gstreamer-%{majorminor}/libgstdtsdec.so
+%{_libdir}/gstreamer-%{majorminor}/libgstfaac.so
+%{_libdir}/gstreamer-%{majorminor}/libgstfaad.so
+%{_libdir}/gstreamer-%{majorminor}/libgstgtksink.so
+%{_libdir}/gstreamer-%{majorminor}/libgstmms.so
+%{_libdir}/gstreamer-%{majorminor}/libgstmpeg2enc.so
+%{_libdir}/gstreamer-%{majorminor}/libgstmplex.so
+%{_libdir}/gstreamer-%{majorminor}/libgstneonhttpsrc.so
+%{_libdir}/gstreamer-%{majorminor}/libgstopenal.so
+%{_libdir}/gstreamer-%{majorminor}/libgstrtmp.so
+%{_libdir}/gstreamer-%{majorminor}/libgstrtpbad.so
+%{_libdir}/gstreamer-%{majorminor}/libgstrtponvif.so
+%{_libdir}/gstreamer-%{majorminor}/libgstvcdsrc.so
+%{_libdir}/gstreamer-%{majorminor}/libqtsink.so
+
+
 %{_libdir}/gstreamer-%{majorminor}/libgstofa.so
 %{_libdir}/gstreamer-%{majorminor}/libgstopencv.so
 %{_datadir}/gst-plugins-bad/%{majorminor}/opencv_haarcascades/fist.xml
@@ -350,7 +363,15 @@ chrpath --delete $RPM_BUILD_ROOT%{_libdir}/gstreamer-%{majorminor}/libgstcamerab
 %{_libdir}/pkgconfig/gstreamer-gl-%{majorminor}.pc
 #%{_libdir}/pkgconfig/gstreamer-wayland-%{majorminor}.pc
 
+%{_libdir}/girepository-1.0/GstGL-1.0.typelib
+%{_libdir}/gstreamer-%{majorminor}/include/gst/gl/gstglconfig.h
+%{_libdir}/libgstadaptivedemux-1.0.so
+%{_datadir}/gir-1.0/GstGL-1.0.gir
+
 %changelog
+* Sun Oct 04 2015 Liu Di <liudidi@gmail.com> - 1.6.0-1
+- 更新到 1.6.0
+
 * Fri Apr 17 2015 Liu Di <liudidi@gmail.com> - 1.4.5-4
 - 为 Magic 3.0 重建
 

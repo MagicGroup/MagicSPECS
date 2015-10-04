@@ -2,8 +2,8 @@
 %define release_version %(echo %{version} | awk -F. '{print $1"."$2}')
 
 Name:           grilo
-Version:	0.2.10
-Release:        3%{?dist}
+Version:	0.2.14
+Release:        1%{?dist}
 Summary:        Content discovery framework
 Summary(zh_CN.UTF-8): 内容发现框架
 
@@ -113,9 +113,13 @@ magic_rpm_clean.sh
 %{_libdir}/girepository-1.0/*.typelib
 %{_bindir}/grl-inspect-%{release_version}
 %{_bindir}/grilo-test-ui-%{release_version}
+%{_bindir}/grl-launch-%{release_version}
+%{_mandir}/man1/grilo-test-ui-%{release_version}.1*
+%{_mandir}/man1/grl-inspect-%{release_version}.1*
+%{_mandir}/man1/grl-launch-%{release_version}.1*
 %{_libdir}/grilo-%{release_version}/
 %{_datadir}/grilo-%{release_version}/plugins/
-%{_mandir}/man1/grl-inspect.1.gz
+
 
 %files devel
 %doc AUTHORS COPYING NEWS README TODO
@@ -130,6 +134,9 @@ magic_rpm_clean.sh
 %{_datadir}/vala/vapi/*
 
 %changelog
+* Sun Oct 04 2015 Liu Di <liudidi@gmail.com> - 0.2.14-1
+- 更新到 0.2.14
+
 * Fri Apr 11 2014 Liu Di <liudidi@gmail.com> - 0.2.10-3
 - 为 Magic 3.0 重建
 

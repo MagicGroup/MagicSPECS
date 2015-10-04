@@ -4,7 +4,7 @@
 Summary: The graphical toolkit for the Tcl scripting language
 Name: tk
 Version: %{vers}
-Release: 2%{?dist}
+Release: 3%{?dist}
 Epoch:   1
 License: TCL
 Group: Development/Languages
@@ -115,6 +115,9 @@ sed -i -e "s|$PWD/unix|%{_libdir}|; s|$PWD|%{_includedir}/%{name}-private|" %{bu
 %{_datadir}/%{name}%{majorver}/tkAppInit.c
 
 %changelog
+* Wed Sep 30 2015 Liu Di <liudidi@gmail.com> - 1:8.6.4-3
+- 为 Magic 3.0 重建
+
 * Thu Jul  2 2015 Jaroslav Škarvada <jskarvad@redhat.com> - 1:8.6.4-2
 - Fixed crash if there is no font installed (by no-fonts-fix patch)
   Resolves: rhbz#1229991

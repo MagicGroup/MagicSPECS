@@ -1,12 +1,14 @@
 Summary: A utility for removing files based on when they were last accessed
+Summary(zh_CN.UTF-8): 按最近访问时间删除文件的工具
 Name: tmpwatch
-Version: 2.10.3
-Release: 3%{?dist}
+Version:	2.11
+Release:	1%{?dist}
 URL: https://fedorahosted.org/tmpwatch/
 Source0: https://fedorahosted.org/releases/t/m/tmpwatch/tmpwatch-%{version}.tar.bz2
 Source1: tmpwatch.daily
 License: GPLv2
 Group: System Environment/Base
+Group(zh_CN.UTF-8): 系统环境/基本
 Requires: psmisc
 Provides: bundled(gnulib)
 # configure is looking for /sbin/fuser
@@ -19,6 +21,9 @@ specified period of time.  Tmpwatch is normally used to clean up
 directories which are used for temporarily holding files (for example,
 /tmp).  Tmpwatch ignores symlinks, won't switch filesystems and only
 removes empty directories and regular files.
+
+%description -l zh_CN.UTF-8
+按最近访问时间删除文件的工具。
 
 %prep
 %setup -q
@@ -38,6 +43,7 @@ ln -s $(echo %{_bindir} |sed 's,/[^/]\+,/..,g; s,^/,,')%{_sbindir}/tmpwatch \
 mkdir -p %{buildroot}/etc/cron.daily
 install -p %{SOURCE1} %{buildroot}/etc/cron.daily/tmpwatch
 chmod +x %{buildroot}/etc/cron.daily/tmpwatch
+magic_rpm_clean.sh
 
 %clean
 rm -rf %{buildroot}
@@ -51,6 +57,9 @@ rm -rf %{buildroot}
 %config(noreplace) /etc/cron.daily/tmpwatch
 
 %changelog
+* Sat Oct 03 2015 Liu Di <liudidi@gmail.com> - 2.11-1
+- 更新到 2.11
+
 * Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 2.10.3-3
 - 为 Magic 3.0 重建
 

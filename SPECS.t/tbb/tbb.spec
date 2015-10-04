@@ -1,7 +1,7 @@
-%define releasedate 20141204
+%define releasedate 20150728
 %define major 4
-%define minor 3
-%define update 2
+%define minor 4
+%define update 0
 %define dotver %{major}.%{minor}
 %define sourcebasename tbb%{major}%{minor}_%{releasedate}oss
 
@@ -9,10 +9,12 @@
 
 Name:    tbb
 Summary: The Threading Building Blocks library abstracts low-level threading details
+Summary(zh_CN.UTF-8): 抽象低级线程信息的线程构建库
 Version: %{dotver}
-Release: 3.%{releasedate}%{?dist}
+Release: 5.%{releasedate}%{?dist}
 License: GPLv2 with exceptions
 Group:   Development/Tools
+Group(zh_CN.UTF-8): 开发/工具
 URL:     http://threadingbuildingblocks.org/
 
 Source0: http://threadingbuildingblocks.org/sites/default/files/software_releases/source/%{sourcebasename}_src.tgz
@@ -48,25 +50,33 @@ threading models.  The applications you write are portable across
 platforms.  Since the library is also inherently scalable, no code
 maintenance is required as more processor cores become available.
 
+%description -l zh_CN.UTF-8
+抽象低级线程信息的线程构建库。
 
 %package devel
 Summary: The Threading Building Blocks C++ headers and shared development libraries
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: %{name}%{?_isa} = %{version}-%{release}
 
 %description devel
 Header files and shared object symlinks for the Threading Building
 Blocks (TBB) C++ libraries.
-
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %package doc
 Summary: The Threading Building Blocks documentation
+Summary(zh_CN.UTF-8): %{name} 的文档
 Group: Documentation
+Group(zh_CN.UTF-8): 文档
 
 %description doc
 PDF documentation for the user of the Threading Building Block (TBB)
 C++ library.
-
+%description doc -l zh_CN.UTF-8
+%{name} 的文档。
 
 %prep
 %setup -q -n %{sourcebasename}
@@ -107,6 +117,7 @@ for file in %{SOURCE6} %{SOURCE7} %{SOURCE8}; do
     install -p -D -m 644 $(basename ${file}) \
 	$RPM_BUILD_ROOT/%{_libdir}/pkgconfig/$(basename ${file})
 done
+magic_rpm_clean.sh
 
 %post -p /sbin/ldconfig
 
@@ -127,6 +138,12 @@ done
 %doc doc/html
 
 %changelog
+* Wed Sep 30 2015 Liu Di <liudidi@gmail.com> - 4.4-5.20150728
+- 为 Magic 3.0 重建
+
+* Wed Sep 30 2015 Liu Di <liudidi@gmail.com> - 4.4-4.20150728
+- 为 Magic 3.0 重建
+
 * Fri Jun 19 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 4.3-3.20141204
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

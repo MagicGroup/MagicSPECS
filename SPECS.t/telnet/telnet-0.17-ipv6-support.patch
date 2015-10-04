@@ -1,0 +1,118 @@
+diff --git a/telnet/commands.c b/telnet/commands.c
+index 49619ac..bc43d54 100644
+--- a/telnet/commands.c
++++ b/telnet/commands.c
+@@ -2365,6 +2365,10 @@ tn(int argc, char *argv[])
+ 		portp++;
+ 		telnetport = 1;
+ 	}
++	
++	if (family)
++		hints.ai_family = family;
++
+ 	h_errno = 0;
+ 	error = getaddrinfo(hostp, portp, &hints, &res0);
+ 	if (error) {
+@@ -2400,6 +2404,9 @@ tn(int argc, char *argv[])
+ 	    ahints.ai_family = PF_UNSPEC;
+ 	    ahints.ai_socktype = SOCK_STREAM;
+ 	    ahints.ai_flags = AI_PASSIVE;
++	    if (family)
++		ahints.ai_family = family;
++
+ 	    error = getaddrinfo(aliasp, "0", &ahints, &ares);
+ 	    if (error) {
+ 	        printf ("Couldn't get address for %s\n", aliasp);
+diff --git a/telnet/externs.h b/telnet/externs.h
+index a42d0dc..93ed218 100644
+--- a/telnet/externs.h
++++ b/telnet/externs.h
+@@ -57,6 +57,7 @@ extern int
+     autologin,		/* Autologin enabled */
+     skiprc,		/* Don't process the ~/.telnetrc file */
+     eight,		/* use eight bit mode (binary in and/or out */
++    family,		/* forced ip family */
+     binary,
+     flushout,		/* flush output */
+     connected,		/* Are we connected to the other side? */
+diff --git a/telnet/main.c b/telnet/main.c
+index 5fa96e8..2b0227c 100644
+--- a/telnet/main.c
++++ b/telnet/main.c
+@@ -80,10 +80,10 @@ usage(void)
+ 	fprintf(stderr, "Usage: %s %s%s%s%s\n",
+ 	    prompt,
+ #ifdef	AUTHENTICATION
+-	    "[-8] [-E] [-K] [-L] [-S tos] [-X atype] [-a] [-c] [-d] [-e char]",
++	    "[-4] [-6] [-8] [-E] [-K] [-L] [-S tos] [-X atype] [-a] [-c] [-d] [-e char]",
+ 	    "\n\t[-k realm] [-l user] [-f/-F] [-n tracefile] [-b hostalias ] ",
+ #else
+-	    "[-8] [-E] [-L] [-S tos] [-a] [-c] [-d] [-e char] [-l user]",
++	    "[-4] [-6] [-8] [-E] [-L] [-S tos] [-a] [-c] [-d] [-e char] [-l user]",
+ 	    "\n\t[-n tracefile] [-b hostalias ] ",
+ #endif
+ #if defined(TN3270) && defined(unix)
+@@ -140,7 +140,7 @@ main(int argc, char *argv[])
+ 	 */
+ 	autologin = -1;
+ 
+-	while ((ch = getopt(argc, argv, "78DEKLS:X:ab:cde:fFk:l:n:rt:x")) != -1) {
++	while ((ch = getopt(argc, argv, "4678DEKLS:X:ab:cde:fFk:l:n:rt:x")) != -1) {
+ 		switch(ch) {
+ 		case '8':
+ 			binary = 3;	/* send TELNET BINARY option for output and input */
+@@ -148,6 +148,18 @@ main(int argc, char *argv[])
+ 		case '7':
+ 			eight = 0;
+ 			break;
++		case '6':
++#ifdef AF_INET6
++			family = AF_INET6;
++#else
++			fprintf(stderr,
++			   "%s: Warning: -6 ignored, no IPv6 support.\n",
++								prompt);
++#endif
++			break;
++		case '4':
++			family = AF_INET;
++			break;
+ 		case 'D': {
+ 			/* sometimes we don't want a mangled display */
+ 			char *p;
+diff --git a/telnet/telnet.1 b/telnet/telnet.1
+index 50015a6..c7af14a 100644
+--- a/telnet/telnet.1
++++ b/telnet/telnet.1
+@@ -44,7 +44,7 @@
+ protocol
+ .Sh SYNOPSIS
+ .Nm telnet
+-.Op Fl 8EFKLacdfrx
++.Op Fl 468EFKLacdfrx
+ .Op Fl X Ar authtype
+ .Op Fl b Ar hostalias
+ .Op Fl e Ar escapechar
+@@ -76,6 +76,10 @@ command with those arguments.
+ .Pp
+ The options are as follows:
+ .Bl -tag -width Ds
++.It Fl 4 
++Force IPv4 address resolution.
++.It Fl 6 
++Force IPv6 address resolution.
+ .It Fl 7
+ Strip 8th bit on input and output. Telnet is 8-bit clean by default but doesn't send the TELNET BINARY option unless forced.
+ .It Fl 8
+diff --git a/telnet/telnet.c b/telnet/telnet.c
+index a3b5a08..52ab06f 100644
+--- a/telnet/telnet.c
++++ b/telnet/telnet.c
+@@ -62,6 +62,7 @@ int
+ 	binary = 0,
+ 	autologin = 0,	/* Autologin anyone? */
+ 	skiprc = 0,
++	family = 0,
+ 	connected,
+ 	showoptions,
+ 	In3270,		/* Are we in 3270 mode? */

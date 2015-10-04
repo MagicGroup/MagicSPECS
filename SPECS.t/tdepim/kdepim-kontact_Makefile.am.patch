@@ -1,9 +1,0 @@
-diff -u -r kdepim-3.5.7/kontact/plugins/Makefile.am kdepim-3.5.7.new/kontact/plugins/Makefile.am
---- kdepim-3.5.7/kontact/plugins/Makefile.am	2007-05-14 15:54:53.000000000 +0800
-+++ kdepim-3.5.7.new/kontact/plugins/Makefile.am	2007-05-28 15:03:17.000000000 +0800
-@@ -3,4 +3,4 @@
- endif
- 
- SUBDIRS = $(KPILOT_KONTACTPLUGIN) kaddressbook kmail knotes korganizer \
--	summary weather knode newsticker specialdates akregator karm
-+	summary weather knode newsticker specialdates akregator

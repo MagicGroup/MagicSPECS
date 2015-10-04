@@ -2,14 +2,16 @@
 
 Name: tre
 Version: 0.8.0
-Release: 6%{?dist}
+Release: 7%{?dist}
 License: BSD
 Group: System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 Source0: http://laurikari.net/tre/%{name}-%{version}.tar.bz2
 Patch0: %{name}-chicken.patch
 # make internal tests of agrep work with just-built shared library
 Patch1: %{name}-tests.patch
 Summary: POSIX compatible regexp library with approximate matching
+Summary(zh_CN.UTF-8): 带有近似匹配的 POSIX 兼容的正则表达式库
 URL: http://laurikari.net/tre/
 Buildroot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: python-devel
@@ -18,26 +20,40 @@ BuildRequires: python-devel
 TRE is a lightweight, robust, and efficient POSIX compatible regexp
 matching library with some exciting features such as approximate
 matching.
+%description -l zh_CN.UTF-8
+带有近似匹配的 POSIX 兼容的正则表达式库。
 
 %package devel
 Requires: tre = %{version}-%{release}
 Summary: Development files for use with the tre package
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 
 %description devel
 This package contains header files and static libraries for use when
 building applications which use the TRE library.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
 %package -n python-%{name}
 Group: System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 Summary: Python bindings for the tre library
+Summary(zh_CN.UTF-8): %{name} 的 Python 绑定
 
 %description -n python-%{name}
 This package contains the python bindings for the TRE library.
 
+%description -n python-%{name} -l zh_CN.UTF-8
+%{name} 的 Python 绑定。
+
 %package -n agrep
 Summary: Approximate grep utility
+Summary(zh_CN.UTF-8): 近似匹配 grep 工具
 Group: Applications/Text
+Group(zh_CN.UTF-8): 应用程序/文本
 
 %description -n agrep
 The agrep tool is similar to the commonly used grep utility, but agrep
@@ -51,6 +67,9 @@ only the best matching lines can be output.
 
 Unlike other agrep implementations, TRE agrep allows full POSIX
 regexps of any length, any number of errors, and non-uniform costs.
+
+%description -n agrep -l zh_CN.UTF-8
+近似匹配 grep 工具。
 
 %prep
 %setup -q
@@ -75,7 +94,8 @@ pushd python
 %{__python} setup.py install -O1 --skip-build --root $RPM_BUILD_ROOT
 popd
 rm $RPM_BUILD_ROOT%{_libdir}/*.la
-%find_lang %{name}
+magic_rpm_clean.sh
+%find_lang %{name} || :
 
 %check
 # revert rpath removal for building internal test programs
@@ -89,7 +109,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %postun -p /sbin/ldconfig
 
-%files -f %{name}.lang
+%files 
 %defattr(644,root,root,755)
 %doc AUTHORS ChangeLog INSTALL LICENSE NEWS README THANKS TODO
 %doc doc/*.html doc/*.css
@@ -112,6 +132,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man1/agrep.1*
 
 %changelog
+* Sun Oct 04 2015 Liu Di <liudidi@gmail.com> - 0.8.0-7
+- 为 Magic 3.0 重建
+
 * Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 0.8.0-6
 - 为 Magic 3.0 重建
 

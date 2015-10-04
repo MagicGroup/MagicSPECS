@@ -1,9 +1,11 @@
 Summary:	A modern implementation of a DBM
+Summary(zh_CN.UTF-8): DBM 的一个现代实现
 Name:		tokyocabinet
-Version:	1.4.47
-Release:	6%{?dist}
+Version:	1.4.48
+Release:	1%{?dist}
 License:	LGPLv2+
 Group:		Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 URL:		http://fallabs.com/tokyocabinet/
 Source:		http://fallabs.com/%{name}/%{name}-%{version}.tar.gz
 Patch0:		tokyocabinet-fedora.patch
@@ -16,19 +18,28 @@ to store 1 million records is 1.5 seconds for a hash database and 2.2 seconds
 for a B+ tree database. Moreover, the database size is very small and can be up
 to 8EB. Furthermore, the scalability of Tokyo Cabinet is great.
 
+%description -l zh_CN.UTF-8
+DBM 的一个现代实现。
+
 %package devel
 Summary:	Headers for developing programs that will use %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:		Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:	%{name} = %{version}-%{release}
 Requires:	pkgconfig
 
 %description devel
 This package contains the libraries and header files needed for
 developing with %{name}.
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %package devel-doc
 Summary:	Documentation files for developing programs that will use %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发文档
 Group:		Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:	%{name} = %{version}-%{release}
 Requires:	pkgconfig
 BuildArch:	noarch
@@ -36,6 +47,9 @@ BuildArch:	noarch
 %description devel-doc
 This package contains documentation files for the libraries and header files
 needed for developing with %{name}.
+
+%description devel-doc -l zh_CN.UTF-8
+%{name} 的开发文档。
 
 %prep
 %setup -q
@@ -51,6 +65,7 @@ make DESTDIR=%{buildroot} install
 
 rm -rf %{buildroot}%{_datadir}/%{name}
 rm -rf %{buildroot}%{_libdir}/lib%{name}.a
+magic_rpm_clean.sh
 
 %check
 make check
@@ -76,6 +91,9 @@ make check
 %doc doc/*
 
 %changelog
+* Sun Oct 04 2015 Liu Di <liudidi@gmail.com> - 1.4.48-1
+- 更新到 1.4.48
+
 * Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 1.4.47-6
 - 为 Magic 3.0 重建
 

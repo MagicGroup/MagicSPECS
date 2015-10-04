@@ -1,10 +1,11 @@
-%global api_ver 0.24
+%global api_ver 0.30
 %global priority 90
 
 Name:           vala
-Version:        0.24.0
-Release:        4%{?dist}
+Version:	0.30.0
+Release:	1%{?dist}
 Summary:        A modern programming language for GNOME
+Summary(zh_CN.UTF-8): GNOME 下的现代程序语言
 
 # Most files are LGPLv2.1+, curses.vapi is 2-clause BSD
 License:        LGPLv2+ and BSD
@@ -13,12 +14,8 @@ URL:            http://live.gnome.org/Vala
 # note: do not use a macro for directory name
 # as it breaks Colin Walters' automatic build script
 # see https://bugzilla.redhat.com/show_bug.cgi?id=609292
-Source0:        http://download.gnome.org/sources/vala/0.24/vala-%{version}.tar.xz
-Source1:        vala-mode.el
-Source2:        vala-init.el
-Source3:        emacs-vala-COPYING
-# https://bugzilla.gnome.org/732138
-Patch0:         vala-0.24.0-clutter-gst-deps.patch
+%define majorver %(echo %{version} | awk -F. '{print $1"."$2}')
+Source0:        http://download.gnome.org/sources/vala/%{majorver}/vala-%{version}.tar.xz
 
 BuildRequires:  flex
 BuildRequires:  bison
@@ -57,9 +54,12 @@ introspection is ready.
 The syntax of Vala is similar to C#, modified to better fit the GObject
 type system.
 
+%description -l zh_CN.UTF-8
+GNOME 下的现代程序语言。
 
 %package        devel
 Summary:        Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Requires:       %{name}%{?_isa} = %{version}-%{release}
 
 %description    devel
@@ -70,10 +70,12 @@ applications and libraries written in C.
 
 This package contains development files for %{name}. This is not
 necessary for using the %{name} compiler.
-
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %package        tools
 Summary:        Tools for creating projects and bindings for %{name}
+Summary(zh_CN.UTF-8): %{name} 的工具
 License:        LGPLv2+
 Requires:       %{name}%{?_isa} = %{version}-%{release}
 Requires:       gnome-common intltool libtool pkgconfig
@@ -87,10 +89,12 @@ applications and libraries written in C.
 
 This package contains tools to generate Vala projects, as well as API
 bindings from existing C libraries, allowing access from Vala programs.
-
+%description tools -l zh_CN.UTF-8
+%{name} 的工具。
 
 %package        doc
 Summary:        Documentation for %{name}
+Summary(zh_CN.UTF-8): %{name} 的文档
 License:        LGPLv2+
 
 BuildArch:      noarch
@@ -104,51 +108,20 @@ runtime requirements and without using a different ABI compared to
 applications and libraries written in C.
 
 This package contains documentation in a devhelp HTML book.
-
-
-%package -n emacs-%{name}
-Summary:        Vala mode for Emacs
-License:        GPLv2+
-
-BuildArch:      noarch
-Requires:       emacs(bin) >= %{_emacs_version}
-
-%description -n emacs-%{name}
-An Emacs mode for editing Vala source code.
-
-
-%package -n emacs-%{name}-el
-Summary:        Elisp source files for emacs-%{name}
-License:        GPLv2+
-
-BuildArch:      noarch
-Requires:       emacs-%{name} = %{version}-%{release}
-
-%description -n emacs-%{name}-el
-This package contains the elisp source files for Vala under GNU
-Emacs. You do not need to install this package to run Vala. Install
-the emacs-%{name} package to use Vala with GNU Emacs.
-
+%description doc -l zh_CN.UTF-8
+%{name} 的文档。
 
 %prep
 %setup -q
-%patch0 -p1
-
 
 %build
 %configure
 # Don't use rpath!
 sed -i 's|/lib /usr/lib|/lib /usr/lib /lib64 /usr/lib64|' libtool
 make %{?_smp_mflags}
-# Compile emacs module
-mkdir emacs-vala && cd emacs-vala && cp -p %{SOURCE1} .
-%{_emacs_bytecompile} vala-mode.el
-# and copy its licensing file
-cp -p %{SOURCE3} COPYING
-
 
 %install
-make install DESTDIR=$RPM_BUILD_ROOT
+%make_install
 # remove symlinks, using alternatives
 for f in %{vala_binaries} %{vala_tools_binaries};
 do
@@ -163,13 +136,6 @@ done
 # own this directory for third-party *.vapi files
 mkdir -p $RPM_BUILD_ROOT%{_datadir}/vala/vapi
 find %{buildroot} -name '*.la' -exec rm -f {} ';'
-
-# Emacs mode files
-mkdir -p $RPM_BUILD_ROOT%{_emacs_sitelispdir}/%{name}
-mkdir -p $RPM_BUILD_ROOT%{_emacs_sitestartdir}
-cp -p emacs-vala/*.el* $RPM_BUILD_ROOT%{_emacs_sitelispdir}/%{name}
-cp -p %{SOURCE2} $RPM_BUILD_ROOT%{_emacs_sitestartdir}
-
 
 %check
 # make check
@@ -266,17 +232,10 @@ done
 %files doc
 %doc %{_datadir}/devhelp/books/vala-%{api_ver}
 
-%files -n emacs-%{name}
-%doc emacs-vala/COPYING
-%dir %{_emacs_sitelispdir}/%{name}
-%{_emacs_sitelispdir}/%{name}/*.elc
-%{_emacs_sitestartdir}/*.el
-
-%files -n emacs-%{name}-el
-%{_emacs_sitelispdir}/%{name}/*.el
-
-
 %changelog
+* Sun Oct 04 2015 Liu Di <liudidi@gmail.com> - 0.30.0-1
+- 更新到 0.30.0
+
 * Tue Jul 15 2014 Liu Di <liudidi@gmail.com> - 0.24.0-4
 - 为 Magic 3.0 重建
 

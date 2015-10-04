@@ -2,10 +2,12 @@
 
 Name:		tcl-pgtcl
 Version:	2.1.1
-Release:	3%{?dist}
+Release:	4%{?dist}
 Summary:	A Tcl client library for PostgreSQL
+Summary(zh_CN.UTF-8): PostgreSQL 的 Tcl 客户端库
 
 Group:		Applications/Databases
+Group(zh_CN.UTF-8): 应用程序/数据库
 URL:		http://sourceforge.net/projects/pgtclng/
 # The PostgreSQL license is very similar to other MIT licenses, but the OSI
 # recognizes it as an independent license, so we do as well.
@@ -27,7 +29,7 @@ Obsoletes:	postgresql-tcl < 8.5
 BuildRequires:	postgresql-devel tcl-devel
 BuildRequires:	autoconf
 
-Requires:	tcl(abi) >= 8.5
+Requires:	tcl(abi) >= 8.6
 
 %{!?tcl_version: %global tcl_version %(echo 'puts $tcl_version' | tclsh)}
 %{!?tcl_sitearch: %global tcl_sitearch %{_libdir}/tcl%{tcl_version}}
@@ -38,6 +40,8 @@ PostgreSQL is an advanced Object-Relational database management system.
 The tcl-pgtcl package contains Pgtcl, a Tcl client library for connecting
 to a PostgreSQL server.
 
+%description -l zh_CN.UTF-8
+PostgreSQL 的 Tcl 客户端库。
 
 %prep
 %setup -q -n pgtcl%{version}
@@ -60,7 +64,7 @@ make all %{?_smp_mflags}
 make install DESTDIR=$RPM_BUILD_ROOT
 # we don't really need to ship the .h file
 rm -f $RPM_BUILD_ROOT%{_includedir}/libpgtcl.h
-
+magic_rpm_clean.sh
 
 %clean
 
@@ -71,6 +75,9 @@ rm -f $RPM_BUILD_ROOT%{_includedir}/libpgtcl.h
 
 
 %changelog
+* Wed Sep 30 2015 Liu Di <liudidi@gmail.com> - 2.1.1-4
+- 为 Magic 3.0 重建
+
 * Sat Aug 01 2015 Liu Di <liudidi@gmail.com> - 2.1.1-3
 - 为 Magic 3.0 重建
 

@@ -1,22 +1,17 @@
 %global         majorminor      1.0
 
 # Turn off extras package on RHEL.
-%if ! 0%{?rhel}
 %bcond_without extras
-%else
-%bcond_with extras
-%endif
 
 Name:           gstreamer1-plugins-good
-Version:	1.4.5
-Release:        2%{?dist}
+Version:	1.6.0
+Release:        1%{?dist}
 Summary:        GStreamer plugins with good code and licensing
 Summary(zh_CN.UTF-8): 具有良好代码和授权支持的 GStreamer 插件
 
 License:        LGPLv2+
 URL:            http://gstreamer.freedesktop.org/
 Source0:        http://gstreamer.freedesktop.org/src/gst-plugins-good/gst-plugins-good-%{version}.tar.xz
-Patch3:         0001-v4l2src-Check-for-obj-pool-NULL.patch
 
 BuildRequires:  gstreamer1-devel >= %{version}
 BuildRequires:  gstreamer1-plugins-base-devel >= %{version}
@@ -92,8 +87,6 @@ to be installed.
 
 %prep
 %setup -q -n gst-plugins-good-%{version}
-%patch3 -p1
-
 
 %build
 %configure \
@@ -212,6 +205,9 @@ find $RPM_BUILD_ROOT -name '*.la' -exec rm -f {} ';'
 
 
 %changelog
+* Sat Oct 03 2015 Liu Di <liudidi@gmail.com> - 1.6.0-1
+- 更新到 1.6.0
+
 * Sun Mar 01 2015 Liu Di <liudidi@gmail.com> - 1.4.5-2
 - 更新到 1.4.5
 

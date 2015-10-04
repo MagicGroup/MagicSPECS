@@ -1,8 +1,10 @@
 Name:		tinycdb
 Summary:	Utility and library for manipulating constant databases
+Summary(zh_CN.UTF-8): 处理常数据库的工具和库
 Version:	0.78
-Release:	4%{?dist}
+Release:	5%{?dist}
 Group:		System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 License:	Public Domain
 URL:		http://www.corpit.ru/mjt/tinycdb.html
 Source0:	http://www.corpit.ru/mjt/%{name}/%{name}-%{version}.tar.gz
@@ -16,9 +18,14 @@ for fast reading.
 
 This package contains tinycdb utility and shared library.
 
+%description -l zh_CN.UTF-8
+处理常数据库的工具和库。
+
 %package devel
 Summary:	Development files for tinycdb
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:		Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:	%{name}%{?_isa} = %{version}-%{release}
 
 %description devel
@@ -27,6 +34,9 @@ library for creating and reading constant databases.
 
 This package contains tinycdb development library and header file for 
 developing applications that use %{name}.
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -45,6 +55,7 @@ chmod +x %{buildroot}%{_libdir}/*.so.*
 rm -f %{buildroot}%{_libdir}/lib*.a
 mkdir -p %{buildroot}%{_libdir}/pkgconfig
 cp -p debian/libcdb.pc %{buildroot}%{_libdir}/pkgconfig/libcdb.pc
+magic_rpm_clean.sh
 
 %post -p /sbin/ldconfig
 %postun -p /sbin/ldconfig
@@ -63,6 +74,9 @@ cp -p debian/libcdb.pc %{buildroot}%{_libdir}/pkgconfig/libcdb.pc
 %{_libdir}/pkgconfig/*.pc
 
 %changelog
+* Sat Oct 03 2015 Liu Di <liudidi@gmail.com> - 0.78-5
+- 为 Magic 3.0 重建
+
 * Thu Apr 16 2015 Liu Di <liudidi@gmail.com> - 0.78-4
 - 为 Magic 3.0 重建
 

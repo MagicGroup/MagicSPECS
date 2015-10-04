@@ -5,24 +5,18 @@
 %global homedir     %{_localstatedir}/lib/%{name}
 %global logdir      %{_localstatedir}/log/%{name}
 
-%if 0%{?fedora} || 0%{?rhel} >= 8
 %bcond_without libsystemd
-%else
-%bcond_with libsystemd
-%endif
 
-%ifarch %{ix86} x86_64
-%bcond_without libseccomp
-%else
 %bcond_with libseccomp
-%endif
 
 Name:       tor
 Version:    0.2.6.10
-Release:    3%{?dist}
+Release:    4%{?dist}
 Group:      System Environment/Daemons
+Group(zh_CN.UTF-8): 系统环境/服务
 License:    BSD
 Summary:    Anonymizing overlay network for TCP (The onion router)
+Summary(zh_CN.UTF-8): TCP 上的匿名网络
 URL:        https://www.torproject.org
 
 Source0:    https://www.torproject.org/dist/%{name}-%{version}.tar.gz
@@ -76,6 +70,8 @@ bugs. The present network is very small -- this further reduces the
 strength of the anonymity provided. Tor is not presently suitable for
 high-stakes anonymity.
 
+%description -l zh_CN.UTF-8
+Tor 是一个匿名网络。
 
 %prep
 %setup -q
@@ -115,7 +111,7 @@ sed -e 's#/etc/tor/torrc#/etc/tor/%%i.torrc#g' \
 
 # Install docs manually.
 rm -rf %{buildroot}%{_datadir}/doc
-
+magic_rpm_clean.sh
 
 %pre
 getent group %{torgroup} >/dev/null || groupadd -r %{torgroup}
@@ -160,6 +156,9 @@ exit 0
 
 
 %changelog
+* Sun Oct 04 2015 Liu Di <liudidi@gmail.com> - 0.2.6.10-4
+- 为 Magic 3.0 重建
+
 * Tue Sep 29 2015 Jamie Nguyen <jamielinux@fedoraproject.org> - 0.2.6.10-3
 - only build with libseccomp support on ix86, x86_64
 

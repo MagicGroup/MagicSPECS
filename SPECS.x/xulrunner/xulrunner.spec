@@ -78,7 +78,7 @@
 Summary:        XUL Runtime for Gecko Applications
 Name:           xulrunner
 Version:        40.0
-Release:        2%{?pre_tag}%{?dist}
+Release:        3%{?pre_tag}%{?dist}
 URL:            http://developer.mozilla.org/En/XULRunner
 License:        MPLv1.1 or GPLv2+ or LGPLv2+
 Group:          Applications/Internet
@@ -552,6 +552,9 @@ fi
 #---------------------------------------------------------------------
 
 %changelog
+* Thu Oct 01 2015 Liu Di <liudidi@gmail.com> - 40.0-3
+- 为 Magic 3.0 重建
+
 * Wed Sep 2 2015 Martin Stransky <stransky@redhat.com> - 40.0-2
 - Disable Skia to build on second arches
 

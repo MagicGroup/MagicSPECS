@@ -1,9 +1,11 @@
 Name: trousers
 Summary: TCG's Software Stack v1.2
-Version: 0.3.11.2
-Release: 1%{?dist}
+Summary(zh_CN.UTF-8): TCG 软件包 v1.2
+Version:	0.3.13
+Release:	1%{?dist}
 License: BSD
 Group: System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 Url: http://trousers.sourceforge.net
 Source0: http://downloads.sourceforge.net/%{name}/%{name}-%{version}.tar.gz
 Source1: tcsd.service
@@ -22,9 +24,14 @@ of your TPM hardware. TPM hardware can create, store and use RSA keys
 securely (without ever being exposed in memory), verify a platform's software
 state using cryptographic hashes and more.
 
+%description -l zh_CN.UTF-8
+TCG 软件包 v1.2.
+
 %package static
 Summary: TrouSerS TCG Device Driver Library
+Summary(zh_CN.UTF-8): %{name} 的静态库
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: %{name}-devel = %{version}-%{release}
 
 %description static
@@ -33,14 +40,21 @@ interface to the TPM's device driver. For more information about writing
 applications to the TDDL interface, see the latest TSS spec at
 https://www.trustedcomputinggroup.org/specs/TSS.
 
+%description static -l zh_CN.UTF-8
+%{name} 的静态库。
+
 %package devel
 Summary: TrouSerS header files and documentation
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: %{name} = %{version}-%{release}
 
 %description devel
 Header files and man pages for use in creating Trusted Computing enabled
 applications.
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -59,6 +73,7 @@ make install DESTDIR=${RPM_BUILD_ROOT} INSTALL="install -p"
 rm -f ${RPM_BUILD_ROOT}/%{_libdir}/libtspi.la
 mkdir -p $RPM_BUILD_ROOT%{_unitdir}
 install -m 0644 %{SOURCE1} $RPM_BUILD_ROOT%{_unitdir}/
+magic_rpm_clean.sh
 
 %clean
 rm -rf ${RPM_BUILD_ROOT}
@@ -108,6 +123,9 @@ exit 0
 %{_libdir}/libtddl.a
 
 %changelog
+* Sun Oct 04 2015 Liu Di <liudidi@gmail.com> - 0.3.13-1
+- 更新到 0.3.13
+
 * Mon Aug 19 2013 Steve Grubb <sgrubb@redhat.com> 0.3.11.2-1
 - New upstream bug fix and license change release
 

@@ -238,8 +238,9 @@ killall -USR1 gvfsd >&/dev/null || :
 %{_datadir}/gvfs/mounts/dns-sd.mount
 %{_datadir}/gvfs/mounts/network.mount
 %{_datadir}/gvfs/mounts/ftp.mount
+%{_datadir}/gvfs/mounts/ftps.mount
 %{_datadir}/gvfs/mounts/recent.mount
-%{_datadir}/dbus-1/services/org.gtk.Private.UDisks2VolumeMonitor.service
+%{_datadir}/dbus-1/services/org.gtk.vfs.UDisks2VolumeMonitor.service
 %{_datadir}/dbus-1/services/gvfs-daemon.service
 %{_datadir}/dbus-1/services/gvfs-metadata.service
 %{_datadir}/gvfs/remote-volume-monitors/udisks2.monitor
@@ -247,7 +248,7 @@ killall -USR1 gvfsd >&/dev/null || :
 %{_datadir}/glib-2.0/schemas/*.xml
 %dir %{_datadir}/bash-completion
 %dir %{_datadir}/bash-completion/completions
-%{_datadir}/bash-completion/completions/gvfs
+%{_datadir}/bash-completion/completions/gvfs*
 %{_libdir}/gvfs/libgvfs*.so
 %{_libdir}/gio/modules/libgioremote-volume-monitor.so
 %{_libdir}/gio/modules/libgvfsdbus.so
@@ -319,19 +320,19 @@ killall -USR1 gvfsd >&/dev/null || :
 %{_libexecdir}/gvfsd-gphoto2
 %{_datadir}/gvfs/mounts/gphoto2.mount
 %{_libexecdir}/gvfs-gphoto2-volume-monitor
-%{_datadir}/dbus-1/services/org.gtk.Private.GPhoto2VolumeMonitor.service
+%{_datadir}/dbus-1/services/org.gtk.vfs.GPhoto2VolumeMonitor.service
 %{_datadir}/gvfs/remote-volume-monitors/gphoto2.monitor
 
 %ifnarch s390 s390x
 %files obexftp
-%{_libexecdir}/gvfsd-obexftp
-%{_datadir}/gvfs/mounts/obexftp.mount
+#{_libexecdir}/gvfsd-obexftp
+#{_datadir}/gvfs/mounts/obexftp.mount
 
 %files afc
 %{_libexecdir}/gvfsd-afc
 %{_datadir}/gvfs/mounts/afc.mount
 %{_libexecdir}/gvfs-afc-volume-monitor
-%{_datadir}/dbus-1/services/org.gtk.Private.AfcVolumeMonitor.service
+%{_datadir}/dbus-1/services/org.gtk.vfs.AfcVolumeMonitor.service
 %{_datadir}/gvfs/remote-volume-monitors/afc.monitor
 %endif
 
@@ -345,12 +346,12 @@ killall -USR1 gvfsd >&/dev/null || :
 %{_libexecdir}/gvfsd-mtp
 %{_datadir}/gvfs/mounts/mtp.mount
 %{_libexecdir}/gvfs-mtp-volume-monitor
-%{_datadir}/dbus-1/services/org.gtk.Private.MTPVolumeMonitor.service
+%{_datadir}/dbus-1/services/org.gtk.vfs.MTPVolumeMonitor.service
 %{_datadir}/gvfs/remote-volume-monitors/mtp.monitor
 
 %files goa
 %{_libexecdir}/gvfs-goa-volume-monitor
-%{_datadir}/dbus-1/services/org.gtk.Private.GoaVolumeMonitor.service
+%{_datadir}/dbus-1/services/org.gtk.vfs.GoaVolumeMonitor.service
 %{_datadir}/gvfs/remote-volume-monitors/goa.monitor
 
 

@@ -1,9 +1,11 @@
 Name:           tslib
 Version:        1.0
-Release:        5%{?dist}
+Release:        6%{?dist}
 Summary:        Touchscreen Access Library
+Summary(zh_CN.UTF-8): 触摸屏访问库
 
 Group:          System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 License:        LGPLv2
 URL:            http://tslib.berlios.de/
 Source0:        http://download.berlios.de/tslib/tslib-%{version}.tar.bz2
@@ -25,17 +27,22 @@ specifies one module, and the parameters for that module.  The modules
 are loaded in order, with the first one processing the touchscreen data
 first. 
 
+%description -l zh_CN.UTF-8
+触摸屏访问库。
 
 %package        devel
 Summary:        Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       %{name} = %{version}-%{release}
 Requires:       pkgconfig
 
 %description    devel
 The %{name}-devel package contains libraries and header files for
 developing applications that use %{name}.
-
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -51,7 +58,7 @@ make %{?_smp_mflags}
 rm -rf $RPM_BUILD_ROOT
 make install DESTDIR=$RPM_BUILD_ROOT INSTALL="install -p"
 find $RPM_BUILD_ROOT -name '*.la' -exec rm -f {} ';'
-
+magic_rpm_clean.sh
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -79,6 +86,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sun Oct 04 2015 Liu Di <liudidi@gmail.com> - 1.0-6
+- 为 Magic 3.0 重建
+
 * Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 1.0-5
 - 为 Magic 3.0 重建
 

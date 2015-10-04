@@ -1,9 +1,11 @@
 Name:           telepathy-farstream
-Version:        0.6.0
-Release:        5%{?dist}
+Version:	0.6.2
+Release:	1%{?dist}
 Summary:        Telepathy client library to handle Call channels
+Summary(zh_CN.UTF-8): 处理呼叫频道的 Telepathy 客户端库
 
 Group:          System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 License:        LGPLv2+
 URL:            http://telepathy.freedesktop.org/wiki/Telepathy-Farsight
 Source0:        http://telepathy.freedesktop.org/releases/%{name}/%{name}-%{version}.tar.gz
@@ -29,11 +31,14 @@ Obsoletes:      %{name}-python < 0.6.0
 %description
 %{name} is a Telepathy client library that uses Farstream to handle
 Call channels.
-
+%description -l zh_CN.UTF-8
+处理呼叫频道的 Telepathy 客户端库。
 
 %package        devel
 Summary:        Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       %{name}%{?_isa} = %{version}-%{release}
 Requires:       telepathy-glib-devel >= 0.19.0
 Requires:       farstream02-devel >= 0.2.0
@@ -50,6 +55,9 @@ Obsoletes:      telepathy-farsight-devel < 0.0.20
 The %{name}-devel package contains libraries and header files for
 developing applications that use %{name}.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
 %prep
 %setup -q
 
@@ -62,7 +70,7 @@ make %{?_smp_mflags}
 %install
 make install DESTDIR=$RPM_BUILD_ROOT
 find $RPM_BUILD_ROOT -name '*.la' -exec rm -f {} ';'
-
+magic_rpm_clean.sh
 
 %check
 make check
@@ -89,6 +97,9 @@ make check
 
 
 %changelog
+* Wed Sep 30 2015 Liu Di <liudidi@gmail.com> - 0.6.2-1
+- 更新到 0.6.2
+
 * Tue Sep 22 2015 Liu Di <liudidi@gmail.com> - 0.6.0-5
 - 为 Magic 3.0 重建
 

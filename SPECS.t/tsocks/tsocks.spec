@@ -1,9 +1,11 @@
 %define     real_version    1.8beta5
 Name:       tsocks
 Version:    1.8
-Release:    0.10.beta5%{?dist}
+Release:    0.11.beta5%{?dist}
 Summary:    Library for catching network connections, redirecting them on a SOCKS server
+Summary(zh_CN.UTF-8): 把网络连接重定向到 SOCKS 代理服务器的库
 Group:      System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 License:    GPLv2+
 URL:        http://tsocks.sourceforge.net/
 Source0:    http://downloads.sourceforge.net/%{name}/%{name}-%{real_version}.tar.gz
@@ -31,6 +33,9 @@ specified in the configuration file. It then negotiates that connection
 with the SOCKS server and passes the connection back to the calling
 program.
 
+%description -l zh_CN.UTF-8
+把网络连接重定向到 SOCKS 代理服务器的库。
+
 %prep
 %setup -q
 %patch0 -p1
@@ -48,6 +53,7 @@ make %{?_smp_mflags}
 %install
 rm -rf $RPM_BUILD_ROOT
 make install DESTDIR=$RPM_BUILD_ROOT
+magic_rpm_clean.sh
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -64,6 +70,9 @@ rm -rf $RPM_BUILD_ROOT
 %postun -p /sbin/ldconfig
 
 %changelog
+* Sun Oct 04 2015 Liu Di <liudidi@gmail.com> - 1.8-0.11.beta5
+- 为 Magic 3.0 重建
+
 * Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 1.8-0.10.beta5
 - 为 Magic 3.0 重建
 

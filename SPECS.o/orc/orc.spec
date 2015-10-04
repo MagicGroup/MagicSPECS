@@ -1,17 +1,15 @@
 Name:		orc
-Version:	0.4.22
-Release:	5%{?dist}
+Version:	0.4.24
+Release:	1%{?dist}
 Summary:	The Oil Run-time Compiler
+Summary(zh_CN.UTF-8): Oil 运行时编译器
 
 Group:		System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 License:	BSD
 URL:		http://cgit.freedesktop.org/gstreamer/orc/
 
-# Source0:	http://code.entropywave.com/download/orc/orc-%{version}.tar.gz
-# Tarfile created using git
-# git clone git://anongit.freedesktop.org/gstreamer/orc
-# git archive --format=tar --prefix=%{name}-%{version}/ %{name}-%{version} | bzip2 > %{name}-%{version}.tar.bz2
-Source0:	%{name}-%{version}.tar.bz2
+Source0:	http://gstreamer.freedesktop.org/src/orc/%{name}-%{version}.tar.xz
 
 BuildRequires:	gtk-doc, libtool
 
@@ -22,18 +20,27 @@ is a generic assembly language that represents many of the features
 available in SIMD architectures, including saturated addition and
 subtraction, and many arithmetic operations.
 
+%description -l zh_CN.UTF-8
+Oil 运行时编译器。
+
 %package doc
 Summary:	Documentation for Orc
+Summary(zh_CN.UTF-8): %{name} 的文档
 Group:		Development/Languages
+Group(zh_CN.UTF-8): 开发/语言
 Requires:	%{name} = %{version}-%{release}
 BuildArch:	noarch
 
 %description doc
 Documentation for Orc.
+%description doc -l zh_CN.UTF-8
+%{name} 的文档。
 
 %package devel
 Summary:	Development files and libraries for Orc
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:		Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:	%{name} = %{version}-%{release}
 Requires:	%{name}-compiler
 Requires:	pkgconfig
@@ -41,16 +48,21 @@ Requires:	pkgconfig
 %description devel
 This package contains the files needed to build packages that depend
 on orc.
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %package compiler
 Summary:	Orc compiler
+Summary(zh_CN.UTF-8): Orc 编译器
 Group:		Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:	%{name} = %{version}-%{release}
 Requires:	pkgconfig
 
 %description compiler
 The Orc compiler, to produce optimized code.
-
+%description compiler -l zh_CN.UTF-8
+Orc 编译器。
 
 %prep
 %setup -q
@@ -71,7 +83,7 @@ find %{buildroot}/%{_libdir} -name \*.a -or -name \*.la -delete
 rm -rf %{buildroot}/%{_libdir}/orc
 
 touch -r stamp-h1 %{buildroot}%{_includedir}/%{name}-0.4/orc/orc-stdint.h   
-
+magic_rpm_clean.sh
 
 %check
 %ifnarch s390 s390x ppc %{power64} %{arm} i686 aarch64
@@ -105,6 +117,12 @@ make check
 
 
 %changelog
+* Sat Oct 03 2015 Liu Di <liudidi@gmail.com> - 0.4.24-1
+- 更新到 0.4.24
+
+* Sat Oct 03 2015 Liu Di <liudidi@gmail.com> - 0.4.22-6
+- 为 Magic 3.0 重建
+
 * Fri Apr 03 2015 Liu Di <liudidi@gmail.com> - 0.4.22-5
 - 为 Magic 3.0 重建
 

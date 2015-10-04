@@ -1,15 +1,13 @@
-%if 0%{?rhel}
-%global run_tests 0
-%else
 %global run_tests 1
-%endif
 
 Name:           telepathy-gabble
-Version:        0.18.2
-Release:        2%{?dist}
+Version:	0.18.3
+Release:	1%{?dist}
 Summary:        A Jabber/XMPP connection manager
+Summary(zh_CN.UTF-8): Jabber/XMPP 连接管理器
 
 Group:          Applications/Communications
+Group(zh_CN.UTF-8): 应用程序/通信
 License:        LGPLv2+
 URL:            http://telepathy.freedesktop.org/wiki/
 Source0:        http://telepathy.freedesktop.org/releases/%{name}/%{name}-%{version}.tar.gz
@@ -45,6 +43,8 @@ Obsoletes:      telepathy-butterfly < 0.5.15-5
 A Jabber/XMPP connection manager, that handles single and multi-user
 chats and voice calls.
 
+%description -l zh_CN.UTF-8
+Jabber/XMPP 连接管理器。
 
 %prep
 %setup -q
@@ -100,6 +100,9 @@ rm -f $RPM_BUILD_ROOT%{_docdir}/%{name}/*.html
 
 
 %changelog
+* Wed Sep 30 2015 Liu Di <liudidi@gmail.com> - 0.18.3-1
+- 更新到 0.18.3
+
 * Wed May 07 2014 Liu Di <liudidi@gmail.com> - 0.18.2-2
 - 为 Magic 3.0 重建
 

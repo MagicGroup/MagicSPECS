@@ -11,8 +11,8 @@
 Summary: System for layout and rendering of internationalized text
 Summary(zh_CN.UTF-8): 国际化文本的布局和渲染系统
 Name: pango
-Version: 1.36.8
-Release: 5%{?dist}
+Version:	1.38.0
+Release:	1%{?dist}
 License: LGPLv2+
 Group: System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
@@ -108,8 +108,7 @@ make %{?_smp_mflags} V=1
 make install DESTDIR=$RPM_BUILD_ROOT INSTALL="install -p"
 
 # Remove files that should not be packaged
-rm $RPM_BUILD_ROOT%{_libdir}/*.la
-rm $RPM_BUILD_ROOT%{_libdir}/pango/*/modules/*.la
+rm -f $RPM_BUILD_ROOT%{_libdir}/*.la
 
 PANGOXFT_SO=$RPM_BUILD_ROOT%{_libdir}/libpangoxft-1.0.so
 if ! test -e $PANGOXFT_SO; then
@@ -118,39 +117,20 @@ if ! test -e $PANGOXFT_SO; then
         exit 1
 fi
 
-# We need to have separate 32-bit and 64-bit pango-querymodules binaries
-# for places where we have two copies of the Pango libraries installed.
-# (we might have x86_64 and i686 packages on the same system, for example.)
-mv $RPM_BUILD_ROOT%{_bindir}/pango-querymodules $RPM_BUILD_ROOT%{_bindir}/pango-querymodules-%{__isa_bits}
-
-# and add a man page too
-echo ".so man1/pango-querymodules.1" > $RPM_BUILD_ROOT%{_mandir}/man1/pango-querymodules-%{__isa_bits}.1
-
-touch $RPM_BUILD_ROOT%{_libdir}/pango/%{bin_version}/modules.cache
 magic_rpm_clean.sh
 
 %post
 /sbin/ldconfig
-/usr/bin/pango-querymodules-%{__isa_bits} --update-cache || :
 
 %postun
 /sbin/ldconfig
-if test $1 -gt 0; then
-  /usr/bin/pango-querymodules-%{__isa_bits} --update-cache || :
-fi
 
 %files
 %doc README AUTHORS COPYING NEWS
 %doc pango-view/HELLO.txt
 %{_libdir}/libpango*-*.so.*
-%{_bindir}/pango-querymodules*
 %{_bindir}/pango-view
 %{_mandir}/man1/pango-view.1.gz
-%{_mandir}/man1/pango-querymodules*
-%dir %{_libdir}/pango
-%dir %{_libdir}/pango/%{bin_version}
-%{_libdir}/pango/%{bin_version}/modules
-%ghost %{_libdir}/pango/%{bin_version}/modules.cache
 %{_libdir}/girepository-1.0/Pango-1.0.typelib
 %{_libdir}/girepository-1.0/PangoCairo-1.0.typelib
 %{_libdir}/girepository-1.0/PangoFT2-1.0.typelib
@@ -174,6 +154,9 @@ fi
 
 
 %changelog
+* Sun Oct 04 2015 Liu Di <liudidi@gmail.com> - 1.38.0-1
+- 更新到 1.38.0
+
 * Wed Apr 15 2015 Liu Di <liudidi@gmail.com> - 1.36.8-5
 - 为 Magic 3.0 重建
 

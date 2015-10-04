@@ -1,6 +1,6 @@
 Name:		tigervnc
 Version:	1.5.0
-Release:	3%{?dist}
+Release:	4%{?dist}
 Summary:	A TigerVNC remote display system
 
 %global _hardened_build 1
@@ -9,7 +9,7 @@ Group:		User Interface/Desktops
 License:	GPLv2+
 URL:		http://www.tigervnc.com
 
-Source0:	%{name}-%{version}.tar.gz
+Source0:	https://github.com/TigerVNC/tigervnc/archive/v%{version}.tar.gz
 Source1:	vncserver.service
 Source2:	vncserver.sysconfig
 Source3:	10-libvnc.conf
@@ -54,11 +54,9 @@ Patch7:		tigervnc-manpages.patch
 Patch8:		tigervnc-getmaster.patch
 Patch9:		tigervnc-shebang.patch
 Patch14:	tigervnc-xstartup.patch
-Patch15:	tigervnc-xserver118.patch
-Patch17:	tigervnc-xorg118-QueueKeyboardEvents.patch
 
 # This is tigervnc-%%{version}/unix/xserver116.patch rebased on the latest xorg
-Patch100:       tigervnc-xserver116-rebased.patch
+Patch100:       xserver114.patch
 
 %description
 Virtual Network Computing (VNC) is a remote display system which
@@ -151,7 +149,7 @@ BuildArch:	noarch
 This package contains icons for TigerVNC viewer
 
 %prep
-%setup -q
+%setup -q -n %{name}-%{version}
 
 %patch1 -p1 -b .cookie
 %patch2 -p1 -b .fix-reversed-logic
@@ -163,7 +161,7 @@ pushd unix/xserver
 for all in `find . -type f -perm -001`; do
 	chmod -x "$all"
 done
-%patch100 -p1 -b .xserver116-rebased
+%patch100 -p1 -b .xserver114-rebased
 popd
 
 # Applied Debian patch to fix busy loop when run from inetd in nowait
@@ -181,13 +179,6 @@ popd
 
 # Clearer xstartup file (bug #923655).
 %patch14 -p1 -b .xstartup
-
-# Allow build against xorg-x11-server-1.18.
-%patch15 -p1 -b .xserver118
-
-%if 0%{?fedora} > 23
-%patch17 -p1 -b .xorg118-QueueKeyboardEvents
-%endif
 
 %build
 %ifarch sparcv9 sparc64 s390 s390x
@@ -356,6 +347,9 @@ fi
 %{_datadir}/icons/hicolor/*/apps/*
 
 %changelog
+* Sat Oct 03 2015 Liu Di <liudidi@gmail.com> - 1.5.0-4
+- 为 Magic 3.0 重建
+
 * Tue Sep 22 2015 Kalev Lember <klember@redhat.com> - 1.5.0-3
 - xorg server 1.18 ABI rebuild
 

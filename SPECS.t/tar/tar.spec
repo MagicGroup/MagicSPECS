@@ -2,45 +2,33 @@
 %global WITH_SELINUX 0
 %endif
 Summary: A GNU file archiving program
+Summary(zh_CN.UTF-8): GNU 文件归档程序
 Name: tar
 Epoch: 2
-Version: 1.26
-Release: 15%{?dist}
+Version:	1.28
+Release:	1%{?dist}
 License: GPLv3+
 Group: Applications/Archiving
+Group(zh_CN.UTF-8): 应用程序/归档
 URL: http://www.gnu.org/software/tar/
 Source0: ftp://ftp.gnu.org/pub/gnu/tar/tar-%{version}.tar.xz
 Source1: ftp://ftp.gnu.org/pub/gnu/tar/tar-%{version}.tar.xz.sig
 #Manpage for tar and gtar, a bit modified help2man generated manpage
 Source2: tar.1
-#Stop issuing lone zero block warnings
-Patch1: tar-1.14-loneZeroWarning.patch
-#Fix extracting sparse files to a filesystem like vfat,
-#when ftruncate may fail to grow the size of a file.(#179507)
-Patch2: tar-1.15.1-vfatTruncate.patch
-#change inclusion defaults of tar to "--wildcards --anchored
-#--wildcards-match-slash" for compatibility reasons (#206841)
-#Add support for selinux, acl and extended attributes
-#Patch3: tar-1.24-xattrs.patch
-Patch4: tar-1.17-wildcards.patch
-#ignore errors from setting utime() for source file
-#on read-only filesystem (#500742)
-Patch5: tar-1.22-atime-rofs.patch
-#oldarchive option was not working(#594044)
-Patch6: tar-1.23-oldarchive.patch
-#temporarily disable sigpipe.at patch (fails at build in koji, passes manually)
-Patch7: tar-sigpipe.patch
-#partially revert upstream commit 4bde4f3 (#717684)
-Patch8: tar-1.24-openat-partial-revert.patch
-# fix for bad cooperation of -C and -u options (#688567)
-Patch9: tar-1.26-update-with-change-directory.patch
-# fix rawhide buildfailure with undefined gets
-Patch10: tar-1.26-stdio.in.patch
-# Prepare gnulib for xattrs and apply xattrs & acls & selinux (#850291)
-Patch11: tar-1.26-xattrs-gnulib-prepare.patch
-Patch12: tar-1.26-xattrs.patch
-# fix regression with --keep-old-files option (#799252)
-Patch13: tar-1.26-add-skip-old-files-option.patch
+
+# Note that all patches are documented in patch files (git format-patch format)
+Patch1:  tar-1.28-loneZeroWarning.patch
+Patch2:  tar-1.28-vfatTruncate.patch
+Patch3:  tar-1.28-wildcards.patch
+Patch4:  tar-1.28-atime-rofs.patch
+Patch5:  tar-1.28-update-with-change-directory.patch
+Patch7:  tar-1.28-docu-xattrs.patch
+Patch9:  tar-1.28-document-exclude-mistakes.patch
+Patch11: tar-1.28-sparse-inf-loops.patch
+Patch12: tar-1.28-big-sparse-listing.patch
+Patch13: tar-1.28-T-matchflags.patch
+Patch14: tar-1.28-T-recursion-tests.patch
+Patch15: tar-1.28-T-tests-false-failure.patch
 
 BuildRequires: autoconf automake texinfo gettext libacl-devel rsh
 # allow proper tests for extended attributes
@@ -65,48 +53,43 @@ backups.
 If you want to use tar for remote backups, you also need to install
 the rmt package.
 
-%prep
-%setup -q
-%patch1 -p1 -b .loneZeroWarning
-%patch2 -p1 -b .vfatTruncate
-%patch4 -p1 -b .wildcards
-%patch5 -p1 -b .rofs
-%patch6 -p1 -b .oldarchive
-%patch7 -p1 -b .fail
-%patch8 -p1 -b .openat
-%patch9 -p1 -b .update_and_changedir
-%patch10 -p1 -b .gets  %{?_rawbuild}
-%patch11 -p1 -b .xattrs_gnulib_prep
-%patch12 -p1 -b .xattrs2
-%patch13 -p1 -b .skip-old-files
+%description -l zh_CN.UTF-8
+GNU 文件归档程序。
 
-autoreconf
+%prep
+%autosetup -p1
+autoreconf -v
 
 %build
-%if %{WITH_SELINUX} == 0
-export CONFIGURE_PARAMS+="--without-selinux"
+%if ! %{WITH_SELINUX}
+%global CONFIGURE_SELINUX --without-selinux
 %endif
 
-%configure --bindir=/bin --libexecdir=/sbin $CONFIGURE_PARAMS
-make
+%configure %{?CONFIGURE_SELINUX} \
+    --with-lzma="xz --format=lzma" \
+    DEFAULT_RMT_DIR=%{_sysconfdir} \
+    RSH=/usr/bin/ssh
+make %{?_smp_mflags}
 
 %install
-make DESTDIR=$RPM_BUILD_ROOT bindir=/bin libexecdir=/sbin install
+make DESTDIR=$RPM_BUILD_ROOT install
 
-ln -s tar $RPM_BUILD_ROOT/bin/gtar
+ln -s tar $RPM_BUILD_ROOT%{_bindir}/gtar
 rm -f $RPM_BUILD_ROOT/%{_infodir}/dir
 mkdir -p $RPM_BUILD_ROOT%{_mandir}/man1
-install -c -p -m 0644 %{SOURCE2} $RPM_BUILD_ROOT%{_mandir}/man1
 ln -s tar.1.gz $RPM_BUILD_ROOT%{_mandir}/man1/gtar.1
 
 # XXX Nuke unpackaged files.
-rm -f $RPM_BUILD_ROOT/sbin/rmt
-
+rm -f $RPM_BUILD_ROOT%{_sysconfdir}/rmt
+rm -f $RPM_BUILD_ROOT%{_mandir}/man8/rmt.8*
+magic_rpm_clean.sh
 %find_lang %name
 
 %check
+%if %{with check}
 rm -f $RPM_BUILD_ROOT/test/testsuite
-TESTSUITEFLAGS=-v make check
+make check || TESTSUITEFLAGS=-v make check
+%endif
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -124,21 +107,19 @@ if [ $1 = 0 ]; then
 fi
 
 %files -f %{name}.lang
-%doc AUTHORS ChangeLog ChangeLog.1 COPYING NEWS README THANKS TODO
-%ifos linux
-/bin/tar
-/bin/gtar
+%{!?_licensedir:%global license %%doc}
+%license COPYING
+%doc AUTHORS ChangeLog ChangeLog.1 NEWS README THANKS TODO
+%{_bindir}/tar
+%{_bindir}/gtar
 %{_mandir}/man1/tar.1*
 %{_mandir}/man1/gtar.1*
-%else
-%{_bindir}/*
-%{_libexecdir}/*
-%{_mandir}/man*/*
-%endif
-
 %{_infodir}/tar.info*
 
 %changelog
+* Wed Sep 30 2015 Liu Di <liudidi@gmail.com> - 2:1.28-1
+- 更新到 1.28
+
 * Thu Nov 29 2012 Ondrej Vasik <ovasik@redhat.com> - 2:1.26-15
 - add missing --full-time option to manpage
 

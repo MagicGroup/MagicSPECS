@@ -2,21 +2,21 @@ Summary: The client program for the telnet remote login protocol.
 Summary(zh_CN.UTF-8): 远程登录协议 - telnet - 的客户端
 Name: telnet
 Version: 0.17
-Release: 46%{?dist}
+Release: 47%{?dist}
 Epoch: 1
 License: BSD
 Group: Applications/Internet
 Group(zh_CN.UTF-8): 应用程序/互联网
 Source0: ftp://ftp.uk.linux.org/pub/linux/Networking/netkit/netkit-telnet-%{version}.tar.gz
 Source2: telnet-client.tar.gz
-Source3: telnet-xinetd
 Source4: telnet.wmconfig
+Source5: telnet@.service
+Source6: telnet.socket
 Patch1: telnet-client-cvs.patch
 Patch5: telnetd-0.17.diff
 Patch6: telnet-0.17-env.patch
 Patch7: telnet-0.17-issue.patch
 Patch8: telnet-0.17-sa-01-49.patch
-Patch9: telnet-0.17-env-5x.patch
 Patch10: telnet-0.17-pek.patch
 Patch11: telnet-0.17-8bit.patch
 Patch12: telnet-0.17-argv.patch
@@ -24,11 +24,16 @@ Patch13: telnet-0.17-conf.patch
 Patch14: telnet-0.17-cleanup_race.patch
 Patch15: telnetd-0.17-pty_read.patch
 Patch16: telnet-0.17-CAN-2005-468_469.patch
-Patch17: telnet-0.17-linemode.patch
 Patch18: telnet-gethostbyname.patch
 Patch19: netkit-telnet-0.17-ipv6.diff
 Patch20: netkit-telnet-0.17-nodns.patch
 Patch21: telnet-0.17-errno_test_sys_bsd.patch
+Patch22: netkit-telnet-0.17-reallynodns.patch
+Patch23: telnet-rh678324.patch
+Patch24: telnet-rh674942.patch
+Patch25: telnet-rh704604.patch
+Patch26: telnet-rh825946.patch
+Patch27: telnet-0.17-ipv6-support.patch
 
 BuildPreReq: ncurses-devel
 Buildroot: %{_tmppath}/%{name}-root
@@ -83,22 +88,21 @@ mv telnet telnet-NETKIT
 %patch19 -p1 -b .gethost2
 %patch20 -p1 -b .nodns
 %patch21 -p1 -b .errnosysbsd
+%patch22 -p1 -b .reallynodns
+%patch23 -p1 -b .rh678324
+%patch24 -p1 -b .rh674942
+%patch25 -p1 -b .rh704604
+%patch26 -p1 -b .rh825946
+%patch27 -p1 -b .ipv6-support
 
 %build
-export OPT_FLAGS="$RPM_OPT_FLAGS -g"
-export LD_FLAGS="$OPT_FLAGS"
-export CC_FLAGS="$CC_FLAGS"
-if echo 'int main () { return 0; }' | gcc -pie -fPIE -O2 -xc - -o pietest 2>/dev/null; then
-        if ./pietest; then
-%ifarch s390 s390x ia64
-		 export CC_FLAGS="$OPT_FLAGS -fPIE"
+%ifarch s390 s390x
+    export CC_FLAGS="$RPM_OPT_FLAGS -fPIE"
 %else
-		 export CC_FLAGS="$OPT_FLAGS -fpie"
+    export CC_FLAGS="$RPM_OPT_FLAGS -fpie"
 %endif
-		 export LD_FLAGS="$OPT_FLAGS -pie"
-	fi
-        rm -f pietest
-fi
+
+export LD_FLAGS="$LD_FLAGS -z now -pie"
 
 sh configure --with-c-compiler=gcc 
 perl -pi -e '
@@ -111,44 +115,54 @@ perl -pi -e '
 
 # remove stripping
 perl -pi -e 's|install[ ]+-s|install|g' \
-	./telnet/GNUmakefile \
-	./telnetd/Makefile \
-	./telnetlogin/Makefile \
-	./telnet-NETKIT/Makefile
+    ./telnet/GNUmakefile \
+    ./telnetd/Makefile \
+    ./telnetlogin/Makefile \
+    ./telnet-NETKIT/Makefile
 
 make %{?_smp_mflags}
 
 %install
-rm -rf ${RPM_BUILD_ROOT}
 mkdir -p ${RPM_BUILD_ROOT}%{_bindir}
 mkdir -p ${RPM_BUILD_ROOT}%{_sbindir}
+mkdir -p ${RPM_BUILD_ROOT}%{_unitdir}
 mkdir -p ${RPM_BUILD_ROOT}%{_mandir}/man1
 mkdir -p ${RPM_BUILD_ROOT}%{_mandir}/man5
 mkdir -p ${RPM_BUILD_ROOT}%{_mandir}/man8
 
 make INSTALLROOT=${RPM_BUILD_ROOT} install
 
-mkdir -p ${RPM_BUILD_ROOT}/etc/xinetd.d
-install -m644 %SOURCE3 ${RPM_BUILD_ROOT}/etc/xinetd.d/telnet
-magic_rpm_clean.sh
+install -p -m644 %SOURCE5 ${RPM_BUILD_ROOT}%{_unitdir}/telnet@.service
+install -p -m644 %SOURCE6 ${RPM_BUILD_ROOT}%{_unitdir}/telnet.socket
 
-%clean
-rm -rf ${RPM_BUILD_ROOT}
+%post server
+%systemd_post telnet.socket
+
+%preun server
+%systemd_preun telnet.socket
+
+%postun server
+%systemd_postun_with_restart telnet.socket
 
 %files
-%defattr(-,root,root)
+%doc README
+%defattr(-,root,root,-)
 %{_bindir}/telnet
 %{_mandir}/man1/telnet.1*
 
 %files server
-%defattr(-,root,root)
-%config(noreplace) /etc/xinetd.d/telnet
+%defattr(-,root,root,-)
+%{_unitdir}/*
 %{_sbindir}/in.telnetd
 %{_mandir}/man5/issue.net.5*
 %{_mandir}/man8/in.telnetd.8*
 %{_mandir}/man8/telnetd.8*
 
+
 %changelog
+* Wed Sep 30 2015 Liu Di <liudidi@gmail.com> - 1:0.17-47
+- 为 Magic 3.0 重建
+
 * Sat Sep 19 2015 Liu Di <liudidi@gmail.com> - 1:0.17-46
 - 为 Magic 3.0 重建
 

@@ -1,11 +1,13 @@
 Summary: A network traffic monitoring tool
+Summary(zh_CN.UTF-8): 网络流量监视工具
 Name: tcpdump
 Epoch: 14
-Version: 4.2.1
-Release: 3%{?dist}
+Version:	4.7.4
+Release:	1%{?dist}
 License: BSD with advertising
 URL: http://www.tcpdump.org
 Group: Applications/Internet
+Group(zh_CN.UTF-8): 应用程序/互联网
 Requires(pre): shadow-utils 
 BuildRequires: openssl-devel libpcap-devel
 BuildRequires: automake sharutils
@@ -13,12 +15,15 @@ BuildRequires: automake sharutils
 Source0: http://www.tcpdump.org/release/tcpdump-%{version}.tar.gz
 Source1: ftp://ftp.ee.lbl.gov/tcpslice-1.2a3.tar.gz
 
-Patch1: tcpdump-4.0.0-portnumbers.patch
-Patch2: tcpdump-4.0.0-icmp6msec.patch
-Patch3: tcpdump-3.9.8-gethostby.patch
-Patch4: tcpslice-1.2a3-time.patch
-Patch5: tcpslice-CVS.20010207-bpf.patch
-Patch6: tcpslice-1.2a3-dateformat.patch
+Patch0001:      0001-icmp6-print-Reachable-Time-and-Retransmit-Time-from-.patch
+Patch0002:      0002-Use-getnameinfo-instead-of-gethostbyaddr.patch
+Patch0003:      0003-Drop-root-priviledges-before-opening-first-savefile-.patch
+Patch0004:      0004-tcpslice-update-tcpslice-patch-to-1.2a3.patch
+Patch0005:      0005-tcpslice-remove-unneeded-include.patch
+Patch0006:      0006-tcpslice-don-t-test-the-pointer-but-pointee-for-NULL.patch
+Patch0007:      0007-Introduce-nn-option.patch
+Patch0008:      0008-Don-t-print-out-we-dropped-root-we-are-always-droppi.patch
+
 
 %define tcpslice_dir tcpslice-1.2a3
 
@@ -30,20 +35,11 @@ the packet headers, or just the ones that match particular criteria.
 
 Install tcpdump if you need a program to monitor network traffic.
 
+%description -l zh_CN.UTF-8
+网络流量监视工具。
+
 %prep
-%setup -q -a 1
-
-%patch1 -p1 -b .portnumbers
-%patch2 -p1 -b .icmp6msec
-%patch3 -p1 -b .gethostby
-
-pushd %{tcpslice_dir}
-%patch4 -p1 -b .time
-%patch5 -p1 -b .bpf
-%patch6 -p1 -b .dateformat
-popd
-
-find . -name '*.c' -o -name '*.h' | xargs chmod 644
+%autosetup -a 1 -S git
 
 %build
 export CFLAGS="$RPM_OPT_FLAGS $(getconf LFS_CFLAGS) -fno-strict-aliasing"
@@ -77,6 +73,7 @@ install -m644 tcpdump.1 ${RPM_BUILD_ROOT}%{_mandir}/man8/tcpdump.8
 # fix section numbers
 sed -i 's/\(\.TH[a-zA-Z ]*\)[1-9]\(.*\)/\18\2/' \
 	${RPM_BUILD_ROOT}%{_mandir}/man8/*
+magic_rpm_clean.sh
 
 %pre
 /usr/sbin/groupadd -g 72 tcpdump 2> /dev/null
@@ -86,13 +83,15 @@ exit 0
 
 %files
 %defattr(-,root,root)
-%doc LICENSE README CHANGES CREDITS
 %{_sbindir}/tcpdump
 %{_sbindir}/tcpslice
 %{_mandir}/man8/tcpslice.8*
 %{_mandir}/man8/tcpdump.8*
 
 %changelog
+* Wed Sep 30 2015 Liu Di <liudidi@gmail.com> - 14:4.7.4-1
+- 更新到 4.7.4
+
 * Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 14:4.2.1-3
 - 为 Magic 3.0 重建
 

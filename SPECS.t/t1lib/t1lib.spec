@@ -1,10 +1,11 @@
 Name:           t1lib
 Version:        5.1.2
-Release:        10%{?dist}
+Release:        11%{?dist}
 
 Summary:        PostScript Type 1 font rasterizer
-
+Summary(zh_CN.UTF-8): PostScript Type 1 字体栅格化
 Group:          Applications/Publishing
+Group(zh_CN.UTF-8): 应用程序/出版
 License:        LGPLv2+
 URL:            ftp://sunsite.unc.edu/pub/Linux/libs/graphics/t1lib-%{version}.lsm
 Source0:        ftp://sunsite.unc.edu/pub/Linux/libs/graphics/t1lib-%{version}.tar.gz
@@ -16,6 +17,10 @@ Patch2:         t1lib-5.1.2-afm-fix.patch
 # Fixes CVE-2011-0764, CVE-2011-1552, CVE-2011-1553, CVE-2011-1554
 # http://bugzilla.redhat.com/show_bug.cgi?id=692909
 Patch3:         t1lib-5.1.2-type1-inv-rw-fix.patch
+# A%description -l zh_CN.UTF-8 aarch64 support
+# https://bugzilla.redhat.com/show_bug.cgi?id=926603
+Patch4:         t1lib-5.1.2-aarch64.patch
+Patch5:         t1lib-5.1.2-format-security.patch
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  libXaw-devel
 
@@ -29,30 +34,45 @@ X11.
 
 AFM-files can be generated from Type 1 font files and font subsetting
 is possible.
+%description -l zh_CN.UTF-8
+PostScript Type 1 字体栅格化。
 
 %package        apps
 Summary:        t1lib demo applications
+Summary(zh_CN.UTF-8): %{name} 的演示程序
 Group:          Applications/Text
+Group(zh_CN.UTF-8): 应用程序/文本
 Requires:       %{name} = %{version}-%{release}
 
 %description    apps
 Sample applications using t1lib
+%description apps -l zh_CN.UTF-8
+%{name} 的演示程序。
 
 %package        devel
 Summary:        Header files and development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       %{name} = %{version}-%{release}
 
 %description    devel
 This package contains header files and development files for %{name}.
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %package        static
 Summary:        Static libraries for %{name}
+Summary(zh_CN.UTF-8): %{name} 的静态库
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       %{name}-devel = %{version}-%{release}
 
 %description    static
 This package contains static libraries for %{name}.
+
+%description static -l zh_CN.UTF-8
+%{name} 的静态库。
 
 %prep
 %setup -q
@@ -60,6 +80,8 @@ This package contains static libraries for %{name}.
 %patch1 -p1 -b .segf
 %patch2 -p1 -b .afm-fix
 %patch3 -p1 -b .type1-inv-rw-fix
+%patch4 -p1 -b .aarch64
+%patch5 -p1 -b .format-security
 
 # use debian patches directly instead of duplicating them
 #patch -p1 < debian/patches/segfault.diff -b -z .segf
@@ -102,6 +124,7 @@ install -p -m 755 t1libconfig $RPM_BUILD_ROOT%{_sbindir}/
 
 mkdir -p $RPM_BUILD_ROOT%{_datadir}/t1lib/
 touch $RPM_BUILD_ROOT%{_datadir}/t1lib/{FontDatabase,t1lib.config}
+magic_rpm_clean.sh
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -146,6 +169,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Wed Sep 30 2015 Liu Di <liudidi@gmail.com> - 5.1.2-11
+- 为 Magic 3.0 重建
+
 * Sat Jul 21 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 5.1.2-10
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 

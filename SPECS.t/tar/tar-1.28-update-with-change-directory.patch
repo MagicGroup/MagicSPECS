@@ -1,0 +1,122 @@
+From fecf72d73021fa47956ea551f6ccc804213452ce Mon Sep 17 00:00:00 2001
+From: Pavel Raiskup <praiskup@redhat.com>
+Date: Wed, 4 Apr 2012 18:04:53 +0200
+Subject: [PATCH 5/9] Bad cooperation of -C and -u options
+
+Previously, tar did not update archive with newly created files in archived
+directory --  it failed instead  with "file not found" error (because it looked
+in bad directory in filesystem).
+
+---
+ src/update.c       |  2 +-
+ tests/Makefile.am  |  1 +
+ tests/testsuite.at |  1 +
+ tests/update03.at  | 59 ++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ 4 files changed, 62 insertions(+), 1 deletion(-)
+ create mode 100644 tests/update03.at
+
+diff --git a/src/update.c b/src/update.c
+index c8fca0c..9a9c4e2 100644
+--- a/src/update.c
++++ b/src/update.c
+@@ -152,7 +152,7 @@ update_archive (void)
+ 
+ 			    for (p = dirp; *p; p += strlen (p) + 1)
+ 			      addname (namebuf_name (nbuf, p),
+-				       0, false, NULL);
++				       name->change_dir, false, NULL);
+ 
+ 			    namebuf_free (nbuf);
+ 			    free (dirp);
+diff --git a/tests/Makefile.am b/tests/Makefile.am
+index 6684d1d..2a2e1cc 100644
+--- a/tests/Makefile.am
++++ b/tests/Makefile.am
+@@ -208,6 +208,7 @@ TESTSUITE_AT = \
+  update.at\
+  update01.at\
+  update02.at\
++ update03.at\
+  volsize.at\
+  volume.at\
+  verbose.at\
+diff --git a/tests/testsuite.at b/tests/testsuite.at
+index 7f8e4c4..f1ce58f 100644
+--- a/tests/testsuite.at
++++ b/tests/testsuite.at
+@@ -360,6 +360,7 @@ AT_BANNER([Updates])
+ m4_include([update.at])
+ m4_include([update01.at])
+ m4_include([update02.at])
++m4_include([update03.at])
+ 
+ AT_BANNER([Verifying the archive])
+ m4_include([verify.at])
+diff --git a/tests/update03.at b/tests/update03.at
+new file mode 100644
+index 0000000..185f9eb
+--- /dev/null
++++ b/tests/update03.at
+@@ -0,0 +1,59 @@
++# Process this file with autom4te to create testsuite. -*- Autotest -*-
++
++# Test suite for GNU tar.
++# Copyright (C) 2012 Free Software Foundation, Inc.
++
++# This program is free software; you can redistribute it and/or modify it under
++# the terms of the GNU General Public License as published by the Free Software
++# Foundation; either version 3, or (at your option) any later version.
++
++# This program is distributed in the hope that it will be useful, but WITHOUT
++# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
++# FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
++# details.
++
++# You should have received a copy of the GNU General Public License along with
++# this program; if not, write to the Free Software Foundation, Inc., 51 Franklin
++# Street, Fifth Floor, Boston, MA 02110-1301, USA.
++
++# Description:
++#   Test if the '--update' option works with the '--directory DIR' option
++#   properly.  In version <= 1.26 tar this combination caused problems.
++#
++# References:
++#   https://bugzilla.redhat.com/show_bug.cgi?id=688567
++#
++# Last-Affected-Version:  1.26.90
++
++AT_SETUP([update & change directory (-C)])
++AT_KEYWORDS([update update03])
++
++AT_TAR_CHECK([
++AT_SORT_PREREQ
++
++# prepare filesystem
++mkdir dir
++mkdir dir/subdir
++genfile --file dir/subdir/a
++
++# crate archive of subdir
++tar -C dir -cf file.tar subdir
++
++# update filesystem
++mkdir dir/subdir/b
++genfile --file dir/subdir/b/c
++
++# sync the 'file.tar' archive
++tar -C dir -uf file.tar subdir
++
++# print contents
++tar -tf file.tar | sort || exit 1
++],
++[0],
++[subdir/
++subdir/a
++subdir/b/
++subdir/b/c
++])
++
++AT_CLEANUP
+-- 
+1.9.3
+

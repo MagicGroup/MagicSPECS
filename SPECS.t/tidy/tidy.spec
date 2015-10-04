@@ -5,16 +5,20 @@
 
 Name:    tidy
 Summary: Utility to clean up and pretty print HTML/XHTML/XML
+Summary(zh_CN.UTF-8): 清理和完美打印 HTML/XHTML/XML 的工具
 Version: 0.99.0
-Release: 24.%{snap}%{?dist}
+Release: 25.%{snap}%{?dist}
 
 Group:   Applications/Text
+Group(zh_CN.UTF-8): 应用程序/文本
 License: W3C
 URL:     http://tidy.sourceforge.net/
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 Source0: tidy-%{snap}cvs.tar.gz
 Source10: tidy-cvs_checkout.sh 
+
+Patch0: tidy-20091203cvs-format.patch
 
 BuildRequires: libtool
 BuildRequires: doxygen
@@ -32,24 +36,36 @@ specialized HTML editors and conversion tools, and can help you
 identify where you need to pay further attention on making your pages
 more accessible to people with disabilities.
 
+%description -l zh_CN.UTF-8
+清理和完美打印 HTML/XHTML/XML 的工具。
+
 %package -n %{libname} 
 Summary: Shared libraries for %{name}
+Summary(zh_CN.UTF-8): %{name} 的运行库
 Group:	 System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 %description -n %{libname} 
 %{summary}.
+%description -n %{libname} -l zh_CN.UTF-8
+%{name} 的运行库。
 
 %package -n %{libname}-devel
 Summary: Development files for %{name} 
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:   Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Obsoletes: tidy-devel < 0.99.0-10 
 Provides:  tidy-devel = %{version}-%{release}
 Requires: %{libname}%{?_isa} = %{version}-%{release}
 %description -n %{libname}-devel
 %{summary}.
 
+%description -n  %{libname}-devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q -n %{name}
+%patch0 -p1 -b .format
 
 # htmldocs included in cvs checkout
 #setup -q -n %{name} -T -D -b1
@@ -115,6 +131,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sat Oct 03 2015 Liu Di <liudidi@gmail.com> - 0.99.0-25.20091203
+- 为 Magic 3.0 重建
+
 * Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 0.99.0-24.20091203
 - 为 Magic 3.0 重建
 

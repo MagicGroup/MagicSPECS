@@ -1,0 +1,72 @@
+https://github.com/w3c/tidy-html5/issues/11
+https://github.com/w3c/tidy-html5/pull/12
+
+From 8727af8a7c8a2d11743bb6d35f07f4a21ade7266 Mon Sep 17 00:00:00 2001
+From: John Schember <john@nachtimwald.com>
+Date: Sun, 26 Feb 2012 11:53:53 -0500
+Subject: [PATCH] Fix format string warnings.
+
+---
+ src/localize.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
+
+diff --git a/src/localize.c b/src/localize.c
+index 1b95923..9823f12 100644
+--- a/src/localize.c
++++ b/src/localize.c
+@@ -1373,14 +1373,14 @@ void TY_(ReportAccessWarning)( TidyDocImpl* doc, Node* node, uint code )
+ {
+     ctmbstr fmt = GetFormatFromCode(code);
+     doc->badAccess |= BA_WAI;
+-    messageNode( doc, TidyAccess, node, fmt );
++    messageNode( doc, TidyAccess, node, "%s", fmt );
+ }
+ 
+ void TY_(ReportAccessError)( TidyDocImpl* doc, Node* node, uint code )
+ {
+     ctmbstr fmt = GetFormatFromCode(code);
+     doc->badAccess |= BA_WAI;
+-    messageNode( doc, TidyAccess, node, fmt );
++    messageNode( doc, TidyAccess, node, "%s", fmt );
+ }
+ 
+ #endif /* SUPPORT_ACCESSIBILITY_CHECKS */
+@@ -1399,7 +1399,7 @@ void TY_(ReportWarning)(TidyDocImpl* doc, Node *element, Node *node, uint code)
+     switch (code)
+     {
+     case NESTED_QUOTATION:
+-        messageNode(doc, TidyWarning, rpt, fmt);
++        messageNode(doc, TidyWarning, rpt, "%s", fmt);
+         break;
+ 
+     case OBSOLETE_ELEMENT:
+@@ -1480,7 +1480,7 @@ void TY_(ReportError)(TidyDocImpl* doc, Node *element, Node *node, uint code)
+     case INCONSISTENT_NAMESPACE:
+     case DOCTYPE_AFTER_TAGS:
+     case DTYPE_NOT_UPPER_CASE:
+-        messageNode(doc, TidyWarning, rpt, fmt);
++        messageNode(doc, TidyWarning, rpt, "%s", fmt);
+         break;
+ 
+     case COERCE_TO_ENDTAG:
+@@ -1499,7 +1499,7 @@ void TY_(ReportError)(TidyDocImpl* doc, Node *element, Node *node, uint code)
+     case ENCODING_IO_CONFLICT:
+     case MISSING_DOCTYPE:
+     case SPACE_PRECEDING_XMLDECL:
+-        messageNode(doc, TidyWarning, node, fmt);
++        messageNode(doc, TidyWarning, node, "%s", fmt);
+         break;
+ 
+     case TRIM_EMPTY_ELEMENT:
+@@ -1548,7 +1548,7 @@ void TY_(ReportFatal)( TidyDocImpl* doc, Node *element, Node *node, uint code)
+     {
+     case SUSPECTED_MISSING_QUOTE:
+     case DUPLICATE_FRAMESET:
+-        messageNode(doc, TidyError, rpt, fmt);
++        messageNode(doc, TidyError, rpt, "%s", fmt);
+         break;
+ 
+     case UNKNOWN_ELEMENT:
+-- 
+1.8.4
+

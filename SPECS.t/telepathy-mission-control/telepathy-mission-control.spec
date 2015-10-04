@@ -1,12 +1,14 @@
 %define tp_glib_ver 0.17.5
 
 Name:           telepathy-mission-control
-Version:        5.16.1
-Release:        1%{?dist}
+Version:	5.16.3
+Release:	1%{?dist}
 Epoch:          1
 Summary:        Central control for Telepathy connection manager
+Summary(zh_CN.UTF-8): Telepathy 连接管理器的中央控制
 
 Group:          System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 License:        LGPLv2
 URL:            http://telepathy.freedesktop.org/wiki/Mission_Control
 Source0:        http://telepathy.freedesktop.org/releases/%{name}/%{name}-%{version}.tar.gz
@@ -33,10 +35,14 @@ managers, to provide a simple way to manipulate a bunch of connection
 managers at once, and to remove the need to have in each program the
 account definitions and credentials.
 
+%description -l zh_CN.UTF-8d
+Telepathy 连接管理器的中央控制。
 
 %package        devel
 Summary:        Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       %{name} = %{epoch}:%{version}-%{release}
 Requires:       dbus-devel
 Requires:       dbus-glib-devel
@@ -47,7 +53,8 @@ Requires:       telepathy-glib-devel >= %{tp_glib_ver}
 The %{name}-devel package contains libraries and header
 files for developing applications that use %{name}.
 
-
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 %prep
 %setup -q
 %patch0049 -p1 -b .0049
@@ -70,7 +77,7 @@ chrpath --delete %{buildroot}%{_libexecdir}/mission-control-5
 
 # Remove .la files
 find %{buildroot} -name '*.la' -exec rm -f {} ';'
-
+magic_rpm_clean.sh
 
 %check
 make check
@@ -107,6 +114,9 @@ fi
 
 
 %changelog
+* Wed Sep 30 2015 Liu Di <liudidi@gmail.com> - 1:5.16.3-1
+- 更新到 5.16.3
+
 * Mon Jan 27 2014 Brian Pepple <bpepple@fedoraproject.org> - 1:5.16.1-1
 - Update to 5.16.1.
 

@@ -1,9 +1,11 @@
 Name:              torsocks
 Version:           2.1.0
-Release:           2%{?dist}
+Release:           3%{?dist}
 
 Summary:           Use SOCKS-friendly applications with Tor
+Summary(zh_CN.UTF-8): 利用 Tor 使用可用 SOCKS 代理的应用程序
 Group:             Applications/Internet
+Group(zh_CN.UTF-8): 应用程序/互联网
 License:           GPLv2+
 URL:               https://gitweb.torproject.org/torsocks.git
 
@@ -21,6 +23,8 @@ Torsocks allows you to use most SOCKS-friendly applications in a safe way
 with Tor. It ensures that DNS requests are handled safely and explicitly
 rejects UDP traffic from the application you're using.
 
+%description -l zh_CN.UTF-8
+利用 Tor 使用可用 SOCKS 代理的应用程序。
 
 %prep
 %setup -q -n %{name}-%{version}
@@ -42,7 +46,7 @@ rm -fr %{buildroot}%{_datadir}/doc/torsocks
 # For bash completion.
 install -p -D -m0644 extras/torsocks-bash_completion \
     %{buildroot}%{_sysconfdir}/bash_completion.d/torsocks
-
+magic_rpm_clean.sh
 
 %check
 pushd tests/
@@ -65,6 +69,9 @@ popd
 
 
 %changelog
+* Sun Oct 04 2015 Liu Di <liudidi@gmail.com> - 2.1.0-3
+- 为 Magic 3.0 重建
+
 * Fri Jun 19 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.1.0-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

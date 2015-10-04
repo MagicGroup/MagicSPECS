@@ -1,13 +1,17 @@
 Name:		telepathy-haze
 Version:	0.8.0
-Release:	3%{?dist}
+Release:	4%{?dist}
 Summary:	A multi-protocol Libpurple connection manager for Telepathy
+Summary(zh_CN.UTF-8): Telepathy 的多协议 libpurlple 连接管理器
 
 Group:		Applications/Communications
+Group(zh_CN.UTF-8): 应用程序/通信
 License:	GPLv2+
 URL:		http://developer.pidgin.im/wiki/Telepathy
 
 Source0:	http://telepathy.freedesktop.org/releases/%{name}/%{name}-%{version}.tar.gz
+
+Patch0:		telepathy-haze-0.8.0-pidgin.patch
 
 BuildRequires:	dbus-python
 BuildRequires:	libpurple-devel >= 2.7
@@ -25,10 +29,12 @@ Ultimately, any protocol supported by libpurple will be supported by
 telepathy-haze; for now, XMPP, MSN and AIM are known to work acceptably, and
 others will probably work too.
 
+%description -l zh_CN.UTF-8
+Telepathy 的多协议 libpurlple 连接管理器.
 
 %prep
 %setup -q
-
+%patch0 -p1
 
 %build
 %configure
@@ -39,6 +45,7 @@ make %{?_smp_mflags}
 rm -rf %{buildroot}
 make install DESTDIR=%{buildroot}
 rm -f %{buildroot}%{_datadir}/telepathy/managers/haze.manager
+magic_rpm_clean.sh
 
 
 %check
@@ -53,6 +60,9 @@ make check
 
 
 %changelog
+* Wed Sep 30 2015 Liu Di <liudidi@gmail.com> - 0.8.0-5
+- 为 Magic 3.0 重建
+
 * Wed May 07 2014 Liu Di <liudidi@gmail.com> - 0.8.0-3
 - 为 Magic 3.0 重建
 

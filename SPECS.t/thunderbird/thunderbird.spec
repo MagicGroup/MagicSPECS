@@ -5,13 +5,8 @@
 # Build as a debug package?
 %define debug_build       0
 
-%if 0%{?fedora} < 20
-%define system_sqlite 0
-%define system_ffi    0
-%else
 %define system_sqlite 1
 %define system_ffi    1
-%endif
 
 %define build_langpacks 1
 
@@ -60,12 +55,14 @@
 
 
 Summary:        Mozilla Thunderbird mail/newsgroup client
+Summary(zh_CN.UTF-8): 邮件客户端
 Name:           thunderbird
 Version:        38.2.0
-Release:        2%{?dist}
+Release:        3%{?dist}
 URL:            http://www.mozilla.org/projects/thunderbird/
 License:        MPLv1.1 or GPLv2+ or LGPLv2+
 Group:          Applications/Internet
+Group(zh_CN.UTF-8): 应用程序/互联网
 Source0:        ftp://ftp.mozilla.org/pub/thunderbird/releases/%{version}%{?pre_version}/source/thunderbird-%{version}%{?pre_version}.source.tar.bz2
 %if %{build_langpacks}
 Source1:        thunderbird-langpacks-%{version}-20150819.tar.xz
@@ -155,6 +152,9 @@ Provides:       thunderbird-lightning
 
 %description
 Mozilla Thunderbird is a standalone mail and newsgroup client.
+
+%description -l zh_CN.UTF-8
+邮件客户端。
 
 %if %{enable_mozilla_crashreporter}
 %global moz_debug_prefix %{_prefix}/lib/debug
@@ -584,6 +584,9 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 #===============================================================================
 
 %changelog
+* Wed Sep 30 2015 Liu Di <liudidi@gmail.com> - 38.2.0-3
+- 为 Magic 3.0 重建
+
 * Thu Aug 20 2015 Jan Horak <jhorak@redhat.com> - 38.2.0-2
 - Thunderbird provides thunderbird-lightning now
 

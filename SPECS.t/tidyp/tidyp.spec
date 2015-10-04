@@ -1,13 +1,14 @@
 Summary:	Clean up and pretty-print HTML/XHTML/XML
+Summary(zh_CN.UTF-8): 清理和完善打印 HTML/XHTML/XML
 Name:		tidyp
-Version:	1.02
-Release:	7%{?dist}
+Version:	1.04
+Release:	1%{?dist}
 License:	W3C
 Group:		Applications/Text
+Group(zh_CN.UTF-8): 应用程序/文本
 Url:		http://www.tidyp.com/
 Source0:	http://github.com/downloads/petdance/tidyp/tidyp-%{version}.tar.gz
-Patch0:		tidy-outfile-raw.patch
-Patch1:		tidyp-cflags.patch
+Patch0:		tidyp-1.02-format.patch
 Buildroot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(id -nu)
 Requires:	libtidyp%{?_isa} = %{version}-%{release}
 
@@ -15,30 +16,37 @@ Requires:	libtidyp%{?_isa} = %{version}-%{release}
 tidyp is a fork of tidy on SourceForge. The library name is "tidyp", and the
 command-line tool is also "tidyp" but all internal API stays the same.
 
+%description -l zh_CN.UTF-8
+这是 tidy 的一个移植。
+
 %package -n libtidyp
 Summary:	Shared libraries for tidyp
+Summary(zh_CN.UTF-8): %{name} 的运行库
 Group:		System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 
 %description -n libtidyp
 Shared libraries for tidyp.
 
+%description -n libtidyp -l zh_CN.UTF-8
+%{name} 的运行库。
+
 %package -n libtidyp-devel
 Summary:	Development files for libtidyp
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:		Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:	libtidyp%{?_isa} = %{version}-%{release}
 
 %description -n libtidyp-devel
 Development files for libtidyp.
 
+%description -n libtidyp-devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
 %prep
 %setup -q
-
-# Fix mangling of output file names (#725651)
-# Sent upstream: https://github.com/petdance/tidyp/pull/18
 %patch0 -p1
-
-# Remove unwanted CFLAGS
-%patch1 -p1
 
 # Fix permissions for debuginfo
 chmod -x src/{mappedio.*,version.h}
@@ -55,6 +63,7 @@ make %{?_smp_mflags}
 %install
 rm -rf %{buildroot}
 make install DESTDIR=%{buildroot}
+magic_rpm_clean.sh
 
 %check
 make check
@@ -82,6 +91,9 @@ rm -rf %{buildroot}
 %exclude %{_libdir}/libtidyp.la
 
 %changelog
+* Sat Oct 03 2015 Liu Di <liudidi@gmail.com> - 1.04-1
+- 更新到 1.04
+
 * Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 1.02-7
 - 为 Magic 3.0 重建
 
@@ -134,77 +146,3 @@ rm -rf %{buildroot}
 - libtidyp forked from tidy
 - add patches to autotools build to make it work more sanely
 
-* Tue Dec  8 2009 Paul Howarth <paul@city-fan.org> 0.99.0-20.20091203.1
-- 20091203 snapshot
-- spec housecleaning
-- tidy erroneously removed whitespace, causing mangled text (#481350)
-
-* Fri Jul 31 2009 Paul Howarth <paul@city-fan.org> 0.99.0-19.20070615.1
-- rebuilt for https://fedoraproject.org/wiki/Fedora_12_Mass_Rebuild
-
-* Tue Mar  3 2009 Paul Howarth <paul@city-fan.org> 0.99.0-18.20070615.1
-- rebuilt for https://fedoraproject.org/wiki/Fedora_11_Mass_Rebuild
-
-* Tue Feb 19 2008 Paul Howarth <paul@city-fan.org> 0.99.0-17.20070615.1
-- respin (gcc 4.3.0)
-
-* Mon Aug 28 2007 Paul Howarth <paul@city-fan.org> 0.99.0-16.20070615.1
-- respin (BuildID)
-
-* Fri Aug 24 2007 Paul Howarth <paul@city-fan.org> 0.99.0-15.20070615.1
-- use standard shortname "WSC" for license tag
-
-* Tue Jul 10 2007 Paul Howarth <paul@city-fan.org> 0.99.0-13.20070615.1
-- 15th June 2007 snapshot
-
-* Mon Jun 25 2007 Paul Howarth <paul@city-fan.org> 0.99.0-12.20070228.1
-- upstream has stopped releasing tarballs and advocates CVS snapshots
-  instead
-- 28th February 2007 snapshot
-- run setup.sh in %%prep rather than %%build
-- fileio.h no longer included in -devel package
-
-* Fri Sep 15 2006 Paul Howarth <paul@city-fan.org> 0.99.0-10.20051026
-- add dist tag
-
-* Tue Jun 20 2006 Paul Howarth <paul@city-fan.org> 0.99.0-9.20051026.4
-- libtidy-devel depends on libtidy, not tidy
-
-* Mon Jan 23 2006 Paul Howarth <paul@city-fan.org> 0.99.0-9.20051026
-- Update source to 26 October 2005 version
-- Bring back libtidy as per Fedora Extras package
-- Never strip binaries
-
-* Fri Oct 21 2005 Paul Howarth <paul@city-fan.org> 0.99.0-6.20051020
-- Drop obsoletes/provides for libtidy-progs, which didn't work anyway
-- Update to 051020 releases of both src and docs
-- Remove buildroot unconditionally in %%clean and %%install
-- Don't use macros for pathnames in build-time commands, hardcode them instead
-- Wrap %%description at 80 columns
-
-* Tue Aug  9 2005 Paul Howarth <paul@city-fan.org> 0.99.0-6.20050803
-- Clean up doc generation
-- Build quickref.html
-- Strip binaries if we're not making a debuginfo package
-
-* Tue Aug  9 2005 Paul Howarth <paul@city-fan.org> 0.99.0-5.20050803
-- Update to 050803 and docs to 050705
-- Rename packages *again* to be compatible with Fedora Extras
-
-* Sun Jun  2 2005 Paul Howarth <paul@city-fan.org> 0.99.0-5.20050531
-- Update to 050531 version
-- Incorporate documentation, version 050502
-- Rename/reversion package for Fedora Extras compatibility
-- Exclude libtidy.la, not needed
-
-* Tue Feb 01 2005 Paul Howarth <paul@city-fan.org>
-- Update to 050120 version
-
-* Wed Oct 27 2004 Paul Howarth <paul@city-fan.org>
-- Update to 041026 version
-
-* Tue Jul 20 2004 Paul Howarth <paul@city-fan.org>
-- Update to 040706 version
-
-* Thu May 13 2004 Paul Howarth <paul@city-fan.org>
-- Initial RPM build

@@ -5,9 +5,7 @@
 %global git_hash   0191a6dd
 %endif
 
-%if 0%{?fedora} > 20
 %global farstream 1
-%endif
 %global qt5 1
 
 ## unit tests
@@ -15,7 +13,7 @@
 
 Name:    telepathy-qt
 Version: 0.9.6.1
-Release: 1%{?dist}
+Release: 2%{?dist}
 Summary: High-level bindings for Telepathy
 
 License: LGPLv2+
@@ -240,6 +238,9 @@ make install/fast DESTDIR=%{buildroot} -C %{_target_platform}
 
 
 %changelog
+* Wed Sep 30 2015 Liu Di <liudidi@gmail.com> - 0.9.6.1-2
+- 为 Magic 3.0 重建
+
 * Sat Jun 20 2015 Rex Dieter <rdieter@fedoraproject.org> 0.9.6.1-1
 - 0.9.6.1
 - workaround FTBFS against gstreamer-1.5 (#1234051)

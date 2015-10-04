@@ -1,11 +1,13 @@
 Name:           tclap
 Summary:        Template-Only Command Line Argument Parser
-Version:        1.2.0
-Release:        5%{?dist}
+Summary(zh_CN.UTF-8): 只有模板的命令行参数解析器
+Version:	1.2.1
+Release:	1%{?dist}
 License:        MIT
 URL:            http://%{name}.sourceforge.net
 Source0:        http://downloads.sourceforge.net/%{name}/%{name}-%{version}.tar.gz
 Group:          System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 BuildArch:      noarch
 BuildRoot:      %(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
 
@@ -29,9 +31,14 @@ the header files, are provided by the development package.
 %{name} is now a mature, stable, and feature rich package. It probably will not
 see much further development aside from bug fixes and compatibility updates.
 
+%description -l zh_CN.UTF-8
+只有模板的命令行参数解析器。
+
 %package devel
 Summary:        Header files for the Template-Only Command Line Argument Parser
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       %{name}%{?isa} = %{version}-%{release}
 Requires:       pkgconfig
 
@@ -40,15 +47,21 @@ Headers for the Template-Only Command Line Argument Parser.
 Note: as that project has only headers (i.e., no library/binary object),
 this package (i.e., the -devel package) is the one containing most of the 
 project.
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %package doc
 Summary:        API Documentation for %{name}
+Summary(zh_CN.UTF-8): %{name} 的文档
 Group:          Documentation
+Group(zh_CN.UTF-8): 文档
 BuildRequires:  doxygen, graphviz
 
 %description doc
 API documentation for the Template-Only Command Line Argument Parser library
 
+%description doc -l zh_CN.UTF-8
+%{name} 的开发文档。
 
 %prep
 %setup -q
@@ -67,6 +80,7 @@ make install DESTDIR=%{buildroot}
 # Move the pkgconfig helper file to the right location for Fedora
 # when the package is noarch
 mv -f %{buildroot}%{_libdir}/pkgconfig/ %{buildroot}%{_datadir}/
+magic_rpm_clean.sh
 
 %clean
 rm -rf %{buildroot}
@@ -87,6 +101,9 @@ rm -rf %{buildroot}
 %{_defaultdocdir}/%{name}/
 
 %changelog
+* Wed Sep 30 2015 Liu Di <liudidi@gmail.com> - 1.2.1-1
+- 更新到 1.2.1
+
 * Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 1.2.0-5
 - 为 Magic 3.0 重建
 

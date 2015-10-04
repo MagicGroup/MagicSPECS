@@ -1,8 +1,8 @@
 Summary: Movie player for GNOME
 Summary(zh_CN.UTF-8): GNOME 的视频播放器
 Name: totem
-Version:	3.12.1
-Release: 2%{?dist}
+Version:	3.18.0
+Release: 1%{?dist}
 Epoch: 1
 License: GPLv2+ with exceptions
 Group: Applications/Multimedia
@@ -216,25 +216,21 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 %{_bindir}/%{name}-audio-preview
 %{_libdir}/libtotem.so.*
 %{_libdir}/girepository-1.0/Totem-1.0.typelib
-%{_datadir}/appdata/totem.appdata.xml
-%{_datadir}/applications/%{name}.desktop
+%{_datadir}/appdata/org.gnome.Totem.appdata.xml
+%{_datadir}/applications/org.gnome.Totem.desktop
+%{_datadir}/dbus-1/services/org.gnome.Totem.service
 %dir %{_datadir}/totem
 %{_datadir}/totem/controls.ui
-%{_datadir}/totem/org_gnome_totem_PluginViewer.xml
 %{_datadir}/totem/playlist.ui
 %{_datadir}/totem/preferences.ui
 %{_datadir}/totem/properties.ui
 %{_datadir}/totem/totem.ui
 %{_datadir}/totem/uri.ui
-%dir %{_libexecdir}/totem
-%{_libexecdir}/totem/totem-bugreport.py
-%exclude %{_libexecdir}/totem/totem-bugreport.py[co]
 %dir %{_libdir}/totem
 %dir %{_libdir}/totem/plugins
 %{_libdir}/totem/plugins/apple-trailers
 %{_libdir}/totem/plugins/autoload-subtitles
 %{_libdir}/totem/plugins/brasero-disc-recorder
-%{_libdir}/totem/plugins/chapters
 %{_libdir}/totem/plugins/dbus
 %{_libdir}/totem/plugins/gromit
 %{_libdir}/totem/plugins/im-status
@@ -252,8 +248,7 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 %{_libdir}/totem/plugins/vimeo
 %{_libdir}/totem/plugins/zeitgeist-dp
 %{_datadir}/icons/hicolor/*/apps/totem.png
-%{_datadir}/icons/hicolor/*/devices/totem-tv.png
-%{_datadir}/icons/hicolor/scalable/devices/totem-tv.svg
+%{_datadir}/icons/hicolor/scalable/apps/totem-symbolic.svg
 %{_mandir}/man1/%{name}.1*
 %{_mandir}/man1/totem-video-thumbnailer.1.gz
 %{_datadir}/GConf/gsettings/*.convert
@@ -278,17 +273,10 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 %{_libdir}/pkgconfig/totem.pc
 %{_datadir}/gir-1.0/Totem-1.0.gir
 
-%files mozplugin
-%{_libdir}/mozilla/plugins/*
-%{_libexecdir}/totem-plugin-viewer
-%{_datadir}/totem/mozilla-viewer.ui
-%{_datadir}/totem/mozilla-viewer.css
-%exclude %{_libdir}/mozilla/plugins/libtotem-vegas-plugin.so
-
-%files mozplugin-vegas
-%{_libdir}/mozilla/plugins/libtotem-vegas-plugin.so
-
 %changelog
+* Sun Oct 04 2015 Liu Di <liudidi@gmail.com> - 1:3.18.0-1
+- 更新到 3.18.0
+
 * Tue May 06 2014 Liu Di <liudidi@gmail.com> - 1:3.12.1-2
 - 更新到 3.12.1
 

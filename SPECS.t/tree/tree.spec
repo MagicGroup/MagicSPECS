@@ -1,31 +1,24 @@
 Summary: File system tree viewer
+Summary(zh_CN.UTF-8): 文件系统树形查看器
 Name: tree
-Version: 1.6.0
-Release: 3%{?dist}
+Version:	1.7.0
+Release:	1%{?dist}
 Group: Applications/File
+Group(zh_CN.UTF-8): 应用程序/文件
 License: GPLv2+
 Url: http://mama.indstate.edu/users/ice/tree/
 Source: ftp://mama.indstate.edu/linux/tree/tree-%{version}.tgz
-Patch2: tree-no-strip.patch
-Patch3: tree-preserve-timestamps.patch
-Patch4: tree-no-color-by-default.patch
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 %description
 The tree utility recursively displays the contents of directories in a
 tree-like format.  Tree is basically a UNIX port of the DOS tree
 utility.
+%description -l zh_CN.UTF-8
+文件系统树形查看器。
 
 %prep
 %setup -q
-# Don't strip binary in the Makefile -- let rpmbuild do it.
-%patch2 -p1 -b .no-strip
-
-# Preserve timestamp on man page.
-%patch3 -p1 -b .preserve-timestamps
-
-# Disable color output by default.
-%patch4 -p1 -b .no-color-by-default
 
 %build
 make CFLAGS="$RPM_OPT_FLAGS" "CPPFLAGS=$(getconf LFS_CFLAGS)" %{?_smp_mflags}
@@ -39,6 +32,7 @@ make	BINDIR=$RPM_BUILD_ROOT%{_bindir} \
 	install
 
 chmod -x $RPM_BUILD_ROOT%{_mandir}/man1/tree.1
+magic_rpm_clean.sh
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -50,6 +44,9 @@ rm -rf $RPM_BUILD_ROOT
 %doc README LICENSE
 
 %changelog
+* Sun Oct 04 2015 Liu Di <liudidi@gmail.com> - 1.7.0-1
+- 更新到 1.7.0
+
 * Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 1.6.0-3
 - 为 Magic 3.0 重建
 

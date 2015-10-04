@@ -2,7 +2,7 @@ Summary: A GNU implementation of Scheme for application extensibility
 Name: guile
 %define mver 2.0
 Version: 2.0.11
-Release: 6%{?dist}
+Release: 7%{?dist}
 Epoch: 5
 Source: ftp://ftp.gnu.org/pub/gnu/guile/guile-%{version}.tar.gz
 URL: http://www.gnu.org/software/guile/
@@ -75,6 +75,9 @@ ln -s ../../slib $RPM_BUILD_ROOT%{_datadir}/guile/%{mver}/slib
 # Create symlinks for compatibility
 ln -s guile $RPM_BUILD_ROOT%{_bindir}/guile2
 ln -s guile-tools $RPM_BUILD_ROOT%{_bindir}/guile2-tools
+
+# Our gdb doesn't support guile yet
+rm -f ${RPM_BUILD_ROOT}%{_libdir}/libguile*gdb.scm
 
 %check
 make %{?_smp_mflags} check
@@ -174,6 +177,9 @@ fi
 %{_includedir}/guile
 
 %changelog
+* Wed Sep 30 2015 Liu Di <liudidi@gmail.com> - 5:2.0.11-7
+- 为 Magic 3.0 重建
+
 * Sat Sep 19 2015 Liu Di <liudidi@gmail.com> - 5:2.0.11-6
 - 为 Magic 3.0 重建
 

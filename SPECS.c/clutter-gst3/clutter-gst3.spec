@@ -1,9 +1,11 @@
 Name:           clutter-gst3
 Version:        3.0.12
-Release:        1%{?dist}
+Release:        3%{?dist}
 Summary:        GStreamer integration library for Clutter
+Summary(zh_CN.UTF-8): Clutter 的 GStreamer 集成库
 
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 License:        LGPLv2+
 URL:            https://developer.gnome.org/clutter-gst/stable/
 Source0:        https://download.gnome.org/sources/clutter-gst/3.0/clutter-gst-%{version}.tar.xz
@@ -29,8 +31,12 @@ rich and animated graphical user interfaces.
 
 Clutter GStreamer enables the use of GStreamer with Clutter.
 
+%description -l zh_CN.UTF-8
+Clutter 的 GStreamer 集成库。
+
 %package        devel
 Summary:        Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Requires:       %{name}%{?_isa} = %{version}-%{release}
 
 %description devel
@@ -41,7 +47,8 @@ Clutter GStreamer enables the use of GStreamer with Clutter.
 
 The %{name}-devel package contains libraries and header files for
 developing applications that use clutter-gst API version 3.0.
-
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q -n clutter-gst-%{version}
@@ -58,7 +65,7 @@ make install DESTDIR=%{buildroot} INSTALL="install -p"
 find %{buildroot} -name '*.la' -delete
 
 rm -rf %{buildroot}%{_libdir}/gstreamer-1.0/
-
+magic_rpm_clean.sh
 
 %post -p /sbin/ldconfig
 
@@ -81,6 +88,12 @@ rm -rf %{buildroot}%{_libdir}/gstreamer-1.0/
 
 
 %changelog
+* Sun Oct 04 2015 Liu Di <liudidi@gmail.com> - 3.0.12-3
+- 为 Magic 3.0 重建
+
+* Sun Oct 04 2015 Liu Di <liudidi@gmail.com> - 3.0.12-2
+- 为 Magic 3.0 重建
+
 * Wed Sep 30 2015 David King <amigadave@amigadave.com> - 3.0.12-1
 - Update to 3.0.12
 

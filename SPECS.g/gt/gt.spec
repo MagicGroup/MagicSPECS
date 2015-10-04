@@ -56,6 +56,7 @@ cp -p src/README README.timidity
 
 
 %build
+autoreconf -fisv
 export CFLAGS="$RPM_OPT_FLAGS -fsigned-char"
 %configure
 make %{?_smp_mflags}

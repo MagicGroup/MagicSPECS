@@ -1,9 +1,11 @@
 Name:           teckit
 Version:        2.5.1
-Release:        8%{?dist}
+Release:        9%{?dist}
 Summary:        Conversion library and mapping compiler
+Summary(zh_CN.UTF-8): 转换库和映射编译器
 License:        LGPLv2+ or CPL
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 URL:            http://scripts.sil.org/teckit
 Source0:        http://scripts.sil.org/svn-view/teckit/TAGS/TECkit_2_5_1.tar.gz
 BuildRequires:  expat-devel zlib-devel libtool
@@ -21,9 +23,14 @@ relies on mapping tables in a specific binary format (for which
 documentation is available); there is a compiler that creates such
 tables from a human-readable mapping description (a simple text file).
 
+%description -l zh_CN.UTF-8
+转换库和映射编译器。
+
 %package devel
 Summary:        Conversion library and mapping compiler
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       %{name} = %{version}-%{release}
 Provides:       %{name}-devel = %{version}-%{release}
 
@@ -36,6 +43,9 @@ performs conversions; this is the "TECkit engine". The engine
 relies on mapping tables in a specific binary format (for which
 documentation is available); there is a compiler that creates such
 tables from a human-readable mapping description (a simple text file).
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q -n TECkit_2_5_1
@@ -54,6 +64,7 @@ make %{_smp_mflags}
 %{__rm} -rf %{buildroot}
 make install DESTDIR=%{buildroot}
 %{__rm} -f %{buildroot}%{_libdir}/*.la
+magic_rpm_clean.sh
 
 %check
 make check
@@ -87,6 +98,9 @@ make check
 %{_libdir}/libTECkit_Compiler.so
 
 %changelog
+* Wed Sep 30 2015 Liu Di <liudidi@gmail.com> - 2.5.1-9
+- 为 Magic 3.0 重建
+
 * Sat Jul 21 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.5.1-8
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 

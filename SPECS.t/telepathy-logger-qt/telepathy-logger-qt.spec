@@ -1,7 +1,8 @@
 Name:    telepathy-logger-qt
 Version: 15.04.0
-Release: 2%{?dist}
+Release: 3%{?dist}
 Summary: Telepathy Logging for Qt 5
+Summary(zh_CN.UTF-8): Qt5 下的 Telepathy 登录框架
 
 License: LGPLv2+
 URL:     https://projects.kde.org/projects/extragear/network/telepathy/%{name}
@@ -27,15 +28,19 @@ BuildRequires: pkgconfig(libxml-2.0)
 
 %description
 %{summary}
+%description -l zh_CN.UTF-8
+Qt5 下的 Telepathy 登录框架。
 
 %package devel
 Summary: Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Requires: %{name}%{?_isa} = %{version}-%{release}
 # for parent include dir ownership (mostly)
 Requires: telepathy-logger-devel%{?_isa}
 %description devel
 %{summary}.
-
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q -n %{name}-%{version}
@@ -51,6 +56,7 @@ make %{?_smp_mflags} -C %{_target_platform}
 
 %install
 make install/fast DESTDIR=%{buildroot} -C %{_target_platform}
+magic_rpm_clean.sh
 
 %check
 
@@ -69,6 +75,9 @@ make install/fast DESTDIR=%{buildroot} -C %{_target_platform}
 
 
 %changelog
+* Wed Sep 30 2015 Liu Di <liudidi@gmail.com> - 15.04.0-3
+- 为 Magic 3.0 重建
+
 * Fri Jun 19 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 15.04.0-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

@@ -11,7 +11,7 @@ Summary: Library that implements an embeddable SQL database engine
 Summary(zh_CN.UTF-8): 实现嵌入式 SQL 数据库引擎的库
 Name: sqlite
 Version: 3.8.11.1
-Release:	1%{?dist}
+Release:	2%{?dist}
 License: Public Domain
 Group: Applications/Databases
 Group(zh_CN.UTF-8): 应用程序/数据库
@@ -134,7 +134,7 @@ rm -f %{name}-doc-%{realver}/search
 autoconf # Rerun with new autoconf to add support for aarm64
 
 %build
-export CFLAGS="$RPM_OPT_FLAGS -DSQLITE_ENABLE_COLUMN_METADATA=1 -DSQLITE_DISABLE_DIRSYNC=1 -DSQLITE_ENABLE_FTS3=3 -DSQLITE_ENABLE_RTREE=1 -DSQLITE_SECURE_DELETE=1 -DSQLITE_ENABLE_UNLOCK_NOTIFY=1 -Wall -fno-strict-aliasing"
+export CFLAGS="$RPM_OPT_FLAGS -DSQLITE_ENABLE_COLUMN_METADATA=1 -DSQLITE_DISABLE_DIRSYNC=1 -DSQLITE_ENABLE_FTS3=3 -DSQLITE_ENABLE_RTREE=1 -DSQLITE_SECURE_DELETE=1 -DSQLITE_ENABLE_UNLOCK_NOTIFY=1 -DSQLITE_ENABLE_DBSTAT_VTAB=1 -DSQLITE_ENABLE_FTS3_PARENTHESIS=1 -Wall -fno-strict-aliasing"
 %configure %{!?with_tcl:--disable-tcl} \
            --enable-threadsafe \
            --enable-threads-override-locks \
@@ -208,6 +208,9 @@ make test
 %endif
 
 %changelog
+* Thu Oct 01 2015 Liu Di <liudidi@gmail.com> - 3.8.11.1-2
+- 为 Magic 3.0 重建
+
 * Tue Sep 29 2015 Liu Di <liudidi@gmail.com> - 3.8.11.1-1
 - 更新到 3.8.11.1
 

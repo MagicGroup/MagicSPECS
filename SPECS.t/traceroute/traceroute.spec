@@ -1,9 +1,11 @@
 Summary: Traces the route taken by packets over an IPv4/IPv6 network
+Summary(zh_CN.UTF-8): 在 IPv4/IPv6 网络上跟踪包的路由
 Name: traceroute
 Epoch: 3
-Version: 2.0.18
-Release: 4%{?dist}
+Version:	2.0.21
+Release:	1%{?dist}
 Group: Applications/Internet
+Group(zh_CN.UTF-8): 应用程序/互联网
 License: GPLv2+
 URL:  http://traceroute.sourceforge.net
 Source0: http://downloads.sourceforge.net/project/traceroute/traceroute/traceroute-%{version}/traceroute-%{version}.tar.gz
@@ -24,6 +26,8 @@ show you where the trouble is coming from along the route.
 Install traceroute if you need a tool for diagnosing network connectivity
 problems.
 
+%description -l zh_CN.UTF-8
+在 IPv4/IPv6 网络上跟踪包的路由。
 
 %prep
 %setup -q
@@ -64,8 +68,10 @@ rm -rf $RPM_BUILD_ROOT
 %{_bindir}/*
 %{_mandir}/*/*
 
-
 %changelog
+* Sun Oct 04 2015 Liu Di <liudidi@gmail.com> - 3:2.0.21-1
+- 更新到 2.0.21
+
 * Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 3:2.0.18-4
 - 为 Magic 3.0 重建
 

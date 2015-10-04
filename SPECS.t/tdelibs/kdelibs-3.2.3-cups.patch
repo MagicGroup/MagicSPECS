@@ -1,7 +1,0 @@
---- kdelibs-3.2.3/tdeprint/tdeprintrc.orig	2004-07-19 12:45:04.575573066 +0200
-+++ kdelibs-3.2.3/tdeprint/tdeprintrc	2004-07-19 12:45:27.141880905 +0200
-@@ -3,3 +3,4 @@
- ViewType=1
- ViewToolBar=true
- ViewPrinterInfos=true
-+PrintSystem=cups

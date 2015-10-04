@@ -71,7 +71,7 @@
 
 Name:        torque
 Version:     4.2.10
-Release:     7%{?dist}
+Release:     8%{?dist}
 Summary:     Tera-scale Open-source Resource and QUEue manager
 Source0:     http://www.adaptivecomputing.com/download/%{name}/%{name}-%{version}.tar.gz
 Source2:     xpbs.desktop
@@ -875,6 +875,9 @@ fi
 %endif
 
 %changelog
+* Sun Oct 04 2015 Liu Di <liudidi@gmail.com> - 4.2.10-8
+- 为 Magic 3.0 重建
+
 * Fri Sep 18 2015 Richard Hughes <rhughes@redhat.com> - 4.2.10-7
 - Remove AppStream metadata file as it's no longer used.
 

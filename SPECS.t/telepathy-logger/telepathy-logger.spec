@@ -1,9 +1,11 @@
 Name:           telepathy-logger
-Version:        0.8.0
-Release:        2%{?dist}
+Version:	0.8.2
+Release:	1%{?dist}
 Summary:        Telepathy framework logging daemon
+Summary(zh_CN.UTF-8): Telepathy 框架登录服务
 
 Group:          Applications/Communications
+Group(zh_CN.UTF-8): 应用程序/通信
 License:        LGPLv2+
 URL:            http://telepathy.freedesktop.org/wiki/Logger
 Source0:        http://telepathy.freedesktop.org/releases/%{name}/%{name}-%{version}.tar.bz2
@@ -27,17 +29,21 @@ Requires:       telepathy-filesystem
 %{name} is a headless Observer client that logs information
 received by the Telepathy framework. It features pluggable
 backends to log different sorts of messages, in different formats.
-
+%description -l zh_CN.UTF-8
+Telepathy 框架登录服务。
 
 %package        devel
 Summary:        Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       %{name}%{?_isa} = %{version}-%{release}
 
 %description devel
 The %{name}-devel package contains libraries and header files for
 developing applications that use %{name}.
-
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -58,7 +64,7 @@ make %{?_smp_mflags} V=1
 %install
 make install DESTDIR=$RPM_BUILD_ROOT
 find $RPM_BUILD_ROOT -name '*.la' -exec rm -f {} ';'
-
+magic_rpm_clean.sh
 
 #check
 #make check
@@ -99,6 +105,9 @@ glib-compile-schemas --allow-any-name %{_datadir}/glib-2.0/schemas &>/dev/null |
 
 
 %changelog
+* Wed Sep 30 2015 Liu Di <liudidi@gmail.com> - 0.8.2-1
+- 更新到 0.8.2
+
 * Fri Feb 15 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.8.0-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
 

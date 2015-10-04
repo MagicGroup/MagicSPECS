@@ -9,7 +9,7 @@
 Summary:	C++ user interface toolkit
 Name:		fltk
 Version:	1.3.3
-Release:	5%{?dist}
+Release:	6%{?dist}
 
 # see COPYING (or http://www.fltk.org/COPYING.php ) for exceptions details
 License:	LGPLv2+ with exceptions	
@@ -198,6 +198,9 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &> /dev/null || :
 
 
 %changelog
+* Sat Oct 03 2015 Liu Di <liudidi@gmail.com> - 1.3.3-6
+- 为 Magic 3.0 重建
+
 * Mon Aug 17 2015 Adam Jackson <ajax@redhat.com> 1.3.3-5
 - For whatever reason fltk thinks it's spelled DSOFLAGS not LDFLAGS, so set
   that when building so hardening takes effect

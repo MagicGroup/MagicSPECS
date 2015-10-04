@@ -5,8 +5,9 @@
 
 Name:       taglib	
 Summary:    Audio Meta-Data Library
+Summary(zh_CN.UTF-8): 音频元数据库
 Version:    1.9.1
-Release:    2%{?dist}
+Release:    3%{?dist}
 
 License:    LGPLv2 and MPL
 #URL:       http://launchpad.net/taglib
@@ -46,21 +47,30 @@ popular audio formats. Currently it supports both ID3v1 and ID3v2 for MP3
 files, Ogg Vorbis comments and ID3 tags and Vorbis comments in FLAC, MPC,
 Speex, WavPack, TrueAudio files, as well as APE Tags.
 
+%description -l zh_CN.UTF-8
+音频元数据库。
+
 %package doc
 Summary: API Documentation for %{name}
+Summary(zh_CN.UTF-8): %{name} 的 API 文档
 BuildArch: noarch
 %description doc
 This is API documentation generated from the TagLib source code.
 
+%description doc -l zh_CN.UTF-8
+%{name} 的 API 文档。
+
 %package devel
 Summary: Development files for %{name} 
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Requires: %{name}%{?_isa} = %{version}-%{release}
 %if ! %{with doc}
 Obsoletes: %{name}-doc
 %endif
 %description devel
 Files needed when building software with %{name}.
-
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q -n taglib-%{version}%{?pre}
@@ -108,7 +118,7 @@ test "$(pkg-config --modversion taglib_c)" = "%{version}"
 #LD_LIBRARY_PATH=%{buildroot}%{_libdir}:$LD_LIBRARY_PATH \
 make check -C %{_target_platform}
 %endif
-
+magic_rpm_clean.sh
 
 %post -p /sbin/ldconfig
 %postun -p /sbin/ldconfig
@@ -135,6 +145,9 @@ make check -C %{_target_platform}
 
 
 %changelog
+* Wed Sep 30 2015 Liu Di <liudidi@gmail.com> - 1.9.1-3
+- 为 Magic 3.0 重建
+
 * Tue Nov 26 2013 Rex Dieter <rdieter@fedoraproject.org> 1.9.1-2
 - backport fixes for ABI breakage (wrt taglib-1.8) (#1026080, #1027164)
 

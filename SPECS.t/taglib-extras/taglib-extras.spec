@@ -1,9 +1,11 @@
 Summary:        Taglib support for other formats 
+Summary(zh_CN.UTF-8): 支持其它格式的 Taglib
 Name:           taglib-extras
 Version:        1.0.1
-Release:        5%{?dist}
+Release:        6%{?dist}
 
 Group:          Applications/Multimedia
+Group(zh_CN.UTF-8): 应用程序/多媒体
 # all LGPLv2, except for rmff/ which is GPLv2+/LGPLv2+
 License:        LGPLv2
 URL:            http://websvn.kde.org/trunk/kdesupport/taglib-extras/
@@ -26,16 +28,21 @@ Requires: taglib%{?_isa} => 1.6
 Taglib-extras delivers support for reading and editing the meta-data of 
 audio formats not supported by taglib, including: asf, mp4v2, rmff, wav.
 
+%description -l zh_CN.UTF-8
+支持其它格式的 Taglib，包括：asf, mp4v2, rmff, wav等。
 
 %package devel
 Summary: Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:   Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: %{name}%{?_isa} = %{version}-%{release}
 Requires: pkgconfig
 Requires: taglib-devel
 %description devel
 %{summary}.
-
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q 
@@ -82,6 +89,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Sep 30 2015 Liu Di <liudidi@gmail.com> - 1.0.1-6
+- 为 Magic 3.0 重建
+
 * Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 1.0.1-5
 - 为 Magic 3.0 重建
 

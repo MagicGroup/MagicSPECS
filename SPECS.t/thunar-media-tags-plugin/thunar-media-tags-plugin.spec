@@ -1,23 +1,19 @@
 %define thunarver 0.9.0
 
 Name:           thunar-media-tags-plugin
-Version:        0.1.2
-Release:        14%{?dist}
+Version:        0.2.1
+Release:        1%{?dist}
 Summary:        Media Tags plugin for the Thunar file manager
+Summary(zh_CN.UTF-8): Thunar 文件管理器的媒体标记插件
 
 Group:          User Interface/Desktops
+Group(zh_CN.UTF-8): 用户界面/桌面
 License:        GPLv2+
 URL:            http://goodies.xfce.org/projects/thunar-plugins/%{name}
-Source0:        http://goodies.xfce.org/releases/%{name}/%{name}-%{version}.tar.bz2
-# All from Debian's Lionel Le Folgoc, all submitted upstream by
-# Lionel. 01 and 04 rediffed slightly
-Patch0:         01_port-to-thunarx-2.patch
-Patch1:         02_port-to-exo-1.patch
-Patch2:         03_fix-crash-with-ogg-video-files.patch
-Patch3:         04_fix-implicit-dso-linking.patch
+Source0:        http://archive.xfce.org/src/thunar-plugins/thunar-media-tags-plugin/0.2/%{name}-%{version}.tar.bz2
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
-BuildRequires:  Thunar-devel >= %{thunarver}, libxfcegui4-devel >= 4.3.90.2
+BuildRequires:  Thunar-devel >= %{thunarver}
 BuildRequires:  libxml2-devel, gettext, perl(XML::Parser), libtool, xfce4-dev-tools
 BuildRequires:  taglib-devel >= 1.4
 BuildRequires:  intltool
@@ -29,14 +25,11 @@ It includes a special media file page for the file properties dialog, a tag
 editor for ID3 or OGG/Vorbis tags and a so-called bulk renamer, which allows 
 users to rename multiple audio files at once, based on their tags.
 
+%description -l zh_CN.UTF-8
+Thunar 文件管理器的媒体标记插件。
 
 %prep
 %setup -q
-%patch0 -p1 -b .thunarx2
-%patch1 -p1 -b .exo1
-%patch2 -p1 -b .ogg
-%patch3 -p1 -b .dso
-
 
 %build
 # Xfce has its own autotools-running-script thingy, if you use autoreconf
@@ -51,6 +44,7 @@ make %{?_smp_mflags}
 rm -rf $RPM_BUILD_ROOT
 make install DESTDIR=$RPM_BUILD_ROOT
 rm $RPM_BUILD_ROOT%{_libdir}/thunarx-2/%{name}.la
+magic_rpm_clean.sh
 %find_lang %{name}
 
 

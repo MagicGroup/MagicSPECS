@@ -1,8 +1,8 @@
 %global         majorminor      1.0
 
 Name:           gstreamer1-plugins-base
-Version:	1.4.5
-Release:        2%{?dist}
+Version:	1.6.0
+Release:        1%{?dist}
 Summary:        GStreamer streaming media framework base plugins
 
 License:        LGPLv2+
@@ -21,7 +21,7 @@ BuildRequires:  libtheora-devel >= 1.1
 BuildRequires:  libvisual-devel
 BuildRequires:  libvorbis-devel >= 1.0
 BuildRequires:  libXv-devel
-BuildRequires:  orc-devel >= 0.4.18
+BuildRequires:  orc-devel >= 0.4.23
 BuildRequires:  pango-devel
 BuildRequires:  pkgconfig
 
@@ -165,7 +165,7 @@ chrpath --delete $RPM_BUILD_ROOT%{_bindir}/gst-discoverer-1.0
 %{_libdir}/girepository-1.0/GstAudio-%{majorminor}.typelib
 %{_libdir}/girepository-1.0/GstFft-%{majorminor}.typelib
 %{_libdir}/girepository-1.0/GstPbutils-%{majorminor}.typelib
-%{_libdir}/girepository-1.0/GstRiff-%{majorminor}.typelib
+#{_libdir}/girepository-1.0/GstRiff-%{majorminor}.typelib
 %{_libdir}/girepository-1.0/GstRtp-%{majorminor}.typelib
 %{_libdir}/girepository-1.0/GstRtsp-%{majorminor}.typelib
 %{_libdir}/girepository-1.0/GstSdp-%{majorminor}.typelib
@@ -314,6 +314,15 @@ chrpath --delete $RPM_BUILD_ROOT%{_bindir}/gst-discoverer-1.0
 %{_includedir}/gstreamer-%{majorminor}/gst/video/video.h
 %{_includedir}/gstreamer-%{majorminor}/gst/video/videoorientation.h
 %{_includedir}/gstreamer-%{majorminor}/gst/video/videooverlay.h
+%{_includedir}/gstreamer-%{majorminor}/gst/allocators/gstfdmemory.h
+%{_includedir}/gstreamer-%{majorminor}/gst/rtp/gstrtp-enumtypes.h
+%{_includedir}/gstreamer-%{majorminor}/gst/rtp/gstrtpdefs.h
+%{_includedir}/gstreamer-%{majorminor}/gst/video/video-converter.h
+%{_includedir}/gstreamer-%{majorminor}/gst/video/video-dither.h
+%{_includedir}/gstreamer-%{majorminor}/gst/video/video-multiview.h
+%{_includedir}/gstreamer-%{majorminor}/gst/video/video-resampler.h
+%{_includedir}/gstreamer-%{majorminor}/gst/video/video-scaler.h
+
 
 %{_includedir}/gstreamer-%{majorminor}/gst/sdp/gstmikey.h
 %{_includedir}/gstreamer-%{majorminor}/gst/video/video-tile.h
@@ -338,7 +347,7 @@ chrpath --delete $RPM_BUILD_ROOT%{_bindir}/gst-discoverer-1.0
 %{_datadir}/gir-1.0/GstAudio-%{majorminor}.gir
 %{_datadir}/gir-1.0/GstFft-%{majorminor}.gir
 %{_datadir}/gir-1.0/GstPbutils-%{majorminor}.gir
-%{_datadir}/gir-1.0/GstRiff-%{majorminor}.gir
+#{_datadir}/gir-1.0/GstRiff-%{majorminor}.gir
 %{_datadir}/gir-1.0/GstRtp-%{majorminor}.gir
 %{_datadir}/gir-1.0/GstRtsp-%{majorminor}.gir
 %{_datadir}/gir-1.0/GstSdp-%{majorminor}.gir
@@ -355,6 +364,9 @@ chrpath --delete $RPM_BUILD_ROOT%{_bindir}/gst-discoverer-1.0
 
 
 %changelog
+* Sat Oct 03 2015 Liu Di <liudidi@gmail.com> - 1.6.0-1
+- 更新到 1.6.0
+
 * Mon Mar 02 2015 Liu Di <liudidi@gmail.com> - 1.4.5-2
 - 更新到 1.4.5
 

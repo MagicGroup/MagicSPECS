@@ -1,11 +1,13 @@
 Name:          libgrss
 Version:       0.7.0
-Release:       1%{?dist}
+Release:       2%{?dist}
 Summary:       Library for easy management of RSS/Atom/Pie feeds
+Summary(zh_CN.UTF-8): 方便管理 RSS/Atom/Pie 种子的库
 
 License:       LGPLv3+
 URL:           https://wiki.gnome.org/Projects/Libgrss
-Source0:       https://download.gnome.org/sources/%{name}/0.7/%{name}-%{version}.tar.xz
+%define majorver %(echo %{version} | awk -F. '{print $1"."$2}')
+Source0:       https://download.gnome.org/sources/%{name}/%{majorver}/%{name}-%{version}.tar.xz
 
 BuildRequires: gcc
 BuildRequires: intltool
@@ -18,13 +20,20 @@ BuildRequires: pkgconfig(libxml-2.0)
 %description
 libgrss is a Glib abstaction to handle feeds in RSS, Atom and other formats.
 
+%description -l zh_CN.UTF-8
+方便管理 RSS/Atom/Pie 种子的库。
+
 %package       devel
 Summary:       Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Requires:      %{name}%{?_isa} = %{version}-%{release}
 
 %description   devel
 The %{name}-devel package contains libraries and header files for
 developing applications that use %{name}.
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %autosetup
@@ -36,6 +45,7 @@ developing applications that use %{name}.
 %install
 %make_install
 rm -f %{buildroot}%{_libdir}/%{name}.la
+magic_rpm_clean.sh
 
 %post -p /sbin/ldconfig
 %postun -p /sbin/ldconfig
@@ -53,6 +63,9 @@ rm -f %{buildroot}%{_libdir}/%{name}.la
 %{_datadir}/gtk-doc/html/%{name}/
 
 %changelog
+* Sun Oct 04 2015 Liu Di <liudidi@gmail.com> - 0.7.0-2
+- 为 Magic 3.0 重建
+
 * Sun Jul 19 2015 Igor Gnatenko <ignatenko@src.gnome.org> - 0.7.0-1
 - 0.7.0
 

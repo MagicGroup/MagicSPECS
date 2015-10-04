@@ -1,13 +1,14 @@
 Name:           telepathy-rakia
-Version:        0.7.4
-Release:        3%{?dist}
+Version:	0.8.0
+Release:	1%{?dist}
 Summary:        SIP connection manager for Telepathy
+Summary(zh_CN.UTF-8): Telepathy 的 SIP 连接管理器
 
 Group:          Applications/Communications
+Group(zh_CN.UTF-8): 应用程序/通信
 License:        LGPLv2+
 URL:            http://telepathy.freedesktop.org/wiki/Components
 Source0:        http://telepathy.freedesktop.org/releases/%{name}/%{name}-%{version}.tar.gz
-Patch0:         0001-Check-for-gio-to-avoid-linking-issue.patch
 
 BuildRequires:  dbus-devel
 BuildRequires:  dbus-glib-devel
@@ -33,11 +34,11 @@ Obsoletes: 	telepathy-sofiasip < 0.7.2
 %{name} is a SIP connection manager for the Telepathy
 framework based on the SofiaSIP-stack. 
 
+%description -l zh_CN.UTF-8
+Telepathy 的 SIP 连接管理器。
 
 %prep
 %setup -q
-%patch0 -p1 -b .gio
-autoreconf -ivf
 
 %build
 %configure
@@ -62,6 +63,9 @@ rm -rf $RPM_BUILD_ROOT%{_includedir}/%{name}-0.7
 
 
 %changelog
+* Wed Sep 30 2015 Liu Di <liudidi@gmail.com> - 0.8.0-1
+- 更新到 0.8.0
+
 * Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 0.7.4-3
 - 为 Magic 3.0 重建
 

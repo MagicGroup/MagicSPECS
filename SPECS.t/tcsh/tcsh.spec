@@ -1,9 +1,11 @@
 Summary: An enhanced version of csh, the C shell
+Summary(zh_CN.UTF-8): csh (C Shell) 的增强版本
 Name: tcsh
 Version: 6.19.00
-Release: 3%{?dist}
+Release: 4%{?dist}
 License: BSD
 Group: System Environment/Shells
+Group(zh_CN.UTF-8): 系统环境/Shells
 Source: ftp://ftp.astron.com/pub/tcsh/%{name}-%{version}.tar.gz
 
 # Those patches should be given in git format-patch (no need to comment here)
@@ -38,6 +40,8 @@ Tcsh includes a command line editor, programmable word completion,
 spelling correction, a history mechanism, job control and a C language
 like syntax.
 
+%description -l zh_CN.UTF-8
+csh (C Shell) 的增强版本，与 csh 完全兼容。
 
 %prep
 for i in Fixes WishList; do
@@ -62,6 +66,7 @@ install -p -m 755 tcsh ${RPM_BUILD_ROOT}%{_bindir}/tcsh
 install -p -m 644 tcsh.man ${RPM_BUILD_ROOT}%{_mandir}/man1/tcsh.1
 ln -sf tcsh ${RPM_BUILD_ROOT}%{_bindir}/csh
 ln -sf tcsh.1 ${RPM_BUILD_ROOT}%{_mandir}/man1/csh.1
+magic_rpm_clean.sh
 
 while read lang language ; do
 	dest=${RPM_BUILD_ROOT}%{_datadir}/locale/$lang/LC_MESSAGES
@@ -123,7 +128,7 @@ if [ ! -x %{_bindir}/tcsh ]; then
 fi
 
 
-%files -f tcsh.lang
+%files 
 %defattr(-,root,root,-)
 %doc Copyright BUGS FAQ Fixes NewThings WishList complete.tcsh README
 %{_bindir}/tcsh
@@ -132,6 +137,9 @@ fi
 
 
 %changelog
+* Wed Sep 30 2015 Liu Di <liudidi@gmail.com> - 6.19.00-4
+- 为 Magic 3.0 重建
+
 * Tue Jun 16 2015 Fridolin Pokorny <fpokorny@redhat.com> - 6.19.00-03
 - Add /bin/tcsh and /bin/csh to /etc/shells (#1229032)
 

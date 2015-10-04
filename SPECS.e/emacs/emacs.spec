@@ -1,57 +1,83 @@
+%global _hardened_build 1
+
 # This file is encoded in UTF-8.  -*- coding: utf-8 -*-
-Summary: GNU Emacs text editor
-Name: emacs
-Epoch: 1
-Version: 24.5
-Release: 1%{?dist}
-License: GPLv3+
-URL: http://www.gnu.org/software/emacs/
-Group: Applications/Editors
-Source0: ftp://ftp.gnu.org/gnu/emacs/emacs-%{version}.tar.xz
-Source1: emacs.desktop
-Source2: emacsclient.desktop
-Source3: dotemacs.el
-Source4: site-start.el
-Source5: default.el
+Summary:       GNU Emacs text editor
+Name:          emacs
+Epoch:         1
+Version:       24.5
+Release:       7%{?dist}
+License:       GPLv3+ and CC0-1.0
+URL:           http://www.gnu.org/software/emacs/
+Group:         Applications/Editors
+Source0:       ftp://ftp.gnu.org/gnu/emacs/emacs-%{version}.tar.xz
+Source1:       emacs.desktop
+Source2:       emacsclient.desktop
+Source3:       dotemacs.el
+Source4:       site-start.el
+Source5:       default.el
 # Emacs Terminal Mode, #551949, #617355
-Source6: emacs-terminal.desktop
-Source7: emacs-terminal.sh
+Source6:       emacs-terminal.desktop
+Source7:       emacs-terminal.sh
+Source8:       emacs.service
+Source9:       %{name}.appdata.xml
 # rhbz#713600
-Patch7: emacs-spellchecker.patch
+Patch1:        emacs-spellchecker.patch
 
-# Fix for emacs bug #922519
-Patch10: emacs-style-change-cb.patch
-# Fix for emacs bug #562719
-Patch11: emacs-bell-dont-work.patch
-# Fix for emacs bug #929353
-Patch12: emacs-gtk-warning.patch
-# Fix for emacs bug #948838
-Patch13: emacs-help-update.patch
-# Fix for emacs bug #948838
-Patch14: emacs-maximized.patch
 # Fix for default PDF viewer bug #971162
-Patch15: emacs-pdf-default.patch
-# Fix for emacs bug #13460.
-Patch100: emacs-24.3-hunspell.patch
-# Fix for emacs bug #827033
-Patch101: emacs-24.3-hunspell.2.patch
+Patch2:        emacs-pdf-default.patch
+Patch3:        emacs-grep-deprecated.patch
+Patch4:        emacs-system-crypto-policies.patch
+Patch5:        emacs-bbdb.patch
 
-BuildRequires: atk-devel cairo-devel freetype-devel fontconfig-devel dbus-devel giflib-devel glibc-devel libpng-devel
-BuildRequires: libjpeg-devel libtiff-devel libX11-devel libXau-devel libXdmcp-devel libXrender-devel libXt-devel
-BuildRequires: libXpm-devel ncurses-devel xorg-x11-proto-devel zlib-devel gnutls-devel
-BuildRequires: librsvg2-devel m17n-lib-devel libotf-devel ImageMagick-devel
-BuildRequires: GConf2-devel alsa-lib-devel gpm-devel liblockfile-devel libxml2-devel
-BuildRequires: bzip2 cairo texinfo gzip desktop-file-utils
+BuildRequires: atk-devel
+BuildRequires: cairo-devel
+BuildRequires: freetype-devel
+BuildRequires: fontconfig-devel
+BuildRequires: dbus-devel
+BuildRequires: giflib-devel
+BuildRequires: glibc-devel
+BuildRequires: libpng-devel
+BuildRequires: libjpeg-turbo-devel
+BuildRequires: libjpeg-turbo
+BuildRequires: libtiff-devel
+BuildRequires: libX11-devel
+BuildRequires: libXau-devel
+BuildRequires: libXdmcp-devel
+BuildRequires: libXrender-devel
+BuildRequires: libXt-devel
+BuildRequires: libXpm-devel
+BuildRequires: ncurses-devel
+BuildRequires: xorg-x11-proto-devel
+BuildRequires: zlib-devel
+BuildRequires: gnutls-devel
+BuildRequires: librsvg2-devel
+BuildRequires: m17n-lib-devel
+BuildRequires: libotf-devel
+BuildRequires: ImageMagick-devel
+BuildRequires: GConf2-devel
+BuildRequires: alsa-lib-devel
+BuildRequires: gpm-devel
+BuildRequires: liblockfile-devel
+BuildRequires: libxml2-devel
+BuildRequires: bzip2
+BuildRequires: cairo
+BuildRequires: texinfo
+BuildRequires: gzip
+BuildRequires: desktop-file-utils
+BuildRequires: libacl-devel
 
 %if 0%{?rhel} == 6
 BuildRequires: gtk2-devel
 %else
 %if 0%{?rhel} == 7
-BuildRequires: gtk3-devel python2-devel 
+BuildRequires: gtk3-devel
+BuildRequires: python2-devel 
 # Buildrequire both python2 and python3 on systems containing both,
 # since below we turn off the brp-python-bytecompile script
 %else
-BuildRequires: gtk3-devel python2-devel python3-devel
+BuildRequires: gtk3-devel
+BuildRequires: python2-devel
+BuildRequires: python3-devel
 %endif
 %endif
 
@@ -60,11 +86,12 @@ BuildRequires: util-linux
 %endif
 
 # Emacs doesn't run without dejavu-sans-mono-fonts, rhbz#732422
-Requires: desktop-file-utils dejavu-sans-mono-fonts
+Requires:      desktop-file-utils
+Requires:      dejavu-sans-mono-fonts
 Requires(preun): %{_sbindir}/alternatives
 Requires(posttrans): %{_sbindir}/alternatives
-Requires: emacs-common = %{epoch}:%{version}-%{release}
-Provides: emacs(bin) = %{epoch}:%{version}-%{release}
+Requires:      emacs-common = %{epoch}:%{version}-%{release}
+Provides:      emacs(bin) = %{epoch}:%{version}-%{release}
 
 %if 0%{!?rhel:1}
 # Turn off the brp-python-bytecompile script since this script doesn't
@@ -95,12 +122,12 @@ without leaving the editor.
 This package provides an emacs binary with support for X windows.
 
 %package nox
-Summary: GNU Emacs text editor without X support
-Group: Applications/Editors
+Summary:       GNU Emacs text editor without X support
+Group:         Applications/Editors
 Requires(preun): %{_sbindir}/alternatives
 Requires(posttrans): %{_sbindir}/alternatives
-Requires: emacs-common = %{epoch}:%{version}-%{release}
-Provides: emacs(bin) = %{epoch}:%{version}-%{release}
+Requires:      emacs-common = %{epoch}:%{version}-%{release}
+Provides:      emacs(bin) = %{epoch}:%{version}-%{release}
 
 %description nox
 Emacs is a powerful, customizable, self-documenting, modeless text
@@ -112,16 +139,18 @@ This package provides an emacs binary with no X windows support for running
 on a terminal.
 
 %package common
-Summary: Emacs common files
+Summary:       Emacs common files
 # The entire source code is GPLv3+ except lib-src/etags.c which is
 # also BSD.  Manual (info) is GFDL.
-License: GPLv3+ and GFDL and BSD
-Group: Applications/Editors
+License:       GPLv3+ and GFDL and BSD
+Group:         Applications/Editors
 Requires(preun): /sbin/install-info
 Requires(preun): %{_sbindir}/alternatives
 Requires(posttrans): %{_sbindir}/alternatives
 Requires(post): /sbin/install-info
-Requires: %{name}-filesystem
+Requires:      %{name}-filesystem = %{epoch}:%{version}-%{release}
+Provides:      %{name}-el = %{epoch}:%{version}-%{release}
+Obsoletes:     emacs-el < 1:24.3-29
 
 %description common
 Emacs is a powerful, customizable, self-documenting, modeless text
@@ -131,24 +160,11 @@ without leaving the editor.
 
 This package contains all the common files needed by emacs or emacs-nox.
 
-%package el
-Summary: Lisp source files included with GNU Emacs
-Group: Applications/Editors
-Requires: %{name}-filesystem
-BuildArch: noarch
-
-%description el
-Emacs-el contains the emacs-elisp sources for many of the elisp
-programs included with the main Emacs text editor package.
-
-You need to install emacs-el only if you intend to modify any of the
-Emacs packages or see some elisp examples.
-
 %package terminal
-Summary: A desktop menu item for GNU Emacs terminal.
-Group: Applications/Editors
-Requires: emacs = %{epoch}:%{version}-%{release}
-BuildArch: noarch
+Summary:       A desktop menu item for GNU Emacs terminal.
+Group:         Applications/Editors
+Requires:      emacs = %{epoch}:%{version}-%{release}
+BuildArch:     noarch
 
 %description terminal
 Contains a desktop menu item running GNU Emacs terminal. Install
@@ -158,9 +174,9 @@ Please note that emacs-terminal is a temporary package and it will be
 removed when another terminal becomes capable of handling Malayalam.
 
 %package filesystem
-Summary: Emacs filesystem layout
-Group: Applications/Editors
-BuildArch: noarch
+Summary:       Emacs filesystem layout
+Group:         Applications/Editors
+BuildArch:     noarch
 
 %description filesystem
 This package provides some directories which are required by other
@@ -169,34 +185,32 @@ packages that add functionality to Emacs.
 %prep
 %setup -q
 
-%patch7 -p1 -b .spellchecker
-
-%patch10 -p1 -b .style-change-cb.patch
-%patch11 -p1 -b .bell-dont-work.patch
-%patch12 -p1 -b .gtk-warning.patch
-%patch13 -p1 -b .help-update.patch
-%patch14 -p1 -b .maximized.patch
-%patch15 -p1 -b .pdf-default.patch
-
-%patch100 -p1 -b .hunspell
-%patch101 -p1 -b .hunspell.2
+%patch1 -p1 -b .spellchecker
+%patch2 -p1 -b .pdf-default.patch
+%patch3 -p1 -b .grep-deprecated
+%patch4 -p1 -b .system-crypto-policies
+%patch5 -p1 -b .bbdb
+autoconf
 
 # We prefer our emacs.desktop file
 cp %SOURCE1 etc/emacs.desktop
 
 grep -v "tetris.elc" lisp/Makefile.in > lisp/Makefile.in.new \
    && mv lisp/Makefile.in.new lisp/Makefile.in
+grep -v "pong.elc" lisp/Makefile.in > lisp/Makefile.in.new \
+   && mv lisp/Makefile.in.new lisp/Makefile.in
 
 # Avoid trademark issues
 %if %{paranoid}
 rm -f lisp/play/tetris.el lisp/play/tetris.elc
+rm -f lisp/play/pong.el lisp/play/pong.el
 %endif
 
 %if %{expurgate}
 rm -f etc/sex.6 etc/condom.1 etc/celibacy.1 etc/COOKIES etc/future-bug etc/JOKES
 %endif
 
-%define info_files ada-mode auth autotype bovine calc ccmode cl dbus dired-x ebrowse ede ediff edt efaq eieio eintr elisp emacs-gnutls emacs-mime emacs epa erc ert eshell eudc flymake forms gnus htmlfontify idlwave info mairix-el message mh-e newsticker nxml-mode org pcl-cvs pgg rcirc reftex remember sasl sc semantic ses sieve smtpmail speedbar srecode tramp url vip viper widget wisent woman
+%define info_files ada-mode auth autotype bovine calc ccmode cl dbus dired-x ebrowse ede ediff edt efaq-w32 efaq eieio eintr elisp emacs-gnutls emacs-mime emacs epa erc ert eshell eudc eww flymake forms gnus htmlfontify idlwave ido info mairix-el message mh-e newsticker nxml-mode octave-mode org pcl-cvs pgg rcirc reftex remember sasl sc semantic ses sieve smtpmail speedbar srecode todo-mode tramp url vip viper widget wisent woman
 
 cd info
 files=`echo $(ls *.info) | sed 's/\.info//'g | sort | tr -d '\n'`
@@ -217,12 +231,6 @@ ln -s ../../%{name}/%{version}/etc/COPYING doc
 ln -s ../../%{name}/%{version}/etc/NEWS doc
 
 %build
-# Remove unpatched files as all files in the lisp directory are
-# installed.
-rm lisp/textmodes/ispell.el.hunspell
-rm lisp/textmodes/ispell.el.hunspell.2
-rm lisp/textmodes/ispell.el.spellchecker
-
 export CFLAGS="-DMAIL_USE_LOCKF $RPM_OPT_FLAGS"
 
 # Build GTK+ binary
@@ -234,6 +242,8 @@ ln -s ../configure .
 %else
 %define toolkit gtk3
 %endif
+
+LDFLAGS=-Wl,-z,relro;  export LDFLAGS;
 
 %configure --with-dbus --with-gif --with-jpeg --with-png --with-rsvg \
            --with-tiff --with-xft --with-xpm --with-x-toolkit=%{toolkit} --with-gpm=no
@@ -258,7 +268,7 @@ sitestartdir=%{site_start_d}
 
 Name: emacs
 Description: GNU Emacs text editor
-Version: 24.5
+Version: %{epoch}:%{version}
 EOF
 
 # Create macros.emacs RPM macro file
@@ -318,6 +328,8 @@ install -p -m 0644 emacs.pc %{buildroot}/%{pkgconfig}
 
 # Install emacsclient desktop file
 install -p -m 0644 %SOURCE2 %{buildroot}/%{_datadir}/applications/emacsclient.desktop
+mkdir -p %{buildroot}/%{_datadir}/appdata
+cp -a %SOURCE9 %{buildroot}/%{_datadir}/appdata
 
 # Install rpm macro definition file
 mkdir -p %{buildroot}%{_rpmconfigdir}/macros.d
@@ -329,6 +341,10 @@ install -p -m 755 %SOURCE7 %{buildroot}%{_bindir}/emacs-terminal
 # After everything is installed, remove info dir
 rm -f %{buildroot}%{_infodir}/dir
 rm %{buildroot}%{_localstatedir}/games/emacs/*
+
+# Installing service file
+mkdir -p %{buildroot}%{_userunitdir}
+install -p -m 0644 %SOURCE8 %{buildroot}%{_userunitdir}/emacs.service
 
 # Install desktop files
 mkdir -p %{buildroot}%{_datadir}/applications
@@ -355,7 +371,7 @@ rm -f *-filelist {common,el}-*-files
   cd %{buildroot}
 
   find .%{_datadir}/emacs/%{version}/lisp \
-    .%{_datadir}/emacs/%{version}/leim \
+    .%{_datadir}/emacs/%{version}/lisp/leim \
     .%{_datadir}/emacs/site-lisp \( -type f -name '*.elc' -fprint $TOPDIR/common-lisp-none-elc-files \) -o \( -type d -fprintf $TOPDIR/common-lisp-dir-files "%%%%dir %%p\n" \) -o \( -name '*.el.gz' -fprint $TOPDIR/el-bytecomped-files -o -fprint $TOPDIR/common-not-comped-files \)
 
 )
@@ -387,20 +403,22 @@ fi
 
 %preun nox
 %{_sbindir}/alternatives --remove emacs %{_bindir}/emacs-%{version}-nox
+%{_sbindir}/alternatives --remove emacs-nox %{_bindir}/emacs-%{version}-nox
 
 %posttrans nox
 %{_sbindir}/alternatives --install %{_bindir}/emacs emacs %{_bindir}/emacs-%{version}-nox 70
+%{_sbindir}/alternatives --install %{_bindir}/emacs-nox emacs-nox %{_bindir}/emacs-%{version}-nox 60
 
 %post common
 for f in %{info_files}; do
-  /sbin/install-info %{_infodir}/$f %{_infodir}/dir 2> /dev/null || :
+  /sbin/install-info %{_infodir}/$f.info.gz %{_infodir}/dir 2> /dev/null || :
 done
 
 %preun common
 %{_sbindir}/alternatives --remove emacs.etags %{_bindir}/etags.emacs
 if [ "$1" = 0 ]; then
   for f in %{info_files}; do
-    /sbin/install-info --delete %{_infodir}/$f %{_infodir}/dir 2> /dev/null || :
+    /sbin/install-info --delete %{_infodir}/$f.info.gz %{_infodir}/dir 2> /dev/null || :
   done
 fi
 
@@ -419,6 +437,7 @@ update-desktop-database &> /dev/null || :
 %attr(0755,-,-) %ghost %{_bindir}/emacs
 %{_datadir}/applications/emacs.desktop
 %{_datadir}/applications/emacsclient.desktop
+%{_datadir}/appdata/%{name}.appdata.xml
 %{_datadir}/icons/hicolor/*/apps/emacs.png
 #%{_datadir}/icons/hicolor/*/apps/emacs22.png
 %{_datadir}/icons/hicolor/scalable/apps/emacs.svg
@@ -427,11 +446,12 @@ update-desktop-database &> /dev/null || :
 %files nox
 %{_bindir}/emacs-%{version}-nox
 %attr(0755,-,-) %ghost %{_bindir}/emacs
+#attr(0755,-,-) %ghost %{_bindir}/emacs-nox
 
-%files -f common-filelist common
+%files common -f common-filelist -f el-filelist
 %config(noreplace) %{_sysconfdir}/skel/.emacs
 %{_rpmconfigdir}/macros.d/macros.emacs
-%doc doc/NEWS BUGS README doc/COPYING
+%doc doc/NEWS BUGS README doc/COPYING etc/COPYING
 %{_bindir}/ebrowse
 %{_bindir}/emacsclient
 %{_bindir}/etags.emacs
@@ -444,13 +464,10 @@ update-desktop-database &> /dev/null || :
 %{_datadir}/emacs/%{version}/etc
 %{_datadir}/emacs/%{version}/site-lisp
 %{_libexecdir}/emacs
+%{_userunitdir}/emacs.service
 %attr(0644,root,root) %config(noreplace) %{_datadir}/emacs/site-lisp/default.el
 %attr(0644,root,root) %config %{_datadir}/emacs/site-lisp/site-start.el
-
-%files -f el-filelist el
 %{pkgconfig}/emacs.pc
-%doc etc/COPYING
-%dir %{_datadir}/emacs/%{version}
 
 %files terminal
 %{_bindir}/emacs-terminal
@@ -462,11 +479,98 @@ update-desktop-database &> /dev/null || :
 %dir %{_datadir}/emacs/site-lisp/site-start.d
 
 %changelog
-* Tue Sep 22 2015 Liu Di <liudidi@gmail.com> - 1:24.5-1
-- 更新到 24.5
+* Fri Sep 18 2015 Richard Hughes <rhughes@redhat.com> - 1:24.5-7
+- Remove no longer required AppData file
 
-* Tue Sep 22 2015 Liu Di <liudidi@gmail.com> - 1:24.3-15
-- 为 Magic 3.0 重建
+* Fri Sep 11 2015 Petr Hracek <phracek@redhat.com> - 1:24.5-6
+- Support BBDB >= 3 (EUDC) (#1261668)
+
+* Wed Jun 17 2015 Petr Hracek <phracek@redhat.com> - 1:24.5-5
+- game and Trademark problem (#1231676)
+
+* Wed Jun 17 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1:24.5-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
+
+* Mon May 11 2015 Petr Hracek <phracek@kiasportyw-brq-redhat-com> - 1:24.5-3
+- Utilize system-wide crypto-policies (#1179285)
+
+* Wed Apr 22 2015 Petr Hracek <phracek@redhat.com> - 1:24.5-2
+- Build with ACL support (#1208945)
+
+* Tue Apr 14 2015 Petr Hracek <phracek@redhat.com> - 1:24.5-1
+- New upstream version 24.5 (#1210919)
+
+* Tue Apr  7 2015 Petr Hracek <phracek@redhat.com> - 1:24.4-6
+- emacs grep warns 'GREP_OPTIONS is deprecated' (#1176547)
+
+* Thu Mar 26 2015 Richard Hughes <rhughes@redhat.com> - 1:24.4-5
+- Add an AppData file for the software center
+
+* Tue Mar 17 2015 Petr Hracek <phracek@redhat.com> - 1:24.4-4
+- emacs option --no-bitmap-icon does not work (#1199160)
+
+* Tue Nov 18 2014 Petr Hracek <phracek@redhat.com> - 1:24.4-3
+- Resolves #1124892 Add appdata file
+
+* Wed Oct 29 2014 Petr Hracek <phracek@redhat.com> - 1:24.4-2
+- Bump version. Correct obsolete version
+
+* Mon Oct 27 2014 Petr Hracek <phracek@redhat.com> - 1:24.4-1
+- resolves: #1155101
+  Update to the newest upstream version (24.4)
+
+* Thu Oct 23 2014 Petr Hracek <phracek@redhat.com> - 1:24.3-29
+- resolves: #1151652
+  emacs-el files are part of emacs-common
+
+* Thu Oct 23 2014 Petr Hracek <phracek@redhat.com> - 1:24.3-28
+- resolves: #1151652
+  emacs-el is required by emacs-common
+
+* Tue Sep 30 2014 jchaloup <jchaloup@redhat.com> - 1:24.3-27
+- resolves: #1147912
+  Service dont start. Must be replace: "Type=Forking" > "Type=forking".
+
+* Mon Aug 18 2014 jchaloup <jchaloup@redhat.com> - 1:24.3-26
+- resolves: #1130587
+  unremove emacs from emacs-nox package, emacs and emacs-nox co-exist
+
+* Sat Aug 16 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1:24.3-25
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
+
+* Wed Aug 13 2014 Petr Hracek <phracek@redhat.com> - 1:24.3-24
+- emacs.service file for systemd (#1128723)
+
+* Tue Aug 05 2014 jchaloup <jchaloup@redhat.com> - 1:24.3-23
+- resolves: #1104012
+  initialize kbd_macro_ptr and kbd_macro_end to kdb_macro_buffer
+
+* Mon Aug 04 2014 Petr Hracek <phracek@redhat.com> - 1:24.3-22
+- remove /usr/bin/emacs-nox from install section
+
+* Mon Aug 04 2014 Petr Hracek <phracek@redhat.com> - 1:24.3-21
+- /usr/bin/emacs-nox link marked as %ghost file (#1123573)
+
+* Fri Aug 01 2014 Petr Hracek <phracek@redhat.com> - 1:24.3-20
+- Provide /usr/bin/emacs-nox (#1123573)
+
+* Mon Jul 28 2014 Petr Hracek <phracek@redhat.com> - 1:24.3-19
+- Add patch to remove timstamp from .elc files (#1122157)
+
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1:24.3-18
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Tue May 20 2014 Petr Hracek <phracek@redhat.com> - 1:24.3-17
+- CVE-2014-3421 CVE-2014-3422 CVE-2014-3423 CVE-2014-3424 (#1095587)
+
+* Thu Apr 17 2014 Petr Hracek <phracek@redhat.com> - 1:24.3-16
+- Info files are not installed (#1062792)
+
+* Fri Apr 11 2014 Richard W.M. Jones <rjones@redhat.com> - 1:24.3-16
+- Rebuild because of unannounced ImageMagick soname bump in Rawhide.
+
+* Tue Apr 01 2014 Richard W.M. Jones <rjones@redhat.com> - 1:24.3-15
+- Rebuild because of unannounced ImageMagick soname bump in Rawhide.
 
 * Mon Feb 03 2014 Petr Hracek <phracek@redhat.com> - 1:24.3-14
 - replace sysconfdir/rpm with rpmconfigdir/macros.d

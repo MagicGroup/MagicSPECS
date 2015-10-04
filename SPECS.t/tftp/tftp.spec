@@ -1,10 +1,14 @@
 Summary: The client for the Trivial File Transfer Protocol (TFTP)
+Summary(zh_CN.UTF-8): 简单文件传输协议 (TFTP) 的客户端
 Name: tftp
 Version: 5.2
-Release: 4%{?dist}
+Release: 5%{?dist}
 License: BSD
 Group: Applications/Internet
+Group(zh_CN.UTF-8): 应用程序/互联网
 Source0: http://www.kernel.org/pub/software/network/tftp/tftp-hpa-%{version}.tar.bz2
+Source1: tftp.socket
+Source2: tftp.service
 URL: http://www.kernel.org/pub/software/network/tftp/
 
 Patch0: tftp-0.40-remap.patch
@@ -15,6 +19,7 @@ Patch5: tftp-hpa-0.49-fortify-strcpy-crash.patch
 Patch6: tftp-0.49-cmd_arg.patch
 Patch7: tftp-hpa-0.49-stats.patch
 Patch8: tftp-hpa-5.2-pktinfo.patch
+Patch9: tftp-doc.patch
 
 BuildRequires: tcp_wrappers-devel readline-devel autoconf
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -26,12 +31,17 @@ interface for TFTP, which allows users to transfer files to and from a
 remote machine.  This program and TFTP provide very little security,
 and should not be enabled unless it is expressly needed.
 
+%description -l zh_CN.UTF-8
+简单文件传输协议 (TFTP) 的客户端。
+
 %package server
 Group: System Environment/Daemons
+Group(zh_CN.UTF-8): 系统环境/服务
 Summary: The server for the Trivial File Transfer Protocol (TFTP)
-Requires: xinetd
-Requires(post): /sbin/service
-Requires(postun): /sbin/service
+Summary(zh_CN.UTF-8): 简单文件传输协议 (TFTP) 的服务器端
+Requires: systemd-units
+Requires(post): systemd-units
+Requires(postun): systemd-units
 
 %description server
 The Trivial File Transfer Protocol (TFTP) is normally used only for
@@ -40,6 +50,9 @@ server for TFTP, which allows users to transfer files to and from a
 remote machine. TFTP provides very little security, and should not be
 enabled unless it is expressly needed.  The TFTP server is run from
 %{_sysconfdir}/xinetd.d/tftp, and is disabled by default.
+
+%description server -l zh_CN.UTF-8
+简单文件传输协议 (TFTP) 的服务器端。
 
 %prep
 %setup -q -n tftp-hpa-%{version} 
@@ -51,9 +64,10 @@ enabled unless it is expressly needed.  The TFTP server is run from
 %patch6 -p1 -b .cmd_arg
 %patch7 -p1 -b .stats
 %patch8 -p1 -b .pktinfo
+%patch9 -p1
 
 %build
-autoreconf
+autoreconf -fisv
 %configure
 make %{?_smp_mflags}
 
@@ -63,39 +77,44 @@ mkdir -p ${RPM_BUILD_ROOT}%{_bindir}
 mkdir -p ${RPM_BUILD_ROOT}%{_mandir}/man{1,8}
 mkdir -p ${RPM_BUILD_ROOT}%{_sbindir}
 mkdir -p ${RPM_BUILD_ROOT}%{_localstatedir}/lib/tftpboot
+mkdir -p ${RPM_BUILD_ROOT}%{_unitdir}
 
 make INSTALLROOT=${RPM_BUILD_ROOT} SBINDIR=%{_sbindir} MANDIR=%{_mandir} INSTALL='install -p' install
-install -m755 -d -p ${RPM_BUILD_ROOT}%{_sysconfdir}/xinetd.d/ ${RPM_BUILD_ROOT}%{_localstatedir}/lib/tftpboot
-sed -e 's:/var:%{_localstatedir}:' -e 's:/usr/sbin:%{_sbindir}:' \
- tftp-xinetd > ${RPM_BUILD_ROOT}%{_sysconfdir}/xinetd.d/tftp
-touch -r tftp-xinetd ${RPM_BUILD_ROOT}%{_sysconfdir}/xinetd.d/tftp
+
+install -p -m 644 %SOURCE1 ${RPM_BUILD_ROOT}%{_unitdir}
+install -p -m 644 %SOURCE2 ${RPM_BUILD_ROOT}%{_unitdir}
+
+magic_rpm_clean.sh
 
 %post server
-/sbin/service xinetd reload > /dev/null 2>&1 || :
+%systemd_post tftp.socket
+
+%preun server
+%systemd_preun tftp.socket
 
 %postun server
-if [ $1 = 0 ]; then
-    /sbin/service xinetd reload > /dev/null 2>&1 || :
-fi
+%systemd_postun_with_restart tftp.socket
+
 
 %clean
 rm -rf ${RPM_BUILD_ROOT}
 
 %files
-%defattr(-,root,root,-)
 %doc README README.security CHANGES
 %{_bindir}/tftp
 %{_mandir}/man1/*
 
 %files server
-%defattr(-,root,root,-)
 %doc README README.security CHANGES
-%config(noreplace) %{_sysconfdir}/xinetd.d/tftp
 %dir %{_localstatedir}/lib/tftpboot
 %{_sbindir}/in.tftpd
 %{_mandir}/man8/*
+%{_unitdir}/*
 
 %changelog
+* Wed Sep 30 2015 Liu Di <liudidi@gmail.com> - 5.2-5
+- 为 Magic 3.0 重建
+
 * Sun Sep 20 2015 Liu Di <liudidi@gmail.com> - 5.2-4
 - 为 Magic 3.0 重建
 

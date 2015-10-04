@@ -1,0 +1,12 @@
+diff -ur telepathy-haze-0.8.0.orig/src/media-stream.c telepathy-haze-0.8.0/src/media-stream.c
+--- telepathy-haze-0.8.0.orig/src/media-stream.c	2015-09-30 11:58:24.262993231 +0000
++++ telepathy-haze-0.8.0/src/media-stream.c	2015-09-30 11:59:33.748991451 +0000
+@@ -1076,7 +1076,7 @@
+       if (proto == TP_MEDIA_STREAM_BASE_PROTO_UDP)
+         protocol = PURPLE_MEDIA_NETWORK_PROTOCOL_UDP;
+       else if (proto == TP_MEDIA_STREAM_BASE_PROTO_TCP)
+-        protocol = PURPLE_MEDIA_NETWORK_PROTOCOL_TCP;
++        protocol = PURPLE_MEDIA_NETWORK_PROTOCOL_TCP_ACTIVE;
+       else
+         DEBUG ("Unknown network protocol");
+ 

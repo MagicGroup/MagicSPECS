@@ -80,14 +80,13 @@ magic_rpm_clean.sh
 
 %files
 %defattr(-,root,root,-)
-%doc AUTHORS COPYING NEWS README THANKS COPYING-GPL COPYING-LGPL
+%doc AUTHORS COPYING NEWS README THANKS 
 %{_bindir}/*
 %{_libdir}/*.so.*
 %{_mandir}/man1/*
 
 %files devel
 %defattr(-,root,root,-)
-%doc doc/FAQ.txt doc/overlapdef.txt
 %{_includedir}/cdio/*
 %{_libdir}/*.so
 %{_libdir}/pkgconfig/*.pc

@@ -2,11 +2,13 @@
 %define thunar_version 1.2.0
 
 Name:           thunar-archive-plugin
-Version:        0.3.0
-Release:        4%{?dist}
+Version:        0.3.1
+Release:        2%{?dist}
 Summary:        Archive plugin for the Thunar file manager
+Summary(zh_CN.UTF-8): Thunar 文件管理器的归档插件
 
 Group:          User Interface/Desktops
+Group(zh_CN.UTF-8): 用户界面/桌面
 License:        LGPLv2+
 URL:            http://goodies.xfce.org/projects/thunar-plugins/%{name}
 Source0:        http://archive.xfce.org/src/thunar-plugins/%{name}/%{minor_version}/%{name}-%{version}.tar.bz2
@@ -25,6 +27,8 @@ The Thunar Archive Plugin allows you to create and extract archive files using
 the file context menus in the Thunar file manager. Starting with version 0.2.0, 
 the plugin provides a generic scripting interface for archive managers. 
 
+%description -l zh_CN.UTF-8
+Thunar 文件管理器的归档插件。
 
 %prep
 %setup -q
@@ -76,6 +80,12 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Wed Sep 30 2015 Liu Di <liudidi@gmail.com> - 0.3.1-2
+- 为 Magic 3.0 重建
+
+* Wed Sep 30 2015 Liu Di <liudidi@gmail.com> - 0.3.1-1
+- 更新到 0.3.1
+
 * Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 0.3.0-4
 - 为 Magic 3.0 重建
 

@@ -2,27 +2,21 @@
 
 %global with_nautilus 0
 
-%if 0%{?rhel}
-%global with_enca 0
-%global with_libcue 0
-%global with_thunderbird 0
-%global with_rss 0
-%else
 %global with_enca 1
 %global with_libcue 1
 %global with_thunderbird 1
 %global with_rss 1
-%endif
 
 Name:           tracker
 Version:        1.6.0
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Desktop-neutral search tool and indexer
 
 Group:          Applications/System
 License:        GPLv2+
 URL:            https://wiki.gnome.org/Projects/Tracker
-Source0:        https://download.gnome.org/sources/%{name}/1.6/%{name}-%{version}.tar.xz
+%define majorver %(echo %{version} | awk -F. '{print $1"."$2}')
+Source0:        https://download.gnome.org/sources/%{name}/%{majorver}/%{name}-%{version}.tar.xz
 
 # only autostart in Gnome, see also
 # https://bugzilla.redhat.com/show_bug.cgi?id=771601
@@ -222,7 +216,7 @@ rm -rf %{buildroot}%{_datadir}/tracker-tests
 # Remove .so symlinks for private libraries -- no external users are supposed
 # to link with them.
 rm -f %{buildroot}%{_libdir}/tracker-1.0/*.so
-
+magic_rpm_clean.sh
 %find_lang %{name}
 
 
@@ -328,6 +322,9 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 
 
 %changelog
+* Sun Oct 04 2015 Liu Di <liudidi@gmail.com> - 1.6.0-2
+- 为 Magic 3.0 重建
+
 * Tue Sep 22 2015 Kalev Lember <klember@redhat.com> - 1.6.0-1
 - Update to 1.6.0
 

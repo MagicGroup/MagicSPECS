@@ -1,0 +1,71 @@
+From f9a1476538bcd46d38e0d8656c037f49bf4b042f Mon Sep 17 00:00:00 2001
+From: Kamil Dudka <kdudka@redhat.com>
+Date: Tue, 3 Dec 2013 16:27:20 +0100
+Subject: [PATCH] Resolves: #1037365 - make it compile with -Werror=format-security
+
+---
+ fig2dev/dev/gencgm.c   |    2 +-
+ fig2dev/dev/genmp.c    |    4 ++--
+ fig2dev/trans_spline.c |    4 ++--
+ 3 files changed, 5 insertions(+), 5 deletions(-)
+
+diff --git a/fig2dev/dev/gencgm.c b/fig2dev/dev/gencgm.c
+index cdb28f9..83494de 100644
+--- a/fig2dev/dev/gencgm.c
++++ b/fig2dev/dev/gencgm.c
+@@ -139,7 +139,7 @@ gencgm_start(objects)
+   
+   if (from) {
+ 	figname = malloc(strlen(from)+1);
+-	sprintf(figname, from);
++	sprintf(figname, "%s", from);
+ 	p = strrchr(figname, '/');
+ 	if (p) 
+ 	    figname = p+1;		/* remove path from name for comment in file */
+diff --git a/fig2dev/dev/genmp.c b/fig2dev/dev/genmp.c
+index 7697ce4..83c3b7f 100644
+--- a/fig2dev/dev/genmp.c
++++ b/fig2dev/dev/genmp.c
+@@ -1150,7 +1150,7 @@ F_text *t;
+ 	    }
+ 	} else {
+ 	    /* special text in latex mode: just write the text. */
+-	    fprintf(tfp, t->cstring);
++	    fprintf(tfp, "%s", t->cstring);
+ 	}
+ 	fprintf(tfp," etex;\n");
+ 
+@@ -1164,7 +1164,7 @@ F_text *t;
+ 
+ 	fprintf(tfp,"  picture q;\n");
+ 	fprintf(tfp,"  q=thelabel.urt(\"");
+-        fprintf(tfp, t->cstring);
++        fprintf(tfp, "%s", t->cstring);
+ 	fprintf(tfp, "\" infont ");
+ 	if (t->font<0) {
+ 	    fprintf(tfp, "defaultfont");
+diff --git a/fig2dev/trans_spline.c b/fig2dev/trans_spline.c
+index 7c0da8f..c347fc1 100644
+--- a/fig2dev/trans_spline.c
++++ b/fig2dev/trans_spline.c
+@@ -648,7 +648,7 @@ create_cpoint()
+     F_control	   *cp;
+ 
+     if ((cp = (F_control *) malloc(CONTROL_SIZE)) == NULL)
+-	fprintf(stderr,Err_mem);
++	put_msg(Err_mem);
+     return cp;
+ }
+ 
+@@ -659,7 +659,7 @@ create_line()
+     F_line	   *l;
+ 
+     if ((l = (F_line *) malloc(LINOBJ_SIZE)) == NULL)
+-	fprintf(stderr,Err_mem);
++	put_msg(Err_mem);
+     l->pic = NULL;
+     l->next = NULL;
+     l->for_arrow = NULL;
+-- 
+1.7.1
+

@@ -6,11 +6,13 @@
 
 
 Name:           thunar-volman
-Version:        0.8.0
-Release:        2%{?dist}
+Version:	0.8.1
+Release:	1%{?dist}
 Summary:        Automatic management of removable drives and media for Thunar
+Summary(zh_CN.UTF-8): Thunar 的自动管理可移动磁盘和媒体的插件
 
 Group:          User Interface/Desktops
+Group(zh_CN.UTF-8): 用户界面/桌面
 License:        GPLv2+
 URL:            http://goodies.xfce.org/projects/thunar-plugins/%{name}
 #VCS: git:git://git.xfce.org/xfce/thunar-volman
@@ -35,6 +37,8 @@ thunar-volman is installed and configured properly, and you plug in your
 digital camera, it will automatically launch your preferred photo application 
 and import the new pictures from the camera into your photo collection.
 
+%description -l zh_CN.UTF-8
+Thunar 的自动管理可移动磁盘和媒体的插件。
 
 %prep
 %setup -q
@@ -49,6 +53,7 @@ make %{?_smp_mflags}
 %install
 rm -rf $RPM_BUILD_ROOT
 make install DESTDIR=$RPM_BUILD_ROOT INSTALL='install -p'
+magic_rpm_clean.sh
 %find_lang %{name}
 desktop-file-install --vendor fedora                        \
     --dir ${RPM_BUILD_ROOT}%{_datadir}/applications         \
@@ -86,6 +91,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Wed Sep 30 2015 Liu Di <liudidi@gmail.com> - 0.8.1-1
+- 更新到 0.8.1
+
 * Sat Jul 21 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.8.0-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 

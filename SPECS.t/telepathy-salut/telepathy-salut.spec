@@ -1,9 +1,11 @@
 Name:           telepathy-salut
 Version:        0.8.1
-Release:        6%{?dist}
+Release:        7%{?dist}
 Summary:        Link-local XMPP telepathy connection manager
+Summary(zh_CN.UTF-8): Telepathy 的本地连接 XMPP 连接管理器
 
 Group:          Applications/Communications
+Group(zh_CN.UTF-8): 应用程序/通信
 License:        LGPLv2+
 URL:            http://telepathy.freedesktop.org/wiki/FrontPage
 Source0:        http://telepathy.freedesktop.org/releases/%{name}/%{name}-%{version}.tar.gz
@@ -34,6 +36,8 @@ since it requires authentication with a server.  This package makes
 it is possible to establish an XMPP-like communications system on a
 local network using zero-configuration networking.
 
+%description -l zh_CN.UTF-8
+Telepathy 的本地连接 XMPP 连接管理器。
 
 %prep
 %setup -q
@@ -50,7 +54,7 @@ find $RPM_BUILD_ROOT -name '*.la' -exec rm -f {} ';'
 
 ## Don't package html doc to incorrect doc directory
 rm -f $RPM_BUILD_ROOT%{_docdir}/%{name}/*.html
-
+magic_rpm_clean.sh
 
 %check
 make check
@@ -78,6 +82,9 @@ make check
 
 
 %changelog
+* Wed Sep 30 2015 Liu Di <liudidi@gmail.com> - 0.8.1-7
+- 为 Magic 3.0 重建
+
 * Wed May 07 2014 Liu Di <liudidi@gmail.com> - 0.8.1-6
 - 为 Magic 3.0 重建
 

@@ -1,29 +1,14 @@
 Summary: A software wavetable MIDI synthesizer
+Summary(zh_CN.UTF-8): 软件 MIDI 波表合成器
 Name: timidity++
-Version: 2.13.2
-Release: 26%{?dist}
+Version:	2.14.0
+Release:	1%{?dist}
 Group: Applications/Multimedia
+Group(zh_CN.UTF-8): 应用程序/多媒体
 Source: http://downloads.sourceforge.net/timidity/TiMidity++-%{version}.tar.bz2
-Source1: fedora-timidity.desktop
+Source1: timidity.desktop
+Source2: timidity-xaw.desktop
 URL: http://timidity.sourceforge.net
-Patch3: TiMidity++-2.13.0-detect.patch
-Patch5: TiMidity++-2.13.0-64bit.patch
-Patch6: TiMidity++-2.13.0-warnings.patch
-Patch7: TiMidity++-2.13.2-flac-detect.patch
-Patch8: TiMidity++-2.13.2-speex.patch
-Patch9: TiMidity++-2.13.2-libao-first.patch
-# The following patches are courtesy of Debian
-Patch10: TiMidity++-2.13.2-man-pages.patch
-Patch11: TiMidity++-2.13.2-misc-fixes.patch
-Patch12: TiMidity++-2.13.2-mlutil.patch
-Patch13: TiMidity++-2.13.2-flac.patch
-# end Debian patches
-Patch14: TiMidity++-2.13.2-ipv6.patch
-Patch15: TiMidity++-2.13.2-dynlibroot.patch
-Patch16: TiMidity++-2.13.2-cfgfile-name.patch
-Patch17: TiMidity++-2.13.2-missing-protos.patch
-Patch18: TiMidity++-2.13.2-fork-early.patch
-
 License: GPLv2
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: alsa-lib-devel ncurses-devel gtk2-devel
@@ -37,84 +22,109 @@ TiMidity++ is a MIDI format to wave table format converter and
 player. Install timidity++ if you'd like to play MIDI files and your
 sound card does not natively support wave table format.
 
+%description -l zh_CN.UTF-8
+软件 MIDI 波表合成器。
+
+%package        GTK-interface
+Summary:        GTK user interface for %{name}
+Summary(zh_CN.UTF-8): %{name} 的 GTK 用户界面
+Requires:       %{name}%{?_isa} = %{version}-%{release}
+
+%description    GTK-interface
+The %{name}-GTK-interface package contains a GTK based UI for %{name}.
+%description GTK-interface -l zh_CN.UTF-8
+%{name} 的 GTK 用户界面。
+
+%package        Xaw3D-interface
+Summary:        Xaw3D user interface for %{name}
+Summary(zh_CN.UTF-8): %{name} 的 Xaw3D 用户界面
+Requires:       %{name}%{?_isa} = %{version}-%{release}
+
+%description    Xaw3D-interface
+The %{name}-Xaw3D-interface package contains a Xaw3D based UI for %{name}.
+
+%description Xaw3D-interface -l zh_CN.UTF-8
+%{name} 的 Xaw3D 用户界面。
 
 %prep
-%setup -q -n TiMidity++-%{version}
-# Autodetect whether we should use aRts, esd, or neither
-%patch3 -p1 -b .detect
-# fix for x86_64 and s390x
-%patch5 -p1 -b .64bit
-%patch6 -p1 -b .warnings
-%patch7 -p1
-%patch8 -p1
-%patch9 -p1
-%patch10 -p1
-%patch11 -p1
-%patch12 -p1
-%patch13 -p1
-%patch14 -p1
-%patch15 -p1
-%patch16 -p1
-%patch17 -p1
-%patch18 -p1
+%setup -q -n TiMidity++-2.14.0
 
 
 %build
-export EXTRACFLAGS="$RPM_OPT_FLAGS -D_GNU_SOURCE"
-%configure --enable-dynamic --disable-dependency-tracking \
-  --enable-interface=ncurses,vt100,alsaseq,server,network,gtk \
-  --enable-audio=oss,alsa,ao,jack,vorbis,speex,flac
+export EXTRACFLAGS="$RPM_OPT_FLAGS -DCONFIG_FILE=\\\"/etc/timidity++.cfg\\\""
+# Note the first argument to --enable-audio is the default output, and
+# we use libao to get pulse output
+%configure --disable-dependency-tracking \
+  --with-module-dir=%{_libdir}/%{name} \
+  --enable-interface=ncurses,vt100,alsaseq,server,network,gtk,xaw \
+  --enable-dynamic=gtk,xaw \
+  --enable-audio=ao,alsa,oss,jack,vorbis,speex,flac
 make %{?_smp_mflags}
 
 
 %install
-rm -rf $RPM_BUILD_ROOT
-make install DESTDIR=$RPM_BUILD_ROOT
-
-mkdir -p $RPM_BUILD_ROOT/%{_sysconfdir}
-echo "soundfont %{_datadir}/soundfonts/default.sf2" > \
-  $RPM_BUILD_ROOT/%{_sysconfdir}/timidity++.cfg
+make install DESTDIR=$RPM_BUILD_ROOT INSTALL="install -p"
 
 mkdir -p $RPM_BUILD_ROOT%{_datadir}/applications
-desktop-file-install --vendor fedora              \
+desktop-file-install               \
   --dir ${RPM_BUILD_ROOT}%{_datadir}/applications \
   %{SOURCE1}
+desktop-file-install                              \
+  --dir ${RPM_BUILD_ROOT}%{_datadir}/applications \
+  %{SOURCE2}
 
 mkdir -p $RPM_BUILD_ROOT%{_datadir}/icons/hicolor/48x48/apps
 install -p -m 644 interface/pixmaps/timidity.xpm \
   $RPM_BUILD_ROOT%{_datadir}/icons/hicolor/48x48/apps/timidity.xpm
 
 
-%clean
-rm -rf $RPM_BUILD_ROOT
+%post GTK-interface
+touch --no-create %{_datadir}/icons/hicolor &>/dev/null || :
 
-
-%post
-# update icon themes
-touch --no-create %{_datadir}/icons/hicolor || :
-if [ -x %{_bindir}/gtk-update-icon-cache ]; then
-   %{_bindir}/gtk-update-icon-cache --quiet %{_datadir}/icons/hicolor || :
+%postun GTK-interface
+if [ $1 -eq 0 ] ; then
+    touch --no-create %{_datadir}/icons/hicolor &>/dev/null
+    gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 fi
 
-%postun
-# update icon themes
-touch --no-create %{_datadir}/icons/hicolor || :
-if [ -x %{_bindir}/gtk-update-icon-cache ]; then
-   %{_bindir}/gtk-update-icon-cache --quiet %{_datadir}/icons/hicolor || :
+%posttrans GTK-interface
+gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
+
+
+%post Xaw3D-interface
+touch --no-create %{_datadir}/icons/hicolor &>/dev/null || :
+
+%postun Xaw3D-interface
+if [ $1 -eq 0 ] ; then
+    touch --no-create %{_datadir}/icons/hicolor &>/dev/null
+    gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 fi
+
+%posttrans Xaw3D-interface
+gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 
 
 %files
-%defattr(-,root,root,-)
 %doc AUTHORS COPYING README NEWS ChangeLog
-%config(noreplace) %{_sysconfdir}/timidity++.cfg
 %{_bindir}/*
+%dir %{_libdir}/%{name}
 %{_mandir}/*/*
-%{_datadir}/applications/fedora-timidity.desktop
+
+%files GTK-interface
+%{_libdir}/%{name}/if_gtk.so
+%{_datadir}/applications/timidity.desktop
+%{_datadir}/icons/hicolor/48x48/apps/timidity.xpm
+
+%files Xaw3D-interface
+%{_libdir}/%{name}/if_xaw.so
+%{_datadir}/applications/timidity-xaw.desktop
 %{_datadir}/icons/hicolor/48x48/apps/timidity.xpm
 
 
 %changelog
+* Sat Oct 03 2015 Liu Di <liudidi@gmail.com> - 2.14.0-1
+- 更新到 2.14.0
+
 * Sat Sep 19 2015 Liu Di <liudidi@gmail.com> - 2.13.2-26
 - 为 Magic 3.0 重建
 

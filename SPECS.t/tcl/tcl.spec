@@ -3,12 +3,14 @@
 %{!?sdt:%define sdt 1}
 
 Summary: Tool Command Language, pronounced tickle
+Summary(zh_CN.UTF-8): 工具命令语言(TCL) 
 Name: tcl
 Version: %{vers}
-Release: 1%{?dist}
+Release: 2%{?dist}
 Epoch: 1
 License: TCL
 Group: Development/Languages
+Group(zh_CN.UTF-8): 开发/语言
 URL: http://tcl.sourceforge.net/
 Source0: http://downloads.sourceforge.net/sourceforge/tcl/tcl-core%{version}-src.tar.gz
 Buildrequires: autoconf
@@ -33,9 +35,14 @@ cross-platform GUI applications.  Tcl can also be used for a variety
 of web-related tasks and for creating powerful command languages for
 applications.
 
+%description -l zh_CN.UTF-8
+工具命令语言(TCL) 。
+
 %package devel
 Summary: Tcl scripting language development environment
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: Development/Languages
+Group(zh_CN.UTF-8): 开发/语言
 Requires: %{name} = %{epoch}:%{version}-%{release}
 
 %description devel
@@ -48,6 +55,9 @@ of web-related tasks and for creating powerful command languages for
 applications.
 
 The package contains the development files and man pages for tcl.
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q -n %{name}%{version}
@@ -105,6 +115,7 @@ find generic unix -name "*.h" -exec cp -p '{}' %{buildroot}/%{_includedir}/%{nam
 # remove buildroot traces
 sed -i -e "s|$PWD/unix|%{_libdir}|; s|$PWD|%{_includedir}/%{name}-private|" %{buildroot}/%{_libdir}/%{name}Config.sh
 rm -rf %{buildroot}/%{_datadir}/%{name}%{majorver}/ldAix
+magic_rpm_clean.sh
 
 %post -p /sbin/ldconfig
 
@@ -136,6 +147,9 @@ rm -rf %{buildroot}/%{_datadir}/%{name}%{majorver}/ldAix
 %{_datadir}/%{name}%{majorver}/tclAppInit.c
 
 %changelog
+* Wed Sep 30 2015 Liu Di <liudidi@gmail.com> - 1:8.6.4-2
+- 为 Magic 3.0 重建
+
 * Fri Mar 13 2015 Jaroslav Škarvada <jskarvad@redhat.com> - 1:8.6.4-1
 - New version
 

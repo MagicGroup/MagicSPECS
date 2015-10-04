@@ -5,8 +5,8 @@
 %global         _gobject_introspection  1.31.1
 
 Name:           gstreamer1
-Version:	1.5.91
-Release:        1%{?dist}
+Version:	1.6.0
+Release:        2%{?dist}
 Summary:        GStreamer streaming media framework runtime
 Summary(zh_CN.UTF-8): GStreamer 流媒体框架运行库
 
@@ -103,6 +103,7 @@ GStreamer streaming media framework.
   --with-package-origin='http://download.fedoraproject.org' \
   --enable-gtk-doc \
   --enable-debug \
+  --enable-introspection=yes \
   --disable-tests --disable-examples
 make %{?_smp_mflags} V=1
 
@@ -162,6 +163,8 @@ install -m0644 -D %{SOURCE2} $RPM_BUILD_ROOT%{_rpmconfigdir}/fileattrs/gstreamer
 %{_rpmconfigdir}/gstreamer1.prov
 %{_rpmconfigdir}/fileattrs/gstreamer1.attr
 
+%{_datadir}/bash-completion/*
+
 %doc %{_mandir}/man1/gst-inspect-%{majorminor}.*
 %doc %{_mandir}/man1/gst-launch-%{majorminor}.*
 %doc %{_mandir}/man1/gst-typefind-%{majorminor}.*
@@ -178,6 +181,7 @@ install -m0644 -D %{SOURCE2} $RPM_BUILD_ROOT%{_rpmconfigdir}/fileattrs/gstreamer
 %{_includedir}/gstreamer-%{majorminor}/gst/check/*.h
 %{_includedir}/gstreamer-%{majorminor}/gst/controller/*.h
 %{_includedir}/gstreamer-%{majorminor}/gst/net/*.h
+%{_libdir}/gstreamer-%{majorminor}/include/gst/gstconfig.h
 
 %{_libdir}/libgstreamer-%{majorminor}.so
 %{_libdir}/libgstbase-%{majorminor}.so
@@ -207,6 +211,12 @@ install -m0644 -D %{SOURCE2} $RPM_BUILD_ROOT%{_rpmconfigdir}/fileattrs/gstreamer
 
 
 %changelog
+* Sat Oct 03 2015 Liu Di <liudidi@gmail.com> - 1.6.0-2
+- 为 Magic 3.0 重建
+
+* Sat Oct 03 2015 Liu Di <liudidi@gmail.com> - 1.6.0-1
+- 更新到 1.6.0
+
 * Wed Sep 23 2015 Liu Di <liudidi@gmail.com> - 1.5.91-1
 - 更新到 1.5.91
 

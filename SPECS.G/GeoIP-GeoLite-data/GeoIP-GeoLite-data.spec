@@ -9,11 +9,13 @@ Name:		GeoIP-GeoLite-data
 # The geolite databases are updated on the first Tuesday of each month,
 # hence we use a versioning scheme of YYYY.MM for the Fedora package
 Version:	2015.09
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:	Free GeoLite IP geolocation country database
+Summary(zh_CN.UTF-8): 自由的 GeoLite IP 地理位置国家库
 # License specified at http://dev.maxmind.com/geoip/legacy/geolite/#License
 License:	CC-BY-SA
 Group:		Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 URL:		http://dev.maxmind.com/geoip/legacy/geolite/
 Source0:	http://geolite.maxmind.com/download/geoip/database/GeoLiteCountry/GeoIP.dat.gz
 Source1:	http://geolite.maxmind.com/download/geoip/database/GeoIPv6.dat.gz
@@ -23,13 +25,6 @@ Source4:	http://download.maxmind.com/download/geoip/database/asnum/GeoIPASNum.da
 Source5:	http://download.maxmind.com/download/geoip/database/asnum/GeoIPASNumv6.dat.gz
 BuildArch:	noarch
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(id -nu)
-# For compatibility with monolithic GeoIP packages in Fedora 21 and older
-# releases, we ensure that all databases are installed together; going
-# forward, only the IPv4 country database is installed by default and the user
-# can choose whether or not to install the databases from the extra package
-%if 0%{?fedora} < 22 && 0%{?rhel} < 8
-Requires:	GeoIP-GeoLite-data-extra = %{version}-%{release}
-%endif
 # This data has previously been available in differently-named packages
 Obsoletes:	GeoIP-data < 1.6.4-10
 Provides:	GeoIP-data = %{version}
@@ -45,9 +40,14 @@ a database that maps IPv4 addresses to countries.
 This product includes GeoLite data created by MaxMind, available from
 http://www.maxmind.com/
 
+%description -l zh_CN.UTF-8
+自由的 GeoLite IP 地理位置国家库。
+
 %package extra
 Summary:	Free GeoLite IP geolocation databases
+Summary(zh_CN.UTF-8): 自由的 GeoLite IP 地理位置国家库
 Group:		Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 License:	CC-BY-SA
 Requires:	%{name} = %{version}-%{release}
 
@@ -58,6 +58,9 @@ to cities and autonomous system numbers.
 
 This product includes GeoLite data created by MaxMind, available from
 http://www.maxmind.com/
+
+%description extra -l zh_CN.UTF-8
+自由的 GeoLite IP 地理位置国家库
 
 %prep
 %setup -q -T -c
@@ -95,6 +98,7 @@ ln -sf GeoIPASNumv6.dat %{buildroot}%{_datadir}/GeoIP/GeoLiteASNumv6.dat
 # (geoiplookup -v ...)
 ln -sf GeoLiteCity.dat %{buildroot}%{_datadir}/GeoIP/GeoIPCity.dat
 ln -sf GeoLiteCityv6.dat %{buildroot}%{_datadir}/GeoIP/GeoIPCityv6.dat
+magic_rpm_clean.sh
 
 %clean
 rm -rf %{buildroot}
@@ -158,6 +162,9 @@ exit 0
 %{_datadir}/GeoIP/GeoLiteASNumv6.dat
 
 %changelog
+* Sat Oct 03 2015 Liu Di <liudidi@gmail.com> - 2015.09-2
+- 为 Magic 3.0 重建
+
 * Wed Sep  9 2015 Paul Howarth <paul@city-fan.org> - 2015.09-1
 - Update to September 2015 databases
 

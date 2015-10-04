@@ -1,9 +1,11 @@
 Name:           telepathy-filesystem
 Version:        0.0.2
-Release:        5%{?dist}
+Release:        6%{?dist}
 Summary:        Telepathy filesystem layout
+Summary(zh_CN.UTF-8): Telepathy 的文件系统结构
 
 Group:          System Environment/Base
+Group(zh_CN.UTF-8): 系统环境/基本
 License:        Public Domain
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
@@ -14,6 +16,9 @@ Requires:       filesystem
 %description
 This package provides some directories which are required by other
 packages which comprise the Telepathy release.  
+
+%description -l zh_CN.UTF-8
+Telepathy 的文件系统结构。
 
 %prep
 
@@ -38,6 +43,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Wed Sep 30 2015 Liu Di <liudidi@gmail.com> - 0.0.2-6
+- 为 Magic 3.0 重建
+
 * Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 0.0.2-5
 - 为 Magic 3.0 重建
 
