@@ -6,23 +6,23 @@
 %global with_enca 0
 %global with_libcue 0
 %global with_thunderbird 0
-%global with_libmediaart 0
+%global with_rss 0
 %else
 %global with_enca 1
 %global with_libcue 1
 %global with_thunderbird 1
-%global with_libmediaart 1
+%global with_rss 1
 %endif
 
 Name:           tracker
-Version:        1.3.2
-Release:        4%{?dist}
+Version:        1.6.0
+Release:        1%{?dist}
 Summary:        Desktop-neutral search tool and indexer
 
 Group:          Applications/System
 License:        GPLv2+
 URL:            https://wiki.gnome.org/Projects/Tracker
-Source0:        https://download.gnome.org/sources/%{name}/1.3/%{name}-%{version}.tar.xz
+Source0:        https://download.gnome.org/sources/%{name}/1.6/%{name}-%{version}.tar.xz
 
 # only autostart in Gnome, see also
 # https://bugzilla.redhat.com/show_bug.cgi?id=771601
@@ -36,6 +36,7 @@ BuildRequires:  gtk-doc
 BuildRequires:  intltool
 BuildRequires:  libjpeg-devel
 BuildRequires:  libtiff-devel
+BuildRequires:  libappstream-glib
 %if 0%{?with_thunderbird}
 BuildRequires:  thunderbird
 %endif
@@ -45,6 +46,7 @@ BuildRequires:  pkgconfig(enca)
 %endif
 BuildRequires:  pkgconfig(exempi-2.0)
 BuildRequires:  pkgconfig(flac)
+BuildRequires:  pkgconfig(gee-0.8)
 BuildRequires:  pkgconfig(gobject-introspection-1.0)
 BuildRequires:  pkgconfig(gstreamer-1.0)
 BuildRequires:  pkgconfig(gstreamer-pbutils-1.0)
@@ -56,19 +58,19 @@ BuildRequires:  pkgconfig(icu-uc)
 BuildRequires:  pkgconfig(libcue)
 %endif
 BuildRequires:  pkgconfig(libexif)
-BuildRequires:  pkgconfig(gee-0.8)
+%if 0%{?with_rss}
+BuildRequires:  pkgconfig(libgrss)
+%endif
 BuildRequires:  pkgconfig(libgsf-1)
 BuildRequires:  pkgconfig(libgxps)
 BuildRequires:  pkgconfig(libiptcdata)
+BuildRequires:  pkgconfig(libmediaart-2.0)
 %if 0%{?with_nautilus}
 BuildRequires:  pkgconfig(libnautilus-extension)
 %endif
 BuildRequires:  pkgconfig(libnm-glib)
 BuildRequires:  pkgconfig(libosinfo-1.0)
 BuildRequires:  pkgconfig(libpng)
-%if 0%{?with_libmediaart}
-BuildRequires:  pkgconfig(libmediaart-1.0)
-%endif
 BuildRequires:  pkgconfig(libxml-2.0)
 BuildRequires:  pkgconfig(poppler-glib)
 BuildRequires:  pkgconfig(sqlite3)
@@ -191,11 +193,7 @@ sed -i -e 's|"/lib /usr/lib|"/%{_lib} %{_libdir}|' configure
 %else
            --disable-nautilus-extension \
 %endif
-%if %{with_libmediaart}
            --enable-libmediaart \
-%else
-           --disable-libmediaart \
-%endif
 %if 0%{?with_thunderbird}
            --with-thunderbird-plugin-dir=%{_libdir}/thunderbird/extensions \
 %endif
@@ -207,7 +205,16 @@ make V=1 %{?_smp_mflags}
 
 
 %install
-make DESTDIR=%{buildroot} INSTALL="install -p" install
+%make_install
+
+# Update the screenshot shown in the software center
+#
+# NOTE: It would be *awesome* if this file was pushed upstream.
+#
+# See http://people.freedesktop.org/~hughsient/appdata/#screenshots for more details.
+#
+appstream-util replace-screenshots $RPM_BUILD_ROOT%{_datadir}/appdata/tracker-needle.appdata.xml \
+  https://raw.githubusercontent.com/hughsie/fedora-appstream/master/screenshots-extra/tracker-needle/a.png 
 
 find %{buildroot} -type f -name "*.la" -delete
 rm -rf %{buildroot}%{_datadir}/tracker-tests
@@ -248,7 +255,8 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 
 
 %files -f %{name}.lang
-%doc AUTHORS COPYING NEWS README
+%license COPYING
+%doc AUTHORS NEWS README
 %{_bindir}/tracker*
 %{_libexecdir}/tracker*
 %{_datadir}/tracker/
@@ -259,8 +267,10 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %{_libdir}/girepository-1.0/TrackerControl-1.0.typelib
 %{_libdir}/girepository-1.0/TrackerMiner-1.0.typelib
 %{_mandir}/*/tracker*.gz
-%{_sysconfdir}/bash_completion.d/tracker-prompt.sh
 %config(noreplace) %{_sysconfdir}/xdg/autostart/tracker*.desktop
+%dir %{_datadir}/bash-completion
+%dir %{_datadir}/bash-completion/completions
+%{_datadir}/bash-completion/completions/tracker
 %{_datadir}/glib-2.0/schemas/*
 %exclude %{_bindir}/tracker-needle
 %exclude %{_bindir}/tracker-preferences
@@ -310,7 +320,7 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %endif
 
 %files docs
-%doc docs/reference/COPYING
+%license docs/reference/COPYING
 %{_datadir}/gtk-doc/html/libtracker-control/
 %{_datadir}/gtk-doc/html/libtracker-miner/
 %{_datadir}/gtk-doc/html/libtracker-sparql/
@@ -318,14 +328,83 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 
 
 %changelog
-* Wed Jan 21 2015 Liu Di <liudidi@gmail.com> - 1.3.2-4
-- 为 Magic 3.0 重建
+* Tue Sep 22 2015 Kalev Lember <klember@redhat.com> - 1.6.0-1
+- Update to 1.6.0
 
-* Wed Jan 21 2015 Liu Di <liudidi@gmail.com> - 1.3.2-3
-- 为 Magic 3.0 重建
+* Thu Sep 03 2015 Jonathan Wakely <jwakely@redhat.com> - 1.5.2-3
+- Rebuilt for Boost 1.59
 
-* Thu Dec 25 2014 Liu Di <liudidi@gmail.com> - 1.3.2-2
-- 为 Magic 3.0 重建
+* Tue Aug 25 2015 David King <amigadave@amigadave.com> - 1.5.2-2
+- Add patch to fix FS miner crash (#1246896)
+
+* Thu Aug 20 2015 Kalev Lember <klember@redhat.com> - 1.5.2-1
+- Update to 1.5.2
+- Use make_install macro
+- Co-own bash-completion directories
+
+* Fri Jul 24 2015 Igor Gnatenko <ignatenko@src.gnome.org> - 1.5.1-2
+- Backport rss fixes from upstream
+
+* Wed Jul 22 2015 David King <amigadave@amigadave.com> - 1.5.1-1
+- Update to 1.5.1
+
+* Tue Jul 21 2015 David King <amigadave@amigadave.com> - 1.5.0-2
+- Bump for new libgrss
+
+* Tue Jul 14 2015 Igor Gnatenko <ignatenkobrain@fedoraproject.org> - 1.5.0-1
+- Update to 1.5.0
+
+* Tue Jul 14 2015 Igor Gnatenko <ignatenko@src.gnome.org> - 1.4.0-6
+- Rebuild due to enabled FTS in sqlite
+- Add RSS support
+
+* Fri Jun 19 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.4.0-5
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
+
+* Mon May 18 2015 Debarshi Ray <rishi@fedoraproject.org> - 1.4.0-4
+- Remove remnants of AC_CHECK_LIB workaround
+
+* Sat May 02 2015 Kalev Lember <kalevlember@gmail.com> - 1.4.0-3
+- Rebuilt for GCC 5 C++11 ABI change
+
+* Mon Mar 30 2015 Richard Hughes <rhughes@redhat.com> - 1.4.0-2
+- Use better AppData screenshots
+
+* Tue Mar 24 2015 Kalev Lember <kalevlember@gmail.com> - 1.4.0-1
+- Update to 1.4.0
+
+* Tue Mar 17 2015 Kalev Lember <kalevlember@gmail.com> - 1.3.6-1
+- Update to 1.3.6
+
+* Fri Mar 06 2015 David King <amigadave@amigadave.com> - 1.3.5-1
+- Update to 1.3.5
+
+* Tue Mar 03 2015 David King <amigadave@amigadave.com> - 1.3.4-2
+- Fix checking for giflib
+- Fix tracker-compat script path (#1198166)
+
+* Tue Mar 03 2015 Kalev Lember <kalevlember@gmail.com> - 1.3.4-1
+- Update to 1.3.4
+- Use license macro for COPYING files
+
+* Tue Mar 03 2015 Debarshi Ray <rishi@fedoraproject.org> - 1.3.3-2
+- Backport upstream patch to fix database migration failures (GNOME #743727)
+
+* Fri Feb 06 2015 David King <amigadave@amigadave.com> - 1.3.3-1
+- Update to 1.3.3
+
+* Mon Jan 26 2015 David Tardon <dtardon@redhat.com> - 1.3.2-5
+- rebuild for ICU 54.1
+
+* Mon Jan 26 2015 David King <amigadave@amigadave.com> - 1.3.2-4
+- Use libmediaart-2.0
+
+* Tue Jan 13 2015 Debarshi Ray <rishi@fedoraproject.org> - 1.3.2-3
+- Backport upstream patch to restrict the amount of data that is logged for
+  errors (GNOME #735406)
+
+* Tue Jan 06 2015 Debarshi Ray <rishi@fedoraproject.org> - 1.3.2-2
+- Backport upstream patch to fix a crash (GNOME #742391)
 
 * Fri Dec 19 2014 Richard Hughes <rhughes@redhat.com> - 1.3.2-1
 - Update to 1.3.2
