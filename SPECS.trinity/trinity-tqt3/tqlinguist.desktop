@@ -1,0 +1,26 @@
+[Desktop Entry]
+Exec=tqlinguist
+Name=TQt3 Linguist
+Name[de]=TQt3-Linguist
+Name[eo]=TQt3-Lingvisto
+Name[es]=Lingüista TQt3
+Name[ko]=TQt3 언어학자
+Name[lv]=TQt3 Lingvists
+GenericName=Translation Tool
+Comment=Tool for translating message catalogues of TQt3 based programs
+Comment[da]=Redskab til at oversætte TQt3 baserede programmer
+Comment[de]=Dienstprogramm zur Übersetzung von Programmen, die auf TQt3 basieren
+Comment[eo]=Ilo por tradukado de mesaĝaroj de TQt3-bazitaj programoj
+Comment[es]=Herramienta para la traducción de catálogos de mensajes de programas basados en TQt3
+Comment[he]=TQt3 תוססובמ תוינכות לש תועדוה יגולטק םוגרתל ילכ
+Comment[hu]=Segédprogram a TQt3-alapú programok üzenetfájljainak lefordításához
+Comment[ko]=TQt3를 바탕으로 하는 프로그램에서 쓸 번역된 메세지 목록을 관리하는 도구
+Comment[lv]=Rīks ziņojumu katalogu tulkošanai uz TQt3 bāzētās programmās
+Comment[pt]=Ferramenta para traduzir os catálogos de mensagens de programas do TQt3
+Comment[pt_BR]=Ferramenta para traduzir os catálogos de mensagens de programas do TQt3
+Comment[sv]=Verktyg för att översätta meddelandekataloger från TQt3-baserade program
+MimeType=application/x-linguist;
+Terminal=false
+Icon=tqlinguist
+Type=Application
+Categories=Qt;Development

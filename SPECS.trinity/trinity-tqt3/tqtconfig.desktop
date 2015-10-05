@@ -1,0 +1,13 @@
+[Desktop Entry]
+Encoding=UTF-8
+Exec=tqtconfig
+Name=TQt3 Configuration
+Name[de]=TQt3 Konfiguration
+GenericName=Configuration Utility
+Comment=A graphical configuration tool for programs using TQt 3
+Comment[de]=Ein grafisches Konfigurationstool für TQt3-Programme
+MimeType=application/x-qtconfig;
+Terminal=false
+Icon=tqtconfig
+Type=Application
+Categories=Qt;Settings;

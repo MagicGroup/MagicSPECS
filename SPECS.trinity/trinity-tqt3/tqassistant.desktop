@@ -1,0 +1,13 @@
+[Desktop Entry]
+Encoding=UTF-8
+Exec=tqassistant
+Name=TQt3 Assistant
+Name[de]=TQt3 Assistent
+GenericName=Document Browser
+Comment=TQt3 Helpcenter
+Comment[de]= TQt3 Hilfezentrum
+MimeType=application/x-assistant;
+Icon=tqassistant
+Terminal=false
+Type=Application
+Categories=Qt;Development;
