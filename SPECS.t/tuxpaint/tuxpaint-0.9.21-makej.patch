@@ -1,0 +1,25 @@
+From edc3e418521bd65ccc67a133f8a980a8f013e394 Mon Sep 17 00:00:00 2001
+From: Lubomir Rintel <lkundrak@v3.sk>
+Date: Tue, 2 Mar 2010 13:43:39 +0100
+Subject: [PATCH] Fix translation parallel build race
+
+---
+ Makefile |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+diff --git a/Makefile b/Makefile
+index 563dded..52d0f40 100644
+--- a/Makefile
++++ b/Makefile
+@@ -370,7 +370,7 @@ endif
+ 
+ # Build the translation files for gettext
+ 
+-$(MOFILES): trans/%.mo: src/po/%.po  
++$(MOFILES): trans/%.mo: src/po/%.po trans
+ 	msgfmt -o $@ $<
+ 
+ .PHONY: translations
+-- 
+1.7.0
+

@@ -1,0 +1,25 @@
+From da064f6c8b2bcbc7f8fb00fbdc49ba3b2f0543ac Mon Sep 17 00:00:00 2001
+From: Lubomir Rintel <lkundrak@v3.sk>
+Date: Tue, 2 Mar 2010 12:54:08 +0100
+Subject: [PATCH 2/2] Fix memset argument order
+
+---
+ src/tuxpaint.c |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+diff --git a/src/tuxpaint.c b/src/tuxpaint.c
+index 6047cbb..145fb10 100644
+--- a/src/tuxpaint.c
++++ b/src/tuxpaint.c
+@@ -1130,7 +1130,7 @@ static SDL_Surface *render_text_w(TuxPaint_Font * restrict font,
+ 
+     utfstr_max = (sizeof(char) * 4 * (wcslen(str) + 1));
+     utfstr = (char *) malloc(utfstr_max);
+-    memset(utfstr, utfstr_max, 0);
++    memset(utfstr, 0, utfstr_max);
+ 
+     j = 0;
+     for (i = 0; i < wcslen(str); i++)
+-- 
+1.7.0
+
