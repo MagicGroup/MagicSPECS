@@ -1,160 +1,158 @@
+#
+# spec file for package python-trinity (version R14)
+#
+# Copyright (c) 2014 Trinity Desktop Environment
+#
+# All modifications and additions to the file contributed by third parties
+# remain the property of their copyright owners, unless otherwise agreed
+# upon. The license for this file, and modifications and additions to the
+# file, is the same license as for the pristine package itself (unless the
+# license for the pristine package is not an Open Source License, in which
+# case the license is the MIT License). An "Open Source License" is a
+# license that conforms to the Open Source Definition (Version 1.9)
+# published by the Open Source Initiative.
+#
+# Please submit bugfixes or comments via http://www.trinitydesktop.org/
+#
+
 %{!?python_sitearch:%global python_sitearch %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib(1)")}
 
-# If TDE is built in a specific prefix (e.g. /opt/trinity), the release will be suffixed with ".opt".
-%if "%{?tde_prefix}" != "/usr"
-%define _variant .opt
+# TDE variables
+%define tde_epoch 2
+%if "%{?tde_version}" == ""
+%define tde_version 14.0.0
 %endif
-%define tdecomp python-trinity
-%define tdeversion 3.5.13.2
-
-# TDE 3.5.13 specific building variables
+%define tde_pkg python-trinity
+%define tde_prefix /opt/trinity
 %define tde_bindir %{tde_prefix}/bin
 %define tde_datadir %{tde_prefix}/share
 %define tde_docdir %{tde_datadir}/doc
 %define tde_includedir %{tde_prefix}/include
 %define tde_libdir %{tde_prefix}/%{_lib}
 %define tde_mandir %{tde_datadir}/man
-%define tde_appdir %{tde_datadir}/applications
-
-%define tde_tdeappdir %{tde_appdir}/kde
 %define tde_tdedocdir %{tde_docdir}/tde
 %define tde_tdeincludedir %{tde_includedir}/tde
-%define tde_tdelibdir %{tde_libdir}/trinity
-
-%define _docdir %{tde_docdir}
-
-%define __arch_install_post %{nil}
 
 
-Name:		trinity-python-trinity
-Summary:	Trinity bindings for Python [Trinity]
+Name:		trinity-%{tde_pkg}
+Epoch:		%{tde_epoch}
 Version:	3.16.3
-Release:	4%{?dist}%{?_variant}
-
-License:	GPLv2+
-Group:		Applications/Utilities
-
-Vendor:		Trinity Project
-Packager:	Francois Andriot <francois.andriot@free.fr>
-URL:		http://www.simonzone.com/software/pykdeextensions
-
-Prefix:    %{_prefix}
-BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-
-Source0:	%{tdecomp}-trinity-%{tdeversion}.tar.xz
-
-# Fix include subdirectory 'tde' instead of 'kde'
-Patch1:		python-trinity-3.5.13.2-fix_tde_includedir.patch
-
-BuildRequires:	trinity-tqtinterface-devel >= 3.5.13.2
-BuildRequires:	trinity-arts-devel >= 3.5.13.2
-BuildRequires:	trinity-tdelibs-devel >= 3.5.13.2
-BuildRequires:	desktop-file-utils
-BuildRequires:	gettext
-
-BuildRequires:	python
-
-%if 0%{?rhel} >= 4 && 0%{?rhel} <= 5
-# RHEL 4/5 comes with old version, so we brought ours ...
-BuildRequires:	trinity-sip-devel
-BuildRequires:	trinity-PyQt-devel
-%endif
-
-%if 0%{?mgaversion} || 0%{?mdkversion}
-BuildRequires:	python-sip
-BuildRequires:	python-qt
-%endif
-
-%if 0%{?rhel} >= 6 || 0%{?fedora}
-BuildRequires:	sip-devel
-BuildRequires:	PyQt-devel
-%endif
+Release:	%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}%{?_variant}
+Summary:	Trinity bindings for Python
+Group:		Development/Libraries/Python
+URL:		http://www.trinitydesktop.org/
+#URL:		http://www.simonzone.com/software/pykdeextensions
 
 %if 0%{?suse_version}
-BuildRequires:	python-sip-devel
-BuildRequires:	trinity-PyQt-devel
+License:	GPL-2.0+
+%else
+License:	GPLv2+
 %endif
 
-Obsoletes:	python-trinity < %{version}-%{release}
-Provides:	python-trinity = %{version}-%{release}
+#Vendor:		Trinity Desktop
+#Packager:	Francois Andriot <francois.andriot@free.fr>
+
+Prefix:		%{tde_prefix}
+BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+
+Source0:		%{name}-%{tde_version}%{?preversion:~%{preversion}}.tar.gz
+
+BuildRequires:	trinity-tdelibs-devel >= %{tde_version}
+
+BuildRequires:	desktop-file-utils
+BuildRequires:	gettext
+BuildRequires:	autoconf automake libtool m4
+BuildRequires:	gcc-c++
+
+# PYTHON support
+BuildRequires:	python
+BuildRequires:	python-tqt-devel
+Requires:		python-tqt
+
+# SIP
+BuildRequires:	sip4-tqt-devel >= 4.10.5
+Requires:		sip4-tqt >= 4.10.5
+
+Obsoletes:	python-trinity < %{?epoch:%{epoch}:}%{version}-%{release}
+Provides:	python-trinity = %{?epoch:%{epoch}:}%{version}-%{release}
 
 %description
 Python binding module that provides wide access to the Trinity API,
 also known as PyTDE. Using this, you'll get (for example) classes
-from kio, kjs, khtml and kprint.
+from tdeio, tdejs, tdehtml and tdeprint.
 
+%files
+%defattr(-,root,root,-)
+%doc AUTHORS ChangeLog COPYING NEWS README
+%{python_sitearch}/*.so
+%{python_sitearch}/dcop*.py*
+%{python_sitearch}/pytde*.py*
+
+##########
 
 %package devel
-Summary:		Trinity bindings for Python - Development files and scripts [Trinity]
-Group:			Development/Libraries
-Requires:		%{name} = %{version}-%{release}
+Summary:	Trinity bindings for Python - Development files and scripts
+Group:		Development/Libraries/Python
+Requires:	%{name} = %{?epoch:%{epoch}:}%{version}-%{release}
 
 Obsoletes:	python-trinity-devel < %{version}-%{release}
 Provides:	python-trinity-devel = %{version}-%{release}
 
 %description devel
-Development .sip files with definitions of PyKDE classes. They
+Development .sip files with definitions of PyTDE classes. They
 are needed to build PyTDE, but also as building blocks of other
 packages based on them. 
 The package also contains kdepyuic, a wrapper script around PyQt's 
 user interface compiler.
 
+%files devel
+%defattr(-,root,root,-)
+%{tde_bindir}/tdepyuic
+# The SIP files are outside TDE's prefix
+%{_datadir}/sip/trinity/
+
+##########
 
 %package doc
-Summary:		Documentation and examples for PyKDE [Trinity]
-Group:			Development/Libraries
+Summary:	Documentation and examples for PyTDE
+Group:		Development/Libraries/Python
 
-Obsoletes:	python-trinity-doc < %{version}-%{release}
-Provides:	python-trinity-doc = %{version}-%{release}
+Obsoletes:	python-trinity-doc < %{?epoch:%{epoch}:}%{version}-%{release}
+Provides:	python-trinity-doc = %{?epoch:%{epoch}:}%{version}-%{release}
 
 %description doc
-General documentation and examples for PyKDE providing programming
+General documentation and examples for PyTDE providing programming
 tips and working code you can use to learn from.
 
+%files doc
+%defattr(-,root,root,-)
+%{tde_tdedocdir}/HTML/en/python-trinity/
 
-%if 0%{?suse_version} || 0%{?pclinuxos}
+##########
+
+%if 0%{?pclinuxos} || 0%{?suse_version} && 0%{?opensuse_bs} == 0
 %debug_package
 %endif
 
+##########
 
 %prep
-%setup -q -n %{tdecomp}-trinity-%{tdeversion}
-%patch1 -p1 -b .inc
-
-# Hack to get TQT include files under /opt
-%__sed -i "configure.py" \
-	-e "s|/usr/include/tqt|%{tde_includedir}/tqt|g"
+%setup -q -n %{name}-%{tde_version}%{?preversion:~%{preversion}}
 
 
 %build
-unset QTDIR; . /etc/profile.d/qt3.sh
+unset QTDIR QTINC QTLIB
 export PATH="%{tde_bindir}:${PATH}"
-export LDFLAGS="-L%{tde_libdir} -I%{tde_includedir}"
-export KDEDIR=%{tde_prefix}
-
-#export LDFLAGS="${LDFLAGS} -lpython2.7"
+export LD_RUN_PATH="%{tde_libdir}"
 
 export DH_OPTIONS
-export QMAKESPEC=$(QTDIR)/mkspecs/linux-g++
-
-export PYTHONPATH=%{python_sitearch}/trinity-sip:%{python_sitearch}/trinity-PyQt
 
 %__python configure.py \
 	-k %{tde_prefix} \
 	-L %{_lib} \
 	-v %{_datadir}/sip/trinity
 
-# Shitty hack to add LDFLAGS
-%if 0%{?mgaversion} || 0%{?mdkversion}
-%__sed -i */Makefile \
-%if 0%{?pclinuxos}
-	-e "/^LIBS = / s|$| -lpython2.6 -lDCOP -lkdecore -lkdefx -lkdeui -lkresources -lkabc -lkparts -lkio|"
-%else
-	-e "/^LIBS = / s|$| -lpython2.7 -lDCOP -lkdecore -lkdefx -lkdeui -lkresources -lkabc -lkparts -lkio|"
-%endif
-%endif
-
-%__make %{_smp_mflags}
+%__make %{_smp_mflags} || %__make
 
 
 %install
@@ -171,28 +169,6 @@ export PATH="%{tde_bindir}:${PATH}"
 %__rm -rf %{buildroot}
 
 
-
-%files
-%defattr(-,root,root,-)
-%doc AUTHORS ChangeLog COPYING NEWS README
-%{python_sitearch}/*.so
-%{python_sitearch}/dcop*.py*
-%{python_sitearch}/pykde*.py*
-
-%files devel
-%defattr(-,root,root,-)
-%{tde_bindir}/kdepyuic
-# The SIP files are outside TDE's prefix
-%{_datadir}/sip/trinity/
-
-%files doc
-%defattr(-,root,root,-)
-%{tde_tdedocdir}/HTML/en/python-trinity/
-
-
 %changelog
-* Mon Jun 03 2013 Francois Andriot <francois.andriot@free.fr> - 3.5.13.2-1
-- Initial release for TDE 3.5.13.2
-
-* Tue Oct 02 2012 Francois Andriot <francois.andriot@free.fr> - 3.16.3-3
-- Initial release for TDE 3.5.13.1
+* Fri Jul 05 2013 Francois Andriot <francois.andriot@free.fr> - 2:3.16.3-1
+- Initial release for TDE 14.0.0
