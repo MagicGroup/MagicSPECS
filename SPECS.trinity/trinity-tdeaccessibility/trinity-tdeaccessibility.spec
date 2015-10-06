@@ -1,76 +1,122 @@
+#
+# spec file for package tdeaccessibility (version R14)
+#
+# Copyright (c) 2014 Trinity Desktop Environment
+#
+# All modifications and additions to the file contributed by third parties
+# remain the property of their copyright owners, unless otherwise agreed
+# upon. The license for this file, and modifications and additions to the
+# file, is the same license as for the pristine package itself (unless the
+# license for the pristine package is not an Open Source License, in which
+# case the license is the MIT License). An "Open Source License" is a
+# license that conforms to the Open Source Definition (Version 1.9)
+# published by the Open Source Initiative.
+#
+# Please submit bugfixes or comments via http://www.trinitydesktop.org/
+#
+
+# BUILD WARNING:
+#  Remove qt-devel and qt3-devel and any kde*-devel on your system !
+#  Having KDE libraries may cause FTBFS here !
+
+# TDE variables
+%define tde_epoch 2
+%if "%{?tde_version}" == ""
+%define tde_version 14.0.0
+%endif
+%define tde_pkg tdeaccessibility
+%define tde_prefix /opt/trinity
+%define tde_bindir %{tde_prefix}/bin
+%define tde_confdir %{_sysconfdir}/trinity
+%define tde_datadir %{tde_prefix}/share
+%define tde_docdir %{tde_datadir}/doc
+%define tde_includedir %{tde_prefix}/include
+%define tde_libdir %{tde_prefix}/%{_lib}
+%define tde_tdeappdir %{tde_datadir}/applications/tde
+%define tde_tdedocdir %{tde_docdir}/tde
+%define tde_tdeincludedir %{tde_includedir}/tde
+%define tde_tdelibdir %{tde_libdir}/trinity
+
 # If TDE is built in a specific prefix (e.g. /opt/trinity), the release will be suffixed with ".opt".
 %if "%{?tde_prefix}" != "/usr"
 %define _variant .opt
 %endif
 
-# TDE 3.5.13 specific building variables
-%define tde_bindir %{tde_prefix}/bin
-%define tde_datadir %{tde_prefix}/share
-%define tde_docdir %{tde_datadir}/doc
-%define tde_includedir %{tde_prefix}/include
-%define tde_libdir %{tde_prefix}/%{_lib}
 
-%define tde_tdeappdir %{tde_datadir}/applications/kde
-%define tde_tdedocdir %{tde_docdir}/tde
-%define tde_tdeincludedir %{tde_includedir}/tde
-%define tde_tdelibdir %{tde_libdir}/trinity
+Name:			trinity-tdeaccessibility
+Summary:		Trinity Desktop Environment - Accessibility
+Version:		%{tde_version}
+Release:		%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}%{?_variant}
+Group:			System/GUI/Other
+URL:			http://www.trinitydesktop.org/
 
-%define _docdir %{tde_docdir}
+%if 0%{?suse_version}
+License:	GPL-2.0+
+%else
+License:	GPLv2+
+%endif
 
+#Vendor:		Trinity Project
+#Packager:	Francois Andriot <francois.andriot@free.fr>
 
-Summary:	Trinity Desktop Environment - Accessibility
-Name:		trinity-tdeaccessibility
-Version:	3.5.13.2
-Release:	1%{?dist}%{?_variant}
+Prefix:			%{tde_prefix}
+BuildRoot:		%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
-License:	GPLv2
-Group:		User Interface/Desktops
+Source0:		%{name}-%{version}%{?preversion:~%{preversion}}.tar.gz
 
-Vendor:		Trinity Project
-Packager:	Francois Andriot <francois.andriot@free.fr>
-URL:		http://www.trinitydesktop.org/
-
-Source0:	kdeaccessibility-trinity-%{version}.tar.xz
-
-Prefix:		%{tde_prefix}
-BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+BuildRequires:	trinity-arts-devel >= %{tde_epoch}:1.5.10
+BuildRequires:	trinity-tdelibs-devel >= %{tde_version}
+BuildRequires:	trinity-tdebase-devel >= %{tde_version}
+BuildRequires:	trinity-tdemultimedia-devel >= %{tde_version}
 
 BuildRequires:	autoconf automake libtool m4
+BuildRequires:	gcc-c++
 BuildRequires:	desktop-file-utils
-BuildRequires:	trinity-akode-devel
-BuildRequires:	trinity-arts-devel >= %{version}
-BuildRequires:	trinity-tdelibs-devel >= %{version}
-BuildRequires:	trinity-tdemultimedia-devel >= %{version}
+BuildRequires:	fdupes
 
+# SUSE desktop files utility
+%if 0%{?suse_version}
+BuildRequires:	update-desktop-files
+%endif
+
+%if 0%{?opensuse_bs} && 0%{?suse_version}
+# for xdg-menu script
+BuildRequires:	brp-check-trinity
+%endif
+
+# AUDIOFILE support
+BuildRequires:	audiofile-devel
+
+# AKODE support
+%define with_akode 1
+BuildRequires: trinity-akode-devel
+
+%define with_mad 1
+%{?with_mad:BuildRequires: libakode_mpeg_decoder}
+
+# ALSA support
 BuildRequires:	alsa-lib-devel
 
-%if 0%{?fedora} > 4 || 0%{?rhel} > 4
-BuildRequires: libXtst-devel
-%endif
-
-%if 0%{?mgaversion} || 0%{?mdkversion}
-BuildRequires:	%{_lib}xi-devel
-BuildRequires:	%{_lib}xext%{?mgaversion:6}-devel
-BuildRequires:	%{_lib}x11%{?mgaversion:_6}-devel
-BuildRequires:	%{_lib}xcb-devel
-BuildRequires:	%{_lib}xau%{?mgaversion:6}-devel
-%else
-BuildRequires:	libXi-devel
-BuildRequires:	libXext-devel
-BuildRequires:	libX11-devel
-%if 0%{?rhel} >= 6 || 0%{?fedora}
+# XCB support
+%if 0%{?rhel} >= 6 || 0%{?fedora} || 0%{?pclinuxos}
 BuildRequires:	libxcb-devel
 %endif
-BuildRequires:	libXau-devel
+%if 0%{?mgaversion} || 0%{?mdkversion}
+%if 0%{?pclinuxos} == 0
+BuildRequires:	%{_lib}xcb-devel
+%endif
 %endif
 
-# Mageia only: Special packages were built for missing '.la' files on Mageia 2 !!!
-%if 0%{?mgaversion}
-BuildRequires:	%{_lib}xi-devel-libtool
-BuildRequires:	%{_lib}xext6-devel-libtool
-BuildRequires:	%{_lib}x11_6-devel-libtool
-BuildRequires:	%{_lib}xcb-devel-libtool
-BuildRequires:	%{_lib}xau6-devel-libtool
+# XAU support
+%if 0%{?mgaversion} || 0%{?mdkversion}
+%if 0%{?mgaversion} >= 4
+BuildRequires:	%{_lib}xau-devel
+%else
+BuildRequires:	%{_lib}xau%{?mgaversion:6}-devel
+%endif
+%endif
+%if 0%{?rhel} >= 5 || 0%{?fedora} || 0%{?suse_version} >= 1220
+BuildRequires:	libXau-devel
 %endif
 
 Obsoletes:		trinity-kdeaccessibility < %{version}-%{release}
@@ -78,7 +124,7 @@ Provides:		trinity-kdeaccessibility = %{version}-%{release}
 Obsoletes:		trinity-kdeaccessibility-libs < %{version}-%{release}
 Provides:		trinity-kdeaccessibility-libs = %{version}-%{release}
 
-Requires: trinity-kde-icons-mono = %{version}-%{release}
+Requires: trinity-tde-icons-mono = %{version}-%{release}
 Requires: trinity-kbstate = %{version}-%{release}
 Requires: trinity-kmag = %{version}-%{release}
 Requires: trinity-kmousetool = %{version}-%{release}
@@ -98,25 +144,35 @@ Included with this package are:
 
 ##########
 
-%package -n trinity-kde-icons-mono
+%package -n trinity-tde-icons-mono
 Summary:	A monochromatic icons theme for TDE
-Group:		User Interface/Desktops
+Group:		System/GUI/Other
 
-%description -n trinity-kde-icons-mono
+Obsoletes:	trinity-kde-icons-mono < %{version}-%{release}
+Provides:	trinity-kde-icons-mono = %{version}-%{release}
+
+%description -n trinity-tde-icons-mono
 A monochromatic icon theme for TDE, designed for accessibility purposes.
 
 This package is part of Trinity, as a component of the TDE accessibility module.
 
-%files -n trinity-kde-icons-mono
+%files -n trinity-tde-icons-mono
 %defattr(-,root,root,-)
+%dir %{tde_datadir}/icons/mono
+%dir %{tde_datadir}/icons/mono/scalable
+%dir %{tde_datadir}/icons/mono/scalable/actions
+%dir %{tde_datadir}/icons/mono/scalable/apps
+%dir %{tde_datadir}/icons/mono/scalable/devices
+%dir %{tde_datadir}/icons/mono/scalable/mimetypes
+%dir %{tde_datadir}/icons/mono/scalable/places
 %{tde_datadir}/icons/mono/index.theme
 %{tde_datadir}/icons/mono/scalable/*/*.svgz
 
 ##########
 
 %package -n trinity-kbstate
-Summary:	a keyboard status applet for TDE
-Group:		User Interface/Desktops
+Summary:	A keyboard status applet for TDE
+Group:		System/GUI/Other
 
 %description -n trinity-kbstate
 A panel applet that displays the keyboard status.
@@ -134,10 +190,10 @@ This package is part of Trinity, as a component of the TDE accessibility module.
 
 %package -n trinity-kmag
 Summary:	A screen magnifier for TDE
-Group:		User Interface/Desktops
+Group:		System/GUI/Other
 
 %description -n trinity-kmag
-KDE's screen magnifier tool.
+TDE's screen magnifier tool.
 
 You can use KMagnifier to magnify a part of the screen just as you would use 
 a lens to magnify a newspaper fine-print or a photograph.  This application is
@@ -149,7 +205,7 @@ This package is part of Trinity, as a component of the TDE accessibility module.
 %files -n trinity-kmag
 %defattr(-,root,root,-)
 %{tde_bindir}/kmag
-%{tde_datadir}/applnk/Applications/kmag.desktop
+%{tde_tdeappdir}/kmag.desktop
 %{tde_datadir}/apps/kmag/
 %{tde_datadir}/icons/hicolor/*/apps/kmag.png
 %{tde_datadir}/icons/locolor/*/apps/kmag.png
@@ -173,7 +229,7 @@ done
 
 %package -n trinity-kmousetool
 Summary:	TDE mouse manipulation tool for the disabled
-Group:		User Interface/Desktops
+Group:		System/GUI/Other
 
 %description -n trinity-kmousetool
 KMouseTool clicks the mouse whenever the mouse cursor pauses briefly. It was
@@ -185,7 +241,7 @@ This package is part of Trinity, as a component of the TDE accessibility module.
 %files -n trinity-kmousetool
 %defattr(-,root,root,-)
 %{tde_bindir}/kmousetool
-%{tde_datadir}/applnk/Applications/kmousetool.desktop
+%{tde_tdeappdir}/kmousetool.desktop
 %{tde_datadir}/apps/kmousetool/
 %{tde_datadir}/icons/hicolor/*/apps/kmousetool.png
 %{tde_tdedocdir}/HTML/en/kmousetool/
@@ -206,7 +262,7 @@ done
 
 %package -n trinity-kmouth
 Summary:	A type-and-say KDE frontend for speech synthesizers
-Group:		User Interface/Desktops
+Group:		System/GUI/Other
 
 %description -n trinity-kmouth
 KDE's type-and-say frontend for speech synthesizers.
@@ -218,9 +274,9 @@ This package is part of Trinity, as a component of the TDE accessibility module.
 
 %files -n trinity-kmouth
 %defattr(-,root,root,-)
-%{tde_datadir}/config/kmouthrc
+%{tde_confdir}/kmouthrc
 %{tde_bindir}/kmouth
-%{tde_datadir}/applnk/Applications/kmouth.desktop
+%{tde_tdeappdir}/kmouth.desktop
 %{tde_datadir}/apps/kmouth/
 %{tde_datadir}/icons/hicolor/*/actions/speak.png
 %{tde_datadir}/icons/hicolor/*/actions/nospeak.png
@@ -245,7 +301,7 @@ done
 
 %package -n trinity-ksayit
 Summary:	A frontend for the TDE Text-to-Speech system
-Group:		User Interface/Desktops
+Group:		System/GUI/Other
 
 %description -n trinity-ksayit
 Text-to-speech front-end to kttsd.
@@ -255,7 +311,6 @@ This package is part of Trinity, as a component of the TDE accessibility module.
 %files -n trinity-ksayit
 %defattr(-,root,root,-)
 %{tde_bindir}/ksayit
-%{tde_tdeincludedir}/ksayit_fxplugin.h
 %{tde_tdelibdir}/libFreeverb_plugin.la
 %{tde_tdelibdir}/libFreeverb_plugin.so
 %{tde_libdir}/libKTTSD_Lib.so.*
@@ -266,6 +321,7 @@ This package is part of Trinity, as a component of the TDE accessibility module.
 %{tde_datadir}/icons/hicolor/32x32/apps/ksayit_talking.png
 %{tde_datadir}/services/ksayit_libFreeverb.desktop
 %{tde_datadir}/servicetypes/ksayit_libFreeverb_service.desktop
+%{tde_tdedocdir}/HTML/en/ksayit/
 
 %post -n trinity-ksayit
 /sbin/ldconfig ||:
@@ -287,7 +343,7 @@ update-desktop-database %{tde_datadir}/applications > /dev/null 2>&1 || :
 
 %package -n trinity-kttsd
 Summary:	A Text-to-Speech system for TDE
-Group:		User Interface/Desktops
+Group:		System/GUI/Other
 
 %description -n trinity-kttsd
 The KDE Text-to-Speech system is a plugin based service that allows any KDE
@@ -306,10 +362,12 @@ Homepage: http://accessibility.kde.org/developer/kttsd
 %{tde_bindir}/kttsmgr
 %{tde_tdelibdir}/kcm_kttsd.la
 %{tde_tdelibdir}/kcm_kttsd.so
-%{tde_tdelibdir}/ktexteditor_kttsd.la
-%{tde_tdelibdir}/ktexteditor_kttsd.so
+%{tde_tdelibdir}/tdetexteditor_kttsd.la
+%{tde_tdelibdir}/tdetexteditor_kttsd.so
+%if 0%{?with_akode}
 %{tde_tdelibdir}/libkttsd_akodeplugin.la
 %{tde_tdelibdir}/libkttsd_akodeplugin.so
+%endif
 %{tde_tdelibdir}/libkttsd_alsaplugin.la
 %{tde_tdelibdir}/libkttsd_alsaplugin.so
 %{tde_tdelibdir}/libkttsd_artsplugin.la
@@ -335,14 +393,18 @@ Homepage: http://accessibility.kde.org/developer/kttsd
 %{tde_libdir}/libkttsd.so.*
 %{tde_tdeappdir}/kcmkttsd.desktop
 %{tde_tdeappdir}/kttsmgr.desktop
-%{tde_datadir}/apps/ktexteditor_kttsd/ktexteditor_kttsdui.rc
+%{tde_datadir}/apps/tdetexteditor_kttsd/
 %exclude %{tde_datadir}/apps/kttsd/hadifix/xslt/SSMLtoTxt2pho.xsl
 %{tde_datadir}/apps/kttsd/
 %{tde_datadir}/icons/hicolor/16x16/actions/female.png
 %{tde_datadir}/icons/hicolor/16x16/actions/male.png
-%{tde_datadir}/services/ktexteditor_kttsd.desktop
+%{tde_datadir}/icons/hicolor/*/apps/kttsd.png
+%{tde_datadir}/icons/hicolor/*/apps/kcmkttsd.png
+%{tde_datadir}/services/tdetexteditor_kttsd.desktop
 %{tde_datadir}/services/kttsd.desktop
+%if 0%{?with_akode}
 %{tde_datadir}/services/kttsd_akodeplugin.desktop
+%endif
 %{tde_datadir}/services/kttsd_alsaplugin.desktop
 %{tde_datadir}/services/kttsd_artsplugin.desktop
 %{tde_datadir}/services/kttsd_commandplugin.desktop
@@ -357,8 +419,6 @@ Homepage: http://accessibility.kde.org/developer/kttsd
 %{tde_datadir}/servicetypes/kttsd_audioplugin.desktop
 %{tde_datadir}/servicetypes/kttsd_filterplugin.desktop
 %{tde_datadir}/servicetypes/kttsd_synthplugin.desktop
-%{tde_datadir}/icons/crystalsvg/*/apps/kttsd.png
-%{tde_datadir}/icons/crystalsvg/*/apps/kttsd.svgz
 %{tde_tdedocdir}/HTML/en/kttsd/
 
 %post -n trinity-kttsd
@@ -380,8 +440,8 @@ update-desktop-database %{tde_datadir}/applications > /dev/null 2>&1 || :
 ##########
 
 %package -n trinity-kttsd-contrib-plugins
-Summary:	the TDE Text-to-Speech system
-Group:		User Interface/Desktops
+Summary:	The TDE Text-to-Speech system
+Group:		System/GUI/Other
 Requires:	trinity-kttsd = %{version}-%{release}
 
 %description -n trinity-kttsd-contrib-plugins
@@ -406,16 +466,19 @@ This package is part of Trinity, as a component of the TDE accessibility module.
 ##########
 
 %package devel
-Summary:	Development files for %{name}
-Group:		Development/Libraries
+Summary:	Development files for tdeaccessibility
+Group:		Development/Libraries/X11
 Requires:	%{name} = %{version}-%{release}
 Requires:	trinity-tdelibs-devel >= %{version}
+Requires:	libjpeg-devel
+Requires:	libpng-devel
 
 Obsoletes:		trinity-kdeaccessibility-devel < %{version}-%{release}
 Provides:		trinity-kdeaccessibility-devel = %{version}-%{release}
 
 %description devel
-%{summary}.
+This package contains the development file for TDE accessibility 
+programs.
 
 %files devel
 %defattr(-,root,root,-)
@@ -423,6 +486,7 @@ Provides:		trinity-kdeaccessibility-devel = %{version}-%{release}
 %{tde_libdir}/libkttsd.so
 %{tde_libdir}/libKTTSD_Lib.la
 %{tde_libdir}/libKTTSD_Lib.so
+%{tde_tdeincludedir}/ksayit_fxplugin.h
 
 %post devel
 /sbin/ldconfig ||:
@@ -432,20 +496,17 @@ Provides:		trinity-kdeaccessibility-devel = %{version}-%{release}
 
 ##########
 
-%if 0%{?suse_version}
+%if 0%{?pclinuxos} || 0%{?suse_version} && 0%{?opensuse_bs} == 0
 %debug_package
 %endif
 
 ##########
 
 %prep
-%setup -q -n kdeaccessibility-trinity-%{version}
+%setup -q -n %{name}-%{version}%{?preversion:~%{preversion}}
 
-# Ugly hack to modify TQT include directory inside autoconf files.
-# If TQT detection fails, it fallbacks to TQT4 instead of TQT3 !
-%__sed -i admin/acinclude.m4.in \
-  -e "s|/usr/include/tqt|%{tde_includedir}/tqt|g" \
-  -e "s|kde_htmldir='.*'|kde_htmldir='%{tde_tdedocdir}/HTML'|g"
+# Update icons for some control center modules
+%__sed -i "kttsd/kcmkttsmgr/kcmkttsd.desktop" -e "s|^Icon=.*|Icon=kcmkttsd|"
 
 %__cp -f "/usr/share/aclocal/libtool.m4" "admin/libtool.m4.in"
 %__cp -f "/usr/share/libtool/config/ltmain.sh" "admin/ltmain.sh" || %__cp -f "/usr/share/libtool/ltmain.sh" "admin/ltmain.sh"
@@ -453,14 +514,10 @@ Provides:		trinity-kdeaccessibility-devel = %{version}-%{release}
 
 
 %build
-unset QTDIR || : ; . /etc/profile.d/qt3.sh
+unset QTDIR QTINC QTLIB
 export PATH="%{tde_bindir}:${PATH}"
-export LDFLAGS="-L%{tde_libdir} -I%{tde_includedir}"
-
-# Avoir conflict with KDE4, if installed
-# see file: '/etc/profile.d/kde.sh' from package 'kde-settings'
-export KDEDIRS=%{tde_prefix}
-export KDEDIR=%{tde_prefix}
+export PKG_CONFIG_PATH="%{tde_libdir}/pkgconfig"
+export kde_confdir="%{tde_confdir}"
 
 %configure \
   --prefix=%{tde_prefix} \
@@ -469,15 +526,18 @@ export KDEDIR=%{tde_prefix}
   --libdir=%{tde_libdir} \
   --datadir=%{tde_datadir} \
   --includedir=%{tde_tdeincludedir} \
-  --disable-rpath \
+  \
+  --disable-dependency-tracking \
+  --disable-debug \
   --enable-new-ldflags \
-  --enable-closure \
-  --disable-debug --disable-warnings \
   --enable-final \
+  --enable-closure \
+  --enable-rpath \
+  --disable-gcc-hidden-visibility \
+  \
   --enable-ksayit-audio-plugins \
-  --with-akode \
-  --with-extra-includes=%{tde_includedir}:%{tde_includedir}/tqt
-
+  %{?with_akode:--with-akode} %{?!with_akode:--without-akode}
+  
 %__make %{?_smp_mflags}
 
 
@@ -486,29 +546,41 @@ export PATH="%{tde_bindir}:${PATH}"
 %__rm -rf %{buildroot}
 %__make install DESTDIR=%{buildroot}
 
-# file lists for locale
-HTML_DIR=$(kde-config --expandvars --install html)
-if [ -d %{buildroot}/$HTML_DIR ]; then
-  for lang_dir in %{buildroot}/$HTML_DIR/* ; do
-    if [ -d $lang_dir ]; then
-      lang=$(basename $lang_dir)
-      echo "%lang($lang) $HTML_DIR/$lang/*" >> %{name}.lang
-      # replace absolute symlinks with relative ones
-      pushd $lang_dir
-         for i in *; do
-           [ -d $i -a -L $i/common ] && ln -nsf ../common $i/common
-         done
-      popd
-    fi
-  done
-fi
+# Move desktop files to correct XDG location
+%__mv -f "%{?buildroot}%{tde_datadir}/applnk/Applications/kmag.desktop" "%{?buildroot}%{tde_tdeappdir}"
+%__mv -f "%{?buildroot}%{tde_datadir}/applnk/Applications/kmousetool.desktop" "%{?buildroot}%{tde_tdeappdir}"
+%__mv -f "%{?buildroot}%{tde_datadir}/applnk/Applications/kmouth.desktop" "%{?buildroot}%{tde_tdeappdir}"
+
+# Adds missing icons in 'hicolor' theme
+# These icons are copied from 'crystalsvg' theme, provided by 'tdelibs'.
+%__mkdir_p "%{?buildroot}%{tde_datadir}/icons/hicolor/"{16x16,22x22,32x32,48x48,64x64,128x128}"/apps/"
+pushd "%{?buildroot}%{tde_datadir}/icons"
+for i in {16,22,32,48,64,128}; do %__cp %{tde_datadir}/icons/crystalsvg/"$i"x"$i"/apps/kttsd.png  hicolor/"$i"x"$i"/apps/kttsd.png    ;done
+for i in {16,22,32,48,64,128}; do %__cp %{tde_datadir}/icons/crystalsvg/"$i"x"$i"/apps/kttsd.png  hicolor/"$i"x"$i"/apps/kcmkttsd.png ;done
+popd
+
+# Avoid conflict with tdelibs
+%__rm -f %{?buildroot}%{tde_datadir}/icons/crystalsvg/*/apps/kttsd.png
+%__rm -f %{?buildroot}%{tde_datadir}/icons/crystalsvg/scalable/apps/kttsd.svgz
+
+# Updates applications categories for openSUSE
+%if 0%{?suse_version}
+%suse_update_desktop_file -r kmag         Utility Accessibility
+%suse_update_desktop_file    kmousetool   Utility Accessibility
+%suse_update_desktop_file    kmouth       Utility Accessibility
+%suse_update_desktop_file    kttsmgr      Utility Accessibility
+%suse_update_desktop_file    ksayit       Utility Accessibility
+%suse_update_desktop_file    kcmkttsd     Utility Accessibility
+%endif
+
+# Links duplicate files
+%fdupes "%{?buildroot}%{tde_datadir}"
 
 
 %clean
 %__rm -rf %{buildroot}
 
 
-
 %changelog
-* Sun Sep 30 2012 Francois Andriot <francois.andriot@free.fr> - 3.5.13.1-1
-- Initial build for TDE 3.5.13.1
+* Fri Jul 05 2013 Francois Andriot <francois.andriot@free.fr> - 14.0.0-1
+- Initial release for TDE R14.0.0
