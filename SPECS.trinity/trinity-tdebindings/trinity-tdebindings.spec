@@ -1,3 +1,47 @@
+#
+# spec file for package tdebindings (version R14)
+#
+# Copyright (c) 2014 Trinity Desktop Environment
+#
+# All modifications and additions to the file contributed by third parties
+# remain the property of their copyright owners, unless otherwise agreed
+# upon. The license for this file, and modifications and additions to the
+# file, is the same license as for the pristine package itself (unless the
+# license for the pristine package is not an Open Source License, in which
+# case the license is the MIT License). An "Open Source License" is a
+# license that conforms to the Open Source Definition (Version 1.9)
+# published by the Open Source Initiative.
+#
+# Please submit bugfixes or comments via http://www.trinitydesktop.org/
+#
+
+# BUILD WARNING:
+#  Remove qt-devel and qt3-devel and any kde*-devel on your system !
+#  Having KDE libraries may cause FTBFS here !
+
+# TDE variables
+%define tde_epoch 2
+%if "%{?tde_version}" == ""
+%define tde_version 14.0.0
+%endif
+%define tde_pkg tdebindings
+%define tde_prefix /opt/trinity
+%define tde_bindir %{tde_prefix}/bin
+%define tde_datadir %{tde_prefix}/share
+%define tde_docdir %{tde_datadir}/doc
+%define tde_includedir %{tde_prefix}/include
+%define tde_libdir %{tde_prefix}/%{_lib}
+%define tde_mandir %{tde_datadir}/man
+%define tde_tdeappdir %{tde_datadir}/applications/tde
+%define tde_tdedocdir %{tde_docdir}/tde
+%define tde_tdeincludedir %{tde_includedir}/tde
+%define tde_tdelibdir %{tde_libdir}/trinity
+
+# If TDE is built in a specific prefix (e.g. /opt/trinity), the release will be suffixed with ".opt".
+%if "%{?tde_prefix}" != "/usr"
+%define _variant .opt
+%endif
+
 # Special note for RHEL4:
 #  You must create symlink 'libgcj.so' manually because it does not exist by default.
 # E.g:
@@ -5,66 +49,48 @@
 # or 64 bits:
 #  ln -s /usr/lib64/libgcj.so.5.0.0 /usr/lib/jvm/java/lib/libgcj.so
 
-# If TDE is built in a specific prefix (e.g. /opt/trinity), the release will be suffixed with ".opt".
-%if "%{?tde_prefix}" != "/usr"
-%define _variant .opt
-%endif
-
-# TDE 3.5.13 specific building variables
-%define tde_bindir %{tde_prefix}/bin
-%define tde_datadir %{tde_prefix}/share
-%define tde_docdir %{tde_datadir}/doc
-%define tde_includedir %{tde_prefix}/include
-%define tde_libdir %{tde_prefix}/%{_lib}
-%define tde_mandir %{tde_datadir}/man
-
-%define tde_tdeappdir %{tde_datadir}/applications/kde
-%define tde_tdedocdir %{tde_docdir}/tde
-%define tde_tdeincludedir %{tde_includedir}/tde
-%define tde_tdelibdir %{tde_libdir}/trinity
-
-%define _docdir %{tde_docdir}
-
-# RHEL4 specific
-Source91:  filter-requires.sh
-%if 0%{?rhel} == 4
-%define    _use_internal_dependency_generator 0
-%define    __find_requires sh %{SOURCE91}
-%endif
-
-Name:			trinity-tdebindings
+Name:			trinity-%{tde_pkg}
 Summary:		TDE bindings to non-C++ languages
-Version:		3.5.13.2
+Version:		%{tde_version}
 Release:		%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}%{?_variant}
-
-License:		GPLv2
-Group:			User Interface/Desktops
-
-Vendor:			Trinity Project
-Packager:		Francois Andriot <francois.andriot@free.fr>
+Group:			System/GUI/Other
 URL:			http://www.trinitydesktop.org/
+
+%if 0%{?suse_version}
+License:	GPL-2.0+
+%else
+License:	GPLv2+
+%endif
+
+#Vendor:		Trinity Desktop
+#Packager:	Francois Andriot <francois.andriot@free.fr>
 
 Prefix:			%{tde_prefix}
 BuildRoot:		%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
-Source0:		kdebindings-trinity-%{version}%{?preversion:~%{preversion}}.tar.xz
+Source0:		%{name}-%{version}%{?preversion:~%{preversion}}.tar.gz
 
-# [kdebindings] Fix FTBFS in dcopjava/bindings
-Patch7:		kdebindings-3.5.13.1-fix_dcopjava_ldflags.patch
+BuildRequires:	trinity-arts-devel >= %{tde_epoch}:1.5.10
+BuildRequires:	trinity-tdelibs-devel >= %{tde_version}
 
-# [tdebindings] Function 'rb_frame_this_func' does not exist in RHEL5
-Patch18:	kdebindings-3.5.13.1-fix_rhel5_ftbfs.patch
+BuildRequires:	autoconf automake libtool m4
+BuildRequires:	gcc-c++
+BuildRequires:	desktop-file-utils
 
-# 临时的解决办法，不知道原因
-Source100:	libtool
+# SUSE desktop files utility
+%if 0%{?suse_version}
+BuildRequires:	update-desktop-files
+%endif
 
-BuildRequires: autoconf automake libtool m4
-BuildRequires: trinity-tqtinterface-devel >= %{version}
-BuildRequires: trinity-arts-devel >= %{version}
-BuildRequires: trinity-tdelibs-devel >= %{version}
+%if 0%{?opensuse_bs} && 0%{?suse_version}
+# for xdg-menu script
+BuildRequires:	brp-check-trinity
+%endif
 
-BuildRequires: desktop-file-utils
+# ZLIB support
 BuildRequires: zlib-devel
+
+# PERL module support
 BuildRequires: perl(ExtUtils::MakeMaker)
 
 # GTK2 support
@@ -85,17 +111,27 @@ BuildRequires:	gtk2-devel
 
 # XULRUNNER support
 %if 0%{?fedora} || 0%{?rhel} >= 5 || 0%{?mgaversion} || 0%{?mdkversion} || 0%{?suse_version} >= 1220
-BuildRequires: xulrunner-devel
+#BuildRequires: xulrunner-devel
 %endif
 %if 0%{?suse_version} == 1140
 BuildRequires: mozilla-xulrunner20-devel
 %endif
 
+# OPENSSL support
+BuildRequires:	openssl-devel
+
 # GTK1 support
-%if 0%{?fedora} || 0%{?rhel}
+%if 0%{?fedora} || 0%{?rhel} >= 5
 %define with_gtk1 1
 BuildRequires: glib-devel
 BuildRequires: gtk+-devel
+%endif
+%if 0%{?rhel} == 5 || 0%{?rhel} == 6
+%if 0%{?with_gtk1}
+%define with_gtk1 1
+BuildRequires: glib-devel
+BuildRequires: gtk+-devel
+%endif
 %endif
 %if 0%{?mdkversion} == 201100
 %define with_gtk1 1
@@ -109,12 +145,26 @@ BuildRequires:	libgdk_pixbuf2.0-devel
 %else
 BuildRequires:	%{_lib}gdk_pixbuf2.0-devel
 %endif
-%else
+%endif
+%if 0%{?fedora}
 %if 0%{?fedora} >= 17
 BuildRequires: gdk-pixbuf2-devel
 %else
 BuildRequires: gdk-pixbuf-devel
 %endif
+%endif
+
+# MESA support
+%if 0%{?rhel} || 0%{?fedora}
+BuildRequires: mesa-libGL-devel
+BuildRequires: mesa-libGLU-devel
+%endif
+%if 0%{?mdkversion} || 0%{?mgaversion}
+BuildRequires: mesaglu-devel
+%endif
+%if 0%{?suse_version}
+BuildRequires: Mesa-libGL-devel
+BuildRequires: Mesa-libGLU-devel
 %endif
 
 
@@ -123,9 +173,23 @@ BuildRequires: python-devel
 %define python_sitearch %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib(1)")
 
 ## ruby
-BuildRequires: ruby-devel >= 1.8, ruby
+BuildRequires:	ruby-devel >= 1.8
+BuildRequires:	ruby >= 1.8
+%if 0%{?fedora} >= 19
+BuildRequires:	rubypick
+%endif
+%if "%{?ruby_libarchdir}" != ""
+%define ruby_arch %{?ruby_libarchdir}
+%else
 %{!?ruby_arch: %define ruby_arch %(ruby -rrbconfig -e 'puts Config::CONFIG["archdir"]')}
+%endif
+
+%if "%{?ruby_libdir}" != ""
+%define ruby_rubylibdir %{?ruby_libdir}
+%else
 %{!?ruby_rubylibdir: %define ruby_rubylibdir %(ruby -rrbconfig -e 'puts Config::CONFIG["rubylibdir"]')}
+%endif
+
 # Ruby 1.9 includes are located in strance directories ... (taken from ruby 1.9 spec file)
 %global	_normalized_cpu	%(echo %{_target_cpu} | sed 's/^ppc/powerpc/;s/i.86/i386/;s/sparcv./sparc/;s/armv.*/arm/')
 
@@ -140,15 +204,22 @@ BuildRequires:	gcc-java
 
 # PCLinuxOS use SUN's Java
 %if 0%{?pclinuxos}
-BuildRequires:	java-1.6.0-sun
-BuildRequires:	java-1.6.0-sun-devel
+BuildRequires:	java-devel
 %else
 
 # Others use OpenJDK
-BuildRequires: jdk
-%if 0%{?fedora} >= 17 || 0%{?suse_version} >= 1220 || 0%{?mgaversion} >= 3
-BuildRequires: jdk
-%else
+BuildRequires: java-openjdk
+BuildRequires: java-devel >= 1.4.2
+%if 0%{?suse_version} >= 1320
+BuildRequires:	java-1_8_0-openjdk-devel
+%endif
+%if 0%{?fedora} >= 21 || 0%{?mgaversion} >= 5
+BuildRequires: java-1.8.0-openjdk-devel
+%endif
+%if 0%{?fedora} == 17 ||  0%{?fedora} == 18 ||  0%{?fedora} == 19 || 0%{?fedora} == 20 || 0%{?suse_version} == 1230 || 0%{?suse_version} == 1310 || 0%{?mgaversion} == 3 || 0%{?mgaversion} == 4 || 0%{?rhel} >= 7
+BuildRequires: java-1.7.0-openjdk-devel
+%endif
+%if 0%{?rhel} == 5 || 0%{?rhel} == 6
 BuildRequires: java-1.6.0-openjdk-devel
 %endif
 
@@ -161,7 +232,7 @@ BuildRequires: java-1.6.0-openjdk-devel
 %if 0%{?rhel} == 4
 %define java_home %{_usr}/lib/jvm/java-1.4.2-gcj-1.4.2.0
 %else
-%define java_home %{_usr}/java/latest
+%define java_home %{_usr}/lib/jvm/java
 %endif
 %endif
 %define _with_java --with-java=%{java_home}
@@ -173,16 +244,19 @@ BuildRequires:	perl-devel
 %endif
 %define perl_vendorarch %{expand:%%(eval `perl -V:installvendorarch`; echo $installvendorarch)}
 
+## QScintilla
+BuildRequires:	libtqscintilla-devel >= %{?tde_epoch:%{tde_epoch}:}1.7.1
+%define _enable_qscintilla --enable-qscintilla
 
 Obsoletes:	trinity-kdebindings < %{version}-%{release}
 Provides:	trinity-kdebindings = %{version}-%{release}
 
 # Metapackage requires
 Requires: trinity-tdebindings-java = %{version}-%{release}
-Requires: trinity-libsmokeqt1 = %{version}-%{release}
-Requires: trinity-libsmokekde1 = %{version}-%{release}
-Requires: trinity-perl-dcop = %{version}-%{release}
-Requires: trinity-python-dcop = %{version}-%{release}
+Requires: trinity-libsmoketqt = %{version}-%{release}
+Requires: trinity-libsmoketde = %{version}-%{release}
+Requires: perl-dcop = %{version}-%{release}
+Requires: python-dcop = %{version}-%{release}
 Requires: trinity-libkjsembed1 = %{version}-%{release}
 Requires: trinity-kjscmd = %{version}-%{release}
 Requires: trinity-juic = %{version}-%{release}
@@ -194,12 +268,13 @@ Requires: trinity-libqt0-ruby = %{version}-%{release}
 TDE/DCOP bindings to non-C++ languages
 
 %files
+%defattr(-,root,root,-)
 
 ##########
 
 %package java
 Summary:	TDE Java bindings metapackage [Trinity]
-Group:		Environment/Libraries
+Group:		System/Libraries
 Requires:	trinity-libdcop3-java = %{version}-%{release}
 Requires:	trinity-libdcop3-jni = %{version}-%{release}
 Requires:	trinity-libqt3-java = %{version}-%{release}
@@ -220,7 +295,7 @@ This package is part of the official TDE bindings module.
 
 %package -n trinity-libdcop3-java
 Summary:	DCOP bindings for Java [Trinity]
-Group:		Environment/Libraries
+Group:		System/Libraries
 
 Requires:	trinity-libdcop3-jni = %{version}-%{release}
 
@@ -233,14 +308,13 @@ This package is part of the official TDE bindings module.
 
 %files -n trinity-libdcop3-java
 %defattr(-,root,root,-)
-#%{tde_datadir}/java/dcopjava*.jar
-%{tde_libdir}/java/org/kde/DCOP/*.class
+%{tde_libdir}/java/org/
 
 ##########
 
 %package -n trinity-libdcop3-java-devel
 Summary:	DCOP bindings for Java (dcopidl2java program) [Trinity]
-Group:		Development/Libraries
+Group:		Development/Languages/Java
 Requires:	trinity-libdcop3-java = %{version}-%{release}
 
 %description -n trinity-libdcop3-java-devel
@@ -259,7 +333,7 @@ This package is part of the official TDE bindings module.
 
 %package -n trinity-libdcop3-jni
 Summary:	DCOP bindings for Java ( Native libraries ) [Trinity]
-Group:		Environment/Libraries
+Group:		System/Libraries
 
 %description -n trinity-libdcop3-jni
 This package contains the shared libraries and scripts necessary to
@@ -284,7 +358,7 @@ This package is part of the official TDE bindings module.
 
 %package -n trinity-libqt3-java
 Summary:	Java bindings for Qt [Trinity]
-Group:		Environment/Libraries
+Group:		System/Libraries
 Requires:	trinity-libdcop3-jni = %{version}-%{release}
 Requires:	trinity-libqt3-jni = %{version}-%{release}
 Requires:	trinity-juic = %{version}-%{release}
@@ -308,7 +382,7 @@ This package is part of the official TDE bindings module.
 
 %package -n trinity-libqt3-jni
 Summary:	Java bindings for Qt ( Native libraries ) [Trinity]
-Group:		Environment/Libraries
+Group:		System/Libraries
 
 %description -n trinity-libqt3-jni
 This package contains the shared libraries necessary to run Java
@@ -325,11 +399,17 @@ This package is part of the official TDE bindings module.
 %{tde_libdir}/jni/libqtjava.so.*
 %doc qtjava/ChangeLog
 
+%post -n trinity-libqt3-jni
+/sbin/ldconfig || :
+
+%postun -n trinity-libqt3-jni
+/sbin/ldconfig || :
+
 ##########
 
 %package -n trinity-libqt3-jni-devel
 Summary:	Development files fo Java bindings for Qt ( Native libraries ) [Trinity]
-Group:		Development/Libraries
+Group:		Development/Languages/Java
 Requires:	trinity-libqt3-jni = %{version}-%{release}
 
 %description -n trinity-libqt3-jni-devel
@@ -345,8 +425,8 @@ This package is part of the official TDE bindings module.
 ##########
 
 %package -n trinity-libtrinity-java
-Summary:	tdelibs bindings for Java [Trinity]
-Group:		Environment/Libraries
+Summary:	Tdelibs bindings for Java [Trinity]
+Group:		System/Libraries
 
 Requires:	trinity-libtrinity-jni = %{version}-%{release}
 
@@ -367,8 +447,8 @@ This package is part of the official TDE bindings module.
 ##########
 
 %package -n trinity-libtrinity-jni
-Summary:	tdelibs bindings for java ( Native libraries ) [Trinity]
-Group:		Environment/Libraries
+Summary:	Tdelibs bindings for java ( Native libraries ) [Trinity]
+Group:		System/Libraries
 
 %description -n trinity-libtrinity-jni
 This package contains the shared libraries necessary to run Java
@@ -379,15 +459,15 @@ This package is part of the official TDE bindings module.
 
 %files -n trinity-libtrinity-jni
 %defattr(-,root,root,-)
-%{tde_libdir}/jni/libkdejava.la
-%{tde_libdir}/jni/libkdejava.so.*
-%doc kdejava/ChangeLog
+%{tde_libdir}/jni/libtdejava.la
+%{tde_libdir}/jni/libtdejava.so.*
+%doc tdejava/ChangeLog
 
 ##########
 
 %package -n trinity-libtrinity-jni-devel
 Summary:	Development files for tdelibs bindings for java ( Native libraries ) [Trinity]
-Group:		Development/Libraries
+Group:		Development/Languages/Java
 Requires:	trinity-libtrinity-jni = %{version}-%{release}
 
 %description -n trinity-libtrinity-jni-devel
@@ -397,39 +477,45 @@ This package is part of the official TDE bindings module.
 
 %files -n trinity-libtrinity-jni-devel
 %defattr(-,root,root,-)
-%{tde_libdir}/jni/libkdejava.so
+%{tde_libdir}/jni/libtdejava.so
 
 ##########
 
-%package -n trinity-libsmokeqt1
+%package -n trinity-libsmoketqt
 Summary:	SMOKE Binding Library to Qt
-Group:		Environment/Libraries
+Group:		System/Libraries
 
-%description -n trinity-libsmokeqt1
+Obsoletes:	trinity-libsmokeqt1 < %{version}-%{release}
+Provides:	trinity-libsmokeqt1 = %{version}-%{release}
+
+%description -n trinity-libsmoketqt
 The "Scripting Meta Object Kompiler Engine" library is used by
 various TDE language bindings packages to provide interfaces to the
 Qt library.
 
 This package is part of the official TDE bindings module.
 
-%files -n trinity-libsmokeqt1
+%files -n trinity-libsmoketqt
 %defattr(-,root,root,-)
-%{tde_libdir}/libsmokeqt.so.*
+%{tde_libdir}/libsmoketqt.so.*
 
-%post -n trinity-libsmokeqt1
+%post -n trinity-libsmoketqt
 /sbin/ldconfig || :
 
-%postun -n trinity-libsmokeqt1
+%postun -n trinity-libsmoketqt
 /sbin/ldconfig || :
 
 ##########
 
-%package -n trinity-libsmokeqt-devel
-Summary:	SMOKE Binding Library to Qt - Development Files
-Group:		Development/Libraries
-Requires:	trinity-libsmokeqt1 = %{version}-%{release}
+%package -n trinity-libsmoketqt-devel
+Summary:	SMOKE Binding Library to TQt - Development Files
+Group:		Development/Languages/Other
+Requires:	trinity-libsmoketqt = %{version}-%{release}
 
-%description -n trinity-libsmokeqt-devel
+Obsoletes:	trinity-libsmokeqt-devel < %{version}-%{release}
+Provides:	trinity-libsmokeqt-devel = %{version}-%{release}
+
+%description -n trinity-libsmoketqt-devel
 The "Scripting Meta Object Kompiler Engine" library is used by
 various TDE language bindings packages to provide interfaces to the
 Qt library. This package contains the development files for the
@@ -440,49 +526,55 @@ package.
 
 This package is part of the official TDE bindings module.
 
-%files -n trinity-libsmokeqt-devel
+%files -n trinity-libsmoketqt-devel
 %defattr(-,root,root,-)
 %{tde_tdeincludedir}/smoke.h
-%{tde_libdir}/libsmokeqt.so
-%{tde_libdir}/libsmokeqt.la
+%{tde_libdir}/libsmoketqt.so
+%{tde_libdir}/libsmoketqt.la
 
-%post -n trinity-libsmokeqt-devel
+%post -n trinity-libsmoketqt-devel
 /sbin/ldconfig || :
 
-%postun -n trinity-libsmokeqt-devel
+%postun -n trinity-libsmoketqt-devel
 /sbin/ldconfig || :
 
 ##########
 
-%package -n trinity-libsmokekde1
+%package -n trinity-libsmoketde
 Summary:	SMOKE Binding Library to TDE
-Group:		Environment/Libraries
+Group:		System/Libraries
 
-%description -n trinity-libsmokekde1
+Obsoletes:	trinity-libsmokekde1 < %{version}-%{release}
+Provides:	trinity-libsmokekde1 = %{version}-%{release}
+
+%description -n trinity-libsmoketde
 The "Scripting Meta Object Kompiler Engine" library is used by
 various TDE language bindings packages to provide interfaces to the
 TDE libraries.
 
 This package is part of the official TDE bindings module.
 
-%files -n trinity-libsmokekde1
+%files -n trinity-libsmoketde
 %defattr(-,root,root,-)
-%{tde_libdir}/libsmokekde.so.*
+%{tde_libdir}/libsmoketde.so.*
 
-%post -n trinity-libsmokekde1
+%post -n trinity-libsmoketde
 /sbin/ldconfig || :
 
-%postun -n trinity-libsmokekde1
+%postun -n trinity-libsmoketde
 /sbin/ldconfig || :
 
 ##########
 
-%package -n trinity-libsmokekde-devel
+%package -n trinity-libsmoketde-devel
 Summary:	SMOKE Binding Library to TDE - Development Files
-Group:		Development/Libraries
-Requires:	trinity-libsmokekde1 = %{version}-%{release}
+Group:		Development/Languages/Other
+Requires:	trinity-libsmoketde = %{version}-%{release}
 
-%description -n trinity-libsmokekde-devel
+Obsoletes:	trinity-libsmokekde-devel < %{version}-%{release}
+Provides:	trinity-libsmokekde-devel = %{version}-%{release}
+
+%description -n trinity-libsmoketde-devel
 The "Scripting Meta Object Kompiler Engine" library is used by
 various TDE language bindings packages to provide interfaces to the
 Qt and TDE libraries. This package contains the development files for
@@ -493,46 +585,56 @@ package.
 
 This package is part of the official TDE bindings module.
 
-%files -n trinity-libsmokekde-devel
+%files -n trinity-libsmoketde-devel
 %defattr(-,root,root,-)
-%{tde_libdir}/libsmokekde.so
-%{tde_libdir}/libsmokekde.la
+%{tde_libdir}/libsmoketde.so
+%{tde_libdir}/libsmoketde.la
 
-%post -n trinity-libsmokekde-devel
+%post -n trinity-libsmoketde-devel
 /sbin/ldconfig || :
 
-%postun -n trinity-libsmokekde-devel
+%postun -n trinity-libsmoketde-devel
 /sbin/ldconfig || :
 
 ##########
 
-%package -n trinity-perl-dcop
+%package -n perl-dcop
 Summary:	DCOP Bindings for Perl 
-Group:		Development/Libraries
+Group:		System/Libraries
+%if 0%{?suse_version}
+Requires:	perl-base
+%else
+Requires:	perl
+%endif
 
 Obsoletes:	trinity-kdebindings-dcopperl < %{version}-%{release}
 Provides:	trinity-kdebindings-dcopperl = %{version}-%{release}
 
-%description -n trinity-perl-dcop
+Obsoletes:	trinity-perl-dcop < %{version}-%{release}
+Provides:	trinity-perl-dcop = %{version}-%{release}
+
+%description -n perl-dcop
 Perl bindings to the DCOP interprocess communication protocol used by TDE
 
-%files -n trinity-perl-dcop
+%files -n perl-dcop
 %defattr(-,root,root,-)
-%{perl_vendorarch}/auto/DCOP/*
+%{perl_vendorarch}/auto/DCOP/
 %{perl_vendorarch}/DCOP.pm
-%{perl_vendorarch}/DCOP/*
+%{perl_vendorarch}/DCOP/
 %doc dcopperl/AUTHORS dcopperl/Changes dcopperl/README dcopperl/TODO
 %{tde_mandir}/man3/DCOP.3pm*
 
 ##########
 
-%package -n trinity-python-dcop
+%package -n python-dcop
 Summary:	DCOP bindings for Python
-Group:		Environment/Libraries
+Group:		System/Libraries
 Requires:	python
-#Provides:	%{name}-dcoppython = %{version}-%{release}
 
-%description -n trinity-python-dcop
+Obsoletes:	trinity-python-dcop < %{version}-%{release}
+Provides:	trinity-python-dcop = %{version}-%{release}
+
+%description -n python-dcop
 This package contains the shared libraries necessary to run and
 develop Python programs using the Python DCOP bindings
 libraries. DCOP is the TDE Desktop COmmunications Protocol, used for
@@ -540,7 +642,7 @@ communicating with running TDE applications.
 
 This package is part of the official TDE bindings module.
 
-%files -n trinity-python-dcop
+%files -n python-dcop
 %defattr(-,root,root,-)
 %{python_sitearch}/pcop.la
 %{python_sitearch}/pcop.so
@@ -550,7 +652,7 @@ This package is part of the official TDE bindings module.
 
 %package -n trinity-libkjsembed1
 Summary:	Embedded JavaScript library
-Group:		Environment/Libraries
+Group:		System/Libraries
 
 %description -n trinity-libkjsembed1
 This package contains the shared libraries necessary to run programs
@@ -570,16 +672,18 @@ This package is part of the official TDE bindings module.
 %{tde_datadir}/services/qprocess_plugin.desktop
 %{tde_tdelibdir}/libfileitemplugin.la
 %{tde_tdelibdir}/libfileitemplugin.so
-%{tde_datadir}/services/kfileitem_plugin.desktop
-%{tde_datadir}/apps/kjsembed/cmdline.js
+%{tde_datadir}/services/tdefileitem_plugin.desktop
+%{tde_datadir}/apps/kjsembed/
 %{tde_datadir}/servicetypes/binding_type.desktop
 %{tde_bindir}/embedjs
-%{tde_datadir}/apps/embedjs/embedjsui.rc
-%{tde_datadir}/applnk/Utilities/embedjs.desktop
+%{tde_datadir}/apps/embedjs/
+%{tde_tdeappdir}/embedjs.desktop
 %{tde_datadir}/icons/hicolor/16x16/apps/embedjs.png
 %{tde_datadir}/icons/hicolor/32x32/apps/embedjs.png
 %{tde_tdelibdir}/libjavascript.la
 %{tde_tdelibdir}/libjavascript.so
+%dir %{tde_datadir}/apps/kate
+%dir %{tde_datadir}/apps/kate/scripts
 %{tde_datadir}/apps/kate/scripts/swaptabs.js
 %{tde_datadir}/apps/kate/scripts/swaptabs.ui
 %{tde_datadir}/apps/kate/scripts/swaptabs.desktop
@@ -602,7 +706,7 @@ update-desktop-database >& /dev/null ||:
 
 %package -n trinity-libkjsembed-devel
 Summary:	Embedded JavaScript library (Development files)
-Group:		Development/Libraries
+Group:		Development/Libraries/Other
 Requires:	trinity-libkjsembed1 = %{version}-%{release}
 
 %description -n trinity-libkjsembed-devel
@@ -621,7 +725,7 @@ This package is part of the official TDE bindings module.
 %{tde_tdeincludedir}/kjsembed/
 %{tde_libdir}/libkjsembed.so
 %{tde_libdir}/libkjsembed.la
-%{tde_docdir}/trinity-libkjsembed-devel/plugin-examples/customobject/
+%{tde_docdir}/trinity-libkjsembed-devel/
 
 %post -n trinity-libkjsembed-devel
 /sbin/ldconfig || :
@@ -633,7 +737,7 @@ This package is part of the official TDE bindings module.
 
 %package -n trinity-kjscmd
 Summary:	A script interpreter using the TDE JavaScript library
-Group:		Environment/Libraries
+Group:		System/Libraries
 
 %description -n trinity-kjscmd
 This package contains the kjscmd program, which is a standalone
@@ -659,7 +763,7 @@ update-desktop-database >& /dev/null ||:
 
 %package -n trinity-juic
 Summary:	The Qt Java UI Compiler
-Group:		Environment/Libraries
+Group:		Development/Languages/Java
 Requires:	trinity-libqt3-java = %{version}-%{release}
 
 %description -n trinity-juic
@@ -680,7 +784,7 @@ This package is part of the official TDE bindings module.
 
 %package -n trinity-libkorundum0-ruby
 Summary:	TDE bindings for Ruby [Trinity]
-Group:		Environment/Libraries
+Group:		System/Libraries
 Requires:	trinity-libqt0-ruby = %{version}-%{release}
 
 %description -n trinity-libkorundum0-ruby
@@ -694,12 +798,13 @@ This package is part of the official TDE bindings module.
 
 %files -n trinity-libkorundum0-ruby
 %defattr(-,root,root,-)
-%{tde_bindir}/rbkdesh
-%{tde_bindir}/rbkdeapi
+%{tde_bindir}/rbtdesh
+%{tde_bindir}/rbtdeapi
 %{tde_bindir}/krubyinit
-%{tde_bindir}/rbkconfig_compiler
+%{tde_bindir}/rbtdeconfig_compiler
 %{ruby_rubylibdir}/Korundum.rb
-%{ruby_rubylibdir}/KDE/korundum.rb
+%dir %{ruby_rubylibdir}/TDE
+%{ruby_rubylibdir}/TDE/korundum.rb
 %{ruby_arch}/korundum.la
 %{ruby_arch}/korundum.so*
 %doc korundum/ChangeLog
@@ -714,7 +819,7 @@ This package is part of the official TDE bindings module.
 
 %package -n trinity-libqt0-ruby
 Summary:	Qt bindings for Ruby [Trinity]
-Group:		Environment/Libraries
+Group:		System/Libraries
 Requires:	ruby
 
 %description -n trinity-libqt0-ruby
@@ -732,12 +837,13 @@ This package is part of the official TDE bindings module.
 %{tde_bindir}/rbqtapi
 %{tde_bindir}/rbuic
 %{tde_bindir}/qtrubyinit
+%dir %{ruby_rubylibdir}/Qt
 %{ruby_rubylibdir}/Qt/qtruby.rb
 %{ruby_rubylibdir}/Qt.rb
 %{ruby_arch}/qtruby.so*
 %{ruby_arch}/qtruby.la
-%{ruby_arch}/qui.so*
-%{ruby_arch}/qui.la
+%{ruby_arch}/tqui.so*
+%{ruby_arch}/tqui.la
 %doc qtruby/ChangeLog
 
 %post -n trinity-libqt0-ruby
@@ -751,10 +857,10 @@ This package is part of the official TDE bindings module.
 %if 0
 %package -n trinity-kmozilla
 Summary:	Kmozilla for TDE
-Group:		Environment/Libraries
+Group:		System/Libraries
 
 %description -n trinity-kmozilla
-%{summary}
+This package contains the kmozilla library fro TDE.
 
 %files -n trinity-kmozilla
 %defattr(-,root,root,-)
@@ -769,7 +875,7 @@ Group:		Environment/Libraries
 
 %package -n trinity-xpart-notepad
 Summary:	A small XPart editor
-Group:		Applications/Utilities
+Group:		Productivity/Scientific/Math
 
 %description -n trinity-xpart-notepad
 xpart_notepad is a small XPart editor. Use it to understand how to use XPart.
@@ -795,10 +901,10 @@ xpart_notepad is a small XPart editor. Use it to understand how to use XPart.
 %if 0%{?with_gtk1}
 %package -n trinity-libgtkxparts1
 Summary:	Xparts library for GTK
-Group:		Environment/Libraries
+Group:		Development/Languages/Other
 
 %description -n trinity-libgtkxparts1
-%{summary}
+This package contains the xparts library for GTK.
 
 %files -n trinity-libgtkxparts1
 %defattr(-,root,root,-)
@@ -814,44 +920,47 @@ Group:		Environment/Libraries
 
 ##########
 
-%package -n trinity-libkdexparts1
-Summary:	Xparts library for KDE
-Group:		Environment/Libraries
+%package -n trinity-libtdexparts
+Summary:	Xparts library for TDE
+Group:		Development/Languages/Other
 
-%description -n trinity-libkdexparts1
-%{summary}
+Obsoletes:	trinity-libkdexparts1 < %{version}-%{release}
+Provides:	trinity-libkdexparts1 = %{version}-%{release}
 
-%files -n trinity-libkdexparts1
+%description -n trinity-libtdexparts
+This package contains the xparts library for TDE.
+
+%files -n trinity-libtdexparts
 %defattr(-,root,root,-)
-%{tde_libdir}/libkdexparts.so.*
-%{tde_libdir}/libkdexparts.la
+%{tde_libdir}/libtdexparts.so.*
+%{tde_libdir}/libtdexparts.la
 
-%post -n trinity-libkdexparts1
+%post -n trinity-libtdexparts
 /sbin/ldconfig || :
 
-%postun -n trinity-libkdexparts1
+%postun -n trinity-libtdexparts
 /sbin/ldconfig || :
 
 ##########
 
 %package -n trinity-libxparts-devel
 Summary:	Xparts development files
-Group:		Development/Libraries
+Group:		Development/Languages/Other
 %if 0%{?with_gtk1}
 Requires:	trinity-libgtkxparts1 = %{version}-%{release}
 %endif
-Requires:	trinity-libkdexparts1 = %{version}-%{release}
+Requires:	trinity-libtdexparts = %{version}-%{release}
 
 %description -n trinity-libxparts-devel
-%{summary}
+This package contains the development files for Xparts library.
 
 %files -n trinity-libxparts-devel
 %defattr(-,root,root,-)
-%{tde_tdeincludedir}/xkparts/
+%{tde_tdeincludedir}/xtdeparts/
 %if 0%{?with_gtk1}
 %{tde_libdir}/libgtkxparts.so
 %endif
-%{tde_libdir}/libkdexparts.so
+%{tde_libdir}/libtdexparts.so
 
 %post -n trinity-libxparts-devel
 /sbin/ldconfig || :
@@ -863,14 +972,14 @@ Requires:	trinity-libkdexparts1 = %{version}-%{release}
 
 %package xparts-extras
 Summary:	Extra xparts for TDE [Trinity]
-Group:		Environment/Libraries
+Group:		Development/Languages/Other
 
 # Metapckage requires
 Requires:	trinity-xpart-notepad = %{version}-%{release}
 %if 0%{?with_gtk1}
 Requires:	trinity-libgtkxparts1 = %{version}-%{release}
 %endif
-Requires:	trinity-libkdexparts1 = %{version}-%{release}
+Requires:	trinity-libtdexparts = %{version}-%{release}
 Requires:	trinity-libdcop-c = %{version}-%{release}
 
 %description xparts-extras
@@ -886,10 +995,10 @@ This package is part of the official TDE bindings module.
 
 %package -n trinity-libdcop-c
 Summary:	DCOP bindings for C [Trinity]
-Group:		Environment/Libraries
+Group:		System/Libraries
 
 %description -n trinity-libdcop-c
-%{summary}
+This package contains the DCOP bindings for C.
 
 %files -n trinity-libdcop-c
 %defattr(-,root,root,-)
@@ -905,11 +1014,11 @@ Group:		Environment/Libraries
 
 %package -n trinity-libdcop-c-devel
 Summary:	DCOP bindings for C, development files [Trinity]
-Group:		Development/Libraries
+Group:		Development/Languages/C and C++
 Requires:	trinity-libdcop-c = %{version}-%{release}
 
 %description -n trinity-libdcop-c-devel
-%{summary}
+This package contains the development files for DCOP bindings for C.
 
 %files -n trinity-libdcop-c-devel
 %defattr(-,root,root,-)
@@ -927,17 +1036,18 @@ Requires:	trinity-libdcop-c = %{version}-%{release}
 
 %package devel
 Summary:	Development files for %{name}
-Group:		Development/Libraries
-Requires:	trinity-tdelibs-devel 
+Group:		Development/Languages/Other
+
+Requires:	trinity-tdelibs-devel >= %{tde_version}
 Requires:	%{name} = %{version}-%{release}
 
 Obsoletes:	trinity-kdebindings-devel < %{version}-%{release}
 Provides:	trinity-kdebindings-devel = %{version}-%{release}
 
 # Metapackage
-Requires:	trinity-libsmokeqt-devel = %{version}-%{release}
+Requires:	trinity-libsmoketqt-devel = %{version}-%{release}
 Requires:	trinity-libdcop3-java-devel = %{version}-%{release}
-Requires:	trinity-libsmokekde-devel = %{version}-%{release}
+Requires:	trinity-libsmoketde-devel = %{version}-%{release}
 Requires:	trinity-libkjsembed-devel = %{version}-%{release}
 Requires:	trinity-libxparts-devel = %{version}-%{release}
 Requires:	trinity-libdcop-c-devel = %{version}-%{release}
@@ -945,44 +1055,43 @@ Requires:	trinity-libqt3-jni-devel = %{version}-%{release}
 Requires:	trinity-libtrinity-jni-devel = %{version}-%{release}
 
 %description devel
-Development files for the TDE bindings.
+This package contains the development files for the TDE bindings.
 
 %files devel
+%defattr(-,root,root,-)
 
 ##########
 
-%if 0%{?suse_version} || 0%{?pclinuxos}
+%if 0%{?pclinuxos} || 0%{?suse_version} && 0%{?opensuse_bs} == 0
 %debug_package
 %endif
 
 ##########
 
 %prep
-%setup -q -n kdebindings-trinity-%{version}%{?preversion:~%{preversion}}
-%patch7 -p1 -b .dcopjavaldflags
+%setup -q -n %{name}-%{version}%{?preversion:~%{preversion}}
 
 %if "%{?perl_vendorarch}" == ""
 exit 1
 %endif
 
+# [tdebindings] Function 'rb_frame_this_func' does not exist in RHEL4/5
 %if 0%{?rhel} >= 4 && 0%{?rhel} <= 5
-%patch18 -p1 -b .ruby
+%__sed -i "qtruby/rubylib/qtruby/Qt.cpp" \
+       -i "korundum/rubylib/korundum/Korundum.cpp" \
+       -e "s|rb_frame_this_func|rb_frame_last_func|g"
 %endif
 
-# Workarounds strange issue in MGA3
-%if 0%{?mgaversion} == 3 || 0%{?pclinuxos} >= 2013
-%__cp /usr/share/automake-1.13/test-driver admin/
+# Another strange FTBFS in RHEL 5
+%if 0%{?rhel} >= 4 && 0%{?rhel} <= 5
+%__sed -i "xparts/xpart_notepad/shell_xparthost.cpp" \
+       -i "xparts/xpart_notepad/xp_notepad.cpp" \
+       -e "/TDEApplication/ s| );|, true, true, true);|"
 %endif
 
 # Disable kmozilla, it does not build with recent xulrunner (missing 'libmozjs.so')
 %__sed -i "xparts/Makefile.am" \
-  -e "s|SUBDIRS = .*|SUBDIRS = src xpart_notepad|"
-
-# Ugly hack to modify TQT include directory inside autoconf files.
-# If TQT detection fails, it fallbacks to TQT4 instead of TQT3 !
-%__sed -i "admin/acinclude.m4.in" \
-  -e "s|/usr/include/tqt|%{tde_includedir}/tqt|g" \
-  -e "s|kde_htmldir='.*'|kde_htmldir='%{tde_tdedocdir}/HTML'|g"
+       -e "s|SUBDIRS = .*|SUBDIRS = src xpart_notepad|"
 
 %__cp -f "/usr/share/aclocal/libtool.m4" "admin/libtool.m4.in"
 %__cp -f "/usr/share/libtool/config/ltmain.sh" "admin/ltmain.sh" || %__cp -f "/usr/share/libtool/ltmain.sh" "admin/ltmain.sh"
@@ -990,9 +1099,9 @@ exit 1
 
 
 %build
-unset QTDIR || : ; source /etc/profile.d/qt3.sh
+unset QTDIR QTINC QTLIB
 export PATH="%{tde_bindir}:${PATH}"
-export LDFLAGS="-L%{tde_libdir} -I%{tde_includedir}"
+export TDEDIR=%{tde_prefix}
 
 unset JAVA_HOME ||:
 %{?java_home:JAVA_HOME=%{java_home}; export JAVA_HOME}
@@ -1000,15 +1109,26 @@ unset JAVA_HOME ||:
 # sip/PyQt/PyKDE built separately, not here
 export DO_NOT_COMPILE="$DO_NOT_COMPILE python"
 
+# Ruby headers, strange location ...
+if [ -d "/usr/include/%{_normalized_cpu}-linux" ]; then
+  export EXTRA_INCLUDES="/usr/include/%{_normalized_cpu}-linux"
+fi
+
 # Specific path for RHEL4
 if [ -d /usr/X11R6 ]; then
-  export CXXFLAGS="${RPM_OPT_FLAGS} -I/usr/X11R6/include -L/usr/X11R6/%{_lib}"
+  export RPM_OPT_FLAGS="${RPM_OPT_FLAGS} -I/usr/X11R6/include -L/usr/X11R6/%{_lib}"
 fi
 if [ -d /usr/evolution28 ]; then
   export PATH="/usr/evolution28/bin:${PATH}"
   export PKG_CONFIG_PATH="/usr/evolution28/%{_lib}/pkgconfig:${PKG_CONFIG_PATH}"
 fi
 
+# Warning: openSUSE 13.1: /usr/include/ruby-2.0.0/ruby.h
+%if 0%{?suse_version} >= 1310
+EXTRA_INCLUDES="/usr/include/ruby-%{rb20_ver}:/usr/include/ruby-%{rb20_ver}/%{_target}"
+%endif
+
+# Warning: GCC visibility causes FTBFS [Bug #1285]
 %configure \
   --prefix=%{tde_prefix} \
   --exec-prefix=%{tde_prefix} \
@@ -1018,26 +1138,28 @@ fi
   --includedir=%{tde_tdeincludedir} \
   --libdir=%{tde_libdir} \
   --mandir=%{tde_mandir} \
-  --disable-rpath \
-  --enable-new-ldflags \
-  --disable-debug --disable-warnings \
+  \
   --disable-dependency-tracking \
+  --disable-debug \
+  --enable-new-ldflags \
+  --enable-final \
+  --enable-closure \
+  --enable-rpath \
+  --disable-gcc-hidden-visibility \
+  \
+  --with-extra-includes=%{_includedir}/tqscintilla:${EXTRA_INCLUDES} \
   --with-extra-libs=%{tde_libdir} \
   --with-pythondir=%{_usr} \
-  --enable-closure \
-  --enable-final \
+  \
   %{?_with_java} %{!?_with_java:--without-java} \
-  %{?_enable_qscintilla} %{!?_enable_qscintilla:--disable-qscintilla} \
-  --with-extra-includes=%{tde_includedir}/tqt
+  %{?_enable_qscintilla} %{!?_enable_qscintilla:--disable-qscintilla}
 
+# Build dcopperl with specific options
 pushd dcopperl
 CFLAGS="$RPM_OPT_FLAGS" perl Makefile.PL INSTALLDIRS=vendor
 
-# Ugly hack to add TQT include directory in Makefile
-# Also modifies the man pages directory
-sed -i Makefile \
-  -e "s|^\(INC = .*\)|\1 -I%{tde_includedir}/tqt|" \
-  -e "s|/usr/share/man|%{tde_mandir}|g"
+# [Bug #348] Ugly hack to modify the man pages directory
+sed -i "Makefile" -e "s|/usr/share/man|%{tde_mandir}|g"
 
 %__make OPTIMIZE="$RPM_OPT_FLAGS" ||:
 popd
@@ -1053,8 +1175,6 @@ popd
 export PATH="%{tde_bindir}:${PATH}"
 %__rm -rf $RPM_BUILD_ROOT
 
-cp %{SOURCE100} . -f
-
 %__make install DESTDIR=%{?buildroot} \
   PYTHON=%{__python}
 
@@ -1062,43 +1182,24 @@ cp %{SOURCE100} . -f
 find $RPM_BUILD_ROOT -type f -a \( -name perllocal.pod -o -name .packlist \
   -o \( -name '*.bs' -a -empty \) \) -exec rm -f {} ';'
 
-# locale's
-%find_lang %{name} || touch %{name}.lang
-HTML_DIR=$(kde-config --expandvars --install html)
-if [ -d $RPM_BUILD_ROOT$HTML_DIR ]; then
-for lang_dir in $RPM_BUILD_ROOT$HTML_DIR/* ; do
-  if [ -d $lang_dir ]; then
-    lang=$(basename $lang_dir)
-    echo "%lang($lang) $HTML_DIR/$lang/*" >> %{name}.lang
-    # replace absolute symlinks with relative ones
-    pushd $lang_dir
-      for i in *; do
-        [ -d $i -a -L $i/common ] && ln -nsf ../common $i/common
-      done
-    popd
-  fi
-done  
-fi  
-
 # Installs juic
 %__install -D -m 755 qtjava/designer/juic/bin/juic	%{?buildroot}%{tde_bindir}/juic
 %__install -d -m 755 %{?buildroot}%{tde_datadir}/juic/common
-%__install qtjava/designer/juic/common/*.xml %{?buildroot}%{tde_datadir}/juic/common
-%__install qtjava/designer/juic/common/*.xsl %{?buildroot}%{tde_datadir}/juic/common
+%__install -m 644 qtjava/designer/juic/common/*.xml %{?buildroot}%{tde_datadir}/juic/common
+%__install -m 644 qtjava/designer/juic/common/*.xsl %{?buildroot}%{tde_datadir}/juic/common
 %__install -d -m 755 %{?buildroot}%{tde_datadir}/juic/java
-%__install qtjava/designer/juic/java/*.xml %{?buildroot}%{tde_datadir}/juic/java
-%__install qtjava/designer/juic/java/*.xsl %{?buildroot}%{tde_datadir}/juic/java
-%__install qtjava/designer/juic/juic.xsl  %{?buildroot}%{tde_datadir}/juic
+%__install -m 644 qtjava/designer/juic/java/*.xml %{?buildroot}%{tde_datadir}/juic/java
+%__install -m 644 qtjava/designer/juic/java/*.xsl %{?buildroot}%{tde_datadir}/juic/java
+%__install -m 644 qtjava/designer/juic/juic.xsl  %{?buildroot}%{tde_datadir}/juic
 
 # kjsembed sample files
 %__install -d -m 755 %{?buildroot}%{tde_docdir}/trinity-libkjsembed-devel/plugin-examples/customobject/
-%__install kjsembed/plugins/customobject_plugin.cpp %{?buildroot}%{tde_docdir}/trinity-libkjsembed-devel/plugin-examples/customobject/
-%__install kjsembed/plugins/customobject_plugin.h %{?buildroot}%{tde_docdir}/trinity-libkjsembed-devel/plugin-examples/customobject/
-%__install kjsembed/plugins/customobject_plugin.desktop %{?buildroot}%{tde_docdir}/trinity-libkjsembed-devel/plugin-examples/customobject/
-%__install kjsembed/plugins/customqobject_plugin.cpp %{?buildroot}%{tde_docdir}/trinity-libkjsembed-devel/plugin-examples/customobject/
-%__install kjsembed/plugins/customqobject_plugin.h %{?buildroot}%{tde_docdir}/trinity-libkjsembed-devel/plugin-examples/customobject/
-%__install kjsembed/plugins/customqobject_plugin.desktop %{?buildroot}%{tde_docdir}/trinity-libkjsembed-devel/plugin-examples/customobject/
-
+%__install -m 644 kjsembed/plugins/customobject_plugin.cpp %{?buildroot}%{tde_docdir}/trinity-libkjsembed-devel/plugin-examples/customobject/
+%__install -m 644 kjsembed/plugins/customobject_plugin.h %{?buildroot}%{tde_docdir}/trinity-libkjsembed-devel/plugin-examples/customobject/
+%__install -m 644 kjsembed/plugins/customobject_plugin.desktop %{?buildroot}%{tde_docdir}/trinity-libkjsembed-devel/plugin-examples/customobject/
+%__install -m 644 kjsembed/plugins/customqobject_plugin.cpp %{?buildroot}%{tde_docdir}/trinity-libkjsembed-devel/plugin-examples/customobject/
+%__install -m 644 kjsembed/plugins/customqobject_plugin.h %{?buildroot}%{tde_docdir}/trinity-libkjsembed-devel/plugin-examples/customobject/
+%__install -m 644 kjsembed/plugins/customqobject_plugin.desktop %{?buildroot}%{tde_docdir}/trinity-libkjsembed-devel/plugin-examples/customobject/
 
 # Man installation location is wrong on RHEL4...
 if [ -d "%{buildroot}%{_mandir}/man3" ]; then
@@ -1106,11 +1207,21 @@ if [ -d "%{buildroot}%{_mandir}/man3" ]; then
   rm -rf %{buildroot}%{_mandir}
 fi
 
+# Move 'embedjs.desktop' to correct location
+%__mv -f "%{?buildroot}%{tde_datadir}/applnk/Utilities/embedjs.desktop" "%{?buildroot}%{tde_tdeappdir}/embedjs.desktop"
+%__rm -rf "%{?buildroot}%{tde_datadir}/applnk"
+
+# Updates applications categories for openSUSE
+%if 0%{?suse_version}
+%suse_update_desktop_file -u kjscmd  Development 
+%suse_update_desktop_file -u embedjs Development 
+%endif
+
 
 %clean
 %__rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
-* Mon Jun 03 2013 Francois Andriot <francois.andriot@free.fr> - 3.5.13.2-1
-- Initial release for TDE 3.5.13.2
+* Fri Jul 05 2013 Francois Andriot <francois.andriot@free.fr> - 14.0.0-1
+- Initial release for TDE R14.0.0
