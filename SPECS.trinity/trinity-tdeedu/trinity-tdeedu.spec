@@ -1,48 +1,96 @@
+#
+# spec file for package tdeedu (version R14)
+#
+# Copyright (c) 2014 Trinity Desktop Environment
+#
+# All modifications and additions to the file contributed by third parties
+# remain the property of their copyright owners, unless otherwise agreed
+# upon. The license for this file, and modifications and additions to the
+# file, is the same license as for the pristine package itself (unless the
+# license for the pristine package is not an Open Source License, in which
+# case the license is the MIT License). An "Open Source License" is a
+# license that conforms to the Open Source Definition (Version 1.9)
+# published by the Open Source Initiative.
+#
+# Please submit bugfixes or comments via http://www.trinitydesktop.org/
+#
+
+# BUILD WARNING:
+#  Remove qt-devel and qt3-devel and any kde*-devel on your system !
+#  Having KDE libraries may cause FTBFS here !
+
+# TDE variables
+%define tde_epoch 2
+%if "%{?tde_version}" == ""
+%define tde_version 14.0.0
+%endif
+%define tde_pkg tdeedu
+%define tde_prefix /opt/trinity
+%define tde_bindir %{tde_prefix}/bin
+%define tde_confdir %{_sysconfdir}/trinity
+%define tde_datadir %{tde_prefix}/share
+%define tde_docdir %{tde_datadir}/doc
+%define tde_includedir %{tde_prefix}/include
+%define tde_libdir %{tde_prefix}/%{_lib}
+%define tde_mandir %{tde_datadir}/man
+%define tde_tdeappdir %{tde_datadir}/applications/tde
+%define tde_tdedocdir %{tde_docdir}/tde
+%define tde_tdeincludedir %{tde_includedir}/tde
+%define tde_tdelibdir %{tde_libdir}/trinity
+
 # If TDE is built in a specific prefix (e.g. /opt/trinity), the release will be suffixed with ".opt".
 %if "%{?tde_prefix}" != "/usr"
 %define _variant .opt
 %endif
 
-# TDE 3.5.13 specific building variables
-%define tde_bindir %{tde_prefix}/bin
-%define tde_datadir %{tde_prefix}/share
-%define tde_docdir %{tde_datadir}/doc
-%define tde_includedir %{tde_prefix}/include
-%define tde_libdir %{tde_prefix}/%{_lib}
 
-%define tde_tdeappdir %{tde_datadir}/applications/kde
-%define tde_tdedocdir %{tde_docdir}/tde
-%define tde_tdeincludedir %{tde_includedir}/tde
-%define tde_tdelibdir %{tde_libdir}/trinity
+Name:			trinity-%{tde_pkg}
+Summary:		Educational/Edutainment applications
+Group:			System/GUI/Other
+Version:		%{tde_version}
+Release:		%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}%{?_variant}
+URL:			http://www.trinitydesktop.org/
 
-%define _docdir %{tde_docdir}
+%if 0%{?suse_version}
+License:	GPL-2.0+
+%else
+License:	GPLv2+
+%endif
 
-# Required for Mageia 2: removes the ldflag '--no-undefined'
-%define _disable_ld_no_undefined 1
+#Vendor:		Trinity Desktop
+#Packager:	Francois Andriot <francois.andriot@free.fr>
 
-Name:    trinity-tdeedu
-Summary: Educational/Edutainment applications
-Version: 3.5.13.2
-Release: 1%{?dist}%{?_variant}
+Prefix:			%{tde_prefix}
+BuildRoot:		%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
-License: GPLv2
-Group:   Amusements/Games
+Source0:		%{name}-%{version}%{?preversion:~%{preversion}}.tar.gz
 
-Vendor:		Trinity Project
-Packager:	Francois Andriot <francois.andriot@free.fr>
-URL:		http://www.trinitydesktop.org/
-
-Prefix:    %{tde_prefix}
-BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-
-Source0: kdeedu-trinity-%{version}.tar.xz
-
+BuildRequires: trinity-tdelibs-devel >= %{tde_version}
 
 BuildRequires: autoconf automake libtool m4
 BuildRequires: desktop-file-utils
-BuildRequires: trinity-kdelibs-devel
-BuildRequires: python-devel python
-BuildRequires: boost-devel
+
+# SUSE desktop files utility
+%if 0%{?suse_version}
+BuildRequires:	update-desktop-files
+%endif
+
+%if 0%{?opensuse_bs} && 0%{?suse_version}
+# for xdg-menu script
+BuildRequires:	brp-check-trinity
+%endif
+
+# PYTHON support
+BuildRequires:	python-devel
+BuildRequires:	python
+BuildRequires:	gcc-c++
+BuildRequires:	desktop-file-utils
+BuildRequires:	fdupes
+
+# BOOST support
+BuildRequires:	boost-devel
+
+# OCAML support
 %if 0%{?rhel} >= 6 || 0%{?fedora} >= 15
 BuildRequires: ocaml(compiler)
 %else
@@ -113,15 +161,15 @@ Educational/Edutainment applications, including:
 ##########
 
 %package data
-Summary:	shared data for Trinity educational applications
-Group:		Amusements/Games
+Summary:	Shared data for Trinity educational applications
+Group:		System/GUI/Other
 
 %description data
 This package contains shared data necessary for running the
 educational applications provided with KDE (the K Desktop
 Environment).
 
-This package is part of Trinity, as a component of the KDE education module.
+This package is part of Trinity, as a component of the TDE education module.
 
 %files data
 %defattr(-,root,root,-)
@@ -135,8 +183,7 @@ This package is part of Trinity, as a component of the KDE education module.
 
 %package -n trinity-blinken
 Summary:	Trinity version of the Simon Says electronic memory game
-Group:		Amusements/Games
-#Requires:	sj-delphine-fonts
+Group:		System/GUI/Other
 Requires:	trinity-tdeedu-data = %{version}-%{release}
 
 %description -n trinity-blinken
@@ -149,7 +196,7 @@ player is successful in remembering the sequence of lights in the
 correct order, they advance to the next stage, where an identical
 sequence with one extra step is presented.
 
-This package is part of Trinity, as a component of the KDE education module.
+This package is part of Trinity, as a component of the TDE education module.
 
 %files -n trinity-blinken
 %defattr(-,root,root,-)
@@ -178,8 +225,8 @@ update-desktop-database %{tde_datadir}/applications > /dev/null 2>&1 || :
 ##########
 
 %package -n trinity-kalzium
-Summary:	chemistry teaching tool for Trinity
-Group:		Amusements/Games
+Summary:	Chemistry teaching tool for Trinity
+Group:		System/GUI/Other
 Requires:	trinity-kalzium-data = %{version}-%{release}
 Requires:	trinity-tdeedu-data = %{version}-%{release}
 
@@ -200,7 +247,7 @@ elements were known at a given date.  In addition, on platforms where
 OCaml supports native code generation, Kalzium includes a chemical
 equation solver.
 
-This package is part of Trinity, as a component of the KDE education module.
+This package is part of Trinity, as a component of the TDE education module.
 
 %files -n trinity-kalzium
 %defattr(-,root,root,-)
@@ -228,8 +275,8 @@ update-desktop-database %{tde_datadir}/applications > /dev/null 2>&1 || :
 ##########
 
 %package -n trinity-kalzium-data
-Summary:	data files for Kalzium
-Group:		Amusements/Games
+Summary:	Data files for Kalzium
+Group:		System/GUI/Other
 
 %description -n trinity-kalzium-data
 This package contains architecture-independent data files for
@@ -239,7 +286,7 @@ addition to the actual chemical data.
 
 See the kalzium package for further information.
 
-This package is part of Trinity, as a component of the KDE education module.
+This package is part of Trinity, as a component of the TDE education module.
 
 %files -n trinity-kalzium-data
 %defattr(-,root,root,-)
@@ -248,8 +295,8 @@ This package is part of Trinity, as a component of the KDE education module.
 ##########
 
 %package -n trinity-kanagram
-Summary:	letter order game for Trinity
-Group:		Amusements/Games
+Summary:	Letter order game for Trinity
+Group:		System/GUI/Other
 Requires:	trinity-tdeedu-data = %{version}-%{release}
 
 %description -n trinity-kanagram
@@ -265,7 +312,7 @@ words and set your own 'look and feel' of the game.  It is aimed for
 children aged 10+ because of the difficulty, but of course everyone
 is welcome to try.
 
-This package is part of Trinity, as a component of the KDE education module.
+This package is part of Trinity, as a component of the TDE education module.
 
 %files -n trinity-kanagram
 %defattr(-,root,root,-)
@@ -294,8 +341,8 @@ update-desktop-database %{tde_datadir}/applications > /dev/null 2>&1 || :
 ##########
 
 %package -n trinity-kbruch
-Summary:	fraction calculation teaching tool for Trinity
-Group:		Amusements/Games
+Summary:	Fraction calculation teaching tool for Trinity
+Group:		System/GUI/Other
 Requires:	trinity-tdeedu-data = %{version}-%{release}
 
 %description -n trinity-kbruch
@@ -303,12 +350,12 @@ KBruch is a small program to practice calculating with fractions.
 Different exercises are provided for this purpose.  The program
 checks the user's input and gives feedback.
 
-This package is part of Trinity, as a component of the KDE education module.
+This package is part of Trinity, as a component of the TDE education module.
 
 %files -n trinity-kbruch
 %defattr(-,root,root,-)
 %{tde_bindir}/kbruch
-%{tde_datadir}/apps/kbruch/kbruchui.rc
+%{tde_datadir}/apps/kbruch/
 %{tde_tdeappdir}/kbruch.desktop
 %{tde_datadir}/config.kcfg/kbruch.kcfg
 %{tde_datadir}/icons/hicolor/*/apps/kbruch.png
@@ -333,15 +380,15 @@ update-desktop-database %{tde_datadir}/applications > /dev/null 2>&1 || :
 ##########
 
 %package -n trinity-keduca
-Summary:	interactive form-based tests for Trinity
-Group:		Amusements/Games
+Summary:	Interactive form-based tests for Trinity
+Group:		System/GUI/Other
 Requires:	trinity-tdeedu-data = %{version}-%{release}
 
 %description -n trinity-keduca
 KEduca is a flash-card application which allows you to make
 interactive form-based tests.
 
-This package is part of Trinity, as a component of the KDE education module.
+This package is part of Trinity, as a component of the TDE education module.
 
 %files -n trinity-keduca
 %defattr(-,root,root,-)
@@ -377,7 +424,7 @@ update-desktop-database %{tde_datadir}/applications > /dev/null 2>&1 || :
 
 %package -n trinity-kgeography
 Summary:	Geography learning tool for Trinity
-Group:		Amusements/Games
+Group:		System/GUI/Other
 Requires:	trinity-kgeography-data = %{version}-%{release}
 Requires:	trinity-tdeedu-data = %{version}-%{release}
 
@@ -387,7 +434,7 @@ the political divisions of several countries.  It has several modes,
 including a map browser and games involving the names, capitals, or
 flags of the map divisions.
 
-This package is part of Trinity, as a component of the KDE education module.
+This package is part of Trinity, as a component of the TDE education module.
 
 %files -n trinity-kgeography
 %defattr(-,root,root,-)
@@ -416,8 +463,8 @@ update-desktop-database %{tde_datadir}/applications > /dev/null 2>&1 || :
 ##########
 
 %package -n trinity-kgeography-data
-Summary:	data files for KGeography
-Group:		Amusements/Games
+Summary:	Data files for KGeography
+Group:		System/GUI/Other
 
 %description -n trinity-kgeography-data
 This package contains architecture-independent data files for
@@ -426,7 +473,7 @@ and flag images.
 
 See the kgeography package for further information.
 
-This package is part of Trinity, as a component of the KDE education module.
+This package is part of Trinity, as a component of the TDE education module.
 
 %files -n trinity-kgeography-data
 %defattr(-,root,root,-)
@@ -435,8 +482,8 @@ This package is part of Trinity, as a component of the KDE education module.
 ##########
 
 %package -n trinity-khangman
-Summary:	the classical hangman game for Trinity
-Group:		Amusements/Games
+Summary:	The classical hangman game for Trinity
+Group:		System/GUI/Other
 #Requires:	dustin-dustismo-sans-fonts
 Requires:	trinity-tdeedu-data = %{version}-%{release}
 
@@ -450,11 +497,11 @@ guess the word by trying one letter after another.  Each time you
 guess a wrong letter, a picture of a hangman is drawn.  You must
 guess the word before getting hanged!  You have 10 tries.
 
-This package is part of Trinity, as a component of the KDE education module.
+This package is part of Trinity, as a component of the TDE education module.
 
 %files -n trinity-khangman
 %defattr(-,root,root,-)
-%{tde_datadir}/config/khangmanrc
+%{tde_confdir}/khangmanrc
 %{tde_bindir}/khangman
 %{tde_tdeappdir}/khangman.desktop
 %{tde_datadir}/apps/khangman/
@@ -480,8 +527,8 @@ update-desktop-database %{tde_datadir}/applications > /dev/null 2>&1 || :
 ##########
 
 %package -n trinity-kig
-Summary:	interactive geometry program for KDE
-Group:		Amusements/Games
+Summary:	Interactive geometry program for KDE
+Group:		System/GUI/Other
 Requires:	trinity-tdeedu-data = %{version}-%{release}
 
 %description -n trinity-kig
@@ -502,22 +549,22 @@ Kig supports loci and user-defined macros.  It also supports imports
 and exports to/from foreign file formats including Cabri, Dr. Geo,
 KGeo, KSeg and XFig.
 
-This package is part of Trinity, as a component of the KDE education module.
+This package is part of Trinity, as a component of the TDE education module.
 
 %files -n trinity-kig
 %defattr(-,root,root,-)
-%{tde_datadir}/config/magic/cabri.magic
-%{tde_datadir}/config/magic/drgeo.magic
+%{tde_confdir}/magic/cabri.magic
+%{tde_confdir}/magic/drgeo.magic
 %{tde_bindir}/kig
 %{tde_bindir}/pykig.py*
-%{tde_tdelibdir}/kfile_drgeo.la
-%{tde_tdelibdir}/kfile_drgeo.so
-%{tde_tdelibdir}/kfile_kig.la
-%{tde_tdelibdir}/kfile_kig.so
+%{tde_tdelibdir}/tdefile_drgeo.la
+%{tde_tdelibdir}/tdefile_drgeo.so
+%{tde_tdelibdir}/tdefile_kig.la
+%{tde_tdelibdir}/tdefile_kig.so
 %{tde_tdelibdir}/libkigpart.la
 %{tde_tdelibdir}/libkigpart.so
 %{tde_tdeappdir}/kig.desktop
-%if 0%{?rhel} >= 6 || 0%{?fedora} || 0%{?mgaversion} || 0%{?mdkversion}
+%if 0%{?rhel} >= 6 || 0%{?fedora} || 0%{?mgaversion} || 0%{?mdkversion} || 0%{?suse_version}
 %{tde_datadir}/apps/katepart/syntax/python-kig.xml
 %endif
 %{tde_datadir}/apps/kig/
@@ -530,8 +577,8 @@ This package is part of Trinity, as a component of the KDE education module.
 %{tde_datadir}/mimelnk/application/x-kig.desktop
 %{tde_datadir}/mimelnk/application/x-kgeo.desktop
 %{tde_datadir}/mimelnk/application/x-kseg.desktop
-%{tde_datadir}/services/kfile_drgeo.desktop
-%{tde_datadir}/services/kfile_kig.desktop
+%{tde_datadir}/services/tdefile_drgeo.desktop
+%{tde_datadir}/services/tdefile_kig.desktop
 %{tde_datadir}/services/kig_part.desktop
 %{tde_tdedocdir}/HTML/en/kig/
 
@@ -553,7 +600,7 @@ update-desktop-database %{tde_datadir}/applications > /dev/null 2>&1 || :
 
 %package -n trinity-kiten
 Summary:	Japanese reference/study tool for Trinity
-Group:		Amusements/Games
+Group:		System/GUI/Other
 Requires:	trinity-tdeedu-data = %{version}-%{release}
 #Requires:	ttf-kochi-gothic | ttf-kochi-mincho
 
@@ -564,7 +611,7 @@ English to Japanese and Japanese to English dictionary.  Secondly, it
 is a Kanji dictionary, with multiple ways to look up specific
 characters.  Thirdly, it is a tool to help you learn Kanji.
 
-This package is part of Trinity, as a component of the KDE education module.
+This package is part of Trinity, as a component of the TDE education module.
 
 %files -n trinity-kiten
 %defattr(-,root,root,-)
@@ -592,8 +639,8 @@ update-desktop-database %{tde_datadir}/applications > /dev/null 2>&1 || :
 ##########
 
 %package -n trinity-klatin
-Summary:	application to help revise/teach Latin
-Group:		Amusements/Games
+Summary:	Application to help revise/teach Latin
+Group:		System/GUI/Other
 Requires:	trinity-tdeedu-data = %{version}-%{release}
 
 %description -n trinity-klatin
@@ -611,7 +658,7 @@ In the grammar and verb sections KLatin asks for a particular part of
 a noun or a verb, such as the "ablative singular", or the "1st person
 indicative passive plural", and is not multiple choice.
 
-This package is part of Trinity, as a component of the KDE education module.
+This package is part of Trinity, as a component of the TDE education module.
 
 %files -n trinity-klatin
 %defattr(-,root,root,-)
@@ -640,8 +687,8 @@ update-desktop-database %{tde_datadir}/applications > /dev/null 2>&1 || :
 ##########
 
 %package -n trinity-klettres
-Summary:	foreign alphabet tutor for Trinity
-Group:		Amusements/Games
+Summary:	Foreign alphabet tutor for Trinity
+Group:		System/GUI/Other
 Requires:	trinity-klettres-data = %{version}-%{release}
 Requires:	trinity-tdeedu-data = %{version}-%{release}
 
@@ -654,11 +701,11 @@ an adult that wants to learn the basics of a foreign language.
 Seven languages are currently available: Czech, Danish, Dutch,
 English, French, Italian and Slovak.
 
-This package is part of Trinity, as a component of the KDE education module.
+This package is part of Trinity, as a component of the TDE education module.
 
 %files -n trinity-klettres
 %defattr(-,root,root,-)
-%{tde_datadir}/config/klettresrc
+%{tde_confdir}/klettresrc
 %{tde_bindir}/klettres
 %{tde_tdeappdir}/klettres.desktop
 %{tde_datadir}/config.kcfg/klettres.kcfg
@@ -683,8 +730,8 @@ update-desktop-database %{tde_datadir}/applications > /dev/null 2>&1 || :
 ##########
 
 %package -n trinity-klettres-data
-Summary:	data files for KLettres foreign alphabet tutor
-Group:		Amusements/Games
+Summary:	Data files for KLettres foreign alphabet tutor
+Group:		System/GUI/Other
 
 %description -n trinity-klettres-data
 This package contains architecture-independent data files for
@@ -693,7 +740,7 @@ files and graphics.
 
 See the klettres package for further information.
 
-This package is part of Trinity, as a component of the KDE education module.
+This package is part of Trinity, as a component of the TDE education module.
 
 %files -n trinity-klettres-data
 %defattr(-,root,root,-)
@@ -702,8 +749,8 @@ This package is part of Trinity, as a component of the KDE education module.
 ##########
 
 %package -n trinity-kmplot
-Summary:	mathematical function plotter for Trinity
-Group:		Amusements/Games
+Summary:	Mathematical function plotter for Trinity
+Group:		System/GUI/Other
 Requires:	trinity-tdeedu-data = %{version}-%{release}
 
 %description -n trinity-kmplot
@@ -720,7 +767,7 @@ and calculating the area between the plot and the first axis, finding
 maximum and minimum values, changing function parameters dynamically
 and plotting derivatives and integral functions.
 
-This package is part of Trinity, as a component of the KDE education module.
+This package is part of Trinity, as a component of the TDE education module.
 
 %files -n trinity-kmplot
 %defattr(-,root,root,-)
@@ -753,8 +800,8 @@ update-desktop-database %{tde_datadir}/applications > /dev/null 2>&1 || :
 ##########
 
 %package -n trinity-kpercentage
-Summary:	percentage calculation teaching tool for Trinity
-Group:		Amusements/Games
+Summary:	Percentage calculation teaching tool for Trinity
+Group:		System/GUI/Other
 Requires:	trinity-tdeedu-data = %{version}-%{release}
 
 %description -n trinity-kpercentage
@@ -765,7 +812,7 @@ There is a special training section for the three basic tasks.
 Finally the pupil can select a random mode, in which all three tasks
 are mixed randomly.
 
-This package is part of Trinity, as a component of the KDE education module.
+This package is part of Trinity, as a component of the TDE education module.
 
 %files -n trinity-kpercentage
 %defattr(-,root,root,-)
@@ -793,8 +840,8 @@ update-desktop-database %{tde_datadir}/applications > /dev/null 2>&1 || :
 ##########
 
 %package -n trinity-kstars
-Summary:	desktop planetarium for Trinity
-Group:		Amusements/Games
+Summary:	Desktop planetarium for Trinity
+Group:		System/GUI/Other
 Requires:	trinity-tdeedu-data = %{version}-%{release}
 Requires:	trinity-kstars-data = %{version}-%{release}
 Requires:	trinity-indi = %{version}-%{release}
@@ -812,11 +859,11 @@ objects and track their motion across the sky.  KStars includes many
 powerful features, yet the interface is clean and simple and fun to
 use.
 
-This package is part of Trinity, as a component of the KDE education module.
+This package is part of Trinity, as a component of the TDE education module.
 
 %files -n trinity-kstars
 %defattr(-,root,root,-)
-%{tde_datadir}/config/kstarsrc
+%{tde_confdir}/kstarsrc
 %{tde_bindir}/kstars
 %{tde_tdeappdir}/kstars.desktop
 %{tde_datadir}/config.kcfg/kstars.kcfg
@@ -841,8 +888,8 @@ update-desktop-database %{tde_datadir}/applications > /dev/null 2>&1 || :
 ##########
 
 %package -n trinity-kstars-data
-Summary:	data files for KStars desktop planetarium
-Group:		Amusements/Games
+Summary:	Data files for KStars desktop planetarium
+Group:		System/GUI/Other
 
 %description -n trinity-kstars-data
 This package contains architecture-independent data files for KStars,
@@ -851,7 +898,7 @@ catalogues and astronomical images.
 
 See the kstars package for further information.
 
-This package is part of Trinity, as a component of the KDE education module.
+This package is part of Trinity, as a component of the TDE education module.
 
 %files -n trinity-kstars-data
 %defattr(-,root,root,-)
@@ -860,8 +907,8 @@ This package is part of Trinity, as a component of the KDE education module.
 ##########
 
 %package -n trinity-ktouch
-Summary:	touch typing tutor for Trinity
-Group:		Amusements/Games
+Summary:	Touch typing tutor for Trinity
+Group:		System/GUI/Other
 Requires:	trinity-tdeedu-data = %{version}-%{release}
 
 %description -n trinity-ktouch
@@ -874,7 +921,7 @@ train on, and adjusts to different levels depending on how good you
 are.  It can display which key to press next, and the correct finger
 to use.
 
-This package is part of Trinity, as a component of the KDE education module.
+This package is part of Trinity, as a component of the TDE education module.
 
 %files -n trinity-ktouch
 %defattr(-,root,root,-)
@@ -903,8 +950,8 @@ update-desktop-database %{tde_datadir}/applications > /dev/null 2>&1 || :
 ##########
 
 %package -n trinity-kturtle
-Summary:	educational Logo programming environment
-Group:		Amusements/Games
+Summary:	Educational Logo programming environment
+Group:		System/GUI/Other
 Requires:	trinity-tdeedu-data = %{version}-%{release}
 
 %description -n trinity-kturtle
@@ -925,7 +972,7 @@ Note that this version of Logo is only focused on the educational
 qualities of the programming language and will not try to suit
 professional programmers' needs.
 
-This package is part of Trinity, as a component of the KDE education module.
+This package is part of Trinity, as a component of the TDE education module.
 
 %files -n trinity-kturtle
 %defattr(-,root,root,-)
@@ -955,7 +1002,7 @@ update-desktop-database %{tde_datadir}/applications > /dev/null 2>&1 || :
 
 %package -n trinity-kverbos
 Summary:	Spanish verb form study application for Trinity
-Group:		Amusements/Games
+Group:		System/GUI/Other
 Requires:	trinity-tdeedu-data = %{version}-%{release}
 
 %description -n trinity-kverbos
@@ -967,7 +1014,7 @@ The user can edit the list of the verbs that can be studied.  The
 program can build regular verb forms by itself.  Irregular verb forms
 have to be entered by the user.
 
-This package is part of Trinity, as a component of the KDE education module.
+This package is part of Trinity, as a component of the TDE education module.
 
 %files -n trinity-kverbos
 %defattr(-,root,root,-)
@@ -997,8 +1044,8 @@ update-desktop-database %{tde_datadir}/applications > /dev/null 2>&1 || :
 ##########
 
 %package -n trinity-kvoctrain
-Summary:	vocabulary trainer for Trinity
-Group:		Amusements/Games
+Summary:	Vocabulary trainer for Trinity
+Group:		System/GUI/Other
 Requires:	perl
 Requires:	perl-libwww-perl
 Requires:	trinity-tdeedu-data = %{version}-%{release}
@@ -1019,11 +1066,11 @@ KVocTrain is not intended to teach you grammar or other sophisticated
 things.  This is and probably will stay beyond the scope of this
 application.
 
-This package is part of Trinity, as a component of the KDE education module.
+This package is part of Trinity, as a component of the TDE education module.
 
 %files -n trinity-kvoctrain
 %defattr(-,root,root,-)
-%{tde_datadir}/config/kvoctrainrc
+%{tde_confdir}/kvoctrainrc
 %{tde_bindir}/kvoctrain
 %{tde_bindir}/spotlight2kvtml
 %{tde_libdir}/libkvoctraincore.so.*
@@ -1055,8 +1102,8 @@ update-desktop-database %{tde_datadir}/applications > /dev/null 2>&1 || :
 ##########
 
 %package -n trinity-kwordquiz
-Summary:	flashcard and vocabulary learning program for Trinity
-Group:		Amusements/Games
+Summary:	Flashcard and vocabulary learning program for Trinity
+Group:		System/GUI/Other
 Requires:	trinity-tdeedu-data = %{version}-%{release}
 
 %description -n trinity-kwordquiz
@@ -1068,11 +1115,11 @@ kvtml files used by other KDE programs such as KVocTrain, wql files
 used by WordQuiz for Windows, csv files with comma-separated text,
 and xml.gz files created by Pauker (http://pauker.sourceforge.net).
 
-This package is part of Trinity, as a component of the KDE education module.
+This package is part of Trinity, as a component of the TDE education module.
 
 %files -n trinity-kwordquiz
 %defattr(-,root,root,-)
-%{tde_datadir}/config/kwordquizrc
+%{tde_confdir}/kwordquizrc
 %{tde_bindir}/kwordquiz
 %{tde_tdeappdir}/kwordquiz.desktop
 %{tde_datadir}/apps/kwordquiz/
@@ -1101,22 +1148,22 @@ update-desktop-database %{tde_datadir}/applications > /dev/null 2>&1 || :
 ##########
 
 %package -n trinity-libtdeedu3
-Summary:	library for use with Trinity educational apps
-Group:		Environment/Libraries
+Summary:	Library for use with Trinity educational apps
+Group:		System/GUI/Other
 
 %description -n trinity-libtdeedu3
 The KDE-based library libtdeedu is used with educational
 applications.  It currently provides support for data plotting and
 vocabulary items (including a parser for kvtml vocabulary files).
 
-This package is part of Trinity, as a component of the KDE education module.
+This package is part of Trinity, as a component of the TDE education module.
 
 %files -n trinity-libtdeedu3
 %defattr(-,root,root,-)
 %{tde_libdir}/libextdate.so.*
-%{tde_libdir}/lib[kt]deeducore.so.*
-%{tde_libdir}/lib[kt]deeduplot.so.*
-%{tde_libdir}/lib[kt]deeduui.so.*
+%{tde_libdir}/libtdeeducore.so.*
+%{tde_libdir}/libtdeeduplot.so.*
+%{tde_libdir}/libtdeeduui.so.*
 
 %post -n trinity-libtdeedu3
 /sbin/ldconfig || :
@@ -1127,8 +1174,8 @@ This package is part of Trinity, as a component of the KDE education module.
 ##########
 
 %package -n trinity-libtdeedu-devel
-Summary:	development files for Trinity educational library
-Group:		Development/Libraries
+Summary:	Development files for Trinity educational library
+Group:		Development/Libraries/Other
 Requires:	trinity-libtdeedu3 = %{version}-%{release}
 
 %description -n trinity-libtdeedu-devel
@@ -1138,19 +1185,19 @@ vocabulary items (including a parser for kvtml vocabulary files).
 
 Development files for libtdeedu are included in this package.
 
-This package is part of Trinity, as a component of the KDE education module.
+This package is part of Trinity, as a component of the TDE education module.
 
 %files -n trinity-libtdeedu-devel
 %defattr(-,root,root,-)
-%{tde_tdeincludedir}/lib[kt]deedu/
+%{tde_tdeincludedir}/libtdeedu/
 %{tde_libdir}/libextdate.la
 %{tde_libdir}/libextdate.so
-%{tde_libdir}/lib[kt]deeducore.la
-%{tde_libdir}/lib[kt]deeducore.so
-%{tde_libdir}/lib[kt]deeduui.la
-%{tde_libdir}/lib[kt]deeduui.so
-%{tde_libdir}/lib[kt]deeduplot.la
-%{tde_libdir}/lib[kt]deeduplot.so
+%{tde_libdir}/libtdeeducore.la
+%{tde_libdir}/libtdeeducore.so
+%{tde_libdir}/libtdeeduui.la
+%{tde_libdir}/libtdeeduui.so
+%{tde_libdir}/libtdeeduplot.la
+%{tde_libdir}/libtdeeduplot.so
 
 %post -n trinity-libtdeedu-devel
 /sbin/ldconfig || :
@@ -1162,8 +1209,8 @@ This package is part of Trinity, as a component of the KDE education module.
 ##########
 
 %package -n trinity-libkiten1
-Summary:	library for Kiten Japanese reference/study tool
-Group:		Environment/Libraries
+Summary:	Library for Kiten Japanese reference/study tool
+Group:		System/GUI/Other
 #Requires:	kanjidic
 
 %description -n trinity-libkiten1
@@ -1176,7 +1223,7 @@ This package contains the libkiten library along with supporting
 data, such as Japanese language data files and GUI resource files.
 For further information, see the kiten package.
 
-This package is part of Trinity, as a component of the KDE education module.
+This package is part of Trinity, as a component of the TDE education module.
 
 %files -n trinity-libkiten1
 %defattr(-,root,root,-)
@@ -1207,8 +1254,8 @@ done
 ##########
 
 %package -n trinity-libkiten-devel
-Summary:	development files for Kiten library
-Group:		Development/Libraries
+Summary:	Development files for Kiten library
+Group:		Development/Libraries/Other
 Requires:	trinity-libkiten1 = %{version}-%{release}
 Requires:	trinity-tdelibs-devel >= %{version}
 
@@ -1221,7 +1268,7 @@ and widget classes.
 Development files for libkiten are included in this package.  For
 further information, see the kiten package.
 
-This package is part of Trinity, as a component of the KDE education module.
+This package is part of Trinity, as a component of the TDE education module.
 
 %files -n trinity-libkiten-devel
 %defattr(-,root,root,-)
@@ -1239,7 +1286,7 @@ This package is part of Trinity, as a component of the KDE education module.
 
 %package -n trinity-indi
 Summary:	Instrument Neutral Distributed Interface for astronomical devices
-Group:		Amusements/Games
+Group:		System/GUI/Other
 
 %description -n trinity-indi
 INDI is an Instrument Neutral Distributed Interface control protocol for
@@ -1249,7 +1296,7 @@ device drivers are completely unaware of the device capabilities and
 communicate with the device drivers and build a completely dynamic GUI
 based on the services provided by the device.
 
-This package is part of Trinity, as a component of the KDE education module.
+This package is part of Trinity, as a component of the TDE education module.
 
 %files -n trinity-indi
 %defattr(-,root,root,-)
@@ -1276,7 +1323,7 @@ This package is part of Trinity, as a component of the KDE education module.
 
 %package devel
 Summary:	Development files for %{name}
-Group:		Development/Libraries
+Group:		Development/Libraries/Other
 Requires:	%{name} = %{version}-%{release}
 Requires:	trinity-libtdeedu-devel = %{version}-%{release}
 Requires:	trinity-libkiten-devel = %{version}-%{release}
@@ -1285,11 +1332,11 @@ Obsoletes:	trinity-kdeedu-devel < %{version}-%{release}
 Provides:	trinity-kdeedu-devel = %{version}-%{release}
 
 %description devel
-%{summary}.
+This package contains the development files for tdeedu.
 
 %files devel
 %defattr(-,root,root,-)
-%doc libkdeedu/AUTHORS libkdeedu/README
+%doc libtdeedu/AUTHORS libtdeedu/README
 # kstars
 %{tde_tdeincludedir}/kstarsinterface.h
 %{tde_tdeincludedir}/simclockinterface.h
@@ -1305,7 +1352,7 @@ Provides:	trinity-kdeedu-devel = %{version}-%{release}
 
 ##########
 
-%if 0%{?suse_version}
+%if 0%{?pclinuxos} || 0%{?suse_version} && 0%{?opensuse_bs} == 0
 %debug_package
 %endif
 
@@ -1313,13 +1360,12 @@ Provides:	trinity-kdeedu-devel = %{version}-%{release}
 
 
 %prep
-%setup -q -n kdeedu-trinity-%{version}
+%setup -q -n %{name}-%{version}%{?preversion:~%{preversion}}
 
-# Ugly hack to modify TQT include directory inside autoconf files.
-# If TQT detection fails, it fallbacks to TQT4 instead of TQT3 !
-%__sed -i "admin/acinclude.m4.in" \
-  -e "s|/usr/include/tqt|%{tde_includedir}/tqt|g" \
-  -e "s|kde_htmldir='.*'|kde_htmldir='%{tde_tdedocdir}/HTML'|g"
+# RHEL5 strange FTBFS on V4L stuff
+%if 0%{?rhel} == 5
+%__sed -i "admin/acinclude.m4.in" -e "s|-ansi||"
+%endif
 
 %__cp -f "/usr/share/aclocal/libtool.m4" "admin/libtool.m4.in"
 %__cp -f "/usr/share/libtool/config/ltmain.sh" "admin/ltmain.sh" || %__cp -f "/usr/share/libtool/ltmain.sh" "admin/ltmain.sh"
@@ -1327,35 +1373,43 @@ Provides:	trinity-kdeedu-devel = %{version}-%{release}
 
 
 %build
-unset QTDIR || : ; . /etc/profile.d/qt.sh
+unset QTDIR QTINC QTLIB
 export PATH="%{tde_bindir}:${PATH}"
-export LDFLAGS="-L%{tde_libdir} -I%{tde_includedir}"
+export kde_confdir="%{tde_confdir}"
 
+# Specific path for RHEL4
+if [ -d "/usr/X11R6" ]; then
+  export CXXFLAGS="${RPM_OPT_FLAGS} -I/usr/X11R6/include -L/usr/X11R6/%{_lib}"
+  export CFLAGS="${RPM_OPT_FLAGS} -I/usr/X11R6/include -L/usr/X11R6/%{_lib}"
+fi
+
+# Warning: GCC visibility causes FTBFS [Bug #1285]
 %configure \
-   --exec-prefix=%{tde_prefix} \
-   --bindir=%{tde_bindir} \
-   --libdir=%{tde_libdir} \
-   --datadir=%{tde_datadir} \
-   --includedir=%{tde_tdeincludedir} \
-   --enable-new-ldflags \
-   --disable-dependency-tracking \
-   --disable-rpath \
-%if 0%{?rhel} >= 6 || 0%{?fedora} >= 15 || 0%{?mgaversion} || 0%{?mdkversion}
+  --prefix=%{tde_prefix} \
+  --exec-prefix=%{tde_prefix} \
+  --bindir=%{tde_bindir} \
+  --libdir=%{tde_libdir} \
+  --datadir=%{tde_datadir} \
+  --includedir=%{tde_tdeincludedir} \
+  \
+  --disable-dependency-tracking \
+  --disable-debug \
+  --enable-new-ldflags \
+  --enable-final \
+  --enable-closure \
+  --enable-rpath \
+  --disable-gcc-hidden-visibility \
+  \
+%if 0%{?rhel} >= 6 || 0%{?fedora} >= 15 || 0%{?mgaversion} || 0%{?mdkversion} || 0%{?suse_version}
    --enable-kig-python-scripting \
 %else
    --disable-kig-python-scripting \
 %endif
-   --disable-debug \
-   --disable-warnings \
-   --enable-final \
-   --enable-closure \
-   --disable-ocamlsolver \
-   --with-extra-includes=%{tde_includedir}/tqt
-
+   --enable-ocamlsolver
 
 %__make %{_smp_mflags} \
   OCAMLLIB=$(ocamlc -where) \
-  FACILELIB=$(ocamlc -where) || %__make
+  FACILELIB=$(ocamlc -where)
 
 
 %install
@@ -1363,30 +1417,38 @@ export PATH="%{tde_bindir}:${PATH}"
 %__rm -rf %{buildroot}
 %__make install DESTDIR=%{buildroot}
 
-# locale's
-%find_lang %{name} || touch %{name}.lang
-HTML_DIR=$(kde-config --expandvars --install html)
-if [ -d %{buildroot}$HTML_DIR ]; then
-for lang_dir in %{buildroot}$HTML_DIR/* ; do
-  if [ -d $lang_dir ]; then
-    lang=$(basename $lang_dir)
-    echo "%lang($lang) $HTML_DIR/$lang/*" >> %{name}.lang
-    # replace absolute symlinks with relative ones
-    pushd $lang_dir
-      for i in *; do
-        [ -d $i -a -L $i/common ] && ln -nsf ../common $i/common
-      done
-    popd
-  fi
-done
-fi
+# Updates applications categories for openSUSE
+%if 0%{?suse_version}
+%suse_update_desktop_file -r khangman      Education Languages Game KidsGame
+%suse_update_desktop_file    kiten         Education Languages
+%suse_update_desktop_file    klatin        Education Languages
+%suse_update_desktop_file    klettres      Education Languages
+%suse_update_desktop_file    kverbos       Education Languages
+%suse_update_desktop_file    kvoctrain     Education Languages
+%suse_update_desktop_file    kwordquiz     Education Languages
+%suse_update_desktop_file    kbruch        Education Math
+%suse_update_desktop_file    kig           Education Math
+%suse_update_desktop_file    kmplot        Education Math
+%suse_update_desktop_file    kturtle       Education Math
+%suse_update_desktop_file    kpercentage   Education Math
+%suse_update_desktop_file    kalzium       Education Chemistry
+%suse_update_desktop_file    kstars        Education Astronomy
+%suse_update_desktop_file    keduca        Education Teaching
+%suse_update_desktop_file    keducabuilder Education Teaching
+%suse_update_desktop_file    ktouch        Education Teaching
+%suse_update_desktop_file -r blinken       Education Teaching Game KidsGame
+%suse_update_desktop_file    kgeography    Education Teaching
+%suse_update_desktop_file -r kanagram      Education Languages Game KidsGame
+%endif
+
+# Links duplicate files
+%fdupes "%{?buildroot}%{tde_datadir}"
 
 
 %clean
 %__rm -rf %{buildroot}
 
 
-
 %changelog
-* Sun Sep 30 2012 Francois Andriot <francois.andriot@free.fr> - 3.5.13.1-1
-- Initial build for TDE 3.5.13.1
+* Fri Jul 05 2013 Francois Andriot <francois.andriot@free.fr> - 14.0.0-1
+- Initial release for TDE R14.0.0
