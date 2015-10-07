@@ -1,0 +1,164 @@
+diff --git a/src/add-carddav-object.c b/src/add-carddav-object.c
+index 5574991..a1586d8 100644
+--- a/src/add-carddav-object.c
++++ b/src/add-carddav-object.c
+@@ -104,7 +104,6 @@ gboolean carddav_add(carddav_settings* settings, carddav_error* error) {
+ 	curl_easy_setopt(curl, CURLOPT_CUSTOMREQUEST, "PUT");
+ 	curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1);
+ 	curl_easy_setopt(curl, CURLOPT_UNRESTRICTED_AUTH, 1);
+-	curl_easy_setopt(curl, CURLOPT_POSTREDIR, CURL_REDIR_POST_ALL);
+ 	res = curl_easy_perform(curl);
+ 	if (res != 0) {
+ 		error->code = -1;
+diff --git a/src/delete-carddav-object.c b/src/delete-carddav-object.c
+index 96b9033..6984a82 100644
+--- a/src/delete-carddav-object.c
++++ b/src/delete-carddav-object.c
+@@ -132,7 +132,6 @@ gboolean carddav_delete(carddav_settings* settings, carddav_error* error) {
+ 	curl_easy_setopt(curl, CURLOPT_CUSTOMREQUEST, "REPORT");
+ 	curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1);
+ 	curl_easy_setopt(curl, CURLOPT_UNRESTRICTED_AUTH, 1);
+-	curl_easy_setopt(curl, CURLOPT_POSTREDIR, CURL_REDIR_POST_ALL);
+ 	res = curl_easy_perform(curl);
+ 	g_free(search);
+ 	curl_slist_free_all(http_header);
+@@ -231,7 +230,6 @@ gboolean carddav_delete(carddav_settings* settings, carddav_error* error) {
+ 					curl_easy_setopt(curl, CURLOPT_CUSTOMREQUEST, "DELETE");
+ 					curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1);
+ 					curl_easy_setopt(curl, CURLOPT_UNRESTRICTED_AUTH, 1);
+-					curl_easy_setopt(curl, CURLOPT_POSTREDIR, CURL_REDIR_POST_ALL);
+ 					res = curl_easy_perform(curl);
+ 					if (LOCKSUPPORT && lock_token) {
+ 						carddav_unlock_object(
+@@ -417,7 +415,6 @@ gboolean carddav_delete_by_uri(carddav_settings* settings, carddav_error* error)
+ 			curl_easy_setopt(curl, CURLOPT_CUSTOMREQUEST, "DELETE");
+ 			curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1);
+ 			curl_easy_setopt(curl, CURLOPT_UNRESTRICTED_AUTH, 1);
+-			curl_easy_setopt(curl, CURLOPT_POSTREDIR, CURL_REDIR_POST_ALL);
+ 			res = curl_easy_perform(curl);
+ 			if (LOCKSUPPORT && lock_token) {
+ 				carddav_unlock_object(
+diff --git a/src/get-carddav-report.c b/src/get-carddav-report.c
+index b44fd2c..7655b29 100644
+--- a/src/get-carddav-report.c
++++ b/src/get-carddav-report.c
+@@ -117,7 +117,6 @@ static gchar* carddav_dirlist(carddav_settings* settings, carddav_error* error)
+ 	curl_easy_setopt(curl, CURLOPT_CUSTOMREQUEST, "PROPFIND");
+ 	curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1);
+ 	curl_easy_setopt(curl, CURLOPT_UNRESTRICTED_AUTH, 1);
+-	curl_easy_setopt(curl, CURLOPT_POSTREDIR, CURL_REDIR_POST_ALL);
+ 	res = curl_easy_perform(curl);
+ 	if (res != 0) {
+ 		error->code = -1;
+@@ -243,7 +242,6 @@ gboolean carddav_getall(carddav_settings* settings, carddav_error* error) {
+ 	curl_easy_setopt(curl, CURLOPT_CUSTOMREQUEST, "REPORT");
+ 	curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1);
+ 	curl_easy_setopt(curl, CURLOPT_UNRESTRICTED_AUTH, 1);
+-	curl_easy_setopt(curl, CURLOPT_POSTREDIR, CURL_REDIR_POST_ALL);
+ 	res = curl_easy_perform(curl);
+ 	if (res != 0) {
+ 		error->code = -1;
+@@ -345,7 +343,6 @@ gboolean carddav_getall_by_uri(carddav_settings* settings, carddav_error* error)
+ 	curl_easy_setopt(curl, CURLOPT_CUSTOMREQUEST, "REPORT");
+ 	curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1);
+ 	curl_easy_setopt(curl, CURLOPT_UNRESTRICTED_AUTH, 1);
+-	curl_easy_setopt(curl, CURLOPT_POSTREDIR, CURL_REDIR_POST_ALL);
+ 	res = curl_easy_perform(curl);
+ 	if (res != 0) {
+ 		error->code = -1;
+@@ -378,4 +375,4 @@ gboolean carddav_getall_by_uri(carddav_settings* settings, carddav_error* error)
+ 	curl_easy_cleanup(curl);
+ 	g_free(dav_file_listing);
+ 	return result;
+-}
+\ No newline at end of file
++}
+diff --git a/src/get-display-name.c b/src/get-display-name.c
+index 9e782e0..16c3e4b 100644
+--- a/src/get-display-name.c
++++ b/src/get-display-name.c
+@@ -100,7 +100,6 @@ gboolean carddav_getname(carddav_settings* settings, carddav_error* error) {
+ 	curl_easy_setopt(curl, CURLOPT_CUSTOMREQUEST, "PROPFIND");
+ 	curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1);
+ 	curl_easy_setopt(curl, CURLOPT_UNRESTRICTED_AUTH, 1);
+-	curl_easy_setopt(curl, CURLOPT_POSTREDIR, CURL_REDIR_POST_ALL);
+ 	res = curl_easy_perform(curl);
+ 	if (res != 0) {
+ 		error->code = -1;
+diff --git a/src/lock-carddav-object.c b/src/lock-carddav-object.c
+index 163264c..2292cad 100644
+--- a/src/lock-carddav-object.c
++++ b/src/lock-carddav-object.c
+@@ -109,7 +109,6 @@ gchar* carddav_lock_object(
+ 	curl_easy_setopt(curl, CURLOPT_CUSTOMREQUEST, "LOCK");
+ 	curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1);
+ 	curl_easy_setopt(curl, CURLOPT_UNRESTRICTED_AUTH, 1);
+-	curl_easy_setopt(curl, CURLOPT_POSTREDIR, CURL_REDIR_POST_ALL);
+ 	res = curl_easy_perform(curl);
+ 	curl_slist_free_all(http_header);
+ 	if (res != 0) {
+@@ -214,7 +213,6 @@ gboolean carddav_unlock_object(gchar* lock_token, gchar* URI,
+ 	curl_easy_setopt(curl, CURLOPT_CUSTOMREQUEST, "UNLOCK");
+ 	curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1);
+ 	curl_easy_setopt(curl, CURLOPT_UNRESTRICTED_AUTH, 1);
+-	curl_easy_setopt(curl, CURLOPT_POSTREDIR, CURL_REDIR_POST_ALL);
+ 	res = curl_easy_perform(curl);
+ 	curl_slist_free_all(http_header);
+ 	if (res != 0) {
+diff --git a/src/modify-carddav-object.c b/src/modify-carddav-object.c
+index 1822068..a8b6de2 100644
+--- a/src/modify-carddav-object.c
++++ b/src/modify-carddav-object.c
+@@ -133,7 +133,6 @@ gboolean carddav_modify(carddav_settings* settings, carddav_error* error) {
+ 	curl_easy_setopt(curl, CURLOPT_CUSTOMREQUEST, "REPORT");
+ 	curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1);
+ 	curl_easy_setopt(curl, CURLOPT_UNRESTRICTED_AUTH, 1);
+-	curl_easy_setopt(curl, CURLOPT_POSTREDIR, CURL_REDIR_POST_ALL);
+ 	res = curl_easy_perform(curl);
+ 	curl_slist_free_all(http_header);
+ 	http_header = NULL;
+@@ -231,7 +230,6 @@ gboolean carddav_modify(carddav_settings* settings, carddav_error* error) {
+ 									strlen(settings->file));
+ 						curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1);
+ 						curl_easy_setopt(curl, CURLOPT_UNRESTRICTED_AUTH, 1);
+-						curl_easy_setopt(curl, CURLOPT_POSTREDIR, CURL_REDIR_POST_ALL);
+ 						curl_easy_setopt(curl, CURLOPT_CUSTOMREQUEST, "PUT");
+ 						res = curl_easy_perform(curl);
+ 						if (LOCKSUPPORT && lock_token) {
+@@ -430,7 +428,6 @@ gboolean carddav_modify_by_uri(carddav_settings* settings, carddav_error* error)
+ 							strlen(settings->file));
+ 				curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1);
+ 				curl_easy_setopt(curl, CURLOPT_UNRESTRICTED_AUTH, 1);
+-				curl_easy_setopt(curl, CURLOPT_POSTREDIR, CURL_REDIR_POST_ALL);
+ 				curl_easy_setopt(curl, CURLOPT_CUSTOMREQUEST, "PUT");
+ 				res = curl_easy_perform(curl);
+ 				if (LOCKSUPPORT && lock_token) {
+diff --git a/src/options-carddav-server.c b/src/options-carddav-server.c
+index b774401..b44aae2 100644
+--- a/src/options-carddav-server.c
++++ b/src/options-carddav-server.c
+@@ -75,7 +75,6 @@ gboolean carddav_getoptions(CURL* curl, carddav_settings* settings, response* re
+ 	curl_easy_setopt(curl, CURLOPT_CUSTOMREQUEST, "OPTIONS");
+ 	curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1);
+ 	curl_easy_setopt(curl, CURLOPT_UNRESTRICTED_AUTH, 1);
+-	curl_easy_setopt(curl, CURLOPT_POSTREDIR, CURL_REDIR_POST_ALL);
+ 	if (settings->debug) {
+ 		curl_easy_setopt(curl, CURLOPT_VERBOSE, 1);
+ 	}
+@@ -106,15 +105,12 @@ gboolean carddav_getoptions(CURL* curl, carddav_settings* settings, response* re
+ 	}
+ 	else if (
+ 		(res == CURLE_SSL_CONNECT_ERROR ||
+-		 CURLE_PEER_FAILED_VERIFICATION ||
+ 		 CURLE_SSL_ENGINE_NOTFOUND ||
+ 		 CURLE_SSL_ENGINE_SETFAILED ||
+ 		 CURLE_SSL_CERTPROBLEM ||
+ 		 CURLE_SSL_CIPHER ||
+ 		 CURLE_SSL_CACERT ||
+-		 CURLE_SSL_CACERT_BADFILE ||
+-		 CURLE_SSL_CRL_BADFILE ||
+-		 CURLE_SSL_ISSUER_ERROR) && settings->usehttps) {
++		 CURLE_SSL_CRL_BADFILE ) && settings->usehttps) {
+ 		error->code = -2;
+ 		error->str = g_strdup(error_buf);
+ 	}
