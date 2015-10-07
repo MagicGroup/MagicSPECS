@@ -1,41 +1,68 @@
-# Avoids relinking, which breaks consolehelper
-%define dont_relink 1
+#
+# spec file for package tdeutils (version R14)
+#
+# Copyright (c) 2014 Trinity Desktop Environment
+#
+# All modifications and additions to the file contributed by third parties
+# remain the property of their copyright owners, unless otherwise agreed
+# upon. The license for this file, and modifications and additions to the
+# file, is the same license as for the pristine package itself (unless the
+# license for the pristine package is not an Open Source License, in which
+# case the license is the MIT License). An "Open Source License" is a
+# license that conforms to the Open Source Definition (Version 1.9)
+# published by the Open Source Initiative.
+#
+# Please submit bugfixes or comments via http://www.trinitydesktop.org/
+#
+
+# BUILD WARNING:
+#  Remove qt-devel and qt3-devel and any kde*-devel on your system !
+#  Having KDE libraries may cause FTBFS here !
+
+# TDE variables
+%if "%{?tde_version}" == ""
+%define tde_version 14.0.0
+%endif
+%define tde_pkg tdeutils
+%define tde_prefix /opt/trinity
+%define tde_bindir %{tde_prefix}/bin
+%define tde_confdir %{_sysconfdir}/trinity
+%define tde_datadir %{tde_prefix}/share
+%define tde_docdir %{tde_datadir}/doc
+%define tde_includedir %{tde_prefix}/include
+%define tde_libdir %{tde_prefix}/%{_lib}
+%define tde_sbindir %{tde_prefix}/sbin
+%define tde_tdeappdir %{tde_datadir}/applications/tde
+%define tde_tdedocdir %{tde_docdir}/tde
+%define tde_tdeincludedir %{tde_includedir}/tde
+%define tde_tdelibdir %{tde_libdir}/trinity
 
 # If TDE is built in a specific prefix (e.g. /opt/trinity), the release will be suffixed with ".opt".
 %if "%{?tde_prefix}" != "/usr"
 %define _variant .opt
 %endif
 
-# TDE 3.5.13 specific building variables
-%define tde_bindir %{tde_prefix}/bin
-%define tde_datadir %{tde_prefix}/share
-%define tde_docdir %{tde_datadir}/doc
-%define tde_includedir %{tde_prefix}/include
-%define tde_libdir %{tde_prefix}/%{_lib}
-%define tde_sbindir %{tde_prefix}/sbin
 
-%define tde_tdeappdir %{tde_datadir}/applications/kde
-%define tde_tdedocdir %{tde_docdir}/tde
-%define tde_tdeincludedir %{tde_includedir}/tde
-%define tde_tdelibdir %{tde_libdir}/trinity
-
-%define _docdir %{tde_docdir}
-
-Name:		trinity-tdeutils
-Version:	3.5.13.2
-Release:	1%{?dist}%{?_variant}
-License:	GPL
+Name:		trinity-%{tde_pkg}
 Summary:	TDE Utilities
+Version:	%{tde_version}
+Release:	%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}%{?_variant}
 Group:		Applications/System
-
-Vendor:		Trinity Project
-Packager:	Francois Andriot <francois.andriot@free.fr>
 URL:		http://www.trinitydesktop.org/
+
+%if 0%{?suse_version}
+License:	GPL-2.0+
+%else
+License:	GPLv2+
+%endif
+
+#Vendor:		Trinity Project
+#Packager:	Francois Andriot <francois.andriot@free.fr>
 
 Prefix:		%{tde_prefix}
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
-Source0:	kdeutils-trinity-%{version}.tar.xz
+Source0:	%{name}-%{version}%{?preversion:~%{preversion}}.tar.gz
 Source1:	klaptop_acpi_helper.pam
 Source2:	klaptop_acpi_helper.console
 Source3:	kcmlaptoprc
@@ -47,48 +74,113 @@ Provides:	trinity-kdeutils-extras = %{version}-%{release}
 Obsoletes:	tdeutils < %{version}-%{release}
 Provides:	tdeutils = %{version}-%{release}
 
-# RedHat / Fedora legacy patches
-Patch1:		kdf-3.0.2-label.patch
+BuildRequires:	trinity-filesystem >= %{tde_version}
+BuildRequires:	trinity-tdelibs-devel >= %{tde_version}
+BuildRequires:	trinity-tdebase-devel >= %{tde_version}
 
-BuildRequires:	trinity-tqtinterface-devel >= %{version}
-BuildRequires:	trinity-arts-devel >= %{version}
-BuildRequires:	trinity-tdelibs-devel >= %{version}
-BuildRequires:	autoconf automake libtool m4
+BuildRequires:	cmake >= 2.8
+BuildRequires:	gcc-c++
+BuildRequires:	pkgconfig
+BuildRequires:	fdupes
+
 BuildRequires:	gettext
 BuildRequires:	net-snmp-devel
 BuildRequires:	python-devel
 BuildRequires:	gmp-devel
 
-%if 0%{?fedora} >= 5 || 0%{?rhel} >= 5
-BuildRequires:	libXScrnSaver-devel
-BuildRequires:	libXtst-devel
+# SUSE desktop files utility
+%if 0%{?suse_version}
+BuildRequires:	update-desktop-files
 %endif
 
-%if 0%{?fedora}
-BuildRequires:	xmms-devel
+%if 0%{?opensuse_bs} && 0%{?suse_version}
+# for xdg-menu script
+BuildRequires:	brp-check-trinity
 %endif
+
+# XTST support
+%if 0%{?mgaversion} || 0%{?mdkversion}
+%if 0%{?mgaversion} >= 4
+%define xtst_devel %{_lib}xtst-devel
+%else
+%define xtst_devel %{_lib}xtst%{?mgaversion:6}-devel
+%endif
+%endif
+%if 0%{?rhel} >= 5 || 0%{?fedora} || 0%{?suse_version} >= 1220
+%define xtst_devel libXtst-devel
+%endif
+%{?xtst_devel:BuildRequires: %{xtst_devel}}
+
+# IDN support
+BuildRequires:	libidn-devel
+
+# GAMIN support
+#  Not on openSUSE.
+%if 0%{?rhel} || 0%{?fedora} || 0%{?mgaversion} || 0%{?mdkversion}
+%define with_gamin 1
+BuildRequires:	gamin-devel
+%endif
+
+# PCRE support
+BuildRequires:	pcre-devel
+
+# XMMS support
+#if 0#{?fedora}
+#BuildRequires:	xmms-devel
+#endif
+
+# KLAPTOPDAEMON
+#  Not for RHEL 4!
+%if 0%{?rhel} >= 5 || 0%{?fedora} || 0%{?mgaversion} || 0%{?mdkversion} || 0%{?suse_version}
+%define build_klaptopdaemon 1
+%endif
+
+# ACL support
+BuildRequires:	libacl-devel
+
+# XSCREENSAVER support
+%if 0%{?fedora} >= 15 || 0%{?mgaversion} || 0%{?mdkversion} || 0%{?rhel} >= 5 || 0%{?suse_version}
+%define with_xscreensaver 1
+%if 0%{?fedora} || 0%{?rhel} >= 5 || 0%{?suse_version}
+BuildRequires:	libXScrnSaver-devel
+%endif
+%if 0%{?mgaversion} || 0%{?mdkversion}
+%if 0%{?mgaversion} >= 4
+BuildRequires:	%{_lib}xscrnsaver-devel
+%else
+BuildRequires:	%{_lib}xscrnsaver%{?mgaversion:1}-devel
+%endif
+%endif
+%endif
+
+# CONSOLEHELPER (usermode) support
+%if 0%{?rhel} || 0%{?fedora} || 0%{?mgaversion} || 0%{?mdkversion}
+%define with_consolehelper 1
+
+# Avoids relinking, which breaks consolehelper
+%define dont_relink 1
+%endif
+
 
 Requires: trinity-ark = %{version}-%{release}
 Requires: trinity-kcalc = %{version}-%{release}
 Requires: trinity-kcharselect = %{version}-%{release}
-Requires: trinity-kdelirc = %{version}-%{release}
-Requires: trinity-kdessh = %{version}-%{release}
+Requires: trinity-tdelirc = %{version}-%{release}
+Requires: trinity-tdessh = %{version}-%{release}
 Requires: trinity-kdf = %{version}-%{release}
 Requires: trinity-kedit = %{version}-%{release}
 Requires: trinity-kfloppy = %{version}-%{release}
 Requires: trinity-kgpg = %{version}-%{release}
 Requires: trinity-khexedit = %{version}-%{release}
 Requires: trinity-kjots = %{version}-%{release}
-Requires: trinity-klaptopdaemon = %{version}-%{release}
+%{?build_klaptopdaemon:Requires: trinity-klaptopdaemon = %{version}-%{release}}
 Requires: trinity-kmilo = %{version}-%{release}
 Requires: trinity-kmilo-legacy = %{version}-%{release}
 Requires: trinity-kregexpeditor = %{version}-%{release}
 Requires: trinity-ksim = %{version}-%{release}
 Requires: trinity-ktimer = %{version}-%{release}
-Requires: trinity-kwalletmanager = %{version}-%{release}
+Requires: trinity-tdewalletmanager = %{version}-%{release}
 Requires: trinity-superkaramba = %{version}-%{release}
-
-%files
 
 
 %description
@@ -96,25 +188,29 @@ Utilities for the Trinity Desktop Environment, including:
   * ark (tar/gzip archive manager)
   * kcalc (scientific calculator)
   * kcharselect (character selector)
-  * kdepasswd (change password)
-  * kdessh (ssh front end)
+  * tdelirc (infrared control)
+  * tdessh (ssh front end)
   * kdf (view disk usage)
   * kedit (simple text editor)
   * kfloppy (floppy formatting tool)
   * kgpg (gpg gui)
   * khexedit (hex editor)
   * kjots (note taker)
+%if 0%{?build_klaptopdaemon}
   * klaptopdaemon (battery monitoring and management for laptops);
+%endif
   * kmilo
   * kregexpeditor (regular expression editor)
   * ksim (system information monitor);
   * ktimer (task scheduler)
   * kwikdisk (removable media utility)
 
+%files
+
 ##########
 
 %package -n trinity-ark
-Summary:	graphical archiving tool for Trinity
+Summary:	Graphical archiving tool for Trinity
 Group:		Applications/Utilities
 #Requires:	ncompress
 Requires:	unzip
@@ -122,8 +218,8 @@ Requires:	zip
 #Requires:	zoo
 Requires:	bzip2
 #Requires:	p7zip
-Requires:	xz
-Requires:	lzma
+#Requires:	xz
+#Requires:	lzma
 #Requires:	rar, unrar
 
 %description -n trinity-ark
@@ -145,7 +241,7 @@ package.
 %{tde_tdelibdir}/ark.so
 %{tde_tdelibdir}/libarkpart.la
 %{tde_tdelibdir}/libarkpart.so
-%{tde_libdir}/lib[kt]deinit_ark.so
+%{tde_libdir}/libtdeinit_ark.so
 %{tde_tdeappdir}/ark.desktop
 %{tde_datadir}/apps/ark/
 %{tde_datadir}/config.kcfg/ark.kcfg
@@ -173,7 +269,7 @@ update-desktop-database %{tde_datadir}/applications > /dev/null 2>&1 || :
 ##########
 
 %package -n trinity-kcalc
-Summary:	calculator for Trinity
+Summary:	Calculator for Trinity
 Group:		Applications/Utilities
 
 %description -n trinity-kcalc
@@ -190,10 +286,10 @@ It provides:
 %{tde_bindir}/kcalc
 %{tde_tdelibdir}/kcalc.la
 %{tde_tdelibdir}/kcalc.so
-%{tde_libdir}/lib[kt]deinit_kcalc.so
+%{tde_libdir}/libtdeinit_kcalc.so
 %{tde_tdeappdir}/kcalc.desktop
 %{tde_datadir}/apps/kcalc/
-%{tde_datadir}/apps/kconf_update/kcalcrc.upd
+%{tde_datadir}/apps/tdeconf_update/kcalcrc.upd
 %{tde_datadir}/config.kcfg/kcalc.kcfg
 %{tde_datadir}/icons/hicolor/*/apps/kcalc.png
 %{tde_datadir}/icons/hicolor/scalable/apps/kcalc.svgz
@@ -218,11 +314,12 @@ update-desktop-database %{tde_datadir}/applications > /dev/null 2>&1 || :
 ##########
 
 %package -n trinity-kcharselect
-Summary:	character selector for Trinity
+Summary:	Character selector for Trinity
 Group:		Applications/Utilities
+Requires:	trinity-kicker
 
 %description -n trinity-kcharselect
-A character set selector for TDE.
+This package contains kcharselect, a character set selector for TDE.
 
 %files -n trinity-kcharselect
 %defattr(-,root,root,-)
@@ -231,7 +328,7 @@ A character set selector for TDE.
 %{tde_tdelibdir}/kcharselect_panelapplet.so
 %{tde_tdeappdir}/KCharSelect.desktop
 %{tde_datadir}/apps/kcharselect/
-%{tde_datadir}/apps/kconf_update/kcharselect.upd
+%{tde_datadir}/apps/tdeconf_update/kcharselect.upd
 %{tde_datadir}/apps/kicker/applets/kcharselectapplet.desktop
 %{tde_datadir}/icons/hicolor/*/apps/kcharselect.png
 %{tde_tdedocdir}/HTML/en/kcharselect/
@@ -252,28 +349,33 @@ update-desktop-database %{tde_datadir}/applications > /dev/null 2>&1 || :
 
 ##########
 
-%package -n trinity-kdelirc
-Summary:	infrared control for Trinity
+%package -n trinity-tdelirc
+Summary:	Infrared control for Trinity
 Group:		Applications/Utilities
+Requires:	trinity-filesystem
 
-%description -n trinity-kdelirc
+Obsoletes:	trinity-kdelirc < %{version}-%{release}
+Provides:	trinity-kdelirc = %{version}-%{release}
+
+%description -n trinity-tdelirc
 This is a frontend for the LIRC suite to use infrared devices with TDE.
 
-%files -n trinity-kdelirc
+%files -n trinity-tdelirc
 %defattr(-,root,root,-)
 %{tde_bindir}/irkick
 %{tde_tdelibdir}/irkick.la
 %{tde_tdelibdir}/irkick.so
 %{tde_tdelibdir}/kcm_kcmlirc.la
 %{tde_tdelibdir}/kcm_kcmlirc.so
-%{tde_libdir}/lib[kt]deinit_irkick.so
+%{tde_libdir}/libtdeinit_irkick.so
 %{tde_tdeappdir}/irkick.desktop
 %{tde_tdeappdir}/kcmlirc.desktop
 %{tde_datadir}/apps/irkick/
-%{tde_datadir}/apps/profiles/klauncher.profile.xml
+%{tde_datadir}/apps/profiles/tdelauncher.profile.xml
 %{tde_datadir}/apps/profiles/konqueror.profile.xml
 %{tde_datadir}/apps/profiles/noatun.profile.xml
 %{tde_datadir}/apps/profiles/profile.dtd
+%dir %{tde_datadir}/apps/remotes
 %{tde_datadir}/apps/remotes/RM-0010.remote.xml
 %{tde_datadir}/apps/remotes/cimr100.remote.xml
 %{tde_datadir}/apps/remotes/hauppauge.remote.xml
@@ -286,7 +388,7 @@ This is a frontend for the LIRC suite to use infrared devices with TDE.
 %{tde_tdedocdir}/HTML/en/irkick/
 %{tde_tdedocdir}/HTML/en/kcmlirc/
 
-%post -n trinity-kdelirc
+%post -n trinity-tdelirc
 /sbin/ldconfig
 for f in hicolor locolor ; do
   touch --no-create %{tde_datadir}/icons/$f 2> /dev/null ||:
@@ -294,7 +396,7 @@ for f in hicolor locolor ; do
 done
 update-desktop-database %{tde_datadir}/applications > /dev/null 2>&1 || :
 
-%postun -n trinity-kdelirc
+%postun -n trinity-tdelirc
 /sbin/ldconfig
 for f in hicolor locolor ; do
   touch --no-create %{tde_datadir}/icons/$f 2> /dev/null  ||:
@@ -304,8 +406,8 @@ update-desktop-database %{tde_datadir}/applications > /dev/null 2>&1 || :
 
 ##########
 
-%package -n trinity-kdessh
-Summary:	ssh frontend for Trinity
+%package -n trinity-tdessh
+Summary:	Ssh frontend for Trinity
 Group:		Applications/Utilities
 %if 0%{?suse_version}
 Requires:	openssh
@@ -313,18 +415,22 @@ Requires:	openssh
 Requires:	openssh-clients
 %endif
 
-%description -n trinity-kdessh
+Obsoletes:	trinity-kdessh < %{version}-%{release}
+Provides:	trinity-kdessh = %{version}-%{release}
+
+%description -n trinity-tdessh
 This package contains TDE's frontend for ssh.
 
-%files -n trinity-kdessh
+%files -n trinity-tdessh
 %defattr(-,root,root,-)
-%{tde_bindir}/kdessh
+%{tde_bindir}/tdessh
 
 ##########
 
 %package -n trinity-kdf
-Summary:	disk space utility for Trinity
+Summary:	Disk space utility for Trinity
 Group:		Applications/Utilities
+Requires:	trinity-kcontrol
 
 %description -n trinity-kdf
 KDiskFree displays the available file devices (hard drive partitions, floppy
@@ -346,7 +452,7 @@ in a file manager.
 %{tde_datadir}/icons/hicolor/*/apps/kdf.png
 %{tde_datadir}/icons/hicolor/*/apps/kwikdisk.png
 %{tde_tdedocdir}/HTML/en/kdf/
-%{tde_tdedocdir}/HTML/en/kinfocenter/blockdevices/
+%{tde_tdedocdir}/HTML/en/kcontrol/storagedevices/
 
 %post -n trinity-kdf
 for f in crystalsvg hicolor ; do
@@ -365,7 +471,7 @@ update-desktop-database %{tde_datadir}/applications > /dev/null 2>&1 || :
 ##########
 
 %package -n trinity-kedit
-Summary:	basic text editor for Trinity
+Summary:	Basic text editor for Trinity
 Group:		Applications/Utilities
 
 %description -n trinity-kedit
@@ -381,9 +487,9 @@ reasonably fast start.
 %{tde_bindir}/kedit
 %{tde_tdelibdir}/kedit.la
 %{tde_tdelibdir}/kedit.so
-%{tde_libdir}/lib[kt]deinit_kedit.so
+%{tde_libdir}/libtdeinit_kedit.so
 %{tde_tdeappdir}/KEdit.desktop
-%{tde_datadir}/apps/kedit/keditui.rc
+%{tde_datadir}/apps/kedit/
 %{tde_datadir}/config.kcfg/kedit.kcfg
 %{tde_datadir}/icons/hicolor/*/apps/kedit.png
 %{tde_tdedocdir}/HTML/en/kedit/
@@ -407,7 +513,7 @@ update-desktop-database %{tde_datadir}/applications > /dev/null 2>&1 || :
 ##########
 
 %package -n trinity-kfloppy
-Summary:	floppy formatter for Trinity
+Summary:	Floppy formatter for Trinity
 Group:		Applications/Utilities
 Requires:	dosfstools
 
@@ -507,7 +613,7 @@ support and other powerful features.
 %{tde_libdir}/libkhexeditcommon.so.*
 %{tde_tdeappdir}/khexedit.desktop
 %{tde_datadir}/apps/khexedit/
-%{tde_datadir}/apps/khexedit2part/khexedit2partui.rc
+%{tde_datadir}/apps/khexedit2part/
 %{tde_datadir}/icons/hicolor/*/apps/khexedit.png
 %{tde_datadir}/services/kbyteseditwidget.desktop
 %{tde_datadir}/services/khexedit2part.desktop
@@ -532,7 +638,7 @@ update-desktop-database %{tde_datadir}/applications > /dev/null 2>&1 || :
 ##########
 
 %package -n trinity-kjots
-Summary:	note taking utility for Trinity
+Summary:	Note taking utility for Trinity
 Group:		Applications/Utilities
 
 %description -n trinity-kjots
@@ -564,11 +670,23 @@ update-desktop-database %{tde_datadir}/applications > /dev/null 2>&1 || :
 
 ##########
 
+%if 0%{?build_klaptopdaemon}
+
 %package -n trinity-klaptopdaemon
-Summary:	battery monitoring and management for laptops using Trinity
+Summary:	Battery monitoring and management for laptops using Trinity
 Group:		Applications/Utilities
 Requires:	pm-utils
+Requires:	trinity-kcontrol
+
+%if 0%{?with_consolehelper}
+# package 'usermode' provides '/usr/bin/consolehelper-gtk'
+%if 0%{?rhel} || 0%{?fedora}
+Requires:	usermode-gtk
+%endif
+%if 0%{?mgaversion} || 0%{?mdkversion}
 Requires:	usermode
+%endif
+%endif
 
 %description -n trinity-klaptopdaemon
 This package contains utilities to monitor batteries and configure
@@ -595,12 +713,15 @@ power management, for laptops, from within TDE.
 %{tde_tdedocdir}/HTML/en/kcontrol/laptop/
 %{tde_tdedocdir}/HTML/en/kcontrol/powerctrl/
 
-# RHEL/Fedora specific
+# ConsoleHelper support
+%if 0%{?with_consolehelper}
 %{_sysconfdir}/pam.d/klaptop_acpi_helper
 %attr(644,root,root) %{_sysconfdir}/security/console.apps/klaptop_acpi_helper
 %{tde_sbindir}/klaptop_acpi_helper
 %{_sbindir}/klaptop_acpi_helper
-%config %{tde_datadir}/config/kcmlaptoprc
+%endif
+
+%config %{tde_confdir}/kcmlaptoprc
 
 %post -n trinity-klaptopdaemon
 /sbin/ldconfig
@@ -618,10 +739,12 @@ for f in crystalsvg ; do
 done
 update-desktop-database %{tde_datadir}/applications > /dev/null 2>&1 || :
 
+%endif
+
 ##########
 
 %package -n trinity-kmilo
-Summary:	laptop special keys support for Trinity
+Summary:	Laptop special keys support for Trinity
 Group:		Applications/Utilities
 
 %description -n trinity-kmilo
@@ -639,7 +762,9 @@ with special keys.
 %{tde_tdelibdir}/kmilo_generic.so
 %{tde_libdir}/libkmilo.so.*
 %{tde_datadir}/services/kded/kmilod.desktop
+%dir %{tde_datadir}/services/kmilo
 %{tde_datadir}/services/kmilo/kmilo_generic.desktop
+%dir %{tde_datadir}/servicetypes/kmilo
 %{tde_datadir}/servicetypes/kmilo/kmilopluginsvc.desktop
 
 %post -n trinity-kmilo
@@ -651,9 +776,10 @@ with special keys.
 ##########
 
 %package -n trinity-kmilo-legacy
-Summary:	non-standard plugins for KMilo
+Summary:	Non-standard plugins for KMilo
 Group:		Applications/Utilities
 Requires:	trinity-kmilo = %{version}-%{release}
+Requires:	trinity-kcontrol
 
 %description -n trinity-kmilo-legacy
 KMilo lets you use the special keys on some keyboards and laptops.
@@ -684,11 +810,13 @@ plugin, if you need this package please file a bug.
 %{tde_datadir}/services/kmilo/kmilo_delli8k.desktop
 %{tde_datadir}/services/kmilo/kmilo_kvaio.desktop
 %{tde_datadir}/services/kmilo/kmilo_thinkpad.desktop
+%{tde_tdedocdir}/HTML/en/kcontrol/kvaio/
+%{tde_tdedocdir}/HTML/en/kcontrol/thinkpad/
 
 ##########
 
 %package -n trinity-kregexpeditor
-Summary:	graphical regular expression editor plugin for Trinity
+Summary:	Graphical regular expression editor plugin for Trinity
 Group:		Applications/Utilities
 
 %description -n trinity-kregexpeditor
@@ -726,8 +854,9 @@ update-desktop-database %{tde_datadir}/applications > /dev/null 2>&1 || :
 ##########
 
 %package -n trinity-ksim
-Summary:	system information monitor for Trinity
+Summary:	System information monitor for Trinity
 Group:		Applications/Utilities
+Requires:	trinity-kicker
 
 %description -n trinity-ksim
 KSim is a system monitor app which has its own plugin system with support
@@ -736,7 +865,7 @@ connections, power, etc.
 
 %files -n trinity-ksim
 %defattr(-,root,root,-)
-%config %{tde_datadir}/config/ksim_panelextensionrc
+%config %{tde_confdir}/ksim_panelextensionrc
 %{tde_tdelibdir}/ksim_*.la
 %{tde_tdelibdir}/ksim_*.so
 %{tde_libdir}/libksimcore.so.*
@@ -763,7 +892,7 @@ done
 ##########
 
 %package -n trinity-ktimer
-Summary:	timer utility for Trinity
+Summary:	Timer utility for Trinity
 Group:		Applications/Utilities
 
 %description -n trinity-ktimer
@@ -794,37 +923,40 @@ update-desktop-database %{tde_datadir}/applications > /dev/null 2>&1 || :
 
 ##########
 
-%package -n trinity-kwalletmanager
-Summary:	wallet manager for Trinity
+%package -n trinity-tdewalletmanager
+Summary:	Wallet manager for Trinity
 Group:		Applications/Utilities
 
-%description -n trinity-kwalletmanager
+Obsoletes:	trinity-kwalletmanager < %{version}-%{release}
+Provides:	trinity-kwalletmanager = %{version}-%{release}
+
+%description -n trinity-tdewalletmanager
 This program keeps various wallets for any kind of data that the user can
 store encrypted with passwords and can also serve as a password manager that
 keeps a master password to all wallets.
 
-%files -n trinity-kwalletmanager
+%files -n trinity-tdewalletmanager
 %defattr(-,root,root,-)
-%{tde_bindir}/kwalletmanager
-%{tde_tdelibdir}/kcm_kwallet.la
-%{tde_tdelibdir}/kcm_kwallet.so
-%{tde_tdeappdir}/kwalletconfig.desktop
-%{tde_tdeappdir}/kwalletmanager.desktop
-%{tde_tdeappdir}/kwalletmanager-kwalletd.desktop
-%{tde_datadir}/apps/kwalletmanager/
-%{tde_datadir}/icons/hicolor/*/apps/kwalletmanager.png
-%{tde_datadir}/services/kwallet_config.desktop
-%{tde_datadir}/services/kwalletmanager_show.desktop
-%{tde_tdedocdir}/HTML/en/kwallet/
+%{tde_bindir}/tdewalletmanager
+%{tde_tdelibdir}/kcm_tdewallet.la
+%{tde_tdelibdir}/kcm_tdewallet.so
+%{tde_tdeappdir}/tdewalletconfig.desktop
+%{tde_tdeappdir}/tdewalletmanager.desktop
+%{tde_tdeappdir}/tdewalletmanager-tdewalletd.desktop
+%{tde_datadir}/apps/tdewalletmanager/
+%{tde_datadir}/icons/hicolor/*/apps/tdewalletmanager.png
+%{tde_datadir}/services/tdewallet_config.desktop
+%{tde_datadir}/services/tdewalletmanager_show.desktop
+%{tde_tdedocdir}/HTML/en/tdewallet/
 
-%post -n trinity-kwalletmanager
+%post -n trinity-tdewalletmanager
 for f in hicolor ; do
   touch --no-create %{tde_datadir}/icons/$f 2> /dev/null ||:
   gtk-update-icon-cache -q %{tde_datadir}/icons/$f 2> /dev/null ||:
 done
 update-desktop-database %{tde_datadir}/applications > /dev/null 2>&1 || :
 
-%postun -n trinity-kwalletmanager
+%postun -n trinity-tdewalletmanager
 for f in hicolor ; do
   touch --no-create %{tde_datadir}/icons/$f 2> /dev/null ||:
   gtk-update-icon-cache -q %{tde_datadir}/icons/$f 2> /dev/null ||:
@@ -834,7 +966,7 @@ update-desktop-database %{tde_datadir}/applications > /dev/null 2>&1 || :
 ##########
 
 %package -n trinity-superkaramba
-Summary:	a program based on karamba improving the eyecandy of TDE
+Summary:	A program based on karamba improving the eyecandy of TDE
 Group:		Applications/Utilities
 
 %description -n trinity-superkaramba
@@ -852,8 +984,8 @@ Here are just some examples of the things that can be done:
 %files -n trinity-superkaramba
 %defattr(-,root,root,-)
 %{tde_bindir}/superkaramba
-%{tde_datadir}/applnk/Utilities/superkaramba.desktop
-%{tde_datadir}/apps/superkaramba/superkarambaui.rc
+%{tde_tdeappdir}/superkaramba.desktop
+%{tde_datadir}/apps/superkaramba/
 %{tde_datadir}/icons/crystalsvg/*/apps/superkaramba.png
 %{tde_datadir}/icons/crystalsvg/*/mimetypes/superkaramba_theme.png
 %{tde_datadir}/icons/crystalsvg/scalable/apps/superkaramba.svgz
@@ -888,17 +1020,19 @@ Obsoletes:	tdeutils-devel < %{version}-%{release}
 Provides:	tdeutils-devel = %{version}-%{release}
 
 %description devel
-Development files for %{name}.
+This package contains the development files for tdeutils.
 
 %files devel
 %defattr(-,root,root,-)
 %{tde_tdeincludedir}/*
+%if 0%{?build_klaptopdaemon}
 %{tde_libdir}/libkcmlaptop.la
 %{tde_libdir}/libkcmlaptop.so
-%{tde_libdir}/lib[kt]deinit_ark.la
-%{tde_libdir}/lib[kt]deinit_irkick.la
-%{tde_libdir}/lib[kt]deinit_kcalc.la
-%{tde_libdir}/lib[kt]deinit_kedit.la
+%endif
+%{tde_libdir}/libtdeinit_ark.la
+%{tde_libdir}/libtdeinit_irkick.la
+%{tde_libdir}/libtdeinit_kcalc.la
+%{tde_libdir}/libtdeinit_kedit.la
 %{tde_libdir}/libkmilo.la
 %{tde_libdir}/libkmilo.so
 %{tde_libdir}/libkregexpeditorcommon.la
@@ -907,6 +1041,7 @@ Development files for %{name}.
 %{tde_libdir}/libksimcore.so
 %{tde_libdir}/libkhexeditcommon.la
 %{tde_libdir}/libkhexeditcommon.so
+%{tde_datadir}/cmake/libksimcore.cmake
 
 %post devel
 /sbin/ldconfig
@@ -916,117 +1051,167 @@ Development files for %{name}.
 
 ##########
 
-%if 0%{?suse_version}
+%if 0%{?pclinuxos} || 0%{?suse_version} && 0%{?opensuse_bs} == 0
 %debug_package
 %endif
 
 ##########
 
 %prep
-%setup -q -n kdeutils-trinity-%{version}
+%setup -q -n %{name}-%{version}%{?preversion:~%{preversion}}
 
-#%patch1 -p1 -b .label
+%if 0%{?rhel} == 5
+# Reverts some older Python stuff
+%__sed -i "superkaramba/src/"*".cpp" \
+       -e "s|PyBytes_CheckExact|PyString_CheckExact|g" \
+       -e "s|PyBytes_AsString|PyString_AsString|g" \
+       -e "s|PyBytes_FromString|PyString_FromString|g" \
+%endif
 
-# Ugly hack to modify TQT include directory inside autoconf files.
-# If TQT detection fails, it fallbacks to TQT4 instead of TQT3 !
-%__sed -i "admin/acinclude.m4.in" \
-  -e "s|/usr/include/tqt|%{tde_includedir}/tqt|g" \
-  -e "s|kde_htmldir='.*'|kde_htmldir='%{tde_tdedocdir}/HTML'|g"
-
-%__cp -f "/usr/share/aclocal/libtool.m4" "admin/libtool.m4.in"
-%__cp -f "/usr/share/libtool/config/ltmain.sh" "admin/ltmain.sh" || %__cp -f "/usr/share/libtool/ltmain.sh" "admin/ltmain.sh"
-%__make -f "admin/Makefile.common"
 
 %build
-unset QTDIR || : ; source /etc/profile.d/qt.sh
+unset QTDIR QTINC QTLIB
 export PATH="%{tde_bindir}:${PATH}"
-export LDFLAGS="-L%{tde_libdir} -I%{tde_includedir}"
+export PKG_CONFIG_PATH="%{tde_libdir}/pkgconfig"
 
-%configure \
-   --prefix=%{tde_prefix} \
-   --exec-prefix=%{tde_prefix} \
-   --bindir=%{tde_bindir} \
-   --libdir=%{tde_libdir} \
-   --datadir=%{tde_datadir} \
-   --includedir=%{tde_tdeincludedir} \
-   --enable-new-ldflags \
-   --disable-dependency-tracking \
-   --disable-rpath \
-   --disable-debug --disable-warnings \
-   --enable-final \
-   --includedir=%{tde_tdeincludedir} \
-   --with-snmp \
-%if 0%{?fedora}
-   --with-xmms \
-%else
-   --without-xmms \
-%endif
-   --with-xscreensaver \
-   --with-extra-includes=%{tde_includedir}/tqt \
-   --enable-closure
-#临时补丁
-sed -i 's/\/\* #undef HAVE_STRLCAT \*\//#define HAVE_STRLCAT 1/g' config.h 
+# Shitty hack for RHEL4 ...
+if [ -d "/usr/X11R6" ]; then
+  export CMAKE_INCLUDE_PATH="${CMAKE_INCLUDE_PATH}:/usr/X11R6/include:/usr/X11R6/%{_lib}"
+  export RPM_OPT_FLAGS="${RPM_OPT_FLAGS} -I/usr/X11R6/include -L/usr/X11R6/%{_lib}"
+fi
 
-%__make %{?_smp_mflags}
+if ! rpm -E %%cmake|grep -q "cd build"; then
+  %__mkdir_p build
+  cd build
+fi
+
+%cmake \
+  -DCMAKE_BUILD_TYPE="RelWithDebInfo" \
+  -DCMAKE_C_FLAGS="${RPM_OPT_FLAGS} -DNDEBUG" \
+  -DCMAKE_CXX_FLAGS="${RPM_OPT_FLAGS} -DNDEBUG" \
+  -DCMAKE_SKIP_RPATH=OFF \
+  -DCMAKE_INSTALL_RPATH="%{tde_libdir}" \
+  -DCMAKE_VERBOSE_MAKEFILE=ON \
+  -DWITH_GCC_VISIBILITY=OFF \
+  \
+  -DCMAKE_INSTALL_PREFIX="%{tde_prefix}" \
+  -DBIN_INSTALL_DIR="%{tde_bindir}" \
+  -DCONFIG_INSTALL_DIR="%{tde_confdir}" \
+  -DDOC_INSTALL_DIR="%{tde_docdir}" \
+  -DINCLUDE_INSTALL_DIR="%{tde_tdeincludedir}" \
+  -DLIB_INSTALL_DIR="%{tde_libdir}" \
+  -DPKGCONFIG_INSTALL_DIR="%{tde_libdir}/pkgconfig" \
+  -DSHARE_INSTALL_PREFIX="%{tde_datadir}" \
+  \
+  -DWITH_DPMS=ON \
+  %{?with_xscreensaver:-DWITH_XSCREENSAVER=ON} \
+  -DWITH_ASUS=ON \
+  -DWITH_POWERBOOK=OFF \
+  -DWITH_POWERBOOK2=OFF \
+  -DWITH_VAIO=ON \
+  -DWITH_THINKPAD=ON \
+  -DWITH_I8K=ON \
+  -DWITH_SNMP=ON \
+  -DWITH_SENSORS=ON \
+  -DWITH_XMMS=ON \
+  -DWITH_TDENEWSTUFF=ON \
+  -DBUILD_ALL=ON \
+  %{?!build_klaptopdaemon:-DBUILD_KLAPTOPDAEMON=OFF} \
+  ..
+   
+%__make %{?_smp_mflags} || %__make
+
 
 %install
 export PATH="%{tde_bindir}:${PATH}"
 %__rm -rf %{?buildroot}
-%__make install DESTDIR=%{?buildroot}
+%__make install DESTDIR=%{?buildroot} -C build
 
-# Show only in KDE (really? -- Rex)
-for i in kcalc kregexpeditor Kjots ktimer kdf kcmdf ksim KFloppy KEdit \
-  KCharSelect ark kwalletmanager kwalletconfig \
- irkick kcmlirc laptop pcmcia kvaio thinkpad kwikdisk; do
- if [ -f %{buildroot}%{tde_datadir}/applications/kde/$i.desktop ] ; then
-   echo "OnlyShowIn=KDE;" >> %{buildroot}%{tde_datadir}/applications/kde/$i.desktop
- fi
-done
-
-## File lists
-# HTML (1.0)
-HTML_DIR=$(kde-config --expandvars --install html)
-if [ -d %{buildroot}$HTML_DIR ]; then
-for lang_dir in %{buildroot}$HTML_DIR/* ; do
-  if [ -d $lang_dir ]; then
-    lang=$(basename $lang_dir)
-    echo "%lang($lang) $HTML_DIR/$lang/*" >> %{name}.lang
-    # replace absolute symlinks with relative ones
-    pushd $lang_dir
-      for i in *; do
-        [ -d $i -a -L $i/common ] && rm -f $i/common && ln -sf ../common $i/common
-      done
-    popd
-    pushd $lang_dir/kcontrol
-      for i in *; do
-        [ -d $i -a -L $i/common ] && rm -f $i/common && ln -sf ../../common $i/common
-      done
-    popd
-  fi
-done
-fi
-
-# using pam
-%__install -p -D -m 644 %{SOURCE1} %{buildroot}%{_sysconfdir}/pam.d/klaptop_acpi_helper
-%__install -p -D -m 644 %{SOURCE2} %{buildroot}%{_sysconfdir}/security/console.apps/klaptop_acpi_helper
-
-# Use consolehelper for 'klaptop_acpi_helper'
-%__mkdir_p %{buildroot}%{tde_sbindir} %{buildroot}%{_sbindir}
-%__mv %{buildroot}%{tde_bindir}/klaptop_acpi_helper %{buildroot}%{tde_sbindir}
-%__ln_s %{_bindir}/consolehelper %{buildroot}%{tde_bindir}/klaptop_acpi_helper
+%if 0%{?build_klaptopdaemon}
+### Use consolehelper for 'klaptop_acpi_helper'
+%if 0%{?with_consolehelper}
+# Install configuration files
+%__install -p -D -m 644 "%{SOURCE1}" "%{buildroot}%{_sysconfdir}/pam.d/klaptop_acpi_helper"
+%__install -p -D -m 644 "%{SOURCE2}" "%{buildroot}%{_sysconfdir}/security/console.apps/klaptop_acpi_helper"
+# Moves the actual binary from 'bin' to 'sbin'
+%__mkdir_p "%{buildroot}%{tde_sbindir}" "%{buildroot}%{_sbindir}"
+%__mv "%{buildroot}%{tde_bindir}/klaptop_acpi_helper" "%{buildroot}%{tde_sbindir}"
+# Links to consolehelper
+%__ln_s "%{_bindir}/consolehelper" "%{buildroot}%{tde_bindir}/klaptop_acpi_helper"
+# Put another symlink under '/usr', otherwise consolehelper does not work
 %if "%{tde_prefix}" != "/usr"
-%__ln_s %{tde_sbindir}/klaptop_acpi_helper %{?buildroot}%{_sbindir}/klaptop_acpi_helper
+%__ln_s "%{tde_sbindir}/klaptop_acpi_helper" "%{?buildroot}%{_sbindir}/klaptop_acpi_helper"
+%endif
 %endif
 
-# klaptop setting
-%__install -p -D -m 644 %{SOURCE3} %{buildroot}%{tde_datadir}/config/kcmlaptoprc
+# klaptop settings file
+%__install -p -D -m 644 "%{SOURCE3}" "%{buildroot}%{tde_confdir}/kcmlaptoprc"
+
+%else
+
+# Klaptop's documentation is installed even if we did not build the program ...
+%__rm -fr %{?buildroot}%{tde_tdedocdir}/HTML/en/kcontrol/kcmlowbatcrit/
+%__rm -fr %{?buildroot}%{tde_tdedocdir}/HTML/en/kcontrol/kcmlowbatwarn/
+%__rm -fr %{?buildroot}%{tde_tdedocdir}/HTML/en/kcontrol/laptop/
+%__rm -fr %{?buildroot}%{tde_tdedocdir}/HTML/en/kcontrol/powerctrl/
+
+%endif
+
+# Fix desktop shortcut location
+%__mv "%{?buildroot}%{tde_datadir}/applnk/Utilities/superkaramba.desktop" "%{?buildroot}%{tde_tdeappdir}/superkaramba.desktop"
+
+# Updates applications categories for openSUSE
+%if 0%{?suse_version}
+%suse_update_desktop_file KEdit              Utility TextEditor
+%suse_update_desktop_file superkaramba       Utility DesktopUtility
+%suse_update_desktop_file KCharSelect        Utility Accessibility
+%suse_update_desktop_file khexedit           Utility Editor
+%suse_update_desktop_file Kjots              Utility TimeUtility
+%suse_update_desktop_file ktimer             Utility TimeUtility
+%suse_update_desktop_file kwikdisk           System  Applet
+%suse_update_desktop_file kdf                System  Filesystem
+%suse_update_desktop_file ark                System  Archiving
+%suse_update_desktop_file kcalc              Utility Calculator
+%suse_update_desktop_file kgpg               Utility Security
+%suse_update_desktop_file irkick             Applet
+%suse_update_desktop_file tdewalletmanager   Applet
+%suse_update_desktop_file kregexpeditor      Utility Editor
+%suse_update_desktop_file kcmdf
+%suse_update_desktop_file kcmlirc
+%suse_update_desktop_file tdewalletconfig
+%suse_update_desktop_file thinkpad
+%suse_update_desktop_file kvaio
+%suse_update_desktop_file KFloppy            System  Filesystem
+%endif
+
+# Icons from TDE Control Center should only be displayed in TDE
+for i in %{?buildroot}%{tde_tdeappdir}/*.desktop ; do
+  if grep -q "^Categories=.*X-TDE-settings" "${i}"; then
+    if ! grep -q "OnlyShowIn=TDE" "${i}" ; then
+      echo "OnlyShowIn=TDE;" >>"${i}"
+    fi
+  fi
+done
+
+# Other TDE-only apps
+echo "OnlyShowIn=TDE;" >>"%{?buildroot}%{tde_tdeappdir}/thinkpad.desktop"
+echo "OnlyShowIn=TDE;" >>"%{?buildroot}%{tde_tdeappdir}/kcmlirc.desktop"
+echo "OnlyShowIn=TDE;" >>"%{?buildroot}%{tde_tdeappdir}/kvaio.desktop"
+echo "OnlyShowIn=TDE;" >>"%{?buildroot}%{tde_tdeappdir}/kcmdf.desktop"
+echo "OnlyShowIn=TDE;" >>"%{?buildroot}%{tde_tdeappdir}/tdewalletconfig.desktop"
+echo "OnlyShowIn=TDE;" >>"%{?buildroot}%{tde_tdeappdir}/khexedit.desktop"
+echo "OnlyShowIn=TDE;" >>"%{?buildroot}%{tde_tdeappdir}/kregexpeditor.desktop"
+echo "OnlyShowIn=TDE;" >>"%{?buildroot}%{tde_tdeappdir}/kgpg.desktop"
+echo "OnlyShowIn=TDE;" >>"%{?buildroot}%{tde_tdeappdir}/Kjots.desktop"
+
+# Links duplicate files
+%fdupes "%{?buildroot}%{tde_datadir}"
 
 
 %clean
-%__rm -rf %{?buildroot}
-
+%__rm -rf "%{?buildroot}"
 
 
 %changelog
-* Sun Sep 30 2012 Francois Andriot <francois.andriot@free.fr> - 3.5.13.1-1
-- Initial build for TDE 3.5.13.1
+* Fri Jul 05 2013 Francois Andriot <francois.andriot@free.fr> - 14.0.0-1
+- Initial release for TDE 14.0.0
