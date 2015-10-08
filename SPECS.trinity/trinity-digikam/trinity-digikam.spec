@@ -1,64 +1,101 @@
-# Default version for this component
-%define kdecomp digikam
-%define tdeversion 3.5.13.2
+#
+# spec file for package digikam (version R14)
+#
+# Copyright (c) 2014 Trinity Desktop Environment
+#
+# All modifications and additions to the file contributed by third parties
+# remain the property of their copyright owners, unless otherwise agreed
+# upon. The license for this file, and modifications and additions to the
+# file, is the same license as for the pristine package itself (unless the
+# license for the pristine package is not an Open Source License, in which
+# case the license is the MIT License). An "Open Source License" is a
+# license that conforms to the Open Source Definition (Version 1.9)
+# published by the Open Source Initiative.
+#
+# Please submit bugfixes or comments via http://www.trinitydesktop.org/
+#
 
-# If TDE is built in a specific prefix (e.g. /opt/trinity), the release will be suffixed with ".opt".
-%if "%{?tde_prefix}" != "/usr"
-%define _variant .opt
+# TDE variables
+%define tde_epoch 2
+%if "%{?tde_version}" == ""
+%define tde_version 14.0.0
 %endif
-
-# TDE 3.5.13 specific building variables
+%define tde_pkg digikam
+%define tde_prefix /opt/trinity
 %define tde_bindir %{tde_prefix}/bin
 %define tde_datadir %{tde_prefix}/share
 %define tde_docdir %{tde_datadir}/doc
 %define tde_includedir %{tde_prefix}/include
 %define tde_libdir %{tde_prefix}/%{_lib}
 %define tde_mandir %{tde_datadir}/man
-
-%define tde_tdeappdir %{tde_datadir}/applications/kde
+%define tde_tdeappdir %{tde_datadir}/applications/tde
 %define tde_tdedocdir %{tde_docdir}/tde
 %define tde_tdeincludedir %{tde_includedir}/tde
 %define tde_tdelibdir %{tde_libdir}/trinity
 
-%define _docdir %{tde_docdir}
 
+Name:			trinity-%{tde_pkg}
+Epoch:			%{tde_epoch}
+Version:		0.9.6
+Release:		%{?!preversion:2}%{?preversion:0_%{preversion}}%{?dist}%{?_variant}
+Summary:		Digital photo management application for TDE
+Group:			Applications/Utilities
+URL:			http://www.trinitydesktop.org/
 
-Name:		trinity-%{kdecomp}
-Summary:	digital photo management application for KDE [Trinity]
-Version:	0.9.6
-Release:	5%{?dist}%{?_variant}
-
+%if 0%{?suse_version}
+License:	GPL-2.0+
+%else
 License:	GPLv2+
-Group:		Applications/Utilities
+%endif
 
-Vendor:		Trinity Project
-Packager:	Francois Andriot <francois.andriot@free.fr>
-URL:		http://www.trinitydesktop.org/
+#Vendor:		Trinity Desktop
+#Packager:	Francois Andriot <francois.andriot@free.fr>
 
-Prefix:    %{_prefix}
-BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+Prefix:			%{_prefix}
+BuildRoot:		%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
-Source0:	%{kdecomp}-trinity-%{tdeversion}.tar.xz
+Source0:		%{name}-%{tde_version}%{?preversion:~%{preversion}}.tar.gz
+Source1:		digikam-open_in_digikam.desktop
 
-# [digikam] Fix FTBFS on png >= 0.15 [Commit #18ecd512]
-Patch9:		digikam-3.5.13-fix_ftbfs_png_015.patch
+BuildRequires:	trinity-tdelibs-devel >= %{tde_version}
+BuildRequires:	trinity-tdebase-devel >= %{tde_version}
+BuildRequires:	desktop-file-utils
 
+BuildRequires:	trinity-libkexiv2-devel
+BuildRequires:	trinity-libkdcraw-devel
+BuildRequires:	trinity-libkipi-devel
 
-BuildRequires:	trinity-tqtinterface-devel >= 3.5.13.1
-BuildRequires:	trinity-arts-devel >= 3.5.13.1
-BuildRequires:	trinity-tdelibs-devel >= 3.5.13.1
-BuildRequires:	trinity-tdebase-devel >= 3.5.13.1
-BuildRequires:	trinity-libkexiv2-devel >= 3.5.13.1
-BuildRequires:	trinity-libkdcraw-devel >= 3.5.13.1
-BuildRequires:	trinity-libkipi-devel >= 3.5.13.1
-%if 0%{?rhel} == 5 || 0%{?mgaversion} || 0%{?mdkversion}
+BuildRequires:	autoconf automake libtool m4
+BuildRequires:	gcc-c++
+BuildRequires:	pkgconfig
+BuildRequires:	libtool
+
+BuildRequires:	libtiff-devel
+BuildRequires:	gettext
+
+# SUSE desktop files utility
+%if 0%{?suse_version}
+BuildRequires:	update-desktop-files
+%endif
+
+%if 0%{?opensuse_bs} && 0%{?suse_version}
+# for xdg-menu script
+BuildRequires:	brp-check-trinity
+%endif
+
+# LCMS support
+%if 0%{?suse_version}
+BuildRequires: liblcms-devel
+%else
+BuildRequires: lcms-devel
+%endif
+
+# GPHOTO2 support
+%if 0%{?rhel} == 4 || 0%{?rhel} == 5 || 0%{?mgaversion} || 0%{?mdkversion}
 BuildRequires:	gphoto2-devel
 %else
 BuildRequires:	libgphoto2-devel
 %endif
-BuildRequires:	libtiff-devel
-BuildRequires:	desktop-file-utils
-BuildRequires:	gettext
 
 # JASPER support
 %if 0%{?suse_version}
@@ -78,9 +115,9 @@ BuildRequires:	libexiv2-devel
 BuildRequires:	exiv2-devel
 %endif
 
-Requires:	trinity-libkexiv2 >= 3.5.13.1
-Requires:	trinity-libkdcraw >= 3.5.13.1
-Requires:	trinity-libkipi >= 3.5.13.1
+Requires:		trinity-libkexiv2
+Requires:		trinity-libkdcraw
+Requires:		trinity-libkipi
 
 %description
 An easy to use and powerful digital photo management
@@ -102,90 +139,7 @@ very useful extentions.
 
 digiKam is based in part on the work of the Independent JPEG Group.
 
-
-%package devel
-Group:		Development/Libraries
-Summary:	Development files for %{name}
-Requires:	%{name} = %{version}
-
-%description devel
-%{summary}
-
-
-%if 0%{?suse_version}
-%debug_package
-%endif
-
-
-%prep
-%setup -q -n %{kdecomp}-trinity-%{tdeversion}
-#%patch9 -p1 -b .png015
-
-
-# Ugly hack to modify TQT include directory inside autoconf files.
-# If TQT detection fails, it fallbacks to TQT4 instead of TQT3 !
-%__sed -i admin/acinclude.m4.in \
-  -e "s|/usr/include/tqt|%{tde_includedir}/tqt|g" \
-  -e "s|kde_htmldir='.*'|kde_htmldir='%{tde_tdedocdir}/HTML'|g"
-
-%__cp -f "/usr/share/aclocal/libtool.m4" "admin/libtool.m4.in"
-%__cp -f "/usr/share/libtool/config/ltmain.sh" "admin/ltmain.sh" || %__cp -f "/usr/share/libtool/ltmain.sh" "admin/ltmain.sh"
-%__make -f "admin/Makefile.common"
-
-
-%build
-unset QTDIR || : ; source /etc/profile.d/qt3.sh
-export PATH="%{tde_bindir}:${PATH}"
-export LDFLAGS="-L%{tde_libdir} -I%{tde_tdeincludedir}"
-
-%configure \
-  --prefix=%{tde_prefix} \
-  --exec-prefix=%{tde_prefix} \
-  --bindir=%{tde_bindir} \
-  --libdir=%{tde_libdir} \
-  --datadir=%{tde_datadir} \
-  --mandir=%{tde_mandir} \
-  --includedir=%{tde_tdeincludedir} \
-  --disable-rpath \
-  --with-extra-includes=%{tde_tdeincludedir}/tqt \
-  --enable-closure
-
-%__make %{?_smp_mflags}
-
-
-%install
-export PATH="%{tde_bindir}:${PATH}"
-%__rm -rf %{buildroot}
-%__make install DESTDIR=%{buildroot}
-
-
-%find_lang %{kdecomp}
-
-
-%clean
-%__rm -rf %{buildroot}
-
-
-%post
-touch --no-create %{tde_datadir}/icons/hicolor || :
-gtk-update-icon-cache --quiet %{tde_datadir}/icons/hicolor || :
-/sbin/ldconfig
-update-desktop-database %{tde_appdir} 2> /dev/null || : 
-
-%postun
-touch --no-create %{tde_datadir}/icons/hicolor || :
-gtk-update-icon-cache --quiet %{tde_datadir}/icons/hicolor || :
-/sbin/ldconfig
-update-desktop-database %{tde_appdir} 2> /dev/null || : 
-
-%post devel
-/sbin/ldconfig || :
-
-%postun devel
-/sbin/ldconfig || :
-
-
-%files -f %{kdecomp}.lang
+%files -f %{tde_pkg}.lang
 %defattr(-,root,root,-)
 %doc AUTHORS COPYING
 %{tde_bindir}/digikam
@@ -194,10 +148,10 @@ update-desktop-database %{tde_appdir} 2> /dev/null || :
 %{tde_bindir}/showfoto
 %{tde_libdir}/libdigikam.so.0
 %{tde_libdir}/libdigikam.so.0.0.0
-%{tde_tdelibdir}/kio_digikamalbums.la
-%{tde_tdelibdir}/kio_digikamalbums.so
-%{tde_tdelibdir}/kio_digikamdates.la
-%{tde_tdelibdir}/kio_digikamdates.so
+%{tde_tdelibdir}/tdeio_digikamalbums.la
+%{tde_tdelibdir}/tdeio_digikamalbums.so
+%{tde_tdelibdir}/tdeio_digikamdates.la
+%{tde_tdelibdir}/tdeio_digikamdates.so
 %{tde_tdelibdir}/digikamimageplugin_adjustcurves.la
 %{tde_tdelibdir}/digikamimageplugin_adjustcurves.so
 %{tde_tdelibdir}/digikamimageplugin_adjustlevels.la
@@ -252,18 +206,19 @@ update-desktop-database %{tde_appdir} 2> /dev/null || :
 %{tde_tdelibdir}/digikamimageplugin_texture.so
 %{tde_tdelibdir}/digikamimageplugin_whitebalance.la
 %{tde_tdelibdir}/digikamimageplugin_whitebalance.so
-%{tde_tdelibdir}/kio_digikamsearch.la
-%{tde_tdelibdir}/kio_digikamsearch.so
-%{tde_tdelibdir}/kio_digikamtags.la
-%{tde_tdelibdir}/kio_digikamtags.so
-%{tde_tdelibdir}/kio_digikamthumbnail.la
-%{tde_tdelibdir}/kio_digikamthumbnail.so
+%{tde_tdelibdir}/tdeio_digikamsearch.la
+%{tde_tdelibdir}/tdeio_digikamsearch.so
+%{tde_tdelibdir}/tdeio_digikamtags.la
+%{tde_tdelibdir}/tdeio_digikamtags.so
+%{tde_tdelibdir}/tdeio_digikamthumbnail.la
+%{tde_tdelibdir}/tdeio_digikamthumbnail.so
 %{tde_tdeappdir}/digikam.desktop
 %{tde_tdeappdir}/showfoto.desktop
 %{tde_datadir}/apps/digikam/
 %{tde_datadir}/apps/konqueror/servicemenus/digikam-download.desktop
 %{tde_datadir}/apps/konqueror/servicemenus/digikam-gphoto2-camera.desktop
 %{tde_datadir}/apps/konqueror/servicemenus/digikam-mount-and-download.desktop
+%{tde_datadir}/apps/konqueror/servicemenus/digikam-open_in_digikam.desktop
 %{tde_datadir}/apps/showfoto/
 %{tde_datadir}/icons/hicolor/*/apps/digikam.png
 %{tde_datadir}/icons/hicolor/*/apps/showfoto.png
@@ -301,42 +256,143 @@ update-desktop-database %{tde_appdir} 2> /dev/null || :
 %{tde_datadir}/services/digikamthumbnail.protocol
 %{tde_datadir}/servicetypes/digikamimageplugin.desktop
 %{tde_mandir}/man*/*
-#%{tde_tdedocdir}/HTML/en/digikam-apidocs/
+%{tde_tdedocdir}/HTML/en/digikam/
+%{tde_tdedocdir}/HTML/en/showfoto/
 
+%post
+touch --no-create %{tde_datadir}/icons/hicolor || :
+gtk-update-icon-cache --quiet %{tde_datadir}/icons/hicolor || :
+/sbin/ldconfig
+update-desktop-database %{tde_appdir} 2> /dev/null || : 
+
+%postun
+touch --no-create %{tde_datadir}/icons/hicolor || :
+gtk-update-icon-cache --quiet %{tde_datadir}/icons/hicolor || :
+/sbin/ldconfig
+update-desktop-database %{tde_appdir} 2> /dev/null || : 
+
+##########
+
+%package devel
+Group:			Development/Libraries
+Summary:		Development files for %{name}
+Requires:		%{name} = %{version}-%{release}
+
+%description devel
+%{summary}
 
 %files devel
+%defattr(-,root,root,-)
 %{tde_tdeincludedir}/digikam_export.h
 %{tde_tdeincludedir}/digikam/
 %{tde_libdir}/libdigikam.so
 %{tde_libdir}/libdigikam.la
 
+%post devel
+/sbin/ldconfig || :
+
+%postun devel
+/sbin/ldconfig || :
+
+##########
+
+%package i18n
+Summary:		Translation files for %{tde_pkg}
+Group:			Applications/Utilities
+Requires:		%{name} = %{version}-%{release}
+
+%description i18n
+%{summary}
+
+%files i18n
+%defattr(-,root,root,-)
+%lang(da) %{tde_tdedocdir}/HTML/da/digikam/
+%lang(da) %{tde_tdedocdir}/HTML/da/showfoto/
+%lang(de) %{tde_tdedocdir}/HTML/de/digikam/
+%lang(de) %{tde_tdedocdir}/HTML/de/showfoto/
+%lang(es) %{tde_tdedocdir}/HTML/es/digikam/
+%lang(es) %{tde_tdedocdir}/HTML/es/showfoto/
+%lang(et) %{tde_tdedocdir}/HTML/et/digikam/
+%lang(et) %{tde_tdedocdir}/HTML/et/showfoto/
+%lang(it) %{tde_tdedocdir}/HTML/it/digikam/
+%lang(it) %{tde_tdedocdir}/HTML/it/showfoto/
+%lang(nl) %{tde_tdedocdir}/HTML/nl/digikam/
+%lang(nl) %{tde_tdedocdir}/HTML/nl/showfoto/
+%lang(pt_BR) %{tde_tdedocdir}/HTML/pt_BR/digikam/
+#%lang(pt_BR) %{tde_tdedocdir}/HTML/pt_BR/showfoto/
+%lang(ru) %{tde_tdedocdir}/HTML/ru/digikam/
+#%lang(ru) %{tde_tdedocdir}/HTML/ru/showfoto/
+%lang(sv) %{tde_tdedocdir}/HTML/sv/digikam/
+%lang(sv) %{tde_tdedocdir}/HTML/sv/showfoto/
+
+##########
+
+%if 0%{?pclinuxos} || 0%{?suse_version} && 0%{?opensuse_bs} == 0
+%debug_package
+%endif
+
+##########
+
+%prep
+%setup -q -n %{name}-%{tde_version}%{?preversion:~%{preversion}}
+
+%__cp -f "/usr/share/aclocal/libtool.m4" "admin/libtool.m4.in"
+%__cp -f "/usr/share/libtool/config/ltmain.sh" "admin/ltmain.sh" || %__cp -f "/usr/share/libtool/ltmain.sh" "admin/ltmain.sh"
+%__make -f "admin/Makefile.common"
+
+
+%build
+unset QTDIR QTINC QTLIB
+export PATH="%{tde_bindir}:${PATH}"
+
+%configure \
+  --prefix=%{tde_prefix} \
+  --exec-prefix=%{tde_prefix} \
+  --bindir=%{tde_bindir} \
+  --libdir=%{tde_libdir} \
+  --datadir=%{tde_datadir} \
+  --mandir=%{tde_mandir} \
+  --includedir=%{tde_tdeincludedir} \
+  \
+  --disable-dependency-tracking \
+  --disable-debug \
+  --enable-new-ldflags \
+  --enable-final \
+  --enable-closure \
+  --enable-rpath \
+  --disable-gcc-hidden-visibility
+
+%__make %{?_smp_mflags} || %__make
+
+
+%install
+export PATH="%{tde_bindir}:${PATH}"
+%__rm -rf %{buildroot}
+%__make install DESTDIR=%{buildroot}
+
+%find_lang %{tde_pkg}
+
+# Hide 'showfoto'.
+echo "NoDisplay=true" >> "$RPM_BUILD_ROOT%{tde_tdeappdir}/showfoto.desktop"
+
+# Install the 'open in digikam' action for konqueror.
+install -D -m 644 "%{SOURCE1}" "$RPM_BUILD_ROOT%{tde_datadir}/apps/konqueror/servicemenus/digikam-open_in_digikam.desktop"
+
+# Updates applications categories for openSUSE
+%if 0%{?suse_version}
+%suse_update_desktop_file digikam  Graphics Photography
+%suse_update_desktop_file showfoto Graphics Viewer
+%suse_update_desktop_file "$RPM_BUILD_ROOT%{tde_datadir}/apps/konqueror/servicemenus/digikam-open_in_digikam.desktop"
+%endif
+
+
+%clean
+%__rm -rf %{buildroot}
+
 
 %changelog
-* Wed Oct 03 2012 Francois Andriot <francois.andriot@free.fr> - 0.9.6-4
-- Initial build for TDE 3.5.13.1
+* Mon Feb 02 2015 Francois Andriot <francois.andriot@free.fr> - 2:0.9.6-2
+- Rebuild on Fedora 21 for updated libgphoto2
 
-* Fri Aug 03 2012 Francois Andriot <francois.andriot@free.fr> - 0.9.6-3
-- Add support for Mageia 2 and Mandriva 2011
-- Removes old patches, adds GIT patches.
-- Fix digikam FTBFS due to jpeg code [Commit #b9419cd5]
-- Fix FTBFS due to png code [Bug #595] [Commit #3e27b07f]
-- Remove version.h. Cruft from an older version prior to 0.9.6.
-- Fix usage of obsolete libpng jmpbuf member [Commit #7d0d82b7]
-- GCC 4.7 fix. [Bug #958] [Commit #a9489034]
-- GCC 4.7 fix. [Bug #958] [Commit #a209c81b]
-- Fix 'format not a string literal' error [Commit #029218cd]
-- Update patch in GIT hash a9489034 to use reinterpret_cast. [Commit #5a043853]
-- Fix FTBFS on png >= 0.15 [Commit #18ecd512]
-
-* Sun Jul 08 2012 Francois Andriot <francois.andriot@free.fr> - 0.9.6-3
-- Fix man directory location
-- Fix postinstall
-- Fix description
-- Add "BuildRequires: exiv2-devel"
-
-* Tue May 01 2012 Francois Andriot <francois.andriot@free.fr> - 0.9.6-2
-- gcc 4.7 + libpng 1.5 patch for digikam (consolidated) [Bug #958]
-
-* Sun Nov 06 2011 Francois Andriot <francois.andriot@free.fr> - 0.9.6-1
-- Initial release for RHEL 6, RHEL 5 and Fedora 15
-
+* Mon Jul 29 2013 Francois Andriot <francois.andriot@free.fr> - 2:0.9.6-1
+- Initial release for TDE 14.0.0
