@@ -1,33 +1,61 @@
-# If TDE is built in a specific prefix (e.g. /opt/trinity), the release will be suffixed with ".opt".
-%if "%{?tde_prefix}" != "/usr"
-%define _variant .opt
-%endif
+#
+# spec file for package tdeaddons (version R14)
+#
+# Copyright (c) 2014 Trinity Desktop Environment
+#
+# All modifications and additions to the file contributed by third parties
+# remain the property of their copyright owners, unless otherwise agreed
+# upon. The license for this file, and modifications and additions to the
+# file, is the same license as for the pristine package itself (unless the
+# license for the pristine package is not an Open Source License, in which
+# case the license is the MIT License). An "Open Source License" is a
+# license that conforms to the Open Source Definition (Version 1.9)
+# published by the Open Source Initiative.
+#
+# Please submit bugfixes or comments via http://www.trinitydesktop.org/
+#
 
-# TDE 3.5.13 specific building variables
+# BUILD WARNING:
+#  Remove qt-devel and qt3-devel and any kde*-devel on your system !
+#  Having KDE libraries may cause FTBFS here !
+
+# TDE variables
+%if "%{?tde_version}" == ""
+%define tde_version 14.0.0
+%endif
+%define tde_pkg tdeaddons
+%define tde_prefix /opt/trinity
 %define tde_bindir %{tde_prefix}/bin
 %define tde_datadir %{tde_prefix}/share
 %define tde_docdir %{tde_datadir}/doc
 %define tde_includedir %{tde_prefix}/include
 %define tde_libdir %{tde_prefix}/%{_lib}
-
-%define tde_tdeappdir %{tde_datadir}/applications/kde
+%define tde_tdeappdir %{tde_datadir}/applications/tde
 %define tde_tdedocdir %{tde_docdir}/tde
 %define tde_tdeincludedir %{tde_includedir}/tde
 %define tde_tdelibdir %{tde_libdir}/trinity
 
-%define _docdir %{tde_docdir}
+# If TDE is built in a specific prefix (e.g. /opt/trinity), the release will be suffixed with ".opt".
+%if "%{?tde_prefix}" != "/usr"
+%define _variant .opt
+%endif
 
-Name:		trinity-tdeaddons
+
+Name:		trinity-%{tde_pkg}
 Summary:	Trinity Desktop Environment - Plugins
-Version:	3.5.13.2
-Release:	1%{?dist}%{?_variant}
-
-License:	GPLv2
+Version:	%{tde_version}
+Release:	%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}%{?_variant}
 Group:		User Interface/Desktops
-
-Vendor:		Trinity Project
-Packager:	Francois Andriot <francois.andriot@free.fr>
 URL:		http://www.trinitydesktop.org/
+
+%if 0%{?suse_version}
+License:	GPL-2.0+
+%else
+License:	GPLv2+
+%endif
+
+#Vendor:		Trinity Project
+#Packager:	Francois Andriot <francois.andriot@free.fr>
 
 Obsoletes:	trinity-kdeaddons < %{version}-%{release}
 Provides:	trinity-kdeaddons = %{version}-%{release}
@@ -37,36 +65,92 @@ Provides:	trinity-kdeaddons-extras = %{version}-%{release}
 Prefix:    %{tde_prefix}
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
-Source0: kdeaddons-trinity-%{version}.tar.xz
+Source0:	%{name}-%{version}%{?preversion:~%{preversion}}.tar.gz
+Patch1:		tdeaddons-14.0.1-fix_sdl_detection.patch
 
-BuildRequires: autoconf automake libtool m4
-BuildRequires: trinity-arts-devel >= %{version}
-BuildRequires: trinity-tdelibs-devel >= %{version}
-BuildRequires: trinity-tdebase-devel >= %{version}
-BuildRequires: trinity-tdegames-devel >= %{version}
-BuildRequires: trinity-tdemultimedia-devel >= %{version}
-BuildRequires: trinity-tdepim-devel >= %{version}
 
+# Trinity dependencies
+BuildRequires: trinity-tdelibs-devel >= %{tde_version}
+BuildRequires: trinity-tdebase-devel >= %{tde_version}
+BuildRequires: trinity-tdegames-devel >= %{tde_version}
+BuildRequires: trinity-tdemultimedia-devel >= %{tde_version}
+BuildRequires: trinity-tdepim-devel >= %{tde_version}
+
+BuildRequires:	cmake >= 2.8
+BuildRequires:	gcc-c++
+BuildRequires:	pkgconfig
+BuildRequires:	fdupes
+
+# SUSE desktop files utility
+%if 0%{?suse_version}
+BuildRequires:	update-desktop-files
+%endif
+
+%if 0%{?opensuse_bs} && 0%{?suse_version}
+# for xdg-menu script
+BuildRequires:	brp-check-trinity
+%endif
+
+# SDL support
 BuildRequires: SDL-devel
+
+# ALSA support
 BuildRequires: alsa-lib-devel
+
+# OPENSSL support
 BuildRequires: openssl-devel
-%if 0%{?rhel} || 0%{?fedora}
-BuildRequires: libdb-devel
+
+# IDN support
+BuildRequires:	libidn-devel
+
+# GAMIN support
+#  Not on openSUSE.
+%if 0%{?rhel} || 0%{?fedora} || 0%{?mgaversion} || 0%{?mdkversion}
+%define with_gamin 1
+BuildRequires:	gamin-devel
+%endif
+
+# PCRE support
+%if 0%{?rhel} >=5 || 0%{?fedora} || 0%{?mgaversion} || 0%{?mdkversion} || 0%{?suse_version}
+%define with_pcre 1
+BuildRequires:	pcre-devel
+%endif
+
+# ACL support
+BuildRequires:	libacl-devel
+
+# DB4/DB5 support
+%if 0%{?rhel} || 0%{?fedora} || 0%{?suse_version} >= 1220 || 0%{?mdkversion} || 0%{?mgaversion}
+%define with_db 1
+%if 0%{?mgaversion} || 0%{?mdkversion}
+%if 0%{?pclinuxos}
+BuildRequires:	db4-devel
+%else
+BuildRequires:	db5-devel
+%endif
+%endif
+%if 0%{?fedora} >= 18 || 0%{?rhel} >= 7
+BuildRequires:	libdb-devel
+BuildRequires:	libdb-cxx-devel
 %endif
 %if 0%{?suse_version}
 BuildRequires:	libdb-4_8-devel
 %endif
-
-%if 0%{?fedora}
-BuildRequires: xmms-devel
+%if 0%{?rhel} && 0%{?rhel} <= 6
+BuildRequires:	db4-devel
+%endif
 %endif
 
-#Requires: which
+# XMMS support: no, always disabled, even on Fedora
+#%if 0%{?fedora}
+#define with_xmms 1
+#BuildRequires:	xmms-devel
+#%endif
 
 Requires: trinity-atlantikdesigner = %{version}-%{release}
 Requires: trinity-kaddressbook-plugins = %{version}-%{release}
 Requires: trinity-kate-plugins = %{version}-%{release}
-Requires: trinity-tdeaddons-kfile-plugins = %{version}-%{release}
+Requires: trinity-tdeaddons-tdefile-plugins = %{version}-%{release}
 Requires: trinity-kicker-applets = %{version}-%{release}
 Requires: trinity-knewsticker-scripts = %{version}-%{release}
 Requires: trinity-konq-plugins = %{version}-%{release}
@@ -110,6 +194,7 @@ America and Europe.
 %{tde_datadir}/apps/atlantikdesigner
 %{tde_tdeappdir}/atlantikdesigner.desktop
 %{tde_datadir}/icons/hicolor/*/apps/atlantikdesigner.png
+%{tde_tdedocdir}/HTML/en/atlantikdesigner/
 
 %post -n trinity-atlantikdesigner
 for f in hicolor ; do
@@ -201,6 +286,7 @@ a tab bar, a Python browser and even more.
 %{tde_tdelibdir}/katexmltoolsplugin.so
 %{tde_tdelibdir}/libkatetabbarextensionplugin.la
 %{tde_tdelibdir}/libkatetabbarextensionplugin.so
+%{tde_datadir}/applnk/.hidden/kate-plugins.desktop
 %{tde_datadir}/applnk/.hidden/katefll.desktop
 %{tde_datadir}/apps/kate
 %{tde_datadir}/apps/katepart
@@ -221,14 +307,22 @@ a tab bar, a Python browser and even more.
 %{tde_datadir}/services/katexmlcheck.desktop
 %{tde_datadir}/services/katexmltools.desktop
 %{tde_tdedocdir}/HTML/en/kate-plugins/
+# katesort plugin
+%{tde_tdelibdir}/katesortplugin.la
+%{tde_tdelibdir}/katesortplugin.so
+%{tde_datadir}/icons/hicolor/*/actions/katesort.png
+%{tde_datadir}/services/katesort.desktop
 
 ##########
 
-%package kfile-plugins
+%package tdefile-plugins
 Summary:	Trinity file dialog plugins for text files and folders
 Group:		Applications/Utilities
 
-%description kfile-plugins
+Obsoletes:	trinity-tdeaddons-kfile-plugins < %{version}-%{release}
+Provides:	trinity-tdeaddons-kfile-plugins = %{version}-%{release}
+
+%description tdefile-plugins
 This is a collection of plugins for the TDE file dialog.  These plugins
 extend the file dialog to offer advanced meta-information for text,
 HTML and desktop files, as well as for folders, Windows .lnk files,
@@ -239,37 +333,37 @@ allowing a user to more easily decide what to do when faced with a
 decision regarding conflicting filenames.  Rename dialog plugins are
 provided for audio and image files.
 
-%files kfile-plugins
+%files tdefile-plugins
 %defattr(-,root,root,-)
-%doc kfile-plugins/lnk/README
+%doc tdefile-plugins/lnk/README
 %{tde_bindir}/lnkforward
-%{tde_tdelibdir}/kfile_cert.la
-%{tde_tdelibdir}/kfile_cert.so
-%{tde_tdelibdir}/kfile_desktop.la
-%{tde_tdelibdir}/kfile_desktop.so
-%{tde_tdelibdir}/kfile_folder.la
-%{tde_tdelibdir}/kfile_folder.so
-%{tde_tdelibdir}/kfile_html.la
-%{tde_tdelibdir}/kfile_html.so
-%{tde_tdelibdir}/kfile_lnk.la
-%{tde_tdelibdir}/kfile_lnk.so
-%{tde_tdelibdir}/kfile_mhtml.la
-%{tde_tdelibdir}/kfile_mhtml.so
-%{tde_tdelibdir}/kfile_txt.la
-%{tde_tdelibdir}/kfile_txt.so
+%{tde_tdelibdir}/tdefile_cert.la
+%{tde_tdelibdir}/tdefile_cert.so
+%{tde_tdelibdir}/tdefile_desktop.la
+%{tde_tdelibdir}/tdefile_desktop.so
+%{tde_tdelibdir}/tdefile_folder.la
+%{tde_tdelibdir}/tdefile_folder.so
+%{tde_tdelibdir}/tdefile_html.la
+%{tde_tdelibdir}/tdefile_html.so
+%{tde_tdelibdir}/tdefile_lnk.la
+%{tde_tdelibdir}/tdefile_lnk.so
+%{tde_tdelibdir}/tdefile_mhtml.la
+%{tde_tdelibdir}/tdefile_mhtml.so
+%{tde_tdelibdir}/tdefile_txt.la
+%{tde_tdelibdir}/tdefile_txt.so
 %{tde_tdelibdir}/librenaudioplugin.la
 %{tde_tdelibdir}/librenaudioplugin.so
 %{tde_tdelibdir}/librenimageplugin.la
 %{tde_tdelibdir}/librenimageplugin.so
 %{tde_datadir}/applnk/.hidden/lnkforward.desktop
 %{tde_datadir}/mimelnk/application/x-win-lnk.desktop
-%{tde_datadir}/services/kfile_cert.desktop
-%{tde_datadir}/services/kfile_desktop.desktop
-%{tde_datadir}/services/kfile_folder.desktop
-%{tde_datadir}/services/kfile_html.desktop
-%{tde_datadir}/services/kfile_lnk.desktop
-%{tde_datadir}/services/kfile_mhtml.desktop
-%{tde_datadir}/services/kfile_txt.desktop
+%{tde_datadir}/services/tdefile_cert.desktop
+%{tde_datadir}/services/tdefile_desktop.desktop
+%{tde_datadir}/services/tdefile_folder.desktop
+%{tde_datadir}/services/tdefile_html.desktop
+%{tde_datadir}/services/tdefile_lnk.desktop
+%{tde_datadir}/services/tdefile_mhtml.desktop
+%{tde_datadir}/services/tdefile_txt.desktop
 %{tde_datadir}/services/renaudiodlg.desktop
 %{tde_datadir}/services/renimagedlg.desktop
 
@@ -354,13 +448,21 @@ and various local news sources.
 Summary:	plugins for Konqueror, the Trinity file/web/doc browser
 Group:		Applications/Utilities
 %if 0%{?mgaversion} || 0%{?mdkversion}
+%if 0%{?pclinuxos} == 0
 Requires:	%{_lib}jpeg8
+%endif
 %endif
 %if 0%{?rhel} || 0%{?fedora}
 Requires:	libjpeg
 %endif
-%if 0%{?suse_version}
+%if 0%{?suse_version} == 1220
 Requires:	libjpeg62
+%endif
+%if 0%{?pclinuxos}
+Requires:	%{_lib}jpeg62
+%endif
+%if 0%{?suse_version} == 1230
+Requires:	libjpeg8
 %endif
 Requires:	python
 Requires:	rsync
@@ -389,10 +491,10 @@ graphical disk usage viewer and image conversions and transformations.
 %files -n trinity-konq-plugins
 %defattr(-,root,root,-)
 %doc konq-plugins/README
-%{tde_datadir}/config/translaterc
+%{_sysconfdir}/trinity/translaterc
 %{tde_bindir}/fsview
 %{tde_bindir}/jpegorient
-%{tde_bindir}/kio_media_realfolder
+%{tde_bindir}/tdeio_media_realfolder
 %{tde_tdelibdir}/konq_sidebarnews.la
 %{tde_tdelibdir}/konq_sidebarnews.so
 %{tde_tdelibdir}/konqsidebar_delicious.la
@@ -421,8 +523,8 @@ graphical disk usage viewer and image conversions and transformations.
 %{tde_tdelibdir}/libdomtreeviewerplugin.so
 %{tde_tdelibdir}/libfsviewpart.la
 %{tde_tdelibdir}/libfsviewpart.so
-%{tde_tdelibdir}/libkhtmlsettingsplugin.la
-%{tde_tdelibdir}/libkhtmlsettingsplugin.so
+%{tde_tdelibdir}/libtdehtmlsettingsplugin.la
+%{tde_tdelibdir}/libtdehtmlsettingsplugin.so
 %{tde_tdelibdir}/kcm_kuick.la
 %{tde_tdelibdir}/kcm_kuick.so
 %{tde_tdelibdir}/libkimgallery.la
@@ -453,7 +555,7 @@ graphical disk usage viewer and image conversions and transformations.
 %{tde_datadir}/applnk/.hidden/dirfilterplugin.desktop
 %{tde_datadir}/applnk/.hidden/rsyncplugin.desktop
 %{tde_datadir}/applnk/.hidden/fsview.desktop
-%{tde_datadir}/applnk/.hidden/khtmlsettingsplugin.desktop
+%{tde_datadir}/applnk/.hidden/tdehtmlsettingsplugin.desktop
 %{tde_datadir}/applnk/.hidden/kimgalleryplugin.desktop
 %{tde_datadir}/applnk/.hidden/plugin_babelfish.desktop
 %{tde_datadir}/applnk/.hidden/plugin_domtreeviewer.desktop
@@ -463,58 +565,35 @@ graphical disk usage viewer and image conversions and transformations.
 %{tde_datadir}/apps/akregator
 %{tde_datadir}/apps/domtreeviewer
 %{tde_datadir}/apps/fsview
-%{tde_datadir}/apps/imagerotation/orient.py*
-%{tde_datadir}/apps/imagerotation/exif.py*
-%{tde_datadir}/apps/khtml/kpartplugins
+%{tde_datadir}/apps/imagerotation/
+%{tde_datadir}/apps/tdehtml/kpartplugins
 %{tde_datadir}/apps/konqiconview
 %{tde_datadir}/apps/konqlistview
 %{tde_datadir}/apps/konqsidebartng
 %{tde_datadir}/apps/konqueror/icons
 %{tde_datadir}/apps/konqueror/kpartplugins
 %{tde_datadir}/apps/konqueror/servicemenus
-%{tde_datadir}/apps/metabar/iconsrc
-%{tde_datadir}/apps/metabar/themes/default/default.css
-%{tde_datadir}/apps/metabar/themes/default/layout.html
-%{tde_datadir}/apps/microformat/pics/microformat.png
+%{tde_datadir}/apps/metabar/
+%{tde_datadir}/apps/microformat/
 %{tde_datadir}/config.kcfg/konq_sidebarnews.kcfg
-%{tde_datadir}/icons/locolor/16x16/apps/autorefresh.png
-%{tde_datadir}/icons/crystalsvg/16x16/actions/babelfish.png
-%{tde_datadir}/icons/crystalsvg/16x16/actions/cssvalidator.png
-%{tde_datadir}/icons/crystalsvg/16x16/actions/domtreeviewer.png
-%{tde_datadir}/icons/crystalsvg/16x16/actions/htmlvalidator.png
-%{tde_datadir}/icons/crystalsvg/16x16/actions/imagegallery.png
-%{tde_datadir}/icons/crystalsvg/16x16/actions/remotesync.png
-%{tde_datadir}/icons/crystalsvg/16x16/actions/remotesyncconfig.png
-%{tde_datadir}/icons/crystalsvg/16x16/actions/minitools.png
-%{tde_datadir}/icons/crystalsvg/16x16/actions/validators.png
-%{tde_datadir}/icons/crystalsvg/16x16/actions/webarchiver.png
-%{tde_datadir}/icons/crystalsvg/16x16/apps/konqsidebar_delicious.png
-%{tde_datadir}/icons/crystalsvg/16x16/apps/konqsidebar_mediaplayer.png
-%{tde_datadir}/icons/crystalsvg/16x16/apps/konqsidebar_news.png
-%{tde_datadir}/icons/crystalsvg/22x22/actions/babelfish.png
-%{tde_datadir}/icons/crystalsvg/22x22/actions/cssvalidator.png
-%{tde_datadir}/icons/crystalsvg/22x22/actions/domtreeviewer.png
-%{tde_datadir}/icons/crystalsvg/22x22/actions/htmlvalidator.png
-%{tde_datadir}/icons/crystalsvg/22x22/actions/imagegallery.png
-%{tde_datadir}/icons/crystalsvg/22x22/actions/remotesync.png
-%{tde_datadir}/icons/crystalsvg/22x22/actions/remotesyncconfig.png
-%{tde_datadir}/icons/crystalsvg/22x22/actions/minitools.png
-%{tde_datadir}/icons/crystalsvg/22x22/actions/validators.png
-%{tde_datadir}/icons/crystalsvg/22x22/actions/webarchiver.png
-%{tde_datadir}/icons/crystalsvg/22x22/apps/konqsidebar_mediaplayer.png
-%{tde_datadir}/icons/crystalsvg/32x32/actions/minitools.png
-%{tde_datadir}/icons/crystalsvg/32x32/apps/konqsidebar_mediaplayer.png
-%{tde_datadir}/icons/crystalsvg/48x48/actions/minitools.png
-%{tde_datadir}/icons/crystalsvg/48x48/apps/konqsidebar_mediaplayer.png
-%{tde_datadir}/icons/hicolor/16x16/apps/metabar.png
-%{tde_datadir}/icons/hicolor/22x22/apps/fsview.png
-%{tde_datadir}/icons/hicolor/32x32/apps/fsview.png
-%{tde_datadir}/icons/hicolor/32x32/apps/metabar.png
-%{tde_datadir}/icons/hicolor/48x48/apps/metabar.png
-%{tde_datadir}/icons/hicolor/64x64/apps/metabar.png
+%{tde_datadir}/icons/crystalsvg/*/actions/babelfish.png
+%{tde_datadir}/icons/crystalsvg/*/actions/cssvalidator.png
+%{tde_datadir}/icons/crystalsvg/*/actions/domtreeviewer.png
+%{tde_datadir}/icons/crystalsvg/*/actions/htmlvalidator.png
+%{tde_datadir}/icons/crystalsvg/*/actions/imagegallery.png
+%{tde_datadir}/icons/crystalsvg/*/actions/remotesync.png
+%{tde_datadir}/icons/crystalsvg/*/actions/remotesyncconfig.png
+%{tde_datadir}/icons/crystalsvg/*/actions/minitools.png
+%{tde_datadir}/icons/crystalsvg/*/actions/validators.png
+%{tde_datadir}/icons/crystalsvg/*/actions/webarchiver.png
+%{tde_datadir}/icons/crystalsvg/*/apps/konqsidebar_delicious.png
+%{tde_datadir}/icons/crystalsvg/*/apps/konqsidebar_mediaplayer.png
+%{tde_datadir}/icons/crystalsvg/*/apps/konqsidebar_news.png
+%{tde_datadir}/icons/hicolor/*/apps/metabar.png
+%{tde_datadir}/icons/hicolor/*/apps/fsview.png
 %{tde_datadir}/icons/hicolor/scalable/apps/metabar.svgz
-%{tde_datadir}/icons/hicolor/128x128/apps/metabar.png
-%{tde_datadir}/icons/locolor/32x32/apps/konqsidebar_mediaplayer.png
+%{tde_datadir}/icons/locolor/*/apps/autorefresh.png
+%{tde_datadir}/icons/locolor/*/apps/konqsidebar_mediaplayer.png
 %{tde_datadir}/services/akregator_konqplugin.desktop
 %{tde_datadir}/services/ark_plugin.desktop
 %{tde_datadir}/services/fsview_part.desktop
@@ -557,7 +636,7 @@ signatures in external mail clients such as KMail.
 %doc README
 %{tde_bindir}/ksig
 %{tde_tdeappdir}/ksig.desktop
-%{tde_datadir}/apps/ksig/ksigui.rc
+%{tde_datadir}/apps/ksig/
 %{tde_datadir}/icons/hicolor/*/apps/ksig.png
 %{tde_tdedocdir}/HTML/en/ksig/
 
@@ -584,7 +663,7 @@ Requires:	trinity-noatun
 
 %description -n trinity-noatun-plugins
 This package contains a variety of useful plugins for Noatun, the audio and
-video media player for TDE.  These plugins can be loaded through the plugin
+video media player for TDE. These plugins can be loaded through the plugin
 manager in Noatun settings.
 
 Highlights include an alarm clock, guessing tags from filenames, adjustable
@@ -613,8 +692,10 @@ of user interfaces, playlists and visualisation plugins.
 %{tde_tdelibdir}/noatunlyrics.so
 %{tde_tdelibdir}/noatunmadness.la
 %{tde_tdelibdir}/noatunmadness.so
+%if 0%{?with_db}
 %{tde_tdelibdir}/noatun_oblique.la
 %{tde_tdelibdir}/noatun_oblique.so
+%endif
 %{tde_tdelibdir}/noatunpitchablespeed.la
 %{tde_tdelibdir}/noatunpitchablespeed.so
 %{tde_tdelibdir}/noatunsynaescope.la
@@ -644,85 +725,99 @@ done
 
 ##########
 
-%if 0%{?suse_version}
+%if 0%{?pclinuxos} || 0%{?suse_version} && 0%{?opensuse_bs} == 0
 %debug_package
 %endif
 
 ##########
 
-
-
 %prep
-%setup -q -n kdeaddons-trinity-%{version}
-
-# Ugly hack to modify TQT include directory inside autoconf files.
-# If TQT detection fails, it fallbacks to TQT4 instead of TQT3 !
-%__sed -i admin/acinclude.m4.in \
-  -e "s|/usr/include/tqt|%{tde_includedir}/tqt|g" \
-  -e "s|kde_htmldir='.*'|kde_htmldir='%{tde_tdedocdir}/HTML'|g"
-
-%__cp -f "/usr/share/aclocal/libtool.m4" "admin/libtool.m4.in"
-%__cp -f "/usr/share/libtool/config/ltmain.sh" "admin/ltmain.sh" || %__cp -f "/usr/share/libtool/ltmain.sh" "admin/ltmain.sh"
-%__make -f "admin/Makefile.common"
+%setup -q -n %{name}-%{version}%{?preversion:~%{preversion}}
+%patch1 -p1 -b .sdl
 
 
 %build
-unset QTDIR || : ; . /etc/profile.d/qt3.sh
+unset QTDIR QTINC QTLIB
 export PATH="%{tde_bindir}:${PATH}"
-export LDFLAGS="-L%{tde_libdir} -I%{tde_includedir}"
 export PKG_CONFIG_PATH="%{tde_libdir}/pkgconfig:${PKG_CONFIG_PATH}"
 
-%configure \
-  --prefix=%{tde_prefix} \
-  --exec-prefix=%{tde_prefix} \
-  --bindir=%{tde_bindir} \
-  --libdir=%{tde_libdir} \
-  --datadir=%{tde_datadir} \
-  --includedir=%{tde_tdeincludedir} \
-  --disable-rpath \
-  --enable-new-ldflags \
-  --enable-closure \
-  --disable-debug --disable-warnings \
-  --disable-dependency-tracking --enable-final \
-  --with-extra-includes=%{tde_includedir}/tqt:%{_includedir}/db4:%{tde_includedir}/arts:%{tde_includedir} \
-  --without-xmms \
-  --with-sdl \
-  --with-berkeley-db
+if ! rpm -E %%cmake|grep -q "cd build"; then
+  %__mkdir_p build
+  cd build
+fi
+
+# Help cmake to find DB headers ...
+if [ -d "/usr/include/db53" ]; then
+  export CMAKE_INCLUDE_PATH="/usr/include/db53"
+fi
+if [ -d "/usr/include/db4" ]; then
+  export CMAKE_INCLUDE_PATH="/usr/include/db4"
+fi
 
 
-%__make %{?_smp_mflags}
+%cmake \
+  -DCMAKE_BUILD_TYPE="RelWithDebInfo" \
+  -DCMAKE_C_FLAGS="${RPM_OPT_FLAGS} -DNDEBUG" \
+  -DCMAKE_CXX_FLAGS="${RPM_OPT_FLAGS} -DNDEBUG" \
+  -DCMAKE_SKIP_RPATH=OFF \
+  -DCMAKE_INSTALL_RPATH="%{tde_libdir}" \
+  -DCMAKE_VERBOSE_MAKEFILE=ON \
+  -DWITH_GCC_VISIBILITY=OFF \
+  \
+  -DCMAKE_INSTALL_PREFIX="%{tde_prefix}" \
+  -DBIN_INSTALL_DIR="%{tde_bindir}" \
+  -DDOC_INSTALL_DIR="%{tde_docdir}" \
+  -DINCLUDE_INSTALL_DIR="%{tde_tdeincludedir}" \
+  -DLIB_INSTALL_DIR="%{tde_libdir}" \
+  -DPKGCONFIG_INSTALL_DIR="%{tde_libdir}/pkgconfig" \
+  -DSYSCONF_INSTALL_DIR="%{_sysconfdir}/trinity" \
+  -DSHARE_INSTALL_PREFIX="%{tde_datadir}" \
+  \
+  -DWITH_ALL_OPTIONS=ON \
+  -DWITH_ARTS=ON \
+  -DWITH_SDL=ON \
+  -DWITH_BERKELEY_DB=ON \
+  -DWITH_XMMS=OFF \
+  -DWITH_TEST=OFF \
+  \
+  -DBUILD_ALL=ON \
+  -DBUILD_ATLANTIKDESIGNER=ON \
+  -DBUILD_DOC=ON \
+  -DBUILD_KADDRESSBOOK_PLUGINS=ON \
+  -DBUILD_KATE_PLUGINS=ON \
+  -DBUILD_KICKER_APPLETS=ON \
+  -DBUILD_KNEWSTICKER_SCRIPTS=ON \
+  -DBUILD_KONQ_PLUGINS=ON \
+  -DBUILD_KSIG=ON \
+  -DBUILD_NOATUN_PLUGINS=ON \
+  -DBUILD_RENAMEDLG_PLUGINS=ON \
+  -DBUILD_TDEFILE_PLUGINS=ON \
+  -DBUILD_TUTORIALS=OFF \
+  ..
+
+%__make %{?_smp_mflags} || %__make
 
 
 %install
 export PATH="%{tde_bindir}:${PATH}"
 %__rm -rf %{buildroot}
-%__make install DESTDIR=%{buildroot}
+%__make install DESTDIR=%{buildroot} -C build
 
-# File lists for locale
-HTML_DIR=$(kde-config --expandvars --install html)
-if [ -d %{buildroot}/$HTML_DIR ]; then
- for lang_dir in %{buildroot}/$HTML_DIR/* ; do
-  if [ -d $lang_dir ]; then
-    lang=$(basename $lang_dir)
-    echo "%lang($lang) $HTML_DIR/$lang/*" >> %{name}.lang
-    # replace absolute symlinks with relative ones
-    pushd $lang_dir
-      for i in *; do
-        [ -d $i -a -L $i/common ] && rm -f $i/common && ln -sf ../common $i/common
-      done
-    popd
-  fi
- done
-fi
+# Temporary
+%__rm -rf %{?buildroot}%{tde_tdedocdir}/HTML/en/khelpcenter
 
+
+# Updates applications categories for openSUSE
+%if 0%{?suse_version}
+%suse_update_desktop_file atlantikdesigner Game    BoardGame
+%suse_update_desktop_file -r ksig          Network Email
+%endif
 
 
 %clean
 %__rm -rf %{buildroot}
 
 
-
-
 %changelog
-* Sun Sep 30 2012 Francois Andriot <francois.andriot@free.fr> - 3.5.13.1-1
-- Initial build for TDE 3.5.13.1
+* Fri Jul 05 2013 Francois Andriot <francois.andriot@free.fr> - 14.0.0-1
+- Initial release for TDE 14.0.0

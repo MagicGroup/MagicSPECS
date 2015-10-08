@@ -1,0 +1,18 @@
+diff --git a/ConfigureChecks.cmake b/ConfigureChecks.cmake
+index 1fedc9a..f3872b9 100644
+--- a/ConfigureChecks.cmake
++++ b/ConfigureChecks.cmake
+@@ -74,7 +74,12 @@ if( BUILD_NOATUN_PLUGINS )
+   if( WITH_SDL )
+     pkg_search_module( SDL sdl )
+     if( NOT SDL_FOUND )
+-      tde_message_fatal( "SDL is requested, but was not found on your system" )
++      check_include_file( SDL/SDL.h HAVE_SDL_H )
++      if( NOT HAVE_SDL_H )
++        tde_message_fatal( "SDL is requested, but was not found on your system" )
++      endif ( )
++      set ( SDL_INCLUDE_DIRS /usr/include/SDL )
++      set ( SDL_LIBRARIES SDL pthread )
+     endif( )
+   endif( WITH_SDL )
+ 
