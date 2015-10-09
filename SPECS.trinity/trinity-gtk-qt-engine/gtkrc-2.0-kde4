@@ -1,5 +1,5 @@
-# This file was written by KDE
-# You can edit it in the KDE control center, under "GTK Styles and Fonts"
+# This file was written by TDE
+# You can edit it in the Trinity control center, under "GTK Styles and Fonts"
 
 include "/usr/share/themes/Qt/gtk-2.0/gtkrc"
 
