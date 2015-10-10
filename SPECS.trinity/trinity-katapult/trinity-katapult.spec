@@ -1,51 +1,79 @@
-# Default version for this component
-%define kdecomp katapult
-%define tdeversion 3.5.13.2
+#
+# spec file for package katapult (version R14)
+#
+# Copyright (c) 2014 Trinity Desktop Environment
+#
+# All modifications and additions to the file contributed by third parties
+# remain the property of their copyright owners, unless otherwise agreed
+# upon. The license for this file, and modifications and additions to the
+# file, is the same license as for the pristine package itself (unless the
+# license for the pristine package is not an Open Source License, in which
+# case the license is the MIT License). An "Open Source License" is a
+# license that conforms to the Open Source Definition (Version 1.9)
+# published by the Open Source Initiative.
+#
+# Please submit bugfixes or comments via http://www.trinitydesktop.org/
+#
 
-# If TDE is built in a specific prefix (e.g. /opt/trinity), the release will be suffixed with ".opt".
-%if "%{?tde_prefix}" != "/usr"
-%define _variant .opt
+# TDE variables
+%define tde_epoch 2
+%if "%{?tde_version}" == ""
+%define tde_version 14.0.0
 %endif
-
-# TDE 3.5.13 specific building variables
+%define tde_pkg katapult
+%define tde_prefix /opt/trinity
+%define tde_appdir %{tde_datadir}/applications
 %define tde_bindir %{tde_prefix}/bin
 %define tde_datadir %{tde_prefix}/share
 %define tde_docdir %{tde_datadir}/doc
 %define tde_includedir %{tde_prefix}/include
 %define tde_libdir %{tde_prefix}/%{_lib}
 %define tde_mandir %{tde_datadir}/man
-%define tde_appdir %{tde_datadir}/applications
-
-%define tde_tdeappdir %{tde_appdir}/kde
+%define tde_tdeappdir %{tde_datadir}/applications/tde
 %define tde_tdedocdir %{tde_docdir}/tde
 %define tde_tdeincludedir %{tde_includedir}/tde
 %define tde_tdelibdir %{tde_libdir}/trinity
 
-%define _docdir %{tde_docdir}
 
+Name:			trinity-%{tde_pkg}
+Epoch:			%{tde_epoch}
+Version:		0.3.2.1
+Release:		%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}%{?_variant}
+Summary:		Faster access to applications, bookmarks, and other items.
+Group:			Applications/Utilities
+URL:			http://www.trinitydesktop.org/
 
-Name:		trinity-%{kdecomp}
-Summary:	Faster access to applications, bookmarks, and other items.
-Version:	0.3.2.1
-Release:	6%{?dist}%{?_variant}
-
+%if 0%{?suse_version}
+License:	GPL-2.0+
+%else
 License:	GPLv2+
-Group:		Applications/Utilities
+%endif
 
-Vendor:		Trinity Project
-Packager:	Francois Andriot <francois.andriot@free.fr>
-URL:		http://www.trinitydesktop.org/
+#Vendor:		Trinity Desktop
+#Packager:	Francois Andriot <francois.andriot@free.fr>
 
-Prefix:		%{tde_prefix}
-BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+Prefix:			%{_prefix}
+BuildRoot:		%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
-Source0:	%{kdecomp}-trinity-%{tdeversion}.tar.xz
+Source0:		%{name}-%{tde_version}%{?preversion:~%{preversion}}.tar.gz
 
-
-BuildRequires:	trinity-tqtinterface-devel >= 3.5.13.1
-BuildRequires:	trinity-tdelibs-devel >= 3.5.13.1
-BuildRequires:	trinity-tdebase-devel >= 3.5.13.1
+BuildRequires:	trinity-tdelibs-devel >= %{tde_version}
+BuildRequires:	trinity-tdebase-devel >= %{tde_version}
 BuildRequires:	desktop-file-utils
+
+BuildRequires:	autoconf automake libtool m4
+BuildRequires:	gcc-c++
+BuildRequires:	pkgconfig
+
+# SUSE desktop files utility
+%if 0%{?suse_version}
+BuildRequires:	update-desktop-files
+%endif
+
+%if 0%{?opensuse_bs} && 0%{?suse_version}
+# for xdg-menu script
+BuildRequires:	brp-check-trinity
+%endif
 
 %description
 Katapult is an application for TDE, designed to allow faster access to
@@ -55,19 +83,17 @@ plugins as well, so its appearance is completely customizable. It was
 inspired by Quicksilver for OS X. 
 
 
-%if 0%{?suse_version}
+##########
+
+%if 0%{?pclinuxos} || 0%{?suse_version} && 0%{?opensuse_bs} == 0
 %debug_package
 %endif
 
+##########
+
 
 %prep
-%setup -q -n %{kdecomp}-trinity-%{tdeversion}
-
-# Ugly hack to modify TQT include directory inside autoconf files.
-# If TQT detection fails, it fallbacks to TQT4 instead of TQT3 !
-%__sed -i "admin/acinclude.m4.in" \
-  -e "s|/usr/include/tqt|%{tde_includedir}/tqt|g" \
-  -e "s|kde_htmldir='.*'|kde_htmldir='%{tde_tdedocdir}/HTML'|g"
+%setup -q -n %{name}-%{tde_version}%{?preversion:~%{preversion}}
 
 %__cp "/usr/share/aclocal/libtool.m4" "admin/libtool.m4.in"
 %__cp "/usr/share/libtool/config/ltmain.sh" "admin/ltmain.sh" || %__cp "/usr/share/libtool/ltmain.sh" "admin/ltmain.sh"
@@ -75,9 +101,8 @@ inspired by Quicksilver for OS X.
 
 
 %build
-unset QTDIR; . /etc/profile.d/qt3.sh
+unset QTDIR QTINC QTLIB
 export PATH="%{tde_bindir}:${PATH}"
-export LDFLAGS="-L%{tde_libdir} -I%{tde_includedir}"
 
 %configure \
   --prefix=%{tde_prefix} \
@@ -86,9 +111,14 @@ export LDFLAGS="-L%{tde_libdir} -I%{tde_includedir}"
   --libdir=%{tde_libdir} \
   --datadir=%{tde_datadir} \
   --includedir=%{tde_tdeincludedir} \
-  --disable-rpath \
-  --with-extra-includes=%{tde_includedir}/tqt \
-  --enable-closure
+  \
+  --disable-dependency-tracking \
+  --disable-debug \
+  --enable-new-ldflags \
+  --enable-final \
+  --enable-closure \
+  --enable-rpath \
+  --disable-gcc-hidden-visibility
 
 %__make %{?_smp_mflags}
 
@@ -98,11 +128,18 @@ export PATH="%{tde_bindir}:${PATH}"
 %__rm -rf %{buildroot}
 %__make install DESTDIR=%{buildroot}
 
-%find_lang %{kdecomp}
+%find_lang %{tde_pkg}
 
 # Removes useless files (-devel ?)
 %__rm -f %{?buildroot}%{tde_libdir}/*.so
 %__rm -f %{?buildroot}%{tde_libdir}/*.la
+
+# Fix desktop files (openSUSE only)
+echo "OnlyShowIn=TDE;" >>"%{?buildroot}%{tde_tdeappdir}/%{tde_pkg}.desktop"
+%if 0%{?suse_version}
+%suse_update_desktop_file -G "Application Launcher" katapult DesktopUtility
+%endif
+
 
 %clean
 %__rm -rf %{buildroot}
@@ -116,6 +153,7 @@ done
 /sbin/ldconfig || :
 update-desktop-database %{tde_appdir} &> /dev/null
 
+
 %postun
 for f in crystalsvg hicolor ; do
   touch --no-create %{tde_datadir}/icons/${f} || :
@@ -125,7 +163,7 @@ done
 update-desktop-database %{tde_appdir} &> /dev/null
 
 
-%files -f %{kdecomp}.lang
+%files -f %{tde_pkg}.lang
 %defattr(-,root,root,-)
 %doc AUTHORS COPYING
 %{tde_bindir}/katapult
@@ -178,23 +216,5 @@ update-desktop-database %{tde_appdir} &> /dev/null
 
 
 %changelog
-* Wed Jul 31 2013 Liu Di <liudidi@gmail.com> - 0.3.2.1-6.opt
-- 为 Magic 3.0 重建
-
-* Wed Oct 03 2012 Francois Andriot <francois.andriot@free.fr> - 0.3.2.1-5
-- Initial build for TDE 3.5.13.1
-
-* Tue May 01 2012 Francois Andriot <francois.andriot@free.fr> - 0.3.2.1-4
-- Rebuilt for Fedora 17
-- Fix post and postun
-
-* Fri Nov 25 2011 Francois Andriot <francois.andriot@free.fr> - 0.3.2.1-3
-- Fix HTML directory location
-
-* Sun Oct 30 2011 Francois Andriot <francois.andriot@free.fr> - 0.3.2.1-2
-- Rebuilt for TDE 3.5.13 on RHEL 6, RHEL 5 and Fedora 15
-
-* Tue Sep 14 2011 Francois Andriot <francois.andriot@free.fr> - 0.3.2.1-1
-- Initial build for RHEL 6.0
-- Import to GIT
-
+* Fri Jul 05 2013 Francois Andriot <francois.andriot@free.fr> - 2:0.3.2.1-1
+- Initial release for TDE 14.0.0
