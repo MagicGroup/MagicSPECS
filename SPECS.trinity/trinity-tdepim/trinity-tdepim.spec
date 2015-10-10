@@ -22,7 +22,7 @@
 # TDE variables
 %define tde_epoch 2
 %if "%{?tde_version}" == ""
-%define tde_version 14.0.0
+%define tde_version 14.0.1
 %endif
 %define tde_pkg tdepim
 %define tde_prefix /opt/trinity
@@ -44,10 +44,8 @@
 
 
 # KDEPIM specific features
-%if 0%{?fedora} || 0%{?mgaversion} || 0%{?mdkversion} || 0%{?suse_version}
 %define with_gnokii 1
 BuildRequires:	gnokii-devel
-%endif
 
 # TDEPIM optional features
 #define		with_kitchensync 1
@@ -60,11 +58,7 @@ Release:	%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}%{?_variant}
 Group:		Applications/Productivity
 URL:		http://www.trinitydesktop.org/
 
-%if 0%{?suse_version}
-License:	GPL-2.0+
-%else
 License:	GPLv2+
-%endif
 
 #Vendor:		Trinity Desktop
 #Packager:	Francois Andriot <francois.andriot@free.fr>
@@ -94,27 +88,13 @@ BuildRequires:	boost-devel
 BuildRequires:	pcre-devel
 BuildRequires:	libidn-devel
 
-# SUSE desktop files utility
-%if 0%{?suse_version}
-BuildRequires:	update-desktop-files
-%endif
-
-%if 0%{?opensuse_bs} && 0%{?suse_version}
-# for xdg-menu script
-BuildRequires:	brp-check-trinity
-%endif
-
 # GAMIN support
 #  Not on openSUSE.
-%if 0%{?rhel} || 0%{?fedora} || 0%{?mgaversion} || 0%{?mdkversion}
 %define with_gamin 1
 BuildRequires:	gamin-devel
-%endif
 
 # FLEX support
-%if 0%{?fedora} >= 15
 BuildRequires:	flex-static
-%endif
 
 # CURL support
 BuildRequires:	curl-devel
@@ -123,66 +103,27 @@ BuildRequires:	curl-devel
 BuildRequires:	glib2-devel
 
 # SASL support
-%if 0%{?mgaversion} || 0%{?mdkversion}
-BuildRequires:	%{_lib}sasl2-devel
-%else
 BuildRequires:	cyrus-sasl-devel
-%endif
 
 # XCOMPOSITE support
-%if 0%{?mgaversion} || 0%{?mdkversion}
-%if 0%{?mgaversion} >= 4
-BuildRequires:	%{_lib}xcomposite-devel
-%else
-BuildRequires:	%{_lib}xcomposite%{?mgaversion:1}-devel
-%endif
-%endif
-%if 0%{?rhel} >= 5 || 0%{?fedora} || 0%{?suse_version} >= 1220
 BuildRequires:	libXcomposite-devel
-%endif
 
 # XSCREENSAVER support
 #  RHEL 4: disabled
 #  RHEL 6: available in EPEL
 #  RHEL 7: available in NUX
-%if 0%{?fedora} || 0%{?mgaversion} || 0%{?mdkversion} || 0%{?rhel} >= 5 || 0%{?suse_version}
 %define with_xscreensaver 1
 
-%if 0%{?fedora} || 0%{?rhel} >= 5
 BuildRequires:	libXScrnSaver-devel
 BuildRequires:	xscreensaver
 BuildRequires:	xscreensaver-base
 BuildRequires:	xscreensaver-extras
-%if 0%{?fedora}
 BuildRequires:	xscreensaver-extras-base
-%endif
 BuildRequires:	xscreensaver-gl-base
 BuildRequires:	xscreensaver-gl-extras
-%endif
-
-%if 0%{?suse_version}
-BuildRequires:	libXScrnSaver-devel
-BuildRequires:	xscreensaver
-BuildRequires:	xscreensaver-data
-BuildRequires:	xscreensaver-data-extra
-%endif
-
-%if 0%{?mgaversion} || 0%{?mdkversion}
-%if 0%{?mgaversion} >= 4
-BuildRequires:	%{_lib}xscrnsaver-devel
-%else
-BuildRequires:	%{_lib}xscrnsaver%{?mgaversion:1}-devel
-%endif
-BuildRequires:	xscreensaver
-BuildRequires:	xscreensaver-base
-BuildRequires:	xscreensaver-extrusion
-BuildRequires:	xscreensaver-gl
-%endif
-%endif
 
 # ACL support
 BuildRequires:	libacl-devel
-
 
 Requires:	trinity-libtdepim = %{version}-%{release}
 Requires:	%{name}-kfile-plugins = %{version}-%{release}
@@ -2280,12 +2221,6 @@ for f in hicolor ; do
   gtk-update-icon-cache -q %{tde_datadir}/icons/${f} 2> /dev/null ||:
 done
 update-desktop-database %{tde_datadir}/applications > /dev/null 2>&1 || :
-
-##########
-
-%if 0%{?pclinuxos} || 0%{?suse_version} && 0%{?opensuse_bs} == 0
-%debug_package
-%endif
 
 ##########
 

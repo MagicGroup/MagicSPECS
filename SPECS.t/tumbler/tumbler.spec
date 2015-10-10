@@ -1,16 +1,18 @@
 # Review at https://bugzilla.redhat.com/show_bug.cgi?id=549593
 
-%global minorversion 0.1
-
 Name:           tumbler
-Version:        0.1.26
+Version:        0.1.31
 Release:        1%{?dist}
 Summary:        D-Bus service for applications to request thumbnails
+Summary(zh_CN.UTF-8): 应用程序请求缩略图的 D-Bus 服务
 
 License:        GPLv2+ and LGPLv2+
 Group:          Applications/System
+Group(zh_CN.UTF-8): 应用程序/系统
 URL:            http://git.xfce.org/xfce/tumbler/
 #VCS git:git://git.xfce.org/xfce/tumbler
+%global minorversion %(echo %{version} | awk -F. '{print $1"."$2}')
+
 Source0:        http://archive.xfce.org/src/apps/tumbler/%{minorversion}/%{name}-%{version}.tar.bz2
 BuildRequires:  dbus-glib-devel
 BuildRequires:  freetype-devel
@@ -34,15 +36,21 @@ http://live.gnome.org/ThumbnailerSpec written in an object-oriented fashion
 
 Additional thumbnailers can be found in the tumbler-extras package
 
+%description -l zh_CN.UTF-8
+应用程序请求缩略图的 D-Bus 服务。
 
 %package devel
 Summary:       Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:         Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:      %{name}%{?_isa} = %{version}-%{release}
 
 %description devel
 This package contains libraries and header files for developing applications 
 that use %{name}.
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -65,7 +73,7 @@ make %{?_smp_mflags} V=1
 make install INSTALL="%{__install} -p" DESTDIR=%{buildroot}
 
 find %{buildroot} -type f -name "*.la" -delete
-
+magic_rpm_clean.sh
 %find_lang %{name}
 
 
@@ -83,7 +91,7 @@ rm -rf %{buildroot}
 %doc AUTHORS ChangeLog COPYING NEWS README TODO
 %{_datadir}/dbus-1/services/org.xfce.Tumbler.*.service
 %{_libdir}/libtumbler-*.so.*
-
+%{_sysconfdir}/xdg/tumbler/tumbler.rc
 %dir %{_libdir}/%{name}-*
 %{_libdir}/%{name}-*/tumblerd
 %{_libdir}/tumbler-*/plugins/
@@ -100,6 +108,9 @@ rm -rf %{buildroot}
 %{_includedir}/%{name}-1/tumbler
 
 %changelog
+* Sun Oct 04 2015 Liu Di <liudidi@gmail.com> - 0.1.31-1
+- 更新到 0.1.31
+
 * Sun Dec 09 2012 Kevin Fenzi <kevin@scrye.com> 0.1.26-1
 - Update to 0.1.26
 

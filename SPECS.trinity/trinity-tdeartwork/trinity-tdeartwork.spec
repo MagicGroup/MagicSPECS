@@ -22,7 +22,7 @@
 # TDE variables
 %define tde_epoch 2
 %if "%{?tde_version}" == ""
-%define tde_version 14.0.0
+%define tde_version 14.0.1
 %endif
 %define tde_pkg tdeartwork
 %define tde_prefix /opt/trinity
@@ -50,11 +50,7 @@ Release:	%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}%{?_variant}
 Group:		System/GUI/Other
 URL:		http://www.trinitydesktop.org/
 
-%if 0%{?suse_version}
-License:	GPL-2.0+
-%else
 License:	GPLv2+
-%endif
 
 #Vendor:		Trinity Desktop
 #Packager:	Francois Andriot <francois.andriot@free.fr>
@@ -85,20 +81,8 @@ BuildRequires:	esound-devel
 BuildRequires:	libacl-devel
 
 # MESA support
-%if 0%{?rhel} || 0%{?fedora}
 BuildRequires: mesa-libGL-devel
 BuildRequires: mesa-libGLU-devel
-%endif
-%if 0%{?mdkversion} || 0%{?mgaversion}
-BuildRequires: mesaglu-devel
-%endif
-%if 0%{?suse_version}
-BuildRequires: Mesa-libGL-devel
-BuildRequires: Mesa-libGLU-devel
-%endif
-%if 0%{?rhel} == 4
-BuildRequires:	xorg-x11-Mesa-libGLU
-%endif
 
 # LIBART support
 %define with_libart 1
@@ -108,68 +92,25 @@ BuildRequires:	libart_lgpl-devel
 #  RHEL 4: disabled
 #  RHEL 6: available in EPEL
 #  RHEL 7: available in NUX
-%if 0%{?fedora} || 0%{?mgaversion} || 0%{?mdkversion} || 0%{?rhel} >= 5 || 0%{?suse_version}
 %define with_xscreensaver 1
 
-%if 0%{?fedora} || 0%{?rhel} >= 5
 BuildRequires:	libXScrnSaver-devel
 BuildRequires:	xscreensaver
 BuildRequires:	xscreensaver-base
 BuildRequires:	xscreensaver-extras
-%if 0%{?fedora}
 BuildRequires:	xscreensaver-extras-base
-%endif
-BuildRequires:	xscreensaver-gl-base
-BuildRequires:	xscreensaver-gl-extras
-%endif
 
-%if 0%{?suse_version}
-BuildRequires:	libXScrnSaver-devel
-BuildRequires:	xscreensaver
-BuildRequires:	xscreensaver-data
-BuildRequires:	xscreensaver-data-extra
-%endif
-
-%if 0%{?mgaversion} || 0%{?mdkversion}
-%if 0%{?mgaversion} >= 4
-BuildRequires:	%{_lib}xscrnsaver-devel
-%else
-BuildRequires:	%{_lib}xscrnsaver%{?mgaversion:1}-devel
-%endif
-BuildRequires:	xscreensaver
-BuildRequires:	xscreensaver-base
-BuildRequires:	xscreensaver-extrusion
-BuildRequires:	xscreensaver-gl
-%endif
-
-# Opensuse <= 13.10 does not provide 'webcollage' screensaver
-%if 0%{?suse_version} == 0 || 0%{?suse_version} >= 1320
 %define with_webcollage 1
-%endif
-
-%endif
 
 # JACK support
-%if 0%{?mgaversion} || 0%{?mdkversion} || 0%{?fedora} || 0%{?suse_version} || 0%{?rhel}
 %define with_jack 1
-%if 0%{?mgaversion} || 0%{?mdkversion}
-%define jack_devel %{_lib}jack-devel
-%endif
-%if 0%{?rhel} >= 5 || 0%{?fedora}
 %define jack_devel jack-audio-connection-kit-devel
-%endif
-%if 0%{?suse_version}
-%define jack_devel libjack-devel
-%endif
 BuildRequires:	%{jack_devel}
-%endif
 
 # GAMIN support
 #  Not on openSUSE.
-%if 0%{?rhel} || 0%{?fedora} || 0%{?mgaversion} || 0%{?mdkversion}
 %define with_gamin 1
 BuildRequires:	gamin-devel
-%endif
 
 
 # Metapackage
@@ -495,13 +436,11 @@ This package is part of Trinity, and a component of the TDE artwork module.
 %{tde_datadir}/applnk/System/ScreenSavers/cwaves.desktop
 %{tde_datadir}/applnk/System/ScreenSavers/topblock.desktop
 %{tde_datadir}/applnk/System/ScreenSavers/voronoi.desktop
-%if 0%{?rhel} >= 6 || 0%{?fedora} || 0%{?mgaversion} || 0%{?mdkversion} || 0%{?suse_version}
 %{tde_datadir}/applnk/System/ScreenSavers/cubicgrid.desktop
 %{tde_datadir}/applnk/System/ScreenSavers/hypnowheel.desktop
 %{tde_datadir}/applnk/System/ScreenSavers/lcdscrub.desktop
 %{tde_datadir}/applnk/System/ScreenSavers/photopile.desktop
 %{tde_datadir}/applnk/System/ScreenSavers/skytentacles.desktop
-%endif
 %if 0%{?rhel} == 5
 %{tde_datadir}/applnk/System/ScreenSavers/bubbles.desktop
 %{tde_datadir}/applnk/System/ScreenSavers/critical.desktop
@@ -711,57 +650,37 @@ This package is part of Trinity, and a component of the TDE artwork module.
 %{tde_datadir}/applnk/System/ScreenSavers/zoom.desktop
 
 # These screensavers do not exist on OpenSuse
-%if 0%{?rhel} || 0%{?fedora} || 0%{?mgaversion} || 0%{?mdkversion}
 %{tde_datadir}/applnk/System/ScreenSavers/vidwhacker.desktop
-%endif
 
 # These screensavers do not exist on Mageia / Mandriva
-%if 0%{?rhel} || 0%{?fedora} || 0%{?suse_version}
 %{tde_datadir}/applnk/System/ScreenSavers/glmatrix.desktop
 %{tde_datadir}/applnk/System/ScreenSavers/xjack.desktop
 %{tde_datadir}/applnk/System/ScreenSavers/xmatrix.desktop
-%endif
 
-%if 0%{?rhel} >= 6 || 0%{?mgaversion} || 0%{?fedora} >= 15 || 0%{?pclinuxos}
 %{tde_datadir}/applnk/System/ScreenSavers/rubikblocks.desktop
 %{tde_datadir}/applnk/System/ScreenSavers/surfaces.desktop
-%endif
 
-%if 0%{?mgaversion} || 0%{?rhel} >= 7 || 0%{?fedora} >= 15 || 0%{?pclinuxos}
 %{tde_datadir}/applnk/System/ScreenSavers/companioncube.desktop
 %{tde_datadir}/applnk/System/ScreenSavers/hilbert.desktop
 %{tde_datadir}/applnk/System/ScreenSavers/tronbit.desktop
-%endif
 
-%if 0%{?fedora} >= 20 || 0%{?pclinuxos} || 0%{?mgaversion} >= 4 || 0%{?rhel} >= 7
+%if 0
 %{tde_datadir}/applnk/System/ScreenSavers/hexadrop.desktop
 %{tde_datadir}/applnk/System/ScreenSavers/kaleidocycle.desktop
 %{tde_datadir}/applnk/System/ScreenSavers/quasicrystal.desktop
 %{tde_datadir}/applnk/System/ScreenSavers/unknownpleasures.desktop
-%endif
 
-%if 0%{?fedora} >= 20 || 0%{?mgaversion} >= 4 || 0%{?rhel} >= 7 || 0%{?pclinuxos}
 %{tde_datadir}/applnk/System/ScreenSavers/geodesic.desktop
 %endif
 
-%if 0%{?fedora} >= 20 || 0%{?rhel} >= 7 || 0%{?pclinuxos} || 0%{?mgaversion} >= 5
 %{tde_datadir}/applnk/System/ScreenSavers/projectiveplane.desktop
 %{tde_datadir}/applnk/System/ScreenSavers/tessellimage.desktop
-%endif
 
-%if 0%{?fedora} >= 20
 %{tde_datadir}/applnk/System/ScreenSavers/winduprobot.desktop
 %{tde_datadir}/applnk/System/ScreenSavers/binaryring.desktop
 %{tde_datadir}/applnk/System/ScreenSavers/cityflow.desktop
 %{tde_datadir}/applnk/System/ScreenSavers/geodesicgears.desktop
-%endif
 
-%endif
-
-##########
-
-%if 0%{?pclinuxos} || 0%{?suse_version} && 0%{?opensuse_bs} == 0
-%debug_package
 %endif
 
 ##########

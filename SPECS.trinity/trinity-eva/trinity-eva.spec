@@ -3,17 +3,35 @@
 %define _date 20111229
 %define _release %(if [ "X%{_date}" != "X" ]; then echo "0.cvs.%{_date}."; fi)2%{?dist}
 
-%define git 1
+%define git 0
 %define gitdate 20111229
+
+# TDE variables
+%define tde_epoch 2
+%if "%{?tde_version}" == ""
+%define tde_version 14.0.1
+%endif
+%define tde_pkg eva
+%define tde_prefix /opt/trinity
+%define tde_bindir %{tde_prefix}/bin
+%define tde_datadir %{tde_prefix}/share
+%define tde_docdir %{tde_datadir}/doc
+%define tde_includedir %{tde_prefix}/include
+%define tde_libdir %{tde_prefix}/%{_lib}
+%define tde_mandir %{tde_datadir}/man
+%define tde_tdeappdir %{tde_datadir}/applications/tde
+%define tde_tdedocdir %{tde_docdir}/tde
+%define tde_tdeincludedir %{tde_includedir}/tde
+%define tde_tdelibdir %{tde_libdir}/trinity
 
 Summary: Eva is the client end of QQ for KDE.
 Summary(zh_CN.UTF-8): KDE 下的 QQ 客户端
-Name: eva
+Name: trinity-%{tde_pkg}
 Version: 0.4.92
 %if %{git}
-Release: 0.git%{gitdate}%{?dist}
+Release: 0.git%{gitdate}%{?dist}.2
 %else
-Release: %{_release}
+Release: %{_release}.2
 %endif
 License: GPL
 URL: http://www.sourceforge.net/projects/evaq
@@ -23,12 +41,12 @@ BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-buildroot-%(%{__id_u} -n)
 %if %{git}
 Source0: %{name}-git%{gitdate}.tar.xz
 %else
-Source0: %{name}-%{_date}.tar.bz2
+Source0: %{name}-%{tde_version}%{?preversion:~%{preversion}}.tar.bz2
 %endif
 Source1: make_eva_git_package.sh
 Patch1: eva-gcc44.patch
 Prefix: %{_prefix}
-Requires: qt, kdelibs, kdebase
+Requires: libtqt3-mt, trinity-tdelibs, trinity-tdebase
 Packager: Bamfox<bamfox@163.com>, kde <jack@linux.net.cn>
 
 %description
@@ -38,18 +56,43 @@ Eva is the client end of QQ for KDE.
 Eva 是 KDE 下的一个 QQ (腾讯)客户端。
 
 %prep
-%setup -q -n %{name}-git%{gitdate}
+%setup -q -n %{name}-%{tde_version}%{?preversion:~%{preversion}}
 #%patch1 -p1
 
-%Build
-./autogen.sh
-%configure
-make %{_smp_mflags}
+%__cp -f "/usr/share/aclocal/libtool.m4" "admin/libtool.m4.in"
+%__cp -f "/usr/share/libtool/config/ltmain.sh" "admin/ltmain.sh" || %__cp -f "/usr/share/libtool/ltmain.sh" "admin/ltmain.sh"
+%__make -f "admin/Makefile.common"
+
+
+%build
+unset QTDIR QTINC QTLIB
+export PATH="%{tde_bindir}:${PATH}"
+
+%configure \
+  --prefix=%{tde_prefix} \
+  --exec-prefix=%{tde_prefix} \
+  --bindir=%{tde_bindir} \
+  --libdir=%{tde_libdir} \
+  --datadir=%{tde_datadir} \
+  --mandir=%{tde_mandir} \
+  --includedir=%{tde_tdeincludedir} \
+  \
+  --disable-dependency-tracking \
+  --disable-debug \
+  --enable-new-ldflags \
+  --enable-final \
+  --enable-closure \
+  --enable-rpath \
+  --disable-gcc-hidden-visibility
+
+%__make %{?_smp_mflags} || %__make
+
 
 %install
-%{__make} DESTDIR=$RPM_BUILD_ROOT install
-
-#install -D -m755 %{SOURCE1} $RPM_BUILD_ROOT%{_datadir}/applnk/Internet/eva.desktop
+export PATH="%{tde_bindir}:${PATH}"
+%__rm -rf %{buildroot}
+%__make install DESTDIR=%{buildroot}
+magic_rpm_clean.sh
 
 %clean
 %{__rm} -rf %{buildroot} %{_builddir}/%{buildsubdir}
@@ -57,10 +100,16 @@ make %{_smp_mflags}
 
 %files
 %defattr(-,root,root)
-%{_bindir}
-%{_datadir}
+%{tde_bindir}
+%{tde_datadir}
 
 %changelog
+* Thu Oct 08 2015 Liu Di <liudidi@gmail.com> - 0.4.92-0.cvs.20111229.2.2
+- 为 Magic 3.0 重建
+
+* Thu Oct 08 2015 Liu Di <liudidi@gmail.com> - 0.4.92-0.cvs.20111229.2.1
+- 为 Magic 3.0 重建
+
 * Mon Jan 21 2008 KanKer <kanker@163.com> - 0.4.91-0.cvs.20080120.1mgc
 - update to 20080120
 

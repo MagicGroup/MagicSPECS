@@ -17,7 +17,7 @@
 
 # TDE variables
 %if "%{?tde_version}" == ""
-%define tde_version 14.0.0
+%define tde_version 14.0.1
 %endif
 %define tde_prefix /opt/trinity
 %define tde_bindir %{tde_prefix}/bin
@@ -40,16 +40,14 @@
 
 Name:		trinity-filesystem
 Version:	%{tde_version}
-Release:	1%{?dist}%{?_variant}
+Release:	2%{?dist}%{?_variant}
 Summary:	Trinity Directory Layout
-Group:		System/Fhs
+Summary(zh_CN.UTF-8): Trinity 的目录结构
+Group:          System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 URL:		http://www.trinitydesktop.org/
 
-%if 0%{?suse_version}
-License:	GPL-2.0+
-%else
 License:	GPLv2+
-%endif
 
 #Vendor:		Trinity Desktop
 #Packager:	Francois Andriot <francois.andriot@free.fr>
@@ -62,6 +60,8 @@ BuildArch:	noarch
 %description
 This package installs the Trinity directory structure.
 
+%description -l zh_CN.UTF-8
+Trinity 的目录结构。
 
 %files
 %defattr(-,root,root,-)
@@ -611,5 +611,8 @@ done
 
 
 %changelog
+* Mon Oct 05 2015 Liu Di <liudidi@gmail.com> - 14.0.1-2.opt
+- 为 Magic 3.0 重建
+
 * Mon Jun 03 2013 Francois Andriot <francois.andriot@free.fr> - 14.0.0-1
 - Initial build for TDE R14

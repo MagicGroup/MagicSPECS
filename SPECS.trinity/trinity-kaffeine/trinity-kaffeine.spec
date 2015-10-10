@@ -18,7 +18,7 @@
 # TDE variables
 %define tde_epoch 2
 %if "%{?tde_version}" == ""
-%define tde_version 14.0.0
+%define tde_version 14.0.1
 %endif
 %define tde_pkg kaffeine
 %define tde_prefix /opt/trinity
@@ -40,14 +40,12 @@ Epoch:			%{tde_epoch}
 Version:		0.8.8
 Release:		%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}%{?_variant}
 Summary:		Xine-based media player
+Summary(zh_CN.UTF-8): 基于 Xine 的媒体播放器
 Group:			Applications/Multimedia
+Group(zh_CN.UTF-8): 应用程序/多媒体
 URL:			http://kaffeine.sourceforge.net/
 
-%if 0%{?suse_version}
-License:	GPL-2.0+
-%else
 License:	GPLv2+
-%endif
 
 #Vendor:		Trinity Desktop
 #Packager:	Francois Andriot <francois.andriot@free.fr>
@@ -56,6 +54,15 @@ Prefix:			%{_prefix}
 BuildRoot:		%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 Source0:		%{name}-%{tde_version}%{?preversion:~%{preversion}}.tar.gz
+
+Patch1:		%{name}-14.0.1-tqt.patch
+
+Source2:        kaffeine.desktop
+Source3:        kaffeine_part.desktop
+Source4:        kaffeine.zh_CN.po
+Source5:        kaffeine.zh_TW.po
+Source6:        mms.protocol
+Source7:        rtsp.protocol
 
 BuildRequires:	trinity-tdelibs-devel >= %{tde_version}
 BuildRequires:	trinity-tdebase-devel >= %{tde_version}
@@ -67,124 +74,34 @@ BuildRequires:	autoconf automake libtool m4
 BuildRequires:	gcc-c++
 BuildRequires:	pkgconfig
 
-# SUSE desktop files utility
-%if 0%{?suse_version}
-BuildRequires:	update-desktop-files
-%endif
-
-%if 0%{?opensuse_bs} && 0%{?suse_version}
-# for xdg-menu script
-BuildRequires:	brp-check-trinity
-%endif
-
 # VORBIS support
 BuildRequires:	libvorbis-devel
 
 # CDDA support
 BuildRequires:	libcdio-devel
-%if 0%{?mgaversion} || 0%{?mdkversion}
-BuildRequires:	libcdda-devel
-%endif
-%if 0%{?rhel} >= 5 || 0%{?fedora} || 0%{?suse_version}
 BuildRequires:	cdparanoia
 BuildRequires:	cdparanoia-devel
-%endif
-%if 0%{?suse_version} >= 1210 || 0%{?fedora} >= 19 || 0%{?rhel} >= 7
-BuildRequires:	libcdio-paranoia-devel
-%endif
 
 # X11 stuff
-%if 0%{?mgaversion} || 0%{?mdkversion}
-%if 0%{?mgaversion} >= 4
-BuildRequires:	%{_lib}xext-devel
-BuildRequires:	%{_lib}xtst-devel
-BuildRequires:	%{_lib}xinerama-devel
-%else
-BuildRequires:	%{_lib}xext%{?mgaversion:6}-devel
-BuildRequires:	%{_lib}xtst%{?mgaversion:6}-devel
-BuildRequires:	%{_lib}xinerama%{?mgaversion:1}-devel
-%endif
-%endif
-%if 0%{?rhel} == 4
-BuildRequires:	xorg-x11-devel 
-%endif
-%if 0%{?rhel} >= 5 || 0%{?fedora} || 0%{?suse_version} >= 1220
 BuildRequires:	libXext-devel 
 BuildRequires:	libXtst-devel
 BuildRequires:	libXinerama-devel
-%endif
-%if 0%{?rhel} >= 6 || 0%{?fedora} >= 15
 BuildRequires: libxcb-devel
-%endif
 
 # GSTREAMER support
-%if 0%{?rhel} >= 5 || 0%{?suse_version} || 0%{?fedora} || 0%{?mgaversion} || 0%{?mdkversion}
 %define with_gstreamer 1
-%if 0%{?suse_version}
-BuildRequires:	gstreamer-0_10-devel
-BuildRequires:	gstreamer-0_10-plugins-base-devel
-%endif
-%if 0%{?rhel} == 4
-BuildRequires:	gstreamer-devel
-BuildRequires:	gstreamer-plugins-devel
-%endif
-%if 0%{?rhel} >= 5 || 0%{?fedora}
 BuildRequires:	gstreamer-plugins-base-devel >= 0.10
-%endif
-%if 0%{?mgaversion} || 0%{?mdkversion}
-BuildRequires:	libgstreamer-devel >= 0.10
-BuildRequires:	libgstreamer-plugins-base-devel >= 0.10
-%endif
-%endif
 
 # XINE support
-%if 0%{?fedora} || 0%{?rhel} >= 4 || 0%{?suse_version} || 0%{?mgaversion} || 0%{?mdkversion}
 %define with_xine 1
-%if 0%{?mgaversion} || 0%{?mdkversion}
-%if 0%{?pclinuxos}
-BuildRequires: %{_lib}xine-devel
-%else
-BuildRequires: %{_lib}xine1.2-devel
-%endif
-%endif
-%if 0%{?fedora} || 0%{?rhel}
 BuildRequires: xine-lib-devel
-%endif
-%if 0%{?suse_version}
-BuildRequires: libxine-devel
-%endif
-%endif
 
 # LAME support
-%if 0%{?opensuse_bs} == 0
-%if 0%{?mdkversion} || 0%{?mgaversion} || 0%{?suse_version} || 0%{?with_lame}
 %define with_lame 1
-
-%if 0%{?mgaversion} || 0%{?mdkversion}
-%if 0%{?pclinuxos}
-BuildRequires:		liblame-devel
-%else
-BuildRequires:		%{_lib}lame-devel
-%endif
-%endif
-%if 0%{?suse_version}
-BuildRequires:	libmp3lame-devel
-%endif
-%if 0%{?fedora} || 0%{?rhel}
 BuildRequires:	lame-devel
-%endif
-%endif
-%endif
 
 # WTF support
-%if 0%{?mgaversion} || 0%{?mdkversion}
-%if 0%{?pclinuxos} == 0
-BuildRequires:	kernel-headers
-%endif
-%endif
-%if 0%{?rhel} >= 5 || 0%{?fedora}
 BuildRequires:	glibc-kernheaders 
-%endif
 
 Requires: %{name}-libs = %{?epoch:%{epoch}:}%{version}-%{release}
 
@@ -195,6 +112,9 @@ supported by xine-lib.
 Additionally, Kaffeine is fully integrated in TDE, it supports drag
 and drop and provides an editable playlist, a bookmark system, a
 Konqueror plugin, OSD and much more.
+
+%description -l zh_CN.UTF-8
+TDE 下基于 Xine 的媒体播放器。
 
 %files -f %{tde_pkg}.lang
 %defattr(-,root,root,-)
@@ -230,12 +150,17 @@ update-desktop-database >& /dev/null ||:
 
 %package devel
 Summary:		Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:			Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:		%{name}-libs = %{?epoch:%{epoch}:}%{version}-%{release}
 Requires:		trinity-tdelibs-devel
 
 %description devel
 %{summary}.
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %files devel
 %defattr(-,root,root,-)
@@ -253,13 +178,16 @@ Requires:		trinity-tdelibs-devel
 
 %package libs
 Summary:		%{name} runtime libraries
+Summary(zh_CN.UTF-8): %{name} 的运行库
 Group:			System Environment/Libraries
-
+Group(zh_CN.UTF-8): 系统环境/库
 # include to be paranoid, installing libs-only is still mostly untested -- Rex
 Requires:		%{name} = %{?epoch:%{epoch}:}%{version}-%{release}
 
 %description libs
 %{summary}.
+%description libs -l zh_CN.UTF-8
+%{name} 的运行库。
 
 %files libs
 %defattr(-,root,root,-)
@@ -273,14 +201,9 @@ Requires:		%{name} = %{?epoch:%{epoch}:}%{version}-%{release}
 
 ##########
 
-%if 0%{?pclinuxos} || 0%{?suse_version} && 0%{?opensuse_bs} == 0
-%debug_package
-%endif
-
-##########
-
 %prep
 %setup -q -n %{name}-%{tde_version}%{?preversion:~%{preversion}}
+%patch1 -p1
 
 %__cp "/usr/share/aclocal/libtool.m4" "admin/libtool.m4.in"
 %__cp "/usr/share/libtool/config/ltmain.sh" "admin/ltmain.sh" || %__cp "/usr/share/libtool/ltmain.sh" "admin/ltmain.sh"
@@ -324,6 +247,14 @@ export PATH="%{tde_bindir}:${PATH}"
 %__rm -rf $RPM_BUILD_ROOT
 %__make install DESTDIR=$RPM_BUILD_ROOT
 
+
+%{__rm} -f %{buildroot}%{tde_datadir}/applications/kde/kaffeine.desktop
+install -D -m 644 %{SOURCE2} %{buildroot}%{tde_datadir}/applications/kde/kaffeine.desktop
+install -D -m 644 %{SOURCE3} %{buildroot}%{tde_datadir}/apps/kaffeine/kaffeine_part.desktop
+
+msgfmt %{SOURCE4} -o %{buildroot}%{tde_datadir}/locale/zh_CN/LC_MESSAGES/kaffeine.mo
+
+magic_rpm_clean.sh
 ## File lists
 # locale's
 %find_lang %{tde_pkg}

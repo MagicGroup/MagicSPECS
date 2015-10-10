@@ -28,7 +28,7 @@
 # TDE variables
 %define tde_epoch 2
 %if "%{?tde_version}" == ""
-%define tde_version 14.0.0
+%define tde_version 14.0.1
 %endif
 %define tde_pkg sip4-tqt
 %define tde_prefix /opt/trinity
@@ -53,16 +53,14 @@
 Name:		trinity-%{tde_pkg}
 Epoch:		%{tde_epoch}
 Version:	4.10.5
-Release:	%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}%{?_variant}
+Release:	%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}%{?_variant}.1
 Summary:	Python/C++ bindings generator runtime library
-Group:		Development/Tools/Building
+Summary(zh_CN.UTF-8): Python/C++ 绑定生成器运行库
+Group:		Development/Tools
+Group(zh_CN.UTF-8): 开发/工具
 URL:		http://www.trinitydesktop.org/
 
-%if 0%{?suse_version}
-License:	GPL-2.0+
-%else
 License:	GPLv2+
-%endif
 
 #Vendor:		Trinity Desktop
 #Packager:	Francois Andriot <francois.andriot@free.fr>
@@ -84,11 +82,16 @@ SIP is a tool for generating bindings for C++ classes with some ideas
 borrowed from SWIG, but capable of tighter bindings because of its
 specificity towards C++ and Python.
 
+%description -l zh_CN.UTF-8
+Python/C++ 绑定生成器运行库。
+
 ##########
 
 %package -n sip4-tqt
 Summary:	Python/C++ bindings generator (Runtime Library)
-Group:		Development/Tools/Building
+Summary(zh_CN.UTF-8): Python/C++ 绑定生成器运行库
+Group:		Development/Tools
+Group(zh_CN.UTF-8): 开发/工具
 Requires:	trinity-filesystem >= %{tde_version}
 Requires:	python
 
@@ -96,6 +99,8 @@ Requires:	python
 SIP is a tool for generating bindings for C++ classes with some ideas
 borrowed from SWIG, but capable of tighter bindings because of its
 specificity towards C++ and Python.
+%description -n sip4-tqt -l zh_CN.UTF-8
+Python/C++ 绑定生成器运行库。
 
 %files -n sip4-tqt
 %defattr(-,root,root,-)
@@ -109,7 +114,9 @@ specificity towards C++ and Python.
 
 %package -n sip4-tqt-devel
 Summary:		Python/C++ bindings generator (Development Files)
-Group:			Development/Libraries/Python
+Summary(zh_CN.UTF-8): %{name} 的开发包
+Group:			Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:		sip4-tqt = %{?epoch:%{epoch}:}%{version}-%{release}
 Requires:		python-devel
 
@@ -135,16 +142,13 @@ Features:
 This package contains the code generator tool and the development headers
 needed to develop Python bindings with sip.
 
+%description -n sip4-tqt-devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
 %files -n sip4-tqt-devel
 %defattr(-,root,root,-)
 %{tde_bindir}/sip
 %{tde_includedir}/sip.h
-
-##########
-
-%if 0%{?pclinuxos} || 0%{?suse_version} && 0%{?opensuse_bs} == 0
-%debug_package
-%endif
 
 ##########
 
@@ -177,5 +181,8 @@ cd build
 
 
 %changelog
+* Tue Oct 06 2015 Liu Di <liudidi@gmail.com> - 2:4.10.5-1.opt.1
+- 为 Magic 3.0 重建
+
 * Fri Jul 05 2013 Francois Andriot <francois.andriot@free.fr> - 2:4.10.5-1
 - Initial release for TDE R14

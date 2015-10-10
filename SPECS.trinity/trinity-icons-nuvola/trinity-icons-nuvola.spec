@@ -18,9 +18,10 @@
 # Default version for this component
 %define tde_pkg icons-nuvola
 %if "%{?tde_version}" == ""
-%define tde_version 14.0.0
+%define tde_version 14.0.1
 %endif
 
+%define tde_prefix /opt/trinity
 # If TDE is built in a specific prefix (e.g. /opt/trinity), the release will be suffixed with ".opt".
 %if "%{?tde_prefix}" != "/usr"
 %define _variant .opt
@@ -42,14 +43,15 @@
 
 %define _docdir %{tde_docdir}
 
-
 Name:			trinity-%{tde_pkg}
 Summary:		Nuvola icons for TDE Desktop
+Summary(zh_CN.UTF-8): TDE 桌面的 Nuvola 图标
 Version:		1.0
-Release:		%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}%{?_variant}
+Release:		%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}%{?_variant}.1
 
 License:		GPLv2+
 Group:			Applications/Utilities
+Group(zh_CN.UTF-8): 应用程序/工具
 
 Vendor:			Trinity Project
 Packager:		Francois Andriot <francois.andriot@free.fr>
@@ -68,6 +70,7 @@ BuildRequires:	desktop-file-utils
 
 BuildRequires:	gettext
 
+BuildArch:	noarch
 
 %description
 Nuvola SVG evolution of SKY icon theme.
@@ -79,10 +82,8 @@ Nuvola SVG evolution of SKY icon theme.
  SVG files are available (not always updated) on my web site in the "svg"
  section.
 
-
-%if 0%{?suse_version} || 0%{?pclinuxos}
-%debug_package
-%endif
+%description -l zh_CN.UTF-8
+TDE 桌面的  Nuvola 图标。
 
 
 %prep
@@ -116,5 +117,8 @@ cp -fr * %{buildroot}%{tde_datadir}/icons/nuvola/
 
 
 %changelog
+* Sat Oct 10 2015 Liu Di <liudidi@gmail.com> - 1.0-1.opt.1
+- 为 Magic 3.0 重建
+
 * Sat Sep 20 2014 Francois Andriot <francois.andriot@free.fr> - 1.0-1
 - Initial release for TDE 14.0.0

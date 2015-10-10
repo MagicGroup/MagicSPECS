@@ -18,7 +18,7 @@
 # TDE variables
 %define tde_epoch 2
 %if "%{?tde_version}" == ""
-%define tde_version 14.0.0
+%define tde_version 14.0.1
 %endif
 %define tde_pkg kbiff
 %define tde_prefix /opt/trinity
@@ -40,14 +40,12 @@ Epoch:			%{tde_epoch}
 Version:        3.9
 Release:		%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}%{?_variant}
 Summary:        TDE mail notification utility
+Summary(zh_CN.UTF-8): TDE 邮件提示工具
 Group:          Applications/Internet
+Group(zh_CN.UTF-8): 应用程序/互联网
 URL:            http://www.trinitydesktop.org/
 
-%if 0%{?suse_version}
-License:	GPL-2.0+
-%else
 License:	GPLv2+
-%endif
 
 #Vendor:		Trinity Desktop
 #Packager:	Francois Andriot <francois.andriot@free.fr>
@@ -56,6 +54,8 @@ Prefix:			%{_prefix}
 BuildRoot:		%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 Source0:		%{name}-%{tde_version}%{?preversion:~%{preversion}}.tar.gz
+
+Patch1:		%{name}-14.0.1-tqt.patch
 
 BuildRequires:	tqt3-compat-headers >= 3.5.0
 BuildRequires:	trinity-tdelibs-devel >= %{tde_version}
@@ -68,17 +68,6 @@ BuildRequires:	autoconf automake libtool m4
 BuildRequires:	gcc-c++
 BuildRequires:	pkgconfig
 
-# SUSE desktop files utility
-%if 0%{?suse_version}
-BuildRequires:	update-desktop-files
-%endif
-
-%if 0%{?opensuse_bs} && 0%{?suse_version}
-# for xdg-menu script
-BuildRequires:	brp-check-trinity
-%endif
-
-
 %description
 Kbiff is a "xbiff"-like mail notification utility. It has  multiple pixmaps,
 session management, and GUI configuration.  It can "dock" into the TDE panel.
@@ -86,16 +75,14 @@ It can display animated gifs, play system sounds, or run arbitrary shell
 command when new mail arrives. It supports mbox, maildir, mh, POP3, IMAP4, and
 NNTP mailboxes.
 
-##########
-
-%if 0%{?pclinuxos} || 0%{?suse_version} && 0%{?opensuse_bs} == 0
-%debug_package
-%endif
+%description -l zh_CN.UTF-8
+TDE 邮件提示工具。
 
 ##########
 
 %prep
 %setup -q -n %{name}-%{tde_version}%{?preversion:~%{preversion}}
+%patch1 -p1
 
 %__cp -f "/usr/share/aclocal/libtool.m4" "admin/libtool.m4.in"
 %__cp -f "/usr/share/libtool/config/ltmain.sh" "admin/ltmain.sh" || %__cp -f "/usr/share/libtool/ltmain.sh" "admin/ltmain.sh"
@@ -129,19 +116,14 @@ export PATH="%{tde_bindir}:${PATH}"
 %install
 %__rm -rf $RPM_BUILD_ROOT
 %__make install DESTDIR=$RPM_BUILD_ROOT
-
-%find_lang %{tde_pkg}
+magic_rpm_clean.sh
+%find_lang %{tde_pkg} || :
 
 # Fix icon location
 %__mkdir_p "%{?buildroot}%{tde_tdeappdir}"
 %__mv -f "%{?buildroot}%{tde_datadir}/applnk/Internet/kbiff.desktop" "%{?buildroot}%{tde_tdeappdir}/kbiff.desktop"
 
-# Updates applications categories for openSUSE
-%if 0%{?suse_version}
-echo "OnlyShowIn=TDE;" >>"%{?buildroot}%{tde_tdeappdir}/kbiff.desktop"
-%suse_update_desktop_file kbiff Applet
-%endif
-
+%__rm -rf %{?buildroot}%{tde_datadir}/doc/tde/HTML
 
 %clean
 %__rm -rf $RPM_BUILD_ROOT
@@ -174,11 +156,6 @@ done
 %{tde_datadir}/icons/hicolor/*/apps/kbiff.png
 %{tde_datadir}/icons/locolor/*/apps/kbiff.png
 %{tde_mandir}/man1/kbiff.1*
-%lang(de) %{tde_tdedocdir}/HTML/de/kbiff/
-%lang(en) %{tde_tdedocdir}/HTML/en/kbiff/
-%lang(es) %{tde_tdedocdir}/HTML/es/kbiff/
-%lang(fr) %{tde_tdedocdir}/HTML/fr/kbiff/
-
 
 %changelog
 * Fri Jul 05 2013 Francois Andriot <francois.andriot@free.fr> - 2:3.9-1

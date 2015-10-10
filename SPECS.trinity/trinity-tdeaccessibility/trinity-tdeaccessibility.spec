@@ -22,7 +22,7 @@
 # TDE variables
 %define tde_epoch 2
 %if "%{?tde_version}" == ""
-%define tde_version 14.0.0
+%define tde_version 14.0.1
 %endif
 %define tde_pkg tdeaccessibility
 %define tde_prefix /opt/trinity
@@ -50,11 +50,7 @@ Release:		%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}%{?_variant}
 Group:			System/GUI/Other
 URL:			http://www.trinitydesktop.org/
 
-%if 0%{?suse_version}
-License:	GPL-2.0+
-%else
 License:	GPLv2+
-%endif
 
 #Vendor:		Trinity Project
 #Packager:	Francois Andriot <francois.andriot@free.fr>
@@ -63,6 +59,7 @@ Prefix:			%{tde_prefix}
 BuildRoot:		%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 Source0:		%{name}-%{version}%{?preversion:~%{preversion}}.tar.gz
+Patch1:			trinity-tdeaccessibility-14.0.1-tqt.patch
 
 BuildRequires:	trinity-arts-devel >= %{tde_epoch}:1.5.10
 BuildRequires:	trinity-tdelibs-devel >= %{tde_version}
@@ -74,15 +71,6 @@ BuildRequires:	gcc-c++
 BuildRequires:	desktop-file-utils
 BuildRequires:	fdupes
 
-# SUSE desktop files utility
-%if 0%{?suse_version}
-BuildRequires:	update-desktop-files
-%endif
-
-%if 0%{?opensuse_bs} && 0%{?suse_version}
-# for xdg-menu script
-BuildRequires:	brp-check-trinity
-%endif
 
 # AUDIOFILE support
 BuildRequires:	audiofile-devel
@@ -98,26 +86,10 @@ BuildRequires: trinity-akode-devel
 BuildRequires:	alsa-lib-devel
 
 # XCB support
-%if 0%{?rhel} >= 6 || 0%{?fedora} || 0%{?pclinuxos}
 BuildRequires:	libxcb-devel
-%endif
-%if 0%{?mgaversion} || 0%{?mdkversion}
-%if 0%{?pclinuxos} == 0
-BuildRequires:	%{_lib}xcb-devel
-%endif
-%endif
 
 # XAU support
-%if 0%{?mgaversion} || 0%{?mdkversion}
-%if 0%{?mgaversion} >= 4
-BuildRequires:	%{_lib}xau-devel
-%else
-BuildRequires:	%{_lib}xau%{?mgaversion:6}-devel
-%endif
-%endif
-%if 0%{?rhel} >= 5 || 0%{?fedora} || 0%{?suse_version} >= 1220
 BuildRequires:	libXau-devel
-%endif
 
 Obsoletes:		trinity-kdeaccessibility < %{version}-%{release}
 Provides:		trinity-kdeaccessibility = %{version}-%{release}
@@ -496,14 +468,9 @@ programs.
 
 ##########
 
-%if 0%{?pclinuxos} || 0%{?suse_version} && 0%{?opensuse_bs} == 0
-%debug_package
-%endif
-
-##########
-
 %prep
 %setup -q -n %{name}-%{version}%{?preversion:~%{preversion}}
+%patch1 -p1
 
 # Update icons for some control center modules
 %__sed -i "kttsd/kcmkttsmgr/kcmkttsd.desktop" -e "s|^Icon=.*|Icon=kcmkttsd|"
@@ -563,15 +530,6 @@ popd
 %__rm -f %{?buildroot}%{tde_datadir}/icons/crystalsvg/*/apps/kttsd.png
 %__rm -f %{?buildroot}%{tde_datadir}/icons/crystalsvg/scalable/apps/kttsd.svgz
 
-# Updates applications categories for openSUSE
-%if 0%{?suse_version}
-%suse_update_desktop_file -r kmag         Utility Accessibility
-%suse_update_desktop_file    kmousetool   Utility Accessibility
-%suse_update_desktop_file    kmouth       Utility Accessibility
-%suse_update_desktop_file    kttsmgr      Utility Accessibility
-%suse_update_desktop_file    ksayit       Utility Accessibility
-%suse_update_desktop_file    kcmkttsd     Utility Accessibility
-%endif
 
 # Links duplicate files
 %fdupes "%{?buildroot}%{tde_datadir}"

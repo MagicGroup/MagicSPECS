@@ -22,7 +22,7 @@
 # TDE variables
 %define tde_epoch 2
 %if "%{?tde_version}" == ""
-%define tde_version 14.0.0
+%define tde_version 14.0.1
 %endif
 %define tde_pkg tqtinterface
 %define cmake_modules_dir %{_datadir}/cmake/Modules
@@ -32,28 +32,19 @@
 %define _variant .opt
 %endif
 
-%if 0%{?mdkversion} || 0%{?mgaversion} || 0%{?pclinuxos}
-%define libtqt4 %{_lib}tqt4
-%else
 %define libtqt4 libtqt4
-%endif
 
 Name:		trinity-%{tde_pkg}
 Epoch:		%{tde_epoch}
 Version:	4.2.0
 Release:	%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}%{?_variant}
 Summary:	The Trinity Qt Interface Libraries
-Group:		System/GUI/Other
+Summary(zh_CN.UTF-8): Trinity Qt 接口库
+Group: System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 URL:		http://www.trinitydesktop.org/
 
-%if 0%{?suse_version}
-License:	GPL-2.0+
-%else
 License:	GPLv2+
-%endif
-
-#Vendor:		Trinity Project
-#Packager:	Francois Andriot <francois.andriot@free.fr>
 
 Prefix:		/usr
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -63,55 +54,24 @@ Source0:	%{name}-%{tde_version}%{?preversion:~%{preversion}}.tar.gz
 BuildRequires:	libtqt3-mt-devel >= 3.5.0
 BuildRequires:	tqt3-dev-tools >= 3.5.0
 
-%if 0%{?suse_version} && 0%{?suse_version} < 1300
-BuildRequires:	trinity-cmake-macros
-%endif
-
 BuildRequires:	cmake >= 2.8
 BuildRequires:	gcc-c++
 BuildRequires:	pkgconfig
 
 # UUID support
-%if 0%{?fedora} || 0%{?mgaversion} || 0%{?mdkversion} || 0%{?suse_version} || 0%{?rhel} >= 6
 %define uuid_devel libuuid-devel
-%endif
-%if 0%{?rhel} == 5
-%define uuid_devel e2fsprogs-devel
-%endif
 %{?uuid_devel:BuildRequires: %{uuid_devel}}
 
 
 # PTHREAD support
-%if 0%{?rhel} >= 5 || 0%{?fedora} || 0%{?mdkversion} || 0%{?mgaversion} || 0%{?suse_version}
 BuildRequires:	pth-devel
-%endif
 
 # MESA support
-%if 0%{?rhel} || 0%{?fedora}
 BuildRequires: mesa-libGL-devel
 BuildRequires: mesa-libGLU-devel
-%endif
-%if 0%{?mdkversion} || 0%{?mgaversion}
-BuildRequires: mesaglu-devel
-%endif
-%if 0%{?suse_version}
-BuildRequires: Mesa-libGL-devel
-BuildRequires: Mesa-libGLU-devel
-%endif
 
 # X11 libraries
-%if 0%{?rhel} == 4
-BuildRequires:	xorg-x11-devel
-%endif
-%if 0%{?mgaversion} || 0%{?mdkversion}
-BuildRequires:	libxi-devel
-%endif
-%if 0%{?suse_version} >= 1220 || 0%{?rhel} >= 5 || 0%{?fedora}
 BuildRequires:	libXi-devel
-%endif
-%if 0%{?suse_version} == 1140
-BuildRequires:	libXi6-devel
-%endif
 
 %description
 The Trinity Qt Interface is a library that abstracts Qt from Trinity.
@@ -119,19 +79,19 @@ This allows the Trinity code to rapidly port from one version of Qt to another.
 This is primarily accomplished by defining old functions in terms of new functions,
 although some code has been added for useful functions that are no longer part of Qt.
 
+%description -l zh_CN.UTF-8
+Trinity Qt 接口库。
 
 ##########
 
 %package -n %{libtqt4}
-Group:		System/GUI/Other
+Group: System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 Summary:	The Trinity Qt Interface Libraries
+Summary(zh_CN.UTF-8): Trinity Qt 接口库
 Provides:	libtqt4 = %{?epoch:%{epoch}:}%{version}-%{release}
 
 Requires:	libtqt3-mt >= 3.5.0
-
-%if 0%{?suse_version} && 0%{?suse_version} < 1300
-Requires:		trinity-cmake-macros
-%endif
 
 Obsoletes:	trinity-tqtinterface < %{?epoch:%{epoch}:}%{version}-%{release}
 Provides:	trinity-tqtinterface = %{?epoch:%{epoch}:}%{version}-%{release}
@@ -141,6 +101,9 @@ The Trinity Qt Interface is a library that abstracts Qt from Trinity.
 This allows the Trinity code to rapidly port from one version of Qt to another.
 This is primarily accomplished by defining old functions in terms of new functions,
 although some code has been added for useful functions that are no longer part of Qt.
+
+%description -n %{libtqt4} -l zh_CN.UTF-8
+Trinity Qt 接口库。
 
 %files -n %{libtqt4}
 %defattr(-,root,root,-)
@@ -156,17 +119,15 @@ although some code has been added for useful functions that are no longer part o
 ##########
 
 %package -n %{libtqt4}-devel
-Group:		Development/Libraries/X11
+Group:		Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Summary:	The Trinity Qt Interface Libraries (Development Files)
+Summary(zh_CN.UTF-8): %{libtqt4} 的开发包
 Provides:	libtqt4-devel = %{?epoch:%{epoch}:}%{version}-%{release}
 
 Requires:	%{libtqt4} = %{?epoch:%{epoch}:}%{version}-%{release}
 Requires:	libtqt3-mt-devel >= 3.5.0
 Requires:	tqt3-dev-tools >= 3.5.0
-
-%if 0%{?suse_version} && 0%{?suse_version} < 1300
-Requires:		trinity-cmake-macros
-%endif
 
 Obsoletes:	trinity-tqtinterface-devel < %{?epoch:%{epoch}:}%{version}-%{release}
 Provides:	trinity-tqtinterface-devel = %{?epoch:%{epoch}:}%{version}-%{release}
@@ -176,6 +137,9 @@ The Trinity Qt Interface is a library that abstracts Qt from Trinity.
 This allows the Trinity code to rapidly port from one version of Qt to another.
 This is primarily accomplished by defining old functions in terms of new functions,
 although some code has been added for useful functions that are no longer part of Qt.
+
+%description -n %{libtqt4}-devel -l zh_CN.UTF-8
+%{libtqt4} 的开发包。
 
 %post -n %{libtqt4}-devel
 /sbin/ldconfig || :
@@ -203,12 +167,6 @@ although some code has been added for useful functions that are no longer part o
 %{_libdir}/pkgconfig/tqt.pc
 %{_libdir}/pkgconfig/tqtqui.pc
 %{cmake_modules_dir}/*.cmake
-
-##########
-
-%if 0%{?pclinuxos} || 0%{?suse_version} && 0%{?opensuse_bs} == 0
-%debug_package
-%endif
 
 ##########
 

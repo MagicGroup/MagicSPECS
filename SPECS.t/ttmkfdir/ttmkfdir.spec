@@ -1,10 +1,12 @@
 Summary: Utility to create fonts.scale files for truetype fonts
+Summary(zh_CN.UTF-8): 为 truetype 字体创建 fonts.scale 文件的工具
 Name: ttmkfdir
 Version: 3.0.9
 Release: 46%{?dist}
 # Only licensing attribution is in README, no version.
 License: LGPLv2+
 Group: Applications/System
+Group(zh_CN.UTF-8): 应用程序/系统
 # This is a Red Hat maintained package which is specific to
 # our distribution.  Thus the source is only available from
 # within this srpm.
@@ -31,6 +33,9 @@ BuildRequires: zlib-devel
 ttmkfdir is a utility used to create fonts.scale files in
 TrueType font directories in order to prepare them for use
 by the font server.
+
+%description -l zh_CN.UTF-8
+为 truetype 字体创建 fonts.scale 文件的工具。
 
 %prep
 %setup -q

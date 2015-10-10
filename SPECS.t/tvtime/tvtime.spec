@@ -1,9 +1,11 @@
 Summary: A high quality TV viewer
+Summary(zh_CN.UTF-8): 高质量的电视软件
 Name: tvtime
-Version: 1.0.6
-Release: 3%{?dist}
+Version:	1.0.7
+Release:	1%{?dist}
 License: GPLv2+ and LGPLv2+
 Group: Applications/Multimedia
+Group(zh_CN.UTF-8): 应用程序/多媒体
 URL: http://tvtime.sourceforge.net
 Source0: http://linuxtv.org/downloads/%{name}/%{name}-%{version}.tar.gz
 
@@ -41,6 +43,9 @@ displays it on a computer monitor or projector.  Unlike other television
 applications, tvtime focuses on high visual quality making it ideal for
 videophiles.
 
+%description -l zh_CN.UTF-8
+高质量的电视软件。
+
 %prep
 %setup -q
 
@@ -70,8 +75,8 @@ make DESTDIR=%{buildroot} INSTALL="/usr/bin/install -p" install
 desktop-file-install --remove-category="Application" --add-category="Video" \
 	--delete-original --dir=%{buildroot}%{_datadir}/applications \
 	docs/tvtime.desktop
-
-%find_lang %{name}
+magic_rpm_clean.sh
+%find_lang %{name} || :
 
 %post
 touch --no-create %{_datadir}/icons/hicolor || :
@@ -90,7 +95,7 @@ fi
 %clean
 rm -rf %{buildroot}
 
-%files -f %{name}.lang
+%files 
 %defattr(-, root, root, -)
 %doc AUTHORS ChangeLog COPYING COPYING.LGPL NEWS README* data/COPYING* docs/html
 %{_mandir}/man?/*
@@ -103,11 +108,12 @@ rm -rf %{buildroot}
 %{_datadir}/icons/hicolor/*/apps/tvtime.png
 %{_datadir}/pixmaps/*
 %{_datadir}/tvtime/
-%lang(de) %{_mandir}/de/man?/*
-%lang(es) %{_mandir}/es/man?/*
 %{_bindir}/tvtime
 
 %changelog
+* Sun Oct 04 2015 Liu Di <liudidi@gmail.com> - 1.0.7-1
+- 更新到 1.0.7
+
 * Fri Jun 19 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.0.6-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

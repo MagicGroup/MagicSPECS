@@ -6,6 +6,7 @@ $RPM_BUILD_ROOT/usr/share/doc/HTML/
 $RPM_BUILD_ROOT/usr/share/locale/
 $RPM_BUILD_ROOT/usr/share/man/
 $RPM_BUILD_ROOT/opt/trinity/share/doc/HTML/
+$RPM_BUILD_ROOT/opt/trinity/share/doc/tde/HTML/
 $RPM_BUILD_ROOT/opt/trinity/share/locale/
 $RPM_BUILD_ROOT/opt/trinity/share/man/
 "

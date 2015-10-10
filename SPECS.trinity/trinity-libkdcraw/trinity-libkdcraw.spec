@@ -18,7 +18,7 @@
 # TDE variables
 %define tde_epoch 2
 %if "%{?tde_version}" == ""
-%define tde_version 14.0.0
+%define tde_version 14.0.1
 %endif
 %define tde_pkg libkdcraw
 %define tde_prefix /opt/trinity
@@ -39,14 +39,12 @@ Epoch:		%{tde_epoch}
 Version:	0.1.9
 Release:	%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}%{?_variant}
 Summary:	Raw picture decoding C++ library (runtime) [Trinity]
-Group:		System/Libraries
+Summary(zh_CN.UTF-8): RAW 图像解码 C++ 库
+Group: System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 URL:		http://www.trinitydesktop.org/
 
-%if 0%{?suse_version}
-License:	GPL-2.0+
-%else
 License:	GPLv2+
-%endif
 
 #Vendor:		Trinity Desktop
 #Packager:	Francois Andriot <francois.andriot@free.fr>
@@ -55,6 +53,8 @@ Prefix:		/usr
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 Source0:		%{name}-%{tde_version}%{?preversion:~%{preversion}}.tar.gz
+
+Patch1:		trinity-libkdcraw-14.0.1-tqt.patch
 
 BuildRequires:	trinity-tdelibs-devel >= %{tde_version}
 BuildRequires:	trinity-filesystem >= %{tde_version}
@@ -66,22 +66,13 @@ BuildRequires: pkgconfig
 BuildRequires: gettext
 
 # LCMS support
-%if 0%{?suse_version}
-BuildRequires: liblcms-devel
-%else
 BuildRequires: lcms-devel
-%endif
 
 # JPEG support
 BuildRequires: libjpeg-devel
 
 # AUTOTOOLS
-%if 0%{?mgaversion} || 0%{?mdkversion}
-BuildRequires:	%{_lib}ltdl-devel
-%endif
-%if 0%{?fedora} || 0%{?rhel} >= 5 || 0%{?suse_version} >= 1220
 BuildRequires:	libtool-ltdl-devel
-%endif
 
 %description
 C++ interface around dcraw binary program used to decode RAW
@@ -89,11 +80,16 @@ picture files.
 This library is used by kipi-plugins, digiKam and others kipi host programs.
 libkdcraw contains the library of libkdcraw.
 
+%description -l zh_CN.UTF-8
+RAW 图像解码库。
+
 ##########
 
 %package -n trinity-%{libkdcraw}4
 Summary:	Raw picture decoding C++ library (runtime) [Trinity]
-Group:		System/Libraries
+Summary(zh_CN.UTF-8): %{name} 的运行库
+Group: System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 Requires:	trinity-libkdcraw-common = %{?epoch:%{epoch}:}%{version}-%{release}
 
 Obsoletes:	trinity-%{tde_pkg} < %{?epoch:%{epoch}:}%{version}-%{release}
@@ -104,6 +100,9 @@ C++ interface around dcraw binary program used to decode RAW
 picture files.
 This library is used by kipi-plugins, digiKam and others kipi host programs.
 libkdcraw contains the library of libkdcraw.
+
+%description -n trinity-%{libkdcraw}4 -l zh_CN.UTF-8
+%{name} 的运行库。
 
 %files -n trinity-%{libkdcraw}4
 %defattr(-,root,root,-)
@@ -120,7 +119,9 @@ libkdcraw contains the library of libkdcraw.
 
 %package -n trinity-libkdcraw-common
 Summary:	Raw picture decoding C++ library (runtime) [Trinity]
-Group:		System/Libraries
+Summary(zh_CN.UTF-8): RAW 图像解码 C++ 库
+Group: System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 Requires:	trinity-filesystem >= %{tde_version}
 
 %description -n trinity-libkdcraw-common
@@ -129,7 +130,10 @@ picture files.
 This library is used by kipi-plugins, digiKam and others kipi host programs.
 libkdcraw contains the library of libkdcraw.
 
-%files -n trinity-libkdcraw-common -f %{tde_pkg}.lang
+%description -n trinity-libkdcraw-common -l zh_CN.UTF-8
+RAW 图像解码 C++ 库。
+
+%files -n trinity-libkdcraw-common 
 %defattr(-,root,root,-)
 %{tde_datadir}/icons/hicolor/*/apps/kdcraw.png
 
@@ -149,7 +153,9 @@ done
 
 %package -n trinity-%{libkdcraw}-devel
 Summary:	RAW picture decoding C++ library (development) [Trinity]
-Group:		Development/Libraries/Other
+Summary(zh_CN.UTF-8): %{name} 的开发包
+Group:		Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:	trinity-%{libkdcraw}4 = %{?epoch:%{epoch}:}%{version}-%{release}
 
 Obsoletes:	trinity-%{tde_pkg}-devel < %{?epoch:%{epoch}:}%{version}-%{release}
@@ -160,6 +166,9 @@ Libkdcraw is a C++ interface around dcraw binary program used to
 decode Raw picture files.
 libkdcraw-devel contains development files and documentation. The
 library documentation is available on kdcraw.h header file.
+
+%description  -n trinity-%{libkdcraw}-devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %files -n trinity-%{libkdcraw}-devel
 %defattr(-,root,root,-)
@@ -176,14 +185,9 @@ library documentation is available on kdcraw.h header file.
 
 ##########
 
-%if 0%{?pclinuxos} || 0%{?suse_version} && 0%{?opensuse_bs} == 0
-%debug_package
-%endif
-
-##########
-
 %prep
 %setup -q -n %{name}-%{tde_version}%{?preversion:~%{preversion}}
+%patch1 -p1
 
 %__cp -f "/usr/share/aclocal/libtool.m4" "admin/libtool.m4.in"
 %__cp -f "/usr/share/libtool/config/ltmain.sh" "admin/ltmain.sh" || %__cp -f "/usr/share/libtool/ltmain.sh" "admin/ltmain.sh"
@@ -217,14 +221,8 @@ export PATH="%{tde_bindir}:${PATH}"
 export PATH="%{tde_bindir}:${PATH}"
 %__rm -rf %{buildroot}
 %__make install DESTDIR=%{buildroot}
-
-%find_lang %{tde_pkg}
-
-# RHEL4: pkgconfig files do not support 'URL' keyword .
-%if 0%{?rhel} == 4
-%__sed -i %{?buildroot}%{tde_libdir}/pkgconfig/*.pc -e "s/^URL: /#URL: /"
-%endif
-
+magic_rpm_clean.sh
+%find_lang %{tde_pkg} || :
 
 %clean
 %__rm -rf %{buildroot}

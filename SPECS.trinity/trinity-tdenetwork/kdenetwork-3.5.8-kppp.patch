@@ -1,9 +1,0 @@
-diff -up kdenetwork-3.5.8/kppp/Kppp.desktop.kppp kdenetwork-3.5.8/kppp/Kppp.desktop
---- kdenetwork-3.5.8/kppp/Kppp.desktop.kppp	2007-10-08 04:49:13.000000000 -0500
-+++ kdenetwork-3.5.8/kppp/Kppp.desktop	2007-10-13 16:03:03.000000000 -0500
-@@ -66,5 +66,4 @@ Path=
- Type=Application
- Terminal=false
- X-KDE-StartupNotify=true
--X-DCOP-ServiceType=Multi
- Categories=Qt;KDE;Network;Dialup;

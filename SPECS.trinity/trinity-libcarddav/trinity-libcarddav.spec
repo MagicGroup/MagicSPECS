@@ -18,19 +18,14 @@
 # TDE variables
 %define tde_epoch 2
 %if "%{?tde_version}" == ""
-%define tde_version 14.0.0
+%define tde_version 14.0.1
 %endif
 %define tde_pkg libcarddav
 %define tde_prefix /opt/trinity
 %define tde_includedir %{tde_prefix}/include
 %define tde_libdir %{tde_prefix}/%{_lib}
 
-%if 0%{?mdkversion} || 0%{?mgaversion} || 0%{?pclinuxos}
-%define libcarddav %{_lib}carddav
-%else
 %define libcarddav libcarddav
-%endif
-
 
 Name:		trinity-%{tde_pkg}
 Epoch:		%{tde_epoch}
@@ -40,11 +35,7 @@ Summary:	A portable CardDAV client implementation
 Group:		System/Libraries
 URL:		http://www.trinitydesktop.org/
 
-%if 0%{?suse_version}
-License:	GPL-2.0+
-%else
 License:	GPLv2+
-%endif
 
 #Vendor:		Trinity Deskio
 #Packager:	Francois Andriot <francois.andriot@free.fr>
@@ -60,21 +51,12 @@ BuildRequires:	make
 BuildRequires:	libtool
 
 # CURL support
-%if 0%{?fedora} || 0%{?rhel} >= 6 || 0%{?suse_version} || 0%{?mgaversion} || 0%{?mdkversion}
 %define libcurl_devel libcurl-devel >= 7.15.5
-%else
-# Specific CURL version for TDE on RHEL 5 (and older)
-%define libcurl_devel curl-devel >= 7.15.5
-%endif
 %{?libcurl_devel:BuildRequires: %{libcurl_devel}}
 
 # GTK2 support
-%if 0%{?rhel} == 4
-BuildRequires:	evolution28-gtk2-devel
-%else
 BuildRequires:	glib2-devel
 BuildRequires:	gtk2-devel
-%endif
 
 %description
 Libcarddav is a portable CardDAV client implementation originally developed for the Trinity PIM suite. 
@@ -140,12 +122,6 @@ This package contains the development files.
 
 %postun -n %{libcarddav}-devel
 /sbin/ldconfig
-
-##########
-
-%if 0%{?pclinuxos} || 0%{?suse_version} && 0%{?opensuse_bs} == 0
-%debug_package
-%endif
 
 ##########
 

@@ -22,7 +22,7 @@
 # TDE variables
 %define tde_epoch 2
 %if "%{?tde_version}" == ""
-%define tde_version 14.0.0
+%define tde_version 14.0.1
 %endif
 %define tde_pkg libkipi
 %define tde_prefix /opt/trinity
@@ -41,26 +41,20 @@
 %define _variant .opt
 %endif
 
-%if 0%{?mdkversion} || 0%{?mgaversion} || 0%{?pclinuxos}
-%define libkipi %{_lib}kipi
-%else
 %define libkipi libkipi
-%endif
 
 
 Name:		trinity-%{tde_pkg}
 Summary:	Library for apps that want to use kipi-plugins (runtime version) [Trinity]
-Group:		System/Libraries
+Summary(zh_CN.UTF-8): 使用 kipi-plugins 的程序使用的库
+Group: System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 Epoch:		%{tde_epoch}
 Version:	0.1.5
 Release:	%{?!preversion:2}%{?preversion:1_%{preversion}}%{?dist}%{?_variant}
 URL:		http://www.trinitydesktop.org/
 
-%if 0%{?suse_version}
-License:	GPL-2.0+
-%else
 License:	GPLv2+
-%endif
 
 #Vendor:		Trinity Desktop
 #Packager:	Francois Andriot <francois.andriot@free.fr>
@@ -69,6 +63,7 @@ Prefix:			%{tde_prefix}
 BuildRoot:		%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 Source0:		%{name}-%{tde_version}%{?preversion:~%{preversion}}.tar.gz
+Patch1:			trinity-libkipi-14.0.1-tqt.patch
 
 BuildRequires: trinity-tdelibs-devel >= %{tde_version}
 
@@ -78,23 +73,14 @@ BuildRequires: gettext
 BuildRequires: gcc-c++
 
 # LCMS support
-%if 0%{?suse_version}
-BuildRequires: liblcms-devel
-%else
 BuildRequires: lcms-devel
-%endif
 
 # JPEG support
 BuildRequires: libjpeg-devel
 
 # AUTOTOOLS
 BuildRequires: automake autoconf libtool
-%if 0%{?mgaversion} || 0%{?mdkversion}
-BuildRequires:	%{_lib}ltdl-devel
-%endif
-%if 0%{?fedora} || 0%{?rhel} >= 5 || 0%{?suse_version} >= 1220
 BuildRequires:	libtool-ltdl-devel
-%endif
 
 %description
 Libkipi is a library
@@ -104,11 +90,16 @@ Libkipi is a library
     
 Homepage: http://www.kipi-plugins.org/
 
+%description -l zh_CN.UTF-8
+使用 kipi-plugins 的程序使用的库。
+
 ##########
 
 %package -n trinity-%{libkipi}0
 Summary:	library for apps that want to use kipi-plugins (runtime version) [Trinity]
-Group:		System/Libraries
+Summary(zh_CN.UTF-8): %{name} 的运行库
+Group: System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 
 Obsoletes:	trinity-%{tde_pkg} < %{?epoch:%{epoch}:}%{version}-%{release}
 Provides:	trinity-%{tde_pkg} = %{?epoch:%{epoch}:}%{version}-%{release}
@@ -120,6 +111,9 @@ Libkipi is a library
     that wants to use kipi-plugins
     
 Homepage: http://www.kipi-plugins.org/
+
+%description -n trinity-%{libkipi}0 -l zh_CN.UTF-8
+%{name} 的运行库。
 
 %post -n trinity-%{libkipi}0
 for f in hicolor ; do
@@ -146,8 +140,10 @@ done
 ##########
 
 %package -n trinity-%{libkipi}-devel
-Group:		Development/Libraries/Other
+Group:		Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Summary:	library for apps that want to use kipi-plugins (development version) [Trinity]
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Requires:	%{name} = %{?epoch:%{epoch}:}%{version}-%{release}
 
 Obsoletes:	trinity-%{tde_pkg}-devel < %{?epoch:%{epoch}:}%{version}-%{release}
@@ -161,6 +157,9 @@ Libkipi is a library
     
 This package contains development files and documentation for libkipi library.
 Homepage: http://www.kipi-plugins.org/
+
+%description  -n trinity-%{libkipi}-devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %files -n trinity-%{libkipi}-devel
 %defattr(-,root,root,-)
@@ -177,14 +176,9 @@ Homepage: http://www.kipi-plugins.org/
 
 ##########
 
-%if 0%{?pclinuxos} || 0%{?suse_version} && 0%{?opensuse_bs} == 0
-%debug_package
-%endif
-
-##########
-
 %prep
 %setup -q -n %{name}-%{tde_version}%{?preversion:~%{preversion}}
+%patch1 -p1
 
 %__cp "/usr/share/aclocal/libtool.m4" "admin/libtool.m4.in"
 %__cp "/usr/share/libtool/config/ltmain.sh" "admin/ltmain.sh" || %__cp "/usr/share/libtool/ltmain.sh" "admin/ltmain.sh"
@@ -217,7 +211,7 @@ export PATH="%{tde_bindir}:${PATH}"
 export PATH="%{tde_bindir}:${PATH}"
 %__rm -rf %{buildroot}
 %__make install DESTDIR=%{buildroot}
-
+magic_rpm_clean.sh
 %find_lang %{tde_pkg}
 
 

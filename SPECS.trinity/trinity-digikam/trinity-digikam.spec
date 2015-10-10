@@ -18,7 +18,7 @@
 # TDE variables
 %define tde_epoch 2
 %if "%{?tde_version}" == ""
-%define tde_version 14.0.0
+%define tde_version 14.0.1
 %endif
 %define tde_pkg digikam
 %define tde_prefix /opt/trinity
@@ -37,16 +37,14 @@
 Name:			trinity-%{tde_pkg}
 Epoch:			%{tde_epoch}
 Version:		0.9.6
-Release:		%{?!preversion:2}%{?preversion:0_%{preversion}}%{?dist}%{?_variant}
+Release:		%{?!preversion:6}%{?preversion:0_%{preversion}}%{?dist}%{?_variant}.2
 Summary:		Digital photo management application for TDE
+Summary(zh_CN.UTF-8): TDE 下的数码照片管理程序
 Group:			Applications/Utilities
+Group(zh_CN.UTF-8): 应用程序/工具
 URL:			http://www.trinitydesktop.org/
 
-%if 0%{?suse_version}
-License:	GPL-2.0+
-%else
 License:	GPLv2+
-%endif
 
 #Vendor:		Trinity Desktop
 #Packager:	Francois Andriot <francois.andriot@free.fr>
@@ -56,6 +54,8 @@ BuildRoot:		%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 Source0:		%{name}-%{tde_version}%{?preversion:~%{preversion}}.tar.gz
 Source1:		digikam-open_in_digikam.desktop
+
+Patch1:			trinity-digikam-14.0.1-tqt.patch
 
 BuildRequires:	trinity-tdelibs-devel >= %{tde_version}
 BuildRequires:	trinity-tdebase-devel >= %{tde_version}
@@ -73,47 +73,16 @@ BuildRequires:	libtool
 BuildRequires:	libtiff-devel
 BuildRequires:	gettext
 
-# SUSE desktop files utility
-%if 0%{?suse_version}
-BuildRequires:	update-desktop-files
-%endif
-
-%if 0%{?opensuse_bs} && 0%{?suse_version}
-# for xdg-menu script
-BuildRequires:	brp-check-trinity
-%endif
-
-# LCMS support
-%if 0%{?suse_version}
-BuildRequires: liblcms-devel
-%else
 BuildRequires: lcms-devel
-%endif
 
 # GPHOTO2 support
-%if 0%{?rhel} == 4 || 0%{?rhel} == 5 || 0%{?mgaversion} || 0%{?mdkversion}
 BuildRequires:	gphoto2-devel
-%else
-BuildRequires:	libgphoto2-devel
-%endif
 
 # JASPER support
-%if 0%{?suse_version}
-BuildRequires:	libjasper-devel
-%else
 BuildRequires:	jasper-devel
-%endif
 
 # EXIV2 support
-%if 0%{?mgaversion} || 0%{?mdkversion}
-BuildRequires:	%{_lib}exiv2-devel
-%endif
-%if 0%{?suse_version}
-BuildRequires:	libexiv2-devel
-%endif
-%if 0%{?rhel} || 0%{?fedora}
 BuildRequires:	exiv2-devel
-%endif
 
 Requires:		trinity-libkexiv2
 Requires:		trinity-libkdcraw
@@ -138,6 +107,9 @@ import and export, etc. The kipi-plugins package contains many
 very useful extentions.
 
 digiKam is based in part on the work of the Independent JPEG Group.
+
+%description -l zh_CN.UTF-8
+数码照片管理程序。
 
 %files -f %{tde_pkg}.lang
 %defattr(-,root,root,-)
@@ -275,11 +247,16 @@ update-desktop-database %{tde_appdir} 2> /dev/null || :
 
 %package devel
 Group:			Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Summary:		Development files for %{name}
-Requires:		%{name} = %{version}-%{release}
+Summary(zh_CN.UTF-8): %{name} 的开发包
+Requires:		%{name} = %{epoch}:%{version}-%{release}
 
 %description devel
 %{summary}
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %files devel
 %defattr(-,root,root,-)
@@ -299,7 +276,7 @@ Requires:		%{name} = %{version}-%{release}
 %package i18n
 Summary:		Translation files for %{tde_pkg}
 Group:			Applications/Utilities
-Requires:		%{name} = %{version}-%{release}
+Requires:		%{name} = %{epoch}:%{version}-%{release}
 
 %description i18n
 %{summary}
@@ -327,14 +304,9 @@ Requires:		%{name} = %{version}-%{release}
 
 ##########
 
-%if 0%{?pclinuxos} || 0%{?suse_version} && 0%{?opensuse_bs} == 0
-%debug_package
-%endif
-
-##########
-
 %prep
 %setup -q -n %{name}-%{tde_version}%{?preversion:~%{preversion}}
+%patch1 -p1
 
 %__cp -f "/usr/share/aclocal/libtool.m4" "admin/libtool.m4.in"
 %__cp -f "/usr/share/libtool/config/ltmain.sh" "admin/ltmain.sh" || %__cp -f "/usr/share/libtool/ltmain.sh" "admin/ltmain.sh"
@@ -369,7 +341,7 @@ export PATH="%{tde_bindir}:${PATH}"
 export PATH="%{tde_bindir}:${PATH}"
 %__rm -rf %{buildroot}
 %__make install DESTDIR=%{buildroot}
-
+magic_rpm_clean.sh
 %find_lang %{tde_pkg}
 
 # Hide 'showfoto'.
@@ -378,19 +350,17 @@ echo "NoDisplay=true" >> "$RPM_BUILD_ROOT%{tde_tdeappdir}/showfoto.desktop"
 # Install the 'open in digikam' action for konqueror.
 install -D -m 644 "%{SOURCE1}" "$RPM_BUILD_ROOT%{tde_datadir}/apps/konqueror/servicemenus/digikam-open_in_digikam.desktop"
 
-# Updates applications categories for openSUSE
-%if 0%{?suse_version}
-%suse_update_desktop_file digikam  Graphics Photography
-%suse_update_desktop_file showfoto Graphics Viewer
-%suse_update_desktop_file "$RPM_BUILD_ROOT%{tde_datadir}/apps/konqueror/servicemenus/digikam-open_in_digikam.desktop"
-%endif
-
-
 %clean
 %__rm -rf %{buildroot}
 
 
 %changelog
+* Thu Oct 08 2015 Liu Di <liudidi@gmail.com> - 2:0.9.6-6.2
+- 为 Magic 3.0 重建
+
+* Thu Oct 08 2015 Liu Di <liudidi@gmail.com> - 2:0.9.6-6.1
+- 为 Magic 3.0 重建
+
 * Mon Feb 02 2015 Francois Andriot <francois.andriot@free.fr> - 2:0.9.6-2
 - Rebuild on Fedora 21 for updated libgphoto2
 

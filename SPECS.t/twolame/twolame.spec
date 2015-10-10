@@ -1,8 +1,10 @@
 Name:		twolame
 Version:	0.3.13
-Release:	3%{?dist}
+Release:	4%{?dist}
 Summary:	TwoLAME is an optimised MPEG Audio Layer 2 encoding library based on tooLAME
+Summary(zh_CN.UTF-8): 基于 tooLAME 优化的 MPEG 音频层 2 编码库
 Group:		Applications/Multimedia
+Group(zh_CN.UTF-8): 应用程序/多媒体
 License:	LGPLv2+
 URL:		http://www.twolame.org/
 Source:		http://downloads.sourceforge.net/twolame/%{name}-%{version}.tar.gz
@@ -17,10 +19,15 @@ which in turn is based heavily on
 - improvement to algorithms as part of the LAME project (www.sulaco.org/mp3)
 
 This package contains the command line frontend.
-                                                                                
+                                   
+%description -l zh_CN.UTF-8
+基于 tooLAME 优化的 MPEG 音频层 2 编码库。
+                                             
 %package libs
 Summary:	TwoLAME is an optimised MPEG Audio Layer 2 encoding library based on tooLAME
+Summary(zh_CN.UTF-8): %{name} 的运行库
 Group:		System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 Obsoletes:	%{name} < 0.3.12-1
 
 %description libs
@@ -31,15 +38,22 @@ which in turn is based heavily on
 
 This package contains the shared library.
 
+%description libs -l zh_CN.UTF-8
+%{name} 的运行库。
+
 %package devel
 Summary:	Development tools for TwoLAME applications
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:		Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:	%{name}-libs = %{version}-%{release}
 Requires:	pkgconfig
 
 %description devel
 This package contains the header files and documentation
 needed to develop applications with TwoLAME.
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -67,6 +81,7 @@ rm -rf $RPM_BUILD_ROOT
 %{__make} DESTDIR=$RPM_BUILD_ROOT install
 rm $RPM_BUILD_ROOT%{_libdir}/*.la
 rm -rf $RPM_BUILD_ROOT%{_docdir}
+magic_rpm_clean.sh
 
 %clean 
 rm -rf $RPM_BUILD_ROOT
@@ -93,6 +108,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_includedir}/%{name}.h
 
 %changelog
+* Sun Oct 04 2015 Liu Di <liudidi@gmail.com> - 0.3.13-4
+- 为 Magic 3.0 重建
+
 * Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 0.3.13-3
 - 为 Magic 3.0 重建
 

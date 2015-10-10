@@ -21,7 +21,7 @@
 
 # TDE variables
 %if "%{?tde_version}" == ""
-%define tde_version 14.0.0
+%define tde_version 14.0.1
 %endif
 %define tde_pkg tdeutils
 %define tde_prefix /opt/trinity
@@ -50,11 +50,7 @@ Release:	%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}%{?_variant}
 Group:		Applications/System
 URL:		http://www.trinitydesktop.org/
 
-%if 0%{?suse_version}
-License:	GPL-2.0+
-%else
 License:	GPLv2+
-%endif
 
 #Vendor:		Trinity Project
 #Packager:	Francois Andriot <francois.andriot@free.fr>
@@ -88,27 +84,7 @@ BuildRequires:	net-snmp-devel
 BuildRequires:	python-devel
 BuildRequires:	gmp-devel
 
-# SUSE desktop files utility
-%if 0%{?suse_version}
-BuildRequires:	update-desktop-files
-%endif
-
-%if 0%{?opensuse_bs} && 0%{?suse_version}
-# for xdg-menu script
-BuildRequires:	brp-check-trinity
-%endif
-
-# XTST support
-%if 0%{?mgaversion} || 0%{?mdkversion}
-%if 0%{?mgaversion} >= 4
-%define xtst_devel %{_lib}xtst-devel
-%else
-%define xtst_devel %{_lib}xtst%{?mgaversion:6}-devel
-%endif
-%endif
-%if 0%{?rhel} >= 5 || 0%{?fedora} || 0%{?suse_version} >= 1220
 %define xtst_devel libXtst-devel
-%endif
 %{?xtst_devel:BuildRequires: %{xtst_devel}}
 
 # IDN support
@@ -116,10 +92,8 @@ BuildRequires:	libidn-devel
 
 # GAMIN support
 #  Not on openSUSE.
-%if 0%{?rhel} || 0%{?fedora} || 0%{?mgaversion} || 0%{?mdkversion}
 %define with_gamin 1
 BuildRequires:	gamin-devel
-%endif
 
 # PCRE support
 BuildRequires:	pcre-devel
@@ -130,37 +104,20 @@ BuildRequires:	pcre-devel
 #endif
 
 # KLAPTOPDAEMON
-#  Not for RHEL 4!
-%if 0%{?rhel} >= 5 || 0%{?fedora} || 0%{?mgaversion} || 0%{?mdkversion} || 0%{?suse_version}
 %define build_klaptopdaemon 1
-%endif
 
 # ACL support
 BuildRequires:	libacl-devel
 
 # XSCREENSAVER support
-%if 0%{?fedora} >= 15 || 0%{?mgaversion} || 0%{?mdkversion} || 0%{?rhel} >= 5 || 0%{?suse_version}
 %define with_xscreensaver 1
-%if 0%{?fedora} || 0%{?rhel} >= 5 || 0%{?suse_version}
 BuildRequires:	libXScrnSaver-devel
-%endif
-%if 0%{?mgaversion} || 0%{?mdkversion}
-%if 0%{?mgaversion} >= 4
-BuildRequires:	%{_lib}xscrnsaver-devel
-%else
-BuildRequires:	%{_lib}xscrnsaver%{?mgaversion:1}-devel
-%endif
-%endif
-%endif
 
 # CONSOLEHELPER (usermode) support
-%if 0%{?rhel} || 0%{?fedora} || 0%{?mgaversion} || 0%{?mdkversion}
 %define with_consolehelper 1
 
 # Avoids relinking, which breaks consolehelper
 %define dont_relink 1
-%endif
-
 
 Requires: trinity-ark = %{version}-%{release}
 Requires: trinity-kcalc = %{version}-%{release}
@@ -1048,12 +1005,6 @@ This package contains the development files for tdeutils.
 
 %postun devel
 /sbin/ldconfig
-
-##########
-
-%if 0%{?pclinuxos} || 0%{?suse_version} && 0%{?opensuse_bs} == 0
-%debug_package
-%endif
 
 ##########
 

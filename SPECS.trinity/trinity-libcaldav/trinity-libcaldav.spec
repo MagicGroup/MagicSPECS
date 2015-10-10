@@ -18,7 +18,7 @@
 # TDE variables
 %define tde_epoch 2
 %if "%{?tde_version}" == ""
-%define tde_version 14.0.0
+%define tde_version 14.0.1
 %endif
 %define tde_pkg libcaldav
 %define tde_prefix /opt/trinity
@@ -40,11 +40,7 @@ Summary:	A client library that adds support for the CalDAV protocol (rfc4791)
 Group:		System/Libraries
 URL:		http://www.trinitydesktop.org/
 
-%if 0%{?suse_version}
-License:	GPL-2.0+
-%else
 License:	GPLv2+
-%endif
 
 #Vendor:		Trinity Desktop
 #Packager:	Francois Andriot <francois.andriot@free.fr>
@@ -54,26 +50,18 @@ BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 Source0:	%{name}-%{tde_version}%{?preversion:~%{preversion}}.tar.gz
 
-Patch1:		libcaldav-14.0.1-rhel5.patch
+Patch1:		trinity-libcaldav-14.0.1-tqt.patch
 
 BuildRequires:	make
 BuildRequires:	libtool
 BuildRequires:	fdupes
 
 # GTK2 support
-%if 0%{?rhel} == 4
-BuildRequires:	evolution28-gtk2-devel
-%else
 BuildRequires:	glib2-devel
 BuildRequires:	gtk2-devel
-%endif
 
 # CURL support
-%if 0%{?fedora} || 0%{?rhel} >= 6 || 0%{?suse_version} || 0%{?mgaversion} || 0%{?mdkversion}
 %define libcurl_devel libcurl-devel >= 7.15.5
-%else
-%define libcurl_devel curl-devel >= 7.15.5
-%endif
 %{?libcurl_devel:BuildRequires: %{libcurl_devel}}
 
 %description
@@ -151,9 +139,7 @@ This package includes the development files.
 
 %prep
 %setup -q -n %{name}-%{tde_version}%{?preversion:~%{preversion}}
-%if 0%{?rhel} == 5
-%patch1 -p1 -b .ftbfs
-%endif
+#patch1 -p1 -b .tqt
 autoreconf -fiv
 
 

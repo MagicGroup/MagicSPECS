@@ -18,7 +18,7 @@
 # TDE variables
 %define tde_epoch 2
 %if "%{?tde_version}" == ""
-%define tde_version 14.0.0
+%define tde_version 14.0.1
 %endif
 %define tde_pkg k3b
 %define tde_prefix /opt/trinity
@@ -41,14 +41,12 @@ Epoch:			%{tde_epoch}
 Version:		1.0.5
 Release:		%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}%{?_variant}
 Summary:		CD/DVD burning application
+Summary(zh_CN.UTF-8): 光盘刻录程序
 Group:			Applications/Archiving
+Group(zh_CN.UTF-8): 应用程序/归档
 URL:			http://www.trinitydesktop.org/
 
-%if 0%{?suse_version}
-License:	GPL-2.0+
-%else
 License:	GPLv2+
-%endif
 
 #Vendor:		Trinity Desktop
 #Packager:	Francois Andriot <francois.andriot@free.fr>
@@ -59,6 +57,7 @@ BuildRoot:		%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 Source0:		%{name}-%{tde_version}%{?preversion:~%{preversion}}.tar.gz
 Source2:		k3brc
 
+Patch1:			trinity-k3b-14.0.1-tqt.patch
 # Legacy RedHat / Fedora patches
 # manual bufsize (upstream?)
 Patch4:			k3b-1.0.4-manualbufsize.patch
@@ -70,16 +69,6 @@ BuildRequires:	desktop-file-utils
 BuildRequires:	autoconf automake libtool m4
 BuildRequires:	gcc-c++
 BuildRequires:	pkgconfig
-
-# SUSE desktop files utility
-%if 0%{?suse_version}
-BuildRequires:	update-desktop-files
-%endif
-
-%if 0%{?opensuse_bs} && 0%{?suse_version}
-# for xdg-menu script
-BuildRequires:	brp-check-trinity
-%endif
 
 BuildRequires:	alsa-lib-devel
 BuildRequires:	audiofile-devel
@@ -96,24 +85,15 @@ Requires(postun): coreutils
 Requires:		%{name}-libs = %{?epoch:%{epoch}:}%{version}-%{release}
 Requires:		%{name}-common = %{?epoch:%{epoch}:}%{version}-%{release}
 
-%if 0%{?suse_version} >= 1310
-Requires:		wodim
-REquires:		genisoimage
-%else
 Requires:		cdrecord
 REquires:		mkisofs
-%endif
 Requires:		dvd+rw-tools
 
 # CDRDAO support
-%if 0%{?mdkversion} || 0%{?mgaversion} || 0%{?fedora} || 0%{?suse_version} || 0%{?rhel} >= 5
 Requires:		cdrdao
-%endif
 
 # UDEV support
-%if 0%{?fedora} || 0%{?mdkversion} || 0%{?mgaversion} || 0%{?suse_version} || 0%{?rhel} >= 6
 BuildRequires:	libudev-devel
-%endif
 
 # HAL support
 %if 0%{?rhel} == 5
@@ -123,93 +103,32 @@ BuildRequires:	hal-devel
 
 # DBUS support
 #  TQT bindings not available for RHEL4
-%if 0%{?rhel} == 4
-# Dbus bindings were rebuilt with Qt support
-BuildRequires:	dbus-devel >= 0.22-12.EL.9p1
-Requires:		dbus-qt >= 0.22-12.EL.9p1
-%else
 BuildRequires:	trinity-dbus-tqt-devel >= 1:0.63
 Requires:		trinity-dbus-tqt >= 1:0.63
-%endif
 
 # SNDFILE support
-%if 0%{?mdkversion} || 0%{?mgaversion} || 0%{?fedora} || 0%{?suse_version} || 0%{?rhel} >= 4
 %define with_sndfile 1
 BuildRequires:	libsndfile-devel
-%endif
 
 # SAMPLERATE support
-%if 0%{?mdkversion} || 0%{?mgaversion} || 0%{?fedora} || 0%{?suse_version} || 0%{?rhel} >= 4
 %define with_samplerate 1
 BuildRequires:	libsamplerate-devel
-%endif
 
 # DVDREAD support
-%if 0%{?mdkversion} || 0%{?mgaversion} || 0%{?fedora} || 0%{?suse_version} || 0%{?rhel} >= 4
 %define with_dvdread 1
-%if 0%{?mdkversion} || 0%{?mgaversion}
-BuildRequires:	%{_lib}dvdread-devel
-%else
 BuildRequires:	libdvdread-devel
-%endif
-%endif
 
-# FLAC support
-%if 0%{?mgaversion} || 0%{?mdkversion}
-%if 0%{?pclinuxos}
-BuildRequires:	libflac-devel
-BuildRequires:	libflac++-devel
-%else
-BuildRequires:	%{_lib}flac-devel
-BuildRequires:	%{_lib}flac++-devel
-%endif
-%else
 BuildRequires:	flac-devel
-%endif
 
 # MAD support
-%if 0%{?mdkversion} || 0%{?mgaversion} || 0%{?fedora} || 0%{?suse_version} || 0%{?rhel}
 %define with_libmad 1
-%if 0%{?mdkversion} || 0%{?mgaversion}
-BuildRequires:	%{_lib}mad-devel
-%endif
-%if 0%{?fedora} || 0%{?suse_version} || 0%{?rhel}
 BuildRequires:	libmad-devel
-%endif
-%endif
 
 # LAME support
-%if 0%{?mgaversion} || 0%{?mdkversion}
-%if 0%{?mdkversion} || 0%{?mgaversion} || 0%{?fedora} || 0%{?suse_version} || 0%{?rhel}
-%define with_lame 1
-%if 0%{?mgaversion} || 0%{?mdkversion}
-%if 0%{?pclinuxos}
-BuildRequires:	liblame-devel
-%else
-BuildRequires:	%{_lib}lame-devel
-%endif
-%endif
-%if 0%{?suse_version}
-BuildRequires:	libmp3lame-devel
-%endif
-%if 0%{?fedora} || 0%{?rhel}
 BuildRequires:	lame-devel
-%endif
-%endif
-%endif
 
 # FFMPEG support
-%if 0%{?opensuse_bs} == 0
-%if 0%{?mdkversion} || 0%{?mgaversion} || 0%{?fedora} || 0%{?suse_version} || 0%{?rhel}
-%define with_ffmpeg 1
-%if 0%{?mdkversion} || 0%{?mgaversion}
-BuildRequires:	%{_lib}ffmpeg-devel
-%endif
-%if 0%{?fedora} || 0%{?suse_version} || 0%{?rhel}
 BuildRequires:	ffmpeg-devel
-%endif
-%endif
-%endif
 
 
 %description
@@ -219,6 +138,8 @@ steps of the burning process the beginner may find comfort in the
 automatic settings and the reasonable k3b defaults which allow a quick
 start.
 
+%description -l zh_CN.UTF-8
+TDE 下的光盘刻录程序。
 
 %files
 %defattr(-,root,root,-)
@@ -261,14 +182,17 @@ start.
 
 %package common
 Summary:		Common files of %{name}
+Summary(zh_CN.UTF-8): %{name} 的公用文件
 Group:			Applications/Archiving
+Group(zh_CN.UTF-8): 应用程序/归档
 Requires:		%{name} = %{?epoch:%{epoch}:}%{version}-%{release}
-%if 0%{?rhel} >= 6 || 0%{?fedora} >= 15 || 0%{?mgaversion} || 0%{?mdkversion}
 BuildArch: noarch
-%endif
 
 %description common
 %{summary}.
+
+%description common -l zh_CN.UTF-8
+%{name} 的公用文件。
 
 %files common
 %defattr(-,root,root,-)
@@ -334,11 +258,15 @@ Requires:		%{name} = %{?epoch:%{epoch}:}%{version}-%{release}
 
 %package devel
 Summary:		Files for the development of applications which will use %{name} 
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:			Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:		%{name}-libs = %{?epoch:%{epoch}:}%{version}-%{release}
 
 %description devel
 %{summary}.
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %files devel
 %defattr(-,root,root,-)
@@ -357,7 +285,9 @@ Requires:		%{name}-libs = %{?epoch:%{epoch}:}%{version}-%{release}
 %if 0%{?with_libmad}
 %package plugin-mad
 Summary:		The MAD plugin for K3B
+Summary(zh_CN.UTF-8): %{name} 的 MAD 插件
 Group:			System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 Requires:		%{name} = %{?epoch:%{epoch}:}%{version}-%{release}
 
 %description plugin-mad
@@ -367,6 +297,9 @@ MAD is a high-quality MPEG audio decoder. It currently supports MPEG-1
 and the MPEG-2  extension to Lower Sampling Frequencies, as well as the
 so-called MPEG 2.5 format. All three audio layers (Layer I, Layer II,
 and Layer III a.k.a. MP3) are fully implemented.
+
+%description plugin-mad -l zh_CN.UTF-8
+%{name} 的 MAD 插件。
 
 %files plugin-mad
 %defattr(-,root,root,-)
@@ -379,7 +312,9 @@ and Layer III a.k.a. MP3) are fully implemented.
 %if 0%{?with_lame}
 %package plugin-lame
 Summary:		The LAME plugin for K3B
+Summary(zh_CN.UTF-8): %{name} 的 LAME 插件
 Group:			System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 Requires:		%{name} = %{?epoch:%{epoch}:}%{version}-%{release}
 
 %description plugin-lame
@@ -389,6 +324,9 @@ Personal and commercial use of compiled versions of LAME (or any other mp3
 encoder) requires a patent license in some countries.
 
 This package is in tainted, as MP3 encoding is covered by software patents.
+
+%description plugin-lame -l zh_CN.UTF-8
+%{name} 的 LAME 插件。
 
 %files plugin-lame
 %defattr(-,root,root,-)
@@ -401,7 +339,9 @@ This package is in tainted, as MP3 encoding is covered by software patents.
 %if 0%{?with_ffmpeg}
 %package plugin-ffmpeg
 Summary:		The FFMPEG plugin for K3B
+Summary(zh_CN.UTF-8): %{name} 的 FFMPEG 插件
 Group:			System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 Requires:		%{name} = %{?epoch:%{epoch}:}%{version}-%{release}
 
 %description plugin-ffmpeg
@@ -409,6 +349,9 @@ Requires:		%{name} = %{?epoch:%{epoch}:}%{version}-%{release}
 
 ffmpeg is a hyper fast realtime audio/video encoder, a streaming server
 and a generic audio and video file converter.
+
+%description plugin-ffmpeg -l zh_CN.UTF-8
+%{name} 的 FFMPEG 插件。
 
 %files plugin-ffmpeg
 %defattr(-,root,root,-)
@@ -418,15 +361,9 @@ and a generic audio and video file converter.
 
 ##########
 
-%if 0%{?pclinuxos} || 0%{?suse_version} && 0%{?opensuse_bs} == 0
-%debug_package
-%endif
-
-##########
-
-
 %prep
 %setup -q -n %{name}-%{tde_version}%{?preversion:~%{preversion}}
+%patch1 -p1
 
 # set in k3brc too 
 %patch4 -p1 -b .manualbufsize
@@ -500,7 +437,7 @@ export PATH="%{tde_bindir}:${PATH}"
 
 # remove the .la files
 %__rm -f %{buildroot}%{tde_libdir}/libk3b*.la 
-
+magic_rpm_clean.sh
 
 %clean
 %__rm -rf %{buildroot}

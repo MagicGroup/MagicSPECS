@@ -1,9 +1,11 @@
 Name:           txt2man
 Version:        1.5.6
-Release:        6%{?dist}
+Release:        7%{?dist}
 Summary:        Convert flat ASCII text to man page format
+Summary(zh_CN.UTF-8): 转换 ASCII 文本到手册页格式
 
 Group:          Applications/Text
+Group(zh_CN.UTF-8): 应用程序/文本
 License:        GPLv2+
 URL:            http://mvertes.free.fr/txt2man/
 Source0:        http://mvertes.free.fr/download/%{name}-%{version}.tar.gz
@@ -23,6 +25,9 @@ Requires:       gawk
 tx2man is a shell script using gnu awk, that should run on any
 Unix-like system. The syntax of the ASCII text is very straightforward
 and looks very much like the output of the man(1) program. 
+
+%description -l zh_CN.UTF-8
+转换 ASCII 文本到手册页格式。
 
 %prep
 %setup -q
@@ -56,6 +61,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Mon Oct 05 2015 Liu Di <liudidi@gmail.com> - 1.5.6-7
+- 为 Magic 3.0 重建
+
 * Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 1.5.6-6
 - 为 Magic 3.0 重建
 

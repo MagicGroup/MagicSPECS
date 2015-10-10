@@ -2,7 +2,7 @@
 # - libstk:  http://www.libstk.net/ - probably not, see 1.1.5 ChangeLog
 # - drop the opengl video out plugin?
 
-%define         plugin_abi  2.4
+%define         plugin_abi  2.5
 %define         codecdir    %{_libdir}/codecs
 
 %ifarch %{ix86}

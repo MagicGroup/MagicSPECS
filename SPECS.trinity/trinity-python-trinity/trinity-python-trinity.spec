@@ -20,7 +20,7 @@
 # TDE variables
 %define tde_epoch 2
 %if "%{?tde_version}" == ""
-%define tde_version 14.0.0
+%define tde_version 14.0.1
 %endif
 %define tde_pkg python-trinity
 %define tde_prefix /opt/trinity
@@ -43,11 +43,7 @@ Group:		Development/Libraries/Python
 URL:		http://www.trinitydesktop.org/
 #URL:		http://www.simonzone.com/software/pykdeextensions
 
-%if 0%{?suse_version}
-License:	GPL-2.0+
-%else
 License:	GPLv2+
-%endif
 
 #Vendor:		Trinity Desktop
 #Packager:	Francois Andriot <francois.andriot@free.fr>
@@ -127,12 +123,6 @@ tips and working code you can use to learn from.
 %files doc
 %defattr(-,root,root,-)
 %{tde_tdedocdir}/HTML/en/python-trinity/
-
-##########
-
-%if 0%{?pclinuxos} || 0%{?suse_version} && 0%{?opensuse_bs} == 0
-%debug_package
-%endif
 
 ##########
 

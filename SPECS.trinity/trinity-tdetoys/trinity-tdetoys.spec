@@ -21,7 +21,7 @@
 
 # TDE variables
 %if "%{?tde_version}" == ""
-%define tde_version 14.0.0
+%define tde_version 14.0.1
 %endif
 %define tde_pkg tdetoys
 %define tde_prefix /opt/trinity
@@ -48,11 +48,7 @@ Release:	%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}%{?_variant}
 Group:		Amusements/Graphics
 URL:		http://www.trinitydesktop.org/
 
-%if 0%{?suse_version}
-License:	GPL-2.0+
-%else
 License:	GPLv2+
-%endif
 
 #Vendor:		Trinity Project
 #Packager:	Francois Andriot <francois.andriot@free.fr>
@@ -72,15 +68,6 @@ BuildRequires:	gcc-c++
 BuildRequires:	pkgconfig
 BuildRequires:	fdupes
 
-# SUSE desktop files utility
-%if 0%{?suse_version}
-BuildRequires:	update-desktop-files
-%endif
-
-%if 0%{?opensuse_bs} && 0%{?suse_version}
-# for xdg-menu script
-BuildRequires:	brp-check-trinity
-%endif
 
 BuildRequires: desktop-file-utils
 BuildRequires: gettext
@@ -90,10 +77,8 @@ BuildRequires:	libidn-devel
 
 # GAMIN support
 #  Not on openSUSE.
-%if 0%{?rhel} || 0%{?fedora} || 0%{?mgaversion} || 0%{?mdkversion}
 %define with_gamin 1
 BuildRequires:	gamin-devel
-%endif
 
 # ACL support
 BuildRequires:	libacl-devel
@@ -434,12 +419,6 @@ update-desktop-database %{tde_datadir}/applications > /dev/null 2>&1 || :
 touch --no-create %{tde_datadir}/icons/hicolor ||:
 gtk-update-icon-cache -q %{tde_datadir}/icons/hicolor 2> /dev/null ||:
 update-desktop-database %{tde_datadir}/applications > /dev/null 2>&1 || :
-
-##########
-
-%if 0%{?pclinuxos} || 0%{?suse_version} && 0%{?opensuse_bs} == 0
-%debug_package
-%endif
 
 ##########
 

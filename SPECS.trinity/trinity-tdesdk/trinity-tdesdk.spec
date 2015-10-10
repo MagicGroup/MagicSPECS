@@ -22,7 +22,7 @@
 # TDE variables
 %define tde_epoch 2
 %if "%{?tde_version}" == ""
-%define tde_version 14.0.0
+%define tde_version 14.0.1
 %endif
 %define tde_pkg tdesdk
 %define tde_prefix /opt/trinity
@@ -50,11 +50,7 @@ Version:		%{tde_version}
 Release:		%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}%{?_variant}
 URL:			http://www.trinitydesktop.org/
 
-%if 0%{?suse_version}
-License:		GPL-2.0+
-%else
 License:		GPLv2+
-%endif
 
 #Vendor:		Trinity Desktop
 #Packager:		Francois Andriot <francois.andriot@free.fr>
@@ -73,16 +69,6 @@ BuildRequires:	gcc-c++
 BuildRequires:	libtool
 BuildRequires:	fdupes
 
-# SUSE desktop files utility
-%if 0%{?suse_version}
-BuildRequires:	update-desktop-files
-%endif
-
-%if 0%{?opensuse_bs} && 0%{?suse_version}
-# for xdg-menu script
-BuildRequires:	brp-check-trinity
-%endif
-
 # ACL support
 BuildRequires:	libacl-devel
 
@@ -91,10 +77,8 @@ BuildRequires:	libidn-devel
 
 # GAMIN support
 #  Not on openSUSE.
-%if 0%{?rhel} || 0%{?fedora} || 0%{?mgaversion} || 0%{?mdkversion}
 %define with_gamin 1
 BuildRequires:	gamin-devel
-%endif
 
 # PCRE support
 BuildRequires:	pcre-devel
@@ -103,15 +87,7 @@ BuildRequires:	pcre-devel
 BuildRequires:	desktop-file-utils
 
 # DB4 support
-%if 0%{?mgaversion} || 0%{?mdkversion}
-#BuildRequires:	%{_lib}db4.8-devel
-%endif
-%if 0%{?rhel} || 0%{?fedora}
 BuildRequires:	db4-devel
-%endif
-%if 0%{?suse_version}
-BuildRequires:	libdb-4_8-devel
-%endif
 
 # kbabel,  F-7+: flex >= 2.5.33-9
 BuildRequires:	flex
@@ -123,26 +99,15 @@ BuildRequires:	neon-devel
 
 # PERL support
 BuildRequires:	perl
-%if 0%{?fedora} >= 19
 BuildRequires:	perl-podlators
-%endif
 
-%if 0%{?mgaversion} || 0%{?mdkversion}
-BuildRequires:	%{_lib}ltdl-devel
-BuildRequires:	%{_lib}binutils-devel
-%endif
-%if 0%{?fedora} >= 6 || 0%{?rhel} >= 5 || 0%{?suse_version}
 BuildRequires:	binutils-devel
-%endif
-%if 0%{?fedora} >= 6 || 0%{?rhel} >= 5 || 0%{?suse_version} >= 1220
 BuildRequires:	libtool-ltdl-devel
-%endif
 
 # KIOSLAVE
 # Does not build on RHEL4
-%if 0%{?rhel} >= 5 || 0%{?fedora} || 0%{?suse_version} || 0%{?mgaversion} || 0%{?mdkversion}
-%define build_kioslave 1
-%endif
+# 不能在 subversion 1.9上编译.
+#define build_kioslave 1
 
 Obsoletes:		trinity-kdesdk < %{version}-%{release}
 Provides:		trinity-kdesdk = %{version}-%{release}
@@ -1147,13 +1112,6 @@ This package contains the development files for tdesdk.
 
 ##########
 
-%if 0%{?pclinuxos} || 0%{?suse_version} && 0%{?opensuse_bs} == 0
-%debug_package
-%endif
-
-##########
-
-
 %prep
 %setup -q -n %{name}-%{version}%{?preversion:~%{preversion}}
 
@@ -1193,7 +1151,7 @@ export RPM_OPT_FLAGS="${RPM_OPT_FLAGS} -L%{tde_libdir}"
   -DWITH_DBSEARCHENGINE=ON \
   -DWITH_KCAL=ON \
   -DBUILD_ALL=ON \
-  %{!?build_kioslave:-DBUILD_KIOSLAVE=OFF} \
+  %{!?build_kioslave:-DBUILD_TDEIOSLAVE=OFF} \
   ..
 
 %__make %{?_smp_mflags} || %__make

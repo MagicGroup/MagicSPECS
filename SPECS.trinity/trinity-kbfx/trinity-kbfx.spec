@@ -18,7 +18,7 @@
 # TDE variables
 %define tde_epoch 2
 %if "%{?tde_version}" == ""
-%define tde_version 14.0.0
+%define tde_version 14.0.1
 %endif
 %define tde_pkg kbfx
 %define tde_prefix /opt/trinity
@@ -40,14 +40,12 @@ Epoch:			%{tde_epoch}
 Version:		0.4.9.3.1
 Release:		%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}%{?_variant}
 Summary:		An alternative to K-Menu for TDE
+Summary(zh_CN.UTF-8): TDE 下可选的 K 菜单
 Group:			Applications/Utilities
+Group(zh_CN.UTF-8): 应用程序/工具
 URL:			http://www.trinitydesktop.org/
 
-%if 0%{?suse_version}
-License:	GPL-2.0+
-%else
 License:	GPLv2+
-%endif
 
 #Vendor:		Trinity Desktop
 #Packager:	Francois Andriot <francois.andriot@free.fr>
@@ -66,25 +64,13 @@ BuildRequires:	cmake libtool
 BuildRequires:	gcc-c++
 BuildRequires:	pkgconfig
 
-# SUSE desktop files utility
-%if 0%{?suse_version}
-BuildRequires:	update-desktop-files
-%endif
-
-%if 0%{?opensuse_bs} && 0%{?suse_version}
-# for xdg-menu script
-BuildRequires:	brp-check-trinity
-%endif
-
 # IDN support
 BuildRequires:	libidn-devel
 
 # GAMIN support
 #  Not on openSUSE.
-%if 0%{?rhel} || 0%{?fedora} || 0%{?mgaversion} || 0%{?mdkversion}
 %define with_gamin 1
 BuildRequires:	gamin-devel
-%endif
 
 # PCRE support
 BuildRequires:	pcre-devel
@@ -103,15 +89,10 @@ bar a try.
 
 Homepage: http://www.kbfx.org
 
+%description -l zh_CN.UTF-8
+TDE 下可选的 K 菜单。
 
 ##########
-
-%if 0%{?pclinuxos} || 0%{?suse_version} && 0%{?opensuse_bs} == 0
-%debug_package
-%endif
-
-##########
-
 
 %prep
 %setup -q -n %{name}-%{tde_version}%{?preversion:~%{preversion}}
@@ -170,17 +151,7 @@ fi
 export PATH="%{tde_bindir}:${PATH}"
 %__rm -rf %{buildroot}
 %__make install DESTDIR=%{buildroot} -C build VERBOSE=1
-
-# Updates applications categories for openSUSE
-%if 0%{?suse_version}
-%suse_update_desktop_file -G "KBFX Configuration Utility" kbfxconfigapp -r KDE Utility DesktopUtility
-%suse_update_desktop_file %{buildroot}%{tde_datadir}/apps/konqueror/servicemenus/kbfx_prepare_theme.desktop
-%suse_update_desktop_file %{buildroot}%{tde_datadir}/apps/konqueror/servicemenus/kbfx_install_theme.desktop
-%suse_update_desktop_file %{buildroot}%{tde_datadir}/apps/kicker/applets/kbfxspinx.desktop
-%suse_update_desktop_file %{buildroot}%{tde_datadir}/mimelnk/application/x-kbfxtheme.desktop
-%suse_update_desktop_file %{buildroot}%{tde_datadir}/applications/tde/kbfx_theme.desktop
-%endif
-
+magic_rpm_clean.sh
 
 %clean
 %__rm -rf %{buildroot}
@@ -231,10 +202,6 @@ update-desktop-database %{tde_appdir} &> /dev/null
 %{tde_docdir}/kbfx/
 %{tde_datadir}/icons/hicolor/*/apps/kbfx.png
 %{tde_datadir}/icons/hicolor/*/apps/kbfxconfigapp.png
-%lang(bg) %{tde_datadir}/locale/bg/LC_MESSAGES/kbfxconfigapp.mo
-%lang(hu) %{tde_datadir}/locale/hu/LC_MESSAGES/kbfxconfigapp.mo
-%lang(it) %{tde_datadir}/locale/it/LC_MESSAGES/kbfxconfigapp.mo
-%lang(nl) %{tde_datadir}/locale/nl/LC_MESSAGES/kbfxconfigapp.mo
 %{tde_datadir}/mimelnk/application/x-kbfxtheme.desktop
 
 

@@ -18,7 +18,7 @@
 # TDE variables
 %define tde_epoch 2
 %if "%{?tde_version}" == ""
-%define tde_version 14.0.0
+%define tde_version 14.0.1
 %endif
 %define tde_pkg bibletime
 %define tde_prefix /opt/trinity
@@ -39,14 +39,12 @@ Epoch:			%{tde_epoch}
 Version:		1.6.6.0
 Release:		%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}%{?_variant}
 Summary:		A bible study tool for Trinity
+Summary(zh_CN.UTF-8): Trinity 下的圣经学习工具 
 Group:			Applications/Utilities
+Group(zh_CN.UTF-8): 应用程序/工具
 URL:			http://www.trinitydesktop.org/
 
-%if 0%{?suse_version}
-License:	GPL-2.0+
-%else
 License:	GPLv2+
-%endif
 
 #Vendor:		Trinity Desktop
 #Packager:	Francois Andriot <francois.andriot@free.fr>
@@ -55,6 +53,8 @@ Prefix:			%{_prefix}
 BuildRoot:		%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 Source0:		%{name}-%{tde_version}%{?preversion:~%{preversion}}.tar.gz
+
+Patch1:			trinity-bibletime-14.0.1-tqt.patch
 
 BuildRequires:	trinity-tdelibs-devel >= %{tde_version}
 BuildRequires:	trinity-tdebase-devel >= %{tde_version}
@@ -66,26 +66,11 @@ BuildRequires:	libtool
 BuildRequires:	desktop-file-utils
 BuildRequires:	gettext
 
-# SUSE desktop files utility
-%if 0%{?suse_version}
-BuildRequires:	update-desktop-files
-%endif
-
-%if 0%{?opensuse_bs} && 0%{?suse_version}
-# for xdg-menu script
-BuildRequires:	brp-check-trinity
-%endif
-
 # BOOST support
 BuildRequires:   boost-devel
 
 # Requires: clucene
-%if 0%{?fedora} || 0%{?suse_version} || 0%{?rhel} >= 6
 BuildRequires:	clucene-core-devel
-%endif
-%if 0%{?mgaversion} || 0%{?mdkversion}
-BuildRequires:	%{_lib}clucene-devel
-%endif
 
 # Requires: sword
 BuildRequires:	sword-devel
@@ -98,16 +83,13 @@ BibleTime provides easy handling of digitized texts (Bibles, commentaries
 and lexicons) and powerful features to work with these texts (search in
 texts, write own notes, save, print etc.).
  
-##########
-
-%if 0%{?pclinuxos} || 0%{?suse_version} && 0%{?opensuse_bs} == 0
-%debug_package
-%endif
+%description -l zh_CN.UTF-8
+这是圣经学习工具。
 
 ##########
-
 %prep
 %setup -q -n %{name}-%{tde_version}%{?preversion:~%{preversion}}
+%patch1 -p1
 
 %__cp -f "/usr/share/aclocal/libtool.m4" "admin/libtool.m4.in"
 %__cp -f "/usr/share/libtool/config/ltmain.sh" "admin/ltmain.sh" || %__cp -f "/usr/share/libtool/ltmain.sh" "admin/ltmain.sh"

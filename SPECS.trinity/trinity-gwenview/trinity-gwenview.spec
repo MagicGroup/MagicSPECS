@@ -18,7 +18,7 @@
 # TDE variables
 %define tde_epoch 2
 %if "%{?tde_version}" == ""
-%define tde_version 14.0.0
+%define tde_version 14.0.1
 %endif
 %define tde_pkg gwenview
 %define tde_prefix /opt/trinity
@@ -40,14 +40,12 @@ Epoch:			%{tde_epoch}
 Version:		1.4.2
 Release:		%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}%{?_variant}
 Summary:		Gwenview is an image viewer for TDE.
+Summary(zh_CN.UTF-8): TDE 下的图像查看器
 Group:			Applications/Utilities
+Group(zh_CN.UTF-8): 应用程序/工具
 URL:			http://www.trinitydesktop.org/
 
-%if 0%{?suse_version}
-License:	GPL-2.0+
-%else
 License:	GPLv2+
-%endif
 
 #Vendor:		Trinity Desktop
 #Packager:	Francois Andriot <francois.andriot@free.fr>
@@ -56,6 +54,8 @@ Prefix:			%{_prefix}
 BuildRoot:		%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 Source0:		%{name}-%{tde_version}%{?preversion:~%{preversion}}.tar.gz
+
+Patch1:			trinity-gwenview-14.0.1-tqt.patch
 
 BuildRequires:	trinity-tdelibs-devel >= %{tde_version}
 BuildRequires:	trinity-tdebase-devel >= %{tde_version}
@@ -66,26 +66,7 @@ BuildRequires:	autoconf automake libtool m4
 BuildRequires:	gcc-c++
 BuildRequires:	pkgconfig
 
-# SUSE desktop files utility
-%if 0%{?suse_version}
-BuildRequires:	update-desktop-files
-%endif
-
-%if 0%{?opensuse_bs} && 0%{?suse_version}
-# for xdg-menu script
-BuildRequires:	brp-check-trinity
-%endif
-
-# EXIV2 support
-%if 0%{?mgaversion} || 0%{?mdkversion}
-BuildRequires:	%{_lib}exiv2-devel
-%endif
-%if 0%{?suse_version}
-BuildRequires:	libexiv2-devel
-%endif
-%if 0%{?rhel} || 0%{?fedora}
 BuildRequires:	exiv2-devel
-%endif
 
 %if "%{?tde_prefix}" == "/usr"
 Conflicts: kdegraphics
@@ -105,18 +86,14 @@ Konqueror. Additional features, such as image renaming, comparing,
 converting, and batch processing, HTML gallery and others are provided by the
 KIPI image framework.
 
+%description -l zh_CN.UTF-8
+TDE 下的快速图像查看器。
 
 ##########
-
-%if 0%{?pclinuxos} || 0%{?suse_version} && 0%{?opensuse_bs} == 0
-%debug_package
-%endif
-
-##########
-
 
 %prep
 %setup -q -n %{name}-%{tde_version}%{?preversion:~%{preversion}}
+%patch1 -p1
 
 %__cp -f "/usr/share/aclocal/libtool.m4" "admin/libtool.m4.in"
 %__cp -f "/usr/share/libtool/config/ltmain.sh" "admin/ltmain.sh" || %__cp -f "/usr/share/libtool/ltmain.sh" "admin/ltmain.sh"
@@ -156,11 +133,7 @@ export PATH="%{tde_bindir}:${PATH}"
 # Removes useless files (-devel ?)
 %__rm -f %{?buildroot}%{tde_libdir}/libgwenviewcore.so
 
-# Updates applications categories for openSUSE
-%if 0%{?suse_version}
-%suse_update_desktop_file gwenview RasterGraphics Viewer
-%endif
-
+magic_rpm_clean.sh
 
 %clean
 %__rm -rf %{buildroot}

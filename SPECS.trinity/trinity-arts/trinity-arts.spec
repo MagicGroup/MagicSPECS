@@ -22,7 +22,7 @@
 # TDE variables
 %define tde_epoch 2
 %if "%{?tde_version}" == ""
-%define tde_version 14.0.0
+%define tde_version 14.0.1
 %endif
 %define tde_pkg arts
 %define tde_prefix /opt/trinity
@@ -49,14 +49,12 @@ Epoch:		%{tde_epoch}
 Version:	1.5.10
 Release:	%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}%{?_variant}
 Summary:	ARTS (analog realtime synthesizer) - the TDE sound system
+Summary(zh_CN.UTF-8): ARTS - TDE 的声音系统
 Group:		System Environment/Daemons 
+Group(zh_CN.UTF-8): 系统环境/服务
 URL:		http://www.trinitydesktop.org/
 
-%if 0%{?suse_version}
-License:	GPL-2.0+
-%else
 License:	GPLv2+
-%endif
 
 #Vendor:		Trinity Project
 #Packager:	Francois Andriot <francois.andriot@free.fr>
@@ -85,47 +83,22 @@ BuildRequires:	libvorbis-devel
 BuildRequires:	esound-devel
 
 # JACK support
-%if 0%{?mgaversion} || 0%{?mdkversion} || 0%{?fedora} || 0%{?suse_version} || 0%{?rhel}
 %define with_jack 1
-%if 0%{?rhel} >= 5 || 0%{?fedora}
 %define jack_devel jack-audio-connection-kit-devel
-%endif
-%if 0%{?suse_version} || 0%{?mgaversion} || 0%{?mdkversion}
-%define jack_devel libjack-devel
-%endif
 BuildRequires:	%{jack_devel}
-%endif
 
 # LIBTOOL
-%if 0%{?mgaversion} || 0%{?mdkversion}
-BuildRequires:	libltdl-devel
-%endif
-%if 0%{?rhel} >= 5 || 0%{?fedora}
 BuildRequires:	libtool-ltdl-devel
-%endif
-%if 0%{?suse_version}
-%if 0%{?suse_version} >= 1220
-BuildRequires:	libltdl-devel
-%else
-BuildRequires:	libtool
-%endif
-%endif
 
 # MAD support
 %ifarch %{ix86} x86_64
-%if 0%{?mdkversion} || 0%{?mgaversion} || 0%{?fedora} || 0%{?suse_version} || 0%{?rhel} 
 %define with_libmad 1
-%if 0%{?fedora} || 0%{?suse_version} || 0%{?rhel} || 0%{?mdkversion} || 0%{?mgaversion}
 %define mad_devel libmad-devel
-%endif
 BuildRequires:		%{mad_devel}
-%endif
 %endif
 
 # Pulseaudio config file
-%if 0%{?mgaversion} || 0%{?mdkversion} || 0%{?rhel} >= 6 || 0%{?fedora} || 0%{?suse_version}
 %define with_pulseaudio 1
-%endif
 
 Requires:		libtqt4 >= %{tde_epoch}:4.2.0
 Requires:		audiofile
@@ -145,6 +118,9 @@ output the data to the soundcard.
 By connecting all those small modules together, you can perform complex
 tasks like simulating a mixer, generating an instrument or things like
 playing a wave file with some effects.
+
+%description -l zh_CN.UTF-8
+TDE 的声音系统。
 
 %files
 %defattr(-,root,root,-)
@@ -176,7 +152,9 @@ playing a wave file with some effects.
 
 %package devel
 Group:		Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Summary:	ARTS (analog realtime synthesizer) - the TDE sound system (Development files)
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Requires:	%{name} = %{?epoch:%{epoch}:}%{version}-%{release}
 %if "%{?tde_prefix}" == "/usr"
 Obsoletes:	arts-devel
@@ -200,6 +178,9 @@ output the data to the soundcard.
 By connecting all those small modules together, you can perform complex
 tasks like simulating a mixer, generating an instrument or things like
 playing a wave file with some effects.
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %files devel
 %defattr(-,root,root,-)
@@ -225,23 +206,22 @@ playing a wave file with some effects.
 
 %package config-pulseaudio
 Group:		System Environment/Daemons
+Group(zh_CN.UTF-8): 系统环境/服务
 Summary:	ARTS - Default configuration file for Pulseaudio
+Summary(zh_CN.UTF-8): ARTS - Pulseaudio 的默认配置文件
 Requires:	%{name} = %{?epoch:%{epoch}:}%{version}-%{release}
 
 %description config-pulseaudio
 This package contains a default ARTS configuration file, that is 
 intended for systems running the Pulseaudio server.
 
+%description config-pulseaudio -l zh_CN.UTF-8
+ARTS - Pulseaudio 的默认配置文件。
+
 %files config-pulseaudio
 %defattr(-,root,root,-)
 %{tde_confdir}/kcmartsrc
 
-%endif
-
-##########
-
-%if 0%{?pclinuxos} || 0%{?suse_version} && 0%{?opensuse_bs} == 0
-%debug_package
 %endif
 
 ##########

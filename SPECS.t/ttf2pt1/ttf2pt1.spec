@@ -1,9 +1,11 @@
 Name: ttf2pt1
 Version: 3.4.4
-Release: 13%{?dist}
+Release: 14%{?dist}
 Summary: TrueType to Adobe Type 1 font converter
+Summary(zh_CN.UTF-8): TrueType 到 Adobe Type 1 字体转换器
 
 Group: Applications/Publishing
+Group(zh_CN.UTF-8): 应用程序/出版
 License: GPLv2+ and BSD with advertising
 URL: http://%name.sourceforge.net
 Source: http://download.sourceforge.net/%name/%name-%version.tgz
@@ -23,6 +25,9 @@ Requires: t1utils
 %description
 Ttf2pt1 is a font converter from the True Type format (and some other formats
 supported by the FreeType library as well) to the Adobe Type1 format.
+
+%description -l zh_CN.UTF-8
+TrueType 到 Adobe Type 1 字体转换器。
 
 %prep
 %setup -q
@@ -71,6 +76,9 @@ rm -rf %buildroot
 
 
 %changelog
+* Sun Oct 04 2015 Liu Di <liudidi@gmail.com> - 3.4.4-14
+- 为 Magic 3.0 重建
+
 * Thu Apr 17 2014 Liu Di <liudidi@gmail.com> - 3.4.4-13
 - 为 Magic 3.0 重建
 

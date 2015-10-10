@@ -18,7 +18,7 @@
 # TDE variables
 %define tde_epoch 2
 %if "%{?tde_version}" == ""
-%define tde_version 14.0.0
+%define tde_version 14.0.1
 %endif
 %define tde_pkg abakus
 %define tde_prefix /opt/trinity
@@ -37,14 +37,12 @@ Epoch:		%{tde_epoch}
 Version:	0.91
 Release:	%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}%{?_variant}
 Summary:	Calculator for TDE
+Summary(zh_CN.UTF-8): TDE 下的计算器
 Group:		Applications/Utilities
+Group(zh_CN.UTF-8): 应用程序/工具
 URL:		http://www.trinitydesktop.org/
 
-%if 0%{?suse_version}
-License:	GPL-2.0+
-%else
 License:	GPLv2+
-%endif
 
 #Vendor:		Trinity Desktop
 #Packager:	Francois Andriot <francois.andriot@free.fr>
@@ -74,10 +72,8 @@ BuildRequires:	libidn-devel
 
 # GAMIN support
 #  Not on openSUSE.
-%if 0%{?rhel} || 0%{?fedora} || 0%{?mgaversion} || 0%{?mdkversion}
 %define with_gamin 1
 BuildRequires:	gamin-devel
-%endif
 
 %description
 AbaKus is a complex calculator, which provides
@@ -86,11 +82,8 @@ Think of it as bc (the command-line calculator) with a nice GUI.
 It also gives information about mathematical variables and
 has the user-friendly menu options of a normal TDE application.
 
-
-%if 0%{?pclinuxos} || 0%{?suse_version} && 0%{?opensuse_bs} == 0
-%debug_package
-%endif
-
+%description -l zh_CN.UTF-8
+AbaKus 是一个高级的计算器。
 
 %prep
 %setup -q -n %{name}-%{tde_version}%{?preversion:~%{preversion}}

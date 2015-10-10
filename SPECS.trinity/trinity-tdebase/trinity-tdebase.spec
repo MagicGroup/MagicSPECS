@@ -18,7 +18,7 @@
 # TDE variables
 %define tde_epoch 2
 %if "%{?tde_version}" == ""
-%define tde_version 14.0.0
+%define tde_version 14.0.1
 %endif
 %define tde_pkg tdebase
 %define tde_prefix /opt/trinity
@@ -50,11 +50,7 @@ Summary:		Trinity Base Programs
 Group:			System/GUI/Other
 URL:			http://www.trinitydesktop.org/
 
-%if 0%{?suse_version}
-License:		GPL-2.0+
-%else
 License:		GPLv2+
-%endif
 
 #Vendor:			Trinity Desktop
 #Packager:		Francois Andriot <francois.andriot@free.fr>
@@ -66,25 +62,16 @@ Source0:		%{name}-%{version}%{?preversion:~%{preversion}}.tar.gz
 Source1:		trinity-tdebase-rpmlintrc
 
 # Pam configuration files for RHEL / Fedora
-%if 0%{?suse_version} == 0
-Source2:		pamd.kdm-trinity%{?dist}
-Source3:		pamd.kdm-trinity-np%{?dist}
-Source4:		pamd.kcheckpass-trinity%{?dist}
-Source5:		pamd.kscreensaver-trinity%{?dist}
-%endif
+Source2:		pamd.kdm-trinitymgc30
+Source3:		pamd.kdm-trinity-npmgc30
+Source4:		pamd.kcheckpass-trinitymgc30
+Source5:		pamd.kscreensaver-trinitymgc30
 
 # openSUSE: configuration file for TDM
 Source6:		suse-displaymanagers-tdm
 
 # Fedora 18: use SYSTEMD for TDM startup
-%if 0%{?fedora} >= 18 || 0%{?rhel} >= 7
-Source7:		tdm.service%{?dist}
-%endif
-
-# openSUSE 11.4: overwrite distribution-provided '/etc/init.d/xdm' !!!
-%if 0%{?suse_version} == 1140
-Source7:		xdm.oss114
-%endif
+Source7:		tdm.service
 
 # Fedora >= 17: special selinux policy required for TDM
 #  If login through TDM takes ages, then look at '/var/log/audit/audit.log'.
@@ -92,15 +79,6 @@ Source7:		xdm.oss114
 #  Put this line into a temporary file, then (e.g for Fedora 17):
 #   audit2allow -i /tmp/file -m tdm.fc17 >tdm.fc17.te
 #   audit2allow -i /tmp/file -M tdm.fc17
-
-%if 0%{?fedora} >= 17 || 0%{?rhel} >= 6
-%define with_selinux_policy 1
-Source8:	tdm%{?dist}.pp
-%endif
-
-%if 0%{?mgaversion} >= 3
-Source9:	mgabutton.svg
-%endif
 
 Obsoletes:	trinity-kdebase < %{version}-%{release}
 Provides:	trinity-kdebase = %{version}-%{release}
@@ -111,175 +89,13 @@ Provides:	trinity-kdebase-extras = %{version}-%{release}
 Obsoletes:	tdebase < %{version}-%{release}
 Provides:	tdebase = %{version}-%{release}
 
-# for set_permissions macro
-%if 0%{?suse_version}
-PreReq: permissions
-%endif
-
-# SUSE desktop files utility
-%if 0%{?suse_version}
-BuildRequires:	update-desktop-files
-%endif
-
-%if 0%{?opensuse_bs} && 0%{?suse_version}
-# for xdg-menu script
-BuildRequires:	brp-check-trinity
-%endif
-
 ### Distribution-specific settings ###
-
-# Fedora 15 Theme: "Lovelock"
-%if 0%{?fedora} == 15
-Requires:	lovelock-backgrounds-single
-%define tde_bg /usr/share/backgrounds/lovelock/default/standard/lovelock.png
-%define tde_starticon /usr/share/icons/hicolor/96x96/apps/fedora-logo-icon.png
-%endif
-
-# Fedora 16 Theme: "Verne"
-%if 0%{?fedora} == 16
-Requires:	verne-backgrounds-single
-%define tde_bg /usr/share/backgrounds/verne/default/standard/verne.png
-%define tde_starticon /usr/share/icons/hicolor/96x96/apps/fedora-logo-icon.png
-%endif
-
-# Fedora 17 Theme: "Beefy Miracle"
-%if 0%{?fedora} == 17
-Requires:	beefy-miracle-backgrounds-single
-%define tde_bg /usr/share/backgrounds/beefy-miracle/default/standard/beefy-miracle.png
-%define tde_starticon /usr/share/icons/hicolor/96x96/apps/fedora-logo-icon.png
-%endif
-
-# Fedora 18 Theme: "Spherical Cow"
-%if 0%{?fedora} == 18
-Requires:	spherical-cow-backgrounds-single
-%define tde_bg /usr/share/backgrounds/spherical-cow/default/standard/spherical-cow.png
-Requires:	fedora-logos
-%define tde_starticon /usr/share/icons/hicolor/96x96/apps/fedora-logo-icon.png
-%endif
-
-# Fedora 19 Theme: "Schroedinger's cat"
-%if 0%{?fedora} == 19
-Requires:	schroedinger-cat-backgrounds-base
-%define tde_bg /usr/share/backgrounds/schroedinger-cat/default/standard/schroedinger-cat.jpg
-Requires:	fedora-logos
-%define tde_starticon /usr/share/icons/hicolor/96x96/apps/fedora-logo-icon.png
-%endif
-
-# Fedora 20 Theme: "Heisenbug"
-%if 0%{?fedora} == 20
-Requires:	heisenbug-backgrounds-base
-%define tde_bg /usr/share/backgrounds/heisenbug/default/standard/heisenbug.png
-Requires:	fedora-logos
-%define tde_starticon /usr/share/icons/hicolor/96x96/apps/fedora-logo-icon.png
-%endif
-
-# Fedora 21 Theme
-%if 0%{?fedora} == 21
-Requires:	f21-backgrounds-base
-%define tde_bg /usr/share/backgrounds/f21/default/standard/f21.png
-Requires:	fedora-logos
-%define tde_starticon /usr/share/icons/hicolor/96x96/apps/fedora-logo-icon.png
-%endif
-
-# RHEL 4 Theme
-%if 0%{?rhel} == 4
-Requires:	desktop-backgrounds-basic
-%define tde_bg /usr/share/backgrounds/images/default.png
-Requires:	redhat-logos
-%define tde_starticon /usr/share/pixmaps/redhat/rpmlogo-64.xpm
-%endif
-
-# RHEL 5 Theme
-%if 0%{?rhel} == 5
-Requires:	desktop-backgrounds-basic
-%define tde_bg /usr/share/backgrounds/images/default.jpg
-%define tde_starticon /usr/share/pixmaps/redhat-starthere.png
-%endif
-
-# RHEL 6 Theme
-%if 0%{?rhel} == 6
-Requires:	redhat-logos
-%define tde_bg /usr/share/backgrounds/default.png
-%define tde_starticon /usr/share/icons/hicolor/96x96/apps/system-logo-icon.png
-%endif
 
 # RHEL 7 Theme
 %if 0%{?rhel} == 7
 Requires:	redhat-logos
 %define tde_bg /usr/share/backgrounds/day.jpg
 %define tde_starticon /usr/share/icons/hicolor/96x96/apps/system-logo-icon.png
-%endif
-
-# Mageia 2 Theme
-%if 0%{?mgaversion} == 2
-Requires:	mageia-theme-Default
-%define tde_bg /usr/share/mga/backgrounds/default.jpg
-%define tde_starticon /usr/share/icons/hicolor/scalable/apps/mageia-menu.svg
-%endif
-
-# Mageia 3 Theme
-%if 0%{?mgaversion} == 3
-Requires:	mageia-theme-Default
-%define tde_bg /usr/share/mga/backgrounds/default.jpg
-%define tde_starticon %{tde_datadir}/oxygen/scalable/mgabutton.svg
-%endif
-
-# Mageia 4 Theme
-%if 0%{?mgaversion} == 4
-Requires:	mageia-theme-Default
-%define tde_bg /usr/share/mga/backgrounds/default.jpg
-%define tde_starticon %{tde_datadir}/oxygen/scalable/mgabutton.svg
-%endif
-
-# Mandriva 2011 Theme: "rosa"
-%if "%{distribution}" == "Mandriva Linux" && "%{?mdkversion}" == "201100"
-Requires:	mandriva-theme
-%define tde_bg /usr/share/mdk/backgrounds/default.jpg
-%define tde_starticon /usr/share/icons/mandriva.png
-%endif
-
-# PCLINUXOS
-%if 0%{?pclinuxos}
-Requires:	desktop-common-data
-%define tde_starticon /usr/share/icons/pclinuxos.png
-%endif
-
-# OpenSuse 11.4 Theme
-%if "%{?suse_version}" == "1140"
-Requires:	hicolor-icon-theme-branding
-%define tde_starticon /usr/share/icons/hicolor/scalable/apps/distributor.svg
-%endif
-
-# OpenSuse 12.2 Theme
-%if "%{?suse_version}" == "1220"
-Requires:	wallpaper-branding = 12.2
-%define tde_bg /usr/share/wallpapers/openSUSEdefault/contents/images/1600x1200.jpg
-Requires:	hicolor-icon-theme-branding
-%define tde_starticon /usr/share/icons/hicolor/scalable/apps/distributor.svg
-%endif
-
-# OpenSuse 12.3 Theme
-%if "%{?suse_version}" == "1230"
-Requires:	wallpaper-branding = 12.3
-%define tde_bg /usr/share/wallpapers/openSUSEdefault/contents/images/1600x1200.jpg
-Requires:	hicolor-icon-theme-branding
-%define tde_starticon /usr/share/icons/hicolor/scalable/apps/distributor.svg
-%endif
-
-# OpenSuse 13.1 Theme
-%if "%{?suse_version}" == "1310"
-Requires:	wallpaper-branding = 13.1
-%define tde_bg /usr/share/wallpapers/openSUSEdefault/contents/images/1600x1200.jpg
-Requires:	hicolor-icon-theme-branding
-%define tde_starticon /usr/share/icons/hicolor/scalable/apps/distributor.svg
-%endif
-
-# OpenSuse 13.2 Theme
-%if "%{?suse_version}" == "1320"
-Requires:	wallpaper-branding = 13.2
-%define tde_bg /usr/share/wallpapers/openSUSEdefault/contents/images/1600x1200.jpg
-Requires:	hicolor-icon-theme-branding
-%define tde_starticon /usr/share/icons/hicolor/scalable/apps/distributor.svg
 %endif
 
 BuildRequires:	trinity-arts-devel >= %{tde_epoch}:1.5.10
@@ -315,81 +131,47 @@ BuildRequires:	glib2-devel
 BuildRequires:	pcre-devel
 
 # SASL support
-%if 0%{?mageia} || 0%{?mandriva} || 0%{?pclinuxos}
-BuildRequires:	%{_lib}sasl2-devel
-%endif
-%if 0%{?suse_version}
-BuildRequires:	cyrus-sasl-devel
-%endif
 
 # PAM support
 BuildRequires:	pam-devel
 
 # LIBUSB support
-%if 0%{?mgaversion} || 0%{?mdkversion} || 0%{?pclinuxos}
-BuildRequires:	%{_lib}usb1.0-devel
-BuildRequires:	%{_lib}usb-compat0.1-devel
-%else
 BuildRequires:	libusb-devel
-%endif
 
 # ESOUND support
-%if 0%{?rhel} || 0%{?fedora} || 0%{?mdkversion} || 0%{?mgaversion} || 0%{?suse_version}
 %define with_esound 1
 BuildRequires:	esound-devel
-%endif
 
 # IDN support
 BuildRequires:	libidn-devel
 
 # GAMIN support
 #  Not on openSUSE.
-%if 0%{?rhel} || 0%{?fedora} || 0%{?mgaversion} || 0%{?mdkversion}
 %define with_gamin 1
 BuildRequires:	gamin-devel
-%endif
 
 # OPENLDAP support
-%if 0%{?rhel} >= 6 || 0%{?fedora} || 0%{?mdkversion} || 0%{?mgaversion}
 BuildRequires:	openldap-devel
-%endif
-%if 0%{?suse_version}
-BuildRequires:	openldap2-devel
-%endif
-%if 0%{?rhel} == 5
-BuildRequires:	openldap24-libs-devel
-%endif
 
 # SENSORS support
-%if 0%{?fedora} || 0%{?mgaversion} || 0%{?mdkversion} || 0%{?rhel}
 BuildRequires:	lm_sensors-devel
-%endif
-%if 0%{?suse_version}
-BuildRequires:	libsensors4-devel
-%endif
 
 # TSAK support (requires libudev-devel)
 #  On RHEL5, udev is built statically, so TSAK cannot build.
-%if 0%{?fedora} || 0%{?mgaversion} || 0%{?mdkversion} || 0%{?rhel} >= 6 || 0%{?suse_version}
 BuildRequires:	libudev-devel
 %define with_tsak 1
 %define with_tdehwlib 1
-%endif
 
 # ACL support
 BuildRequires:	libacl-devel
 
 # XRANDR support
 #  On RHEL5, xrandr library is too old.
-%if 0%{?fedora} >= 15 || 0%{?mgaversion} || 0%{?mdkversion} || 0%{?rhel} >= 6 || 0%{?suse_version}
 %define with_xrandr 1
-%endif
 
 # XTEST support
 #  On RHEL4, xtest library is too old.
-%if 0%{?fedora} >= 15 || 0%{?mgaversion} || 0%{?mdkversion} || 0%{?rhel} >= 5 || 0%{?suse_version}
 %define with_xtest 1
-%endif
 
 # HAL support
 # Only for RHEL5
@@ -400,197 +182,81 @@ BuildRequires:	hal-devel >= 0.5
 
 # OPENEXR support
 #  Disabled on RHEL4
-%if 0%{?fedora} >= 15 || 0%{?mgaversion} || 0%{?mdkversion} || 0%{?rhel} >= 5 || 0%{?suse_version}
 %define with_exr 1
 BuildRequires:	OpenEXR-devel
-%endif
 
 # XSCREENSAVER support
 #  RHEL 4: disabled
 #  RHEL 6: available in EPEL
 #  RHEL 7: available in NUX
-%if 0%{?fedora} || 0%{?mgaversion} || 0%{?mdkversion} || 0%{?rhel} >= 5 || 0%{?suse_version}
 %define with_xscreensaver 1
 
-%if 0%{?fedora} || 0%{?rhel} >= 5
 BuildRequires:	libXScrnSaver-devel
 BuildRequires:	xscreensaver
 BuildRequires:	xscreensaver-base
 BuildRequires:	xscreensaver-extras
-%if 0%{?fedora}
 BuildRequires:	xscreensaver-extras-base
-%endif
-BuildRequires:	xscreensaver-gl-base
-BuildRequires:	xscreensaver-gl-extras
-%endif
-
-%if 0%{?suse_version}
-BuildRequires:	libXScrnSaver-devel
-BuildRequires:	xscreensaver
-BuildRequires:	xscreensaver-data
-BuildRequires:	xscreensaver-data-extra
-%endif
-
-%if 0%{?mgaversion} || 0%{?mdkversion}
-%if 0%{?mgaversion} >= 4
-BuildRequires:	%{_lib}xscrnsaver-devel
-%else
-BuildRequires:	%{_lib}xscrnsaver%{?mgaversion:1}-devel
-%endif
-BuildRequires:	xscreensaver
-BuildRequires:	xscreensaver-base
-BuildRequires:	xscreensaver-extrusion
-BuildRequires:	xscreensaver-gl
-%endif
-%endif
 
 # AVAHI support
 #  Disabled on RHEL4 and RHEL5
-%if 0%{?fedora} >= 15 || 0%{?mgaversion} || 0%{?mdkversion} || 0%{?rhel} >= 6 || 0%{?suse_version}
 BuildRequires:	libavahi-tqt-devel
-%endif
 
 # MESA support
-%if 0%{?rhel} || 0%{?fedora}
 BuildRequires: mesa-libGL-devel
 BuildRequires: mesa-libGLU-devel
-%endif
-%if 0%{?mdkversion} || 0%{?mgaversion}
-BuildRequires: mesaglu-devel
-%endif
-%if 0%{?suse_version}
-BuildRequires: Mesa-libGL-devel
-BuildRequires: Mesa-libGLU-devel
-%endif
 
 # DBUS support
 #  TQT bindings not available for RHEL4
-%if 0%{?rhel} == 4
-# Dbus bindings were rebuilt with Qt support
-BuildRequires:	dbus-devel >= 0.22-12.EL.9p1
-Requires:		dbus-qt >= 0.22-12.EL.9p1
-%else
 BuildRequires:	libdbus-tqt-1-devel >= %{tde_epoch}:0.63
 BuildRequires:	libdbus-1-tqt-devel >= %{tde_epoch}:0.9
 Requires:		libdbus-tqt-1-0 >= %{tde_epoch}:0.63
-%endif
-
-%if 0%{?fedora} >= 17
 BuildRequires:	perl-Digest-MD5
-%endif
 
 # LIBART_LGPL support
 %define with_libart 1
 BuildRequires:	libart_lgpl-devel
 
 # SAMBA support
-%if 0%{?rhel} == 4
-BuildRequires:	samba-common
-%endif
-%if 0%{?rhel} >= 5 || 0%{?fedora} || 0%{?mdkversion} || 0%{?mgaversion} || 0%{?suse_version}
 BuildRequires:	libsmbclient-devel
-%endif
 
 # IMAKE
-%if 0%{?rhel} >= 5 || 0%{?fedora} || 0%{?mdkversion} || 0%{?mgaversion} || 0%{?suse_version} >= 1220
 BuildRequires:	imake
-%endif
 
 # XKB support
-%if 0%{?suse_version} == 1140
-BuildRequires:	xorg-x11-libxkbfile-devel
-%endif
-%if 0%{?rhel} >= 5 || 0%{?fedora} || 0%{?mdkversion} || 0%{?mgaversion} || 0%{?suse_version} >= 1210
 BuildRequires:	libxkbfile-devel
-%endif
 
 # XDMCP support
-%if 0%{?mgaversion} || 0%{?mdkversion}
-%if 0%{?mgaversion} >= 4
-BuildRequires:	%{_lib}xdmcp-devel
-%else
-BuildRequires:	%{_lib}xdmcp%{?mgaversion:6}-devel
-%endif
-%endif
-%if 0%{?rhel} >= 5 || 0%{?fedora} || 0%{?suse_version} >= 1220
 BuildRequires:	libXdmcp-devel
-%endif
 
 # XTST support
-%if 0%{?mgaversion} || 0%{?mdkversion}
-%if 0%{?mgaversion} >= 4
-%define xtst_devel %{_lib}xtst-devel
-%else
-%define xtst_devel %{_lib}xtst%{?mgaversion:6}-devel
-%endif
-%endif
-%if 0%{?rhel} >= 5 || 0%{?fedora} || 0%{?suse_version} >= 1220
 %define xtst_devel libXtst-devel
-%endif
 %{?xtst_devel:BuildRequires: %{xtst_devel}}
 
 # XDAMAGE support
-%if 0%{?mgaversion} || 0%{?mdkversion}
-BuildRequires:	%{_lib}xdamage-devel
-%endif
-%if 0%{?rhel} >= 5 || 0%{?fedora} || 0%{?suse_version} >= 1220
 BuildRequires:	libXdamage-devel
-%endif
 
 # Requires 'usb.ids'
 BuildRequires:	usbutils
 
 # LIBFONTENC support
-%if 0%{?suse_version} == 1140
-BuildRequires:	xorg-x11-libfontenc-devel
-%endif
-%if 0%{?rhel} >= 5 || 0%{?fedora} || 0%{?mdkversion} || 0%{?mgaversion} || 0%{?suse_version} >= 1220
 BuildRequires:	libfontenc-devel
-%endif
 
 # Other X11 stuff ...
-%if 0%{?rhel} == 4
-BuildRequires:	xorg-x11-devel
-%endif
 
-%if 0%{?mgaversion} || 0%{?mdkversion}
-BuildRequires:	x11-font-util
-BuildRequires:	x11-proto-devel
-%endif
-
-%if 0%{?rhel} >= 5 || 0%{?fedora} || 0%{?suse_version} >= 1220
 BuildRequires:	xorg-x11-proto-devel
-%endif
 
-%if 0%{?rhel} >= 5 || 0%{?fedora}
 BuildRequires:	xorg-x11-font-utils
-%endif
-
-%if 0%{?suse_version} >= 1220
-BuildRequires:	font-util
-BuildRequires:	bdftopcf
-%endif
-
-%if 0%{?mdkversion} || 0%{?mgaversion}
-BuildRequires:	drakconf
-%endif
 
 # LIBCONFIG support
 # Needed for "compton" stuff
-%if 0%{?rhel} >= 6 || 0%{?suse_version} || 0%{?mgaversion} || 0%{?mdkversion} || 0%{?fedora}
 %define with_libconfig 1
 BuildRequires:	libconfig-devel
-%endif
 
 # KBDLEDSYNC support
-%if 0%{?rhel} >= 6 || 0%{?suse_version} || 0%{?mgaversion} || 0%{?mdkversion} || 0%{?fedora}
 %define with_kbdledsync 1
-%endif
 
 # TDERANDR support
-%if 0%{?rhel} >= 6 || 0%{?fedora} >= 15 || 0%{?mdkversion} || 0%{?mgaversion} || 0%{?suse_version}
 %define with_tderandrtray 1
-%endif
 
 # tdebase is a metapackage that installs all sub-packages
 Requires: %{name}-runtime-data-common = %{version}-%{release}
@@ -632,13 +298,7 @@ Requires:	openssl
 
 
 # RHEL 6 Configuration files are provided in separate packages
-%if 0%{?rhel} || 0%{?fedora}
-Requires:	redhat-menus
-%endif
-
-%if 0%{?suse_version}
-Requires:	desktop-data-openSUSE
-%endif
+Requires:	magic-menus
 
 %description
 TDE (the Trinity Desktop Environment) is a powerful Open Source graphical

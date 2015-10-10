@@ -1,9 +1,0 @@
---- kdevelop/c_cpp_reference-2.0.2_for_KDE_3.0/reference/C/CONTRIB/SNIP/Makefile.am.ORI	2012-05-01 09:52:59.334490901 -0400
-+++ kdevelop/c_cpp_reference-2.0.2_for_KDE_3.0/reference/C/CONTRIB/SNIP/Makefile.am	2012-05-01 09:53:10.229644843 -0400
-@@ -1,5 +1,5 @@
- EXTRA_DIST = $(wildcard *.html) $(wildcard *.c) $(wildcard *.h) $(wildcard *.asm) $(wildcard *.txt) \
--             8087_sav.asm HEADER.html c_lines.awk except.doc file_id.diz make.ini match.doc myio.cpp \
-+             HEADER.html c_lines.awk except.doc file_id.diz make.ini match.doc myio.cpp \
-              myio.mak myiodemo.cpp myline.cpp mystream.cpp pdn.lst read.me resource.lst rg_qsort.c1 \
-              rg_qsort.c2 snippets._c_ snippets.ndx snippets.txt snippets.wc storage.typ str.cpp str.doc
- 

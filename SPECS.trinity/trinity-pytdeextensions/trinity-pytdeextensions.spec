@@ -20,7 +20,7 @@
 # TDE variables
 %define tde_epoch 2
 %if "%{?tde_version}" == ""
-%define tde_version 14.0.0
+%define tde_version 14.0.1
 %endif
 %define tde_pkg pytdeextensions
 %define tde_prefix /opt/trinity
@@ -37,17 +37,15 @@
 Name:		trinity-%{tde_pkg}
 Epoch:		%{tde_epoch}
 Version:	0.4.0
-Release:	%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}%{?_variant}
+Release:	%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}%{?_variant}.1
 Summary:	Python packages to support TDE applications (scripts)
-Group:		Development/Libraries/Python
+Summary(zh_CN.UTF-8): 支持 TDE 程序的 Python 包
+Group:		Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 URL:		http://www.trinitydesktop.org/
 #URL:		http://www.simonzone.com/software/pykdeextensions
 
-%if 0%{?suse_version}
-License:	GPL-2.0+
-%else
 License:	GPLv2+
-%endif
 
 #Vendor:		Trinity Desktop
 #Packager:	Francois Andriot <francois.andriot@free.fr>
@@ -159,12 +157,6 @@ files.
 
 ##########
 
-%if 0%{?pclinuxos} || 0%{?suse_version} && 0%{?opensuse_bs} == 0
-%debug_package
-%endif
-
-##########
-
 %prep
 %setup -q -n %{name}-%{tde_version}%{?preversion:~%{preversion}}
 
@@ -249,5 +241,8 @@ done
 
 
 %changelog
+* Tue Oct 06 2015 Liu Di <liudidi@gmail.com> - 2:0.4.0-1.1
+- 为 Magic 3.0 重建
+
 * Fri Jul 05 2013 Francois Andriot <francois.andriot@free.fr> - 2:0.4.0-1
 - Initial build for TDE 14.0.0

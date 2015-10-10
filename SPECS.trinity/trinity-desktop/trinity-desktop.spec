@@ -19,9 +19,10 @@
 # Minimum (oldest) distribution supported is RHEL5.
 
 %if "%{?tde_version}" == ""
-%define tde_version 14.0.0
+%define tde_version 14.0.1
 %endif
 
+%define tde_prefix /opt/trinity
 # If TDE is built in a specific prefix (e.g. /opt/trinity), the release will be suffixed with ".opt".
 %if "%{?tde_prefix}" != "/usr"
 %define _variant .opt
@@ -31,10 +32,12 @@
 
 Name:		trinity-desktop
 Version:	%{tde_version}
-Release:	1%{?dist}%{?_variant}
+Release:	2%{?dist}%{?_variant}
 License:	GPL
 Summary:	Meta-package to install TDE
+Summary(zh_CN.UTF-8): 安装 TDE 的元包
 Group:		User Interface/Desktops
+Group(zh_CN.UTF-8): 用户界面/桌面
 
 Vendor:		Trinity Project
 Packager:	Francois Andriot <francois.andriot@free.fr>
@@ -63,11 +66,6 @@ Requires:	trinity-tdepim >= %{version}
 Requires:	trinity-tdeutils >= %{version}
 Requires:	trinity-tdetoys >= %{version}
 
-%if 0%{?rhel} || 0%{?fedora}
-# YUM configuration file
-Requires:	trinity-repo >= %{version}
-%endif
-
 %description
 The TDE project aims to keep the KDE3.5 computing style alive, as well as 
 polish off any rough edges that were present as of KDE 3.5.10. Along 
@@ -77,13 +75,18 @@ Toward that end, significant new enhancements have already been made in
 areas such as display control, network connectivity, user 
 authentication, and much more!
 
+%description -l zh_CN.UTF-8
+安装 TDE 的元包。
+
 %files
 
 ##########
 
 %package devel
 Group:		User Interface/Desktops
+Group(zh_CN.UTF-8): 用户界面/桌面
 Summary:	Meta-package to install TDE development tools
+Summary(zh_CN.UTF-8): %{name} 的开发包
 
 Obsoletes:	trinity-desktop-dev < %{version}-%{release}
 Provides:	trinity-desktop-dev = %{version}-%{release}
@@ -94,6 +97,8 @@ Requires:	trinity-tdewebdev >= %{version}
 
 %description devel
 %{summary}
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %files devel
 
@@ -101,7 +106,9 @@ Requires:	trinity-tdewebdev >= %{version}
 
 %package applications
 Group:		User Interface/Desktops
+Group(zh_CN.UTF-8): 用户界面/桌面
 Summary:	Meta-package to install all TDE applications
+Summary(zh_CN.UTF-8): 安装所有 TDE 程序的元包
 
 # Warning, k9copy requires ffmpeg
 # Warning, tderadio requires libmp3lame
@@ -199,26 +206,16 @@ Requires: trinity-wlassistant
 Requires: trinity-yakuake
 
 # PCLinuxOS does not have sudo ...
-%if 0%{?pclinuxos} == 0
 Requires: trinity-tdesudo
-%endif
 
 # RHEL5: pilot library is too old
-%if 0%{?rhel} >= 6 || 0%{?fedora} >= 15 || 0%{?mgaversion} || 0%{?mdkversion} || 0%{?suse_version}
 Requires: trinity-kpilot
-%endif
 
 # Network management
-# RHEL 6 and openSUSE 11.x: knetworkmanager8
-%if 0%{?suse_version} && 0%{?suse_version} <= 1140 || 0%{?rhel} == 6
-Requires: trinity-knetworkmanager
-%endif
 # Other distros use tdenetworkmanager (since R14)
-%if 0%{?rhel} >= 7 || 0%{?suse_version} >= 1210 || 0%{?mgaversion} || 0%{?mdkversion} || 0%{?pclinuxos} || 0%{?fedora}
 Requires: trinity-tdenetworkmanager
 Obsoletes: trinity-knetworkmanager
 Obsoletes: trinity-knetworkmanager8
-%endif
 
 # Power management
 Obsoletes: trinity-tde-guidance-powermanager
@@ -231,10 +228,7 @@ Requires: trinity-tdepowersave
 #Requires: trinity-qt4-tqt-theme-engine
 
 # On RHEL 5/7, lilypond is not available, so no rosegarden :'-(
-%if 0%{?rhel} == 5 || 0%{?rhel} == 7
-%else
 Requires: trinity-rosegarden
-%endif
 
 # Compiz-related stuff does not work (obsolete)
 #Requires: trinity-compizconfig-backend-kconfig
@@ -258,13 +252,18 @@ Requires: trinity-rosegarden
 %description applications
 %{summary}
 
+%description applications -l zh_CN.UTF-8
+安装所有 TDE 程序的元包。
+
 %files  applications
 
 ##########
 
 %package extras
 Group:		User Interface/Desktops
+Group(zh_CN.UTF-8): 用户界面/桌面
 Summary:	Meta-package to install all extras (unofficial) TDE packages
+Summary(zh_CN.UTF-8): 安装额外（非官方） TDE 程序的元包
 
 Requires:	trinity-akode
 #Requires:	trinity-kdebluetooth
@@ -280,12 +279,13 @@ Requires:	trinity-theme-baghira
 
 
 # GLIBC too old on RHEL <= 5
-%if 0%{?mdkversion} || 0%{?mgaversion} || 0%{?fedora} || 0%{?suse_version} || 0%{?rhel} >= 6
 #Requires:	trinity-twinkle
-%endif
 
 %description extras
 %{summary}
+
+%description extras -l zh_CN.UTF-8
+安装额外（非官方） TDE 程序的元包。
 
 %files extras
 
@@ -293,7 +293,9 @@ Requires:	trinity-theme-baghira
 
 %package all
 Group:		User Interface/Desktops
+Group(zh_CN.UTF-8): 用户界面/桌面
 Summary:	Meta-package to install all TDE packages
+Summary(zh_CN.UTF-8): 安装所有 TDE 程序的元包
 
 Requires:	%{name} = %{version}
 Requires:	%{name}-applications = %{version}
@@ -303,28 +305,10 @@ Requires:	%{name}-devel = %{version}
 %description all
 %{summary}
 
+%description all -l zh_CN.UTF-8
+安装所有 TDE 程序的元包。
+
 %files all
-
-##########
-
-%if 0%{?rhel} || 0%{?fedora}
-%package -n trinity-repo
-Group:		User Interface/Desktops
-Summary:	Yum configuration files for Trinity
-Requires(pre):	coreutils
-
-%description -n trinity-repo
-%{summary}
-
-%pre -n trinity-repo
-# Make sure every Trinity related repository is deleted before installing new one.
-%__rm -f %{_sysconfdir}/yum.repos.d/trinity-*.repo
-
-%files -n trinity-repo
-%defattr(-,root,root,-)
-%{_sysconfdir}/yum.repos.d/*.repo
-%{_sysconfdir}/pki/rpm-gpg/RPM-GPG-KEY-trinity
-%endif
 
 ##########
 
@@ -333,36 +317,10 @@ Requires(pre):	coreutils
 %build
 
 %install
-%__rm -rf %{?buildroot}
-%__mkdir_p "%{?buildroot}%{_sysconfdir}/yum.repos.d"
-
-# FEDORA configuration for YUM
-%if 0%{?fedora}
-%__sed %{SOURCE0} \
-  -e 's/\$releasever/%{fedora}/g' \
-  -e 's/-fedora/-f%{fedora}/g' \
-  >"%{?buildroot}%{_sysconfdir}/yum.repos.d/trinity.repo"
-%endif
-
-# RHEL configuration for YUM
-# $releasever is replaced with its value
-%if 0%{?rhel}
-%__sed %{SOURCE1} \
-  -e 's/\$releasever/%{rhel}/g' \
-  >"%{?buildroot}%{_sysconfdir}/yum.repos.d/trinity.repo"
-%endif
-
-%if 0%{?fedora} || 0%{?rhel}
-%__sed -i %{?buildroot}%{_sysconfdir}/yum.repos.d/*.repo -e "s|3.5.13|r14|g"
-%__chmod 644 %{?buildroot}%{_sysconfdir}/yum.repos.d/*.repo
-%endif
-
-# RPM signing key
-%if 0%{?rhel} || 0%{?fedora}
-%__install -D -m 644 "%{SOURCE2}" "%{?buildroot}%{_sysconfdir}/pki/rpm-gpg/RPM-GPG-KEY-trinity"
-%endif
-
 
 %changelog
+* Thu Oct 08 2015 Liu Di <liudidi@gmail.com> - 14.0.1-2.opt
+- 为 Magic 3.0 重建
+
 * Mon Jun 03 2013 Francois Andriot <francois.andriot@free.fr> - 14.0.0-1
 - Initial build for TDE R14

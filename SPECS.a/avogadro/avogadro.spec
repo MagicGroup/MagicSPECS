@@ -7,7 +7,7 @@
 
 Name:           avogadro
 Version:	1.1.1
-Release:        5%{?dist}
+Release:        6%{?dist}
 Summary:        An advanced molecular editor for chemical purposes
 Summary(zh_CN.UTF-8): 化学用途的高级分子编辑器
 
@@ -16,11 +16,33 @@ Group(zh_CN.UTF-8): 应用程序/编辑器
 License:        GPLv2
 URL:            http://avogadro.openmolecules.net/
 Source0:        http://downloads.sourceforge.net/%{name}/%{name}-%{version}.tar.bz2
+
+## upstreamable patches
+# Fix qmake mkspecs installation directory
+Patch0:         avogadro-1.1.1-mkspecs-dir.patch
+# Remove -Wl,-s from the compiler flags, fixes -debuginfo (#700080)
+Patch1:         avogadro-1.1.1-no-strip.patch
+# avogadro.pc missing eigen dependency
+Patch2:         avogadro-1.1.1-pkgconfig_eigen.patch
+
+## upstream fixes
+# fix FTBFS on arm
+Patch3:         0029-Fix-compilation-on-ARM-where-qreal-can-be-defined-as.patch
+
+## upstreamable
+# fix build with cmake-3.2+
+# https://sourceforge.net/p/avogadro/bugs/746/
+Patch10:        avogadro-cmake-3.2.patch
+
+# fix Eigen3 support, from OpenMandriva (Bernhard Rosenkränzer, Crispin Boylan)
+# disables Eigen2 support, so probably not upstreamable as is
+Patch11:        avogadro-1.1.1-eigen3.patch
+
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildRequires:  cmake >= 2.6.0
 BuildRequires:  qt4-devel >= 4.5.1
-BuildRequires:  eigen2-devel >= 2.0.3
+BuildRequires:  eigen3-devel >= 3.2.1
 BuildRequires:  openbabel-devel >= 2.2.2
 BuildRequires:  boost-devel >= 1.35
 BuildRequires:  glew-devel >= 1.5.0
@@ -72,6 +94,12 @@ Avogadros libraries.
 
 %prep
 %setup -q
+%patch0 -p1 -b .mkspecs-dir
+%patch1 -p1 -b .no-strip
+%patch2 -p1 -b .pkgconfig_eigen
+%patch3 -p1 -b .qreal
+%patch10 -p1 -b .cmake_x11
+%patch11 -p1 -b .eigen3
 
 %build
 # do not use macro cmake here for lib-install-dir problem in cmake file --- nihui
@@ -95,7 +123,7 @@ rm -rf %{buildroot}
 cd build
 make install/fast DESTDIR=%{buildroot}
 mkdir -p %{buildroot}%{_qt4_prefix}/mkspecs
-mv %{buildroot}/usr/features %{buildroot}%{_qt4_prefix}/mkspecs/
+#mv %{buildroot}/usr/features %{buildroot}%{_qt4_prefix}/mkspecs/
 
 for i in af ar bg ca cs da de el en_CA en_GB es fi fr he hr hu id it kn nb nl oc pl pt pt_BR ru sk sv tr uk; do
     rm -fv %{buildroot}%{_datadir}/avogadro/i18n/avogadro_$i.qm;
@@ -161,6 +189,9 @@ rm -rf %{buildroot} %{_builddir}/%{buildsubdir}
 %{_libdir}/avogadro/%{main_ver}/tools/
 
 %changelog
+* Sat Oct 10 2015 Liu Di <liudidi@gmail.com> - 1.1.1-6
+- 为 Magic 3.0 重建
+
 * Fri Dec 26 2014 Liu Di <liudidi@gmail.com> - 1.1.1-5
 - 为 Magic 3.0 重建
 

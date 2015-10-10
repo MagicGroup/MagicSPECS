@@ -22,7 +22,7 @@
 # TDE variables
 %define tde_epoch 2
 %if "%{?tde_version}" == ""
-%define tde_version 14.0.0
+%define tde_version 14.0.1
 %endif
 %define tde_prefix /opt/trinity
 %define tde_bindir %{tde_prefix}/bin
@@ -49,18 +49,16 @@
 
 Name:		trinity-akode 
 Summary: 	Audio-decoding framework
+Summary(zh_CN.UTF-8): 音频解码框架
 Group: 		System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 Epoch:		%{tde_epoch}
 Version:	2.0.2
 Release:	1%{?dist}%{?_variant}
 URL:		http://www.kde-apps.org/content/show.php?content=30375
 #URL:		http://carewolf.com/akode/  
 
-%if 0%{?suse_version}
-License:	GPL-2.0+
-%else
 License:	GPLv2+
-%endif
 
 Source0:	akode-%{tde_version}.tar.gz
 
@@ -77,49 +75,23 @@ BuildRequires:	trinity-filesystem >= %{tde_version}
 
 # FLAC support
 %define _with_flac --with-flac
-%if 0%{?mgaversion} || 0%{?mdkversion}
-BuildRequires: libflac-devel
-%endif
-%if 0%{?rhel} || 0%{?fedora} || 0%{?suse_version}
 BuildRequires: flac-devel
-%endif
 
 # JACK support
-%if 0%{?rhel} >= 5 || 0%{?fedora} || 0%{?mgaversion} || 0%{?mdkversion} || 0%{?suse_version}
 %define _with_jack --with-jack
-%if 0%{?mgaversion} || 0%{?mdkversion}
-BuildRequires: libjack-devel
-%endif
-%if 0%{?rhel} || 0%{?fedora} || 0%{?suse_version}
 BuildRequires: jack-audio-connection-kit-devel
-%endif
-%endif
 
 # SAMPLERATE support
-%if 0%{?rhel} >= 4 || 0%{?fedora} || 0%{?mgaversion} || 0%{?mdkversion} || 0%{?suse_version}
 %define _with_libsamplerate --with-libsamplerate
 BuildRequires: libsamplerate-devel
-%endif
 
 # PULSEAUDIO support
-%if 0%{?fedora} >= 15 || 0%{?rhel} >= 6 || 0%{?mgaversion} || 0%{?mdkversion} || 0%{?suse_version}
 %define _with_pulseaudio --with-pulseaudio
-%if 0%{?mgaversion} || 0%{?mdkversion}
-BuildRequires: libpulseaudio-devel
-%endif
-%if 0%{?rhel} || 0%{?fedora}
 BuildRequires: pulseaudio-libs-devel
-%endif
-%if 0%{?suse_version}
-BuildRequires: pulseaudio-devel
-%endif
-%endif
 
 # MAD support
-%if 0%{?mdkversion} || 0%{?mgaversion} || 0%{?fedora} || 0%{?suse_version} || 0%{?rhel}
 %define _with_libmad --with-libmad
 BuildRequires:		libmad-devel
-%endif
 
 BuildRequires: alsa-lib-devel
 BuildRequires: libvorbis-devel
@@ -139,6 +111,9 @@ aKode also has the following audio outputs:
 * alsa: Outputs to ALSA (dmix is recommended).
 * jack
 * pulseaudio
+
+%description -l zh_CN.UTF-8
+一个简单的音频解码框架。
 
 %files
 %defattr(-,root,root,-)
@@ -164,7 +139,9 @@ aKode also has the following audio outputs:
 
 %package devel
 Summary: Headers for developing programs that will use %{name} 
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:   Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: %{name} = %{?epoch:%{epoch}:}%{version}-%{release}
 %{?_with_jack:Requires: %{libakode}_jack_sink = %{?epoch:%{epoch}:}%{version}-%{release}}
 %{?_with_pulseaudio:Requires: %{libakode}_polyp_sink = %{?epoch:%{epoch}:}%{version}-%{release}}
@@ -175,6 +152,9 @@ Requires: pkgconfig
 %description devel
 This package contains the development files for Akode.
 It is needed if you intend to build an application linked against Akode.
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %files devel
 %defattr(-,root,root,-)
@@ -196,12 +176,17 @@ It is needed if you intend to build an application linked against Akode.
 
 %package -n %{libakode}_jack_sink
 Summary: Jack audio output backend for %{name}
+Summary(zh_CN.UTF-8): %{name} 的 Jack 音频输出后端
 Group:   Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Provides: libakode_jack_sink = %{version}-%{release}
 Requires: %{name} = %{?epoch:%{epoch}:}%{version}-%{release}
 
 %description -n %{libakode}_jack_sink
 This package contains the Jack audio output backend for Akode.
+
+%description -n %{libakode}_jack_sink -l zh_CN.UTF-8
+%{name} 的 Jack 音频输出后端。
 
 %files -n %{libakode}_jack_sink
 %defattr(-,root,root,-)
@@ -222,13 +207,18 @@ This package contains the Jack audio output backend for Akode.
 
 %package -n %{libakode}_polyp_sink
 Summary: Pulseaudio output backend for %{name}
+Summary(zh_CN.UTF-8): %{name} 的 Pulseaudio 音频输出后端
 Group:   Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Provides: libakode_polyp_sink = %{version}-%{release}
 Requires: %{name} = %{?epoch:%{epoch}:}%{version}-%{release}
 
 %description -n %{libakode}_polyp_sink
 This package contains the pulseaudio backend for Akode.
 Recommended for network transparent audio.
+
+%description -n %{libakode}_polyp_sink -l zh_CN.UTF-8
+%{name} 的 Pulseaudio 音频输出后端。
 
 %files -n %{libakode}_polyp_sink
 %defattr(-,root,root,-)
@@ -250,12 +240,17 @@ Recommended for network transparent audio.
 
 %package -n %{libakode}_src_resampler
 Summary: Resampler based on libsamplerate for %{name}
+Summary(zh_CN.UTF-8): 基于 libsamplerate 的重采样
 Group:   Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Provides: libakode_src_resampler = %{version}-%{release}
 Requires: %{name} = %{?epoch:%{epoch}:}%{version}-%{release}
 
 %description -n %{libakode}_src_resampler 
 This package contains the samplerate decoder for Akode.
+
+%description -n %{libakode}_src_resampler -l zh_CN.UTF-8
+基于 libsamplerate 的重采样。
 
 %files -n %{libakode}_src_resampler
 %defattr(-,root,root,-)
@@ -276,12 +271,17 @@ This package contains the samplerate decoder for Akode.
 
 %package -n %{libakode}_mpeg_decoder
 Summary: Decoder based on libmad for %{name}
+Summary(zh_CN.UTF-8): 基于 libmad 的解码器
 Group:   Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Provides: libakode_mpeg_decoder = %{version}-%{release}
 Requires: %{name} = %{?epoch:%{epoch}:}%{version}-%{release}
 
 %description -n %{libakode}_mpeg_decoder 
 This package contains the mad decoder for Akode.
+
+%description -n %{libakode}_mpeg_decoder -l zh_CN.UTF-8
+基于 libmad 的解码器。
 
 %files -n %{libakode}_mpeg_decoder
 %defattr(-,root,root,-)
@@ -294,12 +294,6 @@ This package contains the mad decoder for Akode.
 %postun -n %{libakode}_mpeg_decoder 
 /sbin/ldconfig
 
-%endif
-
-##########
-
-%if 0%{?pclinuxos} || 0%{?suse_version} && 0%{?opensuse_bs} == 0
-%debug_package
 %endif
 
 ##########

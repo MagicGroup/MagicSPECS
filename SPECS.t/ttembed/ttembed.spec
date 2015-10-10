@@ -1,7 +1,8 @@
 Name:       ttembed
 Version:    1.1
-Release:    5%{?dist}
+Release:    6%{?dist}
 Summary:    Remove embedding limitations from TrueType fonts
+Summary(zh_CN.UTF-8): 从 TrueType 字体中移除嵌入限制
 License:    Public Domain
 URL:        https://github.com/hisdeedsaredust/ttembed
 Source0:    https://github.com/hisdeedsaredust/ttembed/archive/v%{version}.tar.gz
@@ -9,6 +10,9 @@ Source0:    https://github.com/hisdeedsaredust/ttembed/archive/v%{version}.tar.g
 %description
 Remove embedding limitations from TrueType fonts, by setting the fsType field
 in the OS/2 table to zero. That's it; this program is a one-trick pony.
+
+%description -l zh_CN.UTF-8
+从 TrueType 字体中移除嵌入限制。
 
 %prep
 %setup -q
@@ -38,6 +42,9 @@ fi
 rm test
 
 %changelog
+* Sun Oct 04 2015 Liu Di <liudidi@gmail.com> - 1.1-6
+- 为 Magic 3.0 重建
+
 * Tue Sep 08 2015 Liu Di <liudidi@gmail.com> - 1.1-5
 - 为 Magic 3.0 重建
 

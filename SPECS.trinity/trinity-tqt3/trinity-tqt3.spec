@@ -17,21 +17,19 @@
 
 # TDE variables
 %if "%{?tde_version}" == ""
-%define tde_version 14.0.0
+%define tde_version 14.0.1
 %endif
 
-%if 0%{?mdkversion} || 0%{?mgaversion} || 0%{?pclinuxos}
-%define libtqt3 %{_lib}tqt3
-%else
 %define libtqt3 libtqt3
-%endif
 
 
 Name:		trinity-tqt3
 Version:	3.5.0
-Release:	%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}%{?_variant}
+Release:	%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}%{?_variant}.1
 Summary:	TQt GUI Library, Version 3
-Group:		System/GUI/Other
+Summary(zh_CN.UTF-8): TQt GUI 库，版本 3
+Group: System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 URL:		http://www.trinitydesktop.org/
 
 %if 0%{?suse_version}
@@ -95,173 +93,71 @@ BuildRequires:	update-desktop-files
 BuildRequires: cups-devel
 
 # GLIB2 support
-%if 0%{?fedora} || 0%{?mgaversion} || 0%{?mdkversion} || 0%{?suse_version} || 0%{?rhel} >= 6
 %define with_glibmainloop 1
 %define glib2_devel glib2-devel
-%endif
 %{?glib2_devel:BuildRequires: %{glib2_devel}}
 
 # UUID support
-%if 0%{?fedora} || 0%{?mgaversion} || 0%{?mdkversion} || 0%{?suse_version} || 0%{?rhel} >= 6
 %define uuid_devel libuuid-devel
-%endif
-%if 0%{?rhel} == 5
-%define uuid_devel e2fsprogs-devel
-%endif
 %{?uuid_devel:BuildRequires: %{uuid_devel}}
 
 # LIBAUDIO support
-%if 0%{?fedora} || 0%{?mgaversion} || 0%{?mdkversion} || 0%{?suse_version} && 0%{?opensuse_bs} == 0
 %define with_nas 1
-%if 0%{?fedora} || 0%{?mgaversion} || 0%{?mdkversion}
 %define libaudio_devel nas-devel
-%endif
-%if 0%{?suse_version} && 0%{?opensuse_bs} == 0
-%define libaudio_devel libaudio-devel
-%endif
-%endif
 %{?libaudio_devel:BuildRequires: %{libaudio_devel}}
 
 # Xrender support
-%if 0%{?rhel} || 0%{?fedora} || 0%{?suse_version}
 %define xrender_devel libXrender-devel
-%endif
-%if 0%{?mdkversion} || 0%{?mgaversion}
-%define xrender_devel libxrender-devel
-%endif
 %{?xrender_devel:BuildRequires: %{xrender_devel}}
 
 # Xrandr support
-%if 0%{?rhel} || 0%{?fedora} || 0%{?suse_version}
 %define xrandr_devel libXrandr-devel
-%endif
-%if 0%{?mdkversion} || 0%{?mgaversion}
-%if 0%{?pclinuxos}
-%define xrandr_devel libxrandr2-devel
-%else
-%define xrandr_devel libxrandr-devel
-%endif
-%endif
 %{?xrandr_devel:BuildRequires: %{xrandr_devel}}
 
 # Xcursor support
-%if 0%{?rhel} || 0%{?fedora} || 0%{?suse_version}
 %define xcursor_devel libXcursor-devel
-%endif
-%if 0%{?mdkversion} || 0%{?mgaversion}
-%define xcursor_devel libxcursor-devel
-%endif
 %{?xcursor_devel:BuildRequires: %{xcursor_devel}}
 
 # Xinerama support
-%if 0%{?rhel} || 0%{?fedora} || 0%{?suse_version}
 %define xinerama_devel libXinerama-devel
-%endif
-%if 0%{?mdkversion} || 0%{?mgaversion}
-%define xinerama_devel libxinerama-devel
-%endif
 %{?xinerama_devel:BuildRequires: %{xinerama_devel}}
 
 # Xft support
-%if 0%{?rhel} || 0%{?fedora} || 0%{?suse_version}
 %define xft_devel libXft-devel
-%endif
-%if 0%{?mdkversion} || 0%{?mgaversion}
-%define xft_devel libxft-devel
-%endif
 %{?xft_devel:BuildRequires: %{xft_devel}}
 
 # XEXT support
-%if 0%{?rhel} || 0%{?fedora} || 0%{?suse_version}
 %define xext_devel libXext-devel
-%endif
-%if 0%{?mdkversion} || 0%{?mgaversion}
-%define xext_devel libxext-devel
-%endif
 %{?xext_devel:BuildRequires: %{xext_devel}}
 
 # X11 support
-%if 0%{?rhel} || 0%{?fedora} || 0%{?suse_version}
 %define x11_devel libX11-devel
-%endif
-%if 0%{?mdkversion} || 0%{?mgaversion}
-%define x11_devel libx11-devel
-%endif
 %{?x11_devel:BuildRequires: %{x11_devel}}
 
 # SM support
-%if 0%{?rhel} || 0%{?fedora} || 0%{?suse_version}
 %define sm_devel libSM-devel
-%endif
-%if 0%{?mdkversion} || 0%{?mgaversion}
-%define sm_devel libsm-devel
-%endif
 %{?sm_devel:BuildRequires: %{sm_devel}}
 
 # ICE support
-%if 0%{?rhel} || 0%{?fedora} || 0%{?suse_version}
 %define ice_devel libICE-devel
-%endif
-%if 0%{?mdkversion} || 0%{?mgaversion}
-%define ice_devel libice-devel
-%endif
 %{?ice_devel:BuildRequires: %{ice_devel}}
 
 # XT support
-%if 0%{?rhel} || 0%{?fedora} || 0%{?suse_version}
 BuildRequires: libXt-devel
-%endif
 
 # XMU support
-%if 0%{?suse_version} == 1140
-BuildRequires:	xorg-x11-libXmu-devel
-%endif
-%if 0%{?rhel} || 0%{?fedora} || 0%{?suse_version} >= 1210
 BuildRequires: libXmu-devel
-%endif
-%if 0%{?mdkversion} || 0%{?mgaversion} >= 4
-BuildRequires: libxmu-devel
-%endif
-%if 0%{?mgaversion} == 2 || 0%{?mgaversion} == 3
-BuildRequires:	%{_lib}xmu%{?mgaversion:6}-devel
-%endif
 
 # XI support
-%if 0%{?rhel} == 4
-%define xi_devel xorg-x11-devel
-%endif
-%if 0%{?mgaversion} || 0%{?mdkversion}
-%define xi_devel libxi-devel
-%endif
-%if 0%{?suse_version} >= 1220 || 0%{?rhel} >= 5 || 0%{?fedora}
 %define xi_devel libXi-devel
-%endif
-%if 0%{?suse_version} == 1140
-%define xi_devel libXi6-devel
-%endif
 %{?xi_devel:BuildRequires: %{xi_devel}}
 
 # Xorg support
-%if 0%{?rhel} || 0%{?fedora} || 0%{?suse_version}
 BuildRequires: xorg-x11-proto-devel
-%endif
 
 # MESA support
-%if 0%{?rhel} || 0%{?fedora}
 BuildRequires: mesa-libGL-devel
 BuildRequires: mesa-libGLU-devel
-%endif
-%if 0%{?mdkversion} || 0%{?mgaversion}
-%if 0%{?pclinuxos}
-BuildRequires: MesaGLU-devel
-%else
-BuildRequires: mesaglu-devel
-%endif
-%endif
-%if 0%{?suse_version}
-BuildRequires: Mesa-libGL-devel
-BuildRequires: Mesa-libGLU-devel
-%endif
 
 # MYSQL support
 BuildRequires: mysql-devel
@@ -273,44 +169,38 @@ BuildRequires: unixODBC-devel
 BuildRequires: sqlite-devel
 
 # SQLITE3 support
-%if 0%{?mgaversion}
-BuildRequires: sqlite3-devel
-%endif
 
 # POSTGRESQL support
 BuildRequires: postgresql
 BuildRequires: postgresql-devel
 
 # Firebird support
-%if 0%{?mdkversion} || 0%{?mgaversion}
 %define with_ibase 1
 BuildRequires:	firebird-devel
-%endif
 
 # x86_64 specific stuff
 %if "%{_lib}" != "lib"
-%if 0%{?mdkversion} || ( 0%{?mgaversion} && 0%{?mgaversion} <= 2)
-BuildRequires: linux32
-%else
 BuildRequires: util-linux
-%endif
 %endif
 
 # GCC visibility stuff
-%if 0%{?fedora} || 0%{?mgaversion} || 0%{?mdkversion} || 0%{?suse_version} || 0%{?rhel} >= 6
 %define EXTRA_CFLAGS -fvisibility=hidden -fvisibility-inlines-hidden
-%endif
 
 %description
 This is the Trolltech TQt library, version 3. It's necessary for
 applications that link against the libtqt-mt.so.3, e.g. all Trinity
 applications.
 
+%description -l zh_CN.UTF-8
+这是 Qt3 的一个改进版本，TDE 需要使用这个版本。
+
 ##########
 
 %package -n %{libtqt3}-mt
 Summary:	TQt GUI Library (Threaded runtime version), Version 3
-Group:		System/GUI/Other
+Summary(zh_CN.UTF-8): TQt GUI 库
+Group: System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 Provides:	libtqt3-mt = %{version}-%{release}
 Provides:	trinity-tqt3 = %{version}-%{release}
 
@@ -324,6 +214,9 @@ Requires: /etc/ld.so.conf.d
 This is the Trolltech TQt library, version 3. It's necessary for
 applications that link against the libtqt-mt.so.3, e.g. all Trinity
 applications.
+
+%description -n %{libtqt3}-mt -l zh_CN.UTF-8
+TQt GUI 库。
 
 %post -n %{libtqt3}-mt
 /sbin/ldconfig || :
@@ -364,7 +257,9 @@ applications.
 
 %package -n %{libtqt3}-mt-devel
 Summary:	TQt development files (Threaded)
-Group:		Development/Libraries/X11
+Summary(zh_CN.UTF-8): %{libtqt3}-mt 的开发包
+Group:		Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Provides:	trinity-tqt3-devel = %{version}-%{release}
 Provides:	libtqt3-mt-devel = %{version}-%{release}
 Requires:	%{libtqt3}-mt = %{version}-%{release}
@@ -403,6 +298,9 @@ contains all the headers which are not part of the official TQt3 API
 anymore but which are still used by some programs. So if you encounter
 problems with missing header files, please install this package first
 before you send a bugreport.
+
+%description -n %{libtqt3}-mt-devel -l zh_CN.UTF-8
+%{libtqt3}-mt 的开发包。
 
 %post -n %{libtqt3}-mt-devel
 /sbin/ldconfig || :
@@ -745,13 +643,18 @@ before you send a bugreport.
 
 %package -n %{libtqt3}-mt-mysql
 Summary:	MySQL database driver for TQt3 (Threaded)
-Group:		System/GUI/Other
+Summary(zh_CN.UTF-8): TQt3 的 MySQL 数据库驱动
+Group: System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 Provides:	libtqt3-mt-mysql = %{version}-%{release}
 Requires:	%{libtqt3}-mt = %{version}-%{release}
 
 %description -n %{libtqt3}-mt-mysql
 This package contains the threaded MySQL plugin for TQt3. Install it if
 you intend to use or write TQt programs that are to access a MySQL DB.
+
+%description -n %{libtqt3}-mt-mysql -l zh_CN.UTF-8
+TQt3 的 MySQL 数据库驱动。
 
 %files -n %{libtqt3}-mt-mysql
 %defattr(-,root,root,-)
@@ -761,13 +664,17 @@ you intend to use or write TQt programs that are to access a MySQL DB.
 
 %package -n %{libtqt3}-mt-odbc
 Summary:	ODBC database driver for TQt3 (Threaded)
-Group:		System/GUI/Other
+Summary(zh_CN.UTF-8): TQt3 的 ODBC 数据库驱动
+Group: System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 Provides:	libtqt3-mt-odbc = %{version}-%{release}
 Requires:	%{libtqt3}-mt = %{version}-%{release}
 
 %description -n %{libtqt3}-mt-odbc
 This package contains the threaded ODBC plugin for TQt3. Install it if
 you intend to use or write TQt programs that are to access an ODBC DB.
+%description -n %{libtqt3}-mt-odbc -l zh_CN.UTF-8
+TQt3 的 ODBC 数据库驱动。
 
 %files -n %{libtqt3}-mt-odbc
 %defattr(-,root,root,-)
@@ -777,7 +684,9 @@ you intend to use or write TQt programs that are to access an ODBC DB.
 
 %package -n %{libtqt3}-mt-psql
 Summary:	PostgreSQL database driver for TQt3 (Threaded)
-Group:		System/GUI/Other
+Summary(zh_CN.UTF-8): TQt3 的 PostgreSQL 数据库驱动
+Group: System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 Provides:	libtqt3-mt-psql = %{version}-%{release}
 Requires:	%{libtqt3}-mt = %{version}-%{release}
 
@@ -785,6 +694,8 @@ Requires:	%{libtqt3}-mt = %{version}-%{release}
 This package contains the threaded PostgreSQL plugin for TQt3.
 Install it if you intend to use or write TQt programs that are
 to access a PostgreSQL DB.
+%description -n %{libtqt3}-mt-psql -l zh_CN.UTF-8
+TQt3 的 PostgreSQL 数据库驱动。
 
 %files -n %{libtqt3}-mt-psql
 %defattr(-,root,root,-)
@@ -795,7 +706,9 @@ to access a PostgreSQL DB.
 %if 0%{?with_ibase}
 %package -n %{libtqt3}-mt-ibase
 Summary:	InterBase/FireBird database driver for TQt3 (Threaded)
-Group:		System/GUI/Other
+Summary(zh_CN.UTF-8): TQt3 的 InterBase/FireBird 数据库驱动
+Group: System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 Provides:	libtqt3-mt-ibase = %{version}-%{release}
 Requires:	%{libtqt3}-mt = %{version}-%{release}
 
@@ -803,6 +716,8 @@ Requires:	%{libtqt3}-mt = %{version}-%{release}
 This package contains the threaded InterBase/FireBird plugin
 for TQt3. Install it if you intend to use or write TQt programs
 that are to access an InterBase/FireBird DB.
+%description -n %{libtqt3}-mt-ibase -l zh_CN.UTF-8
+TQt3 的 InterBase/FireBird 数据库驱动。
 
 %files -n %{libtqt3}-mt-ibase
 %defattr(-,root,root,-)
@@ -813,7 +728,9 @@ that are to access an InterBase/FireBird DB.
 
 %package -n %{libtqt3}-mt-sqlite
 Summary:	SQLite database driver for TQt3 (Threaded)
-Group:		System/GUI/Other
+Summary(zh_CN.UTF-8): TQt3 的 SQLite 数据库驱动
+Group: System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 Provides:	libtqt3-mt-sqlite = %{version}-%{release}
 Requires:	%{libtqt3}-mt = %{version}-%{release}
 
@@ -821,6 +738,8 @@ Requires:	%{libtqt3}-mt = %{version}-%{release}
 This package contains the threaded SQLite plugin for TQt3. Install
 it if you intend to use or write TQt programs that are to access an
 SQLite DB.
+%description -n %{libtqt3}-mt-sqlite -l zh_CN.UTF-8
+TQt3 的 SQLite 数据库驱动。
 
 %files -n %{libtqt3}-mt-sqlite
 %defattr(-,root,root,-)
@@ -830,7 +749,9 @@ SQLite DB.
 
 %package -n %{libtqt3}-mt-sqlite3
 Summary:	SQLite3 database driver for TQt3 (Threaded)
-Group:		System/GUI/Other
+Summary(zh_CN.UTF-8): TQt3 的 SQLite3 数据库驱动
+Group: System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 Provides:	libtqt3-mt-sqlite3 = %{version}-%{release}
 Requires:	%{libtqt3}-mt = %{version}-%{release}
 
@@ -838,6 +759,8 @@ Requires:	%{libtqt3}-mt = %{version}-%{release}
 This package contains the threaded SQLite3 plugin for TQt3. Install
 it if you intend to use or write TQt programs that are to access an
 SQLite3 DB.
+%description -n %{libtqt3}-mt-sqlite3 -l zh_CN.UTF-8
+TQt3 的 SQLite3 数据库驱动。
 
 %files -n %{libtqt3}-mt-sqlite3
 %defattr(-,root,root,-)
@@ -847,7 +770,9 @@ SQLite3 DB.
 
 %package -n tqt3-compat-headers
 Summary:	TQt 1.x and 2.x compatibility includes
-Group:		Development/Libraries/X11
+Summary(zh_CN.UTF-8): TQt 1.x 和 2.x 的兼容头文件
+Group:		Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:	%{libtqt3}-mt = %{version}-%{release}
 
 %description -n tqt3-compat-headers
@@ -858,6 +783,8 @@ these header files are not part of the official TQt3 API.
 All sourcecode that is still using the headers of this package is
 subject to be changed to use the new header files which are in
 libtqt3-headers.
+%description -n tqt3-compat-headers -l zh_CN.UTF-8
+TQt 1.x 和 2.x 的兼容头文件。
 
 %files -n tqt3-compat-headers
 %defattr(-,root,root,-)
@@ -922,7 +849,9 @@ libtqt3-headers.
 
 %package -n tqt3-dev-tools
 Summary:	TQt3 development tools
-Group:		Development/Libraries/X11
+Summary(zh_CN.UTF-8): TQt3 开发工具
+Group:		Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:	%{libtqt3}-mt-devel = %{version}-%{release}
 Requires:	tqt3-dev-tools-devel = %{version}-%{release}
 
@@ -930,6 +859,8 @@ Requires:	tqt3-dev-tools-devel = %{version}-%{release}
 This package contains all tools that are necessary to build programs
 that are written using TQt3. These are: qmake, uic and moc.
 For TQt3 development, you most likely want to install this package.
+%description -n tqt3-dev-tools -l zh_CN.UTF-8
+TQt3 开发工具。
 
 %files -n tqt3-dev-tools
 %defattr(-,root,root,-)
@@ -950,11 +881,15 @@ For TQt3 development, you most likely want to install this package.
 
 %package -n tqt3-dev-tools-devel
 Summary:	TQt3 development tools
-Group:		Development/Libraries/X11
+Summary(zh_CN.UTF-8): TQt3 开发工具
+Group:		Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 
 %description -n tqt3-dev-tools-devel
 This package contains all tools that are necessary to build programs
 that are written using TQt3.
+%description -n tqt3-dev-tools-devel -l zh_CN.UTF-8
+TQt3 开发工具。
 
 %files -n tqt3-dev-tools-devel
 %defattr(-,root,root,-)
@@ -965,7 +900,9 @@ that are written using TQt3.
 
 %package -n tqt3-designer
 Summary:	TQt3 Designer
-Group:		System/GUI/Other
+Summary(zh_CN.UTF-8): TQt3 设计器
+Group:		Development/Tools
+Group(zh_CN.UTF-8): 开发/工具
 Requires:	%{libtqt3}-mt = %{version}-%{release}
 Requires:	tqt3-doc = %{version}-%{release}
 
@@ -978,6 +915,8 @@ TQt. The resulting user interface files can then be converted to
 C++ classes using the uic commandline utility which is usually done
 automatically for the developer with a project management with qmake
 or automake.
+%description -n tqt3-designer -l zh_CN.UTF-8
+TQt3 设计器。
 
 %files -n tqt3-designer
 %defattr(-,root,root,-)
@@ -1009,7 +948,9 @@ or automake.
 
 %package -n tqt3-apps-devel
 Summary:	TQt3 Developer applications development files
-Group:		Development/Libraries/X11
+Summary(zh_CN.UTF-8): TQt3 开发应用程序的开发文件
+Group:		Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:	%{libtqt3}-mt-devel = %{version}-%{release}
 
 %description -n tqt3-apps-devel
@@ -1020,6 +961,9 @@ It allows integrating additional enhancements into the TQt Designer
 respectively faciliate the TQt Assistant from within your TQt application
 to interactively call the Assistant for displaying online help that the
 developer includes with his application.
+
+%description -n tqt3-apps-devel -l zh_CN.UTF-8
+TQt3 开发应用程序的开发文件。
 
 %post -n tqt3-apps-devel
 /sbin/ldconfig || :
@@ -1050,7 +994,9 @@ developer includes with his application.
 
 %package -n tqt3-linguist
 Summary:	The TQt3 Linguist
-Group:		System/GUI/Other
+Summary(zh_CN.UTF-8): TQt3 翻译工具
+Group:		Development/Tools
+Group(zh_CN.UTF-8): 开发/工具
 Requires:	%{libtqt3}-mt = %{version}-%{release}
 Requires:	tqt3-doc = %{version}-%{release}
 
@@ -1059,6 +1005,9 @@ This package contains the TQt3 Linguist which provides translators a
 tool perfect for translating any TQt-based application into other
 languages and can be used and installed independently of any TQt
 development files by the translator.
+
+%description -n tqt3-linguist -l zh_CN.UTF-8
+TQt3 翻译工具。
 
 %files -n tqt3-linguist
 %defattr(-,root,root,-)
@@ -1076,7 +1025,9 @@ development files by the translator.
 
 %package -n tqt3-assistant
 Summary:	The TQt3 assistant application
-Group:		System/GUI/Other
+Summary(zh_CN.UTF-8): TQt3 帮助程序
+Group:		Development/Tools
+Group(zh_CN.UTF-8): 开发/工具
 Requires:	%{libtqt3}-mt = %{version}-%{release}
 Requires:	tqt3-doc = %{version}-%{release}
 
@@ -1091,6 +1042,8 @@ documentation.
 Developers of TQt Application who want to faciliate the TQt Assistant for online
 help display should refer to the README.Debian file for libtqt3-mt-devel and
 the package tqt3-apps-devel.
+%description -n tqt3-assistant -l zh_CN.UTF-8
+TQt3 帮助程序。
 
 %files -n tqt3-assistant
 %defattr(-,root,root,-)
@@ -1105,7 +1058,9 @@ the package tqt3-apps-devel.
 
 %package -n tqt3-qtconfig
 Summary:	The TQt3 Configuration Application
-Group:		Development/Libraries/X11
+Summary(zh_CN.UTF-8): TQt3 配置程序
+Group:		Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:	%{libtqt3}-mt = %{version}-%{release}
 Requires:	tqt3-doc = %{version}-%{release}
 
@@ -1118,6 +1073,9 @@ according to his desktop settings in TDE. However, if you need to run
 CJK-fonts or other non-latin scripts, you will most likely want to
 install this package.
 
+%description -n tqt3-qtconfig -l zh_CN.UTF-8
+TQt3 配置程序。
+
 %files -n tqt3-qtconfig
 %defattr(-,root,root,-)
 %{_bindir}/tqtconfig
@@ -1128,7 +1086,9 @@ install this package.
 
 %package -n tqt3-dev-tools-embedded
 Summary:	Tools to develop embedded TQt applications
-Group:		System/GUI/Other
+Summary(zh_CN.UTF-8): 开发嵌入式 TQt 程序的工具
+Group:		Development/Tools
+Group(zh_CN.UTF-8): 开发/工具
 Requires:	%{libtqt3}-mt-devel = %{version}-%{release}
 
 %description -n tqt3-dev-tools-embedded
@@ -1137,6 +1097,8 @@ applications with TQt Embedded and/or Qtopia. It provides the QVFB
 program for simulating an embedded device desktop as well as maketqpf
 for converting fonts to embedded fonts suitable for being utilized
 by TQt Embedded applications.
+%description -n tqt3-dev-tools-embedded -l zh_CN.UTF-8
+开发嵌入式 TQt 程序的工具。
 
 %files -n tqt3-dev-tools-embedded
 %defattr(-,root,root,-)
@@ -1152,7 +1114,9 @@ by TQt Embedded applications.
 
 %package -n tqt3-dev-tools-compat
 Summary:	Conversion utilities for TQt3 development
-Group:		System/GUI/Other
+Summary(zh_CN.UTF-8): TQt3 开发用的转换工具
+Group:		Development/Tools
+Group(zh_CN.UTF-8): 开发/工具
 Requires:	%{libtqt3}-mt-devel = %{version}-%{release}
 
 %description -n tqt3-dev-tools-compat
@@ -1163,6 +1127,9 @@ for TQt 1.x or 2.x over to TQt 3.x. The purpose of the tools are to
 help fixing the changes with include file renaming as well as migrating
 the message file format of TQt 2 translation files or any gettext-based
 translation system to the TQt 3 system.
+%description -n tqt3-dev-tools-compat -l zh_CN.UTF-8
+TQt3 开发用的转换工具。
+
 
 %files -n tqt3-dev-tools-compat
 %defattr(-,root,root,-)
@@ -1177,13 +1144,17 @@ translation system to the TQt 3 system.
 
 %package -n tqt3-i18n
 Summary:	Translation (i18n) files for TQt3 library
-Group:		System/GUI/Other
+Summary(zh_CN.UTF-8): TQt3 库的翻译文件
+Group: System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 Requires:	%{libtqt3}-mt = %{version}-%{release}
 
 %description -n tqt3-i18n
 This package contains the internationalization files for the TQt library.
 TQt applications that are internationalized will need to depend on this package
 for full internationalization support of the application towards the end user.
+%description -n tqt3-i18n -l zh_CN.UTF-8
+TQt3 库的翻译文件。
 
 %files -n tqt3-i18n
 %defattr(-,root,root,-)
@@ -1214,13 +1185,17 @@ for full internationalization support of the application towards the end user.
 
 %package -n tqt3-doc
 Summary:	TQt3 API documentation
-Group:		System/GUI/Other
+Summary(zh_CN.UTF-8): TQt3 API 文档
+Group: System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 
 %description -n tqt3-doc
 This package contains the complete API documentation for TQt3.
 Examples to coding are in tqt3-examples. The documentation is provided
 in HTML and manpage format; the HTML version can be viewed in conjunction
 with the TQt Assistant.
+%description -n tqt3-doc -l zh_CN.UTF-8
+TQt3 API 文档。
 
 %files -n tqt3-doc
 %defattr(-,root,root,-)
@@ -1238,25 +1213,24 @@ with the TQt Assistant.
 ##########
 
 %package -n tqt3-examples
-summary:	Examples for TQt3
-Group:		System/GUI/Other
+Summary:	Examples for TQt3
+Summary(zh_CN.UTF-8): TQt3 的样例
+Group: System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 
 %description -n tqt3-examples
 These are examples provided with TQt3. They may be especially useful for
 you if you are learning to program in TQt as they cover tquite a lot of
 things that are possible with TQt3.
 
+%description -n tqt3-examples -l zh_CN.UTF-8
+TQt3 的样例。
+
 %files -n tqt3-examples
 %defattr(-,root,root,-)
 %dir %{_docdir}/tqt3-examples/
 %{_docdir}/tqt3-examples/build-examples
 %{_docdir}/tqt3-examples/tqt3-examples.tar.gz
-
-##########
-
-%if 0%{?pclinuxos} || 0%{?suse_version} && 0%{?opensuse_bs} == 0
-%debug_package
-%endif
 
 ##########
 
@@ -1520,5 +1494,8 @@ chmod 644 "%{?buildroot}%{_datadir}/tqt3/mkspecs/"*/*
 
 
 %changelog
+* Mon Oct 05 2015 Liu Di <liudidi@gmail.com> - 3.5.0-1.1
+- 为 Magic 3.0 重建
+
 * Fri Jul 05 2013 Francois Andriot <francois.andriot@free.fr> - 3.5.0-1
 - Initial release for TDE R14.0.0

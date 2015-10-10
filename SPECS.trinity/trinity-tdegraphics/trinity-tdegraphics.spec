@@ -18,7 +18,7 @@
 # TDE variables
 %define tde_epoch 2
 %if "%{?tde_version}" == ""
-%define tde_version 14.0.0
+%define tde_version 14.0.1
 %endif
 %define tde_pkg tdegraphics
 %define tde_prefix /opt/trinity
@@ -46,11 +46,7 @@ Summary:    Trinity Desktop Environment - Graphics Applications
 Group:      Productivity/Graphics/Viewers
 URL:		http://www.trinitydesktop.org/
 
-%if 0%{?suse_version}
-License:		GPL-2.0+
-%else
 License:		GPLv2+
-%endif
 
 #Vendor:			Trinity Desktop
 #Packager:		Francois Andriot <francois.andriot@free.fr>
@@ -69,25 +65,13 @@ BuildRequires:	gettext
 BuildRequires:	libtool
 BuildRequires:	fdupes
 
-# SUSE desktop files utility
-%if 0%{?suse_version}
-BuildRequires:	update-desktop-files
-%endif
-
-%if 0%{?opensuse_bs} && 0%{?suse_version}
-# for xdg-menu script
-BuildRequires:	brp-check-trinity
-%endif
-
 # IDN support
 BuildRequires:	libidn-devel
 
 # GAMIN support
 #  Not on openSUSE.
-%if 0%{?rhel} || 0%{?fedora} || 0%{?mgaversion} || 0%{?mdkversion} || 0%{?suse_version} >= 1310
 %define with_gamin 1
 BuildRequires:	gamin-devel
-%endif
 
 # LIBUSB support
 BuildRequires: libusb-devel
@@ -105,126 +89,49 @@ BuildRequires: pcre-devel
 BuildRequires:	libacl-devel
 
 # GIF support
-%if 0%{?suse_version}
-BuildRequires: giflib-devel
-%else
 BuildRequires: libungif-devel
-%endif
 
 # GPHOTO2 support
-%if 0%{?suse_version}
-BuildRequires: libgphoto2-devel
-%else
 BuildRequires: gphoto2-devel
-%endif
 
 # PAPER support
-%if 0%{?rhel} || 0%{?fedora} || 0%{?mgaversion} || 0%{?mdkversion}
 %define with_paper 1
-%if 0%{?mgaversion} || 0%{?mdkversion}
-BuildRequires:	%{_lib}paper-devel
-%endif
-%if 0%{?rhel} || 0%{?fedora}
 BuildRequires:	libpaper-devel
-%endif
-%endif
 
 # T1LIB support
-%if 0%{?suse_version} && 0%{?suse_version} <= 1230
 %define with_t1lib 1
 BuildRequires:	t1lib-devel
-%endif
-%if 0%{?mgaversion} || 0%{?mdkversion} || 0%{?rhel} >= 5 || 0%{?fedora}
-%define with_t1lib 1
-%if 0%{?mgaversion} || 0%{?mdkversion}
-BuildRequires:	%{_lib}t1lib-devel
-%endif
-%if 0%{?rhel} >= 5 || 0%{?fedora}
-BuildRequires:	t1lib-devel
-%endif
-%endif
 
 # SANE support
-%if 0%{?mgaversion} || 0%{?mdkversion}
-BuildRequires:	%{_lib}sane1-devel
-%else
 BuildRequires:	sane-backends-devel
-%endif
 
 # LIBXXF86VM support
-%if 0%{?mgaversion} || 0%{?mdkversion}
-BuildRequires:	%{_lib}xxf86vm-devel
-%endif
-%if 0%{?rhel} || 0%{?fedora} || 0%{?suse_version} >= 1210
 BuildRequires:	libXxf86vm-devel
-%endif
 
 # XMU support
-%if 0%{?suse_version} == 1140
-BuildRequires:	xorg-x11-libXmu-devel
-%endif
-%if 0%{?rhel} || 0%{?fedora} || 0%{?suse_version} >= 1210
 BuildRequires: libXmu-devel
-%endif
-%if 0%{?mdkversion} || 0%{?mgaversion} >= 4
-BuildRequires: libxmu-devel
-%endif
-%if 0%{?mgaversion} == 2 || 0%{?mgaversion} == 3
-BuildRequires:	%{_lib}xmu%{?mgaversion:6}-devel
-%endif
 
 # MESA support
-%if 0%{?rhel} || 0%{?fedora}
 BuildRequires: mesa-libGL-devel
 BuildRequires: mesa-libGLU-devel
-%endif
-%if 0%{?mdkversion} || 0%{?mgaversion}
-BuildRequires: mesaglu-devel
-%endif
-%if 0%{?suse_version}
-BuildRequires: Mesa-libGL-devel
-BuildRequires: Mesa-libGLU-devel
-%endif
-%if 0%{?rhel} == 4
-BuildRequires:	xorg-x11-Mesa-libGLU
-%endif
 
 # DRM support
-%if 0%{?rhel} == 4
-BuildRequires:	xorg-x11-devel
-%else
 BuildRequires: libdrm-devel
-%endif
 
 # OPENEXR support
 BuildRequires:	OpenEXR-devel
 
 # POPPLER support
-%if 0%{?rhel} >=6 || 0%{?fedora} >= 15 || 0%{?suse_version}
 BuildRequires: poppler-devel >= 0.12
-%endif
-%if 0%{?mgaversion} || 0%{?mdkversion}
-BuildRequires:	%{_lib}poppler-devel
-%endif
-%if 0%{?rhel} >= 4 && 0%{?rhel} <= 5
-# On RHEL 5, the distro-provided poppler is too old. We built a newer one.
-BuildRequires:	trinity-poppler-devel >= 0.12
-%endif
 
 # LCMS support
-%if 0%{?suse_version}
-BuildRequires: liblcms-devel
-%else
 BuildRequires: lcms-devel
-%endif
 
 # FRIBIDI support
 BuildRequires: fribidi-devel
 
 # kamera
-%if 0%{?mgaversion} || 0%{?mdkversion} || 0%{?rhel} >= 5 || 0%{?fedora} || 0%{?suse_version}
 %define build_kamera 1
-%endif
 
 # kmrml
 %define build_kmrml 1
@@ -1263,12 +1170,6 @@ applications against tdegraphics libraries.
 
 ##########
 
-%if 0%{?pclinuxos} || 0%{?suse_version} && 0%{?opensuse_bs} == 0
-%debug_package
-%endif
-
-##########
-
 %prep
 %setup -q -n %{name}-%{version}%{?preversion:~%{preversion}}
 
@@ -1347,25 +1248,6 @@ export PATH="%{tde_bindir}:${PATH}"
 pushd "%{?buildroot}%{tde_datadir}/icons"
 for i in {16,32,48,64}; do %__cp $BUILD_ROOT%{tde_datadir}/icons/crystalsvg/"$i"x"$i"/devices/scanner.png %{buildroot}%{tde_datadir}/icons/hicolor/"$i"x"$i"/apps/kooka.png; done
 popd
-
-# Updates applications categories for openSUSE
-%if 0%{?suse_version}
-%suse_update_desktop_file    %{?buildroot}%{tde_tdeappdir}/kpovmodeler.desktop    Graphics 3DGraphics
-%suse_update_desktop_file    %{?buildroot}%{tde_tdeappdir}/kolourpaint.desktop    Graphics RasterGraphics
-%suse_update_desktop_file    %{?buildroot}%{tde_tdeappdir}/tdeiconedit.desktop    Graphics RasterGraphics
-%suse_update_desktop_file    %{?buildroot}%{tde_tdeappdir}/kview.desktop          Graphics Viewer
-%suse_update_desktop_file    %{?buildroot}%{tde_tdeappdir}/kooka.desktop          Graphics Scanning
-%suse_update_desktop_file -r %{?buildroot}%{tde_tdeappdir}/kruler.desktop         Utility DesktopUtility
-%suse_update_desktop_file -r %{?buildroot}%{tde_tdeappdir}/ksnapshot.desktop      Utility DesktopUtility
-%suse_update_desktop_file -r %{?buildroot}%{tde_tdeappdir}/kcolorchooser.desktop  Utility DesktopUtility
-%suse_update_desktop_file -r %{?buildroot}%{tde_tdeappdir}/kcoloredit.desktop     Utility DesktopUtility
-%suse_update_desktop_file -u %{?buildroot}%{tde_tdeappdir}/kfax.desktop           Office Viewer
-%suse_update_desktop_file    %{?buildroot}%{tde_tdeappdir}/kghostview.desktop     Office Viewer
-%suse_update_desktop_file    %{?buildroot}%{tde_tdeappdir}/kdvi.desktop           Office Viewer
-%suse_update_desktop_file    %{?buildroot}%{tde_tdeappdir}/kpdf.desktop           Office Viewer
-%suse_update_desktop_file    %{?buildroot}%{tde_tdeappdir}/kfaxview.desktop       Office Viewer
-%suse_update_desktop_file    %{?buildroot}%{tde_tdeappdir}/kamera.desktop
-%endif
 
 # Links duplicate files
 %fdupes "%{?buildroot}"

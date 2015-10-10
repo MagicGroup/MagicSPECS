@@ -22,7 +22,7 @@
 # TDE variables
 %define tde_epoch 2
 %if "%{?tde_version}" == ""
-%define tde_version 14.0.0
+%define tde_version 14.0.1
 %endif
 %define tde_pkg tdevelop
 %define tde_prefix /opt/trinity
@@ -45,16 +45,14 @@
 
 Name:		trinity-%{tde_pkg}
 Summary:	Integrated Development Environment for C++/C
+Summary(zh_CN.UTF-8): C++/C 的集成开发环境
 Version:	%{tde_version}
 Release:	%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}%{?_variant}
 Group:		Development/Tools
+Group(zh_CN.UTF-8): 开发/工具
 URL:		http://www.trinitydesktop.org/
 
-%if 0%{?suse_version}
-License:	GPL-2.0+
-%else
 License:	GPLv2+
-%endif
 
 #Vendor:		Trinity Project
 #Packager:	Francois Andriot <francois.andriot@free.fr>
@@ -75,16 +73,6 @@ BuildRequires:	trinity-tdesdk-devel >= %{tde_version}
 Obsoletes:	trinity-kdevelop < %{version}-%{release}
 Provides:	trinity-kdevelop = %{version}-%{release}
 
-# SUSE desktop files utility
-%if 0%{?suse_version}
-BuildRequires:	update-desktop-files
-%endif
-
-%if 0%{?opensuse_bs} && 0%{?suse_version}
-# for xdg-menu script
-BuildRequires:	brp-check-trinity
-%endif
-
 BuildRequires:	cmake >= 2.8
 BuildRequires:	gcc-c++
 BuildRequires:	fdupes
@@ -104,18 +92,14 @@ BuildRequires:	libidn-devel
 
 # GAMIN support
 #  Not on openSUSE.
-%if 0%{?rhel} || 0%{?fedora} || 0%{?mgaversion} || 0%{?mdkversion}
 %define with_gamin 1
 BuildRequires:	gamin-devel
-%endif
 
 # PCRE support
 BuildRequires:	pcre-devel
 
 # DB4 support
-%if 0%{?rhel} || 0%{?fedora}
 BuildRequires:	db4-devel
-%endif
 
 # FLEX support
 BuildRequires:	flex
@@ -128,20 +112,10 @@ BuildRequires:	subversion-devel
 BuildRequires:	neon-devel
 
 # OPENLDAP support
-%if 0%{?rhel} >= 6 || 0%{?fedora} || 0%{?mdkversion} || 0%{?mgaversion}
 BuildRequires:	openldap-devel
-%endif
-%if 0%{?suse_version}
-BuildRequires:	openldap2-devel
-%endif
-%if 0%{?rhel} == 5
-BuildRequires:	openldap24-libs-devel
-%endif
 
 # LIBACL support
-%if 0%{?suse_version} || 0%{?rhel} >= 5 || 0%{?fedora} || 0%{?mgaversion} || 0%{?mdkversion}
 BuildRequires:	libacl-devel
-%endif
 
 %description
 The TDevelop Integrated Development Environment provides many features
@@ -166,6 +140,9 @@ application by integrating KDbg; Editing of project-specific pixmaps
 with KIconEdit; The inclusion of any other program you need for
 development by adding it to the "Tools"-menu according to your
 individual needs.
+
+%description -l zh_CN.UTF-8
+TDE 下的 C/C++ 集成开发环境。
 
 %files
 %defattr(-,root,root,-)
@@ -530,7 +507,9 @@ update-desktop-database %{tde_datadir}/applications > /dev/null 2>&1 || :
 
 %package devel
 Summary: Development files for %{name}
-Group:		Development/Libraries/Other
+Summary(zh_CN.UTF-8): %{name} 的开发包
+Group:		Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: %{name}-libs = %{version}-%{release}
 
 Obsoletes:	trinity-kdevelop-devel < %{version}-%{release}
@@ -538,6 +517,9 @@ Provides:	trinity-kdevelop-devel = %{version}-%{release}
 
 %description devel
 This package contains the development files for tdevelop.
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %files devel
 %defattr(-,root,root,-)
@@ -555,7 +537,9 @@ This package contains the development files for tdevelop.
 
 %package libs
 Summary: %{name} runtime libraries
+Summary(zh_CN.UTF-8): %{name} 的运行库
 Group:   System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 Requires: trinity-tdelibs >= %{tde_version}
 # include to be paranoid, installing libs-only is still mostly untested -- Rex
 Requires: %{name} = %{version}-%{release}
@@ -565,6 +549,9 @@ Provides:	trinity-kdevelop-libs = %{version}-%{release}
 
 %description libs
 This package contains the libraries needed for the tdevelop programs.
+
+%description libs -l zh_CN.UTF-8
+%{name} 的运行库。
 
 %files libs
 %defattr(-,root,root,-)
@@ -606,12 +593,6 @@ This package contains the libraries needed for the tdevelop programs.
 
 %postun libs
 /sbin/ldconfig || :
-
-##########
-
-%if 0%{?pclinuxos} || 0%{?suse_version} && 0%{?opensuse_bs} == 0
-%debug_package
-%endif
 
 ##########
 

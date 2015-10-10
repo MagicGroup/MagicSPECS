@@ -18,8 +18,10 @@
 # Default version for this component
 %define tde_pkg kaffeine-mozilla
 %if "%{?tde_version}" == ""
-%define tde_version 14.0.0
+%define tde_version 14.0.1
 %endif
+
+%define tde_prefix /opt/trinity
 
 # If TDE is built in a specific prefix (e.g. /opt/trinity), the release will be suffixed with ".opt".
 %if "%{?tde_prefix}" != "/usr"
@@ -45,11 +47,13 @@
 
 Name:			trinity-%{tde_pkg}
 Summary:		mozilla plugin that lanches kaffeine for supported media types [Trinity]
+Summary(zh_CN.UTF-8): Kaffeinie 的 mozilla 插件
 Version:		0.4.3.1
 Release:		%{?!preversion:6}%{?preversion:5_%{preversion}}%{?dist}%{?_variant}
 
 License:		GPLv2+
 Group:			Applications/Multimedia
+Group(zh_CN.UTF-8): 应用程序/多媒体
 
 Vendor:			Trinity Project
 Packager:		Francois Andriot <francois.andriot@free.fr>
@@ -63,24 +67,17 @@ Source0:		%{name}-%{tde_version}%{?preversion:~%{preversion}}.tar.gz
 # Fix 'nspr' includes location
 Patch1:		kaffeine-mozilla-3.5.13-fix_nspr_include.patch
 
+Patch2:		%{name}-14.0.1-tqt.patch
+
 BuildRequires:	trinity-tqtinterface-devel >= %{tde_version}
 BuildRequires:	trinity-arts-devel >= 1:1.5.10
 BuildRequires:	trinity-tdelibs-devel >= %{tde_version}
 BuildRequires:	trinity-tdebase-devel >= %{tde_version}
 BuildRequires:	desktop-file-utils
 
-%if 0%{?suse_version}
-BuildRequires:	mozilla-nspr-devel
-%else
 BuildRequires:	nspr-devel
-%endif
 
-%if 0%{?mgaversion} || 0%{?mdkversion}
-BuildRequires:	%{_lib}xaw-devel
-%endif
-%if 0%{?rhel} >= 5 || 0%{?fedora} || 0%{?suse_version} >= 1220
 BuildRequires:	libXaw-devel
-%endif
 
 Requires:		trinity-kaffeine
 
@@ -88,15 +85,13 @@ Requires:		trinity-kaffeine
 This mozilla plugin launches kaffeine, the xine-based media player for TDE,
 when a page containing a supported media format is loaded.
 
-
-%if 0%{?suse_version} || 0%{?pclinuxos}
-%debug_package
-%endif
-
+%description -l zh_CN.UTF-8
+Kaffeine 的 mozilla 插件。
 
 %prep
 %setup -q -n %{name}-%{tde_version}%{?preversion:~%{preversion}}
 %patch1 -p1 -b .nspr
+%patch2 -p1
 
 %__cp "/usr/share/aclocal/libtool.m4" "admin/libtool.m4.in"
 %__cp "/usr/share/libtool/config/ltmain.sh" "ltmain.sh" || %__cp "/usr/share/libtool/ltmain.sh" "ltmain.sh"

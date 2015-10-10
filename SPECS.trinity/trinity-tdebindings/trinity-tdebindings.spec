@@ -22,7 +22,7 @@
 # TDE variables
 %define tde_epoch 2
 %if "%{?tde_version}" == ""
-%define tde_version 14.0.0
+%define tde_version 14.0.1
 %endif
 %define tde_pkg tdebindings
 %define tde_prefix /opt/trinity
@@ -52,15 +52,11 @@
 Name:			trinity-%{tde_pkg}
 Summary:		TDE bindings to non-C++ languages
 Version:		%{tde_version}
-Release:		%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}%{?_variant}
+Release:		%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}%{?_variant}.1
 Group:			System/GUI/Other
 URL:			http://www.trinitydesktop.org/
 
-%if 0%{?suse_version}
-License:	GPL-2.0+
-%else
 License:	GPLv2+
-%endif
 
 #Vendor:		Trinity Desktop
 #Packager:	Francois Andriot <francois.andriot@free.fr>
@@ -69,6 +65,7 @@ Prefix:			%{tde_prefix}
 BuildRoot:		%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 Source0:		%{name}-%{version}%{?preversion:~%{preversion}}.tar.gz
+Patch0:			trinity-tdebindings-14.0.1-tqt.patch
 
 BuildRequires:	trinity-arts-devel >= %{tde_epoch}:1.5.10
 BuildRequires:	trinity-tdelibs-devel >= %{tde_version}
@@ -77,16 +74,6 @@ BuildRequires:	autoconf automake libtool m4
 BuildRequires:	gcc-c++
 BuildRequires:	desktop-file-utils
 
-# SUSE desktop files utility
-%if 0%{?suse_version}
-BuildRequires:	update-desktop-files
-%endif
-
-%if 0%{?opensuse_bs} && 0%{?suse_version}
-# for xdg-menu script
-BuildRequires:	brp-check-trinity
-%endif
-
 # ZLIB support
 BuildRequires: zlib-devel
 
@@ -94,79 +81,24 @@ BuildRequires: zlib-devel
 BuildRequires: perl(ExtUtils::MakeMaker)
 
 # GTK2 support
-%if 0%{?rhel} == 4
-BuildRequires:	evolution28-gtk2-devel
-Requires:		evolution28-gtk2
-BuildRequires:	evolution28-glib2-devel
-Requires:		evolution28-glib2
-BuildRequires:	evolution28-cairo-devel
-Requires:		evolution28-cairo
-BuildRequires:	evolution28-pango-devel
-Requires:		evolution28-pango
-BuildRequires:	evolution28-atk-devel
-Requires:		evolution28-atk
-%else
 BuildRequires:	gtk2-devel
-%endif
 
 # XULRUNNER support
-%if 0%{?fedora} || 0%{?rhel} >= 5 || 0%{?mgaversion} || 0%{?mdkversion} || 0%{?suse_version} >= 1220
 #BuildRequires: xulrunner-devel
-%endif
-%if 0%{?suse_version} == 1140
-BuildRequires: mozilla-xulrunner20-devel
-%endif
 
 # OPENSSL support
 BuildRequires:	openssl-devel
 
 # GTK1 support
-%if 0%{?fedora} || 0%{?rhel} >= 5
 %define with_gtk1 1
 BuildRequires: glib-devel
 BuildRequires: gtk+-devel
-%endif
-%if 0%{?rhel} == 5 || 0%{?rhel} == 6
-%if 0%{?with_gtk1}
-%define with_gtk1 1
-BuildRequires: glib-devel
-BuildRequires: gtk+-devel
-%endif
-%endif
-%if 0%{?mdkversion} == 201100
-%define with_gtk1 1
-BuildRequires: %{_lib}glib1.2-devel
-BuildRequires: %{_lib}gtk+-devel
-%endif
 
-%if 0%{?mgaversion} || 0%{?mdkversion}
-%if 0%{?pclinuxos}
-BuildRequires:	libgdk_pixbuf2.0-devel
-%else
-BuildRequires:	%{_lib}gdk_pixbuf2.0-devel
-%endif
-%endif
-%if 0%{?fedora}
-%if 0%{?fedora} >= 17
 BuildRequires: gdk-pixbuf2-devel
-%else
-BuildRequires: gdk-pixbuf-devel
-%endif
-%endif
 
 # MESA support
-%if 0%{?rhel} || 0%{?fedora}
 BuildRequires: mesa-libGL-devel
 BuildRequires: mesa-libGLU-devel
-%endif
-%if 0%{?mdkversion} || 0%{?mgaversion}
-BuildRequires: mesaglu-devel
-%endif
-%if 0%{?suse_version}
-BuildRequires: Mesa-libGL-devel
-BuildRequires: Mesa-libGLU-devel
-%endif
-
 
 ## Python
 BuildRequires: python-devel
@@ -175,9 +107,7 @@ BuildRequires: python-devel
 ## ruby
 BuildRequires:	ruby-devel >= 1.8
 BuildRequires:	ruby >= 1.8
-%if 0%{?fedora} >= 19
 BuildRequires:	rubypick
-%endif
 %if "%{?ruby_libarchdir}" != ""
 %define ruby_arch %{?ruby_libarchdir}
 %else
@@ -194,54 +124,18 @@ BuildRequires:	rubypick
 %global	_normalized_cpu	%(echo %{_target_cpu} | sed 's/^ppc/powerpc/;s/i.86/i386/;s/sparcv./sparc/;s/armv.*/arm/')
 
 ## java
-%if 0%{?rhel} >= 4 && 0%{?rhel} <= 5
-BuildRequires:	java-1.4.2-gcj-compat-devel
-BuildRequires:	libgcj-devel
-BuildRequires:	gcc-java
-%endif
-
-%if 0%{?rhel} >= 6 || 0%{?fedora} || 0%{?mdkversion} || 0%{?mgaversion} || 0%{?suse_version}
-
-# PCLinuxOS use SUN's Java
-%if 0%{?pclinuxos}
-BuildRequires:	java-devel
-%else
 
 # Others use OpenJDK
 BuildRequires: java-openjdk
 BuildRequires: java-devel >= 1.4.2
-%if 0%{?suse_version} >= 1320
-BuildRequires:	java-1_8_0-openjdk-devel
-%endif
-%if 0%{?fedora} >= 21 || 0%{?mgaversion} >= 5
 BuildRequires: java-1.8.0-openjdk-devel
-%endif
-%if 0%{?fedora} == 17 ||  0%{?fedora} == 18 ||  0%{?fedora} == 19 || 0%{?fedora} == 20 || 0%{?suse_version} == 1230 || 0%{?suse_version} == 1310 || 0%{?mgaversion} == 3 || 0%{?mgaversion} == 4 || 0%{?rhel} >= 7
-BuildRequires: java-1.7.0-openjdk-devel
-%endif
-%if 0%{?rhel} == 5 || 0%{?rhel} == 6
-BuildRequires: java-1.6.0-openjdk-devel
-%endif
 
-%endif
-%endif
-
-%if 0%{?suse_version}
-%define java_home %{_usr}/%{_lib}/jvm/java
-%else
-%if 0%{?rhel} == 4
-%define java_home %{_usr}/lib/jvm/java-1.4.2-gcj-1.4.2.0
-%else
 %define java_home %{_usr}/lib/jvm/java
-%endif
-%endif
 %define _with_java --with-java=%{java_home}
 
 ## Perl
 # There is no 'perl-devel' package on RHEL5
-%if 0%{?rhel} >= 6 || 0%{?fedora} || 0%{?mdkversion} || 0%{?mgaversion}
 BuildRequires:	perl-devel
-%endif
 %define perl_vendorarch %{expand:%%(eval `perl -V:installvendorarch`; echo $installvendorarch)}
 
 ## QScintilla
@@ -601,11 +495,7 @@ This package is part of the official TDE bindings module.
 %package -n perl-dcop
 Summary:	DCOP Bindings for Perl 
 Group:		System/Libraries
-%if 0%{?suse_version}
-Requires:	perl-base
-%else
 Requires:	perl
-%endif
 
 Obsoletes:	trinity-kdebindings-dcopperl < %{version}-%{release}
 Provides:	trinity-kdebindings-dcopperl = %{version}-%{release}
@@ -1062,14 +952,9 @@ This package contains the development files for the TDE bindings.
 
 ##########
 
-%if 0%{?pclinuxos} || 0%{?suse_version} && 0%{?opensuse_bs} == 0
-%debug_package
-%endif
-
-##########
-
 %prep
 %setup -q -n %{name}-%{version}%{?preversion:~%{preversion}}
+%patch0 -p1
 
 %if "%{?perl_vendorarch}" == ""
 exit 1
@@ -1123,10 +1008,8 @@ if [ -d /usr/evolution28 ]; then
   export PKG_CONFIG_PATH="/usr/evolution28/%{_lib}/pkgconfig:${PKG_CONFIG_PATH}"
 fi
 
-# Warning: openSUSE 13.1: /usr/include/ruby-2.0.0/ruby.h
-%if 0%{?suse_version} >= 1310
-EXTRA_INCLUDES="/usr/include/ruby-%{rb20_ver}:/usr/include/ruby-%{rb20_ver}/%{_target}"
-%endif
+export QTINC=%{_includedir}/tqt3
+export QTLIB=%{_libdir}
 
 # Warning: GCC visibility causes FTBFS [Bug #1285]
 %configure \
@@ -1146,8 +1029,8 @@ EXTRA_INCLUDES="/usr/include/ruby-%{rb20_ver}:/usr/include/ruby-%{rb20_ver}/%{_t
   --enable-closure \
   --enable-rpath \
   --disable-gcc-hidden-visibility \
-  \
-  --with-extra-includes=%{_includedir}/tqscintilla:${EXTRA_INCLUDES} \
+  --with-qt-includes=%{_includedir}/tqt3\
+  --with-extra-includes=%{_includedir}/tqscintilla:%{_includedir}/tqt3:${EXTRA_INCLUDES} \
   --with-extra-libs=%{tde_libdir} \
   --with-pythondir=%{_usr} \
   \
@@ -1211,17 +1094,13 @@ fi
 %__mv -f "%{?buildroot}%{tde_datadir}/applnk/Utilities/embedjs.desktop" "%{?buildroot}%{tde_tdeappdir}/embedjs.desktop"
 %__rm -rf "%{?buildroot}%{tde_datadir}/applnk"
 
-# Updates applications categories for openSUSE
-%if 0%{?suse_version}
-%suse_update_desktop_file -u kjscmd  Development 
-%suse_update_desktop_file -u embedjs Development 
-%endif
-
-
 %clean
 %__rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Wed Oct 07 2015 Liu Di <liudidi@gmail.com> - 14.0.1-1.opt.1
+- 为 Magic 3.0 重建
+
 * Fri Jul 05 2013 Francois Andriot <francois.andriot@free.fr> - 14.0.0-1
 - Initial release for TDE R14.0.0

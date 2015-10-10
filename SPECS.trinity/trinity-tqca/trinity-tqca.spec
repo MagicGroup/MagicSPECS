@@ -18,33 +18,27 @@
 # TDE variables
 %define tde_epoch 2
 %if "%{?tde_version}" == ""
-%define tde_version 14.0.0
+%define tde_version 14.0.1
 %endif
 %define tde_pkg tqca
 %define tde_prefix /opt/trinity
 %define tde_includedir %{tde_prefix}/include
 %define tde_libdir %{tde_prefix}/%{_lib}
 
-%if 0%{?mdkversion} || 0%{?mgaversion} || 0%{?pclinuxos}
-%define libtqca %{_lib}tqca
-%else
 %define libtqca libtqca
-%endif
 
 
 Name:		trinity-%{tde_pkg}
 Epoch:		%{tde_epoch}
 Version:	1.0
-Release:	%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}%{?_variant}
+Release:	%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}%{?_variant}.1
 Summary:	TQt Cryptographic Architecture
-Group:		Development/Libraries/C and C++
+Summary(zh_CN.UTF-8): TQt 加密架构
+Group:		Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 URL:		http://www.trinitydesktop.org/
 
-%if 0%{?suse_version}
-License:	GPL-2.0+
-%else
 License:	GPLv2+
-%endif
 
 #Vendor:		Trinity Desktop
 #Packager:	Francois Andriot <francois.andriot@free.fr>
@@ -68,11 +62,16 @@ on any particular cryptographic library. This allows one to easily change
 or upgrade crypto implementations without even needing to recompile the
 application!
 
+%description -l zh_CN.UTF-8
+TQt 加密架构。
+
 ##########
 
 %package -n %{libtqca}1
 Summary:	TQt Cryptographic Architecture
-Group:		Development/Libraries/C and C++
+Summary(zh_CN.UTF-8): TQt 加密架构
+Group:		Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 
 Obsoletes:	trinity-libtqca < %{?epoch:%{epoch}:}%{version}-%{release}
 Provides:	trinity-libtqca = %{?epoch:%{epoch}:}%{version}-%{release}
@@ -88,6 +87,9 @@ model is to allow applications to avoid linking to or explicitly depending
 on any particular cryptographic library. This allows one to easily change
 or upgrade crypto implementations without even needing to recompile the
 application!
+
+%description -n %{libtqca}1 -l zh_CN.UTF-8
+TQt 加密架构。
 
 %post -n %{libtqca}1
 /sbin/ldconfig
@@ -106,7 +108,9 @@ application!
 
 %package -n %{libtqca}-devel
 Summary:	TQt Cryptographic Architecture development files
-Group:		Development/Libraries/C and C++
+Summary(zh_CN.UTF-8): %{name} 的开发包
+Group:		Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:	%{libtqca}1 = %{?epoch:%{epoch}:}%{version}-%{release}
 
 Obsoletes:	trinity-libtqca-devel < %{?epoch:%{epoch}:}%{version}-%{release}
@@ -115,6 +119,9 @@ Provides:	libtqca-devel = %{?epoch:%{epoch}:}%{version}-%{release}
 
 %description -n %{libtqca}-devel
 This packages contains the development files for TQCA
+
+%description -n %{libtqca}-devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %post -n %{libtqca}-devel
 /sbin/ldconfig
@@ -126,12 +133,6 @@ This packages contains the development files for TQCA
 %defattr(-,root,root,-)
 %{_includedir}/qca.h
 %{_libdir}/libqca.so
-
-##########
-
-%if 0%{?pclinuxos} || 0%{?suse_version} && 0%{?opensuse_bs} == 0
-%debug_package
-%endif
 
 ##########
 
@@ -169,5 +170,8 @@ unset QTDIR QTINC QTLIB
 
 
 %changelog
+* Tue Oct 06 2015 Liu Di <liudidi@gmail.com> - 2:1.0-1.1
+- 为 Magic 3.0 重建
+
 * Fri Jul 05 2013 Francois Andriot <francois.andriot@free.fr> - 2:1.0-1
 - Initial release for TDE 14.0.0

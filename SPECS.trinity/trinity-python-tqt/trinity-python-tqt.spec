@@ -24,7 +24,7 @@
 # TDE variables
 %define tde_epoch 2
 %if "%{?tde_version}" == ""
-%define tde_version 14.0.0
+%define tde_version 14.0.1
 %endif
 %define tde_pkg python-tqt
 %define tde_prefix /opt/trinity
@@ -47,16 +47,14 @@
 Name:		trinity-%{tde_pkg}
 Epoch:		%{tde_epoch}
 Version:	3.18.1
-Release:	%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}%{?_variant}
+Release:	%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}%{?_variant}.1
 Summary:	TQt bindings for Python
-Group:		Development/Libraries/Python
+Summary(zh_CN.UTF-8): TQt 的 Python 绑定
+Group:		Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 URL:		http://www.trinitydesktop.org/
 
-%if 0%{?suse_version}
-License:	GPL-2.0+
-%else
 License:	GPLv2+
-%endif
 
 #Vendor:		Trinity Project
 #Packager:	Francois Andriot <francois.andriot@free.fr>
@@ -80,31 +78,11 @@ BuildRequires:	python
 BuildRequires:	python-devel
 
 # MESA support
-%if 0%{?rhel} || 0%{?fedora}
 BuildRequires: mesa-libGL-devel
 BuildRequires: mesa-libGLU-devel
-%endif
-%if 0%{?mdkversion} || 0%{?mgaversion}
-BuildRequires: mesaglu-devel
-%endif
-%if 0%{?suse_version}
-BuildRequires: Mesa-libGL-devel
-BuildRequires: Mesa-libGLU-devel
-%endif
 
 # XMU support
-%if 0%{?suse_version} == 1140
-BuildRequires:	xorg-x11-libXmu-devel
-%endif
-%if 0%{?rhel} || 0%{?fedora} || 0%{?suse_version} >= 1210
 BuildRequires: libXmu-devel
-%endif
-%if 0%{?mdkversion} || 0%{?mgaversion} >= 4
-BuildRequires: libxmu-devel
-%endif
-%if 0%{?mgaversion} == 2 || 0%{?mgaversion} == 3
-BuildRequires:	%{_lib}xmu%{?mgaversion:6}-devel
-%endif
 
 %description
 Python binding module that allows use of TQt X Window toolkit v3.
@@ -115,11 +93,16 @@ some minor issues related to the differences between C++ and Python
 (types, etc), but usually you'll be able to write code pretty much the
 same way in both languages (with syntax differences, of course)
 
+%description -l zh_CN.UTF-8
+TQt 的 Python 绑定。
+
 ##########
 
 %package -n python-tqt
 Summary:	TQt bindings for Python
-Group:		Development/Libraries/Python
+Summary(zh_CN.UTF-8): TQt 的 Python 绑定
+Group:		Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:	trinity-filesystem >= %{tde_version}
 Requires:	sip4-tqt >= %{?epoch:%{epoch}:}4.10.5
 Requires:	libtqt4 >= %{?epoch:%{epoch}:}4.2.0
@@ -132,6 +115,9 @@ At this moment python-tqt offers a vast subset of TQt API. There are
 some minor issues related to the differences between C++ and Python
 (types, etc), but usually you'll be able to write code pretty much the
 same way in both languages (with syntax differences, of course)
+
+%description -n python-tqt -l zh_CN.UTF-8
+TQt 的 Python 绑定。
 
 %files -n python-tqt
 %defattr(-,root,root,-)
@@ -150,13 +136,18 @@ same way in both languages (with syntax differences, of course)
 
 %package -n python-tqt-gl
 Summary:	TQt OpenGL bindings for Python
-Group:		Development/Libraries/Python
+Summary(zh_CN.UTF-8): TQt OpenGL 的 Python 绑定
+Group:		Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:	python-tqt = %{?epoch:%{epoch}:}%{version}-%{release}
 
 %description -n python-tqt-gl
 Python binding module that allows use of the OpenGL facilities
 offered by the TQt X Window toolkit v3. You can use it to create
 portable graphics-capable scripts.
+
+%description -n python-tqt-gl -l zh_CN.UTF-8
+TQt OpenGL 的 Python 绑定。
 
 %files -n python-tqt-gl
 %defattr(-,root,root,-)
@@ -220,12 +211,6 @@ packages based on them, like PyTDE.
 
 ##########
 
-%if 0%{?pclinuxos} || 0%{?suse_version} && 0%{?opensuse_bs} == 0
-%debug_package
-%endif
-
-##########
-
 %prep
 %setup -q -n %{name}-%{tde_version}%{?preversion:~%{preversion}}
 
@@ -267,5 +252,8 @@ echo yes | %__python ../configure.py \
 
 
 %changelog
+* Tue Oct 06 2015 Liu Di <liudidi@gmail.com> - 2:3.18.1-1.opt.1
+- 为 Magic 3.0 重建
+
 * Fri Jul 05 2013 Francois Andriot <francois.andriot@free.fr> - 3.18.1-1
 - Initial release for TDE R14.0.0

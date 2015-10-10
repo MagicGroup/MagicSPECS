@@ -19,28 +19,22 @@
 # TDE variables
 %define tde_epoch 2
 %if "%{?tde_version}" == ""
-%define tde_version 14.0.0
+%define tde_version 14.0.1
 %endif
 
-%if 0%{?mdkversion} || 0%{?mgaversion} || 0%{?pclinuxos}
-%define libart %{_lib}art
-%else
 %define libart libart
-%endif
 
 
 Name:           trinity-libart-lgpl
 Version:        2.3.22
-Release:		%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}%{?_variant}
+Release:		%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}%{?_variant}.1
 Summary:        Library of functions for 2D graphics
-Group:			System/Libraries
+Summary(zh_CN.UTF-8): 2D 图形的函数库
+Group: System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 URL:			http://www.trinitydesktop.org/
 
-%if 0%{?suse_version}
-License:	LGPL-2.0+
-%else
 License:	LGPLv2+
-%endif
 
 #Vendor:			Trinity Project
 #Packager:		Francois Andriot <francois.andriot@free.fr>
@@ -61,11 +55,15 @@ and illustration programs. It is written in optimized C, and is fully
 compatible with C++. With a small footprint of 10,000 lines of code, it is
 especially suitable for embedded applications.
 
+%description -l zh_CN.UTF-8
+2D 图形的函数库。
 ##########
 
 %package -n %{libart}_lgpl_2-2
 Summary:        Library of functions for 2D graphics - runtime files
-Group:			System/Libraries
+Summary(zh_CN.UTF-8): 2D 图形的函数库 - 运行库
+Group: System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 Obsoletes:		libart_lgpl < %{version}-%{release}
 Provides:		libart_lgpl = %{version}-%{release}
 Obsoletes:		%{_lib}art_lgpl2 < %{version}-%{release}
@@ -78,6 +76,9 @@ PostScript imaging model, designed to be integrated with graphics, artwork,
 and illustration programs. It is written in optimized C, and is fully
 compatible with C++. With a small footprint of 10,000 lines of code, it is
 especially suitable for embedded applications.
+
+%description -n %{libart}_lgpl_2-2 -l zh_CN.UTF-8
+2D 图形的函数库 - 运行库。
 
 %post -n %{libart}_lgpl_2-2
 /sbin/ldconfig || :
@@ -94,7 +95,9 @@ especially suitable for embedded applications.
 
 %package -n %{libart}_lgpl-devel
 Summary:        Library of functions for 2D graphics - development files
+Summary(zh_CN.UTF-8): 2D 图形的函数库 - 开发文件
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Provides:		libart_lgpl-devel = %{version}-%{release}
 Requires:       %{libart}_lgpl_2-2 = %{version}-%{release}
 
@@ -104,6 +107,9 @@ PostScript imaging model, designed to be integrated with graphics, artwork,
 and illustration programs. It is written in optimized C, and is fully
 compatible with C++. With a small footprint of 10,000 lines of code, it is
 especially suitable for embedded applications.
+
+%description -n %{libart}_lgpl-devel -l zh_CN.UTF-8
+2D 图形的函数库 - 开发文件。
 
 %post -n %{libart}_lgpl-devel
 /sbin/ldconfig || :
@@ -208,5 +214,8 @@ unset QTDIR QTINC QTLIB
 
 
 %changelog
+* Tue Oct 06 2015 Liu Di <liudidi@gmail.com> - 2.3.22-1.1
+- 为 Magic 3.0 重建
+
 * Fri Jul 05 2013 Francois Andriot <francois.andriot@free.fr> - 2.3.22-1
 - Initial release for TDE 14.0.0

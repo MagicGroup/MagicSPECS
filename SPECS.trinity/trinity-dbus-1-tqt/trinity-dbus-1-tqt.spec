@@ -18,14 +18,10 @@
 # TDE variables
 %define tde_epoch 2
 %if "%{?tde_version}" == ""
-%define tde_version 14.0.0
+%define tde_version 14.0.1
 %endif
 
-%if 0%{?mdkversion} || 0%{?mgaversion} || 0%{?pclinuxos}
-%define libdbus %{_lib}dbus
-%else
 %define libdbus libdbus
-%endif
 
 
 Name:		trinity-dbus-1-tqt
@@ -33,14 +29,12 @@ Epoch:		%{tde_epoch}
 Version:	0.9
 Release:	%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}%{?_variant}
 Summary:	Dbus bindings for the Trinity Qt [TQt] interface
-Group:		System/Libraries
+Summary(zh_CN.UTF-8): TQt 的 Dbus 绑定
+Group: System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 URL:		http://www.trinitydesktop.org/
 
-%if 0%{?suse_version}
-License:	GPL-2.0+
-%else
 License:	GPLv2+
-%endif
 
 #Vendor:		Trinity Project
 #Packager:	Francois Andriot <francois.andriot@free.fr>
@@ -58,11 +52,7 @@ BuildRequires:	gcc-c++
 BuildRequires:	pkgconfig
 
 # DBUS support
-%if 0%{?suse_version}
-BuildRequires:	dbus-1-devel
-%else
 BuildRequires:	dbus-devel
-%endif
 
 %description
 D-BUS is a message bus, used for sending messages between applications.
@@ -73,11 +63,15 @@ This package provides bindings for the Trinity Qt TQt interface.
 
 See the dbus description for more information about D-BUS in general.
 
+%description -l zh_CN.UTF-8
+TQt 的 Dbus 绑定。
 ###########
 
 %package -n %{libdbus}-1-tqt0
 Summary:		Dbus bindings for the Trinity Qt [TQt] interface
-Group:			System/Libraries
+Summary(zh_CN.UTF-8): %{name} 的运行库
+Group: System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 Provides:		libdbus-1-tqt0 = %{?epoch:%{epoch}:}%{version}-%{release}
 
 Obsoletes:		trinity-dbus-1-tqt < %{?epoch:%{epoch}:}%{version}-%{release}
@@ -91,6 +85,9 @@ terms of complexity.
 This package provides bindings for the Trinity Qt TQt interface.
 
 See the dbus description for more information about D-BUS in general.
+
+%description -n %{libdbus}-1-tqt0 -l zh_CN.UTF-8
+%{name} 的运行库。
 
 %post -n %{libdbus}-1-tqt0
 /sbin/ldconfig || :
@@ -107,18 +104,16 @@ See the dbus description for more information about D-BUS in general.
 
 %package -n %{libdbus}-1-tqt-devel
 Summary:		Dbus bindings for the Trinity Qt [TQt] interface (Development Files)
-Group:			Development/Libraries/C and C++
+Summary(zh_CN.UTF-8): %{name} 的开发包
+Group:			Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Provides:		libdbus-1-tqt-devel = %{?epoch:%{epoch}:}%{version}-%{release}
 Requires:		%{libdbus}-1-tqt0 = %{?epoch:%{epoch}:}%{version}-%{release}
 
 Obsoletes:		trinity-dbus-1-tqt-devel < %{?epoch:%{epoch}:}%{version}-%{release}
 Provides:		trinity-dbus-1-tqt-devel = %{?epoch:%{epoch}:}%{version}-%{release}
 
-%if 0%{?suse_version}
-Requires:	dbus-1-devel
-%else
 Requires:	dbus-devel
-%endif
 
 %description -n %{libdbus}-1-tqt-devel
 D-BUS is a message bus, used for sending messages between applications.
@@ -128,6 +123,9 @@ terms of complexity.
 This package provides bindings for the Trinity Qt TQt interface.
 
 See the dbus description for more information about D-BUS in general.
+
+%description -n %{libdbus}-1-tqt-devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %post -n %{libdbus}-1-tqt-devel
 /sbin/ldconfig || :
@@ -142,12 +140,6 @@ See the dbus description for more information about D-BUS in general.
 %{_libdir}/libdbus-1-tqt.so
 %{_libdir}/libdbus-1-tqt.la
 %{_libdir}/pkgconfig/*.pc
-
-##########
-
-%if 0%{?pclinuxos} || 0%{?suse_version} && 0%{?opensuse_bs} == 0
-%debug_package
-%endif
 
 ##########
 

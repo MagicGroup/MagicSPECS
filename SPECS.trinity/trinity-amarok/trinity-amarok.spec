@@ -18,7 +18,7 @@
 # TDE variables
 %define tde_epoch 2
 %if "%{?tde_version}" == ""
-%define tde_version 14.0.0
+%define tde_version 14.0.1
 %endif
 %define tde_pkg amarok
 %define tde_prefix /opt/trinity
@@ -40,15 +40,13 @@ Epoch:		%{tde_epoch}
 Version:	1.4.10
 Release:	%{?!preversion:2}%{?preversion:0_%{preversion}}%{?dist}%{?_variant}
 Summary:	Media player for TDE
+Summary(zh_CN.UTF-8): TDE 下的媒体播放器
 Group:		Applications/Multimedia
+Group(zh_CN.UTF-8): 应用程序/多媒体
 URL:		http://www.trinitydesktop.org/
 #Url:		http://amarok.kde.org
 
-%if 0%{?suse_version}
-License:	GPL-2.0+
-%else
 License:	GPLv2+
-%endif
 
 #Vendor:		Trinity Desktop
 #Packager:	Francois Andriot <francois.andriot@free.fr>
@@ -74,16 +72,6 @@ BuildRequires:	gettext
 # ACL support
 BuildRequires:	libacl-devel
 
-# SUSE desktop files utility
-%if 0%{?suse_version}
-BuildRequires:	update-desktop-files
-%endif
-
-%if 0%{?opensuse_bs} && 0%{?suse_version}
-# for xdg-menu script
-BuildRequires:	brp-check-trinity
-%endif
-
 # ALSA support
 BuildRequires:	alsa-lib-devel
 
@@ -95,9 +83,7 @@ BuildRequires:	pcre-devel
 
 # LIBTOOL
 BuildRequires:	libtool
-%if 0%{?fedora} > 4 || 0%{?rhel} > 4
 BuildRequires:	libtool-ltdl-devel
-%endif
 
 BuildRequires:	libusb-devel
 BuildRequires:	mysql-devel
@@ -114,106 +100,51 @@ BuildRequires:	libidn-devel
 
 # GAMIN support
 #  Not on openSUSE.
-%if 0%{?rhel} || 0%{?fedora} || 0%{?mgaversion} || 0%{?mdkversion}
 %define with_gamin 1
 BuildRequires:	gamin-devel
-%endif
 
 # DBUS support
-%if 0%{?suse_version}
-BuildRequires:	dbus-1-devel
-%else
 BuildRequires:	dbus-devel
-%endif
 
 # DBUS-(T)QT support
-%if 0%{?rhel} == 4
-BuildRequires:	dbus-qt
-%else
 BuildRequires:	trinity-dbus-tqt-devel >= 1:0.63
-%endif
 
 # IFP support
 #  IFP package is broken under PCLinuxOS.
-%if 0%{?pclinuxos} == 0
-%if 0%{?fedora} || 0%{?mgaversion} || 0%{?mdkversion}
 %define with_ifp 1
 BuildRequires:	libifp-devel
-%endif
-%endif
 
 # KARMA support
-%if 0%{?mgaversion} || 0%{?mdkversion}
-%if 0%{?pclinuxos} == 0
-%define with_karma 1
-BuildRequires:	libkarma-devel
-BuildRequires:	karma-sharp
-%endif
-%endif
 
 # GPOD (ipod) support
-%if 0%{?rhel} >= 6 || 0%{?fedora} || 0%{?mdkversion} || 0%{?mgaversion} || 0%{?suse_version}
 %define with_gpod 1
 BuildRequires:	libgpod-devel >= 0.4.2
-%endif
 
 # MTP players
-%if 0%{?rhel} >= 6 || 0%{?fedora} || 0%{?mdkversion} || 0%{?mgaversion} || 0%{?suse_version}
 %define with_mtp 1
 BuildRequires:	libmtp-devel
 BuildRequires:	libmusicbrainz-devel
-%endif
 
 # Creative Nomad Jukebox
-%if 0%{?fedora} || 0%{?mgaversion} || 0%{?mdkversion} || 0%{?suse_version} >= 1220
 %define with_njb 1
 BuildRequires:	libnjb-devel
-%endif
 
 # VISUAL support
-%if 0%{?rhel} >= 4 || 0%{?fedora} || 0%{?mdkversion} || 0%{?mgaversion} || 0%{?suse_version}
 %define with_libvisual 1
 BuildRequires:	libvisual-devel
-%endif
 
 # TUNEPIMP support
-%if 0%{?mgaversion} && 0%{?mgaversion} <= 2
 BuildRequires:	libtunepimp-devel
-%endif
-%if 0%{?fedora} || 0%{?mdkversion} || 0%{?suse_version}
-BuildRequires:	libtunepimp-devel
-%endif
 
 # INOTIFY support
-%if 0%{?rhel} >= 5 || 0%{?fedora} || 0%{?mdkversion} || 0%{?mgaversion} || 0%{?suse_version}
 %define with_inotify 1
-%if 0%{?mgaversion} || 0%{?mdkversion}
-BuildRequires:	%{_lib}inotifytools-devel
-%endif
-%endif
 
 # XINE support
-%if 0%{?suse_version} || 0%{?mgaversion} || 0%{?mdkversion} || 0%{?fedora} == 18 || 0%{?fedora} == 19 || 0%{?rhel} >= 5
 %define with_xine 1
-%if 0%{?mgaversion} || 0%{?mdkversion}
-%if 0%{?pclinuxos}
-BuildRequires: %{_lib}xine-devel
-%else
-BuildRequires: %{_lib}xine1.2-devel
-%endif
-%endif
-%if 0%{?fedora} || 0%{?rhel}
 BuildRequires: xine-lib-devel
-%endif
-%if 0%{?suse_version}
-BuildRequires: libxine-devel
-%endif
-%endif
 
 # YAUAP support
-%if 0%{?rhel} >= 5 || 0%{?fedora} || 0%{?mdkversion} || 0%{?mgaversion} || 0%{?suse_version}
 %define with_yauap 1
-%endif
 
 # AKODE support
 %define with_akode 0
@@ -222,17 +153,13 @@ BuildRequires:	trinity-akode-devel
 %endif
 
 # MP4V2 support
-%if 0%{?rhel} || 0%{?fedora} || 0%{?mgaversion} || 0%{?mdkversion} || 0%{?suse_version}
 %define with_mp4v2 1
-BuildRequires:	libmp4v2-devel
-%endif
+BuildRequires:	mpeg4ip-devel
 
 # ruby
 BuildRequires:	ruby
 BuildRequires:	ruby-devel
-%if 0%{?fedora} >= 19
 BuildRequires:	rubypick
-%endif
 
 # To open the selected browser, works with Patch2
 Requires:		xdg-utils
@@ -247,6 +174,9 @@ Amarok is a multimedia player with:
  - audio effects, like reverb and compressor
  - compatible with the .m3u and .pls formats for playlists
  - nice GUI, integrates into the TDE look, but with a unique touch
+
+%description -l zh_CN.UTF-8
+这是一个媒体播放器。
 
 %files -f %{tde_pkg}.lang
 %defattr(-,root,root,-)
@@ -494,8 +424,9 @@ fi
 # Removes '.so' to avoid automatic -devel dependency
 %__rm -f $RPM_BUILD_ROOT%{tde_libdir}/libamarok.so
 
+magic_rpm_clean.sh
 # Locales
-%find_lang %{tde_pkg}
+%find_lang %{tde_pkg} || :
 
 # HTML
 for lang_dir in $RPM_BUILD_ROOT%{tde_tdedocdir}/HTML/* ; do

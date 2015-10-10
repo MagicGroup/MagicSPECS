@@ -1,11 +1,13 @@
 Summary: Timezone data
+Summary(zh_CN.UTF-8): 时区数据
 Name: tzdata
-Version: 2015a
-%define tzdata_version 2015a
-%define tzcode_version 2015a
-Release: 2%{?dist}
+Version:	2015g
+%define tzdata_version 2015g
+%define tzcode_version 2015g
+Release:	1%{?dist}
 License: Public Domain
 Group: System Environment/Base
+Group(zh_CN.UTF-8): 系统环境/基本
 URL: https://www.iana.org/time-zones
 Source0: ftp://ftp.iana.org/tz/releases/tzdata%{tzdata_version}.tar.gz
 Source1: ftp://ftp.iana.org/tz/releases/tzcode%{tzcode_version}.tar.gz
@@ -22,17 +24,27 @@ BuildArchitectures: noarch
 %description
 This package contains data files with rules for various timezones around
 the world.
+%description -l zh_CN.UTF-8
+世界时区数据。
 
 %package java
 Summary: Timezone data for Java
+Summary(zh_CN.UTF-8): Java 的时区数据
 Group: System Environment/Base
+Group(zh_CN.UTF-8): 系统环境/基本
 Source3: javazic.tar.gz
 Source4: javazic-1.8-37392f2f5d59.tar.xz
 Patch100: javazic-fixup.patch
-Patch101: javazic-exclusion-fix.patch
+Patch101: rebase-01.patch
+Patch102: rebase-02.patch
+Patch103: 7090844.patch
+Patch104: 7133138.patch
 
 %description java
 This package contains timezone information for use by Java runtimes.
+
+%description java -l zh_CN.UTF-8
+Java 的时区数据。
 
 %prep
 %setup -q -c -a 1
@@ -45,6 +57,9 @@ tar zxf %{SOURCE3} -C javazic
 pushd javazic
 %patch100
 %patch101
+%patch102
+%patch103
+%patch104
 
 # Hack alert! sun.tools may be defined and installed in the
 # VM. In order to guarantee that we are using IcedTea/OpenJDK
@@ -100,6 +115,7 @@ install -p -m 644 zone.tab iso3166.tab $RPM_BUILD_ROOT%{_datadir}/zoneinfo
 cp -prd javazi $RPM_BUILD_ROOT%{_datadir}/javazi
 mkdir -p $RPM_BUILD_ROOT%{_datadir}/javazi-1.8
 install -p -m 644 tzdb.dat $RPM_BUILD_ROOT%{_datadir}/javazi-1.8/
+magic_rpm_clean.sh
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -117,6 +133,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/javazi-1.8
 
 %changelog
+* Mon Oct 05 2015 Liu Di <liudidi@gmail.com> - 2015g-1
+- 更新到 2015g
+
 * Mon Feb 16 2015 Liu Di <liudidi@gmail.com> - 2015a-2
 - 为 Magic 3.0 重建
 

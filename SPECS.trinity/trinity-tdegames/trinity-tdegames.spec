@@ -22,7 +22,7 @@
 # TDE variables
 %define tde_epoch 2
 %if "%{?tde_version}" == ""
-%define tde_version 14.0.0
+%define tde_version 14.0.1
 %endif
 %define tde_pkg tdegames
 %define tde_prefix /opt/trinity
@@ -50,11 +50,7 @@ Release:		%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}%{?_variant}
 Group:			System/GUI/Other
 URL:			http://www.trinitydesktop.org/
 
-%if 0%{?suse_version}
-License:	GPL-2.0+
-%else
 License:	GPLv2+
-%endif
 
 #Vendor:		Trinity Project
 #Packager:	Francois Andriot <francois.andriot@free.fr>
@@ -63,6 +59,8 @@ Prefix:			%{tde_prefix}
 BuildRoot:		%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 Source0:		%{name}-%{version}%{?preversion:~%{preversion}}.tar.gz
+
+Patch1:			trinity-tdegames-14.0.1-tqt.patch
 
 BuildRequires:	trinity-arts-devel >= %{tde_epoch}:1.5.10
 BuildRequires:	trinity-tdelibs-devel >= %{tde_version}
@@ -74,16 +72,6 @@ BuildRequires:	gcc-c++
 BuildRequires:	desktop-file-utils
 BuildRequires:	fdupes
 BuildRequires:	libtool
-
-# SUSE desktop files utility
-%if 0%{?suse_version}
-BuildRequires:	update-desktop-files
-%endif
-
-%if 0%{?opensuse_bs} && 0%{?suse_version}
-# for xdg-menu script
-BuildRequires:	brp-check-trinity
-%endif
 
 Obsoletes:		trinity-kdegames < %{version}-%{release}
 Provides:		trinity-kdegames = %{version}-%{release}
@@ -1550,15 +1538,9 @@ update-desktop-database %{tde_datadir}/applications > /dev/null 2>&1 || :
 
 ##########
 
-%if 0%{?pclinuxos} || 0%{?suse_version} && 0%{?opensuse_bs} == 0
-%debug_package
-%endif
-
-##########
-
-
 %prep
 %setup -q -n %{name}-%{version}%{?preversion:~%{preversion}}
+%patch1 -p1
 
 %__cp -f "/usr/share/aclocal/libtool.m4" "admin/libtool.m4.in"
 %__cp -f "/usr/share/libtool/config/ltmain.sh" "admin/ltmain.sh" || %__cp -f "/usr/share/libtool/ltmain.sh" "admin/ltmain.sh"
@@ -1607,42 +1589,6 @@ ln -s . atlantik/libatlantic/.libs/.libs
 export PATH="%{tde_bindir}:${PATH}"
 %__rm -rf %{buildroot}
 %__make install DESTDIR=%{buildroot}
-
-# Updates applications categories for openSUSE
-%if 0%{?suse_version}
-%suse_update_desktop_file -r kasteroids      Game ArcadeGame
-%suse_update_desktop_file -r KGoldrunner     Game ArcadeGame
-%suse_update_desktop_file -r ksnake          Game ArcadeGame
-%suse_update_desktop_file -r kspaceduel      Game ArcadeGame
-%suse_update_desktop_file -r ktron           Game ArcadeGame
-%suse_update_desktop_file -r kfouleggs       Game BlocksGame
-%suse_update_desktop_file -r ksirtet         Game BlocksGame
-%suse_update_desktop_file -r klickety        Game BoardGame
-%suse_update_desktop_file -r ksmiletris      Game BlocksGame
-%suse_update_desktop_file -r ktuberling      Game KidsGame
-%suse_update_desktop_file -r atlantik        Game BoardGame
-%suse_update_desktop_file -r kbackgammon     Game BoardGame
-%suse_update_desktop_file -r kbattleship     Game BoardGame
-%suse_update_desktop_file -r kblackbox       Game BoardGame
-%suse_update_desktop_file -r kenolaba        Game BoardGame
-%suse_update_desktop_file -r kmahjongg       Game BoardGame
-%suse_update_desktop_file -r kreversi        Game BoardGame
-%suse_update_desktop_file -r kshisen         Game BoardGame
-%suse_update_desktop_file -r twin4           Game BoardGame
-%suse_update_desktop_file -r kpat            Game CardGame
-%suse_update_desktop_file -r kpoker          Game CardGame
-%suse_update_desktop_file -r lskat           Game CardGame
-%suse_update_desktop_file -r katomic         Game LogicGame
-%suse_update_desktop_file -r kjumpingcube    Game LogicGame
-%suse_update_desktop_file -r klines          Game LogicGame
-%suse_update_desktop_file -r -G "Tactical Game" knetwalk Game LogicGame
-%suse_update_desktop_file -r kmines          Game LogicGame
-%suse_update_desktop_file -r konquest        Game LogicGame
-%suse_update_desktop_file -r ksame           Game LogicGame
-%suse_update_desktop_file -r ksokoban        Game LogicGame
-%suse_update_desktop_file -r kbounce         Game LogicGame
-%suse_update_desktop_file -r kolf            Game SportsGame
-%endif
 
 # Links duplicate files
 %fdupes "%{?buildroot}"

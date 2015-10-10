@@ -18,7 +18,7 @@
 # TDE variables
 %define tde_epoch 2
 %if "%{?tde_version}" == ""
-%define tde_version 14.0.0
+%define tde_version 14.0.1
 %endif
 %define tde_pkg gtk-qt-engine
 %define tde_prefix /opt/trinity
@@ -40,14 +40,12 @@ Epoch:			%{tde_epoch}
 Version:		0.8
 Release:		%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}%{?_variant}
 Summary:		Theme engine using Qt for GTK+ 2.x and Trinity
+Summary(zh_CN.UTF-8): GTK+ 2.x 和 Trinity 使用 Qt 的主题引擎
 Group:			Applications/Utilities
+Group(zh_CN.UTF-8): 应用程序/工具
 URL:			http://www.trinitydesktop.org/
 
-%if 0%{?suse_version}
-License:	GPL-2.0+
-%else
 License:	GPLv2+
-%endif
 
 #Vendor:		Trinity Desktop
 #Packager:	Francois Andriot <francois.andriot@free.fr>
@@ -72,26 +70,7 @@ BuildRequires:	pkgconfig
 BuildRequires:	libtool
 
 # GTK2 support
-%if 0%{?fedora} || 0%{?suse_version} || 0%{?rhel}
 BuildRequires:	gtk2-devel
-%else
-%if 0%{?mgaversion} >= 5
-BuildRequires:	%{_lib}gtk+2.0-devel
-%else
-BuildRequires:	gtk+2.0-devel
-%endif
-%endif
-
-# SUSE desktop files utility
-%if 0%{?suse_version}
-BuildRequires:	update-desktop-files
-%endif
-
-%if 0%{?opensuse_bs} && 0%{?suse_version}
-# for xdg-menu script
-BuildRequires:	brp-check-trinity
-%endif
-
 
 %description
 The GTK-Qt Theme Engine (also known as gtk-qt-engine) is a GTK 2 theme engine
@@ -102,15 +81,10 @@ experience.
 Please note that this package is targeted at Trinity users and therefore provides
 a way to configure it from within KControl.
 
+%description -l zh_CN.UTF-8
+GTK2 和 Trinity 使用 Qt 的主题引擎。
 
 ##########
-
-%if 0%{?pclinuxos} || 0%{?suse_version} && 0%{?opensuse_bs} == 0
-%debug_package
-%endif
-
-##########
-
 
 %prep
 %setup -q -n %{name}-%{tde_version}%{?preversion:~%{preversion}}
@@ -149,8 +123,8 @@ fi
 export PATH="%{tde_bindir}:${PATH}"
 %__rm -rf %{buildroot}
 %__make install DESTDIR=%{buildroot} -C build
-
-%find_lang gtkqtengine
+magic_rpm_clean.sh
+%find_lang gtkqtengine || :
 
 # Adds TDE's specific GTKRC
 %__install -D -m 644 "%{SOURCE1}" "%{buildroot}%{tde_datadir}/kgtk/gtk-qt-engine.rc.sh"
@@ -162,7 +136,7 @@ export PATH="%{tde_bindir}:${PATH}"
 %__rm -rf %{buildroot}
 
 
-%files -f gtkqtengine.lang
+%files
 %defattr(-,root,root,-)
 %doc AUTHORS ChangeLog COPYING NEWS README TODO
 %{tde_tdelibdir}/kcm_kcmgtk.la

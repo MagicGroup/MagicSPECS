@@ -18,33 +18,27 @@
 # TDE variables
 %define tde_epoch 2
 %if "%{?tde_version}" == ""
-%define tde_version 14.0.0
+%define tde_version 14.0.1
 %endif
 %define tde_pkg tqca-tls
 %define tde_prefix /opt/trinity
 %define tde_includedir %{tde_prefix}/include
 %define tde_libdir %{tde_prefix}/%{_lib}
 
-%if 0%{?mdkversion} || 0%{?mgaversion} || 0%{?pclinuxos}
-%define libtqt3 %{_lib}tqt3
-%else
 %define libtqt3 libtqt3
-%endif
 
 
 Name:		trinity-%{tde_pkg}
 Epoch:		%{tde_epoch}
 Version:	1.0
-Release:	%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}%{?_variant}
+Release:	%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}%{?_variant}.1
 Summary:	TLS plugin for the TQt Cryptographic Architecture
+Summary(zh_CN.UTF-8): TQt 加密架构的 TLS 插件
 Group:		Applications/Internet
+Group(zh_CN.UTF-8): 应用程序/互联网
 URL:		http://delta.affinix.com/qca/
 
-%if 0%{?suse_version}
-License:	GPL-2.0+
-%else
 License:	GPLv2+
-%endif
 
 #Vendor:		Trinity Desktop
 #Packager:	Francois Andriot <francois.andriot@free.fr>
@@ -67,11 +61,16 @@ Cryptographic Architecture (TQCA).  TQCA is a library providing an easy API
 for several cryptographic algorithms to TQt programs.  This package only
 contains the TLS plugin.
 
+%description -l zh_CN.UTF-8
+TQt 加密架构的 TLS 插件。
+
 ##########
 
 %package -n %{libtqt3}-mt-tqca-tls
 Summary:	TLS plugin for the TQt Cryptographic Architecture
+Summary(zh_CN.UTF-8): TQt 加密架构的 TLS 插件
 Group:		Applications/Internet
+Group(zh_CN.UTF-8): 应用程序/互联网
 
 %description -n %{libtqt3}-mt-tqca-tls
 This is a plugin to provide SSL/TLS capability to programs that use the TQt
@@ -79,19 +78,14 @@ Cryptographic Architecture (TQCA).  TQCA is a library providing an easy API
 for several cryptographic algorithms to TQt programs.  This package only
 contains the TLS plugin.
 
+%description -n %{libtqt3}-mt-tqca-tls -l zh_CN.UTF-8
+TQt 加密架构的 TLS 插件。
+
 %files -n %{libtqt3}-mt-tqca-tls
 %defattr(0644,root,root,0755)
 %doc README COPYING
 %dir %{_libdir}/tqt3/plugins/crypto
 %{_libdir}/tqt3/plugins/crypto/libtqca-tls.so
-
-##########
-
-%if 0%{?pclinuxos} || 0%{?suse_version} && 0%{?opensuse_bs} == 0
-%debug_package
-%endif
-
-##########
 
 %prep
 %setup -q -n %{name}-%{tde_version}%{?preversion:~%{preversion}}
@@ -116,5 +110,8 @@ unset QTDIR QTINC QTLIB
 
 
 %changelog
+* Tue Oct 06 2015 Liu Di <liudidi@gmail.com> - 2:1.0-1.1
+- 为 Magic 3.0 重建
+
 * Fri Jul 05 2013 Francois Andriot <francois.andriot@free.fr> - 2:1.0-1
 - Initial release for TDE 14.0.0

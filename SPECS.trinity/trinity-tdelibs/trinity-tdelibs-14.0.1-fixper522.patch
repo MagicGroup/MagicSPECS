@@ -1,0 +1,12 @@
+diff -ur trinity-tdelibs-14.0.1.orig/dcop/dcopidlng/kdocAstUtil.pm trinity-tdelibs-14.0.1/dcop/dcopidlng/kdocAstUtil.pm
+--- trinity-tdelibs-14.0.1.orig/dcop/dcopidlng/kdocAstUtil.pm	2015-10-06 05:38:24.533790049 +0000
++++ trinity-tdelibs-14.0.1/dcop/dcopidlng/kdocAstUtil.pm	2015-10-06 05:39:16.604788715 +0000
+@@ -438,7 +438,7 @@
+ 		dumpAst( $kid );
+ 	}
+ 
+-	print "\t" x $depth, "Documentation nodes:\n" if defined 
++	print "\t" x $depth, "Documentation nodes:\n" if 
+ 		@{ $node->{Doc}->{ "Text" }};
+ 
+ 	foreach $kid ( @{ $node->{Doc}->{ "Text" }} ) {

@@ -22,7 +22,7 @@
 # TDE variables
 %define tde_epoch 2
 %if "%{?tde_version}" == ""
-%define tde_version 14.0.0
+%define tde_version 14.0.1
 %endif
 %define tde_pkg libkexiv2
 %define tde_prefix /opt/trinity
@@ -41,26 +41,20 @@
 %define _variant .opt
 %endif
 
-%if 0%{?mdkversion} || 0%{?mgaversion} || 0%{?pclinuxos}
-%define libkexiv %{_lib}kexiv
-%else
 %define libkexiv libkexiv
-%endif
 
 
 Name:		trinity-%{tde_pkg}
 Summary:	Qt like interface for the libexiv2 library (runtime) [Trinity]
-Group:		System/Libraries
+Summary(zh_CN.UTF-8): libexiv2 库的 Qt 风格接口
+Group: System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 Epoch:		2
 Version:	0.1.7
 Release:	%{?!preversion:2}%{?preversion:1_%{preversion}}%{?dist}%{?_variant}
 URL:		http://www.trinitydesktop.org/
 
-%if 0%{?suse_version}
-License:	GPL-2.0+
-%else
 License:	GPLv2+
-%endif
 
 #Vendor:		Trinity Desktop
 #Packager:	Francois Andriot <francois.andriot@free.fr>
@@ -70,6 +64,8 @@ BuildRoot:		%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 Source0:		%{name}-%{tde_version}%{?preversion:~%{preversion}}.tar.gz
 
+Patch1:		trinity-libkexiv2-14.0.1-tqt.patch
+
 BuildRequires:	trinity-tdelibs-devel >= %{tde_version}
 BuildRequires:	desktop-file-utils
 BuildRequires:	gettext
@@ -77,23 +73,10 @@ BuildRequires:	gcc-c++
 
 # AUTOTOOLS
 BuildRequires: automake autoconf libtool
-%if 0%{?mgaversion} || 0%{?mdkversion}
-BuildRequires:	%{_lib}ltdl-devel
-%endif
-%if 0%{?fedora} || 0%{?rhel} >= 5 || 0%{?suse_version} >= 1220
 BuildRequires:	libtool-ltdl-devel
-%endif
 
 # EXIV2
-%if 0%{?mgaversion} || 0%{?mdkversion}
-BuildRequires:	%{_lib}exiv2-devel
-%endif
-%if 0%{?rhel} || 0%{?fedora}
 BuildRequires:	exiv2-devel
-%endif
-%if 0%{?suse_version}
-BuildRequires:	libexiv2-devel
-%endif
 
 %description
 libkexif2 contains the library of libkexiv2.
@@ -103,7 +86,9 @@ Libkexif is a wrapper around Exiv2 library to manipulate pictures metadata.
 
 %package -n trinity-%{libkexiv}2-5
 Summary:	Qt like interface for the libexiv2 library (runtime) [Trinity]
-Group:		System/Libraries
+Summary(zh_CN.UTF-8): %{name} 的运行库
+Group: System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 
 Obsoletes:	trinity-%{tde_pkg} < %{?epoch:%{epoch}:}%{version}-%{release}
 Provides:	trinity-%{tde_pkg} = %{?epoch:%{epoch}:}%{version}-%{release}
@@ -111,6 +96,9 @@ Provides:	trinity-%{tde_pkg} = %{?epoch:%{epoch}:}%{version}-%{release}
 %description -n trinity-%{libkexiv}2-5
 libkexif2 contains the library of libkexiv2.
 Libkexif is a wrapper around Exiv2 library to manipulate pictures metadata.
+
+%description -n trinity-%{libkexiv}2-5 -l zh_CN.UTF-8
+%{name} 的运行库。
 
 %files -n trinity-%{libkexiv}2-5
 %defattr(-,root,root,-)
@@ -126,8 +114,10 @@ Libkexif is a wrapper around Exiv2 library to manipulate pictures metadata.
 ##########
 
 %package -n trinity-%{libkexiv}2-devel
-Group:		Development/Libraries/Other
+Group:		Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Summary:	Qt like interface for the libexiv2 library (development) [Trinity]
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Requires:	trinity-%{libkexiv}2-5 = %{?epoch:%{epoch}:}%{version}-%{release}
 
 Obsoletes:	trinity-%{tde_pkg}-devel < %{?epoch:%{epoch}:}%{version}-%{release}
@@ -137,6 +127,9 @@ Provides:	trinity-%{tde_pkg}-devel = %{?epoch:%{epoch}:}%{version}-%{release}
 libkexif2-devel contains development files and documentation for libkexiv2
 library.  The library documentation is available on kexiv2.h header file.
 Libkexif is a wrapper around Exiv2 library to manipulate pictures metadata.
+
+%description  -n trinity-%{libkexiv}2-devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %files -n trinity-%{libkexiv}2-devel
 %defattr(-,root,root,-)
@@ -153,14 +146,9 @@ Libkexif is a wrapper around Exiv2 library to manipulate pictures metadata.
 
 ##########
 
-%if 0%{?pclinuxos} || 0%{?suse_version} && 0%{?opensuse_bs} == 0
-%debug_package
-%endif
-
-##########
-
 %prep
 %setup -q -n %{name}-%{tde_version}%{?preversion:~%{preversion}}
+%patch1 -p1
 
 %__cp -f "/usr/share/aclocal/libtool.m4" "admin/libtool.m4.in"
 %__cp -f "/usr/share/libtool/config/ltmain.sh" "admin/ltmain.sh" || %__cp -f "/usr/share/libtool/ltmain.sh" "admin/ltmain.sh"
@@ -192,12 +180,6 @@ export PATH="%{tde_bindir}:${PATH}"
 export PATH="%{tde_bindir}:${PATH}"
 %__rm -rf %{buildroot}
 %__make install DESTDIR=%{buildroot}
-
-# RHEL4: pkgconfig files do not support 'URL' keyword .
-%if 0%{?rhel} == 4
-%__sed -i %{?buildroot}%{tde_libdir}/pkgconfig/*.pc -e "s/^URL: /#URL: /"
-%endif
-
 
 %clean
 %__rm -rf %{buildroot}

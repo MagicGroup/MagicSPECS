@@ -21,7 +21,7 @@
 
 # TDE variables
 %if "%{?tde_version}" == ""
-%define tde_version 14.0.0
+%define tde_version 14.0.1
 %endif
 %define tde_pkg tdeaddons
 %define tde_prefix /opt/trinity
@@ -48,11 +48,7 @@ Release:	%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}%{?_variant}
 Group:		User Interface/Desktops
 URL:		http://www.trinitydesktop.org/
 
-%if 0%{?suse_version}
-License:	GPL-2.0+
-%else
 License:	GPLv2+
-%endif
 
 #Vendor:		Trinity Project
 #Packager:	Francois Andriot <francois.andriot@free.fr>
@@ -81,16 +77,6 @@ BuildRequires:	gcc-c++
 BuildRequires:	pkgconfig
 BuildRequires:	fdupes
 
-# SUSE desktop files utility
-%if 0%{?suse_version}
-BuildRequires:	update-desktop-files
-%endif
-
-%if 0%{?opensuse_bs} && 0%{?suse_version}
-# for xdg-menu script
-BuildRequires:	brp-check-trinity
-%endif
-
 # SDL support
 BuildRequires: SDL-devel
 
@@ -105,46 +91,25 @@ BuildRequires:	libidn-devel
 
 # GAMIN support
 #  Not on openSUSE.
-%if 0%{?rhel} || 0%{?fedora} || 0%{?mgaversion} || 0%{?mdkversion}
 %define with_gamin 1
 BuildRequires:	gamin-devel
-%endif
 
 # PCRE support
-%if 0%{?rhel} >=5 || 0%{?fedora} || 0%{?mgaversion} || 0%{?mdkversion} || 0%{?suse_version}
 %define with_pcre 1
 BuildRequires:	pcre-devel
-%endif
 
 # ACL support
 BuildRequires:	libacl-devel
 
 # DB4/DB5 support
-%if 0%{?rhel} || 0%{?fedora} || 0%{?suse_version} >= 1220 || 0%{?mdkversion} || 0%{?mgaversion}
 %define with_db 1
-%if 0%{?mgaversion} || 0%{?mdkversion}
-%if 0%{?pclinuxos}
-BuildRequires:	db4-devel
-%else
-BuildRequires:	db5-devel
-%endif
-%endif
-%if 0%{?fedora} >= 18 || 0%{?rhel} >= 7
 BuildRequires:	libdb-devel
 BuildRequires:	libdb-cxx-devel
-%endif
-%if 0%{?suse_version}
-BuildRequires:	libdb-4_8-devel
-%endif
-%if 0%{?rhel} && 0%{?rhel} <= 6
-BuildRequires:	db4-devel
-%endif
-%endif
 
 # XMMS support: no, always disabled, even on Fedora
 #%if 0%{?fedora}
-#define with_xmms 1
-#BuildRequires:	xmms-devel
+%define with_xmms 1
+BuildRequires:	xmms-devel
 #%endif
 
 Requires: trinity-atlantikdesigner = %{version}-%{release}
@@ -447,30 +412,12 @@ and various local news sources.
 %package -n trinity-konq-plugins
 Summary:	plugins for Konqueror, the Trinity file/web/doc browser
 Group:		Applications/Utilities
-%if 0%{?mgaversion} || 0%{?mdkversion}
-%if 0%{?pclinuxos} == 0
-Requires:	%{_lib}jpeg8
-%endif
-%endif
-%if 0%{?rhel} || 0%{?fedora}
 Requires:	libjpeg
-%endif
-%if 0%{?suse_version} == 1220
-Requires:	libjpeg62
-%endif
-%if 0%{?pclinuxos}
-Requires:	%{_lib}jpeg62
-%endif
-%if 0%{?suse_version} == 1230
-Requires:	libjpeg8
-%endif
 Requires:	python
 Requires:	rsync
 #Requires:	unison
 Requires:	trinity-konqueror
-%if 0%{?fedora}
 Requires:	python-exif
-%endif
 
 %description -n trinity-konq-plugins
 This package contains a variety of useful plugins for Konqueror, the

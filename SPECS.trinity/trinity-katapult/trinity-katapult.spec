@@ -18,7 +18,7 @@
 # TDE variables
 %define tde_epoch 2
 %if "%{?tde_version}" == ""
-%define tde_version 14.0.0
+%define tde_version 14.0.1
 %endif
 %define tde_pkg katapult
 %define tde_prefix /opt/trinity
@@ -40,14 +40,12 @@ Epoch:			%{tde_epoch}
 Version:		0.3.2.1
 Release:		%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}%{?_variant}
 Summary:		Faster access to applications, bookmarks, and other items.
+Summary(zh_CN.UTF-8): 快速访问程序、书签和其它项目
 Group:			Applications/Utilities
+Group(zh_CN.UTF-8): 应用程序/工具
 URL:			http://www.trinitydesktop.org/
 
-%if 0%{?suse_version}
-License:	GPL-2.0+
-%else
 License:	GPLv2+
-%endif
 
 #Vendor:		Trinity Desktop
 #Packager:	Francois Andriot <francois.andriot@free.fr>
@@ -56,6 +54,7 @@ Prefix:			%{_prefix}
 BuildRoot:		%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 Source0:		%{name}-%{tde_version}%{?preversion:~%{preversion}}.tar.gz
+Patch1:			%{name}-14.0.1-tqt.patch
 
 BuildRequires:	trinity-tdelibs-devel >= %{tde_version}
 BuildRequires:	trinity-tdebase-devel >= %{tde_version}
@@ -65,16 +64,6 @@ BuildRequires:	autoconf automake libtool m4
 BuildRequires:	gcc-c++
 BuildRequires:	pkgconfig
 
-# SUSE desktop files utility
-%if 0%{?suse_version}
-BuildRequires:	update-desktop-files
-%endif
-
-%if 0%{?opensuse_bs} && 0%{?suse_version}
-# for xdg-menu script
-BuildRequires:	brp-check-trinity
-%endif
-
 %description
 Katapult is an application for TDE, designed to allow faster access to
 applications, bookmarks, and other items. It is plugin-based, so it can
@@ -82,18 +71,14 @@ launch anything that is has a plugin for. Its display is driven by
 plugins as well, so its appearance is completely customizable. It was
 inspired by Quicksilver for OS X. 
 
+%description -l zh_CN.UTF-8
+快速访问程序、书签和其它项目。
 
 ##########
-
-%if 0%{?pclinuxos} || 0%{?suse_version} && 0%{?opensuse_bs} == 0
-%debug_package
-%endif
-
-##########
-
 
 %prep
 %setup -q -n %{name}-%{tde_version}%{?preversion:~%{preversion}}
+%patch1 -p1
 
 %__cp "/usr/share/aclocal/libtool.m4" "admin/libtool.m4.in"
 %__cp "/usr/share/libtool/config/ltmain.sh" "admin/ltmain.sh" || %__cp "/usr/share/libtool/ltmain.sh" "admin/ltmain.sh"
@@ -127,8 +112,8 @@ export PATH="%{tde_bindir}:${PATH}"
 export PATH="%{tde_bindir}:${PATH}"
 %__rm -rf %{buildroot}
 %__make install DESTDIR=%{buildroot}
-
-%find_lang %{tde_pkg}
+magic_rpm_clean.sh
+%find_lang %{tde_pkg} || :
 
 # Removes useless files (-devel ?)
 %__rm -f %{?buildroot}%{tde_libdir}/*.so
@@ -136,10 +121,6 @@ export PATH="%{tde_bindir}:${PATH}"
 
 # Fix desktop files (openSUSE only)
 echo "OnlyShowIn=TDE;" >>"%{?buildroot}%{tde_tdeappdir}/%{tde_pkg}.desktop"
-%if 0%{?suse_version}
-%suse_update_desktop_file -G "Application Launcher" katapult DesktopUtility
-%endif
-
 
 %clean
 %__rm -rf %{buildroot}
@@ -163,7 +144,7 @@ done
 update-desktop-database %{tde_appdir} &> /dev/null
 
 
-%files -f %{tde_pkg}.lang
+%files 
 %defattr(-,root,root,-)
 %doc AUTHORS COPYING
 %{tde_bindir}/katapult

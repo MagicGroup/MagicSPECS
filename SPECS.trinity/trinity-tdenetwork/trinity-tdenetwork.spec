@@ -22,7 +22,7 @@
 # TDE variables
 %define tde_epoch 2
 %if "%{?tde_version}" == ""
-%define tde_version 14.0.0
+%define tde_version 14.0.1
 %endif
 %define tde_pkg tdenetwork
 %define tde_prefix /opt/trinity
@@ -55,11 +55,7 @@ Version:		%{tde_version}
 Release:		%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}%{?_variant}
 URL:			http://www.trinitydesktop.org/
 
-%if 0%{?suse_version}
-License:	GPL-2.0+
-%else
 License:	GPLv2+
-%endif
 
 #Vendor:		Trinity Desktop
 #Packager:	Francois Andriot <francois.andriot@free.fr>
@@ -82,21 +78,6 @@ BuildRequires:	gcc-c++
 BuildRequires:	desktop-file-utils
 BuildRequires:	fdupes
 
-# SUSE desktop files utility
-%if 0%{?suse_version}
-BuildRequires:	update-desktop-files
-%endif
-
-%if 0%{?opensuse_bs} && 0%{?suse_version}
-# for xdg-menu script
-BuildRequires:	brp-check-trinity
-%endif
-
-# for set_permissions macro
-%if 0%{?suse_version}
-PreReq: permissions
-%endif
-
 # OPENSSL support
 BuildRequires:	openssl-devel
 
@@ -104,55 +85,29 @@ BuildRequires:	openssl-devel
 BuildRequires:	gnutls-devel
 
 # SQLITE support
-%if 0%{?mgaversion} || 0%{?mdkversion}
-BuildRequires:	sqlite3-devel
-%else
 BuildRequires:	sqlite-devel
-%endif
 
 # GADU support
-%if 0%{?fedora} || 0%{?mdkversion} || 0%{?mgaversion} || 0%{?suse_version}
 %define with_gadu 1
 BuildRequires:	libgadu-devel
-%endif
 
 # PCRE support
 BuildRequires:	pcre-devel
 
 # GAMIN support
 #  Not on openSUSE.
-%if 0%{?rhel} || 0%{?fedora} || 0%{?mgaversion} || 0%{?mdkversion}
 %define with_gamin 1
 BuildRequires:	gamin-devel
-%endif
 
 # XTST support
-%if 0%{?fedora} >= 5 || 0%{?rhel} >= 5 || 0%{?suse_version} >= 1210
 BuildRequires:	libXtst-devel
-%endif
-%if 0%{?mdkversion} || 0%{?mgaversion}
-BuildRequires:	libxtst-devel
-%endif
 
 # XMU support
-%if 0%{?suse_version} == 1140
-BuildRequires:	xorg-x11-libXmu-devel
-%endif
-%if 0%{?rhel} || 0%{?fedora} || 0%{?suse_version} >= 1210
 BuildRequires: libXmu-devel
-%endif
-%if 0%{?mdkversion} || 0%{?mgaversion} >= 4
-BuildRequires: libxmu-devel
-%endif
-%if 0%{?mgaversion} == 2 || 0%{?mgaversion} == 3
-BuildRequires:	%{_lib}xmu%{?mgaversion:6}-devel
-%endif
 
 # Other stuff
-%if 0%{?fedora} >= 5 || 0%{?rhel} >= 5
 BuildRequires:	libXScrnSaver-devel
 BuildRequires:	libXxf86vm-devel
-%endif
 
 # Fedora review:  http://bugzilla.redhat.com/195486
 
@@ -165,25 +120,12 @@ BuildRequires:	libXxf86vm-devel
 
 # Wifi support
 %if "%{?_with_wifi:1}" == "1"
-%if 0%{?fedora} >= 6 || 0%{?rhel} >= 5
 BuildRequires: wireless-tools-devel
-%endif
-%if 0%{?mgaversion} == 2 || 0%{?mdkversion}
-BuildRequires:	%{_lib}iw29-devel
-%endif
-%if 0%{?rhel} == 5 || 0%{?suse_version}
-BuildRequires: wireless-tools
-%endif
-%if 0%{?suse_version} || 0%{?mgaversion} >= 3
-BuildRequires:	libiw-devel
-%endif
 %endif
 
 # OpenSLP support
-%if 0%{?rhel} >= 5 || 0%{?fedora} || 0%{?mdkversion} || 0%{?mgaversion} || 0%{?suse_version}
 %define with_openslp 1
 BuildRequires: openslp-devel
-%endif
 
 %ifarch %{ix86}
 # BR: /usr/include/valgrind/valgrind.h
@@ -193,12 +135,7 @@ BuildRequires: valgrind
 %{?_with_xmms:BuildRequires: xmms-devel}
 
 # V4L support
-%if 0%{?rhel} >= 6 || 0%{?fedora} >= 15 || 0%{?suse_version}
 BuildRequires:	libv4l-devel
-%endif
-%if 0%{?mgaversion} || 0%{?mdkversion}
-BuildRequires:	%{_lib}v4l-devel
-%endif
 
 # XML support
 BuildRequires:	libxml2-devel
@@ -207,11 +144,7 @@ BuildRequires:	libxslt-devel
 #jabber
 BuildRequires:	libidn-devel
 #jabber/jingle
-%if 0%{?suse_version}
-BuildRequires:	libexpat-devel
-%else
 BuildRequires:	expat-devel
-%endif
 BuildRequires:	glib2-devel
 BuildRequires:	speex-devel
 # jabber/ssl
@@ -222,10 +155,8 @@ Requires:		jasper
 BuildRequires:	libacl-devel
 
 # MEANWHILE support
-%if 0%{?rhel} >= 6 || 0%{?fedora} >= 15 || 0%{?suse_version}
 %define with_meanwhile 1
 BuildRequires:	meanwhile-devel
-%endif
 
 # ORTP support
 #if 0%{?rhel} >= 6 || 0#{?fedora} >= 15
@@ -233,18 +164,14 @@ BuildRequires:	meanwhile-devel
 #endif
 
 # SPEEX support
-%if 0%{?rhel} >= 5 || 0%{?fedora} >= 15 || 0%{?suse_version} || 0%{?mdkversion} || 0%{?mgaversion}
 %define with_speex 1
 BuildRequires:	speex-devel
-%endif
 
 # CONSOLEHELPER (usermode) support
-%if 0%{?rhel} || 0%{?fedora} || 0%{?mgaversion} || 0%{?mdkversion}
 %define with_consolehelper 1
 
 # Avoids relinking, which breaks consolehelper
 %define dont_relink 1
-%endif
 
 Obsoletes:	trinity-kdenetwork < %{version}-%{release}
 Provides:	trinity-kdenetwork = %{version}-%{release}
@@ -1197,12 +1124,6 @@ update-desktop-database 2> /dev/null || :
 
 %postun -n trinity-kdnssd
 update-desktop-database 2> /dev/null || : 
-
-##########
-
-%if 0%{?pclinuxos} || 0%{?suse_version} && 0%{?opensuse_bs} == 0
-%debug_package
-%endif
 
 ##########
 

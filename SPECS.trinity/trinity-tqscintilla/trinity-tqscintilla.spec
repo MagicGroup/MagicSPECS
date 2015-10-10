@@ -18,33 +18,27 @@
 # TDE variables
 %define tde_epoch 2
 %if "%{?tde_version}" == ""
-%define tde_version 14.0.0
+%define tde_version 14.0.1
 %endif
 %define tde_pkg tqscintilla
 %define tde_prefix /opt/trinity
 %define tde_datadir %{tde_prefix}/share
 %define tde_tdedocdir %{tde_datadir}/doc/tde
 
-%if 0%{?mdkversion} || 0%{?mgaversion} || 0%{?pclinuxos}
-%define libtqscintilla %{_lib}tqscintilla
-%else
 %define libtqscintilla libtqscintilla
-%endif
 
 
 Name:		trinity-%{tde_pkg}
 Epoch:		%{tde_epoch}
 Version:	1.7.1
-Release:	%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}%{?_variant}
+Release:	%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}%{?_variant}.1
 Summary:	TQt source code editing component based on Scintilla
-Group:		Development/Libraries/C and C++
+Summary(zh_CN.UTF-8): 基于 Scintilla 的 TQt 源码编辑组件
+Group:		Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 URL:		http://www.trinitydesktop.org/
 
-%if 0%{?suse_version}
-License:	GPL-2.0+
-%else
 License:	GPLv2+
-%endif
 
 #Vendor:		Trinity Desktop
 #Packager:	Francois Andriot <francois.andriot@free.fr>
@@ -142,12 +136,6 @@ This package contains the documentation for tqscintilla.
 
 ##########
 
-%if 0%{?pclinuxos} || 0%{?suse_version} && 0%{?opensuse_bs} == 0
-%debug_package
-%endif
-
-##########
-
 %prep
 %setup -q -n %{name}-%{tde_version}%{?preversion:~%{preversion}}
 
@@ -226,5 +214,8 @@ chmod a-x %{buildroot}%{_includedir}/tqscintilla/*.h
 
 
 %changelog
+* Tue Oct 06 2015 Liu Di <liudidi@gmail.com> - 2:1.7.1-1.1
+- 为 Magic 3.0 重建
+
 * Fri Jul 05 2013 Francois Andriot <francois.andriot@free.fr> - 2:1.7.1-1
 - Initial release for TDE 14.0.0

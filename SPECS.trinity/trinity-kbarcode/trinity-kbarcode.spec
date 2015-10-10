@@ -18,7 +18,7 @@
 # TDE variables
 %define tde_epoch 2
 %if "%{?tde_version}" == ""
-%define tde_version 14.0.0
+%define tde_version 14.0.1
 %endif
 %define tde_pkg kbarcode
 %define tde_prefix /opt/trinity
@@ -40,14 +40,12 @@ Epoch:			%{tde_epoch}
 Version:		2.0.7
 Release:		%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}%{?_variant}
 Summary:		barcode and label printing application for Trinity
+Summary(zh_CN.UTF-8): TDE 下的条码和标签打印程序
 Group:			Applications/Utilities
+Group(zh_CN.UTF-8): 应用程序/工具
 URL:			http://www.kbarcode.net
 
-%if 0%{?suse_version}
-License:	GPL-2.0+
-%else
 License:	GPLv2+
-%endif
 
 #Vendor:		Trinity Desktop
 #Packager:	Francois Andriot <francois.andriot@free.fr>
@@ -57,6 +55,7 @@ BuildRoot:		%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 Source0:		%{name}-%{tde_version}%{?preversion:~%{preversion}}.tar.gz
 
+Patch1:			%{name}-14.0.1-tqt.patch
 
 BuildRequires:	trinity-tdelibs-devel >= %{tde_version}
 BuildRequires:	trinity-tdebase-devel >= %{tde_version}
@@ -67,16 +66,6 @@ BuildRequires:	gettext
 BuildRequires:	autoconf automake libtool m4
 BuildRequires:	gcc-c++
 BuildRequires:	pkgconfig
-
-# SUSE desktop files utility
-%if 0%{?suse_version}
-BuildRequires:	update-desktop-files
-%endif
-
-%if 0%{?opensuse_bs} && 0%{?suse_version}
-# for xdg-menu script
-BuildRequires:	brp-check-trinity
-%endif
 
 # PCRE support
 BuildRequires:	pcre-devel
@@ -102,6 +91,9 @@ might know). All major types of barcodes like EAN, UPC, CODE39 and ISBN are
 supported. Even complex 2D barcodes are supported using third party tools. The
 generated barcodes can be directly printed or you can export them into images
 to use them in another application.
+
+%description -l zh_CN.UTF-8
+TDE 下的条码和标签打印程序。
 
 %post
 touch --no-create %{tde_datadir}/icons/hicolor || :
@@ -135,11 +127,15 @@ update-desktop-database %{tde_appdir} &> /dev/null
 
 %package tdefile-plugin
 Summary:		tdefile-plugin for %{name}
+Summary(zh_CN.UTF-8): %{name} 的 tdefile 插件
 Group:			Applications/Utilities
+Group(zh_CN.UTF-8): 应用程序/工具
 #Requires:		%{name} = %{?epoch:%{epoch}:}%{version}-%{release}
 
 %description tdefile-plugin
 %{summary}.
+%description tdefile-plugin -l zh_CN.UTF-8
+%{name} 的 tdefile 插件。
 
 %files tdefile-plugin
 %defattr(-,root,root,-)
@@ -149,14 +145,9 @@ Group:			Applications/Utilities
 
 ##########
 
-%if 0%{?pclinuxos} || 0%{?suse_version} && 0%{?opensuse_bs} == 0
-%debug_package
-%endif
-
-##########
-
 %prep
 %setup -q -n %{name}-%{tde_version}%{?preversion:~%{preversion}}
+%patch1 -p1
 
 %__cp "/usr/share/aclocal/libtool.m4" "admin/libtool.m4.in"
 %__cp "/usr/share/libtool/config/ltmain.sh" "admin/ltmain.sh" || %__cp "/usr/share/libtool/ltmain.sh" "admin/ltmain.sh"

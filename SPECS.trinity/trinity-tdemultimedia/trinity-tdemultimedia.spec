@@ -22,7 +22,7 @@
 # TDE variables
 %define tde_epoch 2
 %if "%{?tde_version}" == ""
-%define tde_version 14.0.0
+%define tde_version 14.0.1
 %endif
 %define tde_pkg tdemultimedia
 %define tde_prefix /opt/trinity
@@ -45,15 +45,11 @@
 Name:		trinity-%{tde_pkg}
 Summary:	Multimedia applications for the Trinity Desktop Environment
 Version:	%{tde_version}
-Release:	%{?!preversion:2}%{?preversion:0_%{preversion}}%{?dist}%{?_variant}
+Release:	%{?!preversion:2}%{?preversion:0_%{preversion}}%{?dist}%{?_variant}.1
 Group:		Productivity/Multimedia/Sound/Utilities
 URL:		http://www.trinitydesktop.org/
 
-%if 0%{?suse_version}
-License:	GPL-2.0+
-%else
 License:	GPLv2+
-%endif
 
 #Vendor:		Trinity Project
 #Packager:	Francois Andriot <francois.andriot@free.fr>
@@ -62,6 +58,7 @@ Prefix:		%{tde_prefix}
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 Source0:	%{name}-%{version}%{?preversion:~%{preversion}}.tar.gz
+Patch1:		trinity-tdemultimedia-14.0.1-tqt.patch
 
 Obsoletes:	trinity-kdemultimedia < %{version}-%{release}
 Provides:	trinity-kdemultimedia = %{version}-%{release}
@@ -80,16 +77,6 @@ BuildRequires:	autoconf automake libtool m4
 BuildRequires:	gcc-c++
 BuildRequires:	fdupes
 BuildRequires:	desktop-file-utils
-
-# SUSE desktop files utility
-%if 0%{?suse_version}
-BuildRequires:	update-desktop-files
-%endif
-
-%if 0%{?opensuse_bs} && 0%{?suse_version}
-# for xdg-menu script
-BuildRequires:	brp-check-trinity
-%endif
 
 # TAGLIB support
 %define with_taglib 1
@@ -119,99 +106,25 @@ BuildRequires:	cdparanoia
 #BuildRequires:	libmpg123-devel
 
 # CDDA support
-%if 0%{?mgaversion} || 0%{?mdkversion}
-BuildRequires:	libcdda-devel
-%endif
-%if 0%{?rhel} || 0%{?fedora} || 0%{?suse_version}
 BuildRequires:	cdparanoia-devel
-%endif
 
 # FLAC support
-%if 0%{?mgaversion} || 0%{?mdkversion}
-%if 0%{?pclinuxos}
-BuildRequires:	libflac-devel
-%else
-BuildRequires:	%{_lib}flac-devel
-%endif
-%endif
-%if 0%{?rhel} || 0%{?fedora} || 0%{?suse_version}
 BuildRequires:	flac-devel
-%endif
 
 # GSTREAMER support
-%if 0%{?mgaversion} || 0%{?mdkversion}
-%if 0%{?pclinuxos}
-BuildRequires:	libgstreamer0.10-devel
-%else
-BuildRequires:	%{_lib}gstreamer0.10-devel
-%endif
-%endif
-%if 0%{?rhel} || 0%{?fedora}
 BuildRequires:	gstreamer-devel
-%endif
-%if 0%{?suse_version}
-BuildRequires:	gstreamer-0_10-devel
-%endif
 
 # X11 Libraries
-%if 0%{?mgaversion} || 0%{?mdkversion}
-BuildRequires:	%{_lib}xxf86dga-devel
-BuildRequires:	%{_lib}xxf86vm-devel
-%if 0%{?mgaversion} >= 4
-BuildRequires:	%{_lib}xtst-devel
-%else
-BuildRequires:	%{_lib}xtst%{?mgaversion:6}-devel
-%endif
-%endif
-%if 0%{?rhel} == 4
-BuildRequires:	xorg-x11-devel
-%endif
-%if 0%{?rhel} >= 5 || 0%{?fedora} || 0%{?suse_version} >= 1220
 BuildRequires:	libXxf86dga-devel
 BuildRequires:	libXxf86vm-devel
-%endif
 
 # XINE support
-%if 0%{?suse_version} || 0%{?mgaversion} || 0%{?mdkversion} || 0%{?fedora} == 18 || 0%{?fedora} == 19 || 0%{?rhel} >= 5
 %define with_xine 1
-%if 0%{?mgaversion} || 0%{?mdkversion}
-%if 0%{?pclinuxos}
-BuildRequires: %{_lib}xine-devel
-%else
-BuildRequires: %{_lib}xine1.2-devel
-%endif
-%endif
-%if 0%{?fedora} || 0%{?rhel}
 BuildRequires: xine-lib-devel
-%endif
-%if 0%{?suse_version}
-BuildRequires: libxine-devel
-%endif
-%endif
 
 # LAME support
-%if 0%{?opensuse_bs} == 0
-%if 0%{?mdkversion} || 0%{?mgaversion} || 0%{?suse_version} || 0%{?with_lame}
 %define with_lame 1
-
-%if 0%{?mgaversion} || 0%{?mdkversion}
-%if 0%{?pclinuxos}
-BuildRequires:		liblame-devel
-%else
-BuildRequires:		%{_lib}lame-devel
-%endif
-%endif
-
-%if 0%{?suse_version}
-BuildRequires:		libmp3lame-devel
-%endif
-
-%if 0%{?fedora} || 0%{?rhel}
 BuildRequires:		lame-devel
-%endif
-
-%endif
-%endif
 
 Requires: trinity-artsbuilder = %{version}-%{release}
 Requires: trinity-juk = %{version}-%{release}
@@ -1216,14 +1129,9 @@ noatun plugins.
 
 ##########
 
-%if 0%{?pclinuxos} || 0%{?suse_version} && 0%{?opensuse_bs} == 0
-%debug_package
-%endif
-
-##########
-
 %prep
 %setup -q -n %{name}-%{version}%{?preversion:~%{preversion}}
+%patch1 -p1
 
 %__cp "/usr/share/aclocal/libtool.m4" "admin/libtool.m4.in"
 %__cp "/usr/share/libtool/config/ltmain.sh" "admin/ltmain.sh" || %__cp "/usr/share/libtool/ltmain.sh" "admin/ltmain.sh"
@@ -1277,6 +1185,11 @@ export PKG_CONFIG_PATH="%{tde_libdir}/pkgconfig:${PKG_CONFIG_PATH}"
 %__sed -i "noatun/app/Makefile" -e "/^libtdeinit_noatun_la_LDFLAGS/ s/$/ -Wl,-lc/"
 %endif
 
+%__sed -i "s/-include tqt.h//g" "arts/modules/common/Makefile"
+%__sed -i "s/-include tqt.h//g" "arts/modules/effects/Makefile"
+%__sed -i "s/-include tqt.h//g" "arts/modules/mixers/Makefile"
+%__sed -i "s/-include tqt.h//g" "arts/modules/synth/Makefile"
+
 %__make %{?_smp_mflags} || %__make
 
 
@@ -1307,21 +1220,6 @@ pushd $RPM_BUILD_ROOT%{tde_datadir}/icons/
 for i in {16,22,32,48,64}; do %__cp %{tde_datadir}/icons/crystalsvg/"$i"x"$i"/devices/media-optical-cdaudio.png hicolor/"$i"x"$i"/apps/kcmaudiocd.png; done
 popd
 
-# Updates applications categories for openSUSE
-%if 0%{?suse_version}
-%suse_update_desktop_file krec           AudioVideo Recorder
-%suse_update_desktop_file tdemid         AudioVideo Midi
-%suse_update_desktop_file artsbuilder    AudioVideo AudioVideoEditing
-%suse_update_desktop_file artscontrol    AudioVideo AudioVideoEditing
-%suse_update_desktop_file kmix           AudioVideo Mixer
-%suse_update_desktop_file kaboodle       AudioVideo Player
-%suse_update_desktop_file kaudiocreator  AudioVideo CD
-%suse_update_desktop_file kscd           AudioVideo Player CD
-%suse_update_desktop_file noatun         AudioVideo Player Video
-%suse_update_desktop_file juk            AudioVideo Player Jukebox
-%suse_update_desktop_file audiocd
-%endif
-
 # Links duplicate files
 %fdupes "%{?buildroot}%{tde_datadir}"
 
@@ -1331,6 +1229,9 @@ popd
 
 
 %changelog
+* Wed Oct 07 2015 Liu Di <liudidi@gmail.com> - 14.0.1-2.opt.1
+- 为 Magic 3.0 重建
+
 * Tue Mar 10 2015 Francois Andriot <francois.andriot@free.fr> - 14.0.0-2
 - Fix dependencies and rebuild for Fedora 21
 

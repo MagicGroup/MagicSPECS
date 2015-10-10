@@ -22,7 +22,7 @@
 # TDE variables
 %define tde_epoch 2
 %if "%{?tde_version}" == ""
-%define tde_version 14.0.0
+%define tde_version 14.0.1
 %endif
 %define tde_pkg tdelibs
 %define tde_prefix /opt/trinity
@@ -45,16 +45,14 @@
 
 Name:			trinity-%{tde_pkg}
 Version:		%{tde_version}
-Release:		%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}%{?_variant}
+Release:		%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}%{?_variant}.1
 Summary:		TDE Libraries
+Summary(zh_CN.UTF-8): TDE 基本库
 Group:			System/GUI/Other
+Group(zh_CN.UTF-8): 系统/GUI/其它
 URL:			http://www.trinitydesktop.org/
 
-%if 0%{?suse_version}
-License:		GPL-2.0+
-%else
 License:		GPLv2+
-%endif
 
 #Vendor:			Trinity Desktop
 #Packager:		Francois Andriot <francois.andriot@free.fr>
@@ -66,6 +64,7 @@ Source0:		%{name}-%{version}%{?preversion:~%{preversion}}.tar.gz
 Source1:		%{name}-rpmlintrc
 
 Patch0:			tdelibs-14.0.1.patch
+Patch1:			trinity-tdelibs-14.0.1-fixper522.patch
 
 Obsoletes:		tdelibs < %{version}-%{release}
 Provides:		tdelibs = %{version}-%{release}
@@ -73,11 +72,6 @@ Obsoletes:		trinity-kdelibs < %{version}-%{release}
 Provides:		trinity-kdelibs = %{version}-%{release}
 Obsoletes:		trinity-kdelibs-apidocs < %{version}-%{release}
 Provides:		trinity-kdelibs-apidocs = %{version}-%{release}
-
-# for set_permissions macro
-%if 0%{?suse_version}
-PreReq: permissions
-%endif
 
 # Trinity dependencies
 BuildRequires:	libtqt4-devel = %{tde_epoch}:4.2.0
@@ -94,16 +88,6 @@ BuildRequires:	cmake >= 2.8
 BuildRequires:	gcc-c++
 BuildRequires:	pkgconfig
 BuildRequires:	fdupes
-
-# SUSE desktop files utility
-%if 0%{?suse_version}
-BuildRequires:	update-desktop-files
-%endif
-
-%if 0%{?opensuse_bs} && 0%{?suse_version}
-# for xdg-menu script
-BuildRequires:	brp-check-trinity
-%endif
 
 # KRB5 support
 BuildRequires:	krb5-devel
@@ -144,214 +128,86 @@ BuildRequires:	aspell-devel
 
 # GAMIN support
 #  Not on openSUSE.
-%if 0%{?rhel} || 0%{?fedora} || 0%{?mgaversion} || 0%{?mdkversion}
 %define with_gamin 1
 BuildRequires:	gamin-devel
-%endif
 
 # PCRE support
-%if 0%{?rhel} >=5 || 0%{?fedora} || 0%{?mgaversion} || 0%{?mdkversion} || 0%{?suse_version}
 %define with_pcre 1
 BuildRequires:	pcre-devel
-%endif
 
 # INOTIFY support
-%if 0%{?rhel} >=5 || 0%{?fedora} || 0%{?mgaversion} || 0%{?mdkversion} || 0%{?suse_version}
 %define with_inotify 1
-%endif
 
 # BZIP2 support
-%if 0%{?suse_version}
-BuildRequires:	libbz2-devel
-%else
 BuildRequires:	bzip2-devel
-%endif
 
 # UTEMPTER support
-%if 0%{?mgaversion} || 0%{?mdkversion}
-BuildRequires:	%{_lib}utempter-devel
-%endif
-%if 0%{?rhel} >=5 || 0%{?fedora}
 BuildRequires:	libutempter-devel
-%endif
-%if 0%{?rhel} == 4
-BuildRequires:	utempter
-%endif
-%if 0%{?suse_version}
-BuildRequires:	utempter-devel
-%endif
 
 # HSPELL support
-%if 0%{?rhel} >=6 || 0%{?fedora} || 0%{?mgaversion} || 0%{?mdkversion}
 %define with_hspell 1
 BuildRequires:	hspell-devel
-%endif
 
 # JASPER support
-%if 0%{?rhel} >=6 || 0%{?fedora} || 0%{?mgaversion} || 0%{?mdkversion} || 0%{?suse_version}
 %define with_jasper 1
-%if 0%{?suse_version}
-BuildRequires:	libjasper-devel
-%endif
-%if 0%{?mgaversion} || 0%{?mdkversion}
-BuildRequires:	%{_lib}jasper-devel
-%endif
-%if 0%{?rhel} || 0%{?fedora}
 BuildRequires:	jasper-devel
-%endif
-%endif
 
 # AVAHI support
-%if 0%{?rhel} >=5 || 0%{?fedora} || 0%{?mgaversion} || 0%{?mdkversion} || 0%{?suse_version}
 %define with_avahi 1
-BuildRequires:	libavahi-tqt-devel >= 1:0.6.30
-%if 0%{?mgaversion} || 0%{?mdkversion}
-BuildRequires:	%{_lib}avahi-client-devel
-Requires:		%{_lib}avahi-client3
-%endif
-%if 0%{?rhel} >= 5 || 0%{?fedora} || 0%{?suse_version}
 BuildRequires:	avahi-devel
 Requires:		avahi
-%endif
-%endif
 
 # OPENEXR support
-%if 0%{?rhel} >=6 || 0%{?fedora} || 0%{?mgaversion} || 0%{?mdkversion} || 0%{?suse_version}
 %define with_openexr 1
 BuildRequires:	OpenEXR-devel
-%endif
 
 # LIBTOOL
 BuildRequires:	libtool
-%if 0%{?mgaversion} || 0%{?mdkversion}
-BuildRequires:	%{_lib}ltdl-devel
-%endif
-%if 0%{?rhel} >= 5 || 0%{?fedora} || 0%{?suse_version} >= 1220
 BuildRequires:	libtool-ltdl-devel
-%endif
 
 # X11 support
-%if 0%{?mgaversion} || 0%{?mdkversion}
-BuildRequires:	x11-proto-devel
-%endif
-%if 0%{?rhel} >= 5 || 0%{?fedora} || 0%{?suse_version}
 BuildRequires:	xorg-x11-proto-devel
-%endif
-%if 0%{?rhel} == 4
-BuildRequires:	xorg-x11-devel
-%endif
 
 # ICEAUTH
-%if 0%{?mgaversion} || 0%{?mdkversion} || 0%{?suse_version} >= 1220
-Requires:		iceauth
-%endif
-%if 0%{?rhel} >= 5 || 0%{?fedora}
 Requires:		xorg-x11-server-utils
-%endif
-%if 0%{?rhel} == 4 || 0%{?suse_version}
-Requires:		xorg-x11
-%endif
 
 # XZ support
-%if 0%{?mgaversion} || 0%{?mdkversion} || 0%{?rhel} >= 5 || 0%{?fedora} || 0%{?suse_version}
 %define with_lzma 1
-%if 0%{?mgaversion} || 0%{?mdkversion}
-BuildRequires:	%{_lib}lzma-devel
-%endif
-%if 0%{?rhel} >= 5 || 0%{?fedora} || 0%{?suse_version}
 BuildRequires:	xz-devel
-%endif
-%endif
 
 # Certificates support
-%if 0%{?fedora} || 0%{?rhel} >= 6
 BuildRequires:	ca-certificates
 Requires:		ca-certificates
-%if 0%{?fedora} >= 20 || 0%{?rhel} >= 6
-%define	cacert	%{_sysconfdir}/pki/tls/certs/ca-bundle.crt
-%endif
-%if 0%{?fedora} == 18 || 0%{?fedora} == 19
-%define	cacert	%{_sysconfdir}/ssl/certs/ca-certificates.crt
-%endif
-%endif
-%if 0%{?mgaversion} || 0%{?mdkversion}
-%if 0%{?pclinuxos}
-Requires:		rootcerts
-%define	cacert	%{_sysconfdir}/pki/tls/certs/ca-bundle.crt
-%else
-%define	cacert	%{_sysconfdir}/ssl/certs/ca-bundle.crt
-Requires:		openssl
-%endif
-%endif
-%if 0%{?rhel} == 5
 %define	cacert	%{_sysconfdir}/pki/tls/certs/ca-bundle.crt
 Requires:		openssl
-%endif
-%if 0%{?suse_version}
-%define cacert	%{_sysconfdir}/ssl/ca-bundle.pem
-BuildRequires:	ca-certificates
-Requires:		ca-certificates
-%endif
 %if "%{cacert}" != ""
 Requires:		%{cacert}
 %endif
 
 # XRANDR support
 #  On RHEL5, xrandr library is too old.
-%if 0%{?fedora} >= 15 || 0%{?mgaversion} || 0%{?mdkversion} || 0%{?rhel} >= 6 || 0%{?suse_version}
 %define with_xrandr 1
-%endif
 
 # XCOMPOSITE support
-%if 0%{?mgaversion} || 0%{?mdkversion}
-%if 0%{?mgaversion} >= 4
-%define xcomposite_devel %{_lib}xcomposite-devel
-%else
-%define xcomposite_devel %{_lib}xcomposite%{?mgaversion:1}-devel
-%endif
-%endif
-%if 0%{?rhel} >= 5 || 0%{?fedora} || 0%{?suse_version} >= 1220
 %define xcomposite_devel libXcomposite-devel
-%endif
 %{?xcomposite_devel:BuildRequires: %{xcomposite_devel}}
 
 # XT support
-%if 0%{?rhel} || 0%{?fedora} || 0%{?suse_version}
 %define xt_devel libXt-devel
-%endif
-%if 0%{?mgaversion} || 0%{?mdkversion}
-%define xt_devel libxt-devel
-%endif
 %{?xt_devel:BuildRequires: %{xt_devel}}
 
 ### New features in TDE R14
 
 # LIBMAGIC support
-%if 0%{?rhel} == 5
-BuildRequires:	file
-%else
 BuildRequires:	file-devel
-%endif
 
 # NETWORKMANAGER support
-%if 0%{?mgaversion} || 0%{?mdkversion} || 0%{?rhel} >= 6 || 0%{?fedora} || 0%{?suse_version}
 %define with_nm 1
-%if 0%{?mgaversion} || 0%{?mdkversion}
-BuildRequires:	%{_lib}nm-util-devel
-%endif
-%if 0%{?rhel} >= 6 || 0%{?fedora}
 BuildRequires:	NetworkManager-glib-devel
-%endif
-%if 0%{?suse_version}
-BuildRequires:	NetworkManager-devel
-%endif
-%endif
 
 # UDEV support
-%if 0%{?fedora} || 0%{?mdkversion} || 0%{?mgaversion} || 0%{?suse_version} || 0%{?rhel} >= 6
 %define with_tdehwlib 1
 BuildRequires:	libudev-devel
-%endif
 
 # HAL support
 %if 0%{?rhel} == 5
@@ -359,27 +215,17 @@ BuildRequires:	libudev-devel
 %endif
 
 # UDISKS support
-%if 0%{?fedora} || 0%{?mdkversion} || 0%{?mgaversion} || 0%{?suse_version} || 0%{?rhel} == 6
-%if 0%{?pclinuxos} == 0
 %define with_udisks 1
 BuildRequires:	udisks-devel
 Requires:		udisks
-%endif
-%endif
 
 # PMOUNT support
 #Requires:		pmount
 
 # UDISKS2 support
-%if 0%{?fedora} || 0%{?mdkversion} || 0%{?mgaversion} || 0%{?suse_version} || 0%{?rhel} >= 7
 %define with_udisks2 1
-%if 0%{?fedora} >= 18 || 0%{?rhel} >= 7
 BuildRequires:	libudisks2-devel
-%else
-BuildRequires:	udisks2-devel
-%endif
 Requires:		udisks2
-%endif
 
 # DEVICEKIT POWER support
 %if 0%{?rhel} == 6
@@ -388,15 +234,11 @@ Requires:		DeviceKit-power
 %endif
 
 # UPOWER support
-%if 0%{?fedora} || 0%{?suse_version} || 0%{?mdkversion} || 0%{?mgaversion} || 0%{?rhel} >= 7
 %define with_upower 1
 Requires:		upower
-%endif
 
 # SYSTEMD support
-%if 0%{?fedora} || 0%{?suse_version} || 0%{?mdkversion} || 0%{?mgaversion} || 0%{?rhel} >= 7
 %define with_systemd 1
-%endif
 
 
 %description
@@ -405,6 +247,9 @@ TDE Libraries included: tdecore (TDE core library), tdeui (user interface),
 kfm (file manager), tdehtmlw (HTML widget), tdeio (Input/Output, networking),
 kspell (spelling checker), jscript (javascript), kab (addressbook),
 kimgio (image manipulation).
+
+%description -l zh_CN.UTF-8
+TDE 的基本库。
 
 %files
 %defattr(-,root,root,-)
@@ -493,15 +338,9 @@ kimgio (image manipulation).
 %config %{tde_confdir}
 
 # Some setuid binaries need special care
-%if 0%{?suse_version}
-%verify(not mode) %{tde_bindir}/kgrantpty
-%verify(not mode) %{tde_bindir}/kpac_dhcp_helper
-%verify(not mode) %{tde_bindir}/start_tdeinit
-%else
 %attr(4755,root,root) %{tde_bindir}/kgrantpty
 %attr(4755,root,root) %{tde_bindir}/kpac_dhcp_helper
 %attr(4711,root,root) %{tde_bindir}/start_tdeinit
-%endif
 
 %config %{_sysconfdir}/xdg/menus/tde-applications.menu
 %config %{_sysconfdir}/xdg/menus/tde-applications.menu-no-kde
@@ -522,13 +361,6 @@ fi
 %post
 /sbin/ldconfig || :
 
-%if 0%{?suse_version}
-# Sets permissions on setuid files (openSUSE specific)
-%set_permissions %{tde_bindir}/kgrantpty
-%set_permissions %{tde_bindir}/kpac_dhcp_helper
-%set_permissions %{tde_bindir}/start_tdeinit
-%endif
-
 %postun
 /sbin/ldconfig || :
 
@@ -536,7 +368,9 @@ fi
 
 %package devel
 Summary:	TDE Libraries (Development files)
-Group:		Development/Libraries/X11
+Summary(zh_CN.UTF-8): %{name} 的开发包
+Group:		Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:	%{name} = %{version}-%{release}
 
 Obsoletes:	tdelibs-devel < %{version}-%{release}
@@ -554,6 +388,8 @@ Requires:	libart_lgpl-devel
 %description devel
 This package includes the header files you will need to compile
 applications for TDE.
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %files devel
 %defattr(-,root,root,-)
@@ -578,15 +414,10 @@ applications for TDE.
 
 ##########
 
-%if 0%{?pclinuxos} || 0%{?suse_version} && 0%{?opensuse_bs} == 0
-%debug_package
-%endif
-
-##########
-
 %prep
 %setup -q -n %{name}-%{version}%{?preversion:~%{preversion}}
 %patch0 -p1 -b .ftbfs
+%patch1 -p1
 
 # RHEL 5: remove tdehwlib stuff from include files, to avoid FTBFS in tdebindings
 %if 0%{?rhel} == 5
@@ -706,15 +537,9 @@ chmod 0755 "%{?buildroot}%{tde_bindir}/start_tdeinit"
 %clean
 %__rm -rf "%{?buildroot}"
 
-%if 0%{?suse_version}
-# Check permissions on setuid files (openSUSE specific)
-%verifyscript
-%verify_permissions -e %{tde_bindir}/kgrantpty
-%verify_permissions -e %{tde_bindir}/kpac_dhcp_helper
-%verify_permissions -e %{tde_bindir}/start_tdeinit
-%endif
-
-
 %changelog
+* Tue Oct 06 2015 Liu Di <liudidi@gmail.com> - 14.0.1-1.opt.1
+- 为 Magic 3.0 重建
+
 * Tue Jul 21 2015 Francois Andriot <francois.andriot@free.fr> - 14.0.1-1
 - Initial release for TDE 14.0.1

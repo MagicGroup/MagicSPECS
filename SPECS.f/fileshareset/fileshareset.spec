@@ -21,7 +21,7 @@
 
 Name:		fileshareset
 Version:	2.0
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:	Set and list fileshares
 Summary(zh_CN.UTF-8): 设置和列出文件共享
 Group: System Environment/Libraries
@@ -95,5 +95,8 @@ echo "RESTRICT=yes" > "${RPM_BUILD_ROOT}%{_sysconfdir}/security/fileshare.conf"
 
 
 %changelog
+* Tue Oct 06 2015 Liu Di <liudidi@gmail.com> - 2.0-2
+- 为 Magic 3.0 重建
+
 * Sun Oct 5 2014 François Andriot <francois.andriot@free.fr> - 2.0-1
 - Initial build for TDE R14

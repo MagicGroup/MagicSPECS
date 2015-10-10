@@ -22,7 +22,7 @@
 # TDE variables
 %define tde_epoch 2
 %if "%{?tde_version}" == ""
-%define tde_version 14.0.0
+%define tde_version 14.0.1
 %endif
 %define tde_pkg tdeadmin
 %define tde_prefix /opt/trinity
@@ -52,11 +52,7 @@ Release:	%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}%{?_variant}
 Group:		System/GUI/Other
 URL:		http://www.trinitydesktop.org/
 
-%if 0%{?suse_version}
-License:	GPL-2.0+
-%else
 License:	GPLv2+
-%endif
 
 #Vendor:		Trinity Project
 #Packager:	Francois Andriot <francois.andriot@free.fr>
@@ -70,6 +66,7 @@ Source2:		kuser.pamd
 Source5:		kpackagerc
 Source6:		ksysvrc
 Source7:		kuserrc
+Patch1:			trinity-tdeadmin-14.0.1-tqt.patch
 
 Obsoletes:		trinity-kdeadmin < %{version}-%{release}
 Provides:		trinity-kdeadmin = %{version}-%{release}
@@ -84,16 +81,6 @@ BuildRequires:	m4
 BuildRequires:	fdupes
 BuildRequires:	gcc-c++
 
-# SUSE desktop files utility
-%if 0%{?suse_version}
-BuildRequires:	update-desktop-files
-%endif
-
-%if 0%{?opensuse_bs} && 0%{?suse_version}
-# for xdg-menu script
-BuildRequires:	brp-check-trinity
-%endif
-
 # RPM support
 BuildRequires: rpm-devel
 
@@ -101,9 +88,6 @@ BuildRequires: rpm-devel
 BuildRequires: pam-devel
 
 # LILO support
-%if 0%{?mgaversion} || 0%{?mdkversion} || 0%{?suse_version}
-#define with_lilo 1
-%endif
 %if 0%{?with_lilo}
 BuildRequires:	lilo
 %endif
@@ -122,12 +106,10 @@ Obsoletes: trinity-lilo-config
 %endif
 
 # CONSOLEHELPER (usermode) support
-%if 0%{?rhel} || 0%{?fedora} || 0%{?mgaversion} || 0%{?mdkversion}
 %define with_consolehelper 1
 
 # Avoids relinking, which breaks consolehelper
 %define dont_relink 1
-%endif
 
 %description
 The tdeadmin package includes administrative tools for the Trinity Desktop
@@ -418,14 +400,9 @@ touch /etc/lilo.conf
 
 ##########
 
-%if 0%{?pclinuxos} || 0%{?suse_version} && 0%{?opensuse_bs} == 0
-%debug_package
-%endif
-
-##########
-
 %prep
 %setup -q -n %{name}-%{version}%{?preversion:~%{preversion}}
+%patch1 -p1
 
 %__cp -f "/usr/share/aclocal/libtool.m4" "admin/libtool.m4.in"
 %__cp -f "/usr/share/libtool/config/ltmain.sh" "admin/ltmain.sh" || %__cp -f "/usr/share/libtool/ltmain.sh" "admin/ltmain.sh"

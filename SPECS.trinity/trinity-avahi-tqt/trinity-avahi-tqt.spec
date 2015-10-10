@@ -18,14 +18,10 @@
 # TDE variables
 %define tde_epoch 2
 %if "%{?tde_version}" == ""
-%define tde_version 14.0.0
+%define tde_version 14.0.1
 %endif
 
-%if 0%{?mdkversion} || 0%{?mgaversion} || 0%{?pclinuxos}
-%define libavahi %{_lib}avahi
-%else
 %define libavahi libavahi
-%endif
 
 
 Name:		trinity-avahi-tqt
@@ -33,14 +29,12 @@ Epoch:		%{tde_epoch}
 Version:	0.6.30
 Release:	%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}%{?_variant}
 Summary:	Avahi TQt integration library
-Group:		System/Libraries
+Summary(zh_CN.UTF-8): Avahi TQt 集成库
+Group: System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 URL:		http://www.trinitydesktop.org/
 
-%if 0%{?suse_version}
-License:	LGPL-2.0+
-%else
 License:	LGPLv2+
-%endif
 
 #Vendor:		Trinity Project
 #Packager:	Francois Andriot <francois.andriot@free.fr>
@@ -62,58 +56,27 @@ BuildRequires:	glib2-devel
 # GETTEXT support
 BuildRequires:	gettext-devel
 
-# Xi support
-%if 0%{?rhel} == 4
-BuildRequires:	xorg-x11-devel
-%endif
-%if 0%{?mgaversion} || 0%{?mdkversion}
-BuildRequires:	libxi-devel
-%endif
-%if 0%{?suse_version} >= 1220 || 0%{?rhel} >= 5 || 0%{?fedora}
 BuildRequires:	libXi-devel
-%endif
-%if 0%{?suse_version} == 1140
-BuildRequires:	libXi6-devel
-%endif
 
 # DBUS support
-%if 0%{?suse_version}
-BuildRequires:	dbus-1-devel
-%endif
-%if 0%{?rhel} || 0%{?fedora} || 0%{?mgaversion} || 0%{?mdkversion}
 BuildRequires:	dbus-devel
-%endif
 
 # PCAP support
 BuildRequires:	libcap-devel
 
 # AVAHI support
-%if 0%{?mgaversion} || 0%{?mdkversion}
-%define avahi_devel libavahi-client-devel
-%endif
-%if 0%{?suse_version} || 0%{?rhel} || 0%{?fedora}
 %define avahi_devel avahi-devel
-%endif
 %{?avahi_devel:BuildRequires: %{avahi_devel}}
 
 # EXPAT support
-%if 0%{?rhel} || 0%{?fedora}
 BuildRequires:	expat-devel
-%endif
-%if 0%{?suse_version} || 0%{?mgaversion} || 0%{?mdkversion}
-BuildRequires:	libexpat-devel
-%endif
 
 # NAS support
-%if 0%{?fedora} || 0%{?mgaversion} || 0%{?mdkversion}
 %define with_nas 1
 BuildRequires: nas-devel
-%endif
 
 # XT support
-%if 0%{?rhel} || 0%{?fedora} || 0%{?suse_version}
 BuildRequires: libXt-devel
-%endif
 
 %description
 Avahi is a fully LGPL framework for Multicast DNS Service Discovery.
@@ -124,12 +87,16 @@ print to, files to look at and people to talk to.
  .
 This library contains the interface to integrate the Avahi libraries
 into a TQt main loop application.
+%description -l zh_CN.UTF-8
+Avahi Tqt 集成库。
 
 ##########
 
 %package -n %{libavahi}-tqt1
 Summary:	Avahi TQt integration library
-Group:		System/Libraries
+Summary(zh_CN.UTF-8): Avahi TQT 集成库
+Group: System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 Provides:	libavahi-tqt1 = %{?epoch:%{epoch}:}%{version}-%{release}
 
 Obsoletes:		trinity-avahi-tqt < %{?epoch:%{epoch}:}%{version}-%{release}
@@ -144,6 +111,9 @@ print to, files to look at and people to talk to.
  .
 This library contains the interface to integrate the Avahi libraries
 into a TQt main loop application.
+
+%description -n %{libavahi}-tqt1 -l zh_CN.UTF-8
+Avahi TQT 集成库。
 
 %post -n %{libavahi}-tqt1
 /sbin/ldconfig || :
@@ -160,7 +130,9 @@ into a TQt main loop application.
 
 %package -n %{libavahi}-tqt-devel
 Summary:	Avahi TQt integration library (Development Files)
-Group:		Development/Libraries/C and C++
+Summary(zh_CN.UTF-8): %{name} 的开发包
+Group:		Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Provides:	libavahi-tqt-devel = %{?epoch:%{epoch}:}%{version}-%{release}
 
 Requires:	%{libavahi}-tqt1 = %{?epoch:%{epoch}:}%{version}-%{release}
@@ -180,6 +152,9 @@ print to, files to look at and people to talk to.
 This library contains the interface to integrate the Avahi libraries
 into a TQt main loop application.
 
+%description -n %{libavahi}-tqt-devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
 %post -n %{libavahi}-tqt-devel
 /sbin/ldconfig || :
 
@@ -192,12 +167,6 @@ into a TQt main loop application.
 %{_libdir}/libavahi-tqt.so
 %{_libdir}/libavahi-tqt.la
 %{_libdir}/pkgconfig/avahi-tqt.pc
-
-##########
-
-%if 0%{?pclinuxos} || 0%{?suse_version} && 0%{?opensuse_bs} == 0
-%debug_package
-%endif
 
 ##########
 

@@ -18,7 +18,7 @@
 # TDE variables
 %define tde_epoch 2
 %if "%{?tde_version}" == ""
-%define tde_version 14.0.0
+%define tde_version 14.0.1
 %endif
 %define tde_pkg kasablanca
 %define tde_prefix /opt/trinity
@@ -40,14 +40,12 @@ Epoch:			%{tde_epoch}
 Version:		0.4.0.2
 Release:		%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}%{?_variant}
 Summary:		Graphical FTP client for Trinity
+Summary(zh_CN.UTF-8): TDE 下的图形 FTP 客户端
 Group:			Applications/Internet 
+Group(zh_CN.UTF-8): 应用程序/互联网
 Url:			http://kasablanca.berlios.de/ 
 
-%if 0%{?suse_version}
-License:	GPL-2.0+
-%else
 License:	GPLv2+
-%endif
 
 #Vendor:		Trinity Desktop
 #Packager:	Francois Andriot <francois.andriot@free.fr>
@@ -57,6 +55,7 @@ BuildRoot:		%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 Source0:		%{name}-%{tde_version}%{?preversion:~%{preversion}}.tar.gz
 Patch0:			%{tde_pkg}-14.0.0.patch
+Patch1:		%{name}-14.0.1-tqt.patch
 
 BuildRequires:	trinity-tdelibs-devel >= %{tde_version}
 BuildRequires:	trinity-tdebase-devel >= %{tde_version}
@@ -68,32 +67,11 @@ BuildRequires:	autoconf automake libtool m4
 BuildRequires:	gcc-c++
 BuildRequires:	pkgconfig
 
-# SUSE desktop files utility
-%if 0%{?suse_version}
-BuildRequires:	update-desktop-files
-%endif
-
-%if 0%{?opensuse_bs} && 0%{?suse_version}
-# for xdg-menu script
-BuildRequires:	brp-check-trinity
-%endif
-
 # OPENSSL support
 BuildRequires:	openssl-devel
 
 # UTEMPTER support
-%if 0%{?suse_version}
-BuildRequires:	utempter-devel
-%endif
-%if 0%{?mgaversion} || 0%{?mdkversion}
-BuildRequires:	%{_lib}utempter-devel
-%endif
-%if 0%{?rhel} || 0%{?fedora}
-%if 0%{?rhel} == 4
-%else
 BuildRequires:	libutempter-devel
-%endif
-%endif
 
 %description
 Kasablanca is an ftp client, among its features are currently: 
@@ -105,19 +83,15 @@ Kasablanca is an ftp client, among its features are currently:
 * interactive transfer queue, movable by drag and drop.
 * small nifty features, like a skiplist.
 
+%description -l zh_CN.UTF-8
+TDE 下的 FTP 客户端。支持 ftps, fxp 等。
 
 ##########
-
-%if 0%{?pclinuxos} || 0%{?suse_version} && 0%{?opensuse_bs} == 0
-%debug_package
-%endif
-
-##########
-
 
 %prep
 %setup -q -n %{name}-%{tde_version}%{?preversion:~%{preversion}}
 %patch0 -p1 -b .orig
+%patch1 -p1
 
 %__cp -f "/usr/share/aclocal/libtool.m4" "admin/libtool.m4.in"
 %__cp -f "/usr/share/libtool/config/ltmain.sh" "admin/ltmain.sh" || %__cp -f "/usr/share/libtool/ltmain.sh" "admin/ltmain.sh"
@@ -157,14 +131,9 @@ export PATH="%{tde_bindir}:${PATH}"
 %__rm -rf $RPM_BUILD_ROOT 
 %__make install DESTDIR=$RPM_BUILD_ROOT
 
+magic_rpm_clean.sh
 # locale's
-%find_lang %{tde_pkg}
-
-# Fix desktop files (openSUSE only)
-%if 0%{?suse_version}
-%suse_update_desktop_file kasablanca Network FileTransfer
-%endif
-
+%find_lang %{tde_pkg} || :
 
 %clean
 %__rm -rf $RPM_BUILD_ROOT 
@@ -185,7 +154,7 @@ fi
 gtk-update-icon-cache %{tde_datadir}/icons/hicolor &> /dev/null || :
 
 
-%files -f %{tde_pkg}.lang
+%files 
 %defattr(-,root,root,-)
 %doc AUTHORS ChangeLog COPYING NEWS README 
 %{tde_bindir}/kasablanca

@@ -1,14 +1,16 @@
 Name:           tuxpaint
-Version:        0.9.21
-Release:        16%{?dist}
+Version:	0.9.22
+Release:	1%{?dist}
 
 Epoch:          1
 Summary:        Drawing program designed for young children
+Summary(zh_CN.UTF-8): 儿童用的绘画程序
 
 Group:          Applications/Multimedia
+Group(zh_CN.UTF-8): 应用程序/多媒体
 License:        GPLv2+
 URL:            http://www.tuxpaint.org/
-Source0:        http://dl.sf.net/%{name}/%{name}-%{version}.tar.gz
+Source0:        http://download.sourceforge.net/%{name}/%{name}-%{version}.tar.gz
 Patch0:         tuxpaint-utf8.patch
 Patch1:         tuxpaint-0.9.21-fix-desktop-file.patch
 Patch2:         tuxpaint-0.9.21-link.patch
@@ -41,22 +43,30 @@ Requires:       hicolor-icon-theme
 (kids ages 3 and up). It has a simple, easy-to-use interface,
 fun sound effects, and a cartoon mascot who helps you along.
 
+%description -l zh_CN.UTF-8
+儿童用的绘画程序。
+
 %package devel
 Summary:	Development files for tuxpaint extensions/plugins
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:		Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:	%{name} = %{epoch}:%{version}-%{release}
 
 %description devel
 Development files for tuxpaint extensions/plugins
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
 %prep
 %setup -q
 %patch0 -p1
-%patch1 -p0 -b .fixdesktopfile
-%patch2 -p1 -b .link
-%patch3 -p1 -b .makej
-%patch4 -p1 -b .memset
-%patch5 -p1 -b .png15
+#%patch1 -p0 -b .fixdesktopfile
+#%patch2 -p1 -b .link
+#%patch3 -p1 -b .makej
+#%patch4 -p1 -b .memset
+#%patch5 -p1 -b .png15
 
 sed -i -e '/\/gnome\/apps\/Graphics/d' Makefile
 find docs -type f -exec perl -pi -e 's/\r\n/\n/' {} \;
@@ -81,6 +91,7 @@ make install PKG_ROOT=$RPM_BUILD_ROOT PREFIX=%{_usr} \
     KDE_ICON_PREFIX=/usr/share/icons \
     MAGIC_PREFIX=$RPM_BUILD_ROOT%{_libdir}/tuxpaint/plugins
 find $RPM_BUILD_ROOT -type d|xargs chmod 0755
+magic_rpm_clean.sh
 %find_lang %{name}
 
 desktop-file-install --dir $RPM_BUILD_ROOT/%{_datadir}/applications \
@@ -149,7 +160,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/icons/*/*/apps/*
 %{_libdir}/%{name}/
 %{_mandir}/man1/*
-%{_mandir}/*/man1/*
+%{_sysconfdir}/bash_completion.d/tuxpaint-completion.bash
 
 %files devel
 %defattr(-,root,root,-)
@@ -157,6 +168,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_includedir}/tuxpaint/
 
 %changelog
+* Mon Oct 05 2015 Liu Di <liudidi@gmail.com> - 1:0.9.22-1
+- 更新到 0.9.22
+
 * Fri Jun 19 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1:0.9.21-16
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

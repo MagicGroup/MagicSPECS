@@ -22,7 +22,7 @@
 # TDE variables
 %define tde_epoch 2
 %if "%{?tde_version}" == ""
-%define tde_version 14.0.0
+%define tde_version 14.0.1
 %endif
 %define tde_pkg tdeedu
 %define tde_prefix /opt/trinity
@@ -43,6 +43,9 @@
 %define _variant .opt
 %endif
 
+%global _hardened_build 0
+%define _hardened_cflags %{nil}
+%define _hardened_ldflags %{nil}
 
 Name:			trinity-%{tde_pkg}
 Summary:		Educational/Edutainment applications
@@ -51,11 +54,7 @@ Version:		%{tde_version}
 Release:		%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}%{?_variant}
 URL:			http://www.trinitydesktop.org/
 
-%if 0%{?suse_version}
-License:	GPL-2.0+
-%else
 License:	GPLv2+
-%endif
 
 #Vendor:		Trinity Desktop
 #Packager:	Francois Andriot <francois.andriot@free.fr>
@@ -65,20 +64,12 @@ BuildRoot:		%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 Source0:		%{name}-%{version}%{?preversion:~%{preversion}}.tar.gz
 
+Patch1:			trinity-tdeedu-14.0.1-tqt.patch
+
 BuildRequires: trinity-tdelibs-devel >= %{tde_version}
 
 BuildRequires: autoconf automake libtool m4
 BuildRequires: desktop-file-utils
-
-# SUSE desktop files utility
-%if 0%{?suse_version}
-BuildRequires:	update-desktop-files
-%endif
-
-%if 0%{?opensuse_bs} && 0%{?suse_version}
-# for xdg-menu script
-BuildRequires:	brp-check-trinity
-%endif
 
 # PYTHON support
 BuildRequires:	python-devel
@@ -91,11 +82,7 @@ BuildRequires:	fdupes
 BuildRequires:	boost-devel
 
 # OCAML support
-%if 0%{?rhel} >= 6 || 0%{?fedora} >= 15
 BuildRequires: ocaml(compiler)
-%else
-BuildRequires: ocaml
-%endif
 
 Obsoletes:		trinity-kdeedu < %{version}-%{release}
 Provides:		trinity-kdeedu = %{version}-%{release}
@@ -1361,6 +1348,7 @@ This package contains the development files for tdeedu.
 
 %prep
 %setup -q -n %{name}-%{version}%{?preversion:~%{preversion}}
+%patch1 -p1
 
 # RHEL5 strange FTBFS on V4L stuff
 %if 0%{?rhel} == 5
@@ -1377,12 +1365,8 @@ unset QTDIR QTINC QTLIB
 export PATH="%{tde_bindir}:${PATH}"
 export kde_confdir="%{tde_confdir}"
 
-# Specific path for RHEL4
-if [ -d "/usr/X11R6" ]; then
-  export CXXFLAGS="${RPM_OPT_FLAGS} -I/usr/X11R6/include -L/usr/X11R6/%{_lib}"
-  export CFLAGS="${RPM_OPT_FLAGS} -I/usr/X11R6/include -L/usr/X11R6/%{_lib}"
-fi
-
+export CXXFLAGS="${RPM_OPT_FLAGS} -fPIC"
+export CFLAGS="${RPM_OPT_FLAGS} -fPIC"
 # Warning: GCC visibility causes FTBFS [Bug #1285]
 %configure \
   --prefix=%{tde_prefix} \
@@ -1400,11 +1384,7 @@ fi
   --enable-rpath \
   --disable-gcc-hidden-visibility \
   \
-%if 0%{?rhel} >= 6 || 0%{?fedora} >= 15 || 0%{?mgaversion} || 0%{?mdkversion} || 0%{?suse_version}
    --enable-kig-python-scripting \
-%else
-   --disable-kig-python-scripting \
-%endif
    --enable-ocamlsolver
 
 %__make %{_smp_mflags} \
