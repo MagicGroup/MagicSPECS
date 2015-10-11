@@ -1,0 +1,10 @@
+[Unit]
+Description=Inetnet News Daemon Receiving News
+
+[Timer]
+OnBootSec=3min
+OnUnitActiveSec=1h
+Unit=innd-rnews.service
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,16 @@
+diff -up inn-2.5.2/storage/cnfs/cnfs.h.posix inn-2.5.2/storage/cnfs/cnfs.h
+--- inn-2.5.2/storage/cnfs/cnfs.h.posix	2010-03-24 21:10:36.000000000 +0100
++++ inn-2.5.2/storage/cnfs/cnfs.h	2010-06-28 17:33:11.106804964 +0200
+@@ -18,4 +18,12 @@ void cnfs_printfiles(FILE *file, TOKEN t
+ char *cnfs_explaintoken(const TOKEN token);
+ void cnfs_shutdown(void);
+ 
++/* Patch for POSIX  */
++
++#ifndef MADV_SEQUENTIAL
++  #ifdef POSIX_MADV_SEQUENTIAL
++    #define MADV_SEQUENTIAL POSIX_MADV_SEQUENTIAL
++  #endif
++#endif
++
+ #endif

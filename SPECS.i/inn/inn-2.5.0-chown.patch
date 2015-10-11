@@ -1,0 +1,16 @@
+diff -urNp inn-2.5.0-orig/site/Makefile inn-2.5.0/site/Makefile
+--- inn-2.5.0-orig/site/Makefile	2009-06-10 15:45:58.000000000 +0200
++++ inn-2.5.0/site/Makefile	2009-06-10 15:46:29.000000000 +0200
+@@ -140,9 +140,9 @@ $D$(PATH_ACTIVE): 	; $(CP_DATA) active.m
+ $D$(PATH_NEWSGROUPS):	; $(CP_DATA) newsgroups.minimal $@
+ $D$(PATH_ACTIVE_TIMES):
+ 	touch $@
+-	chown $(RUNASUSER) $@
+-	chgrp $(RUNASGROUP) $@
+-	chmod $(FILEMODE) $@
++#	chown $(RUNASUSER) $@
++#	chgrp $(RUNASGROUP) $@
++#	chmod $(FILEMODE) $@
+ $D$(PATH_HISTORY):
+ 	touch $@
+ #	chown $(RUNASUSER) $@

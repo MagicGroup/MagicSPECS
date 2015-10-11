@@ -1,0 +1,23 @@
+diff -up inn-2.6.0rc1/doc/man/rc.news.8.docx inn-2.6.0rc1/doc/man/rc.news.8
+diff -up inn-2.6.0rc1/doc/pod/rc.news.pod.docx inn-2.6.0rc1/doc/pod/rc.news.pod
+--- inn-2.6.0rc1/doc/pod/rc.news.pod.docx	2015-04-21 17:04:50.175906904 +0200
++++ inn-2.6.0rc1/doc/pod/rc.news.pod	2015-04-21 17:09:53.873888991 +0200
+@@ -76,15 +76,15 @@ If the first argument is C<stop>, B<rc.n
+ 
+ To start INN and leave certain error messages going to the terminal:
+ 
+-       su news -s /bin/sh -c <pathbin in inn.conf>/rc.news
++       su news -s /bin/sh -c /usr/libexec/news/rc.news
+ 
+ To run INN at startup time from appropriate system boot scripts:
+ 
+-       su news -s /bin/sh -c <pathbin>/rc.news >> <pathlog>/rc.news 2>&1
++       su news -s /bin/sh -c /usr/libexec/news>/rc.news >> <pathlog>/rc.news 2>&1
+ 
+ To stop INN:
+ 
+-       su news -s /bin/sh -c '<pathbin>/rc.news stop'
++       su news -s /bin/sh -c '/usr/libexec/news/rc.news'
+ 
+ =head1 BUGS
+ 

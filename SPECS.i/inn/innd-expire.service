@@ -1,0 +1,8 @@
+[Unit]
+Description=Inetnet News Daemon Expiring
+
+[Service]
+User=news
+PermissionsStartOnly=true
+Type=simple
+ExecStart=/usr/libexec/news/news.daily delayrm

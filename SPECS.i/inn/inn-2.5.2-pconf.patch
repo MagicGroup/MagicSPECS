@@ -1,0 +1,12 @@
+diff -up inn-2.5.2/perl/INN/Config.pm.in.pfix inn-2.5.2/perl/INN/Config.pm.in
+--- inn-2.5.2/perl/INN/Config.pm.in.pfix	2010-06-29 17:13:57.507194722 +0200
++++ inn-2.5.2/perl/INN/Config.pm.in	2010-06-29 17:14:32.270853010 +0200
+@@ -20,7 +20,7 @@ our $exec_prefix = "@exec_prefix@";
+ 
+ ##  Then, process the variables provided by innconfval.
+ my @INNCONFVAR = ();
+-my @values = `${exec_prefix}/bin/innconfval -p`;
++my @values = `${exec_prefix}/innconfval -p`;
+ foreach my $line (@values) {
+   eval 'our '.$line;
+   if ($line =~ /^(.*?) = /m) {

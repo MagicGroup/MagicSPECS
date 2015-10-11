@@ -1,0 +1,10 @@
+[Unit]
+Description=Inetnet News Daemon NNTP Send
+
+[Timer]
+OnBootSec=3min
+OnUnitActiveSec=1h
+Unit=innd-nntpsend.service
+
+[Install]
+WantedBy=multi-user.target

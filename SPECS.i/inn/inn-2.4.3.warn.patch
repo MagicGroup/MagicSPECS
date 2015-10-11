@@ -1,0 +1,11 @@
+--- inn-2.4.3/innfeed/imap_connection.c.warn	2006-03-20 05:14:57.000000000 +0100
++++ inn-2.4.3/innfeed/imap_connection.c	2006-03-27 12:07:20.000000000 +0200
+@@ -2452,7 +2452,7 @@
+     char *p;
+ 
+ #ifdef HAVE_SASL
+-    const char *mechusing;
++    const char *mechusing = NULL;
+     int saslresult=SASL_NOMECH;
+ 
+     sasl_interact_t *client_interact=NULL;

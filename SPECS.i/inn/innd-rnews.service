@@ -1,0 +1,8 @@
+[Unit]
+Description=Inetnet News Daemon Receiving News
+
+[Service]
+User=news
+PermissionsStartOnly=true
+Type=simple
+ExecStart=/usr/libexec/news/rnews -U

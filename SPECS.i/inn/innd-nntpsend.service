@@ -1,0 +1,9 @@
+[Unit]
+Description=Inetnet News Daemon Sending News
+After=innd.service
+
+[Service]
+User=news
+PermissionsStartOnly=true
+Type=simple
+ExecStart=/usr/libexec/news/nntpsend

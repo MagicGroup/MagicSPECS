@@ -1,0 +1,59 @@
+diff -up inn-2.6.0rc1/Makefile.global.in.rh inn-2.6.0rc1/Makefile.global.in
+--- inn-2.6.0rc1/Makefile.global.in.rh	2015-03-25 21:36:36.000000000 +0100
++++ inn-2.6.0rc1/Makefile.global.in	2015-04-21 16:36:11.228008292 +0200
+@@ -305,8 +305,8 @@ INEWSMODE	= @INEWSMODE@
+ RNEWSMODE	= @RNEWSMODE@
+ FILEMODE	= @FILEMODE@
+ 
+-OWNER		= -o $(RUNASUSER) -g $(RUNASGROUP)
+-ROWNER		= -o $(RUNASUSER) -g $(RNEWSGROUP)
++OWNER           =
++ROWNER          =
+ 
+ INSTALL		= $(top)/support/install-sh -c
+ 
+diff -up inn-2.6.0rc1/Makefile.rh inn-2.6.0rc1/Makefile
+--- inn-2.6.0rc1/Makefile.rh	2015-03-25 21:36:36.000000000 +0100
++++ inn-2.6.0rc1/Makefile	2015-04-21 16:36:11.228008292 +0200
+@@ -102,9 +102,9 @@ install: directories
+ directories:
+ 	@chmod +x support/install-sh
+ 	for D in $(INSTDIRS) ; do \
+-	    support/install-sh $(OWNER) -m 0755 -d $(D)$$D ; \
++	    support/install-sh $(OWNER) -m 0755 -d $(DESTDIR)/$$D ; \
+ 	done
+-	support/install-sh $(OWNER) -m 0750 -d $(D)$(PATHRUN)
++	support/install-sh $(OWNER) -m 0750 -d $(DESTDIR)/$(PATHRUN)
+ 
+ update: 
+ 	@chmod +x support/install-sh
+diff -up inn-2.6.0rc1/samples/inn.conf.in.rh inn-2.6.0rc1/samples/inn.conf.in
+--- inn-2.6.0rc1/samples/inn.conf.in.rh	2015-03-25 21:36:36.000000000 +0100
++++ inn-2.6.0rc1/samples/inn.conf.in	2015-04-21 16:36:11.229008292 +0200
+@@ -21,7 +21,7 @@ mta:                         "@SENDMAIL@
+ organization:                "A poorly-installed InterNetNews site"
+ ovmethod:                    tradindexed
+ hismethod:                   hisv6
+-pathhost:                    @HOSTNAME@
++#pathhost:                    localhost
+ pathnews:                    @prefix@
+ 
+ #runasuser:
+@@ -147,7 +147,7 @@ backofftrigger:              10000
+ 
+ # Monitoring
+ 
+-doinnwatch:                  true
++doinnwatch:                  false
+ innwatchbatchspace:          4000
+ innwatchlibspace:            25000
+ innwatchloload:              1000
+@@ -186,7 +186,7 @@ icdsynccount:                10
+ keepmmappedthreshold:        1024
+ #maxcmdreadsize:
+ maxforks:                    10
+-nicekids:                    4
++nicekids:                    0
+ nicenewnews:                 0
+ nicennrpd:                   0
+ pauseretrytime:              300

@@ -1,0 +1,18 @@
+diff -urNp inn-2.4.4-orig/site/Makefile inn-2.4.4/site/Makefile
+--- inn-2.4.4-orig/site/Makefile	2008-05-15 10:59:16.000000000 +0200
++++ inn-2.4.4/site/Makefile	2008-05-15 11:06:54.000000000 +0200
+@@ -135,10 +135,10 @@ $D$(PATH_ACTIVE_TIMES):
+ 	chmod $(FILEMODE) $@
+ $D$(PATH_HISTORY):
+ 	touch $@
+-	chown $(RUNASUSER) $@
+-	chgrp $(RUNASGROUP) $@
+-	chmod $(FILEMODE) $@
+-	test -z "$D" && $(PATHBIN)/makedbz -i -o
++#	chown $(RUNASUSER) $@
++#	chgrp $(RUNASGROUP) $@
++#	chmod $(FILEMODE) $@
++#  test -z "$D" && $(PATHBIN)/makedbz -i -o
+ 
+ bootstrap:
+ 

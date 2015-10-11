@@ -1,0 +1,10 @@
+[Unit]
+Description=Inetnet News Daemon Exp
+
+[Timer]
+OnBootSec=3min
+OnUnitActiveSec=1d
+Unit=innd-expire.service
+
+[Install]
+WantedBy=multi-user.target

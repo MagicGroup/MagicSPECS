@@ -1,0 +1,32 @@
+diff -up inn-2.5.1/scripts/Makefile.redhat_build inn-2.5.1/scripts/Makefile
+--- inn-2.5.1/scripts/Makefile.redhat_build	2009-12-01 14:06:00.977311656 +0100
++++ inn-2.5.1/scripts/Makefile	2009-12-01 14:06:00.977311656 +0100
+@@ -27,7 +27,7 @@ install: all
+ 	done
+ 	for F in innreport_inn.pm innshellvars innshellvars.pl \
+ 	         innshellvars.tcl ; do \
+-	    $(CP_RPUB) $$F $D$(PATHLIB)/$$F ; \
++	    $(CP_RPUB) $$F $D$(PATHBIN)/$$F ; \
+ 	done
+ 
+ bootstrap:
+diff -up inn-2.5.1/support/fixscript.in.redhat_build inn-2.5.1/support/fixscript.in
+--- inn-2.5.1/support/fixscript.in.redhat_build	2009-12-01 14:18:13.664811185 +0100
++++ inn-2.5.1/support/fixscript.in	2009-12-01 14:18:50.024811262 +0100
+@@ -26,6 +26,7 @@ prefix="@prefix@"
+ exec_prefix="@exec_prefix@"
+ libdir="@libdir@"
+ libperldir="@LIBPERLDIR@"
++libexecdir="@libexecdir@"
+ 
+ # We can probably just assume sed is on the path, but since we have it, we may
+ # as well use it.
+@@ -60,7 +61,7 @@ interpreter=`head -n 1 "$input"`
+ case "$interpreter" in
+ */sh|*SH*)
+     path="@SHELL@"
+-    lib=". $libdir/innshellvars"
++    lib=". $libexecdir/news/innshellvars"
+     ;;
+ */perl*|*PERL*)
+     path=`echo "$interpreter" | sed 's%^#! *[^ ][^ ]*%'"$PERLPATH%"`

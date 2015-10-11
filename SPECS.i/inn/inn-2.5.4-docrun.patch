@@ -1,0 +1,43 @@
+diff -up inn-2.5.4/doc/FAQ.docrun inn-2.5.4/doc/FAQ
+--- inn-2.5.4/doc/FAQ.docrun	2014-05-17 10:24:49.000000000 +0200
++++ inn-2.5.4/doc/FAQ	2014-07-15 17:39:20.616375124 +0200
+@@ -980,16 +980,16 @@ common packages.
+ 
+ (Data courtesy of John F. Morse.)
+ 
+-               DEFAULT                          DEBIAN
+-pathnews:      /usr/local/news                  /usr/lib/news
+-pathbin:       /usr/local/news/bin              /usr/lib/news/bin
+-pathcontrol:   /usr/local/news/bin/control      /usr/lib/news/bin/control
++               DEFAULT                          Fedora
++pathnews:      /usr/local/news                  /usr/lib/execenews
++pathbin:       /usr/local/news/bin              /usr/libexec/news
++pathcontrol:   /usr/local/news/bin/control      /usr/libexec/news/control
+ pathdb:        /usr/local/news/db               /var/lib/news
+ pathetc:       /usr/local/news/etc              /etc/news
+ pathfilter:    /usr/local/news/bin/filter       /etc/news/filter
+ pathhttp:      /usr/local/news/log              /var/log/news
+ pathlog:       /usr/local/news/log              /var/log/news
+-pathrun:       /usr/local/news/run              /var/run/news
++pathrun:       /usr/local/news/run              /run/news
+ pathtmp:       /usr/local/news/tmp              /var/spool/news/incoming/tmp
+ pathspool:     /usr/local/news/spool            /var/spool/news
+ patharchive:   /usr/local/news/spool/archive    /var/spool/news/archive
+@@ -1007,7 +1007,7 @@ pathetc:       /usr/local/news/etc
+ pathfilter:    /usr/local/news/bin/filter       /usr/lib/news/bin/filter
+ pathhttp:      /usr/local/news/log              /var/log/news
+ pathlog:       /usr/local/news/log              /var/log/news
+-pathrun:       /usr/local/news/run              /var/run/news
++pathrun:       /usr/local/news/run              /run/news
+ pathtmp:       /usr/local/news/tmp              /var/lib/news/tmp
+ pathspool:     /usr/local/news/spool            /var/spool/news
+ patharchive:   /usr/local/news/spool/archive    /var/spool/news/archive
+@@ -1025,7 +1025,7 @@ pathetc:       /usr/local/news/etc
+ pathfilter:    /usr/local/news/bin/filter       /usr/lib/news/bin/filter
+ pathhttp:      /usr/local/news/log              /var/log/news
+ pathlog:       /usr/local/news/log              /var/log/news
+-pathrun:       /usr/local/news/run              /var/run/news
++pathrun:       /usr/local/news/run              /run/news
+ pathtmp:       /usr/local/news/tmp              /usr/tmp
+ pathspool:     /usr/local/news/spool            /var/spool/news
+ patharchive:   /usr/local/news/spool/archive    /var/spool/news/archive
