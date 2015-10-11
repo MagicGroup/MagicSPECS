@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=UUDeview for X
+Comment=A powerful decoder for binary files
+Exec=xdeview
+Icon=
+Terminal=false
+Type=Application
+Encoding=UTF-8
+Categories=Application;Utility;
