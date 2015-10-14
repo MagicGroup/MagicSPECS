@@ -1,0 +1,39 @@
+diff --git a/kftpgrabber/src/engine/ftpdirectoryparser.cpp b/kftpgrabber/src/engine/ftpdirectoryparser.cpp
+index 981d0b6..71e2cd2 100644
+--- a/kftpgrabber/src/engine/ftpdirectoryparser.cpp
++++ b/kftpgrabber/src/engine/ftpdirectoryparser.cpp
+@@ -421,6 +421,8 @@ bool FtpDirectoryParser::parseUnixPermissions(const TQString &permissions, Direc
+   if (permissions[9] == 't' || permissions[9] == 'T') p |= S_ISVTX;
+    
+    entry.setPermissions(p);
++
++  return(p);
+ }
+ 
+ bool FtpDirectoryParser::parseLine(const TQString &line, DirectoryEntry &entry)
+diff --git a/kftpgrabber/src/misc/desencryptor.cpp b/kftpgrabber/src/misc/desencryptor.cpp
+index 126fad7..fac681f 100644
+--- a/kftpgrabber/src/misc/desencryptor.cpp
++++ b/kftpgrabber/src/misc/desencryptor.cpp
+@@ -65,8 +65,8 @@ void DESEncryptor::DESExec(const TQString &str, int mode)
+   char *o_message = (char*) malloc(8);
+   char *o_output = (char*) malloc(8);
+   
+-  memset(o_message, 0, 9);
+-  memset(o_output, 0, 9);
++  memset(o_message, 0, sizeof o_message);
++  memset(o_output, 0, sizeof o_output);
+   //out.resize(in.size() * 2);
+   
+   while (i < in.size()) {
+@@ -79,8 +79,8 @@ void DESEncryptor::DESExec(const TQString &str, int mode)
+     i += 8;
+     
+     // Clear everything
+-    memset(o_message, 0, 9);
+-    memset(o_output, 0, 9);
++    memset(o_message, 0, sizeof o_message);
++    memset(o_output, 0, sizeof o_output);
+   }
+   
+   free(o_message);

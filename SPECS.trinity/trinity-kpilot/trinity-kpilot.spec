@@ -1,76 +1,94 @@
-# Default version for this component
-%define tdecomp kpilot
-%define tdeversion 3.5.13.2
+#
+# spec file for package kpilot (version R14)
+#
+# Copyright (c) 2014 Trinity Desktop Environment
+#
+# All modifications and additions to the file contributed by third parties
+# remain the property of their copyright owners, unless otherwise agreed
+# upon. The license for this file, and modifications and additions to the
+# file, is the same license as for the pristine package itself (unless the
+# license for the pristine package is not an Open Source License, in which
+# case the license is the MIT License). An "Open Source License" is a
+# license that conforms to the Open Source Definition (Version 1.9)
+# published by the Open Source Initiative.
+#
+# Please submit bugfixes or comments via http://www.trinitydesktop.org/
+#
 
-# If TDE is built in a specific prefix (e.g. /opt/trinity), the release will be suffixed with ".opt".
-%if "%{?tde_prefix}" != "/usr"
-%define _variant .opt
+# TDE variables
+%define tde_epoch 2
+%if "%{?tde_version}" == ""
+%define tde_version 14.0.1
 %endif
-
-# TDE 3.5.13 specific building variables
+%define tde_pkg kpilot
+%define tde_prefix /opt/trinity
 %define tde_bindir %{tde_prefix}/bin
 %define tde_datadir %{tde_prefix}/share
 %define tde_docdir %{tde_datadir}/doc
 %define tde_includedir %{tde_prefix}/include
 %define tde_libdir %{tde_prefix}/%{_lib}
 %define tde_mandir %{tde_datadir}/man
-%define tde_appdir %{tde_datadir}/applications
-
-%define tde_tdeappdir %{tde_appdir}/kde
+%define tde_tdeappdir %{tde_datadir}/applications/tde
 %define tde_tdedocdir %{tde_docdir}/tde
 %define tde_tdeincludedir %{tde_includedir}/tde
 %define tde_tdelibdir %{tde_libdir}/trinity
 
-%define _docdir %{tde_docdir}
 
-
-Name:		trinity-%{tdecomp}
-Summary:	TDE Palm Pilot hot-sync tool
+Name:		trinity-%{tde_pkg}
+Epoch:		%{tde_epoch}
 Version:	0.7
-Release:	5%{?dist}%{?_variant}
-
-License:	GPLv2+
+Release:	%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}
+Summary:	TDE Palm Pilot hot-sync tool
+Summary(zh_CN.UTF-8): TDE 平台的 Palm 同步工具
 Group:		Applications/Utilities
-
-Vendor:		Trinity Project
-Packager:	Francois Andriot <francois.andriot@free.fr>
+Group(zh_CN.UTF-8): 应用程序/工具
 URL:		http://www.trinitydesktop.org
 
-Prefix:    %{tde_prefix}
-BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+License:	GPLv2+
 
-Source0:	%{tdecomp}-trinity-%{tdeversion}.tar.xz
+#Vendor:		Trinity Desktop
+#Packager:	Francois Andriot <francois.andriot@free.fr>
 
+Prefix:		%{tde_prefix}
+BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
-BuildRequires:	trinity-tqtinterface-devel >= 3.5.13.2
-BuildRequires:	trinity-tdelibs-devel >= 3.5.13.2
-BuildRequires:	trinity-tdebase-devel >= 3.5.13.2
+Source0:		%{name}-%{tde_version}%{?preversion:~%{preversion}}.tar.gz
+
+Patch1:		trinity-kpilot-14.0.1-tqt.patch
+
+BuildRequires:	trinity-tdelibs-devel >= %{tde_version}
+BuildRequires:	trinity-tdebase-devel >= %{tde_version}
 BuildRequires:	desktop-file-utils
+BuildRequires:	trinity-tdepim-devel >= %{tde_version}
 BuildRequires:	gettext
 
-BuildRequires:	pilot-link-devel
-BuildRequires:	trinity-kdepim-devel
+BuildRequires:	autoconf automake libtool m4
+BuildRequires:	gcc-c++
+BuildRequires:	pkgconfig
+BuildRequires:	fdupes
+
+
+# FLEX
+BuildRequires:	flex
+BuildRequires:	flex-devel
+
+# PILOT support
+BuildRequires:	pilot-link-devel >= 0.12
+
 
 %description
 KPilot is an application that synchronizes your Palm Pilot or similar device
-(like the Handspring Visor) with your KDE desktop, much like the Palm HotSync
+(like the Handspring Visor) with your TDE desktop, much like the Palm HotSync
 software does for Windows.  KPilot can back-up and restore your Palm Pilot
-and synchronize the built-in applications with their KDE counterparts.
+and synchronize the built-in applications with their TDE counterparts.
 
+%description -l zh_CN.UTF-8
+TDE 平台的 Palm 同步工具。
 
-%if 0%{?suse_version} || 0%{?pclinuxos}
-%debug_package
-%endif
-
-
+##########
 %prep
-%setup -q -n %{tdecomp}-trinity-%{tdeversion}
-
-# Ugly hack to modify TQT include directory inside autoconf files.
-# If TQT detection fails, it fallbacks to TQT4 instead of TQT3 !
-%__sed -i admin/acinclude.m4.in \
-  -e "s|/usr/include/tqt|%{tde_includedir}/tqt|g" \
-  -e "s|kde_htmldir='.*'|kde_htmldir='%{tde_tdedocdir}/HTML'|g"
+%setup -q -n %{name}-%{tde_version}%{?preversion:~%{preversion}}
+%patch1 -p1
 
 %__cp "/usr/share/aclocal/libtool.m4" "admin/libtool.m4.in"
 %__cp "/usr/share/libtool/config/ltmain.sh" "admin/ltmain.sh" || %__cp "/usr/share/libtool/ltmain.sh" "admin/ltmain.sh"
@@ -78,9 +96,8 @@ and synchronize the built-in applications with their KDE counterparts.
 
 
 %build
-unset QTDIR; . /etc/profile.d/qt3.sh
+unset QTDIR QTINC QTLIB
 export PATH="%{tde_bindir}:${PATH}"
-export LDFLAGS="-L%{tde_libdir} -I%{tde_includedir}"
 
 %configure \
   --prefix=%{tde_prefix} \
@@ -90,8 +107,14 @@ export LDFLAGS="-L%{tde_libdir} -I%{tde_includedir}"
   --libdir=%{tde_libdir} \
   --mandir=%{tde_mandir} \
   --includedir=%{tde_tdeincludedir} \
-  --disable-rpath \
-  --with-extra-includes=%{tde_includedir}/tqt:%{tde_tdeincludedir}
+  \
+  --disable-dependency-tracking \
+  --disable-debug \
+  --enable-new-ldflags \
+  --enable-final \
+  --enable-closure \
+  --enable-rpath \
+  --disable-gcc-hidden-visibility
 
 # SMP safe !
 %__make %{?_smp_mflags}
@@ -105,14 +128,14 @@ export PATH="%{tde_bindir}:${PATH}"
 # Unwanted files
 %__rm -f %{?buildroot}%{tde_libdir}/libkpilot.so
 
-
+magic_rpm_clean.sh
 
 %clean
 %__rm -rf %{buildroot}
 
 
 %post
-update-desktop-database %{tde_appdir} > /dev/null
+update-desktop-database %{tde_tdeappdir} > /dev/null
 for f in hicolor locolor crystalsvg; do
   touch --no-create %{tde_datadir}/icons/${f} || :
   gtk-update-icon-cache --quiet %{tde_datadir}/icons/${f} || :
@@ -120,7 +143,7 @@ done
 /sbin/ldconfig || :
 
 %postun
-update-desktop-database %{tde_appdir} > /dev/null
+update-desktop-database %{tde_tdeappdir} > /dev/null
 for f in hicolor locolor crystalsvg; do
   touch --no-create %{tde_datadir}/icons/${f} || :
   gtk-update-icon-cache --quiet %{tde_datadir}/icons/${f} || :
@@ -159,14 +182,12 @@ done
 %{tde_tdelibdir}/conduit_vcal.so
 %{tde_tdelibdir}/kcm_kpilot.la
 %{tde_tdelibdir}/kcm_kpilot.so
-%{tde_tdelibdir}/conduit_mal.la
-%{tde_tdelibdir}/conduit_mal.so
 %{tde_tdeappdir}/kpalmdoc.desktop
 %{tde_tdeappdir}/kpilot.desktop
 %{tde_tdeappdir}/kpilotdaemon.desktop
-%{tde_datadir}/apps/kaddressbook/contacteditorpages/KPilotCustomFieldEditor.ui
-%{tde_datadir}/apps/kconf_update/kpalmdoc.upd
-%{tde_datadir}/apps/kconf_update/kpilot.upd
+%{tde_datadir}/apps/kaddressbook/contacteditorpages/
+%{tde_datadir}/apps/tdeconf_update/kpalmdoc.upd
+%{tde_datadir}/apps/tdeconf_update/kpilot.upd
 %{tde_datadir}/apps/kpilot
 %{tde_datadir}/config.kcfg/*.kcfg
 %{tde_datadir}/icons/crystalsvg/*/apps/*.png
@@ -174,20 +195,8 @@ done
 %{tde_datadir}/icons/locolor/*/apps/*.png
 %{tde_datadir}/services/*.desktop
 %{tde_datadir}/servicetypes/kpilotconduit.desktop
-
+%{tde_tdedocdir}/HTML/en/kpilot/
 
 %changelog
-* Fri Aug 09 2013 Liu Di <liudidi@gmail.com> - 0.7-5.opt
-- 为 Magic 3.0 重建
-
-* Mon Jun 03 2013 Francois Andriot <francois.andriot@free.fr> - 0.7-4
-- Initial release for TDE 3.5.13.2
-
-* Wed Oct 03 2012 Francois Andriot <francois.andriot@free.fr> - 0.7-3
-- Initial release for TDE 3.5.13.1
-
-* Wed May 02 2012 Francois Andriot <francois.andriot@free.fr> - 0.7-2
-- Rebuild for Fedora 17
-
-* Wed Nov 30 2011 Francois Andriot <francois.andriot@free.fr> - 0.7-1
-- Initial release for RHEL 5, RHEL 6, Fedora 15, Fedora 16
+* Mon Jul 29 2013 Francois Andriot <francois.andriot@free.fr> - 2:0.7-1
+- Initial release for TDE 14.0.0

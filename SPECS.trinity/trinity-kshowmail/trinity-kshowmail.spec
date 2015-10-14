@@ -18,7 +18,7 @@
 # TDE variables
 %define tde_epoch 2
 %if "%{?tde_version}" == ""
-%define tde_version 14.0.0
+%define tde_version 14.0.1
 %endif
 %define tde_pkg kshowmail
 %define tde_prefix /opt/trinity
@@ -37,16 +37,14 @@
 Name:		trinity-%{tde_pkg}
 Epoch:		%{tde_epoch}
 Version:	3.3.1
-Release:	%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}
+Release:	%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}.1
 Summary:	Look messages into your mail server
+Summary(zh_CN.UTF-8): 查看邮件服务器的信息
 Group:		Applications/Internet
+Group(zh_CN.UTF-8): 应用程序/互联网
 URL:		http://sourceforge.net/projects/kshowmail/
 
-%if 0%{?suse_version}
-License:	GPL-2.0+
-%else
 License:	GPLv2+
-%endif
 
 #Vendor:		Trinity Desktop
 #Packager:	Francois Andriot <francois.andriot@free.fr>
@@ -55,6 +53,8 @@ Prefix:		%{tde_prefix}
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 Source0:		%{name}-%{tde_version}%{?preversion:~%{preversion}}.tar.gz
+
+Patch1:		%{name}-14.0.1-tqt.patch
 
 BuildRequires:	trinity-tdelibs-devel >= %{tde_version}
 BuildRequires:	trinity-tdebase-devel >= %{tde_version}
@@ -66,32 +66,19 @@ BuildRequires:	gcc-c++
 BuildRequires:	pkgconfig
 BuildRequires:	fdupes
 
-# SUSE desktop files utility
-%if 0%{?suse_version}
-BuildRequires:	update-desktop-files
-%endif
-
-%if 0%{?opensuse_bs} && 0%{?suse_version}
-# for xdg-menu script
-BuildRequires:	brp-check-trinity
-%endif
-
-
 %description
 Very simply kshowmail is a program that allows you to look in on your mail server,
 see what is waiting, decide if it is legitimate, and delete it right off of the server if it is not.
 All without dragging any messages into your computer.
 
-##########
-
-%if 0%{?pclinuxos} || 0%{?suse_version} && 0%{?opensuse_bs} == 0
-%debug_package
-%endif
+%description -l zh_CN.UTF-8
+查看你的邮件服务器上的信息。
 
 ##########
 
 %prep
 %setup -q -n %{name}-%{tde_version}%{?preversion:~%{preversion}}
+%patch1 -p1
 
 %__cp -f "/usr/share/aclocal/libtool.m4" "admin/libtool.m4.in"
 %__cp -f "/usr/share/libtool/config/ltmain.sh" "admin/ltmain.sh" || %__cp -f "/usr/share/libtool/ltmain.sh" "admin/ltmain.sh"
@@ -124,8 +111,8 @@ export PATH="%{tde_bindir}:${PATH}"
 %install
 %__rm -rf $RPM_BUILD_ROOT
 %__make install DESTDIR=$RPM_BUILD_ROOT
-
-%find_lang %{tde_pkg}
+magic_rpm_clean.sh
+%find_lang %{tde_pkg} || :
 
 # Move desktop icon to correct location
 %__mkdir_p "%{?buildroot}%{tde_tdeappdir}"
@@ -135,17 +122,13 @@ export PATH="%{tde_bindir}:${PATH}"
 install -D -m 644 "pics/cr16-app-kshowmail.png" "$RPM_BUILD_ROOT%{tde_datadir}/icons/hicolor/16x16/apps/kshowmail.png"
 install -D -m 644 "pics/kshowmail.png"          "$RPM_BUILD_ROOT%{tde_datadir}/icons/hicolor/48x48/apps/kshowmail.png"
 
-# Updates applications categories for openSUSE
-%if 0%{?suse_version}
-%suse_update_desktop_file kshowmail Network Email
-%endif
-
+%__rm -rf %{?buildroot}%{tde_tdedocdir}/HTML/{de,es,fr,hu,it,ru,sv}
 
 %clean
 %__rm -rf $RPM_BUILD_ROOT
 
 
-%files -f %{tde_pkg}.lang
+%files 
 %defattr(-,root,root,-)
 %doc AUTHORS COPYING README ChangeLog
 %{tde_bindir}/kshowmail
@@ -174,16 +157,11 @@ install -D -m 644 "pics/kshowmail.png"          "$RPM_BUILD_ROOT%{tde_datadir}/i
 %{tde_datadir}/services/kshowmailconfiggeneral.desktop
 %{tde_datadir}/services/kshowmailconfiglog.desktop
 %{tde_datadir}/services/kshowmailconfigspamcheck.desktop
-%lang(de) %{tde_tdedocdir}/HTML/de/kshowmail/
 %lang(en) %{tde_tdedocdir}/HTML/en/kshowmail/
-%lang(es) %{tde_tdedocdir}/HTML/es/kshowmail/
-%lang(fr) %{tde_tdedocdir}/HTML/fr/kshowmail/
-%lang(hu) %{tde_tdedocdir}/HTML/hu/kshowmail/
-%lang(it) %{tde_tdedocdir}/HTML/it/kshowmail/
-%lang(ru) %{tde_tdedocdir}/HTML/ru/kshowmail/
-%lang(sv) %{tde_tdedocdir}/HTML/sv/kshowmail/
-
 
 %changelog
+* Tue Oct 13 2015 Liu Di <liudidi@gmail.com> - 2:3.3.1-1.1
+- 为 Magic 3.0 重建
+
 * Fri Jul 05 2013 Francois Andriot <francois.andriot@free.fr> - 2:3.3.1-1
 - Initial release for TDE 14.0.0

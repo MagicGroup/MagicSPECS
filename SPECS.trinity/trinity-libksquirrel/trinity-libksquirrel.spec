@@ -1,168 +1,147 @@
-# Default version for this component
-%define kdecomp libksquirrel
-%define tdeversion 3.5.13.2
+#
+# spec file for package libksquirrel (version R14)
+#
+# Copyright (c) 2014 Trinity Desktop Environment
+#
+# All modifications and additions to the file contributed by third parties
+# remain the property of their copyright owners, unless otherwise agreed
+# upon. The license for this file, and modifications and additions to the
+# file, is the same license as for the pristine package itself (unless the
+# license for the pristine package is not an Open Source License, in which
+# case the license is the MIT License). An "Open Source License" is a
+# license that conforms to the Open Source Definition (Version 1.9)
+# published by the Open Source Initiative.
+#
+# Please submit bugfixes or comments via http://www.trinitydesktop.org/
+#
+
+# BUILD WARNING:
+#  Remove qt-devel and qt3-devel and any kde*-devel on your system !
+#  Having KDE libraries may cause FTBFS here !
+
+# TDE variables
+%define tde_epoch 2
+%if "%{?tde_version}" == ""
+%define tde_version 14.0.1
+%endif
+%define tde_pkg libksquirrel
+%define tde_prefix /opt/trinity
+%define tde_bindir %{tde_prefix}/bin
+%define tde_datadir %{tde_prefix}/share
+%define tde_docdir %{tde_datadir}/doc
+%define tde_includedir %{tde_prefix}/include
+%define tde_libdir %{tde_prefix}/%{_lib}
+%define tde_tdeappdir %{tde_datadir}/applications/tde
+%define tde_tdedocdir %{tde_docdir}/tde
+%define tde_tdeincludedir %{tde_includedir}/tde
+%define tde_tdelibdir %{tde_libdir}/trinity
 
 # If TDE is built in a specific prefix (e.g. /opt/trinity), the release will be suffixed with ".opt".
 %if "%{?tde_prefix}" != "/usr"
 %define _variant .opt
 %endif
 
-# TDE 3.5.13 specific building variables
-%define tde_bindir %{tde_prefix}/bin
-%define tde_datadir %{tde_prefix}/share
-%define tde_docdir %{tde_datadir}/doc
-%define tde_includedir %{tde_prefix}/include
-%define tde_libdir %{tde_prefix}/%{_lib}
-%define tde_mandir %{tde_datadir}/man
-%define tde_appdir %{tde_datadir}/applications
-
-%define tde_tdeappdir %{tde_appdir}/kde
-%define tde_tdedocdir %{tde_docdir}/tde
-%define tde_tdeincludedir %{tde_includedir}/tde
-%define tde_tdelibdir %{tde_libdir}/trinity
-
-%define _docdir %{tde_docdir}
+%global _hardened_build 0
+%define _hardened_cflags %{nil}
+%define _hardened_ldflags %{nil}
 
 
-Name:		trinity-%{kdecomp}
+Name:		trinity-%{tde_pkg}
 Summary:	Trinity image viewer
+Summary(zh_CN.UTF-8): TDE 下的图像查看器
+Group:		System/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
+Epoch:		%{tde_epoch}
 Version:	0.8.0
-Release:	3%{?dist}%{?_variant}
-
-License:	GPLv2+
-Group:		Environment/Libraries
-
-Vendor:		Trinity Project
-Packager:	Francois Andriot <francois.andriot@free.fr>
+Release:	%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}%{?_variant}
 URL:		http://www.trinitydesktop.org/
 
-Prefix:    %{tde_prefix}
-BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+License:	GPLv2+
 
-Source0:	%{kdecomp}-trinity-%{tdeversion}.tar.xz
-Patch0:		libksquirrel-3.5.13-detect_netpbm.patch
-Patch1:		libksquirrel-3.5.13-fix_docdir.patch
+#Vendor:		Trinity Desktop
+#Packager:	Francois Andriot <francois.andriot@free.fr>
 
-BuildRequires: trinity-tqtinterface-devel >= 3.5.13.1
-BuildRequires: trinity-arts-devel >= 3.5.13.1
-BuildRequires: trinity-tdelibs-devel >= 3.5.13.1
+Prefix:			%{tde_prefix}
+BuildRoot:		%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+
+Source0:	%{name}-%{tde_version}%{?preversion:~%{preversion}}.tar.gz
+Patch0:		%{tde_pkg}-14.0.0.patch
+Patch1:		%{name}-14.0.1-tqt.patch
+
+BuildRequires:	trinity-tdelibs-devel >= %{tde_version}
+
 BuildRequires:	desktop-file-utils
-BuildRequires:	gettext
+BuildRequires:	gcc-c++
+BuildRequires:	pkgconfig
 
-BuildRequires:	gettext-devel
+# AUTOTOOLS
+BuildRequires: automake autoconf libtool
+BuildRequires:	libtool-ltdl-devel
+
+# TRANSFIG support
 BuildRequires:	transfig
+
+# GHOSTSCRIPT support
+%define with_ghostscript 1
+BuildRequires:	ghostscript
+
+# GETTEXT support
+BuildRequires:	gettext
+BuildRequires:	gettext-devel
+
+# OPENEXR support
+BuildRequires:	OpenEXR-devel
+
+# TIFF support
+BuildRequires:	libtiff-devel
+
+# GIF support
+BuildRequires:	libungif-devel
+
+# MNG support
+BuildRequires: libmng-devel
+
+# DJVU support
+%define with_djvu 1
 BuildRequires:	djvulibre
 
 # XMEDCON support
-%if 0%{?fedora} || 0%{?mgaversion} || 0%{?mdkversion}
 %define with_xmedcon 1
 BuildRequires:	xmedcon
 BuildRequires:	xmedcon-devel
-%endif
 
 # RSVG support
-%if 0%{?fedora} || 0%{?rhel} 
+%define with_svg 1
 BuildRequires:	librsvg2
-%endif
-%if 0%{?mgaversion} || 0%{?mdkversion}
-BuildRequires:	librsvg
-%endif
-%if 0%{?suse_version}
-BuildRequires:	rsvg-view
-BuildRequires:	librsvg-devel
-%endif
 
+# JASPER support
+%define with_jasper 1
+BuildRequires:	jasper-devel
+
+# FREETYPE support
+%define with_freetype 1
+BuildRequires: freetype-devel
+
+# WMF support
 BuildRequires:	libwmf-devel
 
-%if 0%{?mgaversion} || 0%{?mdkversion} || 0%{?suse_version}
-BuildRequires:	netpbm
-%else
+# XML2 support
+BuildRequires:	libxml2-devel
+
+# NETPBM support
 BuildRequires:	netpbm-progs
-%endif
 
 
 %description
-Runtime libraries for KSquirrel.
+This package contains the runtime libraries for KSquirrel.
 
-
-%package devel
-Group:		Development/Libraries
-Summary:	Trinity image viewer
-Requires:	%{name}
-
-%description devel
-Development libraries for KSquirrel.
-
-
-%package tools
-Summary:	Trinity image viewer
-Group:		Environment/Libraries
-Requires:	%{name}
-
-%description tools
-Tools for KSquirrel.
-
-
-%if 0%{?suse_version}
-%debug_package
-%endif
-
-
-%prep
-%setup -q -n %{kdecomp}-trinity-%{tdeversion}
-%patch0 -p1
-
-# Ugly hack to modify TQT include directory inside autoconf files.
-# If TQT detection fails, it fallbacks to TQT4 instead of TQT3 !
-%__sed -i admin/acinclude.m4.in \
-  -e "s|/usr/include/tqt|%{tde_includedir}/tqt|g" \
-  -e "s|kde_htmldir='.*'|kde_htmldir='%{tde_tdedocdir}/HTML'|g"
-
-%__cp "/usr/share/aclocal/libtool.m4" "admin/libtool.m4.in"
-%__cp "/usr/share/libtool/config/ltmain.sh" "admin/ltmain.sh" || %__cp "/usr/share/libtool/ltmain.sh" "admin/ltmain.sh"
-%__make -f "admin/Makefile.common"
-
-
-%build
-unset QTDIR; . /etc/profile.d/qt3.sh
-export PATH="%{tde_bindir}:${PATH}"
-export LDFLAGS="-L%{tde_libdir} -I%{tde_includedir}"
-
-%configure \
-  --prefix=%{tde_prefix} \
-  --exec-prefix=%{tde_prefix} \
-  --bindir=%{tde_bindir} \
-  --datadir=%{tde_datadir} \
-  --libdir=%{tde_libdir} \
-  --mandir=%{tde_mandir} \
-  --includedir=%{tde_includedir} \
-  --disable-rpath \
-  --with-extra-includes=%{tde_includedir}/tqt \
-  --enable-djvu
-
-%__make %{?_smp_mflags}
-
-
-%install
-export PATH="%{tde_bindir}:${PATH}"
-%__rm -rf %{buildroot}
-%__make install DESTDIR=%{buildroot}
-
-
-%clean
-%__rm -rf %{buildroot}
-
-
-%post
-/sbin/ldconfig || :
-
-%postun
-/sbin/ldconfig || :
-
+%description -l zh_CN.UTF-8
+KSquirrel 的运行库。
 
 %files
 %defattr(-,root,root,-)
 %doc AUTHORS ChangeLog COPYING LICENSE README
+%dir %{tde_libdir}/ksquirrel-libs
 %{tde_libdir}/ksquirrel-libs/libkls_avs.so.0
 %{tde_libdir}/ksquirrel-libs/libkls_avs.so.0.8.0
 %{tde_libdir}/ksquirrel-libs/libkls_bmp.so.0
@@ -177,10 +156,14 @@ export PATH="%{tde_bindir}:${PATH}"
 %{tde_libdir}/ksquirrel-libs/libkls_dicom.so.0
 %{tde_libdir}/ksquirrel-libs/libkls_dicom.so.0.8.0
 %endif
+%if 0%{?with_djvu}
 %{tde_libdir}/ksquirrel-libs/libkls_djvu.so.0
 %{tde_libdir}/ksquirrel-libs/libkls_djvu.so.0.8.0
+%endif
+%if 0%{?with_ghostscript}
 %{tde_libdir}/ksquirrel-libs/libkls_eps.so.0
 %{tde_libdir}/ksquirrel-libs/libkls_eps.so.0.8.0
+%endif
 %{tde_libdir}/ksquirrel-libs/libkls_fig.so.0
 %{tde_libdir}/ksquirrel-libs/libkls_fig.so.0.8.0
 %{tde_libdir}/ksquirrel-libs/libkls_fli.so.0
@@ -247,14 +230,18 @@ export PATH="%{tde_bindir}:${PATH}"
 %{tde_libdir}/ksquirrel-libs/libkls_sgi.so.0.8.0
 %{tde_libdir}/ksquirrel-libs/libkls_sun.so.0
 %{tde_libdir}/ksquirrel-libs/libkls_sun.so.0.8.0
+%if 0%{?with_svg}
 %{tde_libdir}/ksquirrel-libs/libkls_svg.so.0
 %{tde_libdir}/ksquirrel-libs/libkls_svg.so.0.8.0
+%endif
 %{tde_libdir}/ksquirrel-libs/libkls_tga.so.0
 %{tde_libdir}/ksquirrel-libs/libkls_tga.so.0.8.0
 %{tde_libdir}/ksquirrel-libs/libkls_tiff.so.0
 %{tde_libdir}/ksquirrel-libs/libkls_tiff.so.0.8.0
+%if 0%{?with_freetype}
 %{tde_libdir}/ksquirrel-libs/libkls_ttf.so.0
 %{tde_libdir}/ksquirrel-libs/libkls_ttf.so.0.8.0
+%endif
 %{tde_libdir}/ksquirrel-libs/libkls_utah.so.0
 %{tde_libdir}/ksquirrel-libs/libkls_utah.so.0.8.0
 %{tde_libdir}/ksquirrel-libs/libkls_wal.so.0
@@ -279,15 +266,42 @@ export PATH="%{tde_bindir}:${PATH}"
 %{tde_libdir}/libksquirrel-libs-png.so.0.0.0
 %{tde_libdir}/libksquirrel-libs.so.0
 %{tde_libdir}/libksquirrel-libs.so.0.8.0
+%dir %{tde_datadir}/ksquirrel-libs
 %{tde_datadir}/ksquirrel-libs/libkls_camera.so.ui
+%if 0%{?with_djvu}
 %{tde_datadir}/ksquirrel-libs/libkls_djvu.so.ui
+%endif
+%if 0%{?with_svg}
 %{tde_datadir}/ksquirrel-libs/libkls_svg.so.ui
+%endif
 %{tde_datadir}/ksquirrel-libs/libkls_tiff.so.ui
 %{tde_datadir}/ksquirrel-libs/libkls_xcf.so.ui
 %{tde_datadir}/ksquirrel-libs/rgbmap
 
+%post
+/sbin/ldconfig || :
+
+%postun
+/sbin/ldconfig || :
+
+##########
+
+%package devel
+Group:		Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
+Summary:	Trinity image viewer
+Summary(zh_CN.UTF-8): %{name} 的开发包
+Requires:	%{name} = %{?epoch:%{epoch}:}%{version}-%{release}
+
+%description devel
+This package contains the development libraries for KSquirrel.
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
 %files devel
 %defattr(-,root,root,-)
+%dir %{tde_includedir}/ksquirrel-libs
 %{tde_includedir}/ksquirrel-libs/error.h
 %{tde_includedir}/ksquirrel-libs/fileio.h
 %{tde_includedir}/ksquirrel-libs/fmt_codec_base.h
@@ -309,10 +323,14 @@ export PATH="%{tde_bindir}:${PATH}"
 %{tde_libdir}/ksquirrel-libs/libkls_dicom.la
 %{tde_libdir}/ksquirrel-libs/libkls_dicom.so
 %endif
+%if 0%{?with_djvu}
 %{tde_libdir}/ksquirrel-libs/libkls_djvu.la
 %{tde_libdir}/ksquirrel-libs/libkls_djvu.so
+%endif
+%if 0%{?with_ghostscript}
 %{tde_libdir}/ksquirrel-libs/libkls_eps.la
 %{tde_libdir}/ksquirrel-libs/libkls_eps.so
+%endif
 %{tde_libdir}/ksquirrel-libs/libkls_fig.la
 %{tde_libdir}/ksquirrel-libs/libkls_fig.so
 %{tde_libdir}/ksquirrel-libs/libkls_fli.la
@@ -379,14 +397,18 @@ export PATH="%{tde_bindir}:${PATH}"
 %{tde_libdir}/ksquirrel-libs/libkls_sgi.so
 %{tde_libdir}/ksquirrel-libs/libkls_sun.la
 %{tde_libdir}/ksquirrel-libs/libkls_sun.so
+%if 0%{?with_svg}
 %{tde_libdir}/ksquirrel-libs/libkls_svg.la
 %{tde_libdir}/ksquirrel-libs/libkls_svg.so
+%endif
 %{tde_libdir}/ksquirrel-libs/libkls_tga.la
 %{tde_libdir}/ksquirrel-libs/libkls_tga.so
 %{tde_libdir}/ksquirrel-libs/libkls_tiff.la
 %{tde_libdir}/ksquirrel-libs/libkls_tiff.so
+%if 0%{?with_freetype}
 %{tde_libdir}/ksquirrel-libs/libkls_ttf.la
 %{tde_libdir}/ksquirrel-libs/libkls_ttf.so
+%endif
 %{tde_libdir}/ksquirrel-libs/libkls_utah.la
 %{tde_libdir}/ksquirrel-libs/libkls_utah.so
 %{tde_libdir}/ksquirrel-libs/libkls_wal.la
@@ -414,6 +436,27 @@ export PATH="%{tde_bindir}:${PATH}"
 %{tde_libdir}/pkgconfig/ksquirrellibs.pc
 %{tde_docdir}/ksquirrel-libs/
 
+%post devel
+/sbin/ldconfig || :
+
+%postun devel
+/sbin/ldconfig || :
+
+##########
+
+%package tools
+Summary:	Trinity image viewer
+Summary(zh_CN.UTF-8): %{name} 的工具
+Group:		System/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
+Requires:	%{name} = %{?epoch:%{epoch}:}%{version}-%{release}
+
+%description tools
+This package contains the tools for KSquirrel.
+
+%description tools -l zh_CN.UTF-8
+%{name} 的工具。
+
 %files tools
 %defattr(-,root,root,-)
 %{tde_bindir}/ksquirrel-libs-camera2ppm
@@ -430,13 +473,69 @@ export PATH="%{tde_bindir}:${PATH}"
 %{tde_bindir}/ksquirrel-libs-neo2ppm
 %{tde_bindir}/ksquirrel-libs-pi12ppm
 %{tde_bindir}/ksquirrel-libs-pi32ppm
+%if 0%{?with_svg}
 %{tde_bindir}/ksquirrel-libs-svg2png
+%endif
+%if 0%{?with_freetype}
 %{tde_bindir}/ksquirrel-libs-ttf2pnm
+%endif
 %{tde_bindir}/ksquirrel-libs-utah2ppm
 %{tde_bindir}/ksquirrel-libs-xcf2pnm
 %{tde_bindir}/ksquirrel-libs-xim2ppm
 
+##########
+
+%prep
+%setup -q -n %{name}-%{tde_version}%{?preversion:~%{preversion}}
+%patch0 -p1
+%patch1 -p1
+
+# FIXME: under PCLinuxOS, headers are under 'freetype2' not 'freetype'
+if [ -r /usr/include/freetype2/ftbitmap.h ]; then
+  %__sed -i "configure.ac" -e "s|freetype/ftbitmap.h|freetype2/ftbitmap.h|"
+  %__sed -i "kernel/kls_ttf/ttf2pnm.cpp" -e "s|freetype/config/|freetype2/config/|"
+fi
+
+%__cp "/usr/share/aclocal/libtool.m4" "admin/libtool.m4.in"
+%__cp "/usr/share/libtool/config/ltmain.sh" "admin/ltmain.sh" || %__cp "/usr/share/libtool/ltmain.sh" "admin/ltmain.sh"
+%__make -f "admin/Makefile.common"
+
+
+%build
+unset QTDIR QTINC QTLIB
+export PATH="%{tde_bindir}:${PATH}"
+
+%configure \
+  --prefix=%{tde_prefix} \
+  --exec-prefix=%{tde_prefix} \
+  --bindir=%{tde_bindir} \
+  --datadir=%{tde_datadir} \
+  --libdir=%{tde_libdir} \
+  --includedir=%{tde_includedir} \
+  \
+  --disable-dependency-tracking \
+  --disable-debug \
+  --enable-new-ldflags \
+  --enable-final \
+  --enable-closure \
+  --enable-rpath \
+  --disable-gcc-hidden-visibility \
+  \
+  %{?with_djvu:--enable-djvu}
+
+%__make %{?_smp_mflags}
+
+
+%install
+export PATH="%{tde_bindir}:${PATH}"
+%__rm -rf %{buildroot}
+%__make install DESTDIR=%{buildroot}
+magic_rpm_clean.sh
+
+%clean
+%__rm -rf %{buildroot}
+
 
 %Changelog
-* Tue Oct 02 2012 Francois Andriot <francois.andriot@free.fr> - 0.8.0-2
-- Initial release for TDE 3.5.13.1
+* Fri Jul 05 2013 Francois Andriot <francois.andriot@free.fr> - 2:0.8.0-1
+- Initial release for TDE 14.0.0

@@ -6,7 +6,7 @@ Summary:	GUI independent C++ database application libraries
 Summary(zh_CN.UTF-8): GUI 无关的 C++ 数据库程序库
 Name:		hk_classes
 Version: 	0.8.3
-Release: 	1%{?dist}
+Release: 	2%{?dist}
 License:	GPL
 Group:		Applications/Databases
 Group(zh_CN.UTF-8): 应用程序/数据库
@@ -257,5 +257,8 @@ magic_rpm_clean.sh
 
 
 %changelog
+* Mon Oct 12 2015 Liu Di <liudidi@gmail.com> - 0.8.3-2
+- 为 Magic 3.0 重建
+
 * Mon Apr 08 2013 Francois Andriot <francois.andriot@free.fr> 0.8.3-1
 - Initial release for TDE 3.5.13.2

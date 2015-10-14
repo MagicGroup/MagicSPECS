@@ -1,0 +1,58 @@
+diff -ur trinity-tdelibs-14.0.1/tdeui/kdatepicker.cpp trinity-tdelibs-14.0.1.new/tdeui/kdatepicker.cpp
+--- trinity-tdelibs-14.0.1/tdeui/kdatepicker.cpp	2013-12-30 17:08:12.000000000 +0000
++++ trinity-tdelibs-14.0.1.new/tdeui/kdatepicker.cpp	2015-10-13 01:09:01.223878075 +0000
+@@ -46,6 +46,8 @@
+ #include "kdatetbl.h"
+ #include "kdatepicker.moc"
+ 
++#include <stdlib.h>
++#include <tqfile.h>
+ // Week numbers are defined by ISO 8601
+ // See http://www.merlyn.demon.co.uk/weekinfo.htm for details
+ 
+@@ -248,8 +250,45 @@
+     kdDebug(298) << "KDatePicker::dateChangedSlot: date changed (" << date.year() << "/" << date.month() << "/" << date.day() << ")." << endl;
+ 
+     const KCalendarSystem * calendar = TDEGlobal::locale()->calendar();
+-
++    // line->setText(KGlobal::locale()->formatDate(date, true));
++    if(TQString(getenv("LANG")).upper().contains("ZH"))
++    {
++	if(TQFile("/usr/bin/ccal-kdatepicker").exists())
++    	{
++        TQString cmd = TQString("ccal-kdatepicker -g ")+ TQString("%1").arg(date.month())+TQString(" ")+TQString("%1").arg(date.year());
++        FILE *pipe;
++        //     TQString s;
++        fprintf(stderr,"the cmd is %s\n\n",cmd.latin1());
++        if ((pipe = popen(cmd.latin1(), "r")) == NULL) {
++             pclose(pipe);
++        }
++        TQTextStream *t=new TQTextStream(pipe, IO_ReadOnly);
++        int i = 0;
++        while (!t->atEnd()) {
++        TQString tmp = t->readLine();
++        if(tmp.stripWhiteSpace().length()>0)
++           {
++           i++;
++           fprintf(stderr,"list is %s\n",tmp.stripWhiteSpace().latin1());
++           //  s += tmp.stripWhiteSpace();
++           if(i == date.day())
++              {
++                    line->setText(/*TQString::fromLocal8Bit(*/tmp.stripWhiteSpace()/*.latin1())*/);
++                    break;
++               }
++           }
++        }
++        pclose(pipe);
++       }
++   else
++       {
++        line->setText(TDEGlobal::locale()->formatDate(date, true));
++       }
++   }
++   else
++   {
+     line->setText(TDEGlobal::locale()->formatDate(date, true));
++   }
+     selectMonth->setText(calendar->monthName(date, false));
+     fillWeeksCombo(date);

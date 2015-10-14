@@ -18,7 +18,7 @@
 # TDE variables
 %define tde_epoch 2
 %if "%{?tde_version}" == ""
-%define tde_version 14.0.0
+%define tde_version 14.0.1
 %endif
 %define tde_pkg krecipes
 %define tde_prefix /opt/trinity
@@ -37,16 +37,13 @@
 Name:		trinity-%{tde_pkg}
 Epoch:		%{tde_epoch}
 Version:	1.0beta2
-Release:	%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}
+Release:	%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}.1
 Summary:	Recipes manager for TDE
+Summary(zh_CN.UTF-8): TDE 下的食谱管理程序
 Group:		Applications/Utilities
+Group(zh_CN.UTF-8): 应用程序/工具
 URL:		http://www.trinitydesktop.org/
-
-%if 0%{?suse_version}
-License:	GPL-2.0+
-%else
 License:	GPLv2+
-%endif
 
 #Vendor:		Trinity Desktop
 #Packager:	Francois Andriot <francois.andriot@free.fr>
@@ -56,6 +53,8 @@ BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 Source0:		%{name}-%{tde_version}%{?preversion:~%{preversion}}.tar.gz
 
+Patch1:		%{name}-14.0.1-tqt.patch
+
 BuildRequires:	trinity-tdelibs-devel >= %{tde_version}
 BuildRequires:	desktop-file-utils
 BuildRequires:	gettext
@@ -64,16 +63,6 @@ BuildRequires:	autoconf automake libtool m4
 BuildRequires:	gcc-c++
 BuildRequires:	pkgconfig
 BuildRequires:	fdupes
-
-# SUSE desktop files utility
-%if 0%{?suse_version}
-BuildRequires:	update-desktop-files
-%endif
-
-%if 0%{?opensuse_bs} && 0%{?suse_version}
-# for xdg-menu script
-BuildRequires:	brp-check-trinity
-%endif
 
 # MYSQL support
 BuildRequires:	mysql-devel
@@ -92,16 +81,14 @@ with available ingredients and a diet helper. It can also import or export
 recipes from files in various format (eg RecipeML or Meal-Master) or from
 databases.
 
-##########
-
-%if 0%{?pclinuxos} || 0%{?suse_version} && 0%{?opensuse_bs} == 0
-%debug_package
-%endif
+%description -l zh_CN.UTF-8
+TDE 下的食谱管理程序。
 
 ##########
 
 %prep
 %setup -q -n %{name}-%{tde_version}%{?preversion:~%{preversion}}
+%patch1 -p1
 
 %__cp -f "/usr/share/aclocal/libtool.m4" "admin/libtool.m4.in"
 %__cp -f "/usr/share/libtool/config/ltmain.sh" "admin/ltmain.sh" || %__cp -f "/usr/share/libtool/ltmain.sh" "admin/ltmain.sh"
@@ -140,21 +127,17 @@ export PATH="%{tde_bindir}:${PATH}"
 export PATH="%{tde_bindir}:${PATH}"
 %__rm -rf %{buildroot}
 %__make install DESTDIR=%{buildroot}
-
-%find_lang %{tde_pkg}
+magic_rpm_clean.sh
+%find_lang %{tde_pkg} || :
 
 # Fix desktop file location
 %__mkdir_p "%{?buildroot}%{tde_tdeappdir}"
 %__mv -f "%{?buildroot}%{tde_datadir}/applnk/"*"/krecipes.desktop" "%{?buildroot}%{tde_tdeappdir}"
 
-# Updates applications categories for openSUSE
-%if 0%{?suse_version}
-%suse_update_desktop_file -r krecipes Education Chemistry
-%endif
-
 # Removes duplicate files
 %fdupes "%{buildroot}%{tde_datadir}"
 
+rm -rf %{buildroot}%{tde_tdedocdir}/HTML/{da,es,et,pt,sv}
 
 %clean
 %__rm -rf %{buildroot}
@@ -174,7 +157,7 @@ for f in crystalsvg hicolor ; do
 done
 
 
-%files -f %{tde_pkg}.lang
+%files 
 %defattr(-,root,root,-)
 %{tde_bindir}/krecipes
 %{tde_tdeappdir}/krecipes.desktop
@@ -183,14 +166,11 @@ done
 %{tde_datadir}/icons/hicolor/*/apps/krecipes.png
 %{tde_datadir}/mimelnk/application/x-krecipes-backup.desktop
 %{tde_datadir}/mimelnk/application/x-krecipes-recipes.desktop
-%lang(da) %{tde_tdedocdir}/HTML/da/
 %lang(en) %{tde_tdedocdir}/HTML/en/
-%lang(es) %{tde_tdedocdir}/HTML/es/
-%lang(et) %{tde_tdedocdir}/HTML/et/
-%lang(pt) %{tde_tdedocdir}/HTML/pt/
-%lang(sv) %{tde_tdedocdir}/HTML/sv/
-
 
 %changelog
+* Tue Oct 13 2015 Liu Di <liudidi@gmail.com> - 2:1.0beta2-1.1
+- 为 Magic 3.0 重建
+
 * Fri Jul 05 2013 Francois Andriot <francois.andriot@free.fr> - 2:1.0beta2-1
 - Initial release for TDE 14.0.0

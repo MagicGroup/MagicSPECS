@@ -18,7 +18,7 @@
 # TDE variables
 %define tde_epoch 2
 %if "%{?tde_version}" == ""
-%define tde_version 14.0.0
+%define tde_version 14.0.1
 %endif
 %define tde_pkg kftpgrabber
 %define tde_prefix /opt/trinity
@@ -37,16 +37,14 @@
 Name:			trinity-%{tde_pkg}
 Epoch:			%{tde_epoch}
 Version:        0.8.1
-Release:		%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}%{?_variant}
+Release:		%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}%{?_variant}.1
 Summary:        A FTP client for TDE.
+Summary(zh_CN.UTF-8): TDE 下的 FTP 客户端
 Group:          Applications/Internet
+Group(zh_CN.UTF-8): 应用程序/互联网
 URL:            http://www.kftp.org/
 
-%if 0%{?suse_version}
-License:	GPL-2.0+
-%else
 License:	GPLv2+
-%endif
 
 #Vendor:		Trinity Desktop
 #Packager:	Francois Andriot <francois.andriot@free.fr>
@@ -56,7 +54,7 @@ BuildRoot:		%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 Source0:		%{name}-%{tde_version}%{?preversion:~%{preversion}}.tar.gz
 Patch0:			%{tde_pkg}-14.0.0.patch
-
+Patch1:			%{name}-14.0.1-tqt.patch
 
 BuildRequires:	trinity-tdelibs-devel >= %{tde_version}
 BuildRequires:	trinity-tdebase-devel >= %{tde_version}
@@ -65,16 +63,6 @@ BuildRequires:	desktop-file-utils
 BuildRequires:	autoconf automake libtool m4
 BuildRequires:	gcc-c++
 BuildRequires:	pkgconfig
-
-# SUSE desktop files utility
-%if 0%{?suse_version}
-BuildRequires:	update-desktop-files
-%endif
-
-%if 0%{?opensuse_bs} && 0%{?suse_version}
-# for xdg-menu script
-BuildRequires:	brp-check-trinity
-%endif
 
 # OPENSSL support
 BuildRequires:	openssl-devel
@@ -104,27 +92,27 @@ Feature list:
 - Advanced default "on file exists" action configuration
 - Filter displayed files/directories as you type
 
+%description -l zh_CN.UTF-8
+TDE 下的 FTP 客户端，支持很多功能。
 
 %package devel
 Summary:  	Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: 		Development/Libraries
-Requires: 	%{name} = %{version}-%{release}
+Group(zh_CN.UTF-8): 开发/库
+Requires: 	%{name} = %{epoch}:%{version}-%{release}
 
 %description devel
 %{summary}
-
-
-##########
-
-%if 0%{?pclinuxos} || 0%{?suse_version} && 0%{?opensuse_bs} == 0
-%debug_package
-%endif
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 ##########
 
 %prep
 %setup -q -n %{name}-%{tde_version}%{?preversion:~%{preversion}}
 %patch0 -p1 -b .orig
+%patch1 -p1
 
 %__cp -f "/usr/share/aclocal/libtool.m4" "admin/libtool.m4.in"
 %__cp -f "/usr/share/libtool/config/ltmain.sh" "admin/ltmain.sh" || %__cp -f "/usr/share/libtool/ltmain.sh" "admin/ltmain.sh"
@@ -158,7 +146,7 @@ export PATH="%{tde_bindir}:${PATH}"
 %install
 %__rm -rf $RPM_BUILD_ROOT
 %__make install DESTDIR=$RPM_BUILD_ROOT
-
+magic_rpm_clean.sh
 %find_lang %{tde_pkg}
 
 
@@ -214,5 +202,8 @@ done
 
 
 %changelog
+* Sun Oct 11 2015 Liu Di <liudidi@gmail.com> - 2:0.8.1-1.1
+- 为 Magic 3.0 重建
+
 * Fri Jul 05 2013 Francois Andriot <francois.andriot@free.fr> - 2:0.8.1-1
 - Initial release for TDE 14.0.0

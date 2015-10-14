@@ -18,7 +18,7 @@
 # TDE variables
 %define tde_epoch 2
 %if "%{?tde_version}" == ""
-%define tde_version 14.0.0
+%define tde_version 14.0.1
 %endif
 %define tde_pkg kdbg
 %define tde_prefix /opt/trinity
@@ -40,14 +40,12 @@ Epoch:			%{tde_epoch}
 Version:		2.2.2
 Release:		%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}%{?_variant}
 Summary:		Graphical debugger interface [Trinity]
+Summary(zh_CN.UTF-8): TDE 下的图形界面调试器
 Group:			Applications/Utilities
+Group(zh_CN.UTF-8): 应用程序/工具
 URL:			http://www.trinitydesktop.org/
 
-%if 0%{?suse_version}
-License:	GPL-2.0+
-%else
 License:	GPLv2+
-%endif
 
 #Vendor:		Trinity Desktop
 #Packager:	Francois Andriot <francois.andriot@free.fr>
@@ -56,6 +54,7 @@ Prefix:			%{_prefix}
 BuildRoot:		%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 Source0:		%{name}-%{tde_version}%{?preversion:~%{preversion}}.tar.gz
+Patch1:			%{name}-14.0.1-tqt.patch
 
 BuildRequires:	trinity-tdelibs-devel >= %{tde_version}
 BuildRequires:	trinity-tdebase-devel >= %{tde_version}
@@ -66,17 +65,6 @@ BuildRequires:	gettext
 BuildRequires:	autoconf automake libtool m4
 BuildRequires:	gcc-c++
 BuildRequires:	pkgconfig
-
-# SUSE desktop files utility
-%if 0%{?suse_version}
-BuildRequires:	update-desktop-files
-%endif
-
-%if 0%{?opensuse_bs} && 0%{?suse_version}
-# for xdg-menu script
-BuildRequires:	brp-check-trinity
-%endif
-
 
 %description
 KDbg is a graphical user interface to gdb, the GNU debugger.  It provides
@@ -102,16 +90,14 @@ Features include the following:
 * Debugging of core dumps, attaching to running processes is possible.
 * Conditional breakpoints.
 
-##########
-
-%if 0%{?pclinuxos} || 0%{?suse_version} && 0%{?opensuse_bs} == 0
-%debug_package
-%endif
+%description -l zh_CN.UTF-8
+TDE 下的 gdb 的图形前端。
 
 ##########
 
 %prep
 %setup -q -n %{name}-%{tde_version}%{?preversion:~%{preversion}}
+%patch1 -p1
 
 %__cp -f "/usr/share/aclocal/libtool.m4" "admin/libtool.m4.in"
 %__cp -f "/usr/share/libtool/config/ltmain.sh" "admin/ltmain.sh" || %__cp -f "/usr/share/libtool/ltmain.sh" "admin/ltmain.sh"
@@ -148,8 +134,8 @@ export kde_confdir="%{tde_confdir}"
 export PATH="%{tde_bindir}:${PATH}"
 %__rm -rf %{buildroot}
 %__make install DESTDIR=%{buildroot}
-
-%find_lang %{tde_pkg}
+magic_rpm_clean.sh
+%find_lang %{tde_pkg} || :
 
 
 %clean

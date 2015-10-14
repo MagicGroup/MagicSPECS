@@ -18,7 +18,7 @@
 # TDE variables
 %define tde_epoch 2
 %if "%{?tde_version}" == ""
-%define tde_version 14.0.0
+%define tde_version 14.0.1
 %endif
 %define tde_pkg libtqt-perl
 %define tde_prefix /opt/trinity
@@ -33,16 +33,14 @@
 Name:		trinity-%{tde_pkg}
 Epoch:		%{tde_epoch}
 Version:	3.008
-Release:	%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}%{?_variant}
+Release:	%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}%{?_variant}.1
 Summary:	Perl bindings for the TQt library
-Group:		Development/Libraries/Perl
+Summary(zh_CN.UTF-8): TQt 库的 Perl 绑定
+Group:		Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 URL:		http://www.trinitydesktop.org/
 
-%if 0%{?suse_version}
-License:	GPL-2.0+
-%else
 License:	GPLv2+
-%endif
 
 #Vendor:		Trinity Desktop
 #Packager:	Francois Andriot <francois.andriot@free.fr>
@@ -51,6 +49,8 @@ Prefix:		%{tde_prefix}
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 Source0:	%{name}-%{tde_version}%{?preversion:~%{preversion}}.tar.gz
+
+Patch1:		%{name}-14.0.1-tqt.patch
 
 BuildRequires:	trinity-tdelibs-devel >= %{tde_version}
 
@@ -70,6 +70,9 @@ Requires:		perl-TQt = %{?epoch:%{epoch}:}%{version}-%{release}
 This module lets you use the TQt library from Perl.
 It provides an object-oriented interface and is easy to use.
 
+%description -l zh_CN.UTF-8
+TQt 的 Perl 绑定。
+
 %files
 %defattr(-,root,root,-)
 %{tde_bindir}/puic
@@ -84,7 +87,9 @@ It provides an object-oriented interface and is easy to use.
 
 %package -n perl-TQt
 Summary:	Perl bindings for the TQt library
-Group:		Development/Libraries/Perl
+Summary(zh_CN.UTF-8): TQt 库的 Perl 绑定
+Group:		Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 
 Provides:		perl(TQtShell)
 Provides:		perl(TQtShellControl)
@@ -92,6 +97,9 @@ Provides:		perl(TQtShellControl)
 %description -n perl-TQt
 This module lets you use the TQt library from Perl.
 It provides an object-oriented interface and is easy to use.
+
+%description -n perl-TQt -l zh_CN.UTF-8
+TQt 库的 Perl 绑定。
 
 %files -n perl-TQt
 %defattr(-,root,root,-)
@@ -112,14 +120,9 @@ It provides an object-oriented interface and is easy to use.
 
 ##########
 
-%if 0%{?pclinuxos} || 0%{?suse_version} && 0%{?opensuse_bs} == 0
-%debug_package
-%endif
-
-##########
-
 %prep
 %setup -q -n %{name}-%{tde_version}%{?preversion:~%{preversion}}
+%patch1 -p1
 
 %__cp "/usr/share/aclocal/libtool.m4" "admin/libtool.m4.in"
 %__cp "/usr/share/libtool/config/ltmain.sh" "admin/ltmain.sh" || %__cp "/usr/share/libtool/ltmain.sh" "admin/ltmain.sh"
@@ -166,12 +169,15 @@ export PATH="%{tde_bindir}:${PATH}"
 # Unwanted files
 %__rm -f %{buildroot}%{perl_archlib}/perllocal.pod
 %__rm -f %{buildroot}%{perl_vendorarch}/auto/TQt/.packlist
-
+magic_rpm_clean.sh
 
 %clean
 %__rm -rf %{buildroot}
 
 
 %Changelog
+* Wed Oct 14 2015 Liu Di <liudidi@gmail.com> - 2:3.008-1.1
+- 为 Magic 3.0 重建
+
 * Fri Jul 05 2013 Francois Andriot <francois.andriot@free.fr> - 3.008-1
 - Initial release for TDE 14.0.0

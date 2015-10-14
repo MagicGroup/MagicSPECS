@@ -18,7 +18,7 @@
 # TDE variables
 %define tde_epoch 2
 %if "%{?tde_version}" == ""
-%define tde_version 14.0.0
+%define tde_version 14.0.1
 %endif
 %define tde_pkg knmap
 %define tde_prefix /opt/trinity
@@ -37,16 +37,14 @@
 Name:		trinity-%{tde_pkg}
 Epoch:		%{tde_epoch}
 Version:	2.1
-Release:	%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}
+Release:	%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}.1
 Summary:	An NMAP frontend for TDE
+Summary(zh_CN.UTF-8): TDE 下的 NMAP 前端
 Group:		Applications/Internet
+Group(zh_CN.UTF-8): 应用程序/互联网
 URL:		http://sourceforge.net/projects/knmap/
 
-%if 0%{?suse_version}
-License:	GPL-2.0+
-%else
 License:	GPLv2+
-%endif
 
 #Vendor:		Trinity Desktop
 #Packager:	Francois Andriot <francois.andriot@free.fr>
@@ -56,6 +54,7 @@ BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 Source0:		%{name}-%{tde_version}%{?preversion:~%{preversion}}.tar.gz
 
+Patch1:		trinity-knmap--14.0.1-tqt.patch
 
 BuildRequires:	trinity-tdelibs-devel >= %{tde_version}
 BuildRequires:	trinity-tdebase-devel >= %{tde_version}
@@ -66,16 +65,6 @@ BuildRequires:	autoconf automake libtool m4
 BuildRequires:	gcc-c++
 BuildRequires:	pkgconfig
 BuildRequires:	libtool
-
-# SUSE desktop files utility
-%if 0%{?suse_version}
-BuildRequires:	update-desktop-files
-%endif
-
-%if 0%{?opensuse_bs} && 0%{?suse_version}
-# for xdg-menu script
-BuildRequires:	brp-check-trinity
-%endif
 
 # NMAP support
 Requires:		nmap
@@ -96,17 +85,14 @@ Or, perhaps, 'nmap' progressed whilst that version of Knmap languished.
 
 http://www.kde-apps.org/content/show.php?content=31108
 
-
-##########
-
-%if 0%{?pclinuxos} || 0%{?suse_version} && 0%{?opensuse_bs} == 0
-%debug_package
-%endif
+%description -l zh_CN.UTF-8
+TDE 下的 NMAP 前端。
 
 ##########
 
 %prep
 %setup -q -n %{name}-%{tde_version}%{?preversion:~%{preversion}}
+%patch1 -p1
 
 %__cp -f "/usr/share/aclocal/libtool.m4" "admin/libtool.m4.in"
 %__cp -f "/usr/share/libtool/config/ltmain.sh" "admin/ltmain.sh" || %__cp -f "/usr/share/libtool/ltmain.sh" "admin/ltmain.sh"
@@ -145,11 +131,7 @@ export PATH="%{tde_bindir}:${PATH}"
 %__mv "%{buildroot}%{tde_datadir}/applnk/"*"/%{tde_pkg}.desktop" "%{buildroot}%{tde_tdeappdir}/%{tde_pkg}.desktop"
 %__rm -r "%{buildroot}%{tde_datadir}/applnk"
 
-# Updates applications categories for openSUSE
-%if 0%{?suse_version}
-%suse_update_desktop_file -r %{tde_pkg} TDE System Network
-%endif
-
+magic_rpm_clean.sh
 
 %clean
 %__rm -rf $RPM_BUILD_ROOT
@@ -197,5 +179,8 @@ done
 
 
 %changelog
+* Mon Oct 12 2015 Liu Di <liudidi@gmail.com> - 2:2.1-1.1
+- 为 Magic 3.0 重建
+
 * Fri Jul 05 2013 Francois Andriot <francois.andriot@free.fr> - 2:2.1-1
 - Initial release for TDE 14.0.0

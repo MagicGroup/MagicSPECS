@@ -18,7 +18,7 @@
 # TDE variables
 %define tde_epoch 2
 %if "%{?tde_version}" == ""
-%define tde_version 14.0.0
+%define tde_version 14.0.1
 %endif
 %define tde_pkg kile
 %define tde_prefix /opt/trinity
@@ -37,16 +37,14 @@
 Name:			trinity-%{tde_pkg}
 Epoch:			%{tde_epoch}
 Version:		2.0.3
-Release:		%{?!preversion:8}%{?preversion:7_%{preversion}}%{?dist}%{?_variant}
+Release:		%{?!preversion:8}%{?preversion:7_%{preversion}}%{?dist}%{?_variant}.1
 Summary:		TDE Integrated LaTeX Environment [Trinity]
+Summary(zh_CN.UTF-8): TDE 下的 LaTeX 集成环境
 Group:			Applications/Publishing
+Group(zh_CN.UTF-8): 应用程序/出版
 URL:			http://www.trinitydesktop.org/
 
-%if 0%{?suse_version}
-License:	GPL-2.0+
-%else
 License:	GPLv2+
-%endif
 
 #Vendor:		Trinity Desktop
 #Packager:	Francois Andriot <francois.andriot@free.fr>
@@ -55,6 +53,8 @@ Prefix:			%{_prefix}
 BuildRoot:		%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 Source0:		%{name}-%{tde_version}%{?preversion:~%{preversion}}.tar.gz
+
+Patch1:		%{name}-14.0.1-tqt.patch
 
 BuildRequires:	trinity-tdelibs-devel >= %{tde_version}
 BuildRequires:	trinity-tdebase-devel >= %{tde_version}
@@ -65,16 +65,6 @@ BuildRequires:	gettext
 BuildRequires:	autoconf automake libtool m4
 BuildRequires:	gcc-c++
 BuildRequires:	pkgconfig
-
-# SUSE desktop files utility
-%if 0%{?suse_version}
-BuildRequires:	update-desktop-files
-%endif
-
-%if 0%{?opensuse_bs} && 0%{?suse_version}
-# for xdg-menu script
-BuildRequires:	brp-check-trinity
-%endif
 
 Obsoletes: %{name}-i18n-ar
 Obsoletes: %{name}-i18n-bg
@@ -137,17 +127,14 @@ generation of bibliographies and indices and other common tasks.
 
 Kile can support large projects consisting of several smaller files.
 
-##########
-
-%if 0%{?pclinuxos} || 0%{?suse_version} && 0%{?opensuse_bs} == 0
-%debug_package
-%endif
+%description -l zh_CN.UTF-8
+TDE 下的 LaTeX 集成环境。
 
 ##########
-
 
 %prep
 %setup -q -n %{name}-%{tde_version}%{?preversion:~%{preversion}}
+%patch1 -p1
 
 %__cp -f "/usr/share/aclocal/libtool.m4" "admin/libtool.m4.in"
 %__cp -f "/usr/share/libtool/config/ltmain.sh" "admin/ltmain.sh" || %__cp -f "/usr/share/libtool/ltmain.sh" "admin/ltmain.sh"
@@ -188,14 +175,15 @@ export PATH="%{tde_bindir}:${PATH}"
 # Unwanted files ...
 %__rm -f %{?buildroot}%{tde_datadir}/apps/katepart/syntax/bibtex.xml
 %__rm -f %{?buildroot}%{tde_datadir}/apps/katepart/syntax/latex.xml
-
-%find_lang %{tde_pkg}
-
-# Updates applications categories for openSUSE
-%if 0%{?suse_version}
-%suse_update_desktop_file kile Office WordProcessor
-%endif
-
+%__rm -rf %{?buildroot}%{tde_datadir}/doc/tde/HTML/da
+%__rm -rf %{?buildroot}%{tde_datadir}/doc/tde/HTML/es
+%__rm -rf %{?buildroot}%{tde_datadir}/doc/tde/HTML/et
+%__rm -rf %{?buildroot}%{tde_datadir}/doc/tde/HTML/it
+%__rm -rf %{?buildroot}%{tde_datadir}/doc/tde/HTML/nl
+%__rm -rf %{?buildroot}%{tde_datadir}/doc/tde/HTML/pt
+%__rm -rf %{?buildroot}%{tde_datadir}/doc/tde/HTML/sv
+magic_rpm_clean.sh
+%find_lang %{tde_pkg} || :
 
 %clean
 %__rm -rf %{buildroot}
@@ -224,16 +212,9 @@ gtk-update-icon-cache --quiet %{tde_datadir}/icons/hicolor || :
 %{tde_tdedocdir}/HTML/en/kile
 %{tde_datadir}/mimelnk/text/x-kilepr.desktop
 
-%lang(da) %{tde_tdedocdir}/HTML/da/kile/
-%lang(es) %{tde_tdedocdir}/HTML/es/kile/
-%lang(et) %{tde_tdedocdir}/HTML/et/kile/
-%lang(it) %{tde_tdedocdir}/HTML/it/kile/
-%lang(nl) %{tde_tdedocdir}/HTML/nl/kile/
-%lang(pt) %{tde_tdedocdir}/HTML/pt/kile/
-%lang(sv) %{tde_tdedocdir}/HTML/sv/kile/
-
-
-
 %changelog
+* Sun Oct 11 2015 Liu Di <liudidi@gmail.com> - 2:2.0.3-8.1
+- 为 Magic 3.0 重建
+
 * Mon Jul 29 2013 Francois Andriot <francois.andriot@free.fr> - 2:2.0.2-1
 - Initial release for TDE 14.0.0

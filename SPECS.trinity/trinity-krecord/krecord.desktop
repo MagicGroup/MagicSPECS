@@ -1,0 +1,12 @@
+[Desktop Entry]
+Type=Application
+Icon=
+Exec=krecord
+DocPath=
+Comment=KRecord - a Sound Recorder
+Comment[de]=KRecord - ein Sound Recorder
+Comment[pl]=Rejestrator dźwięku dla KDE
+Name=KRecord
+Categories=Qt;KDE;Audio;Recorder;
+Encoding=UTF-8
+# vi: encoding=utf-8

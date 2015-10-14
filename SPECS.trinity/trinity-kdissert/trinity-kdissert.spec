@@ -18,8 +18,10 @@
 # Default version for this component
 %define tde_pkg kdissert
 %if "%{?tde_version}" == ""
-%define tde_version 14.0.0
+%define tde_version 14.0.1
 %endif
+
+%define tde_prefix /opt/trinity
 
 # If TDE is built in a specific prefix (e.g. /opt/trinity), the release will be suffixed with ".opt".
 %if "%{?tde_prefix}" != "/usr"
@@ -45,12 +47,13 @@
 
 Name:			trinity-%{tde_pkg}
 Summary:        Mindmapping Tool
+Summary(zh_CN.UTF-8): 思维导图工具
 Version:		1.0.6c
 Release:		%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}%{?_variant}
 
 License:		GPLv2+
 Group:			Applications/Utilities
-
+Group(zh_CN.UTF-8): 应用程序/工具
 Vendor:			Trinity Project
 Packager:		Francois Andriot <francois.andriot@free.fr>
 #URL:			http://www.trinitydesktop.org/
@@ -78,9 +81,8 @@ features several document generators: latex reports, latex slides
 (based on Prosper and Beamer), OpenOffice.org writer and impress, html,
 and plain text.
 
-%if 0%{?suse_version} || 0%{?pclinuxos}
-%debug_package
-%endif
+%description -l zh_CN.UTF-8
+思维导图工具。
 
 
 %prep
@@ -113,8 +115,8 @@ export CPPFLAGS="${CPPFLAGS} -I%{tde_tdeincludedir} -I%{_includedir}/tqt -I%{_in
 export PATH="%{tde_bindir}:${PATH}"
 %__rm -rf %{buildroot}
 ./waf --destdir=%{buildroot} install
-
-%find_lang %{tde_pkg}
+magic_rpm_clean.sh
+%find_lang %{tde_pkg} || :
 
 
 %clean
@@ -138,7 +140,7 @@ done
 /sbin/ldconfig
 
 
-%files -f %{tde_pkg}.lang
+%files
 %defattr(-,root,root,-)
 %{tde_bindir}/kdissert
 %{tde_tdelibdir}/libkdissOOOdoc.la

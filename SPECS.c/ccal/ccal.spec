@@ -1,8 +1,9 @@
+%define with_kde 1
 Summary:		Lunar Calender for Chinese Users	
 Summary(zh_CN.UTF-8):		中国的农历
 Name:           ccal	
 Version:	2.5.3
-Release:       	4%{?dist}
+Release:       	5%{?dist}
 License:       	GPL
 Group:         User Interface/Desktops
 Group(zh_CN.UTF-8):  用户界面/桌面
@@ -10,7 +11,7 @@ BuildRoot:     	/var/tmp/%{name}-%{version}-root
 Url:		http://ccal.chinesebay.com/ccal/index.html
 Source:         http://ccal.chinesebay.com/ccal/%{name}-%{version}.tar.gz
 
-Patch0:		   	ccal-2.4-patch-for-kde-datepicker-usage.patch	
+Patch0:		   	ccal-2.5.3-patch-for-kde-datepicker-usage.patch	
 
 %description
 This is a lunar calender utility to export Lunar calender to HTML or PDF.
@@ -50,6 +51,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_bindir}/ccal*
 
 %changelog
+* Tue Oct 13 2015 Liu Di <liudidi@gmail.com> - 2.5.3-5
+- 为 Magic 3.0 重建
+
 * Fri Mar 07 2014 Liu Di <liudidi@gmail.com> - 2.5.3-4
 - 更新到 2.5.3
 

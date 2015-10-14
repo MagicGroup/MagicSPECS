@@ -1,74 +1,91 @@
-# Default version for this component
-%define kdecomp krename
-%define tdeversion 3.5.13.2
+#
+# spec file for package krename (version R14)
+#
+# Copyright (c) 2014 Trinity Desktop Environment
+#
+# All modifications and additions to the file contributed by third parties
+# remain the property of their copyright owners, unless otherwise agreed
+# upon. The license for this file, and modifications and additions to the
+# file, is the same license as for the pristine package itself (unless the
+# license for the pristine package is not an Open Source License, in which
+# case the license is the MIT License). An "Open Source License" is a
+# license that conforms to the Open Source Definition (Version 1.9)
+# published by the Open Source Initiative.
+#
+# Please submit bugfixes or comments via http://www.trinitydesktop.org/
+#
 
-# If TDE is built in a specific prefix (e.g. /opt/trinity), the release will be suffixed with ".opt".
-%if "%{?tde_prefix}" != "/usr"
-%define _variant .opt
+# TDE variables
+%define tde_epoch 2
+%if "%{?tde_version}" == ""
+%define tde_version 14.0.1
 %endif
-
-# TDE 3.5.13 specific building variables
+%define tde_pkg krename
+%define tde_prefix /opt/trinity
 %define tde_bindir %{tde_prefix}/bin
 %define tde_datadir %{tde_prefix}/share
 %define tde_docdir %{tde_datadir}/doc
 %define tde_includedir %{tde_prefix}/include
 %define tde_libdir %{tde_prefix}/%{_lib}
 %define tde_mandir %{tde_datadir}/man
-%define tde_appdir %{tde_datadir}/applications
-
-%define tde_tdeappdir %{tde_appdir}/kde
+%define tde_tdeappdir %{tde_datadir}/applications/tde
 %define tde_tdedocdir %{tde_docdir}/tde
 %define tde_tdeincludedir %{tde_includedir}/tde
 %define tde_tdelibdir %{tde_libdir}/trinity
 
-%define _docdir %{tde_docdir}
 
-
-Name:		trinity-%{kdecomp}
-Summary:	A TDE batch file renaming utility. 
+Name:		trinity-%{tde_pkg}
+Epoch:		%{tde_epoch}
 Version:	3.0.14
-Release:	6%{?dist}%{?_variant}
-
-License:	GPLv2+
-Group:		Applications/Utilities
-
-Vendor:		Trinity Project
-Packager:	Francois Andriot <francois.andriot@free.fr>
+Release:	%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}
+Summary:	A TDE batch file renaming utility
+Summary(zh_CN.UTF-8): KDE 下一个强大的批量重命名程序
+Group: Applications/Tools
+Group(zh_CN.UTF-8): 应用程序/工具
 URL:		http://www.trinitydesktop.org/
 
-Prefix:    %{tde_prefix}
-BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+License:	GPLv2+
 
-Source0:	%{kdecomp}-trinity-%{tdeversion}.tar.xz
+#Vendor:		Trinity Desktop
+#Packager:	Francois Andriot <francois.andriot@free.fr>
 
-BuildRequires:	trinity-tqtinterface-devel >= 3.5.13.1
-BuildRequires:	trinity-tdelibs-devel >= 3.5.13.1
-BuildRequires:	trinity-tdebase-devel >= 3.5.13.1
+Prefix:		%{tde_prefix}
+BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+
+Source0:		%{name}-%{tde_version}%{?preversion:~%{preversion}}.tar.gz
+Source1: krename.zh_CN.po
+Source2: krename.desktop
+Source3: krename_dir.desktop
+Source4: krenameservicemenu.desktop
+
+
+Patch1:		%{name}-14.0.1-tqt.patch
+
+BuildRequires:	trinity-tdelibs-devel >= %{tde_version}
+BuildRequires:	trinity-tdebase-devel >= %{tde_version}
 BuildRequires:	desktop-file-utils
 
-%if 0%{?rhel} || 0%{?fedora} || 0%{?mgaversion} || 0%{?mdkversion}
-BuildRequires:	imlib-devel
-%endif
+BuildRequires:	autoconf automake libtool m4
+BuildRequires:	gcc-c++
+BuildRequires:	pkgconfig
+BuildRequires:	fdupes
 
 %description
-KRename is a powerful batch renamer for TDE. It allows you to easily rename hundreds or
-even more files in one go. The filenames can be created by parts of the original filename,
-numbering the files or accessing hundreds of informations about the file, like creation date
-or Exif informations of an image. 
+Krename is a very powerful batch file renamer for KDE3 which can rename a list of files based on a set of expressions. It can copy/move the files to another directory or simply rename the input files. Krename supports many conversion operations, including conversion of a filename to lowercase or to uppercase, conversion of the first letter of every word to uppercase, adding numbers to filenames, finding and replacing parts of the filename, and many more. It can also change access and modification dates, permissions, and file ownership.
 
-%if 0%{?suse_version}
-%debug_package
-%endif
+%description -l zh_CN.UTF-8
+Krename 是 KDE 下的一个非常强大的批量重命名工具，它可以基于一个表达式集合
+为一连串文件重命名。它可以复制/移动文件到其它目录或者只是重命名输入的文件。
+Krename 支持许多转换选项，包括把文件名转成大写或小写，转换每个单词的首字母
+大写，在文件名上添加数字，查找和替换部分文件名，以及许多其它内容。它还可以
+更改访问和修改日期、许可权以及所有权。
+
+##########
 
 
 %prep
-%setup -q -n %{kdecomp}-trinity-%{tdeversion}
-
-# Ugly hack to modify TQT include directory inside autoconf files.
-# If TQT detection fails, it fallbacks to TQT4 instead of TQT3 !
-%__sed -i admin/acinclude.m4.in \
-  -e "s|/usr/include/tqt|%{tde_includedir}/tqt|g" \
-  -e "s|kde_htmldir='.*'|kde_htmldir='%{tde_tdedocdir}/HTML'|g"
+%setup -q -n %{name}-%{tde_version}%{?preversion:~%{preversion}}
+%patch1 -p1
 
 %__cp "/usr/share/aclocal/libtool.m4" "admin/libtool.m4.in"
 %__cp "/usr/share/libtool/config/ltmain.sh" "admin/ltmain.sh" || %__cp "/usr/share/libtool/ltmain.sh" "admin/ltmain.sh"
@@ -76,9 +93,8 @@ or Exif informations of an image.
 
 
 %build
-unset QTDIR; . /etc/profile.d/qt3.sh
+unset QTDIR QTINC QTLIB
 export PATH="%{tde_bindir}:${PATH}"
-export LDFLAGS="-L%{tde_libdir} -I%{tde_includedir}"
 
 %configure \
   --prefix=%{tde_prefix} \
@@ -88,9 +104,14 @@ export LDFLAGS="-L%{tde_libdir} -I%{tde_includedir}"
   --libdir=%{tde_libdir} \
   --mandir=%{tde_mandir} \
   --includedir=%{tde_tdeincludedir} \
-  --disable-rpath \
-  --with-extra-includes=%{tde_includedir}/tqt \
-  --enable-closure
+  \
+  --disable-dependency-tracking \
+  --disable-debug \
+  --enable-new-ldflags \
+  --enable-final \
+  --enable-closure \
+  --enable-rpath \
+  --disable-gcc-hidden-visibility
 
 %__make %{?_smp_mflags}
 
@@ -100,7 +121,10 @@ export PATH="%{tde_bindir}:${PATH}"
 %__rm -rf %{buildroot}
 %__make install DESTDIR=%{buildroot}
 
-%find_lang %{kdecomp}
+install -d -m755 $RPM_BUILD_ROOT%{tde_datadir}/locale/zh_CN/LC_MESSAGES
+msgfmt %{SOURCE1} -o $RPM_BUILD_ROOT%{tde_datadir}/locale/zh_CN/LC_MESSAGES/krename.mo
+
+%find_lang %{tde_pkg}
 
 
 %clean
@@ -112,16 +136,16 @@ for f in hicolor locolor ; do
   touch --no-create %{tde_datadir}/icons/${f} || :
   gtk-update-icon-cache --quiet %{tde_datadir}/icons/${f} || :
 done
-update-desktop-database %{tde_appdir} &> /dev/null
+update-desktop-database %{tde_tdeappdir} &> /dev/null
 
 %postun
 for f in hicolor locolor ; do
   touch --no-create %{tde_datadir}/icons/${f} || :
   gtk-update-icon-cache --quiet %{tde_datadir}/icons/${f} || :
 done
-update-desktop-database %{tde_appdir} &> /dev/null
+update-desktop-database %{tde_tdeappdir} &> /dev/null
 
-%files -f %{kdecomp}.lang
+%files -f %{tde_pkg}.lang
 %defattr(-,root,root,-)
 %doc AUTHORS COPYING
 %{tde_bindir}/krename
@@ -135,25 +159,5 @@ update-desktop-database %{tde_appdir} &> /dev/null
 
 
 %changelog
-* Tue Aug 06 2013 Liu Di <liudidi@gmail.com> - 3.0.14-6.opt
-- 为 Magic 3.0 重建
-
-* Wed Oct 03 2012 Francois Andriot <francois.andriot@free.fr> - 3.0.14-5
-- Initial build for TDE 3.5.13.1
-
-* Wed May 02 2012 Francois Andriot <francois.andriot@free.fr> - 3.0.14-4
-- Rebuild for Fedora 17
-- Fix HTML directory location
-
-* Sun Oct 30 2011 Francois Andriot <francois.andriot@free.fr> - 3.0.14-3
-- Rebuilt for TDE 3.5.13 on RHEL 6, RHEL 5 and Fedora 15
-
-* Tue Sep 14 2011 Francois Andriot <francois.andriot@free.fr> - 3.0.14-2
-- Import to GIT
-
-* Wed Aug 24 2011 Francois Andriot <francois.andriot@free.fr> - 3.0.14-1
-- Correct macro to install under "/opt", if desired
-
-* Sun Aug 14 2011 Francois Andriot <francois.andriot@free.fr> - 3.0.14-0
-- Initial build for RHEL 6.0
-
+* Fri Jul 05 2013 Francois Andriot <francois.andriot@free.fr> - 2:3.0.14-1
+- Initial release for TDE 14.0.0

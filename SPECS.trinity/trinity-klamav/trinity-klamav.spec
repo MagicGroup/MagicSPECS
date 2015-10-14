@@ -18,9 +18,10 @@
 # Default version for this component
 %define tde_pkg klamav
 %if "%{?tde_version}" == ""
-%define tde_version 14.0.0
+%define tde_version 14.0.1
 %endif
 
+%define tde_prefix /opt/trinity
 # If TDE is built in a specific prefix (e.g. /opt/trinity), the release will be suffixed with ".opt".
 %if "%{?tde_prefix}" != "/usr"
 %define _variant .opt
@@ -45,11 +46,13 @@
 
 Name:			trinity-%{tde_pkg}
 Summary:        Frontend for clamav
+Summary(zh_CN.UTF-8): clamav 的图形前端
 Version:		0.46
-Release:		%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}%{?_variant}
+Release:		%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}%{?_variant}.1
 
 License:		GPLv2+
 Group:			Applications/Utilities
+Group(zh_CN.UTF-8): 应用程序/工具
 
 Vendor:			Trinity Project
 Packager:		Francois Andriot <francois.andriot@free.fr>
@@ -60,6 +63,8 @@ Prefix:			%{_prefix}
 BuildRoot:		%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 Source0:		%{tde_pkg}-14.0.0.tar.gz
+
+Patch1:		%{name}-14.0.1-tqt.patch
 
 BuildRequires:	trinity-tqtinterface-devel >= %{tde_version}
 BuildRequires:	trinity-arts-devel >= 1:1.5.10
@@ -77,21 +82,18 @@ BuildRequires:  fdupes
 BuildRequires:  clamav
 Requires:		clamav
 
-%if 0%{?rhel} || 0%{?fedora} || 0%{?mgaversion} || 0%{?mdkversion}
 BuildRequires:  clamav-devel
-%endif
 
 
 %description
 A TDE front-end for the Clam AntiVirus antivirus toolkit.
 
-%if 0%{?suse_version} || 0%{?pclinuxos}
-%debug_package
-%endif
-
+%description -l zh_CN.UTF-8
+杀毒软件 clamav 的图形前端。
 
 %prep
 %setup -q -n %{tde_pkg}-%{version}
+%patch1 -p1
 
 %__cp -f "/usr/share/aclocal/libtool.m4" "admin/libtool.m4.in"
 %__cp -f "/usr/share/libtool/config/ltmain.sh" "admin/ltmain.sh" || %__cp -f "/usr/share/libtool/ltmain.sh" "admin/ltmain.sh"
@@ -138,8 +140,8 @@ done
 export PATH="%{tde_bindir}:${PATH}"
 %__rm -rf %{buildroot}
 %__make install DESTDIR=%{buildroot}
-
-%find_lang %{tde_pkg}
+magic_rpm_clean.sh
+%find_lang %{tde_pkg} || :
 
 
 %clean
@@ -178,5 +180,8 @@ done
 
 
 %changelog
+* Sun Oct 11 2015 Liu Di <liudidi@gmail.com> - 0.46-1.opt.1
+- 为 Magic 3.0 重建
+
 * Sat Sep 20 2014 Francois Andriot <francois.andriot@free.fr> - 0.46-1
 - Initial release for TDE 14.0.0

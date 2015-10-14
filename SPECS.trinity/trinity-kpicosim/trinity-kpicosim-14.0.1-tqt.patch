@@ -1,0 +1,306 @@
+diff -ur trinity-tdebindings-14.0.1.orig/admin/acinclude.m4.in trinity-tdebindings-14.0.1/admin/acinclude.m4.in
+--- trinity-tdebindings-14.0.1.orig/admin/acinclude.m4.in	2015-10-07 01:05:51.423994789 +0000
++++ trinity-tdebindings-14.0.1/admin/acinclude.m4.in	2015-10-07 01:09:46.173988773 +0000
+@@ -1137,16 +1137,16 @@
+ fi
+ 
+ if test "$kde_qtver" = "3"; then
+-if $PKG_CONFIG --exists qt-mt ; then
++if $PKG_CONFIG --exists tqt-mt ; then
+ cat >> conftest.$ac_ext <<EOF
+-#include <tqt.h>
+-#include <qglobal.h>
+-#include <qapplication.h>
++#include <tqglobal.h>
++#include <tqapplication.h>
+ EOF
+ else
+ cat >> conftest.$ac_ext <<EOF
+-#include <tqglobal.h>
+-#include <tqapplication.h>
++#include <tqt.h>
++#include <qglobal.h>
++#include <qapplication.h>
+ EOF
+ fi
+ fi
+@@ -1168,18 +1168,18 @@
+ fi
+ 
+ if test "$kde_qtver" = "3"; then
+-if $PKG_CONFIG --exists qt-mt ; then
+-cat >> conftest.$ac_ext <<EOF
+-#include <qcursor.h>
+-#include <qstylefactory.h>
+-#include <private/qucomextra_p.h>
+-EOF
+-else
++if $PKG_CONFIG --exists tqt-mt ; then
+ cat >> conftest.$ac_ext <<EOF
+ #include <tqcursor.h>
+ #include <tqstylefactory.h>
+ #include <tqucomextra_p.h>
+ EOF
++else
++cat >> conftest.$ac_ext <<EOF
++#include <qcursor.h>
++#include <qstylefactory.h>
++#include <private/qucomextra_p.h>
++EOF
+ fi
+ fi
+ 
+@@ -1210,15 +1210,15 @@
+ fi
+ fi
+ if test "$kde_qtver" = "3"; then
+-if $PKG_CONFIG --exists qt-mt ; then
++if $PKG_CONFIG --exists tqt-mt ; then
+ cat >> conftest.$ac_ext <<EOF
+-    (void)QStyleFactory::create(QString::null);
+-    QCursor c(Qt::WhatsThisCursor);
++    (void)TQStyleFactory::create(TQString::null);
++    TQCursor c(TQt::WhatsThisCursor);
+ EOF
+ else
+ cat >> conftest.$ac_ext <<EOF
+-    (void)TQStyleFactory::create(TQString::null);
+-    TQCursor c(TQt::WhatsThisCursor);
++    (void)QStyleFactory::create(QString::null);
++    QCursor c(Qt::WhatsThisCursor);
+ EOF
+ fi
+ fi
+@@ -1357,22 +1357,22 @@
+ fi
+ 
+ if test $kde_qtver = 4; then
+-  kde_qt_dirs="$QTDIR /usr/lib/qt4 /usr/lib/qt /usr/share/qt4"
++  kde_qt_dirs="/usr/lib/qt4 /usr/lib/qt /usr/share/qt4"
+ fi
+ if test $kde_qtver = 3; then
+-  kde_qt_dirs="$QTDIR /usr/lib/tqt3 /usr/lib/qt3 /usr/lib/qt /usr/share/tqt3 /usr/share/qt3 /usr/lib${tdelibsuff}/qt-3.3"
++  kde_qt_dirs="/usr/lib/tqt3 /usr/share/tqt3"
+   if test -z "$PKG_CONFIG"; then
+       AC_PATH_PROG(PKG_CONFIG, pkg-config, no)
+   fi
+   if test "$PKG_CONFIG" != "no" ; then
+-    if $PKG_CONFIG --exists qt-mt ; then
+-       kde_qt_dirs="$kde_qt_dirs `$PKG_CONFIG --variable=prefix qt-mt`"
+-       LIB_QUI="-lqui"
++    if $PKG_CONFIG --exists tqt-mt ; then
++       kde_qt_dirs="$kde_qt_dirs `$PKG_CONFIG --variable=prefix tqt-mt`"
++       LIB_QUI="-ltqui"
+        AC_SUBST(LIB_QUI)
+     else
+-       if $PKG_CONFIG --exists tqt-mt ; then
++       if $PKG_CONFIG --exists qt-mt ; then
+          kde_qt_dirs="$kde_qt_dirs `$PKG_CONFIG --variable=prefix tqt-mt`"
+-         LIB_QUI="-ltqui"
++         LIB_QUI="-lqui"
+          AC_SUBST(LIB_QUI)
+        fi
+     fi
+@@ -1510,10 +1510,10 @@
+     if test "x$kde_use_qt_emb" = "xyes"; then
+       LIBQT_GLOB="libqte.*"
+     else
+-      if $PKG_CONFIG --exists qt-mt ; then
+-        LIBQT_GLOB="libqt.*"
+-      else
++      if $PKG_CONFIG --exists tqt-mt ; then
+         LIBQT_GLOB="libtqt.*"
++      else
++        LIBQT_GLOB="libqt.*"
+       fi
+     fi
+   fi
+@@ -1530,10 +1530,10 @@
+   if test "x$kde_use_qt_emb" = "xyes"; then
+     qtlib="qte"
+   else
+-    if $PKG_CONFIG --exists qt-mt ; then
+-      qtlib="qt"
+-    else
++    if $PKG_CONFIG --exists tqt-mt ; then
+       qtlib="tqt"
++    else
++      qtlib="qt"
+     fi
+   fi
+ fi
+@@ -1631,15 +1631,15 @@
+     AC_PATH_PROG(PKG_CONFIG, pkg-config, no)
+ fi
+ if test "$PKG_CONFIG" != "no" ; then
+-  if $PKG_CONFIG --exists qt-mt ; then
+-      qt_incdirs="$qt_incdirs `$PKG_CONFIG --variable=includedir qt-mt`"
++  if $PKG_CONFIG --exists tqt-mt ; then
++      qt_incdirs="$qt_incdirs `$PKG_CONFIG --variable=includedir tqt-mt`"
+   else
+-      if $PKG_CONFIG --exists tqt-mt ; then
++      if $PKG_CONFIG --exists qt-mt ; then
+           qt_incdirs="$qt_incdirs `$PKG_CONFIG --variable=includedir tqt-mt`"
+       fi
+   fi
+ fi
+-qt_incdirs="$QTINC $qt_incdirs /usr/local/qt/include /usr/include/qt /usr/include /usr/X11R6/include/X11/qt /usr/X11R6/include/qt /usr/X11R6/include/qt2 /usr/include/tqt3 /usr/include/qt3 $x_includes"
++qt_incdirs="$qt_incdirs /usr/include/tqt3 /usr/include $x_includes"
+ if test ! "$ac_qt_includes" = "NO"; then
+    qt_incdirs="$ac_qt_includes $qt_incdirs"
+ fi
+@@ -1670,10 +1670,10 @@
+     AC_PATH_PROG(PKG_CONFIG, pkg-config, no)
+ fi
+ if test "$PKG_CONFIG" != "no" ; then
+-  if $PKG_CONFIG --exists qt-mt ; then
+-      qt_libdirs="$qt_incdirs `$PKG_CONFIG --variable=libdir qt-mt`"
++  if $PKG_CONFIG --exists tqt-mt ; then
++      qt_libdirs="$qt_incdirs `$PKG_CONFIG --variable=libdir tqt-mt`"
+   else
+-      if $PKG_CONFIG --exists tqt-mt ; then
++      if $PKG_CONFIG --exists qt-mt ; then
+           qt_libdirs="$qt_incdirs `$PKG_CONFIG --variable=libdir tqt-mt`"
+       fi
+   fi
+@@ -2253,22 +2253,22 @@
+  LDFLAGS="$LDFLAGS $all_libraries $USER_LDFLAGS"
+ 
+ if test "$kde_qtver" = "3"; then
+-if $PKG_CONFIG --exists qt-mt ; then
++if $PKG_CONFIG --exists tqt-mt ; then
+  AC_TRY_LINK([
+-   #include <qdom.h>
++   #include <tqdom.h>
+  ],
+  [
+-   QDomDocument doc;
++   TQDomDocument doc;
+  ],
+   kde_cv_have_kdeqtaddon=yes,
+   kde_cv_have_kdeqtaddon=no
+  )
+ else
+  AC_TRY_LINK([
+-   #include <tqdom.h>
++   #include <qdom.h>
+  ],
+  [
+-   TQDomDocument doc;
++   QDomDocument doc;
+  ],
+   kde_cv_have_kdeqtaddon=yes,
+   kde_cv_have_kdeqtaddon=no
+@@ -2944,22 +2944,22 @@
+             eval "kde_cv_qt_jpeg=yes")
+ fi
+ if test "$kde_qtver" = "3"; then
+-if $PKG_CONFIG --exists qt-mt ; then
++if $PKG_CONFIG --exists tqt-mt ; then
+ AC_TRY_LINK(
+-[#include <qapplication.h>],
++[#include <tqapplication.h>],
+             [
+             int argc;
+             char** argv;
+-            QApplication app(argc, argv);],
++            TQApplication app(argc, argv);],
+             eval "kde_cv_qt_jpeg=no",
+             eval "kde_cv_qt_jpeg=yes")
+ else
+ AC_TRY_LINK(
+-[#include <tqapplication.h>],
++[#include <qapplication.h>],
+             [
+             int argc;
+             char** argv;
+-            TQApplication app(argc, argv);],
++            QApplication app(argc, argv);],
+             eval "kde_cv_qt_jpeg=no",
+             eval "kde_cv_qt_jpeg=yes")
+ fi
+@@ -3809,11 +3809,10 @@
+           CXXFLAGS="$CXXFLAGS $all_includes"
+ 
+ if test "$kde_qtver" = "3"; then
+-if $PKG_CONFIG --exists qt-mt ; then
++if $PKG_CONFIG --exists tqt-mt ; then
+           AC_TRY_COMPILE(
+           [
+-#include <tqt.h>
+-#include <qglobal.h>
++#include <tqglobal.h>
+ #if Q_EXPORT - 0 != 0
+ /* if this compiles, then Q_EXPORT is undefined */
+ /* if Q_EXPORT is nonempty, this will break compilation */
+@@ -3823,7 +3822,8 @@
+ else
+           AC_TRY_COMPILE(
+           [
+-#include <tqglobal.h>
++#include <tqt.h>
++#include <qglobal.h>
+ #if Q_EXPORT - 0 != 0
+ /* if this compiles, then Q_EXPORT is undefined */
+ /* if Q_EXPORT is nonempty, this will break compilation */
+@@ -5089,27 +5089,27 @@
+ if test "$kde_qtver" = "3"; then
+ LIBS="$all_libraries -lqimgio -lpng -lz $LIBJPEG $LIBQT"
+ CXXFLAGS="$CXXFLAGS -I$qt_incdir $all_includes"
+-if $PKG_CONFIG --exists qt-mt ; then
++if $PKG_CONFIG --exists tqt-mt ; then
+ AC_TRY_RUN(dnl
+ [
+-#include <qimageio.h>
+-#include <qstring.h>
++#include <tqimageio.h>
++#include <tqstring.h>
+ int main() {
+-		QString t = "hallo";
+-		t.fill('t');
+-		qInitImageIO();
++                TQString t = "hallo";
++                t.fill('t');
++                qInitImageIO();
+ }
+ ],
+             ac_cv_lib_qimgio=yes,
+             ac_cv_lib_qimgio=no,
+-	    ac_cv_lib_qimgio=no)
++            ac_cv_lib_qimgio=no)
+ else
+ AC_TRY_RUN(dnl
+ [
+-#include <tqimageio.h>
+-#include <tqstring.h>
++#include <qimageio.h>
++#include <qstring.h>
+ int main() {
+-                TQString t = "hallo";
++                QString t = "hallo";
+                 t.fill('t');
+                 qInitImageIO();
+ }
+@@ -6033,7 +6033,7 @@
+   kde_qtdir="$with_qt_dir"
+ fi
+ 
+-AC_FIND_FILE(qsql.html, [ $kde_qtdir/doc/html $QTDIR/doc/html /usr/share/doc/packages/tqt3/html /usr/share/doc/packages/qt3/html /usr/lib/qt/doc /usr/lib/tqt3/doc /usr/lib/qt3/doc /usr/lib/tqt3/doc/html /usr/lib/qt3/doc/html /usr/doc/tqt3/html /usr/doc/qt3/html /usr/doc/tqt3 /usr/doc/qt3 /usr/share/doc/tqt3-doc /usr/share/doc/qt3-doc /usr/share/tqt3/doc/html /usr/share/qt3/doc/html /usr/X11R6/share/doc/qt/html ], QTDOCDIR)
++AC_FIND_FILE(qsql.html, [ $kde_qtdir/doc/html /usr/share/doc/packages/tqt3/html /usr/share/doc/packages/qt3/html /usr/lib/qt/doc /usr/lib/tqt3/doc /usr/lib/qt3/doc /usr/lib/tqt3/doc/html /usr/lib/qt3/doc/html /usr/doc/tqt3/html /usr/doc/qt3/html /usr/doc/tqt3 /usr/doc/qt3 /usr/share/doc/tqt3-doc /usr/share/doc/qt3-doc /usr/share/tqt3/doc/html /usr/share/qt3/doc/html /usr/X11R6/share/doc/qt/html ], QTDOCDIR)
+ AC_MSG_RESULT($QTDOCDIR)
+ 
+ AC_SUBST(QTDOCDIR)
+@@ -6813,10 +6813,10 @@
+       QTDIR=${QTDIR%/bin}
+     fi
+     if test "$PKG_CONFIG" != "no" ; then
+-      if $PKG_CONFIG --exists qt-mt ; then
+-        qt_plugins_dir="`pkg-config --variable=pluginsdir qt-mt`"
++      if $PKG_CONFIG --exists tqt-mt ; then
++        qt_plugins_dir="`pkg-config --variable=pluginsdir tqt-mt`"
+       else
+-        if $PKG_CONFIG --exists tqt-mt ; then
++        if $PKG_CONFIG --exists qt-mt ; then
+           qt_plugins_dir="`pkg-config --variable=pluginsdir tqt-mt`"
+         fi
+       fi

@@ -45,7 +45,7 @@
 
 Name:			trinity-%{tde_pkg}
 Version:		%{tde_version}
-Release:		%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}%{?_variant}.1
+Release:		%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}%{?_variant}.3
 Summary:		TDE Libraries
 Summary(zh_CN.UTF-8): TDE 基本库
 Group:			System/GUI/Other
@@ -65,6 +65,9 @@ Source1:		%{name}-rpmlintrc
 
 Patch0:			tdelibs-14.0.1.patch
 Patch1:			trinity-tdelibs-14.0.1-fixper522.patch
+
+#添加农历支持
+Patch2:			trinity-tdelibs-add-lunar.patch
 
 Obsoletes:		tdelibs < %{version}-%{release}
 Provides:		tdelibs = %{version}-%{release}
@@ -254,6 +257,7 @@ TDE 的基本库。
 %files
 %defattr(-,root,root,-)
 %doc AUTHORS COPYING COPYING-DOCS COPYING.LIB README TODO
+%{_sysconfdir}/ld.so.conf.d/tde-%{_arch}.conf
 %{tde_bindir}/artsmessage
 %{tde_bindir}/cupsdconf
 %{tde_bindir}/cupsdoprint
@@ -418,6 +422,7 @@ applications for TDE.
 %setup -q -n %{name}-%{version}%{?preversion:~%{preversion}}
 %patch0 -p1 -b .ftbfs
 %patch1 -p1
+%patch2 -p1
 
 # RHEL 5: remove tdehwlib stuff from include files, to avoid FTBFS in tdebindings
 %if 0%{?rhel} == 5
@@ -518,11 +523,6 @@ fi
 # Symlinks duplicate files (mostly under 'ksgmltools2')
 %fdupes -s "%{?buildroot}"
 
-# Fix 'tderesources.desktop' (openSUSE only)
-%if 0%{?suse_version}
-%suse_update_desktop_file -r tderesources Qt X-TDE-settings-desktop
-%endif
-
 # Remove setuid bit on some binaries.
 chmod 0755 "%{?buildroot}%{tde_bindir}/kgrantpty"
 chmod 0755 "%{?buildroot}%{tde_bindir}/kpac_dhcp_helper"
@@ -533,11 +533,21 @@ chmod 0755 "%{?buildroot}%{tde_bindir}/start_tdeinit"
 %__rm -f "%{?buildroot}%{tde_bindir}/filesharelist"
 %__rm -f "%{?buildroot}%{tde_bindir}/fileshareset"
 
+mkdir -p %{buildroot}%{_sysconfdir}/ld.so.conf.d
+cat >> %{buildroot}%{_sysconfdir}/ld.so.conf.d/tde-%{_arch}.conf << EOF
+/opt/trinity/%{_lib}
+EOF
 
 %clean
 %__rm -rf "%{?buildroot}"
 
 %changelog
+* Tue Oct 13 2015 Liu Di <liudidi@gmail.com> - 14.0.1-1.opt.3
+- 为 Magic 3.0 重建
+
+* Tue Oct 13 2015 Liu Di <liudidi@gmail.com> - 14.0.1-1.opt.2
+- 为 Magic 3.0 重建
+
 * Tue Oct 06 2015 Liu Di <liudidi@gmail.com> - 14.0.1-1.opt.1
 - 为 Magic 3.0 重建
 

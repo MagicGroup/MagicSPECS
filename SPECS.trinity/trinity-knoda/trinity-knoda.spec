@@ -1,5 +1,6 @@
 # If TDE is built in a specific prefix (e.g. /opt/trinity), the release will be suffixed with ".opt".
 
+%define tde_prefix /opt/trinity
 %if "%{?tde_prefix}" != "/usr"
 %define _variant .opt
 %endif
@@ -23,15 +24,19 @@
 
 Name:           trinity-knoda
 Version:        0.8.3
-Release:        1%{?dist}%{?_variant}
+Release:        2%{?dist}%{?_variant}
 Summary:        A database frontend for TDE.
+Summary(zh_CN.UTF-8): TDE 下的数据库前端
 
 Group:          Applications/Productivity
+Group(zh_CN.UTF-8): 应用程序/生产力
 License:        GPLv2+
 URL:            http://sourceforge.net/projects/knoda/
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 Source0:        http://downloads.sourceforge.net/project/knoda/knoda/0.8.3/knoda-0.8.3.tar.gz
+
+Patch1:		%{name}-tqt.patch
 
 BuildRequires:	desktop-file-utils
 BuildRequires:	trinity-tdelibs-devel
@@ -41,24 +46,26 @@ Requires:		hk_classes
 
 %description
 
+%description -l zh_CN.UTF-8
+TDE 下的数据库前端。
 
 %package devel
 Summary:  	Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: 		Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: 	%{name} = %{version}-%{release}
 
 
 %description devel
 %{summary}
 
-
-%if 0%{?suse_version}
-%debug_package
-%endif
-
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q -n knoda-%{version}
+%patch1 -p1
 
 %__cp -f "/usr/share/aclocal/libtool.m4" "admin/libtool.m4.in"
 %__cp -f "/usr/share/libtool/config/ltmain.sh" "admin/ltmain.sh" || %__cp -f "/usr/share/libtool/ltmain.sh" "admin/ltmain.sh"
@@ -93,8 +100,8 @@ export kde_confdir="%{tde_confdir}"
 # Useless files ..
 %__rm -f %{?buildroot}%{tde_libdir}/*.a
 %__rm -f %{?buildroot}%{tde_tdelibdir}/*.a
-
-%find_lang knoda
+magic_rpm_clean.sh
+%find_lang knoda || :
 
 %clean
 %__rm -rf $RPM_BUILD_ROOT
@@ -114,7 +121,7 @@ for i in hicolor locolor ; do
 done
 
 
-%files -f knoda.lang
+%files
 %defattr(-,root,root,-)
 %doc AUTHORS COPYING README ChangeLog
 %{tde_bindir}/knoda
@@ -240,5 +247,8 @@ done
 
 
 %changelog
+* Mon Oct 12 2015 Liu Di <liudidi@gmail.com> - 0.8.3-2.opt
+- 为 Magic 3.0 重建
+
 * Mon Apr 08 2013 Francois Andriot <francois.andriot@free.fr> - 0.5b-1
 - Initial release for TDE 3.5.13.2

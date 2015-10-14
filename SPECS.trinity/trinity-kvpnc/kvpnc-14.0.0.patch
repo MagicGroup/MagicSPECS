@@ -1,0 +1,19 @@
+--- trinity-kvpnc-14.0.0~pre118+1ae72fe0/src/Makefile.am.ORI	2013-07-20 12:35:51.155931996 +0200
++++ trinity-kvpnc-14.0.0~pre118+1ae72fe0/src/Makefile.am	2013-07-20 12:37:49.601226585 +0200
+@@ -57,13 +57,13 @@
+ 
+ 
+ install-data-local:
+-	$(mkinstalldirs) $(kde_appsdir)/
+-	$(INSTALL_DATA) $(srcdir)/kvpnc.desktop $(kde_appsdir)/kvpnc.desktop
++	$(mkinstalldirs) $(xdg_appsdir)/
++	$(INSTALL_DATA) $(srcdir)/kvpnc.desktop $(xdg_appsdir)/kvpnc.desktop
+ 	$(mkinstalldirs) $(kde_datadir)/kvpnc/
+ 	$(INSTALL_DATA) $(srcdir)/kvpncui.rc $(kde_datadir)/kvpnc/kvpncui.rc
+ 	$(mkinstalldirs) $(kde_datadir)/kvpnc/
+ 	$(INSTALL_DATA) $(srcdir)/eventsrc $(kde_datadir)/kvpnc/eventsrc
+-	$(INSTALL_DATA) $(srcdir)/ping_check.sh $(kde_datadir)/kvpnc/ping_check.sh
++	$(INSTALL_SCRIPT) $(srcdir)/ping_check.sh $(kde_datadir)/kvpnc/ping_check.sh
+ 	$(INSTALL_DATA) $(srcdir)/newprofilewizard.png $(kde_datadir)/kvpnc/newprofilewizard.png
+ 	$(INSTALL_DATA) $(srcdir)/newprofilewizard_final.png $(kde_datadir)/kvpnc/newprofilewizard_final.png
+ #	$(INSTALL_DATA) $(srcdir)/x-cisco.desktop $(kde_mimedir)/application/x-cisco.desktop

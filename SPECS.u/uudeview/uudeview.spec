@@ -1,6 +1,6 @@
 Name:           uudeview
 Version:        0.5.20
-Release:        34%{?dist}
+Release:        35%{?dist}
 
 License:        GPLv2+
 Group:          Applications/File
@@ -80,6 +80,9 @@ install -p -m 0644 uulib/libuu.a $RPM_BUILD_ROOT/%{_libdir}/
 %{_libdir}/*.a
 
 %changelog
+* Sun Oct 11 2015 Liu Di <liudidi@gmail.com> - 0.5.20-35
+- 为 Magic 3.0 重建
+
 * Fri Jun 19 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.5.20-34
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

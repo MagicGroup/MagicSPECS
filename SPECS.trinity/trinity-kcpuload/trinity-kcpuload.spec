@@ -18,7 +18,7 @@
 # TDE variables
 %define tde_epoch 2
 %if "%{?tde_version}" == ""
-%define tde_version 14.0.0
+%define tde_version 14.0.1
 %endif
 %define tde_pkg kcpuload
 %define tde_prefix /opt/trinity
@@ -39,14 +39,12 @@ Epoch:			%{tde_epoch}
 Version:		2.00
 Release:		%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}%{?_variant}
 Summary:		CPU meter for Kicker [Trinity]
+Summary(zh_CN.UTF-8): TDE 下的 CPU 监视器
 Group:			Applications/Utilities
+Group(zh_CN.UTF-8): 应用程序/工具
 URL:			http://www.trinitydesktop.org/
 
-%if 0%{?suse_version}
-License:	GPL-2.0+
-%else
 License:	GPLv2+
-%endif
 
 #Vendor:		Trinity Desktop
 #Packager:	Francois Andriot <francois.andriot@free.fr>
@@ -56,6 +54,7 @@ BuildRoot:		%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 Source0:		%{name}-%{tde_version}%{?preversion:~%{preversion}}.tar.gz
 
+Patch1:		%{name}-14.0.1-tqt.patch
 BuildRequires:	trinity-tdelibs-devel >= %{tde_version}
 BuildRequires:	trinity-tdebase-devel >= %{tde_version}
 BuildRequires:	desktop-file-utils
@@ -66,17 +65,6 @@ BuildRequires:	autoconf automake libtool m4
 BuildRequires:	gcc-c++
 BuildRequires:	pkgconfig
 
-# SUSE desktop files utility
-%if 0%{?suse_version}
-BuildRequires:	update-desktop-files
-%endif
-
-%if 0%{?opensuse_bs} && 0%{?suse_version}
-# for xdg-menu script
-BuildRequires:	brp-check-trinity
-%endif
-
-
 %description
 KCPULoad is a small program for Kicker (the TDE panel).  It shows a
 recent history of CPU usage in the form of one or two configurable
@@ -85,18 +73,14 @@ and various different styles.
 
 KCPULoad has support for SMP and separate user/system loads.
 
+%description -l zh_CN.UTF-8
+TDE 下的 CPU 监视器。
 
 ##########
-
-%if 0%{?pclinuxos} || 0%{?suse_version} && 0%{?opensuse_bs} == 0
-%debug_package
-%endif
-
-##########
-
 
 %prep
 %setup -q -n %{name}-%{tde_version}%{?preversion:~%{preversion}}
+%patch1 -p1
 
 %__cp "/usr/share/aclocal/libtool.m4" "admin/libtool.m4.in"
 %__cp "/usr/share/libtool/config/ltmain.sh" "admin/ltmain.sh" || %__cp "/usr/share/libtool/ltmain.sh" "admin/ltmain.sh"
@@ -134,13 +118,7 @@ export PATH="%{tde_bindir}:${PATH}"
 # Fix desktop icon location
 %__mkdir_p "%{?buildroot}%{tde_tdeappdir}"
 %__mv -f "%{?buildroot}%{tde_datadir}/applnk/System/%{tde_pkg}.desktop" "%{?buildroot}%{tde_tdeappdir}"
-
-# Fix desktop files (openSUSE only)
-echo "OnlyShowIn=TDE;" >>"%{?buildroot}%{tde_tdeappdir}/%{tde_pkg}.desktop"
-%if 0%{?suse_version}
-%suse_update_desktop_file kcpuload System Monitor
-%endif
-
+magic_rpm_clean.sh
 
 %clean
 %__rm -rf %{buildroot}

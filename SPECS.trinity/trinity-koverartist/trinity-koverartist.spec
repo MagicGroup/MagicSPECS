@@ -21,6 +21,7 @@
 %define tde_version 14.0.0
 %endif
 
+%define tde_prefix /opt/trinity
 # If TDE is built in a specific prefix (e.g. /opt/trinity), the release will be suffixed with ".opt".
 %if "%{?tde_prefix}" != "/usr"
 %define _variant .opt
@@ -45,11 +46,13 @@
 
 Name:			trinity-%{tde_pkg}
 Summary:		Fast Creation of CD/DVD Covers
+Summary(zh_CN.UTF-8): 快速创建 CD/DVD 封面
 Version:		0.5
-Release:		%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}%{?_variant}
+Release:		%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}%{?_variant}.1
 
 License:		GPLv2+
 Group:			Applications/Utilities
+Group(zh_CN.UTF-8): 应用程序/模拟器
 
 Vendor:			Trinity Project
 Packager:		Francois Andriot <francois.andriot@free.fr>
@@ -59,6 +62,7 @@ Prefix:			%{_prefix}
 BuildRoot:		%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 Source0:		%{tde_pkg}-14.0.0.tar.gz
+Patch1:		%{name}-14.0.1-tqt.patch
 
 BuildRequires:	trinity-tqtinterface-devel >= %{tde_version}
 BuildRequires:	trinity-arts-devel >= 1:1.5.10
@@ -74,15 +78,14 @@ KoverArtist is a program for the fast creation of covers for
 cd/dvd cases and boxes. The main idea behind it is to be able
 to create decent looking covers with some mouseclicks.
 
-
-%if 0%{?suse_version} || 0%{?pclinuxos}
-%debug_package
-%endif
+%description -l zh_CN.UTF-8
+快速创建 CD/DVD 封面。
 
 
 %prep
 %setup -q -n %{tde_pkg}-%{version}
 
+%patch1 -p1
 %__cp -f "/usr/share/aclocal/libtool.m4" "admin/libtool.m4.in"
 %__cp -f "/usr/share/libtool/config/ltmain.sh" "admin/ltmain.sh" || %__cp -f "/usr/share/libtool/ltmain.sh" "admin/ltmain.sh"
 %__make -f "admin/Makefile.common"
@@ -117,8 +120,8 @@ export PATH="%{tde_bindir}:${PATH}"
 export PATH="%{tde_bindir}:${PATH}"
 %__rm -rf %{buildroot}
 %__make install DESTDIR=%{buildroot}
-
-%find_lang %{tde_pkg}
+magic_rpm_clean.sh
+%find_lang %{tde_pkg} || :
 
 
 %clean
@@ -141,7 +144,7 @@ done
 /sbin/ldconfig
 
 
-%files -f %{tde_pkg}.lang
+%files 
 %defattr(-,root,root,-)
 %{tde_bindir}/koverartist
 %{tde_datadir}/applnk/Multimedia/koverartist.desktop
@@ -157,5 +160,8 @@ done
 
 
 %changelog
+* Mon Oct 12 2015 Liu Di <liudidi@gmail.com> - 0.5-1.opt.1
+- 为 Magic 3.0 重建
+
 * Sat Sep 20 2014 Francois Andriot <francois.andriot@free.fr> - 0.5-1
 - Initial release for TDE 14.0.0

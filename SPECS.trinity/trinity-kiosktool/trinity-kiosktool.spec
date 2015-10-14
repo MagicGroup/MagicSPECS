@@ -18,7 +18,7 @@
 # TDE variables
 %define tde_epoch 2
 %if "%{?tde_version}" == ""
-%define tde_version 14.0.0
+%define tde_version 14.0.1
 %endif
 %define tde_pkg kiosktool
 %define tde_prefix /opt/trinity
@@ -41,14 +41,12 @@ Epoch:			%{tde_epoch}
 Version:		1.0
 Release:		%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}%{?_variant}
 Summary:		Tool to configure the TDE kiosk framework
+Summary(zh_CN.UTF-8): 配置 TDE kiosk 框架的工具
 Group:			Applications/Multimedia
+Group(zh_CN.UTF-8): 应用程序/多媒体
 URL:			http://www.trinitydesktop.org/
 
-%if 0%{?suse_version}
-License:	GPL-2.0+
-%else
 License:	GPLv2+
-%endif
 
 #Vendor:		Trinity Desktop
 #Packager:	Francois Andriot <francois.andriot@free.fr>
@@ -57,6 +55,8 @@ Prefix:			%{_prefix}
 BuildRoot:		%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 Source0:		%{name}-%{tde_version}%{?preversion:~%{preversion}}.tar.gz
+
+Patch1:		%{name}-14.0.1-tqt.patch
 
 BuildRequires:	trinity-tdelibs-devel >= %{tde_version}
 BuildRequires:	trinity-tdebase-devel >= %{tde_version}
@@ -68,34 +68,20 @@ BuildRequires:	autoconf automake libtool m4
 BuildRequires:	gcc-c++
 BuildRequires:	pkgconfig
 
-# SUSE desktop files utility
-%if 0%{?suse_version}
-BuildRequires:	update-desktop-files
-%endif
-
-%if 0%{?opensuse_bs} && 0%{?suse_version}
-# for xdg-menu script
-BuildRequires:	brp-check-trinity
-%endif
-
 
 %description
 A Point&Click tool for system administrators to enable 
 TDE's KIOSK features or otherwise preconfigure TDE for 
 groups of users.
 
+%description -l zh_CN.UTF-8
+配置 TDE 下 KIOSK 的工具。
 
 ##########
-
-%if 0%{?pclinuxos} || 0%{?suse_version} && 0%{?opensuse_bs} == 0
-%debug_package
-%endif
-
-##########
-
 
 %prep
 %setup -q -n %{name}-%{tde_version}%{?preversion:~%{preversion}}
+%patch1 -p1
 
 %__cp "/usr/share/aclocal/libtool.m4" "admin/libtool.m4.in"
 %__cp "/usr/share/libtool/config/ltmain.sh" "admin/ltmain.sh" || %__cp "/usr/share/libtool/ltmain.sh" "admin/ltmain.sh"
@@ -131,21 +117,14 @@ export kde_confdir="%{tde_confdir}"
 export PATH="%{tde_bindir}:${PATH}"
 %__rm -rf $RPM_BUILD_ROOT
 %__make install DESTDIR=$RPM_BUILD_ROOT
-
-%find_lang %{tde_pkg}
+magic_rpm_clean.sh
+%find_lang %{tde_pkg} || :
 
 %__mkdir_p "%{?buildroot}%{tde_confdir}"
 cat <<EOF >"%{?buildroot}%{tde_confdir}/kiosktoolrc"
 [General]
 GroupBlacklist=bin,daemon,sys,tty,disk,lp,www,kmem,wheel,mail,news,uucp,shadow,utmp,at,xok,named,ftp,postfix,maildrop,man,sshd,distcc,nobody,nogroup
 EOF
-
-# Updates applications categories for openSUSE
-echo "OnlyShowIn=TDE;" >>"%{?buildroot}%{tde_tdeappdir}/%{tde_pkg}.desktop"
-%if 0%{?suse_version}
-%suse_update_desktop_file %{tde_pkg} System SystemSetup
-%endif
-
 
 %clean
 %__rm -rf $RPM_BUILD_ROOT
@@ -163,7 +142,7 @@ update-desktop-database >& /dev/null ||:
 
 
 
-%files -f %{tde_pkg}.lang
+%files
 %defattr(-,root,root,-)
 %doc ChangeLog COPYING README TODO
 %{tde_bindir}/kiosktool

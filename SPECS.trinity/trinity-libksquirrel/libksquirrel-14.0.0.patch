@@ -1,0 +1,84 @@
+diff --git a/kernel/kls_hdr/fmt_codec_hdr.cpp b/kernel/kls_hdr/fmt_codec_hdr.cpp
+index 9819504..62f5360 100644
+--- a/kernel/kls_hdr/fmt_codec_hdr.cpp
++++ b/kernel/kls_hdr/fmt_codec_hdr.cpp
+@@ -320,6 +320,9 @@ bool fmt_codec::getHdrHead()
+ 		if(!frs.readK(&a, sizeof(s8))) return false;
+ 
+ 		++count;
++		if (count > 79) {
++			return false;
++		}
+ 	}
+ 
+ 	buff[count] = '\0';
+diff --git a/kernel/kls_png/ksquirrel-libs-png/pngpread.c b/kernel/kls_png/ksquirrel-libs-png/pngpread.c
+index 3dd0f06..f34553b 100644
+--- a/kernel/kls_png/ksquirrel-libs-png/pngpread.c
++++ b/kernel/kls_png/ksquirrel-libs-png/pngpread.c
+@@ -1670,7 +1670,7 @@ png_push_handle_unknown(png_structp png_ptr, png_infop info_ptr, png_uint_32
+ #endif
+       png_strncpy((png_charp)png_ptr->unknown_chunk.name,
+ 	 (png_charp)png_ptr->chunk_name,
+-        png_sizeof((png_charp)png_ptr->chunk_name));
++        png_sizeof(png_ptr->unknown_chunk.name));
+       png_ptr->unknown_chunk.data = (png_bytep)png_malloc(png_ptr, length);
+       png_ptr->unknown_chunk.size = (png_size_t)length;
+       png_crc_read(png_ptr, (png_bytep)png_ptr->unknown_chunk.data, length);
+diff --git a/kernel/kls_png/ksquirrel-libs-png/pngrutil.c b/kernel/kls_png/ksquirrel-libs-png/pngrutil.c
+index 899cdc4..6552af3 100644
+--- a/kernel/kls_png/ksquirrel-libs-png/pngrutil.c
++++ b/kernel/kls_png/ksquirrel-libs-png/pngrutil.c
+@@ -2374,7 +2374,7 @@ png_handle_unknown(png_structp png_ptr, png_infop info_ptr, png_uint_32 length)
+ #endif
+        png_strncpy((png_charp)png_ptr->unknown_chunk.name,
+ 	 (png_charp)png_ptr->chunk_name,
+-         png_sizeof((png_charp)png_ptr->chunk_name));
++         png_sizeof(png_ptr->unknown_chunk.name));
+        png_ptr->unknown_chunk.data = (png_bytep)png_malloc(png_ptr, length);
+        png_ptr->unknown_chunk.size = (png_size_t)length;
+        png_crc_read(png_ptr, (png_bytep)png_ptr->unknown_chunk.data, length);
+diff --git a/kernel/kls_dds/dds.cpp b/kernel/kls_dds/dds.cpp
+index c5551f0..4205816 100644
+--- a/kernel/kls_dds/dds.cpp
++++ b/kernel/kls_dds/dds.cpp
+@@ -564,7 +564,12 @@ static void FREE_ROWS(RGBAP **A, const int H)
+ 
+ 		void GetBits( uchar bit_array[16] )
+ 		{
+-			uint b = (uint &) bits[0];
++			// uint b = (uint &) bits[0];
++			/* avoid a warning
++			 * "dereferencing type-punned pointer will break strict-aliasing rules"
++			 * TODO: check endianness issues (but that was probably broken anyway) */
++			uint b;
++			memcpy(&b, &bits[0], sizeof(b));
+ 			bit_array[0] = uchar(b & 0x07); b >>= 3;
+ 			bit_array[1] = uchar(b & 0x07); b >>= 3;
+ 			bit_array[2] = uchar(b & 0x07); b >>= 3;
+@@ -574,7 +579,8 @@ static void FREE_ROWS(RGBAP **A, const int H)
+ 			bit_array[6] = uchar(b & 0x07); b >>= 3;
+ 			bit_array[7] = uchar(b & 0x07); b >>= 3;
+ 
+-			b = (uint &) bits[3];
++			// b = (uint &) bits[3];
++			memcpy(&b, &bits[3], sizeof(b));
+ 			bit_array[8] = uchar(b & 0x07); b >>= 3;
+ 			bit_array[9] = uchar(b & 0x07); b >>= 3;
+ 			bit_array[10] = uchar(b & 0x07); b >>= 3;
+diff --git a/kernel/kls_hdr/fmt_codec_hdr.cpp b/kernel/kls_hdr/fmt_codec_hdr.cpp
+index 9819504..8dde09b 100644
+--- a/kernel/kls_hdr/fmt_codec_hdr.cpp
++++ b/kernel/kls_hdr/fmt_codec_hdr.cpp
+@@ -136,8 +136,9 @@ s32 fmt_codec::read_scanline(RGBA *scan)
+         if (e != 0)
+ 	    e = (e - 1) << 23;
+ 
+-        t = *(float *)&e;
+-
++        // t = *(float *)&e;
++        /* avoid "dereferencing type-punned pointer will break strict-aliasing rules" warning */
++        memcpy(&t, &e, sizeof(t));
+         (scan + i)->r = u8((r / 255.0f) * t);
+         (scan + i)->g = u8((g / 255.0f) * t);
+         (scan + i)->b = u8((b / 255.0f) * t);

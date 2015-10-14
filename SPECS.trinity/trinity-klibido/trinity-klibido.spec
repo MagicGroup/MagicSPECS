@@ -18,9 +18,10 @@
 # Default version for this component
 %define tde_pkg klibido
 %if "%{?tde_version}" == ""
-%define tde_version 14.0.0
+%define tde_version 14.0.1
 %endif
 
+%define tde_prefix /opt/trinity
 # If TDE is built in a specific prefix (e.g. /opt/trinity), the release will be suffixed with ".opt".
 %if "%{?tde_prefix}" != "/usr"
 %define _variant .opt
@@ -44,11 +45,13 @@
 
 Name:			trinity-%{tde_pkg}
 Summary:		A TDE usenet news grabber for Linux.
+Summary(zh_CN.UTF-8): TDE 下的新闻组抓取器
 Version:		0.2.5
-Release:		%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}%{?_variant}
+Release:		%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}%{?_variant}.1
 
 License:		GPL
 Group:			Applications/Network
+Group(zh_CN.UTF-8): 应用程序/互联网
 
 Vendor:			Trinity Project
 Packager:		Francois Andriot <francois.andriot@free.fr>
@@ -58,6 +61,8 @@ Prefix:			%{tde_prefix}
 BuildRoot:		%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 Source0:		%{tde_pkg}-%{version}.tar.gz
+Patch0:		klibido-0.2.5-uulib.patch
+Patch1:		%{name}-14.0.1-tqt.patch
 
 BuildRequires:	trinity-tqtinterface-devel >= %{tde_version}
 BuildRequires:	trinity-arts-devel >= 1:1.5.10
@@ -77,6 +82,9 @@ KLibido is not a NewsReader. It doesn't let you easily display the articles -
 only their subject, and it discards all non-binary posts. If you want a nice
 newsreader for TDE, try KNode.
 
+%description -l zh_CN.UTF-8
+TDE 下的新闻组抓取器。
+
 %files
 %defattr(-,root,root)
 %doc AUTHORS ChangeLog COPYING INSTALL NEWS README RELEASE TODO
@@ -85,18 +93,13 @@ newsreader for TDE, try KNode.
 %{tde_datadir}/apps/klibido/
 %{tde_datadir}/doc/tde/HTML/en/klibido/
 %{tde_datadir}/icons/hicolor/*/apps/klibido.png
-%lang(fr) %{tde_datadir}/locale/fr/LC_MESSAGES/klibido.mo
-
-##########
-
-%if 0%{?suse_version} || 0%{?pclinuxos}
-%debug_package
-%endif
 
 ##########
 
 %prep
 %setup -q -n %{tde_pkg}-%{version}
+%patch0 -p1
+%patch1 -p1
 
 %__cp -f "/usr/share/aclocal/libtool.m4" "admin/libtool.m4.in"
 %__cp -f "/usr/share/libtool/config/ltmain.sh" "admin/ltmain.sh" || %__cp -f "/usr/share/libtool/ltmain.sh" "admin/ltmain.sh"
@@ -134,12 +137,15 @@ fi
 %install
 %__rm -rf $RPM_BUILD_ROOT
 %__make install DESTDIR=$RPM_BUILD_ROOT
-
+magic_rpm_clean.sh
 
 %clean
 rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sun Oct 11 2015 Liu Di <liudidi@gmail.com> - 0.2.5-1.opt.1
+- 为 Magic 3.0 重建
+
 * Mon Dec 30 2013 François Andriot <francois.andriot@free.fr> - 0.25-1
 - Initial release

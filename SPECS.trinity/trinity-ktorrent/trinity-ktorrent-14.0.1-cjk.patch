@@ -1,0 +1,30 @@
+diff -ur trinity-ktorrent-14.0.1.orig/libktorrent/torrent/torrent.cpp trinity-ktorrent-14.0.1/libktorrent/torrent/torrent.cpp
+--- trinity-ktorrent-14.0.1.orig/libktorrent/torrent/torrent.cpp	2015-10-13 09:36:43.283097350 +0000
++++ trinity-ktorrent-14.0.1/libktorrent/torrent/torrent.cpp	2015-10-13 09:42:14.211088869 +0000
+@@ -33,6 +33,7 @@
+ #include "announcelist.h"
+ 
+ #include <tdelocale.h>
++#include <tqtextcodec.h>
+ 
+ namespace bt
+ {
+@@ -51,7 +52,7 @@
+ 	
+ 	
+ 	void Torrent::load(const TQByteArray & data,bool verbose)
+-	{
++	{
+ 		BNode* node = 0;
+ 		 
+ 		try
+@@ -69,6 +70,9 @@
+ 				encoding = enc->data().toString();
+ 				Out() << "Encoding : " << encoding << endl;
+ 			}
++                        else
++                                encoding = TQTextCodec::codecForLocale()->name();
++
+ 
+ 			BValueNode* announce = dict->getValue("announce");
+ 			BListNode* nodes = dict->getList("nodes");

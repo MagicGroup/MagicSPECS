@@ -1,215 +1,168 @@
-Summary: 	A KDE frontend for various vpn clients
-Name:   	kvpnc
-Version: 	0.9.6
-Release: 	1%{?dist}
-License: 	GPLv2+
-Group: 		Applications/Networking
-BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-buildroot
-Source: 	http://download.gna.org/kvpnc/kvpnc-%{version}%{?betaver:-%{betaver}}.tar.bz2
-Patch0:		 kvpnc-0.9.6-admin.patch
-URL: 		http://home.gna.org/kvpnc/en/index.html
-BuildRequires:	kdelibs-devel libjpeg-devel libpng-devel
+#
+# spec file for package kvpnc (version R14)
+#
+# Copyright (c) 2014 Trinity Desktop Environment
+#
+# All modifications and additions to the file contributed by third parties
+# remain the property of their copyright owners, unless otherwise agreed
+# upon. The license for this file, and modifications and additions to the
+# file, is the same license as for the pristine package itself (unless the
+# license for the pristine package is not an Open Source License, in which
+# case the license is the MIT License). An "Open Source License" is a
+# license that conforms to the Open Source Definition (Version 1.9)
+# published by the Open Source Initiative.
+#
+# Please submit bugfixes or comments via http://www.trinitydesktop.org/
+#
+
+# TDE variables
+%define tde_epoch 2
+%if "%{?tde_version}" == ""
+%define tde_version 14.0.1
+%endif
+%define tde_pkg kvpnc
+%define tde_prefix /opt/trinity
+%define tde_bindir %{tde_prefix}/bin
+%define tde_datadir %{tde_prefix}/share
+%define tde_docdir %{tde_datadir}/doc
+%define tde_includedir %{tde_prefix}/include
+%define tde_libdir %{tde_prefix}/%{_lib}
+%define tde_mandir %{tde_datadir}/man
+%define tde_tdeappdir %{tde_datadir}/applications/tde
+%define tde_tdedocdir %{tde_docdir}/tde
+%define tde_tdeincludedir %{tde_includedir}/tde
+%define tde_tdelibdir %{tde_libdir}/trinity
+
+
+Name:		trinity-%{tde_pkg}
+Epoch:		%{tde_epoch}
+Version:	0.9.6a
+Release:	%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}
+Summary:	Vpn clients frontend for TDE
+Summary(zh_CN.UTF-8): TDE 下的 VPN 客户端前端
+Group:		Applications/Utilities
+Group(zh_CN.UTF-8): 应用程序/工具
+URL:		http://www.trinitydesktop.org/
+
+License:	GPLv2+
+
+#Vendor:		Trinity Desktop
+#Packager:	Francois Andriot <francois.andriot@free.fr>
+
+Prefix:		%{tde_prefix}
+BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+
+Source0:		%{name}-%{tde_version}%{?preversion:~%{preversion}}.tar.gz
+
+Patch0:			%{tde_pkg}-14.0.0.patch
+Patch1:			%{name}-14.0.1-tqt.patch
+
+BuildRequires:	trinity-tdelibs-devel >= %{tde_version}
+BuildRequires:	trinity-tdebase-devel >= %{tde_version}
+BuildRequires:	desktop-file-utils
+BuildRequires:	gettext
+
+BuildRequires:	autoconf automake libtool m4
+BuildRequires:	gcc-c++
+BuildRequires:	pkgconfig
+BuildRequires:	fdupes
+
+BuildRequires:	libgcrypt-devel >= 1.2.0
 
 
 %description
-KVpnc is a KDE Desktop Environment frontend for various vpn clients.
-It supports Cisco VPN (vpnc), IPSec (FreeS/WAN (OpenS/WAN), racoon), PPTP (pptpclient) and OpenVPN.
+KVpnc is a TDE frontend for various vpn clients.
+
+It supports :
+* Cisco-compatible VPN client (vpnc)
+* IPSec (freeswan, openswan, racoon)
+* Point-to-Point Tunneling Protocol (PPTP) client (pptp-linux)
+* Virtual Private Network daemon (openvpn)
+
+%description -l zh_CN.UTF-8
+TDE 下的多种 vpn 客户端的前端界面。包括：Cisco 兼容 VPN 客户端(vpnc),
+IPSec VPN (freeswan, openswan, racoon)，PPTP VPN，OpenVPN 等。
+
+##########
 
 %prep
-%setup -q -n kvpnc-%{version}%{?betaver:-%{betaver}}
-%patch0 -p1
+%setup -q -n %{name}-%{tde_version}%{?preversion:~%{preversion}}
+%patch0 -p1 -b .installdir
+%patch1 -p1
+
+%__cp "/usr/share/aclocal/libtool.m4" "admin/libtool.m4.in"
+%__cp "/usr/share/libtool/config/ltmain.sh" "admin/ltmain.sh" || %__cp "/usr/share/libtool/ltmain.sh" "admin/ltmain.sh"
+%__make -f "admin/Makefile.common"
+
 
 %build
-make -f admin/Makefile.common
-%configure --disable-rpath --disable-debug --with-xinerama --with-fpic --with-gnu-ld
-#临时措施
-sed -i 's/\/include\/tqt/\/include\/tqt \-lqt\-mt \-ltdecore \-ltdeui \-lkwalletclient \-lDCOP \-lkio/g' src/Makefile
-%{__make} %{?_smp_mflags}
+unset QTDIR QTINC QTLIB
+export PATH="%{tde_bindir}:${PATH}"
+
+%configure \
+  --prefix=%{tde_prefix} \
+  --exec-prefix=%{tde_prefix} \
+  --bindir=%{tde_bindir} \
+  --datadir=%{tde_datadir} \
+  --libdir=%{tde_libdir} \
+  --mandir=%{tde_mandir} \
+  --includedir=%{tde_tdeincludedir} \
+  \
+  --disable-dependency-tracking \
+  --disable-debug \
+  --enable-final \
+  --enable-new-ldflags \
+  --enable-closure \
+  --enable-rpath \
+  --disable-gcc-hidden-visibility
+
+%__make %{?_smp_mflags}
 
 %install
-rm -rf %{buildroot}
-
-install -d %{buildroot}/%{_datadir}/config/
-make install-strip DESTDIR=%buildroot
-
+export PATH="%{_bindir}:${PATH}"
+%__rm -rf %{buildroot}
+%__make install DESTDIR=%{buildroot}
 magic_rpm_clean.sh
+%find_lang %{tde_pkg} || :
 
-%find_lang %{name}
-
-# Stolen from guarddog spec
-### consolehelper entry
-#mkdir -p $RPM_BUILD_ROOT%{_sysconfdir}/security/console.apps
-#ln -sf consolehelper $RPM_BUILD_ROOT%{_bindir}/%{name}
-#cat > $RPM_BUILD_ROOT%{_sysconfdir}/security/console.apps/%{name} <<EOF
-#USER=root
-#PROGRAM=%{_sbindir}/%{name}
-#SESSION=true
-#FALLBACK=true
-#EOF
-
-### pam entry
-#mkdir -p $RPM_BUILD_ROOT%{_sysconfdir}/pam.d
-#cat > $RPM_BUILD_ROOT%{_sysconfdir}/pam.d/%{name} <<EOF
-#auth       sufficient   pam_rootok.so
-#auth       include	system-auth
-#session    optional     pam_xauth.so
-#account    required     pam_permit.so
-#EOF
 
 %clean
-rm -rf %{buildroot}
+%__rm -rf %{buildroot}
 
-%post -p /sbin/ldconfig 
-%postun -p /sbin/ldconfig
 
-%files -f %{name}.lang
+%post
+for f in hicolor locolor ; do
+  touch --no-create %{tde_datadir}/icons/${f} || :
+  gtk-update-icon-cache --quiet %{tde_datadir}/icons/${f} || :
+done
+update-desktop-database %{tde_tdeappdir} -q &> /dev/null ||:
+
+%postun
+for f in hicolor locolor ; do
+  touch --no-create %{tde_datadir}/icons/${f} || :
+  gtk-update-icon-cache --quiet %{tde_datadir}/icons/${f} || :
+done
+update-desktop-database %{tde_tdeappdir} -q &> /dev/null ||:
+
+
+%files -f %{tde_pkg}.lang
 %defattr(-,root,root,-)
-%{_bindir}/*
-%{_datadir}/doc/HTML/kvpnc
-%{_datadir}/doc/HTML/en/kvpnc
-%{_datadir}/applnk
-%{_datadir}/apps/kvpnc
-%{_datadir}/config
-%{_datadir}/icons
-#%config(noreplace) %{_sysconfdir}/pam.d/%{name}
+%doc AUTHORS ChangeLog COPYING README TODO
+%{tde_bindir}/kvpnc
+%{tde_tdeappdir}/kvpnc.desktop
+%{tde_datadir}/apps/kvpnc/
+%lang(de) %{tde_datadir}/doc/tde/HTML/de/kvpnc/
+%lang(en) %{tde_datadir}/doc/tde/HTML/en/kvpnc/
+%lang(fr) %{tde_datadir}/doc/tde/HTML/fr/kvpnc/
+%{tde_datadir}/doc/tde/HTML/kvpnc/
+%lang(sv) %{tde_datadir}/doc/tde/HTML/sv/kvpnc/
+%{tde_datadir}/icons/hicolor/*/apps/kvpnc.png
+%{tde_datadir}/icons/locolor/*/apps/kvpnc.png
+%{tde_tdedocdir}/HTML/en/tdeioslave/pcf/
+%{tde_datadir}/services/pcf.protocol
 
 
-%changelog
-* Fri Jul 04 2008 Funda Wang <fundawang@mandriva.org> 0.9.1-0.rc1.2mdv2009.0
-+ Revision: 231508
-- rebuild
-
-  + Pixel <pixel@mandriva.com>
-    - rpm filetriggers deprecates update_menus/update_scrollkeeper/update_mime_database/update_icon_cache/update_desktop_database/post_install_gconf_schemas
-
-* Tue Jun 03 2008 Funda Wang <fundawang@mandriva.org> 0.9.1-0.rc1.1mdv2009.0
-+ Revision: 214652
-- New version 0.9.1-rc1 ( kde4 version !! )
-
-  + Thierry Vignaud <tvignaud@mandriva.com>
-    - fix no-buildroot-tag
-
-* Wed Dec 26 2007 Funda Wang <fundawang@mandriva.org> 0.9.0-1mdv2008.1
-+ Revision: 137856
-- New version 0.9.0
-
-  + Thierry Vignaud <tvignaud@mandriva.com>
-    - kill re-definition of %%buildroot on Pixel's request
-
-* Thu May 03 2007 Laurent Montel <lmontel@mandriva.org> 0.8.9-1mdv2008.0
-+ Revision: 20866
-- 0.8.9
-
-
-* Wed Feb 14 2007 Laurent Montel <lmontel@mandriva.com> 0.8.8-1mdv2007.0
-+ Revision: 120750
-- 0.8.8
-
-* Wed Dec 13 2006 Laurent Montel <lmontel@mandriva.com> 0.8.7-1mdv2007.1
-+ Revision: 96178
-- 0.8.7
-
-  + Lenny Cartier <lenny@mandriva.com>
-    - Import kvpnc
-
-* Tue Sep 26 2006 Laurent MONTEL <lmontel@mandriva.com> 0.8.6-1
-- New version
-
-* Mon Jul 24 2006 Nicolas L閏ureuil <neoclust@mandriva.org> 0.8.5.1-3mdv2007.0
-- Fix for new PAM
-
-* Mon Jun 19 2006 Nicolas L閏ureuil <neoclust@mandriva.org> 0.8.5.1-2mdv2007.0
-- Rebuild to regenerate menu
-
-* Sun May 21 2006 Laurent MONTEL <lmontel@mandriva.com> 0.8.5.1-1
-- 0.8.5.1
-
-* Fri May 19 2006 Lenny Cartier <lenny@mandriva.com> 0.8.5-1mdk
-- 0.8.5
-
-* Thu May 11 2006 Nicolas L閏ureuil <neoclust@mandriva.org> 0.8.4-4mdk
-- Remove redundant BuildRequires
-
-* Wed May 10 2006 Nicolas L閏ureuil <neoclust@mandriva.org> 0.8.4-3mdk
-- Fix BuildRequires
-
-* Tue May 09 2006 Laurent MONTEL <lmontel@mandriva.com> 0.8.4-2
-- Rebuild to generate category
-
-* Wed Apr 12 2006 Laurent MONTEL <lmontel@mandriva.com> 0.8.4-1
-- 0.8.4
-
-* Sun Mar 05 2006 Nicolas L閏ureuil <neoclust@mandriva.org> 0.8.3-1mdk
-- New release 0.8.3
-
-* Sat Jan 07 2006 Anssi Hannula <anssi@mandriva.org> 0.8.2.1-2mdk
-- fix x86_64 build
-
-* Tue Dec 27 2005 Laurent MONTEL <lmontel@mandriva.com> 0.8.2.1-1
-- 0.8.2.1
-
-* Sun Dec 25 2005 Nicolas L閏ureuil <neoclust@mandriva.org> 0.8.2-2mdk
-- Fix BuildRequires
-
-* Sun Dec 25 2005 Nicolas L閏ureuil <neoclust@mandriva.org> 0.8.2-1mdk
-- New release 0.8.2
-- Drop patch 2 : Merged Upstream
-
-* Tue Oct 11 2005 Daouda LO <daouda@mandriva.com> 0.8-2mdk
-- fix crash on startup
-
-* Wed Oct 05 2005 Nicolas L閏ureuil <neoclust@mandriva.org> 0.8-1mdk
-- New release 0.8
-- fix file section
-
-* Sat Jul 09 2005 Laurent MONTEL <lmontel@mandriva.com> 0.7.2-2
-- REbuild
-
-* Thu Jul 07 2005 Laurent MONTEL <lmontel@mandriva.com> 0.7.2-1
-- 0.7.2
-
-* Fri Jun 17 2005 Laurent MONTEL <lmontel@mandriva.com> 0.7-1
-- 0.7
-
-* Tue Jun 07 2005 Laurent MONTEL <lmontel@mandriva.com> 0.7-0.rc1.1
-- 0.7rc1
-
-* Tue Apr 26 2005 Nicolas L閏ureuil <neoclust@mandriva.org> 0.6.1-2mdk
-- Fix build for amd64
-
-* Sat Apr 02 2005 Laurent MONTEL <lmontel@mandrakesoft.com> 0.6.1-1mdk
-- 0.6.1
-
-* Fri Mar 11 2005 Laurent MONTEL <lmontel@mandrakesoft.com> 0.6-2mdk
-- Reupload
-
-* Mon Feb 28 2005 Laurent MONTEL <lmontel@mandrakesoft.com> 0.6-1mdk
-- 0.6
-
-* Wed Dec 29 2004 Laurent MONTEL <lmontel@mandrakesoft.com> 0.5.1-1mdk
-- 0.5.1
-
-* Wed Dec 29 2004 Laurent MONTEL <lmontel@mandrakesoft.com> 0.5-4mdk
-- Add patch2: fix crash in configure settings
-
-* Wed Dec 29 2004 Laurent MONTEL <lmontel@mandrakesoft.com> 0.5-3mdk
-- Fix spec file
-- Add debug flag
-- Add enable-final flag
-- Fix pam entry
-- Now necessary consolehelper stuff which broke all kvpnc
-
-* Sun Dec 26 2004 Couriousous <couriousous@mandrake.org> 0.5-2mdk
-- Add consolehelper stuff as kvpnc requires to run as root
-- Add Requires kvpnc-backend
-  Thank misc for all the explications
-
-* Sun Dec 26 2004 Couriousous <couriousous@mandrake.org> 0.5-1mdk
-- 0.5
-- Remove vpnc require
-- Update description
-- Fix menu entry
-
-* Wed Jun 30 2004 Nick Brown <nickbroon@blueyonder.co.uk> 0.3-1mdk
-- First Mandrake release
+%Changelog
+* Fri Jul 05 2013 Francois Andriot <francois.andriot@free.fr> - 2:0.9.6a-1
+- Initial release for TDE 14.0.0
 

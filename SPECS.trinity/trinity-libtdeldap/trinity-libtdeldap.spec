@@ -22,7 +22,7 @@
 # TDE variables
 %define tde_epoch 2
 %if "%{?tde_version}" == ""
-%define tde_version 14.0.0
+%define tde_version 14.0.1
 %endif
 %define tde_pkg libtdeldap
 %define tde_prefix /opt/trinity
@@ -44,17 +44,15 @@
 
 Name:		trinity-%{tde_pkg}
 Summary:	LDAP interface library for TDE
+Summary(zh_CN.UTF-8): TDE 的 LDAP 接口库
 Group:		System/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 Epoch:		%{tde_epoch}
 Version:	0.5
-Release:	%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}%{?_variant}
+Release:	%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}%{?_variant}.1
 URL:		http://www.trinitydesktop.org/
 
-%if 0%{?suse_version}
-License:	GPL-2.0+
-%else
 License:	GPLv2+
-%endif
 
 #Vendor:		Trinity Desktop
 #Packager:	Francois Andriot <francois.andriot@free.fr>
@@ -64,6 +62,8 @@ BuildRoot:		%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 Source0:	%{name}-%{tde_version}%{?preversion:~%{preversion}}.tar.gz
 
+Patch1:		%{name}-14.0.1-tqt.patch
+
 BuildRequires:	trinity-tdelibs-devel >= %{tde_version}
 
 BuildRequires:	desktop-file-utils
@@ -72,35 +72,19 @@ BuildRequires:	gcc-c++
 
 # AUTOTOOLS
 BuildRequires: automake autoconf libtool
-%if 0%{?mgaversion} || 0%{?mdkversion}
-BuildRequires:	%{_lib}ltdl-devel
-%endif
-%if 0%{?fedora} || 0%{?rhel} >= 5 || 0%{?suse_version} >= 1220
 BuildRequires:	libtool-ltdl-devel
-%endif
 
 # SASL support
-%if 0%{?mageia} || 0%{?mandriva} || 0%{?pclinuxos}
-BuildRequires:	%{_lib}sasl2-devel
-%endif
-%if 0%{?suse_version}
 BuildRequires:	cyrus-sasl-devel
-%endif
 
 # OPENLDAP support
-%if 0%{?rhel} >= 6 || 0%{?fedora} || 0%{?mdkversion} || 0%{?mgaversion}
 BuildRequires:	openldap-devel
-%endif
-%if 0%{?suse_version}
-BuildRequires:	openldap2-devel
-%endif
-%if 0%{?rhel} == 5
-BuildRequires:	openldap24-libs-devel
-%endif
-
 
 %description
 LDAP interface library for TDE management modules.
+
+%description -l zh_CN.UTF-8
+TDE 的 LDAP 接口库。
 
 %post
 /sbin/ldconfig || :
@@ -116,7 +100,9 @@ LDAP interface library for TDE management modules.
 ##########
 
 %package devel
-Group:		Development/Libraries/Other
+Group:		Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Summary:	Trinity image viewer
 Requires:	%{name} = %{?epoch:%{epoch}:}%{version}-%{release}
 
@@ -124,6 +110,9 @@ Requires:	%{name} = %{?epoch:%{epoch}:}%{version}-%{release}
 LDAP interface library for TDE management modules.
 
 libtdeldap-trinity-dev contains development files and documentation.
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %post devel
 /sbin/ldconfig || :
@@ -140,14 +129,9 @@ libtdeldap-trinity-dev contains development files and documentation.
 
 ##########
 
-%if 0%{?pclinuxos} || 0%{?suse_version} && 0%{?opensuse_bs} == 0
-%debug_package
-%endif
-
-##########
-
 %prep
 %setup -q -n %{name}-%{tde_version}%{?preversion:~%{preversion}}
+%patch1 -p1
 
 %__cp "/usr/share/aclocal/libtool.m4" "admin/libtool.m4.in"
 %__cp "/usr/share/libtool/config/ltmain.sh" "admin/ltmain.sh" || %__cp "/usr/share/libtool/ltmain.sh" "admin/ltmain.sh"
@@ -174,10 +158,6 @@ export PATH="%{tde_bindir}:${PATH}"
   --enable-rpath \
   --disable-gcc-hidden-visibility \
   \
-%if 0%{?rhel} == 5
-  --with-extra-includes=/usr/include/openldap24 \
-  --with-extra-libs=%{_libdir}/openldap24 \
-%endif
 
 %__make %{?_smp_mflags}
 
@@ -186,12 +166,15 @@ export PATH="%{tde_bindir}:${PATH}"
 export PATH="%{tde_bindir}:${PATH}"
 %__rm -rf %{buildroot}
 %__make install DESTDIR=%{buildroot}
-
+magic_rpm_clean.sh
 
 %clean
 %__rm -rf %{buildroot}
 
 
 %Changelog
+* Sun Oct 11 2015 Liu Di <liudidi@gmail.com> - 2:0.5-1.opt.1
+- 为 Magic 3.0 重建
+
 * Fri Jul 05 2013 Francois Andriot <francois.andriot@free.fr> - 20.5-1
 - Initial release for TDE 14.0.0

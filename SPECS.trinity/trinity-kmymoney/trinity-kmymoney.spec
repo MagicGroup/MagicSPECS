@@ -18,7 +18,7 @@
 # TDE variables
 %define tde_epoch 2
 %if "%{?tde_version}" == ""
-%define tde_version 14.0.0
+%define tde_version 14.0.1
 %endif
 %define tde_pkg kmymoney
 %define tde_prefix /opt/trinity
@@ -41,14 +41,12 @@ Epoch:		%{tde_epoch}
 Version:	1.0.5
 Release:	%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}
 Summary:	Personal finance manager for TDE
+Summary(zh_CN.UTF-8): TDE 下的个人财务管理程序
 Group:		Applications/Utilities
+Group(zh_CN.UTF-8): 应用程序/工具
 URL:		http://www.trinitydesktop.org/
 
-%if 0%{?suse_version}
-License:	GPL-2.0+
-%else
 License:	GPLv2+
-%endif
 
 #Vendor:		Trinity Desktop
 #Packager:	Francois Andriot <francois.andriot@free.fr>
@@ -59,6 +57,8 @@ BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 Source0:		%{name}-%{tde_version}%{?preversion:~%{preversion}}.tar.gz
 Source1:		kmymoneytitlelabel.png
 
+Patch1:			trinity-kmymoney-14.0.1-tqt.patch
+
 BuildRequires:	trinity-tdelibs-devel >= %{tde_version}
 BuildRequires:	trinity-tdebase-devel >= %{tde_version}
 BuildRequires:	desktop-file-utils
@@ -68,37 +68,11 @@ BuildRequires:	gcc-c++
 BuildRequires:	pkgconfig
 BuildRequires:	libtool
 
-# SUSE desktop files utility
-%if 0%{?suse_version}
-BuildRequires:	update-desktop-files
-%endif
-
-%if 0%{?opensuse_bs} && 0%{?suse_version}
-# for xdg-menu script
-BuildRequires:	brp-check-trinity
-%endif
-
 BuildRequires:	recode
 BuildRequires:	libofx-devel
 
 # OPENSP support
-%if 0%{?mgaversion} || 0%{?pclinuxos} || 0%{?mdkversion}
-%if 0%{?mgaversion} || 0%{?pclinuxos}
-%if 0%{?mgaversion} >= 4
-BuildRequires:	%{_lib}osp-devel
-%else
-BuildRequires:	%{_lib}OpenSP5-devel
-%endif
-%else
 BuildRequires:	opensp-devel
-%endif
-%endif
-%if 0%{?rhel} >= 5 || 0%{?fedora} || 0%{?suse_version}
-BuildRequires:	opensp-devel
-%endif
-%if 0%{?rhel} == 4
-BuildRequires:	openjade-devel
-%endif
 
 # TQT3-sqlite3
 BuildRequires:	libtqt3-mt-sqlite3
@@ -112,6 +86,9 @@ KMyMoney is the Personal Finance Manager for TDE. It operates similar to
 MS-Money and Quicken, supports different account types, categorisation of
 expenses, QIF import/export, multiple currencies and initial online banking
 support.
+
+%description -l zh_CN.UTF-8
+TDE 下的个人财务管理程序。
 
 %post
 update-desktop-database %{tde_tdeappdir} > /dev/null
@@ -145,13 +122,18 @@ done
 
 %package common
 Summary:		KMyMoney architecture independent files
+Summary(zh_CN.UTF-8): %{name} 的公用文件
 Group:			Applications/Utilities
+Group(zh_CN.UTF-8): 应用程序/工具
 Requires:		%{name} = %{?epoch:%{epoch}:}%{version}-%{release}
 
 %description common
 This package contains architecture independent files needed for KMyMoney to
 run properly. It also provides KMyMoney documentation. Therefore, unless you
 have '%{name}' package installed, you will hardly find this package useful.
+
+%description common -l zh_CN.UTF-8
+%{name} 的公用文件。
 
 %files common -f kmymoney2.lang
 %defattr(-,root,root,-)
@@ -178,11 +160,16 @@ have '%{name}' package installed, you will hardly find this package useful.
 
 %package devel
 Summary:		KMyMoney development files
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:			Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:		%{name} = %{?epoch:%{epoch}:}%{version}-%{release}
 
 %description devel
 This package contains development files needed for KMyMoney plugins.
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %files devel
 %defattr(-,root,root,-)
@@ -195,15 +182,9 @@ This package contains development files needed for KMyMoney plugins.
 
 ##########
 
-%if 0%{?pclinuxos} || 0%{?suse_version} && 0%{?opensuse_bs} == 0
-%debug_package
-%endif
-
-##########
-
-
 %prep
 %setup -q -n %{name}-%{tde_version}%{?preversion:~%{preversion}}
+%patch1 -p1
 
 %__install -m644 %{SOURCE1} kmymoney2/widgets/
 
@@ -255,7 +236,7 @@ grep -v "^#~" po/it.po >/tmp/it.po && mv -f /tmp/it.po po/it.po
 export PATH="%{tde_bindir}:${PATH}"
 %__rm -rf %{buildroot}
 %__make install DESTDIR=%{buildroot}
-
+magic_rpm_clean.sh
 %find_lang kmymoney2
 
 

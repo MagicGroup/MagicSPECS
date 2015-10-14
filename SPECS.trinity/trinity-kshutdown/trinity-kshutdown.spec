@@ -1,70 +1,160 @@
-Name: kshutdown
-Summary: An advanced shut down utility for KDE
-Summary(zh_CN.UTF-8): KDE 下的高级关机工具
-Version: 1.0.4
-Release: 1%{?dist}
-License: GPL
-Group: Applications/System
-Group(zh_CN.UTF-8): 应用程序/系统
-URL: http://kshutdown.sf.net/
-Packager: Konrad Twardowski <kdtonline@poczta.onet.pl>
-Source0: kshutdown-%version.tar.bz2
-Patch1: kshutdown-1.0.4-admin.patch
-Buildroot: %_tmppath/kshutdown-%version-%release-root
-Requires: kdelibs >= 3.3.0
-BuildRequires: kdelibs-devel
+#
+# spec file for package kshutdown (version R14)
+#
+# Copyright (c) 2014 Trinity Desktop Environment
+#
+# All modifications and additions to the file contributed by third parties
+# remain the property of their copyright owners, unless otherwise agreed
+# upon. The license for this file, and modifications and additions to the
+# file, is the same license as for the pristine package itself (unless the
+# license for the pristine package is not an Open Source License, in which
+# case the license is the MIT License). An "Open Source License" is a
+# license that conforms to the Open Source Definition (Version 1.9)
+# published by the Open Source Initiative.
+#
+# Please submit bugfixes or comments via http://www.trinitydesktop.org/
+#
+
+# TDE variables
+%define tde_epoch 2
+%if "%{?tde_version}" == ""
+%define tde_version 14.0.1
+%endif
+%define tde_pkg kshutdown
+%define tde_prefix /opt/trinity
+%define tde_bindir %{tde_prefix}/bin
+%define tde_datadir %{tde_prefix}/share
+%define tde_docdir %{tde_datadir}/doc
+%define tde_includedir %{tde_prefix}/include
+%define tde_libdir %{tde_prefix}/%{_lib}
+%define tde_mandir %{tde_datadir}/man
+%define tde_tdeappdir %{tde_datadir}/applications/tde
+%define tde_tdedocdir %{tde_docdir}/tde
+%define tde_tdeincludedir %{tde_includedir}/tde
+%define tde_tdelibdir %{tde_libdir}/trinity
+
+
+Name:		trinity-%{tde_pkg}
+Epoch:		%{tde_epoch}
+Version:	1.0.4
+Release:	%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}
+Summary:	An advanced shut down utility for TDE
+Summary(zh_CN.UTF-8): TDE 下的高级关机工具
+Group:		Applications/Multimedia
+Group(zh_CN.UTF-8): 应用程序/多媒体
+URL:		http://kde-apps.org/content/show.php?content=41180
+
+License:	GPLv2+
+
+#Vendor:		Trinity Desktop
+#Packager:	Francois Andriot <francois.andriot@free.fr>
+
+Prefix:		%{tde_prefix}
+BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+
+Source0:		%{name}-%{tde_version}%{?preversion:~%{preversion}}.tar.gz
+
+Patch1:		%{name}-14.0.1-tqt.patch
+
+BuildRequires:	trinity-tdelibs-devel >= %{tde_version}
+BuildRequires:	trinity-tdebase-devel >= %{tde_version}
+BuildRequires:	desktop-file-utils
+
+BuildRequires:	autoconf automake libtool m4
+BuildRequires:	gcc-c++
+BuildRequires:	pkgconfig
+BuildRequires:	fdupes
+
 
 %description
-KShutDown is an advanced shut down utility for KDE.
-Features:
-- Turn Off Computer (logout and halt the system)
-- Restart Computer (logout and reboot the system)
-- Lock Session (lock the screen using a screen saver)
-- End Current Session (end the current KDE session and logout the user)
-- Extras (additional, user commands)
-- Time and delay options
-- Command line and DCOP support
-- System tray and panel applet
-- Visual and sound notifications
-- KDE Kiosk support
-- And more...
+It has 4 main commands:
+
+- Shut Down (logout and halt the system),
+- Reboot (logout and reboot the system),
+- Lock Screen (lock the screen using a screen saver),
+- Logout (end the session and logout the user).
+
+It features time and delay options, command line support, wizard,
+and sounds.
 
 %description -l zh_CN.UTF-8
-KDE 下的高级关机工具
+TDE 下的高级关机程序。
+
+##########
 
 %prep
-%setup -q
+%setup -q -n %{name}-%{tde_version}%{?preversion:~%{preversion}}
 %patch1 -p1
-chmod 777 admin/*
+
+%__cp -f "/usr/share/aclocal/libtool.m4" "admin/libtool.m4.in"
+%__cp -f "/usr/share/libtool/config/ltmain.sh" "admin/ltmain.sh" || %__cp -f "/usr/share/libtool/ltmain.sh" "admin/ltmain.sh"
+%__make -f "admin/Makefile.common"
+
 
 %build
-make -f admin/Makefile.common
-%configure --enable-final
-#临时措施
-sed -i 's/\/include\/tqt/\/include\/tqt \-lqt\-mt \-ltdecore \-ltdeui \-ltdefx \-lDCOP \-lkio/g' kshutdown*/Makefile
-make
+unset QTDIR QTINC QTLIB
+export PATH="%{tde_bindir}:${PATH}"
+
+%configure \
+  --prefix=%{tde_prefix} \
+  --exec-prefix=%{tde_prefix} \
+  --bindir=%{tde_bindir} \
+  --libdir=%{tde_libdir} \
+  --datadir=%{tde_datadir} \
+  --htmldir=%{tde_tdedocdir}/HTML \
+  --includedir=%{tde_tdeincludedir} \
+  \
+  --disable-dependency-tracking \
+  --disable-debug \
+  --enable-final \
+  --enable-new-ldflags \
+  --enable-closure \
+  --enable-rpath \
+  --disable-gcc-hidden-visibility
+
+%__make %{?_smp_mflags}
+
 
 %install
-rm -fr %buildroot
-make install DESTDIR=%buildroot
+%__rm -rf $RPM_BUILD_ROOT
+%__make install DESTDIR=$RPM_BUILD_ROOT
 magic_rpm_clean.sh
-cd %buildroot
-find . -type d | sed '1,2d;s,^\.,\%attr(-\,root\,root) \%dir ,' > $RPM_BUILD_DIR/file.list.kshutdown
-find . -type f | sed 's,^\.,\%attr(-\,root\,root) ,' >> $RPM_BUILD_DIR/file.list.kshutdown
-find . -type l | sed 's,^\.,\%attr(-\,root\,root) ,' >> $RPM_BUILD_DIR/file.list.kshutdown
+%find_lang %{tde_pkg} || :
 
 %clean
-rm -fr %buildroot
-rm -fr $RPM_BUILD_DIR/kshutdown
-rm -fr ../file.list.kshutdown
+%__rm -rf $RPM_BUILD_ROOT
+
 
 %post
-/sbin/ldconfig
+update-desktop-database %{tde_datadir}/applications -q &> /dev/null
+for f in hicolor ; do
+  touch --no-create %{tde_datadir}/icons/${f} 2> /dev/null || :
+  gtk-update-icon-cache --quiet %{tde_datadir}/icons/${f}  2> /dev/null || :
+done
 
 %postun
-/sbin/ldconfig
+update-desktop-database %{tde_datadir}/applications -q &> /dev/null
+for f in hicolor ; do
+  touch --no-create %{tde_datadir}/icons/${f} 2> /dev/null || :
+  gtk-update-icon-cache --quiet %{tde_datadir}/icons/${f}  2> /dev/null || :
+done
 
-%files -f ../file.list.kshutdown
+
+%files -f %{tde_pkg}.lang
+%defattr(-,root,root,-)
+%doc AUTHORS ChangeLog COPYING README
+%{tde_bindir}/kshutdown
+%{tde_tdelibdir}/kshutdownlockout_panelapplet.la
+%{tde_tdelibdir}/kshutdownlockout_panelapplet.so
+%{tde_datadir}/applications/kshutdown.desktop
+%{tde_datadir}/apps/kicker/applets/kshutdownlockout.desktop
+%{tde_datadir}/apps/kshutdown/
+%{tde_datadir}/apps/tdeconf_update/kshutdown.upd
+%{tde_datadir}/icons/hicolor/*/apps/kshutdown.png
+%lang(de) %{tde_datadir}/doc/tde/HTML/de/kshutdown/
+%lang(en) %{tde_datadir}/doc/tde/HTML/en/kshutdown/
+
 
 %changelog
-
+* Fri Jul 05 2013 Francois Andriot <francois.andriot@free.fr> - 2:1.0.4-1
+- Initial release for TDE 14.0.0

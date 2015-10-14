@@ -1,61 +1,88 @@
-# If TDE is built in a specific prefix (e.g. /opt/trinity), the release will be suffixed with ".opt".
-%if "%{?tde_prefix}" != "/usr"
-%define _variant .opt
-%endif
+#
+# spec file for package tdewebdev (version R14)
+#
+# Copyright (c) 2014 Trinity Desktop Environment
+#
+# All modifications and additions to the file contributed by third parties
+# remain the property of their copyright owners, unless otherwise agreed
+# upon. The license for this file, and modifications and additions to the
+# file, is the same license as for the pristine package itself (unless the
+# license for the pristine package is not an Open Source License, in which
+# case the license is the MIT License). An "Open Source License" is a
+# license that conforms to the Open Source Definition (Version 1.9)
+# published by the Open Source Initiative.
+#
+# Please submit bugfixes or comments via http://www.trinitydesktop.org/
+#
 
-# TDE 3.5.13 specific building variables
+# BUILD WARNING:
+#  Remove qt-devel and qt3-devel and any kde*-devel on your system !
+#  Having KDE libraries may cause FTBFS here !
+
+# TDE variables
+%define tde_epoch 2
+%if "%{?tde_version}" == ""
+%define tde_version 14.0.1
+%endif
+%define tde_pkg tdewebdev
+%define tde_prefix /opt/trinity
 %define tde_bindir %{tde_prefix}/bin
 %define tde_datadir %{tde_prefix}/share
 %define tde_docdir %{tde_datadir}/doc
 %define tde_includedir %{tde_prefix}/include
 %define tde_libdir %{tde_prefix}/%{_lib}
-%define tde_mandir %{tde_datadir}/man
-
-%define tde_tdeappdir %{tde_datadir}/applications/kde
+%define tde_tdeappdir %{tde_datadir}/applications/tde
 %define tde_tdedocdir %{tde_docdir}/tde
 %define tde_tdeincludedir %{tde_includedir}/tde
 %define tde_tdelibdir %{tde_libdir}/trinity
 
-%define _docdir %{tde_docdir}
+# If TDE is built in a specific prefix (e.g. /opt/trinity), the release will be suffixed with ".opt".
+%if "%{?tde_prefix}" != "/usr"
+%define _variant .opt
+%endif
 
-Name:		trinity-tdewebdev
-Version:	3.5.13.2
-Release:	1%{?dist}%{?_variant}
-License:	GPL
-Summary:	Web development applications 
+
+Name:		trinity-%{tde_pkg}
+Summary:	Web development applications
+Summary(zh_CN.UTF-8): 网页开发程序
 Group:		Applications/Editors
-
-Vendor:		Trinity Project
-Packager:	Francois Andriot <francois.andriot@free.fr>
+Group(zh_CN.UTF-8): 应用程序/编辑器
+Version:	%{tde_version}
+Release:	%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}%{?_variant}
 URL:		http://www.trinitydesktop.org/
+
+License:	GPLv2+
+
+#Vendor:		Trinity Project
+#Packager:	Francois Andriot <francois.andriot@free.fr>
 
 Prefix:		%{tde_prefix}
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
-Source0:	kdewebdev-trinity-%{version}.tar.xz
+Source0:	%{name}-%{version}%{?preversion:~%{preversion}}.tar.gz
 Source1:	http://download.sourceforge.net/quanta/css.tar.bz2
 Source2:	http://download.sourceforge.net/quanta/html.tar.bz2
 Source3:	http://download.sourceforge.net/quanta/php_manual_en_20030401.tar.bz2
 Source4:	http://download.sourceforge.net/quanta/javascript.tar.bz2
-Source5:	hi48-app-kxsldbg.png
 
-Patch1:		kdewebdev-3.5.4-kxsldbg-icons.patch
+Patch1:		%{name}-14.0.1-tqt.patch
+
+BuildRequires:	trinity-tdelibs-devel >= %{tde_version}
+BuildRequires:	trinity-tdesdk-devel >= %{tde_version}
 
 BuildRequires:	autoconf automake libtool m4
 BuildRequires:	desktop-file-utils
-BuildRequires:	trinity-tdelibs-devel >= %{version}
-BuildRequires:	trinity-tdesdk-devel >= %{version}
+BuildRequires:	gcc-c++
+
 BuildRequires:	libxslt-devel
-BuildRequires:	libxml2-devel
-%if 0%{?rhel} == 4
-# a bogus dep in libexslt.la file from EL-4 (WONTFIX bug http://bugzilla.redhat.com/142241)
-BuildRequires:	libgcrypt-devel
-%endif
+
+# PERL support
 BuildRequires:	perl
 
 # KXSLDBG requires libxml2
 #if 0%{?mgaversion} || 0%{?mdkversion} || 0%{?rhel} >= 5 || ( 0%{?fedora} > 0 && %{?fedora} <= 17 ) || 0%{?suse_version}
 %define build_kxsldbg 1
+BuildRequires:	libxml2-devel
 #endif
 
 
@@ -66,15 +93,15 @@ Provides:	trinity-kdewebdev = %{version}-%{release}
 
 Requires: trinity-quanta = %{version}-%{release}
 Requires: trinity-quanta-data = %{version}-%{release}
-Requires: trinity-kfilereplace = %{version}-%{release}
+Requires: trinity-tdefilereplace = %{version}-%{release}
 Requires: trinity-kimagemapeditor = %{version}-%{release}
 Requires: trinity-klinkstatus = %{version}-%{release}
 Requires: trinity-kommander = %{version}-%{release}
 %{?build_kxsldbg:Requires: trinity-kxsldbg = %{version}-%{release}}
 
 %description
-%{summary}, including:
-* kfilereplace: batch search and replace tool
+Web development applications, including:
+* tdefilereplace: batch search and replace tool
 * kimagemapeditor: HTML image map editor
 * klinkstatus: link checker
 * kommander: visual dialog building tool
@@ -82,13 +109,14 @@ Requires: trinity-kommander = %{version}-%{release}
 %{?build_kxsldbg:* kxsldbg: xslt Debugger}
 
 %files
+%defattr(-,root,root,-)
 
 ##########
 
 %package -n trinity-quanta
-Summary:	web development environment for KDE [Trinity]
+Summary:	web development environment for TDE [Trinity]
 Group:		Applications/Development
-Requires:	trinity-kfilereplace = %{version}-%{release}
+Requires:	trinity-tdefilereplace = %{version}-%{release}
 Requires:	trinity-klinkstatus = %{version}-%{release}
 Requires:	trinity-kommander = %{version}-%{release}
 Requires:	trinity-quanta-data = %{version}-%{release}
@@ -103,7 +131,7 @@ to all markup languages, while supporting popular web-based scripting
 languages, CSS and other emerging W3C recommendations.
 
 Quanta Plus supports many external components, debuggers and other tools
-for web development, several of which are shipped with the KDE web
+for web development, several of which are shipped with the TDE web
 development module.
 
 Quanta Plus is not in any way affiliated with any commercial versions
@@ -165,41 +193,44 @@ This package is part of TDE, as a component of the TDE web development module.
 
 ##########
 
-%package -n trinity-kfilereplace
-Summary:	batch search-and-replace component for KDE [Trinity]
+%package -n trinity-tdefilereplace
+Summary:	batch search-and-replace component for TDE [Trinity]
 Group:		Applications/Development
 
-%description -n trinity-kfilereplace
-KFileReplace is an embedded component for KDE that acts as a batch
+Obsoletes:	trinity-kfilereplace < %{version}-%{release}
+Provides:	trinity-kfilereplace = %{version}-%{release}
+
+%description -n trinity-tdefilereplace
+tdefileReplace is an embedded component for TDE that acts as a batch
 search-and-replace tool. It allows you to replace one expression with
 another in many files at once.
 
-Note that at the moment KFileReplace does not come as a standalone
-application. An example of an application that uses the KFileReplace
+Note that at the moment tdefileReplace does not come as a standalone
+application. An example of an application that uses the tdefileReplace
 component is Quanta Plus (found in the package quanta).
 
 This package is part of TDE, as a component of the TDE web development module.
 
-%files -n trinity-kfilereplace
+%files -n trinity-tdefilereplace
 %defattr(-,root,root,-)
-%{tde_bindir}/kfilereplace
-%{tde_tdelibdir}/libkfilereplacepart.la
-%{tde_tdelibdir}/libkfilereplacepart.so
-%{tde_tdeappdir}/kfilereplace.desktop
-%{tde_datadir}/apps/kfilereplace/kfilereplaceui.rc
-%{tde_datadir}/apps/kfilereplacepart
-%{tde_datadir}/icons/hicolor/*/apps/kfilereplace.png
-%{tde_datadir}/services/kfilereplacepart.desktop
-%{tde_tdedocdir}/HTML/en/kfilereplace/
+%{tde_bindir}/tdefilereplace
+%{tde_tdelibdir}/libtdefilereplacepart.la
+%{tde_tdelibdir}/libtdefilereplacepart.so
+%{tde_tdeappdir}/tdefilereplace.desktop
+%{tde_datadir}/apps/tdefilereplace/
+%{tde_datadir}/apps/tdefilereplacepart
+%{tde_datadir}/icons/hicolor/*/apps/tdefilereplace.png
+%{tde_datadir}/services/tdefilereplacepart.desktop
+%{tde_tdedocdir}/HTML/en/tdefilereplace/
 
-%post -n trinity-kfilereplace
+%post -n trinity-tdefilereplace
 for f in hicolor ; do
   touch --no-create %{tde_datadir}/icons/$f 2> /dev/null ||:
   gtk-update-icon-cache -q %{tde_datadir}/icons/$f 2> /dev/null ||:
 done
 update-desktop-database %{tde_datadir}/applications > /dev/null 2>&1 || :
 
-%postun -n trinity-kfilereplace
+%postun -n trinity-tdefilereplace
 for f in hicolor ; do
   touch --no-create %{tde_datadir}/icons/$f 2> /dev/null ||:
   gtk-update-icon-cache -q %{tde_datadir}/icons/$f 2> /dev/null ||:
@@ -209,7 +240,7 @@ update-desktop-database %{tde_datadir}/applications > /dev/null 2>&1 || :
 ##########
 
 %package -n trinity-kimagemapeditor
-Summary:	HTML image map editor for KDE [Trinity]
+Summary:	HTML image map editor for TDE
 Group:		Applications/Development
 
 %description -n trinity-kimagemapeditor
@@ -229,6 +260,7 @@ This package is part of TDE, as a component of the TDE web development module.
 %{tde_datadir}/icons/hicolor/*/apps/kimagemapeditor.png
 %{tde_datadir}/icons/locolor/*/apps/kimagemapeditor.png
 %{tde_datadir}/services/kimagemapeditorpart.desktop
+%{tde_tdedocdir}/HTML/en/kimagemapeditor/
 
 %post -n trinity-kimagemapeditor
 for f in hicolor locolor ; do
@@ -247,11 +279,11 @@ update-desktop-database %{tde_datadir}/applications > /dev/null 2>&1 || :
 ##########
 
 %package -n trinity-klinkstatus
-Summary:	web link validity checker for KDE [Trinity]
+Summary:	web link validity checker for TDE
 Group:		Applications/Development
 
 %description -n trinity-klinkstatus
-KLinkStatus is KDE's web link validity checker. It allows you to
+KLinkStatus is TDE's web link validity checker. It allows you to
 search internal and external links throughout your web site. Simply
 point it to a single page and choose the depth to search.
 
@@ -330,23 +362,19 @@ This package is part of TDE, as a component of the TDE web development module.
 %{tde_datadir}/apps/katepart/syntax/kommander.xml
 %{tde_tdedocdir}/HTML/en/kommander/
 %{tde_datadir}/icons/crystalsvg/*/apps/kommander.png
+%{tde_datadir}/icons/hicolor/*/apps/kommander.png
 %{tde_datadir}/mimelnk/application/x-kommander.desktop
-#kommander/examples /opt/trinity/share/doc/kommander
-#kommander/working/extractkmdr /opt/trinity/bin
-#kommander/working/kmdr2po /opt/trinity/bin
 %{tde_tdelibdir}/libkommander_part.so
 %{tde_tdelibdir}/libkommander_part.la
 %{tde_datadir}/apps/kommander/
-%{tde_datadir}/apps/kmdr-editor/editor/
+%{tde_datadir}/apps/kmdr-editor/
 %{tde_datadir}/apps/katepart/syntax/kommander-new.xml
-%{tde_datadir}/apps/kdevappwizard/kommanderplugin.png
-%{tde_datadir}/apps/kdevappwizard/kommanderplugin.tar.gz
-%{tde_datadir}/apps/kdevappwizard/templates/kommanderplugin.kdevtemplate
+%{tde_datadir}/apps/tdevappwizard/
 %{tde_datadir}/services/kommander_part.desktop
 
 %post -n trinity-kommander
 /sbin/ldconfig || :
-for f in crystalsvg ; do
+for f in crystalsvg hicolor ; do
   touch --no-create %{tde_datadir}/icons/$f 2> /dev/null ||:
   gtk-update-icon-cache -q %{tde_datadir}/icons/$f 2> /dev/null ||:
 done
@@ -354,7 +382,7 @@ update-desktop-database %{tde_datadir}/applications > /dev/null 2>&1 || :
 
 %postun -n trinity-kommander
 /sbin/ldconfig || :
-for f in crystalsvg ; do
+for f in crystalsvg hicolor ; do
   touch --no-create %{tde_datadir}/icons/$f 2> /dev/null ||:
   gtk-update-icon-cache -q %{tde_datadir}/icons/$f 2> /dev/null ||:
 done
@@ -400,13 +428,13 @@ This package is part of TDE, as a component of the TDE web development module.
 %if 0%{?build_kxsldbg}
 
 %package -n trinity-kxsldbg
-Summary:	graphical XSLT debugger for KDE [Trinity]
+Summary:	graphical XSLT debugger for TDE [Trinity]
 Group:		Applications/Development
 
 %description -n trinity-kxsldbg
 KXSLDbg is a debugger for XSLT scripts. It includes a graphical user
 interface as well as a text-based debugger. KXSLDbg can be run as a
-standalone application or as an embedded KDE part.
+standalone application or as an embedded TDE part.
 
 XSLT is an XML language for defining transformations of XML files from
 XML to some other arbitrary format, such as XML, HTML, plain text, etc.,
@@ -421,17 +449,18 @@ This package is part of TDE, as a component of the TDE web development module.
 %{tde_tdelibdir}/libkxsldbgpart.la
 %{tde_tdelibdir}/libkxsldbgpart.so
 %{tde_tdeappdir}/kxsldbg.desktop
-%{tde_datadir}/apps/kxsldbg
-%{tde_datadir}/apps/kxsldbgpart
+%{tde_datadir}/applnk/.hidden/xsldbg.desktop
+%{tde_datadir}/apps/kxsldbg/
+%{tde_datadir}/apps/kxsldbgpart/
 %{tde_tdedocdir}/HTML/en/kxsldbg/
 %{tde_tdedocdir}/HTML/en/xsldbg/
 %{tde_datadir}/icons/hicolor/*/actions/1downarrow.png
 %{tde_datadir}/icons/hicolor/*/actions/configure.png
-%{tde_datadir}/icons/hicolor/*/actions/exit.png
+%{tde_datadir}/icons/hicolor/*/actions/system-log-out.png
+%{tde_datadir}/icons/hicolor/*/actions/system-run.png
 %{tde_datadir}/icons/hicolor/*/actions/hash.png
 %{tde_datadir}/icons/hicolor/*/actions/mark.png
 %{tde_datadir}/icons/hicolor/*/actions/next.png
-%{tde_datadir}/icons/hicolor/*/actions/run.png
 %{tde_datadir}/icons/hicolor/*/actions/step.png
 %{tde_datadir}/icons/hicolor/*/actions/xsldbg_*.png
 %{tde_datadir}/icons/hicolor/*/apps/kxsldbg.png
@@ -463,7 +492,8 @@ Summary:	Header files and documentation for %{name}
 Obsoletes:	trinity-kdewebdev-devel < %{version}-%{release}
 Provides:	trinity-kdewebdev-devel = %{version}-%{release}
 
-Requires:	trinity-tdelibs-devel
+Requires:	trinity-tdelibs-devel >= %{tde_version}
+Requires:	%{name} = %{version}-%{release}
 Requires:	trinity-kommander-devel = %{version}-%{release}
 
 %description devel
@@ -473,44 +503,35 @@ Requires:	trinity-kommander-devel = %{version}-%{release}
 
 ##########
 
-%if 0%{?suse_version} || 0%{?pclinuxos}
+%if 0%{?pclinuxos} || 0%{?suse_version} && 0%{?opensuse_bs} == 0
 %debug_package
 %endif
 
 ##########
 
 %prep
-%setup -q -n kdewebdev-trinity-%{version} -a 1 -a 2 -a 3 -a 4
-%patch1 -p1 -b .kxsldbg-icons
+%setup -q -n %{name}-%{version}%{?preversion:~%{preversion}} -a 1 -a 2 -a 3 -a 4
+%patch1 -p1
 
-%__install -m644 -p %{SOURCE5} kxsldbg/
 %if 0%{?build_kxsldbg} == 0
 %__rm -rf kxsldbg/ doc/kxsldbg/ doc/xsldbg/
 %endif
-
-# Ugly hack to modify TQT include directory inside autoconf files.
-# If TQT detection fails, it fallbacks to TQT4 instead of TQT3 !
-%__sed -i "admin/acinclude.m4.in" \
-  -e "s|/usr/include/tqt|%{tde_includedir}/tqt|g" \
-  -e "s|kde_htmldir='.*'|kde_htmldir='%{tde_tdedocdir}/HTML'|g"
 
 %__cp -f "/usr/share/aclocal/libtool.m4" "admin/libtool.m4.in"
 %__cp -f "/usr/share/libtool/config/ltmain.sh" "admin/ltmain.sh" || %__cp -f "/usr/share/libtool/ltmain.sh" "admin/ltmain.sh"
 %__make -f "admin/Makefile.common"
 
-%build
-unset QTDIR || : ; source /etc/profile.d/qt3.sh
-export PATH="%{tde_bindir}:${PATH}"
-export LDFLAGS="-L%{tde_libdir} -I%{tde_includedir}"
 
-# Do not build against any "/usr" installed KDE
-export KDEDIR="%{tde_prefix}"
+%build
+unset QTDIR QTINC QTLIB
+export PATH="%{tde_bindir}:${PATH}"
 
 # Specific path for RHEL4
 if [ -d "/usr/X11R6" ]; then
-  export CXXFLAGS="${RPM_OPT_FLAGS} -I/usr/X11R6/include -L/usr/X11R6/%{_lib}"
+  export RPM_OPT_FLAGS="${RPM_OPT_FLAGS} -I/usr/X11R6/include -L/usr/X11R6/%{_lib}"
 fi
 
+# Warning: GCC visibility causes FTBFS [Bug #1285]
 %configure \
   --prefix=%{tde_prefix} \
   --exec-prefix=%{tde_prefix} \
@@ -518,12 +539,18 @@ fi
   --datadir=%{tde_datadir} \
   --libdir=%{tde_libdir} \
   --includedir=%{tde_tdeincludedir} \
-  --disable-rpath \
+  \
+  --disable-dependency-tracking \
+  --disable-debug \
   --enable-new-ldflags \
+  --enable-final \
   --enable-closure \
-  --disable-debug --disable-warnings \
-  --disable-dependancy-tracking --enable-final \
-  --with-extra-includes=%{tde_includedir}/tqt \
+  --enable-rpath \
+  --disable-gcc-hidden-visibility \
+  \
+  --enable-editors \
+  --with-extra-includes=%{_includedir}/tqt
+
 
 # WTF hack for RHEL4
 %if 0%{?rhel} == 4
@@ -552,22 +579,17 @@ EOF
 done
 cp -a php php.docrc %{buildroot}%{tde_datadir}/apps/quanta/doc/
 
-# make symlinks relative
-pushd %{buildroot}%{tde_tdedocdir}/HTML/en
-for i in *; do
-   if [ -d $i -a -L $i/common ]; then
-      rm -f $i/common
-      ln -nfs ../common $i
-   fi
-done
+# Adds missing icons in 'hicolor' theme
+%__mkdir_p %{buildroot}%{tde_datadir}/icons/hicolor/{16x16,22x22,32x32,48x48,64x64,128x128}/apps/
+pushd %{buildroot}%{tde_datadir}/icons
+for i in {16,22,32,64,128}; do %__cp crystalsvg/"$i"x"$i"/apps/kommander.png  hicolor/"$i"x"$i"/apps/kommander.png  ;done
 popd
-
-
+magic_rpm_clean.sh
 
 %clean
 %__rm -rf %{buildroot}
 
 
 %changelog
-* Mon Jun 03 2013 Francois Andriot <francois.andriot@free.fr> - 3.5.13.2-1
-- Initial release for TDE 3.5.13.2
+* Fri Jul 05 2013 Francois Andriot <francois.andriot@free.fr> - 14.0.0-1
+- Initial release for TDE 14.0.0

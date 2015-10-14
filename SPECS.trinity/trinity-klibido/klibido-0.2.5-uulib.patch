@@ -1,0 +1,10 @@
+diff -ur klibido-0.2.5.orig/configure.in.in klibido-0.2.5/configure.in.in
+--- klibido-0.2.5.orig/configure.in.in	2015-10-11 08:46:40.871603061 +0000
++++ klibido-0.2.5/configure.in.in	2015-10-11 08:47:09.004602340 +0000
+@@ -4,5 +4,5 @@
+ AC_C_BIGENDIAN
+ AC_CHECK_KDEMAXPATHLEN
+ AX_PATH_BDB([4],[LIBS="$BDB_LIBS $LIBS" LDFLAGS="$BDB_LDFLAGS $LDFLAGS" CPPFLAGS="$CPPFLAGS $BDB_CPPFLAGS"])
+-AC_CHECK_HEADER(uulib/uudeview.h, [ LDFLAGS="$LDFLAGS -luu" ], [AC_MSG_ERROR([Error: uudeview.h not found!])])
++AC_CHECK_HEADER(uudeview.h, [ LDFLAGS="$LDFLAGS -luu" ], [AC_MSG_ERROR([Error: uudeview.h not found!])])
+ 

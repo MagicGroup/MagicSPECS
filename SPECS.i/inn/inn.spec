@@ -1,12 +1,14 @@
 %global _hardened_build 1
 
 Summary: The InterNetNews system, an Usenet news server
+Summary(zh_CN.UTF-8): InterNetNews 系统，一个新闻组服务器
 Name: inn
 Version: 2.6.0
-Release: 0.rc1.1%{?dist}.2
+Release: 0.rc1.1%{?dist}.3
 #see LICENSE file for details
 License: GPLv2+ and BSD and MIT and Public Domain
 Group: System Environment/Daemons
+Group(zh_CN.UTF-8): 系统环境/服务
 URL: https://www.isc.org/software/INN/
 Source0: ftp://ftp.isc.org/isc/inn/testing/inn-%{version}rc1.tar.gz
 Source2: inn-default-distributions
@@ -54,9 +56,14 @@ reading Usenet news.  You may also need to install inn-devel, if you
 are going to use a separate program which interfaces to INN, like
 newsgate or tin.
 
+%description -l zh_CN.UTF-8
+新闻组服务器。
+
 %package devel
 Summary: The INN (InterNetNews) library
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: inn = %{version}-%{release}
 Requires: %{name}-libs = %{version}-%{release}
 
@@ -68,9 +75,14 @@ example, newsgate and tin).
 If you are installing a program which must interface with the INN news
 system, you should install inn-devel.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
 %package -n inews
 Summary: Sends Usenet articles to a local news server for distribution
+Summary(zh_CN.UTF-8): 发送 Usenet 的文章到本地新闻服务器
 Group: System Environment/Daemons
+Group(zh_CN.UTF-8): 系统环境/服务
 
 %description -n inews
 The inews program is used by some news programs (for example, inn and
@@ -82,12 +94,20 @@ specified in the inn.conf file.
 Install inews if you need a program for posting Usenet articles to
 local news servers.
 
+%description -n inews -l zh_CN.UTF-8
+发送 Usenet 的文章到本地新闻服务器。
+
 %package libs
 Summary: Libraries provided by INN
+Summary(zh_CN.UTF-8): %{name} 的运行库
 Group: Applications/System
+Group(zh_CN.UTF-8): 应用程序/系统
 
 %description libs
 This package contains dynamic libraries provided by INN project
+
+%description libs -l zh_CN.UTF-8
+%{name} 的运行库。
 
 %pre
 getent group news >/dev/null || groupadd -g 13 -r news
@@ -211,7 +231,7 @@ cat <<EOF >$RPM_BUILD_ROOT%{_tmpfilesdir}/inn.conf
 D %{_localstatedir}/run/news 0755 news news -
 EOF
 install -d -m 0755 $RPM_BUILD_ROOT%{_localstatedir}/run/news
-
+magic_rpm_clean.sh
 
 %post
 su -m news -c '/usr/libexec/news/makedbz -i -o'
@@ -546,6 +566,9 @@ fi
 %{_mandir}/man1/inews*
 
 %changelog
+* Sun Oct 11 2015 Liu Di <liudidi@gmail.com> - 2.6.0-0.rc1.1.3
+- 为 Magic 3.0 重建
+
 * Wed Jun 17 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.6.0-0.rc1.1.2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 
