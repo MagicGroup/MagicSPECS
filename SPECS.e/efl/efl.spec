@@ -12,7 +12,7 @@
 %global use_wayland 0
 
 Name:		efl
-Version:	1.15.1
+Version:	1.15.2
 Release:	2%{?dist}
 Summary:	Collection of Enlightenment libraries
 Summary(zh_CN.UTF-8): Enlightenment 桌面环境的库集合
@@ -21,6 +21,8 @@ URL:		http://enlightenment.org/
 Source0:	http://download.enlightenment.org/rel/libs/efl/efl-%{version}.tar.xz
 # I think this one is Fedora specific.
 Patch0:		efl-1.11.4-tslibfix.patch
+# Fix compilation for lua-devel > 5.1
+Patch1:		efl-lua-5.2-global.patch
 BuildRequires:	bullet-devel libpng-devel libjpeg-devel gstreamer1-devel zlib-devel
 BuildRequires:	gstreamer1-plugins-base-devel libtiff-devel openssl-devel
 BuildRequires:	curl-devel dbus-devel glibc-devel fontconfig-devel freetype-devel
@@ -159,6 +161,9 @@ Development files for EFL.
 %prep
 %setup -q
 %patch0 -p1 -b .tslibfix
+%if ! 0%{?has_luajit}
+%patch1 -p1 -b .luaglobal
+%endif
 autoreconf -ifv
 
 # This is why hardcoding paths is bad.
@@ -474,6 +479,12 @@ fi
 %{_libdir}/pkgconfig/evas*.pc
 
 %changelog
+* Wed Oct 14 2015 Liu Di <liudidi@gmail.com> - 1.15.2-2
+- 为 Magic 3.0 重建
+
+* Wed Oct 14 2015 Liu Di <liudidi@gmail.com> - 1.15.2-1
+- 更新到 1.15.2
+
 * Sun Sep 06 2015 Liu Di <liudidi@gmail.com> - 1.15.1-2
 - 为 Magic 3.0 重建
 
