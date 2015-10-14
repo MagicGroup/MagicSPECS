@@ -1,0 +1,50 @@
+--- coreutils-8.23/gnulib-tests/gnulib.mk.orig	2015-07-04 11:11:09.438579284 +0100
++++ coreutils-8.23/gnulib-tests/gnulib.mk	2015-07-04 11:12:12.113643496 +0100
+@@ -2312,14 +2312,6 @@
+ 
+ ## end   gnulib module unsetenv-tests
+ 
+-## begin gnulib module update-copyright-tests
+-
+-TESTS += test-update-copyright.sh
+-TESTS_ENVIRONMENT += abs_aux_dir='$(abs_aux_dir)'
+-EXTRA_DIST += test-update-copyright.sh
+-
+-## end   gnulib module update-copyright-tests
+-
+ ## begin gnulib module userspec-tests
+ 
+ TESTS += test-userspec
+--- coreutils-8.23/gnulib-tests/Makefile.in.orig	2015-07-04 11:10:54.353323089 +0100
++++ coreutils-8.23/gnulib-tests/Makefile.in	2015-07-04 11:12:45.542210970 +0100
+@@ -220,7 +220,6 @@
+ 	test-u8-mbtoucr$(EXEEXT) test-u8-uctomb$(EXEEXT) \
+ 	test-uc_width$(EXEEXT) uniwidth/test-uc_width2.sh \
+ 	test-unlink$(EXEEXT) test-unlinkat$(EXEEXT) \
+-	test-unsetenv$(EXEEXT) test-update-copyright.sh \
+ 	test-userspec$(EXEEXT) test-utimens$(EXEEXT) \
+ 	test-utimensat$(EXEEXT) test-vasnprintf$(EXEEXT) \
+ 	test-vasprintf-posix$(EXEEXT) test-vasprintf$(EXEEXT) \
+@@ -3766,7 +3765,7 @@
+ 	uniwidth/test-uc_width2.sh macros.h test-unlink.h \
+ 	test-unlink.c signature.h macros.h test-unlinkat.c \
+ 	test-rmdir.h test-unlink.h signature.h macros.h unlinkdir.h \
+-	test-unsetenv.c signature.h macros.h test-update-copyright.sh \
++	test-unsetenv.c signature.h macros.h \
+ 	test-userspec.c nap.h test-futimens.h test-lutimens.h \
+ 	test-utimens.h test-utimens-common.h test-utimens.c macros.h \
+ 	nap.h test-lutimens.h test-utimens.h test-utimens-common.h \
+@@ -7787,13 +7786,6 @@
+ 	$(am__check_pre) $(LOG_DRIVER) --test-name "$$f" \
+ 	--log-file $$b.log --trs-file $$b.trs \
+ 	$(am__common_driver_flags) $(AM_LOG_DRIVER_FLAGS) $(LOG_DRIVER_FLAGS) -- $(LOG_COMPILE) \
+-	"$$tst" $(AM_TESTS_FD_REDIRECT)
+-test-update-copyright.sh.log: test-update-copyright.sh
+-	@p='test-update-copyright.sh'; \
+-	b='test-update-copyright.sh'; \
+-	$(am__check_pre) $(LOG_DRIVER) --test-name "$$f" \
+-	--log-file $$b.log --trs-file $$b.trs \
+-	$(am__common_driver_flags) $(AM_LOG_DRIVER_FLAGS) $(LOG_DRIVER_FLAGS) -- $(LOG_COMPILE) \
+ 	"$$tst" $(AM_TESTS_FD_REDIRECT)
+ test-userspec.log: test-userspec$(EXEEXT)
+ 	@p='test-userspec$(EXEEXT)'; \

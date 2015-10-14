@@ -1,12 +1,13 @@
+%bcond_with selinux
+
 Summary: A set of basic GNU tools commonly used in shell scripts
 Name:    coreutils
-Version: 8.24
-Release: 4%{?dist}
+Version: 8.22
+Release: 12%{?dist}
 License: GPLv3+
 Group:   System Environment/Base
 Url:     http://www.gnu.org/software/coreutils/
 Source0: ftp://ftp.gnu.org/gnu/%{name}/%{name}-%{version}.tar.xz
-Source2: ftp://ftp.gnu.org/gnu/%{name}/%{name}-%{version}.tar.xz.sig
 Source101:  coreutils-DIR_COLORS
 Source102:  coreutils-DIR_COLORS.lightbgcolor
 Source103:  coreutils-DIR_COLORS.256color
@@ -14,6 +15,8 @@ Source105:  coreutils-colorls.sh
 Source106:  coreutils-colorls.csh
 
 # From upstream
+Patch1: coreutils-8.22-cp-selinux.patch
+Patch2: coreutils-8.22-datetzcrash.patch
 
 # Our patches
 #general patch to workaround koji build system issues
@@ -28,10 +31,6 @@ Patch103: coreutils-8.2-uname-processortype.patch
 Patch104: coreutils-df-direct.patch
 #add note about mkdir --mode behaviour into info documentation(#610559)
 Patch107: coreutils-8.4-mkdir-modenote.patch
-# Don't run the currently failing test-update-copyright.sh test
-Patch108: coreutils-remove-test-update-copyright.patch
-#avoid false failure due to extra stat() calls done by opendir() in glibc 2.22
-Patch109: glibc-2.22-test-fix.patch
 
 # sh-utils
 #add info about TZ envvar to date manpage
@@ -52,6 +51,9 @@ Patch913: coreutils-8.22-temporarytestoff.patch
 #(upstream did some SELinux implementation unlike with RedHat patch)
 Patch950: coreutils-selinux.patch
 Patch951: coreutils-selinuxmanpages.patch
+
+#给cp和mv添加进度提示。
+Patch1000: advcpmv-0.5-8.21.patch
 
 Conflicts: filesystem < 3
 Provides: /bin/basename
@@ -86,7 +88,6 @@ Provides: /bin/touch
 Provides: /bin/true
 Provides: /bin/uname
 
-BuildRequires: libselinux-devel
 BuildRequires: libacl-devel
 BuildRequires: gettext bison
 BuildRequires: texinfo
@@ -118,6 +119,10 @@ Obsoletes: fileutils <= 4.1.9
 Obsoletes: sh-utils <= 2.0.12
 Obsoletes: stat <= 3.3
 Obsoletes: textutils <= 2.0.21
+#coreutils-libs dropped in f17
+Obsoletes: coreutils-libs < 8.13
+#require util-linux >=2.22.1-3 to prevent lack of su/runuser on system
+Requires: util-linux >= 2.22.1-3
 
 %description
 These are the GNU core utilities.  This package is the combination of
@@ -126,6 +131,10 @@ the old GNU fileutils, sh-utils, and textutils packages.
 %prep
 %setup -q
 
+# From upstream
+%patch1 -p1 -b .nullcontext
+%patch2 -p1 -b .tzcrash
+
 # Our patches
 %patch100 -p1 -b .configure
 %patch101 -p1 -b .manpages
@@ -133,8 +142,6 @@ the old GNU fileutils, sh-utils, and textutils packages.
 %patch103 -p1 -b .sysinfo
 %patch104 -p1 -b .dfdirect
 %patch107 -p1 -b .mkdirmode
-%patch108 -p1 -b .crtest
-%patch109 -p1 -b .opendir_stat
 
 # sh-utils
 %patch703 -p1 -b .dateman
@@ -151,6 +158,8 @@ the old GNU fileutils, sh-utils, and textutils packages.
 #SELinux
 %patch950 -p1 -b .selinux
 %patch951 -p1 -b .selinuxman
+
+%patch1000 -p1
 
 chmod a+x tests/misc/sort-mb-tests.sh tests/df/direct.sh tests/cp/no-ctx.sh || :
 
@@ -182,7 +191,7 @@ make all %{?_smp_mflags}
 sed -i -e 's,/etc/utmp,/var/run/utmp,g;s,/etc/wtmp,/var/run/wtmp,g' doc/coreutils.texi
 
 %check
-make check %{?_smp_mflags}
+make check
 
 %install
 make DESTDIR=$RPM_BUILD_ROOT install
@@ -231,8 +240,6 @@ find %{buildroot}%{_datadir}/locale -type l | \
  done)
 
 %find_lang %name
-#Add the %lang(xyz) ownership for the LC_TIME dirs as well...
-grep LC_TIME %name.lang | cut -d'/' -f1-6 | sed -e 's/) /) %%dir /g' >>%name.lang
 
 # (sb) Deal with Installed (but unpackaged) file(s) found
 rm -f $RPM_BUILD_ROOT%{_infodir}/dir
@@ -264,11 +271,10 @@ fi
 
 %files -f %{name}.lang
 %defattr(-,root,root,-)
+%dir %{_datadir}/locale/*/LC_TIME
 %config(noreplace) %{_sysconfdir}/DIR_COLORS*
 %config(noreplace) %{_sysconfdir}/profile.d/*
-%doc ABOUT-NLS NEWS README THANKS TODO
-%{!?_licensedir:%global license %%doc}
-%license COPYING
+%doc COPYING ABOUT-NLS ChangeLog.bz2 NEWS README THANKS TODO old/*
 %{_bindir}/arch
 %{_bindir}/basename
 %{_bindir}/cat
@@ -376,85 +382,6 @@ fi
 %{_sbindir}/chroot
 
 %changelog
-* Wed Sep 16 2015 Kamil Dudka <kdudka@redhat.com> - 8.24-4
-- fix memory leak in sort/I18N (patches written by Pádraig, #1259942)
-
-* Sat Sep 12 2015 Ondrej Vasik <ovasik@redhat.com> 8.24-3
-- fix one still existing occurance of non-full path in colorls.sh
-
-* Thu Jul 16 2015 Ondrej Vasik <ovasik@redhat.com> 8.24-2
-- use newer version of sort/I18N fix for CVE-2015-4041
-  and CVE-2015-4042
-
-* Sun Jul 05 2015 Ondrej Vasik <ovasik@redhat.com> 8.24-1
-- new upstream release 8.24
-
-* Sat Jul  4 2015 Peter Robinson <pbrobinson@fedoraproject.org> 8.23-14
-- Disable failing test-update-copyright to fix FTBFS
-
-* Wed Jun 17 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 8.23-13
-- Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
-
-* Thu Jun 04 2015 Ondrej Vasik <ovasik@redhat.com> - 8.23-12
-- call utilities in colorls.* scripts with full path (#1222140)
-
-* Thu May 14 2015 Kamil Dudka <kdudka@redhat.com> - 8.23-11
-- run 'make check' in parallel to speed up the build
-
-* Wed May 13 2015 Ondrej Oprala <ooprala@redhat.com> - 8.23-10
-- sort - fix buffer overflow in some case conversions
-  - patch by Pádraig Brady
-
-* Mon Apr 20 2015 Pádraig Brady <pbrady@redhat.com> - 8.23-9
-- Adjust LS_COLORS in 256 color mode; brighten some, remove hardlink colors (#1196642)
-
-* Sun Mar 22 2015 Peter Robinson <pbrobinson@fedoraproject.org> 8.23-8
-- Drop large ancient docs
-
-* Sat Feb 21 2015 Till Maas <opensource@till.name> - 8.23-7
-- Rebuilt for Fedora 23 Change
-  https://fedoraproject.org/wiki/Changes/Harden_all_packages_with_position-independent_code
-
-* Mon Dec 01 2014 Ondrej Vasik <ovasik@redhat.com> - 8.23-6
-- have the LC_TIME subdirs with lang macro (#1169027)
-
-* Wed Oct 15 2014 Ondrej Vasik <ovasik@redhat.com> - 8.23-5
-- handle situation with ro /tmp in colorls scripts (#1149761)
-
-* Wed Oct 01 2014 Ondrej Vasik <ovasik@redhat.com> - 8.23-4
-- fix the sorting in multibyte locales (NUL-terminate sort keys)
-  - patch by Andreas Schwab (#1146185)
-
-* Sat Aug 16 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 8.23-3
-- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
-
-* Tue Aug 05 2014 Ondrej Vasik <ovasik@redhat.com> - 8.23-2
-- enable smp_flags again (by B.Voelker)
-- fix regression in chroot
-
-* Tue Jul 22 2014 Ondrej Vasik <ovasik@redhat.com> - 8.23-1
-- new upstream release 8.23
-- synchronize the old differences in ls SELinux options
-  with upstream
-- skip df/skip-duplicates.sh test for now (passing locally, failing in koji)
-
-* Fri Jul 11 2014 Tom Callaway <spot@fedoraproject.org> - 8.22-17
-- fix license handling
-
-* Mon Jun 23 2014 Jakub Čajka <jcajka@redhat.com> - 8.22-16
-- fix failed tests on ppc(backport from gnulib upstream)
-
-* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 8.22-15
-- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
-
-* Sat Apr 12 2014 Ondrej Vasik <ovasik@redhat.com> 8.22-14
-- fix dd sparse test failure on xfs filesystem(#1085727,
-  by P.Brady)
-
-* Wed Mar 05 2014 Ondrej Vasik <ovasik@redhat.com> 8.22-13
-- drop the util-linux requirements (smaller docker images),
-  drop ancient obsoletes of -libs subpackage
-
 * Sun Mar 02 2014 Ondrej Vasik <ovasik@redhat.com> 8.22-12
 - fix the date crash or infloop in TZ="" parsing (#1069657)
 

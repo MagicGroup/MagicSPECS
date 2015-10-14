@@ -16,7 +16,7 @@ set COLORS=/etc/DIR_COLORS
 
 if ($?TERM) then
   if ( -e "/etc/DIR_COLORS.256color" ) then
-    if ( "`tput colors`" == "256" ) then
+    if ( "`/usr/bin/tput colors`" == "256" ) then
        set COLORS=/etc/DIR_COLORS.256color
     endif
   endif
@@ -30,21 +30,29 @@ if ($?TERM) then
   if ( -f ~/.dircolors."$TERM" ) set COLORS=~/.dircolors."$TERM"
   if ( -f ~/.dir_colors."$TERM" ) set COLORS=~/.dir_colors."$TERM"
 endif
-set INCLUDE="`cat "$COLORS" | grep '^INCLUDE' | cut -d ' ' -f2-`"
+set INCLUDE="`/usr/bin/cat "$COLORS" | /usr/bin/grep '^INCLUDE' | /usr/bin/cut -d ' ' -f2-`"
 
 if ( ! -e "$COLORS" ) exit
 
-set _tmp="`mktemp .colorlsXXX --tmpdir=/tmp`"
+set _tmp="`/usr/bin/mktemp .colorlsXXX -q --tmpdir=/tmp`"
+#if mktemp fails, exit when include was active, otherwise use $COLORS file
+if ( "$_tmp" == '' ) then
+  if ( "$INCLUDE" == '' ) then
+    eval "`/usr/bin/dircolors -c $COLORS`"
+  endif
+  goto cleanup
+endif
 
-if ( "$INCLUDE" != '' ) cat "$INCLUDE" >> $_tmp
-grep -v '^INCLUDE' "$COLORS" >> $_tmp
+if ( "$INCLUDE" != '' ) /usr/bin/cat "$INCLUDE" >> $_tmp
+/usr/bin/grep -v '^INCLUDE' "$COLORS" >> $_tmp
 
-eval "`dircolors -c $_tmp`"
+eval "`/usr/bin/dircolors -c $_tmp`"
 
-rm -f $_tmp
+/usr/bin/rm -f $_tmp
 
 if ( "$LS_COLORS" == '' ) exit
-set color_none=`sed -n '/^COLOR.*none/Ip' < $COLORS`
+cleanup:
+set color_none=`/usr/bin/sed -n '/^COLOR.*none/Ip' < $COLORS`
 if ( "$color_none" != '' ) then
    unset color_none
    exit
