@@ -1,23 +1,89 @@
-%define kde_support 1
-%define _prefix %{tde_prefix}
+#
+# spec file for package kaffeine (version R14)
+#
+# Copyright (c) 2014 Trinity Desktop Environment
+#
+# All modifications and additions to the file contributed by third parties
+# remain the property of their copyright owners, unless otherwise agreed
+# upon. The license for this file, and modifications and additions to the
+# file, is the same license as for the pristine package itself (unless the
+# license for the pristine package is not an Open Source License, in which
+# case the license is the MIT License). An "Open Source License" is a
+# license that conforms to the Open Source Definition (Version 1.9)
+# published by the Open Source Initiative.
+#
+# Please submit bugfixes or comments via http://www.trinitydesktop.org/
+#
 
-Summary: A great front-end for MPlayer
-Summary(zh_CN.UTF-8): MPlayer 的一个很棒的前端
-Name: trinity-smplayer
-Version: 0.5.21
-Release: 6%{?dist}
-License: GPL
-Group: Applications/Multimedia
+# TDE variables
+%define tde_epoch 2
+%if "%{?tde_version}" == ""
+%define tde_version 14.0.1
+%endif
+%define tde_pkg smplayer
+%define tde_prefix /opt/trinity
+%define tde_appdir %{tde_datadir}/applications
+%define tde_bindir %{tde_prefix}/bin
+%define tde_datadir %{tde_prefix}/share
+%define tde_docdir %{tde_datadir}/doc
+%define tde_includedir %{tde_prefix}/include
+%define tde_libdir %{tde_prefix}/%{_lib}
+%define tde_mandir %{tde_datadir}/man
+%define tde_tdeappdir %{tde_datadir}/applications/tde
+%define tde_tdedocdir %{tde_docdir}/tde
+%define tde_tdeincludedir %{tde_includedir}/tde
+%define tde_tdelibdir %{tde_libdir}/trinity
+
+%define kde_support 1
+
+
+Name:			trinity-%{tde_pkg}
+Epoch:			%{tde_epoch}
+Version:		0.8.8
+Release:		%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}%{?_variant}
+Summary:		Xine-based media player
+Summary(zh_CN.UTF-8): 基于 Xine 的媒体播放器
+Group:			Applications/Multimedia
 Group(zh_CN.UTF-8): 应用程序/多媒体
-Source0: smplayer-%{version}.tar.gz
-Source1: smplayer.desktop
-Patch1: smplayer-%{version}-mplayer.patch
-Patch2: smplayer-0.5.21-tqt.patch
-URL: http://smplayer.sourceforge.net/
-Packager: Ni Hui <shuizhuyuanluo@126.com>
-Requires: mplayer
-BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-buildroot-%(%{__id_u} -n)
-Prefix: %{_prefix}
+URL:			http://kaffeine.sourceforge.net/
+
+License:	GPLv2+
+
+#Vendor:		Trinity Desktop
+#Packager:	Francois Andriot <francois.andriot@free.fr>
+
+Prefix:			%{_prefix}
+BuildRoot:		%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+
+Source0:		%{name}-%{tde_version}%{?preversion:~%{preversion}}.tar.gz
+
+Source1:        smplayer.desktop
+
+BuildRequires:	trinity-tdelibs-devel >= %{tde_version}
+BuildRequires:	trinity-tdebase-devel >= %{tde_version}
+BuildRequires:	desktop-file-utils
+
+BuildRequires:	gettext
+
+BuildRequires:	autoconf automake libtool m4
+BuildRequires:	gcc-c++
+BuildRequires:	pkgconfig
+
+# VORBIS support
+BuildRequires:	libvorbis-devel
+
+# CDDA support
+BuildRequires:	libcdio-devel
+BuildRequires:	cdparanoia
+BuildRequires:	cdparanoia-devel
+
+# X11 stuff
+BuildRequires:	libXext-devel 
+BuildRequires:	libXtst-devel
+BuildRequires:	libXinerama-devel
+BuildRequires: libxcb-devel
+
+Requires:	mplayer
 
 %description
 SMPlayer intends to be a complete front-end for MPlayer, from basic features 
@@ -34,45 +100,42 @@ DVD，和 VCD 到更多高级特性，像对 MPlayer 过滤器的支持还有更
 重新在同一位置恢复播放。smplayer 是用 Qt 工具开发的，所以它也是
 跨平台的。
 
+
+##########
+
 %prep
-%setup -q -n smplayer-%{version}
-%patch1 -p1
-%patch2 -p1
+%setup -q -n %{name}-%{tde_version}%{?preversion:~%{preversion}}
+
+sed -i 's!/opt/trinity/lib!/opt/trinity/%{_lib}!g' src/smplayer.pro
 
 %build
-. /etc/profile.d/qt.sh
-%{__make} QMAKE=/usr/%{_lib}/qt-3.3/bin/qmake PREFIX=%{_prefix} KDE_SUPPORT=%{kde_support} %{?_smp_mflags}
+unset QTDIR QTINC QTLIB
+export PATH="%{tde_bindir}:${PATH}"
+
+%{__make} PREFIX=%{tde_prefix} KDE_SUPPORT=%{kde_support} 
 
 %install
-%{__rm} -rf %{buildroot}
-%{__make} PREFIX=%{_prefix} DESTDIR=%{buildroot} install
-%{__rm} -f %{buildroot}%{_datadir}/applications/smplayer.desktop
-%{__rm} -f %{buildroot}%{_datadir}/applications/kde/smplayer.desktop
-%{__install} -D -m 644 %{SOURCE1} %{buildroot}%{_datadir}/applications/kde/smplayer.desktop
+export PATH="%{tde_bindir}:${PATH}"
+%__rm -rf $RPM_BUILD_ROOT
+
+%{__make} PREFIX=%{tde_prefix} DESTDIR=%{buildroot} install
+%{__rm} -f %{buildroot}%{tde_datadir}/applications/smplayer.desktop
+%{__rm} -f %{buildroot}%{tde_datadir}/applications/kde/smplayer.desktop
+%{__install} -D -m 644 %{SOURCE1} %{buildroot}%{tde_datadir}/applications/kde/smplayer.desktop
+
 magic_rpm_clean.sh
+## File lists
+# locale's
 
 %clean
-%{__rm} -rf %{buildroot} %{_builddir}/%{buildsubdir}
+rm -rf $RPM_BUILD_ROOT
 
 %files
-%defattr(-,root,root)
-%{_prefix}
-%exclude %{_prefix}/*/debug*
-%exclude %{_prefix}/src
+%defattr(-,root,root,-)
+%{tde_bindir}/*
+%{tde_datadir}/*
+
 
 %changelog
-* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 0.5.21-5
-- 为 Magic 3.0 重建
-
-* Mon Aug 6 2007 kde <athena_star {at} 163 {dot} com> - 0.5.21-2mgc
-- modify the spec file
-
-* Mon Jul 30 2007 Ni Hui <shuizhuyuanluo@126.com> - 0.5.21-1mgc
-- port to Magic Linux 2.1
-
-* Sun May 20 2007 Ricardo Villalba <rvm@escomposlinux.org>
-  - use DESTDIR in make install
-* Sat May 5 2007 Ricardo Villalba <rvm@escomposlinux.org>
-  - fixed some typos
-* Mon Feb 12 2007 Ricardo Villalba <rvm@escomposlinux.org>
-  - first spec file
+* Fri Jul 05 2013 Francois Andriot <francois.andriot@free.fr> - 2:0.8.8-1
+- Initial release for TDE 14.0.0

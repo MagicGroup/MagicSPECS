@@ -1,0 +1,57 @@
+--- trinity-tdesvn-14.0.0~pre185+fddfb277/src/svnqt/CMakeLists.txt.sqlite3	2013-12-30 17:57:05.867723485 +0100
++++ trinity-tdesvn-14.0.0~pre185+fddfb277/src/svnqt/CMakeLists.txt	2014-09-16 21:49:29.774968683 +0200
+@@ -45,19 +45,6 @@
+     cache/DatabaseException.cpp
+     )
+ 
+-#     IF (SQLITE_FOUND)
+-        MESSAGE(STATUS "Build own sqlite3 database modul")
+-        SET(SOURCES
+-            ${SOURCES}
+-            cache/sqlite3/qsqlcachedresult.cpp
+-            cache/sqlite3/qsql_sqlite3.cpp
+-            cache/sqlite3/qsqlcachedresult.h
+-            cache/sqlite3/qsql_sqlite3.h
+-        )
+-#     ELSE (SQLITE_FOUND)
+-#         MESSAGE(SEND_ERROR "The QT3 version requires sqlite3 but could not found")
+-#     ENDIF (SQLITE_FOUND)
+-
+ SET(CACHEINST_HEADERS
+     cache/LogCache.hpp
+     cache/ReposLog.hpp
+@@ -150,7 +137,7 @@
+ 
+ # IF (SQLITE_FOUND)
+     TARGET_LINK_LIBRARIES(${svnqt-name} ${SQLITE_LIBRARIES})
+-    INCLUDE_DIRECTORIES(SQLITE_INCLUDE_DIR)
++    INCLUDE_DIRECTORIES(${SQLITE_INCLUDE_DIR})
+ # ELSE (SQLITE_FOUND)
+ #     TARGET_LINK_LIBRARIES(${svnqt-name} ${QT_QTSQL_LIBRARY})
+ # ENDIF (SQLITE_FOUND)
+--- trinity-tdesvn-14.0.0~pre185+fddfb277/src/svnqt/cache/LogCache.cpp.sqlite3	2014-01-28 20:25:28.711539518 +0100
++++ trinity-tdesvn-14.0.0~pre185+fddfb277/src/svnqt/cache/LogCache.cpp	2014-09-16 21:51:37.826387614 +0200
+@@ -10,9 +10,10 @@
+ #include "svnqt/cache/DatabaseException.hpp"
+ 
+ #ifndef NO_SQLITE3
+-#include "sqlite3/qsql_sqlite3.h"
++#include <qsql_sqlite3.h>
+ #define SQLTYPE "QSQLITE3"
+ #else
++#include <qsql_sqlite.h>
+ #define SQLTYPE "QSQLITE"
+ #endif
+ 
+@@ -262,11 +263,6 @@
+ 
+ void LogCache::setupMainDb()
+ {
+-#ifndef NO_SQLITE3
+-    if (!TQSqlDatabase::isDriverAvailable(SQLTYPE)) {
+-        TQSqlDatabase::registerSqlDriver(SQLTYPE,new TQSqlDriverCreator<TQSQLite3Driver>);
+-    }
+-#endif
+     TQDataBase mainDB = m_CacheData->getMainDB();
+     if (!mainDB || !mainDB->open()) {
+         tqWarning("Failed to open main database: %s", (mainDB?mainDB->lastError().text().TOUTF8().data():"No database object."));

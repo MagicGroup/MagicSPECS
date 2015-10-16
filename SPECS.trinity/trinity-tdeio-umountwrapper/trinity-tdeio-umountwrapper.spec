@@ -18,7 +18,7 @@
 # TDE variables
 %define tde_epoch 2
 %if "%{?tde_version}" == ""
-%define tde_version 14.0.0
+%define tde_version 14.0.1
 %endif
 %define tde_pkg tdeio-umountwrapper
 %define tde_prefix /opt/trinity
@@ -39,14 +39,12 @@ Epoch:		%{tde_epoch}
 Version:	0.2
 Release:	%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}
 Summary:	Progress dialog for safely removing devices in Trinity
+Summary(zh_CN.UTF-8): TDE 下安全移除设备的进度对话框
 Group:		Applications/Utilities
+Group(zh_CN.UTF-8): 应用程序/工具
 URL:		http://frode.kde.no/misc/tdeio_umountwrapper/
 
-%if 0%{?suse_version}
-License:	GPL-2.0+
-%else
 License:	GPLv2+
-%endif
 
 #Vendor:		Trinity Desktop
 #Packager:	Francois Andriot <francois.andriot@free.fr>
@@ -57,6 +55,7 @@ BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 Source0:		%{name}-%{tde_version}%{?preversion:~%{preversion}}.tar.gz
 Source1:		media_safelyremove.desktop_tdeio
 
+Patch1:		%{name}-14.0.1-tqt.patch
 
 BuildRequires:	trinity-tdelibs-devel >= %{tde_version}
 BuildRequires:	trinity-tdebase-devel >= %{tde_version}
@@ -70,33 +69,19 @@ BuildRequires:	gcc-c++
 BuildRequires:	pkgconfig
 BuildRequires:	fdupes
 
-# SUSE desktop files utility
-%if 0%{?suse_version}
-BuildRequires:	update-desktop-files
-%endif
-
-%if 0%{?opensuse_bs} && 0%{?suse_version}
-# for xdg-menu script
-BuildRequires:	brp-check-trinity
-%endif
-
 
 %description
 Wrapper around tdeio_media_mountwrapper.
 Provides a progress dialog for Safely Removing of devices in Trinity.
 
+%description -l zh_CN.UTF-8
+TDE 下安全移除设备的进度对话框.
 
 ##########
-
-%if 0%{?pclinuxos} || 0%{?suse_version} && 0%{?opensuse_bs} == 0
-%debug_package
-%endif
-
-##########
-
 
 %prep
 %setup -q -n %{name}-%{tde_version}%{?preversion:~%{preversion}}
+%patch1 -p1
 
 %__cp "/usr/share/aclocal/libtool.m4" "admin/libtool.m4.in"
 %__cp "/usr/share/libtool/config/ltmain.sh" "admin/ltmain.sh" || %__cp "/usr/share/libtool/ltmain.sh" "admin/ltmain.sh"

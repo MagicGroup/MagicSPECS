@@ -1,79 +1,93 @@
-# Default version for this component
-%define tdecomp kde-systemsettings
-%define tdeversion 3.5.13.2
+#
+# spec file for package tde-systemsettings (version R14)
+#
+# Copyright (c) 2014 Trinity Desktop Environment
+#
+# All modifications and additions to the file contributed by third parties
+# remain the property of their copyright owners, unless otherwise agreed
+# upon. The license for this file, and modifications and additions to the
+# file, is the same license as for the pristine package itself (unless the
+# license for the pristine package is not an Open Source License, in which
+# case the license is the MIT License). An "Open Source License" is a
+# license that conforms to the Open Source Definition (Version 1.9)
+# published by the Open Source Initiative.
+#
+# Please submit bugfixes or comments via http://www.trinitydesktop.org/
+#
 
-# If TDE is built in a specific prefix (e.g. /opt/trinity), the release will be suffixed with ".opt".
-%if "%{?tde_prefix}" != "/usr"
-%define _variant .opt
-# Currently, menu files under /etc/xdg conflict with KDE4
-%define tde_sysconfdir %{tde_prefix}/etc
+# TDE variables
+%define tde_epoch 2
+%if "%{?tde_version}" == ""
+%define tde_version 14.0.1
 %endif
-
-# TDE 3.5.13 specific building variables
+%define tde_pkg tde-systemsettings
+%define tde_prefix /opt/trinity
 %define tde_bindir %{tde_prefix}/bin
+%define tde_confdir %{_sysconfdir}/trinity
 %define tde_datadir %{tde_prefix}/share
 %define tde_docdir %{tde_datadir}/doc
 %define tde_includedir %{tde_prefix}/include
 %define tde_libdir %{tde_prefix}/%{_lib}
 %define tde_mandir %{tde_datadir}/man
-%define tde_appdir %{tde_datadir}/applications
-
-%define tde_tdeappdir %{tde_appdir}/kde
+%define tde_sysconfdir %{_sysconfdir}/trinity
+%define tde_tdeappdir %{tde_datadir}/applications/tde
 %define tde_tdedocdir %{tde_docdir}/tde
 %define tde_tdeincludedir %{tde_includedir}/tde
 %define tde_tdelibdir %{tde_libdir}/trinity
 
-%define _docdir %{tde_docdir}
 
-
-Name:		trinity-tde-systemsettings
-Summary:	easy to use control centre for TDE
+Name:		trinity-%{tde_pkg}
+Epoch:		%{tde_epoch}
 Version:	0.0svn20070312
-Release:	8%{?dist}%{?_variant}
+Release:	%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}
+Summary:	Easy to use control centre for TDE
+Summary(zh_CN.UTF-8): TDE 的系统配置程序
+Group:		Applications/Utilities
+Group(zh_CN.UTF-8): 应用程序/工具
+URL:		http://www.trinitydesktop.org
 
 License:	GPLv2+
-Group:		Applications/Utilities
 
-Vendor:		Trinity Project
-Packager:	Francois Andriot <francois.andriot@free.fr>
-URL:		http://www.trinitydesktop.org
+#Vendor:		Trinity Desktop
+#Packager:	Francois Andriot <francois.andriot@free.fr>
 
 Prefix:		%{tde_prefix}
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
-Source0:	%{tdecomp}-trinity-%{tdeversion}.tar.xz
-Source1:	kde-settings-laptops.directory
+Source0:		%{name}-%{tde_version}%{?preversion:~%{preversion}}.tar.gz
+Source1:		kde-settings-laptops.directory
 
-Provides:	trinity-kde-systemsettings = %{version}-%{release}
-Obsoletes:	trinity-kde-systemsettings < %{version}-%{release}
-Provides:	trinity-systemsettings = %{version}-%{release}
-Obsoletes:	trinity-systemsettings < %{version}-%{release}
+Patch1:		%{name}-14.0.1-tqt.patch
 
-BuildRequires:	trinity-tqtinterface-devel >= 3.5.13.2
-BuildRequires:	trinity-tdelibs-devel >= 3.5.13.2
-BuildRequires:	trinity-tdebase-devel >= 3.5.13.2
+Provides:	trinity-kde-systemsettings = %{?epoch:%{epoch}:}%{version}-%{release}
+Obsoletes:	trinity-kde-systemsettings < %{?epoch:%{epoch}:}%{version}-%{release}
+Provides:	trinity-systemsettings = %{?epoch:%{epoch}:}%{version}-%{release}
+Obsoletes:	trinity-systemsettings < %{?epoch:%{epoch}:}%{version}-%{release}
+
+BuildRequires:	trinity-tdelibs-devel >= %{tde_version}
+BuildRequires:	trinity-tdebase-devel >= %{tde_version}
 BuildRequires:	desktop-file-utils
 
-Requires:	trinity-tde-guidance
+BuildRequires:	autoconf automake libtool m4
+BuildRequires:	gcc-c++
+BuildRequires:	pkgconfig
+BuildRequires:	fdupes
+
+Requires:		trinity-guidance
+
 
 %description
 System preferences is a replacement for the TDE
 Control Centre with an improved user interface.
 
+%description -l zh_CN.UTF-8
+TDE 的系统配置程序。
 
-%if 0%{?suse_version} || 0%{?pclinuxos}
-%debug_package
-%endif
-
+##########
 
 %prep
-%setup -q -n %{tdecomp}-trinity-%{tdeversion}
-
-# Ugly hack to modify TQT include directory inside autoconf files.
-# If TQT detection fails, it fallbacks to TQT4 instead of TQT3 !
-%__sed -i admin/acinclude.m4.in \
-  -e "s|/usr/include/tqt|%{tde_includedir}/tqt|g" \
-  -e "s|kde_htmldir='.*'|kde_htmldir='%{tde_tdedocdir}/HTML'|g"
+%setup -q -n %{name}-%{tde_version}%{?preversion:~%{preversion}}
+%patch1 -p1
 
 %__cp -f "/usr/share/aclocal/libtool.m4" "admin/libtool.m4.in"
 %__cp -f "/usr/share/libtool/config/ltmain.sh" "admin/ltmain.sh" || %__cp -f "/usr/share/libtool/ltmain.sh" "admin/ltmain.sh"
@@ -81,10 +95,10 @@ Control Centre with an improved user interface.
 
 
 %build
-unset QTDIR; . /etc/profile.d/qt3.sh
+unset QTDIR QTINC QTLIB
 export PATH="%{tde_bindir}:${PATH}"
-export LDFLAGS="-L%{tde_libdir} -I%{tde_includedir}"
-export KDEDIR="%{tde_prefix}"
+export kde_confdir="%{tde_confdir}"
+
 
 %configure \
   --prefix=%{tde_prefix} \
@@ -93,9 +107,14 @@ export KDEDIR="%{tde_prefix}"
   --datadir=%{tde_datadir} \
   --includedir=%{tde_tdeincludedir} \
   --sysconfdir=%{tde_sysconfdir} \
-  --disable-rpath \
-  --with-extra-includes=%{tde_includedir}/tqt \
-  --enable-closure
+  \
+  --disable-dependency-tracking \
+  --disable-debug \
+  --enable-final \
+  --enable-new-ldflags \
+  --enable-closure \
+  --enable-rpath \
+  --disable-gcc-hidden-visibility
 
 %__make %{?_smp_mflags}
 
@@ -105,12 +124,21 @@ export PATH="%{tde_bindir}:${PATH}"
 %__rm -rf %{buildroot}
 %__make install DESTDIR=%{buildroot}
 
-%__install -D -m 644 %{SOURCE1} %{buildroot}%{tde_datadir}/desktop-directories/kde-settings-laptops.directory
+%__install -D -m 644 %{SOURCE1} %{buildroot}%{tde_datadir}/desktop-directories/tde-settings-laptops.directory
 
 # Unwanted files
-%__rm -f %{buildroot}%{tde_datadir}/applications/kde/kcmfontinst.desktop
-%__rm -f %{buildroot}%{tde_datadir}/desktop-directories/kde-settings-power.directory
-%__rm -f %{buildroot}%{tde_datadir}/desktop-directories/kde-settings-system.directory
+%__rm -f %{buildroot}%{tde_datadir}/applications/tde/kcmfontinst.desktop
+%__rm -f %{buildroot}%{tde_datadir}/desktop-directories/tde-settings-power.directory
+%__rm -f %{buildroot}%{tde_datadir}/desktop-directories/tde-settings-system.directory
+
+%__rm -f %{buildroot}%{tde_datadir}/applications/tde/laptop.desktop
+
+echo "OnlyShowIn=TDE;" >>"%{?buildroot}%{tde_tdeappdir}/audioencoding.desktop"
+echo "OnlyShowIn=TDE;" >>"%{?buildroot}%{tde_tdeappdir}/defaultapplication.desktop"
+echo "OnlyShowIn=TDE;" >>"%{?buildroot}%{tde_tdeappdir}/kcm_knetworkconfmodule_ss.desktop"
+echo "OnlyShowIn=TDE;" >>"%{?buildroot}%{tde_tdeappdir}/medianotifications.desktop"
+echo "OnlyShowIn=TDE;" >>"%{?buildroot}%{tde_tdeappdir}/systemsettings.desktop"
+magic_rpm_clean.sh
 
 %clean
 %__rm -rf %{buildroot}
@@ -119,54 +147,35 @@ export PATH="%{tde_bindir}:${PATH}"
 %post
 touch --no-create %{tde_datadir}/icons/crystalsvg || :
 gtk-update-icon-cache --quiet %{tde_datadir}/icons/crystalsvg || :
-xdg-user-dirs-update
+update-desktop-database %{tde_tdeappdir} -q &> /dev/null
 
 %postun
 touch --no-create %{tde_datadir}/icons/crystalsvg || :
 gtk-update-icon-cache --quiet %{tde_datadir}/icons/crystalsvg || :
-xdg-user-dirs-update
+update-desktop-database %{tde_tdeappdir} -q &> /dev/null
 
 %files
 %defattr(-,root,root,-)
 %doc README TODO
-%{tde_sysconfdir}/xdg/menus/applications-merged/system-settings-merge.menu
-%{tde_sysconfdir}/xdg/menus/system-settings.menu
+%dir %{tde_sysconfdir}/xdg
+%dir %{tde_sysconfdir}/xdg/menus
+%dir %{tde_sysconfdir}/xdg/menus/applications-merged
+%{tde_sysconfdir}/xdg/menus/applications-merged/tde-system-settings-merge.menu
+%{tde_sysconfdir}/xdg/menus/tde-system-settings.menu
 %{tde_bindir}/systemsettings
-%{tde_datadir}/applications/kde/audioencoding.desktop
-%{tde_datadir}/applications/kde/defaultapplication.desktop
-%{tde_datadir}/applications/kde/kcm_knetworkconfmodule_ss.desktop
-%{tde_datadir}/applications/kde/laptoppowermanagement.desktop
-%{tde_datadir}/applications/kde/medianotifications.desktop
-%{tde_datadir}/applications/kde/systemsettings.desktop
-%{tde_datadir}/apps/systemsettings/systemsettingsui.rc
-%{tde_datadir}/config/systemsettingsrc
+%{tde_datadir}/applications/tde/audioencoding.desktop
+%{tde_datadir}/applications/tde/defaultapplication.desktop
+%{tde_datadir}/applications/tde/kcm_knetworkconfmodule_ss.desktop
+#%{tde_datadir}/applications/tde/laptop.desktop
+%{tde_datadir}/applications/tde/medianotifications.desktop
+%{tde_datadir}/applications/tde/systemsettings.desktop
+%{tde_datadir}/apps/systemsettings/
+%{tde_confdir}/systemsettingsrc
 %{tde_datadir}/desktop-directories/*.directory
 %{tde_datadir}/icons/crystalsvg/*/apps/systemsettings.png
-
+%{tde_tdedocdir}/HTML/en/systemsettings/
 
 
 %changelog
-* Wed Aug 07 2013 Liu Di <liudidi@gmail.com> - 0.0svn20070312-8.opt
-- 为 Magic 3.0 重建
-
-* Sat Jun 29 2013 Francois Andriot <francois.andriot@free.fr> - 0.0svn20070312-7
-- Rebuild
-
-* Mon Jun 03 2013 Francois Andriot <francois.andriot@free.fr> - 0.0svn20070312-6
-- Initial release for TDE 3.5.13.2
-
-* Wed Oct 03 2012 Francois Andriot <francois.andriot@free.fr> - 0.0svn20070312-5
-- Initial release for TDE 3.5.13.1
-
-* Wed Jul 11 2012 Francois Andriot <francois.andriot@free.fr> - 0.0svn20070312-4
-- Fix XDG menu directory location (again)
-
-* Sun Jul 08 2012 Francois Andriot <francois.andriot@free.fr> - 0.0svn20070312-3
-- Updates 'Requires: trinity-guidance' to reflect package renaming
-
-* Wed Dec 14 2011 Francois Andriot <francois.andriot@free.fr> - 0.0svn20070312-2
-- Fix XDG menu directory location
-
-* Sat Dec 03 2011 Francois Andriot <francois.andriot@free.fr> - 0.0svn20070312-1
-- Initial release for RHEL 5, RHEL 6, Fedora 15, Fedora 16
-
+* Fri Jul 05 2013 Francois Andriot <francois.andriot@free.fr> - 2:0.0svn20070312-1
+- Initial release for TDE 14.0.0

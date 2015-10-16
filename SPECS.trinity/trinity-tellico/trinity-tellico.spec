@@ -1,61 +1,84 @@
-# Default version for this component
-%define kdecomp tellico
-%define tdeversion 3.5.13.2
+#
+# spec file for package tellico (version R14)
+#
+# Copyright (c) 2014 Trinity Desktop Environment
+#
+# All modifications and additions to the file contributed by third parties
+# remain the property of their copyright owners, unless otherwise agreed
+# upon. The license for this file, and modifications and additions to the
+# file, is the same license as for the pristine package itself (unless the
+# license for the pristine package is not an Open Source License, in which
+# case the license is the MIT License). An "Open Source License" is a
+# license that conforms to the Open Source Definition (Version 1.9)
+# published by the Open Source Initiative.
+#
+# Please submit bugfixes or comments via http://www.trinitydesktop.org/
+#
 
-# If TDE is built in a specific prefix (e.g. /opt/trinity), the release will be suffixed with ".opt".
-%if "%{?tde_prefix}" != "/usr"
-%define _variant .opt
+# TDE variables
+%define tde_epoch 2
+%if "%{?tde_version}" == ""
+%define tde_version 14.0.1
 %endif
-
-# TDE 3.5.13 specific building variables
+%define tde_pkg tellico
+%define tde_prefix /opt/trinity
 %define tde_bindir %{tde_prefix}/bin
+%define tde_confdir %{_sysconfdir}/trinity
 %define tde_datadir %{tde_prefix}/share
 %define tde_docdir %{tde_datadir}/doc
 %define tde_includedir %{tde_prefix}/include
 %define tde_libdir %{tde_prefix}/%{_lib}
 %define tde_mandir %{tde_datadir}/man
-%define tde_appdir %{tde_datadir}/applications
-
-%define tde_tdeappdir %{tde_appdir}/kde
+%define tde_tdeappdir %{tde_datadir}/applications/tde
 %define tde_tdedocdir %{tde_docdir}/tde
 %define tde_tdeincludedir %{tde_includedir}/tde
 %define tde_tdelibdir %{tde_libdir}/trinity
 
-%define _docdir %{tde_tdedocdir}
 
-
-Name:		trinity-%{kdecomp}
-Summary:	Icollection manager for books, videos, music [Trinity]
+Name:		trinity-%{tde_pkg}
+Epoch:		%{tde_epoch}
 Version:	1.3.2.1
-Release:	5%{?dist}%{?_variant}
-
-License:	GPLv2+
+Release:	%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}
+Summary:	Icollection manager for books, videos, music [Trinity]
+Summary(zh_CN.UTF-8): 书箱、视频、音乐的管理工具
 Group:		Applications/Utilities
-
-Vendor:		Trinity Project
-Packager:	Francois Andriot <francois.andriot@free.fr>
+Group(zh_CN.UTF-8): 应用程序/工具
 URL:		http://periapsis.org/tellico/
 
-Prefix:    %{tde_prefix}
-BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+License:	GPLv2+
 
-Source0:	%{kdecomp}-trinity-%{tdeversion}.tar.xz
+#Vendor:		Trinity Desktop
+#Packager:	Francois Andriot <francois.andriot@free.fr>
 
+Prefix:		%{tde_prefix}
+BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
-# [tellico] Fix "not a string literal" error
-Patch2:		tellico-3.5.13-fix_not_a_string_literal_error.patch
-# [tellico] Fix FTBFS
-Patch3:		tellico-3.5.13.1-fix_ftbfs.patch
+Source0:		%{name}-%{tde_version}%{?preversion:~%{preversion}}.tar.gz
 
+Patch1:		%{name}-14.0.1-tqt.patch
 
-BuildRequires:	trinity-tqtinterface-devel >= 3.5.13.1
-BuildRequires:	trinity-tdelibs-devel >= 3.5.13.1
-BuildRequires:	trinity-tdebase-devel >= 3.5.13.1
+BuildRequires:	trinity-tdelibs-devel >= %{tde_version}
+BuildRequires:	trinity-tdebase-devel >= %{tde_version}
 BuildRequires:	desktop-file-utils
 BuildRequires:	gettext
 
-Requires:	%{name}-data = %{version}-%{release}
-Requires:	%{name}-scripts = %{version}-%{release}
+BuildRequires:	autoconf automake libtool m4
+BuildRequires:	gcc-c++
+BuildRequires:	pkgconfig
+BuildRequires:	fdupes
+
+# XML2 support
+BuildRequires:  libxml2-devel
+
+# XSLT support
+BuildRequires:  libxslt-devel
+
+# V4L support
+BuildRequires:	libv4l-devel
+
+Requires:		%{name}-data = %{?epoch:%{epoch}:}%{version}-%{release}
+Requires:		%{name}-scripts = %{?epoch:%{epoch}:}%{version}-%{release}
+
 
 %description
 Tellico is a collection manager for TDE. It includes default collections for
@@ -71,10 +94,31 @@ or any US-MARC compliant z39.50 server.
 The files are stored in XML format, avoiding the need for database server.
 It also makes it easy for other softwares to use the Tellico data.
 
+%description -l zh_CN.UTF-8
+书箱、视频、音乐的管理工具。
+
+%post
+touch --no-create %{tde_datadir}/icons/hicolor || :
+gtk-update-icon-cache --quiet %{tde_datadir}/icons/hicolor || :
+
+%postun
+touch --no-create %{tde_datadir}/icons/hicolor || :
+gtk-update-icon-cache --quiet %{tde_datadir}/icons/hicolor || :
+
+%files 
+%defattr(-,root,root,-)
+%{tde_bindir}/tellico
+#%{tde_datadir}/pixmaps
+%{tde_datadir}/applications
+%{tde_confdir}/tellicorc
+
+##########
 
 %package data
-Group:		Applications/Utilities
-Summary:	collection manager for books, videos, music [data] [Trinity]
+Group:			Applications/Utilities
+Group(zh_CN.UTF-8): 	应用程序/工具
+Summary:		collection manager for books, videos, music [data] [Trinity]
+Summary(zh_CN.UTF-8):   %{name} 的数据文件。
 
 %description data
 Tellico is a collection manager for TDE. It includes default collections for
@@ -93,9 +137,40 @@ It also makes it easy for other softwares to use the Tellico data.
 This package contains the architecture independent files, such data files and
 documentation.
 
+%description data -l zh_CN.UTF-8
+%{name} 的数据文件。
+
+%files data
+%defattr(-,root,root,-)
+%dir %{tde_datadir}/apps/tellico
+%{tde_datadir}/apps/tellico/*.xsl
+%{tde_datadir}/apps/tellico/*.xml
+%{tde_datadir}/apps/tellico/*.png
+%{tde_datadir}/apps/tellico/entry-templates
+%{tde_datadir}/apps/tellico/*.py*
+%{tde_datadir}/apps/tellico/pics
+%{tde_datadir}/apps/tellico/report-templates
+%{tde_datadir}/apps/tellico/tellico.dtd
+%{tde_datadir}/apps/tellico/tellico.tips
+%{tde_datadir}/apps/tellico/tellico2html.js
+%{tde_datadir}/apps/tellico/tellicoui.rc
+%{tde_datadir}/apps/tellico/welcome.html
+%{tde_datadir}/config.kcfg
+%{tde_tdedocdir}/HTML/*/tellico/
+%{tde_datadir}/icons
+%{tde_datadir}/apps/mime
+%{tde_datadir}/mimelnk
+%{tde_datadir}/apps/tdeconf_update/tellico-1-3-update.pl
+%{tde_datadir}/apps/tdeconf_update/tellico-rename.upd
+%{tde_datadir}/apps/tdeconf_update/tellico.upd
+
+##########
+
 %package scripts
-Group:		Applications/Utilities
-Summary:	collection manager for books, videos, music [scripts] [Trinity]
+Group:			Applications/Utilities
+Group(zh_CN.UTF-8): 应用程序/工具
+Summary:		collection manager for books, videos, music [scripts] [Trinity]
+Summary(zh_CN.UTF-8): %{name} 的脚本
 
 %description scripts
 Tellico is a collection manager for TDE. It includes default collections for
@@ -115,20 +190,23 @@ This package contains the scripts to import data from external sources, such
 as websites. As the format of the data may change, these scripts are provided
 as a separate package which can be updated through debian-volatile.
 
+%description scripts -l zh_CN.UTF-8
+%{name} 的脚本。
 
-%if 0%{?suse_version}
-%debug_package
-%endif
+%files scripts
+%defattr(-,root,root,-)
+%{tde_datadir}/apps/tellico/data-sources
+%{tde_datadir}/apps/tellico/z3950-servers.cfg
 
+##########
 
 %prep
-%setup -q -n %{kdecomp}-trinity-%{tdeversion}
+%setup -q -n %{name}-%{tde_version}%{?preversion:~%{preversion}}
+%patch1 -p1
 
-# Ugly hack to modify TQT include directory inside autoconf files.
-# If TQT detection fails, it fallbacks to TQT4 instead of TQT3 !
-%__sed -i admin/acinclude.m4.in \
-  -e "s|/usr/include/tqt|%{tde_includedir}/tqt|g" \
-  -e "s|kde_htmldir='.*'|kde_htmldir='%{tde_tdedocdir}/HTML'|g"
+if [ -r /usr/include/libv4l1-videodev.h ]; then
+%__sed -i "src/barcode/barcode_v4l.h" -e "s|linux/videodev.h|libv4l1.h|"
+fi
 
 %__cp -f "/usr/share/aclocal/libtool.m4" "admin/libtool.m4.in"
 %__cp -f "/usr/share/libtool/config/ltmain.sh" "admin/ltmain.sh" || %__cp -f "/usr/share/libtool/ltmain.sh" "admin/ltmain.sh"
@@ -136,10 +214,11 @@ as a separate package which can be updated through debian-volatile.
 
 
 %build
-unset QTDIR; . /etc/profile.d/qt3.sh
+unset QTDIR QTINC QTLIB
 export PATH="%{tde_bindir}:${PATH}"
-export LDFLAGS="-L%{tde_libdir} -I%{tde_includedir}"
+export kde_confdir="%{tde_confdir}"
 
+# Warning, --enable-final causes FTBFS !
 %configure \
   --prefix=%{tde_prefix} \
   --exec-prefix=%{tde_prefix} \
@@ -148,10 +227,18 @@ export LDFLAGS="-L%{tde_libdir} -I%{tde_includedir}"
   --libdir=%{tde_libdir} \
   --mandir=%{tde_mandir} \
   --includedir=%{tde_tdeincludedir} \
-  --disable-rpath \
-  --with-extra-includes=%{tde_includedir}/tqt
+  \
+  --disable-dependency-tracking \
+  --disable-debug \
+  --disable-final \
+  --enable-new-ldflags \
+  --enable-closure \
+  --enable-rpath \
+  --disable-gcc-hidden-visibility \
+  \
+  --enable-webcam
 
-%__make %{?_smp_mflags}
+%__make %{?_smp_mflags} || %__make
 
 
 %install
@@ -160,77 +247,16 @@ export PATH="%{tde_bindir}:${PATH}"
 %__make install DESTDIR=%{buildroot}
 
 # Add svg icons to xdg directories
-%__install -D -c -p -m 644 -T icons/tellico.svg %{?buildroot}%{tde_datadir}/icons/hicolor/scalable/apps/tellico.svg
-%__install -D -c -p -m 644 -T icons/tellico_mime.svg %{?buildroot}%{tde_datadir}/icons/hicolor/scalable/mimetypes/application-x-tellico.svg
-
-# Remove  dead symlink from French translation
-%__rm %{?buildroot}%{tde_tdedocdir}/HTML/fr/tellico/common
-
-
-%find_lang %{kdecomp}
+%__install -D -c -p -m 644 icons/tellico.svg %{?buildroot}%{tde_datadir}/icons/hicolor/scalable/apps/tellico.svg
+%__install -D -c -p -m 644 icons/tellico_mime.svg %{?buildroot}%{tde_datadir}/icons/hicolor/scalable/mimetypes/application-x-tellico.svg
+magic_rpm_clean.sh
+%find_lang %{tde_pkg} || :
 
 
 %clean
 %__rm -rf %{buildroot}
 
 
-%post
-touch --no-create %{tde_datadir}/icons/hicolor || :
-gtk-update-icon-cache --quiet %{tde_datadir}/icons/hicolor || :
-
-%postun
-touch --no-create %{tde_datadir}/icons/hicolor || :
-gtk-update-icon-cache --quiet %{tde_datadir}/icons/hicolor || :
-
-
-%files -f %{kdecomp}.lang
-%defattr(-,root,root,-)
-%{tde_bindir}/tellico
-#%{tde_datadir}/pixmaps
-%{tde_datadir}/applications
-%{tde_datadir}/config/tellicorc
-
-%files data
-%defattr(-,root,root,-)
-%{tde_datadir}/apps/tellico/*.xsl
-%{tde_datadir}/apps/tellico/*.xml
-%{tde_datadir}/apps/tellico/*.png
-%{tde_datadir}/apps/tellico/entry-templates
-%{tde_datadir}/apps/tellico/*.py*
-%{tde_datadir}/apps/tellico/pics
-%{tde_datadir}/apps/tellico/report-templates
-%{tde_datadir}/apps/tellico/tellico.dtd
-%{tde_datadir}/apps/tellico/tellico.tips
-%{tde_datadir}/apps/tellico/tellico2html.js
-%{tde_datadir}/apps/tellico/tellicoui.rc
-%{tde_datadir}/apps/tellico/welcome.html
-%{tde_datadir}/config.kcfg
-%{tde_tdedocdir}/HTML/*/tellico/
-%{tde_datadir}/icons
-%{tde_datadir}/apps/mime
-%{tde_datadir}/mimelnk
-%{tde_datadir}/apps/kconf_update/tellico-1-3-update.pl
-%{tde_datadir}/apps/kconf_update/tellico-rename.upd
-%{tde_datadir}/apps/kconf_update/tellico.upd
-
-%files scripts
-%defattr(-,root,root,-)
-%{tde_datadir}/apps/tellico/data-sources
-%{tde_datadir}/apps/tellico/z3950-servers.cfg
-
-
 %changelog
-* Tue Aug 06 2013 Liu Di <liudidi@gmail.com> - 1.3.2.1-5.opt
-- 为 Magic 3.0 重建
-
-* Wed Oct 03 2012 Francois Andriot <francois.andriot@free.fr> - 1.3.2.1-4
-- Initial build for TDE 3.5.13.1
-
-* Sat Dec 03 2011 Francois Andriot <francois.andriot@free.fr> - 1.3.2.1-3
-- Fix compilation with GCC 4.7 [Bug #958]
-
-* Fri Nov 25 2011 Francois Andriot <francois.andriot@free.fr> - 1.3.2.1-2
-- Fix HTML directory location
-
-* Thu Nov 24 2011 Francois Andriot <francois.andriot@free.fr> - 1.3.2.1-1
-- Initial build for RHEL 5, RHEL 6, Fedora 15, Fedora 16
+* Mon Jul 29 2013 Francois Andriot <francois.andriot@free.fr> - 2:1.3.2.1-1
+- Initial release for TDE 14.0.0

@@ -27,16 +27,14 @@
 
 Name:		trinity-%{tde_pkg}
 Version:	0.3
-Release:	%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}
+Release:	%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}.1
 Summary:	Png2qrgb (Convert PNG images to an array of TQRgb hexadecimal values)
-Group:		System/GUI/Other
+Summary(zh_CN.UTF-8): 转转 PNG 图形到 TQRgb 数组
+Group:		System/GUI
+Group(zh_CN.UTF-8): 用户界面/桌面
 URL:		http://www.trinitydesktop.org/
 
-%if 0%{?suse_version}
-License:	GPL-2.0+
-%else
 License:	GPLv2+
-%endif
 
 #Vendor:		Trinity Project
 #Packager:	Francois Andriot <francois.andriot@free.fr>
@@ -45,6 +43,7 @@ Prefix:		/usr
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 Source0:	%{tde_pkg}-%{version}%{?preversion:~%{preversion}}.tar.gz
+Patch1:		%{name}-14.0.1-tqt.patch
 
 BuildRequires:	libtqt4-devel >= 2:4.2.0
 
@@ -58,16 +57,14 @@ TWin, png2qrgb  can read  PNG images and spew out TQRgb arrays. A second
 mode png2qrgb can operate in generates image attributes rather than the
 image itself. Png2qrgb can be used to embed PNG images into TQt code.
 
-##########
-
-%if 0%{?pclinuxos} || 0%{?suse_version} && 0%{?opensuse_bs} == 0
-%debug_package
-%endif
+%description -l zh_CN.UTF-8
+转转 PNG 图形到 TQRgb 数组。
 
 ##########
 
 %prep
 %setup -q -n %{tde_pkg}-%{version}%{?preversion:~%{preversion}}
+%patch1 -p1
 
 %__cp -f "/usr/share/aclocal/libtool.m4" "admin/libtool.m4.in"
 %__cp -f "/usr/share/libtool/config/ltmain.sh" "admin/ltmain.sh" || %__cp -f "/usr/share/libtool/ltmain.sh" "admin/ltmain.sh"
@@ -114,5 +111,8 @@ export PATH="%{tde_bindir}:${PATH}"
 
 
 %changelog
+* Thu Oct 15 2015 Liu Di <liudidi@gmail.com> - 0.3-1.1
+- 为 Magic 3.0 重建
+
 * Fri Jul 05 2013 Francois Andriot <francois.andriot@free.fr> - 0.3-1
 - Initial release for TDE 14.0.0

@@ -1,67 +1,85 @@
-# Default version for this component
-%define kdecomp smartcardauth
-%define tdeversion 3.5.13.2
+#
+# spec file for package smartcardauth (version R14)
+#
+# Copyright (c) 2014 Trinity Desktop Environment
+#
+# All modifications and additions to the file contributed by third parties
+# remain the property of their copyright owners, unless otherwise agreed
+# upon. The license for this file, and modifications and additions to the
+# file, is the same license as for the pristine package itself (unless the
+# license for the pristine package is not an Open Source License, in which
+# case the license is the MIT License). An "Open Source License" is a
+# license that conforms to the Open Source Definition (Version 1.9)
+# published by the Open Source Initiative.
+#
+# Please submit bugfixes or comments via http://www.trinitydesktop.org/
+#
 
-# If TDE is built in a specific prefix (e.g. /opt/trinity), the release will be suffixed with ".opt".
-%if "%{?tde_prefix}" != "/usr"
-%define _variant .opt
+# TDE variables
+%define tde_epoch 2
+%if "%{?tde_version}" == ""
+%define tde_version 14.0.1
 %endif
-
-# TDE 3.5.13 specific building variables
+%define tde_pkg smartcardauth
+%define tde_prefix /opt/trinity
 %define tde_bindir %{tde_prefix}/bin
 %define tde_datadir %{tde_prefix}/share
 %define tde_docdir %{tde_datadir}/doc
 %define tde_includedir %{tde_prefix}/include
 %define tde_libdir %{tde_prefix}/%{_lib}
 %define tde_mandir %{tde_datadir}/man
-%define tde_appdir %{tde_datadir}/applications
-
-%define tde_tdeappdir %{tde_appdir}/kde
+%define tde_tdeappdir %{tde_datadir}/applications/tde
 %define tde_tdedocdir %{tde_docdir}/tde
 %define tde_tdeincludedir %{tde_includedir}/tde
 %define tde_tdelibdir %{tde_libdir}/trinity
 
-%define _docdir %{tde_tdedocdir}
 
-
-Name:		trinity-%{kdecomp}
-Summary:	SmartCard Login and LUKS Decrypt, Setup Utility
+Name:		trinity-%{tde_pkg}
+Epoch:		%{tde_epoch}
 Version:	1.0
-Release:	3%{?dist}%{?_variant}
+Release:	%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}
+Summary:	SmartCard Login and LUKS Decrypt, Setup Utility
+Summary(zh_CN.UTF-8): 智能卡登录和加密设置工具
+Group:		Applications/System
+Group(zh_CN.UTF-8): 应用程序/系统
+URL:		http://www.trinitydesktop.org/
 
 License:	GPLv2+
-Group:		Applications/System
 
-Vendor:		Trinity Project
-Packager:	Francois Andriot <francois.andriot@free.fr>
-URL:		http://www.trinitydesktop.org/
+#Vendor:		Trinity Desktop
+#Packager:	Francois Andriot <francois.andriot@free.fr>
 
 Prefix:		%{tde_prefix}
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
-Source0:	%{kdecomp}-trinity-%{tdeversion}.tar.xz
-Patch0:		smartcardauth-3.5.13-ftbfs.patch
+Source0:		%{name}-%{tde_version}%{?preversion:~%{preversion}}.tar.gz
+Source1:		trinity-%{tde_pkg}-rpmlintrc
 
-BuildRequires:	trinity-tqtinterface-devel >= 3.5.13.1
-BuildRequires:	trinity-tdelibs-devel >= 3.5.13.1
-BuildRequires:	trinity-tdebase-devel >= 3.5.13.1
-BuildRequires: desktop-file-utils
+BuildRequires:	trinity-tdelibs-devel >= %{tde_version}
+BuildRequires:	trinity-tdebase-devel >= %{tde_version}
+BuildRequires:	desktop-file-utils
+
+BuildRequires:	autoconf automake libtool m4
+BuildRequires:	gcc-c++
+BuildRequires:	pkgconfig
+BuildRequires:	fdupes
 
 #BuildRequires:	perl-PAR-Packer
-%if 0%{?mgaversion} || 0%{?mdkversion}
-Requires:		perl-pcsc-perl
-%endif
-%if 0%{?rhel} || 0%{?fedora}
 Requires:		pcsc-perl
-%endif
-%if 0%{?suse_version}
-Requires:		perl-pcsc
-%endif
+
+# DB4/DB5 support
+%define with_db 1
+BuildRequires:  libdb-devel
+BuildRequires:  libdb-cxx-devel
+
+# PAM support
+BuildRequires:	pam-devel
+
 
 %description
 This utility will allow you to set up your computer to accept a SmartCard as an authentication source for:
 - Your encrypted LUKS partition
-- TDE3.x, including automatic login, lock, and unlock features
+- TDE, including automatic login, lock, and unlock features
 
 It is designed to work with any ISO 7816-1,2,3,4 compliant smartcard
 Examples of such cards are:
@@ -72,30 +90,23 @@ If a card is chosen that has PKSC support, such as the ACOS cards, this utility 
 simultaneously with the certificate reading program(s) to provide single sign on
 in addition to the PKCS certificate functionality
 
+%description -l zh_CN.UTF-8
+智能卡登录和加密设置工具。
 
-%if 0%{?suse_version}
-%debug_package
-%endif
-
+##########
 
 %prep
-unset QTDIR; . /etc/profile.d/qt3.sh
-%setup -q -n %{kdecomp}-trinity-%{tdeversion}
-
-# Ugly hack to modify TQT include directory inside autoconf files.
-# If TQT detection fails, it fallbacks to TQT4 instead of TQT3 !
-%__sed -i "src/Makefile" \
-	-e "s|/usr/include/tqt|%{tde_includedir}/tqt|g" \
-	-e "s|/usr/include/qt3|${QTINC}|g"
+%setup -q -n %{name}-%{tde_version}%{?preversion:~%{preversion}}
 
 %__sed -i "Makefile" \
-	-e "s|/usr/lib/perl5/Chipcard|/usr/lib64/perl5/vendor_perl/Chipcard|g"
+	-e "s|/usr/lib/perl5/Chipcard|%{_libdir}/perl5/vendor_perl/Chipcard|g"
+
 
 %build
 export PATH="%{tde_bindir}:${PATH}"
-export LDFLAGS="-L%{tde_libdir} -I%{tde_includedir}"
 
-./build_ckpasswd
+cd src
+make CFLAGS="${RPM_OPT_FLAGS}"  CXXFLAGS="${RPM_OPT_FLAGS}"
 
 
 %install
@@ -111,18 +122,21 @@ export PATH="%{tde_bindir}:${PATH}"
 %__mkdir_p %{buildroot}%{_sysconfdir}
 %__cp -Rp etc/* %{buildroot}%{_sysconfdir}
 
+echo "OnlyShowIn=TDE;" >>"%{?buildroot}%{tde_datadir}/applications/smartcardauth.desktop"
+echo "OnlyShowIn=TDE;" >>"%{?buildroot}%{tde_datadir}/applications/smartcardrestrict.desktop"
+magic_rpm_clean.sh
 
 %clean
 %__rm -rf %{buildroot}
 
 
 %post
-update-desktop-database %{tde_appdir} > /dev/null
+update-desktop-database %{tde_tdeappdir} > /dev/null
 touch --no-create %{tde_datadir}/icons/hicolor || :
 gtk-update-icon-cache --quiet %{tde_datadir}/icons/hicolor || :
 
 %postun
-update-desktop-database %{tde_appdir} > /dev/null
+update-desktop-database %{tde_tdeappdir} > /dev/null
 touch --no-create %{tde_datadir}/icons/hicolor || :
 gtk-update-icon-cache --quiet %{tde_datadir}/icons/hicolor || :
 
@@ -131,8 +145,7 @@ gtk-update-icon-cache --quiet %{tde_datadir}/icons/hicolor || :
 %defattr(-,root,root,-)
 %doc gpl.txt
 %{_sysconfdir}/init/smartauthlogin.conf
-%{_sysconfdir}/smartauth/smartauth.sh.in
-%{_sysconfdir}/smartauth/smartauthmon.sh.in
+%{_sysconfdir}/smartauth/
 %{tde_bindir}/cryptosmartcard.sh
 %{tde_bindir}/scriptor.pl
 %{tde_bindir}/setupcard.sh
@@ -148,12 +161,5 @@ gtk-update-icon-cache --quiet %{tde_datadir}/icons/hicolor || :
 
 
 %changelog
-* Tue Aug 06 2013 Liu Di <liudidi@gmail.com> - 1.0-3.opt
-- 为 Magic 3.0 重建
-
-* Wed Oct 03 2012 Francois Andriot <francois.andriot@free.fr> - 1.0-2
-- Initial build for TDE 3.5.13.1
-
-* Sat Dec 03 2011 Francois Andriot <francois.andriot@free.fr> - 1.0-1
-- Initial build for RHEL 5, RHEL 6, Fedora 15, Fedora 16
-
+* Fri Jul 05 2013 Francois Andriot <francois.andriot@free.fr> - 2:1.0-1
+- Initial release for TDE 14.0.0

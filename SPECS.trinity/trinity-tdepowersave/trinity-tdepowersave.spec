@@ -18,7 +18,7 @@
 # TDE variables
 %define tde_epoch 2
 %if "%{?tde_version}" == ""
-%define tde_version 14.0.0
+%define tde_version 14.0.1
 %endif
 %define tde_pkg tdepowersave
 %define tde_prefix /opt/trinity
@@ -38,16 +38,14 @@
 Name:		trinity-%{tde_pkg}
 Epoch:		%{tde_epoch}
 Version:	0.7.3
-Release:	%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}
+Release:	%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}.1
 Summary:	Power management applet for Trinity
+Summary(zh_CN.UTF-8): TDE 下的电源管理小程序
 Group:		Applications/Utilities
+Group(zh_CN.UTF-8): 应用程序/工具
 URL:		http://www.trinitydesktop.org/
 
-%if 0%{?suse_version}
-License:	GPL-2.0+
-%else
 License:	GPLv2+
-%endif
 
 #Vendor:		Trinity Desktop
 #Packager:	Francois Andriot <francois.andriot@free.fr>
@@ -68,44 +66,14 @@ BuildRequires:	gcc-c++
 BuildRequires:	pkgconfig
 BuildRequires:	fdupes
 
-# SUSE desktop files utility
-%if 0%{?suse_version}
-BuildRequires:	update-desktop-files
-%endif
-
-%if 0%{?opensuse_bs} && 0%{?suse_version}
-# for xdg-menu script
-BuildRequires:	brp-check-trinity
-%endif
-
 # UDEV support
-%if 0%{?fedora} || 0%{?mdkversion} || 0%{?mgaversion} || 0%{?suse_version} || 0%{?rhel} >= 6
 %define with_tdehwlib 1
 BuildRequires:	libudev-devel
-%endif
 
 # XSCREENSAVER support
 #  Disabled on RHEL4
-%if 0%{?fedora} >= 15 || 0%{?mgaversion} || 0%{?mdkversion} || 0%{?rhel} >= 5 || 0%{?suse_version}
 %define with_xscreensaver 1
-%if 0%{?rhel} == 5
-BuildRequires:	xorg-x11-proto-devel
-BuildRequires:	gnome-screensaver
-%endif
-%if 0%{?mgaversion} || 0%{?mdkversion}
-%if 0%{?mgaversion} >= 4
-BuildRequires:	%{_lib}xscrnsaver-devel
-%else
-BuildRequires:	%{_lib}xscrnsaver%{?mgaversion:1}-devel
-%endif
-%endif
-%if 0%{?fedora} || 0%{?rhel} >= 6 || 0%{?suse_version} >= 1220
 BuildRequires:	libXScrnSaver-devel
-%endif
-%if 0%{?suse_version} == 1140
-BuildRequires:	xscreensaver
-%endif
-%endif
 
 # ACL support
 BuildRequires:	libacl-devel
@@ -115,10 +83,8 @@ BuildRequires:	libidn-devel
 
 # GAMIN support
 #  Not on openSUSE.
-%if 0%{?rhel} || 0%{?fedora} || 0%{?mgaversion} || 0%{?mdkversion}
 %define with_gamin 1
 BuildRequires:	gamin-devel
-%endif
 
 Obsoletes:		trinity-kpowersave < %{version}-%{release}
 Provides:		trinity-kpowersave = %{version}-%{release}
@@ -154,11 +120,8 @@ settings for:
  * notification settings
 
 
-##########
-
-%if 0%{?pclinuxos} || 0%{?suse_version} && 0%{?opensuse_bs} == 0
-%debug_package
-%endif
+%description -l zh_CN.UTF-8
+TDE 下的电源管理小程序。
 
 ##########
 
@@ -203,8 +166,8 @@ fi
 export PATH="%{tde_bindir}:${PATH}"
 %__rm -rf %{buildroot}
 %__make install DESTDIR=%{buildroot} -C build
-
-%find_lang %{tde_pkg}
+magic_rpm_clean.sh
+%find_lang %{tde_pkg} || :
 
 
 %clean
@@ -258,5 +221,8 @@ fi
 
 
 %changelog
+* Thu Oct 15 2015 Liu Di <liudidi@gmail.com> - 2:0.7.3-1.1
+- 为 Magic 3.0 重建
+
 * Thu Jul 04 2013 Francois Andriot <francois.andriot@free.fr> - 2:0.7.3-1
 - Initial release for TDE 14.0.0

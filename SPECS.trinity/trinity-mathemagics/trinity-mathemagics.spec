@@ -39,16 +39,14 @@
 
 Name:			trinity-%{tde_pkg}
 Summary:		Mathemagics is a RPN Calculator.
+Summary(zh_CN.UTF-8): 这是一个 RPN 计算器
 Version:		1.1
-Release:		%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}%{?_variant}
+Release:		%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}%{?_variant}.1
 Group:			Applications/Utilities
+Group(zh_CN.UTF-8): 应用程序/工具
 URL:			http://www.trinitydesktop.org/
 
-%if 0%{?suse_version}
-License:		GPL-2.0+
-%else
 License:		GPLv2+
-%endif
 
 #Vendor:			Trinity Desktop
 #Packager:		Francois Andriot <francois.andriot@free.fr>
@@ -58,6 +56,8 @@ BuildRoot:		%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 Source0:		%{tde_pkg}-%{tde_version}.tar.gz
 
+Patch1:		%{name}-14.0.1-tqt.patch
+
 BuildRequires:	trinity-tdelibs-devel >= %{tde_version}
 BuildRequires:	trinity-tdebase-devel >= %{tde_version}
 BuildRequires:	desktop-file-utils
@@ -66,13 +66,12 @@ BuildRequires:	desktop-file-utils
 %description
 Mathemagics is a RPN Calculator.
 
-%if 0%{?pclinuxos}
-%debug_package
-%endif
-
+%description -l zh_CN.UTF-8
+这是一个 RPN 计算器。
 
 %prep
 %setup -q -n %{tde_pkg}-%{version}
+%patch1 -p1
 
 %__cp -f "/usr/share/aclocal/libtool.m4" "admin/libtool.m4.in"
 %__cp -f "/usr/share/libtool/config/ltmain.sh" "admin/ltmain.sh" || %__cp -f "/usr/share/libtool/ltmain.sh" "admin/ltmain.sh"
@@ -108,7 +107,7 @@ export PATH="%{tde_bindir}:${PATH}"
 export PATH="%{tde_bindir}:${PATH}"
 %__rm -rf %{buildroot}
 %__make install DESTDIR=%{buildroot}
-
+magic_rpm_clean.sh
 
 %clean
 %__rm -rf %{buildroot}
@@ -143,5 +142,8 @@ done
 
 
 %changelog
+* Thu Oct 15 2015 Liu Di <liudidi@gmail.com> - 1.1-1.opt.1
+- 为 Magic 3.0 重建
+
 * Sat Sep 20 2014 Francois Andriot <francois.andriot@free.fr> - 1.1-1
 - Initial release for TDE 14.0.0

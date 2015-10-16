@@ -18,7 +18,7 @@
 # TDE variables
 %define tde_epoch 2
 %if "%{?tde_version}" == ""
-%define tde_version 14.0.0
+%define tde_version 14.0.1
 %endif
 %define tde_pkg tdeio-sword
 %define tde_prefix /opt/trinity
@@ -37,16 +37,14 @@
 Name:		trinity-%{tde_pkg}
 Epoch:		%{tde_epoch}
 Version:	0.3
-Release:	%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}
+Release:	%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}.1
 Summary:	Tdeio-slave for the Sword Bible tool
+Summary(zh_CN.UTF-8): Sword 圣经工具的 TDEIO
 Group:		Productivity/Networking/Ftp/Clients
+Group(zh_CN.UTF-8): 应用程序/互联网
 URL:		http://lukeplant.me.uk/kio-sword/
 
-%if 0%{?suse_version}
-License:	GPL-2.0+
-%else
 License:	GPLv2+
-%endif
 
 #Vendor:		Trinity Desktop
 #Packager:	Francois Andriot <francois.andriot@free.fr>
@@ -55,6 +53,8 @@ Prefix:		%{tde_prefix}
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 Source0:		%{name}-%{tde_version}%{?preversion:~%{preversion}}.tar.gz
+
+Patch1:		%{name}-14.0.1-tqt.patch
 
 BuildRequires:	trinity-tdelibs-devel >= %{tde_version}
 BuildRequires:	trinity-tdebase-devel >= %{tde_version}
@@ -65,16 +65,6 @@ BuildRequires:	autoconf automake libtool m4
 BuildRequires:	gcc-c++
 BuildRequires:	pkgconfig
 BuildRequires:	fdupes
-
-# SUSE desktop files utility
-%if 0%{?suse_version}
-BuildRequires:	update-desktop-files
-%endif
-
-%if 0%{?opensuse_bs} && 0%{?suse_version}
-# for xdg-menu script
-BuildRequires:	brp-check-trinity
-%endif
 
 # Requires: sword
 BuildRequires:	sword-devel
@@ -88,18 +78,14 @@ interface -- the Konqueror web browser.  It does so
 using the SWORD Bible project and implementing a TDE
 ioslave, providing the sword:/ protocol.
 
+%description -l zh_CN.UTF-8
+Sword 圣经的 TDEIO
 
 ##########
-
-%if 0%{?pclinuxos} || 0%{?suse_version} && 0%{?opensuse_bs} == 0
-%debug_package
-%endif
-
-##########
-
 
 %prep
 %setup -q -n %{name}-%{tde_version}%{?preversion:~%{preversion}}
+%patch1 -p1
 
 %__cp -f "/usr/share/aclocal/libtool.m4" "admin/libtool.m4.in"
 %__cp -f "/usr/share/libtool/config/ltmain.sh" "admin/ltmain.sh" || %__cp -f "/usr/share/libtool/ltmain.sh" "admin/ltmain.sh"
@@ -136,7 +122,7 @@ export PATH="%{tde_bindir}:${PATH}"
 %install
 %__rm -rf %{?buildroot}
 %__make install DESTDIR=%{buildroot}
-
+magic_rpm_clean.sh
 
 %post
 for f in hicolor ; do
@@ -165,5 +151,8 @@ done
 
 
 %changelog
+* Thu Oct 15 2015 Liu Di <liudidi@gmail.com> - 2:0.3-1.1
+- 为 Magic 3.0 重建
+
 * Fri Jul 05 2013 Francois Andriot <francois.andriot@free.fr> - 2:0.3-1
 - Initial release for TDE 14.0.0

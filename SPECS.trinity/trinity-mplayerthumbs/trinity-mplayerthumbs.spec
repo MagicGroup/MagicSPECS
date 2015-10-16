@@ -18,7 +18,7 @@
 # TDE variables
 %define tde_epoch 2
 %if "%{?tde_version}" == ""
-%define tde_version 14.0.0
+%define tde_version 14.0.1
 %endif
 %define tde_pkg mplayerthumbs
 %define tde_prefix /opt/trinity
@@ -37,16 +37,14 @@
 Name:		trinity-%{tde_pkg}
 Epoch:		%{tde_epoch}
 Version:	0.5b
-Release:	%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}
+Release:	%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}.1
 Summary:	A video thumbnail generator for TDE file managers
+Summary(zh_CN.UTF-8): TDE 文件管理器的视频缩略图生成器
 Group:		Applications/Multimedia
+Group(zh_CN.UTF-8): 应用程序/多媒体
 URL:		http://kde-apps.org/content/show.php?content=41180
 
-%if 0%{?suse_version}
-License:	GPL-2.0+
-%else
 License:	GPLv2+
-%endif
 
 #Vendor:		Trinity Desktop
 #Packager:	Francois Andriot <francois.andriot@free.fr>
@@ -56,6 +54,8 @@ BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 Source0:		%{name}-%{tde_version}%{?preversion:~%{preversion}}.tar.gz
 
+Patch1:		%{name}-14.0.1-tqt.patch
+
 BuildRequires:	trinity-tdelibs-devel >= %{tde_version}
 BuildRequires:	trinity-tdebase-devel >= %{tde_version}
 BuildRequires:	desktop-file-utils
@@ -64,16 +64,6 @@ BuildRequires:	autoconf automake libtool m4
 BuildRequires:	gcc-c++
 BuildRequires:	pkgconfig
 BuildRequires:	fdupes
-
-# SUSE desktop files utility
-%if 0%{?suse_version}
-BuildRequires:	update-desktop-files
-%endif
-
-%if 0%{?opensuse_bs} && 0%{?suse_version}
-# for xdg-menu script
-BuildRequires:	brp-check-trinity
-%endif
 
 # MPLAYER support
 Requires:		mplayer
@@ -89,18 +79,14 @@ launching the mplayerthumbsconfig helper application.
 It catches a random frame from 15% to 70%, checking also how contrasted 
 is the image, and dropping bad frames.
 
+%description -l zh_CN.UTF-8
+TDE 文件管理器的视频缩略图生成器。
 
 ##########
-
-%if 0%{?pclinuxos} || 0%{?suse_version} && 0%{?opensuse_bs} == 0
-%debug_package
-%endif
-
-##########
-
 
 %prep
 %setup -q -n %{name}-%{tde_version}%{?preversion:~%{preversion}}
+%patch1 -p1
 
 %__cp -f "/usr/share/aclocal/libtool.m4" "admin/libtool.m4.in"
 %__cp -f "/usr/share/libtool/config/ltmain.sh" "admin/ltmain.sh" || %__cp -f "/usr/share/libtool/ltmain.sh" "admin/ltmain.sh"
@@ -153,5 +139,8 @@ export PATH="%{tde_bindir}:${PATH}"
 
 
 %changelog
+* Thu Oct 15 2015 Liu Di <liudidi@gmail.com> - 2:0.5b-1.1
+- 为 Magic 3.0 重建
+
 * Fri Jul 05 2013 Francois Andriot <francois.andriot@free.fr> - 2:0.5b-1
 - Initial release for TDE 14.0.0

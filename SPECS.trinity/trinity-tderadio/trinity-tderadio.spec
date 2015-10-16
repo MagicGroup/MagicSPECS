@@ -15,14 +15,12 @@
 # Please submit bugfixes or comments via http://www.trinitydesktop.org/
 #
 
-%if 0%{?rhel} >= 6 || 0%{?fedora} || 0%{?mdkversion} || 0%{?mgaversion} || 0%{?suse_version}
 %define with_lirc 1
-%endif
 
 # TDE variables
 %define tde_epoch 2
 %if "%{?tde_version}" == ""
-%define tde_version 14.0.0
+%define tde_version 14.0.1
 %endif
 %define tde_pkg tderadio
 %define tde_prefix /opt/trinity
@@ -43,14 +41,12 @@ Epoch:		%{tde_epoch}
 Version:	0.1.1.1
 Release:	%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}
 Summary:	Comfortable Radio Application for TDE
+Summary(zh_CN.UTF-8): TDE 下的广播程序
 Group:		Applications/Utilities
+Group(zh_CN.UTF-8): 应用程序/工具
 URL:		http://www.trinitydesktop.org/
 
-%if 0%{?suse_version}
-License:	GPL-2.0+
-%else
 License:	GPLv2+
-%endif
 
 #Vendor:		Trinity Desktop
 #Packager:	Francois Andriot <francois.andriot@free.fr>
@@ -59,6 +55,8 @@ Prefix:		%{tde_prefix}
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 Source0:		%{name}-%{tde_version}%{?preversion:~%{preversion}}.tar.gz
+
+Patch1:		%{name}-14.0.1-tqt.patch
 
 BuildRequires:	trinity-tdelibs-devel >= %{tde_version}
 BuildRequires:	trinity-tdebase-devel >= %{tde_version}
@@ -70,28 +68,11 @@ BuildRequires:	gcc-c++
 BuildRequires:	pkgconfig
 BuildRequires:	fdupes
 
-# SUSE desktop files utility
-%if 0%{?suse_version}
-BuildRequires:	update-desktop-files
-%endif
-
-%if 0%{?opensuse_bs} && 0%{?suse_version}
-# for xdg-menu script
-BuildRequires:	brp-check-trinity
-%endif
 
 BuildRequires:	libsndfile-devel
 %{?with_lirc:BuildRequires:	lirc-devel}
 
-%if 0%{?mgaversion} || 0%{?mdkversion}
-BuildRequires:	%{_lib}twolame-devel
-%endif
-%if 0%{?suse_version}
-BuildRequires:	libtwolame-devel
-%endif
-%if 0%{?rhel} || 0%{?fedora}
 BuildRequires:	lame-devel
-%endif
 
 Obsoletes:		trinity-kradio < %{version}-%{release}
 Provides:		trinity-kradio = %{version}-%{release}
@@ -119,19 +100,14 @@ files for many cities around the world contributed by TDERadio users.
 As TDERadio is based on an extendable plugin architecture, contributions
 of new plugins (e.g. Internet Radio Streams, new cool GUIs) are welcome.
 
+%description -l zh_CN.UTF-8
+TDE 下的广播程序。
 
 ##########
-
-%if 0%{?pclinuxos} || 0%{?suse_version} && 0%{?opensuse_bs} == 0
-%debug_package
-%endif
-
-##########
-
 
 %prep
 %setup -q -n %{name}-%{tde_version}%{?preversion:~%{preversion}}
-
+%patch1 -p1
 %__cp "/usr/share/aclocal/libtool.m4" "admin/libtool.m4.in"
 %__cp "/usr/share/libtool/config/ltmain.sh" "admin/ltmain.sh" || %__cp "/usr/share/libtool/ltmain.sh" "admin/ltmain.sh"
 %__make -f "admin/Makefile.common"
@@ -174,14 +150,8 @@ export PATH="%{tde_bindir}:${PATH}"
 export PATH="%{tde_bindir}:${PATH}"
 %__rm -rf %{buildroot}
 %__make install DESTDIR=%{buildroot}
-
-%find_lang %{tde_pkg}
-
-# Updates applications categories for openSUSE
-%if 0%{?suse_version}
-%suse_update_desktop_file -G "Radio Tuner" %{tde_pkg} AudioVideo Tuner
-%endif
-
+magic_rpm_clean.sh
+%find_lang %{tde_pkg} || :
 
 %clean
 %__rm -rf %{buildroot}
@@ -202,7 +172,7 @@ done
 update-desktop-database %{tde_tdeappdir} -q &> /dev/null ||:
 
 
-%files -f %{tde_pkg}.lang
+%files
 %defattr(-,root,root,-)
 %{tde_bindir}/convert-presets
 %{tde_bindir}/tderadio
@@ -216,8 +186,6 @@ update-desktop-database %{tde_tdeappdir} -q &> /dev/null ||:
 %dir %{tde_datadir}/icons/hicolor/256x256/actions
 %{tde_datadir}/icons/hicolor/*/*/tderadio*.png
 %{tde_datadir}/icons/locolor/*/*/tderadio*.png
-%lang(de) %{tde_datadir}/locale/de/LC_MESSAGES/*.mo
-%lang(ru) %{tde_datadir}/locale/ru/LC_MESSAGES/*.mo
 %{tde_tdedocdir}/HTML/en/tderadio/
 
 %changelog

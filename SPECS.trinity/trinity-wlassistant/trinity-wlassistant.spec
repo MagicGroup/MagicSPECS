@@ -1,54 +1,82 @@
-# Default version for this component
-%define kdecomp wlassistant
-%define tdeversion 3.5.13.2
+#
+# spec file for package wlassistant (version R14)
+#
+# Copyright (c) 2014 Trinity Desktop Environment
+#
+# All modifications and additions to the file contributed by third parties
+# remain the property of their copyright owners, unless otherwise agreed
+# upon. The license for this file, and modifications and additions to the
+# file, is the same license as for the pristine package itself (unless the
+# license for the pristine package is not an Open Source License, in which
+# case the license is the MIT License). An "Open Source License" is a
+# license that conforms to the Open Source Definition (Version 1.9)
+# published by the Open Source Initiative.
+#
+# Please submit bugfixes or comments via http://www.trinitydesktop.org/
+#
 
-# If TDE is built in a specific prefix (e.g. /opt/trinity), the release will be suffixed with ".opt".
-%if "%{?tde_prefix}" != "/usr"
-%define _variant .opt
+# TDE variables
+%define tde_epoch 2
+%if "%{?tde_version}" == ""
+%define tde_version 14.0.1
 %endif
-
-# TDE 3.5.13 specific building variables
+%define tde_pkg wlassistant
+%define tde_prefix /opt/trinity
 %define tde_bindir %{tde_prefix}/bin
 %define tde_datadir %{tde_prefix}/share
 %define tde_docdir %{tde_datadir}/doc
 %define tde_includedir %{tde_prefix}/include
 %define tde_libdir %{tde_prefix}/%{_lib}
 %define tde_mandir %{tde_datadir}/man
-%define tde_appdir %{tde_datadir}/applications
-
-%define tde_tdeappdir %{tde_appdir}/kde
+%define tde_tdeappdir %{tde_datadir}/applications/tde
 %define tde_tdedocdir %{tde_docdir}/tde
 %define tde_tdeincludedir %{tde_includedir}/tde
 %define tde_tdelibdir %{tde_libdir}/trinity
 
-%define _docdir %{tde_tdedocdir}
 
-
-Name:		trinity-%{kdecomp}
-Summary:	User friendly KDE frontend for wireless network connection [Trinity]
+Name:		trinity-%{tde_pkg}
+Epoch:		%{tde_epoch}
 Version:	0.5.7
-Release:	3%{?dist}%{?_variant}
-
-License:	GPLv2+
+Release:	%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}
+Summary:	User friendly TDE frontend for wireless network connection
+Summary(zh_CN.UTF-8): 无线网络连接管理程序
 Group:		Applications/Utilities
-
-Vendor:		Trinity Project
-Packager:	Francois Andriot <francois.andriot@free.fr>
+Group(zh_CN.UTF-8): 应用程序/工具
 URL:		http://wlassistant.sourceforge.net/
 
-Prefix:    %{tde_prefix}
-BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+License:	GPLv2+
 
-Source0:	%{kdecomp}-trinity-%{tdeversion}.tar.xz
+#Vendor:		Trinity Desktop
+#Packager:	Francois Andriot <francois.andriot@free.fr>
 
-BuildRequires:	trinity-tqtinterface-devel >= 3.5.13.1
-BuildRequires:	trinity-tdelibs-devel >= 3.5.13.1
-BuildRequires:	trinity-tdebase-devel >= 3.5.13.1
+Prefix:		%{tde_prefix}
+BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+
+Source0:		%{name}-%{tde_version}%{?preversion:~%{preversion}}.tar.gz
+
+BuildRequires:	trinity-tdelibs-devel >= %{tde_version}
+BuildRequires:	trinity-tdebase-devel >= %{tde_version}
 BuildRequires:	desktop-file-utils
 BuildRequires:	gettext
 
+BuildRequires:	cmake libtool
+BuildRequires:	gcc-c++
+BuildRequires:	pkgconfig
+BuildRequires:	fdupes
+
+# Wireless support
+BuildRequires: wireless-tools-devel
+
+# IDN support
+BuildRequires:	libidn-devel
+
+# GAMIN support
+#  Not on openSUSE.
+%define with_gamin 1
+BuildRequires:	gamin-devel
+# PYTHON support
 BuildRequires:	python
-BuildRequires:	cmake >= 2.8
+
 
 %description
 Wireless Assistant scans for wireless access points and displays link quality,
@@ -57,36 +85,45 @@ network, Wireless Assistant opens up its wizards and guides the user through
 Wi-Fi settings. After a successful connection is made the settings are
 remembered so next time the user won't have to enter them again.
 
+%description -l zh_CN.UTF-8
+TDE 下的无线网络连接管理程序。
 
-%if 0%{?suse_version}
-%debug_package
-%endif
-
+##########
 
 %prep
-%setup -q -n %{kdecomp}-trinity-%{tdeversion}
+%setup -q -n %{name}-%{tde_version}%{?preversion:~%{preversion}}
 
-%__sed -i 's/TQT_PREFIX/TDE_PREFIX/g' cmake/modules/FindTQt.cmake
 
 %build
-unset QTDIR; . /etc/profile.d/qt3.sh
+unset QTDIR QTINC QTLIB
 export PATH="%{tde_bindir}:${PATH}"
 export PKG_CONFIG_PATH="%{tde_libdir}/pkgconfig"
-export LDFLAGS="-L%{tde_libdir} -I%{tde_includedir}"
 
+# Shitty hack for RHEL4 ...
+if [ -d "/usr/X11R6" ]; then
+  export CMAKE_INCLUDE_PATH="${CMAKE_INCLUDE_PATH}:/usr/X11R6/include:/usr/X11R6/%{_lib}"
+  export RPM_OPT_FLAGS="${RPM_OPT_FLAGS} -I/usr/X11R6/include -L/usr/X11R6/%{_lib}"
+fi
 
-%if 0%{?rhel} || 0%{?fedora} || 0%{?suse_version}
-%__mkdir_p build
-cd build
-%endif
+if ! rpm -E %%cmake|grep -q "cd build"; then
+  %__mkdir_p build
+  cd build
+fi
 
 %cmake \
-  -DCMAKE_PREFIX_PATH=%{tde_prefix} \
-  -DTDE_PREFIX=%{tde_prefix} \
+  -DCMAKE_BUILD_TYPE="RelWithDebInfo" \
+  -DCMAKE_C_FLAGS="${RPM_OPT_FLAGS} -DNDEBUG" \
+  -DCMAKE_CXX_FLAGS="${RPM_OPT_FLAGS} -DNDEBUG" \
+  -DCMAKE_SKIP_RPATH=OFF \
+  -DCMAKE_INSTALL_RPATH="%{tde_libdir}" \
+  -DCMAKE_VERBOSE_MAKEFILE=ON \
+  -DWITH_GCC_VISIBILITY=OFF \
+  \
   -DBIN_INSTALL_DIR=%{tde_bindir} \
   -DINCLUDE_INSTALL_DIR=%{tde_tdeincludedir} \
   -DLIB_INSTALL_DIR=%{tde_libdir} \
   -DSHARE_INSTALL_PREFIX=%{tde_datadir} \
+  \
   -DBUILD_ALL=on \
   ..
 
@@ -97,6 +134,8 @@ cd build
 export PATH="%{tde_bindir}:${PATH}"
 %__rm -rf %{buildroot}
 %__make install DESTDIR=%{buildroot} -C build
+
+magic_rpm_clean.sh
 
 %clean
 %__rm -rf %{buildroot}
@@ -118,24 +157,10 @@ gtk-update-icon-cache --quiet %{tde_datadir}/icons/hicolor || :
 %{tde_tdeappdir}/wlassistant.desktop
 %{tde_datadir}/icons/hicolor/16x16/apps/wlassistant.png
 %{tde_datadir}/icons/hicolor/32x32/apps/wlassistant.png
-%lang(ar) %{tde_datadir}/locale/ar/LC_MESSAGES/wlassistant.mo
-%lang(ca) %{tde_datadir}/locale/ca/LC_MESSAGES/wlassistant.mo
-%lang(es) %{tde_datadir}/locale/es/LC_MESSAGES/wlassistant.mo
-%lang(fr) %{tde_datadir}/locale/fr/LC_MESSAGES/wlassistant.mo
-%lang(nb) %{tde_datadir}/locale/nb/LC_MESSAGES/wlassistant.mo
-%lang(pl) %{tde_datadir}/locale/pl/LC_MESSAGES/wlassistant.mo
-%lang(pt) %{tde_datadir}/locale/pt_BR/LC_MESSAGES/wlassistant.mo
-%lang(sv) %{tde_datadir}/locale/sv/LC_MESSAGES/wlassistant.mo
 %lang(zh_CN) %{tde_datadir}/locale/zh_CN/LC_MESSAGES/wlassistant.mo
 %lang(zh_TW) %{tde_datadir}/locale/zh_TW/LC_MESSAGES/wlassistant.mo
 
 
 %changelog
-* Tue Aug 06 2013 Liu Di <liudidi@gmail.com> - 0.5.7-3.opt
-- 为 Magic 3.0 重建
-
-* Wed Oct 03 2012 Francois Andriot <francois.andriot@free.fr> - 0.5.7-2
-- Initial build for TDE 3.5.13.1
-
-* Tue Nov 29 2011 Francois Andriot <francois.andriot@free.fr> - 0.5.7-1
-- Initial build for RHEL 5, RHEL 6, Fedora 15, Fedora 16
+* Fri Jul 05 2013 Francois Andriot <francois.andriot@free.fr> - 2:0.5.7-1
+- Initial release for TDE 14.0.0
