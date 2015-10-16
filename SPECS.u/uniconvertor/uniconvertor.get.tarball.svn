@@ -1,0 +1,17 @@
+#!/bin/bash
+
+APP=uniconvertor
+VER=2.0
+
+rm -rf $APP-$VER
+#REV=$( svn export svn://svn.code.sf.net/p/tora/code/trunk/tora $APP | tail -n 1 | grep -Po '\d+' )
+# Preserve .svn as it needed for not released build
+REV=$( svn checkout http://uniconvertor.googlecode.com/svn/trunk/ $APP-$VER | tail -n 1 | grep -Po '\d+' )
+echo REV=$REV
+
+# Non-free sRGB.icm removal
+rm -rf $APP-$VER/src/unittests/cms_tests/cms_data/sRGB.icm
+
+TARF=$APP-${VER}svn${REV}.tar.xz
+tar -cJf $TARF $APP-$VER
+echo "[$TARF] created"

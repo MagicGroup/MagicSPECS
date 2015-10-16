@@ -1,84 +1,100 @@
 %{!?python_sitearch: %define python_sitearch %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib(1)")}
 
+%global SVN 362
+
 Name:           uniconvertor
-Version:        1.1.4
-Release:        7%{?dist}
+Version:        2.0
+Release:        0.8%{?SVN:.svn%{SVN}}%{?dist}
 Summary:        Universal vector graphics translator
 
 Group:          Applications/Multimedia
 License:        LGPLv2+ and GPLv2+ and MIT
 URL:            http://sk1project.org/modules.php?name=Products&product=uniconvertor
-Source0:        http://sk1project.org/downloads/uniconvertor/v%{version}/%{name}-%{version}.tar.gz
-# Upstream notified via forum: http://sk1project.org/forum/topic.php?forum=2&topic=19
-Patch0:         UniConvertor-1.1.0-simplify.patch
-# Upstream notified via forum: http://sk1project.org/forum/topic.php?forum=2&topic=11
-Patch1:         UniConvertor-1.1.1-rename-in-help.patch
-Patch2:         UniConvertor-1.1.1-use-exec.patch
-BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+# Script to reproduce given tarball from source0
+Source1:        %{name}.get.tarball.svn
+Source0:        %{name}-%{version}svn%{SVN}.tar.xz
 
-BuildRequires:  python-devel
-Requires:       python-imaging
-Requires:       python-reportlab
+BuildRequires:  python-devel, pycairo-devel, python-pillow-devel, lcms2-devel
+BuildRequires:  potrace-devel
+# For a public domain sRGB.icm
+BuildRequires:  argyllcms
+Requires:       python-imaging, python-reportlab, python-pillow, pycairo
 
 
 %description
 UniConvertor is a universal vector graphics translator.
 It uses sK1 engine to convert one format to another.
 
-
 %prep
-%setup -q -n UniConvertor-%{version}
-%patch0 -p1 -b .simplify
-%patch1 -p1 -b .rename-in-help
-%patch2 -p1 -b .use-exec
-
-# Prepare for inclusion into documentation part
-install -p -m644 src/COPYRIGHTS COPYRIGHTS
-install -p -m644 src/GNU_GPL_v2 GNU_GPL_v2
-install -p -m644 src/GNU_LGPL_v2 GNU_LGPL_v2
-
+%setup -q
+cp -a /usr/share/color/argyll/ref/sRGB.icm src/unittests/cms_tests/cms_data/sRGB.icm
 
 %build
-CFLAGS="$RPM_OPT_FLAGS" %{__python} setup.py build
-
+CFLAGS="$RPM_OPT_FLAGS -I/usr/include/python2.7/Imaging" python setup.py build
 
 %install
-rm -rf $RPM_BUILD_ROOT
-%{__python} setup.py install --skip-build --root $RPM_BUILD_ROOT 
+python setup.py install --skip-build --root %{buildroot}
 
-# Fix permissions
-chmod a+x $RPM_BUILD_ROOT%{python_sitearch}/uniconvertor/__init__.py
-chmod g-w $RPM_BUILD_ROOT%{python_sitearch}/uniconvertor/app/modules/*.so
+%post
+touch --no-create %{_datadir}/mime/packages &> /dev/null || :
 
-# Don't duplicate documentation
-rm -f $RPM_BUILD_ROOT%{python_sitearch}/uniconvertor/{COPYRIGHTS,GNU_GPL_v2,GNU_LGPL_v2}
+%postun
+if [ $1 -eq 0 ] ; then
+update-mime-database %{_datadir}/mime &> /dev/null || :
+fi
 
-# Satisfy rpmlint claim on debuginfo subpackage
-chmod 644 src/modules/*/*.{c,h}
-
-# Rename uniconv script due to conflicts with netatalk
-# (https://bugzilla.redhat.com/show_bug.cgi?id=405011)
-# Upstream notified via forum:
-#   http://sk1project.org/forum/topic.php?forum=2&topic=11
-#   http://sk1project.org/forum/topic.php?forum=2&topic=33
-mv $RPM_BUILD_ROOT%{_bindir}/uniconv $RPM_BUILD_ROOT%{_bindir}/uniconvertor
-magic_rpm_clean.sh
-
-%clean
-rm -rf $RPM_BUILD_ROOT
-
+%posttrans
+update-mime-database %{?fedora:-n} %{_datadir}/mime &> /dev/null || :
 
 %files
-%defattr(-,root,root,-)
-%doc README
-%doc COPYRIGHTS GNU_GPL_v2 GNU_LGPL_v2
-%{_bindir}/uniconvertor
+%doc README LICENSE GPLv3.txt
+%{_bindir}/%{name}
 %{python_sitearch}/*
-
+%{_datarootdir}/mime-info/sk1project.keys
+%{_datarootdir}/mime-info/sk1project.mime
+%{_datarootdir}/mime/packages/vnd.sk1project.pdxf-graphics.xml
 
 %changelog
-* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 1.1.4-7
-- 为 Magic 3.0 重建
+* Fri Jun 19 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.0-0.8.svn362
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
+
+* Sat Sep 27 2014 Rex Dieter <rdieter@fedoraproject.org> 2.0-0.7.svn362
+- add (optimized) mime scriptlet
+
+* Mon Aug 18 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.0-0.6.svn362
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
+
+* Sun Jun 08 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.0-0.5.svn362
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Fri Mar 21 2014 Pavel Alexeev <Pahan@Hubbitus.info> - 2.0-0.4.svn362
+- Add pycairo require (bz#1079342).
+
+* Sat Oct 19 2013 Pavel Alexeev <Pahan@Hubbitus.info> - 2.0-0.3.svn362
+- New build to fix bz#1013652
+- Add BR potrace-devel
+
+* Tue Sep  3 2013 Tom Callaway <spot@fedoraproject.org> - 2.0-0.2.svn344
+- fix tarball generation script to remove non-free sRGB.icm
+- update to cleaned svn344 tarball
+- use Public Domain sRGB.icm from argyllcms
+
+* Sat Aug 24 2013 Pavel Alexeev <Pahan@Hubbitus.info> - 2.0-0.1.svn340
+- First attempt packaging 2.0 version. Igor Novikov said in mail it is almost ready.
+- New build with hope to fix compatability with python-pillow instead of PIL (by author mail)
+- Add BR lcms2-devel
+- Add script to get tarball from svn.
+- Replace $RPM_BUILD_ROOT by %%{buildroot}
+- Add BR pycairo-devel, python-pillow-devel
+- Add require python-pillow
+- Drop 1.x branch patches.
+- Spec cleanup.
+
+* Sun Aug 04 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.1.4-8
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Fri Feb 15 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.1.4-7
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
 
 * Sun Jul 22 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.1.4-6
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
