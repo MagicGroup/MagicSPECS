@@ -8,86 +8,87 @@
 # even the implied warranty of MERCHANTABILITY or FITNESS FOR A
 # PARTICULAR PURPOSE.
 
-Name: ucommon
-Summary: Portable C++ framework for threads and sockets
-Version: 6.1.0
-Release: 1%{?dist}
-License: LGPLv3+
-URL: http://www.gnu.org/software/commoncpp
-Source0: http://dev.gnutelephony.org/dist/tarballs/ucommon-%{version}.tar.gz
-BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
-BuildRequires: doxygen graphviz-gd openssl-devel
-Group: System Environment/Libraries
-Summary: Runtime library for portable C++ threading and sockets
+Name:          ucommon
+Version:       6.6.1
+Release:       1%{?dist}
+Summary:       Portable C++ framework for threads and sockets
+
+License:       LGPLv3+
+URL:           http://www.gnu.org/software/commoncpp
+Source0:       http://dev.gnutelephony.org/dist/tarballs/ucommon-%{version}.tar.gz
+
+BuildRequires: cmake
+BuildRequires: doxygen
+BuildRequires: graphviz-gd
+BuildRequires: openssl-devel
+
 
 %description
 GNU uCommon C++ is a lightweight library to facilitate using C++ design
 patterns even for very deeply embedded applications, such as for systems using
-uClibc along with POSIX threading support. For this reason, uCommon disables
+uclibc along with POSIX threading support. For this reason, uCommon disables
 language features that consume memory or introduce runtime overhead. UCommon
 introduces some design patterns from Objective-C, such as reference counted
 objects, memory pools, and smart pointers. UCommon introduces some new concepts
 for handling of thread locking and synchronization.  Starting with release
 5.0, GNU uCommon also bundles GNU Common C++ libraries.
 
+
 %package bin
-Requires: %{name} = %{version}-%{release}
-Group: Applications/System
-Summary: ucommon system and support applications
-
-%package devel
-Requires: %{name} = %{version}-%{release}
-Requires: %{name}-bin = %{version}-%{release}
-Requires: openssl-devel
-Requires: pkgconfig
-Group: Development/Libraries
-Summary: Headers for building uCommon applications
-
-%package doc
-Group: Documentation
-Summary: Generated class documentation for uCommon
+Summary:       GNU uCommon system and support applications
+Requires:      %{name}%{?_isa} = %{version}-%{release}
 
 %description bin
 This is a collection of command line tools that use various aspects of the
-ucommon library.  Some may be needed to prepare files or for development of
+ucommon library. Some may be needed to prepare files or for development of
 applications.
+
+
+%package devel
+Summary:       Headers for building GNU uCommon applications
+Requires:      %{name}%{?_isa} = %{version}-%{release}
+Requires:      openssl-devel%{?_isa}
+Requires:      pkgconfig
 
 %description devel
 This package provides header and support files needed for building
 applications that use the uCommon and commoncpp libraries.
 
+
+%package doc
+Summary: Generated class documentation for GNU uCommon
+
 %description doc
-Generated class documentation for GNU uCommon library from header files,
-html browsable.
+Generated class documentation for GNU uCommon library from header files in
+HTML format.
+
 
 %prep
 %setup -q
-%build
 
-%configure --disable-static
-%{__make} %{?_smp_mflags}
-%{__rm} -rf doc/html
-%{__make} doxy
+
+%build
+%cmake .
+make %{?_smp_mflags}
+make doc
+
 
 %install
-%{__rm} -rf %{buildroot}
-%{__make} DESTDIR=%{buildroot} INSTALL="install -p" install
-%{__chmod} 0755 %{buildroot}%{_bindir}/ucommon-config
-%{__chmod} 0755 %{buildroot}%{_bindir}/commoncpp-config
-%{__rm} %{buildroot}%{_libdir}/*.la
+%make_install INSTALL="install -p"
 
-%clean
-%{__rm} -rf %{buildroot}
+%post -p /sbin/ldconfig
+
+%postun -p /sbin/ldconfig
+
 
 %files
-%defattr(-,root,root,-)
-%doc AUTHORS README COPYING COPYING.LESSER NEWS SUPPORT ChangeLog
-%{_libdir}/libucommon.so.*
-%{_libdir}/libusecure.so.*
-%{_libdir}/libcommoncpp.so.*
+%doc AUTHORS README NEWS SUPPORT ChangeLog
+%license COPYING COPYING.LESSER
+%{_libdir}/libucommon.so.7*
+%{_libdir}/libusecure.so.7*
+%{_libdir}/libcommoncpp.so.7*
 
 %files bin
-%defattr(-,root,root,-)
 %{_bindir}/args
 %{_bindir}/mdsum
 %{_bindir}/pdetach
@@ -106,25 +107,61 @@ html browsable.
 %{_mandir}/man1/keywait.*
 
 %files devel
-%defattr(-,root,root,-)
-%{_libdir}/*.so
+%{_bindir}/ucommon-config
+%{_bindir}/commoncpp-config
+%{_datadir}/%{name}/
 %{_includedir}/ucommon/
 %{_includedir}/commoncpp/
+%{_libdir}/*.so
 %{_libdir}/pkgconfig/*.pc
-%{_bindir}/ucommon-config
 %{_mandir}/man1/ucommon-config.*
-%{_bindir}/commoncpp-config
 %{_mandir}/man1/commoncpp-config.*
 
 %files doc
-%defattr(-,root,root,-)
 %doc doc/html/*
 
-%post -p /sbin/ldconfig
-
-%postun -p /sbin/ldconfig
 
 %changelog
+* Mon Oct 05 2015 Sandro Mani <manisandro@gmail.com> - 6.6.1-1
+- Update to 6.6.1
+
+* Wed Sep 09 2015 Sandro Mani <manisandro@gmail.com> - 6.6.0-1
+- Update to 6.6.0
+
+* Wed Sep 02 2015 Sandro Mani <manisandro@gmail.com> - 6.5.7-1
+- Update to 6.5.7
+
+* Mon Aug 24 2015 Sandro Mani <manisandro@gmail.com> - 6.5.4-1
+- Update to 6.5.4
+
+* Sun Aug 23 2015 Sandro Mani <manisandro@gmail.com> - 6.5.3-1
+- Update to 6.5.3
+
+* Thu Aug 13 2015 Sandro Mani <manisandro@gmail.com> - 6.5.1-1
+- Update to 6.5.1
+
+* Mon Aug 03 2015 Sandro Mani <manisandro@gmail.com> - 6.4.4-1
+- Update to 6.4.4
+
+* Fri Jun 19 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 6.1.3-5
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
+
+* Sat May 02 2015 Kalev Lember <kalevlember@gmail.com> - 6.1.3-4
+- Rebuilt for GCC 5 C++11 ABI change
+
+* Mon Aug 18 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 6.1.3-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
+
+* Sun Jun 08 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 6.1.3-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Sat May 03 2014 David Sugar <dyfet@gnutelephony.org> - 6.1.3-1
+- Change to using cmake in rpm build
+- Upstream fixes for specific memory corruption issues
+
+* Mon Apr 14 2014 David Sugar <dyfet@gnutelephony.org> - 6.1.1-1
+- Greater commoncpp compatibility
+
 * Mon Jan 06 2014 David Sugar <dyfet@gnutelephony.org> - 6.1.0-1
 - Keywait utility added
 - Fixes for correcting commoncpp exception handling
