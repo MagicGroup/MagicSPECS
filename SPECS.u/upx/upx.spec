@@ -1,6 +1,6 @@
 Name:           upx
-Version:        3.08
-Release:        2%{?dist}
+Version:        3.91
+Release:        6%{?dist}
 Summary:        Ultimate Packer for eXecutables
 
 Group:          Applications/Archiving
@@ -31,6 +31,7 @@ sed -i -e 's/ -O2/ /' -e 's/ -Werror//' src/Makefile
 %patch1 -p1 -b .use-lib
 
 %build
+export CXX="g++"
 export CXXFLAGS="$RPM_OPT_FLAGS" # export, not to make so it won't trump all
 UPX_LZMA_VERSION=0x465 UPX_LZMADIR=%{_includedir}/lzma465 make %{?_smp_mflags} -C src
 make -C doc
@@ -54,8 +55,36 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
-* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 3.08-2
-- 为 Magic 3.0 重建
+* Fri Jun 19 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.91-6
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
+
+* Sat May 02 2015 Kalev Lember <kalevlember@gmail.com> - 3.91-5
+- Rebuilt for GCC 5 C++11 ABI change
+
+* Thu Oct 16 2014 Jon Ciesla <limburgher@gmail.com> - 3.91-4
+- Fix FTBFS.
+
+* Mon Aug 18 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.91-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
+
+* Sun Jun 08 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.91-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Mon Oct 28 2013 Jon Ciesla <limburgher@gmail.com> - 3.91-1
+- New upstream, BZ 1023719.
+- Fix bad changelog date.
+
+* Sun Aug 04 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.09-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Mon Mar 18 2013 Jon Ciesla <limburgher@gmail.com> - 3.09-1
+- New upstream.
+
+* Fri Feb 15 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.08-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
+
+* Sun Jul 22 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.08-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 
 * Fri Jan 27 2012 Jon Ciesla <limburgher@gmail.com> - 3.08-1
 - New upstream.
@@ -124,7 +153,7 @@ rm -rf $RPM_BUILD_ROOT
 * Thu May 19 2005 Ville Skyttä <ville.skytta at iki.fi> - 1.25-4
 - Rebuild.
 
-* Fri Apr  7 2005 Michael Schwendt <mschwendt[AT]users.sf.net> - 1.25-3
+* Fri Apr  8 2005 Michael Schwendt <mschwendt[AT]users.sf.net> - 1.25-3
 - rebuilt
 
 * Fri Dec 17 2004 Ville Skyttä <ville.skytta at iki.fi> - 0:1.25-2
