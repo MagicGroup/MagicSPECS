@@ -1,0 +1,70 @@
+On a zEC12 or z13, a glibc with lock elision enabled infers from HWCAP
+that the prerequisites for lock elision are met.  Then it may use TBEGIN
+and other transactional-execution instructions which are not implemented
+by Valgrind.  Likewise, the upcoming glibc 2.23 will exploit vector
+instructions if they are advertised by HWCAP; and those are currently
+not implemented by Valgrind either.  In general, the increased use of
+ifunc may lead to more such cases in the future.
+
+This patch suppresses the advertising of those hardware features via
+HWCAP which are either not known to Valgrind or currently unsupported.
+
+Patch by Andreas Arnez (arnez@linux.vnet.ibm.com).
+Fixes BZ #353680.
+
+Modified: trunk/README.s390
+==============================================================================
+--- trunk/README.s390 (original)
++++ trunk/README.s390 Mon Oct 12 21:35:56 2015
+@@ -22,6 +22,9 @@
+ - Some gcc versions use mvc to copy 4/8 byte values. This will affect
+   certain debug messages. For example, memcheck will complain about
+   4 one-byte reads/writes instead of just a single read/write.
++- The transactional-execution facility is not supported; it is masked
++  off from HWCAP.
++- The vector facility is not supported; it is masked off from HWCAP.
+ 
+ 
+ Hardware facilities
+
+Modified: trunk/coregrind/m_initimg/initimg-linux.c
+==============================================================================
+--- trunk/coregrind/m_initimg/initimg-linux.c (original)
++++ trunk/coregrind/m_initimg/initimg-linux.c Mon Oct 12 21:35:56 2015
+@@ -701,6 +701,12 @@
+                  in syswrap-arm-linux.c rather than to base this on
+                  conditional compilation. */
+             }
++#           elif defined(VGP_s390x_linux)
++            {
++               /* Advertise hardware features "below" TE only.  TE and VXRS
++                  (and anything above) are not supported by Valgrind. */
++               auxv->u.a_val &= VKI_HWCAP_S390_TE - 1;
++            }
+ #           endif
+             break;
+ #        if defined(VGP_ppc64be_linux) || defined(VGP_ppc64le_linux)
+
+Modified: trunk/include/vki/vki-s390x-linux.h
+==============================================================================
+--- trunk/include/vki/vki-s390x-linux.h (original)
++++ trunk/include/vki/vki-s390x-linux.h Mon Oct 12 21:35:56 2015
+@@ -800,12 +800,15 @@
+ #define VKI_PTRACE_POKEUSR_AREA       0x5001
+ 
+ //----------------------------------------------------------------------
+-// From linux-2.6.16.60/include/asm-s390/elf.h
++// From linux-3.18/include/asm-s390/elf.h
+ //----------------------------------------------------------------------
+ 
+ typedef vki_s390_fp_regs vki_elf_fpregset_t;
+ typedef vki_s390_regs vki_elf_gregset_t;
+ 
++#define VKI_HWCAP_S390_TE           1024
++#define VKI_HWCAP_S390_VXRS         2048
++
+ 
+ //----------------------------------------------------------------------
+ // From linux-2.6.16.60/include/asm-s390/ucontext.h
+
+

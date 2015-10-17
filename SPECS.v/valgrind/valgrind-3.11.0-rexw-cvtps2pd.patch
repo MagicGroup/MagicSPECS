@@ -1,0 +1,76 @@
+diff --git a/VEX/priv/guest_amd64_toIR.c b/VEX/priv/guest_amd64_toIR.c
+index 98596d2..06552e8 100644
+--- a/VEX/priv/guest_amd64_toIR.c
++++ b/VEX/priv/guest_amd64_toIR.c
+@@ -13396,7 +13396,8 @@ Long dis_ESC_0F__SSE2 ( Bool* decode_OK,
+    case 0x5A:
+       /* 0F 5A = CVTPS2PD -- convert 2 x F32 in low half mem/xmm to 2 x
+          F64 in xmm(G). */
+-      if (haveNo66noF2noF3(pfx) && sz == 4) {
++      if (haveNo66noF2noF3(pfx)
++          && (sz == 4 || /* ignore redundant REX.W */ sz == 8)) {
+          delta = dis_CVTPS2PD_128( vbi, pfx, delta, False/*!isAvx*/ );
+          goto decode_success;
+       }
+diff --git a/none/tests/amd64/redundantRexW.c b/none/tests/amd64/redundantRexW.c
+index e189267..0a50c3b 100644
+--- a/none/tests/amd64/redundantRexW.c
++++ b/none/tests/amd64/redundantRexW.c
+@@ -596,6 +596,23 @@ int main ( void )
+      after_test( "rex.WB subsd  -0x8(%r13),%xmm1", regs, mem );
+    }
+ 
++   /* cvtps2pd mem, reg   48 0f 5a 07     rex.W cvtps2pd  (%rdi),%xmm0 */
++   {
++     before_test( regs, mem );
++     __asm__ __volatile__(
++         "movq %0, %%r14\n"
++       "\tmovq %1, %%r15\n"
++       LOAD_XMMREGS_from_r14
++       "\tmovq %%r15, %%rdi\n"
++       "\t.byte 0x48,0x0f,0x5a,0x07\n"
++       SAVE_XMMREGS_to_r14
++          : /*out*/ : /*in*/ "r"(regs), "r"( -0 + (char*)&mem->dqw[2] )
++                    : /*trash*/ "r14","r15","memory", XMMREGS,
++                                "rdi"
++     );
++     after_test( "rex.W cvtps2pd  (%rdi),%xmm0", regs, mem );
++   }
++
+    free(regs);
+    free(mem);
+    return 0;
+diff --git a/none/tests/amd64/redundantRexW.stdout.exp b/none/tests/amd64/redundantRexW.stdout.exp
+index dd1697a..94b255a 100644
+--- a/none/tests/amd64/redundantRexW.stdout.exp
++++ b/none/tests/amd64/redundantRexW.stdout.exp
+@@ -648,3 +648,29 @@ after "rex.WB subsd  -0x8(%r13),%xmm1" (xmms in order [15..0]) {
+   %xmm15 ................................
+ }
+ 
++after "rex.W cvtps2pd  (%rdi),%xmm0" (dqws in order [15 .. 0]) {
++  [0]    ................................
++  [1]    ................................
++  [2]    ................................
++  [3]    ................................
++  [4]    ................................
++}
++after "rex.W cvtps2pd  (%rdi),%xmm0" (xmms in order [15..0]) {
++  %xmm 0 113a1c7d5554535213bd9cffd4535251
++  %xmm 1 ................................
++  %xmm 2 ................................
++  %xmm 3 ................................
++  %xmm 4 ................................
++  %xmm 5 ................................
++  %xmm 6 ................................
++  %xmm 7 ................................
++  %xmm 8 ................................
++  %xmm 9 ................................
++  %xmm10 ................................
++  %xmm11 ................................
++  %xmm12 ................................
++  %xmm13 ................................
++  %xmm14 ................................
++  %xmm15 ................................
++}
++

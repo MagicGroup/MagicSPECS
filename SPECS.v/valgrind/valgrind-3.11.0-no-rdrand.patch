@@ -1,0 +1,26 @@
+commit 1ab61656f71e94ce12b68de87f1e28cf3dc0c18c
+Author: mjw <mjw@8f6e269a-dfd6-0310-a8e1-e2731360e62c>
+Date:   Thu Oct 1 12:31:19 2015 +0000
+
+    Don't advertise RDRAND in cpuid for Core-i7-4910-like avx2 machine.
+    
+    Bug#353370. In amd64g_dirtyhelper_CPUID_avx2 we set the RDRAND bit
+    but we don't implement support for RDRAND. Turn the bit off so programs
+    don't try to use RDRAND when running under valgrind.
+    
+    git-svn-id: svn://svn.valgrind.org/vex/trunk@3197 8f6e269a-dfd6-0310-a8e1-e2731360e62c
+
+diff --git a/VEX/priv/guest_amd64_helpers.c b/VEX/priv/guest_amd64_helpers.c
+index e77d753..ab53e15 100644
+--- a/VEX/priv/guest_amd64_helpers.c
++++ b/VEX/priv/guest_amd64_helpers.c
+@@ -3101,7 +3101,8 @@ void amd64g_dirtyhelper_CPUID_avx2 ( VexGuestAMD64State* st )
+          SET_ABCD(0x0000000d, 0x756e6547, 0x6c65746e, 0x49656e69);
+          break;
+       case 0x00000001:
+-         SET_ABCD(0x000306c3, 0x02100800, 0x7ffafbff, 0xbfebfbff);
++         /* Don't advertise RDRAND support, bit 30 in ECX.  */
++         SET_ABCD(0x000306c3, 0x02100800, 0x3ffafbff, 0xbfebfbff);
+          break;
+       case 0x00000002:
+          SET_ABCD(0x76036301, 0x00f0b6ff, 0x00000000, 0x00c10000);
