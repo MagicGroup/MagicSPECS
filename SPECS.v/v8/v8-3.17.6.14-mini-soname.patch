@@ -1,0 +1,43 @@
+diff -up v8-3.17.6.14/build/common.gypi.mini-soname v8-3.17.6.14/build/common.gypi
+--- v8-3.17.6.14/build/common.gypi.mini-soname	2013-06-03 17:15:23.626000000 -0400
++++ v8-3.17.6.14/build/common.gypi	2013-06-03 17:20:06.688000000 -0400
+@@ -110,6 +110,9 @@
+     # For a shared library build, results in "libv8-<(soname_version).so".
+     'soname_version%': '',
+ 
++    # For a shared library build, pass -Wl,-soname,libv8.so.<(mini_soname).
++    'mini_soname%': '',
++
+     # Interpreted regexp engine exists as platform-independent alternative
+     # based where the regular expression is compiled to a bytecode.
+     'v8_interpreted_regexp%': 0,
+diff -up v8-3.17.6.14/Makefile.mini-soname v8-3.17.6.14/Makefile
+--- v8-3.17.6.14/Makefile.mini-soname	2013-06-03 17:14:10.305000000 -0400
++++ v8-3.17.6.14/Makefile	2013-06-03 17:15:07.985000000 -0400
+@@ -103,6 +103,10 @@ endif
+ ifdef soname_version
+   GYPFLAGS += -Dsoname_version=$(soname_version)
+ endif
++# mini_soname=1
++ifdef mini_soname
++  GYPFLAGS += -Dmini_soname=$(mini_soname)
++endif
+ # werror=no
+ ifeq ($(werror), no)
+   GYPFLAGS += -Dwerror=''
+diff -up v8-3.17.6.14/tools/gyp/v8.gyp.mini-soname v8-3.17.6.14/tools/gyp/v8.gyp
+--- v8-3.17.6.14/tools/gyp/v8.gyp.mini-soname	2013-06-03 17:11:25.738000000 -0400
++++ v8-3.17.6.14/tools/gyp/v8.gyp	2013-06-03 17:21:50.538000000 -0400
+@@ -87,6 +87,12 @@
+                 ['soname_version!=""', {
+                   'product_extension': 'so.<(soname_version)',
+                 }],
++                ['mini_soname!=""', {
++                  'link_settings': {
++                    'libraries': [
++                      '-Wl,-soname,libv8.so.<(mini_soname)',
++                  ]},  
++                }],
+               ],
+             },
+             {
