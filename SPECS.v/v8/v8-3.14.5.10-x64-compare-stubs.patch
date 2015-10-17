@@ -1,0 +1,116 @@
+From a960d1707a0038bfa5546c669b5b63c35bdb75c5 Mon Sep 17 00:00:00 2001
+From: Fedor Indutny <fedor@indutny.com>
+Date: Fri, 2 May 2014 22:44:45 +0400
+Subject: [PATCH] deps: backport 23f2736a from v8 upstream
+
+Original text:
+
+    Fix corner case in x64 compare stubs.
+
+    BUG=v8:2416
+
+    Review URL: https://codereview.chromium.org/11413087
+
+fix #7528
+---
+ src/x64/code-stubs-x64.cc            |  2 +-
+ test/mjsunit/regress/regress-2416.js | 75 ++++++++++++++++++++++++++++
+ 2 files changed, 76 insertions(+), 1 deletion(-)
+ create mode 100644 test/mjsunit/regress/regress-2416.js
+
+diff --git a/src/x64/code-stubs-x64.cc b/deps/v8/src/x64/code-stubs-x64.cc
+index f0f9c5d..9ad0167 100644
+--- a/src/x64/code-stubs-x64.cc
++++ b/src/x64/code-stubs-x64.cc
+@@ -5580,7 +5580,7 @@ void ICCompareStub::GenerateSmis(MacroAssembler* masm) {
+     __ subq(rdx, rax);
+     __ j(no_overflow, &done, Label::kNear);
+     // Correct sign of result in case of overflow.
+-    __ SmiNot(rdx, rdx);
++    __ not_(rdx);
+     __ bind(&done);
+     __ movq(rax, rdx);
+   }
+diff --git a/test/mjsunit/regress/regress-2416.js b/deps/v8/test/mjsunit/regress/regress-2416.js
+new file mode 100644
+index 0000000..02afeb9
+--- /dev/null
++++ b/test/mjsunit/regress/regress-2416.js
+@@ -0,0 +1,75 @@
++// Copyright 2012 the V8 project authors. All rights reserved.
++// Redistribution and use in source and binary forms, with or without
++// modification, are permitted provided that the following conditions are
++// met:
++//
++//     * Redistributions of source code must retain the above copyright
++//       notice, this list of conditions and the following disclaimer.
++//     * Redistributions in binary form must reproduce the above
++//       copyright notice, this list of conditions and the following
++//       disclaimer in the documentation and/or other materials provided
++//       with the distribution.
++//     * Neither the name of Google Inc. nor the names of its
++//       contributors may be used to endorse or promote products derived
++//       from this software without specific prior written permission.
++//
++// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
++// "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
++// LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
++// A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
++// OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
++// SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
++// LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
++// DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
++// THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
++// (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
++// OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
++
++assertFalse(2147483647 < -2147483648)
++assertFalse(2147483647 <= -2147483648)
++assertFalse(2147483647 == -2147483648)
++assertTrue(2147483647 >= -2147483648)
++assertTrue(2147483647 > -2147483648)
++
++assertTrue(-2147483648 < 2147483647)
++assertTrue(-2147483648 <= 2147483647)
++assertFalse(-2147483648 == 2147483647)
++assertFalse(-2147483648 >= 2147483647)
++assertFalse(-2147483648 > 2147483647)
++
++assertFalse(2147483647 < 2147483647)
++assertTrue(2147483647 <= 2147483647)
++assertTrue(2147483647 == 2147483647)
++assertTrue(2147483647 >= 2147483647)
++assertFalse(2147483647 > 2147483647)
++
++assertFalse(-2147483648 < -2147483648)
++assertTrue(-2147483648 <= -2147483648)
++assertTrue(-2147483648 == -2147483648)
++assertTrue(-2147483648 >= -2147483648)
++assertFalse(-2147483648 > -2147483648)
++
++
++assertFalse(1073741823 < -1073741824)
++assertFalse(1073741823 <= -1073741824)
++assertFalse(1073741823 == -1073741824)
++assertTrue(1073741823 >= -1073741824)
++assertTrue(1073741823 > -1073741824)
++
++assertTrue(-1073741824 < 1073741823)
++assertTrue(-1073741824 <= 1073741823)
++assertFalse(-1073741824 == 1073741823)
++assertFalse(-1073741824 >= 1073741823)
++assertFalse(-1073741824 > 1073741823)
++
++assertFalse(1073741823 < 1073741823)
++assertTrue(1073741823 <= 1073741823)
++assertTrue(1073741823 == 1073741823)
++assertTrue(1073741823 >= 1073741823)
++assertFalse(1073741823 > 1073741823)
++
++assertFalse(-1073741824 < -1073741824)
++assertTrue(-1073741824 <= -1073741824)
++assertTrue(-1073741824 == -1073741824)
++assertTrue(-1073741824 >= -1073741824)
++assertFalse(-1073741824 > -1073741824)
+-- 
+1.9.3

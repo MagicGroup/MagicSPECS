@@ -1,0 +1,122 @@
+From f9ced08de30c37838756e8227bd091f80ad9cafa Mon Sep 17 00:00:00 2001
+From: Ben Noordhuis <ben@strongloop.com>
+Date: Thu, 24 Apr 2014 04:27:40 +0200
+Subject: [PATCH] deps: make v8 use CLOCK_REALTIME_COARSE
+
+Date.now() indirectly calls gettimeofday() on Linux and that's a system
+call that is extremely expensive on virtualized systems when the host
+operating system has to emulate access to the hardware clock.
+
+Case in point: output from `perf record -c 10000 -e cycles:u -g -i`
+for a benchmark/http_simple bytes/8 benchmark with a light load of
+50 concurrent clients:
+
+    53.69%     node  node                 [.] v8::internal::OS::TimeCurrentMillis()
+               |
+               --- v8::internal::OS::TimeCurrentMillis()
+                  |
+                  |--99.77%-- v8::internal::Runtime_DateCurrentTime(v8::internal::Arguments, v8::internal::Isolate*)
+                  |          0x23587880618e
+
+That's right - over half of user time spent inside the V8 function that
+calls gettimeofday().
+
+Notably, nearly all system time gets attributed to acpi_pm_read(), the
+kernel function that reads the ACPI power management timer:
+
+    32.49%     node  [kernel.kallsyms]    [k] acpi_pm_read
+               |
+               --- acpi_pm_read
+                  |
+                  |--98.40%-- __getnstimeofday
+                  |          getnstimeofday
+                  |          |
+                  |          |--71.61%-- do_gettimeofday
+                  |          |          sys_gettimeofday
+                  |          |          system_call_fastpath
+                  |          |          0x7fffbbaf6dbc
+                  |          |          |
+                  |          |          |--98.72%-- v8::internal::OS::TimeCurrentMillis()
+
+The cost of the gettimeofday() system call is normally measured in
+nanoseconds but we were seeing 100 us averages and spikes >= 1000 us.
+The numbers were so bad, my initial hunch was that the node process was
+continuously getting rescheduled inside the system call...
+
+v8::internal::OS::TimeCurrentMillis()'s most frequent caller is
+v8::internal::Runtime_DateCurrentTime(), the V8 run-time function
+that's behind Date.now().  The timeout handling logic in lib/http.js
+and lib/net.js calls into lib/timers.js and that module will happily
+call Date.now() hundreds or even thousands of times per second.
+If you saw exports._unrefActive() show up in --prof output a lot,
+now you know why.
+
+That's why this commit makes V8 switch over to clock_gettime() on Linux.
+In particular, it checks if CLOCK_REALTIME_COARSE is available and has
+a resolution <= 1 ms because in that case the clock_gettime() call can
+be fully serviced from the vDSO.
+
+It speeds up the aforementioned benchmark by about 100% on the affected
+systems and should go a long way toward addressing the latency issues
+that StrongLoop customers have been reporting.
+
+This patch will be upstreamed as a CR against V8 3.26.  I'm sending it
+as a pull request for v0.10 first because that's what our users are
+running and because the delta between 3.26 and 3.14 is too big to
+reasonably back-port the patch.  I'll open a pull request for the
+master branch once the CR lands upstream.
+
+Signed-off-by: Trevor Norris <trev.norris@gmail.com>
+Signed-off-by: Fedor Indutny <fedor@indutny.com>
+---
+ src/platform-posix.cc | 26 ++++++++++++++++++++++----
+ 1 file changed, 22 insertions(+), 4 deletions(-)
+
+diff --git a/src/platform-posix.cc b/src/platform-posix.cc
+index ad74eba..3c86868 100644
+--- a/src/platform-posix.cc
++++ b/src/platform-posix.cc
+@@ -188,19 +188,37 @@ int OS::GetUserTime(uint32_t* secs,  uint32_t* usecs) {
+ 
+ 
+ double OS::TimeCurrentMillis() {
+-  struct timeval tv;
+-  if (gettimeofday(&tv, NULL) < 0) return 0.0;
+-  return (static_cast<double>(tv.tv_sec) * 1000) +
+-         (static_cast<double>(tv.tv_usec) / 1000);
++  return static_cast<double>(Ticks()) / 1000;
+ }
+ 
+ 
+ int64_t OS::Ticks() {
++#if defined(__linux__)
++  static clockid_t clock_id = static_cast<clockid_t>(-1);
++  struct timespec spec;
++  if (clock_id == static_cast<clockid_t>(-1)) {
++    // CLOCK_REALTIME_COARSE may not be defined by the system headers but
++    // might still be supported by the kernel so use the clock id directly.
++    // Only use CLOCK_REALTIME_COARSE when its granularity <= 1 ms.
++    const clockid_t clock_realtime_coarse = 5;
++    if (clock_getres(clock_realtime_coarse, &spec) == 0 &&
++        spec.tv_nsec <= 1000 * 1000) {
++      clock_id = clock_realtime_coarse;
++    } else {
++      clock_id = CLOCK_REALTIME;
++    }
++  }
++  if (clock_gettime(clock_id, &spec) != 0) {
++    return 0;  // Not really possible.
++  }
++  return static_cast<int64_t>(spec.tv_sec) * 1000000 + (spec.tv_nsec / 1000);
++#else
+   // gettimeofday has microsecond resolution.
+   struct timeval tv;
+   if (gettimeofday(&tv, NULL) < 0)
+     return 0;
+   return (static_cast<int64_t>(tv.tv_sec) * 1000000) + tv.tv_usec;
++#endif
+ }
+ 
+ 
+-- 
+1.9.1

@@ -1,0 +1,37 @@
+From 0ff51c6e063e3eea9e4d9ea68edc82d935626fc7 Mon Sep 17 00:00:00 2001
+From: Julien Gilli <julien.gilli@joyent.com>
+Date: Fri, 28 Nov 2014 15:33:35 -0800
+Subject: [PATCH] deps: backport 2ad2237 from v8 upstream
+
+Original commit message:
+
+Fix Unhandled ReferenceError in debug-debugger.js
+
+This fixes following exception in Sky on attempt to set a breakpoint
+"Unhandled: Uncaught ReferenceError: break_point is not defined"
+I think this happens in Sky but not in Chrome because Sky scripts are executed in strict mode.
+
+BUG=None
+LOG=N
+R=yangguo@chromium.org
+
+Review URL: https://codereview.chromium.org/741683002
+
+Cr-Commit-Position: refs/heads/master@{#25415}
+---
+ src/debug-debugger.js | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/debug-debugger.js b/src/debug-debugger.js
+index dfad902..a27961f 100644
+--- a/src/debug-debugger.js
++++ b/src/debug-debugger.js
+@@ -442,7 +442,7 @@ ScriptBreakPoint.prototype.set = function (script) {
+   if (position === null) return;
+ 
+   // Create a break point object and set the break point.
+-  break_point = MakeBreakPoint(position, this);
++  var break_point = MakeBreakPoint(position, this);
+   break_point.setIgnoreCount(this.ignoreCount());
+   var actual_position = %SetScriptBreakPoint(script, position, break_point);
+   if (IS_UNDEFINED(actual_position)) {

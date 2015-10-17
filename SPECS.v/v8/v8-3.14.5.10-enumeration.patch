@@ -1,0 +1,30 @@
+From 196184d332ba2d2defc56ad0b37653659a7d3ec0 Mon Sep 17 00:00:00 2001
+From: "svenpanne@chromium.org" <svenpanne@chromium.org>
+Date: Fri, 9 Nov 2012 11:30:05 +0000
+Subject: [PATCH] v8: backport codereview.chromium.org/11362182
+
+Keep the number of descriptors below
+DescriptorArray::kMaxNumberOfDescriptors even for accessors
+
+Review URL: https://codereview.chromium.org/11362182
+---
+ src/objects.cc | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/src/objects.cc b/src/objects.cc
+--- a/src/objects.cc
++++ b/src/objects.cc
+@@ -4453,7 +4453,9 @@ MaybeObject* JSObject::DefinePropertyAccessor(String* name,
+   // to do a lookup, which seems to be a bit of overkill.
+   Heap* heap = GetHeap();
+   bool only_attribute_changes = getter->IsNull() && setter->IsNull();
+-  if (HasFastProperties() && !only_attribute_changes) {
++  if (HasFastProperties() && !only_attribute_changes &&
++      (map()->NumberOfOwnDescriptors() <
++       DescriptorArray::kMaxNumberOfDescriptors)) {
+     MaybeObject* getterOk = heap->undefined_value();
+     if (!getter->IsNull()) {
+       getterOk = DefineFastAccessor(name, ACCESSOR_GETTER, getter, attributes);
+--
+1.8.5.1
+
