@@ -1,8 +1,10 @@
 Name:           usbredir
-Version:        0.6
-Release:        1%{?dist}
+Version:	0.7
+Release:	1%{?dist}
 Summary:        USB network redirection protocol libraries
+Summary(zh_CN.UTF-8): USB 网络重定向协议库
 Group:          System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 License:        LGPLv2+
 URL:            http://spice-space.org/page/UsbRedir
 Source0:        http://spice-space.org/download/%{name}/%{name}-%{version}.tar.bz2
@@ -22,26 +24,36 @@ All that an application wishing to implement a USB host needs to do is:
 * Provide write and read callbacks for the actual transport of usbredir data
 * Monitor for usbredir and libusb read/write events and call their handlers
 
+%description -l zh_CN.UTF-8
+USB 网络重定向协议库。
 
 %package        devel
 Summary:        Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       %{name}%{?_isa} = %{version}-%{release}
 
 %description    devel
 The %{name}-devel package contains libraries and header files for
 developing applications that use %{name}.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %package        server
 Summary:        Simple USB host TCP server
+Summary(zh_CN.UTF-8): 简单的 USB 主机 TCP 服务器
 Group:          System Environment/Daemons
+Group(zh_CN.UTF-8): 系统环境/服务
 License:        GPLv2+
 Requires:       %{name}%{?_isa} = %{version}-%{release}
 
 %description    server
 A simple USB host TCP server, using libusbredirhost.
 
+%description server -l zh_CN.UTF-8
+简单的 USB 主机 TCP 服务器。
 
 %prep
 %setup -q
@@ -55,7 +67,7 @@ make %{?_smp_mflags} V=1
 %install
 make install DESTDIR=$RPM_BUILD_ROOT
 rm $RPM_BUILD_ROOT%{_libdir}/libusbredir*.la
-
+magic_rpm_clean.sh
 
 %post -p /sbin/ldconfig
 %postun -p /sbin/ldconfig
@@ -78,6 +90,9 @@ rm $RPM_BUILD_ROOT%{_libdir}/libusbredir*.la
 
 
 %changelog
+* Sat Oct 17 2015 Liu Di <liudidi@gmail.com> - 0.7-1
+- 更新到 0.7
+
 * Thu Dec 13 2012 Hans de Goede <hdegoede@redhat.com> - 0.6-1
 - Update to upstream 0.6 release
 

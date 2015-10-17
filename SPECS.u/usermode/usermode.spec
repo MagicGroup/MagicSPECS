@@ -1,9 +1,11 @@
 Summary: Tools for certain user account management tasks
+Summary(zh_CN.UTF-8): 管理用户使用的工具
 Name: usermode
-Version: 1.108
-Release: 3%{?dist}
+Version: 1.111
+Release: 2%{?dist}
 License: GPLv2+
 Group: Applications/System
+Group(zh_CN.UTF-8): 应用程序/系统
 URL: https://fedorahosted.org/usermode/
 Source: https://fedorahosted.org/releases/u/s/usermode/usermode-%{version}.tar.xz
 Source1: config-util
@@ -15,13 +17,18 @@ BuildRequires: util-linux
 
 %package gtk
 Summary: Graphical tools for certain user account management tasks
+Summary(zh_CN.UTF-8): %{name} 的图形化工具
 Group: Applications/System
+Group(zh_CN.UTF-8): 应用程序/系统
 Requires: %{name} = %{version}-%{release}
 
 %description
 The usermode package contains the userhelper program, which can be
 used to allow configured programs to be run with superuser privileges
 by ordinary users.
+
+%description -l zh_CN.UTF-8
+管理用户使用的工具。
 
 %description gtk
 The usermode-gtk package contains several graphical tools for users:
@@ -32,6 +39,9 @@ passwords.
 
 Install the usermode-gtk package if you would like to provide users with
 graphical tools for certain account management tasks.
+
+%description gtk -l zh_CN.UTF-8
+%{name} 的图形化工具。
 
 %prep
 %setup -q
@@ -48,15 +58,7 @@ make install DESTDIR=$RPM_BUILD_ROOT INSTALL='install -p'
 ln -sf usermount $RPM_BUILD_ROOT%{_bindir}/userformat
 ln -s usermount.1 $RPM_BUILD_ROOT%{_mandir}/man1/userformat.1
 
-# We set up the shutdown programs to be wrapped in this package.  Other
-# packages are on their own....
-mkdir -p $RPM_BUILD_ROOT/etc/pam.d $RPM_BUILD_ROOT/etc/security/console.apps
-for wrappedapp in halt reboot poweroff ; do
-	ln -s consolehelper $RPM_BUILD_ROOT%{_bindir}/${wrappedapp}
-	install -p -m644 $wrappedapp \
-		$RPM_BUILD_ROOT/etc/security/console.apps/${wrappedapp}
-	install -p -m644 shutdown.pamd $RPM_BUILD_ROOT/etc/pam.d/${wrappedapp}
-done
+mkdir -p $RPM_BUILD_ROOT/etc/security/console.apps
 install -p -m 644 %{SOURCE1} \
 	$RPM_BUILD_ROOT/etc/security/console.apps/config-util
 
@@ -67,8 +69,8 @@ for i in redhat-userinfo.desktop redhat-userpasswd.desktop \
 		--dir $RPM_BUILD_ROOT%{_datadir}/applications \
 		$RPM_BUILD_ROOT%{_datadir}/applications/$i
 done
-
-%find_lang %{name}
+magic_rpm_clean.sh
+%find_lang %{name} || :
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -81,17 +83,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man8/userhelper.8*
 %{_mandir}/man8/consolehelper.8*
 # PAM console wrappers
-%{_bindir}/halt
-%{_bindir}/reboot
-%{_bindir}/poweroff
-%exclude %{_bindir}/shutdown
-%config(noreplace) /etc/pam.d/halt
-%config(noreplace) /etc/pam.d/reboot
-%config(noreplace) /etc/pam.d/poweroff
 %config(noreplace) /etc/security/console.apps/config-util
-%config(noreplace) /etc/security/console.apps/halt
-%config(noreplace) /etc/security/console.apps/reboot
-%config(noreplace) /etc/security/console.apps/poweroff
 
 %files gtk
 %defattr(-,root,root,-)
@@ -112,6 +104,12 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/applications/*
 
 %changelog
+* Sat Oct 17 2015 Liu Di <liudidi@gmail.com> - 1.111-2
+- 为 Magic 3.0 重建
+
+* Sat Oct 17 2015 Liu Di <liudidi@gmail.com> - 1.111-1
+- 更新到 1.111
+
 * Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 1.108-3
 - 为 Magic 3.0 重建
 

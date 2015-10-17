@@ -10,10 +10,12 @@
 
 Name:           uuid
 Version:        1.6.2
-Release:        19%{?dist}
+Release:        21%{?dist}
 Summary:        Universally Unique Identifier library
+Summary(zh_CN.UTF-8): 通用唯一标识符库
 License:        MIT
 Group:          System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 URL:            http://www.ossp.org/pkg/lib/uuid/
 Source0:        ftp://ftp.ossp.org/pkg/lib/uuid/uuid-%{version}.tar.gz
 Patch0:         uuid-1.6.1-ossp.patch
@@ -25,6 +27,9 @@ Patch3:         uuid-1.6.2-hwaddr.patch
 
 # do not strip binaries
 Patch4:         uuid-1.6.2-nostrip.patch
+Patch5: uuid-1.6.2-manfix.patch
+Patch6: uuid-aarch64.patch
+
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  libtool
@@ -40,35 +45,55 @@ API bindings are provided for the languages ISO-C++:1998, Perl:5 and
 PHP:4/5. Optional backward compatibility exists for the ISO-C DCE-1.1
 and Perl Data::UUID APIs.
 
+%description -l zh_CN.UTF-8
+通用唯一标识符库。
+
 %package devel
 Summary:        Development support for Universally Unique Identifier library
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       pkgconfig
 Requires:       %{name} = %{version}-%{release}
 
 %description devel
 Development headers and libraries for OSSP uuid.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
 %package c++
 Summary:        C++ support for Universally Unique Identifier library
+Summary(zh_CN.UTF-8): %{name} 的 C++ 支持
 Group:          System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 Requires:       %{name} = %{version}-%{release}
 
 %description c++
 C++ libraries for OSSP uuid.
 
+%description c++ -l zh_CN.UTF-8
+%{name} 的 C++ 支持.
+
 %package c++-devel
 Summary:        C++ development support for Universally Unique Identifier library
+Summary(zh_CN.UTF-8): %{name} 的 C++ 开发包
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       %{name}-c++ = %{version}-%{release}
 Requires:       %{name}-devel = %{version}-%{release}
 
 %description c++-devel
 C++ development headers and libraries for OSSP uuid.
 
+%description c++-devel -l zh_CN.UTF-8
+%{name} 的 C++ 开发包。
+
 %package perl
 Summary:        Perl support for Universally Unique Identifier library
+Summary(zh_CN.UTF-8): %{name} 的 Perl 绑定
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 BuildRequires:  perl(ExtUtils::MakeMaker)
 BuildRequires:  perl(Test::More)
 Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
@@ -77,9 +102,14 @@ Requires:       %{name} = %{version}-%{release}
 %description perl
 Perl OSSP uuid modules, which includes a Data::UUID replacement.
 
+%description perl -l zh_CN.UTF-8
+%{name} 的 Perl 绑定。
+
 %package php
 Summary:        PHP support for Universally Unique Identifier library
+Summary(zh_CN.UTF-8): %{name} 的 php 绑定
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 BuildRequires:  php-devel
 Requires:       %{name} = %{version}-%{release}
 %if 0%{?php_zend_api:1}
@@ -92,9 +122,14 @@ Requires: php-api = %{php_apiver}
 %description php
 PHP OSSP uuid module.
 
+%description php -l zh_CN.UTF-8
+%{name} 的 php 绑定。
+
 %package pgsql
 Summary:        PostgreSQL support for Universally Unique Identifier library
+Summary(zh_CN.UTF-8): %{name} 的 PostreSQL 支持
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 BuildRequires:  postgresql-devel
 Requires:       postgresql%{_isa}
 Requires:       %{_datadir}/pgsql
@@ -103,22 +138,35 @@ Requires:       %{name} = %{version}-%{release}
 %description pgsql
 PostgreSQL OSSP uuid module.
 
+%description pgsql -l zh_CN.UTF-8
+%{name} 的 PostgreSQL 支持。
+
 %package dce
 Summary:        DCE support for Universally Unique Identifier library
+Summary(zh_CN.UTF-8): %{name} 的 DCE 支持
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       %{name} = %{version}-%{release}
 
 %description dce
 DCE OSSP uuid library.
 
+%description dce -l zh_CN.UTF-8
+%{name} 的 DCE 支持。
+
 %package dce-devel
 Summary:        DCE development support for Universally Unique Identifier library
+Summary(zh_CN.UTF-8): %{name}-dce 的开发包
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       %{name}-dce = %{version}-%{release}
 Requires:       %{name}-devel = %{version}-%{release}
 
 %description dce-devel
 DCE development headers and libraries for OSSP uuid.
+
+%description dce-devel -l zh_CN.UTF-8
+%{name}-dce 的开发包。
 
 %prep
 %setup -q
@@ -127,6 +175,8 @@ DCE development headers and libraries for OSSP uuid.
 %patch2 -p1 -b .php54
 %patch3 -p1 -b .hwaddr
 %patch4 -p1 -b .nostrip
+%patch5 -p1 -b .manfix
+%patch6 -p1 -b .aarch64
 
 %build
 # Build the library.
@@ -279,6 +329,12 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/libossp-uuid_dce.so
 
 %changelog
+* Sat Oct 17 2015 Liu Di <liudidi@gmail.com> - 1.6.2-21
+- 为 Magic 3.0 重建
+
+* Sat Oct 17 2015 Liu Di <liudidi@gmail.com> - 1.6.2-20
+- 为 Magic 3.0 重建
+
 * Thu Sep 17 2015 Liu Di <liudidi@gmail.com> - 1.6.2-19
 - 为 Magic 3.0 重建
 

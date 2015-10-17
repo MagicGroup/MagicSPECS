@@ -7,12 +7,13 @@
 %global uhm_api_version 0.0
 
 Name:           uhttpmock
-Version:        0.3.0
-Release:        2%{?dist}
+Version:	0.5.0
+Release:	1%{?dist}
 Summary:        HTTP web service mocking library
+Summary(zh_CN.UTF-8): HTTP 网页服务模仿库
 License:        LGPLv2
-URL:            http://gitorious.org/uhttpmock/
-Source0:        http://tecnocode.co.uk/downloads/%{name}-%{version}.tar.xz
+URL:            https://gitlab.com/groups/uhttpmock
+Source0:        https://tecnocode.co.uk/downloads/uhttpmock/uhttpmock-%{version}.tar.xz
 
 BuildRequires:  glib2-devel >= %{glib2_version}
 BuildRequires:  libsoup-devel >= %{libsoup_version}
@@ -22,21 +23,28 @@ BuildRequires:  gtk-doc
 BuildRequires:  vala-tools
 BuildRequires:  vala-devel
 
-Requires:       glib2 >= %{glib2_version}
-Requires:       libsoup >= %{libsoup_version}
+Requires:       glib2%{?_isa} >= %{glib2_version}
+Requires:       libsoup%{?_isa} >= %{libsoup_version}
 
 %description
 uhttpmock is a project for mocking web service APIs which use HTTP or HTTPS.
 It provides a library, libuhttpmock, which implements recording and
 playback of HTTP request–response traces.
 
+%description -l zh_CN.UTF-8
+HTTP 网页服务模仿库。
+
 %package devel
 Summary:        Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Requires:       %{name}%{?_isa} = %{version}-%{release}
 
 %description devel
 This package contains libraries, header files and documentation for
 developing applications that use %{name}.
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -56,13 +64,15 @@ make check
 make DESTDIR=$RPM_BUILD_ROOT install
 
 rm -f $RPM_BUILD_ROOT%{_libdir}/*.la
+magic_rpm_clean.sh
 
 %post -p /sbin/ldconfig
 
 %postun -p /sbin/ldconfig
 
 %files
-%doc README COPYING NEWS AUTHORS
+%license COPYING
+%doc README NEWS AUTHORS
 %{_libdir}/libuhttpmock-%{uhm_api_version}.so.0*
 %{_libdir}/girepository-1.0/Uhm-%{uhm_api_version}.typelib
 
@@ -75,7 +85,11 @@ rm -f $RPM_BUILD_ROOT%{_libdir}/*.la
 %{_datadir}/vala/vapi/libuhttpmock-%{uhm_api_version}.vapi
 %doc %{_datadir}/gtk-doc/html/libuhttpmock-%{uhm_api_version}/
 
+
 %changelog
+* Fri Oct 16 2015 Liu Di <liudidi@gmail.com> - 0.5.0-1
+- 更新到 0.5.0
+
 * Wed Jul 16 2014 Liu Di <liudidi@gmail.com> - 0.3.0-2
 - 为 Magic 3.0 重建
 

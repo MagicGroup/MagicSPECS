@@ -1,18 +1,20 @@
 Summary: A complete ODBC driver manager for Linux
+Summary(zh_CN.UTF-8): Linux 下的 ODBC 驱动管理器
 Name: unixODBC
-Version: 2.3.1
-Release: 2%{?dist}
+Version:	2.3.4
+Release:	1%{?dist}
 Group: System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 URL: http://www.unixODBC.org/
 # Programs are GPL, libraries are LGPL, except News Server library is GPL.
 License: GPLv2+ and LGPLv2+
 
-Source: http://www.unixODBC.org/%{name}-%{version}.tar.gz
+#Source: http://www.unixODBC.org/%{name}-%{version}.tar.gz
+Source: ftp://ftp.unixodbc.org/pub/unixODBC/unixODBC-%{version}.tar.gz
 Source1: odbcinst.ini
 Source4: conffile.h
 Source5: README.fedora
 
-Patch1: depcomp.patch
 Patch6: export-symbols.patch
 Patch8: so-version-bump.patch
 Patch9: keep-typedefs.patch
@@ -29,9 +31,14 @@ Install unixODBC if you want to access databases through ODBC.
 You will also need the mysql-connector-odbc package if you want to access
 a MySQL database, and/or the postgresql-odbc package for PostgreSQL.
 
+%description -l zh_CN.UTF-8
+Linux 下的 ODBC 驱动管理器。
+
 %package devel
 Summary: Development files for programs which will use the unixODBC library
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: %{name}%{?_isa} = %{version}-%{release}
 
 %description devel
@@ -39,9 +46,11 @@ The unixODBC package can be used to access databases through ODBC
 drivers. If you want to develop programs that will access data through
 ODBC, you need to install this package.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
 %prep
 %setup -q
-%patch1 -p1
 %patch6 -p1
 %patch8 -p1
 %patch9 -p1
@@ -126,6 +135,8 @@ do
     grep -v "/$lib$" devel-so-list > devel-so-list.x
     mv -f devel-so-list.x devel-so-list
 done
+magic_rpm_clean.sh
+
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -140,6 +151,8 @@ rm -rf $RPM_BUILD_ROOT
 %{_bindir}/dltest
 %{_bindir}/iusql
 %{_bindir}/odbc_config
+%{_bindir}/slencheck
+%{_mandir}/man*/*
 
 %files devel -f devel-so-list
 %defattr(-,root,root)
@@ -149,6 +162,9 @@ rm -rf $RPM_BUILD_ROOT
 %postun -p /sbin/ldconfig
 
 %changelog
+* Fri Oct 16 2015 Liu Di <liudidi@gmail.com> - 2.3.4-1
+- 更新到 2.3.4
+
 * Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 2.3.1-2
 - 为 Magic 3.0 重建
 

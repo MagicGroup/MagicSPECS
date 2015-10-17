@@ -1,0 +1,16 @@
+#!/bin/bash
+url="www.unicode.org/Public/zipped/?C=M&O=D"
+new1="DIR "
+new2=" "
+downcommand="wget -q" 
+pushd $(dirname $0) > /dev/null
+rm -f index.html && $downcommand $url -O index.html
+if [ -f index.html ];then
+	newver=`html2text index.html |grep DIR |grep -v latest |grep -v Parent|head -n1|sed -e 's/^.*]//' |sed -e 's/\/.*$//g'`
+	echo $newver
+else
+	echo "不能正常取得新版本号"
+	exit 1
+fi
+rm -f index.html
+popd > /dev/null

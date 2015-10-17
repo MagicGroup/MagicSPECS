@@ -3,9 +3,10 @@
 %global ucddir %{unicodedir}/ucd
 
 Name:           unicode-ucd
-Version:        6.2.0
-Release:        3%{?dist}
+Version:	8.0.0
+Release:	2%{?dist}
 Summary:        Unicode Character Database
+Summary(zh_CN.UTF-8): Unicode 字符数据库
 
 # https://fedoraproject.org/wiki/Licensing/MIT#Modern_Style_without_sublicense_.28Unicode.29
 License:        MIT
@@ -19,6 +20,8 @@ The Unicode Character Database (UCD) consists of a number of data files listing
 Unicode character properties and related data. It also includes data files
 containing test data for conformance to several important Unicode algorithms.
 
+%description -l zh_CN.UTF-8
+Unicode 字符数据库。
 
 %prep
 %setup -q -c
@@ -43,6 +46,12 @@ cp -p %{SOURCE1} .
 
 
 %changelog
+* Fri Oct 16 2015 Liu Di <liudidi@gmail.com> - 8.0.0-2
+- 为 Magic 3.0 重建
+
+* Fri Oct 16 2015 Liu Di <liudidi@gmail.com> - 8.0.0-1
+- 更新到 8.0.0
+
 * Wed Oct 24 2012 Jens Petersen <petersen@redhat.com> - 6.2.0-3
 - do not use macro in comment
 

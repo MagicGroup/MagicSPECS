@@ -1,9 +1,11 @@
 Name: uClibc
 Version: 0.9.33.2
-Release: 7%{?dist}
+Release: 8%{?dist}
 Summary: C library for embedded Linux
+Summary(zh_CN.UTF-8): 嵌入式 Linux 使用的 C 库
 
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 License: LGPLv2
 URL: http://www.uclibc.org/
 Source0: http://www.uclibc.org/downloads/%{name}-%{version}.tar.xz
@@ -21,9 +23,14 @@ uClibc is a C library for developing embedded Linux systems.
 It is much smaller than the GNU C Library, but nearly all applications
 supported by glibc also work perfectly with uClibc.
 
+%description -l zh_CN.UTF-8
+嵌入式 Linux 使用的 C 库。
+
 %package devel
 Summary: Header files and libraries for uClibc library
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Provides: uClibc-static = %{version}-%{release}
 
 %description devel
@@ -32,6 +39,9 @@ It is much smaller than the GNU C Library, but nearly all applications
 supported by glibc also work perfectly with uClibc.
 This package contains the header files and libraries
 needed for uClibc package.
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q -n %{name}-%{version}
@@ -76,6 +86,7 @@ rm -rf  $RPM_BUILD_ROOT/lib/
 mkdir -p $RPM_BUILD_ROOT/%{_includedir}/uClibc
 mv  $RPM_BUILD_ROOT/include/*  $RPM_BUILD_ROOT/%{_includedir}/uClibc
 rm -rf  $RPM_BUILD_ROOT/include/
+magic_rpm_clean.sh
 
 %files devel
 %defattr(-,root,root,-)
@@ -86,6 +97,9 @@ rm -rf  $RPM_BUILD_ROOT/include/
 %{_libdir}/uClibc
 
 %changelog
+* Fri Oct 16 2015 Liu Di <liudidi@gmail.com> - 0.9.33.2-8
+- 为 Magic 3.0 重建
+
 * Tue Jun 30 2015 Liu Di <liudidi@gmail.com> - 0.9.33.2-7
 - 为 Magic 3.0 重建
 

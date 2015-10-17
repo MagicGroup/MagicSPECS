@@ -1,10 +1,12 @@
 ### Header
 Summary: A collection of basic system utilities
+Summary(zh_CN.UTF-8): 基本的系统工具程序集合
 Name: util-linux
 Version: 2.27
-Release: 1%{?dist}
+Release: 2%{?dist}
 License: GPLv2 and GPLv2+ and LGPLv2+ and BSD with advertising and Public Domain
 Group: System Environment/Base
+Group(zh_CN.UTF-8): 系统环境/基本
 URL: http://en.wikipedia.org/wiki/Util-linux
 
 ### Macros
@@ -13,19 +15,11 @@ URL: http://en.wikipedia.org/wiki/Util-linux
 
 %define compldir %{_datadir}/bash-completion/completions/
 
-%if 0%{?fedora} >= 23
 %define pypkg python3
 %define pyver 3
-%else
-%define pypkg python
-%define pyver 2
-%endif
-
 
 ### Dependencies
-BuildRequires: audit-libs-devel >= 1.0.6
 BuildRequires: gettext-devel
-BuildRequires: libselinux-devel
 BuildRequires: ncurses-devel
 BuildRequires: pam-devel
 BuildRequires: zlib-devel
@@ -77,7 +71,6 @@ Provides: /sbin/nologin
 
 Requires(post): coreutils
 Requires: pam >= 1.1.3-7, /etc/pam.d/system-auth
-Requires: audit-libs >= 1.0.6
 Requires: libuuid = %{version}-%{release}
 Requires: libblkid = %{version}-%{release}
 Requires: libmount = %{version}-%{release}
@@ -278,8 +271,8 @@ export DAEMON_LDFLAGS="$SUID_LDFLAGS"
 	--with-python=%{pyver} \
 	--with-systemd \
 	--with-udev \
-	--with-selinux \
-	--with-audit \
+	--without-selinux \
+	--without-audit \
 	--with-utempter \
 	--disable-makeinstall-chown \
 %ifarch s390 s390x
@@ -894,6 +887,9 @@ exit 0
 %{_libdir}/python*/site-packages/libmount/*
 
 %changelog
+* Sat Oct 17 2015 Liu Di <liudidi@gmail.com> - 2.27-2
+- 为 Magic 3.0 重建
+
 * Mon Sep  7 2015 Karel Zak <kzak@redhat.com> - 2.27
 - upgrade to v2.27
 

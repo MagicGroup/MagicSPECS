@@ -1,6 +1,6 @@
 Name:           unique
 Version:        1.1.6
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        Single instance support for applications
 Summary(zh_CN.UTF-8):	应用程序的单一实例支持
 
@@ -13,6 +13,7 @@ Source0:        http://www.gnome.org/~ebassi/source/libunique-%{version}.tar.bz2
 # Fix build -- upstream dead (replaced with GtkApplication)
 Patch0:    fix-unused-but-set-variable.patch
 Patch1:    fix-disable-deprecated.patch
+Patch2:	   libunique-1.1.6-format-security.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  dbus-glib-devel
@@ -50,6 +51,7 @@ Headers and libraries for Unique.
 %setup -q -n libunique-%{version}
 %patch0 -p1
 %patch1 -p1
+%patch2 -p1
 
 %build
 %configure --enable-gtk-doc --disable-static --enable-introspection=no --enable-maintainer-flags=no
@@ -81,6 +83,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/lib*.so
 
 %changelog
+* Fri Oct 16 2015 Liu Di <liudidi@gmail.com> - 1.1.6-4
+- 为 Magic 3.0 重建
+
 * Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 1.1.6-3
 - 为 Magic 3.0 重建
 

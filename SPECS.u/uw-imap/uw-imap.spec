@@ -1,26 +1,22 @@
 
 # Fedora review: http://bugzilla.redhat.com/166008
 
-%if 0%{?fedora}
 %define _with_devel 1
 # ship static lib, matches default upstream config
 # as convenience to users, since our hacked shlib can potentially break 
 # abi semi-often
 %define _with_static 1
-%endif
-
-%if 0%{?rhel} > 5
-%define _with_system_libc_client 1
-%endif
 
 Summary: UW Server daemons for IMAP and POP network mail protocols
+Summary(zh_CN.UTF-8): IMAP 和 POP 网络邮件协议的 UW 服务
 Name:	 uw-imap 
 Version: 2007f
-Release: 3%{?dist}
+Release: 4%{?dist}
 
 # See LICENSE.txt, http://www.apache.org/licenses/LICENSE-2.0
 License: ASL 2.0 
 Group: 	 System Environment/Daemons
+Group(zh_CN.UTF-8): 系统环境/服务
 URL:	 http://www.washington.edu/imap/
 # Old (non-latest) releases live at  ftp://ftp.cac.washington.edu/imap/old/
 Source0: ftp://ftp.cac.washington.edu/imap/imap-%{version}%{?beta}%{?dev}%{?snap}.tar.gz
@@ -30,13 +26,7 @@ BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 #define somajor   %{version} 
 %define somajor   2007
 %define shlibname lib%{soname}.so.%{somajor}
-%if 0%{?fedora} > 2 || 0%{?rhel} > 5
 %define imap_libs lib%{soname}
-%else
-# rhel (4,5) requires parallel-installable shlib, to not conflict with 
-# os-provided libc-client
-%define imap_libs lib%{soname}%{somajor}
-%endif
 
 # FC4+ uses %%_sysconfdir/pki/tls, previous releases used %%_datadir/ssl
 %global ssldir  %(if [ -d %{_sysconfdir}/pki/tls ]; then echo "%{_sysconfdir}/pki/tls"; else echo "%{_datadir}/ssl"; fi)
@@ -64,6 +54,7 @@ Patch5: imap-2007e-overflow.patch
 Patch9: imap-2007e-shared.patch
 Patch10: imap-2007e-authmd5.patch
 Patch11: imap-2007e-system_c_client.patch
+Patch12: imap-2007f-format-security.patch
 
 BuildRequires: krb5-devel
 BuildRequires: openssl-devel
@@ -87,9 +78,14 @@ mail for users and allows users to download their mail to their local
 machine for reading. The IMAP protocol allows a user to read mail on a
 remote machine without downloading it to their local machine.
 
+%description -l zh_CN.UTF-8
+IMAP 和 POP 邮件协议的 UW 服务。
+
 %package -n %{imap_libs} 
-Summary: UW C-client mail library 
+Summary: UW C-client mail library
+Summary(zh_CN.UTF-8): %{name} 的运行库 
 Group:	 System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 Obsoletes: libc-client2004d < 1:2004d-2
 Obsoletes: libc-client2004e < 2004e-2
 Obsoletes: libc-client2004g < 2004g-7
@@ -100,9 +96,14 @@ Obsoletes: libc-client2007 < 2007-2
 %description -n %{imap_libs} 
 Provides a common API for accessing mailboxes. 
 
+%description -n %{imap_libs} -l zh_CN.UTF-8
+%{name} 的运行库。
+
 %package devel
 Summary: Development tools for programs which will use the UW IMAP library
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: 	 Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: %{imap_libs}%{?_isa} = %{version}-%{release}
 # imap -> uw-imap rename
 Obsoletes: imap-devel < 1:%{version}
@@ -116,9 +117,14 @@ Conflicts: libc-client-devel < %{version}-%{release}
 Contains the header files and libraries for developing programs 
 which will use the UW C-client common API.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
 %package static 
 Summary: UW IMAP static library
+Summary(zh_CN.UTF-8): %{name} 的静态库
 Group:   Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: %{name}-devel = %{version}-%{release}
 #Provides: libc-client-static = %{version}-%{release}
 Requires: krb5-devel openssl-devel pam-devel
@@ -126,9 +132,14 @@ Requires: krb5-devel openssl-devel pam-devel
 Contains static libraries for developing programs 
 which will use the UW C-client common API.
 
+%description static -l zh_CN.UTF-8
+%{name} 的静态库
+。
 %package utils
 Summary: UW IMAP Utilities to make managing your email simpler
+Summary(zh_CN.UTF-8): %{name} 的工具
 Group: 	 Applications/System 
+Group(zh_CN.UTF-8): 应用程序/系统
 %if ! 0%{?_with_system_libc_client}
 Requires: %{imap_libs}%{?_isa} = %{version}-%{release}
 %endif
@@ -141,7 +152,8 @@ This package contains some utilities for managing UW IMAP email,including:
 * mtest : C client test program
 * tmail : Mail Delivery Module
 * mlock
-
+%description utils -l zh_CN.UTF-8
+%{name} 的工具。
 
 
 %prep
@@ -169,6 +181,7 @@ install -p -m644 %{SOURCE22} imap.pam
 %patch11 -p1 -b .system_c_client
 %endif
 
+%patch12 -p1 -b .fmt-sec
 
 %build
 
@@ -260,7 +273,7 @@ install -p -m644 -D %{SOURCE35} $RPM_BUILD_ROOT%{_sysconfdir}/xinetd.d/pop3s
 # %ghost'd *.pem files
 mkdir -p $RPM_BUILD_ROOT%{ssldir}/certs
 touch $RPM_BUILD_ROOT%{ssldir}/certs/{imapd,ipop3d}.pem
-
+magic_rpm_clean.sh
 
 # FIXME, do on first launch (or not at all?), not here -- Rex
 %post
@@ -348,6 +361,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sat Oct 17 2015 Liu Di <liudidi@gmail.com> - 2007f-4
+- 为 Magic 3.0 重建
+
 * Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 2007f-3
 - 为 Magic 3.0 重建
 

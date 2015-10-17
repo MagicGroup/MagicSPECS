@@ -1,15 +1,17 @@
 Name:           uudeview
 Version:        0.5.20
-Release:        35%{?dist}
+Release:        36%{?dist}
 
 License:        GPLv2+
 Group:          Applications/File
+Group(zh_CN.UTF-8): 应用程序/文件
 Source:         http://www.fpx.de/fp/Software/UUDeview/download/uudeview-0.5.20.tar.gz
 Source1:        xdeview.desktop
 Patch0:         uudeview-debian-patches.patch
 Patch1:         uudeview-format-security.patch
 URL:            http://www.fpx.de/fp/Software/UUDeview/
 Summary:        Applications for uuencoding, uudecoding, ...
+Summary(zh_CN.UTF-8): uu 编码和解码程序
 BuildRequires:  inews, tcl, tk
 BuildRequires:  texlive-collection-latexextra
 BuildRequires:  transfig, desktop-file-utils
@@ -21,9 +23,14 @@ Handles uuencoding, xxencoding, yEnc, and base-64 encoding (MIME). Can do
 automatic splitting of large encodes, automatic posting.  A must for
 anyone serious encoding/decoding.
 
+%description -l zh_CN.UTF-8
+uu 编码和解码程序。
+
 %package        -n uulib-devel
 Summary:        Binary news message decoding library
+Summary(zh_CN.UTF-8): 二进制新闻信息解码库
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Provides:       uulib = %{version}-%{release}
 Provides:       uulib-static = %{version}-%{release}
 Obsoletes:      uulib < 0.5.20-11
@@ -36,6 +43,8 @@ encoding data in any of these formats except BinHex.
 
 This package contains header files and static libraries for uulib.
 
+%description -n uulib-devel -l zh_CN.UTF-8
+二进制新闻信息解码库。
 
 %prep
 %setup -q
@@ -63,7 +72,7 @@ mkdir -p $RPM_BUILD_ROOT/%{_includedir}
 install -p -m 0644 uulib/uudeview.h $RPM_BUILD_ROOT/%{_includedir}/
 mkdir -p $RPM_BUILD_ROOT/%{_libdir}
 install -p -m 0644 uulib/libuu.a $RPM_BUILD_ROOT/%{_libdir}/
-
+magic_rpm_clean.sh
 
 %files
 %doc COPYING HISTORY IAFA-PACKAGE README uudeview.lsm
@@ -80,6 +89,9 @@ install -p -m 0644 uulib/libuu.a $RPM_BUILD_ROOT/%{_libdir}/
 %{_libdir}/*.a
 
 %changelog
+* Sat Oct 17 2015 Liu Di <liudidi@gmail.com> - 0.5.20-36
+- 为 Magic 3.0 重建
+
 * Sun Oct 11 2015 Liu Di <liudidi@gmail.com> - 0.5.20-35
 - 为 Magic 3.0 重建
 

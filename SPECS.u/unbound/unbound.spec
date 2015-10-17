@@ -6,9 +6,10 @@
 %endif
 
 Summary: Validating, recursive, and caching DNS(SEC) resolver
+Summary(zh_CN.UTF-8): DNS 服务程序
 Name: unbound
-Version: 1.4.16
-Release: 2%{?dist}
+Version:	1.5.5
+Release:	1%{?dist}
 License: BSD
 Url: http://www.nlnetlabs.nl/unbound/
 Source: http://www.unbound.net/downloads/%{name}-%{version}.tar.gz
@@ -20,9 +21,11 @@ Source5: root.key
 Source6: dlv.isc.org.key
 Source7: unbound-keygen.service
 Source8: tmpfiles-unbound.conf
+
 Patch1: unbound-1.2-glob.patch
 
 Group: System Environment/Daemons
+Group(zh_CN.UTF-8): 系统环境/服务
 BuildRequires: flex, openssl-devel , ldns-devel >= 1.5.0, 
 BuildRequires: libevent-devel expat-devel
 %if %{with_python}
@@ -53,26 +56,41 @@ Unbound is designed as a set of modular components, so that also
 DNSSEC (secure DNS) validation and stub-resolvers (that do not run
 as a server, but are linked into an application) are easily possible.
 
+%description -l zh_CN.UTF-8
+Unbound 是一个 DNS 服务程序。
+
 %package munin
 Summary: Plugin for the munin / munin-node monitoring package
+Summary(zh_CN.UTF-8): munin 监视插件
 Group:     System Environment/Daemons
+Group(zh_CN.UTF-8): 系统环境/服务
 Requires: munin-node
 Requires: %{name} = %{version}-%{release}, bc
 
 %description munin
 Plugin for the munin / munin-node monitoring package
 
+%description munin -l zh_CN.UTF-8
+munin 监视插件。
+
 %package devel
 Summary: Development package that includes the unbound header files
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: %{name}-libs = %{version}-%{release}, openssl-devel, ldns-devel
 
 %description devel
 The devel package contains the unbound library and the include files
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
 
 %package libs
 Summary: Libraries used by the unbound server and client applications
+Summary(zh_CN.UTF-8): %{name} 的运行库
 Group: Applications/System
+Group(zh_CN.UTF-8): 应用程序/系统
 Requires(post): /sbin/ldconfig
 Requires(postun): /sbin/ldconfig
 Requires: openssl >= 0.9.8g-12
@@ -80,14 +98,21 @@ Requires: openssl >= 0.9.8g-12
 %description libs
 Contains libraries used by the unbound server and client applications
 
+%description libs -l zh_CN.UTF-8
+%{name} 的运行库。
+
 %if %{with_python}
 %package python
 Summary: Python modules and extensions for unbound
+Summary(zh_CN.UTF-8): %{name} 的 Python 绑定
 Group: Applications/System
+Group(zh_CN.UTF-8): 应用程序/系统
 Requires: %{name}-libs = %{version}-%{release}
 
 %description python
 Python modules and extensions for unbound
+%description python -l zh_CN.UTF-8
+%{name} 的 Python 绑定。
 %endif
 
 %prep
@@ -134,6 +159,7 @@ rm %{buildroot}%{python_sitearch}/*.la
 %endif
 
 mkdir -p %{buildroot}%{_localstatedir}/run/unbound
+magic_rpm_clean.sh
 
 %files 
 %doc doc/README doc/CREDITS doc/LICENSE doc/FEATURES
@@ -219,6 +245,9 @@ fi
 /bin/systemctl try-restart unbound-keygen.service >/dev/null 2>&1 || :
 
 %changelog
+* Fri Oct 16 2015 Liu Di <liudidi@gmail.com> - 1.5.5-1
+- 更新到 1.5.5
+
 * Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 1.4.16-2
 - 为 Magic 3.0 重建
 

@@ -1,52 +1,53 @@
-Name: usbutils
-Version: 005
-Release: 2%{?dist}
-Source:	%{name}-%{version}.tar.gz
-URL: http://www.linux-usb.org/
-License: GPLv2+
-BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-
-Requires: hwdata
-BuildRequires: autoconf, libtool, libusb-devel >= 0.1.8, libusb1-devel
+Name:    usbutils
 Summary: Linux USB utilities
-Group: Applications/System
-Conflicts: hotplug < 3:2002_01_14-2
-Patch0: usbutils-003-hwdata.patch
-#Path to usb.ids should be with /hwdata/
-Patch1: usbutils-make-hwdata.patch
-Patch2: usbutils-005-readlink.patch
+Summary(zh_CN.UTF-8): Linux 下的 USB 工具
+Version: 008
+Release: 5%{?dist}
+URL:     http://www.linux-usb.org/
+License: GPLv2+
+Group:   Applications/System
+Group(zh_CN.UTF-8): 应用程序/系统
+
+Source0: https://www.kernel.org/pub/linux/utils/usb/usbutils/%{name}-%{version}.tar.xz
+
+#Path to usb.ids in lsusb.py should be with /hwdata/
+Patch0: usbutils-006-hwdata.patch
+
+BuildRequires: libusbx-devel
+BuildRequires: systemd-devel
+Requires: hwdata
 
 %description
 This package contains utilities for inspecting devices connected to a
 USB bus.
 
+%description -l zh_CN.UTF-8
+Linux 下的 USB 工具，用来发现连接到 USB 总线的设备。
+
 %prep
 %setup -q
 %patch0 -p1
-%patch1 -p1
-%patch2 -p1
-./autogen.sh
 
 %build
-%configure --sbindir=%{_sbindir}
+%configure --sbindir=%{_sbindir} --datadir=%{_datadir}/hwdata --disable-usbids
 make %{?_smp_mflags}
 
 %install
-rm -rf $RPM_BUILD_ROOT
 make install DESTDIR=$RPM_BUILD_ROOT INSTALL="install -p"
 magic_rpm_clean.sh
 
 %files
-%defattr(-,root,root,-)
+%{!?_licensedir:%global license %%doc}
+%license COPYING
+%doc AUTHORS NEWS README
 %{_mandir}/*/*
 %{_bindir}/*
 %{_datadir}/pkgconfig/usbutils.pc
-%doc AUTHORS COPYING ChangeLog NEWS README
-
-%clean
-rm -rf $RPM_BUILD_ROOT
 
 %changelog
+* Sat Oct 17 2015 Liu Di <liudidi@gmail.com> - 008-5
+- 为 Magic 3.0 重建
+
 * Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 005-2
 - 为 Magic 3.0 重建
 

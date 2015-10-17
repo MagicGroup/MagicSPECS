@@ -1,8 +1,10 @@
 Name:    argyllcms
 Version: 1.8.2
-Release: 1%{?dist}
+Release: 2%{?dist}
 Summary: ICC compatible color management system
+Summary(zh_CN.UTF-8): 兼容 ICC 的颜色管理系统
 Group:   User Interface/X
+Group(zh_CN.UTF-8): 用户界面/X
 License: GPLv3 and MIT
 URL:     http://gitorious.org/hargyllcms
 Source0: http://people.freedesktop.org/~hughsient/releases/hargyllcms-%{version}.tar.xz
@@ -37,9 +39,14 @@ engine available anywhere, as well as support for fast, fully accurate 16 bit
 conversion. Device color gamuts can also be viewed and compared using a VRML
 viewer.
 
+%description -l zh_CN.UTF-8
+兼容 ICC 的颜色管理系统。
+
 %package doc
 Summary: Argyll CMS documentation
+Summary(zh_CN.UTF-8): %{name} 的文档
 Group:   User Interface/X
+Group(zh_CN.UTF-8): 用户界面/X
 # Does not really make sense without Argyll CMS itself
 Requires: %{name} = %{version}-%{release}
 
@@ -49,6 +56,9 @@ acquisition devices, CMYK printers, film recorders and calibration and profiling
 of displays.
 
 This package contains the Argyll color management system documentation.
+
+%description doc -l zh_CN.UTF-8
+%{name} 的文档。
 
 %prep
 %setup -q -n hargyllcms-%{version}
@@ -69,6 +79,7 @@ rm -f $RPM_BUILD_ROOT%{_libdir}/lib*.so
 
 # rely on colord  to provide ENV{COLOR_MEASUREMENT_DEVICE}="1"
 rm -f $RPM_BUILD_ROOT/lib/udev/rules.d/55-Argyll.rules
+magic_rpm_clean.sh
 
 %files
 %defattr(0644,root,root,0755)
@@ -90,6 +101,9 @@ rm -f $RPM_BUILD_ROOT/lib/udev/rules.d/55-Argyll.rules
 %doc doc/*.html doc/*.jpg doc/*.txt
 
 %changelog
+* Fri Oct 16 2015 Liu Di <liudidi@gmail.com> - 1.8.2-2
+- 为 Magic 3.0 重建
+
 * Mon Sep 07 2015 Richard Hughes <rhughes@redhat.com> - 1.8.2-1
 - Update to 1.8.2
 

@@ -6,11 +6,13 @@
 %define dbus_version                    1.4.0
 
 Summary: Disk Manager
+Summary(zh_CN.UTF-8): 磁盘管理程序
 Name: udisks2
-Version: 2.1.3
-Release: 3%{?dist}
+Version:	2.1.6
+Release:	1%{?dist}
 License: GPLv2+
 Group: System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 URL: http://www.freedesktop.org/wiki/Software/udisks
 Source0: http://udisks.freedesktop.org/releases/udisks-%{version}.tar.bz2
 
@@ -67,9 +69,14 @@ udisks provides a daemon, D-Bus API and command line tools for
 managing disks and storage devices. This package is for the udisks 2.x
 series.
 
+%description -l zh_CN.UTF-8
+磁盘管理服务。
+
 %package -n libudisks2
 Summary: Dynamic library to access the udisks daemon
+Summary(zh_CN.UTF-8): %{name} 的运行库
 Group: System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 License: LGPLv2+
 
 %description -n libudisks2
@@ -77,9 +84,14 @@ This package contains the dynamic library libudisks2, which provides
 access to the udisks daemon. This package is for the udisks 2.x
 series.
 
+%description -n libudisks2 -l zh_CN.UTF-8
+%{name} 的运行库。
+
 %package -n libudisks2-devel
 Summary: Development files for libudisks2
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: libudisks2 = %{version}-%{release}
 Requires: pkgconfig
 License: LGPLv2+
@@ -88,6 +100,9 @@ License: LGPLv2+
 This package contains the development files for the library
 libudisks2, a dynamic library, which provides access to the udisks
 daemon. This package is for the udisks 2.x series.
+
+%description -n libudisks2-devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q -n udisks-%{version}
@@ -105,8 +120,8 @@ make install DESTDIR=$RPM_BUILD_ROOT
 
 rm -f $RPM_BUILD_ROOT%{_libdir}/*.la
 rm -f $RPM_BUILD_ROOT%{_libdir}/*.a
-
-%find_lang %{name}
+magic_rpm_clean.sh
+%find_lang %{name} || :
 
 %post -n libudisks2 -p /sbin/ldconfig
 
@@ -123,8 +138,8 @@ rm -f $RPM_BUILD_ROOT%{_libdir}/*.a
 %{_prefix}/lib/udev/rules.d/80-udisks2.rules
 %{_sbindir}/umount.udisks2
 
-%dir %{_prefix}/lib/udisks2
-%{_prefix}/lib/udisks2/udisksd
+%dir %{_prefix}/libexec/udisks2
+%{_prefix}/libexec/udisks2/udisksd
 
 %{_bindir}/udisksctl
 
@@ -154,6 +169,9 @@ rm -f $RPM_BUILD_ROOT%{_libdir}/*.a
 
 # Note: please don't forget the %{?dist} in the changelog. Thanks
 %changelog
+* Fri Oct 16 2015 Liu Di <liudidi@gmail.com> - 2.1.6-1
+- 更新到 2.1.6
+
 * Tue May 27 2014 Liu Di <liudidi@gmail.com> - 2.1.3-3
 - 为 Magic 3.0 重建
 

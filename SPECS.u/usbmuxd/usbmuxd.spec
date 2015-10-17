@@ -1,9 +1,11 @@
 Name:          usbmuxd
 Version:       1.1.0
-Release:       5%{?dist}
+Release:       6%{?dist}
 Summary:       Daemon for communicating with Apple's iOS devices
+Summary(zh_CN.UTF-8): 和苹果 iOS 设备通信的服务
 
 Group:         Applications/System
+Group(zh_CN.UTF-8): 应用程序/系统
 # All code is dual licenses as GPLv3+ or GPLv2+, except libusbmuxd which is LGPLv2+.
 License:       GPLv3+ or GPLv2+
 URL:           http://www.libimobiledevice.org/
@@ -26,6 +28,9 @@ usbmuxd is a daemon used for communicating with Apple's iPod Touch, iPhone,
 iPad and Apple TV devices. It allows multiple services on the device to be 
 accessed simultaneously.
 
+%description -l zh_CN.UTF-8
+和苹果 iOS 设备通信的服务。
+
 %prep
 %setup -q
 
@@ -40,6 +45,7 @@ make %{?_smp_mflags} V=1
 
 %install
 make install DESTDIR=$RPM_BUILD_ROOT
+magic_rpm_clean.sh
 
 %pre
 getent group usbmuxd >/dev/null || groupadd -r usbmuxd -g 113
@@ -67,6 +73,9 @@ exit 0
 %{_datadir}/man/man1/usbmuxd.1.gz
 
 %changelog
+* Sat Oct 17 2015 Liu Di <liudidi@gmail.com> - 1.1.0-6
+- 为 Magic 3.0 重建
+
 * Fri Jun 19 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.1.0-5
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

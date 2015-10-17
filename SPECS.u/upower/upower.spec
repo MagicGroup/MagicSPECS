@@ -1,9 +1,11 @@
 Summary:        Power Management Service
+Summary(zh_CN.UTF-8): 电源管理服务
 Name:           upower
-Version:        0.99.2
-Release:        2%{?dist}
+Version:	0.99.3
+Release:	1%{?dist}
 License:        GPLv2+
 Group:          System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 URL:            http://upower.freedesktop.org/
 Source0:        http://upower.freedesktop.org/releases/upower-%{version}.tar.xz
 BuildRequires:  sqlite-devel
@@ -23,30 +25,40 @@ BuildRequires:  gtk-doc
 Requires:       udev
 Requires:       gobject-introspection
 
-%if 0%{?fedora}
 # From rhughes-f20-gnome-3-12 copr
 Obsoletes:      compat-upower09 < 0.99
-%endif
 
 %description
 UPower (formerly DeviceKit-power) provides a daemon, API and command
 line tools for managing power devices attached to the system.
 
+%description -l zh_CN.UTF-8
+电源管理服务。
+
 %package devel
 Summary: Headers and libraries for UPower
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: %{name} = %{version}-%{release}
 
 %description devel
 Headers and libraries for UPower.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
 %package devel-docs
 Summary: Headers and libraries for UPower
+Summary(zh_CN.UTF-8): %{name} 的开发文档
 Requires: %{name} = %{version}-%{release}
 BuildArch: noarch
 
 %description devel-docs
 Developer documentation for for libupower-glib.
+
+%description devel-docs -l zh_CN.UTF-8
+%{name} 的开发文档。
 
 %prep
 %setup -q
@@ -66,14 +78,14 @@ make
 %install
 make install DESTDIR=$RPM_BUILD_ROOT
 rm -f $RPM_BUILD_ROOT%{_libdir}/*.la
-
-%find_lang upower
+magic_rpm_clean.sh
+%find_lang upower || :
 
 %post -p /sbin/ldconfig
 
 %postun -p /sbin/ldconfig
 
-%files -f upower.lang
+%files
 %defattr(-,root,root,-)
 %doc NEWS COPYING AUTHORS HACKING README
 %{_libdir}/libupower-glib.so.*
@@ -110,6 +122,12 @@ rm -f $RPM_BUILD_ROOT%{_libdir}/*.la
 %{_datadir}/gtk-doc/html/UPower/*
 
 %changelog
+* Fri Oct 16 2015 Liu Di <liudidi@gmail.com> - 0.99.3-1
+- 更新到 0.99.3
+
+* Fri Oct 16 2015 Liu Di <liudidi@gmail.com> - 0.99.2-3
+- 为 Magic 3.0 重建
+
 * Tue Dec 23 2014 Liu Di <liudidi@gmail.com> - 0.99.2-2
 - 为 Magic 3.0 重建
 

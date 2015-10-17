@@ -1,9 +1,11 @@
 Name:           upx
 Version:        3.91
-Release:        6%{?dist}
+Release:        7%{?dist}
 Summary:        Ultimate Packer for eXecutables
+Summary(zh_CN.UTF-8): 可执行文件压缩程序
 
 Group:          Applications/Archiving
+Group(zh_CN.UTF-8): 应用程序/归档
 License:        GPLv2+ and Public Domain
 URL:            http://upx.sourceforge.net/
 Source0:        http://upx.sourceforge.net/download/%{name}-%{version}-src.tar.bz2
@@ -22,6 +24,8 @@ packer for several different executable formats. It achieves an
 excellent compression ratio and offers very fast decompression. Your
 executables suffer no memory overhead or other drawbacks.
 
+%description -l zh_CN.UTF-8
+可执行文件的压缩程序。
 
 %prep
 %setup -q -n %{name}-%{version}-src
@@ -41,7 +45,7 @@ make -C doc
 rm -rf $RPM_BUILD_ROOT
 install -Dpm 644 doc/upx.1   $RPM_BUILD_ROOT%{_mandir}/man1/upx.1
 install -Dpm 755 src/upx.out $RPM_BUILD_ROOT%{_bindir}/upx
-
+magic_rpm_clean.sh
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -55,6 +59,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Fri Oct 16 2015 Liu Di <liudidi@gmail.com> - 3.91-7
+- 为 Magic 3.0 重建
+
 * Fri Jun 19 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.91-6
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

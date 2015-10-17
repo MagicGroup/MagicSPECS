@@ -1,23 +1,32 @@
-%define glib2_version           2.6.0
-%define dbus_version            1.2
-%define dbus_glib_version       0.82
-%define polkit_version          0.92
-%define parted_version          1.8.8
-%define udev_version            145
-%define mdadm_version           2.6.7
-%define device_mapper_version   1.02
-%define libatasmart_version     0.12
-%define sg3_utils_version       1.27
-%define smp_utils_version       0.94
+%global dbus_version 1.2
+%global dbus_glib_version 0.82
+%global glib2_version 2.15.0
+%global gudev_version 147
+%global polkit_version 0.97
+%global parted_version 1.8.8
+%global udev_version 143
+%global mdadm_version 2.6.7
+%global device_mapper_version 1.02
+%global libatasmart_version 0.14
+%global sg3_utils_version 1.27
+%global smp_utils_version 0.94
+%global systemd_version 185
 
 Summary: Storage Management Service
+Summary(zh_CN.UTF-8): 存储管理服务
 Name: udisks
-Version: 1.0.4
-Release: 5%{?dist}
+Version:	1.0.5
+Release:	1%{?dist}
 License: GPLv2+
 Group: System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 URL: http://www.freedesktop.org/wiki/Software/udisks
 Source0: http://hal.freedesktop.org/releases/%{name}-%{version}.tar.gz
+# https://bugs.freedesktop.org/show_bug.cgi?id=90778
+Patch0:  udisks-1.0.5-fix-build-with-glibc-2.20.patch
+Patch1:  fix_bash_completion.patch
+# https://bugzilla.redhat.com/show_bug.cgi?id=1238664
+Patch2:  udisks-1.0.5-fix-service-file.patch
 BuildRequires: glib2-devel >= %{glib2_version}
 BuildRequires: dbus-devel  >= %{dbus_version}
 BuildRequires: dbus-glib-devel >= %{dbus_glib_version}
@@ -63,15 +72,18 @@ Conflicts: kernel < 2.6.26
 Obsoletes: DeviceKit-disks <= 009
 Provides: DeviceKit-disks = 010
 
-Patch0: udisks-1.0.4-neuter-stdout-and-stderr.patch
-
 %description
 udisks provides a daemon, D-Bus API and command line tools
 for managing disks and storage devices.
 
+%description -l zh_CN.UTF-8
+存储管理服务。
+
 %package devel
 Summary: D-Bus interface definitions for udisks
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: %{name} = %{version}-%{release}
 
 # See comment above
@@ -82,19 +94,27 @@ Provides: DeviceKit-disks-devel = 010
 %description devel
 D-Bus interface definitions and documentation for udisks.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
 %prep
 %setup -q
 %patch0 -p1
+%patch1 -p1
+%patch2 -p1
 
 # https://bugzilla.redhat.com/show_bug.cgi?id=673544#c15
 rm -f src/*-glue.h tools/*-glue.h
 
+autoreconf --force --install
+
 %build
 %configure --enable-gtk-doc
-make
+%configure --enable-gtk-doc
+%make_build
 
 %install
-make install DESTDIR=$RPM_BUILD_ROOT
+make install DESTDIR=$RPM_BUILD_ROOT INSTALL="install -p"
 
 rm -f $RPM_BUILD_ROOT%{_libdir}/*.la
 rm -f $RPM_BUILD_ROOT%{_libdir}/*.a
@@ -106,17 +126,20 @@ ln -s udisks.1 $RPM_BUILD_ROOT%{_datadir}/man/man1/devkit-disks.1
 
 # TODO: should be fixed upstream
 chmod 0644 $RPM_BUILD_ROOT%{_sysconfdir}/profile.d/udisks-bash-completion.sh
+mkdir -p $RPM_BUILD_ROOT%{_sysconfdir}/bash_completion.d
+mv $RPM_BUILD_ROOT%{_sysconfdir}/profile.d/udisks-bash-completion.sh \
+    $RPM_BUILD_ROOT%{_sysconfdir}/bash_completion.d
+magic_rpm_clean.sh
+%find_lang %{name} || :
 
-%find_lang %{name}
-
-%files -f %{name}.lang
+%files 
 %defattr(-,root,root,-)
 
 %doc README AUTHORS NEWS COPYING HACKING doc/TODO
 
 %{_sysconfdir}/avahi/services/udisks.service
 %{_sysconfdir}/dbus-1/system.d/*.conf
-%{_sysconfdir}/profile.d/*.sh
+%{_sysconfdir}/bash_completion.d/
 /lib/udev/rules.d/*.rules
 
 /lib/udev/udisks-part-id
@@ -135,6 +158,7 @@ chmod 0644 $RPM_BUILD_ROOT%{_sysconfdir}/profile.d/udisks-bash-completion.sh
 %{_datadir}/polkit-1/actions/*.policy
 
 %{_datadir}/dbus-1/system-services/*.service
+%{_unitdir}/udisks.service
 
 %attr(0700,root,root) %dir %{_localstatedir}/lib/udisks
 
@@ -147,6 +171,9 @@ chmod 0644 $RPM_BUILD_ROOT%{_sysconfdir}/profile.d/udisks-bash-completion.sh
 
 # Note: please don't forget the %{?dist} in the changelog. Thanks
 %changelog
+* Fri Oct 16 2015 Liu Di <liudidi@gmail.com> - 1.0.5-1
+- 更新到 1.0.5
+
 * Mon Jan 14 2013 Liu Di <liudidi@gmail.com> - 1.0.4-5
 - 为 Magic 3.0 重建
 

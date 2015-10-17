@@ -4,10 +4,12 @@
 
 Name:           uniconvertor
 Version:        2.0
-Release:        0.8%{?SVN:.svn%{SVN}}%{?dist}
+Release:        0.9%{?SVN:.svn%{SVN}}%{?dist}
 Summary:        Universal vector graphics translator
+Summary(zh_CN.UTF-8): 通用的向量图形转换程序
 
 Group:          Applications/Multimedia
+Group(zh_CN.UTF-8): 应用程序/多媒体
 License:        LGPLv2+ and GPLv2+ and MIT
 URL:            http://sk1project.org/modules.php?name=Products&product=uniconvertor
 # Script to reproduce given tarball from source0
@@ -25,6 +27,9 @@ Requires:       python-imaging, python-reportlab, python-pillow, pycairo
 UniConvertor is a universal vector graphics translator.
 It uses sK1 engine to convert one format to another.
 
+%description -l zh_CN.UTF-8
+通用的向量图形转换程序。
+
 %prep
 %setup -q
 cp -a /usr/share/color/argyll/ref/sRGB.icm src/unittests/cms_tests/cms_data/sRGB.icm
@@ -34,6 +39,7 @@ CFLAGS="$RPM_OPT_FLAGS -I/usr/include/python2.7/Imaging" python setup.py build
 
 %install
 python setup.py install --skip-build --root %{buildroot}
+magic_rpm_clean.sh
 
 %post
 touch --no-create %{_datadir}/mime/packages &> /dev/null || :
@@ -55,6 +61,9 @@ update-mime-database %{?fedora:-n} %{_datadir}/mime &> /dev/null || :
 %{_datarootdir}/mime/packages/vnd.sk1project.pdxf-graphics.xml
 
 %changelog
+* Fri Oct 16 2015 Liu Di <liudidi@gmail.com> - 2.0-0.9.svn362
+- 为 Magic 3.0 重建
+
 * Fri Jun 19 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.0-0.8.svn362
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

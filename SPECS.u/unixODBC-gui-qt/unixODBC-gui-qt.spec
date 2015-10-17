@@ -3,12 +3,14 @@
 %global checkout 20120105svn%{svn}
 
 Summary: Several GUI (Qt) programs and plug-ins for unixODBC
+Summary(zh_CN.UTF-8): unixODBC 的一些图形化程序和插件 (QT)
 Name: unixODBC-gui-qt
 # There has not been a formal upstream release yet and we're not
 # sure what the first formal release version number will be, so using 0
 Version: 0
-Release: 0.6.%{checkout}%{?dist}
+Release: 0.7.%{checkout}%{?dist}
 Group: Applications/Databases
+Group(zh_CN.UTF-8): 应用程序/数据库
 URL: http://sourceforge.net/projects/unixodbc-gui-qt/
 # Programs are GPL, libraries are LGPL
 License: GPLv3 and LGPLv3
@@ -42,6 +44,14 @@ unixODBC-gui-qt provides several GUI (Qt) programs and plug-ins.
   * test (program)
   * installer (plug-in)
   * auto test (plug-in)
+
+%description -l zh_CN.UTF-8
+unixODBC 的一些图形化程序和插件 (QT)。
+  * 管理程序
+  * 创建数据源向导程序
+  * 测试程序
+  * 安装器插件
+  * 自动测试插件
 
 %prep
 %setup -q -n %{name}
@@ -87,6 +97,7 @@ install -p -m 644 ODBCTestQ4/ODBCTestQ4-48.xpm \
 
 # remove unpackaged files from the buildroot
 rm -f $RPM_BUILD_ROOT%{_libdir}/*.la
+magic_rpm_clean.sh
 
 %files
 %doc AUTHORS COPYING ChangeLog NEWS doc GPL.txt LGPL.txt
@@ -102,6 +113,9 @@ rm -f $RPM_BUILD_ROOT%{_libdir}/*.la
 %postun -p /sbin/ldconfig
 
 %changelog
+* Fri Oct 16 2015 Liu Di <liudidi@gmail.com> - 0-0.7.20120105svn98
+- 为 Magic 3.0 重建
+
 * Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 0-0.6.20120105svn98
 - 为 Magic 3.0 重建
 

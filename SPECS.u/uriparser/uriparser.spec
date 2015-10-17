@@ -3,15 +3,16 @@
 %{!?_pkgdocdir: %global _pkgdocdir %{_docdir}/%{name}-%{version}}
 
 Name:           uriparser
-Version:        0.8.1
-Release:        5%{?dist}
+Version:	0.8.4
+Release:	1%{?dist}
 Summary:        URI parsing library - RFC 3986
+Summary(zh_CN.UTF-8): URI 解析库 - RFC 3986
 
 Group:          System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 License:        BSD
 URL:            http://%{name}.sourceforge.net/
 Source0:        http://downloads.sourceforge.net/%{name}/%{name}-%{version}.tar.bz2
-Patch0:         uriparser-bug24.patch
 BuildRequires:  doxygen, graphviz, cpptest-devel
 Requires:       cpptest
 
@@ -20,18 +21,25 @@ Uriparser is a strictly RFC 3986 compliant URI parsing library written
 in C. uriparser is cross-platform, fast, supports Unicode and is
 licensed under the New BSD license.
 
+%description -l zh_CN.UTF-8
+URI 解析库。
+
 %package	devel
 Summary:        Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       %{name} = %{version}-%{release}
 
 %description    devel
 The %{name}-devel package contains libraries and header files for
 developing applications that use %{name}.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
 %prep
 %setup -q
-%patch0 -p1
 sed -i 's/\r//' THANKS
 sed -i 's/\r//' COPYING
 iconv -f iso-8859-1 -t utf-8 -o THANKS{.utf8,}
@@ -87,6 +95,9 @@ fi
 %{_docdir}/%{name}-%{version}/*
 
 %changelog
+* Fri Oct 16 2015 Liu Di <liudidi@gmail.com> - 0.8.4-1
+- 更新到 0.8.4
+
 * Thu Feb 12 2015 Liu Di <liudidi@gmail.com> - 0.8.1-5
 - 为 Magic 3.0 重建
 
