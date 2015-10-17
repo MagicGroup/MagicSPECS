@@ -1,36 +1,25 @@
-# Tarfile created using git
-# git clone https://github.com/libimobiledevice/usbmuxd.git
-# git archive --format=tar --prefix=%{name}-%{version}/ %{name}-%{version} | bzip2 > ~/%{name}-%{version}.tar.bz2
-# c24463e
-
-%define gittag c24463e
-%define tarfile %{name}-%{version}-%{gittag}.tar.bz2
-
 Name:          usbmuxd
-Version:       1.0.9
-Release:       0.4.%{gittag}%{?dist}
+Version:       1.1.0
+Release:       5%{?dist}
 Summary:       Daemon for communicating with Apple's iOS devices
 
 Group:         Applications/System
 # All code is dual licenses as GPLv3+ or GPLv2+, except libusbmuxd which is LGPLv2+.
 License:       GPLv3+ or GPLv2+
 URL:           http://www.libimobiledevice.org/
-#ource0:       http://www.libimobiledevice.org/downloads/%{name}-%{version}.tar.bz2
-Source0:       %{tarfile}
-Patch0:        usbmuxd-use-systemd-to-start-usbmuxd.patch
-Patch1:        usbmuxd-default-source.patch
+Source0:       http://www.libimobiledevice.org/downloads/%{name}-%{version}.tar.bz2
 
 BuildRequires: libimobiledevice-devel
 BuildRequires: libplist-devel
 BuildRequires: libusbx-devel
 BuildRequires: systemd
-BuildRequires: autoconf automake libtool
 
 Requires(pre): shadow-utils
-Requires(post): systemd-units
-Requires(preun): systemd-units
-Requires(postun): systemd-units
-Obsoletes: usbmuxd-devel < 1.0.9
+Requires(post): systemd
+Requires(preun): systemd
+Requires(postun): systemd
+# for multilib upgrade path
+Obsoletes: usbmuxd < 1.0.9
 
 %description
 usbmuxd is a daemon used for communicating with Apple's iPod Touch, iPhone, 
@@ -39,24 +28,18 @@ accessed simultaneously.
 
 %prep
 %setup -q
-%patch0 -p1 -b .systemd
-%patch1 -p1 -b .def-src
 
 # Set the owner of the device node to be usbmuxd
 sed -i.owner 's/OWNER="usbmux"/OWNER="usbmuxd"/' udev/39-usbmuxd.rules.in
-sed -i.user 's/-U usbmux/-U usbmuxd/' udev/usbmuxd.service.in
+sed -i.user 's/--user usbmux/--user usbmuxd/' systemd/usbmuxd.service.in
 
 %build
-NOCONFIGURE=1 ./autogen.sh
-CFLAGS=-D_BSD_SOURCE %configure 
+%configure
 
 make %{?_smp_mflags} V=1
 
 %install
 make install DESTDIR=$RPM_BUILD_ROOT
-# Short term hack
-mkdir -p $RPM_BUILD_ROOT/%{_unitdir}
-cp udev/usbmuxd.service.in $RPM_BUILD_ROOT/%{_unitdir}/usbmuxd.service
 
 %pre
 getent group usbmuxd >/dev/null || groupadd -r usbmuxd -g 113
@@ -66,25 +49,57 @@ useradd -r -g usbmuxd -d / -s /sbin/nologin \
 exit 0
 
 %post
-/sbin/ldconfig
 %systemd_post usbmuxd.service
 
 %preun
 %systemd_preun usbmuxd.service
 
 %postun
-/sbin/ldconfig
 %systemd_postun_with_restart usbmuxd.service 
 
 %files
-%doc AUTHORS README COPYING.GPLv2 COPYING.GPLv3
-/lib/udev/rules.d/39-usbmuxd.rules
+%{!?_licensedir:%global license %%doc}
+%license COPYING.GPLv2 COPYING.GPLv3
+%doc AUTHORS README
 %{_unitdir}/usbmuxd.service
+/usr/lib/udev/rules.d/39-usbmuxd.rules
 %{_sbindir}/usbmuxd
+%{_datadir}/man/man1/usbmuxd.1.gz
 
 %changelog
-* Mon Jul 21 2014 Liu Di <liudidi@gmail.com> - 1.0.9-0.4.c24463e
-- 为 Magic 3.0 重建
+* Fri Jun 19 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.1.0-5
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
+
+* Wed Feb 11 2015 Peter Robinson <pbrobinson@fedoraproject.org> 1.0.10-4
+- Rebuild (libimobiledevice)
+
+* Tue Feb  3 2015 Peter Robinson <pbrobinson@fedoraproject.org> 1.0.10-3
+- Use %%license
+
+* Tue Oct 21 2014 Peter Robinson <pbrobinson@fedoraproject.org> 1.0.10-2
+- (rebuild)
+
+* Fri Oct 17 2014 Peter Robinson <pbrobinson@fedoraproject.org> 1.0.10-1
+- New stable 1.1.0 release
+
+* Fri Oct 17 2014 Peter Robinson <pbrobinson@fedoraproject.org> 1.0.9-3
+- Bump for correct overrides
+
+* Fri Oct 17 2014 Peter Robinson <pbrobinson@fedoraproject.org> 1.0.9-2
+- Refresh usbmuxd owner bits
+
+* Wed Oct 15 2014 Peter Robinson <pbrobinson@fedoraproject.org> 1.0.9-1
+- New stable 1.0.9 release
+
+* Tue Sep 09 2014 Rex Dieter <rdieter@fedoraproject.org> - 1.0.9-0.6.c24463e
+- Obsoletes: usbmuxd < 1.0.9 (multilib upgrade path)
+- move Obsoletes: usbmuxd-devel to libusbmuxd-devel
+
+* Mon Aug 18 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.0.9-0.5.c24463e
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
+
+* Wed Jul 30 2014 Peter Robinson <pbrobinson@fedoraproject.org> 1.0.9-0.4.c24463e
+- Add upstream patch for systemd support
 
 * Sun Jun 08 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.0.9-0.3.c24463e
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
