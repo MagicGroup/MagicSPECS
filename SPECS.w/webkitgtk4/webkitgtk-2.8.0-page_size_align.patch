@@ -1,0 +1,35 @@
+diff -up webkitgtk-2.8.0/Source/JavaScriptCore/heap/CopiedBlock.h.page_size_align webkitgtk-2.8.0/Source/JavaScriptCore/heap/CopiedBlock.h
+--- webkitgtk-2.8.0/Source/JavaScriptCore/heap/CopiedBlock.h.page_size_align	2015-03-23 09:08:04.000000000 +0100
++++ webkitgtk-2.8.0/Source/JavaScriptCore/heap/CopiedBlock.h	2015-04-08 12:02:51.218138924 +0200
+@@ -79,7 +79,7 @@ public:
+     size_t size();
+     size_t capacity();
+ 
+-    static const size_t blockSize = 32 * KB;
++    static const size_t blockSize = 64 * KB;
+ 
+     bool hasWorkList();
+     CopyWorkList& workList();
+diff -up webkitgtk-2.8.0/Source/JavaScriptCore/interpreter/JSStack.cpp.page_size_align webkitgtk-2.8.0/Source/JavaScriptCore/interpreter/JSStack.cpp
+--- webkitgtk-2.8.0/Source/JavaScriptCore/interpreter/JSStack.cpp.page_size_align	2015-04-08 12:02:51.218138924 +0200
++++ webkitgtk-2.8.0/Source/JavaScriptCore/interpreter/JSStack.cpp	2015-04-08 12:04:48.158143620 +0200
+@@ -58,7 +58,8 @@ JSStack::JSStack(VM& vm)
+     size_t capacity = Options::maxPerThreadStackUsage();
+     ASSERT(capacity && isPageAligned(capacity));
+ 
+-    m_reservation = PageReservation::reserve(WTF::roundUpToMultipleOf(commitSize, capacity), OSAllocator::JSVMStackPages);
++    size_t commitsize = pageSize();
++    m_reservation = PageReservation::reserve(WTF::roundUpToMultipleOf(commitsize, capacity), OSAllocator::JSVMStackPages);
+     setStackLimit(highAddress());
+     m_commitTop = highAddress();
+     
+@@ -92,7 +93,8 @@ bool JSStack::growSlowCase(Register* new
+     // have it is still within our budget. If not, we'll fail to grow and
+     // return false.
+     ptrdiff_t delta = reinterpret_cast<char*>(m_commitTop) - reinterpret_cast<char*>(newTopOfStackWithReservedZone);
+-    delta = WTF::roundUpToMultipleOf(commitSize, delta);
++    size_t commitsize = pageSize();
++    delta = WTF::roundUpToMultipleOf(commitsize, delta);
+     Register* newCommitTop = m_commitTop - (delta / sizeof(Register));
+     if (newCommitTop < reservationTop())
+         return false;

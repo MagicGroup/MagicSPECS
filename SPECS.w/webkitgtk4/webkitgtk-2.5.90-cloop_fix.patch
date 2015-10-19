@@ -1,0 +1,99 @@
+diff -up webkitgtk-2.5.90/Source/JavaScriptCore/llint/LowLevelInterpreter64.asm.cloop_fix webkitgtk-2.5.90/Source/JavaScriptCore/llint/LowLevelInterpreter64.asm
+--- webkitgtk-2.5.90/Source/JavaScriptCore/llint/LowLevelInterpreter64.asm.cloop_fix    2014-09-22 01:22:29.943407090 -0600
++++ webkitgtk-2.5.90/Source/JavaScriptCore/llint/LowLevelInterpreter64.asm      2014-09-22 01:20:25.463025643 -0600
+@@ -2094,7 +2094,7 @@ macro loadWithStructureCheck(operand, sl
+ end
+
+ macro getProperty()
+-    loadisFromInstruction(6, t1)
++    loadpFromInstruction(6, t1)
+     loadPropertyAtVariableOffset(t1, t0, t2)
+     valueProfile(t2, 7, t0)
+     loadisFromInstruction(1, t0)
+@@ -2111,7 +2111,7 @@ end
+
+ macro getClosureVar()
+     loadp JSEnvironmentRecord::m_registers[t0], t0
+-    loadisFromInstruction(6, t1)
++    loadpFromInstruction(6, t1)
+     loadq [t0, t1, 8], t0
+     valueProfile(t0, 7, t1)
+     loadisFromInstruction(1, t1)
+@@ -2168,7 +2168,7 @@ _llint_op_get_from_scope:
+ macro putProperty()
+     loadisFromInstruction(3, t1)
+     loadConstantOrVariable(t1, t2)
+-    loadisFromInstruction(6, t1)
++    loadpFromInstruction(6, t1)
+     storePropertyAtVariableOffset(t1, t0, t2)
+ end
+
+@@ -2185,7 +2185,7 @@ macro putClosureVar()
+     loadisFromInstruction(3, t1)
+     loadConstantOrVariable(t1, t2)
+     loadp JSEnvironmentRecord::m_registers[t0], t0
+-    loadisFromInstruction(6, t1)
++    loadpFromInstruction(6, t1)
+     storeq t2, [t0, t1, 8]
+ end
+
+diff -up webkitgtk-2.5.90/Source/JavaScriptCore/bytecode/CodeBlock.cpp.cloop_fix webkitgtk-2.5.90/Source/JavaScriptCore/bytecode/CodeBlock.cpp
+--- webkitgtk-2.5.90/Source/JavaScriptCore/bytecode/CodeBlock.cpp.cloop_fix     2014-09-17 06:31:08.000000000 -0600
++++ webkitgtk-2.5.90/Source/JavaScriptCore/bytecode/CodeBlock.cpp       2014-09-24 06:00:21.573643180 -0600
+@@ -1519,13 +1519,13 @@ void CodeBlock::dumpBytecode(
+             int id0 = (++it)->u.operand;
+             ResolveModeAndType modeAndType = ResolveModeAndType((++it)->u.operand);
+             ++it; // Structure
+-            int operand = (++it)->u.operand; // Operand
++            void *operand = (++it)->u.pointer; // Operand
+             ++it; // Skip value profile.
+             printLocationAndOp(out, exec, location, it, "get_from_scope");
+-            out.printf("%s, %s, %s, %u<%s|%s>, <structure>, %d",
++            out.printf("%s, %s, %s, %u<%s|%s>, <structure>, %lu",
+                 registerName(r0).data(), registerName(r1).data(), idName(id0, identifier(id0)).data(),
+                 modeAndType.operand(), resolveModeName(modeAndType.mode()), resolveTypeName(modeAndType.type()),
+-                operand);
++                reinterpret_cast<uintptr_t>(operand));
+             break;
+         }
+         case op_put_to_scope: {
+@@ -1534,12 +1534,12 @@ void CodeBlock::dumpBytecode(
+             int r1 = (++it)->u.operand;
+             ResolveModeAndType modeAndType = ResolveModeAndType((++it)->u.operand);
+             ++it; // Structure
+-            int operand = (++it)->u.operand; // Operand
++            void *operand = (++it)->u.pointer; // Operand
+             printLocationAndOp(out, exec, location, it, "put_to_scope");
+-            out.printf("%s, %s, %s, %u<%s|%s>, <structure>, %d",
++            out.printf("%s, %s, %s, %u<%s|%s>, <structure>, %lu",
+                 registerName(r0).data(), idName(id0, identifier(id0)).data(), registerName(r1).data(),
+                 modeAndType.operand(), resolveModeName(modeAndType.mode()), resolveTypeName(modeAndType.type()),
+-                operand);
++                reinterpret_cast<uintptr_t>(operand));
+             break;
+         }
+         default:
+diff -up webkitgtk-2.5.90/Source/JavaScriptCore/llint/LLIntSlowPaths.cpp.cloop_fix webkitgtk-2.5.90/Source/JavaScriptCore/llint/LLIntSlowPaths.cpp
+--- webkitgtk-2.5.90/Source/JavaScriptCore/llint/LLIntSlowPaths.cpp.cloop_fix   2014-09-22 01:23:26.643580502 -0600
++++ webkitgtk-2.5.90/Source/JavaScriptCore/llint/LLIntSlowPaths.cpp     2014-09-24 06:02:36.574037807 -0600
+@@ -1392,7 +1396,7 @@ LLINT_SLOW_PATH_DECL(slow_path_get_from_
+             {
+                 ConcurrentJITLocker locker(codeBlock->m_lock);
+                 pc[5].u.structure.set(exec->vm(), codeBlock->ownerExecutable(), structure);
+-                pc[6].u.operand = slot.cachedOffset();
++                pc[6].u.pointer = reinterpret_cast<void*>(slot.cachedOffset());
+             }
+             structure->startWatchingPropertyForReplacements(vm, slot.cachedOffset());
+         }
+diff -up webkitgtk-2.5.90/Source/JavaScriptCore/runtime/CommonSlowPaths.h.cloop_fix webkitgtk-2.5.90/Source/JavaScriptCore/runtime/CommonSlowPaths.h
+--- webkitgtk-2.5.90/Source/JavaScriptCore/runtime/CommonSlowPaths.h.cloop_fix  2014-09-22 01:25:13.843908763 -0600
++++ webkitgtk-2.5.90/Source/JavaScriptCore/runtime/CommonSlowPaths.h    2014-09-24 06:03:23.834201352 -0600
+@@ -115,7 +116,7 @@ inline void tryCachePutToScopeGlobal(
+
+     ConcurrentJITLocker locker(codeBlock->m_lock);
+     pc[5].u.structure.set(exec->vm(), codeBlock->ownerExecutable(), scope->structure());
+-    pc[6].u.operand = slot.cachedOffset();
++    pc[6].u.pointer = reinterpret_cast<void*>(slot.cachedOffset());
+ }
+
+ } // namespace CommonSlowPaths

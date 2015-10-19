@@ -1,0 +1,24 @@
+diff -up webkitgtk-2.8.0/Source/bmalloc/bmalloc/Algorithm.h.s390_fixes webkitgtk-2.8.0/Source/bmalloc/bmalloc/Algorithm.h
+--- webkitgtk-2.8.0/Source/bmalloc/bmalloc/Algorithm.h.s390_fixes	2015-03-04 15:25:17.000000000 +0100
++++ webkitgtk-2.8.0/Source/bmalloc/bmalloc/Algorithm.h	2015-03-27 10:59:40.245010499 +0100
+@@ -66,7 +66,7 @@ inline constexpr bool isPowerOfTwo(size_
+ template<typename T> inline T roundUpToMultipleOf(size_t divisor, T x)
+ {
+     BASSERT(isPowerOfTwo(divisor));
+-    return reinterpret_cast<T>((reinterpret_cast<uintptr_t>(x) + (divisor - 1)) & ~(divisor - 1));
++    return reinterpret_cast<T>((reinterpret_cast<size_t>(x) + (divisor - 1)) & ~(divisor - 1));
+ }
+ 
+ template<size_t divisor, typename T> inline constexpr T roundUpToMultipleOf(T x)
+diff -up webkitgtk-2.8.0/Source/bmalloc/bmalloc/Sizes.h.s390_fixes webkitgtk-2.8.0/Source/bmalloc/bmalloc/Sizes.h
+--- webkitgtk-2.8.0/Source/bmalloc/bmalloc/Sizes.h.s390_fixes	2015-03-04 15:25:17.000000000 +0100
++++ webkitgtk-2.8.0/Source/bmalloc/bmalloc/Sizes.h	2015-03-27 10:59:40.245010499 +0100
+@@ -99,7 +99,7 @@ namespace Sizes {
+     inline size_t sizeClass(size_t size)
+     {
+         static const size_t sizeClassMask = (mediumMax / alignment) - 1;
+-        return mask((size - 1) / alignment, sizeClassMask);
++        return mask(static_cast<uintptr_t>((size - 1) / alignment), sizeClassMask);
+     }
+ 
+     inline size_t objectSize(size_t sizeClass)

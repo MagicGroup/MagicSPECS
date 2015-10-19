@@ -1,0 +1,34 @@
+diff --git a/Source/WebCore/platform/graphics/gstreamer/MediaPlayerPrivateGStreamer.cpp b/Source/WebCore/platform/graphics/gstreamer/MediaPlayerPrivateGStreamer.cpp
+index 8929f2e..419330d 100644
+--- a/Source/WebCore/platform/graphics/gstreamer/MediaPlayerPrivateGStreamer.cpp
++++ b/Source/WebCore/platform/graphics/gstreamer/MediaPlayerPrivateGStreamer.cpp
+@@ -1767,7 +1767,7 @@ static HashSet<String> mimeTypeCache()
+         "video/flv",
+         "video/mj2",
+         "video/mp2t",
+-        "video/mp4",
++//        "video/mp4",
+         "video/mpeg",
+         "video/mpegts",
+         "video/ogg",
+@@ -1794,6 +1794,20 @@ static HashSet<String> mimeTypeCache()
+     for (unsigned i = 0; i < (sizeof(mimeTypes) / sizeof(*mimeTypes)); ++i)
+         cache.add(String(mimeTypes[i]));
+ 
++    // Hack to make YouTube work, https://bugs.webkit.org/show_bug.cgi?id=135972
++    gint exit_status = 1;
++    GUniqueOutPtr<GError> error;
++    GUniqueOutPtr<char> stdout_to_discard;
++    GUniqueOutPtr<char> stderr_to_discard;
++    gboolean success = g_spawn_command_line_sync(
++        "rpm -qi gstreamer1-libav",
++        &stdout_to_discard.outPtr(),
++        &stderr_to_discard.outPtr(),
++        &exit_status,
++        &error.outPtr());
++    if (success && !error && !exit_status)
++        cache.add(String::fromUTF8("video/mp4"));
++
+     typeListInitialized = true;
+     return cache;
+ }

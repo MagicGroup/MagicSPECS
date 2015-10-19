@@ -1,0 +1,14 @@
+diff -up webkitgtk-2.9.4/Source/WebKit2/Shared/Plugins/unix/PluginSearchPath.cpp.nspluginwrapper webkitgtk-2.9.4/Source/WebKit2/Shared/Plugins/unix/PluginSearchPath.cpp
+--- webkitgtk-2.9.4/Source/WebKit2/Shared/Plugins/unix/PluginSearchPath.cpp.nspluginwrapper	2015-07-22 09:22:28.761782915 +0200
++++ webkitgtk-2.9.4/Source/WebKit2/Shared/Plugins/unix/PluginSearchPath.cpp	2015-07-22 09:23:03.796351404 +0200
+@@ -57,6 +57,9 @@ Vector<String> pluginsDirectories()
+     result.append("/usr/lib64/mozilla/plugins");
+     result.append("/usr/lib/nsbrowser/plugins");
+     result.append("/usr/lib64/nsbrowser/plugins");
++    /* nspluginwrapper plugins */
++    result.append("/usr/lib64/mozilla/plugins-wrapped");
++    result.append("/usr/lib/mozilla/plugins-wrapped");
+ 
+     String mozillaHome(getenv("MOZILLA_HOME"));
+     if (!mozillaHome.isEmpty())
+diff -up webkitgtk-2.9.4/Source/WebKit2/UIProcess/Plugins/unix/PluginInfoStoreUnix.cpp.nspluginwrapper webkitgtk-2.9.4/Source/WebKit2/UIProcess/Plugins/unix/PluginInfoStoreUnix.cpp
