@@ -1,8 +1,9 @@
 %{!?tcp_wrappers:%define tcp_wrappers 1}
+%define _generatorsdir %{_prefix}/lib/systemd/system-generators
 
 Name: vsftpd
-Version: 2.3.5
-Release: 4%{?dist}
+Version: 3.0.2
+Release: 14%{?dist}
 Summary: Very Secure Ftp Daemon
 
 Group: System Environment/Daemons
@@ -14,22 +15,23 @@ Source1: vsftpd.xinetd
 Source2: vsftpd.pam
 Source3: vsftpd.ftpusers
 Source4: vsftpd.user_list
-Source5: vsftpd.init
 Source6: vsftpd_conf_migrate.sh
 Source7: vsftpd.service
+Source8: vsftpd@.service
+Source9: vsftpd.target
+Source10: vsftpd-generator
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildRequires: pam-devel
 BuildRequires: libcap-devel
 BuildRequires: openssl-devel
+BuildRequires: systemd
 %if %{tcp_wrappers}
 BuildRequires: tcp_wrappers-devel
 %endif
 
 Requires: logrotate
-Requires (preun): /sbin/chkconfig
-Requires (post): /sbin/chkconfig
 
 # Build patches
 Patch1: vsftpd-2.1.0-libs.patch
@@ -47,7 +49,6 @@ Patch9: vsftpd-2.1.0-userlist_log.patch
 
 Patch10: vsftpd-2.1.0-trim.patch
 Patch12: vsftpd-2.1.1-daemonize_plus.patch
-Patch13: vsftpd-2.2.0-openssl.patch
 Patch14: vsftpd-2.2.0-wildchar.patch
 
 Patch16: vsftpd-2.2.2-clone.patch
@@ -55,20 +56,19 @@ Patch19: vsftpd-2.3.4-sd.patch
 Patch20: vsftpd-2.3.4-sqb.patch
 Patch21: vsftpd-2.3.4-listen_ipv6.patch
 Patch22: vsftpd-2.3.5-aslim.patch
+Patch23: vsftpd-3.0.0-tz.patch
+Patch24: vsftpd-3.0.0-xferlog.patch
+Patch25: vsftpd-3.0.0-logrotate.patch
+Patch26: vsftpd-3.0.2-lookup.patch
+Patch27: vsftpd-3.0.2-uint-uidgid.patch
+Patch28: vsftpd-3.0.2-dh.patch
+Patch29: vsftpd-3.0.2-ecdh.patch
+Patch30: vsftpd-3.0.2-docupd.patch
+Patch31: vsftpd-3.0.2-rc450.patch
 
 %description
 vsftpd is a Very Secure FTP daemon. It was written completely from
 scratch.
-
-%package sysvinit
-Group: System Environment/Daemons
-Summary: SysV initscript for vsftpd daemon
-Requires: %{name} = %{version}-%{release}
-Requires(preun): /sbin/service
-Requires(postun): /sbin/service
-
-%description sysvinit
-The vsftpd-sysvinit contains SysV initscritps support.
 
 %prep
 %setup -q -n %{name}-%{version}
@@ -86,13 +86,21 @@ cp %{SOURCE1} .
 %patch9 -p1 -b .userlist_log
 %patch10 -p1 -b .trim
 %patch12 -p1 -b .daemonize_plus
-%patch13 -p1 -b .openssl
 %patch14 -p1 -b .wildchar
 %patch16 -p1 -b .clone
 %patch19 -p1 -b .sd
 %patch20 -p1 -b .sqb
 %patch21 -p1 -b .listen_ipv6
 %patch22 -p1 -b .aslim
+%patch23 -p1 -b .tz
+%patch24 -p1 -b .xferlog
+%patch25 -p1 -b .logrotate
+%patch26 -p1 -b .lookup
+%patch27 -p1 -b .uint-uidgid
+%patch28 -p1 -b .dh
+%patch29 -p1 -b .ecdh
+%patch30 -p1 -b .docupd
+%patch31 -p1 -b .rc450
 
 %build
 %ifarch s390x sparcv9 sparc64
@@ -107,9 +115,10 @@ make CFLAGS="$RPM_OPT_FLAGS -fpie -pipe -Wextra -Werror" \
 rm -rf $RPM_BUILD_ROOT
 mkdir -p $RPM_BUILD_ROOT%{_sbindir}
 mkdir -p $RPM_BUILD_ROOT%{_sysconfdir}
-mkdir -p $RPM_BUILD_ROOT%{_sysconfdir}/{vsftpd,pam.d,logrotate.d,rc.d/init.d}
+mkdir -p $RPM_BUILD_ROOT%{_sysconfdir}/{vsftpd,pam.d,logrotate.d}
 mkdir -p $RPM_BUILD_ROOT%{_mandir}/man{5,8}
-mkdir -p $RPM_BUILD_ROOT/lib/systemd/system
+mkdir -p $RPM_BUILD_ROOT%{_unitdir}
+mkdir -p $RPM_BUILD_ROOT%{_generatorsdir}
 install -m 755 vsftpd  $RPM_BUILD_ROOT%{_sbindir}/vsftpd
 install -m 600 vsftpd.conf $RPM_BUILD_ROOT%{_sysconfdir}/vsftpd/vsftpd.conf
 install -m 644 vsftpd.conf.5 $RPM_BUILD_ROOT/%{_mandir}/man5/
@@ -118,9 +127,11 @@ install -m 644 RedHat/vsftpd.log $RPM_BUILD_ROOT%{_sysconfdir}/logrotate.d/vsftp
 install -m 644 %{SOURCE2} $RPM_BUILD_ROOT%{_sysconfdir}/pam.d/vsftpd
 install -m 600 %{SOURCE3} $RPM_BUILD_ROOT%{_sysconfdir}/vsftpd/ftpusers
 install -m 600 %{SOURCE4} $RPM_BUILD_ROOT%{_sysconfdir}/vsftpd/user_list
-install -m 755 %{SOURCE5} $RPM_BUILD_ROOT%{_sysconfdir}/rc.d/init.d/vsftpd
 install -m 744 %{SOURCE6} $RPM_BUILD_ROOT%{_sysconfdir}/vsftpd/vsftpd_conf_migrate.sh
-install -m 644 %{SOURCE7} $RPM_BUILD_ROOT/lib/systemd/system/
+install -m 644 %{SOURCE7} $RPM_BUILD_ROOT%{_unitdir}
+install -m 644 %{SOURCE8} $RPM_BUILD_ROOT%{_unitdir}
+install -m 644 %{SOURCE9} $RPM_BUILD_ROOT%{_unitdir}
+install -m 755 %{SOURCE10} $RPM_BUILD_ROOT%{_generatorsdir}
                             
 mkdir -p $RPM_BUILD_ROOT/%{_var}/ftp/pub
 
@@ -128,27 +139,19 @@ mkdir -p $RPM_BUILD_ROOT/%{_var}/ftp/pub
 rm -rf $RPM_BUILD_ROOT
 
 %post
-/bin/systemctl daemon-reload >/dev/null 2>&1 || :
+%systemd_post vsftpd.service
 
 %preun
-if [ $1 = 0 ]; then
-	/bin/systemctl disable vsftpd.service > /dev/null 2>&1 || :
-	/bin/systemctl stop vsftpd.service > /dev/null 2>&1 || :
-fi
+%systemd_preun vsftpd.service
+%systemd_preun vsftpd.target
 
 %postun
-/bin/systemctl daemon-reload >/dev/null 2>&1 || :
-
-%triggerun --  %{name} < 2.3.4-5
-	/sbin/chkconfig --del vsftpd >/dev/null 2>&1 || :
-	/bin/systemctl try-restart vsftpd.service >/dev/null 2>&1 || :
-
-%triggerpostun -n %{name}-sysvinit -- %{name} < 2.3.4-5
-	/sbin/chkconfig --add vsftpd >/dev/null 2>&1 || :
+%systemd_postun_with_restart vsftpd.service 
 
 %files
 %defattr(-,root,root,-)
-/lib/systemd/system/vsftpd.service
+%{_unitdir}/*
+%{_generatorsdir}/*
 %{_sbindir}/vsftpd
 %dir %{_sysconfdir}/vsftpd
 %{_sysconfdir}/vsftpd/vsftpd_conf_migrate.sh
@@ -163,12 +166,77 @@ fi
 %{_mandir}/man8/vsftpd.*
 %{_var}/ftp
 
-%files sysvinit
-%{_sysconfdir}/rc.d/init.d/vsftpd
-
 %changelog
-* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 2.3.5-4
-- 为 Magic 3.0 重建
+* Fri Jun 19 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.0.2-14
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
+
+* Tue Sep 16 2014 Jiri Skala <jskala@redhat.com> - 3.0.2-13
+- added appropriate values to ssl_ciphers (dh and ecdh patches)
+
+* Mon Aug 18 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.0.2-12
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
+
+* Fri Jul 04 2014 Jiri Skala <jskala@redhat.com> - 3.0.2-11
+- fixed deny_file, hide_file options - updated sqb patch
+
+* Wed Jun 18 2014 Jiri Skala <jskala@redhat.com> - 3.0.2-10
+- improves DH cipher
+- implements ECDH cipher
+- adds isolate* options to man vsftpd.conf
+- corrects max_clients, max_per_ip default values in man vsftd.conf
+- adds return code 450 when a file is temporarily unavailable
+
+* Sun Jun 08 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.0.2-9
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Tue May 13 2014 Jiri Skala <jskala@redhat.com> - 3.0.2-8
+- adds reverse lookup option to vsftpd.conf
+- changes types of uid and gid to uint
+- removes spare patch pasv-addr
+- implements DH cipher
+- gets rid init scirpt subpackage
+
+* Tue Sep 10 2013 Jiri Skala <jskala@redhat.com> - 3.0.2-7
+- fixed #1005549 - vsftpd startup broken
+
+* Wed Sep 04 2013 Jiri Skala <jskala@redhat.com> - 3.0.2-6
+- fixes usage pasv_address option in combination with external IP
+- updated man pages - multile instances using vsftpd.target
+
+* Thu Aug 15 2013 Jiri Skala <jskala@redhat.com> - 3.0.2-5
+- replaced systemd path by _unitdir macro
+- fixes #7194344 - multiple instances (target, generator)
+
+* Sun Aug 04 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.0.2-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Mon Feb 25 2013 Jiri Skala <jskala@redhat.com> - 3.0.2-3
+- fixes #913519 - login fails (increased AS_LIMIT)
+
+* Fri Feb 15 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.0.2-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
+
+* Wed Sep 19 2012 Jiri Skala <jskala@redhat.com> - 3.0.2-2
+- update to latest upstream 3.0.2
+
+* Mon Sep 17 2012 Jiri Skala <jskala@redhat.com> - 3.0.1-1
+- update to latest upstream 3.0.1
+- fixes #851441 - Introduce new systemd-rpm macros in vsftpd spec file
+- fixes #845980 - vsftpd seccomp filter is too strict
+
+* Sun Jul 22 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.0.0-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Tue Jul 17 2012 Jiri Skala <jskala@redhat.com> - 3.0.0-3
+- changed default value of xferlog_file to /var/log/xferlog
+- added rotating xferlog
+
+* Thu Apr 26 2012 Jiri Skala <jskala@redhat.com> - 3.0.0-2
+- corrected time zone handling - especially DST flag
+- fixed default value of option 'listen'
+
+* Tue Apr 10 2012 Jiri Skala <jskala@redhat.com> - 3.0.0-1
+- updated to latest upstream 3.0.0
 
 * Thu Feb 09 2012 Jiri Skala <jskala@redhat.com> - 2.3.5-3
 - fixes #788812 - authentication failure on x86_64 when using nss_pgsql
