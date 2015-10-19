@@ -9,7 +9,7 @@
 	cp -p %1  %{buildroot}%{_pkgdocdir}/$(echo '%1' | sed -e 's!/!.!g')
 
 Name:		webkitgtk
-Version:	2.4.1
+Version:	2.4.9
 Release:	3%{?dist}
 Summary:	GTK+ Web content engine library
 
@@ -21,10 +21,14 @@ Source0:	http://www.webkitgtk.org/releases/webkitgtk-%{version}.tar.xz
 
 # add support for nspluginwrapper.
 Patch0: 	webkit-1.3.10-nspluginwrapper.patch
-# https://bugs.webkit.org/show_bug.cgi?id=103128
-Patch4:         webkit-2.1.90-double2intsPPC32.patch
-Patch10:        webkitgtk-aarch64.patch
-Patch100:       webkitgtk-2.4.1-mips64el.patch
+Patch1:         webkitgtk-aarch64.patch
+Patch2:         webkitgtk-2.4.1-cloop_fix.patch
+Patch3:         webkitgtk-2.4.5-cloop_fix_32.patch
+Patch4:         webkitgtk-2.4.1-ppc64_align.patch
+# https://bugs.webkit.org/show_bug.cgi?id=142074
+Patch5:         webkitgtk-2.4.8-user-agent.patch
+# http://trac.webkit.org/changeset/169665
+Patch6:         webkitgtk-2.4.9-sql_initialize_string.patch
 
 BuildRequires:	bison
 BuildRequires:	chrpath
@@ -88,38 +92,47 @@ This package contains developer documentation for %{name}.
 %prep
 %setup -qn "webkitgtk-%{version}"
 %patch0 -p1 -b .nspluginwrapper
+%patch1 -p1 -b .aarch64
+%patch2 -p1 -b .cloop_fix
+%patch5 -p1 -b .user_agent
+%patch6 -p1 -b .sql_initialize_string
 # required for 32-bit big-endians
 %ifarch ppc s390
-%patch4 -p1 -b .double2intsPPC32
+%patch3 -p1 -b .cloop_fix_32
 %endif
-%patch10 -p1 -b .aarch64
-%ifarch mips64el
-%patch100 -p1 -b .mips64el
+%ifarch %{power64} aarch64 ppc
+%patch4 -p1 -b .ppc64_align
 %endif
 
 %build
-%ifarch s390 %{arm} ppc mips64el
-# Use linker flags to reduce memory consumption on low-mem architectures
+# Use linker flags to reduce memory consumption
 %global optflags %{optflags} -Wl,--no-keep-memory -Wl,--reduce-memory-overheads
-%endif
-%ifarch s390
+
+%ifarch s390 %{arm}
 # Decrease debuginfo verbosity to reduce memory consumption even more
-%global optflags %(echo %{optflags} | sed 's/-g/-g1/')
+%global optflags %(echo %{optflags} | sed 's/-g /-g1 /')
 %endif
 
 %ifarch ppc
-# Use linker flag -relax to get WebKit2 build under ppc(32) with JIT disabled
-%global optflags %{optflags} -Wl,-relax
+# Use linker flag -relax to get WebKit build under ppc(32) with JIT disabled
+%global optflags %{optflags} -Wl,-relax -latomic
 %endif
 
-# Build with -g1 on all platforms to avoid running into 4 GB ar format limit
-# https://bugs.webkit.org/show_bug.cgi?id=91154
-%global optflags %(echo %{optflags} | sed 's/-g /-g1 /')
+%ifarch s390 s390x ppc %{power64} aarch64
+%global optflags %{optflags} -DENABLE_YARR_JIT=0
+%endif
 
-CFLAGS="%{optflags} -DLIBSOUP_I_HAVE_READ_BUG_594377_AND_KNOW_SOUP_PASSWORD_MANAGER_MIGHT_GO_AWAY" %configure                                                   \
+# Regenerate configure to pick up the gcc 5.0 changes
+autoreconf -v
+
+%if 0%{?fedora}
+%global optflags %{optflags} -DUSER_AGENT_GTK_DISTRIBUTOR_NAME=\'\\"Fedora\\"\'
+%endif
+
+%configure                                                      \
                         --with-gtk=2.0                          \
                         --disable-webkit2                       \
-%ifarch s390 s390x ppc ppc64 aarch64 mips64el
+%ifarch s390 s390x ppc %{power64} aarch64
                         --disable-jit                           \
 %else
                         --enable-jit                            \
@@ -205,8 +218,75 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &>/dev/null || :
 %{_datadir}/gtk-doc/html/webkitgtk
 
 %changelog
-* Tue May 06 2014 Liu Di <liudidi@gmail.com> - 2.4.1-3
-- 为 Magic 3.0 重建
+* Fri Sep 25 2015 Tomas Popela <tpopela@redhat.com> - 2.4.9-3
+- rhbz#1189303 - [abrt] midori: WebCore::SQLiteStatement::prepare(): midori killed by SIGSEGV
+  Initialize string in SQLiteStatement before using it
+
+* Fri Jun 19 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.4.9-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
+
+* Wed May 20 2015 Tomas Popela <tpopela@redhat.com> - 2.4.9-1
+- Update to 2.4.9
+
+* Mon May 11 2015 Tomas Popela <tpopela@redhat.com> - 2.4.8-4
+- Add Fedora branding to the user agent
+
+* Wed Feb 18 2015 Tomas Popela <tpopela@redhat.com> - 2.4.8-3
+- Add support for gcc 5.0
+- Let the package compile with latest glib
+
+* Mon Jan 26 2015 David Tardon <dtardon@redhat.com> - 2.4.8-2
+- rebuild for ICU 54.1
+
+* Wed Jan 07 2015 Tomas Popela <tpopela@redhat.com> - 2.4.8-1
+- Update to 2.4.8
+
+* Wed Oct 22 2014 Tomas Popela <tpopela@redhat.com> - 2.4.7-1
+- Update to 2.4.7
+
+* Mon Sep 29 2014 Tomas Popela <tpopela@redhat.com> - 2.4.6-1
+- Update to 2.4.6
+
+* Tue Sep 02 2014 Tomas Popela <tpopela@redhat.com> - 2.4.5-3
+- Rebase the aarch64 patch
+
+* Tue Aug 26 2014 David Tardon <dtardon@redhat.com> - 2.4.5-2
+- rebuild for ICU 53.1
+
+* Tue Aug 26 2014 Tomas Popela <tpopela@redhat.com> - 2.4.5-1
+- Update to 2.4.5
+
+* Mon Aug 18 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.4.4-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
+
+* Wed Jul 23 2014 Tomas Popela <tpopela@redhat.com> - 2.4.4-3
+- Remove geoclue-devel from BR
+
+* Wed Jul 23 2014 Tomas Popela <tpopela@redhat.com> - 2.4.4-2
+- Fix CLoop on ppc32 and s390
+- Add geoclue-devel as BR as WK1 needs it
+
+* Thu Jul 10 2014 Tomas Popela <tpopela@redhat.com> 2.4.4-1
+- Update to 2.4.4
+
+* Fri Jul 04 2014 Tomas Popela <tpopela@redhat.com> 2.4.3-4
+- rhbz#1088480 - [abrt] libwebkit2gtk: TSymbolTableLevel::~TSymbolTableLevel(): WebKitWebProcess killed by SIGSEGV
+
+* Wed Jun 25 2014 Yaakov Selkowitz <yselkowi@redhat.com> - 2.4.3-3
+- Fix for 64k pages on aarch64 (#1074093, #1113347)
+
+* Sun Jun 08 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.4.3-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Tue May 27 2014 Tomas Popela <tpopela@redhat.com> 2.4.3-1
+- Update to 2.4.3
+
+* Sun May 18 2014 Peter Robinson <pbrobinson@fedoraproject.org> 2.4.2-2
+- Fix aarch64 build
+
+* Thu May 15 2014 Tomas Popela <tpopela@redhat.com> 2.4.2-1
+- Update to 2.4.2
+- Fix for CLoop on ppc64, ppc64le and s390x
 
 * Fri Apr 25 2014 Peter Robinson <pbrobinson@fedoraproject.org> 2.4.1-2
 - Switch over to geoclue2
