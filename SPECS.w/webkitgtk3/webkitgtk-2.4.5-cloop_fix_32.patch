@@ -1,6 +1,6 @@
-diff -up webkitgtk-2.1.90.1/Source/JavaScriptCore/llint/LowLevelInterpreter32_64.asm.double2intsPPC32 webkitgtk-2.1.90.1/Source/JavaScriptCore/llint/LowLevelInterpreter32_64.asm
---- webkitgtk-2.1.90.1/Source/JavaScriptCore/llint/LowLevelInterpreter32_64.asm.double2intsPPC32	2013-08-28 21:06:29.000000000 +0200
-+++ webkitgtk-2.1.90.1/Source/JavaScriptCore/llint/LowLevelInterpreter32_64.asm	2013-09-12 15:32:34.000000000 +0200
+diff -up webkitgtk-2.4.5/Source/JavaScriptCore/llint/LowLevelInterpreter32_64.asm.cloop_fix_32 webkitgtk-2.4.5/Source/JavaScriptCore/llint/LowLevelInterpreter32_64.asm
+--- webkitgtk-2.4.5/Source/JavaScriptCore/llint/LowLevelInterpreter32_64.asm.cloop_fix_32	2013-08-28 21:06:29.000000000 +0200
++++ webkitgtk-2.4.5/Source/JavaScriptCore/llint/LowLevelInterpreter32_64.asm	2013-09-12 15:32:34.000000000 +0200
 @@ -1679,7 +1679,7 @@ _llint_op_next_pname:
      loadi 20[PC], t2
      loadi PayloadOffset[cfr, t2, 8], t2
@@ -10,9 +10,9 @@ diff -up webkitgtk-2.1.90.1/Source/JavaScriptCore/llint/LowLevelInterpreter32_64
      addi 1, t0
      storei t0, PayloadOffset[cfr, t1, 8]
      loadi 4[PC], t1
-diff -up webkitgtk-2.1.90.1/Source/JavaScriptCore/llint/LowLevelInterpreter.asm.double2intsPPC32 webkitgtk-2.1.90.1/Source/JavaScriptCore/llint/LowLevelInterpreter.asm
---- webkitgtk-2.1.90.1/Source/JavaScriptCore/llint/LowLevelInterpreter.asm.double2intsPPC32	2013-08-28 21:06:29.000000000 +0200
-+++ webkitgtk-2.1.90.1/Source/JavaScriptCore/llint/LowLevelInterpreter.asm	2013-09-12 15:32:34.000000000 +0200
+diff -up webkitgtk-2.4.5/Source/JavaScriptCore/llint/LowLevelInterpreter.asm.cloop_fix_32 webkitgtk-2.4.5/Source/JavaScriptCore/llint/LowLevelInterpreter.asm
+--- webkitgtk-2.4.5/Source/JavaScriptCore/llint/LowLevelInterpreter.asm.cloop_fix_32	2013-08-28 21:06:29.000000000 +0200
++++ webkitgtk-2.4.5/Source/JavaScriptCore/llint/LowLevelInterpreter.asm	2013-09-12 15:32:34.000000000 +0200
 @@ -276,13 +276,13 @@ macro assertNotConstant(index)
  end
  

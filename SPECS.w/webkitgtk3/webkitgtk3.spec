@@ -1,3 +1,6 @@
+# Fix rebuild on non-Fedora
+%{!?_pkgdocdir: %global _pkgdocdir %{_docdir}/%{name}-%{version}}
+
 ## NOTE: Lots of files in various subdirectories have the same name (such as
 ## "LICENSE") so this short macro allows us to distinguish them by using their
 ## directory names (from the source tree) as prefixes for the files.
@@ -6,8 +9,8 @@
         cp -p %1  %{buildroot}%{_pkgdocdir}/$(echo '%1' | sed -e 's!/!.!g')
 
 Name:           webkitgtk3
-Version:        2.4.1
-Release:        2%{?dist}
+Version:        2.4.9
+Release:        3%{?dist}
 Summary:        GTK+ Web content engine library
 
 Group:          Development/Libraries
@@ -17,10 +20,14 @@ URL:            http://www.webkitgtk.org/
 Source0:        http://webkitgtk.org/releases/webkitgtk-%{version}.tar.xz
 
 Patch0:         webkit-1.1.14-nspluginwrapper.patch
-# https://bugs.webkit.org/show_bug.cgi?id=103128
-Patch4:         webkit-2.1.90-double2intsPPC32.patch
-Patch10:        webkitgtk-aarch64.patch
-Patch100:       webkitgtk-2.4.1-mips64el.patch
+Patch1:         webkitgtk-aarch64.patch
+Patch2:         webkitgtk-2.4.1-cloop_fix.patch
+Patch3:         webkitgtk-2.4.5-cloop_fix_32.patch
+Patch4:         webkitgtk-2.4.1-ppc64_align.patch
+# https://bugs.webkit.org/show_bug.cgi?id=142074
+Patch5:         webkitgtk-2.4.8-user-agent.patch
+# http://trac.webkit.org/changeset/169665
+Patch6:         webkitgtk-2.4.9-sql_initialize_string.patch
 
 BuildRequires:  at-spi2-core-devel
 BuildRequires:  bison
@@ -54,6 +61,9 @@ BuildRequires:  gobject-introspection-devel >= 1.32.0
 BuildRequires:  perl-Switch
 BuildRequires:  ruby
 BuildRequires:  mesa-libGL-devel
+%ifarch ppc
+BuildRequires:  libatomic
+%endif
 Requires:       geoclue2
 
 %description
@@ -61,16 +71,6 @@ WebKitGTK+ is the port of the portable web rendering engine WebKit to the
 GTK+ platform.
 
 This package contains WebKitGTK+ for GTK+ 3.
-
-%package -n     libwebkit2gtk
-Summary:        The libwebkit2gtk library
-Group:          Development/Libraries
-Requires:       %{name}%{?_isa} = %{version}-%{release}
-Requires:       geoclue2
-
-%description -n libwebkit2gtk
-The libwebkit2gtk package contains the libwebkit2gtk library
-that is part of %{name}.
 
 %package        devel
 Summary:        Development files for %{name}
@@ -93,19 +93,22 @@ This package contains developer documentation for %{name}.
 %prep
 %setup -qn "webkitgtk-%{version}"
 %patch0 -p1 -b .nspluginwrapper
+%patch1 -p1 -b .aarch64
+%patch2 -p1 -b .cloop_fix
+%patch5 -p1 -b .user_agent
+%patch6 -p1 -b .sql_initialize_string
 %ifarch ppc s390
-%patch4 -p1 -b .double2intsPPC32
+%patch3 -p1 -b .cloop_fix_32
 %endif
-%patch10 -p1 -b .aarch64
-%ifarch mips64el
-%patch100 -p1 -b .mips64el
+%ifarch %{power64} aarch64 ppc
+%patch4 -p1 -b .ppc64_align
 %endif
 
 %build
 # Use linker flags to reduce memory consumption
 %global optflags %{optflags} -Wl,--no-keep-memory -Wl,--reduce-memory-overheads
 
-%ifarch s390 %{arm} mips64el
+%ifarch s390 %{arm}
 # Decrease debuginfo verbosity to reduce memory consumption even more
 %global optflags %(echo %{optflags} | sed 's/-g /-g1 /')
 %endif
@@ -115,13 +118,18 @@ This package contains developer documentation for %{name}.
 %global optflags %{optflags} -Wl,-relax -latomic
 %endif
 
-%ifarch s390 s390x ppc ppc64 aarch64
+%ifarch s390 s390x ppc %{power64} aarch64
 %global optflags %{optflags} -DENABLE_YARR_JIT=0
+%endif
+
+%if 0%{?fedora}
+%global optflags %{optflags} -DUSER_AGENT_GTK_DISTRIBUTOR_NAME=\'\\"Fedora\\"\'
 %endif
 
 %configure                                                      \
                         --with-gtk=3.0                          \
-%ifarch s390 s390x ppc ppc64 aarch64 mips64el
+                        --disable-webkit2                       \
+%ifarch s390 s390x ppc %{power64} aarch64
                         --disable-jit                           \
 %else
                         --enable-jit                            \
@@ -136,23 +144,21 @@ mkdir -p DerivedSources/webkitdom/
 mkdir -p DerivedSources/InjectedBundle
 mkdir -p DerivedSources/Platform
 
-make %{_smp_mflags} V=1
+# Disable the parallel compilation as it fails to compile in brew.
+# https://bugs.webkit.org/show_bug.cgi?id=34846
+# make %{_smp_mflags} V=1
+make -j1 V=1
 
 %install
 make install DESTDIR=%{buildroot}
 
 install -d -m 755 %{buildroot}%{_libexecdir}/%{name}
 install -m 755 Programs/GtkLauncher %{buildroot}%{_libexecdir}/%{name}
-install -m 755 Programs/MiniBrowser %{buildroot}%{_libexecdir}/%{name}
 
 # Remove lib64 rpaths
 chrpath --delete %{buildroot}%{_bindir}/jsc-3
 chrpath --delete %{buildroot}%{_libdir}/libwebkitgtk-3.0.so
-chrpath --delete %{buildroot}%{_libdir}/libwebkit2gtk-3.0.so
 chrpath --delete %{buildroot}%{_libexecdir}/%{name}/GtkLauncher
-chrpath --delete %{buildroot}%{_libexecdir}/%{name}/MiniBrowser
-chrpath --delete %{buildroot}%{_libexecdir}/WebKitPluginProcess
-chrpath --delete %{buildroot}%{_libexecdir}/WebKitWebProcess
 
 # Remove .la files
 find $RPM_BUILD_ROOT%{_libdir} -name "*.la" -delete
@@ -176,9 +182,6 @@ find $RPM_BUILD_ROOT%{_libdir} -name "*.la" -delete
 %post -p /sbin/ldconfig
 %postun -p /sbin/ldconfig
 
-%post -n libwebkit2gtk -p /sbin/ldconfig
-%postun -n libwebkit2gtk -p /sbin/ldconfig
-
 
 %files -f WebKitGTK-3.0.lang
 %doc %{_pkgdocdir}/
@@ -190,41 +193,128 @@ find $RPM_BUILD_ROOT%{_libdir} -name "*.la" -delete
 %{_libexecdir}/%{name}/GtkLauncher
 %{_datadir}/webkitgtk-3.0
 
-%files -n libwebkit2gtk
-%{_libdir}/libwebkit2gtk-3.0.so.*
-%{_libdir}/webkit2gtk-3.0/
-%{_libdir}/girepository-1.0/WebKit2-3.0.typelib
-%{_libdir}/girepository-1.0/WebKit2WebExtension-3.0.typelib
-%{_libexecdir}/%{name}/MiniBrowser
-%{_libexecdir}/WebKitNetworkProcess
-%{_libexecdir}/WebKitPluginProcess
-%{_libexecdir}/WebKitWebProcess
-
 %files  devel
 %{_bindir}/jsc-3
 %{_includedir}/webkitgtk-3.0
 %{_libdir}/libwebkitgtk-3.0.so
-%{_libdir}/libwebkit2gtk-3.0.so
 %{_libdir}/libjavascriptcoregtk-3.0.so
 %{_libdir}/pkgconfig/webkitgtk-3.0.pc
-%{_libdir}/pkgconfig/webkit2gtk-3.0.pc
-%{_libdir}/pkgconfig/webkit2gtk-web-extension-3.0.pc
 %{_libdir}/pkgconfig/javascriptcoregtk-3.0.pc
 %{_datadir}/gir-1.0/WebKit-3.0.gir
-%{_datadir}/gir-1.0/WebKit2-3.0.gir
-%{_datadir}/gir-1.0/WebKit2WebExtension-3.0.gir
 %{_datadir}/gir-1.0/JavaScriptCore-3.0.gir
 
 %files doc
 %dir %{_datadir}/gtk-doc
 %dir %{_datadir}/gtk-doc/html
 %{_datadir}/gtk-doc/html/webkitgtk
-%{_datadir}/gtk-doc/html/webkit2gtk
 %{_datadir}/gtk-doc/html/webkitdomgtk
 
 %changelog
-* Tue May 06 2014 Liu Di <liudidi@gmail.com> - 2.4.1-2
-- 为 Magic 3.0 重建
+* Fri Sep 25 2015 Tomas Popela <tpopela@redhat.com> - 2.4.9-3
+- rhbz#1189303 - [abrt] midori: WebCore::SQLiteStatement::prepare(): midori killed by SIGSEGV
+  Initialize string in SQLiteStatement before using it
+
+* Fri Jun 19 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.4.9-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
+
+* Wed May 20 2015 Tomas Popela <tpopela@redhat.com> - 2.4.9-1
+- Update to 2.4.9
+
+* Sat May 02 2015 Kalev Lember <kalevlember@gmail.com> - 2.4.8-9
+- Rebuilt for GCC 5 C++11 ABI change
+
+* Tue Mar 17 2015 Michael Catanzaro <mcatanzaro@gnome.org> - 2.4.8-7
+- Remove the fix for late certificate validation because we use --disable-webkit2
+
+* Tue Mar 17 2015 Michael Catanzaro <mcatanzaro@gnome.org> - 2.4.8-7
+- Backport fix for late certificate validation
+
+* Tue Mar 10 2015 Tomas Popela <tpopela@redhat.com> - 2.4.8-6
+- Backport fix for use-after-free when destroying frame
+
+* Fri Feb 27 2015 Michael Catanzaro <mcatanzaro@gnome.org> - 2.4.8-5
+- Add Fedora branding to the user agent
+
+* Sat Feb 21 2015 Till Maas <opensource@till.name> - 2.4.8-4
+- Rebuilt for Fedora 23 Change
+  https://fedoraproject.org/wiki/Changes/Harden_all_packages_with_position-independent_code
+
+* Wed Feb 18 2015 Tomas Popela <tpopela@redhat.com> - 2.4.8-3
+- Add support for gcc 5.0
+- Let the package compile with latest glib
+
+* Mon Jan 26 2015 David Tardon <dtardon@redhat.com> - 2.4.8-2
+- rebuild for ICU 54.1
+
+* Wed Jan 07 2015 Tomas Popela <tpopela@redhat.com> - 2.4.8-1
+- Update to 2.4.8
+
+* Wed Oct 22 2014 Tomas Popela <tpopela@redhat.com> - 2.4.7-1
+- Update to 2.4.7
+
+* Tue Oct 21 2014 Tomas Popela <tpopela@redhat.com> - 2.4.6-2
+- Disable the SSLv3 to address the POODLE vulnerability
+
+* Mon Sep 29 2014 Tomas Popela <tpopela@redhat.com> - 2.4.6-1
+- Update to 2.4.6
+- Run make with -j1 to let it successfully compile in brew
+
+* Tue Sep 02 2014 Tomas Popela <tpopela@redhat.com> - 2.4.5-4
+- Rebase the aarch64 patch
+
+* Tue Aug 26 2014 Kalev Lember <kalevlember@gmail.com> - 2.4.5-3
+- Disable support for webkit2 API which is now provided by the webkitgtk4
+  package
+
+* Tue Aug 26 2014 David Tardon <dtardon@redhat.com> - 2.4.5-2
+- rebuild for ICU 53.1
+
+* Tue Aug 26 2014 Tomas Popela <tpopela@redhat.com> - 2.4.5-1
+- Update to 2.4.5
+
+* Mon Aug 18 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.4.4-5
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
+
+* Wed Jul 23 2014 Tomas Popela <tpopela@redhat.com> - 2.4.4-4
+- Remove geoclue-devel from BR
+
+* Wed Jul 23 2014 Tomas Popela <tpopela@redhat.com> - 2.4.4-3
+- Fix CLoop on ppc32 and s390
+- Add geoclue-devel as BR as WK1 needs it
+
+* Tue Jul 22 2014 Kalev Lember <kalevlember@gmail.com> - 2.4.4-2
+- Rebuilt for gobject-introspection 1.41.4
+
+* Tue Jul 08 2014 Kalev Lember <kalevlember@gmail.com> - 2.4.4-1
+- Update to 2.4.4
+
+* Fri Jul  4 2014 Yaakov Selkowitz <yselkowi@redhat.com> - 2.4.3-4
+- Fix for 64k pages on aarch64 (#1074093, #1113345)
+
+* Fri Jul 04 2014 Tomas Popela <tpopela@redhat.com> 2.4.3-3
+- rhbz#1088480 - [abrt] libwebkit2gtk: TSymbolTableLevel::~TSymbolTableLevel(): WebKitWebProcess killed by SIGSEGV
+
+* Sun Jun 08 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.4.3-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Tue May 27 2014 Tomas Popela <tpopela@redhat.com> 2.4.3-1
+- Update to 2.4.3
+
+* Sun May 18 2014 Peter Robinson <pbrobinson@fedoraproject.org> 2.4.2-4
+- Fix aarch64 build
+
+* Wed May 14 2014 Tomas Popela <tpopela@redhat.com> 2.4.2-3
+- Add support for ppc64le
+- Fix for CLoop on ppc64, ppc64le and s390x
+
+* Tue May 13 2014 Karsten Hopp <karsten@redhat.com> 2.4.2-2
+- PPC (32bit) needs libatomic in the buildroot
+
+* Mon May 12 2014 Kalev Lember <kalevlember@gmail.com> - 2.4.2-1
+- Update to 2.4.2
+
+* Wed May 07 2014 Kalev Lember <kalevlember@gmail.com> - 2.4.1-2
+- Make sure -devel pulls in libwebkit2gtk
 
 * Mon Apr 14 2014 Kalev Lember <kalevlember@gmail.com> - 2.4.1-1
 - Update to 2.4.1
