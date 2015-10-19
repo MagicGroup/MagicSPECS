@@ -1,0 +1,54 @@
+To: vim_dev@googlegroups.com
+Subject: Patch 7.4.850
+Fcc: outbox
+From: Bram Moolenaar <Bram@moolenaar.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+------------
+
+Patch 7.4.850 (after 7.4.846)
+Problem:    <Esc> does not show up.
+Solution:   Use &gt; and &lt;. (Kazunobu Kuriyama)
+Files:      CONTRIBUTING.md
+
+
+*** ../vim-7.4.849/CONTRIBUTING.md	2015-09-01 17:50:32.476494002 +0200
+--- CONTRIBUTING.md	2015-09-01 19:47:33.679001533 +0200
+***************
+*** 27,34 ****
+  
+  If you report an issue, please describe exactly how to reproduce it.
+  For example, don't say "insert some text" but say what you did exactly:
+! "ahere is some text<Esc>".  Ideally, the steps you list can be used to write a
+! test to verify the problem is fixed.
+  
+  Feel free to report even the smallest problem, also typos in the documentation.
+  
+--- 27,35 ----
+  
+  If you report an issue, please describe exactly how to reproduce it.
+  For example, don't say "insert some text" but say what you did exactly:
+! "ahere is some text&lt;Esc&gt;".
+! Ideally, the steps you list can be used to write a test to verify the problem
+! is fixed.
+  
+  Feel free to report even the smallest problem, also typos in the documentation.
+  
+*** ../vim-7.4.849/src/version.c	2015-09-01 19:25:58.324615363 +0200
+--- src/version.c	2015-09-01 19:48:54.298154726 +0200
+***************
+*** 743,744 ****
+--- 743,746 ----
+  {   /* Add new patch number below this line */
++ /**/
++     850,
+  /**/
+
+-- 
+God made machine language; all the rest is the work of man.
+
+ /// Bram Moolenaar -- Bram@Moolenaar.net -- http://www.Moolenaar.net   \\\
+///        sponsor Vim, vote for features -- http://www.Vim.org/sponsor/ \\\
+\\\  an exciting new programming language -- http://www.Zimbu.org        ///
+ \\\            help me help AIDS victims -- http://ICCF-Holland.org    ///

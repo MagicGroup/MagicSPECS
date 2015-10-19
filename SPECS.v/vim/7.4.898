@@ -1,0 +1,45 @@
+To: vim_dev@googlegroups.com
+Subject: Patch 7.4.898
+Fcc: outbox
+From: Bram Moolenaar <Bram@moolenaar.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+------------
+
+Patch 7.4.898
+Problem:    The 'fixendofline' option is set on with ":edit".
+Solution:   Don't set the option when clearing a buffer. (Yasuhiro Matsumoto)
+Files:      src/buffer.c
+
+
+*** ../vim-7.4.897/src/buffer.c	2015-08-04 17:43:20.577543527 +0200
+--- src/buffer.c	2015-10-13 20:39:51.476794341 +0200
+***************
+*** 547,553 ****
+      buf->b_shortname = FALSE;
+  #endif
+      buf->b_p_eol = TRUE;
+-     buf->b_p_fixeol = TRUE;
+      buf->b_start_eol = TRUE;
+  #ifdef FEAT_MBYTE
+      buf->b_p_bomb = FALSE;
+--- 547,552 ----
+*** ../vim-7.4.897/src/version.c	2015-10-13 20:21:45.220226141 +0200
+--- src/version.c	2015-10-13 20:41:17.031890643 +0200
+***************
+*** 743,744 ****
+--- 743,746 ----
+  {   /* Add new patch number below this line */
++ /**/
++     898,
+  /**/
+
+-- 
+hundred-and-one symptoms of being an internet addict:
+37. You start looking for hot HTML addresses in public restrooms.
+
+ /// Bram Moolenaar -- Bram@Moolenaar.net -- http://www.Moolenaar.net   \\\
+///        sponsor Vim, vote for features -- http://www.Vim.org/sponsor/ \\\
+\\\  an exciting new programming language -- http://www.Zimbu.org        ///
+ \\\            help me help AIDS victims -- http://ICCF-Holland.org    ///

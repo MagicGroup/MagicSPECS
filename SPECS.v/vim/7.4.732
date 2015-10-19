@@ -1,0 +1,47 @@
+To: vim_dev@googlegroups.com
+Subject: Patch 7.4.732
+Fcc: outbox
+From: Bram Moolenaar <Bram@moolenaar.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+------------
+
+Patch 7.4.732
+Problem:    The cursor line is not always updated for the "O" command.
+Solution:   Reset the VALID_CROW flag. (Christian Brabandt)
+Files:      src/normal.c
+
+
+*** ../vim-7.4.731/src/normal.c	2015-03-31 17:46:16.844128018 +0200
+--- src/normal.c	2015-06-09 19:18:30.394588238 +0200
+***************
+*** 8493,8498 ****
+--- 8493,8501 ----
+  	    /* When '#' is in 'cpoptions' ignore the count. */
+  	    if (vim_strchr(p_cpo, CPO_HASH) != NULL)
+  		cap->count1 = 1;
++ 	    if (curwin->w_p_cul)
++ 		/* force redraw of cursorline */
++ 		curwin->w_valid &= ~VALID_CROW;
+  	    invoke_edit(cap, FALSE, cap->cmdchar, TRUE);
+  	}
+      }
+*** ../vim-7.4.731/src/version.c	2015-06-09 19:14:18.777373918 +0200
+--- src/version.c	2015-06-09 19:20:00.357591407 +0200
+***************
+*** 743,744 ****
+--- 743,746 ----
+  {   /* Add new patch number below this line */
++ /**/
++     732,
+  /**/
+
+-- 
+From "know your smileys":
+ 8-O 	"Omigod!!" (done "rm -rf *" ?)
+
+ /// Bram Moolenaar -- Bram@Moolenaar.net -- http://www.Moolenaar.net   \\\
+///        sponsor Vim, vote for features -- http://www.Vim.org/sponsor/ \\\
+\\\  an exciting new programming language -- http://www.Zimbu.org        ///
+ \\\            help me help AIDS victims -- http://ICCF-Holland.org    ///

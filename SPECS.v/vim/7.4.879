@@ -1,0 +1,78 @@
+To: vim_dev@googlegroups.com
+Subject: Patch 7.4.879
+Fcc: outbox
+From: Bram Moolenaar <Bram@moolenaar.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+------------
+
+Patch 7.4.879
+Problem:    Can't see line numbers in nested function calls.
+Solution:   Add line number to the file name. (Alberto Fanjul)
+Files:      src/eval.c
+
+
+*** ../vim-7.4.878/src/eval.c	2015-09-01 16:04:26.702472363 +0200
+--- src/eval.c	2015-09-25 17:15:40.627893181 +0200
+***************
+*** 23817,23822 ****
+--- 23817,23823 ----
+      int		ai;
+      char_u	numbuf[NUMBUFLEN];
+      char_u	*name;
++     size_t	len;
+  #ifdef FEAT_PROFILE
+      proftime_T	wait_start;
+      proftime_T	call_start;
+***************
+*** 23948,23960 ****
+      save_sourcing_name = sourcing_name;
+      save_sourcing_lnum = sourcing_lnum;
+      sourcing_lnum = 1;
+!     sourcing_name = alloc((unsigned)((save_sourcing_name == NULL ? 0
+! 		: STRLEN(save_sourcing_name)) + STRLEN(fp->uf_name) + 13));
+      if (sourcing_name != NULL)
+      {
+  	if (save_sourcing_name != NULL
+  			  && STRNCMP(save_sourcing_name, "function ", 9) == 0)
+! 	    sprintf((char *)sourcing_name, "%s..", save_sourcing_name);
+  	else
+  	    STRCPY(sourcing_name, "function ");
+  	cat_func_name(sourcing_name + STRLEN(sourcing_name), fp);
+--- 23949,23964 ----
+      save_sourcing_name = sourcing_name;
+      save_sourcing_lnum = sourcing_lnum;
+      sourcing_lnum = 1;
+!     /* need space for function name + ("function " + 3) or "[number]" */
+!     len = (save_sourcing_name == NULL ? 0 : STRLEN(save_sourcing_name))
+! 						   + STRLEN(fp->uf_name) + 20;
+!     sourcing_name = alloc((unsigned)len);
+      if (sourcing_name != NULL)
+      {
+  	if (save_sourcing_name != NULL
+  			  && STRNCMP(save_sourcing_name, "function ", 9) == 0)
+! 	    sprintf((char *)sourcing_name, "%s[%d]..",
+! 				 save_sourcing_name, (int)save_sourcing_lnum);
+  	else
+  	    STRCPY(sourcing_name, "function ");
+  	cat_func_name(sourcing_name + STRLEN(sourcing_name), fp);
+*** ../vim-7.4.878/src/version.c	2015-09-25 16:59:43.001963805 +0200
+--- src/version.c	2015-09-25 17:36:15.198910955 +0200
+***************
+*** 743,744 ****
+--- 743,746 ----
+  {   /* Add new patch number below this line */
++ /**/
++     879,
+  /**/
+
+-- 
+hundred-and-one symptoms of being an internet addict:
+7. You finally do take that vacation, but only after buying a cellular modem
+   and a laptop.
+
+ /// Bram Moolenaar -- Bram@Moolenaar.net -- http://www.Moolenaar.net   \\\
+///        sponsor Vim, vote for features -- http://www.Vim.org/sponsor/ \\\
+\\\  an exciting new programming language -- http://www.Zimbu.org        ///
+ \\\            help me help AIDS victims -- http://ICCF-Holland.org    ///

@@ -1,0 +1,71 @@
+To: vim_dev@googlegroups.com
+Subject: Patch 7.4.870
+Fcc: outbox
+From: Bram Moolenaar <Bram@moolenaar.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+------------
+
+Patch 7.4.870
+Problem:    May get into an invalid state when using getchar() in an
+            expression mapping.
+Solution:   Anticipate mod_mask to change. (idea by Yukihiro Nakadaira)
+Files:      src/getchar.c
+
+
+*** ../vim-7.4.869/src/getchar.c	2015-09-15 14:12:01.378632565 +0200
+--- src/getchar.c	2015-09-15 18:17:50.192261837 +0200
+***************
+*** 1630,1642 ****
+        last_recorded_len = 0;
+        for (;;)			/* this is done twice if there are modifiers */
+        {
+  	if (mod_mask)		/* no mapping after modifier has been read */
+  	{
+  	    ++no_mapping;
+  	    ++allow_keys;
+  	}
+  	c = vgetorpeek(TRUE);
+! 	if (mod_mask)
+  	{
+  	    --no_mapping;
+  	    --allow_keys;
+--- 1630,1645 ----
+        last_recorded_len = 0;
+        for (;;)			/* this is done twice if there are modifiers */
+        {
++ 	int did_inc = FALSE;
++ 
+  	if (mod_mask)		/* no mapping after modifier has been read */
+  	{
+  	    ++no_mapping;
+  	    ++allow_keys;
++ 	    did_inc = TRUE;	/* mod_mask may change value */
+  	}
+  	c = vgetorpeek(TRUE);
+! 	if (did_inc)
+  	{
+  	    --no_mapping;
+  	    --allow_keys;
+*** ../vim-7.4.869/src/version.c	2015-09-15 17:58:22.760394656 +0200
+--- src/version.c	2015-09-15 18:15:46.745544634 +0200
+***************
+*** 743,744 ****
+--- 743,746 ----
+  {   /* Add new patch number below this line */
++ /**/
++     870,
+  /**/
+
+-- 
+I once paid $12 to peer at the box that held King Tutankhamen's little
+bandage-covered midget corpse at the De Young Museum in San Francisco.  I
+remember thinking how pleased he'd be about the way things turned out in his
+afterlife.
+				(Scott Adams - The Dilbert principle)
+
+ /// Bram Moolenaar -- Bram@Moolenaar.net -- http://www.Moolenaar.net   \\\
+///        sponsor Vim, vote for features -- http://www.Vim.org/sponsor/ \\\
+\\\  an exciting new programming language -- http://www.Zimbu.org        ///
+ \\\            help me help AIDS victims -- http://ICCF-Holland.org    ///

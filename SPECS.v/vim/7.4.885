@@ -1,0 +1,80 @@
+To: vim_dev@googlegroups.com
+Subject: Patch 7.4.885
+Fcc: outbox
+From: Bram Moolenaar <Bram@moolenaar.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+------------
+
+Patch 7.4.885
+Problem:    When doing an upwards search without wildcards the search fails if
+            the initial directory doesn't exist.
+Solution:   Fix the non-wildcard case. (Stefan Kempf)
+Files:      src/misc2.c
+
+
+*** ../vim-7.4.884/src/misc2.c	2015-09-25 16:37:57.231680454 +0200
+--- src/misc2.c	2015-09-29 12:03:09.548854560 +0200
+***************
+*** 4369,4389 ****
+  		temp = alloc((int)(STRLEN(search_ctx->ffsc_wc_path)
+  				 + STRLEN(search_ctx->ffsc_fix_path + len)
+  				 + 1));
+! 	    }
+  
+! 	    if (temp == NULL || wc_path == NULL)
+! 	    {
+! 		vim_free(buf);
+! 		vim_free(temp);
+  		vim_free(wc_path);
+! 		goto error_return;
+  	    }
+- 
+- 	    STRCPY(temp, search_ctx->ffsc_fix_path + len);
+- 	    STRCAT(temp, search_ctx->ffsc_wc_path);
+- 	    vim_free(search_ctx->ffsc_wc_path);
+- 	    vim_free(wc_path);
+- 	    search_ctx->ffsc_wc_path = temp;
+  	}
+  #endif
+  	vim_free(buf);
+--- 4369,4388 ----
+  		temp = alloc((int)(STRLEN(search_ctx->ffsc_wc_path)
+  				 + STRLEN(search_ctx->ffsc_fix_path + len)
+  				 + 1));
+! 		if (temp == NULL || wc_path == NULL)
+! 		{
+! 		    vim_free(buf);
+! 		    vim_free(temp);
+! 		    vim_free(wc_path);
+! 		    goto error_return;
+! 		}
+  
+! 		STRCPY(temp, search_ctx->ffsc_fix_path + len);
+! 		STRCAT(temp, search_ctx->ffsc_wc_path);
+! 		vim_free(search_ctx->ffsc_wc_path);
+  		vim_free(wc_path);
+! 		search_ctx->ffsc_wc_path = temp;
+  	    }
+  	}
+  #endif
+  	vim_free(buf);
+*** ../vim-7.4.884/src/version.c	2015-09-25 20:30:55.192585861 +0200
+--- src/version.c	2015-09-29 12:07:20.382179579 +0200
+***************
+*** 743,744 ****
+--- 743,746 ----
+  {   /* Add new patch number below this line */
++ /**/
++     885,
+  /**/
+
+-- 
+hundred-and-one symptoms of being an internet addict:
+27. You refer to your age as 3.x.
+
+ /// Bram Moolenaar -- Bram@Moolenaar.net -- http://www.Moolenaar.net   \\\
+///        sponsor Vim, vote for features -- http://www.Vim.org/sponsor/ \\\
+\\\  an exciting new programming language -- http://www.Zimbu.org        ///
+ \\\            help me help AIDS victims -- http://ICCF-Holland.org    ///

@@ -1,0 +1,48 @@
+To: vim_dev@googlegroups.com
+Subject: Patch 7.4.884
+Fcc: outbox
+From: Bram Moolenaar <Bram@moolenaar.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+------------
+
+Patch 7.4.884
+Problem:    Travis also builds on a tag push.
+Solution:   Filter out tag pushes. (Kenichi Ito)
+Files:      .travis.yml
+
+
+*** ../vim-7.4.883/.travis.yml	2015-09-15 19:17:51.990768865 +0200
+--- .travis.yml	2015-09-25 20:28:08.798341040 +0200
+***************
+*** 12,17 ****
+--- 12,21 ----
+  
+  sudo: false
+  
++ branches:
++   except:
++     - /^v[0-9]/
++ 
+  addons:
+    apt:
+      packages:
+*** ../vim-7.4.883/src/version.c	2015-09-25 19:34:57.895936899 +0200
+--- src/version.c	2015-09-25 20:29:16.449627412 +0200
+***************
+*** 743,744 ****
+--- 743,746 ----
+  {   /* Add new patch number below this line */
++ /**/
++     884,
+  /**/
+
+-- 
+hundred-and-one symptoms of being an internet addict:
+14. You start introducing yourself as "Jim at I-I-Net dot net dot au"
+
+ /// Bram Moolenaar -- Bram@Moolenaar.net -- http://www.Moolenaar.net   \\\
+///        sponsor Vim, vote for features -- http://www.Vim.org/sponsor/ \\\
+\\\  an exciting new programming language -- http://www.Zimbu.org        ///
+ \\\            help me help AIDS victims -- http://ICCF-Holland.org    ///

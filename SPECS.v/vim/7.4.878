@@ -1,0 +1,52 @@
+To: vim_dev@googlegroups.com
+Subject: Patch 7.4.878
+Fcc: outbox
+From: Bram Moolenaar <Bram@moolenaar.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+------------
+
+Patch 7.4.878
+Problem:    Coverity error for clearing only one byte of struct.
+Solution:   Clear the whole struct. (Dominique Pelle)
+Files:      src/ex_docmd.c
+
+
+*** ../vim-7.4.877/src/ex_docmd.c	2015-09-15 14:12:01.374632607 +0200
+--- src/ex_docmd.c	2015-09-25 16:52:00.718823730 +0200
+***************
+*** 871,877 ****
+      if (flags & DOCMD_EXCRESET)
+  	save_dbg_stuff(&debug_saved);
+      else
+! 	vim_memset(&debug_saved, 0, 1);
+  
+      initial_trylevel = trylevel;
+  
+--- 871,877 ----
+      if (flags & DOCMD_EXCRESET)
+  	save_dbg_stuff(&debug_saved);
+      else
+! 	vim_memset(&debug_saved, 0, sizeof(debug_saved));
+  
+      initial_trylevel = trylevel;
+  
+*** ../vim-7.4.877/src/version.c	2015-09-25 16:37:57.231680454 +0200
+--- src/version.c	2015-09-25 16:51:54.634887652 +0200
+***************
+*** 743,744 ****
+--- 743,746 ----
+  {   /* Add new patch number below this line */
++ /**/
++     878,
+  /**/
+
+-- 
+The goal of science is to build better mousetraps.
+The goal of nature is to build better mice.
+
+ /// Bram Moolenaar -- Bram@Moolenaar.net -- http://www.Moolenaar.net   \\\
+///        sponsor Vim, vote for features -- http://www.Vim.org/sponsor/ \\\
+\\\  an exciting new programming language -- http://www.Zimbu.org        ///
+ \\\            help me help AIDS victims -- http://ICCF-Holland.org    ///

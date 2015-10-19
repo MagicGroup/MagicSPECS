@@ -1,0 +1,53 @@
+To: vim_dev@googlegroups.com
+Subject: Patch 7.4.719
+Fcc: outbox
+From: Bram Moolenaar <Bram@moolenaar.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+------------
+
+Patch 7.4.719
+Problem:    Overflow when adding MAXCOL to a pointer.
+Solution:   Subtract pointers instead. (James McCoy)
+Files:      src/screen.c
+
+
+*** ../vim-7.4.718/src/screen.c	2015-04-21 18:33:33.902675797 +0200
+--- src/screen.c	2015-05-04 16:02:20.530421566 +0200
+***************
+*** 4341,4347 ****
+  			  || (mb_utf8 && mb_c == 160)
+  #endif
+  			 ) && lcs_nbsp)
+! 			|| (c == ' ' && lcs_space && ptr <= line + trailcol)))
+  	    {
+  		c = (c == ' ') ? lcs_space : lcs_nbsp;
+  		if (area_attr == 0 && search_attr == 0)
+--- 4341,4347 ----
+  			  || (mb_utf8 && mb_c == 160)
+  #endif
+  			 ) && lcs_nbsp)
+! 			|| (c == ' ' && lcs_space && ptr - line <= trailcol)))
+  	    {
+  		c = (c == ' ') ? lcs_space : lcs_nbsp;
+  		if (area_attr == 0 && search_attr == 0)
+*** ../vim-7.4.718/src/version.c	2015-05-04 12:34:17.595202558 +0200
+--- src/version.c	2015-05-04 16:04:11.589169466 +0200
+***************
+*** 743,744 ****
+--- 743,746 ----
+  {   /* Add new patch number below this line */
++ /**/
++     719,
+  /**/
+
+-- 
+For a moment, nothing happened.
+Then, after a second or so, nothing continued to happen.
+		-- Douglas Adams, "The Hitchhiker's Guide to the Galaxy"
+
+ /// Bram Moolenaar -- Bram@Moolenaar.net -- http://www.Moolenaar.net   \\\
+///        sponsor Vim, vote for features -- http://www.Vim.org/sponsor/ \\\
+\\\  an exciting new programming language -- http://www.Zimbu.org        ///
+ \\\            help me help AIDS victims -- http://ICCF-Holland.org    ///

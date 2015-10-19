@@ -1,0 +1,110 @@
+To: vim_dev@googlegroups.com
+Subject: Patch 7.4.772
+Fcc: outbox
+From: Bram Moolenaar <Bram@moolenaar.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+------------
+
+Patch 7.4.772
+Problem:    Racket 6.2 is not supported on MS-Windows.
+Solution:   Check for the "racket" subdirectory. (Weiyong Mao)
+Files:      src/Make_mvc.mak, src/if_mzsch.c
+
+
+*** ../vim-7.4.771/src/Make_mvc.mak	2015-06-25 16:13:37.779750062 +0200
+--- src/Make_mvc.mak	2015-07-10 16:00:35.125149663 +0200
+***************
+*** 797,803 ****
+  !endif
+  CFLAGS = $(CFLAGS) -DFEAT_MZSCHEME -I $(MZSCHEME)\include
+  !if EXIST("$(MZSCHEME)\collects\scheme\base.ss") \
+! 	|| EXIST("$(MZSCHEME)\collects\scheme\base.rkt") 
+  # for MzScheme >= 4 we need to include byte code for basic Scheme stuff
+  MZSCHEME_EXTRA_DEP = mzscheme_base.c
+  CFLAGS = $(CFLAGS) -DINCLUDE_MZSCHEME_BASE
+--- 797,804 ----
+  !endif
+  CFLAGS = $(CFLAGS) -DFEAT_MZSCHEME -I $(MZSCHEME)\include
+  !if EXIST("$(MZSCHEME)\collects\scheme\base.ss") \
+!       	|| EXIST("$(MZSCHEME)\collects\scheme\base.rkt") \
+!       	|| EXIST("$(MZSCHEME)\collects\racket\base.rkt")
+  # for MzScheme >= 4 we need to include byte code for basic Scheme stuff
+  MZSCHEME_EXTRA_DEP = mzscheme_base.c
+  CFLAGS = $(CFLAGS) -DINCLUDE_MZSCHEME_BASE
+***************
+*** 1170,1176 ****
+--- 1171,1181 ----
+  	$(CC) $(CFLAGS) if_mzsch.c \
+  		-DMZSCHEME_COLLECTS=\"$(MZSCHEME:\=\\)\\collects\"
+  mzscheme_base.c:
++ !IF "$(MZSCHEME_MAIN_LIB)" == "racket"
++ 	$(MZSCHEME)\raco ctool --c-mods mzscheme_base.c ++lib scheme/base
++ !ELSE
+  	$(MZSCHEME)\mzc --c-mods mzscheme_base.c ++lib scheme/base
++ !ENDIF
+  
+  $(OUTDIR)/if_python.obj: $(OUTDIR) if_python.c if_py_both.h $(INCL)
+  	$(CC) $(CFLAGS) $(PYTHON_INC) if_python.c
+*** ../vim-7.4.771/src/if_mzsch.c	2013-05-06 04:06:04.000000000 +0200
+--- src/if_mzsch.c	2015-07-10 16:04:38.714856066 +0200
+***************
+*** 851,857 ****
+  #endif
+  }
+  
+! #if MZSCHEME_VERSION_MAJOR >= 500 && defined(WIN32) && defined(USE_THREAD_LOCAL)
+  static __declspec(thread) void *tls_space;
+  #endif
+  
+--- 851,863 ----
+  #endif
+  }
+  
+! /*
+!  * scheme_register_tls_space is only available on 32-bit Windows.
+!  * See http://docs.racket-lang.org/inside/im_memoryalloc.html?q=scheme_register_tls_space
+!  */
+! #if MZSCHEME_VERSION_MAJOR >= 500 && defined(WIN32) \
+! 	&& defined(USE_THREAD_LOCAL) && !defined(_WIN64)
+! # define HAVE_TLS_SPACE 1
+  static __declspec(thread) void *tls_space;
+  #endif
+  
+***************
+*** 870,876 ****
+      int
+  mzscheme_main(int argc, char** argv)
+  {
+! #if MZSCHEME_VERSION_MAJOR >= 500 && defined(WIN32) && defined(USE_THREAD_LOCAL)
+      scheme_register_tls_space(&tls_space, 0);
+  #endif
+  #ifdef TRAMPOLINED_MZVIM_STARTUP
+--- 876,882 ----
+      int
+  mzscheme_main(int argc, char** argv)
+  {
+! #ifdef HAVE_TLS_SPACE
+      scheme_register_tls_space(&tls_space, 0);
+  #endif
+  #ifdef TRAMPOLINED_MZVIM_STARTUP
+*** ../vim-7.4.771/src/version.c	2015-07-10 14:43:29.560722567 +0200
+--- src/version.c	2015-07-10 16:11:54.982749248 +0200
+***************
+*** 743,744 ****
+--- 743,746 ----
+  {   /* Add new patch number below this line */
++ /**/
++     772,
+  /**/
+
+-- 
+hundred-and-one symptoms of being an internet addict:
+199. You read this entire list of symptoms, looking for something
+     that doesn't describe you.
+
+ /// Bram Moolenaar -- Bram@Moolenaar.net -- http://www.Moolenaar.net   \\\
+///        sponsor Vim, vote for features -- http://www.Vim.org/sponsor/ \\\
+\\\  an exciting new programming language -- http://www.Zimbu.org        ///
+ \\\            help me help AIDS victims -- http://ICCF-Holland.org    ///

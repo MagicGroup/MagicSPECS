@@ -1,0 +1,94 @@
+To: vim_dev@googlegroups.com
+Subject: Patch 7.4.722
+Fcc: outbox
+From: Bram Moolenaar <Bram@moolenaar.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+------------
+
+Patch 7.4.722
+Problem:    0x202f is not recognized as a non-breaking space character.
+Solution:   Add 0x202f to the list. (Christian Brabandt)
+Files:      runtime/doc/options.txt, src/message.c, src/screen.c
+
+
+*** ../vim-7.4.721/runtime/doc/options.txt	2015-04-21 18:33:33.902675797 +0200
+--- runtime/doc/options.txt	2015-05-04 17:27:27.736999723 +0200
+***************
+*** 4743,4750 ****
+  	  conceal:c	Character to show in place of concealed text, when
+  			'conceallevel' is set to 1.
+  							*lcs-nbsp*
+! 	  nbsp:c	Character to show for a non-breakable space (character
+! 			0xA0, 160).  Left blank when omitted.
+  
+  	The characters ':' and ',' should not be used.  UTF-8 characters can
+  	be used when 'encoding' is "utf-8", otherwise only printable
+--- 4746,4754 ----
+  	  conceal:c	Character to show in place of concealed text, when
+  			'conceallevel' is set to 1.
+  							*lcs-nbsp*
+! 	  nbsp:c	Character to show for a non-breakable space character
+! 			(0xA0 (160 decimal) and U+202F).  Left blank when
+! 			omitted.
+  
+  	The characters ':' and ',' should not be used.  UTF-8 characters can
+  	be used when 'encoding' is "utf-8", otherwise only printable
+*** ../vim-7.4.721/src/message.c	2015-04-22 22:18:14.659662668 +0200
+--- src/message.c	2015-05-04 17:24:48.462778022 +0200
+***************
+*** 1697,1703 ****
+  	else if (has_mbyte && (l = (*mb_ptr2len)(s)) > 1)
+  	{
+  	    col += (*mb_ptr2cells)(s);
+! 	    if (lcs_nbsp != NUL && list && mb_ptr2char(s) == 160)
+  	    {
+  		mb_char2bytes(lcs_nbsp, buf);
+  		buf[(*mb_ptr2len)(buf)] = NUL;
+--- 1697,1705 ----
+  	else if (has_mbyte && (l = (*mb_ptr2len)(s)) > 1)
+  	{
+  	    col += (*mb_ptr2cells)(s);
+! 	    if (lcs_nbsp != NUL && list
+! 		    && (mb_ptr2char(s) == 160
+! 			|| mb_ptr2char(s) == 0x202f))
+  	    {
+  		mb_char2bytes(lcs_nbsp, buf);
+  		buf[(*mb_ptr2len)(buf)] = NUL;
+*** ../vim-7.4.721/src/screen.c	2015-05-04 16:51:55.708920741 +0200
+--- src/screen.c	2015-05-04 17:01:00.854787665 +0200
+***************
+*** 4338,4344 ****
+  	    if (wp->w_p_list
+  		    && (((c == 160
+  #ifdef FEAT_MBYTE
+! 			  || (mb_utf8 && mb_c == 160)
+  #endif
+  			 ) && lcs_nbsp)
+  			|| (c == ' ' && lcs_space && ptr - line <= trailcol)))
+--- 4338,4344 ----
+  	    if (wp->w_p_list
+  		    && (((c == 160
+  #ifdef FEAT_MBYTE
+! 			  || (mb_utf8 && (mb_c == 160 || mb_c == 0x202f))
+  #endif
+  			 ) && lcs_nbsp)
+  			|| (c == ' ' && lcs_space && ptr - line <= trailcol)))
+*** ../vim-7.4.721/src/version.c	2015-05-04 16:51:55.708920741 +0200
+--- src/version.c	2015-05-04 17:02:26.941818964 +0200
+***************
+*** 743,744 ****
+--- 743,746 ----
+  {   /* Add new patch number below this line */
++ /**/
++     722,
+  /**/
+
+-- 
+I have a drinking problem -- I can't afford it.
+
+ /// Bram Moolenaar -- Bram@Moolenaar.net -- http://www.Moolenaar.net   \\\
+///        sponsor Vim, vote for features -- http://www.Vim.org/sponsor/ \\\
+\\\  an exciting new programming language -- http://www.Zimbu.org        ///
+ \\\            help me help AIDS victims -- http://ICCF-Holland.org    ///

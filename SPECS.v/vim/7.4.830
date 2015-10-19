@@ -1,0 +1,73 @@
+To: vim_dev@googlegroups.com
+Subject: Patch 7.4.830
+Fcc: outbox
+From: Bram Moolenaar <Bram@moolenaar.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+------------
+
+Patch 7.4.830
+Problem:    Resetting 'encoding' when doing ":set all&" causes problems.
+            (Bjorn Linse) Display is not updated.
+Solution:   Do not reset 'encoding'. Do a full redraw.
+Files:      src/option.c
+
+
+*** ../vim-7.4.829/src/option.c	2015-08-11 18:52:58.073121563 +0200
+--- src/option.c	2015-08-25 12:52:02.764997919 +0200
+***************
+*** 3656,3661 ****
+--- 3656,3662 ----
+  
+  /*
+   * Set all options (except terminal options) to their default value.
++  * When "opt_flags" is non-zero skip 'encoding'.
+   */
+      static void
+  set_options_default(opt_flags)
+***************
+*** 3668,3674 ****
+  #endif
+  
+      for (i = 0; !istermoption(&options[i]); i++)
+! 	if (!(options[i].flags & P_NODEFAULT))
+  	    set_option_default(i, opt_flags, p_cp);
+  
+  #ifdef FEAT_WINDOWS
+--- 3669,3676 ----
+  #endif
+  
+      for (i = 0; !istermoption(&options[i]); i++)
+! 	if (!(options[i].flags & P_NODEFAULT)
+! 		&& (opt_flags == 0 || options[i].var != (char_u *)&p_enc))
+  	    set_option_default(i, opt_flags, p_cp);
+  
+  #ifdef FEAT_WINDOWS
+***************
+*** 4204,4209 ****
+--- 4206,4212 ----
+  		++arg;
+  		/* Only for :set command set global value of local options. */
+  		set_options_default(OPT_FREE | opt_flags);
++ 		redraw_all_later(CLEAR);
+  	    }
+  	    else
+  	    {
+*** ../vim-7.4.829/src/version.c	2015-08-25 12:21:23.583957205 +0200
+--- src/version.c	2015-08-25 12:50:16.870092540 +0200
+***************
+*** 743,744 ****
+--- 743,746 ----
+  {   /* Add new patch number below this line */
++ /**/
++     830,
+  /**/
+
+-- 
+Every exit is an entrance into something else.
+
+ /// Bram Moolenaar -- Bram@Moolenaar.net -- http://www.Moolenaar.net   \\\
+///        sponsor Vim, vote for features -- http://www.Vim.org/sponsor/ \\\
+\\\  an exciting new programming language -- http://www.Zimbu.org        ///
+ \\\            help me help AIDS victims -- http://ICCF-Holland.org    ///

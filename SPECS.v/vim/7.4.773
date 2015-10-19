@@ -1,0 +1,97 @@
+To: vim_dev@googlegroups.com
+Subject: Patch 7.4.773
+Fcc: outbox
+From: Bram Moolenaar <Bram@moolenaar.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+------------
+
+Patch 7.4.773
+Problem:    'langmap' is used in command-line mode when checking for mappings.
+            Issue 376.
+Solution:   Do not use 'langmap' in command-line mode. (Larry Velazquez)
+Files:      src/getchar.c, src/testdir/test_mapping.in,
+            src/testdir/test_mapping.ok
+
+
+*** ../vim-7.4.772/src/getchar.c	2015-01-14 14:08:40.360402421 +0100
+--- src/getchar.c	2015-07-10 17:12:33.408498532 +0200
+***************
+*** 2145,2151 ****
+  			    nolmaplen = 2;
+  			else
+  			{
+! 			    LANGMAP_ADJUST(c1, (State & INSERT) == 0);
+  			    nolmaplen = 0;
+  			}
+  #endif
+--- 2145,2152 ----
+  			    nolmaplen = 2;
+  			else
+  			{
+! 			    LANGMAP_ADJUST(c1,
+! 					   (State & (CMDLINE | INSERT)) == 0);
+  			    nolmaplen = 0;
+  			}
+  #endif
+*** ../vim-7.4.772/src/testdir/test_mapping.in	2015-02-03 16:53:47.151669335 +0100
+--- src/testdir/test_mapping.in	2015-07-10 17:11:22.857163361 +0200
+***************
+*** 28,36 ****
+  :inoremap { FAIL_ilangmap
+  :set langmap=+{ langnoremap
+  o+
+! : " expr mapping with langmap
+  :inoremap <expr> { "FAIL_iexplangmap"
+  o+
+  :" issue #212 (feedkeys insert mapping at current position)
+  :nnoremap . :call feedkeys(".", "in")<cr>
+  :/^a b
+--- 28,45 ----
+  :inoremap { FAIL_ilangmap
+  :set langmap=+{ langnoremap
+  o+
+! :" Insert-mode expr mapping with langmap
+  :inoremap <expr> { "FAIL_iexplangmap"
+  o+
++ :" langmap should not get remapped in Command-line mode
++ :cnoremap { FAIL_clangmap
++ :call append(line('$'), '+')
++ :cunmap {
++ :" Command-line mode expr mapping with langmap
++ :cnoremap <expr> { "FAIL_cexplangmap"
++ :call append(line('$'), '+')
++ :cunmap {
++ :"
+  :" issue #212 (feedkeys insert mapping at current position)
+  :nnoremap . :call feedkeys(".", "in")<cr>
+  :/^a b
+*** ../vim-7.4.772/src/testdir/test_mapping.ok	2015-02-03 16:53:47.151669335 +0100
+--- src/testdir/test_mapping.ok	2015-07-10 17:11:22.857163361 +0200
+***************
+*** 8,10 ****
+--- 8,12 ----
+  vmap works
+  +
+  +
++ +
++ +
+*** ../vim-7.4.772/src/version.c	2015-07-10 16:12:43.146296071 +0200
+--- src/version.c	2015-07-10 17:11:00.021378557 +0200
+***************
+*** 743,744 ****
+--- 743,746 ----
+  {   /* Add new patch number below this line */
++ /**/
++     773,
+  /**/
+
+-- 
+hundred-and-one symptoms of being an internet addict:
+200. You really believe in the concept of a "paperless" office.
+
+ /// Bram Moolenaar -- Bram@Moolenaar.net -- http://www.Moolenaar.net   \\\
+///        sponsor Vim, vote for features -- http://www.Vim.org/sponsor/ \\\
+\\\  an exciting new programming language -- http://www.Zimbu.org        ///
+ \\\            help me help AIDS victims -- http://ICCF-Holland.org    ///

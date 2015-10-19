@@ -1,0 +1,114 @@
+To: vim_dev@googlegroups.com
+Subject: Patch 7.4.872
+Fcc: outbox
+From: Bram Moolenaar <Bram@moolenaar.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+------------
+
+Patch 7.4.872
+Problem:    Not using CI services available.
+Solution:   Add configuration files for travis and appveyor. (PR #401)
+Files:      .travis.yml, appveyor.yml, Filelist
+
+
+*** ../vim-7.4.871/.travis.yml	2015-09-15 19:17:22.019085105 +0200
+--- .travis.yml	2015-09-15 19:15:43.168128234 +0200
+***************
+*** 0 ****
+--- 1,37 ----
++ language: c
++ 
++ compiler:
++   - clang
++   - gcc
++ 
++ env:
++   - COVERAGE=yes CFLAGS=--coverage LDFLAGS=--coverage FEATURES=huge
++     "CONFOPT='--enable-perlinterp --enable-pythoninterp --enable-python3interp --enable-rubyinterp --enable-luainterp'"
++   - COVERAGE=no FEATURES=small CONFOPT=
++   - COVERAGE=no FEATURES=tiny  CONFOPT=
++ 
++ sudo: false
++ 
++ addons:
++   apt:
++     packages:
++       - lcov
++       - libperl-dev
++       - python-dev
++       - python3-dev
++       - liblua5.1-0-dev
++       - lua5.1
++ 
++ before_install:
++   - pip install --user cpp-coveralls
++ 
++ script:
++   - NPROC=$(getconf _NPROCESSORS_ONLN)
++   - ./configure --with-features=$FEATURES $CONFOPT --enable-fail-if-missing && make -j$NPROC
++   - ./src/vim --version
++   - make test
++ 
++ after_success:
++   - if [ x"$COVERAGE" = "xyes" ]; then ~/.local/bin/coveralls -b src -x .xs -e src/xxd -e src/if_perl.c --encodings utf-8 latin-1 EUC-KR; fi
++ 
++ # vim:set sts=2 sw=2 tw=0 et:
+*** ../vim-7.4.871/appveyor.yml	2015-09-15 19:17:22.027085021 +0200
+--- appveyor.yml	2015-09-15 19:15:43.168128234 +0200
+***************
+*** 0 ****
+--- 1,15 ----
++ version: "{build}"
++ 
++ before_build:
++   - '"C:\Program Files\Microsoft SDKs\Windows\v7.1\Bin\SetEnv.cmd" /x64 /release'
++ 
++ build_script:
++   - cd src
++   - sed -e "s/\$(LINKARGS2)/\$(LINKARGS2) | sed -e 's#.*\\\\r.*##'/" Make_mvc.mak > Make_mvc2.mak
++   - nmake -f Make_mvc2.mak CPU=AMD64 GUI=yes IME=yes MBYTE=yes ICONV=yes DEBUG=no PYTHON_VER=27 DYNAMIC_PYTHON=yes PYTHON=C:\Python27-x64 PYTHON3_VER=34 DYNAMIC_PYTHON3=yes PYTHON3=C:\Python34-x64
++   - .\gvim -u NONE -c "redir @a | ver | 0put a | wq!" ver.txt
++   - type ver.txt
++ 
++ test_script:
++   - cd testdir
++   - nmake -f Make_dos.mak VIMPROG=..\gvim
+*** ../vim-7.4.871/Filelist	2015-09-01 17:50:32.476494002 +0200
+--- Filelist	2015-09-15 19:16:22.327714977 +0200
+***************
+*** 4,9 ****
+--- 4,11 ----
+  # source files for all source archives
+  SRC_ALL =	\
+  		.hgignore \
++ 		.travis.yml \
++ 		appveyor.yml \
+  		src/README.txt \
+  		src/arabic.c \
+  		src/arabic.h \
+*** ../vim-7.4.871/src/version.c	2015-09-15 19:05:49.250365080 +0200
+--- src/version.c	2015-09-15 19:17:34.998948148 +0200
+***************
+*** 743,744 ****
+--- 743,746 ----
+  {   /* Add new patch number below this line */
++ /**/
++     872,
+  /**/
+
+-- 
+The acknowledged parents of reengineering are Michael Hammer and James Champy.
+When I say they're the "parents" I don't mean they had sex - and I apologize
+for making you think about it.  I mean they wrote the best-selling business
+book _Reengineering the Corporation_, which was published in 1993.
+   Businesses flocked to reengineering like frat boys to a drunken
+cheerleader.  (This analogy wasn't necessary, but I'm trying to get my mind
+off that Hammer and Champy thing.)
+				(Scott Adams - The Dilbert principle)
+
+ /// Bram Moolenaar -- Bram@Moolenaar.net -- http://www.Moolenaar.net   \\\
+///        sponsor Vim, vote for features -- http://www.Vim.org/sponsor/ \\\
+\\\  an exciting new programming language -- http://www.Zimbu.org        ///
+ \\\            help me help AIDS victims -- http://ICCF-Holland.org    ///

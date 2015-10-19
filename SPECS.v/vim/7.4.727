@@ -1,0 +1,52 @@
+To: vim_dev@googlegroups.com
+Subject: Patch 7.4.727
+Fcc: outbox
+From: Bram Moolenaar <Bram@moolenaar.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+------------
+
+Patch 7.4.727 (after 7.4.724)
+Problem:    Cannot build GvimExt with MingW.
+Solution:   Add -lgdi32.  (KF Leong)
+Files:      src/GvimExt/Make_ming.mak
+
+*** ../vim-7.4.726/src/GvimExt/Make_ming.mak	2011-09-30 16:47:09.000000000 +0200
+--- src/GvimExt/Make_ming.mak	2015-05-06 06:47:37.136235840 +0200
+***************
+*** 47,53 ****
+  WINDRES := $(CROSS_COMPILE)windres
+  WINDRES_CXX = $(CXX)
+  WINDRES_FLAGS = --preprocessor="$(WINDRES_CXX) -E -xc" -DRC_INVOKED
+! LIBS :=  -luuid
+  RES  := gvimext.res
+  DEFFILE = gvimext_ming.def
+  OBJ  := gvimext.o
+--- 47,53 ----
+  WINDRES := $(CROSS_COMPILE)windres
+  WINDRES_CXX = $(CXX)
+  WINDRES_FLAGS = --preprocessor="$(WINDRES_CXX) -E -xc" -DRC_INVOKED
+! LIBS :=  -luuid -lgdi32
+  RES  := gvimext.res
+  DEFFILE = gvimext_ming.def
+  OBJ  := gvimext.o
+*** ../vim-7.4.726/src/version.c	2015-05-05 10:25:09.073543436 +0200
+--- src/version.c	2015-05-06 06:49:16.243123422 +0200
+***************
+*** 743,744 ****
+--- 743,746 ----
+  {   /* Add new patch number below this line */
++ /**/
++     727,
+  /**/
+
+-- 
+How To Keep A Healthy Level Of Insanity:
+15. Five days in advance, tell your friends you can't attend their
+    party because you're not in the mood.
+
+ /// Bram Moolenaar -- Bram@Moolenaar.net -- http://www.Moolenaar.net   \\\
+///        sponsor Vim, vote for features -- http://www.Vim.org/sponsor/ \\\
+\\\  an exciting new programming language -- http://www.Zimbu.org        ///
+ \\\            help me help AIDS victims -- http://ICCF-Holland.org    ///

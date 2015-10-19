@@ -1,0 +1,57 @@
+To: vim_dev@googlegroups.com
+Subject: Patch 7.4.855
+Fcc: outbox
+From: Bram Moolenaar <Bram@moolenaar.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+------------
+
+Patch 7.4.855
+Problem:    GTK: font glitches for combining characters
+Solution:   Use pango_shape_full() instead of pango_shape(). (luchr, PR #393)
+Files:      src/gui_gtk_x11.c
+
+
+*** ../vim-7.4.854/src/gui_gtk_x11.c	2015-06-09 19:14:18.773373964 +0200
+--- src/gui_gtk_x11.c	2015-09-08 16:18:51.944711934 +0200
+***************
+*** 5063,5070 ****
+  	     * done, because drawing the cursor would change the display. */
+  	    item->analysis.shape_engine = default_shape_engine;
+  
+! 	    pango_shape((const char *)s + item->offset, item->length,
+! 			&item->analysis, glyphs);
+  	    /*
+  	     * Fixed-width hack: iterate over the array and assign a fixed
+  	     * width to each glyph, thus overriding the choice made by the
+--- 5063,5070 ----
+  	     * done, because drawing the cursor would change the display. */
+  	    item->analysis.shape_engine = default_shape_engine;
+  
+! 	    pango_shape_full((const char *)s + item->offset, item->length,
+! 		    (const char *)s, len, &item->analysis, glyphs);
+  	    /*
+  	     * Fixed-width hack: iterate over the array and assign a fixed
+  	     * width to each glyph, thus overriding the choice made by the
+*** ../vim-7.4.854/src/version.c	2015-09-01 21:25:38.845874761 +0200
+--- src/version.c	2015-09-08 16:28:14.186863672 +0200
+***************
+*** 743,744 ****
+--- 743,746 ----
+  {   /* Add new patch number below this line */
++ /**/
++     855,
+  /**/
+
+-- 
+CART DRIVER: Bring out your dead!
+LARGE MAN:   Here's one!
+CART DRIVER: Ninepence.
+BODY:        I'm not dead!
+                 "Monty Python and the Holy Grail" PYTHON (MONTY) PICTURES LTD
+
+ /// Bram Moolenaar -- Bram@Moolenaar.net -- http://www.Moolenaar.net   \\\
+///        sponsor Vim, vote for features -- http://www.Vim.org/sponsor/ \\\
+\\\  an exciting new programming language -- http://www.Zimbu.org        ///
+ \\\            help me help AIDS victims -- http://ICCF-Holland.org    ///

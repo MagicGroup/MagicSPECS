@@ -1,0 +1,56 @@
+diff -up vsftpd-3.0.2/ftpcodes.h.rc450 vsftpd-3.0.2/ftpcodes.h
+--- vsftpd-3.0.2/ftpcodes.h.rc450	2008-02-12 01:30:46.000000000 +0100
++++ vsftpd-3.0.2/ftpcodes.h	2014-06-18 13:41:02.238821708 +0200
+@@ -52,6 +52,7 @@
+ #define FTP_TLS_FAIL          421
+ #define FTP_BADSENDCONN       425
+ #define FTP_BADSENDNET        426
++#define FTP_FILETMPFAIL       450
+ #define FTP_BADSENDFILE       451
+ 
+ #define FTP_BADCMD            500
+diff -up vsftpd-3.0.2/postlogin.c.rc450 vsftpd-3.0.2/postlogin.c
+--- vsftpd-3.0.2/postlogin.c.rc450	2012-09-18 11:59:37.000000000 +0200
++++ vsftpd-3.0.2/postlogin.c	2014-06-18 13:41:02.238821708 +0200
+@@ -670,7 +670,14 @@ handle_retr(struct vsf_session* p_sess,
+   opened_file = str_open(&p_sess->ftp_arg_str, kVSFSysStrOpenReadOnly);
+   if (vsf_sysutil_retval_is_error(opened_file))
+   {
+-    vsf_cmdio_write(p_sess, FTP_FILEFAIL, "Failed to open file.");
++    if (kVSFSysUtilErrAGAIN == vsf_sysutil_get_error())
++    {
++      vsf_cmdio_write(p_sess, FTP_FILETMPFAIL, "Temporarily failed to open file");
++    }
++    else
++    {
++      vsf_cmdio_write(p_sess, FTP_FILEFAIL, "Failed to open file.");
++    }
+     return;
+   }
+   /* Lock file if required */
+diff -up vsftpd-3.0.2/sysutil.c.rc450 vsftpd-3.0.2/sysutil.c
+--- vsftpd-3.0.2/sysutil.c.rc450	2014-06-18 13:41:02.231821807 +0200
++++ vsftpd-3.0.2/sysutil.c	2014-06-18 13:41:02.238821708 +0200
+@@ -1632,6 +1632,9 @@ vsf_sysutil_get_error(void)
+     case ENOENT:
+       retval = kVSFSysUtilErrNOENT;
+       break;
++    case EAGAIN:
++      retval = kVSFSysUtilErrAGAIN;
++      break;
+     default:
+       break;
+   }
+diff -up vsftpd-3.0.2/sysutil.h.rc450 vsftpd-3.0.2/sysutil.h
+--- vsftpd-3.0.2/sysutil.h.rc450	2014-06-18 13:41:02.231821807 +0200
++++ vsftpd-3.0.2/sysutil.h	2014-06-18 13:41:02.239821694 +0200
+@@ -18,7 +18,8 @@ enum EVSFSysUtilError
+   kVSFSysUtilErrINVAL,
+   kVSFSysUtilErrOPNOTSUPP,
+   kVSFSysUtilErrACCES,
+-  kVSFSysUtilErrNOENT
++  kVSFSysUtilErrNOENT,
++  kVSFSysUtilErrAGAIN
+ };
+ enum EVSFSysUtilError vsf_sysutil_get_error(void);
+ 

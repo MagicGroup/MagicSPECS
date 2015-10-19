@@ -1,0 +1,567 @@
+To: vim_dev@googlegroups.com
+Subject: Patch 7.4.785
+Fcc: outbox
+From: Bram Moolenaar <Bram@moolenaar.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+------------
+
+Patch 7.4.785
+Problem:    On some systems automatically adding the missing EOL causes
+            problems. Setting 'binary' has too many side effects.
+Solution:   Add the 'fixeol' option, default on. (Pavel Samarkin)
+Files:      src/buffer.c, src/fileio.c, src/memline.c, src/netbeans.c,
+            src/ops.c, src/option.c, src/option.h, src/os_unix.c,
+            src/os_win32.c, src/structs.h, src/testdir/Make_amiga.mak,
+            src/testdir/Make_dos.mak, src/testdir/Make_ming.mak,
+            src/testdir/Make_os2.mak, src/testdir/Make_vms.mms,
+            src/testdir/Makefile, src/testdir/test_fixeol.in,
+            src/testdir/test_fixeol.ok, runtime/doc/options.txt,
+            runtime/optwin.vim
+
+
+*** ../vim-7.4.784/src/buffer.c	2015-06-19 14:41:44.777813290 +0200
+--- src/buffer.c	2015-07-17 13:55:33.174783882 +0200
+***************
+*** 547,552 ****
+--- 547,553 ----
+      buf->b_shortname = FALSE;
+  #endif
+      buf->b_p_eol = TRUE;
++     buf->b_p_fixeol = TRUE;
+      buf->b_start_eol = TRUE;
+  #ifdef FEAT_MBYTE
+      buf->b_p_bomb = FALSE;
+*** ../vim-7.4.784/src/fileio.c	2015-03-31 13:33:00.793524956 +0200
+--- src/fileio.c	2015-07-17 13:57:26.777699252 +0200
+***************
+*** 2623,2632 ****
+  #endif
+  
+      /*
+!      * Trick: We remember if the last line of the read didn't have
+!      * an eol even when 'binary' is off, for when writing it again with
+!      * 'binary' on.  This is required for
+!      * ":autocmd FileReadPost *.gz set bin|'[,']!gunzip" to work.
+       */
+      curbuf->b_no_eol_lnum = read_no_eol_lnum;
+  
+--- 2623,2632 ----
+  #endif
+  
+      /*
+!      * We remember if the last line of the read didn't have
+!      * an eol even when 'binary' is off, to support turning 'fixeol' off,
+!      * or writing the read again with 'binary' on.  The latter is required
+!      * for ":autocmd FileReadPost *.gz set bin|'[,']!gunzip" to work.
+       */
+      curbuf->b_no_eol_lnum = read_no_eol_lnum;
+  
+***************
+*** 4547,4553 ****
+  	/* write failed or last line has no EOL: stop here */
+  	if (end == 0
+  		|| (lnum == end
+! 		    && write_bin
+  		    && (lnum == buf->b_no_eol_lnum
+  			|| (lnum == buf->b_ml.ml_line_count && !buf->b_p_eol))))
+  	{
+--- 4547,4553 ----
+  	/* write failed or last line has no EOL: stop here */
+  	if (end == 0
+  		|| (lnum == end
+! 		    && (write_bin || !buf->b_p_fixeol)
+  		    && (lnum == buf->b_no_eol_lnum
+  			|| (lnum == buf->b_ml.ml_line_count && !buf->b_p_eol))))
+  	{
+*** ../vim-7.4.784/src/memline.c	2015-07-12 17:52:50.728095726 +0200
+--- src/memline.c	2015-07-17 13:58:04.193342051 +0200
+***************
+*** 5361,5368 ****
+  	if (ffdos)
+  	    size += lnum - 1;
+  
+! 	/* Don't count the last line break if 'bin' and 'noeol'. */
+! 	if (buf->b_p_bin && !buf->b_p_eol && buf->b_ml.ml_line_count == lnum)
+  	    size -= ffdos + 1;
+      }
+  
+--- 5361,5370 ----
+  	if (ffdos)
+  	    size += lnum - 1;
+  
+! 	/* Don't count the last line break if 'noeol' and ('bin' or
+! 	 * 'nofixeol'). */
+! 	if ((!buf->b_p_fixeol || buf->b_p_bin) && !buf->b_p_eol
+! 					   && buf->b_ml.ml_line_count == lnum)
+  	    size -= ffdos + 1;
+      }
+  
+*** ../vim-7.4.784/src/netbeans.c	2015-03-20 18:11:44.967196356 +0100
+--- src/netbeans.c	2015-07-17 13:55:33.182783805 +0200
+***************
+*** 3802,3808 ****
+  	    }
+  	}
+  	/* Correction for when last line doesn't have an EOL. */
+! 	if (!bufp->b_p_eol && bufp->b_p_bin)
+  	    char_count -= eol_size;
+      }
+  
+--- 3802,3808 ----
+  	    }
+  	}
+  	/* Correction for when last line doesn't have an EOL. */
+! 	if (!bufp->b_p_eol && (bufp->b_p_bin || !bufp->b_p_fixeol))
+  	    char_count -= eol_size;
+      }
+  
+*** ../vim-7.4.784/src/ops.c	2015-07-17 13:22:43.157523671 +0200
+--- src/ops.c	2015-07-17 13:58:25.945134391 +0200
+***************
+*** 7052,7058 ****
+  					   &char_count_cursor, len, eol_size);
+  		    if (lnum == curbuf->b_ml.ml_line_count
+  			    && !curbuf->b_p_eol
+! 			    && curbuf->b_p_bin
+  			    && (long)STRLEN(s) < len)
+  			byte_count_cursor -= eol_size;
+  		}
+--- 7052,7058 ----
+  					   &char_count_cursor, len, eol_size);
+  		    if (lnum == curbuf->b_ml.ml_line_count
+  			    && !curbuf->b_p_eol
+! 			    && (curbuf->b_p_bin || !curbuf->b_p_fixeol)
+  			    && (long)STRLEN(s) < len)
+  			byte_count_cursor -= eol_size;
+  		}
+***************
+*** 7076,7082 ****
+  	}
+  
+  	/* Correction for when last line doesn't have an EOL. */
+! 	if (!curbuf->b_p_eol && curbuf->b_p_bin)
+  	    byte_count -= eol_size;
+  
+  	if (VIsual_active)
+--- 7076,7082 ----
+  	}
+  
+  	/* Correction for when last line doesn't have an EOL. */
+! 	if (!curbuf->b_p_eol && (curbuf->b_p_bin || !curbuf->b_p_fixeol))
+  	    byte_count -= eol_size;
+  
+  	if (VIsual_active)
+*** ../vim-7.4.784/src/option.c	2015-07-17 13:03:42.108357465 +0200
+--- src/option.c	2015-07-17 13:55:33.186783767 +0200
+***************
+*** 98,103 ****
+--- 98,104 ----
+  # define PV_INC		OPT_BOTH(OPT_BUF(BV_INC))
+  #endif
+  #define PV_EOL		OPT_BUF(BV_EOL)
++ #define PV_FIXEOL	OPT_BUF(BV_FIXEOL)
+  #define PV_EP		OPT_BOTH(OPT_BUF(BV_EP))
+  #define PV_ET		OPT_BUF(BV_ET)
+  #ifdef FEAT_MBYTE
+***************
+*** 306,311 ****
+--- 307,313 ----
+  static char_u	*p_ofu;
+  #endif
+  static int	p_eol;
++ static int	p_fixeol;
+  static int	p_et;
+  #ifdef FEAT_MBYTE
+  static char_u	*p_fenc;
+***************
+*** 1169,1174 ****
+--- 1171,1179 ----
+  			    {(char_u *)"", (char_u *)0L}
+  #endif
+  			    SCRIPTID_INIT},
++     {"fixendofline",  "fixeol", P_BOOL|P_VI_DEF|P_RSTAT,
++ 			    (char_u *)&p_fixeol, PV_FIXEOL,
++ 			    {(char_u *)TRUE, (char_u *)0L} SCRIPTID_INIT},
+      {"fkmap",	    "fk",   P_BOOL|P_VI_DEF,
+  #ifdef FEAT_FKMAP
+  			    (char_u *)&p_fkmap, PV_NONE,
+***************
+*** 7781,7786 ****
+--- 7786,7796 ----
+      {
+  	redraw_titles();
+      }
++     /* when 'fixeol' is changed, redraw the window title */
++     else if ((int *)varp == &curbuf->b_p_fixeol)
++     {
++ 	redraw_titles();
++     }
+  # ifdef FEAT_MBYTE
+      /* when 'bomb' is changed, redraw the window title and tab page text */
+      else if ((int *)varp == &curbuf->b_p_bomb)
+***************
+*** 10176,10181 ****
+--- 10186,10192 ----
+  	case PV_OFU:	return (char_u *)&(curbuf->b_p_ofu);
+  #endif
+  	case PV_EOL:	return (char_u *)&(curbuf->b_p_eol);
++ 	case PV_FIXEOL:	return (char_u *)&(curbuf->b_p_fixeol);
+  	case PV_ET:	return (char_u *)&(curbuf->b_p_et);
+  #ifdef FEAT_MBYTE
+  	case PV_FENC:	return (char_u *)&(curbuf->b_p_fenc);
+***************
+*** 11894,11899 ****
+--- 11905,11911 ----
+   * from when editing started (save_file_ff() called).
+   * Also when 'endofline' was changed and 'binary' is set, or when 'bomb' was
+   * changed and 'binary' is not set.
++  * Also when 'endofline' was changed and 'fixeol' is not set.
+   * When "ignore_empty" is true don't consider a new, empty buffer to be
+   * changed.
+   */
+***************
+*** 11912,11918 ****
+  	return FALSE;
+      if (buf->b_start_ffc != *buf->b_p_ff)
+  	return TRUE;
+!     if (buf->b_p_bin && buf->b_start_eol != buf->b_p_eol)
+  	return TRUE;
+  #ifdef FEAT_MBYTE
+      if (!buf->b_p_bin && buf->b_start_bomb != buf->b_p_bomb)
+--- 11924,11930 ----
+  	return FALSE;
+      if (buf->b_start_ffc != *buf->b_p_ff)
+  	return TRUE;
+!     if ((buf->b_p_bin || !buf->b_p_fixeol) && buf->b_start_eol != buf->b_p_eol)
+  	return TRUE;
+  #ifdef FEAT_MBYTE
+      if (!buf->b_p_bin && buf->b_start_bomb != buf->b_p_bomb)
+*** ../vim-7.4.784/src/option.h	2015-06-19 14:41:44.777813290 +0200
+--- src/option.h	2015-07-17 13:55:33.186783767 +0200
+***************
+*** 962,967 ****
+--- 962,968 ----
+      , BV_INC
+  #endif
+      , BV_EOL
++     , BV_FIXEOL
+      , BV_EP
+      , BV_ET
+      , BV_FENC
+*** ../vim-7.4.784/src/os_unix.c	2015-03-31 13:33:00.801524871 +0200
+--- src/os_unix.c	2015-07-17 13:55:33.186783767 +0200
+***************
+*** 4624,4630 ****
+  				/* Finished a line, add a NL, unless this line
+  				 * should not have one. */
+  				if (lnum != curbuf->b_op_end.lnum
+! 					|| !curbuf->b_p_bin
+  					|| (lnum != curbuf->b_no_eol_lnum
+  					    && (lnum !=
+  						    curbuf->b_ml.ml_line_count
+--- 4624,4631 ----
+  				/* Finished a line, add a NL, unless this line
+  				 * should not have one. */
+  				if (lnum != curbuf->b_op_end.lnum
+! 					|| (!curbuf->b_p_bin
+! 					    && curbuf->b_p_fixeol)
+  					|| (lnum != curbuf->b_no_eol_lnum
+  					    && (lnum !=
+  						    curbuf->b_ml.ml_line_count
+*** ../vim-7.4.784/src/os_win32.c	2015-03-24 17:12:04.477113277 +0100
+--- src/os_win32.c	2015-07-17 13:55:33.190783729 +0200
+***************
+*** 4173,4179 ****
+  	    /* Finished a line, add a NL, unless this line should not have
+  	     * one. */
+  	    if (lnum != curbuf->b_op_end.lnum
+! 		|| !curbuf->b_p_bin
+  		|| (lnum != curbuf->b_no_eol_lnum
+  		    && (lnum != curbuf->b_ml.ml_line_count
+  			|| curbuf->b_p_eol)))
+--- 4173,4180 ----
+  	    /* Finished a line, add a NL, unless this line should not have
+  	     * one. */
+  	    if (lnum != curbuf->b_op_end.lnum
+! 		|| (!curbuf->b_p_bin
+! 		    && curbuf->b_p_fixeol)
+  		|| (lnum != curbuf->b_no_eol_lnum
+  		    && (lnum != curbuf->b_ml.ml_line_count
+  			|| curbuf->b_p_eol)))
+*** ../vim-7.4.784/src/structs.h	2015-04-13 16:16:31.221091470 +0200
+--- src/structs.h	2015-07-17 13:55:33.190783729 +0200
+***************
+*** 635,641 ****
+      int		ml_flags;
+  
+      infoptr_T	*ml_stack;	/* stack of pointer blocks (array of IPTRs) */
+!     int		ml_stack_top;	/* current top if ml_stack */
+      int		ml_stack_size;	/* total number of entries in ml_stack */
+  
+      linenr_T	ml_line_lnum;	/* line number of cached line, 0 if not valid */
+--- 635,641 ----
+      int		ml_flags;
+  
+      infoptr_T	*ml_stack;	/* stack of pointer blocks (array of IPTRs) */
+!     int		ml_stack_top;	/* current top of ml_stack */
+      int		ml_stack_size;	/* total number of entries in ml_stack */
+  
+      linenr_T	ml_line_lnum;	/* line number of cached line, 0 if not valid */
+***************
+*** 1586,1591 ****
+--- 1586,1592 ----
+      char_u	*b_p_ofu;	/* 'omnifunc' */
+  #endif
+      int		b_p_eol;	/* 'endofline' */
++     int		b_p_fixeol;	/* 'fixendofline' */
+      int		b_p_et;		/* 'expandtab' */
+      int		b_p_et_nobin;	/* b_p_et saved for binary mode */
+  #ifdef FEAT_MBYTE
+*** ../vim-7.4.784/src/testdir/Make_amiga.mak	2015-07-10 14:43:29.556722605 +0200
+--- src/testdir/Make_amiga.mak	2015-07-17 14:01:03.567629733 +0200
+***************
+*** 45,50 ****
+--- 45,51 ----
+  		test_command_count.out \
+  		test_erasebackword.out \
+  		test_eval.out \
++ 		test_fixeol.out \
+  		test_increment.out \
+  		test_insertcount.out \
+  		test_listchars.out \
+***************
+*** 195,200 ****
+--- 196,202 ----
+  test_erasebackword.out: test_erasebackword.in
+  test_eval.out: test_eval.in
+  test_increment.out: test_increment.in
++ test_fixeol.out: test_fixeol.in
+  test_insertcount.out: test_insertcount.in
+  test_listchars.out: test_listchars.in
+  test_listlbr.out: test_listlbr.in
+*** ../vim-7.4.784/src/testdir/Make_dos.mak	2015-07-10 14:43:29.556722605 +0200
+--- src/testdir/Make_dos.mak	2015-07-17 14:00:58.519677917 +0200
+***************
+*** 44,49 ****
+--- 44,50 ----
+  		test_command_count.out \
+  		test_erasebackword.out \
+  		test_eval.out \
++ 		test_fixeol.out \
+  		test_increment.out \
+  		test_insertcount.out \
+  		test_listchars.out \
+*** ../vim-7.4.784/src/testdir/Make_ming.mak	2015-07-10 14:43:29.556722605 +0200
+--- src/testdir/Make_ming.mak	2015-07-17 14:01:15.847512519 +0200
+***************
+*** 66,71 ****
+--- 66,72 ----
+  		test_command_count.out \
+  		test_erasebackword.out \
+  		test_eval.out \
++ 		test_fixeol.out \
+  		test_increment.out \
+  		test_insertcount.out \
+  		test_listchars.out \
+*** ../vim-7.4.784/src/testdir/Make_os2.mak	2015-07-10 14:43:29.556722605 +0200
+--- src/testdir/Make_os2.mak	2015-07-17 14:01:25.883416724 +0200
+***************
+*** 46,51 ****
+--- 46,52 ----
+  		test_command_count.out \
+  		test_erasebackword.out \
+  		test_eval.out \
++ 		test_fixeol.out \
+  		test_increment.out \
+  		test_insertcount.out \
+  		test_listchars.out \
+*** ../vim-7.4.784/src/testdir/Make_vms.mms	2015-07-10 14:43:29.556722605 +0200
+--- src/testdir/Make_vms.mms	2015-07-17 14:01:36.355316767 +0200
+***************
+*** 4,10 ****
+  # Authors:	Zoltan Arpadffy, <arpadffy@polarhome.com>
+  #		Sandor Kopanyi,  <sandor.kopanyi@mailbox.hu>
+  #
+! # Last change:  2015 Jul 10
+  #
+  # This has been tested on VMS 6.2 to 8.3 on DEC Alpha, VAX and IA64.
+  # Edit the lines in the Configuration section below to select.
+--- 4,10 ----
+  # Authors:	Zoltan Arpadffy, <arpadffy@polarhome.com>
+  #		Sandor Kopanyi,  <sandor.kopanyi@mailbox.hu>
+  #
+! # Last change:  2015 Jul 17
+  #
+  # This has been tested on VMS 6.2 to 8.3 on DEC Alpha, VAX and IA64.
+  # Edit the lines in the Configuration section below to select.
+***************
+*** 105,110 ****
+--- 105,111 ----
+  	 test_command_count.out \
+  	 test_erasebackword.out \
+  	 test_eval.out \
++ 	 test_fixeol.out \
+  	 test_increment.out \
+  	 test_insertcount.out \
+  	 test_listchars.out \
+*** ../vim-7.4.784/src/testdir/Makefile	2015-07-10 14:43:29.556722605 +0200
+--- src/testdir/Makefile	2015-07-17 14:01:46.679218225 +0200
+***************
+*** 42,47 ****
+--- 42,48 ----
+  		test_command_count.out \
+  		test_erasebackword.out \
+  		test_eval.out \
++ 		test_fixeol.out \
+  		test_increment.out \
+  		test_insertcount.out \
+  		test_listchars.out \
+*** ../vim-7.4.784/src/testdir/test_fixeol.in	2015-07-17 14:14:20.856020508 +0200
+--- src/testdir/test_fixeol.in	2015-07-17 13:55:33.190783729 +0200
+***************
+*** 0 ****
+--- 1,40 ----
++ Tests for 'fixeol'                         vim: set ft=vim :
++  
++ STARTTEST
++ :" first write two test files – with and without trailing EOL
++ :" use Unix fileformat for consistency
++ :set ff=unix
++ :enew!
++ awith eol:w! XXEol
++ :enew!
++ :set noeol nofixeol
++ awithout eol:w! XXNoEol
++ :set eol fixeol
++ :bwipe XXEol XXNoEol
++ :"
++ :" try editing files with 'fixeol' disabled
++ :e! XXEol
++ ostays eol:set nofixeol
++ :w! XXTestEol
++ :e! XXNoEol
++ ostays without:set nofixeol
++ :w! XXTestNoEol
++ :bwipe XXEol XXNoEol XXTestEol XXTestNoEol
++ :set fixeol
++ :"
++ :" Append "END" to each file so that we can see what the last written char was.
++ ggdGaEND:w >>XXEol
++ :w >>XXNoEol
++ :w >>XXTestEol
++ :w >>XXTestNoEol
++ :"
++ :" Concatenate the results
++ :e! test.out
++ a0:$r XXEol
++ :$r XXNoEol
++ Go1:$r XXTestEol
++ :$r XXTestNoEol
++ :w
++ :qa!
++ ENDTEST
++ 
+*** ../vim-7.4.784/src/testdir/test_fixeol.ok	2015-07-17 14:14:20.860020470 +0200
+--- src/testdir/test_fixeol.ok	2015-07-17 13:55:33.190783729 +0200
+***************
+*** 0 ****
+--- 1,10 ----
++ 0
++ with eol
++ END
++ without eolEND
++ 1
++ with eol
++ stays eol
++ END
++ without eol
++ stays withoutEND
+*** ../vim-7.4.784/runtime/doc/options.txt	2015-07-10 18:18:35.575206298 +0200
+--- runtime/doc/options.txt	2015-07-17 14:13:33.036477520 +0200
+***************
+*** 2670,2684 ****
+  			local to buffer
+  			{not in Vi}
+  	When writing a file and this option is off and the 'binary' option
+! 	is on, no <EOL> will be written for the last line in the file.  This
+! 	option is automatically set when starting to edit a new file, unless
+! 	the file does not have an <EOL> for the last line in the file, in
+! 	which case it is reset.  Normally you don't have to set or reset this
+! 	option.  When 'binary' is off the value is not used when writing the
+! 	file.  When 'binary' is on it is used to remember the presence of a
+! 	<EOL> for the last line in the file, so that when you write the file
+! 	the situation from the original file can be kept.  But you can change
+! 	it if you want to.
+  
+  			     *'equalalways'* *'ea'* *'noequalalways'* *'noea'*
+  'equalalways' 'ea'	boolean	(default on)
+--- 2671,2686 ----
+  			local to buffer
+  			{not in Vi}
+  	When writing a file and this option is off and the 'binary' option
+! 	is on, or 'fixeol' option is off, no <EOL> will be written for the
+! 	last line in the file.  This option is automatically set or reset when
+! 	starting to edit a new file, depending on whether file has an <EOL>
+! 	for the last line in the file.  Normally you don't have to set or
+! 	reset this option.
+! 	When 'binary' is off and 'fixeol' is on the value is not used when
+! 	writing the file.  When 'binary' is on or 'fixeol' is off it is used
+! 	to remember the presence of a <EOL> for the last line in the file, so
+! 	that when you write the file the situation from the original file can
+! 	be kept.  But you can change it if you want to.
+  
+  			     *'equalalways'* *'ea'* *'noequalalways'* *'noea'*
+  'equalalways' 'ea'	boolean	(default on)
+***************
+*** 3063,3068 ****
+--- 3065,3081 ----
+  	  fold:c	Folded			|hl-Folded|
+  	  diff:c	DiffDelete		|hl-DiffDelete|
+  
++ 		*'fixendofline'* *'fixeol'* *'nofixendofline'* *'nofixeol'*
++ 'fixendofline' 'fixeol'	boolean	(default on)
++ 			local to buffer
++ 			{not in Vi}
++ 	When writing a file and this option is on, <EOL> at the end of file
++ 	will be restored if missing. Turn this option off if you want to
++ 	preserve the situation from the original file.
++ 	When the 'binary' option is set the value of this option doesn't
++ 	matter.
++ 	See the 'endofline' option.
++ 
+  					*'fkmap'* *'fk'* *'nofkmap'* *'nofk'*
+  'fkmap' 'fk'		boolean (default off)			*E198*
+  			global
+*** ../vim-7.4.784/runtime/optwin.vim	2014-06-25 14:39:35.098348584 +0200
+--- runtime/optwin.vim	2015-07-17 14:04:18.181772220 +0200
+***************
+*** 949,954 ****
+--- 954,962 ----
+  call append("$", "endofline\tlast line in the file has an end-of-line")
+  call append("$", "\t(local to buffer)")
+  call <SID>BinOptionL("eol")
++ call append("$", "fixeol\tfixes missing end-of-line at end of text file")
++ call append("$", "\t(local to buffer)")
++ call <SID>BinOptionL("fixeol")
+  if has("multi_byte")
+    call append("$", "bomb\tprepend a Byte Order Mark to the file")
+    call append("$", "\t(local to buffer)")
+*** ../vim-7.4.784/src/version.c	2015-07-17 13:42:17.778373909 +0200
+--- src/version.c	2015-07-17 13:54:24.543439196 +0200
+***************
+*** 743,744 ****
+--- 743,746 ----
+  {   /* Add new patch number below this line */
++ /**/
++     785,
+  /**/
+
+-- 
+A computer without Windows is like a fish without a bicycle.
+
+ /// Bram Moolenaar -- Bram@Moolenaar.net -- http://www.Moolenaar.net   \\\
+///        sponsor Vim, vote for features -- http://www.Vim.org/sponsor/ \\\
+\\\  an exciting new programming language -- http://www.Zimbu.org        ///
+ \\\            help me help AIDS victims -- http://ICCF-Holland.org    ///

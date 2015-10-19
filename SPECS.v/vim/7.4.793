@@ -1,0 +1,949 @@
+To: vim_dev@googlegroups.com
+Subject: Patch 7.4.793
+Fcc: outbox
+From: Bram Moolenaar <Bram@moolenaar.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+------------
+
+Patch 7.4.793
+Problem:    Can't specify when not to ring the bell.
+Solution:   Add the 'belloff' option. (Christian Brabandt)
+Files:      runtime/doc/options.txt, src/edit.c, src/ex_getln.c,
+            src/hangulin.c, src/if_lua.c, src/if_mzsch.c, src/if_tcl.c,
+            src/message.c, src/misc1.c, src/normal.c, src/option.c,
+            src/option.h, src/proto/misc1.pro, src/search.c, src/spell.c
+
+
+*** ../vim-7.4.792/runtime/doc/options.txt	2015-07-17 14:16:49.854596682 +0200
+--- runtime/doc/options.txt	2015-07-21 17:17:27.562113662 +0200
+***************
+*** 1126,1131 ****
+--- 1124,1170 ----
+  	expression evaluates to a |List| this is equal to using each List item
+  	as a string and putting "\n" in between them.
+  
++ 						*'belloff'* *'bo'*
++ 'belloff' 'bo'		string	(default "")
++ 			global
++ 			{not in Vi}
++ 	Specifies for which events the bell will not be rung. It is a comma
++ 	separated list of items. For each item that is present, the bell
++ 	will be silenced. This is most useful to specify specific events in
++ 	insert mode to be silenced.
++ 
++ 	item	    meaning when present	~
++ 	all	    All events.
++ 	backspace   When hitting <BS> or <Del> and deleting results in an
++ 		    error.
++ 	cursor	    Fail to move around using the cursor keys or
++ 		    <PageUp>/<PageDown> in |Insert-mode|.
++ 	complete    Error occurred when using |i_CTRL-X_CTRL-K| or
++ 		    |i_CTRL-X_CTRL-T|.
++ 	copy	    Cannot copy char from insert mode using |i_CTRL-Y| or
++ 		    |i_CTRL-E|.
++ 	ctrlg	    Unknown Char after <C-G> in Insert mode.
++ 	error	    Other Error occurred (e.g. try to join last line)
++ 		    (mostly used in |Normal-mode| or |Cmdline-mode|).
++ 	esc	    hitting <Esc> in |Normal-mode|.
++ 	ex	    In |Visual-mode|, hitting |Q| results in an error.
++ 	hangul	    Error occurred when using hangul input.
++ 	insertmode  Pressing <Esc> in 'insertmode'.
++ 	lang	    Calling the beep module for Lua/Mzscheme/TCL.
++ 	mess	    No output available for |g<|.
++ 	showmatch   Error occurred for 'showmatch' function.
++ 	operator    Empty region error |cpo-E|.
++ 	register    Unknown register after <C-R> in |Insert-mode|.
++ 	shell	    Bell from shell output |:!|.
++ 	spell	    Error happened on spell suggest.
++ 	wildmode    More matches in |cmdline-completion| available
++ 		    (depends on the 'wildmode' setting).
++ 
++ 	This is most useful, to fine tune when in insert mode the bell should
++ 	be rung. For normal mode and ex commands, the bell is often rung to
++ 	indicate that an error occurred. It can be silenced by adding the
++ 	"error" keyword.
++ 
+  				     *'binary'* *'bin'* *'nobinary'* *'nobin'*
+  'binary' 'bin'		boolean	(default off)
+  			local to buffer
+***************
+*** 2720,2726 ****
+  	makes a difference for error messages, the bell will be used always
+  	for a lot of errors without a message (e.g., hitting <Esc> in Normal
+  	mode).  See 'visualbell' on how to make the bell behave like a beep,
+! 	screen flash or do nothing.
+  
+  						*'errorfile'* *'ef'*
+  'errorfile' 'ef'	string	(Amiga default: "AztecC.Err",
+--- 2762,2769 ----
+  	makes a difference for error messages, the bell will be used always
+  	for a lot of errors without a message (e.g., hitting <Esc> in Normal
+  	mode).  See 'visualbell' on how to make the bell behave like a beep,
+! 	screen flash or do nothing. See 'belloff' to finetune when to ring the
+! 	bell.
+  
+  						*'errorfile'* *'ef'*
+  'errorfile' 'ef'	string	(Amiga default: "AztecC.Err",
+*** ../vim-7.4.792/src/edit.c	2015-07-17 13:42:17.778373909 +0200
+--- src/edit.c	2015-07-21 17:17:27.566113624 +0200
+***************
+*** 982,988 ****
+  		    got_int = FALSE;
+  		}
+  		else
+! 		    vim_beep();
+  		break;
+  	    }
+  doESCkey:
+--- 982,988 ----
+  		    got_int = FALSE;
+  		}
+  		else
+! 		    vim_beep(BO_IM);
+  		break;
+  	    }
+  doESCkey:
+***************
+*** 2210,2216 ****
+  							      hl_attr(HLF_E));
+  	if (emsg_silent == 0)
+  	{
+! 	    vim_beep();
+  	    setcursor();
+  	    out_flush();
+  	    ui_delay(2000L, FALSE);
+--- 2210,2216 ----
+  							      hl_attr(HLF_E));
+  	if (emsg_silent == 0)
+  	{
+! 	    vim_beep(BO_COMPL);
+  	    setcursor();
+  	    out_flush();
+  	    ui_delay(2000L, FALSE);
+***************
+*** 8263,8269 ****
+      }
+      if (regname == NUL || !valid_yank_reg(regname, FALSE))
+      {
+! 	vim_beep();
+  	need_redraw = TRUE;	/* remove the '"' */
+      }
+      else
+--- 8263,8269 ----
+      }
+      if (regname == NUL || !valid_yank_reg(regname, FALSE))
+      {
+! 	vim_beep(BO_REG);
+  	need_redraw = TRUE;	/* remove the '"' */
+      }
+      else
+***************
+*** 8281,8287 ****
+  	}
+  	else if (insert_reg(regname, literally) == FAIL)
+  	{
+! 	    vim_beep();
+  	    need_redraw = TRUE;	/* remove the '"' */
+  	}
+  	else if (stop_insert_mode)
+--- 8281,8287 ----
+  	}
+  	else if (insert_reg(regname, literally) == FAIL)
+  	{
+! 	    vim_beep(BO_REG);
+  	    need_redraw = TRUE;	/* remove the '"' */
+  	}
+  	else if (stop_insert_mode)
+***************
+*** 8355,8361 ****
+  		  break;
+  
+  	/* Unknown CTRL-G command, reserved for future expansion. */
+! 	default:  vim_beep();
+      }
+  }
+  
+--- 8355,8361 ----
+  		  break;
+  
+  	/* Unknown CTRL-G command, reserved for future expansion. */
+! 	default:  vim_beep(BO_CTRLG);
+      }
+  }
+  
+***************
+*** 8781,8792 ****
+  	temp = curwin->w_cursor.col;
+  	if (!can_bs(BS_EOL)		/* only if "eol" included */
+  		|| do_join(2, FALSE, TRUE, FALSE, FALSE) == FAIL)
+! 	    vim_beep();
+  	else
+  	    curwin->w_cursor.col = temp;
+      }
+!     else if (del_char(FALSE) == FAIL)	/* delete char under cursor */
+! 	vim_beep();
+      did_ai = FALSE;
+  #ifdef FEAT_SMARTINDENT
+      did_si = FALSE;
+--- 8781,8792 ----
+  	temp = curwin->w_cursor.col;
+  	if (!can_bs(BS_EOL)		/* only if "eol" included */
+  		|| do_join(2, FALSE, TRUE, FALSE, FALSE) == FAIL)
+! 	    vim_beep(BO_BS);
+  	else
+  	    curwin->w_cursor.col = temp;
+      }
+!     else if (del_char(FALSE) == FAIL)  /* delete char under cursor */
+! 	vim_beep(BO_BS);
+      did_ai = FALSE;
+  #ifdef FEAT_SMARTINDENT
+      did_si = FALSE;
+***************
+*** 8861,8867 ****
+  					 && curwin->w_cursor.col <= ai_col)
+  		    || (!can_bs(BS_EOL) && curwin->w_cursor.col == 0))))
+      {
+! 	vim_beep();
+  	return FALSE;
+      }
+  
+--- 8861,8867 ----
+  					 && curwin->w_cursor.col <= ai_col)
+  		    || (!can_bs(BS_EOL) && curwin->w_cursor.col == 0))))
+      {
+! 	vim_beep(BO_BS);
+  	return FALSE;
+      }
+  
+***************
+*** 9473,9479 ****
+  	curwin->w_set_curswant = TRUE;	/* so we stay at the end */
+      }
+      else
+! 	vim_beep();
+  }
+  
+      static void
+--- 9473,9479 ----
+  	curwin->w_set_curswant = TRUE;	/* so we stay at the end */
+      }
+      else
+! 	vim_beep(BO_CRSR);
+  }
+  
+      static void
+***************
+*** 9533,9539 ****
+  	curwin->w_set_curswant = TRUE;
+      }
+      else
+! 	vim_beep();
+  }
+  
+      static void
+--- 9533,9539 ----
+  	curwin->w_set_curswant = TRUE;
+      }
+      else
+! 	vim_beep(BO_CRSR);
+  }
+  
+      static void
+***************
+*** 9583,9589 ****
+  	curwin->w_cursor.col = 0;
+      }
+      else
+! 	vim_beep();
+  }
+  
+      static void
+--- 9583,9589 ----
+  	curwin->w_cursor.col = 0;
+      }
+      else
+! 	vim_beep(BO_CRSR);
+  }
+  
+      static void
+***************
+*** 9602,9608 ****
+  	curwin->w_set_curswant = TRUE;
+      }
+      else
+! 	vim_beep();
+  }
+  
+      static void
+--- 9602,9608 ----
+  	curwin->w_set_curswant = TRUE;
+      }
+      else
+! 	vim_beep(BO_CRSR);
+  }
+  
+      static void
+***************
+*** 9633,9639 ****
+  #endif
+      }
+      else
+! 	vim_beep();
+  }
+  
+      static void
+--- 9633,9639 ----
+  #endif
+      }
+      else
+! 	vim_beep(BO_CRSR);
+  }
+  
+      static void
+***************
+*** 9665,9671 ****
+  #endif
+      }
+      else
+! 	vim_beep();
+  }
+  
+      static void
+--- 9665,9671 ----
+  #endif
+      }
+      else
+! 	vim_beep(BO_CRSR);
+  }
+  
+      static void
+***************
+*** 9696,9702 ****
+  #endif
+      }
+      else
+! 	vim_beep();
+  }
+  
+      static void
+--- 9696,9702 ----
+  #endif
+      }
+      else
+! 	vim_beep(BO_CRSR);
+  }
+  
+      static void
+***************
+*** 9728,9734 ****
+  #endif
+      }
+      else
+! 	vim_beep();
+  }
+  
+  #ifdef FEAT_DND
+--- 9728,9734 ----
+  #endif
+      }
+      else
+! 	vim_beep(BO_CRSR);
+  }
+  
+  #ifdef FEAT_DND
+***************
+*** 10146,10152 ****
+  
+      if (lnum < 1 || lnum > curbuf->b_ml.ml_line_count)
+      {
+! 	vim_beep();
+  	return NUL;
+      }
+  
+--- 10146,10152 ----
+  
+      if (lnum < 1 || lnum > curbuf->b_ml.ml_line_count)
+      {
+! 	vim_beep(BO_COPY);
+  	return NUL;
+      }
+  
+***************
+*** 10169,10175 ****
+      c = *ptr;
+  #endif
+      if (c == NUL)
+! 	vim_beep();
+      return c;
+  }
+  
+--- 10169,10175 ----
+      c = *ptr;
+  #endif
+      if (c == NUL)
+! 	vim_beep(BO_COPY);
+      return c;
+  }
+  
+*** ../vim-7.4.792/src/ex_getln.c	2015-07-17 13:22:43.153523709 +0200
+--- src/ex_getln.c	2015-07-21 17:17:27.566113624 +0200
+***************
+*** 900,906 ****
+  							       firstc != '@');
+  		    }
+  		    else
+! 			vim_beep();
+  		}
+  #ifdef FEAT_WILDMENU
+  		else if (xpc.xp_numfiles == -1)
+--- 900,906 ----
+  							       firstc != '@');
+  		    }
+  		    else
+! 			vim_beep(BO_WILD);
+  		}
+  #ifdef FEAT_WILDMENU
+  		else if (xpc.xp_numfiles == -1)
+***************
+*** 3710,3716 ****
+  	    if (i < xp->xp_numfiles)
+  	    {
+  		if (!(options & WILD_NO_BEEP))
+! 		    vim_beep();
+  		break;
+  	    }
+  	}
+--- 3710,3716 ----
+  	    if (i < xp->xp_numfiles)
+  	    {
+  		if (!(options & WILD_NO_BEEP))
+! 		    vim_beep(BO_WILD);
+  		break;
+  	    }
+  	}
+*** ../vim-7.4.792/src/hangulin.c	2010-05-15 13:04:11.000000000 +0200
+--- src/hangulin.c	2015-07-21 17:17:27.566113624 +0200
+***************
+*** 824,830 ****
+      }
+      else if (n == AUTOMATA_ERROR)
+      {
+! 	vim_beep();
+  	return 0;
+      }
+      return len;
+--- 824,830 ----
+      }
+      else if (n == AUTOMATA_ERROR)
+      {
+! 	vim_beep(BO_HANGUL);
+  	return 0;
+      }
+      return len;
+*** ../vim-7.4.792/src/if_lua.c	2015-06-27 18:36:09.110432861 +0200
+--- src/if_lua.c	2015-07-21 17:17:27.566113624 +0200
+***************
+*** 1354,1360 ****
+      static int
+  luaV_beep(lua_State *L UNUSED)
+  {
+!     vim_beep();
+      return 0;
+  }
+  
+--- 1354,1360 ----
+      static int
+  luaV_beep(lua_State *L UNUSED)
+  {
+!     vim_beep(BO_LANG);
+      return 0;
+  }
+  
+*** ../vim-7.4.792/src/if_mzsch.c	2015-07-10 16:12:43.146296071 +0200
+--- src/if_mzsch.c	2015-07-21 17:17:27.566113624 +0200
+***************
+*** 1569,1575 ****
+      static Scheme_Object *
+  mzscheme_beep(void *data UNUSED, int argc UNUSED, Scheme_Object **argv UNUSED)
+  {
+!     vim_beep();
+      return scheme_void;
+  }
+  
+--- 1569,1575 ----
+      static Scheme_Object *
+  mzscheme_beep(void *data UNUSED, int argc UNUSED, Scheme_Object **argv UNUSED)
+  {
+!     vim_beep(BO_LANG);
+      return scheme_void;
+  }
+  
+*** ../vim-7.4.792/src/if_tcl.c	2013-10-02 14:25:39.000000000 +0200
+--- src/if_tcl.c	2015-07-21 17:17:27.566113624 +0200
+***************
+*** 337,343 ****
+  	Tcl_WrongNumArgs(interp, 1, objv, NULL);
+  	return TCL_ERROR;
+      }
+!     vim_beep();
+      return TCL_OK;
+  }
+  
+--- 337,343 ----
+  	Tcl_WrongNumArgs(interp, 1, objv, NULL);
+  	return TCL_ERROR;
+      }
+!     vim_beep(BO_LANG);
+      return TCL_OK;
+  }
+  
+*** ../vim-7.4.792/src/message.c	2015-05-04 17:28:17.340445782 +0200
+--- src/message.c	2015-07-21 17:17:27.570113585 +0200
+***************
+*** 2119,2126 ****
+  		msg_screen_putchar(' ', attr);
+  	    while (msg_col & 7);
+  	}
+! 	else if (*s == BELL)	    /* beep (from ":sh") */
+! 	    vim_beep();
+  	else
+  	{
+  #ifdef FEAT_MBYTE
+--- 2119,2126 ----
+  		msg_screen_putchar(' ', attr);
+  	    while (msg_col & 7);
+  	}
+! 	else if (*s == BELL)		/* beep (from ":sh") */
+! 	    vim_beep(BO_SH);
+  	else
+  	{
+  #ifdef FEAT_MBYTE
+***************
+*** 2363,2369 ****
+       * weird, typing a command without output results in one line. */
+      mp = msg_sb_start(last_msgchunk);
+      if (mp == NULL || mp->sb_prev == NULL)
+! 	vim_beep();
+      else
+      {
+  	do_more_prompt('G');
+--- 2363,2369 ----
+       * weird, typing a command without output results in one line. */
+      mp = msg_sb_start(last_msgchunk);
+      if (mp == NULL || mp->sb_prev == NULL)
+! 	vim_beep(BO_MESS);
+      else
+      {
+  	do_more_prompt('G');
+*** ../vim-7.4.792/src/misc1.c	2015-05-04 17:50:25.613605986 +0200
+--- src/misc1.c	2015-07-21 17:50:42.098962486 +0200
+***************
+*** 3699,3744 ****
+      if (emsg_silent == 0)
+      {
+  	flush_buffers(FALSE);
+! 	vim_beep();
+      }
+  }
+  
+  /*
+!  * give a warning for an error
+   */
+      void
+! vim_beep()
+  {
+      if (emsg_silent == 0)
+      {
+! 	if (p_vb
+  #ifdef FEAT_GUI
+! 		/* While the GUI is starting up the termcap is set for the GUI
+! 		 * but the output still goes to a terminal. */
+! 		&& !(gui.in_use && gui.starting)
+  #endif
+! 		)
+! 	{
+! 	    out_str(T_VB);
+! 	}
+! 	else
+! 	{
+! #ifdef MSDOS
+! 	    /*
+! 	     * The number of beeps outputted is reduced to avoid having to wait
+! 	     * for all the beeps to finish. This is only a problem on systems
+! 	     * where the beeps don't overlap.
+! 	     */
+! 	    if (beep_count == 0 || beep_count == 10)
+  	    {
+! 		out_char(BELL);
+! 		beep_count = 1;
+  	    }
+  	    else
+! 		++beep_count;
+  #else
+! 	    out_char(BELL);
+  #endif
+  	}
+  
+  	/* When 'verbose' is set and we are sourcing a script or executing a
+--- 3699,3748 ----
+      if (emsg_silent == 0)
+      {
+  	flush_buffers(FALSE);
+! 	vim_beep(BO_ERROR);
+      }
+  }
+  
+  /*
+!  * Give a warning for an error.
+   */
+      void
+! vim_beep(val)
+!     unsigned val; /* one of the BO_ values, e.g., BO_OPER */
+  {
+      if (emsg_silent == 0)
+      {
+! 	if (!((bo_flags & val) || (bo_flags & BO_ALL)))
+! 	{
+! 	    if (p_vb
+  #ifdef FEAT_GUI
+! 		    /* While the GUI is starting up the termcap is set for the
+! 		     * GUI but the output still goes to a terminal. */
+! 		    && !(gui.in_use && gui.starting)
+  #endif
+! 		    )
+  	    {
+! 		out_str(T_VB);
+  	    }
+  	    else
+! 	    {
+! #ifdef MSDOS
+! 		/*
+! 		 * The number of beeps outputted is reduced to avoid having to
+! 		 * wait for all the beeps to finish. This is only a problem on
+! 		 * systems where the beeps don't overlap.
+! 		 */
+! 		if (beep_count == 0 || beep_count == 10)
+! 		{
+! 		    out_char(BELL);
+! 		    beep_count = 1;
+! 		}
+! 		else
+! 		    ++beep_count;
+  #else
+! 		out_char(BELL);
+  #endif
++ 	    }
+  	}
+  
+  	/* When 'verbose' is set and we are sourcing a script or executing a
+*** ../vim-7.4.792/src/normal.c	2015-07-17 13:03:42.104357503 +0200
+--- src/normal.c	2015-07-21 17:20:01.308637453 +0200
+***************
+*** 1880,1886 ****
+  	    VIsual_reselect = FALSE;	    /* don't reselect now */
+  	    if (empty_region_error)
+  	    {
+! 		vim_beep();
+  		CancelRedo();
+  	    }
+  	    else
+--- 1880,1886 ----
+  	    VIsual_reselect = FALSE;	    /* don't reselect now */
+  	    if (empty_region_error)
+  	    {
+! 		vim_beep(BO_OPER);
+  		CancelRedo();
+  	    }
+  	    else
+***************
+*** 1897,1903 ****
+  	    {
+  		if (!gui_yank)
+  		{
+! 		    vim_beep();
+  		    CancelRedo();
+  		}
+  	    }
+--- 1897,1903 ----
+  	    {
+  		if (!gui_yank)
+  		{
+! 		    vim_beep(BO_OPER);
+  		    CancelRedo();
+  		}
+  	    }
+***************
+*** 1915,1921 ****
+  	    VIsual_reselect = FALSE;	    /* don't reselect now */
+  	    if (empty_region_error)
+  	    {
+! 		vim_beep();
+  		CancelRedo();
+  	    }
+  	    else
+--- 1915,1921 ----
+  	    VIsual_reselect = FALSE;	    /* don't reselect now */
+  	    if (empty_region_error)
+  	    {
+! 		vim_beep(BO_OPER);
+  		CancelRedo();
+  	    }
+  	    else
+***************
+*** 1989,1995 ****
+  	case OP_ROT13:
+  	    if (empty_region_error)
+  	    {
+! 		vim_beep();
+  		CancelRedo();
+  	    }
+  	    else
+--- 1989,1995 ----
+  	case OP_ROT13:
+  	    if (empty_region_error)
+  	    {
+! 		vim_beep(BO_OPER);
+  		CancelRedo();
+  	    }
+  	    else
+***************
+*** 2023,2029 ****
+  #ifdef FEAT_VISUALEXTRA
+  	    if (empty_region_error)
+  	    {
+! 		vim_beep();
+  		CancelRedo();
+  	    }
+  	    else
+--- 2023,2029 ----
+  #ifdef FEAT_VISUALEXTRA
+  	    if (empty_region_error)
+  	    {
+! 		vim_beep(BO_OPER);
+  		CancelRedo();
+  	    }
+  	    else
+***************
+*** 2056,2062 ****
+  		    restart_edit = restart_edit_save;
+  	    }
+  #else
+! 	    vim_beep();
+  #endif
+  	    break;
+  
+--- 2056,2062 ----
+  		    restart_edit = restart_edit_save;
+  	    }
+  #else
+! 	    vim_beep(BO_OPER);
+  #endif
+  	    break;
+  
+***************
+*** 2066,2072 ****
+  	    if (empty_region_error)
+  #endif
+  	    {
+! 		vim_beep();
+  		CancelRedo();
+  	    }
+  #ifdef FEAT_VISUALEXTRA
+--- 2066,2072 ----
+  	    if (empty_region_error)
+  #endif
+  	    {
+! 		vim_beep(BO_OPER);
+  		CancelRedo();
+  	    }
+  #ifdef FEAT_VISUALEXTRA
+***************
+*** 5359,5365 ****
+       * Ignore 'Q' in Visual mode, just give a beep.
+       */
+      if (VIsual_active)
+! 	vim_beep();
+      else if (!checkclearop(cap->oap))
+  	do_exmode(FALSE);
+  }
+--- 5359,5365 ----
+       * Ignore 'Q' in Visual mode, just give a beep.
+       */
+      if (VIsual_active)
+! 	vim_beep(BO_EX);
+      else if (!checkclearop(cap->oap))
+  	do_exmode(FALSE);
+  }
+***************
+*** 9055,9061 ****
+  	redraw_curbuf_later(INVERTED);
+      }
+      else if (no_reason)
+! 	vim_beep();
+      clearop(cap->oap);
+  
+      /* A CTRL-C is often used at the start of a menu.  When 'insertmode' is
+--- 9055,9061 ----
+  	redraw_curbuf_later(INVERTED);
+      }
+      else if (no_reason)
+! 	vim_beep(BO_ESC);
+      clearop(cap->oap);
+  
+      /* A CTRL-C is often used at the start of a menu.  When 'insertmode' is
+*** ../vim-7.4.792/src/option.c	2015-07-19 14:42:16.569130206 +0200
+--- src/option.c	2015-07-21 17:17:27.574113547 +0200
+***************
+*** 632,637 ****
+--- 632,640 ----
+      {"beautify",    "bf",   P_BOOL|P_VI_DEF,
+  			    (char_u *)NULL, PV_NONE,
+  			    {(char_u *)FALSE, (char_u *)0L} SCRIPTID_INIT},
++     {"belloff",      "bo",  P_STRING|P_VI_DEF|P_COMMA|P_NODUP,
++ 			    (char_u *)&p_bo, PV_NONE,
++ 			    {(char_u *)"", (char_u *)0L} SCRIPTID_INIT},
+      {"binary",	    "bin",  P_BOOL|P_VI_DEF|P_RSTAT,
+  			    (char_u *)&p_bin, PV_BIN,
+  			    {(char_u *)FALSE, (char_u *)0L} SCRIPTID_INIT},
+***************
+*** 5323,5328 ****
+--- 5326,5332 ----
+      (void)opt_strings_flags(p_cmp, p_cmp_values, &cmp_flags, TRUE);
+  #endif
+      (void)opt_strings_flags(p_bkc, p_bkc_values, &bkc_flags, TRUE);
++     (void)opt_strings_flags(p_bo, p_bo_values, &bo_flags, TRUE);
+  #ifdef FEAT_SESSION
+      (void)opt_strings_flags(p_ssop, p_ssop_values, &ssop_flags, TRUE);
+      (void)opt_strings_flags(p_vop, p_ssop_values, &vop_flags, TRUE);
+***************
+*** 6997,7002 ****
+--- 7001,7011 ----
+  	else if (check_opt_strings(p_bs, p_bs_values, TRUE) != OK)
+  	    errmsg = e_invarg;
+      }
++     else if (varp == &p_bo)
++     {
++ 	if (opt_strings_flags(p_bo, p_bo_values, &bo_flags, TRUE) != OK)
++ 	    errmsg = e_invarg;
++     }
+  
+  #ifdef FEAT_MBYTE
+      /* 'casemap' */
+*** ../vim-7.4.792/src/option.h	2015-07-17 14:16:49.850596721 +0200
+--- src/option.h	2015-07-21 17:45:14.614105646 +0200
+***************
+*** 338,343 ****
+--- 338,374 ----
+  # define BKC_BREAKHARDLINK	0x010
+  EXTERN char_u	*p_bdir;	/* 'backupdir' */
+  EXTERN char_u	*p_bex;		/* 'backupext' */
++ EXTERN char_u	*p_bo;		/* 'belloff' */
++ EXTERN unsigned	bo_flags;
++ # ifdef IN_OPTION_C
++ static char *(p_bo_values[]) = {"all", "backspace", "cursor", "complete",
++ 				 "copy", "ctrlg", "error", "esc", "ex",
++ 				 "hangul", "insertmode", "lang", "mess",
++ 				 "showmatch", "operator", "register", "shell", 
++ 				 "spell", "wildmode", NULL};
++ # endif
++ 
++ /* values for the 'beepon' option */
++ #define BO_ALL		0x0001
++ #define BO_BS		0x0002
++ #define BO_CRSR		0x0004
++ #define BO_COMPL	0x0008
++ #define BO_COPY		0x0010
++ #define BO_CTRLG	0x0020
++ #define BO_ERROR	0x0040
++ #define BO_ESC		0x0080
++ #define BO_EX		0x0100
++ #define BO_HANGUL	0x0200
++ #define BO_IM		0x0400
++ #define BO_LANG		0x0800
++ #define BO_MESS		0x1000
++ #define BO_MATCH	0x2000
++ #define BO_OPER		0x4000
++ #define BO_REG		0x8000
++ #define BO_SH		0x10000
++ #define BO_SPELL	0x20000
++ #define BO_WILD		0x40000
++ 
+  #ifdef FEAT_WILDIGN
+  EXTERN char_u	*p_bsk;		/* 'backupskip' */
+  #endif
+*** ../vim-7.4.792/src/proto/misc1.pro	2014-12-17 14:36:10.363090985 +0100
+--- src/proto/misc1.pro	2015-07-21 17:44:35.958476757 +0200
+***************
+*** 49,55 ****
+  int prompt_for_number __ARGS((int *mouse_used));
+  void msgmore __ARGS((long n));
+  void beep_flush __ARGS((void));
+! void vim_beep __ARGS((void));
+  void init_homedir __ARGS((void));
+  void free_homedir __ARGS((void));
+  void free_users __ARGS((void));
+--- 49,55 ----
+  int prompt_for_number __ARGS((int *mouse_used));
+  void msgmore __ARGS((long n));
+  void beep_flush __ARGS((void));
+! void vim_beep __ARGS((unsigned val));
+  void init_homedir __ARGS((void));
+  void free_homedir __ARGS((void));
+  void free_users __ARGS((void));
+*** ../vim-7.4.792/src/search.c	2015-07-10 14:43:29.556722605 +0200
+--- src/search.c	2015-07-21 17:17:27.574113547 +0200
+***************
+*** 2469,2475 ****
+      }
+  
+      if ((lpos = findmatch(NULL, NUL)) == NULL)	    /* no match, so beep */
+! 	vim_beep();
+      else if (lpos->lnum >= curwin->w_topline && lpos->lnum < curwin->w_botline)
+      {
+  	if (!curwin->w_p_wrap)
+--- 2469,2475 ----
+      }
+  
+      if ((lpos = findmatch(NULL, NUL)) == NULL)	    /* no match, so beep */
+! 	vim_beep(BO_MATCH);
+      else if (lpos->lnum >= curwin->w_topline && lpos->lnum < curwin->w_botline)
+      {
+  	if (!curwin->w_p_wrap)
+*** ../vim-7.4.792/src/spell.c	2015-03-31 13:33:00.801524871 +0200
+--- src/spell.c	2015-07-21 17:17:27.578113509 +0200
+***************
+*** 10201,10207 ****
+  	 * a multi-line selection. */
+  	if (curwin->w_cursor.lnum != VIsual.lnum)
+  	{
+! 	    vim_beep();
+  	    return;
+  	}
+  	badlen = (int)curwin->w_cursor.col - (int)VIsual.col;
+--- 10201,10207 ----
+  	 * a multi-line selection. */
+  	if (curwin->w_cursor.lnum != VIsual.lnum)
+  	{
+! 	    vim_beep(BO_SPELL);
+  	    return;
+  	}
+  	badlen = (int)curwin->w_cursor.col - (int)VIsual.col;
+*** ../vim-7.4.792/src/version.c	2015-07-21 15:48:13.593517912 +0200
+--- src/version.c	2015-07-21 17:17:14.162242329 +0200
+***************
+*** 743,744 ****
+--- 743,746 ----
+  {   /* Add new patch number below this line */
++ /**/
++     793,
+  /**/
+
+-- 
+Eagles may soar, but weasels don't get sucked into jet engines.
+
+ /// Bram Moolenaar -- Bram@Moolenaar.net -- http://www.Moolenaar.net   \\\
+///        sponsor Vim, vote for features -- http://www.Vim.org/sponsor/ \\\
+\\\  an exciting new programming language -- http://www.Zimbu.org        ///
+ \\\            help me help AIDS victims -- http://ICCF-Holland.org    ///

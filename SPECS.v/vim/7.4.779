@@ -1,0 +1,84 @@
+To: vim_dev@googlegroups.com
+Subject: Patch 7.4.779
+Fcc: outbox
+From: Bram Moolenaar <Bram@moolenaar.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+------------
+
+Patch 7.4.779
+Problem:    Using CTRL-A in a line without a number moves the cursor. May
+            cause a crash when at the start of the line. (Urtica Dioica)
+Solution:   Do not move the cursor if no number was changed.
+Files:      src/ops.c
+
+
+*** ../vim-7.4.778/src/ops.c	2015-07-10 22:37:54.312853901 +0200
+--- src/ops.c	2015-07-12 14:56:33.707974480 +0200
+***************
+*** 5404,5409 ****
+--- 5404,5410 ----
+      int		lnum = curwin->w_cursor.lnum;
+      int		lnume = curwin->w_cursor.lnum;
+      int		startcol;
++     int		did_change = FALSE;
+  
+      dohex = (vim_strchr(curbuf->b_p_nf, 'x') != NULL);	/* "heX" */
+      dooct = (vim_strchr(curbuf->b_p_nf, 'o') != NULL);	/* "Octal" */
+***************
+*** 5547,5552 ****
+--- 5548,5554 ----
+  #endif
+  	    }
+  	    curwin->w_cursor.col = col;
++ 	    did_change = TRUE;
+  	    (void)del_char(FALSE);
+  	    ins_char(firstdigit);
+  	}
+***************
+*** 5619,5624 ****
+--- 5621,5627 ----
+  	     * Delete the old number.
+  	     */
+  	    curwin->w_cursor.col = col;
++ 	    did_change = TRUE;
+  	    todel = length;
+  	    c = gchar_cursor();
+  
+***************
+*** 5713,5719 ****
+  	RLADDSUBFIX(ptr);
+  #endif
+      }
+!     --curwin->w_cursor.col;
+      return OK;
+  }
+  
+--- 5716,5723 ----
+  	RLADDSUBFIX(ptr);
+  #endif
+      }
+!     if (did_change && curwin->w_cursor.col > 0)
+! 	--curwin->w_cursor.col;
+      return OK;
+  }
+  
+*** ../vim-7.4.778/src/version.c	2015-07-10 22:37:54.312853901 +0200
+--- src/version.c	2015-07-12 15:01:11.605349725 +0200
+***************
+*** 743,744 ****
+--- 743,746 ----
+  {   /* Add new patch number below this line */
++ /**/
++     779,
+  /**/
+
+-- 
+Your mouse has moved.  Windows must be restarted for the change
+to take effect.  Reboot now?
+
+ /// Bram Moolenaar -- Bram@Moolenaar.net -- http://www.Moolenaar.net   \\\
+///        sponsor Vim, vote for features -- http://www.Vim.org/sponsor/ \\\
+\\\  an exciting new programming language -- http://www.Zimbu.org        ///
+ \\\            help me help AIDS victims -- http://ICCF-Holland.org    ///

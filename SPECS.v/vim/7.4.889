@@ -1,0 +1,90 @@
+To: vim_dev@googlegroups.com
+Subject: Patch 7.4.889
+Fcc: outbox
+From: Bram Moolenaar <Bram@moolenaar.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+------------
+
+Patch 7.4.889
+Problem:    Triggering OptionSet from setwinvar() isn't tested.
+Solution:   Add a test. (Christian Brabandt)
+Files:      src/testdir/test_autocmd_option.in,
+            src/testdir/test_autocmd_option.ok
+
+
+*** ../vim-7.4.888/src/testdir/test_autocmd_option.in	2015-07-21 10:57:35.379311166 +0200
+--- src/testdir/test_autocmd_option.in	2015-09-29 18:03:38.704496393 +0200
+***************
+*** 59,72 ****
+  :call setbufvar(1, '&l:bk', 1)
+  : "should trigger, use correct option name
+  :call setbufvar(1, '&backup', 1)
+  :" Write register now, because next test shouldn't output anything.
+  :$put r
+  :let @r=''
+! :let g:testcase="\n14: Setting key option, shouldn't trigger\n"
+  :let g:options=[['key', 'invalid', 'invalid1', 'invalid']]
+  :setlocal key=blah
+  :setlocal key=
+  :$put =g:testcase
+  :/^dummy text/,$w! test.out
+  :qa!
+  ENDTEST
+--- 59,76 ----
+  :call setbufvar(1, '&l:bk', 1)
+  : "should trigger, use correct option name
+  :call setbufvar(1, '&backup', 1)
++ :let g:testcase="14: Setting number option using setwinvar\n"
++ :let g:options=[['number', 0, 1, 'local']]
++ :call setwinvar(0, '&number', 1)
+  :" Write register now, because next test shouldn't output anything.
+  :$put r
+  :let @r=''
+! :let g:testcase="\n15: Setting key option, shouldn't trigger\n"
+  :let g:options=[['key', 'invalid', 'invalid1', 'invalid']]
+  :setlocal key=blah
+  :setlocal key=
+  :$put =g:testcase
++ :$put r
+  :/^dummy text/,$w! test.out
+  :qa!
+  ENDTEST
+*** ../vim-7.4.888/src/testdir/test_autocmd_option.ok	2015-07-21 10:57:35.379311166 +0200
+--- src/testdir/test_autocmd_option.ok	2015-09-29 18:03:38.704496393 +0200
+***************
+*** 56,59 ****
+  Expected: Name: <backup>, Oldval: <>, NewVal: <1>, Scope: <local>
+  Autocmd Option: <backup>, OldVal: <0>, NewVal: <1>, Scope: <local>
+  
+! 14: Setting key option, shouldn't trigger
+--- 56,64 ----
+  Expected: Name: <backup>, Oldval: <>, NewVal: <1>, Scope: <local>
+  Autocmd Option: <backup>, OldVal: <0>, NewVal: <1>, Scope: <local>
+  
+! 14: Setting number option using setwinvar
+! Expected: Name: <number>, Oldval: <0>, NewVal: <1>, Scope: <local>
+! Autocmd Option: <number>, OldVal: <0>, NewVal: <1>, Scope: <local>
+! 
+! 15: Setting key option, shouldn't trigger
+! 
+*** ../vim-7.4.888/src/version.c	2015-09-29 16:53:18.200480733 +0200
+--- src/version.c	2015-09-29 18:08:21.341560463 +0200
+***************
+*** 743,744 ****
+--- 743,746 ----
+  {   /* Add new patch number below this line */
++ /**/
++     889,
+  /**/
+
+-- 
+For a moment, nothing happened.
+Then, after a second or so, nothing continued to happen.
+		-- Douglas Adams, "The Hitchhiker's Guide to the Galaxy"
+
+ /// Bram Moolenaar -- Bram@Moolenaar.net -- http://www.Moolenaar.net   \\\
+///        sponsor Vim, vote for features -- http://www.Vim.org/sponsor/ \\\
+\\\  an exciting new programming language -- http://www.Zimbu.org        ///
+ \\\            help me help AIDS victims -- http://ICCF-Holland.org    ///

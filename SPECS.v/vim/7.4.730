@@ -1,0 +1,325 @@
+To: vim_dev@googlegroups.com
+Subject: Patch 7.4.730
+Fcc: outbox
+From: Bram Moolenaar <Bram@moolenaar.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+------------
+
+Patch 7.4.730
+Problem:    When setting the crypt key and using a swap file, text may be
+            encrypted twice or unencrypted text remains in the swap file.
+            (Issue 369)
+Solution:   Call ml_preserve() before re-encrypting.  Set correct index for
+            next pointer block.
+Files:      src/memfile.c, src/memline.c, src/proto/memline.pro, src/option.c
+
+
+*** ../vim-7.4.729/src/memfile.c	2015-02-27 18:25:10.820179062 +0100
+--- src/memfile.c	2015-06-09 18:20:03.021860562 +0200
+***************
+*** 811,816 ****
+--- 811,818 ----
+   *
+   * Return the block header to the caller, including the memory block, so
+   * it can be re-used. Make sure the page_count is right.
++  *
++  * Returns NULL if no block is released.
+   */
+      static bhdr_T *
+  mf_release(mfp, page_count)
+***************
+*** 1219,1225 ****
+  }
+  
+  /*
+!  * Lookup a translation from the trans lists and delete the entry
+   *
+   * Return the positive new number when found, the old number when not found
+   */
+--- 1221,1227 ----
+  }
+  
+  /*
+!  * Lookup a translation from the trans lists and delete the entry.
+   *
+   * Return the positive new number when found, the old number when not found
+   */
+*** ../vim-7.4.729/src/memline.c	2015-03-31 13:33:00.797524914 +0200
+--- src/memline.c	2015-06-09 18:24:46.186622422 +0200
+***************
+*** 488,494 ****
+  ml_set_crypt_key(buf, old_key, old_cm)
+      buf_T	*buf;
+      char_u	*old_key;
+!     int		old_cm;
+  {
+      memfile_T	*mfp = buf->b_ml.ml_mfp;
+      bhdr_T	*hp;
+--- 488,494 ----
+  ml_set_crypt_key(buf, old_key, old_cm)
+      buf_T	*buf;
+      char_u	*old_key;
+!     char_u	*old_cm;
+  {
+      memfile_T	*mfp = buf->b_ml.ml_mfp;
+      bhdr_T	*hp;
+***************
+*** 500,514 ****
+      DATA_BL	*dp;
+      blocknr_T	bnum;
+      int		top;
+  
+      if (mfp == NULL)
+  	return;  /* no memfile yet, nothing to do */
+  
+      /* Set the key, method and seed to be used for reading, these must be the
+       * old values. */
+      mfp->mf_old_key = old_key;
+!     mfp->mf_old_cm = old_cm;
+!     if (old_cm > 0)
+  	mch_memmove(mfp->mf_old_seed, mfp->mf_seed, MF_SEED_LEN);
+  
+      /* Update block 0 with the crypt flag and may set a new seed. */
+--- 500,529 ----
+      DATA_BL	*dp;
+      blocknr_T	bnum;
+      int		top;
++     int		old_method;
+  
+      if (mfp == NULL)
+  	return;  /* no memfile yet, nothing to do */
++     old_method = crypt_method_nr_from_name(old_cm);
++ 
++     /* First make sure the swapfile is in a consistent state, using the old
++      * key and method. */
++     {
++ 	char_u *new_key = buf->b_p_key;
++ 	char_u *new_buf_cm = buf->b_p_cm;
++ 
++ 	buf->b_p_key = old_key;
++ 	buf->b_p_cm = old_cm;
++ 	ml_preserve(buf, FALSE);
++ 	buf->b_p_key = new_key;
++ 	buf->b_p_cm = new_buf_cm;
++     }
+  
+      /* Set the key, method and seed to be used for reading, these must be the
+       * old values. */
+      mfp->mf_old_key = old_key;
+!     mfp->mf_old_cm = old_method;
+!     if (old_method > 0 && *old_key != NUL)
+  	mch_memmove(mfp->mf_old_seed, mfp->mf_seed, MF_SEED_LEN);
+  
+      /* Update block 0 with the crypt flag and may set a new seed. */
+***************
+*** 561,568 ****
+  		    {
+  			if (pp->pb_pointer[idx].pe_bnum < 0)
+  			{
+! 			    /* Skip data block with negative block number. */
+! 			    ++idx;    /* get same block again for next index */
+  			    continue;
+  			}
+  
+--- 576,585 ----
+  		    {
+  			if (pp->pb_pointer[idx].pe_bnum < 0)
+  			{
+! 			    /* Skip data block with negative block number.
+! 			     * Should not happen, because of the ml_preserve()
+! 			     * above. Get same block again for next index. */
+! 			    ++idx; 
+  			    continue;
+  			}
+  
+***************
+*** 579,584 ****
+--- 596,602 ----
+  
+  			bnum = pp->pb_pointer[idx].pe_bnum;
+  			page_count = pp->pb_pointer[idx].pe_page_count;
++ 			idx = 0;
+  			continue;
+  		    }
+  		}
+***************
+*** 605,610 ****
+--- 623,630 ----
+  	    idx = ip->ip_index + 1;	    /* go to next index */
+  	    page_count = 1;
+  	}
++ 	if (hp != NULL)
++ 	    mf_put(mfp, hp, FALSE, FALSE);  /* release previous block */
+  
+  	if (error > 0)
+  	    EMSG(_("E843: Error while updating swap file crypt"));
+***************
+*** 4859,4864 ****
+--- 4879,4888 ----
+      if (dp->db_id != DATA_ID)
+  	return data;
+  
++     state = ml_crypt_prepare(mfp, offset, FALSE);
++     if (state == NULL)
++ 	return data;
++ 
+      new_data = (char_u *)alloc(size);
+      if (new_data == NULL)
+  	return NULL;
+***************
+*** 4870,4876 ****
+      mch_memmove(new_data, dp, head_end - (char_u *)dp);
+  
+      /* Encrypt the text. */
+-     state = ml_crypt_prepare(mfp, offset, FALSE);
+      crypt_encode(state, text_start, text_len, new_data + dp->db_txt_start);
+      crypt_free_state(state);
+  
+--- 4894,4899 ----
+***************
+*** 4882,4888 ****
+  }
+  
+  /*
+!  * Decrypt the text in "data" if it points to a data block.
+   */
+      void
+  ml_decrypt_data(mfp, data, offset, size)
+--- 4905,4911 ----
+  }
+  
+  /*
+!  * Decrypt the text in "data" if it points to an encrypted data block.
+   */
+      void
+  ml_decrypt_data(mfp, data, offset, size)
+***************
+*** 4907,4916 ****
+  						     || dp->db_txt_end > size)
+  	    return;  /* data was messed up */
+  
+- 	/* Decrypt the text in place. */
+  	state = ml_crypt_prepare(mfp, offset, TRUE);
+! 	crypt_decode_inplace(state, text_start, text_len);
+! 	crypt_free_state(state);
+      }
+  }
+  
+--- 4930,4942 ----
+  						     || dp->db_txt_end > size)
+  	    return;  /* data was messed up */
+  
+  	state = ml_crypt_prepare(mfp, offset, TRUE);
+! 	if (state != NULL)
+! 	{
+! 	    /* Decrypt the text in place. */
+! 	    crypt_decode_inplace(state, text_start, text_len);
+! 	    crypt_free_state(state);
+! 	}
+      }
+  }
+  
+***************
+*** 4943,4948 ****
+--- 4969,4976 ----
+  	key = buf->b_p_key;
+  	seed = mfp->mf_seed;
+      }
++     if (*key == NUL)
++ 	return NULL;
+  
+      if (method_nr == CRYPT_M_ZIP)
+      {
+*** ../vim-7.4.729/src/proto/memline.pro	2013-08-10 13:37:18.000000000 +0200
+--- src/proto/memline.pro	2015-06-09 16:30:03.989599819 +0200
+***************
+*** 1,6 ****
+  /* memline.c */
+  int ml_open __ARGS((buf_T *buf));
+! void ml_set_crypt_key __ARGS((buf_T *buf, char_u *old_key, int old_cm));
+  void ml_setname __ARGS((buf_T *buf));
+  void ml_open_files __ARGS((void));
+  void ml_open_file __ARGS((buf_T *buf));
+--- 1,6 ----
+  /* memline.c */
+  int ml_open __ARGS((buf_T *buf));
+! void ml_set_crypt_key __ARGS((buf_T *buf, char_u *old_key, char_u *old_cm));
+  void ml_setname __ARGS((buf_T *buf));
+  void ml_open_files __ARGS((void));
+  void ml_open_file __ARGS((buf_T *buf));
+*** ../vim-7.4.729/src/option.c	2015-04-21 19:10:41.311067930 +0200
+--- src/option.c	2015-06-09 16:30:37.209226314 +0200
+***************
+*** 6163,6169 ****
+  # endif
+  	if (STRCMP(curbuf->b_p_key, oldval) != 0)
+  	    /* Need to update the swapfile. */
+! 	    ml_set_crypt_key(curbuf, oldval, crypt_get_method_nr(curbuf));
+      }
+  
+      else if (gvarp == &p_cm)
+--- 6163,6170 ----
+  # endif
+  	if (STRCMP(curbuf->b_p_key, oldval) != 0)
+  	    /* Need to update the swapfile. */
+! 	    ml_set_crypt_key(curbuf, oldval,
+! 			      *curbuf->b_p_cm == NUL ? p_cm : curbuf->b_p_cm);
+      }
+  
+      else if (gvarp == &p_cm)
+***************
+*** 6207,6214 ****
+  	    else
+  		p = curbuf->b_p_cm;
+  	    if (STRCMP(s, p) != 0)
+! 		ml_set_crypt_key(curbuf, curbuf->b_p_key,
+! 						crypt_method_nr_from_name(s));
+  
+  	    /* If the global value changes need to update the swapfile for all
+  	     * buffers using that value. */
+--- 6208,6214 ----
+  	    else
+  		p = curbuf->b_p_cm;
+  	    if (STRCMP(s, p) != 0)
+! 		ml_set_crypt_key(curbuf, curbuf->b_p_key, s);
+  
+  	    /* If the global value changes need to update the swapfile for all
+  	     * buffers using that value. */
+***************
+*** 6218,6225 ****
+  
+  		for (buf = firstbuf; buf != NULL; buf = buf->b_next)
+  		    if (buf != curbuf && *buf->b_p_cm == NUL)
+! 			ml_set_crypt_key(buf, buf->b_p_key,
+! 					   crypt_method_nr_from_name(oldval));
+  	    }
+  	}
+      }
+--- 6218,6224 ----
+  
+  		for (buf = firstbuf; buf != NULL; buf = buf->b_next)
+  		    if (buf != curbuf && *buf->b_p_cm == NUL)
+! 			ml_set_crypt_key(buf, buf->b_p_key, oldval);
+  	    }
+  	}
+      }
+*** ../vim-7.4.729/src/version.c	2015-05-14 05:55:59.138935575 +0200
+--- src/version.c	2015-06-09 18:21:27.252897234 +0200
+***************
+*** 743,744 ****
+--- 743,746 ----
+  {   /* Add new patch number below this line */
++ /**/
++     730,
+  /**/
+
+-- 
+From "know your smileys":
+ :-X	My lips are sealed
+
+ /// Bram Moolenaar -- Bram@Moolenaar.net -- http://www.Moolenaar.net   \\\
+///        sponsor Vim, vote for features -- http://www.Vim.org/sponsor/ \\\
+\\\  an exciting new programming language -- http://www.Zimbu.org        ///
+ \\\            help me help AIDS victims -- http://ICCF-Holland.org    ///

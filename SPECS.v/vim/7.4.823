@@ -1,0 +1,126 @@
+To: vim_dev@googlegroups.com
+Subject: Patch 7.4.823
+Fcc: outbox
+From: Bram Moolenaar <Bram@moolenaar.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+------------
+
+Patch 7.4.823
+Problem:    Cursor moves after CTRL-A on alphabetic character.
+Solution:   (Hirohito Higashi, test by Christian Brabandt)
+Files:      src/testdir/test_increment.in, src/testdir/test_increment.ok,
+	    src/ops.c
+
+
+*** ../vim-7.4.822/src/testdir/test_increment.in	2015-08-04 18:23:16.538332360 +0200
+--- src/testdir/test_increment.in	2015-08-11 19:16:22.060431145 +0200
+***************
+*** 268,274 ****
+   Expected:
+   1) <Ctrl-V>j$ <ctrl-a>
+   2
+!  1b
+     
+  
+  
+--- 268,282 ----
+   Expected:
+   1) <Ctrl-V>j$ <ctrl-a>
+   2
+!  2a
+! 
+! 20) increment a single letter
+! Text:
+!  a
+! 
+!  Expected:
+!  1) <Ctrl-a> and cursor is on a
+!  b
+     
+  
+  
+***************
+*** 386,391 ****
+--- 394,406 ----
+  k$
+  :set nrformats&vim
+  
++ :" Test 20
++ :set nrformats+=alpha
++ :/^S20=/+,/^E20=/-y a
++ :/^E20=/+put a
++ :.put =col('.')
++ :set nrformats&vim
++ 
+  :" Save the report
+  :/^# Test 1/,$w! test.out
+  :qa!
+***************
+*** 572,577 ****
+--- 587,599 ----
+  
+  
+  
++ # Test 20
++ S20====
++ a
++ E20====
++ 
++ 
++ 
+  
+  ENDTEST
+  
+*** ../vim-7.4.822/src/testdir/test_increment.ok	2015-08-04 18:23:16.538332360 +0200
+--- src/testdir/test_increment.ok	2015-08-11 19:16:22.060431145 +0200
+***************
+*** 271,276 ****
+--- 271,285 ----
+  2a
+  
+  
++ # Test 20
++ S20====
++ a
++ E20====
++ 
++ b
++ 1
++ 
++ 
+  
+  ENDTEST
+  
+*** ../vim-7.4.822/src/ops.c	2015-08-04 18:23:16.538332360 +0200
+--- src/ops.c	2015-08-11 19:17:59.307275090 +0200
+***************
+*** 5584,5589 ****
+--- 5584,5590 ----
+  	    did_change = TRUE;
+  	    (void)del_char(FALSE);
+  	    ins_char(firstdigit);
++ 	    curwin->w_cursor.col = col;
+  	}
+  	else
+  	{
+*** ../vim-7.4.822/src/version.c	2015-08-11 19:13:55.146175594 +0200
+--- src/version.c	2015-08-11 19:17:41.231489953 +0200
+***************
+*** 743,744 ****
+--- 743,746 ----
+  {   /* Add new patch number below this line */
++ /**/
++     823,
+  /**/
+
+-- 
+I'm sure that I asked CBuilder to do a "full" install.  Looks like I got
+a "fool" install, instead.		Charles E Campbell, Jr, PhD
+
+
+ /// Bram Moolenaar -- Bram@Moolenaar.net -- http://www.Moolenaar.net   \\\
+///        sponsor Vim, vote for features -- http://www.Vim.org/sponsor/ \\\
+\\\  an exciting new programming language -- http://www.Zimbu.org        ///
+ \\\            help me help AIDS victims -- http://ICCF-Holland.org    ///

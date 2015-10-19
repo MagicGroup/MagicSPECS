@@ -1,0 +1,127 @@
+To: vim_dev@googlegroups.com
+Subject: Patch 7.4.831
+Fcc: outbox
+From: Bram Moolenaar <Bram@moolenaar.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+------------
+
+Patch 7.4.831
+Problem:    When expanding `=expr` on the command line and encountering an
+            error, the command is executed anyway.
+Solution:   Bail out when an error is detected.
+Files:      src/misc1.c
+
+
+*** ../vim-7.4.830/src/misc1.c	2015-07-28 21:17:31.522069387 +0200
+--- src/misc1.c	2015-08-25 13:32:09.704105987 +0200
+***************
+*** 10875,10880 ****
+--- 10875,10881 ----
+      char_u		*p;
+      static int		recursive = FALSE;
+      int			add_pat;
++     int			retval = OK;
+  #if defined(FEAT_SEARCHPATH)
+      int			did_expand_in_path = FALSE;
+  #endif
+***************
+*** 10924,10930 ****
+--- 10925,10935 ----
+  
+  #ifdef VIM_BACKTICK
+  	if (vim_backtick(p))
++ 	{
+  	    add_pat = expand_backtick(&ga, p, flags);
++ 	    if (add_pat == -1)
++ 		retval = FAIL;
++ 	}
+  	else
+  #endif
+  	{
+***************
+*** 11013,11019 ****
+  
+      recursive = FALSE;
+  
+!     return (ga.ga_data != NULL) ? OK : FAIL;
+  }
+  
+  # ifdef VIM_BACKTICK
+--- 11018,11024 ----
+  
+      recursive = FALSE;
+  
+!     return (ga.ga_data != NULL) ? retval : FAIL;
+  }
+  
+  # ifdef VIM_BACKTICK
+***************
+*** 11031,11037 ****
+  /*
+   * Expand an item in `backticks` by executing it as a command.
+   * Currently only works when pat[] starts and ends with a `.
+!  * Returns number of file names found.
+   */
+      static int
+  expand_backtick(gap, pat, flags)
+--- 11036,11042 ----
+  /*
+   * Expand an item in `backticks` by executing it as a command.
+   * Currently only works when pat[] starts and ends with a `.
+!  * Returns number of file names found, -1 if an error is encountered.
+   */
+      static int
+  expand_backtick(gap, pat, flags)
+***************
+*** 11048,11054 ****
+      /* Create the command: lop off the backticks. */
+      cmd = vim_strnsave(pat + 1, (int)STRLEN(pat) - 2);
+      if (cmd == NULL)
+! 	return 0;
+  
+  #ifdef FEAT_EVAL
+      if (*cmd == '=')	    /* `={expr}`: Expand expression */
+--- 11053,11059 ----
+      /* Create the command: lop off the backticks. */
+      cmd = vim_strnsave(pat + 1, (int)STRLEN(pat) - 2);
+      if (cmd == NULL)
+! 	return -1;
+  
+  #ifdef FEAT_EVAL
+      if (*cmd == '=')	    /* `={expr}`: Expand expression */
+***************
+*** 11059,11065 ****
+  				(flags & EW_SILENT) ? SHELL_SILENT : 0, NULL);
+      vim_free(cmd);
+      if (buffer == NULL)
+! 	return 0;
+  
+      cmd = buffer;
+      while (*cmd != NUL)
+--- 11064,11070 ----
+  				(flags & EW_SILENT) ? SHELL_SILENT : 0, NULL);
+      vim_free(cmd);
+      if (buffer == NULL)
+! 	return -1;
+  
+      cmd = buffer;
+      while (*cmd != NUL)
+*** ../vim-7.4.830/src/version.c	2015-08-25 12:56:22.622312124 +0200
+--- src/version.c	2015-08-25 13:55:45.693438779 +0200
+***************
+*** 743,744 ****
+--- 743,746 ----
+  {   /* Add new patch number below this line */
++ /**/
++     831,
+  /**/
+
+-- 
+Every person is responsible for the choices he makes.
+
+ /// Bram Moolenaar -- Bram@Moolenaar.net -- http://www.Moolenaar.net   \\\
+///        sponsor Vim, vote for features -- http://www.Vim.org/sponsor/ \\\
+\\\  an exciting new programming language -- http://www.Zimbu.org        ///
+ \\\            help me help AIDS victims -- http://ICCF-Holland.org    ///

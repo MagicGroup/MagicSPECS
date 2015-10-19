@@ -1,15 +1,11 @@
-%if (0%{?fedora} && 0%{?fedora} < 19) || (0%{?rhel} && 0%{?rhel} < 7)
-%global with_desktop_vendor_tag 1
-%else
-%global with_desktop_vendor_tag 0
-%endif
-
 Summary:      Virtual MIDI keyboard
+Summary(zh_CN.UTF-8): 虚拟 MIDI 键盘
 Name:         vkeybd
 Version:      0.1.18d
-Release:      7%{?dist}
+Release:      8%{?dist}
 License:      GPLv2+
 Group:        Applications/Multimedia
+Group(zh_CN.UTF-8): 应用程序/多媒体
 URL:          http://www.alsa-project.org/~iwai/alsa.html
 Source0:      http://www.alsa-project.org/~iwai/vkeybd-0.1.18d.tar.bz2
 Source1:      vkeybd.png
@@ -29,6 +25,9 @@ Requires: hicolor-icon-theme
 This is a virtual keyboard for AWE, MIDI and ALSA drivers.
 It's a simple fake of a MIDI keyboard on X-windows system.
 Enjoy a music with your mouse and "computer" keyboard :-)
+
+%description -l zh_CN.UTF-8
+虚拟 MIDI 键盘。
 
 %prep
 %setup -q -n vkeybd
@@ -50,9 +49,6 @@ install -m 644 %{SOURCE1} $RPM_BUILD_ROOT%{_datadir}/icons/hicolor/64x64/apps/vk
 
 mkdir -p $RPM_BUILD_ROOT%{_datadir}/applications
 desktop-file-install \
-%if 0%{?with_desktop_vendor_tag}
-  --vendor fedora            \
-%endif
   --dir $RPM_BUILD_ROOT%{_datadir}/applications \
   --add-category X-Fedora                       \
   %{SOURCE2}
@@ -77,6 +73,9 @@ touch --no-create %{_datadir}/icons/hicolor || :
 %{_datadir}/icons/hicolor/64x64/apps/vkeybd.png
 
 %changelog
+* Sun Oct 18 2015 Liu Di <liudidi@gmail.com> - 0.1.18d-8
+- 为 Magic 3.0 重建
+
 * Tue Jun 17 2014 Liu Di <liudidi@gmail.com> - 0.1.18d-7
 - 为 Magic 3.0 重建
 

@@ -1,0 +1,55 @@
+To: vim_dev@googlegroups.com
+Subject: Patch 7.4.713
+Fcc: outbox
+From: Bram Moolenaar <Bram@moolenaar.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+------------
+
+Patch 7.4.713
+Problem:    Wrong condition for #ifdef.
+Solution:   Change USR_EXRC_FILE2 to USR_VIMRC_FILE2. (Mikael Fourrier)
+Files:      src/os_unix.h
+
+
+*** ../vim-7.4.712/src/os_unix.h	2015-04-09 22:08:09.183074550 +0200
+--- src/os_unix.h	2015-05-03 19:07:22.850147859 +0200
+***************
+*** 290,296 ****
+  #endif
+  
+  
+! #if !defined(USR_EXRC_FILE2)
+  # ifdef OS2
+  #  define USR_VIMRC_FILE2	"$HOME/vimfiles/vimrc"
+  # else
+--- 290,296 ----
+  #endif
+  
+  
+! #if !defined(USR_VIMRC_FILE2)
+  # ifdef OS2
+  #  define USR_VIMRC_FILE2	"$HOME/vimfiles/vimrc"
+  # else
+*** ../vim-7.4.712/src/version.c	2015-04-22 22:18:14.659662668 +0200
+--- src/version.c	2015-05-04 09:16:12.477776841 +0200
+***************
+*** 743,744 ****
+--- 743,746 ----
+  {   /* Add new patch number below this line */
++ /**/
++     713,
+  /**/
+
+-- 
+Q: What is the difference betwee open-source and commercial software?
+A: If you have a problem with commercial software you can call a phone
+   number and they will tell you it might be solved in a future version.
+   For open-source software there isn't a phone number to call, but you
+   get the solution within a day.
+
+ /// Bram Moolenaar -- Bram@Moolenaar.net -- http://www.Moolenaar.net   \\\
+///        sponsor Vim, vote for features -- http://www.Vim.org/sponsor/ \\\
+\\\  an exciting new programming language -- http://www.Zimbu.org        ///
+ \\\            help me help AIDS victims -- http://ICCF-Holland.org    ///

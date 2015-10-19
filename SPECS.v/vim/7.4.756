@@ -1,0 +1,176 @@
+To: vim_dev@googlegroups.com
+Subject: Patch 7.4.756
+Fcc: outbox
+From: Bram Moolenaar <Bram@moolenaar.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+------------
+
+Patch 7.4.756
+Problem:    Can't use strawberry Perl 5.22 x64 on MS-Windows.
+Solution:   Add new defines and #if. (Ken Takata)
+Files:      src/Make_cyg_ming.mak, src/Make_mvc.mak, src/if_perl.xs
+
+
+*** ../vim-7.4.755/src/Make_cyg_ming.mak	2014-12-13 20:50:01.793994592 +0100
+--- src/Make_cyg_ming.mak	2015-06-25 16:11:38.321009757 +0200
+***************
+*** 397,403 ****
+  endif
+  
+  ifdef PERL
+! CFLAGS += -I$(PERLLIBS) -DFEAT_PERL
+  ifeq (yes, $(DYNAMIC_PERL))
+  CFLAGS += -DDYNAMIC_PERL -DDYNAMIC_PERL_DLL=\"perl$(PERL_VER).dll\"
+  EXTRA_LIBS += -L$(PERLLIBS) -lperl$(PERL_VER)
+--- 397,403 ----
+  endif
+  
+  ifdef PERL
+! CFLAGS += -I$(PERLLIBS) -DFEAT_PERL -DPERL_IMPLICIT_CONTEXT -DPERL_IMPLICIT_SYS
+  ifeq (yes, $(DYNAMIC_PERL))
+  CFLAGS += -DDYNAMIC_PERL -DDYNAMIC_PERL_DLL=\"perl$(PERL_VER).dll\"
+  EXTRA_LIBS += -L$(PERLLIBS) -lperl$(PERL_VER)
+*** ../vim-7.4.755/src/Make_mvc.mak	2015-05-06 11:33:37.168517956 +0200
+--- src/Make_mvc.mak	2015-06-25 16:11:38.325009715 +0200
+***************
+*** 874,880 ****
+  !endif
+  !endif
+  
+! CFLAGS = $(CFLAGS) -DFEAT_PERL
+  
+  # Do we want to load Perl dynamically?
+  !if "$(DYNAMIC_PERL)" == "yes"
+--- 874,880 ----
+  !endif
+  !endif
+  
+! CFLAGS = $(CFLAGS) -DFEAT_PERL -DPERL_IMPLICIT_CONTEXT -DPERL_IMPLICIT_SYS
+  
+  # Do we want to load Perl dynamically?
+  !if "$(DYNAMIC_PERL)" == "yes"
+*** ../vim-7.4.755/src/if_perl.xs	2014-06-12 16:03:24.268046589 +0200
+--- src/if_perl.xs	2015-06-25 16:11:38.325009715 +0200
+***************
+*** 197,206 ****
+  # define Perl_stack_grow dll_Perl_stack_grow
+  # define Perl_set_context dll_Perl_set_context
+  # if (PERL_REVISION == 5) && (PERL_VERSION >= 14)
+! # define Perl_sv_2bool_flags dll_Perl_sv_2bool_flags
+! # define Perl_xs_apiversion_bootcheck dll_Perl_xs_apiversion_bootcheck
+  # else
+! # define Perl_sv_2bool dll_Perl_sv_2bool
+  # endif
+  # define Perl_sv_2iv dll_Perl_sv_2iv
+  # define Perl_sv_2mortal dll_Perl_sv_2mortal
+--- 197,208 ----
+  # define Perl_stack_grow dll_Perl_stack_grow
+  # define Perl_set_context dll_Perl_set_context
+  # if (PERL_REVISION == 5) && (PERL_VERSION >= 14)
+! #  define Perl_sv_2bool_flags dll_Perl_sv_2bool_flags
+! #  if (PERL_REVISION == 5) && (PERL_VERSION < 22)
+! #   define Perl_xs_apiversion_bootcheck dll_Perl_xs_apiversion_bootcheck
+! #  endif
+  # else
+! #  define Perl_sv_2bool dll_Perl_sv_2bool
+  # endif
+  # define Perl_sv_2iv dll_Perl_sv_2iv
+  # define Perl_sv_2mortal dll_Perl_sv_2mortal
+***************
+*** 268,273 ****
+--- 270,279 ----
+  # define Perl_call_list dll_Perl_call_list
+  # define Perl_Iscopestack_ix_ptr dll_Perl_Iscopestack_ix_ptr
+  # define Perl_Iunitcheckav_ptr dll_Perl_Iunitcheckav_ptr
++ # if (PERL_REVISION == 5) && (PERL_VERSION >= 22)
++ #  define Perl_xs_handshake dll_Perl_xs_handshake
++ #  define Perl_xs_boot_epilog dll_Perl_xs_boot_epilog
++ # endif
+  # if (PERL_REVISION == 5) && (PERL_VERSION >= 14)
+  #  ifdef USE_ITHREADS
+  #   define PL_thr_key *dll_PL_thr_key
+***************
+*** 299,305 ****
+--- 305,315 ----
+  static I32 (*Perl_dowantarray)(pTHX);
+  static void (*Perl_free_tmps)(pTHX);
+  static HV* (*Perl_gv_stashpv)(pTHX_ const char*, I32);
++ #if (PERL_REVISION == 5) && (PERL_VERSION >= 22)
++ static I32* (*Perl_markstack_grow)(pTHX);
++ #else
+  static void (*Perl_markstack_grow)(pTHX);
++ #endif
+  static MAGIC* (*Perl_mg_find)(pTHX_ SV*, int);
+  static CV* (*Perl_newXS)(pTHX_ char*, XSUBADDR_t, char*);
+  static SV* (*Perl_newSV)(pTHX_ STRLEN);
+***************
+*** 321,327 ****
+--- 331,339 ----
+  static SV** (*Perl_set_context)(void*);
+  #if (PERL_REVISION == 5) && (PERL_VERSION >= 14)
+  static bool (*Perl_sv_2bool_flags)(pTHX_ SV*, I32);
++ # if (PERL_REVISION == 5) && (PERL_VERSION < 22)
+  static void (*Perl_xs_apiversion_bootcheck)(pTHX_ SV *module, const char *api_p, STRLEN api_len);
++ # endif
+  #else
+  static bool (*Perl_sv_2bool)(pTHX_ SV*);
+  #endif
+***************
+*** 394,399 ****
+--- 406,415 ----
+  static AV** (*Perl_Iunitcheckav_ptr)(register PerlInterpreter*);
+  # endif
+  #endif
++ #if (PERL_REVISION == 5) && (PERL_VERSION >= 22)
++ static I32 (*Perl_xs_handshake)(const U32, void *, const char *, ...);
++ static void (*Perl_xs_boot_epilog)(pTHX_ const U32);
++ #endif
+  
+  #if (PERL_REVISION == 5) && (PERL_VERSION >= 14)
+  # ifdef USE_ITHREADS
+***************
+*** 453,459 ****
+--- 469,477 ----
+      {"Perl_set_context", (PERL_PROC*)&Perl_set_context},
+  #if (PERL_REVISION == 5) && (PERL_VERSION >= 14)
+      {"Perl_sv_2bool_flags", (PERL_PROC*)&Perl_sv_2bool_flags},
++ # if (PERL_REVISION == 5) && (PERL_VERSION < 22)
+      {"Perl_xs_apiversion_bootcheck",(PERL_PROC*)&Perl_xs_apiversion_bootcheck},
++ # endif
+  #else
+      {"Perl_sv_2bool", (PERL_PROC*)&Perl_sv_2bool},
+  #endif
+***************
+*** 521,526 ****
+--- 539,548 ----
+      {"Perl_Iunitcheckav_ptr", (PERL_PROC*)&Perl_Iunitcheckav_ptr},
+  # endif
+  #endif
++ #if (PERL_REVISION == 5) && (PERL_VERSION >= 22)
++     {"Perl_xs_handshake", (PERL_PROC*)&Perl_xs_handshake},
++     {"Perl_xs_boot_epilog", (PERL_PROC*)&Perl_xs_boot_epilog},
++ #endif
+  #if (PERL_REVISION == 5) && (PERL_VERSION >= 14)
+  #  ifdef USE_ITHREADS
+      {"PL_thr_key", (PERL_PROC*)&dll_PL_thr_key},
+*** ../vim-7.4.755/src/version.c	2015-06-25 16:09:20.706461152 +0200
+--- src/version.c	2015-06-25 16:12:35.536406396 +0200
+***************
+*** 743,744 ****
+--- 743,746 ----
+  {   /* Add new patch number below this line */
++ /**/
++     756,
+  /**/
+
+-- 
+hundred-and-one symptoms of being an internet addict:
+146. You experience ACTUAL physical withdrawal symptoms when away
+     from your 'puter and the net.
+
+ /// Bram Moolenaar -- Bram@Moolenaar.net -- http://www.Moolenaar.net   \\\
+///        sponsor Vim, vote for features -- http://www.Vim.org/sponsor/ \\\
+\\\  an exciting new programming language -- http://www.Zimbu.org        ///
+ \\\            help me help AIDS victims -- http://ICCF-Holland.org    ///

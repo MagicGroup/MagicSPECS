@@ -35,10 +35,12 @@
 
 Name:		v8
 Version:	%{somajor}.%{sominor}.%{sobuild}.%{sotiny}
-Release:	2%{?dist}
+Release:	3%{?dist}
 Epoch:		1
 Summary:	JavaScript Engine
+Summary(zh_CN.UTF-8): JavaScript 引擎
 Group:		System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 License:	BSD
 URL:		http://code.google.com/p/v8
 Source0:	http://commondatastorage.googleapis.com/chromium-browser-official/v8-%{version}.tar.bz2
@@ -56,13 +58,21 @@ V8 is Google's open source JavaScript engine. V8 is written in C++ and is used
 in Google Chrome, the open source browser from Google. V8 implements ECMAScript 
 as specified in ECMA-262, 3rd edition.
 
+%description -l zh_CN.UTF-8
+Googls 的开源 JavaScript 引擎。
+
 %package devel
 Group:		Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Summary:	Development headers and libraries for v8
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Requires:	%{name} = %{epoch}:%{version}-%{release}
 
 %description devel
 Development headers and libraries for v8.
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q -n %{name}-%{version} -a 1
@@ -113,6 +123,7 @@ ln -sf libv8.so.%{sover} libv8.so
 ln -sf libv8.so.%{sover} libv8.so.%{somajor}
 ln -sf libv8.so.%{sover} libv8.so.%{somajor}.%{sominor}
 popd
+magic_rpm_clean.sh
 
 %clean
 rm -rf %{buildroot}
@@ -135,6 +146,9 @@ rm -rf %{buildroot}
 %{python_sitelib}/j*.py*
 
 %changelog
+* Sat Oct 17 2015 Liu Di <liudidi@gmail.com> - 1:3.17.6.14-3
+- 为 Magic 3.0 重建
+
 * Mon Jun  3 2013 Tom Callaway <spot@fedoraproject.org> - 1:3.17.6.14-2
 - proper soname
 

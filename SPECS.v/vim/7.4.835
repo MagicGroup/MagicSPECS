@@ -1,0 +1,158 @@
+To: vim_dev@googlegroups.com
+Subject: Patch 7.4.835
+Fcc: outbox
+From: Bram Moolenaar <Bram@moolenaar.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+------------
+
+Patch 7.4.835
+Problem:    Comparing utf-8 sequences does not handle different byte sizes
+            correctly.
+Solution:   Get the byte size of each character. (Dominique Pelle)
+Files:      src/misc2.c
+
+
+*** ../vim-7.4.834/src/misc2.c	2015-07-17 13:22:43.153523709 +0200
+--- src/misc2.c	2015-08-25 16:27:31.565982817 +0200
+***************
+*** 5058,5064 ****
+      char_u	*s1;
+      char_u	*s2;
+  {
+!     int		i;
+      int		prev1 = NUL;
+      int		prev2 = NUL;
+  
+--- 5058,5064 ----
+      char_u	*s1;
+      char_u	*s2;
+  {
+!     int		i, j;
+      int		prev1 = NUL;
+      int		prev2 = NUL;
+  
+***************
+*** 5068,5086 ****
+      if (s1 == NULL || s2 == NULL)
+  	return FALSE;
+  
+!     if (STRLEN(s1) != STRLEN(s2))
+! 	return FAIL;
+! 
+!     for (i = 0; s1[i] != NUL && s2[i] != NUL; i += MB_PTR2LEN(s1 + i))
+      {
+  	int c1 = PTR2CHAR(s1 + i);
+! 	int c2 = PTR2CHAR(s2 + i);
+  
+  	if ((p_fic ? MB_TOLOWER(c1) != MB_TOLOWER(c2) : c1 != c2)
+  		&& (prev1 != '*' || prev2 != '*'))
+  	    return FAIL;
+  	prev2 = prev1;
+  	prev1 = c1;
+      }
+      return TRUE;
+  }
+--- 5068,5086 ----
+      if (s1 == NULL || s2 == NULL)
+  	return FALSE;
+  
+!     for (i = 0, j = 0; s1[i] != NUL;)
+      {
+  	int c1 = PTR2CHAR(s1 + i);
+! 	int c2 = PTR2CHAR(s2 + j);
+  
+  	if ((p_fic ? MB_TOLOWER(c1) != MB_TOLOWER(c2) : c1 != c2)
+  		&& (prev1 != '*' || prev2 != '*'))
+  	    return FAIL;
+  	prev2 = prev1;
+  	prev1 = c1;
++ 
++         i += MB_PTR2LEN(s1 + i);
++         j += MB_PTR2LEN(s2 + j);
+      }
+      return TRUE;
+  }
+***************
+*** 5814,5827 ****
+      const char *p, *q;
+      int maxlen;
+  {
+!     int		i;
+      int		c1, c2;
+      const char	*s = NULL;
+  
+!     for (i = 0; maxlen < 0 || i < maxlen; i += MB_PTR2LEN((char_u *)p + i))
+      {
+  	c1 = PTR2CHAR((char_u *)p + i);
+! 	c2 = PTR2CHAR((char_u *)q + i);
+  
+  	/* End of "p": check if "q" also ends or just has a slash. */
+  	if (c1 == NUL)
+--- 5814,5827 ----
+      const char *p, *q;
+      int maxlen;
+  {
+!     int		i, j;
+      int		c1, c2;
+      const char	*s = NULL;
+  
+!     for (i = 0, j = 0; maxlen < 0 || (i < maxlen && j < maxlen);)
+      {
+  	c1 = PTR2CHAR((char_u *)p + i);
+! 	c2 = PTR2CHAR((char_u *)q + j);
+  
+  	/* End of "p": check if "q" also ends or just has a slash. */
+  	if (c1 == NUL)
+***************
+*** 5829,5834 ****
+--- 5829,5835 ----
+  	    if (c2 == NUL)  /* full match */
+  		return 0;
+  	    s = q;
++             i = j;
+  	    break;
+  	}
+  
+***************
+*** 5854,5861 ****
+  	    return p_fic ? MB_TOUPPER(c1) - MB_TOUPPER(c2)
+  		    : c1 - c2;  /* no match */
+  	}
+      }
+!     if (s == NULL)	/* "i" ran into "maxlen" */
+  	return 0;
+  
+      c1 = PTR2CHAR((char_u *)s + i);
+--- 5855,5865 ----
+  	    return p_fic ? MB_TOUPPER(c1) - MB_TOUPPER(c2)
+  		    : c1 - c2;  /* no match */
+  	}
++ 
++ 	i += MB_PTR2LEN((char_u *)p + i);
++ 	j += MB_PTR2LEN((char_u *)q + j);
+      }
+!     if (s == NULL)	/* "i" or "j" ran into "maxlen" */
+  	return 0;
+  
+      c1 = PTR2CHAR((char_u *)s + i);
+*** ../vim-7.4.834/src/version.c	2015-08-25 16:19:01.587296525 +0200
+--- src/version.c	2015-08-25 16:22:58.444828674 +0200
+***************
+*** 743,744 ****
+--- 743,746 ----
+  {   /* Add new patch number below this line */
++ /**/
++     835,
+  /**/
+
+-- 
+If an elephant is left tied to a parking meter, the parking fee has to be paid
+just as it would for a vehicle.
+		[real standing law in Florida, United States of America]
+
+ /// Bram Moolenaar -- Bram@Moolenaar.net -- http://www.Moolenaar.net   \\\
+///        sponsor Vim, vote for features -- http://www.Vim.org/sponsor/ \\\
+\\\  an exciting new programming language -- http://www.Zimbu.org        ///
+ \\\            help me help AIDS victims -- http://ICCF-Holland.org    ///

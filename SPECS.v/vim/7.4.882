@@ -1,0 +1,52 @@
+To: vim_dev@googlegroups.com
+Subject: Patch 7.4.882
+Fcc: outbox
+From: Bram Moolenaar <Bram@moolenaar.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+------------
+
+Patch 7.4.882
+Problem:    When leaving the command line window with CTRL-C while a
+            completion menu is displayed the menu isn't removed.
+Solution:   Force a screen update. (Hirohito Higashi)
+Files:      src/edit.c
+
+
+*** ../vim-7.4.881/src/edit.c	2015-09-01 19:25:58.324615363 +0200
+--- src/edit.c	2015-09-25 19:08:23.220720902 +0200
+***************
+*** 3903,3908 ****
+--- 3903,3914 ----
+  		showmode();
+  	    }
+  
++ #ifdef FEAT_CMDWIN
++ 	    if (c == Ctrl_C && cmdwin_type != 0)
++ 		/* Avoid the popup menu remains displayed when leaving the
++ 		 * command line window. */
++ 		update_screen(0);
++ #endif
+  #ifdef FEAT_CINDENT
+  	    /*
+  	     * Indent now if a key was typed that is in 'cinkeys'.
+*** ../vim-7.4.881/src/version.c	2015-09-25 17:56:46.497947805 +0200
+--- src/version.c	2015-09-25 19:06:29.745915553 +0200
+***************
+*** 743,744 ****
+--- 743,746 ----
+  {   /* Add new patch number below this line */
++ /**/
++     882,
+  /**/
+
+-- 
+hundred-and-one symptoms of being an internet addict:
+11. You find yourself typing "com" after every period when using a word
+    processor.com
+
+ /// Bram Moolenaar -- Bram@Moolenaar.net -- http://www.Moolenaar.net   \\\
+///        sponsor Vim, vote for features -- http://www.Vim.org/sponsor/ \\\
+\\\  an exciting new programming language -- http://www.Zimbu.org        ///
+ \\\            help me help AIDS victims -- http://ICCF-Holland.org    ///

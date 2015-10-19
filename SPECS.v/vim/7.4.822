@@ -1,0 +1,668 @@
+To: vim_dev@googlegroups.com
+Subject: Patch 7.4.822
+Fcc: outbox
+From: Bram Moolenaar <Bram@moolenaar.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+------------
+
+Patch 7.4.822
+Problem:    More problems reported by coverity.
+Solution:   Avoid the warnings. (Christian Brabandt)
+Files:      src/os_unix.c, src/eval.c, src/ex_cmds.c, src/ex_cmds2.c,
+            src/ex_getln.c, src/fold.c, src/gui.c, src/gui_w16.c,
+            src/gui_w32.c, src/if_cscope.c, src/if_xcmdsrv.c, src/move.c,
+            src/normal.c, src/regexp.c, src/syntax.c, src/ui.c, src/window.c
+
+
+*** ../vim-7.4.821/src/os_unix.c	2015-07-17 14:16:49.850596721 +0200
+--- src/os_unix.c	2015-08-11 18:55:47.479102692 +0200
+***************
+*** 7001,7007 ****
+  	/* Rely on the same mouse code for the duration of this */
+  	mouse_code = find_termcode(mouse_name);
+  	prev_row = mouse_row;
+! 	prev_row = mouse_col;
+  	xterm_trace = 2;
+  
+  	/* Find the offset of the chars, there might be a scrollbar on the
+--- 7001,7007 ----
+  	/* Rely on the same mouse code for the duration of this */
+  	mouse_code = find_termcode(mouse_name);
+  	prev_row = mouse_row;
+! 	prev_col = mouse_col;
+  	xterm_trace = 2;
+  
+  	/* Find the offset of the chars, there might be a scrollbar on the
+*** ../vim-7.4.821/src/eval.c	2015-08-11 15:54:46.582211899 +0200
+--- src/eval.c	2015-08-11 18:56:47.834383757 +0200
+***************
+*** 6736,6742 ****
+  	len = (int)STRLEN(s);
+  	sumlen += len;
+  
+! 	ga_grow(join_gap, 1);
+  	p = ((join_T *)join_gap->ga_data) + (join_gap->ga_len++);
+  	if (tofree != NULL || s != numbuf)
+  	{
+--- 6736,6742 ----
+  	len = (int)STRLEN(s);
+  	sumlen += len;
+  
+! 	(void)ga_grow(join_gap, 1);
+  	p = ((join_T *)join_gap->ga_data) + (join_gap->ga_len++);
+  	if (tofree != NULL || s != numbuf)
+  	{
+***************
+*** 19590,19596 ****
+  		    goto error;
+  	    }
+  
+! 	    ga_grow(&ga, cplen);
+  	    mch_memmove((char *)ga.ga_data + ga.ga_len, cpstr, (size_t)cplen);
+  	    ga.ga_len += cplen;
+  
+--- 19590,19596 ----
+  		    goto error;
+  	    }
+  
+! 	    (void)ga_grow(&ga, cplen);
+  	    mch_memmove((char *)ga.ga_data + ga.ga_len, cpstr, (size_t)cplen);
+  	    ga.ga_len += cplen;
+  
+***************
+*** 19610,19616 ****
+      }
+  
+      /* add a terminating NUL */
+!     ga_grow(&ga, 1);
+      ga_append(&ga, NUL);
+  
+      rettv->vval.v_string = ga.ga_data;
+--- 19610,19616 ----
+      }
+  
+      /* add a terminating NUL */
+!     (void)ga_grow(&ga, 1);
+      ga_append(&ga, NUL);
+  
+      rettv->vval.v_string = ga.ga_data;
+*** ../vim-7.4.821/src/ex_cmds.c	2015-07-17 13:03:42.100357542 +0200
+--- src/ex_cmds.c	2015-08-11 18:56:47.826383852 +0200
+***************
+*** 6856,6862 ****
+  	/*
+  	 * Sort the tags.
+  	 */
+! 	sort_strings((char_u **)ga.ga_data, ga.ga_len);
+  
+  	/*
+  	 * Check for duplicates.
+--- 6856,6863 ----
+  	/*
+  	 * Sort the tags.
+  	 */
+! 	if (ga.ga_data != NULL)
+! 	    sort_strings((char_u **)ga.ga_data, ga.ga_len);
+  
+  	/*
+  	 * Check for duplicates.
+*** ../vim-7.4.821/src/ex_cmds2.c	2015-04-13 15:37:48.342074267 +0200
+--- src/ex_cmds2.c	2015-08-11 18:56:47.834383757 +0200
+***************
+*** 3051,3057 ****
+      {
+  	int fdflags = fcntl(fd_tmp, F_GETFD);
+  	if (fdflags >= 0 && (fdflags & FD_CLOEXEC) == 0)
+! 	    fcntl(fd_tmp, F_SETFD, fdflags | FD_CLOEXEC);
+      }
+  # endif
+  
+--- 3051,3057 ----
+      {
+  	int fdflags = fcntl(fd_tmp, F_GETFD);
+  	if (fdflags >= 0 && (fdflags & FD_CLOEXEC) == 0)
+! 	    (void)fcntl(fd_tmp, F_SETFD, fdflags | FD_CLOEXEC);
+      }
+  # endif
+  
+***************
+*** 3841,3847 ****
+      {
+  	/* Grow the array before starting the timer, so that the time spent
+  	 * here isn't counted. */
+! 	ga_grow(&si->sn_prl_ga, (int)(sourcing_lnum - si->sn_prl_ga.ga_len));
+  	si->sn_prl_idx = sourcing_lnum - 1;
+  	while (si->sn_prl_ga.ga_len <= si->sn_prl_idx
+  		&& si->sn_prl_ga.ga_len < si->sn_prl_ga.ga_maxlen)
+--- 3841,3847 ----
+      {
+  	/* Grow the array before starting the timer, so that the time spent
+  	 * here isn't counted. */
+! 	(void)ga_grow(&si->sn_prl_ga, (int)(sourcing_lnum - si->sn_prl_ga.ga_len));
+  	si->sn_prl_idx = sourcing_lnum - 1;
+  	while (si->sn_prl_ga.ga_len <= si->sn_prl_idx
+  		&& si->sn_prl_ga.ga_len < si->sn_prl_ga.ga_maxlen)
+*** ../vim-7.4.821/src/ex_getln.c	2015-07-21 17:53:11.577527989 +0200
+--- src/ex_getln.c	2015-08-11 18:56:47.834383757 +0200
+***************
+*** 2312,2318 ****
+  add_indent:
+  		while (get_indent_str(p, 8, FALSE) < indent)
+  		{
+! 		    ga_grow(&line_ga, 2);  /* one more for the NUL */
+  		    p = (char_u *)line_ga.ga_data;
+  		    s = skipwhite(p);
+  		    mch_memmove(s + 1, s, line_ga.ga_len - (s - p) + 1);
+--- 2312,2318 ----
+  add_indent:
+  		while (get_indent_str(p, 8, FALSE) < indent)
+  		{
+! 		    (void)ga_grow(&line_ga, 2);  /* one more for the NUL */
+  		    p = (char_u *)line_ga.ga_data;
+  		    s = skipwhite(p);
+  		    mch_memmove(s + 1, s, line_ga.ga_len - (s - p) + 1);
+*** ../vim-7.4.821/src/fold.c	2015-04-15 12:43:37.997444487 +0200
+--- src/fold.c	2015-08-11 18:56:47.838383710 +0200
+***************
+*** 2446,2452 ****
+      if (getlevel == foldlevelMarker && flp->start <= flp->lvl - level
+  							      && flp->lvl > 0)
+      {
+! 	foldFind(gap, startlnum - 1, &fp);
+  	if (fp >= ((fold_T *)gap->ga_data) + gap->ga_len
+  						   || fp->fd_top >= startlnum)
+  	    fp = NULL;
+--- 2446,2452 ----
+      if (getlevel == foldlevelMarker && flp->start <= flp->lvl - level
+  							      && flp->lvl > 0)
+      {
+! 	(void)foldFind(gap, startlnum - 1, &fp);
+  	if (fp >= ((fold_T *)gap->ga_data) + gap->ga_len
+  						   || fp->fd_top >= startlnum)
+  	    fp = NULL;
+***************
+*** 2508,2514 ****
+  	    }
+  	    if (lvl < level + i)
+  	    {
+! 		foldFind(&fp->fd_nested, flp->lnum - fp->fd_top, &fp2);
+  		if (fp2 != NULL)
+  		    bot = fp2->fd_top + fp2->fd_len - 1 + fp->fd_top;
+  	    }
+--- 2508,2514 ----
+  	    }
+  	    if (lvl < level + i)
+  	    {
+! 		(void)foldFind(&fp->fd_nested, flp->lnum - fp->fd_top, &fp2);
+  		if (fp2 != NULL)
+  		    bot = fp2->fd_top + fp2->fd_len - 1 + fp->fd_top;
+  	    }
+*** ../vim-7.4.821/src/gui.c	2014-03-23 15:12:29.923264336 +0100
+--- src/gui.c	2015-08-11 18:56:47.838383710 +0200
+***************
+*** 1575,1581 ****
+      base_height = gui_get_base_height();
+      if (fit_to_display)
+  	/* Remember the original window position. */
+! 	gui_mch_get_winpos(&x, &y);
+  
+  #ifdef USE_SUN_WORKSHOP
+      if (!mustset && usingSunWorkShop
+--- 1575,1581 ----
+      base_height = gui_get_base_height();
+      if (fit_to_display)
+  	/* Remember the original window position. */
+! 	(void)gui_mch_get_winpos(&x, &y);
+  
+  #ifdef USE_SUN_WORKSHOP
+      if (!mustset && usingSunWorkShop
+***************
+*** 5366,5372 ****
+      {
+  	/* Search for the next match. */
+  	i = msg_scroll;
+! 	do_search(NULL, down ? '/' : '?', ga.ga_data, 1L,
+  					      SEARCH_MSG + SEARCH_MARK, NULL);
+  	msg_scroll = i;	    /* don't let an error message set msg_scroll */
+      }
+--- 5366,5372 ----
+      {
+  	/* Search for the next match. */
+  	i = msg_scroll;
+! 	(void)do_search(NULL, down ? '/' : '?', ga.ga_data, 1L,
+  					      SEARCH_MSG + SEARCH_MARK, NULL);
+  	msg_scroll = i;	    /* don't let an error message set msg_scroll */
+      }
+*** ../vim-7.4.821/src/gui_w16.c	2013-05-06 04:06:04.000000000 +0200
+--- src/gui_w16.c	2015-08-11 18:56:47.830383805 +0200
+***************
+*** 282,288 ****
+  	    result = MyWindowProc(hwnd, uMsg, wParam, lParam);
+  	    if (result == HTCLIENT)
+  	    {
+! 		gui_mch_get_winpos(&x, &y);
+  		xPos -= x;
+  
+  		if (xPos < 48) /*<VN> TODO should use system metric?*/
+--- 282,288 ----
+  	    result = MyWindowProc(hwnd, uMsg, wParam, lParam);
+  	    if (result == HTCLIENT)
+  	    {
+! 		(void)gui_mch_get_winpos(&x, &y);
+  		xPos -= x;
+  
+  		if (xPos < 48) /*<VN> TODO should use system metric?*/
+*** ../vim-7.4.821/src/gui_w32.c	2015-03-24 17:57:06.210846471 +0100
+--- src/gui_w32.c	2015-08-11 18:56:47.830383805 +0200
+***************
+*** 17,23 ****
+   * scrollbars, etc.
+   *
+   * Note: Clipboard stuff, for cutting and pasting text to other windows, is in
+!  * os_win32.c.	(It can also be done from the terminal version).
+   *
+   * TODO: Some of the function signatures ought to be updated for Win64;
+   * e.g., replace LONG with LONG_PTR, etc.
+--- 17,23 ----
+   * scrollbars, etc.
+   *
+   * Note: Clipboard stuff, for cutting and pasting text to other windows, is in
+!  * winclip.c.	(It can also be done from the terminal version).
+   *
+   * TODO: Some of the function signatures ought to be updated for Win64;
+   * e.g., replace LONG with LONG_PTR, etc.
+***************
+*** 76,82 ****
+  	char_u  name[128];
+  	char_u  value[128];
+  
+! 	copy_option_part(&p, item, sizeof(item), ","); 
+  	if (p == NULL)
+  	    break;
+  	q = &item[0];
+--- 76,82 ----
+  	char_u  name[128];
+  	char_u  value[128];
+  
+! 	copy_option_part(&p, item, sizeof(item), ",");
+  	if (p == NULL)
+  	    break;
+  	q = &item[0];
+***************
+*** 1227,1233 ****
+  			return result;
+  		}
+  #endif
+! 		gui_mch_get_winpos(&x, &y);
+  		xPos -= x;
+  
+  		if (xPos < 48) /* <VN> TODO should use system metric? */
+--- 1227,1233 ----
+  			return result;
+  		}
+  #endif
+! 		(void)gui_mch_get_winpos(&x, &y);
+  		xPos -= x;
+  
+  		if (xPos < 48) /* <VN> TODO should use system metric? */
+*** ../vim-7.4.821/src/if_cscope.c	2015-03-31 13:33:00.797524914 +0200
+--- src/if_cscope.c	2015-08-11 19:10:00.516961303 +0200
+***************
+*** 1076,1083 ****
+  /*
+   * PRIVATE: cs_find
+   *
+!  * query cscope using command line interface.  parse the output and use tselect
+!  * to allow choices.  like Nvi, creates a pipe to send to/from query/cscope.
+   *
+   * returns TRUE if we jump to a tag or abort, FALSE if not.
+   */
+--- 1076,1083 ----
+  /*
+   * PRIVATE: cs_find
+   *
+!  * Query cscope using command line interface.  Parse the output and use tselect
+!  * to allow choices.  Like Nvi, creates a pipe to send to/from query/cscope.
+   *
+   * returns TRUE if we jump to a tag or abort, FALSE if not.
+   */
+***************
+*** 1214,1220 ****
+--- 1214,1223 ----
+  
+      nummatches = (int *)alloc(sizeof(int)*csinfo_size);
+      if (nummatches == NULL)
++     {
++ 	vim_free(cmd);
+  	return FALSE;
++     }
+  
+      /* Send query to all open connections, then count the total number
+       * of matches so we can alloc all in one swell foop. */
+***************
+*** 1289,1295 ****
+  # ifdef FEAT_WINDOWS
+  		if (postponed_split != 0)
+  		{
+! 		    win_split(postponed_split > 0 ? postponed_split : 0,
+  						       postponed_split_flags);
+  		    RESET_BINDING(curwin);
+  		    postponed_split = 0;
+--- 1292,1298 ----
+  # ifdef FEAT_WINDOWS
+  		if (postponed_split != 0)
+  		{
+! 		    (void)win_split(postponed_split > 0 ? postponed_split : 0,
+  						       postponed_split_flags);
+  		    RESET_BINDING(curwin);
+  		    postponed_split = 0;
+***************
+*** 2085,2090 ****
+--- 2088,2095 ----
+  
+      strcpy(tbuf, matches[0]);
+      ptag = strtok(tbuf, "\t");
++     if (ptag == NULL)
++ 	return;
+  
+      newsize = (int)(strlen(cstag_msg) + strlen(ptag));
+      buf = (char *)alloc(newsize);
+*** ../vim-7.4.821/src/if_xcmdsrv.c	2012-07-10 14:44:13.000000000 +0200
+--- src/if_xcmdsrv.c	2015-08-11 18:56:47.834383757 +0200
+***************
+*** 1265,1276 ****
+  			/* Initialize the result property. */
+  			ga_init2(&reply, 1, 100);
+  #ifdef FEAT_MBYTE
+! 			ga_grow(&reply, 50 + STRLEN(p_enc));
+  			sprintf(reply.ga_data, "%cr%c-E %s%c-s %s%c-r ",
+  						   0, 0, p_enc, 0, serial, 0);
+  			reply.ga_len = 14 + STRLEN(p_enc) + STRLEN(serial);
+  #else
+! 			ga_grow(&reply, 50);
+  			sprintf(reply.ga_data, "%cr%c-s %s%c-r ",
+  							     0, 0, serial, 0);
+  			reply.ga_len = 10 + STRLEN(serial);
+--- 1265,1276 ----
+  			/* Initialize the result property. */
+  			ga_init2(&reply, 1, 100);
+  #ifdef FEAT_MBYTE
+! 			(void)ga_grow(&reply, 50 + STRLEN(p_enc));
+  			sprintf(reply.ga_data, "%cr%c-E %s%c-s %s%c-r ",
+  						   0, 0, p_enc, 0, serial, 0);
+  			reply.ga_len = 14 + STRLEN(p_enc) + STRLEN(serial);
+  #else
+! 			(void)ga_grow(&reply, 50);
+  			sprintf(reply.ga_data, "%cr%c-s %s%c-r ",
+  							     0, 0, serial, 0);
+  			reply.ga_len = 10 + STRLEN(serial);
+***************
+*** 1351,1365 ****
+  		    continue;
+  
+  		pcPtr->code = code;
+! 		if (res != NULL)
+! 		{
+! 		    res = serverConvert(enc, res, &tofree);
+! 		    if (tofree == NULL)
+! 			res = vim_strsave(res);
+! 		    pcPtr->result = res;
+! 		}
+! 		else
+! 		    pcPtr->result = vim_strsave((char_u *)"");
+  		break;
+  	    }
+  	}
+--- 1351,1360 ----
+  		    continue;
+  
+  		pcPtr->code = code;
+! 		res = serverConvert(enc, res, &tofree);
+! 		if (tofree == NULL)
+! 		    res = vim_strsave(res);
+! 		pcPtr->result = res;
+  		break;
+  	    }
+  	}
+*** ../vim-7.4.821/src/move.c	2015-03-20 18:11:44.967196356 +0100
+--- src/move.c	2015-08-11 18:56:47.826383852 +0200
+***************
+*** 1512,1518 ****
+  	--curwin->w_topline;
+  #endif
+  #ifdef FEAT_FOLDING
+! 	hasFolding(curwin->w_topline, &curwin->w_topline, NULL);
+  #endif
+  	--curwin->w_botline;	    /* approximate w_botline */
+  	curwin->w_valid &= ~(VALID_WROW|VALID_CROW|VALID_BOTLINE);
+--- 1512,1518 ----
+  	--curwin->w_topline;
+  #endif
+  #ifdef FEAT_FOLDING
+! 	(void)hasFolding(curwin->w_topline, &curwin->w_topline, NULL);
+  #endif
+  	--curwin->w_botline;	    /* approximate w_botline */
+  	curwin->w_valid &= ~(VALID_WROW|VALID_CROW|VALID_BOTLINE);
+*** ../vim-7.4.821/src/normal.c	2015-08-11 17:46:31.212481064 +0200
+--- src/normal.c	2015-08-11 18:56:47.842383661 +0200
+***************
+*** 2865,2874 ****
+  		end_visual.col = leftcol;
+  	    else
+  		end_visual.col = rightcol;
+! 	    if (curwin->w_cursor.lnum <
+  				    (start_visual.lnum + end_visual.lnum) / 2)
+- 		end_visual.lnum = end_visual.lnum;
+- 	    else
+  		end_visual.lnum = start_visual.lnum;
+  
+  	    /* move VIsual to the right column */
+--- 2865,2872 ----
+  		end_visual.col = leftcol;
+  	    else
+  		end_visual.col = rightcol;
+! 	    if (curwin->w_cursor.lnum >=
+  				    (start_visual.lnum + end_visual.lnum) / 2)
+  		end_visual.lnum = start_visual.lnum;
+  
+  	    /* move VIsual to the right column */
+***************
+*** 3807,3814 ****
+  	}
+  # ifdef FEAT_FOLDING
+  	/* Include closed folds as a whole. */
+! 	hasFolding(top, &top, NULL);
+! 	hasFolding(bot, NULL, &bot);
+  # endif
+  	lines = bot - top + 1;
+  
+--- 3805,3812 ----
+  	}
+  # ifdef FEAT_FOLDING
+  	/* Include closed folds as a whole. */
+! 	(void)hasFolding(top, &top, NULL);
+! 	(void)hasFolding(bot, NULL, &bot);
+  # endif
+  	lines = bot - top + 1;
+  
+***************
+*** 5954,5960 ****
+  		lnum = curwin->w_topline;
+  		while (n-- > 0 && lnum < curwin->w_botline - 1)
+  		{
+! 		    hasFolding(lnum, NULL, &lnum);
+  		    ++lnum;
+  		}
+  		n = lnum - curwin->w_topline;
+--- 5952,5958 ----
+  		lnum = curwin->w_topline;
+  		while (n-- > 0 && lnum < curwin->w_botline - 1)
+  		{
+! 		    (void)hasFolding(lnum, NULL, &lnum);
+  		    ++lnum;
+  		}
+  		n = lnum - curwin->w_topline;
+***************
+*** 6254,6260 ****
+      {
+  	/* do autowrite if necessary */
+  	if (curbufIsChanged() && curbuf->b_nwindows <= 1 && !P_HID(curbuf))
+! 	    autowrite(curbuf, FALSE);
+  	setpcmark();
+  	(void)do_ecmd(0, ptr, NULL, NULL, ECMD_LAST,
+  				       P_HID(curbuf) ? ECMD_HIDE : 0, curwin);
+--- 6252,6258 ----
+      {
+  	/* do autowrite if necessary */
+  	if (curbufIsChanged() && curbuf->b_nwindows <= 1 && !P_HID(curbuf))
+! 	    (void)autowrite(curbuf, FALSE);
+  	setpcmark();
+  	(void)do_ecmd(0, ptr, NULL, NULL, ECMD_LAST,
+  				       P_HID(curbuf) ? ECMD_HIDE : 0, curwin);
+*** ../vim-7.4.821/src/regexp.c	2015-07-10 19:16:27.302493581 +0200
+--- src/regexp.c	2015-08-11 18:56:47.834383757 +0200
+***************
+*** 3824,3837 ****
+  	/* Use an item size of 1 byte, since we push different things
+  	 * onto the regstack. */
+  	ga_init2(&regstack, 1, REGSTACK_INITIAL);
+! 	ga_grow(&regstack, REGSTACK_INITIAL);
+  	regstack.ga_growsize = REGSTACK_INITIAL * 8;
+      }
+  
+      if (backpos.ga_data == NULL)
+      {
+  	ga_init2(&backpos, sizeof(backpos_T), BACKPOS_INITIAL);
+! 	ga_grow(&backpos, BACKPOS_INITIAL);
+  	backpos.ga_growsize = BACKPOS_INITIAL * 8;
+      }
+  
+--- 3824,3837 ----
+  	/* Use an item size of 1 byte, since we push different things
+  	 * onto the regstack. */
+  	ga_init2(&regstack, 1, REGSTACK_INITIAL);
+! 	(void)ga_grow(&regstack, REGSTACK_INITIAL);
+  	regstack.ga_growsize = REGSTACK_INITIAL * 8;
+      }
+  
+      if (backpos.ga_data == NULL)
+      {
+  	ga_init2(&backpos, sizeof(backpos_T), BACKPOS_INITIAL);
+! 	(void)ga_grow(&backpos, BACKPOS_INITIAL);
+  	backpos.ga_growsize = BACKPOS_INITIAL * 8;
+      }
+  
+*** ../vim-7.4.821/src/syntax.c	2015-08-11 15:27:07.624943222 +0200
+--- src/syntax.c	2015-08-11 18:56:47.838383710 +0200
+***************
+*** 6670,6676 ****
+  	spp = &(SYN_ITEMS(curwin->w_s)[idx]);
+  	if (spp->sp_time.count > 0)
+  	{
+! 	    ga_grow(&ga, 1);
+  	    p = ((time_entry_T *)ga.ga_data) + ga.ga_len;
+  	    p->total = spp->sp_time.total;
+  	    profile_add(&total_total, &spp->sp_time.total);
+--- 6670,6676 ----
+  	spp = &(SYN_ITEMS(curwin->w_s)[idx]);
+  	if (spp->sp_time.count > 0)
+  	{
+! 	    (void)ga_grow(&ga, 1);
+  	    p = ((time_entry_T *)ga.ga_data) + ga.ga_len;
+  	    p->total = spp->sp_time.total;
+  	    profile_add(&total_total, &spp->sp_time.total);
+*** ../vim-7.4.821/src/ui.c	2015-01-27 21:39:01.970698049 +0100
+--- src/ui.c	2015-08-11 18:56:47.830383805 +0200
+***************
+*** 2903,2909 ****
+  		    break;
+  		first = FALSE;
+  #ifdef FEAT_FOLDING
+! 		hasFolding(curwin->w_topline, &curwin->w_topline, NULL);
+  #endif
+  #ifdef FEAT_DIFF
+  		if (curwin->w_topfill < diff_check(curwin, curwin->w_topline))
+--- 2903,2909 ----
+  		    break;
+  		first = FALSE;
+  #ifdef FEAT_FOLDING
+! 		(void)hasFolding(curwin->w_topline, &curwin->w_topline, NULL);
+  #endif
+  #ifdef FEAT_DIFF
+  		if (curwin->w_topfill < diff_check(curwin, curwin->w_topline))
+*** ../vim-7.4.821/src/window.c	2015-07-21 15:48:13.593517912 +0200
+--- src/window.c	2015-08-11 19:08:07.094308424 +0200
+***************
+*** 141,147 ****
+  #ifdef FEAT_GUI
+  		need_mouse_correct = TRUE;
+  #endif
+! 		win_split((int)Prenum, 0);
+  		break;
+  
+  #ifdef FEAT_VERTSPLIT
+--- 141,147 ----
+  #ifdef FEAT_GUI
+  		need_mouse_correct = TRUE;
+  #endif
+! 		(void)win_split((int)Prenum, 0);
+  		break;
+  
+  #ifdef FEAT_VERTSPLIT
+***************
+*** 159,165 ****
+  # ifdef FEAT_GUI
+  		need_mouse_correct = TRUE;
+  # endif
+! 		win_split((int)Prenum, WSP_VERT);
+  		break;
+  #endif
+  
+--- 159,165 ----
+  # ifdef FEAT_GUI
+  		need_mouse_correct = TRUE;
+  # endif
+! 		(void)win_split((int)Prenum, WSP_VERT);
+  		break;
+  #endif
+  
+***************
+*** 2586,2592 ****
+  	return;
+  
+      /* When closing the last window in a tab page remove the tab page. */
+!     if (tp == NULL ? firstwin == lastwin : tp->tp_firstwin == tp->tp_lastwin)
+      {
+  	if (tp == first_tabpage)
+  	    first_tabpage = tp->tp_next;
+--- 2586,2592 ----
+  	return;
+  
+      /* When closing the last window in a tab page remove the tab page. */
+!     if (tp->tp_firstwin == tp->tp_lastwin)
+      {
+  	if (tp == first_tabpage)
+  	    first_tabpage = tp->tp_next;
+*** ../vim-7.4.821/src/version.c	2015-08-11 18:52:58.077121515 +0200
+--- src/version.c	2015-08-11 18:58:41.109035628 +0200
+***************
+*** 743,744 ****
+--- 743,746 ----
+  {   /* Add new patch number below this line */
++ /**/
++     822,
+  /**/
+
+-- 
+DENNIS:  Listen -- strange women lying in ponds distributing swords is no
+         basis for a system of government.  Supreme executive power derives
+         from a mandate from the masses, not from some farcical aquatic
+         ceremony.
+                                  The Quest for the Holy Grail (Monty Python)
+
+ /// Bram Moolenaar -- Bram@Moolenaar.net -- http://www.Moolenaar.net   \\\
+///        sponsor Vim, vote for features -- http://www.Vim.org/sponsor/ \\\
+\\\  an exciting new programming language -- http://www.Zimbu.org        ///
+ \\\            help me help AIDS victims -- http://ICCF-Holland.org    ///

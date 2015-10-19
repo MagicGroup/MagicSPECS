@@ -1,0 +1,232 @@
+To: vim_dev@googlegroups.com
+Subject: Patch 7.4.775
+Fcc: outbox
+From: Bram Moolenaar <Bram@moolenaar.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+------------
+
+Patch 7.4.775
+Problem:    It is not possible to avoid using the first item of completion.
+Solution:   Add the "noinsert" and "noselect" values to 'completeopt'. (Shougo
+            Matsu)
+Files:      runtime/doc/options.txt, src/edit.c, src/option.c
+
+
+*** ../vim-7.4.774/runtime/doc/options.txt	2015-06-19 14:41:44.773813332 +0200
+--- runtime/doc/options.txt	2015-07-10 18:02:02.584539984 +0200
+***************
+*** 1818,1823 ****
+--- 1819,1832 ----
+  		    completion in the preview window.  Only works in
+  		    combination with "menu" or "menuone".
+  
++ 	   noinsert Do not insert any text for a match until the user selects
++ 		    a match from the menu. Only works in combination with
++ 		    "menu" or "menuone". No effect if "longest" is present.
++ 
++ 	   noselect Do not select a match in the menu, force the user to
++ 		    select one from the menu. Only works in combination with
++ 		    "menu" or "menuone".
++ 
+  
+  						*'concealcursor'* *'cocu'*
+  'concealcursor' 'cocu'	string (default: "")
+*** ../vim-7.4.774/src/edit.c	2015-07-10 17:56:18.215777193 +0200
+--- src/edit.c	2015-07-10 18:05:16.054721894 +0200
+***************
+*** 108,113 ****
+--- 108,118 ----
+  static int	  compl_get_longest = FALSE;	/* put longest common string
+  						   in compl_leader */
+  
++ static int	  compl_no_insert = FALSE;	/* FALSE: select & insert
++ 						   TRUE: noinsert */
++ static int	  compl_no_select = FALSE;	/* FALSE: select & insert
++ 						   TRUE: noselect */
++ 
+  static int	  compl_used_match;	/* Selected one of the matches.  When
+  					   FALSE the match was edited or using
+  					   the longest common string. */
+***************
+*** 2788,2794 ****
+      compl_cont_status = 0;
+  
+      compl_curr_match = compl_first_match;
+!     ins_complete(Ctrl_N);
+      out_flush();
+  }
+  
+--- 2793,2809 ----
+      compl_cont_status = 0;
+  
+      compl_curr_match = compl_first_match;
+!     if (compl_no_insert)
+!     {
+! 	if (!compl_no_select)
+! 	    ins_complete(K_DOWN);
+!     }
+!     else
+!     {
+! 	ins_complete(Ctrl_N);
+! 	if (compl_no_select)
+! 	    ins_complete(Ctrl_P);
+!     }
+      out_flush();
+  }
+  
+***************
+*** 3657,3666 ****
+      if (ctrl_x_mode == CTRL_X_NOT_DEFINED_YET
+  				      || (ctrl_x_mode == 0 && !compl_started))
+      {
+! 	compl_get_longest = (vim_strchr(p_cot, 'l') != NULL);
+  	compl_used_match = TRUE;
+      }
+  
+      if (ctrl_x_mode == CTRL_X_NOT_DEFINED_YET)
+      {
+  	/*
+--- 3672,3689 ----
+      if (ctrl_x_mode == CTRL_X_NOT_DEFINED_YET
+  				      || (ctrl_x_mode == 0 && !compl_started))
+      {
+! 	compl_get_longest = (strstr((char *)p_cot, "longest") != NULL);
+  	compl_used_match = TRUE;
++ 
+      }
+  
++     compl_no_insert = FALSE;
++     compl_no_select = FALSE;
++     if (strstr((char *)p_cot, "noselect") != NULL)
++ 	compl_no_select = TRUE;
++     if (strstr((char *)p_cot, "noinsert") != NULL)
++ 	compl_no_insert = TRUE;
++ 
+      if (ctrl_x_mode == CTRL_X_NOT_DEFINED_YET)
+      {
+  	/*
+***************
+*** 4672,4677 ****
+--- 4695,4701 ----
+      compl_T *found_compl = NULL;
+      int	    found_end = FALSE;
+      int	    advance;
++     int	    started = compl_started;
+  
+      /* When user complete function return -1 for findstart which is next
+       * time of 'always', compl_shown_match become NULL. */
+***************
+*** 4753,4759 ****
+  		return -1;
+  	    }
+  
+! 	    if (advance)
+  	    {
+  		if (compl_shows_dir == BACKWARD)
+  		    --compl_pending;
+--- 4777,4783 ----
+  		return -1;
+  	    }
+  
+! 	    if (!compl_no_select && advance)
+  	    {
+  		if (compl_shows_dir == BACKWARD)
+  		    --compl_pending;
+***************
+*** 4805,4811 ****
+      }
+  
+      /* Insert the text of the new completion, or the compl_leader. */
+!     if (insert_match)
+      {
+  	if (!compl_get_longest || compl_used_match)
+  	    ins_compl_insert();
+--- 4829,4840 ----
+      }
+  
+      /* Insert the text of the new completion, or the compl_leader. */
+!     if (compl_no_insert && !started)
+!     {
+! 	ins_bytes(compl_orig_text + ins_compl_len());
+! 	compl_used_match = FALSE;
+!     }
+!     else if (insert_match)
+      {
+  	if (!compl_get_longest || compl_used_match)
+  	    ins_compl_insert();
+***************
+*** 4842,4848 ****
+  
+      /* Enter will select a match when the match wasn't inserted and the popup
+       * menu is visible. */
+!     compl_enter_selects = !insert_match && compl_match_array != NULL;
+  
+      /*
+       * Show the file name for the match (if any)
+--- 4871,4880 ----
+  
+      /* Enter will select a match when the match wasn't inserted and the popup
+       * menu is visible. */
+!     if (compl_no_insert && !started)
+! 	compl_enter_selects = TRUE;
+!     else
+! 	compl_enter_selects = !insert_match && compl_match_array != NULL;
+  
+      /*
+       * Show the file name for the match (if any)
+***************
+*** 4917,4923 ****
+  	    }
+  	}
+      }
+!     if (compl_pending != 0 && !got_int)
+      {
+  	int todo = compl_pending > 0 ? compl_pending : -compl_pending;
+  
+--- 4949,4955 ----
+  	    }
+  	}
+      }
+!     if (compl_pending != 0 && !got_int && !compl_no_insert)
+      {
+  	int todo = compl_pending > 0 ? compl_pending : -compl_pending;
+  
+*** ../vim-7.4.774/src/option.c	2015-06-25 19:16:51.485906246 +0200
+--- src/option.c	2015-07-10 17:59:17.526091062 +0200
+***************
+*** 3054,3060 ****
+  static char *(p_fcl_values[]) = {"all", NULL};
+  #endif
+  #ifdef FEAT_INS_EXPAND
+! static char *(p_cot_values[]) = {"menu", "menuone", "longest", "preview", NULL};
+  #endif
+  
+  static void set_option_default __ARGS((int, int opt_flags, int compatible));
+--- 3054,3060 ----
+  static char *(p_fcl_values[]) = {"all", NULL};
+  #endif
+  #ifdef FEAT_INS_EXPAND
+! static char *(p_cot_values[]) = {"menu", "menuone", "longest", "preview", "noinsert", "noselect", NULL};
+  #endif
+  
+  static void set_option_default __ARGS((int, int opt_flags, int compatible));
+*** ../vim-7.4.774/src/version.c	2015-07-10 17:56:18.219777154 +0200
+--- src/version.c	2015-07-10 18:01:22.548916206 +0200
+***************
+*** 743,744 ****
+--- 743,746 ----
+  {   /* Add new patch number below this line */
++ /**/
++     775,
+  /**/
+
+-- 
+hundred-and-one symptoms of being an internet addict:
+202. You're amazed to find out Spam is a food.
+
+ /// Bram Moolenaar -- Bram@Moolenaar.net -- http://www.Moolenaar.net   \\\
+///        sponsor Vim, vote for features -- http://www.Vim.org/sponsor/ \\\
+\\\  an exciting new programming language -- http://www.Zimbu.org        ///
+ \\\            help me help AIDS victims -- http://ICCF-Holland.org    ///

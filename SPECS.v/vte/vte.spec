@@ -4,7 +4,7 @@
 
 Name: vte
 Version: 0.28.2
-Release: 14%{?dist}
+Release: 15%{?dist}
 Summary: A terminal emulator
 Summary(zh_CN.UTF-8): 终端模块器
 License: LGPLv2+
@@ -126,6 +126,9 @@ magic_rpm_clean.sh
 %doc %{_datadir}/gtk-doc/html/vte-0.0
 
 %changelog
+* Mon Oct 19 2015 Liu Di <liudidi@gmail.com> - 0.28.2-15
+- 为 Magic 3.0 重建
+
 * Sat Sep 19 2015 Liu Di <liudidi@gmail.com> - 0.28.2-14
 - 为 Magic 3.0 重建
 

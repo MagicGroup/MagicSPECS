@@ -1,0 +1,59 @@
+To: vim_dev@googlegroups.com
+Subject: Patch 7.4.854
+Fcc: outbox
+From: Bram Moolenaar <Bram@moolenaar.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+------------
+
+Patch 7.4.854 (after 7.4.850)
+Problem:    Missing information about runtime files.
+Solution:   Add section about runtime files. (Christian Brabandt)
+Files:      CONTRIBUTING.md
+
+
+*** ../vim-7.4.853/CONTRIBUTING.md	2015-09-01 19:50:05.697404798 +0200
+--- CONTRIBUTING.md	2015-09-01 21:22:38.119765678 +0200
+***************
+*** 37,39 ****
+--- 37,54 ----
+  Or open [the todo file] on GitHub to see the latest version.
+  
+  [the todo file]: https://github.com/vim/vim/blob/master/runtime/doc/todo.txt
++ 
++ 
++ # Syntax, indent and other runtime files
++ 
++ The latest version of these files can be obtained from the repository.
++ They are usually not updated with numbered patches.
++ 
++ If you find a problem with one of these files or have a suggestion for
++ improvement, please first try to contact the maintainer directly.
++ Look in the header of the file for the name and email address.
++ 
++ The maintainer will take care of issues and send updates to Bram for 
++ distribution with Vim.
++ 
++ If the maintainer does not react, contact the vim-dev maillist.
+*** ../vim-7.4.853/src/version.c	2015-09-01 20:53:20.294030821 +0200
+--- src/version.c	2015-09-01 21:23:38.559133262 +0200
+***************
+*** 743,744 ****
+--- 743,746 ----
+  {   /* Add new patch number below this line */
++ /**/
++     854,
+  /**/
+
+-- 
+The Characters and incidents portrayed and the names used are fictitious and
+any similarity to the names, characters, or history of any person is entirely
+accidental and unintentional.
+                                  Signed RICHARD M. NIXON
+                 "Monty Python and the Holy Grail" PYTHON (MONTY) PICTURES LTD
+
+ /// Bram Moolenaar -- Bram@Moolenaar.net -- http://www.Moolenaar.net   \\\
+///        sponsor Vim, vote for features -- http://www.Vim.org/sponsor/ \\\
+\\\  an exciting new programming language -- http://www.Zimbu.org        ///
+ \\\            help me help AIDS victims -- http://ICCF-Holland.org    ///

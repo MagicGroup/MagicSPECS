@@ -1,0 +1,72 @@
+To: vim_dev@googlegroups.com
+Subject: Patch 7.4.721
+Fcc: outbox
+From: Bram Moolenaar <Bram@moolenaar.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+------------
+
+Patch 7.4.721
+Problem:    When 'list' is set Visual mode does not highlight anything in
+            empty lines. (mgaleski)
+Solution:   Check the value of lcs_eol in another place. (Christian Brabandt)
+Files:      src/screen.c
+
+
+*** ../vim-7.4.720/src/screen.c	2015-05-04 16:10:21.397000027 +0200
+--- src/screen.c	2015-05-04 16:45:59.044932107 +0200
+***************
+*** 4703,4709 ****
+  		    }
+  		}
+  		else if (c == NUL
+! 			&& ((wp->w_p_list && lcs_eol > 0)
+  			    || ((fromcol >= 0 || fromcol_prev >= 0)
+  				&& tocol > vcol
+  				&& VIsual_mode != Ctrl_V
+--- 4703,4709 ----
+  		    }
+  		}
+  		else if (c == NUL
+! 			&& (wp->w_p_list
+  			    || ((fromcol >= 0 || fromcol_prev >= 0)
+  				&& tocol > vcol
+  				&& VIsual_mode != Ctrl_V
+***************
+*** 4749,4755 ****
+  			    c_extra = NUL;
+  			}
+  		    }
+! 		    if (wp->w_p_list)
+  			c = lcs_eol;
+  		    else
+  			c = ' ';
+--- 4749,4755 ----
+  			    c_extra = NUL;
+  			}
+  		    }
+! 		    if (wp->w_p_list && lcs_eol > 0)
+  			c = lcs_eol;
+  		    else
+  			c = ' ';
+*** ../vim-7.4.720/src/version.c	2015-05-04 16:18:18.127624758 +0200
+--- src/version.c	2015-05-04 16:51:10.045434371 +0200
+***************
+*** 743,744 ****
+--- 743,746 ----
+  {   /* Add new patch number below this line */
++ /**/
++     721,
+  /**/
+
+-- 
+"Making it up?  Why should I want to make anything up?  Life's bad enough
+as it is without wanting to invent any more of it."
+		-- Marvin, the Paranoid Android in Douglas Adams'
+		   "The Hitchhiker's Guide to the Galaxy"
+
+ /// Bram Moolenaar -- Bram@Moolenaar.net -- http://www.Moolenaar.net   \\\
+///        sponsor Vim, vote for features -- http://www.Vim.org/sponsor/ \\\
+\\\  an exciting new programming language -- http://www.Zimbu.org        ///
+ \\\            help me help AIDS victims -- http://ICCF-Holland.org    ///

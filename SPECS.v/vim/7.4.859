@@ -1,0 +1,55 @@
+To: vim_dev@googlegroups.com
+Subject: Patch 7.4.859
+Fcc: outbox
+From: Bram Moolenaar <Bram@moolenaar.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+------------
+
+Patch 7.4.859
+Problem:    Vim doesn't recognize all htmldjango files.
+Solution:   Recognize a comment. (Daniel Hahler, PR #410)
+Files:      runtime/filetype.vim
+
+
+*** ../vim-7.4.858/runtime/filetype.vim	2013-08-03 17:50:05.000000000 +0200
+--- runtime/filetype.vim	2015-09-08 19:08:38.039364393 +0200
+***************
+*** 843,849 ****
+        setf xhtml
+        return
+      endif
+!     if getline(n) =~ '{%\s*\(extends\|block\)\>'
+        setf htmldjango
+        return
+      endif
+--- 872,878 ----
+        setf xhtml
+        return
+      endif
+!     if getline(n) =~ '{%\s*\(extends\|block\|load\)\>\|{#\s\+'
+        setf htmldjango
+        return
+      endif
+*** ../vim-7.4.858/src/version.c	2015-09-08 18:46:04.349233550 +0200
+--- src/version.c	2015-09-08 19:07:39.943960712 +0200
+***************
+*** 743,744 ****
+--- 743,746 ----
+  {   /* Add new patch number below this line */
++ /**/
++     859,
+  /**/
+
+-- 
+LARGE MAN:   Who's that then?
+CART DRIVER: (Grudgingly) I dunno, Must be a king.
+LARGE MAN:   Why?
+CART DRIVER: He hasn't got shit all over him.
+                 "Monty Python and the Holy Grail" PYTHON (MONTY) PICTURES LTD
+
+ /// Bram Moolenaar -- Bram@Moolenaar.net -- http://www.Moolenaar.net   \\\
+///        sponsor Vim, vote for features -- http://www.Vim.org/sponsor/ \\\
+\\\  an exciting new programming language -- http://www.Zimbu.org        ///
+ \\\            help me help AIDS victims -- http://ICCF-Holland.org    ///

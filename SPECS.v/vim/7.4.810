@@ -1,0 +1,55 @@
+To: vim_dev@googlegroups.com
+Subject: Patch 7.4.810
+Fcc: outbox
+From: Bram Moolenaar <Bram@moolenaar.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+------------
+
+Patch 7.4.810
+Problem:    With a sequence of commands using buffers in diff mode E749 is
+            given. (itchyny)
+Solution:   Skip unloaded buffer. (Hirohito Higashi)
+Files:      src/diff.c
+
+
+*** ../vim-7.4.809/src/diff.c	2015-07-03 15:06:49.714360608 +0200
+--- src/diff.c	2015-08-04 21:30:25.100999807 +0200
+***************
+*** 804,811 ****
+      for (idx_new = idx_orig + 1; idx_new < DB_COUNT; ++idx_new)
+      {
+  	buf = curtab->tp_diffbuf[idx_new];
+! 	if (buf == NULL)
+! 	    continue;
+  	if (diff_write(buf, tmp_new) == FAIL)
+  	    continue;
+  	diff_file(tmp_orig, tmp_new, tmp_diff);
+--- 804,811 ----
+      for (idx_new = idx_orig + 1; idx_new < DB_COUNT; ++idx_new)
+      {
+  	buf = curtab->tp_diffbuf[idx_new];
+! 	if (buf == NULL || buf->b_ml.ml_mfp == NULL)
+! 	    continue; /* skip buffer that isn't loaded */
+  	if (diff_write(buf, tmp_new) == FAIL)
+  	    continue;
+  	diff_file(tmp_orig, tmp_new, tmp_diff);
+*** ../vim-7.4.809/src/version.c	2015-08-04 21:27:02.767279357 +0200
+--- src/version.c	2015-08-04 21:32:41.559463140 +0200
+***************
+*** 743,744 ****
+--- 743,746 ----
+  {   /* Add new patch number below this line */
++ /**/
++     810,
+  /**/
+
+-- 
+A vacation is a period of travel during which you find that you
+took twice as many clothes and half as much money as you needed.
+
+ /// Bram Moolenaar -- Bram@Moolenaar.net -- http://www.Moolenaar.net   \\\
+///        sponsor Vim, vote for features -- http://www.Vim.org/sponsor/ \\\
+\\\  an exciting new programming language -- http://www.Zimbu.org        ///
+ \\\            help me help AIDS victims -- http://ICCF-Holland.org    ///

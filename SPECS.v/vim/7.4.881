@@ -1,0 +1,183 @@
+To: vim_dev@googlegroups.com
+Subject: Patch 7.4.881
+Fcc: outbox
+From: Bram Moolenaar <Bram@moolenaar.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+------------
+
+Patch 7.4.881 (after 7.4.879)
+Problem:    Test 49 fails.
+Solution:   Add line number to check of call stack.
+Files:      src/testdir/test49.vim
+
+
+*** ../vim-7.4.880/src/testdir/test49.vim	2013-06-06 18:13:46.000000000 +0200
+--- src/testdir/test49.vim	2015-09-25 17:25:33.609659111 +0200
+***************
+*** 1,6 ****
+  " Vim script language tests
+  " Author:	Servatius Brandt <Servatius.Brandt@fujitsu-siemens.com>
+! " Last Change:	2013 Jun 06
+  
+  "-------------------------------------------------------------------------------
+  " Test environment							    {{{1
+--- 1,6 ----
+  " Vim script language tests
+  " Author:	Servatius Brandt <Servatius.Brandt@fujitsu-siemens.com>
+! " Last Change:	2015 Sep 25
+  
+  "-------------------------------------------------------------------------------
+  " Test environment							    {{{1
+***************
+*** 5188,5206 ****
+      Xpath 65536					" X: 65536
+      let exception  = v:exception
+      let throwpoint = v:throwpoint
+!     call CHECK(1, "oops", '\<F\.\.G\.\.T\>', '\<2\>')
+      exec "let exception  = v:exception"
+      exec "let throwpoint = v:throwpoint"
+!     call CHECK(2, "oops", '\<F\.\.G\.\.T\>', '\<2\>')
+      CmdException
+      CmdThrowpoint
+!     call CHECK(3, "oops", '\<F\.\.G\.\.T\>', '\<2\>')
+      call FuncException()
+      call FuncThrowpoint()
+!     call CHECK(4, "oops", '\<F\.\.G\.\.T\>', '\<2\>')
+      exec "source" scriptException
+      exec "source" scriptThrowPoint
+!     call CHECK(5, "oops", '\<F\.\.G\.\.T\>', '\<2\>')
+      try
+  	Xpath 131072				" X: 131072
+  	call G("arrgh", 4)
+--- 5188,5206 ----
+      Xpath 65536					" X: 65536
+      let exception  = v:exception
+      let throwpoint = v:throwpoint
+!     call CHECK(1, "oops", '\<F\[1]\.\.G\[1]\.\.T\>', '\<2\>')
+      exec "let exception  = v:exception"
+      exec "let throwpoint = v:throwpoint"
+!     call CHECK(2, "oops", '\<F\[1]\.\.G\[1]\.\.T\>', '\<2\>')
+      CmdException
+      CmdThrowpoint
+!     call CHECK(3, "oops", '\<F\[1]\.\.G\[1]\.\.T\>', '\<2\>')
+      call FuncException()
+      call FuncThrowpoint()
+!     call CHECK(4, "oops", '\<F\[1]\.\.G\[1]\.\.T\>', '\<2\>')
+      exec "source" scriptException
+      exec "source" scriptThrowPoint
+!     call CHECK(5, "oops", '\<F\[1]\.\.G\[1]\.\.T\>', '\<2\>')
+      try
+  	Xpath 131072				" X: 131072
+  	call G("arrgh", 4)
+***************
+*** 5208,5214 ****
+  	Xpath 262144				" X: 262144
+  	let exception  = v:exception
+  	let throwpoint = v:throwpoint
+! 	call CHECK(6, "arrgh", '\<G\.\.T\>', '\<4\>')
+  	try
+  	    Xpath 524288			" X: 524288
+  	    let g:arg = "autsch"
+--- 5208,5214 ----
+  	Xpath 262144				" X: 262144
+  	let exception  = v:exception
+  	let throwpoint = v:throwpoint
+! 	call CHECK(6, "arrgh", '\<G\[1]\.\.T\>', '\<4\>')
+  	try
+  	    Xpath 524288			" X: 524288
+  	    let g:arg = "autsch"
+***************
+*** 5226,5232 ****
+  	    Xpath 2097152			" X: 2097152
+  	    let exception  = v:exception
+  	    let throwpoint = v:throwpoint
+! 	    call CHECK(8, "arrgh", '\<G\.\.T\>', '\<4\>')
+  	    try
+  		Xpath 4194304			" X: 4194304
+  		let g:arg = "brrrr"
+--- 5226,5232 ----
+  	    Xpath 2097152			" X: 2097152
+  	    let exception  = v:exception
+  	    let throwpoint = v:throwpoint
+! 	    call CHECK(8, "arrgh", '\<G\[1]\.\.T\>', '\<4\>')
+  	    try
+  		Xpath 4194304			" X: 4194304
+  		let g:arg = "brrrr"
+***************
+*** 5242,5268 ****
+  		Xpath 16777216			" X: 16777216
+  		let exception  = v:exception
+  		let throwpoint = v:throwpoint
+! 		call CHECK(10, "arrgh", '\<G\.\.T\>', '\<4\>')
+  	    endtry
+  	    Xpath 33554432			" X: 33554432
+  	    let exception  = v:exception
+  	    let throwpoint = v:throwpoint
+! 	    call CHECK(11, "arrgh", '\<G\.\.T\>', '\<4\>')
+  	endtry
+  	Xpath 67108864				" X: 67108864
+  	let exception  = v:exception
+  	let throwpoint = v:throwpoint
+! 	call CHECK(12, "arrgh", '\<G\.\.T\>', '\<4\>')
+      finally
+  	Xpath 134217728				" X: 134217728
+  	let exception  = v:exception
+  	let throwpoint = v:throwpoint
+! 	call CHECK(13, "oops", '\<F\.\.G\.\.T\>', '\<2\>')
+      endtry
+      Xpath 268435456				" X: 268435456
+      let exception  = v:exception
+      let throwpoint = v:throwpoint
+!     call CHECK(14, "oops", '\<F\.\.G\.\.T\>', '\<2\>')
+  finally
+      Xpath 536870912				" X: 536870912
+      let exception  = v:exception
+--- 5242,5268 ----
+  		Xpath 16777216			" X: 16777216
+  		let exception  = v:exception
+  		let throwpoint = v:throwpoint
+! 		call CHECK(10, "arrgh", '\<G\[1]\.\.T\>', '\<4\>')
+  	    endtry
+  	    Xpath 33554432			" X: 33554432
+  	    let exception  = v:exception
+  	    let throwpoint = v:throwpoint
+! 	    call CHECK(11, "arrgh", '\<G\[1]\.\.T\>', '\<4\>')
+  	endtry
+  	Xpath 67108864				" X: 67108864
+  	let exception  = v:exception
+  	let throwpoint = v:throwpoint
+! 	call CHECK(12, "arrgh", '\<G\[1]\.\.T\>', '\<4\>')
+      finally
+  	Xpath 134217728				" X: 134217728
+  	let exception  = v:exception
+  	let throwpoint = v:throwpoint
+! 	call CHECK(13, "oops", '\<F\[1]\.\.G\[1]\.\.T\>', '\<2\>')
+      endtry
+      Xpath 268435456				" X: 268435456
+      let exception  = v:exception
+      let throwpoint = v:throwpoint
+!     call CHECK(14, "oops", '\<F\[1]\.\.G\[1]\.\.T\>', '\<2\>')
+  finally
+      Xpath 536870912				" X: 536870912
+      let exception  = v:exception
+*** ../vim-7.4.880/src/version.c	2015-09-25 17:50:16.350057915 +0200
+--- src/version.c	2015-09-25 17:56:08.866344257 +0200
+***************
+*** 743,744 ****
+--- 743,746 ----
+  {   /* Add new patch number below this line */
++ /**/
++     881,
+  /**/
+
+-- 
+"How is your new girlfriend?"
+"90-60-90 man!"
+"What, pale purple?"
+
+ /// Bram Moolenaar -- Bram@Moolenaar.net -- http://www.Moolenaar.net   \\\
+///        sponsor Vim, vote for features -- http://www.Vim.org/sponsor/ \\\
+\\\  an exciting new programming language -- http://www.Zimbu.org        ///
+ \\\            help me help AIDS victims -- http://ICCF-Holland.org    ///

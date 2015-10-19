@@ -1,0 +1,52 @@
+To: vim_dev@googlegroups.com
+Subject: Patch 7.4.799
+Fcc: outbox
+From: Bram Moolenaar <Bram@moolenaar.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+------------
+
+Patch 7.4.799
+Problem:    Accessing memory before an allocated block.
+Solution:   Check for not going before the start of a pattern. (Dominique
+            Pelle)
+Files:      src/fileio.c
+
+
+*** ../vim-7.4.798/src/fileio.c	2015-07-17 17:38:00.567399623 +0200
+--- src/fileio.c	2015-07-28 13:33:00.470887578 +0200
+***************
+*** 8514,8520 ****
+  	 */
+  	brace_level = 0;
+  	for (endpat = pat; *endpat && (*endpat != ',' || brace_level
+! 					     || endpat[-1] == '\\'); ++endpat)
+  	{
+  	    if (*endpat == '{')
+  		brace_level++;
+--- 8514,8520 ----
+  	 */
+  	brace_level = 0;
+  	for (endpat = pat; *endpat && (*endpat != ',' || brace_level
+! 			   || (endpat > pat && endpat[-1] == '\\')); ++endpat)
+  	{
+  	    if (*endpat == '{')
+  		brace_level++;
+*** ../vim-7.4.798/src/version.c	2015-07-28 11:21:27.045407225 +0200
+--- src/version.c	2015-07-28 13:31:00.896057007 +0200
+***************
+*** 743,744 ****
+--- 743,746 ----
+  {   /* Add new patch number below this line */
++ /**/
++     799,
+  /**/
+
+-- 
+The software said it requires Windows 95 or better, so I installed Linux.
+
+ /// Bram Moolenaar -- Bram@Moolenaar.net -- http://www.Moolenaar.net   \\\
+///        sponsor Vim, vote for features -- http://www.Vim.org/sponsor/ \\\
+\\\  an exciting new programming language -- http://www.Zimbu.org        ///
+ \\\            help me help AIDS victims -- http://ICCF-Holland.org    ///

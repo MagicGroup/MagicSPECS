@@ -1,0 +1,162 @@
+To: vim_dev@googlegroups.com
+Subject: Patch 7.4.777
+Fcc: outbox
+From: Bram Moolenaar <Bram@moolenaar.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+------------
+
+Patch 7.4.777
+Problem:    The README file doesn't look nice on github.
+Solution:   Add a markdown version of the README file.
+Files:      Filelist, README.md
+
+
+*** ../vim-7.4.776/Filelist	2014-11-05 17:04:10.516530418 +0100
+--- Filelist	2015-07-10 16:29:19.472923927 +0200
+***************
+*** 481,486 ****
+--- 481,487 ----
+  # runtime files for all distributions
+  RT_ALL =	\
+  		README.txt \
++ 		README.md \
+  		runtime/bugreport.vim \
+  		runtime/doc/*.awk \
+  		runtime/doc/*.pl \
+*** ../vim-7.4.776/README.md	2015-07-10 19:21:37.767563658 +0200
+--- README.md	2015-07-10 16:28:55.569148732 +0200
+***************
+*** 0 ****
+--- 1,112 ----
++ `README.md` for version 7.4 of Vim: Vi IMproved.
++ 
++ 
++ ## What is VIM ##
++ 
++ Vim is an almost compatible version of the UNIX editor Vi.  Many new features
++ have been added: multi-level undo, syntax highlighting, command line history,
++ on-line help, spell checking, filename completion, block operations, etc.
++ There is also a Graphical User Interface (GUI) available.  See
++ `runtime/doc/vi_diff.txt` for differences with Vi.
++ 
++ This editor is very useful for editing programs and other plain text files.
++ All commands are given with normal keyboard characters, so those who can type
++ with ten fingers can work very fast.  Additionally, function keys can be
++ defined by the user, and the mouse can be used.
++ 
++ Vim runs under Amiga DOS, MS-DOS, MS-Windows (95, 98, Me, NT, 2000, XP, Vista,
++ 7), Atari MiNT, Macintosh, BeOS, VMS, RISC OS, OS/2 and almost all flavours of
++ UNIX.  Porting to other systems should not be very difficult.
++ 
++ 
++ ## Distribution ##
++ 
++ There are separate distributions for Unix, PC, Amiga and some other systems.
++ This `README.md` file comes with the runtime archive.  It includes the
++ documentation, syntax files and other files that are used at runtime.  To run
++ Vim you must get either one of the binary archives or a source archive.
++ Which one you need depends on the system you want to run it on and whether you
++ want or must compile it yourself.  Check http://www.vim.org/download.php for
++ an overview of currently available distributions.
++ 
++ 
++ ## Documentation ##
++ 
++ The vim tutor is a one hour training course for beginners.  Mostly it can be
++ started as `vimtutor`.  See `:help tutor` for more information.
++ 
++ The best is to use `:help` in Vim.  If you don't have an executable yet, read
++ `runtime/doc/help.txt`.  It contains pointers to the other documentation
++ files.  The User Manual reads like a book and is recommended to learn to use
++ Vim.  See `:help user-manual`.
++ 
++ 
++ ## Copying ##
++ 
++ Vim is Charityware.  You can use and copy it as much as you like, but you are
++ encouraged to make a donation to help orphans in Uganda.  Please read the file
++ `runtime/doc/uganda.txt` for details (do `:help uganda` inside Vim).
++ 
++ Summary of the license: There are no restrictions on using or distributing an
++ unmodified copy of Vim.  Parts of Vim may also be distributed, but the license
++ text must always be included.  For modified versions a few restrictions apply.
++ The license is GPL compatible, you may compile Vim with GPL libraries and
++ distribute it.
++ 
++ 
++ ## Sponsoring ##
++ 
++ Fixing bugs and adding new features takes a lot of time and effort.  To show
++ your appreciation for the work and motivate Bram and others to continue
++ working on Vim please send a donation.
++ 
++ Since Bram is back to a paid job the money will now be used to help children
++ in Uganda.  See `runtime/doc/uganda.txt`.  But at the same time donations
++ increase Bram's motivation to keep working on Vim!
++ 
++ For the most recent information about sponsoring look on the Vim web site:
++ 	http://www.vim.org/sponsor/
++ 
++ 
++ ## Compiling ##
++ 
++ If you obtained a binary distribution you don't need to compile Vim.  If you
++ obtained a source distribution, all the stuff for compiling Vim is in the
++ `src` directory.  See `src/INSTALL` for instructions.
++ 
++ 
++ ## Installation ##
++ 
++ See one of these files for system-specific instructions:
++ 
++ 	README_ami.txt		Amiga
++ 	README_unix.txt		Unix
++ 	README_dos.txt		MS-DOS and MS-Windows
++ 	README_os2.txt		OS/2
++ 	README_mac.txt		Macintosh
++ 	README_vms.txt		VMS
++ 
++ There are more `README_*.txt` files, depending on the distribution you used.
++ 
++ 
++ ## Information ##
++ 
++ The latest news about Vim can be found on the Vim home page:
++ 	http://www.vim.org/
++ 
++ If you have problems, have a look at the Vim documentation or tips:
++ 	http://www.vim.org/docs.php
++ 	http://vim.wikia.com/wiki/Vim_Tips_Wiki
++ 
++ If you still have problems or any other questions, use one of the mailing
++ lists to discuss them with Vim users and developers:
++ 	http://www.vim.org/maillist.php
++ 
++ If nothing else works, report bugs directly:
++ 	Bram Moolenaar <Bram@vim.org>
++ 
++ 
++ ## Main author ##
++ 
++ Send any other comments, patches, flowers and suggestions to:
++ 	Bram Moolenaar <Bram@vim.org>
+*** ../vim-7.4.776/src/version.c	2015-07-10 19:16:27.302493581 +0200
+--- src/version.c	2015-07-10 19:20:17.560320543 +0200
+***************
+*** 743,744 ****
+--- 743,746 ----
+  {   /* Add new patch number below this line */
++ /**/
++     777,
+  /**/
+
+-- 
+hundred-and-one symptoms of being an internet addict:
+203. You're an active member of more than 20 newsgroups.
+
+ /// Bram Moolenaar -- Bram@Moolenaar.net -- http://www.Moolenaar.net   \\\
+///        sponsor Vim, vote for features -- http://www.Vim.org/sponsor/ \\\
+\\\  an exciting new programming language -- http://www.Zimbu.org        ///
+ \\\            help me help AIDS victims -- http://ICCF-Holland.org    ///

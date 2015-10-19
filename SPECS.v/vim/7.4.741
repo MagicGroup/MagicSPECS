@@ -1,0 +1,174 @@
+To: vim_dev@googlegroups.com
+Subject: Patch 7.4.741
+Fcc: outbox
+From: Bram Moolenaar <Bram@moolenaar.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+------------
+
+Patch 7.4.741
+Problem:    When using += with ":set" a trailing comma is not recognized.
+            (Issue 365)
+Solution:   Don't add a second comma. Add a test. (partly by Christian 
+            Brabandt)
+Files:      src/option.c, src/testdir/test_set.in, src/testdir/test_set.ok,
+            src/testdir/Make_amiga.mak, src/testdir/Make_dos.mak,
+            src/testdir/Make_ming.mak, src/testdir/Make_os2.mak,
+            src/testdir/Make_vms.mms, src/testdir/Makefile
+
+
+*** ../vim-7.4.740/src/option.c	2015-06-09 18:35:17.471406959 +0200
+--- src/option.c	2015-06-19 14:03:17.869987088 +0200
+***************
+*** 4829,4834 ****
+--- 4829,4838 ----
+  				if (adding)
+  				{
+  				    i = (int)STRLEN(origval);
++ 				    /* strip a trailing comma, would get 2 */
++ 				    if (comma && i > 1 && origval[i - 1] == ','
++ 						    && origval[i - 2] != '\\')
++ 					i--;
+  				    mch_memmove(newval + i + comma, newval,
+  							  STRLEN(newval) + 1);
+  				    mch_memmove(newval, origval, (size_t)i);
+*** ../vim-7.4.740/src/testdir/test_set.in	2015-06-19 14:06:11.504176595 +0200
+--- src/testdir/test_set.in	2015-06-19 13:40:14.560405399 +0200
+***************
+*** 0 ****
+--- 1,12 ----
++ Tests for :set     vim: set ft=vim :
++ 
++ STARTTEST
++ :so small.vim
++ :set wildignore=*.png,
++ :set wildignore+=*.jpg
++ :$put =&wildignore
++ :/^Output goes here/+1,$w! test.out
++ :qa!
++ ENDTEST
++ 
++ Output goes here
+*** ../vim-7.4.740/src/testdir/test_set.ok	2015-06-19 14:06:11.508176554 +0200
+--- src/testdir/test_set.ok	2015-06-19 13:42:16.731131055 +0200
+***************
+*** 0 ****
+--- 1 ----
++ *.png,*.jpg
+*** ../vim-7.4.740/src/testdir/Make_amiga.mak	2015-04-21 18:33:33.906675754 +0200
+--- src/testdir/Make_amiga.mak	2015-06-19 13:44:38.885650059 +0200
+***************
+*** 54,59 ****
+--- 54,60 ----
+  		test_nested_function.out \
+  		test_options.out \
+  		test_qf_title.out \
++ 		test_set.out \
+  		test_signs.out \
+  		test_textobjects.out \
+  		test_utf8.out
+***************
+*** 198,203 ****
+--- 199,205 ----
+  test_nested_function.out: test_nested_function.in
+  test_options.out: test_options.in
+  test_qf_title.out: test_qf_title.in
++ test_set.out: test_set.in
+  test_signs.out: test_signs.in
+  test_textobjects.out: test_textobjects.in
+  test_utf8.out: test_utf8.in
+*** ../vim-7.4.740/src/testdir/Make_dos.mak	2015-04-21 18:33:33.906675754 +0200
+--- src/testdir/Make_dos.mak	2015-06-19 13:44:47.549559793 +0200
+***************
+*** 53,58 ****
+--- 53,59 ----
+  		test_nested_function.out \
+  		test_options.out \
+  		test_qf_title.out \
++ 		test_set.out \
+  		test_signs.out \
+  		test_textobjects.out \
+  		test_utf8.out
+*** ../vim-7.4.740/src/testdir/Make_ming.mak	2015-04-21 18:33:33.906675754 +0200
+--- src/testdir/Make_ming.mak	2015-06-19 13:45:00.801421725 +0200
+***************
+*** 75,80 ****
+--- 75,81 ----
+  		test_nested_function.out \
+  		test_options.out \
+  		test_qf_title.out \
++ 		test_set.out \
+  		test_signs.out \
+  		test_textobjects.out \
+  		test_utf8.out
+*** ../vim-7.4.740/src/testdir/Make_os2.mak	2015-04-21 18:33:33.906675754 +0200
+--- src/testdir/Make_os2.mak	2015-06-19 13:45:07.781349001 +0200
+***************
+*** 55,60 ****
+--- 55,61 ----
+  		test_nested_function.out \
+  		test_options.out \
+  		test_qf_title.out \
++ 		test_set.out \
+  		test_signs.out \
+  		test_textobjects.out \
+  		test_utf8.out
+*** ../vim-7.4.740/src/testdir/Make_vms.mms	2015-04-21 18:33:33.906675754 +0200
+--- src/testdir/Make_vms.mms	2015-06-19 13:45:17.649246188 +0200
+***************
+*** 4,10 ****
+  # Authors:	Zoltan Arpadffy, <arpadffy@polarhome.com>
+  #		Sandor Kopanyi,  <sandor.kopanyi@mailbox.hu>
+  #
+! # Last change:  2015 Apr 21
+  #
+  # This has been tested on VMS 6.2 to 8.3 on DEC Alpha, VAX and IA64.
+  # Edit the lines in the Configuration section below to select.
+--- 4,10 ----
+  # Authors:	Zoltan Arpadffy, <arpadffy@polarhome.com>
+  #		Sandor Kopanyi,  <sandor.kopanyi@mailbox.hu>
+  #
+! # Last change:  2015 Jun 19
+  #
+  # This has been tested on VMS 6.2 to 8.3 on DEC Alpha, VAX and IA64.
+  # Edit the lines in the Configuration section below to select.
+***************
+*** 114,119 ****
+--- 114,120 ----
+  	 test_nested_function.out \
+  	 test_options.out \
+  	 test_qf_title.out \
++ 	 test_set.out \
+  	 test_signs.out \
+  	 test_textobjects.out \
+  	 test_utf8.out
+*** ../vim-7.4.740/src/testdir/Makefile	2015-04-21 18:33:33.906675754 +0200
+--- src/testdir/Makefile	2015-06-19 13:41:02.539904437 +0200
+***************
+*** 51,56 ****
+--- 51,57 ----
+  		test_nested_function.out \
+  		test_options.out \
+  		test_qf_title.out \
++ 		test_set.out \
+  		test_signs.out \
+  		test_textobjects.out \
+  		test_utf8.out
+*** ../vim-7.4.740/src/version.c	2015-06-19 12:43:02.384196168 +0200
+--- src/version.c	2015-06-19 13:30:12.122694151 +0200
+***************
+*** 743,744 ****
+--- 743,746 ----
+  {   /* Add new patch number below this line */
++ /**/
++     741,
+  /**/
+
+-- 
+Amnesia is one of my favorite words, but I forgot what it means.
+
+ /// Bram Moolenaar -- Bram@Moolenaar.net -- http://www.Moolenaar.net   \\\
+///        sponsor Vim, vote for features -- http://www.Vim.org/sponsor/ \\\
+\\\  an exciting new programming language -- http://www.Zimbu.org        ///
+ \\\            help me help AIDS victims -- http://ICCF-Holland.org    ///

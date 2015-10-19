@@ -1,0 +1,190 @@
+To: vim_dev@googlegroups.com
+Subject: Patch 7.4.844
+Fcc: outbox
+From: Bram Moolenaar <Bram@moolenaar.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+------------
+
+Patch 7.4.844
+Problem:    When '#' is in 'isident' the is# comparator doesn't work.
+Solution:   Don't use vim_isIDc(). (Yasuhiro Matsumoto)
+Files:      src/eval.c, src/testdir/test_comparators.in,
+            src/testdir/test_comparators.ok, src/testdir/Makefile,
+            src/testdir/Make_amiga.mak, src/testdir/Make_dos.mak,
+            src/testdir/Make_ming.mak, src/testdir/Make_os2.mak,
+            src/testdir/Make_vms.mms
+
+
+*** ../vim-7.4.843/src/eval.c	2015-08-25 16:48:56.072640146 +0200
+--- src/eval.c	2015-09-01 16:01:08.008531180 +0200
+***************
+*** 4431,4437 ****
+  		    {
+  			if (p[2] == 'n' && p[3] == 'o' && p[4] == 't')
+  			    len = 5;
+! 			if (!vim_isIDc(p[len]))
+  			{
+  			    type = len == 2 ? TYPE_EQUAL : TYPE_NEQUAL;
+  			    type_is = TRUE;
+--- 4431,4438 ----
+  		    {
+  			if (p[2] == 'n' && p[3] == 'o' && p[4] == 't')
+  			    len = 5;
+! 			i = p[len];
+! 			if (!isalnum(i) && i != '_')
+  			{
+  			    type = len == 2 ? TYPE_EQUAL : TYPE_NEQUAL;
+  			    type_is = TRUE;
+*** ../vim-7.4.843/src/testdir/test_comparators.in	2015-09-01 16:04:01.606732445 +0200
+--- src/testdir/test_comparators.in	2015-09-01 15:55:25.584077613 +0200
+***************
+*** 0 ****
+--- 1,21 ----
++ " Test for expression comparators.   vim: set ft=vim :
++ 
++ 
++ STARTTEST
++ :so small.vim
++ :try
++ :  let oldisident=&isident
++ :  set isident+=#
++ :  if 1 is#1
++ :    $put ='ok'
++ :  else
++ :    $put ='ng'
++ :  endif
++ :finally
++ :  let &isident=oldisident
++ :endtry
++ :"
++ :/^marker/+1,$wq! test.out
++ ENDTEST
++ 
++ marker
+*** ../vim-7.4.843/src/testdir/test_comparators.ok	2015-09-01 16:04:01.610732403 +0200
+--- src/testdir/test_comparators.ok	2015-09-01 15:55:43.527891828 +0200
+***************
+*** 0 ****
+--- 1 ----
++ ok
+*** ../vim-7.4.843/src/testdir/Makefile	2015-08-11 14:26:03.594931131 +0200
+--- src/testdir/Makefile	2015-09-01 15:57:00.607093695 +0200
+***************
+*** 42,47 ****
+--- 42,48 ----
+  		test_charsearch.out \
+  		test_close_count.out \
+  		test_command_count.out \
++ 		test_comparators.out \
+  		test_erasebackword.out \
+  		test_eval.out \
+  		test_fixeol.out \
+*** ../vim-7.4.843/src/testdir/Make_amiga.mak	2015-08-11 14:26:03.594931131 +0200
+--- src/testdir/Make_amiga.mak	2015-09-01 15:56:34.279366321 +0200
+***************
+*** 45,50 ****
+--- 45,51 ----
+  		test_charsearch.out \
+  		test_close_count.out \
+  		test_command_count.out \
++ 		test_comparators.out \
+  		test_erasebackword.out \
+  		test_eval.out \
+  		test_fixeol.out \
+***************
+*** 198,203 ****
+--- 199,205 ----
+  test_charsearch.out: test_charsearch.in
+  test_close_count.out: test_close_count.in
+  test_command_count.out: test_command_count.in
++ test_comparators.out: test_comparators.in
+  test_erasebackword.out: test_erasebackword.in
+  test_eval.out: test_eval.in
+  test_increment.out: test_increment.in
+*** ../vim-7.4.843/src/testdir/Make_dos.mak	2015-08-11 14:26:03.594931131 +0200
+--- src/testdir/Make_dos.mak	2015-09-01 15:56:40.607300797 +0200
+***************
+*** 44,49 ****
+--- 44,50 ----
+  		test_charsearch.out \
+  		test_close_count.out \
+  		test_command_count.out \
++ 		test_comparators.out \
+  		test_erasebackword.out \
+  		test_eval.out \
+  		test_fixeol.out \
+*** ../vim-7.4.843/src/testdir/Make_ming.mak	2015-08-11 14:26:03.594931131 +0200
+--- src/testdir/Make_ming.mak	2015-09-01 15:56:44.631259125 +0200
+***************
+*** 66,71 ****
+--- 66,72 ----
+  		test_charsearch.out \
+  		test_close_count.out \
+  		test_command_count.out \
++ 		test_comparators.out \
+  		test_erasebackword.out \
+  		test_eval.out \
+  		test_fixeol.out \
+*** ../vim-7.4.843/src/testdir/Make_os2.mak	2015-08-11 14:26:03.594931131 +0200
+--- src/testdir/Make_os2.mak	2015-09-01 15:56:46.683237882 +0200
+***************
+*** 46,51 ****
+--- 46,52 ----
+  		test_charsearch.out \
+  		test_close_count.out \
+  		test_command_count.out \
++ 		test_comparators.out \
+  		test_erasebackword.out \
+  		test_eval.out \
+  		test_fixeol.out \
+*** ../vim-7.4.843/src/testdir/Make_vms.mms	2015-08-11 14:26:03.594931131 +0200
+--- src/testdir/Make_vms.mms	2015-09-01 15:56:50.363199776 +0200
+***************
+*** 4,10 ****
+  # Authors:	Zoltan Arpadffy, <arpadffy@polarhome.com>
+  #		Sandor Kopanyi,  <sandor.kopanyi@mailbox.hu>
+  #
+! # Last change:  2015 Aug 11
+  #
+  # This has been tested on VMS 6.2 to 8.3 on DEC Alpha, VAX and IA64.
+  # Edit the lines in the Configuration section below to select.
+--- 4,10 ----
+  # Authors:	Zoltan Arpadffy, <arpadffy@polarhome.com>
+  #		Sandor Kopanyi,  <sandor.kopanyi@mailbox.hu>
+  #
+! # Last change:  2015 Sep 01
+  #
+  # This has been tested on VMS 6.2 to 8.3 on DEC Alpha, VAX and IA64.
+  # Edit the lines in the Configuration section below to select.
+***************
+*** 105,110 ****
+--- 105,111 ----
+  	 test_charsearch.out \
+  	 test_close_count.out \
+  	 test_command_count.out \
++ 	 test_comparators.out \
+  	 test_erasebackword.out \
+  	 test_eval.out \
+  	 test_fixeol.out \
+*** ../vim-7.4.843/src/version.c	2015-08-27 22:30:43.548873347 +0200
+--- src/version.c	2015-09-01 15:59:22.845620563 +0200
+***************
+*** 743,744 ****
+--- 743,746 ----
+  {   /* Add new patch number below this line */
++ /**/
++     844,
+  /**/
+
+-- 
+TERRY GILLIAM PLAYED: PATSY (ARTHUR'S TRUSTY STEED), THE GREEN KNIGHT
+                      SOOTHSAYER, BRIDGEKEEPER, SIR GAWAIN (THE FIRST TO BE
+                      KILLED BY THE RABBIT)
+                 "Monty Python and the Holy Grail" PYTHON (MONTY) PICTURES LTD
+
+ /// Bram Moolenaar -- Bram@Moolenaar.net -- http://www.Moolenaar.net   \\\
+///        sponsor Vim, vote for features -- http://www.Vim.org/sponsor/ \\\
+\\\  an exciting new programming language -- http://www.Zimbu.org        ///
+ \\\            help me help AIDS victims -- http://ICCF-Holland.org    ///

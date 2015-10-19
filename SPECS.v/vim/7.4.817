@@ -1,0 +1,74 @@
+To: vim_dev@googlegroups.com
+Subject: Patch 7.4.817
+Fcc: outbox
+From: Bram Moolenaar <Bram@moolenaar.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+------------
+
+Patch 7.4.817
+Problem:    Invalid memory access in file_pat_to_reg_pat().
+Solution:   Use vim_isspace() instead of checking for a space only. (Dominique
+            Pelle)
+Files:      src/fileio.c
+
+
+*** ../vim-7.4.816/src/fileio.c	2015-07-28 13:33:36.846531733 +0200
+--- src/fileio.c	2015-08-11 16:18:41.130081993 +0200
+***************
+*** 10188,10194 ****
+  #endif
+  	    default:
+  		size++;
+! # ifdef  FEAT_MBYTE
+  		if (enc_dbcs != 0 && (*mb_ptr2len)(p) > 1)
+  		{
+  		    ++p;
+--- 10188,10194 ----
+  #endif
+  	    default:
+  		size++;
+! # ifdef FEAT_MBYTE
+  		if (enc_dbcs != 0 && (*mb_ptr2len)(p) > 1)
+  		{
+  		    ++p;
+***************
+*** 10277,10283 ****
+  		    reg_pat[i++] = '?';
+  		else
+  		    if (*p == ',' || *p == '%' || *p == '#'
+! 				       || *p == ' ' || *p == '{' || *p == '}')
+  			reg_pat[i++] = *p;
+  		    else if (*p == '\\' && p[1] == '\\' && p[2] == '{')
+  		    {
+--- 10277,10283 ----
+  		    reg_pat[i++] = '?';
+  		else
+  		    if (*p == ',' || *p == '%' || *p == '#'
+! 			       || vim_isspace(*p) || *p == '{' || *p == '}')
+  			reg_pat[i++] = *p;
+  		    else if (*p == '\\' && p[1] == '\\' && p[2] == '{')
+  		    {
+*** ../vim-7.4.816/src/version.c	2015-08-11 15:54:46.582211899 +0200
+--- src/version.c	2015-08-11 16:16:01.163882279 +0200
+***************
+*** 743,744 ****
+--- 743,746 ----
+  {   /* Add new patch number below this line */
++ /**/
++     817,
+  /**/
+
+-- 
+ARTHUR:  Then who is your lord?
+WOMAN:   We don't have a lord.
+ARTHUR:  What?
+DENNIS:  I told you.  We're an anarcho-syndicalist commune.  We take it in
+         turns to act as a sort of executive officer for the week.
+                                  The Quest for the Holy Grail (Monty Python)
+
+ /// Bram Moolenaar -- Bram@Moolenaar.net -- http://www.Moolenaar.net   \\\
+///        sponsor Vim, vote for features -- http://www.Vim.org/sponsor/ \\\
+\\\  an exciting new programming language -- http://www.Zimbu.org        ///
+ \\\            help me help AIDS victims -- http://ICCF-Holland.org    ///

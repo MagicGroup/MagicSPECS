@@ -1,0 +1,161 @@
+To: vim_dev@googlegroups.com
+Subject: Patch 7.4.864
+Fcc: outbox
+From: Bram Moolenaar <Bram@moolenaar.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+------------
+
+Patch 7.4.864 (after 7.4.858)
+Problem:    Tiny build fails.
+Solution:   Put qf_ items inside #ifdef.
+Files:      src/ex_docmd.c
+
+
+*** ../vim-7.4.863/src/ex_docmd.c	2015-09-08 18:46:04.345233591 +0200
+--- src/ex_docmd.c	2015-09-09 20:57:46.382355308 +0200
+***************
+*** 2173,2181 ****
+--- 2173,2183 ----
+  		lnum = CURRENT_TAB_NR;
+  		ea.line2 = lnum;
+  		break;
++ #ifdef FEAT_QUICKFIX
+  	    case ADDR_QUICKFIX:
+  		ea.line2 = qf_get_cur_valid_idx(&ea);
+  		break;
++ #endif
+  	}
+  	ea.cmd = skipwhite(ea.cmd);
+  	lnum = get_address(&ea, &ea.cmd, ea.addr_type, ea.skip, ea.addr_count == 0);
+***************
+*** 2236,2247 ****
+--- 2238,2251 ----
+  			    ea.line2 = ARGCOUNT;
+  			}
+  			break;
++ #ifdef FEAT_QUICKFIX
+  		    case ADDR_QUICKFIX:
+  			ea.line1 = 1;
+  			ea.line2 = qf_get_size(&ea);
+  			if (ea.line2 == 0)
+  			    ea.line2 = 1;
+  			break;
++ #endif
+  		}
+  		++ea.addr_count;
+  	    }
+***************
+*** 2702,2712 ****
+--- 2706,2718 ----
+  		else
+  		    ea.line2 = ARGCOUNT;
+  		break;
++ #ifdef FEAT_QUICKFIX
+  	    case ADDR_QUICKFIX:
+  		ea.line2 = qf_get_size(&ea);
+  		if (ea.line2 == 0)
+  		    ea.line2 = 1;
+  		break;
++ #endif
+  	}
+      }
+  
+***************
+*** 4340,4346 ****
+   */
+      static linenr_T
+  get_address(eap, ptr, addr_type, skip, to_other_file)
+!     exarg_T	*eap;
+      char_u	**ptr;
+      int		addr_type;  /* flag: one of ADDR_LINES, ... */
+      int		skip;	    /* only skip the address, don't use it */
+--- 4346,4352 ----
+   */
+      static linenr_T
+  get_address(eap, ptr, addr_type, skip, to_other_file)
+!     exarg_T	*eap UNUSED;
+      char_u	**ptr;
+      int		addr_type;  /* flag: one of ADDR_LINES, ... */
+      int		skip;	    /* only skip the address, don't use it */
+***************
+*** 4381,4389 ****
+--- 4387,4397 ----
+  		    case ADDR_TABS:
+  			lnum = CURRENT_TAB_NR;
+  			break;
++ #ifdef FEAT_QUICKFIX
+  		    case ADDR_QUICKFIX:
+  			lnum = qf_get_cur_valid_idx(eap);
+  			break;
++ #endif
+  		}
+  		break;
+  
+***************
+*** 4416,4426 ****
+--- 4424,4436 ----
+  		    case ADDR_TABS:
+  			lnum = LAST_TAB_NR;
+  			break;
++ #ifdef FEAT_QUICKFIX
+  		    case ADDR_QUICKFIX:
+  			lnum = qf_get_size(eap);
+  			if (lnum == 0)
+  			    lnum = 1;
+  			break;
++ #endif
+  		}
+  		break;
+  
+***************
+*** 4596,4604 ****
+--- 4606,4616 ----
+  		    case ADDR_TABS:
+  			lnum = CURRENT_TAB_NR;
+  			break;
++ #ifdef FEAT_QUICKFIX
+  		    case ADDR_QUICKFIX:
+  			lnum = qf_get_cur_valid_idx(eap);
+  			break;
++ #endif
+  		}
+  	    }
+  
+***************
+*** 4737,4746 ****
+--- 4749,4760 ----
+  		if (eap->line2 > LAST_TAB_NR)
+  		    return (char_u *)_(e_invrange);
+  		break;
++ #ifdef FEAT_QUICKFIX
+  	    case ADDR_QUICKFIX:
+  		if (eap->line2 != 1 && eap->line2 > qf_get_size(eap))
+  		    return (char_u *)_(e_invrange);
+  		break;
++ #endif
+  	}
+      }
+      return NULL;
+*** ../vim-7.4.863/src/version.c	2015-09-09 20:59:34.013186842 +0200
+--- src/version.c	2015-09-09 21:09:48.691066099 +0200
+***************
+*** 743,744 ****
+--- 743,746 ----
+  {   /* Add new patch number below this line */
++ /**/
++     864,
+  /**/
+
+-- 
+DENNIS: Look,  strange women lying on their backs in ponds handing out
+        swords ... that's no basis for a system of government.  Supreme
+        executive power derives from a mandate from the masses, not from some
+        farcical aquatic ceremony.
+                 "Monty Python and the Holy Grail" PYTHON (MONTY) PICTURES LTD
+
+ /// Bram Moolenaar -- Bram@Moolenaar.net -- http://www.Moolenaar.net   \\\
+///        sponsor Vim, vote for features -- http://www.Vim.org/sponsor/ \\\
+\\\  an exciting new programming language -- http://www.Zimbu.org        ///
+ \\\            help me help AIDS victims -- http://ICCF-Holland.org    ///

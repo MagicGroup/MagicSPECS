@@ -1,0 +1,137 @@
+To: vim_dev@googlegroups.com
+Subject: Patch 7.4.807
+Fcc: outbox
+From: Bram Moolenaar <Bram@moolenaar.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+------------
+
+Patch 7.4.807 (after 7.4.798)
+Problem:    After CTRL-V CTRL-A mode isn't updated. (Hirohito Higashi)
+Solution:   Clear the command line or update the displayed command.
+Files:      src/normal.c
+
+
+*** ../vim-7.4.806/src/normal.c	2015-07-28 11:21:27.041407266 +0200
+--- src/normal.c	2015-08-04 19:09:32.059034805 +0200
+***************
+*** 48,53 ****
+--- 48,54 ----
+  static void	clearop __ARGS((oparg_T *oap));
+  static void	clearopbeep __ARGS((oparg_T *oap));
+  static void	unshift_special __ARGS((cmdarg_T *cap));
++ static void	may_clear_cmdline __ARGS((void));
+  #ifdef FEAT_CMDL_INFO
+  static void	del_from_showcmd __ARGS((int));
+  #endif
+***************
+*** 1752,1763 ****
+  		setmouse();
+  		mouse_dragging = 0;
+  #endif
+! 		if (mode_displayed)
+! 		    clear_cmdline = TRUE;   /* unshow visual mode later */
+! #ifdef FEAT_CMDL_INFO
+! 		else
+! 		    clear_showcmd();
+! #endif
+  		if ((oap->op_type == OP_YANK
+  			    || oap->op_type == OP_COLON
+  			    || oap->op_type == OP_FUNCTION
+--- 1753,1759 ----
+  		setmouse();
+  		mouse_dragging = 0;
+  #endif
+! 		may_clear_cmdline();
+  		if ((oap->op_type == OP_YANK
+  			    || oap->op_type == OP_COLON
+  			    || oap->op_type == OP_FUNCTION
+***************
+*** 3312,3324 ****
+      if (!virtual_active())
+  	curwin->w_cursor.coladd = 0;
+  #endif
+! 
+!     if (mode_displayed)
+! 	clear_cmdline = TRUE;		/* unshow visual mode later */
+! #ifdef FEAT_CMDL_INFO
+!     else
+! 	clear_showcmd();
+! #endif
+  
+      adjust_cursor_eol();
+  }
+--- 3308,3314 ----
+      if (!virtual_active())
+  	curwin->w_cursor.coladd = 0;
+  #endif
+!     may_clear_cmdline();
+  
+      adjust_cursor_eol();
+  }
+***************
+*** 3763,3768 ****
+--- 3753,3773 ----
+      cap->cmdchar = simplify_key(cap->cmdchar, &mod_mask);
+  }
+  
++ /*
++  * If the mode is currently displayed clear the command line or update the
++  * command displayed.
++  */
++     static void
++ may_clear_cmdline()
++ {
++     if (mode_displayed)
++ 	clear_cmdline = TRUE;   /* unshow visual mode later */
++ #ifdef FEAT_CMDL_INFO
++     else
++ 	clear_showcmd();
++ #endif
++ }
++ 
+  #if defined(FEAT_CMDL_INFO) || defined(PROTO)
+  /*
+   * Routines for displaying a partly typed command
+***************
+*** 4240,4245 ****
+--- 4245,4251 ----
+      cmdarg_T	*cap;
+  {
+      int visual = VIsual_active;
++ 
+      if (cap->oap->op_type == OP_NOP
+  	    && do_addsub((int)cap->cmdchar, cap->count1, cap->arg) == OK)
+      {
+***************
+*** 4259,4264 ****
+--- 4265,4271 ----
+      {
+  	VIsual_active = FALSE;
+  	redo_VIsual_busy = FALSE;
++ 	may_clear_cmdline();
+  	redraw_later(INVERTED);
+      }
+  }
+*** ../vim-7.4.806/src/version.c	2015-08-04 18:23:16.538332360 +0200
+--- src/version.c	2015-08-04 19:11:33.805670860 +0200
+***************
+*** 743,744 ****
+--- 743,746 ----
+  {   /* Add new patch number below this line */
++ /**/
++     807,
+  /**/
+
+-- 
+LAUNCELOT: At last!   A call!  A cry of distress ...
+           (he draws his sword, and turns to CONCORDE)
+           Concorde!  Brave, Concorde ... you shall not have died in vain!
+CONCORDE:  I'm not quite dead, sir ...
+                 "Monty Python and the Holy Grail" PYTHON (MONTY) PICTURES LTD
+
+ /// Bram Moolenaar -- Bram@Moolenaar.net -- http://www.Moolenaar.net   \\\
+///        sponsor Vim, vote for features -- http://www.Vim.org/sponsor/ \\\
+\\\  an exciting new programming language -- http://www.Zimbu.org        ///
+ \\\            help me help AIDS victims -- http://ICCF-Holland.org    ///

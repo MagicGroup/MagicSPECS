@@ -1,0 +1,51 @@
+To: vim_dev@googlegroups.com
+Subject: Patch 7.4.847
+Fcc: outbox
+From: Bram Moolenaar <Bram@moolenaar.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+------------
+
+Patch 7.4.847
+Problem:    "vi)d" may leave a character behind.
+Solution:   Skip over multi-byte character. (Christian Brabandt)
+Files:      src/search.c
+
+
+*** ../vim-7.4.846/src/search.c	2015-08-26 23:01:16.449677001 +0200
+--- src/search.c	2015-09-01 18:26:33.629994624 +0200
+***************
+*** 3799,3805 ****
+      if (VIsual_active)
+      {
+  	if (*p_sel == 'e')
+! 	    ++curwin->w_cursor.col;
+  	if (sol && gchar_cursor() != NUL)
+  	    inc(&curwin->w_cursor);	/* include the line break */
+  	VIsual = start_pos;
+--- 3799,3805 ----
+      if (VIsual_active)
+      {
+  	if (*p_sel == 'e')
+! 	    inc(&curwin->w_cursor);
+  	if (sol && gchar_cursor() != NUL)
+  	    inc(&curwin->w_cursor);	/* include the line break */
+  	VIsual = start_pos;
+*** ../vim-7.4.846/src/version.c	2015-09-01 17:50:32.480493960 +0200
+--- src/version.c	2015-09-01 18:26:07.286269459 +0200
+***************
+*** 743,744 ****
+--- 743,746 ----
+  {   /* Add new patch number below this line */
++ /**/
++     847,
+  /**/
+
+-- 
+Did Adam and Eve have navels?
+
+ /// Bram Moolenaar -- Bram@Moolenaar.net -- http://www.Moolenaar.net   \\\
+///        sponsor Vim, vote for features -- http://www.Vim.org/sponsor/ \\\
+\\\  an exciting new programming language -- http://www.Zimbu.org        ///
+ \\\            help me help AIDS victims -- http://ICCF-Holland.org    ///

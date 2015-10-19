@@ -1,0 +1,49 @@
+To: vim_dev@googlegroups.com
+Subject: Patch 7.4.875
+Fcc: outbox
+From: Bram Moolenaar <Bram@moolenaar.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+------------
+
+Patch 7.4.875
+Problem:    Not obvious how to contribute.
+Solution:   Add a remark about CONTRIBUTING.md to README.md
+Files:      README.md
+
+
+*** ../vim-7.4.874/README.md	2015-07-10 19:21:45.667489110 +0200
+--- README.md	2015-09-25 14:55:34.837215815 +0200
+***************
+*** 89,94 ****
+--- 89,99 ----
+  There are more `README_*.txt` files, depending on the distribution you used.
+  
+  
++ ## Contributing ##
++ 
++ If you would like to help making Vim better, see the `CONTRIBUTING.md` file.
++ 
++ 
+  ## Information ##
+  
+  The latest news about Vim can be found on the Vim home page:
+*** ../vim-7.4.874/src/version.c	2015-09-25 15:00:16.150212206 +0200
+--- src/version.c	2015-09-25 14:56:49.100422649 +0200
+***************
+*** 743,744 ****
+--- 743,746 ----
+  {   /* Add new patch number below this line */
++ /**/
++     875,
+  /**/
+
+-- 
+hundred-and-one symptoms of being an internet addict:
+4. Your eyeglasses have a web site burned in on them.
+
+ /// Bram Moolenaar -- Bram@Moolenaar.net -- http://www.Moolenaar.net   \\\
+///        sponsor Vim, vote for features -- http://www.Vim.org/sponsor/ \\\
+\\\  an exciting new programming language -- http://www.Zimbu.org        ///
+ \\\            help me help AIDS victims -- http://ICCF-Holland.org    ///

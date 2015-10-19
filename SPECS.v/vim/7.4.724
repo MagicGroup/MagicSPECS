@@ -1,0 +1,381 @@
+To: vim_dev@googlegroups.com
+Subject: Patch 7.4.724
+Fcc: outbox
+From: Bram Moolenaar <Bram@moolenaar.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+------------
+
+Patch 7.4.724
+Problem:    Vim icon does not show in Windows context menu. (issue 249)
+Solution:   Load the icon in GvimExt.
+Files:      src/GvimExt/gvimext.cpp, src/GvimExt/gvimext.h
+
+
+*** ../vim-7.4.723/src/GvimExt/gvimext.cpp	2013-05-06 04:06:04.000000000 +0200
+--- src/GvimExt/gvimext.cpp	2015-05-04 18:20:37.345326768 +0200
+***************
+*** 79,97 ****
+  	    strcpy(name, searchpath((char *)"gvim.bat"));
+  	if (name[0] == 0)
+  	    strcpy(name, "gvim");	// finds gvim.bat or gvim.exe
+- 
+- 	// avoid that Vim tries to expand wildcards in the file names
+- 	strcat(name, " --literal");
+      }
+  }
+  
+      static void
+! getGvimNameW(wchar_t *nameW)
+  {
+      char *name;
+  
+      name = (char *)malloc(BUFSIZE);
+!     getGvimName(name, 0);
+      mbstowcs(nameW, name, BUFSIZE);
+      free(name);
+  }
+--- 79,102 ----
+  	    strcpy(name, searchpath((char *)"gvim.bat"));
+  	if (name[0] == 0)
+  	    strcpy(name, "gvim");	// finds gvim.bat or gvim.exe
+      }
+  }
+  
+      static void
+! getGvimInvocation(char *name, int runtime)
+! {
+!     getGvimName(name, runtime);
+!     // avoid that Vim tries to expand wildcards in the file names
+!     strcat(name, " --literal");
+! }
+! 
+!     static void
+! getGvimInvocationW(wchar_t *nameW)
+  {
+      char *name;
+  
+      name = (char *)malloc(BUFSIZE);
+!     getGvimInvocation(name, 0);
+      mbstowcs(nameW, name, BUFSIZE);
+      free(name);
+  }
+***************
+*** 123,128 ****
+--- 128,153 ----
+      }
+  }
+  
++ HBITMAP IconToBitmap(HICON hIcon, HBRUSH hBackground, int width, int height)
++ {
++ 	HDC hDC = GetDC(NULL);
++ 	HDC hMemDC = CreateCompatibleDC(hDC);
++ 	HBITMAP hMemBmp = CreateCompatibleBitmap(hDC, width, height);
++ 	HBITMAP hResultBmp = NULL;
++ 	HGDIOBJ hOrgBMP = SelectObject(hMemDC, hMemBmp);
++ 
++ 	DrawIconEx(hMemDC, 0, 0, hIcon, width, height, 0, hBackground, DI_NORMAL);
++ 
++ 	hResultBmp = hMemBmp;
++ 	hMemBmp = NULL;
++ 
++ 	SelectObject(hMemDC, hOrgBMP);
++ 	DeleteDC(hMemDC);
++ 	ReleaseDC(NULL, hDC);
++ 	DestroyIcon(hIcon);
++ 	return hResultBmp;
++ }
++ 
+  //
+  // GETTEXT: translated messages and menu entries
+  //
+***************
+*** 404,410 ****
+  {
+      *ppv = NULL;
+  
+!     // Any interface on this object is the object pointer
+  
+      if (IsEqualIID(riid, IID_IUnknown) || IsEqualIID(riid, IID_IClassFactory))
+      {
+--- 429,435 ----
+  {
+      *ppv = NULL;
+  
+!     // any interface on this object is the object pointer
+  
+      if (IsEqualIID(riid, IID_IUnknown) || IsEqualIID(riid, IID_IClassFactory))
+      {
+***************
+*** 448,454 ****
+      // QueryInterface with IID_IShellExtInit--this is how shell extensions are
+      // initialized.
+  
+!     LPCSHELLEXT pShellExt = new CShellExt();  //Create the CShellExt object
+  
+      if (NULL == pShellExt)
+  	return E_OUTOFMEMORY;
+--- 473,479 ----
+      // QueryInterface with IID_IShellExtInit--this is how shell extensions are
+      // initialized.
+  
+!     LPCSHELLEXT pShellExt = new CShellExt();  // create the CShellExt object
+  
+      if (NULL == pShellExt)
+  	return E_OUTOFMEMORY;
+***************
+*** 469,474 ****
+--- 494,501 ----
+      m_pDataObj = NULL;
+  
+      inc_cRefThisDLL();
++ 
++     LoadMenuIcon();
+  }
+  
+  CShellExt::~CShellExt()
+***************
+*** 477,482 ****
+--- 504,512 ----
+  	m_pDataObj->Release();
+  
+      dec_cRefThisDLL();
++ 
++     if (m_hVimIconBitmap)
++ 	DeleteObject(m_hVimIconBitmap);
+  }
+  
+  STDMETHODIMP CShellExt::QueryInterface(REFIID riid, LPVOID FAR *ppv)
+***************
+*** 597,602 ****
+--- 627,633 ----
+  
+      HKEY keyhandle;
+      bool showExisting = true;
++     bool showIcons = true;
+  
+      // Check whether "Edit with existing Vim" entries are disabled.
+      if (RegOpenKeyEx(HKEY_LOCAL_MACHINE, "Software\\Vim\\Gvim", 0,
+***************
+*** 605,610 ****
+--- 636,644 ----
+  	if (RegQueryValueEx(keyhandle, "DisableEditWithExisting", 0, NULL,
+  						 NULL, NULL) == ERROR_SUCCESS)
+  	    showExisting = false;
++ 	if (RegQueryValueEx(keyhandle, "DisableContextMenuIcons", 0, NULL,
++ 						 NULL, NULL) == ERROR_SUCCESS)
++ 	    showIcons = false;
+  	RegCloseKey(keyhandle);
+      }
+  
+***************
+*** 612,639 ****
+      if (showExisting)
+  	EnumWindows(EnumWindowsProc, (LPARAM)this);
+  
+      if (cbFiles > 1)
+      {
+! 	InsertMenu(hMenu,
+! 		indexMenu++,
+! 		MF_STRING|MF_BYPOSITION,
+! 		idCmd++,
+! 		_("Edit with &multiple Vims"));
+! 
+! 	InsertMenu(hMenu,
+! 		indexMenu++,
+! 		MF_STRING|MF_BYPOSITION,
+! 		idCmd++,
+! 		_("Edit with single &Vim"));
+  
+  	if (cbFiles <= 4)
+  	{
+  	    // Can edit up to 4 files in diff mode
+! 	    InsertMenu(hMenu,
+! 		    indexMenu++,
+! 		    MF_STRING|MF_BYPOSITION,
+! 		    idCmd++,
+! 		    _("Diff with Vim"));
+  	    m_edit_existing_off = 3;
+  	}
+  	else
+--- 646,678 ----
+      if (showExisting)
+  	EnumWindows(EnumWindowsProc, (LPARAM)this);
+  
++     MENUITEMINFO mii = { sizeof(MENUITEMINFO) };
++     mii.fMask = MIIM_STRING | MIIM_ID;
++     if (showIcons)
++     {
++ 	mii.fMask |= MIIM_BITMAP;
++ 	mii.hbmpItem = m_hVimIconBitmap;
++     }
++ 
+      if (cbFiles > 1)
+      {
+! 	mii.wID = idCmd++;
+! 	mii.dwTypeData = _("Edit with &multiple Vims");
+! 	mii.cch = lstrlen(mii.dwTypeData);
+! 	InsertMenuItem(hMenu, indexMenu++, TRUE, &mii);
+! 
+! 	mii.wID = idCmd++;
+! 	mii.dwTypeData = _("Edit with single &Vim");
+! 	mii.cch = lstrlen(mii.dwTypeData);
+! 	InsertMenuItem(hMenu, indexMenu++, TRUE, &mii);
+  
+  	if (cbFiles <= 4)
+  	{
+  	    // Can edit up to 4 files in diff mode
+! 	    mii.wID = idCmd++;
+! 	    mii.dwTypeData = _("Diff with Vim");
+! 	    mii.cch = lstrlen(mii.dwTypeData);
+! 	    InsertMenuItem(hMenu, indexMenu++, TRUE, &mii);
+  	    m_edit_existing_off = 3;
+  	}
+  	else
+***************
+*** 642,652 ****
+      }
+      else
+      {
+! 	InsertMenu(hMenu,
+! 		indexMenu++,
+! 		MF_STRING|MF_BYPOSITION,
+! 		idCmd++,
+! 		_("Edit with &Vim"));
+  	m_edit_existing_off = 1;
+      }
+  
+--- 681,690 ----
+      }
+      else
+      {
+! 	mii.wID = idCmd++;
+! 	mii.dwTypeData = _("Edit with &Vim");
+! 	mii.cch = lstrlen(mii.dwTypeData);
+! 	InsertMenuItem(hMenu, indexMenu++, TRUE, &mii);
+  	m_edit_existing_off = 1;
+      }
+  
+***************
+*** 672,682 ****
+  	temp[BUFSIZE - 1] = '\0';
+  	strncat(temp, title, BUFSIZE - 1 - strlen(temp));
+  	temp[BUFSIZE - 1] = '\0';
+! 	InsertMenu(hMenu,
+! 		indexMenu++,
+! 		MF_STRING|MF_BYPOSITION,
+! 		idCmd++,
+! 		temp);
+      }
+      // InsertMenu(hMenu, indexMenu++, MF_SEPARATOR|MF_BYPOSITION, 0, NULL);
+  
+--- 710,720 ----
+  	temp[BUFSIZE - 1] = '\0';
+  	strncat(temp, title, BUFSIZE - 1 - strlen(temp));
+  	temp[BUFSIZE - 1] = '\0';
+! 
+! 	mii.wID = idCmd++;
+! 	mii.dwTypeData = temp;
+! 	mii.cch = lstrlen(mii.dwTypeData);
+! 	InsertMenuItem(hMenu, indexMenu++, TRUE, &mii);
+      }
+      // InsertMenu(hMenu, indexMenu++, MF_SEPARATOR|MF_BYPOSITION, 0, NULL);
+  
+***************
+*** 813,818 ****
+--- 851,872 ----
+      return TRUE; // continue enumeration (otherwise this would be false)
+  }
+  
++ BOOL CShellExt::LoadMenuIcon()
++ {
++ 	char vimExeFile[BUFSIZE];
++ 	getGvimName(vimExeFile, 1);
++ 	if (vimExeFile[0] == '\0')
++ 		return FALSE;
++ 	HICON hVimIcon;
++ 	if (ExtractIconEx(vimExeFile, 0, NULL, &hVimIcon, 1) == 0)
++ 		return FALSE;
++ 	m_hVimIconBitmap = IconToBitmap(hVimIcon,
++ 		GetSysColorBrush(COLOR_MENU),
++ 		GetSystemMetrics(SM_CXSMICON),
++ 		GetSystemMetrics(SM_CYSMICON));
++ 	return TRUE;
++ }
++ 
+  #ifdef WIN32
+  // This symbol is not defined in older versions of the SDK or Visual C++.
+  
+***************
+*** 893,899 ****
+  		m_szFileUserClickedOn,
+  		sizeof(m_szFileUserClickedOn));
+  
+! 	getGvimNameW(cmdStrW);
+  	wcscat(cmdStrW, L" \"");
+  
+  	if ((wcslen(cmdStrW) + wcslen(m_szFileUserClickedOn) + 2) < BUFSIZE)
+--- 947,953 ----
+  		m_szFileUserClickedOn,
+  		sizeof(m_szFileUserClickedOn));
+  
+! 	getGvimInvocationW(cmdStrW);
+  	wcscat(cmdStrW, L" \"");
+  
+  	if ((wcslen(cmdStrW) + wcslen(m_szFileUserClickedOn) + 2) < BUFSIZE)
+***************
+*** 961,967 ****
+  
+      cmdlen = BUFSIZE;
+      cmdStrW  = (wchar_t *) malloc(cmdlen * sizeof(wchar_t));
+!     getGvimNameW(cmdStrW);
+  
+      if (useDiff)
+  	wcscat(cmdStrW, L" -d");
+--- 1015,1021 ----
+  
+      cmdlen = BUFSIZE;
+      cmdStrW  = (wchar_t *) malloc(cmdlen * sizeof(wchar_t));
+!     getGvimInvocationW(cmdStrW);
+  
+      if (useDiff)
+  	wcscat(cmdStrW, L" -d");
+*** ../vim-7.4.723/src/GvimExt/gvimext.h	2010-05-26 21:39:23.000000000 +0200
+--- src/GvimExt/gvimext.h	2015-05-04 18:24:28.898738746 +0200
+***************
+*** 110,119 ****
+--- 110,123 ----
+  class CShellExt : public IContextMenu,
+  			 IShellExtInit
+  {
++ private:
++     BOOL LoadMenuIcon();
++ 
+  protected:
+      ULONG	 m_cRef;
+      LPDATAOBJECT m_pDataObj;
+      UINT	 m_edit_existing_off;
++     HBITMAP	 m_hVimIconBitmap;
+  
+      // For some reason, this callback must be static
+      static BOOL CALLBACK EnumWindowsProc(HWND hWnd, LPARAM lParam);
+*** ../vim-7.4.723/src/version.c	2015-05-04 17:50:25.613605986 +0200
+--- src/version.c	2015-05-04 18:25:12.494251378 +0200
+***************
+*** 743,744 ****
+--- 743,746 ----
+  {   /* Add new patch number below this line */
++ /**/
++     724,
+  /**/
+
+-- 
+How To Keep A Healthy Level Of Insanity:
+3. Every time someone asks you to do something, ask if they want fries
+   with that.
+
+ /// Bram Moolenaar -- Bram@Moolenaar.net -- http://www.Moolenaar.net   \\\
+///        sponsor Vim, vote for features -- http://www.Vim.org/sponsor/ \\\
+\\\  an exciting new programming language -- http://www.Zimbu.org        ///
+ \\\            help me help AIDS victims -- http://ICCF-Holland.org    ///

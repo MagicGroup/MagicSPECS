@@ -1,0 +1,245 @@
+To: vim_dev@googlegroups.com
+Subject: Patch 7.4.755
+Fcc: outbox
+From: Bram Moolenaar <Bram@moolenaar.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+------------
+
+Patch 7.4.755
+Problem:    It is not easy to count the number of characters.
+Solution:   Add the skipcc argument to strchars(). (Hirohito Higashi, Ken
+            Takata)
+Files:      runtime/doc/eval.txt, src/eval.c, src/testdir/test_utf8.in,
+            src/testdir/test_utf8.ok
+
+
+*** ../vim-7.4.754/runtime/doc/eval.txt	2015-03-20 17:36:38.618949214 +0100
+--- runtime/doc/eval.txt	2015-06-25 15:59:53.104434430 +0200
+***************
+*** 1984,1990 ****
+  sqrt( {expr})			Float	square root of {expr}
+  str2float( {expr})		Float	convert String to Float
+  str2nr( {expr} [, {base}])	Number	convert String to Number
+! strchars( {expr})		Number	character length of the String {expr}
+  strdisplaywidth( {expr} [, {col}]) Number display length of the String {expr}
+  strftime( {format}[, {time}])	String	time in specified format
+  stridx( {haystack}, {needle}[, {start}])
+--- 1985,1991 ----
+  sqrt( {expr})			Float	square root of {expr}
+  str2float( {expr})		Float	convert String to Float
+  str2nr( {expr} [, {base}])	Number	convert String to Number
+! strchars( {expr} [, {skipcc}])	Number	character length of the String {expr}
+  strdisplaywidth( {expr} [, {col}]) Number display length of the String {expr}
+  strftime( {format}[, {time}])	String	time in specified format
+  stridx( {haystack}, {needle}[, {start}])
+***************
+*** 5792,5806 ****
+  		Text after the number is silently ignored.
+  
+  
+! strchars({expr})					*strchars()*
+  		The result is a Number, which is the number of characters
+! 		String {expr} occupies.  Composing characters are counted
+! 		separately.
+  		Also see |strlen()|, |strdisplaywidth()| and |strwidth()|.
+  
+  strdisplaywidth({expr}[, {col}])			*strdisplaywidth()*
+  		The result is a Number, which is the number of display cells
+! 		String {expr} occupies on the screen.
+  		When {col} is omitted zero is used.  Otherwise it is the
+  		screen column where to start.  This matters for Tab
+  		characters.
+--- 5839,5855 ----
+  		Text after the number is silently ignored.
+  
+  
+! strchars({expr} [, {skipcc}])					*strchars()*
+  		The result is a Number, which is the number of characters
+! 		in String {expr}.
+! 		When {skipcc} is omitted or zero, composing characters are
+! 		counted separately.
+! 		When {skipcc} set to 1, Composing characters are ignored.
+  		Also see |strlen()|, |strdisplaywidth()| and |strwidth()|.
+  
+  strdisplaywidth({expr}[, {col}])			*strdisplaywidth()*
+  		The result is a Number, which is the number of display cells
+! 		String {expr} occupies on the screen when it starts a {col}.
+  		When {col} is omitted zero is used.  Otherwise it is the
+  		screen column where to start.  This matters for Tab
+  		characters.
+***************
+*** 5866,5880 ****
+  							*strlen()*
+  strlen({expr})	The result is a Number, which is the length of the String
+  		{expr} in bytes.
+- 		If you want to count the number of multi-byte characters (not
+- 		counting composing characters) use something like this: >
+- 
+- 			:let len = strlen(substitute(str, ".", "x", "g"))
+- <
+  		If the argument is a Number it is first converted to a String.
+  		For other types an error is given.
+! 		Also see |len()|, |strchars()|, |strdisplaywidth()| and
+! 		|strwidth()|.
+  
+  strpart({src}, {start}[, {len}])			*strpart()*
+  		The result is a String, which is part of {src}, starting from
+--- 5915,5925 ----
+  							*strlen()*
+  strlen({expr})	The result is a Number, which is the length of the String
+  		{expr} in bytes.
+  		If the argument is a Number it is first converted to a String.
+  		For other types an error is given.
+! 		If you want to count the number of multi-byte characters use
+! 		|strchars()|.
+! 		Also see |len()|, |strdisplaywidth()| and |strwidth()|.
+  
+  strpart({src}, {start}[, {len}])			*strpart()*
+  		The result is a String, which is part of {src}, starting from
+*** ../vim-7.4.754/src/eval.c	2015-06-19 21:06:04.664521324 +0200
+--- src/eval.c	2015-06-25 15:53:55.992189567 +0200
+***************
+*** 3810,3816 ****
+  	/* (un)lock a List item. */
+  	item_lock(&lp->ll_li->li_tv, deep, lock);
+      else
+! 	/* un(lock) a Dictionary item. */
+  	item_lock(&lp->ll_di->di_tv, deep, lock);
+  
+      return ret;
+--- 3810,3816 ----
+  	/* (un)lock a List item. */
+  	item_lock(&lp->ll_li->li_tv, deep, lock);
+      else
+! 	/* (un)lock a Dictionary item. */
+  	item_lock(&lp->ll_di->di_tv, deep, lock);
+  
+      return ret;
+***************
+*** 8309,8315 ****
+      {"str2float",	1, 1, f_str2float},
+  #endif
+      {"str2nr",		1, 2, f_str2nr},
+!     {"strchars",	1, 1, f_strchars},
+      {"strdisplaywidth",	1, 2, f_strdisplaywidth},
+  #ifdef HAVE_STRFTIME
+      {"strftime",	1, 2, f_strftime},
+--- 8309,8315 ----
+      {"str2float",	1, 1, f_str2float},
+  #endif
+      {"str2nr",		1, 2, f_str2nr},
+!     {"strchars",	1, 2, f_strchars},
+      {"strdisplaywidth",	1, 2, f_strdisplaywidth},
+  #ifdef HAVE_STRFTIME
+      {"strftime",	1, 2, f_strftime},
+***************
+*** 18372,18389 ****
+      typval_T	*rettv;
+  {
+      char_u		*s = get_tv_string(&argvars[0]);
+  #ifdef FEAT_MBYTE
+      varnumber_T		len = 0;
+  
+!     while (*s != NUL)
+      {
+! 	mb_cptr2char_adv(&s);
+! 	++len;
+!     }
+!     rettv->vval.v_number = len;
+  #else
+!     rettv->vval.v_number = (varnumber_T)(STRLEN(s));
+  #endif
+  }
+  
+  /*
+--- 18372,18401 ----
+      typval_T	*rettv;
+  {
+      char_u		*s = get_tv_string(&argvars[0]);
++     int			skipcc = 0;
+  #ifdef FEAT_MBYTE
+      varnumber_T		len = 0;
++     int			(*func_mb_ptr2char_adv)(char_u **pp);
++ #endif
+  
+!     if (argvars[1].v_type != VAR_UNKNOWN)
+! 	skipcc = get_tv_number_chk(&argvars[1], NULL);
+!     if (skipcc < 0 || skipcc > 1)
+! 	EMSG(_(e_invarg));
+!     else
+      {
+! #ifdef FEAT_MBYTE
+! 	func_mb_ptr2char_adv = skipcc ? mb_ptr2char_adv : mb_cptr2char_adv;
+! 	while (*s != NUL)
+! 	{
+! 	    func_mb_ptr2char_adv(&s);
+! 	    ++len;
+! 	}
+! 	rettv->vval.v_number = len;
+  #else
+! 	rettv->vval.v_number = (varnumber_T)(STRLEN(s));
+  #endif
++     }
+  }
+  
+  /*
+*** ../vim-7.4.754/src/testdir/test_utf8.in	2014-08-16 18:36:38.593993280 +0200
+--- src/testdir/test_utf8.in	2015-06-25 15:53:55.992189567 +0200
+***************
+*** 11,16 ****
+--- 11,22 ----
+  :
+  :bwipeout!
+  :$put=r
++ :" Test for built-in function strchars()
++ :for str in ["a", "あいa", "A\u20dd", "A\u20dd\u20dd", "\u20dd"]
++ :	$put=strchars(str)
++ :	$put=strchars(str, 0)
++ :	$put=strchars(str, 1)
++ :endfor
+  :call garbagecollect(1)
+  :/^start:/,$wq! test.out
+  ENDTEST
+*** ../vim-7.4.754/src/testdir/test_utf8.ok	2014-08-16 18:36:38.593993280 +0200
+--- src/testdir/test_utf8.ok	2015-06-25 15:53:55.992189567 +0200
+***************
+*** 2,4 ****
+--- 2,19 ----
+  axaa
+  xあああ
+  bxbb
++ 1
++ 1
++ 1
++ 3
++ 3
++ 3
++ 2
++ 2
++ 1
++ 3
++ 3
++ 1
++ 1
++ 1
++ 1
+*** ../vim-7.4.754/src/version.c	2015-06-25 13:57:20.033431073 +0200
+--- src/version.c	2015-06-25 15:55:26.071242187 +0200
+***************
+*** 743,744 ****
+--- 743,746 ----
+  {   /* Add new patch number below this line */
++ /**/
++     755,
+  /**/
+
+-- 
+hundred-and-one symptoms of being an internet addict:
+145. You e-mail your boss, informing him you'll be late.
+
+ /// Bram Moolenaar -- Bram@Moolenaar.net -- http://www.Moolenaar.net   \\\
+///        sponsor Vim, vote for features -- http://www.Vim.org/sponsor/ \\\
+\\\  an exciting new programming language -- http://www.Zimbu.org        ///
+ \\\            help me help AIDS victims -- http://ICCF-Holland.org    ///

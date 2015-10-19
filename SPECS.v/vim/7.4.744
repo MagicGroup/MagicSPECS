@@ -1,0 +1,210 @@
+To: vim_dev@googlegroups.com
+Subject: Patch 7.4.744
+Fcc: outbox
+From: Bram Moolenaar <Bram@moolenaar.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+------------
+
+Patch 7.4.744
+Problem:    No tests for Ruby and Perl.
+Solution:   Add minimal tests. (Ken Takata)
+Files:      src/testdir/test_perl.in, src/testdir/test_perl.ok,
+            src/testdir/test_ruby.in, src/testdir/test_ruby.ok,
+            src/testdir/Make_amiga.mak, src/testdir/Make_dos.mak,
+            src/testdir/Make_ming.mak, src/testdir/Make_os2.mak,
+            src/testdir/Make_vms.mms, src/testdir/Makefile
+
+
+*** ../vim-7.4.743/src/testdir/test_perl.in	2015-06-19 15:45:02.098003107 +0200
+--- src/testdir/test_perl.in	2015-06-19 15:22:58.479839592 +0200
+***************
+*** 0 ****
+--- 1,26 ----
++ Tests for perl interface.     vim: set ft=vim :
++ 
++ STARTTEST
++ :so small.vim
++ :set nocompatible viminfo+=nviminfo
++ :if !has('perl') | e! test.ok | wq! test.out | endif
++ :" change buffer contents
++ :perl VIM::DoCommand("normal /^1\n")
++ :perl $curline = VIM::Eval("line('.')")
++ :perl $curbuf->Set($curline, "1 changed line 1")
++ :" evaluate a List
++ :perl VIM::DoCommand("normal /^2\n")
++ :perl $curline = VIM::Eval("line('.')")
++ :let l = ["abc", "def"]
++ :perl << EOF
++ $l = VIM::Eval("l");
++ $curbuf->Append($curline, $l);
++ EOF
++ :normal j
++ :.perldo s|\n|/|g
++ :?^1?,$w! test.out
++ :qa!
++ ENDTEST
++ 
++ 1 line 1
++ 2 line 2
+*** ../vim-7.4.743/src/testdir/test_perl.ok	2015-06-19 15:45:02.102003065 +0200
+--- src/testdir/test_perl.ok	2015-06-19 15:22:58.479839592 +0200
+***************
+*** 0 ****
+--- 1,3 ----
++ 1 changed line 1
++ 2 line 2
++ abc/def/
+*** ../vim-7.4.743/src/testdir/test_ruby.in	2015-06-19 15:45:02.110002982 +0200
+--- src/testdir/test_ruby.in	2015-06-19 15:22:58.479839592 +0200
+***************
+*** 0 ****
+--- 1,25 ----
++ Tests for ruby interface.     vim: set ft=vim :
++ 
++ STARTTEST
++ :so small.vim
++ :set nocompatible viminfo+=nviminfo
++ :if !has('ruby') | e! test.ok | wq! test.out | endif
++ :" change buffer contents
++ :ruby VIM.command("normal /^1\n")
++ :ruby $curbuf.line = "1 changed line 1"
++ :" evaluate a List
++ :ruby VIM.command("normal /^2\n")
++ :let l = ["abc", "def"]
++ :ruby << EOF
++ curline = $curbuf.line_number
++ l = VIM.evaluate("l");
++ $curbuf.append(curline, l.join("\n"))
++ EOF
++ :normal j
++ :.rubydo $_ = $_.gsub(/\n/, '/')
++ :?^1?,$w! test.out
++ :qa!
++ ENDTEST
++ 
++ 1 line 1
++ 2 line 2
+*** ../vim-7.4.743/src/testdir/test_ruby.ok	2015-06-19 15:45:02.114002940 +0200
+--- src/testdir/test_ruby.ok	2015-06-19 15:22:58.479839592 +0200
+***************
+*** 0 ****
+--- 1,3 ----
++ 1 changed line 1
++ 2 line 2
++ abc/def
+*** ../vim-7.4.743/src/testdir/Make_amiga.mak	2015-06-19 14:06:29.043993697 +0200
+--- src/testdir/Make_amiga.mak	2015-06-19 15:25:07.546490522 +0200
+***************
+*** 53,59 ****
+--- 53,61 ----
+  		test_marks.out \
+  		test_nested_function.out \
+  		test_options.out \
++ 		test_perl.out \
+  		test_qf_title.out \
++ 		test_ruby.out \
+  		test_set.out \
+  		test_signs.out \
+  		test_textobjects.out \
+***************
+*** 198,204 ****
+--- 200,208 ----
+  test_marks.out: test_marks.in
+  test_nested_function.out: test_nested_function.in
+  test_options.out: test_options.in
++ test_perl.out: test_perl.in
+  test_qf_title.out: test_qf_title.in
++ test_ruby.out: test_ruby.in
+  test_set.out: test_set.in
+  test_signs.out: test_signs.in
+  test_textobjects.out: test_textobjects.in
+*** ../vim-7.4.743/src/testdir/Make_dos.mak	2015-06-19 14:06:29.043993697 +0200
+--- src/testdir/Make_dos.mak	2015-06-19 15:25:17.606385377 +0200
+***************
+*** 52,58 ****
+--- 52,60 ----
+  		test_marks.out \
+  		test_nested_function.out \
+  		test_options.out \
++ 		test_perl.out \
+  		test_qf_title.out \
++ 		test_ruby.out \
+  		test_set.out \
+  		test_signs.out \
+  		test_textobjects.out \
+*** ../vim-7.4.743/src/testdir/Make_ming.mak	2015-06-19 14:06:29.043993697 +0200
+--- src/testdir/Make_ming.mak	2015-06-19 15:25:30.650249042 +0200
+***************
+*** 74,80 ****
+--- 74,82 ----
+  		test_marks.out \
+  		test_nested_function.out \
+  		test_options.out \
++ 		test_perl.out \
+  		test_qf_title.out \
++ 		test_ruby.out \
+  		test_set.out \
+  		test_signs.out \
+  		test_textobjects.out \
+*** ../vim-7.4.743/src/testdir/Make_os2.mak	2015-06-19 14:06:29.043993697 +0200
+--- src/testdir/Make_os2.mak	2015-06-19 15:25:42.358126674 +0200
+***************
+*** 54,60 ****
+--- 54,62 ----
+  		test_marks.out \
+  		test_nested_function.out \
+  		test_options.out \
++ 		test_perl.out \
+  		test_qf_title.out \
++ 		test_ruby.out \
+  		test_set.out \
+  		test_signs.out \
+  		test_textobjects.out \
+*** ../vim-7.4.743/src/testdir/Make_vms.mms	2015-06-19 14:06:29.043993697 +0200
+--- src/testdir/Make_vms.mms	2015-06-19 15:25:50.038046403 +0200
+***************
+*** 113,119 ****
+--- 113,121 ----
+  	 test_marks.out \
+  	 test_nested_function.out \
+  	 test_options.out \
++ 	 test_perl.out \
+  	 test_qf_title.out \
++ 	 test_ruby.out \
+  	 test_set.out \
+  	 test_signs.out \
+  	 test_textobjects.out \
+*** ../vim-7.4.743/src/testdir/Makefile	2015-06-19 14:06:29.043993697 +0200
+--- src/testdir/Makefile	2015-06-19 15:26:11.261824557 +0200
+***************
+*** 50,56 ****
+--- 50,58 ----
+  		test_marks.out \
+  		test_nested_function.out \
+  		test_options.out \
++ 		test_perl.out \
+  		test_qf_title.out \
++ 		test_ruby.out \
+  		test_set.out \
+  		test_signs.out \
+  		test_textobjects.out \
+*** ../vim-7.4.743/src/version.c	2015-06-19 15:17:49.895065569 +0200
+--- src/version.c	2015-06-19 15:24:24.582939585 +0200
+***************
+*** 743,744 ****
+--- 743,746 ----
+  {   /* Add new patch number below this line */
++ /**/
++     744,
+  /**/
+
+-- 
+"A clear conscience is usually the sign of a bad memory."
+                             -- Steven Wright
+
+ /// Bram Moolenaar -- Bram@Moolenaar.net -- http://www.Moolenaar.net   \\\
+///        sponsor Vim, vote for features -- http://www.Vim.org/sponsor/ \\\
+\\\  an exciting new programming language -- http://www.Zimbu.org        ///
+ \\\            help me help AIDS victims -- http://ICCF-Holland.org    ///

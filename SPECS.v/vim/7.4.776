@@ -1,0 +1,92 @@
+To: vim_dev@googlegroups.com
+Subject: Patch 7.4.776
+Fcc: outbox
+From: Bram Moolenaar <Bram@moolenaar.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+------------
+
+Patch 7.4.776
+Problem:    Equivalence class for 'd' does not work correctly.
+Solution:   Fix 0x1e0f and 0x1d0b. (Dominique Pelle)
+Files:      src/regexp.c, src/regexp_nfa.c
+
+
+*** ../vim-7.4.775/src/regexp.c	2015-06-09 20:39:04.322545425 +0200
+--- src/regexp.c	2015-07-10 18:53:07.391711695 +0200
+***************
+*** 1011,1020 ****
+  		      REGMBC(0x107) REGMBC(0x109) REGMBC(0x10b)
+  		      REGMBC(0x10d)
+  		      return;
+! 	    case 'd': CASEMBC(0x10f) CASEMBC(0x111) CASEMBC(0x1d0b)
+! 	    CASEMBC(0x1e11)
+  		      regmbc('d'); REGMBC(0x10f) REGMBC(0x111)
+! 		      REGMBC(0x1e0b) REGMBC(0x01e0f) REGMBC(0x1e11)
+  		      return;
+  	    case 'e': case 0xe8: case 0xe9: case 0xea: case 0xeb:
+  	    CASEMBC(0x113) CASEMBC(0x115) CASEMBC(0x117) CASEMBC(0x119)
+--- 1011,1020 ----
+  		      REGMBC(0x107) REGMBC(0x109) REGMBC(0x10b)
+  		      REGMBC(0x10d)
+  		      return;
+! 	    case 'd': CASEMBC(0x10f) CASEMBC(0x111) CASEMBC(0x1e0b)
+! 	    CASEMBC(0x1e0f) CASEMBC(0x1e11)
+  		      regmbc('d'); REGMBC(0x10f) REGMBC(0x111)
+! 		      REGMBC(0x1e0b) REGMBC(0x1e0f) REGMBC(0x1e11)
+  		      return;
+  	    case 'e': case 0xe8: case 0xe9: case 0xea: case 0xeb:
+  	    CASEMBC(0x113) CASEMBC(0x115) CASEMBC(0x117) CASEMBC(0x119)
+*** ../vim-7.4.775/src/regexp_nfa.c	2015-05-04 10:33:09.633193707 +0200
+--- src/regexp_nfa.c	2015-07-10 18:53:07.391711695 +0200
+***************
+*** 542,548 ****
+      ret = alloc(len);
+      if (ret != NULL)
+      {
+- 	len = 0;
+  	p = start->out->out; /* skip first char, it goes into regstart */
+  	s = ret;
+  	while (p->c > 0)
+--- 542,547 ----
+***************
+*** 946,955 ****
+  		    EMITMBC(0x10b) EMITMBC(0x10d)
+  		    return OK;
+  
+! 	    case 'd': CASEMBC(0x10f) CASEMBC(0x111) CASEMBC(0x1d0b)
+! 	    CASEMBC(0x1e11)
+! 		    EMIT2('d'); EMITMBC(0x10f) EMITMBC(0x111) EMITMBC(0x1e0b)
+! 		    EMITMBC(0x01e0f) EMITMBC(0x1e11)
+  		    return OK;
+  
+  	    case 'e': case 0350: case 0351: case 0352: case 0353:
+--- 945,954 ----
+  		    EMITMBC(0x10b) EMITMBC(0x10d)
+  		    return OK;
+  
+! 	    case 'd': CASEMBC(0x10f) CASEMBC(0x111) CASEMBC(0x1e0b)
+! 	    CASEMBC(0x1e0f) CASEMBC(0x1e11)
+! 		    EMIT2('d'); EMITMBC(0x10f) EMITMBC(0x111)
+! 		    EMITMBC(0x1e0b) EMITMBC(0x1e0f) EMITMBC(0x1e11)
+  		    return OK;
+  
+  	    case 'e': case 0350: case 0351: case 0352: case 0353:
+*** ../vim-7.4.775/src/version.c	2015-07-10 18:18:35.579206260 +0200
+--- src/version.c	2015-07-10 18:55:20.974449842 +0200
+***************
+*** 743,744 ****
+--- 743,746 ----
+  {   /* Add new patch number below this line */
++ /**/
++     776,
+  /**/
+
+-- 
+$ echo pizza > /dev/oven
+
+ /// Bram Moolenaar -- Bram@Moolenaar.net -- http://www.Moolenaar.net   \\\
+///        sponsor Vim, vote for features -- http://www.Vim.org/sponsor/ \\\
+\\\  an exciting new programming language -- http://www.Zimbu.org        ///
+ \\\            help me help AIDS victims -- http://ICCF-Holland.org    ///

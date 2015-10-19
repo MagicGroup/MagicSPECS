@@ -1,0 +1,66 @@
+To: vim_dev@googlegroups.com
+Subject: Patch 7.4.784
+Fcc: outbox
+From: Bram Moolenaar <Bram@moolenaar.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+------------
+
+Patch 7.4.784
+Problem:    Using both "noinsert" and "noselect" in 'completeopt' does not
+            work properly.
+Solution:   Change the ins_complete() calls. (Ozaki Kiichi)
+Files:      src/edit.c
+
+
+*** ../vim-7.4.783/src/edit.c	2015-07-10 18:18:35.575206298 +0200
+--- src/edit.c	2015-07-17 13:36:48.597498614 +0200
+***************
+*** 2794,2809 ****
+  
+      compl_curr_match = compl_first_match;
+      if (compl_no_insert)
+!     {
+! 	if (!compl_no_select)
+! 	    ins_complete(K_DOWN);
+!     }
+      else
+-     {
+  	ins_complete(Ctrl_N);
+! 	if (compl_no_select)
+! 	    ins_complete(Ctrl_P);
+!     }
+      out_flush();
+  }
+  
+--- 2794,2804 ----
+  
+      compl_curr_match = compl_first_match;
+      if (compl_no_insert)
+! 	ins_complete(K_DOWN);
+      else
+  	ins_complete(Ctrl_N);
+!     if (compl_no_select)
+! 	ins_complete(Ctrl_P);
+      out_flush();
+  }
+  
+*** ../vim-7.4.783/src/version.c	2015-07-17 13:22:43.161523633 +0200
+--- src/version.c	2015-07-17 13:39:08.552170118 +0200
+***************
+*** 743,744 ****
+--- 743,746 ----
+  {   /* Add new patch number below this line */
++ /**/
++     784,
+  /**/
+
+-- 
+hundred-and-one symptoms of being an internet addict:
+230. You spend your Friday nights typing away at your keyboard
+
+ /// Bram Moolenaar -- Bram@Moolenaar.net -- http://www.Moolenaar.net   \\\
+///        sponsor Vim, vote for features -- http://www.Vim.org/sponsor/ \\\
+\\\  an exciting new programming language -- http://www.Zimbu.org        ///
+ \\\            help me help AIDS victims -- http://ICCF-Holland.org    ///

@@ -1,0 +1,199 @@
+To: vim_dev@googlegroups.com
+Subject: Patch 7.4.863
+Fcc: outbox
+From: Bram Moolenaar <Bram@moolenaar.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+------------
+
+Patch 7.4.863
+Problem:    plines_nofill() used without the diff feature.
+Solution:   Define PLINES_NOFILL().
+Files:      src/macros.h, src/move.c
+
+
+*** ../vim-7.4.862/src/macros.h	2015-07-10 17:56:18.219777154 +0200
+--- src/macros.h	2015-09-09 20:14:30.153091468 +0200
+***************
+*** 315,317 ****
+--- 315,323 ----
+  #  endif
+  # endif
+  #endif
++ 
++ #ifdef FEAT_DIFF
++ # define PLINES_NOFILL(x) plines_nofill(x)
++ #else
++ # define PLINES_NOFILL(x) plines(x)
++ #endif
+*** ../vim-7.4.862/src/move.c	2015-09-08 17:31:38.591350883 +0200
+--- src/move.c	2015-09-09 20:40:43.264983747 +0200
+***************
+*** 1252,1262 ****
+  	    }
+  	    else
+  #endif
+! #ifdef FEAT_DIFF
+! 		done += plines_nofill(curwin->w_topline);
+! #else
+! 		done += plines(curwin->w_topline);
+! #endif
+  	}
+  	--curwin->w_botline;		/* approximate w_botline */
+  	invalidate_botline();
+--- 1252,1258 ----
+  	    }
+  	    else
+  #endif
+! 		done += PLINES_NOFILL(curwin->w_topline);
+  	}
+  	--curwin->w_botline;		/* approximate w_botline */
+  	invalidate_botline();
+***************
+*** 1609,1621 ****
+  	    lp->height = 1;
+  	else
+  #endif
+! 	{
+! #ifdef FEAT_DIFF
+! 	    lp->height = plines_nofill(lp->lnum);
+! #else
+! 	    lp->height = plines(lp->lnum);
+! #endif
+! 	}
+      }
+  }
+  
+--- 1605,1611 ----
+  	    lp->height = 1;
+  	else
+  #endif
+! 	    lp->height = PLINES_NOFILL(lp->lnum);
+      }
+  }
+  
+***************
+*** 1653,1663 ****
+  	else
+  #endif
+  	{
+! #ifdef FEAT_DIFF
+! 	    lp->height = plines_nofill(lp->lnum);
+! #else
+! 	    lp->height = plines(lp->lnum);
+! #endif
+  	}
+      }
+  }
+--- 1643,1649 ----
+  	else
+  #endif
+  	{
+! 	    lp->height = PLINES_NOFILL(lp->lnum);
+  	}
+      }
+  }
+***************
+*** 1769,1775 ****
+  	    i = 1;
+  	else
+  #endif
+! 	    i = plines_nofill(top);
+  	used += i;
+  	if (extra + i <= off && bot < curbuf->b_ml.ml_line_count)
+  	{
+--- 1755,1761 ----
+  	    i = 1;
+  	else
+  #endif
+! 	    i = PLINES_NOFILL(top);
+  	used += i;
+  	if (extra + i <= off && bot < curbuf->b_ml.ml_line_count)
+  	{
+***************
+*** 2273,2283 ****
+  		++above;
+  	    else
+  #endif
+! #ifndef FEAT_DIFF
+! 		above += plines(topline);
+! #else
+! 		above += plines_nofill(topline);
+! 
+  	    /* Count filler lines below this line as context. */
+  	    if (topline < botline)
+  		above += diff_check_fill(curwin, topline + 1);
+--- 2259,2266 ----
+  		++above;
+  	    else
+  #endif
+! 		above += PLINES_NOFILL(topline);
+! #ifdef FEAT_DIFF
+  	    /* Count filler lines below this line as context. */
+  	    if (topline < botline)
+  		above += diff_check_fill(curwin, topline + 1);
+***************
+*** 2666,2676 ****
+  	    else
+  #endif
+  	    {
+! #ifdef FEAT_DIFF
+! 		i = plines_nofill(curwin->w_topline);
+! #else
+! 		i = plines(curwin->w_topline);
+! #endif
+  		n -= i;
+  		if (n < 0 && scrolled > 0)
+  		    break;
+--- 2649,2655 ----
+  	    else
+  #endif
+  	    {
+! 		i = PLINES_NOFILL(curwin->w_topline);
+  		n -= i;
+  		if (n < 0 && scrolled > 0)
+  		    break;
+***************
+*** 2776,2786 ****
+  	    else
+  #endif
+  	    {
+! #ifdef FEAT_DIFF
+! 		i = plines_nofill(curwin->w_topline - 1);
+! #else
+! 		i = plines(curwin->w_topline - 1);
+! #endif
+  		n -= i;
+  		if (n < 0 && scrolled > 0)
+  		    break;
+--- 2755,2761 ----
+  	    else
+  #endif
+  	    {
+! 		i = PLINES_NOFILL(curwin->w_topline - 1);
+  		n -= i;
+  		if (n < 0 && scrolled > 0)
+  		    break;
+*** ../vim-7.4.862/src/version.c	2015-09-09 20:26:58.909675729 +0200
+--- src/version.c	2015-09-09 20:28:25.236703587 +0200
+***************
+*** 743,744 ****
+--- 743,746 ----
+  {   /* Add new patch number below this line */
++ /**/
++     863,
+  /**/
+
+-- 
+OLD WOMAN: Well, how did you become king, then?
+ARTHUR: The Lady of the Lake, her arm clad in the purest shimmering samite,
+        held Excalibur aloft from the bosom of the water to signify by Divine
+        Providence ...  that I, Arthur, was to carry Excalibur ...  That is
+        why I am your king!
+                 "Monty Python and the Holy Grail" PYTHON (MONTY) PICTURES LTD
+
+ /// Bram Moolenaar -- Bram@Moolenaar.net -- http://www.Moolenaar.net   \\\
+///        sponsor Vim, vote for features -- http://www.Vim.org/sponsor/ \\\
+\\\  an exciting new programming language -- http://www.Zimbu.org        ///
+ \\\            help me help AIDS victims -- http://ICCF-Holland.org    ///

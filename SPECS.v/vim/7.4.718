@@ -1,0 +1,114 @@
+To: vim_dev@googlegroups.com
+Subject: Patch 7.4.718
+Fcc: outbox
+From: Bram Moolenaar <Bram@moolenaar.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+------------
+
+Patch 7.4.718
+Problem:    Autocommands triggered by quickfix cannot get the current title
+            value.
+Solution:   Set w:quickfix_title earlier. (Yannick)
+            Also move the check for a title into the function.
+Files:      src/quickfix.c
+
+
+*** ../vim-7.4.717/src/quickfix.c	2015-03-31 13:33:00.801524871 +0200
+--- src/quickfix.c	2015-05-04 11:51:56.583831852 +0200
+***************
+*** 2452,2465 ****
+  	    prevwin = win;
+      }
+  
+      /*
+       * Fill the buffer with the quickfix list.
+       */
+      qf_fill_buffer(qi);
+  
+-     if (qi->qf_lists[qi->qf_curlist].qf_title != NULL)
+- 	qf_set_title_var(qi);
+- 
+      curwin->w_cursor.lnum = qi->qf_lists[qi->qf_curlist].qf_index;
+      curwin->w_cursor.col = 0;
+      check_cursor();
+--- 2452,2464 ----
+  	    prevwin = win;
+      }
+  
++     qf_set_title_var(qi);
++ 
+      /*
+       * Fill the buffer with the quickfix list.
+       */
+      qf_fill_buffer(qi);
+  
+      curwin->w_cursor.lnum = qi->qf_lists[qi->qf_curlist].qf_index;
+      curwin->w_cursor.col = 0;
+      check_cursor();
+***************
+*** 2608,2615 ****
+  
+  	qf_fill_buffer(qi);
+  
+! 	if (qi->qf_lists[qi->qf_curlist].qf_title != NULL
+! 	    && (win = qf_find_win(qi)) != NULL)
+  	{
+  	    curwin_save = curwin;
+  	    curwin = win;
+--- 2607,2613 ----
+  
+  	qf_fill_buffer(qi);
+  
+! 	if ((win = qf_find_win(qi)) != NULL)
+  	{
+  	    curwin_save = curwin;
+  	    curwin = win;
+***************
+*** 2625,2635 ****
+      }
+  }
+  
+      static void
+  qf_set_title_var(qi)
+      qf_info_T	*qi;
+  {
+!     set_internal_string_var((char_u *)"w:quickfix_title",
+  				    qi->qf_lists[qi->qf_curlist].qf_title);
+  }
+  
+--- 2623,2637 ----
+      }
+  }
+  
++ /*
++  * Set "w:quickfix_title" if "qi" has a title.
++  */
+      static void
+  qf_set_title_var(qi)
+      qf_info_T	*qi;
+  {
+!     if (qi->qf_lists[qi->qf_curlist].qf_title != NULL)
+! 	set_internal_string_var((char_u *)"w:quickfix_title",
+  				    qi->qf_lists[qi->qf_curlist].qf_title);
+  }
+  
+*** ../vim-7.4.717/src/version.c	2015-05-04 11:10:21.543941803 +0200
+--- src/version.c	2015-05-04 11:53:05.711053186 +0200
+***************
+*** 743,744 ****
+--- 743,746 ----
+  {   /* Add new patch number below this line */
++ /**/
++     718,
+  /**/
+
+-- 
+Don't Panic!
+		-- The Hitchhiker's Guide to the Galaxy
+
+ /// Bram Moolenaar -- Bram@Moolenaar.net -- http://www.Moolenaar.net   \\\
+///        sponsor Vim, vote for features -- http://www.Vim.org/sponsor/ \\\
+\\\  an exciting new programming language -- http://www.Zimbu.org        ///
+ \\\            help me help AIDS victims -- http://ICCF-Holland.org    ///

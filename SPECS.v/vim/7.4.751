@@ -1,0 +1,112 @@
+To: vim_dev@googlegroups.com
+Subject: Patch 7.4.751
+Fcc: outbox
+From: Bram Moolenaar <Bram@moolenaar.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+------------
+
+Patch 7.4.751
+Problem:    It is not obvious how to enable the address sanitizer.
+Solution:   Add commented-out flags in the Makefile. (Dominique Pelle)
+            Also add missing test targets.
+Files:      src/Makefile
+
+
+*** ../vim-7.4.750/src/Makefile	2014-12-08 04:16:26.257702950 +0100
+--- src/Makefile	2015-06-21 13:43:37.873649912 +0200
+***************
+*** 616,621 ****
+--- 616,629 ----
+  #PROFILE_LIBS = -pg
+  #PROFILE_LIBS = -pg -lc
+  
++ # Uncomment one of the next two lines to compile Vim with the
++ # address sanitizer or with the undefined sanitizer.  Works with gcc and
++ # clang.  May make Vim twice as slow.  Errors reported on stderr.
++ # More at: https://code.google.com/p/address-sanitizer/
++ #SANITIZER_CFLAGS = -g -O0 -fsanitize=address -fno-omit-frame-pointer
++ #SANITIZER_CFLAGS = -g -O0 -fsanitize=undefined -fno-omit-frame-pointer
++ SANITIZER_LIBS = $(SANITIZER_CFLAGS)
++ 
+  # MEMORY LEAK DETECTION
+  # Requires installing the ccmalloc library.
+  # Configuration is in the .ccmalloc or ~/.ccmalloc file.
+***************
+*** 1342,1348 ****
+  PRE_DEFS = -Iproto $(DEFS) $(GUI_DEFS) $(GUI_IPATH) $(CPPFLAGS) $(EXTRA_IPATHS)
+  POST_DEFS = $(X_CFLAGS) $(MZSCHEME_CFLAGS) $(TCL_CFLAGS) $(EXTRA_DEFS)
+  
+! ALL_CFLAGS = $(PRE_DEFS) $(CFLAGS) $(PROFILE_CFLAGS) $(LEAK_CFLAGS) $(POST_DEFS)
+  
+  # Exclude $CFLAGS for osdef.sh, for Mac 10.4 some flags don't work together
+  # with "-E".
+--- 1350,1356 ----
+  PRE_DEFS = -Iproto $(DEFS) $(GUI_DEFS) $(GUI_IPATH) $(CPPFLAGS) $(EXTRA_IPATHS)
+  POST_DEFS = $(X_CFLAGS) $(MZSCHEME_CFLAGS) $(TCL_CFLAGS) $(EXTRA_DEFS)
+  
+! ALL_CFLAGS = $(PRE_DEFS) $(CFLAGS) $(PROFILE_CFLAGS) $(SANITIZER_CFLAGS) $(LEAK_CFLAGS) $(POST_DEFS)
+  
+  # Exclude $CFLAGS for osdef.sh, for Mac 10.4 some flags don't work together
+  # with "-E".
+***************
+*** 1374,1379 ****
+--- 1382,1388 ----
+  	   $(TCL_LIBS) \
+  	   $(RUBY_LIBS) \
+  	   $(PROFILE_LIBS) \
++ 	   $(SANITIZER_LIBS) \
+  	   $(LEAK_LIBS)
+  
+  # abbreviations
+***************
+*** 1891,1910 ****
+--- 1900,1928 ----
+  
+  # Run individual test, assuming that Vim was already compiled.
+  test1 \
++ 	test_argument_0count \
+  	test_argument_count \
+  	test_autoformat_join \
+  	test_breakindent \
+  	test_changelist \
+  	test_close_count \
+  	test_command_count \
++ 	test_erasebackword \
+  	test_eval \
+  	test_insertcount \
++ 	test_listchars \
+  	test_listlbr \
+  	test_listlbr_utf8 \
+  	test_mapping \
++ 	test_marks \
++ 	test_nested_function \
+  	test_options \
++ 	test_perl \
+  	test_qf_title \
++ 	test_ruby \
++ 	test_set \
+  	test_signs \
++ 	test_textobjects \
+  	test_utf8 \
+  	test_writefile \
+  	test2 test3 test4 test5 test6 test7 test8 test9 \
+*** ../vim-7.4.750/src/version.c	2015-06-21 13:41:02.815278555 +0200
+--- src/version.c	2015-06-21 13:43:52.321498196 +0200
+***************
+*** 743,744 ****
+--- 743,746 ----
+  {   /* Add new patch number below this line */
++ /**/
++     751,
+  /**/
+
+-- 
+hundred-and-one symptoms of being an internet addict:
+131. You challenge authority and society by portnuking people
+
+ /// Bram Moolenaar -- Bram@Moolenaar.net -- http://www.Moolenaar.net   \\\
+///        sponsor Vim, vote for features -- http://www.Vim.org/sponsor/ \\\
+\\\  an exciting new programming language -- http://www.Zimbu.org        ///
+ \\\            help me help AIDS victims -- http://ICCF-Holland.org    ///

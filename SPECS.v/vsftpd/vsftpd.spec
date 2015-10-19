@@ -2,11 +2,13 @@
 %define _generatorsdir %{_prefix}/lib/systemd/system-generators
 
 Name: vsftpd
-Version: 3.0.2
-Release: 14%{?dist}
+Version: 3.0.3
+Release: 2%{?dist}
 Summary: Very Secure Ftp Daemon
+Summary(zh_CN.UTF-8): 非常安全的 Ftp 服务
 
 Group: System Environment/Daemons
+Group(zh_CN.UTF-8): 系统环境/服务
 # OpenSSL link exception
 License: GPLv2 with exceptions
 URL: https://security.appspot.com/vsftpd.html
@@ -70,6 +72,9 @@ Patch31: vsftpd-3.0.2-rc450.patch
 vsftpd is a Very Secure FTP daemon. It was written completely from
 scratch.
 
+%description -l zh_CN.UTF-8
+非常安全的 Ftp 服务。
+
 %prep
 %setup -q -n %{name}-%{version}
 cp %{SOURCE1} .
@@ -91,14 +96,14 @@ cp %{SOURCE1} .
 %patch19 -p1 -b .sd
 %patch20 -p1 -b .sqb
 %patch21 -p1 -b .listen_ipv6
-%patch22 -p1 -b .aslim
+#patch22 -p1 -b .aslim
 %patch23 -p1 -b .tz
 %patch24 -p1 -b .xferlog
 %patch25 -p1 -b .logrotate
 %patch26 -p1 -b .lookup
 %patch27 -p1 -b .uint-uidgid
-%patch28 -p1 -b .dh
-%patch29 -p1 -b .ecdh
+#patch28 -p1 -b .dh
+#patch29 -p1 -b .ecdh
 %patch30 -p1 -b .docupd
 %patch31 -p1 -b .rc450
 
@@ -134,6 +139,7 @@ install -m 644 %{SOURCE9} $RPM_BUILD_ROOT%{_unitdir}
 install -m 755 %{SOURCE10} $RPM_BUILD_ROOT%{_generatorsdir}
                             
 mkdir -p $RPM_BUILD_ROOT/%{_var}/ftp/pub
+magic_rpm_clean.sh
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -167,6 +173,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_var}/ftp
 
 %changelog
+* Mon Oct 19 2015 Liu Di <liudidi@gmail.com> - 3.0.3-2
+- 为 Magic 3.0 重建
+
 * Fri Jun 19 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.0.2-14
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

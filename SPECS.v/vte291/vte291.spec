@@ -1,15 +1,15 @@
 %global apiver 2.91
 
 Name:           vte291
-Version:	0.42.0
+Version:	0.42.1
 Release:        1%{?dist}
 Summary:        Terminal emulator library
+Summary(zh_CN.UTF-8): 终端模拟器库
 
 License:        LGPLv2+
 URL:            http://www.gnome.org/
-Source0:        http://download.gnome.org/sources/vte/0.37/vte-%{version}.tar.xz
-# https://bugzilla.gnome.org/show_bug.cgi?id=688456
-Patch2:         0001-widget-Only-show-the-cursor-on-motion-if-moved.patch
+%define majorver %(echo %{version} | awk -F. '{print $1"."$2}')
+Source0:        http://download.gnome.org/sources/vte/%{majorver}/vte-%{version}.tar.xz
 
 BuildRequires:  gettext
 BuildRequires:  gobject-introspection-devel
@@ -30,13 +30,20 @@ console/terminal in games, editors, IDEs, etc.
 VTE supports Unicode and character set conversion, as well as emulating
 any terminal known to the system's terminfo database.
 
+%description -l zh_CN.UTF-8
+终端模拟器库。
+
 %package        devel
 Summary:        Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Requires:       %{name}%{?_isa} = %{version}-%{release}
 
 %description devel
 The %{name}-devel package contains libraries and header files for
 developing applications that use %{name}.
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 # vte-profile is deliberately not noarch to avoid having to obsolete a noarch
 # subpackage in the future when we get rid of the vte3 / vte291 split. Yum is
@@ -44,6 +51,7 @@ developing applications that use %{name}.
 # of the multilib packages (i686 + x86_64) as the replacement.
 %package -n     vte-profile
 Summary:        Profile script for VTE terminal emulator library
+Summary(zh_CN.UTF-8): VTE 的配置文件脚本
 License:        GPLv3+
 # vte.sh was previously part of the vte3 package
 Conflicts:      vte3 < 0.36.1-3
@@ -52,9 +60,11 @@ Conflicts:      vte3 < 0.36.1-3
 The vte-profile package contains a profile.d script for the VTE terminal
 emulator library.
 
+%description -n vte-profile -l zh_CN.UTF-8
+VTE 的配置文件脚本。
+
 %prep
 %setup -q -n vte-%{version}
-%patch2 -p1 -b .motion
 
 %build
 CFLAGS="%optflags -fPIE -DPIE" \
@@ -72,7 +82,7 @@ make %{?_smp_mflags} V=1
 %make_install
 
 rm -f $RPM_BUILD_ROOT%{_libdir}/*.la
-
+magic_rpm_clean.sh
 %find_lang vte-%{apiver}
 
 %post -p /sbin/ldconfig
@@ -82,8 +92,6 @@ rm -f $RPM_BUILD_ROOT%{_libdir}/*.la
 %files -f vte-%{apiver}.lang
 %doc COPYING NEWS README
 %{_libdir}/libvte-%{apiver}.so.0*
-%dir %{_libdir}/vte-%{apiver}
-%attr(2711,root,utmp) %{_libdir}/vte-%{apiver}/gnome-pty-helper
 %{_libdir}/girepository-1.0/
 
 %files devel
@@ -99,6 +107,9 @@ rm -f $RPM_BUILD_ROOT%{_libdir}/*.la
 %{_sysconfdir}/profile.d/vte.sh
 
 %changelog
+* Mon Oct 19 2015 Liu Di <liudidi@gmail.com> - 0.42.1-1
+- 更新到 0.42.1
+
 * Tue Sep 22 2015 Liu Di <liudidi@gmail.com> - 0.42.0-1
 - 更新到 0.42.0
 

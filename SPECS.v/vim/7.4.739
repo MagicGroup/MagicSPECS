@@ -1,0 +1,59 @@
+To: vim_dev@googlegroups.com
+Subject: Patch 7.4.739
+Fcc: outbox
+From: Bram Moolenaar <Bram@moolenaar.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+------------
+
+Patch 7.4.739
+Problem:    In a string "\U" only takes 4 digits, while after CTRL-V U eight
+            digits can be used.
+Solution:   Make "\U" also take eight digits. (Christian Brabandt)
+Files:      src/eval.c
+
+
+*** ../vim-7.4.738/src/eval.c	2015-06-09 20:30:45.495855617 +0200
+--- src/eval.c	2015-06-19 11:36:27.818121198 +0200
+***************
+*** 5745,5752 ****
+  
+  			      if (c == 'X')
+  				  n = 2;
+! 			      else
+  				  n = 4;
+  			      nr = 0;
+  			      while (--n >= 0 && vim_isxdigit(p[1]))
+  			      {
+--- 5745,5754 ----
+  
+  			      if (c == 'X')
+  				  n = 2;
+! 			      else if (*p == 'u')
+  				  n = 4;
++ 			      else
++ 				  n = 8;
+  			      nr = 0;
+  			      while (--n >= 0 && vim_isxdigit(p[1]))
+  			      {
+*** ../vim-7.4.738/src/version.c	2015-06-10 12:16:41.926648740 +0200
+--- src/version.c	2015-06-19 11:38:52.016606219 +0200
+***************
+*** 743,744 ****
+--- 743,746 ----
+  {   /* Add new patch number below this line */
++ /**/
++     739,
+  /**/
+
+-- 
+FIXME and XXX are two common keywords used to mark broken or incomplete code
+not only since XXX as a sex reference would grab everybody's attention but
+simply due to the fact that Vim would highlight these words.
+					-- Hendrik Scholz
+
+ /// Bram Moolenaar -- Bram@Moolenaar.net -- http://www.Moolenaar.net   \\\
+///        sponsor Vim, vote for features -- http://www.Vim.org/sponsor/ \\\
+\\\  an exciting new programming language -- http://www.Zimbu.org        ///
+ \\\            help me help AIDS victims -- http://ICCF-Holland.org    ///

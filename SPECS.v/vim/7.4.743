@@ -1,0 +1,167 @@
+To: vim_dev@googlegroups.com
+Subject: Patch 7.4.743
+Fcc: outbox
+From: Bram Moolenaar <Bram@moolenaar.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+------------
+
+Patch 7.4.743
+Problem:    "p" in Visual mode causes an unexpected line split.
+Solution:   Advance the cursor first. (Yukihiro Nakadaira)
+Files:      src/ops.c, src/testdir/test94.in, src/testdir/test94.ok
+
+
+*** ../vim-7.4.742/src/ops.c	2015-06-09 20:19:57.730732183 +0200
+--- src/ops.c	2015-06-19 14:50:19.344413102 +0200
+***************
+*** 3459,3475 ****
+      {
+  	if (flags & PUT_LINE_SPLIT)
+  	{
+  	    /* "p" or "P" in Visual mode: split the lines to put the text in
+  	     * between. */
+  	    if (u_save_cursor() == FAIL)
+  		goto end;
+! 	    ptr = vim_strsave(ml_get_cursor());
+  	    if (ptr == NULL)
+  		goto end;
+  	    ml_append(curwin->w_cursor.lnum, ptr, (colnr_T)0, FALSE);
+  	    vim_free(ptr);
+  
+! 	    ptr = vim_strnsave(ml_get_curline(), curwin->w_cursor.col);
+  	    if (ptr == NULL)
+  		goto end;
+  	    ml_replace(curwin->w_cursor.lnum, ptr, FALSE);
+--- 3459,3484 ----
+      {
+  	if (flags & PUT_LINE_SPLIT)
+  	{
++ 	    char_u *p;
++ 
+  	    /* "p" or "P" in Visual mode: split the lines to put the text in
+  	     * between. */
+  	    if (u_save_cursor() == FAIL)
+  		goto end;
+! 	    p = ml_get_cursor();
+! 	    if (dir == FORWARD && *p != NUL)
+! 		mb_ptr_adv(p);
+! 	    ptr = vim_strsave(p);
+  	    if (ptr == NULL)
+  		goto end;
+  	    ml_append(curwin->w_cursor.lnum, ptr, (colnr_T)0, FALSE);
+  	    vim_free(ptr);
+  
+! 	    oldp = ml_get_curline();
+! 	    p = oldp + curwin->w_cursor.col;
+! 	    if (dir == FORWARD && *p != NUL)
+! 		mb_ptr_adv(p);
+! 	    ptr = vim_strnsave(oldp, p - oldp);
+  	    if (ptr == NULL)
+  		goto end;
+  	    ml_replace(curwin->w_cursor.lnum, ptr, FALSE);
+*** ../vim-7.4.742/src/testdir/test94.in	2015-06-09 20:19:57.730732183 +0200
+--- src/testdir/test94.in	2015-06-19 14:49:22.357010930 +0200
+***************
+*** 174,179 ****
+--- 174,215 ----
+  :$put ='c'
+  kgH<Down><Del>
+  :$put ='---'
++ :
++ :$put =''
++ :$put ='v_p: replace last character with line register at middle line'
++ :$put ='aaa'
++ :$put ='bbb'
++ :$put ='ccc'
++ :-2yank
++ k$vp
++ :$put ='---'
++ :
++ :$put =''
++ :$put ='v_p: replace last character with line register at middle line selecting newline'
++ :$put ='aaa'
++ :$put ='bbb'
++ :$put ='ccc'
++ :-2yank
++ k$v$p
++ :$put ='---'
++ :
++ :$put =''
++ :$put ='v_p: replace last character with line register at last line'
++ :$put ='aaa'
++ :$put ='bbb'
++ :$put ='ccc'
++ :-2yank
++ $vp
++ :$put ='---'
++ :
++ :$put =''
++ :$put ='v_p: replace last character with line register at last line selecting newline'
++ :$put ='aaa'
++ :$put ='bbb'
++ :$put ='ccc'
++ :-2yank
++ $v$p
++ :$put ='---'
+  :/^start:/+2,$w! test.out
+  :q!
+  ENDTEST
+*** ../vim-7.4.742/src/testdir/test94.ok	2015-06-09 20:19:57.730732183 +0200
+--- src/testdir/test94.ok	2015-06-19 14:49:57.564641577 +0200
+***************
+*** 81,83 ****
+--- 81,114 ----
+  linewise select mode: delete last two line
+  a
+  ---
++ 
++ v_p: replace last character with line register at middle line
++ aaa
++ bb
++ aaa
++ 
++ ccc
++ ---
++ 
++ v_p: replace last character with line register at middle line selecting newline
++ aaa
++ bb
++ aaa
++ ccc
++ ---
++ 
++ v_p: replace last character with line register at last line
++ aaa
++ bbb
++ cc
++ aaa
++ 
++ ---
++ 
++ v_p: replace last character with line register at last line selecting newline
++ aaa
++ bbb
++ cc
++ aaa
++ 
++ ---
+*** ../vim-7.4.742/src/version.c	2015-06-19 14:41:44.777813290 +0200
+--- src/version.c	2015-06-19 14:45:13.251624852 +0200
+***************
+*** 743,744 ****
+--- 743,746 ----
+  {   /* Add new patch number below this line */
++ /**/
++     743,
+  /**/
+
+-- 
+hundred-and-one symptoms of being an internet addict:
+117. You are more comfortable typing in html.
+
+ /// Bram Moolenaar -- Bram@Moolenaar.net -- http://www.Moolenaar.net   \\\
+///        sponsor Vim, vote for features -- http://www.Vim.org/sponsor/ \\\
+\\\  an exciting new programming language -- http://www.Zimbu.org        ///
+ \\\            help me help AIDS victims -- http://ICCF-Holland.org    ///

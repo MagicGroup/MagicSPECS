@@ -1,0 +1,48 @@
+To: vim_dev@googlegroups.com
+Subject: Patch 7.4.747
+Fcc: outbox
+From: Bram Moolenaar <Bram@moolenaar.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+------------
+
+Patch 7.4.747
+Problem:    ":cnext" may jump to the wrong column when setting
+            'virtualedit=all' (cs86661)
+Solution:   Reset the coladd field. (Hirohito Higashi)
+Files:      src/quickfix.c
+
+
+*** ../vim-7.4.746/src/quickfix.c	2015-05-04 12:34:17.595202558 +0200
+--- src/quickfix.c	2015-06-19 18:34:58.491932112 +0200
+***************
+*** 1841,1846 ****
+--- 1841,1849 ----
+  	    if (qf_ptr->qf_col > 0)
+  	    {
+  		curwin->w_cursor.col = qf_ptr->qf_col - 1;
++ #ifdef FEAT_VIRTUALEDIT
++ 		curwin->w_cursor.coladd = 0;
++ #endif
+  		if (qf_ptr->qf_viscol == TRUE)
+  		{
+  		    /*
+*** ../vim-7.4.746/src/version.c	2015-06-19 16:45:38.580205688 +0200
+--- src/version.c	2015-06-19 18:34:32.156210622 +0200
+***************
+*** 743,744 ****
+--- 743,746 ----
+  {   /* Add new patch number below this line */
++ /**/
++     747,
+  /**/
+
+-- 
+hundred-and-one symptoms of being an internet addict:
+120. You ask a friend, "What's that big shiny thing?" He says, "It's the sun."
+
+ /// Bram Moolenaar -- Bram@Moolenaar.net -- http://www.Moolenaar.net   \\\
+///        sponsor Vim, vote for features -- http://www.Vim.org/sponsor/ \\\
+\\\  an exciting new programming language -- http://www.Zimbu.org        ///
+ \\\            help me help AIDS victims -- http://ICCF-Holland.org    ///

@@ -1,0 +1,130 @@
+To: vim_dev@googlegroups.com
+Subject: Patch 7.4.876
+Fcc: outbox
+From: Bram Moolenaar <Bram@moolenaar.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+------------
+
+Patch 7.4.876
+Problem:    Windows7: when using vim.exe with msys or msys2, conhost.exe
+            (console window provider on Windows7) will freeze or crash.
+Solution:   Make original screen buffer active, before executing external
+            program.  And when the program is finished, revert to vim's one.
+            (Taro Muraoka)
+Files:      src/os_win32.c
+
+
+*** ../vim-7.4.875/src/os_win32.c	2015-09-01 20:31:16.307776163 +0200
+--- src/os_win32.c	2015-09-25 15:27:22.772877421 +0200
+***************
+*** 234,239 ****
+--- 234,240 ----
+  
+  static char_u *exe_path = NULL;
+  
++ static BOOL is_win7 = FALSE;
+  static BOOL win8_or_later = FALSE;
+  
+  /*
+***************
+*** 680,685 ****
+--- 681,689 ----
+  
+  	g_PlatformId = ovi.dwPlatformId;
+  
++ 	if ((ovi.dwMajorVersion == 6 && ovi.dwMinorVersion == 1))
++ 	    is_win7 = TRUE;
++ 
+  	if ((ovi.dwMajorVersion == 6 && ovi.dwMinorVersion >= 2)
+  		|| ovi.dwMajorVersion > 6)
+  	    win8_or_later = TRUE;
+***************
+*** 4581,4591 ****
+      else
+  	return mch_system_classic(cmd, options);
+  }
+  #else
+  
+  # ifdef FEAT_MBYTE
+      static int
+! mch_system(char *cmd, int options)
+  {
+      if (enc_codepage >= 0 && (int)GetACP() != enc_codepage)
+      {
+--- 4585,4596 ----
+      else
+  	return mch_system_classic(cmd, options);
+  }
++ 
+  #else
+  
+  # ifdef FEAT_MBYTE
+      static int
+! mch_system1(char *cmd, int options)
+  {
+      if (enc_codepage >= 0 && (int)GetACP() != enc_codepage)
+      {
+***************
+*** 4600,4608 ****
+      return system(cmd);
+  }
+  # else
+! #  define mch_system(c, o) system(c)
+  # endif
+  
+  #endif
+  
+  /*
+--- 4605,4635 ----
+      return system(cmd);
+  }
+  # else
+! #  define mch_system1(c, o) system(c)
+  # endif
+  
++     static int
++ mch_system(char *cmd, int options)
++ {
++     int ret;
++ 
++     /*
++      * Restore non-termcap screen buffer before execute external program, and
++      * revert it after.  Because msys and msys2's programs will cause freeze
++      * or crash conhost.exe (Windows's console window provider) and vim.exe,
++      * if active screen buffer is vim's one on Windows7.
++      */
++     if (is_win7 && g_fTermcapMode)
++ 	SetConsoleActiveScreenBuffer(g_cbNonTermcap.handle);
++ 
++     ret = mch_system1(cmd, options);
++ 
++     if (is_win7 && g_fTermcapMode)
++ 	SetConsoleActiveScreenBuffer(g_cbTermcap.handle);
++ 
++     return ret;
++ }
++ 
+  #endif
+  
+  /*
+*** ../vim-7.4.875/src/version.c	2015-09-25 15:00:53.537813204 +0200
+--- src/version.c	2015-09-25 15:23:09.863577538 +0200
+***************
+*** 743,744 ****
+--- 743,746 ----
+  {   /* Add new patch number below this line */
++ /**/
++     876,
+  /**/
+
+
+-- 
+hundred-and-one symptoms of being an internet addict:
+5. You find yourself brainstorming for new subjects to search.
+
+ /// Bram Moolenaar -- Bram@Moolenaar.net -- http://www.Moolenaar.net   \\\
+///        sponsor Vim, vote for features -- http://www.Vim.org/sponsor/ \\\
+\\\  an exciting new programming language -- http://www.Zimbu.org        ///
+ \\\            help me help AIDS victims -- http://ICCF-Holland.org    ///

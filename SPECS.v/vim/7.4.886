@@ -1,0 +1,95 @@
+To: vim_dev@googlegroups.com
+Subject: Patch 7.4.886
+Fcc: outbox
+From: Bram Moolenaar <Bram@moolenaar.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+------------
+
+Patch 7.4.886 (after 7.4.876)
+Problem:    Windows7: Switching screen buffer causes flicker when using
+            system().
+Solution:   Instead of actually switching screen buffer, duplicate the handle.
+            (Yasuhiro Matsumoto)
+Files:      src/os_win32.c
+
+
+*** ../vim-7.4.885/src/os_win32.c	2015-09-25 15:28:32.740126079 +0200
+--- src/os_win32.c	2015-09-29 13:59:59.648635163 +0200
+***************
+*** 4612,4631 ****
+  mch_system(char *cmd, int options)
+  {
+      int ret;
+  
+      /*
+!      * Restore non-termcap screen buffer before execute external program, and
+!      * revert it after.  Because msys and msys2's programs will cause freeze
+!      * or crash conhost.exe (Windows's console window provider) and vim.exe,
+!      * if active screen buffer is vim's one on Windows7.
+       */
+!     if (is_win7 && g_fTermcapMode)
+! 	SetConsoleActiveScreenBuffer(g_cbNonTermcap.handle);
+  
+      ret = mch_system1(cmd, options);
+  
+!     if (is_win7 && g_fTermcapMode)
+! 	SetConsoleActiveScreenBuffer(g_cbTermcap.handle);
+  
+      return ret;
+  }
+--- 4612,4645 ----
+  mch_system(char *cmd, int options)
+  {
+      int ret;
++     HANDLE hTemp = INVALID_HANDLE_VALUE;
+  
+      /*
+!      * Call DuplicateHandle before executing an external program, because msys
+!      * and msys2's programs will call CreateConsoleScreenBuffer and
+!      * CloseHandle.  CreateConsoleScreenBuffer returns the same handle which
+!      * created by vim.  This causes a crash. This workaround is required on
+!      * Windows7.
+       */
+!     if (is_win7
+! 	    && g_fTermcapMode
+! 	    && DuplicateHandle(
+! 		    GetCurrentProcess(),
+! 		    g_hConOut,
+! 		    GetCurrentProcess(),
+! 		    &hTemp,
+! 		    0,
+! 		    TRUE,
+! 		    DUPLICATE_SAME_ACCESS))
+! 	SetConsoleActiveScreenBuffer(hTemp);
+  
+      ret = mch_system1(cmd, options);
+  
+!     if (hTemp != INVALID_HANDLE_VALUE)
+!     {
+! 	SetConsoleActiveScreenBuffer(g_hConOut);
+! 	CloseHandle(hTemp);
+!     }
+  
+      return ret;
+  }
+*** ../vim-7.4.885/src/version.c	2015-09-29 12:08:39.333321460 +0200
+--- src/version.c	2015-09-29 13:56:54.234534337 +0200
+***************
+*** 743,744 ****
+--- 743,746 ----
+  {   /* Add new patch number below this line */
++ /**/
++     886,
+  /**/
+
+-- 
+Anyone who is capable of getting themselves made President should on no
+account be allowed to do the job.
+		-- Douglas Adams, "The Hitchhiker's Guide to the Galaxy"
+
+ /// Bram Moolenaar -- Bram@Moolenaar.net -- http://www.Moolenaar.net   \\\
+///        sponsor Vim, vote for features -- http://www.Vim.org/sponsor/ \\\
+\\\  an exciting new programming language -- http://www.Zimbu.org        ///
+ \\\            help me help AIDS victims -- http://ICCF-Holland.org    ///

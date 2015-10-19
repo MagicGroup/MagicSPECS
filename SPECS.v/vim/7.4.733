@@ -1,0 +1,45 @@
+To: vim_dev@googlegroups.com
+Subject: Patch 7.4.733
+Fcc: outbox
+From: Bram Moolenaar <Bram@moolenaar.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+------------
+
+Patch 7.4.733
+Problem:    test_listchars breaks on MS-Windows. (Kenichi Ito)
+Solution:   Set fileformat to "unix". (Christian Brabandt)
+Files:      src/testdir/test_listchars.in
+
+
+*** ../vim-7.4.732/src/testdir/test_listchars.in	2015-04-21 18:33:33.906675754 +0200
+--- src/testdir/test_listchars.in	2015-06-09 19:49:07.810564783 +0200
+***************
+*** 2,7 ****
+--- 2,8 ----
+  
+  STARTTEST
+  :so small.vim
++ :set ff=unix
+  :let g:lines = []
+  :function GetScreenCharsForLine(lnum)
+  :  return join(map(range(1, virtcol('$')), 'nr2char(screenchar(a:lnum, v:val))'), '')
+*** ../vim-7.4.732/src/version.c	2015-06-09 19:23:39.675159547 +0200
+--- src/version.c	2015-06-09 19:51:18.205155704 +0200
+***************
+*** 743,744 ****
+--- 743,746 ----
+  {   /* Add new patch number below this line */
++ /**/
++     733,
+  /**/
+
+-- 
+From "know your smileys":
+ %-)	After staring at screen for 15 hours
+
+ /// Bram Moolenaar -- Bram@Moolenaar.net -- http://www.Moolenaar.net   \\\
+///        sponsor Vim, vote for features -- http://www.Vim.org/sponsor/ \\\
+\\\  an exciting new programming language -- http://www.Zimbu.org        ///
+ \\\            help me help AIDS victims -- http://ICCF-Holland.org    ///

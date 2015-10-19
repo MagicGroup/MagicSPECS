@@ -1,0 +1,78 @@
+To: vim_dev@googlegroups.com
+Subject: Patch 7.4.856
+Fcc: outbox
+From: Bram Moolenaar <Bram@moolenaar.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+------------
+
+Patch 7.4.856
+Problem:    "zt" still doesn't work well with filler lines. (Gary Johnson)
+Solution:   Check for filler lines above the cursor. (Christian Brabandt)
+Files:      src/move.c
+
+
+*** ../vim-7.4.855/src/move.c	2015-09-01 20:53:20.294030821 +0200
+--- src/move.c	2015-09-08 17:18:09.315751849 +0200
+***************
+*** 1751,1762 ****
+      new_topline = top + 1;
+  
+  #ifdef FEAT_DIFF
+!     /* used already contains the number of filler lines above, don't add it
+       * again.
+!      * TODO: if filler lines above new top are to be considered as context for
+!      * the current window, leave next statement commented, else hide filler
+!      * lines above cursor line, by adding them to extra */
+!     /* extra += diff_check_fill(curwin, curwin->w_cursor.lnum); */
+  #endif
+  
+      /*
+--- 1751,1760 ----
+      new_topline = top + 1;
+  
+  #ifdef FEAT_DIFF
+!     /* "used" already contains the number of filler lines above, don't add it
+       * again.
+!      * Hide filler lines above cursor line by adding them to "extra". */
+!     extra += diff_check_fill(curwin, curwin->w_cursor.lnum);
+  #endif
+  
+      /*
+***************
+*** 1771,1777 ****
+  	    i = 1;
+  	else
+  #endif
+! 	    i = plines(top);
+  	used += i;
+  	if (extra + i <= off && bot < curbuf->b_ml.ml_line_count)
+  	{
+--- 1769,1775 ----
+  	    i = 1;
+  	else
+  #endif
+! 	    i = plines_nofill(top);
+  	used += i;
+  	if (extra + i <= off && bot < curbuf->b_ml.ml_line_count)
+  	{
+*** ../vim-7.4.855/src/version.c	2015-09-08 16:31:01.673123014 +0200
+--- src/version.c	2015-09-08 17:15:18.005529911 +0200
+***************
+*** 743,744 ****
+--- 743,746 ----
+  {   /* Add new patch number below this line */
++ /**/
++     856,
+  /**/
+
+-- 
+I used to wonder about the meaning of life.  But I looked it
+up in the dictionary under "L" and there it was - the meaning
+of life.  It was less than I expected.              - Dogbert
+
+ /// Bram Moolenaar -- Bram@Moolenaar.net -- http://www.Moolenaar.net   \\\
+///        sponsor Vim, vote for features -- http://www.Vim.org/sponsor/ \\\
+\\\  an exciting new programming language -- http://www.Zimbu.org        ///
+ \\\            help me help AIDS victims -- http://ICCF-Holland.org    ///

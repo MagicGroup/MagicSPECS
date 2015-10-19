@@ -1,0 +1,55 @@
+To: vim_dev@googlegroups.com
+Subject: Patch 7.4.726
+Fcc: outbox
+From: Bram Moolenaar <Bram@moolenaar.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+------------
+
+Patch 7.4.726 (after 7.4.724)
+Problem:    Cannot build GvimExt.
+Solution:   Set APPVER to 5.0.  (KF Leong)
+Files:      src/GvimExt/Makefile
+
+
+*** ../vim-7.4.725/src/GvimExt/Makefile	2012-11-21 19:53:02.000000000 +0100
+--- src/GvimExt/Makefile	2015-05-05 10:21:35.583931121 +0200
+***************
+*** 4,10 ****
+  #
+  
+  TARGETOS=BOTH
+! APPVER=4.0
+  
+  !if "$(DEBUG)" != "yes"
+  NODEBUG = 1
+--- 4,12 ----
+  #
+  
+  TARGETOS=BOTH
+! !ifndef APPVER
+! APPVER=5.0
+! !endif
+  
+  !if "$(DEBUG)" != "yes"
+  NODEBUG = 1
+*** ../vim-7.4.725/src/version.c	2015-05-04 20:19:16.941521157 +0200
+--- src/version.c	2015-05-05 10:24:40.825852231 +0200
+***************
+*** 743,744 ****
+--- 743,746 ----
+  {   /* Add new patch number below this line */
++ /**/
++     726,
+  /**/
+
+-- 
+If Pacman had affected us as kids we'd be running around in dark rooms,
+munching pills and listening to repetitive music.
+                       -- Marcus Brigstocke
+
+ /// Bram Moolenaar -- Bram@Moolenaar.net -- http://www.Moolenaar.net   \\\
+///        sponsor Vim, vote for features -- http://www.Vim.org/sponsor/ \\\
+\\\  an exciting new programming language -- http://www.Zimbu.org        ///
+ \\\            help me help AIDS victims -- http://ICCF-Holland.org    ///

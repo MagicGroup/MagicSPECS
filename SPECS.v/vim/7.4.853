@@ -1,0 +1,76 @@
+To: vim_dev@googlegroups.com
+Subject: Patch 7.4.853
+Fcc: outbox
+From: Bram Moolenaar <Bram@moolenaar.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+------------
+
+Patch 7.4.853
+Problem:    "zt" in diff mode does not always work properly. (Gary Johnson)
+Solution:   Don't count filler lines twice. (Christian Brabandt)
+Files:      src/move.c
+
+
+*** ../vim-7.4.852/src/move.c	2015-08-11 19:13:55.142175641 +0200
+--- src/move.c	2015-09-01 20:44:12.507720203 +0200
+***************
+*** 1732,1738 ****
+       * - at least 'scrolloff' lines above and below the cursor
+       */
+      validate_cheight();
+!     used = curwin->w_cline_height;
+      if (curwin->w_cursor.lnum < curwin->w_topline)
+  	scrolled = used;
+  
+--- 1732,1738 ----
+       * - at least 'scrolloff' lines above and below the cursor
+       */
+      validate_cheight();
+!     used = curwin->w_cline_height; /* includes filler lines above */
+      if (curwin->w_cursor.lnum < curwin->w_topline)
+  	scrolled = used;
+  
+***************
+*** 1751,1760 ****
+      new_topline = top + 1;
+  
+  #ifdef FEAT_DIFF
+!     /* count filler lines of the cursor window as context */
+!     i = diff_check_fill(curwin, curwin->w_cursor.lnum);
+!     used += i;
+!     extra += i;
+  #endif
+  
+      /*
+--- 1751,1762 ----
+      new_topline = top + 1;
+  
+  #ifdef FEAT_DIFF
+!     /* used already contains the number of filler lines above, don't add it
+!      * again.
+!      * TODO: if filler lines above new top are to be considered as context for
+!      * the current window, leave next statement commented, else hide filler
+!      * lines above cursor line, by adding them to extra */
+!     /* extra += diff_check_fill(curwin, curwin->w_cursor.lnum); */
+  #endif
+  
+      /*
+*** ../vim-7.4.852/src/version.c	2015-09-01 20:31:16.311776122 +0200
+--- src/version.c	2015-09-01 20:40:44.433880446 +0200
+***************
+*** 743,744 ****
+--- 743,746 ----
+  {   /* Add new patch number below this line */
++ /**/
++     853,
+  /**/
+
+-- 
+A fool must search for a greater fool to find admiration.
+
+ /// Bram Moolenaar -- Bram@Moolenaar.net -- http://www.Moolenaar.net   \\\
+///        sponsor Vim, vote for features -- http://www.Vim.org/sponsor/ \\\
+\\\  an exciting new programming language -- http://www.Zimbu.org        ///
+ \\\            help me help AIDS victims -- http://ICCF-Holland.org    ///

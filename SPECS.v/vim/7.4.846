@@ -1,0 +1,92 @@
+To: vim_dev@googlegroups.com
+Subject: Patch 7.4.846
+Fcc: outbox
+From: Bram Moolenaar <Bram@moolenaar.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+------------
+
+Patch 7.4.846
+Problem:    Some GitHub users don't know how to use issues.
+Solution:   Add a file that explains the basics of contributing.
+Files:      Filelist, CONTRIBUTING.md
+
+
+*** ../vim-7.4.845/Filelist	2015-07-10 19:21:45.663489149 +0200
+--- Filelist	2015-09-01 17:28:10.878424667 +0200
+***************
+*** 482,487 ****
+--- 482,488 ----
+  RT_ALL =	\
+  		README.txt \
+  		README.md \
++ 		CONTRIBUTING.md \
+  		runtime/bugreport.vim \
+  		runtime/doc/*.awk \
+  		runtime/doc/*.pl \
+*** ../vim-7.4.845/CONTRIBUTING.md	2015-09-01 17:50:23.908582991 +0200
+--- CONTRIBUTING.md	2015-09-01 17:49:57.812854008 +0200
+***************
+*** 0 ****
+--- 1,38 ----
++ # Contributing to Vim
++ 
++ Patches are welcome in whatever form.
++ Discussions about patches happen on the vim-dev maillist.
++ If you create a pull request on GitHub it will be
++ forwarded to the vim-dev maillist.  You can also send your patch there
++ directly.  An attachment with a unified diff format is preferred.
++ Information about the maillist can be found [on the Vim website].
++ 
++ [on the Vim website]: http://www.vim.org/maillist.php#vim-dev
++ 
++ Please consider adding a test.  Test coverage isn't very good yet, this needs
++ to improve.  Look through recent patches for examples.  The tests are located
++ under "src/testdir".
++ 
++ 
++ # Reporting issues
++ 
++ We use GitHub issues, but that is not a requirement.  Writing to the Vim
++ maillist is also fine.
++ 
++ Please use the GitHub issues only for actual issues. If you are not 100% sure
++ that your problem is a Vim issue, please first discuss this on the Vim user
++ maillist.  Try reproducing the problem without any plugins or settings:
++ 
++     vim -N -u NONE
++ 
++ If you report an issue, please describe exactly how to reproduce it.
++ For example, don't say "insert some text" but say what you did exactly:
++ "ahere is some text<Esc>".  Ideally, the steps you list can be used to write a
++ test to verify the problem is fixed.
++ 
++ Feel free to report even the smallest problem, also typos in the documentation.
++ 
++ You can find known issues in the todo file: ":help todo".
++ Or open [the todo file] on GitHub to see the latest version.
++ 
++ [the todo file]: https://github.com/vim/vim/blob/master/runtime/doc/todo.txt
+*** ../vim-7.4.845/src/version.c	2015-09-01 16:25:28.357392851 +0200
+--- src/version.c	2015-09-01 17:29:27.465629903 +0200
+***************
+*** 743,744 ****
+--- 743,746 ----
+  {   /* Add new patch number below this line */
++ /**/
++     846,
+  /**/
+
+-- 
+(letter from Mark to Mike, about the film's probable certificate)
+      For an 'A' we would have to: Lose as many shits as possible; Take Jesus
+      Christ out, if possible; Loose "I fart in your general direction"; Lose
+      "the oral sex"; Lose "oh, fuck off"; Lose "We make castanets out of your
+      testicles"
+                 "Monty Python and the Holy Grail" PYTHON (MONTY) PICTURES LTD
+
+ /// Bram Moolenaar -- Bram@Moolenaar.net -- http://www.Moolenaar.net   \\\
+///        sponsor Vim, vote for features -- http://www.Vim.org/sponsor/ \\\
+\\\  an exciting new programming language -- http://www.Zimbu.org        ///
+ \\\            help me help AIDS victims -- http://ICCF-Holland.org    ///

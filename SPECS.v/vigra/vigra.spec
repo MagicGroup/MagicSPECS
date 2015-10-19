@@ -1,19 +1,19 @@
 %{!?python_sitearch: %global python_sitearch %(%{__python} -c "from distutils.sysconfig import get_python_lib; print(get_python_lib(1))")}
 Summary:        Generic Programming for Computer Vision
+Summary(zh_CN.UTF-8): 计算机视觉的通用程序
 Name:           vigra
 Version:        1.10.0
-Release:        6%{?dist}
+Release:        7%{?dist}
 License:        MIT
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Source0:        http://hci.iwr.uni-heidelberg.de/%{name}/%{name}-%{version}-src.tar.gz
 Source1:        vigra-config.sh
 URL:            http://hci.iwr.uni-heidelberg.de/vigra/
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  zlib-devel libjpeg-devel libpng-devel libtiff-devel fftw-devel >= 3
 BuildRequires:  cmake boost-devel doxygen
-%if ! 0%{?rhel}
 BuildRequires:  hdf5-devel python-sphinx numpy-f2py boost-python OpenEXR-devel
-%endif
 Patch0: vigra.rhbz987048.shebang.patch
 
 %description
@@ -23,40 +23,44 @@ structures. By using template techniques similar to those in the C++ Standard
 Template Library, you can easily adapt any VIGRA component to the needs of your
 application without thereby giving up execution speed.
 
+%description -l zh_CN.UTF-8
+计算机视觉的通用程序。
+
 %package devel
 Summary: Development tools for programs which will use the vigra library
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: vigra = %{version}-%{release}
 Requires: libjpeg-devel libtiff-devel libpng-devel zlib-devel fftw-devel >= 3
 Requires: boost-devel
-%if ! 0%{?rhel}
 Requires: hdf5-devel numpy-f2py boost-python OpenEXR-devel
-%endif
 
 %description devel
 The vigra-devel package includes the header files necessary for developing
 programs that use the vigra library.
 
-%if ! 0%{?rhel}
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
 %package python
 Summary: Python interface for the vigra computer vision library
+Summary(zh_CN.UTF-8): %{name} 的 Python 绑定
 Requires: vigra = %{version}-%{release}
 Requires: numpy numpy-f2py
 
 %description python
 The vigra-python package provides python bindings for vigra
-%endif
+
+%description python -l zh_CN.UTF-8
+%{name} 的 Python 绑定。
 
 %prep
 %setup -q
 %patch0 -p1 -b .rhbz987048.shebang.patch
 
 %build
-%if ! 0%{?rhel}
 %cmake . -DWITH_OPENEXR=1 -DWITH_HDF5=1 -DWITH_VIGRANUMPY=1 -DWITH_VALGRIND=0
-%else
-%cmake . -DWITH_OPENEXR=0 -DWITH_HDF5=0 -DWITH_VIGRANUMPY=0 -DWITH_VALGRIND=0
-%endif
 make VERBOSE=1 %{?_smp_mflags}
 # cleanup
 rm -f doc/vigranumpy/.buildinfo
@@ -95,14 +99,15 @@ rm -rf %{buildroot}
 %{_libdir}/vigra
 %doc doc/vigra doc/vigranumpy
 
-%if ! 0%{?rhel}
 %files python
 %defattr(-, root, root,-)
 %{python_sitearch}/vigra
 %{_libdir}/vigranumpy
-%endif
 
 %changelog
+* Sat Oct 17 2015 Liu Di <liudidi@gmail.com> - 1.10.0-7
+- 为 Magic 3.0 重建
+
 * Sun Mar 01 2015 Liu Di <liudidi@gmail.com> - 1.10.0-6
 - 为 Magic 3.0 重建
 

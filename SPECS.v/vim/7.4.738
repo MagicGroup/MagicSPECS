@@ -1,0 +1,102 @@
+To: vim_dev@googlegroups.com
+Subject: Patch 7.4.738
+Fcc: outbox
+From: Bram Moolenaar <Bram@moolenaar.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+------------
+
+Patch 7.4.738 (after 7.4.732)
+Problem:    Can't compile without the syntax highlighting feature.
+Solution:   Add #ifdef around use of w_p_cul. (Hirohito Higashi)
+Files:      src/normal.c, src/screen.c
+
+
+*** ../vim-7.4.737/src/normal.c	2015-06-09 20:19:57.726732226 +0200
+--- src/normal.c	2015-06-10 11:48:14.045128971 +0200
+***************
+*** 8487,8495 ****
+--- 8487,8497 ----
+  	    /* When '#' is in 'cpoptions' ignore the count. */
+  	    if (vim_strchr(p_cpo, CPO_HASH) != NULL)
+  		cap->count1 = 1;
++ #ifdef FEAT_SYN_HL
+  	    if (curwin->w_p_cul)
+  		/* force redraw of cursorline */
+  		curwin->w_valid &= ~VALID_CROW;
++ #endif
+  	    invoke_edit(cap, FALSE, cap->cmdchar, TRUE);
+  	}
+      }
+*** ../vim-7.4.737/src/screen.c	2015-05-14 05:55:59.138935575 +0200
+--- src/screen.c	2015-06-10 12:16:28.090798579 +0200
+***************
+*** 3750,3773 ****
+  	    if (draw_state == WL_BRI - 1 && n_extra == 0)
+  	    {
+  		draw_state = WL_BRI;
+- # ifdef FEAT_DIFF
+- # endif
+  		if (wp->w_p_bri && n_extra == 0 && row != startrow
+! #ifdef FEAT_DIFF
+  			&& filler_lines == 0
+! #endif
+  		   )
+  		{
+  		    char_attr = 0; /* was: hl_attr(HLF_AT); */
+! #ifdef FEAT_DIFF
+  		    if (diff_hlf != (hlf_T)0)
+  		    {
+  			char_attr = hl_attr(diff_hlf);
+  			if (wp->w_p_cul && lnum == wp->w_cursor.lnum)
+  			    char_attr = hl_combine_attr(char_attr,
+  							    hl_attr(HLF_CUL));
+  		    }
+! #endif
+  		    p_extra = NULL;
+  		    c_extra = ' ';
+  		    n_extra = get_breakindent_win(wp,
+--- 3750,3773 ----
+  	    if (draw_state == WL_BRI - 1 && n_extra == 0)
+  	    {
+  		draw_state = WL_BRI;
+  		if (wp->w_p_bri && n_extra == 0 && row != startrow
+! # ifdef FEAT_DIFF
+  			&& filler_lines == 0
+! # endif
+  		   )
+  		{
+  		    char_attr = 0; /* was: hl_attr(HLF_AT); */
+! # ifdef FEAT_DIFF
+  		    if (diff_hlf != (hlf_T)0)
+  		    {
+  			char_attr = hl_attr(diff_hlf);
++ #  ifdef FEAT_SYN_HL
+  			if (wp->w_p_cul && lnum == wp->w_cursor.lnum)
+  			    char_attr = hl_combine_attr(char_attr,
+  							    hl_attr(HLF_CUL));
++ #  endif
+  		    }
+! # endif
+  		    p_extra = NULL;
+  		    c_extra = ' ';
+  		    n_extra = get_breakindent_win(wp,
+*** ../vim-7.4.737/src/version.c	2015-06-09 21:33:24.819610622 +0200
+--- src/version.c	2015-06-10 11:49:51.336075815 +0200
+***************
+*** 743,744 ****
+--- 743,746 ----
+  {   /* Add new patch number below this line */
++ /**/
++     738,
+  /**/
+
+-- 
+From "know your smileys":
+ :-&	Eating spaghetti
+
+ /// Bram Moolenaar -- Bram@Moolenaar.net -- http://www.Moolenaar.net   \\\
+///        sponsor Vim, vote for features -- http://www.Vim.org/sponsor/ \\\
+\\\  an exciting new programming language -- http://www.Zimbu.org        ///
+ \\\            help me help AIDS victims -- http://ICCF-Holland.org    ///

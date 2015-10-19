@@ -1,0 +1,58 @@
+To: vim_dev@googlegroups.com
+Subject: Patch 7.4.815
+Fcc: outbox
+From: Bram Moolenaar <Bram@moolenaar.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+------------
+
+Patch 7.4.815
+Problem:    Invalid memory access when doing ":call g:".
+Solution:   Check for an empty name. (Dominique Pelle)
+Files:      src/eval.c
+
+
+*** ../vim-7.4.814/src/eval.c	2015-08-11 14:26:03.594931131 +0200
+--- src/eval.c	2015-08-11 15:44:34.457092477 +0200
+***************
+*** 21371,21376 ****
+--- 21371,21377 ----
+  
+  /*
+   * Find the hashtab used for a variable name.
++  * Return NULL if the name is not valid.
+   * Set "varname" to the start of name without ':'.
+   */
+      static hashtab_T *
+***************
+*** 21380,21385 ****
+--- 21381,21388 ----
+  {
+      hashitem_T	*hi;
+  
++     if (name[0] == NUL)
++ 	return NULL;
+      if (name[1] != ':')
+      {
+  	/* The name must not start with a colon or #. */
+*** ../vim-7.4.814/src/version.c	2015-08-11 15:27:07.624943222 +0200
+--- src/version.c	2015-08-11 15:44:59.056813528 +0200
+***************
+*** 743,744 ****
+--- 743,746 ----
+  {   /* Add new patch number below this line */
++ /**/
++     815,
+  /**/
+
+-- 
+There are 2 kinds of people in my world: those who know Unix, Perl, Vim, GNU,
+Linux, etc, and those who know COBOL.  It gets very difficult for me at
+parties, not knowing which group to socialise with :-)
+						Sitaram Chamarty
+
+ /// Bram Moolenaar -- Bram@Moolenaar.net -- http://www.Moolenaar.net   \\\
+///        sponsor Vim, vote for features -- http://www.Vim.org/sponsor/ \\\
+\\\  an exciting new programming language -- http://www.Zimbu.org        ///
+ \\\            help me help AIDS victims -- http://ICCF-Holland.org    ///

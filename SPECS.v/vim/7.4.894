@@ -1,0 +1,50 @@
+To: vim_dev@googlegroups.com
+Subject: Patch 7.4.894
+Fcc: outbox
+From: Bram Moolenaar <Bram@moolenaar.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+------------
+
+Patch 7.4.894
+Problem:    vimrun.exe is picky about the number of spaces before -s.
+Solution:   Skip all spaces. (Cam Sinclair)
+Files:      src/vimrun.c
+
+
+*** ../vim-7.4.893/src/vimrun.c	2010-05-15 13:04:08.000000000 +0200
+--- src/vimrun.c	2015-10-13 17:52:19.458373362 +0200
+***************
+*** 79,84 ****
+--- 79,86 ----
+  	}
+  	++p;
+      }
++     while (*p == ' ')
++         ++p;
+  
+      /*
+       * "-s" argument: don't wait for a key hit.
+*** ../vim-7.4.893/src/version.c	2015-10-13 16:13:33.460731830 +0200
+--- src/version.c	2015-10-13 17:50:14.099697025 +0200
+***************
+*** 743,744 ****
+--- 743,746 ----
+  {   /* Add new patch number below this line */
++ /**/
++     894,
+  /**/
+
+-- 
+Q. What happens to programmers when they die?
+A: MS-Windows programmers are reinstalled.  C++ programmers become undefined,
+   anyone who refers to them will die as well. Java programmers reincarnate
+   after being garbage collected, unless they are in permgen, in which case
+   they become zombies.  Zimbu programmers leave a stack trace that tells us
+   exactly where they died and how they got there.
+
+ /// Bram Moolenaar -- Bram@Moolenaar.net -- http://www.Moolenaar.net   \\\
+///        sponsor Vim, vote for features -- http://www.Vim.org/sponsor/ \\\
+\\\  an exciting new programming language -- http://www.Zimbu.org        ///
+ \\\            help me help AIDS victims -- http://ICCF-Holland.org    ///

@@ -1,0 +1,115 @@
+diff -up vsftpd-3.0.2/parseconf.c.ecdh vsftpd-3.0.2/parseconf.c
+--- vsftpd-3.0.2/parseconf.c.ecdh	2014-09-15 15:49:48.801315298 +0200
++++ vsftpd-3.0.2/parseconf.c	2014-09-15 15:49:48.804315301 +0200
+@@ -177,6 +177,7 @@ parseconf_str_array[] =
+   { "rsa_cert_file", &tunable_rsa_cert_file },
+   { "dsa_cert_file", &tunable_dsa_cert_file },
+   { "dh_param_file", &tunable_dh_param_file },
++  { "ecdh_param_file", &tunable_ecdh_param_file },
+   { "ssl_ciphers", &tunable_ssl_ciphers },
+   { "rsa_private_key_file", &tunable_rsa_private_key_file },
+   { "dsa_private_key_file", &tunable_dsa_private_key_file },
+diff -up vsftpd-3.0.2/ssl.c.ecdh vsftpd-3.0.2/ssl.c
+--- vsftpd-3.0.2/ssl.c.ecdh	2014-09-15 15:49:48.802315299 +0200
++++ vsftpd-3.0.2/ssl.c	2014-09-15 15:49:48.804315301 +0200
+@@ -122,7 +122,7 @@ ssl_init(struct vsf_session* p_sess)
+     {
+       die("SSL: could not allocate SSL context");
+     }
+-    options = SSL_OP_ALL | SSL_OP_SINGLE_DH_USE;
++    options = SSL_OP_ALL | SSL_OP_SINGLE_DH_USE | SSL_OP_SINGLE_ECDH_USE;
+     if (!tunable_sslv2)
+     {
+       options |= SSL_OP_NO_SSLv2;
+@@ -235,6 +235,41 @@ ssl_init(struct vsf_session* p_sess)
+     
+     SSL_CTX_set_tmp_dh_callback(p_ctx, ssl_tmp_dh_callback);
+ 
++    if (tunable_ecdh_param_file)
++    {
++      BIO *bio;
++      int nid;
++      EC_GROUP *ecparams = NULL;
++      EC_KEY *eckey;
++
++      if ((bio = BIO_new_file(tunable_ecdh_param_file, "r")) == NULL)
++        die("SSL: cannot load custom ec params");
++      else
++      {
++        ecparams = PEM_read_bio_ECPKParameters(bio, NULL, NULL, NULL);
++        BIO_free(bio);
++
++        if (ecparams && (nid = EC_GROUP_get_curve_name(ecparams)) &&
++            (eckey = EC_KEY_new_by_curve_name(nid)))
++        {
++          if (!SSL_CTX_set_tmp_ecdh(p_ctx, eckey))
++            die("SSL: setting custom EC params failed");
++	}
++	else
++        {
++          die("SSL: getting ec group or key failed");
++	}
++      }
++    }
++    else
++    {
++#if defined(SSL_CTX_set_ecdh_auto)
++      SSL_CTX_set_ecdh_auto(p_ctx, 1);
++#else
++      SSL_CTX_set_tmp_ecdh(p_ctx, EC_KEY_new_by_curve_name(NID_X9_62_prime256v1));
++#endif
++    }
++
+     p_sess->p_ssl_ctx = p_ctx;
+     ssl_inited = 1;
+   }
+diff -up vsftpd-3.0.2/tunables.c.ecdh vsftpd-3.0.2/tunables.c
+--- vsftpd-3.0.2/tunables.c.ecdh	2014-09-15 15:49:48.802315299 +0200
++++ vsftpd-3.0.2/tunables.c	2014-09-15 15:51:13.176386035 +0200
+@@ -141,6 +141,7 @@ const char* tunable_email_password_file;
+ const char* tunable_rsa_cert_file;
+ const char* tunable_dsa_cert_file;
+ const char* tunable_dh_param_file;
++const char* tunable_ecdh_param_file;
+ const char* tunable_ssl_ciphers;
+ const char* tunable_rsa_private_key_file;
+ const char* tunable_dsa_private_key_file;
+@@ -290,7 +291,8 @@ tunables_load_defaults()
+                       &tunable_rsa_cert_file);
+   install_str_setting(0, &tunable_dsa_cert_file);
+   install_str_setting(0, &tunable_dh_param_file);
+-  install_str_setting("AES128-SHA:DES-CBC3-SHA:DHE-RSA-AES256-SHA",
++  install_str_setting(0, &tunable_ecdh_param_file);
++  install_str_setting("AES128-SHA:DES-CBC3-SHA:DHE-RSA-AES256-SHA:ECDHE-RSA-AES128-SHA",
+                       &tunable_ssl_ciphers);
+   install_str_setting(0, &tunable_rsa_private_key_file);
+   install_str_setting(0, &tunable_dsa_private_key_file);
+diff -up vsftpd-3.0.2/tunables.h.ecdh vsftpd-3.0.2/tunables.h
+--- vsftpd-3.0.2/tunables.h.ecdh	2014-09-15 15:49:48.802315299 +0200
++++ vsftpd-3.0.2/tunables.h	2014-09-15 15:49:48.804315301 +0200
+@@ -143,6 +143,7 @@ extern const char* tunable_email_passwor
+ extern const char* tunable_rsa_cert_file;
+ extern const char* tunable_dsa_cert_file;
+ extern const char* tunable_dh_param_file;
++extern const char* tunable_ecdh_param_file;
+ extern const char* tunable_ssl_ciphers;
+ extern const char* tunable_rsa_private_key_file;
+ extern const char* tunable_dsa_private_key_file;
+diff -up vsftpd-3.0.2/vsftpd.conf.5.ecdh vsftpd-3.0.2/vsftpd.conf.5
+--- vsftpd-3.0.2/vsftpd.conf.5.ecdh	2014-09-15 15:49:48.802315299 +0200
++++ vsftpd-3.0.2/vsftpd.conf.5	2014-09-15 15:49:48.806315302 +0200
+@@ -899,6 +915,14 @@ ephemeral Diffie-Hellman key exchange in
+ 
+ Default: (none - use built in parameters appropriate for certificate key size)
+ .TP
++.B ecdh_param_file
++This option specifies the location of custom parameters for ephemeral
++Elliptic Curve Diffie-Hellman (ECDH) key exchange.
++
++Default: (none - use built in parameters, NIST P-256 with OpenSSL 1.0.1 and
++automatically selected curve based on client preferences with OpenSSL 1.0.2
++and later)
++.TP
+ .B email_password_file
+ This option can be used to provide an alternate file for usage by the
+ .BR secure_email_list_enable

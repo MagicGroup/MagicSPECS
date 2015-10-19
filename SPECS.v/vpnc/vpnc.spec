@@ -1,12 +1,14 @@
-%define snapshot .svn457
+%define snapshot .svn550
 
 Name:		vpnc
 Version:	0.5.3
-Release:	21%{snapshot}%{?dist}
+Release:	23%{snapshot}%{?dist}
 
 Summary:	IPSec VPN client compatible with Cisco equipment
+Summary(zh_CN.UTF-8): Cisco 兼容的 IPSec VPN 客户端
 
 Group:		Applications/Internet
+Group(zh_CN.UTF-8): 应用程序/互联网
 License:	GPLv2+
 URL:		http://www.unix-ag.uni-kl.de/~massar/vpnc/
 Source0:	http://www.unix-ag.uni-kl.de/~massar/vpnc/%{name}-%{version}%{snapshot}.tar.gz
@@ -35,9 +37,14 @@ A VPN client compatible with Cisco's EasyVPN equipment.
 Supports IPSec (ESP) with Mode Configuration and Xauth.  Supports only
 shared-secret IPSec authentication, 3DES, MD5, and IP tunneling.
 
+%description -l zh_CN.UTF-8
+Cisco 的 EasyVPN 兼容的 VPN 客户端。
+
 %package consoleuser
 Summary:	Allows console user to run the VPN client directly
+Summary(zh_CN.UTF-8): 允许控制台用户直接运行 VPN 客户端
 Group:		Applications/Internet
+Group(zh_CN.UTF-8): 应用程序/互联网
 Requires:	vpnc = %{version}-%{release}
 Requires:	usermode
 
@@ -45,15 +52,21 @@ Requires:	usermode
 Allows the console user to run the IPSec VPN client directly without
 switching to the root account.
 
+%description consoleuser -l zh_CN.UTF-8
+允许控制台用户直接运行 VPN 客户端。
+
 %package script
 Summary:	Routing setup script for vpnc and openconnect
+Summary(zh_CN.UTF-8): vpnc 和 openconnet 用的路由设置脚本
 Group:		Applications/Internet
+Group(zh_CN.UTF-8): 应用程序/互联网
 BuildArch:	noarch
 
 %description script
 This script sets up routing for VPN connectivity, when invoked by vpnc
 or openconnect.
-
+%description script -l zh_CN.UTF-8
+vpnc 和 openconnet 用的路由设置脚本。
 
 %prep
 %setup -q
@@ -92,6 +105,7 @@ install -m 0644 %{SOURCE8} %{buildroot}%{_sysconfdir}/tmpfiles.d/%{name}.conf
 
 mkdir -p %{buildroot}%{_localstatedir}/run/
 install -d -m 0755 %{buildroot}%{_localstatedir}/run/%{name}/
+magic_rpm_clean.sh
 
 %files
 %defattr(-,root,root)
@@ -119,6 +133,12 @@ install -d -m 0755 %{buildroot}%{_localstatedir}/run/%{name}/
 %config(noreplace) %{_sysconfdir}/vpnc/vpnc-script
 
 %changelog
+* Mon Oct 19 2015 Liu Di <liudidi@gmail.com> - 0.5.3-23.svn550
+- 为 Magic 3.0 重建
+
+* Mon Oct 19 2015 Liu Di <liudidi@gmail.com> - 0.5.3-22.svn457
+- 为 Magic 3.0 重建
+
 * Tue May 06 2014 Liu Di <liudidi@gmail.com> - 0.5.3-21.svn457
 - 为 Magic 3.0 重建
 

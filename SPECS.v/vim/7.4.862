@@ -1,0 +1,92 @@
+To: vim_dev@googlegroups.com
+Subject: Patch 7.4.862
+Fcc: outbox
+From: Bram Moolenaar <Bram@moolenaar.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+------------
+
+Patch 7.4.862 (after 7.4.861)
+Problem:    Still problems with pango_shape_full() not available.
+Solution:   Change AC_TRY_COMPILE to AC_TRY_LINK.
+Files:      src/configure.in, src/auto/configure
+
+
+*** ../vim-7.4.861/src/configure.in	2015-09-08 20:00:17.527627756 +0200
+--- src/configure.in	2015-09-09 20:08:26.833746422 +0200
+***************
+*** 3546,3552 ****
+    ac_save_LIBS="$LIBS"
+    CFLAGS="$CFLAGS $GTK_CFLAGS"
+    LIBS="$LIBS $GTK_LIBS"
+!   AC_TRY_COMPILE(
+    [#include <gtk/gtk.h>],
+    [ pango_shape_full(NULL, 0, NULL, 0, NULL, NULL); ],
+  	  AC_MSG_RESULT(yes); AC_DEFINE(HAVE_PANGO_SHAPE_FULL),
+--- 3546,3552 ----
+    ac_save_LIBS="$LIBS"
+    CFLAGS="$CFLAGS $GTK_CFLAGS"
+    LIBS="$LIBS $GTK_LIBS"
+!   AC_TRY_LINK(
+    [#include <gtk/gtk.h>],
+    [ pango_shape_full(NULL, 0, NULL, 0, NULL, NULL); ],
+  	  AC_MSG_RESULT(yes); AC_DEFINE(HAVE_PANGO_SHAPE_FULL),
+*** ../vim-7.4.861/src/auto/configure	2015-09-08 20:00:17.531627716 +0200
+--- src/auto/configure	2015-09-09 20:08:29.721697479 +0200
+***************
+*** 12199,12205 ****
+    return 0;
+  }
+  _ACEOF
+! if ac_fn_c_try_compile "$LINENO"; then :
+    { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
+  $as_echo "yes" >&6; }; $as_echo "#define HAVE_PANGO_SHAPE_FULL 1" >>confdefs.h
+  
+--- 12199,12205 ----
+    return 0;
+  }
+  _ACEOF
+! if ac_fn_c_try_link "$LINENO"; then :
+    { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
+  $as_echo "yes" >&6; }; $as_echo "#define HAVE_PANGO_SHAPE_FULL 1" >>confdefs.h
+  
+***************
+*** 12207,12213 ****
+    { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
+  $as_echo "no" >&6; }
+  fi
+! rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
+    CFLAGS="$ac_save_CFLAGS"
+    LIBS="$ac_save_LIBS"
+  fi
+--- 12207,12214 ----
+    { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
+  $as_echo "no" >&6; }
+  fi
+! rm -f core conftest.err conftest.$ac_objext \
+!     conftest$ac_exeext conftest.$ac_ext
+    CFLAGS="$ac_save_CFLAGS"
+    LIBS="$ac_save_LIBS"
+  fi
+*** ../vim-7.4.861/src/version.c	2015-09-08 20:00:17.535627675 +0200
+--- src/version.c	2015-09-09 20:11:51.130471208 +0200
+***************
+*** 743,744 ****
+--- 743,746 ----
+  {   /* Add new patch number below this line */
++ /**/
++     862,
+  /**/
+
+-- 
+ARTHUR:    Be quiet!  I order you to shut up.
+OLD WOMAN: Order, eh -- who does he think he is?
+ARTHUR:    I am your king!
+OLD WOMAN: Well, I didn't vote for you.
+                 "Monty Python and the Holy Grail" PYTHON (MONTY) PICTURES LTD
+
+ /// Bram Moolenaar -- Bram@Moolenaar.net -- http://www.Moolenaar.net   \\\
+///        sponsor Vim, vote for features -- http://www.Vim.org/sponsor/ \\\
+\\\  an exciting new programming language -- http://www.Zimbu.org        ///
+ \\\            help me help AIDS victims -- http://ICCF-Holland.org    ///

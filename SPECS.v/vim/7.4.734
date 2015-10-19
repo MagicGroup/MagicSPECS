@@ -1,0 +1,389 @@
+To: vim_dev@googlegroups.com
+Subject: Patch 7.4.734
+Fcc: outbox
+From: Bram Moolenaar <Bram@moolenaar.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+------------
+
+Patch 7.4.734
+Problem:    ml_get error when using "p" in a Visual selection in the last
+            line.
+Solution:   Change the behavior at the last line. (Yukihiro Nakadaira)
+Files:      src/normal.c, src/ops.c, src/testdir/test94.in,
+            src/testdir/test94.ok
+
+
+*** ../vim-7.4.733/src/normal.c	2015-06-09 19:23:39.675159547 +0200
+--- src/normal.c	2015-06-09 20:08:53.853761282 +0200
+***************
+*** 1547,1554 ****
+  	    }
+  
+  	    /* In Select mode, a linewise selection is operated upon like a
+! 	     * characterwise selection. */
+! 	    if (VIsual_select && VIsual_mode == 'V')
+  	    {
+  		if (lt(VIsual, curwin->w_cursor))
+  		{
+--- 1547,1556 ----
+  	    }
+  
+  	    /* In Select mode, a linewise selection is operated upon like a
+! 	     * characterwise selection.
+! 	     * Special case: gH<Del> deletes the last line. */
+! 	    if (VIsual_select && VIsual_mode == 'V'
+! 					    && cap->oap->op_type != OP_DELETE)
+  	    {
+  		if (lt(VIsual, curwin->w_cursor))
+  		{
+***************
+*** 1770,1793 ****
+  		    oap->inclusive = FALSE;
+  		    /* Try to include the newline, unless it's an operator
+  		     * that works on lines only. */
+! 		    if (*p_sel != 'o' && !op_on_lines(oap->op_type))
+  		    {
+! 			if (oap->end.lnum < curbuf->b_ml.ml_line_count)
+! 			{
+! 			    ++oap->end.lnum;
+! 			    oap->end.col = 0;
+  #ifdef FEAT_VIRTUALEDIT
+! 			    oap->end.coladd = 0;
+  #endif
+! 			    ++oap->line_count;
+! 			}
+! 			else
+! 			{
+! 			    /* Cannot move below the last line, make the op
+! 			     * inclusive to tell the operation to include the
+! 			     * line break. */
+! 			    oap->inclusive = TRUE;
+! 			}
+  		    }
+  		}
+  	    }
+--- 1772,1787 ----
+  		    oap->inclusive = FALSE;
+  		    /* Try to include the newline, unless it's an operator
+  		     * that works on lines only. */
+! 		    if (*p_sel != 'o'
+! 			    && !op_on_lines(oap->op_type)
+! 			    && oap->end.lnum < curbuf->b_ml.ml_line_count)
+  		    {
+! 			++oap->end.lnum;
+! 			oap->end.col = 0;
+  #ifdef FEAT_VIRTUALEDIT
+! 			oap->end.coladd = 0;
+  #endif
+! 			++oap->line_count;
+  		    }
+  		}
+  	    }
+*** ../vim-7.4.733/src/ops.c	2015-05-04 20:19:16.937521201 +0200
+--- src/ops.c	2015-06-09 20:08:53.857761240 +0200
+***************
+*** 1959,2018 ****
+  		    curwin->w_cursor.coladd = 0;
+  	    }
+  #endif
+! 	    if (oap->op_type == OP_DELETE
+! 		    && oap->inclusive
+! 		    && oap->end.lnum == curbuf->b_ml.ml_line_count
+! 		    && n > (int)STRLEN(ml_get(oap->end.lnum)))
+! 	    {
+! 		/* Special case: gH<Del> deletes the last line. */
+! 		del_lines(1L, FALSE);
+! 	    }
+! 	    else
+! 	    {
+! 		(void)del_bytes((long)n, !virtual_op,
+! 				oap->op_type == OP_DELETE && !oap->is_VIsual);
+! 	    }
+  	}
+  	else				/* delete characters between lines */
+  	{
+  	    pos_T   curpos;
+- 	    int     delete_last_line;
+  
+  	    /* save deleted and changed lines for undo */
+  	    if (u_save((linenr_T)(curwin->w_cursor.lnum - 1),
+  		 (linenr_T)(curwin->w_cursor.lnum + oap->line_count)) == FAIL)
+  		return FAIL;
+  
+- 	    delete_last_line = (oap->end.lnum == curbuf->b_ml.ml_line_count);
+  	    truncate_line(TRUE);	/* delete from cursor to end of line */
+  
+  	    curpos = curwin->w_cursor;	/* remember curwin->w_cursor */
+  	    ++curwin->w_cursor.lnum;
+  	    del_lines((long)(oap->line_count - 2), FALSE);
+  
+! 	    if (delete_last_line)
+! 		oap->end.lnum = curbuf->b_ml.ml_line_count;
+! 
+  	    n = (oap->end.col + 1 - !oap->inclusive);
+! 	    if (oap->inclusive && delete_last_line
+! 		    && n > (int)STRLEN(ml_get(oap->end.lnum)))
+! 	    {
+! 		/* Special case: gH<Del> deletes the last line. */
+! 		del_lines(1L, FALSE);
+! 		curwin->w_cursor = curpos;	/* restore curwin->w_cursor */
+! 		if (curwin->w_cursor.lnum > curbuf->b_ml.ml_line_count)
+! 		    curwin->w_cursor.lnum = curbuf->b_ml.ml_line_count;
+! 	    }
+! 	    else
+! 	    {
+! 		/* delete from start of line until op_end */
+! 		curwin->w_cursor.col = 0;
+! 		(void)del_bytes((long)n, !virtual_op,
+! 				oap->op_type == OP_DELETE && !oap->is_VIsual);
+! 		curwin->w_cursor = curpos;	/* restore curwin->w_cursor */
+! 	    }
+! 	    if (curwin->w_cursor.lnum < curbuf->b_ml.ml_line_count)
+! 		(void)do_join(2, FALSE, FALSE, FALSE, FALSE);
+  	}
+      }
+  
+--- 1959,1989 ----
+  		    curwin->w_cursor.coladd = 0;
+  	    }
+  #endif
+! 	    (void)del_bytes((long)n, !virtual_op,
+! 			    oap->op_type == OP_DELETE && !oap->is_VIsual);
+  	}
+  	else				/* delete characters between lines */
+  	{
+  	    pos_T   curpos;
+  
+  	    /* save deleted and changed lines for undo */
+  	    if (u_save((linenr_T)(curwin->w_cursor.lnum - 1),
+  		 (linenr_T)(curwin->w_cursor.lnum + oap->line_count)) == FAIL)
+  		return FAIL;
+  
+  	    truncate_line(TRUE);	/* delete from cursor to end of line */
+  
+  	    curpos = curwin->w_cursor;	/* remember curwin->w_cursor */
+  	    ++curwin->w_cursor.lnum;
+  	    del_lines((long)(oap->line_count - 2), FALSE);
+  
+! 	    /* delete from start of line until op_end */
+  	    n = (oap->end.col + 1 - !oap->inclusive);
+! 	    curwin->w_cursor.col = 0;
+! 	    (void)del_bytes((long)n, !virtual_op,
+! 			    oap->op_type == OP_DELETE && !oap->is_VIsual);
+! 	    curwin->w_cursor = curpos;	/* restore curwin->w_cursor */
+! 	    (void)do_join(2, FALSE, FALSE, FALSE, FALSE);
+  	}
+      }
+  
+*** ../vim-7.4.733/src/testdir/test94.in	2013-05-04 04:03:02.000000000 +0200
+--- src/testdir/test94.in	2015-06-09 20:08:08.058244848 +0200
+***************
+*** 64,69 ****
+--- 64,179 ----
+  d::set ma | put = v:errmsg =~# '^E21' ? 'ok' : 'failed'
+  dv:dV::set noma | let v:errmsg = ''
+  d::set ma | put = v:errmsg =~# '^E21' ? 'failed' : 'ok'
++ :
++ :$put =''
++ :$put ='characterwise visual mode: replace last line'
++ :$put ='a'
++ :let @" = 'x'
++ :let v:errmsg = ''
++ v$p
++ :$put ='---'
++ :$put ='v:errmsg='.v:errmsg
++ :
++ :$put =''
++ :$put ='characterwise visual mode: delete middle line'
++ :$put ='a'
++ :$put ='b'
++ :$put ='c'
++ kkv$d
++ :$put ='---'
++ :
++ :$put =''
++ :$put ='characterwise visual mode: delete middle two line'
++ :$put ='a'
++ :$put ='b'
++ :$put ='c'
++ kkvj$d
++ :$put ='---'
++ :
++ :$put =''
++ :$put ='characterwise visual mode: delete last line'
++ :$put ='a'
++ :$put ='b'
++ :$put ='c'
++ v$d
++ :$put ='---'
++ :
++ :$put =''
++ :$put ='characterwise visual mode: delete last two line'
++ :$put ='a'
++ :$put ='b'
++ :$put ='c'
++ kvj$d
++ :$put ='---'
++ :
++ :" Select mode maps
++ :snoremap <lt>End> <End>
++ :snoremap <lt>Down> <Down>
++ :snoremap <lt>Del> <Del>
++ :
++ :$put =''
++ :$put ='characterwise select mode: delete middle line'
++ :$put ='a'
++ :$put ='b'
++ :$put ='c'
++ kkgh<End><Del>
++ :$put ='---'
++ :
++ :$put =''
++ :$put ='characterwise select mode: delete middle two line'
++ :$put ='a'
++ :$put ='b'
++ :$put ='c'
++ kkgh<Down><End><Del>
++ :$put ='---'
++ :
++ :$put =''
++ :$put ='characterwise select mode: delete last line'
++ :$put ='a'
++ :$put ='b'
++ :$put ='c'
++ gh<End><Del>
++ :$put ='---'
++ :
++ :$put =''
++ :$put ='characterwise select mode: delete last two line'
++ :$put ='a'
++ :$put ='b'
++ :$put ='c'
++ kgh<Down><End><Del>
++ :$put ='---'
++ :
++ :$put =''
++ :$put ='linewise select mode: delete middle line'
++ :$put ='a'
++ :$put ='b'
++ :$put ='c'
++ kkgH<Del>
++ :$put ='---'
++ :
++ :$put =''
++ :$put ='linewise select mode: delete middle two line'
++ :$put ='a'
++ :$put ='b'
++ :$put ='c'
++ kkgH<Down><Del>
++ :$put ='---'
++ :
++ :$put =''
++ :$put ='linewise select mode: delete last line'
++ :$put ='a'
++ :$put ='b'
++ :$put ='c'
++ gH<Del>
++ :$put ='---'
++ :
++ :$put =''
++ :$put ='linewise select mode: delete last two line'
++ :$put ='a'
++ :$put ='b'
++ :$put ='c'
++ kgH<Down><Del>
++ :$put ='---'
+  :/^start:/+2,$w! test.out
+  :q!
+  ENDTEST
+*** ../vim-7.4.733/src/testdir/test94.ok	2013-05-04 04:06:46.000000000 +0200
+--- src/testdir/test94.ok	2015-06-09 20:08:08.058244848 +0200
+***************
+*** 18,20 ****
+--- 18,83 ----
+  zzz
+  ok
+  ok
++ 
++ characterwise visual mode: replace last line
++ x
++ ---
++ v:errmsg=
++ 
++ characterwise visual mode: delete middle line
++ b
++ c
++ ---
++ 
++ characterwise visual mode: delete middle two line
++ c
++ ---
++ 
++ characterwise visual mode: delete last line
++ a
++ b
++ 
++ ---
++ 
++ characterwise visual mode: delete last two line
++ a
++ 
++ ---
++ 
++ characterwise select mode: delete middle line
++ b
++ c
++ ---
++ 
++ characterwise select mode: delete middle two line
++ c
++ ---
++ 
++ characterwise select mode: delete last line
++ a
++ b
++ 
++ ---
++ 
++ characterwise select mode: delete last two line
++ a
++ 
++ ---
++ 
++ linewise select mode: delete middle line
++ b
++ c
++ ---
++ 
++ linewise select mode: delete middle two line
++ c
++ ---
++ 
++ linewise select mode: delete last line
++ a
++ b
++ ---
++ 
++ linewise select mode: delete last two line
++ a
++ ---
+*** ../vim-7.4.733/src/version.c	2015-06-09 19:58:13.664658549 +0200
+--- src/version.c	2015-06-09 20:19:16.815166372 +0200
+***************
+*** 743,744 ****
+--- 743,746 ----
+  {   /* Add new patch number below this line */
++ /**/
++     734,
+  /**/
+
+-- 
+From "know your smileys":
+ <>:-)	Bishop
+
+ /// Bram Moolenaar -- Bram@Moolenaar.net -- http://www.Moolenaar.net   \\\
+///        sponsor Vim, vote for features -- http://www.Vim.org/sponsor/ \\\
+\\\  an exciting new programming language -- http://www.Zimbu.org        ///
+ \\\            help me help AIDS victims -- http://ICCF-Holland.org    ///

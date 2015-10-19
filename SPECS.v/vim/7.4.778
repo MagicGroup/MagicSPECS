@@ -1,0 +1,59 @@
+To: vim_dev@googlegroups.com
+Subject: Patch 7.4.778
+Fcc: outbox
+From: Bram Moolenaar <Bram@moolenaar.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+------------
+
+Patch 7.4.778
+Problem:    Coverity warns for uninitialized variable.
+Solution:   Change condition of assignment.
+Files:      src/ops.c
+
+
+*** ../vim-7.4.777/src/ops.c	2015-07-03 12:44:01.735748596 +0200
+--- src/ops.c	2015-07-10 21:44:12.118882050 +0200
+***************
+*** 5702,5711 ****
+  	/* reset */
+  	subtract = FALSE;
+  	negative = FALSE;
+! 	if (visual && VIsual_mode != Ctrl_V)
+! 	    col = 0;
+! 	else
+  	    col = startcol;
+  	Prenum1 += offset;
+  	curwin->w_set_curswant = TRUE;
+  #ifdef FEAT_RIGHTLEFT
+--- 5702,5711 ----
+  	/* reset */
+  	subtract = FALSE;
+  	negative = FALSE;
+! 	if (visual && VIsual_mode == Ctrl_V)
+  	    col = startcol;
++ 	else
++ 	    col = 0;
+  	Prenum1 += offset;
+  	curwin->w_set_curswant = TRUE;
+  #ifdef FEAT_RIGHTLEFT
+*** ../vim-7.4.777/src/version.c	2015-07-10 19:21:45.667489110 +0200
+--- src/version.c	2015-07-10 22:37:05.097309995 +0200
+***************
+*** 743,744 ****
+--- 743,746 ----
+  {   /* Add new patch number below this line */
++ /**/
++     778,
+  /**/
+
+-- 
+hundred-and-one symptoms of being an internet addict:
+206. You religiously respond immediately to e-mail, while ignoring
+     your growing pile of snail mail.
+
+ /// Bram Moolenaar -- Bram@Moolenaar.net -- http://www.Moolenaar.net   \\\
+///        sponsor Vim, vote for features -- http://www.Vim.org/sponsor/ \\\
+\\\  an exciting new programming language -- http://www.Zimbu.org        ///
+ \\\            help me help AIDS victims -- http://ICCF-Holland.org    ///

@@ -1,0 +1,52 @@
+To: vim_dev@googlegroups.com
+Subject: Patch 7.4.781
+Fcc: outbox
+From: Bram Moolenaar <Bram@moolenaar.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+------------
+
+Patch 7.4.781
+Problem:    line2byte() returns one less when 'bin' and 'noeol' are set.
+Solution:   Only adjust the size for the last line. (Rob Wu)
+Files:      src/memline.c
+
+
+*** ../vim-7.4.780/src/memline.c	2015-06-09 18:35:17.467406952 +0200
+--- src/memline.c	2015-07-12 17:45:59.252002071 +0200
+***************
+*** 5362,5368 ****
+  	    size += lnum - 1;
+  
+  	/* Don't count the last line break if 'bin' and 'noeol'. */
+! 	if (buf->b_p_bin && !buf->b_p_eol)
+  	    size -= ffdos + 1;
+      }
+  
+--- 5362,5368 ----
+  	    size += lnum - 1;
+  
+  	/* Don't count the last line break if 'bin' and 'noeol'. */
+! 	if (buf->b_p_bin && !buf->b_p_eol && buf->b_ml.ml_line_count == lnum)
+  	    size -= ffdos + 1;
+      }
+  
+*** ../vim-7.4.780/src/version.c	2015-07-12 16:21:17.795908369 +0200
+--- src/version.c	2015-07-12 17:47:20.723228449 +0200
+***************
+*** 743,744 ****
+--- 743,746 ----
+  {   /* Add new patch number below this line */
++ /**/
++     781,
+  /**/
+
+-- 
+hundred-and-one symptoms of being an internet addict:
+213. Your kids start referring to you as "that guy in front of the monitor."
+
+ /// Bram Moolenaar -- Bram@Moolenaar.net -- http://www.Moolenaar.net   \\\
+///        sponsor Vim, vote for features -- http://www.Vim.org/sponsor/ \\\
+\\\  an exciting new programming language -- http://www.Zimbu.org        ///
+ \\\            help me help AIDS victims -- http://ICCF-Holland.org    ///

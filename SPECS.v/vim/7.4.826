@@ -1,0 +1,74 @@
+To: vim_dev@googlegroups.com
+Subject: Patch 7.4.826
+Fcc: outbox
+From: Bram Moolenaar <Bram@moolenaar.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+------------
+
+Patch 7.4.826
+Problem:    Compiler warnings and errors.
+Solution:   Make it build properly without the multi-byte feature.
+Files:      src/eval.c, src/search.c
+
+
+*** ../vim-7.4.825/src/eval.c	2015-08-12 22:56:53.577637469 +0200
+--- src/eval.c	2015-08-13 23:23:22.978663934 +0200
+***************
+*** 17056,17063 ****
+  	    }
+  	    else
+  #endif
+! 		set_last_csearch(mb_ptr2char(csearch),
+! 						csearch, mb_ptr2len(csearch));
+  	}
+  
+  	di = dict_find(d, (char_u *)"forward", -1);
+--- 17056,17063 ----
+  	    }
+  	    else
+  #endif
+! 		set_last_csearch(PTR2CHAR(csearch),
+! 						csearch, MB_PTR2LEN(csearch));
+  	}
+  
+  	di = dict_find(d, (char_u *)"forward", -1);
+*** ../vim-7.4.825/src/search.c	2015-08-11 14:26:03.594931131 +0200
+--- src/search.c	2015-08-13 23:25:44.708957357 +0200
+***************
+*** 451,458 ****
+      void
+  set_last_csearch(c, s, len)
+      int		c;
+!     char_u	*s;
+!     int		len;
+  {
+      *lastc = c;
+  #ifdef FEAT_MBYTE
+--- 451,458 ----
+      void
+  set_last_csearch(c, s, len)
+      int		c;
+!     char_u	*s UNUSED;
+!     int		len UNUSED;
+  {
+      *lastc = c;
+  #ifdef FEAT_MBYTE
+*** ../vim-7.4.825/src/version.c	2015-08-13 22:53:20.188768573 +0200
+--- src/version.c	2015-08-13 23:25:32.377105007 +0200
+***************
+*** 743,744 ****
+--- 743,746 ----
+  {   /* Add new patch number below this line */
++ /**/
++     826,
+  /**/
+
+-- 
+The early bird gets the worm. The second mouse gets the cheese.
+
+ /// Bram Moolenaar -- Bram@Moolenaar.net -- http://www.Moolenaar.net   \\\
+///        sponsor Vim, vote for features -- http://www.Vim.org/sponsor/ \\\
+\\\  an exciting new programming language -- http://www.Zimbu.org        ///
+ \\\            help me help AIDS victims -- http://ICCF-Holland.org    ///

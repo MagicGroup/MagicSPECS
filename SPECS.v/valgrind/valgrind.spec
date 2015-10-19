@@ -1,13 +1,15 @@
 %{?scl:%scl_package valgrind}
 
 Summary: Tool for finding memory management bugs in programs
+Summary(zh_CN.UTF-8): 查找程序中内存管理 bugs 的工具
 Name: %{?scl_prefix}valgrind
 Version: 3.11.0
-Release: 4%{?dist}
+Release: 5%{?dist}
 Epoch: 1
 License: GPLv2+
 URL: http://www.valgrind.org/
 Group: Development/Debuggers
+Group(zh_CN.UTF-8): 开发/调试器
 
 # Only necessary for RHEL, will be ignored on Fedora
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -20,15 +22,6 @@ BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 %ifarch x86_64
  %global build_multilib 1
-%endif
-
-%ifarch ppc64
-  %if 0%{?rhel}
-    %global build_multilib 1
-  %endif
-  %if 0%{?fedora}
-    %global build_multilib (%fedora < 21)
-  %endif
 %endif
 
 # Note s390x doesn't have an openmpi port available.
@@ -75,15 +68,7 @@ Patch8: valgrind-3.11.0-s390-hwcap.patch
 BuildRequires: /lib/libc.so.6 /usr/lib/libc.so /lib64/libc.so.6 /usr/lib64/libc.so
 %endif
 
-%if 0%{?fedora} >= 15
 BuildRequires: glibc-devel >= 2.14
-%else
-%if 0%{?rhel} >= 6
-BuildRequires: glibc-devel >= 2.12
-%else
-BuildRequires: glibc-devel >= 2.5
-%endif
-%endif
 
 %if %{build_openmpi}
 BuildRequires: openmpi-devel >= 1.3.3
@@ -151,9 +136,14 @@ malloc/new/free/delete are intercepted. As a result, Valgrind can
 detect a lot of problems that are otherwise very hard to
 find/diagnose.
 
+%description -l zh_CN.UTF-8
+查找程序中内存管理 bugs 的工具。
+
 %package devel
 Summary: Development files for valgrind
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: Development/Debuggers
+Group(zh_CN.UTF-8): 开发/调试器
 Requires: %{?scl_prefix}valgrind = %{epoch}:%{version}-%{release}
 Provides: %{name}-static = %{epoch}:%{version}-%{release}
 
@@ -161,15 +151,23 @@ Provides: %{name}-static = %{epoch}:%{version}-%{release}
 Header files and libraries for development of valgrind aware programs
 or valgrind plugins.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
 %package openmpi
 Summary: OpenMPI support for valgrind
+Summary(zh_CN.UTF-8): %{name} 的 OpenMPI 支持
 Group: Development/Debuggers
+Group(zh_CN.UTF-8): 开发/调试器
 Requires: %{?scl_prefix}valgrind = %{epoch}:%{version}-%{release}
 
 %description openmpi
 A wrapper library for debugging OpenMPI parallel programs with valgrind.
 See the section on Debugging MPI Parallel Programs with Valgrind in the
 Valgrind User Manual for details.
+
+%description openmpi -l zh_CN.UTF-8
+%{name} 的 OpenMPI 支持。
 
 %prep
 %setup -q -n %{?scl:%{pkg_name}}%{!?scl:%{name}}-%{version}
@@ -283,6 +281,7 @@ for i in HAVE_PTHREAD_CREATE_GLIBC_2_0 HAVE_PTRACE_GETREGS \
     $RPM_BUILD_ROOT%{_includedir}/valgrind/config.h
 done
 %endif
+magic_rpm_clean.sh
 
 %check
 # Make sure some info about the system is in the build.log
@@ -357,6 +356,9 @@ echo ===============END TESTING===============
 %endif
 
 %changelog
+* Sat Oct 17 2015 Liu Di <liudidi@gmail.com> - 1:3.11.0-5
+- 为 Magic 3.0 重建
+
 * Mon Oct 12 2015 Mark Wielaard <mjw@redhat.com> - 3.11.0-4
 - Fix parenthesis in valgrind-3.11.0-rexw-cvtps2pd.patch.
 - Add valgrind-3.11.0-s390-hwcap.patch

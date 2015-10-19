@@ -1,0 +1,50 @@
+To: vim_dev@googlegroups.com
+Subject: Patch 7.4.837
+Fcc: outbox
+From: Bram Moolenaar <Bram@moolenaar.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+------------
+
+Patch 7.4.837
+Problem:    Compiler warning with MSVC compiler when using +sniff.
+Solution:   Use Sleep() instead of _sleep(). (Tux)
+Files:      src/if_sniff.c
+
+
+*** ../vim-7.4.836/src/if_sniff.c	2012-06-20 19:56:09.000000000 +0200
+--- src/if_sniff.c	2015-08-25 19:49:03.289172373 +0200
+***************
+*** 655,661 ****
+--- 655,665 ----
+      else
+      {
+  #ifdef WIN32
++ # if (defined(_MSC_VER) && _MSC_VER >= 1400)
++         Sleep(2);
++ # else
+  	_sleep(2);
++ # endif
+  	if (!sniff_request_processed)
+  	    ProcessSniffRequests();
+  #else
+*** ../vim-7.4.836/src/version.c	2015-08-25 16:48:56.072640146 +0200
+--- src/version.c	2015-08-25 19:48:21.269605069 +0200
+***************
+*** 743,744 ****
+--- 743,746 ----
+  {   /* Add new patch number below this line */
++ /**/
++     837,
+  /**/
+
+-- 
+It is illegal for anyone to give lighted cigars to dogs, cats, and other
+domesticated animal kept as pets.
+		[real standing law in Illinois, United States of America]
+
+ /// Bram Moolenaar -- Bram@Moolenaar.net -- http://www.Moolenaar.net   \\\
+///        sponsor Vim, vote for features -- http://www.Vim.org/sponsor/ \\\
+\\\  an exciting new programming language -- http://www.Zimbu.org        ///
+ \\\            help me help AIDS victims -- http://ICCF-Holland.org    ///

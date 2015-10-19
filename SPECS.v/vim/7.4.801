@@ -1,0 +1,82 @@
+To: vim_dev@googlegroups.com
+Subject: Patch 7.4.801
+Fcc: outbox
+From: Bram Moolenaar <Bram@moolenaar.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+------------
+
+Patch 7.4.801 (after 7.4.769)
+Problem:    Test for ":diffoff" doesn't catch all potential problems.
+Solution:   Add a :diffthis and a :diffoff command. (Olaf Dabrunz)
+Files:      src/testdir/test47.in
+
+
+*** ../vim-7.4.800/src/testdir/test47.in	2015-07-04 15:05:08.606736259 +0200
+--- src/testdir/test47.in	2015-07-28 14:37:53.316858455 +0200
+***************
+*** 21,26 ****
+--- 21,30 ----
+  :redir => diffsettings
+  :silent! :set diff? fdm? fdc? scb? crb? wrap?
+  :redir END
++ :let diff_fdm = &fdm
++ :let diff_fdc = &fdc
++ :" repeat entering diff mode here to see if this saves the wrong settings
++ :diffthis
+  :" jump to second window for a moment to have filler line appear at start of
+  :" first window
+  ggpgg:let one = winline()
+***************
+*** 48,53 ****
+--- 52,63 ----
+  :"
+  :" Test diffoff
+  :diffoff!
++ 1
++ :let &diff = 1
++ :let &fdm = diff_fdm
++ :let &fdc = diff_fdc
++ 4
++ :diffoff!
+  :$put =nodiffsettings
+  :$put =diffsettings
+  1
+***************
+*** 82,88 ****
+  :enew
+  :put =w0
+  :.w >> test.out
+! :unlet! one two three nodiffsettings diffsettings nd1 nd2 nd3 w0
+  :qa!
+  ENDTEST
+  
+--- 92,98 ----
+  :enew
+  :put =w0
+  :.w >> test.out
+! :unlet! one two three nodiffsettings diffsettings diff_fdm diff_fdc nd1 nd2 nd3 w0
+  :qa!
+  ENDTEST
+  
+*** ../vim-7.4.800/src/version.c	2015-07-28 14:25:41.848151118 +0200
+--- src/version.c	2015-07-28 14:40:19.143395365 +0200
+***************
+*** 743,744 ****
+--- 743,746 ----
+  {   /* Add new patch number below this line */
++ /**/
++     801,
+  /**/
+
+-- 
+FIRST HEAD:  Oh! quick! get the sword out I want to cut his head off.
+THIRD HEAD:  Oh, cut your own head off.
+SECOND HEAD: Yes - do us all a favour.
+                 "Monty Python and the Holy Grail" PYTHON (MONTY) PICTURES LTD
+
+ /// Bram Moolenaar -- Bram@Moolenaar.net -- http://www.Moolenaar.net   \\\
+///        sponsor Vim, vote for features -- http://www.Vim.org/sponsor/ \\\
+\\\  an exciting new programming language -- http://www.Zimbu.org        ///
+ \\\            help me help AIDS victims -- http://ICCF-Holland.org    ///

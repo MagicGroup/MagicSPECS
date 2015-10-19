@@ -1,0 +1,72 @@
+To: vim_dev@googlegroups.com
+Subject: Patch 7.4.789
+Fcc: outbox
+From: Bram Moolenaar <Bram@moolenaar.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+------------
+
+Patch 7.4.789 (after 7.4.788)
+Problem:    Using freed memory and crash. (Dominique Pellej)
+Solution:   Correct use of pointers. (Hirohito Higashi)
+Files:      src/option.c
+
+
+*** ../vim-7.4.788/src/option.c	2015-07-17 23:08:18.200915641 +0200
+--- src/option.c	2015-07-19 14:36:23.112460392 +0200
+***************
+*** 4943,4949 ****
+  
+  			    sprintf((char *)buf_type, "%s",
+  				(opt_flags & OPT_LOCAL) ? "local" : "global");
+! 			    set_vim_var_string(VV_OPTION_NEW, newval, -1);
+  			    set_vim_var_string(VV_OPTION_OLD, saved_origval, -1);
+  			    set_vim_var_string(VV_OPTION_TYPE, buf_type, -1);
+  			    apply_autocmds(EVENT_OPTIONSET,
+--- 4943,4950 ----
+  
+  			    sprintf((char *)buf_type, "%s",
+  				(opt_flags & OPT_LOCAL) ? "local" : "global");
+! 			    set_vim_var_string(VV_OPTION_NEW,
+! 							*(char_u **)varp, -1);
+  			    set_vim_var_string(VV_OPTION_OLD, saved_origval, -1);
+  			    set_vim_var_string(VV_OPTION_TYPE, buf_type, -1);
+  			    apply_autocmds(EVENT_OPTIONSET,
+***************
+*** 5738,5745 ****
+  	    char_u buf_type[7];
+  	    sprintf((char *)buf_type, "%s",
+  		(opt_flags & OPT_LOCAL) ? "local" : "global");
+! 	    set_vim_var_string(VV_OPTION_NEW, s, -1);
+! 	    set_vim_var_string(VV_OPTION_OLD, oldval, -1);
+  	    set_vim_var_string(VV_OPTION_TYPE, buf_type, -1);
+  	    apply_autocmds(EVENT_OPTIONSET, (char_u *)options[opt_idx].fullname, NULL, FALSE, NULL);
+  	    reset_v_option_vars();
+--- 5739,5746 ----
+  	    char_u buf_type[7];
+  	    sprintf((char *)buf_type, "%s",
+  		(opt_flags & OPT_LOCAL) ? "local" : "global");
+! 	    set_vim_var_string(VV_OPTION_NEW, *varp, -1);
+! 	    set_vim_var_string(VV_OPTION_OLD, saved_oldval, -1);
+  	    set_vim_var_string(VV_OPTION_TYPE, buf_type, -1);
+  	    apply_autocmds(EVENT_OPTIONSET, (char_u *)options[opt_idx].fullname, NULL, FALSE, NULL);
+  	    reset_v_option_vars();
+*** ../vim-7.4.788/src/version.c	2015-07-17 23:08:18.204915603 +0200
+--- src/version.c	2015-07-19 14:38:31.815247734 +0200
+***************
+*** 743,744 ****
+--- 743,746 ----
+  {   /* Add new patch number below this line */
++ /**/
++     789,
+  /**/
+
+-- 
+Google is kind of like Dr. Who's Tardis; it's weirder on the
+inside than on the outside...
+
+ /// Bram Moolenaar -- Bram@Moolenaar.net -- http://www.Moolenaar.net   \\\
+///        sponsor Vim, vote for features -- http://www.Vim.org/sponsor/ \\\
+\\\  an exciting new programming language -- http://www.Zimbu.org        ///
+ \\\            help me help AIDS victims -- http://ICCF-Holland.org    ///

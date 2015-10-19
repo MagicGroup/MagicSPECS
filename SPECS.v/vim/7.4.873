@@ -1,0 +1,120 @@
+To: vim_dev@googlegroups.com
+Subject: Patch 7.4.873
+Fcc: outbox
+From: Bram Moolenaar <Bram@moolenaar.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+------------
+
+Patch 7.4.873 (after 7.4.866)
+Problem:    Compiler warning for unused variable. (Tony Mechelynck)
+Solution:   Remove the variable.  Also fix int vs long_u mixup.
+Files:      src/if_xcmdsrv.c
+
+
+*** ../vim-7.4.872/src/if_xcmdsrv.c	2015-09-15 14:12:01.382632522 +0200
+--- src/if_xcmdsrv.c	2015-09-17 23:19:33.877882652 +0200
+***************
+*** 172,178 ****
+  struct x_cmdqueue
+  {
+      char_u		*propInfo;
+!     int			len;
+      struct x_cmdqueue	*next;
+      struct x_cmdqueue	*prev;
+  };
+--- 172,178 ----
+  struct x_cmdqueue
+  {
+      char_u		*propInfo;
+!     long_u		len;
+      struct x_cmdqueue	*next;
+      struct x_cmdqueue	*prev;
+  };
+***************
+*** 199,206 ****
+  static int	AppendPropCarefully __ARGS((Display *display, Window window, Atom property, char_u *value, int length));
+  static int	x_error_check __ARGS((Display *dpy, XErrorEvent *error_event));
+  static int	IsSerialName __ARGS((char_u *name));
+! static void	save_in_queue __ARGS((char_u *buf, int len));
+! static void	server_parse_message __ARGS((Display *dpy, char_u *propInfo, int numItems));
+  
+  /* Private variables for the "server" functionality */
+  static Atom	registryProperty = None;
+--- 199,206 ----
+  static int	AppendPropCarefully __ARGS((Display *display, Window window, Atom property, char_u *value, int length));
+  static int	x_error_check __ARGS((Display *dpy, XErrorEvent *error_event));
+  static int	IsSerialName __ARGS((char_u *name));
+! static void	save_in_queue __ARGS((char_u *buf, long_u len));
+! static void	server_parse_message __ARGS((Display *dpy, char_u *propInfo, long_u numItems));
+  
+  /* Private variables for the "server" functionality */
+  static Atom	registryProperty = None;
+***************
+*** 1198,1205 ****
+   */
+      static void
+  save_in_queue(propInfo, len)
+!     char_u  *propInfo;
+!     int	    len;
+  {
+      x_queue_T *node;
+  
+--- 1198,1205 ----
+   */
+      static void
+  save_in_queue(propInfo, len)
+!     char_u	*propInfo;
+!     long_u	len;
+  {
+      x_queue_T *node;
+  
+***************
+*** 1228,1234 ****
+      void
+  server_parse_messages()
+  {
+-     char_u	*p;
+      x_queue_T	*node;
+  
+      if (!X_DISPLAY)
+--- 1228,1233 ----
+***************
+*** 1262,1268 ****
+  server_parse_message(dpy, propInfo, numItems)
+      Display	*dpy;
+      char_u	*propInfo; /* A string containing 0 or more X commands */
+!     int		numItems;  /* The size of propInfo in bytes. */
+  {
+      char_u	*p;
+      int		code;
+--- 1261,1267 ----
+  server_parse_message(dpy, propInfo, numItems)
+      Display	*dpy;
+      char_u	*propInfo; /* A string containing 0 or more X commands */
+!     long_u	numItems;  /* The size of propInfo in bytes. */
+  {
+      char_u	*p;
+      int		code;
+*** ../vim-7.4.872/src/version.c	2015-09-15 19:17:51.990768865 +0200
+--- src/version.c	2015-09-17 23:16:45.507625630 +0200
+***************
+*** 743,744 ****
+--- 743,746 ----
+  {   /* Add new patch number below this line */
++ /**/
++     873,
+  /**/
+
+-- 
+Article in the first Free Software Magazine: "Bram Moolenaar studied electrical
+engineering at the Technical University of Delft and graduated in 1985 on a
+multi-processor Unix architecture."
+Response by "dimator": Could the school not afford a proper stage for the
+ceremony?
+
+ /// Bram Moolenaar -- Bram@Moolenaar.net -- http://www.Moolenaar.net   \\\
+///        sponsor Vim, vote for features -- http://www.Vim.org/sponsor/ \\\
+\\\  an exciting new programming language -- http://www.Zimbu.org        ///
+ \\\            help me help AIDS victims -- http://ICCF-Holland.org    ///

@@ -1,0 +1,59 @@
+To: vim_dev@googlegroups.com
+Subject: Patch 7.4.728
+Fcc: outbox
+From: Bram Moolenaar <Bram@moolenaar.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+------------
+
+Patch 7.4.728
+Problem:    Can't build with some version of Visual Studio 2015.
+Solution:   Recognize another version 14 number. (Sinan)
+Files:      src/Make_mvc.mak
+
+
+*** ../vim-7.4.727/src/Make_mvc.mak	2015-05-04 16:18:18.127624758 +0200
+--- src/Make_mvc.mak	2015-05-06 11:32:34.209224175 +0200
+***************
+*** 446,452 ****
+  !if "$(_NMAKE_VER)" == "12.00.21005.1"
+  MSVCVER = 12.0
+  !endif
+! !if "$(_NMAKE_VER)" == "14.00.22609.0"
+  MSVCVER = 14.0
+  !endif
+  !endif
+--- 446,452 ----
+  !if "$(_NMAKE_VER)" == "12.00.21005.1"
+  MSVCVER = 12.0
+  !endif
+! !if ("$(_NMAKE_VER)" == "14.00.22609.0") || ("$(_NMAKE_VER)" == "14.00.22816.0")
+  MSVCVER = 14.0
+  !endif
+  !endif
+*** ../vim-7.4.727/src/version.c	2015-05-06 06:51:41.909488669 +0200
+--- src/version.c	2015-05-06 11:31:46.601759813 +0200
+***************
+*** 743,744 ****
+--- 743,746 ----
+  {   /* Add new patch number below this line */
++ /**/
++     728,
+  /**/
+
+-- 
+In many of the more relaxed civilizations on the Outer Eastern Rim of the
+Galaxy, "The Hitchhiker's Guide to the Galaxy" has already supplanted the
+great "Encyclopedia Galactica" as the standard repository of all knowledge
+and wisdom, for though it has many omissions and contains much that is
+apocryphal, or at least wildly inaccurate, it scores over the older, more
+pedestrian work in two important respects.
+First, it is slightly cheaper; and second, it has the words "DON'T PANIC"
+inscribed in large friendly letters on its cover.
+		-- Douglas Adams, "The Hitchhiker's Guide to the Galaxy"
+
+ /// Bram Moolenaar -- Bram@Moolenaar.net -- http://www.Moolenaar.net   \\\
+///        sponsor Vim, vote for features -- http://www.Vim.org/sponsor/ \\\
+\\\  an exciting new programming language -- http://www.Zimbu.org        ///
+ \\\            help me help AIDS victims -- http://ICCF-Holland.org    ///

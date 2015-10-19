@@ -1,0 +1,391 @@
+To: vim_dev@googlegroups.com
+Subject: Patch 7.4.849
+Fcc: outbox
+From: Bram Moolenaar <Bram@moolenaar.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+------------
+
+Patch 7.4.849
+Problem:    Moving the cursor in Insert mode starts new undo sequence.
+Solution:   Add CTRL-G U to keep the undo sequence for the following cursor
+            movement command. (Christian Brabandt)
+Files:      runtime/doc/insert.txt, src/edit.c, src/testdir/test_mapping.in,
+            src/testdir/test_mapping.ok
+
+
+*** ../vim-7.4.848/runtime/doc/insert.txt	2013-08-10 13:24:56.000000000 +0200
+--- runtime/doc/insert.txt	2015-09-01 19:00:11.780862669 +0200
+***************
+*** 373,378 ****
+--- 377,385 ----
+  CTRL-\ CTRL-O	like CTRL-O but don't move the cursor	     *i_CTRL-\_CTRL-O*
+  CTRL-L		when 'insertmode' is set: go to Normal mode  *i_CTRL-L*
+  CTRL-G u	break undo sequence, start new change	     *i_CTRL-G_u*
++ CTRL-G U	don't break undo with next left/right cursor *i_CTRL-G_U*
++ 		movement (but only if the cursor stays
++ 		within same the line)
+  -----------------------------------------------------------------------
+  
+  Note: If the cursor keys take you out of Insert mode, check the 'noesckeys'
+***************
+*** 412,417 ****
+--- 419,446 ----
+  This breaks undo at each line break.  It also expands abbreviations before
+  this.
+  
++ An example for using CTRL-G U: >
++ 
++ 	inoremap <Left>  <C-G>U<Left>
++ 	inoremap <Right> <C-G>U<Right>
++ 	inoremap <expr> <Home> col('.') == match(getline('.'), '\S') + 1 ?
++ 	 \ repeat('<C-G>U<Left>', col('.') - 1) :
++ 	 \ (col('.') < match(getline('.'), '\S') ?
++ 	 \     repeat('<C-G>U<Right>', match(getline('.'), '\S') + 0) :
++ 	 \     repeat('<C-G>U<Left>', col('.') - 1 - match(getline('.'), '\S')))
++ 	inoremap <expr> <End> repeat('<C-G>U<Right>', col('$') - col('.'))
++ 	inoremap ( ()<C-G>U<Left>
++ 
++ This makes it possible to use the cursor keys in Insert mode, without breaking
++ the undo sequence and therefore using |.| (redo) will work as expected. 
++ Also entering a text like (with the "(" mapping from above): >
++ 
++    Lorem ipsum (dolor
++ 
++ will be repeatable by the |.|to the expected
++ 
++    Lorem ipsum (dolor)
++ 
+  Using CTRL-O splits undo: the text typed before and after it is undone
+  separately.  If you want to avoid this (e.g., in a mapping) you might be able
+  to use CTRL-R = |i_CTRL-R|.  E.g., to call a function: >
+*** ../vim-7.4.848/src/edit.c	2015-07-28 21:17:31.526069349 +0200
+--- src/edit.c	2015-09-01 19:15:52.938978211 +0200
+***************
+*** 202,207 ****
+--- 202,209 ----
+  static void check_auto_format __ARGS((int));
+  static void redo_literal __ARGS((int c));
+  static void start_arrow __ARGS((pos_T *end_insert_pos));
++ static void start_arrow_with_change __ARGS((pos_T *end_insert_pos, int change));
++ static void start_arrow_common __ARGS((pos_T *end_insert_pos, int change));
+  #ifdef FEAT_SPELL
+  static void check_spell_redraw __ARGS((void));
+  static void spell_back_to_badword __ARGS((void));
+***************
+*** 241,251 ****
+  #if defined(FEAT_GUI_TABLINE) || defined(PROTO)
+  static void ins_tabline __ARGS((int c));
+  #endif
+! static void ins_left __ARGS((void));
+  static void ins_home __ARGS((int c));
+  static void ins_end __ARGS((int c));
+  static void ins_s_left __ARGS((void));
+! static void ins_right __ARGS((void));
+  static void ins_s_right __ARGS((void));
+  static void ins_up __ARGS((int startcol));
+  static void ins_pageup __ARGS((void));
+--- 243,253 ----
+  #if defined(FEAT_GUI_TABLINE) || defined(PROTO)
+  static void ins_tabline __ARGS((int c));
+  #endif
+! static void ins_left __ARGS((int end_change));
+  static void ins_home __ARGS((int c));
+  static void ins_end __ARGS((int c));
+  static void ins_s_left __ARGS((void));
+! static void ins_right __ARGS((int end_change));
+  static void ins_s_right __ARGS((void));
+  static void ins_up __ARGS((int startcol));
+  static void ins_pageup __ARGS((void));
+***************
+*** 297,302 ****
+--- 299,306 ----
+  
+  static int	did_add_space = FALSE;	/* auto_format() added an extra space
+  					   under the cursor */
++ static int	dont_sync_undo = FALSE;	/* CTRL-G U prevents syncing undo for
++ 					   the next left/right cursor */
+  
+  /*
+   * edit(): Start inserting text.
+***************
+*** 767,772 ****
+--- 771,782 ----
+  	 */
+  	if (c != K_CURSORHOLD)
+  	    lastc = c;		/* remember the previous char for CTRL-D */
++ 
++ 	/* After using CTRL-G U the next cursor key will not break undo. */
++ 	if (dont_sync_undo == MAYBE)
++ 	    dont_sync_undo = TRUE;
++ 	else
++ 	    dont_sync_undo = FALSE;
+  	do
+  	{
+  	    c = safe_vgetc();
+***************
+*** 1237,1243 ****
+  	    if (mod_mask & (MOD_MASK_SHIFT|MOD_MASK_CTRL))
+  		ins_s_left();
+  	    else
+! 		ins_left();
+  	    break;
+  
+  	case K_S_LEFT:	/* <S-Left> */
+--- 1247,1253 ----
+  	    if (mod_mask & (MOD_MASK_SHIFT|MOD_MASK_CTRL))
+  		ins_s_left();
+  	    else
+! 		ins_left(dont_sync_undo == FALSE);
+  	    break;
+  
+  	case K_S_LEFT:	/* <S-Left> */
+***************
+*** 1249,1255 ****
+  	    if (mod_mask & (MOD_MASK_SHIFT|MOD_MASK_CTRL))
+  		ins_s_right();
+  	    else
+! 		ins_right();
+  	    break;
+  
+  	case K_S_RIGHT:	/* <S-Right> */
+--- 1259,1265 ----
+  	    if (mod_mask & (MOD_MASK_SHIFT|MOD_MASK_CTRL))
+  		ins_s_right();
+  	    else
+! 		ins_right(dont_sync_undo == FALSE);
+  	    break;
+  
+  	case K_S_RIGHT:	/* <S-Right> */
+***************
+*** 6787,6795 ****
+   */
+      static void
+  start_arrow(end_insert_pos)
+!     pos_T    *end_insert_pos;	    /* can be NULL */
+  {
+!     if (!arrow_used)	    /* something has been inserted */
+      {
+  	AppendToRedobuff(ESC_STR);
+  	stop_insert(end_insert_pos, FALSE, FALSE);
+--- 6797,6830 ----
+   */
+      static void
+  start_arrow(end_insert_pos)
+!     pos_T    *end_insert_pos;		/* can be NULL */
+! {
+!     start_arrow_common(end_insert_pos, TRUE);
+! }
+! 
+! /*
+!  * Like start_arrow() but with end_change argument.
+!  * Will prepare for redo of CTRL-G U if "end_change" is FALSE.
+!  */
+!     static void
+! start_arrow_with_change(end_insert_pos, end_change)
+!     pos_T    *end_insert_pos;		/* can be NULL */
+!     int	      end_change;		/* end undoable change */
+  {
+!     start_arrow_common(end_insert_pos, end_change);
+!     if (!end_change)
+!     {
+! 	AppendCharToRedobuff(Ctrl_G);
+! 	AppendCharToRedobuff('U');
+!     }
+! }
+! 
+!     static void
+! start_arrow_common(end_insert_pos, end_change)
+!     pos_T    *end_insert_pos;		/* can be NULL */
+!     int	      end_change;		/* end undoable change */
+! {
+!     if (!arrow_used && end_change)	/* something has been inserted */
+      {
+  	AppendToRedobuff(ESC_STR);
+  	stop_insert(end_insert_pos, FALSE, FALSE);
+***************
+*** 8359,8364 ****
+--- 8394,8406 ----
+  		  Insstart = curwin->w_cursor;
+  		  break;
+  
++ 	/* CTRL-G U: do not break undo with the next char */
++ 	case 'U':
++ 		  /* Allow one left/right cursor movement with the next char,
++ 		   * without breaking undo. */
++ 		  dont_sync_undo = MAYBE;
++ 		  break;
++ 
+  	/* Unknown CTRL-G command, reserved for future expansion. */
+  	default:  vim_beep(BO_CTRLG);
+      }
+***************
+*** 9440,9446 ****
+  #endif
+  
+      static void
+! ins_left()
+  {
+      pos_T	tpos;
+  
+--- 9482,9489 ----
+  #endif
+  
+      static void
+! ins_left(end_change)
+!     int	    end_change; /* end undoable change */
+  {
+      pos_T	tpos;
+  
+***************
+*** 9457,9463 ****
+  	 * break undo.  K_LEFT is inserted in im_correct_cursor(). */
+  	if (!im_is_preediting())
+  #endif
+! 	    start_arrow(&tpos);
+  #ifdef FEAT_RIGHTLEFT
+  	/* If exit reversed string, position is fixed */
+  	if (revins_scol != -1 && (int)curwin->w_cursor.col >= revins_scol)
+--- 9500,9510 ----
+  	 * break undo.  K_LEFT is inserted in im_correct_cursor(). */
+  	if (!im_is_preediting())
+  #endif
+! 	{
+! 	    start_arrow_with_change(&tpos, end_change);
+! 	    if (!end_change)
+! 		AppendCharToRedobuff(K_LEFT);
+! 	}
+  #ifdef FEAT_RIGHTLEFT
+  	/* If exit reversed string, position is fixed */
+  	if (revins_scol != -1 && (int)curwin->w_cursor.col >= revins_scol)
+***************
+*** 9472,9477 ****
+--- 9519,9525 ----
+       */
+      else if (vim_strchr(p_ww, '[') != NULL && curwin->w_cursor.lnum > 1)
+      {
++ 	/* always break undo when moving upwards/downwards, else undo may break */
+  	start_arrow(&tpos);
+  	--(curwin->w_cursor.lnum);
+  	coladvance((colnr_T)MAXCOL);
+***************
+*** 9479,9484 ****
+--- 9527,9533 ----
+      }
+      else
+  	vim_beep(BO_CRSR);
++     dont_sync_undo = FALSE;
+  }
+  
+      static void
+***************
+*** 9542,9548 ****
+  }
+  
+      static void
+! ins_right()
+  {
+  #ifdef FEAT_FOLDING
+      if ((fdo_flags & FDO_HOR) && KeyTyped)
+--- 9591,9598 ----
+  }
+  
+      static void
+! ins_right(end_change)
+!     int	    end_change; /* end undoable change */
+  {
+  #ifdef FEAT_FOLDING
+      if ((fdo_flags & FDO_HOR) && KeyTyped)
+***************
+*** 9555,9561 ****
+  #endif
+  	    )
+      {
+! 	start_arrow(&curwin->w_cursor);
+  	curwin->w_set_curswant = TRUE;
+  #ifdef FEAT_VIRTUALEDIT
+  	if (virtual_active())
+--- 9605,9613 ----
+  #endif
+  	    )
+      {
+! 	start_arrow_with_change(&curwin->w_cursor, end_change);
+! 	if (!end_change)
+! 	    AppendCharToRedobuff(K_RIGHT);
+  	curwin->w_set_curswant = TRUE;
+  #ifdef FEAT_VIRTUALEDIT
+  	if (virtual_active())
+***************
+*** 9589,9594 ****
+--- 9641,9647 ----
+      }
+      else
+  	vim_beep(BO_CRSR);
++     dont_sync_undo = FALSE;
+  }
+  
+      static void
+*** ../vim-7.4.848/src/testdir/test_mapping.in	2015-07-10 17:19:25.024620239 +0200
+--- src/testdir/test_mapping.in	2015-09-01 18:57:22.578641036 +0200
+***************
+*** 45,50 ****
+--- 45,65 ----
+  :/^a b
+  0qqdw.ifooqj0@q:unmap .
+  
++ :" <c-g>U<cursor> works only within a single line
++ :imapclear
++ :imap ( ()<c-g>U<left>
++ G2oki
++ Test1: text with a (here some more textk.
++ :" test undo
++ G2oki
++ Test2: text wit a (here some more text [und undo]uk.u
++ :"
++ :imapclear
++ :set whichwrap=<,>,[,]
++ G3o2k
++ :exe ":norm! iTest3: text with a (parenthesis here\<C-G>U\<Right>new line here\<esc>\<up>\<up>."
++ 
++ 
+  
+  :/^test/,$w! test.out
+  :qa!
+*** ../vim-7.4.848/src/testdir/test_mapping.ok	2015-07-10 17:19:25.024620239 +0200
+--- src/testdir/test_mapping.ok	2015-09-01 18:57:22.578641036 +0200
+***************
+*** 10,12 ****
+--- 10,22 ----
+  +
+  +
+  +
++ 
++ Test1: text with a (here some more text)
++ Test1: text with a (here some more text)
++ 
++ 
++ Test2: text wit a (here some more text [und undo])
++ 
++ new line here
++ Test3: text with a (parenthesis here
++ new line here
+*** ../vim-7.4.848/src/version.c	2015-09-01 18:51:35.126294303 +0200
+--- src/version.c	2015-09-01 18:57:09.862774703 +0200
+***************
+*** 743,744 ****
+--- 743,746 ----
+  {   /* Add new patch number below this line */
++ /**/
++     849,
+  /**/
+
+-- 
+The chat program is in public domain.  This is not the GNU public license.
+If it breaks then you get to keep both pieces.
+		-- Copyright notice for the chat program
+
+ /// Bram Moolenaar -- Bram@Moolenaar.net -- http://www.Moolenaar.net   \\\
+///        sponsor Vim, vote for features -- http://www.Vim.org/sponsor/ \\\
+\\\  an exciting new programming language -- http://www.Zimbu.org        ///
+ \\\            help me help AIDS victims -- http://ICCF-Holland.org    ///

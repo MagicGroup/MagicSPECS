@@ -1,0 +1,700 @@
+To: vim_dev@googlegroups.com
+Subject: Patch 7.4.786
+Fcc: outbox
+From: Bram Moolenaar <Bram@moolenaar.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+------------
+
+Patch 7.4.786
+Problem:    It is not possible for a plugin to adjust to a changed setting.
+Solution:   Add the OptionSet autocommand event. (Christian Brabandt)
+Files:      runtime/doc/autocmd.txt, runtime/doc/eval.txt, src/eval.c,
+            src/fileio.c, src/option.c, src/proto/eval.pro,
+            src/testdir/Make_amiga.mak, src/testdir/Make_dos.mak,
+            src/testdir/Make_ming.mak, src/testdir/Make_os2.mak,
+            src/testdir/Make_vms.mms, src/testdir/Makefile,
+            src/testdir/test_autocmd_option.in,
+            src/testdir/test_autocmd_option.ok, src/vim.h
+
+
+*** ../vim-7.4.785/runtime/doc/autocmd.txt	2015-07-10 17:56:18.211777230 +0200
+--- runtime/doc/autocmd.txt	2015-07-17 15:03:42.523751972 +0200
+***************
+*** 259,264 ****
+--- 259,265 ----
+  |Syntax|		when the 'syntax' option has been set
+  |EncodingChanged|	after the 'encoding' option has been changed
+  |TermChanged|		after the value of 'term' has changed
++ |OptionSet|		after setting any option
+  
+  	Startup and exit
+  |VimEnter|		after doing all the startup stuff
+***************
+*** 732,737 ****
+--- 745,771 ----
+  					o	Operator-pending
+  					i	Insert
+  					c	Command line
++ 							*OptionSet*
++ OptionSet			After setting an option.  The pattern is
++ 				matched against the long option name.
++ 				The |v:option_old| variable indicates the
++ 				old option value, |v:option_new| variable
++ 				indicates the newly set value, the
++ 				|v:option_type| variable indicates whether
++ 				it's global or local scoped and |<amatch>|
++ 				indicates what option has been set.
++ 
++ 				Is not triggered on startup and for the 'key'
++ 				option for obvious reasons.
++ 
++ 				Note: It's a bad idea, to reset an option
++ 				during this autocommand, since this will
++ 				probably break plugins. You can always use
++ 				|noa| to prevent triggering this autocommand.
++ 				Could be used, to check for existence of the
++ 				'backupdir' and 'undodir' options and create
++ 				directories, if they don't exist yet.
++ 
+  							*QuickFixCmdPre*
+  QuickFixCmdPre			Before a quickfix command is run (|:make|,
+  				|:lmake|, |:grep|, |:lgrep|, |:grepadd|,
+*** ../vim-7.4.785/runtime/doc/eval.txt	2015-07-10 17:56:18.211777230 +0200
+--- runtime/doc/eval.txt	2015-07-17 15:05:12.834890842 +0200
+***************
+*** 1533,1538 ****
+--- 1535,1549 ----
+  		than String this will cause trouble.
+  		{only when compiled with the |+viminfo| feature}
+  
++ 						    *v:option_new*
++ v:option_new    New value of the option. Valid while executing an |OptionSet|
++ 		autocommand.
++ 						    *v:option_old*
++ v:option_old    Old value of the option. Valid while executing an |OptionSet|
++ 		autocommand.
++ 						    *v:option_type*
++ v:option_type   Scope of the set command. Valid while executing an
++ 		|OptionSet| autocommand. Can be either "global" or "local"
+  					*v:operator* *operator-variable*
+  v:operator	The last operator given in Normal mode.  This is a single
+  		character except for commands starting with <g> or <z>,
+*** ../vim-7.4.785/src/eval.c	2015-07-17 13:03:42.096357579 +0200
+--- src/eval.c	2015-07-17 15:07:24.513630864 +0200
+***************
+*** 365,370 ****
+--- 365,373 ----
+      {VV_NAME("windowid",	 VAR_NUMBER), VV_RO},
+      {VV_NAME("progpath",	 VAR_STRING), VV_RO},
+      {VV_NAME("completed_item",	 VAR_DICT), VV_RO},
++     {VV_NAME("option_new",	 VAR_STRING), VV_RO},
++     {VV_NAME("option_old",	 VAR_STRING), VV_RO},
++     {VV_NAME("option_type",	 VAR_STRING), VV_RO},
+  };
+  
+  /* shorthand */
+***************
+*** 24720,24725 ****
+--- 24723,24738 ----
+      }
+  }
+  
++ /* reset v:option_new, v:option_old and v:option_type */
++     void
++ reset_v_option_vars()
++ {
++     set_vim_var_string(VV_OPTION_NEW,  NULL, -1);
++     set_vim_var_string(VV_OPTION_OLD,  NULL, -1);
++     set_vim_var_string(VV_OPTION_TYPE, NULL, -1);
++ }
++ 
++ 
+  #endif /* FEAT_EVAL */
+  
+  
+*** ../vim-7.4.785/src/fileio.c	2015-07-17 14:16:49.846596759 +0200
+--- src/fileio.c	2015-07-17 14:58:39.362642959 +0200
+***************
+*** 7699,7704 ****
+--- 7699,7705 ----
+      {"InsertLeave",	EVENT_INSERTLEAVE},
+      {"InsertCharPre",	EVENT_INSERTCHARPRE},
+      {"MenuPopup",	EVENT_MENUPOPUP},
++     {"OptionSet",	EVENT_OPTIONSET},
+      {"QuickFixCmdPost",	EVENT_QUICKFIXCMDPOST},
+      {"QuickFixCmdPre",	EVENT_QUICKFIXCMDPRE},
+      {"QuitPre",		EVENT_QUITPRE},
+***************
+*** 7736,7742 ****
+      NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
+      NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
+      NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
+!     NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL
+  };
+  
+  /*
+--- 7737,7743 ----
+      NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
+      NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
+      NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
+!     NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL
+  };
+  
+  /*
+***************
+*** 9321,9327 ****
+       */
+      if (fname_io == NULL)
+      {
+! 	if (event == EVENT_COLORSCHEME)
+  	    autocmd_fname = NULL;
+  	else if (fname != NULL && *fname != NUL)
+  	    autocmd_fname = fname;
+--- 9322,9328 ----
+       */
+      if (fname_io == NULL)
+      {
+! 	if (event == EVENT_COLORSCHEME || event == EVENT_OPTIONSET)
+  	    autocmd_fname = NULL;
+  	else if (fname != NULL && *fname != NUL)
+  	    autocmd_fname = fname;
+***************
+*** 9385,9390 ****
+--- 9386,9392 ----
+  		|| event == EVENT_SPELLFILEMISSING
+  		|| event == EVENT_QUICKFIXCMDPRE
+  		|| event == EVENT_COLORSCHEME
++ 		|| event == EVENT_OPTIONSET
+  		|| event == EVENT_QUICKFIXCMDPOST)
+  	    fname = vim_strsave(fname);
+  	else
+*** ../vim-7.4.785/src/option.c	2015-07-17 14:16:49.850596721 +0200
+--- src/option.c	2015-07-17 17:30:22.703747129 +0200
+***************
+*** 4592,4600 ****
+  		    {
+  			char_u	    *save_arg = NULL;
+  			char_u	    *s = NULL;
+! 			char_u	    *oldval;	/* previous value if *varp */
+  			char_u	    *newval;
+! 			char_u	    *origval;
+  			unsigned    newlen;
+  			int	    comma;
+  			int	    bs;
+--- 4592,4603 ----
+  		    {
+  			char_u	    *save_arg = NULL;
+  			char_u	    *s = NULL;
+! 			char_u	    *oldval = NULL;	/* previous value if *varp */
+  			char_u	    *newval;
+! 			char_u	    *origval = NULL;
+! #if defined(FEAT_AUTOCMD) && defined(FEAT_EVAL)
+! 			char_u	    *saved_origval = NULL;
+! #endif
+  			unsigned    newlen;
+  			int	    comma;
+  			int	    bs;
+***************
+*** 4914,4919 ****
+--- 4917,4930 ----
+  			/* Set the new value. */
+  			*(char_u **)(varp) = newval;
+  
++ #if defined(FEAT_AUTOCMD) && defined(FEAT_EVAL)
++ 			if (!starting && options[opt_idx].indir != PV_KEY
++ 							   && origval != NULL)
++ 			    /* origval may be freed by
++ 			     * did_set_string_option(), make a copy. */
++ 			    saved_origval = vim_strsave(origval);
++ #endif
++ 
+  			/* Handle side effects, and set the global value for
+  			 * ":set" on local options. */
+  			errmsg = did_set_string_option(opt_idx, (char_u **)varp,
+***************
+*** 4922,4927 ****
+--- 4933,4956 ----
+  			/* If error detected, print the error message. */
+  			if (errmsg != NULL)
+  			    goto skip;
++ #if defined(FEAT_AUTOCMD) && defined(FEAT_EVAL)
++ 			if (saved_origval != NULL)
++ 			{
++ 			    char_u buf_type[7];
++ 
++ 			    sprintf((char *)buf_type, "%s",
++ 				(opt_flags & OPT_LOCAL) ? "local" : "global");
++ 			    set_vim_var_string(VV_OPTION_NEW, newval, -1);
++ 			    set_vim_var_string(VV_OPTION_OLD, saved_origval, -1);
++ 			    set_vim_var_string(VV_OPTION_TYPE, buf_type, -1);
++ 			    apply_autocmds(EVENT_OPTIONSET,
++ 					  (char_u *)options[opt_idx].fullname,
++ 				NULL, FALSE, NULL);
++ 			    reset_v_option_vars();
++ 			    vim_free(saved_origval);
++ 			}
++ #endif
++ 
+  		    }
+  		    else	    /* key code option */
+  		    {
+***************
+*** 5668,5673 ****
+--- 5697,5705 ----
+      char_u	*s;
+      char_u	**varp;
+      char_u	*oldval;
++ #if defined(FEAT_AUTOCMD) && defined(FEAT_EVAL)
++     char_u	*saved_oldval = NULL;
++ #endif
+      char_u	*r = NULL;
+  
+      if (options[opt_idx].var == NULL)	/* don't set hidden option */
+***************
+*** 5683,5691 ****
+--- 5715,5744 ----
+  		    : opt_flags);
+  	oldval = *varp;
+  	*varp = s;
++ 
++ #if defined(FEAT_AUTOCMD) && defined(FEAT_EVAL)
++ 	if (!starting && options[opt_idx].indir != PV_KEY)
++ 	    saved_oldval = vim_strsave(oldval);
++ #endif
+  	if ((r = did_set_string_option(opt_idx, varp, TRUE, oldval, NULL,
+  							   opt_flags)) == NULL)
+  	    did_set_option(opt_idx, opt_flags, TRUE);
++ 
++ 	/* call autocomamnd after handling side effects */
++ #if defined(FEAT_AUTOCMD) && defined(FEAT_EVAL)
++ 	if (saved_oldval != NULL)
++ 	{
++ 	    char_u buf_type[7];
++ 	    sprintf((char *)buf_type, "%s",
++ 		(opt_flags & OPT_LOCAL) ? "local" : "global");
++ 	    set_vim_var_string(VV_OPTION_NEW, s, -1);
++ 	    set_vim_var_string(VV_OPTION_OLD, oldval, -1);
++ 	    set_vim_var_string(VV_OPTION_TYPE, buf_type, -1);
++ 	    apply_autocmds(EVENT_OPTIONSET, (char_u *)options[opt_idx].fullname, NULL, FALSE, NULL);
++ 	    reset_v_option_vars();
++ 	    vim_free(saved_oldval);
++ 	}
++ #endif
+      }
+      return r;
+  }
+***************
+*** 8230,8237 ****
+--- 8283,8307 ----
+       * End of handling side effects for bool options.
+       */
+  
++     /* after handling side effects, call autocommand */
++ 
+      options[opt_idx].flags |= P_WAS_SET;
+  
++ #if defined(FEAT_AUTOCMD) && defined(FEAT_EVAL)
++     if (!starting)
++     {
++ 	char_u buf_old[2], buf_new[2], buf_type[7];
++ 	snprintf((char *)buf_old, 2, "%d", old_value ? TRUE: FALSE);
++ 	snprintf((char *)buf_new, 2, "%d", value ? TRUE: FALSE);
++ 	sprintf((char *)buf_type, "%s", (opt_flags & OPT_LOCAL) ? "local" : "global");
++ 	set_vim_var_string(VV_OPTION_NEW, buf_new, -1);
++ 	set_vim_var_string(VV_OPTION_OLD, buf_old, -1);
++ 	set_vim_var_string(VV_OPTION_TYPE, buf_type, -1);
++ 	apply_autocmds(EVENT_OPTIONSET, (char_u *) options[opt_idx].fullname, NULL, FALSE, NULL);
++ 	reset_v_option_vars();
++     }
++ #endif
++ 
+      comp_col();			    /* in case 'ruler' or 'showcmd' changed */
+      if (curwin->w_curswant != MAXCOL
+  		     && (options[opt_idx].flags & (P_CURSWANT | P_RALL)) != 0)
+***************
+*** 8767,8772 ****
+--- 8837,8857 ----
+  
+      options[opt_idx].flags |= P_WAS_SET;
+  
++ #if defined(FEAT_AUTOCMD) && defined(FEAT_EVAL)
++     if (!starting && errmsg == NULL)
++     {
++ 	char_u buf_old[11], buf_new[11], buf_type[7];
++ 	snprintf((char *)buf_old, 10, "%ld", old_value);
++ 	snprintf((char *)buf_new, 10, "%ld", value);
++ 	snprintf((char *)buf_type, 7, "%s", (opt_flags & OPT_LOCAL) ? "local" : "global");
++ 	set_vim_var_string(VV_OPTION_NEW, buf_new, -1);
++ 	set_vim_var_string(VV_OPTION_OLD, buf_old, -1);
++ 	set_vim_var_string(VV_OPTION_TYPE, buf_type, -1);
++ 	apply_autocmds(EVENT_OPTIONSET, (char_u *) options[opt_idx].fullname, NULL, FALSE, NULL);
++ 	reset_v_option_vars();
++     }
++ #endif
++ 
+      comp_col();			    /* in case 'columns' or 'ls' changed */
+      if (curwin->w_curswant != MAXCOL
+  		     && (options[opt_idx].flags & (P_CURSWANT | P_RALL)) != 0)
+*** ../vim-7.4.785/src/proto/eval.pro	2015-07-10 17:56:18.219777154 +0200
+--- src/proto/eval.pro	2015-07-17 17:14:38.408715248 +0200
+***************
+*** 133,138 ****
+--- 133,139 ----
+  int store_session_globals __ARGS((FILE *fd));
+  void last_set_msg __ARGS((scid_T scriptID));
+  void ex_oldfiles __ARGS((exarg_T *eap));
++ void reset_v_option_vars __ARGS((void));
+  int modify_fname __ARGS((char_u *src, int *usedlen, char_u **fnamep, char_u **bufp, int *fnamelen));
+  char_u *do_string_sub __ARGS((char_u *str, char_u *pat, char_u *sub, char_u *flags));
+  /* vim: set ft=c : */
+*** ../vim-7.4.785/src/testdir/Make_amiga.mak	2015-07-17 14:16:49.854596682 +0200
+--- src/testdir/Make_amiga.mak	2015-07-17 15:02:36.916377572 +0200
+***************
+*** 38,43 ****
+--- 38,44 ----
+  		test104.out test105.out test106.out test107.out \
+  		test_argument_0count.out \
+  		test_argument_count.out \
++ 		test_autocmd_option.out \
+  		test_autoformat_join.out \
+  		test_breakindent.out \
+  		test_changelist.out \
+***************
+*** 188,193 ****
+--- 189,195 ----
+  test107.out: test107.in
+  test_argument_0count.out: test_argument_0count.in
+  test_argument_count.out: test_argument_count.in
++ test_autocmd_option.out: test_autocmd_option.in
+  test_autoformat_join.out: test_autoformat_join.in
+  test_breakindent.out: test_breakindent.in
+  test_changelist.out: test_changelist.in
+*** ../vim-7.4.785/src/testdir/Make_dos.mak	2015-07-17 14:16:49.854596682 +0200
+--- src/testdir/Make_dos.mak	2015-07-17 14:58:39.362642959 +0200
+***************
+*** 37,42 ****
+--- 37,43 ----
+  		test105.out test106.out  test107.out\
+  		test_argument_0count.out \
+  		test_argument_count.out \
++ 		test_autocmd_option.out \
+  		test_autoformat_join.out \
+  		test_breakindent.out \
+  		test_changelist.out \
+*** ../vim-7.4.785/src/testdir/Make_ming.mak	2015-07-17 14:16:49.854596682 +0200
+--- src/testdir/Make_ming.mak	2015-07-17 14:58:39.362642959 +0200
+***************
+*** 59,64 ****
+--- 59,65 ----
+  		test105.out test106.out test107.out \
+  		test_argument_0count.out \
+  		test_argument_count.out \
++ 		test_autocmd_option.out \
+  		test_autoformat_join.out \
+  		test_breakindent.out \
+  		test_changelist.out \
+*** ../vim-7.4.785/src/testdir/Make_os2.mak	2015-07-17 14:16:49.854596682 +0200
+--- src/testdir/Make_os2.mak	2015-07-17 14:58:39.362642959 +0200
+***************
+*** 39,44 ****
+--- 39,45 ----
+  		test105.out test106.out test107.out \
+  		test_argument_0count.out \
+  		test_argument_count.out \
++ 		test_autocmd_option.out \
+  		test_autoformat_join.out \
+  		test_breakindent.out \
+  		test_changelist.out \
+*** ../vim-7.4.785/src/testdir/Make_vms.mms	2015-07-17 14:16:49.854596682 +0200
+--- src/testdir/Make_vms.mms	2015-07-17 14:58:39.362642959 +0200
+***************
+*** 98,103 ****
+--- 98,104 ----
+  	 test105.out test106.out test107.out \
+  	 test_argument_0count.out \
+  	 test_argument_count.out \
++ 	 test_autocmd_option.out \
+  	 test_autoformat_join.out \
+  	 test_breakindent.out \
+  	 test_changelist.out \
+*** ../vim-7.4.785/src/testdir/Makefile	2015-07-17 14:16:49.854596682 +0200
+--- src/testdir/Makefile	2015-07-17 14:58:39.362642959 +0200
+***************
+*** 35,40 ****
+--- 35,41 ----
+  		test104.out test105.out test106.out test107.out \
+  		test_argument_0count.out \
+  		test_argument_count.out \
++ 		test_autocmd_option.out \
+  		test_autoformat_join.out \
+  		test_breakindent.out \
+  		test_changelist.out \
+*** ../vim-7.4.785/src/testdir/test_autocmd_option.in	2015-07-17 17:13:44.769224683 +0200
+--- src/testdir/test_autocmd_option.in	2015-07-17 14:58:39.362642959 +0200
+***************
+*** 0 ****
+--- 1,73 ----
++ Test for option autocommand
++ 
++ STARTTEST
++ :so small.vim
++ :if !has("eval") || !has("autocmd") | e! test.ok | w! test.out | qa! | endif
++ :fu! AutoCommand(match)
++ :	let c=g:testcase
++ :       let item=remove(g:options, 0)
++ :       let c.=printf("Expected: Name: <%s>, Oldval: <%s>, NewVal: <%s>, Scope: <%s>\n", item[0], item[1], item[2], item[3])
++ :       let c.=printf("Autocmd Option: <%s>,", a:match)
++ :       let c.=printf(" OldVal: <%s>,", v:option_old)
++ :       let c.=printf(" NewVal: <%s>,", v:option_new)
++ :       let c.=printf(" Scope: <%s>\n", v:option_type)
++ :       call setreg('r', printf("%s\n%s", getreg('r'), c))
++ :endfu
++ :au OptionSet * :call AutoCommand(expand("<amatch>"))
++ :let g:testcase="1: Setting number option\n"
++ :let g:options=[['number', 0, 1, 'global']]
++ :set nu
++ :let g:testcase="2: Setting local number option\n"
++ :let g:options=[['number', 1, 0, 'local']]
++ :setlocal nonu
++ :let g:testcase="3: Setting global number option\n"
++ :let g:options=[['number', 1, 0, 'global']]
++ :setglobal nonu
++ :let g:testcase="4: Setting local autoindent option\n"
++ :let g:options=[['autoindent', 0, 1, 'local']]
++ :setlocal ai
++ :let g:testcase="5: Setting global autoindent option\n"
++ :let g:options=[['autoindent', 0, 1, 'global']]
++ :setglobal ai
++ :let g:testcase="6: Setting global autoindent option\n"
++ :let g:options=[['autoindent', 1, 0, 'global']]
++ :set ai!
++ : Should not print anything, use :noa
++ :noa :set nonu
++ :let g:testcase="7: Setting several global list and number option\n"
++ :let g:options=[['list', 0, 1, 'global'], ['number', 0, 1, 'global']]
++ :set list nu
++ :noa set nolist nonu
++ :let g:testcase="8: Setting global acd\n"
++ :let g:options=[['autochdir', 0, 1, 'global']]
++ :setlocal acd
++ :let g:testcase="9: Setting global autoread\n"
++ :let g:options=[['autoread', 0, 1, 'global']]
++ :set ar
++ :let g:testcase="10: Setting local autoread\n"
++ :let g:options=[['autoread', 0, 1, 'local']]
++ :setlocal ar
++ :let g:testcase="11: Setting global autoread\n"
++ :let g:options=[['autoread', 1, 0, 'global']]
++ :setglobal invar
++ :let g:testcase="12: Setting option backspace through :let\n"
++ :let g:options=[['backspace', '', 'eol,indent,start', 'global']]
++ :let &bs="eol,indent,start"
++ :let g:testcase="13: Setting option backspace through setbufvar()\n"
++ :let g:options=[['backup', '', '1', 'local']]
++ : "try twice, first time, shouldn't trigger because option name is invalid, second time, it should trigger
++ :call setbufvar(1, '&l:bk', 1)
++ : "should trigger, use correct option name
++ :call setbufvar(1, '&backup', 1)
++ :" Write register now, because next test shouldn't output anything.
++ :$put r
++ :let @r=''
++ :let g:testcase="\n14: Setting key option, shouldn't trigger\n"
++ :let g:options=[['key', 'invalid', 'invalid1', 'invalid']]
++ :setlocal key=blah
++ :setlocal key=
++ :$put =g:testcase
++ :%w! test.out
++ :qa!
++ ENDTEST
++ dummy text
+*** ../vim-7.4.785/src/testdir/test_autocmd_option.ok	2015-07-17 17:13:44.777224608 +0200
+--- src/testdir/test_autocmd_option.ok	2015-07-17 14:58:39.362642959 +0200
+***************
+*** 0 ****
+--- 1,131 ----
++ Test for option autocommand
++ 
++ STARTTEST
++ :so small.vim
++ :if !has("eval") || !has("autocmd") | e! test.ok | w! test.out | qa! | endif
++ :fu! AutoCommand(match)
++ :	let c=g:testcase
++ :       let item=remove(g:options, 0)
++ :       let c.=printf("Expected: Name: <%s>, Oldval: <%s>, NewVal: <%s>, Scope: <%s>\n", item[0], item[1], item[2], item[3])
++ :       let c.=printf("Autocmd Option: <%s>,", a:match)
++ :       let c.=printf(" OldVal: <%s>,", v:option_old)
++ :       let c.=printf(" NewVal: <%s>,", v:option_new)
++ :       let c.=printf(" Scope: <%s>\n", v:option_type)
++ :       call setreg('r', printf("%s\n%s", getreg('r'), c))
++ :endfu
++ :au OptionSet * :call AutoCommand(expand("<amatch>"))
++ :let g:testcase="1: Setting number option\n"
++ :let g:options=[['number', 0, 1, 'global']]
++ :set nu
++ :let g:testcase="2: Setting local number option\n"
++ :let g:options=[['number', 1, 0, 'local']]
++ :setlocal nonu
++ :let g:testcase="3: Setting global number option\n"
++ :let g:options=[['number', 1, 0, 'global']]
++ :setglobal nonu
++ :let g:testcase="4: Setting local autoindent option\n"
++ :let g:options=[['autoindent', 0, 1, 'local']]
++ :setlocal ai
++ :let g:testcase="5: Setting global autoindent option\n"
++ :let g:options=[['autoindent', 0, 1, 'global']]
++ :setglobal ai
++ :let g:testcase="6: Setting global autoindent option\n"
++ :let g:options=[['autoindent', 1, 0, 'global']]
++ :set ai!
++ : Should not print anything, use :noa
++ :noa :set nonu
++ :let g:testcase="7: Setting several global list and number option\n"
++ :let g:options=[['list', 0, 1, 'global'], ['number', 0, 1, 'global']]
++ :set list nu
++ :noa set nolist nonu
++ :let g:testcase="8: Setting global acd\n"
++ :let g:options=[['autochdir', 0, 1, 'global']]
++ :setlocal acd
++ :let g:testcase="9: Setting global autoread\n"
++ :let g:options=[['autoread', 0, 1, 'global']]
++ :set ar
++ :let g:testcase="10: Setting local autoread\n"
++ :let g:options=[['autoread', 0, 1, 'local']]
++ :setlocal ar
++ :let g:testcase="11: Setting global autoread\n"
++ :let g:options=[['autoread', 1, 0, 'global']]
++ :setglobal invar
++ :let g:testcase="12: Setting option backspace through :let\n"
++ :let g:options=[['backspace', '', 'eol,indent,start', 'global']]
++ :let &bs="eol,indent,start"
++ :let g:testcase="13: Setting option backspace through setbufvar()\n"
++ :let g:options=[['backup', '', '1', 'local']]
++ : "try twice, first time, shouldn't trigger because option name is invalid, second time, it should trigger
++ :call setbufvar(1, '&l:bk', 1)
++ : "should trigger, use correct option name
++ :call setbufvar(1, '&backup', 1)
++ :" Write register now, because next test shouldn't output anything.
++ :$put r
++ :let @r=''
++ :let g:testcase="\n14: Setting key option, shouldn't trigger\n"
++ :let g:options=[['key', 'invalid', 'invalid1', 'invalid']]
++ :setlocal key=blah
++ :setlocal key=
++ :$put =g:testcase
++ :%w! test.out
++ :qa!
++ ENDTEST
++ dummy text
++ 
++ 1: Setting number option
++ Expected: Name: <number>, Oldval: <0>, NewVal: <1>, Scope: <global>
++ Autocmd Option: <number>, OldVal: <0>, NewVal: <1>, Scope: <global>
++ 
++ 2: Setting local number option
++ Expected: Name: <number>, Oldval: <1>, NewVal: <0>, Scope: <local>
++ Autocmd Option: <number>, OldVal: <1>, NewVal: <0>, Scope: <local>
++ 
++ 3: Setting global number option
++ Expected: Name: <number>, Oldval: <1>, NewVal: <0>, Scope: <global>
++ Autocmd Option: <number>, OldVal: <1>, NewVal: <0>, Scope: <global>
++ 
++ 4: Setting local autoindent option
++ Expected: Name: <autoindent>, Oldval: <0>, NewVal: <1>, Scope: <local>
++ Autocmd Option: <autoindent>, OldVal: <0>, NewVal: <1>, Scope: <local>
++ 
++ 5: Setting global autoindent option
++ Expected: Name: <autoindent>, Oldval: <0>, NewVal: <1>, Scope: <global>
++ Autocmd Option: <autoindent>, OldVal: <0>, NewVal: <1>, Scope: <global>
++ 
++ 6: Setting global autoindent option
++ Expected: Name: <autoindent>, Oldval: <1>, NewVal: <0>, Scope: <global>
++ Autocmd Option: <autoindent>, OldVal: <1>, NewVal: <0>, Scope: <global>
++ 
++ 7: Setting several global list and number option
++ Expected: Name: <list>, Oldval: <0>, NewVal: <1>, Scope: <global>
++ Autocmd Option: <list>, OldVal: <0>, NewVal: <1>, Scope: <global>
++ 
++ 7: Setting several global list and number option
++ Expected: Name: <number>, Oldval: <0>, NewVal: <1>, Scope: <global>
++ Autocmd Option: <number>, OldVal: <0>, NewVal: <1>, Scope: <global>
++ 
++ 8: Setting global acd
++ Expected: Name: <autochdir>, Oldval: <0>, NewVal: <1>, Scope: <global>
++ Autocmd Option: <autochdir>, OldVal: <0>, NewVal: <1>, Scope: <local>
++ 
++ 9: Setting global autoread
++ Expected: Name: <autoread>, Oldval: <0>, NewVal: <1>, Scope: <global>
++ Autocmd Option: <autoread>, OldVal: <0>, NewVal: <1>, Scope: <global>
++ 
++ 10: Setting local autoread
++ Expected: Name: <autoread>, Oldval: <0>, NewVal: <1>, Scope: <local>
++ Autocmd Option: <autoread>, OldVal: <1>, NewVal: <1>, Scope: <local>
++ 
++ 11: Setting global autoread
++ Expected: Name: <autoread>, Oldval: <1>, NewVal: <0>, Scope: <global>
++ Autocmd Option: <autoread>, OldVal: <1>, NewVal: <0>, Scope: <global>
++ 
++ 12: Setting option backspace through :let
++ Expected: Name: <backspace>, Oldval: <>, NewVal: <eol,indent,start>, Scope: <global>
++ Autocmd Option: <backspace>, OldVal: <>, NewVal: <eol,indent,start>, Scope: <global>
++ 
++ 13: Setting option backspace through setbufvar()
++ Expected: Name: <backup>, Oldval: <>, NewVal: <1>, Scope: <local>
++ Autocmd Option: <backup>, OldVal: <0>, NewVal: <1>, Scope: <local>
++ 
++ 14: Setting key option, shouldn't trigger
+*** ../vim-7.4.785/src/vim.h	2015-07-10 17:56:18.219777154 +0200
+--- src/vim.h	2015-07-17 15:01:08.737218443 +0200
+***************
+*** 1335,1340 ****
+--- 1335,1341 ----
+      EVENT_TEXTCHANGED,		/* text was modified */
+      EVENT_TEXTCHANGEDI,		/* text was modified in Insert mode*/
+      EVENT_CMDUNDEFINED,		/* command undefined */
++     EVENT_OPTIONSET,		/* option was set */
+      NUM_EVENTS			/* MUST be the last one */
+  };
+  
+***************
+*** 1898,1904 ****
+  #define VV_WINDOWID	56
+  #define VV_PROGPATH	57
+  #define VV_COMPLETED_ITEM 58
+! #define VV_LEN		59	/* number of v: vars */
+  
+  #ifdef FEAT_CLIPBOARD
+  
+--- 1899,1908 ----
+  #define VV_WINDOWID	56
+  #define VV_PROGPATH	57
+  #define VV_COMPLETED_ITEM 58
+! #define VV_OPTION_NEW   59
+! #define VV_OPTION_OLD   60
+! #define VV_OPTION_TYPE  61
+! #define VV_LEN		62	/* number of v: vars */
+  
+  #ifdef FEAT_CLIPBOARD
+  
+*** ../vim-7.4.785/src/version.c	2015-07-17 14:16:49.858596644 +0200
+--- src/version.c	2015-07-17 17:09:30.819636167 +0200
+***************
+*** 743,744 ****
+--- 743,746 ----
+  {   /* Add new patch number below this line */
++ /**/
++     786,
+  /**/
+
+-- 
+hundred-and-one symptoms of being an internet addict:
+231. You sprinkle Carpet Fresh on the rugs and put your vacuum cleaner
+     in the front doorway permanently so it always looks like you are
+     actually attempting to do something about that mess that has amassed
+     since you discovered the Internet.
+
+ /// Bram Moolenaar -- Bram@Moolenaar.net -- http://www.Moolenaar.net   \\\
+///        sponsor Vim, vote for features -- http://www.Vim.org/sponsor/ \\\
+\\\  an exciting new programming language -- http://www.Zimbu.org        ///
+ \\\            help me help AIDS victims -- http://ICCF-Holland.org    ///

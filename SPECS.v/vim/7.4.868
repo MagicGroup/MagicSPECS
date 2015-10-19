@@ -1,0 +1,187 @@
+To: vim_dev@googlegroups.com
+Subject: Patch 7.4.868
+Fcc: outbox
+From: Bram Moolenaar <Bram@moolenaar.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+------------
+
+Patch 7.4.868
+Problem:    'smarttab' is also effective when 'paste' is enabled. (Alexander
+            Monakov)
+Solution:   Disable 'smarttab' when 'paste' is set. (Christian Brabandt)
+            Do the same for 'expandtab'.
+Files:      src/option.c, src/structs.h
+
+
+*** ../vim-7.4.867/src/option.c	2015-08-26 23:24:06.854494285 +0200
+--- src/option.c	2015-09-15 17:20:59.307643051 +0200
+***************
+*** 387,396 ****
+  static long	p_wm_nobin;
+  
+  /* Saved values for when 'paste' is set */
+  static long	p_tw_nopaste;
+  static long	p_wm_nopaste;
+- static long	p_sts_nopaste;
+- static int	p_ai_nopaste;
+  
+  struct vimoption
+  {
+--- 387,397 ----
+  static long	p_wm_nobin;
+  
+  /* Saved values for when 'paste' is set */
++ static int	p_ai_nopaste;
++ static int	p_et_nopaste;
++ static long	p_sts_nopaste;
+  static long	p_tw_nopaste;
+  static long	p_wm_nopaste;
+  
+  struct vimoption
+  {
+***************
+*** 10702,10707 ****
+--- 10703,10709 ----
+  	    buf->b_p_fixeol = p_fixeol;
+  	    buf->b_p_et = p_et;
+  	    buf->b_p_et_nobin = p_et_nobin;
++ 	    buf->b_p_et_nopaste = p_et_nopaste;
+  	    buf->b_p_ml = p_ml;
+  	    buf->b_p_ml_nobin = p_ml_nobin;
+  	    buf->b_p_inf = p_inf;
+***************
+*** 11640,11645 ****
+--- 11642,11648 ----
+  {
+      static int	old_p_paste = FALSE;
+      static int	save_sm = 0;
++     static int	save_sta = 0;
+  #ifdef FEAT_CMDL_INFO
+      static int	save_ru = 0;
+  #endif
+***************
+*** 11664,11673 ****
+--- 11667,11678 ----
+  		buf->b_p_wm_nopaste = buf->b_p_wm;
+  		buf->b_p_sts_nopaste = buf->b_p_sts;
+  		buf->b_p_ai_nopaste = buf->b_p_ai;
++ 		buf->b_p_et_nopaste = buf->b_p_et;
+  	    }
+  
+  	    /* save global options */
+  	    save_sm = p_sm;
++ 	    save_sta = p_sta;
+  #ifdef FEAT_CMDL_INFO
+  	    save_ru = p_ru;
+  #endif
+***************
+*** 11676,11685 ****
+  	    save_hkmap = p_hkmap;
+  #endif
+  	    /* save global values for local buffer options */
+  	    p_tw_nopaste = p_tw;
+  	    p_wm_nopaste = p_wm;
+- 	    p_sts_nopaste = p_sts;
+- 	    p_ai_nopaste = p_ai;
+  	}
+  
+  	/*
+--- 11681,11691 ----
+  	    save_hkmap = p_hkmap;
+  #endif
+  	    /* save global values for local buffer options */
++ 	    p_ai_nopaste = p_ai;
++ 	    p_et_nopaste = p_et;
++ 	    p_sts_nopaste = p_sts;
+  	    p_tw_nopaste = p_tw;
+  	    p_wm_nopaste = p_wm;
+  	}
+  
+  	/*
+***************
+*** 11693,11702 ****
+--- 11699,11710 ----
+  	    buf->b_p_wm = 0;	    /* wrapmargin is 0 */
+  	    buf->b_p_sts = 0;	    /* softtabstop is 0 */
+  	    buf->b_p_ai = 0;	    /* no auto-indent */
++ 	    buf->b_p_et = 0;	    /* no expandtab */
+  	}
+  
+  	/* set global options */
+  	p_sm = 0;		    /* no showmatch */
++ 	p_sta = 0;		    /* no smarttab */
+  #ifdef FEAT_CMDL_INFO
+  # ifdef FEAT_WINDOWS
+  	if (p_ru)
+***************
+*** 11727,11736 ****
+--- 11735,11746 ----
+  	    buf->b_p_wm = buf->b_p_wm_nopaste;
+  	    buf->b_p_sts = buf->b_p_sts_nopaste;
+  	    buf->b_p_ai = buf->b_p_ai_nopaste;
++ 	    buf->b_p_et = buf->b_p_et_nopaste;
+  	}
+  
+  	/* restore global options */
+  	p_sm = save_sm;
++ 	p_sta = save_sta;
+  #ifdef FEAT_CMDL_INFO
+  # ifdef FEAT_WINDOWS
+  	if (p_ru != save_ru)
+***************
+*** 11743,11752 ****
+  	p_hkmap = save_hkmap;
+  #endif
+  	/* set global values for local buffer options */
+  	p_tw = p_tw_nopaste;
+  	p_wm = p_wm_nopaste;
+- 	p_sts = p_sts_nopaste;
+- 	p_ai = p_ai_nopaste;
+      }
+  
+      old_p_paste = p_paste;
+--- 11753,11763 ----
+  	p_hkmap = save_hkmap;
+  #endif
+  	/* set global values for local buffer options */
++ 	p_ai = p_ai_nopaste;
++ 	p_et = p_et_nopaste;
++ 	p_sts = p_sts_nopaste;
+  	p_tw = p_tw_nopaste;
+  	p_wm = p_wm_nopaste;
+      }
+  
+      old_p_paste = p_paste;
+*** ../vim-7.4.867/src/structs.h	2015-07-21 15:48:13.589517950 +0200
+--- src/structs.h	2015-09-15 17:16:58.742127236 +0200
+***************
+*** 1589,1594 ****
+--- 1589,1595 ----
+      int		b_p_fixeol;	/* 'fixendofline' */
+      int		b_p_et;		/* 'expandtab' */
+      int		b_p_et_nobin;	/* b_p_et saved for binary mode */
++     int	        b_p_et_nopaste; /* b_p_et saved for paste mode */
+  #ifdef FEAT_MBYTE
+      char_u	*b_p_fenc;	/* 'fileencoding' */
+  #endif
+*** ../vim-7.4.867/src/version.c	2015-09-15 15:57:22.815879940 +0200
+--- src/version.c	2015-09-15 17:01:01.468036320 +0200
+***************
+*** 743,744 ****
+--- 743,746 ----
+  {   /* Add new patch number below this line */
++ /**/
++     868,
+  /**/
+
+-- 
+Are leaders born or made?  And if they're made, can we return them under
+warranty?
+				(Scott Adams - The Dilbert principle)
+
+ /// Bram Moolenaar -- Bram@Moolenaar.net -- http://www.Moolenaar.net   \\\
+///        sponsor Vim, vote for features -- http://www.Vim.org/sponsor/ \\\
+\\\  an exciting new programming language -- http://www.Zimbu.org        ///
+ \\\            help me help AIDS victims -- http://ICCF-Holland.org    ///

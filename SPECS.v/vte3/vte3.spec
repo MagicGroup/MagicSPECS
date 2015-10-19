@@ -1,6 +1,6 @@
 Name: vte3
-Version:	0.36.4
-Release: 2%{?dist}
+Version:	0.36.5
+Release: 1%{?dist}
 Summary: A terminal emulator
 Summary(zh_CN.UTF-8): 终端模拟器
 License: LGPLv2+
@@ -67,6 +67,10 @@ make V=1
 %install
 make install DESTDIR=$RPM_BUILD_ROOT
 
+# Remove the vte.sh built here and use the one from the vte-profile package
+# instead.
+rm -f $RPM_BUILD_ROOT%{_sysconfdir}/profile.d/vte.sh
+
 rm -f $RPM_BUILD_ROOT%{_libdir}/*.a
 rm -f $RPM_BUILD_ROOT%{_libdir}/*.la
 magic_rpm_clean.sh
@@ -80,7 +84,6 @@ magic_rpm_clean.sh
 %doc COPYING HACKING NEWS README
 %doc src/iso2022.txt
 %doc doc/utmpwtmp.txt doc/boxes.txt doc/openi18n/UTF-8.txt doc/openi18n/wrap.txt
-%{_sysconfdir}/profile.d/vte.sh
 %{_libdir}/*.so.*
 %dir %{_libdir}/vte-2.90
 %attr(2711,root,utmp) %{_libdir}/vte-2.90/gnome-pty-helper
@@ -96,6 +99,9 @@ magic_rpm_clean.sh
 
 
 %changelog
+* Mon Oct 19 2015 Liu Di <liudidi@gmail.com> - 0.36.5-1
+- 更新到 0.36.5
+
 * Sat Sep 19 2015 Liu Di <liudidi@gmail.com> - 0.36.4-2
 - 为 Magic 3.0 重建
 

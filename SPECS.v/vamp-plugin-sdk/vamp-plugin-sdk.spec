@@ -1,12 +1,14 @@
 Name:           vamp-plugin-sdk
-Version:        2.4
-Release:        2%{?dist}
+Version:	2.6
+Release:	1%{?dist}
 Summary:        An API for audio analysis and feature extraction plugins
+Summary(zh_CN.UTF-8): 音频分析和特征提取插件的 API
 
 Group:          System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 License:        BSD
 URL:            http://www.vamp-plugins.org/
-Source0:        http://code.soundsoftware.ac.uk/attachments/download/517/vamp-plugin-sdk-2.4.tar.gz
+Source0:        http://code.soundsoftware.ac.uk/attachments/download/1520/vamp-plugin-sdk-%{version}.tar.gz
 # https://sourceforge.net/tracker/?func=detail&aid=1884043&group_id=192001&atid=939644
 Patch0:         %{name}-2.4-libdir.patch
 
@@ -17,25 +19,35 @@ BuildRequires:  libsndfile-devel
 Vamp is an API for C and C++ plugins that process sampled audio data
 to produce descriptive output (measurements or semantic observations).
 
+%description -l zh_CN.UTF-8
+音频分析和特征提取插件的 API。
+
 %package        devel
 Summary:        Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       %{name} = %{version}-%{release}
 Requires:       pkgconfig
 
 %description    devel
 The %{name}-devel package contains libraries and header files for
 developing applications that use %{name}.
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %package        static
 Summary:        Static libraries for %{name}
+Summary(zh_CN.UTF-8): %{name} 的静态库
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       %{name}-devel = %{version}-%{release}
 
 %description    static
 The %{name}-static package contains library files for
 developing static applications that use %{name}.
-
+%description static -l zh_CN.UTF-8
+%{name} 的静态库。
 
 %prep
 %setup -q
@@ -106,6 +118,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sat Oct 17 2015 Liu Di <liudidi@gmail.com> - 2.6-1
+- 更新到 2.6
+
 * Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 2.4-2
 - 为 Magic 3.0 重建
 

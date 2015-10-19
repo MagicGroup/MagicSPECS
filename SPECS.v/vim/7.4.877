@@ -1,0 +1,53 @@
+To: vim_dev@googlegroups.com
+Subject: Patch 7.4.877
+Fcc: outbox
+From: Bram Moolenaar <Bram@moolenaar.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+------------
+
+Patch 7.4.877 (after 7.4.843)
+Problem:    ":find" sometimes fails. (Excanoe)
+Solution:   Compare current characters instead of previous ones.
+Files:      src/misc2.c
+
+
+*** ../vim-7.4.876/src/misc2.c	2015-09-15 15:57:22.815879940 +0200
+--- src/misc2.c	2015-09-25 16:31:54.883481435 +0200
+***************
+*** 5084,5090 ****
+          i += MB_PTR2LEN(s1 + i);
+          j += MB_PTR2LEN(s2 + j);
+      }
+!     return c1 == c2;
+  }
+  #endif
+  
+--- 5084,5090 ----
+          i += MB_PTR2LEN(s1 + i);
+          j += MB_PTR2LEN(s2 + j);
+      }
+!     return s1[i] == s2[j];
+  }
+  #endif
+  
+*** ../vim-7.4.876/src/version.c	2015-09-25 15:28:32.744126036 +0200
+--- src/version.c	2015-09-25 16:35:44.085077423 +0200
+***************
+*** 743,744 ****
+--- 743,746 ----
+  {   /* Add new patch number below this line */
++ /**/
++     877,
+  /**/
+
+
+-- 
+hundred-and-one symptoms of being an internet addict:
+6. You refuse to go to a vacation spot with no electricity and no phone lines.
+
+ /// Bram Moolenaar -- Bram@Moolenaar.net -- http://www.Moolenaar.net   \\\
+///        sponsor Vim, vote for features -- http://www.Vim.org/sponsor/ \\\
+\\\  an exciting new programming language -- http://www.Zimbu.org        ///
+ \\\            help me help AIDS victims -- http://ICCF-Holland.org    ///

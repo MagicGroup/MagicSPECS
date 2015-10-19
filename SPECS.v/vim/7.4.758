@@ -1,0 +1,50 @@
+To: vim_dev@googlegroups.com
+Subject: Patch 7.4.758
+Fcc: outbox
+From: Bram Moolenaar <Bram@moolenaar.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+------------
+
+Patch 7.4.758
+Problem:    When 'conceallevel' is 1 and quitting the command-line window with
+            CTRL-C the first character ':' is erased.
+Solution:   Reset 'conceallevel' in the command-line window. (Hirohito
+            Higashi)
+Files:      src/ex_getln.c
+
+
+*** ../vim-7.4.757/src/ex_getln.c	2015-04-03 17:06:21.744398370 +0200
+--- src/ex_getln.c	2015-06-25 18:18:53.118270102 +0200
+***************
+*** 6611,6616 ****
+--- 6611,6620 ----
+  	/* Don't execute autocommands while deleting the window. */
+  	block_autocmds();
+  # endif
++ # ifdef FEAT_CONCEAL
++ 	/* Avoid command-line window first character being concealed. */
++ 	curwin->w_p_cole = 0;
++ # endif
+  	wp = curwin;
+  	bp = curbuf;
+  	win_goto(old_curwin);
+*** ../vim-7.4.757/src/version.c	2015-06-25 17:03:32.584666216 +0200
+--- src/version.c	2015-06-25 18:17:36.035060772 +0200
+***************
+*** 743,744 ****
+--- 743,746 ----
+  {   /* Add new patch number below this line */
++ /**/
++     758,
+  /**/
+
+-- 
+You are not really successful until someone claims he sat
+beside you in school.
+
+ /// Bram Moolenaar -- Bram@Moolenaar.net -- http://www.Moolenaar.net   \\\
+///        sponsor Vim, vote for features -- http://www.Vim.org/sponsor/ \\\
+\\\  an exciting new programming language -- http://www.Zimbu.org        ///
+ \\\            help me help AIDS victims -- http://ICCF-Holland.org    ///

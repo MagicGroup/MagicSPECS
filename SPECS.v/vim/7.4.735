@@ -1,0 +1,52 @@
+To: vim_dev@googlegroups.com
+Subject: Patch 7.4.735
+Fcc: outbox
+From: Bram Moolenaar <Bram@moolenaar.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+------------
+
+Patch 7.4.735
+Problem:    Wrong argument for sizeof().
+Solution:   Use a pointer argument. (Chris Hall)
+Files:      src/eval.c
+
+
+*** ../vim-7.4.734/src/eval.c	2015-05-04 11:10:21.539941849 +0200
+--- src/eval.c	2015-06-09 20:24:56.219563938 +0200
+***************
+*** 23164,23170 ****
+      if (todo == 0)
+  	return;     /* nothing to dump */
+  
+!     sorttab = (ufunc_T **)alloc((unsigned)(sizeof(ufunc_T) * todo));
+  
+      for (hi = func_hashtab.ht_array; todo > 0; ++hi)
+      {
+--- 23164,23170 ----
+      if (todo == 0)
+  	return;     /* nothing to dump */
+  
+!     sorttab = (ufunc_T **)alloc((unsigned)(sizeof(ufunc_T *) * todo));
+  
+      for (hi = func_hashtab.ht_array; todo > 0; ++hi)
+      {
+*** ../vim-7.4.734/src/version.c	2015-06-09 20:19:57.730732183 +0200
+--- src/version.c	2015-06-09 20:26:31.098557448 +0200
+***************
+*** 743,744 ****
+--- 743,746 ----
+  {   /* Add new patch number below this line */
++ /**/
++     735,
+  /**/
+
+-- 
+From "know your smileys":
+ +<(:-) The Pope
+
+ /// Bram Moolenaar -- Bram@Moolenaar.net -- http://www.Moolenaar.net   \\\
+///        sponsor Vim, vote for features -- http://www.Vim.org/sponsor/ \\\
+\\\  an exciting new programming language -- http://www.Zimbu.org        ///
+ \\\            help me help AIDS victims -- http://ICCF-Holland.org    ///

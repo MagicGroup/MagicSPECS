@@ -1,0 +1,57 @@
+To: vim_dev@googlegroups.com
+Subject: Patch 7.4.737
+Fcc: outbox
+From: Bram Moolenaar <Bram@moolenaar.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+------------
+
+Patch 7.4.737
+Problem:    On MS-Windows vimgrep over arglist doesn't work (Issue 361)
+Solution:   Only escape backslashes in ## expansion when it is not used as the
+            path separator. (James McCoy)
+Files:      src/ex_docmd.c
+
+
+*** ../vim-7.4.736/src/ex_docmd.c	2015-04-21 18:08:21.838719097 +0200
+--- src/ex_docmd.c	2015-06-09 21:32:02.900492033 +0200
+***************
+*** 10746,10752 ****
+  		}
+  		for ( ; *p != NUL; ++p)
+  		{
+! 		    if (*p == ' ' || *p == '\\')
+  		    {
+  			/* insert a backslash */
+  			if (retval != NULL)
+--- 10746,10756 ----
+  		}
+  		for ( ; *p != NUL; ++p)
+  		{
+! 		    if (*p == ' '
+! #ifndef BACKSLASH_IN_FILENAME
+! 			    || *p == '\\'
+! #endif
+! 			    )
+  		    {
+  			/* insert a backslash */
+  			if (retval != NULL)
+*** ../vim-7.4.736/src/version.c	2015-06-09 20:39:04.322545425 +0200
+--- src/version.c	2015-06-09 21:30:30.001492247 +0200
+***************
+*** 743,744 ****
+--- 743,746 ----
+  {   /* Add new patch number below this line */
++ /**/
++     737,
+  /**/
+
+-- 
+From "know your smileys":
+ :-D	Big smile
+
+ /// Bram Moolenaar -- Bram@Moolenaar.net -- http://www.Moolenaar.net   \\\
+///        sponsor Vim, vote for features -- http://www.Vim.org/sponsor/ \\\
+\\\  an exciting new programming language -- http://www.Zimbu.org        ///
+ \\\            help me help AIDS victims -- http://ICCF-Holland.org    ///

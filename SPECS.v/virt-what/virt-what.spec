@@ -1,9 +1,11 @@
 Name:           virt-what
-Version:        1.12
-Release:        3%{?dist}
+Version:	1.15
+Release:	1%{?dist}
 Summary:        Detect if we are running in a virtual machine
+Summary(zh_CN.UTF-8): 检测你是否在虚拟机中运行
 
 Group:          Applications/Emulators
+Group(zh_CN.UTF-8): 应用程序/模拟器
 License:        GPLv2+
 URL:            http://people.redhat.com/~rjones/virt-what/
 Source0:        http://people.redhat.com/~rjones/virt-what/files/%{name}-%{version}.tar.gz
@@ -53,6 +55,10 @@ Current types of virtualization detected:
  - xen-domU     Xen domU (paravirtualized guest domain)
  - xen-hvm      Xen guest fully virtualized (HVM)
 
+%description -l zh_CN.UTF-8
+检测你是否是在虚拟机中运行，支持的虚拟机类型有：hyperv, kvm,
+openvz, powervm_lx86, qemu, uml, virtage,virtualbox, virtualpc,
+vmware, xen, xen-dom0, xen-domU, xen-hvm。
 
 %prep
 %setup -q
@@ -66,7 +72,7 @@ make
 %install
 rm -rf $RPM_BUILD_ROOT
 make install DESTDIR=$RPM_BUILD_ROOT
-
+magic_rpm_clean.sh
 
 %check
 make check
@@ -85,6 +91,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sun Oct 18 2015 Liu Di <liudidi@gmail.com> - 1.15-1
+- 更新到 1.15
+
 * Fri Feb 15 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.12-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
 

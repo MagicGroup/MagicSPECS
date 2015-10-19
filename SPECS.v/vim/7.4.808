@@ -1,0 +1,120 @@
+To: vim_dev@googlegroups.com
+Subject: Patch 7.4.808
+Fcc: outbox
+From: Bram Moolenaar <Bram@moolenaar.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+------------
+
+Patch 7.4.808
+Problem:    On MS-Windows 10 IME input doen't work correctly.
+Solution:   Read console input before calling MsgWaitForMultipleObjects().
+            (vim-jp, Nobuhiro Takasaki)
+Files:      src/os_win32.c
+
+
+*** ../vim-7.4.807/src/os_win32.c	2015-07-17 14:16:49.854596682 +0200
+--- src/os_win32.c	2015-08-04 19:23:17.165798107 +0200
+***************
+*** 259,264 ****
+--- 259,267 ----
+      int tail;
+      int i;
+  
++     if (nLength == -2)
++ 	return (s_dwMax > 0) ? TRUE : FALSE;
++ 
+      if (!win8_or_later)
+      {
+  	if (nLength == -1)
+***************
+*** 303,309 ****
+      }
+  
+      *lpBuffer = s_irCache[s_dwIndex];
+!     if (nLength != -1 && ++s_dwIndex >= s_dwMax)
+  	s_dwMax = 0;
+      *lpEvents = 1;
+      return TRUE;
+--- 306,312 ----
+      }
+  
+      *lpBuffer = s_irCache[s_dwIndex];
+!     if (!(nLength == -1 || nLength == -2) && ++s_dwIndex >= s_dwMax)
+  	s_dwMax = 0;
+      *lpEvents = 1;
+      return TRUE;
+***************
+*** 322,327 ****
+--- 325,354 ----
+      return read_console_input(hInput, lpBuffer, -1, lpEvents);
+  }
+  
++     static DWORD
++ msg_wait_for_multiple_objects(
++     DWORD    nCount,
++     LPHANDLE pHandles,
++     BOOL     fWaitAll,
++     DWORD    dwMilliseconds,
++     DWORD    dwWakeMask)
++ {
++     if (read_console_input(NULL, NULL, -2, NULL))
++ 	return WAIT_OBJECT_0;
++     return MsgWaitForMultipleObjects(nCount, pHandles, fWaitAll,
++ 				     dwMilliseconds, dwWakeMask);
++ }
++ 
++     static DWORD
++ wait_for_single_object(
++     HANDLE hHandle,
++     DWORD dwMilliseconds)
++ {
++     if (read_console_input(NULL, NULL, -2, NULL))
++ 	return WAIT_OBJECT_0;
++     return WaitForSingleObject(hHandle, dwMilliseconds);
++ }
++ 
+      static void
+  get_exe_name(void)
+  {
+***************
+*** 1459,1468 ****
+  #ifdef FEAT_CLIENTSERVER
+  	    /* Wait for either an event on the console input or a message in
+  	     * the client-server window. */
+! 	    if (MsgWaitForMultipleObjects(1, &g_hConIn, FALSE,
+  				 dwWaitTime, QS_SENDMESSAGE) != WAIT_OBJECT_0)
+  #else
+! 	    if (WaitForSingleObject(g_hConIn, dwWaitTime) != WAIT_OBJECT_0)
+  #endif
+  		    continue;
+  	}
+--- 1486,1495 ----
+  #ifdef FEAT_CLIENTSERVER
+  	    /* Wait for either an event on the console input or a message in
+  	     * the client-server window. */
+! 	    if (msg_wait_for_multiple_objects(1, &g_hConIn, FALSE,
+  				 dwWaitTime, QS_SENDMESSAGE) != WAIT_OBJECT_0)
+  #else
+! 	    if (wait_for_single_object(g_hConIn, dwWaitTime) != WAIT_OBJECT_0)
+  #endif
+  		    continue;
+  	}
+*** ../vim-7.4.807/src/version.c	2015-08-04 19:18:46.044825907 +0200
+--- src/version.c	2015-08-04 19:24:45.568810366 +0200
+***************
+*** 743,744 ****
+--- 743,746 ----
+  {   /* Add new patch number below this line */
++ /**/
++     808,
+  /**/
+
+-- 
+Why doesn't Tarzan have a beard?
+
+ /// Bram Moolenaar -- Bram@Moolenaar.net -- http://www.Moolenaar.net   \\\
+///        sponsor Vim, vote for features -- http://www.Vim.org/sponsor/ \\\
+\\\  an exciting new programming language -- http://www.Zimbu.org        ///
+ \\\            help me help AIDS victims -- http://ICCF-Holland.org    ///

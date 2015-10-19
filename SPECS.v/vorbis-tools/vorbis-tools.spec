@@ -1,12 +1,37 @@
 Summary:	The Vorbis General Audio Compression Codec tools
+Summary(zh_CN.UTF-8): Vorbis 通用音频压缩编码工具
 Name:		vorbis-tools
 Version:	1.4.0
-Release:	5%{?dist}
+Release:	6%{?dist}
 Epoch:		1
 Group:		Applications/Multimedia
+Group(zh_CN.UTF-8): 应用程序/多媒体
 License:	GPLv2
 URL:		http://www.xiph.org/
 Source:		http://downloads.xiph.org/releases/vorbis/%{name}-%{version}.tar.gz
+
+Patch0:		vorbis-tools-1.4.0-bz887540.patch
+
+# http://thread.gmane.org/gmane.comp.multimedia.ogg.vorbis.devel/5729
+Patch1:		vorbis-tools-1.4.0-man-page.patch
+
+# http://thread.gmane.org/gmane.comp.multimedia.ogg.vorbis.devel/5738
+Patch2:		vorbis-tools-1.4.0-bz1003607.patch
+
+# update po files from translationproject.org (#1116650)
+Patch3:		vorbis-tools-1.4.0-bz1116650.patch
+
+# do not use stack variable out of its scope of validity (#1185558)
+Patch4:		vorbis-tools-1.4.0-bz1185558.patch
+
+# validate count of channels in the header (CVE-2014-9638 and CVE-2014-9639)
+Patch5:		vorbis-tools-1.4.0-CVE-2014-9638-CVE-2014-9639.patch
+
+# oggenc: fix large alloca on bad AIFF input (CVE-2015-6749)
+Patch6:		vorbis-tools-1.4.0-CVE-2015-6749.patch
+
+Patch7:		vorbis-tools-1.4.0-format-security.patch
+
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:	flac-devel
 BuildRequires:	libao-devel
@@ -24,9 +49,19 @@ and variable bitrates from 16 to 128 kbps/channel.
 The vorbis package contains an encoder, a decoder, a playback tool, and a
 comment editor.
 
+%description -l zh_CN.UTF-8
+Vorbis 通用音频压缩编码工具。
 
 %prep
 %setup -q
+%patch0 -p1
+%patch1 -p1
+%patch2 -p1
+%patch3 -p1
+%patch4 -p1
+%patch5 -p1
+%patch6 -p1
+%patch7 -p1
 
 %build
 %configure
@@ -36,21 +71,25 @@ make %{?_smp_mflags}
 %install
 rm -rf $RPM_BUILD_ROOT
 make DESTDIR=$RPM_BUILD_ROOT install
-%find_lang %{name}
+magic_rpm_clean.sh
+%find_lang %{name} || :
 
 
 %clean 
 rm -rf $RPM_BUILD_ROOT
 
 
-%files -f %{name}.lang
+%files 
 %defattr(-,root,root,-)
 %doc AUTHORS COPYING README ogg123/ogg123rc-example
 %{_bindir}/*
 %{_mandir}/man1/*
-
+%{_docdir}/%{name}-%{version}/ogg123rc-example
 
 %changelog
+* Mon Oct 19 2015 Liu Di <liudidi@gmail.com> - 1:1.4.0-6
+- 为 Magic 3.0 重建
+
 * Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 1:1.4.0-5
 - 为 Magic 3.0 重建
 

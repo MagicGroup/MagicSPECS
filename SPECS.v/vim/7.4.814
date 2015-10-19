@@ -1,0 +1,51 @@
+To: vim_dev@googlegroups.com
+Subject: Patch 7.4.814
+Fcc: outbox
+From: Bram Moolenaar <Bram@moolenaar.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+------------
+
+Patch 7.4.814
+Problem:    Illegal memory access with "sy match a fold".
+Solution:   Check for empty string. (Dominique Pelle)
+Files:      src/syntax.c
+
+
+*** ../vim-7.4.813/src/syntax.c	2015-06-25 18:36:20.511463791 +0200
+--- src/syntax.c	2015-08-11 15:25:45.521870095 +0200
+***************
+*** 5654,5660 ****
+      char_u	*cpo_save;
+  
+      /* need at least three chars */
+!     if (arg == NULL || arg[1] == NUL || arg[2] == NUL)
+  	return NULL;
+  
+      end = skip_regexp(arg + 1, *arg, TRUE, NULL);
+--- 5654,5660 ----
+      char_u	*cpo_save;
+  
+      /* need at least three chars */
+!     if (arg == NULL || arg[0] == NUL || arg[1] == NUL || arg[2] == NUL)
+  	return NULL;
+  
+      end = skip_regexp(arg + 1, *arg, TRUE, NULL);
+*** ../vim-7.4.813/src/version.c	2015-08-11 14:26:03.598931086 +0200
+--- src/version.c	2015-08-11 15:24:29.398729091 +0200
+***************
+*** 743,744 ****
+--- 743,746 ----
+  {   /* Add new patch number below this line */
++ /**/
++     814,
+  /**/
+
+-- 
+Witches prefer brooms: vacuum-cleaners need extension cords!
+
+ /// Bram Moolenaar -- Bram@Moolenaar.net -- http://www.Moolenaar.net   \\\
+///        sponsor Vim, vote for features -- http://www.Vim.org/sponsor/ \\\
+\\\  an exciting new programming language -- http://www.Zimbu.org        ///
+ \\\            help me help AIDS victims -- http://ICCF-Holland.org    ///

@@ -1,0 +1,115 @@
+To: vim_dev@googlegroups.com
+Subject: Patch 7.4.798
+Fcc: outbox
+From: Bram Moolenaar <Bram@moolenaar.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+------------
+
+Patch 7.4.798 (after 7.4.753)
+Problem:    Repeating a change in Visual mode does not work as expected.
+            (Urtica Dioica)
+Solution:   Make redo in Visual mode work better. (Christian Brabandt)
+Files:      src/normal.c, src/testdir/test_listlbr.in,
+            src/testdir/test_listlbr.ok
+
+
+*** ../vim-7.4.797/src/normal.c	2015-07-21 17:53:11.581527951 +0200
+--- src/normal.c	2015-07-28 11:11:58.479169612 +0200
+***************
+*** 9598,9615 ****
+  #endif
+  
+      getvvcol(curwin, &(oap->start), &oap->start_vcol, NULL, &oap->end_vcol);
+-     getvvcol(curwin, &(oap->end), &start, NULL, &end);
+  
+!     if (start < oap->start_vcol)
+! 	oap->start_vcol = start;
+!     if (end > oap->end_vcol)
+      {
+! 	if (initial && *p_sel == 'e' && start >= 1
+! 			&& start - 1 >= oap->end_vcol)
+! 	    oap->end_vcol = start - 1;
+! 	else
+! 	    oap->end_vcol = end;
+      }
+      /* if '$' was used, get oap->end_vcol from longest line */
+      if (curwin->w_curswant == MAXCOL)
+      {
+--- 9598,9620 ----
+  #endif
+  
+      getvvcol(curwin, &(oap->start), &oap->start_vcol, NULL, &oap->end_vcol);
+  
+!     if (!redo_VIsual_busy)
+      {
+! 	getvvcol(curwin, &(oap->end), &start, NULL, &end);
+! 
+! 	if (start < oap->start_vcol)
+! 	    oap->start_vcol = start;
+! 	if (end > oap->end_vcol)
+! 	{
+! 	    if (initial && *p_sel == 'e' && start >= 1
+! 				    && start - 1 >= oap->end_vcol)
+! 		oap->end_vcol = start - 1;
+! 	    else
+! 		oap->end_vcol = end;
+! 	}
+      }
++ 
+      /* if '$' was used, get oap->end_vcol from longest line */
+      if (curwin->w_curswant == MAXCOL)
+      {
+*** ../vim-7.4.797/src/testdir/test_listlbr.in	2015-06-25 13:30:41.206095684 +0200
+--- src/testdir/test_listlbr.in	2015-07-28 11:11:39.487362238 +0200
+***************
+*** 74,79 ****
+--- 74,85 ----
+  :let g:test ="Test 8: set linebreak with visual char mode and changing block"
+  :$put =g:test
+  Go1111-1111-1111-11-1111-1111-11110f-lv3lc2222bgj.
++ :let g:test ="Test 9: using redo after block visual mode"
++ :$put =g:test
++ Go
++ aaa
++ aaa
++ a2k2j~e.
+  :%w! test.out
+  :qa!
+  ENDTEST
+*** ../vim-7.4.797/src/testdir/test_listlbr.ok	2015-06-25 13:30:41.206095684 +0200
+--- src/testdir/test_listlbr.ok	2015-07-28 11:11:39.487362238 +0200
+***************
+*** 41,43 ****
+--- 41,48 ----
+  long line: foobar foobar foobar foobar foobar foobar foobar foobar foobar foobar foobar foobar foobar foobar foobar foobar foobar foobar foobar foobar foobar foobar foobar foobar foobar foobar foobar foobar foobar foobar foobar foobar foobar foobar foobar foobar foobar foobar foobar foobar TARGETx at end
+  Test 8: set linebreak with visual char mode and changing block
+  1111-2222-1111-11-1111-2222-1111
++ Test 9: using redo after block visual mode
++ 
++ AaA
++ AaA
++ A
+*** ../vim-7.4.797/src/version.c	2015-07-25 22:52:55.396781119 +0200
+--- src/version.c	2015-07-28 11:11:21.699542664 +0200
+***************
+*** 743,744 ****
+--- 743,746 ----
+  {   /* Add new patch number below this line */
++ /**/
++     798,
+  /**/
+
+-- 
+    A KNIGHT rides into shot and hacks him to the ground.  He rides off.
+    We stay for a moment on the glade.  A MIDDLE-AGED LADY in a C. & A.
+    twin-set emerges from the trees and looks in horror at the body of her
+    HUSBAND.
+MRS HISTORIAN: FRANK!
+                 "Monty Python and the Holy Grail" PYTHON (MONTY) PICTURES LTD
+
+ /// Bram Moolenaar -- Bram@Moolenaar.net -- http://www.Moolenaar.net   \\\
+///        sponsor Vim, vote for features -- http://www.Vim.org/sponsor/ \\\
+\\\  an exciting new programming language -- http://www.Zimbu.org        ///
+ \\\            help me help AIDS victims -- http://ICCF-Holland.org    ///

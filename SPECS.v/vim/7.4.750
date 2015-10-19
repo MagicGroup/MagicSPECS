@@ -1,0 +1,79 @@
+To: vim_dev@googlegroups.com
+Subject: Patch 7.4.750
+Fcc: outbox
+From: Bram Moolenaar <Bram@moolenaar.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+------------
+
+Patch 7.4.750
+Problem:    Cannot build with clang 3.5 on Cygwin with perl enabled.
+Solution:   Strip "-fdebug-prefix-map" in configure. (Ken Takata)
+Files:      src/configure.in, src/auto/configure
+
+
+*** ../vim-7.4.749/src/configure.in	2015-03-24 15:14:19.181039379 +0100
+--- src/configure.in	2015-06-21 13:35:26.542813059 +0200
+***************
+*** 942,949 ****
+        done
+        AC_SUBST(vi_cv_perl_xsubpp)
+        dnl Remove "-fno-something", it breaks using cproto.
+        perlcppflags=`$vi_cv_path_perl -Mlib=$srcdir -MExtUtils::Embed \
+! 	      -e 'ccflags;perl_inc;print"\n"' | sed -e 's/-fno[[^ ]]*//'`
+        dnl Remove "-lc", it breaks on FreeBSD when using "-pthread".
+        perllibs=`cd $srcdir; $vi_cv_path_perl -MExtUtils::Embed -e 'ldopts' | \
+  		sed -e '/Warning/d' -e '/Note (probably harmless)/d' \
+--- 942,951 ----
+        done
+        AC_SUBST(vi_cv_perl_xsubpp)
+        dnl Remove "-fno-something", it breaks using cproto.
++       dnl Remove "-fdebug-prefix-map", it isn't supported by clang.
+        perlcppflags=`$vi_cv_path_perl -Mlib=$srcdir -MExtUtils::Embed \
+! 	      -e 'ccflags;perl_inc;print"\n"' | sed -e 's/-fno[[^ ]]*//' \
+! 			-e 's/-fdebug-prefix-map[[^ ]]*//g'`
+        dnl Remove "-lc", it breaks on FreeBSD when using "-pthread".
+        perllibs=`cd $srcdir; $vi_cv_path_perl -MExtUtils::Embed -e 'ldopts' | \
+  		sed -e '/Warning/d' -e '/Note (probably harmless)/d' \
+*** ../vim-7.4.749/src/auto/configure	2015-03-24 15:14:19.189039146 +0100
+--- src/auto/configure	2015-06-21 13:37:24.189576093 +0200
+***************
+*** 5613,5620 ****
+  	fi
+        done
+  
+!             perlcppflags=`$vi_cv_path_perl -Mlib=$srcdir -MExtUtils::Embed \
+! 	      -e 'ccflags;perl_inc;print"\n"' | sed -e 's/-fno[^ ]*//'`
+              perllibs=`cd $srcdir; $vi_cv_path_perl -MExtUtils::Embed -e 'ldopts' | \
+  		sed -e '/Warning/d' -e '/Note (probably harmless)/d' \
+  			-e 's/-bE:perl.exp//' -e 's/-lc //'`
+--- 5613,5621 ----
+  	fi
+        done
+  
+!                   perlcppflags=`$vi_cv_path_perl -Mlib=$srcdir -MExtUtils::Embed \
+! 	      -e 'ccflags;perl_inc;print"\n"' | sed -e 's/-fno[^ ]*//' \
+! 			-e 's/-fdebug-prefix-map[^ ]*//g'`
+              perllibs=`cd $srcdir; $vi_cv_path_perl -MExtUtils::Embed -e 'ldopts' | \
+  		sed -e '/Warning/d' -e '/Note (probably harmless)/d' \
+  			-e 's/-bE:perl.exp//' -e 's/-lc //'`
+*** ../vim-7.4.749/src/version.c	2015-06-20 15:29:57.202600053 +0200
+--- src/version.c	2015-06-21 13:37:20.145618605 +0200
+***************
+*** 743,744 ****
+--- 743,746 ----
+  {   /* Add new patch number below this line */
++ /**/
++     750,
+  /**/
+
+-- 
+hundred-and-one symptoms of being an internet addict:
+130. You can't get out of your desk even if it's time to eat or time
+     to go to the bathroom.
+
+ /// Bram Moolenaar -- Bram@Moolenaar.net -- http://www.Moolenaar.net   \\\
+///        sponsor Vim, vote for features -- http://www.Vim.org/sponsor/ \\\
+\\\  an exciting new programming language -- http://www.Zimbu.org        ///
+ \\\            help me help AIDS victims -- http://ICCF-Holland.org    ///

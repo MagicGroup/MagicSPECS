@@ -1,0 +1,236 @@
+To: vim_dev@googlegroups.com
+Subject: Patch 7.4.774
+Fcc: outbox
+From: Bram Moolenaar <Bram@moolenaar.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+------------
+
+Patch 7.4.774
+Problem:    When using the CompleteDone autocommand event it's difficult to
+            get to the completed items.
+Solution:   Add the v:completed_items variable. (Shougo Matsu)
+Files:      runtime/doc/autocmd.txt, runtime/doc/eval.txt, src/edit.c,
+            src/eval.c, src/macros.h, src/proto/eval.pro, src/vim.h
+
+
+*** ../vim-7.4.773/runtime/doc/autocmd.txt	2014-08-22 23:05:50.098606614 +0200
+--- runtime/doc/autocmd.txt	2015-07-10 17:37:59.618121125 +0200
+***************
+*** 502,507 ****
+--- 505,512 ----
+  CompleteDone			After Insert mode completion is done.  Either
+  				when something was completed or abandoning
+  				completion. |ins-completion|
++ 				The |v:completed_item| variable contains
++ 				information about the completed item.
+  
+  							*CursorHold*
+  CursorHold			When the user doesn't press a key for the time
+*** ../vim-7.4.773/runtime/doc/eval.txt	2015-06-25 16:09:20.698461237 +0200
+--- runtime/doc/eval.txt	2015-07-10 17:39:36.641207424 +0200
+***************
+*** 1330,1335 ****
+--- 1330,1341 ----
+  		can only be used in autocommands.  For user commands |<bang>|
+  		can be used.
+  
++ 				*v:completed_item* *completed_item-variable*
++ v:completed_item
++ 		|Dictionary| containing the |complete-items| for the most
++ 		recently completed word after |CompleteDone|.  The
++ 		|Dictionary| is empty if the completion failed.
++ 
+  					*v:count* *count-variable*
+  v:count		The count given for the last Normal mode command.  Can be used
+  		to get the count before a mapping.  Read-only.	Example: >
+*** ../vim-7.4.773/src/edit.c	2015-03-31 19:17:55.620054448 +0200
+--- src/edit.c	2015-07-10 17:37:22.574469987 +0200
+***************
+*** 3372,3377 ****
+--- 3372,3379 ----
+      vim_free(compl_orig_text);
+      compl_orig_text = NULL;
+      compl_enter_selects = FALSE;
++     /* clear v:completed_item */
++     set_vim_var_dict(VV_COMPLETED_ITEM, dict_alloc());
+  }
+  
+  /*
+***************
+*** 4606,4622 ****
+--- 4608,4646 ----
+      /* TODO: is this sufficient for redrawing?  Redrawing everything causes
+       * flicker, thus we can't do that. */
+      changed_cline_bef_curs();
++     /* clear v:completed_item */
++     set_vim_var_dict(VV_COMPLETED_ITEM, dict_alloc());
+  }
+  
+  /* Insert the new text being completed. */
+      static void
+  ins_compl_insert()
+  {
++     dict_T	*dict;
++ 
+      ins_bytes(compl_shown_match->cp_str + ins_compl_len());
+      if (compl_shown_match->cp_flags & ORIGINAL_TEXT)
+  	compl_used_match = FALSE;
+      else
+  	compl_used_match = TRUE;
++ 
++     /* Set completed item. */
++     /* { word, abbr, menu, kind, info } */
++     dict = dict_alloc();
++     if (dict != NULL)
++     {
++ 	dict_add_nr_str(dict, "word", 0L,
++ 		    EMPTY_IF_NULL(compl_shown_match->cp_str));
++ 	dict_add_nr_str(dict, "abbr", 0L,
++ 		    EMPTY_IF_NULL(compl_shown_match->cp_text[CPT_ABBR]));
++ 	dict_add_nr_str(dict, "menu", 0L,
++ 		    EMPTY_IF_NULL(compl_shown_match->cp_text[CPT_MENU]));
++ 	dict_add_nr_str(dict, "kind", 0L,
++ 		    EMPTY_IF_NULL(compl_shown_match->cp_text[CPT_KIND]));
++ 	dict_add_nr_str(dict, "info", 0L,
++ 		    EMPTY_IF_NULL(compl_shown_match->cp_text[CPT_INFO]));
++     }
++     set_vim_var_dict(VV_COMPLETED_ITEM, dict);
+  }
+  
+  /*
+*** ../vim-7.4.773/src/eval.c	2015-06-25 16:09:20.702461194 +0200
+--- src/eval.c	2015-07-10 17:42:52.831359939 +0200
+***************
+*** 364,369 ****
+--- 364,370 ----
+      {VV_NAME("oldfiles",	 VAR_LIST), 0},
+      {VV_NAME("windowid",	 VAR_NUMBER), VV_RO},
+      {VV_NAME("progpath",	 VAR_STRING), VV_RO},
++     {VV_NAME("completed_item",	 VAR_DICT), VV_RO},
+  };
+  
+  /* shorthand */
+***************
+*** 372,377 ****
+--- 373,379 ----
+  #define vv_float	vv_di.di_tv.vval.v_float
+  #define vv_str		vv_di.di_tv.vval.v_string
+  #define vv_list		vv_di.di_tv.vval.v_list
++ #define vv_dict		vv_di.di_tv.vval.v_dict
+  #define vv_tv		vv_di.di_tv
+  
+  static dictitem_T	vimvars_var;		/* variable used for v: */
+***************
+*** 888,893 ****
+--- 890,896 ----
+      }
+      set_vim_var_nr(VV_SEARCHFORWARD, 1L);
+      set_vim_var_nr(VV_HLSEARCH, 1L);
++     set_vim_var_dict(VV_COMPLETED_ITEM, dict_alloc());
+      set_reg_var(0);  /* default for v:register is not 0 but '"' */
+  
+  #ifdef EBCDIC
+***************
+*** 20577,20582 ****
+--- 20580,20614 ----
+  }
+  
+  /*
++  * Set Dictionary v: variable to "val".
++  */
++     void
++ set_vim_var_dict(idx, val)
++     int		idx;
++     dict_T	*val;
++ {
++     int		todo;
++     hashitem_T	*hi;
++ 
++     dict_unref(vimvars[idx].vv_dict);
++     vimvars[idx].vv_dict = val;
++     if (val != NULL)
++     {
++ 	++val->dv_refcount;
++ 
++ 	/* Set readonly */
++ 	todo = (int)val->dv_hashtab.ht_used;
++ 	for (hi = val->dv_hashtab.ht_array; todo > 0 ; ++hi)
++ 	{
++ 	    if (HASHITEM_EMPTY(hi))
++ 		continue;
++ 	    --todo;
++ 	    HI2DI(hi)->di_flags = DI_FLAGS_RO | DI_FLAGS_FIX;
++ 	}
++     }
++ }
++ 
++ /*
+   * Set v:register if needed.
+   */
+      void
+*** ../vim-7.4.773/src/macros.h	2014-11-05 17:44:47.676471691 +0100
+--- src/macros.h	2015-07-10 17:25:46.129029911 +0200
+***************
+*** 118,123 ****
+--- 118,126 ----
+  # define ASCII_ISALNUM(c) (ASCII_ISALPHA(c) || VIM_ISDIGIT(c))
+  #endif
+  
++ /* Returns empty string if it is NULL. */
++ #define EMPTY_IF_NULL(x) ((x) ? (x) : (u_char *)"")
++ 
+  /* macro version of chartab().
+   * Only works with values 0-255!
+   * Doesn't work for UTF-8 mode with chars >= 0x80. */
+*** ../vim-7.4.773/src/proto/eval.pro	2015-02-03 12:55:11.140179551 +0100
+--- src/proto/eval.pro	2015-07-10 17:25:46.129029911 +0200
+***************
+*** 91,96 ****
+--- 91,97 ----
+  void set_vcount __ARGS((long count, long count1, int set_prevcount));
+  void set_vim_var_string __ARGS((int idx, char_u *val, int len));
+  void set_vim_var_list __ARGS((int idx, list_T *val));
++ void set_vim_var_dict __ARGS((int idx, dict_T *val));
+  void set_reg_var __ARGS((int c));
+  char_u *v_exception __ARGS((char_u *oldval));
+  char_u *v_throwpoint __ARGS((char_u *oldval));
+*** ../vim-7.4.773/src/vim.h	2015-03-21 17:32:14.058780006 +0100
+--- src/vim.h	2015-07-10 17:37:04.970635775 +0200
+***************
+*** 1897,1903 ****
+  #define VV_OLDFILES	55
+  #define VV_WINDOWID	56
+  #define VV_PROGPATH	57
+! #define VV_LEN		58	/* number of v: vars */
+  
+  #ifdef FEAT_CLIPBOARD
+  
+--- 1897,1904 ----
+  #define VV_OLDFILES	55
+  #define VV_WINDOWID	56
+  #define VV_PROGPATH	57
+! #define VV_COMPLETED_ITEM 58
+! #define VV_LEN		59	/* number of v: vars */
+  
+  #ifdef FEAT_CLIPBOARD
+  
+*** ../vim-7.4.773/src/version.c	2015-07-10 17:19:25.024620239 +0200
+--- src/version.c	2015-07-10 17:27:37.643979391 +0200
+***************
+*** 743,744 ****
+--- 743,746 ----
+  {   /* Add new patch number below this line */
++ /**/
++     774,
+  /**/
+
+-- 
+hundred-and-one symptoms of being an internet addict:
+201. When somebody asks you where you are, you tell them in which chat room.
+
+ /// Bram Moolenaar -- Bram@Moolenaar.net -- http://www.Moolenaar.net   \\\
+///        sponsor Vim, vote for features -- http://www.Vim.org/sponsor/ \\\
+\\\  an exciting new programming language -- http://www.Zimbu.org        ///
+ \\\            help me help AIDS victims -- http://ICCF-Holland.org    ///

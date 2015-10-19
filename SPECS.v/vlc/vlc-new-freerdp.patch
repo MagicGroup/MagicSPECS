@@ -1,0 +1,24 @@
+diff -ur vlc-2.2.1/modules/access/rdp.c vlc-2.2.1.orig/modules/access/rdp.c
+--- vlc-2.2.1/modules/access/rdp.c	2014-11-20 18:44:23.000000000 +0000
++++ vlc-2.2.1.orig/modules/access/rdp.c	2015-10-18 23:53:42.001397888 +0000
+@@ -428,7 +428,9 @@
+     if ( p_sys->f_fps <= 0 ) p_sys->f_fps = 1.0;
+     p_sys->i_frame_interval = 1000000 / p_sys->f_fps;
+ 
++#if FREERDP_VERSION_MAJOR == 1 && FREERDP_VERSION_MINOR < 2    
+     freerdp_channels_global_init();
++#endif
+ 
+     p_sys->p_instance = freerdp_new();
+     if ( !p_sys->p_instance )
+@@ -504,8 +506,9 @@
+ 
+     freerdp_disconnect( p_sys->p_instance );
+     freerdp_free( p_sys->p_instance );
++#if FREERDP_VERSION_MAJOR == 1 && FREERDP_VERSION_MINOR < 2
+     freerdp_channels_global_uninit();
+-
++#endif
+     if ( p_sys->p_block )
+         block_Release( p_sys->p_block );
+ 

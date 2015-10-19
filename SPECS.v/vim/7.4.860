@@ -1,0 +1,646 @@
+To: vim_dev@googlegroups.com
+Subject: Patch 7.4.860
+Fcc: outbox
+From: Bram Moolenaar <Bram@moolenaar.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+------------
+
+Patch 7.4.860
+Problem:    Filetype detection is outdated.
+Solution:   Include all recent and not-so-recent changes.
+Files:      runtime/filetype.vim
+
+
+*** ../vim-7.4.859/runtime/filetype.vim	2015-09-08 19:10:12.446395189 +0200
+--- runtime/filetype.vim	2015-09-08 19:08:38.039364393 +0200
+***************
+*** 1,7 ****
+  " Vim support file to detect file types
+  "
+  " Maintainer:	Bram Moolenaar <Bram@vim.org>
+! " Last Change:	2013 Aug 03
+  
+  " Listen very carefully, I will say this only once
+  if exists("did_load_filetypes")
+--- 1,7 ----
+  " Vim support file to detect file types
+  "
+  " Maintainer:	Bram Moolenaar <Bram@vim.org>
+! " Last Change:	2015 Sep 08
+  
+  " Listen very carefully, I will say this only once
+  if exists("did_load_filetypes")
+***************
+*** 106,111 ****
+--- 106,114 ----
+  " Ant
+  au BufNewFile,BufRead build.xml			setf ant
+  
++ " Arduino
++ au BufNewFile,BufRead *.ino,*.pde		setf arduino
++ 
+  " Apache style config file
+  au BufNewFile,BufRead proftpd.conf*		call s:StarSetf('apachestyle')
+  
+***************
+*** 129,135 ****
+  au BufNewFile,BufRead *.aml			setf aml
+  
+  " APT config file
+! au BufNewFile,BufRead apt.conf                 setf aptconf
+  au BufNewFile,BufRead */.aptitude/config       setf aptconf
+  au BufNewFile,BufRead */etc/apt/apt.conf.d/{[-_[:alnum:]]\+,[-_.[:alnum:]]\+.conf} setf aptconf
+  
+--- 132,138 ----
+  au BufNewFile,BufRead *.aml			setf aml
+  
+  " APT config file
+! au BufNewFile,BufRead apt.conf		       setf aptconf
+  au BufNewFile,BufRead */.aptitude/config       setf aptconf
+  au BufNewFile,BufRead */etc/apt/apt.conf.d/{[-_[:alnum:]]\+,[-_.[:alnum:]]\+.conf} setf aptconf
+  
+***************
+*** 496,502 ****
+  	\ endif
+  
+  " Clojure
+! au BufNewFile,BufRead *.clj,*.cljs		setf clojure
+  
+  " Cmake
+  au BufNewFile,BufRead CMakeLists.txt,*.cmake,*.cmake.in		setf cmake
+--- 499,505 ----
+  	\ endif
+  
+  " Clojure
+! au BufNewFile,BufRead *.clj,*.cljs,*.cljx,*.cljc		setf clojure
+  
+  " Cmake
+  au BufNewFile,BufRead CMakeLists.txt,*.cmake,*.cmake.in		setf cmake
+***************
+*** 527,532 ****
+--- 530,538 ----
+  " CUDA  Cumpute Unified Device Architecture
+  au BufNewFile,BufRead *.cu			setf cuda
+  
++ " Dockerfile
++ au BufNewFile,BufRead Dockerfile		setf dockerfile
++ 
+  " WildPackets EtherPeek Decoder
+  au BufNewFile,BufRead *.dcd			setf dcd
+  
+***************
+*** 536,541 ****
+--- 542,561 ----
+  " Eterm
+  au BufNewFile,BufRead *Eterm/*.cfg		setf eterm
+  
++ " Euphoria 3 or 4
++ au BufNewFile,BufRead *.eu,*.ew,*.ex,*.exu,*.exw  call s:EuphoriaCheck()
++ if has("fname_case")
++    au BufNewFile,BufRead *.EU,*.EW,*.EX,*.EXU,*.EXW  call s:EuphoriaCheck()
++ endif
++ 
++ func! s:EuphoriaCheck()
++   if exists('g:filetype_euphoria')
++     exe 'setf ' . g:filetype_euphoria
++   else
++     setf euphoria3
++   endif
++ endfunc
++ 
+  " Lynx config files
+  au BufNewFile,BufRead lynx.cfg			setf lynx
+  
+***************
+*** 656,677 ****
+  " Embedix Component Description
+  au BufNewFile,BufRead *.ecd			setf ecd
+  
+! " Eiffel or Specman
+  au BufNewFile,BufRead *.e,*.E			call s:FTe()
+  
+  " Elinks configuration
+  au BufNewFile,BufRead */etc/elinks.conf,*/.elinks/elinks.conf	setf elinks
+  
+  func! s:FTe()
+!   let n = 1
+!   while n < 100 && n < line("$")
+!     if getline(n) =~ "^\\s*\\(<'\\|'>\\)\\s*$"
+!       setf specman
+!       return
+!     endif
+!     let n = n + 1
+!   endwhile
+!   setf eiffel
+  endfunc
+  
+  " ERicsson LANGuage; Yaws is erlang too
+--- 676,701 ----
+  " Embedix Component Description
+  au BufNewFile,BufRead *.ecd			setf ecd
+  
+! " Eiffel or Specman or Euphoria
+  au BufNewFile,BufRead *.e,*.E			call s:FTe()
+  
+  " Elinks configuration
+  au BufNewFile,BufRead */etc/elinks.conf,*/.elinks/elinks.conf	setf elinks
+  
+  func! s:FTe()
+!   if exists('g:filetype_euphoria')
+!     exe 'setf ' . g:filetype_euphoria
+!   else
+!     let n = 1
+!     while n < 100 && n < line("$")
+!       if getline(n) =~ "^\\s*\\(<'\\|'>\\)\\s*$"
+!         setf specman
+!         return
+!       endif
+!       let n = n + 1
+!     endwhile
+!     setf eiffel
+!   endif
+  endfunc
+  
+  " ERicsson LANGuage; Yaws is erlang too
+***************
+*** 752,763 ****
+  au BufNewFile,BufRead *.ged,lltxxxxx.txt	setf gedcom
+  
+  " Git
+! au BufNewFile,BufRead *.git/COMMIT_EDITMSG	setf gitcommit
+! au BufNewFile,BufRead *.git/MERGE_MSG		setf gitcommit
+  au BufNewFile,BufRead *.git/config,.gitconfig,.gitmodules setf gitconfig
+- au BufNewFile,BufRead *.git/modules/*/COMMIT_EDITMSG setf gitcommit
+  au BufNewFile,BufRead *.git/modules/*/config	setf gitconfig
+  au BufNewFile,BufRead */.config/git/config	setf gitconfig
+  au BufNewFile,BufRead git-rebase-todo		setf gitrebase
+  au BufNewFile,BufRead .msg.[0-9]*
+        \ if getline(1) =~ '^From.*# This line is ignored.$' |
+--- 776,789 ----
+  au BufNewFile,BufRead *.ged,lltxxxxx.txt	setf gedcom
+  
+  " Git
+! au BufNewFile,BufRead COMMIT_EDITMSG		setf gitcommit
+! au BufNewFile,BufRead MERGE_MSG			setf gitcommit
+  au BufNewFile,BufRead *.git/config,.gitconfig,.gitmodules setf gitconfig
+  au BufNewFile,BufRead *.git/modules/*/config	setf gitconfig
+  au BufNewFile,BufRead */.config/git/config	setf gitconfig
++ if !empty($XDG_CONFIG_HOME)
++   au BufNewFile,BufRead $XDG_CONFIG_HOME/git/config	setf gitconfig
++ endif
+  au BufNewFile,BufRead git-rebase-todo		setf gitrebase
+  au BufNewFile,BufRead .msg.[0-9]*
+        \ if getline(1) =~ '^From.*# This line is ignored.$' |
+***************
+*** 790,795 ****
+--- 816,824 ----
+  " Gnuplot scripts
+  au BufNewFile,BufRead *.gpi			setf gnuplot
+  
++ " Go (Google)
++ au BufNewFile,BufRead *.go			setf go
++ 
+  " GrADS scripts
+  au BufNewFile,BufRead *.gs			setf grads
+  
+***************
+*** 952,957 ****
+--- 981,989 ----
+  " Inno Setup
+  au BufNewFile,BufRead *.iss			setf iss
+  
++ " J
++ au BufNewFile,BufRead *.ijs			setf j
++ 
+  " JAL
+  au BufNewFile,BufRead *.jal,*.JAL		setf jal
+  
+***************
+*** 965,971 ****
+  au BufNewFile,BufRead *.jj,*.jjt		setf javacc
+  
+  " JavaScript, ECMAScript
+! au BufNewFile,BufRead *.js,*.javascript,*.es,*.jsx,*.json   setf javascript
+  
+  " Java Server Pages
+  au BufNewFile,BufRead *.jsp			setf jsp
+--- 997,1003 ----
+  au BufNewFile,BufRead *.jj,*.jjt		setf javacc
+  
+  " JavaScript, ECMAScript
+! au BufNewFile,BufRead *.js,*.javascript,*.es,*.jsx   setf javascript
+  
+  " Java Server Pages
+  au BufNewFile,BufRead *.jsp			setf jsp
+***************
+*** 983,994 ****
+--- 1015,1032 ----
+  " Jovial
+  au BufNewFile,BufRead *.jov,*.j73,*.jovial	setf jovial
+  
++ " JSON
++ au BufNewFile,BufRead *.json,*.jsonp		setf json
++ 
+  " Kixtart
+  au BufNewFile,BufRead *.kix			setf kix
+  
+  " Kimwitu[++]
+  au BufNewFile,BufRead *.k			setf kwt
+  
++ " Kivy
++ au BufNewFile,BufRead *.kv			setf kivy
++ 
+  " KDE script
+  au BufNewFile,BufRead *.ks			setf kscript
+  
+***************
+*** 1013,1020 ****
+  " Ld loader
+  au BufNewFile,BufRead *.ld			setf ld
+  
+  " Lex
+! au BufNewFile,BufRead *.lex,*.l			setf lex
+  
+  " Libao
+  au BufNewFile,BufRead */etc/libao.conf,*/.libao	setf libao
+--- 1051,1061 ----
+  " Ld loader
+  au BufNewFile,BufRead *.ld			setf ld
+  
++ " Less
++ au BufNewFile,BufRead *.less			setf less
++ 
+  " Lex
+! au BufNewFile,BufRead *.lex,*.l,*.lxx,*.l++	setf lex
+  
+  " Libao
+  au BufNewFile,BufRead */etc/libao.conf,*/.libao	setf libao
+***************
+*** 1068,1073 ****
+--- 1109,1117 ----
+  " Lua
+  au BufNewFile,BufRead *.lua			setf lua
+  
++ " Luarocks
++ au BufNewFile,BufRead *.rockspec		setf lua
++ 
+  " Linden Scripting Language (Second Life)
+  au BufNewFile,BufRead *.lsl			setf lsl
+  
+***************
+*** 1112,1121 ****
+  au BufNewFile,BufRead *.map			setf map
+  
+  " Markdown
+! au BufNewFile,BufRead *.markdown,*.mdown,*.mkd,*.mkdn,*.mdwn,README.md  setf markdown
+  
+  " Mason
+! au BufNewFile,BufRead *.mason,*.mhtml		setf mason
+  
+  " Matlab or Objective C
+  au BufNewFile,BufRead *.m			call s:FTm()
+--- 1156,1165 ----
+  au BufNewFile,BufRead *.map			setf map
+  
+  " Markdown
+! au BufNewFile,BufRead *.markdown,*.mdown,*.mkd,*.mkdn,*.mdwn,*.md  setf markdown
+  
+  " Mason
+! au BufNewFile,BufRead *.mason,*.mhtml,*.comp	setf mason
+  
+  " Matlab or Objective C
+  au BufNewFile,BufRead *.m			call s:FTm()
+***************
+*** 1124,1130 ****
+    let n = 1
+    while n < 10
+      let line = getline(n)
+!     if line =~ '^\s*\(#\s*\(include\|import\)\>\|/\*\|//\)'
+        setf objc
+        return
+      endif
+--- 1168,1174 ----
+    let n = 1
+    while n < 10
+      let line = getline(n)
+!     if line =~ '^\s*\(#\s*\(include\|import\)\>\|@import\>\|/\*\|//\)'
+        setf objc
+        return
+      endif
+***************
+*** 1169,1174 ****
+--- 1213,1221 ----
+  " MGL
+  au BufNewFile,BufRead *.mgl			setf mgl
+  
++ " MIX - Knuth assembly
++ au BufNewFile,BufRead *.mix,*.mixal		setf mix
++ 
+  " MMIX or VMS makefile
+  au BufNewFile,BufRead *.mms			call s:FTmms()
+  
+***************
+*** 1201,1208 ****
+  	\   setf modsim3 |
+  	\ endif
+  
+! " Modula 2
+! au BufNewFile,BufRead *.m2,*.DEF,*.MOD,*.md,*.mi setf modula2
+  
+  " Modula 3 (.m3, .i3, .mg, .ig)
+  au BufNewFile,BufRead *.[mi][3g]		setf modula3
+--- 1248,1255 ----
+  	\   setf modsim3 |
+  	\ endif
+  
+! " Modula 2  (.md removed in favor of Markdown)
+! au BufNewFile,BufRead *.m2,*.DEF,*.MOD,*.mi	setf modula2
+  
+  " Modula 3 (.m3, .i3, .mg, .ig)
+  au BufNewFile,BufRead *.[mi][3g]		setf modula3
+***************
+*** 1219,1226 ****
+  " Mplayer config
+  au BufNewFile,BufRead mplayer.conf,*/.mplayer/config	setf mplayerconf
+  
+! " Moterola S record
+! au BufNewFile,BufRead *.s19,*.s28,*.s37		setf srec
+  
+  " Mrxvtrc
+  au BufNewFile,BufRead mrxvtrc,.mrxvtrc		setf mrxvtrc
+--- 1266,1273 ----
+  " Mplayer config
+  au BufNewFile,BufRead mplayer.conf,*/.mplayer/config	setf mplayerconf
+  
+! " Motorola S record
+! au BufNewFile,BufRead *.s19,*.s28,*.s37,*.mot,*.srec	setf srec
+  
+  " Mrxvtrc
+  au BufNewFile,BufRead mrxvtrc,.mrxvtrc		setf mrxvtrc
+***************
+*** 1247,1253 ****
+  au BufNewFile,BufRead Mutt{ng,}rc		setf muttrc
+  
+  " Nano
+! au BufNewFile,BufRead */etc/nanorc,.nanorc	setf nanorc
+  
+  " Nastran input/DMAP
+  "au BufNewFile,BufRead *.dat			setf nastran
+--- 1294,1300 ----
+  au BufNewFile,BufRead Mutt{ng,}rc		setf muttrc
+  
+  " Nano
+! au BufNewFile,BufRead */etc/nanorc,*.nanorc  	setf nanorc
+  
+  " Nastran input/DMAP
+  "au BufNewFile,BufRead *.dat			setf nastran
+***************
+*** 1289,1295 ****
+    let n = 1
+    while n < 10
+      let line = getline(n)
+!     if line =~ '^\s*\(#\s*\(include\|import\)\>\|/\*\)'
+        setf objcpp
+        return
+      endif
+--- 1336,1342 ----
+    let n = 1
+    while n < 10
+      let line = getline(n)
+!     if line =~ '^\s*\(#\s*\(include\|import\)\>\|@import\>\|/\*\)'
+        setf objcpp
+        return
+      endif
+***************
+*** 1619,1624 ****
+--- 1666,1685 ----
+    au BufNewFile,BufRead *.rnw,*.snw			setf rnoweb
+  endif
+  
++ " R Markdown file
++ if has("fname_case")
++   au BufNewFile,BufRead *.Rmd,*.rmd,*.Smd,*.smd		setf rmd
++ else
++   au BufNewFile,BufRead *.rmd,*.smd			setf rmd
++ endif
++ 
++ " R reStructuredText file
++ if has("fname_case")
++   au BufNewFile,BufRead *.Rrst,*.rrst,*.Srst,*.srst	setf rrst
++ else
++   au BufNewFile,BufRead *.rrst,*.srst			setf rrst
++ endif
++ 
+  " Rexx, Rebol or R
+  au BufNewFile,BufRead *.r,*.R			call s:FTr()
+  
+***************
+*** 1797,1803 ****
+  
+  " Shell scripts (sh, ksh, bash, bash2, csh); Allow .profile_foo etc.
+  " Gentoo ebuilds are actually bash scripts
+! au BufNewFile,BufRead .bashrc*,bashrc,bash.bashrc,.bash_profile*,.bash_logout*,*.bash,*.ebuild call SetFileTypeSH("bash")
+  au BufNewFile,BufRead .kshrc*,*.ksh call SetFileTypeSH("ksh")
+  au BufNewFile,BufRead */etc/profile,.profile*,*.sh,*.env call SetFileTypeSH(getline(1))
+  
+--- 1858,1864 ----
+  
+  " Shell scripts (sh, ksh, bash, bash2, csh); Allow .profile_foo etc.
+  " Gentoo ebuilds are actually bash scripts
+! au BufNewFile,BufRead .bashrc*,bashrc,bash.bashrc,.bash[_-]profile*,.bash[_-]logout*,.bash[_-]aliases*,*.bash,*/{,.}bash[_-]completion{,.d,.sh}{,/*},*.ebuild,*.eclass call SetFileTypeSH("bash")
+  au BufNewFile,BufRead .kshrc*,*.ksh call SetFileTypeSH("ksh")
+  au BufNewFile,BufRead */etc/profile,.profile*,*.sh,*.env call SetFileTypeSH(getline(1))
+  
+***************
+*** 1967,1972 ****
+--- 2028,2037 ----
+      setf conf  " Better than hog
+      return
+    endif
++   if path =~ '^/\(etc\|usr/share\)/polkit-1/rules\.d'
++     setf javascript
++     return
++   endif
+    try
+      let config_lines = readfile('/etc/udev/udev.conf')
+    catch /^Vim\%((\a\+)\)\=:E484/
+***************
+*** 2058,2071 ****
+  " SVG (Scalable Vector Graphics)
+  au BufNewFile,BufRead *.svg			setf svg
+  
+! " If the file has an extension of 't' and is in a directory 't' then it is
+! " almost certainly a Perl test file.
+  " If the first line starts with '#' and contains 'perl' it's probably a Perl
+  " file.
+  " (Slow test) If a file contains a 'use' statement then it is almost certainly
+  " a Perl file.
+  func! s:FTperl()
+!   if expand("%:e") == 't' && expand("%:p:h:t") == 't'
+      setf perl
+      return 1
+    endif
+--- 2123,2137 ----
+  " SVG (Scalable Vector Graphics)
+  au BufNewFile,BufRead *.svg			setf svg
+  
+! " If the file has an extension of 't' and is in a directory 't' or 'xt' then
+! " it is almost certainly a Perl test file.
+  " If the first line starts with '#' and contains 'perl' it's probably a Perl
+  " file.
+  " (Slow test) If a file contains a 'use' statement then it is almost certainly
+  " a Perl file.
+  func! s:FTperl()
+!   let dirname = expand("%:p:h:t")
+!   if expand("%:e") == 't' && (dirname == 't' || dirname == 'xt')
+      setf perl
+      return 1
+    endif
+***************
+*** 2092,2098 ****
+  
+  " Task
+  au BufRead,BufNewFile {pending,completed,undo}.data  setf taskdata
+! au BufRead,BufNewFile *.task                    setf taskedit
+  
+  " Tcl (JACL too)
+  au BufNewFile,BufRead *.tcl,*.tk,*.itcl,*.itk,*.jacl	setf tcl
+--- 2158,2164 ----
+  
+  " Task
+  au BufRead,BufNewFile {pending,completed,undo}.data  setf taskdata
+! au BufRead,BufNewFile *.task			setf taskedit
+  
+  " Tcl (JACL too)
+  au BufNewFile,BufRead *.tcl,*.tk,*.itcl,*.itk,*.jacl	setf tcl
+***************
+*** 2103,2108 ****
+--- 2169,2177 ----
+  " Telix Salt
+  au BufNewFile,BufRead *.slt			setf tsalt
+  
++ " Tera Term Language
++ au BufRead,BufNewFile *.ttl			setf teraterm
++ 
+  " Terminfo
+  au BufNewFile,BufRead *.ti			setf terminfo
+  
+***************
+*** 2217,2228 ****
+  au BufNewFile,BufRead */etc/updatedb.conf	setf updatedb
+  
+  " Upstart (init(8)) config files
+! au BufNewFile,BufRead */usr/share/upstart/*.conf               setf upstart
+! au BufNewFile,BufRead */usr/share/upstart/*.override           setf upstart
+  au BufNewFile,BufRead */etc/init/*.conf,*/etc/init/*.override  setf upstart
+  au BufNewFile,BufRead */.init/*.conf,*/.init/*.override        setf upstart
+! au BufNewFile,BufRead */.config/upstart/*.conf                 setf upstart
+! au BufNewFile,BufRead */.config/upstart/*.override             setf upstart
+  
+  " Vera
+  au BufNewFile,BufRead *.vr,*.vri,*.vrh		setf vera
+--- 2286,2297 ----
+  au BufNewFile,BufRead */etc/updatedb.conf	setf updatedb
+  
+  " Upstart (init(8)) config files
+! au BufNewFile,BufRead */usr/share/upstart/*.conf	       setf upstart
+! au BufNewFile,BufRead */usr/share/upstart/*.override	       setf upstart
+  au BufNewFile,BufRead */etc/init/*.conf,*/etc/init/*.override  setf upstart
+  au BufNewFile,BufRead */.init/*.conf,*/.init/*.override        setf upstart
+! au BufNewFile,BufRead */.config/upstart/*.conf		       setf upstart
+! au BufNewFile,BufRead */.config/upstart/*.override	       setf upstart
+  
+  " Vera
+  au BufNewFile,BufRead *.vr,*.vri,*.vrh		setf vera
+***************
+*** 2233,2238 ****
+--- 2302,2310 ----
+  " Verilog-AMS HDL
+  au BufNewFile,BufRead *.va,*.vams		setf verilogams
+  
++ " SystemVerilog
++ au BufNewFile,BufRead *.sv,*.svh		setf systemverilog
++ 
+  " VHDL
+  au BufNewFile,BufRead *.hdl,*.vhd,*.vhdl,*.vbe,*.vst  setf vhdl
+  au BufNewFile,BufRead *.vhdl_[0-9]*		call s:StarSetf('vhdl')
+***************
+*** 2263,2268 ****
+--- 2335,2343 ----
+  " VRML V1.0c
+  au BufNewFile,BufRead *.wrl			setf vrml
+  
++ " Vroom (vim testing and executable documentation)
++ au BufNewFile,BufRead *.vroom			setf vroom
++ 
+  " Webmacro
+  au BufNewFile,BufRead *.wm			setf webmacro
+  
+***************
+*** 2405,2411 ****
+  au BufNewFile,BufRead *.xsl,*.xslt		setf xslt
+  
+  " Yacc
+! au BufNewFile,BufRead *.yy			setf yacc
+  
+  " Yacc or racc
+  au BufNewFile,BufRead *.y			call s:FTy()
+--- 2480,2486 ----
+  au BufNewFile,BufRead *.xsl,*.xslt		setf xslt
+  
+  " Yacc
+! au BufNewFile,BufRead *.yy,*.yxx,*.y++		setf yacc
+  
+  " Yacc or racc
+  au BufNewFile,BufRead *.y			call s:FTy()
+***************
+*** 2436,2441 ****
+--- 2511,2518 ----
+  
+  " Zimbu
+  au BufNewFile,BufRead *.zu			setf zimbu
++ " Zimbu Templates
++ au BufNewFile,BufRead *.zut			setf zimbutempl
+  
+  " Zope
+  "   dtml (zope dynamic template markup language), pt (zope page template),
+***************
+*** 2630,2636 ****
+  
+  " Plain text files, needs to be far down to not override others.  This avoids
+  " the "conf" type being used if there is a line starting with '#'.
+! au BufNewFile,BufRead *.txt,*.text		setf text
+  
+  
+  " Use the filetype detect plugins.  They may overrule any of the previously
+--- 2707,2713 ----
+  
+  " Plain text files, needs to be far down to not override others.  This avoids
+  " the "conf" type being used if there is a line starting with '#'.
+! au BufNewFile,BufRead *.txt,*.text,README	setf text
+  
+  
+  " Use the filetype detect plugins.  They may overrule any of the previously
+*** ../vim-7.4.859/src/version.c	2015-09-08 19:10:12.450395148 +0200
+--- src/version.c	2015-09-08 19:12:11.161176150 +0200
+***************
+*** 743,744 ****
+--- 743,746 ----
+  {   /* Add new patch number below this line */
++ /**/
++     860,
+  /**/
+
+-- 
+ARTHUR: Old woman!
+DENNIS: Man!
+ARTHUR: Man.  I'm sorry.  Old man, What knight live in that castle over there?
+DENNIS: I'm thirty-seven.
+                 "Monty Python and the Holy Grail" PYTHON (MONTY) PICTURES LTD
+
+ /// Bram Moolenaar -- Bram@Moolenaar.net -- http://www.Moolenaar.net   \\\
+///        sponsor Vim, vote for features -- http://www.Vim.org/sponsor/ \\\
+\\\  an exciting new programming language -- http://www.Zimbu.org        ///
+ \\\            help me help AIDS victims -- http://ICCF-Holland.org    ///

@@ -1,0 +1,53 @@
+To: vim_dev@googlegroups.com
+Subject: Patch 7.4.715
+Fcc: outbox
+From: Bram Moolenaar <Bram@moolenaar.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+------------
+
+Patch 7.4.715
+Problem:    Invalid memory access when there are illegal bytes.
+Solution:   Get the length from the text, not from the character. (Dominique
+            Pelle)
+Files:      src/regexp_nfa.c
+
+
+*** ../vim-7.4.714/src/regexp_nfa.c	2015-04-13 15:28:00.108492965 +0200
+--- src/regexp_nfa.c	2015-05-04 10:24:04.575379783 +0200
+***************
+*** 6602,6608 ****
+  		/* If ireg_icombine is not set only skip over the character
+  		 * itself.  When it is set skip over composing characters. */
+  		if (result && enc_utf8 && !ireg_icombine)
+! 		    clen = utf_char2len(curc);
+  #endif
+  		ADD_STATE_IF_MATCH(t->state);
+  		break;
+--- 6602,6608 ----
+  		/* If ireg_icombine is not set only skip over the character
+  		 * itself.  When it is set skip over composing characters. */
+  		if (result && enc_utf8 && !ireg_icombine)
+! 		    clen = utf_ptr2len(reginput);
+  #endif
+  		ADD_STATE_IF_MATCH(t->state);
+  		break;
+*** ../vim-7.4.714/src/version.c	2015-05-04 09:56:41.882096008 +0200
+--- src/version.c	2015-05-04 10:22:37.528367734 +0200
+***************
+*** 743,744 ****
+--- 743,746 ----
+  {   /* Add new patch number below this line */
++ /**/
++     715,
+  /**/
+
+-- 
+hundred-and-one symptoms of being an internet addict:
+27. You refer to your age as 3.x.
+
+ /// Bram Moolenaar -- Bram@Moolenaar.net -- http://www.Moolenaar.net   \\\
+///        sponsor Vim, vote for features -- http://www.Vim.org/sponsor/ \\\
+\\\  an exciting new programming language -- http://www.Zimbu.org        ///
+ \\\            help me help AIDS victims -- http://ICCF-Holland.org    ///

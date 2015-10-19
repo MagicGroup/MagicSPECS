@@ -1,0 +1,70 @@
+To: vim_dev@googlegroups.com
+Subject: Patch 7.4.767
+Fcc: outbox
+From: Bram Moolenaar <Bram@moolenaar.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+------------
+
+Patch 7.4.767
+Problem:    --remote-tab-silent can fail on MS-Windows.
+Solution:   Use single quotes to avoid problems with backslashes. (Idea by
+            Weiyong Mao)
+Files:      src/main.c
+
+
+*** ../vim-7.4.766/src/main.c	2015-06-25 17:03:32.580666257 +0200
+--- src/main.c	2015-07-03 13:23:10.479096992 +0200
+***************
+*** 4008,4022 ****
+       *    if haslocaldir()
+       *	    cd -
+       *      lcd -
+!      *    elseif getcwd() ==# "current path"
+       *      cd -
+       *    endif
+       *  endif
+       */
+      ga_concat(&ga, (char_u *)":if !exists('+acd')||!&acd|if haslocaldir()|");
+!     ga_concat(&ga, (char_u *)"cd -|lcd -|elseif getcwd() ==# \"");
+      ga_concat(&ga, cdp);
+!     ga_concat(&ga, (char_u *)"\"|cd -|endif|endif<CR>");
+      vim_free(cdp);
+  
+      if (sendReply)
+--- 4008,4022 ----
+       *    if haslocaldir()
+       *	    cd -
+       *      lcd -
+!      *    elseif getcwd() ==# 'current path'
+       *      cd -
+       *    endif
+       *  endif
+       */
+      ga_concat(&ga, (char_u *)":if !exists('+acd')||!&acd|if haslocaldir()|");
+!     ga_concat(&ga, (char_u *)"cd -|lcd -|elseif getcwd() ==# '");
+      ga_concat(&ga, cdp);
+!     ga_concat(&ga, (char_u *)"'|cd -|endif|endif<CR>");
+      vim_free(cdp);
+  
+      if (sendReply)
+*** ../vim-7.4.766/src/version.c	2015-07-03 13:05:45.833974396 +0200
+--- src/version.c	2015-07-03 13:31:49.905707437 +0200
+***************
+*** 743,744 ****
+--- 743,746 ----
+  {   /* Add new patch number below this line */
++ /**/
++     767,
+  /**/
+
+-- 
+hundred-and-one symptoms of being an internet addict:
+173. You keep tracking down the email addresses of all your friends
+     (even childhood friends).
+
+ /// Bram Moolenaar -- Bram@Moolenaar.net -- http://www.Moolenaar.net   \\\
+///        sponsor Vim, vote for features -- http://www.Vim.org/sponsor/ \\\
+\\\  an exciting new programming language -- http://www.Zimbu.org        ///
+ \\\            help me help AIDS victims -- http://ICCF-Holland.org    ///

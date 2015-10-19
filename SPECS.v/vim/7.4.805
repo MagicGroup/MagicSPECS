@@ -1,0 +1,48 @@
+To: vim_dev@googlegroups.com
+Subject: Patch 7.4.805
+Fcc: outbox
+From: Bram Moolenaar <Bram@moolenaar.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+------------
+
+Patch 7.4.805
+Problem:    The ruler shows "Bot" even when there are only filler lines
+            missing. (Gary Johnson)
+Solution:   Use "All" when the first line and one filler line are visible.
+Files:      src/buffer.c
+
+
+*** ../vim-7.4.804/src/buffer.c	2015-07-21 15:03:00.691467213 +0200
+--- src/buffer.c	2015-08-04 17:38:28.340901106 +0200
+***************
+*** 4434,4439 ****
+--- 4434,4443 ----
+      above = wp->w_topline - 1;
+  #ifdef FEAT_DIFF
+      above += diff_check_fill(wp, wp->w_topline) - wp->w_topfill;
++     if (wp->w_topline == 1 && wp->w_topfill >= 1)
++ 	above = 0;  /* All buffer lines are displayed and there is an
++ 		     * indication of filler lines, that can be considered
++ 		     * seeing all lines. */
+  #endif
+      below = wp->w_buffer->b_ml.ml_line_count - wp->w_botline + 1;
+      if (below <= 0)
+*** ../vim-7.4.804/src/version.c	2015-08-04 17:29:02.863390617 +0200
+--- src/version.c	2015-08-04 17:42:39.858011243 +0200
+***************
+*** 743,744 ****
+--- 743,746 ----
+  {   /* Add new patch number below this line */
++ /**/
++     805,
+  /**/
+
+-- 
+Not too long ago, a keyboard was something to make music with...
+
+ /// Bram Moolenaar -- Bram@Moolenaar.net -- http://www.Moolenaar.net   \\\
+///        sponsor Vim, vote for features -- http://www.Vim.org/sponsor/ \\\
+\\\  an exciting new programming language -- http://www.Zimbu.org        ///
+ \\\            help me help AIDS victims -- http://ICCF-Holland.org    ///

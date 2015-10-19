@@ -1,0 +1,54 @@
+To: vim_dev@googlegroups.com
+Subject: Patch 7.4.829
+Fcc: outbox
+From: Bram Moolenaar <Bram@moolenaar.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+------------
+
+Patch 7.4.829
+Problem:    Crash when clicking in beval balloon. (Travis Lebsock)
+Solution:   Use PostMessage() instead of DestroyWindow(). (Raymond Ko, PR 298)
+Files:      src/gui_w32.c
+
+
+*** ../vim-7.4.828/src/gui_w32.c	2015-08-11 19:13:55.138175689 +0200
+--- src/gui_w32.c	2015-08-25 12:20:08.668726500 +0200
+***************
+*** 4836,4842 ****
+  delete_tooltip(beval)
+      BalloonEval	*beval;
+  {
+!     DestroyWindow(beval->balloon);
+  }
+  
+  /*ARGSUSED*/
+--- 4836,4843 ----
+  delete_tooltip(beval)
+      BalloonEval	*beval;
+  {
+!     PostMessage(beval->balloon, WM_DESTROY, 0, 0);
+!     PostMessage(beval->balloon, WM_NCDESTROY, 0, 0);
+  }
+  
+  /*ARGSUSED*/
+*** ../vim-7.4.828/src/version.c	2015-08-25 11:57:45.026505650 +0200
+--- src/version.c	2015-08-25 12:18:39.021646821 +0200
+***************
+*** 743,744 ****
+--- 743,746 ----
+  {   /* Add new patch number below this line */
++ /**/
++     829,
+  /**/
+
+-- 
+BEDEVERE: How do you know so much about swallows?
+ARTHUR:   Well you have to know these things when you're a king, you know.
+                 "Monty Python and the Holy Grail" PYTHON (MONTY) PICTURES LTD
+
+ /// Bram Moolenaar -- Bram@Moolenaar.net -- http://www.Moolenaar.net   \\\
+///        sponsor Vim, vote for features -- http://www.Vim.org/sponsor/ \\\
+\\\  an exciting new programming language -- http://www.Zimbu.org        ///
+ \\\            help me help AIDS victims -- http://ICCF-Holland.org    ///

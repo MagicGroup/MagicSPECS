@@ -1,0 +1,87 @@
+To: vim_dev@googlegroups.com
+Subject: Patch 7.4.821
+Fcc: outbox
+From: Bram Moolenaar <Bram@moolenaar.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+------------
+
+Patch 7.4.821
+Problem:    Coverity reports a few problems.
+Solution:   Avoid the warnings. (Christian Brabandt)
+Files:      src/ex_docmd.c, src/option.c, src/screen.c
+
+
+*** ../vim-7.4.820/src/ex_docmd.c	2015-08-04 22:02:45.215119715 +0200
+--- src/ex_docmd.c	2015-08-11 18:51:20.646283285 +0200
+***************
+*** 4520,4525 ****
+--- 4520,4528 ----
+  			pos.col = MAXCOL;
+  		    else
+  			pos.col = 0;
++ #ifdef FEAT_VIRTUALEDIT
++ 		    pos.coladd = 0;
++ #endif
+  		    if (searchit(curwin, curbuf, &pos,
+  				*cmd == '?' ? BACKWARD : FORWARD,
+  				(char_u *)"", 1L, SEARCH_MSG,
+*** ../vim-7.4.820/src/option.c	2015-07-22 22:19:33.073837041 +0200
+--- src/option.c	2015-08-11 18:51:20.650283237 +0200
+***************
+*** 9990,9995 ****
+--- 9990,9997 ----
+      buf_T	*buf = (buf_T *)from;
+  
+      opt_idx = findoption(name);
++     if (opt_idx < 0)
++ 	return;
+      p = &(options[opt_idx]);
+  
+      switch ((int)p->indir)
+*** ../vim-7.4.820/src/screen.c	2015-07-25 22:52:55.396781119 +0200
+--- src/screen.c	2015-08-11 18:51:55.205871139 +0200
+***************
+*** 7801,7807 ****
+  	}
+      }
+      posmatch->cur = 0;
+!     if (shl->lnum == lnum)
+      {
+  	colnr_T	start = posmatch->pos[bot].col == 0
+  					     ? 0 : posmatch->pos[bot].col - 1;
+--- 7801,7807 ----
+  	}
+      }
+      posmatch->cur = 0;
+!     if (shl->lnum == lnum && bot >= 0)
+      {
+  	colnr_T	start = posmatch->pos[bot].col == 0
+  					     ? 0 : posmatch->pos[bot].col - 1;
+*** ../vim-7.4.820/src/version.c	2015-08-11 18:45:43.122311811 +0200
+--- src/version.c	2015-08-11 18:52:13.809649302 +0200
+***************
+*** 743,744 ****
+--- 743,746 ----
+  {   /* Add new patch number below this line */
++ /**/
++     821,
+  /**/
+
+-- 
+A poem:                read aloud:
+
+<> !*''#               Waka waka bang splat tick tick hash,
+^"`$$-                 Caret quote back-tick dollar dollar dash,
+!*=@$_                 Bang splat equal at dollar under-score,
+%*<> ~#4               Percent splat waka waka tilde number four,
+&[]../                 Ampersand bracket bracket dot dot slash,
+|{,,SYSTEM HALTED      Vertical-bar curly-bracket comma comma CRASH.
+
+Fred Bremmer and Steve Kroese (Calvin College & Seminary of Grand Rapids, MI.)
+
+ /// Bram Moolenaar -- Bram@Moolenaar.net -- http://www.Moolenaar.net   \\\
+///        sponsor Vim, vote for features -- http://www.Vim.org/sponsor/ \\\
+\\\  an exciting new programming language -- http://www.Zimbu.org        ///
+ \\\            help me help AIDS victims -- http://ICCF-Holland.org    ///

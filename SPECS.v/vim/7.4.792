@@ -1,0 +1,841 @@
+To: vim_dev@googlegroups.com
+Subject: Patch 7.4.792
+Fcc: outbox
+From: Bram Moolenaar <Bram@moolenaar.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+------------
+
+Patch 7.4.792
+Problem:    Can only conceal text by defining syntax items.
+Solution:   Use matchadd() to define concealing. (Christian Brabandt)
+Files:      runtime/doc/eval.txt, src/eval.c, src/ex_docmd.c,
+            src/proto/window.pro, src/screen.c, src/structs.h,
+            src/testdir/Make_amiga.mak,
+            src/testdir/Make_dos.mak, src/testdir/Make_ming.mak,
+            src/testdir/Make_os2.mak, src/testdir/Make_vms.mms,
+            src/testdir/Makefile, src/testdir/test_match_conceal.in,
+            src/testdir/test_match_conceal.ok, src/window.c
+
+
+*** ../vim-7.4.791/runtime/doc/eval.txt	2015-07-17 17:38:00.559399699 +0200
+--- runtime/doc/eval.txt	2015-07-21 15:41:47.501228965 +0200
+***************
+*** 4337,4347 ****
+  		done like 'magic' is set and 'cpoptions' is empty.
+  
+  					*matchadd()* *E798* *E799* *E801*
+! matchadd({group}, {pattern}[, {priority}[, {id}]])
+  		Defines a pattern to be highlighted in the current window (a
+  		"match").  It will be highlighted with {group}.  Returns an
+  		identification number (ID), which can be used to delete the
+  		match using |matchdelete()|.
+  
+  		The optional {priority} argument assigns a priority to the
+  		match.	A match with a high priority will have its
+--- 4405,4420 ----
+  		done like 'magic' is set and 'cpoptions' is empty.
+  
+  					*matchadd()* *E798* *E799* *E801*
+! matchadd({group}, {pattern}[, {priority}[, {id} [, {dict}]]])
+  		Defines a pattern to be highlighted in the current window (a
+  		"match").  It will be highlighted with {group}.  Returns an
+  		identification number (ID), which can be used to delete the
+  		match using |matchdelete()|.
++ 		Matching is case sensitive and magic, unless case sensitivity
++ 		or magicness are explicitly overridden in {pattern}.  The
++ 		'magic', 'smartcase' and 'ignorecase' options are not used.
++ 		The "Conceal" value is special, it causes the match to be
++ 		concealed.
+  
+  		The optional {priority} argument assigns a priority to the
+  		match.	A match with a high priority will have its
+***************
+*** 4359,4367 ****
+  		message will appear and the match will not be added.  An ID
+  		is specified as a positive integer (zero excluded).  IDs 1, 2
+  		and 3 are reserved for |:match|, |:2match| and |:3match|,
+! 		respectively.  If the {id} argument is not specified,
+  		|matchadd()| automatically chooses a free ID.
+  
+  		The number of matches is not limited, as it is the case with
+  		the |:match| commands.
+  
+--- 4432,4449 ----
+  		message will appear and the match will not be added.  An ID
+  		is specified as a positive integer (zero excluded).  IDs 1, 2
+  		and 3 are reserved for |:match|, |:2match| and |:3match|,
+! 		respectively.  If the {id} argument is not specified or -1,
+  		|matchadd()| automatically chooses a free ID.
+  
++ 		The optional {dict} argmument allows for further custom
++ 		values. Currently this is used to specify a match specifc
++ 		conceal character that will be shown for |hl-Conceal|
++ 		highlighted matches. The dict can have the following members:
++ 
++ 			conceal	    Special character to show instead of the
++ 				    match (only for |hl-Conceal| highlighed
++ 				    matches, see |:syn-cchar|)
++ 
+  		The number of matches is not limited, as it is the case with
+  		the |:match| commands.
+  
+***************
+*** 4375,4381 ****
+  		available from |getmatches()|.	All matches can be deleted in
+  		one operation by |clearmatches()|.
+  
+! matchaddpos({group}, {pos}[, {priority}[, {id}]])		*matchaddpos()*
+  		Same as |matchadd()|, but requires a list of positions {pos}
+  		instead of a pattern. This command is faster than |matchadd()|
+  		because it does not require to handle regular expressions and
+--- 4457,4463 ----
+  		available from |getmatches()|.	All matches can be deleted in
+  		one operation by |clearmatches()|.
+  
+! matchaddpos({group}, {pos}[, {priority}[, {id}[, {dict}]]])		*matchaddpos()*
+  		Same as |matchadd()|, but requires a list of positions {pos}
+  		instead of a pattern. This command is faster than |matchadd()|
+  		because it does not require to handle regular expressions and
+*** ../vim-7.4.791/src/eval.c	2015-07-17 17:38:00.563399661 +0200
+--- src/eval.c	2015-07-21 15:36:00.616543334 +0200
+***************
+*** 8224,8231 ****
+      {"maparg",		1, 4, f_maparg},
+      {"mapcheck",	1, 3, f_mapcheck},
+      {"match",		2, 4, f_match},
+!     {"matchadd",	2, 4, f_matchadd},
+!     {"matchaddpos",	2, 4, f_matchaddpos},
+      {"matcharg",	1, 1, f_matcharg},
+      {"matchdelete",	1, 1, f_matchdelete},
+      {"matchend",	2, 4, f_matchend},
+--- 8224,8231 ----
+      {"maparg",		1, 4, f_maparg},
+      {"mapcheck",	1, 3, f_mapcheck},
+      {"match",		2, 4, f_match},
+!     {"matchadd",	2, 5, f_matchadd},
+!     {"matchaddpos",	2, 5, f_matchaddpos},
+      {"matcharg",	1, 1, f_matcharg},
+      {"matchdelete",	1, 1, f_matchdelete},
+      {"matchend",	2, 4, f_matchend},
+***************
+*** 12031,12036 ****
+--- 12031,12045 ----
+  	    dict_add_nr_str(dict, "group", 0L, syn_id2name(cur->hlg_id));
+  	    dict_add_nr_str(dict, "priority", (long)cur->priority, NULL);
+  	    dict_add_nr_str(dict, "id", (long)cur->id, NULL);
++ # ifdef FEAT_CONCEAL
++ 	    if (cur->conceal_char)
++ 	    {
++ 		char_u buf[MB_MAXBYTES + 1];
++ 
++ 		buf[(*mb_char2bytes)((int)cur->conceal_char, buf)] = NUL;
++ 		dict_add_nr_str(dict, "conceal", 0L, (char_u *)&buf);
++ 	    }
++ # endif
+  	    list_append_dict(rettv->vval.v_list, dict);
+  	    cur = cur->next;
+  	}
+***************
+*** 14589,14594 ****
+--- 14598,14604 ----
+      int		prio = 10;	/* default priority */
+      int		id = -1;
+      int		error = FALSE;
++     char_u	*conceal_char = NULL;
+  
+      rettv->vval.v_number = -1;
+  
+***************
+*** 14598,14604 ****
+--- 14608,14628 ----
+      {
+  	prio = get_tv_number_chk(&argvars[2], &error);
+  	if (argvars[3].v_type != VAR_UNKNOWN)
++ 	{
+  	    id = get_tv_number_chk(&argvars[3], &error);
++ 	    if (argvars[4].v_type != VAR_UNKNOWN)
++ 	    {
++ 		if (argvars[4].v_type != VAR_DICT)
++ 		{
++ 		    EMSG(_(e_dictreq));
++ 		    return;
++ 		}
++ 		if (dict_find(argvars[4].vval.v_dict,
++ 					     (char_u *)"conceal", -1) != NULL)
++ 		    conceal_char = get_dict_string(argvars[4].vval.v_dict,
++ 						  (char_u *)"conceal", FALSE);
++ 	    }
++ 	}
+      }
+      if (error == TRUE)
+  	return;
+***************
+*** 14608,14614 ****
+  	return;
+      }
+  
+!     rettv->vval.v_number = match_add(curwin, grp, pat, prio, id, NULL);
+  #endif
+  }
+  
+--- 14632,14639 ----
+  	return;
+      }
+  
+!     rettv->vval.v_number = match_add(curwin, grp, pat, prio, id, NULL,
+! 								conceal_char);
+  #endif
+  }
+  
+***************
+*** 14627,14632 ****
+--- 14652,14658 ----
+      int		id = -1;
+      int		error = FALSE;
+      list_T	*l;
++     char_u	*conceal_char = NULL;
+  
+      rettv->vval.v_number = -1;
+  
+***************
+*** 14647,14653 ****
+--- 14673,14693 ----
+      {
+  	prio = get_tv_number_chk(&argvars[2], &error);
+  	if (argvars[3].v_type != VAR_UNKNOWN)
++ 	{
+  	    id = get_tv_number_chk(&argvars[3], &error);
++ 	    if (argvars[4].v_type != VAR_UNKNOWN)
++ 	    {
++ 		if (argvars[4].v_type != VAR_DICT)
++ 		{
++ 		    EMSG(_(e_dictreq));
++ 		    return;
++ 		}
++ 		if (dict_find(argvars[4].vval.v_dict,
++ 					     (char_u *)"conceal", -1) != NULL)
++ 		    conceal_char = get_dict_string(argvars[4].vval.v_dict,
++ 						  (char_u *)"conceal", FALSE);
++ 	    }
++ 	}
+      }
+      if (error == TRUE)
+  	return;
+***************
+*** 14659,14665 ****
+  	return;
+      }
+  
+!     rettv->vval.v_number = match_add(curwin, group, NULL, prio, id, l);
+  #endif
+  }
+  
+--- 14699,14706 ----
+  	return;
+      }
+  
+!     rettv->vval.v_number = match_add(curwin, group, NULL, prio, id, l,
+! 								conceal_char);
+  #endif
+  }
+  
+***************
+*** 17165,17173 ****
+  	    int		i = 0;
+  	    char_u	buf[5];
+  	    dictitem_T  *di;
+  
+  	    d = li->li_tv.vval.v_dict;
+- 
+  	    if (dict_find(d, (char_u *)"pattern", -1) == NULL)
+  	    {
+  		if (s == NULL)
+--- 17206,17217 ----
+  	    int		i = 0;
+  	    char_u	buf[5];
+  	    dictitem_T  *di;
++ 	    char_u	*group;
++ 	    int		priority;
++ 	    int		id;
++ 	    char_u	*conceal;
+  
+  	    d = li->li_tv.vval.v_dict;
+  	    if (dict_find(d, (char_u *)"pattern", -1) == NULL)
+  	    {
+  		if (s == NULL)
+***************
+*** 17193,17210 ****
+  			break;
+  		}
+  	    }
+  	    if (i == 0)
+  	    {
+! 		match_add(curwin, get_dict_string(d, (char_u *)"group", FALSE),
+  		    get_dict_string(d, (char_u *)"pattern", FALSE),
+! 		    (int)get_dict_number(d, (char_u *)"priority"),
+! 		    (int)get_dict_number(d, (char_u *)"id"), NULL);
+  	    }
+  	    else
+  	    {
+! 		match_add(curwin, get_dict_string(d, (char_u *)"group", FALSE),
+! 		    NULL, (int)get_dict_number(d, (char_u *)"priority"),
+! 		    (int)get_dict_number(d, (char_u *)"id"), s);
+  		list_unref(s);
+  		s = NULL;
+  	    }
+--- 17237,17258 ----
+  			break;
+  		}
+  	    }
++ 
++ 	    group = get_dict_string(d, (char_u *)"group", FALSE);
++ 	    priority = (int)get_dict_number(d, (char_u *)"priority");
++ 	    id = (int)get_dict_number(d, (char_u *)"id");
++ 	    conceal = dict_find(d, (char_u *)"conceal", -1) != NULL
++ 			      ? get_dict_string(d, (char_u *)"conceal", FALSE)
++ 			      : NULL;
+  	    if (i == 0)
+  	    {
+! 		match_add(curwin, group,
+  		    get_dict_string(d, (char_u *)"pattern", FALSE),
+! 		    priority, id, NULL, conceal);
+  	    }
+  	    else
+  	    {
+! 		match_add(curwin, group, NULL, priority, id, s, conceal);
+  		list_unref(s);
+  		s = NULL;
+  	    }
+*** ../vim-7.4.791/src/ex_docmd.c	2015-06-19 12:43:02.380196210 +0200
+--- src/ex_docmd.c	2015-07-21 15:13:48.185280280 +0200
+***************
+*** 12079,12085 ****
+  
+  	    c = *end;
+  	    *end = NUL;
+! 	    match_add(curwin, g, p + 1, 10, id, NULL);
+  	    vim_free(g);
+  	    *end = c;
+  	}
+--- 12079,12085 ----
+  
+  	    c = *end;
+  	    *end = NUL;
+! 	    match_add(curwin, g, p + 1, 10, id, NULL, NULL);
+  	    vim_free(g);
+  	    *end = c;
+  	}
+*** ../vim-7.4.791/src/proto/window.pro	2015-01-14 15:47:33.076036876 +0100
+--- src/proto/window.pro	2015-07-21 15:31:37.891052904 +0200
+***************
+*** 76,82 ****
+  void switch_buffer __ARGS((buf_T **save_curbuf, buf_T *buf));
+  void restore_buffer __ARGS((buf_T *save_curbuf));
+  int win_hasvertsplit __ARGS((void));
+! int match_add __ARGS((win_T *wp, char_u *grp, char_u *pat, int prio, int id, list_T *pos_list));
+  int match_delete __ARGS((win_T *wp, int id, int perr));
+  void clear_matches __ARGS((win_T *wp));
+  matchitem_T *get_match __ARGS((win_T *wp, int id));
+--- 76,82 ----
+  void switch_buffer __ARGS((buf_T **save_curbuf, buf_T *buf));
+  void restore_buffer __ARGS((buf_T *save_curbuf));
+  int win_hasvertsplit __ARGS((void));
+! int match_add __ARGS((win_T *wp, char_u *grp, char_u *pat, int prio, int id, list_T *pos_list, char_u *conceal_char));
+  int match_delete __ARGS((win_T *wp, int id, int perr));
+  void clear_matches __ARGS((win_T *wp));
+  matchitem_T *get_match __ARGS((win_T *wp, int id));
+*** ../vim-7.4.791/src/screen.c	2015-07-17 13:22:43.161523633 +0200
+--- src/screen.c	2015-07-21 15:36:35.956205830 +0200
+***************
+*** 3047,3052 ****
+--- 3047,3054 ----
+  					   wrapping */
+      int		vcol_off	= 0;	/* offset for concealed characters */
+      int		did_wcol	= FALSE;
++     int		match_conc	= FALSE; /* cchar for match functions */
++     int		has_match_conc  = FALSE; /* match wants to conceal */
+      int		old_boguscols   = 0;
+  # define VCOL_HLC (vcol - vcol_off)
+  # define FIX_FOR_BOGUSCOLS \
+***************
+*** 3580,3585 ****
+--- 3582,3590 ----
+       */
+      for (;;)
+      {
++ #ifdef FEAT_CONCEAL
++ 	has_match_conc = FALSE;
++ #endif
+  	/* Skip this quickly when working on the text. */
+  	if (draw_state != WL_LINE)
+  	{
+***************
+*** 3923,3935 ****
+  				shl->endcol = tmp_col;
+  #endif
+  			    shl->attr_cur = shl->attr;
+  			}
+  			else if (v == (long)shl->endcol)
+  			{
+  			    shl->attr_cur = 0;
+  			    next_search_hl(wp, shl, lnum, (colnr_T)v, cur);
+  			    pos_inprogress = cur == NULL || cur->pos.cur == 0
+! 							      ? FALSE : TRUE;
+  
+  			    /* Need to get the line again, a multi-line regexp
+  			     * may have made it invalid. */
+--- 3928,3953 ----
+  				shl->endcol = tmp_col;
+  #endif
+  			    shl->attr_cur = shl->attr;
++ #ifdef FEAT_CONCEAL
++ 			    if (cur != NULL && syn_name2id((char_u *)"Conceal")
++ 							       == cur->hlg_id)
++ 			    {
++ 				has_match_conc = TRUE;
++ 				match_conc = cur->conceal_char;
++ 			    }
++ 			    else
++ 				has_match_conc = match_conc = FALSE;
++ #endif
+  			}
+  			else if (v == (long)shl->endcol)
+  			{
+  			    shl->attr_cur = 0;
++ #ifdef FEAT_CONCEAL
++ 			    prev_syntax_id = 0;
++ #endif
+  			    next_search_hl(wp, shl, lnum, (colnr_T)v, cur);
+  			    pos_inprogress = cur == NULL || cur->pos.cur == 0
+! 							       ? FALSE : TRUE;
+  
+  			    /* Need to get the line again, a multi-line regexp
+  			     * may have made it invalid. */
+***************
+*** 4873,4891 ****
+  #ifdef FEAT_CONCEAL
+  	    if (   wp->w_p_cole > 0
+  		&& (wp != curwin || lnum != wp->w_cursor.lnum ||
+! 						      conceal_cursor_line(wp))
+! 		&& (syntax_flags & HL_CONCEAL) != 0
+  		&& !(lnum_in_visual_area
+  				    && vim_strchr(wp->w_p_cocu, 'v') == NULL))
+  	    {
+  		char_attr = conceal_attr;
+  		if (prev_syntax_id != syntax_seqnr
+! 			&& (syn_get_sub_char() != NUL || wp->w_p_cole == 1)
+  			&& wp->w_p_cole != 3)
+  		{
+  		    /* First time at this concealed item: display one
+  		     * character. */
+! 		    if (syn_get_sub_char() != NUL)
+  			c = syn_get_sub_char();
+  		    else if (lcs_conceal != NUL)
+  			c = lcs_conceal;
+--- 4891,4912 ----
+  #ifdef FEAT_CONCEAL
+  	    if (   wp->w_p_cole > 0
+  		&& (wp != curwin || lnum != wp->w_cursor.lnum ||
+! 							conceal_cursor_line(wp) )
+! 		&& ( (syntax_flags & HL_CONCEAL) != 0 || has_match_conc)
+  		&& !(lnum_in_visual_area
+  				    && vim_strchr(wp->w_p_cocu, 'v') == NULL))
+  	    {
+  		char_attr = conceal_attr;
+  		if (prev_syntax_id != syntax_seqnr
+! 			&& (syn_get_sub_char() != NUL || match_conc
+! 							 || wp->w_p_cole == 1)
+  			&& wp->w_p_cole != 3)
+  		{
+  		    /* First time at this concealed item: display one
+  		     * character. */
+! 		    if (match_conc)
+! 			c = match_conc;
+! 		    else if (syn_get_sub_char() != NUL)
+  			c = syn_get_sub_char();
+  		    else if (lcs_conceal != NUL)
+  			c = lcs_conceal;
+*** ../vim-7.4.791/src/structs.h	2015-07-17 14:16:49.854596682 +0200
+--- src/structs.h	2015-07-21 15:34:41.237301482 +0200
+***************
+*** 2021,2026 ****
+--- 2021,2029 ----
+      regmmatch_T	match;	    /* regexp program for pattern */
+      posmatch_T	pos;	    /* position matches */
+      match_T	hl;	    /* struct for doing the actual highlighting */
++ #ifdef FEAT_CONCEAL
++     int		conceal_char; /* cchar for Conceal highlighting */
++ #endif
+  };
+  
+  /*
+*** ../vim-7.4.791/src/testdir/Make_amiga.mak	2015-07-17 17:38:00.567399623 +0200
+--- src/testdir/Make_amiga.mak	2015-07-21 15:13:48.185280280 +0200
+***************
+*** 54,59 ****
+--- 54,60 ----
+  		test_listlbr_utf8.out \
+  		test_mapping.out \
+  		test_marks.out \
++ 		test_match_conceal.out \
+  		test_nested_function.out \
+  		test_options.out \
+  		test_perl.out \
+***************
+*** 205,210 ****
+--- 206,212 ----
+  test_listlbr_utf8.out: test_listlbr_utf8.in
+  test_mapping.out: test_mapping.in
+  test_marks.out: test_marks.in
++ test_match_conceal.out: test_match_conceal.in
+  test_nested_function.out: test_nested_function.in
+  test_options.out: test_options.in
+  test_perl.out: test_perl.in
+*** ../vim-7.4.791/src/testdir/Make_dos.mak	2015-07-17 17:38:00.567399623 +0200
+--- src/testdir/Make_dos.mak	2015-07-21 15:13:48.185280280 +0200
+***************
+*** 53,58 ****
+--- 53,59 ----
+  		test_listlbr_utf8.out \
+  		test_mapping.out \
+  		test_marks.out \
++ 		test_match_conceal.out \
+  		test_nested_function.out \
+  		test_options.out \
+  		test_perl.out \
+*** ../vim-7.4.791/src/testdir/Make_ming.mak	2015-07-17 17:38:00.567399623 +0200
+--- src/testdir/Make_ming.mak	2015-07-21 15:13:48.185280280 +0200
+***************
+*** 75,80 ****
+--- 75,81 ----
+  		test_listlbr_utf8.out \
+  		test_mapping.out \
+  		test_marks.out \
++ 		test_match_conceal.out \
+  		test_nested_function.out \
+  		test_options.out \
+  		test_perl.out \
+*** ../vim-7.4.791/src/testdir/Make_os2.mak	2015-07-17 17:38:00.567399623 +0200
+--- src/testdir/Make_os2.mak	2015-07-21 15:13:48.185280280 +0200
+***************
+*** 55,60 ****
+--- 55,61 ----
+  		test_listlbr_utf8.out \
+  		test_mapping.out \
+  		test_marks.out \
++ 		test_match_conceal.out \
+  		test_nested_function.out \
+  		test_options.out \
+  		test_perl.out \
+*** ../vim-7.4.791/src/testdir/Make_vms.mms	2015-07-17 17:38:00.567399623 +0200
+--- src/testdir/Make_vms.mms	2015-07-21 15:13:48.185280280 +0200
+***************
+*** 114,119 ****
+--- 114,120 ----
+  	 test_listlbr_utf8.out \
+  	 test_mapping.out \
+  	 test_marks.out \
++ 	 test_match_conceal.out \
+  	 test_nested_function.out \
+  	 test_options.out \
+  	 test_perl.out \
+*** ../vim-7.4.791/src/testdir/Makefile	2015-07-17 17:38:00.567399623 +0200
+--- src/testdir/Makefile	2015-07-21 15:13:48.185280280 +0200
+***************
+*** 51,56 ****
+--- 51,57 ----
+  		test_listlbr_utf8.out \
+  		test_mapping.out \
+  		test_marks.out \
++ 		test_match_conceal.out \
+  		test_nested_function.out \
+  		test_options.out \
+  		test_perl.out \
+*** ../vim-7.4.791/src/testdir/test_match_conceal.in	2015-07-21 15:45:35.379038332 +0200
+--- src/testdir/test_match_conceal.in	2015-07-21 15:13:48.185280280 +0200
+***************
+*** 0 ****
+--- 1,159 ----
++ Test for matchadd() and conceal feature
++ 
++ STARTTEST
++ :so small.vim
++ :if !has("conceal") | e! test.ok | w! test.out | qa! | endif
++ :set term=ansi
++ :so mbyte.vim
++ :if &enc !=? 'utf-8'|:e! test.ok|:w! test.out|qa!|endif
++ :10new|:vsp|:vert resize 20
++ :put =\"\#\ This\ is\ a\ Test\"
++ :norm! mazt
++ :fu! ScreenChar(width, lines)
++ :	let c=''
++ :	for j in range(1,a:lines)
++ :	    for i in range(1,a:width)
++ :	    	let c.=nr2char(screenchar(j, i))
++ :	    endfor
++ :           let c.="\n"
++ :	endfor
++ :	return c
++ :endfu
++ :fu! ScreenAttr(line, pos, eval)
++ :       let g:attr=[]
++ :       for col in a:pos
++ :	    call add(g:attr, screenattr(a:line,col))
++ :	endfor
++ :	" In case all values are zero, probably the terminal
++ :       " isn't set correctly, so catch that case
++ :	let null = (eval(join(g:attr, '+')) == 0)
++ :       let str=substitute(a:eval, '\d\+', 'g:attr[&]', 'g')
++ :	if null || eval(str)
++ :	    :let g:attr_test="OK: ". str
++ :	else
++ :	    :let g:attr_test="FAILED: ".str
++ :	    :let g:attr_test.="\n". join(g:attr, ' ')
++ :	    :let g:attr_test.="\n TERM: ". &term
++ :	endif
++ :endfu
++ :fu! DoRecordScreen()
++ :	wincmd l
++ :	$put =printf(\"\n%s\", g:test)
++ :	$put =g:line
++ :       $put =g:attr_test
++ :	wincmd p
++ :endfu
++ :let g:test ="Test 1: simple addmatch()"
++ :call matchadd('Conceal', '\%2l ')
++ :redraw!
++ :let line=ScreenChar(winwidth(0),1)
++ :call ScreenAttr(1,[1,2,7,10,12,16], "0!=1 && 1==2 && 1==3 && 1==4 && 0==5")
++ :call DoRecordScreen()
++ :
++ :let g:test ="Test 2: simple addmatch() and conceal (should be: #XThisXisXaXTest)"
++ :norm! 'azt
++ :call clearmatches()
++ :syntax on
++ :set concealcursor=n conceallevel=1
++ :call matchadd('Conceal', '\%2l ', 10, -1, {'conceal': 'X'})
++ :redraw!
++ :let line=ScreenChar(winwidth(0),1)
++ :call ScreenAttr(1,[1,2,7,10,12,16], "0!=1 && 1==2 && 1==3 && 1==4 && 0==5")
++ :call DoRecordScreen()
++ :
++ :let g:test ="Test 3: addmatch() and conceallevel=3 (should be: #ThisisaTest)"
++ :norm! 'azt
++ :set conceallevel=3
++ :call clearmatches()
++ :call matchadd('Conceal', '\%2l ', 10, -1, {'conceal': 'X'})
++ :redraw!
++ :let line=ScreenChar(winwidth(0),1)
++ :call ScreenAttr(1,[1,2,7,10,12,16], "0==1 && 1==2 && 1==3 && 1==4 && 0!=5")
++ :call DoRecordScreen()
++ :
++ :let g:test ="Test 4: more match() (should be: #Thisisa Test)"
++ :norm! 'azt
++ :call matchadd('ErrorMsg', '\%2l Test', 20, -1, {'conceal': 'X'})
++ :redraw!
++ :let line=ScreenChar(winwidth(0),1)
++ :call ScreenAttr(1,[1,2,7,10,12,16], "0==1 && 1==2 && 0!=3 && 3==4 && 0!=5 && 3!=5")
++ :call DoRecordScreen()
++ :
++ :let g:test ="Test 5/1: default conceal char (should be: # This is a Test)"
++ :norm! 'azt
++ :call clearmatches()
++ :set conceallevel=1
++ :call matchadd('Conceal', '\%2l ', 10, -1, {})
++ :redraw!
++ :let line=ScreenChar(winwidth(0),1)
++ :call ScreenAttr(1,[1,2,7,10,12,16], "0!=1 && 1==2 && 1==3 && 1==4 && 0==5")
++ :call DoRecordScreen()
++ :let g:test ="Test 5/2: default conceal char (should be: #+This+is+a+Test)"
++ :norm! 'azt
++ :set listchars=conceal:+
++ :let line=ScreenChar(winwidth(0),1)
++ :call ScreenAttr(1,[1,2,7,10,12,16], "0!=1 && 1==2 && 1==3 && 1==4 && 0==5")
++ :call DoRecordScreen()
++ :set listchars&vim
++ :
++ :let g:test ="Test 6/1: syn and match conceal (should be: #ZThisZisZaZTest)"
++ :norm! 'azt
++ :call clearmatches()
++ :set conceallevel=1
++ :call matchadd('Conceal', '\%2l ', 10, -1, {'conceal': 'Z'})
++ :syn match MyConceal /\%2l / conceal containedin=ALL cchar=*
++ :redraw!
++ :let line=ScreenChar(winwidth(0),1)
++ :call ScreenAttr(1,[1,2,7,10,12,16], "0!=1 && 1==2 && 1==3 && 1==4 && 0==5")
++ :call DoRecordScreen()
++ :let g:test ="Test 6/2: syn and match conceal (should be: #*This*is*a*Test)"
++ :norm! 'azt
++ :call clearmatches()
++ :let line=ScreenChar(winwidth(0),1)
++ :call ScreenAttr(1,[1,2,7,10,12,16], "0!=1 && 1==2 && 1==3 && 1==4 && 0==5")
++ :call DoRecordScreen()
++ :
++ :let g:test ="Test 7/1: clear matches"
++ :norm! 'azt
++ :syn on
++ :call matchadd('Conceal', '\%2l ', 10, -1, {'conceal': 'Z'})
++ :let a=getmatches()
++ :call clearmatches()
++ :redraw!
++ :let line=ScreenChar(winwidth(0),1)
++ :call ScreenAttr(1,[1,2,7,10,12,16], "0==1 && 0==2 && 0==3 && 0==4 && 0==5")
++ :call DoRecordScreen()
++ :$put =a
++ :call setmatches(a)
++ :norm! 'azt
++ :let g:test ="Test 7/2: reset match using setmatches()"
++ :norm! 'azt
++ :let line=ScreenChar(winwidth(0),1)
++ :call ScreenAttr(1,[1,2,7,10,12,16], "0!=1 && 1==2 && 1==3 && 1==4 && 0==5")
++ :call DoRecordScreen()
++ :
++ :let g:test ="Test 8: using matchaddpos() (should be #Pis a Test"
++ :norm! 'azt
++ :call clearmatches()
++ :call matchaddpos('Conceal', [[2,2,6]], 10, -1, {'conceal': 'P'})
++ :let a=getmatches()
++ :redraw!
++ :let line=ScreenChar(winwidth(0),1)
++ :call ScreenAttr(1,[1,2,7,10,12,16], "0!=1 && 1!=2 && 0==2 && 0==3 && 0!=4 && 0!=5 && 4==5")
++ :call DoRecordScreen()
++ :$put =a
++ :
++ :let g:test ="Test 9: match using multibyte conceal char (should be: #ˑThisˑisˑaˑTest)"
++ :norm! 'azt
++ :call clearmatches()
++ :call matchadd('Conceal', '\%2l ', 20, -1, {'conceal': "\u02d1"})
++ :redraw!
++ :let line=ScreenChar(winwidth(0),1)
++ :call ScreenAttr(1,[1,2,7,10,12,16], "0!=1 && 1==2 && 1==3 && 1==4 && 0==5")
++ :call DoRecordScreen()
++ :
++ :"sleep 10
++ :%w! test.out
++ :qa!
++ ENDTEST
++ dummy text
+*** ../vim-7.4.791/src/testdir/test_match_conceal.ok	2015-07-21 15:45:35.391038216 +0200
+--- src/testdir/test_match_conceal.ok	2015-07-21 15:13:48.185280280 +0200
+***************
+*** 0 ****
+--- 1,52 ----
++ 
++ # This is a Test
++ 
++ Test 1: simple addmatch()
++ # This is a Test    
++ OK: g:attr[0]!=g:attr[1] && g:attr[1]==g:attr[2] && g:attr[1]==g:attr[3] && g:attr[1]==g:attr[4] && g:attr[0]==g:attr[5]
++ 
++ Test 2: simple addmatch() and conceal (should be: #XThisXisXaXTest)
++ #XThisXisXaXTest    
++ OK: g:attr[0]!=g:attr[1] && g:attr[1]==g:attr[2] && g:attr[1]==g:attr[3] && g:attr[1]==g:attr[4] && g:attr[0]==g:attr[5]
++ 
++ Test 3: addmatch() and conceallevel=3 (should be: #ThisisaTest)
++ #ThisisaTest        
++ OK: g:attr[0]==g:attr[1] && g:attr[1]==g:attr[2] && g:attr[1]==g:attr[3] && g:attr[1]==g:attr[4] && g:attr[0]!=g:attr[5]
++ 
++ Test 4: more match() (should be: #Thisisa Test)
++ #Thisisa Test       
++ OK: g:attr[0]==g:attr[1] && g:attr[1]==g:attr[2] && g:attr[0]!=g:attr[3] && g:attr[3]==g:attr[4] && g:attr[0]!=g:attr[5] && g:attr[3]!=g:attr[5]
++ 
++ Test 5/1: default conceal char (should be: # This is a Test)
++ # This is a Test    
++ OK: g:attr[0]!=g:attr[1] && g:attr[1]==g:attr[2] && g:attr[1]==g:attr[3] && g:attr[1]==g:attr[4] && g:attr[0]==g:attr[5]
++ 
++ Test 5/2: default conceal char (should be: #+This+is+a+Test)
++ #+This+is+a+Test    
++ OK: g:attr[0]!=g:attr[1] && g:attr[1]==g:attr[2] && g:attr[1]==g:attr[3] && g:attr[1]==g:attr[4] && g:attr[0]==g:attr[5]
++ 
++ Test 6/1: syn and match conceal (should be: #ZThisZisZaZTest)
++ #ZThisZisZaZTest    
++ OK: g:attr[0]!=g:attr[1] && g:attr[1]==g:attr[2] && g:attr[1]==g:attr[3] && g:attr[1]==g:attr[4] && g:attr[0]==g:attr[5]
++ 
++ Test 6/2: syn and match conceal (should be: #*This*is*a*Test)
++ #*This*is*a*Test    
++ OK: g:attr[0]!=g:attr[1] && g:attr[1]==g:attr[2] && g:attr[1]==g:attr[3] && g:attr[1]==g:attr[4] && g:attr[0]==g:attr[5]
++ 
++ Test 7/1: clear matches
++ # This is a Test    
++ OK: g:attr[0]==g:attr[1] && g:attr[0]==g:attr[2] && g:attr[0]==g:attr[3] && g:attr[0]==g:attr[4] && g:attr[0]==g:attr[5]
++ {'group': 'Conceal', 'pattern': '\%2l ', 'priority': 10, 'id': 10, 'conceal': 'Z'}
++ 
++ Test 7/2: reset match using setmatches()
++ #ZThisZisZaZTest    
++ OK: g:attr[0]!=g:attr[1] && g:attr[1]==g:attr[2] && g:attr[1]==g:attr[3] && g:attr[1]==g:attr[4] && g:attr[0]==g:attr[5]
++ 
++ Test 8: using matchaddpos() (should be #Pis a Test
++ #Pis a Test         
++ OK: g:attr[0]!=g:attr[1] && g:attr[1]!=g:attr[2] && g:attr[0]==g:attr[2] && g:attr[0]==g:attr[3] && g:attr[0]!=g:attr[4] && g:attr[0]!=g:attr[5] && g:attr[4]==g:attr[5]
++ {'group': 'Conceal', 'id': 11, 'priority': 10, 'pos1': [2, 2, 6], 'conceal': 'P'}
++ 
++ Test 9: match using multibyte conceal char (should be: #ˑThisˑisˑaˑTest)
++ #ˑThisˑisˑaˑTest    
++ OK: g:attr[0]!=g:attr[1] && g:attr[1]==g:attr[2] && g:attr[1]==g:attr[3] && g:attr[1]==g:attr[4] && g:attr[0]==g:attr[5]
+*** ../vim-7.4.791/src/window.c	2015-04-21 18:08:21.834719140 +0200
+--- src/window.c	2015-07-21 15:35:45.852684337 +0200
+***************
+*** 6943,6955 ****
+   * Return ID of added match, -1 on failure.
+   */
+      int
+! match_add(wp, grp, pat, prio, id, pos_list)
+      win_T	*wp;
+      char_u	*grp;
+      char_u	*pat;
+      int		prio;
+      int		id;
+      list_T	*pos_list;
+  {
+      matchitem_T	*cur;
+      matchitem_T	*prev;
+--- 6943,6956 ----
+   * Return ID of added match, -1 on failure.
+   */
+      int
+! match_add(wp, grp, pat, prio, id, pos_list, conceal_char)
+      win_T	*wp;
+      char_u	*grp;
+      char_u	*pat;
+      int		prio;
+      int		id;
+      list_T	*pos_list;
++     char_u      *conceal_char UNUSED; /* pointer to conceal replacement char */
+  {
+      matchitem_T	*cur;
+      matchitem_T	*prev;
+***************
+*** 7009,7014 ****
+--- 7010,7020 ----
+      m->match.regprog = regprog;
+      m->match.rmm_ic = FALSE;
+      m->match.rmm_maxcol = 0;
++ #ifdef FEAT_CONCEAL
++     m->conceal_char = 0;
++     if (conceal_char != NULL)
++ 	m->conceal_char = (*mb_ptr2char)(conceal_char);
++ #endif
+  
+      /* Set up position matches */
+      if (pos_list != NULL)
+*** ../vim-7.4.791/src/version.c	2015-07-21 15:03:00.695467174 +0200
+--- src/version.c	2015-07-21 15:14:54.272647935 +0200
+***************
+*** 743,744 ****
+--- 743,746 ----
+  {   /* Add new patch number below this line */
++ /**/
++     792,
+  /**/
+
+-- 
+"Marriage is a wonderful institution...
+but who wants to live in an institution?"
+ - Groucho Marx
+
+ /// Bram Moolenaar -- Bram@Moolenaar.net -- http://www.Moolenaar.net   \\\
+///        sponsor Vim, vote for features -- http://www.Vim.org/sponsor/ \\\
+\\\  an exciting new programming language -- http://www.Zimbu.org        ///
+ \\\            help me help AIDS victims -- http://ICCF-Holland.org    ///

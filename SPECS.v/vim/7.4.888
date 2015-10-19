@@ -1,0 +1,169 @@
+To: vim_dev@googlegroups.com
+Subject: Patch 7.4.888
+Fcc: outbox
+From: Bram Moolenaar <Bram@moolenaar.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+------------
+
+Patch 7.4.888
+Problem:    The OptionSet autocommands are not triggered from setwinvar().
+Solution:   Do not use switch_win() when not needed. (Hirohito Higashi)
+Files:      src/eval.c
+
+
+*** ../vim-7.4.887/src/eval.c	2015-09-25 17:37:12.242310841 +0200
+--- src/eval.c	2015-09-29 16:07:10.385294539 +0200
+***************
+*** 12420,12431 ****
+      typval_T	*rettv;
+      int		off;	    /* 1 for gettabwinvar() */
+  {
+!     win_T	*win, *oldcurwin;
+      char_u	*varname;
+      dictitem_T	*v;
+      tabpage_T	*tp = NULL;
+-     tabpage_T	*oldtabpage;
+      int		done = FALSE;
+  
+  #ifdef FEAT_WINDOWS
+      if (off == 1)
+--- 12420,12435 ----
+      typval_T	*rettv;
+      int		off;	    /* 1 for gettabwinvar() */
+  {
+!     win_T	*win;
+      char_u	*varname;
+      dictitem_T	*v;
+      tabpage_T	*tp = NULL;
+      int		done = FALSE;
++ #ifdef FEAT_WINDOWS
++     win_T	*oldcurwin;
++     tabpage_T	*oldtabpage;
++     int		need_switch_win;
++ #endif
+  
+  #ifdef FEAT_WINDOWS
+      if (off == 1)
+***************
+*** 12442,12450 ****
+  
+      if (win != NULL && varname != NULL)
+      {
+  	/* Set curwin to be our win, temporarily.  Also set the tabpage,
+! 	 * otherwise the window is not valid. */
+! 	if (switch_win(&oldcurwin, &oldtabpage, win, tp, TRUE) == OK)
+  	{
+  	    if (*varname == '&')	/* window-local-option */
+  	    {
+--- 12446,12459 ----
+  
+      if (win != NULL && varname != NULL)
+      {
++ #ifdef FEAT_WINDOWS
+  	/* Set curwin to be our win, temporarily.  Also set the tabpage,
+! 	 * otherwise the window is not valid. Only do this when needed,
+! 	 * autocommands get blocked. */
+! 	need_switch_win = !(tp == curtab && win == curwin);
+! 	if (!need_switch_win
+! 		  || switch_win(&oldcurwin, &oldtabpage, win, tp, TRUE) == OK)
+! #endif
+  	{
+  	    if (*varname == '&')	/* window-local-option */
+  	    {
+***************
+*** 12465,12472 ****
+  	    }
+  	}
+  
+! 	/* restore previous notion of curwin */
+! 	restore_win(oldcurwin, oldtabpage, TRUE);
+      }
+  
+      if (!done && argvars[off + 2].v_type != VAR_UNKNOWN)
+--- 12474,12484 ----
+  	    }
+  	}
+  
+! #ifdef FEAT_WINDOWS
+! 	if (need_switch_win)
+! 	    /* restore previous notion of curwin */
+! 	    restore_win(oldcurwin, oldtabpage, TRUE);
+! #endif
+      }
+  
+      if (!done && argvars[off + 2].v_type != VAR_UNKNOWN)
+***************
+*** 17597,17602 ****
+--- 17609,17615 ----
+  #ifdef FEAT_WINDOWS
+      win_T	*save_curwin;
+      tabpage_T	*save_curtab;
++     int		need_switch_win;
+  #endif
+      char_u	*varname, *winvarname;
+      typval_T	*varp;
+***************
+*** 17619,17625 ****
+      if (win != NULL && varname != NULL && varp != NULL)
+      {
+  #ifdef FEAT_WINDOWS
+! 	if (switch_win(&save_curwin, &save_curtab, win, tp, TRUE) == OK)
+  #endif
+  	{
+  	    if (*varname == '&')
+--- 17632,17640 ----
+      if (win != NULL && varname != NULL && varp != NULL)
+      {
+  #ifdef FEAT_WINDOWS
+! 	need_switch_win = !(tp == curtab && win == curwin);
+! 	if (!need_switch_win
+! 	       || switch_win(&save_curwin, &save_curtab, win, tp, TRUE) == OK)
+  #endif
+  	{
+  	    if (*varname == '&')
+***************
+*** 17647,17653 ****
+  	    }
+  	}
+  #ifdef FEAT_WINDOWS
+! 	restore_win(save_curwin, save_curtab, TRUE);
+  #endif
+      }
+  }
+--- 17662,17669 ----
+  	    }
+  	}
+  #ifdef FEAT_WINDOWS
+! 	if (need_switch_win)
+! 	    restore_win(save_curwin, save_curtab, TRUE);
+  #endif
+      }
+  }
+*** ../vim-7.4.887/src/version.c	2015-09-29 15:06:10.783577763 +0200
+--- src/version.c	2015-09-29 15:59:58.409791366 +0200
+***************
+*** 743,744 ****
+--- 743,746 ----
+  {   /* Add new patch number below this line */
++ /**/
++     888,
+  /**/
+
+-- 
+Far back in the mists of ancient time, in the great and glorious days of the
+former Galactic Empire, life was wild, rich and largely tax free.
+Mighty starships plied their way between exotic suns, seeking adventure and
+reward among the furthest reaches of Galactic space.  In those days, spirits
+were brave, the stakes were high, men were real men, women were real women
+and small furry creatures from Alpha Centauri were real small furry creatures
+from Alpha Centauri.  And all dared to brave unknown terrors, to do mighty
+deeds, to boldly split infinitives that no man had split before -- and thus
+was the Empire forged.
+		-- Douglas Adams, "The Hitchhiker's Guide to the Galaxy"
+
+ /// Bram Moolenaar -- Bram@Moolenaar.net -- http://www.Moolenaar.net   \\\
+///        sponsor Vim, vote for features -- http://www.Vim.org/sponsor/ \\\
+\\\  an exciting new programming language -- http://www.Zimbu.org        ///
+ \\\            help me help AIDS victims -- http://ICCF-Holland.org    ///

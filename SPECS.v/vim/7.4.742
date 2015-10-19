@@ -1,0 +1,120 @@
+To: vim_dev@googlegroups.com
+Subject: Patch 7.4.742
+Fcc: outbox
+From: Bram Moolenaar <Bram@moolenaar.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+------------
+
+Patch 7.4.742
+Problem:    Cannot specify a vertical split when loading a buffer for a
+            quickfix command.
+Solution:   Add the "vsplit" value to 'switchbuf'. (Brook Hong)
+Files:      runtime/doc/options.txt, src/buffer.c, src/option.h
+
+
+*** ../vim-7.4.741/runtime/doc/options.txt	2015-05-04 17:28:17.340445782 +0200
+--- runtime/doc/options.txt	2015-06-19 14:26:15.447584096 +0200
+***************
+*** 7058,7063 ****
+--- 7067,7073 ----
+  	   split	If included, split the current window before loading
+  			a buffer for a |quickfix| command that display errors.
+  			Otherwise: do not split, use current window.
++ 	   vsplit	Just like "split" but split vertically.
+  	   newtab	Like "split", but open a new tab page.  Overrules
+  			"split" when both are present.
+  
+*** ../vim-7.4.741/src/buffer.c	2015-03-20 18:11:44.963196400 +0100
+--- src/buffer.c	2015-06-19 14:28:36.342100740 +0200
+***************
+*** 2071,2087 ****
+  	 * "buf" if one exists */
+  	if (swb_flags & SWB_USEOPEN)
+  	    wp = buf_jump_open_win(buf);
+  	/* If 'switchbuf' contains "usetab": jump to first window in any tab
+  	 * page containing "buf" if one exists */
+  	if (wp == NULL && (swb_flags & SWB_USETAB))
+  	    wp = buf_jump_open_tab(buf);
+! 	/* If 'switchbuf' contains "split" or "newtab" and the current buffer
+! 	 * isn't empty: open new window */
+! 	if (wp == NULL && (swb_flags & (SWB_SPLIT | SWB_NEWTAB)) && !bufempty())
+  	{
+! 	    if (swb_flags & SWB_NEWTAB)		/* Open in a new tab */
+  		tabpage_new();
+! 	    else if (win_split(0, 0) == FAIL)	/* Open in a new window */
+  		return FAIL;
+  	    RESET_BINDING(curwin);
+  	}
+--- 2071,2091 ----
+  	 * "buf" if one exists */
+  	if (swb_flags & SWB_USEOPEN)
+  	    wp = buf_jump_open_win(buf);
++ 
+  	/* If 'switchbuf' contains "usetab": jump to first window in any tab
+  	 * page containing "buf" if one exists */
+  	if (wp == NULL && (swb_flags & SWB_USETAB))
+  	    wp = buf_jump_open_tab(buf);
+! 
+! 	/* If 'switchbuf' contains "split", "vsplit" or "newtab" and the
+! 	 * current buffer isn't empty: open new tab or window */
+! 	if (wp == NULL && (swb_flags & (SWB_VSPLIT | SWB_SPLIT | SWB_NEWTAB))
+! 							       && !bufempty())
+  	{
+! 	    if (swb_flags & SWB_NEWTAB)
+  		tabpage_new();
+! 	    else if (win_split(0, (swb_flags & SWB_VSPLIT) ? WSP_VERT : 0)
+! 								      == FAIL)
+  		return FAIL;
+  	    RESET_BINDING(curwin);
+  	}
+*** ../vim-7.4.741/src/option.h	2014-11-05 17:44:47.676471691 +0100
+--- src/option.h	2015-06-19 14:25:00.364374797 +0200
+***************
+*** 765,776 ****
+  EXTERN char_u	*p_swb;		/* 'switchbuf' */
+  EXTERN unsigned	swb_flags;
+  #ifdef IN_OPTION_C
+! static char *(p_swb_values[]) = {"useopen", "usetab", "split", "newtab", NULL};
+  #endif
+  #define SWB_USEOPEN		0x001
+  #define SWB_USETAB		0x002
+  #define SWB_SPLIT		0x004
+  #define SWB_NEWTAB		0x008
+  EXTERN int	p_tbs;		/* 'tagbsearch' */
+  EXTERN long	p_tl;		/* 'taglength' */
+  EXTERN int	p_tr;		/* 'tagrelative' */
+--- 765,777 ----
+  EXTERN char_u	*p_swb;		/* 'switchbuf' */
+  EXTERN unsigned	swb_flags;
+  #ifdef IN_OPTION_C
+! static char *(p_swb_values[]) = {"useopen", "usetab", "split", "newtab", "vsplit", NULL};
+  #endif
+  #define SWB_USEOPEN		0x001
+  #define SWB_USETAB		0x002
+  #define SWB_SPLIT		0x004
+  #define SWB_NEWTAB		0x008
++ #define SWB_VSPLIT		0x010
+  EXTERN int	p_tbs;		/* 'tagbsearch' */
+  EXTERN long	p_tl;		/* 'taglength' */
+  EXTERN int	p_tr;		/* 'tagrelative' */
+*** ../vim-7.4.741/src/version.c	2015-06-19 14:06:29.043993697 +0200
+--- src/version.c	2015-06-19 14:25:32.060040993 +0200
+***************
+*** 743,744 ****
+--- 743,746 ----
+  {   /* Add new patch number below this line */
++ /**/
++     742,
+  /**/
+
+-- 
+hundred-and-one symptoms of being an internet addict:
+116. You are living with your boyfriend who networks your respective
+     computers so you can sit in separate rooms and email each other
+
+ /// Bram Moolenaar -- Bram@Moolenaar.net -- http://www.Moolenaar.net   \\\
+///        sponsor Vim, vote for features -- http://www.Vim.org/sponsor/ \\\
+\\\  an exciting new programming language -- http://www.Zimbu.org        ///
+ \\\            help me help AIDS victims -- http://ICCF-Holland.org    ///

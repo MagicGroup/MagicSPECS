@@ -8,11 +8,13 @@
 
 Name:    virtuoso-opensource
 Epoch:   1
-Version: 6.1.4
-Release: 5%{?dist}
+Version: 6.1.6
+Release: 2%{?dist}
 Summary: A high-performance object-relational SQL database
+Summary(zh_CN.UTF-8): 高性能的对象关系型数据库
 
 Group:   Applications/Databases
+Group(zh_CN.UTF-8): 应用程序/数据库
 # see LICENSE for exception details
 License: GPLv2 with exceptions
 URL:     http://virtuoso.sourceforge.net/
@@ -24,8 +26,6 @@ Source0: http://downloads.sourceforge.net/virtuoso/virtuoso-opensource-%{version
 BuildRoot: %(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
 
 ## Upstreamable patches
-# based on http://svn.mandriva.com/cgi-bin/viewvc.cgi/packages/cooker/virtuoso-opensource/current/SOURCES/virtuoso-opensource-6.1.0-extern-iodbc.patch
-Patch51: virtuoso-opensource-6.1.0-external_iodbc.patch
 Patch52: virtuoso-opensource-6.1.0-nodemos_buildfix.patch
 Patch53: virtuoso-opensource-6.1.4-no_strip.patch
 
@@ -58,41 +58,59 @@ Virtuoso is a scalable cross-platform server that combines SQL/RDF/XML
 Data Management with Web Application Server and Web Services Platform
 functionality.
 
+%description -l zh_CN.UTF-8
+高性能的对象关系型数据库。
+
 %package apps
 Summary: Applications
+Summary(zh_CN.UTF-8): %{name} 的程序
 Group:   Applications/Databases
+Group(zh_CN.UTF-8): 应用程序/数据库
 Requires: %{name} = %{?epoch:%{epoch}:}%{version}-%{release}
 %description apps 
 %{summary}.
 
+%description apps -l zh_CN.UTF-8
+%{name} 的程序。
+
 %package conductor
 Summary: Server pages 
+Summary(zh_CN.UTF-8): %{name} 的服务器页
 Group:   Applications/Databases
+Group(zh_CN.UTF-8): 应用程序/数据库
 Requires: %{name} = %{?epoch:%{epoch}:}%{version}-%{release}
 BuildArch: noarch
 %description conductor 
 %{summary}.
 
+%description conductor -l zh_CN.UTF-8
+%{name} 的服务器页。
+
 %package doc 
 Summary: Documentation 
+Summary(zh_CN.UTF-8): %{name} 的文档
 Group:   Documentation 
+Group(zh_CN.UTF-8): 文档
 Requires: %{name} = %{?epoch:%{epoch}:}%{version}-%{release}
 BuildArch: noarch
 %description doc 
 %{summary}.
+%description doc -l zh_CN.UTF-8
+%{name} 的文档。
 
 %package utils
 Summary: Utilities
+Summary(zh_CN.UTF-8): %{name} 的工具
 Group:   Applications/Databases
+Group(zh_CN.UTF-8): 应用程序/数据库
 Requires: %{name} = %{?epoch:%{epoch}:}%{version}-%{release}
 %description utils
 %{summary}.
-
+%description utils -l zh_CN.UTF-8
+%{name} 的工具。
 
 %prep
 %setup -q -n virtuoso-opensource-%{!?snap:%{version}}%{?snap:6-%{snap}}
-
-#patch51 -p1 -b .external_iodbc
 
 %if 0%{?_disable_all_vads:1}
 %patch52 -p1 -b .nodemos_buildfix
@@ -161,7 +179,7 @@ rm -rvf %{buildroot}%{_docdir}/virtuoso/
 rm -vf  %{buildroot}%{_libdir}/{hibernate,jdbc-?.?,jena}/*.jar
 %endif
 rm -rvf %{buildroot}%{_libdir}/sesame
-
+magic_rpm_clean.sh
 
 %check
 ## these take a very long time
@@ -211,6 +229,12 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Oct 18 2015 Liu Di <liudidi@gmail.com> - 1:6.1.6-2
+- 为 Magic 3.0 重建
+
+* Sun Oct 18 2015 Liu Di <liudidi@gmail.com> - 1:6.1.6-1
+- 为 Magic 3.0 重建
+
 * Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 1:6.1.4-5
 - 为 Magic 3.0 重建
 

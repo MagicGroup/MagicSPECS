@@ -1,0 +1,182 @@
+To: vim_dev@googlegroups.com
+Subject: Patch 7.4.891
+Fcc: outbox
+From: Bram Moolenaar <Bram@moolenaar.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+------------
+
+Patch 7.4.891
+Problem:    Indentation of array initializer is wrong.
+Solution:   Avoid that calling find_start_rawstring() changes the position
+            returned by find_start_comment(), add a test. (Hirohito Higashi)
+Files:      src/misc1.c, src/testdir/test3.in, src/testdir/test3.ok
+
+
+*** ../vim-7.4.890/src/misc1.c	2015-09-15 19:05:49.250365080 +0200
+--- src/misc1.c	2015-10-07 11:36:05.441677658 +0200
+***************
+*** 5345,5352 ****
+      static pos_T *
+  ind_find_start_CORS()	    /* XXX */
+  {
+!     pos_T	*comment_pos = find_start_comment(curbuf->b_ind_maxcomment);
+!     pos_T	*rs_pos = find_start_rawstring(curbuf->b_ind_maxcomment);
+  
+      /* If comment_pos is before rs_pos the raw string is inside the comment.
+       * If rs_pos is before comment_pos the comment is inside the raw string. */
+--- 5345,5363 ----
+      static pos_T *
+  ind_find_start_CORS()	    /* XXX */
+  {
+!     static pos_T comment_pos_copy;
+!     pos_T	*comment_pos;
+!     pos_T	*rs_pos;
+! 
+!     comment_pos = find_start_comment(curbuf->b_ind_maxcomment);
+!     if (comment_pos != NULL)
+!     {
+! 	/* Need to make a copy of the static pos in findmatchlimit(),
+! 	 * calling find_start_rawstring() may change it. */
+! 	comment_pos_copy = *comment_pos;
+! 	comment_pos = &comment_pos_copy;
+!     }
+!     rs_pos = find_start_rawstring(curbuf->b_ind_maxcomment);
+  
+      /* If comment_pos is before rs_pos the raw string is inside the comment.
+       * If rs_pos is before comment_pos the comment is inside the raw string. */
+***************
+*** 8334,8340 ****
+  		if (terminated == 0 || (lookfor != LOOKFOR_UNTERM
+  							&& terminated == ','))
+  		{
+! 		    if (*skipwhite(l) == '[' || l[STRLEN(l) - 1] == '[')
+  			amount += ind_continuation;
+  		    /*
+  		     * if we're in the middle of a paren thing,
+--- 8345,8352 ----
+  		if (terminated == 0 || (lookfor != LOOKFOR_UNTERM
+  							&& terminated == ','))
+  		{
+! 		    if (lookfor != LOOKFOR_ENUM_OR_INIT &&
+! 			    (*skipwhite(l) == '[' || l[STRLEN(l) - 1] == '['))
+  			amount += ind_continuation;
+  		    /*
+  		     * if we're in the middle of a paren thing,
+***************
+*** 8576,8582 ****
+  			     */
+  			    l = ml_get_curline();
+  			    amount = cur_amount;
+! 			    if (*skipwhite(l) == ']' || l[STRLEN(l) - 1] == ']')
+  				break;
+  
+  			    /*
+--- 8588,8597 ----
+  			     */
+  			    l = ml_get_curline();
+  			    amount = cur_amount;
+! 
+! 			    n = (int)STRLEN(l);
+! 			    if (terminated == ',' && (*skipwhite(l) == ']'
+! 					|| (n >=2 && l[n - 2] == ']')))
+  				break;
+  
+  			    /*
+*** ../vim-7.4.890/src/testdir/test3.in	2015-07-28 21:17:31.526069349 +0200
+--- src/testdir/test3.in	2015-10-07 11:02:39.058670265 +0200
+***************
+*** 910,915 ****
+--- 910,937 ----
+      )foo";
+       }
+  
++ {
++ int a[4] = {
++ [0] = 0,
++ [1] = 1,
++ [2] = 2,
++ [3] = 3,
++ };
++ }
++ 
++ {
++ a = b[2]
++ + 3;
++ }
++ 
++ {
++ if (1)
++ /* aaaaa
++ * bbbbb
++ */
++ a = 1;
++ }
++ 
+  /* end of AUTO */
+  
+  STARTTEST
+*** ../vim-7.4.890/src/testdir/test3.ok	2015-07-28 21:17:31.526069349 +0200
+--- src/testdir/test3.ok	2015-10-07 11:02:39.058670265 +0200
+***************
+*** 898,903 ****
+--- 898,925 ----
+      )foo";
+  }
+  
++ {
++ 	int a[4] = {
++ 		[0] = 0,
++ 		[1] = 1,
++ 		[2] = 2,
++ 		[3] = 3,
++ 	};
++ }
++ 
++ {
++ 	a = b[2]
++ 		+ 3;
++ }
++ 
++ {
++ 	if (1)
++ 		/* aaaaa
++ 		 * bbbbb
++ 		 */
++ 		a = 1;
++ }
++ 
+  /* end of AUTO */
+  
+  
+*** ../vim-7.4.890/src/version.c	2015-10-07 10:39:49.572914770 +0200
+--- src/version.c	2015-10-07 11:02:31.614748215 +0200
+***************
+*** 743,744 ****
+--- 743,746 ----
+  {   /* Add new patch number below this line */
++ /**/
++     891,
+  /**/
+
+-- 
+Now it is such a bizarrely improbable coincidence that anything as
+mind-bogglingly useful as the Babel fish could have evolved purely by chance
+that some thinkers have chosen to see it as a final and clinching proof of the
+NON-existence of God.
+The argument goes something like this: 'I refuse to prove that I exist,' says
+God, 'for proof denies faith, and without faith I am nothing.'
+'But,' says Man, 'the Babel fish is a dead giveaway, isn't it?  It could not
+have evolved by chance.  It proves you exist, and so therefore, by your own
+arguments, you don't.  QED.'
+'Oh dear,' says God, 'I hadn't thought of that,' and promptly vanishes in a
+puff of logic.
+'Oh, that was easy,' says Man, and for an encore goes on to prove that black
+is white and gets himself killed on the next pedestrian crossing.
+		-- Douglas Adams, "The Hitchhiker's Guide to the Galaxy"
+
+ /// Bram Moolenaar -- Bram@Moolenaar.net -- http://www.Moolenaar.net   \\\
+///        sponsor Vim, vote for features -- http://www.Vim.org/sponsor/ \\\
+\\\  an exciting new programming language -- http://www.Zimbu.org        ///
+ \\\            help me help AIDS victims -- http://ICCF-Holland.org    ///

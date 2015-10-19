@@ -1,0 +1,101 @@
+To: vim_dev@googlegroups.com
+Subject: Patch 7.4.766
+Fcc: outbox
+From: Bram Moolenaar <Bram@moolenaar.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+------------
+
+Patch 7.4.766 (after 7.4.757)
+Problem:    Background color check does not work on Tera Term.
+Solution:   Also recognize ST as a termination character. (Hirohito Higashi)
+Files:      src/term.c
+
+
+*** ../vim-7.4.765/src/term.c	2015-06-27 18:34:19.503618396 +0200
+--- src/term.c	2015-07-03 12:49:14.224448432 +0200
+***************
+*** 4264,4270 ****
+  	     *
+  	     * - Background color response:
+  	     *       <Esc>]11;rgb:{rrrr}/{gggg}/{bbbb}\007
+! 	     *   The final byte must be '\007'.
+  	     */
+  	    char_u *argp = tp[0] == CSI ? tp + 1 : tp + 2;
+  
+--- 4264,4272 ----
+  	     *
+  	     * - Background color response:
+  	     *       <Esc>]11;rgb:{rrrr}/{gggg}/{bbbb}\007
+! 	     *   Or
+! 	     *       <Esc>]11;rgb:{rrrr}/{gggg}/{bbbb}ST
+! 	     *   The final byte must be '\007' or ST(0x9c or ESC\).
+  	     */
+  	    char_u *argp = tp[0] == CSI ? tp + 1 : tp + 2;
+  
+***************
+*** 4408,4419 ****
+  		    key_name[1] = (int)KE_IGNORE;
+  		    slen = i + 1;
+  		}
+! 		else if (*T_RBG != NUL && len >= 24 - (tp[0] == CSI)
+  			&& argp[0] == '1' && argp[1] == '1'
+  			&& argp[2] == ';' && argp[3] == 'r' && argp[4] == 'g'
+  			&& argp[5] == 'b' && argp[6] == ':'
+  			&& argp[11] == '/' && argp[16] == '/'
+! 			&& argp[21] == '\007')
+  		{
+  		    LOG_TR("Received RBG");
+  		    rbg_status = RBG_GOT;
+--- 4410,4424 ----
+  		    key_name[1] = (int)KE_IGNORE;
+  		    slen = i + 1;
+  		}
+! 		else if (*T_RBG != NUL
+! 			&& len >= 24 - (tp[0] == CSI)
+! 			&& len >= 24 - (tp[0] == CSI) + (argp[21] == ESC)
+  			&& argp[0] == '1' && argp[1] == '1'
+  			&& argp[2] == ';' && argp[3] == 'r' && argp[4] == 'g'
+  			&& argp[5] == 'b' && argp[6] == ':'
+  			&& argp[11] == '/' && argp[16] == '/'
+! 			&& (argp[21] == '\007' || argp[21] == STERM
+! 			    || (argp[21] == ESC && argp[22] == '\\')))
+  		{
+  		    LOG_TR("Received RBG");
+  		    rbg_status = RBG_GOT;
+***************
+*** 4427,4433 ****
+  		    }
+  		    key_name[0] = (int)KS_EXTRA;
+  		    key_name[1] = (int)KE_IGNORE;
+! 		    slen = 24;
+  		}
+  	    }
+  
+--- 4432,4438 ----
+  		    }
+  		    key_name[0] = (int)KS_EXTRA;
+  		    key_name[1] = (int)KE_IGNORE;
+! 		    slen = 24 - (tp[0] == CSI) + (argp[21] == ESC);
+  		}
+  	    }
+  
+*** ../vim-7.4.765/src/version.c	2015-07-03 12:44:01.739748554 +0200
+--- src/version.c	2015-07-03 12:49:06.288532246 +0200
+***************
+*** 743,744 ****
+--- 743,746 ----
+  {   /* Add new patch number below this line */
++ /**/
++     766,
+  /**/
+
+-- 
+hundred-and-one symptoms of being an internet addict:
+172. You join listservers just for the extra e-mail.
+
+ /// Bram Moolenaar -- Bram@Moolenaar.net -- http://www.Moolenaar.net   \\\
+///        sponsor Vim, vote for features -- http://www.Vim.org/sponsor/ \\\
+\\\  an exciting new programming language -- http://www.Zimbu.org        ///
+ \\\            help me help AIDS victims -- http://ICCF-Holland.org    ///

@@ -1,0 +1,88 @@
+To: vim_dev@googlegroups.com
+Subject: Patch 7.4.892
+Fcc: outbox
+From: Bram Moolenaar <Bram@moolenaar.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+------------
+
+Patch 7.4.892
+Problem:    On MS-Windows the iconv DLL may have a different name.
+Solution:   Also try libiconv2.dll and libiconv-2.dll. (Yasuhiro Matsumoto)
+Files:      src/mbyte.c
+
+
+*** ../vim-7.4.891/src/mbyte.c	2015-06-21 14:21:54.477599972 +0200
+--- src/mbyte.c	2015-10-13 13:43:51.747457468 +0200
+***************
+*** 4400,4406 ****
+  
+  #  ifndef DYNAMIC_ICONV_DLL
+  #   define DYNAMIC_ICONV_DLL "iconv.dll"
+! #   define DYNAMIC_ICONV_DLL_ALT "libiconv.dll"
+  #  endif
+  #  ifndef DYNAMIC_MSVCRT_DLL
+  #   define DYNAMIC_MSVCRT_DLL "msvcrt.dll"
+--- 4400,4408 ----
+  
+  #  ifndef DYNAMIC_ICONV_DLL
+  #   define DYNAMIC_ICONV_DLL "iconv.dll"
+! #   define DYNAMIC_ICONV_DLL_ALT1 "libiconv.dll"
+! #   define DYNAMIC_ICONV_DLL_ALT2 "libiconv2.dll"
+! #   define DYNAMIC_ICONV_DLL_ALT3 "libiconv-2.dll"
+  #  endif
+  #  ifndef DYNAMIC_MSVCRT_DLL
+  #   define DYNAMIC_MSVCRT_DLL "msvcrt.dll"
+***************
+*** 4456,4464 ****
+  {
+      if (hIconvDLL != 0 && hMsvcrtDLL != 0)
+  	return TRUE;
+      hIconvDLL = vimLoadLib(DYNAMIC_ICONV_DLL);
+!     if (hIconvDLL == 0)		/* sometimes it's called libiconv.dll */
+! 	hIconvDLL = vimLoadLib(DYNAMIC_ICONV_DLL_ALT);
+      if (hIconvDLL != 0)
+  	hMsvcrtDLL = vimLoadLib(DYNAMIC_MSVCRT_DLL);
+      if (hIconvDLL == 0 || hMsvcrtDLL == 0)
+--- 4458,4473 ----
+  {
+      if (hIconvDLL != 0 && hMsvcrtDLL != 0)
+  	return TRUE;
++ 
++     /* The iconv DLL file goes under different names, try them all. */
+      hIconvDLL = vimLoadLib(DYNAMIC_ICONV_DLL);
+!     if (hIconvDLL == 0)
+! 	hIconvDLL = vimLoadLib(DYNAMIC_ICONV_DLL_ALT1);
+!     if (hIconvDLL == 0)
+! 	hIconvDLL = vimLoadLib(DYNAMIC_ICONV_DLL_ALT2);
+!     if (hIconvDLL == 0)
+! 	hIconvDLL = vimLoadLib(DYNAMIC_ICONV_DLL_ALT3);
+! 
+      if (hIconvDLL != 0)
+  	hMsvcrtDLL = vimLoadLib(DYNAMIC_MSVCRT_DLL);
+      if (hIconvDLL == 0 || hMsvcrtDLL == 0)
+*** ../vim-7.4.891/src/version.c	2015-10-07 11:41:43.158141156 +0200
+--- src/version.c	2015-10-13 13:47:01.433459855 +0200
+***************
+*** 743,744 ****
+--- 743,746 ----
+  {   /* Add new patch number below this line */
++ /**/
++     892,
+  /**/
+
+-- 
+hundred-and-one symptoms of being an internet addict:
+32. You don't know what sex three of your closest friends are, because they
+    have neutral nicknames and you never bothered to ask.
+
+ /// Bram Moolenaar -- Bram@Moolenaar.net -- http://www.Moolenaar.net   \\\
+///        sponsor Vim, vote for features -- http://www.Vim.org/sponsor/ \\\
+\\\  an exciting new programming language -- http://www.Zimbu.org        ///
+ \\\            help me help AIDS victims -- http://ICCF-Holland.org    ///
+
+ /// Bram Moolenaar -- Bram@Moolenaar.net -- http://www.Moolenaar.net   \\\
+///        sponsor Vim, vote for features -- http://www.Vim.org/sponsor/ \\\
+\\\  an exciting new programming language -- http://www.Zimbu.org        ///
+ \\\            help me help AIDS victims -- http://ICCF-Holland.org    ///

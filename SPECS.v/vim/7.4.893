@@ -1,0 +1,145 @@
+To: vim_dev@googlegroups.com
+Subject: Patch 7.4.893
+Fcc: outbox
+From: Bram Moolenaar <Bram@moolenaar.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+------------
+
+Patch 7.4.893
+Problem:    C indenting is wrong below a "case (foo):" because it is
+            recognized as a C++ base class construct.  Issue #38.
+Solution:   Check for the case keyword.
+Files:      src/misc1.c, src/testdir/test3.in, src/testdir/test3.ok
+
+
+*** ../vim-7.4.892/src/misc1.c	2015-10-07 11:41:43.154141198 +0200
+--- src/misc1.c	2015-10-13 16:03:35.727021051 +0200
+***************
+*** 6555,6561 ****
+  
+      pos->lnum = lnum;
+      line = ml_get(lnum);
+!     s = cin_skipcomment(line);
+      for (;;)
+      {
+  	if (*s == NUL)
+--- 6555,6561 ----
+  
+      pos->lnum = lnum;
+      line = ml_get(lnum);
+!     s = line;
+      for (;;)
+      {
+  	if (*s == NUL)
+***************
+*** 6564,6569 ****
+--- 6564,6576 ----
+  		break;
+  	    /* Continue in the cursor line. */
+  	    line = ml_get(++lnum);
++ 	    s = line;
++ 	}
++ 	if (s == line)
++ 	{
++ 	    /* don't recognize "case (foo):" as a baseclass */
++ 	    if (cin_iscase(s, FALSE))
++ 		break;
+  	    s = cin_skipcomment(line);
+  	    if (*s == NUL)
+  		continue;
+*** ../vim-7.4.892/src/testdir/test3.in	2015-10-07 11:41:43.158141156 +0200
+--- src/testdir/test3.in	2015-10-13 16:06:13.781358279 +0200
+***************
+*** 932,937 ****
+--- 932,964 ----
+  a = 1;
+  }
+  
++ void func()
++ {
++ switch (foo)
++ {
++ case (bar):
++ if (baz())
++ quux();
++ break;
++ case (shmoo):
++ if (!bar)
++ {
++ }
++ case (foo1):
++ switch (bar)
++ {
++ case baz:
++ baz_f();
++ break;
++ }
++ break;
++ default:
++ baz();
++ baz();
++ break;
++ }
++ }
++ 
+  /* end of AUTO */
+  
+  STARTTEST
+*** ../vim-7.4.892/src/testdir/test3.ok	2015-10-07 11:41:43.158141156 +0200
+--- src/testdir/test3.ok	2015-10-13 16:05:58.869515164 +0200
+***************
+*** 920,925 ****
+--- 920,952 ----
+  		a = 1;
+  }
+  
++ void func()
++ {
++ 	switch (foo)
++ 	{
++ 		case (bar):
++ 			if (baz())
++ 				quux();
++ 			break;
++ 		case (shmoo):
++ 			if (!bar)
++ 			{
++ 			}
++ 		case (foo1):
++ 			switch (bar)
++ 			{
++ 				case baz:
++ 					baz_f();
++ 					break;
++ 			}
++ 			break;
++ 		default:
++ 			baz();
++ 			baz();
++ 			break;
++ 	}
++ }
++ 
+  /* end of AUTO */
+  
+  
+*** ../vim-7.4.892/src/version.c	2015-10-13 13:49:04.068168461 +0200
+--- src/version.c	2015-10-13 16:11:50.681813418 +0200
+***************
+*** 743,744 ****
+--- 743,746 ----
+  {   /* Add new patch number below this line */
++ /**/
++     893,
+  /**/
+
+-- 
+My sister Cecilia opened a computer store in Hawaii.
+She sells C shells by the seashore.
+
+ /// Bram Moolenaar -- Bram@Moolenaar.net -- http://www.Moolenaar.net   \\\
+///        sponsor Vim, vote for features -- http://www.Vim.org/sponsor/ \\\
+\\\  an exciting new programming language -- http://www.Zimbu.org        ///
+ \\\            help me help AIDS victims -- http://ICCF-Holland.org    ///

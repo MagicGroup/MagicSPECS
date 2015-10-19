@@ -1,0 +1,131 @@
+To: vim_dev@googlegroups.com
+Subject: Patch 7.4.731
+Fcc: outbox
+From: Bram Moolenaar <Bram@moolenaar.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+------------
+
+Patch 7.4.731
+Problem:    The tab menu shows "Close tab" even when it doesn't work.
+Solution:   Don't show "Close tab" for the last tab. (John Marriott)
+Files:      src/gui_w48.c, src/gui_gtk_x11.c, src/gui_mac.c, src/gui_motif.c
+
+
+*** ../vim-7.4.730/src/gui_w48.c	2014-08-22 18:44:30.307175276 +0200
+--- src/gui_w48.c	2015-06-09 19:05:35.267157965 +0200
+***************
+*** 2389,2395 ****
+      if (tab_pmenu == NULL)
+  	return;
+  
+!     add_tabline_popup_menu_entry(tab_pmenu, TABLINE_MENU_CLOSE, _("Close tab"));
+      add_tabline_popup_menu_entry(tab_pmenu, TABLINE_MENU_NEW, _("New tab"));
+      add_tabline_popup_menu_entry(tab_pmenu, TABLINE_MENU_OPEN,
+  				 _("Open tab..."));
+--- 2389,2397 ----
+      if (tab_pmenu == NULL)
+  	return;
+  
+!     if (first_tabpage->tp_next != NULL)
+!         add_tabline_popup_menu_entry(tab_pmenu,
+! 					  TABLINE_MENU_CLOSE, _("Close tab"));
+      add_tabline_popup_menu_entry(tab_pmenu, TABLINE_MENU_NEW, _("New tab"));
+      add_tabline_popup_menu_entry(tab_pmenu, TABLINE_MENU_OPEN,
+  				 _("Open tab..."));
+*** ../vim-7.4.730/src/gui_gtk_x11.c	2014-06-17 18:46:57.880761027 +0200
+--- src/gui_gtk_x11.c	2015-06-09 19:06:40.962433029 +0200
+***************
+*** 2873,2879 ****
+      GtkWidget *menu;
+  
+      menu = gtk_menu_new();
+!     add_tabline_menu_item(menu, (char_u *)_("Close"), TABLINE_MENU_CLOSE);
+      add_tabline_menu_item(menu, (char_u *)_("New tab"), TABLINE_MENU_NEW);
+      add_tabline_menu_item(menu, (char_u *)_("Open Tab..."), TABLINE_MENU_OPEN);
+  
+--- 2873,2881 ----
+      GtkWidget *menu;
+  
+      menu = gtk_menu_new();
+!     if (first_tabpage->tp_next != NULL)
+! 	add_tabline_menu_item(menu, (char_u *)_("Close tab"),
+! 							  TABLINE_MENU_CLOSE);
+      add_tabline_menu_item(menu, (char_u *)_("New tab"), TABLINE_MENU_NEW);
+      add_tabline_menu_item(menu, (char_u *)_("Open Tab..."), TABLINE_MENU_OPEN);
+  
+*** ../vim-7.4.730/src/gui_mac.c	2014-03-23 15:12:29.923264336 +0100
+--- src/gui_mac.c	2015-06-09 19:07:03.406185323 +0200
+***************
+*** 6819,6825 ****
+  
+      // create tabline popup menu required by vim docs (see :he tabline-menu)
+      CreateNewMenu(kTabContextMenuId, 0, &contextMenu);
+!     AppendMenuItemTextWithCFString(contextMenu, CFSTR("Close"), 0,
+  						    TABLINE_MENU_CLOSE, NULL);
+      AppendMenuItemTextWithCFString(contextMenu, CFSTR("New Tab"), 0,
+  						      TABLINE_MENU_NEW, NULL);
+--- 6819,6826 ----
+  
+      // create tabline popup menu required by vim docs (see :he tabline-menu)
+      CreateNewMenu(kTabContextMenuId, 0, &contextMenu);
+!     if (first_tabpage->tp_next != NULL)
+! 	AppendMenuItemTextWithCFString(contextMenu, CFSTR("Close Tab"), 0,
+  						    TABLINE_MENU_CLOSE, NULL);
+      AppendMenuItemTextWithCFString(contextMenu, CFSTR("New Tab"), 0,
+  						      TABLINE_MENU_NEW, NULL);
+*** ../vim-7.4.730/src/gui_motif.c	2013-06-22 12:54:44.000000000 +0200
+--- src/gui_motif.c	2015-06-09 19:08:18.837352548 +0200
+***************
+*** 540,553 ****
+      tabLine_menu = XmCreatePopupMenu(tabLine, "tabline popup", NULL, 0);
+  
+      /* Add the buttons to the menu */
+!     n = 0;
+!     XtSetArg(args[n], XmNuserData, TABLINE_MENU_CLOSE); n++;
+!     xms = XmStringCreate((char *)"Close tab", STRING_TAG);
+!     XtSetArg(args[n], XmNlabelString, xms); n++;
+!     button = XmCreatePushButton(tabLine_menu, "Close", args, n);
+!     XtAddCallback(button, XmNactivateCallback,
+! 		  (XtCallbackProc)tabline_button_cb, NULL);
+!     XmStringFree(xms);
+  
+      n = 0;
+      XtSetArg(args[n], XmNuserData, TABLINE_MENU_NEW); n++;
+--- 540,556 ----
+      tabLine_menu = XmCreatePopupMenu(tabLine, "tabline popup", NULL, 0);
+  
+      /* Add the buttons to the menu */
+!     if (first_tabpage->tp_next != NULL)
+!     {
+! 	n = 0;
+! 	XtSetArg(args[n], XmNuserData, TABLINE_MENU_CLOSE); n++;
+! 	xms = XmStringCreate((char *)"Close tab", STRING_TAG);
+! 	XtSetArg(args[n], XmNlabelString, xms); n++;
+! 	button = XmCreatePushButton(tabLine_menu, "Close", args, n);
+! 	XtAddCallback(button, XmNactivateCallback,
+! 		      (XtCallbackProc)tabline_button_cb, NULL);
+! 	XmStringFree(xms);
+!     }
+  
+      n = 0;
+      XtSetArg(args[n], XmNuserData, TABLINE_MENU_NEW); n++;
+*** ../vim-7.4.730/src/version.c	2015-06-09 18:35:17.471406959 +0200
+--- src/version.c	2015-06-09 19:05:02.451520015 +0200
+***************
+*** 743,744 ****
+--- 743,746 ----
+  {   /* Add new patch number below this line */
++ /**/
++     731,
+  /**/
+
+-- 
+From "know your smileys":
+ 8<}}	Glasses, big nose, beard
+
+ /// Bram Moolenaar -- Bram@Moolenaar.net -- http://www.Moolenaar.net   \\\
+///        sponsor Vim, vote for features -- http://www.Vim.org/sponsor/ \\\
+\\\  an exciting new programming language -- http://www.Zimbu.org        ///
+ \\\            help me help AIDS victims -- http://ICCF-Holland.org    ///

@@ -1,0 +1,49 @@
+To: vim_dev@googlegroups.com
+Subject: Patch 7.4.828
+Fcc: outbox
+From: Bram Moolenaar <Bram@moolenaar.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+------------
+
+Patch 7.4.828
+Problem:    Crash when using "syn keyword x c". (Dominique Pelle)
+Solution:   Initialize the keyword tabble. (Raymond Ko, PR 397)
+Files:      src/syntax.c
+
+
+*** ../vim-7.4.827/src/syntax.c	2015-08-13 22:53:20.188768573 +0200
+--- src/syntax.c	2015-08-25 11:53:24.461171966 +0200
+***************
+*** 6314,6319 ****
+--- 6314,6321 ----
+      {
+  	curwin->w_s = (synblock_T *)alloc(sizeof(synblock_T));
+  	memset(curwin->w_s, 0, sizeof(synblock_T));
++ 	hash_init(&curwin->w_s->b_keywtab);
++ 	hash_init(&curwin->w_s->b_keywtab_ic);
+  #ifdef FEAT_SPELL
+  	/* TODO: keep the spell checking as it was. */
+  	curwin->w_p_spell = FALSE;	/* No spell checking */
+*** ../vim-7.4.827/src/version.c	2015-08-18 13:48:49.831988811 +0200
+--- src/version.c	2015-08-25 11:52:20.817823019 +0200
+***************
+*** 743,744 ****
+--- 743,746 ----
+  {   /* Add new patch number below this line */
++ /**/
++     828,
+  /**/
+
+-- 
+BRIDGEKEEPER: What is the air-speed velocity of an unladen swallow?
+ARTHUR:       What do you mean?  An African or European swallow?
+BRIDGEKEEPER: Er ...  I don't know that ... Aaaaarrrrrrggghhh!
+   BRIDGEKEEPER is cast into the gorge.
+                 "Monty Python and the Holy Grail" PYTHON (MONTY) PICTURES LTD
+
+ /// Bram Moolenaar -- Bram@Moolenaar.net -- http://www.Moolenaar.net   \\\
+///        sponsor Vim, vote for features -- http://www.Vim.org/sponsor/ \\\
+\\\  an exciting new programming language -- http://www.Zimbu.org        ///
+ \\\            help me help AIDS victims -- http://ICCF-Holland.org    ///

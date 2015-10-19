@@ -1,0 +1,53 @@
+To: vim_dev@googlegroups.com
+Subject: Patch 7.4.865
+Fcc: outbox
+From: Bram Moolenaar <Bram@moolenaar.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+------------
+
+Patch 7.4.865
+Problem:    Compiler warning for uninitialized variable.
+Solution:   Initialize.
+Files:      src/ex_cmds2.c
+
+
+*** ../vim-7.4.864/src/ex_cmds2.c	2015-09-08 18:46:04.345233591 +0200
+--- src/ex_cmds2.c	2015-09-09 22:32:59.866035538 +0200
+***************
+*** 2447,2453 ****
+  #endif
+      char_u	*p_shm_save;
+  #ifdef FEAT_QUICKFIX
+!     int		qf_size;
+      int		qf_idx;
+  #endif
+  
+--- 2447,2453 ----
+  #endif
+      char_u	*p_shm_save;
+  #ifdef FEAT_QUICKFIX
+!     int		qf_size = 0;
+      int		qf_idx;
+  #endif
+  
+*** ../vim-7.4.864/src/version.c	2015-09-09 21:10:34.334602633 +0200
+--- src/version.c	2015-09-09 22:33:33.781694232 +0200
+***************
+*** 743,744 ****
+--- 743,746 ----
+  {   /* Add new patch number below this line */
++ /**/
++     865,
+  /**/
+
+-- 
+BLACK KNIGHT: I'm invincible!
+ARTHUR:       You're a looney.
+                 "Monty Python and the Holy Grail" PYTHON (MONTY) PICTURES LTD
+
+ /// Bram Moolenaar -- Bram@Moolenaar.net -- http://www.Moolenaar.net   \\\
+///        sponsor Vim, vote for features -- http://www.Vim.org/sponsor/ \\\
+\\\  an exciting new programming language -- http://www.Zimbu.org        ///
+ \\\            help me help AIDS victims -- http://ICCF-Holland.org    ///

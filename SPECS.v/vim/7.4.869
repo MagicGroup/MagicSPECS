@@ -1,0 +1,143 @@
+To: vim_dev@googlegroups.com
+Subject: Patch 7.4.869
+Fcc: outbox
+From: Bram Moolenaar <Bram@moolenaar.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+------------
+
+Patch 7.4.869
+Problem:    MS-Windows: scrolling may cause text to disappear when using an
+            Intel GPU.
+Solution:   Call GetPixel(). (Yohei Endo)
+Files:      src/gui_w48.c
+
+
+*** ../vim-7.4.868/src/gui_w48.c	2015-09-15 14:12:01.382632522 +0200
+--- src/gui_w48.c	2015-09-15 17:57:35.316887514 +0200
+***************
+*** 2389,2395 ****
+  	return;
+  
+      if (first_tabpage->tp_next != NULL)
+!         add_tabline_popup_menu_entry(tab_pmenu,
+  					  TABLINE_MENU_CLOSE, _("Close tab"));
+      add_tabline_popup_menu_entry(tab_pmenu, TABLINE_MENU_NEW, _("New tab"));
+      add_tabline_popup_menu_entry(tab_pmenu, TABLINE_MENU_OPEN,
+--- 2389,2395 ----
+  	return;
+  
+      if (first_tabpage->tp_next != NULL)
+! 	add_tabline_popup_menu_entry(tab_pmenu,
+  					  TABLINE_MENU_CLOSE, _("Close tab"));
+      add_tabline_popup_menu_entry(tab_pmenu, TABLINE_MENU_NEW, _("New tab"));
+      add_tabline_popup_menu_entry(tab_pmenu, TABLINE_MENU_OPEN,
+***************
+*** 2931,2940 ****
+  
+      base_width = gui_get_base_width()
+  	+ (GetSystemMetrics(SM_CXFRAME) +
+!            GetSystemMetrics(SM_CXPADDEDBORDER)) * 2;
+      base_height = gui_get_base_height()
+  	+ (GetSystemMetrics(SM_CYFRAME) +
+!            GetSystemMetrics(SM_CXPADDEDBORDER)) * 2
+  	+ GetSystemMetrics(SM_CYCAPTION)
+  #ifdef FEAT_MENU
+  	+ gui_mswin_get_menu_height(FALSE)
+--- 2931,2940 ----
+  
+      base_width = gui_get_base_width()
+  	+ (GetSystemMetrics(SM_CXFRAME) +
+! 	   GetSystemMetrics(SM_CXPADDEDBORDER)) * 2;
+      base_height = gui_get_base_height()
+  	+ (GetSystemMetrics(SM_CYFRAME) +
+! 	   GetSystemMetrics(SM_CXPADDEDBORDER)) * 2
+  	+ GetSystemMetrics(SM_CYCAPTION)
+  #ifdef FEAT_MENU
+  	+ gui_mswin_get_menu_height(FALSE)
+***************
+*** 2997,3002 ****
+--- 2997,3016 ----
+  }
+  
+  /*
++  * On some Intel GPUs, the regions drawn just prior to ScrollWindowEx()
++  * may not be scrolled out properly.
++  * For gVim, when _OnScroll() is repeated, the character at the
++  * previous cursor position may be left drawn after scroll.
++  * The problem can be avoided by calling GetPixel() to get a pixel in
++  * the region before ScrollWindowEx().
++  */
++     static void
++ intel_gpu_workaround(void)
++ {
++     GetPixel(s_hdc, FILL_X(gui.col), FILL_Y(gui.row));
++ }
++ 
++ /*
+   * Delete the given number of lines from the given row, scrolling up any
+   * text further down within the scroll region.
+   */
+***************
+*** 3007,3012 ****
+--- 3021,3028 ----
+  {
+      RECT	rc;
+  
++     intel_gpu_workaround();
++ 
+      rc.left = FILL_X(gui.scroll_region_left);
+      rc.right = FILL_X(gui.scroll_region_right + 1);
+      rc.top = FILL_Y(row);
+***************
+*** 3038,3043 ****
+--- 3054,3061 ----
+  {
+      RECT	rc;
+  
++     intel_gpu_workaround();
++ 
+      rc.left = FILL_X(gui.scroll_region_left);
+      rc.right = FILL_X(gui.scroll_region_right + 1);
+      rc.top = FILL_Y(row);
+***************
+*** 3319,3328 ****
+      GetWindowRect(s_hwnd, &rect);
+      gui_resize_shell(rect.right - rect.left
+  			- (GetSystemMetrics(SM_CXFRAME) +
+!                            GetSystemMetrics(SM_CXPADDEDBORDER)) * 2,
+  		     rect.bottom - rect.top
+  			- (GetSystemMetrics(SM_CYFRAME) +
+!                            GetSystemMetrics(SM_CXPADDEDBORDER)) * 2
+  			- GetSystemMetrics(SM_CYCAPTION)
+  #ifdef FEAT_MENU
+  			- gui_mswin_get_menu_height(FALSE)
+--- 3337,3346 ----
+      GetWindowRect(s_hwnd, &rect);
+      gui_resize_shell(rect.right - rect.left
+  			- (GetSystemMetrics(SM_CXFRAME) +
+! 			   GetSystemMetrics(SM_CXPADDEDBORDER)) * 2,
+  		     rect.bottom - rect.top
+  			- (GetSystemMetrics(SM_CYFRAME) +
+! 			   GetSystemMetrics(SM_CXPADDEDBORDER)) * 2
+  			- GetSystemMetrics(SM_CYCAPTION)
+  #ifdef FEAT_MENU
+  			- gui_mswin_get_menu_height(FALSE)
+*** ../vim-7.4.868/src/version.c	2015-09-15 17:30:35.913682004 +0200
+--- src/version.c	2015-09-15 17:55:53.009950236 +0200
+***************
+*** 743,744 ****
+--- 743,746 ----
+  {   /* Add new patch number below this line */
++ /**/
++     869,
+  /**/
+
+-- 
+Lower life forms have more fun!
+
+ /// Bram Moolenaar -- Bram@Moolenaar.net -- http://www.Moolenaar.net   \\\
+///        sponsor Vim, vote for features -- http://www.Vim.org/sponsor/ \\\
+\\\  an exciting new programming language -- http://www.Zimbu.org        ///
+ \\\            help me help AIDS victims -- http://ICCF-Holland.org    ///

@@ -1,0 +1,56 @@
+To: vim_dev@googlegroups.com
+Subject: Patch 7.4.796
+Fcc: outbox
+From: Bram Moolenaar <Bram@moolenaar.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+------------
+
+Patch 7.4.796
+Problem:    Warning from 64 bit compiler.
+Solution:   Add type cast. (Mike Williams)
+Files:      src/ops.c
+
+
+*** ../vim-7.4.795/src/ops.c	2015-07-17 14:16:49.850596721 +0200
+--- src/ops.c	2015-07-22 22:44:23.831980567 +0200
+***************
+*** 5429,5438 ****
+  	if (VIsual_mode == 'V')
+  	{
+  	    VIsual.col = 0;
+! 	    curwin->w_cursor.col = STRLEN(ptr);
+  	}
+! 	else if (VIsual_mode == Ctrl_V &&
+! 		VIsual.col > curwin->w_cursor.col)
+  	{
+  	    t = VIsual;
+  	    VIsual.col = curwin->w_cursor.col;
+--- 5429,5437 ----
+  	if (VIsual_mode == 'V')
+  	{
+  	    VIsual.col = 0;
+! 	    curwin->w_cursor.col = (colnr_T)STRLEN(ptr);
+  	}
+! 	else if (VIsual_mode == Ctrl_V && VIsual.col > curwin->w_cursor.col)
+  	{
+  	    t = VIsual;
+  	    VIsual.col = curwin->w_cursor.col;
+*** ../vim-7.4.795/src/version.c	2015-07-22 22:19:33.073837041 +0200
+--- src/version.c	2015-07-22 22:44:59.071652665 +0200
+***************
+*** 743,744 ****
+--- 743,746 ----
+  {   /* Add new patch number below this line */
++ /**/
++     796,
+  /**/
+
+-- 
+Place mark here ->[ ]<- if you want a dirty monitor.
+
+ /// Bram Moolenaar -- Bram@Moolenaar.net -- http://www.Moolenaar.net   \\\
+///        sponsor Vim, vote for features -- http://www.Vim.org/sponsor/ \\\
+\\\  an exciting new programming language -- http://www.Zimbu.org        ///
+ \\\            help me help AIDS victims -- http://ICCF-Holland.org    ///

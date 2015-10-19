@@ -1,0 +1,55 @@
+To: vim_dev@googlegroups.com
+Subject: Patch 7.4.845
+Fcc: outbox
+From: Bram Moolenaar <Bram@moolenaar.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+------------
+
+Patch 7.4.845
+Problem:    Compiler warning for possible loss of data.
+Solution:   Add a type cast. (Erich Ritz)
+Files:      src/misc1.c
+
+
+*** ../vim-7.4.844/src/misc1.c	2015-08-25 14:21:14.013470670 +0200
+--- src/misc1.c	2015-09-01 16:23:51.378393877 +0200
+***************
+*** 3985,3991 ****
+  		len = dstlen;
+  	    vim_strncpy(dst, var, len);
+  	    dst += len;
+! 	    dstlen -= len;
+  	    continue;
+  	}
+  #endif
+--- 3985,3991 ----
+  		len = dstlen;
+  	    vim_strncpy(dst, var, len);
+  	    dst += len;
+! 	    dstlen -= (int)len;
+  	    continue;
+  	}
+  #endif
+*** ../vim-7.4.844/src/version.c	2015-09-01 16:04:26.706472322 +0200
+--- src/version.c	2015-09-01 16:24:37.497917848 +0200
+***************
+*** 743,744 ****
+--- 743,746 ----
+  {   /* Add new patch number below this line */
++ /**/
++     845,
+  /**/
+
+-- 
+MICHAEL PALIN PLAYED: 1ST SOLDIER WITH A KEEN INTEREST IN BIRDS, DENNIS, MR
+                      DUCK (A VILLAGE CARPENTER WHO IS ALMOST KEENER THAN
+                      ANYONE ELSE TO BURN WITCHES), THREE-HEADED KNIGHT, SIR
+                      GALAHAD, KING OF SWAMP CASTLE, BROTHER MAYNARD'S ROOMATE
+                 "Monty Python and the Holy Grail" PYTHON (MONTY) PICTURES LTD
+
+ /// Bram Moolenaar -- Bram@Moolenaar.net -- http://www.Moolenaar.net   \\\
+///        sponsor Vim, vote for features -- http://www.Vim.org/sponsor/ \\\
+\\\  an exciting new programming language -- http://www.Zimbu.org        ///
+ \\\            help me help AIDS victims -- http://ICCF-Holland.org    ///

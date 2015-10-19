@@ -1,0 +1,182 @@
+To: vim_dev@googlegroups.com
+Subject: Patch 7.4.806
+Fcc: outbox
+From: Bram Moolenaar <Bram@moolenaar.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+------------
+
+Patch 7.4.806
+Problem:    CTRL-A in Visual mode doesn't work properly with "alpha" in
+            'nrformat'.
+Solution:   Make it work. (Christian Brabandt)
+Files:      src/ops.c, src/testdir/test_increment.in,
+            src/testdir/test_increment.ok
+
+
+*** ../vim-7.4.805/src/ops.c	2015-07-28 21:17:31.526069349 +0200
+--- src/ops.c	2015-08-04 18:22:23.110938512 +0200
+***************
+*** 5492,5497 ****
+--- 5492,5499 ----
+  
+      for (i = lnum; i <= lnume; i++)
+      {
++ 	colnr_T stop = 0;
++ 
+  	t = curwin->w_cursor;
+  	curwin->w_cursor.lnum = i;
+  	ptr = ml_get_curline();
+***************
+*** 5501,5531 ****
+  	    continue;
+  	if (visual)
+  	{
+! 	    if (doalp) /* search for ascii chars */
+! 	    {
+! 		while (!ASCII_ISALPHA(ptr[col]) && ptr[col])
+! 		    col++;
+! 	    }
+! 	    /* skip to first digit, but allow for leading '-' */
+! 	    else if (dohex)
+  	    {
+! 		while (!(vim_isxdigit(ptr[col]) || (ptr[col] == '-'
+! 				    && vim_isxdigit(ptr[col+1]))) && ptr[col])
+! 		    col++;
+  	    }
+! 	    else /* decimal */
+  	    {
+! 		while (!(vim_isdigit(ptr[col]) || (ptr[col] == '-'
+! 				     && vim_isdigit(ptr[col+1]))) && ptr[col])
+! 		    col++;
+  	    }
+  	}
+- 	if (visual && ptr[col] == '-')
+- 	{
+- 	    negative = TRUE;
+- 	    was_positive = FALSE;
+- 	    col++;
+- 	}
+  	/*
+  	 * If a number was found, and saving for undo works, replace the number.
+  	 */
+--- 5503,5530 ----
+  	    continue;
+  	if (visual)
+  	{
+! 	    if (VIsual_mode == 'v'
+! 		    && i == lnume)
+! 		stop = curwin->w_cursor.col;
+! 	    else if (VIsual_mode == Ctrl_V
+! 		    && curbuf->b_visual.vi_curswant != MAXCOL)
+! 		stop = curwin->w_cursor.col;
+! 
+! 	    while (ptr[col] != NUL
+! 		    && !vim_isdigit(ptr[col])
+! 		    && !(doalp && ASCII_ISALPHA(ptr[col])))
+  	    {
+! 		if (col > 0  && col == stop)
+! 		    break;
+! 		++col;
+  	    }
+! 
+! 	    if (col > startcol && ptr[col - 1] == '-')
+  	    {
+! 		negative = TRUE;
+! 		was_positive = FALSE;
+  	    }
+  	}
+  	/*
+  	 * If a number was found, and saving for undo works, replace the number.
+  	 */
+*** ../vim-7.4.805/src/testdir/test_increment.in	2015-07-17 13:03:42.108357465 +0200
+--- src/testdir/test_increment.in	2015-08-04 18:18:44.421419280 +0200
+***************
+*** 260,265 ****
+--- 260,275 ----
+    9
+    12
+    
++ 19) increment on number with nrformat including alpha
++ Text:
++  1
++  1a
++ 
++  Expected:
++  1) <Ctrl-V>j$ <ctrl-a>
++  2
++  1b
++    
+  
+  
+  STARTTEST
+***************
+*** 369,374 ****
+--- 379,391 ----
+  :/^E18=/+put a
+  V3kg..
+  
++ :" Test 19
++ :set nrformats+=alpha
++ :/^S19=/+,/^E19=/-y a
++ :/^E19=/+put a
++ k$
++ :set nrformats&vim
++ 
+  :" Save the report
+  :/^# Test 1/,$w! test.out
+  :qa!
+***************
+*** 547,552 ****
+--- 564,576 ----
+  
+  
+  
++ # Test 19
++ S19====
++ 1
++ 1a
++ E19====
++ 
++ 
+  
+  
+  ENDTEST
+*** ../vim-7.4.805/src/testdir/test_increment.ok	2015-07-17 13:03:42.108357465 +0200
+--- src/testdir/test_increment.ok	2015-08-04 18:18:44.425419233 +0200
+***************
+*** 261,266 ****
+--- 261,275 ----
+  12
+  
+  
++ # Test 19
++ S19====
++ 1
++ 1a
++ E19====
++ 
++ 2
++ 2a
++ 
+  
+  
+  ENDTEST
+*** ../vim-7.4.805/src/version.c	2015-08-04 17:43:20.577543527 +0200
+--- src/version.c	2015-08-04 18:08:55.096101557 +0200
+***************
+*** 743,744 ****
+--- 743,746 ----
+  {   /* Add new patch number below this line */
++ /**/
++     806,
+  /**/
+
+-- 
+Not too long ago, compress was something you did to garbage...
+
+ /// Bram Moolenaar -- Bram@Moolenaar.net -- http://www.Moolenaar.net   \\\
+///        sponsor Vim, vote for features -- http://www.Vim.org/sponsor/ \\\
+\\\  an exciting new programming language -- http://www.Zimbu.org        ///
+ \\\            help me help AIDS victims -- http://ICCF-Holland.org    ///

@@ -1,0 +1,114 @@
+To: vim_dev@googlegroups.com
+Subject: Patch 7.4.818
+Fcc: outbox
+From: Bram Moolenaar <Bram@moolenaar.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+------------
+
+Patch 7.4.818
+Problem:    'linebreak' breaks c% if the last Visual selection was block.
+            (Chris Morganiser, Issue 389)
+Solution:   Handle Visual block mode differently. (Christian Brabandt)
+Files:      src/normal.c, src/testdir/test_listlbr.in,
+            src/testdir/test_listlbr.ok
+
+
+*** ../vim-7.4.817/src/normal.c	2015-08-04 19:18:46.044825907 +0200
+--- src/normal.c	2015-08-11 17:39:51.777194300 +0200
+***************
+*** 9583,9602 ****
+  #endif
+  
+  /*
+!  * calculate start/end virtual columns for operating in block mode
+   */
+      static void
+  get_op_vcol(oap, redo_VIsual_vcol, initial)
+      oparg_T	*oap;
+      colnr_T	redo_VIsual_vcol;
+!     int		initial;            /* when true: adjust position for 'selectmode' */
+  {
+      colnr_T	    start, end;
+  
+!     if (VIsual_mode != Ctrl_V)
+  	return;
+  
+!     oap->block_mode = TRUE;
+  
+  #ifdef FEAT_MBYTE
+      /* prevent from moving onto a trail byte */
+--- 9583,9603 ----
+  #endif
+  
+  /*
+!  * Calculate start/end virtual columns for operating in block mode.
+   */
+      static void
+  get_op_vcol(oap, redo_VIsual_vcol, initial)
+      oparg_T	*oap;
+      colnr_T	redo_VIsual_vcol;
+!     int		initial;    /* when TRUE adjust position for 'selectmode' */
+  {
+      colnr_T	    start, end;
+  
+!     if (VIsual_mode != Ctrl_V
+! 	    || (!initial && oap->end.col < W_WIDTH(curwin)))
+  	return;
+  
+!     oap->block_mode = VIsual_active;
+  
+  #ifdef FEAT_MBYTE
+      /* prevent from moving onto a trail byte */
+*** ../vim-7.4.817/src/testdir/test_listlbr.in	2015-07-28 11:21:27.045407225 +0200
+--- src/testdir/test_listlbr.in	2015-08-11 17:34:36.084926763 +0200
+***************
+*** 80,85 ****
+--- 80,92 ----
+  aaa
+  aaa
+  a2k2j~e.
++ :let g:test ="Test 10: using normal commands after block-visual"
++ :$put =g:test
++ :set linebreak
++ Go
++ abcd{ef
++ ghijklm
++ no}pqrs2k0f{c%
+  :%w! test.out
+  :qa!
+  ENDTEST
+*** ../vim-7.4.817/src/testdir/test_listlbr.ok	2015-07-28 11:21:27.045407225 +0200
+--- src/testdir/test_listlbr.ok	2015-08-11 17:34:36.084926763 +0200
+***************
+*** 46,48 ****
+--- 46,51 ----
+  AaA
+  AaA
+  A
++ Test 10: using normal commands after block-visual
++ 
++ abcdpqrs
+*** ../vim-7.4.817/src/version.c	2015-08-11 16:19:59.433200370 +0200
+--- src/version.c	2015-08-11 17:46:09.644735306 +0200
+***************
+*** 743,744 ****
+--- 743,746 ----
+  {   /* Add new patch number below this line */
++ /**/
++     818,
+  /**/
+
+-- 
+ARTHUR:  Be quiet!
+DENNIS:  --but by a two-thirds majority in the case of more--
+ARTHUR:  Be quiet!  I order you to be quiet!
+WOMAN:   Order, eh -- who does he think he is?
+ARTHUR:  I am your king!
+                                  The Quest for the Holy Grail (Monty Python)
+
+ /// Bram Moolenaar -- Bram@Moolenaar.net -- http://www.Moolenaar.net   \\\
+///        sponsor Vim, vote for features -- http://www.Vim.org/sponsor/ \\\
+\\\  an exciting new programming language -- http://www.Zimbu.org        ///
+ \\\            help me help AIDS victims -- http://ICCF-Holland.org    ///

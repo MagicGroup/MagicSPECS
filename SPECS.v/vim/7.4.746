@@ -1,0 +1,100 @@
+To: vim_dev@googlegroups.com
+Subject: Patch 7.4.746
+Fcc: outbox
+From: Bram Moolenaar <Bram@moolenaar.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+------------
+
+Patch 7.4.746
+Problem:    ":[count]tag" is not always working. (cs86661)
+Solution:   Set cur_match a bit later. (Hirohito Higashi)
+Files:      src/tag.c,
+
+
+*** ../vim-7.4.745/src/tag.c	2014-04-02 17:18:59.047728202 +0200
+--- src/tag.c	2015-06-19 16:36:56.205600552 +0200
+***************
+*** 508,521 ****
+  		tagmatchname = vim_strsave(name);
+  	    }
+  
+! 	    /*
+! 	     * If a count is supplied to the ":tag <name>" command, then
+! 	     * jump to count'th matching tag.
+! 	     */
+! 	    if (type == DT_TAG && *tag != NUL && count > 0)
+! 		cur_match = count - 1;
+! 
+! 	    if (type == DT_SELECT || type == DT_JUMP
+  #if defined(FEAT_QUICKFIX)
+  		|| type == DT_LTAG
+  #endif
+--- 508,514 ----
+  		tagmatchname = vim_strsave(name);
+  	    }
+  
+! 	    if (type == DT_TAG || type == DT_SELECT || type == DT_JUMP
+  #if defined(FEAT_QUICKFIX)
+  		|| type == DT_LTAG
+  #endif
+***************
+*** 594,600 ****
+  	    }
+  	    else
+  #endif
+! 	    if (type == DT_SELECT || (type == DT_JUMP && num_matches > 1))
+  	    {
+  		/*
+  		 * List all the matching tags.
+--- 587,599 ----
+  	    }
+  	    else
+  #endif
+! 	    if (type == DT_TAG)
+! 		/*
+! 		 * If a count is supplied to the ":tag <name>" command, then
+! 		 * jump to count'th matching tag.
+! 		 */
+! 		cur_match = count > 0 ? count - 1 : 0;
+! 	    else if (type == DT_SELECT || (type == DT_JUMP && num_matches > 1))
+  	    {
+  		/*
+  		 * List all the matching tags.
+***************
+*** 990,996 ****
+  
+  
+  	    ic = (matches[cur_match][0] & MT_IC_OFF);
+! 	    if (type != DT_SELECT && type != DT_JUMP
+  #ifdef FEAT_CSCOPE
+  		&& type != DT_CSCOPE
+  #endif
+--- 989,995 ----
+  
+  
+  	    ic = (matches[cur_match][0] & MT_IC_OFF);
+! 	    if (type != DT_TAG && type != DT_SELECT && type != DT_JUMP
+  #ifdef FEAT_CSCOPE
+  		&& type != DT_CSCOPE
+  #endif
+*** ../vim-7.4.745/src/version.c	2015-06-19 16:32:52.328116933 +0200
+--- src/version.c	2015-06-19 16:36:49.121673667 +0200
+***************
+*** 743,744 ****
+--- 743,746 ----
+  {   /* Add new patch number below this line */
++ /**/
++     746,
+  /**/
+
+-- 
+hundred-and-one symptoms of being an internet addict:
+119. You are reading a book and look for the scroll bar to get to
+     the next page.
+
+ /// Bram Moolenaar -- Bram@Moolenaar.net -- http://www.Moolenaar.net   \\\
+///        sponsor Vim, vote for features -- http://www.Vim.org/sponsor/ \\\
+\\\  an exciting new programming language -- http://www.Zimbu.org        ///
+ \\\            help me help AIDS victims -- http://ICCF-Holland.org    ///

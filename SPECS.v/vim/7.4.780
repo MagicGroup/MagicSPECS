@@ -1,0 +1,78 @@
+To: vim_dev@googlegroups.com
+Subject: Patch 7.4.780
+Fcc: outbox
+From: Bram Moolenaar <Bram@moolenaar.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+------------
+
+Patch 7.4.780
+Problem:    Compiler complains about uninitialized variable and clobbered
+            variables.
+Solution:   Add Initialization.  Make variables static.
+Files:      src/ops.c, src/main.c
+
+
+*** ../vim-7.4.779/src/ops.c	2015-07-12 15:02:27.396634029 +0200
+--- src/ops.c	2015-07-12 16:14:53.815524705 +0200
+***************
+*** 5403,5409 ****
+      int		i;
+      int		lnum = curwin->w_cursor.lnum;
+      int		lnume = curwin->w_cursor.lnum;
+!     int		startcol;
+      int		did_change = FALSE;
+  
+      dohex = (vim_strchr(curbuf->b_p_nf, 'x') != NULL);	/* "heX" */
+--- 5403,5409 ----
+      int		i;
+      int		lnum = curwin->w_cursor.lnum;
+      int		lnume = curwin->w_cursor.lnum;
+!     int		startcol = 0;
+      int		did_change = FALSE;
+  
+      dohex = (vim_strchr(curbuf->b_p_nf, 'x') != NULL);	/* "heX" */
+*** ../vim-7.4.779/src/main.c	2015-07-03 13:32:56.121020898 +0200
+--- src/main.c	2015-07-12 16:18:30.961478337 +0200
+***************
+*** 1069,1077 ****
+      oparg_T	oa;				/* operator arguments */
+      volatile int previous_got_int = FALSE;	/* "got_int" was TRUE */
+  #ifdef FEAT_CONCEAL
+!     linenr_T	conceal_old_cursor_line = 0;
+!     linenr_T	conceal_new_cursor_line = 0;
+!     int		conceal_update_lines = FALSE;
+  #endif
+  
+  #if defined(FEAT_X11) && defined(FEAT_XCLIPBOARD)
+--- 1069,1078 ----
+      oparg_T	oa;				/* operator arguments */
+      volatile int previous_got_int = FALSE;	/* "got_int" was TRUE */
+  #ifdef FEAT_CONCEAL
+!     /* these are static to avoid a compiler warning */
+!     static linenr_T	conceal_old_cursor_line = 0;
+!     static linenr_T	conceal_new_cursor_line = 0;
+!     static int		conceal_update_lines = FALSE;
+  #endif
+  
+  #if defined(FEAT_X11) && defined(FEAT_XCLIPBOARD)
+*** ../vim-7.4.779/src/version.c	2015-07-12 15:02:27.396634029 +0200
+--- src/version.c	2015-07-12 16:15:42.383065560 +0200
+***************
+*** 743,744 ****
+--- 743,746 ----
+  {   /* Add new patch number below this line */
++ /**/
++     780,
+  /**/
+
+-- 
+hundred-and-one symptoms of being an internet addict:
+211. Your husband leaves you...taking the computer with him and you
+     call him crying, and beg him to bring the computer back.
+
+ /// Bram Moolenaar -- Bram@Moolenaar.net -- http://www.Moolenaar.net   \\\
+///        sponsor Vim, vote for features -- http://www.Vim.org/sponsor/ \\\
+\\\  an exciting new programming language -- http://www.Zimbu.org        ///
+ \\\            help me help AIDS victims -- http://ICCF-Holland.org    ///

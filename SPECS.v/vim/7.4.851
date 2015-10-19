@@ -1,0 +1,386 @@
+To: vim_dev@googlegroups.com
+Subject: Patch 7.4.851
+Fcc: outbox
+From: Bram Moolenaar <Bram@moolenaar.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+------------
+
+Patch 7.4.851
+Problem:    Saving and restoring the console buffer does not work properly.
+Solution:   Instead of ReadConsoleOutputA/WriteConsoleOutputA use
+            CreateConsoleScreenBuffer and SetConsoleActiveScreenBuffer.
+            (Ken Takata)
+Files:      src/os_win32.c
+
+
+*** ../vim-7.4.850/src/os_win32.c	2015-08-04 19:26:59.747310733 +0200
+--- src/os_win32.c	2015-09-01 20:03:57.428750713 +0200
+***************
+*** 2192,2199 ****
+  {
+      BOOL			IsValid;
+      CONSOLE_SCREEN_BUFFER_INFO	Info;
+!     PCHAR_INFO			Buffer;
+!     COORD			BufferSize;
+  } ConsoleBuffer;
+  
+  /*
+--- 2192,2198 ----
+  {
+      BOOL			IsValid;
+      CONSOLE_SCREEN_BUFFER_INFO	Info;
+!     HANDLE			handle;
+  } ConsoleBuffer;
+  
+  /*
+***************
+*** 2210,2286 ****
+  SaveConsoleBuffer(
+      ConsoleBuffer *cb)
+  {
+-     DWORD NumCells;
+-     COORD BufferCoord;
+-     SMALL_RECT ReadRegion;
+-     WORD Y, Y_incr;
+- 
+      if (cb == NULL)
+  	return FALSE;
+  
+!     if (!GetConsoleScreenBufferInfo(g_hConOut, &cb->Info))
+      {
+  	cb->IsValid = FALSE;
+  	return FALSE;
+      }
+      cb->IsValid = TRUE;
+  
+!     /*
+!      * Allocate a buffer large enough to hold the entire console screen
+!      * buffer.  If this ConsoleBuffer structure has already been initialized
+!      * with a buffer of the correct size, then just use that one.
+!      */
+!     if (!cb->IsValid || cb->Buffer == NULL ||
+! 	    cb->BufferSize.X != cb->Info.dwSize.X ||
+! 	    cb->BufferSize.Y != cb->Info.dwSize.Y)
+!     {
+! 	cb->BufferSize.X = cb->Info.dwSize.X;
+! 	cb->BufferSize.Y = cb->Info.dwSize.Y;
+! 	NumCells = cb->BufferSize.X * cb->BufferSize.Y;
+! 	vim_free(cb->Buffer);
+! 	cb->Buffer = (PCHAR_INFO)alloc(NumCells * sizeof(CHAR_INFO));
+! 	if (cb->Buffer == NULL)
+! 	    return FALSE;
+!     }
+  
+      /*
+!      * We will now copy the console screen buffer into our buffer.
+!      * ReadConsoleOutput() seems to be limited as far as how much you
+!      * can read at a time.  Empirically, this number seems to be about
+!      * 12000 cells (rows * columns).  Start at position (0, 0) and copy
+!      * in chunks until it is all copied.  The chunks will all have the
+!      * same horizontal characteristics, so initialize them now.  The
+!      * height of each chunk will be (12000 / width).
+       */
+!     BufferCoord.X = 0;
+      ReadRegion.Left = 0;
+!     ReadRegion.Right = cb->Info.dwSize.X - 1;
+!     Y_incr = 12000 / cb->Info.dwSize.X;
+!     for (Y = 0; Y < cb->BufferSize.Y; Y += Y_incr)
+      {
+! 	/*
+! 	 * Read into position (0, Y) in our buffer.
+! 	 */
+! 	BufferCoord.Y = Y;
+! 	/*
+! 	 * Read the region whose top left corner is (0, Y) and whose bottom
+! 	 * right corner is (width - 1, Y + Y_incr - 1).  This should define
+! 	 * a region of size width by Y_incr.  Don't worry if this region is
+! 	 * too large for the remaining buffer; it will be cropped.
+! 	 */
+! 	ReadRegion.Top = Y;
+! 	ReadRegion.Bottom = Y + Y_incr - 1;
+! 	if (!ReadConsoleOutput(g_hConOut,	/* output handle */
+! 		cb->Buffer,			/* our buffer */
+! 		cb->BufferSize,			/* dimensions of our buffer */
+! 		BufferCoord,			/* offset in our buffer */
+! 		&ReadRegion))			/* region to save */
+! 	{
+! 	    vim_free(cb->Buffer);
+! 	    cb->Buffer = NULL;
+! 	    return FALSE;
+! 	}
+      }
+  
+      return TRUE;
+  }
+--- 2209,2289 ----
+  SaveConsoleBuffer(
+      ConsoleBuffer *cb)
+  {
+      if (cb == NULL)
+  	return FALSE;
+  
+!     if (!GetConsoleScreenBufferInfo(cb->handle, &cb->Info))
+      {
+  	cb->IsValid = FALSE;
+  	return FALSE;
+      }
+      cb->IsValid = TRUE;
+  
+!     return TRUE;
+! }
+! 
+! /*
+!  * CopyOldConsoleBuffer()
+!  * Description:
+!  *  Copies the old console buffer contents to the current console buffer.
+!  *  This is used when 'restorescreen' is off.
+!  * Returns:
+!  *  TRUE on success
+!  */
+!     static BOOL
+! CopyOldConsoleBuffer(
+!     ConsoleBuffer   *cb,
+!     HANDLE	    hConOld)
+! {
+!     COORD		    BufferCoord;
+!     COORD		    BufferSize;
+!     PCHAR_INFO		    Buffer;
+!     DWORD		    NumCells;
+!     SMALL_RECT		    ReadRegion;
+  
+      /*
+!      * Before copying the buffer contents, clear the current buffer, and
+!      * restore the window information.  Doing this now prevents old buffer
+!      * contents from "flashing" onto the screen.
+       */
+!     ClearConsoleBuffer(cb->Info.wAttributes);
+! 
+!     /* We only need to copy the window area, not whole buffer. */
+!     BufferSize.X = cb->Info.srWindow.Right - cb->Info.srWindow.Left + 1;
+!     BufferSize.Y = cb->Info.srWindow.Bottom - cb->Info.srWindow.Top + 1;
+      ReadRegion.Left = 0;
+!     ReadRegion.Right = BufferSize.X - 1;
+!     ReadRegion.Top = 0;
+!     ReadRegion.Bottom = BufferSize.Y - 1;
+! 
+!     NumCells = BufferSize.X * BufferSize.Y;
+!     Buffer = (PCHAR_INFO)alloc(NumCells * sizeof(CHAR_INFO));
+!     if (Buffer == NULL)
+! 	return FALSE;
+! 
+!     BufferCoord.X = 0;
+!     BufferCoord.Y = 0;
+! 
+!     if (!ReadConsoleOutputW(hConOld,	    /* output handle */
+! 		Buffer,			    /* our buffer */
+! 		BufferSize,		    /* dimensions of our buffer */
+! 		BufferCoord,		    /* offset in our buffer */
+! 		&ReadRegion))		    /* region to save */
+      {
+! 	vim_free(Buffer);
+! 	return FALSE;
+!     }
+!     if (!WriteConsoleOutputW(g_hConOut,     /* output handle */
+! 		Buffer,			    /* our buffer */
+! 		BufferSize,		    /* dimensions of our buffer */
+! 		BufferCoord,		    /* offset in our buffer */
+! 		&ReadRegion))		    /* region to restore */
+!     {
+! 	vim_free(Buffer);
+! 	return FALSE;
+      }
++     vim_free(Buffer);
++     SetConsoleWindowInfo(g_hConOut, TRUE, &ReadRegion);
+  
+      return TRUE;
+  }
+***************
+*** 2299,2365 ****
+      ConsoleBuffer   *cb,
+      BOOL	    RestoreScreen)
+  {
+!     COORD BufferCoord;
+!     SMALL_RECT WriteRegion;
+  
+      if (cb == NULL || !cb->IsValid)
+  	return FALSE;
+  
+!     /*
+!      * Before restoring the buffer contents, clear the current buffer, and
+!      * restore the cursor position and window information.  Doing this now
+!      * prevents old buffer contents from "flashing" onto the screen.
+!      */
+!     if (RestoreScreen)
+! 	ClearConsoleBuffer(cb->Info.wAttributes);
+! 
+!     FitConsoleWindow(cb->Info.dwSize, TRUE);
+!     if (!SetConsoleScreenBufferSize(g_hConOut, cb->Info.dwSize))
+! 	return FALSE;
+!     if (!SetConsoleTextAttribute(g_hConOut, cb->Info.wAttributes))
+! 	return FALSE;
+! 
+!     if (!RestoreScreen)
+!     {
+! 	/*
+! 	 * No need to restore the screen buffer contents, so we're done.
+! 	 */
+! 	return TRUE;
+!     }
+! 
+!     if (!SetConsoleCursorPosition(g_hConOut, cb->Info.dwCursorPosition))
+! 	return FALSE;
+!     if (!SetConsoleWindowInfo(g_hConOut, TRUE, &cb->Info.srWindow))
+! 	return FALSE;
+! 
+!     /*
+!      * Restore the screen buffer contents.
+!      */
+!     if (cb->Buffer != NULL)
+!     {
+! 	BufferCoord.X = 0;
+! 	BufferCoord.Y = 0;
+! 	WriteRegion.Left = 0;
+! 	WriteRegion.Top = 0;
+! 	WriteRegion.Right = cb->Info.dwSize.X - 1;
+! 	WriteRegion.Bottom = cb->Info.dwSize.Y - 1;
+! 	if (!WriteConsoleOutput(g_hConOut,	/* output handle */
+! 		cb->Buffer,			/* our buffer */
+! 		cb->BufferSize,			/* dimensions of our buffer */
+! 		BufferCoord,			/* offset in our buffer */
+! 		&WriteRegion))			/* region to restore */
+! 	{
+! 	    return FALSE;
+! 	}
+!     }
+  
+      return TRUE;
+  }
+  
+- #define FEAT_RESTORE_ORIG_SCREEN
+- #ifdef FEAT_RESTORE_ORIG_SCREEN
+- static ConsoleBuffer g_cbOrig = { 0 };
+- #endif
+  static ConsoleBuffer g_cbNonTermcap = { 0 };
+  static ConsoleBuffer g_cbTermcap = { 0 };
+  
+--- 2302,2321 ----
+      ConsoleBuffer   *cb,
+      BOOL	    RestoreScreen)
+  {
+!     HANDLE hConOld;
+  
+      if (cb == NULL || !cb->IsValid)
+  	return FALSE;
+  
+!     hConOld = g_hConOut;
+!     g_hConOut = cb->handle;
+!     if (!RestoreScreen && exiting)
+! 	CopyOldConsoleBuffer(cb, hConOld);
+!     SetConsoleActiveScreenBuffer(g_hConOut);
+  
+      return TRUE;
+  }
+  
+  static ConsoleBuffer g_cbNonTermcap = { 0 };
+  static ConsoleBuffer g_cbTermcap = { 0 };
+  
+***************
+*** 2498,2506 ****
+      void
+  mch_init(void)
+  {
+- #ifndef FEAT_RESTORE_ORIG_SCREEN
+-     CONSOLE_SCREEN_BUFFER_INFO csbi;
+- #endif
+  #ifndef __MINGW32__
+      extern int _fmode;
+  #endif
+--- 2454,2459 ----
+***************
+*** 2521,2536 ****
+      else
+  	create_conin();
+      g_hConOut = GetStdHandle(STD_OUTPUT_HANDLE);
+  
+- #ifdef FEAT_RESTORE_ORIG_SCREEN
+-     /* Save the initial console buffer for later restoration */
+-     SaveConsoleBuffer(&g_cbOrig);
+-     g_attrCurrent = g_attrDefault = g_cbOrig.Info.wAttributes;
+- #else
+      /* Get current text attributes */
+!     GetConsoleScreenBufferInfo(g_hConOut, &csbi);
+!     g_attrCurrent = g_attrDefault = csbi.wAttributes;
+! #endif
+      if (cterm_normal_fg_color == 0)
+  	cterm_normal_fg_color = (g_attrCurrent & 0xf) + 1;
+      if (cterm_normal_bg_color == 0)
+--- 2474,2487 ----
+      else
+  	create_conin();
+      g_hConOut = GetStdHandle(STD_OUTPUT_HANDLE);
++     g_cbNonTermcap.handle = g_hConOut;
++     g_cbTermcap.handle = CreateConsoleScreenBuffer(
++ 	    GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ | FILE_SHARE_WRITE,
++ 	    NULL, CONSOLE_TEXTMODE_BUFFER, NULL);
+  
+      /* Get current text attributes */
+!     SaveConsoleBuffer(&g_cbNonTermcap);
+!     g_attrCurrent = g_attrDefault = g_cbNonTermcap.Info.wAttributes;
+      if (cterm_normal_fg_color == 0)
+  	cterm_normal_fg_color = (g_attrCurrent & 0xf) + 1;
+      if (cterm_normal_bg_color == 0)
+***************
+*** 2630,2635 ****
+--- 2581,2588 ----
+      SetConsoleMode(g_hConIn,  g_cmodein);
+      SetConsoleMode(g_hConOut, g_cmodeout);
+  
++     CloseHandle(g_cbTermcap.handle);
++ 
+  #ifdef DYNAMIC_GETTEXT
+      dyn_libintl_end();
+  #endif
+***************
+*** 5002,5007 ****
+--- 4955,4962 ----
+  	 * screen buffer, and resize the buffer to match the current window
+  	 * size.  We will use this as the size of our editing environment.
+  	 */
++ 	g_hConOut = g_cbTermcap.handle;
++ 	SetConsoleActiveScreenBuffer(g_hConOut);
+  	ClearConsoleBuffer(g_attrCurrent);
+  	ResizeConBufAndWindow(g_hConOut, Columns, Rows);
+      }
+***************
+*** 5045,5055 ****
+      cmodein &= ~(ENABLE_MOUSE_INPUT | ENABLE_WINDOW_INPUT);
+      SetConsoleMode(g_hConIn, cmodein);
+  
+- #ifdef FEAT_RESTORE_ORIG_SCREEN
+-     cb = exiting ? &g_cbOrig : &g_cbNonTermcap;
+- #else
+      cb = &g_cbNonTermcap;
+- #endif
+      RestoreConsoleBuffer(cb, p_rs);
+      SetConsoleCursorInfo(g_hConOut, &g_cci);
+  
+--- 5000,5006 ----
+*** ../vim-7.4.850/src/version.c	2015-09-01 19:50:05.697404798 +0200
+--- src/version.c	2015-09-01 20:22:33.065197395 +0200
+***************
+*** 743,744 ****
+--- 743,746 ----
+  {   /* Add new patch number below this line */
++ /**/
++     851,
+  /**/
+
+-- 
+FATAL ERROR! SYSTEM HALTED! - Press any key to continue doing nothing.
+
+ /// Bram Moolenaar -- Bram@Moolenaar.net -- http://www.Moolenaar.net   \\\
+///        sponsor Vim, vote for features -- http://www.Vim.org/sponsor/ \\\
+\\\  an exciting new programming language -- http://www.Zimbu.org        ///
+ \\\            help me help AIDS victims -- http://ICCF-Holland.org    ///

@@ -1,0 +1,46 @@
+To: vim_dev@googlegroups.com
+Subject: Patch 7.4.836
+Fcc: outbox
+From: Bram Moolenaar <Bram@moolenaar.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+------------
+
+Patch 7.4.836
+Problem:    Accessing unitinialized memory.
+Solution:   Add missing calls to init_tv(). (Dominique Pelle)
+Files:      src/eval.c
+
+
+*** ../vim-7.4.835/src/eval.c	2015-08-25 16:19:01.583296566 +0200
+--- src/eval.c	2015-08-25 16:47:06.109777570 +0200
+***************
+*** 5371,5376 ****
+--- 5371,5378 ----
+      }
+  #endif
+  
++     init_tv(&var1);
++     init_tv(&var2);
+      if (**arg == '.')
+      {
+  	/*
+*** ../vim-7.4.835/src/version.c	2015-08-25 16:31:34.631453176 +0200
+--- src/version.c	2015-08-25 16:46:21.294243211 +0200
+***************
+*** 743,744 ****
+--- 743,746 ----
+  {   /* Add new patch number below this line */
++ /**/
++     836,
+  /**/
+
+-- 
+Men may not be seen publicly in any kind of strapless gown.
+		[real standing law in Florida, United States of America]
+
+ /// Bram Moolenaar -- Bram@Moolenaar.net -- http://www.Moolenaar.net   \\\
+///        sponsor Vim, vote for features -- http://www.Vim.org/sponsor/ \\\
+\\\  an exciting new programming language -- http://www.Zimbu.org        ///
+ \\\            help me help AIDS victims -- http://ICCF-Holland.org    ///

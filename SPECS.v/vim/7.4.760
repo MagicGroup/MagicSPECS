@@ -1,0 +1,52 @@
+To: vim_dev@googlegroups.com
+Subject: Patch 7.4.760
+Fcc: outbox
+From: Bram Moolenaar <Bram@moolenaar.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+------------
+
+Patch 7.4.760
+Problem:    Spelling mistakes are not displayed after ":syn spell".
+Solution:   Force a redraw after ":syn spell" command. (Christian Brabandt)
+Files:      src/syntax.c
+
+
+*** ../vim-7.4.759/src/syntax.c	2015-03-21 21:46:07.562423678 +0100
+--- src/syntax.c	2015-06-25 18:35:12.860164934 +0200
+***************
+*** 3469,3475 ****
+--- 3469,3481 ----
+      else if (STRNICMP(arg, "default", 7) == 0 && next - arg == 7)
+  	curwin->w_s->b_syn_spell = SYNSPL_DEFAULT;
+      else
++     {
+  	EMSG2(_("E390: Illegal argument: %s"), arg);
++ 	return;
++     }
++ 
++     /* assume spell checking changed, force a redraw */
++     redraw_win_later(curwin, NOT_VALID);
+  }
+  
+  /*
+*** ../vim-7.4.759/src/version.c	2015-06-25 18:27:27.312991420 +0200
+--- src/version.c	2015-06-25 18:31:07.810705103 +0200
+***************
+*** 743,744 ****
+--- 743,746 ----
+  {   /* Add new patch number below this line */
++ /**/
++     760,
+  /**/
+
+-- 
+hundred-and-one symptoms of being an internet addict:
+151. You find yourself engaged to someone you've never actually met,
+     except through e-mail.
+
+ /// Bram Moolenaar -- Bram@Moolenaar.net -- http://www.Moolenaar.net   \\\
+///        sponsor Vim, vote for features -- http://www.Vim.org/sponsor/ \\\
+\\\  an exciting new programming language -- http://www.Zimbu.org        ///
+ \\\            help me help AIDS victims -- http://ICCF-Holland.org    ///

@@ -1,0 +1,1093 @@
+To: vim_dev@googlegroups.com
+Subject: Patch 7.4.754
+Fcc: outbox
+From: Bram Moolenaar <Bram@moolenaar.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+------------
+
+Patch 7.4.754
+Problem:    Using CTRL-A in Visual mode does not work well. (Gary Johnson)
+Solution:   Make it increment all numbers in the Visual area. (Christian
+            Brabandt)
+Files:      runtime/doc/change.txt, src/normal.c, src/ops.c,
+            src/proto/ops.pro, src/testdir/Make_amiga.mak,
+            src/testdir/Make_dos.mak, src/testdir/Make_ming.mak,
+            src/testdir/Make_os2.mak, src/testdir/Make_vms.mms,
+            src/testdir/Makefile, src/testdir/test_increment.in,
+            src/testdir/test_increment.ok
+
+
+*** ../vim-7.4.753/runtime/doc/change.txt	2015-01-27 18:43:42.134535513 +0100
+--- runtime/doc/change.txt	2015-06-25 13:55:43.686428819 +0200
+***************
+*** 156,161 ****
+--- 156,164 ----
+  The 'B' and 'M' flags in 'formatoptions' change the behavior for inserting
+  spaces before and after a multi-byte character |fo-table|.
+  
++ The '[ mark is set at the end of the first line that was joined, '] at the end
++ of the resulting line.
++ 
+  
+  ==============================================================================
+  2. Delete and insert				*delete-insert* *replacing*
+***************
+*** 376,385 ****
+--- 379,421 ----
+  CTRL-A			Add [count] to the number or alphabetic character at
+  			or after the cursor.  {not in Vi}
+  
++ 							*v_CTRL-A*
++ {Visual}CTRL-A		Add [count] to the number or alphabetic character in
++ 			the highlighted text.  {not in Vi}
++ 
++ 							*v_g_CTRL-A*
++ {Visual}g CTRL-A	Add [count] to the number or alphabetic character in
++ 			the highlighted text. If several lines are
++ 		        highlighted, each one will be incremented by an
++ 			additional [count] (so effectively creating a
++ 			[count] incrementing sequence).  {not in Vi}
++ 			For Example, if you have this list of numbers:
++ 				1. ~
++ 				1. ~
++ 				1. ~
++ 				1. ~
++ 			Move to the second "1." and Visually select three
++ 			lines, pressing g CTRL-A results in:
++ 				1. ~
++ 				2. ~
++ 				3. ~
++ 				4. ~
++ 
+  							*CTRL-X*
+  CTRL-X			Subtract [count] from the number or alphabetic
+  			character at or after the cursor.  {not in Vi}
+  
++ 							*v_CTRL-X*
++ {Visual}CTRL-X		Subtract [count] from the number or alphabetic
++ 			character in the highlighted text.  {not in Vi}
++ 
++ 							*v_g_CTRL-X*
++ {Visual}g CTRL-X	Subtract [count] from the number or alphabetic
++ 			character in the highlighted text. If several lines
++ 			are highlighted, each value will be decremented by an
++ 			additional [count] (so effectively creating a [count]
++ 			decrementing sequence).  {not in Vi}
++ 
+  The CTRL-A and CTRL-X commands work for (signed) decimal numbers, unsigned
+  octal and hexadecimal numbers and alphabetic characters.  This depends on the
+  'nrformats' option.
+***************
+*** 396,401 ****
+--- 432,440 ----
+    under or after the cursor.  This is useful to make lists with an alphabetic
+    index.
+  
++ For decimals a leading negative sign is considered for incrementing/
++ decrementing, for octal and hey values, it won't be considered.
++ 
+  For numbers with leading zeros (including all octal and hexadecimal numbers),
+  Vim preserves the number of characters in the number when possible.  CTRL-A on
+  "0077" results in "0100", CTRL-X on "0x100" results in "0x0ff".
+*** ../vim-7.4.753/src/normal.c	2015-06-25 13:30:41.206095684 +0200
+--- src/normal.c	2015-06-25 13:42:06.342924954 +0200
+***************
+*** 4201,4209 ****
+  nv_addsub(cap)
+      cmdarg_T	*cap;
+  {
+!     if (!checkclearopq(cap->oap)
+! 	    && do_addsub((int)cap->cmdchar, cap->count1) == OK)
+  	prep_redo_cmd(cap);
+  }
+  
+  /*
+--- 4201,4217 ----
+  nv_addsub(cap)
+      cmdarg_T	*cap;
+  {
+!     int visual = VIsual_active;
+!     if (cap->oap->op_type == OP_NOP
+! 	    && do_addsub((int)cap->cmdchar, cap->count1, cap->arg) == OK)
+  	prep_redo_cmd(cap);
++     else
++ 	clearopbeep(cap->oap);
++     if (visual)
++     {
++ 	VIsual_active = FALSE;
++ 	redraw_later(CLEAR);
++     }
+  }
+  
+  /*
+***************
+*** 7841,7854 ****
+  
+      switch (cap->nchar)
+      {
+  #ifdef MEM_PROFILE
+      /*
+       * "g^A": dump log of used memory.
+       */
+!     case Ctrl_A:
+! 	vim_mem_profile_dump();
+! 	break;
+  #endif
+  
+  #ifdef FEAT_VREPLACE
+      /*
+--- 7849,7876 ----
+  
+      switch (cap->nchar)
+      {
++     case Ctrl_A:
++     case Ctrl_X:
+  #ifdef MEM_PROFILE
+      /*
+       * "g^A": dump log of used memory.
+       */
+! 	if (!VIsual_active && cap->nchar == Ctrl_A)
+! 	    vim_mem_profile_dump();
+! 	else
+  #endif
++     /*
++      * "g^A/g^X": sequentially increment visually selected region
++      */
++ 	     if (VIsual_active)
++ 	{
++ 	    cap->arg = TRUE;
++ 	    cap->cmdchar = cap->nchar;
++ 	    nv_addsub(cap);
++ 	}
++ 	else
++ 	    clearopbeep(oap);
++ 	break;
+  
+  #ifdef FEAT_VREPLACE
+      /*
+*** ../vim-7.4.753/src/ops.c	2015-06-19 15:17:49.891065610 +0200
+--- src/ops.c	2015-06-25 13:44:44.285272132 +0200
+***************
+*** 5375,5383 ****
+   * return FAIL for failure, OK otherwise
+   */
+      int
+! do_addsub(command, Prenum1)
+      int		command;
+      linenr_T	Prenum1;
+  {
+      int		col;
+      char_u	*buf1;
+--- 5375,5384 ----
+   * return FAIL for failure, OK otherwise
+   */
+      int
+! do_addsub(command, Prenum1, g_cmd)
+      int		command;
+      linenr_T	Prenum1;
++     int		g_cmd;		    /* was g<c-a>/g<c-x> */
+  {
+      int		col;
+      char_u	*buf1;
+***************
+*** 5385,5390 ****
+--- 5386,5392 ----
+      int		hex;		/* 'X' or 'x': hex; '0': octal */
+      static int	hexupper = FALSE;	/* 0xABC */
+      unsigned long n;
++     long	offset = 0;		/* line offset for Ctrl_V mode */
+      long_u	oldn;
+      char_u	*ptr;
+      int		c;
+***************
+*** 5394,5640 ****
+      int		dooct;
+      int		doalp;
+      int		firstdigit;
+-     int		negative;
+      int		subtract;
+  
+      dohex = (vim_strchr(curbuf->b_p_nf, 'x') != NULL);	/* "heX" */
+      dooct = (vim_strchr(curbuf->b_p_nf, 'o') != NULL);	/* "Octal" */
+      doalp = (vim_strchr(curbuf->b_p_nf, 'p') != NULL);	/* "alPha" */
+  
+-     ptr = ml_get_curline();
+-     RLADDSUBFIX(ptr);
+- 
+      /*
+       * First check if we are on a hexadecimal number, after the "0x".
+       */
+      col = curwin->w_cursor.col;
+!     if (dohex)
+! 	while (col > 0 && vim_isxdigit(ptr[col]))
+! 	    --col;
+!     if (       dohex
+! 	    && col > 0
+! 	    && (ptr[col] == 'X'
+! 		|| ptr[col] == 'x')
+! 	    && ptr[col - 1] == '0'
+! 	    && vim_isxdigit(ptr[col + 1]))
+      {
+! 	/*
+! 	 * Found hexadecimal number, move to its start.
+! 	 */
+! 	--col;
+      }
+      else
+      {
+! 	/*
+! 	 * Search forward and then backward to find the start of number.
+! 	 */
+! 	col = curwin->w_cursor.col;
+  
+! 	while (ptr[col] != NUL
+! 		&& !vim_isdigit(ptr[col])
+! 		&& !(doalp && ASCII_ISALPHA(ptr[col])))
+! 	    ++col;
+! 
+! 	while (col > 0
+! 		&& vim_isdigit(ptr[col - 1])
+! 		&& !(doalp && ASCII_ISALPHA(ptr[col])))
+  	    --col;
+      }
+  
+!     /*
+!      * If a number was found, and saving for undo works, replace the number.
+!      */
+!     firstdigit = ptr[col];
+!     RLADDSUBFIX(ptr);
+!     if ((!VIM_ISDIGIT(firstdigit) && !(doalp && ASCII_ISALPHA(firstdigit)))
+! 	    || u_save_cursor() != OK)
+      {
+! 	beep_flush();
+! 	return FAIL;
+!     }
+  
+!     /* get ptr again, because u_save() may have changed it */
+!     ptr = ml_get_curline();
+!     RLADDSUBFIX(ptr);
+  
+!     if (doalp && ASCII_ISALPHA(firstdigit))
+!     {
+! 	/* decrement or increment alphabetic character */
+! 	if (command == Ctrl_X)
+  	{
+! 	    if (CharOrd(firstdigit) < Prenum1)
+  	    {
+! 		if (isupper(firstdigit))
+! 		    firstdigit = 'A';
+  		else
+- 		    firstdigit = 'a';
+- 	    }
+- 	    else
+  #ifdef EBCDIC
+! 		firstdigit = EBCDIC_CHAR_ADD(firstdigit, -Prenum1);
+  #else
+! 		firstdigit -= Prenum1;
+  #endif
+- 	}
+- 	else
+- 	{
+- 	    if (26 - CharOrd(firstdigit) - 1 < Prenum1)
+- 	    {
+- 		if (isupper(firstdigit))
+- 		    firstdigit = 'Z';
+- 		else
+- 		    firstdigit = 'z';
+  	    }
+  	    else
+  #ifdef EBCDIC
+! 		firstdigit = EBCDIC_CHAR_ADD(firstdigit, Prenum1);
+  #else
+! 		firstdigit += Prenum1;
+  #endif
+  	}
+! 	curwin->w_cursor.col = col;
+! 	(void)del_char(FALSE);
+! 	ins_char(firstdigit);
+!     }
+!     else
+!     {
+! 	negative = FALSE;
+! 	if (col > 0 && ptr[col - 1] == '-')	    /* negative number */
+  	{
+! 	    --col;
+! 	    negative = TRUE;
+! 	}
+  
+! 	/* get the number value (unsigned) */
+! 	vim_str2nr(ptr + col, &hex, &length, dooct, dohex, NULL, &n);
+  
+! 	/* ignore leading '-' for hex and octal numbers */
+! 	if (hex && negative)
+! 	{
+! 	    ++col;
+! 	    --length;
+! 	    negative = FALSE;
+! 	}
+  
+! 	/* add or subtract */
+! 	subtract = FALSE;
+! 	if (command == Ctrl_X)
+! 	    subtract ^= TRUE;
+! 	if (negative)
+! 	    subtract ^= TRUE;
+! 
+! 	oldn = n;
+! 	if (subtract)
+! 	    n -= (unsigned long)Prenum1;
+! 	else
+! 	    n += (unsigned long)Prenum1;
+  
+! 	/* handle wraparound for decimal numbers */
+! 	if (!hex)
+! 	{
+  	    if (subtract)
+  	    {
+! 		if (n > oldn)
+  		{
+! 		    n = 1 + (n ^ (unsigned long)-1);
+! 		    negative ^= TRUE;
+  		}
+  	    }
+! 	    else /* add */
+  	    {
+! 		if (n < oldn)
+  		{
+! 		    n = (n ^ (unsigned long)-1);
+! 		    negative ^= TRUE;
+  		}
+  	    }
+- 	    if (n == 0)
+- 		negative = FALSE;
+- 	}
+  
+! 	/*
+! 	 * Delete the old number.
+! 	 */
+! 	curwin->w_cursor.col = col;
+! 	todel = length;
+! 	c = gchar_cursor();
+! 	/*
+! 	 * Don't include the '-' in the length, only the length of the part
+! 	 * after it is kept the same.
+! 	 */
+! 	if (c == '-')
+! 	    --length;
+! 	while (todel-- > 0)
+! 	{
+! 	    if (c < 0x100 && isalpha(c))
+  	    {
+! 		if (isupper(c))
+! 		    hexupper = TRUE;
+! 		else
+! 		    hexupper = FALSE;
+  	    }
+- 	    /* del_char() will mark line needing displaying */
+- 	    (void)del_char(FALSE);
+- 	    c = gchar_cursor();
+- 	}
+  
+! 	/*
+! 	 * Prepare the leading characters in buf1[].
+! 	 * When there are many leading zeros it could be very long.  Allocate
+! 	 * a bit too much.
+! 	 */
+! 	buf1 = alloc((unsigned)length + NUMBUFLEN);
+! 	if (buf1 == NULL)
+! 	    return FAIL;
+! 	ptr = buf1;
+! 	if (negative)
+! 	{
+! 	    *ptr++ = '-';
+! 	}
+! 	if (hex)
+! 	{
+! 	    *ptr++ = '0';
+! 	    --length;
+! 	}
+! 	if (hex == 'x' || hex == 'X')
+! 	{
+! 	    *ptr++ = hex;
+! 	    --length;
+! 	}
+  
+! 	/*
+! 	 * Put the number characters in buf2[].
+! 	 */
+! 	if (hex == 0)
+! 	    sprintf((char *)buf2, "%lu", n);
+! 	else if (hex == '0')
+! 	    sprintf((char *)buf2, "%lo", n);
+! 	else if (hex && hexupper)
+! 	    sprintf((char *)buf2, "%lX", n);
+! 	else
+! 	    sprintf((char *)buf2, "%lx", n);
+! 	length -= (int)STRLEN(buf2);
+  
+! 	/*
+! 	 * Adjust number of zeros to the new number of digits, so the
+! 	 * total length of the number remains the same.
+! 	 * Don't do this when
+! 	 * the result may look like an octal number.
+! 	 */
+! 	if (firstdigit == '0' && !(dooct && hex == 0))
+! 	    while (length-- > 0)
+! 		*ptr++ = '0';
+! 	*ptr = NUL;
+! 	STRCAT(buf1, buf2);
+! 	ins_str(buf1);		/* insert the new number */
+! 	vim_free(buf1);
+!     }
+!     --curwin->w_cursor.col;
+!     curwin->w_set_curswant = TRUE;
+  #ifdef FEAT_RIGHTLEFT
+!     ptr = ml_get_buf(curbuf, curwin->w_cursor.lnum, TRUE);
+!     RLADDSUBFIX(ptr);
+  #endif
+      return OK;
+  }
+  
+--- 5396,5697 ----
+      int		dooct;
+      int		doalp;
+      int		firstdigit;
+      int		subtract;
++     int		negative = FALSE;
++     int		visual = VIsual_active;
++     int		i;
++     int		lnum = curwin->w_cursor.lnum;
++     int		lnume = curwin->w_cursor.lnum;
+  
+      dohex = (vim_strchr(curbuf->b_p_nf, 'x') != NULL);	/* "heX" */
+      dooct = (vim_strchr(curbuf->b_p_nf, 'o') != NULL);	/* "Octal" */
+      doalp = (vim_strchr(curbuf->b_p_nf, 'p') != NULL);	/* "alPha" */
+  
+      /*
+       * First check if we are on a hexadecimal number, after the "0x".
+       */
+      col = curwin->w_cursor.col;
+!     if (VIsual_active)
+      {
+! 	if (lt(curwin->w_cursor, VIsual))
+! 	{
+! 	    pos_T t;
+! 	    t = curwin->w_cursor;
+! 	    curwin->w_cursor = VIsual;
+! 	    VIsual = t;
+! 	}
+! 	if (VIsual_mode == 'V')
+! 	    VIsual.col = 0;
+! 
+! 	ptr = ml_get(VIsual.lnum);
+! 	RLADDSUBFIX(ptr);
+! 
+! 	/* store visual area for 'gv' */
+! 	curbuf->b_visual.vi_start = VIsual;
+! 	curbuf->b_visual.vi_end = curwin->w_cursor;
+! 	curbuf->b_visual.vi_mode = VIsual_mode;
+! 
+! 	col = VIsual.col;
+! 	lnum = VIsual.lnum;
+! 	lnume = curwin->w_cursor.lnum;
+! 	if (ptr[col] == '-')
+! 	{
+! 	    negative = TRUE;
+! 	    col++;
+! 	}
+      }
+      else
+      {
+! 	ptr = ml_get_curline();
+! 	RLADDSUBFIX(ptr);
+  
+! 	if (dohex)
+! 	    while (col > 0 && vim_isxdigit(ptr[col]))
+! 		--col;
+! 	if (       dohex
+! 		&& col > 0
+! 		&& (ptr[col] == 'X'
+! 		    || ptr[col] == 'x')
+! 		&& ptr[col - 1] == '0'
+! 		&& vim_isxdigit(ptr[col + 1]))
+! 	{
+! 	    /* Found hexadecimal number, move to its start. */
+  	    --col;
++ 	}
++ 	else
++ 	{
++ 	    /*
++ 	     * Search forward and then backward to find the start of number.
++ 	     */
++ 	    col = curwin->w_cursor.col;
++ 
++ 	    while (ptr[col] != NUL
++ 		    && !vim_isdigit(ptr[col])
++ 		    && !(doalp && ASCII_ISALPHA(ptr[col])))
++ 		++col;
++ 
++ 	    while (col > 0
++ 		    && vim_isdigit(ptr[col - 1])
++ 		    && !(doalp && ASCII_ISALPHA(ptr[col])))
++ 		--col;
++ 	}
+      }
+  
+!     for (i = lnum; i <= lnume; i++)
+      {
+! 	curwin->w_cursor.lnum = i;
+! 	ptr = ml_get_curline();
+! 	RLADDSUBFIX(ptr);
+! 	if ((int)STRLEN(ptr) <= col)
+! 	    col = 0;
+! 	/*
+! 	 * If a number was found, and saving for undo works, replace the number.
+! 	 */
+! 	firstdigit = ptr[col];
+! 	RLADDSUBFIX(ptr);
+! 	if ((!VIM_ISDIGIT(firstdigit) && !(doalp && ASCII_ISALPHA(firstdigit)))
+! 		|| u_save_cursor() != OK)
+! 	{
+! 	    if (lnum < lnume)
+! 		/* Try again on next line */
+! 		continue;
+! 	    beep_flush();
+! 	    return FAIL;
+! 	}
+  
+! 	ptr = ml_get_curline();
+! 	RLADDSUBFIX(ptr);
+  
+! 	if (doalp && ASCII_ISALPHA(firstdigit))
+  	{
+! 	    /* decrement or increment alphabetic character */
+! 	    if (command == Ctrl_X)
+  	    {
+! 		if (CharOrd(firstdigit) < Prenum1)
+! 		{
+! 		    if (isupper(firstdigit))
+! 			firstdigit = 'A';
+! 		    else
+! 			firstdigit = 'a';
+! 		}
+  		else
+  #ifdef EBCDIC
+! 		    firstdigit = EBCDIC_CHAR_ADD(firstdigit, -Prenum1);
+  #else
+! 		    firstdigit -= Prenum1;
+  #endif
+  	    }
+  	    else
++ 	    {
++ 		if (26 - CharOrd(firstdigit) - 1 < Prenum1)
++ 		{
++ 		    if (isupper(firstdigit))
++ 			firstdigit = 'Z';
++ 		    else
++ 			firstdigit = 'z';
++ 		}
++ 		else
+  #ifdef EBCDIC
+! 		    firstdigit = EBCDIC_CHAR_ADD(firstdigit, Prenum1);
+  #else
+! 		    firstdigit += Prenum1;
+  #endif
++ 	    }
++ 	    curwin->w_cursor.col = col;
++ 	    (void)del_char(FALSE);
++ 	    ins_char(firstdigit);
+  	}
+! 	else
+  	{
+! 	    if (col > 0 && ptr[col - 1] == '-' && !visual)
+! 	    {
+! 		/* negative number */
+! 		--col;
+! 		negative = TRUE;
+! 	    }
+  
+! 	    /* get the number value (unsigned) */
+! 	    vim_str2nr(ptr + col, &hex, &length, dooct, dohex, NULL, &n);
+  
+! 	    /* ignore leading '-' for hex and octal numbers */
+! 	    if (hex && negative)
+! 	    {
+! 		++col;
+! 		--length;
+! 		negative = FALSE;
+! 	    }
+  
+! 	    /* add or subtract */
+! 	    subtract = FALSE;
+! 	    if (command == Ctrl_X)
+! 		subtract ^= TRUE;
+! 	    if (negative)
+! 		subtract ^= TRUE;
+  
+! 	    oldn = n;
+  	    if (subtract)
++ 		n -= (unsigned long)Prenum1;
++ 	    else
++ 		n += (unsigned long)Prenum1;
++ 
++ 	    /* handle wraparound for decimal numbers */
++ 	    if (!hex)
+  	    {
+! 		if (subtract)
+! 		{
+! 		    if (n > oldn)
+! 		    {
+! 			n = 1 + (n ^ (unsigned long)-1);
+! 			negative ^= TRUE;
+! 		    }
+! 		}
+! 		else
+  		{
+! 		    /* add */
+! 		    if (n < oldn)
+! 		    {
+! 			n = (n ^ (unsigned long)-1);
+! 			negative ^= TRUE;
+! 		    }
+  		}
++ 		if (n == 0)
++ 		    negative = FALSE;
+  	    }
+! 
+! 	    /*
+! 	     * Delete the old number.
+! 	     */
+! 	    curwin->w_cursor.col = col;
+! 	    todel = length;
+! 	    c = gchar_cursor();
+! 
+! 	    /*
+! 	     * Don't include the '-' in the length, only the length of the
+! 	     * part after it is kept the same.
+! 	     */
+! 	    if (c == '-')
+! 		--length;
+! 	    while (todel-- > 0)
+  	    {
+! 		if (c < 0x100 && isalpha(c))
+  		{
+! 		    if (isupper(c))
+! 			hexupper = TRUE;
+! 		    else
+! 			hexupper = FALSE;
+  		}
++ 		/* del_char() will mark line needing displaying */
++ 		(void)del_char(FALSE);
++ 		c = gchar_cursor();
+  	    }
+  
+! 	    /*
+! 	     * Prepare the leading characters in buf1[].
+! 	     * When there are many leading zeros it could be very long.
+! 	     * Allocate a bit too much.
+! 	     */
+! 	    buf1 = alloc((unsigned)length + NUMBUFLEN);
+! 	    if (buf1 == NULL)
+! 		return FAIL;
+! 	    ptr = buf1;
+! 	    /* do not add leading '-' for visual mode */
+! 	    if (negative && !visual)
+  	    {
+! 		*ptr++ = '-';
+! 	    }
+! 	    if (hex)
+! 	    {
+! 		*ptr++ = '0';
+! 		--length;
+! 	    }
+! 	    if (hex == 'x' || hex == 'X')
+! 	    {
+! 		*ptr++ = hex;
+! 		--length;
+  	    }
+  
+! 	    /*
+! 	     * Put the number characters in buf2[].
+! 	     */
+! 	    if (hex == 0)
+! 		sprintf((char *)buf2, "%lu", n + offset);
+! 	    else if (hex == '0')
+! 		sprintf((char *)buf2, "%lo", n + offset);
+! 	    else if (hex && hexupper)
+! 		sprintf((char *)buf2, "%lX", n + offset);
+! 	    else
+! 		sprintf((char *)buf2, "%lx", n + offset);
+! 	    length -= (int)STRLEN(buf2);
+  
+! 	    if (g_cmd)
+! 	    {
+! 		if (subtract)
+! 		    offset -= (unsigned long)Prenum1;
+! 		else
+! 		    offset += (unsigned long)Prenum1;
+! 	    }
+  
+! 	    /*
+! 	     * Adjust number of zeros to the new number of digits, so the
+! 	     * total length of the number remains the same.
+! 	     * Don't do this when
+! 	     * the result may look like an octal number.
+! 	     */
+! 	    if (firstdigit == '0' && !(dooct && hex == 0))
+! 		while (length-- > 0)
+! 		    *ptr++ = '0';
+! 	    *ptr = NUL;
+! 	    STRCAT(buf1, buf2);
+! 	    ins_str(buf1);		/* insert the new number */
+! 	    vim_free(buf1);
+! 	}
+! 	--curwin->w_cursor.col;
+! 	curwin->w_set_curswant = TRUE;
+  #ifdef FEAT_RIGHTLEFT
+! 	ptr = ml_get_buf(curbuf, curwin->w_cursor.lnum, TRUE);
+! 	RLADDSUBFIX(ptr);
+  #endif
++     }
+      return OK;
+  }
+  
+*** ../vim-7.4.753/src/proto/ops.pro	2014-12-17 14:36:10.363090985 +0100
+--- src/proto/ops.pro	2015-06-25 13:38:28.429205490 +0200
+***************
+*** 43,49 ****
+  int fex_format __ARGS((linenr_T lnum, long count, int c));
+  void format_lines __ARGS((linenr_T line_count, int avoid_fex));
+  int paragraph_start __ARGS((linenr_T lnum));
+! int do_addsub __ARGS((int command, linenr_T Prenum1));
+  int read_viminfo_register __ARGS((vir_T *virp, int force));
+  void write_viminfo_registers __ARGS((FILE *fp));
+  void x11_export_final_selection __ARGS((void));
+--- 43,49 ----
+  int fex_format __ARGS((linenr_T lnum, long count, int c));
+  void format_lines __ARGS((linenr_T line_count, int avoid_fex));
+  int paragraph_start __ARGS((linenr_T lnum));
+! int do_addsub __ARGS((int command, linenr_T Prenum1, int g_cmd));
+  int read_viminfo_register __ARGS((vir_T *virp, int force));
+  void write_viminfo_registers __ARGS((FILE *fp));
+  void x11_export_final_selection __ARGS((void));
+*** ../vim-7.4.753/src/testdir/Make_amiga.mak	2015-06-19 15:45:13.005889121 +0200
+--- src/testdir/Make_amiga.mak	2015-06-25 13:45:32.340769261 +0200
+***************
+*** 45,50 ****
+--- 45,51 ----
+  		test_command_count.out \
+  		test_erasebackword.out \
+  		test_eval.out \
++ 		test_increment.out \
+  		test_insertcount.out \
+  		test_listchars.out \
+  		test_listlbr.out \
+***************
+*** 192,197 ****
+--- 193,199 ----
+  test_command_count.out: test_command_count.in
+  test_erasebackword.out: test_erasebackword.in
+  test_eval.out: test_eval.in
++ test_increment.out: test_increment.in
+  test_insertcount.out: test_insertcount.in
+  test_listchars.out: test_listchars.in
+  test_listlbr.out: test_listlbr.in
+*** ../vim-7.4.753/src/testdir/Make_dos.mak	2015-06-19 15:45:13.005889121 +0200
+--- src/testdir/Make_dos.mak	2015-06-25 13:38:28.429205490 +0200
+***************
+*** 44,49 ****
+--- 44,50 ----
+  		test_command_count.out \
+  		test_erasebackword.out \
+  		test_eval.out \
++ 		test_increment.out \
+  		test_insertcount.out \
+  		test_listchars.out \
+  		test_listlbr.out \
+*** ../vim-7.4.753/src/testdir/Make_ming.mak	2015-06-19 15:45:13.005889121 +0200
+--- src/testdir/Make_ming.mak	2015-06-25 13:38:28.429205490 +0200
+***************
+*** 66,71 ****
+--- 66,72 ----
+  		test_command_count.out \
+  		test_erasebackword.out \
+  		test_eval.out \
++ 		test_increment.out \
+  		test_insertcount.out \
+  		test_listchars.out \
+  		test_listlbr.out \
+*** ../vim-7.4.753/src/testdir/Make_os2.mak	2015-06-19 15:45:13.005889121 +0200
+--- src/testdir/Make_os2.mak	2015-06-25 13:38:28.429205490 +0200
+***************
+*** 46,51 ****
+--- 46,52 ----
+  		test_command_count.out \
+  		test_erasebackword.out \
+  		test_eval.out \
++ 		test_increment.out \
+  		test_insertcount.out \
+  		test_listchars.out \
+  		test_listlbr.out \
+*** ../vim-7.4.753/src/testdir/Make_vms.mms	2015-06-19 15:45:13.005889121 +0200
+--- src/testdir/Make_vms.mms	2015-06-25 13:38:28.429205490 +0200
+***************
+*** 105,110 ****
+--- 105,111 ----
+  	 test_command_count.out \
+  	 test_erasebackword.out \
+  	 test_eval.out \
++ 	 test_increment.out \
+  	 test_insertcount.out \
+  	 test_listchars.out \
+  	 test_listlbr.out \
+*** ../vim-7.4.753/src/testdir/Makefile	2015-06-19 15:45:13.005889121 +0200
+--- src/testdir/Makefile	2015-06-25 13:38:28.429205490 +0200
+***************
+*** 42,47 ****
+--- 42,48 ----
+  		test_command_count.out \
+  		test_erasebackword.out \
+  		test_eval.out \
++ 		test_increment.out \
+  		test_insertcount.out \
+  		test_listchars.out \
+  		test_listlbr.out \
+*** ../vim-7.4.753/src/testdir/test_increment.in	2015-06-25 13:56:12.046135151 +0200
+--- src/testdir/test_increment.in	2015-06-25 13:38:28.429205490 +0200
+***************
+*** 0 ****
+--- 1,143 ----
++ Tests for using Ctrl-A/Ctrl-X on visual selections
++ 
++ Test cases
++ ==========
++ 
++ 1) Ctrl-A on visually selected number
++ Text:
++ foobar-10
++     1)    Ctrl-A on start of line:
++ 	foobar-9
++     2)    Ctrl-A on visually selected "-10":
++ 	foobar-9
++     3)    Ctrl-A on visually selected "10":
++ 	foobar-11
++     4)    Ctrl-X on visually selected "-10"
++ 	foobar-11
++     5)    Ctrl-X on visually selected "10"
++ 	foobar-9
++ 
++ 2) Ctrl-A on visually selected lines
++ Text:
++ 10
++ 20
++ 30
++ 40
++ 
++     1) Ctrl-A on visually selected lines:
++ 11
++ 21
++ 31
++ 41
++ 
++     2) Ctrl-X on visually selected lines:
++ 9
++ 19
++ 29
++ 39
++ 
++ 3) g Ctrl-A on visually selected lines, with non-numbers in between
++ Text:
++ 10
++ 
++ 20
++ 
++ 30
++ 
++ 40
++ 
++     1) 2 g Ctrl-A on visually selected lines:
++ 12
++ 
++ 24
++ 
++ 36
++ 
++ 48
++     2) 2 g Ctrl-X on visually selected lines
++ 8
++ 
++ 16
++ 
++ 24
++ 
++ 32
++ 
++ 4) Ctrl-A on non-number
++ Text:
++ foobar-10
++     1) visually select foobar:
++     foobar-10
++ 
++ STARTTEST
++ :so small.vim
++ 
++ :" Test 1
++ :/^S1=/+,/^E1=/-y a
++ :/^E1/+put a
++ :/^E1/+2put a
++ f-v$:/^E1/+3put a
++ f1v$:/^E1/+4put a
++ f-v$:/^E1/+5put a
++ f1v$
++ 
++ :" Test 22
++ :/^S2=/+,/^E2=/-y a
++ :/^E2/+put a
++ V3k$:.+put a
++ V3k$
++ 
++ :" Test 3
++ :/^S3=/+,/^E3=/-y a
++ :/^E3=/+put a
++ V6k2g:.+put a
++ V6k2g
++ 
++ :" Test 4
++ :/^S4=/+,/^E4=/-y a
++ :/^E4=/+put a
++ vf-
++ 
++ :" Save the report
++ :/^# Test 1/,$w! test.out
++ :qa!
++ 
++ 
++ # Test 1
++ S1======
++ foobar-10
++ E1======
++ 
++ 
++ 
++ # Test 2
++ S2=====
++ 10
++ 20
++ 30
++ 40
++ E2=====
++ 
++ 
++ 
++ # Test 3
++ S3=====
++ 10
++ 
++ 20
++ 
++ 30
++ 
++ 40
++ E3=====
++ 
++ 
++ 
++ # Test 4
++ S4=====
++ foobar-10
++ E4=====
++ 
++ 
++ ENDTEST
++ 
+*** ../vim-7.4.753/src/testdir/test_increment.ok	2015-06-25 13:56:12.050135109 +0200
+--- src/testdir/test_increment.ok	2015-06-25 13:38:28.429205490 +0200
+***************
+*** 0 ****
+--- 1,66 ----
++ # Test 1
++ S1======
++ foobar-10
++ E1======
++ 
++ foobar-9
++ foobar-9
++ foobar-11
++ foobar-11
++ foobar-9
++ 
++ 
++ # Test 2
++ S2=====
++ 10
++ 20
++ 30
++ 40
++ E2=====
++ 
++ 11
++ 21
++ 31
++ 41
++ 
++ 9
++ 19
++ 29
++ 39
++ 
++ # Test 3
++ S3=====
++ 10
++ 
++ 20
++ 
++ 30
++ 
++ 40
++ E3=====
++ 
++ 12
++ 
++ 24
++ 
++ 36
++ 
++ 48
++ 
++ 8
++ 
++ 16
++ 
++ 24
++ 
++ 32
++ 
++ # Test 4
++ S4=====
++ foobar-10
++ E4=====
++ 
++ foobar-10
++ 
++ ENDTEST
++ 
+*** ../vim-7.4.753/src/version.c	2015-06-25 13:30:41.206095684 +0200
+--- src/version.c	2015-06-25 13:38:07.853420831 +0200
+***************
+*** 743,744 ****
+--- 743,746 ----
+  {   /* Add new patch number below this line */
++ /**/
++     754,
+  /**/
+
+-- 
+hundred-and-one symptoms of being an internet addict:
+144. You eagerly await the update of the "Cool Site of the Day."
+
+ /// Bram Moolenaar -- Bram@Moolenaar.net -- http://www.Moolenaar.net   \\\
+///        sponsor Vim, vote for features -- http://www.Vim.org/sponsor/ \\\
+\\\  an exciting new programming language -- http://www.Zimbu.org        ///
+ \\\            help me help AIDS victims -- http://ICCF-Holland.org    ///

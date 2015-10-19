@@ -1,0 +1,12 @@
+diff -up vsftpd-3.0.0/Makefile.libs vsftpd-3.0.0/Makefile
+--- vsftpd-3.0.0/Makefile.libs	2012-04-03 09:21:18.000000000 +0200
++++ vsftpd-3.0.0/Makefile	2012-04-10 21:20:39.377248990 +0200
+@@ -8,7 +8,7 @@ CFLAGS	=	-O2 -fPIE -fstack-protector --p
+ 	-D_FORTIFY_SOURCE=2 \
+ 	#-pedantic -Wconversion
+ 
+-LIBS	=	`./vsf_findlibs.sh`
++LIBS	=	-lwrap -lnsl -lpam -lcap -ldl -lcrypto
+ LINK	=	-Wl,-s
+ LDFLAGS	=	-fPIE -pie -Wl,-z,relro -Wl,-z,now
+ 

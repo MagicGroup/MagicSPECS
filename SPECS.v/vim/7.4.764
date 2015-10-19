@@ -1,0 +1,56 @@
+To: vim_dev@googlegroups.com
+Subject: Patch 7.4.764
+Fcc: outbox
+From: Bram Moolenaar <Bram@moolenaar.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+------------
+
+Patch 7.4.764 (after 7.4.754)
+Problem:    test_increment fails on MS-Windows. (Ken Takata)
+Solution:   Clear Visual mappings. (Taro Muraoka)
+Files:      src/testdir/test_increment.in
+
+
+*** ../vim-7.4.763/src/testdir/test_increment.in	2015-06-25 13:57:20.033431073 +0200
+--- src/testdir/test_increment.in	2015-06-28 19:19:13.182284987 +0200
+***************
+*** 71,77 ****
+  
+  STARTTEST
+  :so small.vim
+! 
+  :" Test 1
+  :/^S1=/+,/^E1=/-y a
+  :/^E1/+put a
+--- 71,80 ----
+  
+  STARTTEST
+  :so small.vim
+! :"
+! :" Avoid CTRL-X being mapped in Visual mode for MS-Windows
+! :vmapclear
+! :"
+  :" Test 1
+  :/^S1=/+,/^E1=/-y a
+  :/^E1/+put a
+*** ../vim-7.4.763/src/version.c	2015-06-27 18:36:09.110432861 +0200
+--- src/version.c	2015-06-28 19:20:11.649666515 +0200
+***************
+*** 743,744 ****
+--- 743,746 ----
+  {   /* Add new patch number below this line */
++ /**/
++     764,
+  /**/
+
+-- 
+hundred-and-one symptoms of being an internet addict:
+166. You have been on your computer soo long that you didn't realize
+     you had grandchildren.
+
+ /// Bram Moolenaar -- Bram@Moolenaar.net -- http://www.Moolenaar.net   \\\
+///        sponsor Vim, vote for features -- http://www.Vim.org/sponsor/ \\\
+\\\  an exciting new programming language -- http://www.Zimbu.org        ///
+ \\\            help me help AIDS victims -- http://ICCF-Holland.org    ///

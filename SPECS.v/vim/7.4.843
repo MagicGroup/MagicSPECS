@@ -1,0 +1,91 @@
+To: vim_dev@googlegroups.com
+Subject: Patch 7.4.843
+Fcc: outbox
+From: Bram Moolenaar <Bram@moolenaar.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+------------
+
+Patch 7.4.843 (after 7.4.835)
+Problem:    Still possible to go beyond the end of a string.
+Solution:   Check for NUL also in second string. (Dominique Pelle)
+Files:      src/misc2.c
+
+
+*** ../vim-7.4.842/src/misc2.c	2015-08-25 16:31:34.631453176 +0200
+--- src/misc2.c	2015-08-27 22:23:18.181382994 +0200
+***************
+*** 5059,5064 ****
+--- 5059,5066 ----
+      char_u	*s2;
+  {
+      int		i, j;
++     int		c1 = NUL;
++     int		c2 = NUL;
+      int		prev1 = NUL;
+      int		prev2 = NUL;
+  
+***************
+*** 5068,5088 ****
+      if (s1 == NULL || s2 == NULL)
+  	return FALSE;
+  
+!     for (i = 0, j = 0; s1[i] != NUL;)
+      {
+! 	int c1 = PTR2CHAR(s1 + i);
+! 	int c2 = PTR2CHAR(s2 + j);
+  
+  	if ((p_fic ? MB_TOLOWER(c1) != MB_TOLOWER(c2) : c1 != c2)
+  		&& (prev1 != '*' || prev2 != '*'))
+! 	    return FAIL;
+  	prev2 = prev1;
+  	prev1 = c1;
+  
+          i += MB_PTR2LEN(s1 + i);
+          j += MB_PTR2LEN(s2 + j);
+      }
+!     return TRUE;
+  }
+  #endif
+  
+--- 5070,5090 ----
+      if (s1 == NULL || s2 == NULL)
+  	return FALSE;
+  
+!     for (i = 0, j = 0; s1[i] != NUL && s2[j] != NUL;)
+      {
+! 	c1 = PTR2CHAR(s1 + i);
+! 	c2 = PTR2CHAR(s2 + j);
+  
+  	if ((p_fic ? MB_TOLOWER(c1) != MB_TOLOWER(c2) : c1 != c2)
+  		&& (prev1 != '*' || prev2 != '*'))
+! 	    return FALSE;
+  	prev2 = prev1;
+  	prev1 = c1;
+  
+          i += MB_PTR2LEN(s1 + i);
+          j += MB_PTR2LEN(s2 + j);
+      }
+!     return c1 == c2;
+  }
+  #endif
+  
+*** ../vim-7.4.842/src/version.c	2015-08-27 22:25:03.464318030 +0200
+--- src/version.c	2015-08-27 22:30:21.093101012 +0200
+***************
+*** 743,744 ****
+--- 743,746 ----
+  {   /* Add new patch number below this line */
++ /**/
++     843,
+  /**/
+
+-- 
+Beer & pretzels can't be served at the same time in any bar or restaurant.
+		[real standing law in North Dakota, United States of America]
+
+ /// Bram Moolenaar -- Bram@Moolenaar.net -- http://www.Moolenaar.net   \\\
+///        sponsor Vim, vote for features -- http://www.Vim.org/sponsor/ \\\
+\\\  an exciting new programming language -- http://www.Zimbu.org        ///
+ \\\            help me help AIDS victims -- http://ICCF-Holland.org    ///

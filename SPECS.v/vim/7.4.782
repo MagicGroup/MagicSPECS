@@ -1,0 +1,1080 @@
+To: vim_dev@googlegroups.com
+Subject: Patch 7.4.782
+Fcc: outbox
+From: Bram Moolenaar <Bram@moolenaar.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+------------
+
+Patch 7.4.782
+Problem:    Still a few problems with CTRL-A and CTRL-X in Visual mode.
+Solution:   Fix the reported problems. (Christian Brabandt)
+Files:      src/charset.c, src/eval.c, src/ex_cmds.c, src/ex_getln.c,
+            src/misc2.c, src/normal.c, src/ops.c, src/option.c,
+            src/proto/charset.pro, src/testdir/test_increment.in,
+            src/testdir/test_increment.ok
+
+
+*** ../vim-7.4.781/src/charset.c	2015-01-14 19:35:10.963756142 +0100
+--- src/charset.c	2015-07-17 12:48:43.296898014 +0200
+***************
+*** 1835,1843 ****
+   * octal number.
+   * If "dohex" is non-zero recognize hex numbers, when > 1 always assume
+   * hex number.
+   */
+      void
+! vim_str2nr(start, hexp, len, dooct, dohex, nptr, unptr)
+      char_u		*start;
+      int			*hexp;	    /* return: type of number 0 = decimal, 'x'
+  				       or 'X' is hex, '0' = octal */
+--- 1835,1844 ----
+   * octal number.
+   * If "dohex" is non-zero recognize hex numbers, when > 1 always assume
+   * hex number.
++  * If maxlen > 0, check at a maximum maxlen chars
+   */
+      void
+! vim_str2nr(start, hexp, len, dooct, dohex, nptr, unptr, maxlen)
+      char_u		*start;
+      int			*hexp;	    /* return: type of number 0 = decimal, 'x'
+  				       or 'X' is hex, '0' = octal */
+***************
+*** 1846,1851 ****
+--- 1847,1853 ----
+      int			dohex;	    /* recognize hex number */
+      long		*nptr;	    /* return: signed result */
+      unsigned long	*unptr;	    /* return: unsigned result */
++     int			maxlen;     /* max length of string to check */
+  {
+      char_u	    *ptr = start;
+      int		    hex = 0;		/* default is decimal */
+***************
+*** 1860,1869 ****
+      }
+  
+      /* Recognize hex and octal. */
+!     if (ptr[0] == '0' && ptr[1] != '8' && ptr[1] != '9')
+      {
+  	hex = ptr[1];
+! 	if (dohex && (hex == 'X' || hex == 'x') && vim_isxdigit(ptr[2]))
+  	    ptr += 2;			/* hexadecimal */
+  	else
+  	{
+--- 1862,1873 ----
+      }
+  
+      /* Recognize hex and octal. */
+!     if (ptr[0] == '0' && ptr[1] != '8' && ptr[1] != '9'
+! 					       && (maxlen == 0 || maxlen > 1))
+      {
+  	hex = ptr[1];
+! 	if (dohex && (hex == 'X' || hex == 'x') && vim_isxdigit(ptr[2])
+! 					       && (maxlen == 0 || maxlen > 2))
+  	    ptr += 2;			/* hexadecimal */
+  	else
+  	{
+***************
+*** 1880,1885 ****
+--- 1884,1891 ----
+  		    }
+  		    if (ptr[n] >= '0')
+  			hex = '0';	/* assume octal */
++ 		    if (n == maxlen)
++ 			break;
+  		}
+  	    }
+  	}
+***************
+*** 1888,1893 ****
+--- 1894,1900 ----
+      /*
+       * Do the string-to-numeric conversion "manually" to avoid sscanf quirks.
+       */
++     n = 1;
+      if (hex == '0' || dooct > 1)
+      {
+  	/* octal */
+***************
+*** 1895,1900 ****
+--- 1902,1909 ----
+  	{
+  	    un = 8 * un + (unsigned long)(*ptr - '0');
+  	    ++ptr;
++ 	    if (n++ == maxlen)
++ 		break;
+  	}
+      }
+      else if (hex != 0 || dohex > 1)
+***************
+*** 1904,1909 ****
+--- 1913,1920 ----
+  	{
+  	    un = 16 * un + (unsigned long)hex2nr(*ptr);
+  	    ++ptr;
++ 	    if (n++ == maxlen)
++ 		break;
+  	}
+      }
+      else
+***************
+*** 1913,1918 ****
+--- 1924,1931 ----
+  	{
+  	    un = 10 * un + (unsigned long)(*ptr - '0');
+  	    ++ptr;
++ 	    if (n++ == maxlen)
++ 		break;
+  	}
+      }
+  
+*** ../vim-7.4.781/src/eval.c	2015-07-10 17:56:18.219777154 +0200
+--- src/eval.c	2015-07-17 12:45:16.778860576 +0200
+***************
+*** 1615,1621 ****
+  	    len = 0;
+  	else
+  	    /* Recognize a number argument, the others must be strings. */
+! 	    vim_str2nr(argv[i], NULL, &len, TRUE, TRUE, &n, NULL);
+  	if (len != 0 && len == (int)STRLEN(argv[i]))
+  	{
+  	    argvars[i].v_type = VAR_NUMBER;
+--- 1615,1621 ----
+  	    len = 0;
+  	else
+  	    /* Recognize a number argument, the others must be strings. */
+! 	    vim_str2nr(argv[i], NULL, &len, TRUE, TRUE, &n, NULL, 0);
+  	if (len != 0 && len == (int)STRLEN(argv[i]))
+  	{
+  	    argvars[i].v_type = VAR_NUMBER;
+***************
+*** 5128,5134 ****
+  		else
+  #endif
+  		{
+! 		    vim_str2nr(*arg, NULL, &len, TRUE, TRUE, &n, NULL);
+  		    *arg += len;
+  		    if (evaluate)
+  		    {
+--- 5128,5134 ----
+  		else
+  #endif
+  		{
+! 		    vim_str2nr(*arg, NULL, &len, TRUE, TRUE, &n, NULL, 0);
+  		    *arg += len;
+  		    if (evaluate)
+  		    {
+***************
+*** 18233,18239 ****
+      p = skipwhite(get_tv_string(&argvars[0]));
+      if (*p == '+')
+  	p = skipwhite(p + 1);
+!     vim_str2nr(p, NULL, NULL, base == 8 ? 2 : 0, base == 16 ? 2 : 0, &n, NULL);
+      rettv->vval.v_number = n;
+  }
+  
+--- 18233,18239 ----
+      p = skipwhite(get_tv_string(&argvars[0]));
+      if (*p == '+')
+  	p = skipwhite(p + 1);
+!     vim_str2nr(p, NULL, NULL, base == 8 ? 2 : 0, base == 16 ? 2 : 0, &n, NULL, 0);
+      rettv->vval.v_number = n;
+  }
+  
+***************
+*** 21039,21045 ****
+  	case VAR_STRING:
+  	    if (varp->vval.v_string != NULL)
+  		vim_str2nr(varp->vval.v_string, NULL, NULL,
+! 							TRUE, TRUE, &n, NULL);
+  	    return n;
+  	case VAR_LIST:
+  	    EMSG(_("E745: Using a List as a Number"));
+--- 21039,21045 ----
+  	case VAR_STRING:
+  	    if (varp->vval.v_string != NULL)
+  		vim_str2nr(varp->vval.v_string, NULL, NULL,
+! 						    TRUE, TRUE, &n, NULL, 0);
+  	    return n;
+  	case VAR_LIST:
+  	    EMSG(_("E745: Using a List as a Number"));
+*** ../vim-7.4.781/src/ex_cmds.c	2015-05-04 10:45:57.288481610 +0200
+--- src/ex_cmds.c	2015-07-17 12:45:16.782860538 +0200
+***************
+*** 500,506 ****
+  		nrs[lnum - eap->line1].start_col_nr = -MAXLNUM;
+  	    else
+  		vim_str2nr(s, NULL, NULL, sort_oct, sort_hex,
+! 				  &nrs[lnum - eap->line1].start_col_nr, NULL);
+  	    *s2 = c;
+  	}
+  	else
+--- 500,506 ----
+  		nrs[lnum - eap->line1].start_col_nr = -MAXLNUM;
+  	    else
+  		vim_str2nr(s, NULL, NULL, sort_oct, sort_hex,
+! 				  &nrs[lnum - eap->line1].start_col_nr, NULL, 0);
+  	    *s2 = c;
+  	}
+  	else
+*** ../vim-7.4.781/src/ex_getln.c	2015-06-25 18:20:30.437271806 +0200
+--- src/ex_getln.c	2015-07-17 12:45:16.782860538 +0200
+***************
+*** 5917,5923 ****
+      *str = skipwhite(*str);
+      if (**str == '-' || vim_isdigit(**str))  /* parse "from" part of range */
+      {
+! 	vim_str2nr(*str, NULL, &len, FALSE, FALSE, &num, NULL);
+  	*str += len;
+  	*num1 = (int)num;
+  	first = TRUE;
+--- 5917,5923 ----
+      *str = skipwhite(*str);
+      if (**str == '-' || vim_isdigit(**str))  /* parse "from" part of range */
+      {
+! 	vim_str2nr(*str, NULL, &len, FALSE, FALSE, &num, NULL, 0);
+  	*str += len;
+  	*num1 = (int)num;
+  	first = TRUE;
+***************
+*** 5926,5932 ****
+      if (**str == ',')			/* parse "to" part of range */
+      {
+  	*str = skipwhite(*str + 1);
+! 	vim_str2nr(*str, NULL, &len, FALSE, FALSE, &num, NULL);
+  	if (len > 0)
+  	{
+  	    *num2 = (int)num;
+--- 5926,5932 ----
+      if (**str == ',')			/* parse "to" part of range */
+      {
+  	*str = skipwhite(*str + 1);
+! 	vim_str2nr(*str, NULL, &len, FALSE, FALSE, &num, NULL, 0);
+  	if (len > 0)
+  	{
+  	    *num2 = (int)num;
+*** ../vim-7.4.781/src/misc2.c	2015-04-21 14:02:28.489694393 +0200
+--- src/misc2.c	2015-07-17 12:45:16.782860538 +0200
+***************
+*** 2813,2819 ****
+  	    bp += 3;	/* skip t_xx, xx may be '-' or '>' */
+  	else if (STRNICMP(bp, "char-", 5) == 0)
+  	{
+! 	    vim_str2nr(bp + 5, NULL, &l, TRUE, TRUE, NULL, NULL);
+  	    bp += l + 5;
+  	    break;
+  	}
+--- 2813,2819 ----
+  	    bp += 3;	/* skip t_xx, xx may be '-' or '>' */
+  	else if (STRNICMP(bp, "char-", 5) == 0)
+  	{
+! 	    vim_str2nr(bp + 5, NULL, &l, TRUE, TRUE, NULL, NULL, 0);
+  	    bp += l + 5;
+  	    break;
+  	}
+***************
+*** 2845,2851 ****
+  						 && VIM_ISDIGIT(last_dash[6]))
+  	    {
+  		/* <Char-123> or <Char-033> or <Char-0x33> */
+! 		vim_str2nr(last_dash + 6, NULL, NULL, TRUE, TRUE, NULL, &n);
+  		key = (int)n;
+  	    }
+  	    else
+--- 2845,2851 ----
+  						 && VIM_ISDIGIT(last_dash[6]))
+  	    {
+  		/* <Char-123> or <Char-033> or <Char-0x33> */
+! 		vim_str2nr(last_dash + 6, NULL, NULL, TRUE, TRUE, NULL, &n, 0);
+  		key = (int)n;
+  	    }
+  	    else
+*** ../vim-7.4.781/src/normal.c	2015-07-03 12:44:01.735748596 +0200
+--- src/normal.c	2015-07-17 12:49:38.748371068 +0200
+***************
+*** 40,45 ****
+--- 40,46 ----
+  static void	find_end_of_word __ARGS((pos_T *));
+  static int	get_mouse_class __ARGS((char_u *p));
+  #endif
++ static void	prep_redo_visual __ARGS((cmdarg_T *cap));
+  static void	prep_redo_cmd __ARGS((cmdarg_T *cap));
+  static void	prep_redo __ARGS((int regname, long, int, int, int, int, int));
+  static int	checkclearop __ARGS((oparg_T *oap));
+***************
+*** 3613,3618 ****
+--- 3614,3656 ----
+  }
+  
+  /*
++  * Add commands to reselect Visual mode into the redo buffer.
++  */
++     static void
++ prep_redo_visual(cap)
++     cmdarg_T *cap;
++ {
++     ResetRedobuff();
++     AppendCharToRedobuff(VIsual_mode);
++     if (VIsual_mode == 'V' && curbuf->b_visual.vi_end.lnum
++ 					    != curbuf->b_visual.vi_start.lnum)
++     {
++ 	AppendNumberToRedobuff(curbuf->b_visual.vi_end.lnum
++ 					    - curbuf->b_visual.vi_start.lnum);
++ 	AppendCharToRedobuff('j');
++     }
++     else if (VIsual_mode == 'v' || VIsual_mode == Ctrl_V)
++     {
++ 	/* block visual mode or char visual mmode*/
++ 	if (curbuf->b_visual.vi_end.lnum != curbuf->b_visual.vi_start.lnum)
++ 	{
++ 	    AppendNumberToRedobuff(curbuf->b_visual.vi_end.lnum -
++ 		    curbuf->b_visual.vi_start.lnum);
++ 	    AppendCharToRedobuff('j');
++ 	}
++ 	if (curbuf->b_visual.vi_curswant == MAXCOL)
++ 	    AppendCharToRedobuff('$');
++ 	else if (curbuf->b_visual.vi_end.col > curbuf->b_visual.vi_start.col)
++ 	{
++ 	    AppendNumberToRedobuff(curbuf->b_visual.vi_end.col
++ 					 - curbuf->b_visual.vi_start.col - 1);
++ 	    AppendCharToRedobuff(' ');
++ 	}
++     }
++     AppendNumberToRedobuff(cap->count1);
++ }
++ 
++ /*
+   * Prepare for redo of a normal command.
+   */
+      static void
+***************
+*** 4207,4222 ****
+      {
+  	if (visual)
+  	{
+! 	    ResetRedobuff();
+! 	    AppendCharToRedobuff(VIsual_mode);
+! 	    if (VIsual_mode == 'V')
+! 	    {
+! 		AppendNumberToRedobuff(cap->oap->line_count);
+! 		AppendCharToRedobuff('j');
+! 	    }
+! 	    AppendNumberToRedobuff(cap->count1);
+! 	    if (cap->nchar != NUL)
+! 		AppendCharToRedobuff(cap->nchar);
+  	    AppendCharToRedobuff(cap->cmdchar);
+  	}
+  	else
+--- 4245,4253 ----
+      {
+  	if (visual)
+  	{
+! 	    prep_redo_visual(cap);
+! 	    if (cap->arg)
+! 		AppendCharToRedobuff('g');
+  	    AppendCharToRedobuff(cap->cmdchar);
+  	}
+  	else
+***************
+*** 4227,4233 ****
+      if (visual)
+      {
+  	VIsual_active = FALSE;
+! 	redraw_later(CLEAR);
+      }
+  }
+  
+--- 4258,4265 ----
+      if (visual)
+      {
+  	VIsual_active = FALSE;
+! 	redo_VIsual_busy = FALSE;
+! 	redraw_later(INVERTED);
+      }
+  }
+  
+*** ../vim-7.4.781/src/ops.c	2015-07-12 16:21:17.791908408 +0200
+--- src/ops.c	2015-07-17 12:58:11.083502711 +0200
+***************
+*** 5405,5410 ****
+--- 5405,5412 ----
+      int		lnume = curwin->w_cursor.lnum;
+      int		startcol = 0;
+      int		did_change = FALSE;
++     pos_T	t = curwin->w_cursor;
++     int		maxlen = 0;
+  
+      dohex = (vim_strchr(curbuf->b_p_nf, 'x') != NULL);	/* "heX" */
+      dooct = (vim_strchr(curbuf->b_p_nf, 'o') != NULL);	/* "Octal" */
+***************
+*** 5418,5438 ****
+      {
+  	if (lt(curwin->w_cursor, VIsual))
+  	{
+- 	    pos_T t;
+- 	    t = curwin->w_cursor;
+  	    curwin->w_cursor = VIsual;
+  	    VIsual = t;
+  	}
+- 	if (VIsual_mode == 'V')
+- 	    VIsual.col = 0;
+  
+  	ptr = ml_get(VIsual.lnum);
+  	RLADDSUBFIX(ptr);
+  
+  	/* store visual area for 'gv' */
+  	curbuf->b_visual.vi_start = VIsual;
+  	curbuf->b_visual.vi_end = curwin->w_cursor;
+  	curbuf->b_visual.vi_mode = VIsual_mode;
+  
+  	if (VIsual_mode != 'v')
+  	    startcol = VIsual.col < curwin->w_cursor.col ? VIsual.col
+--- 5420,5449 ----
+      {
+  	if (lt(curwin->w_cursor, VIsual))
+  	{
+  	    curwin->w_cursor = VIsual;
+  	    VIsual = t;
+  	}
+  
+  	ptr = ml_get(VIsual.lnum);
+  	RLADDSUBFIX(ptr);
++ 	if (VIsual_mode == 'V')
++ 	{
++ 	    VIsual.col = 0;
++ 	    curwin->w_cursor.col = STRLEN(ptr);
++ 	}
++ 	else if (VIsual_mode == Ctrl_V &&
++ 		VIsual.col > curwin->w_cursor.col)
++ 	{
++ 	    t = VIsual;
++ 	    VIsual.col = curwin->w_cursor.col;
++ 	    curwin->w_cursor.col = t.col;
++ 	}
+  
+  	/* store visual area for 'gv' */
+  	curbuf->b_visual.vi_start = VIsual;
+  	curbuf->b_visual.vi_end = curwin->w_cursor;
+  	curbuf->b_visual.vi_mode = VIsual_mode;
++ 	curbuf->b_visual.vi_curswant = curwin->w_curswant;
+  
+  	if (VIsual_mode != 'v')
+  	    startcol = VIsual.col < curwin->w_cursor.col ? VIsual.col
+***************
+*** 5482,5517 ****
+  
+      for (i = lnum; i <= lnume; i++)
+      {
+  	curwin->w_cursor.lnum = i;
+  	ptr = ml_get_curline();
+  	if ((int)STRLEN(ptr) <= col)
+  	    /* try again on next line */
+  	    continue;
+  	if (visual && ptr[col] == '-')
+  	{
+  	    negative = TRUE;
+  	    was_positive = FALSE;
+  	    col++;
+  	}
+- 	RLADDSUBFIX(ptr);
+  	/*
+  	 * If a number was found, and saving for undo works, replace the number.
+  	 */
+  	firstdigit = ptr[col];
+- 	RLADDSUBFIX(ptr);
+  	if ((!VIM_ISDIGIT(firstdigit) && !(doalp && ASCII_ISALPHA(firstdigit)))
+  		|| u_save_cursor() != OK)
+  	{
+  	    if (lnum < lnume)
+  		/* Try again on next line */
+  		continue;
+  	    beep_flush();
+  	    return FAIL;
+  	}
+  
+- 	ptr = ml_get_curline();
+- 	RLADDSUBFIX(ptr);
+- 
+  	if (doalp && ASCII_ISALPHA(firstdigit))
+  	{
+  	    /* decrement or increment alphabetic character */
+--- 5493,5552 ----
+  
+      for (i = lnum; i <= lnume; i++)
+      {
++ 	t = curwin->w_cursor;
+  	curwin->w_cursor.lnum = i;
+  	ptr = ml_get_curline();
++ 	RLADDSUBFIX(ptr);
+  	if ((int)STRLEN(ptr) <= col)
+  	    /* try again on next line */
+  	    continue;
++ 	if (visual)
++ 	{
++ 	    if (doalp) /* search for ascii chars */
++ 	    {
++ 		while (!ASCII_ISALPHA(ptr[col]) && ptr[col])
++ 		    col++;
++ 	    }
++ 	    /* skip to first digit, but allow for leading '-' */
++ 	    else if (dohex)
++ 	    {
++ 		while (!(vim_isxdigit(ptr[col]) || (ptr[col] == '-'
++ 				    && vim_isxdigit(ptr[col+1]))) && ptr[col])
++ 		    col++;
++ 	    }
++ 	    else /* decimal */
++ 	    {
++ 		while (!(vim_isdigit(ptr[col]) || (ptr[col] == '-'
++ 				     && vim_isdigit(ptr[col+1]))) && ptr[col])
++ 		    col++;
++ 	    }
++ 	}
+  	if (visual && ptr[col] == '-')
+  	{
+  	    negative = TRUE;
+  	    was_positive = FALSE;
+  	    col++;
+  	}
+  	/*
+  	 * If a number was found, and saving for undo works, replace the number.
+  	 */
+  	firstdigit = ptr[col];
+  	if ((!VIM_ISDIGIT(firstdigit) && !(doalp && ASCII_ISALPHA(firstdigit)))
+  		|| u_save_cursor() != OK)
+  	{
+  	    if (lnum < lnume)
++ 	    {
++ 		if (visual && VIsual_mode != Ctrl_V)
++ 		    col = 0;
++ 		else
++ 		    col = startcol;
+  		/* Try again on next line */
+  		continue;
++ 	    }
+  	    beep_flush();
+  	    return FAIL;
+  	}
+  
+  	if (doalp && ASCII_ISALPHA(firstdigit))
+  	{
+  	    /* decrement or increment alphabetic character */
+***************
+*** 5560,5568 ****
+  		--col;
+  		negative = TRUE;
+  	    }
+- 
+  	    /* get the number value (unsigned) */
+! 	    vim_str2nr(ptr + col, &hex, &length, dooct, dohex, NULL, &n);
+  
+  	    /* ignore leading '-' for hex and octal numbers */
+  	    if (hex && negative)
+--- 5595,5621 ----
+  		--col;
+  		negative = TRUE;
+  	    }
+  	    /* get the number value (unsigned) */
+! 	    if (visual && VIsual_mode != 'V')
+! 	    {
+! 		if (VIsual_mode == 'v')
+! 		{
+! 		    if (i == lnum)
+! 			maxlen = (lnum == lnume
+! 					    ? curwin->w_cursor.col - col + 1
+! 					    : (int)STRLEN(ptr) - col);
+! 		    else
+! 			maxlen = (i == lnume ? curwin->w_cursor.col - col  + 1
+! 					     : (int)STRLEN(ptr) - col);
+! 		}
+! 		else if (VIsual_mode == Ctrl_V)
+! 		    maxlen = (curbuf->b_visual.vi_curswant == MAXCOL
+! 					?  (int)STRLEN(ptr) - col
+! 					: curwin->w_cursor.col - col + 1);
+! 	    }
+! 
+! 	    vim_str2nr(ptr + col, &hex, &length, dooct, dohex, NULL, &n,
+! 								      maxlen);
+  
+  	    /* ignore leading '-' for hex and octal numbers */
+  	    if (hex && negative)
+***************
+*** 5609,5615 ****
+  		    negative = FALSE;
+  	    }
+  
+! 	    if (visual && !was_positive && !negative)
+  	    {
+  		/* need to remove the '-' */
+  		col--;
+--- 5662,5668 ----
+  		    negative = FALSE;
+  	    }
+  
+! 	    if (visual && !was_positive && !negative && col > 0)
+  	    {
+  		/* need to remove the '-' */
+  		col--;
+***************
+*** 5695,5700 ****
+--- 5748,5757 ----
+  	    STRCAT(buf1, buf2);
+  	    ins_str(buf1);		/* insert the new number */
+  	    vim_free(buf1);
++ 	    if (lnum < lnume)
++ 		curwin->w_cursor.col = t.col;
++ 	    else if (did_change && curwin->w_cursor.col)
++ 		--curwin->w_cursor.col;
+  	}
+  
+  	if (g_cmd)
+***************
+*** 5705,5710 ****
+--- 5762,5768 ----
+  	/* reset */
+  	subtract = FALSE;
+  	negative = FALSE;
++ 	was_positive = TRUE;
+  	if (visual && VIsual_mode == Ctrl_V)
+  	    col = startcol;
+  	else
+***************
+*** 5716,5723 ****
+  	RLADDSUBFIX(ptr);
+  #endif
+      }
+!     if (did_change && curwin->w_cursor.col > 0)
+! 	--curwin->w_cursor.col;
+      return OK;
+  }
+  
+--- 5774,5782 ----
+  	RLADDSUBFIX(ptr);
+  #endif
+      }
+!     if (visual)
+! 	/* cursor at the top of the selection */
+! 	curwin->w_cursor = VIsual;
+      return OK;
+  }
+  
+*** ../vim-7.4.781/src/option.c	2015-07-10 18:18:35.579206260 +0200
+--- src/option.c	2015-07-17 12:45:16.786860499 +0200
+***************
+*** 4561,4567 ****
+  			{
+  			    /* Allow negative (for 'undolevels'), octal and
+  			     * hex numbers. */
+! 			    vim_str2nr(arg, NULL, &i, TRUE, TRUE, &value, NULL);
+  			    if (arg[i] != NUL && !vim_iswhite(arg[i]))
+  			    {
+  				errmsg = e_invarg;
+--- 4561,4567 ----
+  			{
+  			    /* Allow negative (for 'undolevels'), octal and
+  			     * hex numbers. */
+! 			    vim_str2nr(arg, NULL, &i, TRUE, TRUE, &value, NULL, 0);
+  			    if (arg[i] != NUL && !vim_iswhite(arg[i]))
+  			    {
+  				errmsg = e_invarg;
+*** ../vim-7.4.781/src/proto/charset.pro	2014-06-25 14:39:35.110348584 +0200
+--- src/proto/charset.pro	2015-07-17 12:45:22.098810018 +0200
+***************
+*** 49,55 ****
+  char_u *skiptowhite_esc __ARGS((char_u *p));
+  long getdigits __ARGS((char_u **pp));
+  int vim_isblankline __ARGS((char_u *lbuf));
+! void vim_str2nr __ARGS((char_u *start, int *hexp, int *len, int dooct, int dohex, long *nptr, unsigned long *unptr));
+  int hex2nr __ARGS((int c));
+  int hexhex2nr __ARGS((char_u *p));
+  int rem_backslash __ARGS((char_u *str));
+--- 49,55 ----
+  char_u *skiptowhite_esc __ARGS((char_u *p));
+  long getdigits __ARGS((char_u **pp));
+  int vim_isblankline __ARGS((char_u *lbuf));
+! void vim_str2nr __ARGS((char_u *start, int *hexp, int *len, int dooct, int dohex, long *nptr, unsigned long *unptr, int strlen));
+  int hex2nr __ARGS((int c));
+  int hexhex2nr __ARGS((char_u *p));
+  int rem_backslash __ARGS((char_u *str));
+*** ../vim-7.4.781/src/testdir/test_increment.in	2015-07-03 12:44:01.735748596 +0200
+--- src/testdir/test_increment.in	2015-07-17 12:45:27.426759384 +0200
+***************
+*** 185,190 ****
+--- 185,267 ----
+      1 0
+      1 0
+  
++ 13) visually selected part of columns
++ Text:
++ max: 100px
++ max: 200px
++ max: 300px
++ max: 400px
++     Expected:
++     1) 'v' on first two numbers Ctrl-A
++     max: 110px
++     max: 220px
++     max: 330px
++     max: 400px
++     2) 'v' on first two numbers Ctrl-X
++     max: 90px
++     max: 190px
++     max: 290px
++     max: 400px
++ 
++ 14) redo in block mode
++ Text:
++ 1 1
++ 1 1
++     Expected:
++     1) Ctrl-a on first column, redo on second column
++     2 2
++     2 2
++ 
++ 15) block select single numbers
++ Text:
++ 101
++     Expected:
++     1) Ctrl-a on visually selected zero
++     111
++ 
++ 16) increment right aligned numbers
++ Text:
++    1
++   19
++  119
++     Expected:
++     1) Ctrl-a on line selected region
++        2
++       20
++      120
++ 
++ 17) block-wise increment and redo
++ Text:
++   100
++   1
++ 
++   100
++   1
++ 
++   Expected:
++   1) Ctrl-V j $ on first block, afterwards '.' on second
++   101
++   2
++ 
++   101
++   2
++ 
++ 18) repeat of g<Ctrl-a>
++ Text:
++   0
++   0
++   0
++   0
++ 
++   Expected:
++   1) V 4j g<ctrl-a>, repeat twice afterwards with .
++   3
++   6
++   9
++   12
++   
++ 
++ 
+  STARTTEST
+  :so small.vim
+  :"
+***************
+*** 200,215 ****
+  f-v$:/^E1=/+5put a
+  f1v$
+  
+! :" Test 22
+  :/^S2=/+,/^E2=/-y a
+  :/^E2=/+put a
+! V3k$:.+put a
+  V3k$
+  
+  :" Test 3
+  :/^S3=/+,/^E3=/-y a
+  :/^E3=/+put a
+! V6k2g:.+put a
+  V6k2g
+  
+  :" Test 4
+--- 277,292 ----
+  f-v$:/^E1=/+5put a
+  f1v$
+  
+! :" Test 2
+  :/^S2=/+,/^E2=/-y a
+  :/^E2=/+put a
+! V3k$3j:.+put a
+  V3k$
+  
+  :" Test 3
+  :/^S3=/+,/^E3=/-y a
+  :/^E3=/+put a
+! V6k2g6j:.+put a
+  V6k2g
+  
+  :" Test 4
+***************
+*** 229,249 ****
+  v3kg
+  
+  :" Test 7
+  :/^S7=/+,/^E7=/-y a
+  :/^E7=/+put a
+! V4k:.+put a
+  V4k
+  
+  :" Test 8
+  :/^S8=/+,/^E8=/-y a
+  :/^E8=/+put a
+! kj$:.+put a
+  k$+
+  
+  :" Test 9
+  :/^S9=/+,/^E9=/-y a
+  :/^E9=/+put a
+! 5kVj22j.
+  
+  :" Test 10
+  :/^S10=/+,/^E10=/-y a
+--- 306,327 ----
+  v3kg
+  
+  :" Test 7
++ :set nrformats&vim
+  :/^S7=/+,/^E7=/-y a
+  :/^E7=/+put a
+! V4k4j:.+put a
+  V4k
+  
+  :" Test 8
+  :/^S8=/+,/^E8=/-y a
+  :/^E8=/+put a
+! kj$j:.+put a
+  k$+
+  
+  :" Test 9
+  :/^S9=/+,/^E9=/-y a
+  :/^E9=/+put a
+! 5kVj23j.
+  
+  :" Test 10
+  :/^S10=/+,/^E10=/-y a
+***************
+*** 260,265 ****
+--- 338,374 ----
+  :/^E12=/+put a
+  2k$v++
+  
++ :" Test 13
++ :/^S13=/+,/^E13=/-y a
++ :/^E13=/+put a
++ 3kf1l2j3j:.+put a
++ 3kf1l2j
++ 
++ :" Test 14
++ :/^S14=/+,/^E14=/-y a
++ :/^E14=/+put a
++ kw.
++ 
++ :" Test 15
++ :/^S15=/+,/^E15=/-y a
++ :/^E15=/+put a
++ lv
++ 
++ :" Test 16
++ :/^S16=/+,/^E16=/-y a
++ :/^E16=/+put a
++ V3k
++ 
++ :" Test 17
++ :/^S17=/+,/^E17=/-y a
++ :/^E17=/+put a
++ 4kj$2j.
++ 
++ :" Test 18
++ :/^S18=/+,/^E18=/-y a
++ :/^E18=/+put a
++ V3kg..
++ 
+  :" Save the report
+  :/^# Test 1/,$w! test.out
+  :qa!
+***************
+*** 384,389 ****
+--- 493,549 ----
+  
+  
+  
++ # Test 13
++ S13====
++ max: 100px
++ max: 200px
++ max: 300px
++ max: 400px
++ E13====
++ 
++ 
++ 
++ # Test 14
++ S14====
++ 1 1
++ 1 1
++ E14====
++ 
++ 
++ 
++ # Test 15
++ S15====
++ 101
++ E15====
++ 
++ 
++ 
++ # Test 16
++ S16====
++    1
++   19
++  119
++ E16====
++ 
++ 
++ 
++ # Test 17
++ S17====
++  100
++  1
++ 
++  100
++  1
++ E17====
++ 
++ 
++ # Test 18
++ S18====
++ 0
++ 0
++ 0
++ 0
++ E18====
+  
+  
+  
+*** ../vim-7.4.781/src/testdir/test_increment.ok	2015-07-03 12:44:01.739748554 +0200
+--- src/testdir/test_increment.ok	2015-07-17 12:45:34.094696017 +0200
+***************
+*** 184,190 ****
+  1 0
+  
+  
+! 
+  
+  
+  
+--- 184,264 ----
+  1 0
+  
+  
+! # Test 13
+! S13====
+! max: 100px
+! max: 200px
+! max: 300px
+! max: 400px
+! E13====
+! 
+! max: 110px
+! max: 210px
+! max: 310px
+! max: 400px
+! 
+! max: 90px
+! max: 190px
+! max: 290px
+! max: 400px
+! 
+! # Test 14
+! S14====
+! 1 1
+! 1 1
+! E14====
+! 
+! 2 2
+! 2 2
+! 
+! 
+! # Test 15
+! S15====
+! 101
+! E15====
+! 
+! 111
+! 
+! 
+! # Test 16
+! S16====
+!    1
+!   19
+!  119
+! E16====
+! 
+!    2
+!   20
+!  120
+! 
+! 
+! # Test 17
+! S17====
+!  100
+!  1
+! 
+!  100
+!  1
+! E17====
+! 
+!  101
+!  2
+! 
+!  101
+!  1
+! 
+! # Test 18
+! S18====
+! 0
+! 0
+! 0
+! 0
+! E18====
+! 
+! 3
+! 6
+! 9
+! 12
+  
+  
+  
+*** ../vim-7.4.781/src/version.c	2015-07-12 17:52:50.728095726 +0200
+--- src/version.c	2015-07-17 12:46:37.590092608 +0200
+***************
+*** 743,744 ****
+--- 743,746 ----
+  {   /* Add new patch number below this line */
++ /**/
++     782,
+  /**/
+
+-- 
+hundred-and-one symptoms of being an internet addict:
+226. You sit down at the computer right after dinner and your spouse
+     says "See you in the morning."
+
+ /// Bram Moolenaar -- Bram@Moolenaar.net -- http://www.Moolenaar.net   \\\
+///        sponsor Vim, vote for features -- http://www.Vim.org/sponsor/ \\\
+\\\  an exciting new programming language -- http://www.Zimbu.org        ///
+ \\\            help me help AIDS victims -- http://ICCF-Holland.org    ///

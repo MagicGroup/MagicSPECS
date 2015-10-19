@@ -1,0 +1,146 @@
+To: vim_dev@googlegroups.com
+Subject: Patch 7.4.763
+Fcc: outbox
+From: Bram Moolenaar <Bram@moolenaar.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+------------
+
+Patch 7.4.763 (after 7.4.759)
+Problem:    Building with Lua 5.1 doesn't work.
+Solution:   Define lua_replace and lua_remove. (KF Leong)
+Files:      src/if_lua.c
+
+
+*** ../vim-7.4.762/src/if_lua.c	2015-06-25 18:27:27.312991420 +0200
+--- src/if_lua.c	2015-06-27 18:30:11.046265315 +0200
+***************
+*** 111,122 ****
+  #define lua_tointeger dll_lua_tointeger
+  #define lua_call dll_lua_call
+  #define lua_pcall dll_lua_pcall
+- 
+- #elif LUA_VERSION_NUM <= 502
+- #define lua_replace dll_lua_replace
+- #define lua_remove dll_lua_remove
+  #else
+- #define lua_rotate dll_lua_rotate
+  #define lua_tonumberx dll_lua_tonumberx
+  #define lua_tointegerx dll_lua_tointegerx
+  #define lua_callk dll_lua_callk
+--- 111,117 ----
+***************
+*** 124,135 ****
+  #define lua_getglobal dll_lua_getglobal
+  #define lua_setglobal dll_lua_setglobal
+  #endif
+  #define lua_typename dll_lua_typename
+  #define lua_close dll_lua_close
+  #define lua_gettop dll_lua_gettop
+  #define lua_settop dll_lua_settop
+  #define lua_pushvalue dll_lua_pushvalue
+- #define lua_copy dll_lua_copy
+  #define lua_isnumber dll_lua_isnumber
+  #define lua_isstring dll_lua_isstring
+  #define lua_type dll_lua_type
+--- 119,137 ----
+  #define lua_getglobal dll_lua_getglobal
+  #define lua_setglobal dll_lua_setglobal
+  #endif
++ #if LUA_VERSION_NUM <= 502
++ #define lua_replace dll_lua_replace
++ #define lua_remove dll_lua_remove
++ #endif
++ #if LUA_VERSION_NUM >= 503
++ #define lua_rotate dll_lua_rotate
++ #define lua_copy dll_lua_copy
++ #endif
+  #define lua_typename dll_lua_typename
+  #define lua_close dll_lua_close
+  #define lua_gettop dll_lua_gettop
+  #define lua_settop dll_lua_settop
+  #define lua_pushvalue dll_lua_pushvalue
+  #define lua_isnumber dll_lua_isnumber
+  #define lua_isstring dll_lua_isstring
+  #define lua_type dll_lua_type
+***************
+*** 199,210 ****
+  lua_Integer (*dll_lua_tointeger) (lua_State *L, int idx);
+  void (*dll_lua_call) (lua_State *L, int nargs, int nresults);
+  int (*dll_lua_pcall) (lua_State *L, int nargs, int nresults, int errfunc);
+- #elif LUA_VERSION_NUM <= 502
+- void (*dll_lua_replace) (lua_State *L, int idx);
+- void (*dll_lua_remove) (lua_State *L, int idx);
+  #else
+- 
+- void  (*dll_lua_rotate) (lua_State *L, int idx, int n);
+  lua_Number (*dll_lua_tonumberx) (lua_State *L, int idx, int *isnum);
+  lua_Integer (*dll_lua_tointegerx) (lua_State *L, int idx, int *isnum);
+  void (*dll_lua_callk) (lua_State *L, int nargs, int nresults, int ctx,
+--- 201,207 ----
+***************
+*** 213,218 ****
+--- 210,222 ----
+  	int ctx, lua_CFunction k);
+  void (*dll_lua_getglobal) (lua_State *L, const char *var);
+  void (*dll_lua_setglobal) (lua_State *L, const char *var);
++ #endif
++ #if LUA_VERSION_NUM <= 502
++ void (*dll_lua_replace) (lua_State *L, int idx);
++ void (*dll_lua_remove) (lua_State *L, int idx);
++ #endif
++ #if LUA_VERSION_NUM >= 503
++ void  (*dll_lua_rotate) (lua_State *L, int idx, int n);
+  void (*dll_lua_copy) (lua_State *L, int fromidx, int toidx);
+  #endif
+  const char *(*dll_lua_typename) (lua_State *L, int tp);
+***************
+*** 296,307 ****
+      {"lua_tointeger", (luaV_function) &dll_lua_tointeger},
+      {"lua_call", (luaV_function) &dll_lua_call},
+      {"lua_pcall", (luaV_function) &dll_lua_pcall},
+- #elif LUA_VERSION_NUM <= 502
+-     {"lua_replace", (luaV_function) &dll_lua_replace},
+-     {"lua_remove", (luaV_function) &dll_lua_remove},
+  #else
+-     {"lua_rotate", (luaV_function) &dll_lua_rotate},
+-     {"lua_copy", (luaV_function) &dll_lua_copy},
+      {"lua_tonumberx", (luaV_function) &dll_lua_tonumberx},
+      {"lua_tointegerx", (luaV_function) &dll_lua_tointegerx},
+      {"lua_callk", (luaV_function) &dll_lua_callk},
+--- 300,306 ----
+***************
+*** 309,314 ****
+--- 308,321 ----
+      {"lua_getglobal", (luaV_function) &dll_lua_getglobal},
+      {"lua_setglobal", (luaV_function) &dll_lua_setglobal},
+  #endif
++ #if LUA_VERSION_NUM <= 502
++     {"lua_replace", (luaV_function) &dll_lua_replace},
++     {"lua_remove", (luaV_function) &dll_lua_remove},
++ #endif
++ #if LUA_VERSION_NUM >= 503
++     {"lua_rotate", (luaV_function) &dll_lua_rotate},
++     {"lua_copy", (luaV_function) &dll_lua_copy},
++ #endif
+      {"lua_typename", (luaV_function) &dll_lua_typename},
+      {"lua_close", (luaV_function) &dll_lua_close},
+      {"lua_gettop", (luaV_function) &dll_lua_gettop},
+*** ../vim-7.4.762/src/version.c	2015-06-27 18:34:19.503618396 +0200
+--- src/version.c	2015-06-27 18:35:56.010574502 +0200
+***************
+*** 743,744 ****
+--- 743,746 ----
+  {   /* Add new patch number below this line */
++ /**/
++     763,
+  /**/
+
+-- 
+If you feel lonely, try schizophrenia.
+
+ /// Bram Moolenaar -- Bram@Moolenaar.net -- http://www.Moolenaar.net   \\\
+///        sponsor Vim, vote for features -- http://www.Vim.org/sponsor/ \\\
+\\\  an exciting new programming language -- http://www.Zimbu.org        ///
+ \\\            help me help AIDS victims -- http://ICCF-Holland.org    ///

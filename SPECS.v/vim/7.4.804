@@ -1,0 +1,50 @@
+To: vim_dev@googlegroups.com
+Subject: Patch 7.4.804
+Fcc: outbox
+From: Bram Moolenaar <Bram@moolenaar.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+------------
+
+Patch 7.4.804
+Problem:    Xxd doesn't have a license notice.
+Solution:   Add license as indicated by Juergen.
+Files:      src/xxd/xxd.c
+
+
+*** ../vim-7.4.803/src/xxd/xxd.c	2015-03-05 17:51:10.784921052 +0100
+--- src/xxd/xxd.c	2015-08-02 16:58:57.275281442 +0200
+***************
+*** 55,60 ****
+--- 55,63 ----
+   *
+   * (c) 1990-1998 by Juergen Weigert (jnweiger@informatik.uni-erlangen.de)
+   *
++  * I hereby grant permission to distribute and use xxd
++  * under X11-MIT or GPL-2.0 (at the user's choice).
++  *
+   * Small changes made afterwards by Bram Moolenaar et al.
+   *
+   * Distribute freely and credit me,
+*** ../vim-7.4.803/src/version.c	2015-07-28 21:17:31.526069349 +0200
+--- src/version.c	2015-08-04 17:28:26.483806771 +0200
+***************
+*** 743,744 ****
+--- 743,746 ----
+  {   /* Add new patch number below this line */
++ /**/
++     804,
+  /**/
+
+-- 
+Q:  Why do ducks have flat feet?
+A:  To stamp out forest fires.
+
+Q:  Why do elephants have flat feet?
+A:  To stamp out flaming ducks.
+
+ /// Bram Moolenaar -- Bram@Moolenaar.net -- http://www.Moolenaar.net   \\\
+///        sponsor Vim, vote for features -- http://www.Vim.org/sponsor/ \\\
+\\\  an exciting new programming language -- http://www.Zimbu.org        ///
+ \\\            help me help AIDS victims -- http://ICCF-Holland.org    ///

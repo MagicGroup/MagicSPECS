@@ -1,0 +1,75 @@
+To: vim_dev@googlegroups.com
+Subject: Patch 7.4.841
+Fcc: outbox
+From: Bram Moolenaar <Bram@moolenaar.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+------------
+
+Patch 7.4.841
+Problem:    Can't compile without the multi-byte feature. (John Marriott)
+Solution:   Add more #ifdef's.
+Files:      src/option.c
+    
+
+*** ../vim-7.4.840/src/option.c	2015-08-25 21:27:31.312156958 +0200
+--- src/option.c	2015-08-26 23:18:39.122134709 +0200
+***************
+*** 3652,3664 ****
+  
+      for (i = 0; !istermoption(&options[i]); i++)
+  	if (!(options[i].flags & P_NODEFAULT)
+  		&& (opt_flags == 0
+! 		    || (options[i].var != (char_u *)&p_enc
+! #if defined(FEAT_CRYPT)
+  			&& options[i].var != (char_u *)&p_cm
+  			&& options[i].var != (char_u *)&p_key
+  #endif
+! 			)))
+  	    set_option_default(i, opt_flags, p_cp);
+  
+  #ifdef FEAT_WINDOWS
+--- 3652,3670 ----
+  
+      for (i = 0; !istermoption(&options[i]); i++)
+  	if (!(options[i].flags & P_NODEFAULT)
++ #if defined(FEAT_MBYTE) || defined(FEAT_CRYPT)
+  		&& (opt_flags == 0
+! 		    || (TRUE
+! # if defined(FEAT_MBYTE)
+! 			&& options[i].var != (char_u *)&p_enc
+! # endif
+! # if defined(FEAT_CRYPT)
+  			&& options[i].var != (char_u *)&p_cm
+  			&& options[i].var != (char_u *)&p_key
++ # endif
++ 			))
+  #endif
+! 			)
+  	    set_option_default(i, opt_flags, p_cp);
+  
+  #ifdef FEAT_WINDOWS
+*** ../vim-7.4.840/src/version.c	2015-08-26 23:12:32.730194785 +0200
+--- src/version.c	2015-08-26 23:22:20.295676696 +0200
+***************
+*** 743,744 ****
+--- 743,746 ----
+  {   /* Add new patch number below this line */
++ /**/
++     841,
+  /**/
+
+-- 
+So when I saw the post to comp.editors, I rushed over to the FTP site to
+grab it.  So I yank apart the tarball, light x candles, where x= the
+vim version multiplied by the md5sum of the source divided by the MAC of
+my NIC (8A3FA78155A8A1D346C3C4A), put on black robes, dim the lights,
+wave a dead chicken over the hard drive, and summon the power of GNU GCC
+with the magic words "make config ; make!".
+		[Jason Spence, compiling Vim 5.0]
+
+ /// Bram Moolenaar -- Bram@Moolenaar.net -- http://www.Moolenaar.net   \\\
+///        sponsor Vim, vote for features -- http://www.Vim.org/sponsor/ \\\
+\\\  an exciting new programming language -- http://www.Zimbu.org        ///
+ \\\            help me help AIDS victims -- http://ICCF-Holland.org    ///

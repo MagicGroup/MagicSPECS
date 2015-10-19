@@ -4,9 +4,10 @@
 
 Name:           freerdp
 Version:        1.2.0
-Release:        0.9%{?shortcommit:.git.%{shortcommit}}%{?dist}
+Release:        0.10%{?shortcommit:.git.%{shortcommit}}%{?dist}
 Epoch:          2
 Summary:        Free implementation of the Remote Desktop Protocol (RDP)
+Summary(zh_CN.UTF-8): 远程桌面协议 (RDP) 的自由实现
 
 License:        ASL 2.0
 URL:            http://www.freerdp.com/
@@ -21,6 +22,8 @@ Patch2:         freerdp-args.patch
 # We have to stick at commit 24a752a for now to stop breaking guacamole etc.,
 # and these are assorted shadow fixes from later.
 Patch3:         freerdp-fixes-since-24a752a.patch
+# gstconfig.h 的位置在 gstreamer 1.5.1 以后有变动
+Patch4:		freerdp-gstreamer1-gstconfig.patch
 
 BuildRequires:  alsa-lib-devel
 BuildRequires:  cmake >= 2.8
@@ -54,21 +57,28 @@ The xfreerdp Remote Desktop Protocol (RDP) client from the FreeRDP project.
 xfreerdp can connect to RDP servers such as Microsoft Windows machines, xrdp and
 VirtualBox.
 
+%description -l zh_CN.UTF-8
+远程桌面协议 (RDP) 的自由实现。
+
 %package        libs
 Summary:        Core libraries implementing the RDP protocol
+Summary(zh_CN.UTF-8): %{name} 的运行库
 Requires:       libwinpr%{?_isa} = %{?epoch}:%{version}-%{release}
 Obsoletes:      %{name}-plugins < 1:1.1.0
 Provides:       %{name}-plugins = %{?epoch}:%{version}-%{release}
 %description    libs
 libfreerdp-core can be embedded in applications.
-
 libfreerdp-channels and libfreerdp-kbd might be convenient to use in X
 applications together with libfreerdp-core.
 
 libfreerdp-core can be extended with plugins handling RDP channels.
 
+%description libs -l zh_CN.UTF-8
+%{name} 的运行库。
+
 %package        devel
 Summary:        Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Requires:       %{name}-libs%{?_isa} = %{?epoch}:%{version}-%{release}
 Requires:       pkgconfig
 Requires:       cmake >= 2.8
@@ -77,15 +87,22 @@ Requires:       cmake >= 2.8
 The %{name}-devel package contains libraries and header files for developing
 applications that use %{name}-libs.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
 %package        server
 Summary:        Server support for %{name}
+Summary(zh_CN.UTF-8): %{name} 的服务器支持
 
 %description    server
 The %{name}-server package contains servers which can export a desktop via
 the RDP protocol.
+%description server -l zh_CN.UTF-8
+%{name} 的服务器支持。
 
 %package -n     libwinpr
 Summary:        Windows Portable Runtime
+Summary(zh_CN.UTF-8): Windows 可移植运行库
 Provides:       %{name}-libwinpr = %{?epoch}:%{version}-%{release}
 Obsoletes:      %{name}-libwinpr < %{?epoch}:%{version}-%{release}
 
@@ -94,8 +111,12 @@ WinPR provides API compatibility for applications targeting non-Windows
 environments. When on Windows, the original native API is being used instead of
 the equivalent WinPR implementation, without having to modify the code using it.
 
+%description -n libwinpr -l zh_CN.UTF-8
+Windows 可移植运行库。
+
 %package -n     libwinpr-devel
 Summary:        Windows Portable Runtime development files
+Summary(zh_CN.UTF-8): libwinpr 的开发包
 Requires:       libwinpr%{?_isa} = %{?epoch}:%{version}-%{release}
 Requires:       pkgconfig
 Requires:       cmake >= 2.8
@@ -104,12 +125,16 @@ Requires:       cmake >= 2.8
 The %{name}-libwinpr-devel package contains libraries and header files for
 developing applications that use %{name}-libwinpr.
 
+%description -n libwinpr-devel -l zh_CN.UTF-8
+libwinpr 的开发包。
+
 %prep
 %setup -qn FreeRDP-%{commit}
 %patch0 -p1 -b .aarch64
 %patch1 -p1 -b .cmake-list
 %patch2 -p1 -b .args
 %patch3 -p1 -b .fixes
+%patch4 -p1 -b .gstconfig
 
 # Rpmlint fixes
 find . -name "*.h" -exec chmod 664 {} \;
@@ -212,6 +237,9 @@ find %{buildroot} -name "*.a" -delete
 %{_libdir}/pkgconfig/winpr.pc
 
 %changelog
+* Sun Oct 18 2015 Liu Di <liudidi@gmail.com> - 2:1.2.0-0.10.git.24a752a
+- 为 Magic 3.0 重建
+
 * Sun Mar 22 2015 Kalev Lember <kalevlember@gmail.com> - 2:1.2.0-0.9.git.24a752a
 - Bump epoch after the version downgrade
 

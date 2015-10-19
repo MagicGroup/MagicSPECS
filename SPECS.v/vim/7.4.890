@@ -1,0 +1,59 @@
+To: vim_dev@googlegroups.com
+Subject: Patch 7.4.890
+Fcc: outbox
+From: Bram Moolenaar <Bram@moolenaar.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+------------
+
+Patch 7.4.890
+Problem:    Build failure when using dynamic python but not python3.
+Solution:   Adjust the #if to also include DYNAMIC_PYTHON3 and UNIX.
+Files:      src/if_python3.c
+
+
+*** ../vim-7.4.889/src/if_python3.c	2015-02-03 13:15:59.614101028 +0100
+--- src/if_python3.c	2015-10-04 15:20:57.016272462 +0200
+***************
+*** 828,834 ****
+      --recurse;
+  }
+  
+! #if (defined(DYNAMIC_PYTHON) && defined(FEAT_PYTHON)) || defined(PROTO)
+      int
+  python3_loaded()
+  {
+--- 828,834 ----
+      --recurse;
+  }
+  
+! #if (defined(DYNAMIC_PYTHON3) && defined(DYNAMIC_PYTHON) && defined(FEAT_PYTHON) && defined(UNIX)) || defined(PROTO)
+      int
+  python3_loaded()
+  {
+*** ../vim-7.4.889/src/version.c	2015-09-29 18:08:28.625484808 +0200
+--- src/version.c	2015-09-29 18:35:01.668951021 +0200
+***************
+*** 743,744 ****
+--- 743,746 ----
+  {   /* Add new patch number below this line */
++ /**/
++     890,
+  /**/
+
+-- 
+In many of the more relaxed civilizations on the Outer Eastern Rim of the
+Galaxy, "The Hitchhiker's Guide to the Galaxy" has already supplanted the
+great "Encyclopedia Galactica" as the standard repository of all knowledge
+and wisdom, for though it has many omissions and contains much that is
+apocryphal, or at least wildly inaccurate, it scores over the older, more
+pedestrian work in two important respects.
+First, it is slightly cheaper; and second, it has the words "DON'T PANIC"
+inscribed in large friendly letters on its cover.
+		-- Douglas Adams, "The Hitchhiker's Guide to the Galaxy"
+
+ /// Bram Moolenaar -- Bram@Moolenaar.net -- http://www.Moolenaar.net   \\\
+///        sponsor Vim, vote for features -- http://www.Vim.org/sponsor/ \\\
+\\\  an exciting new programming language -- http://www.Zimbu.org        ///
+ \\\            help me help AIDS victims -- http://ICCF-Holland.org    ///

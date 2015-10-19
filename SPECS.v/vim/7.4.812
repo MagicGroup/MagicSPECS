@@ -1,0 +1,56 @@
+To: vim_dev@googlegroups.com
+Subject: Patch 7.4.812
+Fcc: outbox
+From: Bram Moolenaar <Bram@moolenaar.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+------------
+
+Patch 7.4.812
+Problem:    Gcc sanitizer complains about using a NULL pointer to memmove().
+Solution:   Only call memmove when there is something to move. (Vittorio
+            Zecca)
+Files:      src/memline.c
+
+
+*** ../vim-7.4.811/src/memline.c	2015-07-17 14:16:49.846596759 +0200
+--- src/memline.c	2015-08-08 14:14:21.129601118 +0200
+***************
+*** 3834,3840 ****
+  					(buf->b_ml.ml_stack_size + STACK_INCR));
+  	if (newstack == NULL)
+  	    return -1;
+! 	mch_memmove(newstack, buf->b_ml.ml_stack,
+  					     (size_t)top * sizeof(infoptr_T));
+  	vim_free(buf->b_ml.ml_stack);
+  	buf->b_ml.ml_stack = newstack;
+--- 3834,3841 ----
+  					(buf->b_ml.ml_stack_size + STACK_INCR));
+  	if (newstack == NULL)
+  	    return -1;
+! 	if (top > 0)
+! 	    mch_memmove(newstack, buf->b_ml.ml_stack,
+  					     (size_t)top * sizeof(infoptr_T));
+  	vim_free(buf->b_ml.ml_stack);
+  	buf->b_ml.ml_stack = newstack;
+*** ../vim-7.4.811/src/version.c	2015-08-04 22:02:45.215119715 +0200
+--- src/version.c	2015-08-08 18:23:30.167691718 +0200
+***************
+*** 743,744 ****
+--- 743,746 ----
+  {   /* Add new patch number below this line */
++ /**/
++     812,
+  /**/
+
+-- 
+DEAD PERSON:  I'm getting better!
+CUSTOMER:     No, you're not -- you'll be stone dead in a moment.
+MORTICIAN:    Oh, I can't take him like that -- it's against regulations.
+                                  The Quest for the Holy Grail (Monty Python)
+
+ /// Bram Moolenaar -- Bram@Moolenaar.net -- http://www.Moolenaar.net   \\\
+///        sponsor Vim, vote for features -- http://www.Vim.org/sponsor/ \\\
+\\\  an exciting new programming language -- http://www.Zimbu.org        ///
+ \\\            help me help AIDS victims -- http://ICCF-Holland.org    ///

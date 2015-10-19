@@ -17,7 +17,6 @@
 %global _with_vaapi --with-vaapi
 %global _with_xcb 1
 %endif
-%if 0%{?fedora}
 %global _with_fluidsynth 1
 %global _with_bluray    1
 %ifarch x86_64 i686
@@ -25,30 +24,30 @@
 %endif
 %global _with_projectm  1
 %global _with_schroedinger 1
-%endif
 
-%define gitv 1
+%define gitv 0
 %define gitdate 20140428
 %define gitver 0546
 
 Summary:	The cross-platform open-source multimedia framework, player and server
+Summary(zh_CN.UTF-8): 跨平台的开源媒体框架、播放器和服务器
 Name:		vlc
-Version:	2.2.0
+Version:	2.2.1
 %if 0%{?gitv}
-Release:	0.%{gitdate}.%{?dist}.9
+Release:	1%{?dist}
 %else
-Release:	10%{?dist}
+Release:	1%{?dist}
 %endif
 License:	GPLv2+
 Group:		Applications/Multimedia
+Group(zh_CN.UTF-8): 应用程序/多媒体
 URL:		http://www.videolan.org
 %if 0%{?gitv}
 Source0:	http://nightlies.videolan.org/build/source/vlc-%{version}-%{gitdate}-%{gitver}.tar.xz
 %else
 Source0:	http://download.videolan.org/pub/videolan/vlc/%{version}/vlc-%{version}%{?vlc_rc}.tar.xz
 %endif
-Patch0:         vlc-2.0.2-xcb_discard.patch
-Patch1:         0001-Fix-build-with-unreleased-FLAC-1.3.x.patch
+Patch2:		vlc-new-freerdp.patch
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildRequires:	desktop-file-utils
@@ -187,44 +186,63 @@ and various streaming protocols.
 It can also be used as a media converter or a server to stream in uni-cast or 
 multi-cast in IPv4 or IPv6 on networks.
 
+%description -l zh_CN.UTF-8
+跨平台的开源媒体播放器和框架，支持大多数音频和视频格式，如 DVD，音频 CD , VCD
+及多种流媒体协议。
+它也可以做为媒体转换器或流媒体服务器。
 
 %package devel
 Summary:	Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:		Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:	%{name}-core%{_isa} = %{version}-%{release}
 
 %description devel
 The %{name}-devel package contains libraries and header files for
 developing applications that use %{name}.
-
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %package core
 Summary:	VLC media player core
+Summary(zh_CN.UTF-8): %{name} 的核心
 Group:		Applications/Multimedia
+Group(zh_CN.UTF-8): 应用程序/多媒体
 Provides:	vlc-nox = %{version}-%{release}
 Obsoletes:	vlc-nox < 1.1.5-2
 %{?live555date:Requires: live555date%{_isa} = %{live555date}}
 
 %description core
 VLC media player core components
+%description core -l zh_CN.UTF-8
+%{name} 的核心组件。
 
 %package extras
 Summary:	VLC media player with extras modules
+Summary(zh_CN.UTF-8): %{name} 的额外模块
 Group:		Applications/Multimedia
+Group(zh_CN.UTF-8): 应用程序/多媒体
 Requires:	vlc-core%{_isa} = %{version}-%{release}
 
 
 %description extras
 VLC media player extras modules.
 
+%description extras -l zh_CN.UTF-8
+%{name} 的额外模块。
+
 %package plugin-jack
 Summary:	JACK audio plugin for VLC
+Summary(zh_CN.UTF-8): %{name} 的 JACK 音频插件
 Group:		Applications/Multimedia
+Group(zh_CN.UTF-8): 应用程序/多媒体
 Requires:	vlc-core%{_isa} = %{version}-%{release}
 
 %description plugin-jack
 JACK audio plugin for the VLC media player.
-
+%description plugin-jack -l zh_CN.UTF-8
+%{name} 的 JACK 音频插件。
 
 %prep
 %if 0%{?gitv}
@@ -233,14 +251,7 @@ JACK audio plugin for the VLC media player.
 %setup -q -n %{name}-%{version}%{?vlc_rc}
 %endif
 
-%if 0%{?rhel}
-%patch0 -p1 -b .xcb_discard
-%{?_with_xcb:
-sed -i -e "s|xcb >= 1.6|xcb >= 1.5|" configure configure.ac
-touch -r config.h.in configure configure.ac
-}
-%endif
-#%patch1 -p1 -b .FLAC13
+%patch2 -p1
 
 %{?_with_bootstrap:
 rm aclocal.m4 m4/lib*.m4 m4/lt*.m4 || :
@@ -350,7 +361,7 @@ ln -sf ../../../fonts/dejavu/DejaVuSans-Bold.ttf  \
 #Fix unowned directories
 rm -rf $RPM_BUILD_ROOT%{_docdir}/vlc
 
-
+magic_rpm_clean.sh
 %find_lang %{name}
 
 
@@ -526,6 +537,9 @@ fi || :
 
 
 %changelog
+* Sun Oct 18 2015 Liu Di <liudidi@gmail.com> - 2.2.1-1
+- 更新到 2.2.1
+
 * Tue Sep 22 2015 Liu Di <liudidi@gmail.com>
 - 为 Magic 3.0 重建
 

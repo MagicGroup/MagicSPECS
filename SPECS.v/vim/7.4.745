@@ -1,0 +1,157 @@
+To: vim_dev@googlegroups.com
+Subject: Patch 7.4.745
+Fcc: outbox
+From: Bram Moolenaar <Bram@moolenaar.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+------------
+
+Patch 7.4.745
+Problem:    The entries added by matchaddpos() are returned by getmatches()
+            but can't be set with setmatches(). (Lcd)
+Solution:   Fix setmatches(). (Christian Brabandt)
+Files:      src/eval.c, src/testdir/test63.in, src/testdir/test63.ok
+
+
+*** ../vim-7.4.744/src/eval.c	2015-06-19 12:08:08.230151195 +0200
+--- src/eval.c	2015-06-19 16:27:05.567692144 +0200
+***************
+*** 17118,17123 ****
+--- 17118,17124 ----
+      list_T	*l;
+      listitem_T	*li;
+      dict_T	*d;
++     list_T	*s = NULL;
+  
+      rettv->vval.v_number = -1;
+      if (argvars[0].v_type != VAR_LIST)
+***************
+*** 17140,17146 ****
+  		return;
+  	    }
+  	    if (!(dict_find(d, (char_u *)"group", -1) != NULL
+! 			&& dict_find(d, (char_u *)"pattern", -1) != NULL
+  			&& dict_find(d, (char_u *)"priority", -1) != NULL
+  			&& dict_find(d, (char_u *)"id", -1) != NULL))
+  	    {
+--- 17141,17148 ----
+  		return;
+  	    }
+  	    if (!(dict_find(d, (char_u *)"group", -1) != NULL
+! 			&& (dict_find(d, (char_u *)"pattern", -1) != NULL
+! 			    || dict_find(d, (char_u *)"pos1", -1) != NULL)
+  			&& dict_find(d, (char_u *)"priority", -1) != NULL
+  			&& dict_find(d, (char_u *)"id", -1) != NULL))
+  	    {
+***************
+*** 17154,17164 ****
+  	li = l->lv_first;
+  	while (li != NULL)
+  	{
+  	    d = li->li_tv.vval.v_dict;
+! 	    match_add(curwin, get_dict_string(d, (char_u *)"group", FALSE),
+  		    get_dict_string(d, (char_u *)"pattern", FALSE),
+  		    (int)get_dict_number(d, (char_u *)"priority"),
+  		    (int)get_dict_number(d, (char_u *)"id"), NULL);
+  	    li = li->li_next;
+  	}
+  	rettv->vval.v_number = 0;
+--- 17156,17208 ----
+  	li = l->lv_first;
+  	while (li != NULL)
+  	{
++ 	    int		i = 0;
++ 	    char_u	buf[4];
++ 	    dictitem_T  *di;
++ 
+  	    d = li->li_tv.vval.v_dict;
+! 
+! 	    if (dict_find(d, (char_u *)"pattern", -1) == NULL)
+! 	    {
+! 		if (s == NULL)
+! 		{
+! 		    s = list_alloc();
+! 		    if (s == NULL)
+! 			return;
+! 		}
+! 
+! 		/* match from matchaddpos() */
+! 		for (i = 1; i < 9; i++)
+! 		{
+! 		    sprintf((char *)buf, (char *)"pos%d", i);
+! 		    if ((di = dict_find(d, (char_u *)buf, -1)) != NULL)
+! 		    {
+! 			if (di->di_tv.v_type != VAR_LIST)
+! 			    return;
+! 
+! 			list_append_tv(s, &di->di_tv);
+! 			s->lv_refcount++;
+! 		    }
+! 		    else
+! 			break;
+! 		}
+! 	    }
+! 	    if (i == 0)
+! 	    {
+! 		match_add(curwin, get_dict_string(d, (char_u *)"group", FALSE),
+  		    get_dict_string(d, (char_u *)"pattern", FALSE),
+  		    (int)get_dict_number(d, (char_u *)"priority"),
+  		    (int)get_dict_number(d, (char_u *)"id"), NULL);
++ 	    }
++ 	    else
++ 	    {
++ 		match_add(curwin, get_dict_string(d, (char_u *)"group", FALSE),
++ 		    NULL, (int)get_dict_number(d, (char_u *)"priority"),
++ 		    (int)get_dict_number(d, (char_u *)"id"), s);
++ 		list_unref(s);
++ 		s = NULL;
++ 	    }
++ 
+  	    li = li->li_next;
+  	}
+  	rettv->vval.v_number = 0;
+*** ../vim-7.4.744/src/testdir/test63.in	2014-11-27 18:57:07.468605191 +0100
+--- src/testdir/test63.in	2015-06-19 16:22:09.866738185 +0200
+***************
+*** 187,193 ****
+--- 187,198 ----
+  :else
+  :  let @r .= "FAILED: " . v4 . "/" . v5 . "/" . v6 . "/" . v7 . "/" . v8 . "/" . v9 . "/" . v10 . "\n"
+  :endif
++ :" Check, that setmatches() can correctly restore the matches from matchaddpos()
++ :call matchadd('MyGroup1', '\%2lmatchadd')
++ :let m=getmatches()
+  :call clearmatches()
++ :call setmatches(m)
++ :let @r .= string(getmatches())."\n"
+  G"rp
+  :/^Results/,$wq! test.out
+  ENDTEST
+*** ../vim-7.4.744/src/testdir/test63.ok	2014-08-16 16:28:31.882272056 +0200
+--- src/testdir/test63.ok	2015-06-19 16:22:09.866738185 +0200
+***************
+*** 14,16 ****
+--- 14,17 ----
+  OK
+  [{'group': 'MyGroup1', 'id': 11, 'priority': 10, 'pos1': [1, 4, 2], 'pos2': [1, 9, 2]}]
+  OK
++ [{'group': 'MyGroup1', 'id': 11, 'priority': 10, 'pos1': [1, 4, 2], 'pos2': [1, 9, 2]}, {'group': 'MyGroup1', 'pattern': '\%2lmatchadd', 'priority': 10, 'id': 12}]
+*** ../vim-7.4.744/src/version.c	2015-06-19 15:45:13.005889121 +0200
+--- src/version.c	2015-06-19 16:20:56.127497363 +0200
+***************
+*** 743,744 ****
+--- 743,746 ----
+  {   /* Add new patch number below this line */
++ /**/
++     745,
+  /**/
+
+-- 
+An actual excerpt from a classified section of a city newspaper:
+"Illiterate?  Write today for free help!"
+
+ /// Bram Moolenaar -- Bram@Moolenaar.net -- http://www.Moolenaar.net   \\\
+///        sponsor Vim, vote for features -- http://www.Vim.org/sponsor/ \\\
+\\\  an exciting new programming language -- http://www.Zimbu.org        ///
+ \\\            help me help AIDS victims -- http://ICCF-Holland.org    ///

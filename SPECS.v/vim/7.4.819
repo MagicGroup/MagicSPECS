@@ -1,0 +1,527 @@
+To: vim_dev@googlegroups.com
+Subject: Patch 7.4.819
+Fcc: outbox
+From: Bram Moolenaar <Bram@moolenaar.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+------------
+
+Patch 7.4.819
+Problem:    Beeping when running the tests.
+Solution:   Fix 41 beeps. (Roland Eggner)
+Files:      src/testdir/test17.in, src/testdir/test29.in,
+            src/testdir/test4.in, src/testdir/test61.in,
+            src/testdir/test82.in, src/testdir/test83.in,
+            src/testdir/test90.in, src/testdir/test95.in,
+            src/testdir/test_autoformat_join.in
+
+
+*** ../vim-7.4.818/src/testdir/test17.in	2013-07-03 22:28:23.000000000 +0200
+--- src/testdir/test17.in	2015-08-11 18:30:19.937364870 +0200
+***************
+*** 49,65 ****
+  :!mkdir Xdir1
+  :!mkdir "Xdir1/dir2"
+  :e! Xdir1/dir2/foo.a
+! i#include   "bar.a"
+  :w
+  :e Xdir1/dir2/bar.a
+! i#include      "baz.a"
+  :w
+  :e Xdir1/dir2/baz.a
+! i#include            "foo.a"
+  :w
+  :e Xbase.a
+  :set path=Xdir1/dir2
+! i#include    <foo.a>
+  :w
+  :redir! >>test.out
+  :checkpath!
+--- 49,65 ----
+  :!mkdir Xdir1
+  :!mkdir "Xdir1/dir2"
+  :e! Xdir1/dir2/foo.a
+! i#include   "bar.a":
+  :w
+  :e Xdir1/dir2/bar.a
+! i#include      "baz.a":
+  :w
+  :e Xdir1/dir2/baz.a
+! i#include            "foo.a":
+  :w
+  :e Xbase.a
+  :set path=Xdir1/dir2
+! i#include    <foo.a>:
+  :w
+  :redir! >>test.out
+  :checkpath!
+***************
+*** 79,95 ****
+  :endfunction
+  :let &includeexpr='DotsToSlashes()'
+  :e! Xdir1/dir2/foo.b
+! i%inc   /bar/
+  :w
+  :e Xdir1/dir2/bar.b
+! i%inc      /baz/
+  :w
+  :e Xdir1/dir2/baz.b
+! i%inc            /foo/
+  :w
+  :e Xbase.b
+  :set path=Xdir1/dir2
+! i%inc    /foo/
+  :w
+  :redir! >>test.out
+  :checkpath!
+--- 79,95 ----
+  :endfunction
+  :let &includeexpr='DotsToSlashes()'
+  :e! Xdir1/dir2/foo.b
+! i%inc   /bar/:
+  :w
+  :e Xdir1/dir2/bar.b
+! i%inc      /baz/:
+  :w
+  :e Xdir1/dir2/baz.b
+! i%inc            /foo/:
+  :w
+  :e Xbase.b
+  :set path=Xdir1/dir2
+! i%inc    /foo/:
+  :w
+  :redir! >>test.out
+  :checkpath!
+***************
+*** 112,131 ****
+  :endfunction
+  :let &includeexpr='StripNewlineChar()'
+  :e! Xdir1/dir2/foo.c
+! i%inc   bar.c
+  :w
+  :e Xdir1/dir2/bar.c
+! i%inc      baz.c
+  :w
+  :e Xdir1/dir2/baz.c
+! i%inc            foo.c
+  :w
+  :e Xdir1/dir2/FALSE.c
+! i%inc            foo.c
+  :w
+  :e Xbase.c
+  :set path=Xdir1/dir2
+! i%inc    FALSE.c foo.c
+  :w
+  :redir! >>test.out
+  :checkpath!
+--- 112,131 ----
+  :endfunction
+  :let &includeexpr='StripNewlineChar()'
+  :e! Xdir1/dir2/foo.c
+! i%inc   bar.c:
+  :w
+  :e Xdir1/dir2/bar.c
+! i%inc      baz.c:
+  :w
+  :e Xdir1/dir2/baz.c
+! i%inc            foo.c:
+  :w
+  :e Xdir1/dir2/FALSE.c
+! i%inc            foo.c:
+  :w
+  :e Xbase.c
+  :set path=Xdir1/dir2
+! i%inc    FALSE.c foo.c:
+  :w
+  :redir! >>test.out
+  :checkpath!
+*** ../vim-7.4.818/src/testdir/test29.in	2014-04-29 14:44:31.515875819 +0200
+--- src/testdir/test29.in	2015-08-11 18:30:19.937364870 +0200
+***************
+*** 113,124 ****
+  :iunmap <c-u>
+  Avim4
+  :" Test with backspace set to the compatible setting
+! :set bs=
+  A vim5A
+  A vim6Azweiu
+  :inoremap <c-u> <left><c-u>
+  A vim7
+! :set cp
+  ENDTEST
+  1 this shouldn't be deleted
+  2 this shouldn't be deleted
+--- 113,124 ----
+  :iunmap <c-u>
+  Avim4
+  :" Test with backspace set to the compatible setting
+! :set backspace= visualbell
+  A vim5A
+  A vim6Azweiu
+  :inoremap <c-u> <left><c-u>
+  A vim7
+! :set compatible novisualbell
+  ENDTEST
+  1 this shouldn't be deleted
+  2 this shouldn't be deleted
+*** ../vim-7.4.818/src/testdir/test4.in	2014-10-31 19:20:30.782742928 +0100
+--- src/testdir/test4.in	2015-08-11 18:30:19.937364870 +0200
+***************
+*** 19,25 ****
+  G:r Xxx             " include Xxx in the current file
+  :set fo+=r          " issue #57 do not move cursor on <c-o> when autoindent is set
+  Go# abcdef2hi
+! d0o# abcdef2hid0
+  :?startstart?,$w! test.out
+  :qa!
+  ENDTEST
+--- 19,25 ----
+  G:r Xxx             " include Xxx in the current file
+  :set fo+=r          " issue #57 do not move cursor on <c-o> when autoindent is set
+  Go# abcdef2hi
+! d0o# abcdef2hid0:
+  :?startstart?,$w! test.out
+  :qa!
+  ENDTEST
+*** ../vim-7.4.818/src/testdir/test61.in	2013-07-04 20:23:47.000000000 +0200
+--- src/testdir/test61.in	2015-08-11 18:30:19.937364870 +0200
+***************
+*** 87,105 ****
+  :so small.vim
+  :set nocp viminfo+=nviminfo
+  :enew!
+! oa
+  :set ul=100
+! ob
+  :set ul=100
+  o1a2=setline('.','1234')
+  
+  uu:"
+! oc
+  :set ul=100
+  o1a2=setline('.','1234')
+  
+  u:"
+! od
+  :set ul=100
+  o1a2=string(123)
+  u:"
+--- 87,105 ----
+  :so small.vim
+  :set nocp viminfo+=nviminfo
+  :enew!
+! oa:
+  :set ul=100
+! ob:
+  :set ul=100
+  o1a2=setline('.','1234')
+  
+  uu:"
+! oc:
+  :set ul=100
+  o1a2=setline('.','1234')
+  
+  u:"
+! od:
+  :set ul=100
+  o1a2=string(123)
+  u:"
+*** ../vim-7.4.818/src/testdir/test82.in	2013-08-09 19:32:57.000000000 +0200
+--- src/testdir/test82.in	2015-08-11 18:30:19.937364870 +0200
+***************
+*** 9,15 ****
+  : qa!
+  :endif
+  :set enc=utf8
+! ggdG
+  :
+  :function! Ch(a, op, b, expected)
+  :  if eval(printf('"%s" %s "%s"', a:a, a:op, a:b)) != a:expected
+--- 9,15 ----
+  : qa!
+  :endif
+  :set enc=utf8
+! ggdG:
+  :
+  :function! Ch(a, op, b, expected)
+  :  if eval(printf('"%s" %s "%s"', a:a, a:op, a:b)) != a:expected
+*** ../vim-7.4.818/src/testdir/test83.in	2011-12-30 13:05:05.000000000 +0100
+--- src/testdir/test83.in	2015-08-11 18:30:19.937364870 +0200
+***************
+*** 8,23 ****
+  : w! test.out
+  : qa!
+  :endif
+! 
+  :/^text for tags1$/,/^text for tags1$/+1w! Xtags1.txt
+  :/^text for tags2$/,/^text for tags2$/+1w! Xtags2.txt
+  :/^text for tags3$/,/^text for tags3$/+1w! Xtags3.txt
+  :/^tags1$/+1,/^tags1-end$/-1w! Xtags1
+! 
+! ggdG
+! 
+  :call setline('.', 'Results of test83')
+! 
+  :" case1:
+  :new
+  :set tags=Xtags1
+--- 8,23 ----
+  : w! test.out
+  : qa!
+  :endif
+! :
+  :/^text for tags1$/,/^text for tags1$/+1w! Xtags1.txt
+  :/^text for tags2$/,/^text for tags2$/+1w! Xtags2.txt
+  :/^text for tags3$/,/^text for tags3$/+1w! Xtags3.txt
+  :/^tags1$/+1,/^tags1-end$/-1w! Xtags1
+! :
+! ggdG:
+! :
+  :call setline('.', 'Results of test83')
+! :
+  :" case1:
+  :new
+  :set tags=Xtags1
+***************
+*** 30,36 ****
+  : close
+  : put ='case1: ok'
+  :endif
+! 
+  :" case2:
+  :new
+  :set tags=test83-tags2
+--- 30,36 ----
+  : close
+  : put ='case1: ok'
+  :endif
+! :
+  :" case2:
+  :new
+  :set tags=test83-tags2
+***************
+*** 43,49 ****
+  : close
+  : put ='case2: ok'
+  :endif
+! 
+  :" case3:
+  :new
+  :set tags=test83-tags3
+--- 43,49 ----
+  : close
+  : put ='case2: ok'
+  :endif
+! :
+  :" case3:
+  :new
+  :set tags=test83-tags3
+***************
+*** 57,63 ****
+  : put ='case3: ok'
+  :endif
+  :close
+! 
+  :wq! test.out
+  ENDTEST
+  
+--- 57,63 ----
+  : put ='case3: ok'
+  :endif
+  :close
+! :
+  :wq! test.out
+  ENDTEST
+  
+*** ../vim-7.4.818/src/testdir/test90.in	2013-02-13 17:20:13.000000000 +0100
+--- src/testdir/test90.in	2015-08-11 18:30:19.937364870 +0200
+***************
+*** 46,52 ****
+  : let res='ng'
+  :endif
+  :$put =testcase.res
+! "
+  :/^start:/,$wq! test.out
+  ENDTEST
+  
+--- 46,52 ----
+  : let res='ng'
+  :endif
+  :$put =testcase.res
+! :"
+  :/^start:/,$wq! test.out
+  ENDTEST
+  
+*** ../vim-7.4.818/src/testdir/test95.in	2014-05-13 20:15:20.461806487 +0200
+--- src/testdir/test95.in	2015-08-11 18:30:19.937364870 +0200
+***************
+*** 18,24 ****
+  :"    etc.
+  :"  When there is no match use only the first two items.
+  :let tl = []
+! 
+  :"""" Multi-byte character tests. These will fail unless vim is compiled
+  :"""" with Multibyte (FEAT_MBYTE) or BIG/HUGE features.
+  :call add(tl, [2, '[[:alpha:][=a=]]\+', '879 aiaãâaiuvna ', 'aiaãâaiuvna'])
+--- 18,24 ----
+  :"    etc.
+  :"  When there is no match use only the first two items.
+  :let tl = []
+! :
+  :"""" Multi-byte character tests. These will fail unless vim is compiled
+  :"""" with Multibyte (FEAT_MBYTE) or BIG/HUGE features.
+  :call add(tl, [2, '[[:alpha:][=a=]]\+', '879 aiaãâaiuvna ', 'aiaãâaiuvna'])
+***************
+*** 26,40 ****
+  :call add(tl, [2, '[^ม ]\+', 'มม oijasoifjos ifjoisj f osij j มมมมม abcd', 'oijasoifjos'])
+  :call add(tl, [2, ' [^ ]\+', 'start มabcdม ', ' มabcdม'])
+  :call add(tl, [2, '[ม[:alpha:][=a=]]\+', '879 aiaãมâมaiuvna ', 'aiaãมâมaiuvna'])
+! 
+  :" this is not a normal "i" but 0xec
+  :call add(tl, [2, '\p\+', 'ìa', 'ìa'])
+  :call add(tl, [2, '\p*', 'aあ', 'aあ'])
+! 
+  :"""" Test recognition of some character classes
+  :call add(tl, [2, '\i\+', '&*¨xx ', 'xx'])
+  :call add(tl, [2, '\f\+', '&*fname ', 'fname'])
+! 
+  :"""" Test composing character matching
+  :call add(tl, [2, '.ม', 'xม่x yมy', 'yม'])
+  :call add(tl, [2, '.ม่', 'xม่x yมy', 'xม่'])
+--- 26,40 ----
+  :call add(tl, [2, '[^ม ]\+', 'มม oijasoifjos ifjoisj f osij j มมมมม abcd', 'oijasoifjos'])
+  :call add(tl, [2, ' [^ ]\+', 'start มabcdม ', ' มabcdม'])
+  :call add(tl, [2, '[ม[:alpha:][=a=]]\+', '879 aiaãมâมaiuvna ', 'aiaãมâมaiuvna'])
+! :
+  :" this is not a normal "i" but 0xec
+  :call add(tl, [2, '\p\+', 'ìa', 'ìa'])
+  :call add(tl, [2, '\p*', 'aあ', 'aあ'])
+! :
+  :"""" Test recognition of some character classes
+  :call add(tl, [2, '\i\+', '&*¨xx ', 'xx'])
+  :call add(tl, [2, '\f\+', '&*fname ', 'fname'])
+! :
+  :"""" Test composing character matching
+  :call add(tl, [2, '.ม', 'xม่x yมy', 'yม'])
+  :call add(tl, [2, '.ม่', 'xม่x yมy', 'xม่'])
+***************
+*** 56,63 ****
+  :call add(tl, [2, 'a\%C', "ca\u0300t", "a\u0300"])
+  :call add(tl, [2, 'ca\%C', "ca\u0300t", "ca\u0300"])
+  :call add(tl, [2, 'ca\%Ct', "ca\u0300t", "ca\u0300t"])
+! 
+! 
+  :"""" Test \Z
+  :call add(tl, [2, 'ú\Z', 'x'])
+  :call add(tl, [2, 'יהוה\Z', 'יהוה', 'יהוה'])
+--- 56,63 ----
+  :call add(tl, [2, 'a\%C', "ca\u0300t", "a\u0300"])
+  :call add(tl, [2, 'ca\%C', "ca\u0300t", "ca\u0300"])
+  :call add(tl, [2, 'ca\%Ct', "ca\u0300t", "ca\u0300t"])
+! :
+! :
+  :"""" Test \Z
+  :call add(tl, [2, 'ú\Z', 'x'])
+  :call add(tl, [2, 'יהוה\Z', 'יהוה', 'יהוה'])
+***************
+*** 75,86 ****
+  :call add(tl, [2, "\\Z\u05b9", "xy\u05b9z", "y\u05b9"])
+  :call add(tl, [1, "\u05b9\\+\\Z", "xy\u05b9z\u05b9 ", "y\u05b9z\u05b9"])
+  :call add(tl, [1, "\\Z\u05b9\\+", "xy\u05b9z\u05b9 ", "y\u05b9z\u05b9"])
+! 
+  :"""" Combining different tests and features
+  :call add(tl, [2, '[^[=a=]]\+', 'ddaãâbcd', 'dd'])
+! 
+  :"""" Run the tests
+! 
+  :"
+  :for t in tl
+  :  let re = t[0]
+--- 75,86 ----
+  :call add(tl, [2, "\\Z\u05b9", "xy\u05b9z", "y\u05b9"])
+  :call add(tl, [1, "\u05b9\\+\\Z", "xy\u05b9z\u05b9 ", "y\u05b9z\u05b9"])
+  :call add(tl, [1, "\\Z\u05b9\\+", "xy\u05b9z\u05b9 ", "y\u05b9z\u05b9"])
+! :
+  :"""" Combining different tests and features
+  :call add(tl, [2, '[^[=a=]]\+', 'ddaãâbcd', 'dd'])
+! :
+  :"""" Run the tests
+! :
+  :"
+  :for t in tl
+  :  let re = t[0]
+***************
+*** 124,130 ****
+  :  endfor
+  :endfor
+  :unlet t tl e l
+! 
+  :" check that 'ambiwidth' does not change the meaning of \p
+  :set regexpengine=1 ambiwidth=single
+  :$put ='eng 1 ambi single: ' . match(\"\u00EC\", '\p')
+--- 124,130 ----
+  :  endfor
+  :endfor
+  :unlet t tl e l
+! :
+  :" check that 'ambiwidth' does not change the meaning of \p
+  :set regexpengine=1 ambiwidth=single
+  :$put ='eng 1 ambi single: ' . match(\"\u00EC\", '\p')
+***************
+*** 134,140 ****
+  :$put ='eng 2 ambi single: ' . match(\"\u00EC\", '\p')
+  :set regexpengine=2 ambiwidth=double
+  :$put ='eng 2 ambi double: ' . match(\"\u00EC\", '\p')
+! 
+  :/\%#=1^Results/,$wq! test.out
+  ENDTEST
+  
+--- 134,140 ----
+  :$put ='eng 2 ambi single: ' . match(\"\u00EC\", '\p')
+  :set regexpengine=2 ambiwidth=double
+  :$put ='eng 2 ambi double: ' . match(\"\u00EC\", '\p')
+! :
+  :/\%#=1^Results/,$wq! test.out
+  ENDTEST
+  
+*** ../vim-7.4.818/src/testdir/test_autoformat_join.in	2014-04-29 12:15:22.852032651 +0200
+--- src/testdir/test_autoformat_join.in	2015-08-11 18:30:19.937364870 +0200
+***************
+*** 3,9 ****
+  STARTTEST
+  :so small.vim
+  :/^\t\t/
+! 0gqj
+  :let a=string(getpos("'[")).'/'.string(getpos("']"))
+  :/^This line/;'}-join
+  :let b=string(getpos("'[")).'/'.string(getpos("']"))
+--- 3,9 ----
+  STARTTEST
+  :so small.vim
+  :/^\t\t/
+! 0gqj:
+  :let a=string(getpos("'[")).'/'.string(getpos("']"))
+  :/^This line/;'}-join
+  :let b=string(getpos("'[")).'/'.string(getpos("']"))
+*** ../vim-7.4.818/src/version.c	2015-08-11 17:46:31.212481064 +0200
+--- src/version.c	2015-08-11 18:29:53.437682968 +0200
+***************
+*** 743,744 ****
+--- 743,746 ----
+  {   /* Add new patch number below this line */
++ /**/
++     819,
+  /**/
+
+-- 
+ARTHUR:  I am your king!
+WOMAN:   Well, I didn't vote for you.
+ARTHUR:  You don't vote for kings.
+WOMAN:   Well, 'ow did you become king then?
+                                  The Quest for the Holy Grail (Monty Python)
+
+ /// Bram Moolenaar -- Bram@Moolenaar.net -- http://www.Moolenaar.net   \\\
+///        sponsor Vim, vote for features -- http://www.Vim.org/sponsor/ \\\
+\\\  an exciting new programming language -- http://www.Zimbu.org        ///
+ \\\            help me help AIDS victims -- http://ICCF-Holland.org    ///

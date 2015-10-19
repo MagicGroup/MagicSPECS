@@ -1,0 +1,45 @@
+To: vim_dev@googlegroups.com
+Subject: Patch 7.4.795
+Fcc: outbox
+From: Bram Moolenaar <Bram@moolenaar.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+------------
+
+Patch 7.4.795
+Problem:    The 'fixeol' option is not copied to a new window.
+Solution:   Copy the option value. (Yasuhiro Matsumoto)
+Files:      src/option.c
+
+
+*** ../vim-7.4.794/src/option.c	2015-07-21 17:53:11.585527913 +0200
+--- src/option.c	2015-07-22 21:48:18.727198452 +0200
+***************
+*** 10659,10664 ****
+--- 10659,10665 ----
+  #ifdef FEAT_MBYTE
+  	    buf->b_p_bomb = p_bomb;
+  #endif
++ 	    buf->b_p_fixeol = p_fixeol;
+  	    buf->b_p_et = p_et;
+  	    buf->b_p_et_nobin = p_et_nobin;
+  	    buf->b_p_ml = p_ml;
+*** ../vim-7.4.794/src/version.c	2015-07-21 20:22:07.331615818 +0200
+--- src/version.c	2015-07-22 21:49:14.366683887 +0200
+***************
+*** 743,744 ****
+--- 743,746 ----
+  {   /* Add new patch number below this line */
++ /**/
++     795,
+  /**/
+
+-- 
+hundred-and-one symptoms of being an internet addict:
+253. You wait for a slow loading web page before going to the toilet.
+
+ /// Bram Moolenaar -- Bram@Moolenaar.net -- http://www.Moolenaar.net   \\\
+///        sponsor Vim, vote for features -- http://www.Vim.org/sponsor/ \\\
+\\\  an exciting new programming language -- http://www.Zimbu.org        ///
+ \\\            help me help AIDS victims -- http://ICCF-Holland.org    ///

@@ -1,0 +1,55 @@
+To: vim_dev@googlegroups.com
+Subject: Patch 7.4.824
+Fcc: outbox
+From: Bram Moolenaar <Bram@moolenaar.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+------------
+
+Patch 7.4.824 (after 7.4.813)
+Problem:    Can't compile without the multi-byte feature. (John Marriott)
+Solution:   Add #ifdef.
+Files:      src/eval.c
+
+
+*** ../vim-7.4.823/src/eval.c	2015-08-11 19:13:55.134175736 +0200
+--- src/eval.c	2015-08-12 22:54:53.127060295 +0200
+***************
+*** 17046,17058 ****
+--- 17046,17061 ----
+  	csearch = get_dict_string(d, (char_u *)"char", FALSE);
+  	if (csearch != NULL)
+  	{
++ #ifdef FEAT_MBYTE
+  	    if (enc_utf8)
+  	    {
+  		int pcc[MAX_MCO];
+  		int c = utfc_ptr2char(csearch, pcc);
++ 
+  		set_last_csearch(c, csearch, utfc_ptr2len(csearch));
+  	    }
+  	    else
++ #endif
+  		set_last_csearch(mb_ptr2char(csearch),
+  						csearch, mb_ptr2len(csearch));
+  	}
+*** ../vim-7.4.823/src/version.c	2015-08-11 19:36:37.054004134 +0200
+--- src/version.c	2015-08-12 22:56:43.929751435 +0200
+***************
+*** 743,744 ****
+--- 743,746 ----
+  {   /* Add new patch number below this line */
++ /**/
++     824,
+  /**/
+
+-- 
+ARTHUR:        I command you as King of the Britons to stand aside!
+BLACK KNIGHT:  I move for no man.
+                                  The Quest for the Holy Grail (Monty Python)
+
+ /// Bram Moolenaar -- Bram@Moolenaar.net -- http://www.Moolenaar.net   \\\
+///        sponsor Vim, vote for features -- http://www.Vim.org/sponsor/ \\\
+\\\  an exciting new programming language -- http://www.Zimbu.org        ///
+ \\\            help me help AIDS victims -- http://ICCF-Holland.org    ///

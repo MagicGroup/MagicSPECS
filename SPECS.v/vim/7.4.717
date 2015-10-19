@@ -1,0 +1,268 @@
+To: vim_dev@googlegroups.com
+Subject: Patch 7.4.717
+Fcc: outbox
+From: Bram Moolenaar <Bram@moolenaar.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+------------
+
+Patch 7.4.717
+Problem:    ":let list += list" can change a locked list.
+Solution:   Check for the lock earlier. (Olaf Dabrunz)
+Files:      src/eval.c, src/testdir/test55.in, src/testdir/test55.ok
+
+
+*** ../vim-7.4.716/src/eval.c	2015-04-21 16:48:55.028917216 +0200
+--- src/eval.c	2015-05-04 11:06:30.878541202 +0200
+***************
+*** 783,789 ****
+  static char_u * make_expanded_name __ARGS((char_u *in_start, char_u *expr_start, char_u *expr_end, char_u *in_end));
+  static int eval_isnamec __ARGS((int c));
+  static int eval_isnamec1 __ARGS((int c));
+! static int get_var_tv __ARGS((char_u *name, int len, typval_T *rettv, int verbose, int no_autoload));
+  static int handle_subscript __ARGS((char_u **arg, typval_T *rettv, int evaluate, int verbose));
+  static typval_T *alloc_tv __ARGS((void));
+  static typval_T *alloc_string_tv __ARGS((char_u *string));
+--- 783,789 ----
+  static char_u * make_expanded_name __ARGS((char_u *in_start, char_u *expr_start, char_u *expr_end, char_u *in_end));
+  static int eval_isnamec __ARGS((int c));
+  static int eval_isnamec1 __ARGS((int c));
+! static int get_var_tv __ARGS((char_u *name, int len, typval_T *rettv, dictitem_T **dip, int verbose, int no_autoload));
+  static int handle_subscript __ARGS((char_u **arg, typval_T *rettv, int evaluate, int verbose));
+  static typval_T *alloc_tv __ARGS((void));
+  static typval_T *alloc_string_tv __ARGS((char_u *string));
+***************
+*** 2257,2263 ****
+  	    {
+  		if (tofree != NULL)
+  		    name = tofree;
+! 		if (get_var_tv(name, len, &tv, TRUE, FALSE) == FAIL)
+  		    error = TRUE;
+  		else
+  		{
+--- 2257,2263 ----
+  	    {
+  		if (tofree != NULL)
+  		    name = tofree;
+! 		if (get_var_tv(name, len, &tv, NULL, TRUE, FALSE) == FAIL)
+  		    error = TRUE;
+  		else
+  		{
+***************
+*** 2926,2935 ****
+  		typval_T tv;
+  
+  		/* handle +=, -= and .= */
+  		if (get_var_tv(lp->ll_name, (int)STRLEN(lp->ll_name),
+! 						      &tv, TRUE, FALSE) == OK)
+  		{
+! 		    if (tv_op(&tv, rettv, op) == OK)
+  			set_var(lp->ll_name, &tv, FALSE);
+  		    clear_tv(&tv);
+  		}
+--- 2926,2940 ----
+  		typval_T tv;
+  
+  		/* handle +=, -= and .= */
++ 		di = NULL;
+  		if (get_var_tv(lp->ll_name, (int)STRLEN(lp->ll_name),
+! 						 &tv, &di, TRUE, FALSE) == OK)
+  		{
+! 		    if ((di == NULL
+! 			   || (!var_check_ro(di->di_flags, lp->ll_name, FALSE)
+! 			      && !tv_check_lock(di->di_tv.v_lock, lp->ll_name,
+! 								      FALSE)))
+! 			    && tv_op(&tv, rettv, op) == OK)
+  			set_var(lp->ll_name, &tv, FALSE);
+  		    clear_tv(&tv);
+  		}
+***************
+*** 5246,5252 ****
+  		}
+  	    }
+  	    else if (evaluate)
+! 		ret = get_var_tv(s, len, rettv, TRUE, FALSE);
+  	    else
+  		ret = OK;
+  	}
+--- 5251,5257 ----
+  		}
+  	    }
+  	    else if (evaluate)
+! 		ret = get_var_tv(s, len, rettv, NULL, TRUE, FALSE);
+  	    else
+  		ret = OK;
+  	}
+***************
+*** 10375,10381 ****
+  	{
+  	    if (tofree != NULL)
+  		name = tofree;
+! 	    n = (get_var_tv(name, len, &tv, FALSE, TRUE) == OK);
+  	    if (n)
+  	    {
+  		/* handle d.key, l[idx], f(expr) */
+--- 10380,10386 ----
+  	{
+  	    if (tofree != NULL)
+  		name = tofree;
+! 	    n = (get_var_tv(name, len, &tv, NULL, FALSE, TRUE) == OK);
+  	    if (n)
+  	    {
+  		/* handle d.key, l[idx], f(expr) */
+***************
+*** 20646,20655 ****
+   * Return OK or FAIL.
+   */
+      static int
+! get_var_tv(name, len, rettv, verbose, no_autoload)
+      char_u	*name;
+      int		len;		/* length of "name" */
+      typval_T	*rettv;		/* NULL when only checking existence */
+      int		verbose;	/* may give error message */
+      int		no_autoload;	/* do not use script autoloading */
+  {
+--- 20651,20661 ----
+   * Return OK or FAIL.
+   */
+      static int
+! get_var_tv(name, len, rettv, dip, verbose, no_autoload)
+      char_u	*name;
+      int		len;		/* length of "name" */
+      typval_T	*rettv;		/* NULL when only checking existence */
++     dictitem_T	**dip;		/* non-NULL when typval's dict item is needed */
+      int		verbose;	/* may give error message */
+      int		no_autoload;	/* do not use script autoloading */
+  {
+***************
+*** 20680,20686 ****
+--- 20686,20696 ----
+      {
+  	v = find_var(name, NULL, no_autoload);
+  	if (v != NULL)
++ 	{
+  	    tv = &v->di_tv;
++ 	    if (dip != NULL)
++ 		*dip = v;
++ 	}
+      }
+  
+      if (tv == NULL)
+***************
+*** 21474,21481 ****
+  	}
+  
+  	/*
+! 	 * Handle setting internal v: variables separately: we don't change
+! 	 * the type.
+  	 */
+  	if (ht == &vimvarht)
+  	{
+--- 21484,21491 ----
+  	}
+  
+  	/*
+! 	 * Handle setting internal v: variables separately where needed to
+! 	 * prevent changing the type.
+  	 */
+  	if (ht == &vimvarht)
+  	{
+***************
+*** 21490,21499 ****
+  		    v->di_tv.vval.v_string = tv->vval.v_string;
+  		    tv->vval.v_string = NULL;
+  		}
+  	    }
+! 	    else if (v->di_tv.v_type != VAR_NUMBER)
+! 		EMSG2(_(e_intern2), "set_var()");
+! 	    else
+  	    {
+  		v->di_tv.vval.v_number = get_tv_number(tv);
+  		if (STRCMP(varname, "searchforward") == 0)
+--- 21500,21508 ----
+  		    v->di_tv.vval.v_string = tv->vval.v_string;
+  		    tv->vval.v_string = NULL;
+  		}
++ 		return;
+  	    }
+! 	    else if (v->di_tv.v_type == VAR_NUMBER)
+  	    {
+  		v->di_tv.vval.v_number = get_tv_number(tv);
+  		if (STRCMP(varname, "searchforward") == 0)
+***************
+*** 21505,21512 ****
+  		    redraw_all_later(SOME_VALID);
+  		}
+  #endif
+  	    }
+! 	    return;
+  	}
+  
+  	clear_tv(&v->di_tv);
+--- 21514,21523 ----
+  		    redraw_all_later(SOME_VALID);
+  		}
+  #endif
++ 		return;
+  	    }
+! 	    else if (v->di_tv.v_type != tv->v_type)
+! 		EMSG2(_(e_intern2), "set_var()");
+  	}
+  
+  	clear_tv(&v->di_tv);
+*** ../vim-7.4.716/src/testdir/test55.in	2015-04-13 16:16:31.225091428 +0200
+--- src/testdir/test55.in	2015-05-04 10:52:25.892071486 +0200
+***************
+*** 442,447 ****
+--- 442,458 ----
+  :unlockvar 1 b:
+  :unlet! b:testvar
+  :"
++ :$put ='No :let += of locked list variable:'
++ :let l = ['a', 'b', 3]
++ :lockvar 1 l
++ :try
++ :  let l += ['x']
++ :  $put ='did :let +='
++ :catch
++ :  $put =v:exception[:14]
++ :endtry
++ :$put =string(l)
++ :"
+  :unlet l
+  :let l = [1, 2, 3, 4]
+  :lockvar! l
+*** ../vim-7.4.716/src/testdir/test55.ok	2015-04-13 16:16:31.225091428 +0200
+--- src/testdir/test55.ok	2015-05-04 10:52:25.892071486 +0200
+***************
+*** 144,149 ****
+--- 144,152 ----
+  Vim(put):E742: 
+  No :unlet of variable in locked scope:
+  Vim(unlet):E741: 
++ No :let += of locked list variable:
++ Vim(let):E741: 
++ ['a', 'b', 3]
+  [1, 2, 3, 4]
+  [1, 2, 3, 4]
+  [1, 2, 3, 4]
+*** ../vim-7.4.716/src/version.c	2015-05-04 10:45:57.292481564 +0200
+--- src/version.c	2015-05-04 10:52:38.743925636 +0200
+***************
+*** 743,744 ****
+--- 743,746 ----
+  {   /* Add new patch number below this line */
++ /**/
++     717,
+  /**/
+
+-- 
+Anyone who is capable of getting themselves made President should on no
+account be allowed to do the job.
+		-- Douglas Adams, "The Hitchhiker's Guide to the Galaxy"
+
+ /// Bram Moolenaar -- Bram@Moolenaar.net -- http://www.Moolenaar.net   \\\
+///        sponsor Vim, vote for features -- http://www.Vim.org/sponsor/ \\\
+\\\  an exciting new programming language -- http://www.Zimbu.org        ///
+ \\\            help me help AIDS victims -- http://ICCF-Holland.org    ///

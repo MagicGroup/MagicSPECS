@@ -1,0 +1,45 @@
+To: vim_dev@googlegroups.com
+Subject: Patch 7.4.816
+Fcc: outbox
+From: Bram Moolenaar <Bram@moolenaar.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+------------
+
+Patch 7.4.816
+Problem:    Invalid memory access when doing ":fun X(".
+Solution:   Check for missing ')'. (Dominique Pelle)
+Files:      src/eval.c
+
+
+*** ../vim-7.4.815/src/eval.c	2015-08-11 15:46:04.544078510 +0200
+--- src/eval.c	2015-08-11 15:51:17.552562474 +0200
+***************
+*** 22557,22562 ****
+--- 22557,22564 ----
+  	    break;
+  	}
+      }
++     if (*p != ')')
++ 	goto erret;
+      ++p;	/* skip the ')' */
+  
+      /* find extra arguments "range", "dict" and "abort" */
+*** ../vim-7.4.815/src/version.c	2015-08-11 15:46:04.544078510 +0200
+--- src/version.c	2015-08-11 15:51:37.380339593 +0200
+***************
+*** 743,744 ****
+--- 743,746 ----
+  {   /* Add new patch number below this line */
++ /**/
++     816,
+  /**/
+
+-- 
+Individualists unite!
+
+ /// Bram Moolenaar -- Bram@Moolenaar.net -- http://www.Moolenaar.net   \\\
+///        sponsor Vim, vote for features -- http://www.Vim.org/sponsor/ \\\
+\\\  an exciting new programming language -- http://www.Zimbu.org        ///
+ \\\            help me help AIDS victims -- http://ICCF-Holland.org    ///

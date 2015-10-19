@@ -1,0 +1,56 @@
+To: vim_dev@googlegroups.com
+Subject: Patch 7.4.820
+Fcc: outbox
+From: Bram Moolenaar <Bram@moolenaar.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+------------
+
+Patch 7.4.820
+Problem:    Invalid memory access in file_pat_to_reg_pat.
+Solution:   Avoid looking before the start of a string. (Dominique Pelle)
+Files:      src/fileio.c
+
+
+*** ../vim-7.4.819/src/fileio.c	2015-08-11 16:19:59.433200370 +0200
+--- src/fileio.c	2015-08-11 18:43:31.191888181 +0200
+***************
+*** 10210,10216 ****
+      else
+  	reg_pat[i++] = '^';
+      endp = pat_end - 1;
+!     if (*endp == '*')
+      {
+  	while (endp - pat > 0 && *endp == '*')
+  	    endp--;
+--- 10210,10216 ----
+      else
+  	reg_pat[i++] = '^';
+      endp = pat_end - 1;
+!     if (endp >= pat && *endp == '*')
+      {
+  	while (endp - pat > 0 && *endp == '*')
+  	    endp--;
+*** ../vim-7.4.819/src/version.c	2015-08-11 18:33:43.078928006 +0200
+--- src/version.c	2015-08-11 18:44:56.022874464 +0200
+***************
+*** 743,744 ****
+--- 743,746 ----
+  {   /* Add new patch number below this line */
++ /**/
++     820,
+  /**/
+
+-- 
+WOMAN:   Well, 'ow did you become king then?
+ARTHUR:  The Lady of the Lake, [angels sing] her arm clad in the purest
+         shimmering samite, held aloft Excalibur from the bosom of the water
+         signifying by Divine Providence that I, Arthur, was to carry
+         Excalibur.  [singing stops] That is why I am your king!
+                                  The Quest for the Holy Grail (Monty Python)
+
+ /// Bram Moolenaar -- Bram@Moolenaar.net -- http://www.Moolenaar.net   \\\
+///        sponsor Vim, vote for features -- http://www.Vim.org/sponsor/ \\\
+\\\  an exciting new programming language -- http://www.Zimbu.org        ///
+ \\\            help me help AIDS victims -- http://ICCF-Holland.org    ///

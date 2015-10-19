@@ -1,0 +1,87 @@
+To: vim_dev@googlegroups.com
+Subject: Patch 7.4.874
+Fcc: outbox
+From: Bram Moolenaar <Bram@moolenaar.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+------------
+
+Patch 7.4.874
+Problem:    MS-Windows: When Vim runs inside another application, the size
+            isn't right.
+Solution:   When in child mode compute the size differently. (Agorgianitis
+            Loukas)
+Files:      src/gui_w48.c
+
+
+*** ../vim-7.4.873/src/gui_w48.c	2015-09-15 17:58:22.760394656 +0200
+--- src/gui_w48.c	2015-09-25 14:08:38.914825744 +0200
+***************
+*** 3335,3351 ****
+      RECT	rect;
+  
+      GetWindowRect(s_hwnd, &rect);
+!     gui_resize_shell(rect.right - rect.left
+! 			- (GetSystemMetrics(SM_CXFRAME) +
+! 			   GetSystemMetrics(SM_CXPADDEDBORDER)) * 2,
+! 		     rect.bottom - rect.top
+! 			- (GetSystemMetrics(SM_CYFRAME) +
+! 			   GetSystemMetrics(SM_CXPADDEDBORDER)) * 2
+! 			- GetSystemMetrics(SM_CYCAPTION)
+  #ifdef FEAT_MENU
+  			- gui_mswin_get_menu_height(FALSE)
+  #endif
+! 	    );
+  }
+  
+  /*
+--- 3335,3364 ----
+      RECT	rect;
+  
+      GetWindowRect(s_hwnd, &rect);
+!     if (win_socket_id == 0)
+!     {
+! 	gui_resize_shell(rect.right - rect.left
+! 	    - (GetSystemMetrics(SM_CXFRAME) +
+! 	       GetSystemMetrics(SM_CXPADDEDBORDER)) * 2,
+! 	    rect.bottom - rect.top
+! 	    - (GetSystemMetrics(SM_CYFRAME) +
+! 	       GetSystemMetrics(SM_CXPADDEDBORDER)) * 2
+! 	    - GetSystemMetrics(SM_CYCAPTION)
+! #ifdef FEAT_MENU
+! 	    - gui_mswin_get_menu_height(FALSE)
+! #endif
+! 	);
+!     }
+!     else
+!     {
+! 	/* Inside another window, don't use the frame and border. */
+! 	gui_resize_shell(rect.right - rect.left,
+! 	    rect.bottom - rect.top
+  #ifdef FEAT_MENU
+  			- gui_mswin_get_menu_height(FALSE)
+  #endif
+! 	);
+!     }
+  }
+  
+  /*
+*** ../vim-7.4.873/src/version.c	2015-09-17 23:20:38.577212536 +0200
+--- src/version.c	2015-09-25 14:07:42.195418589 +0200
+***************
+*** 743,744 ****
+--- 743,746 ----
+  {   /* Add new patch number below this line */
++ /**/
++     874,
+  /**/
+
+-- 
+hundred-and-one symptoms of being an internet addict:
+3. Your bookmark takes 15 minutes to scroll from top to bottom.
+
+ /// Bram Moolenaar -- Bram@Moolenaar.net -- http://www.Moolenaar.net   \\\
+///        sponsor Vim, vote for features -- http://www.Vim.org/sponsor/ \\\
+\\\  an exciting new programming language -- http://www.Zimbu.org        ///
+ \\\            help me help AIDS victims -- http://ICCF-Holland.org    ///

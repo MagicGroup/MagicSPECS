@@ -1,0 +1,275 @@
+To: vim_dev@googlegroups.com
+Subject: Patch 7.4.771
+Fcc: outbox
+From: Bram Moolenaar <Bram@moolenaar.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+------------
+
+Patch 7.4.771
+Problem:    Search does not handle multi-byte character at the start position
+            correctly.
+Solution:   Take byte size of character into account. (Yukihiro Nakadaira)
+Files:      src/search.c, src/testdir/Make_amiga.mak,
+            src/testdir/Make_dos.mak, src/testdir/Make_ming.mak,
+            src/testdir/Make_os2.mak, src/testdir/Make_vms.mms,
+            src/testdir/Makefile, src/testdir/test_search_mbyte.in,
+            src/testdir/test_search_mbyte.ok
+
+
+*** ../vim-7.4.770/src/search.c	2015-03-13 15:02:46.254059251 +0100
+--- src/search.c	2015-07-10 14:37:49.055931842 +0200
+***************
+*** 548,553 ****
+--- 548,554 ----
+      pos_T	start_pos;
+      int		at_first_line;
+      int		extra_col;
++     int		start_char_len;
+      int		match_ok;
+      long	nmatched;
+      int		submatch = 0;
+***************
+*** 574,596 ****
+  	/* When not accepting a match at the start position set "extra_col" to
+  	 * a non-zero value.  Don't do that when starting at MAXCOL, since
+  	 * MAXCOL + 1 is zero. */
+! 	if ((options & SEARCH_START) || pos->col == MAXCOL)
+! 	    extra_col = 0;
+  #ifdef FEAT_MBYTE
+  	/* Watch out for the "col" being MAXCOL - 2, used in a closed fold. */
+! 	else if (dir != BACKWARD && has_mbyte
+! 		     && pos->lnum >= 1 && pos->lnum <= buf->b_ml.ml_line_count
+! 						     && pos->col < MAXCOL - 2)
+  	{
+  	    ptr = ml_get_buf(buf, pos->lnum, FALSE) + pos->col;
+  	    if (*ptr == NUL)
+! 		extra_col = 1;
+  	    else
+! 		extra_col = (*mb_ptr2len)(ptr);
+  	}
+  #endif
+  	else
+! 	    extra_col = 1;
+  
+  	start_pos = *pos;	/* remember start pos for detecting no match */
+  	found = 0;		/* default: not found */
+--- 575,611 ----
+  	/* When not accepting a match at the start position set "extra_col" to
+  	 * a non-zero value.  Don't do that when starting at MAXCOL, since
+  	 * MAXCOL + 1 is zero. */
+! 	if (pos->col == MAXCOL)
+! 	    start_char_len = 0;
+  #ifdef FEAT_MBYTE
+  	/* Watch out for the "col" being MAXCOL - 2, used in a closed fold. */
+! 	else if (has_mbyte
+! 		    && pos->lnum >= 1 && pos->lnum <= buf->b_ml.ml_line_count
+! 						    && pos->col < MAXCOL - 2)
+  	{
+  	    ptr = ml_get_buf(buf, pos->lnum, FALSE) + pos->col;
+  	    if (*ptr == NUL)
+! 		start_char_len = 1;
+  	    else
+! 		start_char_len = (*mb_ptr2len)(ptr);
+  	}
+  #endif
+  	else
+! 	    start_char_len = 1;
+! 	if (dir == FORWARD)
+! 	{
+! 	    if (options & SEARCH_START)
+! 		extra_col = 0;
+! 	    else
+! 		extra_col = start_char_len;
+! 	}
+! 	else
+! 	{
+! 	    if (options & SEARCH_START)
+! 		extra_col = start_char_len;
+! 	    else
+! 		extra_col = 0;
+! 	}
+  
+  	start_pos = *pos;	/* remember start pos for detecting no match */
+  	found = 0;		/* default: not found */
+***************
+*** 779,793 ****
+  					|| (lnum + regmatch.endpos[0].lnum
+  							     == start_pos.lnum
+  					     && (int)regmatch.endpos[0].col - 1
+! 								   + extra_col
+! 							<= (int)start_pos.col))
+  				    : (lnum + regmatch.startpos[0].lnum
+  							      < start_pos.lnum
+  					|| (lnum + regmatch.startpos[0].lnum
+  							     == start_pos.lnum
+  					     && (int)regmatch.startpos[0].col
+! 								   + extra_col
+! 						      <= (int)start_pos.col))))
+  			    {
+  				match_ok = TRUE;
+  				matchpos = regmatch.startpos[0];
+--- 794,808 ----
+  					|| (lnum + regmatch.endpos[0].lnum
+  							     == start_pos.lnum
+  					     && (int)regmatch.endpos[0].col - 1
+! 							< (int)start_pos.col
+! 								+ extra_col))
+  				    : (lnum + regmatch.startpos[0].lnum
+  							      < start_pos.lnum
+  					|| (lnum + regmatch.startpos[0].lnum
+  							     == start_pos.lnum
+  					     && (int)regmatch.startpos[0].col
+! 						      < (int)start_pos.col
+! 							      + extra_col))))
+  			    {
+  				match_ok = TRUE;
+  				matchpos = regmatch.startpos[0];
+*** ../vim-7.4.770/src/testdir/Make_amiga.mak	2015-06-25 13:57:20.033431073 +0200
+--- src/testdir/Make_amiga.mak	2015-07-10 14:36:33.776641084 +0200
+***************
+*** 57,62 ****
+--- 57,63 ----
+  		test_perl.out \
+  		test_qf_title.out \
+  		test_ruby.out \
++ 		test_search_mbyte.out \
+  		test_set.out \
+  		test_signs.out \
+  		test_textobjects.out \
+***************
+*** 205,210 ****
+--- 206,212 ----
+  test_perl.out: test_perl.in
+  test_qf_title.out: test_qf_title.in
+  test_ruby.out: test_ruby.in
++ test_search_mbyte.out: test_search_mbyte.in
+  test_set.out: test_set.in
+  test_signs.out: test_signs.in
+  test_textobjects.out: test_textobjects.in
+*** ../vim-7.4.770/src/testdir/Make_dos.mak	2015-06-25 13:57:20.033431073 +0200
+--- src/testdir/Make_dos.mak	2015-07-10 14:36:43.384550582 +0200
+***************
+*** 56,61 ****
+--- 56,62 ----
+  		test_perl.out \
+  		test_qf_title.out \
+  		test_ruby.out \
++ 		test_search_mbyte.out \
+  		test_set.out \
+  		test_signs.out \
+  		test_textobjects.out \
+*** ../vim-7.4.770/src/testdir/Make_ming.mak	2015-06-25 13:57:20.033431073 +0200
+--- src/testdir/Make_ming.mak	2015-07-10 14:36:50.716481518 +0200
+***************
+*** 78,83 ****
+--- 78,84 ----
+  		test_perl.out \
+  		test_qf_title.out \
+  		test_ruby.out \
++ 		test_search_mbyte.out \
+  		test_set.out \
+  		test_signs.out \
+  		test_textobjects.out \
+*** ../vim-7.4.770/src/testdir/Make_os2.mak	2015-06-25 13:57:20.033431073 +0200
+--- src/testdir/Make_os2.mak	2015-07-10 14:36:52.820461700 +0200
+***************
+*** 58,63 ****
+--- 58,64 ----
+  		test_perl.out \
+  		test_qf_title.out \
+  		test_ruby.out \
++ 		test_search_mbyte.out \
+  		test_set.out \
+  		test_signs.out \
+  		test_textobjects.out \
+*** ../vim-7.4.770/src/testdir/Make_vms.mms	2015-06-25 13:57:20.033431073 +0200
+--- src/testdir/Make_vms.mms	2015-07-10 14:36:58.240410647 +0200
+***************
+*** 4,10 ****
+  # Authors:	Zoltan Arpadffy, <arpadffy@polarhome.com>
+  #		Sandor Kopanyi,  <sandor.kopanyi@mailbox.hu>
+  #
+! # Last change:  2015 Jun 19
+  #
+  # This has been tested on VMS 6.2 to 8.3 on DEC Alpha, VAX and IA64.
+  # Edit the lines in the Configuration section below to select.
+--- 4,10 ----
+  # Authors:	Zoltan Arpadffy, <arpadffy@polarhome.com>
+  #		Sandor Kopanyi,  <sandor.kopanyi@mailbox.hu>
+  #
+! # Last change:  2015 Jul 10
+  #
+  # This has been tested on VMS 6.2 to 8.3 on DEC Alpha, VAX and IA64.
+  # Edit the lines in the Configuration section below to select.
+***************
+*** 117,122 ****
+--- 117,123 ----
+  	 test_perl.out \
+  	 test_qf_title.out \
+  	 test_ruby.out \
++ 	 test_search_mbyte.out \
+  	 test_set.out \
+  	 test_signs.out \
+  	 test_textobjects.out \
+*** ../vim-7.4.770/src/testdir/Makefile	2015-06-25 13:57:20.033431073 +0200
+--- src/testdir/Makefile	2015-07-10 14:37:09.404305492 +0200
+***************
+*** 54,59 ****
+--- 54,60 ----
+  		test_perl.out \
+  		test_qf_title.out \
+  		test_ruby.out \
++ 		test_search_mbyte.out \
+  		test_set.out \
+  		test_signs.out \
+  		test_textobjects.out \
+*** ../vim-7.4.770/src/testdir/test_search_mbyte.in	2015-07-10 14:42:43.513156459 +0200
+--- src/testdir/test_search_mbyte.in	2015-07-10 14:33:38.430293025 +0200
+***************
+*** 0 ****
+--- 1,15 ----
++ Test for search('multi-byte char', 'bce')
++ 
++ STARTTEST
++ :source small.vim
++ :source mbyte.vim
++ :set encoding=utf-8
++ :/^Test bce:/+1
++ :$put =search('Ａ', 'bce', line('.'))
++ :1;/^Results:/,$wq! test.out
++ ENDTEST
++ 
++ Results:
++ 
++ Test bce:
++ Ａ
+*** ../vim-7.4.770/src/testdir/test_search_mbyte.ok	2015-07-10 14:42:43.517156422 +0200
+--- src/testdir/test_search_mbyte.ok	2015-07-10 14:34:23.409869226 +0200
+***************
+*** 0 ****
+--- 1,5 ----
++ Results:
++ 
++ Test bce:
++ Ａ
++ 15
+*** ../vim-7.4.770/src/version.c	2015-07-10 14:05:03.930436893 +0200
+--- src/version.c	2015-07-10 14:37:46.207958692 +0200
+***************
+*** 743,744 ****
+--- 743,746 ----
+  {   /* Add new patch number below this line */
++ /**/
++     771,
+  /**/
+
+-- 
+hundred-and-one symptoms of being an internet addict:
+197. Your desk collapses under the weight of your computer peripherals.
+
+ /// Bram Moolenaar -- Bram@Moolenaar.net -- http://www.Moolenaar.net   \\\
+///        sponsor Vim, vote for features -- http://www.Vim.org/sponsor/ \\\
+\\\  an exciting new programming language -- http://www.Zimbu.org        ///
+ \\\            help me help AIDS victims -- http://ICCF-Holland.org    ///

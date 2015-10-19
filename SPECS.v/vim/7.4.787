@@ -1,0 +1,79 @@
+To: vim_dev@googlegroups.com
+Subject: Patch 7.4.787
+Fcc: outbox
+From: Bram Moolenaar <Bram@moolenaar.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+------------
+
+Patch 7.4.787 (after 7.4.786)
+Problem:    snprintf() isn't available everywhere.
+Solution:   Use vim_snprintf(). (Ken Takata)
+Files:      src/option.c
+
+
+*** ../vim-7.4.786/src/option.c	2015-07-17 17:38:00.567399623 +0200
+--- src/option.c	2015-07-17 22:01:19.618757952 +0200
+***************
+*** 8291,8299 ****
+      if (!starting)
+      {
+  	char_u buf_old[2], buf_new[2], buf_type[7];
+! 	snprintf((char *)buf_old, 2, "%d", old_value ? TRUE: FALSE);
+! 	snprintf((char *)buf_new, 2, "%d", value ? TRUE: FALSE);
+! 	sprintf((char *)buf_type, "%s", (opt_flags & OPT_LOCAL) ? "local" : "global");
+  	set_vim_var_string(VV_OPTION_NEW, buf_new, -1);
+  	set_vim_var_string(VV_OPTION_OLD, buf_old, -1);
+  	set_vim_var_string(VV_OPTION_TYPE, buf_type, -1);
+--- 8291,8299 ----
+      if (!starting)
+      {
+  	char_u buf_old[2], buf_new[2], buf_type[7];
+! 	vim_snprintf((char *)buf_old, 2, "%d", old_value ? TRUE: FALSE);
+! 	vim_snprintf((char *)buf_new, 2, "%d", value ? TRUE: FALSE);
+! 	vim_snprintf((char *)buf_type, 7, "%s", (opt_flags & OPT_LOCAL) ? "local" : "global");
+  	set_vim_var_string(VV_OPTION_NEW, buf_new, -1);
+  	set_vim_var_string(VV_OPTION_OLD, buf_old, -1);
+  	set_vim_var_string(VV_OPTION_TYPE, buf_type, -1);
+***************
+*** 8841,8849 ****
+      if (!starting && errmsg == NULL)
+      {
+  	char_u buf_old[11], buf_new[11], buf_type[7];
+! 	snprintf((char *)buf_old, 10, "%ld", old_value);
+! 	snprintf((char *)buf_new, 10, "%ld", value);
+! 	snprintf((char *)buf_type, 7, "%s", (opt_flags & OPT_LOCAL) ? "local" : "global");
+  	set_vim_var_string(VV_OPTION_NEW, buf_new, -1);
+  	set_vim_var_string(VV_OPTION_OLD, buf_old, -1);
+  	set_vim_var_string(VV_OPTION_TYPE, buf_type, -1);
+--- 8841,8849 ----
+      if (!starting && errmsg == NULL)
+      {
+  	char_u buf_old[11], buf_new[11], buf_type[7];
+! 	vim_snprintf((char *)buf_old, 10, "%ld", old_value);
+! 	vim_snprintf((char *)buf_new, 10, "%ld", value);
+! 	vim_snprintf((char *)buf_type, 7, "%s", (opt_flags & OPT_LOCAL) ? "local" : "global");
+  	set_vim_var_string(VV_OPTION_NEW, buf_new, -1);
+  	set_vim_var_string(VV_OPTION_OLD, buf_old, -1);
+  	set_vim_var_string(VV_OPTION_TYPE, buf_type, -1);
+*** ../vim-7.4.786/src/version.c	2015-07-17 17:38:00.567399623 +0200
+--- src/version.c	2015-07-17 22:02:53.357875372 +0200
+***************
+*** 743,744 ****
+--- 743,746 ----
+  {   /* Add new patch number below this line */
++ /**/
++     787,
+  /**/
+
+-- 
+The term "free software" is defined by Richard M. Stallman as
+being software that isn't necessarily for free.  Confusing?
+Let's call it "Stallman software" then!
+				-- Bram Moolenaar
+
+ /// Bram Moolenaar -- Bram@Moolenaar.net -- http://www.Moolenaar.net   \\\
+///        sponsor Vim, vote for features -- http://www.Vim.org/sponsor/ \\\
+\\\  an exciting new programming language -- http://www.Zimbu.org        ///
+ \\\            help me help AIDS victims -- http://ICCF-Holland.org    ///

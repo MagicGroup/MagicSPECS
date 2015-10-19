@@ -1,0 +1,60 @@
+To: vim_dev@googlegroups.com
+Subject: Patch 7.4.762
+Fcc: outbox
+From: Bram Moolenaar <Bram@moolenaar.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+------------
+
+Patch 7.4.762 (after 7.4.757)
+Problem:    Comment for may_req_bg_color() is wrong. (Christ van Willegen)
+Solution:   Rewrite the comment.
+Files:      src/term.c
+
+
+*** ../vim-7.4.761/src/term.c	2015-06-25 19:16:51.489906203 +0200
+--- src/term.c	2015-06-25 20:07:42.969433277 +0200
+***************
+*** 3409,3421 ****
+  
+  #if defined(FEAT_TERMRESPONSE) || defined(PROTO)
+  /*
+!  * Check how the terminal treats ambiguous character width (UAX #11).
+!  * First, we move the cursor to (1, 0) and print a test ambiguous character
+!  * \u25bd (WHITE DOWN-POINTING TRIANGLE) and query current cursor position.
+!  * If the terminal treats \u25bd as single width, the position is (1, 1),
+!  * or if it is treated as double width, that will be (1, 2).
+!  * This function has the side effect that changes cursor position, so
+!  * it must be called immediately after entering termcap mode.
+   */
+      void
+  may_req_bg_color()
+--- 3409,3416 ----
+  
+  #if defined(FEAT_TERMRESPONSE) || defined(PROTO)
+  /*
+!  * Similar to requesting the version string: Request the terminal background
+!  * color when it is the right moment.
+   */
+      void
+  may_req_bg_color()
+*** ../vim-7.4.761/src/version.c	2015-06-25 19:16:51.489906203 +0200
+--- src/version.c	2015-06-27 18:33:02.632450430 +0200
+***************
+*** 743,744 ****
+--- 743,746 ----
+  {   /* Add new patch number below this line */
++ /**/
++     762,
+  /**/
+
+-- 
+hundred-and-one symptoms of being an internet addict:
+163. You go outside for the fresh air (at -30 degrees) but open the
+     window first to hear new mail arrive.
+
+ /// Bram Moolenaar -- Bram@Moolenaar.net -- http://www.Moolenaar.net   \\\
+///        sponsor Vim, vote for features -- http://www.Vim.org/sponsor/ \\\
+\\\  an exciting new programming language -- http://www.Zimbu.org        ///
+ \\\            help me help AIDS victims -- http://ICCF-Holland.org    ///

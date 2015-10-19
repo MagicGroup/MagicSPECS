@@ -1,0 +1,83 @@
+To: vim_dev@googlegroups.com
+Subject: Patch 7.4.896
+Fcc: outbox
+From: Bram Moolenaar <Bram@moolenaar.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+------------
+
+Patch 7.4.896
+Problem:    Editing a URL, which netrw should handle, doesn't work.
+Solution:   Avoid changing slashes to backslashes. (Yasuhiro Matsumoto)
+Files:      src/fileio.c, src/os_mswin.c
+
+
+*** ../vim-7.4.895/src/fileio.c	2015-08-11 18:45:43.122311811 +0200
+--- src/fileio.c	2015-10-13 19:41:02.297893970 +0200
+***************
+*** 7547,7553 ****
+  
+  #if defined(BACKSLASH_IN_FILENAME) || defined(PROTO)
+  /*
+!  * Convert all backslashes in fname to forward slashes in-place.
+   */
+      void
+  forward_slash(fname)
+--- 7547,7554 ----
+  
+  #if defined(BACKSLASH_IN_FILENAME) || defined(PROTO)
+  /*
+!  * Convert all backslashes in fname to forward slashes in-place, unless when
+!  * it looks like a URL.
+   */
+      void
+  forward_slash(fname)
+***************
+*** 7555,7560 ****
+--- 7556,7563 ----
+  {
+      char_u	*p;
+  
++     if (path_with_url(fname))
++ 	return;
+      for (p = fname; *p != NUL; ++p)
+  # ifdef  FEAT_MBYTE
+  	/* The Big5 encoding can have '\' in the trail byte. */
+*** ../vim-7.4.895/src/os_mswin.c	2014-11-05 19:33:19.548314778 +0100
+--- src/os_mswin.c	2015-10-13 19:41:56.637324394 +0200
+***************
+*** 481,491 ****
+--- 481,494 ----
+   * commands that use a file name should try to avoid the need to type a
+   * backslash twice.
+   * When 'shellslash' set do it the other way around.
++  * When the path looks like a URL leave it unmodified.
+   */
+      void
+  slash_adjust(p)
+      char_u  *p;
+  {
++     if (path_with_url(p))
++ 	return;
+      while (*p)
+      {
+  	if (*p == psepcN)
+*** ../vim-7.4.895/src/version.c	2015-10-13 19:18:00.252374217 +0200
+--- src/version.c	2015-10-13 19:21:05.238436798 +0200
+***************
+*** 743,744 ****
+--- 743,746 ----
+  {   /* Add new patch number below this line */
++ /**/
++     896,
+  /**/
+
+-- 
+Have you heard about the new Beowulf cluster? It's so fast, it executes
+an infinite loop in 6 seconds.
+
+ /// Bram Moolenaar -- Bram@Moolenaar.net -- http://www.Moolenaar.net   \\\
+///        sponsor Vim, vote for features -- http://www.Vim.org/sponsor/ \\\
+\\\  an exciting new programming language -- http://www.Zimbu.org        ///
+ \\\            help me help AIDS victims -- http://ICCF-Holland.org    ///

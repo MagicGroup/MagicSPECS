@@ -3,12 +3,14 @@
 %define telepathy_glib_version 0.11.6
 
 Summary: A remote desktop system for GNOME
+Summary(zh_CN.UTF-8): GNOME 下的远程桌面系统
 Name: vino
-Version: 3.11.4
-Release: 2%{?dist}
+Version:	3.18.0
+Release:	1%{?dist}
 URL: http://www.gnome.org
 #VCS: git:git://git.gnome.org/vino
-Source0: http://download.gnome.org/sources/vino/3.11/%{name}-%{version}.tar.xz
+%define majorver %(echo %{version} | awk -F. '{print $1"."$2}')
+Source0: http://download.gnome.org/sources/vino/%{majorver}/%{name}-%{version}.tar.xz
 
 License: GPLv2+
 Group: User Interface/Desktops
@@ -31,6 +33,9 @@ BuildRequires: gnome-common
 %description
 Vino is a VNC server for GNOME. It allows remote users to
 connect to a running GNOME session using VNC.
+
+%description -l zh_CN.UTF-8
+Vino 是 GNOME 下的 VNC 服务器。
 
 %prep
 %setup -q
@@ -56,7 +61,7 @@ make %{?_smp_mflags}
 
 %install
 make install DESTDIR=$RPM_BUILD_ROOT
-
+magic_rpm_clean.sh
 %find_lang %{name}
 
 %post
@@ -79,12 +84,15 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &>/dev/null || :
 %{_datadir}/dbus-1/services/org.freedesktop.Telepathy.Client.Vino.service
 %{_datadir}/telepathy/clients/Vino.client
 %{_libexecdir}/*
-%{_sysconfdir}/xdg/autostart/vino-server.desktop
+%{_datadir}/applications/vino-server.desktop
 %{_datadir}/glib-2.0/schemas/org.gnome.Vino.enums.xml
 %{_datadir}/glib-2.0/schemas/org.gnome.Vino.gschema.xml
-%{_datadir}/GConf/gsettings/org.gnome.Vino.convert
+#%{_datadir}/GConf/gsettings/org.gnome.Vino.convert
 
 %changelog
+* Sun Oct 18 2015 Liu Di <liudidi@gmail.com> - 3.18.0-1
+- 更新到 3.18.0
+
 * Sun May 04 2014 Liu Di <liudidi@gmail.com> - 3.11.4-2
 - 为 Magic 3.0 重建
 

@@ -3,15 +3,18 @@
 %endif
 
 Name:           vinagre
-Version:        3.8.1
-Release:        1%{?dist}
+Version:	3.18.1
+Release:	1%{?dist}
 Summary:        VNC client for GNOME
+Summary(zh_CN.UTF-8): GNOME 下的 VNC 客户端
 
 Group:          Applications/System
+Group(zh_CN.UTF-8): 应用程序/系统
 License:        GPLv2+
 URL:            http://projects.gnome.org/vinagre/
 #VCS: git:git://git.gnome.org/vinagre
-Source0:        http://download.gnome.org/sources/vinagre/3.8/%{name}-%{version}.tar.xz
+%define majorver %(echo %{version} | awk -F. '{print $1"."$2}')
+Source0:        http://download.gnome.org/sources/vinagre/%{majorver}/%{name}-%{version}.tar.xz
 
 %if 0%{?with_spice}
 BuildRequires:  spice-gtk3-devel
@@ -30,6 +33,8 @@ BuildRequires:  vte3-devel >= 0.20
 BuildRequires:  vala-devel
 BuildRequires:  itstool
 BuildRequires:  libsecret-devel
+
+BuildRequires:  freerdp-devel
 
 # for /usr/share/dbus-1/services
 Requires: dbus
@@ -53,6 +58,8 @@ GNOME keyring, and browse the network to look for VNC servers.
 
 Apart from the VNC protocol, vinagre supports Spice and RDP.
 
+%description -l zh_CN.UTF-8
+GNOME 下的 VNC 客户端。
 
 %prep
 %setup -q
@@ -85,7 +92,7 @@ desktop-file-install                                            \
 
 # drop unwanted stuff
 rm -f $RPM_BUILD_ROOT%{_libdir}/vinagre-3.0/plugins/*.la
-
+magic_rpm_clean.sh
 %find_lang vinagre --with-gnome
 
 %post
@@ -120,13 +127,16 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &>/dev/null || :
 %dir %{_datadir}/GConf/
 %dir %{_datadir}/GConf/gsettings/
 %{_datadir}/GConf/gsettings/org.gnome.Vinagre.convert
-
+%{_datadir}/appdata/vinagre.appdata.xml
 
 %doc %{_mandir}/man1/vinagre.1.gz
 %doc README NEWS COPYING AUTHORS
 
 
 %changelog
+* Sun Oct 18 2015 Liu Di <liudidi@gmail.com> - 3.18.1-1
+- 更新到 3.18.1
+
 * Mon Apr 15 2013 Kalev Lember <kalevlember@gmail.com> - 3.8.1-1
 - Update to 3.8.1
 

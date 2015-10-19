@@ -1,0 +1,187 @@
+To: vim_dev@googlegroups.com
+Subject: Patch 7.4.791
+Fcc: outbox
+From: Bram Moolenaar <Bram@moolenaar.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+------------
+
+Patch 7.4.791
+Problem:    The buffer list can be very long.
+Solution:   Add an argument to ":ls" to specify the type of buffer to list.
+            (Marcin Szamotulski)
+Files:      runtime/doc/windows.txt, src/buffer.c, src/ex_cmds.h
+
+
+*** ../vim-7.4.790/runtime/doc/windows.txt	2015-01-07 16:52:53.506792420 +0100
+--- runtime/doc/windows.txt	2015-07-21 14:59:59.925184307 +0200
+***************
+*** 986,994 ****
+  list of buffers. |unlisted-buffer|
+  
+  
+! :files[!]					*:files*
+! :buffers[!]					*:buffers* *:ls*
+! :ls[!]		Show all buffers.  Example:
+  
+  			1 #h   "/test/text"		line 1 ~
+  			2u     "asdf"			line 0 ~
+--- 986,995 ----
+  list of buffers. |unlisted-buffer|
+  
+  
+! :files[!] [flags]				*:files*
+! :buffers[!] [flags]				*:buffers* *:ls*
+! :ls[!] [flags]
+! 		Show all buffers.  Example:
+  
+  			1 #h   "/test/text"		line 1 ~
+  			2u     "asdf"			line 0 ~
+***************
+*** 998,1005 ****
+  		(the term "unlisted" is a bit confusing then...).
+  
+  		Each buffer has a unique number.  That number will not change,
+! 		so you can always go to a specific buffer with ":buffer N" or
+! 		"N CTRL-^", where N is the buffer number.
+  
+  		Indicators (chars in the same column are mutually exclusive):
+  		u	an unlisted buffer (only displayed when [!] is used)
+--- 999,1006 ----
+  		(the term "unlisted" is a bit confusing then...).
+  
+  		Each buffer has a unique number.  That number will not change,
+! 		thus you can always go to a specific buffer with ":buffer N"
+! 		or "N CTRL-^", where N is the buffer number.
+  
+  		Indicators (chars in the same column are mutually exclusive):
+  		u	an unlisted buffer (only displayed when [!] is used)
+***************
+*** 1014,1019 ****
+--- 1015,1035 ----
+  		    +	a modified buffer
+  		    x   a buffer with read errors
+  
++ 		[flags] can be a combination of the following characters,
++ 		which restrict the buffers to be listed:
++ 		     +   modified buffers
++ 		     -   buffers with 'modifiable' off
++ 		     =   readonly buffers
++ 		     a   active buffers
++ 		     u   unloaded buffers (overrides the "!")
++ 		     h   hidden buffers
++ 		     x   buffers with a read error
++ 		     %   current buffer
++ 		     #   alternate buffer
++ 		Combining flags means they are "and"ed together, e.g.:
++ 		     h+   hidden buffers which are modified
++ 		     a+   active buffers which are modified
++ 
+  						*:bad* *:badd*
+  :bad[d]	[+lnum] {fname}
+  		Add file name {fname} to the buffer list, without loading it.
+*** ../vim-7.4.790/src/buffer.c	2015-07-17 14:16:49.842596797 +0200
+--- src/buffer.c	2015-07-21 14:59:08.989668192 +0200
+***************
+*** 2761,2767 ****
+      for (buf = firstbuf; buf != NULL && !got_int; buf = buf->b_next)
+      {
+  	/* skip unlisted buffers, unless ! was used */
+! 	if (!buf->b_p_bl && !eap->forceit)
+  	    continue;
+  	msg_putchar('\n');
+  	if (buf_spname(buf) != NULL)
+--- 2761,2780 ----
+      for (buf = firstbuf; buf != NULL && !got_int; buf = buf->b_next)
+      {
+  	/* skip unlisted buffers, unless ! was used */
+! 	if ((!buf->b_p_bl && !eap->forceit && !vim_strchr(eap->arg, 'u'))
+! 		|| (vim_strchr(eap->arg, 'u') && buf->b_p_bl)
+! 		|| (vim_strchr(eap->arg, '+')
+! 			&& ((buf->b_flags & BF_READERR) || !bufIsChanged(buf)))
+! 		|| (vim_strchr(eap->arg, 'a')
+! 			 && (buf->b_ml.ml_mfp == NULL || buf->b_nwindows == 0))
+! 		|| (vim_strchr(eap->arg, 'h')
+! 			 && (buf->b_ml.ml_mfp == NULL || buf->b_nwindows != 0))
+! 		|| (vim_strchr(eap->arg, '-') && buf->b_p_ma)
+! 		|| (vim_strchr(eap->arg, '=') && !buf->b_p_ro)
+! 		|| (vim_strchr(eap->arg, 'x') && !(buf->b_flags & BF_READERR))
+! 		|| (vim_strchr(eap->arg, '%') && buf != curbuf)
+! 		|| (vim_strchr(eap->arg, '#')
+! 		      && (buf == curbuf || curwin->w_alt_fnum != buf->b_fnum)))
+  	    continue;
+  	msg_putchar('\n');
+  	if (buf_spname(buf) != NULL)
+*** ../vim-7.4.790/src/ex_cmds.h	2015-01-20 19:30:46.665275623 +0100
+--- src/ex_cmds.h	2015-07-21 14:40:57.480043462 +0200
+***************
+*** 217,223 ****
+  			NEEDARG|EXTRA|NOTRLCOM|CMDWIN,
+  			ADDR_LINES),
+  EX(CMD_buffers,		"buffers",	buflist_list,
+! 			BANG|TRLBAR|CMDWIN,
+  			ADDR_LINES),
+  EX(CMD_bufdo,		"bufdo",	ex_listdo,
+  			BANG|NEEDARG|EXTRA|NOTRLCOM|RANGE|NOTADR|DFLALL,
+--- 217,223 ----
+  			NEEDARG|EXTRA|NOTRLCOM|CMDWIN,
+  			ADDR_LINES),
+  EX(CMD_buffers,		"buffers",	buflist_list,
+! 			BANG|EXTRA|TRLBAR|CMDWIN,
+  			ADDR_LINES),
+  EX(CMD_bufdo,		"bufdo",	ex_listdo,
+  			BANG|NEEDARG|EXTRA|NOTRLCOM|RANGE|NOTADR|DFLALL,
+***************
+*** 526,532 ****
+  			RANGE|NOTADR|ZEROR|BANG|FILE1|TRLBAR,
+  			ADDR_LINES),
+  EX(CMD_files,		"files",	buflist_list,
+! 			BANG|TRLBAR|CMDWIN,
+  			ADDR_LINES),
+  EX(CMD_filetype,	"filetype",	ex_filetype,
+  			EXTRA|TRLBAR|CMDWIN,
+--- 526,532 ----
+  			RANGE|NOTADR|ZEROR|BANG|FILE1|TRLBAR,
+  			ADDR_LINES),
+  EX(CMD_files,		"files",	buflist_list,
+! 			BANG|EXTRA|TRLBAR|CMDWIN,
+  			ADDR_LINES),
+  EX(CMD_filetype,	"filetype",	ex_filetype,
+  			EXTRA|TRLBAR|CMDWIN,
+***************
+*** 847,853 ****
+  			RANGE|NOTADR|COUNT|TRLBAR,
+  			ADDR_LINES),
+  EX(CMD_ls,		"ls",		buflist_list,
+! 			BANG|TRLBAR|CMDWIN,
+  			ADDR_LINES),
+  EX(CMD_move,		"move",		ex_copymove,
+  			RANGE|WHOLEFOLD|EXTRA|TRLBAR|CMDWIN|MODIFY,
+--- 847,853 ----
+  			RANGE|NOTADR|COUNT|TRLBAR,
+  			ADDR_LINES),
+  EX(CMD_ls,		"ls",		buflist_list,
+! 			BANG|EXTRA|TRLBAR|CMDWIN,
+  			ADDR_LINES),
+  EX(CMD_move,		"move",		ex_copymove,
+  			RANGE|WHOLEFOLD|EXTRA|TRLBAR|CMDWIN|MODIFY,
+*** ../vim-7.4.790/src/version.c	2015-07-21 10:57:35.379311166 +0200
+--- src/version.c	2015-07-21 14:41:25.219779629 +0200
+***************
+*** 743,744 ****
+--- 743,746 ----
+  {   /* Add new patch number below this line */
++ /**/
++     791,
+  /**/
+
+-- 
+"Women marry men hoping they will change. Men marry women hoping
+they will not. So each is inevitably disappointed."
+ - Einstein
+
+ /// Bram Moolenaar -- Bram@Moolenaar.net -- http://www.Moolenaar.net   \\\
+///        sponsor Vim, vote for features -- http://www.Vim.org/sponsor/ \\\
+\\\  an exciting new programming language -- http://www.Zimbu.org        ///
+ \\\            help me help AIDS victims -- http://ICCF-Holland.org    ///

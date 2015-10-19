@@ -1,0 +1,85 @@
+diff -up vsftpd-3.0.2/parseconf.c.lookup vsftpd-3.0.2/parseconf.c
+--- vsftpd-3.0.2/parseconf.c.lookup	2014-04-17 10:01:50.862951491 +0200
++++ vsftpd-3.0.2/parseconf.c	2014-04-17 10:02:42.343955443 +0200
+@@ -91,6 +91,7 @@ parseconf_bool_array[] =
+   { "mdtm_write", &tunable_mdtm_write },
+   { "lock_upload_files", &tunable_lock_upload_files },
+   { "pasv_addr_resolve", &tunable_pasv_addr_resolve },
++  { "reverse_lookup_enable", &tunable_reverse_lookup_enable },
+   { "userlist_log", &tunable_userlist_log },
+   { "debug_ssl", &tunable_debug_ssl },
+   { "require_cert", &tunable_require_cert },
+diff -up vsftpd-3.0.2/sysdeputil.c.lookup vsftpd-3.0.2/sysdeputil.c
+--- vsftpd-3.0.2/sysdeputil.c.lookup	2014-04-17 09:57:02.111933144 +0200
++++ vsftpd-3.0.2/sysdeputil.c	2014-04-17 10:01:31.069950498 +0200
+@@ -354,12 +354,16 @@ vsf_sysdep_check_auth(struct mystr* p_us
+     return 0;
+   }
+ #ifdef PAM_RHOST
+-  sin.sin_addr.s_addr = inet_addr(str_getbuf(p_remote_host));
+-  host = gethostbyaddr((char*)&sin.sin_addr.s_addr,sizeof(struct in_addr),AF_INET);
+-  if (host != (struct hostent*)0)
+-    retval = pam_set_item(s_pamh, PAM_RHOST, host->h_name);
+-  else
++  if (tunable_reverse_lookup_enable) {
++    sin.sin_addr.s_addr = inet_addr(str_getbuf(p_remote_host));
++    host = gethostbyaddr((char*)&sin.sin_addr.s_addr,sizeof(struct in_addr),AF_INET);
++    if (host != (struct hostent*)0)
++      retval = pam_set_item(s_pamh, PAM_RHOST, host->h_name);
++    else
++      retval = pam_set_item(s_pamh, PAM_RHOST, str_getbuf(p_remote_host));
++  } else {
+     retval = pam_set_item(s_pamh, PAM_RHOST, str_getbuf(p_remote_host));
++  }
+   if (retval != PAM_SUCCESS)
+   {
+     (void) pam_end(s_pamh, retval);
+diff -up vsftpd-3.0.2/tunables.c.lookup vsftpd-3.0.2/tunables.c
+--- vsftpd-3.0.2/tunables.c.lookup	2014-04-17 10:03:22.766958324 +0200
++++ vsftpd-3.0.2/tunables.c	2014-04-17 10:04:52.004964675 +0200
+@@ -72,6 +72,7 @@ int tunable_force_anon_data_ssl;
+ int tunable_mdtm_write;
+ int tunable_lock_upload_files;
+ int tunable_pasv_addr_resolve;
++int tunable_reverse_lookup_enable;
+ int tunable_userlist_log;
+ int tunable_debug_ssl;
+ int tunable_require_cert;
+@@ -213,6 +214,7 @@ tunables_load_defaults()
+   tunable_mdtm_write = 1;
+   tunable_lock_upload_files = 1;
+   tunable_pasv_addr_resolve = 0;
++  tunable_reverse_lookup_enable = 1;
+   tunable_userlist_log = 0;
+   tunable_debug_ssl = 0;
+   tunable_require_cert = 0;
+diff -up vsftpd-3.0.2/tunables.h.lookup vsftpd-3.0.2/tunables.h
+--- vsftpd-3.0.2/tunables.h.lookup	2014-04-17 10:03:27.405958676 +0200
++++ vsftpd-3.0.2/tunables.h	2014-04-17 10:04:22.763963824 +0200
+@@ -73,6 +73,7 @@ extern int tunable_force_anon_data_ssl;
+ extern int tunable_mdtm_write;                /* Allow MDTM to set timestamps */
+ extern int tunable_lock_upload_files;         /* Lock uploading files */
+ extern int tunable_pasv_addr_resolve;         /* DNS resolve pasv_addr */
++extern int tunable_reverse_lookup_enable;     /* Get hostname before pam auth */
+ extern int tunable_userlist_log;              /* Log every failed login attempt */
+ extern int tunable_debug_ssl;                 /* Verbose SSL logging */
+ extern int tunable_require_cert;              /* SSL client cert required */
+diff -up vsftpd-3.0.2/vsftpd.conf.5.lookup vsftpd-3.0.2/vsftpd.conf.5
+--- vsftpd-3.0.2/vsftpd.conf.5.lookup	2014-04-17 10:05:30.956969003 +0200
++++ vsftpd-3.0.2/vsftpd.conf.5	2014-04-17 10:06:36.586971828 +0200
+@@ -425,6 +425,15 @@ http://scarybeastsecurity.blogspot.com/2
+ 
+ Default: YES
+ .TP
++.B reverse_lookup_enable
++Set to YES if you want vsftpd to transform the ip address into the hostname,
++before pam authentication. This is useful if you use pam_access including the
++hostname. If you want vsftpd to run on the environment where the reverse lookup
++for some hostname is available and the name server doesn't respond for a while,
++you should set this to NO to avoid a performance issue.
++
++Default: YES
++.TP
+ .B run_as_launching_user
+ Set to YES if you want vsftpd to run as the user which launched vsftpd. This is
+ useful where root access is not available. MASSIVE WARNING! Do NOT enable this

@@ -1,0 +1,58 @@
+#!/bin/bash 
+if [ -z "$1" ] ; then
+        echo "使用方法：$0 新版本号"
+        exit 1
+fi
+pushd $(dirname $0)
+NAME=$(basename $(pwd))
+OLDMAJORVERSION=`grep "define baseversion" vim.spec | cut -d ' ' -f 3`
+M1=$(echo $1|cut -d"." -f1)
+M2=$(echo $1|cut -d"." -f2)
+M3=$(echo $1|cut -d"." -f3)
+NEWMAJORVERSION="$M1.$M2"
+if [ "$OLDMAJORVERSION" == "$NEWMAJORVERSION" ]; then
+sed -i "s/%define baseversion.*/%define baseversion $M1.$M2/g" $NAME.spec
+sed -i "s/%define vimdir vim.*/%define vimdir vim$M1$M2/g" $NAME.spec
+sed -i "s/Release:.*/Release:\t1%{?dist}/g" $NAME.spec
+MAJORVERSION=`grep "define baseversion" vim.spec | cut -d ' ' -f 3`
+ORIGPL=`grep "define patchlevel" vim.spec | cut -d ' ' -f 3 | sed -e "s/^0*//g"`
+ORIGPLFILLED=`printf "%03d" $ORIGPL`
+for ((PL = $ORIGPL; PL < $M3; PL++)) ; do
+    LASTPL=$PL
+    LASTPLFILLED=`printf "%03d" $LASTPL`
+    NEWPL=$((PL+1))
+    PLFILLED=`printf "%03d" $NEWPL`
+    PNAME="$MAJORVERSION.$PLFILLED"
+    URL="ftp://ftp.vim.org/pub/vim/patches/$MAJORVERSION/$PNAME"
+    # echo "Got patchlevel $MAJORVERSION.$PL, current CVS is at $MAJORVERSION.$ORIGPL"
+    sed -i -e "/Patch$LASTPLFILLED: ftp:\/\/ftp.vim.org\/pub\/vim\/patches\/$MAJORVERSION\/$MAJORVERSION.$LASTPLFILLED/aPatch$PLFILLED: ftp:\/\/ftp.vim.org\/pub\/vim\/patches\/$MAJORVERSION\/$MAJORVERSION.$PLFILLED" $NAME.spec
+    sed -i -e "/patch$LASTPLFILLED -p0/a%patch$PLFILLED -p0" $NAME.spec
+done
+sed -i "s/%define patchlevel.*/%define patchlevel $M3/g" $NAME.spec
+sed -i "s/Version:.*/Version: $M1.$M2.$M3/g" $NAME.spec
+else
+sed -i "s/%define baseversion.*/%define baseversion $M1.$M2/g" $NAME.spec
+sed -i "s/%define vimdir vim.*/%define vimdir vim$M1$M2/g" $NAME.spec
+sed -i "s/Release:.*/Release:\t1%{?dist}/g" $NAME.spec
+sed -i -e "/Patch[0-9][0-9][0-9]: ftp:\/\/ftp.vim.org\/pub\/vim\/patches\/$OLDMAJORVERSION\/$OLDMAJORVERSION.[0-9][0-9][0-9]/d" $NAME.spec
+sed -i -e "/Patch.*$OLDMAJORVERSION\.[0-9]{3}/d" $NAME.spec
+sed -i -e "/%patch[0-9][0-9][0-9] -p0/d" $NAME.spec
+MAJORVERSION=`grep "define baseversion" vim.spec | cut -d ' ' -f 3`
+sed -i -e "/Insert Patches/aPatch001: ftp:\/\/ftp.vim.org\/pub\/vim\/patches\/$MAJORVERSION\/$MAJORVERSION.001" $NAME.spec
+sed -i -e "/insert patches/a%patch001 -p0" $NAME.spec
+for ((PL = 1; PL < $M3; PL++)) ; do
+    LASTPL=$PL
+    LASTPLFILLED=`printf "%03d" $LASTPL`
+    NEWPL=$((PL+1))
+    PLFILLED=`printf "%03d" $NEWPL`
+    PNAME="$MAJORVERSION.$PLFILLED"
+    URL="ftp://ftp.vim.org/pub/vim/patches/$MAJORVERSION/$PNAME"
+    # echo "Got patchlevel $MAJORVERSION.$PL, current CVS is at $MAJORVERSION.$ORIGPL"
+    sed -i -e "/Patch$LASTPLFILLED: ftp:\/\/ftp.vim.org\/pub\/vim\/patches\/$MAJORVERSION\/$MAJORVERSION.$LASTPLFILLED/aPatch$PLFILLED: ftp:\/\/ftp.vim.org\/pub\/vim\/patches\/$MAJORVERSION\/$MAJORVERSION.$PLFILLED" $NAME.spec
+    sed -i -e "/patch$LASTPLFILLED -p0/a%patch$PLFILLED -p0" $NAME.spec
+done
+sed -i "s/%define patchlevel.*/%define patchlevel $M3/g" $NAME.spec
+sed -i "s/Version:.*/Version: $M1.$M2.$M3/g" $NAME.spec
+rm -f $OLDMAJORVERSION.*
+fi
+popd

@@ -1,0 +1,169 @@
+To: vim_dev@googlegroups.com
+Subject: Patch 7.4.769
+Fcc: outbox
+From: Bram Moolenaar <Bram@moolenaar.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+------------
+
+Patch 7.4.769 (after 7.4 768)
+Problem:    Behavior of :diffoff is not tested.
+Solution:   Add a bit of testing. (Olaf Dabrunz)
+Files:      src/testdir/test47.in, src/testdir/test47.ok
+
+
+*** ../vim-7.4.768/src/testdir/test47.in	2012-10-21 22:08:44.000000000 +0200
+--- src/testdir/test47.in	2015-07-04 15:00:48.065450222 +0200
+***************
+*** 1,5 ****
+--- 1,7 ----
+  Tests for vertical splits and filler lines in diff mode
+  
++ Also tests restoration of saved options by :diffoff.
++ 
+  STARTTEST
+  :so small.vim
+  :" Disable the title to avoid xterm keeping the wrong one.
+***************
+*** 10,17 ****
+--- 12,26 ----
+  ddGpkkrXoxxx:w! Xtest2
+  :file Nop
+  ggoyyyjjjozzzz
++ :set foldmethod=marker foldcolumn=4
++ :redir => nodiffsettings
++ :silent! :set diff? fdm? fdc? scb? crb? wrap?
++ :redir END
+  :vert diffsplit Xtest
+  :vert diffsplit Xtest2
++ :redir => diffsettings
++ :silent! :set diff? fdm? fdc? scb? crb? wrap?
++ :redir END
+  :" jump to second window for a moment to have filler line appear at start of
+  :" first window
+  ggpgg:let one = winline()
+***************
+*** 36,43 ****
+  :call append("$", two)
+  :call append("$", three)
+  :$-2,$w! test.out
+! :" Test that diffing shows correct filler lines
+  :diffoff!
+  :windo :bw!
+  :enew
+  :put =range(4,10)
+--- 45,74 ----
+  :call append("$", two)
+  :call append("$", three)
+  :$-2,$w! test.out
+! :"
+! :" Test diffoff
+  :diffoff!
++ :$put =nodiffsettings
++ :$put =diffsettings
++ 1
++ :redir => nd1
++ :silent! :set diff? fdm? fdc? scb? crb? wrap?
++ :redir END
++ 
++ :redir => nd2
++ :silent! :set diff? fdm? fdc? scb? crb? wrap?
++ :redir END
++ 
++ :redir => nd3
++ :silent! :set diff? fdm? fdc? scb? crb? wrap?
++ :redir END
++ 
++ :$put =nd1
++ :$put =nd2
++ :$put =nd3
++ :$-39,$w >> test.out
++ :"
++ :" Test that diffing shows correct filler lines
+  :windo :bw!
+  :enew
+  :put =range(4,10)
+***************
+*** 51,57 ****
+  :enew
+  :put =w0
+  :.w >> test.out
+! :unlet! one two three w0
+  :qa!
+  ENDTEST
+  
+--- 82,88 ----
+  :enew
+  :put =w0
+  :.w >> test.out
+! :unlet! one two three nodiffsettings diffsettings nd1 nd2 nd3 w0
+  :qa!
+  ENDTEST
+  
+*** ../vim-7.4.768/src/testdir/test47.ok	2012-10-21 22:08:44.000000000 +0200
+--- src/testdir/test47.ok	2015-07-04 15:00:48.065450222 +0200
+***************
+*** 1,4 ****
+--- 1,44 ----
+  2-4-5-6-8-9
+  1-2-4-5-8
+  2-3-4-5-6-7-8
++ 
++ 
++ nodiff
++   foldmethod=marker
++   foldcolumn=4
++ noscrollbind
++ nocursorbind
++   wrap
++ 
++ 
++   diff
++   foldmethod=diff
++   foldcolumn=2
++   scrollbind
++   cursorbind
++ nowrap
++ 
++ 
++ nodiff
++   foldmethod=marker
++   foldcolumn=4
++ noscrollbind
++ nocursorbind
++   wrap
++ 
++ 
++ nodiff
++   foldmethod=marker
++   foldcolumn=4
++ noscrollbind
++ nocursorbind
++   wrap
++ 
++ 
++ nodiff
++   foldmethod=marker
++   foldcolumn=4
++ noscrollbind
++ nocursorbind
++   wrap
+  1
+*** ../vim-7.4.768/src/version.c	2015-07-03 15:06:49.718360566 +0200
+--- src/version.c	2015-07-04 15:02:15.644538282 +0200
+***************
+*** 743,744 ****
+--- 743,746 ----
+  {   /* Add new patch number below this line */
++ /**/
++     769,
+  /**/
+
+-- 
+The CIA drives around in cars with the "Intel inside" logo.
+
+ /// Bram Moolenaar -- Bram@Moolenaar.net -- http://www.Moolenaar.net   \\\
+///        sponsor Vim, vote for features -- http://www.Vim.org/sponsor/ \\\
+\\\  an exciting new programming language -- http://www.Zimbu.org        ///
+ \\\            help me help AIDS victims -- http://ICCF-Holland.org    ///

@@ -1,0 +1,759 @@
+To: vim_dev@googlegroups.com
+Subject: Patch 7.4.765
+Fcc: outbox
+From: Bram Moolenaar <Bram@moolenaar.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+------------
+
+Patch 7.4.765 (after 7.4.754)
+Problem:    CTRL-A and CTRL-X in Visual mode do not always work well.
+Solution:   Improvements for increment and decrement. (Christian Brabandt)
+Files:      src/normal.c, src/ops.c, src/testdir/test_increment.in,
+            src/testdir/test_increment.ok
+
+
+*** ../vim-7.4.764/src/normal.c	2015-06-25 13:57:20.029431114 +0200
+--- src/normal.c	2015-07-03 11:43:43.250141166 +0200
+***************
+*** 4204,4210 ****
+      int visual = VIsual_active;
+      if (cap->oap->op_type == OP_NOP
+  	    && do_addsub((int)cap->cmdchar, cap->count1, cap->arg) == OK)
+! 	prep_redo_cmd(cap);
+      else
+  	clearopbeep(cap->oap);
+      if (visual)
+--- 4204,4227 ----
+      int visual = VIsual_active;
+      if (cap->oap->op_type == OP_NOP
+  	    && do_addsub((int)cap->cmdchar, cap->count1, cap->arg) == OK)
+!     {
+! 	if (visual)
+! 	{
+! 	    ResetRedobuff();
+! 	    AppendCharToRedobuff(VIsual_mode);
+! 	    if (VIsual_mode == 'V')
+! 	    {
+! 		AppendNumberToRedobuff(cap->oap->line_count);
+! 		AppendCharToRedobuff('j');
+! 	    }
+! 	    AppendNumberToRedobuff(cap->count1);
+! 	    if (cap->nchar != NUL)
+! 		AppendCharToRedobuff(cap->nchar);
+! 	    AppendCharToRedobuff(cap->cmdchar);
+! 	}
+! 	else
+! 	    prep_redo_cmd(cap);
+!     }
+      else
+  	clearopbeep(cap->oap);
+      if (visual)
+*** ../vim-7.4.764/src/ops.c	2015-06-25 13:57:20.033431073 +0200
+--- src/ops.c	2015-07-03 12:31:42.315559376 +0200
+***************
+*** 5386,5392 ****
+      int		hex;		/* 'X' or 'x': hex; '0': octal */
+      static int	hexupper = FALSE;	/* 0xABC */
+      unsigned long n;
+!     long	offset = 0;		/* line offset for Ctrl_V mode */
+      long_u	oldn;
+      char_u	*ptr;
+      int		c;
+--- 5386,5392 ----
+      int		hex;		/* 'X' or 'x': hex; '0': octal */
+      static int	hexupper = FALSE;	/* 0xABC */
+      unsigned long n;
+!     unsigned long offset = 0;		/* line offset for Ctrl_V mode */
+      long_u	oldn;
+      char_u	*ptr;
+      int		c;
+***************
+*** 5398,5407 ****
+--- 5398,5409 ----
+      int		firstdigit;
+      int		subtract;
+      int		negative = FALSE;
++     int		was_positive = TRUE;
+      int		visual = VIsual_active;
+      int		i;
+      int		lnum = curwin->w_cursor.lnum;
+      int		lnume = curwin->w_cursor.lnum;
++     int		startcol;
+  
+      dohex = (vim_strchr(curbuf->b_p_nf, 'x') != NULL);	/* "heX" */
+      dooct = (vim_strchr(curbuf->b_p_nf, 'o') != NULL);	/* "Octal" */
+***************
+*** 5431,5444 ****
+  	curbuf->b_visual.vi_end = curwin->w_cursor;
+  	curbuf->b_visual.vi_mode = VIsual_mode;
+  
+! 	col = VIsual.col;
+  	lnum = VIsual.lnum;
+  	lnume = curwin->w_cursor.lnum;
+- 	if (ptr[col] == '-')
+- 	{
+- 	    negative = TRUE;
+- 	    col++;
+- 	}
+      }
+      else
+      {
+--- 5433,5446 ----
+  	curbuf->b_visual.vi_end = curwin->w_cursor;
+  	curbuf->b_visual.vi_mode = VIsual_mode;
+  
+! 	if (VIsual_mode != 'v')
+! 	    startcol = VIsual.col < curwin->w_cursor.col ? VIsual.col
+! 						       : curwin->w_cursor.col;
+! 	else
+! 	    startcol = VIsual.col;
+! 	col = startcol;
+  	lnum = VIsual.lnum;
+  	lnume = curwin->w_cursor.lnum;
+      }
+      else
+      {
+***************
+*** 5481,5489 ****
+      {
+  	curwin->w_cursor.lnum = i;
+  	ptr = ml_get_curline();
+- 	RLADDSUBFIX(ptr);
+  	if ((int)STRLEN(ptr) <= col)
+! 	    col = 0;
+  	/*
+  	 * If a number was found, and saving for undo works, replace the number.
+  	 */
+--- 5483,5498 ----
+      {
+  	curwin->w_cursor.lnum = i;
+  	ptr = ml_get_curline();
+  	if ((int)STRLEN(ptr) <= col)
+! 	    /* try again on next line */
+! 	    continue;
+! 	if (visual && ptr[col] == '-')
+! 	{
+! 	    negative = TRUE;
+! 	    was_positive = FALSE;
+! 	    col++;
+! 	}
+! 	RLADDSUBFIX(ptr);
+  	/*
+  	 * If a number was found, and saving for undo works, replace the number.
+  	 */
+***************
+*** 5598,5603 ****
+--- 5607,5620 ----
+  		    negative = FALSE;
+  	    }
+  
++ 	    if (visual && !was_positive && !negative)
++ 	    {
++ 		/* need to remove the '-' */
++ 		col--;
++ 		length++;
++ 	    }
++ 
++ 
+  	    /*
+  	     * Delete the old number.
+  	     */
+***************
+*** 5634,5641 ****
+  	    if (buf1 == NULL)
+  		return FAIL;
+  	    ptr = buf1;
+! 	    /* do not add leading '-' for visual mode */
+! 	    if (negative && !visual)
+  	    {
+  		*ptr++ = '-';
+  	    }
+--- 5651,5657 ----
+  	    if (buf1 == NULL)
+  		return FAIL;
+  	    ptr = buf1;
+! 	    if (negative && (!visual || (visual && was_positive)))
+  	    {
+  		*ptr++ = '-';
+  	    }
+***************
+*** 5654,5676 ****
+  	     * Put the number characters in buf2[].
+  	     */
+  	    if (hex == 0)
+! 		sprintf((char *)buf2, "%lu", n + offset);
+  	    else if (hex == '0')
+! 		sprintf((char *)buf2, "%lo", n + offset);
+  	    else if (hex && hexupper)
+! 		sprintf((char *)buf2, "%lX", n + offset);
+  	    else
+! 		sprintf((char *)buf2, "%lx", n + offset);
+  	    length -= (int)STRLEN(buf2);
+  
+- 	    if (g_cmd)
+- 	    {
+- 		if (subtract)
+- 		    offset -= (unsigned long)Prenum1;
+- 		else
+- 		    offset += (unsigned long)Prenum1;
+- 	    }
+- 
+  	    /*
+  	     * Adjust number of zeros to the new number of digits, so the
+  	     * total length of the number remains the same.
+--- 5670,5684 ----
+  	     * Put the number characters in buf2[].
+  	     */
+  	    if (hex == 0)
+! 		sprintf((char *)buf2, "%lu", n);
+  	    else if (hex == '0')
+! 		sprintf((char *)buf2, "%lo", n);
+  	    else if (hex && hexupper)
+! 		sprintf((char *)buf2, "%lX", n);
+  	    else
+! 		sprintf((char *)buf2, "%lx", n);
+  	    length -= (int)STRLEN(buf2);
+  
+  	    /*
+  	     * Adjust number of zeros to the new number of digits, so the
+  	     * total length of the number remains the same.
+***************
+*** 5685,5697 ****
+  	    ins_str(buf1);		/* insert the new number */
+  	    vim_free(buf1);
+  	}
+! 	--curwin->w_cursor.col;
+  	curwin->w_set_curswant = TRUE;
+  #ifdef FEAT_RIGHTLEFT
+  	ptr = ml_get_buf(curbuf, curwin->w_cursor.lnum, TRUE);
+  	RLADDSUBFIX(ptr);
+  #endif
+      }
+      return OK;
+  }
+  
+--- 5693,5719 ----
+  	    ins_str(buf1);		/* insert the new number */
+  	    vim_free(buf1);
+  	}
+! 
+! 	if (g_cmd)
+! 	{
+! 	    offset = (unsigned long)Prenum1;
+! 	    g_cmd = 0;
+! 	}
+! 	/* reset */
+! 	subtract = FALSE;
+! 	negative = FALSE;
+! 	if (visual && VIsual_mode != Ctrl_V)
+! 	    col = 0;
+! 	else
+! 	    col = startcol;
+! 	Prenum1 += offset;
+  	curwin->w_set_curswant = TRUE;
+  #ifdef FEAT_RIGHTLEFT
+  	ptr = ml_get_buf(curbuf, curwin->w_cursor.lnum, TRUE);
+  	RLADDSUBFIX(ptr);
+  #endif
+      }
++     --curwin->w_cursor.col;
+      return OK;
+  }
+  
+*** ../vim-7.4.764/src/testdir/test_increment.in	2015-06-28 19:24:32.198911433 +0200
+--- src/testdir/test_increment.in	2015-07-03 11:47:53.111483406 +0200
+***************
+*** 6,11 ****
+--- 6,12 ----
+  1) Ctrl-A on visually selected number
+  Text:
+  foobar-10
++     Expected:
+      1)    Ctrl-A on start of line:
+  	foobar-9
+      2)    Ctrl-A on visually selected "-10":
+***************
+*** 24,29 ****
+--- 25,31 ----
+  30
+  40
+  
++     Expected:
+      1) Ctrl-A on visually selected lines:
+  11
+  21
+***************
+*** 46,51 ****
+--- 48,54 ----
+  
+  40
+  
++     Expected:
+      1) 2 g Ctrl-A on visually selected lines:
+  12
+  
+***************
+*** 66,74 ****
+--- 69,190 ----
+  4) Ctrl-A on non-number
+  Text:
+  foobar-10
++     Expected:
+      1) visually select foobar:
+      foobar-10
+  
++ 5) g<Ctrl-A> on letter
++ Test:
++ a
++ a
++ a
++ a
++     Expected:
++     1) g Ctrl-A on visually selected lines
++     b
++     c
++     d
++     e
++ 
++ 6) g<Ctrl-A> on letter
++ Test:
++ z
++ z
++ z
++ z
++     Expected:
++     1) g Ctrl-X on visually selected lines
++     y
++     x
++     w
++     v
++ 
++ 7) <Ctrl-A> on letter
++ Test:
++ 2
++ 1
++ 0
++ -1
++ -2
++ 
++     Expected:
++     1) Ctrl-A on visually selected lines
++     3
++     2
++     1
++     0
++     -1
++ 
++     2) Ctrl-X on visually selected lines
++     1
++     0
++     -1
++     -2
++     -3
++ 8) Block increment on 0x9
++ Text:
++ 0x9
++ 0x9
++     Expected:
++     1) Ctrl-A on visually block selected region (cursor at beginning):
++     0xa
++     0xa
++     2) Ctrl-A on visually block selected region (cursor at end)
++     0xa
++     0xa
++ 
++ 9) Increment and redo
++ Text:
++ 2
++ 2
++ 
++ 3
++ 3
++ 
++     Expected:
++     1) 2 Ctrl-A on first 2 visually selected lines
++     4
++     4
++     2) redo (.) on 3
++     5
++     5
++ 10) sequentially decrement 1
++ Text:
++ 1
++ 1
++ 1
++ 1
++     Expected:
++     1) g Ctrl-X on visually selected lines
++     0
++     -1
++     -2
++     -3
++ 
++ 11) visually block selected indented lines
++ Text:
++     1
++ 1
++     1
++     1
++     Expexted:
++     1) g Ctrl-A on block selected indented lines
++     2
++ 1
++     3
++     4
++ 
++ 12) visually selected several columns
++ Text:
++ 0 0
++ 0 0
++ 0 0
++     Expected:
++     1) 'v' select last zero and first zeroes
++     0 1
++     1 0
++     1 0
++ 
+  STARTTEST
+  :so small.vim
+  :"
+***************
+*** 77,92 ****
+  :"
+  :" Test 1
+  :/^S1=/+,/^E1=/-y a
+! :/^E1/+put a
+! :/^E1/+2put a
+! f-v$:/^E1/+3put a
+! f1v$:/^E1/+4put a
+! f-v$:/^E1/+5put a
+  f1v$
+  
+  :" Test 22
+  :/^S2=/+,/^E2=/-y a
+! :/^E2/+put a
+  V3k$:.+put a
+  V3k$
+  
+--- 193,208 ----
+  :"
+  :" Test 1
+  :/^S1=/+,/^E1=/-y a
+! :/^E1=/+put a
+! :/^E1=/+2put a
+! f-v$:/^E1=/+3put a
+! f1v$:/^E1=/+4put a
+! f-v$:/^E1=/+5put a
+  f1v$
+  
+  :" Test 22
+  :/^S2=/+,/^E2=/-y a
+! :/^E2=/+put a
+  V3k$:.+put a
+  V3k$
+  
+***************
+*** 101,106 ****
+--- 217,265 ----
+  :/^E4=/+put a
+  vf-
+  
++ :" Test 5
++ :set nrformats+=alpha
++ :/^S5=/+,/^E5=/-y a
++ :/^E5=/+put a
++ v3kg
++ 
++ :" Test 6
++ :/^S6=/+,/^E6=/-y a
++ :/^E6=/+put a
++ v3kg
++ 
++ :" Test 7
++ :/^S7=/+,/^E7=/-y a
++ :/^E7=/+put a
++ V4k:.+put a
++ V4k
++ 
++ :" Test 8
++ :/^S8=/+,/^E8=/-y a
++ :/^E8=/+put a
++ kj$:.+put a
++ k$+
++ 
++ :" Test 9
++ :/^S9=/+,/^E9=/-y a
++ :/^E9=/+put a
++ 5kVj22j.
++ 
++ :" Test 10
++ :/^S10=/+,/^E10=/-y a
++ :/^E10=/+put a
++ V3kg
++ 
++ : Test 11
++ :/^S11=/+,/^E11=/-y a
++ :/^E11=/+put a
++ 3kf13jg
++ 
++ :" Test 12
++ :/^S12=/+,/^E12=/-y a
++ :/^E12=/+put a
++ 2k$v++
++ 
+  :" Save the report
+  :/^# Test 1/,$w! test.out
+  :qa!
+***************
+*** 142,146 ****
+--- 301,393 ----
+  E4=====
+  
+  
++ 
++ # Test 5
++ S5====
++ a
++ a
++ a
++ a
++ E5====
++ 
++ 
++ # Test 6
++ S6====
++ z
++ z
++ z
++ z
++ E6====
++ 
++ 
++ 
++ # Test 7
++ S7====
++ 2
++ 1
++ 0
++ -1
++ -2
++ E7====
++ 
++ 
++ 
++ # Test 8
++ S8====
++ 0x9
++ 0x9
++ E8====
++ 
++ 
++ 
++ 
++ # Test 9
++ S9====
++ 2
++ 2
++ 
++ 3
++ 3
++ 
++ E9====
++ 
++ 
++ 
++ 
++ # Test 10
++ S10====
++ 1
++ 1
++ 1
++ 1
++ E10====
++ 
++ 
++ 
++ 
++ # Test 11
++ S11====
++     1
++ 1
++     1
++     1
++ E11====
++ 
++ 
++ 
++ # Test 12
++ S12====
++ 0 0
++ 0 0
++ 0 0
++ E12====
++ 
++ 
++ 
++ 
++ 
++ 
++ 
++ 
+  ENDTEST
+  
+*** ../vim-7.4.764/src/testdir/test_increment.ok	2015-06-25 13:57:20.033431073 +0200
+--- src/testdir/test_increment.ok	2015-07-03 11:43:43.254141124 +0200
+***************
+*** 62,66 ****
+--- 62,193 ----
+  
+  foobar-10
+  
++ 
++ # Test 5
++ S5====
++ a
++ a
++ a
++ a
++ E5====
++ 
++ b
++ c
++ d
++ e
++ 
++ # Test 6
++ S6====
++ z
++ z
++ z
++ z
++ E6====
++ 
++ y
++ x
++ w
++ v
++ 
++ 
++ # Test 7
++ S7====
++ 2
++ 1
++ 0
++ -1
++ -2
++ E7====
++ 
++ 3
++ 2
++ 1
++ 0
++ -1
++ 
++ 1
++ 0
++ -1
++ -2
++ -3
++ 
++ # Test 8
++ S8====
++ 0x9
++ 0x9
++ E8====
++ 
++ 0xa
++ 0xa
++ 
++ 0xa
++ 0xa
++ 
++ 
++ # Test 9
++ S9====
++ 2
++ 2
++ 
++ 3
++ 3
++ 
++ E9====
++ 
++ 4
++ 4
++ 
++ 5
++ 5
++ 
++ 
++ 
++ 
++ # Test 10
++ S10====
++ 1
++ 1
++ 1
++ 1
++ E10====
++ 
++ 0
++ -1
++ -2
++ -3
++ 
++ 
++ 
++ # Test 11
++ S11====
++     1
++ 1
++     1
++     1
++ E11====
++ 
++     2
++ 1
++     3
++     4
++ 
++ 
++ # Test 12
++ S12====
++ 0 0
++ 0 0
++ 0 0
++ E12====
++ 
++ 0 1
++ 1 0
++ 1 0
++ 
++ 
++ 
++ 
++ 
++ 
++ 
+  ENDTEST
+  
+*** ../vim-7.4.764/src/version.c	2015-06-28 19:24:32.198911433 +0200
+--- src/version.c	2015-07-03 11:45:07.697242802 +0200
+***************
+*** 743,744 ****
+--- 743,746 ----
+  {   /* Add new patch number below this line */
++ /**/
++     765,
+  /**/
+
+-- 
+hundred-and-one symptoms of being an internet addict:
+171. You invent another person and chat with yourself in empty chat rooms.
+
+ /// Bram Moolenaar -- Bram@Moolenaar.net -- http://www.Moolenaar.net   \\\
+///        sponsor Vim, vote for features -- http://www.Vim.org/sponsor/ \\\
+\\\  an exciting new programming language -- http://www.Zimbu.org        ///
+ \\\            help me help AIDS victims -- http://ICCF-Holland.org    ///

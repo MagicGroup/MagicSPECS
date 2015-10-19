@@ -1,0 +1,133 @@
+To: vim_dev@googlegroups.com
+Subject: Patch 7.4.720
+Fcc: outbox
+From: Bram Moolenaar <Bram@moolenaar.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+------------
+
+Patch 7.4.720
+Problem:    Can't build with Visual Studio 2015.
+Solution:   Recognize the "version 14" numbers and omit /nodefaultlib when
+            appropriate. (Paul Moore)
+Files:      src/Make_mvc.mak
+
+
+*** ../vim-7.4.719/src/Make_mvc.mak	2014-11-05 13:53:13.188806497 +0100
+--- src/Make_mvc.mak	2015-05-04 16:16:55.716553990 +0200
+***************
+*** 343,349 ****
+  # gdi32.lib and comdlg32.lib for printing support
+  # ole32.lib and uuid.lib are needed for FEAT_SHORTCUT
+  CON_LIB = oldnames.lib kernel32.lib advapi32.lib shell32.lib gdi32.lib \
+!           comdlg32.lib ole32.lib uuid.lib /machine:$(CPU) /nodefaultlib
+  !if "$(DELAYLOAD)" == "yes"
+  CON_LIB = $(CON_LIB) /DELAYLOAD:comdlg32.dll /DELAYLOAD:ole32.dll DelayImp.lib
+  !endif
+--- 343,349 ----
+  # gdi32.lib and comdlg32.lib for printing support
+  # ole32.lib and uuid.lib are needed for FEAT_SHORTCUT
+  CON_LIB = oldnames.lib kernel32.lib advapi32.lib shell32.lib gdi32.lib \
+!           comdlg32.lib ole32.lib uuid.lib /machine:$(CPU)
+  !if "$(DELAYLOAD)" == "yes"
+  CON_LIB = $(CON_LIB) /DELAYLOAD:comdlg32.dll /DELAYLOAD:ole32.dll DelayImp.lib
+  !endif
+***************
+*** 446,451 ****
+--- 446,454 ----
+  !if "$(_NMAKE_VER)" == "12.00.21005.1"
+  MSVCVER = 12.0
+  !endif
++ !if "$(_NMAKE_VER)" == "14.00.22609.0"
++ MSVCVER = 14.0
++ !endif
+  !endif
+  
+  # Abort building VIM if version of VC is unrecognised.
+***************
+*** 460,466 ****
+  !endif
+  
+  # Convert processor ID to MVC-compatible number
+! !if ("$(MSVCVER)" != "8.0") && ("$(MSVCVER)" != "9.0") && ("$(MSVCVER)" != "10.0") && ("$(MSVCVER)" != "11.0") && ("$(MSVCVER)" != "12.0")
+  !if "$(CPUNR)" == "i386"
+  CPUARG = /G3
+  !elseif "$(CPUNR)" == "i486"
+--- 463,469 ----
+  !endif
+  
+  # Convert processor ID to MVC-compatible number
+! !if ("$(MSVCVER)" != "8.0") && ("$(MSVCVER)" != "9.0") && ("$(MSVCVER)" != "10.0") && ("$(MSVCVER)" != "11.0") && ("$(MSVCVER)" != "12.0") && ("$(MSVCVER)" != "14.0")
+  !if "$(CPUNR)" == "i386"
+  CPUARG = /G3
+  !elseif "$(CPUNR)" == "i486"
+***************
+*** 484,489 ****
+--- 487,499 ----
+  LIBC =
+  DEBUGINFO = /Zi
+  
++ # Don't use /nodefaultlib on MSVC 14
++ !if "$(MSVCVER)" == "14.0"
++ NODEFAULTLIB =
++ !else
++ NODEFAULTLIB = /nodefaultlib
++ !endif
++ 
+  !ifdef NODEBUG
+  VIM = vim
+  !if "$(OPTIMIZE)" == "SPACE"
+***************
+*** 655,661 ****
+  GUI_LIB = \
+  	gdi32.lib version.lib $(IME_LIB) \
+  	winspool.lib comctl32.lib advapi32.lib shell32.lib \
+! 	/machine:$(CPU) /nodefaultlib
+  !else
+  SUBSYSTEM = console
+  !endif
+--- 665,671 ----
+  GUI_LIB = \
+  	gdi32.lib version.lib $(IME_LIB) \
+  	winspool.lib comctl32.lib advapi32.lib shell32.lib \
+! 	/machine:$(CPU)
+  !else
+  SUBSYSTEM = console
+  !endif
+***************
+*** 976,982 ****
+  !ENDIF
+  
+  LINKARGS1 = $(linkdebug) $(conflags)
+! LINKARGS2 = $(CON_LIB) $(GUI_LIB) $(LIBC) $(OLE_LIB)  user32.lib $(SNIFF_LIB) \
+  		$(LUA_LIB) $(MZSCHEME_LIB) $(PERL_LIB) $(PYTHON_LIB) $(PYTHON3_LIB) $(RUBY_LIB) \
+  		$(TCL_LIB) $(NETBEANS_LIB) $(XPM_LIB) $(LINK_PDB)
+  
+--- 986,992 ----
+  !ENDIF
+  
+  LINKARGS1 = $(linkdebug) $(conflags)
+! LINKARGS2 = $(CON_LIB) $(GUI_LIB) $(NODEFAULTLIB) $(LIBC) $(OLE_LIB) user32.lib $(SNIFF_LIB) \
+  		$(LUA_LIB) $(MZSCHEME_LIB) $(PERL_LIB) $(PYTHON_LIB) $(PYTHON3_LIB) $(RUBY_LIB) \
+  		$(TCL_LIB) $(NETBEANS_LIB) $(XPM_LIB) $(LINK_PDB)
+  
+*** ../vim-7.4.719/src/version.c	2015-05-04 16:10:21.397000027 +0200
+--- src/version.c	2015-05-04 16:14:29.614201353 +0200
+***************
+*** 743,744 ****
+--- 743,746 ----
+  {   /* Add new patch number below this line */
++ /**/
++     720,
+  /**/
+
+-- 
+If they don't keep on exercising their lips, he thought, their brains
+start working.
+		-- Douglas Adams, "The Hitchhiker's Guide to the Galaxy"
+
+ /// Bram Moolenaar -- Bram@Moolenaar.net -- http://www.Moolenaar.net   \\\
+///        sponsor Vim, vote for features -- http://www.Vim.org/sponsor/ \\\
+\\\  an exciting new programming language -- http://www.Zimbu.org        ///
+ \\\            help me help AIDS victims -- http://ICCF-Holland.org    ///

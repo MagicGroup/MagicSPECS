@@ -1,0 +1,656 @@
+To: vim_dev@googlegroups.com
+Subject: Patch 7.4.866
+Fcc: outbox
+From: Bram Moolenaar <Bram@moolenaar.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+------------
+
+Patch 7.4.866
+Problem:    Crash when changing the 'tags' option from a remote command.
+            (Benjamin Fritz)
+Solution:   Instead of executing messages immediately, use a queue, like for
+            netbeans. (James Kolb)
+Files:      src/ex_docmd.c, src/getchar.c, src/gui_gtk_x11.c, src/gui_w48.c,
+            src/gui_x11.c, src/if_xcmdsrv.c, src/misc2.c, src/os_unix.c,
+            src/proto/if_xcmdsrv.pro, src/proto/misc2.pro, src/macros.h
+
+
+*** ../vim-7.4.865/src/ex_docmd.c	2015-09-09 21:10:34.334602633 +0200
+--- src/ex_docmd.c	2015-09-15 13:27:17.534755748 +0200
+***************
+*** 9033,9043 ****
+      {
+  	ui_delay(msec - done > 1000L ? 1000L : msec - done, TRUE);
+  	ui_breakcheck();
+! #ifdef FEAT_NETBEANS_INTG
+! 	/* Process the netbeans messages that may have been received in the
+! 	 * call to ui_breakcheck() when the GUI is in use. This may occur when
+! 	 * running a test case. */
+! 	netbeans_parse_messages();
+  #endif
+      }
+  }
+--- 9033,9043 ----
+      {
+  	ui_delay(msec - done > 1000L ? 1000L : msec - done, TRUE);
+  	ui_breakcheck();
+! #ifdef MESSAGE_QUEUE
+! 	/* Process the netbeans and clientserver messages that may have been
+! 	 * received in the call to ui_breakcheck() when the GUI is in use. This
+! 	 * may occur when running a test case. */
+! 	parse_queued_messages();
+  #endif
+      }
+  }
+*** ../vim-7.4.865/src/getchar.c	2015-07-10 17:19:25.024620239 +0200
+--- src/getchar.c	2015-09-15 13:27:23.318695538 +0200
+***************
+*** 3034,3042 ****
+  	    )
+      {
+  
+! #if defined(FEAT_NETBEANS_INTG)
+! 	/* Process the queued netbeans messages. */
+! 	netbeans_parse_messages();
+  #endif
+  
+  	if (got_int || (script_char = getc(scriptin[curscript])) < 0)
+--- 3034,3041 ----
+  	    )
+      {
+  
+! #ifdef MESSAGE_QUEUE
+! 	parse_queued_messages();
+  #endif
+  
+  	if (got_int || (script_char = getc(scriptin[curscript])) < 0)
+*** ../vim-7.4.865/src/gui_gtk_x11.c	2015-09-08 20:00:17.531627716 +0200
+--- src/gui_gtk_x11.c	2015-09-15 13:27:27.514651858 +0200
+***************
+*** 650,656 ****
+  	xev.xproperty.atom = commProperty;
+  	xev.xproperty.window = commWindow;
+  	xev.xproperty.state = PropertyNewValue;
+! 	serverEventProc(GDK_WINDOW_XDISPLAY(widget->window), &xev);
+      }
+      return FALSE;
+  }
+--- 650,656 ----
+  	xev.xproperty.atom = commProperty;
+  	xev.xproperty.window = commWindow;
+  	xev.xproperty.state = PropertyNewValue;
+! 	serverEventProc(GDK_WINDOW_XDISPLAY(widget->window), &xev, 0);
+      }
+      return FALSE;
+  }
+***************
+*** 5476,5484 ****
+  	    focus = gui.in_focus;
+  	}
+  
+! #if defined(FEAT_NETBEANS_INTG)
+! 	/* Process any queued netbeans messages. */
+! 	netbeans_parse_messages();
+  #endif
+  
+  	/*
+--- 5476,5483 ----
+  	    focus = gui.in_focus;
+  	}
+  
+! #ifdef MESSAGE_QUEUE
+! 	parse_queued_messages();
+  #endif
+  
+  	/*
+*** ../vim-7.4.865/src/gui_w48.c	2015-06-09 19:14:18.773373964 +0200
+--- src/gui_w48.c	2015-09-15 13:27:31.402611385 +0200
+***************
+*** 2016,2024 ****
+  	    s_need_activate = FALSE;
+  	}
+  
+! #ifdef FEAT_NETBEANS_INTG
+! 	/* Process the queued netbeans messages. */
+! 	netbeans_parse_messages();
+  #endif
+  
+  	/*
+--- 2016,2023 ----
+  	    s_need_activate = FALSE;
+  	}
+  
+! #ifdef MESSAGE_QUEUE
+! 	parse_queued_messages();
+  #endif
+  
+  	/*
+*** ../vim-7.4.865/src/gui_x11.c	2013-07-14 15:01:56.000000000 +0200
+--- src/gui_x11.c	2015-09-15 13:27:35.482568913 +0200
+***************
+*** 2895,2903 ****
+  	    focus = gui.in_focus;
+  	}
+  
+! #if defined(FEAT_NETBEANS_INTG)
+! 	/* Process any queued netbeans messages. */
+! 	netbeans_parse_messages();
+  #endif
+  
+  	/*
+--- 2895,2902 ----
+  	    focus = gui.in_focus;
+  	}
+  
+! #ifdef MESSAGE_QUEUE
+! 	parse_queued_messages();
+  #endif
+  
+  	/*
+***************
+*** 3199,3205 ****
+      if (e->type == PropertyNotify && e->window == commWindow
+  	    && e->atom == commProperty &&  e->state == PropertyNewValue)
+      {
+! 	serverEventProc(gui.dpy, event);
+      }
+  }
+  #endif
+--- 3198,3204 ----
+      if (e->type == PropertyNotify && e->window == commWindow
+  	    && e->atom == commProperty &&  e->state == PropertyNewValue)
+      {
+! 	serverEventProc(gui.dpy, event, 0);
+      }
+  }
+  #endif
+*** ../vim-7.4.865/src/if_xcmdsrv.c	2015-08-11 19:13:55.138175689 +0200
+--- src/if_xcmdsrv.c	2015-09-15 14:01:47.597081931 +0200
+***************
+*** 169,174 ****
+--- 169,187 ----
+  
+  typedef int (*EndCond) __ARGS((void *));
+  
++ struct x_cmdqueue
++ {
++     char_u		*propInfo;
++     int			len;
++     struct x_cmdqueue	*next;
++     struct x_cmdqueue	*prev;
++ };
++ 
++ typedef struct x_cmdqueue x_queue_T;
++ 
++ /* dummy node, header for circular queue */
++ static x_queue_T head = {NULL, 0, NULL, NULL};
++ 
+  /*
+   * Forward declarations for procedures defined later in this file:
+   */
+***************
+*** 186,191 ****
+--- 199,206 ----
+  static int	AppendPropCarefully __ARGS((Display *display, Window window, Atom property, char_u *value, int length));
+  static int	x_error_check __ARGS((Display *dpy, XErrorEvent *error_event));
+  static int	IsSerialName __ARGS((char_u *name));
++ static void	save_in_queue __ARGS((char_u *buf, int len));
++ static void	server_parse_message __ARGS((Display *dpy, char_u *propInfo, int numItems));
+  
+  /* Private variables for the "server" functionality */
+  static Atom	registryProperty = None;
+***************
+*** 595,601 ****
+      while (TRUE)
+      {
+  	while (XCheckWindowEvent(dpy, commWindow, PropertyChangeMask, &event))
+! 	    serverEventProc(dpy, &event);
+  
+  	if (endCond(endData) != 0)
+  	    break;
+--- 610,616 ----
+      while (TRUE)
+      {
+  	while (XCheckWindowEvent(dpy, commWindow, PropertyChangeMask, &event))
+! 	    serverEventProc(dpy, &event, 1);
+  
+  	if (endCond(endData) != 0)
+  	    break;
+***************
+*** 1127,1148 ****
+      return OK;
+  }
+  
+  /*
+   * This procedure is invoked by the various X event loops throughout Vims when
+   * a property changes on the communication window.  This procedure reads the
+!  * property and handles command requests and responses.
+   */
+      void
+! serverEventProc(dpy, eventPtr)
+      Display	*dpy;
+!     XEvent	*eventPtr;		/* Information about event. */
+  {
+      char_u	*propInfo;
+!     char_u	*p;
+!     int		result, actualFormat, code;
+      long_u	numItems, bytesAfter;
+      Atom	actualType;
+-     char_u	*tofree;
+  
+      if (eventPtr != NULL)
+      {
+--- 1142,1166 ----
+      return OK;
+  }
+  
++ 
+  /*
+   * This procedure is invoked by the various X event loops throughout Vims when
+   * a property changes on the communication window.  This procedure reads the
+!  * property and enqueues command requests and responses. If immediate is true,
+!  * it runs the event immediatly instead of enqueuing it. Immediate can cause
+!  * unintended behavior and should only be used for code that blocks for a
+!  * response.
+   */
+      void
+! serverEventProc(dpy, eventPtr, immediate)
+      Display	*dpy;
+!     XEvent	*eventPtr;	/* Information about event. */
+!     int		immediate;	/* Run event immediately. Should mostly be 0. */
+  {
+      char_u	*propInfo;
+!     int		result, actualFormat;
+      long_u	numItems, bytesAfter;
+      Atom	actualType;
+  
+      if (eventPtr != NULL)
+      {
+***************
+*** 1168,1173 ****
+--- 1186,1272 ----
+  	    XFree(propInfo);
+  	return;
+      }
++     if (immediate)
++ 	server_parse_message(dpy, propInfo, numItems);
++     else
++ 	save_in_queue(propInfo, numItems);
++ }
++ 
++ /*
++  * Saves x clientserver commands in a queue so that they can be called when
++  * vim is idle.
++  */
++     static void
++ save_in_queue(propInfo, len)
++     char_u  *propInfo;
++     int	    len;
++ {
++     x_queue_T *node;
++ 
++     node = (x_queue_T *)alloc(sizeof(x_queue_T));
++     if (node == NULL)
++ 	return;	    /* out of memory */
++     node->propInfo = propInfo;
++     node->len = len;
++ 
++     if (head.next == NULL)   /* initialize circular queue */
++     {
++ 	head.next = &head;
++ 	head.prev = &head;
++     }
++ 
++     /* insert node at tail of queue */
++     node->next = &head;
++     node->prev = head.prev;
++     head.prev->next = node;
++     head.prev = node;
++ }
++ 
++ /*
++  * Parses queued clientserver messages.
++  */
++     void
++ server_parse_messages()
++ {
++     char_u	*p;
++     x_queue_T	*node;
++ 
++     if (!X_DISPLAY)
++ 	return; /* cannot happen? */
++     while (head.next != NULL && head.next != &head)
++     {
++ 	node = head.next;
++ 	server_parse_message(X_DISPLAY, node->propInfo, node->len);
++ 	head.next = node->next;
++ 	node->next->prev = node->prev;
++ 	vim_free(node);
++     }
++ }
++ 
++ /*
++  * Returns a non-zero value if there are clientserver messages waiting
++  * int the queue.
++  */
++     int
++ server_waiting()
++ {
++     return head.next != NULL && head.next != &head;
++ }
++ 
++ /*
++  * Prases a single clientserver message. A single message may contain multiple
++  * commands.
++  * "propInfo" will be freed.
++  */
++     static void
++ server_parse_message(dpy, propInfo, numItems)
++     Display	*dpy;
++     char_u	*propInfo; /* A string containing 0 or more X commands */
++     int		numItems;  /* The size of propInfo in bytes. */
++ {
++     char_u	*p;
++     int		code;
++     char_u	*tofree;
+  
+      /*
+       * Several commands and results could arrive in the property at
+***************
+*** 1248,1263 ****
+  	    if (script == NULL || name == NULL)
+  		continue;
+  
+!             if (serverName != NULL && STRICMP(name, serverName) == 0)
+!             {
+!                 script = serverConvert(enc, script, &tofree);
+!                 if (asKeys)
+!                     server_to_input_buf(script);
+!                 else
+!                 {
+!                     char_u      *res;
+  
+!                     res = eval_client_expr_to_string(script);
+  		    if (resWindow != None)
+  		    {
+  			garray_T    reply;
+--- 1347,1362 ----
+  	    if (script == NULL || name == NULL)
+  		continue;
+  
+! 	    if (serverName != NULL && STRICMP(name, serverName) == 0)
+! 	    {
+! 		script = serverConvert(enc, script, &tofree);
+! 		if (asKeys)
+! 		    server_to_input_buf(script);
+! 		else
+! 		{
+! 		    char_u      *res;
+  
+! 		    res = eval_client_expr_to_string(script);
+  		    if (resWindow != None)
+  		    {
+  			garray_T    reply;
+***************
+*** 1290,1299 ****
+  						 reply.ga_data, reply.ga_len);
+  			ga_clear(&reply);
+  		    }
+!                     vim_free(res);
+!                 }
+!                 vim_free(tofree);
+!             }
+  	}
+  	else if (*p == 'r' && p[1] == 0)
+  	{
+--- 1389,1398 ----
+  						 reply.ga_data, reply.ga_len);
+  			ga_clear(&reply);
+  		    }
+! 		    vim_free(res);
+! 		}
+! 		vim_free(tofree);
+! 	    }
+  	}
+  	else if (*p == 'r' && p[1] == 0)
+  	{
+*** ../vim-7.4.865/src/misc2.c	2015-08-27 22:30:43.548873347 +0200
+--- src/misc2.c	2015-09-15 13:28:12.086187881 +0200
+***************
+*** 6328,6330 ****
+--- 6328,6350 ----
+      return FALSE;
+  }
+  #endif
++ 
++ #if defined(MESSAGE_QUEUE) || defined(PROTO)
++ /*
++  * Process messages that have been queued for netbeans or clientserver.
++  * These functions can call arbitrary vimscript and should only be called when
++  * it is safe to do so.
++  */
++     void
++ parse_queued_messages()
++ {
++ # ifdef FEAT_NETBEANS_INTG
++     /* Process the queued netbeans messages. */
++     netbeans_parse_messages();
++ # endif
++ # ifdef FEAT_CLIENTSERVER
++     /* Process the queued clientserver messages. */
++     server_parse_messages();
++ # endif
++ }
++ #endif
+*** ../vim-7.4.865/src/os_unix.c	2015-08-11 19:13:55.130175784 +0200
+--- src/os_unix.c	2015-09-15 13:33:20.218978266 +0200
+***************
+*** 388,396 ****
+  {
+      int		len;
+  
+! #ifdef FEAT_NETBEANS_INTG
+!     /* Process the queued netbeans messages. */
+!     netbeans_parse_messages();
+  #endif
+  
+      /* Check if window changed size while we were busy, perhaps the ":set
+--- 388,395 ----
+  {
+      int		len;
+  
+! #ifdef MESSAGE_QUEUE
+!     parse_queued_messages();
+  #endif
+  
+      /* Check if window changed size while we were busy, perhaps the ":set
+***************
+*** 405,413 ****
+  	    if (!do_resize)	/* return if not interrupted by resize */
+  		return 0;
+  	    handle_resize();
+! #ifdef FEAT_NETBEANS_INTG
+! 	    /* Process the queued netbeans messages. */
+! 	    netbeans_parse_messages();
+  #endif
+  	}
+      }
+--- 404,411 ----
+  	    if (!do_resize)	/* return if not interrupted by resize */
+  		return 0;
+  	    handle_resize();
+! #ifdef MESSAGE_QUEUE
+! 	    parse_queued_messages();
+  #endif
+  	}
+      }
+***************
+*** 439,447 ****
+  	while (do_resize)    /* window changed size */
+  	    handle_resize();
+  
+! #ifdef FEAT_NETBEANS_INTG
+! 	/* Process the queued netbeans messages. */
+! 	netbeans_parse_messages();
+  #endif
+  	/*
+  	 * We want to be interrupted by the winch signal
+--- 437,444 ----
+  	while (do_resize)    /* window changed size */
+  	    handle_resize();
+  
+! #ifdef MESSAGE_QUEUE
+! 	parse_queued_messages();
+  #endif
+  	/*
+  	 * We want to be interrupted by the winch signal
+***************
+*** 5208,5213 ****
+--- 5205,5211 ----
+   * When a GUI is being used, this will not be used for input -- webb
+   * Returns also, when a request from Sniff is waiting -- toni.
+   * Or when a Linux GPM mouse event is waiting.
++  * Or when a clientserver message is on the queue.
+   */
+  #if defined(__BEOS__)
+      int
+***************
+*** 5601,5606 ****
+--- 5599,5609 ----
+  	if (finished || msec == 0)
+  	    break;
+  
++ # ifdef FEAT_CLIENTSERVER
++ 	if (server_waiting())
++ 	    break;
++ # endif
++ 
+  	/* We're going to loop around again, find out for how long */
+  	if (msec > 0)
+  	{
+***************
+*** 7106,7136 ****
+  
+      for (;;)
+      {
+!         XtInputMask mask = XtAppPending(app_context);
+  
+!         if (mask == 0 || vim_is_input_buf_full())
+  	    break;
+  
+!         if (mask & XtIMXEvent)
+  	{
+  	    /* There is an event to process. */
+!             XtAppNextEvent(app_context, &event);
+  #ifdef FEAT_CLIENTSERVER
+  	    {
+  		XPropertyEvent *e = (XPropertyEvent *)&event;
+  
+  		if (e->type == PropertyNotify && e->window == commWindow
+  		   && e->atom == commProperty && e->state == PropertyNewValue)
+!                 serverEventProc(xterm_dpy, &event);
+  	    }
+  #endif
+!             XtDispatchEvent(&event);
+!         }
+  	else
+  	{
+  	    /* There is something else than an event to process. */
+!             XtAppProcessEvent(app_context, mask);
+!         }
+      }
+  }
+  
+--- 7109,7139 ----
+  
+      for (;;)
+      {
+! 	XtInputMask mask = XtAppPending(app_context);
+  
+! 	if (mask == 0 || vim_is_input_buf_full())
+  	    break;
+  
+! 	if (mask & XtIMXEvent)
+  	{
+  	    /* There is an event to process. */
+! 	    XtAppNextEvent(app_context, &event);
+  #ifdef FEAT_CLIENTSERVER
+  	    {
+  		XPropertyEvent *e = (XPropertyEvent *)&event;
+  
+  		if (e->type == PropertyNotify && e->window == commWindow
+  		   && e->atom == commProperty && e->state == PropertyNewValue)
+! 		    serverEventProc(xterm_dpy, &event, 0);
+  	    }
+  #endif
+! 	    XtDispatchEvent(&event);
+! 	}
+  	else
+  	{
+  	    /* There is something else than an event to process. */
+! 	    XtAppProcessEvent(app_context, mask);
+! 	}
+      }
+  }
+  
+*** ../vim-7.4.865/src/proto/if_xcmdsrv.pro	2013-08-10 13:37:15.000000000 +0200
+--- src/proto/if_xcmdsrv.pro	2015-09-15 13:50:22.648292769 +0200
+***************
+*** 7,11 ****
+  int serverSendReply __ARGS((char_u *name, char_u *str));
+  int serverReadReply __ARGS((Display *dpy, Window win, char_u **str, int localLoop));
+  int serverPeekReply __ARGS((Display *dpy, Window win, char_u **str));
+! void serverEventProc __ARGS((Display *dpy, XEvent *eventPtr));
+  /* vim: set ft=c : */
+--- 7,13 ----
+  int serverSendReply __ARGS((char_u *name, char_u *str));
+  int serverReadReply __ARGS((Display *dpy, Window win, char_u **str, int localLoop));
+  int serverPeekReply __ARGS((Display *dpy, Window win, char_u **str));
+! void serverEventProc __ARGS((Display *dpy, XEvent *eventPtr, int immediate));
+! void server_parse_messages __ARGS((void));
+! int server_waiting __ARGS((void));
+  /* vim: set ft=c : */
+*** ../vim-7.4.865/src/proto/misc2.pro	2015-07-17 13:22:43.157523671 +0200
+--- src/proto/misc2.pro	2015-09-15 13:34:55.177985281 +0200
+***************
+*** 106,109 ****
+--- 106,110 ----
+  void put_time __ARGS((FILE *fd, time_t the_time));
+  void time_to_bytes __ARGS((time_t the_time, char_u *buf));
+  int has_non_ascii __ARGS((char_u *s));
++ void parse_queued_messages __ARGS((void));
+  /* vim: set ft=c : */
+*** ../vim-7.4.865/src/macros.h	2015-09-09 20:59:34.013186842 +0200
+--- src/macros.h	2015-09-15 13:26:44.155103230 +0200
+***************
+*** 321,323 ****
+--- 321,327 ----
+  #else
+  # define PLINES_NOFILL(x) plines(x)
+  #endif
++ 
++ #if defined(FEAT_NETBEANS_INTG) || defined(FEAT_CLIENTSERVER)
++ # define MESSAGE_QUEUE
++ #endif
+*** ../vim-7.4.865/src/version.c	2015-09-09 22:35:25.792564584 +0200
+--- src/version.c	2015-09-15 14:08:07.297090947 +0200
+***************
+*** 743,744 ****
+--- 743,746 ----
+  {   /* Add new patch number below this line */
++ /**/
++     866,
+  /**/
+
+-- 
+ALL:   A witch!  A witch!
+WITCH: It's a fair cop.
+ALL:   Burn her!  Burn her!  Let's make her into a ladder.
+                 "Monty Python and the Holy Grail" PYTHON (MONTY) PICTURES LTD
+
+ /// Bram Moolenaar -- Bram@Moolenaar.net -- http://www.Moolenaar.net   \\\
+///        sponsor Vim, vote for features -- http://www.Vim.org/sponsor/ \\\
+\\\  an exciting new programming language -- http://www.Zimbu.org        ///
+ \\\            help me help AIDS victims -- http://ICCF-Holland.org    ///

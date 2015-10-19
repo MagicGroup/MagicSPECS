@@ -1,0 +1,52 @@
+To: vim_dev@googlegroups.com
+Subject: Patch 7.4.725
+Fcc: outbox
+From: Bram Moolenaar <Bram@moolenaar.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+------------
+
+Patch 7.4.725
+Problem:    ":call setreg('"', [])" reports an internal error.
+Solution:   Make the register empty. (Yasuhiro Matsumoto)
+Files:      src/ops.c
+
+
+*** ../vim-7.4.724/src/ops.c	2015-02-03 18:36:40.401033677 +0100
+--- src/ops.c	2015-05-04 20:13:12.357598140 +0200
+***************
+*** 6642,6647 ****
+--- 6642,6655 ----
+  	}
+      }
+  
++     /* Without any lines make the register empty. */
++     if (y_ptr->y_size + newlines == 0)
++     {
++ 	vim_free(y_ptr->y_array);
++ 	y_ptr->y_array = NULL;
++ 	return;
++     }
++ 
+      /*
+       * Allocate an array to hold the pointers to the new register lines.
+       * If the register was not empty, move the existing lines to the new array.
+*** ../vim-7.4.724/src/version.c	2015-05-04 18:27:29.920714802 +0200
+--- src/version.c	2015-05-04 20:11:52.326492918 +0200
+***************
+*** 743,744 ****
+--- 743,746 ----
+  {   /* Add new patch number below this line */
++ /**/
++     725,
+  /**/
+
+-- 
+How To Keep A Healthy Level Of Insanity:
+6. In the memo field of all your checks, write "for sexual favors".
+
+ /// Bram Moolenaar -- Bram@Moolenaar.net -- http://www.Moolenaar.net   \\\
+///        sponsor Vim, vote for features -- http://www.Vim.org/sponsor/ \\\
+\\\  an exciting new programming language -- http://www.Zimbu.org        ///
+ \\\            help me help AIDS victims -- http://ICCF-Holland.org    ///

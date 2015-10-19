@@ -1,0 +1,52 @@
+To: vim_dev@googlegroups.com
+Subject: Patch 7.4.748
+Fcc: outbox
+From: Bram Moolenaar <Bram@moolenaar.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+------------
+
+Patch 7.4.748 (after 7.4.745)
+Problem:    Buffer overflow.
+Solution:   Make the buffer larger. (Kazunobu Kuriyama)
+Files:      src/eval.c
+
+
+*** ../vim-7.4.747/src/eval.c	2015-06-19 16:32:52.328116933 +0200
+--- src/eval.c	2015-06-19 21:03:32.294099699 +0200
+***************
+*** 17157,17163 ****
+  	while (li != NULL)
+  	{
+  	    int		i = 0;
+! 	    char_u	buf[4];
+  	    dictitem_T  *di;
+  
+  	    d = li->li_tv.vval.v_dict;
+--- 17157,17163 ----
+  	while (li != NULL)
+  	{
+  	    int		i = 0;
+! 	    char_u	buf[5];
+  	    dictitem_T  *di;
+  
+  	    d = li->li_tv.vval.v_dict;
+*** ../vim-7.4.747/src/version.c	2015-06-19 18:35:29.683602295 +0200
+--- src/version.c	2015-06-19 21:05:18.868995774 +0200
+***************
+*** 743,744 ****
+--- 743,746 ----
+  {   /* Add new patch number below this line */
++ /**/
++     748,
+  /**/
+
+-- 
+hundred-and-one symptoms of being an internet addict:
+121. You ask for e-mail adresses instead of telephone numbers.
+
+ /// Bram Moolenaar -- Bram@Moolenaar.net -- http://www.Moolenaar.net   \\\
+///        sponsor Vim, vote for features -- http://www.Vim.org/sponsor/ \\\
+\\\  an exciting new programming language -- http://www.Zimbu.org        ///
+ \\\            help me help AIDS victims -- http://ICCF-Holland.org    ///

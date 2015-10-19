@@ -1,0 +1,238 @@
+To: vim_dev@googlegroups.com
+Subject: Patch 7.4.797
+Fcc: outbox
+From: Bram Moolenaar <Bram@moolenaar.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+------------
+
+Patch 7.4.797
+Problem:    Crash when using more lines for the command line than
+            'maxcombine'.
+Solution:   Use the correct array index.  Also, do not try redrawing when
+            exiting.  And use screen_Columns instead of Columns.
+Files:      src/screen.c
+
+
+*** ../vim-7.4.796/src/screen.c	2015-07-21 15:48:13.589517950 +0200
+--- src/screen.c	2015-07-25 22:46:44.028355647 +0200
+***************
+*** 279,284 ****
+--- 279,285 ----
+      int		type;
+  {
+      int		rows;
++     int		cols = screen_Columns;
+      int		r;
+      int		ret = 0;
+      schar_T	*screenline;	/* copy from ScreenLines[] */
+***************
+*** 291,318 ****
+  #endif
+  
+      redraw_later(type);
+!     if (msg_scrolled || (State != NORMAL && State != NORMAL_BUSY))
+  	return ret;
+  
+      /* Allocate space to save the text displayed in the command line area. */
+!     rows = Rows - cmdline_row;
+      screenline = (schar_T *)lalloc(
+! 			   (long_u)(rows * Columns * sizeof(schar_T)), FALSE);
+      screenattr = (sattr_T *)lalloc(
+! 			   (long_u)(rows * Columns * sizeof(sattr_T)), FALSE);
+      if (screenline == NULL || screenattr == NULL)
+  	ret = 2;
+  #ifdef FEAT_MBYTE
+      if (enc_utf8)
+      {
+  	screenlineUC = (u8char_T *)lalloc(
+! 			  (long_u)(rows * Columns * sizeof(u8char_T)), FALSE);
+  	if (screenlineUC == NULL)
+  	    ret = 2;
+  	for (i = 0; i < p_mco; ++i)
+  	{
+  	    screenlineC[i] = (u8char_T *)lalloc(
+! 			  (long_u)(rows * Columns * sizeof(u8char_T)), FALSE);
+  	    if (screenlineC[i] == NULL)
+  		ret = 2;
+  	}
+--- 292,319 ----
+  #endif
+  
+      redraw_later(type);
+!     if (msg_scrolled || (State != NORMAL && State != NORMAL_BUSY) || exiting)
+  	return ret;
+  
+      /* Allocate space to save the text displayed in the command line area. */
+!     rows = screen_Rows - cmdline_row;
+      screenline = (schar_T *)lalloc(
+! 			   (long_u)(rows * cols * sizeof(schar_T)), FALSE);
+      screenattr = (sattr_T *)lalloc(
+! 			   (long_u)(rows * cols * sizeof(sattr_T)), FALSE);
+      if (screenline == NULL || screenattr == NULL)
+  	ret = 2;
+  #ifdef FEAT_MBYTE
+      if (enc_utf8)
+      {
+  	screenlineUC = (u8char_T *)lalloc(
+! 			  (long_u)(rows * cols * sizeof(u8char_T)), FALSE);
+  	if (screenlineUC == NULL)
+  	    ret = 2;
+  	for (i = 0; i < p_mco; ++i)
+  	{
+  	    screenlineC[i] = (u8char_T *)lalloc(
+! 			  (long_u)(rows * cols * sizeof(u8char_T)), FALSE);
+  	    if (screenlineC[i] == NULL)
+  		ret = 2;
+  	}
+***************
+*** 320,326 ****
+      if (enc_dbcs == DBCS_JPNU)
+      {
+  	screenline2 = (schar_T *)lalloc(
+! 			   (long_u)(rows * Columns * sizeof(schar_T)), FALSE);
+  	if (screenline2 == NULL)
+  	    ret = 2;
+      }
+--- 321,327 ----
+      if (enc_dbcs == DBCS_JPNU)
+      {
+  	screenline2 = (schar_T *)lalloc(
+! 			   (long_u)(rows * cols * sizeof(schar_T)), FALSE);
+  	if (screenline2 == NULL)
+  	    ret = 2;
+      }
+***************
+*** 331,357 ****
+  	/* Save the text displayed in the command line area. */
+  	for (r = 0; r < rows; ++r)
+  	{
+! 	    mch_memmove(screenline + r * Columns,
+  			ScreenLines + LineOffset[cmdline_row + r],
+! 			(size_t)Columns * sizeof(schar_T));
+! 	    mch_memmove(screenattr + r * Columns,
+  			ScreenAttrs + LineOffset[cmdline_row + r],
+! 			(size_t)Columns * sizeof(sattr_T));
+  #ifdef FEAT_MBYTE
+  	    if (enc_utf8)
+  	    {
+! 		mch_memmove(screenlineUC + r * Columns,
+  			    ScreenLinesUC + LineOffset[cmdline_row + r],
+! 			    (size_t)Columns * sizeof(u8char_T));
+  		for (i = 0; i < p_mco; ++i)
+! 		    mch_memmove(screenlineC[i] + r * Columns,
+! 				ScreenLinesC[r] + LineOffset[cmdline_row + r],
+! 				(size_t)Columns * sizeof(u8char_T));
+  	    }
+  	    if (enc_dbcs == DBCS_JPNU)
+! 		mch_memmove(screenline2 + r * Columns,
+  			    ScreenLines2 + LineOffset[cmdline_row + r],
+! 			    (size_t)Columns * sizeof(schar_T));
+  #endif
+  	}
+  
+--- 332,358 ----
+  	/* Save the text displayed in the command line area. */
+  	for (r = 0; r < rows; ++r)
+  	{
+! 	    mch_memmove(screenline + r * cols,
+  			ScreenLines + LineOffset[cmdline_row + r],
+! 			(size_t)cols * sizeof(schar_T));
+! 	    mch_memmove(screenattr + r * cols,
+  			ScreenAttrs + LineOffset[cmdline_row + r],
+! 			(size_t)cols * sizeof(sattr_T));
+  #ifdef FEAT_MBYTE
+  	    if (enc_utf8)
+  	    {
+! 		mch_memmove(screenlineUC + r * cols,
+  			    ScreenLinesUC + LineOffset[cmdline_row + r],
+! 			    (size_t)cols * sizeof(u8char_T));
+  		for (i = 0; i < p_mco; ++i)
+! 		    mch_memmove(screenlineC[i] + r * cols,
+! 				ScreenLinesC[i] + LineOffset[cmdline_row + r],
+! 				(size_t)cols * sizeof(u8char_T));
+  	    }
+  	    if (enc_dbcs == DBCS_JPNU)
+! 		mch_memmove(screenline2 + r * cols,
+  			    ScreenLines2 + LineOffset[cmdline_row + r],
+! 			    (size_t)cols * sizeof(schar_T));
+  #endif
+  	}
+  
+***************
+*** 366,393 ****
+  	    for (r = 0; r < rows; ++r)
+  	    {
+  		mch_memmove(current_ScreenLine,
+! 			    screenline + r * Columns,
+! 			    (size_t)Columns * sizeof(schar_T));
+  		mch_memmove(ScreenAttrs + off,
+! 			    screenattr + r * Columns,
+! 			    (size_t)Columns * sizeof(sattr_T));
+  #ifdef FEAT_MBYTE
+  		if (enc_utf8)
+  		{
+  		    mch_memmove(ScreenLinesUC + off,
+! 				screenlineUC + r * Columns,
+! 				(size_t)Columns * sizeof(u8char_T));
+  		    for (i = 0; i < p_mco; ++i)
+  			mch_memmove(ScreenLinesC[i] + off,
+! 				    screenlineC[i] + r * Columns,
+! 				    (size_t)Columns * sizeof(u8char_T));
+  		}
+  		if (enc_dbcs == DBCS_JPNU)
+  		    mch_memmove(ScreenLines2 + off,
+! 				screenline2 + r * Columns,
+! 				(size_t)Columns * sizeof(schar_T));
+  #endif
+! 		SCREEN_LINE(cmdline_row + r, 0, Columns, Columns, FALSE);
+  	    }
+  	    ret = 4;
+  	}
+--- 367,394 ----
+  	    for (r = 0; r < rows; ++r)
+  	    {
+  		mch_memmove(current_ScreenLine,
+! 			    screenline + r * cols,
+! 			    (size_t)cols * sizeof(schar_T));
+  		mch_memmove(ScreenAttrs + off,
+! 			    screenattr + r * cols,
+! 			    (size_t)cols * sizeof(sattr_T));
+  #ifdef FEAT_MBYTE
+  		if (enc_utf8)
+  		{
+  		    mch_memmove(ScreenLinesUC + off,
+! 				screenlineUC + r * cols,
+! 				(size_t)cols * sizeof(u8char_T));
+  		    for (i = 0; i < p_mco; ++i)
+  			mch_memmove(ScreenLinesC[i] + off,
+! 				    screenlineC[i] + r * cols,
+! 				    (size_t)cols * sizeof(u8char_T));
+  		}
+  		if (enc_dbcs == DBCS_JPNU)
+  		    mch_memmove(ScreenLines2 + off,
+! 				screenline2 + r * cols,
+! 				(size_t)cols * sizeof(schar_T));
+  #endif
+! 		SCREEN_LINE(cmdline_row + r, 0, cols, cols, FALSE);
+  	    }
+  	    ret = 4;
+  	}
+*** ../vim-7.4.796/src/version.c	2015-07-22 22:46:08.127010101 +0200
+--- src/version.c	2015-07-25 22:38:04.193354077 +0200
+***************
+*** 743,744 ****
+--- 743,746 ----
+  {   /* Add new patch number below this line */
++ /**/
++     797,
+  /**/
+
+-- 
+Women are probably the main cause of free software starvation.
+
+ /// Bram Moolenaar -- Bram@Moolenaar.net -- http://www.Moolenaar.net   \\\
+///        sponsor Vim, vote for features -- http://www.Vim.org/sponsor/ \\\
+\\\  an exciting new programming language -- http://www.Zimbu.org        ///
+ \\\            help me help AIDS victims -- http://ICCF-Holland.org    ///

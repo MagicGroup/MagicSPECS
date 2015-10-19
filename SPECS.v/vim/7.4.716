@@ -1,0 +1,74 @@
+To: vim_dev@googlegroups.com
+Subject: Patch 7.4.716
+Fcc: outbox
+From: Bram Moolenaar <Bram@moolenaar.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+------------
+
+Patch 7.4.716
+Problem:    When using the 'c' flag of ":substitute" and selecting "a" or "l"
+            at the prompt the flags are not remembered for ":&&". (Ingo
+            Karkat)
+Solution:   Save the flag values and restore them. (Hirohito Higashi)
+Files:      src/ex_cmds.c
+
+
+*** ../vim-7.4.715/src/ex_cmds.c	2015-04-15 12:43:37.993444528 +0200
+--- src/ex_cmds.c	2015-05-04 10:38:24.853616235 +0200
+***************
+*** 4279,4284 ****
+--- 4279,4286 ----
+      static int	do_list = FALSE;	/* list last line with subs. */
+      static int	do_number = FALSE;	/* list last line with line nr*/
+      static int	do_ic = 0;		/* ignore case flag */
++     int		save_do_all;		/* remember user specified 'g' flag */
++     int		save_do_ask;		/* remember user specified 'c' flag */
+      char_u	*pat = NULL, *sub = NULL;	/* init for GCC */
+      int		delimiter;
+      int		sublen;
+***************
+*** 4514,4519 ****
+--- 4516,4524 ----
+      if (do_count)
+  	do_ask = FALSE;
+  
++     save_do_all = do_all;
++     save_do_ask = do_ask;
++ 
+      /*
+       * check for a trailing count
+       */
+***************
+*** 5327,5332 ****
+--- 5332,5341 ----
+  #endif
+  
+      vim_regfree(regmatch.regprog);
++ 
++     /* Restore the flag values, they can be used for ":&&". */
++     do_all = save_do_all;
++     do_ask = save_do_ask;
+  }
+  
+  /*
+*** ../vim-7.4.715/src/version.c	2015-05-04 10:33:09.633193707 +0200
+--- src/version.c	2015-05-04 10:35:25.235654731 +0200
+***************
+*** 743,744 ****
+--- 743,746 ----
+  {   /* Add new patch number below this line */
++ /**/
++     716,
+  /**/
+
+-- 
+hundred-and-one symptoms of being an internet addict:
+28. You have comandeered your teenager's phone line for the net and even his
+    friends know not to call on his line anymore.
+
+ /// Bram Moolenaar -- Bram@Moolenaar.net -- http://www.Moolenaar.net   \\\
+///        sponsor Vim, vote for features -- http://www.Vim.org/sponsor/ \\\
+\\\  an exciting new programming language -- http://www.Zimbu.org        ///
+ \\\            help me help AIDS victims -- http://ICCF-Holland.org    ///

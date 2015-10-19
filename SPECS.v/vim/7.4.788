@@ -1,0 +1,76 @@
+To: vim_dev@googlegroups.com
+Subject: Patch 7.4.788
+Fcc: outbox
+From: Bram Moolenaar <Bram@moolenaar.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+------------
+
+Patch 7.4.788 (after 7.4.787)
+Problem:    Can't build without the crypt feature. (John Marriott)
+Solution:   Add #ifdef's.
+Files:      src/option.c
+
+
+*** ../vim-7.4.787/src/option.c	2015-07-17 22:04:44.300830834 +0200
+--- src/option.c	2015-07-17 23:05:31.542484926 +0200
+***************
+*** 4918,4924 ****
+  			*(char_u **)(varp) = newval;
+  
+  #if defined(FEAT_AUTOCMD) && defined(FEAT_EVAL)
+! 			if (!starting && options[opt_idx].indir != PV_KEY
+  							   && origval != NULL)
+  			    /* origval may be freed by
+  			     * did_set_string_option(), make a copy. */
+--- 4918,4927 ----
+  			*(char_u **)(varp) = newval;
+  
+  #if defined(FEAT_AUTOCMD) && defined(FEAT_EVAL)
+! 			if (!starting
+! # ifdef FEAT_CRYPT
+! 				&& options[opt_idx].indir != PV_KEY
+! # endif
+  							   && origval != NULL)
+  			    /* origval may be freed by
+  			     * did_set_string_option(), make a copy. */
+***************
+*** 5717,5723 ****
+  	*varp = s;
+  
+  #if defined(FEAT_AUTOCMD) && defined(FEAT_EVAL)
+! 	if (!starting && options[opt_idx].indir != PV_KEY)
+  	    saved_oldval = vim_strsave(oldval);
+  #endif
+  	if ((r = did_set_string_option(opt_idx, varp, TRUE, oldval, NULL,
+--- 5720,5730 ----
+  	*varp = s;
+  
+  #if defined(FEAT_AUTOCMD) && defined(FEAT_EVAL)
+! 	if (!starting
+! # ifdef FEAT_CRYPT
+! 		&& options[opt_idx].indir != PV_KEY
+! # endif
+! 		)
+  	    saved_oldval = vim_strsave(oldval);
+  #endif
+  	if ((r = did_set_string_option(opt_idx, varp, TRUE, oldval, NULL,
+*** ../vim-7.4.787/src/version.c	2015-07-17 22:04:44.304830797 +0200
+--- src/version.c	2015-07-17 23:07:19.569467719 +0200
+***************
+*** 743,744 ****
+--- 743,746 ----
+  {   /* Add new patch number below this line */
++ /**/
++     788,
+  /**/
+
+-- 
+hundred-and-one symptoms of being an internet addict:
+235. You start naming your kids Pascal, COBOL, Algol and Fortran.
+
+ /// Bram Moolenaar -- Bram@Moolenaar.net -- http://www.Moolenaar.net   \\\
+///        sponsor Vim, vote for features -- http://www.Vim.org/sponsor/ \\\
+\\\  an exciting new programming language -- http://www.Zimbu.org        ///
+ \\\            help me help AIDS victims -- http://ICCF-Holland.org    ///

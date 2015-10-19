@@ -1,0 +1,84 @@
+To: vim_dev@googlegroups.com
+Subject: Patch 7.4.825
+Fcc: outbox
+From: Bram Moolenaar <Bram@moolenaar.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+------------
+
+Patch 7.4.825
+Problem:    Invalid memory access for ":syn keyword x a[".
+Solution:   Do not skip over the NUL. (Dominique Pelle)
+Files:      src/syntax.c
+
+
+*** ../vim-7.4.824/src/syntax.c	2015-08-11 19:13:55.142175641 +0200
+--- src/syntax.c	2015-08-13 22:52:20.709498467 +0200
+***************
+*** 4873,4883 ****
+  			if (p[1] == NUL)
+  			{
+  			    EMSG2(_("E789: Missing ']': %s"), kw);
+! 			    kw = p + 2;		/* skip over the NUL */
+! 			    break;
+  			}
+  			if (p[1] == ']')
+  			{
+  			    kw = p + 1;		/* skip over the "]" */
+  			    break;
+  			}
+--- 4873,4888 ----
+  			if (p[1] == NUL)
+  			{
+  			    EMSG2(_("E789: Missing ']': %s"), kw);
+! 			    goto error;
+  			}
+  			if (p[1] == ']')
+  			{
++ 			    if (p[2] != NUL)
++ 			    {
++ 				EMSG3(_("E890: trailing char after ']': %s]%s"),
++ 								kw, &p[2]);
++ 				goto error;
++ 			    }
+  			    kw = p + 1;		/* skip over the "]" */
+  			    break;
+  			}
+***************
+*** 4898,4904 ****
+  		    }
+  		}
+  	    }
+! 
+  	    vim_free(keyword_copy);
+  	    vim_free(syn_opt_arg.cont_in_list);
+  	    vim_free(syn_opt_arg.next_list);
+--- 4903,4909 ----
+  		    }
+  		}
+  	    }
+! error:
+  	    vim_free(keyword_copy);
+  	    vim_free(syn_opt_arg.cont_in_list);
+  	    vim_free(syn_opt_arg.next_list);
+*** ../vim-7.4.824/src/version.c	2015-08-12 22:56:53.581637421 +0200
+--- src/version.c	2015-08-13 22:45:24.574614004 +0200
+***************
+*** 743,744 ****
+--- 743,746 ----
+  {   /* Add new patch number below this line */
++ /**/
++     825,
+  /**/
+
+-- 
+FATHER:    You killed eight wedding guests in all!
+LAUNCELOT: Er, Well ... the thing is ... I thought your son was a lady.
+FATHER:    I can understand that.
+                 "Monty Python and the Holy Grail" PYTHON (MONTY) PICTURES LTD
+
+ /// Bram Moolenaar -- Bram@Moolenaar.net -- http://www.Moolenaar.net   \\\
+///        sponsor Vim, vote for features -- http://www.Vim.org/sponsor/ \\\
+\\\  an exciting new programming language -- http://www.Zimbu.org        ///
+ \\\            help me help AIDS victims -- http://ICCF-Holland.org    ///

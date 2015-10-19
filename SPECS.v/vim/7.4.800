@@ -1,0 +1,57 @@
+To: vim_dev@googlegroups.com
+Subject: Patch 7.4.800
+Fcc: outbox
+From: Bram Moolenaar <Bram@moolenaar.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+------------
+
+Patch 7.4.800
+Problem:    Using freed memory when triggering CmdUndefined autocommands.
+Solution:   Set pointer to NULL. (Dominique Pelle)
+Files:      src/ex_docmd.c
+
+
+*** ../vim-7.4.799/src/ex_docmd.c	2015-07-21 15:48:13.589517950 +0200
+--- src/ex_docmd.c	2015-07-28 14:24:05.801096678 +0200
+***************
+*** 2365,2372 ****
+  	p = vim_strnsave(ea.cmd, (int)(p - ea.cmd));
+  	ret = apply_autocmds(EVENT_CMDUNDEFINED, p, p, TRUE, NULL);
+  	vim_free(p);
+! 	if (ret && !aborting())
+! 	    p = find_command(&ea, NULL);
+      }
+  #endif
+  
+--- 2365,2373 ----
+  	p = vim_strnsave(ea.cmd, (int)(p - ea.cmd));
+  	ret = apply_autocmds(EVENT_CMDUNDEFINED, p, p, TRUE, NULL);
+  	vim_free(p);
+! 	/* If the autocommands did something and didn't cause an error, try
+! 	 * finding the command again. */
+! 	p = (ret && !aborting()) ? find_command(&ea, NULL) : NULL;
+      }
+  #endif
+  
+*** ../vim-7.4.799/src/version.c	2015-07-28 13:33:36.850531694 +0200
+--- src/version.c	2015-07-28 14:22:09.050246179 +0200
+***************
+*** 743,744 ****
+--- 743,746 ----
+  {   /* Add new patch number below this line */
++ /**/
++     800,
+  /**/
+
+-- 
+   They now pass three KNIGHTS impaled to a tree.  With their feet off the
+   ground,  with one lance through the lot of them, they are skewered up
+   like a barbecue.
+                 "Monty Python and the Holy Grail" PYTHON (MONTY) PICTURES LTD
+
+ /// Bram Moolenaar -- Bram@Moolenaar.net -- http://www.Moolenaar.net   \\\
+///        sponsor Vim, vote for features -- http://www.Vim.org/sponsor/ \\\
+\\\  an exciting new programming language -- http://www.Zimbu.org        ///
+ \\\            help me help AIDS victims -- http://ICCF-Holland.org    ///

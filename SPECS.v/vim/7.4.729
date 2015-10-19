@@ -1,0 +1,51 @@
+To: vim_dev@googlegroups.com
+Subject: Patch 7.4.729
+Fcc: outbox
+From: Bram Moolenaar <Bram@moolenaar.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+------------
+
+Patch 7.4.729 (after 7.4.721)
+Problem:    Occasional crash with 'list' set.
+Solution:   Fix off-by-one error. (Christian Brabandt)
+Files:      src/screen.c
+
+
+*** ../vim-7.4.728/src/screen.c	2015-05-04 17:28:17.344445737 +0200
+--- src/screen.c	2015-05-14 05:49:39.183210016 +0200
+***************
+*** 4715,4721 ****
+  				&& !(noinvcur
+  				    && lnum == wp->w_cursor.lnum
+  				    && (colnr_T)vcol == wp->w_virtcol)))
+! 			&& lcs_eol_one >= 0)
+  		{
+  		    /* Display a '$' after the line or highlight an extra
+  		     * character if the line break is included. */
+--- 4715,4721 ----
+  				&& !(noinvcur
+  				    && lnum == wp->w_cursor.lnum
+  				    && (colnr_T)vcol == wp->w_virtcol)))
+! 			&& lcs_eol_one > 0)
+  		{
+  		    /* Display a '$' after the line or highlight an extra
+  		     * character if the line break is included. */
+*** ../vim-7.4.728/src/version.c	2015-05-06 11:33:37.168517956 +0200
+--- src/version.c	2015-05-14 05:51:49.949737971 +0200
+***************
+*** 743,744 ****
+--- 743,746 ----
+  {   /* Add new patch number below this line */
++ /**/
++     729,
+  /**/
+
+-- 
+He who laughs last, thinks slowest.
+
+ /// Bram Moolenaar -- Bram@Moolenaar.net -- http://www.Moolenaar.net   \\\
+///        sponsor Vim, vote for features -- http://www.Vim.org/sponsor/ \\\
+\\\  an exciting new programming language -- http://www.Zimbu.org        ///
+ \\\            help me help AIDS victims -- http://ICCF-Holland.org    ///

@@ -1,0 +1,65 @@
+To: vim_dev@googlegroups.com
+Subject: Patch 7.4.832
+Fcc: outbox
+From: Bram Moolenaar <Bram@moolenaar.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+------------
+
+Patch 7.4.832
+Problem:    $HOME in `=$HOME . '/.vimrc'` is expanded too early.
+Solution:   Skip over `=expr` when expanding environment names.
+Files:      src/misc1.c
+
+
+*** ../vim-7.4.831/src/misc1.c	2015-08-25 13:57:00.188667536 +0200
+--- src/misc1.c	2015-08-25 14:12:46.678814290 +0200
+***************
+*** 3969,3974 ****
+--- 3969,3994 ----
+      --dstlen;		    /* leave one char space for "\," */
+      while (*src && dstlen > 0)
+      {
++ #ifdef FEAT_EVAL
++ 	/* Skip over `=expr`. */
++ 	if (src[0] == '`' && src[1] == '=')
++ 	{
++ 	    size_t len;
++ 
++ 	    var = src;
++ 	    src += 2;
++ 	    (void)skip_expr(&src);
++ 	    if (*src == '`')
++ 		++src;
++ 	    len = src - var;
++ 	    if (len > (size_t)dstlen)
++ 		len = dstlen;
++ 	    vim_strncpy(dst, var, len);
++ 	    dst += len;
++ 	    dstlen -= len;
++ 	    continue;
++ 	}
++ #endif
+  	copy_char = TRUE;
+  	if ((*src == '$'
+  #ifdef VMS
+*** ../vim-7.4.831/src/version.c	2015-08-25 13:57:00.188667536 +0200
+--- src/version.c	2015-08-25 14:14:36.573656094 +0200
+***************
+*** 743,744 ****
+--- 743,746 ----
+  {   /* Add new patch number below this line */
++ /**/
++     832,
+  /**/
+
+-- 
+It is illegal for anyone to try and stop a child from playfully jumping over
+puddles of water.
+		[real standing law in California, United States of America]
+
+ /// Bram Moolenaar -- Bram@Moolenaar.net -- http://www.Moolenaar.net   \\\
+///        sponsor Vim, vote for features -- http://www.Vim.org/sponsor/ \\\
+\\\  an exciting new programming language -- http://www.Zimbu.org        ///
+ \\\            help me help AIDS victims -- http://ICCF-Holland.org    ///

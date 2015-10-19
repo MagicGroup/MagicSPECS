@@ -1,0 +1,12 @@
+diff -up vsftpd-3.0.0/vsftpd.conf.xferlog vsftpd-3.0.0/vsftpd.conf
+--- vsftpd-3.0.0/vsftpd.conf.xferlog	2012-07-17 10:38:14.022601998 +0200
++++ vsftpd-3.0.0/vsftpd.conf	2012-07-17 10:41:09.311073484 +0200
+@@ -50,7 +50,7 @@ connect_from_port_20=YES
+ #
+ # You may override where the log file goes if you like. The default is shown
+ # below.
+-#xferlog_file=/var/log/vsftpd.log
++#xferlog_file=/var/log/xferlog
+ #
+ # If you want, you can have your log file in standard ftpd xferlog format.
+ # Note that the default log file location is /var/log/xferlog in this case.

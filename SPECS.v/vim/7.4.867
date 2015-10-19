@@ -1,0 +1,53 @@
+To: vim_dev@googlegroups.com
+Subject: Patch 7.4.867
+Fcc: outbox
+From: Bram Moolenaar <Bram@moolenaar.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+------------
+
+Patch 7.4.867 (after 7.4.866)
+Problem:    Can't build on MS-Windows. (Taro Muraoka)
+Solution:   Adjust #ifdef.
+Files:      src/misc2.c
+
+
+*** ../vim-7.4.866/src/misc2.c	2015-09-15 14:12:01.382632522 +0200
+--- src/misc2.c	2015-09-15 15:55:19.589159669 +0200
+***************
+*** 6342,6348 ****
+      /* Process the queued netbeans messages. */
+      netbeans_parse_messages();
+  # endif
+! # ifdef FEAT_CLIENTSERVER
+      /* Process the queued clientserver messages. */
+      server_parse_messages();
+  # endif
+--- 6342,6348 ----
+      /* Process the queued netbeans messages. */
+      netbeans_parse_messages();
+  # endif
+! # if defined(FEAT_CLIENTSERVER) && defined(FEAT_X11)
+      /* Process the queued clientserver messages. */
+      server_parse_messages();
+  # endif
+*** ../vim-7.4.866/src/version.c	2015-09-15 14:12:01.386632480 +0200
+--- src/version.c	2015-09-15 15:55:57.900761842 +0200
+***************
+*** 743,744 ****
+--- 743,746 ----
+  {   /* Add new patch number below this line */
++ /**/
++     867,
+  /**/
+
+-- 
+If you had to identify, in one word, the reason why the
+human race has not achieved, and never will achieve, its
+full potential, that word would be "meetings."
+
+ /// Bram Moolenaar -- Bram@Moolenaar.net -- http://www.Moolenaar.net   \\\
+///        sponsor Vim, vote for features -- http://www.Vim.org/sponsor/ \\\
+\\\  an exciting new programming language -- http://www.Zimbu.org        ///
+ \\\            help me help AIDS victims -- http://ICCF-Holland.org    ///

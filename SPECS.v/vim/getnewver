@@ -1,0 +1,28 @@
+#!/bin/bash
+url="ftp://ftp.vim.org/pub/vim/patches/"
+downcommand="wget -q" 
+pushd $(dirname $0) > /dev/null
+if ! [ x"$UPDATEMAJOR" = x"" ]; then
+	rm -f index.html && lftp -c "open ftp://ftp.vim.org/pub/vim/patches;cls --sort=date" >> index.html
+	if [ -f index.html ];then
+		newver1=`cat index.html |grep -v '.*\..*\..*' |grep '.*\..*' |grep '/' |head -n1 |sed -e 's!/!!'`
+	else
+		echo "不能正常取得新版本号"
+		exit 1
+	fi
+else
+	specver=`rpmspec -q --qf "%{version}\n" vim.spec |head -n 1`
+	newver1=$(echo $specver | cut -d"." -f1).$(echo $specver | cut -d"." -f2)
+fi	
+rm -f index.html
+url1="$url$newver1/"
+lftp -c "open ftp://ftp.vim.org/pub/vim/patches/$newver1/;cls --sort=date" >> index.html
+if [ -f index.html ];then
+	newver=`cat index.html |grep '.*\..*\..*'|head -n1`
+	echo $newver
+else
+        echo "不能正常取得新版本号"
+        exit 1
+fi
+rm -f index.html
+popd > /dev/null

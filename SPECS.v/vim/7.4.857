@@ -1,0 +1,56 @@
+To: vim_dev@googlegroups.com
+Subject: Patch 7.4.857
+Fcc: outbox
+From: Bram Moolenaar <Bram@moolenaar.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+------------
+
+Patch 7.4.857
+Problem:    Dragging the current tab with the mouse doesn't work properly.
+Solution:   Take the current tabpage index into account. (Hirohito Higashi)
+Files:      src/normal.c
+
+
+*** ../vim-7.4.856/src/normal.c	2015-08-11 19:13:55.142175641 +0200
+--- src/normal.c	2015-09-08 17:50:31.147618211 +0200
+***************
+*** 2561,2567 ****
+  	    if (in_tab_line)
+  	    {
+  		c1 = TabPageIdxs[mouse_col];
+! 		tabpage_move(c1 <= 0 ? 9999 : c1 - 1);
+  	    }
+  	    return FALSE;
+  	}
+--- 2561,2568 ----
+  	    if (in_tab_line)
+  	    {
+  		c1 = TabPageIdxs[mouse_col];
+! 		tabpage_move(c1 <= 0 ? 9999 : c1 < tabpage_index(curtab)
+! 								? c1 - 1 : c1);
+  	    }
+  	    return FALSE;
+  	}
+*** ../vim-7.4.856/src/version.c	2015-09-08 17:31:38.591350883 +0200
+--- src/version.c	2015-09-08 17:48:17.700998564 +0200
+***************
+*** 743,744 ****
+--- 743,746 ----
+  {   /* Add new patch number below this line */
++ /**/
++     857,
+  /**/
+
+-- 
+BODY:        I'm not dead!
+CART DRIVER: 'Ere.  He says he's not dead.
+LARGE MAN:   Yes he is.
+BODY:        I'm not!
+                 "Monty Python and the Holy Grail" PYTHON (MONTY) PICTURES LTD
+
+ /// Bram Moolenaar -- Bram@Moolenaar.net -- http://www.Moolenaar.net   \\\
+///        sponsor Vim, vote for features -- http://www.Vim.org/sponsor/ \\\
+\\\  an exciting new programming language -- http://www.Zimbu.org        ///
+ \\\            help me help AIDS victims -- http://ICCF-Holland.org    ///

@@ -1,0 +1,124 @@
+To: vim_dev@googlegroups.com
+Subject: Patch 7.4.848
+Fcc: outbox
+From: Bram Moolenaar <Bram@moolenaar.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+------------
+
+Patch 7.4.848
+Problem:    CTRL-A on hex number in Visual block mode is incorrect.
+Solution:   Account for the "0x". (Hirohito Higashi)
+Files:      src/charset.c, src/testdir/test_increment.in,
+            src/testdir/test_increment.ok
+
+
+*** ../vim-7.4.847/src/charset.c	2015-07-17 13:03:42.092357617 +0200
+--- src/charset.c	2015-09-01 18:42:30.984009677 +0200
+***************
+*** 1909,1914 ****
+--- 1909,1916 ----
+      else if (hex != 0 || dohex > 1)
+      {
+  	/* hex */
++ 	if (hex != 0)
++ 	    n += 2;	    /* skip over "0x" */
+  	while (vim_isxdigit(*ptr))
+  	{
+  	    un = 16 * un + (unsigned long)hex2nr(*ptr);
+*** ../vim-7.4.847/src/testdir/test_increment.in	2015-08-11 19:36:37.050004181 +0200
+--- src/testdir/test_increment.in	2015-09-01 18:39:25.813940564 +0200
+***************
+*** 277,283 ****
+   Expected:
+   1) <Ctrl-a> and cursor is on a
+   b
+!    
+  
+  
+  STARTTEST
+--- 277,291 ----
+   Expected:
+   1) <Ctrl-a> and cursor is on a
+   b
+! 
+! 21) block-wise increment on part of hexadecimal
+! Text:
+! 0x123456
+! 
+!   Expected:
+!   1) Ctrl-V f3 <ctrl-a>
+! 0x124456
+! 
+  
+  
+  STARTTEST
+***************
+*** 401,406 ****
+--- 409,420 ----
+  :.put =col('.')
+  :set nrformats&vim
+  
++ :" Test 21
++ :/^S21=/+,/^E21=/-y a
++ :/^E21=/+put a
++ :set nrformats&vim
++ f3
++ 
+  :" Save the report
+  :/^# Test 1/,$w! test.out
+  :qa!
+***************
+*** 594,599 ****
+--- 608,620 ----
+  
+  
+  
++ # Test 21
++ S21====
++ 0x123456
++ E21====
++ 
++ 
++ 
+  
+  ENDTEST
+  
+*** ../vim-7.4.847/src/testdir/test_increment.ok	2015-08-11 19:36:37.050004181 +0200
+--- src/testdir/test_increment.ok	2015-09-01 18:39:25.813940564 +0200
+***************
+*** 280,285 ****
+--- 280,293 ----
+  1
+  
+  
++ # Test 21
++ S21====
++ 0x123456
++ E21====
++ 
++ 0x124456
++ 
++ 
+  
+  ENDTEST
+  
+*** ../vim-7.4.847/src/version.c	2015-09-01 18:27:45.117248852 +0200
+--- src/version.c	2015-09-01 18:38:56.586245357 +0200
+***************
+*** 743,744 ****
+--- 743,746 ----
+  {   /* Add new patch number below this line */
++ /**/
++     848,
+  /**/
+
+-- 
+An SQL statement walks into a bar.  He approaches two tables
+and says, "Mind if I join you?"
+
+ /// Bram Moolenaar -- Bram@Moolenaar.net -- http://www.Moolenaar.net   \\\
+///        sponsor Vim, vote for features -- http://www.Vim.org/sponsor/ \\\
+\\\  an exciting new programming language -- http://www.Zimbu.org        ///
+ \\\            help me help AIDS victims -- http://ICCF-Holland.org    ///
