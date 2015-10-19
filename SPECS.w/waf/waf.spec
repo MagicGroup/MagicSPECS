@@ -13,30 +13,32 @@
 %undefine prerel
 
 Name:           waf
-Version:        1.7.16
-Release:        %{?prerel:0.}1%{?prerel:.%prerel}%{?dist}.2
+Version:        1.8.14
+Release:        %{?prerel:0.}1%{?prerel:.%prerel}%{?dist}
 Summary:        A Python-based build system
 Group:          Development/Tools
 # The entire source code is BSD apart from pproc.py (taken from Python 2.5)
 License:        BSD and Python
-URL:            http://code.google.com/p/waf/
+URL:            https://github.com/waf-project/waf
 # Original tarfile can be found at
-# http://ftp.waf.io/pub/release/waf-%%{version}.tar.bz2
+# https://waf.io/waf-%%{version}.tar.bz2 or
+# http://www.freehackers.org/%7Etnagy/release/waf-%%{version}.tar.bz2
 # We remove:
 # - docs/book, licensed CC BY-NC-ND
 # - Waf logos, licensed CC BY-NC
 Source:         waf-%{version}%{?prerel}.stripped.tar.bz2
-Patch0:         waf-1.6.2-libdir.patch
+Patch0:         waf-1.8.11-libdir.patch
 Patch1:         waf-1.6.9-logo.patch
+Patch2:         waf-1.8.11-sphinx-no-W.patch
 
 BuildArch:      noarch
 
-BuildRequires:  python-devel
+BuildRequires:  python2-devel
 %if 0%{?with_python3}
 BuildRequires:  python3-devel
 %endif # with_python3
 %if 0%{?with_docs}
-%if 0%{?fedora}
+%if 0%{?fedora} || 0%{?rhel} >= 7
 BuildRequires:  python-sphinx
 %else
 BuildRequires:  python-sphinx10
@@ -44,10 +46,10 @@ BuildRequires:  python-sphinx10
 BuildRequires:  graphviz
 BuildRequires:  ImageMagick
 %endif # with_docs
-%if "%{?python_version}" != ""
+%if "%{?python2_version}" != ""
 # Seems like automatic ABI dependency is not detected since the files are
 # going to a non-standard location
-Requires:       python(abi) = %{python_version}
+Requires:       python(abi) = %{python2_version}
 %endif
 
 
@@ -104,19 +106,11 @@ This package contains the HTML documentation for %{name}.
 %prep
 %setup -q
 # also search for waflib in /usr/share/waf
-%patch0 -p0
+%patch0 -p1
 # do not try to use the (removed) waf logos
 %patch1 -p1
-
-# remove BOM, causes trouble later
-sed -i -e '1s/^\xEF\xBB\xBF//' waflib/extras/dpapi.py
-
-# add missing quotes, see rhbz#914566 and
-# https://code.google.com/p/waf/issues/detail?id=1263
-sed -i -e 's@fontname=\(Vera.*sans\),@fontname="\1",@g' \
-  docs/sphinx/conf.py \
-  docs/sphinx/coremodules.rst \
-  docs/sphinx/featuremap.rst
+# do not add -W when running sphinx-build
+%patch2 -p1
 
 
 %build
@@ -132,7 +126,7 @@ done
 %if 0%{?with_docs}
 # build html docs
 pushd docs/sphinx
-%if ! 0%{?fedora > 13}
+%if ! ( 0%{?fedora} || 0%{?rhel} >= 7 )
 export SPHINX_BUILD=sphinx-1.0-build
 %endif
 ../../waf -v configure build
@@ -144,12 +138,13 @@ popd
 # use waf so it unpacks itself
 mkdir _temp ; pushd _temp
 cp -av ../waf .
-%{__python} ./waf >/dev/null 2>&1
+%{__python2} ./waf >/dev/null 2>&1
 pushd .waf-%{version}-*
 find . -name '*.py' -printf '%%P\0' |
   xargs -0 -I{} install -m 0644 -p -D {} %{buildroot}%{_datadir}/waf/{}
 popd
 %if 0%{?with_python3}
+# use waf so it unpacks itself
 %{__python3} ./waf >/dev/null 2>&1
 pushd .waf3-%{version}-*
 find . -name '*.py' -printf '%%P\0' |
@@ -159,18 +154,20 @@ popd
 popd
 
 # install the frontend
-install -m 0755 -p -D waf-light %{buildroot}%{_bindir}/waf-%{python_version}
+install -m 0755 -p -D waf-light %{buildroot}%{_bindir}/waf-%{python2_version}
+ln -s waf-%{python2_version} %{buildroot}%{_bindir}/waf-2
 %if 0%{?with_python3}
 install -m 0755 -p -D waf-light %{buildroot}%{_bindir}/waf-%{python3_version}
+ln -s waf-%{python3_version} %{buildroot}%{_bindir}/waf-3
 %endif # with_python3
-ln -s waf-%{python_version} %{buildroot}%{_bindir}/waf
+ln -s waf-%{python2_version} %{buildroot}%{_bindir}/waf
 
 # remove shebangs from and fix EOL for all scripts in wafadmin
 find %{buildroot}%{_datadir}/ -name '*.py' \
      -exec sed -i -e '1{/^#!/d}' -e 's|\r$||g' {} \;
 
 # fix waf script shebang line
-sed -i "1c#! %{__python}" %{buildroot}%{_bindir}/waf-%{python_version}
+sed -i "1c#! %{__python2}" %{buildroot}%{_bindir}/waf-%{python2_version}
 %if 0%{?with_python3}
 sed -i "1c#! %{__python3}" %{buildroot}%{_bindir}/waf-%{python3_version}
 %endif # with_python3
@@ -183,7 +180,7 @@ rm -f docs/sphinx/build/html/.buildinfo
 
 %if 0%{?with_python3}
 # do byte compilation
-%py_byte_compile %{__python} %{buildroot}%{_datadir}/waf
+%py_byte_compile %{__python2} %{buildroot}%{_datadir}/waf
 %py_byte_compile %{__python3} %{buildroot}%{_datadir}/waf3
 %endif # with_python3
 
@@ -191,13 +188,16 @@ rm -f docs/sphinx/build/html/.buildinfo
 %files
 %doc README TODO ChangeLog demos
 %{_bindir}/waf
-%{_bindir}/waf-%{python_version}
+%{_bindir}/waf-%{python2_version}
+%{_bindir}/waf-2
 %{_datadir}/waf
 
 
 %if 0%{?with_python3}
 %files -n %{name}-python3
+%doc README TODO ChangeLog demos
 %{_bindir}/waf-%{python3_version}
+%{_bindir}/waf-3
 %{_datadir}/waf3
 %endif # with_python3
 
@@ -209,6 +209,51 @@ rm -f docs/sphinx/build/html/.buildinfo
 
 
 %changelog
+* Sun Oct 11 2015 Thomas Moschny <thomas.moschny@gmx.de> - 1.8.14-1
+- Update to 1.8.14.
+- Include waf-2 and waf-3 symlinks, respectively.
+- Add basic doc files to the python3 subpackage.
+
+* Sat Jul 25 2015 Thomas Moschny <thomas.moschny@gmx.de> - 1.8.12-1
+- Update to 1.8.12.
+
+* Mon Jun 22 2015 Thomas Moschny <thomas.moschny@gmx.de> - 1.8.11-2
+- Patch to remove -W from sphinx-build call, in order to build with
+  older sphinx.
+- Rebase libdir patch.
+
+* Mon Jun 22 2015 Thomas Moschny <thomas.moschny@gmx.de> - 1.8.11-1
+- Update to 1.8.11.
+
+* Fri Jun 19 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.8.9-1.1
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
+
+* Fri May  1 2015 Thomas Moschny <thomas.moschny@gmx.de> - 1.8.9-1
+- Update to 1.8.9.
+- Update upstream URL.
+
+* Sun Apr 19 2015 Thomas Moschny <thomas.moschny@gmx.de> - 1.8.8-2
+- Project moved to github.
+
+* Sun Apr 19 2015 Thomas Moschny <thomas.moschny@gmx.de> - 1.8.8-1
+- Update to 1.8.8.
+- Apply updated Python packaging guidelines.
+
+* Sun Mar  1 2015 Thomas Moschny <thomas.moschny@gmx.de> - 1.8.7-1
+- Update to 1.8.7.
+
+* Sun Feb 22 2015 Thomas Moschny <thomas.moschny@gmx.de> - 1.8.6-1
+- Update to 1.8.6.
+
+* Thu Dec 18 2014 Thomas Moschny <thomas.moschny@gmx.de> - 1.8.5-1
+- Update to 1.8.5.
+
+* Sat Nov 22 2014 Thomas Moschny <thomas.moschny@gmx.de> - 1.8.4-1
+- Update to 1.8.4.
+
+* Sun Oct 12 2014 Thomas Moschny <thomas.moschny@gmx.de> - 1.8.2-1
+- Update to 1.8.2.
+
 * Sun Jun 08 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.7.16-1.2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 
