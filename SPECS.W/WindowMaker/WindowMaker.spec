@@ -1,10 +1,12 @@
 Summary:        A fast, feature rich Window Manager
+Summary(zh_CN.UTF-8): 一个快速，功能丰富的窗口管理器
 Name:           WindowMaker
-Version:        0.95.3
-Release:        4%{?dist}
+Version:	0.95.7
+Release:	1%{?dist}
 
 License:        GPLv2+
 Group:          User Interface/Desktops
+Group(zh_CN.UTF-8): 用户界面/桌面
 URL:            http://www.windowmaker.org
 Source0:        http://windowmaker.org/pub/source/release/WindowMaker-%{version}.tar.gz
 Source1:        WindowMaker-xsession.desktop
@@ -49,25 +51,40 @@ It is fast, feature rich, easy to configure, and easy to use. In
 addition, Window Maker works with GNOME and KDE, making it one of the
 most useful and universal window managers available.
 
+%description -l zh_CN.UTF-8
+一个快速的，功能丰富的 X11 窗口管理器。
+
 %package devel
 Summary:        Development files for WindowMaker
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:          System Environment/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       WindowMaker = %{version}-%{release}
 Requires:       WINGs-devel = %{version}-%{release}
 
 %description devel
 Development files for WindowMaker.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
 %package -n WINGs-libs
 Summary:        Widgets and image libraries needed for WindowMaker
+Summary(zh_CN.UTF-8): %{name} 的部件和图像库
 Group:          System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 
 %description -n WINGs-libs
 Widgets and image libraries needed for WindowMaker.
 
+%description -n WINGs-libs -l zh_CN.UTF-8
+%{name} 的部件和图像库。
+
 %package -n WINGs-devel
 Summary:        Development files for the WINGs library
+Summary(zh_CN.UTF-8): WINGs 的开发包
 Group:          System Environment/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       WINGs-libs = %{version}-%{release}
 Requires:       libX11-devel
 Requires:       xorg-x11-proto-devel
@@ -85,6 +102,9 @@ Requires:       fontconfig-devel
 
 %description -n WINGs-devel
 Development files for the WINGs library.
+
+%description -n WINGs-devel -l zh_CN.UTF-8
+WINGs 的开发包。
 
 %prep
 %setup -q
@@ -140,7 +160,7 @@ geticonset wmsetbg wmagnify wmgenmenu wmmenugen WPrefs ; do
 chrpath --delete %{buildroot}%{_bindir}/$f
 done
 
-chrpath --delete %{buildroot}%{_libdir}/libWINGs.so.2.0.1
+chrpath --delete %{buildroot}%{_libdir}/libWINGs.so.3.1.0
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -173,6 +193,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_bindir}/wkdemenu.pl
 %{_bindir}/wm-oldmenu2new
 %{_bindir}/wmaker.inst
+%{_bindir}/wmiv
 %{_bindir}/wxcopy
 %{_bindir}/wxpaste
 %{_libdir}/libWMaker.so.*
@@ -180,16 +201,14 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/applications/WindowMaker.desktop
 %{_datadir}/WindowMaker/
 %{_datadir}/WPrefs/
-%{_mandir}/man1/wdread*
-%{_mandir}/man1/wmgenmenu*
-%{_mandir}/man1/wmmenugen*
-%{_mandir}/man1/*.1x*
+%{_mandir}/man1/*.1*
 %{_mandir}/man8/upgrade-windowmaker-defaults*
 
 %files devel
 %defattr(-,root,root,-)
 %{_libdir}/libWMaker.so
 %{_includedir}/WMaker.h
+%{_libdir}/pkgconfig/WUtil.pc
 
 %files -n WINGs-libs
 %defattr(-,root,root,-)
@@ -216,6 +235,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man1/get-wutil-flags*
 
 %changelog
+* Mon Oct 19 2015 Liu Di <liudidi@gmail.com> - 0.95.7-1
+- 更新到 0.95.7
+
 * Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 0.95.3-4
 - 为 Magic 3.0 重建
 
