@@ -8,21 +8,22 @@
 %define debug_package %{nil}
 
 Name:                wicd
-Version:             1.7.2.4
-Release:             5%{?dist}
+Version:             1.7.3
+Release:             2%{?dist}
 Summary:             Wireless and wired network connection manager
 
 Group:               System Environment/Base
 License:             GPLv2+
-URL:                 http://wicd.sourceforge.net/
-Source0:             http://downloads.sourceforge.net/%{name}/%{name}-%{version}.tar.gz
+URL:                 https://launchpad.net/wicd/
+Source0:             https://launchpad.net/wicd/1.7/%{version}/+download/%{name}-%{version}.tar.gz
 Source1:             org.wicd.daemon.service
 
-Patch0:              wicd-1.7.0-remove-WHEREAREMYFILES.patch
-Patch1:              wicd-1.7.1-dbus-failure.patch
-Patch2:              wicd-1.7.0-dbus-policy.patch
-Patch3:              wicd-1.7.1-DaemonClosing.patch
-Patch4:              wicd-1.7.2.4-unicode.patch
+Patch0:              wicd-1.7.3-remove-WHEREAREMYFILES.patch
+Patch1:              wicd-1.7.3-dbus-failure.patch
+Patch2:              wicd-1.7.2.4-dbus-policy.patch
+Patch3:              wicd-1.7.3-DaemonClosing.patch
+Patch4:              wicd-1.7.3-unicode.patch
+Patch5:              wicd-1.7.3-sanitize.patch
 
 BuildRoot:           %{_tmppath}/%{name}-%{version}-%{release}-root-%(id -u -n)
 BuildRequires:       babel
@@ -30,8 +31,8 @@ BuildRequires:       python2-devel
 BuildRequires:       desktop-file-utils
 BuildRequires:       pkgconfig
 BuildRequires:       systemd-units
+BuildRequires:       gettext
 
-Requires:            pm-utils >= 1.2.4
 Requires:            %{name}-common = %{version}-%{release}
 
 %description
@@ -104,7 +105,12 @@ Client program for wicd that uses a GTK+ interface.
 %patch3 -p1
 
 # Unicode string handling problems
-%patch4 -p1
+%patch4 -p1 -b .orig
+
+# Prevent crash when saving network settings
+# Upstream bug report and patch:
+# https://bugs.launchpad.net/wicd/+bug/993912
+%patch5 -p1
 
 %build
 rm -f po/ast.po
@@ -114,10 +120,11 @@ rm -f po/ast.po
     --share %{_datadir}/wicd \
     --etc %{_sysconfdir}/wicd \
     --bin %{_bindir} \
-    --pmutils %{_libdir}/pm-utils/sleep.d \
     --log %{_localstatedir}/log \
     --systemd %{_systemd_unitdir} \
-    --no-install-init
+    --no-install-init \
+    --no-install-pmutils \
+    --no-install-gnome-shell-extensions
 %{__python} setup.py build
 %{__python} setup.py compile_translations
 
@@ -172,7 +179,7 @@ rm -rf %{buildroot}
 %systemd_preun wicd.service
 
 %postun common
-%systemd_post_with_restart wicd.service
+%systemd_postun_with_restart wicd.service
 
 %post gtk
 touch --no-create %{_datadir}/icons/hicolor &>/dev/null || :
@@ -188,11 +195,10 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 
 %files
 %defattr(-,root,root,-)
-%{_libdir}/pm-utils/sleep.d/55wicd
+%doc AUTHORS CHANGES LICENSE NEWS README other/WHEREAREMYFILES
 
 %files common -f %{name}.lang
 %defattr(-,root,root,-)
-%doc AUTHORS CHANGES LICENSE NEWS README other/WHEREAREMYFILES
 %dir %{python_sitelib}/wicd
 %dir %{_sysconfdir}/wicd
 %dir %{_sysconfdir}/wicd/encryption
@@ -222,6 +228,7 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %config(noreplace) %{_sysconfdir}/wicd/encryption/templates/wired_8021x
 %config(noreplace) %{_sysconfdir}/wicd/encryption/templates/wpa
 %config(noreplace) %{_sysconfdir}/wicd/encryption/templates/wpa-psk
+%config(noreplace) %{_sysconfdir}/wicd/encryption/templates/wpa-psk-hex
 %config(noreplace) %{_sysconfdir}/wicd/encryption/templates/wpa-peap
 %config(noreplace) %{_sysconfdir}/wicd/encryption/templates/wpa2-leap
 %config(noreplace) %{_sysconfdir}/wicd/encryption/templates/wpa2-peap
@@ -265,17 +272,59 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %files gtk
 %defattr(-,root,root,-)
 %dir %{_datadir}/wicd/gtk
-%dir %{_datadir}/pixmaps/wicd
 %{_sysconfdir}/xdg/autostart/wicd-tray.desktop
-%{_datadir}/autostart/wicd-tray.desktop
-%{_datadir}/wicd/gtk/*
-%{_datadir}/pixmaps/wicd/*
 %{_datadir}/pixmaps/wicd-gtk.xpm
+%{_datadir}/wicd/gtk/*
 %{_bindir}/wicd-gtk
 %{_datadir}/icons/hicolor/*/apps/wicd-gtk.png
 %{_datadir}/icons/hicolor/scalable/apps/wicd-gtk.svg
+%dir %{_datadir}/wicd/icons
+%{_datadir}/wicd/icons/*
 
 %changelog
+* Fri Jun 19 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.7.3-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
+
+* Thu Apr 09 2015 David Cantrell <dcantrell@redhat.com> - 1.7.3-1
+- Upgrade to wicd-1.7.3 (#1176990)
+
+* Thu Apr 09 2015 David Cantrell <dcantrell@redhat.com> - 1.7.2.4-16
+- Remove dependency on pm-utils (#1208313)
+
+* Tue Nov 25 2014 David Cantrell <dcantrell@redhat.com> - 1.7.2.4-15
+- self.prog_name -> self.prof_name in netentry_curses.py (#1162118)
+
+* Mon Sep 29 2014 David Cantrell <dcantrell@redhat.com> - 1.7.2.4-14
+- Remove check for daemon patch (#1074315)
+
+* Thu Sep 25 2014 David Cantrell <dcantrell@redhat.com> - 1.7.2.4-13
+- Fix string.translate() usage in misc.py (#1005515)
+
+* Mon Aug 18 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.7.2.4-12
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
+
+* Wed Jul 02 2014 David Cantrell <dcantrell@redhat.com> - 1.7.2.4-11
+- Prevent crash when saving network settings (#996693)
+
+* Mon Jun 30 2014 David Cantrell <dcantrell@redhat.com> - 1.7.2.4-10
+- Do not assume wicd-daemon is running when wicd-client runs (#1074315)
+- Fix wicd-curses crash on startup (#894646)
+- Edit default D-Bus policy file to allow 'users' group members to run
+  wicd client programs (#1074372)
+
+* Sun Jun 08 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.7.2.4-9
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Mon Dec 09 2013 David Cantrell <dcantrell@redhat.com> - 1.7.2.4-8
+- Apply upstream patch to fix exception when changing properties in
+  wicd-gtk (#981667)
+
+* Sun Aug 04 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.7.2.4-7
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Mon Apr 01 2013 David Cantrell <dcantrell@redhat.com> - 1.7.2.4-6
+- systemd_post_with_restart -> systemd_postun_with_restart (#901753)
+
 * Fri Feb 15 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.7.2.4-5
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
 
