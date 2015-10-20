@@ -1,9 +1,11 @@
 Name:           wmctrl
 Version:        1.07
-Release:        12%{?dist}
+Release:        13%{?dist}
 Summary:        Command line tool to interact with an X Window Manager
+Summary(zh_CN.UTF-8): 与 X 窗口管理器交互的命令行工具
 
 Group:          User Interface/X
+Group(zh_CN.UTF-8): 用户界面/X
 License:        GPLv2+
 URL:            http://sweb.cz/tripie/utils/wmctrl
 Source0:        http://sweb.cz/tripie/utils/wmctrl/dist/%{name}-%{version}.tar.gz
@@ -22,6 +24,8 @@ resize, maximize and minimize them. The command line access to these window
 management functions makes it easy to automate and execute them from any
 application that is able to run a command in response to an event.
 
+%description -l zh_CN.UTF-8
+与 X 窗口管理器交互的命令行工具。
 
 %prep
 %setup -q
@@ -35,7 +39,7 @@ make %{?_smp_mflags}
 
 %install
 make install DESTDIR=$RPM_BUILD_ROOT
-
+magic_rpm_clean.sh
 
 %files
 %doc AUTHORS COPYING README
@@ -44,6 +48,9 @@ make install DESTDIR=$RPM_BUILD_ROOT
 
 
 %changelog
+* Tue Oct 20 2015 Liu Di <liudidi@gmail.com> - 1.07-13
+- 为 Magic 3.0 重建
+
 * Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 1.07-12
 - 为 Magic 3.0 重建
 

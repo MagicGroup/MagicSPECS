@@ -1,9 +1,11 @@
 Name:           wdiff
-Version:        1.2.1
-Release:        3%{?dist}
+Version:	1.2.2
+Release:	1%{?dist}
 Summary:        A front-end to GNU diff
+Summary(zh_CN.UTF-8): GNU diff 的前端
 
 Group:          Applications/System
+Group(zh_CN.UTF-8): 应用程序/系统
 License:        GPLv3+
 URL:            http://www.gnu.org/software/%{name}/
 Source0:        http://ftp.gnu.org/gnu/%{name}/%{name}-%{version}.tar.gz
@@ -27,6 +29,9 @@ terminals and pagers (notably with `less').  `wdiff' is particularly
 useful when two texts differ only by a few words and paragraphs have
 been refilled.
 
+%description -l zh_CN.UTF-8
+GNU diff 的前端。
+
 %prep
 %setup -q -n %{name}-%{version}
 iconv --from=ISO-8859-1 --to=UTF-8 ChangeLog > ChangeLog.new && \
@@ -42,7 +47,7 @@ make %{?_smp_mflags}
 make install DESTDIR=$RPM_BUILD_ROOT INSTALL="install -p"
 rm -f $RPM_BUILD_ROOT%{_infodir}/dir
 find $RPM_BUILD_ROOT -type f -name '*gnulib.mo' -exec rm -f {} ';'
-
+magic_rpm_clean.sh
 %find_lang %{name}
 
 %post
@@ -63,6 +68,9 @@ fi
 
 
 %changelog
+* Mon Oct 19 2015 Liu Di <liudidi@gmail.com> - 1.2.2-1
+- 更新到 1.2.2
+
 * Sun Sep 20 2015 Liu Di <liudidi@gmail.com> - 1.2.1-3
 - 为 Magic 3.0 重建
 

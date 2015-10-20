@@ -1,12 +1,14 @@
 %{?mingw_package_header}
 
 Name:           wine-mono
-Version:        4.5.2
-Release:        2%{?dist}
+Version:	4.5.6
+Release:	1%{?dist}
 Summary:        Mono library required for Wine
+Summary(zh_CN.UTF-8): Wine 需要的 Mono 库
 
 License:        GPLv2 and LGPLv2 and MIT and BSD and MS-PL and MPLv1.1
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 URL:            http://wiki.winehq.org/Mono
 Source0:        http://sourceforge.net/projects/wine/files/Wine%20Mono/%{version}/%{name}-%{version}.tar.gz
 Patch0:         wine-mono-build-msifilename.patch
@@ -48,6 +50,9 @@ Requires: wine-filesystem
 %description
 Windows Mono library required for Wine.
 
+%description -l zh_CN.UTF-8
+Wine 需要的 Windows Mono 库。
+
 %prep
 %setup -q
 %patch0 -p1 -b.msifilename
@@ -84,16 +89,18 @@ popd
 
 cp mono-basic/README mono-basic-README
 cp mono-basic/LICENSE mono-basic-LICENSE
-cp MonoGame/LICENSE.txt MonoGame-LICENSE.txt
+magic_rpm_clean.sh
 
 %files
 %doc COPYING README
 %doc mono-LICENSE mono-COPYING.LIB mono-mcs*
 %doc mono-basic-README mono-basic-LICENSE
-%doc MonoGame-LICENSE.txt
 %{_datadir}/wine/mono/wine-mono-%{version}.msi
 
 %changelog
+* Tue Oct 20 2015 Liu Di <liudidi@gmail.com> - 4.5.6-1
+- 更新到 4.5.6
+
 * Sat Dec 14 2013 Michael Cronenworth <mike@cchtml.com>
 - 4.5.2-2
 - Add ExcludeArch as Mono requires an x86 builder host

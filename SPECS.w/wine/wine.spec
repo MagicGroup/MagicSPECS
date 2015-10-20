@@ -8,24 +8,18 @@
 
 # build with compholio-patches, see:  http://www.compholio.com/wine-compholio/
 # uncomment to enable; comment-out to disable.
-%if 0%{?fedora}
 %global compholio 1
-%endif # 0%{?fedora}
 
 # binfmt macros for RHEL
-%if 0%{?fedora} <= 20 || 0%{?rhel} == 7
-%global _binfmtdir /usr/lib/binfmt.d
-%global binfmt_apply() \
-/usr/lib/systemd/systemd-binfmt  %{?*} >/dev/null 2>&1 || : \
-%{nil}
-%endif
 
 Name:           wine
-Version:        1.7.52
+Version:	1.7.53
 Release:        1%{?dist}
 Summary:        A compatibility layer for windows applications
+Summary(zh_CN.UTF-8): windows 程序的兼容层
 
 Group:          Applications/Emulators
+Group(zh_CN.UTF-8): 应用程序/模拟器
 License:        LGPLv2+
 URL:            http://www.winehq.org/
 Source0:        http://downloads.sourceforge.net/wine/wine-%{version}.tar.bz2
@@ -76,7 +70,7 @@ Patch513:       wine-relocate-base.patch
 # wine compholio patches for pipelight.
 # pulseaudio-patch is covered by that patch-set, too.
 %if 0%{?compholio}
-Source900: https://github.com/compholio/wine-compholio/archive/v%{version}.tar.gz#/wine-staging-%{version}.tar.gz
+Source900: https://github.com/wine-compholio/wine-staging/archive/v%{version}.tar.gz
 %endif
 
 %if !%{?no64bit}
@@ -128,9 +122,6 @@ BuildRequires:  libXmu-devel
 BuildRequires:  libXi-devel
 BuildRequires:  libXcursor-devel
 BuildRequires:  dbus-devel
-%if !0%{?fedora} >= 16
-BuildRequires:  hal-devel
-%endif
 BuildRequires:  gnutls-devel
 BuildRequires:  pulseaudio-libs-devel
 BuildRequires:  gsm-devel
@@ -148,10 +139,8 @@ BuildRequires:  libattr-devel
 BuildRequires:  libva-devel
 %endif # 0%{?compholio}
 
-%if 0%{?fedora} >= 10 || 0%{?rhel} >= 6
 BuildRequires:  openal-soft-devel
 BuildRequires:  icoutils
-%endif
 
 Requires:       wine-common = %{version}-%{release}
 Requires:       wine-desktop = %{version}-%{release}
@@ -159,25 +148,19 @@ Requires:       wine-fonts = %{version}-%{release}
 
 # x86-32 parts
 %ifarch %{ix86} x86_64
-%if 0%{?fedora} || 0%{?rhel} <= 6
 Requires:       wine-core(x86-32) = %{version}-%{release}
 Requires:       wine-capi(x86-32) = %{version}-%{release}
 Requires:       wine-cms(x86-32) = %{version}-%{release}
 Requires:       wine-ldap(x86-32) = %{version}-%{release}
 Requires:       wine-twain(x86-32) = %{version}-%{release}
 Requires:       wine-pulseaudio(x86-32) = %{version}-%{release}
-%if 0%{?fedora} >= 10 || 0%{?rhel} == 6
 Requires:       wine-openal(x86-32) = %{version}-%{release}
-%endif
 Requires:       wine-opencl(x86-32) = %{version}-%{release}
-%if 0%{?fedora} >= 17
 Requires:       mingw32-wine-gecko = %winegecko
 Requires:       wine-mono = %winemono
-%endif
 #  wait for rhbz#968860 to require arch-specific samba-winbind-clients
 Requires:       /usr/bin/ntlm_auth
 Requires:       mesa-dri-drivers(x86-32)
-%endif
 %endif
 
 # x86-64 parts
@@ -188,14 +171,10 @@ Requires:       wine-cms(x86-64) = %{version}-%{release}
 Requires:       wine-ldap(x86-64) = %{version}-%{release}
 Requires:       wine-twain(x86-64) = %{version}-%{release}
 Requires:       wine-pulseaudio(x86-64) = %{version}-%{release}
-%if 0%{?fedora} >= 10 || 0%{?rhel} >= 6
 Requires:       wine-openal(x86-64) = %{version}-%{release}
-%endif
 Requires:       wine-opencl(x86-64) = %{version}-%{release}
-%if 0%{?fedora} >= 17
 Requires:       mingw64-wine-gecko = %winegecko
 Requires:       wine-mono = %winemono
-%endif
 Requires:       mesa-dri-drivers(x86-64)
 %endif
 
@@ -222,6 +201,9 @@ package includes a program loader, which allows unmodified Windows
 In Fedora wine is a meta-package which will install everything needed for wine
 to work smoothly. Smaller setups can be achieved by installing some of the
 wine-* sub packages.
+
+%description -l zh_CN.UTF-8
+Windows 程序的兼容层。
 
 %package core
 Summary:        Wine core package
@@ -315,7 +297,6 @@ Provides:       wine-wow = %{version}-%{release}
 %description core
 Wine core package includes the basic wine stuff needed by all other packages.
 
-%if 0%{?fedora} >= 15 || 0%{?rhel} >= 7
 %package systemd
 Summary:        Systemd config for the wine binfmt handler
 Group:          Applications/Emulators
@@ -327,17 +308,6 @@ Requires(postun): systemd
 %description systemd
 Register the wine binary handler for windows executables via systemd binfmt
 handling. See man binfmt.d for further information.
-
-%if 0%{?fedora} < 23
-%package sysvinit
-Summary:        SysV initscript for the wine binfmt handler
-Group:          Applications/Emulators
-BuildArch:      noarch
-
-%description sysvinit
-Register the wine binary handler for windows executables via SysV init files.
-%endif
-%endif
 
 %package filesystem
 Summary:        Filesystem directories for wine
@@ -365,9 +335,7 @@ Requires(preun): /sbin/chkconfig, /sbin/service
 Requires(postun): desktop-file-utils >= 0.8
 Requires:       wine-core = %{version}-%{release}
 Requires:       wine-common = %{version}-%{release}
-%if 0%{?fedora} >= 15 || 0%{?rhel} >= 7
 Requires:       wine-systemd = %{version}-%{release}
-%endif
 Requires:       hicolor-icon-theme
 BuildArch:      noarch
 
@@ -399,9 +367,7 @@ Requires:      wine-symbol-fonts = %{version}-%{release}
 Requires:      wine-wingdings-fonts = %{version}-%{release}
 # intermediate fix for #593140
 Requires:      liberation-sans-fonts liberation-serif-fonts liberation-mono-fonts
-%if 0%{?fedora} > 12
 Requires:      liberation-narrow-fonts
-%endif
 
 %description fonts
 %{summary}
@@ -587,14 +553,6 @@ Twain support for wine
 Summary: ISDN support for wine
 Group: System Environment/Libraries
 Requires: wine-core = %{version}-%{release}
-#FIXME: parallel installable rhbz#1164355
-#ifarch x86_64
-#Requires:       isdn4k-utils(x86-64)
-#endif
-
-#ifarch %{ix86}
-#Requires:       isdn4k-utils(x86-32)
-#endif
 
 #ifarch %{arm}
 Requires:       isdn4k-utils
@@ -631,7 +589,6 @@ Requires: wine-core = %{version}-%{release}
 %description alsa
 This package adds an alsa driver for wine.
 
-%if 0%{?fedora} >= 10 || 0%{?rhel} >= 6
 %package openal
 Summary: Openal support for wine
 Group: System Environment/Libraries
@@ -639,7 +596,6 @@ Requires: wine-core = %{version}-%{release}
 
 %description openal
 This package adds an openal driver for wine.
-%endif
 
 %package opencl
 Summary: OpenCL support for wine
@@ -651,9 +607,6 @@ This package adds the opencl driver for wine.
 %prep
 %setup -q
 %patch511 -p1 -b.cjk
-%if 0%{?fedora} > 21
-#patch512 -p1 -b.gcc5
-%endif
 %patch513 -p1 -b.relocate
 
 # setup and apply compholio-patches or pulseaudio-patch.
@@ -683,12 +636,7 @@ autoreconf
 # disable fortify as it breaks wine
 # http://bugs.winehq.org/show_bug.cgi?id=24606
 # http://bugs.winehq.org/show_bug.cgi?id=25073
-%if 0%{?fedora} > 21
-export TEMP_CFLAGS="`echo $RPM_OPT_FLAGS | sed -e 's/-O2/-O0/'`"
-export CFLAGS="`echo $TEMP_CFLAGS | sed -e 's/-Wp,-D_FORTIFY_SOURCE=2//'` -Wno-error"
-%else
 export CFLAGS="`echo $RPM_OPT_FLAGS | sed -e 's/-Wp,-D_FORTIFY_SOURCE=2//'` -Wno-error"
-%endif
 
 %configure \
  --sysconfdir=%{_sysconfdir}/wine \
@@ -743,14 +691,8 @@ chrpath --delete %{buildroot}%{_bindir}/wineserver32
 mkdir -p %{buildroot}%{_sysconfdir}/wine
 
 # Allow users to launch Windows programs by just clicking on the .exe file...
-%if 0%{?fedora} < 23
-mkdir -p %{buildroot}%{_initrddir}
-install -p -c -m 755 %{SOURCE1} %{buildroot}%{_initrddir}/wine
-%endif
-%if 0%{?fedora} >= 15 || 0%{?rhel} >= 7
 mkdir -p %{buildroot}%{_binfmtdir}
 install -p -c -m 644 %{SOURCE2} %{buildroot}%{_binfmtdir}/wine.conf
-%endif
 
 # add wine dir to desktop
 mkdir -p %{buildroot}%{_sysconfdir}/xdg/menus/applications-merged
@@ -767,7 +709,6 @@ mkdir -p %{buildroot}%{_datadir}/wine/gecko
 mkdir -p %{buildroot}%{_datadir}/wine/mono
 
 # extract and install icons
-%if 0%{?fedora} > 10
 mkdir -p %{buildroot}%{_datadir}/icons/hicolor/scalable/apps
 
 # This replacement masks a composite program icon .SVG down
@@ -817,7 +758,6 @@ install -p -m 644 programs/wordpad/wordpad.svg \
  %{buildroot}%{_datadir}/icons/hicolor/scalable/apps/wordpad.svg
 sed -i -e "$PROGRAM_ICONFIX" %{buildroot}%{_datadir}/icons/hicolor/scalable/apps/wordpad.svg
 
-%endif
 
 # install desktop files
 desktop-file-install \
@@ -921,23 +861,7 @@ do iconv -f iso8859-1 -t utf-8 README.$lang > \
  README.$lang.conv && mv -f README.$lang.conv README.$lang
 done;
 popd
-
-
-%if 0%{?fedora} >= 15
-%if 0%{?fedora} < 23
-%post sysvinit
-if [ $1 -eq 1 ]; then
-/sbin/chkconfig --add wine
-/sbin/chkconfig --level 2345 wine on
-/sbin/service wine start &>/dev/null || :
-fi
-
-%preun sysvinit
-if [ $1 -eq 0 ]; then
-/sbin/service wine stop >/dev/null 2>&1
-/sbin/chkconfig --del wine
-fi
-%endif
+magic_rpm_clean.sh
 
 %post systemd
 %binfmt_apply wine.conf
@@ -951,22 +875,11 @@ fi
 update-desktop-database &>/dev/null || :
 touch --no-create %{_datadir}/icons/hicolor &>/dev/null || :
 
-%else
-%post desktop
-update-desktop-database &>/dev/null || :
-touch --no-create %{_datadir}/icons/hicolor &>/dev/null || :
-if [ $1 -eq 1 ]; then
-/sbin/chkconfig --add wine
-/sbin/chkconfig --level 2345 wine on
-/sbin/service wine start &>/dev/null || :
-fi
-
 %preun desktop
 if [ $1 -eq 0 ]; then
 /sbin/service wine stop >/dev/null 2>&1
 /sbin/chkconfig --del wine
 fi
-%endif
 
 %postun desktop
 update-desktop-database &>/dev/null || :
@@ -1035,10 +948,8 @@ fi
 %post alsa -p /sbin/ldconfig
 %postun alsa -p /sbin/ldconfig
 
-%if 0%{?fedora} >= 10 || 0%{?rhel} >= 6
 %post openal -p /sbin/ldconfig
 %postun openal -p /sbin/ldconfig
-%endif
 
 %files
 # meta package
@@ -1654,6 +1565,17 @@ fi
 %{_libdir}/wine/xapofx1_3.dll.so
 %{_libdir}/wine/xapofx1_4.dll.so
 %{_libdir}/wine/xapofx1_5.dll.so
+%{_libdir}/wine/vcomp120.dll.so
+%{_libdir}/wine/winemp3.acm.so
+%{_libdir}/wine/x3daudio1_0.dll.so
+%{_libdir}/wine/xapofx1_2.dll.so
+%{_libdir}/wine/xaudio2_0.dll.so
+%{_libdir}/wine/xaudio2_1.dll.so
+%{_libdir}/wine/xaudio2_2.dll.so
+%{_libdir}/wine/xaudio2_3.dll.so
+%{_libdir}/wine/xaudio2_4.dll.so
+%{_libdir}/wine/xaudio2_5.dll.so
+%{_libdir}/wine/xaudio2_6.dll.so
 %{_libdir}/wine/xaudio2_7.dll.so
 %{_libdir}/wine/xaudio2_8.dll.so
 %{_libdir}/wine/xcopy.exe.so
@@ -1778,11 +1700,6 @@ fi
 %{_mandir}/man1/winefile.1*
 %{_mandir}/man1/winemine.1*
 %{_mandir}/man1/winepath.1*
-%lang(fr) %{_mandir}/fr.UTF-8/man1/wine.1*
-%lang(fr) %{_mandir}/fr.UTF-8/man1/wineserver.1*
-%lang(de) %{_mandir}/de.UTF-8/man1/wine.1*
-%lang(de) %{_mandir}/de.UTF-8/man1/wineserver.1*
-%lang(pl) %{_mandir}/pl.UTF-8/man1/wine.1*
 
 %files fonts
 # meta package
@@ -1878,19 +1795,10 @@ fi
 %{_datadir}/applications/wine-oleview.desktop
 %{_datadir}/desktop-directories/Wine.directory
 %config %{_sysconfdir}/xdg/menus/applications-merged/wine.menu
-%if 0%{?fedora} >= 10
 %{_datadir}/icons/hicolor/scalable/apps/*svg
-%endif
 
-%if 0%{?fedora} >= 15 || 0%{?rhel} >= 7
 %files systemd
 %config %{_binfmtdir}/wine.conf
-
-%if 0%{?fedora} < 23
-%files sysvinit
-%{_initrddir}/wine
-%endif
-%endif
 
 # ldap subpackage
 %files ldap
@@ -1930,8 +1838,6 @@ fi
 %{_mandir}/man1/wrc.1*
 %{_mandir}/man1/winedbg.1*
 %{_mandir}/man1/wineg++.1*
-%lang(de) %{_mandir}/de.UTF-8/man1/winemaker.1*
-%lang(fr) %{_mandir}/fr.UTF-8/man1/winemaker.1*
 %attr(0755, root, root) %dir %{_includedir}/wine
 %{_includedir}/wine/*
 %{_libdir}/*.so
@@ -1944,15 +1850,16 @@ fi
 %files alsa
 %{_libdir}/wine/winealsa.drv.so
 
-%if 0%{?fedora} >= 10 || 0%{?rhel} >= 6
 %files openal
 %{_libdir}/wine/openal32.dll.so
-%endif
 
 %files opencl
 %{_libdir}/wine/opencl.dll.so
 
 %changelog
+* Tue Oct 20 2015 Liu Di <liudidi@gmail.com> - 1.7.53-1
+- 更新到 1.7.53
+
 * Sat Oct 03 2015 Michael Cronenworth <mike@cchtml.com> 1.7.52-1
 - version upgrade
 

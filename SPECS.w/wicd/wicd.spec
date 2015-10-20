@@ -1,18 +1,15 @@
-%if ! (0%{?fedora} > 12 || 0%{?rhel} > 5)
-%{!?python_sitelib: %global python_sitelib %(%{__python} -c "from distutils.sysconfig import get_python_lib; print(get_python_lib())")}
-%{!?python_sitearch: %global python_sitearch %(%{__python} -c "from distutils.sysconfig import get_python_lib; print(get_python_lib(1))")}
-%endif
-
 %{!?_systemd_unitdir: %global _systemd_unitdir %(pkg-config systemd --variable=systemdsystemunitdir)}
 
 %define debug_package %{nil}
 
 Name:                wicd
 Version:             1.7.3
-Release:             2%{?dist}
+Release:             3%{?dist}
 Summary:             Wireless and wired network connection manager
+Summary(zh_CN.UTF-8): 无线和有线网络连接管理程序
 
 Group:               System Environment/Base
+Group(zh_CN.UTF-8): 系统环境/基本
 License:             GPLv2+
 URL:                 https://launchpad.net/wicd/
 Source0:             https://launchpad.net/wicd/1.7/%{version}/+download/%{name}-%{version}.tar.gz
@@ -44,9 +41,14 @@ it should try, with a preference first to a wired network, then to wireless.
 
 This package provides the architecture-dependent components of wicd.
 
+%description -l zh_CN.UTF-8
+无线和有线网络连接管理程序。
+
 %package common
 Summary:             Wicd common files
+Summary(zh_CN.UTF-8): %{name} 的公用文件
 Group:               System Environment/Base
+Group(zh_CN.UTF-8): 系统环境/基本
 BuildArch:           noarch
 Requires:            dbus
 Requires:            dbus-python
@@ -65,9 +67,14 @@ Requires(postun):    systemd-units
 %description common
 This package provides the main wicd daemon and the wicd-cli front-end.
 
+%description common -l zh_CN.UTF-8
+%{name} 的公用文件。
+
 %package curses
 Summary:             Curses client for wicd
+Summary(zh_CN.UTF-8): %{name} 的控制台客户端
 Group:               Applications/System
+Group(zh_CN.UTF-8): 应用程序/系统
 BuildArch:           noarch
 Requires:            %{name}-common = %{version}-%{release}
 Requires:            python-urwid >= 0.9.8.3
@@ -76,9 +83,14 @@ Requires:            %{name}-gtk = %{version}-%{release}
 %description curses
 Client program for wicd that uses a curses interface.
 
+%description curses -l zh_CN.UTF-8
+%{name} 的控制台客户端。
+
 %package gtk
 Summary:             GTK+ client for wicd
+Summary(zh_CN.UTF-8): %{name} 的 GTK+ 客户端
 Group:               Applications/Internet
+Group(zh_CN.UTF-8): 应用程序/互联网
 BuildArch:           noarch
 Requires:            %{name}-common = %{version}-%{release}
 Requires:            notify-python
@@ -86,6 +98,9 @@ Requires:            pygtk2-libglade >= 2.10
 
 %description gtk
 Client program for wicd that uses a GTK+ interface.
+
+%description gtk -l zh_CN.UTF-8
+%{name} 的 GTK+ 客户端。
 
 %prep
 %setup -q
@@ -166,8 +181,8 @@ desktop-file-install \
 desktop-file-install \
     --dir=%{buildroot}%{_sysconfdir}/xdg/autostart \
     %{buildroot}%{_sysconfdir}/xdg/autostart/wicd-tray.desktop
-
-%find_lang %{name}
+magic_rpm_clean.sh
+%find_lang %{name} || :
 
 %clean
 rm -rf %{buildroot}
@@ -246,11 +261,6 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %{_datadir}/man/man5/wicd-wireless-settings.conf.5*
 %{_datadir}/man/man8/wicd-cli.8*
 %{_datadir}/man/man8/wicd.8*
-%lang(nl) %{_datadir}/man/nl/man1/wicd-client.1*
-%lang(nl) %{_datadir}/man/nl/man5/wicd-manager-settings.conf.5*
-%lang(nl) %{_datadir}/man/nl/man5/wicd-wired-settings.conf.5*
-%lang(nl) %{_datadir}/man/nl/man5/wicd-wireless-settings.conf.5*
-%lang(nl) %{_datadir}/man/nl/man8/wicd.8*
 %dir %{_datadir}/wicd
 %dir %{_datadir}/wicd/backends
 %dir %{_datadir}/wicd/cli
@@ -267,7 +277,6 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %{_datadir}/wicd/curses/*
 %{_bindir}/wicd-curses
 %{_datadir}/man/man8/wicd-curses.8*
-%lang(nl) %{_datadir}/man/nl/man8/wicd-curses.8*
 
 %files gtk
 %defattr(-,root,root,-)
@@ -280,8 +289,12 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %{_datadir}/icons/hicolor/scalable/apps/wicd-gtk.svg
 %dir %{_datadir}/wicd/icons
 %{_datadir}/wicd/icons/*
+%{_datadir}/autostart/wicd-tray.desktop
 
 %changelog
+* Tue Oct 20 2015 Liu Di <liudidi@gmail.com> - 1.7.3-3
+- 为 Magic 3.0 重建
+
 * Fri Jun 19 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.7.3-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

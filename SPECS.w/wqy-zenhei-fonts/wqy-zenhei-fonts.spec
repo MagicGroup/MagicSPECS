@@ -24,10 +24,12 @@ named "WenQuanYi Zen Hei Mono".
 
 Name:           %{fontname}-fonts
 Version:        0.9.46
-Release:        7%{?dist}
+Release:        8%{?dist}
 Summary:        WenQuanYi Zen Hei CJK Font
+Summary(zh_CN.UTF-8): 文泉驿正黑 CJK 字体
 
 Group:          User Interface/X
+Group(zh_CN.UTF-8): 用户界面/X
 License:        GPLv2 with exceptions
 URL:            http://wenq.org/enindex.cgi
 Source0:        http://downloads.sourceforge.net/wqy/%{fontname}-%{version}-May.tar.bz2
@@ -43,6 +45,9 @@ Obsoletes:      wqy-zenhei-fonts-common < 0.9.45-5
 
 %description
 %common_desc
+
+%description -l zh_CN.UTF-8
+文泉驿正黑 CJK 字体。
 
 %prep
 %setup -q -n %{fontname}
@@ -83,6 +88,9 @@ rm -fr %{buildroot}
 
 
 %changelog
+* Tue Oct 20 2015 Liu Di <liudidi@gmail.com> - 0.9.46-8
+- 为 Magic 3.0 重建
+
 * Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 0.9.46-7
 - 为 Magic 3.0 重建
 

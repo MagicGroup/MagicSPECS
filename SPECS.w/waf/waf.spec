@@ -1,9 +1,7 @@
-%if 0%{?fedora}
 %global with_python3 1
 # Turn off the brp-python-bytecompile script
 %global __os_install_post %(echo '%{__os_install_post}' | sed -e 's!/usr/lib[^[:space:]]*/brp-python-bytecompile[[:space:]].*$!!g')
 %{!?python3_version: %global python3_version %(%{__python3} -c "import sys; sys.stdout.write(sys.version[:3])")}
-%endif
 
 # Enable building without html docs (e.g. in case no recent sphinx is
 # available)
@@ -13,10 +11,12 @@
 %undefine prerel
 
 Name:           waf
-Version:        1.8.14
-Release:        %{?prerel:0.}1%{?prerel:.%prerel}%{?dist}
+Version:	1.8.15
+Release:	1%{?dist}
 Summary:        A Python-based build system
+Summary(zh_CN.UTF-8): 基于 Pyhton 的编译构建系统
 Group:          Development/Tools
+Group(zh_CN.UTF-8): 开发/工具
 # The entire source code is BSD apart from pproc.py (taken from Python 2.5)
 License:        BSD and Python
 URL:            https://github.com/waf-project/waf
@@ -26,7 +26,7 @@ URL:            https://github.com/waf-project/waf
 # We remove:
 # - docs/book, licensed CC BY-NC-ND
 # - Waf logos, licensed CC BY-NC
-Source:         waf-%{version}%{?prerel}.stripped.tar.bz2
+Source:         https://waf.io/waf-%{version}.tar.bz2
 Patch0:         waf-1.8.11-libdir.patch
 Patch1:         waf-1.6.9-logo.patch
 Patch2:         waf-1.8.11-sphinx-no-W.patch
@@ -38,11 +38,7 @@ BuildRequires:  python2-devel
 BuildRequires:  python3-devel
 %endif # with_python3
 %if 0%{?with_docs}
-%if 0%{?fedora} || 0%{?rhel} >= 7
 BuildRequires:  python-sphinx
-%else
-BuildRequires:  python-sphinx10
-%endif
 BuildRequires:  graphviz
 BuildRequires:  ImageMagick
 %endif # with_docs
@@ -67,10 +63,14 @@ Waf is a Python-based framework for configuring, compiling and
 installing applications. It is a replacement for other tools such as
 Autotools, Scons, CMake or Ant.
 
+%description -l zh_CN.UTF-8
+基于 Python 的配置、编译和安装程序框架。是类似 autotools, scons,
+cmake 或 ant 的同类软件。
 
 %if 0%{?with_python3}
 %package -n %{name}-python3
 Summary:        Python3 support for %{name}
+Summary(zh_CN.UTF-8): %{name} 的 Python3 版本
 %if "%{?python3_version}" != ""
 Requires:       python(abi) = %{python3_version}
 %endif
@@ -81,6 +81,10 @@ installing applications. It is a replacement for other tools such as
 Autotools, Scons, CMake or Ant.
 
 This package contains the Python 3 version of %{name}.
+%description -n %{name}-python3 -l zh_CN.UTF-8
+基于 Python 的配置、编译和安装程序框架。是类似 autotools, scons,
+cmake 或 ant 的同类软件。
+这是 Python3 版本。
 %endif # with_python3
 
 
@@ -126,9 +130,6 @@ done
 %if 0%{?with_docs}
 # build html docs
 pushd docs/sphinx
-%if ! ( 0%{?fedora} || 0%{?rhel} >= 7 )
-export SPHINX_BUILD=sphinx-1.0-build
-%endif
 ../../waf -v configure build
 popd
 %endif # with_docs
@@ -145,7 +146,7 @@ find . -name '*.py' -printf '%%P\0' |
 popd
 %if 0%{?with_python3}
 # use waf so it unpacks itself
-%{__python3} ./waf >/dev/null 2>&1
+%{__python3} ./waf
 pushd .waf3-%{version}-*
 find . -name '*.py' -printf '%%P\0' |
   xargs -0 -I{} install -m 0644 -p -D {} %{buildroot}%{_datadir}/waf3/{}
@@ -183,7 +184,7 @@ rm -f docs/sphinx/build/html/.buildinfo
 %py_byte_compile %{__python2} %{buildroot}%{_datadir}/waf
 %py_byte_compile %{__python3} %{buildroot}%{_datadir}/waf3
 %endif # with_python3
-
+magic_rpm_clean.sh
 
 %files
 %doc README TODO ChangeLog demos
@@ -209,6 +210,9 @@ rm -f docs/sphinx/build/html/.buildinfo
 
 
 %changelog
+* Mon Oct 19 2015 Liu Di <liudidi@gmail.com> - 1.8.15-1
+- 更新到 1.8.15
+
 * Sun Oct 11 2015 Thomas Moschny <thomas.moschny@gmx.de> - 1.8.14-1
 - Update to 1.8.14.
 - Include waf-2 and waf-3 symlinks, respectively.

@@ -4,12 +4,14 @@
 %global _hardened_build 1
 
 Summary: WPA/WPA2/IEEE 802.1X Supplicant
+Summary(zh_CN.UTF-8): WPA/WPA2/IEEE 802.1X 支持
 Name: wpa_supplicant
 Epoch: 1
-Version: 2.0
-Release: 10%{?dist}
+Version:	2.5
+Release:	2%{?dist}
 License: BSD
 Group: System Environment/Base
+Group(zh_CN.UTF-8): 系统环境/基本
 Source0: http://w1.fi/releases/%{name}-%{version}%{rcver}%{snapshot}.tar.gz
 Source1: build-config
 Source2: %{name}.conf
@@ -18,11 +20,6 @@ Source4: %{name}.sysconfig
 Source6: %{name}.logrotate
 
 %define build_gui 1
-%define build_libeap 1
-%if 0%{?rhel} >= 1
-%define build_gui 0
-%define build_libeap 0
-%endif
 
 # distro specific customization and not suitable for upstream,
 # works around busted drivers
@@ -34,37 +31,35 @@ Patch1: wpa_supplicant-flush-debug-output.patch
 Patch2: wpa_supplicant-dbus-service-file-args.patch
 # quiet an annoying and frequent syslog message
 Patch3: wpa_supplicant-quiet-scan-results-message.patch
-# allow more private key encryption algorithms
-Patch5: wpa_supplicant-openssl-more-algs.patch
 # distro specific customization for Qt4 build tools, not suitable for upstream
 Patch6: wpa_supplicant-gui-qt4.patch
-# Fix libnl3 includes path
-Patch7: libnl3-includes.patch
 # Less aggressive roaming; signal strength is wildly variable
+# dcbw states (2015-04):
+# "upstream doesn't like that patch so it's been discussed and I think rejected"
 Patch8: rh837402-less-aggressive-roaming.patch
-# Don't evict current AP from PMKSA cache when it's large
-Patch9: 0001-Fix-OKC-based-PMKSA-cache-entry-clearing.patch
-
-%if %{build_libeap}
-# Dirty hack for WiMAX
-# http://linuxwimax.org/Download?action=AttachFile&do=get&target=wpa-1.5-README.txt
-Patch100: wpa_supplicant-2.0-generate-libeap-peer.patch
-%endif
 
 URL: http://w1.fi/wpa_supplicant/
 
 %if %{build_gui}
-BuildRequires: qt-devel >= 4.0
+BuildRequires: qt4-devel >= 4.0
 %endif
 BuildRequires: openssl-devel
 BuildRequires: readline-devel
 BuildRequires: dbus-devel
 BuildRequires: libnl3-devel
 BuildRequires: systemd-units
+BuildRequires: docbook-utils
 Requires(post): systemd-sysv
 Requires(post): systemd-units
 Requires(preun): systemd-units
 Requires(postun): systemd-units
+# libeap used to be built from wpa_supplicant with some fairly horrible
+# hackery, solely for use by WiMAX. We dropped all WiMAX support around
+# F21. This is here so people don't wind up with obsolete libeap packages
+# lying around. If it's ever resurrected for any reason, this needs
+# dropping.
+Obsoletes: libeap < %{epoch}:%{version}-%{release}
+Obsoletes: libeap-devel < %{epoch}:%{version}-%{release}
 
 %description
 wpa_supplicant is a WPA Supplicant for Linux, BSD and Windows with support
@@ -73,34 +68,22 @@ component that is used in the client stations. It implements key negotiation
 with a WPA Authenticator and it controls the roaming and IEEE 802.11
 authentication/association of the wlan driver.
 
+%description -l zh_CN.UTF-8
+这是无线加密 WPA/WPA2 的 Linux 支持。
+
 %if %{build_gui}
 
 %package gui
 Summary: Graphical User Interface for %{name}
+Summary(zh_CN.UTF-8): %{name} 的图形界面
 Group: Applications/System
+Group(zh_CN.UTF-8): 应用程序/系统
 
 %description gui
 Graphical User Interface for wpa_supplicant written using QT
 
-%endif
-
-%if %{build_libeap}
-%package -n libeap
-Summary: EAP peer library
-Group: System Environment/Libraries
-
-%description -n libeap
-This package contains the runtime EAP peer library. Don't use this
-unless you know what you're doing.
-
-%package -n libeap-devel
-Summary: Header files for EAP peer library
-Group: Development/Libraries
-Requires: libeap = %{epoch}:%{version}-%{release}
-
-%description -n libeap-devel
-This package contains header files for using the EAP peer library.
-Don't use this unless you know what you're doing.
+%description gui -l zh_CN.UTF-8
+%{name} 的图形界面。
 %endif
 
 %prep
@@ -109,11 +92,8 @@ Don't use this unless you know what you're doing.
 %patch1 -p1 -b .flush-debug-output
 %patch2 -p1 -b .dbus-service-file
 %patch3 -p1 -b .quiet-scan-results-msg
-%patch5 -p1 -b .more-openssl-algs
-%patch6 -p1 -b .qt4
-%patch7 -p1 -b .libnl3
+#patch6 -p1 -b .qt4
 %patch8 -p1 -b .rh837402-less-aggressive-roaming
-%patch9 -p1 -b .okc-current-fix
 
 %build
 pushd wpa_supplicant
@@ -131,9 +111,13 @@ pushd wpa_supplicant
   make eapol_test
 popd
 
+pushd wpa_supplicant/doc/docbook
+  make man
+popd
+
 %install
 # init scripts
-install -D -m 0755 %{SOURCE3} %{buildroot}/%{_unitdir}/%{name}.service
+install -D -m 0644 %{SOURCE3} %{buildroot}/%{_unitdir}/%{name}.service
 install -D -m 0644 %{SOURCE4} %{buildroot}/%{_sysconfdir}/sysconfig/%{name}
 install -D -m 0644 %{SOURCE6} %{buildroot}/%{_sysconfdir}/logrotate.d/%{name}
 
@@ -168,25 +152,7 @@ install -m 0644 %{name}/doc/docbook/*.5 %{buildroot}%{_mandir}/man5
 rm -f  %{name}/doc/.cvsignore
 rm -rf %{name}/doc/docbook
 chmod -R 0644 %{name}/examples/*.py
-
-%if %{build_libeap}
-# HAAACK
-patch -p1 -b --suffix .wimax < %{PATCH100}
-pushd wpa_supplicant
-  make clean
-
-  CFLAGS="${CFLAGS:-%optflags} -fPIC -DPIC" ; export CFLAGS ;
-  CXXFLAGS="${CXXFLAGS:-%optflags} -fPIC -DPIC" ; export CXXFLAGS ;
-  LDFLAGS="${LDFLAGS:-%optflags} -Wl,-z,now" ; export LDFLAGS ;
-  # yes, BINDIR=_sbindir
-  BINDIR="%{_sbindir}" ; export BINDIR ;
-  LIBDIR="%{_libdir}" ; export LIBDIR ;
-
-  make V=1 -C ../src/eap_peer
-  make DESTDIR=%{buildroot} LIB=%{_lib} -C ../src/eap_peer install
-  sed -i -e 's|libdir=/usr/lib|libdir=%{_libdir}|g' %{buildroot}/%{_libdir}/pkgconfig/*.pc
-popd
-%endif
+magic_rpm_clean.sh
 
 %post
 if [ $1 -eq 1 ] ; then 
@@ -220,7 +186,8 @@ fi
 
 
 %files
-%doc COPYING %{name}/ChangeLog README %{name}/eap_testing.txt %{name}/todo.txt %{name}/wpa_supplicant.conf %{name}/examples
+%license COPYING
+%doc %{name}/ChangeLog README %{name}/eap_testing.txt %{name}/todo.txt %{name}/wpa_supplicant.conf %{name}/examples
 %config(noreplace) %{_sysconfdir}/%{name}/%{name}.conf
 %config(noreplace) %{_sysconfdir}/sysconfig/%{name}
 %config(noreplace) %{_sysconfdir}/logrotate.d/%{name}
@@ -242,21 +209,13 @@ fi
 %{_bindir}/wpa_gui
 %endif
 
-%if %{build_libeap}
-%files -n libeap
-%{_libdir}/libeap.so.0*
-
-%files -n libeap-devel
-%{_includedir}/eap_peer
-%{_libdir}/libeap.so
-%{_libdir}/pkgconfig/*.pc
-
-%post -n libeap -p /sbin/ldconfig
-
-%postun -n libeap -p /sbin/ldconfig
-%endif
-
 %changelog
+* Tue Oct 20 2015 Liu Di <liudidi@gmail.com> - 1:2.5-2
+- 为 Magic 3.0 重建
+
+* Tue Oct 20 2015 Liu Di <liudidi@gmail.com> - 1:2.5-1
+- 更新到 2.5
+
 * Sun Aug 10 2014 Liu Di <liudidi@gmail.com> - 1:2.0-10
 - 为 Magic 3.0 重建
 

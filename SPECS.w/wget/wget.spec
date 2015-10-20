@@ -1,16 +1,15 @@
 Summary: A utility for retrieving files using the HTTP or FTP protocols
+Summary(zh_CN.UTF-8): 支持 HTTP 和 FTP 协议的下载工具
 Name: wget
-Version: 1.14
-Release: 3%{?dist}
+Version:	1.16.3
+Release:	1%{?dist}
 License: GPLv3+
 Group: Applications/Internet
+Group(zh_CN.UTF-8): 应用程序/互联网
 Url: http://www.gnu.org/software/wget/
 Source: ftp://ftp.gnu.org/gnu/wget/wget-%{version}.tar.xz
 
-Patch1: wget-rh-modified.patch
-Patch2: wget-1.12-path.patch
-Patch3: wget-1.14-sslreadtimeout.patch
-Patch4: 0001-Fix-itemx-issue-when-building-doc.patch
+Patch2: wget-1.16.1-path.patch
 
 Provides: webclient
 Provides: bundled(gnulib) 
@@ -28,12 +27,12 @@ storage and comparison, use of Rest with FTP servers and Range with
 HTTP servers to retrieve files over slow or unstable connections,
 support for Proxy servers, and configurability.
 
+%description -l zh_CN.UTF-8
+支持 HTTP 和 FTP 协议的命令行下载工具。
+
 %prep
 %setup -q
-%patch1 -p0
 %patch2 -p1
-%patch3 -p1 -b .sslreadtimeout
-%patch4 -p1 -b .itemx
 
 %build
 if pkg-config openssl ; then
@@ -47,8 +46,8 @@ make %{?_smp_mflags}
 rm -rf $RPM_BUILD_ROOT
 make install DESTDIR=$RPM_BUILD_ROOT CFLAGS="$RPM_OPT_FLAGS"
 rm -f $RPM_BUILD_ROOT/%{_infodir}/dir
-
-%find_lang %{name}
+magic_rpm_clean.sh
+%find_lang %{name} || :
 
 %post
 /sbin/install-info %{_infodir}/wget.info.gz %{_infodir}/dir || :
@@ -70,6 +69,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_infodir}/*
 
 %changelog
+* Tue Oct 20 2015 Liu Di <liudidi@gmail.com> - 1.16.3-1
+- 更新到 1.16.3
+
 * Thu Oct 11 2012 Tomas Hozza <thozza@redhat.com> 1.14-3
 - Added libuuid-devel to BuildRequires to use libuuid functions
   in "src/warc.c" functions (#865421)

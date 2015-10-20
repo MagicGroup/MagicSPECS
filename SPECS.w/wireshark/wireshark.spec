@@ -4,26 +4,18 @@
 %global with_lua 0
 %global with_gtk2 0
 
-%if 0%{?rhel} != 0
-#RHEL:
-    %global with_portaudio 0
-    %global with_GeoIP 0
-    %if 0%{?rhel} <= 6
-        # RHEL6: use GTK2
-       %global with_gtk2 1
-    %endif
-%else
-    %global with_portaudio 1
-    %global with_GeoIP 1
-%endif
+%global with_portaudio 1
+%global with_GeoIP 1
 
 
 Summary:	Network traffic analyzer
+Summary(zh_CN.UTF-8): 网络流量分析程序
 Name:		wireshark
-Version:	1.12.7
-Release:	3%{?dist}
+Version:	1.12.8
+Release:	1%{?dist}
 License:	GPL+
 Group:		Applications/Internet
+Group(zh_CN.UTF-8): 应用程序/互联网
 Source0:	http://wireshark.org/download/src/%{name}-%{version}.tar.bz2
 Source1:	90-wireshark-usbmon.rules
 # Fedora-specific
@@ -44,9 +36,8 @@ Patch7:		wireshark-0007-Install-autoconf-related-file.patch
 Patch8:		wireshark-0008-move-default-temporary-directory-to-var-tmp.patch
 # Fedora-specific
 Patch9:		wireshark-0009-Fix-paths-in-a-wireshark.desktop-file.patch
-Patch10:	wireshark-0010-gdk.patch
 # Backported from upstream - https://code.wireshark.org/review/#/c/10015/
-Patch11:	wireshark-0011-Allow-redefining-all-ports-for-RADIUS.patch
+Patch10:	wireshark-0010-Allow-redefining-all-ports-for-RADIUS.patch
 
 Url:		http://www.wireshark.org/
 BuildRequires:	libpcap-devel >= 0.9
@@ -62,10 +53,8 @@ BuildRequires:	xdg-utils
 BuildRequires:	flex, bison
 BuildRequires:	libcap-devel
 BuildRequires:	libnl3-devel
-%if 0%{?fedora} > 18
 BuildRequires:	perl(Pod::Html)
 BuildRequires:	perl(Pod::Man)
-%endif
 BuildRequires:	libgcrypt-devel
 %if %{with_GeoIP}
 BuildRequires:	GeoIP-devel
@@ -98,7 +87,9 @@ Requires:	adns
 
 %package	gnome
 Summary:	Gnome desktop integration for wireshark
+Summary(zh_CN.UTF-8): %{name} 的 Gnome 桌面集成
 Group:		Applications/Internet
+Group(zh_CN.UTF-8): 应用程序/互联网
 Requires:	%{name} = %{version}-%{release}
 Requires:	xdg-utils
 Requires:	hicolor-icon-theme
@@ -116,7 +107,9 @@ Requires:	GeoIP
 
 %package devel
 Summary:	Development headers and libraries for wireshark
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:		Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:	%{name} = %{version}-%{release} glibc-devel glib2-devel
 
 
@@ -128,14 +121,21 @@ library, contains command-line utilities, contains plugins and
 documentation for wireshark. A graphical user interface is packaged
 separately to GTK+ package.
 
+%description -l zh_CN.UTF-8
+网络流量分析程序，基于 libpcap。
+
 %description gnome
 Contains wireshark for Gnome 2 and desktop integration file
+
+%description gnome -l zh_CN.UTF-8
+%{name} 的 Gnome 桌面集成。
 
 %description devel
 The wireshark-devel package contains the header files, developer
 documentation, and libraries required for development of wireshark scripts
 and plugins.
-
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -149,7 +149,7 @@ and plugins.
 %patch4 -p1 -b .add_autoconf
 %patch5 -p1 -b .restore_group
 
-# Somebody forgot to add this file into tarball (fixed in wireshark-1.12.1)
+# Somebody forgot to a%description -l zh_CN.UTF-8 this file into tarball (fixed in wireshark-1.12.1)
 echo "prefix=@CMAKE_INSTALL_PREFIX@
 exec_prefix=\${prefix}
 libdir=\${prefix}/@CMAKE_INSTALL_LIBDIR@
@@ -169,8 +169,7 @@ Cflags: -I\${includedir}" > wireshark.pc.in
 %patch7 -p1 -b .install_autoconf
 %patch8 -p1 -b .tmp_dir
 %patch9 -p1 -b .fix_paths
-%patch10 -p1 -b .gdk
-%patch11 -p1 -b .radius_ports
+%patch10 -p1 -b .radius_ports
 
 %build
 %ifarch s390 s390x sparcv9 sparc64
@@ -307,6 +306,7 @@ rm -f %{buildroot}%{_libdir}/%{name}/plugins/*.la
 
 # Remove .la files in libdir
 rm -f %{buildroot}%{_libdir}/*.la
+magic_rpm_clean.sh
 
 %pre
 getent group wireshark >/dev/null || groupadd -r wireshark
@@ -411,6 +411,9 @@ update-mime-database %{?fedora:-n} %{_datadir}/mime &> /dev/null || :
 %{_datadir}/aclocal/*
 
 %changelog
+* Tue Oct 20 2015 Liu Di <liudidi@gmail.com> - 1.12.8-1
+- 更新到 1.12.8
+
 * Thu Sep 17 2015 Liu Di <liudidi@gmail.com> - 1.12.7-3
 - 为 Magic 3.0 重建
 

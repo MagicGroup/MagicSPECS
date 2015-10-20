@@ -1,8 +1,9 @@
 
 Name:           webrtc-audio-processing
 Version:        0.1
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        Library for echo cancellation
+Summary(zh_CN.UTF-8): 回声消除库
 
 License:        BSD
 URL:            http://www.freedesktop.org/software/pulseaudio/webrtc-audio-processing/
@@ -15,14 +16,22 @@ ExclusiveArch: %{ix86} x86_64 %{arm}
 provides echo cancellation functionality. This library is used by for example
 PulseAudio to provide echo cancellation.
 
+%description -l zh_CN.UTF-8
+回声消除库。
+
 %package        devel
 Summary:        Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       %{name}%{?_isa} = %{version}-%{release}
 
 %description    devel
 The %{name}-devel package contains libraries and header
 files for developing applications that use %{name}.
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -56,6 +65,9 @@ magic_rpm_clean.sh
 
 
 %changelog
+* Tue Oct 20 2015 Liu Di <liudidi@gmail.com> - 0.1-4
+- 为 Magic 3.0 重建
+
 * Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 0.1-3
 - 为 Magic 3.0 重建
 

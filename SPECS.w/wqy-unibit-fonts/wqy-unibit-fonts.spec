@@ -2,13 +2,17 @@
 
 Name:           %{fontname}-fonts
 Version:        1.1.0
-Release:        10%{?dist}
+Release:        11%{?dist}
 Summary:        WenQuanYi Unibit Bitmap Font
+Summary(zh_CN.UTF-8): 文泉驿标准双等宽点阵字体
 
 Group:          User Interface/X
+Group(zh_CN.UTF-8): 用户界面/X
 License:        GPLv2 with exceptions
 URL:            http://wenq.org/enindex.cgi
 Source0:        http://downloads.sourceforge.net/wqy/wqy-unibit-bdf-%{version}-1.tar.gz
+Patch0:         wqy-unibit-fixes-build.patch
+
 BuildRoot:      %(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
 
 BuildArch:      noarch
@@ -33,9 +37,12 @@ high-quality glyphs from China National Standard GB19966-2005
 WenQuanYi contributors via their collaborative font editing website at
 http://wenq.org/eindex.cgi?Unicode_Chart_EN
 
+%description -l zh_CN.UTF-8
+文泉驿标准双等宽点阵字体。
+
 %prep
 %setup -q -n %{fontname}
-
+%patch0 -p1
 
 %build
 make
@@ -61,6 +68,9 @@ rm -fr %{buildroot}
 
 
 %changelog
+* Tue Oct 20 2015 Liu Di <liudidi@gmail.com> - 1.1.0-11
+- 为 Magic 3.0 重建
+
 * Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 1.1.0-10
 - 为 Magic 3.0 重建
 

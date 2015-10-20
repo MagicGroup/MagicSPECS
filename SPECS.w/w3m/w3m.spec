@@ -1,11 +1,13 @@
 %define _use_internal_dependency_generator 0
-%define  build_options  --enable-m17n --enable-unicode --enable-nls --with-editor=/bin/vi --with-mailer="gnome-open mailto:%s" --with-browser=gnome-open --with-charset=UTF-8 --with-gc --with-termlib=ncurses
+%define  build_options  --enable-m17n --enable-unicode --enable-nls --with-editor=/bin/vi --with-charset=UTF-8 --with-gc --with-termlib=ncurses 
 
 %define   with_utf8 1
 
+%global __requires_exclude perl\\(w3mhelp-
+
 Name:     w3m
 Version:  0.5.3
-Release:  5%{?dist}
+Release:  6%{?dist}
 License:  MIT
 URL:      http://w3m.sourceforge.net/
 BuildRequires:  bzip2 findutils sed ncurses-devel
@@ -21,25 +23,54 @@ BuildRequires:  gc-devel
 BuildRequires:  nkf
 BuildRequires:  lynx
 
+# This is needed for perl files
+Requires: perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
+Requires: perl(NKF)
+
 ## re-compressed bzip2 instead of gzip
 Source0: http://downloads.sourceforge.net/w3m/%{name}-%{version}.tar.gz
 
-Source10:  w3mconfig
+Source1:  w3mconfig
 
-Source14:  filter-requires-w3m.sh
-%define __find_requires %{SOURCE14}
+# Change for function call GC_get_warn_proc()
+# https://sourceforge.net/tracker/?func=detail&aid=3595876&group_id=39518&atid=425441
+Patch0:  %{name}-rh555467_FTBFS.patch
 
-## fix patch
-Patch0:  w3m-0.4.1-helpcharset.patch
-Patch1:  w3m-0.5.1-gcc4.patch
-Patch2:  bug_555467_FTBFS.patch
-Patch3:  bug_566101_Fix-DSO-X11.patch
-Patch4:  w3m-0.5.2-ssl_verify_server_on.patch
-Patch5:  w3m-0.5.2-fix_gcc_error.patch
-Patch6:  rh707994-fix-https-segfault.patch
+# w3mimgdisplay need to be linked with -lX11 to build against gcc 4.5
+# https://sourceforge.net/tracker/?func=detail&aid=3126430&group_id=39518&atid=425441
+Patch1:  %{name}-rh566101_Fix-DSO-X11.patch
+
+# https://bugzilla.redhat.com/show_bug.cgi?id=604864
+# verify SSL certificates by default. SSL support really is pointless
+# without doing that. Also disable use of SSLv2 by default as it's 
+# insecure, deprecated, dead since last century.
+# https://sourceforge.net/tracker/?func=detail&aid=3595801&group_id=39518&atid=425441
+Patch2:  %{name}-0.5.2-ssl_verify_server_on.patch
+
+# Now glib-2.14 owns structure name file_handle
+# https://sourceforge.net/tracker/?func=detail&aid=3595814&group_id=39518&atid=425441
+Patch3:  %{name}-0.5.2-glibc2.14-fix_file_handle_error.patch
+
+# Resolves a bug of when given following command w3m crashes
+# w3m https://www.example.coma
+# but following command works fine by giving can't load error
+# w3m http://www.example.coma
+# https://sourceforge.net/tracker/?func=detail&aid=3595167&group_id=39518&atid=425441
+Patch4:  %{name}-rh707994-fix-https-segfault.patch
+
+#https://sourceforge.net/tracker/?group_id=39518&atid=425441
+Patch5:  %{name}-0.5.3-parallel-make.patch
+
+#https://bugzilla.redhat.com/show_bug.cgi?id=1037380
+Patch6:  %{name}-0.5.3-format-security.patch
+
+#https://bugzilla.redhat.com/show_bug.cgi?id=1038009
+Patch7:  %{name}-0.5.3-FTBFS-sys-errlist.patch
 
 Summary:  A pager with Web browsing abilities
+Summary(zh_CN.UTF-8): 控制台下的网页浏览器
 Group:    Applications/Internet
+Group(zh_CN.UTF-8): 应用程序/互联网
 Provides:  webclient
 Provides: text-www-browser
 
@@ -55,9 +86,14 @@ text into a link to that URL.
 If you want to display the inline images on w3m, you need to install
 w3m-img package as well.
 
+%description -l zh_CN.UTF-8
+控制台下的网页浏览器。
+
 %package img
 Summary: A helper program to display the inline images for w3m
+Summary(zh_CN.UTF-8): %{name} 的图像显示辅助程序
 Group: Applications/Internet
+Group(zh_CN.UTF-8): 应用程序/互联网
 Requires: ImageMagick
 Requires: w3m = %{version}-%{release}
 
@@ -66,18 +102,22 @@ w3m-img package provides a helper program for w3m to display the inline
 images on the terminal emulator in X Window System environments and the
 linux framebuffer.
 
+%description img -l zh_CN.UTF-8
+%{name} 的图像显示辅助程序。
+
 %prep
 %setup -q
 chmod 755 doc
 chmod 755 doc-jp
 
-%patch0 -p1
-%patch1 -p1
-%patch2 -p0
-%patch3 -p0
-%patch4 -p1
+%patch0 -p0
+%patch1 -p0
+%patch2 -p1
+%patch3 -p1
+%patch4 -p0
 %patch5 -p1
-%patch6 -p0
+%patch6 -p1
+%patch7 -p1
 
 %if %{with_utf8}
 pushd doc-jp
@@ -125,22 +165,20 @@ make # %{?_smp_mflags}
 make install DESTDIR=$RPM_BUILD_ROOT INSTALL="install -p"
 
 mkdir -p $RPM_BUILD_ROOT%{_sysconfdir}/w3m
-install -p -m 644 %{SOURCE10} $RPM_BUILD_ROOT%{_sysconfdir}/w3m/config
+install -p -m 644 %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/w3m/config
 
 rm -f doc*/w3m.1
 rm -rf doc/CVS doc-jp/CVS
+magic_rpm_clean.sh
+%find_lang w3m || :
 
-%find_lang w3m
 
-
-%files -f w3m.lang
+%files
 %doc NEWS
 %doc doc
-%lang(ja) %doc doc-jp
 %{_datadir}/w3m/
 %config(noreplace) %{_sysconfdir}/w3m/
 %{_bindir}/w3m*
-%lang(ja) %{_mandir}/ja/man1/w3m.1*
 %{_mandir}/man1/w3m.1*
 %{_mandir}/man1/w3mman.1*
 %{_libexecdir}/w3m/
@@ -150,6 +188,9 @@ rm -rf doc/CVS doc-jp/CVS
 %{_libexecdir}/w3m/w3mimgdisplay
 
 %changelog
+* Mon Oct 19 2015 Liu Di <liudidi@gmail.com> - 0.5.3-6
+- 为 Magic 3.0 重建
+
 * Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 0.5.3-5
 - 为 Magic 3.0 重建
 

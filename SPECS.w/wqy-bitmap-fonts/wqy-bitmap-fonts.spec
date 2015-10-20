@@ -4,10 +4,12 @@
 
 Name:           %{fontname}-fonts
 Version:        1.0.0
-Release:        0.4.rc1%{?dist}
+Release:        0.5.rc1%{?dist}
 Summary:        WenQuanYi Bitmap Chinese Fonts
+Summary(zh_CN.UTF-8): 文泉驿位图中文字体
 
 Group:          User Interface/X
+Group(zh_CN.UTF-8): 用户界面/X
 License:        GPLv2 with exceptions
 URL:            http://wenq.org/enindex.cgi
 Source0:        http://downloads.sourceforge.net/wqy/wqy-bitmapsong-bdf-1.0.0-RC1.tar.gz
@@ -31,9 +33,12 @@ insufficient "hinting" of anti-aliased vector CJK fonts.
 In addition, Latin characters, Japanese Kanas and
 Korean Hangul glyphs (U+AC00~U+D7A3) are also included.
 
+%description -l zh_CN.UTF-8
+文泉驿位图中文字体。
+
 %prep
 %setup -q -n %{wqyroot}
-
+sed -i 's/shift(ARGV)/shift(@ARGV)/g' bdfmerge.pl
 
 %build
 make wqyv1
@@ -66,6 +71,9 @@ rm -fr %{buildroot}
 
 
 %changelog
+* Tue Oct 20 2015 Liu Di <liudidi@gmail.com> - 1.0.0-0.5.rc1
+- 为 Magic 3.0 重建
+
 * Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 1.0.0-0.4.rc1
 - 为 Magic 3.0 重建
 

@@ -28,23 +28,27 @@ Magic 网页托盘管理程序
 qmake-qt4
 make
 lrelease webtray_cn.ts
+
 %install
 rm -rf %{buildroot}
 mkdir -p %{buildroot}/opt/webtray
-mkdir -p %{buildroot}/usr/bin/
-mkdir -p %{buildroot}/usr/share/applications/
+mkdir -p %{buildroot}%{_bindir}
+mkdir -p %{buildroot}%{_datadir}/applications/
 install -m 755 ./webtray %{buildroot}/opt/webtray
 install -m 644 ./webtray_cn.qm %{buildroot}/opt/webtray
-tar xvf %{SOURCE1} -C %{buildroot}/usr/share/applications/
+tar xvf %{SOURCE1} -C %{buildroot}%{_datadir}/applications/
 tar xvf %{SOURCE2} -C %{buildroot}/opt/webtray/
 cp webtray.png %{buildroot}/opt/webtray/
 ln -s /opt/webtray/webtray %{buildroot}/usr/bin/webtray
+
 %clean
 rm -rf %{buildroot} %{_builddir}/%{buildsubdir}
+
 %files
 %defattr(-,root,root)
-/opt/webtray
-/usr/share/applications/
-/usr/bin
+/opt/webtray/*
+%{_datadir}/applications/*
+%{_bindir}/*
+
 %changelog
 

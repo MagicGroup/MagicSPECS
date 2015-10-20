@@ -1,12 +1,13 @@
 Name:           wildmidi
-Version:        0.2.3.5
-Release:        2%{?dist}
+Version:	0.3.8
+Release:	1%{?dist}
 Summary:        Softsynth midi player
+Summary(zh_CN.UTF-8): 软波表 MIDI 播放器
 Group:          Applications/Multimedia
+Group(zh_CN.UTF-8): 应用程序/多媒体
 License:        GPLv3+
-URL:            http://wildmidi.sourceforge.net/
-Source0:        http://downloads.sourceforge.net/%{name}/%{name}-%{version}.tar.gz
-Patch0:         wildmidi-0.2.2-cfg-abs-path.patch
+URL:            https://github.com/Mindwerks/wildmidi
+Source0:        https://github.com/Mindwerks/wildmidi/archive/%{name}-%{version}.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  alsa-lib-devel libtool
 Requires:       %{name}-libs = %{version}-%{release}
@@ -14,11 +15,14 @@ Requires:       %{name}-libs = %{version}-%{release}
 %description
 WildMidi is a software midi player which has a core softsynth library that can
 be used with other applications.
-
+%description -l zh_CN.UTF-8
+软波表 MIDI 播放器，自带软波表库，可以被其它程序使用。
 
 %package libs
 Summary:        WildMidi Midi Wavetable Synth Lib
+Summary(zh_CN.UTF-8): %{name} 的运行库
 Group:          System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 License:        LGPLv3+
 Requires:       timidity++-patches
 
@@ -26,44 +30,35 @@ Requires:       timidity++-patches
 This package contains the WildMidi core softsynth library. The library is
 designed to process a midi file and stream out the stereo audio data
 through a buffer which an external program can then process further.
-
+%description libs -l zh_CN.UTF-8
+%{name} 的运行库。
 
 %package        devel
 Summary:        Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 License:        LGPLv3+
 Requires:       %{name}-libs = %{version}-%{release}
 
 %description    devel
 The %{name}-devel package contains libraries and header files for
 developing applications that use %{name}.
-
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
-%setup -q
-%patch0 -p1
-sed -i 's/\r//g' COPYING
-chmod -x src/file_io.c
-
+%setup -q -n %{name}-%{name}-%{version}
 
 %build
-%configure --disable-static --disable-werror --without-arch
-sed -i 's|^hardcode_libdir_flag_spec=.*|hardcode_libdir_flag_spec=""|g' libtool
-sed -i 's|^runpath_var=LD_RUN_PATH|runpath_var=DIE_RPATH_DIE|g' libtool
-make 
+%cmake
+make %{?_smp_mflags}
 
 
 %install
-rm -rf $RPM_BUILD_ROOT
-make install DESTDIR=$RPM_BUILD_ROOT
-find $RPM_BUILD_ROOT -name '*.la' -exec rm -f {} ';'
-
-mkdir $RPM_BUILD_ROOT%{_sysconfdir}
-ln -s timidity.cfg $RPM_BUILD_ROOT%{_sysconfdir}/wildmidi.cfg
-
-
-%clean
-rm -rf $RPM_BUILD_ROOT
+%make_install
+mkdir -p $RPM_BUILD_ROOT%{_sysconfdir}/%{name}
+ln -s ../timidity.cfg $RPM_BUILD_ROOT%{_sysconfdir}/%{name}/%{name}.cfg
 
 
 %post libs -p /sbin/ldconfig
@@ -72,26 +67,25 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %files
-%defattr(-,root,root,-)
-%doc COPYING docs/GPLv3.txt
-%{_sysconfdir}/wildmidi.cfg
-%{_bindir}/wildmidi
+%doc docs/license/GPLv3.txt
+%{_sysconfdir}/%{name}
+%{_bindir}/%{name}
 %{_mandir}/man1/*
 
 %files libs
-%defattr(-,root,root,-)
-%doc COPYING docs/LGPLv3.txt
+%doc docs/license/LGPLv3.txt
 %{_libdir}/libWildMidi.so.1*
 %{_mandir}/man5/*
 
 %files devel
-%defattr(-,root,root,-)
 %{_includedir}/*
 %{_libdir}/libWildMidi.so
 %{_mandir}/man3/*
 
-
 %changelog
+* Tue Oct 20 2015 Liu Di <liudidi@gmail.com> - 0.3.8-1
+- 更新到 0.3.8
+
 * Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 0.2.3.5-2
 - 为 Magic 3.0 重建
 

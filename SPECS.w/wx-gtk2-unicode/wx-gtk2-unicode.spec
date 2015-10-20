@@ -55,7 +55,7 @@ Summary: The GTK+ %{gtkver} port of the wxWidgets library
 Summary(zh_CN.UTF-8): wxWidgets的GTK+%{gtkver}移植
 Name: %{name}
 Version: %{ver}
-Release: 4%{?dist}
+Release: 5%{?dist}
 License: wxWindows Licence
 Group: System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
@@ -779,6 +779,9 @@ rm -f %{_bindir}/%{wxbaseconfiglink}
 %{_libdir}/libwx_%{buildname}_svg-%{ver2}.so
 
 %changelog 
+* Tue Oct 20 2015 Liu Di <liudidi@gmail.com> - 2.8.12-5
+- 为 Magic 3.0 重建
+
 * Wed Aug 13 2014 Liu Di <liudidi@gmail.com> - 2.8.12-4
 - 为 Magic 3.0 重建
 

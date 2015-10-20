@@ -1,9 +1,11 @@
 Summary: A dictionary of English words for the /usr/share/dict directory
+Summary(zh_CN.UTF-8): 英语的词典
 Name: words
 Version: 3.0
-Release: 19%{?dist}
+Release: 20%{?dist}
 License: Public Domain
 Group: System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 # Note that Moby Project officially does not exist any more. The most complete
 # information about the project is in Wikipedia.
 URL: http://en.wikipedia.org/wiki/Moby_Project
@@ -27,6 +29,10 @@ The words file is a dictionary of English words for the
 /usr/share/dict directory. Some programs use this database of
 words to check spelling. Password checkers use it to look for bad
 passwords.
+
+%description -l zh_CN.UTF-8
+这是在 /usr/share/dict 目录下的一个英语词典，一些程序会使用
+这个数据来做拼写检查等。
 
 %prep
 %setup -q -c
@@ -80,6 +86,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/dict/words
 
 %changelog
+* Tue Oct 20 2015 Liu Di <liudidi@gmail.com> - 3.0-20
+- 为 Magic 3.0 重建
+
 * Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 3.0-19
 - 为 Magic 3.0 重建
 

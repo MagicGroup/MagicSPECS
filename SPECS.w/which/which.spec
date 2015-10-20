@@ -1,9 +1,11 @@
 Summary: Displays where a particular program in your path is located
+Summary(zh_CN.UTF-8): 显示特定的程序在你的路径中的位置
 Name: which
 Version: 2.20
-Release: 4%{?dist}
+Release: 5%{?dist}
 License: GPLv3
 Group: Applications/System
+Group(zh_CN.UTF-8): 应用程序/系统
 Source0: http://www.xs4all.nl/~carlo17/which/%{name}-%{version}.tar.gz
 Source1: which2.sh
 Source2: which2.csh
@@ -17,6 +19,9 @@ Requires(post): /sbin/install-info
 %description
 The which command shows the full pathname of a specified program, if
 the specified program is in your PATH.
+
+%description -l zh_CN.UTF-8
+显示特定的程序在你的路径中的位置。
 
 %prep
 %setup -q
@@ -36,6 +41,7 @@ make install DESTDIR=$RPM_BUILD_ROOT
 mkdir -p $RPM_BUILD_ROOT%{_sysconfdir}/profile.d
 install -p -m 644 %{SOURCE1} %{SOURCE2} $RPM_BUILD_ROOT%{_sysconfdir}/profile.d/
 rm -f $RPM_BUILD_ROOT%{_infodir}/dir
+magic_rpm_clean.sh
 
 %post
 /sbin/install-info --quiet --info-dir=%{_infodir} %{_infodir}/which.info.gz
@@ -59,6 +65,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/*/*
 
 %changelog
+* Tue Oct 20 2015 Liu Di <liudidi@gmail.com> - 2.20-5
+- 为 Magic 3.0 重建
+
 * Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 2.20-4
 - 为 Magic 3.0 重建
 

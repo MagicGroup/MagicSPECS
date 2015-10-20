@@ -3,18 +3,16 @@
 %global wxbasename wxBase3
 #RHEL 6 does not have gtk3
 #RHEL prior to 6 is unsupported by this package
-%if 0%{?el6}
-%global gtkver 2
-%else
 %global gtkver 3
-%endif
 
 Name:           %{wxgtkname}
-Version:        3.0.1
-Release:        2%{?dist}
+Version:	3.0.2
+Release:	1%{?dist}
 Summary:        GTK port of the wxWidgets GUI library
+Summary(zh_CN.UTF-8): wxWidgets 图形库的 GTK 移植
 License:        wxWidgets
 Group:          System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 URL:            http://www.wxwidgets.org/
 Source0:        http://downloads.sf.net/wxwindows/%{srcname}-%{version}.tar.bz2
 Source1:        http://downloads.sf.net/wxwindows/%{srcname}-%{version}-docs-html.tar.bz2
@@ -49,10 +47,14 @@ GUI library, offering classes for all common GUI controls as well as a
 comprehensive set of helper classes for most common application tasks,
 ranging from networking to HTML display and image manipulation.
 
+%description -l zh_CN.UTF-8
+wxWidgets 图形库的 GTK 移植
 
 %package        devel
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Summary:        Development files for the wxGTK3 library
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Requires:       %{name}%{?_isa} = %{version}-%{release}
 Requires:       %{name}-gl = %{version}-%{release}
 Requires:       %{name}-media = %{version}-%{release}
@@ -68,10 +70,14 @@ GUI library, offering classes for all common GUI controls as well as a
 comprehensive set of helper classes for most common application tasks,
 ranging from networking to HTML display and image manipulation.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %package        gl
 Summary:        OpenGL add-on for the wxWidgets library
+Summary(zh_CN.UTF-8): %{name} 的 OpenGL 组件
 Group:          System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 Requires:       %{name}%{?_isa} = %{version}-%{release}
 
 %description gl
@@ -81,10 +87,14 @@ GUI library, offering classes for all common GUI controls as well as a
 comprehensive set of helper classes for most common application tasks,
 ranging from networking to HTML display and image manipulation.
 
+%description gl -l zh_CN.UTF-8
+%{name} 的 OpenGL 组件。
 
 %package        media
 Summary:        Multimedia add-on for the wxWidgets library
+Summary(zh_CN.UTF-8): %{name} 的多媒体组件
 Group:          System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 Requires:       %{name}%{?_isa} = %{version}-%{release}
 
 %description media
@@ -93,11 +103,14 @@ wxWidgets is the GTK port of the C++ cross-platform wxWidgets
 GUI library, offering classes for all common GUI controls as well as a
 comprehensive set of helper classes for most common application tasks,
 ranging from networking to HTML display and image manipulation.
-
+%description media -l zh_CN.UTF-8
+%{name} 的多媒体组件。
 
 %package -n     %{wxbasename}
 Summary:        Non-GUI support classes from the wxWidgets library
+Summary(zh_CN.UTF-8): %{name} 的非图形支持类
 Group:          System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 
 %description -n %{wxbasename}
 Every wxWidgets application must link against this library. It contains
@@ -106,17 +119,22 @@ portability classes that abstract differences between platforms. wxBase can
 be used to develop console mode applications -- it does not require any GUI
 libraries or the X Window System.
 
+%description -n %{wxbasename} -l zh_CN.UTF-8
+%{name} 的非图形支持类。
 
 %package        docs
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Summary:        Documentation for the wxGTK3 library
+Summary(zh_CN.UTF-8): %{name} 的文档
 Requires:       %{name} = %{version}-%{release}
 Provides:       %{srcname}-docs = %{version}-%{release}
 BuildArch:      noarch
 
 %description docs
 This package provides documentation for the %{srcname} library.
-
+%description docs -l zh_CN.UTF-8
+%{name} 的文档。
 
 %prep
 %setup -q -n %{srcname}-%{version} -a 1
@@ -171,10 +189,10 @@ install -p -m 755 %{SOURCE10} %{buildroot}%{_bindir}/wx-config-3.0
 # move bakefiles to avoid conflicts with 2.8.*
 mkdir %{buildroot}%{_datadir}/bakefile/presets/wx3
 mv %{buildroot}%{_datadir}/bakefile/presets/*.* %{buildroot}%{_datadir}/bakefile/presets/wx3
-
-%find_lang wxstd3
-%find_lang wxmsw3
-cat wxmsw3.lang >> wxstd3.lang
+magic_rpm_clean.sh
+%find_lang wxstd3 || :
+%find_lang wxmsw3 || :
+cat wxmsw3.lang >> wxstd3.lang || :
 
 %check
 pushd tests
@@ -236,6 +254,9 @@ popd
 %doc html
 
 %changelog
+* Tue Oct 20 2015 Liu Di <liudidi@gmail.com> - 3.0.2-1
+- 更新到 3.0.2
+
 * Wed Aug 13 2014 Liu Di <liudidi@gmail.com> - 3.0.1-2
 - 为 Magic 3.0 重建
 

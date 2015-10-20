@@ -4,11 +4,13 @@
 %endif
 
 Summary: Wireless ethernet configuration tools
+Summary(zh_CN.UTF-8): 无线以太网配置工具
 Group: System Environment/Base
+Group(zh_CN.UTF-8): 系统环境/基本
 License: GPL+
 Name: wireless-tools
 Version: 29
-Release: 9.1%{?pre_version}%{?dist}
+Release: 10.1%{?pre_version}%{?dist}
 Epoch: 1
 URL: http://www.hpl.hp.com/personal/Jean_Tourrilhes/Linux/Tools.html
 Source: http://www.hpl.hp.com/personal/Jean_Tourrilhes/Linux/wireless_tools.%{version}%{?pre_version}.tar.gz
@@ -27,14 +29,20 @@ the Wireless Extensions. The Wireless Extension is an interface
 allowing you to set Wireless LAN specific parameters and get the
 specific stats for wireless networking equipment.
 
+%description -l zh_CN.UTF-8
+无线以太网配置工具。
+
 %package devel
 Summary: Development headers for the wireless-tools package
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: wireless-tools = %{epoch}:%{version}-%{release}
 
 %description devel
 Development headers for the wireless-tools package.
-
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %if %{pre_release}
@@ -84,6 +92,9 @@ magic_rpm_clean.sh
 
 
 %changelog
+* Tue Oct 20 2015 Liu Di <liudidi@gmail.com> - 1:29-10.1
+- 为 Magic 3.0 重建
+
 * Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 1:29-9.1
 - 为 Magic 3.0 重建
 

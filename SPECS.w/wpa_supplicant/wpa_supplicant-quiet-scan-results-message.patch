@@ -1,13 +1,18 @@
-diff -up wpa_supplicant-0.6.7/wpa_supplicant/events.c.scan-results-msg wpa_supplicant-0.6.7/wpa_supplicant/events.c
---- wpa_supplicant-0.6.7/wpa_supplicant/events.c.scan-results-msg	2009-01-30 12:08:34.000000000 -0500
-+++ wpa_supplicant-0.6.7/wpa_supplicant/events.c	2009-01-30 12:08:37.000000000 -0500
-@@ -911,7 +911,7 @@ static void wpa_supplicant_event_scan_re
+diff --git a/wpa_supplicant/events.c b/wpa_supplicant/events.c
+index d275ca4..fc335c0 100644
+--- a/wpa_supplicant/events.c
++++ b/wpa_supplicant/events.c
+@@ -1356,11 +1356,11 @@ static int _wpa_supplicant_event_scan_results(struct wpa_supplicant *wpa_s,
+ 		wpa_s->own_scan_running, wpa_s->radio->external_scan_running);
+ 	if (wpa_s->last_scan_req == MANUAL_SCAN_REQ &&
+ 	    wpa_s->manual_scan_use_id && wpa_s->own_scan_running) {
+-		wpa_msg_ctrl(wpa_s, MSG_INFO, WPA_EVENT_SCAN_RESULTS "id=%u",
++		wpa_msg_ctrl(wpa_s, MSG_DEBUG, WPA_EVENT_SCAN_RESULTS "id=%u",
+ 			     wpa_s->manual_scan_id);
+ 		wpa_s->manual_scan_use_id = 0;
+ 	} else {
+-		wpa_msg_ctrl(wpa_s, MSG_INFO, WPA_EVENT_SCAN_RESULTS);
++		wpa_msg_ctrl(wpa_s, MSG_DEBUG, WPA_EVENT_SCAN_RESULTS);
  	}
- 
- 	wpa_dbg(wpa_s, MSG_DEBUG, "New scan results available");
--	wpa_msg_ctrl(wpa_s, MSG_INFO, WPA_EVENT_SCAN_RESULTS);
-+	wpa_msg_ctrl(wpa_s, MSG_DEBUG, WPA_EVENT_SCAN_RESULTS);
  	wpas_notify_scan_results(wpa_s);
  
- 	wpas_notify_scan_done(wpa_s, 1);
-

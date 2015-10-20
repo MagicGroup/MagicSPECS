@@ -4,8 +4,9 @@
 
 Name:           web-assets
 Version:        5
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        A simple framework for bits pushed to browsers
+Summary(zh_CN.UTF-8): 一个位推送到浏览器的简单框架
 BuildArch:      noarch
 
 License:        MIT
@@ -19,25 +20,35 @@ Source4:        README.devel
 %description
 %{summary}.
 
+%description -l zh_CN.UTF-8
+一个位推送到浏览器的简单框架
+
 %package filesystem
 Summary:        The basic directory layout for Web Assets
+Summary(zh_CN.UTF-8): %{name} 的文件系统结构
 #there's nothing copyrightable about a few directories and symlinks
 License:        Public Domain
 
 %description filesystem
 %{summary}.
+%description filesystem -l zh_CN.UTF-8
+%{name} 的文件系统结构。
 
 %package devel
 Summary:        RPM macros for Web Assets packaging
+Summary(zh_CN.UTF-8): %{name} 的 RPM 宏
 License:        MIT
 Requires:       web-assets-filesystem = %{version}-%{release}
 
 %description devel
 %{summary}.
+%description devel -l zh_CN.UTF-8
+%{name} 的 RPM 宏。
 
 %if 0%{?enable_httpd}
 %package httpd
 Summary:        Web Assets aliases for the Apache HTTP daemon
+Summary(zh_CN.UTF-8): Apache HTTP 服务的 %{name} 别名
 License:        MIT
 Requires:       web-assets-filesystem = %{version}-%{release}
 Requires:       httpd
@@ -46,6 +57,8 @@ Requires(postun): systemd
 
 %description httpd
 %{summary}.
+%description httpd -l zh_CN.UTF-8
+Apache HTTP 服务的 %{name} 别名。
 %endif
 
 %prep
@@ -91,6 +104,9 @@ systemctl reload-or-try-restart httpd.service || :
 %endif
 
 %changelog
+* Mon Oct 19 2015 Liu Di <liudidi@gmail.com> - 5-5
+- 为 Magic 3.0 重建
+
 * Tue Sep 22 2015 Liu Di <liudidi@gmail.com> - 5-4
 - 为 Magic 3.0 重建
 

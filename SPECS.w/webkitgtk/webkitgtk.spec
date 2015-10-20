@@ -10,10 +10,12 @@
 
 Name:		webkitgtk
 Version:	2.4.9
-Release:	3%{?dist}
+Release:	4%{?dist}
 Summary:	GTK+ Web content engine library
+Summary(zh_CN.UTF-8): GTK+ 的网页内容引擎库
 
 Group:		Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 License:	LGPLv2+ and BSD
 URL:		http://www.webkitgtk.org/
 
@@ -69,9 +71,14 @@ BuildRequires:  libatomic
 WebKitGTK+ is the port of the portable web rendering engine WebKit to the
 GTK+ platform.
 
+%description -l zh_CN.UTF-8d
+WebKit 的 GTK+ 移植，一个可移植的网页渲染引擎。
+
 %package	devel
 Summary:	Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:		Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:	%{name} = %{version}-%{release}
 Requires:	pkgconfig
 Requires:	gtk2-devel
@@ -80,14 +87,22 @@ Requires:	gtk2-devel
 The %{name}-devel package contains libraries, build data, and header
 files for developing applications that use %{name}.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
 %package	doc
 Summary:	Documentation for %{name}
+Summary(zh_CN.UTF-8): %{name} 的文档
 Group:		Documentation
+Group(zh_CN.UTF-8): 文档
 BuildArch:	noarch
 Requires:	%{name} = %{version}-%{release}
 
 %description	doc
 This package contains developer documentation for %{name}.
+
+%description doc -l zh_CN.UTF-8
+%{name} 的文档。
 
 %prep
 %setup -qn "webkitgtk-%{version}"
@@ -125,9 +140,7 @@ This package contains developer documentation for %{name}.
 # Regenerate configure to pick up the gcc 5.0 changes
 autoreconf -v
 
-%if 0%{?fedora}
-%global optflags %{optflags} -DUSER_AGENT_GTK_DISTRIBUTOR_NAME=\'\\"Fedora\\"\'
-%endif
+%global optflags %{optflags} -DUSER_AGENT_GTK_DISTRIBUTOR_NAME=\'\\"Magic\\"\'
 
 %configure                                                      \
                         --with-gtk=2.0                          \
@@ -163,8 +176,8 @@ chrpath --delete %{buildroot}%{_libexecdir}/%{name}/GtkLauncher
 
 # Remove .la files
 find $RPM_BUILD_ROOT%{_libdir} -name "*.la" -delete
-
-%find_lang WebKitGTK-2.0
+magic_rpm_clean.sh
+%find_lang WebKitGTK-2.0 || :
 
 ## Finally, copy over and rename the various files for %%doc inclusion.
 %add_to_doc_files Source/WebKit/LICENSE
@@ -218,6 +231,9 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &>/dev/null || :
 %{_datadir}/gtk-doc/html/webkitgtk
 
 %changelog
+* Mon Oct 19 2015 Liu Di <liudidi@gmail.com> - 2.4.9-4
+- 为 Magic 3.0 重建
+
 * Fri Sep 25 2015 Tomas Popela <tpopela@redhat.com> - 2.4.9-3
 - rhbz#1189303 - [abrt] midori: WebCore::SQLiteStatement::prepare(): midori killed by SIGSEGV
   Initialize string in SQLiteStatement before using it

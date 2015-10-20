@@ -1,11 +1,15 @@
 Name:       wv
 Summary:    MSWord 6/7/8/9 binary file format to HTML converter
+Summary(zh_CN.UTF-8): 微软 Word 6/7/8/9 格式文件转移为 HTML
 Version:    1.2.9
-Release:    6%{?dist}
+Release:    7%{?dist}
 License:    GPLv2+
 Group:      Applications/Text
+Group(zh_CN.UTF-8): 应用程序/文本
 URL:        http://www.abisource.com/downloads/wv/
 Source:     http://www.abisource.com/downloads/wv/%{version}/wv-%{version}.tar.gz
+Patch1:     wv-aarch64.patch
+Patch2:     format-security.patch
 
 BuildRequires: glib2-devel
 BuildRequires: libjpeg-devel
@@ -21,10 +25,14 @@ Wv is a program that understands the Microsoft Word 6/7/8/9
 binary file format and is able to convert Word
 documents into HTML, which can then be read with a browser.
 
+%description -l zh_CN.UTF-8
+微软 Word 6/7/8/9 格式文件转移为 HTML。
 
 %package        devel
 Summary:        MSWord format converter - development files
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       %{name} = %{version}-%{release}
 
 %description    devel
@@ -33,9 +41,13 @@ binary file format and is able to convert Word
 documents into HTML, which can then be read with a browser.
 This package contains the development files
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
+%patch1 -p1
+%patch2 -p1
 %configure
 
 %build
@@ -70,6 +82,9 @@ magic_rpm_clean.sh
 
 
 %changelog
+* Tue Oct 20 2015 Liu Di <liudidi@gmail.com> - 1.2.9-7
+- 为 Magic 3.0 重建
+
 * Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 1.2.9-6
 - 为 Magic 3.0 重建
 

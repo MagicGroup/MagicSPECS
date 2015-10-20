@@ -1,12 +1,13 @@
 Name:		wavpack
 Summary:	A completely open audiocodec
-Version:	4.60.1
-Release:	4%{?dist}
+Summary(zh_CN.UTF-8): 完全开放的音频编码
+Version:	4.75.2
+Release:	1%{?dist}
 License:	BSD
 Group:		Applications/Multimedia
+Group(zh_CN.UTF-8): 应用程序/多媒体
 Url:		http://www.wavpack.com/
 Source:		http://www.wavpack.com/%{name}-%{version}.tar.bz2
-Patch1:		wavpack-0001-Fixed-default-values-in-pkgconfig-file.patch
 Buildroot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 %description
@@ -16,18 +17,25 @@ technology is loosely based on previous versions of WavPack, the new
 version 4 format has been designed from the ground up to offer unparalleled
 performance and functionality.
 
+%description -l zh_CN.UTF-8
+这是一个完全开放的无损音频压缩格式。
+
 %package devel
 Summary:	WavPack - development files
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:		Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:	%{name} = %{version}-%{release}
 Requires:	pkgconfig
 
 %description devel
 Files needed for developing apps using wavpack
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
 %prep
 %setup -q
-%patch1 -p1 -b .pkgconfig_values
 
 %build
 %configure --disable-static
@@ -37,6 +45,7 @@ make %{?_smp_mflags}
 rm -rf %{buildroot}
 make DESTDIR=%{buildroot} install
 rm -f %{buildroot}/%{_libdir}/*.la
+magic_rpm_clean.sh
 
 %post -p /sbin/ldconfig
 
@@ -52,7 +61,6 @@ rm -rf %{buildroot}
 %{_mandir}/man1/wavpack.1*
 %{_mandir}/man1/wvgain.1*
 %{_mandir}/man1/wvunpack.1*
-%doc license.txt
 
 %files devel
 %defattr(-,root,root,-)
@@ -62,6 +70,9 @@ rm -rf %{buildroot}
 %doc ChangeLog README doc/*
 
 %changelog
+* Mon Oct 19 2015 Liu Di <liudidi@gmail.com> - 4.75.2-1
+- 更新到 4.75.2
+
 * Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 4.60.1-4
 - 为 Magic 3.0 重建
 

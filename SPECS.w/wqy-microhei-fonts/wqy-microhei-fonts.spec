@@ -5,10 +5,12 @@
 
 Name:           %{fontname}-fonts
 Version:        0.2.0
-Release:        0.10.beta%{?dist}
+Release:        0.11.beta%{?dist}
 Summary:        Compact Chinese fonts derived from Droid
+Summary(zh_CN.UTF-8): 文泉驿微米黑字体
 
 Group:          User Interface/X
+Group(zh_CN.UTF-8): 用户界面/X
 License:        ASL 2.0 or GPLv3 with exceptions
 URL:            http://wenq.org/enindex.cgi?MicroHei(en)
 Source0:        http://downloads.sourceforge.net/wqy/%{archivename}.tar.gz
@@ -22,6 +24,9 @@ Requires:       fontpackages-filesystem
 %description
 A new Sans Serif CJK font derived from Google's "Droid Sans Fallback"
 and covers the entire GBK code points (20932 Han glyphs).
+
+%description -l zh_CN.UTF-8
+文泉驿微米黑字体。
 
 %prep
 %setup -q -n %{fontname}
@@ -47,7 +52,6 @@ install -m 0644 -p %{SOURCE1} \
 ln -s %{_fontconfig_templatedir}/%{fontconf} \
       %{buildroot}%{_fontconfig_confdir}/%{fontconf}
 
-
 %clean
 rm -fr %{buildroot}
 
@@ -57,6 +61,9 @@ rm -fr %{buildroot}
 
 
 %changelog
+* Tue Oct 20 2015 Liu Di <liudidi@gmail.com> - 0.2.0-0.11.beta
+- 为 Magic 3.0 重建
+
 * Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 0.2.0-0.10.beta
 - 为 Magic 3.0 重建
 

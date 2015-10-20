@@ -1,9 +1,11 @@
 Name:      hyphen
 Summary:   A text hyphenation library
+Summary(zh_CN.UTF-8): 文本断字库
 Version:   2.8.8
-Release:   2%{?dist}
+Release:   3%{?dist}
 Source:    http://downloads.sourceforge.net/hunspell/hyphen-%{version}.tar.gz
 Group:     System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 URL:       http://hunspell.sf.net
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 License:   GPLv2 or LGPLv2+ or MPLv1.1
@@ -15,22 +17,35 @@ BuildRequires: valgrind
 %description
 Hyphen is a library for high quality hyphenation and justification.
 
+%description -l zh_CN.UTF-8
+文本断字库。
+
 %package devel
 Requires: hyphen = %{version}-%{release}
 Summary: Files for developing with hyphen
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 
 %description devel
 Includes and definitions for developing with hyphen
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
 %package en
 Requires: hyphen
 Summary: English hyphenation rules
+Summary(zh_CN.UTF-8): 英语的断字规则
 Group: Applications/Text
+Group(zh_CN.UTF-8): 应用程序/文本
 BuildArch: noarch
 
 %description en
 English hyphenation rules.
+
+%description en -l zh_CN.UTF-8
+英语的断字规则。
 
 %prep
 %setup -q
@@ -84,6 +99,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_bindir}/substrings.pl
 
 %changelog
+* Mon Oct 19 2015 Liu Di <liudidi@gmail.com> - 2.8.8-3
+- 为 Magic 3.0 重建
+
 * Wed Jun 17 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.8.8-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

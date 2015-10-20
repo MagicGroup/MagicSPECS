@@ -6,6 +6,7 @@ Name:		webrtc
 Version:	0.1
 Release:	0.11.%{svndate}svn%{svnrev}%{?dist}
 Summary:	Libraries to provide Real Time Communications via the web
+Summary(zh_CN.UTF-8): 通过网页实时通信的库
 License:	BSD
 URL:		http://www.webrtc.org/
 # No source tarballs. This is a google failure^Wproject.
@@ -29,13 +30,20 @@ WebRTC is a free, open project that enables web browsers with Real-Time
 Communications (RTC) capabilities via simple Javascript APIs. The 
 WebRTC components have been optimized to best serve this purpose. 
 
+%description -l zh_CN.UTF-8
+通过网页实时通信的库。
+
 %package devel
 Summary:	Development files for WebRTC
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Requires:	%{name}%{?_isa} = %{version}-%{release}
 Requires:	libjpeg-turbo-devel, libyuv-devel, libvpx-devel
 
 %description devel
 Development files for WebRTC.
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q -n webrtc-%{svndate}svn%{svnrev}
@@ -59,6 +67,7 @@ make %{?_smp_mflags}
 %install
 make install DESTDIR=%{buildroot}
 rm -rf %{buildroot}%{_libdir}/*.la
+magic_rpm_clean.sh
 
 %post -p /sbin/ldconfig
 %postun -p /sbin/ldconfig

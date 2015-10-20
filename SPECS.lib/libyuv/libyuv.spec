@@ -5,10 +5,12 @@
 
 Name:		libyuv
 Summary:	YUV conversion and scaling functionality library
+Summary(zh_CN.UTF-8): YUV 转换和缩放函数库
 Version:	0
-Release:	0.24.20121221svn522%{?dist}
+Release:	0.25.20121221svn522%{?dist}
 License:	BSD
 Group:		Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Url:		http://code.google.com/p/libyuv/
 ## svn -r 522 export http://libyuv.googlecode.com/svn/trunk libyuv-0
 ## tar -cjvf libyuv-0.tar.bz2 libyuv-0
@@ -31,18 +33,22 @@ functionality. Converts all webcam formats to YUV (I420). Convert YUV to
 formats for rendering/effects. Rotate by 90 degrees to adjust for mobile
 devices in portrait mode. Scale YUV to prepare content for compression,
 with point, bilinear or box filter.
-
+%description -l zh_CN.UTF-8
+YUV 转换和缩放函数库。
 
 %package devel
 Summary: The development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: pkgconfig
 Requires: %{name}%{?_isa} = %{version}-%{release}
 
 
 %description devel
 Additional header files for development with %{name}.
-
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -52,7 +58,7 @@ Additional header files for development with %{name}.
 
 %build
 sh autogen.sh
-%configure --disable-static --with-pic --with-test --with-mjpeg %{?with_neon}
+%configure --disable-static --with-pic --without-test --with-mjpeg %{?with_neon}
 make %{?_smp_mflags}
 
 
@@ -60,7 +66,7 @@ make %{?_smp_mflags}
 rm -rf %{buildroot}
 make install DESTDIR=%{buildroot}
 rm -f %{buildroot}%{_libdir}/*.la
-
+magic_rpm_clean.sh
 
 %clean
 rm -rf %{buildroot}
@@ -89,6 +95,9 @@ make check
 
 
 %changelog
+* Tue Oct 20 2015 Liu Di <liudidi@gmail.com> - 0-0.25.20121221svn522
+- 为 Magic 3.0 重建
+
 * Wed Jun 17 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0-0.24.20121221svn522
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

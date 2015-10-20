@@ -1,11 +1,13 @@
 #global gitdate 20130515
 
 Name:           wayland
-Version:        1.7.0
-Release:        3%{?gitdate:.%{gitdate}}%{?dist}
+Version:	1.9.0
+Release:	1%{?dist}
 Summary:        Wayland Compositor Infrastructure
+Summary(zh_CN.UTF-8): Wayland 显示服务
 
 Group:          User Interface/X
+Group(zh_CN.UTF-8): 用户界面/X
 License:        MIT
 URL:            http://%{name}.freedesktop.org/
 %if 0%{?gitdate}
@@ -40,6 +42,14 @@ Summary: Common headers for wayland
 License: MIT
 %description devel
 Common headers for wayland
+
+%package doc
+Summary: Wayland development documentation
+License: MIT
+BuildArch: noarch
+Obsoletes: wayland < 1.8.91
+%description doc
+Wayland development documentation
 
 %package -n libwayland-client
 Summary: Wayland client library
@@ -100,6 +110,7 @@ find $RPM_BUILD_ROOT -name \*.la | xargs rm -f
 
 # Remove lib64 rpaths
 chrpath -d $RPM_BUILD_ROOT%{_libdir}/libwayland-cursor.so
+magic_rpm_clean.sh
 
 %check
 mkdir -m 700 tests/run
@@ -131,6 +142,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_bindir}/wayland-scanner
 %{_includedir}/wayland-util.h
 %{_includedir}/wayland-egl.h
+%{_includedir}/wayland-egl-core.h
 %{_includedir}/wayland-version.h
 %{_datadir}/aclocal/wayland-scanner.m4
 %{_libdir}/pkgconfig/wayland-scanner.pc
@@ -139,6 +151,10 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/wayland/wayland.xml
 %{_datadir}/wayland/wayland.dtd
 %{_mandir}/man3/*.3*
+
+%files doc
+%doc README TODO
+%{_docdir}/wayland/
 
 %files -n libwayland-client
 %defattr(-,root,root,-)
@@ -171,6 +187,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/pkgconfig/wayland-server.pc
 
 %changelog
+* Mon Oct 19 2015 Liu Di <liudidi@gmail.com> - 1.9.0-1
+- 更新到 1.9.0
+
 * Wed Feb 25 2015 Liu Di <liudidi@gmail.com> - 1.7.0-3
 - 为 Magic 3.0 重建
 

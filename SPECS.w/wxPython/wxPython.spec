@@ -5,11 +5,13 @@
 
 Name:           wxPython
 Version:        3.0.2.0
-Release:        7%{?dist}
+Release:        8%{?dist}
 
 Summary:        GUI toolkit for the Python programming language
+Summary(zh_CN.UTF-8): Python 程序语言的图形开发工具包
 
 Group:          Development/Languages
+Group(zh_CN.UTF-8): 开发/语言
 License:        LGPLv2+ and wxWidgets 
 URL:            http://www.wxpython.org/
 Source0:        http://downloads.sourceforge.net/wxpython/%{name}-src-%{version}.tar.bz2
@@ -33,9 +35,14 @@ graphical user interface, simply and easily. It is implemented as a Python
 extension module (native code) that wraps the popular wxWindows cross
 platform GUI library, which is written in C++.
 
+%description -l zh_CN.UTF-8
+Python 程序语言的图形开发工具包。
+
 %package        devel
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Summary:        Development files for wxPython add-on modules
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Requires:       %{name} = %{version}-%{release}
 Requires:       wxGTK3-devel
 
@@ -44,17 +51,22 @@ This package includes C++ header files and SWIG files needed for developing
 add-on modules for wxPython. It is NOT needed for development of most
 programs which use the wxPython toolkit.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
 %package        docs
 Group:          Documentation
+Group(zh_CN.UTF-8): 文档
 Summary:        Documentation and samples for wxPython
+Summary(zh_CN.UTF-8): %{name} 的文档
 Requires:       %{name} = %{version}-%{release}
-%if 0%{?fedora} > 9
 BuildArch:      noarch
-%endif
 
 %description docs
 Documentation, samples and demo application for wxPython.
 
+%description docs -l zh_CN.UTF-8
+%{name} 的文档。
 
 %prep
 %setup -q -n wxPython-src-%{version}
@@ -85,7 +97,7 @@ python setup.py %{buildflags} install --root=$RPM_BUILD_ROOT
 mv $RPM_BUILD_ROOT%{python_sitelib}/wx.pth  $RPM_BUILD_ROOT%{python_sitearch}
 mv $RPM_BUILD_ROOT%{python_sitelib}/wxversion.py* $RPM_BUILD_ROOT%{python_sitearch}
 %endif
-
+magic_rpm_clean.sh
 
 %files
 %doc wxPython/licence
@@ -94,10 +106,8 @@ mv $RPM_BUILD_ROOT%{python_sitelib}/wxversion.py* $RPM_BUILD_ROOT%{python_sitear
 %{python_sitearch}/wxversion.py*
 %dir %{python_sitearch}/wx-3.0-gtk3/
 %{python_sitearch}/wx-3.0-gtk3/wx
-%if 0%{?fedora} >= 9 || 0%{?rhel} >= 6
 %{python_sitelib}/*egg-info
 %{python_sitearch}/wx-3.0-gtk3/*egg-info
-%endif
 
 %files devel
 %dir %{_includedir}/wx-3.0/wx/wxPython
@@ -112,6 +122,9 @@ mv $RPM_BUILD_ROOT%{python_sitelib}/wxversion.py* $RPM_BUILD_ROOT%{python_sitear
 
 
 %changelog
+* Tue Oct 20 2015 Liu Di <liudidi@gmail.com> - 3.0.2.0-8
+- 为 Magic 3.0 重建
+
 * Wed Aug 12 2015 Liu Di <liudidi@gmail.com> - 3.0.2.0-7
 - 为 Magic 3.0 重建
 
