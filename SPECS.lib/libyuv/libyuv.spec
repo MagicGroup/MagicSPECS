@@ -1,26 +1,22 @@
 %ifarch %{arm}
 %global with_neon --enable-neon
 %endif
-%define svn 1
-%define vcsdate 20140808
 
 
 Name:		libyuv
 Summary:	YUV conversion and scaling functionality library
-Summary(zh_CN.UTF-8): YUV 转换和缩放函数库
 Version:	0
-Release:	0.svn%{vcsdate}%{?dist}.7
+Release:	0.24.20121221svn522%{?dist}
 License:	BSD
 Group:		Development/Libraries
-Group(zh_CN.UTF-8): 系统环境/库
 Url:		http://code.google.com/p/libyuv/
-## svn -r 389 export http://libyuv.googlecode.com/svn/trunk libyuv-0
+## svn -r 522 export http://libyuv.googlecode.com/svn/trunk libyuv-0
 ## tar -cjvf libyuv-0.tar.bz2 libyuv-0
-Source0:	%{name}-svn%{vcsdate}.tar.xz
-Source1:	make_libyuv_svn_package.sh
+Source0:	%{name}-%{version}.tar.bz2
 # Fedora-specific. Upstream isn't interested in this.
 Patch1:		libyuv-0001-Initial-autotools-support.patch
-Patch2:         libyuv-disable-mips64-COPYROW_MIPS.patch
+# big endian fix - http://code.google.com/p/libyuv/issues/detail?id=171
+Patch2:		libyuv-endian.patch
 BuildRequires:	autoconf
 BuildRequires:	automake
 BuildRequires:	libtool
@@ -36,14 +32,10 @@ formats for rendering/effects. Rotate by 90 degrees to adjust for mobile
 devices in portrait mode. Scale YUV to prepare content for compression,
 with point, bilinear or box filter.
 
-%description -l zh_CN.UTF-8
-YUV 转换和缩放函数库。
 
 %package devel
 Summary: The development files for %{name}
-Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: Development/Libraries
-Group(zh_CN.UTF-8): 开发/库
 Requires: pkgconfig
 Requires: %{name}%{?_isa} = %{version}-%{release}
 
@@ -51,18 +43,16 @@ Requires: %{name}%{?_isa} = %{version}-%{release}
 %description devel
 Additional header files for development with %{name}.
 
-%description devel -l zh_CN.UTF-8
-%{name} 的开发包。
 
 %prep
-%setup -q -n %{name}-svn%{vcsdate}
+%setup -q
 %patch1 -p1 -b .autotools
-#%patch2 -p1 -b .COPYROW_MIPS
+%patch2 -p1 -b .endian
 
 
 %build
 sh autogen.sh
-%configure --disable-static --with-pic --without-test --with-mjpeg %{?with_neon}
+%configure --disable-static --with-pic --with-test --with-mjpeg %{?with_neon}
 make %{?_smp_mflags}
 
 
@@ -70,7 +60,7 @@ make %{?_smp_mflags}
 rm -rf %{buildroot}
 make install DESTDIR=%{buildroot}
 rm -f %{buildroot}%{_libdir}/*.la
-magic_rpm_clean.sh
+
 
 %clean
 rm -rf %{buildroot}
@@ -99,35 +89,35 @@ make check
 
 
 %changelog
-* Fri Aug 08 2014 Liu Di <liudidi@gmail.com> - 0-0.svn20140808.7
-- 为 Magic 3.0 重建
+* Wed Jun 17 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0-0.24.20121221svn522
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 
-* Fri Aug 08 2014 Liu Di <liudidi@gmail.com> - 0-0.svn20140808.6
-- 更新到 20140808 日期的仓库源码
+* Sat May 02 2015 Kalev Lember <kalevlember@gmail.com> - 0-0.23.20121221svn522
+- Rebuilt for GCC 5 C++11 ABI change
 
-* Fri Aug 08 2014 Liu Di <liudidi@gmail.com> - 0-0.svn20140603.6
-- 为 Magic 3.0 重建
+* Sun Aug 17 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0-0.22.20121221svn522
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
 
-* Tue Jun 03 2014 Liu Di <liudidi@gmail.com> - 0-0.svn20140603.5
-- 为 Magic 3.0 重建
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0-0.21.20121221svn522
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 
-* Tue Jun 03 2014 Liu Di <liudidi@gmail.com> - 0-0.svn20140603.4
-- 为 Magic 3.0 重建
+* Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0-0.20.20121221svn522
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
 
-* Tue Jun 03 2014 Liu Di <liudidi@gmail.com> - 0-0.svn20140603.3
-- 为 Magic 3.0 重建
+* Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0-0.19.20121221svn522
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
 
-* Tue Jun 03 2014 Liu Di <liudidi@gmail.com> - 0-0.svn20140603.2
-- 为 Magic 3.0 重建
+* Fri Jan 18 2013 Adam Tkac <atkac redhat com> - 0-0.18.20121221svn522
+- rebuild due to "jpeg8-ABI" feature drop
 
-* Tue Jun 03 2014 Liu Di <liudidi@gmail.com> - 0-0.svn20140603.1
-- 更新到 20140603 日期的仓库源码
+* Sun Dec 30 2012 Dan Horák <dan[at]danny.cz> - 0-0.17.20121221svn522
+- add big endian fix
 
-* Tue Jun 03 2014 Liu Di <liudidi@gmail.com> - 0-0.svn20121001.1
-- 为 Magic 3.0 重建
+* Fri Dec 21 2012 Adam Tkac <atkac redhat com> - 0-0.16.20121221svn522
+- rebuild against new libjpeg
 
-* Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 0-0.15.20121001svn389
-- 为 Magic 3.0 重建
+* Fri Dec 21 2012 Peter Lemenkov <lemenkov@gmail.com> - 0-0.15.20121221svn522
+- Next svn snapshot - ver. 522
 
 * Thu Oct 04 2012 Peter Lemenkov <lemenkov@gmail.com> - 0-0.14.20121001svn389
 - Next svn snapshot - ver. 389

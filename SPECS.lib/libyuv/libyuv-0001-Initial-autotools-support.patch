@@ -1,6 +1,61 @@
-diff -Nuri libyuv-svn20140603-orig/autogen.sh libyuv-svn20140603/autogen.sh
---- libyuv-svn20140603-orig/autogen.sh	1970-01-01 00:00:00.000000000 +0000
-+++ libyuv-svn20140603/autogen.sh	2014-07-03 07:09:29.198460813 +0000
+From c2294ecef0a8f90b9b8fadbe2c5e6493979247de Mon Sep 17 00:00:00 2001
+From: Peter Lemenkov <lemenkov@gmail.com>
+Date: Fri, 16 Dec 2011 22:08:41 +0400
+Subject: [PATCH 1/1] Initial autotools support
+
+Signed-off-by: Peter Lemenkov <lemenkov@gmail.com>
+---
+ Makefile.am         |  28 ++++++++++
+ autogen.sh          |   7 +++
+ configure.ac        | 156 ++++++++++++++++++++++++++++++++++++++++++++++++++++
+ source/Makefile.am  |  78 ++++++++++++++++++++++++++
+ source/libyuv.pc.in |   9 +++
+ 5 files changed, 278 insertions(+)
+ create mode 100644 Makefile.am
+ create mode 100755 autogen.sh
+ create mode 100644 configure.ac
+ create mode 100644 source/Makefile.am
+ create mode 100644 source/libyuv.pc.in
+
+diff --git a/Makefile.am b/Makefile.am
+new file mode 100644
+index 0000000..0b7c289
+--- /dev/null
++++ b/Makefile.am
+@@ -0,0 +1,28 @@
++SUBDIRS = source
++
++EXTRA_DIST = AUTHORS DEPS LICENSE PATENTS README.chromium codereview.settings libyuv.gyp libyuv_test.gyp unit_test/testdata/arm_v7.txt unit_test/testdata/tegra3.txt util/compare.cc
++
++if WITH_TEST
++
++TESTS = unittest
++
++noinst_PROGRAMS = $(TESTS)
++
++unittest_SOURCES = unit_test/basictypes_test.cc \
++		   unit_test/compare_test.cc \
++		   unit_test/convert_test.cc \
++		   unit_test/cpu_test.cc \
++		   unit_test/planar_test.cc \
++		   unit_test/rotate_argb_test.cc \
++		   unit_test/rotate_test.cc \
++		   unit_test/scale_argb_test.cc \
++		   unit_test/scale_test.cc \
++		   unit_test/unit_test.cc \
++		   unit_test/unit_test.h \
++		   unit_test/version_test.cc \
++		   unit_test/video_common_test.cc
++
++unittest_CXXFLAGS = $(AM_CXXFLAGS) @GTEST_CXXFLAGS@ -I$(top_srcdir)/include -I$(top_srcdir)
++unittest_LDADD = @GTEST_LIBS@ $(top_builddir)/source/libyuv.la
++
++endif
+diff --git a/autogen.sh b/autogen.sh
+new file mode 100755
+index 0000000..bfd37d1
+--- /dev/null
++++ b/autogen.sh
 @@ -0,0 +1,7 @@
 +#!/bin/sh
 +LIBTOOLIZE=`which libtoolize || which glibtoolize`
@@ -9,10 +64,12 @@ diff -Nuri libyuv-svn20140603-orig/autogen.sh libyuv-svn20140603/autogen.sh
 +aclocal
 +automake --add-missing --copy
 +autoconf
-diff -Nuri libyuv-svn20140603-orig/configure.ac libyuv-svn20140603/configure.ac
---- libyuv-svn20140603-orig/configure.ac	1970-01-01 00:00:00.000000000 +0000
-+++ libyuv-svn20140603/configure.ac	2014-07-03 07:09:29.243382711 +0000
-@@ -0,0 +1,152 @@
+diff --git a/configure.ac b/configure.ac
+new file mode 100644
+index 0000000..7f6673a
+--- /dev/null
++++ b/configure.ac
+@@ -0,0 +1,156 @@
 +AC_INIT([libyuv], [0], [http://groups.google.com/group/discuss-libyuv], [libyuv], [http://code.google.com/p/libyuv/])
 +
 +AC_CANONICAL_TARGET
@@ -21,6 +78,7 @@ diff -Nuri libyuv-svn20140603-orig/configure.ac libyuv-svn20140603/configure.ac
 +
 +AC_SUBST(LIBYUV_VERSION_INFO, [0:0:0])
 +
++AM_PROG_AS
 +AC_PROG_CXX
 +AC_PROG_LIBTOOL
 +AC_PROG_INSTALL
@@ -33,7 +91,6 @@ diff -Nuri libyuv-svn20140603-orig/configure.ac libyuv-svn20140603/configure.ac
 +	    )
 +
 +if test "$with_mjpeg" = "yes" ; then
-+	AC_MSG_WARN([Motion JPEG decoder is enabled])
 +	AC_CHECK_HEADERS(
 +			 [jpeglib.h],
 +			 [],
@@ -52,8 +109,6 @@ diff -Nuri libyuv-svn20140603-orig/configure.ac libyuv-svn20140603/configure.ac
 +		     []
 +		     )
 +
-+else
-+	AC_MSG_WARN([Motion JPEG decoder is disabled])
 +fi
 +
 +
@@ -63,19 +118,18 @@ diff -Nuri libyuv-svn20140603-orig/configure.ac libyuv-svn20140603/configure.ac
 +	    )
 +
 +if test "$with_test" = "yes" ; then
-+	AC_MSG_WARN([Test suite is enabled])
 +	AC_CHECK_HEADERS(
 +			 [gtest/gtest.h],
 +			 [],
 +			 [AC_MSG_ERROR([gtest not found])],
 +			 []
 +			 )
-+	#AC_PATH_PROG([GTEST_CONFIG], gtest-config, [no])
-+	#if test "$GTEST_CONFIG" = "no" ; then
-+	#	AC_MSG_ERROR([gtest-config was not found])
-+	#fi
-+	GTEST_CXXFLAGS="-I/usr/include/gtest"
-+	GTEST_LIBS="-lgtest -lgtest_main"
++	AC_PATH_PROG([GTEST_CONFIG], gtest-config, [no])
++	if test "$GTEST_CONFIG" = "no" ; then
++		AC_MSG_ERROR([gtest-config was not found])
++	fi
++	GTEST_CXXFLAGS=`$GTEST_CONFIG --cxxflags`
++	GTEST_LIBS=`$GTEST_CONFIG --libs`
 +	AC_SUBST([GTEST_CXXFLAGS])
 +	AC_SUBST([GTEST_LIBS])
 +else
@@ -100,6 +154,9 @@ diff -Nuri libyuv-svn20140603-orig/configure.ac libyuv-svn20140603/configure.ac
 +esac
 +
 +has_neon="no"
++has_mips="no"
++has_x86="no"
++
 +case "$target_cpu" in
 +	arm*)
 +		AC_ARG_ENABLE(neon,
@@ -120,12 +177,14 @@ diff -Nuri libyuv-svn20140603-orig/configure.ac libyuv-svn20140603/configure.ac
 +					       [has_neon=yes],
 +					       [has_neon=no]
 +					      )
-+			       AC_MSG_RESULT($has_neon)
 +			      ]
 +			     )
 +		;;
 +	mips*)
-+		has_mips="yes"
++		has_mips=yes
++		;;
++	x86*)
++		has_x86=yes
 +		;;
 +	*)
 +		;;
@@ -142,8 +201,10 @@ diff -Nuri libyuv-svn20140603-orig/configure.ac libyuv-svn20140603/configure.ac
 +
 +AM_CONDITIONAL(WITH_MJPEG, test "$with_mjpeg" = "yes")
 +AM_CONDITIONAL(WITH_TEST, test "$with_test" = "yes")
++
 +AM_CONDITIONAL(ENABLE_NEON, test "$has_neon" = "yes")
-+AM_CONDITIONAL(WITH_CPU_MIPS, test "$has_mips" = "yes")
++AM_CONDITIONAL(ENABLE_MIPS, test "$has_mips" = "yes")
++AM_CONDITIONAL(ENABLE_X86, test "$has_x86" = "yes")
 +
 +AC_OUTPUT
 +
@@ -165,52 +226,12 @@ diff -Nuri libyuv-svn20140603-orig/configure.ac libyuv-svn20140603/configure.ac
 +
 +------------------------------------------------------------------------
 +])
-diff -Nuri libyuv-svn20140603-orig/Makefile.am libyuv-svn20140603/Makefile.am
---- libyuv-svn20140603-orig/Makefile.am	1970-01-01 00:00:00.000000000 +0000
-+++ libyuv-svn20140603/Makefile.am	2014-07-03 07:09:29.246312400 +0000
-@@ -0,0 +1,25 @@
-+SUBDIRS = source
-+
-+EXTRA_DIST = AUTHORS DEPS LICENSE PATENTS README.chromium codereview.settings libyuv.gyp libyuv_test.gyp unit_test/testdata/arm_v7.txt unit_test/testdata/tegra3.txt
-+
-+if WITH_TEST
-+
-+TESTS = unittest
-+
-+noinst_PROGRAMS = $(TESTS)
-+
-+unittest_SOURCES = unit_test/compare_test.cc \
-+		    unit_test/cpu_test.cc \
-+		    unit_test/planar_test.cc \
-+		    unit_test/rotate_test.cc \
-+		    unit_test/rotate_argb_test.cc \
-+		    unit_test/scale_argb_test.cc \
-+		    unit_test/scale_test.cc \
-+		    unit_test/unit_test.cc \
-+		    unit_test/unit_test.h \
-+		    unit_test/version_test.cc
-+
-+unittest_CXXFLAGS = $(AM_CXXFLAGS) @GTEST_CXXFLAGS@ -I$(top_srcdir)/include -I$(top_srcdir)
-+unittest_LDADD = @GTEST_LIBS@ $(top_builddir)/source/libyuv.la
-+
-+endif
-diff -Nuri libyuv-svn20140603-orig/source/libyuv.pc.in libyuv-svn20140603/source/libyuv.pc.in
---- libyuv-svn20140603-orig/source/libyuv.pc.in	1970-01-01 00:00:00.000000000 +0000
-+++ libyuv-svn20140603/source/libyuv.pc.in	2014-07-03 07:09:29.249242089 +0000
-@@ -0,0 +1,9 @@
-+prefix=@prefix@
-+exec_prefix=@exec_prefix@
-+libdir=@libdir@
-+includedir=@includedir@
-+
-+Name: libyuv
-+Description: YUV conversion and scaling functionality library
-+Version: @PACKAGE_VERSION@
-+Libs: -lyuv @LIBJPEG_LIBS@
-diff -Nuri libyuv-svn20140603-orig/source/Makefile.am libyuv-svn20140603/source/Makefile.am
---- libyuv-svn20140603-orig/source/Makefile.am	1970-01-01 00:00:00.000000000 +0000
-+++ libyuv-svn20140603/source/Makefile.am	2014-07-03 07:12:32.652656304 +0000
-@@ -0,0 +1,79 @@
+diff --git a/source/Makefile.am b/source/Makefile.am
+new file mode 100644
+index 0000000..0a10297
+--- /dev/null
++++ b/source/Makefile.am
+@@ -0,0 +1,78 @@
 +lib_LTLIBRARIES = libyuv.la
 +
 +pkgconfigdir = $(libdir)/pkgconfig
@@ -220,24 +241,28 @@ diff -Nuri libyuv-svn20140603-orig/source/Makefile.am libyuv-svn20140603/source/
 +libyuvnobase_includedir = $(includedir)/libyuv
 +
 +if WITH_MJPEG
-+mjpeg_SOURCES = mjpeg_decoder.cc mjpeg_validate.cc convert_jpeg.cc
++mjpeg_SOURCES = mjpeg_decoder.cc
 +mjpeg_HDRS = ../include/libyuv/mjpeg_decoder.h
 +endif
 +
 +if LIBYUV_POSIX
-+posix_SOURCES = row_posix.cc
++posix_SOURCES = compare_posix.cc row_posix.cc
 +endif
 +
 +if LIBYUV_WINDOWS
-+windows_SOURCES = row_win.cc
++windows_SOURCES = compare_win.cc row_win.cc
++endif
++
++if ENABLE_MIPS
++mips_SOURCES = memcpy_mips.S rotate_mips.cc row_mips.cc scale_mips.cc
++endif
++
++if ENABLE_X86
++x86_SOURCES = row_x86.asm x86inc.asm
 +endif
 +
 +if ENABLE_NEON
-+neon_SOURCES = rotate_neon.cc row_neon.cc
-+endif
-+
-+if WITH_CPU_MIPS
-+mips_SOURCES = rotate_mips.cc row_mips.cc scale_mips.cc
++neon_SOURCES = compare_neon.cc rotate_neon.cc row_neon.cc scale_argb_neon.cc scale_neon.cc
 +endif
 +
 +libyuvinclude_HEADERS = ../include/libyuv.h
@@ -246,6 +271,7 @@ diff -Nuri libyuv-svn20140603-orig/source/Makefile.am libyuv-svn20140603/source/
 +			       ../include/libyuv/convert.h \
 +			       ../include/libyuv/convert_argb.h \
 +			       ../include/libyuv/convert_from.h \
++			       ../include/libyuv/convert_from_argb.h \
 +			       ../include/libyuv/cpu_id.h \
 +			       ../include/libyuv/format_conversion.h \
 +			       ../include/libyuv/planar_functions.h \
@@ -256,8 +282,6 @@ diff -Nuri libyuv-svn20140603-orig/source/Makefile.am libyuv-svn20140603/source/
 +			       ../include/libyuv/scale_argb.h \
 +			       ../include/libyuv/version.h \
 +			       ../include/libyuv/video_common.h \
-+			       ../include/libyuv/convert_from_argb.h \
-+			       ../include/libyuv/scale_row.h \
 +			       $(mjpeg_HDRS)
 +
 +libyuv_la_SOURCES = compare.cc \
@@ -266,27 +290,41 @@ diff -Nuri libyuv-svn20140603-orig/source/Makefile.am libyuv-svn20140603/source/
 +		    convert_argb.cc \
 +		    convert_from.cc \
 +		    convert_from_argb.cc \
-+		    convert_to_argb.cc \
-+		    convert_to_i420.cc \
 +		    cpu_id.cc \
 +		    format_conversion.cc \
 +		    planar_functions.cc \
 +		    rotate.cc \
 +		    rotate_argb.cc \
-+		    rotate_priv.h \
-+		    row.h \
 +		    row_any.cc \
 +		    row_common.cc \
 +		    scale.cc \
 +		    scale_argb.cc \
-+		    scale_common.cc \
 +		    video_common.cc \
++		    $(mjpeg_SOURCES) \
 +		    $(posix_SOURCES) \
 +		    $(windows_SOURCES) \
-+		    $(mjpeg_SOURCES) \
++		    $(mips_SOURCES) \
 +		    $(neon_SOURCES) \
-+		    $(mips_SOURCES)
++		    $(x86_SOURCES)
 +
 +libyuv_la_CXXFLAGS = $(AM_LDFLAGS) -I$(top_srcdir)/include -I$(top_srcdir)
 +libyuv_la_LDFLAGS = $(AM_LDFLAGS) -version-info $(LIBYUV_VERSION_INFO)
 +libyuv_la_LIBADD = @LIBJPEG_LIBS@
+diff --git a/source/libyuv.pc.in b/source/libyuv.pc.in
+new file mode 100644
+index 0000000..d921dd5
+--- /dev/null
++++ b/source/libyuv.pc.in
+@@ -0,0 +1,9 @@
++prefix=@prefix@
++exec_prefix=@exec_prefix@
++libdir=@libdir@
++includedir=@includedir@
++
++Name: libyuv
++Description: YUV conversion and scaling functionality library
++Version: @PACKAGE_VERSION@
++Libs: -lyuv
+-- 
+1.8.0.2
+

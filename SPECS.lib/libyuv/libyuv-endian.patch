@@ -1,0 +1,145 @@
+From 0abda1d13ff5907c7bee3c900a2813489c7ec290 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Dan=20Hor=C3=A1k?= <dan@danny.cz>
+Date: Sun, 30 Dec 2012 12:13:34 +0100
+Subject: [PATCH 1/2] move endian support to basic_types.h
+
+---
+ include/libyuv/basic_types.h |   26 ++++++++++++++++++++++++++
+ source/convert.cc            |   19 -------------------
+ source/convert_from.cc       |   19 -------------------
+ 3 files changed, 26 insertions(+), 38 deletions(-)
+
+diff --git a/include/libyuv/basic_types.h b/include/libyuv/basic_types.h
+index 19a24ef..cf6cc33 100644
+--- a/include/libyuv/basic_types.h
++++ b/include/libyuv/basic_types.h
+@@ -96,4 +96,30 @@ typedef signed char int8;
+ #endif  // __GNUC__
+ #endif  // LIBYUV_API
+ 
++// Visual C x86 or GCC little endian.
++#if defined(__x86_64__) || defined(_M_X64) || \
++  defined(__i386__) || defined(_M_IX86) || \
++  defined(__arm__) || defined(_M_ARM) || \
++  (defined(__BYTE_ORDER__) && __BYTE_ORDER__ == __ORDER_LITTLE_ENDIAN__)
++#define LIBYUV_LITTLE_ENDIAN
++#endif
++
++#ifdef LIBYUV_LITTLE_ENDIAN
++#define READWORD(p) (*reinterpret_cast<const uint32*>(p))
++#define WRITEWORD(p, v) *reinterpret_cast<uint32*>(p) = v
++#else
++static inline uint32 READWORD(const uint8* p) {
++  return static_cast<uint32>(p[0]) |
++      (static_cast<uint32>(p[1]) << 8) |
++      (static_cast<uint32>(p[2]) << 16) |
++      (static_cast<uint32>(p[3]) << 24);
++}
++static inline void WRITEWORD(uint8* p, uint32 v) {
++  p[0] = (uint8)(v & 255);
++  p[1] = (uint8)((v >> 8) & 255);
++  p[2] = (uint8)((v >> 16) & 255);
++  p[3] = (uint8)((v >> 24) & 255);
++}
++#endif
++
+ #endif  // INCLUDE_LIBYUV_BASIC_TYPES_H_  NOLINT
+diff --git a/source/convert.cc b/source/convert.cc
+index 866a664..d40f90b 100644
+--- a/source/convert.cc
++++ b/source/convert.cc
+@@ -692,25 +692,6 @@ int UYVYToI420(const uint8* src_uyvy, int src_stride_uyvy,
+   return 0;
+ }
+ 
+-// Visual C x86 or GCC little endian.
+-#if defined(__x86_64__) || defined(_M_X64) || \
+-  defined(__i386__) || defined(_M_IX86) || \
+-  defined(__arm__) || defined(_M_ARM) || \
+-  (defined(__BYTE_ORDER__) && __BYTE_ORDER__ == __ORDER_LITTLE_ENDIAN__)
+-#define LIBYUV_LITTLE_ENDIAN
+-#endif
+-
+-#ifdef LIBYUV_LITTLE_ENDIAN
+-#define READWORD(p) (*reinterpret_cast<const uint32*>(p))
+-#else
+-static inline uint32 READWORD(const uint8* p) {
+-  return static_cast<uint32>(p[0]) |
+-      (static_cast<uint32>(p[1]) << 8) |
+-      (static_cast<uint32>(p[2]) << 16) |
+-      (static_cast<uint32>(p[3]) << 24);
+-}
+-#endif
+-
+ // Must be multiple of 6 pixels. Will over convert to handle remainder.
+ // https://developer.apple.com/quicktime/icefloe/dispatch019.html#v210
+ static void V210ToUYVYRow_C(const uint8* src_v210, uint8* dst_uyvy, int width) {
+diff --git a/source/convert_from.cc b/source/convert_from.cc
+index d89e606..fba0513 100644
+--- a/source/convert_from.cc
++++ b/source/convert_from.cc
+@@ -210,25 +210,6 @@ int I400Copy(const uint8* src_y, int src_stride_y,
+   return 0;
+ }
+ 
+-// Visual C x86 or GCC little endian.
+-#if defined(__x86_64__) || defined(_M_X64) || \
+-  defined(__i386__) || defined(_M_IX86) || \
+-  defined(__arm__) || defined(_M_ARM) || \
+-  (defined(__BYTE_ORDER__) && __BYTE_ORDER__ == __ORDER_LITTLE_ENDIAN__)
+-#define LIBYUV_LITTLE_ENDIAN
+-#endif
+-
+-#ifdef LIBYUV_LITTLE_ENDIAN
+-#define WRITEWORD(p, v) *reinterpret_cast<uint32*>(p) = v
+-#else
+-static inline void WRITEWORD(uint8* p, uint32 v) {
+-  p[0] = (uint8)(v & 255);
+-  p[1] = (uint8)((v >> 8) & 255);
+-  p[2] = (uint8)((v >> 16) & 255);
+-  p[3] = (uint8)((v >> 24) & 255);
+-}
+-#endif
+-
+ #define EIGHTTOTEN(x) (x << 2 | x >> 6)
+ static void UYVYToV210Row_C(const uint8* src_uyvy, uint8* dst_v210, int width) {
+   for (int x = 0; x < width; x += 6) {
+-- 
+1.7.7.6
+
+
+From cdb9bf600c4cd9109ae64da21dbb890dcfb744a5 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Dan=20Hor=C3=A1k?= <dan@danny.cz>
+Date: Sun, 30 Dec 2012 12:23:50 +0100
+Subject: [PATCH 2/2] use WRITEWORD in ARGBToRGB565Row_C
+
+---
+ source/row_common.cc |    5 ++---
+ 1 files changed, 2 insertions(+), 3 deletions(-)
+
+diff --git a/source/row_common.cc b/source/row_common.cc
+index fb769aa..0a30281 100644
+--- a/source/row_common.cc
++++ b/source/row_common.cc
+@@ -182,7 +182,6 @@ void ARGBToRAWRow_C(const uint8* src_argb, uint8* dst_rgb, int width) {
+   }
+ }
+ 
+-// TODO(fbarchard): support big endian CPU
+ void ARGBToRGB565Row_C(const uint8* src_argb, uint8* dst_rgb, int width) {
+   for (int x = 0; x < width - 1; x += 2) {
+     uint8 b0 = src_argb[0] >> 3;
+@@ -191,8 +190,8 @@ void ARGBToRGB565Row_C(const uint8* src_argb, uint8* dst_rgb, int width) {
+     uint8 b1 = src_argb[4] >> 3;
+     uint8 g1 = src_argb[5] >> 2;
+     uint8 r1 = src_argb[6] >> 3;
+-    *reinterpret_cast<uint32*>(dst_rgb) = b0 | (g0 << 5) | (r0 << 11) |
+-        (b1 << 16) | (g1 << 21) | (r1 << 27);
++    WRITEWORD(dst_rgb, b0 | (g0 << 5) | (r0 << 11) |
++        (b1 << 16) | (g1 << 21) | (r1 << 27));
+     dst_rgb += 4;
+     src_argb += 8;
+   }
+-- 
+1.7.7.6
+
