@@ -1,87 +1,70 @@
 Name:           xarchiver
-Version:        0.5.2
-Release:        14%{?dist}
+Version:        0.5.4
+Release:        2%{?dist}
 Summary:        Archive manager for Xfce
 
 Group:          Applications/Archiving
 License:        GPLv2+
 URL:            http://xarchiver.xfce.org/
 Source0:        http://downloads.sourceforge.net/xarchiver/xarchiver-%{version}.tar.bz2
-Patch0:         xarchiver-0.5.2-no-donators-menu.patch
-Patch1:         xarchiver-0.5.2-default-archive-format.patch
-# add_xz_support.patch by Robby Workman taken from
-# http://slackbuilds.org/slackbuilds/13.1/system/xarchiver/xarchiver-0.5.2-add_xz_support.patch
-# sent upstream through
-# https://sourceforge.net/tracker/?func=detail&aid=2847624&group_id=140153&atid=745600
-Patch2:         xarchiver-0.5.2-add_xz_support.patch
-# rpm2cpio.patch by Daniel Hokka Zakrisson
-# taken from https://bugzilla.redhat.com/show_bug.cgi?id=577480
-# sent upstream through
-# https://sourceforge.net/tracker/?func=detail&aid=3310768&group_id=140153&atid=745602
-Patch3:         xarchiver-0.5.2-rpm2cpio.patch
-# segfault-open-with.patch by Bastiaan Jacques
-# taken from https://bugzilla.redhat.com/show_bug.cgi?id=690012
-# sent upstream through
-# https://sourceforge.net/tracker/?func=detail&aid=3310778&group_id=140153&atid=745600
-Patch4:         xarchiver-0.5.2-segfault-open-with.patch
-# fix-7z-support.patch by taken from
-# https://sourceforge.net/tracker/?func=detail&aid=3137589&group_id=140153&atid=745602
-Patch5:         xarchiver-0.5.2-fix_7z_support.patch
-# rhbz#784075 - extraction fails when the Drag'n'Drop target path contains spaces
-Patch6:         xarchiver-0.5.2-drag-n-drop_escaped_path.patch
 
-BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+Patch0:         xarchiver-0.5.4-version-fix.patch
 
 BuildRequires:  gtk2-devel, libxml2-devel, gettext, desktop-file-utils
 BuildRequires:  xfce4-dev-tools >= 4.3.90.2
+BuildRequires:  autoconf >= 2.69
+BuildRequires:  libtool
+BuildRequires:  automake
+BuildRequires:  intltool
+
 Requires:       arj, binutils, bzip2, cpio, gzip, xdg-utils, tar, unzip, zip
 
 %description
-Xarchiver is a lightweight GTK2 only frontend for manipulating 7z, arj, bzip2, 
-gzip, iso, rar, lha, tar, zip, RPM and deb files. It allows you to create 
-archives and add, extract, and delete files from them. Password protected 
+Xarchiver is a lightweight GTK2 only frontend for manipulating 7z, arj, bzip2,
+gzip, iso, rar, lha, tar, zip, RPM and deb files. It allows you to create
+archives and add, extract, and delete files from them. Password protected
 archives in the arj, 7z, rar, and zip formats are supported.
 
 
 %prep
 %setup -q
+%patch0 -p1
 # fix spurious executable permissions of some debug files
 chmod -x src/mime.*
-%patch0 -p2 -b .no-donators-menu
-%patch1 -p1 -b .default-archive-format
-%patch2 -p1 -b .add_xz_support
-%patch3 -p1 -b .rpm2cpio
-%patch4 -p1 -b .segfault-open-with
-%patch5 -p1 -b .fix_7z_support
-%patch6 -p1 -b .dnd_escaped_path
+
 
 %build
+autoreconf -vif
 %configure
 make %{?_smp_mflags}
 
 
 %install
-rm -rf $RPM_BUILD_ROOT
-make install DESTDIR=$RPM_BUILD_ROOT
+make install DESTDIR=%{buildroot} INSTALL="install -p"
 
-# We need to install xarchiver.tap as fedora-xarchiver.tap, because the name 
-# has to match the basename of the desktop-file in %{_datadir}/applications.
-rm $RPM_BUILD_ROOT%{_libexecdir}/thunar-archive-plugin/xarchiver.tap
+%if (0%{?fedora} && 0%{?fedora} < 19) || (0%{?rhel} && 0%{?rhel} < 7)
+# On Fedora < 19 we need to install file-roller.tap as gnome-file-roller.tap,
+# because the name # has to match the basename of the desktop-file in
+# %%{_datadir}/applications.
+rm %{buildroot}%{_libexecdir}/thunar-archive-plugin/xarchiver.tap
 install -p -m 755 xarchiver.tap \
-   $RPM_BUILD_ROOT%{_libexecdir}/thunar-archive-plugin/fedora-xarchiver.tap
+   %{buildroot}%{_libexecdir}/thunar-archive-plugin/fedora-xarchiver.tap
+%endif
 
 %find_lang %{name}
-desktop-file-install --vendor fedora                            \
-        --dir ${RPM_BUILD_ROOT}%{_datadir}/applications         \
-        --add-category="Compression"                            \
-        --add-mime-type="application/x-xz"                      \
-        --add-mime-type="application/x-xz-compressed-tar"       \
-        --remove-mime-type="multipart/x-zip"                    \
-        --delete-original                                       \
-        ${RPM_BUILD_ROOT}%{_datadir}/applications/%{name}.desktop
+desktop-file-install --delete-original \
+    --dir %{buildroot}%{_datadir}/applications \
+    --add-category="Compression" \
+    --add-mime-type="application/x-xz" \
+    --add-mime-type="application/x-xz-compressed-tar" \
+    --remove-mime-type="multipart/x-zip" \
+    %if (0%{?fedora} && 0%{?fedora} < 19) || (0%{?rhel} && 0%{?rhel} < 7)
+    --vendor fedora \
+    %endif
+    %{buildroot}%{_datadir}/applications/%{name}.desktop
 
 # remove duplicate docs
-rm $RPM_BUILD_ROOT%{_docdir}/%{name}/{AUTHORS,COPYING,ChangeLog,NEWS,README,TODO}
+rm %{buildroot}%{_docdir}/%{name}/{AUTHORS,COPYING,ChangeLog,NEWS,README,TODO}
 
 
 %post
@@ -104,27 +87,53 @@ update-desktop-database &> /dev/null || :
 gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 
 
-%clean
-rm -rf $RPM_BUILD_ROOT
-
-
 %files -f %{name}.lang
-%defattr(-,root,root,-)
 %doc AUTHORS COPYING ChangeLog NEWS README TODO
 %doc %{_docdir}/%{name}/
 %{_bindir}/%{name}
-%{_datadir}/applications/fedora-%{name}.desktop
-%{_datadir}/icons/hicolor/*/apps/%{name}.png
-%{_datadir}/icons/hicolor/scalable/apps/%{name}.svg
-%dir %{_datadir}/pixmaps/%{name}/
-%{_datadir}/pixmaps/%{name}/%{name}*.png
-%dir %{_libexecdir}/thunar-archive-plugin/
-%{_libexecdir}/thunar-archive-plugin/fedora-xarchiver.tap
+%{_datadir}/applications/*%{name}.desktop
+%{_datadir}/icons/hicolor/*/*/*
+%{_datadir}/pixmaps/%{name}/
+%{_libexecdir}/thunar-archive-plugin/
 
 
 %changelog
-* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 0.5.2-14
-- 为 Magic 3.0 重建
+* Fri Jun 19 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.5.4-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
+
+* Tue Mar 31 2015 Jaromir Capik <jcapik@redhat.com> - 0.5.4-1
+- Update to 0.5.4 (#1147466)
+
+* Sat Feb 21 2015 Till Maas <opensource@till.name> - 0.5.2-22
+- Rebuilt for Fedora 23 Change
+  https://fedoraproject.org/wiki/Changes/Harden_all_packages_with_position-independent_code
+
+* Mon Aug 18 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.5.2-21
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
+
+* Thu Jun 19 2014 Yaakov Selkowitz <yselkowi@redhat.com> - 0.5.2-20
+- Fix FTBFS with -Werror=format-security (#1037390, #1107209)
+
+* Sun Jun 08 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.5.2-19
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Sun Aug 04 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.5.2-18
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Fri May 10 2013 Christoph Wickert <cwickert@fedoraproject.org> - 0.5.2-17
+- Fix thunar-archive-plugin integration (#961626)
+- Conditionalize vendor tag
+
+* Thu Apr 04 2013 Jaromir Capik <jcapik@redhat.com> - 0.5.2-16
+- aarch64 support (#926742)
+- fixing bogus date in the changelog
+
+* Sun Feb 10 2013 Parag Nemade <paragn AT fedoraproject DOT org> - 0.5.2-15
+- Remove vendor tag from desktop file as per https://fedorahosted.org/fesco/ticket/1077
+- Cleanup spec as per recently changed packaging guidelines
+
+* Sun Jul 22 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.5.2-14
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 
 * Thu Jan 26 2012 Jaromir Capik <jcapik@redhat.com> - 0.5.2-13
 - Fix extraction failures when the Drag'n'Drop target path contains spaces (#784075)
@@ -222,7 +231,7 @@ rm -rf $RPM_BUILD_ROOT
 - Require binutils, cpio and htmlview.
 - Add mimetypes application/x-ar, application/x-cd-image and application/x-deb.
 
-* Tue Nov 27 2006 Christoph Wickert <cwickert@fedoraproject.org> - 0.4.4-1
+* Mon Nov 27 2006 Christoph Wickert <cwickert@fedoraproject.org> - 0.4.4-1
 - Update to 0.4.4.
 
 * Sat Nov 25 2006 Christoph Wickert <cwickert@fedoraproject.org> - 0.4.2-0.3.rc2

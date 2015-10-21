@@ -1,0 +1,12 @@
+diff -Naur xarchiver-0.5.4.orig/configure.in xarchiver-0.5.4/configure.in
+--- xarchiver-0.5.4.orig/configure.in	2014-02-09 16:29:23.000000000 +0100
++++ xarchiver-0.5.4/configure.in	2015-03-31 21:35:17.450044488 +0200
+@@ -11,7 +11,7 @@
+ dnl ***************************
+ m4_define([xarchiver_version_major], [0])
+ m4_define([xarchiver_version_minor], [5])
+-m4_define([xarchiver_version_micro], [3])
++m4_define([xarchiver_version_micro], [4])
+ m4_define([xarchiver_version_nano], []) # Leave empty for no nano version
+ m4_define([xarchiver_version_build], [r28705])
+ m4_define([xarchiver_version_tag], []) # Leave empty for releases
