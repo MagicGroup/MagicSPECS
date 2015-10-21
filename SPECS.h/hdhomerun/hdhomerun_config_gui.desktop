@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=HDHomeRun Config
+GenericName=HDHomeRun Config
+Comment=Configuration GUI for SiliconDust HDHomeRun network-attached TV tuners
+Exec=hdhomerun_config_gui
+Icon=hdhr
+Terminal=false
+Type=Application
+Categories=Network;Settings;Utility;AudioVideo
