@@ -1,9 +1,10 @@
-%define pkgdir  %{_datadir}/xemacs
-%define xemver  v=$(rpm -q --qf=%%{VERSION} xemacs-nox) ; case $v in 2*) echo $v ;; *) echo 0 ;; esac
+%global hgver   3720091d7106
+%global pkgdir  %{_datadir}/xemacs
+%global xemver  v=$(rpm -q --qf=%%{VERSION} xemacs-nox) ; case $v in 2*) echo $v ;; *) echo 0 ;; esac
 
 Name:           xemacs-packages-base
-Version:        20130408
-Release:        3%{?dist}
+Version:        20150919
+Release:        1%{?dist}
 Summary:        Base lisp packages for XEmacs
 
 Group:          Applications/Editors
@@ -13,8 +14,6 @@ URL:            http://www.xemacs.org/Documentation/packageGuide.html
 # Tarball created with Source99
 Source0:        %{name}-%{version}.tar.xz
 Source99:       %{name}-checkout.sh
-# Fix the build with texinfo 5
-Patch0:         %{name}-texi.patch
 
 BuildArch:      noarch
 BuildRequires:  xemacs-nox
@@ -45,17 +44,22 @@ developing or debugging the packages.
 
 %prep
 %setup -q
-%patch0
-[ ! "%(%{xemver})" '<' "21.5" ] && x215="XEMACS_21_5=t" || x215=
 cat << EOF > make.sh
 #!/bin/sh
 make \\
     XEMACS_BINARY=%{_bindir}/xemacs-nox \\
     XEMACS_INSTALLED_PACKAGES_ROOT=\$RPM_BUILD_ROOT%{pkgdir} \\
-    $x215 \\
+    XEMACS_21_5=t \\
     "\$@"
 EOF
 chmod +x make.sh
+
+# Get reproducible builds by setting the compiling username
+mkdir ~/.xemacs
+echo >> ~/.xemacs/custom.el << EOF
+(custom-set-variables
+ '(user-mail-address "mockbuild@fedoraproject.org"))
+EOF
 
 
 %build
@@ -76,8 +80,7 @@ mkdir -p $RPM_BUILD_ROOT%{pkgdir}
 
 # separate files
 rm -f *.files
-echo "%%defattr(-,root,root,-)" > base-files
-echo "%%defattr(-,root,root,-)" > el-files
+touch base-files el-files
 
 find $RPM_BUILD_ROOT%{pkgdir}/* \
   \( -type f -name '*.el.orig' -exec rm '{}' ';' \) -o \
@@ -102,6 +105,24 @@ sed -i -e 's/^\(.*\(\.ja\|-ja\.texi\)\)$/%lang(ja) \1/' base-files
 
 
 %changelog
+* Wed Oct  7 2015 Jerry James <loganjerry@gmail.com> - 20150919-1
+- Update to latest package releases
+
+* Fri Jun 19 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 20150413-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
+
+* Tue Apr 21 2015 Jerry James <loganjerry@gmail.com> - 20150413-1
+- Update to latest package releases
+- Set the build username for reproducible builds
+
+* Thu Aug  7 2014 Jerry James <loganjerry@gmail.com> - 20140715-1
+- Update to latest package releases
+
+* Mon Jul  7 2014 Jerry James <loganjerry@gmail.com> - 20140705-1
+- Update to latest package releases
+- Drop upstreamed -texi patch
+- Update checkout script for mercurial
+
 * Sun Jun 08 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 20130408-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

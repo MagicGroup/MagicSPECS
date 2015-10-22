@@ -1,7 +1,7 @@
-#!/bin/bash
+#!/bin/bash -e
 
-if [ -z "$1" ] ; then
-    echo "Usage: $0 date, eg. 2006-05-10"
+if [ "$#" != 2 ]; then
+    echo "Usage: $0 date revision, eg. 2014-06-30 832449bdc11b"
     exit 1
 fi
 
@@ -13,34 +13,37 @@ cleanup() {
 }
 
 unset CDPATH
-pwd=$(pwd)
-date=$1 
-tag=sumo-$date
+pwd=$PWD
+date=$1
+tag=$2
 tarball=xemacs-packages-base-${date//-/}
-cvs="cvs -z3 -d:pserver:cvs@cvs.alioth.debian.org:/cvsroot/xemacs"
 
-# For the checkout to work, first "cvs login" with the above CVSROOT (pass:cvs)
+pushd $tmp > /dev/null
+hg clone https://bitbucket.org/xemacs/xemacs-packages
+cd xemacs-packages
+cp -p Local.rules.template Local.rules
 
-cd $tmp
+# Save the only xemacs-packages dirs we want to build
+mkdir save
+mv xemacs-packages/{Makefile,apel,dired,efs,fsf-compat,xemacs-base} save
+rm -fr xemacs-packages
+mv save xemacs-packages
 
-$cvs export -r $tag package-ctlfile
-cp packages/Local.rules.template packages/Local.rules
-$cvs export -r $tag standard-Makefile mule-Makefile
-pushd packages/xemacs-packages >/dev/null
+# Save the only mule-packages dirs we want to build
+mkdir save
+mv mule-packages/{Makefile,mule-base} save
+rm -fr mule-packages
+mv save mule-packages
 
-# the meat of xemacs-packages-base:
-$cvs export -r $tag efs xemacs-base
-cd ../mule-packages
-$cvs export -r $tag mule-base
+# Break an unneeded build dependency
+sed -i 's/ prog-modes//' xemacs-packages/dired/Makefile
 
-# build dependencies:
-cd ../xemacs-packages
-$cvs export -r $tag apel dired fsf-compat
-sed -i -e 's/ prog-modes//' dired/Makefile
+# Remove the mercurial files
+find . -name .hg\* | xargs rm -fr
 
-popd >/dev/null
-mv packages $tarball
+# Make the tarball
+cd ..
+mv xemacs-packages $tarball
 tar cf $pwd/$tarball.tar $tarball
-xz -f $pwd/$tarball.tar
-
-cd $pwd
+xz -9f $pwd/$tarball.tar
+popd > /dev/null
