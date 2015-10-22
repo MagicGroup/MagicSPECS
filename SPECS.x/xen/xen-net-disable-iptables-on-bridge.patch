@@ -1,12 +1,10 @@
 --- xen-4.1.0-orig/tools/hotplug/Linux/vif-bridge	2008-08-22 10:49:07.000000000 +0100
 +++ xen-4.1.0-new/tools/hotplug/Linux/vif-bridge	2008-08-29 11:29:38.000000000 +0100
-@@ -96,10 +96,6 @@ case "$command" in
+@@ -96,8 +96,6 @@ case "$command" in
          ;;
  esac
  
--if [ "$type_if" = vif ]; then
--    handle_iptable
--fi
+-handle_iptable
 -
  call_hooks vif post
  

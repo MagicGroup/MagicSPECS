@@ -1,0 +1,135 @@
+diff -uN xen-4.5.0/tools/hotplug/Linux/systemd.orig/Makefile xen-4.5.0/tools/hotplug/Linux/systemd/Makefile
+--- xen-4.5.0/tools/hotplug/Linux/systemd.orig/Makefile	2015-01-12 16:53:24.000000000 +0000
++++ xen-4.5.0/tools/hotplug/Linux/systemd/Makefile	2015-01-25 22:23:26.000000000 +0000
+@@ -14,7 +14,8 @@
+ XEN_SYSTEMD_SERVICE += xen-qemu-dom0-disk-backend.service
+ XEN_SYSTEMD_SERVICE += xendomains.service
+ XEN_SYSTEMD_SERVICE += xen-watchdog.service
+-XEN_SYSTEMD_SERVICE += xen-init-dom0.service
++#XEN_SYSTEMD_SERVICE += xen-init-dom0.service
++XEN_SYSTEMD_SERVICE += oxenstored.service
+ 
+ ALL_XEN_SYSTEMD =	$(XEN_SYSTEMD_MODULES)  \
+ 			$(XEN_SYSTEMD_MOUNT)	\
+diff -uN xen-4.5.0/tools/hotplug/Linux/systemd.orig/oxenstored.service.in xen-4.5.0/tools/hotplug/Linux/systemd/oxenstored.service.in
+--- xen-4.5.0/tools/hotplug/Linux/systemd.orig/oxenstored.service.in	1970-01-01 01:00:00.000000000 +0100
++++ xen-4.5.0/tools/hotplug/Linux/systemd/oxenstored.service.in	2015-01-25 22:37:15.000000000 +0000
+@@ -0,0 +1,26 @@
++[Unit]
++Description=The ocaml version of Xen xenstore
++Requires=xenstored_ro.socket xenstored.socket proc-xen.mount var-lib-xenstored.mount
++After=proc-xen.mount var-lib-xenstored.mount
++Before=libvirtd.service libvirt-guests.service
++Conflicts=xenstored.service
++RefuseManualStop=true
++ConditionPathExists=/proc/xen/capabilities
++
++[Service]
++Type=notify
++KillMode=none
++Sockets=xenstored.socket xenstored_ro.socket
++Environment=XENSTORED_ARGS=
++EnvironmentFile=-@CONFIG_DIR@/@CONFIG_LEAF_DIR@/xencommons
++ExecStartPre=/bin/grep -q control_d /proc/xen/capabilities
++ExecStartPre=-/bin/rm -f @XEN_LIB_STORED@/tdb*
++ExecStartPre=/bin/mkdir -p @XEN_RUN_DIR@
++ExecStart=@sbindir@/oxenstored --no-fork $XENSTORED_ARGS
++ExecStartPost=-@LIBEXEC_BIN@/xen-init-dom0
++
++[Install]
++WantedBy=multi-user.target
++Also=xenstored_ro.socket xenstored.socket
++Also=proc-xen.mount
++Also=var-lib-xenstored.mount
+diff -uN xen-4.5.0/tools/hotplug/Linux/systemd.orig/var-lib-xenstored.mount.in xen-4.5.0/tools/hotplug/Linux/systemd/var-lib-xenstored.mount.in
+--- xen-4.5.0/tools/hotplug/Linux/systemd.orig/var-lib-xenstored.mount.in	2015-01-12 16:53:24.000000000 +0000
++++ xen-4.5.0/tools/hotplug/Linux/systemd/var-lib-xenstored.mount.in	2015-01-25 22:28:59.000000000 +0000
+@@ -9,4 +9,4 @@
+ What=xenstore
+ Where=@XEN_LIB_STORED@
+ Type=tmpfs
+-Options=mode=755
++Options=mode=755,context="system_u:object_r:xenstored_var_lib_t:s0"
+diff -uN xen-4.5.0/tools/hotplug/Linux/systemd.orig/xenconsoled.service.in xen-4.5.0/tools/hotplug/Linux/systemd/xenconsoled.service.in
+--- xen-4.5.0/tools/hotplug/Linux/systemd.orig/xenconsoled.service.in	2015-01-12 16:53:24.000000000 +0000
++++ xen-4.5.0/tools/hotplug/Linux/systemd/xenconsoled.service.in	2015-01-25 22:30:26.000000000 +0000
+@@ -1,7 +1,7 @@
+ [Unit]
+ Description=Xenconsoled - handles logging from guest consoles and hypervisor
+-Requires=proc-xen.mount xenstored.service
+-After=proc-xen.mount xenstored.service
++Requires=proc-xen.mount
++After=proc-xen.mount xenstored.service oxenstored.service
+ ConditionPathExists=/proc/xen/capabilities
+ 
+ [Service]
+diff -uN xen-4.5.0/tools/hotplug/Linux/systemd.orig/xendomains.service.in xen-4.5.0/tools/hotplug/Linux/systemd/xendomains.service.in
+--- xen-4.5.0/tools/hotplug/Linux/systemd.orig/xendomains.service.in	2015-01-12 16:53:24.000000000 +0000
++++ xen-4.5.0/tools/hotplug/Linux/systemd/xendomains.service.in	2015-01-25 22:31:55.000000000 +0000
+@@ -1,7 +1,7 @@
+ [Unit]
+ Description=Xendomains - start and stop guests on boot and shutdown
+-Requires=proc-xen.mount xenstored.service
+-After=proc-xen.mount xenstored.service xenconsoled.service xen-init-dom0.service
++Requires=proc-xen.mount
++After=proc-xen.mount xenstored.service xenconsoled.service oxenstored.service
+ After=network-online.target
+ After=remote-fs.target
+ ConditionPathExists=/proc/xen/capabilities
+diff -uN xen-4.5.0/tools/hotplug/Linux/systemd.orig/xen-qemu-dom0-disk-backend.service.in xen-4.5.0/tools/hotplug/Linux/systemd/xen-qemu-dom0-disk-backend.service.in
+--- xen-4.5.0/tools/hotplug/Linux/systemd.orig/xen-qemu-dom0-disk-backend.service.in	2015-01-12 16:53:24.000000000 +0000
++++ xen-4.5.0/tools/hotplug/Linux/systemd/xen-qemu-dom0-disk-backend.service.in	2015-01-25 22:34:36.000000000 +0000
+@@ -1,7 +1,7 @@
+ [Unit]
+ Description=qemu for xen dom0 disk backend
+-Requires=proc-xen.mount xenstored.service
+-After=proc-xen.mount xenstored.service xenconsoled.service
++Requires=proc-xen.mount
++After=proc-xen.mount xenstored.service xenconsoled.service oxenstored.service
+ Before=xendomains.service libvirtd.service libvirt-guests.service
+ RefuseManualStop=true
+ ConditionPathExists=/proc/xen/capabilities
+diff -uN xen-4.5.0/tools/hotplug/Linux/systemd.orig/xenstored.service.in xen-4.5.0/tools/hotplug/Linux/systemd/xenstored.service.in
+--- xen-4.5.0/tools/hotplug/Linux/systemd.orig/xenstored.service.in	2015-01-12 16:53:24.000000000 +0000
++++ xen-4.5.0/tools/hotplug/Linux/systemd/xenstored.service.in	2015-01-25 22:37:27.000000000 +0000
+@@ -8,13 +8,14 @@
+ [Service]
+ Type=notify
+ KillMode=none
++Sockets=xenstored.socket xenstored_ro.socket
+ Environment=XENSTORED_ARGS=
+-Environment=XENSTORED=@XENSTORED@
+ EnvironmentFile=-@CONFIG_DIR@/@CONFIG_LEAF_DIR@/xencommons
+ ExecStartPre=/bin/grep -q control_d /proc/xen/capabilities
+ ExecStartPre=-/bin/rm -f @XEN_LIB_STORED@/tdb*
+ ExecStartPre=/bin/mkdir -p @XEN_RUN_DIR@
+-ExecStart=/bin/sh -c "exec $XENSTORED --no-fork $XENSTORED_ARGS"
++ExecStart=@sbindir@/xenstored --no-fork $XENSTORED_ARGS
++ExecStartPost=-@LIBEXEC_BIN@/xen-init-dom0
+ 
+ [Install]
+ WantedBy=multi-user.target
+--- xen-4.6.0/tools/configure.ac.orig	2015-02-15 16:47:22.000000000 +0000
++++ xen-4.6.0/tools/configure.ac	2015-03-01 16:18:30.493647587 +0000
+@@ -382,9 +382,9 @@
+ 
+ AS_IF([test "x$systemd" = "xy"], [
+     AC_CONFIG_FILES([
++    hotplug/Linux/systemd/oxenstored.service
+     hotplug/Linux/systemd/proc-xen.mount
+     hotplug/Linux/systemd/var-lib-xenstored.mount
+-    hotplug/Linux/systemd/xen-init-dom0.service
+     hotplug/Linux/systemd/xen-qemu-dom0-disk-backend.service
+     hotplug/Linux/systemd/xen-watchdog.service
+     hotplug/Linux/systemd/xenconsoled.service
+--- xen-4.6.0/tools/configure.orig	2015-02-15 16:47:22.000000000 +0000
++++ xen-4.6.0/tools/configure	2015-03-01 16:20:10.648285840 +0000
+@@ -8995,7 +8995,7 @@
+ 
+ if test "x$systemd" = "xy"; then :
+ 
+-    ac_config_files="$ac_config_files hotplug/Linux/systemd/proc-xen.mount hotplug/Linux/systemd/var-lib-xenstored.mount hotplug/Linux/systemd/xen-init-dom0.service hotplug/Linux/systemd/xen-qemu-dom0-disk-backend.service hotplug/Linux/systemd/xen-watchdog.service hotplug/Linux/systemd/xenconsoled.service hotplug/Linux/systemd/xendomains.service hotplug/Linux/systemd/xenstored.service hotplug/Linux/systemd/xenstored.socket hotplug/Linux/systemd/xenstored_ro.socket"
++    ac_config_files="$ac_config_files hotplug/Linux/systemd/oxenstored.service hotplug/Linux/systemd/proc-xen.mount hotplug/Linux/systemd/var-lib-xenstored.mount hotplug/Linux/systemd/xen-qemu-dom0-disk-backend.service hotplug/Linux/systemd/xen-watchdog.service hotplug/Linux/systemd/xenconsoled.service hotplug/Linux/systemd/xendomains.service hotplug/Linux/systemd/xenstored.service hotplug/Linux/systemd/xenstored.socket hotplug/Linux/systemd/xenstored_ro.socket"
+ 
+ 
+ fi

@@ -1,0 +1,11 @@
+--- xen-4.5.1/tools/qemu-xen-traditional/vnc.c.orig	2015-07-12 21:55:32.875504811 +0100
++++ xen-4.5.1/tools/qemu-xen-traditional/vnc.c	2015-07-12 22:03:03.860005391 +0100
+@@ -2140,7 +2140,7 @@
+ 
+ static int vnc_set_gnutls_priority(gnutls_session_t s, int x509)
+ {
+-    const char *priority = x509 ? "NORMAL" : "NORMAL:+ANON-DH";
++    const char *priority = x509 ? "@SYSTEM" : "@SYSTEM:+ANON-DH";
+     int rc;
+ 
+     rc = gnutls_priority_set_direct(s, priority, NULL);

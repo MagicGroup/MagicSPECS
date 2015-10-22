@@ -1,7 +1,7 @@
 --- xen-4.3.0/xen/Makefile.orig	2013-07-19 21:34:24.226148328 +0100
 +++ xen-4.3.0/xen/Makefile	2013-07-19 21:46:54.603767317 +0100
 @@ -15,6 +15,9 @@
- EFI_MOUNTPOINT ?= /boot/efi
+ EFI_MOUNTPOINT ?= $(BOOT_DIR)/efi
  EFI_VENDOR=fedora
  LD_EFI ?= $(LD)
 +ifeq ($(XEN_TARGET_ARCH),x86_32)
@@ -23,8 +23,8 @@
  
  .PHONY: _build
 @@ -99,9 +102,9 @@
- 	$(MAKE) -f $(BASEDIR)/Rules.mk include/xen/compile.h
- 	[ -e include/asm ] || ln -sf asm-$(TARGET_ARCH) include/asm
+ 		do ln -nsf ../../../common/efi/$$f arch/$(TARGET_ARCH)/efi/; done;\
+ 		true
  	$(MAKE) -f $(BASEDIR)/Rules.mk -C include
 -	$(MAKE) -f $(BASEDIR)/Rules.mk -C arch/$(TARGET_ARCH) asm-offsets.s
 +	$(MAKE) CC=$(CCX) -f $(BASEDIR)/Rules.mk -C arch/$(TARGET_ARCH) asm-offsets.s
