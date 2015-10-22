@@ -14,7 +14,7 @@
  fi
 --- ./configure.orig	2012-08-02 12:39:01.000000000 -0600
 +++ ./configure	2012-08-06 20:28:23.841705350 -0600
-@@ -15007,7 +15007,10 @@ if test "$xe_gnu_ld" = yes -a "$ld_shlib
+@@ -15036,7 +15036,10 @@ if test "$xe_gnu_ld" = yes -a "$ld_shlib
      ;;
  
    *)

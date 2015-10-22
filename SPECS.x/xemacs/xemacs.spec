@@ -1,3 +1,6 @@
+# The garbage collector does not work with PIE
+%undefine _hardened_build
+
 # TODO: review desktop entry associations (does text/* work?)
 # TODO: zero-length /usr/share/xemacs-21.5-b26/lisp/dump-paths.el
 # TODO: non-ASCII in buffer tabs
@@ -16,11 +19,11 @@
 %bcond_without  modules
 %endif
 
-%global snap    20140605hgacf1c26e3019
+%global snap    20150929hga76c9268bb72
 
 Name:           xemacs
 Version:        21.5.34
-Release:        8%{?snap:.%{snap}}%{?dist}
+Release:        12%{?snap:.%{snap}}%{?dist}
 Summary:        Different version of Emacs
 
 %global majver %(cut -d. -f1-2 <<<%{version})
@@ -57,10 +60,13 @@ Patch3:         %{name}-21.5.27-no-expdyn-ia64-106744.patch
 Patch4:         %{name}-21.5.28-courier-default.patch
 # Fedora-specific.  Recognize the Fedora X server.
 Patch5:         %{name}-21.5.29-x-server.patch
+# Submitted upstream by Henry Thompson: fix playing sounds through ALSA
+Patch6:         %{name}-21.5.34-alsaplay.patch
 
 BuildRequires:  texinfo
 BuildRequires:  ncurses-devel
 BuildRequires:  gpm-devel
+BuildRequires:  nss-devel
 BuildRequires:  pam-devel
 BuildRequires:  zlib-devel
 BuildRequires:  libjpeg-devel
@@ -236,7 +242,6 @@ add functionality to XEmacs.
 %prep
 %setup -q -n %{name}-%{?snap:beta}%{!?snap:%{version}}
 find . -type f -name "*.elc" -o -name "*.info*" | xargs rm -f
-rm -f configure.in
 sed -i -e /tetris/d lisp/menubar-items.el
 %patch0
 %patch1
@@ -244,16 +249,25 @@ sed -i -e /tetris/d lisp/menubar-items.el
 %patch3
 %patch4
 %patch5
+%patch6
 
 sed -e 's/"lib"/"%{_lib}"/' lisp/setup-paths.el > lisp/setup-paths.el.new
 touch -r lisp/setup-paths.el lisp/setup-paths.el.new
 mv -f lisp/setup-paths.el.new lisp/setup-paths.el
 
-for f in man/lispref/mule.texi man/xemacs-faq.texi CHANGES-beta ; do
+for f in man/internals/internals.texi man/lispref/mule.texi man/xemacs-faq.texi CHANGES-beta
+do
     iconv -f iso-8859-1 -t utf-8 -o $f.utf8 $f
     touch -r $f $f.utf8
     mv -f $f.utf8 $f
 done
+
+# Get reproducible builds by setting the compiling username
+mkdir ~/.xemacs
+echo >> ~/.xemacs/custom.el << EOF
+(custom-set-variables
+ '(user-mail-address "mockbuild@fedoraproject.org"))
+EOF
 
 
 %build
@@ -288,6 +302,7 @@ common_options="
     --with-mail-locking=lockf
     --with-pop
     --without-hesiod
+    --with-tls=nss \
 %ifarch alpha ia64 ppc64
     --with-system-malloc
 %endif
@@ -609,7 +624,8 @@ fi
 %{_mandir}/man1/xemacs-xft.1*
 
 %files common -f base-files
-%doc INSTALL README COPYING PROBLEMS CHANGES-beta etc/NEWS etc/TUTORIAL
+%doc INSTALL README PROBLEMS CHANGES-beta etc/NEWS etc/TUTORIAL
+%license COPYING
 %{_bindir}/etags.xemacs
 %{_bindir}/ootags
 %{_bindir}/xemacs-script
@@ -635,7 +651,7 @@ fi
 %endif
 
 %files info -f info-files
-%doc COPYING
+%license COPYING
 %{_infodir}/*.info*
 
 %files devel
@@ -658,8 +674,25 @@ fi
 %dir %{_datadir}/xemacs/site-packages/pkginfo
 
 %changelog
-* Sun Sep 20 2015 Liu Di <liudidi@gmail.com> - 21.5.34-8.20140605hgacf1c26e3019
-- 为 Magic 3.0 重建
+* Sat Oct  3 2015 Jerry James <loganjerry@gmail.com> - 21.5.34-1220150929hga76c9268bb72
+- Update to snapshot: fixes multiple bugs
+- Add -alsaplay patch to fix playing sounds through ALSA
+
+* Fri Jun 19 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 21.5.34-11.20150420hg23178aa71f8b
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
+
+* Mon Apr 20 2015 Jerry James <loganjerry@gmail.com> - 21.5.34-10.20150420hg23178aa71f8b
+- Update to snapshot: fixes multiple bugs
+- Drop upstreamed -c11 patch
+- Enable NSS support
+
+* Mon Feb  9 2015 Jerry James <loganjerry@gmail.com> - 21.5.34-9.20140605hgacf1c26e3019
+- Add -c11 patch to fix build failure with gcc 5.0
+- Set compiling username to get reproducible builds
+- Use license macro
+
+* Mon Aug 18 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 21.5.34-8.20140605hgacf1c26e3019
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
 
 * Sun Jun 08 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 21.5.34-7.20140605hgacf1c26e3019
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
