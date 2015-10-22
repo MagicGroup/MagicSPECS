@@ -1,0 +1,12 @@
+diff -up xemacs-packages-extra-20150413/xemacs-packages/auctex/tex-jp.el~ xemacs-packages-extra-20150413/xemacs-packages/auctex/tex-jp.el
+--- xemacs-packages-extra-20150413/xemacs-packages/auctex/tex-jp.el~	2015-04-21 11:04:01.000000000 -0600
++++ xemacs-packages-extra-20150413/xemacs-packages/auctex/tex-jp.el	2015-04-21 11:57:43.078057936 -0600
+@@ -308,7 +308,7 @@ For detail, see `TeX-command-list', to w
+   (make-variable-buffer-local 'japanese-TeX-command-default)
+ 
+ ;; 順調に行けば不要になる。
+-(defcustom japanese-LaTeX-command-default "LaTeX"
++(defcustom japanese-LaTeX-command-default "pLaTeX"
+   "*The default command for `TeX-command' in the japanese-LaTeX mode."
+   :group 'AUCTeX-jp
+   :type 'string)

@@ -1,7 +1,7 @@
-#!/bin/bash
+#!/bin/bash -e
 
-if [ -z "$1" ] ; then
-    echo "Usage: $0 date, eg. 2006-05-10"
+if [ "$#" != 2 ]; then
+    echo "Usage: $0 date revision, eg. 2014-06-30 832449bdc11b"
     exit 1
 fi
 
@@ -13,24 +13,20 @@ cleanup() {
 }
 
 unset CDPATH
-pwd=$(pwd)
+pwd=$PWD
 date=$1
-tag=sumo-$date
+tag=$2
 tarball=xemacs-packages-extra-${date//-/}
-export CVSROOT=:pserver:cvs@cvs.alioth.debian.org:/cvsroot/xemacs
 
-# For the checkout to work, first "cvs login" with the above CVSROOT (pass:cvs)
-
-cd $tmp
-
-cvs -z3 checkout -r $tag packages
-cd packages
-
-cp Local.rules.template Local.rules
+pushd $tmp > /dev/null
+hg clone https://bitbucket.org/xemacs/xemacs-packages
+cd xemacs-packages
+cp -p Local.rules.template Local.rules
 
 # Not useful on Linux
 rm -rf xemacs-packages/Sun
 sed -i -e 's/Sun //' xemacs-packages/Makefile
+sed -i -e '/Sun/d' package-compile.el
 
 # Not built nor included in upstream Sumo, replaced by riece
 rm -rf xemacs-packages/liece
@@ -38,18 +34,18 @@ rm -rf xemacs-packages/liece
 # Not included in upstream Sumo
 rm -rf xemacs-packages/ess
 
-# Shouldn't ship this
+# Shouldn't ship this for trademark reasons
 rm -f xemacs-packages/games/tetris.el
 sed -i -e 's/ tetris.elc//' xemacs-packages/games/Makefile
 sed -i -e 's/ tetris//' -e 's/Tetris, //' xemacs-packages/games/package-info.in
 
 # Clean up
 find . -name "*.jar" -o -name "*.class" -delete
-find . -name .cvsignore -o -name CVS | xargs rm -rf
+find . -name .hg\* | xargs rm -fr
 
+# Make the tarball
 cd ..
-mv packages $tarball
+mv xemacs-packages $tarball
 tar cf $pwd/$tarball.tar $tarball
-xz -f $pwd/$tarball.tar
-
-cd $pwd >/dev/null
+xz -9f $pwd/$tarball.tar
+popd > /dev/null

@@ -1,10 +1,11 @@
+%global hgver   3720091d7106
 %global pkgdir  %{_datadir}/xemacs
 %global xemver  %(pkg-config --modversion xemacs 2>/dev/null || echo 0)
-%global basever 20130408
+%global basever 20150919
 
 Name:           xemacs-packages-extra
-Version:        20130408
-Release:        4%{?dist}
+Version:        20150919
+Release:        1%{?dist}
 Summary:        Collection of XEmacs lisp packages
 
 Group:          Applications/Editors
@@ -22,27 +23,17 @@ Source16:       Emacs.ad.zh_CN.UTF-8
 Source17:       Emacs.ad.zh_TW.UTF-8
 Source99:       %{name}-checkout.sh
 
-# adapt ispell.el to aspell >= 0.60's encoding behaviour, #190151
-Patch0:         %{name}-20060510-aspellenc-190151.patch
 # use TrAX by default in xslt-process
-Patch1:         %{name}-20060510-trax.patch
+Patch0:         %{name}-20060510-trax.patch
 # catch harmless errors in mouse-avoidance-too-close-p (avoid.el)
-Patch2:         %{name}-20060510-avoid-catch-error-65346.patch
+Patch1:         %{name}-20060510-avoid-catch-error-65346.patch
 # make egg-wnn use unix domain sockets by default
-Patch3:         %{name}-20060510-egg-wnn-host-unix-79826.patch
-# fix keywords inadvertently expanded by XEmacs CVS, failing auctex build
-Patch4:         %{name}-20090217-auctex-cvs-keywords.patch
+Patch2:         %{name}-20060510-egg-wnn-host-unix-79826.patch
 # use ptex rather than jtex by default for Japanese
-Patch5:         %{name}-20090217-auctex-texjp-platex.patch
-# update browsers in psgml-html
-Patch6:         %{name}-20090217-browsers.patch
-# do not use the unsupported :risky keyword to defcustom
-Patch7:         %{name}-20121228-risky.patch
-# fix problems with texinfo 5
-Patch8:         %{name}-20130408-texi.patch
+Patch3:         %{name}-20150413-auctex-texjp-platex.patch
 
 BuildArch:      noarch
-BuildRequires:  xemacs >= 21.5.30
+BuildRequires:  xemacs >= 21.5.34
 BuildRequires:  texinfo
 # For building auctex docs
 BuildRequires:  tex(latex)
@@ -93,16 +84,8 @@ collection in GNU texinfo format
 %patch1 -p1
 %patch2 -p1
 %patch3 -p1
-%patch4 -p1
-%patch5 -p1
-%patch6 -p1
-%patch7 -p1
-%patch8
 
-chmod -c -x \
-    xemacs-packages/auctex/style/babel.el \
-    xemacs-packages/ede/ede-proj-comp.el \
-    xemacs-packages/vm/lisp/vm-version.el
+chmod -c -x xemacs-packages/auctex/style/babel.el
 
 cat << EOF > make.sh
 #!/bin/sh
@@ -114,8 +97,15 @@ make \\
 EOF
 chmod +x make.sh
 
-sed -i -e 's|/usr/local/bin/perl5\?|/usr/bin/perl|g' \
+sed -i -e 's|/usr/local/bin/perl5\?|%{_bindir}/perl|g' \
   xemacs-packages/bbdb/utils/*.pl xemacs-packages/hyperbole/file-newer
+
+# Get reproducible builds by setting the compiling username
+mkdir ~/.xemacs
+echo >> ~/.xemacs/custom.el << EOF
+(custom-set-variables
+ '(user-mail-address "mockbuild@fedoraproject.org"))
+EOF
 
 
 %build
@@ -192,9 +182,7 @@ find $RPM_BUILD_ROOT%{pkgdir} -type f -name '*.info*' | xargs gzip -9
 
 # separate files
 rm -f *.files
-echo "%%defattr(-,root,root,-)" > base-files
-echo "%%defattr(-,root,root,-)" > el-files
-echo "%%defattr(-,root,root,-)" > info-files
+touch base-files el-files info-files
 
 find $RPM_BUILD_ROOT%{pkgdir}/* \
   \( -type f -name '*.el.orig' -exec rm '{}' ';' \) -o \
@@ -226,6 +214,25 @@ sed -i -e 's/^\(.*[_-]ja\.info.*\)$/%lang(ja) \1/' info-files
 
 
 %changelog
+* Wed Oct  7 2015 Jerry James <loganjerry@gmail.com> - 20150919-1
+- Update to latest packages releases
+
+* Fri Jun 19 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 20150413-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
+
+* Tue Apr 21 2015 Jerry James <loganjerry@gmail.com> - 20150413-1
+- Update to latest package releases
+- Set the build username for reproducible builds
+
+* Thu Aug  7 2014 Jerry James <loganjerry@gmail.com> - 20140715-1
+- Update to new package release (bz 1127518)
+
+* Mon Jul  7 2014 Jerry James <loganjerry@gmail.com> - 20140705-1
+- Update to new package release
+- Drop upstreamed -aspellenc, -auctex-cvs-keywords, -browsers, -risky, and
+  -texi patches
+- Update checkout script for mercurial
+
 * Sun Jun 08 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 20130408-4
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 
