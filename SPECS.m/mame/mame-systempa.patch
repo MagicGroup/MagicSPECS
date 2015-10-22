@@ -1,0 +1,60 @@
+diff -up mame-0.163/makefile.systempa mame-0.163/makefile
+--- mame-0.163/makefile.systempa	2015-07-05 10:40:43.933061000 +0200
++++ mame-0.163/makefile	2015-07-05 11:09:47.122619628 +0200
+@@ -60,6 +60,7 @@
+ # USE_SYSTEM_LIB_LUA = 1
+ # USE_SYSTEM_LIB_SQLITE3 = 1
+ # USE_SYSTEM_LIB_PORTMIDI = 1
++# USE_SYSTEM_LIB_PORTAUDIO = 1
+ 
+ # MESA_INSTALL_ROOT = /opt/mesa
+ # SDL_INSTALL_ROOT = /opt/sdl2
+@@ -336,6 +337,10 @@ ifndef USE_SYSTEM_LIB_PORTMIDI
+ PARAMS += --with-bundled-portmidi
+ endif
+ 
++ifndef USE_SYSTEM_LIB_PORTAUDIO
++PARAMS += --with-bundled-portaudio
++endif
++
+ #-------------------------------------------------
+ # distribution may change things
+ #-------------------------------------------------
+diff -up mame-0.163/scripts/genie.lua.systempa mame-0.163/scripts/genie.lua
+--- mame-0.163/scripts/genie.lua.systempa	2015-07-05 11:11:18.522715238 +0200
++++ mame-0.163/scripts/genie.lua	2015-07-05 11:11:45.958044104 +0200
+@@ -129,6 +129,11 @@ newoption {
+ }
+ 
+ newoption {
++    trigger = 'with-bundled-portaudio',
++    description = 'Build bundled PortAudio library',
++}
++
++newoption {
+ 	trigger = "distro",
+ 	description = "Choose distribution",
+ 	allowed = {
+diff -up mame-0.163/scripts/src/3rdparty.lua.systempa mame-0.163/scripts/src/3rdparty.lua
+--- mame-0.163/scripts/src/3rdparty.lua.systempa	2015-07-05 11:17:42.332171148 +0200
++++ mame-0.163/scripts/src/3rdparty.lua	2015-07-05 11:15:46.737835996 +0200
+@@ -650,6 +650,7 @@ end
+ -- PortAudio library objects
+ --------------------------------------------------
+ 
++if _OPTIONS["with-bundled-portaudio"] then
+ project "portaudio"
+ 	uuid "0755c5f5-eccf-47f3-98a9-df67018a94d4"
+ 	kind "StaticLib"
+@@ -775,6 +776,11 @@ project "portaudio"
+ 			"-Wshadow"
+ 		}
+ 	end
++else
++links {
++	"portaudio",
++}
++end
+ 		
+ --------------------------------------------------
+ -- UnitTest++ library objects
