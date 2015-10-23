@@ -1,0 +1,14 @@
+--- apps/rodent-fgr/Rodent-fgr.appdata.xml.orig.in	2014-07-07 15:58:32.000000000 +0200
++++ apps/rodent-fgr/Rodent-fgr.appdata.xml.in	2015-07-05 18:26:07.549332307 +0200
+@@ -18,8 +21,8 @@
+  out for the maintainance of large sets of source code and is highly customizable,
+  either from the rodent-fm settings dialog ---if installed--- or else by setting 
+  the corresponding environment variables.  Content search is left to the excellent
+- code developed by GNU grep <a href="http://git.sv.gnu.org/cgit/grep.git/tree/AUTHORS">authors</a>,
+- without duplicating any code. Updates to GNU grep are used automatically. 
++ code developed by GNU grep authors, without duplicating any code.
++ Updates to GNU grep are used automatically. 
+   </p>
+   <ul>
+   <li>GNU's not Unix, but Unix is a beast; its plural form is Unixen.</li>
+
