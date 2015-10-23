@@ -1,0 +1,19 @@
+diff -up libdbh2-5.0.13/src/dbh_static.i.bigendian libdbh2-5.0.13/src/dbh_static.i
+--- libdbh2-5.0.13/src/dbh_static.i.bigendian	2014-01-22 09:26:03.000000000 +0100
++++ libdbh2-5.0.13/src/dbh_static.i	2014-01-22 09:26:21.000000000 +0100
+@@ -1658,7 +1658,6 @@ static int sdbh_writeheader (DBHashTable
+     dbh->head_info->data_space = sdbh_turnaround (dbh->head_info->data_space);
+     dbh->head_info->erased_space = sdbh_turnaround (dbh->head_info->erased_space);
+     dbh->head_info->records = sdbh_turnaround (dbh->head_info->records);
+-    dbh->head_info->fractalidad = sdbh_turnaround (dbh->head_info->fractalidad);
+ #endif
+ 
+ 
+@@ -1688,7 +1687,6 @@ static int sdbh_writeheader (DBHashTable
+     dbh->head_info->data_space = sdbh_turnaround (dbh->head_info->data_space);
+     dbh->head_info->erased_space = sdbh_turnaround (dbh->head_info->erased_space);
+     dbh->head_info->records = sdbh_turnaround (dbh->head_info->records);
+-    dbh->head_info->fractalidad = sdbh_turnaround (dbh->head_info->fractalidad);
+ #endif
+     if (!flush) return 1;
+   
