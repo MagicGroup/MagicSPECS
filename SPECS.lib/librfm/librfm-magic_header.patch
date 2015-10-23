@@ -1,0 +1,14 @@
+--- configure.orig.ac	2015-03-23 22:22:03.000000000 +0100
++++ configure.ac	2015-04-09 15:54:44.461364698 +0200
+@@ -424,8 +424,8 @@
+ 
+ dnl Check for required packages
+ # check for libmagic (from "file" utility)
+-AC_CHECK_LIB([magic],[magic_file])
+-if test "$ac_cv_lib_magic_magic_file" = "no" ; then
++AC_CHECK_LIB([magic])
++if test "$ac_cv_lib_magic" = "no" ; then
+     AC_MSG_ERROR([*** Shucks! *** Error: libmagic header files were not found.  Debian package is  "libmagic-dev" or you can obtain the original author´s latest version by anonymous FTP on ftp.astron.com in the directory /pub/file/file-X.YZ.tar.gz. The Debian version adds a number of new magic entries. It can be obtained from every site carrying a Debian distribution (that is ftp.debian.org and mirrors)
+     In OpenSUSE/Fedora, the package is called "file-devel".])
+ fi
+
