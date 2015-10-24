@@ -1,0 +1,80 @@
+========================================================================
+User Information for the Fedora terminus-font-console package
+========================================================================
+
+The console package just dumps the font files in the directory where
+the other console fonts are and does not do any setting up (for now).
+
+ * The difference between all those ter-????.psf.gz files is
+   explained in the file
+
+      /lib/kbd/consolefonts/README.terminus
+
+ * You can manually change the font for the Linux VGA textmode or
+   framebuffer console by running something like
+
+      /bin/setfont /lib/kbd/consolefonts/ter-u24b.psf.gz
+
+   Note that using a font of a different font size will change the
+   $COLUMNS and $LINES of the terminal together with the changed
+   font size.
+
+ * To make the above setting permanent, you need to tell your initramfs
+   and/or other init system to load the font.
+
+   The (config) files to adapt for that are
+
+      /etc/vconsole.conf
+      /etc/default/grub
+      /etc/grub2.cfg aka /boot/grub2/grub.cfg
+
+   and also your initramfs must contain the font file such as ter-u24b.psf:
+
+      /boot/initramfs-$(uname -r).img
+
+   Configuration changes:
+
+   1. In /etc/vconsole.conf, add a line
+
+        FONT="ter-u24b"
+
+   2. In /etc/default/grub, add an option
+
+        vconsole.font=ter-u24b
+
+      to the GRUB_CMDLINE_LINUX="..." definition.
+
+   At this point, there should be an easy and obvious way to propagate
+   those settings into grub.cfg and the initramfs. However, I do not
+   know it, so here are two ways to do it
+
+   3a * Open /etc/grub2.cfg in an editor and add the vconsole.font
+        option to the appropriate "linux" command lines (same as
+        /etc/default/grub)
+
+      * Rebuild the initramfs. There might be a better way, but
+
+          yum reinstall kernel
+
+        might work.
+
+   3b * Update /etc/grub2.cfg with options from /etc/default/grub (but
+        the generated grub2.cfg will look very differently than the
+        one maintained just by kernel installs and updates):
+
+	  grub2-mkconfig -o /boot/grub2/grub.cfg
+
+      * Then rebuild a new initramfs with:
+
+          dracut -f
+
+   Verify that the initramfs contains the required font file:
+
+      [root@host ~]# gunzip -c < /boot/initramfs-$(uname -r).img | cpio --list | grep consolefonts/
+      usr/lib/kbd/consolefonts/latarcyrheb-sun16.psfu
+      usr/lib/kbd/consolefonts/ter-u24b.psf
+      71695 blocks
+      [root@host ~]#
+
+   On the next boot, your framebuffer console should come up with a
+   beautiful Terminus font.
