@@ -1,6 +1,6 @@
-diff -up jdk8/hotspot/src/share/vm/gc_implementation/concurrentMarkSweep/compactibleFreeListSpace.cpp.s390 jdk8/hotspot/src/share/vm/gc_implementation/concurrentMarkSweep/compactibleFreeListSpace.cpp
---- jdk8/hotspot/src/share/vm/gc_implementation/concurrentMarkSweep/compactibleFreeListSpace.cpp.s390	2014-10-23 18:32:14.000000000 -0400
-+++ jdk8/hotspot/src/share/vm/gc_implementation/concurrentMarkSweep/compactibleFreeListSpace.cpp	2015-01-09 15:57:32.423809100 -0500
+diff -up jdk8/hotspot/src/share/vm/gc_implementation/concurrentMarkSweep/compactibleFreeListSpace.cpp.size_t jdk8/hotspot/src/share/vm/gc_implementation/concurrentMarkSweep/compactibleFreeListSpace.cpp
+--- jdk8/hotspot/src/share/vm/gc_implementation/concurrentMarkSweep/compactibleFreeListSpace.cpp.size_t	2015-05-19 12:16:26.000000000 -0400
++++ jdk8/hotspot/src/share/vm/gc_implementation/concurrentMarkSweep/compactibleFreeListSpace.cpp	2015-06-09 10:21:39.000000000 -0400
 @@ -2659,7 +2659,7 @@ void CFLS_LAB::get_from_global_pool(size
    if (ResizeOldPLAB && CMSOldPLABResizeQuicker) {
      size_t multiple = _num_blocks[word_sz]/(CMSOldPLABToleranceFactor*CMSOldPLABNumRefills*n_blks);
@@ -10,10 +10,10 @@ diff -up jdk8/hotspot/src/share/vm/gc_implementation/concurrentMarkSweep/compact
    }
    assert(n_blks > 0, "Error");
    _cfls->par_get_chunk_of_blocks(word_sz, n_blks, fl);
-diff -up jdk8/hotspot/src/share/vm/gc_implementation/concurrentMarkSweep/concurrentMarkSweepGeneration.cpp.s390 jdk8/hotspot/src/share/vm/gc_implementation/concurrentMarkSweep/concurrentMarkSweepGeneration.cpp
---- jdk8/hotspot/src/share/vm/gc_implementation/concurrentMarkSweep/concurrentMarkSweepGeneration.cpp.s390	2014-10-23 18:32:14.000000000 -0400
-+++ jdk8/hotspot/src/share/vm/gc_implementation/concurrentMarkSweep/concurrentMarkSweepGeneration.cpp	2015-01-09 15:57:32.423809100 -0500
-@@ -951,7 +951,7 @@ void ConcurrentMarkSweepGeneration::comp
+diff -up jdk8/hotspot/src/share/vm/gc_implementation/concurrentMarkSweep/concurrentMarkSweepGeneration.cpp.size_t jdk8/hotspot/src/share/vm/gc_implementation/concurrentMarkSweep/concurrentMarkSweepGeneration.cpp
+--- jdk8/hotspot/src/share/vm/gc_implementation/concurrentMarkSweep/concurrentMarkSweepGeneration.cpp.size_t	2015-05-19 12:16:26.000000000 -0400
++++ jdk8/hotspot/src/share/vm/gc_implementation/concurrentMarkSweep/concurrentMarkSweepGeneration.cpp	2015-06-09 10:21:39.000000000 -0400
+@@ -957,7 +957,7 @@ void ConcurrentMarkSweepGeneration::comp
    if (free_percentage < desired_free_percentage) {
      size_t desired_capacity = (size_t)(used() / ((double) 1 - desired_free_percentage));
      assert(desired_capacity >= capacity(), "invalid expansion size");
@@ -22,7 +22,7 @@ diff -up jdk8/hotspot/src/share/vm/gc_implementation/concurrentMarkSweep/concurr
      if (PrintGCDetails && Verbose) {
        size_t desired_capacity = (size_t)(used() / ((double) 1 - desired_free_percentage));
        gclog_or_tty->print_cr("\nFrom compute_new_size: ");
-@@ -6569,7 +6569,7 @@ void CMSCollector::reset(bool asynch) {
+@@ -6575,7 +6575,7 @@ void CMSCollector::reset(bool asynch) {
      HeapWord* curAddr = _markBitMap.startWord();
      while (curAddr < _markBitMap.endWord()) {
        size_t remaining  = pointer_delta(_markBitMap.endWord(), curAddr);
@@ -31,7 +31,7 @@ diff -up jdk8/hotspot/src/share/vm/gc_implementation/concurrentMarkSweep/concurr
        _markBitMap.clear_large_range(chunk);
        if (ConcurrentMarkSweepThread::should_yield() &&
            !foregroundGCIsActive() &&
-@@ -6868,7 +6868,7 @@ void CMSMarkStack::expand() {
+@@ -6873,7 +6873,7 @@ void CMSMarkStack::expand() {
      return;
    }
    // Double capacity if possible
@@ -40,10 +40,10 @@ diff -up jdk8/hotspot/src/share/vm/gc_implementation/concurrentMarkSweep/concurr
    // Do not give up existing stack until we have managed to
    // get the double capacity that we desired.
    ReservedSpace rs(ReservedSpace::allocation_align_size_up(
-diff -up jdk8/hotspot/src/share/vm/gc_implementation/g1/concurrentMark.cpp.s390 jdk8/hotspot/src/share/vm/gc_implementation/g1/concurrentMark.cpp
---- jdk8/hotspot/src/share/vm/gc_implementation/g1/concurrentMark.cpp.s390	2014-10-23 18:32:14.000000000 -0400
-+++ jdk8/hotspot/src/share/vm/gc_implementation/g1/concurrentMark.cpp	2015-01-09 15:57:32.423809100 -0500
-@@ -3891,7 +3891,7 @@ void CMTask::drain_local_queue(bool part
+diff -up jdk8/hotspot/src/share/vm/gc_implementation/g1/concurrentMark.cpp.size_t jdk8/hotspot/src/share/vm/gc_implementation/g1/concurrentMark.cpp
+--- jdk8/hotspot/src/share/vm/gc_implementation/g1/concurrentMark.cpp.size_t	2015-05-19 12:16:26.000000000 -0400
++++ jdk8/hotspot/src/share/vm/gc_implementation/g1/concurrentMark.cpp	2015-06-09 10:21:39.000000000 -0400
+@@ -3902,7 +3902,7 @@ void CMTask::drain_local_queue(bool part
    // of things to do) or totally (at the very end).
    size_t target_size;
    if (partially) {
@@ -52,7 +52,7 @@ diff -up jdk8/hotspot/src/share/vm/gc_implementation/g1/concurrentMark.cpp.s390 
    } else {
      target_size = 0;
    }
-@@ -4717,7 +4717,7 @@ size_t G1PrintRegionLivenessInfoClosure:
+@@ -4728,7 +4728,7 @@ size_t G1PrintRegionLivenessInfoClosure:
    // The > 0 check is to deal with the prev and next live bytes which
    // could be 0.
    if (*hum_bytes > 0) {
@@ -61,10 +61,10 @@ diff -up jdk8/hotspot/src/share/vm/gc_implementation/g1/concurrentMark.cpp.s390 
      *hum_bytes -= bytes;
    }
    return bytes;
-diff -up jdk8/hotspot/src/share/vm/gc_implementation/g1/g1CollectedHeap.cpp.s390 jdk8/hotspot/src/share/vm/gc_implementation/g1/g1CollectedHeap.cpp
---- jdk8/hotspot/src/share/vm/gc_implementation/g1/g1CollectedHeap.cpp.s390	2014-10-23 18:32:14.000000000 -0400
-+++ jdk8/hotspot/src/share/vm/gc_implementation/g1/g1CollectedHeap.cpp	2015-01-09 15:57:32.423809100 -0500
-@@ -1737,7 +1737,7 @@ HeapWord* G1CollectedHeap::expand_and_al
+diff -up jdk8/hotspot/src/share/vm/gc_implementation/g1/g1CollectedHeap.cpp.size_t jdk8/hotspot/src/share/vm/gc_implementation/g1/g1CollectedHeap.cpp
+--- jdk8/hotspot/src/share/vm/gc_implementation/g1/g1CollectedHeap.cpp.size_t	2015-05-19 12:16:26.000000000 -0400
++++ jdk8/hotspot/src/share/vm/gc_implementation/g1/g1CollectedHeap.cpp	2015-06-09 10:21:39.000000000 -0400
+@@ -1726,7 +1726,7 @@ HeapWord* G1CollectedHeap::expand_and_al
  
    verify_region_sets_optional();
  
@@ -73,9 +73,9 @@ diff -up jdk8/hotspot/src/share/vm/gc_implementation/g1/g1CollectedHeap.cpp.s390
    ergo_verbose1(ErgoHeapSizing,
                  "attempt heap expansion",
                  ergo_format_reason("allocation request failed")
-diff -up jdk8/hotspot/src/share/vm/gc_implementation/g1/g1StringDedupQueue.cpp.s390 jdk8/hotspot/src/share/vm/gc_implementation/g1/g1StringDedupQueue.cpp
---- jdk8/hotspot/src/share/vm/gc_implementation/g1/g1StringDedupQueue.cpp.s390	2015-01-09 16:12:23.063809100 -0500
-+++ jdk8/hotspot/src/share/vm/gc_implementation/g1/g1StringDedupQueue.cpp	2015-01-09 16:13:02.213809100 -0500
+diff -up jdk8/hotspot/src/share/vm/gc_implementation/g1/g1StringDedupQueue.cpp.size_t jdk8/hotspot/src/share/vm/gc_implementation/g1/g1StringDedupQueue.cpp
+--- jdk8/hotspot/src/share/vm/gc_implementation/g1/g1StringDedupQueue.cpp.size_t	2015-05-19 12:16:26.000000000 -0400
++++ jdk8/hotspot/src/share/vm/gc_implementation/g1/g1StringDedupQueue.cpp	2015-06-09 10:21:39.000000000 -0400
 @@ -38,7 +38,7 @@ G1StringDedupQueue::G1StringDedupQueue()
    _cancel(false),
    _empty(true),
@@ -85,9 +85,9 @@ diff -up jdk8/hotspot/src/share/vm/gc_implementation/g1/g1StringDedupQueue.cpp.s
    _queues = NEW_C_HEAP_ARRAY(G1StringDedupWorkerQueue, _nqueues, mtGC);
    for (size_t i = 0; i < _nqueues; i++) {
      new (_queues + i) G1StringDedupWorkerQueue(G1StringDedupWorkerQueue::default_segment_size(), _max_cache_size, _max_size);
-diff -up jdk8/hotspot/src/share/vm/gc_implementation/g1/g1StringDedupTable.cpp.s390 jdk8/hotspot/src/share/vm/gc_implementation/g1/g1StringDedupTable.cpp
---- jdk8/hotspot/src/share/vm/gc_implementation/g1/g1StringDedupTable.cpp.s390	2015-01-09 16:13:29.713809100 -0500
-+++ jdk8/hotspot/src/share/vm/gc_implementation/g1/g1StringDedupTable.cpp	2015-01-09 16:13:57.713809100 -0500
+diff -up jdk8/hotspot/src/share/vm/gc_implementation/g1/g1StringDedupTable.cpp.size_t jdk8/hotspot/src/share/vm/gc_implementation/g1/g1StringDedupTable.cpp
+--- jdk8/hotspot/src/share/vm/gc_implementation/g1/g1StringDedupTable.cpp.size_t	2015-05-19 12:16:26.000000000 -0400
++++ jdk8/hotspot/src/share/vm/gc_implementation/g1/g1StringDedupTable.cpp	2015-06-09 10:21:39.000000000 -0400
 @@ -110,7 +110,7 @@ public:
  };
  
@@ -97,10 +97,10 @@ diff -up jdk8/hotspot/src/share/vm/gc_implementation/g1/g1StringDedupTable.cpp.s
    _lists = PaddedArray<G1StringDedupEntryFreeList, mtGC>::create_unfreeable((uint)_nlists);
  }
  
-diff -up jdk8/hotspot/src/share/vm/gc_implementation/g1/heapRegion.cpp.s390 jdk8/hotspot/src/share/vm/gc_implementation/g1/heapRegion.cpp
---- jdk8/hotspot/src/share/vm/gc_implementation/g1/heapRegion.cpp.s390	2015-01-09 16:14:57.193809100 -0500
-+++ jdk8/hotspot/src/share/vm/gc_implementation/g1/heapRegion.cpp	2015-01-09 16:15:41.163809100 -0500
-@@ -147,7 +147,7 @@ void HeapRegion::setup_heap_region_size(
+diff -up jdk8/hotspot/src/share/vm/gc_implementation/g1/heapRegion.cpp.size_t jdk8/hotspot/src/share/vm/gc_implementation/g1/heapRegion.cpp
+--- jdk8/hotspot/src/share/vm/gc_implementation/g1/heapRegion.cpp.size_t	2015-05-19 12:16:26.000000000 -0400
++++ jdk8/hotspot/src/share/vm/gc_implementation/g1/heapRegion.cpp	2015-06-09 10:21:39.000000000 -0400
+@@ -109,7 +109,7 @@ void HeapRegion::setup_heap_region_size(
    if (FLAG_IS_DEFAULT(G1HeapRegionSize)) {
      size_t average_heap_size = (initial_heap_size + max_heap_size) / 2;
      region_size = MAX2(average_heap_size / HeapRegionBounds::target_number(),
@@ -109,9 +109,9 @@ diff -up jdk8/hotspot/src/share/vm/gc_implementation/g1/heapRegion.cpp.s390 jdk8
    }
  
    int region_size_log = log2_long((jlong) region_size);
-diff -up jdk8/hotspot/src/share/vm/gc_implementation/g1/heapRegionRemSet.cpp.s390 jdk8/hotspot/src/share/vm/gc_implementation/g1/heapRegionRemSet.cpp
---- jdk8/hotspot/src/share/vm/gc_implementation/g1/heapRegionRemSet.cpp.s390	2014-10-23 18:32:14.000000000 -0400
-+++ jdk8/hotspot/src/share/vm/gc_implementation/g1/heapRegionRemSet.cpp	2015-01-09 16:16:27.533809100 -0500
+diff -up jdk8/hotspot/src/share/vm/gc_implementation/g1/heapRegionRemSet.cpp.size_t jdk8/hotspot/src/share/vm/gc_implementation/g1/heapRegionRemSet.cpp
+--- jdk8/hotspot/src/share/vm/gc_implementation/g1/heapRegionRemSet.cpp.size_t	2015-05-19 12:16:26.000000000 -0400
++++ jdk8/hotspot/src/share/vm/gc_implementation/g1/heapRegionRemSet.cpp	2015-06-09 10:21:39.000000000 -0400
 @@ -833,7 +833,7 @@ OtherRegionsTable::do_cleanup_work(HRRSC
  // This can be done by either mutator threads together with the
  // concurrent refinement threads or GC threads.
@@ -121,9 +121,21 @@ diff -up jdk8/hotspot/src/share/vm/gc_implementation/g1/heapRegionRemSet.cpp.s39
  }
  
  HeapRegionRemSet::HeapRegionRemSet(G1BlockOffsetSharedArray* bosa,
-diff -up jdk8/hotspot/src/share/vm/gc_implementation/parallelScavenge/psParallelCompact.cpp.s390 jdk8/hotspot/src/share/vm/gc_implementation/parallelScavenge/psParallelCompact.cpp
---- jdk8/hotspot/src/share/vm/gc_implementation/parallelScavenge/psParallelCompact.cpp.s390	2014-10-23 18:32:14.000000000 -0400
-+++ jdk8/hotspot/src/share/vm/gc_implementation/parallelScavenge/psParallelCompact.cpp	2015-01-09 15:57:32.423809100 -0500
+diff -up jdk8/hotspot/src/share/vm/gc_implementation/parNew/parNewGeneration.cpp.size_t jdk8/hotspot/src/share/vm/gc_implementation/parNew/parNewGeneration.cpp
+--- jdk8/hotspot/src/share/vm/gc_implementation/parNew/parNewGeneration.cpp.size_t	2015-05-19 12:16:26.000000000 -0400
++++ jdk8/hotspot/src/share/vm/gc_implementation/parNew/parNewGeneration.cpp	2015-06-09 10:21:39.000000000 -0400
+@@ -194,7 +194,7 @@ bool ParScanThreadState::take_from_overf
+   const size_t num_overflow_elems = of_stack->size();
+   const size_t space_available = queue->max_elems() - queue->size();
+   const size_t num_take_elems = MIN3(space_available / 4,
+-                                     ParGCDesiredObjsFromOverflowList,
++                                     (size_t)ParGCDesiredObjsFromOverflowList,
+                                      num_overflow_elems);
+   // Transfer the most recent num_take_elems from the overflow
+   // stack to our work queue.
+diff -up jdk8/hotspot/src/share/vm/gc_implementation/parallelScavenge/psParallelCompact.cpp.size_t jdk8/hotspot/src/share/vm/gc_implementation/parallelScavenge/psParallelCompact.cpp
+--- jdk8/hotspot/src/share/vm/gc_implementation/parallelScavenge/psParallelCompact.cpp.size_t	2015-05-19 12:16:26.000000000 -0400
++++ jdk8/hotspot/src/share/vm/gc_implementation/parallelScavenge/psParallelCompact.cpp	2015-06-09 10:21:39.000000000 -0400
 @@ -910,8 +910,8 @@ void PSParallelCompact::initialize_space
  void PSParallelCompact::initialize_dead_wood_limiter()
  {
@@ -135,22 +147,10 @@ diff -up jdk8/hotspot/src/share/vm/gc_implementation/parallelScavenge/psParallel
    _dwl_first_term = 1.0 / (sqrt(2.0 * M_PI) * _dwl_std_dev);
    DEBUG_ONLY(_dwl_initialized = true;)
    _dwl_adjustment = normal_distribution(1.0);
-diff -up jdk8/hotspot/src/share/vm/gc_implementation/parNew/parNewGeneration.cpp.s390 jdk8/hotspot/src/share/vm/gc_implementation/parNew/parNewGeneration.cpp
---- jdk8/hotspot/src/share/vm/gc_implementation/parNew/parNewGeneration.cpp.s390	2014-10-23 18:32:14.000000000 -0400
-+++ jdk8/hotspot/src/share/vm/gc_implementation/parNew/parNewGeneration.cpp	2015-01-09 15:57:32.423809100 -0500
-@@ -194,7 +194,7 @@ bool ParScanThreadState::take_from_overf
-   const size_t num_overflow_elems = of_stack->size();
-   const size_t space_available = queue->max_elems() - queue->size();
-   const size_t num_take_elems = MIN3(space_available / 4,
--                                     ParGCDesiredObjsFromOverflowList,
-+                                     (size_t)ParGCDesiredObjsFromOverflowList,
-                                      num_overflow_elems);
-   // Transfer the most recent num_take_elems from the overflow
-   // stack to our work queue.
-diff -up jdk8/hotspot/src/share/vm/memory/collectorPolicy.cpp.s390 jdk8/hotspot/src/share/vm/memory/collectorPolicy.cpp
---- jdk8/hotspot/src/share/vm/memory/collectorPolicy.cpp.s390	2014-10-23 18:32:14.000000000 -0400
-+++ jdk8/hotspot/src/share/vm/memory/collectorPolicy.cpp	2015-01-09 16:05:36.093809100 -0500
-@@ -389,7 +389,7 @@ void TwoGenerationCollectorPolicy::initi
+diff -up jdk8/hotspot/src/share/vm/memory/collectorPolicy.cpp.size_t jdk8/hotspot/src/share/vm/memory/collectorPolicy.cpp
+--- jdk8/hotspot/src/share/vm/memory/collectorPolicy.cpp.size_t	2015-05-19 12:16:26.000000000 -0400
++++ jdk8/hotspot/src/share/vm/memory/collectorPolicy.cpp	2015-06-09 10:21:39.000000000 -0400
+@@ -385,7 +385,7 @@ void TwoGenerationCollectorPolicy::initi
        uintx calculated_size = NewSize + OldSize;
        double shrink_factor = (double) MaxHeapSize / calculated_size;
        uintx smaller_new_size = align_size_down((uintx)(NewSize * shrink_factor), _gen_alignment);
@@ -159,7 +159,7 @@ diff -up jdk8/hotspot/src/share/vm/memory/collectorPolicy.cpp.s390 jdk8/hotspot/
        _initial_gen0_size = NewSize;
  
        // OldSize is already aligned because above we aligned MaxHeapSize to
-@@ -437,7 +437,7 @@ void GenCollectorPolicy::initialize_size
+@@ -433,7 +433,7 @@ void GenCollectorPolicy::initialize_size
      // yield a size that is too small) and bound it by MaxNewSize above.
      // Ergonomics plays here by previously calculating the desired
      // NewSize and MaxNewSize.
@@ -168,7 +168,7 @@ diff -up jdk8/hotspot/src/share/vm/memory/collectorPolicy.cpp.s390 jdk8/hotspot/
    }
    assert(max_new_size > 0, "All paths should set max_new_size");
  
-@@ -459,24 +459,23 @@ void GenCollectorPolicy::initialize_size
+@@ -455,24 +455,23 @@ void GenCollectorPolicy::initialize_size
        // lower limit.
        _min_gen0_size = NewSize;
        desired_new_size = NewSize;
@@ -198,7 +198,7 @@ diff -up jdk8/hotspot/src/share/vm/memory/collectorPolicy.cpp.s390 jdk8/hotspot/
  
      assert(_min_gen0_size > 0, "Sanity check");
      _initial_gen0_size = desired_new_size;
-@@ -577,7 +576,7 @@ void TwoGenerationCollectorPolicy::initi
+@@ -573,7 +572,7 @@ void TwoGenerationCollectorPolicy::initi
    } else {
      // It's been explicitly set on the command line.  Use the
      // OldSize and then determine the consequences.
@@ -207,9 +207,9 @@ diff -up jdk8/hotspot/src/share/vm/memory/collectorPolicy.cpp.s390 jdk8/hotspot/
      _initial_gen1_size = OldSize;
  
      // If the user has explicitly set an OldSize that is inconsistent
-diff -up jdk8/hotspot/src/share/vm/memory/metaspace.cpp.s390 jdk8/hotspot/src/share/vm/memory/metaspace.cpp
---- jdk8/hotspot/src/share/vm/memory/metaspace.cpp.s390	2014-10-23 18:32:14.000000000 -0400
-+++ jdk8/hotspot/src/share/vm/memory/metaspace.cpp	2015-01-09 16:18:54.233809100 -0500
+diff -up jdk8/hotspot/src/share/vm/memory/metaspace.cpp.size_t jdk8/hotspot/src/share/vm/memory/metaspace.cpp
+--- jdk8/hotspot/src/share/vm/memory/metaspace.cpp.size_t	2015-05-19 12:16:26.000000000 -0400
++++ jdk8/hotspot/src/share/vm/memory/metaspace.cpp	2015-06-09 10:21:39.000000000 -0400
 @@ -1455,7 +1455,7 @@ void MetaspaceGC::initialize() {
  
  void MetaspaceGC::post_initialize() {
@@ -237,7 +237,7 @@ diff -up jdk8/hotspot/src/share/vm/memory/metaspace.cpp.s390 jdk8/hotspot/src/sh
      if (PrintGCDetails && Verbose) {
        gclog_or_tty->print_cr("  "
                               "  maximum_free_percentage: %6.2f"
-@@ -3235,7 +3235,7 @@ void Metaspace::global_initialize() {
+@@ -3245,7 +3245,7 @@ void Metaspace::global_initialize() {
      // on the medium chunk list.   The next chunk will be small and progress
      // from there.  This size calculated by -version.
      _first_class_chunk_word_size = MIN2((size_t)MediumChunk*6,
@@ -246,21 +246,29 @@ diff -up jdk8/hotspot/src/share/vm/memory/metaspace.cpp.s390 jdk8/hotspot/src/sh
      _first_class_chunk_word_size = align_word_size_up(_first_class_chunk_word_size);
      // Arbitrarily set the initial virtual space to a multiple
      // of the boot class loader size.
-diff -up jdk8/hotspot/src/share/vm/memory/threadLocalAllocBuffer.cpp.s390 jdk8/hotspot/src/share/vm/memory/threadLocalAllocBuffer.cpp
---- jdk8/hotspot/src/share/vm/memory/threadLocalAllocBuffer.cpp.s390	2014-10-23 18:32:14.000000000 -0400
-+++ jdk8/hotspot/src/share/vm/memory/threadLocalAllocBuffer.cpp	2015-01-09 15:57:32.423809100 -0500
-@@ -238,7 +238,7 @@ size_t ThreadLocalAllocBuffer::initial_d
-   size_t init_sz;
+diff -up jdk8/hotspot/src/share/vm/memory/threadLocalAllocBuffer.cpp.size_t jdk8/hotspot/src/share/vm/memory/threadLocalAllocBuffer.cpp
+--- jdk8/hotspot/src/share/vm/memory/threadLocalAllocBuffer.cpp.size_t	2015-05-19 12:16:26.000000000 -0400
++++ jdk8/hotspot/src/share/vm/memory/threadLocalAllocBuffer.cpp	2015-06-09 10:21:39.000000000 -0400
+@@ -238,13 +238,13 @@ size_t ThreadLocalAllocBuffer::initial_d
+   size_t init_sz = 0;
  
    if (TLABSize > 0) {
--    init_sz = MIN2(TLABSize / HeapWordSize, max_size());
-+    init_sz = MIN2((size_t)(TLABSize / HeapWordSize), max_size());
-   } else if (global_stats() == NULL) {
-     // Startup issue - main thread initialized before heap initialized.
-     init_sz = min_size();
-diff -up jdk8/hotspot/src/share/vm/oops/objArrayKlass.inline.hpp.s390 jdk8/hotspot/src/share/vm/oops/objArrayKlass.inline.hpp
---- jdk8/hotspot/src/share/vm/oops/objArrayKlass.inline.hpp.s390	2014-10-23 18:32:14.000000000 -0400
-+++ jdk8/hotspot/src/share/vm/oops/objArrayKlass.inline.hpp	2015-01-09 15:57:32.423809100 -0500
+-    init_sz = TLABSize / HeapWordSize;
++    init_sz = (size_t)(TLABSize / HeapWordSize);
+   } else if (global_stats() != NULL) {
+     // Initial size is a function of the average number of allocating threads.
+     unsigned nof_threads = global_stats()->allocating_threads_avg();
+ 
+-    init_sz  = (Universe::heap()->tlab_capacity(myThread()) / HeapWordSize) /
+-                      (nof_threads * target_refills());
++    init_sz  = (size_t)((Universe::heap()->tlab_capacity(myThread()) / HeapWordSize) /
++                      (nof_threads * target_refills()));
+     init_sz = align_object_size(init_sz);
+   }
+   init_sz = MIN2(MAX2(init_sz, min_size()), max_size());
+diff -up jdk8/hotspot/src/share/vm/oops/objArrayKlass.inline.hpp.size_t jdk8/hotspot/src/share/vm/oops/objArrayKlass.inline.hpp
+--- jdk8/hotspot/src/share/vm/oops/objArrayKlass.inline.hpp.size_t	2015-05-19 12:16:26.000000000 -0400
++++ jdk8/hotspot/src/share/vm/oops/objArrayKlass.inline.hpp	2015-06-09 10:21:39.000000000 -0400
 @@ -48,7 +48,7 @@ void ObjArrayKlass::objarray_follow_cont
    const size_t beg_index = size_t(index);
    assert(beg_index < len || len == 0, "index too large");
@@ -279,10 +287,10 @@ diff -up jdk8/hotspot/src/share/vm/oops/objArrayKlass.inline.hpp.s390 jdk8/hotsp
    const size_t end_index = beg_index + stride;
    T* const base = (T*)a->base();
    T* const beg = base + beg_index;
-diff -up jdk8/hotspot/src/share/vm/runtime/arguments.cpp.s390 jdk8/hotspot/src/share/vm/runtime/arguments.cpp
---- jdk8/hotspot/src/share/vm/runtime/arguments.cpp.s390	2014-10-23 18:32:14.000000000 -0400
-+++ jdk8/hotspot/src/share/vm/runtime/arguments.cpp	2015-01-09 15:57:32.423809100 -0500
-@@ -1250,7 +1250,7 @@ void Arguments::set_cms_and_parnew_gc_fl
+diff -up jdk8/hotspot/src/share/vm/runtime/arguments.cpp.size_t jdk8/hotspot/src/share/vm/runtime/arguments.cpp
+--- jdk8/hotspot/src/share/vm/runtime/arguments.cpp.size_t	2015-05-19 12:16:26.000000000 -0400
++++ jdk8/hotspot/src/share/vm/runtime/arguments.cpp	2015-06-09 10:21:39.000000000 -0400
+@@ -1277,7 +1277,7 @@ void Arguments::set_cms_and_parnew_gc_fl
      // NewSize was set on the command line and it is larger than
      // preferred_max_new_size.
      if (!FLAG_IS_DEFAULT(NewSize)) {   // NewSize explicitly set at command-line
@@ -291,7 +299,7 @@ diff -up jdk8/hotspot/src/share/vm/runtime/arguments.cpp.s390 jdk8/hotspot/src/s
      } else {
        FLAG_SET_ERGO(uintx, MaxNewSize, preferred_max_new_size);
      }
-@@ -1275,8 +1275,8 @@ void Arguments::set_cms_and_parnew_gc_fl
+@@ -1302,8 +1302,8 @@ void Arguments::set_cms_and_parnew_gc_fl
        // Unless explicitly requested otherwise, make young gen
        // at least min_new, and at most preferred_max_new_size.
        if (FLAG_IS_DEFAULT(NewSize)) {
@@ -302,7 +310,7 @@ diff -up jdk8/hotspot/src/share/vm/runtime/arguments.cpp.s390 jdk8/hotspot/src/s
          if (PrintGCDetails && Verbose) {
            // Too early to use gclog_or_tty
            tty->print_cr("CMS ergo set NewSize: " SIZE_FORMAT, NewSize);
-@@ -1286,7 +1286,7 @@ void Arguments::set_cms_and_parnew_gc_fl
+@@ -1313,7 +1313,7 @@ void Arguments::set_cms_and_parnew_gc_fl
        // so it's NewRatio x of NewSize.
        if (FLAG_IS_DEFAULT(OldSize)) {
          if (max_heap > NewSize) {
@@ -311,3 +319,15 @@ diff -up jdk8/hotspot/src/share/vm/runtime/arguments.cpp.s390 jdk8/hotspot/src/s
            if (PrintGCDetails && Verbose) {
              // Too early to use gclog_or_tty
              tty->print_cr("CMS ergo set OldSize: " SIZE_FORMAT, OldSize);
+diff -up jdk8/hotspot/src/share/vm/gc_implementation/g1/g1PageBasedVirtualSpace.cpp.size_t jdk8/hotspot/src/share/vm/gc_implementation/g1/g1PageBasedVirtualSpace.cpp
+--- jdk8/hotspot/src/share/vm/gc_implementation/g1/g1PageBasedVirtualSpace.cpp.size_t	2015-06-09 10:35:04.000000000 -0400
++++ jdk8/hotspot/src/share/vm/gc_implementation/g1/g1PageBasedVirtualSpace.cpp	2015-06-09 10:33:21.000000000 -0400
+@@ -117,7 +117,7 @@ size_t G1PageBasedVirtualSpace::uncommit
+   return reserved_size() - committed_size();
+ }
+ 
+-size_t G1PageBasedVirtualSpace::addr_to_page_index(char* addr) const {
++uintptr_t G1PageBasedVirtualSpace::addr_to_page_index(char* addr) const {
+   return (addr - _low_boundary) / _page_size;
+ }
+ 

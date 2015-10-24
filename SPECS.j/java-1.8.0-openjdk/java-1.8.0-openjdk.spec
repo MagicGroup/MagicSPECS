@@ -43,7 +43,7 @@
 # sometimes we need to distinguish big and little endian PPC64
 %global ppc64le         ppc64le
 %global ppc64be         ppc64 ppc64p7
-%global multilib_arches %{power64} sparc64 x86_64 mips64el
+%global multilib_arches %{power64} sparc64 x86_64
 %global jit_arches      %{ix86} x86_64 sparcv9 sparc64 %{aarch64} %{power64}
 
 # With diabled nss is NSS deactivated, so in NSS_LIBDIR can be wrong path
@@ -63,8 +63,11 @@
 %ifarch ppc
 %global archinstall ppc
 %endif
-%ifarch %{power64}
+%ifarch %{ppc64be}
 %global archinstall ppc64
+%endif
+%ifarch %{ppc64le}
+%global archinstall ppc64le
 %endif
 %ifarch %{ix86}
 %global archinstall i386
@@ -83,9 +86,6 @@
 %endif
 %ifarch %{aarch64}
 %global archinstall aarch64
-%endif
-%ifarch mips64el
-%global archinstall mips64el
 %endif
 # 32 bit sparc, optimized for v9
 %ifarch sparcv9
@@ -116,12 +116,11 @@
 
 # Standard JPackage naming and versioning defines.
 %global origin          openjdk
-%global updatever       40
-%global buildver        b12
-%global aarch64_updatever 40
-%global aarch64_buildver b12
-%global aarch64_changesetid aarch64-1263
-# priority must be 6 digits in total
+%global updatever       60
+%global buildver        b28
+%global aarch64_updatever %{updatever}
+%global aarch64_buildver  %{buildver}
+# priority must be 7 digits in total
 %global priority        18000%{updatever}
 %global javaver         1.8.0
 
@@ -130,7 +129,7 @@
 #images stub
 %global j2sdkimage       j2sdk-image
 # output dir stub
-%global buildoutputdir() %{expand:jdk8/build/jdk8.build%1}
+%global buildoutputdir() %{expand:openjdk/build/jdk8.build%1}
 #we can copy the javadoc to not arched dir, or made it not noarch
 %global uniquejavadocdir()    %{expand:%{fullversion}%1}
 #main id and dir of this jdk
@@ -171,8 +170,27 @@ exit 0
 %global post_headless() %{expand:
 # FIXME: identical binaries are copied, not linked. This needs to be
 # fixed upstream.
+# The pretrans lua scriptlet prevents an unmodified java.security
+# from being replaced via an update. It gets created as
+# java.security.rpmnew instead. This invalidates the patch of
+# JDK-8061210 of the January 2015 CPU or JDK-8043201 of the
+# July 2015 CPU. We fix this via a post scriptlet which runs on updates.
+if [ "$1" -gt 1 ]; then
+  javasecurity="%{_jvmdir}/%{uniquesuffix}/jre/lib/security/java.security"
+  sum=$(md5sum "${javasecurity}" | cut -d' ' -f1)
+  # This is the md5sum of an unmodified java.security file
+  if [ "${sum}" = '1690ac33955594f71dc952c9e83fd396' -o \\
+       "${sum}" = 'b138695d0c0ea947e64a21a627d973ba' -o \\
+       "${sum}" = 'd17958676bdb9f9d941c8a59655311fb' ]; then
+    if [ -f "${javasecurity}.rpmnew" ]; then
+      mv -f "${javasecurity}.rpmnew" "${javasecurity}"
+    fi
+  fi
+fi
+
 %ifarch %{jit_arches}
-%ifnarch %{ppc64le}
+# MetaspaceShared::generate_vtable_methods not implemented for PPC JIT
+%ifnarch %{power64}
 #see https://bugzilla.redhat.com/show_bug.cgi?id=513605
 %{jrebindir %%1}/java -Xshare:dump >/dev/null 2>/dev/null
 %endif
@@ -219,7 +237,7 @@ for X in %{origin} %{javaver} ; do
     --install %{_jvmdir}/jre-"$X" \\
     jre_"$X" %{_jvmdir}/%{jredir %%1} %{priority} \\
     --slave %{_jvmjardir}/jre-"$X" \\
-    jre_"$X"_exports %{_jvmjardir}/%{jredir %%1}
+    jre_"$X"_exports %{_jvmdir}/%{jredir %%1}
 done
 
 update-alternatives --install %{_jvmdir}/jre-%{javaver}-%{origin} jre_%{javaver}_%{origin} %{_jvmdir}/%{jrelnk %%1} %{priority} \\
@@ -431,8 +449,10 @@ exit 0
 %config(noreplace) %{_jvmdir}/%{jredir %%1}/lib/security/nss.cfg
 %{_jvmdir}/%{jredir %%1}/lib/audio/
 %ifarch %{jit_arches}
+%ifnarch %{power64}
 %attr(664, root, root) %ghost %{_jvmdir}/%{jredir %%1}/lib/%{archinstall}/server/classes.jsa
 %attr(664, root, root) %ghost %{_jvmdir}/%{jredir %%1}/lib/%{archinstall}/client/classes.jsa
+%endif
 %endif
 %{_jvmdir}/%{jredir %%1}/lib/%{archinstall}/server/
 %{_jvmdir}/%{jredir %%1}/lib/%{archinstall}/client/
@@ -446,15 +466,9 @@ exit 0
 %dir %{_jvmdir}/%{sdkdir %%1}/bin
 %dir %{_jvmdir}/%{sdkdir %%1}/include
 %dir %{_jvmdir}/%{sdkdir %%1}/lib
-%if %{with_systemtap}
-%dir %{_jvmdir}/%{sdkdir %%1}/tapset
-%endif
 %{_jvmdir}/%{sdkdir %%1}/bin/*
 %{_jvmdir}/%{sdkdir %%1}/include/*
 %{_jvmdir}/%{sdkdir %%1}/lib/*
-%if %{with_systemtap}
-%{_jvmdir}/%{sdkdir %%1}/tapset/*.stp
-%endif
 %{_jvmjardir}/%{sdkdir %%1}
 %{_datadir}/applications/*jconsole%1.desktop
 %{_mandir}/man1/appletviewer-%{uniquesuffix %%1}.1*
@@ -488,7 +502,11 @@ exit 0
 %{_mandir}/man1/wsimport-%{uniquesuffix %%1}.1*
 %{_mandir}/man1/xjc-%{uniquesuffix %%1}.1*
 %if %{with_systemtap}
-%{tapsetroot}
+%dir %{tapsetroot}
+%dir %{tapsetdir}
+%{tapsetdir}/*%{version}-%{release}.%{_arch}%1.stp
+%dir %{_jvmdir}/%{sdkdir %%1}/tapset
+%{_jvmdir}/%{sdkdir %%1}/tapset/*.stp
 %endif
 }
 
@@ -544,10 +562,12 @@ Obsoletes: sinjdoc
 %global java_headless_rpo() %{expand:
 # Require /etc/pki/java/cacerts.
 Requires: ca-certificates
-# Require jpackage-utils for ownership of /usr/lib/jvm/
-Requires: jpackage-utils
+# Require javapackages-tools for ownership of /usr/lib/jvm/
+Requires: javapackages-tools
 # Require zoneinfo data provided by tzdata-java subpackage.
-Requires: tzdata-java >= 2014f-1
+Requires: tzdata-java >= 2015d
+# libsctp.so.1 is being `dlopen`ed on demand
+Requires: lksctp-tools
 # Post requires alternatives to install tool alternatives.
 Requires(post):   %{_sbindir}/alternatives
 # Postun requires alternatives to uninstall tool alternatives.
@@ -640,7 +660,7 @@ Obsoletes: java-1.7.0-openjdk-accessibility%1
 
 Name:    java-%{javaver}-%{origin}
 Version: %{javaver}.%{updatever}
-Release: 20.%{buildver}%{?dist}
+Release: 15.%{buildver}%{?dist}
 # java-1.5.0-ibm from jpackage.org set Epoch to 1 for unknown reasons,
 # and this change was brought into RHEL-4.  java-1.5.0-ibm packages
 # also included the epoch in their virtual provides.  This created a
@@ -650,6 +670,7 @@ Release: 20.%{buildver}%{?dist}
 # satisfied by the 1:1.5.0 packages.  Thus we need to set the epoch in
 # JDK package >= 1.6.0 to 1, and packages referring to JDK virtual
 # provides >= 1.6.0 must specify the epoch, "java >= 1:1.6.0".
+
 Epoch:   1
 Summary: OpenJDK Runtime Environment
 Group:   Development/Languages
@@ -658,10 +679,9 @@ License:  ASL 1.1 and ASL 2.0 and GPL+ and GPLv2 and GPLv2 with exceptions and L
 URL:      http://openjdk.java.net/
 
 # Source from upstrem OpenJDK8 project. To regenerate, use
-# ./generate_source_tarball.sh jdk8u jdk8u jdk8u%%{updatever}-%%{buildver}
-# ./generate_source_tarball.sh aarch64-port jdk8 %%{aarch64_hg_tag}
-Source0:  jdk8u-jdk8u%{updatever}-%{buildver}.tar.xz
-Source1:  jdk8-jdk8u%{aarch64_updatever}-%{aarch64_buildver}-%{aarch64_changesetid}.tar.xz
+# aarch64-port now contains integration forest of both aarch64 and normal jdk
+# ./generate_source_tarball.sh aarch64-port jdk8u60 aarch64-jdk8u60-b28
+Source0:  jdk8u60-aarch64-jdk8u%{updatever}-%{buildver}.tar.xz
 
 # Custom README for -src subpackage
 Source2:  README.src
@@ -680,10 +700,12 @@ Source10: policytool.desktop.in
 Source11: nss.cfg
 
 # Removed libraries that we link instead
-Source12: remove-intree-libraries.sh
+Source12: %{name}-remove-intree-libraries.sh
 
 # Ensure we aren't using the limited crypto policy
 Source13: TestCryptoLevel.java
+
+Source20: repackReproduciblePolycies.sh
 
 # New versions of config files with aarch64 support. This is not upstream yet.
 Source100: config.guess
@@ -697,15 +719,12 @@ Patch1:   %{name}-accessible-toolkit.patch
 # Restrict access to java-atk-wrapper classes
 Patch3: java-atk-wrapper-security.patch
 # RHBZ 808293
-Patch4: PStack-808293.patch
+Patch4: %{name}-PStack-808293.patch
 # Allow multiple initialization of PKCS11 libraries
 Patch5: multiple-pkcs11-library-init.patch
-# Disable doclint for compatibility
-Patch6: disable-doclint-by-default.patch
 # Include all sources in src.zip
 Patch7: include-all-srcs.patch
 # Problem discovered with make 4.0
-Patch11: hotspot-build-j-directive.patch
 Patch12: removeSunEcProvider-RH1154143.patch
 Patch13: libjpeg-turbo-1.4-compat.patch
 
@@ -724,13 +743,18 @@ Patch203: system-lcms.patch
 
 Patch300: jstack-pr1845.patch
 
-Patch400: ppc_stack_overflow_fix.patch 
-Patch401: fix_ZERO_ARCHDEF_ppc.patch
-Patch402: atomic_linux_zero.inline.hpp.patch
+# Fixes StackOverflowError on ARM32 bit Zero. See RHBZ#1206656
+Patch403: rhbz1206656_fix_current_stack_pointer.patch
 
-Patch1000: java-1.8.0-openjdk-mips64el-fix.patch
+# PR2095, RH1163501: 2048-bit DH upper bound too small for Fedora infrastructure (sync with IcedTea 2.x)
+Patch504: rh1163501.patch
+# S4890063, PR2304, RH1214835: HPROF: default text truncated when using doe=n option (upstreaming post-CPU 2015/07)
+Patch511: rh1214835.patch
 
-Patch9999: enableArm64.patch
+# RH1191652; fix name of ppc64le architecture
+Patch601: %{name}-rh1191652-root.patch
+Patch602: %{name}-rh1191652-jdk.patch
+Patch603: %{name}-rh1191652-hotspot-aarch64.patch
 
 BuildRequires: autoconf
 BuildRequires: automake
@@ -763,15 +787,11 @@ BuildRequires: java-1.8.0-openjdk-devel
 %ifnarch %{jit_arches}
 BuildRequires: libffi-devel
 %endif
-BuildRequires: tzdata-java >= 2014f-1
+BuildRequires: tzdata-java >= 2015d
 
 # cacerts build requirement.
 BuildRequires: openssl
-# execstack build requirement.
-# no prelink on ARM yet
-%ifnarch %{arm} %{aarch64} %{ppc64le}
-BuildRequires: prelink
-%endif
+#prelink was removed from fedora
 %if %{with_systemtap}
 BuildRequires: systemtap-sdt-devel
 %endif
@@ -890,7 +910,7 @@ The OpenJDK source bundle %{for_debug}.
 %package javadoc
 Summary: OpenJDK API Documentation
 Group:   Documentation
-Requires: jpackage-utils
+Requires: javapackages-tools
 BuildArch: noarch
 
 %{java_javadoc_rpo %{nil}}
@@ -903,7 +923,7 @@ The OpenJDK API documentation.
 %package javadoc-debug
 Summary: OpenJDK API Documentation %{for_debug}
 Group:   Documentation
-Requires: jpackage-utils
+Requires: javapackages-tools
 BuildArch: noarch
 
 %{java_javadoc_rpo %{debug_suffix_unquoted}}
@@ -957,29 +977,28 @@ if [ %{include_debug_build} -eq 0 -a  %{include_normal_build} -eq 0 ] ; then
   exit 13
 fi
 %setup -q -c -n %{uniquesuffix ""} -T -a 0
-%ifarch %{aarch64}
-pushd jdk8
-rm -r hotspot
-tar xf %{SOURCE1}
-popd
-%endif
+# https://bugzilla.redhat.com/show_bug.cgi?id=1189084
+prioritylength=`expr length %{priority}`
+if [ $prioritylength -ne 7 ] ; then
+ echo "priority must be 7 digits in total, violated"
+ exit 14
+fi
+# For old patches
+ln -s openjdk jdk8
+
 cp %{SOURCE2} .
 
 # replace outdated configure guess script
 #
 # the configure macro will do this too, but it also passes a few flags not
 # supported by openjdk configure script
-cp %{SOURCE100} jdk8/common/autoconf/build-aux/
-cp %{SOURCE101} jdk8/common/autoconf/build-aux/
+cp %{SOURCE100} openjdk/common/autoconf/build-aux/
+cp %{SOURCE101} openjdk/common/autoconf/build-aux/
 
 # OpenJDK patches
 
 # Remove libraries that are linked
 sh %{SOURCE12}
-
-%ifarch %{aarch64}
-%patch9999
-%endif
 
 %patch201
 %patch202
@@ -989,9 +1008,7 @@ sh %{SOURCE12}
 %patch3
 %patch4
 %patch5
-%patch6
 %patch7
-%patch11
 %patch12
 %patch13
 
@@ -1002,22 +1019,20 @@ sh %{SOURCE12}
 %endif
 
 # Zero PPC fixes.
-#  TODO: propose them upstream
-%patch400
-%patch401
-%patch402
+%patch403
 
-%ifarch mips64el
-%patch1000
-%endif
+%patch603
+%patch601
+%patch602
+
+
+%patch504
+%patch511
 
 # Extract systemtap tapsets
 %if %{with_systemtap}
-
 tar xzf %{SOURCE8}
-
 %patch300
-
 %if %{include_debug_build}
 cp -r tapset tapset%{debug_suffix}
 %endif
@@ -1038,7 +1053,7 @@ for suffix in %{build_loop} ; do
   done
 done
 # systemtap tapsets ends
-%endif 
+%endif
 
 # Prepare desktop files
 for suffix in %{build_loop} ; do
@@ -1059,7 +1074,7 @@ export NUM_PROC=`/usr/bin/getconf _NPROCESSORS_ONLN 2> /dev/null || :`
 export NUM_PROC=${NUM_PROC:-1}
 
 # Build IcedTea and OpenJDK.
-%ifarch s390x sparc64 alpha %{power64} %{aarch64} mips64el
+%ifarch s390x sparc64 alpha %{power64} %{aarch64}
 export ARCH_DATA_MODEL=64
 %endif
 %ifarch alpha
@@ -1067,9 +1082,10 @@ export CFLAGS="$CFLAGS -mieee"
 %endif
 
 EXTRA_CFLAGS="-fstack-protector-strong"
-#see https://bugzilla.redhat.com/show_bug.cgi?id=1120792
-EXTRA_CFLAGS="$EXTRA_CFLAGS -fno-devirtualize" 
-EXTRA_CPP_FLAGS="-fno-devirtualize"
+# Disable various optimizations to fix miscompliation. See:
+# - https://bugzilla.redhat.com/show_bug.cgi?id=1120792
+EXTRA_CFLAGS="$EXTRA_CFLAGS -fno-devirtualize"
+EXTRA_CPP_FLAGS="-fno-devirtualize -fno-tree-vrp"
 # PPC/PPC64 needs -fno-tree-vectorize since -O3 would
 # otherwise generate wrong code producing segfaults.
 %ifarch %{power64} ppc
@@ -1079,7 +1095,7 @@ EXTRA_CFLAGS="$EXTRA_CFLAGS -fno-strict-aliasing"
 %endif
 export EXTRA_CFLAGS
 
-(cd jdk8/common/autoconf
+(cd openjdk/common/autoconf
  bash ./autogen.sh
 )
 
@@ -1097,15 +1113,12 @@ bash ../../configure \
 %ifnarch %{jit_arches}
     --with-jvm-variants=zero \
 %endif
-%ifarch %{ppc64le}
-    --with-jvm-interpreter=cpp \
-%endif
     --disable-zip-debug-info \
     --with-milestone="fcs" \
     --with-update-version=%{updatever} \
     --with-build-number=%{buildver} \
 %ifarch %{aarch64}
-    --with-user-release-suffix="aarch64-%{aarch64_updatever}-%{aarch64_buildver}-%{aarch64_changesetid}" \
+    --with-user-release-suffix="aarch64-%{aarch64_updatever}-%{aarch64_buildver}" \
 %endif
     --with-boot-jdk=/usr/lib/jvm/java-openjdk \
     --with-debug-level=$debugbuild \
@@ -1120,6 +1133,9 @@ bash ../../configure \
     --with-extra-cflags="$EXTRA_CFLAGS" \
     --with-num-cores="$NUM_PROC"
 
+cat spec.gmk
+cat hotspot-spec.gmk
+
 # The combination of FULL_DEBUG_SYMBOLS=0 and ALT_OBJCOPY=/does_not_exist
 # disables FDS for all build configs and reverts to pre-FDS make logic.
 # STRIP_POLICY=none says don't do any stripping. DEBUG_BINARIES=true says
@@ -1127,6 +1143,7 @@ bash ../../configure \
 
 make \
     DEBUG_BINARIES=true \
+    JAVAC_FLAGS=-g \
     STRIP_POLICY=no_strip \
     POST_STRIP_CMD="" \
     LOG=trace \
@@ -1174,7 +1191,17 @@ if [ -f "$ZERO_JVM" ] ; then
 fi
 
 # Check src.zip has all sources. See RHBZ#1130490
-jar -tf $JAVA_HOME/src.zip | grep Unsafe
+jar -tf $JAVA_HOME/src.zip | grep 'sun.misc.Unsafe'
+
+# Check class files include useful debugging information
+$JAVA_HOME/bin/javap -l java.lang.Object | grep "Compiled from"
+$JAVA_HOME/bin/javap -l java.lang.Object | grep LineNumberTable
+$JAVA_HOME/bin/javap -l java.lang.Object | grep LocalVariableTable
+
+# Check generated class files include useful debugging information
+$JAVA_HOME/bin/javap -l java.nio.ByteBuffer | grep "Compiled from"
+$JAVA_HOME/bin/javap -l java.nio.ByteBuffer | grep LineNumberTable
+$JAVA_HOME/bin/javap -l java.nio.ByteBuffer | grep LocalVariableTable
 
 #build cycles
 done
@@ -1207,10 +1234,16 @@ mkdir -p $RPM_BUILD_ROOT%{_jvmdir}/%{jredir $suffix}/lib/%{archinstall}/client/
   install -dm 755 $RPM_BUILD_ROOT%{_jvmdir}/%{sdkdir $suffix}/tapset
   # note, that uniquesuffix  is in BUILD dir in this case
   cp -a $RPM_BUILD_DIR/%{uniquesuffix ""}/tapset$suffix/*.stp $RPM_BUILD_ROOT%{_jvmdir}/%{sdkdir $suffix}/tapset/
+  pushd  $RPM_BUILD_ROOT%{_jvmdir}/%{sdkdir $suffix}/tapset/
+   tapsetFiles=`ls *.stp`
+  popd
   install -d -m 755 $RPM_BUILD_ROOT%{tapsetdir}
   pushd $RPM_BUILD_ROOT%{tapsetdir}
     RELATIVE=$(%{abs2rel} %{_jvmdir}/%{sdkdir $suffix}/tapset %{tapsetdir})
-    ln -sf $RELATIVE/*.stp .
+    for name in $tapsetFiles ; do
+      targetName=`echo $name | sed "s/.stp/$suffix.stp/"`
+      ln -sf $RELATIVE/$name $targetName
+    done
   popd
 %endif
 
@@ -1291,7 +1324,7 @@ cp -a %{buildoutputdir $suffix}/docs $RPM_BUILD_ROOT%{_javadocdir}/%{uniquejavad
 # Install icons and menu entries.
 for s in 16 24 32 48 ; do
   install -D -p -m 644 \
-    jdk8/jdk/src/solaris/classes/sun/awt/X11/java-icon${s}.png \
+    openjdk/jdk/src/solaris/classes/sun/awt/X11/java-icon${s}.png \
     $RPM_BUILD_ROOT%{_datadir}/icons/hicolor/${s}x${s}/apps/java-%{javaver}.png
 done
 
@@ -1384,6 +1417,8 @@ find $RPM_BUILD_ROOT%{_jvmdir}/%{sdkdir $suffix}/demo \
     echo "" >> accessibility.properties
   popd
 
+bash %{SOURCE20} $RPM_BUILD_ROOT/%{_jvmdir}/%{jredir $suffix} %{javaver}
+
 # end, dual install
 done
 
@@ -1415,7 +1450,6 @@ local caredFiles = {"jre/lib/calendars.properties",
               "jre/lib/net.properties",
               "jre/lib/psfontj2d.properties",
               "jre/lib/sound.properties",
-              "jre/lib/tz.properties",
               "jre/lib/deployment.properties",
               "jre/lib/deployment.config",
               "jre/lib/security/US_export_policy.jar",
@@ -1677,10 +1711,152 @@ end
 %{files_accessibility %{debug_suffix_unquoted}}
 %endif
 
-
 %changelog
-* Mon Feb 16 2015 Liu Di <liudidi@gmail.com> - 1:1.8.0.40-20.b12
-- 为 Magic 3.0 重建
+* Thu Oct 15 2015 Jiri Vanek <jvanek@redhat.com> - 1:1.8.0.60-15.b28
+- moved to single source integration forest
+- removed patch patch9999 enableArm64.patch
+- removed patch patch600  %%{name}-rh1191652-hotspot.patch
+
+* Thu Aug 27 2015 Jiri Vanek <jvanek@redhat.com> - 1:1.8.0.60-14.b24
+- updated aarch64 tarball to contain whole forest of latest jdk8-aarch64-jdk8u60-b24.2.tar.xz
+- using this forest instead of only hotspot
+- generate_source_tarball.sh - temporarily excluded repos="hotspot" compression of download
+- not only openjdk/hotspot is replaced, by wholeopenjdk
+- ln -s openjdk jdk8 done after replacing of openjdk
+- patches 9999 601 and 602 exclded for aarch64
+
+* Wed Aug 26 2015 Jiri Vanek <jvanek@redhat.com> - 1:1.8.0.60-13.b24
+- updated aarch64 hotpost to latest jdk8-aarch64-jdk8u60-b24.2.tar.xz
+
+* Wed Aug 19 2015 Jiri Vanek <jvanek@redhat.com> - 1:1.8.0.60-12.b24
+- updated to freshly released jdk8u60-jdk8u60-b27
+
+* Thu Aug 13 2015 Jiri Vanek <jvanek@redhat.com> - 1:1.8.0.60-11.b24
+- another touching attempt to polycies...
+
+* Mon Aug 03 2015 Jiri Vanek <jvanek@redhat.com> - 1:1.8.0.60-10.b24
+- arch64 updated to u60-b24 with hope to fix rhbz1249037
+
+* Fri Jul 17 2015 Jiri Vanek <jvanek@redhat.com> - 1:1.8.0.60-3.b24
+- added one more md5sum test (thanx to Severin!)
+ - I guess one more missing
+- doubled slash in md5sum test in post
+
+* Thu Jul 16 2015 Jiri Vanek <jvanek@redhat.com> - 1:1.8.0.60-2.b24
+- updated to security u60-b24
+- moved to openjdk instead of jdk8 topdir in sources
+- removed upstreamed patch99 java-1.8.0-openjdk-linux-4.x.patch
+- removed upstreamed patch503 pr2444.patch
+- removed upstreamed patch505 1208369_memory_leak_gcc5.patch
+- removed upstreamed patch506: gif4.1.patch
+ - note: usptream version is suspicious
+  GIFLIB_MAJOR >= 5 SplashStreamGifInputFunc, NULL
+  ELSE SplashStreamGifInputFunc
+ - but the condition seems to be viceversa
+
+
+* Mon Jun 22 2015 Omair Majid <omajid@redhat.com> - 1:1.8.0.60-7.b16
+- Require javapackages-tools instead of jpackage-utils.
+
+* Wed Jun 17 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1:1.8.0.60-6.b16
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
+
+* Tue Jun 09 2015 Dan Horák <dan[at]danny.cz> - 1:1.8.0.60-5.b16
+- allow build on Linux 4.x kernel
+- refresh s390 size_t patch
+
+* Fri Jun 05 2015 Jiri Vanek <jvanek@redhat.com> - 1:1.8.0.60-4.b16
+- added requires lksctp-tools for headless subpackage to make sun.nio.ch.sctp work
+
+* Mon May 25 2015 Jiri Vanek <jvanek@redhat.com> - 1:1.8.0.60-2.b16
+- Patch503 d318d83c4e74.patch, patch505 1208369_memory_leak_gcc5.patch (and patch506 gif4.1.patch)
+   moved out of "if with_systemtap" block
+
+* Mon May 25 2015 Jiri Vanek <jvanek@redhat.com> - 1:1.8.0.60-1.b16
+- updated to u60b16
+- deleted upstreamed patches:
+   patch501 1182011_JavaPrintApiDoesNotPrintUmlautCharsWithPostscriptOutputCorrectly.patch
+   patch502 1182694_javaApplicationMenuMisbehave.patch
+   patch504 1210739_dns_naming_ipv6_addresses.patch
+   patch402 atomic_linux_zero.inline.hpp.patch
+   patch401 fix_ZERO_ARCHDEF_ppc.patch
+   patch400 ppc_stack_overflow_fix.patch
+   patch204 zero-interpreter-fix.patch
+- added Patch506 gif4.1.patch to allow build agaisnt giflib > 4.1
+
+* Wed May 13 2015 Jiri Vanek <jvanek@redhat.com> - 1:1.8.0.45-38.b14
+- updated to 8u45-b14 with hope to fix rhbz#1123870
+
+* Wed May 13 2015 Jiri Vanek <jvanek@redhat.com> - 1:1.8.0.45-37.b13
+- added runtime requires for tzdata
+- Remove reference to tz.properties which is no longer used (by gnu.andrew)
+
+* Wed Apr 29 2015 Severin Gehwolf <sgehwolf@redhat.com> - 1:1.8.0.45-36.b13
+- Patch hotspot to not use undefined code rather than passing
+  -fno-tree-vrp via CFLAGS.
+  Resolves: RHBZ#1208369
+- Add upstream patch for DNS nameserver issue with IPv6 addresses.
+  Resolves: RHBZ#1210739
+
+* Wed Apr 29 2015 Jiri Vanek <jvanek@redhat.com> - 1:1.8.0.45-35.b13
+- Omit jsa files from power64 file list as well, as they are never generated
+- moved to boot build by openjdk8
+- Use the template interpreter on ppc64le
+
+* Fri Apr 10 2015 Jiri Vanek <jvanek@redhat.com> - 1:1.8.0.45-31.b13
+- repacked sources
+
+* Tue Apr 07 2015 Jiri Vanek <jvanek@redhat.com> - 1:1.8.0.45-30.b13
+- updated to security u45
+- removed patch6: disable-doclint-by-default.patch
+- added patch d318d83c4e74.patch
+- added  rhbz1206656_fix_current_stack_pointer.patch
+- renamed PStack-808293.patch -> java-1.8.0-openjdk-PStack-808293.patch
+- renamed remove-intree-libraries.sh -> java-1.8.0-openjdk-remove-intree-libraries.sh
+- renamed to preven conflix with jdk7
+
+* Fri Apr 03 2015 Omair Majid <omajid@redhat.com> - 1:1.8.0.40-27.b25
+- Add -fno-tree-vrp to flags to prevent hotspot miscompilation.
+- Resolves: RHBZ#1208369
+
+* Thu Apr 02 2015 Jiri Vanek <jvanek@redhat.com> - 1:1.8.0.40-27.b25
+- bumped release. Needed rebuild by itself on arm
+
+* Tue Mar 31 2015 Severin Gehwolf <sgehwolf@redhat.com> - 1:1.8.0.40-26.b25
+- Make Zero build-able on ARM32.
+  Resolves: RHBZ#1206656
+
+* Fri Mar 27 2015 Dan Horák <dan[at]danny.cz> - 1:1.8.0.40-25.b25
+- refresh s390 patches
+
+* Fri Mar 27 2015 Jiri Vanek <jvanek@redhat.com> - 1:1.8.0.40-24.b25
+- added patch501 1182011_JavaPrintApiDoesNotPrintUmlautCharsWithPostscriptOutputCorrectly.patch
+- added patch502 1182694_javaApplicationMenuMisbehave.patch
+- both upstreamed, will be gone with u60
+
+* Wed Mar 25 2015 Omair Majid <omajid@redhat.com> - 1:1.8.0.40-23.b25
+- Disable various EC algorithms in configuration
+
+* Mon Mar 23 2015 Jiri Vanek <jvanek@redhat.com> - 1:1.8.0.40-22.b25
+- sytemtap made working for dual package
+
+* Tue Mar 03 2015 Severin Gehwolf <sgehwolf@redhat.com> - 1:1.8.0.40-21.b25
+- Added compiler no-warn-
+
+* Fri Feb 20 2015 Omair Majid <omajid@redhat.com> - 1:1.8.0.40-21.b25
+- Fix zero interpreter build.
+
+* Thu Feb 12 2015 Omair Majid <omajid@redhat.com> - 1:1.8.0.40-21.b25
+- Fix building with gcc 5 by ignoring return-local-addr warning
+- Include additional debugging info for java class files and test that they are
+  present
+
+* Thu Feb 12 2015 Jiri Vanek <jvanek@redhat.com> - 1:1.8.0.40-20.b25
+- bumped to b25
+- removed upstreamed patch11 hotspot-build-j-directive.patch
+- policies repacked to stop spamming yum update
+- added and used source20 repackReproduciblePolycies.sh
+- added mehanism to force priority size
 
 * Fri Jan 09 2015 Dan Horák <dan[at]danny.cz> - 1:1.8.0.40-19.b12
 - refresh s390 patches
