@@ -1,0 +1,27 @@
+From ec64f273fb7660d3746eb765dc02e40726a54294 Mon Sep 17 00:00:00 2001
+From: Anselm R Garbe <anselm@garbe.us>
+Date: Wed, 17 Apr 2013 20:59:12 +0200
+Subject: [PATCH 23/28] applied Alex Sedov's Tab buffer termination patch,
+ thanks
+
+---
+ dmenu.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/dmenu.c b/dmenu.c
+index efc1e54..c25dc82 100644
+--- a/dmenu.c
++++ b/dmenu.c
+@@ -392,7 +392,8 @@ keypress(XKeyEvent *ev) {
+ 	case XK_Tab:
+ 		if(!sel)
+ 			return;
+-		strncpy(text, sel->text, sizeof text);
++		strncpy(text, sel->text, sizeof text - 1);
++		text[sizeof text - 1] = '\0';
+ 		cursor = strlen(text);
+ 		match();
+ 		break;
+-- 
+1.9.0
+

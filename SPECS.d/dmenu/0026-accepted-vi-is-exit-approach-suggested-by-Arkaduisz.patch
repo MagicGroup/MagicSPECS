@@ -1,0 +1,26 @@
+From 597d4b43379433a5bf86d490f747c0eeda38bba8 Mon Sep 17 00:00:00 2001
+From: Anselm R Garbe <anselm@garbe.us>
+Date: Fri, 28 Jun 2013 22:06:02 +0200
+Subject: [PATCH 26/28] accepted vi'is exit approach ^[ (suggested by
+ Arkaduisz)
+
+---
+ dmenu.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/dmenu.c b/dmenu.c
+index a06ae15..5e0a19c 100644
+--- a/dmenu.c
++++ b/dmenu.c
+@@ -279,6 +279,8 @@ keypress(XKeyEvent *ev) {
+ 		case XK_Return:
+ 		case XK_KP_Enter:
+ 			break;
++		case XK_bracketleft:
++			exit(EXIT_FAILURE);
+ 		default:
+ 			return;
+ 		}
+-- 
+1.9.0
+

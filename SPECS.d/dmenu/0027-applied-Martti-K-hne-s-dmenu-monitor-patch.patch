@@ -1,0 +1,106 @@
+From 13f787306f46a5f838987e3b546d85d1bb1c3c01 Mon Sep 17 00:00:00 2001
+From: Anselm R Garbe <anselm@garbe.us>
+Date: Fri, 2 Aug 2013 22:30:20 +0200
+Subject: [PATCH 27/28] =?UTF-8?q?applied=20Martti=20K=C3=BChne's=20dmenu?=
+ =?UTF-8?q?=20monitor=20patch=20https://gist.github.com/mar77i/3349298/raw?=
+ =?UTF-8?q?/f6581ca96627f4c71c0bd1faf531daaf2a613b95/monarg.patch=20become?=
+ =?UTF-8?q?s=20upstream=20now?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+---
+ LICENSE |  2 +-
+ dmenu.1 |  5 +++++
+ dmenu.c | 11 ++++++++---
+ 3 files changed, 14 insertions(+), 4 deletions(-)
+
+diff --git a/LICENSE b/LICENSE
+index e2bfc83..0df62c6 100644
+--- a/LICENSE
++++ b/LICENSE
+@@ -1,7 +1,7 @@
+ MIT/X Consortium License
+ 
++© 2006-2013 Anselm R Garbe <anselm@garbe.us>
+ © 2010-2012 Connor Lane Smith <cls@lubutu.com>
+-© 2006-2012 Anselm R Garbe <anselm@garbe.us>
+ © 2009 Gottox <gottox@s01.de>
+ © 2009 Markus Schnalke <meillo@marmaro.de>
+ © 2009 Evan Gates <evan.gates@gmail.com>
+diff --git a/dmenu.1 b/dmenu.1
+index 88f77de..bbee17d 100644
+--- a/dmenu.1
++++ b/dmenu.1
+@@ -7,6 +7,8 @@ dmenu \- dynamic menu
+ .RB [ \-f ]
+ .RB [ \-i ]
+ .RB [ \-l
++.RB [ \-m
++.IR monitor ]
+ .IR lines ]
+ .RB [ \-p
+ .IR prompt ]
+@@ -49,6 +51,9 @@ dmenu matches menu items case insensitively.
+ .BI \-l " lines"
+ dmenu lists items vertically, with the given number of lines.
+ .TP
++.BI \-m " monitor"
++dmenu is displayed on the monitor supplied.
++.TP
+ .BI \-p " prompt"
+ defines the prompt to be displayed to the left of the input field.
+ .TP
+diff --git a/dmenu.c b/dmenu.c
+index 5e0a19c..8d9bbb6 100644
+--- a/dmenu.c
++++ b/dmenu.c
+@@ -54,6 +54,7 @@ static Item *matches, *matchend;
+ static Item *prev, *curr, *next, *sel;
+ static Window win;
+ static XIC xic;
++static int mon = -1;
+ 
+ #include "config.h"
+ 
+@@ -84,6 +85,8 @@ main(int argc, char *argv[]) {
+ 		/* these options take one argument */
+ 		else if(!strcmp(argv[i], "-l"))   /* number of lines in vertical list */
+ 			lines = atoi(argv[++i]);
++		else if(!strcmp(argv[i], "-m"))
++			mon = atoi(argv[++i]);
+ 		else if(!strcmp(argv[i], "-p"))   /* adds prompt to left of input field */
+ 			prompt = argv[++i];
+ 		else if(!strcmp(argv[i], "-fn"))  /* font or font set */
+@@ -557,7 +560,9 @@ setup(void) {
+ 		XWindowAttributes wa;
+ 
+ 		XGetInputFocus(dc->dpy, &w, &di);
+-		if(w != root && w != PointerRoot && w != None) {
++		if(mon != -1 && mon < n)
++			i = mon;
++		if(!i && w != root && w != PointerRoot && w != None) {
+ 			/* find top-level window containing current input focus */
+ 			do {
+ 				if(XQueryTree(dc->dpy, (pw = w), &dw, &w, &dws, &du) && dws)
+@@ -572,7 +577,7 @@ setup(void) {
+ 					}
+ 		}
+ 		/* no focused window is on screen, so use pointer location instead */
+-		if(!area && XQueryPointer(dc->dpy, root, &dw, &dw, &x, &y, &di, &di, &du))
++		if(mon == -1 && !area && XQueryPointer(dc->dpy, root, &dw, &dw, &x, &y, &di, &di, &du))
+ 			for(i = 0; i < n; i++)
+ 				if(INTERSECT(x, y, 1, 1, info[i]))
+ 					break;
+@@ -614,7 +619,7 @@ setup(void) {
+ 
+ void
+ usage(void) {
+-	fputs("usage: dmenu [-b] [-f] [-i] [-l lines] [-p prompt] [-fn font]\n"
++	fputs("usage: dmenu [-b] [-f] [-i] [-l lines] [-p prompt] [-fn font] [-m monitor]\n"
+ 	      "             [-nb color] [-nf color] [-sb color] [-sf color] [-v]\n", stderr);
+ 	exit(EXIT_FAILURE);
+ }
+-- 
+1.9.0
+

@@ -1,0 +1,25 @@
+From 38fccafada4eee3e4e0301d7c6eadd3c5788b305 Mon Sep 17 00:00:00 2001
+From: Connor Lane Smith <cls@lubutu.com>
+Date: Fri, 6 Apr 2012 16:38:01 +0100
+Subject: [PATCH 19/28] _POSIX_C_SOURCE=200809L
+
+---
+ config.mk | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/config.mk b/config.mk
+index ca89fd6..c0d466b 100644
+--- a/config.mk
++++ b/config.mk
+@@ -17,7 +17,7 @@ INCS = -I${X11INC}
+ LIBS = -L${X11LIB} -lX11 ${XINERAMALIBS}
+ 
+ # flags
+-CPPFLAGS = -D_BSD_SOURCE -DVERSION=\"${VERSION}\" ${XINERAMAFLAGS}
++CPPFLAGS = -D_BSD_SOURCE -D_POSIX_C_SOURCE=200809L -DVERSION=\"${VERSION}\" ${XINERAMAFLAGS}
+ CFLAGS   = -ansi -pedantic -Wall -Os ${INCS} ${CPPFLAGS}
+ LDFLAGS  = -s ${LIBS}
+ 
+-- 
+1.9.0
+

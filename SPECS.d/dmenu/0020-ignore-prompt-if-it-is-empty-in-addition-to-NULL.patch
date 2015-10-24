@@ -1,0 +1,34 @@
+From 1299e41447fe5850d127857a68f37c5badd491ce Mon Sep 17 00:00:00 2001
+From: Moritz Wilhelmy <moritz+hg@wzff.de>
+Date: Tue, 15 May 2012 11:47:54 +0200
+Subject: [PATCH 20/28] ignore prompt if it is empty in addition to NULL
+
+---
+ dmenu.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/dmenu.c b/dmenu.c
+index f7eba87..3962801 100644
+--- a/dmenu.c
++++ b/dmenu.c
+@@ -169,7 +169,7 @@ drawmenu(void) {
+ 	dc->h = bh;
+ 	drawrect(dc, 0, 0, mw, mh, True, BG(dc, normcol));
+ 
+-	if(prompt) {
++	if(prompt && *prompt) {
+ 		dc->w = promptw;
+ 		drawtext(dc, prompt, selcol);
+ 		dc->x = dc->w;
+@@ -579,7 +579,7 @@ setup(void) {
+ 		y = topbar ? 0 : DisplayHeight(dc->dpy, screen) - mh;
+ 		mw = DisplayWidth(dc->dpy, screen);
+ 	}
+-	promptw = prompt ? textw(dc, prompt) : 0;
++	promptw = (prompt && *prompt) ? textw(dc, prompt) : 0;
+ 	inputw = MIN(inputw, mw/3);
+ 	match();
+ 
+-- 
+1.9.0
+

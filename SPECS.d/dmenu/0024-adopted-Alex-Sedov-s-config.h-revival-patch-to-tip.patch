@@ -1,0 +1,64 @@
+From 14f72a276334de4a46543cf648a4922bc54f1e9f Mon Sep 17 00:00:00 2001
+From: Anselm R Garbe <anselm@garbe.us>
+Date: Wed, 17 Apr 2013 21:04:05 +0200
+Subject: [PATCH 24/28] adopted Alex Sedov's config.h revival patch to tip
+
+---
+ Makefile |  6 +++++-
+ dmenu.c  | 12 ++----------
+ 2 files changed, 7 insertions(+), 11 deletions(-)
+
+diff --git a/Makefile b/Makefile
+index f011ad7..0f7dfbd 100644
+--- a/Makefile
++++ b/Makefile
+@@ -18,7 +18,11 @@ options:
+ 	@echo CC -c $<
+ 	@${CC} -c $< ${CFLAGS}
+ 
+-${OBJ}: config.mk draw.h
++config.h:
++	@echo creating $@ from config.def.h
++	@cp config.def.h $@
++
++${OBJ}: config.h config.mk draw.h
+ 
+ dmenu: dmenu.o draw.o
+ 	@echo CC -o $@
+diff --git a/dmenu.c b/dmenu.c
+index c25dc82..a06ae15 100644
+--- a/dmenu.c
++++ b/dmenu.c
+@@ -44,20 +44,10 @@ static char text[BUFSIZ] = "";
+ static int bh, mw, mh;
+ static int inputw, promptw;
+ static size_t cursor = 0;
+-static const char *font = NULL;
+-static const char *prompt = NULL;
+-static const char *normbgcolor = "#222222";
+-static const char *normfgcolor = "#bbbbbb";
+-static const char *selbgcolor  = "#005577";
+-static const char *selfgcolor  = "#eeeeee";
+-static const char *outbgcolor  = "#00ffff";
+-static const char *outfgcolor  = "#000000";
+-static unsigned int lines = 0;
+ static unsigned long normcol[ColLast];
+ static unsigned long selcol[ColLast];
+ static unsigned long outcol[ColLast];
+ static Atom clip, utf8;
+-static Bool topbar = True;
+ static DC *dc;
+ static Item *items = NULL;
+ static Item *matches, *matchend;
+@@ -65,6 +55,8 @@ static Item *prev, *curr, *next, *sel;
+ static Window win;
+ static XIC xic;
+ 
++#include "config.h"
++
+ static int (*fstrncmp)(const char *, const char *, size_t) = strncmp;
+ static char *(*fstrstr)(const char *, const char *) = strstr;
+ 
+-- 
+1.9.0
+

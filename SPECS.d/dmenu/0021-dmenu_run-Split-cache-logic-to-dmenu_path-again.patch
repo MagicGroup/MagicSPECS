@@ -1,0 +1,89 @@
+From dec9a28863f388072be105e0950deb72ac719d48 Mon Sep 17 00:00:00 2001
+From: Quentin Glidic <sardemff7+hg@sardemff7.net>
+Date: Mon, 30 Jul 2012 17:02:12 +0200
+Subject: [PATCH 21/28] dmenu_run: Split cache logic to dmenu_path again
+
+This allows to run dmenu_path to update the cache using
+a packager manager hook system
+---
+ Makefile   |  6 ++++--
+ dmenu_path | 13 +++++++++++++
+ dmenu_run  | 15 +--------------
+ 3 files changed, 18 insertions(+), 16 deletions(-)
+ create mode 100644 dmenu_path
+
+diff --git a/Makefile b/Makefile
+index c127f6a..f011ad7 100644
+--- a/Makefile
++++ b/Makefile
+@@ -35,7 +35,7 @@ clean:
+ dist: clean
+ 	@echo creating dist tarball
+ 	@mkdir -p dmenu-${VERSION}
+-	@cp LICENSE Makefile README config.mk dmenu.1 draw.h dmenu_run stest.1 ${SRC} dmenu-${VERSION}
++	@cp LICENSE Makefile README config.mk dmenu.1 draw.h dmenu_path dmenu_run stest.1 ${SRC} dmenu-${VERSION}
+ 	@tar -cf dmenu-${VERSION}.tar dmenu-${VERSION}
+ 	@gzip dmenu-${VERSION}.tar
+ 	@rm -rf dmenu-${VERSION}
+@@ -43,8 +43,9 @@ dist: clean
+ install: all
+ 	@echo installing executables to ${DESTDIR}${PREFIX}/bin
+ 	@mkdir -p ${DESTDIR}${PREFIX}/bin
+-	@cp -f dmenu dmenu_run stest ${DESTDIR}${PREFIX}/bin
++	@cp -f dmenu dmenu_path dmenu_run stest ${DESTDIR}${PREFIX}/bin
+ 	@chmod 755 ${DESTDIR}${PREFIX}/bin/dmenu
++	@chmod 755 ${DESTDIR}${PREFIX}/bin/dmenu_path
+ 	@chmod 755 ${DESTDIR}${PREFIX}/bin/dmenu_run
+ 	@chmod 755 ${DESTDIR}${PREFIX}/bin/stest
+ 	@echo installing manual pages to ${DESTDIR}${MANPREFIX}/man1
+@@ -57,6 +58,7 @@ install: all
+ uninstall:
+ 	@echo removing executables from ${DESTDIR}${PREFIX}/bin
+ 	@rm -f ${DESTDIR}${PREFIX}/bin/dmenu
++	@rm -f ${DESTDIR}${PREFIX}/bin/dmenu_path
+ 	@rm -f ${DESTDIR}${PREFIX}/bin/dmenu_run
+ 	@rm -f ${DESTDIR}${PREFIX}/bin/stest
+ 	@echo removing manual page from ${DESTDIR}${MANPREFIX}/man1
+diff --git a/dmenu_path b/dmenu_path
+new file mode 100644
+index 0000000..338bac4
+--- /dev/null
++++ b/dmenu_path
+@@ -0,0 +1,13 @@
++#!/bin/sh
++cachedir=${XDG_CACHE_HOME:-"$HOME/.cache"}
++if [ -d "$cachedir" ]; then
++	cache=$cachedir/dmenu_run
++else
++	cache=$HOME/.dmenu_cache # if no xdg dir, fall back to dotfile in ~
++fi
++IFS=:
++if stest -dqr -n "$cache" $PATH; then
++	stest -flx $PATH | sort -u | tee "$cache"
++else
++	cat "$cache"
++fi
+diff --git a/dmenu_run b/dmenu_run
+index 052e51b..834ede5 100755
+--- a/dmenu_run
++++ b/dmenu_run
+@@ -1,15 +1,2 @@
+ #!/bin/sh
+-cachedir=${XDG_CACHE_HOME:-"$HOME/.cache"}
+-if [ -d "$cachedir" ]; then
+-	cache=$cachedir/dmenu_run
+-else
+-	cache=$HOME/.dmenu_cache # if no xdg dir, fall back to dotfile in ~
+-fi
+-(
+-	IFS=:
+-	if stest -dqr -n "$cache" $PATH; then
+-		stest -flx $PATH | sort -u | tee "$cache" | dmenu "$@"
+-	else
+-		dmenu "$@" < "$cache"
+-	fi
+-) | ${SHELL:-"/bin/sh"} &
++dmenu_path | dmenu "$@" | ${SHELL:-"/bin/sh"} &
+-- 
+1.9.0
+

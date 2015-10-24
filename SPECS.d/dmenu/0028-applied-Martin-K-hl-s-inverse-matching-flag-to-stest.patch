@@ -1,0 +1,71 @@
+From 5ed5e90bfb7760f24661281cf7156087afbe49d3 Mon Sep 17 00:00:00 2001
+From: Anselm R Garbe <anselm@garbe.us>
+Date: Tue, 13 Aug 2013 19:15:04 +0200
+Subject: [PATCH 28/28] =?UTF-8?q?applied=20Martin=20K=C3=BChl's=20inverse?=
+ =?UTF-8?q?=20matching=20flag=20to=20stest?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+---
+ stest.1 | 3 +++
+ stest.c | 8 ++++----
+ 2 files changed, 7 insertions(+), 4 deletions(-)
+
+diff --git a/stest.1 b/stest.1
+index bb48f45..2667d8a 100644
+--- a/stest.1
++++ b/stest.1
+@@ -67,6 +67,9 @@ Test that files are not empty.
+ .B \-u
+ Test that files have their set-user-ID flag set.
+ .TP
++.B \-v
++Invert the sense of tests, only failing files pass.
++.TP
+ .B \-w
+ Test that files are writable.
+ .TP
+diff --git a/stest.c b/stest.c
+index e1dcf36..8fac42a 100644
+--- a/stest.c
++++ b/stest.c
+@@ -22,7 +22,7 @@ main(int argc, char *argv[]) {
+ 	DIR *dir;
+ 	int opt;
+ 
+-	while((opt = getopt(argc, argv, "abcdefghln:o:pqrsuwx")) != -1)
++	while((opt = getopt(argc, argv, "abcdefghln:o:pqrsuvwx")) != -1)
+ 		switch(opt) {
+ 		case 'n': /* newer than file */
+ 		case 'o': /* older than file */
+@@ -33,7 +33,7 @@ main(int argc, char *argv[]) {
+ 			FLAG(opt) = true;
+ 			break;
+ 		case '?': /* error: unknown flag */
+-			fprintf(stderr, "usage: %s [-abcdefghlpqrsuwx] [-n file] [-o file] [file...]\n", argv[0]);
++			fprintf(stderr, "usage: %s [-abcdefghlpqrsuvwx] [-n file] [-o file] [file...]\n", argv[0]);
+ 			exit(2);
+ 		}
+ 	if(optind == argc)
+@@ -60,7 +60,7 @@ void
+ test(const char *path, const char *name) {
+ 	struct stat st, ln;
+ 
+-	if(!stat(path, &st) && (FLAG('a') || name[0] != '.')          /* hidden files      */
++	if((!stat(path, &st) && (FLAG('a') || name[0] != '.')         /* hidden files      */
+ 	&& (!FLAG('b') || S_ISBLK(st.st_mode))                        /* block special     */
+ 	&& (!FLAG('c') || S_ISCHR(st.st_mode))                        /* character special */
+ 	&& (!FLAG('d') || S_ISDIR(st.st_mode))                        /* directory         */
+@@ -75,7 +75,7 @@ test(const char *path, const char *name) {
+ 	&& (!FLAG('s') || st.st_size > 0)                             /* not empty         */
+ 	&& (!FLAG('u') || st.st_mode & S_ISUID)                       /* set-user-id flag  */
+ 	&& (!FLAG('w') || access(path, W_OK) == 0)                    /* writable          */
+-	&& (!FLAG('x') || access(path, X_OK) == 0)) {                 /* executable        */
++	&& (!FLAG('x') || access(path, X_OK) == 0)) != FLAG('v')) {   /* executable        */
+ 		if(FLAG('q'))
+ 			exit(0);
+ 		match = true;
+-- 
+1.9.0
+

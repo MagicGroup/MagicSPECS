@@ -1,0 +1,39 @@
+From 50145384c821bb05f5497e80a006fee2db9f145b Mon Sep 17 00:00:00 2001
+From: Karl F <karlf@thep.lu.se>
+Date: Thu, 19 Jan 2012 22:52:17 +0000
+Subject: [PATCH 17/28] add ^G escape keybinding
+
+---
+ dmenu.1 | 3 +++
+ dmenu.c | 1 +
+ 2 files changed, 4 insertions(+)
+
+diff --git a/dmenu.1 b/dmenu.1
+index 0784cd9..3a0f4ef 100644
+--- a/dmenu.1
++++ b/dmenu.1
+@@ -107,6 +107,9 @@ End
+ C\-f
+ Right
+ .TP
++C\-g
++Escape
++.TP
+ C\-h
+ Backspace
+ .TP
+diff --git a/dmenu.c b/dmenu.c
+index 4ea95f8..fad4443 100644
+--- a/dmenu.c
++++ b/dmenu.c
+@@ -251,6 +251,7 @@ keypress(XKeyEvent *ev) {
+ 		case XK_d: ksym = XK_Delete;    break;
+ 		case XK_e: ksym = XK_End;       break;
+ 		case XK_f: ksym = XK_Right;     break;
++		case XK_g: ksym = XK_Escape;    break;
+ 		case XK_h: ksym = XK_BackSpace; break;
+ 		case XK_i: ksym = XK_Tab;       break;
+ 		case XK_j: ksym = XK_Return;    break;
+-- 
+1.9.0
+
