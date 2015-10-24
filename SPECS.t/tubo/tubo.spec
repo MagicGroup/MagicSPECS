@@ -1,11 +1,13 @@
 Name:  tubo
 Summary:  Library to thread process std-in/std-err/std-out from fork() child
+Summary(zh_CN.UTF-8): 处理标准输入/输出/错误的库
 Version:  5.0.15
-Release:  2%{?dist}
+Release:  3%{?dist}
 License:  GPLv3+
 URL:      http://xffm.org/libtubo.html
 Source0:  http://sourceforge.net/projects/xffm/files/libtubo/libtubo0-%{version}.tar.bz2
 Group:    Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 
 BuildRequires: gtk-doc
 BuildRequires: glib2-devel
@@ -17,19 +19,29 @@ std-err and std-in file descriptors.
 This library is used by Rodent file-manager but is also available here 
 for other programs to use freely
 
+%description -l zh_CN.UTF-8
+处理标准输入/输出/错误的库。
+
 %package devel
 Summary: Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: %{name}%{?_isa} = %{version}-%{release}
 %description devel
 The %{name}-devel package contains libraries and header files for
 developing applications that use %{name}.
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %package doc
 Summary: HTML documentation of %{name}
+Summary(zh_CN.UTF-8): %{name} 的 HTML 文档
 BuildArch: noarch
 %description doc
 This package contains HTML documentation files of %{name}.
+%description doc -l zh_CN.UTF-8
+%{name} 的 HTML 文档。
 
 %prep
 %setup -q -n libtubo0-%{version}
@@ -54,11 +66,7 @@ find $RPM_BUILD_ROOT -name '*.la' -delete
 
 %files
 %doc README ChangeLog AUTHORS
-%if 0%{?fedora}
 %license COPYING
-%else
-%doc COPYING
-%endif
 %{_bindir}/tuboexec
 %{_libdir}/lib%{name}.so.*
 %{_mandir}/man1/tuboexec*
@@ -69,17 +77,16 @@ find $RPM_BUILD_ROOT -name '*.la' -delete
 %{_libdir}/lib%{name}.so
 
 %files doc
-%if 0%{?fedora}
 %license COPYING
-%else
-%doc COPYING
-%endif
 %dir %{_datadir}/gtk-doc
 %dir %{_datadir}/gtk-doc/html
 %{_datadir}/gtk-doc/html/libtubo/
 
 
 %changelog
+* Fri Oct 23 2015 Liu Di <liudidi@gmail.com> - 5.0.15-3
+- 为 Magic 3.0 重建
+
 * Fri Jun 19 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 5.0.15-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

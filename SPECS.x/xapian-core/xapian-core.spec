@@ -1,12 +1,14 @@
 Name:          xapian-core
-Version:       1.2.12
-Release:       3%{?dist}
+Version:	1.2.21
+Release:	1%{?dist}
 Summary:       The Xapian Probabilistic Information Retrieval Library
+Summary(zh_CN.UTF-8):  Xapian 概率信息检索库
 
 Group:         Applications/Databases
+Group(zh_CN.UTF-8): 应用程序/数据库
 License:       GPLv2+
 URL:           http://www.xapian.org/
-Source0:       http://www.oligarchy.co.uk/xapian/%{version}/%{name}-%{version}.tar.gz
+Source0:       http://www.oligarchy.co.uk/xapian/%{version}/%{name}-%{version}.tar.xz
 
 BuildRequires: zlib-devel
 BuildRequires: libuuid-devel
@@ -17,9 +19,14 @@ Xapian is an Open Source Probabilistic Information Retrieval Library. It
 offers a highly adaptable toolkit that allows developers to easily add advanced
 indexing and search facilities to applications
 
+%description -l zh_CN.UTF-8
+Xapian 概率信息检索库。
+
 %package libs
 Summary:       Xapian search engine libraries
+Summary(zh_CN.UTF-8): %{name} 的运行库
 Group:         System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 
 %description libs
 Xapian is an Open Source Probabilistic Information Retrieval framework. It
@@ -27,9 +34,14 @@ offers a highly adaptable toolkit that allows developers to easily add advanced
 indexing and search facilities to applications. This package provides the
 libraries for applications using Xapian functionality
 
+%description libs -l zh_CN.UTF-8
+%{name} 的运行库。
+
 %package devel
 Group:         Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Summary:       Files needed for building packages which use Xapian
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Requires:      %{name} = %{version}-%{release}
 Requires:      %{name}-libs = %{version}-%{release}
 
@@ -38,6 +50,9 @@ Xapian is an Open Source Probabilistic Information Retrieval framework. It
 offers a highly adaptable toolkit that allows developers to easily add advanced
 indexing and search facilities to applications. This package provides the
 files needed for building packages which use Xapian
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -99,11 +114,15 @@ magic_rpm_clean.sh
 %{_libdir}/libxapian.so
 %{_libdir}/libxapian.la
 %{_libdir}/cmake/xapian
+%{_libdir}/pkgconfig/xapian-core.pc
 %{_datadir}/aclocal/xapian.m4
 # man pages may be gzipped, hence the trailing wildcard.
 %{_mandir}/man1/xapian-config.1*
 
 %changelog
+* Wed Oct 21 2015 Liu Di <liudidi@gmail.com> - 1.2.21-1
+- 更新到 1.2.21
+
 * Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 1.2.12-3
 - 为 Magic 3.0 重建
 

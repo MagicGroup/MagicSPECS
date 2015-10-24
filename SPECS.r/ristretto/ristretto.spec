@@ -5,7 +5,7 @@
 
 Name:           ristretto
 Version:	0.8.0
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:        Image-viewer for the Xfce desktop environment
 Summary(zh_CN.UTF-8): Xfce 桌面环境下的图像查看器
 
@@ -89,6 +89,9 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %{_datadir}/appdata/ristretto.appdata.xml
 
 %changelog
+* Fri Oct 23 2015 Liu Di <liudidi@gmail.com> - 0.8.0-2
+- 为 Magic 3.0 重建
+
 * Sat Sep 12 2015 Liu Di <liudidi@gmail.com> - 0.8.0-1
 - 更新到 0.8.0
 

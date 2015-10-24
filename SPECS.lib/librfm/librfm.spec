@@ -1,8 +1,10 @@
 Name:  librfm
 Summary: Rodent file manager basic library functionality
+Summary(zh_CN.UTF-8): Rodent 文件管理器的基本库
 Version: 5.3.16
-Release: 7%{?dist}
+Release: 8%{?dist}
 Group:   System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 License: GPLv3+
 URL:   http://xffm.org/
 Source0: http://sourceforge.net/projects/xffm/files/%{version}.5/librfm5-%{version}.3.tar.bz2
@@ -27,12 +29,19 @@ Basic library functionality for Rodent applications. This includes
 two libraries: low level and high level, plus the minimum icon 
 emblems and translations.
 
+%description -l zh_CN.UTF-8
+Rodent 文件管理器的基本库。
+
 %package devel
 Summary: The %{name} headers and development-related files
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: %{name}%{?_isa} = %{version}-%{release}
 %description devel
 Shared links, header files for %{name}.
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q -n %{name}5-%{version}.3
@@ -55,6 +64,7 @@ make %{?_smp_mflags} CFLAGS="%{optflags}"
 
 %install
 make install DESTDIR=$RPM_BUILD_ROOT
+magic_rpm_clean.sh
 %find_lang %{name}5 --with-gnome
 
 %post
@@ -73,11 +83,7 @@ gtk-update-icon-cache %{_datadir}/icons/rfm &>/dev/null || :
 
 %files -f %{name}5.lang
 %doc ChangeLog README NEWS
-%if 0%{?fedora}
 %license COPYING
-%else
-%doc COPYING
-%endif
 %{_libdir}/librfm.so.*
 %{_libdir}/librodent.so.*
 %{_libdir}/rfm/
@@ -89,16 +95,15 @@ gtk-update-icon-cache %{_datadir}/icons/rfm &>/dev/null || :
 %{_datadir}/images/*.jpg
 
 %files devel
-%ifarch aarch64
 %{_libdir}/pkgconfig/*.pc
-%else
-%{_datadir}/pkgconfig/*.pc
-%endif
 %{_includedir}/rfm/
 %{_libdir}/librfm.so
 %{_libdir}/librodent.so
 
 %changelog
+* Fri Oct 23 2015 Liu Di <liudidi@gmail.com> - 5.3.16-8
+- 为 Magic 3.0 重建
+
 * Sun Jul 05 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 5.3.16-7
 - pkgconfig files installed in libdir on aarch64
 

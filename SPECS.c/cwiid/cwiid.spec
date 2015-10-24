@@ -2,10 +2,12 @@
 %define git_commit fadf11e
 Name:           cwiid
 Version:        0.6.00
-Release:        26.20100505git%{git_commit}%{?dist}
+Release:        27.20100505git%{git_commit}%{?dist}
 Summary:        Wiimote interface library
+Summary(zh_CN.UTF-8): Wii 的遥控接口库
 
 Group:          System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 License:        GPLv2+
 URL:            http://abstrakraft.org/cwiid/
 
@@ -26,26 +28,40 @@ BuildRequires:  autoconf automake
 Cwiid is a library that enables your application to communicate with
 a wiimote using a bluetooth connection.
 
+%description -l zh_CN.UTF-8
+Wii 的遥控接口库。
+
 %package        devel
 Summary:        Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       %{name} = %{version}-%{release}, bluez-libs-devel
 
 %description    devel
 The %{name}-devel package contains libraries and header files for
 developing applications that use %{name}.
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %package        python2
 Summary:        Python binding for %{name}
+Summary(zh_CN.UTF-8): %{name} 的 Python 绑定
 Group:          Development/Languages
+Group(zh_CN.UTF-8): 开发/语言
 Requires:       %{name} = %{version}-%{release}
 
 %description    python2
 Python2 binding for %{name}
 
+%description python2 -l zh_CN.UTF-8
+%{name} 的 Python 绑定。
+
 %package        utils
 Summary:        Wiimote connection test application
+Summary(zh_CN.UTF-8): %{name} 的测试程序
 Group:          Applications/System
+Group(zh_CN.UTF-8): 应用程序/系统
 Requires:       %{name} = %{version}-%{release}
 Provides:       %{name}-wmgui = %{version}-%{release}
 Obsoletes:      %{name}-wmgui < 0.6.00-7
@@ -53,18 +69,26 @@ Obsoletes:      %{name}-wmgui < 0.6.00-7
 %description    utils
 Applications to test the wiimote connection
 
+%description utils -l zh_CN.UTF-8
+%{name} 的测试程序。
+
 %package        wminput
 Summary:        Enables using the wiimote as an input source
+Summary(zh_CN.UTF-8): 把 Wii 的遥控做为输入源
 # The licence must be GPLv2 instead of GPLv2+ for this package
 # since the file wminput/action_enum.txt is GPLv2 as stated
 # in the file.
 License:        GPLv2
 Group:          Applications/System
+Group(zh_CN.UTF-8): 应用程序/系统
 Requires:       %{name} = %{version}-%{release}, %{name}-python2
 
 %description    wminput
 This program allows the user to use the wiimote to emulate normal system
 input sources like the mouse and keyboard.
+
+%description wminput -l zh_CN.UTF-8
+把 Wii 的遥控做为输入源。
 
 %prep
 %setup -q -n abstrakraft-cwiid-%{git_commit}
@@ -118,6 +142,9 @@ desktop-file-install --dir=${RPM_BUILD_ROOT}%{_datadir}/applications %{SOURCE1}
 %{_datadir}/applications/wmgui.desktop
 
 %changelog
+* Wed Oct 21 2015 Liu Di <liudidi@gmail.com> - 0.6.00-27.20100505gitfadf11e
+- 为 Magic 3.0 重建
+
 * Wed Jun 17 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.6.00-26.20100505gitfadf11e
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

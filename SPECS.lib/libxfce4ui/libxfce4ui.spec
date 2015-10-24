@@ -2,8 +2,8 @@
 
 
 Name:           libxfce4ui
-Version:	4.11.1
-Release:        3%{?dist}
+Version:	4.12.1
+Release: 2%{?dist}
 Summary:        Commonly used Xfce widgets
 Summary(zh_CN.UTF-8): xfce 通用的部件
 
@@ -118,6 +118,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/icons/hicolor/48x48/apps/xfce4-logo.png
 
 %changelog
+* Fri Oct 23 2015 Liu Di <liudidi@gmail.com> - 4.12.1-2
+- 更新到 4.12.1
+
 * Tue Jun 10 2014 Liu Di <liudidi@gmail.com> - 4.11.1-3
 - 更新到 4.11.1
 

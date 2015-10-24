@@ -1,9 +1,11 @@
 Summary:	Validating XML Parser
+Summary(zh_CN.UTF-8): 检验 XML 解析器
 Name:		xerces-c
-Version:	3.1.1
-Release:	5%{?dist}
+Version:	3.1.2
+Release:	1%{?dist}
 License:	ASL 2.0
 Group:		System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 URL:		http://xml.apache.org/xerces-c/
 Source0:	http://archive.apache.org/dist/xerces/c/3/sources/xerces-c-%{version}.tar.gz
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -21,10 +23,14 @@ Edition), DOM Level 1, 2, 3 Core, DOM Level 2.0 Traversal and Range,
 DOM Level 3.0 Load and Save, SAX 1.0 and SAX 2.0, Namespaces in XML,
 Namespaces in XML 1.1, XML Schema, XML Inclusions).
 
+%description -l zh_CN.UTF-8
+检验 XML 解析器。
 
 %package	devel
 Summary:	Header files, libraries and development documentation for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:		Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:	%{name} = %{version}-%{release}
 
 %description devel
@@ -32,9 +38,14 @@ This package contains the header files, static libraries and development
 documentation for %{name}. If you like to develop programs using %{name},
 you will need to install %{name}-devel.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
 %package doc
 Group:		Documentation
+Group(zh_CN.UTF-8): 文档
 Summary:	Documentation for Xerces-C++ validating XML parser
+Summary(zh_CN.UTF-8): %{name} 的文档
 BuildArch:	noarch
 
 %description doc
@@ -44,6 +55,9 @@ Xerces-C++ is a validating XML parser written in a portable subset of C++.
 Xerces-C++ makes it easy to give your application the ability to read and
 write XML data. A shared library is provided for parsing, generating,
 manipulating, and validating XML documents.
+
+%description doc -l zh_CN.UTF-8
+%{name} 的文档。
 
 %prep
 %setup -q 
@@ -96,6 +110,9 @@ rm -rf $RPM_BUILD_ROOT
 %doc README LICENSE NOTICE CREDITS doc _docs/*
 
 %changelog
+* Thu Oct 22 2015 Liu Di <liudidi@gmail.com> - 3.1.2-1
+- 更新到 3.1.2
+
 * Wed Apr 30 2014 Liu Di <liudidi@gmail.com> - 3.1.1-5
 - 为 Magic 3.0 重建
 

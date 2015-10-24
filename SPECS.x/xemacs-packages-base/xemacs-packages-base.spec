@@ -4,7 +4,7 @@
 
 Name:           xemacs-packages-base
 Version:        20150919
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Base lisp packages for XEmacs
 
 Group:          Applications/Editors
@@ -54,14 +54,6 @@ make \\
 EOF
 chmod +x make.sh
 
-# Get reproducible builds by setting the compiling username
-mkdir ~/.xemacs
-echo >> ~/.xemacs/custom.el << EOF
-(custom-set-variables
- '(user-mail-address "mockbuild@fedoraproject.org"))
-EOF
-
-
 %build
 apkgs="apel dired efs fsf-compat xemacs-base"
 xpkgs="efs xemacs-base"
@@ -105,6 +97,9 @@ sed -i -e 's/^\(.*\(\.ja\|-ja\.texi\)\)$/%lang(ja) \1/' base-files
 
 
 %changelog
+* Thu Oct 22 2015 Liu Di <liudidi@gmail.com> - 20150919-2
+- 为 Magic 3.0 重建
+
 * Wed Oct  7 2015 Jerry James <loganjerry@gmail.com> - 20150919-1
 - Update to latest package releases
 

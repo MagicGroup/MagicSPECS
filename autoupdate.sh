@@ -133,7 +133,7 @@ if ! [ $NEWVER = $SPECVER ]; then
 	echo "$1 版本有更新，更新 spec 文件。"
 	if [ -f $DIR/updatespec ]; then
 		./$DIR/updatespec $NEWVER || exit 1
-		rpmdev-bumpspec -n $NEWVER -c "更新到 $NEWVER" $SPECNAME && touch $DIR/hasupdate
+		rpmdev-bumpspec -c "更新到 $NEWVER" $SPECNAME && touch $DIR/hasupdate
 	else
 		echo "不存在 spec 更新脚本，请自行添加。"
 		exit 1

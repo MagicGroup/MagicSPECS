@@ -9,12 +9,12 @@ F1=$(echo $1|cut -d"." -f1)
 F2=$(echo $1|cut -d"." -f2)
 F3=$(echo $1|cut -d"." -f3)
 if [ x"$F3" == x"" ]; then
-sed -i "s/%global pa_major.*/%global pa_major   $F1.$F2/g" $NAME.spec
+sed -i "s/^%global pa_major.*/%global pa_major   $F1.$F2/g" $NAME.spec
 sed -i "s/[%#]global pa_minor.*/#global pa_minor   0/g" $NAME.spec
 #sed -i "s/Version:.*/Version:\t$1/g" $NAME.spec
 #sed -i "s/Release:.*/Release:\t1%{?dist}/g" $NAME.spec
 else
-sed -i "s/%global pa_major.*/%global pa_major   $F1.$F2/g" $NAME.spec
+sed -i "s/^%global pa_major.*/%global pa_major   $F1.$F2/g" $NAME.spec
 sed -i "s/[%#]global pa_minor.*/%global pa_minor   $F3/g" $NAME.spec
 fi
 popd

@@ -1,17 +1,17 @@
 # $Id: x264.spec 3748 2005-11-29 18:47:34Z thias $
 # Authority: matthias
 
-%define sover 135
-%define git 1
-%define gitdate 20130704
+%define sover 148
+%define usegit 1
+%define gitdate 20151019
 Summary: Library for encoding and decoding H264/AVC video streams
 Summary(zh_CN.UTF-8): 编码和解码H264/AVC视频流的库
 Name: x264
-Version: 0.%{sover}.2012
-%if %{git}
-Release: 0.svn%{gitdate}.%{?dist}.3
+Version: 0.%{sover}.2015
+%if %{usegit}
+Release: 0.svn%{gitdate}.%{?dist}.5
 %else
-Release: 3%{?dist}
+Release: 5%{?dist}
 %endif
 License: GPL
 Group: System Environment/Libraries
@@ -22,7 +22,7 @@ URL: http://developers.videolan.org/x264.html
 Packager: Liu Di <liudidi@gmail.com>
 
 #Source: %{name}-%{version}.tar.bz2
-%if %{git}
+%if %{usegit}
 Source: http://ftp.videolan.org/pub/videolan/x264/snapshots/%{name}-snapshot-%{gitdate}-2245.tar.bz2
 %else
 Source: http://download.videolan.org/pub/videolan/x264/%{name}-%{version}.tar.bz2
@@ -112,6 +112,12 @@ magic_rpm_clean.sh
 %{_libdir}/libx264.so
 
 %changelog
+* Tue Oct 20 2015 Liu Di <liudidi@gmail.com>
+- 为 Magic 3.0 重建
+
+* Tue Oct 20 2015 Liu Di <liudidi@gmail.com>
+- 更新到 20151020 日期的仓库源码
+
 * Tue Sep 22 2015 Liu Di <liudidi@gmail.com>
 - 更新到 20150922 日期的仓库源码
 

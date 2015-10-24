@@ -1,7 +1,7 @@
 
 Name:           libxfce4util
-Version:	4.11.0
-Release:        3%{?dist}
+Version:	4.12.1
+Release: 3%{?dist}
 Summary:        Utility library for the Xfce4 desktop environment
 Summary(zh_CN.UTF-8): Xfce4 桌面环境的工具库
 
@@ -85,6 +85,12 @@ rm -rf $RPM_BUILD_ROOT
 %doc %{_datadir}/gtk-doc/
 
 %changelog
+* Fri Oct 23 2015 Liu Di <liudidi@gmail.com> - 4.12.1-3
+- 为 Magic 3.0 重建
+
+* Fri Oct 23 2015 Liu Di <liudidi@gmail.com> - 4.12.1-2
+- 更新到 4.12.1
+
 * Tue Jun 10 2014 Liu Di <liudidi@gmail.com> - 4.11.0-3
 - 更新到 4.11.0
 

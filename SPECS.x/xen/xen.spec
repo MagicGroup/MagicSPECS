@@ -5,7 +5,7 @@
 %define build_ocaml %(test -x %{_bindir}/ocamlopt && echo %{with_ocaml} || echo 0)
 # build xsm support unless rpmbuild was run with --without xsm
 # or required packages are missing
-%define with_xsm  %{?_without_xsm: 0} %{?!_without_xsm: 1}
+%bcond_with xsm
 %define build_xsm %(test -x %{_bindir}/checkpolicy && test -x %{_bindir}/m4 && echo %{with_xsm} || echo 0)
 # cross compile 64-bit hypervisor on ix86 unless rpmbuild was run
 #	with --without crosshyp
@@ -29,21 +29,9 @@
 %ifnarch x86_64
 %define build_efi 0
 %endif
-%if "%dist" >= ".fc17"
 %define with_sysv 0
-%else
-%define with_sysv 1
-%endif
-%if "%dist" >= ".fc15"
 %define with_systemd 1
-%else
-%define with_systemd 0
-%endif
-%if "%dist" >= ".fc20"
 %define with_systemd_presets 1
-%else
-%define with_systemd_presets 0
-%endif
 
 # Hypervisor ABI
 %define hv_abi  4.6
@@ -51,7 +39,7 @@
 Summary: Xen is a virtual machine monitor
 Name:    xen
 Version: 4.6.0
-Release: 1%{?dist}
+Release: 2%{?dist}
 Group:   Development/Libraries
 License: GPLv2+ and LGPLv2+ and BSD
 URL:     http://xen.org/
@@ -99,9 +87,7 @@ Patch29: qemu.trad.CVE-2015-7295.patch
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: transfig libidn-devel zlib-devel texi2html SDL-devel curl-devel
 BuildRequires: libX11-devel python-devel ghostscript texlive-latex
-%if "%dist" >= ".fc18"
 BuildRequires: texlive-times texlive-courier texlive-helvetic texlive-ntgclass
-%endif
 BuildRequires: ncurses-devel gtk2-devel libaio-devel
 # for the docs
 BuildRequires: perl perl(Pod::Man) perl(Pod::Text) texinfo graphviz
@@ -132,7 +118,7 @@ BuildRequires: e2fsprogs-devel
 BuildRequires: yajl-devel wget
 # remus support now needs libnl3
 BuildRequires: libnl3-devel
-%if %with_xsm
+%if 0%{?with_xsm}
 # xsm policy file needs needs checkpolicy and m4
 BuildRequires: checkpolicy m4
 %endif
@@ -693,6 +679,8 @@ rm -rf %{buildroot}
 /usr/lib/xen/boot/hvmloader
 /usr/lib/xen/boot/ioemu-stubdom.gz
 /usr/lib/xen/boot/xenstore-stubdom.gz
+/usr/lib/xen/boot/vtpm-stubdom.gz
+/usr/lib/xen/boot/vtpmmgr-stubdom.gz
 /usr/lib/xen/boot/pv-grub*.gz
 %endif
 # General Xen state
@@ -815,6 +803,9 @@ rm -rf %{buildroot}
 %endif
 
 %changelog
+* Thu Oct 22 2015 Liu Di <liudidi@gmail.com> - 4.6.0-2
+- 为 Magic 3.0 重建
+
 * Sun Oct 11 2015 Michael Young <m.a.young@durham.ac.uk> - 4.6.0-1
 - update to xen-4.6.0
   xen-dumpdir.patch no longer needed

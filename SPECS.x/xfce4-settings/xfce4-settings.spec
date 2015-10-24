@@ -1,29 +1,18 @@
 %global xfceversion 4.10
 
 Name:           xfce4-settings
-Version:        4.10.0
-Release:        4%{?dist}
+Version:	4.12.0
+Release: 2%{?dist}
 Summary:        Settings Manager for Xfce
+Summary(zh_CN.UTF-8): Xfce 的设置管理程序
 
 Group:          User Interface/Desktops
+Group(zh_CN.UTF-8): 用户界面/桌面
 License:        GPLv2+
 URL:            http://www.xfce.org/
 #VCS git:git://git.xfce.org/xfce/xfce4-settings
-Source0:        http://archive.xfce.org/src/xfce/%{name}/%{xfceversion}/%{name}-%{version}.tar.bz2
-# Add patch to handle position settings on multi monitor setups
-# https://bugzilla.xfce.org/show_bug.cgi?id=7465
-Patch0:         xfce4-settings-4.8.3-monitor-position.patch
-# Fix GTK3 theme handling
-# https://bugzilla.xfce.org/show_bug.cgi?id=9272
-# http://git.xfce.org/xfce/xfce4-settings/commit/?id=8032dd77
-Patch1:         xfce4-settings-4.10.0-gtk3-theme-detection.patch
-# Prevent accidental shutdown of xfsettingsd
-# https://bugzilla.xfce.org/show_bug.cgi?id=9273
-# http://git.xfce.org/xfce/xfce4-settings/commit/?id=2ec63604
-Patch2:         xfce4-settings-4.10.0-NameOwnerChanged.patch
-## Downstream patches
-# Use Fedora theme and font settings
-Patch10:         xfce4-settings-4.9.4-fedora.patch
+%define majorver %(echo %{version} | awk -F. '{print $1"."$2}')
+Source0:        http://archive.xfce.org/src/xfce/%{name}/%{majorver}/%{name}-%{version}.tar.bz2
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
@@ -42,9 +31,6 @@ BuildRequires:  libxklavier-devel
 BuildRequires:  libXrandr-devel
 BuildRequires:  garcon-devel >= 0.1.10
 Requires:       xfconf
-%if 0%{?rhel}
-Requires:       gnome-icon-theme
-%endif
 
 Obsoletes:      xfce-mcs-manager < 4.4.3-2
 Obsoletes:      xfce-mcs-plugins < 4.4.3-2
@@ -55,13 +41,11 @@ Obsoletes:      xfce4-gsynaptics-mcs-plugin < 1.0.0-3
 %description
 This package includes the settings manager applications for the Xfce desktop. 
 
+%description -l zh_CN.UTF-8
+Xfce 的设置管理程序。
+
 %prep
 %setup -q
-%patch0 -p1 -b .multi-monitor-position
-%patch1 -p1 -b .gtk3-theme
-%patch2 -p1 -b .NameOwnerChanged
-%patch10 -p1 -b .fedora
-
 
 %build
 # add --enable-maintainer-mode to regen after multi monitor setup patch.
@@ -100,8 +84,12 @@ rm -rf %{buildroot}
 %{_bindir}/xfsettingsd
 %{_datadir}/applications/xfce*.desktop
 %{_libdir}/xfce4/settings
+%{_datadir}/icons/hicolor/128x128/devices/xfce-*.png
 
 %changelog
+* Fri Oct 23 2015 Liu Di <liudidi@gmail.com> - 4.12.0-2
+- 更新到 4.12.0
+
 * Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 4.10.0-4
 - 为 Magic 3.0 重建
 

@@ -1,8 +1,10 @@
 Name:		xcb-util-wm
 Version:	0.4.1
-Release:	3%{?dist}
+Release:	4%{?dist}
 Summary:	Client and window-manager helper library on top of libxcb
+Summary(zh_CN.UTF-8): 基于 libxcb 的客户端和窗口管理器辅助库
 Group:		System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 License:	MIT
 URL:		http://xcb.freedesktop.org
 Source0:	http://xcb.freedesktop.org/dist/%{name}-%{version}.tar.bz2
@@ -14,16 +16,20 @@ XCB util-wm module provides the following libraries:
 
   - ewmh: Both client and window-manager helpers for EWMH.
   - icccm: Both client and window-manager helpers for ICCCM.
-
+%description -l zh_CN.UTF-8
+基于 libxcb 的客户端和窗口管理器辅助库，支持 EWMH, ICCCM。
 
 %package 	devel
 Summary:	Development and header files for xcb-util-vm
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:		System Environment/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:	%{name}%{?_isa} = %{version}-%{release}
 
 %description	devel
 Development files for xcb-util-wm.
-
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -41,7 +47,7 @@ make check
 %install
 make install DESTDIR=%{buildroot} INSTALL="install -p"
 rm %{buildroot}%{_libdir}/*.la
-
+magic_rpm_clean.sh
 
 %post -p /sbin/ldconfig
 
@@ -62,6 +68,9 @@ rm %{buildroot}%{_libdir}/*.la
 
 
 %changelog
+* Thu Oct 22 2015 Liu Di <liudidi@gmail.com> - 0.4.1-4
+- 为 Magic 3.0 重建
+
 * Sun May 04 2014 Liu Di <liudidi@gmail.com> - 0.4.1-3
 - 为 Magic 3.0 重建
 

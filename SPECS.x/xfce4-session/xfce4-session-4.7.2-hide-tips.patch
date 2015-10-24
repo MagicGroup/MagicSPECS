@@ -1,8 +1,0 @@
---- xfce4-session-4.7.2.orig/xfce4-tips/xfce4-tips-autostart.desktop.in	2010-12-03 21:05:54.000000000 +0100
-+++ xfce4-session-4.7.2/xfce4-tips/xfce4-tips-autostart.desktop.in	2010-12-05 02:16:24.995433232 +0100
-@@ -6,4 +6,4 @@
- Terminal=false
- Type=Application
- OnlyShowIn=XFCE;
--Hidden=false
-+Hidden=true

@@ -3,10 +3,12 @@
 
 Name:		xdg-user-dirs
 Version:	0.15
-Release:	4%{?dist}
+Release:	5%{?dist}
 Summary:	Handles user special directories
+Summary(zh_CN.UTF-8): 处理用户指定的目录
 
 Group:		User Interface/Desktops
+Group(zh_CN.UTF-8): 用户界面/桌面
 License:	GPLv2+ and MIT
 URL:		http://freedesktop.org/wiki/Software/xdg-user-dirs
 Source0:	http://user-dirs.freedesktop.org/releases/%{name}-%{version}.tar.gz
@@ -25,6 +27,9 @@ Requires:	%{_sysconfdir}/X11/xinit/xinitrc.d
 Contains xdg-user-dirs-update that updates folders in a users
 homedirectory based on the defaults configured by the administrator.
 
+%description -l zh_CN.UTF-8
+处理用户指定的目录。
+
 %prep
 %setup -q
 %patch0 -p1 -b .use-fuzzy
@@ -41,8 +46,8 @@ make update-gmo
 make install DESTDIR=$RPM_BUILD_ROOT
 mkdir -p $RPM_BUILD_ROOT%{_sysconfdir}/X11/xinit/xinitrc.d
 install -p -m 755 %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/X11/xinit/xinitrc.d
-
-%find_lang %name
+magic_rpm_clean.sh 
+%find_lang %name || :
 
 
 %files -f %{name}.lang
@@ -56,6 +61,9 @@ install -p -m 755 %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/X11/xinit/xinitrc.d
 
 
 %changelog
+* Thu Oct 22 2015 Liu Di <liudidi@gmail.com> - 0.15-5
+- 为 Magic 3.0 重建
+
 * Wed May 07 2014 Liu Di <liudidi@gmail.com> - 0.15-4
 - 为 Magic 3.0 重建
 

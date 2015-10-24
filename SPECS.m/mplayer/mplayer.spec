@@ -1,14 +1,16 @@
 %define _sysconfdir /etc
-%define date 2015-09-24
+%define date 2015-10-21
 %define with_gui 1
 %define with_vdpau 1
 
 %define svndate %(echo %date | sed -e 's/-//g')
 
+%define debug_package %{nil}
+
 Summary: MPlayer, the Movie Player for Linux.
 Summary(zh_CN.UTF-8): MPlayer, Linux 下的媒体播放器
 Name: mplayer
-Version: 1.0svn%{svndate}
+Version: 1.0svn20151021
 License: GPL
 Release: 1%{?dist}
 Group: Applications/Multimedia
@@ -200,6 +202,9 @@ rm -rf %{buildroot} %{_builddir}/%{buildsubdir}
 %endif
 
 %changelog
+* Wed Oct 21 2015 Liu Di <liudidi@gmail.com> - 1.0svn20151021-1
+- 更新到 1.0svn20151021
+
 * Sat Sep 19 2015 Liu Di <liudidi@gmail.com> - 1.0svn20150327-2
 - 为 Magic 3.0 重建
 

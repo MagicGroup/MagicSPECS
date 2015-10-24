@@ -1,15 +1,17 @@
-%global minorversion 1.2
 %global xfceversion 4.10
 
 Name:           xfce4-power-manager
-Version:        1.2.0
-Release:        2%{?dist}
+Version:	1.5.2
+Release: 2%{?dist}
 Summary:        Power management for the Xfce desktop environment
+Summary(zh_CN.UTF-8): Xfce 桌面环境的电源管理程序
 
 Group:          User Interface/Desktops
+Group(zh_CN.UTF-8): 用户界面/桌面
 License:        GPLv2+
 URL:            http://goodies.xfce.org/projects/applications/%{name}
 #VCS: git:git://git.xfce.org/xfce/xfce4-power-manager
+%define minorversion %(echo %{version} | awk -F. '{print $1"."$2}')
 Source0:        http://archive.xfce.org/src/apps/%{name}/%{minorversion}/%{name}-%{version}.tar.bz2
 # Fix XFCE category
 Patch1:	        xfce4-power-manager-1.1.0-fix-desktop.patch
@@ -36,6 +38,8 @@ display icons and handle user callbacks in an interactive Xfce session.
 Xfce Power Preferences allows authorised users to set policy and change 
 preferences.
 
+%description -l zh_CN.UTF-8
+Xfce 桌面环境的电源管理程序。
 
 %prep
 %setup -q
@@ -48,6 +52,7 @@ make %{?_smp_mflags} V=1
 %install
 rm -rf $RPM_BUILD_ROOT
 make install DESTDIR=$RPM_BUILD_ROOT INSTALL='install -p'
+magic_rpm_clean.sh
 %find_lang %{name}
 desktop-file-validate $RPM_BUILD_ROOT%{_datadir}/applications/%{name}-settings.desktop      
 
@@ -76,20 +81,21 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %doc AUTHORS COPYING ChangeLog NEWS README TODO
 %{_bindir}/%{name}
 %{_bindir}/%{name}-settings
-%{_bindir}/xfce4-power-information
 %{_sbindir}/xfpm-power-backlight-helper
+%{_sbindir}/xfce4-pm-helper
 %config %{_sysconfdir}/xdg/autostart/%{name}.desktop
-%{_libdir}/xfce4/panel-plugins/xfce4-brightness-plugin
+%{_datadir}/appdata/xfce4-power-manager.appdata.xml
 %{_datadir}/applications/%{name}-settings.desktop
 %{_datadir}/icons/hicolor/*/*/*.*
-%{_datadir}/xfce4/panel-plugins/xfce4-brightness-plugin.desktop
 %{_datadir}/polkit-1/actions/org.xfce.power.policy
-%doc %{_datadir}/xfce4/doc/C/
 %{_mandir}/man1/%{name}-settings.1.*
 %{_mandir}/man1/%{name}.1.*
 
 
 %changelog
+* Fri Oct 23 2015 Liu Di <liudidi@gmail.com> - 1.5.2-2
+- 更新到 1.5.2
+
 * Sun Jul 22 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.2.0-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 

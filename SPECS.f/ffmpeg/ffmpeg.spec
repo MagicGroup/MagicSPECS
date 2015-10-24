@@ -4,15 +4,16 @@
 %define date   20100817
 
 #define _without_faac 0
+%define debug_package %{nil}
 
 Summary: Hyper fast MPEG1/MPEG4/H263/RV and AC3/MPEG audio encoder and decoder
 Summary(zh_CN.UTF-8): 非常快速的 MPEG1/MPEG4/H263/RV 和 AC3/MPEG 声音编码和解码器
 Name: ffmpeg
 %if %{svn}
-Version:	2.5.5
-Release: 0.svn%{date}.1%{?dist}.3
+Version:	2.8.1
+Release: 1%{?dist}
 %else
-Version:	2.5.5
+Version:	2.8.1
 Release: 1%{?dist}
 %endif
 License: GPL
@@ -221,6 +222,9 @@ make install DESTDIR=$RPM_BUILD_ROOT
 %{_mandir}/man3/lib*.3*
 
 %changelog
+* Tue Oct 20 2015 Liu Di <liudidi@gmail.com> - 2.8.1-1
+- 更新到 2.8.1
+
 * Fri Mar 27 2015 Liu Di <liudidi@gmail.com> - 2.5.5-1
 - 更新到 2.5.5
 

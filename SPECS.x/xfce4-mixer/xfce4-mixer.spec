@@ -1,15 +1,17 @@
 %global xfceversion 4.8
 
 Name:           xfce4-mixer
-Version:        4.8.0
-Release:        4%{?dist}
+Version:        4.11.0
+Release:        3%{?dist}
 Summary:        Volume control plugin for the Xfce 4 panel
+Summary(zh_CN.UTF-8): Xfce4 面板上的音量控制插件
 
 Group:          User Interface/Desktops
+Group(zh_CN.UTF-8): 用户界面/桌面
 License:        GPLv2+
 URL:            http://www.xfce.org/
-Source0:        http://archive.xfce.org/src/apps/%{name}/%{xfceversion}/%{name}-%{version}.tar.bz2
-Patch0:         xfce4-mixer-4.6.1-xfce4-panel-4.7.7.patch
+%define majorver %(echo %{version} | awk -F. '{print $1"."$2}')
+Source0:        http://archive.xfce.org/src/apps/%{name}/%{majorver}/%{name}-%{version}.tar.bz2
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildRequires:  libxfce4util-devel >= %{xfceversion}
@@ -30,11 +32,11 @@ The Xfce mixer is a volume control application for the Xfce Desktop Environment.
 It provides both a volume control plugin for the Xfce Panel and a standalone 
 mixer application.
 
+%description -l zh_CN.UTF-8
+Xfce4 面板上的音量控制插件。
 
 %prep
 %setup -q
-%patch0 -p1 -b .xfce4-panel-4.7.7.patch
-
 
 %build
 %configure --with-sound=alsa
@@ -45,6 +47,7 @@ make %{?_smp_mflags}
 rm -rf $RPM_BUILD_ROOT
 make install DESTDIR=$RPM_BUILD_ROOT
 find $RPM_BUILD_ROOT -name '*.la' -exec rm -f {} ';'
+magic_rpm_clean.sh
 %find_lang %{name}
 
 desktop-file-validate $RPM_BUILD_ROOT%{_datadir}/applications/%{name}.desktop
@@ -56,15 +59,24 @@ rm -rf $RPM_BUILD_ROOT
 
 %files -f %{name}.lang
 %defattr(-,root,root,-)
-%doc README TODO ChangeLog COPYING AUTHORS NEWS
 %{_bindir}/xfce4-mixer
 %{_datadir}/applications/xfce4-mixer.desktop
-%{_libexecdir}/xfce4/panel-plugins/xfce4-mixer-plugin
+%{_libdir}/xfce4/panel/plugins/libmixer.so
+%{_mandir}/man1/xfce4-mixer.1*
 %{_datadir}/pixmaps/xfce4-mixer/
 %{_datadir}/xfce4-mixer/
 %{_datadir}/xfce4/panel/plugins/*.desktop
 
 %changelog
+* Fri Oct 23 2015 Liu Di <liudidi@gmail.com> - 4.11.0-3
+- 为 Magic 3.0 重建
+
+* Fri Oct 23 2015 Liu Di <liudidi@gmail.com> - 4.11.0-2
+- 为 Magic 3.0 重建
+
+* Fri Oct 23 2015 Liu Di <liudidi@gmail.com> - 4.11.0-1
+- 更新到 4.11.0
+
 * Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 4.8.0-4
 - 为 Magic 3.0 重建
 

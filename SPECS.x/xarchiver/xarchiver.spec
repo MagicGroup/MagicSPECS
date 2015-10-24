@@ -1,9 +1,11 @@
 Name:           xarchiver
 Version:        0.5.4
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Archive manager for Xfce
+Summary(zh_CN.UTF-8): Xfce 下的归档管理器
 
 Group:          Applications/Archiving
+Group(zh_CN.UTF-8): 应用程序/归档
 License:        GPLv2+
 URL:            http://xarchiver.xfce.org/
 Source0:        http://downloads.sourceforge.net/xarchiver/xarchiver-%{version}.tar.bz2
@@ -25,6 +27,8 @@ gzip, iso, rar, lha, tar, zip, RPM and deb files. It allows you to create
 archives and add, extract, and delete files from them. Password protected
 archives in the arj, 7z, rar, and zip formats are supported.
 
+%description -l zh_CN.UTF-8
+Xfce 下的归档管理器，支持 arj, bz2, cpio, gzip, tar, zip, 7z 等格式。
 
 %prep
 %setup -q
@@ -42,16 +46,8 @@ make %{?_smp_mflags}
 %install
 make install DESTDIR=%{buildroot} INSTALL="install -p"
 
-%if (0%{?fedora} && 0%{?fedora} < 19) || (0%{?rhel} && 0%{?rhel} < 7)
-# On Fedora < 19 we need to install file-roller.tap as gnome-file-roller.tap,
-# because the name # has to match the basename of the desktop-file in
-# %%{_datadir}/applications.
-rm %{buildroot}%{_libexecdir}/thunar-archive-plugin/xarchiver.tap
-install -p -m 755 xarchiver.tap \
-   %{buildroot}%{_libexecdir}/thunar-archive-plugin/fedora-xarchiver.tap
-%endif
-
-%find_lang %{name}
+magic_rpm_clean.sh
+%find_lang %{name} || :
 desktop-file-install --delete-original \
     --dir %{buildroot}%{_datadir}/applications \
     --add-category="Compression" \
@@ -87,7 +83,7 @@ update-desktop-database &> /dev/null || :
 gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 
 
-%files -f %{name}.lang
+%files 
 %doc AUTHORS COPYING ChangeLog NEWS README TODO
 %doc %{_docdir}/%{name}/
 %{_bindir}/%{name}
@@ -98,6 +94,9 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 
 
 %changelog
+* Wed Oct 21 2015 Liu Di <liudidi@gmail.com> - 0.5.4-3
+- 为 Magic 3.0 重建
+
 * Fri Jun 19 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.5.4-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

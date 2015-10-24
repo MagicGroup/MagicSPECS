@@ -1,7 +1,7 @@
 Summary: 	Time-managing application for xfce4.
 Summary(zh_CN):	Xfce4的时间管理程序
 Name: 		orage
-Version:	4.10.0
+Version:	4.12.1
 Release: 2%{?dist}
 License:	GPL
 URL: 		http://www.xfce.org/
@@ -29,6 +29,8 @@ make
 %install
 rm -rf $RPM_BUILD_ROOT
 make install DESTDIR=$RPM_BUILD_ROOT mandir=%{_mandir}
+rm -f $RPM_BUILD_ROOT%{_libdir}/xfce4/panel/plugins/liborageclock.la
+
 magic_rpm_clean.sh
 
 %clean
@@ -51,9 +53,12 @@ fi
 %doc README ChangeLog INSTALL COPYING AUTHORS
 %{_bindir}/*
 %{_datadir}/*
-%{_libexecdir}/xfce4/panel-plugins/xfce4-orageclock-plugin
+%{_libdir}/xfce4/panel/plugins/liborageclock.so
 
 %changelog
+* Fri Oct 23 2015 Liu Di <liudidi@gmail.com> - 4.12.1-2
+- 更新到 4.12.1
+
 * Fri Apr 03 2015 Liu Di <liudidi@gmail.com> - 4.10.0-2
 - 为 Magic 3.0 重建
 

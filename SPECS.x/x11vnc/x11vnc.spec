@@ -1,10 +1,12 @@
 %define java 0
 Summary:		VNC server for the current X11 session
+Summary(zh_CN.UTF-8):  当前 X11 会话的 VNC 服务
 Name:		x11vnc
 Version:		0.9.13
-Release:		8%{?dist}
+Release:		9%{?dist}
 License:		GPLv2
 Group:		User Interface/X
+Group(zh_CN.UTF-8): 用户界面/X
 URL:			http://www.karlrunge.com/x11vnc/
 Source0:		http://downloads.sourceforge.net/libvncserver/%{name}-%{version}.tar.gz
 
@@ -19,11 +21,7 @@ BuildRequires:	libXfixes-devel, libvncserver-devel
 # In Fedora 12 /usr/include/X11/extensions/XInput.h in libXi-devel but in
 # previous versions in xorg-x11-proto-devel /usr/include/X11/extensions/shmproto.h
 # placed in libXext-devel in F12 and in xorg-x11-proto-devel early.
-%if 0%{?fedora} > 11
 BuildRequires:	libXi-devel libXext-devel
-%else
-BuildRequires:	xorg-x11-proto-devel
-%endif
 Requires:		Xvfb
 
 # Fedora don't want hardcoded rpaths.
@@ -39,6 +37,9 @@ protocol to the user.
 
 Based on the ideas of x0rfbserver and on LibVNCServer it has evolved into a
 versatile and productive while still easy to use program.
+
+%description -l zh_CN.UTF-8
+当前 X 会话的 VNC 服务
 
 # Required java not available on EL-5.ppc
 %if 0%{?java}
@@ -116,6 +117,8 @@ popd
 %{__mv} classes/ssl/src/ultra/README classes/ssl/src/ultra/README.ultra
 %endif
 
+magic_rpm_clean.sh
+
 %clean
 %{__rm} -rf %{buildroot}
 
@@ -135,6 +138,9 @@ popd
 %endif
 
 %changelog
+* Tue Oct 20 2015 Liu Di <liudidi@gmail.com> - 0.9.13-9
+- 为 Magic 3.0 重建
+
 * Sun Apr 14 2013 Pavel Alexeev <Pahan@Hubbitus.info> - 0.9.13-8
 - Add requires to tk (bz#920554).
 

@@ -1,4 +1,4 @@
-%global pa_major   6.0
+%global pa_major   7.0
 #global pa_minor   0
 
 #global snap       20141103
@@ -19,8 +19,8 @@
 Name:           pulseaudio
 Summary:        Improved Linux Sound Server
 Summary(zh_CN.UTF-8): 增强的 Linux 声音服务
-Version:        %{pa_major}%{?pa_minor:.%{pa_minor}}
-Release:        9%{?snap:.%{snap}git%{shortcommit}}%{?dist}
+Version:        %{pa_major}%{?pa_minor}
+Release:        9%{?dist}
 License:        LGPLv2+
 URL:            http://www.freedesktop.org/wiki/Software/PulseAudio
 %if 0%{?gitrel}
@@ -41,8 +41,6 @@ Source5:        default.pa-for-gdm
 Patch1: pulseaudio-autostart.patch
 
 ## upstream patches
-Patch35: 0035-pstream-Don-t-split-non-SHM-memblocks.patch
-Patch37: 0037-pstream-Remove-unnecessary-if-condition.patch
 
 ## upstreamable patches
 
@@ -229,8 +227,6 @@ This package contains GDM integration hooks for the PulseAudio sound server.
 %setup -q -T -b0 -n %{name}-%{version}%{?gitrel:-%{gitrel}-g%{shortcommit}}
 
 %patch1 -p1 -b .autostart
-%patch35 -p1 -b .0035
-%patch37 -p1 -b .0037
 
 sed -i.no_consolekit -e \
   's/^load-module module-console-kit/#load-module module-console-kit/' \
@@ -298,13 +294,6 @@ mv -fv $RPM_BUILD_ROOT/lib/udev/rules.d/90-pulseaudio.rules $RPM_BUILD_ROOT%{_pr
 
 mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/lib/pulse
 install -p -m644 -D %{SOURCE5} $RPM_BUILD_ROOT%{_localstatedir}/lib/gdm/.pulse/default.pa
-
-# bash completions
-%if "%{bash_completionsdir}" != "/etc/bash_completion.d"
-mkdir -p $RPM_BUILD_ROOT%{bash_completionsdir}
-mv $RPM_BUILD_ROOT/etc/bash_completion.d/* \
-   $RPM_BUILD_ROOT%{bash_completionsdir}/
-%endif
 
 ## unpackaged files
 # extraneous libtool crud
@@ -567,6 +556,9 @@ exit 0
 %{_mandir}/man1/pasuspender.1.gz
 %{_mandir}/man1/padsp.1.gz
 %{_mandir}/man1/pax11publish.1.gz
+%{_mandir}/man1/pamon.1.gz
+%{_mandir}/man1/parec.1.gz
+%{_mandir}/man1/parecord.1.gz
 
 %files gdm-hooks
 %attr(0700, gdm, gdm) %dir %{_localstatedir}/lib/gdm/.pulse
@@ -574,6 +566,9 @@ exit 0
 
 
 %changelog
+* Thu Oct 22 2015 Liu Di <liudidi@gmail.com>
+- 更新到 7.0
+
 * Fri Aug 07 2015 Liu Di <liudidi@gmail.com> - 6.0-9
 - 为 Magic 3.0 重建
 

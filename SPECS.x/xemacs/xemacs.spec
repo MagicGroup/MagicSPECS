@@ -23,12 +23,14 @@
 
 Name:           xemacs
 Version:        21.5.34
-Release:        12%{?snap:.%{snap}}%{?dist}
+Release:        13%{?snap:.%{snap}}%{?dist}
 Summary:        Different version of Emacs
+Summary(zh_CN.UTF-8): 不同版本的 Emacs
 
 %global majver %(cut -d. -f1-2 <<<%{version})
 
 Group:          Applications/Editors
+Group(zh_CN.UTF-8): 应用程序/编辑器
 License:        GPLv3+
 URL:            http://www.xemacs.org/
 %if 0%{?snap:1}
@@ -674,6 +676,9 @@ fi
 %dir %{_datadir}/xemacs/site-packages/pkginfo
 
 %changelog
+* Thu Oct 22 2015 Liu Di <liudidi@gmail.com> - 21.5.34-13.20150929hga76c9268bb72
+- 为 Magic 3.0 重建
+
 * Sat Oct  3 2015 Jerry James <loganjerry@gmail.com> - 21.5.34-1220150929hga76c9268bb72
 - Update to snapshot: fixes multiple bugs
 - Add -alsaplay patch to fix playing sounds through ALSA

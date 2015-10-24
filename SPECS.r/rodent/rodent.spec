@@ -5,8 +5,9 @@
 
 Name:  rodent
 Summary: Advanced user file manager for Linux/BSD systems
-Version: 5.3.16
-Release: 6%{?dist}
+Summary(zh_CN.UTF-8): Linux/BSD 系统下的高级用户文件管理器
+Version:	5.3.16
+Release:	1%{?dist}
 License: GPLv3+
 URL: http://xffm.org/
 Source0: http://sourceforge.net/projects/xffm/files/%{version}.5/rodent-%{version}.3.tar.bz2
@@ -33,9 +34,13 @@ Rodent is fast, small and powerful parallel file manager. All operations are
 done in threads, and command are inherited from the GNU or BSD operating
 systems to reduce the possibility of bugs to a minimum.
 
+%description -l zh_CN.UTF-8
+Linux/BSD 系统下的高级用户文件管理器。
+
 %if 0%{?with_rodentfgr}
 %package -n  rodent-fgr
 Summary:     Search tool for Rodent
+Summary(zh_CN.UTF-8): %{name} 的搜索工具
 Requires:    %{name}%{?_isa} = %{version}-%{release}
 
 %description -n rodent-fgr
@@ -43,11 +48,14 @@ Search tool for Rodent. Uses fgr and grep.
 Rodent is fast, small and powerful parallel file manager. All operations are
 done in threads, and command are inherited from the GNU or BSD operating
 systems to reduce the possibility of bugs to a minimum.
+%description -n rodent-fgr -l zh_CN.UTF-8
+%{name} 的搜索工具。
 %endif #with_rodentfgr
 
 %if 0%{?with_rodentdiff}
 %package -n  rodent-diff
 Summary:     Differences tool for Rodent
+Summary(zh_CN.UTF-8): %{name} 的对比工具
 Requires:    %{name}%{?_isa} = %{version}-%{release}
 
 %description -n rodent-diff
@@ -55,11 +63,14 @@ Differences tool for Rodent. Uses system diff application (GNU or BSD).
 Rodent is fast, small and powerful parallel file manager. All operations are
 done in threads, and command are inherited from the GNU or BSD operating
 systems to reduce the possibility of bugs to a minimum.
+%description -n rodent-diff -l zh_CN.UTF-8
+%{name} 的对比工具。
 %endif #with_rodentdiff
 
 %if 0%{?with_rodenticonmgr}
 %package -n  rodent-iconmgr
 Summary:     Icon customization dialog for Rodent applications
+Summary(zh_CN.UTF-8): %{name} 的图标定制对话框
 Requires:    %{name}%{?_isa} = %{version}-%{release}
 
 %description -n rodent-iconmgr
@@ -67,6 +78,8 @@ Icon customization dialog for Rodent applications.
 Rodent is fast, small and powerful parallel file manager. All operations are
 done in threads, and command are inherited from the GNU or BSD operating
 systems to reduce the possibility of bugs to a minimum.
+%description -n rodent-iconmgr -l zh_CN.UTF-8
+%{name} 的图标定制对话框。
 %endif #with_rodenticonmgr
 
 %if 0%{?with_rodentpkg}
@@ -94,6 +107,7 @@ make %{?_smp_mflags} CFLAGS="%{optflags}"
 
 %install
 make install DESTDIR=$RPM_BUILD_ROOT
+magic_rpm_clean.sh 
 %find_lang rodent-fgr --with-gnome
 %find_lang rodent-diff --with-gnome
 %find_lang rodent-iconmgr --with-gnome

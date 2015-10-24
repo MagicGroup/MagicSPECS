@@ -3,7 +3,7 @@ Summary(zh_CN.UTF-8): 方便的实用程序函数库
 Name:		glib
 Epoch:		1
 Version:	1.2.10
-Release:	38%{?dist}
+Release:	39%{?dist}
 License:	LGPLv2+
 Group:		System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
@@ -22,7 +22,12 @@ Patch4: glib-1.2.10-no_undefined.patch
 Patch5: glib-1.2.10-multilib.patch
 # Fix unused direct shared library dependency on libgmodule for libgthread
 Patch6: glib-1.2.10-unused-dep.patch
-
+# Avoid having to run autotools at build time
+Patch7: glib-1.2.10-autotools.patch
+# Use format strings properly
+Patch8: glib-1.2.10-format.patch
+# Workaround for different inline semantics between GNU89 and C99
+Patch9: glib-1.2.10-gcc5.patch
 
 %description
 GLib is a handy library of utility functions. This C library is
@@ -55,19 +60,14 @@ Requires: pkgconfig
 %patch4 -p1 -b .no_undefined
 %patch5 -p1 -b .multilib
 %patch6 -p1 -b .unused-dep
+%patch7 -b .autotools
+%patch8 -b .format
+%patch9 -b .gcc5
 
 # The original config.{guess,sub} do not work on x86_64
 #
 # The following /usr/lib cannot be %%_libdir !!
 cp -p /usr/lib/rpm/config.{guess,sub} .
-
-#cp -f %{_datadir}/aclocal/libtool.m4 .
-#libtoolize --copy --force
-automake-1.4
-#aclocal-1.4
-autoconf-2.13
-autoheader-2.13
-
 
 %build
 LIBTOOL=%{_bindir}/libtool \
@@ -122,6 +122,9 @@ rm -rf %{buildroot}
 %{_datadir}/aclocal/*
 
 %changelog
+* Sat Oct 24 2015 Liu Di <liudidi@gmail.com> - 1:1.2.10-39
+- 为 Magic 3.0 重建
+
 * Fri Jul 27 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1:1.2.10-37
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 

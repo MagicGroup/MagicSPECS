@@ -1,7 +1,18 @@
 diff -up xfig.3.2.5a/Fig.ad~ xfig.3.2.5a/Fig.ad
 --- xfig.3.2.5a/Fig.ad~	2007-04-14 04:17:24.000000000 +0200
 +++ xfig.3.2.5a/Fig.ad	2009-03-27 15:15:27.000000000 +0100
-@@ -23,18 +23,16 @@ Fig*AllowShellResize: false
+@@ -5,6 +5,10 @@
+ 
+ ! some sample settings you may want to change
+ 
++! If the following resource is set to false, xfig will use metric units
++! by default.
++Fig.inches:     false
++
+ ! The following fixes a problem that some window managers have
+ ! with xfig continually resizing itself
+ 
+@@ -23,18 +27,16 @@
  
  ! Browser - put your favorite browser here.  
  ! 		This is for viewing the xfig html reference.

@@ -1,18 +1,18 @@
 %global xfceversion 4.10
 
 Name:           xfce4-appfinder
-Version:        4.10.0
-Release:        3%{?dist}
+Version:	4.12.0
+Release: 1%{?dist}
 Summary:        Appfinder for the Xfce4 Desktop Environment
+Summary(zh_CN.UTF-8): Xfce4 桌面环境的程序查找器
 
 Group:          User Interface/Desktops
+Group(zh_CN.UTF-8): 用户界面/桌面
 License:        GPLv2+
 URL:            http://www.xfce.org/
 #VCS git:git://git.xfce.org/xfce/xfce4-appfinder
-Source0:        http://archive.xfce.org/src/xfce/%{name}/%{xfceversion}/%{name}-%{version}.tar.bz2
-# https://bugzilla.xfce.org/show_bug.cgi?id=9109
-# http://git.xfce.org/xfce/xfce4-appfinder/commit/?id=2a14564c
-Patch0:         xfce4-appfinder-4.10.0-null-pointers.patch
+%define majorver %(echo %{version} | awk -F. '{print $1"."$2}')
+Source0:        http://archive.xfce.org/src/xfce/%{name}/%{majorver}/%{name}-%{version}.tar.bz2
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildRequires:  pkgconfig(dbus-glib-1) >= 0.84
@@ -28,11 +28,11 @@ BuildRequires:  desktop-file-utils
 %description
 xfce-appfinder shows system wide installed applications.
 
+%description -l zh_CN.UTF-8
+Xfce4 桌面环境的程序查找器。
 
 %prep
 %setup -q
-%patch0 -p1
-
 
 %build
 %configure
@@ -46,7 +46,7 @@ make install DESTDIR=%{buildroot} INSTALL='install -p'
 
 desktop-file-validate %{buildroot}%{_datadir}/applications/%{name}.desktop
 desktop-file-validate %{buildroot}%{_datadir}/applications/xfce4-run.desktop
-
+magic_rpm_clean.sh
 %find_lang %{name}
 
 
@@ -60,9 +60,12 @@ rm -rf %{buildroot}
 %{_bindir}/xfce4-appfinder
 %{_bindir}/xfrun4
 %{_datadir}/applications/xfce4-*.desktop
-
+%{_datadir}/appdata/xfce4-appfinder.appdata.xml
 
 %changelog
+* Thu Oct 22 2015 Liu Di <liudidi@gmail.com> - 4.12.0-1
+- 更新到 4.12.0
+
 * Sat Oct 06 2012 Christoph Wickert <cwickert@fedoraproject.org> - 4.10.0-3
 - Use full patch for bugzilla.xfce.org #9109 from upstream (#826486)
 

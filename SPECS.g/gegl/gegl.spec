@@ -17,7 +17,7 @@ Summary:    A graph based image processing framework
 Summary(zh_CN.UTF-8): 基于图形的图像处理框架
 Name:       gegl
 Version:    0.2.0
-Release:    9%{?dist}
+Release:    11%{?dist}
 
 # Compute some version related macros
 # Ugly hack, you need to get your quoting backslashes/percent signs straight
@@ -35,6 +35,7 @@ Source0:    ftp://ftp.gimp.org/pub/gegl/%{apiver}/%{name}-%{version}.tar.bz2
 Patch0:     gegl-0.2.0-lua-5.2.patch
 Patch1:     gegl-0.2.0-CVE-2012-4433.patch
 Patch2:     gegl-0.2.0-remove-src-over-op.patch
+Patch3:	    0001-matting-levin-Fix-the-build-with-recent-suitesparse-.patch
 BuildRoot:  %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  asciidoc
 BuildRequires:  babl-devel >= 0.1.10
@@ -114,6 +115,7 @@ developing with %{name}.
 %patch0 -p1 -b .lua-5.2
 %patch1 -p1 -b .CVE-2012-4433
 %patch2 -p1 -b .remove-src-over-op
+%patch3 -p1
 
 %build
 # use hardening compiler/linker flags because gegl is likely to deal with
@@ -197,7 +199,7 @@ for opfile in *.so; do
 done
 popd
 magic_rpm_clean.sh
-%find_lang %{name}-%{apiver}
+%find_lang %{name}-%{apiver} || :
 
 %check
 # skip tests known to be problematic in a specific version
@@ -222,7 +224,7 @@ rm -rf %{buildroot}
 
 %postun -p /sbin/ldconfig
 
-%files -f operations_files -f %{name}-%{apiver}.lang
+%files -f operations_files
 %defattr(-, root, root, -)
 %doc AUTHORS ChangeLog COPYING COPYING.LESSER NEWS README
 %{_bindir}/gegl
@@ -241,6 +243,12 @@ rm -rf %{buildroot}
 %{_libdir}/pkgconfig/%{name}-%{apiver}.pc
 
 %changelog
+* Fri Oct 23 2015 Liu Di <liudidi@gmail.com> - 0.2.0-11
+- 为 Magic 3.0 重建
+
+* Fri Oct 23 2015 Liu Di <liudidi@gmail.com> - 0.2.0-10
+- 为 Magic 3.0 重建
+
 * Sun Mar 01 2015 Liu Di <liudidi@gmail.com> - 0.2.0-9
 - 为 Magic 3.0 重建
 

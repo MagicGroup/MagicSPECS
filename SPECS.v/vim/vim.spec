@@ -20,7 +20,7 @@ Summary(zh_CN.UTF-8): VIM 编辑器
 URL:     http://www.vim.org/
 Name: vim
 Version: 7.4.898
-Release:	1%{?dist}
+Release:	3%{?dist}
 License: Vim
 Group: Applications/Editors
 Group(zh_CN.UTF-8): 应用程序/工程
@@ -1931,14 +1931,14 @@ perl -pi -e "s,bin/nawk,bin/awk,g" runtime/tools/mve.awk
 %patch799 -p0
 %patch800 -p0
 %patch801 -p0
-%patch802 -p0
+#patch802 -p0
 %patch803 -p0
 %patch804 -p0
 %patch805 -p0
 %patch806 -p0
 %patch807 -p0
 %patch808 -p0
-%patch809 -p0
+#patch809 -p0
 %patch810 -p0
 %patch811 -p0
 %patch812 -p0
@@ -2059,15 +2059,42 @@ mv -f Makefile.tmp Makefile
 export CFLAGS="%{optflags} -D_GNU_SOURCE -D_FILE_OFFSET_BITS=64 -D_FORTIFY_SOURCE=2"
 export CXXFLAGS="%{optflags} -D_GNU_SOURCE -D_FILE_OFFSET_BITS=64 -D_FORTIFY_SOURCE=2"
 
+cp -f os_unix.h os_unix.h.save
+cp -f ex_cmds.c ex_cmds.c.save
+
+perl -pi -e "s/help.txt/vi_help.txt/"  os_unix.h ex_cmds.c
+perl -pi -e "s/\/etc\/vimrc/\/etc\/virc/"  os_unix.h
+
+%configure --prefix=%{_prefix} --with-features=small --with-x=no \
+  --enable-multibyte \
+  --disable-netbeans \
+%if %{WITH_SELINUX}
+  --enable-selinux \
+%else
+  --disable-selinux \
+%endif
+  --disable-pythoninterp --disable-perlinterp --disable-tclinterp \
+  --with-tlib=ncurses --enable-gui=no --disable-gpm --exec-prefix=/ \
+  --with-compiledby="<bugs@magiclinux.org>" \
+  --with-modified-by="<bugs@magiclinux.org>"
+
+make VIMRCLOC=/etc VIMRUNTIMEDIR=/usr/share/vim/%{vimdir} %{?_smp_mflags}
+cp vim minimal-vim
+make clean
+
+mv -f os_unix.h.save os_unix.h
+mv -f ex_cmds.c.save ex_cmds.c
+
 %configure --with-features=huge \
   --enable-pythoninterp=dynamic \
+  --enable-python3interp=dynamic \
   --enable-perlinterp \
   --disable-tclinterp --with-x=yes \
   --enable-xim --enable-multibyte \
   --with-tlib=ncurses \
   --enable-gtk2-check --enable-gui=gtk2 \
-  --with-compiledby="<bugzilla@redhat.com>" --enable-cscope \
-  --with-modified-by="<bugzilla@redhat.com>" \
+  --with-compiledby="<bugs@magiclinux.org>" --enable-cscope \
+  --with-modified-by="<bugs@magiclinux.org>" \
 %if "%{withnetbeans}" == "1"
   --enable-netbeans \
 %else
@@ -2095,13 +2122,14 @@ make clean
 
 %configure --prefix=%{_prefix} --with-features=huge \
  --enable-pythoninterp=dynamic \
+ --enable-python3interp=dynamic \
  --enable-perlinterp \
  --disable-tclinterp \
  --with-x=no \
  --enable-gui=no --exec-prefix=%{_prefix} --enable-multibyte \
- --enable-cscope --with-modified-by="<bugzilla@redhat.com>" \
+ --enable-cscope --with-modified-by="<bugs@magiclinux.org>" \
  --with-tlib=ncurses \
- --with-compiledby="<bugzilla@redhat.com>" \
+ --with-compiledby="<bugs@magiclinux.org>" \
 %if "%{withnetbeans}" == "1"
   --enable-netbeans \
 %else
@@ -2125,24 +2153,6 @@ make clean
 
 make VIMRCLOC=/etc VIMRUNTIMEDIR=/usr/share/vim/%{vimdir} %{?_smp_mflags}
 cp vim enhanced-vim
-make clean
-
-perl -pi -e "s/help.txt/vi_help.txt/"  os_unix.h ex_cmds.c
-perl -pi -e "s/\/etc\/vimrc/\/etc\/virc/"  os_unix.h
-%configure --prefix=%{_prefix} --with-features=small --with-x=no \
-  --enable-multibyte \
-  --disable-netbeans \
-%if %{WITH_SELINUX}
-  --enable-selinux \
-%else
-  --disable-selinux \
-%endif
-  --disable-pythoninterp --disable-perlinterp --disable-tclinterp \
-  --with-tlib=ncurses --enable-gui=no --disable-gpm --exec-prefix=/ \
-  --with-compiledby="<bugzilla@redhat.com>" \
-  --with-modified-by="<bugzilla@redhat.com>"
-
-make VIMRCLOC=/etc VIMRUNTIMEDIR=/usr/share/vim/%{vimdir} %{?_smp_mflags}
 
 %install
 rm -rf %{buildroot}
@@ -2150,21 +2160,16 @@ mkdir -p %{buildroot}/%{_bindir}
 mkdir -p %{buildroot}/%{_datadir}/%{name}/vimfiles/{after,autoload,colors,compiler,doc,ftdetect,ftplugin,indent,keymap,lang,plugin,print,spell,syntax,tutor}
 mkdir -p %{buildroot}/%{_datadir}/%{name}/vimfiles/after/{autoload,colors,compiler,doc,ftdetect,ftplugin,indent,keymap,lang,plugin,print,spell,syntax,tutor}
 cp -f %{SOURCE11} .
-%if %{?fedora}%{!?fedora:0} >= 16 || %{?rhel}%{!?rhel:0} >= 6
 cp -f %{SOURCE15} %{buildroot}/%{_datadir}/%{name}/vimfiles/template.spec
-%else
-cp -f %{SOURCE14} %{buildroot}/%{_datadir}/%{name}/vimfiles/template.spec
-%endif
 cp runtime/doc/uganda.txt LICENSE
 # Those aren't Linux info files but some binary files for Amiga:
 rm -f README*.info
-
 
 cd src
 make install DESTDIR=%{buildroot} BINDIR=%{_bindir} VIMRCLOC=/etc VIMRUNTIMEDIR=/usr/share/vim/%{vimdir}
 make installgtutorbin  DESTDIR=%{buildroot} BINDIR=%{_bindir} VIMRCLOC=/etc VIMRUNTIMEDIR=/usr/share/vim/%{vimdir}
 mkdir -p %{buildroot}%{_datadir}/icons/hicolor/{16x16,32x32,48x48,64x64}/apps
-install -m755 vim %{buildroot}%{_bindir}/vi
+install -m755 minimal-vim %{buildroot}%{_bindir}/vi
 install -m755 enhanced-vim %{buildroot}%{_bindir}/vim
 install -m755 gvim %{buildroot}%{_bindir}/gvim
 install -p -m644 %{SOURCE7} \
@@ -2175,6 +2180,44 @@ install -p -m644 %{SOURCE9} \
    %{buildroot}%{_datadir}/icons/hicolor/48x48/apps/gvim.png
 install -p -m644 %{SOURCE10} \
    %{buildroot}%{_datadir}/icons/hicolor/64x64/apps/gvim.png
+
+# Register as an application to be visible in the software center
+#
+# NOTE: It would be *awesome* if this file was maintained by the upstream
+# project, translated and installed into the right place during `make install`.
+#
+# See http://www.freedesktop.org/software/appstream/docs/ for more details.
+#
+mkdir -p $RPM_BUILD_ROOT%{_datadir}/appdata
+cat > $RPM_BUILD_ROOT%{_datadir}/appdata/gvim.appdata.xml <<EOF
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Copyright 2014 Richard Hughes <richard@hughsie.com> -->
+<!--
+EmailA%description -l zh_CN.UTF-8ress: Bram@moolenaar.net>
+SentUpstream: 2014-05-22
+-->
+<application>
+  <id type="desktop">gvim.desktop</id>
+  <metadata_license>CC0-1.0</metadata_license>
+  <project_license>Vim</project_license>
+  <description>
+    <p>
+     Vim is an advanced text editor that seeks to provide the power of the
+     de-facto Unix editor 'Vi', with a more complete feature set.
+     It's useful whether you're already using vi or using a different editor.
+    </p>
+    <p>
+     Vim is a highly configurable text editor built to enable efficient text
+     editing.
+     Vim is often called a "programmer's editor," and so useful for programming
+     that many consider it an entire IDE. It's not just for programmers, though.
+     Vim is perfect for all kinds of text editing, from composing email to
+     editing configuration files.
+    </p>
+  </description>
+  <url type="homepage">http://www.vim.org/</url>
+</application>
+EOF
 
 ( cd %{buildroot}
   ln -sf vi ./%{_bindir}/rvi
@@ -2196,12 +2239,9 @@ install -p -m644 %{SOURCE10} \
   %if "%{desktop_file}" == "1"
     mkdir -p %{buildroot}/%{_datadir}/applications
     desktop-file-install \
-    %if 0%{?fedora} && 0%{?fedora} < 19
-        --vendor fedora \
-    %endif
         --dir %{buildroot}/%{_datadir}/applications \
         %{SOURCE3}
-        # --add-category "Development;TextEditor;X-Red-Hat-Base" D\
+        # --a%description -l zh_CN.UTF-8-category "Development;TextEditor;X-Red-Hat-Base" D\
   %else
     mkdir -p ./%{_sysconfdir}/X11/applnk/Applications
     cp %{SOURCE3} ./%{_sysconfdir}/X11/applnk/Applications/gvim.desktop
@@ -2282,6 +2322,9 @@ rm -rf %{buildroot}/%{_datadir}/vim/%{vimdir}/doc/vim2html.pl
 rm -f %{buildroot}/%{_datadir}/vim/%{vimdir}/tutor/tutor.gr.utf-8~
 ( cd %{buildroot}/%{_mandir}
   for i in `find ??/ -type f`; do
+    if [[ "`file $i`" == *UTF-8\ Unicode\ text* ]]; then
+      continue
+    fi
     bi=`basename $i`
     iconv -f latin1 -t UTF8 $i > %{buildroot}/$bi
     mv -f %{buildroot}/$bi $i
@@ -2332,7 +2375,9 @@ rm -rf %{buildroot}
 %files common
 %defattr(-,root,root)
 %config(noreplace) %{_sysconfdir}/vimrc
-%doc README* LICENSE 
+%{!?_licensedir:%global license %%doc}
+%license LICENSE
+%doc README*
 %doc runtime/docs
 %doc Changelog.rpm
 %dir %{_datadir}/%{name}
@@ -2346,7 +2391,7 @@ rm -rf %{buildroot}
 %{_datadir}/%{name}/%{vimdir}/ftplugin
 %{_datadir}/%{name}/%{vimdir}/indent
 %{_datadir}/%{name}/%{vimdir}/keymap
-%{_datadir}/%{name}/%{vimdir}/lang/menu_*.vim
+%{_datadir}/%{name}/%{vimdir}/lang/*.vim
 %{_datadir}/%{name}/%{vimdir}/lang/*.txt
 %dir %{_datadir}/%{name}/%{vimdir}/lang
 %{_datadir}/%{name}/%{vimdir}/macros
@@ -2357,6 +2402,43 @@ rm -rf %{buildroot}
 %if ! %{withvimspell}
 %{_datadir}/%{name}/%{vimdir}/spell
 %endif
+%lang(af) %{_datadir}/%{name}/%{vimdir}/lang/af
+%lang(ca) %{_datadir}/%{name}/%{vimdir}/lang/ca
+%lang(cs) %{_datadir}/%{name}/%{vimdir}/lang/cs
+%lang(cs.cp1250) %{_datadir}/%{name}/%{vimdir}/lang/cs.cp1250
+%lang(de) %{_datadir}/%{name}/%{vimdir}/lang/de
+%lang(en_GB) %{_datadir}/%{name}/%{vimdir}/lang/en_GB
+%lang(eo) %{_datadir}/%{name}/%{vimdir}/lang/eo
+%lang(es) %{_datadir}/%{name}/%{vimdir}/lang/es
+%lang(fi) %{_datadir}/%{name}/%{vimdir}/lang/fi
+%lang(fr) %{_datadir}/%{name}/%{vimdir}/lang/fr
+%lang(ga) %{_datadir}/%{name}/%{vimdir}/lang/ga
+%lang(it) %{_datadir}/%{name}/%{vimdir}/lang/it
+%lang(ja) %{_datadir}/%{name}/%{vimdir}/lang/ja
+%lang(ja.euc-jp) %{_datadir}/%{name}/%{vimdir}/lang/ja.euc-jp
+%lang(ja.sjis) %{_datadir}/%{name}/%{vimdir}/lang/ja.sjis
+%lang(ko) %{_datadir}/%{name}/%{vimdir}/lang/ko
+%lang(ko) %{_datadir}/%{name}/%{vimdir}/lang/ko.UTF-8
+%lang(nb) %{_datadir}/%{name}/%{vimdir}/lang/nb
+%lang(nl) %{_datadir}/%{name}/%{vimdir}/lang/nl
+%lang(no) %{_datadir}/%{name}/%{vimdir}/lang/no
+%lang(pl) %{_datadir}/%{name}/%{vimdir}/lang/pl
+%lang(pl.UTF-8) %{_datadir}/%{name}/%{vimdir}/lang/pl.UTF-8
+%lang(pl.cp1250) %{_datadir}/%{name}/%{vimdir}/lang/pl.cp1250
+%lang(pt_BR) %{_datadir}/%{name}/%{vimdir}/lang/pt_BR
+%lang(ru) %{_datadir}/%{name}/%{vimdir}/lang/ru
+%lang(ru.cp1251) %{_datadir}/%{name}/%{vimdir}/lang/ru.cp1251
+%lang(sk) %{_datadir}/%{name}/%{vimdir}/lang/sk
+%lang(sk.cp1250) %{_datadir}/%{name}/%{vimdir}/lang/sk.cp1250
+%lang(sv) %{_datadir}/%{name}/%{vimdir}/lang/sv
+%lang(uk) %{_datadir}/%{name}/%{vimdir}/lang/uk
+%lang(uk.cp1251) %{_datadir}/%{name}/%{vimdir}/lang/uk.cp1251
+%lang(vi) %{_datadir}/%{name}/%{vimdir}/lang/vi
+%lang(zh_CN) %{_datadir}/%{name}/%{vimdir}/lang/zh_CN
+%lang(zh_CN.cp936) %{_datadir}/%{name}/%{vimdir}/lang/zh_CN.cp936
+%lang(zh_TW) %{_datadir}/%{name}/%{vimdir}/lang/zh_TW
+%lang(zh_CN.UTF-8) %{_datadir}/%{name}/%{vimdir}/lang/zh_CN.UTF-8
+%lang(zh_TW.UTF-8) %{_datadir}/%{name}/%{vimdir}/lang/zh_TW.UTF-8
 /%{_bindir}/xxd
 %{_mandir}/man1/ex.*
 %{_mandir}/man1/gex.*
@@ -2484,6 +2566,7 @@ rm -rf %{buildroot}
 %files X11
 %defattr(-,root,root)
 %if "%{desktop_file}" == "1"
+%{_datadir}/appdata/*.appdata.xml
 /%{_datadir}/applications/*
 %else
 /%{_sysconfdir}/X11/applnk/*/gvim.desktop
@@ -2499,6 +2582,12 @@ rm -rf %{buildroot}
 %{_datadir}/icons/hicolor/*/apps/*
 
 %changelog
+* Fri Oct 23 2015 Liu Di <liudidi@gmail.com> - 2:7.4.898-3
+- 为 Magic 3.0 重建
+
+* Fri Oct 23 2015 Liu Di <liudidi@gmail.com> - 2:7.4.898-2
+- 为 Magic 3.0 重建
+
 * Sun Oct 18 2015 Liu Di <liudidi@gmail.com> - 2:7.4.898-1
 - 更新到 7.4.898
 

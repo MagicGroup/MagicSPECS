@@ -8,7 +8,7 @@
 
 Name:		im-chooser
 Version:	1.6.4
-Release:	2%{?dist}
+Release:	3%{?dist}
 License:	GPLv2+ and LGPLv2+
 URL:		http://fedorahosted.org/im-chooser/
 %{?_with_gtk2:BuildRequires:	gtk2-devel}
@@ -132,6 +132,9 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %endif
 
 %changelog
+* Fri Oct 23 2015 Liu Di <liudidi@gmail.com> - 1.6.4-3
+- 为 Magic 3.0 重建
+
 * Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.6.4-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
 

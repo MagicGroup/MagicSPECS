@@ -1,16 +1,13 @@
 Summary: A version of the MIT Athena widget set for X
+Summary(zh_CN.UTF-8): X 下的 MIT Athena 部件集合
 Name: Xaw3d
-Version: 1.6.1
-Release: 3%{?dist}
+Version:	1.6.2
+Release:	1%{?dist}
 Group: System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 Source: http://xorg.freedesktop.org/archive/individual/lib/libXaw3d-%{version}.tar.bz2
-Patch1: Xaw3d-1.5E-cast.patch
-Patch3: Xaw3d-1.6.1-i18n.patch
-Patch4: Xaw3d-1.5-box.c.patch
 Patch5: Xaw3d-1.5-debian-fixes.patch
 Patch7: Xaw3d-1.6.1-3Dlabel.patch
-Patch8: Xaw3d-1.5E-close-destroy-crash.patch
-Patch9: Xaw3d-1.6.1-compat.patch
 Patch10: Xaw3d-1.6.1-fontset.patch
 Patch11: Xaw3d-1.6.1-hsbar.patch
 
@@ -38,9 +35,14 @@ You should install Xaw3d if you are using applications which incorporate
 the MIT Athena widget set and you'd like to incorporate a 3D look into
 those applications.
 
+%description -l zh_CN.UTF-8
+X 下的 MIT Athena 部件集合。
+
 %package devel
 Summary: Header files and static libraries for development using Xaw3d
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: %{name} = %{version}-%{release}
 Requires: libXmu-devel
 Requires: libXt-devel
@@ -60,17 +62,13 @@ You should install Xaw3d-devel if you are going to develop applications
 using the Xaw3d widget set.  You'll also need to install the Xaw3d
 package.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q -n libXaw3d-%{version}
-%patch1 -p1
-%patch3 -p1 -b .i18n
-%patch4 -p1
-# This doesn't apply cleanly, but has not been applied
 #%patch5 -p1 -b .debian
 %patch7 -p1 -b .3Dlabel
-%patch8 -p1 -b .close-destroy-crash
-%patch9 -p1 -b .compat
 %patch10 -p1 -b .fontset
 %patch11 -p1 -b .hsbar
 
@@ -108,6 +106,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_includedir}/X11/Xaw3d
 
 %changelog
+* Tue Oct 20 2015 Liu Di <liudidi@gmail.com> - 1.6.2-1
+- 更新到 1.6.2
+
 * Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 1.6.1-3
 - 为 Magic 3.0 重建
 

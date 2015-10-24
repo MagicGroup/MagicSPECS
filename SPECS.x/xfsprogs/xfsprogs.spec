@@ -1,13 +1,15 @@
 Summary:	Utilities for managing the XFS filesystem
+Summary(zh_CN.UTF-8): 管理 XFS 文件系统的工具
 Name:		xfsprogs
-Version:	3.1.8
-Release:	5%{?dist}
+Version:	4.2.0
+Release:	2%{?dist}
 # Licensing based on generic "GNU GENERAL PUBLIC LICENSE"
 # in source, with no mention of version.
 # doc/COPYING file specifies what is GPL and what is LGPL
 # but no mention of versions in the source.
 License:	GPL+ and LGPLv2+
 Group:		System Environment/Base
+Group(zh_CN.UTF-8): 系统环境/基本
 URL:		http://oss.sgi.com/projects/xfs/
 Source0:	ftp://oss.sgi.com/projects/xfs/cmd_tars/%{name}-%{version}.tar.gz
 Source1:	xfsprogs-wrapper.h
@@ -32,9 +34,14 @@ Refer to the documentation at http://oss.sgi.com/projects/xfs/
 for complete details.  This implementation is on-disk compatible
 with the IRIX version of XFS.
 
+%description -l zh_CN.UTF-8
+管理 XFS 文件系统的工具。
+
 %package devel
 Summary: XFS filesystem-specific headers
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: xfsprogs = %{version}-%{release}, libuuid-devel
 
 %description devel
@@ -45,18 +52,8 @@ You should install xfsprogs-devel if you want to develop XFS
 filesystem-specific programs,  If you install xfsprogs-devel, you'll
 also want to install xfsprogs.
 
-%package qa-devel
-Summary: XFS QA filesystem-specific headers
-Group: Development/Libraries
-Requires: xfsprogs = %{version}-%{release}
-Requires: xfsprogs-devel = %{version}-%{release}
-
-%description qa-devel
-xfsprogs-qa-devel contains headers needed to build the xfstests
-QA suite.
-
-You should install xfsprogs-qa-devel only if you are interested
-in building or running the xfstests QA suite.
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -75,7 +72,7 @@ make V=1 %{?_smp_mflags}
 
 %install
 rm -rf $RPM_BUILD_ROOT
-make V=1 DIST_ROOT=$RPM_BUILD_ROOT install install-dev install-qa \
+make V=1 DIST_ROOT=$RPM_BUILD_ROOT install install-dev \
 	PKG_ROOT_SBIN_DIR=%{_sbindir} PKG_ROOT_LIB_DIR=%{_libdir}
 
 # nuke .la files, etc
@@ -84,18 +81,8 @@ chmod 0755 $RPM_BUILD_ROOT/%{_libdir}/libhandle.so.*.*.*
 
 # remove non-versioned docs location
 rm -rf $RPM_BUILD_ROOT/%{_datadir}/doc/xfsprogs/
-
-# ugly hack to allow parallel install of 32-bit and 64-bit -devel packages:
-%define multilib_arches %{ix86} x86_64 ppc ppc64 s390 s390x %{sparc}
-
-%ifarch %{multilib_arches}
-mv -f $RPM_BUILD_ROOT%{_includedir}/xfs/platform_defs.h \
-      $RPM_BUILD_ROOT%{_includedir}/xfs/platform_defs-%{_arch}.h
-install -m 644 %{SOURCE1} $RPM_BUILD_ROOT%{_includedir}/xfs/platform_defs.h
-%endif
-
-magic_rpm_clean.sh 
-%find_lang %{name} || touch %{name}.lang
+magic_rpm_clean.sh
+%find_lang %{name} || :
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -104,7 +91,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %postun -p /sbin/ldconfig
 
-%files -f %{name}.lang
+%files
 %defattr(-,root,root)
 %doc doc/CHANGES doc/COPYING doc/CREDITS README
 %{_libdir}/*.so.*
@@ -119,71 +106,21 @@ rm -rf $RPM_BUILD_ROOT
 %{_includedir}/xfs/handle.h
 %{_includedir}/xfs/jdm.h
 %{_includedir}/xfs/linux.h
-%ifarch %{multilib_arches}
-%{_includedir}/xfs/platform_defs-%{_arch}.h
-%endif
-%{_includedir}/xfs/platform_defs.h
 %{_includedir}/xfs/xfs.h
+%{_includedir}/xfs/xfs_arch.h
 %{_includedir}/xfs/xfs_fs.h
+%{_includedir}/xfs/xfs_types.h
+%{_includedir}/xfs/xfs_format.h
+%{_includedir}/xfs/xfs_da_format.h
+%{_includedir}/xfs/xfs_log_format.h
 %{_includedir}/xfs/xqm.h
+
 %{_libdir}/*.so
 
-%files qa-devel
-%defattr(-,root,root)
-%{_includedir}/xfs/atomic.h
-%{_includedir}/xfs/bitops.h
-%{_includedir}/xfs/cache.h
-%{_includedir}/xfs/hlist.h
-%{_includedir}/xfs/kmem.h
-%{_includedir}/xfs/libxfs.h
-%{_includedir}/xfs/libxlog.h
-%{_includedir}/xfs/list.h
-%{_includedir}/xfs/parent.h
-%{_includedir}/xfs/radix-tree.h
-%{_includedir}/xfs/swab.h
-%{_includedir}/xfs/xfs_ag.h
-%{_includedir}/xfs/xfs_alloc.h
-%{_includedir}/xfs/xfs_alloc_btree.h
-%{_includedir}/xfs/xfs_arch.h
-%{_includedir}/xfs/xfs_attr_leaf.h
-%{_includedir}/xfs/xfs_attr_sf.h
-%{_includedir}/xfs/xfs_bit.h
-%{_includedir}/xfs/xfs_bmap.h
-%{_includedir}/xfs/xfs_bmap_btree.h
-%{_includedir}/xfs/xfs_btree.h
-%{_includedir}/xfs/xfs_btree_trace.h
-%{_includedir}/xfs/xfs_buf_item.h
-%{_includedir}/xfs/xfs_da_btree.h
-%{_includedir}/xfs/xfs_dfrag.h
-%{_includedir}/xfs/xfs_dinode.h
-%{_includedir}/xfs/xfs_dir2.h
-%{_includedir}/xfs/xfs_dir2_block.h
-%{_includedir}/xfs/xfs_dir2_data.h
-%{_includedir}/xfs/xfs_dir2_leaf.h
-%{_includedir}/xfs/xfs_dir2_node.h
-%{_includedir}/xfs/xfs_dir2_sf.h
-%{_includedir}/xfs/xfs_dir_leaf.h
-%{_includedir}/xfs/xfs_dir_sf.h
-%{_includedir}/xfs/xfs_extfree_item.h
-%{_includedir}/xfs/xfs_ialloc.h
-%{_includedir}/xfs/xfs_ialloc_btree.h
-%{_includedir}/xfs/xfs_inode.h
-%{_includedir}/xfs/xfs_inode_item.h
-%{_includedir}/xfs/xfs_inum.h
-%{_includedir}/xfs/xfs_log.h
-%{_includedir}/xfs/xfs_log_priv.h
-%{_includedir}/xfs/xfs_log_recover.h
-%{_includedir}/xfs/xfs_metadump.h
-%{_includedir}/xfs/xfs_mount.h
-%{_includedir}/xfs/xfs_quota.h
-%{_includedir}/xfs/xfs_rtalloc.h
-%{_includedir}/xfs/xfs_sb.h
-%{_includedir}/xfs/xfs_trace.h
-%{_includedir}/xfs/xfs_trans.h
-%{_includedir}/xfs/xfs_trans_space.h
-%{_includedir}/xfs/xfs_types.h
-
 %changelog
+* Sat Oct 24 2015 Liu Di <liudidi@gmail.com> - 4.2.0-2
+- 更新到 4.2.0
+
 * Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 3.1.8-5
 - 为 Magic 3.0 重建
 

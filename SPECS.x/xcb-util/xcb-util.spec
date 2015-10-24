@@ -1,9 +1,11 @@
 Name:		xcb-util
-Version:	0.3.9
+Version:	0.4.0
 Release:	1%{?dist}
 Summary:	Convenience libraries sitting on top of libxcb
+Summary(zh_CN.UTF-8): 基于 libxcb 的方便工具库
 
 Group:		System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 License:	MIT
 URL:		http://xcb.freedesktop.org
 Source0:	http://xcb.freedesktop.org/dist/%{name}-%{version}.tar.bz2
@@ -18,15 +20,19 @@ libraries. These experimental libraries provide convenience functions
 and interfaces which make the raw X protocol more usable. Some of the
 libraries also provide client-side code which is not strictly part of
 the X protocol but which have traditionally been provided by Xlib.
-
+%description -l zh_CN.UTF-8
+基于 libxcb 的方便工具库。
 
 %package 	devel
 Summary:	Development and header files for xcb-util
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:		System Environment/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:	%{name} = %{version}-%{release}, pkgconfig
 %description	devel
 Development files for xcb-util.
-
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -52,7 +58,7 @@ make install DESTDIR=$RPM_BUILD_ROOT INSTALL="install -p"
 chrpath --delete $RPM_BUILD_ROOT%{_prefix}/%{_lib}/libxcb-*.so.*
 
 rm %{buildroot}%{_libdir}/*.la
-
+magic_rpm_clean.sh
 
 %post -p /sbin/ldconfig
 
@@ -77,6 +83,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Oct 22 2015 Liu Di <liudidi@gmail.com> - 0.4.0-1
+- 更新到 0.4.0
+
 * Mon Aug 20 2012 Adam Jackson <ajax@redhat.com> 0.3.9-1
 - xcb-util 0.3.9 (#828286)
 

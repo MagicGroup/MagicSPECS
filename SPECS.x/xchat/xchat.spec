@@ -2,15 +2,26 @@
 %define gconf_version 2.14
 
 Summary:   A popular and easy to use graphical IRC (chat) client
+Summary(zh_CN.UTF-8): 一个流行的易用的图形 IRC 客户端
 Name:      xchat
 Version:   2.8.8
-Release:   14%{?dist}
+Release:   16%{?dist}
 Epoch:     1
 Group:     Applications/Internet
+Group(zh_CN.UTF-8): 应用程序/互联网
 License:   GPLv2+
 URL:       http://www.xchat.org
 Source:    http://www.xchat.org/files/source/2.8/xchat-%{version}.tar.xz
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+
+# http://sourceforge.net/p/xchat/bugs/1504/
+Source1:   hicolor_apps_16x16_%{name}.png
+Source2:   hicolor_apps_22x22_%{name}.png
+Source3:   hicolor_apps_24x24_%{name}.png
+Source4:   hicolor_apps_32x32_%{name}.png
+Source5:   hicolor_apps_48x48_%{name}.png
+Source6:   hicolor_apps_256x256_%{name}.png
+Source7:   %{name}.svg
 
 # Patches 0-9 reserved for official xchat.org patches
 
@@ -36,6 +47,15 @@ Patch52: xchat-2.8.8-libnotify07.patch
 Patch53: xchat-2.8.8-link-against-libnotify.patch
 
 Patch54: xchat-2.8.8-glib.patch
+
+# http://sourceforge.net/p/xchat/bugs/1504/
+Patch55: xchat-2.8.8-hires-icons.patch
+# http://sourceforge.net/p/xchat/bugs/1506/
+Patch56: xchat-2.8.8-xdg-dirs.patch
+# http://sourceforge.net/p/xchat/bugs/1397/
+Patch57: xchat-2.8.8-desktop-file-name.patch
+# https://bugzilla.redhat.com/show_bug.cgi?id=1091544
+Patch58: 0001-Don-t-force-the-use-of-SSLv3.patch
 
 BuildRequires: perl perl(ExtUtils::Embed) python-devel openssl-devel pkgconfig, tcl-devel
 BuildRequires: GConf2-devel
@@ -92,8 +112,20 @@ This package contains the X-Chat plugin providing the Tcl scripting interface.
 %patch52 -p1 -b .libnotify07
 %patch53 -p1 -b .link-against-libnotify
 %patch54 -p1
+%patch55 -p1 -b .hires-icons
+%patch56 -p1 -b .xdg-dirs
+%patch57 -p1 -b .desktop-file-name
+%patch58 -p1 -b .allow-tls
 
 sed -i -e 's/#define GTK_DISABLE_DEPRECATED//g' src/fe-gtk/*.c
+
+cp -p %{SOURCE1} icons/
+cp -p %{SOURCE2} icons/
+cp -p %{SOURCE3} icons/
+cp -p %{SOURCE4} icons/
+cp -p %{SOURCE5} icons/
+cp -p %{SOURCE6} icons/
+cp -p %{SOURCE7} icons/
 
 %build
 # Remove CVS files from source dirs so they're not installed into doc dirs.
@@ -103,8 +135,7 @@ export CFLAGS="$RPM_OPT_FLAGS $(perl -MExtUtils::Embed -e ccopts)"
 export LDFLAGS=$(perl -MExtUtils::Embed -e ldopts)
 
 # For xchat-2.8.8-link-against-libnotify.patch
-autoconf
-autoheader
+./autogen.sh
 
 %configure --disable-textfe \
            --enable-gtkfe \
@@ -135,7 +166,50 @@ desktop-file-install --vendor="" \
   --add-category=IRCClient \
   --add-category=GTK xchat.desktop
 
-%find_lang %{name}
+# Register as an application to be visible in the software center
+#
+# NOTE: It would be *awesome* if this file was maintained by the upstream
+# project, translated and installed into the right place during `make install`.
+#
+# See http://www.freedesktop.org/software/appstream/docs/ for more details.
+#
+mkdir -p $RPM_BUILD_ROOT%{_datadir}/appdata
+cat > $RPM_BUILD_ROOT%{_datadir}/appdata/%{name}.appdata.xml <<EOF
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Copyright 2014 Richard Hughes <richard@hughsie.com> -->
+<!--
+BugReportURL: https://sourceforge.net/p/xchat/feature-requests/235/
+SentUpstream: 2014-09-18
+-->
+<application>
+  <id type="desktop">xchat.desktop</id>
+  <metadata_license>CC0-1.0</metadata_license>
+  <description>
+    <p>
+      XChat is an Internet Relay Chat (IRC) client.
+      It allows you to join multiple IRC channels at the same time, which you can view
+      and browse using tabs or a tree-like interface.
+      You can use XChat to publicly chat with people in a channel, and to have private
+      one-on-one conversations.
+      You can even transfer files with XChat!
+    </p>
+    <p>
+      The client includes nick completion, alerts for mentions, logging functionality,
+      and several customization options for fonts, sounds and colors.
+    </p>
+  </description>
+  <url type="homepage">http://xchat.org/</url>
+  <screenshots>
+    <screenshot type="default">https://raw.githubusercontent.com/hughsie/fedora-appstream/master/screenshots-extra/xchat/a.png</screenshot>
+  </screenshots>
+  <!-- FIXME: change this to an upstream email address for spec updates
+  <updatecontact>someone_who_cares@upstream_project.org</updatecontact>
+   -->
+</application>
+EOF
+
+magic_rpm_clean.sh
+%find_lang %{name} || :
 
 # do not Provide plugins .so
 %define _use_internal_dependency_generator 0
@@ -180,6 +254,8 @@ fi
 %{_libdir}/xchat/plugins/python.so
 %{_datadir}/applications/xchat.desktop
 %{_datadir}/pixmaps/*
+%{_datadir}/appdata/xchat.appdata.xml
+%{_datadir}/icons/hicolor/*/apps/xchat.png
 %{_sysconfdir}/gconf/schemas/apps_xchat_url_handler.schemas
 %{_datadir}/dbus-1/services/org.xchat.service.service
 
@@ -188,6 +264,12 @@ fi
 %{_libdir}/xchat/plugins/tcl.so
 
 %changelog
+* Thu Oct 22 2015 Liu Di <liudidi@gmail.com> - 1:2.8.8-16
+- 为 Magic 3.0 重建
+
+* Thu Oct 22 2015 Liu Di <liudidi@gmail.com> - 1:2.8.8-15
+- 为 Magic 3.0 重建
+
 * Thu Sep 17 2015 Liu Di <liudidi@gmail.com> - 1:2.8.8-14
 - 为 Magic 3.0 重建
 

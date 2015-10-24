@@ -1,27 +1,32 @@
 %define app_defaults_dir %{_datadir}/X11/app-defaults
 
 Summary: An X Window System tool for drawing basic vector graphics
+Summary(zh_CN.UTF-8): 描绘基本向量图形的 X 窗口系统工具
 Name: xfig
 Version: 3.2.5
-Release: 32.b%{?dist}
+Release: 33.c%{?dist}
 License: MIT
 Group: Applications/Multimedia
+Group(zh_CN.UTF-8): 应用程序/多媒体
 URL: http://www.xfig.org/
-Source0: http://downloads.sourceforge.net/mcj/xfig.%{version}b.full.tar.gz
-Source1: xfig.png
+Source0: http://downloads.sourceforge.net/mcj/xfig.%{version}c.full.tar.gz
+Source1: xfig-icons.tar.gz
 Source2: xfig.desktop
 Source3: xfig.sh
 
 Patch0: xfig-3.2.5a-default-apps.patch
-Patch1: xfig-3.2.5-fhs.patch
-Patch7: xfig.3.2.5-modularX.patch
-Patch9: xfig.3.2.5-Xaw3d.patch
-Patch10: xfig-3.2.5-enable-Xaw3d.patch
-Patch13: xfig-3.2.5-urwfonts.patch
-Patch19: xfig-3.2.5-debian.patch
-Patch20: xfig-3.2.5b-fix-eps-reading.patch
-Patch21: xfig-3.2.5b-fix-fig-buffer-overflow.patch
-Patch22: 36_libpng15.dpatch
+Patch1: xfig-3.2.5-Imakefile.patch
+Patch2: xfig-3.2.5-disable-Xaw3d.patch
+Patch3: xfig-3.2.5-urwfonts.patch
+Patch4: 31_spelling.patch
+Patch5: 33_pdfimport_mediabox.patch
+# xfig_man.html is not in 3.2.5c tarball from some reason,
+# but makefile still tries to install it
+Patch6: 38_formatstring.patch
+Patch7: 39_add_xfig_man_html.patch
+Patch8: 40_fix_dash_list_for_different_styles.patch
+Patch9: xfig-3.2.5-rhbz1046102.patch
+patch10: xfig-3.2.5-libpng16.patch
 
 BuildRequires: libjpeg-devel
 BuildRequires: libpng-devel
@@ -54,10 +59,14 @@ PostScript, LaTeX).
 You should install xfig if you need a simple program to create vector
 graphics.
 
+%description -l zh_CN.UTF-8
+描绘基本向量图形的 X 窗口系统工具。
 
 %package plain
 Summary:        Plain Xaw version of xfig
+Summary(zh_CN.UTF-8): xfig 的朴素版本
 Group:          Applications/Multimedia
+Group(zh_CN.UTF-8): 应用程序/多媒体
 Requires:       %{name}-common = %{version}-%{release}
 Provides:       %{name}-executable = %{version}-%{release}
 
@@ -68,10 +77,14 @@ package uses the more modern / prettier looking Xaw3d toolkit, whereas this
 version uses the very basic Xaw toolkit. Unless you really know you want this
 version you probably don't want this version.
 
+%description plain -l zh_CN.UTF-8
+%{name} 的朴素版本。
 
 %package common
 Summary:        Common xfig files
+Summary(zh_CN.UTF-8): %{name} 的公用文件
 Group:          Applications/Multimedia
+Group(zh_CN.UTF-8): 应用程序/多媒体
 Requires:       transfig >= 1:3.2.5, xdg-utils, enchant, urw-fonts
 Requires:       hicolor-icon-theme
 Requires:       xorg-x11-fonts-base
@@ -82,72 +95,70 @@ Requires(postun): desktop-file-utils
 
 %description common
 Files common to both the plain Xaw and the Xaw3d version of xfig.
-
+%description common -l zh_CN.UTF-8
+%{name} 的公用文件。
 
 %prep
-%setup -q -n xfig.%{version}b
-%patch0 -p1 -b .redhat
-%patch1 -p1 -b .fhs
-%patch7 -p1 -b .modularX
-%patch9 -p1 -b .Xaw3d
-%patch10 -p1 -b .no-Xaw3d
-%patch13 -p1 -b .urw
-%patch19 -p1
-%patch20 -p1
-%patch21
-%patch22 -p1 -b .libpng
+%setup -q -n xfig.%{version}c -a 1
+%patch0 -p1
+%patch1 -p1
+%patch2 -p1 -b .with-Xaw3d
+%patch3 -p1
+%patch4 -p1
+%patch5 -p1
+%patch6 -p1
+%patch7 -p1
+%patch8 -p1
+%patch9 -p1
+%patch10 -p1
 iconv -f ISO-8859-1 -t UTF8 CHANGES > tmp; touch -r CHANGES tmp; mv tmp CHANGES
 rm Doc/html/images/sav1a0.tmp
 chmod -x `find -type f`
 
 
 %build
-# First build the Xaw3d version
+# First build the normal Xaw version
 xmkmf
 # make sure cmdline option parsing still works despite us renaming the binary
-sed -i 's/"xfig"/"xfig-Xaw3d"/' main.c
-make XFIGDOCDIR=%{_docdir}/%{name}-%{version} \
-     CDEBUGFLAGS="$RPM_OPT_FLAGS -D_GNU_SOURCE -fno-strength-reduce -fno-strict-aliasing"
-mv xfig xfig-Xaw3d
+sed -i 's/"xfig"/"xfig-plain"/' main.c
+make CDEBUGFLAGS="$RPM_OPT_FLAGS -D_GNU_SOURCE -D_DEFAULT_SOURCE -fno-strength-reduce -fno-strict-aliasing"
+mv xfig xfig-plain
 make distclean
 
-# And then build the normal Xaw version
-mv Imakefile.no-Xaw3d Imakefile
+# And then build the Xaw3d version
+mv Imakefile.with-Xaw3d Imakefile
 xmkmf
 # make sure cmdline option parsing still works despite us renaming the binary
-sed -i 's/"xfig-Xaw3d"/"xfig-plain"/' main.c
-make XFIGDOCDIR=%{_docdir}/%{name}-%{version} \
-     CDEBUGFLAGS="$RPM_OPT_FLAGS -D_GNU_SOURCE -fno-strength-reduce -fno-strict-aliasing"
+sed -i 's/"xfig-plain"/"xfig-Xaw3d"/' main.c
+make CDEBUGFLAGS="$RPM_OPT_FLAGS -D_GNU_SOURCE -D_DEFAULT_SOURCE -fno-strength-reduce -fno-strict-aliasing"
 
 
 %install
 rm -rf %{buildroot}
-
-make DESTDIR=%{buildroot} XFIGDOCDIR=%{_docdir}/%{name}-%{version} \
-     INSTALL="install -p" install.all
+make DESTDIR=$RPM_BUILD_ROOT INSTALL="install -p" install.all
 install -p -m 644 CHANGES README LATEX.AND.XFIG* FIGAPPS \
-  %{buildroot}%{_docdir}/%{name}-%{version}
-
-# install the Xaw3d version and the wrapper for the .desktop file
-mv %{buildroot}%{_bindir}/%{name} %{buildroot}%{_bindir}/%{name}-plain
-install -p -m 755 %{SOURCE3} %{buildroot}%{_bindir}/%{name}
-install -m 755 %{name}-Xaw3d %{buildroot}%{_bindir}
+  $RPM_BUILD_ROOT%{_docdir}/%{name}
 
 # remove the map generation scripts, these are for xfig developers only
-rm %{buildroot}%{_datadir}/%{name}/Libraries/Maps/{USA,Canada}/assemble
-
-mkdir -p %{buildroot}%{_datadir}/icons/hicolor/32x32/apps \
-         %{buildroot}%{_datadir}/applications
-
-install -p -m 644 %{SOURCE1} %{buildroot}%{_datadir}/icons/hicolor/32x32/apps
-
-desktop-file-install --vendor fedora         \
-  --dir %{buildroot}%{_datadir}/applications \
-  %{SOURCE2}
-
+rm $RPM_BUILD_ROOT%{_datadir}/%{name}/Libraries/Maps/{USA,Canada}/assemble
 # remove app-defaults symlink which gets installed
-rm %{buildroot}%{_prefix}/lib*/X11/app-defaults
+rm $RPM_BUILD_ROOT%{_prefix}/lib*/X11/app-defaults
 
+# install both Xaw and Xaw3d versions and the wrapper for the .desktop file
+mv $RPM_BUILD_ROOT%{_bindir}/%{name} $RPM_BUILD_ROOT%{_bindir}/%{name}-Xaw3d
+install -p -m 755 %{SOURCE3} $RPM_BUILD_ROOT%{_bindir}/%{name}
+install -m 755 %{name}-plain $RPM_BUILD_ROOT%{_bindir}
+
+install -D -p -m 644 %{name}16x16.xpm \
+  $RPM_BUILD_ROOT%{_datadir}/icons/hicolor/16x16/apps/%{name}.xpm
+install -D -p -m 644 %{name}32x32.xpm \
+  $RPM_BUILD_ROOT%{_datadir}/icons/hicolor/32x32/apps/%{name}.xpm
+install -D -p -m 644 %{name}64x64.xpm \
+  $RPM_BUILD_ROOT%{_datadir}/icons/hicolor/32x32/apps/%{name}.xpm
+
+mkdir -p $RPM_BUILD_ROOT%{_datadir}/applications
+desktop-file-install          \
+  --dir $RPM_BUILD_ROOT%{_datadir}/applications %{SOURCE2}
 
 %post common
 update-desktop-database &> /dev/null || :
@@ -174,16 +185,19 @@ fi
 
 %files common
 %defattr(-,root,root,-)
-%doc %{_docdir}/%{name}-%{version}
+%doc %{_docdir}/%{name}
 %{_bindir}/%{name}
 %{_datadir}/%{name}
 %{_mandir}/*/*
 %{app_defaults_dir}/*
-%{_datadir}/applications/fedora-%{name}.desktop
-%{_datadir}/icons/hicolor/32x32/apps/%{name}.png
+%{_datadir}/applications/%{name}.desktop
+%{_datadir}/icons/hicolor/??x??/apps/%{name}.xpm
 
 
 %changelog
+* Fri Oct 23 2015 Liu Di <liudidi@gmail.com> - 3.2.5-33.b
+- 为 Magic 3.0 重建
+
 * Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 3.2.5-32.b
 - 为 Magic 3.0 重建
 

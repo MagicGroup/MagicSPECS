@@ -4,7 +4,7 @@ Name: xdialog
 Summary: X11 drop in replacement for cdialog
 Summary(zh_CN.UTF-8): cdialog 的 X11 替代程序
 Version: 2.3.1
-Release: 6%{?dist}
+Release: 7%{?dist}
 License: GPL+
 Group: Applications/System
 Group(zh_CN.UTF-8): 应用程序/系统
@@ -12,6 +12,7 @@ URL: http://xdialog.free.fr
 
 Source0: http://xdialog.free.fr/%{real_name}-%{version}.tar.bz2
 Patch0: xdialog-2.3.1-nostrip.patch
+Patch1: xdialog-2.3.1-secure-fprintf.diff
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildRequires: gtk+-devel >= 1.2.0
@@ -39,6 +40,7 @@ iconv -f latin1 -t utf8 ChangeLog > ChangeLog.utf8
 touch -c -r ChangeLog ChangeLog.utf8
 mv ChangeLog.utf8 ChangeLog
 %patch0 -p1 -b .nostrip
+%patch1 -p0
 touch -c -r configure.nostrip configure
 touch -c -r configure.in.nostrip configure.in
 
@@ -81,6 +83,9 @@ rm -rf %{buildroot}
 %exclude %{_docdir}/%{real_name}-%{version}
 
 %changelog
+* Thu Oct 22 2015 Liu Di <liudidi@gmail.com> - 2.3.1-7
+- 为 Magic 3.0 重建
+
 * Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 2.3.1-6
 - 为 Magic 3.0 重建
 

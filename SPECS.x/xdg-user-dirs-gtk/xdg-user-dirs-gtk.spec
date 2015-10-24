@@ -1,11 +1,14 @@
 Name:		xdg-user-dirs-gtk
 Version:	0.10
-Release:	6%{?dist}
+Release:	7%{?dist}
 Summary:	Gnome integration of special directories
+Summary(zh_CN.UTF-8): 用户指定目录的 Gnome 集成 
 
 Group:		User Interface/Desktops
+Group(zh_CN.UTF-8): 用户界面/桌面
 License:	GPL+
 URL:		http://freedesktop.org/wiki/Software/xdg-user-dirs
+%define majorver %(echo %{version} | awk -F. '{print $1"."$2}')
 Source0:	http://download.gnome.org/sources/xdg-user-dirs-gtk/%{version}/%{name}-%{version}.tar.xz
 
 # upstream fix
@@ -25,6 +28,9 @@ Contains some integration of xdg-user-dirs with the gnome
 desktop, including creating default bookmarks and detecting
 locale changes.
 
+%description -l zh_CN.UTF-8
+用户指定目录的 Gnome 集成。
+
 %prep
 %setup -q
 %patch0 -p1
@@ -37,8 +43,8 @@ make %{?_smp_mflags}
 
 %install
 make install DESTDIR=$RPM_BUILD_ROOT
-
-%find_lang %name
+magic_rpm_clean.sh
+%find_lang %name || :
 
 desktop-file-validate $RPM_BUILD_ROOT%{_sysconfdir}/xdg/autostart/user-dirs-update-gtk.desktop
 
@@ -50,6 +56,9 @@ desktop-file-validate $RPM_BUILD_ROOT%{_sysconfdir}/xdg/autostart/user-dirs-upda
 
 
 %changelog
+* Thu Oct 22 2015 Liu Di <liudidi@gmail.com> - 0.10-7
+- 为 Magic 3.0 重建
+
 * Wed May 07 2014 Liu Di <liudidi@gmail.com> - 0.10-6
 - 为 Magic 3.0 重建
 

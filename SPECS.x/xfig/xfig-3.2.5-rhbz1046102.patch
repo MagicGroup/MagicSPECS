@@ -1,0 +1,12 @@
+diff -up xfig.3.2.5c/w_indpanel.c~ xfig.3.2.5c/w_indpanel.c
+--- xfig.3.2.5c/w_indpanel.c~	2011-09-30 21:27:36.000000000 +0200
++++ xfig.3.2.5c/w_indpanel.c	2014-06-18 16:39:38.783389253 +0200
+@@ -1266,7 +1266,7 @@ static void
+ set_arrow_size_state(Widget w, XtPointer closure, XtPointer call_data)
+ {
+     Boolean	    state;
+-    int		    which;
++    intptr_t	    which;
+     Pixel	    bg1, bg2, fg1, fg2;
+ 
+     /* check state of the toggle and set/remove checkmark */

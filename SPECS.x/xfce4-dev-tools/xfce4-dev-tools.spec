@@ -1,15 +1,18 @@
 %global xfceversion 4.10
 
 Name:           xfce4-dev-tools
-Version:        4.10.0
-Release:        2%{?dist}
+Version:        4.12.0
+Release:        1%{?dist}
 Summary:        Xfce developer tools
+Summary(zh_CN.UTF-8): Xfce 开发工具
 
 Group:          Development/Tools
+Group(zh_CN.UTF-8): 开发/工具
 License:        GPLv2+
 URL:            http://xfce.org/~benny/projects/xfce4-dev-tools/
 #VCS git:git://git.xfce.org/xfce/xfce4-dev-tools
-Source0:        http://archive.xfce.org/src/xfce/xfce4-dev-tools/%{xfceversion}/%{name}-%{version}.tar.bz2
+%define majorver %(echo %{version} | awk -F. '{print $1"."$2}')
+Source0:        http://archive.xfce.org/src/xfce/xfce4-dev-tools/%{majorver}/%{name}-%{version}.tar.bz2
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildRequires:  gettext-devel
@@ -23,6 +26,9 @@ Requires:       glib2-devel
 %description
 This package contains common tools required by Xfce developers and people
 that want to build Xfce from SVN.
+
+%description -l zh_CN.UTF-8
+Xfce 开发工具。
 
 %prep
 %setup -q
@@ -52,6 +58,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/aclocal/*
 
 %changelog
+* Fri Oct 23 2015 Liu Di <liudidi@gmail.com> - 4.12.0-1
+- 更新到 4.12.0
+
 * Sun Jul 22 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 4.10.0-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 

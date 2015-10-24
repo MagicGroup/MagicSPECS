@@ -1,0 +1,68 @@
+From 012b0b019ede3cfa7df20bf60c7915a771ecff78 Mon Sep 17 00:00:00 2001
+From: Kalev Lember <kalevlember@gmail.com>
+Date: Thu, 4 Dec 2014 11:22:04 +0100
+Subject: [PATCH] matting-levin: Fix the build with recent suitesparse versions
+
+Stop using the UF_long define that was deprecated previously and has
+completely disappeared in suitesparse 4.3.
+
+https://bugzilla.gnome.org/show_bug.cgi?id=741105
+---
+ operations/external/matting-levin.c | 20 ++++++++++----------
+ 1 file changed, 10 insertions(+), 10 deletions(-)
+
+diff --git a/operations/external/matting-levin.c b/operations/external/matting-levin.c
+index 63e85d1..cf84699 100644
+--- a/operations/external/matting-levin.c
++++ b/operations/external/matting-levin.c
+@@ -850,8 +850,8 @@ matting_sparse_new (guint cols, guint rows, guint elems)
+   sparse_t *s = g_new (sparse_t, 1);
+   s->columns  = cols;
+   s->rows     = rows;
+-  s->col_idx  = g_new  (UF_long, cols + 1);
+-  s->row_idx  = g_new  (UF_long, elems);
++  s->col_idx  = g_new  (SuiteSparse_long, cols + 1);
++  s->row_idx  = g_new  (SuiteSparse_long, elems);
+   s->values   = g_new0 (gdouble, elems);
+ 
+   return s;
+@@ -964,8 +964,8 @@ matting_get_laplacian (const gdouble       *restrict image,
+             image_elems  = roi->width * roi->height,
+             i, j, k, x, y,
+             status;
+-  UF_long  *trip_col,
+-           *trip_row;
++  SuiteSparse_long *trip_col,
++                   *trip_row;
+   glong     trip_nz = 0,
+             trip_cursor = 0,
+             trip_masked = 0;
+@@ -995,8 +995,8 @@ matting_get_laplacian (const gdouble       *restrict image,
+   trip_nz   = trip_masked * window_elems * window_elems;
+   trip_nz  += image_elems; // Sparse diagonal and row summing at conclusion
+ 
+-  trip_col  = g_new  (UF_long, trip_nz);
+-  trip_row  = g_new  (UF_long, trip_nz);
++  trip_col  = g_new  (SuiteSparse_long, trip_nz);
++  trip_row  = g_new  (SuiteSparse_long, trip_nz);
+   trip_val  = g_new0 (gdouble, trip_nz);
+ 
+   /* Compute the contribution of each pixel in the image to the laplacian */
+@@ -1082,10 +1082,10 @@ matting_get_laplacian (const gdouble       *restrict image,
+           for (y = 0; y < window_elems; ++y)
+             for (x = 0; x < window_elems; ++x)
+               {
+-                UF_long yx = y % diameter,
+-                        yy = y / diameter,
+-                        xx = x % diameter,
+-                        xy = x / diameter;
++                SuiteSparse_long yx = y % diameter,
++                                 yy = y / diameter,
++                                 xx = x % diameter,
++                                 xy = x / diameter;
+ 
+                 g_return_val_if_fail (trip_cursor < trip_nz, FALSE);
+                 trip_col[trip_cursor] = (i - radius + yx) + (j - radius + yy) * roi->width,
+-- 
+2.1.0
+

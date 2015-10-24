@@ -1,0 +1,6 @@
+#!/bin/bash
+pushd $(dirname $0)
+NAME=$(basename $(pwd))
+DATE=`date -d '-1 day' +%Y%m%d`
+sed -i "s/%define gitdate.*/%define gitdate $DATE/g" $NAME.spec
+popd

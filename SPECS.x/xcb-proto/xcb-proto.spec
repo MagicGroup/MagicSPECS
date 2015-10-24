@@ -3,7 +3,7 @@
 
 Name:           xcb-proto
 Version: 1.11
-Release: 1%{?dist}
+Release: 2%{?dist}
 Summary:        XCB protocol descriptions
 Summary(zh_CN.UTF-8): XCB 协议的描述文件
 
@@ -52,6 +52,9 @@ rm -rf $RPM_BUILD_ROOT
 %{python_sitelib}/xcbgen
 
 %changelog
+* Wed Oct 21 2015 Liu Di <liudidi@gmail.com> - 1.11-2
+- 为 Magic 3.0 重建
+
 * Fri Aug 08 2014 Liu Di <liudidi@gmail.com> - 1.11-1
 - 更新到 1.11
 

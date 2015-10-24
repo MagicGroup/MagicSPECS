@@ -1,4 +1,4 @@
-From: Steven Noonan <a%description -l zh_CN.UTF-8ress@hi%description -l zh_CN.UTF-8en>
+From: Steven Noonan <address@hidden>
 
 This is caused by a linux/xattr.h and sys/xattr.h incompatibility:
 

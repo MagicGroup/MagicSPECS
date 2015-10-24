@@ -1,8 +1,8 @@
-# Review at https://bugzilla.redhat.com/show_bug.cgi?id=554603
+%define debug_package %{nil}
 
 Name:           garcon
-Version:	0.3.0
-Release:        3%{?dist}
+Version:	0.5.0
+Release:        4%{?dist}
 Summary:        Implementation of the freedesktop.org menu specification
 Summary(zh_CN.UTF-8): freedesktop.org 菜单标准的实现 
 
@@ -104,6 +104,9 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %doc %{_datadir}/gtk-doc/
 
 %changelog
+* Fri Oct 23 2015 Liu Di <liudidi@gmail.com> - 0.5.0-4
+- 更新到 0.5.0
+
 * Wed Jun 11 2014 Liu Di <liudidi@gmail.com> - 0.3.0-3
 - 更新到 0.3.0
 

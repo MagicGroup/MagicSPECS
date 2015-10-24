@@ -1,10 +1,12 @@
 #global checkout 20130722git65169c9
 Name:           x2goserver
 Version:        4.0.1.19
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        X2Go Server
+Summary(zh_CN.UTF-8): X2Go 服务器
 
 Group:          Applications/Communications
+Group(zh_CN.UTF-8): 应用程序/通信
 License:        GPLv2+
 URL:            http://www.x2go.org
 Source0:        http://code.x2go.org/releases/source/%{name}/%{name}-%{version}.tar.gz
@@ -19,12 +21,8 @@ Patch1:		x2goserver-4.0.1.19-magic.patch
 
 BuildRequires:  desktop-file-utils
 BuildRequires:  perl(ExtUtils::MakeMaker)
-%if 0%{?fedora} || 0%{?rhel} >= 7
 BuildRequires:  man2html-core
 BuildRequires:  systemd
-%else
-BuildRequires:  man
-%endif
 # So XSESSIONDIR gets linked
 BuildRequires:  xorg-x11-xinit
 # For x2goruncommand - for now
@@ -51,11 +49,9 @@ Requires:       xorg-x11-xauth
 Requires(pre):  shadow-utils
 Requires(post): grep
 Requires(post): perl(DBD::SQLite)
-%if 0%{?fedora} || 0%{?rhel} >= 7
 Requires(post): systemd
 Requires(preun): systemd
 Requires(postun): systemd
-%endif
 # Provide upstream path from upstream rpms
 # http://bugs.x2go.org/cgi-bin/bugreport.cgi?bug=755
 Obsoletes:      x2goserver-extensions < %{version}-%{release}
@@ -75,11 +71,16 @@ This package contains the main daemon and tools for X2Go server-side session
 administrations.
 
 
+%description -l zh_CN.UTF-8
+X 的远程服务.
+
 %package fmbindings
 Summary:        X2Go Server file manager bindings
+Summary(zh_CN.UTF-8): %{name} 的文件管理组件
 Requires:       %{name} = %{version}-%{release}
 Requires:       xdg-utils
 Group:          Applications/Communications
+Group(zh_CN.UTF-8): 应用程序/通信
 
 %description fmbindings
 X2Go is a server based computing environment with
@@ -103,10 +104,15 @@ corresponding desktop shell:
     - under MATE by x2gomatebindings
 
 
+%description fmbindings -l zh_CN.UTF-8
+%{name} 的文件管理组件。
+
 %package printing
 Summary:        X2Go Server printing support
+Summary(zh_CN.UTF-8): %{name} 的打印支持
 Requires:       %{name} = %{version}-%{release}
 Group:          Applications/Communications
+Group(zh_CN.UTF-8): 应用程序/通信
 
 %description printing
 The X2Go Server printing package provides client-side printing support for
@@ -119,14 +125,18 @@ This package co-operates with the cups-x2go CUPS backend. If CUPS server and
 X2Go server are hosted on different machines, then make sure you install
 this package on the X2Go server(s) (and the cups-x2go package on the CUPS
 server).
+%description printing -l zh_CN.UTF-8
+%{name} 的打印支持。
 
 
 %package xsession
 Summary:        X2Go Server Xsession runner
+Summary(zh_CN.UTF-8): %{name} 的 X 会话运行器
 Requires:       %{name} = %{version}-%{release}
 # Symlinks to xinit files
 Requires:       xorg-x11-xinit
 Group:          Applications/Communications
+Group(zh_CN.UTF-8): 应用程序/通信
 
 %description xsession
 X2Go is a server based computing environment with
@@ -145,6 +155,8 @@ enable desktop-profiles, ssh-agent startups, gpgagent
 startups and many more Xsession related features on
 X2Go session login automagically.
 
+%description xsession -l zh_CN.UTF-8
+%{name} 的 X 会话运行器。
 
 %prep
 %setup -q
@@ -182,18 +194,12 @@ touch %{buildroot}%{_sharedstatedir}/x2go/x2go_sessions
 # Printing spool dir
 mkdir -p %{buildroot}%{_localstatedir}/spool/x2goprint
 
-%if 0%{?fedora} || 0%{?rhel} >= 7
 # System.d session cleanup script
 mkdir -p %{buildroot}%{_unitdir}
 install -pm0644 %SOURCE1 %{buildroot}%{_unitdir}
-%else
-# SysV session cleanup script
-mkdir -p %{buildroot}%{_initddir}
-install -pm0755 %SOURCE2 %{buildroot}%{_initddir}/x2gocleansessions
-%endif
 
 desktop-file-validate %{buildroot}%{_datadir}/applications/x2gofm.desktop
-
+chmod 440 %{buildroot}%{_sysconfdir}/sudoers.d/x2goserver
 
 %pre
 getent group x2gouser >/dev/null || groupadd -r x2gouser
@@ -208,7 +214,6 @@ exit 0
   egrep "^backend=sqlite.*" /etc/x2go/x2gosql/sql >/dev/null 2>&1 &&
   %{_sbindir}/x2godbadmin --createdb >/dev/null 2>&1 || :
 
-%if 0%{?fedora} || 0%{?rhel} >= 7
 %systemd_post x2gocleansessions.service
 
 %preun
@@ -216,20 +221,6 @@ exit 0
 
 %postun
 %systemd_postun x2gocleansessions.service
-%else
-/sbin/chkconfig --add x2gocleansessions
-
-%postun
-if [ "$1" -ge "1" ] ; then
-    /sbin/service x2gocleansessions condrestart >/dev/null 2>&1 || :
-fi
-
-%preun
-if [ "$1" = 0 ]; then
-        /sbin/service x2gocleansessions stop >/dev/null 2>&1
-        /sbin/chkconfig --del x2gocleansessions
-fi
-%endif
 
 %post fmbindings
 touch --no-create %{_datadir}/mime/packages &> /dev/null || :
@@ -239,11 +230,11 @@ touch --no-create %{_datadir}/mime/packages &> /dev/null || :
 /usr/bin/update-desktop-database &>/dev/null || :
 if [ $1 -eq 0 ] ; then
         /bin/touch --no-create %{_datadir}/mime/packages &> /dev/null || :
-        /usr/bin/update-mime-database %{?fedora:-n} %{_datadir}/mime &> /dev/null || :
+        /usr/bin/update-mime-database %{_datadir}/mime &> /dev/null || :
 fi
 
 %posttrans fmbindings
-/usr/bin/update-mime-database %{?fedora:-n} %{_datadir}/mime &> /dev/null || :
+/usr/bin/update-mime-database %{_datadir}/mime &> /dev/null || :
 
 %pre printing
 getent group x2goprint >/dev/null || groupadd -r x2goprint
@@ -303,11 +294,7 @@ exit 0
 %{_datadir}/x2go/x2gofeature.d/x2goserver-extensions.features
 %attr(0775,root,x2gouser) %dir %{_sharedstatedir}/x2go/
 %ghost %attr(0660,root,x2gouser) %{_sharedstatedir}/x2go/x2go_sessions
-%if 0%{?fedora} || 0%{?rhel} >= 7
 %{_unitdir}/x2gocleansessions.service
-%else
-%{_initddir}/x2gocleansessions
-%endif
 
 %files fmbindings
 %{_bindir}/x2gofm
@@ -334,6 +321,9 @@ exit 0
 
 
 %changelog
+* Wed Oct 21 2015 Liu Di <liudidi@gmail.com> - 4.0.1.19-4
+- 为 Magic 3.0 重建
+
 * Thu Sep 17 2015 Liu Di <liudidi@gmail.com> - 4.0.1.19-3
 - 为 Magic 3.0 重建
 
@@ -365,120 +355,4 @@ exit 0
 * Fri Oct 03 2014 Orion Poplawski <orion@cora.nwra.com> - 4.0.1.17-1
 - Update to 4.0.1.17
 
-* Thu Oct 02 2014 Rex Dieter <rdieter@fedoraproject.org> 4.0.1.16-2
-- -fmbindings: update mime scriptlets
 
-* Thu Sep 25 2014 Orion Poplawski <orion@cora.nwra.com> - 4.0.1.16-1
-- Update to 4.0.1.16
-
-* Tue Sep 09 2014 Jitka Plesnikova <jplesnik@redhat.com> - 4.0.1.15-7
-- Perl 5.20 mass
-
-* Wed Aug 27 2014 Jitka Plesnikova <jplesnik@redhat.com> - 4.0.1.15-6
-- Perl 5.20 rebuild
-
-* Tue Aug 26 2014 Orion Poplawski <orion@cora.nwra.com> - 4.0.1.15-5
-- Fix scriptlet requires
-
-* Mon Aug 18 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 4.0.1.15-4
-- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
-
-* Sun Jun 08 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 4.0.1.15-3
-- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
-
-* Fri May 2 2014 Orion Poplawski <orion@cora.nwra.com> - 4.0.1.15-2
-- Add Requires xorg-x11-xauth
-
-* Thu Apr 3 2014 Orion Poplawski <orion@cora.nwra.com> - 4.0.1.15-1
-- Update to 4.0.1.15
-
-* Wed Apr 2 2014 Orion Poplawski <orion@cora.nwra.com> - 4.0.1.14-1
-- Update to 4.0.1.14
-
-* Mon Mar 24 2014 Orion Poplawski <orion@cora.nwra.com> - 4.0.1.13-4
-- Create /tmp/.X11-unix with correct SELinux context (bug #1079772)
-
-* Wed Feb 5 2014 Orion Poplawski <orion@cora.nwra.com> - 4.0.1.13-3
-- Fix x2gocleansession.service unit file
-
-* Mon Jan 27 2014 Orion Poplawski <orion@cora.nwra.com> - 4.0.1.13-2
-- Fix xinitrd.d path in Xsession
-
-* Sun Jan 26 2014 Orion Poplawski <orion@cora.nwra.com> - 4.0.1.13-1
-- Update 4.0.1.13
-- Add xsession sub-package
-
-* Tue Jan 7 2014 Orion Poplawski <orion@cora.nwra.com> - 4.0.1.12-1
-- Update 4.0.1.12
-
-* Mon Jan 6 2014 Orion Poplawski <orion@cora.nwra.com> - 4.0.1.11-1
-- Update 4.0.1.11
-- Drop mimetype patch applied upstream
-
-* Fri Jan 3 2014 Orion Poplawski <orion@cora.nwra.com> - 4.0.1.10-1
-- Update to 4.0.1.10
-- Drop pwgen and mktemp patches applied upstream
-
-* Sat Dec 7 2013 Orion Poplawski <orion@cora.nwra.com> - 4.0.1.9-2
-- Disable Xsession support for now - Debian specific (Bug #1038834)
-
-* Mon Dec 2 2013 Orion Poplawski <orion@cora.nwra.com> - 4.0.1.9-1
-- Update to 4.0.1.9
-- Drop incorrect keyboard patch
-
-* Wed Nov 27 2013 Orion Poplawski <orion@cora.nwra.com> - 4.0.1.8-2
-- Use mktemp instead of tempfile
-- BR xorg-x11-xinit for Xsession.d link creation
-- Add patch to fix keyboard setting (bug #1033876)
-
-* Sat Nov 23 2013 Orion Poplawski <orion@cora.nwra.com> - 4.0.1.8-1
-- Update to 4.0.1.8
-- Fix x2gocleansessions init script for EL6 (bug #1031150)
-
-* Tue Oct 22 2013 Orion Poplawski <orion@cora.nwra.com> - 4.0.1.6-6
-- Fix bug in x2gocleansessions init script, enable by default
-
-* Wed Sep 11 2013 Orion Poplawski <orion@cora.nwra.com> - 4.0.1.6-5
-- Add some needed requires
-
-* Sun Aug 04 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 4.0.1.6-4
-- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
-
-* Tue Jul 30 2013 Orion Poplawski <orion@cora.nwra.com> - 4.0.1.6-3
-- Mark /var/lib/x2go as a directory
-- Add patch to make the following changes:
-- Remove Xsession.options
-- Make /etc/x2go/Xsession.d point to /etc/X11/xinit/Xclients.d
-- Make /etc/x2go/Xsession executable
-
-* Mon Jul 29 2013 Orion Poplawski <orion@cora.nwra.com> - 4.0.1.6-2
-- Add SysV init script for EL6
-
-* Mon Jul 29 2013 Orion Poplawski <orion@cora.nwra.com> - 4.0.1.6-1
-- Use 4.0.1.6 release
-- Drop patches applied upstream
-
-* Mon Jul 22 2013 Rok Mandeljc <rok.mandeljc@gmail.com> - 4.1.0.0-0.4.20130722git65169c9
-- Update to latest git
-- Use PREFIX=%{_prefix} when building, not just when installing.
-- Use pwgen instead of makepasswd, which is not available on Fedora.
-- Fixed a missing function import in x2golistsessions.
-- Added dependencies for xorg-x11-fonts-misc
-- Added system.d script for session cleanup on start.
-- Fixed x2goruncommand for TERMINAL -> gnome-terminal; the latter seems to return immediately in Fedora 19.
-
-* Thu May 30 2013 Orion Poplawski <orion@cora.nwra.com> - 4.1.0.0-0.3.20130520gitbd2cfe4
-- Update to latest git
-- Split out printing sub-package
-
-* Wed Jan 23 2013 Orion Poplawski <orion@cora.nwra.com> - 4.1.0.0-0.2.20130122git
-- Add post script to create session database if needed
-
-* Tue Jan 22 2013 Orion Poplawski <orion@cora.nwra.com> - 4.1.0.0-0.1.20130122git
-- Update to 4.1.0.0 git
-
-* Fri Jan 18 2013 Orion Poplawski <orion@cora.nwra.com> - 4.0.0.0-1
-- Update to 4.0.0.0
-
-* Tue Dec 11 2012 Orion Poplawski <orion@cora.nwra.com> - 3.1.1.9-1
-- Initial Fedora package

@@ -1,7 +1,6 @@
-%global         releasedate 20150615
 Name:           hdhomerun
-Version:        0.0.%{releasedate}
-Release:        0.%{?dist}
+Version:	20150826
+Release:	3%{?dist}
 Summary:        Silicon Dust HDHomeRun configuration utility
 Summary(zh_CN.UTF-8): HDHomeRun 配置程序 
 
@@ -9,8 +8,8 @@ Group:          Applications/System
 Group(zh_CN.UTF-8): 应用程序/系统
 License:        LGPLv3 and GPLv3
 URL:            http://www.silicondust.com/
-Source0:        http://download.silicondust.com/hdhomerun/libhdhomerun_%{releasedate}.tgz
-Source1:        http://download.silicondust.com/hdhomerun/hdhomerun_config_gui_%{releasedate}.tgz
+Source0:        http://download.silicondust.com/hdhomerun/libhdhomerun_%{version}.tgz
+Source1:        http://download.silicondust.com/hdhomerun/hdhomerun_config_gui_%{version}.tgz
 Source2:	hdhomerun_config_gui.desktop
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  gtk2-devel
@@ -118,6 +117,15 @@ rm -rf $RPM_BUILD_ROOT
 %{_includedir}/hdhomerun/*.h
 
 %changelog
+* Wed Oct 21 2015 Liu Di <liudidi@gmail.com> - 20150826-3
+- 为 Magic 3.0 重建
+
+* Wed Oct 21 2015 Liu Di <liudidi@gmail.com> - 20150826-2
+- 为 Magic 3.0 重建
+
+* Wed Oct 21 2015 Liu Di <liudidi@gmail.com> - 20150826-1
+- 更新到 20150826
+
 * Sat Jun 28 2015 Jeffrey C. Ollie <jeff@ocjtech.us> - 0.0-0.28.20150615
 - Update to 20150615
 

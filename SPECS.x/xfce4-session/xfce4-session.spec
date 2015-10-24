@@ -1,22 +1,21 @@
 %global xfceversion 4.10
 
 Name:           xfce4-session
-Version:        4.10.0
-Release:        4%{?dist}
+Version:	4.12.1
+Release: 2%{?dist}
 Summary:        Xfce session manager
+Summary(zh_CN.UTF-8): Xfce 会话管理器
 
 Group:          User Interface/Desktops
+Group(zh_CN.UTF-8): 用户界面/桌面
 License:        GPLv2+
 URL:            http://www.xfce.org/
 #VCS git:git://git.xfce.org/xfce/xfce4-session
-Source0:        http://archive.xfce.org/src/xfce/%{name}/%{xfceversion}/%{name}-%{version}.tar.bz2
+%define majorver %(echo %{version} | awk -F. '{print $1"."$2}')
+Source0:        http://archive.xfce.org/src/xfce/%{name}/%{majorver}/%{name}-%{version}.tar.bz2
 # taken from polkit-gnome, license is LGPLv2+, requires because of
 # http://lists.fedoraproject.org/pipermail/devel-announce/2011-February/000758.html
 Source1:        polkit-gnome-authentication-agent-1.desktop
-# Fix logout with multiple sessions asking for save. 
-# https://bugzilla.xfce.org/show_bug.cgi?id=5379
-# http://git.xfce.org/xfce/xfce4-session/patch/?id=9f3077be682355e1cd07e9a9463e76307292208c
-Patch1:         xfce4-session-4.10.0-session-save.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
@@ -49,28 +48,38 @@ Obsoletes:      xfce-utils < 4.8.3-7.fc18
 %description
 xfce4-session is the session manager for the Xfce desktop environment.
 
+%description -l zh_CN.UTF-8
+Xfce 会话管理器。
+
 %package        devel
 Summary:        Development files for xfce4-session
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       %{name} = %{version}-%{release}
 Requires:       libxfce4ui-devel >= %{xfceversion}
 
 %description    devel
 Header files for the Xfce Session Manager.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
 %package        engines
 Summary:        Additional engines for xfce4-session
+Summary(zh_CN.UTF-8): %{name} 的附加引擎
 Group:          User Interface/Desktops
+Group(zh_CN.UTF-8): 用户界面/桌面
 Requires:       %{name} = %{version}-%{release}
 
 %description    engines
 Additional splash screen engines for the Xfce Session Manager.
 
+%description engines -l zh_CN.UTF-8
+%{name} 的附加引擎。
 
 %prep
 %setup -q
-
-%patch1 -p1
 
 %build
 %configure --disable-static \
@@ -88,6 +97,7 @@ make %{?_smp_mflags} V=1
 rm -rf $RPM_BUILD_ROOT
 make install DESTDIR=$RPM_BUILD_ROOT INSTALL='install -p'
 find $RPM_BUILD_ROOT -type f -name "*.la" -exec rm -f {} ';'
+magic_rpm_clean.sh
 %find_lang %{name}
 
 # install autostart file for polkit-gnome-authentication-agent-1
@@ -134,6 +144,7 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %{_datadir}/applications/*.desktop
 %{_datadir}/xsessions/xfce.desktop
 %{_datadir}/icons/hicolor/*/*/*
+%{_datadir}/polkit-1/actions/org.xfce.session.policy
 %{_mandir}/man1/*
 
 %files devel
@@ -150,6 +161,9 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %{_datadir}/themes/Default/balou/
 
 %changelog
+* Fri Oct 23 2015 Liu Di <liudidi@gmail.com> - 4.12.1-2
+- 更新到 4.12.1
+
 * Sun Sep 30 2012 Kevin Fenzi <kevin@scrye.com> 4.10.0-4
 - Add upstream commit to fix session saves with 2 or more apps that ask to save. 
 - https://bugzilla.xfce.org/show_bug.cgi?id=5379

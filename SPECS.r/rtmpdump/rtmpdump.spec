@@ -4,7 +4,7 @@
 
 Name:           rtmpdump
 Version:        2.4
-Release:        3.%{gitdate}.git%{shortcommit}%{?dist}
+Release:        4.%{gitdate}.git%{shortcommit}%{?dist}
 Summary:        Toolkit for RTMP streams
 Summary(zh_CN.UTF-8): RTMP 流媒体工具
 
@@ -89,6 +89,9 @@ rm -f %{buildroot}%{_libdir}/librtmp.a
 %{_mandir}/man3/librtmp.3*
 
 %changelog
+* Wed Oct 21 2015 Liu Di <liudidi@gmail.com> - 2.4-4.20131205.gitdc76f0a
+- 为 Magic 3.0 重建
+
 * Mon Sep 01 2014 Sérgio Basto <sergio@serjux.com> - 2.4-3.20131205.gitdc76f0a
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
 

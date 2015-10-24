@@ -1,13 +1,16 @@
+%undefine _hardened_build	
 Summary: Disk based hash library
+Summary(zh_CN.UTF-8): 基于磁盘的哈希库
 Name: dbh
-Version: 5.0.16
-Release: 2%{?dist}
+Version:	5.0.19
+Release:	1%{?dist}
 URL: http://dbh.sourceforge.net/
 Source0: http://downloads.sourceforge.net/%{name}/lib%{name}2-%{version}.tar.gz
 Patch0: %{name}-5.0.13-bigendian.patch
 Epoch: 1
 License: GPLv3+
 Group: System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 Buildroot: %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: glib2-devel
 
@@ -20,14 +23,22 @@ particular record is minimized (using the concept of critical points from
 calculus), which provides the means to construct optimized databases for 
 particular applications.
 
+%description -l zh_CN.UTF-8
+基于磁盘的哈希库。
+
 %package devel
 Summary: Header files for disk based hash library
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: %{name} = %{epoch}:%{version}-%{release}
 
 %description devel
 This package includes the static libraries and header files you will need
 to compile applications for dbh.
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -qn lib%{name}2-%{version}
@@ -71,6 +82,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/dbh*
 
 %changelog
+* Fri Oct 23 2015 Liu Di <liudidi@gmail.com> - 1:5.0.19-1
+- 更新到 5.0.19
+
 * Wed Jun 17 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1:5.0.16-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

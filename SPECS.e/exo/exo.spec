@@ -5,7 +5,7 @@
 
 Name:           exo
 Version:        0.10.2
-Release:        6%{?dist}
+Release:        7%{?dist}
 Summary:        Application library for the Xfce desktop environment
 
 Group:          System Environment/Libraries
@@ -174,6 +174,9 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %endif
 
 %changelog
+* Fri Oct 23 2015 Liu Di <liudidi@gmail.com> - 0.10.2-7
+- 更新到 0.10.7
+
 * Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.10.2-6
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
 

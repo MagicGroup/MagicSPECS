@@ -5,7 +5,7 @@
 
 Name:           xemacs-packages-extra
 Version:        20150919
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Collection of XEmacs lisp packages
 
 Group:          Applications/Editors
@@ -99,14 +99,6 @@ chmod +x make.sh
 
 sed -i -e 's|/usr/local/bin/perl5\?|%{_bindir}/perl|g' \
   xemacs-packages/bbdb/utils/*.pl xemacs-packages/hyperbole/file-newer
-
-# Get reproducible builds by setting the compiling username
-mkdir ~/.xemacs
-echo >> ~/.xemacs/custom.el << EOF
-(custom-set-variables
- '(user-mail-address "mockbuild@fedoraproject.org"))
-EOF
-
 
 %build
 cd xemacs-packages/xslt-process/java
@@ -214,6 +206,9 @@ sed -i -e 's/^\(.*[_-]ja\.info.*\)$/%lang(ja) \1/' info-files
 
 
 %changelog
+* Thu Oct 22 2015 Liu Di <liudidi@gmail.com> - 20150919-2
+- 为 Magic 3.0 重建
+
 * Wed Oct  7 2015 Jerry James <loganjerry@gmail.com> - 20150919-1
 - Update to latest packages releases
 

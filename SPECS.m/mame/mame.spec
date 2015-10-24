@@ -15,7 +15,7 @@
 
 Name:           mame
 Version:        0.%{baseversion}
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        Multiple Arcade Machine Emulator
 
 License:        MAME License and BSD and GPLv2+ and LGPLv2+ and Public Domain and zlib
@@ -31,15 +31,13 @@ BuildRequires:  expat-devel
 BuildRequires:  flac-devel
 #BuildRequires:  jsoncpp-devel
 BuildRequires:  libjpeg-turbo-devel
-%if 0%{?fedora} >= 22
-BuildRequires:  lua-devel >= 5.3.0
-%endif
+BuildRequires:  lua-devel >= 5.2.0
 #BuildRequires:  mongoose-devel
 BuildRequires:  p7zip
 BuildRequires:  portaudio-devel
 BuildRequires:  portmidi-devel
 BuildRequires:  python
-BuildRequires:  qt-devel
+BuildRequires:  qt4-devel
 BuildRequires:  SDL2_ttf-devel
 BuildRequires:  sqlite-devel
 BuildRequires:  zlib-devel
@@ -48,9 +46,7 @@ Requires:       %{name}-data = %{version}-%{release}
 Provides:       bundled(bgfx)
 Provides:       bundled(bx)
 Provides:       bundled(jsoncpp)
-%if 0%{?fedora} < 22
 Provides:       bundled(lua) = 5.3.0
-%endif
 Provides:       bundled(lzma-sdk) = 9.22
 Provides:       bundled(mongoose)
 Provides:       mess = %{version}-%{release}
@@ -180,17 +176,10 @@ RPM_OPT_FLAGS=$(echo $RPM_OPT_FLAGS | sed -e 's@-mtune=generic@-march=corei7-avx
 
 #save some space
 #jsoncpp and mongoose in Fedora are too old, lua is only new enough on F22+
-%if 0%{?fedora} >= 22
-MAME_FLAGS="NOWERROR=1 SYMBOLS=1 OPTIMIZE=2 VERBOSE=1 USE_SYSTEM_LIB_EXPAT=1 \
-    USE_SYSTEM_LIB_ZLIB=1 USE_SYSTEM_LIB_JPEG=1 USE_SYSTEM_LIB_FLAC=1 \
-    USE_SYSTEM_LIB_LUA=1 USE_SYSTEM_LIB_SQLITE3=1 USE_SYSTEM_LIB_PORTMIDI=1 \
-    USE_SYSTEM_LIB_PORTAUDIO=1 SDL_INI_PATH=%{_sysconfdir}/%{name};"
-%else
 MAME_FLAGS="NOWERROR=1 SYMBOLS=1 OPTIMIZE=2 VERBOSE=1 USE_SYSTEM_LIB_EXPAT=1 \
     USE_SYSTEM_LIB_ZLIB=1 USE_SYSTEM_LIB_JPEG=1 USE_SYSTEM_LIB_FLAC=1 \
     USE_SYSTEM_LIB_SQLITE3=1 USE_SYSTEM_LIB_PORTMIDI=1 \
     USE_SYSTEM_LIB_PORTAUDIO=1 SDL_INI_PATH=%{_sysconfdir}/%{name};"
-%endif
 
 %if %{with lowmem}
 MAME_FLAGS="$MAME_FLAGS LDOPTS=-Wl,--no-keep-memory,--reduce-memory-overheads \
@@ -324,6 +313,9 @@ popd
 
 
 %changelog
+* Thu Oct 22 2015 Liu Di <liudidi@gmail.com> - 0.163-5
+- 为 Magic 3.0 重建
+
 * Sat Jul 18 2015 Julian Sikorski <belegdol@fedoraproject.org> - 0.163-4
 - Fixed debug conditional build (rfbz #3715)
 
