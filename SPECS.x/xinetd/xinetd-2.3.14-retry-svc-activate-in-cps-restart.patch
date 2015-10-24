@@ -1,0 +1,54 @@
+diff -Napur xinetd-2.3.14.old/xinetd/access.c xinetd-2.3.14.new/xinetd/access.c
+--- xinetd-2.3.14.old/xinetd/access.c	2005-10-05 10:15:33.000000000 -0700
++++ xinetd-2.3.14.new/xinetd/access.c	2012-02-22 20:12:09.120973124 -0800
+@@ -89,9 +89,20 @@ static void cps_service_restart(void)
+                msg(LOG_ERR, func,
+                "Activating service %s", SC_NAME(scp));
+             } else {
+-               msg(LOG_ERR, func,
+-               "Error activating service %s", 
+-               SC_NAME(scp)) ;
++               /* Try to restart the service */
++               SVC_ATTEMPTS(sp) += 1;
++               if ( SVC_ATTEMPTS(sp) < MAX_SVC_ATTEMPTS ) {
++                  msg(LOG_ERR, func, 
++                  "Error activating service %s, retrying %d more time(s)...",
++                  SC_NAME(scp),
++                  MAX_SVC_ATTEMPTS - SVC_ATTEMPTS(sp));
++                  xtimer_add(cps_service_restart, 1);
++               } else {
++                  /* Give up */
++                  msg(LOG_ERR, func,
++                  "Error activating service %s", 
++                  SC_NAME(scp));
++               } 
+             } /* else */
+          }
+       }
+diff -Napur xinetd-2.3.14.old/xinetd/service.c xinetd-2.3.14.new/xinetd/service.c
+--- xinetd-2.3.14.old/xinetd/service.c	2012-02-22 19:16:56.288912783 -0800
++++ xinetd-2.3.14.new/xinetd/service.c	2012-02-22 19:25:03.059356909 -0800
+@@ -397,6 +408,7 @@ status_e svc_activate( struct service *s
+     * Initialize the service data
+     */
+    SVC_RUNNING_SERVERS(sp)   = SVC_RETRIES(sp) = 0 ;
++   SVC_ATTEMPTS(sp) = 0;
+ 
+    if ( SC_MUST_LISTEN( scp ) )
+       (void) listen( SVC_FD(sp), LISTEN_BACKLOG ) ;
+diff -Napur xinetd-2.3.14.old/xinetd/xconfig.h xinetd-2.3.14.new/xinetd/xconfig.h
+--- xinetd-2.3.14.old/xinetd/xconfig.h	2003-02-19 09:29:28.000000000 -0800
++++ xinetd-2.3.14.new/xinetd/xconfig.h	2012-02-22 19:20:20.360855514 -0800
+@@ -59,6 +59,12 @@
+ #define DEFAULT_LOOP_TIME			10
+ 
+ /*
++ * The number of times to attempt re-activating a service after being
++ * deactivated due to the above.
++ */
++#define MAX_SVC_ATTEMPTS                         30
++
++/*
+  * Signal-to-action mapping
+  */
+ #ifndef RECONFIG_HARD_SIG

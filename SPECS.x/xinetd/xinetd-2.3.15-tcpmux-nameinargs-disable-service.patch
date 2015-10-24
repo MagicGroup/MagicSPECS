@@ -1,0 +1,50 @@
+Xinetd parses and applies its configuration line by line. If a user wants to
+specify NAMEINARGS as a flag, it has to be *before* specifying 'server_args'.
+
+Author: Jan Synacek <jsynacek@redhat.com>
+Resolves: #1033528
+
+--- a/xinetd/parse.c	2013-11-21 10:51:25.025436376 +0100
++++ b/xinetd/parse.c	2013-11-21 14:45:44.374121057 +0100
+@@ -633,7 +633,28 @@ static status_e identify_attribute( entr
+ 
+    if ( (*ap->a_parser)( attr_values, scp, op ) == OK )
+    {    /* This is the normal path. */
+-	SC_SPECIFY( scp, ap->a_id ) ;
++       /* If flags contain NAMEINARGS and server_args is already set, disable the service.
++          Server args are already set incorrectly. */
++       if ( strcmp( ap->a_name, "flags" ) == 0 &&
++            SC_SERVER_ARGV( scp ) )
++       {
++           int i = 0, n = pset_count( attr_values ) ;
++           for ( ; i < n ; i++ ) {
++               char *v = (char *)pset_pointer( attr_values, i ) ;
++               if ( strcmp( v, "NAMEINARGS" ) == 0 )
++                   break ;
++           }
++
++           if ( i != n ) {
++               parsemsg( LOG_ERR, func,
++                         "NAMEINARGS flag is set after server_args - DISABLING SERVICE" ) ;
++               SC_DISABLE( scp ) ;
++           }
++       }
++       else
++       {
++           SC_SPECIFY( scp, ap->a_id ) ;
++       }
+    }
+    else if ( entry_type == SERVICE_ENTRY )
+    {
+--- a/xinetd/xinetd.conf.man	2013-12-03 10:06:35.717977075 +0100
++++ b/xinetd/xinetd.conf.man	2013-12-03 10:41:14.779089430 +0100
+@@ -106,7 +106,8 @@
+ This will cause the first argument in "server_args" to be argv[0] when
+ executing the server, as specified in "server".  This allows you to use
+ tcpd by putting tcpd in "server" and the name of the server in "server_args"
+-like in normal inetd.
++like in normal inetd. This flag has to be specified before "server_args",
++otherwise is not taken into account.
+ .TP
+ .B NODELAY
+ If the service is a tcp service and the NODELAY flag is set, then the

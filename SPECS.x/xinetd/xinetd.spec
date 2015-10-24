@@ -1,27 +1,24 @@
 Summary: A secure replacement for inetd
 Name: xinetd
-Version: 2.3.14
-Release: 42%{?dist}
-License: xinetd 
+Version: 2.3.15
+Release: 16%{?dist}
+License: xinetd
 Group: System Environment/Daemons
 Epoch: 2
-URL: http://www.xinetd.org
-Source: http://www.xinetd.org/xinetd-%{version}.tar.gz
+URL: https://github.com/xinetd-org/xinetd
+# source can be downloaded at
+# https://github.com/xinetd-org/xinetd/archive/xinetd-2-3-15.tar.gz
+Source: xinetd-%{version}.tar.gz
 Source1: xinetd.service
-Source3: xinetd.sysconf
-Patch0: xinetd-2.3.11-pie.patch
-Patch1: xinetd-2.3.12-tcp_rpc.patch
-Patch2: xinetd-2.3.14-label.patch
-Patch3: xinetd-2.3.14-contextconf.patch
+Patch0: xinetd-2.3.15-pie.patch
 Patch4: xinetd-2.3.14-bind-ipv6.patch
-Patch5: xinetd-2.3.14-ssize_t.patch
 Patch6: xinetd-2.3.14-man-section.patch
-Patch7: xinetd-2.3.11-PIE.patch
+Patch7: xinetd-2.3.15-PIE.patch
 Patch8: xinetd-2.3.14-ident-bind.patch
 Patch9: xinetd-2.3.14-readable-debuginfo.patch
 # Patch for clean reconfiguration using newer versions of autotools
 Patch10: xinetd-2.3.14-autoconf.patch
-# Completely rewritten socket handling code (it uses poll() instead 
+# Completely rewritten socket handling code (it uses poll() instead
 # of select() function)
 Patch11: xinetd-2.3.14-poll.patch
 # New configuration option (limit for files opened by child process)
@@ -39,7 +36,6 @@ Patch15: xinetd-2.3.14-ipv6confusion.patch
 # This fixes bug #593904 - online reconfiguration caused log message
 # flood when turning off UDP service
 Patch16: xinetd-2.3.14-udp-reconfig.patch
-Patch17: xinetd-2.3.13-log-crash.patch
 Patch18: xinetd-2.3.14-rpc-specific-port.patch
 Patch19: xinetd-2.3.14-signal-log-hang.patch
 Patch20: xinetd-2.3.14-fix-type-punned-ptr.patch
@@ -51,15 +47,28 @@ Patch21: xinetd-2.3.14-leaking-fds.patch
 Patch22: xinetd-2.3.14-many-services.patch
 # Remove realloc of fds that was causing memory corruption
 Patch23: xinetd-2.3.14-realloc-remove.patch
+# Fix leaking descriptor when starting a service fails
+Patch24: xinetd-2.3.14-leaking-fds-2a.patch
+# Fix #770858 - Instances limit in xinetd can be easily bypassed
+Patch25: xinetd-2.3.14-instances.patch
+# Fix #809272 - Service disabled due to bind failure
+Patch26: xinetd-2.3.14-retry-svc-activate-in-cps-restart.patch
+Patch27: xinetd-2.3.15-bad-port-check.patch
+# Fix #977873 - Use full path to server when checking selinux context
+Patch28: xinetd-2.3.15-context-exepath.patch
+Patch29: xinetd-2.3.15-creds.patch
+# Fix #1033528 - xinetd segfaults when connecting to tcpmux service
+Patch30: xinetd-2.3.15-tcpmux-nameinargs-disable-service.patch
 
 BuildRequires: autoconf, automake
+BuildRequires: libselinux-devel >= 1.30
 BuildRequires: systemd-units
 Requires(post): systemd-sysv
 Requires(post): systemd-units
 Requires(preun): systemd-units
 Requires(postun): systemd-units
 %{!?tcp_wrappers:BuildRequires: tcp_wrappers-devel}
-Requires: filesystem >= 2.0.1, initscripts, setup, fileutils
+Requires: filesystem >= 2.0.1, setup, fileutils
 Provides: inetd
 
 
@@ -74,20 +83,16 @@ has its own specific configuration file for Xinetd; the files are
 located in the /etc/xinetd.d directory.
 
 %prep
-%setup -q  
+%setup -q
 
 # SPARC/SPARC64 needs -fPIE/-PIE
 # This really should be detected by configure.
 %ifarch sparcv9 sparc64
-%patch7 -p0 -b .PIE
+%patch7 -p1 -b .PIE
 %else
-%patch0 -p0 -b .pie
+%patch0 -p1 -b .pie
 %endif
-%patch1 -p1 -b .tcp_rpc
-%patch2 -p1 -b .lspp
-%patch3 -p1 -b .confcntx
 %patch4 -p1 -b .bind
-%patch5 -p1 -b .ssize_t
 %patch6 -p1 -b .man-section
 %patch8 -p1 -b .ident-bind
 %patch9 -p1 -b .readable-debuginfo
@@ -98,13 +103,19 @@ located in the /etc/xinetd.d directory.
 %patch14 -p1 -b .clean-pfd
 %patch15 -p1 -b .ipv6confusion
 %patch16 -p1 -b .udp-reconfig
-%patch17 -p1 -b .log-crash
 %patch18 -p1 -b .rpc-specific-port
 %patch19 -p1 -b .signal-log-hang
 %patch20 -p1 -b .fix-type-punned-ptr
 %patch21 -p1 -b .leaking-fds
 %patch22 -p1 -b .many-services
 %patch23 -p1 -b .realloc-remove
+%patch24 -p1 -b .leaking-fds-2a
+%patch25 -p1 -b .instances
+%patch26 -p1 -b .retry-svc-activate
+%patch27 -p1 -b .bad-port-check
+%patch28 -p1 -b .context-exepath
+%patch29 -p1 -b .creds
+%patch30 -p1
 
 aclocal
 autoconf
@@ -117,65 +128,120 @@ make
 
 %install
 mkdir -p $RPM_BUILD_ROOT%{_unitdir}
-mkdir -p $RPM_BUILD_ROOT/etc/xinetd.d/
+mkdir -m 700 -p $RPM_BUILD_ROOT/etc/xinetd.d/
 # Remove unneeded service
 rm -f contrib/xinetd.d/ftp-sensor
-%makeinstall DAEMONDIR=$RPM_BUILD_ROOT/usr/sbin MANDIR=$RPM_BUILD_ROOT/%{_mandir}
-install -m 644 contrib/xinetd.conf $RPM_BUILD_ROOT/etc
-install -m 644 contrib/xinetd.d/* $RPM_BUILD_ROOT/etc/xinetd.d
-install -m 755 %{SOURCE1} $RPM_BUILD_ROOT%{_unitdir}
+%make_install DAEMONDIR=$RPM_BUILD_ROOT/usr/sbin MANDIR=$RPM_BUILD_ROOT/%{_mandir}
+install -m 600 contrib/xinetd.conf $RPM_BUILD_ROOT/etc
+install -m 600 contrib/xinetd.d/* $RPM_BUILD_ROOT/etc/xinetd.d
+install -m 644 %{SOURCE1} $RPM_BUILD_ROOT%{_unitdir}
 
 rm -f $RPM_BUILD_ROOT/%{_mandir}/man8/itox*
 rm -f $RPM_BUILD_ROOT/usr/sbin/itox
 rm -f $RPM_BUILD_ROOT/%{_mandir}/man8/xconv.pl*
 rm -f $RPM_BUILD_ROOT/usr/sbin/xconv.pl
 
-mkdir -p $RPM_BUILD_ROOT/etc/sysconfig
-install -m 644 %SOURCE3 $RPM_BUILD_ROOT/etc/sysconfig/xinetd
-
 %post
-if [ $1 -eq 1 ] ; then 
-    # Initial installation
-    /bin/systemctl enable xinetd.service >/dev/null 2>&1 || :
-fi
+%systemd_post xinetd.service
 
 %preun
-if [ $1 -eq 0 ] ; then
-    # Package removal, not upgrade
-    /bin/systemctl --no-reload disable xinetd.service > /dev/null 2>&1 || :
-    /bin/systemctl stop xinetd.service > /dev/null 2>&1 || :
-fi
+%systemd_preun xinetd.service
 
 %postun
-/bin/systemctl daemon-reload >/dev/null 2>&1 || :
-if [ $1 -ge 1 ] ; then
-    # Package upgrade, not uninstall
-    /bin/systemctl try-restart xinetd.service >/dev/null 2>&1 || :
-fi
-
-%triggerun -- xinetd < 2:2.3.14-37
-# Save the current service runlevel info
-# User must manually run systemd-sysv-convert --apply xinetd
-# to migrate them to systemd targets
-/usr/bin/systemd-sysv-convert --save xinetd >/dev/null 2>&1 ||:
-/bin/systemctl --no-reload enable xinetd.service >/dev/null 2>&1 ||:
-
-# Run these because the SysV package being removed won't do them
-/sbin/chkconfig --del xinetd >/dev/null 2>&1 || :
-/bin/systemctl try-restart xinetd.service >/dev/null 2>&1 || :
+%systemd_postun_with_restart xinetd.service
 
 %files
-%doc INSTALL CHANGELOG COPYRIGHT README xinetd/sample.conf contrib/empty.conf 
+%doc CHANGELOG COPYRIGHT README xinetd/sample.conf contrib/empty.conf
 %config(noreplace) /etc/xinetd.conf
-%config(noreplace) /etc/sysconfig/xinetd
 %{_unitdir}/xinetd.service
 %config(noreplace) /etc/xinetd.d/*
 /usr/sbin/xinetd
 %{_mandir}/*/*
 
 %changelog
-* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 2:2.3.14-42
-- 为 Magic 3.0 重建
+* Fri Jun 19 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2:2.3.15-16
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
+
+* Mon Aug 18 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2:2.3.15-15
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
+
+* Sun Jun 08 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2:2.3.15-14
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Mon Feb 24 2014 Jan Synáček <jsynacek@redhat.com> - 2:2.3.15-13
+- drop sysconfig-related stuff
+- add documentation reference to the service file
+
+* Tue Jan 14 2014 Jan Synáček <jsynacek@redhat.com> - 2:2.3.15-12
+- fix bad URL
+
+* Fri Dec 13 2013 Jan Synáček <jsynacek@redhat.com> - 2:2.3.15-11
+- fixup of the previous patch
+- Resolves: #1042652
+- Related: #1033528
+
+* Tue Dec  3 2013 Jan Synáček <jsynacek@redhat.com> - 2:2.3.15-10
+- xinetd segfaults when connecting to tcpmux service
+- Resolves: #1033528
+
+* Fri Oct  4 2013 Jan Synáček <jsynacek@redhat.com> - 2:2.3.15-9
+- xinetd should not depend on NetworkManager-wait-online
+- Resolves: #1002294
+
+* Thu Oct  3 2013 Jan Synáček <jsynacek@redhat.com> - 2:2.3.15-8
+- Honor user and group directives
+- Resolves: CVE-2013-4342
+
+* Sun Aug 04 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2:2.3.15-7
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Wed Jun 26 2013 Jan Synáček <jsynacek@redhat.com> - 2:2.3.15-6
+- Use full path to server when checking selinux context
+- Resolves: #977873
+
+* Fri Feb 15 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2:2.3.15-5
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
+
+* Mon Sep 03 2012 Jan Synáček <jsynacek@redhat.com> - 2:2.3.15-4
+- Change config files' permissions
+- Resolves: #853144
+
+* Wed Aug 22 2012 Jan Synáček <jsynacek@redhat.com> - 2:2.3.15-3
+- Replace the makeinstall macro
+- Add systemd-rpm macros
+- Resolves: #850370
+
+* Sun Jul 22 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2:2.3.15-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Mon May 14 2012 Jan Synáček <jsynacek@redhat.com> - 2:2.3.15-1
+- Update to 2.3.15
+- Drop patches merged by upstream
+  (-log-crash, -tcp_rpc, -label, -contextconf, -ssize_t)
+- Update -pie, -PIE, -poll patch
+- Resolves: #820927
+- Add -bad-port-check patch
+
+* Fri Apr 13 2012 Jan Synáček <jsynacek@redhat.com> - 2:2.3.14-46
+- Fix: service file: avoid problems when name resolution is not ready
+- Resolves: #748931
+
+* Fri Apr 13 2012 Jan Synáček <jsynacek@redhat.com> - 2:2.3.14-45
+- Fix: Service disabled due to bind failure
+- Update patch: xinetd-2.3.14-leaking-fds-2.patch
+- Resolves: #809272
+
+* Mon Mar 05 2012 Jan Synáček <jsynacek@redhat.com> - 2:2.3.14-44
+- Fix: Instances limit in xinetd can be easily bypassed
+- Resolves: #770858
+
+* Mon Mar 05 2012 Jan Synáček <jsynacek@redhat.com> - 2:2.3.14-43
+- Fix xinetd.service permissions
+- Remove useless INSTALL from package documentation
+- Implement reload in xinetd.service
+
+* Fri Mar 02 2012 Jan Synáček <jsynacek@redhat.com> - 2:2.3.14-42
+- Fix leaking descriptor when starting a service fails (#795188)
 
 * Wed Jan 18 2012 Jan Synáček <jsynacek@redhat.com> - 2:2.3.14-41
 - Remove realloc inside svc_activate that was causing memory corruption

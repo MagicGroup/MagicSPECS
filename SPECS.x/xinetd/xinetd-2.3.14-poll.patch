@@ -796,7 +796,7 @@ diff -Nurp xinetd-2.3.14-orig/xinetd/service.h xinetd-2.3.14-poll/xinetd/service
 +#endif
  
  /*
-  * $Id: service.h,v 1.5 2005/03/29 15:50:34 bbraun Exp $
+  * $Id: service.h,v 1.6 2012-05-09 15:40:29 bbraun Exp $
 @@ -45,7 +48,13 @@ struct service
     state_e                svc_state ;
     int                    svc_ref_count ;   /* # of pters to this struct */

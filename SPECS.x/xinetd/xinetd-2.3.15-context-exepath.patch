@@ -1,0 +1,11 @@
+--- xinetd-2.3.15/xinetd/child.c	2013-06-25 14:12:24.599767760 +0200
++++ xinetd-2.3.15/xinetd/child.c.new	2013-06-25 14:14:57.463905500 +0200
+@@ -532,7 +532,7 @@ static int set_context_from_socket( cons
+    if (getpeercon(fd, &peer_context) < 0)
+      goto fail;
+ 
+-   exepath = SC_SERVER_ARGV( scp )[0];
++   exepath = SC_SERVER( scp );
+    if (getfilecon(exepath, &exec_context) < 0)
+      goto fail;
+ 
