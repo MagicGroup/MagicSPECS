@@ -1,8 +1,10 @@
 %define tarball xf86-video-ati
 %define moduledir %(pkg-config xorg-server --variable=moduledir )
 %define driverdir	%{moduledir}/drivers
-%define gitdate 20131101
-%define gitversion 3b38701
+%define gitdate 20150729
+%define gitversion 5510cd6
+
+%undefine _hardened_build
 
 %if 0%{?gitdate}
 %define gver .%{gitdate}git%{gitversion}
@@ -10,8 +12,8 @@
 
 Summary:   Xorg X11 ati video driver
 Name:      xorg-x11-drv-ati
-Version:   7.2.0
-Release:   7%{?gver}%{?dist}
+Version:   7.6.0
+Release:   0.4%{?gver}%{?dist}
 URL:       http://www.x.org
 License:   MIT
 Group:     User Interface/X Hardware Support
@@ -52,26 +54,67 @@ autoreconf -iv
 make %{?_smp_mflags}
 
 %install
-rm -rf $RPM_BUILD_ROOT
-
-make install DESTDIR=$RPM_BUILD_ROOT
-
+%make_install
 find $RPM_BUILD_ROOT -regex ".*\.la$" | xargs rm -f --
 
 # these only work in UMS, which is not supported
 rm -rf $RPM_BUILD_ROOT%{moduledir}/multimedia/
 
-%clean
-rm -rf $RPM_BUILD_ROOT
-
 %files
-%defattr(-,root,root,-)
 %{driverdir}/ati_drv.so
 %{driverdir}/radeon_drv.so
 %{_mandir}/man4/ati.4*
 %{_mandir}/man4/radeon.4*
 
 %changelog
+* Wed Sep 16 2015 Dave Airlie <airlied@redhat.com> - 7.6.0-0.4.20150729git5510cd6
+- 1.18 ABI rebuild
+
+* Wed Jul 29 2015 Dave Airlie <airlied@redhat.com> 7.6.0-0.3.20150729git5510cd6
+- git snapshot for new ABI
+
+* Wed Jul 29 2015 Dave Airlie <airlied@redhat.com> - 7.6.0-0.2.20150709git95f5d09
+- 1.15 ABI rebuild
+
+* Thu Jul 09 2015 Dave Airlie <airlied@redhat.com> 7.6.0-0.1
+- git snapshot of the day.
+
+* Fri Jun 19 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 7.5.0-5
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
+
+* Mon Mar 02 2015 Dave Airlie <airlied@redhat.com> 7.5.0-4
+- kill hardended builds harder
+
+* Mon Mar 02 2015 Dave Airlie <airlied@redhat.com> 7.5.0-3
+- kill hardended builds for X.org
+
+* Wed Feb 11 2015 Hans de Goede <hdegoede@redhat.com> - 7.5.0-2
+- xserver 1.17 ABI rebuild
+
+* Fri Oct 10 2014 Adam Jackson <ajax@redhat.com> 7.5.0-1
+- ati 7.5.0
+
+* Mon Aug 18 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 7.4.0-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
+
+* Mon Jul 28 2014 Hans de Goede <hdegoede@redhat.com> - 7.4.0-2
+- Fix FTBFS with xorg-server-1.16.0
+
+* Wed Jul  2 2014 Hans de Goede <hdegoede@redhat.com> - 7.4.0-1
+- Update to 7.4.0 (rhbz#907141)
+
+* Mon Jun 16 2014 Hans de Goede <hdegoede@redhat.com> - 7.4.0-0.4.20140419git48d3dbc
+- xserver 1.15.99.903 ABI rebuild
+
+* Sun Jun 08 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 7.4.0-0.3.20140419git48d3dbc
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Mon Apr 28 2014 Hans de Goede <hdegoede@redhat.com> - 7.4.0-0.2.20140419git48d3dbc
+- xserver 1.15.99-20140428 git snapshot ABI rebuild
+
+* Sat Apr 19 2014 Dave Airlie <airlied@redhat.com> 7.4.0-0.1
+- latest upstream git snapshot
+
 * Mon Jan 13 2014 Adam Jackson <ajax@redhat.com> - 7.2.0-7.20131101git3b38701
 - 1.15 ABI rebuild
 
