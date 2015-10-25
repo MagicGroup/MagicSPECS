@@ -1,0 +1,146 @@
+From b3ef430c7896db4d3bd1249d5341342424532539 Mon Sep 17 00:00:00 2001
+From: Dave Airlie <airlied@redhat.com>
+Date: Wed, 7 Jan 2015 09:19:27 +1000
+Subject: [PATCH 1/2] randr: attempt to fix primary on slave output (v2)
+
+If the user wants to set one of the slave devices as
+the primary output, we shouldn't fail to do so,
+we were returning BadMatch which was tripping up
+gnome-settings-daemon and bad things ensues.
+
+Fix all the places we use primaryOutput to work
+out primaryCrtc and take it into a/c when slave
+gpus are in use.
+
+v2: review from Aaron, fix indent, unhide has_primary from
+macro. I left the int vs Bool alone to be consistent with
+code below, a future patch could fix both.
+
+Signed-off-by: Dave Airlie <airlied@redhat.com>
+Reviewed-by: Aaron Plattner <aplattner@nvidia.com>
+Signed-off-by: Keith Packard <keithp@keithp.com>
+---
+ randr/rroutput.c   |  6 +++++-
+ randr/rrscreen.c   | 22 ++++++++++++++++++----
+ randr/rrxinerama.c | 12 ++++++++++--
+ 3 files changed, 33 insertions(+), 7 deletions(-)
+
+diff --git a/randr/rroutput.c b/randr/rroutput.c
+index f824f50..1649309 100644
+--- a/randr/rroutput.c
++++ b/randr/rroutput.c
+@@ -540,7 +540,11 @@ ProcRRSetOutputPrimary(ClientPtr client)
+     if (stuff->output) {
+         VERIFY_RR_OUTPUT(stuff->output, output, DixReadAccess);
+ 
+-        if (output->pScreen != pWin->drawable.pScreen) {
++        if (!output->pScreen->isGPU && output->pScreen != pWin->drawable.pScreen) {
++            client->errorValue = stuff->window;
++            return BadMatch;
++        }
++        if (output->pScreen->isGPU && output->pScreen->current_master != pWin->drawable.pScreen) {
+             client->errorValue = stuff->window;
+             return BadMatch;
+         }
+diff --git a/randr/rrscreen.c b/randr/rrscreen.c
+index 36179ae..e7ea49d 100644
+--- a/randr/rrscreen.c
++++ b/randr/rrscreen.c
+@@ -322,8 +322,13 @@ static inline void swap_modeinfos(xRRModeInfo *modeinfos, int i)
+     swapl(&modeinfos[i].modeFlags);
+ }
+ 
+-#define update_arrays(gpuscreen, pScrPriv) do {            \
++#define update_arrays(gpuscreen, pScrPriv, primary_crtc, has_primary) do {            \
+     for (j = 0; j < pScrPriv->numCrtcs; j++) {             \
++        if (has_primary && \
++            primary_crtc == pScrPriv->crtcs[j]) { \
++            has_primary = 0;   \
++            continue; \
++        }\
+         crtcs[crtc_count] = pScrPriv->crtcs[j]->id;        \
+         if (client->swapped)                               \
+             swapl(&crtcs[crtc_count]);                     \
+@@ -366,9 +371,11 @@ rrGetMultiScreenResources(ClientPtr client, Bool query, ScreenPtr pScreen)
+     unsigned long extraLen;
+     CARD8 *extra;
+     RRCrtc *crtcs;
++    RRCrtcPtr primary_crtc = NULL;
+     RROutput *outputs;
+     xRRModeInfo *modeinfos;
+     CARD8 *names;
++    int has_primary = 0;
+ 
+     /* we need to iterate all the GPU masters and all their output slaves */
+     total_crtcs = 0;
+@@ -426,18 +433,25 @@ rrGetMultiScreenResources(ClientPtr client, Bool query, ScreenPtr pScreen)
+     modeinfos = (xRRModeInfo *)(outputs + total_outputs);
+     names = (CARD8 *)(modeinfos + total_modes);
+ 
+-    /* TODO primary */
+     crtc_count = 0;
+     output_count = 0;
+     mode_count = 0;
+ 
+     pScrPriv = rrGetScrPriv(pScreen);
+-    update_arrays(pScreen, pScrPriv);
++    if (pScrPriv->primaryOutput && pScrPriv->primaryOutput->crtc) {
++        has_primary = 1;
++        primary_crtc = pScrPriv->primaryOutput->crtc;
++        crtcs[0] = pScrPriv->primaryOutput->crtc->id;
++        if (client->swapped)
++            swapl(&crtcs[0]);
++        crtc_count = 1;
++    }
++    update_arrays(pScreen, pScrPriv, primary_crtc, has_primary);
+ 
+     xorg_list_for_each_entry(iter, &pScreen->output_slave_list, output_head) {
+         pScrPriv = rrGetScrPriv(iter);
+ 
+-        update_arrays(iter, pScrPriv);
++        update_arrays(iter, pScrPriv, primary_crtc, has_primary);
+     }
+ 
+     assert(bytes_to_int32((char *) names - (char *) extra) == rep.length);
+diff --git a/randr/rrxinerama.c b/randr/rrxinerama.c
+index 76d728c..363cead 100644
+--- a/randr/rrxinerama.c
++++ b/randr/rrxinerama.c
+@@ -344,15 +344,17 @@ ProcRRXineramaQueryScreens(ClientPtr client)
+         ScreenPtr slave;
+         rrScrPriv(pScreen);
+         int has_primary = 0;
++        RRCrtcPtr primary_crtc = NULL;
+ 
+         if (pScrPriv->primaryOutput && pScrPriv->primaryOutput->crtc) {
+             has_primary = 1;
++            primary_crtc = pScrPriv->primaryOutput->crtc;
+             RRXineramaWriteCrtc(client, pScrPriv->primaryOutput->crtc);
+         }
+ 
+         for (i = 0; i < pScrPriv->numCrtcs; i++) {
+             if (has_primary &&
+-                pScrPriv->primaryOutput->crtc == pScrPriv->crtcs[i]) {
++                primary_crtc == pScrPriv->crtcs[i]) {
+                 has_primary = 0;
+                 continue;
+             }
+@@ -362,8 +364,14 @@ ProcRRXineramaQueryScreens(ClientPtr client)
+         xorg_list_for_each_entry(slave, &pScreen->output_slave_list, output_head) {
+             rrScrPrivPtr pSlavePriv;
+             pSlavePriv = rrGetScrPriv(slave);
+-            for (i = 0; i < pSlavePriv->numCrtcs; i++)
++            for (i = 0; i < pSlavePriv->numCrtcs; i++) {
++                if (has_primary &&
++                    primary_crtc == pSlavePriv->crtcs[i]) {
++                    has_primary = 0;
++                    continue;
++                }
+                 RRXineramaWriteCrtc(client, pSlavePriv->crtcs[i]);
++            }
+         }
+     }
+ 
+-- 
+2.1.0
+

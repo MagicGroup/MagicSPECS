@@ -1,0 +1,45 @@
+From 764ef8dcf24c78bad3480e97b65e2ea7fc4afcd5 Mon Sep 17 00:00:00 2001
+From: Adam Jackson <ajax@redhat.com>
+Date: Mon, 5 Jan 2015 16:48:11 -0500
+Subject: [PATCH] dix: make RegionInit legal C++
+
+The CVE fix in:
+
+    commit 97015a07b9e15d8ec5608b95d95ec0eb51202acb
+    Author: Alan Coopersmith <alan.coopersmith@oracle.com>
+    Date:   Wed Jan 22 22:37:15 2014 -0800
+
+        dix: integer overflow in RegionSizeof() [CVE-2014-8092 3/4]
+
+offended the C++ demons:
+
+../../include/regionstr.h:147:45: error: invalid conversion from 'void*' to
+'pixman_region16_data_t* {aka pixman_region16_data*}' [-fpermissive]
+
+Normally this isn't a problem, because around here we have the sense and
+common decency to not use C++, but this does make tigervnc fail to build,
+which is a little rude of us.
+
+Signed-off-by: Adam Jackson <ajax@redhat.com>
+Reviewed-by: Alan Coopersmith <alan.coopersmith@oracle.com>
+Signed-off-by: Keith Packard <keithp@keithp.com>
+---
+ include/regionstr.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/include/regionstr.h b/include/regionstr.h
+index 33df87f..00343f2 100644
+--- a/include/regionstr.h
++++ b/include/regionstr.h
+@@ -144,7 +144,7 @@ RegionInit(RegionPtr _pReg, BoxPtr _rect, int _size)
+         size_t rgnSize;
+         (_pReg)->extents = RegionEmptyBox;
+         if (((_size) > 1) && ((rgnSize = RegionSizeof(_size)) > 0) &&
+-            (((_pReg)->data = malloc(rgnSize)) != NULL)) {
++            (((_pReg)->data = (RegDataPtr) malloc(rgnSize)) != NULL)) {
+             (_pReg)->data->size = (_size);
+             (_pReg)->data->numRects = 0;
+         }
+-- 
+2.1.0
+

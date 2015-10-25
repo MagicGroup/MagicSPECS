@@ -19,22 +19,37 @@ else
     pkg=fedpkg
 fi
 
-$pkg co xorg-x11-drivers
+# figure out the branch we're on
+branch=$(git branch | awk '/^\*/ { print $2 }' | grep -v '^master$')
+if [ $branch ]; then
+    branch="-b $branch"
+fi
+
+$pkg co $branch xorg-x11-drivers
 pushd xorg-x11-drivers
 driverlist=$(grep ^Requires *.spec | awk '{ print $2 }')
 popd
 
 # Things not in -drivers for whatever reason...
-extradrivers="xorg-x11-drv-ivtv"
+extradrivers="xorg-x11-glamor xorg-x11-drv-ivtv"
 
 rm -rf xorg-x11-drivers
-echo $driverlist $extradrivers | xargs -n1 $pkg co
+echo $driverlist $extradrivers | xargs -n1 $pkg co $branch
 
-for i in */ ; do
+for i in xorg-x11-drv-*/ ; do
     [ -e $i/dead.package ] && continue
     pushd $i
-    rpmdev-bumpspec -c "- ABI rebuild" *.spec
+    rpmdev-bumpspec -c "- 1.15 ABI rebuild" *.spec
     $pkg commit -c -p && $pkg build --nowait
+    #$pkg mockbuild
+    #$pkg srpm
+    #mockchain -r fedora-20-x86_64 -l $OLDPWD
+    #mockchain -r rhel-7.0-candidate-x86_64 -l $OLDPWD
+
+    if [ $i = "xorg-x11-glamor" ]; then
+        koji wait-repo f21-build --build $($pkg verrel)
+    fi
+
     popd
 done
 
