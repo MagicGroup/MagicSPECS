@@ -1,23 +1,23 @@
-# Tarfile created using git
-# git clone git://git.linaro.org/arm/xorg/driver/xf86-video-armsoc.git
-# git archive --format=tar --prefix=%{name}-%{version}/ %{gittag} | bzip2 > ~/%{name}-%{version}-%{gittag}.tar.bz2
-
-%define gittag 3be1f62
-%define tarfile %{name}-%{version}-%{gittag}.tar.bz2
 %define moduledir %(pkg-config xorg-server --variable=moduledir )
-%define driverdir %{moduledir}/drivers
+%define driverdir       %{moduledir}/drivers
+%define gitdate 20150531
+%define gitrev .%{gitdate}
+
+%undefine _hardened_build
 
 Summary:   Xorg X11 armsocdrm driver
 Name:      xorg-x11-drv-armsoc
-Version:   0.6.0
-Release:   0.7.%{gittag}%{?dist}
-URL:       http://git.linaro.org/gitweb?p=arm/xorg/driver/xf86-video-armsoc.git
+Version:   1.3.0
+Release:   4%{?gitrev}%{?dist}
+URL:       http://cgit.freedesktop.org/xorg/driver/xf86-video-armsoc
 License:   MIT
 Group:     User Interface/X Hardware Support
 
-Source0:   %{tarfile}
+Source0:    xf86-video-armsoc-%{gitdate}.tar.bz2
+Source2:    make-git-snapshot.sh
+Patch1:     stat-inc.patch
 
-ExclusiveArch: %{arm}
+ExclusiveArch: %{arm} aarch64
 
 BuildRequires: kernel-headers
 BuildRequires: libdrm-devel
@@ -32,19 +32,29 @@ BuildRequires: xorg-x11-util-macros
 BuildRequires: autoconf automake libtool
 BuildRequires: perl-Carp
 
-Requires:  xorg-x11-server-Xorg
+Requires: Xorg %(xserver-sdk-abi-requires ansic)
+Requires: Xorg %(xserver-sdk-abi-requires videodrv)
 
 %description 
 X.Org X11 armsocdrm driver for ARM MALI GPUs such as the Samsung 
 Exynos 4/5 series ARM devices.
 
+%if 0%{?gitdate}
+%define dirsuffix %{gitdate}
+%else
+%define dirsuffix %{version}
+%endif
+
 %prep
-%setup -q
+%setup -q -n xf86-video-armsoc-%{?gitdate:%{gitdate}}%{!?gitdate:%{dirsuffix}} 
+touch AUTHORS
+%patch1 -p1
 
 %build
-sh autogen.sh --with-drmmode=exynos
+%{?gitdate:autoreconf -v --install}
+
 %configure --disable-static  --libdir=%{_libdir} --mandir=%{_mandir} --with-drmmode=exynos
-make V=1
+make %{?_smp_mflags} V=1
 
 %install
 make install DESTDIR=$RPM_BUILD_ROOT
@@ -59,6 +69,52 @@ find $RPM_BUILD_ROOT -regex ".*\.la$" | xargs rm -f --
 %{_mandir}/man4/armsoc.4*
 
 %changelog
+* Wed Jul 29 2015 Dave Airlie <airlied@redhat.com> - 1.3.0-4.20150531
+- 1.15 ABI rebuild
+
+* Tue Jun 23 2015 Adam Jackson <ajax@redhat.com> - 1.3.0-3.20150531
+- Undefine _hardened_build
+
+* Fri Jun 19 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.3.0-2.20150531
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
+
+* Sun May 31 2015 Dennis Gilmore <dennis@ausil.us> - 1.3.0-1.20150531
+- update to latest git
+- add patch to fix ftbfs for missing includes
+- pull source from  https://github.com/endlessm/xf86-video-armsoc
+
+* Mon May 11 2015 Marcin Juszkiewicz <mjuszkiewicz@redhat.com> - 1.1.0-2.20150212
+- Handle pointer as a pointer to make gcc happy.
+
+* Thu Feb 12 2015 Hans de Goede <hdegoede@redhat.com> - 1.1.0-1.20150212
+- Update to git snapshot of the day to fix FTBFS
+- This also bumps the version we're based on from 0.7.0 + git patches to
+  1.1.0 + git patches.
+
+* Wed Feb 11 2015 Hans de Goede <hdegoede@redhat.com> - 0.7.0-7.20140504
+- xserver 1.17 ABI rebuild
+
+* Mon Aug 18 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.7.0-6.20140504
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
+
+* Mon Jun 16 2014 Hans de Goede <hdegoede@redhat.com> - 0.7.0-5.20140504
+- xserver 1.15.99.903 ABI rebuild
+
+* Sun Jun 08 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.7.0-4.20140504
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Tue May  6 2014 Peter Robinson <pbrobinson@fedoraproject.org> 0.7.0-3.20140504
+- Build on aarch64 too
+
+* Sun May 04 2014 Dennis Gilmore <dennis@ausil.us> - 0.7.0-2.20140504
+- update git snapshot for ftbfs
+
+* Thu May 01 2014 Dennis Gilmore <dennis@ausil.us> - 0.7.0-1.20140501
+- update git snapshot
+- add script to make tarball from git
+- xserver 1.15.99-20140428 git snapshot ABI rebuild
+- sync package to match other x drivers
+
 * Mon Jan 13 2014 Adam Jackson <ajax@redhat.com> - 0.6.0-0.7.3be1f62
 - 1.15 ABI rebuild
 

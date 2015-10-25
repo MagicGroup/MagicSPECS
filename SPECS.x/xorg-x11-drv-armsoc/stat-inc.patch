@@ -1,0 +1,13 @@
+--- xf86-video-armsoc-20150531/src/drmmode_display.c.orig	2015-05-31 21:29:32.345298588 -0500
++++ xf86-video-armsoc-20150531/src/drmmode_display.c	2015-05-31 21:44:27.900630024 -0500
+@@ -51,6 +51,10 @@
+ #include <libudev.h>
+ #include "drmmode_driver.h"
+ 
++#include<sys/types.h>
++#include<sys/stat.h>
++#include<unistd.h>
++
+ struct drmmode_cursor_rec {
+ 	/* hardware cursor: */
+ 	struct armsoc_bo *bo;
