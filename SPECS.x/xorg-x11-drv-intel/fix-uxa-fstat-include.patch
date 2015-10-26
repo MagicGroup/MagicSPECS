@@ -1,0 +1,25 @@
+commit 369ceec0e4910ba2c37736a59c55c0d6c26433bf
+Author: Chris Wilson <chris@chris-wilson.co.uk>
+Date:   Tue Feb 24 15:25:40 2015 +0000
+
+    uxa: udev integration depends on fstat and sys/stat.h
+    
+    src/uxa/intel_driver.c: In function 'I830HandleUEvents':
+    src/uxa/intel_driver.c:738:14: error: storage size of 's' isn't known
+    src/uxa/intel_driver.c:746:2: error: implicit declaration of function 'fstat' [-Werror=implicit-function-declaration]
+    
+    Signed-off-by: Chris Wilson <chris@chris-wilson.co.uk>
+
+diff --git a/src/uxa/intel_driver.c b/src/uxa/intel_driver.c
+index c554124..6e64b8c 100644
+--- a/src/uxa/intel_driver.c
++++ b/src/uxa/intel_driver.c
+@@ -728,6 +728,8 @@ intel_flush_callback(CallbackListPtr *list,
+ }
+ 
+ #if HAVE_UDEV
++#include <sys/stat.h>
++
+ static void
+ I830HandleUEvents(int fd, void *closure)
+ {

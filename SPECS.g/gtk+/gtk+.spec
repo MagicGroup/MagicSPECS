@@ -3,7 +3,7 @@ Summary(zh_CN.UTF-8): GIMP 工具集
 Name:		gtk+
 Epoch:		1
 Version:	1.2.10
-Release:	73%{?dist}
+Release:	74%{?dist}
 License:	LGPLv2+
 Group:		System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
@@ -73,18 +73,17 @@ Patch33:	gtk+-1.2.10-no_undefined.patch
 Patch34:	gtk+-1.2.10-multilib.patch
 # Remove redundant shared library dependencies
 Patch35:	gtk+-1.2.10-unused-deps.patch
+# Avoid having to run autotools at build time
+Patch36:	gtk+-1.2.10-autotools.patch
+# Use format strings properly
+Patch37:	gtk+-1.2.10-format.patch
 
 BuildRequires:	glib-devel >= 1:%{version}
-BuildRequires:	automake14 autoconf213
 BuildRequires:	libtool
 BuildRequires:	gettext
-%if 0%{?fedora} > 4 || 0%{?rhel} > 4
 %global x_deps	libX11-devel libXext-devel libXi-devel libXt-devel
-%else
-%global x_deps	xorg-x11-devel
 ## This can be used for legacy too -- Rex
 #global	x_deps	XFree86-devel
-%endif
 BuildRequires:	%{x_deps} 
 
 %description
@@ -149,18 +148,13 @@ Libraries, header files and documentation for developing GTK+
 %patch33 -p1 -b .no_undefined
 %patch34 -p1 -b .multilib
 %patch35 -p1 -b .unused-deps
+%patch36 -b .autotools
+%patch37 -b .format
 
 # The original config.{guess,sub} do not work on x86_64
 #
 # The following /usr/lib cannot be %%_libdir !!
 %{__cp} -p /usr/lib/rpm/config.{guess,sub} .
-
-#%{__cp} -f %{_datadir}/aclocal/libtool.m4 .
-#/usr/bin/libtoolize --copy --force
-/usr/bin/automake-1.4
-#/usr/bin/aclocal-1.4
-/usr/bin/autoconf-2.13
-/usr/bin/autoheader-2.13
 
 # Recode docs as UTF-8
 for doc in ChangeLog examples/calendar/calendar.c; do
@@ -259,6 +253,9 @@ magic_rpm_clean.sh
 
 
 %changelog
+* Mon Oct 26 2015 Liu Di <liudidi@gmail.com> - 1:1.2.10-74
+- 为 Magic 3.0 重建
+
 * Fri Apr 11 2014 Liu Di <liudidi@gmail.com> - 1:1.2.10-73
 - 为 Magic 3.0 重建
 

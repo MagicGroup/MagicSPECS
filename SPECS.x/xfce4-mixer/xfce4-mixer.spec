@@ -2,7 +2,7 @@
 
 Name:           xfce4-mixer
 Version:        4.11.0
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        Volume control plugin for the Xfce 4 panel
 Summary(zh_CN.UTF-8): Xfce4 面板上的音量控制插件
 
@@ -68,6 +68,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/xfce4/panel/plugins/*.desktop
 
 %changelog
+* Sat Oct 24 2015 Liu Di <liudidi@gmail.com> - 4.11.0-4
+- 为 Magic 3.0 重建
+
 * Fri Oct 23 2015 Liu Di <liudidi@gmail.com> - 4.11.0-3
 - 为 Magic 3.0 重建
 

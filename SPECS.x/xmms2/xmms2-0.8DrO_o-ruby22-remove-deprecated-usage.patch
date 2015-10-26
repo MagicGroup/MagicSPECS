@@ -1,0 +1,11 @@
+--- xmms2-0.8DrO_o/.waf-1.6.7-b271784c448ab906d5606267fb7f92c0/waflib/Tools/ruby.py.rbconfig	2015-01-16 17:04:41.900715116 +0900
++++ xmms2-0.8DrO_o/.waf-1.6.7-b271784c448ab906d5606267fb7f92c0/waflib/Tools/ruby.py	2015-01-16 17:18:02.144349327 +0900
+@@ -45,7 +45,7 @@
+ 	def read_out(cmd):
+ 		return Utils.to_list(self.cmd_and_log([self.env.RUBY,'-rrbconfig','-e',cmd]))
+ 	def read_config(key):
+-		return read_out('puts Config::CONFIG[%r]'%key)
++		return read_out('puts RbConfig::CONFIG[%r]'%key)
+ 	ruby=self.env['RUBY']
+ 	archdir=read_config('archdir')
+ 	cpppath=archdir

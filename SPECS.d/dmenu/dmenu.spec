@@ -1,6 +1,6 @@
 Name:           dmenu
 Version:        4.5
-Release:        8.20140425git%{?dist}
+Release:        9.20140425git%{?dist}
 Summary:        Generic menu for X
 License:        MIT
 URL:            http://tools.suckless.org/dmenu
@@ -58,6 +58,9 @@ make %{?_smp_mflags}
 %{_mandir}/man*/stest.*
 
 %changelog
+* Sat Oct 24 2015 Liu Di <liudidi@gmail.com> - 4.5-9.20140425git
+- 为 Magic 3.0 重建
+
 * Wed Jun 17 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 4.5-8.20140425git
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

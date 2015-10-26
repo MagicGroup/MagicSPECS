@@ -2,7 +2,7 @@
 
 Name:           thunar-media-tags-plugin
 Version:        0.2.1
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Media Tags plugin for the Thunar file manager
 Summary(zh_CN.UTF-8): Thunar 文件管理器的媒体标记插件
 
@@ -59,6 +59,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sat Oct 24 2015 Liu Di <liudidi@gmail.com> - 0.2.1-3
+- 为 Magic 3.0 重建
+
 * Fri Oct 23 2015 Liu Di <liudidi@gmail.com> - 0.2.1-2
 - 为 Magic 3.0 重建
 

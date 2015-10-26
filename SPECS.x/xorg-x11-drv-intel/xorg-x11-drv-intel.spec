@@ -1,27 +1,25 @@
 %define moduledir %(pkg-config xorg-server --variable=moduledir )
 %define driverdir	%{moduledir}/drivers
 %define gputoolsdate 20130611
+%define gputoolsver 1.9
 #define gitdate 20120907
 #define gitrev .%{gitdate}
 
-%if 0%{?rhel} == 7
-%define rhel7 1
-%endif
-%if 0%{?rhel} == 6
-%define rhel6 1
-%endif
-
-%if 0%{?rhel7} || 0%{?fedora} > 17
 %define prime 1
+
+%ifnarch %{ix86}
+%define kmsonly 1
 %endif
 
 Summary:   Xorg X11 Intel video driver
+Summary(zh_CN.UTF-8): Xorg X11 Intel 显卡驱动
 Name:      xorg-x11-drv-intel
-Version:   2.99.910
-Release:   1%{?gitrev}%{?dist}
+Version:	2.99.917
+Release:	2%{?dist}
 URL:       http://www.x.org
 License:   MIT
 Group:     User Interface/X Hardware Support
+Group(zh_CN.UTF-8): 用户界面/X 硬件支持
 
 %if 0%{?gitdate}
 Source0:    xf86-video-intel-%{gitdate}.tar.bz2
@@ -29,8 +27,15 @@ Source0:    xf86-video-intel-%{gitdate}.tar.bz2
 Source0:    http://ftp.nara.wide.ad.jp/pub/X11/x.org/individual/driver/xf86-video-intel-%{version}.tar.bz2 
 %endif
 Source1:    make-intel-gpu-tools-snapshot.sh
-Source3:    intel-gpu-tools-%{gputoolsdate}.tar.bz2
+Source3:    http://xorg.freedesktop.org/archive/individual/app/intel-gpu-tools-%{gputoolsver}.tar.bz2
+#Source3:    intel-gpu-tools-%{gputoolsdate}.tar.bz2
 Source4:    make-git-snapshot.sh
+
+Patch1:		fix-sna-fstat-include.patch  
+Patch2:		fix-uxa-fstat-include.patch  
+Patch3:		fix-yuv-to-rgb-shared-on-intel-gen8.patch
+
+Patch4:		igt-stat.patch
 
 ExclusiveArch: %{ix86} x86_64 ia64
 
@@ -51,21 +56,34 @@ Requires: Xorg %(xserver-sdk-abi-requires videodrv)
 %description 
 X.Org X11 Intel video driver.
 
+%description -l zh_CN.UTF-8
+Xorg X11 Intel 显卡驱动。
+
 %package devel
 Summary:   Xorg X11 Intel video driver XvMC development package
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:     Development/System
+Group(zh_CN.UTF-8): 开发/库
 Requires:  %{name} = %{version}-%{release}
 Provides:  xorg-x11-drv-intel-devel = %{version}-%{release}
 
 %description devel
 X.Org X11 Intel video driver XvMC development package.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
 %package -n intel-gpu-tools
 Summary:    Debugging tools for Intel graphics chips
+Summary(zh_CN.UTF-8): Intel 显卡用的调试工具
 Group:	    Development/Tools
+Group(zh_CN.UTF-8): 开发/工具
 
 %description -n intel-gpu-tools
 Debugging tools for Intel graphics chips
+
+%description -n intel-gpu-tools -l zh_CN.UTF-8
+Intel 显卡用的调试工具。
 
 %if 0%{?gitdate}
 %define dirsuffix %{gitdate}
@@ -75,32 +93,31 @@ Debugging tools for Intel graphics chips
 
 %prep
 %setup -q -n xf86-video-intel-%{?gitdate:%{gitdate}}%{!?gitdate:%{dirsuffix}} -b3
+%patch1 -p1
+%patch2 -p1
+%patch3 -p1
+
+pushd ../intel-gpu-tools-%{gputoolsver}
+%patch4 -p1 -b .stat
+popd
 
 %build
- 
-#export CFLAGS="$RPM_OPT_FLAGS -fno-omit-frame-pointer"
-%{?gitdate:autoreconf -v --install}
+autoreconf -fisv 
+%configure %{?kmsonly:--enable-kms-only} --enable-tools
+make %{?_smp_mflags} V=1
 
-%configure \
-%ifnarch %{ix86}
-    --enable-kms-only \
-%endif
-    %{?rhel7:--enable-kms-only} \
-    --disable-static \
-    --enable-dri \
-    --enable-xvmc \
-    --enable-sna \
-    --with-default-accel=uxa
-make
-
-pushd ../intel-gpu-tools-%{gputoolsdate}
+pushd ../intel-gpu-tools-%{gputoolsver}
+# this is missing from the tarbal, having it empty is ok
+touch lib/check-ndebug.h
 mkdir -p m4
 autoreconf -f -i -v
 # --disable-dumper: quick_dump is both not recommended for packaging yet,
 # and requires python3 to build; i'd like to keep this spec valid for rhel6
 # for at least a bit longer
 %configure %{!?prime:--disable-nouveau} --disable-dumper
-make
+# some of the sources are in utf-8 and pre-preprocessed by python
+export LANG=en_US.UTF-8
+make %{?_smp_mflags}
 popd
 
 %install
@@ -108,45 +125,46 @@ rm -rf $RPM_BUILD_ROOT
 
 make install DESTDIR=$RPM_BUILD_ROOT
 
-pushd ../intel-gpu-tools-%{gputoolsdate}
+pushd ../intel-gpu-tools-%{gputoolsver}
 make install DESTDIR=$RPM_BUILD_ROOT
+rm -f $RPM_BUILD_ROOT%{_bindir}/eudb
 popd
 
 find $RPM_BUILD_ROOT -regex ".*\.la$" | xargs rm -f --
+
+# libXvMC opens the versioned file name, these are useless
+rm -f $RPM_BUILD_ROOT%{_libdir}/libI*XvMC.so
 
 %clean
 rm -rf $RPM_BUILD_ROOT
 
 %files
-%defattr(-,root,root,-)
 %doc COPYING
 %{driverdir}/intel_drv.so
-%ifarch %{ix86}
-%if !0%{?rhel7}
+%if !%{?kmsonly}
 %{_libdir}/libI810XvMC.so.1*
 %endif
-%endif
 %{_libdir}/libIntelXvMC.so.1*
+%{_libexecdir}/xf86-video-intel-backlight-helper
+%{_datadir}/polkit-1/actions/org.x.xf86-video-intel.backlight-helper.policy
 %{_mandir}/man4/i*
 
 %files devel
-%defattr(-,root,root,-)
-%ifarch %{ix86}
-%if !0%{?rhel7}
-%{_libdir}/libI810XvMC.so
-%endif
-%endif
-%{_libdir}/libIntelXvMC.so
+%{_bindir}/intel-gen4asm
+%{_bindir}/intel-gen4disasm
 %{_libdir}/pkgconfig/intel-gen4asm.pc
 
 %files -n intel-gpu-tools
-%defattr(-,root,root,-)
 %doc COPYING
-%{_bindir}/intel_*
-%{_bindir}/intel-*
+%{_bindir}/gem_userptr_benchmark
+%{_bindir}/intel*
+%{_datadir}/gtk-doc
 %{_mandir}/man1/intel_*.1*
 
 %changelog
+* Mon Oct 26 2015 Liu Di <liudidi@gmail.com> - 2.99.917-2
+- 更新到 2.99.917
+
 * Tue May 28 2013 Adam Jackson <ajax@redhat.com> 2.21.8-1
 - intel 2.21.8
 

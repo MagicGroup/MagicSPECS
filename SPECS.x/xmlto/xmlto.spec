@@ -1,9 +1,11 @@
 Summary: A tool for converting XML files to various formats
+Summary(zh_CN.UTF-8): 转换 XML 文件到多种格式的工具
 Name: xmlto
-Version: 0.0.25
-Release: 3%{?dist}
+Version:	0.0.26
+Release:	1%{?dist}
 License: GPLv2+
 Group: Applications/System
+Group(zh_CN.UTF-8): 应用程序/系统
 #Older versions up to xmlto-0.0.20
 #URL: http://cyberelk.net/tim/xmlto/
 #Source0: http://cyberelk.net/tim/data/xmlto/stable/%{name}-%{version}.tar.bz2
@@ -27,10 +29,15 @@ Requires: util-linux, flex
 This is a package for converting XML files to various formats using XSL
 stylesheets.
 
+%description -l zh_CN.UTF-8
+转换 XML 文件到多种格式的工具。
+
 %package tex
 Group: Applications/System
+Group(zh_CN.UTF-8): 应用程序/系统
 License: GPLv2+
 Summary: A set of xmlto backends with TeX requirements
+Summary(zh_CN.UTF-8): TeX 需要的 xmlto 后端
 # For full functionality, we need passivetex.
 Requires: passivetex >= 1.11
 # We require main package
@@ -42,10 +49,15 @@ BuildArch: noarch
 This subpackage contains xmlto backend scripts which do require
 PassiveTeX/TeX for functionality.
 
+%description tex -l zh_CN.UTF-8
+TeX 需要的 xmlto 后端。
+
 %package xhtml
 Group: Applications/System
+Group(zh_CN.UTF-8): 应用程序/系统
 License: GPLv2+
 Summary: A set of xmlto backends for xhtml1 source format
+Summary(zh_CN.UTF-8): xhtml1 源格式的 xmlto 后端
 # For functionality we need stylesheets xhtml2fo-style-xsl
 Requires: xhtml2fo-style-xsl
 # We require main package
@@ -55,6 +67,8 @@ BuildArch: noarch
 %description xhtml
 This subpackage contains xmlto backend scripts for processing
 xhtml1 source format.
+%description xhtml -l zh_CN.UTF-8
+xhtml1 源格式的 xmlto 后端。
 
 %prep
 %setup -q
@@ -99,6 +113,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sat Oct 24 2015 Liu Di <liudidi@gmail.com> - 0.0.26-1
+- 更新到 0.0.26
+
 * Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 0.0.25-3
 - 为 Magic 3.0 重建
 

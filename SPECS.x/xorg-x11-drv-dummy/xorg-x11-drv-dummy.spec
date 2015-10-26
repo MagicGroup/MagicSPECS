@@ -3,15 +3,15 @@
 %define driverdir	%{moduledir}/drivers
 
 Summary:   Xorg X11 dummy video driver
+Summary(zh_CN.UTF-8): Xorg X11 空显卡驱动
 Name:      xorg-x11-drv-dummy
-Version:   0.3.6
-Release:   16%{?dist}
+Version:	0.3.7
+Release:	2%{?dist}
 URL:       http://www.x.org
 License:   MIT
 Group:     User Interface/X Hardware Support
 
 Source0:   ftp://ftp.x.org/pub/individual/driver/%{tarball}-%{version}.tar.bz2
-Patch0:    0001-Remove-mibstore.h.patch
 
 ExcludeArch: s390 s390x
 
@@ -24,9 +24,11 @@ Requires: Xorg %(xserver-sdk-abi-requires videodrv)
 %description 
 X.Org X11 dummy video driver.
 
+%description -l zh_CN.UTF-8
+Xorg X11 空显卡驱动。
+
 %prep
 %setup -q -n %{tarball}-%{version}
-%patch0 -p1 -b .mibstore
 
 %build
 autoreconf -vif
@@ -50,6 +52,9 @@ rm -rf $RPM_BUILD_ROOT
 %{driverdir}/dummy_drv.so
 
 %changelog
+* Mon Oct 26 2015 Liu Di <liudidi@gmail.com> - 0.3.7-2
+- 更新到 0.3.7
+
 * Mon Jan 13 2014 Adam Jackson <ajax@redhat.com> - 0.3.6-16
 - 1.15 ABI rebuild
 

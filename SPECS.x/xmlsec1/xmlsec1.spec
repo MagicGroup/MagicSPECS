@@ -1,9 +1,11 @@
 Summary: Library providing support for "XML Signature" and "XML Encryption" standards
+Summary(zh_CN.UTF-8): 提供了 XML 签名和 XML 加密标准的库
 Name: xmlsec1
-Version: 1.2.19
-Release: 5%{?dist}%{?extra_release}
+Version: 1.2.20
+Release: 2%{?dist}
 License: MIT
 Group: System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 Source0: http://www.aleksey.com/xmlsec/download/xmlsec1-%{version}.tar.gz
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 URL: http://www.aleksey.com/xmlsec/
@@ -15,7 +17,6 @@ BuildRequires: gnutls-devel >= 1.0.20
 BuildRequires: nss-devel >= 3.2
 BuildRequires: nspr-devel
 BuildRequires: libtool-ltdl-devel
-Patch1: xmlsec1-1.2.19-openssl-no-ecdsa.patch
 # extra build deps needed for autoreconf after above patch
 BuildRequires: autoconf
 BuildRequires: automake
@@ -28,31 +29,40 @@ XML Security Library is a C library based on LibXML2  and OpenSSL.
 The library was created with a goal to support major XML security
 standards "XML Digital Signature" and "XML Encryption".
 
+%description -l zh_CN.UTF-8
+提供了 XML 签名和 XML 加密标准的库。
+
 %package devel
 Summary: Libraries, includes, etc. to develop applications with XML Digital Signatures and XML Encryption support.
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: xmlsec1%{?_isa} = %{version}-%{release}
 Requires: libxml2-devel%{?_isa} >= 2.6.0
 Requires: libxslt-devel%{?_isa} >= 1.1.0
 Requires: openssl-devel%{?_isa} >= 0.9.6
 Requires: zlib-devel%{?_isa}
-# pkgconfig deps are automatic in Fedora and EL>=6
-%if 0%{?rhel} == 5
-Requires: pkgconfig
-%endif
 
 %description devel
 Libraries, includes, etc. you can use to develop applications with XML Digital
 Signatures and XML Encryption support.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
 %package openssl
 Summary: OpenSSL crypto plugin for XML Security Library
+Summary(zh_CN.UTF-8): XML 加密库的 OpenSSL 加密插件
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: xmlsec1%{?_isa} = %{version}-%{release}
 
 %description openssl
 OpenSSL plugin for XML Security Library provides OpenSSL based crypto services
 for the xmlsec library.
+
+%description openssl -l zh_CN.UTF-8
+XML 加密库的 OpenSSL 加密插件。
 
 %package openssl-devel
 Summary: OpenSSL crypto plugin for XML Security Library
@@ -123,7 +133,6 @@ Libraries, includes, etc. for developing XML Security applications with NSS.
 
 %prep
 %setup -q
-%patch1 -p0
 
 %build
 autoreconf -if
@@ -214,6 +223,12 @@ rm -fr ${RPM_BUILD_ROOT}
 %{_libdir}/pkgconfig/xmlsec1-nss.pc
 
 %changelog
+* Sat Oct 24 2015 Liu Di <liudidi@gmail.com> - 1.2.20-2
+- 为 Magic 3.0 重建
+
+* Sat Oct 24 2015 Liu Di <liudidi@gmail.com> - 1.2.20-1
+- 更新到 1.2.20
+
 * Fri May 02 2014 Liu Di <liudidi@gmail.com> - 1.2.19-5
 - 为 Magic 3.0 重建
 

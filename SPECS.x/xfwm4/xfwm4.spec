@@ -1,7 +1,7 @@
 
 Name:           xfwm4
 Version:	4.12.3
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Next generation window manager for Xfce
 
 Group:          User Interface/Desktops
@@ -89,6 +89,9 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 
 
 %changelog
+* Sat Oct 24 2015 Liu Di <liudidi@gmail.com> - 4.12.3-3
+- 为 Magic 3.0 重建
+
 * Fri Oct 23 2015 Liu Di <liudidi@gmail.com> - 4.12.3-2
 - 更新到 4.12.3
 

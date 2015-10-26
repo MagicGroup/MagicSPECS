@@ -4,11 +4,13 @@
 %define debug_package %{nil}
 
 Summary: X.Org X11 developmental X transport library
+Summary(zh_CN.UTF-8): X.Org X11 X transport 开发库
 Name: xorg-x11-xtrans-devel
-Version: 1.2.7
-Release: 2%{?dist}
+Version:	1.3.5
+Release:	2%{?dist}
 License: MIT
 Group: System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 URL: http://www.x.org
 BuildArch: noarch
 
@@ -22,6 +24,9 @@ BuildRequires: xorg-x11-util-macros
 
 %description
 X.Org X11 developmental X transport library
+
+%description -l zh_CN.UTF-8
+X.Org X11 X transport 开发库。
 
 %prep
 %setup -q -n xtrans-%{version}
@@ -47,7 +52,6 @@ make install DESTDIR=$RPM_BUILD_ROOT INSTALL="install -p"
 %{_includedir}/X11/Xtrans/Xtransint.h
 %{_includedir}/X11/Xtrans/Xtranslcl.c
 %{_includedir}/X11/Xtrans/Xtranssock.c
-%{_includedir}/X11/Xtrans/Xtranstli.c
 %{_includedir}/X11/Xtrans/Xtransutil.c
 %{_includedir}/X11/Xtrans/transport.c
 %{_datadir}/aclocal/xtrans.m4
@@ -56,6 +60,9 @@ make install DESTDIR=$RPM_BUILD_ROOT INSTALL="install -p"
 %{_docdir}/%{name}-%{version}-%{release}/xtrans.*
 
 %changelog
+* Mon Oct 26 2015 Liu Di <liudidi@gmail.com> - 1.3.5-2
+- 更新到 1.3.5
+
 * Sun Jul 22 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.2.7-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 

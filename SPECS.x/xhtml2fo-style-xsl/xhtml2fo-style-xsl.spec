@@ -1,9 +1,11 @@
 Name: xhtml2fo-style-xsl
 Version: 20051222
-Release: 7%{?dist}
+Release: 8%{?dist}
 Group: Applications/Text
+Group(zh_CN.UTF-8): 应用程序/文本
 
 Summary: Antenna House, Inc. XHTML to XSL:FO stylesheets
+Summary(zh_CN.UTF-8): Antenna House, Inc. XHTML 到 XSL:FO 样式表
 License: Copyright only
 URL: http://www.antennahouse.com/XSLsample/XSLsample.htm
 
@@ -22,6 +24,8 @@ Source1: AntennaHouse-COPYRIGHT
 These XSL stylesheets allow you to transform any XHTML document to FO.
 With a XSL:FO processor you could create PDF versions of XHTML documents.
 
+%description -l zh_CN.UTF-8
+Antenna House, Inc. XHTML 到 XSL:FO 样式表。
 
 %prep
 %setup -q -c -n %{name}-%{version} -T -b 0
@@ -65,6 +69,9 @@ fi
 
 
 %changelog
+* Sat Oct 24 2015 Liu Di <liudidi@gmail.com> - 20051222-8
+- 为 Magic 3.0 重建
+
 * Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 20051222-7
 - 为 Magic 3.0 重建
 

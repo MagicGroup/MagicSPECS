@@ -1,0 +1,11 @@
+diff -ur xf86-input-libinput-0.14.0.orig/src/xf86libinput.c xf86-input-libinput-0.14.0/src/xf86libinput.c
+--- xf86-input-libinput-0.14.0.orig/src/xf86libinput.c	2015-10-26 06:10:14.349519603 +0000
++++ xf86-input-libinput-0.14.0/src/xf86libinput.c	2015-10-26 06:10:39.993518946 +0000
+@@ -33,6 +33,7 @@
+ #include <list.h>
+ #include <exevents.h>
+ #include <xkbsrv.h>
++#include <xf86.h>
+ #include <xf86Xinput.h>
+ #include <xf86_OSproc.h>
+ #include <xserver-properties.h>

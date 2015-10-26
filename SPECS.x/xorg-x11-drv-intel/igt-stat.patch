@@ -1,0 +1,11 @@
+diff -up intel-gpu-tools-1.9/tests/testdisplay_hotplug.c.jx intel-gpu-tools-1.9/tests/testdisplay_hotplug.c
+--- intel-gpu-tools-1.9/tests/testdisplay_hotplug.c.jx	2014-12-12 11:08:14.000000000 -0500
++++ intel-gpu-tools-1.9/tests/testdisplay_hotplug.c	2015-06-03 15:43:55.127775543 -0400
+@@ -24,6 +24,7 @@
+ #include <stdio.h>
+ #include <string.h>
+ #include <stdlib.h>
++#include <sys/stat.h>
+ 
+ #include "testdisplay.h"
+ #ifdef HAVE_CONFIG_H

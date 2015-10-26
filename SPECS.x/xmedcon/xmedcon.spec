@@ -1,7 +1,8 @@
 Name:           xmedcon
 Version:        0.10.7
-Release:        10%{?dist}
+Release:        11%{?dist}
 Summary:        A medical image conversion utility and library
+Summary(zh_CN.UTF-8): 医疗用图像转换工具和库
 
 # Please refer to http://xmedcon.sourceforge.net/pub/readme/README for details
 # None of the libraries are bundled, they are appear to be modified versions of code taken
@@ -33,14 +34,21 @@ study information. The currently supported formats are: Acr/Nema 2.0,
 Analyze (SPM), Concorde/uPET, DICOM 3.0, CTI ECAT 6/7, InterFile 3.3
 and PNG or Gif87a/89a towards desktop applications.
 
+%description -l zh_CN.UTF-8
+医疗用图像转换工具和库。
+
 %package devel
 Summary: Libraries and header files for (X)MedCon development
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Requires: %{name}%{?_isa} = %{version}-%{release}
 
 %description devel
 The xmedcon-devel package contains the header files and static libraries
 necessary for developing programs that make use of the (X)MedCon library
 (libmdc).
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -83,6 +91,7 @@ desktop-file-install                                    \
 # remove static libraries
 find $RPM_BUILD_ROOT -name "*.a" -execdir rm -fv '{}' \;
 find $RPM_BUILD_ROOT -name "*.la" -execdir rm -fv '{}' \;
+magic_rpm_clean.sh
 
 %post
 /sbin/ldconfig
@@ -120,6 +129,9 @@ fi
 %{_datadir}/aclocal/*
 
 %changelog
+* Sat Oct 24 2015 Liu Di <liudidi@gmail.com> - 0.10.7-11
+- 为 Magic 3.0 重建
+
 * Fri Feb 15 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.10.7-10
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
 

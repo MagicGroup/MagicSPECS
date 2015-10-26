@@ -1,10 +1,12 @@
 
 Name:           xfconf
 Version:	4.12.0
-Release:        1%{?dist}
+Release:        3%{?dist}
 Summary:        Hierarchical configuration system for Xfce
+Summary(zh_CN.UTF-8): Xfce 下的分类配置系统
 
 Group:          System Environment/Base
+Group(zh_CN.UTF-8): 用户界面/桌面
 License:        GPLv2
 URL:            http://www.xfce.org/
 #VCS git:git://git.xfce.org/xfce/xfconf
@@ -33,9 +35,14 @@ Xfconf is a hierarchical (tree-like) configuration system where the
 immediate child nodes of the root are called "channels".  All settings
 beneath the channel nodes are called "properties."
 
+%description -l zh_CN.UTF-8
+Xfce 下的分类配置系统。
+
 %package        devel
 Summary:        Development tools for xfconf
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       %{name} = %{version}-%{release}
 Requires:       pkgconfig
 Requires:       dbus-devel
@@ -48,15 +55,23 @@ Obsoletes:      xfce-mcs-manager-devel < 4.4.3-3
 This package includes the libraries and header files you will need
 to compile applications for xfconf.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
 %package perl
 Summary:        Perl modules for xfconf
+Summary(zh_CN.UTF-8): %{name} 的 Perl 模块
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       %{name} = %{version}-%{release}
 Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
 
 %description perl
 This package includes the perl modules and files you will need to 
 interact with xfconf using perl. 
+
+%description perl -l zh_CN.UTF-8
+%{name} 的 Perl 模块。
 
 %prep
 %setup -q
@@ -82,6 +97,8 @@ rm -f $RPM_BUILD_ROOT/%{perl_vendorarch}/auto/Xfce4/Xfconf/Xfconf.bs
 find $RPM_BUILD_ROOT -type f -name .packlist -exec rm -f {} \;
 # fix permissions on the .so file
 chmod 755 $RPM_BUILD_ROOT/%{perl_vendorarch}/auto/Xfce4/Xfconf/Xfconf.so
+# kevin identified the issue - fixes wrong library permissions
+chmod 755 $RPM_BUILD_ROOT/%{_libdir}/*.so
 magic_rpm_clean.sh
 %find_lang %{name}
 
@@ -114,6 +131,12 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*.3*
 
 %changelog
+* Sat Oct 24 2015 Liu Di <liudidi@gmail.com> - 4.12.0-3
+- 为 Magic 3.0 重建
+
+* Sat Oct 24 2015 Liu Di <liudidi@gmail.com> - 4.12.0-2
+- 为 Magic 3.0 重建
+
 * Thu Sep 17 2015 Liu Di <liudidi@gmail.com> - 4.12.0-1
 - 更新到 4.12.0
 

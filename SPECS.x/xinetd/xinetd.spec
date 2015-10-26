@@ -1,9 +1,11 @@
 Summary: A secure replacement for inetd
+Summary(zh_CN.UTF-8): inetd 的一个安全替代程序
 Name: xinetd
 Version: 2.3.15
-Release: 16%{?dist}
+Release: 17%{?dist}
 License: xinetd
 Group: System Environment/Daemons
+Group(zh_CN.UTF-8): 系统环境/服务
 Epoch: 2
 URL: https://github.com/xinetd-org/xinetd
 # source can be downloaded at
@@ -61,7 +63,6 @@ Patch29: xinetd-2.3.15-creds.patch
 Patch30: xinetd-2.3.15-tcpmux-nameinargs-disable-service.patch
 
 BuildRequires: autoconf, automake
-BuildRequires: libselinux-devel >= 1.30
 BuildRequires: systemd-units
 Requires(post): systemd-sysv
 Requires(post): systemd-units
@@ -81,6 +82,9 @@ limit on the number of server arguments, and lets you bind specific
 services to specific IP addresses on your host machine. Each service
 has its own specific configuration file for Xinetd; the files are
 located in the /etc/xinetd.d directory.
+
+%description -l zh_CN.UTF-8
+这是 inetd 的一个更安全的替代程序。
 
 %prep
 %setup -q
@@ -140,6 +144,7 @@ rm -f $RPM_BUILD_ROOT/%{_mandir}/man8/itox*
 rm -f $RPM_BUILD_ROOT/usr/sbin/itox
 rm -f $RPM_BUILD_ROOT/%{_mandir}/man8/xconv.pl*
 rm -f $RPM_BUILD_ROOT/usr/sbin/xconv.pl
+magic_rpm_clean.sh
 
 %post
 %systemd_post xinetd.service
@@ -159,6 +164,9 @@ rm -f $RPM_BUILD_ROOT/usr/sbin/xconv.pl
 %{_mandir}/*/*
 
 %changelog
+* Sat Oct 24 2015 Liu Di <liudidi@gmail.com> - 2:2.3.15-17
+- 为 Magic 3.0 重建
+
 * Fri Jun 19 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2:2.3.15-16
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

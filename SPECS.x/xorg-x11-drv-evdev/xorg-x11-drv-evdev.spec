@@ -6,12 +6,14 @@
 %global gitversion c085c8b6c
 
 Summary:    Xorg X11 evdev input driver
+Summary(zh_CN.UTF-8): Xorg X11 evdev 输入驱动
 Name:       xorg-x11-drv-evdev
-Version:    2.8.2
-Release:    6%{?gitdate:.%{gitdate}git%{gitversion}}%{?dist}
+Version:	2.9.2
+Release:	2%{?dist}
 URL:        http://www.x.org
 License:    MIT
 Group:      User Interface/X Hardware Support
+Group(zh_CN.UTF-8): 用户界面/X 硬件支持
 
 %if 0%{?gitdate}
 Source0:    %{tarball}-%{gitdate}.tar.bz2
@@ -35,6 +37,9 @@ Requires: mtdev
 
 %description
 X.Org X11 evdev input driver.
+
+%description -l zh_CN.UTF-8
+Xorg X11 evdev 输入驱动。
 
 %prep
 %setup -q -n %{tarball}-%{?gitdate:%{gitdate}}%{!?gitdate:%{version}}
@@ -79,6 +84,9 @@ X.Org X11 evdev input driver development files.
 
 
 %changelog
+* Mon Oct 26 2015 Liu Di <liudidi@gmail.com> - 2.9.2-2
+- 更新到 2.9.2
+
 * Mon Jan 13 2014 Adam Jackson <ajax@redhat.com> - 2.8.2-6
 - 1.15 ABI rebuild
 

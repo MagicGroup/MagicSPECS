@@ -30,7 +30,7 @@ The font is available for the Linux console and for X11.
 
 Name:		%{fontname}-fonts
 Version:	4.39
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:	Clean fixed width font
 
 Group:		User Interface/X
@@ -372,6 +372,9 @@ ln -s %{_fontdir} %{buildroot}%{catalog}/%{fontname}:unscaled
 
 
 %changelog
+* Sat Oct 24 2015 Liu Di <liudidi@gmail.com> - 4.39-3
+- 为 Magic 3.0 重建
+
 * Fri Jun 19 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 4.39-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

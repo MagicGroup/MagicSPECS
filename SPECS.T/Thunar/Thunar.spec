@@ -2,7 +2,7 @@
 
 Name:           Thunar
 Version:        1.6.10
-Release:        5%{?dist}
+Release:        6%{?dist}
 Summary:        Thunar File Manager
 Summary(zh_CN.UTF-8): Thunar 文件管理器
 
@@ -206,6 +206,9 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %{_libdir}/pkgconfig/thunarx-*.pc
 
 %changelog
+* Sat Oct 24 2015 Liu Di <liudidi@gmail.com> - 1.6.10-6
+- 为 Magic 3.0 重建
+
 * Fri Oct 23 2015 Liu Di <liudidi@gmail.com> - 1.6.10-5
 - 为 Magic 3.0 重建
 

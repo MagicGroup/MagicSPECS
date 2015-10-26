@@ -5,11 +5,13 @@
 #global gitversion 19a0026b5
 
 Summary: X Keyboard Extension configuration data
+Summary(zh_CN.UTF-8): X 键盘扩展配置数据
 Name: xkeyboard-config
-Version: 2.6
-Release: 3%{?gitdate:.%{gitdate}git%{gitversion}}%{dist}
+Version:	2.16
+Release:	2%{?dist}
 License: MIT
 Group: User Interface/X
+Group(zh_CN.UTF-8): 用户界面/X
 URL: http://www.freedesktop.org/wiki/Software/XKeyboardConfig
 %if 0%{?gitdate}
 Source0:    %{name}-%{gitdate}.tar.bz2
@@ -18,9 +20,6 @@ Source2:    commitid
 %else
 Source0: http://xorg.freedesktop.org/archive/individual/data/xkeyboard-config/%{name}-%{version}.tar.bz2
 %endif
-
-# Bug 826220 - Tilda is now a dead key (for accented chars)
-Patch01: 0001-Reverting-broken-fix-for-is-keyboard.patch
 
 BuildArch: noarch
 
@@ -41,14 +40,22 @@ This package contains configuration data used by the X Keyboard Extension
 (XKB), which allows selection of keyboard layouts when using a graphical 
 interface. 
 
+%description -l zh_CN.UTF-8
+X 键盘扩展配置数据。
+
 %package devel
 Summary: Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: User Interface/X
+Group(zh_CN.UTF-8): 用户界面/X
 Requires: %{name} = %{version}-%{release}
 Requires: pkgconfig
 
 %description devel
 %{name} development package
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q -n %{name}-%{?gitdate:%{gitdate}}%{!?gitdate:%{version}}
@@ -102,7 +109,6 @@ magic_rpm_clean.sh
 
 %files -f files.list -f %{name}.lang
 %defattr(-,root,root,-)
-%doc AUTHORS README NEWS TODO COPYING CREDITS docs/README.* docs/HOWTO.*
 %{_datadir}/X11/xkb/rules/xorg
 %{_datadir}/X11/xkb/rules/xorg.lst
 %{_datadir}/X11/xkb/rules/xorg.xml
@@ -113,6 +119,9 @@ magic_rpm_clean.sh
 %{_datadir}/pkgconfig/xkeyboard-config.pc
 
 %changelog
+* Sat Oct 24 2015 Liu Di <liudidi@gmail.com> - 2.16-2
+- 更新到 2.16
+
 * Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 2.6-3
 - 为 Magic 3.0 重建
 

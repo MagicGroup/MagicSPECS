@@ -660,7 +660,7 @@ Obsoletes: java-1.7.0-openjdk-accessibility%1
 
 Name:    java-%{javaver}-%{origin}
 Version: %{javaver}.%{updatever}
-Release: 15.%{buildver}%{?dist}
+Release: 16.%{buildver}%{?dist}
 # java-1.5.0-ibm from jpackage.org set Epoch to 1 for unknown reasons,
 # and this change was brought into RHEL-4.  java-1.5.0-ibm packages
 # also included the epoch in their virtual provides.  This created a
@@ -755,6 +755,8 @@ Patch511: rh1214835.patch
 Patch601: %{name}-rh1191652-root.patch
 Patch602: %{name}-rh1191652-jdk.patch
 Patch603: %{name}-rh1191652-hotspot-aarch64.patch
+
+Patch1000: openjdk-fix-gcc4.patch
 
 BuildRequires: autoconf
 BuildRequires: automake
@@ -999,6 +1001,8 @@ cp %{SOURCE101} openjdk/common/autoconf/build-aux/
 
 # Remove libraries that are linked
 sh %{SOURCE12}
+
+%patch1000 
 
 %patch201
 %patch202
@@ -1712,6 +1716,9 @@ end
 %endif
 
 %changelog
+* Sat Oct 24 2015 Liu Di <liudidi@gmail.com> - 1:1.8.0.60-16.b28
+- 为 Magic 3.0 重建
+
 * Thu Oct 15 2015 Jiri Vanek <jvanek@redhat.com> - 1:1.8.0.60-15.b28
 - moved to single source integration forest
 - removed patch patch9999 enableArm64.patch

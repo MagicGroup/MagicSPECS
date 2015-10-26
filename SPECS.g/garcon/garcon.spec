@@ -2,7 +2,7 @@
 
 Name:           garcon
 Version:	0.5.0
-Release:        4%{?dist}
+Release:        6%{?dist}
 Summary:        Implementation of the freedesktop.org menu specification
 Summary(zh_CN.UTF-8): freedesktop.org 菜单标准的实现 
 
@@ -69,6 +69,8 @@ make %{?_smp_mflags} V=1
 rm -rf $RPM_BUILD_ROOT
 make install DESTDIR=$RPM_BUILD_ROOT INSTALL='install -p'
 find $RPM_BUILD_ROOT -name '*.la' -exec rm -f {} ';'
+# kevin identified the issue - fixes wrong library permissions
+chmod 755 $RPM_BUILD_ROOT/%{_libdir}/*.so
 magic_rpm_clean.sh
 %find_lang %{name}
 install -pm 644 %{SOURCE1} %{buildroot}%{_datadir}/desktop-directories
@@ -104,6 +106,12 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %doc %{_datadir}/gtk-doc/
 
 %changelog
+* Sat Oct 24 2015 Liu Di <liudidi@gmail.com> - 0.5.0-6
+- 为 Magic 3.0 重建
+
+* Sat Oct 24 2015 Liu Di <liudidi@gmail.com> - 0.5.0-5
+- 为 Magic 3.0 重建
+
 * Fri Oct 23 2015 Liu Di <liudidi@gmail.com> - 0.5.0-4
 - 更新到 0.5.0
 

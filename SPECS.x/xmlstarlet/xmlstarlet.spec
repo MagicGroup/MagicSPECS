@@ -1,12 +1,17 @@
 Name: xmlstarlet
-Version: 1.3.1
-Release: 3%{?dist}
+Version:	1.6.1
+Release:	2%{?dist}
 Summary: Command Line XML Toolkit
+Summary(zh_CN.UTF-8): 命令行的 XML 工具
 Group: Applications/Text
+Group(zh_CN.UTF-8): 应用程序/文本
 License: MIT
 URL: http://xmlstar.sourceforge.net/
 Source0: http://downloads.sourceforge.net/xmlstar/%{name}-%{version}.tar.gz
-Patch0: xmlstarlet-1.0.6-gendoc.patch
+
+# https://sourceforge.net/p/xmlstar/bugs/109/
+Patch0: xmlstarlet-1.6.1-nogit.patch
+
 # http://sourceforge.net/tracker/?func=detail&aid=3266898&group_id=66612&atid=515106
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
@@ -19,26 +24,24 @@ to transform, query, validate, and edit XML documents and files
 using simple set of shell commands in similar way it is done for
 plain text files using UNIX grep, sed, awk, diff, patch, join, etc
 commands.
+%description -l zh_CN.UTF-8
+命令行的 XML 工具，可以传输，查询，校验和编辑 XML 文档。
 
 %prep
 %setup -q
-%patch0 -p1 -b .gendoc
+%patch0 -p1 -b .nogit
 
 
 %build
 autoreconf -i
-%configure --disable-static-libs --with-libxml-include-prefix=%{_includedir}/libxml2 # --libdir=%{_libdir}
+%configure --disable-static-libs --with-libxml-include-prefix=%{_includedir}/libxml2 --docdir=%{?_pkgdocdir}%{!?_pkgdocdir:%{_docdir}/%{name}-%{version}} # --libdir=%{_libdir}
 make %{?_smp_mflags}
-cd $RPM_BUILD_DIR/%{name}-%{version}/doc
-xmlto man xmlstarlet-man.xml
-xmlto html-nochunks xmlstarlet-ug.xml
-./gen-doc > xmlstarlet.txt
 
 
 %install
 rm -fr %{buildroot}
 make install DESTDIR=$RPM_BUILD_ROOT
-# Avoid name kludging in autotools
+# Avoid name kluGroup(zh_CN.UTF-8):ing in autotools
 mv $RPM_BUILD_ROOT%{_bindir}/xml $RPM_BUILD_ROOT%{_bindir}/xmlstarlet
 
 
@@ -52,12 +55,15 @@ rm -fr %{buildroot}
 
 %files
 %defattr(-, root, root)
-%doc AUTHORS ChangeLog NEWS README Copyright TODO doc/xmlstarlet.txt doc/xmlstarlet-ug.html
+%doc AUTHORS ChangeLog NEWS README Copyright TODO 
 %{_mandir}/man1/xmlstarlet.1*
 %{_bindir}/xmlstarlet
-
+%{_docdir}/%{name}-%{version}/*
 
 %changelog
+* Sat Oct 24 2015 Liu Di <liudidi@gmail.com> - 1.6.1-2
+- 更新到 1.6.1
+
 * Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 1.3.1-3
 - 为 Magic 3.0 重建
 

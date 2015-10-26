@@ -1,11 +1,13 @@
 %define tarname xorg-docs
 
 Summary: X.Org X11 documentation
+Summary(zh_CN.UTF-8): X.Org X11 文档
 Name: xorg-x11-docs
-Version: 1.6
-Release: 5%{?dist}
+Version:	1.7.1
+Release:	2%{?dist}
 License: MIT
 Group: Documentation
+Group(zh_CN.UTF-8): 文档
 URL: http://www.x.org
 
 BuildArch: noarch
@@ -25,6 +27,9 @@ BuildRequires: xmlto-tex
 %description
 Protocol and other technical documentation for the X.Org X11 X Window System
 implementation.
+
+%description -l zh_CN.UTF-8
+X.Org X11 文档。
 
 %prep
 %setup -q -n %{tarname}-%{version}
@@ -55,6 +60,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man7/Xsecurity.7*
 
 %changelog
+* Sun Oct 25 2015 Liu Di <liudidi@gmail.com> - 1.7.1-2
+- 更新到 1.7.1
+
 * Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 1.6-5
 - 为 Magic 3.0 重建
 

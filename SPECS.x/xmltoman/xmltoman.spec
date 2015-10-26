@@ -1,6 +1,6 @@
 Name:           xmltoman
 Version:        0.4
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        Scripts for converting XML to roff or HTML
 Summary(zh_CN.UTF-8): 转换 XML 到 roff 或 HTML 的脚本
 
@@ -51,6 +51,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sat Oct 24 2015 Liu Di <liudidi@gmail.com> - 0.4-5
+- 为 Magic 3.0 重建
+
 * Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 0.4-4
 - 为 Magic 3.0 重建
 

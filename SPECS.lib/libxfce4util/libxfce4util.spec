@@ -1,7 +1,6 @@
-
 Name:           libxfce4util
 Version:	4.12.1
-Release: 3%{?dist}
+Release: 5%{?dist}
 Summary:        Utility library for the Xfce4 desktop environment
 Summary(zh_CN.UTF-8): Xfce4 桌面环境的工具库
 
@@ -60,6 +59,9 @@ make %{?_smp_mflags} V=1
 rm -rf $RPM_BUILD_ROOT
 make install DESTDIR=$RPM_BUILD_ROOT
 
+# kevin identified the issue - fixes wrong library permissions
+chmod 755 $RPM_BUILD_ROOT/%{_libdir}/*.so
+
 rm -f $RPM_BUILD_ROOT%{_libdir}/*.la
 magic_rpm_clean.sh
 %find_lang %{name}
@@ -85,6 +87,12 @@ rm -rf $RPM_BUILD_ROOT
 %doc %{_datadir}/gtk-doc/
 
 %changelog
+* Sat Oct 24 2015 Liu Di <liudidi@gmail.com> - 4.12.1-5
+- 为 Magic 3.0 重建
+
+* Sat Oct 24 2015 Liu Di <liudidi@gmail.com> - 4.12.1-4
+- 为 Magic 3.0 重建
+
 * Fri Oct 23 2015 Liu Di <liudidi@gmail.com> - 4.12.1-3
 - 为 Magic 3.0 重建
 

@@ -1,7 +1,7 @@
 
 Name:           xfce4-panel
 Version:	4.12.0
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        Next generation panel for Xfce
 Summary(zh_CN.UTF-8): Xfce 的下一代面板
 
@@ -161,6 +161,9 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %{_includedir}/xfce4/libxfce4panel-*/
 
 %changelog
+* Sat Oct 24 2015 Liu Di <liudidi@gmail.com> - 4.12.0-5
+- 为 Magic 3.0 重建
+
 * Fri Oct 23 2015 Liu Di <liudidi@gmail.com> - 4.12.0-4
 - 更新到 4.12.0
 

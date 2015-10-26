@@ -3,7 +3,7 @@
 
 Name:           thunar-archive-plugin
 Version:        0.3.1
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        Archive plugin for the Thunar file manager
 Summary(zh_CN.UTF-8): Thunar 文件管理器的归档插件
 
@@ -80,6 +80,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sat Oct 24 2015 Liu Di <liudidi@gmail.com> - 0.3.1-4
+- 为 Magic 3.0 重建
+
 * Fri Oct 23 2015 Liu Di <liudidi@gmail.com> - 0.3.1-3
 - 为 Magic 3.0 重建
 

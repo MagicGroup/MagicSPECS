@@ -2,10 +2,12 @@
 
 Name:           xhtml1-dtds
 Version:        1.0
-Release:        %{date}.8
+Release:        %{date}.9
 Summary:        XHTML 1.0 document type definitions
+Summary(zh_CN.UTF-8): XHTML 1.0 文档类型定义
 
 Group:          Applications/Text
+Group(zh_CN.UTF-8): 应用程序/文本
 # W3C Software License for DTDs etc:
 # http://www.w3.org/Consortium/Legal/IPR-FAQ-20000620#DTD
 License:        W3C
@@ -33,6 +35,8 @@ ones defined by HTML 4. The semantics of the elements and their attributes
 are defined in the W3C Recommendation for HTML 4. These semantics provide
 the foundation for future extensibility of XHTML.
 
+%description -l zh_CN.UTF-8
+XHTML 1.0 文档类型定义。
 
 %prep
 %setup -q -n xhtml1-20020801
@@ -118,6 +122,9 @@ cd - >/dev/null
 
 
 %changelog
+* Sat Oct 24 2015 Liu Di <liudidi@gmail.com> - 1.0-20020801.9
+- 为 Magic 3.0 重建
+
 * Sun Jul 22 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.0-20020801.8
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 

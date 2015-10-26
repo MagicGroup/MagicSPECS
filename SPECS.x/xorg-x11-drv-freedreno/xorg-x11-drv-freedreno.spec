@@ -1,7 +1,5 @@
 %define moduledir %(pkg-config xorg-server --variable=moduledir )
-%if 0%{?fedora} >= 20
 %define sysconfigdir %(pkg-config xorg-server --variable=sysconfigdir )
-%endif
 %define driverdir       %{moduledir}/drivers
 #define gitdate 20140503
 #define gitrev .%{gitdate}
@@ -9,12 +7,14 @@
 %undefine _hardened_build
 
 Summary:   Xorg X11 freedreno driver
+Summary(zh_CN.UTF-8): Xorg X11 freedreno 显卡驱动
 Name:      xorg-x11-drv-freedreno
 Version:   1.3.0
 Release:   5%{?gitrev}%{?dist}
 URL:       http://www.x.org
 License:   MIT
 Group:     User Interface/X Hardware Support
+Group(zh_CN.UTF-8): 用户界面/X 硬件支持
 
 %if 0%{?gitdate}
 Source0:    xf86-video-freedreno-%{gitdate}.tar.bz2
@@ -41,6 +41,9 @@ Requires: Xorg %(xserver-sdk-abi-requires videodrv)
 
 %description 
 X.Org X11 freedreno driver for qualcomm based ARM devices.
+
+%description -l zh_CN.UTF-8
+org X11 freedreno 显卡驱动。
 
 %if 0%{?gitdate}
 %define dirsuffix %{gitdate}

@@ -2,11 +2,13 @@
 
 Name:           xmms
 Version:        1.2.11
-Release:        42%{?dist}
+Release:        43%{?dist}
 Epoch:          1
 Summary:        The X MultiMedia System, a media player
+Summary(zh_CN.UTF-8): 一个媒体播放器
 
 Group:          Applications/Multimedia
+Group(zh_CN.UTF-8): 应用程序/多媒体
 License:        GPLv2
 URL:            http://www.xmms.org/
 Source0:        http://www.xmms.org/files/1.2.x/%{name}-%{version}.tar.bz2
@@ -58,24 +60,39 @@ XMMS is a multimedia (Ogg Vorbis, CDs) player for the X Window System
 with an interface similar to Winamp's.  XMMS supports playlists and
 streaming content and has a configurable interface.
 
+%description -l zh_CN.UTF-8
+一个界面像 winamp 的媒体播放器。
+
 %package        libs
 Summary:        XMMS engine and core plugins
+Summary(zh_CN.UTF-8): %{name} 的运行库
 Group:          System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 
 %description    libs
 The X MultiMedia System player engine and core plugins.
 
+%description libs -l zh_CN.UTF-8
+%{name} 的运行库。
+
 %package        esd
 Summary:        EsounD output plugin for XMMS
+Summary(zh_CN.UTF-8): %{name} 的 EsounD 输出插件
 Group:          System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 Requires:       %{name}-libs = %{epoch}:%{version}-%{release}
 
 %description    esd
 EsounD output plugin for the X MultiMedia System.
 
+%description esd -l zh_CN.UTF-8
+%{name} 的 EsounD 输出插件。
+
 %package        devel
 Summary:        Files required for XMMS plug-in development
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       %{name}-libs = %{epoch}:%{version}-%{release}
 Requires:       gtk+-devel
 Requires:       pkgconfig
@@ -83,6 +100,8 @@ Requires:       pkgconfig
 %description    devel
 Files needed for building plug-ins for the X MultiMedia System.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q 
@@ -217,6 +236,9 @@ update-desktop-database -q || :
 
 
 %changelog
+* Sat Oct 24 2015 Liu Di <liudidi@gmail.com> - 1:1.2.11-43
+- 为 Magic 3.0 重建
+
 * Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 1:1.2.11-42
 - 为 Magic 3.0 重建
 

@@ -2,7 +2,7 @@
 
 Name:           xfce4-session
 Version:	4.12.1
-Release: 2%{?dist}
+Release: 3%{?dist}
 Summary:        Xfce session manager
 Summary(zh_CN.UTF-8): Xfce 会话管理器
 
@@ -161,6 +161,9 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %{_datadir}/themes/Default/balou/
 
 %changelog
+* Sat Oct 24 2015 Liu Di <liudidi@gmail.com> - 4.12.1-3
+- 为 Magic 3.0 重建
+
 * Fri Oct 23 2015 Liu Di <liudidi@gmail.com> - 4.12.1-2
 - 更新到 4.12.1
 

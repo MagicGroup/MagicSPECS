@@ -1,29 +1,25 @@
-# upstream is switching to github, but has not released a new tar ball there yet
-%global commit 3be48f8b7fc0e8de8cef7675a9861484b8b68c52
+%global commit 5619e1771048e74b729804e8602f409af0f3faea
 %global shortcommit %(c=%{commit}; echo ${c:0:7})
 
 Summary: Layer 2 Tunnelling Protocol Daemon (RFC 2661)
+Summary(zh_CN.UTF-8): 第二层上的隧道协议有服务 (RFC 2661)
 Name: xl2tpd
-Version: 1.3.1
-Release: 14%{?dist}
+Version:	1.3.6
+Release:	1%{?dist}
 License: GPL+
 Url: https://github.com/xelerance/xl2tpd
 Group: System Environment/Daemons
-Source0: http://www.xelerance.com/software/xl2tpd/xl2tpd-%{version}.tar.gz
+Group(zh_CN.UTF-8): 系统环境/服务
+Source0: https://github.com/xelerance/xl2tpd/archive/v%{version}.tar.gz
 #Source0: https://github.com/xelerance/%{name}/archive/v%{version}.tar.gz
 #Source0: https://github.com/xelerance/%{name}/archive/%{commit}/%{name}-%{version}-%{shortcommit}.tar.gz 
 Source1: xl2tpd.service
 Source2: tmpfiles-xl2tpd.conf
-Patch1: xl2tpd-1.3.1-Wunused.patch
-Patch2: xl2tpd-bz80693.patch
-Patch3: xl2tpd-1.3.1-kernelmode.patch
-Patch4: xl2tpd-1.3.1-conf.patch
-Patch5: xl2tpd-1.3.1-pty.patch
-Patch6: xl2tpd-1.3.1-ipparam-to-remotenumber.patch
-Patch7: xl2tpd-1.3.1-Makefile
-Patch8: xl2tpd-1.3.1-md5-fips.patch
+Patch1: xl2tpd-1.3.6-conf.patch
+Patch2: xl2tpd-1.3.6-md5-fips.patch
+Patch3: xl2tpd-1.3.6-saref.patch
 
-Requires: ppp >= 2.4.5-18, kernel-modules-extra
+Requires: ppp >= 2.4.5-18,  kmod(l2tp_ppp.ko)
 # If you want to authenticate against a Microsoft PDC/Active Directory
 # Requires: samba-winbind
 BuildRequires: libpcap-devel
@@ -57,37 +53,30 @@ or via a patch in contrib for 2.4.x kernels.
 Xl2tpd is based on the 0.69 L2TP by Jeff McAdams <jeffm@iglou.com>
 It was de-facto maintained by Jacco de Leeuw <jacco2@dds.nl> in 2002 and 2003.
 
+%description -l zh_CN.UTF-8
+第二层上的隧道协议服务。
+
 %prep
-# for git version
-#% setup -qn %{name}-%{commit}
-%setup -q
+%setup -qn %{name}-%{version}
 %patch1 -p1 
 %patch2 -p1
 %patch3 -p1
-%patch4 -p1
-%patch5 -p1
-%patch6 -p1
-%patch7 -p1 
-%patch8 -p1 
-
-rm linux/include/linux/if_pppol2tp.h 
 
 %build
 #make DFLAGS="$RPM_OPT_FLAGS -g -DDEBUG_HELLO -DDEBUG_CLOSE -DDEBUG_FLOW -DDEBUG_PAYLOAD -DDEBUG_CONTROL -DDEBUG_CONTROL_XMIT -DDEBUG_FLOW_MORE -DDEBUG_MAGIC -DDEBUG_ENTROPY -DDEBUG_HIDDEN -DDEBUG_PPPD -DDEBUG_AAA -DDEBUG_FILE -DDEBUG_FLOW -DDEBUG_HELLO -DDEBUG_CLOSE -DDEBUG_ZLB -DDEBUG_AUTH"
 
-export CFLAGS="$CFLAGS -fPIC -Wall"
+export CFLAGS="$CFLAGS -fPIC -Wall -DTRUST_PPPD_TO_DIE"
 export DFLAGS="$RPM_OPT_FLAGS -g "
 export LDFLAGS="$LDFLAGS -pie -Wl,-z,relro -Wl,-z,now"
-make  
+make
 
 %install
 rm -rf %{buildroot}
 make DESTDIR=%{buildroot} PREFIX=%{_prefix} install
 install -d 0755 %{buildroot}%{_unitdir}
 install -m 0644 %{SOURCE1} %{buildroot}%{_unitdir}/xl2tpd.service
-mkdir -p %{buildroot}%{_sysconfdir}/tmpfiles.d/
-install -m 0644 %{SOURCE2} %{buildroot}%{_sysconfdir}/tmpfiles.d/%{name}.conf
-
+mkdir -p %{buildroot}%{_prefix}/lib/tmpfiles.d/
+install -m 0644 %{SOURCE2} %{buildroot}%{_prefix}/lib/tmpfiles.d/%{name}.conf
 
 install -p -D -m644 examples/xl2tpd.conf %{buildroot}%{_sysconfdir}/xl2tpd/xl2tpd.conf
 install -p -D -m644 examples/ppp-options.xl2tpd %{buildroot}%{_sysconfdir}/ppp/options.xl2tpd
@@ -97,6 +86,7 @@ install -p -D -m755 -d %{buildroot}%{_localstatedir}/run/xl2tpd
 
 %preun
 %systemd_preun xl2tpd.service
+
 %post
 %systemd_post xl2tpd.service
 
@@ -124,10 +114,13 @@ install -p -D -m755 -d %{buildroot}%{_localstatedir}/run/xl2tpd
 %config(noreplace) %{_sysconfdir}/ppp/*
 %dir %{_localstatedir}/run/xl2tpd
 %{_unitdir}/%{name}.service
-%config(noreplace) %{_sysconfdir}/tmpfiles.d/%{name}.conf
+%{_prefix}/lib/tmpfiles.d/%{name}.conf
 %ghost %attr(0600,root,root) %{_localstatedir}/run/xl2tpd/l2tp-control
 
 %changelog
+* Sat Oct 24 2015 Liu Di <liudidi@gmail.com> - 1.3.6-1
+- 更新到 1.3.6
+
 * Sun Aug 04 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.3.1-14
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
 

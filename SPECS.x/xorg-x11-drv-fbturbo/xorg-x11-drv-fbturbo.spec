@@ -6,12 +6,14 @@
 %undefine _hardened_build
 
 Summary:   Xorg X11 fbturbo driver
+Summary(zh_CN.UTF-8): Xorg X11 fbturbo 驱动
 Name:      xorg-x11-drv-fbturbo
 Version:   0.5.1
-Release:   0.6%{?gitrev}%{?dist}
+Release:   0.7%{?gitrev}%{?dist}
 URL:       https://github.com/ssvb/xf86-video-fbturbo
 License:   MIT and GPLv2
 Group:     User Interface/X Hardware Support
+Group(zh_CN.UTF-8): 用户界面/X 硬件支持
 
 Source0:    xf86-video-fbturbo-%{gitdate}.tar.bz2
 Source1:    make-git-snapshot.sh
@@ -38,6 +40,9 @@ ExcludeArch: s390 s390x
 Xorg DDX driver for ARM devices (Allwinner, RPi and others), it's
 based on the fbdev driver so will work in all places it does
 but has NEON optimised code paths to improve ARM
+
+%description -l zh_CN.UTF-8
+Xorg X11 fbturbo 驱动。
 
 %if 0%{?gitdate}
 %define dirsuffix %{gitdate}
@@ -69,6 +74,9 @@ find %{buildroot} -type f -name "*.la" -delete
 %{_mandir}/man4/fbturbo.4*
 
 %changelog
+* Mon Oct 26 2015 Liu Di <liudidi@gmail.com> - 0.5.1-0.7.20150221
+- 为 Magic 3.0 重建
+
 * Wed Sep 23 2015 Dave Airlie <airlied@redhat.com> 0.5.1-0.6.20150221
 - 1.18 ABI rebuild
 

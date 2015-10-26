@@ -36,7 +36,7 @@
 Summary:        XML Object Model
 Name:           xom
 Version:        1.0
-Release:        17%{?dist}
+Release:        18%{?dist}
 Epoch:          0
 License:        LGPLv2
 URL:            http://www.xom.nu
@@ -182,6 +182,9 @@ dummy = posix.readlink(dir) and os.remove(dir)
 %{_datadir}/%{name}/xom-samples.jar
 
 %changelog
+* Sun Oct 25 2015 Liu Di <liudidi@gmail.com> - 0:1.0-18
+- 为 Magic 3.0 重建
+
 * Wed Aug 13 2014 Liu Di <liudidi@gmail.com> - 0:1.0-17
 - 为 Magic 3.0 重建
 

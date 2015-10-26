@@ -6,12 +6,14 @@
 %undefine _hardened_build
 
 Summary:   Xorg X11 armsocdrm driver
+Summary(zh_CN.UTF-8): Xorg X11 armsocdrm 驱动
 Name:      xorg-x11-drv-armsoc
 Version:   1.3.0
 Release:   4%{?gitrev}%{?dist}
 URL:       http://cgit.freedesktop.org/xorg/driver/xf86-video-armsoc
 License:   MIT
 Group:     User Interface/X Hardware Support
+Group(zh_CN.UTF-8): 用户界面/X 硬件支持
 
 Source0:    xf86-video-armsoc-%{gitdate}.tar.bz2
 Source2:    make-git-snapshot.sh
@@ -38,6 +40,9 @@ Requires: Xorg %(xserver-sdk-abi-requires videodrv)
 %description 
 X.Org X11 armsocdrm driver for ARM MALI GPUs such as the Samsung 
 Exynos 4/5 series ARM devices.
+
+%description -l zh_CN.UTF-8
+ARM MALI GPU 的驱动。
 
 %if 0%{?gitdate}
 %define dirsuffix %{gitdate}

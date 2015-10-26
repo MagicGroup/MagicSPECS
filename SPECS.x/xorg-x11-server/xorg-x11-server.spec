@@ -40,12 +40,14 @@
 %global pkgname xorg-server
 
 Summary:   X.Org X11 X server
+Summary(zh_CN.UTF-8): X.Org X11 X 服务
 Name:      xorg-x11-server
-Version:   1.16.3
+Version:   1.16.4
 Release:   2%{?gitdate:.%{gitdate}}%{dist}
 URL:       http://www.x.org
 License:   MIT
 Group:     User Interface/X
+Group(zh_CN.UTF-8): 用户界面/X
 
 #VCS:      git:git://git.freedesktop.org/git/xorg/xserver
 %if 0%{?gitdate}
@@ -99,13 +101,8 @@ Patch10000: 0001-Fedora-hack-Make-the-suid-root-wrapper-always-start-.patch
 # submitted http://lists.x.org/archives/xorg-devel/2014-July/042936.html
 Patch10200: 0001-xwayland-Snap-damage-reports-to-the-bounding-box.patch
 
-# alread in stable
-Patch10250: 0001-dix-Allow-zero-height-PutImage-requests.patch
 # already in master:
 Patch10300: glamor-add-shm-sync-fence-support.patch
-Patch10301: 0001-randr-attempt-to-fix-primary-on-slave-output-v2.patch
-Patch10302: 0002-config-udev-Respect-seat-assignments-when-assigned-d.patch
-Patch10303: 0001-dix-make-RegionInit-legal-C.patch
 
 %global moduledir	%{_libdir}/xorg/modules
 %global drimoduledir	%{_libdir}/dri
@@ -149,14 +146,10 @@ BuildRequires: libXinerama-devel libXi-devel
 BuildRequires: libXt-devel libdmx-devel libXmu-devel libXrender-devel
 BuildRequires: libXi-devel libXpm-devel libXaw-devel libXfixes-devel
 
-%if 0%{?fedora} > 20
 BuildRequires: wayland-devel
 BuildRequires: pkgconfig(wayland-client) >= 1.3.0
 BuildRequires: pkgconfig(epoxy)
-%endif
-%if !0%{?rhel}
 BuildRequires: pkgconfig(xshmfence) >= 1.1
-%endif
 BuildRequires: libXv-devel
 BuildRequires: pixman-devel >= 0.30.0
 BuildRequires: libpciaccess-devel >= 0.13.1 openssl-devel byacc flex
@@ -166,13 +159,10 @@ BuildRequires: mesa-libgbm-devel
 # XXX silly...
 BuildRequires: libdrm-devel >= 2.4.0 kernel-headers
 
-BuildRequires: audit-libs-devel libselinux-devel >= 2.0.86-1
 BuildRequires: libudev-devel
-%if !0%{?rhel}
 # libunwind is Exclusive for the following arches
-%ifarch aarch64 %{arm} hppa ia64 mips ppc ppc64 %{ix86} x86_64
+%ifarch aarch64 %{arm} hppa ia64 mips mips64el ppc ppc64 %{ix86} x86_64
 BuildRequires: libunwind-devel
-%endif
 %endif
 
 BuildRequires: pkgconfig(xcb-aux) pkgconfig(xcb-image) pkgconfig(xcb-icccm)
@@ -185,21 +175,28 @@ BuildRequires: pkgconfig(xcb-keysyms)
 %description
 X.Org X11 X server
 
+%description -l zh_CN.UTF-8
+X.Org X11 X 服务。
 
 %package common
 Summary: Xorg server common files
+Summary(zh_CN.UTF-8): Xorg 服务公用文件
 Group: User Interface/X
+Group(zh_CN.UTF-8): 用户界面/X
 Requires: pixman >= 0.30.0
 Requires: xkeyboard-config xkbcomp
 
 %description common
 Common files shared among all X servers.
-
+%description common -l zh_CN.UTF-8
+Xorg 服务公用文件。
 
 %if %{with_hw_servers}
 %package Xorg
 Summary: Xorg X server
+Summary(zh_CN.UTF-8): Xorg X 服务
 Group: User Interface/X
+Group(zh_CN.UTF-8): 用户界面/X
 Provides: Xorg = %{version}-%{release}
 Provides: Xserver
 # HdG: This should be moved to the wrapper package once the wrapper gets
@@ -220,35 +217,6 @@ Provides: xserver-abi(extension-%{git_extension_major}) = %{git_extension_minor}
 Obsoletes: xorg-x11-glamor < %{version}-%{release}
 Provides: xorg-x11-glamor = %{version}-%{release}
 
-%if 0%{?fedora} > 17
-# Dropped from F18, use a video card instead
-# in F17 updates-testing: 0.7.4-1.fc17
-Obsoletes: xorg-x11-drv-ark <= 0.7.3-15.fc17
-Obsoletes: xorg-x11-drv-chips <= 1.2.4-8.fc18
-Obsoletes: xorg-x11-drv-s3 <= 0.6.3-14.fc17
-Obsoletes: xorg-x11-drv-tseng <= 1.2.4-12.fc17
-%endif
-
-%if 0%{?fedora} > 20
-# Dropped from F21
-Obsoletes: xorg-x11-drv-apm < 1.2.5-18
-Obsoletes: xorg-x11-drv-cirrus < 1.5.2-10
-Obsoletes: xorg-x11-drv-glint < 1.2.8-17
-Obsoletes: xorg-x11-drv-i128 < 1.3.6-18
-Obsoletes: xorg-x11-drv-i740 < 1.3.4-18
-Obsoletes: xorg-x11-drv-mach64 < 6.9.4-16
-Obsoletes: xorg-x11-drv-mga < 1.6.2-17
-Obsoletes: xorg-x11-drv-neomagic < 1.2.8-8
-Obsoletes: xorg-x11-drv-r128 < 6.9.1-15
-Obsoletes: xorg-x11-drv-rendition < 4.2.5-18
-Obsoletes: xorg-x11-drv-s3virge < 1.10.6-18
-Obsoletes: xorg-x11-drv-savage < 2.3.7-7
-Obsoletes: xorg-x11-drv-siliconmotion < 1.7.7-17
-Obsoletes: xorg-x11-drv-sis < 0.10.7-19
-Obsoletes: xorg-x11-drv-tdfx < 1.4.5-17
-Obsoletes: xorg-x11-drv-trident < 1.3.6-18
-%endif
-
 Requires: xorg-x11-server-common >= %{version}-%{release}
 Requires: system-setup-keyboard
 
@@ -257,6 +225,8 @@ X.org X11 is an open source implementation of the X Window System.  It
 provides the basic low level functionality which full fledged
 graphical user interfaces (GUIs) such as GNOME and KDE are designed
 upon.
+%description Xorg -l zh_CN.UTF-8
+开源的 X 窗口系统。
 %endif
 
 
@@ -326,7 +296,6 @@ X protocol, and therefore supports the newer X extensions like
 Render and Composite.
 
 
-%if 0%{?fedora} > 20
 %package Xwayland
 Summary: Wayland X Server
 Group: User Interface/X
@@ -334,7 +303,6 @@ Requires: xorg-x11-server-common >= %{version}-%{release}
 
 %description Xwayland
 Xwayland is an X server for running X clients under Wayland.
-%endif
 
 
 %if %{with_hw_servers}
@@ -380,8 +348,8 @@ fi
 %else
 git init
 if [ -z "$GIT_COMMITTER_NAME" ]; then
-    git config user.email "x@fedoraproject.org"
-    git config user.name "Fedora X Ninjas"
+    git config user.email "x@magiclinux.org"
+    git config user.name "Magic Group"
 fi
 cp %{SOURCE1} .gitignore
 git add .
@@ -424,14 +392,8 @@ test `getminor extension` == %{extension_minor}
 %global dri_flags --disable-dri
 %endif
 
-%if 0%{?fedora}
-%global bodhi_flags --with-vendor-name="Fedora Project"
-%if 0%{?fedora} > 20
+%global bodhi_flags --with-vendor-name="Magic Group"
 %global wayland --enable-xwayland
-%else
-%global wayland --disable-xwayland
-%endif
-%endif
 
 # ick
 %if 0%{?rhel}
@@ -454,7 +416,7 @@ autoreconf -f -v --install || exit 1
 	--with-xkb-output=%{_localstatedir}/lib/xkb \
         --without-dtrace \
 	--disable-linux-acpi --disable-linux-apm \
-	--enable-xselinux --enable-record --enable-present \
+	--disable-xselinux --enable-record --enable-present \
 	--enable-config-udev \
 	--disable-unit-tests \
 	--enable-dmx \
@@ -624,10 +586,8 @@ find %{inst_srcdir}/hw/xfree86 -name \*.c -delete
 %{_bindir}/Xephyr
 %{_mandir}/man1/Xephyr.1*
 
-%if 0%{?fedora} > 20
 %files Xwayland
 %{_bindir}/Xwayland
-%endif
 
 %if %{with_hw_servers}
 %files devel
@@ -645,6 +605,12 @@ find %{inst_srcdir}/hw/xfree86 -name \*.c -delete
 
 
 %changelog
+* Mon Oct 26 2015 Liu Di <liudidi@gmail.com> - 1.16.4-2
+- 为 Magic 3.0 重建
+
+* Mon Oct 26 2015 Liu Di <liudidi@gmail.com> - 1.16.3-3
+- 为 Magic 3.0 重建
+
 * Sun Feb 01 2015 Dave Airlie <airlied@redhat.com> 1.16.3-2
 - fix C++ region init for vnc building
 

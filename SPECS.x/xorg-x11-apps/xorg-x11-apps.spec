@@ -1,41 +1,41 @@
 %define pkgname apps
 
 Summary: X.Org X11 applications
+Summary(zh_CN.UTF-8): X.Org X11 的应用程序
 Name: xorg-x11-%{pkgname}
 # NOTE: The package version should be set to the X11 major release from which
 # the OS release is based upon.
-Version: 7.6
-Release: 6%{?dist}
+Version: 7.7
+Release: 2%{?dist}
 License: MIT
 Group: User Interface/X
 URL: http://www.x.org
 
 # Clock apps
-Source0:  http://ftp.nara.wide.ad.jp/pub/X11/x.org/individual/app/oclock-1.0.2.tar.bz2
-Source1:  http://ftp.nara.wide.ad.jp/pub/X11/x.org/individual/app/xclock-1.0.5.tar.bz2
+Source0:  http://ftp.nara.wide.ad.jp/pub/X11/x.org/individual/app/oclock-1.0.3.tar.bz2
+Source1:  http://ftp.nara.wide.ad.jp/pub/X11/x.org/individual/app/xclock-1.0.7.tar.bz2
 # X Window Dump (xwd) utilities
-Source2:  http://ftp.nara.wide.ad.jp/pub/X11/x.org/individual/app/xwd-1.0.4.tar.bz2
-Source3:  http://ftp.nara.wide.ad.jp/pub/X11/x.org/individual/app/xwud-1.0.3.tar.bz2
-Source4:  http://ftp.nara.wide.ad.jp/pub/X11/x.org/individual/app/xpr-1.0.3.tar.bz2
+Source2:  http://ftp.nara.wide.ad.jp/pub/X11/x.org/individual/app/xwd-1.0.6.tar.bz2
+Source3:  http://ftp.nara.wide.ad.jp/pub/X11/x.org/individual/app/xwud-1.0.4.tar.bz2
+Source4:  http://ftp.nara.wide.ad.jp/pub/X11/x.org/individual/app/xpr-1.0.4.tar.bz2
 # Miscellaneous other applications
-Source5:  http://ftp.nara.wide.ad.jp/pub/X11/x.org/individual/app/luit-1.1.0.tar.bz2
-Source6:  http://ftp.nara.wide.ad.jp/pub/X11/x.org/individual/app/x11perf-1.5.3.tar.bz2
-Source7:  http://ftp.nara.wide.ad.jp/pub/X11/x.org/individual/app/xbiff-1.0.2.tar.bz2
-Source8:  http://ftp.nara.wide.ad.jp/pub/X11/x.org/individual/app/xclipboard-1.1.1.tar.bz2
-Source9:  http://ftp.nara.wide.ad.jp/pub/X11/x.org/individual/app/xconsole-1.0.4.tar.bz2
-Source10: http://ftp.nara.wide.ad.jp/pub/X11/x.org/individual/app/xcursorgen-1.0.4.tar.bz2
+Source5:  http://ftp.nara.wide.ad.jp/pub/X11/x.org/individual/app/luit-1.1.1.tar.bz2
+Source6:  http://ftp.nara.wide.ad.jp/pub/X11/x.org/individual/app/x11perf-1.6.0.tar.bz2
+Source7:  http://ftp.nara.wide.ad.jp/pub/X11/x.org/individual/app/xbiff-1.0.3.tar.bz2
+Source8:  http://ftp.nara.wide.ad.jp/pub/X11/x.org/individual/app/xclipboard-1.1.3.tar.bz2
+Source9:  http://ftp.nara.wide.ad.jp/pub/X11/x.org/individual/app/xconsole-1.0.6.tar.bz2
+Source10: http://ftp.nara.wide.ad.jp/pub/X11/x.org/individual/app/xcursorgen-1.0.6.tar.bz2
 Source11: http://ftp.nara.wide.ad.jp/pub/X11/x.org/individual/app/xeyes-1.1.1.tar.bz2
-Source13: http://ftp.nara.wide.ad.jp/pub/X11/x.org/individual/app/xload-1.1.0.tar.bz2
-Source14: http://ftp.nara.wide.ad.jp/pub/X11/x.org/individual/app/xlogo-1.0.3.tar.bz2
-Source15: http://ftp.nara.wide.ad.jp/pub/X11/x.org/individual/app/xmag-1.0.4.tar.bz2
-Source16: http://ftp.nara.wide.ad.jp/pub/X11/x.org/individual/app/xmessage-1.0.3.tar.bz2
-Source18: http://ftp.nara.wide.ad.jp/pub/X11/x.org/individual/app/xfd-1.1.0.tar.bz2
-Source19: http://ftp.nara.wide.ad.jp/pub/X11/x.org/individual/app/xfontsel-1.0.3.tar.bz2
-Source20: http://ftp.nara.wide.ad.jp/pub/X11/x.org/individual/app/xvidtune-1.0.2.tar.bz2
+Source13: http://ftp.nara.wide.ad.jp/pub/X11/x.org/individual/app/xload-1.1.2.tar.bz2
+Source14: http://ftp.nara.wide.ad.jp/pub/X11/x.org/individual/app/xlogo-1.0.4.tar.bz2
+Source15: http://ftp.nara.wide.ad.jp/pub/X11/x.org/individual/app/xmag-1.0.6.tar.bz2
+Source16: http://ftp.nara.wide.ad.jp/pub/X11/x.org/individual/app/xmessage-1.0.4.tar.bz2
+Source18: http://ftp.nara.wide.ad.jp/pub/X11/x.org/individual/app/xfd-1.1.2.tar.bz2
+Source19: http://ftp.nara.wide.ad.jp/pub/X11/x.org/individual/app/xfontsel-1.0.5.tar.bz2
+Source20: http://ftp.nara.wide.ad.jp/pub/X11/x.org/individual/app/xvidtune-1.0.3.tar.bz2
 
-Patch0: x11perf-1.4.1-x11perf-datadir-cleanups.patch
-Patch2: xconsole-1.0.3-streams-me-softer.patch
-Patch6: xbiff-1.0.2-xmu-configure.patch
+Patch0:     x11perf-1.6.0-x11perf-datadir-cleanups.patch
+Patch1:     luit-1.1.1-configure-define-XOPEN_SOURCE-to-600-on-linux.patch
 
 BuildRequires: autoconf automake
 
@@ -75,11 +75,13 @@ Conflicts: xorg-x11-server-utils < 7.4-8.fc12
 %description
 A collection of common X Window System applications.
 
+%description -l zh_CN.UTF-8
+X 窗口系统下的应用程序集合。
+
 %prep
 %setup -q -c %{name}-%{version} -a1 -a2 -a3 -a4 -a5 -a6 -a7 -a8 -a9 -a10 -a11 -a13 -a14 -a15 -a16 -a18 -a19 -a20
-%patch0 -p0 -b .x11perf-datadir-cleanups
-#%patch2 -p0 -b .streams-me-softer
-%patch6 -p1 -b .xmu-configure
+%patch0 -p0 -b .x11perf-datadir-cleanup
+%patch1 -p0 -b .luit-xopen_source
 
 %build
 # Build all apps
@@ -104,6 +106,7 @@ for app in * ; do
 	popd
 done
 }
+magic_rpm_clean.sh
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -178,6 +181,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man1/xwud.1*
 
 %changelog
+* Sun Oct 25 2015 Liu Di <liudidi@gmail.com> - 7.7-2
+- 为 Magic 3.0 重建
+
 * Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 7.6-6
 - 为 Magic 3.0 重建
 

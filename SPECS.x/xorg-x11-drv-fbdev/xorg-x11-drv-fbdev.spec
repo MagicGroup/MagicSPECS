@@ -3,19 +3,18 @@
 %define driverdir	%{moduledir}/drivers
 
 Summary:   Xorg X11 fbdev video driver
+Summary(zh_CN.UTF-8): Xorg X11 fbdev 显卡驱动
 Name:      xorg-x11-drv-fbdev
-Version:   0.4.3
-Release:   15%{?dist}
+Version:	0.4.4
+Release:	2%{?dist}
 URL:       http://www.x.org
 License:   MIT
 Group:     User Interface/X Hardware Support
+Group(zh_CN.UTF-8): 用户界面/X 硬件支持
 
 Source0:   http://ftp.nara.wide.ad.jp/pub/X11/x.org/individual/driver/%{tarball}-%{version}.tar.bz2
 
 ExcludeArch: s390 s390x
-
-Patch0: 0001-Remove-mibstore.h.patch
-Patch2: BGNoneRoot.patch
 
 BuildRequires: xorg-x11-server-devel >= 1.10.99.902
 BuildRequires: autoconf automake libtool
@@ -26,10 +25,11 @@ Requires: Xorg %(xserver-sdk-abi-requires videodrv)
 %description 
 X.Org X11 fbdev video driver.
 
+%description -l zh_CN.UTF-8
+Xorg X11 fbdev 显卡驱动。
+
 %prep
 %setup -q -n %{tarball}-%{version}
-%patch0 -p1
-%patch2 -p1
 
 %build
 autoreconf -vif
@@ -54,6 +54,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man4/fbdev.4*
 
 %changelog
+* Mon Oct 26 2015 Liu Di <liudidi@gmail.com> - 0.4.4-2
+- 更新到 0.4.4
+
 * Mon Jan 13 2014 Adam Jackson <ajax@redhat.com> - 0.4.3-15
 - 1.15 ABI rebuild
 

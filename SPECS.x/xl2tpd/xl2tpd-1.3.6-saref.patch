@@ -1,0 +1,36 @@
+diff -Naur xl2tpd-5619e1771048e74b729804e8602f409af0f3faea-orig/file.c xl2tpd-5619e1771048e74b729804e8602f409af0f3faea/file.c
+--- xl2tpd-5619e1771048e74b729804e8602f409af0f3faea-orig/file.c	2014-01-15 15:58:37.000000000 -0500
++++ xl2tpd-5619e1771048e74b729804e8602f409af0f3faea/file.c	2014-06-14 12:34:06.422355636 -0400
+@@ -42,6 +42,8 @@
+ 
+     gconfig.port = UDP_LISTEN_PORT;
+     gconfig.sarefnum = IP_IPSEC_REFINFO; /* default use the latest we know */
++    gconfig.ipsecsaref = 0; /* default off - requires patched KLIPS kernel module */
++    gconfig.forceuserspace = 0; /* default off - allow kernel decap of data packets */
+     gconfig.listenaddr = htonl(INADDR_ANY); /* Default is to bind (listen) to all interfaces */
+     gconfig.debug_avp = 0;
+     gconfig.debug_network = 0;
+diff -Naur xl2tpd-5619e1771048e74b729804e8602f409af0f3faea-orig/network.c xl2tpd-5619e1771048e74b729804e8602f409af0f3faea/network.c
+--- xl2tpd-5619e1771048e74b729804e8602f409af0f3faea-orig/network.c	2014-01-15 15:58:37.000000000 -0500
++++ xl2tpd-5619e1771048e74b729804e8602f409af0f3faea/network.c	2014-06-14 12:37:06.953574143 -0400
+@@ -78,6 +78,12 @@
+      * For L2TP/IPsec with KLIPSng, set the socket to receive IPsec REFINFO
+      * values.
+      */
++    if (!gconfig.ipsecsaref)
++    {
++        l2tp_log (LOG_INFO, "Not looking for kernel SAref support.\n");
++    }
++    else
++    { 
+     arg=1;
+     if(setsockopt(server_socket, IPPROTO_IP, gconfig.sarefnum,
+ 		  &arg, sizeof(arg)) != 0) {
+@@ -85,6 +91,7 @@
+ 
+ 	    gconfig.ipsecsaref=0;
+     }
++    }
+     
+     arg=1;
+     if(setsockopt(server_socket, IPPROTO_IP, IP_PKTINFO, (char*)&arg, sizeof(arg)) != 0) {

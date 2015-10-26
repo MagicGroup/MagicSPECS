@@ -34,6 +34,9 @@ Patch8:			xmms2-0.8DrO_o-vorbis-pkgconfig-libs.patch
 Patch9:			xmms2-0.8-fixcython.patch
 # ffmpeg 2.2
 Patch10:		xmms2-0.8DrO_o-ffmpeg-2.2.patch
+# Remove deprecated usage on ruby 22
+Patch11:			xmms2-0.8DrO_o-ruby22-remove-deprecated-usage.patch
+
 URL:			http://wiki.xmms2.xmms.se/
 BuildRoot:		%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:		sqlite-devel, flac-devel, libofa-devel
@@ -177,8 +180,14 @@ export CPPFLAGS="%{optflags}"
 export LIBDIR="%{_libdir}"
 export PYTHONDIR="%{python_sitearch}"
 export XSUBPP="%{_bindir}/xsubpp"
+# Now with ruby22, the following waf fails until applying PATCH9
+# Really want to know how to patch against waf beforehand...
 ./waf configure --prefix=%{_prefix} --libdir=%{_libdir} --with-ruby-libdir=%{ruby_vendorlibdir} --with-ruby-archdir=%{ruby_vendorarchdir} \
-  --with-perl-archdir=%{perl_archlib} --with-pkgconfigdir=%{_libdir}/pkgconfig -j1
+  --with-perl-archdir=%{perl_archlib} --with-pkgconfigdir=%{_libdir}/pkgconfig -j1 || true
+(
+	cd .waf-1.*
+	cat %PATCH11 | patch -p2
+)
 # Hacky, hacky, hacky.
 patch -p0 < %{_sourcedir}/xmms2-0.8DrO_o-xsubpp-fix.patch
 ./waf configure --prefix=%{_prefix} --libdir=%{_libdir} --with-ruby-libdir=%{ruby_vendorlibdir} --with-ruby-archdir=%{ruby_vendorarchdir} \

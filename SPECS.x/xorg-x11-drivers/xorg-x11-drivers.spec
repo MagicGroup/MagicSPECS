@@ -1,9 +1,11 @@
 Summary: X.Org X11 driver installation package
+Summary(zh_CN.UTF-8): X.Org X11 驱动安装包
 Name: xorg-x11-drivers
 Version: 7.7
-Release: 9%{?dist}
+Release: 11%{?dist}
 License: MIT
 Group: User Interface/X Hardware Support
+Group(zh_CN.UTF-8): 用户界面/X 硬件支持
 
 ExcludeArch: s390 s390x
 
@@ -15,10 +17,11 @@ Requires: xorg-x11-drv-evdev
 Requires: xorg-x11-drv-fbdev
 Requires: xorg-x11-drv-modesetting
 Requires: xorg-x11-drv-nouveau
+%ifnarch aarch64
 Requires: xorg-x11-drv-qxl
+%endif
 Requires: xorg-x11-drv-synaptics
 Requires: xorg-x11-drv-v4l
-Requires: xorg-x11-drv-void
 Requires: xorg-x11-drv-wacom
 
 # only build vesa on machines where we support vbe
@@ -40,9 +43,6 @@ Requires: xorg-x11-drv-vmmouse
 %endif
 
 # irrelevant hardware
-
-%if !0%{?rhel}
-
 # These have KMS drivers for everything RHEL cares about
 Requires: xorg-x11-drv-cirrus
 Requires: xorg-x11-drv-mga
@@ -63,15 +63,25 @@ Requires: xorg-x11-drv-tdfx
 Requires: xorg-x11-drv-trident
 Requires: xorg-x11-drv-voodoo
 
+# This chipset has long since been EOLd, and afaik was only ever in x86 laptops
+%ifarch %{ix86}
+Requires: xorg-x11-drv-neomagic
+%endif
+
+# ARM kit
+%ifarch %{arm}
+Requires: xorg-x11-drv-omap
+Requires: xorg-x11-drv-armsoc
+Requires: xorg-x11-drv-freedreno
+Requires: xorg-x11-drv-opentegra
+%endif
+
+# rhel-only exclusions that have maintainers in f21+: geode, openchrome
+
 # cyrix and nsc used to be here too, but are deprecated upstream and
 # should eventually get folded into -geode.
 %ifarch %{ix86}
 Requires: xorg-x11-drv-geode
-%endif
-
-# This chipset has long since been EOLd, and afaik was only ever in x86 laptops
-%ifarch %{ix86}
-Requires: xorg-x11-drv-neomagic
 %endif
 
 # Thus far via chips are only on x86 and amd64 motherboards.  This might be
@@ -81,20 +91,15 @@ Requires: xorg-x11-drv-neomagic
 Requires: xorg-x11-drv-openchrome
 %endif
 
-# ARM kit
-%ifarch %{arm}
-Requires: xorg-x11-drv-omap
-Requires: xorg-x11-drv-armsoc
-Requires: xorg-x11-drv-freedreno
-%endif
-%endif
-
 %description
 The purpose of this package is to require all of the individual X.Org
 driver rpms, to allow the OS installation software to install all drivers
 all at once, without having to track which individual drivers are present
 on each architecture.  By installing this package, it forces all of the
 individual driver packages to be installed.
+
+%description -l zh_CN.UTF-8
+X.Org 的驱动安装包。
 
 %prep
 %build
@@ -108,7 +113,14 @@ rm -rf $RPM_BUILD_ROOT
 %files
 %defattr(-,root,root,-)
 
+
 %changelog
+* Mon Oct 26 2015 Liu Di <liudidi@gmail.com> - 7.7-11
+- 为 Magic 3.0 重建
+
+* Mon Oct 26 2015 Liu Di <liudidi@gmail.com> - 7.7-10
+- 为 Magic 3.0 重建
+
 * Mon Jun 09 2014 Liu Di <liudidi@gmail.com> - 7.7-9
 - 为 Magic 3.0 重建
 

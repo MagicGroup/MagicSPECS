@@ -3,17 +3,17 @@
 %global driverdir %{moduledir}/input
 
 Summary:    Xorg X11 libinput input driver
+Summary(zh_CN.UTF-8): Xorg X11 libinput 输入驱动
 Name:       xorg-x11-drv-libinput
 Version:    0.14.0
-Release:    2%{?dist}
+Release:    3%{?dist}
 URL:        http://www.x.org
 License:    MIT
 
 Source0:    ftp://ftp.x.org/pub/individual/driver/%{tarball}-%{version}.tar.bz2
 Source1:    90-libinput.conf
 
-# Fedora-specific unless merged into 1.7.3 at least
-Patch00: 0001-Fedora-use-unaccelerated-vmask-on-input-ABI-21.patch
+Patch1:		xserver-libinput-fixinclude.patch
 
 ExcludeArch: s390 s390x
 
@@ -27,16 +27,16 @@ Requires: Xorg %(xserver-sdk-abi-requires xinput)
 Requires: xkeyboard-config
 Requires: libinput >= 0.21.0
 
-# For the unaccelerated valuator masks, drop in F23
-Requires: xorg-x11-server-Xorg >= 1.17.1-14
-
 %description
 A generic input driver for the X.Org X11 X server based on libinput,
 supporting all devices.
 
+%description -l zh_CN.UTF-8
+Xorg X11 libinput 输入驱动。
+
 %prep
 %setup -q -n %{tarball}-%{version}
-%patch00 -p1
+%patch1 -p1
 
 %build
 autoreconf --force -v --install || exit 1
@@ -72,6 +72,9 @@ Xorg X11 libinput input driver development files.
 %{_includedir}/xorg/libinput-properties.h
 
 %changelog
+* Mon Oct 26 2015 Liu Di <liudidi@gmail.com> - 0.14.0-3
+- 为 Magic 3.0 重建
+
 * Wed Sep 16 2015 Dave Airlie <airlied@redhat.com> - 0.14.0-2
 - 1.18 ABI rebuild
 

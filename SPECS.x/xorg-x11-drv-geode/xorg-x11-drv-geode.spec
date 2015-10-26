@@ -3,21 +3,23 @@
 %define driverdir	%{moduledir}/drivers
 
 Summary:   Xorg X11 AMD Geode video driver
+Summary(zh_CN.UTF-8): Xorg X11 AMD Geode 显卡驱动
 Name:      xorg-x11-drv-geode
-Version:   2.11.13
-Release:   2%{?dist}
+Version:	2.11.17
+Release:	2%{?dist}
 URL:       http://www.x.org/wiki/AMDGeodeDriver
 Source0:   http://xorg.freedesktop.org/releases/individual/driver/xf86-video-geode-%{version}.tar.bz2
 License:   MIT
 Group:     User Interface/X Hardware Support
+Group(zh_CN.UTF-8): 用户界面/X 硬件支持
 
-ExclusiveArch: %{ix86}
+ExclusiveArch: %{ix86} 
 
 BuildRequires: pkgconfig
 BuildRequires: autoconf
 BuildRequires: automake
 BuildRequires: libtool
-BuildRequires: xorg-x11-server-sdk
+BuildRequires: xorg-x11-server-source
 BuildRequires: xorg-x11-proto-devel
 
 Requires:  xorg-x11-server-Xorg >= 1.1.0
@@ -26,6 +28,9 @@ BuildRequires: autoconf automake
 
 %description 
 X.Org X11 AMD Geode video driver.
+
+%description -l zh_CN.UTF-8
+Xorg X11 AMD Geode 显卡驱动。
 
 %prep
 %setup -q -n %{tarball}-%{version}
@@ -53,6 +58,9 @@ magic_rpm_clean.sh
 %{driverdir}/ztv_drv.so
 
 %changelog
+* Mon Oct 26 2015 Liu Di <liudidi@gmail.com> - 2.11.17-2
+- 更新到 2.11.17
+
 * Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 2.11.13-2
 - 为 Magic 3.0 重建
 
@@ -248,7 +256,7 @@ magic_rpm_clean.sh
 - Today's snapshot: EXA fixes.
 
 * Wed Aug 16 2006 Adam Jackson <ajackson@redhat.com> 0.0-4.20060816git.fc6
-- Un-reset the Release: number.
+- Un-reset the Release:	1%{?dist}
 
 * Wed Aug 16 2006 Adam Jackson <ajackson@redhat.com> 0.0-1.20060816git.fc6
 - git update: more Xv fixes.

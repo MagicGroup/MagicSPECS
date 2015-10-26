@@ -3,12 +3,14 @@
 %define driverdir	%{moduledir}/drivers
 
 Summary:   Xorg X11 cirrus video driver
+Summary(zh_CN.UTF-8): Xorg X11 cirrus 显卡驱动
 Name:      xorg-x11-drv-cirrus
-Version:   1.5.2
-Release:   6%{?dist}
+Version:	1.5.3
+Release:	2%{?dist}
 URL:       http://www.x.org
 License:   MIT
 Group:     User Interface/X Hardware Support
+Group(zh_CN.UTF-8): 用户界面/X 硬件支持
 
 ExcludeArch: s390 s390x %{?rhel:ppc ppc64}
 
@@ -26,6 +28,9 @@ Requires: Xorg %(xserver-sdk-abi-requires videodrv)
 
 %description 
 X.Org X11 cirrus video driver.
+
+%description -l zh_CN.UTF-8
+Xorg X11 cirrus 显卡驱动。
 
 %prep
 %setup -q -n %{tarball}-%{version}
@@ -57,6 +62,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man4/cirrus.4*
 
 %changelog
+* Mon Oct 26 2015 Liu Di <liudidi@gmail.com> - 1.5.3-2
+- 更新到 1.5.3
+
 * Mon Jan 13 2014 Adam Jackson <ajax@redhat.com> - 1.5.2-6
 - 1.15 ABI rebuild
 

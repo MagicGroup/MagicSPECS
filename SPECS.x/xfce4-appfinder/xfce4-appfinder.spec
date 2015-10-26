@@ -2,7 +2,7 @@
 
 Name:           xfce4-appfinder
 Version:	4.12.0
-Release: 1%{?dist}
+Release: 2%{?dist}
 Summary:        Appfinder for the Xfce4 Desktop Environment
 Summary(zh_CN.UTF-8): Xfce4 桌面环境的程序查找器
 
@@ -63,6 +63,9 @@ rm -rf %{buildroot}
 %{_datadir}/appdata/xfce4-appfinder.appdata.xml
 
 %changelog
+* Sat Oct 24 2015 Liu Di <liudidi@gmail.com> - 4.12.0-2
+- 为 Magic 3.0 重建
+
 * Thu Oct 22 2015 Liu Di <liudidi@gmail.com> - 4.12.0-1
 - 更新到 4.12.0
 

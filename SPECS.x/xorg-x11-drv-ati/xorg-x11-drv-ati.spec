@@ -1,7 +1,7 @@
 %define tarball xf86-video-ati
 %define moduledir %(pkg-config xorg-server --variable=moduledir )
 %define driverdir	%{moduledir}/drivers
-%define gitdate 20150729
+#define gitdate 20150729
 %define gitversion 5510cd6
 
 %undefine _hardened_build
@@ -11,15 +11,17 @@
 %endif
 
 Summary:   Xorg X11 ati video driver
+Summary(zh_CN.UTF-8): Xorg X11 ati 显卡驱动
 Name:      xorg-x11-drv-ati
-Version:   7.6.0
-Release:   0.4%{?gver}%{?dist}
+Version:	7.5.0
+Release:	2%{?dist}
 URL:       http://www.x.org
 License:   MIT
 Group:     User Interface/X Hardware Support
+Group(zh_CN.UTF-8): 用户界面/X 硬件支持
 
-#Source0:    http://www.x.org/pub/individual/driver/%{tarball}-%{version}.tar.bz2
-Source0: %{tarball}-%{gitdate}.tar.xz
+Source0:    http://www.x.org/pub/individual/driver/%{tarball}-%{version}.tar.bz2
+#Source0: %{tarball}-%{gitdate}.tar.xz
 
 Patch10:    radeon-6.12.2-lvds-default-modes.patch
 Patch13:    fix-default-modes.patch
@@ -42,6 +44,9 @@ Requires: libdrm >= 2.4.36-1
 
 %description 
 X.Org X11 ati video driver.
+
+%description -l zh_CN.UTF-8
+Xorg X11 ati 显卡驱动。
 
 %prep
 %setup -q -n %{tarball}-%{?gitdate:%{gitdate}}%{?!gitdate:%{version}}
@@ -67,6 +72,12 @@ rm -rf $RPM_BUILD_ROOT%{moduledir}/multimedia/
 %{_mandir}/man4/radeon.4*
 
 %changelog
+* Sun Oct 25 2015 Liu Di <liudidi@gmail.com> - 7.5.0-2
+- 更新到 7.5.0
+
+* Sun Oct 25 2015 Liu Di <liudidi@gmail.com> - 7.6.0-0.5.20150729git5510cd6
+- 为 Magic 3.0 重建
+
 * Wed Sep 16 2015 Dave Airlie <airlied@redhat.com> - 7.6.0-0.4.20150729git5510cd6
 - 1.18 ABI rebuild
 

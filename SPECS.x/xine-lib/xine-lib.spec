@@ -23,7 +23,7 @@ Summary:        A multimedia engine
 Summary(zh_CN.UTF-8): 多媒体引擎
 Name:           xine-lib
 Version:	1.2.6
-Release:        1%{?dist}
+Release:        2%{?dist}
 License:        GPLv2+
 Group:          System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
@@ -425,6 +425,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sat Oct 24 2015 Liu Di <liudidi@gmail.com> - 1.2.6-2
+- 为 Magic 3.0 重建
+
 * Tue Sep 22 2015 Liu Di <liudidi@gmail.com> - 1.2.6-1
 - 更新到 1.2.6
 
