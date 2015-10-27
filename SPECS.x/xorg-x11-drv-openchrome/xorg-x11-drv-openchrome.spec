@@ -12,12 +12,14 @@
 %define with_debug 0
 
 Summary:        Xorg X11 openchrome video driver
+Summary(zh_CN.UTF-8): Xorg X11 openchrome 显卡驱动
 Name:           xorg-x11-drv-openchrome
 Version:        0.3.3
-Release:        8%{?gver}%{?dist}
+Release:        9%{?gver}%{?dist}
 URL:            http://www.openchrome.org
 License:        MIT
 Group:          User Interface/X Hardware Support
+Group(zh_CN.UTF-8): 用户界面/X 硬件支持
 
 %if 0%{?gitdate}
 Source0:        %{tarball}-%{gitdate}.tar.bz2
@@ -55,17 +57,23 @@ Provides:       xorg-x11-drv-via = 0.2.2-5
 %description 
 X.Org X11 openchrome video driver.
 
+%description -l zh_CN.UTF-8
+Xorg X11 openchrome 显卡驱动。
 
 %if %{with_xvmc}
 %package devel
 Summary:        Xorg X11 openchrome video driver XvMC development package
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:          Development/System
+Group(zh_CN.UTF-8): 开发/库
 Requires:       %{name} = %{version}-%{release}
 Obsoletes:      xorg-x11-drv-via-devel <= 0.2.2-4
 Provides:       xorg-x11-drv-via-devel = 0.2.2-5
 
 %description devel
 X.Org X11 openchrome video driver XvMC development package.
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 %endif
 
 
@@ -134,6 +142,9 @@ fi
 
 
 %changelog
+* Mon Oct 26 2015 Liu Di <liudidi@gmail.com> - 0.3.3-9
+- 为 Magic 3.0 重建
+
 * Mon Jan 13 2014 Adam Jackson <ajax@redhat.com> - 0.3.3-8
 - 1.15 ABI rebuild
 

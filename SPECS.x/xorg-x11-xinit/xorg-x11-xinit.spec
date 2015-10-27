@@ -1,9 +1,10 @@
 %define pkgname xinit
 
 Summary:    X.Org X11 X Window System xinit startup scripts
+Summary(zh_CN.UTF-8): X.Org X11 X 窗口系统启动脚本
 Name:       xorg-x11-%{pkgname}
 Version:    1.3.4
-Release:    10%{?dist}
+Release:    12%{?dist}
 License:    MIT
 URL:        http://www.x.org
 
@@ -47,12 +48,19 @@ Provides:   %{pkgname} = %{version}
 %description
 X.Org X11 X Window System xinit startup scripts.
 
+%description -l zh_CN.UTF-8
+X.Org X11 X 窗口系统启动脚本。
+
 %package session
 Summary:    Display manager support for ~/.xsession and ~/.Xclients
+Summary(zh_CN.UTF-8): 支持 ~/.xsession 和 ~/.Xclients 的会话管理器
 
 %description session
 Allows legacy ~/.xsession and ~/.Xclients files to be used from display
 managers.
+
+%description session -l zh_CN.UTF-8
+支持 ~/.xsession 和 ~/.Xclients 的会话管理器。
 
 %prep
 %setup -q -n %{pkgname}-%{version}
@@ -115,6 +123,12 @@ install -p -m644 -D %{SOURCE18} $RPM_BUILD_ROOT%{_datadir}/xsessions/xinit-compa
 %{_datadir}/xsessions/xinit-compat.desktop
 
 %changelog
+* Tue Oct 27 2015 Liu Di <liudidi@gmail.com> - 1.3.4-12
+- 为 Magic 3.0 重建
+
+* Tue Oct 27 2015 Liu Di <liudidi@gmail.com> - 1.3.4-11
+- 为 Magic 3.0 重建
+
 * Fri Jun 19 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.3.4-10
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

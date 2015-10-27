@@ -3,12 +3,14 @@
 %define driverdir	%{moduledir}/drivers
 
 Summary:   Xorg X11 s3virge video driver
+Summary(zh_CN.UTF-8): Xorg X11 s3virge 显卡驱动
 Name:      xorg-x11-drv-s3virge
-Version:   1.10.6
-Release:   14%{?dist}
+Version:	1.10.7
+Release:	2%{?dist}
 URL:       http://www.x.org
 License:   MIT
 Group:     User Interface/X Hardware Support
+Group(zh_CN.UTF-8): 用户界面/X 硬件支持
 
 Source0:   http://ftp.nara.wide.ad.jp/pub/X11/x.org/individual/driver/%{tarball}-%{version}.tar.bz2
 
@@ -22,6 +24,9 @@ Requires: Xorg %(xserver-sdk-abi-requires videodrv)
 
 %description 
 X.Org X11 s3virge video driver.
+
+%description -l zh_CN.UTF-8
+Xorg X11 s3virge 显卡驱动。
 
 %prep
 %setup -q -n %{tarball}-%{version}
@@ -49,6 +54,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man4/s3virge.4*
 
 %changelog
+* Mon Oct 26 2015 Liu Di <liudidi@gmail.com> - 1.10.7-2
+- 更新到 1.10.7
+
 * Mon Jan 13 2014 Adam Jackson <ajax@redhat.com> - 1.10.6-14
 - 1.15 ABI rebuild
 

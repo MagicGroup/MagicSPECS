@@ -1,15 +1,22 @@
 %global compat_ver xz-4.999.9beta
 
 Summary:	LZMA compression utilities
+Summary(zh_CN.UTF-8): LZMA 压缩工具
 Name:		xz
-Version:	5.1.1
-Release:	3alpha%{?dist}
+Version:	5.2.2
+Release:	2%{?dist}
 License:	LGPLv2+
 Group:		Applications/File
+Group(zh_CN.UTF-8): 应用程序/文件
 # official upstream release
-Source0:	http://tukaani.org/%{name}/%{name}-%{version}alpha.tar.gz
-# source created as "make dist" in checked out GIT tree
-Source1:	%{compat_ver}.20100401git.tar.bz2
+Source0:	http://tukaani.org/%{name}/%{name}-%{version}.tar.gz
+
+Source100:	colorxzgrep.sh
+Source101:	colorxzgrep.csh
+
+# 临时补丁，和 openssl 版本有关
+Patch1:		xz-force-use-internalsha.patch
+
 URL:		http://tukaani.org/%{name}/
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 Requires:	%{name}-libs = %{version}-%{release}
@@ -24,26 +31,55 @@ LZMA is a general purpose compression algorithm designed by Igor Pavlov as
 part of 7-Zip. It provides high compression ratio while keeping the
 decompression speed fast.
 
+%description -l zh_CN.UTF-8
+LZMA 压缩工具。
+
 %package 	libs
 Summary:	Libraries for decoding LZMA compression
+Summary(zh_CN.UTF-8): %{name} 的运行库
 Group:		System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 License:	LGPLv2+
 
 %description 	libs
 Libraries for decoding files compressed with LZMA or XZ utils.
 
+%description libs -l zh_CN.UTF-8
+%{name} 的运行库。
+
+%package 	static
+Summary:	Statically linked library for decoding LZMA compression
+Summary(zh_CN.UTF-8): %{name} 的静态库
+Group:		System Environment/Libraries
+Group(zh_CN.UTF-8): 开发/库
+License:	Public Domain
+
+%description 	static
+Statically linked library for decoding files compressed with LZMA or
+XZ utils.  Most users should *not* install this.
+
+%description static -l zh_CN.UTF-8
+%{name} 的静态库。
+
 %package 	compat-libs
 Summary:	Compatibility libraries for decoding LZMA compression
+Summary(zh_CN.UTF-8): %{name} 的兼容运行库
 Group:		System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 License:	LGPLv2+
 
 %description 	compat-libs
 Compatibility libraries for decoding files compressed with LZMA or XZ utils.
 This particular package ships libraries from %{compat_ver} as of 1st of April 2010.
 
+%description compat-libs -l zh_CN.UTF-8
+%{name} 的兼容运行库。
+
 %package 	devel
 Summary:	Devel libraries & headers for liblzma
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:		Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 License:	LGPLv2+
 Requires:	%{name}-libs = %{version}-%{release}
 Requires:	pkgconfig
@@ -51,9 +87,14 @@ Requires:	pkgconfig
 %description	devel
 Devel libraries and headers for liblzma.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
 %package 	lzma-compat
 Summary:	Older LZMA format compatibility binaries
+Summary(zh_CN.UTF-8): 旧版本 LZMA 格式兼容程序
 Group:		Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 # lz{grep,diff,more} are GPLv2+. Other binaries are LGPLv2+
 License:	GPLv2+ and LGPLv2+
 Requires:	%{name} = %{version}-%{release}
@@ -64,65 +105,61 @@ Provides:	lzma = %{version}
 The lzma-compat package contains compatibility links for older
 commands that deal with the older LZMA format.
 
+%description lzma-compat -l zh_CN.UTF-8
+旧版本 LZMA 格式兼容程序。
+
 %prep
-%setup -q -a1 -n %{name}-%{version}alpha
+%setup -q
+%patch1 -p1
+
+for i in `find . -name config.sub`; do
+  perl -pi -e "s/ppc64-\*/ppc64-\* \| ppc64p7-\*/" $i
+done
 
 %build
-CFLAGS="%{optflags} -D_FILE_OFFSET_BITS=64" \
-CXXFLAGS="%{optflags} -D_FILE_OFFSET_BITS=64" \
-%configure --disable-static
-sed -i 's|^hardcode_libdir_flag_spec=.*|hardcode_libdir_flag_spec=""|g' libtool
-sed -i 's|^runpath_var=LD_RUN_PATH|runpath_var=DIE_RPATH_DIE|g' libtool
-make %{?_smp_mflags}
+CFLAGS="%{optflags} -D_FILE_OFFSET_BITS=64"
+%ifarch %{power64}
+    CFLAGS=`echo $CFLAGS | xargs -n 1 | sed 's|^-O2$|-O3|g' | xargs -n 100`
+%endif
+export CFLAGS
 
-pushd %{compat_ver}
-%configure --disable-static
+%configure
 sed -i 's|^hardcode_libdir_flag_spec=.*|hardcode_libdir_flag_spec=""|g' libtool
 sed -i 's|^runpath_var=LD_RUN_PATH|runpath_var=DIE_RPATH_DIE|g' libtool
 make %{?_smp_mflags}
-popd
 
 %install
-rm -rf %{buildroot}
-make install DESTDIR=%{buildroot} INSTALL="%{__install} -p"
-rm -f %{buildroot}%{_libdir}/*.a
+make install DESTDIR=%{buildroot}
 rm -f %{buildroot}%{_libdir}/*.la
-rm -rf %{buildroot}%{_docdir}/%{name}
-rm -rf %{buildroot}%{_datadir}/locale
-cp -r %{compat_ver}/src/liblzma/.libs/liblzma.so.0* %{buildroot}%{_libdir}
+
+# xzgrep colorization
+%global profiledir %{_sysconfdir}/profile.d
+mkdir -p %{buildroot}%{profiledir}
+install -p -m 644 %{SOURCE100} %{buildroot}%{profiledir}
+install -p -m 644 %{SOURCE101} %{buildroot}%{profiledir}
+magic_rpm_clean.sh
+%find_lang %name || :
 
 %check
 LD_LIBRARY_PATH=$PWD/src/liblzma/.libs make check
-
-%clean
-rm -rf %{buildroot}
 
 %post libs -p /sbin/ldconfig
 
 %postun libs -p /sbin/ldconfig
 
-%post compat-libs -p /sbin/ldconfig
-
-%postun compat-libs -p /sbin/ldconfig
-
-%files
-%defattr(-,root,root,-)
-%doc AUTHORS COPYING* ChangeLog NEWS README THANKS TODO
+%files 
 %{_bindir}/*xz*
 %{_mandir}/man1/*xz*
+%{profiledir}/*
+%{_docdir}/xz/*
 
 %files libs
-%defattr(-,root,root,-)
-%doc COPYING*
 %{_libdir}/lib*.so.5*
 
-%files compat-libs
-%defattr(-,root,root,-)
-%doc COPYING*
-%{_libdir}/lib*.so.0*
+%files static
+%{_libdir}/liblzma.a
 
 %files devel
-%defattr(-,root,root,-)
 %dir %{_includedir}/lzma
 %{_includedir}/lzma/*.h
 %{_includedir}/lzma.h
@@ -130,11 +167,13 @@ rm -rf %{buildroot}
 %{_libdir}/pkgconfig/liblzma.pc
 
 %files lzma-compat
-%defattr(-,root,root,-)
 %{_bindir}/*lz*
 %{_mandir}/man1/*lz*
 
 %changelog
+* Tue Oct 27 2015 Liu Di <liudidi@gmail.com> - 5.2.2-2
+- 更新到 5.2.2
+
 * Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 5.1.1-3alpha
 - 为 Magic 3.0 重建
 

@@ -7,17 +7,18 @@
 
 Name:           xosd
 Version:        2.2.14
-Release:        14%{?dist}
+Release:        15%{?dist}
 Summary:        On-screen display library for X
-Summary(zh_CN): X 的屏幕显示库
+Summary(zh_CN.UTF-8): X 的屏幕显示库
 
 Group:          System Environment/Libraries
-Group(zh_CN):	系统环境/库
+Group(zh_CN.UTF-8):	系统环境/库
 License:        GPLv2+
 URL:            http://www.ignavus.net/software.html
 Source:         http://ftp.debian.org/debian/pool/main/x/xosd/%{name}_%{version}.orig.tar.gz
 Patch0:         %{name}-aclocal18.patch
 Patch1:         %{name}-defaults.patch
+Patch2:		xosd-2.2.14-Do-not-install-some-manual-pages-twice.patch
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildRequires:  libX11-devel
@@ -33,14 +34,14 @@ the effect of an On Screen Display, like your TV/VCR etc.. The package
 also includes an xmms plugin, which automatically displays various
 interesting things as they change (song name, volume etc...)
 
-%description -l zh_CN
+%description -l zh_CN.UTF-8
 X 的屏幕显示库。
 
 %package        devel
 Summary:        Development files for the XOSD on-screen display library
-Summary(zh_CN):	%name 的开发包。
+Summary(zh_CN.UTF-8):	%name 的开发包。
 Group:          Development/Libraries
-Group(zh_CN):	开发/库
+Group(zh_CN.UTF-8):	开发/库
 Requires:       %{name} = %{version}-%{release}
 Requires:       libX11-devel
 Requires:       libXext-devel
@@ -51,15 +52,15 @@ The xosd-devel package contains static libraries, header files and
 documentation for developing applications that use the XOSD on-screen
 display.
 
-%description devel -l zh_CN
+%description devel -l zh_CN.UTF-8
 %name 的开发包。
 
 %if 0%{?with_xmms}
 %package     -n xmms-%{name}
 Summary:        XMMS plugin for on-screen display using the XOSD library
-Summary(zh_CN):	XOSD 库的 XMMS 插件
+Summary(zh_CN.UTF-8):	XOSD 库的 XMMS 插件
 Group:          Applications/Multimedia
-Group(zh_CN):	应用程序/多媒体
+Group(zh_CN.UTF-8):	应用程序/多媒体
 BuildRequires:  gtk+-devel >= 1.2.2
 BuildRequires:  gdk-pixbuf-devel
 BuildRequires:  xmms-devel
@@ -71,14 +72,14 @@ Obsoletes:      %{name}-xmms <= 2.2.12
 X MultiMedia System plugin to display information on-screen through
 the XOSD library, similarly to TV OSD.
 
-%description -n xmms-%{name}
+%description -n xmms-%{name} -l zh_CN.UTF-8
 XOSD 库的 XMMS 插件。
 
 %package     -n bmp-%{name}
 Summary:        BMP plugin for on-screen display using the XOSD library
-Summary(zh_CN): XOSD 库的 BMP 插件
+Summary(zh_CN.UTF-8): XOSD 库的 BMP 插件
 Group:          Applications/Multimedia
-Group(zh_CN):   应用程序/多媒体
+Group(zh_CN.UTF-8):   应用程序/多媒体
 BuildRequires:  gtk2-devel >= 1.2.2
 Requires:       %{name} = %{version}-%{release}
 Requires:       beep-media-player
@@ -87,7 +88,7 @@ Requires:       beep-media-player
 X MultiMedia System plugin to display information on-screen through
 the XOSD library, similarly to TV OSD.
 
-%description -n bmp-%{name}
+%description -n bmp-%{name} -l zh_CN.UTF-8
 XOSD 库的 BMP 插件。
 %endif
 
@@ -95,6 +96,7 @@ XOSD 库的 BMP 插件。
 %setup -q
 %patch0 -p0
 %patch1 -p1
+%patch2 -p1
 for f in ChangeLog man/xosd_{create,destroy,display,is_onscreen,set_bar_length}.3 ; do
     iconv -f iso-8859-1 -t utf-8 $f > $f.utf8 ; mv $f.utf8 $f
 done
@@ -152,6 +154,9 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Tue Oct 27 2015 Liu Di <liudidi@gmail.com> - 2.2.14-15
+- 为 Magic 3.0 重建
+
 * Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 2.2.14-14
 - 为 Magic 3.0 重建
 

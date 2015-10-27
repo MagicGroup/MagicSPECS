@@ -1,21 +1,22 @@
 %define pkgname font-utils
-%define mkfontscale 1.1.0
+%define mkfontscale 1.1.2
 
 Summary: X.Org X11 font utilities
+Summary(zh_CN.UTF-8): X.Org X11 字体工具
 Name: xorg-x11-%{pkgname}
 # IMPORTANT: If package ever gets renamed to something else, remove the Epoch line!
 Epoch: 1
 Version: 7.7
-Release: 2%{?dist}
+Release: 3%{?dist}
 License: MIT
 Group: User Interface/X
 URL: http://www.x.org
 
-Source0: http://ftp.nara.wide.ad.jp/pub/X11/x.org/individual/app/bdftopcf-1.0.3.tar.bz2
-Source1: http://ftp.nara.wide.ad.jp/pub/X11/x.org/individual/app/fonttosfnt-1.0.3.tar.bz2
+Source0: http://ftp.nara.wide.ad.jp/pub/X11/x.org/individual/app/bdftopcf-1.0.5.tar.bz2
+Source1: http://ftp.nara.wide.ad.jp/pub/X11/x.org/individual/app/fonttosfnt-1.0.4.tar.bz2
 Source2: http://ftp.nara.wide.ad.jp/pub/X11/x.org/individual/app/mkfontdir-1.0.7.tar.bz2
 Source3: http://ftp.nara.wide.ad.jp/pub/X11/x.org/individual/app/mkfontscale-%{mkfontscale}.tar.bz2
-Source4: http://ftp.nara.wide.ad.jp/pub/X11/x.org/individual/font/font-util-1.3.0.tar.bz2
+Source4: http://ftp.nara.wide.ad.jp/pub/X11/x.org/individual/font/font-util-1.3.1.tar.bz2
 # helper script used in %post for xorg-x11-fonts
 Source5: xorg-x11-fonts-update-dirs
 
@@ -132,6 +133,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Tue Oct 27 2015 Liu Di <liudidi@gmail.com> - 1:7.7-3
+- 为 Magic 3.0 重建
+
 * Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 1:7.7-2
 - 为 Magic 3.0 重建
 

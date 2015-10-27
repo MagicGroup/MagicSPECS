@@ -8,9 +8,10 @@
 %define showfont 1.0.5
 
 Summary:    X.Org X11 xfs font server
+Summary(zh_CN.UTF-8): X.Org X11 xfs 字体服务
 Name:       xorg-x11-xfs
 Version:    1.1.4
-Release:    3%{?dist}
+Release:    4%{?dist}
 Epoch:      1
 License:    MIT
 URL:        http://www.x.org
@@ -25,7 +26,7 @@ Source11:   xfs.init
 Source12:   xfs.config
 Source13:   xfs.tmpfiles
 
-BuildRequires:  font-util >= 1.1
+BuildRequires:  xorg-x11-font-utils >= 1.1
 BuildRequires:  libtool
 BuildRequires:  pkgconfig(libfs)
 BuildRequires:  pkgconfig(x11)
@@ -33,9 +34,7 @@ BuildRequires:  pkgconfig(xfont) >= 1.4.5
 BuildRequires:  pkgconfig(xorg-macros)
 BuildRequires:  pkgconfig(xtrans)
 
-%if 0%{?fedora} >= 22 || 0%{?rhel} >= 8
 BuildRequires: systemd
-%endif
 
 Provides:   xfs = %{version}
 Provides:   xfsinfo = %{xfsinfo}
@@ -46,26 +45,26 @@ Provides:   showfont = %{showfont}
 
 Requires(pre):  shadow-utils
 
-%if 0%{?fedora} >= 22 || 0%{?rhel} >= 8
 Requires(post):    systemd
 Requires(preun):   systemd
 Requires(postun):  systemd
-%else
-Requires(post):    /sbin/chkconfig
-Requires(preun):   /sbin/chkconfig
-Requires(preun):   /sbin/service
-Requires(postun):  /sbin/service
-%endif
 
 %description
 X.Org X11 xfs font server.
 
+%description -l zh_CN.UTF-8
+X.Org X11 xfs 字体服务。
+
 %package utils
 Summary:    X.Org X11 font server utilities
+Summary(zh_CN.UTF-8): X.Org X11 字体服务工具
 #Requires: %{name} = %{version}-%{release}
 
 %description utils
 X.Org X11 font server utilities.
+
+%description utils -l zh_CN.UTF-8
+X.Org X11 字体服务工具。
 
 %prep
 %setup -q -c %{name}-%{version} -a1 -a2 -a3 -a4
@@ -114,28 +113,16 @@ X.Org X11 font server utilities.
 # Install the Red Hat xfs config file and initscript
 install -D -p -m 644 %{SOURCE12} $RPM_BUILD_ROOT%{_sysconfdir}/X11/fs/config
 
-%if 0%{?fedora} >= 22 || 0%{?rhel} >= 8
-
 # Systemd unit files
 mkdir -p %{buildroot}%{_unitdir}
 install -p -m 644 -D %{SOURCE10} %{buildroot}%{_unitdir}/xfs.service
 install -p -m 644 -D %{SOURCE13} %{buildroot}%{_tmpfilesdir}/xfs.conf
-
-%else
-
-# Initscripts
-mkdir -p %{buildroot}%{_initrddir}
-install -p -m 755 -D %{SOURCE11} %{buildroot}%{_initrddir}/xfs
-
-%endif
 
 %pre
 getent group %username >/dev/null || groupadd -g %uid -r %username &>/dev/null || :
 getent passwd %username >/dev/null || useradd -u %uid -r -s /sbin/nologin \
     -d %{_sysconfdir}/X11/fs -M -c 'X Font Server' -g %username %username &>/dev/null || :
 exit 0
-
-%if 0%{?fedora} >= 22 || 0%{?rhel} >= 8
 
 %post
 %systemd_post xfs.service
@@ -145,24 +132,6 @@ exit 0
 
 %postun
 %systemd_postun_with_restart xfs.service
-
-%else
-
-%post
-/sbin/chkconfig --add xfs
-
-%preun
-if [ "$1" = 0 ]; then
-        /sbin/service xfs stop >/dev/null 2>&1 || :
-        /sbin/chkconfig --del xfs
-fi
-
-%postun
-if [ "$1" -ge "1" ]; then
-        /sbin/service xfs condrestart >/dev/null 2>&1 || :
-fi
-
-%endif
 
 %files
 %doc xfs-%{version}/COPYING
@@ -175,12 +144,8 @@ fi
 # and if so, submit patch upstream to fix.
 %config(noreplace) %verify(not md5 size mtime) %{_sysconfdir}/X11/fs/config
 %{_mandir}/man1/xfs.1*
-%if 0%{?fedora} >= 22 || 0%{?rhel} >= 8
 %{_unitdir}/xfs.service
 %{_tmpfilesdir}/xfs.conf
-%else
-%{_initrddir}/xfs
-%endif
 
 %files utils
 %doc xfs-%{version}/COPYING
@@ -194,6 +159,9 @@ fi
 %{_mandir}/man1/xfsinfo.1*
 
 %changelog
+* Tue Oct 27 2015 Liu Di <liudidi@gmail.com> - 1:1.1.4-4
+- 为 Magic 3.0 重建
+
 * Fri Jun 19 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1:1.1.4-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

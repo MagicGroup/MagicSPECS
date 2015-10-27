@@ -6,12 +6,14 @@
 %global gitversion fe60f0ed2
 
 Summary:   Xorg X11 tdfx video driver
+Summary(zh_CN.UTF-8): Xorg X11 tdfx 显卡驱动
 Name:      xorg-x11-drv-tdfx
-Version:   1.4.5
-Release:   13%{?gitdate:.%{gitdate}git%{gitversion}}%{dist}
+Version:	1.4.6
+Release:	2%{?dist}
 URL:       http://www.x.org
 License: MIT
 Group:     User Interface/X Hardware Support
+Group(zh_CN.UTF-8): 用户界面/X 硬件支持
 
 %if 0%{?gitdate}
 Source0:    %{tarball}-%{gitdate}.tar.bz2
@@ -20,8 +22,6 @@ Source2:    commitid
 %else
 Source0:   http://ftp.nara.wide.ad.jp/pub/X11/x.org/individual/driver/%{tarball}-%{version}.tar.bz2
 %endif
-
-Patch0: 0001-Remove-mibstore.h.patch
 
 ExcludeArch: s390 s390x %{?rhel:ppc ppc64}
 
@@ -38,12 +38,14 @@ Requires: Xorg %(xserver-sdk-abi-requires videodrv)
 %description 
 X.Org X11 tdfx video driver.
 
+%description -l zh_CN.UTF-8
+Xorg X11 tdfx 显卡驱动。
+
 %prep
 %setup -q -n %{tarball}-%{?gitdate:%{gitdate}}%{!?gitdate:%{version}}
-%patch0 -p1
 
 %build
-autoreconf -v --install || exit 1
+autoreconf -fisv
 %configure --disable-static --disable-dri
 make
 
@@ -65,6 +67,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man4/tdfx.4*
 
 %changelog
+* Mon Oct 26 2015 Liu Di <liudidi@gmail.com> - 1.4.6-2
+- 更新到 1.4.6
+
 * Mon Jan 13 2014 Adam Jackson <ajax@redhat.com> - 1.4.5-13
 - 1.15 ABI rebuild
 

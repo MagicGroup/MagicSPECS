@@ -1,11 +1,13 @@
 Name:           xsd
 Version:        4.0.0
-Release:        9%{?dist}
+Release:        10%{?dist}
 Summary:        W3C XML schema to C++ data binding compiler
+Summary(zh_CN.UTF-8): W3C XML schema 到 C++ 数据绑定的编译器
 # Exceptions permit otherwise GPLv2 incompatible combination with ASL 2.0
 License:        GPLv2 with exceptions and ASL 2.0  
 URL:            http://www.codesynthesis.com/products/xsd/
-Source0:        http://www.codesynthesis.com/download/xsd/4.0/xsd-%{version}+dep.tar.bz2
+%define majorver %(echo %{version} | awk -F. '{print $1"."$2}')
+Source0:        http://www.codesynthesis.com/download/xsd/%{majorver}/xsd-%{version}+dep.tar.bz2
 
 Obsoletes:      xsd-devel <= 0:4.0.0-9
 
@@ -14,15 +16,7 @@ Obsoletes:      xsd-devel <= 0:4.0.0-9
 Patch0:         xsd-3.3.0-xsdcxx-rename.patch
 
 BuildRequires: m4, xerces-c-devel, libcutl-devel
-%if 0%{?rhel}
-BuildRequires: boost148-devel
-%else
 BuildRequires: boost-devel
-%endif
-
-%if 0%{?rhel}
-Requires: boost148
-%endif
 
 %description
 CodeSynthesis XSD is an open-source, cross-platform W3C XML Schema to
@@ -33,12 +27,19 @@ You can then access the data stored in XML using types and functions
 that semantically correspond to your application domain rather than
 dealing with intricacies of reading and writing XML.
 
+%description -l zh_CN.UTF-8
+W3C XML schema 到 C++ 数据绑定的编译器。
+
 %package   doc
 BuildArch: noarch
 Summary:   API documentation files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发文档
 
 %description    doc
 This package contains API documentation for %{name}.
+%description doc -l zh_CN.UTF-8
+%{name} 的开发文档。
+
 
 %prep
 %setup -q -n xsd-%{version}+dep
@@ -48,9 +49,6 @@ This package contains API documentation for %{name}.
 rm -rf libcutl
 
 %build
-%if 0%{?rhel}
-%{!?__global_ldflags: %global __global_ldflags -Wl,-z,relro}
-%endif
 make verbose=1 CXX=g++ CC=gcc CXXFLAGS="$RPM_OPT_FLAGS" LDFLAGS="%{__global_ldflags}" BOOST_LINK_SYSTEM=y EXTERNAL_LIBCUTL=y
 
 %install
@@ -95,10 +93,8 @@ find apidocdir -name "*.doxygen" \
 
 ##Test failed on EPEL6 due to "bad" xerces-c
 ##http://codesynthesis.com/pipermail/xsd-users/2015-October/004696.html
-%if 0%{?fedora} || 0%{?rhel} >= 7 
 %check
 make -j 1 test EXTERNAL_LIBCUTL=y BOOST_LINK_SYSTEM=y
-%endif
 
 %files
 %{!?_licensedir:%global license %doc}
@@ -115,6 +111,9 @@ make -j 1 test EXTERNAL_LIBCUTL=y BOOST_LINK_SYSTEM=y
 %doc apidocdir/*
 
 %changelog
+* Tue Oct 27 2015 Liu Di <liudidi@gmail.com> - 4.0.0-10
+- 为 Magic 3.0 重建
+
 * Mon Oct 12 2015 Antonio Trande <sagitterATfedoraproject.org> - 4.0.0-9
 - Header files included again in main package
 

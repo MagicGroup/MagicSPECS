@@ -1,14 +1,14 @@
 # The base of the version (just major and minor without point)
-%global base_version 1.9
 
 Name:           libcutl
-Version:        %{base_version}.0
-Release:        6%{?dist}
+Version:        1.9.0
+Release:        7%{?dist}
 Summary:        C++ utility library from Code Synthesis
 
 Group:          System Environment/Libraries
 License:        MIT
 URL:            http://www.codesynthesis.com/projects/libcutl/
+%define base_version %(echo %{version} | awk -F. '{print $1"."$2}')
 Source0:        http://www.codesynthesis.com/download/libcutl/%{base_version}/%{name}-%{version}.tar.bz2
 Patch0:         libcutl_no_boost_license.patch
 
@@ -17,13 +17,8 @@ Patch0:         libcutl_no_boost_license.patch
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 # If building on Fedora or RHEL 6/7
-%if 0%{?rhel}%{?fedora} >= 6
 # Use the system Boost instead of the internal one
 BuildRequires: boost-devel
-%else
-# Otherwise, on RHEL 5 use the EPEL Boost 1.41 instead of the internal one
-BuildRequires: boost141-devel
-%endif
 # Uses pkgconfig
 BuildRequires: pkgconfig
 BuildRequires: expat-devel
@@ -95,6 +90,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Tue Oct 27 2015 Liu Di <liudidi@gmail.com> - 1.9.0-7
+- 为 Magic 3.0 重建
+
 * Thu Aug 27 2015 Jonathan Wakely <jwakely@redhat.com> - 1.9.0-6
 - Rebuilt for Boost 1.59
 

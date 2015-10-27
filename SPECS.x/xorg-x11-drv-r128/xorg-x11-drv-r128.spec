@@ -6,12 +6,14 @@
 #global gitversion b4892e340
 
 Summary:   Xorg X11 r128 video driver
+Summary(zh_CN.UTF-8): Xorg X11 r128 显卡驱动
 Name:      xorg-x11-drv-r128
-Version:   6.9.1
-Release:   11%{?gitdate:.%{gitdate}git%{gitversion}}%{dist}
+Version:	6.10.0
+Release:	2%{?dist}
 URL:       http://www.x.org
 License:   MIT
 Group:     User Interface/X Hardware Support
+Group(zh_CN.UTF-8): 用户界面/X 硬件支持
 
 %if 0%{?gitdate}
 Source0:    %{tarball}-%{gitdate}.tar.bz2
@@ -20,8 +22,6 @@ Source2:    commitid
 %else
 Source0:   http://www.x.org/pub/individual/driver/%{tarball}-%{version}.tar.bz2
 %endif
-
-Patch0:	    r128-6.8.1-panel-hack.patch
 
 ExcludeArch: s390 s390x %{?rhel:ppc ppc64}
 
@@ -38,12 +38,14 @@ Requires: Xorg %(xserver-sdk-abi-requires videodrv)
 %description 
 X.Org X11 r128 video driver.
 
+%description -l zh_CN.UTF-8
+Xorg X11 r128 显卡驱动。
+
 %prep
 %setup -q -n %{tarball}-%{?gitdate:%{gitdate}}%{!?gitdate:%{version}}
-%patch0 -p1 -b .panel
 
 %build
-autoreconf -v --install || exit 1
+autoreconf -fisv
 %configure --disable-static --disable-dri
 make %{?_smp_mflags}
 
@@ -64,6 +66,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man4/r128.4*
 
 %changelog
+* Mon Oct 26 2015 Liu Di <liudidi@gmail.com> - 6.10.0-2
+- 更新到 6.10.0
+
 * Mon Jan 13 2014 Adam Jackson <ajax@redhat.com> - 6.9.1-11
 - 1.15 ABI rebuild
 

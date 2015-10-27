@@ -1,21 +1,23 @@
 %define pkgname utils
 
 Summary: X.Org X11 X client utilities
+Summary(zh_CN.UTF-8): X.Org X11 X 客户端工具
 Name: xorg-x11-%{pkgname}
 Version: 7.5
-Release: 8%{?dist}
+Release: 9%{?dist}
 License: MIT
 Group: User Interface/X
+Group(zh_CN.UTF-8): 用户界面/X
 URL: http://www.x.org
 
-Source0:  http://ftp.nara.wide.ad.jp/pub/X11/x.org/individual/app/xdpyinfo-1.3.0.tar.bz2
-Source2:  http://ftp.nara.wide.ad.jp/pub/X11/x.org/individual/app/xev-1.1.0.tar.bz2
-Source5:  http://ftp.nara.wide.ad.jp/pub/X11/x.org/individual/app/xlsatoms-1.1.0.tar.bz2
-Source6:  http://ftp.nara.wide.ad.jp/pub/X11/x.org/individual/app/xlsclients-1.1.2.tar.bz2
-Source7:  http://ftp.nara.wide.ad.jp/pub/X11/x.org/individual/app/xlsfonts-1.0.3.tar.bz2
-Source8:  http://ftp.nara.wide.ad.jp/pub/X11/x.org/individual/app/xprop-1.2.1.tar.bz2
-Source9:  http://ftp.nara.wide.ad.jp/pub/X11/x.org/individual/app/xvinfo-1.1.1.tar.bz2
-Source10: http://ftp.nara.wide.ad.jp/pub/X11/x.org/individual/app/xwininfo-1.1.1.tar.bz2
+Source0:  http://ftp.nara.wide.ad.jp/pub/X11/x.org/individual/app/xdpyinfo-1.3.2.tar.bz2
+Source2:  http://ftp.nara.wide.ad.jp/pub/X11/x.org/individual/app/xev-1.2.2.tar.bz2
+Source5:  http://ftp.nara.wide.ad.jp/pub/X11/x.org/individual/app/xlsatoms-1.1.2.tar.bz2
+Source6:  http://ftp.nara.wide.ad.jp/pub/X11/x.org/individual/app/xlsclients-1.1.3.tar.bz2
+Source7:  http://ftp.nara.wide.ad.jp/pub/X11/x.org/individual/app/xlsfonts-1.0.5.tar.bz2
+Source8:  http://ftp.nara.wide.ad.jp/pub/X11/x.org/individual/app/xprop-1.2.2.tar.bz2
+Source9:  http://ftp.nara.wide.ad.jp/pub/X11/x.org/individual/app/xvinfo-1.1.3.tar.bz2
+Source10: http://ftp.nara.wide.ad.jp/pub/X11/x.org/individual/app/xwininfo-1.1.3.tar.bz2
 
 Source100: edid-decode-20100205.tar.xz
 Source101: make-edid-decode-snapshot.sh
@@ -31,6 +33,9 @@ Provides: edid-decode xdpyinfo xev xlsatoms xlsclients xlsfonts xprop xvinfo xwi
 %description
 A collection of client utilities which can be used to query the X server
 for various information.
+
+%description -l zh_CN.UTF-8
+X.Org X11 X 客户端工具。
 
 %prep
 %setup -q -c %{name}-%{version} -a2 -a5 -a6 -a7 -a8 -a9 -a10 -a100
@@ -85,6 +90,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man1/xwininfo.1*
 
 %changelog
+* Tue Oct 27 2015 Liu Di <liudidi@gmail.com> - 7.5-9
+- 为 Magic 3.0 重建
+
 * Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 7.5-8
 - 为 Magic 3.0 重建
 

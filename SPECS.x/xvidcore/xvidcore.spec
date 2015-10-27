@@ -1,6 +1,9 @@
+
+%define debug_package %{nil}
+
 Summary: Free reimplementation of the OpenDivX video codec
 Name: xvidcore
-Version: 1.3.2
+Version: 1.3.3
 Release: 2%{?dist}
 License: XviD
 Group: System Environment/Libraries
@@ -73,7 +76,7 @@ make install DESTDIR=%{buildroot}
 cd %{buildroot}%{_libdir}
 for x in `ls *.so.* | grep '\.so\.[^.]*$'`; do
   chmod 0755 $x
-  ln -s $x `echo $x | sed -e's,\.so.*,.so,'`
+#  ln -s $x `echo $x | sed -e's,\.so.*,.so,'`
 done
 
 %clean
@@ -98,6 +101,12 @@ rm -rf %{buildroot}
 %{_includedir}/xvid.h
 
 %changelog
+* Tue Oct 27 2015 Liu Di <liudidi@gmail.com> - 1.3.3-2
+- 为 Magic 3.0 重建
+
+* Tue Oct 27 2015 Liu Di <liudidi@gmail.com> - 1.3.3-1
+- 为 Magic 3.0 重建
+
 * Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 1.3.2-2
 - 为 Magic 3.0 重建
 

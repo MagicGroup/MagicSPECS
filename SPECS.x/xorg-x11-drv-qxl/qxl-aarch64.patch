@@ -1,0 +1,63 @@
+From 413bfd50e675a9904a2578b9e8dddf027f761abe Mon Sep 17 00:00:00 2001
+From: Adam Jackson <ajax@redhat.com>
+Date: Thu, 30 Apr 2015 14:32:16 +0200
+Subject: [PATCH] Use pci_io_write8 instead of outb
+
+This ensures better portability as some arches (eg aarch64) don't have
+outb.
+On linux pci_io_* try to open the sysfs map file corresponding to the
+I/O port range, which the kernel translates arch-appropriately.  If
+there is no such file then it'll try to use port instructions if that's
+a thing the architecture has.  So you only need one path, pciaccess
+exists to get the portability right for you.
+
+https://bugzilla.redhat.com/show_bug.cgi?id=1201877
+---
+ src/qxl.h        | 3 ++-
+ src/qxl_driver.c | 5 +++++
+ 2 files changed, 7 insertions(+), 1 deletion(-)
+
+diff --git a/src/qxl.h b/src/qxl.h
+index 95d6682..e05e982 100644
+--- a/src/qxl.h
++++ b/src/qxl.h
+@@ -276,6 +276,7 @@ struct _qxl_screen_t
+ 
+ #ifdef XSERVER_LIBPCIACCESS
+     struct pci_device *		pci;
++    struct pci_io_handle *	io;
+ #else
+     pciVideoPtr			pci;
+     PCITAG			pci_tag;
+@@ -634,7 +635,7 @@ void ioport_write(qxl_screen_t *qxl, uint32_t io_port, uint32_t val);
+ #else
+ static inline void ioport_write(qxl_screen_t *qxl, int port, int val)
+ {
+-    outb(qxl->io_base + port, val);
++    pci_io_write8(qxl->io, port, val);
+ }
+ #endif
+ 
+diff --git a/src/qxl_driver.c b/src/qxl_driver.c
+index 2cacb61..f00f144 100644
+--- a/src/qxl_driver.c
++++ b/src/qxl_driver.c
+@@ -220,6 +220,8 @@ unmap_memory_helper (qxl_screen_t *qxl)
+ 	pci_device_unmap_range (qxl->pci, qxl->vram, qxl->pci->regions[1].size);
+     if (qxl->rom)
+ 	pci_device_unmap_range (qxl->pci, qxl->rom, qxl->pci->regions[2].size);
++    if (qxl->io)
++	pci_device_close_io (qxl->pci, qxl->io);
+ #else
+     if (qxl->ram)
+ 	xf86UnMapVidMem (scrnIndex, qxl->ram, (1 << qxl->pci->size[0]));
+@@ -252,6 +254,9 @@ map_memory_helper (qxl_screen_t *qxl)
+                           qxl->pci->regions[2].size, 0,
+                           (void **)&qxl->rom);
+     
++    qxl->io = pci_device_open_io(qxl->pci,
++                                qxl->pci->regions[3].base_addr,
++                                qxl->pci->regions[3].size);
+     qxl->io_base = qxl->pci->regions[3].base_addr;
+ #else
+     qxl->ram = xf86MapPciMem (scrnIndex, VIDMEM_FRAMEBUFFER,

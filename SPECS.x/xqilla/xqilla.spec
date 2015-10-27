@@ -1,7 +1,8 @@
 Name:           xqilla
 Version:        2.3.0
-Release:        7%{?dist}
+Release:        8%{?dist}
 Summary:        XQuery and XPath 2.0 library, built on top of Xerces-C
+Summary(zh_CN.UTF-8): XQuery 和 XPath 2.0 库
 
 License:        ASL 2.0
 URL:            http://xqilla.sourceforge.net/HomePage
@@ -20,9 +21,14 @@ on Xerces-C. It implements the DOM 3 XPath API, as well as having it's own
 more powerful API. It conforms to the W3C proposed recommendation of XQuery
 and XPath 2.0.
 
+%description -l zh_CN.UTF-8
+XQuery 和 XPath 2.0 库。
+
 %package        devel
 Summary:        XQilla is an XQuery and XPath 2.0 library, built on top of Xerces-C
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       %{name}%{?_isa} = %{version}-%{release}
 Requires:       xerces-c-devel%{?_isa} >= 3.0.1
 Requires:       xqc
@@ -32,14 +38,21 @@ XQilla is an XQuery and XPath 2.0 implementation written in C++ and based
 on Xerces-C. It implements the DOM 3 XPath API, as well as having it's own
 more powerful API. It conforms to the W3C proposed recommendation of XQuery
 and XPath 2.0.
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %package        doc
 Summary:        XQilla documentation
+Summary(zh_CN.UTF-8): %{name} 的文档
 Group:          Documentation
+Group(zh_CN.UTF-8): 文档
 BuildArch:      noarch
 
 %description    doc
 simple-api and dom3-api documentation for XQilla.
+
+%description doc -l zh_CN.UTF-8
+%{name} 的文档。
 
 %prep
 %setup -qn XQilla-%{version}
@@ -84,6 +97,9 @@ install -D -p -m0664 %{SOURCE1} %{buildroot}/%{_mandir}/man1/%{name}.1
 
 
 %changelog
+* Tue Oct 27 2015 Liu Di <liudidi@gmail.com> - 2.3.0-8
+- 为 Magic 3.0 重建
+
 * Fri Sep 25 2015 Liu Di <liudidi@gmail.com> - 2.3.0-7
 - 为 Magic 3.0 重建
 

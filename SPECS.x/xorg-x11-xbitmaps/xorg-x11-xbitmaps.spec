@@ -3,11 +3,13 @@
 %define debug_package %{nil}
 
 Summary: X.Org X11 application bitmaps
+Summary(zh_CN.UTF-8): X.Org X11 应用程序位图
 Name: xorg-x11-%{pkgname}
 Version: 1.1.1
-Release: 4%{?dist}
+Release: 5%{?dist}
 License: MIT
 Group: User Interface/X
+Group(zh_CN.UTF-8): 用户界面/X
 URL: http://www.x.org
 BuildArch: noarch
 
@@ -17,6 +19,9 @@ Requires: pkgconfig
 
 %description
 X.Org X11 application bitmaps
+
+%description -l zh_CN.UTF-8
+X.Org X11 应用程序位图。
 
 %prep
 %setup -q -n xbitmaps-%{version}
@@ -35,6 +40,9 @@ make install DESTDIR=$RPM_BUILD_ROOT INSTALL="install -p"
 %{_datadir}/pkgconfig/xbitmaps.pc
 
 %changelog
+* Tue Oct 27 2015 Liu Di <liudidi@gmail.com> - 1.1.1-5
+- 为 Magic 3.0 重建
+
 * Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 1.1.1-4
 - 为 Magic 3.0 重建
 

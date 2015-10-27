@@ -1,19 +1,26 @@
+# Component versions
+%define setxkbmap 1.3.1
+%define xkbcomp 1.3.0
+%define xkbevd 1.1.4
+%define xkbprint 1.0.4
+%define xkbutils 1.0.4
+
 Summary: X.Org X11 xkb utilities
+Summary(zh_CN.UTF-8): X.Org X11 xkb 工具
 Name: xorg-x11-xkb-utils
 Version: 7.5
-Release: 7%{?dist}
+Release: 9%{?dist}
 License: MIT
 Group: User Interface/X
+Group(zh_CN.UTF-8): 用户界面/X
 URL: http://www.x.org
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
-# use the macro so the doc dir is changed automagically
-%define xkbutils_version 1.0.3
-Source0: http://ftp.nara.wide.ad.jp/pub/X11/x.org/individual/app/xkbutils-%{xkbutils_version}.tar.bz2
-Source1: http://ftp.nara.wide.ad.jp/pub/X11/x.org/individual/app/xkbcomp-1.2.3.tar.bz2
-Source2: http://ftp.nara.wide.ad.jp/pub/X11/x.org/individual/app/xkbevd-1.1.1.tar.bz2
-Source3: http://ftp.nara.wide.ad.jp/pub/X11/x.org/individual/app/xkbprint-1.0.3.tar.bz2
-Source4: http://ftp.nara.wide.ad.jp/pub/X11/x.org/individual/app/setxkbmap-1.2.0.tar.bz2
+Source0:    http://www.x.org/pub/individual/app/setxkbmap-%{setxkbmap}.tar.bz2
+Source1:    http://www.x.org/pub/individual/app/xkbcomp-%{xkbcomp}.tar.bz2
+Source2:    http://www.x.org/pub/individual/app/xkbevd-%{xkbevd}.tar.bz2
+Source3:    http://www.x.org/pub/individual/app/xkbprint-%{xkbprint}.tar.bz2
+Source4:    http://www.x.org/pub/individual/app/xkbutils-%{xkbutils}.tar.bz2
 
 BuildRequires: pkgconfig
 BuildRequires: byacc
@@ -37,15 +44,32 @@ BuildRequires: libXpm-devel
 Provides: setxkbmap xkbcomp
 Obsoletes: XFree86 xorg-x11
 
-%package -n xorg-x11-xkb-extras
-Summary: X.Org X11 xkb gadgets
-Provides: xkbevd xkbprint xkbutils
-
 %description
-X.Org X11 xkb core utilities
+X.Org X11 xkb core utilities.
+
+%description -l zh_CN.UTF-8
+X.Org X11 xkb 核心工具。
+
+%package devel
+Summary:    X.Org X11 xkb utilities development package
+Summary(zh_CN.UTF-8): %{name} 的开发包
+Requires:   pkgconfig
+
+%description devel
+X.Org X11 xkb utilities development files.
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
+%package -n xorg-x11-xkb-extras
+Summary:    X.Org X11 xkb gadgets
+Summary(zh_CN.UTF-8): %{name} 的额外包
+Provides:   xkbevd = %{xkbevd}
+Provides:   xkbprint = %{xkbprint}
+Provides:   xkbutils = %{xkbutils}
 
 %description -n xorg-x11-xkb-extras
-X.Org X11 xkb gadgets
+%{name} 的额外包。
 
 %prep
 %setup -q -c %{name}-%{version} -a1 -a2 -a3 -a4
@@ -78,10 +102,13 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man1/setxkbmap.1*
 %{_mandir}/man1/xkbcomp.1*
 
+%files devel
+%{_libdir}/pkgconfig/xkbcomp.pc
+
 %files -n xorg-x11-xkb-extras
 %defattr(-,root,root,-)
-%doc xkbutils-%{xkbutils_version}/COPYING
-%doc xkbutils-%{xkbutils_version}/README
+%doc xkbutils-%{xkbutils}/COPYING
+%doc xkbutils-%{xkbutils}/README
 %{_bindir}/xkbbell
 %{_bindir}/xkbevd
 %{_bindir}/xkbprint
@@ -94,6 +121,12 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man1/xkbwatch.*
 
 %changelog
+* Tue Oct 27 2015 Liu Di <liudidi@gmail.com> - 7.5-9
+- 为 Magic 3.0 重建
+
+* Tue Oct 27 2015 Liu Di <liudidi@gmail.com> - 7.5-8
+- 为 Magic 3.0 重建
+
 * Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 7.5-7
 - 为 Magic 3.0 重建
 

@@ -5,10 +5,7 @@
 
 
 %define modular_conf  1
-%define split_getimage   0
-%if 0%{?fedora} >= 14
 %define split_getimage   1
-%endif
 
 %define fedora_rel    1
 
@@ -19,11 +16,7 @@
 %global use_gcc_trap_on_sanitize 0
 %undefine extrarel
 
-%if 0%{?fedora}
-%define default_text  %{_sysconfdir}/fedora-release
-%else
 %define default_text  %{_sysconfdir}/system-release
-%endif
 %define default_URL   http://planet.fedoraproject.org/rss20.xml
 
 %define pam_ver       0.80-7
@@ -37,7 +30,7 @@ Buildroot:       %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 Summary:         X screen saver and locker
 Name:            %{name}
 Version:         %{mainversion}
-Release:         %{fedora_rel}%{?dist}%{?extrarel}
+Release:         %{fedora_rel}%{?dist}%{?extrarel}.1
 Epoch:           1
 License:         MIT
 Group:           Amusements/Graphics
@@ -46,10 +39,8 @@ Source0:         http://www.jwz.org/xscreensaver/xscreensaver-%{mainversion}%{?b
 %if %{modular_conf}
 Source10:        update-xscreensaver-hacks
 %endif
-%if 0%{?fedora} >= 12
 Source11:        xscreensaver-autostart
 Source12:        xscreensaver-autostart.desktop
-%endif
 ##
 ## Patches
 ##
@@ -139,14 +130,8 @@ BuildRequires:   pkgconfig(gdk-pixbuf-2.0)
 BuildRequires:   pkgconfig(gdk-pixbuf-xlib-2.0)
 BuildRequires:   libjpeg-devel
 BuildRequires:   libglade2-devel
-%if 0%{?fedora}
-BuildRequires:   fedora-release
-%endif
+BuildRequires:   magic-release
 # For --with-login-manager option
-%if 0%{?fedora} >= 14
-# Use pseudo symlink, not writing BR: gdm
-#BuildRequires:   gdm
-%endif
 Requires:        %{_sysconfdir}/pam.d/system-auth
 Requires:        pam > %{pam_ver}
 # For xdg-open
@@ -163,16 +148,12 @@ Obsoletes:       xscreeensaver-tests < %{epoch}:%{version}-%{release}
 %package extras-base
 Summary:         A base package for screensavers
 Group:           Amusements/Graphics
-%if 0%{?fedora} < 19
-Requires:        %{name}-base = %{epoch}:%{version}-%{release}
-%endif
 # For appres, etc
 Requires:        xorg-x11-resutils
 
 %package extras
 Summary:         An enhanced set of screensavers
 Group:           Amusements/Graphics
-BuildRequires:   desktop-backgrounds-basic
 Requires:        %{name}-base = %{epoch}:%{version}-%{release}
 %if %{split_getimage}
 Requires:        %{name}-extras-base = %{epoch}:%{version}-%{release}
@@ -390,9 +371,7 @@ change_option driver/XScreenSaver.ad.in \
    splash=False \
    ignoreUninstalledPrograms=True \
    textProgram=fortune\ -s \
-%if 0%{?fedora} >= 12
    textURL=%{default_URL}
-%endif
 %__git commit -m "%PATCH_desc" -a
 
 %global PATCH_desc \
@@ -453,10 +432,8 @@ fi
 
 %global PATCH_desc \
 # Fix for desktop-file-utils 0.14+
-%if 0%{?fedora} >= 9
 sed -i.icon -e 's|xscreensaver\.xpm|xscreensaver|' \
    driver/screensaver-properties.desktop.in
-%endif
 %__git commit -m "%PATCH_desc" -a || echo "Nothing changed"
 
 %global PATCH_desc \
@@ -534,22 +511,13 @@ CONFIG_OPTS="$CONFIG_OPTS --disable-root-passwd"
 CONFIG_OPTS="$CONFIG_OPTS --with-browser=xdg-open"
 # From xscreensaver 5.12, login-manager option is on by default
 # For now, let's enable it on F-14 and above
-%if 0%{?fedora} >= 14
 pushd TMPBINDIR
 ln -sf /bin/true gdmflexiserver
 popd
-%else
-CONFIG_OPTS="$CONFIG_OPTS --without-login-manager"
-%endif
 # Enable extrusion on F-13 and above
-%if 0%{?fedora} <= 12
-CONFIG_OPTS="$CONFIG_OPTS --without-gle"
-%endif
 # Enable account type pam validation on F-18+,
 # debian bug 656766
-%if 0%{?fedora} >= 18
 CONFIG_OPTS="$CONFIG_OPTS --enable-pam-check-account-type"
-%endif
 # xscreensaver 5.30
 CONFIG_OPTS="$CONFIG_OPTS --with-record-animation"
 
@@ -655,9 +623,6 @@ make install_prefix=$RPM_BUILD_ROOT INSTALL="install -c -p" install
 # Kill OnlyShowIn=GNOME; on F-11+ (bug 483495)
 desktop-file-install --vendor "" --delete-original    \
    --dir $RPM_BUILD_ROOT%{_datadir}/applications         \
-%if 0%{?fedora} < 11
-   --add-only-show-in GNOME                              \
-%endif
    --add-category    DesktopSettings                     \
 %if 0
    --add-category X-Red-Hat-Base                         \
@@ -810,7 +775,6 @@ popd
 
 # Install desktop application autostart stuff
 # Add OnlyShowIn=GNOME (bug 517391)
-%if 0%{?fedora} >= 12
 mkdir -p ${RPM_BUILD_ROOT}%{_sysconfdir}/xdg/autostart
 install -cpm 0755 %{SOURCE11} ${RPM_BUILD_ROOT}%{_libexecdir}/
 desktop-file-install \
@@ -822,7 +786,6 @@ chmod 0644 ${RPM_BUILD_ROOT}%{_sysconfdir}/xdg/autostart/xscreensaver*.desktop
 
 echo "%{_libexecdir}/xscreensaver-autostart" >> $dd/base.files
 echo '%{_sysconfdir}/xdg/autostart/xscreensaver*.desktop' >> $dd/base.files
-%endif
 
 # Create desktop entry for gnome-screensaver
 # bug 204944, 208560
@@ -926,7 +889,6 @@ rm -rf ${RPM_BUILD_ROOT}
 %{_sbindir}/update-xscreensaver-hacks
 %endif
 
-%if 0%{?fedora} >= 18
 # In the case that pam setting is edited locally by sysadmin:
 if ! grep -q '^account' %{_sysconfdir}/pam.d/xscreensaver
 then
@@ -937,7 +899,6 @@ then
     echo "# Account validation" >> $PAMFILE
     echo "account include system-auth" >> $PAMFILE
 fi
-%endif
 
 exit 0
 
@@ -985,6 +946,9 @@ exit 0
 %endif
 
 %changelog
+* Tue Oct 27 2015 Liu Di <liudidi@gmail.com> - 1:5.34-1.1
+- 为 Magic 3.0 重建
+
 * Sun Oct 25 2015 Mamoru TASAKA <mtasaka@fedoraproject.org> - 1:5.34-1
 - Update to 5.34
 

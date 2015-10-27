@@ -3,18 +3,17 @@
 %define driverdir	%{moduledir}/drivers
 
 Summary:   Xorg X11 vesa video driver
+Summary(zh_CN.UTF-8): Xorg X11 vesa 显卡驱动
 Name:      xorg-x11-drv-vesa
-Version:   2.3.2
-Release:   15%{?dist}
+Version:	2.3.4
+Release:	2%{?dist}
 URL:       http://www.x.org
 Source0:   http://xorg.freedesktop.org/releases/individual/driver/%{tarball}-%{version}.tar.bz2
 License: MIT
 Group:     User Interface/X Hardware Support
+Group(zh_CN.UTF-8): 用户界面/X 硬件支持
 
 Patch0:	    vesa-2.3.0-24bpp-sucks.patch
-Patch1:	    vesa-2.3.0-no-virt-shadowfb.patch
-Patch2:	    0001-Fix-check-function-in-VESASaveRestore.patch
-Patch3:	    0002-Remove-mibstore.h.patch
 ExclusiveArch: %{ix86} x86_64 mips64el
 
 BuildRequires: xorg-x11-server-devel >= 1.10.99.902
@@ -26,12 +25,12 @@ Requires: Xorg %([ -e /usr/bin/xserver-sdk-abi-requires ] && xserver-sdk-abi-req
 %description 
 X.Org X11 vesa video driver.
 
+%description -l zh_CN.UTF-8
+Xorg X11 vesa 显卡驱动。
+
 %prep
 %setup -q -n %{tarball}-%{version}
 %patch0 -p1 -b .24
-%patch1 -p1 -b .virt
-%patch2 -p1
-%patch3 -p1
 
 %build
 autoreconf -v --install || exit 1
@@ -56,6 +55,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man4/vesa.4*
 
 %changelog
+* Mon Oct 26 2015 Liu Di <liudidi@gmail.com> - 2.3.4-2
+- 更新到 2.3.4
+
 * Mon Jan 13 2014 Adam Jackson <ajax@redhat.com> - 2.3.2-15
 - 1.15 ABI rebuild
 

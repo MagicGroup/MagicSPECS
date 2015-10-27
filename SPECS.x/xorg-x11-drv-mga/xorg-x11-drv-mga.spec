@@ -6,12 +6,14 @@
 #global gitversion 9223c44a7
 
 Summary:   Xorg X11 mga video driver
+Summary(zh_CN.UTF-8): Xorg X11 mga 显卡驱动
 Name:      xorg-x11-drv-mga
-Version:   1.6.2
-Release:   13%{?gitdate:.%{gitdate}git%{gitversion}}%{dist}
+Version:	1.6.4
+Release:	2%{?dist}
 URL:       http://www.x.org
 License: MIT
 Group:     User Interface/X Hardware Support
+Group(zh_CN.UTF-8): 用户界面/X 硬件支持
 
 %if 0%{?gitdate}
 Source0:    %{tarball}-%{gitdate}.tar.bz2
@@ -23,7 +25,6 @@ Source0:   http://x.org/pub/individual/driver/%{tarball}-%{version}.tar.bz2
 
 Patch0: mga-1.4.5-no-hal-advertising.patch
 Patch2: mga-1.4.12-bigendian.patch
-Patch3: mga-1.6.2-fix-kms-matching.patch
 Patch4: mga-1.6.2-shadowfb.patch
 
 ExcludeArch: s390 s390x %{?rhel:ppc ppc64}
@@ -39,15 +40,17 @@ Requires: Xorg %(xserver-sdk-abi-requires videodrv)
 %description 
 X.Org X11 mga video driver.
 
+%description -l zh_CN.UTF-8
+Xorg X11 mga 显卡驱动。
+
 %prep
 %setup -q -n %{tarball}-%{?gitdate:%{gitdate}}%{!?gitdate:%{version}}
 %patch0 -p1 -b .hal
 %patch2 -p1 -b .bigendian
-%patch3 -p1 -b .kms
 %patch4 -p1 -b .shadowfb
 
 %build
-autoreconf -v --install || exit 1
+autoreconf -fisv
 %configure --disable-static --disable-dri
 make %{?_smp_mflags}
 
@@ -67,6 +70,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man4/mga.4*
 
 %changelog
+* Mon Oct 26 2015 Liu Di <liudidi@gmail.com> - 1.6.4-2
+- 更新到 1.6.4
+
 * Mon Jan 13 2014 Adam Jackson <ajax@redhat.com> - 1.6.2-13
 - 1.15 ABI rebuild
 

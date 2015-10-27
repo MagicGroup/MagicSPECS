@@ -5,7 +5,7 @@ Summary: X.Org X11 Autotools macros
 Summary(zh_CN.UTF-8): X.Org X11 Autotools 宏
 Name: xorg-x11-util-macros
 Version: 1.19.0
-Release: 1%{?dist}
+Release: 2%{?dist}
 License: MIT
 Group: Development/System
 Group(zh_CN.UTF-8): 开发/系统
@@ -40,6 +40,9 @@ magic_rpm_clean.sh
 %{_datadir}/pkgconfig/xorg-macros.pc
 
 %changelog
+* Tue Oct 27 2015 Liu Di <liudidi@gmail.com> - 1.19.0-2
+- 为 Magic 3.0 重建
+
 * Fri Aug 08 2014 Liu Di <liudidi@gmail.com> - 1.19.0-1
 - 更新到 1.19.0
 

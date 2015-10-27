@@ -1,13 +1,15 @@
 %define pkgname xdm
 
 Summary: X.Org X11 xdm - X Display Manager
+Summary(zh_CN.UTF-8): X.Org X11 xdm - X 会话管理器
 Name: xorg-x11-%{pkgname}
 Version: 1.1.11
-Release: 5%{?dist}
+Release: 7%{?dist}
 # NOTE: Remove Epoch line if/when the package ever gets renamed.
 Epoch: 1
 License: MIT
 Group: User Interface/X
+Group(zh_CN.UTF-8): 用户界面/X
 URL: http://www.x.org
 
 Source0: http://ftp.nara.wide.ad.jp/pub/X11/x.org/individual/app/xdm-%{version}.tar.bz2
@@ -17,12 +19,6 @@ Source11: xdm.pamd
 
 # Following are Fedora specific patches
 Patch11: xdm-1.0.5-sessreg-utmp-fix-bug177890.patch
-
-# FIXME Most likely not needed
-Patch14: xdm-1.1.10-libdl.patch
-
-# send a USER_LOGIN event like other login programs do. 
-Patch15: xdm-1.1.10-add-audit-event.patch
 
 # systemd unit file update
 Patch16: xdm-service.patch
@@ -74,12 +70,13 @@ Requires: xorg-x11-xinit
 %description
 X.Org X11 xdm - X Display Manager
 
+%description -l zh_CN.UTF-8
+X.Org X11 xdm - X 会话管理器。
+
 %prep
 %setup -q -n %{pkgname}-%{version}
 
 %patch11 -p0 -b .redhat-sessreg-utmp-fix-bug177890
-#%_patch14 -p1 -b .add-needed
-#%patch15 -p1 -b .add-audit-events
 %patch16 -p1 -b .systemd
 %patch20 -p1 -b .setproctitle
 
@@ -167,6 +164,12 @@ mkdir -p $RPM_BUILD_ROOT%{_sharedstatedir}/xdm
 %{_unitdir}/xdm.service
 
 %changelog
+* Tue Oct 27 2015 Liu Di <liudidi@gmail.com> - 1:1.1.11-7
+- 为 Magic 3.0 重建
+
+* Tue Oct 27 2015 Liu Di <liudidi@gmail.com> - 1:1.1.11-6
+- 为 Magic 3.0 重建
+
 * Wed May 22 2013 Liu Di <liudidi@gmail.com> - 1:1.1.11-5
 - 重新编译
 

@@ -2,12 +2,14 @@
 %define xfwp_version 1.0.2
 
 Summary: X.Org X11 X firewall proxy
+Summary(zh_CN.UTF-8): X.Org X11 X 防火墙代理
 Name: xorg-x11-%{pkgname}
 # NOTE: The package version should always be the upstream xfwp tarball version.
 Version: %{xfwp_version}
-Release: 3%{?dist}
+Release: 4%{?dist}
 License: MIT
 Group: User Interface/X
+Group(zh_CN.UTF-8): 用户界面/X
 URL: http://www.x.org
 
 Source0: http://ftp.nara.wide.ad.jp/pub/X11/x.org/individual/app/xfwp-%{xfwp_version}.tar.bz2
@@ -33,8 +35,12 @@ The X firewall proxy (xfwp) is an application layer gateway proxy that
 may be run on a network firewall host to forward X traffic  across  the
 firewall.
 
+%description -l zh_CN.UTF-8
+X.Org X11 X 防火墙代。
+
 %prep
 %setup -q -c %{name}-%{version} -a1 -a2
+
 %patch0 -p0 -b .lbx
 %patch1 -p0 -b .config
 
@@ -80,7 +86,7 @@ firewall.
 %{_mandir}/man1/xfwp.1*
 
 %changelog
-* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 1.0.2-3
+* Tue Oct 27 2015 Liu Di <liudidi@gmail.com> - 1.0.2-4
 - 为 Magic 3.0 重建
 
 * Sat Jan 14 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.0.2-2

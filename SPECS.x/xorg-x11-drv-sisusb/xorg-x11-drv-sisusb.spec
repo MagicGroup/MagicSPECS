@@ -3,15 +3,18 @@
 %define driverdir	%{moduledir}/drivers
 
 Summary:    Xorg X11 sisusb video driver
+Summary(zh_CN.UTF-8): Xorg X11 sisusb 显卡驱动
 Name:	    xorg-x11-drv-sisusb
 Version:    0.9.6
-Release:    14%{?dist}
+Release:    15%{?dist}
 URL:	    http://www.x.org
 License:    MIT
 Group:	    User Interface/X Hardware Support
+Group(zh_CN.UTF-8): 用户界面/X 硬件支持
 
 Source0:    http://ftp.nara.wide.ad.jp/pub/X11/x.org/individual/driver/%{tarball}-%{version}.tar.bz2
-Patch0: 0001-Remove-mibstore.h.patch 
+
+Patch1:	0001-Remove-mibstore.h.patch
 
 ExcludeArch: s390 s390x %{?rhel:ppc ppc64}
 
@@ -24,9 +27,12 @@ Requires: Xorg %(xserver-sdk-abi-requires videodrv)
 %description 
 X.Org X11 sisusb video driver.
 
+%description -l zh_CN.UTF-8
+Xorg X11 sisusb 显卡驱动。
+
 %prep
 %setup -q -n %{tarball}-%{version}
-%patch0 -p1
+%patch1 -p1
 
 %build
 autoreconf -vif
@@ -53,6 +59,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man4/*.4*
 
 %changelog
+* Mon Oct 26 2015 Liu Di <liudidi@gmail.com> - 0.9.6-15
+- 为 Magic 3.0 重建
+
 * Mon Jan 13 2014 Adam Jackson <ajax@redhat.com> - 0.9.6-14
 - 1.15 ABI rebuild
 

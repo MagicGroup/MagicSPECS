@@ -1,0 +1,12 @@
+diff -ur xz-5.2.2.orig/src/liblzma/check/check.h xz-5.2.2/src/liblzma/check/check.h
+--- xz-5.2.2.orig/src/liblzma/check/check.h	2015-10-27 06:09:50.186305842 +0000
++++ xz-5.2.2/src/liblzma/check/check.h	2015-10-27 06:10:05.396305453 +0000
+@@ -30,8 +30,6 @@
+ 
+ #if defined(HAVE_CC_SHA256_CTX)
+ typedef CC_SHA256_CTX lzma_sha256_state;
+-#elif defined(HAVE_SHA256_CTX)
+-typedef SHA256_CTX lzma_sha256_state;
+ #elif defined(HAVE_SHA2_CTX)
+ typedef SHA2_CTX lzma_sha256_state;
+ #else

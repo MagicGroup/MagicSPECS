@@ -2,10 +2,12 @@
 
 Name:           xqc
 Version:        1.0
-Release:        0.10.%{snapshot}%{?dist}
+Release:        0.11.%{snapshot}%{?dist}
 Summary:        C/C++ API for interfacing with XQuery processors
+Summary(zh_CN.UTF-8): XQuery 处理的 C/C++ API 接口
 
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 License:        BSD
 URL:            http://xqc.sourceforge.net
 
@@ -25,6 +27,8 @@ interfacing with XQuery processors. They should provide mechanisms to compile
 and execute XQueries, manage contexts, and provide a basic interface for 
 the XQuery Data Model.
 
+%description -l zh_CN.UTF-8
+XQuery 处理的 C/C++ API 接口。
 
 %prep
 %setup -q -n %{name}
@@ -54,6 +58,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Oct 27 2015 Liu Di <liudidi@gmail.com> - 1.0-0.11.20101120svn7
+- 为 Magic 3.0 重建
+
 * Fri Sep 25 2015 Liu Di <liudidi@gmail.com> - 1.0-0.10.20101120svn7
 - 为 Magic 3.0 重建
 

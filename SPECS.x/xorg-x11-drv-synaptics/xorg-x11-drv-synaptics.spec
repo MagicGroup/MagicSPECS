@@ -7,11 +7,13 @@
 
 Name:           xorg-x11-drv-synaptics
 Summary:        Xorg X11 Synaptics touchpad input driver
-Version:        1.7.3
-Release:        2%{?gitdate:.%{gitdate}git%{gitversion}}%{?dist}
+Summary(zh_CN.UTF-8): Xorg X11 触摸板输入驱动
+Version:	1.8.2
+Release:	2%{?dist}
 URL:            http://www.x.org
 License:        MIT
 Group:          User Interface/X Hardware Support
+Group(zh_CN.UTF-8): 用户界面/X 硬件支持
 
 %if 0%{?gitdate}
 Source0:        %{tarball}-%{gitdate}.tar.bz2
@@ -78,6 +80,9 @@ Features:
     * Run-time configuration using shared memory. This means you can change
       parameter settings without restarting the X server.
 
+%description -l zh_CN.UTF-8
+Xorg X11 触摸板输入驱动。
+
 %prep
 %setup -q -n %{tarball}-%{?gitdate:%{gitdate}}%{!?gitdate:%{version}}
 
@@ -135,6 +140,9 @@ Development files for the Synaptics TouchPad for X.Org.
 
 
 %changelog
+* Mon Oct 26 2015 Liu Di <liudidi@gmail.com> - 1.8.2-2
+- 更新到 1.8.2
+
 * Mon Jan 13 2014 Adam Jackson <ajax@redhat.com> - 1.7.3-2
 - 1.15 ABI rebuild
 

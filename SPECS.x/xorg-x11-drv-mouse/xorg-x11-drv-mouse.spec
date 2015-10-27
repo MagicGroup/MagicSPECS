@@ -5,12 +5,14 @@
 #global gitdate 20101125
 
 Summary:   Xorg X11 mouse input driver
+Summary(zh_CN.UTF-8): Xorg X11 鼠标输入驱动
 Name:      xorg-x11-drv-mouse
-Version:   1.9.0
-Release:   7%{?gitdate:.%{gitdate}}%{?dist}
+Version:	1.9.1
+Release:	2%{?dist}
 URL:       http://www.x.org
 License:   MIT
 Group:     User Interface/X Hardware Support
+Group(zh_CN.UTF-8): 用户界面/X 硬件支持
 
 %if 0%{?gitdate}
 Source0:   %{tarball}-%{gitdate}.tar.bz2
@@ -31,6 +33,9 @@ Requires: Xorg %(xserver-sdk-abi-requires xinput)
 
 %description 
 X.Org X11 mouse input driver.
+
+%description -l zh_CN.UTF-8
+Xorg X11 鼠标输入驱动。
 
 %prep
 %setup -q -n %{tarball}-%{?gitdate:%{gitdate}}%{!?gitdate:%{version}}
@@ -71,6 +76,9 @@ X.Org X11 mouse input driver development files.
 %{_libdir}/pkgconfig/xorg-mouse.pc
 
 %changelog
+* Mon Oct 26 2015 Liu Di <liudidi@gmail.com> - 1.9.1-2
+- 更新到 1.9.1
+
 * Mon Jan 13 2014 Adam Jackson <ajax@redhat.com> - 1.9.0-7
 - 1.15 ABI rebuild
 

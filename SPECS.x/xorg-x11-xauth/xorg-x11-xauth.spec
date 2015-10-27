@@ -1,13 +1,15 @@
 %define pkgname xauth
 
 Summary: X.Org X11 X authority utilities
+Summary(zh_CN.UTF-8): X.Org X11 X 认证工具
 Name: xorg-x11-%{pkgname}
-Version: 1.0.6
-Release: 4%{?dist}
+Version:	1.0.9
+Release:	2%{?dist}
 # NOTE: Remove Epoch line if package gets renamed
 Epoch: 1
 License: MIT
 Group: User Interface/X
+Group(zh_CN.UTF-8): 用户界面/X
 URL: http://www.x.org
 
 Source0: http://ftp.nara.wide.ad.jp/pub/X11/x.org/individual/app/%{pkgname}-%{version}.tar.bz2
@@ -23,6 +25,9 @@ Provides: xauth
 %description
 xauth is used to edit and display the authorization information
 used in connecting to an X server.
+
+%description -l zh_CN.UTF-8
+X.Org X11 X 认证工具。
 
 %prep
 %setup -q -n %{pkgname}-%{version}
@@ -47,6 +52,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man1/xauth.1*
 
 %changelog
+* Tue Oct 27 2015 Liu Di <liudidi@gmail.com> - 1:1.0.9-2
+- 更新到 1.0.9
+
 * Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 1:1.0.6-4
 - 为 Magic 3.0 重建
 

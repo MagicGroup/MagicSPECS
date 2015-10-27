@@ -5,5 +5,5 @@ if [ -z "$1" ] ; then
 fi
 pushd $(dirname $0)
 sed -i "s/Version:.*/Version: $1/g" xorg-x11-util-macros.spec
-sed -i "s/Release:.*/Release: 1%{?dist}/g" xorg-x11-util-macros.spec
+sed -i "s/Release:.*/Release: 0%{?dist}/g" xorg-x11-util-macros.spec
 popd

@@ -1,6 +1,7 @@
 %define pkgname xsm
 
 Summary: X.Org X11 X Session Manager
+Summary(zh_CN.UTF-8): X.Org X11 X 会话管理器
 Name: xorg-x11-%{pkgname}
 # NOTE: The Version field should be the version of the xsm tarball.
 Version: 1.0.2
@@ -8,6 +9,7 @@ Version: 1.0.2
 Release: 20%{?dist}
 License: MIT
 Group: User Interface/X
+Group(zh_CN.UTF-8): 用户界面/X
 URL: http://www.x.org
 
 Source0: http://ftp.nara.wide.ad.jp/pub/X11/x.org/individual/app/xsm-1.0.1.tar.bz2
@@ -43,6 +45,9 @@ Provides: xsm, smproxy, rstart, rstartd
 
 %description
 X.Org X11 X Session Manager
+
+%description -l zh_CN.UTF-8
+X.Org X11 X 会话管理器。
 
 %prep
 %setup -q -c %{name}-%{version} -a1 -a2

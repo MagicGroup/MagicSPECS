@@ -20,35 +20,23 @@
 Summary:   Xorg X11 qxl video driver
 Name:      xorg-x11-drv-qxl
 
-Version:   0.1.1
+Version:	0.1.4
 
-Release:   8%{?gver}%{?dist}
+Release:	2%{?dist}
 URL:       http://www.x.org
 Source0:   http://xorg.freedesktop.org/releases/individual/driver/%{tarball}-%{version}.tar.bz2
 
 #Source0: %{tarball}-%{gitdate}.tar.bz2
 Patch1:    qxl-kms-disable-composite.patch
 
-# This should go away with a spice server containing 1d18b7e98ab268c755933061d77ccc7a981815e2
-Patch2:        0005-spiceqxl_display-only-use-qxl-interface-after-it-is-.patch
-
 Patch3: no-surfaces-kms.patch
 Patch4: 0001-worst-hack-of-all-time-to-qxl-driver.patch
+Patch5: qxl-aarch64.patch
 
-# Fixes for running with Xorg suid, which is the only way we ship in fedora
-Patch6: 0006-spiceqxl_spice_server-no-need-to-call-spice_server_s.patch
-Patch7: 0007-xspice-chown-both-files-used-by-vdagent-for-suid-Xor.patch
-Patch8: 0008-Xspice-cleanup-non-regular-files-too.patch
-Patch9: 0009-Xspice-fix-cleanup-when-some-processes-are-already-d.patch
-Patch10: 0010-Xspice-cleanup-vdagent-files.patch
+# Upstream commits
+Patch6: 0006-Use-for-system-includes.patch
+Patch7: 0007-Fix-compilation-with-newer-Xorg-versions.patch
 
-# Support for old revision 1 qxl device (which won't go upstream)
-# These aren't currently being applied, because they're not compatible with
-# xserver 1.15.  They could be if someone wanted, but it's been 2.5 years,
-# probably nobody's running that old of a RHEV anymore...
-Patch20:	   0002-Add-old-driver-in-as-a-compatibility-layer.patch
-Patch21:	   0003-Link-in-the-compat-driver-various-renamings.patch
-Patch22:	   0004-compat-bump-to-new-server-API-changes.patch
 
 License:   MIT
 Group:     User Interface/X Hardware Support
@@ -89,14 +77,11 @@ XSpice is both an X and a Spice server.
 %setup -q -n %{tarball}-%{?gitdate:%{gitdate}}%{!?gitdate:%{version}}
 
 %patch1 -p1
-%patch2 -p1
 %patch3 -p1
 %patch4 -p1
+%patch5 -p1
 %patch6 -p1
 %patch7 -p1
-%patch8 -p1
-%patch9 -p1
-%patch10 -p1
 
 %build
 autoreconf -f -i
@@ -144,6 +129,9 @@ rm -f $RPM_BUILD_ROOT%{_sysconfdir}/X11/spiceqxl.xorg.conf
 
 
 %changelog
+* Mon Oct 26 2015 Liu Di <liudidi@gmail.com> - 0.1.4-2
+- 更新到 0.1.4
+
 * Tue Jan 14 2014 Dave Airlie <airlied@redhat.com> 0.1.1-8
 - grab patches from F20 - fix dates
 

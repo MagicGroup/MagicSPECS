@@ -7,12 +7,14 @@
 #global gitversion 12345689
 
 Summary:    Xorg X11 wacom input driver
+Summary(zh_CN.UTF-8): Xorg X11 wacom 输入驱动
 Name:       xorg-x11-drv-wacom
-Version:    0.23.0
-Release:    1%{?gitdate:.%{gitdate}git%{gitversion}}%{?dist}
+Version:	0.31.0
+Release:	2%{?dist}
 URL:        http://www.x.org
 License:    GPLv2+
 Group:      User Interface/X Hardware Support
+Group(zh_CN.UTF-8): 用户界面/X 硬件支持
 
 %if 0%{?gitdate}
 Source0: %{tarball}-%{gitdate}.tar.bz2
@@ -40,12 +42,18 @@ Obsoletes: linuxwacom <= 0.8.4.3
 %description
 X.Org X11 wacom input driver for Wacom tablets.
 
+%description -l zh_CN.UTF-8
+Xorg X11 wacom 输入驱动。
+
 %prep
+
 %setup -q -n %{tarball}-%{?gitdate:%{gitdate}}%{!?gitdate:%{version}}
 
 %build
 autoreconf --force -v --install || exit 1
-%configure --disable-static --disable-silent-rules --enable-debug
+%configure --disable-static --disable-silent-rules --enable-debug \
+	   --with-systemd-unit-dir=%{_unitdir} \
+           --with-udev-rules-dir=%{_prefix}/lib/udev/rules.d/
 make %{_smp_mflags}
 
 %install
@@ -56,9 +64,7 @@ make install DESTDIR=$RPM_BUILD_ROOT
 # FIXME: Remove all libtool archives (*.la) from modules directory.  This
 # should be fixed in upstream Makefile.am or whatever.
 find $RPM_BUILD_ROOT -regex ".*\.la$" | xargs rm -f --
-
-install -d $RPM_BUILD_ROOT%{_prefix}/lib/udev/rules.d
-install -m 0644 %{SOURCE3} $RPM_BUILD_ROOT%{_prefix}/lib/udev/rules.d/70-wacom.rules
+mv $RPM_BUILD_ROOT/%{_prefix}/lib/udev/rules.d/wacom.rules $RPM_BUILD_ROOT/%{_prefix}/lib/udev/rules.d/70-wacom.rules
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -76,6 +82,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/X11/xorg.conf.d/50-wacom.conf
 %{_bindir}/xsetwacom
 %{_prefix}/lib/udev/rules.d/70-wacom.rules
+%{_bindir}/isdv4-serial-inputattach
+%{_unitdir}/wacom-inputattach@.service
+%{_udevrulesdir}/70-wacom.rules
 
 %package devel
 Summary:    Xorg X11 wacom input driver development package
@@ -98,6 +107,9 @@ X.Org X11 wacom input driver development files.
 %{_bindir}/isdv4-serial-debugger
 
 %changelog
+* Mon Oct 26 2015 Liu Di <liudidi@gmail.com> - 0.31.0-2
+- 更新到 0.31.0
+
 * Tue Apr 30 2013 Peter Hutterer <peter.hutterer@redhat.com> 0.21.0-1
 - wacom 0.21.0
 

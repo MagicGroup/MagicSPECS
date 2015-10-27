@@ -3,12 +3,14 @@
 %define driverdir	%{moduledir}/drivers
 
 Summary:   Xorg X11 v4l video driver
+Summary(zh_CN.UTF-8): Xorg X11 v4l 显卡驱动
 Name:      xorg-x11-drv-v4l
 Version:   0.2.0
-Release:   36%{?dist}
+Release:   37%{?dist}
 URL:       http://www.x.org
 License:   GPLv2+
 Group:     User Interface/X Hardware Support
+Group(zh_CN.UTF-8): 用户界面/X 硬件支持
 
 Source0:   http://ftp.nara.wide.ad.jp/pub/X11/x.org/individual/driver/%{tarball}-%{version}.tar.bz2
 Patch0:    xorg-x11-drv-v4l-support_v4l2_only_drivers.patch
@@ -23,6 +25,9 @@ Requires: Xorg %([ -e /usr/bin/xserver-sdk-abi-requires ] && xserver-sdk-abi-req
 
 %description 
 X.Org X11 v4l video driver.
+
+%description -l zh_CN.UTF-8
+Xorg X11 v4l 显卡驱动。
 
 %prep
 %setup -q -n %{tarball}-%{version}
@@ -51,6 +56,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man4/v4l.4*
 
 %changelog
+* Mon Oct 26 2015 Liu Di <liudidi@gmail.com> - 0.2.0-37
+- 为 Magic 3.0 重建
+
 * Mon Jan 13 2014 Adam Jackson <ajax@redhat.com> - 0.2.0-36
 - 1.15 ABI rebuild
 

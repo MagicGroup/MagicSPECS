@@ -4,14 +4,16 @@
 #define gitdate 20120816
 
 Summary:   Xorg X11 nouveau video driver for NVIDIA graphics chipsets
+Summary(zh_CN.UTF-8): Xorg X11 NVIDIA 显卡的驱动
 Name:      xorg-x11-drv-nouveau
 # need to set an epoch to get version number in sync with upstream
 Epoch:     1
-Version:   1.0.9
-Release:   7%{?dist}
+Version:	1.0.11
+Release:	2%{?dist}
 URL:       http://www.x.org
 License:   MIT
 Group:     User Interface/X Hardware Support
+Group(zh_CN.UTF-8): 用户界面/X 硬件支持
 
 # Fedora specific snapshot no upstream release
 %if 0%{?gitdate}
@@ -26,19 +28,13 @@ Patch1: 0002-nouveau-add-gpu-identifier-to-connector-names-for-se.patch
 
 ExcludeArch: s390 s390x
 
-%if 0%{?fedora} > 18
 Obsoletes: xorg-x11-drv-nv < 2.1.20-3
-%endif
 
 BuildRequires: libtool automake autoconf
-BuildRequires: xorg-x11-server-devel >= xorg-x11-server-1.14.2-8
+BuildRequires: xorg-x11-server-devel >= 1.14.2-8
 BuildRequires: libdrm-devel >= 2.4.24-0.1.20110106
 BuildRequires: mesa-libGL-devel
-%if 0%{?fedora} > 17 || 0%{?rhel} > 6
 BuildRequires: systemd-devel
-%else
-BuildRequires: libudev-devel
-%endif
 
 Requires: Xorg %(xserver-sdk-abi-requires ansic)
 Requires: Xorg %(xserver-sdk-abi-requires videodrv)
@@ -46,6 +42,9 @@ Requires:  libdrm >= 2.4.33-0.1
 
 %description 
 X.Org X11 nouveau video driver.
+
+%description -l zh_CN.UTF-8
+Xorg X11 NVIDIA 显卡的驱动。
 
 %if 0%{?gitdate}
 %define dirsuffix %{gitdate}
@@ -55,8 +54,6 @@ X.Org X11 nouveau video driver.
 
 %prep
 %setup -q -n xf86-video-nouveau-%{dirsuffix}
-%patch0 -p1 -b .ppc
-%patch1 -p1 -b .randrnames
 
 %build
 autoreconf -v --install
@@ -80,6 +77,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man4/nouveau.4*
 
 %changelog
+* Mon Oct 26 2015 Liu Di <liudidi@gmail.com> - 1:1.0.11-2
+- 更新到 1.0.11
+
 * Mon Jan 13 2014 Adam Jackson <ajax@redhat.com> - 1:1.0.9-7
 - 1.15 ABI rebuild
 

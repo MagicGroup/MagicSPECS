@@ -1,7 +1,7 @@
 #!/bin/bash
-url="http://xorg.freedesktop.org/releases/individual/driver/?C=M&O=D"
-new1="xorg-server-"
-new2=".tar.bz2"
+url="https://sourceforge.net/projects/linuxwacom/files/xf86-input-wacom/"
+new1='<tr title="xf86-input-wacom-'
+new2='.tar.bz2" class="file ">'
 downcommand="wget -q" 
 pushd $(dirname $0) > /dev/null
 rm -f index.html && $downcommand $url -O index.html

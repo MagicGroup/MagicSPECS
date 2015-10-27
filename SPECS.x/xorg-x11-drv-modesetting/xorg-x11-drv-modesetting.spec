@@ -3,12 +3,14 @@
 %global driverdir %{moduledir}/drivers
 
 Summary:   Xorg X11 modesetting video driver
+Summary(zh_CN.UTF-8): Xorg X11 modesetting 显卡驱动
 Name:      xorg-x11-drv-modesetting
-Version:   0.8.0
-Release:   11%{?dist}
+Version:	0.9.0
+Release:	2%{?dist}
 URL:       http://www.x.org
 License:   MIT
 Group:     User Interface/X Hardware Support
+Group(zh_CN.UTF-8): 用户界面/X 硬件支持
 
 Source0:   http://ftp.nara.wide.ad.jp/pub/X11/x.org/individual/driver/%{tarball}-%{version}.tar.bz2
 
@@ -31,20 +33,16 @@ Requires: Xorg %(xserver-sdk-abi-requires ansic)
 Requires: Xorg %(xserver-sdk-abi-requires videodrv)
 
 Obsoletes: xorg-x11-drv-ast < 0.97.0-9
-%if 0%{?rhel} >= 7
-Obsoletes: xorg-x11-drv-cirrus < 1.5.1-10
-Obsoletes: xorg-x11-drv-mga < 1.6.2-7
-%endif
 
 %description 
 X.Org X11 modesetting video driver - basic modesetting fallback driver.
 
+%description -l zh_CN.UTF-8
+Xorg X11 modesetting 显卡驱动。
+
 %prep
 %setup -q -n %{tarball}-%{version}
-%patch0 -p1 -b .fixnames
 %patch1 -p1 -b .compat
-%patch2 -p1 -b .bpp24
-%patch3 -p1 -b .mgag200
 
 %build
 autoreconf -vif
@@ -64,6 +62,9 @@ find $RPM_BUILD_ROOT -regex ".*\.la$" | xargs rm -f --
 %doc COPYING README
 
 %changelog
+* Mon Oct 26 2015 Liu Di <liudidi@gmail.com> - 0.9.0-2
+- 更新到 0.9.0
+
 * Thu Jan 23 2014 Dave Airlie <airlied@redhat.com> 0.8.0-11
 - add 32 bpp shadow for 24 bpp hw support - add workaround to use this on early mgag200
 

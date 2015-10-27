@@ -3,29 +3,31 @@
 %define with_xkeystone 0
 
 Summary: X.Org X11 X server utilities
+Summary(zh_CN.UTF-8): X.Org X11 X 服务器工具
 Name: xorg-x11-%{pkgname}
 Version: 7.5
-Release: 11%{?dist}
+Release: 12%{?dist}
 License: MIT
 Group: User Interface/X
+Group(zh_CN.UTF-8): 用户界面/X
 URL: http://www.x.org
 
-Source0:  http://www.x.org/pub/individual/app/iceauth-1.0.5.tar.bz2
-Source2:  http://www.x.org/pub/individual/app/rgb-1.0.4.tar.bz2
-Source3:  http://www.x.org/pub/individual/app/sessreg-1.0.6.tar.bz2
-Source5:  http://www.x.org/pub/individual/app/xgamma-1.0.4.tar.bz2
-Source6:  http://www.x.org/pub/individual/app/xhost-1.0.4.tar.bz2
-Source7:  http://www.x.org/pub/individual/app/xmodmap-1.0.5.tar.bz2
-Source8:  http://www.x.org/pub/individual/app/xrandr-1.3.5.tar.bz2
-Source9:  http://www.x.org/pub/individual/app/xrdb-1.0.9.tar.bz2
-Source10: http://www.x.org/pub/individual/app/xrefresh-1.0.4.tar.bz2
-Source11: http://www.x.org/pub/individual/app/xset-1.2.2.tar.bz2
+Source0:  http://www.x.org/pub/individual/app/iceauth-1.0.7.tar.bz2
+Source2:  http://www.x.org/pub/individual/app/rgb-1.0.6.tar.bz2
+Source3:  http://www.x.org/pub/individual/app/sessreg-1.1.0.tar.bz2
+Source5:  http://www.x.org/pub/individual/app/xgamma-1.0.6.tar.bz2
+Source6:  http://www.x.org/pub/individual/app/xhost-1.0.7.tar.bz2
+Source7:  http://www.x.org/pub/individual/app/xmodmap-1.0.9.tar.bz2
+Source8:  http://www.x.org/pub/individual/app/xrandr-1.4.3.tar.bz2
+Source9:  http://www.x.org/pub/individual/app/xrdb-1.1.0.tar.bz2
+Source10: http://www.x.org/pub/individual/app/xrefresh-1.0.5.tar.bz2
+Source11: http://www.x.org/pub/individual/app/xset-1.2.3.tar.bz2
 Source12: http://www.x.org/pub/individual/app/xsetmode-1.0.0.tar.bz2
 Source13: http://www.x.org/pub/individual/app/xsetpointer-1.0.1.tar.bz2
-Source14: http://www.x.org/pub/individual/app/xsetroot-1.1.0.tar.bz2
-Source15: http://www.x.org/pub/individual/app/xstdcmap-1.0.2.tar.bz2
-Source16: http://www.x.org/pub/individual/app/xkill-1.0.3.tar.bz2
-Source17: http://www.x.org/pub/individual/app/xinput-1.5.4.tar.bz2
+Source14: http://www.x.org/pub/individual/app/xsetroot-1.1.1.tar.bz2
+Source15: http://www.x.org/pub/individual/app/xstdcmap-1.0.3.tar.bz2
+Source16: http://www.x.org/pub/individual/app/xkill-1.0.4.tar.bz2
+Source17: http://www.x.org/pub/individual/app/xinput-1.6.2.tar.bz2
 
 # NOTE: Each upstream tarball has its own "PatchN" section, taken from
 # multiplying the "SourceN" line times 100.  Please keep them in this
@@ -173,6 +175,9 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Tue Oct 27 2015 Liu Di <liudidi@gmail.com> - 7.5-12
+- 为 Magic 3.0 重建
+
 * Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 7.5-11
 - 为 Magic 3.0 重建
 

@@ -12,6 +12,7 @@ GSESSION="$(type -p gnome-session)"
 MSESSION="$(type -p mate-session)"
 STARTKDE="$(type -p startkde)"
 STARTLXDE="$(type -p startlxde)"
+STARTTDE="$(type -p starttde)"
 
 # check to see if the user has a preferred desktop
 PREFERRED=
@@ -25,6 +26,8 @@ if [ -f /etc/sysconfig/desktop ]; then
 	PREFERRED="$STARTKDE"
     elif [ "$DESKTOP" = "LXDE" ]; then
 	PREFERRED="$STARTLXDE"
+    elif [ "$DESKTOP" = "TDE" ]; then
+	PREFERRED="$STARTTDE"
     fi
 fi
 
@@ -44,6 +47,9 @@ elif [ -n "$STARTKDE" ]; then
 elif [ -n "$STARTLXDE" ]; then
     # if neither GNOME nor KDE then LXDE
     exec "$STARTLXDE"
+elif [ -n "$STARTTDE" ]; then
+    # then TDE
+    exec "$STARTTDE"
 fi
 
 # We should also support /etc/X11/xinit/Xclients.d scripts

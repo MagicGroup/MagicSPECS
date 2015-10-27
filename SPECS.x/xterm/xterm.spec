@@ -1,10 +1,12 @@
 Summary: Terminal emulator for the X Window System
+Summary(zh_CN.UTF-8): X 窗口系统下的终端模拟器
 Name: xterm
-Version: 278
-Release: 3%{?dist}
+Version:	320
+Release:	2%{?dist}
 URL: http://dickey.his.com/xterm
 License: MIT
 Group: User Interface/X
+Group(zh_CN.UTF-8): 用户界面/X
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: imake pkgconfig ncurses-devel libutempter-devel
 BuildRequires: libXft-devel libXaw-devel libXext-devel desktop-file-utils
@@ -13,9 +15,9 @@ BuildRequires: libxkbfile-devel
 Source0: ftp://invisible-island.net/xterm/%{name}-%{version}.tgz
 Source1: ftp://invisible-island.net/xterm/16colors.txt
 
-Patch1: xterm-245-resources.patch
-Patch2: xterm-261-desk.patch
-Patch3: xterm-271-man-page_paths.patch
+Patch1: xterm-resources.patch
+Patch2: xterm-desktop.patch
+Patch3: xterm-man-paths.patch
 
 %bcond_with trace
 
@@ -25,6 +27,9 @@ Patch3: xterm-271-man-page_paths.patch
 The xterm program is a terminal emulator for the X Window System. It
 provides DEC VT102 and Tektronix 4014 compatible terminals for
 programs that can't use the window system directly.
+
+%description -l zh_CN.UTF-8
+X 窗口系统下的终端模拟器。
 
 %prep
 %setup -q
@@ -60,9 +65,12 @@ make DESTDIR=$RPM_BUILD_ROOT install
 
 cp -fp %{SOURCE1} 16colors.txt
 
-desktop-file-install --vendor=fedora \
+desktop-file-install \
 	--dir=$RPM_BUILD_ROOT%{_datadir}/applications \
 	xterm.desktop
+
+mkdir -p $RPM_BUILD_ROOT%{_datadir}/appdata
+install -m644 -p xterm.appdata.xml $RPM_BUILD_ROOT%{_datadir}/appdata
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -78,13 +86,17 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man1/resize.1*
 %{_mandir}/man1/uxterm.1*
 %{_mandir}/man1/xterm.1*
-%{_datadir}/applications/fedora-xterm.desktop
-%{_datadir}/pixmaps/xterm*.xpm
+%{_datadir}/appdata/xterm.appdata.xml
+%{_datadir}/applications/xterm.desktop
+%{_datadir}/pixmaps/*xterm*.xpm
 %{x11_app_defaults_dir}/KOI8RXTerm*
 %{x11_app_defaults_dir}/UXTerm*
 %{x11_app_defaults_dir}/XTerm*
 
 %changelog
+* Tue Oct 27 2015 Liu Di <liudidi@gmail.com> - 320-2
+- 更新到 320
+
 * Sat Sep 19 2015 Liu Di <liudidi@gmail.com> - 278-3
 - 为 Magic 3.0 重建
 

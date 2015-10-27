@@ -24,11 +24,13 @@
 %endif
 
 Summary:	X.Org X11 fonts
+Summary(zh_CN.UTF-8): X.Org X11 字体
 Name:		xorg-x11-fonts
 Version:	7.7
-Release:	2%{?dist}
+Release:	3%{?dist}
 License:	MIT and Lucida and Public Domain
 Group:		User Interface/X
+Group(zh_CN.UTF-8): 用户界面/X
 URL:		http://www.x.org
 
 BuildArch:	noarch
@@ -95,6 +97,9 @@ Conflicts: xorg-x11-xfs < 1.0.4-1
 
 %description
 X.Org X Window System fonts
+
+%description -l zh_CN.UTF-8
+X.Org X 窗口系统字体。
 
 %package misc
 Summary: misc bitmap fonts for the X Window System
@@ -1130,6 +1135,9 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Tue Oct 27 2015 Liu Di <liudidi@gmail.com> - 7.7-3
+- 为 Magic 3.0 重建
+
 * Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 7.7-2
 - 为 Magic 3.0 重建
 

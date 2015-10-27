@@ -6,12 +6,14 @@
 #global gitversion cb8d19b8a
 
 Summary:   Xorg X11 void input driver
+Summary(zh_CN.UTF-8): Xorg X11 无输入驱动
 Name:      xorg-x11-drv-void
-Version:   1.4.0
-Release:   24%{?gitdate:.%{gitdate}git%{gitversion}}%{?dist}
+Version:	1.4.1
+Release:	3%{?dist}
 URL:       http://www.x.org
 License:   MIT
 Group:     User Interface/X Hardware Support
+Group(zh_CN.UTF-8): 用户界面/X 硬件支持
 
 %if 0%{?gitdate}
 Source0:    %{tarball}-%{gitdate}.tar.bz2
@@ -33,6 +35,9 @@ Requires: Xorg %(xserver-sdk-abi-requires xinput)
 
 %description 
 X.Org X11 void input driver.
+
+%description -l zh_CN.UTF-8
+Xorg X11 无输入驱动。
 
 %prep
 %setup -q -n %{tarball}-%{?gitdate:%{gitdate}}%{!?gitdate:%{version}}
@@ -61,6 +66,12 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man4/void.4*
 
 %changelog
+* Mon Oct 26 2015 Liu Di <liudidi@gmail.com> - 1.4.1-3
+- 为 Magic 3.0 重建
+
+* Mon Oct 26 2015 Liu Di <liudidi@gmail.com> - 1.4.1-2
+- 更新到 1.4.1
+
 * Mon Jan 13 2014 Adam Jackson <ajax@redhat.com> - 1.4.0-24
 - 1.15 ABI rebuild
 

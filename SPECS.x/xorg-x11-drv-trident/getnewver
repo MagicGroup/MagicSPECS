@@ -1,6 +1,6 @@
 #!/bin/bash
 url="http://xorg.freedesktop.org/releases/individual/driver/?C=M&O=D"
-new1="xorg-server-"
+new1="xf86-video-trident-"
 new2=".tar.bz2"
 downcommand="wget -q" 
 pushd $(dirname $0) > /dev/null

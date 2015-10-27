@@ -1,17 +1,21 @@
 %define pkgname resutils
 
 Summary: X.Org X11 X resource utilities
+Summary(zh_CN.UTF-8): X.Org X11 X 资源工具
 Name: xorg-x11-%{pkgname}
 Version: 7.5
-Release: 4%{?dist}
+Release: 5%{?dist}
 License: MIT
 Group: User Interface/X
+Group(zh_CN.UTF-8): 用户界面/X
 URL: http://www.x.org
 
-Source0:  http://ftp.nara.wide.ad.jp/pub/X11/x.org/individual/app/appres-1.0.3.tar.bz2
-Source1:  http://ftp.nara.wide.ad.jp/pub/X11/x.org/individual/app/editres-1.0.5.tar.bz2
-Source2:  http://ftp.nara.wide.ad.jp/pub/X11/x.org/individual/app/listres-1.0.2.tar.bz2
-Source3:  http://ftp.nara.wide.ad.jp/pub/X11/x.org/individual/app/viewres-1.0.3.tar.bz2
+Source0:  http://ftp.nara.wide.ad.jp/pub/X11/x.org/individual/app/appres-1.0.4.tar.bz2
+Source1:  http://ftp.nara.wide.ad.jp/pub/X11/x.org/individual/app/editres-1.0.6.tar.bz2
+Source2:  http://ftp.nara.wide.ad.jp/pub/X11/x.org/individual/app/listres-1.0.3.tar.bz2
+Source3:  http://ftp.nara.wide.ad.jp/pub/X11/x.org/individual/app/viewres-1.0.4.tar.bz2
+
+Patch0:     editres-1.0.6-format-security.patch
 
 BuildRequires: pkgconfig
 BuildRequires: libX11-devel
@@ -38,8 +42,12 @@ Obsoletes: XFree86-tools, xorg-x11-tools
 %description
 A collection of utilities for managing X resources.
 
+%description -l zh_CN.UTF-8
+X.Org X11 X 资源工具。
+
 %prep
 %setup -q -c %{name}-%{version} -a1 -a2 -a3
+%patch0 -p0 -b .fmt
 
 %build
 # Build all apps
@@ -84,6 +92,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man1/viewres.1*
 
 %changelog
+* Tue Oct 27 2015 Liu Di <liudidi@gmail.com> - 7.5-5
+- 为 Magic 3.0 重建
+
 * Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 7.5-4
 - 为 Magic 3.0 重建
 

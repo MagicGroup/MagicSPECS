@@ -1,9 +1,10 @@
 %define oversion 1.1.4c
 
 Summary:        XML Pull Parser
+Summary(zh_CN.UTF-8): XML 解析器
 Name:           xpp3
 Version:        1.1.4
-Release:        4.c%{?dist}
+Release:        5.c%{?dist}
 License:        ASL 1.1
 URL:            http://www.extreme.indiana.edu/xgws/xsoap/xpp/mxp1/index.html
 Source0:        http://www.extreme.indiana.edu/dist/java-repository/xpp3/distributions/xpp3-%{oversion}_src.tgz
@@ -28,8 +29,12 @@ parsing engine that is based on ideas from XPP and in
 particular XPP2 but completely revised and rewritten to
 take best advantage of latest JIT JVMs such as Hotspot in JDK 1.4.
 
+%description -l zh_CN.UTF-8
+XML 解析器。
+
 %package minimal
 Summary:        Minimal XML Pull Parser
+Summary(zh_CN.UTF-8): 迷你版本的 XML 解析器
 Requires:       junit
 Requires:       xml-commons-apis
 Requires:       java-headless
@@ -93,6 +98,9 @@ cp -pr doc/api/* %{buildroot}%{_javadocdir}/%{name}
 %doc %{_javadocdir}/%{name}
 
 %changelog
+* Tue Oct 27 2015 Liu Di <liudidi@gmail.com> - 1.1.4-5.c
+- 为 Magic 3.0 重建
+
 * Wed Aug 13 2014 Liu Di <liudidi@gmail.com> - 1.1.4-4.c
 - 为 Magic 3.0 重建
 

@@ -1,11 +1,13 @@
 Summary: X.Org X11 twm window manager
+Summary(zh_CN.UTF-8): X.Org X11 twm 窗口管理器
 Name: xorg-x11-twm
 # NOTE: Remove Epoch line if package gets renamed to something like "twm"
 Epoch: 1
-Version: 1.0.7
-Release: 3%{?dist}
+Version:	1.0.9
+Release:	2%{?dist}
 License: MIT
 Group: User Interface/X
+Group(zh_CN.UTF-8): 用户界面/X
 URL: http://www.x.org
 
 Source0: http://ftp.nara.wide.ad.jp/pub/X11/x.org/individual/app/twm-%{version}.tar.bz2
@@ -31,6 +33,9 @@ Provides: twm
 
 %description
 X.Org X11 twm window manager
+
+%description -l zh_CN.UTF-8
+X.Org X11 twm 窗口管理器。
 
 %prep
 %setup -q -n twm-%{version}
@@ -61,6 +66,9 @@ make install DESTDIR=$RPM_BUILD_ROOT INSTALL="install -p"
 %config %{_sysconfdir}/X11/twm/system.twmrc
 
 %changelog
+* Tue Oct 27 2015 Liu Di <liudidi@gmail.com> - 1:1.0.9-2
+- 更新到 1.0.9
+
 * Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 1:1.0.7-3
 - 为 Magic 3.0 重建
 
