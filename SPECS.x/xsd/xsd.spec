@@ -1,24 +1,28 @@
 Name:           xsd
-Version:        3.3.0
-Release:        16%{?dist}
+Version:        4.0.0
+Release:        9%{?dist}
 Summary:        W3C XML schema to C++ data binding compiler
-
-Group:          Development/Tools
 # Exceptions permit otherwise GPLv2 incompatible combination with ASL 2.0
 License:        GPLv2 with exceptions and ASL 2.0  
 URL:            http://www.codesynthesis.com/products/xsd/
-Source0:        http://www.codesynthesis.com/download/xsd/3.3/xsd-%{version}-2+dep.tar.bz2
-# Sent suggestion to upstream via e-mail 20090707
-Patch0:         xsd-3.3.0-xsdcxx-rename.patch
-BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+Source0:        http://www.codesynthesis.com/download/xsd/4.0/xsd-%{version}+dep.tar.bz2
 
-BuildRequires:  m4 boost-devel xerces-c-devel
-# Requires:  ace-devel - only needed for applications using
-#                        Adaptive Communication Environment (ACE) streams,
-#                        enable when Fedora gets ACE packages.
-#                        See http://www.cs.wustl.edu/~schmidt/ACE.html and
-#                        https://bugzilla.redhat.com/show_bug.cgi?id=450164
-Requires:       xerces-c-devel
+Obsoletes:      xsd-devel <= 0:4.0.0-9
+
+# Sent suggestion to upstream via e-mail 20090707
+# http://anonscm.debian.org/cgit/collab-maint/xsd.git/tree/debian/patches/0001-xsd_xsdcxx-rename.patch
+Patch0:         xsd-3.3.0-xsdcxx-rename.patch
+
+BuildRequires: m4, xerces-c-devel, libcutl-devel
+%if 0%{?rhel}
+BuildRequires: boost148-devel
+%else
+BuildRequires: boost-devel
+%endif
+
+%if 0%{?rhel}
+Requires: boost148
+%endif
 
 %description
 CodeSynthesis XSD is an open-source, cross-platform W3C XML Schema to
@@ -29,51 +33,34 @@ You can then access the data stored in XML using types and functions
 that semantically correspond to your application domain rather than
 dealing with intricacies of reading and writing XML.
 
-
-%package        doc
-Group:          Documentation
-Summary:        API documentation files for %{name}
+%package   doc
+BuildArch: noarch
+Summary:   API documentation files for %{name}
 
 %description    doc
 This package contains API documentation for %{name}.
 
-
 %prep
-%setup -q -n xsd-%{version}-2+dep
-pushd xsd
+%setup -q -n xsd-%{version}+dep
 %patch0 -p1 -b .xsdcxx-rename
-popd
 
+##Unbundle libcutl
+rm -rf libcutl
 
 %build
-
-# Default GCC on EL-5 will fail on this code with internal
-# compiler error when debugging symbol generation is requested with -g
-# Reducing debug level to 1 will "fix" this problem. A better way would
-# be to use gcc-44, but old versions of boost headers do not compile 
-# with it (https://svn.boost.org/trac/boost/ticket/2069).
-# Also boost-1.33.1 on those systems does not have boost_system library
-# thus we need to disable explicit linking against it.
-
-%if 0%{?el5}
-make verbose=1 CXXFLAGS="$RPM_OPT_FLAGS -g1" BOOST_LINK_SYSTEM=n
-%else
-make verbose=1 CXXFLAGS="$RPM_OPT_FLAGS"
+%if 0%{?rhel}
+%{!?__global_ldflags: %global __global_ldflags -Wl,-z,relro}
 %endif
-
+make verbose=1 CXX=g++ CC=gcc CXXFLAGS="$RPM_OPT_FLAGS" LDFLAGS="%{__global_ldflags}" BOOST_LINK_SYSTEM=y EXTERNAL_LIBCUTL=y
 
 %install
-rm -rf $RPM_BUILD_ROOT
 rm -rf apidocdir
 
-%if 0%{?el5}
-make install_prefix="$RPM_BUILD_ROOT%{_prefix}" BOOST_LINK_SYSTEM=n install
-%else
-make install_prefix="$RPM_BUILD_ROOT%{_prefix}" install
-%endif
+make install DESTDIR=$RPM_BUILD_ROOT LDFLAGS="%{__global_ldflags}" install_prefix=$RPM_BUILD_ROOT%{_prefix} \
+ install_bin_dir=$RPM_BUILD_ROOT%{_bindir} install_man_dir=$RPM_BUILD_ROOT%{_mandir} EXTERNAL_LIBCUTL=y BOOST_LINK_SYSTEM=y
 
 # Split API documentation to -doc subpackage.
-mkdir apidocdir
+mkdir -p apidocdir
 mv $RPM_BUILD_ROOT%{_datadir}/doc/xsd/*.{xhtml,css} apidocdir/
 mv $RPM_BUILD_ROOT%{_datadir}/doc/xsd/cxx/ apidocdir/
 mv $RPM_BUILD_ROOT%{_datadir}/doc/xsd/ docdir/
@@ -106,25 +93,82 @@ find apidocdir -name "*.doxygen" \
             -o -name "makefile" \
             -o -name "*.html2ps" | xargs rm -f
 
-%clean
-rm -rf $RPM_BUILD_ROOT
-
+##Test failed on EPEL6 due to "bad" xerces-c
+##http://codesynthesis.com/pipermail/xsd-users/2015-October/004696.html
+%if 0%{?fedora} || 0%{?rhel} >= 7 
+%check
+make -j 1 test EXTERNAL_LIBCUTL=y BOOST_LINK_SYSTEM=y
+%endif
 
 %files
-%defattr(-,root,root,-)
-%doc docdir/*
+%{!?_licensedir:%global license %doc}
+%doc docdir/README docdir/NEWS docdir/FLOSSE
+%license docdir/GPLv2 docdir/LICENSE
 %{_bindir}/xsdcxx
-%{_includedir}/xsd/
 %{_mandir}/man1/xsdcxx.1*
+%{_includedir}/xsd/
 
 %files doc
-%defattr(-,root,root,-)
+%{!?_licensedir:%global license %doc}
+%doc docdir/README docdir/NEWS docdir/FLOSSE
+%license docdir/GPLv2 docdir/LICENSE
 %doc apidocdir/*
 
-
 %changelog
-* Mon Dec 29 2014 Liu Di <liudidi@gmail.com> - 3.3.0-16
-- 为 Magic 3.0 重建
+* Mon Oct 12 2015 Antonio Trande <sagitterATfedoraproject.org> - 4.0.0-9
+- Header files included again in main package
+
+* Mon Oct 12 2015 Antonio Trande <sagitterATfedoraproject.org> - 4.0.0-8
+- Requires explicitely Boost148 in EPEL
+- Tests not performed in EPEL6
+
+* Thu Oct 08 2015 Antonio Trande <sagitterATfedoraproject.org> - 4.0.0-7
+- Used %%license tag
+- libcutl libraries unbundled
+- Header files packaged apart
+- Made tests
+
+* Thu Aug 27 2015 Jonathan Wakely <jwakely@redhat.com> - 4.0.0-6
+- Rebuilt for Boost 1.59
+
+* Wed Jul 29 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 4.0.0-5
+- Rebuilt for https://fedoraproject.org/wiki/Changes/F23Boost159
+
+* Wed Jul 22 2015 David Tardon <dtardon@redhat.com> - 4.0.0-4
+- rebuild for Boost 1.58
+
+* Fri Jun 19 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 4.0.0-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
+
+* Sat May 02 2015 Kalev Lember <kalevlember@gmail.com> - 4.0.0-2
+- Rebuilt for GCC 5 C++11 ABI change
+
+* Sat Mar 28 2015 Kalev Lember <kalevlember@gmail.com> - 4.0.0-1
+- Update to 4.0.0
+
+* Wed Feb 25 2015 Rex Dieter <rdieter@fedoraproject.org> 3.3.0-23
+- rebuild (gcc5)
+
+* Tue Jan 27 2015 Petr Machata <pmachata@redhat.com> - 3.3.0-22
+- Rebuild for boost 1.57.0
+
+* Mon Aug 18 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.3.0-21
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
+
+* Sun Jun 08 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.3.0-20
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Thu Jun  5 2014 Peter Robinson <pbrobinson@fedoraproject.org> 3.3.0-19
+- Update config.* to fix FTBFS on aarch64/ppc64le
+
+* Thu May 22 2014 Petr Machata <pmachata@redhat.com> - 3.3.0-18
+- Rebuild for boost 1.55.0
+
+* Sun Aug 04 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.3.0-17
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Sat Jul 27 2013 pmachata@redhat.com - 3.3.0-16
+- Rebuild for boost 1.54.0
 
 * Sat Feb 09 2013 Denis Arnaud <denis.arnaud_fedora@m4x.org> - 3.3.0-15
 - Rebuild for Boost-1.53.0
@@ -189,7 +233,7 @@ rm -rf $RPM_BUILD_ROOT
 - Added verbose=1 to MAKEFLAGS so compiler flags could be
   verified from build logs.
 
-* Mon Jul 04 2009 Antti Andreimann <Antti.Andreimann@mail.ee> 3.2.0-2
+* Sat Jul 04 2009 Antti Andreimann <Antti.Andreimann@mail.ee> 3.2.0-2
 - Changed License tag to clarify which exceptions we are talking about
 
 * Wed May 20 2009 Antti Andreimann <Antti.Andreimann@mail.ee> 3.2.0-1

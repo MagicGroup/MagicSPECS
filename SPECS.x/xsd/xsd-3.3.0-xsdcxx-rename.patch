@@ -1,12 +1,19 @@
-diff -up xsd/documentation/xsd.1.rename xsd/documentation/xsd.1
---- xsd/documentation/xsd.1.rename	2010-06-20 15:45:31.000000000 +0300
-+++ xsd/documentation/xsd.1	2010-06-20 15:46:24.000000000 +0300
+Description: change docu from xsd to xsdcxx
+Author: Jörg Frings-Fürst <debian@jff-webhosting.net>
+Reviewed-by: 
+Last-Update: 2014-07-22
+---
+This patch header follows DEP-3: http://dep.debian.net/deps/dep3/
+Index: trunk/xsd/doc/xsd.1
+===================================================================
+--- trunk.orig/xsd/doc/xsd.1	2014-07-21 08:38:41.000000000 +0200
++++ trunk/xsd/doc/xsd.1	2014-07-21 23:27:00.928980158 +0200
 @@ -1,16 +1,16 @@
  .\" Process this file with
--.\" groff -man -Tascii xsd.1
-+.\" groff -man -Tascii xsdcxx.1
+ .\" groff -man -Tascii xsd.1
  .\"
- .TH XSD 1 "April 2010" "XSD 3.3.0"
+-.TH XSD 1 "July 2014" "XSD 4.0.0"
++.TH XSDCXX 1 "July 2014" "XSDCXX 4.0.0"
  .SH NAME
 -xsd \- W3C XML Schema to C++ Compiler
 +xsdcxx \- W3C XML Schema to C++ Compiler
@@ -21,7 +28,7 @@ diff -up xsd/documentation/xsd.1.rename xsd/documentation/xsd.1
  .I command
  .B [
  .I options
-@@ -20,19 +20,19 @@ xsd \- W3C XML Schema to C++ Compiler
+@@ -20,19 +20,19 @@
  .I file
  .B ...]
  .in
@@ -44,7 +51,7 @@ diff -up xsd/documentation/xsd.1.rename xsd/documentation/xsd.1
  generates vocabulary-specific, statically-typed C++ mapping from W3C XML
  Schema definitions. Particular mapping to produce is selected by a
  .IR command .
-@@ -96,7 +96,7 @@ Print usage information and exit. Use
+@@ -96,7 +96,7 @@
  .PP
  .RS
  .RS 3
@@ -53,16 +60,20 @@ diff -up xsd/documentation/xsd.1.rename xsd/documentation/xsd.1
  .I command
  .RE
  .PP
-@@ -203,7 +203,7 @@ For example, if you have file
- with namespace
- .B http://example.com/hello
- and you run
--.B xsd
-+.B xsdcxx
- on this file, then the string in question will be:
+@@ -133,9 +133,9 @@
  
- .B hello.xsd. http://example.com/hello
-@@ -1877,7 +1877,7 @@ option. With this approach you don't nee
+ When the C++11 mode is selected, you normally don't need to perform any
+ extra steps other than enable C++11 in your C++ compiler, if required\. The
+-XSD compiler will automatically add the necessary macro defines to the
+-generated header files that will switch the header-only XSD runtime library
+-(\fBlibxsd\fP) to the C++11 mode\. However, if you include any of the XSD
++XSDCXX compiler will automatically add the necessary macro defines to the
++generated header files that will switch the header-only XSDCXX runtime library
++(\fBlibxsd\fP) to the C++11 mode\. However, if you include any of the XSDCXX
+ runtime headers directly in your application (normally you just include the
+ generated headers), then you will need to define the \fBXSD_CXX11\fP macro
+ for your entire project\.
+@@ -1632,7 +1632,7 @@
  .\"
  .SH DIAGNOSTICS
  If the input file is not a valid W3C XML Schema definition,
@@ -71,9 +82,24 @@ diff -up xsd/documentation/xsd.1.rename xsd/documentation/xsd.1
  will issue diagnostic messages to
  .B STDERR
  and exit with non-zero exit code.
-diff -up xsd/documentation/xsd.xhtml.rename xsd/documentation/xsd.xhtml
---- xsd/documentation/xsd.xhtml.rename	2010-06-20 15:47:29.000000000 +0300
-+++ xsd/documentation/xsd.xhtml	2010-06-20 15:47:30.000000000 +0300
+Index: trunk/xsd/doc/xsd.xhtml
+===================================================================
+--- trunk.orig/xsd/doc/xsd.xhtml	2014-07-21 08:38:41.000000000 +0200
++++ trunk/xsd/doc/xsd.xhtml	2014-07-21 23:29:32.796093697 +0200
+@@ -3,11 +3,11 @@
+ <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+ 
+ <head>
+-  <title>XSD 4.0.0 Compiler Command Line Manual</title>
++  <title>XSDCXX 4.0.0 Compiler Command Line Manual</title>
+ 
+   <meta name="copyright" content="&copy; 2005-2014 Code Synthesis Tools CC"/>
+   <meta name="keywords" content="xsd,xml,schema,c++,mapping,data,binding,code,generator,manual,man,page"/>
+-  <meta name="description" content="XSD Compiler Command Line Manual"/>
++  <meta name="description" content="XSDCXX Compiler Command Line Manual"/>
+ 
+   <link rel="stylesheet" type="text/css" href="default.css" />
+ 
 @@ -50,19 +50,19 @@
  
    <h1>NAME</h1>
@@ -99,25 +125,30 @@ diff -up xsd/documentation/xsd.xhtml.rename xsd/documentation/xsd.xhtml
    C++ mapping from W3C XML Schema definitions. Particular mapping to
    produce is selected by a <code><i>command</i></code>. Each mapping has
    a number of mapping-specific <code><i>options</i></code> that should
-@@ -104,7 +104,7 @@
+@@ -138,10 +138,10 @@
  
-     <dt><code><b>help</b></code></dt>
-     <dd>Print usage information and exit. Use
--      <p><code><b>xsd help</b> <i>command</i></code></p>
-+      <p><code><b>xsdcxx help</b> <i>command</i></code></p>
-       for command-specific help.
-     </dd>
+   <p>When the C++11 mode is selected, you normally don't need to perform any
+   extra steps other than enable C++11 in your C++ compiler, if required. The
+-  XSD compiler will automatically add the necessary macro defines to the
+-  generated header files that will switch the header-only XSD runtime library
++  XSDCXX compiler will automatically add the necessary macro defines to the
++  generated header files that will switch the header-only XSDCXX runtime library
+   (<code><b>libxsd</b></code>) to the C++11 mode. However, if you include any
+-  of the XSD runtime headers directly in your application (normally you just
++  of the XSDCXX runtime headers directly in your application (normally you just
+   include the generated headers), then you will need to define the
+   <code><b>XSD_CXX11</b></code> macro for your entire project.</p></dd>
  
-@@ -174,7 +174,7 @@
+@@ -219,7 +219,7 @@
  
-       <p>For example, if you have file <code><b>hello.xsd</b></code>
-         with namespace <code><b>http://example.com/hello</b></code> and you run
--        <code><b>xsd</b></code> on this file, then the string in question
-+        <code><b>xsdcxx</b></code> on this file, then the string in question
-         will be:</p>
+   <p>For example, if you have file <code><b>hello.xsd</b></code> with
+   namespace <code><b>http://example.com/hello</b></code> and you run
+-  <code><b>xsd</b></code> on this file, then the string in question will
++  <code><b>xsdcxx</b></code> on this file, then the string in question will
+   be:</p>
  
-       <p><code><b>hello.xsd. http://example.com/hello</b></code></p>
-@@ -1575,7 +1575,7 @@ namespace .*
+   <p><code><b>hello.xsd. http://example.com/hello</b></code></p>
+@@ -1530,7 +1530,7 @@
    <h1>DIAGNOSTICS</h1>
  
    <p>If the input file is not a valid W3C XML Schema definition,
