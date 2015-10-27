@@ -1,0 +1,47 @@
+2015-01-22  Jakub Jelinek  <jakub@redhat.com>
+
+	* asan/asan_allocator.h (kAllocatorSpace, kAllocatorSize):
+	Set to 1T for __aarch64__.
+	* sanitizer_common/sanitizer_platform.h
+	(SANITIZER_CAN_USE_ALLOCATOR64): Set to 1 on __aarch64__
+	if SANITIZER_WORDSIZE is 64.
+	(SANITIZER_MMAP_RANGE_SIZE): Define to 1ULL << 42 for
+	__aarch64__.
+
+--- libsanitizer/asan/asan_allocator.h	(revision 219833)
++++ libsanitizer/asan/asan_allocator.h	(working copy)
+@@ -100,6 +100,10 @@
+ # if defined(__powerpc64__)
+ const uptr kAllocatorSpace =  0xa0000000000ULL;
+ const uptr kAllocatorSize  =  0x20000000000ULL;  // 2T.
++# elif defined(__aarch64__)
++// Valid only for 42-bit VA
++const uptr kAllocatorSpace =  0x10000000000ULL;
++const uptr kAllocatorSize  =  0x10000000000ULL;  // 1T.
+ # else
+ const uptr kAllocatorSpace = 0x600000000000ULL;
+ const uptr kAllocatorSize  =  0x40000000000ULL;  // 4T.
+--- libsanitizer/sanitizer_common/sanitizer_platform.h	(revision 219833)
++++ libsanitizer/sanitizer_common/sanitizer_platform.h	(working copy)
+@@ -79,7 +79,7 @@
+ // For such platforms build this code with -DSANITIZER_CAN_USE_ALLOCATOR64=0 or
+ // change the definition of SANITIZER_CAN_USE_ALLOCATOR64 here.
+ #ifndef SANITIZER_CAN_USE_ALLOCATOR64
+-# if defined(__aarch64__) || defined(__mips64)
++# if defined(__mips64)
+ #  define SANITIZER_CAN_USE_ALLOCATOR64 0
+ # else
+ #  define SANITIZER_CAN_USE_ALLOCATOR64 (SANITIZER_WORDSIZE == 64)
+@@ -88,10 +88,10 @@
+ 
+ // The range of addresses which can be returned my mmap.
+ // FIXME: this value should be different on different platforms,
+-// e.g. on AArch64 it is most likely (1ULL << 39). Larger values will still work
++// e.g. on AArch64 it is most likely (1ULL << 42). Larger values will still work
+ // but will consume more memory for TwoLevelByteMap.
+ #if defined(__aarch64__)
+-# define SANITIZER_MMAP_RANGE_SIZE FIRST_32_SECOND_64(1ULL << 32, 1ULL << 39)
++# define SANITIZER_MMAP_RANGE_SIZE FIRST_32_SECOND_64(1ULL << 32, 1ULL << 42)
+ #else
+ # define SANITIZER_MMAP_RANGE_SIZE FIRST_32_SECOND_64(1ULL << 32, 1ULL << 47)
+ #endif
