@@ -9,9 +9,8 @@
 
 Name:           webkitgtk4
 Version:        2.10.2
-Release:        2%{?dist}
+Release:        1%{?dist}
 Summary:        GTK+ Web content engine library
-Summary(zh_CN.UTF-8): GTK+ 网页内容渲染引擎库
 
 License:        LGPLv2
 URL:            http://www.webkitgtk.org/
@@ -87,31 +86,21 @@ GTK+ platform.
 
 This package contains WebKitGTK+ for GTK+ 3.
 
-%description -l zh_CN.UTF-8
-GTK+ 网页内容渲染引擎库。
-
 %package        devel
 Summary:        Development files for %{name}
-Summary(zh_CN.UTF-8): %{name} 的开发包
 Requires:       %{name}%{?_isa} = %{version}-%{release}
 
 %description    devel
 The %{name}-devel package contains libraries, build data, and header
 files for developing applications that use %{name}.
-%description devel -l zh_CN.UTF-8
-%{name} 的开发包。
 
 %package        doc
 Summary:        Documentation files for %{name}
-Summary(zh_CN.UTF-8): %{name} 的文档
 BuildArch:      noarch
 Requires:       %{name} = %{version}-%{release}
 
 %description    doc
 This package contains developer documentation for %{name}.
-
-%description doc -l zh_CN.UTF-8
-%{name} 的文档。
 
 %prep
 %setup -q -n webkitgtk-%{version}
@@ -157,7 +146,9 @@ rm -rf Source/ThirdParty/qunit/
 %global optflags %{optflags} -DUSE_BMALLOC=0
 %endif
 
-%global optflags %{optflags} -DUSER_AGENT_GTK_DISTRIBUTOR_NAME=\'\\"Magic\\"\'
+%if 0%{?fedora}
+%global optflags %{optflags} -DUSER_AGENT_GTK_DISTRIBUTOR_NAME=\'\\"Fedora\\"\'
+%endif
 
 # Disable ld.gold on s390 as it does not have it.
 # Also for aarch64 as the support is in upstream, but not packaged in Fedora.
@@ -181,7 +172,7 @@ make %{?_smp_mflags} -C %{_target_platform}
 
 %install
 %make_install -C %{_target_platform}
-magic_rpm_clean.sh
+
 %find_lang WebKit2GTK-4.0
 
 # Finally, copy over and rename various files for %%license inclusion
@@ -233,9 +224,6 @@ magic_rpm_clean.sh
 %{_datadir}/gtk-doc/html/webkitdomgtk-4.0/
 
 %changelog
-* Mon Oct 19 2015 Liu Di <liudidi@gmail.com> - 2.10.2-2
-- 为 Magic 3.0 重建
-
 * Thu Oct 15 2015 Tomas Popela <tpopela@redhat.com> - 2.10.2-1
 - Update to 2.10.2
 
