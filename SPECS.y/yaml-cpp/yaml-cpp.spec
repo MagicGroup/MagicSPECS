@@ -1,8 +1,10 @@
 Name:           yaml-cpp
 Version:        0.5.1
-Release:        7%{?dist}
+Release:        8%{?dist}
 Summary:        A YAML parser and emitter for C++
+Summary(zh_CN.UTF-8): C++ 的 YAML 解析器
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 License:        MIT 
 URL:            http://code.google.com/p/yaml-cpp/
 Source0:        http://yaml-cpp.googlecode.com/files/%{name}-%{version}.tar.gz
@@ -13,10 +15,14 @@ BuildRequires:  boost-devel
 %description
 yaml-cpp is a YAML parser and emitter in C++ written around the YAML 1.2 spec.
 
+%description -l zh_CN.UTF-8
+C++ 的 YAML 解析器。
 
 %package        devel
 Summary:        Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 License:        MIT
 Requires:       %{name}%{?_isa} = %{version}-%{release}
 Requires:       pkgconfig
@@ -26,6 +32,8 @@ Requires:       boost-devel
 The %{name}-devel package contains libraries and header files for
 developing applications that use %{name}.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -59,6 +67,9 @@ make VERBOSE=1 %{?_smp_mflags}
 
 
 %changelog
+* Tue Oct 27 2015 Liu Di <liudidi@gmail.com> - 0.5.1-8
+- 为 Magic 3.0 重建
+
 * Thu Apr 16 2015 Liu Di <liudidi@gmail.com> - 0.5.1-7
 - 为 Magic 3.0 重建
 

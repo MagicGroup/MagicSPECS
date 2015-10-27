@@ -5,7 +5,7 @@ Summary: The GNU Portable Library Tool
 Summary(zh_CN.UTF-8): GNU 可移植库工具
 Name:    libtool
 Version: 2.4.2
-Release: 28%{?dist}
+Release: 29%{?dist}
 License: GPLv2+ and LGPLv2+ and GFDL
 URL:     http://www.gnu.org/software/libtool/
 Group:   Development/Tools
@@ -198,6 +198,9 @@ fi
 
 
 %changelog
+* Tue Oct 27 2015 Liu Di <liudidi@gmail.com> - 2.4.2-29
+- 为 Magic 3.0 重建
+
 * Fri Aug 01 2014 Liu Di <liudidi@gmail.com> - 2.4.2-28
 - 为 Magic 3.0 重建
 

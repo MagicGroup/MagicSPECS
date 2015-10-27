@@ -1,18 +1,14 @@
 %global _changelog_trimtime %(date +%s -d "1 year ago")
 
 Summary: Help browser for the GNOME desktop
+Summary(zh_CN.UTF-8): GNOME 桌面的帮助浏览器
 Name: yelp
 Epoch: 1
-Version: 3.11.1
-Release: 1%{?dist}
+Version:	3.19.1
+Release:	2%{?dist}
 #VCS: git:git://git.gnome.org/yelp
-Source: http://download.gnome.org/sources/yelp/3.11/%{name}-%{version}.tar.xz
-
-# https://bugzilla.gnome.org/show_bug.cgi?id=687957
-Patch0: 0001-Don-t-steal-focus-optionally.patch
-# https://bugzilla.gnome.org/show_bug.cgi?id=687960
-Patch1: 0001-Center-new-windows.patch
-Patch2: yelp-keywords.patch
+%define majorver %(echo %{version} | awk -F. '{print $1"."$2}')
+Source: http://download.gnome.org/sources/yelp/%{majorver}/%{name}-%{version}.tar.xz
 
 URL: http://live.gnome.org/Yelp
 License: GPLv2+
@@ -27,7 +23,7 @@ Requires(postun): desktop-file-utils
 BuildRequires: gtk3-devel >= 3.0.0
 BuildRequires: libxml2-devel >= 2.6.5
 BuildRequires: libxslt-devel >= 1.1.4
-BuildRequires: webkitgtk3-devel
+BuildRequires: webkitgtk4-devel
 BuildRequires: desktop-file-utils
 BuildRequires: yelp-xsl-devel >= 3.0.1
 BuildRequires: xz-devel
@@ -45,28 +41,37 @@ to help you browse all the documentation on your system in
 one central tool, including traditional man pages, info pages and
 documentation written in DocBook.
 
+%description -l zh_CN.UTF-8
+GNOME 桌面的帮助浏览器。
+
 %package libs
 Summary: Libraries for yelp
+Summary(zh_CN.UTF-8): %{name} 的运行库
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 
 %description libs
 This package contains libraries used by the yelp help browser.
 
+%description libs -l zh_CN.UTF-8
+%{name} 的运行库。
+
 %package devel
 Summary: Development files for yelp-libs
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: %{name}-libs%{?_isa} = %{epoch}:%{version}-%{release}
 
 %description devel
 This package contains header files and documentation for
 the libraries in the yelp-libs package.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
-%patch0 -p1
-%patch1 -p1
-%patch2 -p1
 
 %build
 %configure --disable-static
@@ -80,8 +85,8 @@ make %{?_smp_mflags}
 %install
 make install DESTDIR=$RPM_BUILD_ROOT
 
-rm $RPM_BUILD_ROOT%{_libdir}/libyelp.la
-
+find $RPM_BUILD_ROOT%{_libdir} -name '*.la' -delete
+magic_rpm_clean.sh
 %find_lang %{name}
 
 %check
@@ -108,7 +113,6 @@ gtk-update-icon-cache %{_datadir}icons/hicolor &> /dev/null || :
 %postun libs -p /sbin/ldconfig
 
 %files -f %{name}.lang
-%doc AUTHORS COPYING MAINTAINERS NEWS README
 %{_bindir}/*
 %{_datadir}/applications/yelp.desktop
 %{_datadir}/yelp
@@ -117,6 +121,7 @@ gtk-update-icon-cache %{_datadir}icons/hicolor &> /dev/null || :
 
 %files libs
 %{_libdir}/libyelp.so.*
+%{_libdir}/yelp/web-extensions/libyelpwebextension.so
 
 %files devel
 %{_libdir}/libyelp.so
@@ -125,6 +130,12 @@ gtk-update-icon-cache %{_datadir}icons/hicolor &> /dev/null || :
 
 
 %changelog
+* Tue Oct 27 2015 Liu Di <liudidi@gmail.com> - 1:3.19.1-2
+- 更新到 3.19.1
+
+* Tue Oct 27 2015 Liu Di <liudidi@gmail.com> - 1:3.18.1-2
+- 更新到 3.18.1
+
 * Mon Nov 25 2013 Richard Hughes <rhughes@redhat.com> - 1:3.11.1-1
 - Update to 3.11.1
 

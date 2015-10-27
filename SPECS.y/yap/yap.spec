@@ -4,9 +4,11 @@
 
 Name:       yap
 Version:    6.2.2
-Release:    5%{?dist}
+Release:    6%{?dist}
 Summary:    High-performance Prolog Compiler
+Summary(zh_CN.UTF-8): 高性能的 Prolog 编译器
 Group:      Development/Languages
+Group(zh_CN.UTF-8): 开发/语言
 # README                            Perl Artistic license 2 and the FSF's LGPL
 # packages/ProbLog/                         Artistic 2.0
 # COPYING                                   LGPL
@@ -56,25 +58,33 @@ Machine), with several optimizations for better performance. YAP
 follows the Edinburgh tradition, and is largely compatible with the
 ISO-Prolog standard and with Quintus and SICStus Prolog.
 
+%description -l zh_CN.UTF-8
+高性能的 Prolog 编译器。
 
 %package devel
 Summary:    C-Interface development files for Yap
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:      Development/Languages
+Group(zh_CN.UTF-8): 开发/语言
 Requires:   %{name} = %{version}-%{release}
 
 %description devel
 C-Interface development files for Yap.
-
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %package docs
 Summary:    Documentation for Yap
+Summary(zh_CN.UTF-8): %{name} 的文档
 Group:      Development/Languages
+Group(zh_CN.UTF-8): 开发/语言
 BuildArch:  noarch
 Requires:   %{name} = %{version}-%{release}
 
 %description docs
 Documentation for Yap.
-
+%description docs -l zh_CN.UTF-8
+%{name} 的文档。
 
 %prep
 %setup -q
@@ -229,6 +239,9 @@ fi
 
 
 %changelog
+* Tue Oct 27 2015 Liu Di <liudidi@gmail.com> - 6.2.2-6
+- 为 Magic 3.0 重建
+
 * Mon Jan 07 2013 Petr Pisar <ppisar@redhat.com> - 6.2.2-5
 - Fix off-by-one error when initializing yap_flags
 

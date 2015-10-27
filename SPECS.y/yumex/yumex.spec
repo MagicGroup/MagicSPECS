@@ -1,8 +1,8 @@
 %{!?python_sitelib: %define python_sitelib %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib()")}
 
 Name:     yumex
-Version:  3.0.15
-Release:  2%{?dist}
+Version: 3.0.17
+Release: 2%{?dist}
 Summary:  Yum Extender graphical package management tool
 Summary(zh_CN.UTF-8): Yum 扩展的图形包管理工具
 
@@ -87,8 +87,12 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/polkit-1/actions/dk.yumex.backend.policy
 %{_datadir}/applications/*.desktop
 %{_datadir}/appdata/*.xml
+%{_datadir}/polkit-1/rules.d/50-dk.yumex.backend.pkexec.run.rules
 
 %changelog
+* Tue Oct 27 2015 Liu Di <liudidi@gmail.com> - 3.0.17-2
+- 更新到 3.0.17
+
 * Sun Aug 10 2014 Liu Di <liudidi@gmail.com> - 3.0.15-2
 - 为 Magic 3.0 重建
 

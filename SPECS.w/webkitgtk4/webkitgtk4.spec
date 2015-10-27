@@ -146,9 +146,7 @@ rm -rf Source/ThirdParty/qunit/
 %global optflags %{optflags} -DUSE_BMALLOC=0
 %endif
 
-%if 0%{?fedora}
-%global optflags %{optflags} -DUSER_AGENT_GTK_DISTRIBUTOR_NAME=\'\\"Fedora\\"\'
-%endif
+%global optflags %{optflags} -DUSER_AGENT_GTK_DISTRIBUTOR_NAME=\'\\"Magic\\"\'
 
 # Disable ld.gold on s390 as it does not have it.
 # Also for aarch64 as the support is in upstream, but not packaged in Fedora.

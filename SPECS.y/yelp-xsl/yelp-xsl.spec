@@ -1,12 +1,15 @@
 Name:           yelp-xsl
-Version:        3.11.1
-Release:        1%{?dist}
+Version:	3.18.1
+Release:	2%{?dist}
 Summary:        XSL stylesheets for the yelp help browser
+Summary(zh_CN.UTF-8): yelp 帮助浏览器的 XSL 样式表
 
 License:        LGPLv2+
 Group:          Applications/System
+Group(zh_CN.UTF-8): 应用程序/系统
 URL:            http://download.gnome.org/sources/yelp-xsl
-Source0:        http://download.gnome.org/sources/yelp-xsl/3.11/yelp-xsl-%{version}.tar.xz
+%define majorver %(echo %{version} | awk -F. '{print $1"."$2}')
+Source0:        http://download.gnome.org/sources/yelp-xsl/%{majorver}/yelp-xsl-%{version}.tar.xz
 BuildArch:      noarch
 
 BuildRequires:  libxml2-devel
@@ -19,9 +22,12 @@ BuildRequires:  itstool
 %description
 This package contains XSL stylesheets that are used by the yelp help browser.
 
+%description -l zh_CN.UTF-8
+yelp 帮助浏览器的 XSL 样式表。
 
 %package devel
 Summary: Developer documentation for yelp-xsl
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Requires: pkgconfig
 Requires: %{name} = %{version}-%{release}
 
@@ -29,6 +35,8 @@ Requires: %{name} = %{version}-%{release}
 The yelp-xsl-devel package contains developer documentation for the
 XSL stylesheets in yelp-xsl.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -53,6 +61,9 @@ make install DESTDIR=$RPM_BUILD_ROOT INSTALL="install -p"
 
 
 %changelog
+* Tue Oct 27 2015 Liu Di <liudidi@gmail.com> - 3.18.1-2
+- 更新到 3.18.1
+
 * Tue Nov 19 2013 Richard Hughes <rhughes@redhat.com> - 3.11.1-1
 - Update to 3.11.1
 

@@ -37,57 +37,24 @@ but optionally a real Saturn BIOS can be used, however it is not included.
 %setup -q
 
 %build
-mkdir build
-cd build
-%cmake ..
+%cmake -DBUILD_SHARED_LIBS:BOOL=OFF -DYAB_PORTS=qt -DYAB_OPTIMIZATION=-O2 .
 make %{?_smp_mflags}
-
 
 %install
 rm -rf %{buildroot}
-cd build
+rm -rf %{buildroot}
 make install DESTDIR=%{buildroot}
-mkdir -p %{buildroot}%{_datadir}/icons/hicolor/32x32/apps
-
-# Some cleanups
-rm -rf %{buildroot}%{_datadir}/%{name} %{buildroot}%{_datadir}/pixmaps
-rm -f %{buildroot}%{_datadir}/applications/*.desktop %{buildroot}%{_bindir}/gen68k
-mkdir %{buildroot}%{_libdir}
-install -pm0755 src/libyabause.so %{buildroot}%{_libdir}/
-
-install -pm0644 ../src/logo.png %{buildroot}%{_datadir}/icons/hicolor/32x32/apps/%{name}.png
-
-desktop-file-install --vendor magic \
-                     --dir %{buildroot}%{_datadir}/applications \
-                     %{SOURCE1}
-
 
 %clean
 rm -rf %{buildroot}
 
-
-%post
-touch --no-create %{_datadir}/icons/hicolor
-if [ -x %{_bindir}/gtk-update-icon-cache ]; then
-   %{_bindir}/gtk-update-icon-cache --quiet %{_datadir}/icons/hicolor || :
-fi
-
-
-%postun
-touch --no-create %{_datadir}/icons/hicolor
-if [ -x %{_bindir}/gtk-update-icon-cache ]; then
-   %{_bindir}/gtk-update-icon-cache --quiet %{_datadir}/icons/hicolor || :
-fi
-
-
 %files
-%defattr(-,root,root,-)
 %{_bindir}/%{name}
-%{_libdir}/*.so
 %{_mandir}/man1/%{name}.1.gz
-%{_datadir}/applications/magic-%{name}.desktop
-%{_datadir}/icons/hicolor/32x32/apps/%{name}.png
-%doc AUTHORS ChangeLog COPYING GOALS README README.LIN TODO
+%{_datadir}/%{name}
+%{_datadir}/applications/%{name}.desktop
+%{_datadir}/pixmaps/%{name}.png
+%doc AUTHORS ChangeLog COPYING GOALS README README.QT TODO
 
 
 %changelog

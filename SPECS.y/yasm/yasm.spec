@@ -1,10 +1,12 @@
 Summary: Modular Assembler
+Summary(zh_CN.UTF-8): 模块化汇编语言
 Name: yasm
-Version: 1.2.0
-Release: 4%{?dist}
+Version:	1.3.0
+Release:	2%{?dist}
 # See COPYING for the detail, there is quite a lot!
 License: BSD and (GPLv2+ or Artistic or LGPLv2+) and LGPLv2
 Group: Development/Languages
+Group(zh_CN.UTF-8): 开发/语言
 URL: http://yasm.tortall.net/
 Source: http://www.tortall.net/projects/yasm/releases/yasm-%{version}.tar.gz
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
@@ -19,10 +21,14 @@ supported (eg, NASM, TASM, GAS, etc.) in addition to multiple output object
 formats and even multiple instruction sets. Another primary module of the
 overall design is an optimizer module.
 
+%description -l zh_CN.UTF-8
+模块化汇编语言。
 
 %package devel
 Summary: Header files and static libraries for the yasm Modular Assembler
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: %{name} = %{version}-%{release}
 Provides: %{name}-static = %{version}-%{release}
 Provides: bundled(md5-plumb)
@@ -36,6 +42,8 @@ formats and even multiple instruction sets. Another primary module of the
 overall design is an optimizer module.
 Install this package if you need to rebuild applications that use yasm.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -73,6 +81,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Oct 27 2015 Liu Di <liudidi@gmail.com> - 1.3.0-2
+- 更新到 1.3.0
+
 * Fri Feb 15 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.2.0-4
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
 

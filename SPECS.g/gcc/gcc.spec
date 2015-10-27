@@ -84,7 +84,7 @@
 Summary: Various compilers (C, C++, Objective-C, Java, ...)
 Name: gcc
 Version: %{gcc_version}
-Release: %{gcc_release}%{?dist}
+Release: %{gcc_release}%{?dist}.1
 # libgcc, libgfortran, libgomp, libstdc++ and crtstuff have
 # GCC Runtime Exception.
 License: GPLv3+ and GPLv3+ with exceptions and GPLv2+ with exceptions and LGPLv2+ and BSD
@@ -3078,6 +3078,9 @@ fi
 %doc rpm.doc/changelogs/libcc1/ChangeLog*
 
 %changelog
+* Tue Oct 27 2015 Liu Di <liudidi@gmail.com> - 5.1.1-4.1
+- 为 Magic 3.0 重建
+
 * Thu Jun 18 2015 Jakub Jelinek <jakub@redhat.com> 5.1.1-4
 - update from the 5 branch
   - fix C++ ICE in build_ctor_subob_ref (#1232679, #1233030, #1233068,

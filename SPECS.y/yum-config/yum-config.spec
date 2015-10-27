@@ -6,7 +6,7 @@ Summary: yum's config file
 Summary(zh_CN.UTF-8): yum 的配置文件
 Name: yum-config
 Version: 3.0
-Release: 4%{?dist}
+Release: 5%{?dist}
 License: GPL
 Group: Applications/System
 Group(zh_CN.UTF-8): 应用程序/系统
@@ -63,6 +63,9 @@ magic_rpm_clean.sh
 %config(noreplace) %{_sysconfdir}/yum.repos.d
 
 %changelog
+* Tue Oct 27 2015 Liu Di <liudidi@gmail.com> - 3.0-5
+- 为 Magic 3.0 重建
+
 * Mon May 26 2014 Liu Di <liudidi@gmail.com> - 3.0-4
 - 为 Magic 3.0 重建
 

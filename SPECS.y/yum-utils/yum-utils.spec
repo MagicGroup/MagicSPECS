@@ -1,8 +1,4 @@
-%if 0%{?rhel}
-%define package_yum_updatesd 0
-%else
 %define package_yum_updatesd 1
-%endif
 
 %{!?python_sitelib: %define python_sitelib %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib()")}
 %define pluginhome /usr/lib/yum-plugins
@@ -10,7 +6,7 @@
 Summary: Utilities based around the yum package manager
 Name: yum-utils
 Version: 1.1.31
-Release: 21%{?dist}
+Release: 22%{?dist}
 License: GPLv2+
 Group: Development/Tools
 Source: http://yum.baseurl.org/download/yum-utils/%{name}-%{version}.tar.gz
@@ -663,6 +659,9 @@ fi
 %{pluginhome}/puppetverify.*
 
 %changelog
+* Tue Oct 27 2015 Liu Di <liudidi@gmail.com> - 1.1.31-22
+- 为 Magic 3.0 重建
+
 * Thu Jan 16 2014 Zdenek Pavlas <zpavlas@redhat.com> - 1.1.31-21
 - Update to latest HEAD
 - completion: Fix file/dir completions for names containing spaces or tabs

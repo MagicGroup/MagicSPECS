@@ -1,9 +1,11 @@
 Name: yajl
 Version: 2.0.4
-Release: 2%{?dist}
+Release: 3%{?dist}
 Summary: Yet Another JSON Library (YAJL)
+Summary(zh_CN.UTF-8): 另一个 JSON 库 (YAJL)
 
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 License: ISC
 URL: http://lloyd.github.com/yajl/
 
@@ -36,12 +38,15 @@ BuildRequires: cmake
 
 %package devel
 Summary: Libraries, includes, etc to develop with YAJL
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Requires: %{name} = %{version}-%{release}
 
 %description
 Yet Another JSON Library. YAJL is a small event-driven
 (SAX-style) JSON parser written in ANSI C, and a small
 validating JSON generator.
+%description -l zh_CN.UTF-8
+另一个 JSON 库。
 
 %description devel
 Yet Another JSON Library. YAJL is a small event-driven
@@ -50,6 +55,9 @@ validating JSON generator.
 
 This sub-package provides the libraries and includes
 necessary for developing against the YAJL library
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q -n lloyd-%{name}-%{githash}
@@ -109,6 +117,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Tue Oct 27 2015 Liu Di <liudidi@gmail.com> - 2.0.4-3
+- 为 Magic 3.0 重建
+
 * Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 2.0.4-2
 - 为 Magic 3.0 重建
 

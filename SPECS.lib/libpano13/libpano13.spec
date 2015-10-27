@@ -2,14 +2,13 @@ Summary: Library for manipulating panoramic images
 Summary(zh_CN.UTF-8): 处理全景图像的库
 Name: libpano13
 Version: 2.9.19
-Release: 1%{?dist}
+Release: 3%{?dist}
 License: GPLv2+
 URL: http://panotools.sourceforge.net/
 Group: Development/Libraries
 Group(zh_CN.UTF-8): 开发/库
 Source: http://downloads.sourceforge.net/panotools/%{name}-%{version}.tar.gz
 BuildRequires: libjpeg-devel, libtiff-devel, libpng-devel, zlib-devel
-BuildRequires: libgcj-devel
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 %description
@@ -56,7 +55,6 @@ Group: Development/Libraries
 Group(zh_CN.UTF-8): 开发/库
 Requires: %{name} = %{version}-%{release}
 Requires: libjpeg-devel, libtiff-devel, libpng-devel, zlib-devel
-Requires: libgcj-devel
 
 %description devel
 The libpano13-devel package includes the header files necessary for developing
@@ -113,6 +111,12 @@ rm -rf %{buildroot}
 %{_libdir}/pkgconfig/libpano13.pc
 
 %changelog
+* Tue Oct 27 2015 Liu Di <liudidi@gmail.com> - 2.9.19-3
+- 为 Magic 3.0 重建
+
+* Tue Oct 27 2015 Liu Di <liudidi@gmail.com> - 2.9.19-2
+- 为 Magic 3.0 重建
+
 * Fri Jul 25 2014 Liu Di <liudidi@gmail.com> - 2.9.19-1
 - 更新到 2.9.19
 

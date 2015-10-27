@@ -4,15 +4,6 @@
 %define disable_check 1
 %define yum_cron_systemd 1
 
-%if 0%{?rhel} <= 6
-# rhel-6 doesn't have the systemd stuff...
-%define yum_cron_systemd 0
-%endif
-
-%if 0%{?fedora} <= 18
-# yum in Fedora <= 18 doesn't use systemd unit files...
-%define yum_cron_systemd 0
-%endif
 
 %if %{auto_sitelib}
 
@@ -27,11 +18,13 @@
 %define yum_pluginsshare /usr/share/yum-plugins
 
 Summary: RPM package installer/updater/manager
+Summary(zh_CN.UTF-8): RPM 包的安装、更新与管理
 Name: yum
 Version: 3.4.3
-Release: 66%{?dist}
+Release: 68%{?dist}
 License: GPLv2+
 Group: System Environment/Base
+Group(zh_CN.UTF-8): 系统环境/基本
 Source0: http://yum.baseurl.org/download/3.4/%{name}-%{version}.tar.gz
 Source1: yum.conf.fedora
 Source2: yum-updatesd.conf.fedora
@@ -114,9 +107,14 @@ Yum is a utility that can check for and automatically download and
 install updated RPM packages. Dependencies are obtained and downloaded 
 automatically, prompting the user for permission as necessary.
 
+%description -l zh_CN.UTF-8
+RPM 包安装更新与管理程序。
+
 %package updatesd
 Summary: Update notification daemon
+Summary(zh_CN.UTF-8): 提示更新的服务
 Group: Applications/System
+Group(zh_CN.UTF-8): 应用程序/系统
 Requires: yum = %{version}-%{release}
 Requires: dbus-python
 Requires: pygobject2
@@ -132,9 +130,14 @@ Requires(postun): /sbin/service
 yum-updatesd provides a daemon which checks for available updates and 
 can notify you when they are available via email, syslog or dbus. 
 
+%description updatesd -l zh_CN.UTF-8
+提示更新的服务。
+
 %package cron
 Summary: Files needed to run yum updates as a cron job
+Summary(zh_CN.UTF-8): 运行 yum 更新为计划服务
 Group: System Environment/Base
+Group(zh_CN.UTF-8): 系统环境/基本
 Requires: yum >= 3.0 cronie crontabs findutils
 %if %{yum_cron_systemd}
 BuildRequires: systemd-units
@@ -153,6 +156,8 @@ Requires(postun): /sbin/service
 These are the files needed to run yum updates as a cron job.
 Install this package if you want auto yum updates nightly via cron.
 
+%description cron -l zh_CN.UTF-8
+运行 yum 更新为计划服务。
 
 %prep
 %setup -q
@@ -219,7 +224,7 @@ touch $RPM_BUILD_ROOT/var/lib/yum/uuid
 chmod +x $RPM_BUILD_ROOT/%{_datadir}/yum-cli/*.py
 chmod +x $RPM_BUILD_ROOT/%{python_sitelib}/yum/*.py
 chmod +x $RPM_BUILD_ROOT/%{python_sitelib}/rpmUtils/*.py
-
+magic_rpm_clean.sh
 %find_lang %name
 
 %if %{yum_cron_systemd}
@@ -385,6 +390,12 @@ exit 0
 %endif
 
 %changelog
+* Tue Oct 27 2015 Liu Di <liudidi@gmail.com> - 3.4.3-68
+- 为 Magic 3.0 重建
+
+* Tue Oct 27 2015 Liu Di <liudidi@gmail.com> - 3.4.3-67
+- 为 Magic 3.0 重建
+
 * Thu Jul 30 2015 Liu Di <liudidi@gmail.com> - 3.4.3-66
 - 为 Magic 3.0 重建
 
