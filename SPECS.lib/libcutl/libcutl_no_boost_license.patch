@@ -1,0 +1,14 @@
+--- LICENSE.with_boost_license
++++ LICENSE
+@@ -1,11 +1,5 @@
+-Code found in the cutl/details/boost/ directory is distributed under
+-the Boost Software License (see the accompanying LICENSE file).
+-
+-Code found in the cutl/details/expat/ directory is distributed under
+-the MIT License (see the accompanying LICENSE file).
+-
+ Code found in the cutl/details/genx/ directory is distributed under
+ the MIT License (see the accompanying LICENSE file).
+ 
+ The rest is Copyright (c) 2009-2013 Code Synthesis Tools CC and is
+ distributed under the MIT License:
