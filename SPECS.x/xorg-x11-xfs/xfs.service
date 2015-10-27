@@ -1,0 +1,14 @@
+[Unit]
+Description=X Font Server
+Documentation=man:xfs(1)
+After=network.target
+
+[Service]
+EnvironmentFile=-/etc/sysconfig/xfs
+ExecStart=/usr/bin/xfs -nodaemon $OPTS
+Restart=on-failure
+User=xfs
+Group=xfs
+
+[Install]
+WantedBy=multi-user.target
