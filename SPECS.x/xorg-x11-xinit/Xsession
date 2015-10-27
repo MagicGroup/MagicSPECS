@@ -30,7 +30,7 @@ SWITCHDESKPATH=/usr/share/switchdesk
 # Xsession and xinitrc scripts which has been factored out to avoid duplication
 . /etc/X11/xinit/xinitrc-common
 
-# This Xsession.d implementation, is intended to obsolte and replace the
+# This Xsession.d implementation, is intended to obsolete and replace the
 # various mechanisms present in the 'case' statement which follows, and to
 # eventually be able to easily remove all hard coded window manager specific
 # content from this script.  See bug #142260 for additional explanation and

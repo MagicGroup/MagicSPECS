@@ -9,7 +9,9 @@
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
 GSESSION="$(type -p gnome-session)"
+MSESSION="$(type -p mate-session)"
 STARTKDE="$(type -p startkde)"
+STARTLXDE="$(type -p startlxde)"
 
 # check to see if the user has a preferred desktop
 PREFERRED=
@@ -17,8 +19,12 @@ if [ -f /etc/sysconfig/desktop ]; then
     . /etc/sysconfig/desktop
     if [ "$DESKTOP" = "GNOME" ]; then
 	PREFERRED="$GSESSION"
+    elif [ "$DESKTOP" = "MATE" ]; then
+	PREFERRED="$MSESSION"
     elif [ "$DESKTOP" = "KDE" ]; then
 	PREFERRED="$STARTKDE"
+    elif [ "$DESKTOP" = "LXDE" ]; then
+	PREFERRED="$STARTLXDE"
     fi
 fi
 
@@ -35,6 +41,9 @@ if [ -n "$GSESSION" ]; then
 elif [ -n "$STARTKDE" ]; then
     # if GNOME isn't installed, try KDE.
     exec "$STARTKDE"
+elif [ -n "$STARTLXDE" ]; then
+    # if neither GNOME nor KDE then LXDE
+    exec "$STARTLXDE"
 fi
 
 # We should also support /etc/X11/xinit/Xclients.d scripts
