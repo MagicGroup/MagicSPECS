@@ -1,17 +1,29 @@
 %define name          xscreensaver
 
-%define mainversion   5.17
+%define mainversion   5.34
 %define beta_ver      %{nil}
 
 
 %define modular_conf  1
+%define split_getimage   0
+%if 0%{?fedora} >= 14
 %define split_getimage   1
+%endif
 
-%define fedora_rel    2
+%define fedora_rel    1
 
+%global use_clang_as_cc 0
+%global use_clang_analyze 0
+%global use_cppcheck   0
+%global use_gcc_strict_sanitize 0
+%global use_gcc_trap_on_sanitize 0
 %undefine extrarel
 
-%define default_text  %{_datadir}/doc/HTML/readme/en_US/README-en_US.txt
+%if 0%{?fedora}
+%define default_text  %{_sysconfdir}/fedora-release
+%else
+%define default_text  %{_sysconfdir}/system-release
+%endif
 %define default_URL   http://planet.fedoraproject.org/rss20.xml
 
 %define pam_ver       0.80-7
@@ -25,7 +37,7 @@ Buildroot:       %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 Summary:         X screen saver and locker
 Name:            %{name}
 Version:         %{mainversion}
-Release:         %{fedora_rel}%{?dist}%{?extrarel}.1
+Release:         %{fedora_rel}%{?dist}%{?extrarel}
 Epoch:           1
 License:         MIT
 Group:           Amusements/Graphics
@@ -34,38 +46,36 @@ Source0:         http://www.jwz.org/xscreensaver/xscreensaver-%{mainversion}%{?b
 %if %{modular_conf}
 Source10:        update-xscreensaver-hacks
 %endif
+%if 0%{?fedora} >= 12
 Source11:        xscreensaver-autostart
 Source12:        xscreensaver-autostart.desktop
+%endif
 ##
 ## Patches
 ##
 # bug 129335
+%global PATCH1_desc \
 # sanitize the names of modes in barcode
 Patch1:          xscreensaver-5.00b5-sanitize-hacks.patch
-# Change webcollage not to access to net
-# Also see bug 472061
-Patch21:         xscreensaver-5.16-webcollage-default-nonet.patch
-#
 ## Patches already sent to the upsteam
-# Remove "AC_PROG_CC' was expanded before it was required" warning
-Patch30:         xscreensaver-5.11-conf264.patch
-#
 ## Patches which must be discussed with upstream
 #
-# Update Japanese po file
-Patch32:         xscreensaver-5.13-dpmsQuickoff-japo.patch
-# lament now uses a larger xpm file
-Patch33:         xscreensaver-5.17-lament-newxpm.patch
-# Don't call ctime() in signal handler, patch from jwz
-Patch34:         xscreensaver-5.17-blurb-in-sighandler-jwz.patch
+%global PATCH21_desc \
+# Change webcollage not to access to net \
+# Also see bug 472061
+Patch21:         xscreensaver-5.26-webcollage-default-nonet.patch
 #
+%global PATCH51_desc \
 # driver/test-passwd tty segfaults
-Patch41:         xscreensaver-5.12-test-passwd-segv-tty.patch
+Patch51:         xscreensaver-5.12-test-passwd-segv-tty.patch
+%global PATCH52_desc \
 # patch to compile driver/test-xdpms
-Patch42:         xscreensaver-5.12-tests-miscfix.patch
-# patch to compile driver/test-passwd.c with Patch34
-Patch43:         xscreensaver-5.17-blurb-hndl-test-passwd.patch
+Patch52:         xscreensaver-5.12-tests-miscfix.patch
 # 
+# Enable double buffer on cubestorm
+Patch3204:       xscreensaver-5.32-0004-cubestorm-enable-double-buffer-on-linux.patch
+# 
+#
 # Patches end
 Requires:        xscreensaver-base = %{epoch}:%{version}-%{release}
 Requires:        xscreensaver-extras = %{epoch}:%{version}-%{release}
@@ -74,7 +84,25 @@ Requires:        xscreensaver-gl-extras = %{epoch}:%{version}-%{release}
 %package base
 Summary:         A minimal installation of xscreensaver
 Group:           Amusements/Graphics
+
+%if 0%{?use_clang_analyze} >= 1
+BuildRequires:   clang-analyzer
+BuildRequires:   clang
+%endif
+%if 0%{?use_clang_as_cc}
+BuildRequires:   clang
+%endif
+%if 0%{?use_cppcheck}
+BuildRequires:   cppcheck
+%endif
+%if 0%{?use_gcc_strict_sanitize}
+BuildRequires:   libasan
+BuildRequires:   libubsan
+%endif
+BuildRequires:   git
 BuildRequires:   autoconf
+BuildRequires:   automake
+BuildRequires:   intltool
 BuildRequires:   bc
 BuildRequires:   desktop-file-utils
 BuildRequires:   gawk
@@ -86,7 +114,9 @@ BuildRequires:   sed
 # BuildRequires:   xdg-utils
 BuildRequires:   xorg-x11-proto-devel
 # extrusioni
+%if 0%{?fedora} >= 13
 BuildRequires:   libgle-devel
+%endif
 BuildRequires:   libX11-devel
 BuildRequires:   libXScrnSaver-devel
 BuildRequires:   libXext-devel
@@ -100,11 +130,26 @@ BuildRequires:   libXrandr-devel
 BuildRequires:   libXt-devel
 BuildRequires:   libXxf86misc-devel
 BuildRequires:   libXxf86vm-devel
-BuildRequires:   gtk2-devel	
+# XScreenSaver 5.31
+BuildRequires:   libXft-devel
+BuildRequires:   gtk2-devel
+# Write explicitly below, especially
+# for F-23 gdk_pixbuf package splitting
+BuildRequires:   pkgconfig(gdk-pixbuf-2.0)
+BuildRequires:   pkgconfig(gdk-pixbuf-xlib-2.0)
 BuildRequires:   libjpeg-devel
 BuildRequires:   libglade2-devel
+%if 0%{?fedora}
+BuildRequires:   fedora-release
+%endif
+# For --with-login-manager option
+%if 0%{?fedora} >= 14
+# Use pseudo symlink, not writing BR: gdm
+#BuildRequires:   gdm
+%endif
 Requires:        %{_sysconfdir}/pam.d/system-auth
 Requires:        pam > %{pam_ver}
+# For xdg-open
 Requires:        xdg-utils
 %if ! %{split_getimage}
 Requires:        xorg-x11-resutils
@@ -118,7 +163,10 @@ Obsoletes:       xscreeensaver-tests < %{epoch}:%{version}-%{release}
 %package extras-base
 Summary:         A base package for screensavers
 Group:           Amusements/Graphics
+%if 0%{?fedora} < 19
 Requires:        %{name}-base = %{epoch}:%{version}-%{release}
+%endif
+# For appres, etc
 Requires:        xorg-x11-resutils
 
 %package extras
@@ -152,21 +200,27 @@ Requires:        %{name}-extras-base = %{epoch}:%{version}-%{release}
 %endif
 
 %package extras-gss
-Summary:         Desktop files of extras for gnome-screensaver
+Summary:         Desktop files of extras for other screensaver
 Group:           Amusements/Graphics
 Requires:        %{name}-extras = %{epoch}:%{version}-%{release}
-Requires:        gnome-screensaver
 
 %package gl-extras-gss
-Summary:         Desktop files of gl-extras for gnome-screensaver
+Summary:         Desktop files of gl-extras for other screensaver
 Group:           Amusements/Graphics
 Requires:        %{name}-gl-extras = %{epoch}:%{version}-%{release}
-Requires:        gnome-screensaver
 
 %package tests
 Summary:         Test programs related to XScreenSaver
 Group:           Development/Debuggers
 Requires:        %{name}-base = %{epoch}:%{version}-%{release}
+
+%package clang-analyze
+Summary:         Clang analyze result log
+Group:           Development/Debuggers
+
+%package cppcheck
+Summary:         cppcheck result log
+Group:           Development/Debuggers
 
 
 %description
@@ -228,29 +282,54 @@ pour votre plaisir des yeux.
 
 %description extras-gss
 This package contains desktop files of extras screensavers
-for gnome-screensaver compatibility.
+for other screensaver compatibility.
 
 %description gl-extras-gss
 This package contains desktop files of gl-extras screensavers
-for gnome-screensaver compatibility.
+for other screensaver compatibility.
 
 %description tests
 This package contains some test programs to debug XScreenSaver.
+
+%description clang-analyze
+This package contains Clang analyze result of XScreenSaver.
+
+%description cppcheck
+This package contains cppcheck result of XScreenSaver.
 
 
 %prep
 %setup -q -n %{name}-%{mainversion}%{?beta_ver}
 
-%patch1 -p1 -b .sanitize-hacks
-%patch21 -p1 -b .nonet
-%patch32 -p1 -b .dpmsoff_japo
-%patch33 -p1 -b .newxpm
-( cd driver
-%patch34 -p0 -b .blurb_hndl
-)
-%patch41 -p1 -b .test_passwd
-%patch42 -p1 -b .test_misc
-%patch43 -p1 -b .hndl_extra
+cat > .gitignore <<EOF
+configure
+config.guess
+config.sub
+aclocal.m4
+config.h.in
+OSX
+EOF
+
+# Firstly clean this
+rm -f driver/XScreenSaver_ad.h
+
+%__git init
+%__git config user.email "xscreensaver-owner@fedoraproject.org"
+%__git config user.name "XScreenSaver owners"
+%__git add .
+%__git commit -m "base" -q
+
+%patch1 -p1
+  %__git commit -m "%PATCH1_desc" -a
+%patch21 -p1
+  %__git commit -m "%PATCH21_desc" -a
+
+%patch51 -p1
+  %__git commit -m "%PATCH51_desc" -a
+%patch52 -p1
+  %__git commit -m "%PATCH52_desc" -a
+
+%__cat %PATCH3204 | %__git am
 
 change_option(){
    set +x
@@ -288,6 +367,7 @@ silence_hack(){
    set -x
 }
 
+%global PATCH_desc \
 # change some files to UTF-8
 for f in \
    driver/XScreenSaver.ad.in \
@@ -297,8 +377,10 @@ for f in \
    touch -r $f $f.tmp
    mv $f.tmp $f
 done
+%__git commit -m "%PATCH_desc" -a
 
-# Change some options
+%global PATCH_desc \
+# Change some options \
 # For grabDesktopImages, lock, see bug 126809
 change_option driver/XScreenSaver.ad.in \
    captureStderr=False \
@@ -308,13 +390,19 @@ change_option driver/XScreenSaver.ad.in \
    splash=False \
    ignoreUninstalledPrograms=True \
    textProgram=fortune\ -s \
+%if 0%{?fedora} >= 12
    textURL=%{default_URL}
+%endif
+%__git commit -m "%PATCH_desc" -a
 
-# Disable the following hacks by default
+%global PATCH_desc \
+# Disable the following hacks by default \
 # (disable, not remove)
 silence_hack driver/XScreenSaver.ad.in \
    bsod flag
+%__git commit -m "%PATCH_desc" -a
 
+%global PATCH_desc \
 # Record time, EVR
 eval sed -i.ver \
    -e \'s\|version \[45\]\.\[0-9a-z\]\[0-9a-z\]\*\|version %{version}-`echo \
@@ -322,27 +410,32 @@ eval sed -i.ver \
       driver/XScreenSaver.ad.in
 
 eval sed -i.date \
-   -e \'s\|\[0-9\].\*-.\*-20\[0-9\]\[0-9\]\|`LANG=C date -u +'%%d-%%b-%%Y'`\|g\' \
+   -e \'s\|\[0-9\].\*-.\*-20\[0-9\]\[0-9\]\|`LANG=C LC_ALL=C date -u +'%%d-%%b-%%Y'`\|g\' \
    driver/XScreenSaver.ad.in
 
 eval sed -i.ver \
-   -e \'s\|\(\[0-9\].\*-.\*-20\[0-9\]\[0-9\]\)\|\(`LANG=C \
+   -e \'s\|\(\[0-9\].\*-.\*-20\[0-9\]\[0-9\]\)\|\(`LANG=C LC_ALL=C \
       date -u +'%%d-%%b-%%Y'`\)\|g\' \
    -e \'s\|\\\(5.\[0-9\]\[0-9\]\\\)[a-z]\[0-9\]\[0-9\]\*\|\\\1\|\' \
    -e \'s\|5.\[0-9\]\[0-9\]\|%{version}-`echo %{release} | \
       sed -e '/IGNORE THIS/s|\.[a-zA-Z][a-zA-Z0-9].*$||'`\|\' \
    utils/version.h
+%__git commit -m "%PATCH_desc" -a
 
+%global PATCH_desc \
 # Move man entry to 6x (bug 197741)
 for f in `find hacks -name Makefile.in` ; do
    sed -i.mansuf \
       -e '/^mansuffix/s|6|6x|'\
       $f
 done
+%__git commit -m "%PATCH_desc" -a
 
+%global PATCH_desc \
 # Search first 6x entry, next 1 entry for man pages
 sed -i.manentry -e 's@man %%s@man 6x %%s 2>/dev/null || man 1 %%s @' \
    driver/XScreenSaver.ad.in
+%__git commit -m "%PATCH_desc" -a
 
 # Suppress rpmlint warnings.
 # suppress about pam config (although this is 
@@ -358,12 +451,17 @@ if [ -x %{_datadir}/libtool/config.guess ]; then
    cp -p %{_datadir}/libtool/config.{sub,guess} .
 fi
 
+%global PATCH_desc \
 # Fix for desktop-file-utils 0.14+
+%if 0%{?fedora} >= 9
 sed -i.icon -e 's|xscreensaver\.xpm|xscreensaver|' \
    driver/screensaver-properties.desktop.in
+%endif
+%__git commit -m "%PATCH_desc" -a || echo "Nothing changed"
 
-# Disable (don't build) some tests
-# apm: doesn't compile
+%global PATCH_desc \
+# Disable (don't build) some tests \
+# apm: doesn't compile \
 # mlstring: causes OOM - need check again
 sed -i.test \
    -e 's|test-apm[ \t][ \t]*t|t|' \
@@ -371,23 +469,35 @@ sed -i.test \
    -e 's|test-mlstring[ \t][ \t]*t|t|' \
 %endif
    driver/Makefile.in
+%__git commit -m "%PATCH_desc" -a
 
+%global PATCH_desc \
 # test-fade: give more time between fading
 sed -i.delay -e 's| delay = 1| delay = 3|' driver/test-fade.c
+%__git commit -m "%PATCH_desc" -a
+
+%global PATCH_desc \
 # test-grab: testing time too long, setting time 15 min -> 20 sec
 sed -i.delay -e 's|60 \* 15|20|' driver/test-grab.c
+%__git commit -m "%PATCH_desc" -a
 
+aclocal
 autoconf
 autoheader
 
 %build
 
-archdir=`./config.guess`
+archdir=`sh ./config.guess`
 [ -d $archdir ] || mkdir $archdir
 cd $archdir
 
 # Create temporary path and symlink
 rm -rf ./TMPBINDIR
+
+# Make it sure that perl interpreter is recognized
+# as /usr/bin/perl, not /bin/perl so as not to make
+# /bin/perl added as rpm dependency
+export PATH=/usr/bin:$PATH
 
 mkdir TMPBINDIR
 pushd TMPBINDIR/
@@ -398,6 +508,23 @@ ln -sf /bin/true xdg-open
 popd
 
 export CFLAGS="${CFLAGS:-${RPM_OPT_FLAGS}}"
+export CFLAGS="$(echo $CFLAGS | sed -e 's|-g |-g3 |')"
+# Build with -D_FILE_OFFSET_BITS=64 to support cifs-mounted
+# filesystem for image directory (Ubuntu bug 609451)
+# The below line changed to use Patch37
+# export CFLAGS="$CFLAGS -D_FILE_OFFSET_BITS=64"
+
+%if 0%{?use_clang_as_cc}
+export CC=clang
+export CFLAGS="$(echo $CFLAGS | sed -e 's|-fstack-protector-strong|-fstack-protector|')"
+%endif
+
+%if 0%{?use_gcc_strict_sanitize}
+export CC="gcc -fsanitize=address -fsanitize=undefined"
+%if 0%{?use_gcc_trap_on_sanitize}
+export CC="$CC -fsanitize-undefined-trap-on-error"
+%endif
+%endif
 
 CONFIG_OPTS="--prefix=%{_prefix} --with-pam --without-shadow --without-kerberos"
 CONFIG_OPTS="$CONFIG_OPTS --without-setuid-hacks"
@@ -407,27 +534,62 @@ CONFIG_OPTS="$CONFIG_OPTS --disable-root-passwd"
 CONFIG_OPTS="$CONFIG_OPTS --with-browser=xdg-open"
 # From xscreensaver 5.12, login-manager option is on by default
 # For now, let's enable it on F-14 and above
+%if 0%{?fedora} >= 14
 pushd TMPBINDIR
 ln -sf /bin/true gdmflexiserver
 popd
+%else
+CONFIG_OPTS="$CONFIG_OPTS --without-login-manager"
+%endif
+# Enable extrusion on F-13 and above
+%if 0%{?fedora} <= 12
+CONFIG_OPTS="$CONFIG_OPTS --without-gle"
+%endif
 # Enable account type pam validation on F-18+,
 # debian bug 656766
+%if 0%{?fedora} >= 18
 CONFIG_OPTS="$CONFIG_OPTS --enable-pam-check-account-type"
+%endif
+# xscreensaver 5.30
+CONFIG_OPTS="$CONFIG_OPTS --with-record-animation"
 
 # This is flaky:
 # CONFIG_OPTS="$CONFIG_OPTS --with-login-manager"
 
+%if 0%{?use_clang_analyze} >= 1
+%global _configure scan-build --use-analyzer %_bindir/clang ./configure
+%endif
+
 unlink configure || :
 ln -s ../configure .
-%configure $CONFIG_OPTS
+%configure $CONFIG_OPTS || { cat config.log ; sleep 10 ; exit 1; }
 rm -f configure
 
 %if %{update_po}
-( cd po ; make generate_potfiles_in update-po )
+#( cd po ; make generate_potfiles_in update-po )
+# ???
+( cd po ; make generate_potfiles_in ; cp -p POTFILES.in .. ; export srcdir=.. ; make update-po ; rm -f ../POTFILES_in )
+( cp -p ../po/*.po po/)
+( ( cd ../po ; git add *.po ; git commit -m "po regenerated" ) || true )
 %endif
 
-make %{?_smp_mflags} -k \
+%if 0%{?use_clang_analyze} >= 1
+%global __make scan-build  --use-analyzer %_bindir/clang -v -v -v -o clang-analyze make
+mkdir clang-analyze
+%endif
+
+%if 0%{?use_clang_analyze} < 1
+for dir in \
+  utils driver hacks hacks/glx po
+do
+  %__make %{?_smp_mflags} -k \
+    -C $dir \
 	GMSGFMT="msgfmt --statistics"
+done
+%endif
+
+# Again
+%__make %{?_smp_mflags} -k
 
 %if %{modular_conf}
 # Make XScreenSavar.ad modular (bug 200881)
@@ -459,8 +621,26 @@ cd ..
 make tests -C driver
 %endif
 
+%if 0%{?use_cppcheck} >= 1
+cd ..
+CPPCHECK_FLAGS=""
+CPPCHECK_FLAGS="$CPPCHECK_FLAGS --enable=all --std=c89 -U__STRICT_ANSI__"
+CPPCHECK_FLAGS="$CPPCHECK_FLAGS -I. -Iutils -Idriver -Ihacks -I$archdir -I$archdir/hacks/"
+CPPCHECK_FLAGS="$CPPCHECK_FLAGS -I%{_includedir}"
+# find stddef.h
+GCC_HEADER_PATH=$(echo '#include <stddef.h>' | gcc -E - | sed -n -e 's|^.*"\(.*\)stddef\.h".*$|\1|p' | head -n 1)
+CPPCHECK_FLAGS="$CPPCHECK_FLAGS -I$GCC_HEADER_PATH"
+CPPCHECK_FLAGS="$CPPCHECK_FLAGS $(pkg-config --cflags gtk+-2.0 | sed -e 's|-pthread||')"
+CPPCHECK_FLAGS="$CPPCHECK_FLAGS -DSTANDALONE -DHAVE_CONFIG_H -DUSE_GL"
+
+cppcheck $CPPCHECK_FLAGS . 2>&1 | tee cppcheck-result.log
+cppcheck $CPPCHECK_FLAGS --check-config . 2>&1 | tee cppcheck-path-inclusion-check.log
+
+cd $archdir
+%endif
+
 %install
-archdir=`./config.guess`
+archdir=`sh ./config.guess`
 cd $archdir
 
 rm -rf ${RPM_BUILD_ROOT}
@@ -475,6 +655,9 @@ make install_prefix=$RPM_BUILD_ROOT INSTALL="install -c -p" install
 # Kill OnlyShowIn=GNOME; on F-11+ (bug 483495)
 desktop-file-install --vendor "" --delete-original    \
    --dir $RPM_BUILD_ROOT%{_datadir}/applications         \
+%if 0%{?fedora} < 11
+   --add-only-show-in GNOME                              \
+%endif
    --add-category    DesktopSettings                     \
 %if 0
    --add-category X-Red-Hat-Base                         \
@@ -593,8 +776,7 @@ for dir in `find . -type d | grep xscreensaver` ; do
 done
 popd
 
-magic_rpm_clean.sh
-%find_lang %{name} || touch %{name}.lang
+%find_lang %{name}
 cat %{name}.lang | uniq >> $dd/base.files
 
 # Suppress rpmlint warnings
@@ -618,8 +800,17 @@ done
 cd ..
 %endif
 
+%if 0%{?use_clang_analyze} >= 1
+pushd ..
+rm -rf clang-analyze
+mkdir -p clang-analyze/html
+cp -a $archdir/clang-analyze/*/* clang-analyze/html
+popd
+%endif
+
 # Install desktop application autostart stuff
 # Add OnlyShowIn=GNOME (bug 517391)
+%if 0%{?fedora} >= 12
 mkdir -p ${RPM_BUILD_ROOT}%{_sysconfdir}/xdg/autostart
 install -cpm 0755 %{SOURCE11} ${RPM_BUILD_ROOT}%{_libexecdir}/
 desktop-file-install \
@@ -631,6 +822,7 @@ chmod 0644 ${RPM_BUILD_ROOT}%{_sysconfdir}/xdg/autostart/xscreensaver*.desktop
 
 echo "%{_libexecdir}/xscreensaver-autostart" >> $dd/base.files
 echo '%{_sysconfdir}/xdg/autostart/xscreensaver*.desktop' >> $dd/base.files
+%endif
 
 # Create desktop entry for gnome-screensaver
 # bug 204944, 208560
@@ -645,7 +837,8 @@ create_desktop(){
       echo "$COMMAND could not be found under $RPM_BUILD_ROOT"
       #exit 1
    fi
-   NAME=`cat $1 | sed -n -e 's|^<screen.*_label=\"\(.*\)\">.*$|\1|p'`
+# NAME entry fix (bug 953558)
+   NAME=`cat $1 | sed -n -e 's|^<screen.*_label=\"\([^\"][^\"]*\)\".*>.*$|\1|p'`
    ARG=`cat $1 | sed -n -e 's|^.*<command arg=\"\([^ ][^ ]*\)\".*$|\1|p'`
    ARG=$(echo "$ARG" | while read line ; do echo -n "$line " ; done)
    COMMENT="`cat $1 | sed -e '1,/_description/d' | \
@@ -672,6 +865,8 @@ create_desktop(){
    echo "StartupNotify=false" >> $2
    echo "Type=Application" >> $2
    echo "Categories=GNOME;Screensaver;" >> $2
+# Add OnlyShowIn (bug 953558)
+   echo "OnlyShowIn=GNOME;MATE;" >> $2
 }
 
 cd $dd
@@ -731,6 +926,7 @@ rm -rf ${RPM_BUILD_ROOT}
 %{_sbindir}/update-xscreensaver-hacks
 %endif
 
+%if 0%{?fedora} >= 18
 # In the case that pam setting is edited locally by sysadmin:
 if ! grep -q '^account' %{_sysconfdir}/pam.d/xscreensaver
 then
@@ -741,6 +937,7 @@ then
     echo "# Account validation" >> $PAMFILE
     echo "account include system-auth" >> $PAMFILE
 fi
+%endif
 
 exit 0
 
@@ -777,9 +974,258 @@ exit 0
 %files -f gnome-gl-extras.files gl-extras-gss
 %defattr(-,root,root,-)
 
+%if 0%{?use_clang_analyze} >= 1
+%files clang-analyze
+%doc clang-analyze/html
+%endif
+
+%if 0%{?use_cppcheck} >= 1
+%files cppcheck
+%doc cppcheck-*.log
+%endif
+
 %changelog
-* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 1:5.17-2.1
-- 为 Magic 3.0 重建
+* Sun Oct 25 2015 Mamoru TASAKA <mtasaka@fedoraproject.org> - 1:5.34-1
+- Update to 5.34
+
+* Sat Oct 24 2015 Mamoru TASAKA <mtasaka@fedoraproject.org> - 1:5.33-5.respin1
+- Patch3302 revised by the upstream
+
+* Fri Oct 23 2015 Mamoru TASAKA <mtasaka@fedoraproject.org> - 1:5.33-4.respin1
+- Suspend resizing when unlock (bug 1274452)
+
+* Sun Aug 30 2015 Mamoru TASAKA <mtasaka@fedoraproject.org> - 1:5.33-3.respin1
+- Escape braces in xscreensaver-text to remove warning
+
+* Mon Jul  6 2015 Mamoru TASAKA <mtasaka@fedoraproject.org> - 1:5.33-2.retake1
+- Upstream source refreshed, retake
+
+* Sat Jul  4 2015 Mamoru TASAKA <mtasaka@fedoraproject.org> - 1:5.33-1
+- 5.33
+
+* Fri Jun 19 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1:5.32-12.1
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
+
+* Sun Apr 19 2015 Mamoru TASAKA <mtasaka@fedoraproject.org> - 1:5.32-12
+- providence:update_particles: aviod one byte ahead access
+
+* Mon Mar 23 2015 Mamoru TASAKA <mtasaka@fedoraproject.org>
+- Make it sure that perl interpreter is recognized
+  as /usr/bin/perl
+
+* Sat Mar 21 2015 Mamoru TASAKA <mtasaka@fedoraproject.org> - 1:5.32-11
+- Fix up gdk_pixbuf BR dep, per F-23 gdk_pixbuf packaging change
+
+* Mon Mar  9 2015 Mamoru TASAKA <mtasaka@fedoraproject.org> - 1:5.32-10
+- pong: adjust paddle position again on new game (bug 1199713)
+
+* Fri Feb 27 2015 Mamoru TASAKA <mtasaka@fedoraproject.org> - 1:5.32-9
+- pick_font_1: rescue when XftFontOpenXlfd fails correctly
+  (bug 1195437)
+
+* Wed Feb 10 2015 Mamoru TASAKA <mtasaka@fedoraproject.org>
+- Remove PATCH202 (fixed by gcc 5.0.0-0.10)
+
+* Tue Feb 10 2015 Mamoru TASAKA <mtasaka@fedoraproject.org> - 1:5.32-8
+- Fix possibly wrong codes detected by cppcheck
+
+* Tue Feb 10 2015 Mamoru TASAKA <mtasaka@fedoraproject.org> - 1:5.32-7
+- flush_dialog_changes_and_save: strdup for TEXT entry (bug 1190846)
+
+* Tue Feb 10 2015 Mamoru TASAKA <mtasaka@fedoraproject.org>
+- Raise debugging level to -g3
+
+* Fri Feb  6 2015 Mamoru TASAKA <mtasaka@fedoraproject.org> - 1:5.32-6
+- F-22: rebuild with gcc5
+
+* Mon Feb  2 2015 Mamoru TASAKA <mtasaka@fedoraproject.org> - 1:5.32-5
+- Enable double buffer on cubestorm
+- Update ja.po
+
+* Sun Feb  1 2015 Mamoru TASAKA <mtasaka@fedoraproject.org> - 1:5.32-4
+- Temporarily disable sse2 when gcc5 with -fsanitize=foo
+- gcc5 address sanitizer fix for pick_best_gl_visual
+
+* Sat Dec 20 2014 Mamoru TASAKA <mtasaka@fedoraproject.org> - 1:5.32-3
+- Enable double buffer on noof (Ubuntu bug 1390304)
+
+* Sun Dec  7 2014 Mamoru TASAKA <mtasaka@fedoraproject.org> - 1:5.32-2
+- Patch from upstream for some GNOME issues with KeyPress
+
+* Thu Nov 20 2014 Mamoru TASAKA <mtasaka@fedoraproject.org> - 1:5.32-1
+- Update to 5.32
+
+* Sun Nov 16 2014 Mamoru TASAKA <mtasaka@fedoraproject.org> - 1:5.31-1
+- Update to 5.31
+
+* Tue Sep 23 2014 Mamoru TASAKA <mtasaka@fedoraproject.org> - 1:5.30-4
+- tessellimage/tessellate: return immediately when nthreshes is zero
+- Bunch of signed integer overflow fixes
+
+* Mon Sep 15 2014 Mamoru TASAKA <mtasaka@fedoraproject.org> - 1:5.30-3
+- gcc49 sanitizer fix for xscreensaver-demo wrt memmove usage on de_stringify
+
+* Sat Sep 13 2014 Mamoru TASAKA <mtasaka@fedoraproject.org> - 1:5.30-2
+- Some misc change on spec file for git usage
+
+* Fri Sep 12 2014 Mamoru TASAKA <mtasaka@fedoraproject.org> - 1:5.30-1
+- Update to 5.30
+
+* Sat Sep  6 2014 Mamoru TASAKA <mtasaka@fedoraproject.org> - 1:5.29-3
+- Remove GtkDialog:has-separator usage to suppress warning for
+  xscreensaver-demo on Fedora 21 and above
+
+* Thu Sep  4 2014 Mamoru TASAKA <mtasaka@fedoraproject.org> - 1:5.29-2
+- gcc49 sanitizer array elements oversize fixes
+- Make parallel build actually work
+
+* Mon Aug 18 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1:5.29-1.1
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
+
+* Mon Jun  9 2014 Mamoru TASAKA <mtasaka@fedoraproject.org> - 1:5.29-1
+- Update to 5.29
+
+* Thu Jun  5 2014 Mamoru TASAKA <mtasaka@fedoraproject.org> - 1:5.28-1
+- Update to 5.28
+
+* Fri May 30 2014 Mamoru TASAKA <mtasaka@fedoraproject.org> - 1:5.27-2
+- Remove GLib and invalid-source-encoding warnings on clang
+- Re-generate driver/XScreenSaver_ad.h correctly
+
+* Wed May 28 2014 Mamoru TASAKA <mtasaka@fedoraproject.org> - 1:5.27-1
+- Update to 5.27
+
+* Mon May  5 2014 Mamoru TASAKA <mtasaka@fedoraproject.org> - 1:5.26-7
+- Yet another segv fix (for extrusion), detected by
+  gcc49 -fsanitize=address
+
+* Thu May  1 2014 Mamoru TASAKA <mtasaka@fedoraproject.org> - 1:5.26-6
+- Yet another segv fix (for shadebobs), detected by
+  gcc49 -fsanitize=address
+
+* Wed Apr 16 2014 Mamoru TASAKA <mtasaka@fedoraproject.org> - 1:5.26-5
+- Yet another segv fix (for noseguy, xmatrix), detected by
+  gcc49 -fsanitize=address
+
+* Mon Apr 14 2014 Mamoru TASAKA <mtasaka@fedoraproject.org> - 1:5.26-4
+- Support gcc -fsanitize=address -fsanitize=undefined (disabled by default)
+- And fix some errors detected by above, especially address errors
+  in apple2
+
+* Fri Apr 11 2014 Mamoru TASAKA <mtasaka@fedoraproject.org> - 1:5.26-3
+- F21 gcc49 rebuild
+
+* Mon Jan 13 2014 Mamoru TASAKA <mtasaka@fedoraproject.org> - 1:5.26-2
+- Make sync_server_dpms_settings consistent for dpms_quickoff_p option
+  (bug 1047108)
+- Kill memleak on goop
+- Various fixes for cppcheck errors / warnings
+
+* Tue Dec 10 2013 Mamoru TASAKA <mtasaka@fedoraproject.org> - 1:5.26-1
+- Update to 5.26
+
+* Wed Nov 13 2013 Mamoru TASAKA <mtasaka@fedoraproject.org> - 1:5.23-1
+- Update to 5.23
+
+* Sun Aug 04 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1:5.22-1.2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Wed Jul 17 2013 Petr Pisar <ppisar@redhat.com> - 1:5.22-1.1
+- Perl 5.18 rebuild
+
+* Wed Jul 17 2013 Mamoru TASAKA <mtasaka@fedoraproject.org> - 1:5.22-1
+- Update to 5.22
+
+* Mon Jul  8 2013 Mamoru TASAKA <mtasaka@fedoraproject.org>
+- Add support for Clang analyze for debugging Clang (ref: bug 982081)
+
+* Sun Jul  7 2013 Mamoru TASAKA <mtasaka@fedoraproject.org> - 1:5.21-10
+- Fix memleak in on_path_p
+  (Patrice Bouchand <patrice.bouchand.fedora@gmail.com>)
+
+* Mon Jun 10 2013 Mamoru TASAKA <mtasaka@fedoraproject.org> - 1:5.21-9
+- Revised polyominoes patch from jwz
+
+* Wed Jun  5 2013 Mamoru TASAKA <mtasaka@fedoraproject.org> - 1:5.21-8
+- Prevent apple2 segfault when receiving ConfigureNotify event
+  (bug 970402)
+
+* Thu May 30 2013 Mamoru TASAKA <mtasaka@fedoraproject.org> - 1:5.21-7
+- Reinitialize maze on restart, which will perhaps fix
+  maze segv
+
+* Sun May 19 2013 Mamoru TASAKA <mtasaka@fedoraproject.org> - 1:5.21-6
+- F-19+: Kill dependency for base on extras, gl-extras subpackage
+- Fix segfault on pacman (bug 964575)
+
+* Sun Apr 21 2013 Mamoru TASAKA <mtasaka@fedoraproject.org> - 1:5.21-5
+- Don't autostart xscreensaver when mate-screensaver is installed.
+
+* Sun Apr 21 2013 Mamoru TASAKA <mtasaka@fedoraproject.org> - 1:5.21-4
+- Fix engine crash with one byte ahead access (bug 954115)
+
+* Sun Apr 21 2013 Mamoru TASAKA <mtasaka@fedoraproject.org> - 1:5.21-3
+- Fix the iteration number for pentomino mode in polyominoes
+  (bug 954077)
+- Convert maxlife option from 5.20- for fireworkx (bug 953916)
+- Fix broken Name entry for desktop file of GL hacks (bug 953558)
+- Add OnlyShownIn entry for desktop files (bug 953558)
+
+* Sat Feb 16 2013 Mamoru TASAKA <mtasaka@fedoraproject.org> - 1:5.21-2
+- Fix bumps segfault on 64bit (bug 911007)
+
+* Thu Feb  7 2013 Mamoru TASAKA <mtasaka@fedoraproject.org> - 1:5.21-1
+- Update to 5.21
+
+* Mon Jan 21 2013 Adam Tkac <atkac redhat com> - 1:5.20-3.1
+- rebuild due to "jpeg8-ABI" feature drop
+
+* Tue Oct 30 2012 Mamoru Tasaka <mtasaka@fedoraproject.org> - 1:5.20-3
+- Prevent crash when distort receives ConfigureNotify at startup
+  (bug 871433)
+
+* Wed Oct 24 2012 Mamoru Tasaka <mtasaka@fedoraproject.org> - 1:5.20-2
+- Kill dependency of -gss subpackages for gnome-screensaver
+  to make MATE desktop happy 
+
+* Wed Oct 17 2012 Mamoru Tasaka <mtasaka@fedoraproject.org> - 1:5.20-1
+- Update to 5.20
+
+* Sun Oct  7 2012 Mamoru Tasaka <mtasaka@fedoraproject.org> - 1:5.19-6
+- Use AC_SYS_LARGEFILE to detect support for -D_FILE_OFFSET_BITS=64
+
+* Wed Oct  3 2012 Mamoru Tasaka <mtasaka@fedoraproject.org> - 1:5.19-5
+- May fix xscreensaver-getimage failure with BadMatch in
+  XPutImage (may fix debian bug 688955)
+
+* Fri Sep 21 2012 Mamoru Tasaka <mtasaka@fedoraproject.org>
+- A bit spec file cleanup
+
+* Mon Aug 27 2012 Mamoru Tasaka <mtasaka@fedoraproject.org> - 1:5.19-4
+- Remove warning from calling glLighti with float argument in engine.c
+
+* Thu Aug 23 2012 Mamoru Tasaka <mtasaka@fedoraproject.org> - 1:5.19-3
+- More fix on bug 849961 (lament -no-texture)
+
+* Wed Aug 22 2012 Mamoru Tasaka <mtasaka@fedoraproject.org> - 1:5.19-2
+- Fix segv on lament with -wireframe option (bug 849961)
+- Fix improper and operator on flurry detected by llvm-clang
+
+* Fri Jul 27 2012 Mamoru Tasaka <mtasaka@fedoraproject.org> - 1:5.19-1
+- Update to 5.19
+
+* Fri Jul 27 2012 Mamoru Tasaka <mtasaka@fedoraproject.org> - 1:5.18-3
+- Build with -D_FILE_OFFSET_BITS=64 to support cifs-mounted
+  filesystem for image directory (Ubuntu bug 609451)
+
+* Sun Jul 22 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1:5.18-2.1
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Wed Jul  4 2012 Mamoru Tasaka <mtasaka@fedoraproject.org> - 1:5.18-2
+- Fix -verbose option usage in widwhacker as written in usage()
+
+* Wed Jul  4 2012 Mamoru Tasaka <mtasaka@fedoraproject.org> - 1:5.18-1
+- Update to 5.18
 
 * Sat Jun 30 2012 Mamoru Tasaka <mtasaka@fedoraproject.org> - 1:5.17-2
 - Don't call ctime in blurb in signal hander, patch by jwz
