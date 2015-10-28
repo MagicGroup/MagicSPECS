@@ -1,14 +1,17 @@
 Name:          zenity
-Version:       3.8.0
-Release:       2%{?dist}
+Version:	3.18.1.1
+Release:	2%{?dist}
 Summary:       Display dialog boxes from shell scripts
+Summary(zh_CN.UTF-8): 在 shell 脚本中显示对话框
 Group:         Applications/System
+Group(zh_CN.UTF-8): 应用程序/系统
 License:       LGPLv2+
 URL:           http://directory.fsf.org/zenity.html
-Source:        http://download.gnome.org/sources/%{name}/3.8/%{name}-%{version}.tar.xz
+%define majorver %(echo %{version} | awk -F. '{print $1"."$2}')
+Source:        http://download.gnome.org/sources/%{name}/%{majorver}/%{name}-%{version}.tar.xz
 
 BuildRequires: gtk3-devel >= 3.0.0
-BuildRequires: libnotify-devel >= 0.4.1
+BuildRequires: libnotify-devel >= 0.6.1
 BuildRequires: which
 BuildRequires: gettext
 BuildRequires: intltool
@@ -18,6 +21,9 @@ BuildRequires: itstool
 Zenity lets you display Gtk+ dialog boxes from the command line and through
 shell scripts. It is similar to gdialog, but is intended to be saner. It comes
 from the same family as dialog, Xdialog, and cdialog.
+
+%description -l zh_CN.UTF-8
+在 shell 脚本中显示对话框。
 
 %prep
 %setup -q
@@ -45,6 +51,9 @@ rm $RPM_BUILD_ROOT%{_bindir}/gdialog
 
 
 %changelog
+* Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 3.18.1-2
+- 更新到 3.18.1
+
 * Tue Mar 26 2013 Kalev Lember <kalevlember@gmail.com> - 3.8.0-2
 - Minor spec file updates for 3.8
 

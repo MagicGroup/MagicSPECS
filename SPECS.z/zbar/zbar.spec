@@ -3,7 +3,7 @@
 
 Name:           zbar
 Version:        0.10
-Release:        19%{?dist}
+Release:        20%{?dist}
 Summary:        Bar code reader
 
 Group:          User Interface/X Hardware Support
@@ -13,6 +13,8 @@ Source0:        http://downloads.sourceforge.net/%{name}/%{name}-%{version}.tar.
 Patch0:		zbar_update_to_hg.patch
 Patch1:		zbar_use_libv4l.patch
 Patch2:		zbar_choose_supported_format_first.patch
+Patch3:		zbar_use_REQBUFS_properly.patch
+Patch4:		zbar_configure_ac_use_m4_pattern_allow.patch
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
  
 BuildRequires:	autoconf automake libtool python-devel gettext-devel
@@ -86,6 +88,8 @@ scanning widget.
 %patch0 -p1
 %patch1 -p1
 %patch2 -p1
+%patch3 -p1
+%patch4 -p1
 
 %build
 autoreconf -vfi
@@ -136,7 +140,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man1/*
 
 #java?
-%{_datadir}/zbar/lib/*
+#%{_datadir}/zbar/lib/*
 
 %files devel
 %defattr(-,root,root,-)
@@ -182,6 +186,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_includedir}/zbar/QZBar*.h
 
 %changelog
+* Tue Oct 27 2015 Liu Di <liudidi@gmail.com> - 0.10-20
+- 为 Magic 3.0 重建
+
 * Tue Aug 06 2013 Mauro Carvalho Chehab <m.chehab@samsung.com> - 0.10-19
 - Fix Fedora 20 build problems
 

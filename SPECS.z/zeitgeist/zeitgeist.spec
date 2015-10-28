@@ -1,7 +1,8 @@
 Summary:	Framework providing Desktop activity awareness
+Summary(zh_CN.UTF-8): 提供桌面活动通知的框架
 Name:		zeitgeist
-Version:	0.9.14
-Release:	4%{?dist}
+Version:	0.9.16
+Release:	2%{?dist}
 
 # most of the source code is LGPLv2+, except:
 # datahub/ is LGPLv3+
@@ -13,7 +14,6 @@ Release:	4%{?dist}
 License:	LGPLv2+ and LGPLv3+ and GPLv2+
 URL:		https://launchpad.net/zeitgeist
 Source0:	http://launchpad.net/%{name}/0.9/%{version}/+download/%{name}-%{version}.tar.xz
-Patch0:		zeitgeist-fix-giodeps.patch
 
 BuildRequires:	dbus-devel
 BuildRequires:	gettext
@@ -42,36 +42,42 @@ relevant information available to other applications.
 Note that this package only contains the daemon, which you can use
 together with several different user interfaces.
 
+%description -l zh_CN.UTF-8
+提供桌面活动通知的框架。
 
 %package	libs
 Summary:	Client library for interacting with the Zeitgeist daemon
+Summary(zh_CN.UTF-8): %{name} 的运行库
 License:	LGPLv2+
 
 %description	libs
 Libzeitgeist is a client library for interacting with the Zeitgeist
 daemon.
 
+%description libs -l zh_CN.UTF-8
+%{name} 的运行库。
 
 %package	devel
 Summary:	Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 License:	LGPLv2+
 Requires:	%{name}-libs%{?_isa} = %{version}-%{release}
 
 %description	devel
 The %{name}-devel package contains libraries and header files for
 developing applications that use %{name}.
-
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
-%patch0 -p1
 
 ## nuke unwanted rpaths, see also
 ## https://fedoraproject.org/wiki/Packaging/Guidelines#Beware_of_Rpath
 sed -i -e 's|"/lib /usr/lib|"/%{_lib} %{_libdir}|' configure
 
 %build
-%configure --enable-fts --enable-datahub     
+%configure --enable-fts --enable-datahub   --disable-silent-rules
 make %{?_smp_mflags} 
 
 %install
@@ -81,7 +87,7 @@ rm -f %{buildroot}%{_libdir}/*.la
 
 # We install AUTHORS and NEWS with %%doc instead
 rm -rf %{buildroot}%{_datadir}/zeitgeist/doc
-
+magic_rpm_clean.sh
 #%find_lang %{name}
 
 %post libs -p /sbin/ldconfig
@@ -118,6 +124,9 @@ rm -rf %{buildroot}%{_datadir}/zeitgeist/doc
 %{_datadir}/vala/vapi/zeitgeist-datamodel-2.0.vapi
 
 %changelog
+* Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 0.9.16-2
+- 更新到 0.9.16
+
 * Fri Jul 18 2014 Liu Di <liudidi@gmail.com> - 0.9.14-4
 - 为 Magic 3.0 重建
 

@@ -1,13 +1,15 @@
 # this file is encoded in UTF-8  -*- coding: utf-8 -*-
 
 Summary: Powerful interactive shell
+Summary(zh_CN.UTF-8): 强大的交互式 shell
 Name: zsh
-Version: 4.3.17
-Release: 4%{?dist}
+Version:	5.1.1
+Release:	2%{?dist}
 License: MIT
 URL: http://zsh.sourceforge.net/
 Group: System Environment/Shells
-Source0: http://download.sourceforge.net/%{name}/%{name}-%{version}.tar.bz2
+Group(zh_CN.UTF-8): 系统环境/Shells
+Source0: http://download.sourceforge.net/%{name}/%{name}-%{version}.tar.gz
 Source1: zlogin.rhs
 Source2: zlogout.rhs
 Source3: zprofile.rhs
@@ -20,7 +22,6 @@ Source7: zshprompt.pl
 Patch0: zsh-serial.patch
 Patch4: zsh-4.3.6-8bit-prompts.patch
 Patch5: zsh-test-C02-dev_fd-mock.patch
-Patch6: zsh-5.0.2.texi-itemx.patch
 BuildRequires: coreutils sed ncurses-devel libcap-devel
 BuildRequires: texinfo tetex texi2html gawk /bin/hostname
 Requires(post): /usr/sbin/install-info grep
@@ -36,9 +37,14 @@ command line editing, built-in spelling correction, programmable
 command completion, shell functions (with autoloading), a history
 mechanism, and more.
 
+%description -l zh_CN.UTF-8
+强大的交互式 shell。
+
 %package html
 Summary: Zsh shell manual in html format
+Summary(zh_CN.UTF-8): %{name} 的 html 格式的手册
 Group: System Environment/Shells
+Group(zh_CN.UTF-8): 系统环境/Shells
 
 %description html
 The zsh shell is a command interpreter usable as an interactive login
@@ -50,13 +56,15 @@ mechanism, and more.
 
 This package contains the Zsh manual in html format.
 
+%description html -l zh_CN.UTF-8
+%{name} 的 html 格式的手册。
+
 %prep
 
 %setup -q
 %patch0 -p1 -b .serial
 %patch4 -p1
 %patch5 -p1
-%patch6 -p1
 
 cp -p %SOURCE7 .
 
@@ -90,31 +98,36 @@ make all html
 
 %install
 rm -rf $RPM_BUILD_ROOT
+
 %makeinstall install.info \
-  fndir=$RPM_BUILD_ROOT%{_datadir}/zsh/%{version}/functions \
-  sitefndir=$RPM_BUILD_ROOT%{_datadir}/zsh/site-functions \
-  scriptdir=$RPM_BUILD_ROOT%{_datadir}/zsh/%{version}/scripts \
-  sitescriptdir=$RPM_BUILD_ROOT%{_datadir}/zsh/scripts
+  fndir=$RPM_BUILD_ROOT%{_datadir}/%{name}/%{version}/functions \
+  sitefndir=$RPM_BUILD_ROOT%{_datadir}/%{name}/site-functions \
+  scriptdir=$RPM_BUILD_ROOT%{_datadir}/%{name}/%{version}/scripts \
+  sitescriptdir=$RPM_BUILD_ROOT%{_datadir}/%{name}/scripts \
+  runhelpdir=$RPM_BUILD_ROOT%{_datadir}/%{name}/%{version}/help
 
 rm -f ${RPM_BUILD_ROOT}%{_bindir}/zsh-%{version}
 rm -f $RPM_BUILD_ROOT%{_infodir}/dir
 
 mkdir -p ${RPM_BUILD_ROOT}%{_sysconfdir}
-for i in %{SOURCE4} %{SOURCE1} %{SOURCE2} %{SOURCE5} %{SOURCE3}; do
-    install -m 644 $i ${RPM_BUILD_ROOT}%{_sysconfdir}/"$(basename $i .rhs)"
+for i in %{SOURCE1} %{SOURCE2} %{SOURCE3} %{SOURCE4} %{SOURCE5}; do
+    install -m 644 $i $RPM_BUILD_ROOT%{_sysconfdir}/"$(basename $i .rhs)"
 done
 
-mkdir -p ${RPM_BUILD_ROOT}%{_sysconfdir}/skel
-install -m 644 %{SOURCE6} ${RPM_BUILD_ROOT}%{_sysconfdir}/skel/.zshrc
+mkdir -p $RPM_BUILD_ROOT%{_sysconfdir}/skel
+install -m 644 %{SOURCE6} $RPM_BUILD_ROOT%{_sysconfdir}/skel/.zshrc
 
 # This is just here to shut up rpmlint, and is very annoying.
 # Note that we can't chmod everything as then rpmlint will complain about
 # those without a she-bang line.
 for i in checkmail harden run-help zcalc zkbd; do
     sed -i -e 's!/usr/local/bin/zsh!%{_bindir}/zsh!' \
-      ${RPM_BUILD_ROOT}%{_datadir}/zsh/*/functions/$i
-    chmod +x ${RPM_BUILD_ROOT}%{_datadir}/zsh/*/functions/$i
+    $RPM_BUILD_ROOT%{_datadir}/zsh/%{version}/functions/$i
+    chmod +x $RPM_BUILD_ROOT%{_datadir}/zsh/%{version}/functions/$i
 done
+
+sed -i "s!$RPM_BUILD_ROOT%{_datadir}/%{name}/%{version}/help!%{_datadir}/%{name}/%{version}/help!" \
+    $RPM_BUILD_ROOT%{_datadir}/zsh/%{version}/functions/{run-help,_run-help}
 
 magic_rpm_clean.sh
 
@@ -173,6 +186,9 @@ fi
 %doc Doc/*.html
 
 %changelog
+* Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 5.1.1-2
+- 更新到 5.1.1
+
 * Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 4.3.17-4
 - 为 Magic 3.0 重建
 

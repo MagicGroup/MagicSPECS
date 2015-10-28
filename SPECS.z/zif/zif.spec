@@ -1,7 +1,8 @@
 Summary:   Simple wrapper for rpm and the Fedora package metadata
+Summary(zh_CN.UTF-8): rpm 和 Magic 包元数据的简单接口
 Name:      zif
-Version:   0.3.5
-Release:   3%{?dist}
+Version:	0.3.6
+Release:	2%{?dist}
 License:   GPLv2+
 URL:       http://people.freedesktop.org/~hughsient/zif/
 Source0:   http://people.freedesktop.org/~hughsient/zif/releases/%{name}-%{version}.tar.xz
@@ -32,16 +33,24 @@ access to the rpm database and the Fedora metadata for PackageKit.
 
 Zif is not designed as a replacement to yum, nor to be used by end users.
 
+%description -l zh_CN.UTF-8
+rpm 和 Magic 包元数据的简单接口。
+
 %package tools
 Summary: Command line tools for using libzif
+Summary(zh_CN.UTF-8): %{name} 的命令行工具
 Requires: %{name} = %{version}-%{release}
 
 %description tools
 This provides the zif command line tool that can be used as an
 alternative to yum. It is not normally required.
 
+%description tools -l zh_CN.UTF-8
+%{name} 的命令行工具。
+
 %package devel
 Summary: GLib Libraries and headers for zif
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Requires: %{name} = %{version}-%{release}
 Requires: bzip2-devel
 Requires: zlib-devel
@@ -49,6 +58,9 @@ Requires: gpgme-devel
 
 %description devel
 GLib headers and libraries for zif.
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -65,7 +77,7 @@ make %{?_smp_mflags}
 make install DESTDIR=$RPM_BUILD_ROOT
 
 rm -f $RPM_BUILD_ROOT%{_libdir}/libzif*.la
-
+magic_rpm_clean.sh
 %find_lang Zif
 
 %post -p /sbin/ldconfig
@@ -97,6 +109,12 @@ rm -f $RPM_BUILD_ROOT%{_libdir}/libzif*.la
 %{_datadir}/gir-1.0/*.gir
 
 %changelog
+* Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 0.3.6-2
+- 更新到 0.3.6
+
+* Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 0.2.1-2
+- 更新到 0.2.1
+
 * Sat Aug 01 2015 Liu Di <liudidi@gmail.com> - 0.3.5-3
 - 为 Magic 3.0 重建
 

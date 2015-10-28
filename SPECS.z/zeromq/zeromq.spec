@@ -1,11 +1,13 @@
 %bcond_without pgm
 
 Name:           zeromq
-Version:        4.0.5
-Release:        2%{?dist}
+Version:	4.1.3
+Release:	2%{?dist}
 Summary:        Software library for fast, message-based applications
+Summary(zh_CN.UTF-8): 快速，基于消息的程序使用的软件库
 
 Group:          System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 License:        LGPLv3+
 URL:            http://www.zeromq.org
 # VCS:          git:http://github.com/zeromq/zeromq2.git
@@ -14,21 +16,14 @@ Source0:        http://download.zeromq.org/zeromq-%{version}.tar.gz
 BuildRequires:  autoconf
 BuildRequires:  automake
 BuildRequires:  libtool
+BuildRequires:  libsodium-devel
 
 BuildRequires:  glib2-devel
-%if ! (0%{?fedora} > 12 || 0%{?rhel} > 5)
 BuildRequires:  e2fsprogs-devel
 BuildRoot:      %(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
-%else
-BuildRequires:  libuuid-devel
-%endif
 %if %{with pgm}
 BuildRequires:  openpgm-devel
 %endif
-
-# utils subpackage was removed in F-16
-# -> can be deleted in F-19
-Obsoletes:      zeromq-utils < 2.1.3-1
 
 %description
 The 0MQ lightweight messaging kernel is a library which extends the
@@ -40,10 +35,14 @@ multiple transport protocols and more.
 
 This package contains the ZeroMQ shared library.
 
+%description -l zh_CN.UTF-8
+快速，基于消息的程序使用的软件库。
 
 %package devel
 Summary:        Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       %{name}%{?_isa} = %{version}-%{release}
 
 
@@ -51,6 +50,8 @@ Requires:       %{name}%{?_isa} = %{version}-%{release}
 The %{name}-devel package contains libraries and header files for 
 developing applications that use %{name}.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -66,11 +67,6 @@ sed -i "s/libzmq_werror=\"yes\"/libzmq_werror=\"no\"/g" \
 %global openpgm_pc $(basename %{_libdir}/pkgconfig/openpgm*.pc .pc)
 sed -i "s/openpgm-[0-9].[0-9]/%{openpgm_pc}/g" \
     configure*
-
-
-# remove all files in foreign except Makefiles
-rm -v $(find foreign -type f | grep -v Makefile)
-
 
 %build
 autoreconf -fi
@@ -102,7 +98,7 @@ make check
 
 %files
 %defattr(-,root,root,-)
-%doc AUTHORS ChangeLog COPYING COPYING.LESSER NEWS README.md
+%doc AUTHORS ChangeLog COPYING COPYING.LESSER NEWS 
 %{_bindir}/curve_keygen
 %{_libdir}/libzmq.so.*
 
@@ -116,6 +112,9 @@ make check
 
 
 %changelog
+* Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 4.1.3-2
+- 更新到 4.1.3
+
 * Thu Apr 16 2015 Liu Di <liudidi@gmail.com> - 4.0.5-2
 - 为 Magic 3.0 重建
 

@@ -1,7 +1,8 @@
 Name:           libsodium
 Version:        1.0.5
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        The Sodium crypto library
+Summary(zh_CN.UTF-8): Sodium 加密库
 License:        ISC
 URL:            http://libsodium.org/
 Source0:        http://download.libsodium.org/libsodium/releases/%{name}-%{version}.tar.gz
@@ -19,13 +20,20 @@ constants are not described by the standards. And despite the emphasis on
 higher security, primitives are faster across-the-board than most 
 implementations of the NIST standards.
 
+%description -l zh_CN.UTF-8
+Sodium 加密库。
+
 %package        devel
 Summary:        Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Requires:       %{name}%{?_isa} = %{version}-%{release}
 
 %description    devel
 This package contains libraries and header files for
 developing applications that use %{name} libraries.
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -60,6 +68,9 @@ make check
 %{_libdir}/pkgconfig/libsodium.pc
 
 %changelog
+* Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 1.0.5-2
+- 为 Magic 3.0 重建
+
 * Sun Oct 25 2015 Christopher Meng <rpm@cicku.me> - 1.0.5-1
 - Update to 1.0.5
 

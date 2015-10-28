@@ -1,9 +1,11 @@
 %define _hardened_build 1
 Name:             zfs-fuse
 Version:          0.7.0
-Release:          16%{?dist}
+Release:          17%{?dist}
 Summary:          ZFS ported to Linux FUSE
+Summary(zh_CN.UTF-8): ZFS 的 FUSE 移植
 Group:            System Environment/Base
+Group(zh_CN.UTF-8): 系统环境/基本
 License:          CDDL
 URL:              http://zfs-fuse.net/
 Source00:         http://zfs-fuse.net/releases/0.7.0/%{name}-%{version}.tar.bz2
@@ -33,6 +35,9 @@ Microsystems, originally designed for Solaris/OpenSolaris.
 
 This project is a port of ZFS to the FUSE framework for the Linux
 operating system.
+
+%description -l zh_CN.UTF-8
+ZFS 的 FUSE 移植。
 
 %prep
 %setup -q
@@ -143,6 +148,9 @@ fi
 %{_mandir}/man8/zstreamdump.8.gz
 
 %changelog
+* Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 0.7.0-17
+- 为 Magic 3.0 重建
+
 * Mon Feb 10 2014 Jon Ciesla <limburgher@gmail.com> - 0.7.0-16
 - Fix format-security FTBFS, BZ 1037411.
 

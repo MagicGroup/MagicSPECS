@@ -1,6 +1,6 @@
 Name:          xapian-core
 Version:	1.2.21
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:       The Xapian Probabilistic Information Retrieval Library
 Summary(zh_CN.UTF-8):  Xapian 概率信息检索库
 
@@ -120,6 +120,9 @@ magic_rpm_clean.sh
 %{_mandir}/man1/xapian-config.1*
 
 %changelog
+* Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 1.2.21-2
+- 为 Magic 3.0 重建
+
 * Wed Oct 21 2015 Liu Di <liudidi@gmail.com> - 1.2.21-1
 - 更新到 1.2.21
 

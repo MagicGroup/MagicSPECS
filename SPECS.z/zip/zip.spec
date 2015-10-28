@@ -1,9 +1,11 @@
 Summary: A file compression and packaging utility compatible with PKZIP
+Summary(zh_CN.UTF-8): 与 PKZIP 兼容的文件压缩和打包工具
 Name: zip
 Version: 3.0
-Release: 5%{?dist}
+Release: 6%{?dist}
 License: BSD
 Group: Applications/Archiving
+Group(zh_CN.UTF-8): 应用程序/归档
 Source: http://downloads.sourceforge.net/infozip/zip30.tar.gz
 URL: http://www.info-zip.org/Zip.html
 # This patch will probably be merged to zip 3.1
@@ -13,6 +15,13 @@ Patch1: zip-3.0-exec-shield.patch
 Patch2: zip-3.0-currdir.patch
 # Not upstreamed.
 Patch3: zip-3.0-time.patch
+Patch4: man.patch
+Patch5: zip-3.0-format-security.patch
+Patch6: zipnote.patch
+
+BuildRequires: bzip2-devel
+Requires: unzip
+
 
 %description
 The zip program is a compression and file packaging utility.  Zip is
@@ -23,11 +32,17 @@ MS-DOS systems).
 Install the zip package if you need to compress files using the zip
 program.
 
+%description -l zh_CN.UTF-8
+与 PKZIP 兼容的文件压缩和打包工具。
+
 %prep
 %setup -q -n zip30
 %patch1 -p1 -b .exec-shield
 %patch2 -p1 -b .currdir
 %patch3 -p1 -b .time
+%patch4 -p1 -b .man
+%patch5 -p1 -b .format-security
+%patch6 -p1 -b .zipnote
 
 %build
 make -f unix/Makefile prefix=%{_prefix} "CFLAGS_NOOPT=-I. -DUNIX $RPM_OPT_FLAGS" generic_gcc  %{?_smp_mflags}
@@ -54,6 +69,9 @@ make -f unix/Makefile prefix=$RPM_BUILD_ROOT%{_prefix} \
 %{_mandir}/man1/zipsplit.1*
 
 %changelog
+* Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 3.0-6
+- 为 Magic 3.0 重建
+
 * Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 3.0-5
 - 为 Magic 3.0 重建
 

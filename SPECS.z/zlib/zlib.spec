@@ -1,14 +1,21 @@
 Summary: The zlib compression and decompression library
 Summary(zh_CN.UTF-8): zlib 压缩和解压库
 Name: zlib
-Version: 1.2.5
-Release: 5%{?dist}
+Version:	1.2.8
+Release:	2%{?dist}
 Group: System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
-Source: http://www.zlib.net/zlib-%{version}.tar.bz2
-Patch3: zlib-1.2.4-autotools.patch
-# https://bugzilla.redhat.com/show_bug.cgi?id=591317
-Patch4: zlib-1.2.5-gentoo.patch
+Source: http://www.zlib.net/zlib-%{version}.tar.gz
+
+Patch0: zlib-1.2.5-minizip-fixuncrypt.patch
+# resolves: #805113
+Patch1: zlib-1.2.7-optimized-s390.patch
+# resolves: #844791
+Patch2: zlib-1.2.7-z-block-flush.patch
+# resolves: #985344
+# http://mail.madler.net/pipermail/zlib-devel_madler.net/2013-August/003081.html
+Patch3: zlib-1.2.8-minizip-include.patch
+
 URL: http://www.gzip.org/zlib/
 # /contrib/dotzlib/ have Boost license
 License: zlib and Boost
@@ -84,23 +91,24 @@ minizip 库的开发文件。
 
 %prep
 %setup -q
-%patch3 -p1 -b .atools
-%patch4 -p1 -b .g
-# patch cannot create an empty dir
-mkdir contrib/minizip/m4
-cp minigzip.c contrib/minizip
-iconv -f windows-1252 -t utf-8 <ChangeLog >ChangeLog.tmp
+%patch0 -p1 -b .fixuncrypt
+%ifarch s390 s390x
+%patch1 -p1 -b .optimized-deflate
+%endif
+%patch2 -p1 -b .z-flush
+%patch3 -p1 -b .minizip_include
+iconv -f iso-8859-2 -t utf-8 < ChangeLog > ChangeLog.tmp
 mv ChangeLog.tmp ChangeLog
 
 %build
-CFLAGS=$RPM_OPT_FLAGS ./configure --libdir=%{_libdir} --includedir=%{_includedir} --prefix=%{_prefix}
+export CFLAGS="$RPM_OPT_FLAGS"
+export LDFLAGS="$LDFLAGS -Wl,-z,relro -Wl,-z,now"
+./configure --libdir=%{_libdir} --includedir=%{_includedir} --prefix=%{_prefix}
 make %{?_smp_mflags}
 
 cd contrib/minizip
 autoreconf --install
-%configure  CPPFLAGS="-I/$RPM_BUILD_DIR/%{name}-%{version}-%{release}"
-      LDFLAGS="-L/$RPM_BUILD_DIR/%{name}-%{version}-%{release}"
-
+%configure --enable-static=no
 make %{?_smp_mflags}
 
 %check
@@ -136,7 +144,7 @@ rm -rf ${RPM_BUILD_ROOT}
 
 %files devel
 %defattr(-,root,root,-)
-%doc doc/algorithm.txt example.c
+%doc doc/algorithm.txt 
 %{_libdir}/libz.so
 %{_includedir}/zconf.h
 %{_includedir}/zlib.h
@@ -160,6 +168,12 @@ rm -rf ${RPM_BUILD_ROOT}
 %{_libdir}/pkgconfig/minizip.pc
 
 %changelog
+* Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 1.2.8-2
+- 更新到 1.2.8
+
+* Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 1.2.5-6
+- 为 Magic 3.0 重建
+
 * Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 1.2.5-5
 - 为 Magic 3.0 重建
 

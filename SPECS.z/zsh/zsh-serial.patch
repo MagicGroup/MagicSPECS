@@ -1,6 +1,12 @@
---- zsh-4.0.4/Src/builtin.c.open	Tue Oct 16 02:49:17 2001
-+++ zsh-4.0.4/Src/builtin.c	Wed May 15 11:55:32 2002
-@@ -3489,7 +3489,7 @@ bin_read(char *name, char **args, char *
+ Src/builtin.c |  2 +-
+ Src/init.c    | 34 ++++++++++++++++++++++++++++++++--
+ 2 files changed, 33 insertions(+), 3 deletions(-)
+
+diff --git a/Src/builtin.c b/Src/builtin.c
+index 9358e8b..ee14f91 100644
+--- a/Src/builtin.c
++++ b/Src/builtin.c
+@@ -5631,7 +5631,7 @@ bin_read(char *name, char **args, Options ops, UNUSED(int func))
  	if (!zleactive) {
  	    if (SHTTY == -1) {
  		/* need to open /dev/tty specially */
@@ -9,9 +15,11 @@
  		    haso = 1;
  		    oshout = shout;
  		    init_shout();
---- zsh-4.0.4/Src/init.c.open	Wed Oct 24 04:16:32 2001
-+++ zsh-4.0.4/Src/init.c	Wed May 15 12:00:07 2002
-@@ -397,7 +397,7 @@ init_io(void)
+diff --git a/Src/init.c b/Src/init.c
+index 102276a..238f6ed 100644
+--- a/Src/init.c
++++ b/Src/init.c
+@@ -545,7 +545,7 @@ init_io(void)
      if (isatty(0)) {
  	zsfree(ttystrname);
  	if ((ttystrname = ztrdup(ttyname(0)))) {
@@ -20,7 +28,7 @@
  #ifdef TIOCNXCL
  	    /*
  	     * See if the terminal claims to be busy.  If so, and fd 0
-@@ -438,7 +438,7 @@ init_io(void)
+@@ -586,7 +586,7 @@ init_io(void)
  	ttystrname = ztrdup(ttyname(1));
      }
      if (SHTTY == -1 &&
@@ -29,8 +37,8 @@
  	zsfree(ttystrname);
  	ttystrname = ztrdup(ttyname(SHTTY));
      }
-@@ -1235,3 +1235,33 @@ zsh_main(int argc, char **argv)
- 		: "use 'logout' to logout.", NULL, 0);
+@@ -1711,3 +1711,33 @@ zsh_main(UNUSED(int argc), char **argv)
+ 		    : "use 'logout' to logout.");
      }
  }
 +

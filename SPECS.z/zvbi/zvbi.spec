@@ -3,9 +3,11 @@
 
 Name:               zvbi
 Version:            0.2.33
-Release:            13%{?dist}
+Release:            14%{?dist}
 Summary:            Raw VBI, Teletext and Closed Caption decoding library
+Summary(zh_CN.UTF-8): Raw VBI，Teletext 和 Closed Caption 解码库
 Group:              System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 # See NEWS for a full breakdown of licensing.
 License:            LGPLv2+ and GPLv2+ and BSD
 URL:                http://zapping.sourceforge.net/ZVBI/index.html
@@ -37,20 +39,28 @@ blanking interval can be used to carry data, since anything sent during the VBI
 would naturally not be displayed; various test signals, closed captioning, and
 other digital data can be sent during this time period.
 
+%description -l zh_CN.UTF-8
+Raw VBI，Teletext 和 Closed Caption 解码库。
 
 %package devel
 Summary:            Development files for zvbi
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:              Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:           %{name} = %{version}-%{release}
 Requires:           pkgconfig
 
 %description devel
 Development files for zvbi
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %package fonts
 Summary:            Fonts from zvbi converted to X11
+Summary(zh_CN.UTF-8): %{name} 的字体
 Group:              User Interface/X
+Group(zh_CN.UTF-8): 用户界面/X
 Requires(post):     fontconfig
 Requires(postun):   fontconfig
 # Don't use chkfontpath for F8+, it's legacy.
@@ -60,7 +70,8 @@ Provides:           xawtv-tv-fonts >= 3.95
 
 %description fonts
 Fonts from zvbi converted for use with X11
-
+%description fonts -l zh_CN.UTF-8
+%{name} 的字体。
 
 %prep
 %setup -q
@@ -208,6 +219,9 @@ fi
 
 
 %changelog
+* Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 0.2.33-14
+- 为 Magic 3.0 重建
+
 * Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 0.2.33-13
 - 为 Magic 3.0 重建
 

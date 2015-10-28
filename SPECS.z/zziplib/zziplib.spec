@@ -1,11 +1,14 @@
+%undefine _hardened_build
 Summary: Lightweight library to easily extract data from zip files
+Summary(zh_CN.UTF-8): 简单从 zip 文件中解压数据的轻量库
 Name: zziplib
-Version: 0.13.62
-Release: 2%{?dist}
+Version:	0.13.59
+Release:	2%{?dist}
 License: LGPLv2+ or MPLv1.1
 Group: Applications/Archiving
+Group(zh_CN.UTF-8): 应用程序/归档
 URL: http://zziplib.sourceforge.net/
-Source: http://dl.sf.net/zziplib/zziplib-%{version}.tar.bz2
+Source: http://download.sourceforge.net/zziplib/zziplib-%{version}.tar.bz2
 Patch0: zziplib-0.13.59-multilib.patch
 BuildRequires: perl
 BuildRequires: python
@@ -24,9 +27,14 @@ can bundle files into a single zip archive and access them. The implementation
 is based only on the (free) subset of compression with the zlib algorithm
 which is actually used by the zip/unzip tools.
 
+%description -l zh_CN.UTF-8
+简单从 zip 文件中解压数据的轻量库。
+
 %package utils
 Summary: Utilities for the zziplib library
+Summary(zh_CN.UTF-8): %{name} 的工具
 Group: Applications/Archiving
+Group(zh_CN.UTF-8): 应用程序/归档
 Requires: %{name}%{?_isa} = %{version}-%{release}
 
 %description utils
@@ -38,9 +46,14 @@ which is actually used by the zip/unzip tools.
 
 This packages contains all the utilities that come with the zziplib library.
 
+%description utils -l zh_CN.UTF-8
+%{name} 的工具。
+
 %package devel
 Summary: Development files for the zziplib library
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: %{name}%{?_isa} = %{version}-%{release}
 Requires: pkgconfig
 Requires: zlib-devel
@@ -56,6 +69,9 @@ which is actually used by the zip/unzip tools.
 This package contains files required to build applications that will use the
 zziplib library.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
 %prep
 %setup -q
 %patch0 -p1
@@ -63,6 +79,8 @@ zziplib library.
 cp -a zzip/_config.h _config.h
 
 %build
+autoreconf -fisv
+export CFLAGS="$RPM_OPT_FLAGS -fno-strict-aliasing"
 %configure \
     --disable-static \
     --enable-sdl \
@@ -101,6 +119,9 @@ magic_rpm_clean.sh
 %{_mandir}/man3/*
 
 %changelog
+* Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 0.13.59-2
+- 更新到 0.13.59
+
 * Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 0.13.62-2
 - 为 Magic 3.0 重建
 
